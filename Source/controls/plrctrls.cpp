@@ -6,11 +6,12 @@
 
 #include "automap.h"
 #include "control.h"
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "cursor.h"
 #include "doom.h"
+#include "engine/point.hpp"
 #include "gmenu.h"
 #include "help.h"
 #include "inv.h"

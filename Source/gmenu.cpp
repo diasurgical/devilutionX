@@ -9,6 +9,8 @@
 #include "controls/axis_direction.h"
 #include "controls/controller_motion.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "stores.h"
@@ -39,7 +41,7 @@ void gmenu_draw_pause(const CelOutputBuffer &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		light_table_index = 0;
-		DrawString(out, _("Pause"), { PANEL_LEFT + 252, PANEL_TOP / 2, 0, 0 }, UIS_HUGE, 2);
+		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UIS_HUGE | UIS_CENTER, 2);
 	}
 }
 
@@ -175,7 +177,7 @@ static void GmenuDrawMenuItem(const CelOutputBuffer &out, TMenuItem *pItem, int 
 
 	int x = (gnScreenWidth - w) / 2;
 	uint16_t style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UIS_SILVER : UIS_BLACK;
-	DrawString(out, _(pItem->pszStr), { x, y, 0, 0 }, style | UIS_HUGE, 2);
+	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UIS_HUGE, 2);
 	if (pItem == sgpCurrItem) {
 		CelDrawTo(out, { x - 54, y + 1 }, *PentSpin_cel, PentSpn2Spin());
 		CelDrawTo(out, { x + 4 + w, y + 1 }, *PentSpin_cel, PentSpn2Spin());

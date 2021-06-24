@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "engine/point.hpp"
 #include "items.h"
 #include "palette.h"
 #include "player.h"
@@ -110,13 +111,12 @@ int FindGetItem(int idx, uint16_t ci, int iseed);
 void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
 bool CanPut(Point position);
 bool TryInvPut();
-void DrawInvMsg(const char *msg);
 int InvPutItem(PlayerStruct &player, Point position);
 int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 char CheckInvHLight();
-void RemoveScroll(int pnum);
+void RemoveScroll(PlayerStruct &player);
 bool UseScroll();
-void UseStaffCharge(int pnum);
+void UseStaffCharge(PlayerStruct &player);
 bool UseStaff();
 bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();

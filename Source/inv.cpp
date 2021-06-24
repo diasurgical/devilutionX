@@ -9,8 +9,11 @@
 #include <fmt/format.h>
 
 #include "cursor.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "engine/size.hpp"
 #include "hwcursor.hpp"
 #include "minitext.h"
 #include "options.h"
@@ -327,14 +330,8 @@ void DrawInvBelt(const CelOutputBuffer &out)
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
-			sprintf(tempstr, "%i", i + 1);
-			SDL_Rect rect {
-				InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X + InventorySlotSizeInPixels.width - GetLineWidth(tempstr),
-				InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1,
-				0,
-				0
-			};
-			DrawString(out, tempstr, rect, UIS_SILVER);
+			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
+			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UIS_SILVER | UIS_RIGHT);
 		}
 	}
 }
@@ -804,7 +801,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
 	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
-	Size itemSize { icursW28, icursW28 };
+	Size itemSize { icursW28, icursH28 };
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
@@ -1771,15 +1768,6 @@ bool TryInvPut()
 	return CanPut(myPlayer.position.tile);
 }
 
-void DrawInvMsg(const char *msg)
-{
-	uint32_t dwTicks = SDL_GetTicks();
-	if (dwTicks - sgdwLastTime >= 5000) {
-		sgdwLastTime = dwTicks;
-		ErrorPlrMsg(msg);
-	}
-}
-
 static bool PutItem(PlayerStruct &player, Point &position)
 {
 	if (numitems >= MAXITEMS)
@@ -1999,10 +1987,8 @@ char CheckInvHLight()
 	return rv;
 }
 
-void RemoveScroll(int pnum)
+void RemoveScroll(PlayerStruct &player)
 {
-	auto &player = plr[pnum];
-
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (!player.InvList[i].isEmpty()
 		    && (player.InvList[i]._iMiscId == IMISC_SCROLL || player.InvList[i]._iMiscId == IMISC_SCROLLT)
@@ -2059,16 +2045,15 @@ static bool CanUseStaff(ItemStruct &staff, spell_id spell)
 	    && staff._iCharges > 0;
 }
 
-void UseStaffCharge(int pnum)
+void UseStaffCharge(PlayerStruct &player)
 {
-	auto &player = plr[pnum];
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
 
 	if (!CanUseStaff(staff, player._pRSpell))
 		return;
 
 	staff._iCharges--;
-	CalcPlrStaff(pnum);
+	CalcPlrStaff(player);
 }
 
 bool UseStaff()
@@ -2128,13 +2113,14 @@ bool UseInvItem(int pnum, int cii)
 		speedlist = true;
 	}
 
-	switch (item->IDidx) {
-	case IDI_MUSHROOM:
-		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10);
+	constexpr int SpeechDelay = 10;
+	if (item->IDidx == IDI_MUSHROOM) {
+		player.Say(HeroSpeech::NowThatsOneBigMushroom, SpeechDelay);
 		return true;
-	case IDI_FUNGALTM:
+	}
+	if (item->IDidx == IDI_FUNGALTM) {
 		PlaySFX(IS_IBOOK);
-		player.Say(HeroSpeech::ThatDidntDoAnything, 10);
+		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
 	}
 

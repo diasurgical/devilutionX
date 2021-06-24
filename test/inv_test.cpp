@@ -203,7 +203,7 @@ TEST(Inv, RemoveScroll_inventory)
 	plr[myplr].InvList[0]._iMiscId = IMISC_SCROLL;
 	plr[myplr].InvList[0]._iSpell = SPL_FIREBOLT;
 
-	RemoveScroll(myplr);
+	RemoveScroll(plr[myplr]);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr]._pNumInv, 0);
 }
@@ -221,6 +221,6 @@ TEST(Inv, RemoveScroll_belt)
 	plr[myplr].SpdList[3]._iMiscId = IMISC_SCROLL;
 	plr[myplr].SpdList[3]._iSpell = SPL_FIREBOLT;
 
-	RemoveScroll(myplr);
+	RemoveScroll(plr[myplr]);
 	EXPECT_EQ(plr[myplr].SpdList[3]._itype, ITYPE_NONE);
 }

@@ -10,6 +10,7 @@
 
 #include "diablo.h"
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
 #include "objects.h"
 #include "player.h"
 #include "quests.h"

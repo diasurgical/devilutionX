@@ -10,14 +10,17 @@
 
 #include "diablo.h"
 #include "engine.h"
+#include "engine/actor_position.hpp"
+#include "engine/animationinfo.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
 #include "gendung.h"
+#include "interfac.h"
 #include "items.h"
 #include "multi.h"
-#include "spelldat.h"
 #include "path.h"
-#include "interfac.h"
+#include "spelldat.h"
 #include "utils/enum_traits.h"
-#include "engine/animationinfo.h"
 
 namespace devilution {
 
@@ -407,7 +410,7 @@ extern bool deathflag;
 extern int ToBlkTbl[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
-void InitPlayerGFX(int pnum);
+void InitPlayerGFX(PlayerStruct &player);
 void ResetPlayerGFX(PlayerStruct &player);
 
 /**
@@ -456,6 +459,7 @@ void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, Point position);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
+void CalcPlrStaff(PlayerStruct &player);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);

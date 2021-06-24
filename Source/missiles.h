@@ -9,6 +9,7 @@
 
 #include "miniwin/miniwin.h"
 #include "engine.h"
+#include "engine/point.hpp"
 #include "misdat.h"
 #include "spelldat.h"
 
@@ -32,6 +33,38 @@ struct MissilePosition {
 	Point start;
 	/** Start position */
 	Point traveled;
+};
+
+
+/*
+ *      W  sW  SW   Sw  S
+ *              ^
+ *     nW       |       Se
+ *              |
+ *     NW ------+-----> SE
+ *              |
+ *     Nw       |       sE
+ *              |
+ *      N  Ne  NE   nE  E
+ */
+enum Direction16
+{
+	DIR16_S,
+	DIR16_Sw,
+	DIR16_SW,
+	DIR16_sW,
+	DIR16_W,
+	DIR16_nW,
+	DIR16_NW,
+	DIR16_Nw,
+	DIR16_N,
+	DIR16_Ne,
+	DIR16_NE,
+	DIR16_nE,
+	DIR16_E,
+	DIR16_sE,
+	DIR16_SE,
+	DIR16_Se,
 };
 
 struct MissileStruct {
@@ -80,8 +113,8 @@ extern int nummissiles;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
-int GetSpellLevel(int id, spell_id sn);
-int GetDirection16(int x1, int y1, int x2, int y2);
+int GetSpellLevel(int playerId, spell_id sn);
+Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
 bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
@@ -92,90 +125,90 @@ void InitMissileGFX();
 void FreeMissiles();
 void FreeMissiles2();
 void InitMissiles();
-void AddHiveExplosion(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFireRune(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLightningRune(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddGreatLightningRune(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddImmolationRune(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddStoneRune(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddReflection(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBerserk(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddHorkSpawn(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddJester(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddStealPotions(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddManaTrap(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddSpecArrow(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddWarp(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLightningWall(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRuneExplosion(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddImmolation(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFireNova(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLightningArrow(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddMana(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddMagi(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRing(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddSearch(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddCboltArrow(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLArrow(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddArrow(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRndTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFirebolt(int mi, int sx, int sy, int dx, int dy, int midir, int8_t micaster, int id, int dam);
-void AddMagmaball(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddKrull(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddTeleport(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLightball(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFirewall(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFireball(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLightctrl(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddLightning(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddMisexp(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddWeapexp(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddTown(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFlash(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFlash2(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddManashield(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFiremove(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddGuardian(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddChain(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBloodStar(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBone(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddMetlHit(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRhino(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFireman(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFlare(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddAcid(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFireWallA(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddAcidpud(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddStone(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddGolem(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddEtherealize(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddDummy(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBlodbur(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBoom(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddHeal(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddHealOther(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddElement(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddIdentify(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFirewallC(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddInfra(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddWave(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddNova(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBlodboil(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRepair(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRecharge(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddDisarm(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddApoca(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFlame(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddFlamec(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddCbolt(int mi, int sx, int sy, int dx, int dy, int midir, int8_t micaster, int id, int dam);
-void AddHbolt(int mi, int sx, int sy, int dx, int dy, int midir, int8_t micaster, int id, int dam);
-void AddResurrect(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddResurrectBeam(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddTelekinesis(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddBoneSpirit(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddRportal(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-void AddDiabApoca(int mi, int sx, int sy, int dx, int dy, int midir, int8_t mienemy, int id, int dam);
-int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl);
+void AddHiveExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFireRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLightningRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddGreatLightningRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddImmolationRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddStoneRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddReflection(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBerserk(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddJester(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddStealPotions(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddManaTrap(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddSpecArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddWarp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLightningWall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRuneExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLightningArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddMana(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddMagi(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRing(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddSearch(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRndTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam);
+void AddMagmaball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddKrull(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLightball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFirewall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFireball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLightctrl(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddLightning(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddMisexp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddWeapexp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddTown(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFlash(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFlash2(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddManashield(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFiremove(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddGuardian(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddChain(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBloodStar(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddMetlHit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRhino(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFireman(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddAcid(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFireWallA(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddAcidpud(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddStone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddGolem(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddEtherealize(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddDummy(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBlodbur(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBoom(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddHeal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddHealOther(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddElement(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddIdentify(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFirewallC(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddInfra(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddWave(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBlodboil(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRepair(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRecharge(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddDisarm(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFlame(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam);
+void AddHbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam);
+void AddResurrect(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddResurrectBeam(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddTelekinesis(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddRportal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+void AddDiabApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
+int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl);
 void MI_Dummy(int i);
 void MI_Golem(int i);
 void MI_Manashield(int i);

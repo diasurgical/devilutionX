@@ -3,8 +3,10 @@
  *
  * Implementation of the hell level generation algorithms.
  */
+#include "drlg_l4.h"
 
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"

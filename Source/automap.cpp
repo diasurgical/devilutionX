@@ -5,11 +5,10 @@
  */
 #include "automap.h"
 
-#include <algorithm>
-
 #include <fmt/format.h>
 
 #include "control.h"
+#include "engine/load_file.hpp"
 #include "engine/render/automap_render.hpp"
 #include "inv.h"
 #include "monster.h"
@@ -17,6 +16,7 @@
 #include "player.h"
 #include "setmaps.h"
 #include "utils/language.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -383,24 +383,24 @@ uint16_t GetAutomapType(Point map, bool view)
 void DrawAutomapText(const CelOutputBuffer &out)
 {
 	char desc[256];
-	int nextLine = 20;
+	Point linePosition { 8, 20 };
 
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {
 			strcat(strcpy(desc, _("game: ")), szPlayerName);
-			DrawString(out, desc, { 8, nextLine, 0, 0 });
-			nextLine += 15;
+			DrawString(out, desc, linePosition);
+			linePosition.y += 15;
 		}
 
 		if (szPlayerDescript[0] != '\0') {
 			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
-			DrawString(out, desc, { 8, nextLine, 0, 0 });
-			nextLine += 15;
+			DrawString(out, desc, linePosition);
+			linePosition.y += 15;
 		}
 	}
 
 	if (setlevel) {
-		DrawString(out, _(quest_level_names[setlvlnum]), { 8, nextLine, 0, 0 });
+		DrawString(out, _(quest_level_names[setlvlnum]), linePosition);
 		return;
 	}
 
@@ -413,7 +413,7 @@ void DrawAutomapText(const CelOutputBuffer &out)
 			strcpy(desc, fmt::format(_("Level: {:d}"), currlevel).c_str());
 		}
 
-		DrawString(out, desc, { 8, nextLine, 0, 0 });
+		DrawString(out, desc, linePosition);
 	}
 }
 

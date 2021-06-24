@@ -12,6 +12,7 @@
 #include "cursor.h"
 #include "drlg_l1.h"
 #include "drlg_l4.h"
+#include "engine/load_file.hpp"
 #include "error.h"
 #include "init.h"
 #include "lighting.h"
@@ -1957,7 +1958,7 @@ void Obj_Circle(int i)
 			ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 				quests[Q_BETRAYER]._qvar1 = 4;
-			AddMissile(plr[myplr].position.tile.x, plr[myplr].position.tile.y, 35, 46, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
+			AddMissile(plr[myplr].position.tile, { 35, 46 }, plr[myplr]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, myplr, 0, 0);
 			track_repeat_walk(false);
 			sgbMouseDown = CLICK_NONE;
 			ClrPlrPath(plr[myplr]);
@@ -2121,9 +2122,7 @@ void Obj_Trap(int i)
 	}
 	if (!deltaload) {
 		Direction dir = GetDirection(object[i].position, object[oti].position);
-		int sx = object[i].position.x;
-		int sy = object[i].position.y;
-		AddMissile(sx, sy, dx, dy, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
+		AddMissile(object[i].position, object[oti].position, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
 		PlaySfxLoc(IS_TRAP, object[oti].position.x, object[oti].position.y);
 	}
 	object[oti]._oTrapFlag = false;
@@ -2945,7 +2944,7 @@ void OperateBook(int pnum, int i)
 			}
 			if (do_add_missile) {
 				object[dObject[35][36] - 1]._oVar5++;
-				AddMissile(plr[pnum].position.tile.x, plr[pnum].position.tile.y, dx, dy, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(plr[pnum].position.tile, { dx, dy }, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
 				missile_added = true;
 				do_add_missile = false;
 			}
@@ -2967,10 +2966,8 @@ void OperateBook(int pnum, int i)
 			PlaySfxLoc(IS_QUESTDN, object[i].position.x, object[i].position.y);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
-		    plr[pnum].position.tile.x,
-		    plr[pnum].position.tile.y,
-		    object[i].position.x - 2,
-		    object[i].position.y - 4,
+		    plr[pnum].position.tile,
+		    object[i].position + Point { -2, -4 },
 		    plr[pnum]._pdir,
 		    MIS_GUARDIAN,
 		    TARGET_MONSTERS,
@@ -3123,7 +3120,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				default:
 					mtype = MIS_ARROW;
 				}
-				AddMissile(object[i].position.x, object[i].position.y, plr[pnum].position.tile.x, plr[pnum].position.tile.y, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
+				AddMissile(object[i].position, plr[pnum].position.tile, mdir, mtype, TARGET_PLAYERS, -1, 0, 0);
 				object[i]._oTrapFlag = false;
 			}
 			if (pnum == myplr)
@@ -3543,10 +3540,8 @@ bool OperateShrineMagical(int pnum)
 		return false;
 
 	AddMissile(
-	    plr[pnum].position.tile.x,
-	    plr[pnum].position.tile.y,
-	    plr[pnum].position.tile.x,
-	    plr[pnum].position.tile.y,
+	    plr[pnum].position.tile,
+	    plr[pnum].position.tile,
 	    plr[pnum]._pdir,
 	    MIS_MANASHIELD,
 	    -1,
@@ -3716,10 +3711,8 @@ bool OperateShrineCryptic(int pnum)
 		return false;
 
 	AddMissile(
-	    plr[pnum].position.tile.x,
-	    plr[pnum].position.tile.y,
-	    plr[pnum].position.tile.x,
-	    plr[pnum].position.tile.y,
+	    plr[pnum].position.tile,
+	    plr[pnum].position.tile,
 	    plr[pnum]._pdir,
 	    MIS_NOVA,
 	    -1,
@@ -3845,7 +3838,7 @@ bool OperateShrineHoly(int pnum)
 			break;
 	} while (nSolidTable[lv] || dObject[xx][yy] != 0 || dMonster[xx][yy] != 0);
 
-	AddMissile(plr[pnum].position.tile.x, plr[pnum].position.tile.y, xx, yy, plr[pnum]._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
+	AddMissile(plr[pnum].position.tile, { xx, yy }, plr[pnum]._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
 
 	if (pnum != myplr)
 		return false;
@@ -4123,10 +4116,8 @@ bool OperateShrineOily(int pnum, int x, int y)
 	CheckStats(plr[pnum]);
 
 	AddMissile(
-	    x,
-	    y,
-	    plr[myplr].position.tile.x,
-	    plr[myplr].position.tile.y,
+	    { x, y },
+	    plr[myplr].position.tile,
 	    plr[myplr]._pdir,
 	    MIS_FIREWALL,
 	    TARGET_PLAYERS,
@@ -4195,10 +4186,8 @@ bool OperateShrineSparkling(int pnum, int x, int y)
 	AddPlrExperience(myplr, plr[myplr]._pLevel, 1000 * currlevel);
 
 	AddMissile(
-	    x,
-	    y,
-	    plr[myplr].position.tile.x,
-	    plr[myplr].position.tile.y,
+	    { x, y },
+	    plr[myplr].position.tile,
 	    plr[myplr]._pdir,
 	    MIS_FLASH,
 	    TARGET_PLAYERS,
@@ -4221,10 +4210,8 @@ bool OperateShrineTown(int pnum, int x, int y)
 		return false;
 
 	AddMissile(
-	    x,
-	    y,
-	    plr[myplr].position.tile.x,
-	    plr[myplr].position.tile.y,
+	    { x, y },
+	    plr[myplr].position.tile,
 	    plr[myplr]._pdir,
 	    MIS_TOWN,
 	    TARGET_PLAYERS,
@@ -4666,10 +4653,8 @@ bool OperateFountains(int pnum, int i)
 		if (deltaload)
 			return false;
 		AddMissile(
-		    plr[pnum].position.tile.x,
-		    plr[pnum].position.tile.y,
-		    plr[pnum].position.tile.x,
-		    plr[pnum].position.tile.y,
+		    plr[pnum].position.tile,
+		    plr[pnum].position.tile,
 		    plr[pnum]._pdir,
 		    MIS_INFRA,
 		    -1,

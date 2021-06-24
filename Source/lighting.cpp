@@ -7,6 +7,7 @@
 
 #include "automap.h"
 #include "diablo.h"
+#include "engine/load_file.hpp"
 #include "player.h"
 
 namespace devilution {

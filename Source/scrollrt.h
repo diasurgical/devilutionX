@@ -7,8 +7,9 @@
 
 #include <cstdint>
 
-#include "engine/animationinfo.h"
 #include "engine.h"
+#include "engine/animationinfo.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 

@@ -7,6 +7,8 @@
 
 #include <cstdint>
 
+#include "utils/endian.hpp"
+
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif

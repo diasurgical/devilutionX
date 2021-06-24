@@ -6,6 +6,7 @@
 #include "town.h"
 
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
 #include "init.h"
 #include "player.h"
 #include "quests.h"

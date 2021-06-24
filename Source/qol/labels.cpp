@@ -1,15 +1,18 @@
+#include "itemlabels.h"
+
 #include <vector>
 #include <string>
 #include <unordered_set>
 
-#include "inv.h"
-#include "gmenu.h"
-#include "cursor.h"
 #include "common.h"
 #include "control.h"
+#include "cursor.h"
+#include "engine/point.hpp"
+#include "engine/render/cel_render.hpp"
+#include "gmenu.h"
+#include "inv.h"
 #include "labels.h"
 #include "utils/language.h"
-#include "engine/render/cel_render.hpp"
 
 namespace devilution {
 

@@ -15,6 +15,7 @@
 #include "dead.h"
 #include "doom.h"
 #include "engine.h"
+#include "engine/point.hpp"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"
@@ -22,6 +23,7 @@
 #include "mpqapi.h"
 #include "pfile.h"
 #include "stores.h"
+#include "utils/endian.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -979,31 +981,35 @@ void LoadHotkeys()
 	if (!file.isValid())
 		return;
 
-	for (auto &spellId : plr[myplr]._pSplHotKey) {
+	auto &myPlayer = plr[myplr];
+
+	for (auto &spellId : myPlayer._pSplHotKey) {
 		spellId = static_cast<spell_id>(file.nextLE<int32_t>());
 	}
-	for (auto &spellType : plr[myplr]._pSplTHotKey) {
+	for (auto &spellType : myPlayer._pSplTHotKey) {
 		spellType = static_cast<spell_type>(file.nextLE<int8_t>());
 	}
-	plr[myplr]._pRSpell = static_cast<spell_id>(file.nextLE<int32_t>());
-	plr[myplr]._pRSplType = static_cast<spell_type>(file.nextLE<int8_t>());
+	myPlayer._pRSpell = static_cast<spell_id>(file.nextLE<int32_t>());
+	myPlayer._pRSplType = static_cast<spell_type>(file.nextLE<int8_t>());
 }
 
 void SaveHotkeys()
 {
-	const size_t nHotkeyTypes = sizeof(plr[myplr]._pSplHotKey) / sizeof(plr[myplr]._pSplHotKey[0]);
-	const size_t nHotkeySpells = sizeof(plr[myplr]._pSplTHotKey) / sizeof(plr[myplr]._pSplTHotKey[0]);
+	auto &myPlayer = plr[myplr];
+
+	const size_t nHotkeyTypes = sizeof(myPlayer._pSplHotKey) / sizeof(myPlayer._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(myPlayer._pSplTHotKey) / sizeof(myPlayer._pSplTHotKey[0]);
 
 	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
 
-	for (auto &spellId : plr[myplr]._pSplHotKey) {
+	for (auto &spellId : myPlayer._pSplHotKey) {
 		file.writeLE<int32_t>(spellId);
 	}
-	for (auto &spellType : plr[myplr]._pSplTHotKey) {
+	for (auto &spellType : myPlayer._pSplTHotKey) {
 		file.writeLE<uint8_t>(spellType);
 	}
-	file.writeLE<int32_t>(plr[myplr]._pRSpell);
-	file.writeLE<uint8_t>(plr[myplr]._pRSplType);
+	file.writeLE<int32_t>(myPlayer._pRSpell);
+	file.writeLE<uint8_t>(myPlayer._pRSplType);
 }
 
 static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
@@ -1035,12 +1041,12 @@ void LoadHeroItems(PlayerStruct &player)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void RemoveEmptyInventory(int pnum)
+void RemoveEmptyInventory(PlayerStruct &player)
 {
 	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
-		int idx = plr[pnum].InvGrid[i - 1];
-		if (idx > 0 && plr[pnum].InvList[idx - 1].isEmpty()) {
-			plr[pnum].RemoveInvItem(idx - 1);
+		int idx = player.InvGrid[i - 1];
+		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
+			player.RemoveInvItem(idx - 1);
 		}
 	};
 }
@@ -1119,7 +1125,7 @@ void LoadGame(bool firstflag)
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		ConvertLevels();
-		RemoveEmptyInventory(myplr);
+		RemoveEmptyInventory(plr[myplr]);
 	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);

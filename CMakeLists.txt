@@ -391,6 +391,8 @@ set(libdevilutionx_SRCS
   Source/controls/touch.cpp
   Source/controls/keymapper.cpp
   Source/engine/animationinfo.cpp
+  Source/engine/load_cel.cpp
+  Source/engine/load_file.cpp
   Source/engine/render/automap_render.cpp
   Source/engine/render/cel_render.cpp
   Source/engine/render/cl2_render.cpp

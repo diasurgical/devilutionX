@@ -16,6 +16,8 @@
 #include "dead.h"
 #include "drlg_l1.h"
 #include "drlg_l4.h"
+#include "engine/cel_header.hpp"
+#include "engine/load_file.hpp"
 #include "engine/render/cl2_render.hpp"
 #include "init.h"
 #include "lighting.h"
@@ -157,7 +159,7 @@ void InitMonsterTRN(CMonster &monst)
 
 		for (int j = 0; j < 8; j++) {
 			Cl2ApplyTrans(
-			    CelGetFrameStart(monst.Anims[i].CMem.get(), j),
+			    CelGetFrame(monst.Anims[i].CMem.get(), j),
 			    colorTranslations,
 			    monst.Anims[i].Frames);
 		}
@@ -357,7 +359,7 @@ void InitMonsterGFX(int monst)
 			if (Monsters[monst].mtype != MT_GOLEM || (animletter[anim] != 's' && animletter[anim] != 'd')) {
 
 				for (i = 0; i < 8; i++) {
-					byte *pCelStart = CelGetFrameStart(celBuf, i);
+					byte *pCelStart = CelGetFrame(celBuf, i);
 					Monsters[monst].Anims[anim].CelSpritesForDirections[i].emplace(pCelStart, width);
 				}
 			} else {
@@ -1773,7 +1775,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 	CheckQuestKill(i, sendmsg);
 	M_FallenFear(Monst->position.tile);
 	if ((Monst->MType->mtype >= MT_NACID && Monst->MType->mtype <= MT_XACID) || Monst->MType->mtype == MT_SPIDLORD)
-		AddMissile(Monst->position.tile.x, Monst->position.tile.y, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, Monst->_mint + 1, 0);
+		AddMissile(Monst->position.tile, { 0, 0 }, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, Monst->_mint + 1, 0);
 }
 
 void M2MStartKill(int i, int mid)
@@ -1817,7 +1819,7 @@ void M2MStartKill(int i, int mid)
 	CheckQuestKill(mid, true);
 	M_FallenFear(monster[mid].position.tile);
 	if (monster[mid].MType->mtype >= MT_NACID && monster[mid].MType->mtype <= MT_XACID)
-		AddMissile(monster[mid].position.tile.x, monster[mid].position.tile.y, 0, 0, 0, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster[mid]._mint + 1, 0);
+		AddMissile(monster[mid].position.tile, { 0, 0 }, 0, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster[mid]._mint + 1, 0);
 
 	if (gbIsHellfire)
 		M_StartStand(i, monster[i]._mdir);
@@ -2251,10 +2253,8 @@ bool M_DoRAttack(int i)
 				}
 
 				AddMissile(
-				    sourcePosition.x,
-				    sourcePosition.y,
-				    monster[i].enemyPosition.x,
-				    monster[i].enemyPosition.y,
+				    sourcePosition,
+				    monster[i].enemyPosition,
 				    monster[i]._mdir,
 				    monster[i]._mVar1,
 				    TARGET_PLAYERS,
@@ -2287,10 +2287,8 @@ bool M_DoRSpAttack(int i)
 		}
 
 		AddMissile(
-		    sourcePosition.x,
-		    sourcePosition.y,
-		    monster[i].enemyPosition.x,
-		    monster[i].enemyPosition.y,
+		    sourcePosition,
+		    monster[i].enemyPosition,
 		    monster[i]._mdir,
 		    monster[i]._mVar1,
 		    TARGET_PLAYERS,
@@ -3009,7 +3007,7 @@ void MAI_Snake(int i)
 	Monst->_mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if (abs(mx) < 3 && abs(my) < 3 && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy }) && Monst->_mVar1 != MM_CHARGE) {
-			if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
+			if (AddMissile(Monst->position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(i, 0);
 				dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
 				Monst->_mmode = MM_CHARGE;
@@ -3092,7 +3090,7 @@ void MAI_Bat(int i)
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * Monst->_mint + 33
 	    && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy })) {
-		if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
+		if (AddMissile(Monst->position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
 			Monst->_mmode = MM_CHARGE;
 		}
@@ -3108,7 +3106,7 @@ void MAI_Bat(int i)
 		Monst->_mgoal = MGOAL_RETREAT;
 		Monst->_mgoalvar1 = 0;
 		if (Monst->MType->mtype == MT_FAMILIAR) {
-			AddMissile(Monst->enemyPosition.x, Monst->enemyPosition.y, Monst->enemyPosition.x + 1, 0, -1, MIS_LIGHTNING, TARGET_PLAYERS, i, GenerateRnd(10) + 1, 0);
+			AddMissile(Monst->enemyPosition, { Monst->enemyPosition.x + 1, 0 }, -1, MIS_LIGHTNING, TARGET_PLAYERS, i, GenerateRnd(10) + 1, 0);
 		}
 	}
 
@@ -3275,7 +3273,7 @@ void MAI_Fireman(int i)
 	Direction md = M_GetDir(i);
 	if (Monst->_mgoal == MGOAL_NORMAL) {
 		if (LineClearMissile(Monst->position.tile, { fx, fy })
-		    && AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
+		    && AddMissile(Monst->position.tile, { fx, fy }, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
 			Monst->_mmode = MM_CHARGE;
 			Monst->_mgoal = MGOAL_ATTACK2;
 			Monst->_mgoalvar1 = 0;
@@ -4019,7 +4017,7 @@ void MAI_Rhino(int i)
 			if (dist >= 5
 			    && v < 2 * Monst->_mint + 43
 			    && LineClear(PosOkMonst, i, Monst->position.tile, { fx, fy })) {
-				if (AddMissile(Monst->position.tile.x, Monst->position.tile.y, fx, fy, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
+				if (AddMissile(Monst->position.tile, { fx, fy }, md, MIS_RHINO, Monst->_menemy, i, 0, 0) != -1) {
 					if (Monst->MData->snd_special)
 						PlayEffect(i, 3);
 					dMonster[Monst->position.tile.x][Monst->position.tile.y] = -(i + 1);
@@ -4175,8 +4173,8 @@ void MAI_Counselor(int i)
 				} else if (Monst->_mVar1 == MM_DELAY
 				    || GenerateRnd(100) < 2 * Monst->_mint + 20) {
 					M_StartRAttack(i, -1, 0);
-					AddMissile(Monst->position.tile.x, Monst->position.tile.y, 0, 0, Monst->_mdir, MIS_FLASH, TARGET_PLAYERS, i, 4, 0);
-					AddMissile(Monst->position.tile.x, Monst->position.tile.y, 0, 0, Monst->_mdir, MIS_FLASH2, TARGET_PLAYERS, i, 4, 0);
+					AddMissile(Monst->position.tile, { 0, 0 }, Monst->_mdir, MIS_FLASH, TARGET_PLAYERS, i, 4, 0);
+					AddMissile(Monst->position.tile, { 0, 0 }, Monst->_mdir, MIS_FLASH2, TARGET_PLAYERS, i, 4, 0);
 				} else
 					M_StartDelay(i, GenerateRnd(10) + 2 * (5 - Monst->_mint));
 			}

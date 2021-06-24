@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"
 

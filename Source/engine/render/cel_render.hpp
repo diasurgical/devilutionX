@@ -8,6 +8,8 @@
 #include <utility>
 
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
 
 namespace devilution {
 

@@ -5,9 +5,9 @@
  */
 
 #include "dx.h"
+#include "engine/load_file.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
-#include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
 

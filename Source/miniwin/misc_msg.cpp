@@ -3,21 +3,22 @@
 #include <deque>
 
 #include "control.h"
-#include "controls/controller.h"
 #include "controls/controller_motion.h"
+#include "controls/controller.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "cursor.h"
+#include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
+#include "miniwin/miniwin.h"
 #include "movie.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
-#include "utils/log.hpp"
-#include "miniwin/miniwin.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -49,28 +50,30 @@ void SetCursorPos(int x, int y)
 // Moves the mouse to the first attribute "+" button.
 void FocusOnCharInfo()
 {
-	if (invflag || plr[myplr]._pStatPts <= 0)
+	auto &myPlayer = plr[myplr];
+
+	if (invflag || myPlayer._pStatPts <= 0)
 		return;
 
 	// Find the first incrementable stat.
 	int stat = -1;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
-		int max = plr[myplr].GetMaximumAttributeValue(attribute);
+		int max = myPlayer.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			if (plr[myplr]._pBaseStr >= max)
+			if (myPlayer._pBaseStr >= max)
 				continue;
 			break;
 		case CharacterAttribute::Magic:
-			if (plr[myplr]._pBaseMag >= max)
+			if (myPlayer._pBaseMag >= max)
 				continue;
 			break;
 		case CharacterAttribute::Dexterity:
-			if (plr[myplr]._pBaseDex >= max)
+			if (myPlayer._pBaseDex >= max)
 				continue;
 			break;
 		case CharacterAttribute::Vitality:
-			if (plr[myplr]._pBaseVit >= max)
+			if (myPlayer._pBaseVit >= max)
 				continue;
 			break;
 		}

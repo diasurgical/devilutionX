@@ -11,6 +11,7 @@
 #pragma once
 
 #include "engine.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 

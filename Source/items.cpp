@@ -3,6 +3,8 @@
  *
  * Implementation of item functionality.
  */
+#include "items.h"
+
 #include <algorithm>
 #include <climits>
 #include <cstdint>
@@ -13,6 +15,8 @@
 #include "cursor.h"
 #include "doom.h"
 #include "dx.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
@@ -22,6 +26,7 @@
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/math.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 namespace {
@@ -917,16 +922,6 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 	drawhpflag = true;
 }
 
-void CalcPlrStaff(int p)
-{
-	plr[p]._pISpells = 0;
-	if (!plr[p].InvBody[INVLOC_HAND_LEFT].isEmpty()
-	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iStatFlag
-	    && plr[p].InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
-		plr[p]._pISpells |= GetSpellBitmask(plr[p].InvBody[INVLOC_HAND_LEFT]._iSpell);
-	}
-}
-
 void CalcSelfItems(PlayerStruct &player)
 {
 	int i;
@@ -1045,7 +1040,7 @@ void CalcPlrInv(int playerId, bool Loadgfx)
 	if (playerId == myplr) {
 		CalcPlrBookVals(player);
 		player.CalcScrolls();
-		CalcPlrStaff(playerId);
+		CalcPlrStaff(player);
 		if (playerId == myplr && currlevel == 0)
 			RecalcStoreStats();
 	}
@@ -3314,11 +3309,11 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLHEAL:
-		strcpy(tempstr, _("fully recover life"));
+		strcpy(tempstr, _("restore all life"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_HEAL:
-		strcpy(tempstr, _("recover partial life"));
+		strcpy(tempstr, _("restore some life"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_OLDHEAL:
@@ -3330,11 +3325,11 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_MANA:
-		strcpy(tempstr, _("recover mana"));
+		strcpy(tempstr, _("restore some mana"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLMANA:
-		strcpy(tempstr, _("fully recover mana"));
+		strcpy(tempstr, _("restore all mana"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXSTR:
@@ -3370,11 +3365,11 @@ void PrintItemOil(char IDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_REJUV:
-		strcpy(tempstr, _("recover life and mana"));
+		strcpy(tempstr, _("restore some life and mana"));
 		AddPanelString(tempstr);
 		break;
 	case IMISC_FULLREJUV:
-		strcpy(tempstr, _("fully recover life and mana"));
+		strcpy(tempstr, _("restore all life and mana"));
 		AddPanelString(tempstr);
 		break;
 	}
@@ -3694,37 +3689,37 @@ void DrawUniqueInfo(const CelOutputBuffer &out)
 
 	DrawUTextBack(GlobalBackBuffer());
 
-	SDL_Rect rect { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12, 257, 0 };
+	Rectangle rect { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12, 257, 0 };
 	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UIS_CENTER);
 
 	DrawULine(out, 5);
 
-	rect.y += (12 - uitem.UINumPL) * 12;
+	rect.position.y += (12 - uitem.UINumPL) * 12;
 	PrintItemPower(uitem.UIPower1, &curruitem);
 	DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	if (uitem.UINumPL > 1) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower2, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 2) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower3, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 3) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower4, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 4) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower5, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 5) {
-		rect.y += 2 * 12;
+		rect.position.y += 2 * 12;
 		PrintItemPower(uitem.UIPower6, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
@@ -3889,41 +3884,43 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 {
 	int l, j;
 
+	auto &player = plr[p];
+
 	switch (Mid) {
 	case IMISC_HEAL:
 	case IMISC_FOOD:
-		j = plr[p]._pMaxHP >> 8;
+		j = player._pMaxHP >> 8;
 		l = ((j >> 1) + GenerateRnd(j)) << 6;
-		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
+		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
-		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
+		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
 			l += l / 2;
-		plr[p]._pHitPoints = std::min(l + plr[p]._pHitPoints, plr[p]._pMaxHP);
-		plr[p]._pHPBase = std::min(l + plr[p]._pHPBase, plr[p]._pMaxHPBase);
+		player._pHitPoints = std::min(l + player._pHitPoints, player._pMaxHP);
+		player._pHPBase = std::min(l + player._pHPBase, player._pMaxHPBase);
 		drawhpflag = true;
 		break;
 	case IMISC_FULLHEAL:
-		plr[p]._pHitPoints = plr[p]._pMaxHP;
-		plr[p]._pHPBase = plr[p]._pMaxHPBase;
+		player._pHitPoints = player._pMaxHP;
+		player._pHPBase = player._pMaxHPBase;
 		drawhpflag = true;
 		break;
 	case IMISC_MANA:
-		j = plr[p]._pMaxMana >> 8;
+		j = player._pMaxMana >> 8;
 		l = ((j >> 1) + GenerateRnd(j)) << 6;
-		if (plr[p]._pClass == HeroClass::Sorcerer)
+		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
-		if (plr[p]._pClass == HeroClass::Rogue || plr[p]._pClass == HeroClass::Monk || plr[p]._pClass == HeroClass::Bard)
+		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
 			l += l / 2;
-		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
-			plr[p]._pMana = std::min(l + plr[p]._pMana, plr[p]._pMaxMana);
-			plr[p]._pManaBase = std::min(l + plr[p]._pManaBase, plr[p]._pMaxManaBase);
+		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+			player._pMana = std::min(l + player._pMana, player._pMaxMana);
+			player._pManaBase = std::min(l + player._pManaBase, player._pMaxManaBase);
 			drawmanaflag = true;
 		}
 		break;
 	case IMISC_FULLMANA:
-		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
-			plr[p]._pMana = plr[p]._pMaxMana;
-			plr[p]._pManaBase = plr[p]._pMaxManaBase;
+		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+			player._pMana = player._pMaxMana;
+			player._pManaBase = player._pMaxManaBase;
 			drawmanaflag = true;
 		}
 		break;
@@ -3933,8 +3930,8 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_ELIXMAG:
 		ModifyPlrMag(p, 1);
 		if (gbIsHellfire) {
-			plr[p]._pMana = plr[p]._pMaxMana;
-			plr[p]._pManaBase = plr[p]._pMaxManaBase;
+			player._pMana = player._pMaxMana;
+			player._pManaBase = player._pMaxManaBase;
 			drawmanaflag = true;
 		}
 		break;
@@ -3944,89 +3941,89 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_ELIXVIT:
 		ModifyPlrVit(p, 1);
 		if (gbIsHellfire) {
-			plr[p]._pHitPoints = plr[p]._pMaxHP;
-			plr[p]._pHPBase = plr[p]._pMaxHPBase;
+			player._pHitPoints = player._pMaxHP;
+			player._pHPBase = player._pMaxHPBase;
 			drawhpflag = true;
 		}
 		break;
 	case IMISC_REJUV:
-		j = plr[p]._pMaxHP >> 8;
+		j = player._pMaxHP >> 8;
 		l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (plr[p]._pClass == HeroClass::Warrior || plr[p]._pClass == HeroClass::Barbarian)
+		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
-		if (plr[p]._pClass == HeroClass::Rogue)
+		if (player._pClass == HeroClass::Rogue)
 			l += l / 2;
-		plr[p]._pHitPoints = std::min(plr[p]._pHitPoints + l, plr[p]._pMaxHP);
-		plr[p]._pHPBase = std::min(plr[p]._pHPBase + l, plr[p]._pMaxHPBase);
+		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
+		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
 		drawhpflag = true;
-		j = plr[p]._pMaxMana >> 8;
+		j = player._pMaxMana >> 8;
 		l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (plr[p]._pClass == HeroClass::Sorcerer)
+		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
-		if (plr[p]._pClass == HeroClass::Rogue)
+		if (player._pClass == HeroClass::Rogue)
 			l += l / 2;
-		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
-			plr[p]._pMana = std::min(plr[p]._pMana + l, plr[p]._pMaxMana);
-			plr[p]._pManaBase = std::min(plr[p]._pManaBase + l, plr[p]._pMaxManaBase);
+		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+			player._pMana = std::min(player._pMana + l, player._pMaxMana);
+			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
 			drawmanaflag = true;
 		}
 		break;
 	case IMISC_FULLREJUV:
-		plr[p]._pHitPoints = plr[p]._pMaxHP;
-		plr[p]._pHPBase = plr[p]._pMaxHPBase;
+		player._pHitPoints = player._pMaxHP;
+		player._pHPBase = player._pMaxHPBase;
 		drawhpflag = true;
-		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
-			plr[p]._pMana = plr[p]._pMaxMana;
-			plr[p]._pManaBase = plr[p]._pMaxManaBase;
+		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+			player._pMana = player._pMaxMana;
+			player._pManaBase = player._pMaxManaBase;
 			drawmanaflag = true;
 		}
 		break;
 	case IMISC_SCROLL:
 		if (spelldata[spl].sTargeted) {
-			plr[p]._pTSpell = spl;
-			plr[p]._pTSplType = RSPLTYPE_INVALID;
+			player._pTSpell = spl;
+			player._pTSplType = RSPLTYPE_INVALID;
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
-			ClrPlrPath(plr[p]);
-			plr[p]._pSpell = spl;
-			plr[p]._pSplType = RSPLTYPE_INVALID;
-			plr[p]._pSplFrom = 3;
-			plr[p].destAction = ACTION_SPELL;
-			plr[p].destParam1 = cursmx;
-			plr[p].destParam2 = cursmy;
+			ClrPlrPath(player);
+			player._pSpell = spl;
+			player._pSplType = RSPLTYPE_INVALID;
+			player._pSplFrom = 3;
+			player.destAction = ACTION_SPELL;
+			player.destParam1 = cursmx;
+			player.destParam2 = cursmy;
 			if (p == myplr && spl == SPL_NOVA)
 				NetSendCmdLoc(myplr, true, CMD_NOVA, { cursmx, cursmy });
 		}
 		break;
 	case IMISC_SCROLLT:
 		if (spelldata[spl].sTargeted) {
-			plr[p]._pTSpell = spl;
-			plr[p]._pTSplType = RSPLTYPE_INVALID;
+			player._pTSpell = spl;
+			player._pTSplType = RSPLTYPE_INVALID;
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
-			ClrPlrPath(plr[p]);
-			plr[p]._pSpell = spl;
-			plr[p]._pSplType = RSPLTYPE_INVALID;
-			plr[p]._pSplFrom = 3;
-			plr[p].destAction = ACTION_SPELL;
-			plr[p].destParam1 = cursmx;
-			plr[p].destParam2 = cursmy;
+			ClrPlrPath(player);
+			player._pSpell = spl;
+			player._pSplType = RSPLTYPE_INVALID;
+			player._pSplFrom = 3;
+			player.destAction = ACTION_SPELL;
+			player.destParam1 = cursmx;
+			player.destParam2 = cursmy;
 		}
 		break;
 	case IMISC_BOOK:
-		plr[p]._pMemSpells |= GetSpellBitmask(spl);
-		if (plr[p]._pSplLvl[spl] < MAX_SPELL_LEVEL)
-			plr[p]._pSplLvl[spl]++;
-		if ((plr[p]._pIFlags & ISPL_NOMANA) == 0) {
-			plr[p]._pMana += spelldata[spl].sManaCost << 6;
-			plr[p]._pMana = std::min(plr[p]._pMana, plr[p]._pMaxMana);
-			plr[p]._pManaBase += spelldata[spl].sManaCost << 6;
-			plr[p]._pManaBase = std::min(plr[p]._pManaBase, plr[p]._pMaxManaBase);
+		player._pMemSpells |= GetSpellBitmask(spl);
+		if (player._pSplLvl[spl] < MAX_SPELL_LEVEL)
+			player._pSplLvl[spl]++;
+		if ((player._pIFlags & ISPL_NOMANA) == 0) {
+			player._pMana += spelldata[spl].sManaCost << 6;
+			player._pMana = std::min(player._pMana, player._pMaxMana);
+			player._pManaBase += spelldata[spl].sManaCost << 6;
+			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
 		if (p == myplr)
-			CalcPlrBookVals(plr[p]);
+			CalcPlrBookVals(player);
 		drawmanaflag = true;
 		break;
 	case IMISC_MAPOFDOOM:
@@ -4042,7 +4039,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_OILPERM:
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
-		plr[p]._pOilType = Mid;
+		player._pOilType = Mid;
 		if (p != myplr) {
 			return;
 		}
@@ -4061,32 +4058,32 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		ModifyPlrVit(p, 3);
 		break;
 	case IMISC_RUNEF:
-		plr[p]._pTSpell = SPL_RUNEFIRE;
-		plr[p]._pTSplType = RSPLTYPE_INVALID;
+		player._pTSpell = SPL_RUNEFIRE;
+		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
-		plr[p]._pTSpell = SPL_RUNELIGHT;
-		plr[p]._pTSplType = RSPLTYPE_INVALID;
+		player._pTSpell = SPL_RUNELIGHT;
+		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
-		plr[p]._pTSpell = SPL_RUNENOVA;
-		plr[p]._pTSplType = RSPLTYPE_INVALID;
+		player._pTSpell = SPL_RUNENOVA;
+		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
-		plr[p]._pTSpell = SPL_RUNEIMMOLAT;
-		plr[p]._pTSplType = RSPLTYPE_INVALID;
+		player._pTSpell = SPL_RUNEIMMOLAT;
+		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
-		plr[p]._pTSpell = SPL_RUNESTONE;
-		plr[p]._pTSplType = RSPLTYPE_INVALID;
+		player._pTSpell = SPL_RUNESTONE;
+		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
@@ -4097,11 +4094,13 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 
 bool StoreStatOk(ItemStruct *h)
 {
-	if (plr[myplr]._pStrength < h->_iMinStr)
+	const auto &myPlayer = plr[myplr];
+
+	if (myPlayer._pStrength < h->_iMinStr)
 		return false;
-	if (plr[myplr]._pMagic < h->_iMinMag)
+	if (myPlayer._pMagic < h->_iMinMag)
 		return false;
-	if (plr[myplr]._pDexterity < h->_iMinDex)
+	if (myPlayer._pDexterity < h->_iMinDex)
 		return false;
 
 	return true;
@@ -4243,9 +4242,11 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	bool keepgoing = false;
 	ItemStruct holditem = items[0];
 
-	int strength = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength), plr[myplr]._pStrength);
-	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity), plr[myplr]._pDexterity);
-	int magic = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic), plr[myplr]._pMagic);
+	auto &myPlayer = plr[myplr];
+
+	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
+	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
+	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
 	strength *= 1.2;
 	dexterity *= 1.2;
 	magic *= 1.2;
@@ -4274,7 +4275,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
-			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
+			const auto mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
 			    [](const ItemStruct &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
@@ -4293,7 +4294,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_STAFF:
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
-			const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
+			const auto mostValuablePlayerItem = myPlayer.GetMostValuableItem(
 			    [](const ItemStruct &item) { return item._itype == items[0]._itype; });
 
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
@@ -4337,25 +4338,16 @@ void SpawnPremium(int pnum)
 	while (premiumlevel < lvl) {
 		premiumlevel++;
 		if (gbIsHellfire) {
-			premiumitems[0] = premiumitems[3];
-			premiumitems[1] = premiumitems[4];
-			premiumitems[2] = premiumitems[5];
-			premiumitems[3] = premiumitems[6];
-			premiumitems[4] = premiumitems[7];
-			premiumitems[5] = premiumitems[8];
-			premiumitems[6] = premiumitems[9];
-			premiumitems[7] = premiumitems[10];
-			premiumitems[8] = premiumitems[11];
-			premiumitems[9] = premiumitems[12];
+			// Discard first 3 items and shift next 10
+			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
 			SpawnOnePremium(10, premiumlevel + premiumLvlAddHellfire[10], pnum);
 			premiumitems[11] = premiumitems[13];
 			SpawnOnePremium(12, premiumlevel + premiumLvlAddHellfire[12], pnum);
 			premiumitems[13] = premiumitems[14];
 			SpawnOnePremium(14, premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
-			premiumitems[0] = premiumitems[2];
-			premiumitems[1] = premiumitems[3];
-			premiumitems[2] = premiumitems[4];
+			// Discard first 2 items and shift next 3
+			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
 			SpawnOnePremium(3, premiumlevel + premiumlvladd[3], pnum);
 			premiumitems[4] = premiumitems[5];
 			SpawnOnePremium(5, premiumlevel + premiumlvladd[5], pnum);
@@ -4502,10 +4494,12 @@ void SpawnBoy(int lvl)
 	bool keepgoing = false;
 	int count = 0;
 
-	HeroClass pc = plr[myplr]._pClass;
-	int strength = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength), plr[myplr]._pStrength);
-	int dexterity = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity), plr[myplr]._pDexterity);
-	int magic = std::max(plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic), plr[myplr]._pMagic);
+	auto &myPlayer = plr[myplr];
+
+	HeroClass pc = myPlayer._pClass;
+	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
+	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
+	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
 	strength *= 1.2;
 	dexterity *= 1.2;
 	magic *= 1.2;
@@ -4536,7 +4530,7 @@ void SpawnBoy(int lvl)
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
-			const auto mostValuablePlayerArmor = plr[myplr].GetMostValuableItem(
+			const auto mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
 			    [](const ItemStruct &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
@@ -4555,7 +4549,7 @@ void SpawnBoy(int lvl)
 		case ITYPE_STAFF:
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
-			const auto mostValuablePlayerItem = plr[myplr].GetMostValuableItem(
+			const auto mostValuablePlayerItem = myPlayer.GetMostValuableItem(
 			    [itemType](const ItemStruct &item) { return item._itype == itemType; });
 
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
@@ -4620,14 +4614,16 @@ bool HealerItemOk(int i)
 		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
+		auto &myPlayer = plr[myplr];
+
 		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
-			return !gbIsHellfire || plr[myplr]._pBaseStr < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Strength);
+			return !gbIsHellfire || myPlayer._pBaseStr < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXMAG)
-			return !gbIsHellfire || plr[myplr]._pBaseMag < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Magic);
+			return !gbIsHellfire || myPlayer._pBaseMag < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXDEX)
-			return !gbIsHellfire || plr[myplr]._pBaseDex < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Dexterity);
+			return !gbIsHellfire || myPlayer._pBaseDex < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity);
 		if (AllItemsList[i].iMiscId == IMISC_ELIXVIT)
-			return !gbIsHellfire || plr[myplr]._pBaseVit < plr[myplr].GetMaximumAttributeValue(CharacterAttribute::Vitality);
+			return !gbIsHellfire || myPlayer._pBaseVit < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality);
 	}
 
 	if (AllItemsList[i].iMiscId == IMISC_REJUV)

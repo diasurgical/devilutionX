@@ -25,6 +25,9 @@
 #include "drlg_l4.h"
 #include "dx.h"
 #include "encrypt.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
+#include "engine/load_file.hpp"
 #include "error.h"
 #include "gamemenu.h"
 #include "gmenu.h"
@@ -1731,7 +1734,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		for (int i = 0; i < MAX_PLRS; i++) {
 			auto &player = plr[i];
 			if (player.plractive && currlevel == player.plrlevel) {
-				InitPlayerGFX(i);
+				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(i, firstflag);
 			}
@@ -1825,7 +1828,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		for (int i = 0; i < MAX_PLRS; i++) {
 			auto &player = plr[i];
 			if (player.plractive && currlevel == player.plrlevel) {
-				InitPlayerGFX(i);
+				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
 					InitPlayer(i, firstflag);
 			}
