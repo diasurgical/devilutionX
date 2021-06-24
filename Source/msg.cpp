@@ -2216,38 +2216,40 @@ static DWORD On_ACK_PLRINFO(TCmd *pCmd, int pnum)
 static DWORD On_PLAYER_JOINLEVEL(TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
+
+	if (gbBufferMsgs == 1) {
+		msg_send_packet(pnum, p, sizeof(*p));
+		return sizeof(*p);
+	}
+
 	auto &player = plr[pnum];
 
-	if (gbBufferMsgs == 1)
-		msg_send_packet(pnum, p, sizeof(*p));
-	else {
-		player._pLvlChanging = false;
-		if (player._pName[0] != 0 && !player.plractive) {
-			ResetPlayerGFX(player);
-			player.plractive = true;
-			gbActivePlayers++;
-			EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel).c_str());
-		}
+	player._pLvlChanging = false;
+	if (player._pName[0] != 0 && !player.plractive) {
+		ResetPlayerGFX(player);
+		player.plractive = true;
+		gbActivePlayers++;
+		EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel).c_str());
+	}
 
-		if (player.plractive && myplr != pnum) {
-			player.position.tile = { p->x, p->y };
-			player.plrlevel = p->wParam1;
-			ResetPlayerGFX(player);
-			if (currlevel == player.plrlevel) {
-				SyncInitPlr(pnum);
-				if ((player._pHitPoints >> 6) > 0)
-					StartStand(pnum, DIR_S);
-				else {
-					player._pgfxnum = 0;
-					player._pmode = PM_DEATH;
-					NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
-					player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
-					dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
-				}
-
-				player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == myplr);
-				player._plid = NO_LIGHT;
+	if (player.plractive && myplr != pnum) {
+		player.position.tile = { p->x, p->y };
+		player.plrlevel = p->wParam1;
+		ResetPlayerGFX(player);
+		if (currlevel == player.plrlevel) {
+			SyncInitPlr(pnum);
+			if ((player._pHitPoints >> 6) > 0)
+				StartStand(pnum, DIR_S);
+			else {
+				player._pgfxnum = 0;
+				player._pmode = PM_DEATH;
+				NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
+				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
+				dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 			}
+
+			player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == myplr);
+			player._plid = NO_LIGHT;
 		}
 	}
 
