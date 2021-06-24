@@ -132,6 +132,8 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	strcpy(infostr, bkp);
 	textOnGround = name;
 
+	SDL_Log("NAME: %s  COLOR: %d", textOnGround, objcolor);
+
 	x += it->_oAnimWidth / 2;
 	ModifyCoords(x, y);
 	int nameWidth = GetLabelWidth(textOnGround);

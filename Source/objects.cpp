@@ -5417,6 +5417,7 @@ void SyncObjectAnim(int o)
 
 void GetObjectStr(int i)
 {
+	infoclr = UIS_SILVER;
 	switch (object[i]._otype) {
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
