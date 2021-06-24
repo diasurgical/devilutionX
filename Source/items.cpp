@@ -3890,13 +3890,13 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_HEAL:
 	case IMISC_FOOD:
 		j = player._pMaxHP >> 8;
-		l = ((j >> 1) + GenerateRnd(j)) << 6;
+		l = ((j / 2) + GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
 			l += l / 2;
-		player._pHitPoints = std::min(l + player._pHitPoints, player._pMaxHP);
-		player._pHPBase = std::min(l + player._pHPBase, player._pMaxHPBase);
+		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
+		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
 		drawhpflag = true;
 		break;
 	case IMISC_FULLHEAL:
@@ -3906,14 +3906,14 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		break;
 	case IMISC_MANA:
 		j = player._pMaxMana >> 8;
-		l = ((j >> 1) + GenerateRnd(j)) << 6;
+		l = ((j / 2) + GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
 			l += l / 2;
 		if ((player._pIFlags & ISPL_NOMANA) == 0) {
-			player._pMana = std::min(l + player._pMana, player._pMaxMana);
-			player._pManaBase = std::min(l + player._pManaBase, player._pMaxManaBase);
+			player._pMana = std::min(player._pMana + l, player._pMaxMana);
+			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
 			drawmanaflag = true;
 		}
 		break;
@@ -4247,9 +4247,9 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
 	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
-	strength *= 1.2;
-	dexterity *= 1.2;
-	magic *= 1.2;
+	strength += strength / 5;
+	dexterity += dexterity / 5;
+	magic += magic / 5;
 
 	plvl = clamp(plvl, 1, 30);
 
@@ -4488,8 +4488,6 @@ int RndBoyItem(int lvl)
 
 void SpawnBoy(int lvl)
 {
-	int itype;
-
 	int ivalue = 0;
 	bool keepgoing = false;
 	int count = 0;
@@ -4500,9 +4498,9 @@ void SpawnBoy(int lvl)
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
 	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
 	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
-	strength *= 1.2;
-	dexterity *= 1.2;
-	magic *= 1.2;
+	strength += strength / 5;
+	dexterity += dexterity / 5;
+	magic += magic / 5;
 
 	if (boylevel >= (lvl / 2) && !boyitem.isEmpty())
 		return;
@@ -4510,7 +4508,7 @@ void SpawnBoy(int lvl)
 		keepgoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		itype = RndBoyItem(lvl) - 1;
+		int itype = RndBoyItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		GetItemBonus(0, lvl, 2 * lvl, true, true);
 
