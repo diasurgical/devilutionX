@@ -119,7 +119,6 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	if (!it->_oSelFlag)
 		return;
 
-	const char *textOnGround;
 	// TODO: remove this dirty hack after a proper way to get object name has been added
 	char bkp[64];
 	strcpy(bkp, infostr);
@@ -130,13 +129,12 @@ void AddObjectToLabelQueue(int id, int x, int y)
 	char name[64];
 	strcpy(name, infostr);
 	strcpy(infostr, bkp);
-	textOnGround = name;
 
 	x += it->_oAnimWidth / 2;
 	ModifyCoords(x, y);
-	int nameWidth = GetLabelWidth(textOnGround);
+	int nameWidth = GetLabelWidth(name);
 	x -= nameWidth / 2;
-	labelQueue.push_back(Label { id, nameWidth, { x, y }, textOnGround, objcolor, LabelType::LABEL_OBJECT });
+	labelQueue.push_back(Label { id, nameWidth, { x, y }, name, objcolor, LabelType::LABEL_OBJECT });
 }
 
 bool IsMouseOverGameArea()
