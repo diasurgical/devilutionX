@@ -1135,9 +1135,9 @@ void InitMonsterSND(int monst)
 void FreeMonsterSnd()
 {
 	for (int i = 0; i < nummtypes; i++) {
-		for (int j = 0; j < 4; ++j) {
+		for (auto &Snd : Monsters[i].Snds) {
 			for (int k = 0; k < 2; ++k) {
-				Monsters[i].Snds[j][k] = nullptr;
+				Snd[k] = nullptr;
 			}
 		}
 	}
@@ -1376,10 +1376,10 @@ void effects_play_sound(const char *snd_file)
 		return;
 	}
 
-	for (uint32_t i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		if (strcasecmp(sgSFX[i].pszName, snd_file) == 0 && sgSFX[i].pSnd != nullptr) {
-			if (!sgSFX[i].pSnd->isPlaying())
-				snd_play_snd(sgSFX[i].pSnd.get(), 0, 0);
+	for (auto &sfx : sgSFX) {
+		if (strcasecmp(sfx.pszName, snd_file) == 0 && sfx.pSnd != nullptr) {
+			if (!sfx.pSnd->isPlaying())
+				snd_play_snd(sfx.pSnd.get(), 0, 0);
 
 			return;
 		}

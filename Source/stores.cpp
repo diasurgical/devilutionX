@@ -310,8 +310,8 @@ void S_ScrollSPBuy(int boughtitems)
 bool S_StartSPBuy()
 {
 	storenumh = 0;
-	for (int i = 0; i < SMITH_PREMIUM_ITEMS; i++) {
-		if (!premiumitems[i].isEmpty())
+	for (const auto &item : premiumitems) {
+		if (!item.isEmpty())
 			storenumh++;
 	}
 	if (storenumh == 0) {
@@ -410,8 +410,8 @@ void S_StartSSell()
 	bool sellok = false;
 	storenumh = 0;
 
-	for (int i = 0; i < 48; i++) {
-		storehold[i]._itype = ITYPE_NONE;
+	for (auto &item : storehold) {
+		item._itype = ITYPE_NONE;
 	}
 
 	const auto &myPlayer = plr[myplr];
@@ -501,8 +501,9 @@ void S_StartSRepair()
 	bool repairok = false;
 	storenumh = 0;
 
-	for (int i = 0; i < 48; i++)
-		storehold[i]._itype = ITYPE_NONE;
+	for (auto &item : storehold) {
+		item._itype = ITYPE_NONE;
+	}
 
 	auto &myPlayer = plr[myplr];
 
@@ -685,8 +686,9 @@ void S_StartWSell()
 	bool sellok = false;
 	storenumh = 0;
 
-	for (int i = 0; i < 48; i++)
-		storehold[i]._itype = ITYPE_NONE;
+	for (auto &item : storehold) {
+		item._itype = ITYPE_NONE;
+	}
 
 	const auto &myPlayer = plr[myplr];
 
@@ -784,8 +786,8 @@ void S_StartWRecharge()
 	bool rechargeok = false;
 	storenumh = 0;
 
-	for (int i = 0; i < 48; i++) {
-		storehold[i]._itype = ITYPE_NONE;
+	for (auto &item : storehold) {
+		item._itype = ITYPE_NONE;
 	}
 
 	const auto &myPlayer = plr[myplr];
@@ -1074,8 +1076,9 @@ void S_StartSIdentify()
 	stextsize = true;
 	storenumh = 0;
 
-	for (int i = 0; i < 48; i++)
-		storehold[i]._itype = ITYPE_NONE;
+	for (auto &item : storehold) {
+		item._itype = ITYPE_NONE;
+	}
 
 	auto &myPlayer = plr[myplr];
 
@@ -1426,8 +1429,8 @@ bool StoreGoldFit(int idx)
 
 	auto &myPlayer = plr[myplr];
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (myPlayer.InvGrid[i] == 0)
+	for (int8_t itemId : myPlayer.InvGrid) {
+		if (itemId == 0)
 			numsqrs++;
 	}
 

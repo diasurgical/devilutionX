@@ -394,10 +394,10 @@ void PlayerStruct::CalcScrolls()
 		}
 	}
 
-	for (int j = 0; j < MAXBELTITEMS; j++) {
-		if (!SpdList[j].isEmpty() && (SpdList[j]._iMiscId == IMISC_SCROLL || SpdList[j]._iMiscId == IMISC_SCROLLT)) {
-			if (SpdList[j]._iStatFlag)
-				_pScrlSpells |= GetSpellBitmask(SpdList[j]._iSpell);
+	for (auto &item : SpdList) {
+		if (!item.isEmpty() && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)) {
+			if (item._iStatFlag)
+				_pScrlSpells |= GetSpellBitmask(item._iSpell);
 		}
 	}
 	EnsureValidReadiedSpell(*this);
@@ -421,9 +421,9 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 	iv++;
 
 	//Iterate through invGrid and remove every reference to item
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (InvGrid[i] == iv || InvGrid[i] == -iv) {
-			InvGrid[i] = 0;
+	for (int8_t &itemId : InvGrid) {
+		if (itemId == iv || itemId == -iv) {
+			itemId = 0;
 		}
 	}
 
@@ -434,12 +434,12 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 	if (_pNumInv > 0 && _pNumInv != iv) {
 		InvList[iv] = InvList[_pNumInv];
 
-		for (int j = 0; j < NUM_INV_GRID_ELEM; j++) {
-			if (InvGrid[j] == _pNumInv + 1) {
-				InvGrid[j] = iv + 1;
+		for (int8_t &itemId : InvGrid) {
+			if (itemId == _pNumInv + 1) {
+				itemId = iv + 1;
 			}
-			if (InvGrid[j] == -(_pNumInv + 1)) {
-				InvGrid[j] = -(iv + 1);
+			if (itemId == -(_pNumInv + 1)) {
+				itemId = -(iv + 1);
 			}
 		}
 	}

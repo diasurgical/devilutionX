@@ -1198,10 +1198,10 @@ void InitMissiles()
 		missileactive[i] = 0;
 	}
 	numchains = 0;
-	for (int i = 0; i < MAXMISSILES; i++) {
-		chain[i].idx = -1;
-		chain[i]._mitype = 0;
-		chain[i]._mirange = 0;
+	for (auto &link : chain) {
+		link.idx = -1;
+		link._mitype = 0;
+		link._mirange = 0;
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
