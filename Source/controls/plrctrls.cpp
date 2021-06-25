@@ -1086,7 +1086,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	}
 
 	const Direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
-	const auto delta{ future + pdir };
+	const auto delta = player.position.future + pdir;
 
 	if (CanChangeDirection(player))
 		player._pdir = pdir;
