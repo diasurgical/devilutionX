@@ -79,8 +79,8 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_HEAL:
 	case SPL_HEALOTHER:
 		/// BUGFIX: healing calculation is unused
-		*mind += AddClassHealingBonus(myPlayer._pLevel + sl + 1, myPlayer._pClass) - 1;
-		*maxd += AddClassHealingBonus((4 * myPlayer._pLevel) + (6 * sl) + 10, myPlayer._pClass) - 1;
+		*mind = AddClassHealingBonus(myPlayer._pLevel + sl + 1, myPlayer._pClass) - 1;
+		*maxd = AddClassHealingBonus((4 * myPlayer._pLevel) + (6 * sl) + 10, myPlayer._pClass) - 1;
 		break;
 	case SPL_LIGHTNING:
 	case SPL_RUNELIGHT:
