@@ -86,7 +86,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 	DelayLen = delayLen;
 	TicksSinceSequenceStarted = 0;
 	RelevantFramesForDistributing = 0;
-	TickModifier = 0.0f;
+	TickModifier = 0.0F;
 
 	if (numSkippedFrames != 0 || flags != AnimationDistributionFlags::None) {
 		// Animation Frames that will be adjusted for the skipped Frames/game ticks
@@ -164,7 +164,7 @@ void AnimationInfo::ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrame
 		DelayLen = delayLen;
 		TicksSinceSequenceStarted = 0;
 		RelevantFramesForDistributing = 0;
-		TickModifier = 0.0f;
+		TickModifier = 0.0F;
 	}
 	this->pCelSprite = pCelSprite;
 	DelayLen = delayLen;

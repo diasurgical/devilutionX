@@ -10,7 +10,7 @@ namespace devilution {
 
 size_t GetFileSize(const char *pszName);
 
-void LoadFileData(const char *pszName, byte *buffer, size_t bufferSize);
+void LoadFileData(const char *pszName, byte *buffer, size_t fileLen);
 
 template <typename T>
 void LoadFileInMem(const char *path, T *data, std::size_t count = 0)

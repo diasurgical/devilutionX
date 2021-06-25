@@ -572,7 +572,7 @@ void CelBlitLightTransSafeTo(const CelOutputBuffer &out, Point position, const b
  * @param nWidth Width of sprite
  * @param tbl Palette translation table
  */
-void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *tbl)
+void CelBlitLightBlendedSafeTo(const CelOutputBuffer &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth, const uint8_t *tbl)
 {
 	assert(pRLEBytes != nullptr);
 	if (tbl == nullptr)
@@ -710,7 +710,7 @@ std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame
 {
 	int nDataSize;
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	auto end = &src[nDataSize];
+	const auto *end = &src[nDataSize];
 	const int celWidth = cel.Width(frame);
 
 	int xBegin = celWidth;

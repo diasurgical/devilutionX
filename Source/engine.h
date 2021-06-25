@@ -44,7 +44,6 @@
 
 namespace devilution {
 
-
 struct CelOutputBuffer {
 	// 8-bit palletized surface.
 	SDL_Surface *surface;
@@ -223,7 +222,7 @@ struct CelOutputBuffer {
 void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 /** Same as DrawHorizontalLine but without bounds clipping. */
-void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a vertical line segment in the target buffer (top to bottom)

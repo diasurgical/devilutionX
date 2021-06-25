@@ -135,7 +135,7 @@ int GetTileDebugColor(TileType tile)
 #endif // DEBUG_RENDER_COLOR
 
 /** Fully transparent variant of WallMask. */
-const std::uint32_t WallMask_FullyTrasparent[TILE_HEIGHT] = {
+const std::uint32_t WallMaskFullyTrasparent[TILE_HEIGHT] = {
 	0x00000000,
 	0x00000000,
 	0x00000000,
@@ -170,7 +170,7 @@ const std::uint32_t WallMask_FullyTrasparent[TILE_HEIGHT] = {
 	0x00000000
 };
 /** Transparent variant of RightMask. */
-const std::uint32_t RightMask_Transparent[TILE_HEIGHT] = {
+const std::uint32_t RightMaskTransparent[TILE_HEIGHT] = {
 	0xC0000000,
 	0xF0000000,
 	0xFC000000,
@@ -205,7 +205,7 @@ const std::uint32_t RightMask_Transparent[TILE_HEIGHT] = {
 	0xFFFFFFFF
 };
 /** Transparent variant of LeftMask. */
-const std::uint32_t LeftMask_Transparent[TILE_HEIGHT] = {
+const std::uint32_t LeftMaskTransparent[TILE_HEIGHT] = {
 	0x00000003,
 	0x0000000F,
 	0x0000003F,
@@ -1253,14 +1253,14 @@ const std::uint32_t *GetMask(TileType tile)
 	if (cel_transparency_active) {
 		if (arch_draw_type == 0) {
 			if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
-				return &WallMask_FullyTrasparent[TILE_HEIGHT - 1];
+				return &WallMaskFullyTrasparent[TILE_HEIGHT - 1];
 			return &WallMask[TILE_HEIGHT - 1];
 		}
 		if (arch_draw_type == 1 && tile != TileType::LeftTriangle) {
 			const auto c = block_lvid[level_piece_id];
 			if (c == 1 || c == 3) {
 				if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
-					return &LeftMask_Transparent[TILE_HEIGHT - 1];
+					return &LeftMaskTransparent[TILE_HEIGHT - 1];
 				return &LeftMask[TILE_HEIGHT - 1];
 			}
 		}
@@ -1268,7 +1268,7 @@ const std::uint32_t *GetMask(TileType tile)
 			const auto c = block_lvid[level_piece_id];
 			if (c == 2 || c == 3) {
 				if (sgOptions.Graphics.bBlendedTransparancy) // Use a fully transparent mask
-					return &RightMask_Transparent[TILE_HEIGHT - 1];
+					return &RightMaskTransparent[TILE_HEIGHT - 1];
 				return &RightMask[TILE_HEIGHT - 1];
 			}
 		}
