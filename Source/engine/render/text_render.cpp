@@ -301,12 +301,10 @@ int DrawString(const CelOutputBuffer &out, const char *text, const Rectangle &re
 		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
 	Point characterPosition = rect.position;
-	int sx = rect.position.x;
 	if ((flags & UIS_CENTER) != 0)
 		characterPosition.x += (rect.size.width - lineWidth) / 2;
 	else if ((flags & UIS_RIGHT) != 0)
 		characterPosition.x += rect.size.width - lineWidth;
-	characterPosition.y = rect.position.y;
 
 	int rightMargin = rect.position.x + rect.size.width;
 	int bottomMargin = rect.size.height != 0 ? rect.position.y + rect.size.height : out.h();
