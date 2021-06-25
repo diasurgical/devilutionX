@@ -36,7 +36,8 @@ struct ObjectStruct {
 	bool _oTrapFlag;
 	bool _oDoorFlag;
 	int _olid;
-	int _oRndSeed;
+	uint32_t _oRndSeed; // Saves the absolute value of the engine state (typically from a call to AdvanceRndSeed()) to later use when spawning items from a container object
+	                    // This is an unsigned value to avoid implementation defined behaviour when reading from this variable.
 	int _oVar1;
 	int _oVar2;
 	int _oVar3;

@@ -49,7 +49,7 @@ void InitTownerInfo(int i, const TownerInit &initData)
 	towner._ttype = initData.type;
 	towner.position = initData.position;
 	towner.talk = initData.talk;
-	towner._tSeed = AdvanceRndSeed();
+	towner._tSeed = AdvanceRndSeed(); // TODO: Narrowing conversion, tSeed might need to be uint16_t
 
 	dMonster[towner.position.x][towner.position.y] = i + 1;
 

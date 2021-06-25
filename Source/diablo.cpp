@@ -73,10 +73,13 @@ namespace devilution {
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 dungeon_type gnLevelTypeTbl[NUMLEVELS];
-int glEndSeed[NUMLEVELS];
-int glMid1Seed[NUMLEVELS];
-int glMid2Seed[NUMLEVELS];
-int glMid3Seed[NUMLEVELS];
+
+// Used for debugging level generation
+uint32_t glEndSeed[NUMLEVELS];
+uint32_t glMid1Seed[NUMLEVELS];
+uint32_t glMid2Seed[NUMLEVELS];
+uint32_t glMid3Seed[NUMLEVELS];
+
 int MouseX;
 int MouseY;
 bool gbGameLoopStartup;
@@ -1560,19 +1563,19 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
-				glMid1Seed[currlevel] = GetRndSeed();
+				glMid1Seed[currlevel] = GetLCGEngineState();
 				InitMonsters();
-				glMid2Seed[currlevel] = GetRndSeed();
+				glMid2Seed[currlevel] = GetLCGEngineState();
 				IncProgress();
 				InitObjects();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
-				glMid3Seed[currlevel] = GetRndSeed();
+				glMid3Seed[currlevel] = GetLCGEngineState();
 				InitMissiles();
 				InitDead();
-				glEndSeed[currlevel] = GetRndSeed();
+				glEndSeed[currlevel] = GetLCGEngineState();
 
 				if (gbIsMultiplayer)
 					DeltaLoadLevel();

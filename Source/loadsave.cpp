@@ -592,8 +592,8 @@ static void LoadMonster(LoadHelper *file, int i)
 	file->skip(4); // Unused
 	pMonster->position.last.x = file->nextLE<int32_t>();
 	pMonster->position.last.y = file->nextLE<int32_t>();
-	pMonster->_mRndSeed = file->nextLE<int32_t>();
-	pMonster->_mAISeed = file->nextLE<int32_t>();
+	pMonster->_mRndSeed = file->nextLE<uint32_t>();
+	pMonster->_mAISeed = file->nextLE<uint32_t>();
 	file->skip(4); // Unused
 
 	pMonster->_uniqtype = file->nextLE<uint8_t>();
@@ -718,7 +718,7 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oTrapFlag = file->nextBool32();
 	pObject->_oDoorFlag = file->nextBool32();
 	pObject->_olid = file->nextLE<int32_t>();
-	pObject->_oRndSeed = file->nextLE<int32_t>();
+	pObject->_oRndSeed = file->nextLE<uint32_t>();
 	pObject->_oVar1 = file->nextLE<int32_t>();
 	pObject->_oVar2 = file->nextLE<int32_t>();
 	pObject->_oVar3 = file->nextLE<int32_t>();
@@ -1649,8 +1649,8 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(4); // Unused
 	file->writeLE<int32_t>(pMonster->position.last.x);
 	file->writeLE<int32_t>(pMonster->position.last.y);
-	file->writeLE<int32_t>(pMonster->_mRndSeed);
-	file->writeLE<int32_t>(pMonster->_mAISeed);
+	file->writeLE<uint32_t>(pMonster->_mRndSeed);
+	file->writeLE<uint32_t>(pMonster->_mAISeed);
 	file->skip(4); // Unused
 
 	file->writeLE<uint8_t>(pMonster->_uniqtype);
@@ -1764,7 +1764,7 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<uint32_t>(pObject->_oTrapFlag ? 1 : 0);
 	file->writeLE<uint32_t>(pObject->_oDoorFlag ? 1 : 0);
 	file->writeLE<int32_t>(pObject->_olid);
-	file->writeLE<int32_t>(pObject->_oRndSeed);
+	file->writeLE<uint32_t>(pObject->_oRndSeed);
 	file->writeLE<int32_t>(pObject->_oVar1);
 	file->writeLE<int32_t>(pObject->_oVar2);
 	file->writeLE<int32_t>(pObject->_oVar3);
