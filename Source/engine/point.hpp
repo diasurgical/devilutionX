@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "engine/direction.hpp"
 #include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/algorithm.hpp"
@@ -166,7 +168,8 @@ struct Point {
 	{
 		auto vector = *this - other; //No need to call abs() as we square the values anyway
 
-		return sqrt(vector.x * vector.x + vector.y * vector.y);
+		// Casting one operand to a wide type is enough to promote every value in the expression, addresses overflow warnings
+		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.x) * vector.x + vector.y * vector.y));
 	}
 
 	constexpr friend Point abs(Point a)
