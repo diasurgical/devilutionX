@@ -107,11 +107,13 @@ int GetDistanceRanged(Point destination)
 	return plr[myplr].position.future.ExactDistance(destination);
 }
 
+/**
+ * @todo The loops in this function are iterating through tiles offset from the player position. This
+ * could be accomplished by looping over the values in the Direction enum and making use of
+ * Point math instead of nested loops from [-1, 1].
+ */
 void FindItemOrObject()
 {
-	// The loops in this function are iterating through tiles offset from the player position. This
-	// could be accomplished by looping over the values in the Direction enum and making use of
-	// Point math instead of nested loops from [-1, 1].
 	int mx = plr[myplr].position.future.x;
 	int my = plr[myplr].position.future.y;
 	int rotations = 5;
