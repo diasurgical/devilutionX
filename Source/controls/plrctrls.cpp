@@ -1421,7 +1421,7 @@ void UpdateSpellTarget()
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	auto cursm{ plr[myplr].position.future + Point::fromDirection(plr[myplr]._pdir) * range };
+	auto cursm = plr[myplr].position.future + Point::fromDirection(plr[myplr]._pdir) * range;
 	cursmx = cursm.x;
 	cursmy = cursm.y;
 }
