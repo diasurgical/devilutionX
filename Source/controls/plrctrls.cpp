@@ -385,7 +385,7 @@ void FindTrigger()
 	for (int i = 0; i < nummissiles; i++) {
 		int mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
-			const int newDdistance = GetDistance(missile[mi].position.tile, 2);
+			const int newDistance = GetDistance(missile[mi].position.tile, 2);
 			if (newDdistance == 0)
 				continue;
 			if (pcursmissile != -1 && distance < newDdistance)
