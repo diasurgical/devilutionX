@@ -2110,19 +2110,18 @@ void Obj_Trap(int i)
 	}
 
 	object[i]._oVar4 = 1;
-	int dx = object[oti].position.x;
-	int dy = object[oti].position.y;
-	for (int y = dy - 1; y <= object[oti].position.y + 1; y++) {
+	Point target = object[oti].position;
+	for (int y = target.y - 1; y <= object[oti].position.y + 1; y++) {
 		for (int x = object[oti].position.x - 1; x <= object[oti].position.x + 1; x++) {
 			if (dPlayer[x][y] != 0) {
-				dx = x;
-				dy = y;
+				target.x = x;
+				target.y = y;
 			}
 		}
 	}
 	if (!deltaload) {
-		Direction dir = GetDirection(object[i].position, object[oti].position);
-		AddMissile(object[i].position, object[oti].position, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
+		Direction dir = GetDirection(object[i].position, target);
+		AddMissile(object[i].position, target, dir, object[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
 		PlaySfxLoc(IS_TRAP, object[oti].position.x, object[oti].position.y);
 	}
 	object[oti]._oTrapFlag = false;
