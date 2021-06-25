@@ -30,6 +30,38 @@ int numchains;
 
 const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
 
+int AddClassHealingBonus(int hp, HeroClass heroClass)
+{
+	if (heroClass == HeroClass::Warrior || heroClass == HeroClass::Monk || heroClass == HeroClass::Barbarian) {
+		return hp * 2;
+	}
+
+	if (heroClass == HeroClass::Rogue || heroClass == HeroClass::Bard) {
+		return hp + hp / 2;
+	}
+
+	return hp;
+}
+
+int ScaleSpellEffect(int base, int spellLevel)
+{
+	for (int i = 0; i < spellLevel; i++) {
+		base += base / 8;
+	}
+
+	return base;
+}
+
+int GenerateRndSum(int range, int iterations)
+{
+	int value = 0;
+	for (int i = 0; i < iterations; i++) {
+		value += GenerateRnd(range);
+	}
+
+	return value;
+}
+
 void GetDamageAmt(int i, int *mind, int *maxd)
 {
 	assert(myplr >= 0 && myplr < MAX_PLRS);
@@ -42,40 +74,21 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	switch (i) {
 	case SPL_FIREBOLT:
 		*mind = (myPlayer._pMagic / 8) + sl + 1;
-		*maxd = (myPlayer._pMagic / 8) + sl + 10;
+		*maxd = *mind + 9;
 		break;
-	case SPL_HEAL: /// BUGFIX: healing calculation is unused
-		*mind = myPlayer._pLevel + sl + 1;
-		if (myPlayer._pClass == HeroClass::Warrior || myPlayer._pClass == HeroClass::Monk || myPlayer._pClass == HeroClass::Barbarian) {
-			*mind *= 2;
-		} else if (myPlayer._pClass == HeroClass::Rogue || myPlayer._pClass == HeroClass::Bard) {
-			*mind += *mind / 2;
-		}
-		*maxd = 10;
-		for (int k = 0; k < myPlayer._pLevel; k++) {
-			*maxd += 4;
-		}
-		for (int k = 0; k < sl; k++) {
-			*maxd += 6;
-		}
-		if (myPlayer._pClass == HeroClass::Warrior || myPlayer._pClass == HeroClass::Monk || myPlayer._pClass == HeroClass::Barbarian) {
-			*maxd *= 2;
-		} else if (myPlayer._pClass == HeroClass::Rogue || myPlayer._pClass == HeroClass::Bard) {
-			*maxd += *maxd / 2;
-		}
-		*mind = -1;
-		*maxd = -1;
+	case SPL_HEAL:
+	case SPL_HEALOTHER:
+		/// BUGFIX: healing calculation is unused
+		*mind = AddClassHealingBonus(myPlayer._pLevel + sl + 1, myPlayer._pClass) - 1;
+		*maxd = AddClassHealingBonus((4 * myPlayer._pLevel) + (6 * sl) + 10, myPlayer._pClass) - 1;
 		break;
 	case SPL_LIGHTNING:
 	case SPL_RUNELIGHT:
 		*mind = 2;
-		*maxd = myPlayer._pLevel + 2;
+		*maxd = 2 + myPlayer._pLevel;
 		break;
 	case SPL_FLASH:
-		*mind = myPlayer._pLevel;
-		for (int k = 0; k < sl; k++) {
-			*mind += *mind / 8;
-		}
+		*mind = ScaleSpellEffect(myPlayer._pLevel, sl);
 		*mind += *mind / 2;
 		*maxd = *mind * 2;
 		break;
@@ -109,51 +122,33 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 	case SPL_LIGHTWALL:
 	case SPL_FIRERING:
 		*mind = 2 * myPlayer._pLevel + 4;
-		*maxd = 2 * myPlayer._pLevel + 40;
+		*maxd = *mind + 36;
 		break;
 	case SPL_FIREBALL:
-	case SPL_RUNEFIRE:
-		*mind = 2 * myPlayer._pLevel + 4;
-		for (int k = 0; k < sl; k++) {
-			*mind += *mind / 8;
-		}
-		*maxd = 2 * myPlayer._pLevel + 40;
-		for (int k = 0; k < sl; k++) {
-			*maxd += *maxd / 8;
-		}
-		break;
-	case SPL_GUARDIAN:
-		*mind = (myPlayer._pLevel / 2) + 1;
-		for (int k = 0; k < sl; k++) {
-			*mind += *mind / 8;
-		}
-		*maxd = (myPlayer._pLevel / 2) + 10;
-		for (int k = 0; k < sl; k++) {
-			*maxd += *maxd / 8;
-		}
-		break;
+	case SPL_RUNEFIRE: {
+		int base = (2 * myPlayer._pLevel) + 4;
+		*mind = ScaleSpellEffect(base, sl);
+		*maxd = ScaleSpellEffect(base + 36, sl);
+	} break;
+	case SPL_GUARDIAN: {
+		int base = (myPlayer._pLevel / 2) + 1;
+		*mind = ScaleSpellEffect(base, sl);
+		*maxd = ScaleSpellEffect(base + 9, sl);
+	} break;
 	case SPL_CHAIN:
 		*mind = 4;
-		*maxd = 2 * myPlayer._pLevel + 4;
+		*maxd = 4 + (2 * myPlayer._pLevel);
 		break;
 	case SPL_WAVE:
 		*mind = 6 * (myPlayer._pLevel + 1);
-		*maxd = 6 * (myPlayer._pLevel + 10);
+		*maxd = *mind + 54;
 		break;
 	case SPL_NOVA:
 	case SPL_IMMOLAT:
 	case SPL_RUNEIMMOLAT:
 	case SPL_RUNENOVA:
-		*mind = (myPlayer._pLevel + 5) / 2;
-		for (int k = 0; k < sl; k++) {
-			*mind += *mind / 8;
-		}
-		*mind *= 5;
-		*maxd = (myPlayer._pLevel + 30) / 2;
-		for (int k = 0; k < sl; k++) {
-			*maxd += *maxd / 8;
-		}
-		*maxd *= 5;
+		*mind = ScaleSpellEffect((myPlayer._pLevel + 5) / 2, sl) * 5;
+		*maxd = ScaleSpellEffect((myPlayer._pLevel + 30) / 2, sl) * 5;
 		break;
 	case SPL_FLAME:
 		*mind = 3;
@@ -165,58 +160,22 @@ void GetDamageAmt(int i, int *mind, int *maxd)
 		*maxd = 17;
 		break;
 	case SPL_APOCA:
-		*mind = 0;
-		for (int k = 0; k < myPlayer._pLevel; k++) {
-			*mind += 1;
-		}
-		*maxd = 0;
-		for (int k = 0; k < myPlayer._pLevel; k++) {
-			*maxd += 6;
-		}
+		*mind = myPlayer._pLevel;
+		*maxd = *mind * 6;
 		break;
 	case SPL_ELEMENT:
-		*mind = 2 * myPlayer._pLevel + 4;
-		for (int k = 0; k < sl; k++) {
-			*mind += *mind / 8;
-		}
+		*mind = ScaleSpellEffect(2 * myPlayer._pLevel + 4, sl);
 		/// BUGFIX: add here '*mind /= 2;'
-		*maxd = 2 * myPlayer._pLevel + 40;
-		for (int k = 0; k < sl; k++) {
-			*maxd += *maxd / 8;
-		}
+		*maxd = ScaleSpellEffect(2 * myPlayer._pLevel + 40, sl);
 		/// BUGFIX: add here '*maxd /= 2;'
 		break;
 	case SPL_CBOLT:
 		*mind = 1;
-		*maxd = (myPlayer._pMagic / 4) + 1;
+		*maxd = *mind + (myPlayer._pMagic / 4);
 		break;
 	case SPL_HBOLT:
 		*mind = myPlayer._pLevel + 9;
-		*maxd = myPlayer._pLevel + 18;
-		break;
-	case SPL_HEALOTHER: /// BUGFIX: healing calculation is unused
-		*mind = myPlayer._pLevel + sl + 1;
-		if (myPlayer._pClass == HeroClass::Warrior || myPlayer._pClass == HeroClass::Monk || myPlayer._pClass == HeroClass::Barbarian) {
-			*mind *= 2;
-		}
-		if (myPlayer._pClass == HeroClass::Rogue || myPlayer._pClass == HeroClass::Bard) {
-			*mind += *mind / 2;
-		}
-		*maxd = 10;
-		for (int k = 0; k < myPlayer._pLevel; k++) {
-			*maxd += 4;
-		}
-		for (int k = 0; k < sl; k++) {
-			*maxd += 6;
-		}
-		if (myPlayer._pClass == HeroClass::Warrior || myPlayer._pClass == HeroClass::Monk || myPlayer._pClass == HeroClass::Barbarian) {
-			*maxd *= 2;
-		}
-		if (myPlayer._pClass == HeroClass::Rogue || myPlayer._pClass == HeroClass::Bard) {
-			*maxd += *maxd / 2;
-		}
-		*mind = -1;
-		*maxd = -1;
+		*maxd = *mind + 9;
 		break;
 	case SPL_FLARE:
 		*mind = (myPlayer._pMagic / 2) + 3 * sl - (myPlayer._pMagic / 8);
@@ -1665,12 +1624,10 @@ void AddLightningWall(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 void AddRuneExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (mienemy == TARGET_MONSTERS || mienemy == TARGET_BOTH) {
-		missile[mi]._midam = 2 * (plr[id]._pLevel + GenerateRnd(10) + GenerateRnd(10)) + 4;
-		for (int i = missile[mi]._mispllvl; i > 0; i--) {
-			missile[mi]._midam += missile[mi]._midam / 8;
-		}
+		int dmg = 2 * (plr[id]._pLevel + GenerateRndSum(10, 2)) + 4;
+		dmg = ScaleSpellEffect(dmg, missile[mi]._mispllvl);
 
-		int dmg = missile[mi]._midam;
+		missile[mi]._midam = dmg;
 
 		constexpr Point offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
 		for (Point offset : offsets)
@@ -1685,16 +1642,14 @@ void AddRuneExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	int sp = 16;
 	if (mienemy == TARGET_MONSTERS) {
 		sp += std::min(missile[mi]._mispllvl * 2, 34);
 
-		missile[mi]._midam = 2 * (plr[id]._pLevel + GenerateRnd(10) + GenerateRnd(10)) + 4;
-		for (int i = missile[mi]._mispllvl; i > 0; i--) {
-			missile[mi]._midam += missile[mi]._midam / 8;
-		}
+		int dmg = 2 * (plr[id]._pLevel + GenerateRndSum(10, 2)) + 4;
+		missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl);
 
 		UseMana(id, SPL_FIREBALL);
 	}
@@ -1714,7 +1669,7 @@ void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	int sp = 16;
 	if (mienemy == TARGET_MONSTERS) {
@@ -1734,7 +1689,7 @@ void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 void AddLightningArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	GetMissileVel(mi, src, dst, 32);
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
@@ -1849,7 +1804,7 @@ void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	}
 
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mlid = AddLight(src, 5);
@@ -1863,7 +1818,7 @@ void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	int av = 32;
 	if (mienemy == TARGET_MONSTERS) {
@@ -1899,7 +1854,7 @@ void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	int av = 32;
 	if (mienemy == TARGET_MONSTERS) {
@@ -1912,6 +1867,7 @@ void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 			av += (player._pLevel - 1) / 4;
 		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
 			av += (player._pLevel - 1) / 8;
+
 		if (gbIsHellfire) {
 			if ((player._pIFlags & ISPL_QUICKATTACK) != 0)
 				av++;
@@ -1993,7 +1949,7 @@ void AddRndTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	int sp = 26;
 	if (micaster == 0) {
@@ -2090,7 +2046,7 @@ void AddLightball(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 
 void AddFirewall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	missile[mi]._midam = GenerateRnd(10) + GenerateRnd(10) + 2;
+	missile[mi]._midam = GenerateRndSum(10, 2) + 2;
 	missile[mi]._midam += id >= 0 ? plr[id]._pLevel : currlevel; // BUGFIX: missing parenthesis around ternary (fixed)
 	missile[mi]._midam <<= 3;
 	GetMissileVel(mi, src, dst, 16);
@@ -2110,15 +2066,15 @@ void AddFirewall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 void AddFireball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	int sp = 16;
 	if (mienemy == TARGET_MONSTERS) {
 		sp += std::min(missile[mi]._mispllvl * 2, 34);
-		missile[mi]._midam = 2 * (plr[id]._pLevel + GenerateRnd(10) + GenerateRnd(10)) + 4;
-		for (int i = missile[mi]._mispllvl; i > 0; i--) {
-			missile[mi]._midam += missile[mi]._midam / 8;
-		}
+
+		int dmg = 2 * (plr[id]._pLevel + GenerateRndSum(10, 2)) + 4;
+		missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl);
+
 		UseMana(id, SPL_FIREBALL);
 	}
 	GetMissileVel(mi, src, dst, sp);
@@ -2270,17 +2226,10 @@ void AddTown(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 
 void AddFlash(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int i;
-
 	if (id != -1) {
 		if (mienemy == TARGET_MONSTERS) {
-			missile[mi]._midam = 0;
-			for (i = 0; i <= plr[id]._pLevel; i++) {
-				missile[mi]._midam += GenerateRnd(20) + 1;
-			}
-			for (i = missile[mi]._mispllvl; i > 0; i--) {
-				missile[mi]._midam += missile[mi]._midam / 8;
-			}
+			int dmg = GenerateRndSum(20, plr[id]._pLevel + 1) + plr[id]._pLevel + 1;
+			missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl);
 			missile[mi]._midam += missile[mi]._midam / 2;
 			UseMana(id, SPL_FLASH);
 		} else {
@@ -2294,17 +2243,10 @@ void AddFlash(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 
 void AddFlash2(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int i;
-
 	if (mienemy == TARGET_MONSTERS) {
 		if (id != -1) {
-			missile[mi]._midam = 0;
-			for (i = 0; i <= plr[id]._pLevel; i++) {
-				missile[mi]._midam += GenerateRnd(20) + 1;
-			}
-			for (i = missile[mi]._mispllvl; i > 0; i--) {
-				missile[mi]._midam += missile[mi]._midam / 8;
-			}
+			int dmg = GenerateRndSum(20, plr[id]._pLevel + 1) + plr[id]._pLevel + 1;
+			missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl);
 			missile[mi]._midam += missile[mi]._midam / 2;
 		} else {
 			missile[mi]._midam = currlevel / 2;
@@ -2338,15 +2280,13 @@ void AddFiremove(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 
 void AddGuardian(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int i, pn, k, j, tx, ty;
+	int pn, k, j, tx, ty;
 
-	missile[mi]._midam = GenerateRnd(10) + (plr[id]._pLevel / 2) + 1;
-	for (i = missile[mi]._mispllvl; i > 0; i--) {
-		missile[mi]._midam += missile[mi]._midam / 8;
-	}
+	int dmg = GenerateRnd(10) + (plr[id]._pLevel / 2) + 1;
+	missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl);
 
 	missile[mi]._miDelFlag = true;
-	for (i = 0; i < 6; i++) {
+	for (int i = 0; i < 6; i++) {
 		pn = CrawlNum[i];
 		k = pn + 2;
 		for (j = (BYTE)CrawlTable[pn]; j > 0; j--) {
@@ -2478,7 +2418,7 @@ void AddFireman(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	GetMissileVel(mi, src, dst, 16);
 	missile[mi]._mirange = 256;
@@ -2613,10 +2553,9 @@ void AddEtherealize(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 {
 	auto &player = plr[id];
 
-	missile[mi]._mirange = 16 * player._pLevel / 2;
-	for (int i = missile[mi]._mispllvl; i > 0; i--) {
-		missile[mi]._mirange += missile[mi]._mirange / 8;
-	}
+	int range = 8 * player._pLevel;
+	missile[mi]._mirange = ScaleSpellEffect(range, missile[mi]._mispllvl);
+
 	missile[mi]._mirange += missile[mi]._mirange * player._pISplDur / 128;
 	missile[mi]._miVar1 = player._pHitPoints;
 	missile[mi]._miVar2 = player._pHPBase;
@@ -2693,13 +2632,12 @@ void AddHealOther(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 void AddElement(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
-	missile[mi]._midam = 2 * (plr[id]._pLevel + GenerateRnd(10) + GenerateRnd(10)) + 4;
-	for (int i = missile[mi]._mispllvl; i > 0; i--) {
-		missile[mi]._midam += missile[mi]._midam / 8;
-	}
-	missile[mi]._midam /= 2;
+
+	int dmg = 2 * (plr[id]._pLevel + GenerateRndSum(10, 2)) + 4;
+	missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl) / 2;
+
 	GetMissileVel(mi, src, dst, 16);
 	SetMissDir(mi, GetDirection(src, dst));
 	missile[mi]._mirange = 256;
@@ -2771,13 +2709,9 @@ void AddFirewallC(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 
 void AddInfra(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int i;
-
-	missile[mi]._mirange = 1584;
-	for (i = missile[mi]._mispllvl; i > 0; i--) {
-		missile[mi]._mirange += missile[mi]._mirange / 8;
-	}
+	missile[mi]._mirange = ScaleSpellEffect(1584, missile[mi]._mispllvl);
 	missile[mi]._mirange += missile[mi]._mirange * plr[id]._pISplDur / 128;
+
 	if (mienemy == TARGET_MONSTERS)
 		UseMana(id, SPL_INFRA);
 }
@@ -2795,22 +2729,19 @@ void AddWave(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 
 void AddNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int k;
-
 	missile[mi]._miVar1 = dst.x;
 	missile[mi]._miVar2 = dst.y;
+
 	if (id != -1) {
-		missile[mi]._midam = (GenerateRnd(6) + GenerateRnd(6) + GenerateRnd(6) + GenerateRnd(6) + GenerateRnd(6));
-		missile[mi]._midam += plr[id]._pLevel + 5;
-		missile[mi]._midam /= 2;
-		for (k = missile[mi]._mispllvl; k > 0; k--) {
-			missile[mi]._midam += missile[mi]._midam / 8;
-		}
+		int dmg = GenerateRndSum(6, 5) + plr[id]._pLevel + 5;
+		missile[mi]._midam = ScaleSpellEffect(dmg / 2, missile[mi]._mispllvl);
+
 		if (mienemy == TARGET_MONSTERS)
 			UseMana(id, SPL_NOVA);
 	} else {
-		missile[mi]._midam = ((DWORD)currlevel / 2) + GenerateRnd(3) + GenerateRnd(3) + GenerateRnd(3);
+		missile[mi]._midam = ((DWORD)currlevel / 2) + GenerateRndSum(3, 3);
 	}
+
 	missile[mi]._mirange = 1;
 }
 
@@ -2885,8 +2816,6 @@ void AddDisarm(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 
 void AddApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
-	int i;
-
 	missile[mi]._miVar1 = 8;
 	missile[mi]._miVar2 = src.y - missile[mi]._miVar1;
 	missile[mi]._miVar3 = missile[mi]._miVar1 + src.y;
@@ -2901,9 +2830,7 @@ void AddApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 		missile[mi]._miVar4 = 1;
 	if (missile[mi]._miVar5 >= MAXDUNX)
 		missile[mi]._miVar5 = MAXDUNX - 1;
-	for (i = 0; i < plr[id]._pLevel; i++) {
-		missile[mi]._midam += GenerateRnd(6) + 1;
-	}
+	missile[mi]._midam = GenerateRndSum(6, plr[id]._pLevel) + plr[id]._pLevel;
 	missile[mi]._mirange = 255;
 	missile[mi]._miDelFlag = false;
 	UseMana(id, SPL_APOCA);
@@ -2933,7 +2860,7 @@ void AddFlame(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	GetMissileVel(mi, src, dst, 32);
 	if (mienemy == TARGET_MONSTERS) {
@@ -2953,7 +2880,7 @@ void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, 
 	missile[mi]._midam = (micaster == 0) ? (GenerateRnd(plr[id]._pMagic / 4) + 1) : 15;
 
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mlid = AddLight(src, 5);
@@ -2968,7 +2895,7 @@ void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, 
 void AddHbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 
 	int sp = 16;
@@ -3016,7 +2943,7 @@ void AddTelekinesis(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
 {
 	if (src == dst) {
-		dst += (Direction)midir;
+		dst += static_cast<Direction>(midir);
 	}
 	missile[mi]._midam = 0;
 	GetMissileVel(mi, src, dst, 16);
@@ -3766,7 +3693,7 @@ static void MI_Ring(int i, int type)
 	int src = missile[i]._micaster;
 	int k = CrawlNum[3] + 1;
 	uint8_t lvl = src > 0 ? plr[src]._pLevel : currlevel;
-	int dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2) / 2;
+	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
 	for (int j = CrawlTable[b]; j > 0; j--, k += 2) {
 		int tx = missile[i]._miVar1 + CrawlTable[k - 1];
@@ -3833,7 +3760,7 @@ void MI_LightningWallC(int i)
 
 	int id = missile[i]._misource;
 	int lvl = (id > -1) ? plr[id]._pLevel : 0;
-	int dmg = 16 * (GenerateRnd(10) + GenerateRnd(10) + lvl + 2);
+	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 
 	{
 		Point position = { missile[i]._miVar1, missile[i]._miVar2 };
