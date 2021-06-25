@@ -10,6 +10,30 @@ struct Point {
 	int x;
 	int y;
 
+	static constexpr Point fromDirection(Direction direction)
+	{
+		switch (direction) {
+		case DIR_S:
+			return { 1, 1 };
+		case DIR_SW:
+			return { 0, 1 };
+		case DIR_W:
+			return { -1, 1 };
+		case DIR_NW:
+			return { -1, 0 };
+		case DIR_N:
+			return { -1, -1 };
+		case DIR_NE:
+			return { 0, -1 };
+		case DIR_E:
+			return { 1, -1 };
+		case DIR_SE:
+			return { 1, 0 };
+		default:
+			return { 0, 0 };
+		}
+	};
+
 	constexpr bool operator==(const Point &other) const
 	{
 		return x == other.x && y == other.y;
@@ -129,6 +153,20 @@ struct Point {
 			approx -= max * 40;
 
 		return (approx + 512) / 1024;
+	}
+
+	/**
+	 * @brief Calculates the exact distance between two points (as accurate as the closest integer representation)
+	 *
+	 * In practice it is likely that ApproxDistance gives the same result, especially for nearby points.
+	 * @param other Point to which we want the distance
+	 * @return Exact magnitude of vector this -> other
+	*/
+	int ExactDistance(Point other) const
+	{
+		auto vector = *this - other; //No need to call abs() as we square the values anyway
+
+		return sqrt(vector.x * vector.x + vector.y * vector.y);
 	}
 
 	constexpr friend Point abs(Point a)
