@@ -23,10 +23,14 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	if (CurrentFrame > RelevantFramesForDistributing)
 		return CurrentFrame;
 
-	assert(TicksSinceSequenceStarted >= 0);
+	float ticksSinceSequenceStarted = (float)TicksSinceSequenceStarted;
+	if (TicksSinceSequenceStarted < 0) {
+		ticksSinceSequenceStarted = 0.0F;
+		Log("GetFrameToUseForRendering: Invalid TicksSinceSequenceStarted {}", TicksSinceSequenceStarted);
+	}
 
 	// we don't use the processed game ticks alone but also the fraction of the next game tick (if a rendering happens between game ticks). This helps to smooth the animations.
-	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)TicksSinceSequenceStarted;
+	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + ticksSinceSequenceStarted;
 
 	// 1 added for rounding reasons. float to int cast always truncate.
 	int absoluteAnimationFrame = 1 + (int)(totalTicksForCurrentAnimationSequence * TickModifier);
