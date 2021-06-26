@@ -204,7 +204,7 @@ struct Archive {
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
 			if (!GetFileSize(name, &size)) {
-				Log("GetFileSize(\"{}\") failed with \"{}\"", name, std::strerror(errno));
+				Log(R"(GetFileSize("{}") failed with "{}")", name, std::strerror(errno));
 				return false;
 			}
 #ifdef _DEBUG
