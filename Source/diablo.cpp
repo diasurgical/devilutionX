@@ -138,6 +138,7 @@ int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
+GameLogicStep gGameLogicStep = GameLogicStep::None;
 QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 	{ "QuickMessage1", N_("I need help! Come Here!") },
 	{ "QuickMessage2", N_("Follow me.") },
@@ -1713,20 +1714,29 @@ static void game_logic()
 		return;
 	}
 	if (gbProcessPlayers) {
+		gGameLogicStep = GameLogicStep::ProcessPlayers;
 		ProcessPlayers();
 	}
 	if (leveltype != DTYPE_TOWN) {
+		gGameLogicStep = GameLogicStep::ProcessMonsters;
 		ProcessMonsters();
+		gGameLogicStep = GameLogicStep::ProcessObjects;
 		ProcessObjects();
+		gGameLogicStep = GameLogicStep::ProcessMissiles;
 		ProcessMissiles();
+		gGameLogicStep = GameLogicStep::ProcessItems;
 		ProcessItems();
 		ProcessLightList();
 		ProcessVisionList();
 	} else {
+		gGameLogicStep = GameLogicStep::ProcessTowners;
 		ProcessTowners();
+		gGameLogicStep = GameLogicStep::ProcessItemsTown;
 		ProcessItems();
+		gGameLogicStep = GameLogicStep::ProcessMissilesTown;
 		ProcessMissiles();
 	}
+	gGameLogicStep = GameLogicStep::None;
 
 #ifdef _DEBUG
 	if (debug_mode_key_inverted_v && GetAsyncKeyState(DVL_VK_SHIFT)) {
