@@ -468,7 +468,6 @@ void ClearMVars(int i)
 	monster[i]._mVar3 = 0;
 	monster[i].position.temp = { 0, 0 };
 	monster[i].position.offset2 = { 0, 0 };
-	monster[i].actionFrame = 0;
 }
 
 void InitMonster(int i, Direction rd, int mtype, Point position)
@@ -1427,9 +1426,8 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction EndDir
 	monster[i]._mVar2 = yadd;
 	monster[i]._mVar3 = EndDir;
 	monster[i]._mdir = EndDir;
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir);
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster[i].position.offset2 = { 0, 0 };
-	monster[i].actionFrame = 0;
 }
 
 void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction EndDir)
@@ -1451,9 +1449,8 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i].position.velocity = { xvel, yvel };
 	monster[i]._mVar3 = EndDir;
 	monster[i]._mdir = EndDir;
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir);
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster[i].position.offset2 = { 16 * xoff, 16 * yoff };
-	monster[i].actionFrame = 0;
 }
 
 void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction EndDir)
@@ -1479,9 +1476,8 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i]._mVar2 = fy;
 	monster[i]._mVar3 = EndDir;
 	monster[i]._mdir = EndDir;
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir);
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster[i].position.offset2 = { 16 * xoff, 16 * yoff };
-	monster[i].actionFrame = 0;
 }
 
 void M_StartAttack(int i)
@@ -1972,7 +1968,7 @@ bool M_DoWalk(int i, int variant)
 	commitment(monster[i].MType != nullptr, i);
 
 	//Check if we reached new tile
-	if (monster[i].actionFrame == monster[i].MType->Anims[MA_WALK].Frames) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MType->Anims[MA_WALK].Frames) {
 		switch (variant) {
 		case MM_WALK:
 			dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = 0;
@@ -1996,9 +1992,8 @@ bool M_DoWalk(int i, int variant)
 		returnValue = true;
 	} else { //We didn't reach new tile so update monster's "sub-tile" position
 		if (monster[i].AnimInfo.DelayCounter == 0) {
-			if (monster[i].actionFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
+			if (monster[i].AnimInfo.CurrentFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
-			monster[i].actionFrame++;
 			monster[i].position.offset2 += monster[i].position.velocity;
 			monster[i].position.offset.x = monster[i].position.offset2.x >> 4;
 			monster[i].position.offset.y = monster[i].position.offset2.y >> 4;
