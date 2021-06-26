@@ -196,7 +196,7 @@ bool CheckThemeObj3(int xp, int yp, int t, int f)
 			return false;
 		if (dTransVal[xp + trm3x[i]][yp + trm3y[i]] != themes[t].ttval)
 			return false;
-		if (dObject[xp + trm3x[i]][yp + trm3y[i]])
+		if (dObject[xp + trm3x[i]][yp + trm3y[i]] != 0)
 			return false;
 		if (f != -1 && GenerateRnd(f) == 0)
 			return false;
@@ -736,7 +736,7 @@ void Theme_Library(int t)
 		for (xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && GenerateRnd(librnd[leveltype - 1]) == 0) {
 				AddObject(OBJ_BOOKSTAND, xp, yp);
-				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp]) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
+				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp] != 0) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
 					oi = dObject[xp][yp] - 1;
 					object[oi]._oSelFlag = 0;
 					object[oi]._oAnimFrame += 2;

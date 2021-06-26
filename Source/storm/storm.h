@@ -308,7 +308,7 @@ bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
 bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);
-int SNetGetProviderCaps(struct _SNETCAPS *);
+void SNetGetProviderCaps(struct _SNETCAPS *);
 bool SFileEnableDirectAccess(bool enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)

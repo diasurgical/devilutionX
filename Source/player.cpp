@@ -140,16 +140,16 @@ bool PlrDirOK(int pnum, Direction dir)
 
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
-	if (futurePosition.x < 0 || !dPiece[futurePosition.x][futurePosition.y] || !PosOkPlayer(pnum, futurePosition)) {
+	if (futurePosition.x < 0 || dPiece[futurePosition.x][futurePosition.y] == 0 || !PosOkPlayer(pnum, futurePosition)) {
 		return false;
 	}
 
 	if (dir == DIR_E) {
-		return !SolidLoc(position + DIR_SE) && !(dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR);
+		return !SolidLoc(position + DIR_SE) && (dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR) == 0;
 	}
 
 	if (dir == DIR_W) {
-		return !SolidLoc(position + DIR_SW) && !(dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR);
+		return !SolidLoc(position + DIR_SW) && (dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR) == 0;
 	}
 
 	return true;
@@ -181,7 +181,7 @@ void HandleWalkMode(int pnum, Point vel, Direction dir)
 void StartWalkAnimation(PlayerStruct &player, Direction dir, bool pmWillBeCalled)
 {
 	int skippedFrames = -2;
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown)
+	if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
@@ -1326,7 +1326,7 @@ void PlrDoTrans(Point position)
 	} else {
 		for (i = position.y - 1; i <= position.y + 1; i++) {
 			for (j = position.x - 1; j <= position.x + 1; j++) {
-				if (!nSolidTable[dPiece[j][i]] && dTransVal[j][i]) {
+				if (!nSolidTable[dPiece[j][i]] && dTransVal[j][i] != 0) {
 					TransList[dTransVal[j][i]] = true;
 				}
 			}
@@ -1409,7 +1409,7 @@ void PM_ChangeOffset(int pnum)
 
 	player.position.offset2 += player.position.velocity;
 
-	if (currlevel == 0 && sgGameInitInfo.bRunInTown) {
+	if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0) {
 		player.position.offset2 += player.position.velocity;
 	}
 
@@ -1418,7 +1418,7 @@ void PM_ChangeOffset(int pnum)
 	px -= player.position.offset2.x >> 8;
 	py -= player.position.offset2.y >> 8;
 
-	if (pnum == myplr && ScrollInfo._sdir) {
+	if (pnum == myplr && ScrollInfo._sdir != SDIR_NONE) {
 		ScrollInfo.offset.x += px;
 		ScrollInfo.offset.y += py;
 	}
@@ -1658,47 +1658,43 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	SetPlayerOld(player);
 }
 
-void RespawnDeadItem(ItemStruct *itm, int x, int y)
+static void RespawnDeadItem(ItemStruct *itm, Point target)
 {
 	if (numitems >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 
-	dItem[x][y] = ii + 1;
+	dItem[target.x][target.y] = ii + 1;
 
 	items[ii] = *itm;
-	items[ii].position = { x, y };
+	items[ii].position = target;
 	RespawnItem(&items[ii], true);
 
 	itm->_itype = ITYPE_NONE;
 }
 
-static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, int xx, int yy)
+static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Point direction)
 {
-	int i, j, k;
-
 	if (itm->isEmpty())
 		return;
 
-	int x = xx + player.position.tile.x;
-	int y = yy + player.position.tile.y;
-	if ((xx || yy) && ItemSpaceOk({ x, y })) {
-		RespawnDeadItem(itm, x, y);
+	Point target = direction + player.position.tile;
+	if (direction != Point { 0, 0 } && ItemSpaceOk(target)) {
+		RespawnDeadItem(itm, target);
 		player.HoldItem = *itm;
-		NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
+		NetSendCmdPItem(false, CMD_RESPAWNITEM, target);
 		return;
 	}
 
-	for (k = 1; k < 50; k++) {
-		for (j = -k; j <= k; j++) {
-			y = j + player.position.tile.y;
-			for (i = -k; i <= k; i++) {
-				x = i + player.position.tile.x;
-				if (ItemSpaceOk({ x, y })) {
-					RespawnDeadItem(itm, x, y);
+	for (int k = 1; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			for (int i = -k; i <= k; i++) {
+				Point target = Point { i, j } + player.position.tile;
+				if (ItemSpaceOk(target)) {
+					RespawnDeadItem(itm, target);
 					player.HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, { x, y });
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, target);
 					return;
 				}
 			}
@@ -1713,9 +1709,8 @@ void
 StartPlayerKill(int pnum, int earflag)
 {
 	bool diablolevel;
-	int i, pdd;
+	int i;
 	ItemStruct ear;
-	ItemStruct *pi;
 
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlayerKill: illegal player %i", pnum);
@@ -1734,7 +1729,7 @@ StartPlayerKill(int pnum, int earflag)
 
 	player.Say(HeroSpeech::OofAh);
 
-	if (player._pgfxnum) {
+	if (player._pgfxnum != 0) {
 		player._pgfxnum = 0;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
@@ -1748,7 +1743,7 @@ StartPlayerKill(int pnum, int earflag)
 	SetPlayerHitPoints(pnum, 0);
 	player.deathFrame = 1;
 
-	if (pnum != myplr && !earflag && !diablolevel) {
+	if (pnum != myplr && earflag == 0 && !diablolevel) {
 		for (i = 0; i < NUM_INVLOC; i++) {
 			player.InvBody[i]._itype = ITYPE_NONE;
 		}
@@ -1766,7 +1761,7 @@ StartPlayerKill(int pnum, int earflag)
 			deathdelay = 30;
 
 			if (pcurs >= CURSOR_FIRSTITEM) {
-				PlrDeadItem(player, &player.HoldItem, 0, 0);
+				PlrDeadItem(player, &player.HoldItem, { 0, 0 });
 				NewCursor(CURSOR_HAND);
 			}
 
@@ -1791,16 +1786,13 @@ StartPlayerKill(int pnum, int earflag)
 						ear._ivalue = player._pLevel;
 
 						if (FindGetItem(IDI_EAR, ear._iCreateInfo, ear._iSeed) == -1) {
-							PlrDeadItem(player, &ear, 0, 0);
+							PlrDeadItem(player, &ear, { 0, 0 });
 						}
 					} else {
-						pi = &player.InvBody[0];
-						i = NUM_INVLOC;
-						while (i--) {
-							pdd = (i + player._pdir) & 7;
-							Point offset = Point { 0, 0 } + static_cast<Direction>(pdd);
-							PlrDeadItem(player, pi, offset.x, offset.y);
-							pi++;
+						Direction pdd = player._pdir;
+						for (auto &item : player.InvBody) {
+							pdd = left[pdd];
+							PlrDeadItem(player, &item, Point::fromDirection(pdd));
 						}
 
 						CalcPlrInv(pnum, false);
@@ -1828,7 +1820,7 @@ static int DropGold(int pnum, int amount, bool skipFullStacks)
 			GetGoldSeed(pnum, &player.HoldItem);
 			SetPlrHandGoldCurs(&player.HoldItem);
 			player.HoldItem._ivalue = amount;
-			PlrDeadItem(player, &player.HoldItem, 0, 0);
+			PlrDeadItem(player, &player.HoldItem, { 0, 0 });
 			return 0;
 		}
 
@@ -1838,7 +1830,7 @@ static int DropGold(int pnum, int amount, bool skipFullStacks)
 		GetGoldSeed(pnum, &player.HoldItem);
 		SetPlrHandGoldCurs(&player.HoldItem);
 		player.HoldItem._ivalue = item._ivalue;
-		PlrDeadItem(player, &player.HoldItem, 0, 0);
+		PlrDeadItem(player, &player.HoldItem, { 0, 0 });
 		i = -1;
 	}
 
@@ -1883,7 +1875,7 @@ void StripTopGold(int pnum)
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(&player.HoldItem);
 				if (!GoldAutoPlace(player))
-					PlrDeadItem(player, &player.HoldItem, 0, 0);
+					PlrDeadItem(player, &player.HoldItem, { 0, 0 });
 			}
 		}
 	}
@@ -2153,7 +2145,7 @@ bool PM_DoWalk(int pnum, int variant)
 		}
 
 		//Update the "camera" tile position
-		if (pnum == myplr && ScrollInfo._sdir) {
+		if (pnum == myplr && ScrollInfo._sdir != SDIR_NONE) {
 			ViewX = player.position.tile.x - ScrollInfo.tile.x;
 			ViewY = player.position.tile.y - ScrollInfo.tile.y;
 		}
