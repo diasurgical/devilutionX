@@ -698,8 +698,13 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 
 	const CelSprite &cel = *pMonster->AnimInfo.pCelSprite;
 
-	px = sx + pMonster->position.offset.x - CalculateWidth2(cel.Width());
-	py = sy + pMonster->position.offset.y;
+	Point offset = pMonster->position.offset;
+	if (pMonster->IsWalking()) {
+		offset = GetOffsetForWalking(pMonster->AnimInfo, pMonster->_mdir);
+	}
+
+	px = sx + offset.x - CalculateWidth2(cel.Width());
+	py = sy + offset.y;
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.GetFrameToUseForRendering());
 	}
