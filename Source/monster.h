@@ -201,6 +201,11 @@ struct MonsterStruct { // note: missing field _mAFNum
 	 * @brief Sets _mmode to MM_STONE
 	 */
 	void Petrify();
+
+	/**
+	 * @brief Is the monster currently walking?
+	 */
+	bool IsWalking() const;
 };
 
 extern int monstkills[MAXMONSTERS];
