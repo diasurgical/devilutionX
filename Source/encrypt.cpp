@@ -69,7 +69,7 @@ void InitHash()
 	}
 }
 
-static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
+static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
 	TDataInfo *pInfo = (TDataInfo *)param;
 
@@ -86,7 +86,7 @@ static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 	return sSize;
 }
 
-static void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
+static void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
 	TDataInfo *pInfo = (TDataInfo *)param;
 
