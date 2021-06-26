@@ -7,7 +7,7 @@
 namespace devilution {
 namespace net {
 
-framesize_t frame_queue::size()
+framesize_t frame_queue::size() const
 {
 	return current_size;
 }

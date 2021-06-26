@@ -92,7 +92,7 @@ bool protocol_zt::send(const endpoint &peer, const buffer_t &data)
 	return true;
 }
 
-bool protocol_zt::send_oob(const endpoint &peer, const buffer_t &data)
+bool protocol_zt::send_oob(const endpoint &peer, const buffer_t &data) const
 {
 	struct sockaddr_in6 in6 {
 	};

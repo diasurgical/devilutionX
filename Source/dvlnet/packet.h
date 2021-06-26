@@ -91,8 +91,8 @@ public:
 	const buffer_t &data();
 
 	packet_type type();
-	plr_t src();
-	plr_t dest();
+	plr_t src() const;
+	plr_t dest() const;
 	const buffer_t &message();
 	turn_t turn();
 	cookie_t cookie();

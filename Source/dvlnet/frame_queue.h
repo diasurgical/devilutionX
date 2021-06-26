@@ -29,7 +29,7 @@ private:
 	std::deque<buffer_t> buffer_deque;
 	framesize_t nextsize = 0;
 
-	framesize_t size();
+	framesize_t size() const;
 	buffer_t read(framesize_t s);
 
 public:

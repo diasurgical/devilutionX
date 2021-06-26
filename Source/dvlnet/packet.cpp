@@ -78,14 +78,14 @@ packet_type packet::type()
 	return m_type;
 }
 
-plr_t packet::src()
+plr_t packet::src() const
 {
 	if (!have_decrypted)
 		ABORT();
 	return m_src;
 }
 
-plr_t packet::dest()
+plr_t packet::dest() const
 {
 	if (!have_decrypted)
 		ABORT();
