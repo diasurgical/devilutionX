@@ -2442,8 +2442,6 @@ void SpawnUnique(_unique_items uid, Point position)
 	GetItemAttrs(ii, idx, curlv);
 	GetUniqueItem(ii, uid);
 	SetupItem(ii);
-
-	return;
 }
 
 void ItemRndDur(int ii)

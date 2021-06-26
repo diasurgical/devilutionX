@@ -3067,7 +3067,6 @@ static int Sentfire(int i, Point src)
 
 void MI_Dummy(int i)
 {
-	return;
 }
 
 void MI_Golem(int i)
