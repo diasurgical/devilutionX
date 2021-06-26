@@ -138,7 +138,7 @@ struct NetworkOptions {
 
 struct ChatOptions {
 	/** @brief Quick chat messages. */
-	char szHotKeyMsgs[4][MAX_SEND_STR_LEN];
+	char szHotKeyMsgs[QUICK_MESSAGE_OPTIONS][MAX_SEND_STR_LEN];
 };
 
 struct LanguageOptions {

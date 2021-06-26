@@ -204,8 +204,8 @@ void LoadOptions()
 	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
 	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
 
-	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgNameTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, "");
+	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
+		getIniValue("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, "");
 
 	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
 	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
@@ -286,8 +286,8 @@ void SaveOptions()
 	setIniValue("Network", "Port", sgOptions.Network.nPort);
 	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
 
-	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		setIniValue("NetMsg", spszMsgNameTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
+	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++)
+		setIniValue("NetMsg", QuickMessages[i].key, sgOptions.Chat.szHotKeyMsgs[i]);
 
 	setIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
 	setIniValue("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
