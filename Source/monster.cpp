@@ -5420,4 +5420,16 @@ void MonsterStruct::Petrify()
 	AnimInfo.IsPetrified = true;
 }
 
+bool MonsterStruct::IsWalking() const
+{
+	switch (_mmode) {
+	case MM_WALK:
+	case MM_WALK2:
+	case MM_WALK3:
+		return true;
+	default:
+		return false;
+	}
+}
+
 } // namespace devilution
