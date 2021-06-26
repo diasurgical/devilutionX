@@ -514,10 +514,10 @@ static _BLOCKENTRY *mpqapi_add_file(const char *pszName, _BLOCKENTRY *pBlk, int 
 		app_fatal("Hash collision between \"%s\" and existing file\n", pszName);
 	hIdx = h1 & 0x7FF;
 
-    bool hasSpace = false;
+	bool hasSpace = false;
 	for (int i = 0; i < INDEX_ENTRIES; i++) {
 		if (cur_archive.sgpHashTbl[hIdx].block == -1 || cur_archive.sgpHashTbl[hIdx].block == -2) {
-            hasSpace = true;
+			hasSpace = true;
 			break;
         }
 		hIdx = (hIdx + 1) & 0x7FF;
