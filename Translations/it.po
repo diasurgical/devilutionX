@@ -10139,15 +10139,3 @@ msgstr "Giù da Diablo"
 #: Source/trigs.cpp:722 Source/trigs.cpp:739 Source/trigs.cpp:756
 msgid "Back to Level {:d}"
 msgstr "Torna al Livello {:d}"
-
-#~ msgid "fully recover life"
-#~ msgstr "recupero totale vita"
-
-#~ msgid "recover mana"
-#~ msgstr "recupera mana"
-
-#~ msgid "fully recover mana"
-#~ msgstr "recupero totale mana"
-
-#~ msgid "fully recover life and mana"
-#~ msgstr "recupero totale vita e mana"
