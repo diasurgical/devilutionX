@@ -579,7 +579,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->position.temp.y = file->nextLE<int32_t>();
 	pMonster->position.offset2.x = file->nextLE<int32_t>();
 	pMonster->position.offset2.y = file->nextLE<int32_t>();
-	pMonster->actionFrame = file->nextLE<int32_t>();
+	file->skip(4); // Skip actionFrame
 	pMonster->_mmaxhp = file->nextLE<int32_t>();
 	pMonster->_mhitpoints = file->nextLE<int32_t>();
 
@@ -1633,7 +1633,8 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMonster->position.temp.y);
 	file->writeLE<int32_t>(pMonster->position.offset2.x);
 	file->writeLE<int32_t>(pMonster->position.offset2.y);
-	file->writeLE<int32_t>(pMonster->actionFrame);
+	// Write actionFrame for vanilla compatibility
+	file->writeLE<int32_t>(0);
 	file->writeLE<int32_t>(pMonster->_mmaxhp);
 	file->writeLE<int32_t>(pMonster->_mhitpoints);
 

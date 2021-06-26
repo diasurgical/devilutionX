@@ -160,8 +160,6 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int _mVar1;
 	int _mVar2;
 	int _mVar3;
-	/** Value used to measure progress for moving from one tile to another */
-	int actionFrame;
 	int _mmaxhp;
 	int _mhitpoints;
 	_mai_id _mAi;
