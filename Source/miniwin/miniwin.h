@@ -39,7 +39,7 @@ struct tagMSG {
 void SetCursorPos(int X, int Y);
 void FocusOnCharInfo();
 
-uint16_t GetAsyncKeyState(int vKey);
+bool GetAsyncKeyState(int vKey);
 
 bool FetchMessage(tagMSG *lpMsg);
 

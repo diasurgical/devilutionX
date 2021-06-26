@@ -295,7 +295,7 @@ static byte *DeltaExportJunk(byte *dst)
 
 	for (i = 0, q = 0; i < MAXQUESTS; i++) {
 		if (!questlist[i].isSinglePlayerOnly) {
-			sgJunk.quests[q].qlog = quests[i]._qlog;
+			sgJunk.quests[q].qlog = quests[i]._qlog ? 1 : 0;
 			sgJunk.quests[q].qstate = quests[i]._qactive;
 			sgJunk.quests[q].qvar1 = quests[i]._qvar1;
 			memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
@@ -333,7 +333,7 @@ static void DeltaImportJunk(byte *src)
 		if (!questlist[i].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
-			quests[i]._qlog = sgJunk.quests[q].qlog;
+			quests[i]._qlog = sgJunk.quests[q].qlog != 0;
 			quests[i]._qactive = sgJunk.quests[q].qstate;
 			quests[i]._qvar1 = sgJunk.quests[q].qvar1;
 			q++;
@@ -671,7 +671,7 @@ void DeltaAddItem(int ii)
 			pD->wIndx = items[ii].IDidx;
 			pD->wCI = items[ii]._iCreateInfo;
 			pD->dwSeed = items[ii]._iSeed;
-			pD->bId = items[ii]._iIdentified;
+			pD->bId = items[ii]._iIdentified ? 1 : 0;
 			pD->bDur = items[ii]._iDurability;
 			pD->bMDur = items[ii]._iMaxDur;
 			pD->bCh = items[ii]._iCharges;
@@ -738,7 +738,7 @@ void DeltaLoadLevel()
 					M_UpdateLeader(i);
 				} else {
 					decode_enemy(i, sgLevels[currlevel].monster[i]._menemy);
-					if ((monster[i].position.tile.x && monster[i].position.tile.x != 1) || monster[i].position.tile.y)
+					if (monster[i].position.tile != Point { 0, 0 } && monster[i].position.tile != Point { 1, 0 })
 						dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = i + 1;
 					if (i < MAX_PLRS) {
 						MAI_Golum(i);
@@ -789,7 +789,7 @@ void DeltaLoadLevel()
 					    sgLevels[currlevel].item[i].dwSeed,
 					    sgLevels[currlevel].item[i].wValue,
 					    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
-					if (sgLevels[currlevel].item[i].bId)
+					if (sgLevels[currlevel].item[i].bId != 0)
 						items[ii]._iIdentified = true;
 					items[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
 					items[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
@@ -983,7 +983,7 @@ void NetSendCmdQuest(bool bHiPri, BYTE q)
 	cmd.q = q;
 	cmd.bCmd = CMD_SYNCQUEST;
 	cmd.qstate = quests[q]._qactive;
-	cmd.qlog = quests[q]._qlog;
+	cmd.qlog = quests[q]._qlog ? 1 : 0;
 	cmd.qvar1 = quests[q]._qvar1;
 	if (bHiPri)
 		NetSendHiPri(myplr, (byte *)&cmd, sizeof(cmd));
@@ -1018,7 +1018,7 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 	} else {
 		cmd.wCI = items[ii]._iCreateInfo;
 		cmd.dwSeed = items[ii]._iSeed;
-		cmd.bId = items[ii]._iIdentified;
+		cmd.bId = items[ii]._iIdentified ? 1 : 0;
 		cmd.bDur = items[ii]._iDurability;
 		cmd.bMDur = items[ii]._iMaxDur;
 		cmd.bCh = items[ii]._iCharges;
@@ -1116,7 +1116,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position)
 	} else {
 		cmd.wCI = plr[myplr].HoldItem._iCreateInfo;
 		cmd.dwSeed = plr[myplr].HoldItem._iSeed;
-		cmd.bId = plr[myplr].HoldItem._iIdentified;
+		cmd.bId = plr[myplr].HoldItem._iIdentified ? 1 : 0;
 		cmd.bDur = plr[myplr].HoldItem._iDurability;
 		cmd.bMDur = plr[myplr].HoldItem._iMaxDur;
 		cmd.bCh = plr[myplr].HoldItem._iCharges;
@@ -1146,7 +1146,7 @@ void NetSendCmdChItem(bool bHiPri, BYTE bLoc)
 	cmd.wIndx = plr[myplr].HoldItem.IDidx;
 	cmd.wCI = plr[myplr].HoldItem._iCreateInfo;
 	cmd.dwSeed = plr[myplr].HoldItem._iSeed;
-	cmd.bId = plr[myplr].HoldItem._iIdentified;
+	cmd.bId = plr[myplr].HoldItem._iIdentified ? 1 : 0;
 	cmd.dwBuff = plr[myplr].HoldItem.dwBuff;
 
 	if (bHiPri)
@@ -1189,7 +1189,7 @@ void NetSendCmdDItem(bool bHiPri, int ii)
 	} else {
 		cmd.wCI = items[ii]._iCreateInfo;
 		cmd.dwSeed = items[ii]._iSeed;
-		cmd.bId = items[ii]._iIdentified;
+		cmd.bId = items[ii]._iIdentified ? 1 : 0;
 		cmd.bDur = items[ii]._iDurability;
 		cmd.bMDur = items[ii]._iMaxDur;
 		cmd.bCh = items[ii]._iCharges;
@@ -1283,7 +1283,7 @@ static void delta_open_portal(int pnum, uint8_t x, uint8_t y, uint8_t bLevel, du
 	sgJunk.portal[pnum].y = y;
 	sgJunk.portal[pnum].level = bLevel;
 	sgJunk.portal[pnum].ltype = bLType;
-	sgJunk.portal[pnum].setlvl = bSetLvl;
+	sgJunk.portal[pnum].setlvl = bSetLvl ? 1 : 0;
 }
 
 void delta_close_portal(int pnum)
@@ -2155,7 +2155,7 @@ static DWORD On_CHANGEPLRITEMS(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else if (pnum != myplr)
-		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId, p->dwBuff);
+		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
 
 	return sizeof(*p);
 }
@@ -2263,7 +2263,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
-		ActivatePortal(pnum, p->x, p->y, p->wParam1, (dungeon_type)p->wParam2, p->wParam3);
+		ActivatePortal(pnum, p->x, p->y, p->wParam1, static_cast<dungeon_type>(p->wParam2), p->wParam3 != 0);
 		if (pnum != myplr) {
 			if (currlevel == 0)
 				AddInTownPortal(pnum);
@@ -2281,7 +2281,7 @@ static DWORD On_ACTIVATEPORTAL(TCmd *pCmd, int pnum)
 			} else
 				RemovePortalMissile(pnum);
 		}
-		delta_open_portal(pnum, p->x, p->y, p->wParam1, (dungeon_type)p->wParam2, p->wParam3);
+		delta_open_portal(pnum, p->x, p->y, p->wParam1, static_cast<dungeon_type>(p->wParam2), p->wParam3 != 0);
 	}
 
 	return sizeof(*p);

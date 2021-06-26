@@ -228,7 +228,7 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	file->skip(3); // Alignment
 	pItem->_iPostDraw = file->nextBool32();
 	pItem->_iIdentified = file->nextBool32();
-	pItem->_iMagical = file->nextLE<int8_t>();
+	pItem->_iMagical = static_cast<item_quality>(file->nextLE<int8_t>());
 	file->nextBytes(pItem->_iName, 64);
 	file->nextBytes(pItem->_iIName, 64);
 	pItem->_iLoc = static_cast<item_equip_type>(file->nextLE<int8_t>());

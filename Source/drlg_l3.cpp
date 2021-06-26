@@ -1451,28 +1451,28 @@ static bool DRLG_L3SpawnEdge(int x, int y, int *totarea)
 	dungeon[x][y] |= 0x80;
 	*totarea += 1;
 
-	if (spawntable[i] & 8 && DRLG_L3SpawnEdge(x, y - 1, totarea)) {
+	if ((spawntable[i] & 8) != 0 && DRLG_L3SpawnEdge(x, y - 1, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 4 && DRLG_L3SpawnEdge(x, y + 1, totarea)) {
+	if ((spawntable[i] & 4) != 0 && DRLG_L3SpawnEdge(x, y + 1, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 2 && DRLG_L3SpawnEdge(x + 1, y, totarea)) {
+	if ((spawntable[i] & 2) != 0 && DRLG_L3SpawnEdge(x + 1, y, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 1 && DRLG_L3SpawnEdge(x - 1, y, totarea)) {
+	if ((spawntable[i] & 1) != 0 && DRLG_L3SpawnEdge(x - 1, y, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 0x80 && DRLG_L3Spawn(x, y - 1, totarea)) {
+	if ((spawntable[i] & 0x80) != 0 && DRLG_L3Spawn(x, y - 1, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 0x40 && DRLG_L3Spawn(x, y + 1, totarea)) {
+	if ((spawntable[i] & 0x40) != 0 && DRLG_L3Spawn(x, y + 1, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 0x20 && DRLG_L3Spawn(x + 1, y, totarea)) {
+	if ((spawntable[i] & 0x20) != 0 && DRLG_L3Spawn(x + 1, y, totarea)) {
 		return true;
 	}
-	if (spawntable[i] & 0x10 && DRLG_L3Spawn(x - 1, y, totarea)) {
+	if ((spawntable[i] & 0x10) != 0 && DRLG_L3Spawn(x - 1, y, totarea)) {
 		return true;
 	}
 
@@ -1502,16 +1502,16 @@ static bool DRLG_L3Spawn(int x, int y, int *totarea)
 	*totarea += 1;
 
 	if (i != 8) {
-		if (spawntable[i] & 8 && DRLG_L3SpawnEdge(x, y - 1, totarea)) {
+		if ((spawntable[i] & 8) != 0 && DRLG_L3SpawnEdge(x, y - 1, totarea)) {
 			return true;
 		}
-		if (spawntable[i] & 4 && DRLG_L3SpawnEdge(x, y + 1, totarea)) {
+		if ((spawntable[i] & 4) != 0 && DRLG_L3SpawnEdge(x, y + 1, totarea)) {
 			return true;
 		}
-		if (spawntable[i] & 2 && DRLG_L3SpawnEdge(x + 1, y, totarea)) {
+		if ((spawntable[i] & 2) != 0 && DRLG_L3SpawnEdge(x + 1, y, totarea)) {
 			return true;
 		}
-		if (spawntable[i] & 1 && DRLG_L3SpawnEdge(x - 1, y, totarea)) {
+		if ((spawntable[i] & 1) != 0 && DRLG_L3SpawnEdge(x - 1, y, totarea)) {
 			return true;
 		}
 	} else {
@@ -2436,10 +2436,14 @@ static void DRLG_L3(lvl_entry entry)
 		if (currlevel < 17) {
 			DRLG_L3Pool();
 		} else {
-			lavapool += drlg_l3_hive_rnd_piece(byte_48A998, 30);
-			lavapool += drlg_l3_hive_rnd_piece(byte_48A9C8, 40);
-			lavapool += drlg_l3_hive_rnd_piece(byte_48A948, 50);
-			lavapool += drlg_l3_hive_rnd_piece(byte_48A970, 60);
+			if (drlg_l3_hive_rnd_piece(byte_48A998, 30))
+				lavapool++;
+			if (drlg_l3_hive_rnd_piece(byte_48A9C8, 40))
+				lavapool++;
+			if (drlg_l3_hive_rnd_piece(byte_48A948, 50))
+				lavapool++;
+			if (drlg_l3_hive_rnd_piece(byte_48A970, 60))
+				lavapool++;
 			if (lavapool < 3)
 				lavapool = 0;
 		}

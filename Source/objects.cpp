@@ -285,7 +285,7 @@ void InitObjectGFX()
 	char filestr[32];
 	int i, j;
 
-	memset(fileload, false, sizeof(fileload));
+	memset(fileload, 0, sizeof(fileload));
 
 	int lvl = currlevel;
 	if (currlevel >= 21 && currlevel <= 24)
@@ -2997,7 +2997,7 @@ void OperateBookLever(int pnum, int i)
 			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
 			quests[Q_BLOOD]._qlog = true;
 			quests[Q_BLOOD]._qvar1 = 1;
-			SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 25, 2 * setpc_y + 33 }, 0, true);
+			SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 25, 2 * setpc_y + 33 }, 0, 1);
 		}
 		object[i]._otype = object[i]._otype;
 		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
@@ -3142,7 +3142,7 @@ void OperateMushPatch(int pnum, int i)
 		object[i]._oAnimFrame++;
 		if (!deltaload) {
 			Point pos = GetSuperItemLoc(object[i].position);
-			SpawnQuestItem(IDI_MUSHROOM, pos, 0, false);
+			SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
 			quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		}
 	}
@@ -3166,7 +3166,7 @@ void OperateInnSignChest(int pnum, int i)
 			object[i]._oAnimFrame += 2;
 			if (!deltaload) {
 				Point pos = GetSuperItemLoc(object[i].position);
-				SpawnQuestItem(IDI_BANNER, pos, 0, false);
+				SpawnQuestItem(IDI_BANNER, pos, 0, 0);
 			}
 		}
 	}
@@ -3292,13 +3292,13 @@ void OperatePedistal(int pnum, int i)
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position);
 		ObjChangeMap(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 19, 2 * setpc_y + 26 }, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 19, 2 * setpc_y + 26 }, 0, 1);
 	}
 	if (object[i]._oVar6 == 2) {
 		if (!deltaload)
 			PlaySfxLoc(LS_PUDDLE, object[i].position);
 		ObjChangeMap(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
-		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 31, 2 * setpc_y + 26 }, 0, true);
+		SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 31, 2 * setpc_y + 26 }, 0, 1);
 	}
 	if (object[i]._oVar6 == 3) {
 		if (!deltaload)
@@ -3621,7 +3621,7 @@ bool OperateShrineEnchanted(int pnum)
 		int r;
 		do {
 			r = GenerateRnd(maxSpells);
-		} while (!(plr[pnum]._pMemSpells & GetSpellBitmask(r + 1)));
+		} while ((plr[pnum]._pMemSpells & GetSpellBitmask(r + 1)) == 0);
 		if (plr[pnum]._pSplLvl[r + 1] >= 2)
 			plr[pnum]._pSplLvl[r + 1] -= 2;
 		else
@@ -4029,15 +4029,15 @@ bool OperateShrineGlimmering(int pnum)
 		return false;
 
 	for (auto &item : plr[pnum].InvBody) {
-		if (item._iMagical && !item._iIdentified)
+		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified)
 			item._iIdentified = true;
 	}
 	for (int j = 0; j < plr[pnum]._pNumInv; j++) {
-		if (plr[pnum].InvList[j]._iMagical && !plr[pnum].InvList[j]._iIdentified)
+		if (plr[pnum].InvList[j]._iMagical != ITEM_QUALITY_NORMAL && !plr[pnum].InvList[j]._iIdentified)
 			plr[pnum].InvList[j]._iIdentified = true;
 	}
 	for (auto &item : plr[pnum].SpdList) {
-		if (item._iMagical && !item._iIdentified)
+		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified)
 			item._iIdentified = true; // belt items can't be magical?
 	}
 
@@ -4487,7 +4487,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 			    && monster[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 			    && monster[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
 			    && monster[MAX_PLRS]._msquelch == UINT8_MAX
-			    && monster[MAX_PLRS]._mhitpoints) {
+			    && monster[MAX_PLRS]._mhitpoints > 0) {
 				monster[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
 				M_StartStand(0, monster[MAX_PLRS]._mdir);
 				monster[MAX_PLRS]._mgoal = MGOAL_ATTACK2;
@@ -4774,7 +4774,7 @@ void OperateLazStand(int pnum, int i)
 		object[i]._oAnimFrame++;
 		object[i]._oSelFlag = 0;
 		Point pos = GetSuperItemLoc(object[i].position);
-		SpawnQuestItem(IDI_LAZSTAFF, pos, 0, false);
+		SpawnQuestItem(IDI_LAZSTAFF, pos, 0, 0);
 	}
 }
 

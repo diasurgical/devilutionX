@@ -159,9 +159,9 @@ void nthread_start(bool set_turn_upper_bit)
 	caps.size = 36;
 	SNetGetProviderCaps(&caps);
 	gdwTurnsInTransit = caps.defaultturnsintransit;
-	if (!caps.defaultturnsintransit)
+	if (gdwTurnsInTransit == 0)
 		gdwTurnsInTransit = 1;
-	if (caps.defaultturnssec <= 20 && caps.defaultturnssec)
+	if (caps.defaultturnssec <= 20 && caps.defaultturnssec != 0)
 		sgbNetUpdateRate = 20 / caps.defaultturnssec;
 	else
 		sgbNetUpdateRate = 1;
@@ -239,7 +239,7 @@ bool nthread_has_500ms_passed()
 
 void nthread_UpdateProgressToNextGameTick()
 {
-	if (!gbRunGame || PauseMode || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers) // if game is not running or paused there is no next gametick in the near future
+	if (!gbRunGame || PauseMode != 0 || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers) // if game is not running or paused there is no next gametick in the near future
 		return;
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = last_tick - currentTickCount;
