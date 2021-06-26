@@ -38,7 +38,7 @@ private:
 	static int ToSdlJoyButton(ControllerButton button);
 
 	// NOLINTNEXTLINE(readability-convert-member-functions-to-static): Not static if joystick mappings are defined.
-	bool IsHatButtonPressed(ControllerButton button) const;
+	static bool IsHatButtonPressed(ControllerButton button);
 
 	SDL_Joystick *sdl_joystick_ = NULL;
 	SDL_JoystickID instance_id_ = -1;
