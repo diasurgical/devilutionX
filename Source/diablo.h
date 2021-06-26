@@ -85,10 +85,16 @@ extern bool debug_mode_dollar_sign;
 extern bool debug_mode_key_i;
 extern int debug_mode_key_j;
 #endif
-/** Default quick messages */
-extern const char *const spszMsgTbl[4];
-/** INI files variable names for quick messages */
-extern const char *const spszMsgNameTbl[4];
+
+struct QuickMessage {
+    /** Config variable names for quick message */
+    const char *const key;
+    /** Default quick message */
+    const char *const message;
+};
+
+constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
+extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 extern bool gbFriendlyMode;
 
 } // namespace devilution

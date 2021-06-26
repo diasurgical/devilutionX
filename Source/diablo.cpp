@@ -136,13 +136,12 @@ int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
-const char *const spszMsgTbl[4] = {
-	N_("I need help! Come Here!"),
-	N_("Follow me."),
-	N_("Here's something for you."),
-	N_("Now you DIE!")
+QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
+	{ "QuickMessage1", N_("I need help! Come Here!") },
+	{ "QuickMessage2", N_("Follow me.") },
+	{ "QuickMessage3", N_("Here's something for you.") },
+	{ "QuickMessage4", N_("Now you DIE!") }
 };
-const char *const spszMsgNameTbl[4] = { "QuickMessage1", "QuickMessage2", "QuickMessage3", "QuickMessage4" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
 bool was_archives_init = false;
@@ -513,11 +512,11 @@ static void diablo_init()
 
 	SetApplicationVersions();
 
-	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++) {
+	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
 		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
 			continue;
 		}
-		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(spszMsgTbl[i]), MAX_SEND_STR_LEN);
+		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
 
 	UiInitialize();
@@ -869,7 +868,7 @@ static void diablo_hotkey_msg(DWORD dwMsg)
 		return;
 	}
 
-	assert(dwMsg < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]));
+	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
 
 	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
@@ -1986,7 +1985,7 @@ void initKeymapActions()
 	}
 	for (int i = 0; i < 4; ++i) {
 		keymapper.addAction({
-		    spszMsgNameTbl[i],
+		    QuickMessages[i].key,
 		    DVL_VK_F9 + i,
 		    [i]() { diablo_hotkey_msg(i); },
 		});
