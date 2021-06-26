@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <fmt/format.h>
+#include <utility>
 
 #include <SDL.h>
 
@@ -16,8 +17,8 @@
 namespace devilution {
 
 Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction)
-    : setKeyFunction(setKeyFunction)
-    , getKeyFunction(getKeyFunction)
+    : setKeyFunction(std::move(setKeyFunction))
+    , getKeyFunction(std::move(getKeyFunction))
 {
 	// Insert all supported keys: a-z, 0-9 and F1-F12.
 	keyIDToKeyName.reserve(('Z' - 'A' + 1) + ('9' - '0' + 1) + 12);
