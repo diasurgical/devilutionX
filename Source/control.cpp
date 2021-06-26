@@ -85,7 +85,7 @@ uint8_t SplTransTbl[256];
 int initialDropGoldValue;
 bool panbtndown;
 bool spselflag;
-extern Keymapper keymapper;
+
 extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /** Map of hero class names */

@@ -10,7 +10,7 @@
 
 namespace devilution {
 
-extern SDL_Surface *pal_surface;
+
 
 namespace {
 
