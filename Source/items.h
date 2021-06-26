@@ -218,7 +218,7 @@ struct ItemStruct {
 	int16_t _iPLGetHit;
 	int16_t _iPLLight;
 	int8_t _iSplLvlAdd;
-	int8_t _iRequest;
+	bool _iRequest;
 	int _iUid;
 	int16_t _iFMinDam;
 	int16_t _iFMaxDam;

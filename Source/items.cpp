@@ -615,7 +615,7 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 			if (itm->_iMagical == ITEM_QUALITY_NORMAL || itm->_iIdentified) {
 				bdam += itm->_iPLDam;
 				btohit += itm->_iPLToHit;
-				if (itm->_iPLAC) {
+				if (itm->_iPLAC != 0) {
 					int tmpac = itm->_iAC;
 					tmpac *= itm->_iPLAC;
 					tmpac /= 100;
@@ -2232,7 +2232,7 @@ void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells
 
 void SetupItem(int i)
 {
-	items[i].SetNewAnimation(!plr[myplr].pLvlLoad);
+	items[i].SetNewAnimation(plr[myplr].pLvlLoad == 0);
 	items[i]._iIdentified = false;
 }
 
@@ -2780,7 +2780,7 @@ void items_427ABA(Point position)
 
 	CornerStone.item._itype = ITYPE_NONE;
 	CornerStone.activated = true;
-	if (dItem[position.x][position.y]) {
+	if (dItem[position.x][position.y] != 0) {
 		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < numitems; i++) {
 			if (itemactive[i] == ii) {
@@ -2808,7 +2808,7 @@ void items_427ABA(Point position)
 
 void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 {
-	if (randarea) {
+	if (randarea > 0) {
 		int tries = 0;
 		while (true) {
 			tries++;
@@ -2844,7 +2844,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	SetupItem(ii);
 	items[ii]._iSeed = AdvanceRndSeed();
 	items[ii]._iPostDraw = true;
-	if (selflag) {
+	if (selflag != 0) {
 		items[ii]._iSelFlag = selflag;
 		items[ii].AnimInfo.CurrentFrame = items[ii].AnimInfo.NumberOfFrames;
 		items[ii]._iAnimFlag = false;
@@ -3038,7 +3038,7 @@ static void RepairItem(ItemStruct *i, int lvl)
 	do {
 		rep += lvl + GenerateRnd(lvl);
 		i->_iMaxDur -= std::max(i->_iMaxDur / (lvl + 9), 1);
-		if (!i->_iMaxDur) {
+		if (i->_iMaxDur == 0) {
 			i->_itype = ITYPE_NONE;
 			return;
 		}
@@ -3782,11 +3782,11 @@ static void PrintItemInfo(ItemStruct *x)
 	uint8_t mag = x->_iMinMag;
 	if (str != 0 || mag != 0 || dex != 0) {
 		strcpy(tempstr, _("Required:"));
-		if (str)
+		if (str != 0)
 			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Str"), str).c_str());
-		if (mag)
+		if (mag != 0)
 			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Mag"), mag).c_str());
-		if (dex)
+		if (dex != 0)
 			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Dex"), dex).c_str());
 		AddPanelString(tempstr);
 	}

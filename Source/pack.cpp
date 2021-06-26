@@ -39,7 +39,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 		} else {
 			id->iSeed = SDL_SwapLE32(is->_iSeed);
 			id->iCreateInfo = SDL_SwapLE16(is->_iCreateInfo);
-			id->bId = is->_iIdentified + 2 * is->_iMagical;
+			id->bId = (is->_iMagical << 1) | (is->_iIdentified ? 1 : 0);
 			id->bDur = is->_iDurability;
 			id->bMDur = is->_iMaxDur;
 			id->bCh = is->_iCharges;
@@ -106,12 +106,12 @@ void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashie
 	pPack->pDifficulty = SDL_SwapLE32(player.pDifficulty);
 	pPack->pDamAcFlags = SDL_SwapLE32(player.pDamAcFlags);
 	pPack->pDiabloKillLevel = SDL_SwapLE32(player.pDiabloKillLevel);
-	pPack->bIsHellfire = gbIsHellfire;
+	pPack->bIsHellfire = gbIsHellfire ? 1 : 0;
 
 	if (!gbIsMultiplayer || manashield)
 		pPack->pManaShield = SDL_SwapLE32(player.pManaShield);
 	else
-		pPack->pManaShield = false;
+		pPack->pManaShield = 0;
 }
 
 /**
@@ -234,13 +234,13 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
 		auto packedItem = pPack->InvBody[i];
-		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
 		UnPackItem(&packedItem, &player.InvBody[i], isHellfire);
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
 		auto packedItem = pPack->InvList[i];
-		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
 		UnPackItem(&packedItem, &player.InvList[i], isHellfire);
 	}
 
@@ -252,7 +252,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		auto packedItem = pPack->SpdList[i];
-		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : pPack->bIsHellfire;
+		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
 		UnPackItem(&packedItem, &player.SpdList[i], isHellfire);
 	}
 
@@ -268,7 +268,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 	player.pDungMsgs2 = 0;
 	player.pLvlLoad = 0;
 	player.pDiabloKillLevel = SDL_SwapLE32(pPack->pDiabloKillLevel);
-	player.pBattleNet = pPack->pBattleNet;
+	player.pBattleNet = pPack->pBattleNet != 0;
 	player.pManaShield = SDL_SwapLE32(pPack->pManaShield);
 	player.pDifficulty = (_difficulty)SDL_SwapLE32(pPack->pDifficulty);
 	player.pDamAcFlags = SDL_SwapLE32(pPack->pDamAcFlags);

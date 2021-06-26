@@ -46,7 +46,7 @@ uint32_t Hash(const char *s, int type)
 {
 	uint32_t seed1 = 0x7FED7FED;
 	uint32_t seed2 = 0xEEEEEEEE;
-	while (s != nullptr && *s) {
+	while (s != nullptr && (*s != '\0')) {
 		int8_t ch = *s++;
 		ch = toupper(ch);
 		seed1 = hashtable[type][ch] ^ (seed1 + seed2);

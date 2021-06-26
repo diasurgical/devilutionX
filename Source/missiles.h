@@ -103,7 +103,7 @@ struct MissileStruct {
 	int _miVar5;
 	int _miVar6;
 	int _miVar7;
-	int _miVar8;
+	bool limitReached;
 };
 
 extern int missileactive[MAXMISSILES];

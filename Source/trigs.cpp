@@ -78,7 +78,7 @@ void InitTownTriggers()
 	if (!gbIsSpawn) {
 		auto &myPlayer = plr[myplr];
 
-		if (gbIsMultiplayer || myPlayer.pTownWarps & 1 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
+		if (gbIsMultiplayer || (myPlayer.pTownWarps & 1) != 0 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
 			townwarps[0] = true;
 			trigs[numtrigs].position = { 49, 21 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -89,14 +89,14 @@ void InitTownTriggers()
 #endif
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || myPlayer.pTownWarps & 2 || (gbIsHellfire && myPlayer._pLevel >= 15)) {
+		if (gbIsMultiplayer || (myPlayer.pTownWarps & 2) != 0 || (gbIsHellfire && myPlayer._pLevel >= 15)) {
 			townwarps[1] = true;
 			trigs[numtrigs].position = { 17, 69 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 9;
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || myPlayer.pTownWarps & 4 || (gbIsHellfire && myPlayer._pLevel >= 20)) {
+		if (gbIsMultiplayer || (myPlayer.pTownWarps & 4) != 0 || (gbIsHellfire && myPlayer._pLevel >= 20)) {
 			townwarps[2] = true;
 			trigs[numtrigs].position = { 41, 80 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;

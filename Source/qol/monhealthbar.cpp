@@ -80,7 +80,7 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	DrawArt(out, xPos, yPos, &healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
 	int barProgress = (width * mon._mhitpoints) / maxLife;
-	if (barProgress) {
+	if (barProgress != 0) {
 		DrawArt(out, xPos + border + 1, yPos + border + 1, &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
@@ -110,10 +110,10 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if (mon.mMagicRes & immunes[i]) {
+			if ((mon.mMagicRes & immunes[i]) != 0) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if (mon.mMagicRes & resists[i]) {
+			} else if ((mon.mMagicRes & resists[i]) != 0) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}

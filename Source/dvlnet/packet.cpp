@@ -164,13 +164,13 @@ void packet_in::decrypt()
 		    - crypto_secretbox_NONCEBYTES
 		    - crypto_secretbox_MACBYTES);
 		decrypted_buffer.resize(pktlen);
-		if (crypto_secretbox_open_easy(decrypted_buffer.data(),
-		        encrypted_buffer.data()
-		            + crypto_secretbox_NONCEBYTES,
-		        encrypted_buffer.size()
-		            - crypto_secretbox_NONCEBYTES,
-		        encrypted_buffer.data(),
-		        key.data()))
+		int status = crypto_secretbox_open_easy(
+		    decrypted_buffer.data(),
+		    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
+		    encrypted_buffer.size() - crypto_secretbox_NONCEBYTES,
+		    encrypted_buffer.data(),
+		    key.data());
+		if (status != 0)
 			throw packet_exception();
 	} else
 #endif
@@ -202,13 +202,13 @@ void packet_out::encrypt()
 		encrypted_buffer.insert(encrypted_buffer.end(),
 		    crypto_secretbox_MACBYTES, 0);
 		randombytes_buf(encrypted_buffer.data(), crypto_secretbox_NONCEBYTES);
-		if (crypto_secretbox_easy(encrypted_buffer.data()
-		            + crypto_secretbox_NONCEBYTES,
-		        encrypted_buffer.data()
-		            + crypto_secretbox_NONCEBYTES,
-		        lenCleartext,
-		        encrypted_buffer.data(),
-		        key.data()))
+		int status = crypto_secretbox_easy(
+		    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
+		    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
+		    lenCleartext,
+		    encrypted_buffer.data(),
+		    key.data());
+		if (status != 0)
 			ABORT();
 	}
 #endif
@@ -224,12 +224,16 @@ packet_factory::packet_factory(std::string pw)
 	pw.resize(std::max<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MIN), 0);
 	std::string salt("W9bE9dQgVaeybwr2");
 	salt.resize(crypto_pwhash_argon2id_SALTBYTES, 0);
-	if (crypto_pwhash(key.data(), crypto_secretbox_KEYBYTES,
-	        pw.data(), pw.size(),
-	        reinterpret_cast<const unsigned char *>(salt.data()),
-	        3 * crypto_pwhash_argon2id_OPSLIMIT_MIN,
-	        2 * crypto_pwhash_argon2id_MEMLIMIT_MIN,
-	        crypto_pwhash_ALG_ARGON2ID13))
+	int status = crypto_pwhash(
+	    key.data(),
+	    crypto_secretbox_KEYBYTES,
+	    pw.data(),
+	    pw.size(),
+	    reinterpret_cast<const unsigned char *>(salt.data()),
+	    3 * crypto_pwhash_argon2id_OPSLIMIT_MIN,
+	    2 * crypto_pwhash_argon2id_MEMLIMIT_MIN,
+	    crypto_pwhash_ALG_ARGON2ID13);
+	if (status != 0)
 		ABORT();
 #endif
 }

@@ -158,6 +158,13 @@ struct Options {
 	LanguageOptions Language;
 };
 
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
+void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
+
 extern Options sgOptions;
+extern bool sbWasOptionsLoaded;
+
+void SaveOptions();
+void LoadOptions();
 
 } // namespace devilution

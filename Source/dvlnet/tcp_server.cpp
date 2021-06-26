@@ -194,9 +194,8 @@ void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
 	}
 	if (con->timeout > 0)
 		con->timeout -= 1;
-	if (con->timeout < 0)
+	if (con->timeout <= 0) {
 		con->timeout = 0;
-	if (!con->timeout) {
 		drop_connection(con);
 		return;
 	}

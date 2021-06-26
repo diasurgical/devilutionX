@@ -36,7 +36,7 @@ std::uint8_t SVidAudioDepth;
 unsigned long SVidWidth, SVidHeight;
 double SVidFrameEnd;
 double SVidFrameLength;
-BYTE SVidLoop;
+bool SVidLoop;
 smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
@@ -136,7 +136,7 @@ bool SVidLoadNextFrame()
 
 bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 {
-	if (flags & 0x10000 || flags & 0x20000000) {
+	if ((flags & 0x10000) != 0 || (flags & 0x20000000) != 0) {
 		return false;
 	}
 
@@ -179,7 +179,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	if (enableAudio && depth[0] != 0) {
 		sound_stop(); // Stop in-progress music and sound effects
 
-		smk_enable_audio(SVidSMK, 0, enableAudio);
+		smk_enable_audio(SVidSMK, 0, enableAudio ? 1 : 0);
 		SVidAudioDepth = depth[0];
 		auto decoder = std::make_unique<PushAulibDecoder>(channels[0], rate[0]);
 		SVidAudioDecoder = decoder.get();
@@ -204,7 +204,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	smk_info_all(SVidSMK, nullptr, &nFrames, &SVidFrameLength);
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 
-	smk_enable_video(SVidSMK, enableVideo);
+	smk_enable_video(SVidSMK, enableVideo ? 1 : 0);
 	smk_first(SVidSMK); // Decode first frame
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
@@ -251,7 +251,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 
 bool SVidPlayContinue()
 {
-	if (smk_palette_updated(SVidSMK)) {
+	if (smk_palette_updated(SVidSMK) != 0) {
 		SDL_Color colors[256];
 		const unsigned char *paletteData = smk_get_palette(SVidSMK);
 
@@ -387,7 +387,7 @@ void SVidPlayEnd(HANDLE video)
 		if (texture == nullptr) {
 			ErrSdl();
 		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
+		if (renderer != nullptr && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
 	}

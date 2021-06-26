@@ -212,7 +212,7 @@ void DecreaseGamma()
 
 int UpdateGamma(int gamma)
 {
-	if (gamma) {
+	if (gamma > 0) {
 		sgOptions.Graphics.nGammaCorrection = 130 - gamma;
 		ApplyGamma(system_palette, logical_palette, 256);
 		palette_update();

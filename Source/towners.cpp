@@ -823,15 +823,15 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_FARMER:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0)
 				continue;
 			break;
 		case TOWN_COWFARM:
-			if (!gbIsHellfire || !sgGameInitInfo.bCowQuest || quests[Q_FARMER]._qactive == 10)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 || quests[Q_FARMER]._qactive == 10)
 				continue;
 			break;
 		case TOWN_GIRL:
-			if (!gbIsHellfire || !sgGameInitInfo.bTheoQuest || !plr->_pLvlVisited[17])
+			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !plr->_pLvlVisited[17])
 				continue;
 			break;
 		default:

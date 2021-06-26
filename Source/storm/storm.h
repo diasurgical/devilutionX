@@ -256,15 +256,6 @@ DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh = nullptr);
 DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
 
-bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
-float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
-void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
-void SaveIni();
-int getIniInt(const char *keyname, const char *valuename, int defaultValue);
-void setIniInt(const char *keyname, const char *valuename, int value);
-void setIniFloat(const char *keyname, const char *valuename, float value);
-
 // These error codes are used and returned by StormLib.
 // See StormLib/src/StormPort.h
 #if defined(_WIN32)

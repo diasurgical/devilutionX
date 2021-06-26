@@ -38,7 +38,7 @@ void track_process()
 	if (cursmx != target.x || cursmy != target.y) {
 		Uint32 tick = SDL_GetTicks();
 		int TickMultiplier = 6;
-		if (currlevel == 0 && sgGameInitInfo.bRunInTown)
+		if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
 			TickMultiplier = 3;
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * TickMultiplier) {
 			sgdwLastWalk = tick;
