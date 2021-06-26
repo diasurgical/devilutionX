@@ -222,8 +222,7 @@ void tcp_server::close()
 }
 
 tcp_server::~tcp_server()
-{
-}
+    = default;
 
 } // namespace net
 } // namespace devilution

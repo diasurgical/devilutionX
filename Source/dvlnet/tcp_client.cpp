@@ -136,8 +136,7 @@ std::string tcp_client::make_default_gamename()
 }
 
 tcp_client::~tcp_client()
-{
-}
+    = default;
 
 } // namespace net
 } // namespace devilution
