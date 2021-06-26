@@ -100,7 +100,7 @@ public:
 		s_ = nullptr;
 	}
 
-	bool IsOpen() const
+	[[nodiscard]] bool IsOpen() const
 	{
 		return s_ != nullptr;
 	}

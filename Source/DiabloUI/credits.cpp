@@ -125,7 +125,7 @@ public:
 
 	void Render();
 
-	bool Finished() const
+	[[nodiscard]] bool Finished() const
 	{
 		return finished_;
 	}
