@@ -24,7 +24,7 @@ void InitDeadAnimationFromMonster(DeadStruct &d, const CMonster &mon)
 	d._deadFrame = mon.Anims[MA_DEATH].Frames;
 	d._deadWidth = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
 }
-}
+} // namespace
 
 void InitDead()
 {

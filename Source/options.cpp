@@ -109,7 +109,7 @@ void SaveIni()
 	getIni().Save(*stream, true);
 }
 
-}
+} // namespace
 
 void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
 {
