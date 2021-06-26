@@ -2377,7 +2377,7 @@ static DWORD On_SYNCQUEST(TCmd *pCmd, int pnum)
 		msg_send_packet(pnum, p, sizeof(*p));
 	else {
 		if (pnum != myplr)
-			SetMultiQuest(p->q, p->qstate, p->qlog, p->qvar1);
+			SetMultiQuest(p->q, p->qstate, p->qlog != 0, p->qvar1);
 		sgbDeltaChanged = true;
 	}
 
