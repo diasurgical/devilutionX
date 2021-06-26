@@ -550,7 +550,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	}
 }
 
-static void scrollrt_draw_dungeon(const CelOutputBuffer &, int, int, int, int);
+static void scrollrt_draw_dungeon(const CelOutputBuffer & /*out*/, int /*sx*/, int /*sy*/, int /*dx*/, int /*dy*/);
 
 /**
  * @brief Render a cell

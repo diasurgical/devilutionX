@@ -208,7 +208,7 @@ bool SNetGetTurnsInTransit(DWORD *turns)
 /**
  * @brief engine calls this only once with argument 1
  */
-bool SNetSetBasePlayer(int)
+bool SNetSetBasePlayer(int /*unused*/)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
