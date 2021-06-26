@@ -10,8 +10,8 @@
 #include "utils/sdl2_backports.h"
 #endif
 
-#include "utils/sdl_compat.h"
 #include "utils/log.hpp"
+#include "utils/sdl_compat.h"
 
 namespace devilution {
 

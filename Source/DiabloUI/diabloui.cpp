@@ -16,11 +16,11 @@
 #include "palette.h"
 #include "storm/storm.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
 #include "utils/stubs.h"
 #include "utils/utf8.h"
-#include "utils/log.hpp"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch

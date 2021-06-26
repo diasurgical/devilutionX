@@ -12,8 +12,8 @@
 #include <ZeroTierSockets.h>
 #include <cstdlib>
 
-#include "utils/paths.h"
 #include "utils/log.hpp"
+#include "utils/paths.h"
 
 #include "dvlnet/zerotier_lwip.h"
 

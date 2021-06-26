@@ -5,8 +5,8 @@
  */
 
 #include "diablo.h"
-#include "hwcursor.hpp"
 #include "effects.h"
+#include "hwcursor.hpp"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
 

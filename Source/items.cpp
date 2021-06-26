@@ -6,9 +6,9 @@
 #include "items.h"
 
 #include <algorithm>
+#include <bitset>
 #include <climits>
 #include <cstdint>
-#include <bitset>
 
 #include <fmt/format.h>
 

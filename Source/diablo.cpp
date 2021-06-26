@@ -18,6 +18,7 @@
 #include "debug.h"
 #endif
 #include "DiabloUI/diabloui.h"
+#include "controls/keymapper.hpp"
 #include "doom.h"
 #include "drlg_l1.h"
 #include "drlg_l2.h"
@@ -59,8 +60,6 @@
 #include "utils/console.h"
 #include "utils/language.h"
 #include "utils/paths.h"
-#include "utils/language.h"
-#include "controls/keymapper.hpp"
 
 #ifndef NOSOUND
 #include "sound.h"

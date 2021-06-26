@@ -10,8 +10,8 @@
 
 #include "diablo.h"
 #include "storm/storm.h"
-#include "utils/ui_fwd.h"
 #include "utils/language.h"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
 

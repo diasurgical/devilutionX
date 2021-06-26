@@ -12,10 +12,10 @@
 #include "controls/menu_controls.h"
 #include "hwcursor.hpp"
 #include "utils/display.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
-#include "utils/log.hpp"
-#include "utils/language.h"
 
 namespace devilution {
 

@@ -3,8 +3,8 @@
 #include <deque>
 
 #include "control.h"
-#include "controls/controller_motion.h"
 #include "controls/controller.h"
+#include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"

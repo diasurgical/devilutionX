@@ -10,16 +10,16 @@
 #include <memory>
 #include <mutex>
 
-#include <aulib.h>
 #include <Aulib/DecoderDrwav.h>
-#include <Aulib/Stream.h>
 #include <Aulib/ResamplerSpeex.h>
+#include <Aulib/Stream.h>
 #include <SDL.h>
+#include <aulib.h>
 
 #include "init.h"
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
 #include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/sdl_mutex.h"

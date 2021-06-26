@@ -5,9 +5,9 @@
 #include <mutex>
 #include <string>
 
-#include "storm/storm.h"
 #include "DiabloUI/diabloui.h"
 #include "options.h"
+#include "storm/storm.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"

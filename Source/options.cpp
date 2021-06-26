@@ -4,14 +4,14 @@
  * Load and save options from the diablo.ini file.
  */
 
-#include <fstream>
 #include <cstdint>
+#include <fstream>
 
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
-#include "options.h"
 #include "diablo.h"
+#include "options.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 

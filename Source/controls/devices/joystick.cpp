@@ -3,8 +3,8 @@
 #include <cstddef>
 
 #include "controls/controller_motion.h"
-#include "utils/stubs.h"
 #include "utils/log.hpp"
+#include "utils/stubs.h"
 
 namespace devilution {
 

@@ -2,9 +2,9 @@
 
 #include <SDL.h>
 
-#include "utils/stdcompat/optional.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
+#include "utils/stdcompat/optional.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"

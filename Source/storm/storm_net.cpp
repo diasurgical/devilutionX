@@ -1,9 +1,9 @@
 #include <memory>
 #ifndef NONET
+#include "utils/sdl_mutex.h"
 #include <mutex>
 #include <thread>
 #include <utility>
-#include "utils/sdl_mutex.h"
 #endif
 
 #include "dvlnet/abstract_net.h"

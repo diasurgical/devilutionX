@@ -1,8 +1,8 @@
 #include "itemlabels.h"
 
-#include <vector>
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 #include "common.h"
 #include "control.h"

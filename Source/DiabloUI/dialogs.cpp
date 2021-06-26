@@ -12,8 +12,8 @@
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
-#include "utils/log.hpp"
 #include "utils/language.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 

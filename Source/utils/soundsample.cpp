@@ -1,7 +1,7 @@
 #include "utils/soundsample.h"
 
-#include <cmath>
 #include <chrono>
+#include <cmath>
 
 #include <Aulib/DecoderDrwav.h>
 #include <Aulib/ResamplerSpeex.h>
@@ -13,8 +13,8 @@
 #endif
 
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
 #include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/stubs.h"

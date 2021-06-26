@@ -6,9 +6,9 @@
 
 #include "controls/controller_motion.h"
 #include "controls/devices/joystick.h"
+#include "utils/log.hpp"
 #include "utils/sdl_ptrs.h"
 #include "utils/stubs.h"
-#include "utils/log.hpp"
 
 namespace devilution {
 

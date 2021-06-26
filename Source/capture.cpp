@@ -10,9 +10,9 @@
 #include "palette.h"
 #include "storm/storm.h"
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-#include "utils/log.hpp"
 
 namespace devilution {
 

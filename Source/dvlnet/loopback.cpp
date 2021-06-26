@@ -1,6 +1,6 @@
 #include "dvlnet/loopback.h"
-#include "utils/stubs.h"
 #include "utils/language.h"
+#include "utils/stubs.h"
 
 namespace devilution {
 namespace net {

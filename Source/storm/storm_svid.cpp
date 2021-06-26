@@ -8,8 +8,8 @@
 #include <smacker.h>
 
 #ifndef NOSOUND
-#include <Aulib/Stream.h>
 #include <Aulib/ResamplerSpeex.h>
+#include <Aulib/Stream.h>
 
 #include "utils/push_aulib_decoder.h"
 #endif
@@ -17,8 +17,8 @@
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
-#include "storm/storm_file_wrapper.h"
 #include "storm/storm.h"
+#include "storm/storm_file_wrapper.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"

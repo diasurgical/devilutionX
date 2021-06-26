@@ -3,8 +3,8 @@
  *
  * Implementation of functions for compression and decompressing MPQ data.
  */
-#include <memory>
 #include <SDL.h>
+#include <memory>
 
 #include "encrypt.h"
 #include "pkware.h"
