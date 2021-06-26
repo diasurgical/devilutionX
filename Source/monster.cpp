@@ -2413,7 +2413,7 @@ bool M_DoTalk(int i)
 	}
 	if (monster[i]._uniqtype - 1 == UMT_ZHAR
 	    && monster[i].mtalkmsg == TEXT_ZHAR1
-	    && ((monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0)) {
+	    && (monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		quests[Q_ZHAR]._qlog = true;
 		CreateTypeItem(monster[i].position.tile + Point { 1, 1 }, false, ITYPE_MISC, IMISC_BOOK, true, false);
