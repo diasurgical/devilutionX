@@ -2677,7 +2677,7 @@ bool M_DoStone(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
 
-	if (monster[i]._mhitpoints > 0) {
+	if (monster[i]._mhitpoints <= 0) {
 		dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = 0;
 		monster[i]._mDelFlag = true;
 	}
