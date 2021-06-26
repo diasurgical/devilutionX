@@ -55,30 +55,7 @@ struct Point {
 
 	constexpr Point &operator+=(Direction direction)
 	{
-		constexpr auto toPoint = [](Direction direction) -> Point {
-			switch (direction) {
-			case DIR_S:
-				return { 1, 1 };
-			case DIR_SW:
-				return { 0, 1 };
-			case DIR_W:
-				return { -1, 1 };
-			case DIR_NW:
-				return { -1, 0 };
-			case DIR_N:
-				return { -1, -1 };
-			case DIR_NE:
-				return { 0, -1 };
-			case DIR_E:
-				return { 1, -1 };
-			case DIR_SE:
-				return { 1, 0 };
-			default:
-				return { 0, 0 };
-			}
-		};
-
-		return (*this) += toPoint(direction);
+		return (*this) += Point::fromDirection(direction);
 	}
 
 	constexpr Point &operator-=(const Point &other)
@@ -168,8 +145,8 @@ struct Point {
 	{
 		auto vector = *this - other; //No need to call abs() as we square the values anyway
 
-		// Casting one operand to a wide type is enough to promote every value in the expression, addresses overflow warnings
-		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.x) * vector.x + vector.y * vector.y));
+		// Casting multiplication operands to a wide type to address overflow warnings
+		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.x) * vector.x + static_cast<int64_t>(vector.y) * vector.y));
 	}
 
 	constexpr friend Point abs(Point a)

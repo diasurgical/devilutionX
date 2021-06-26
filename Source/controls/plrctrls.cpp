@@ -386,17 +386,17 @@ void FindTrigger()
 		int mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
 			const int newDistance = GetDistance(missile[mi].position.tile, 2);
-			if (newDdistance == 0)
+			if (newDistance == 0)
 				continue;
-			if (pcursmissile != -1 && distance < newDdistance)
+			if (pcursmissile != -1 && distance < newDistance)
 				continue;
 			const int newRotations = GetRotaryDistance(missile[mi].position.tile);
-			if (pcursmissile != -1 && distance == newDdistance && rotations < newRotations)
+			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
 			cursmx = missile[mi].position.tile.x;
 			cursmy = missile[mi].position.tile.y;
 			pcursmissile = mi;
-			distance = newDdistance;
+			distance = newDistance;
 			rotations = newRotations;
 		}
 	}
@@ -407,8 +407,8 @@ void FindTrigger()
 			int ty = trigs[i].position.y;
 			if (trigs[i]._tlvl == 13)
 				ty -= 1;
-			const int newDdistance = GetDistance({ tx, ty }, 2);
-			if (newDdistance == 0)
+			const int newDistance = GetDistance({ tx, ty }, 2);
+			if (newDistance == 0)
 				continue;
 			cursmx = tx;
 			cursmy = ty;
@@ -419,8 +419,8 @@ void FindTrigger()
 			for (int i = 0; i < MAXQUESTS; i++) {
 				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
 					continue;
-				const int newDdistance = GetDistance(quests[i].position, 2);
-				if (newDdistance == 0)
+				const int newDistance = GetDistance(quests[i].position, 2);
+				if (newDistance == 0)
 					continue;
 				cursmx = quests[i].position.x;
 				cursmy = quests[i].position.y;
@@ -1051,8 +1051,8 @@ bool IsPathBlocked(Point position, Direction dir)
 		return false;
 	}
 
-	auto leftStep{ position + d1 };
-	auto rightStep{ position + d2 };
+	auto leftStep { position + d1 };
+	auto rightStep { position + d2 };
 
 	if (!nSolidTable[dPiece[leftStep.x][leftStep.y]] && !nSolidTable[dPiece[rightStep.x][rightStep.y]])
 		return false;
@@ -1077,11 +1077,9 @@ void WalkInDir(int playerId, AxisDirection dir)
 {
 	auto &player = plr[playerId];
 
-	const auto future{ player.position.future };
-
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
 		if (sgbControllerActive && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
-			NetSendCmdLoc(playerId, true, CMD_WALKXY, future); // Stop walking
+			NetSendCmdLoc(playerId, true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}
 
@@ -1091,7 +1089,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (CanChangeDirection(player))
 		player._pdir = pdir;
 
-	if (PosOkPlayer(playerId, delta) && IsPathBlocked(future, pdir))
+	if (PosOkPlayer(playerId, delta) && IsPathBlocked(player.position.future, pdir))
 		return; // Don't start backtrack around obstacles
 
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
