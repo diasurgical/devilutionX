@@ -31,9 +31,9 @@ enum AnimationDistributionFlags : uint8_t {
 	RepeatedAction = 1 << 2,
 };
 
-/*
-* @brief Contains the core animation information and related logic
-*/
+/**
+ * @brief Contains the core animation information and related logic
+ */
 class AnimationInfo {
 public:
 	/**
@@ -91,7 +91,7 @@ public:
 	 */
 	void ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrames, int delayLen);
 
-	/*
+	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
 	 * @param dontProgressAnimation Increase DelayCounter but don't change CurrentFrame
@@ -101,7 +101,7 @@ public:
 private:
 	/**
 	 * @brief returns the progress as a fraction (0.0f to 1.0f) in time to the next game tick or 0.0f if the animation is frozen
-	*/
+	 */
 	float GetProgressToNextGameTick() const;
 
 	/**
