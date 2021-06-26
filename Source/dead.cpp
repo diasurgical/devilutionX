@@ -19,7 +19,7 @@ namespace {
 void InitDeadAnimationFromMonster(DeadStruct &d, const CMonster &mon)
 {
 	int i = 0;
-	for (auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
+	for (const auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
 		d._deadData[i++] = celSprite->Data();
 	d._deadFrame = mon.Anims[MA_DEATH].Frames;
 	d._deadWidth = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();

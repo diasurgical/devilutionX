@@ -2368,7 +2368,7 @@ void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const Monste
 	const AnimStruct &anim = mon.MType->Anims[graphic];
 	mis._mimfnum = midir;
 	mis._miAnimFlags = 0;
-	auto &celSprite = *anim.CelSpritesForDirections[midir];
+	const auto &celSprite = *anim.CelSpritesForDirections[midir];
 	mis._miAnimData = celSprite.Data();
 	mis._miAnimDelay = anim.Rate;
 	mis._miAnimLen = anim.Frames;

@@ -250,7 +250,7 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 		return;
 	}
 	int nCel = m->_miAnimFrame;
-	auto frameTable = reinterpret_cast<const uint32_t *>(m->_miAnimData);
+	const auto *frameTable = reinterpret_cast<const uint32_t *>(m->_miAnimData);
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
@@ -321,7 +321,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	}
 
 	int nCel = monster[m].AnimInfo.GetFrameToUseForRendering();
-	auto frameTable = reinterpret_cast<const uint32_t *>(monster[m].AnimInfo.pCelSprite->Data());
+	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster[m].AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
@@ -786,7 +786,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
 			const byte *pCelBuff = pDeadGuy->_deadData[dd];
 			assert(pCelBuff != nullptr);
-			auto frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
+			const auto *frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
 			int frames = SDL_SwapLE32(frameTable[0]);
 			int nCel = pDeadGuy->_deadFrame;
 			if (nCel < 1 || frames > 50 || nCel > frames) {

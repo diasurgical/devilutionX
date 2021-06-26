@@ -4264,7 +4264,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
-			const auto mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
+			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
 			    [](const ItemStruct &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
@@ -4283,7 +4283,7 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_STAFF:
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
-			const auto mostValuablePlayerItem = myPlayer.GetMostValuableItem(
+			const auto *const mostValuablePlayerItem = myPlayer.GetMostValuableItem(
 			    [](const ItemStruct &item) { return item._itype == items[0]._itype; });
 
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
@@ -4517,7 +4517,7 @@ void SpawnBoy(int lvl)
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
-			const auto mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
+			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
 			    [](const ItemStruct &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
@@ -4536,7 +4536,7 @@ void SpawnBoy(int lvl)
 		case ITYPE_STAFF:
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
-			const auto mostValuablePlayerItem = myPlayer.GetMostValuableItem(
+			const auto *const mostValuablePlayerItem = myPlayer.GetMostValuableItem(
 			    [itemType](const ItemStruct &item) { return item._itype == itemType; });
 
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;

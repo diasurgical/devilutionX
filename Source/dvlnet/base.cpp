@@ -124,7 +124,7 @@ bool base::SNetSendMessage(int playerID, void *data, unsigned int size)
 	if (playerID != SNPLAYER_ALL && playerID != SNPLAYER_OTHERS
 	    && (playerID < 0 || playerID >= MAX_PLRS))
 		abort();
-	auto rawMessage = reinterpret_cast<unsigned char *>(data);
+	auto *rawMessage = reinterpret_cast<unsigned char *>(data);
 	buffer_t message(rawMessage, rawMessage + size);
 	if (playerID == plr_self || playerID == SNPLAYER_ALL)
 		message_queue.emplace_back(plr_self, message);

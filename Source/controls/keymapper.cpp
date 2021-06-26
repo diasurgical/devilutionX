@@ -50,7 +50,7 @@ void Keymapper::keyPressed(int key) const
 	if (it == keyIDToAction.end())
 		return; // Ignore unmapped keys.
 
-	auto &action = it->second;
+	const auto &action = it->second;
 
 	// Check that the action can be triggered and that the chat textbox is not
 	// open.

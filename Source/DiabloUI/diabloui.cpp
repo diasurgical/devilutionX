@@ -99,7 +99,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	SDL_StopTextInput(); // input is enabled by default
 #endif
 	textInputActive = false;
-	for (auto &item : items) {
+	for (const auto &item : items) {
 		if (item->m_type == UI_EDIT) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item);
 			SDL_SetTextInputRect(&item->m_rect);
@@ -578,7 +578,7 @@ bool UiValidPlayerName(const char *name)
 	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
 		tmpname[i]++;
 
-	for (auto bannedName : bannedNames) {
+	for (const auto *bannedName : bannedNames) {
 		if (strstr(tmpname, bannedName) != nullptr)
 			return false;
 	}
@@ -929,7 +929,7 @@ void LoadPalInMem(const SDL_Color *pPal)
 
 void UiRenderItems(const std::vector<UiItemBase *> &items)
 {
-	for (auto &item : items)
+	for (const auto &item : items)
 		RenderItem(item);
 }
 
@@ -945,7 +945,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 #endif
 
 	bool handled = false;
-	for (auto &item : items) {
+	for (const auto &item : items) {
 		if (HandleMouseEvent(*event, item)) {
 			handled = true;
 			break;
@@ -954,7 +954,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
-		for (auto &item : items) {
+		for (const auto &item : items) {
 			if (item->m_type == UI_BUTTON)
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
 		}

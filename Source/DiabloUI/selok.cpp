@@ -24,12 +24,12 @@ void selok_Free()
 {
 	ArtBackground.Unload();
 
-	for (auto pUIListItem : vecSelOkDialogItems) {
+	for (auto *pUIListItem : vecSelOkDialogItems) {
 		delete pUIListItem;
 	}
 	vecSelOkDialogItems.clear();
 
-	for (auto pUIItem : vecSelOkDialog) {
+	for (auto *pUIItem : vecSelOkDialog) {
 		delete pUIItem;
 	}
 	vecSelOkDialog.clear();

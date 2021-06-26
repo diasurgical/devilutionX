@@ -83,12 +83,12 @@ void SelconnFree()
 {
 	ArtBackground.Unload();
 
-	for (auto pUIItem : vecConnItems) {
+	for (auto *pUIItem : vecConnItems) {
 		delete pUIItem;
 	}
 	vecConnItems.clear();
 
-	for (auto pUIMenuItem : vecSelConnDlg) {
+	for (auto *pUIMenuItem : vecSelConnDlg) {
 		delete pUIMenuItem;
 	}
 	vecSelConnDlg.clear();

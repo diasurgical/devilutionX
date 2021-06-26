@@ -215,7 +215,7 @@ void Deinit()
 	if (!fontWasLoaded)
 		UnloadTtfFont();
 
-	for (auto pUIItem : vecOkDialog) {
+	for (auto *pUIItem : vecOkDialog) {
 		delete pUIItem;
 	}
 	vecOkDialog.clear();

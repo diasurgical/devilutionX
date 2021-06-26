@@ -44,12 +44,12 @@ std::vector<UiItemBase *> vecSelGameDialog;
 
 void selgame_FreeVectors()
 {
-	for (auto pUIItem : vecSelGameDlgItems) {
+	for (auto *pUIItem : vecSelGameDlgItems) {
 		delete pUIItem;
 	}
 	vecSelGameDlgItems.clear();
 
-	for (auto pUIItem : vecSelGameDialog) {
+	for (auto *pUIItem : vecSelGameDialog) {
 		delete pUIItem;
 	}
 	vecSelGameDialog.clear();

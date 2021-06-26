@@ -66,7 +66,7 @@ void SelheroUiFocusNavigationYesNo()
 
 void SelheroFreeListItems()
 {
-	for (auto pUIItem : vecSelHeroDlgItems) {
+	for (auto *pUIItem : vecSelHeroDlgItems) {
 		delete pUIItem;
 	}
 	vecSelHeroDlgItems.clear();
@@ -74,7 +74,7 @@ void SelheroFreeListItems()
 
 void SelheroFreeDlgItems()
 {
-	for (auto pUIItem : vecSelDlgItems) {
+	for (auto *pUIItem : vecSelDlgItems) {
 		delete pUIItem;
 	}
 	vecSelDlgItems.clear();
@@ -84,7 +84,7 @@ void SelheroFree()
 {
 	ArtBackground.Unload();
 
-	for (auto pUIItem : vecSelHeroDialog) {
+	for (auto *pUIItem : vecSelHeroDialog) {
 		delete pUIItem;
 	}
 	vecSelHeroDialog.clear();

@@ -69,12 +69,12 @@ void MainmenuFree()
 	ArtBackgroundWidescreen.Unload();
 	ArtBackground.Unload();
 
-	for (auto pUIItem : vecMainMenuDialog) {
+	for (auto *pUIItem : vecMainMenuDialog) {
 		delete pUIItem;
 	}
 	vecMainMenuDialog.clear();
 
-	for (auto pUIMenuItem : vecMenuItems) {
+	for (auto *pUIMenuItem : vecMenuItems) {
 		delete pUIMenuItem;
 	}
 	vecMenuItems.clear();
