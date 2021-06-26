@@ -188,10 +188,7 @@ static void pfile_encode_hero(const PkPlayerStruct *pack)
 
 static bool pfile_open_archive(uint32_t save_num)
 {
-	if (OpenMPQ(GetSavePath(save_num).c_str()))
-		return true;
-
-	return false;
+	return OpenMPQ(GetSavePath(save_num).c_str());
 }
 
 static HANDLE pfile_open_save_archive(uint32_t save_num)

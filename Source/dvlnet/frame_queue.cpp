@@ -52,10 +52,7 @@ bool frame_queue::packet_ready()
 		if (nextsize == 0)
 			throw frame_queue_exception();
 	}
-	if (size() >= nextsize)
-		return true;
-
-	return false;
+	return size() >= nextsize;
 }
 
 buffer_t frame_queue::read_packet()

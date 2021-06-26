@@ -277,9 +277,7 @@ private:
 		fhdr.hashcount = SDL_SwapLE32(INDEX_ENTRIES);
 		fhdr.blockcount = SDL_SwapLE32(INDEX_ENTRIES);
 
-		if (!stream.write(reinterpret_cast<const char *>(&fhdr), sizeof(fhdr)))
-			return false;
-		return true;
+		return stream.write(reinterpret_cast<const char *>(&fhdr), sizeof(fhdr));
 	}
 
 	bool WriteBlockTable()

@@ -810,11 +810,7 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 	player._pILMinDam = lmin;
 	player._pILMaxDam = lmax;
 
-	if ((iflgs & ISPL_INFRAVISION) != 0) {
-		player._pInfraFlag = true;
-	} else {
-		player._pInfraFlag = false;
-	}
+	player._pInfraFlag = (iflgs & ISPL_INFRAVISION) != 0;
 
 	player._pBlockFlag = false;
 	if (player._pClass == HeroClass::Monk) {

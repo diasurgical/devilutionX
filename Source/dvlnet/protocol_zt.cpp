@@ -152,10 +152,7 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 		if (len >= 0) {
 			peer_list[peer].recv_queue.write(buffer_t(buf, buf + len));
 		} else {
-			if (errno == EAGAIN || errno == EWOULDBLOCK) {
-				return true;
-			}
-			return false;
+			return errno == EAGAIN || errno == EWOULDBLOCK;
 		}
 	}
 }

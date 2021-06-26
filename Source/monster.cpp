@@ -4663,9 +4663,7 @@ bool DirOK(int i, Direction mdir)
 		if (SolidLoc(position + DIR_SW) || SolidLoc(position + DIR_SE))
 			return false;
 	if (monster[i].leaderflag == 1) {
-		if (futurePosition.WalkingDistance(monster[monster[i].leader].position.future) >= 4)
-			return false;
-		return true;
+		return futurePosition.WalkingDistance(monster[monster[i].leader].position.future) < 4;
 	}
 	if (monster[i]._uniqtype == 0 || (UniqMonst[monster[i]._uniqtype - 1].mUnqAttr & 2) == 0)
 		return true;

@@ -347,9 +347,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
-	if (leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144)
-		return true;
-	return false;
+	return leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
 }
 
 static bool WallTrapLocOkK(int xp, int yp)
@@ -357,10 +355,7 @@ static bool WallTrapLocOkK(int xp, int yp)
 	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
 
-	if (nTrapTable[dPiece[xp][yp]])
-		return true;
-
-	return false;
+	return nTrapTable[dPiece[xp][yp]];
 }
 
 void InitRndLocObj(int min, int max, _object_id objtype)
@@ -647,9 +642,7 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 
 bool TorchLocOK(int xp, int yp)
 {
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
-		return false;
-	return true;
+	return (dFlags[xp][yp] & BFLAG_POPULATED) == 0;
 }
 
 void AddL2Torches()
@@ -5317,10 +5310,7 @@ void SyncL2Doors(int i)
 {
 	int x, y;
 
-	if (object[i]._oVar4 == 0)
-		object[i]._oMissFlag = false;
-	else
-		object[i]._oMissFlag = true;
+	object[i]._oMissFlag = object[i]._oVar4 != 0;
 	x = object[i].position.x;
 	y = object[i].position.y;
 	object[i]._oSelFlag = 2;
