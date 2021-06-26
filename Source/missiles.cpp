@@ -458,7 +458,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 #ifdef _DEBUG
 	if (hit < hper || debug_mode_dollar_sign || debug_mode_key_inverted_v || monster[m]._mmode == MM_STONE) {
 #else
-	else if (hit < hper || monster[m]._mmode == MM_STONE) {
+	if (hit < hper || monster[m]._mmode == MM_STONE) {
 #endif
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
 		if (!shift)

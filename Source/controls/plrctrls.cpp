@@ -1124,13 +1124,17 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	}
 	if (chrflag && plr[myplr]._pStatPts > 0) {
 		return &AttrIncBtnSnap;
-	} else if (spselflag) {
+	}
+	if (spselflag) {
 		return &HotSpellMove;
-	} else if (sbookflag) {
+	}
+	if (sbookflag) {
 		return &SpellBookMove;
-	} else if (questlog) {
+	}
+	if (questlog) {
 		return &QuestLogMove;
-	} else if (stextflag != STORE_NONE) {
+	}
+	if (stextflag != STORE_NONE) {
 		return &StoreMove;
 	}
 	return nullptr;

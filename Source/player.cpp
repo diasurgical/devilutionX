@@ -3322,7 +3322,8 @@ bool PlrDeathModeOK(int p)
 	}
 	if (player._pmode == PM_QUIT) {
 		return true;
-	} else if (player._pmode == PM_NEWLVL) {
+	}
+	if (player._pmode == PM_NEWLVL) {
 		return true;
 	}
 

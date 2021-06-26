@@ -135,7 +135,8 @@ bool protocol_zt::send_queued_peer(const endpoint &peer)
 			auto it = peer_list[peer].send_queue.front().begin();
 			peer_list[peer].send_queue.front().erase(it, it + r);
 			return true;
-		} else if (decltype(len)(r) == len) {
+		}
+		if (decltype(len)(r) == len) {
 			peer_list[peer].send_queue.pop_front();
 		} else {
 			throw protocol_exception();

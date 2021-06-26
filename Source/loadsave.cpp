@@ -916,9 +916,11 @@ bool IsHeaderValid(uint32_t magicNumber)
 	if (magicNumber == LoadLE32("SHLF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
-	} else if (!gbIsSpawn && magicNumber == LoadLE32("RETL")) {
+	}
+	if (!gbIsSpawn && magicNumber == LoadLE32("RETL")) {
 		return true;
-	} else if (!gbIsSpawn && magicNumber == LoadLE32("HELF")) {
+	}
+	if (!gbIsSpawn && magicNumber == LoadLE32("HELF")) {
 		gbIsHellfireSaveGame = true;
 		return true;
 	}

@@ -892,7 +892,8 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar *uiSb)
 		if (IsInsideRect(event, UpArrowRect(uiSb))) {
 			scrollBarState.upArrowPressed = true;
 			return true;
-		} else if (IsInsideRect(event, DownArrowRect(uiSb))) {
+		}
+		if (IsInsideRect(event, DownArrowRect(uiSb))) {
 			scrollBarState.downArrowPressed = true;
 			return true;
 		}
