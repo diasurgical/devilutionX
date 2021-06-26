@@ -49,19 +49,18 @@ int slot = SLOTXY_INV_FIRST;
 
 /**
  * Number of angles to turn to face the coordinate
- * @param x Tile coordinates
- * @param y Tile coordinates
+ * @param destination Tile coordinates
  * @return -1 == down
  */
-int GetRotaryDistance(int x, int y)
+int GetRotaryDistance(Point destination)
 {
 	auto &myPlayer = plr[myplr];
 
-	if (myPlayer.position.future.x == x && myPlayer.position.future.y == y)
+	if (myPlayer.position.future == destination)
 		return -1;
 
 	int d1 = myPlayer._pdir;
-	int d2 = GetDirection(myPlayer.position.future, { x, y });
+	int d2 = GetDirection(myPlayer.position.future, destination);
 
 	int d = abs(d1 - d2);
 	if (d > 4)
@@ -81,19 +80,18 @@ int GetMinDistance(Point position)
 
 /**
  * @brief Get walking steps to coordinate
- * @param dx Tile coordinates
- * @param dy Tile coordinates
+ * @param destination Tile coordinates
  * @param maxDistance the max number of steps to search
  * @return number of steps, or 0 if not reachable
  */
-int GetDistance(int dx, int dy, int maxDistance)
+int GetDistance(Point destination, int maxDistance)
 {
-	if (GetMinDistance({ dx, dy }) > maxDistance) {
+	if (GetMinDistance(destination) > maxDistance) {
 		return 0;
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath(PosOkPlayer, myplr, plr[myplr].position.future.x, plr[myplr].position.future.y, dx, dy, walkpath);
+	int steps = FindPath(PosOkPlayer, myplr, plr[myplr].position.future.x, plr[myplr].position.future.y, destination.x, destination.y, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -102,24 +100,25 @@ int GetDistance(int dx, int dy, int maxDistance)
 
 /**
  * @brief Get distance to coordinate
- * @param dx Tile coordinates
- * @param dy Tile coordinates
+ * @param destination Tile coordinates
  */
-int GetDistanceRanged(int dx, int dy)
+int GetDistanceRanged(Point destination)
 {
-	int a = plr[myplr].position.future.x - dx;
-	int b = plr[myplr].position.future.y - dy;
-
-	return sqrt(a * a + b * b);
+	return plr[myplr].position.future.ExactDistance(destination);
 }
 
+/**
+ * @todo The loops in this function are iterating through tiles offset from the player position. This
+ * could be accomplished by looping over the values in the Direction enum and making use of
+ * Point math instead of nested loops from [-1, 1].
+ */
 void FindItemOrObject()
 {
 	int mx = plr[myplr].position.future.x;
 	int my = plr[myplr].position.future.y;
 	int rotations = 5;
 
-	// As the player can not stand on the edge fo the map this is safe from OOB
+	// As the player can not stand on the edge of the map this is safe from OOB
 	for (int xx = -1; xx < 2; xx++) {
 		for (int yy = -1; yy < 2; yy++) {
 			if (dItem[mx + xx][my + yy] <= 0)
@@ -128,10 +127,10 @@ void FindItemOrObject()
 			if (items[i].isEmpty()
 			    || items[i]._iSelFlag == 0)
 				continue;
-			int newRotations = GetRotaryDistance(mx + xx, my + yy);
+			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance(mx + xx, my + yy, 1) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
 			rotations = newRotations;
 			pcursitem = i;
@@ -152,10 +151,10 @@ void FindItemOrObject()
 				continue;
 			if (xx == 0 && yy == 0 && object[o]._oDoorFlag)
 				continue; // Ignore doorway so we don't get stuck behind barrels
-			int newRotations = GetRotaryDistance(mx + xx, my + yy);
+			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance(mx + xx, my + yy, 1) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
 			rotations = newRotations;
 			pcursobj = o;
@@ -168,7 +167,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(towners[i].position.x, towners[i].position.y, 2);
+		int distance = GetDistance(towners[i].position, 2);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -213,17 +212,14 @@ void FindRangedTarget()
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
-		const MonsterStruct &monst = monster[mi];
-		const int mx = monst.position.future.x;
-		const int my = monst.position.future.y;
 		if (!CanTargetMonster(mi))
 			continue;
 
 		const bool newCanTalk = CanTalkToMonst(mi);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(mx, my);
-		const int newRotations = GetRotaryDistance(mx, my);
+		const int newDdistance = GetDistanceRanged(monster[mi].position.future);
+		const int newRotations = GetRotaryDistance(monster[mi].position.future);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -282,7 +278,7 @@ void FindMeleeTarget()
 						const bool newCanTalk = CanTalkToMonst(mi);
 						if (pcursmonst != -1 && !canTalk && newCanTalk)
 							continue;
-						const int newRotations = GetRotaryDistance(dx, dy);
+						const int newRotations = GetRotaryDistance({ dx, dy });
 						if (pcursmonst != -1 && canTalk == newCanTalk && rotations < newRotations)
 							continue;
 						rotations = newRotations;
@@ -335,7 +331,7 @@ void CheckPlayerNearby()
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (i == myplr)
 			continue;
-		auto &player = plr[i];
+		const auto &player = plr[i];
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
@@ -344,16 +340,16 @@ void CheckPlayerNearby()
 			continue;
 
 		if (myPlayer._pwtype == WT_RANGED || HasRangedSpell() || spl == SPL_HEALOTHER) {
-			newDdistance = GetDistanceRanged(mx, my);
+			newDdistance = GetDistanceRanged(player.position.future);
 		} else {
-			newDdistance = GetDistance(mx, my, distance);
+			newDdistance = GetDistance(player.position.future, distance);
 			if (newDdistance == 0)
 				continue;
 		}
 
 		if (pcursplr != -1 && distance < newDdistance)
 			continue;
-		const int newRotations = GetRotaryDistance(mx, my);
+		const int newRotations = GetRotaryDistance(player.position.future);
 		if (pcursplr != -1 && distance == newDdistance && rotations < newRotations)
 			continue;
 
@@ -380,7 +376,7 @@ int pcursquest;
 
 void FindTrigger()
 {
-	int rotations;
+	int rotations = 0;
 	int distance = 0;
 
 	if (pcursitem != -1 || pcursobj != -1)
@@ -389,20 +385,18 @@ void FindTrigger()
 	for (int i = 0; i < nummissiles; i++) {
 		int mi = missileactive[i];
 		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
-			int mix = missile[mi].position.tile.x;
-			int miy = missile[mi].position.tile.y;
-			const int newDdistance = GetDistance(mix, miy, 2);
-			if (newDdistance == 0)
+			const int newDistance = GetDistance(missile[mi].position.tile, 2);
+			if (newDistance == 0)
 				continue;
-			if (pcursmissile != -1 && distance < newDdistance)
+			if (pcursmissile != -1 && distance < newDistance)
 				continue;
-			const int newRotations = GetRotaryDistance(mix, miy);
-			if (pcursmissile != -1 && distance == newDdistance && rotations < newRotations)
+			const int newRotations = GetRotaryDistance(missile[mi].position.tile);
+			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
-			cursmx = mix;
-			cursmy = miy;
+			cursmx = missile[mi].position.tile.x;
+			cursmy = missile[mi].position.tile.y;
 			pcursmissile = mi;
-			distance = newDdistance;
+			distance = newDistance;
 			rotations = newRotations;
 		}
 	}
@@ -413,8 +407,8 @@ void FindTrigger()
 			int ty = trigs[i].position.y;
 			if (trigs[i]._tlvl == 13)
 				ty -= 1;
-			const int newDdistance = GetDistance(tx, ty, 2);
-			if (newDdistance == 0)
+			const int newDistance = GetDistance({ tx, ty }, 2);
+			if (newDistance == 0)
 				continue;
 			cursmx = tx;
 			cursmy = ty;
@@ -425,8 +419,8 @@ void FindTrigger()
 			for (int i = 0; i < MAXQUESTS; i++) {
 				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
 					continue;
-				const int newDdistance = GetDistance(quests[i].position.x, quests[i].position.y, 2);
-				if (newDdistance == 0)
+				const int newDistance = GetDistance(quests[i].position, 2);
+				if (newDistance == 0)
 					continue;
 				cursmx = quests[i].position.x;
 				cursmy = quests[i].position.y;
@@ -941,13 +935,13 @@ void InvMove(AxisDirection dir)
 /**
  * check if hot spell at X Y exists
  */
-bool HSExists(int x, int y)
+bool HSExists(Point target)
 {
 	for (int r = 0; r < speedspellcount; r++) {
-		if (x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && x < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
+		if (target.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
+		    && target.x < speedspellscoords[r].x + SPLICONLENGTH / 2
+		    && target.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
+		    && target.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
 			return true;
 		}
 	}
@@ -988,11 +982,11 @@ void HotSpellMove(AxisDirection dir)
 	}
 
 	if (dir.y == AxisDirectionY_UP) {
-		if (HSExists(x, y - SPLICONLENGTH)) {
+		if (HSExists({ x, y - SPLICONLENGTH })) {
 			y -= SPLICONLENGTH;
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
-		if (HSExists(x, y + SPLICONLENGTH)) {
+		if (HSExists({ x, y + SPLICONLENGTH })) {
 			y += SPLICONLENGTH;
 		}
 	}
@@ -1022,19 +1016,9 @@ static const Direction FaceDir[3][3] = {
 	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
 	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
 };
-static const int Offsets[8][2] = {
-	{ 1, 1 },   // DIR_S
-	{ 0, 1 },   // DIR_SW
-	{ -1, 1 },  // DIR_W
-	{ -1, 0 },  // DIR_NW
-	{ -1, -1 }, // DIR_N
-	{ 0, -1 },  // DIR_NE
-	{ 1, -1 },  // DIR_E
-	{ 1, 0 },   // DIR_SE
-};
 
 /**
- * @brief check if stepping in direction (dir) from x, y is blocked.
+ * @brief check if stepping in direction (dir) from position is blocked.
  *
  * If you step from A to B, at leat one of the Xs need to be clear:
  *
@@ -1043,10 +1027,9 @@ static const int Offsets[8][2] = {
  *
  *  @return true if step is blocked
  */
-bool IsPathBlocked(int x, int y, int dir)
+bool IsPathBlocked(Point position, Direction dir)
 {
-	int d1, d2, d1x, d1y, d2x, d2y;
-
+	Direction d1, d2;
 	switch (dir) {
 	case DIR_N:
 		d1 = DIR_NW;
@@ -1068,15 +1051,13 @@ bool IsPathBlocked(int x, int y, int dir)
 		return false;
 	}
 
-	d1x = x + Offsets[d1][0];
-	d1y = y + Offsets[d1][1];
-	d2x = x + Offsets[d2][0];
-	d2y = y + Offsets[d2][1];
+	auto leftStep { position + d1 };
+	auto rightStep { position + d2 };
 
-	if (!nSolidTable[dPiece[d1x][d1y]] && !nSolidTable[dPiece[d2x][d2y]])
+	if (!nSolidTable[dPiece[leftStep.x][leftStep.y]] && !nSolidTable[dPiece[rightStep.x][rightStep.y]])
 		return false;
 
-	return !PosOkPlayer(myplr, { d1x, d1y }) && !PosOkPlayer(myplr, { d2x, d2y });
+	return !PosOkPlayer(myplr, leftStep) && !PosOkPlayer(myplr, rightStep);
 }
 
 bool CanChangeDirection(const PlayerStruct &player)
@@ -1096,26 +1077,22 @@ void WalkInDir(int playerId, AxisDirection dir)
 {
 	auto &player = plr[playerId];
 
-	const int x = player.position.future.x;
-	const int y = player.position.future.y;
-
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE) {
 		if (sgbControllerActive && player.walkpath[0] != WALK_NONE && player.destAction == ACTION_NONE)
-			NetSendCmdLoc(playerId, true, CMD_WALKXY, { x, y }); // Stop walking
+			NetSendCmdLoc(playerId, true, CMD_WALKXY, player.position.future); // Stop walking
 		return;
 	}
 
 	const Direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
-	const int dx = x + Offsets[pdir][0];
-	const int dy = y + Offsets[pdir][1];
+	const auto delta = player.position.future + pdir;
 
 	if (CanChangeDirection(player))
 		player._pdir = pdir;
 
-	if (PosOkPlayer(playerId, { dx, dy }) && IsPathBlocked(x, y, pdir))
+	if (PosOkPlayer(playerId, delta) && IsPathBlocked(player.position.future, pdir))
 		return; // Don't start backtrack around obstacles
 
-	NetSendCmdLoc(playerId, true, CMD_WALKXY, { dx, dy });
+	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
 }
 
 void QuestLogMove(AxisDirection moveDir)
@@ -1442,8 +1419,9 @@ void UpdateSpellTarget()
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	cursmx = plr[myplr].position.future.x + Offsets[plr[myplr]._pdir][0] * range;
-	cursmy = plr[myplr].position.future.y + Offsets[plr[myplr]._pdir][1] * range;
+	auto cursm = plr[myplr].position.future + Point::fromDirection(plr[myplr]._pdir) * range;
+	cursmx = cursm.x;
+	cursmy = cursm.y;
 }
 
 /**

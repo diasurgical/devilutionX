@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 #include "engine/direction.hpp"
 #include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/algorithm.hpp"
@@ -9,6 +11,30 @@ namespace devilution {
 struct Point {
 	int x;
 	int y;
+
+	static constexpr Point fromDirection(Direction direction)
+	{
+		switch (direction) {
+		case DIR_S:
+			return { 1, 1 };
+		case DIR_SW:
+			return { 0, 1 };
+		case DIR_W:
+			return { -1, 1 };
+		case DIR_NW:
+			return { -1, 0 };
+		case DIR_N:
+			return { -1, -1 };
+		case DIR_NE:
+			return { 0, -1 };
+		case DIR_E:
+			return { 1, -1 };
+		case DIR_SE:
+			return { 1, 0 };
+		default:
+			return { 0, 0 };
+		}
+	};
 
 	constexpr bool operator==(const Point &other) const
 	{
@@ -29,30 +55,7 @@ struct Point {
 
 	constexpr Point &operator+=(Direction direction)
 	{
-		constexpr auto toPoint = [](Direction direction) -> Point {
-			switch (direction) {
-			case DIR_S:
-				return { 1, 1 };
-			case DIR_SW:
-				return { 0, 1 };
-			case DIR_W:
-				return { -1, 1 };
-			case DIR_NW:
-				return { -1, 0 };
-			case DIR_N:
-				return { -1, -1 };
-			case DIR_NE:
-				return { 0, -1 };
-			case DIR_E:
-				return { 1, -1 };
-			case DIR_SE:
-				return { 1, 0 };
-			default:
-				return { 0, 0 };
-			}
-		};
-
-		return (*this) += toPoint(direction);
+		return (*this) += Point::fromDirection(direction);
 	}
 
 	constexpr Point &operator-=(const Point &other)
@@ -129,6 +132,21 @@ struct Point {
 			approx -= max * 40;
 
 		return (approx + 512) / 1024;
+	}
+
+	/**
+	 * @brief Calculates the exact distance between two points (as accurate as the closest integer representation)
+	 *
+	 * In practice it is likely that ApproxDistance gives the same result, especially for nearby points.
+	 * @param other Point to which we want the distance
+	 * @return Exact magnitude of vector this -> other
+	*/
+	int ExactDistance(Point other) const
+	{
+		auto vector = *this - other; //No need to call abs() as we square the values anyway
+
+		// Casting multiplication operands to a wide type to address overflow warnings
+		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.x) * vector.x + static_cast<int64_t>(vector.y) * vector.y));
 	}
 
 	constexpr friend Point abs(Point a)
