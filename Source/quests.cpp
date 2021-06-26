@@ -813,7 +813,7 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, quest_state s, int l, int v1)
+void SetMultiQuest(int q, quest_state s, bool log, int v1)
 {
 	if (gbIsSpawn)
 		return;
@@ -821,7 +821,8 @@ void SetMultiQuest(int q, quest_state s, int l, int v1)
 	if (quests[q]._qactive != QUEST_DONE) {
 		if (s > quests[q]._qactive)
 			quests[q]._qactive = s;
-		quests[q]._qlog |= l;
+		if (log)
+			quests[q]._qlog = true;
 		if (v1 > quests[q]._qvar1)
 			quests[q]._qvar1 = v1;
 	}
