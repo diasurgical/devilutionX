@@ -1450,7 +1450,7 @@ static void L5firstRoom()
 		HR2 = GenerateRnd(2) != 0;
 		HR3 = GenerateRnd(2) != 0;
 
-		if (HR1 && HR3)
+		if (!HR1 || !HR3)
 			HR2 = true;
 		if (HR1)
 			L5drawRoom(1, 15, 10, 10);
