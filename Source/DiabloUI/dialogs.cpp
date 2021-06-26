@@ -301,7 +301,7 @@ void UiErrorOkDialog(const char *text, const char *caption, bool error)
 
 void UiErrorOkDialog(const char *text, const std::vector<UiItemBase *>& renderBehind)
 {
-	UiErrorOkDialog(text, nullptr, std::move(renderBehind));
+	UiErrorOkDialog(text, nullptr, renderBehind);
 }
 
 } // namespace devilution
