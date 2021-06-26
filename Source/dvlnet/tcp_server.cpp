@@ -60,10 +60,11 @@ bool tcp_server::empty()
 
 void tcp_server::start_recv(const scc &con)
 {
-	con->socket.async_receive(asio::buffer(con->recv_buffer),
-	    std::bind(&tcp_server::handle_recv, this, con,
-	        std::placeholders::_1,
-	        std::placeholders::_2));
+	con->socket.async_receive(
+	    asio::buffer(con->recv_buffer),
+	    [this, con](auto &&PH1, auto &&PH2) {
+		    handle_recv(con, std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
+	    });
 }
 
 void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
@@ -157,10 +158,11 @@ void tcp_server::handle_send(const scc &con, const asio::error_code &ec,
 void tcp_server::start_accept()
 {
 	auto nextcon = make_connection();
-	acceptor->async_accept(nextcon->socket,
-	    std::bind(&tcp_server::handle_accept,
-	        this, nextcon,
-	        std::placeholders::_1));
+	acceptor->async_accept(
+	    nextcon->socket,
+	    [this, nextcon](auto &&PH1) {
+		    handle_accept(nextcon, std::forward<decltype(PH1)>(PH1));
+	    });
 }
 
 void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
@@ -182,8 +184,10 @@ void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
 void tcp_server::start_timeout(const scc &con)
 {
 	con->timer.expires_after(std::chrono::seconds(1));
-	con->timer.async_wait(std::bind(&tcp_server::handle_timeout, this, con,
-	    std::placeholders::_1));
+	con->timer.async_wait(
+	    [this, con](auto &&PH1) {
+		    handle_timeout(con, std::forward<decltype(PH1)>(PH1));
+	    });
 }
 
 void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
