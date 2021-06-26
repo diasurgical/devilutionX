@@ -2401,7 +2401,7 @@ bool PlrHitMonst(int pnum, int m)
 			dam *= 3;
 		}
 
-		if (player.pDamAcFlags & 0x10 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
+		if ((player.pDamAcFlags & 0x10) != 0 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
 			monster_43C785(m);
 		}
 
@@ -2439,8 +2439,8 @@ bool PlrHitMonst(int pnum, int m)
 			}
 			drawhpflag = true;
 		}
-		if (player._pIFlags & (ISPL_STEALMANA_3 | ISPL_STEALMANA_5) && !(player._pIFlags & ISPL_NOMANA)) {
-			if (player._pIFlags & ISPL_STEALMANA_3) {
+		if ((player._pIFlags & (ISPL_STEALMANA_3 | ISPL_STEALMANA_5)) != 0 && (player._pIFlags & ISPL_NOMANA) == 0) {
+			if ((player._pIFlags & ISPL_STEALMANA_3) != 0) {
 				skdam = 3 * dam / 100;
 			}
 			if ((player._pIFlags & ISPL_STEALMANA_5) != 0) {
@@ -2456,8 +2456,8 @@ bool PlrHitMonst(int pnum, int m)
 			}
 			drawmanaflag = true;
 		}
-		if (player._pIFlags & (ISPL_STEALLIFE_3 | ISPL_STEALLIFE_5)) {
-			if (player._pIFlags & ISPL_STEALLIFE_3) {
+		if ((player._pIFlags & (ISPL_STEALLIFE_3 | ISPL_STEALLIFE_5)) != 0) {
+			if ((player._pIFlags & ISPL_STEALLIFE_3) != 0) {
 				skdam = 3 * dam / 100;
 			}
 			if ((player._pIFlags & ISPL_STEALLIFE_5) != 0) {
@@ -2650,15 +2650,15 @@ bool PM_DoAttack(int pnum)
 			}
 		}
 
-		if (!(player._pIFlags & ISPL_FIREDAM) || !(player._pIFlags & ISPL_LIGHTDAM)) {
-			if (player._pIFlags & ISPL_FIREDAM) {
+		if ((player._pIFlags & ISPL_FIREDAM) == 0 || (player._pIFlags & ISPL_LIGHTDAM) == 0) {
+			if ((player._pIFlags & ISPL_FIREDAM) != 0) {
 				AddMissile({ dx, dy }, { 1, 0 }, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			} else if ((player._pIFlags & ISPL_LIGHTDAM) != 0) {
 				AddMissile({ dx, dy }, { 2, 0 }, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
 
-		if (dMonster[dx][dy]) {
+		if (dMonster[dx][dy] != 0) {
 			m = dMonster[dx][dy];
 			if (dMonster[dx][dy] > 0) {
 				m = dMonster[dx][dy] - 1;
@@ -2666,7 +2666,7 @@ bool PM_DoAttack(int pnum)
 				m = -(dMonster[dx][dy] + 1);
 			}
 			didhit = PlrHitMonst(pnum, m);
-		} else if (dPlayer[dx][dy] != 0 && (!gbFriendlyMode || sgGameInitInfo.bFriendlyFire)) {
+		} else if (dPlayer[dx][dy] != 0 && (!gbFriendlyMode || sgGameInitInfo.bFriendlyFire != 0)) {
 			BYTE p = dPlayer[dx][dy];
 			if (dPlayer[dx][dy] > 0) {
 				p = dPlayer[dx][dy] - 1;
@@ -3461,10 +3461,10 @@ void ProcessPlayers()
 			}
 
 			if (pnum == myplr) {
-				if ((player._pIFlags & ISPL_DRAINLIFE) && currlevel != 0) {
+				if ((player._pIFlags & ISPL_DRAINLIFE) != 0 && currlevel != 0) {
 					ApplyPlrDamage(pnum, 0, 0, 4);
 				}
-				if (player._pIFlags & ISPL_NOMANA && player._pManaBase > 0) {
+				if ((player._pIFlags & ISPL_NOMANA) != 0 && player._pManaBase > 0) {
 					player._pManaBase -= player._pMana;
 					player._pMana = 0;
 					drawmanaflag = true;
@@ -3568,8 +3568,6 @@ bool PosOkPlayer(int pnum, Point position)
 
 void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 {
-	int path;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("MakePlrPath: illegal player %i", pnum);
 	}
@@ -3579,8 +3577,8 @@ void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 		return;
 	}
 
-	path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
-	if (!path) {
+	int path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
+	if (path == 0) {
 		return;
 	}
 
@@ -4072,34 +4070,34 @@ void PlayDungMsgs()
 	}
 	auto &myPlayer = plr[myplr];
 
-	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATHEDRAL)) {
+	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_CATHEDRAL) == 0) {
 		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);
 		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DMSG_CATHEDRAL;
-	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CATACOMBS)) {
+	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_CATACOMBS) == 0) {
 		myPlayer.Say(HeroSpeech::TheSmellOfDeathSurroundsMe, 40);
 		myPlayer.pDungMsgs |= DMSG_CATACOMBS;
-	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_CAVES)) {
+	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_CAVES) == 0) {
 		myPlayer.Say(HeroSpeech::ItsHotDownHere, 40);
 		myPlayer.pDungMsgs |= DMSG_CAVES;
-	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_HELL)) {
+	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_HELL) == 0) {
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
 		myPlayer.pDungMsgs |= DMSG_HELL;
-	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & DMSG_DIABLO)) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
+	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_DIABLO) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
 		sfxdnum = PS_DIABLVLINT;
 		myPlayer.pDungMsgs |= DMSG_DIABLO;
-	} else if (currlevel == 17 && !myPlayer._pLvlVisited[17] && !gbIsMultiplayer && !(myPlayer.pDungMsgs2 & 1)) {
+	} else if (currlevel == 17 && !myPlayer._pLvlVisited[17] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;
 		quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
 		quests[Q_DEFILER]._qlog = true;
 		quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		myPlayer.pDungMsgs2 |= 1;
-	} else if (currlevel == 19 && !myPlayer._pLvlVisited[19] && !gbIsMultiplayer && !(myPlayer.pDungMsgs2 & 4)) {
+	} else if (currlevel == 19 && !myPlayer._pLvlVisited[19] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 4) == 0) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER3;
 		myPlayer.pDungMsgs2 |= 4;
-	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && !gbIsMultiplayer && !(myPlayer.pDungMsgs & 32)) {
+	} else if (currlevel == 21 && !myPlayer._pLvlVisited[21] && !gbIsMultiplayer && (myPlayer.pDungMsgs & 32) == 0) {
 		myPlayer.Say(HeroSpeech::ThisIsAPlaceOfGreatPower, 30);
 		myPlayer.pDungMsgs |= 32;
 	} else {

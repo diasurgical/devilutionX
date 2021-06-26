@@ -71,12 +71,6 @@ static void buffer_init(TBuffer *pBuf)
 	pBuf->bData[0] = byte { 0 };
 }
 
-// Microsoft VisualC 2-11/net runtime
-static int multi_check_pkt_valid(TBuffer *pBuf)
-{
-	return pBuf->dwNextWriteOffset == 0;
-}
-
 static void multi_copy_packet(TBuffer *buf, byte *packet, uint8_t size)
 {
 	if (buf->dwNextWriteOffset + size + 2 > 0x1000) {
@@ -132,7 +126,7 @@ static void NetRecvPlrData(TPkt *pkt)
 
 void multi_msg_add(byte *pbMsg, BYTE bLen)
 {
-	if (pbMsg && bLen) {
+	if (pbMsg != nullptr && bLen != 0) {
 		tmsg_add(pbMsg, bLen);
 	}
 }
@@ -150,7 +144,7 @@ static void multi_send_packet(int playerId, void *packet, BYTE dwSize)
 
 void NetSendLoPri(int playerId, byte *pbMsg, BYTE bLen)
 {
-	if (pbMsg && bLen) {
+	if (pbMsg != nullptr && bLen != 0) {
 		multi_copy_packet(&sgLoPriBuf, pbMsg, bLen);
 		multi_send_packet(playerId, pbMsg, bLen);
 	}
@@ -161,7 +155,7 @@ void NetSendHiPri(int playerId, byte *pbMsg, BYTE bLen)
 	DWORD size, len;
 	TPkt pkt;
 
-	if (pbMsg && bLen) {
+	if (pbMsg != nullptr && bLen != 0) {
 		multi_copy_packet(&sgHiPriBuf, pbMsg, bLen);
 		multi_send_packet(playerId, pbMsg, bLen);
 	}
@@ -225,11 +219,11 @@ static void multi_handle_turn_upper_bit(int pnum)
 	}
 }
 
-static void multi_parse_turn(int pnum, int turn)
+static void multi_parse_turn(int pnum, uint32_t turn)
 {
 	DWORD absTurns;
 
-	if (turn >> 31)
+	if ((turn & 0x80000000) != 0)
 		multi_handle_turn_upper_bit(pnum);
 	absTurns = turn & 0x7FFFFFFF;
 	if (sgbSentThisCycle < gdwTurnsInTransit + absTurns) {
@@ -317,7 +311,7 @@ static void multi_check_drop_player()
 	int i;
 
 	for (i = 0; i < MAX_PLRS; i++) {
-		if (!(player_state[i] & PS_ACTIVE) && player_state[i] & PS_CONNECTED) {
+		if ((player_state[i] & PS_ACTIVE) == 0 && (player_state[i] & PS_CONNECTED) != 0) {
 			SNetDropPlayer(i, LEAVE_DROP);
 		}
 	}
@@ -417,7 +411,7 @@ bool multi_handle_delta()
 			gbShouldValidatePackage = false;
 		} else {
 			gbShouldValidatePackage = false;
-			if (!multi_check_pkt_valid(&sgHiPriBuf))
+			if (sgHiPriBuf.dwNextWriteOffset != 0)
 				NetSendHiPri(myplr, nullptr, 0);
 		}
 	}
@@ -651,7 +645,7 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 		sgbPlayerTurnBitTbl[pEvt->playerid] = false;
 
 		LeftReason = 0;
-		if (pEvt->data && pEvt->databytes >= sizeof(DWORD))
+		if (pEvt->data != nullptr && pEvt->databytes >= sizeof(DWORD))
 			LeftReason = *(DWORD *)pEvt->data;
 		sgdwPlayerLeftReasonTbl[pEvt->playerid] = LeftReason;
 		if (LeftReason == LEAVE_ENDING)
@@ -713,10 +707,10 @@ bool NetInit(bool bSinglePlayer)
 		sgGameInitInfo.versionMinor = PROJECT_VERSION_MINOR;
 		sgGameInitInfo.versionPatch = PROJECT_VERSION_PATCH;
 		sgGameInitInfo.nTickRate = sgOptions.Gameplay.nTickRate;
-		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown;
-		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest;
-		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest;
-		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire;
+		sgGameInitInfo.bRunInTown = sgOptions.Gameplay.bRunInTown ? 1 : 0;
+		sgGameInitInfo.bTheoQuest = sgOptions.Gameplay.bTheoQuest ? 1 : 0;
+		sgGameInitInfo.bCowQuest = sgOptions.Gameplay.bCowQuest ? 1 : 0;
+		sgGameInitInfo.bFriendlyFire = sgOptions.Gameplay.bFriendlyFire ? 1 : 0;
 		memset(sgbPlayerTurnBitTbl, 0, sizeof(sgbPlayerTurnBitTbl));
 		gbGameDestroyed = false;
 		memset(sgbPlayerLeftGameTbl, 0, sizeof(sgbPlayerLeftGameTbl));
