@@ -2420,7 +2420,7 @@ bool M_DoTalk(int i)
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
-		if (monster[i].mtalkmsg == TEXT_BANNER10 && ((monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0)) {
+		if (monster[i].mtalkmsg == TEXT_BANNER10 && (monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 			ObjChangeMap(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
 			tren = TransVal;
 			TransVal = 9;
