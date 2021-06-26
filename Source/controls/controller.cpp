@@ -38,7 +38,7 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 
 	const Joystick *joystick = Joystick::Get(event);
 	if (joystick != nullptr)
-		result.button = joystick->ToControllerButton(event);
+		result.button = devilution::Joystick::ToControllerButton(event);
 
 	return result;
 }
