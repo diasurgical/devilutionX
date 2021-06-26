@@ -169,14 +169,14 @@ void T_Pass3()
 	T_FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
+		if (gbIsSpawn || ((plr[myplr].pTownWarps & 1) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
 			T_FillTile(pMegaTiles.get(), 48, 20, 320);
 		}
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
+		if (gbIsSpawn || ((plr[myplr].pTownWarps & 2) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
 			T_FillTile(pMegaTiles.get(), 16, 68, 332);
 			T_FillTile(pMegaTiles.get(), 16, 70, 331);
 		}
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
+		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
 				T_FillTile(pMegaTiles.get(), x, 78, GenerateRnd(4) + 1);
 			}

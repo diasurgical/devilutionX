@@ -67,12 +67,12 @@ bool SNetSendTurn(char *data, unsigned int databytes)
 	return dvlnet_inst->SNetSendTurn(data, databytes);
 }
 
-int SNetGetProviderCaps(struct _SNETCAPS *caps)
+void SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
-	return dvlnet_inst->SNetGetProviderCaps(caps);
+	dvlnet_inst->SNetGetProviderCaps(caps);
 }
 
 bool SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)

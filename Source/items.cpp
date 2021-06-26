@@ -541,9 +541,9 @@ void InitItems()
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
 			SpawnQuestItem(IDI_ANVIL, { 2 * setpc_x + 27, 2 * setpc_y + 27 }, 0, 1);
-		if (sgGameInitInfo.bCowQuest && currlevel == 20)
+		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 20)
 			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1);
-		if (sgGameInitInfo.bCowQuest && currlevel == 19)
+		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 19)
 			SpawnQuestItem(IDI_GREYSUIT, { 25, 25 }, 3, 1);
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
@@ -985,20 +985,15 @@ static bool ItemMinStats(const PlayerStruct &player, ItemStruct *x)
 
 void CalcPlrItemMin(PlayerStruct &player)
 {
-	ItemStruct *pi = player.InvList;
-	int i = player._pNumInv;
-
-	while (i--) {
-		pi->_iStatFlag = ItemMinStats(player, pi);
-		pi++;
+	for (int i = 0; i < player._pNumInv; i++) {
+		auto &item = player.InvList[i];
+		item._iStatFlag = ItemMinStats(player, &item);
 	}
 
-	pi = player.SpdList;
-	for (i = MAXBELTITEMS; i != 0; i--) {
-		if (!pi->isEmpty()) {
-			pi->_iStatFlag = ItemMinStats(player, pi);
+	for (auto &item : player.SpdList) {
+		if (!item.isEmpty()) {
+			item._iStatFlag = ItemMinStats(player, &item);
 		}
-		pi++;
 	}
 }
 

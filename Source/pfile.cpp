@@ -270,7 +270,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 				strcpy(hero_names[i], pkplr.pName);
 				bool hasSaveGame = pfile_archive_contains_game(archive);
 				if (hasSaveGame)
-					pkplr.bIsHellfire = gbIsHellfireSaveGame;
+					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
 				UnPackPlayer(&pkplr, 0, false);
 
@@ -318,7 +318,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	uint32_t save_num = pfile_get_save_num_from_name(heroinfo->name);
 	if (save_num >= MAX_CHARACTERS) {
 		for (save_num = 0; save_num < MAX_CHARACTERS; save_num++) {
-			if (!hero_names[save_num][0])
+			if (hero_names[save_num][0] == '\0')
 				break;
 		}
 		if (save_num >= MAX_CHARACTERS)
@@ -395,7 +395,7 @@ void pfile_read_player_from_save(char name[16], int playerId)
 
 	gbValidSaveFile = pfile_archive_contains_game(archive);
 	if (gbValidSaveFile)
-		pkplr.bIsHellfire = gbIsHellfireSaveGame;
+		pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
 	pfile_SFileCloseArchive(&archive);
 

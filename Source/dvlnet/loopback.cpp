@@ -51,7 +51,7 @@ bool loopback::SNetSendTurn(char *data, unsigned int size)
 	return true;
 }
 
-int loopback::SNetGetProviderCaps(struct _SNETCAPS *caps)
+void loopback::SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
 	caps->size = 0;                  // engine writes only ?!?
 	caps->flags = 0;                 // unused
@@ -63,7 +63,6 @@ int loopback::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	caps->defaultturnssec = 10;      // ?
 	caps->defaultturnsintransit = 1; // maximum acceptable number
 	                                 // of turns in queue?
-	return 1;
 }
 
 bool loopback::SNetRegisterEventHandler(event_type evtype,

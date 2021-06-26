@@ -144,7 +144,7 @@ void nthread_set_turn_upper_bit()
 
 void nthread_start(bool set_turn_upper_bit)
 {
-	const char *err, *err2;
+	const char *err;
 	DWORD largestMsgSize;
 	_SNETCAPS caps;
 
@@ -157,10 +157,7 @@ void nthread_start(bool set_turn_upper_bit)
 	else
 		turn_upper_bit = 0;
 	caps.size = 36;
-	if (!SNetGetProviderCaps(&caps)) {
-		err = SDL_GetError();
-		app_fatal("SNetGetProviderCaps:\n%s", err);
-	}
+	SNetGetProviderCaps(&caps);
 	gdwTurnsInTransit = caps.defaultturnsintransit;
 	if (!caps.defaultturnsintransit)
 		gdwTurnsInTransit = 1;
@@ -191,8 +188,8 @@ void nthread_start(bool set_turn_upper_bit)
 		nthread_should_run = true;
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
 		if (sghThread == nullptr) {
-			err2 = SDL_GetError();
-			app_fatal("nthread2:\n%s", err2);
+			err = SDL_GetError();
+			app_fatal("nthread2:\n%s", err);
 		}
 	}
 }

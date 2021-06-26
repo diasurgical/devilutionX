@@ -259,7 +259,7 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 	int mx = sx + m->position.offset.x - m->_miAnimWidth2;
 	int my = sy + m->position.offset.y;
 	CelSprite cel { m->_miAnimData, m->_miAnimWidth };
-	if (m->_miUniqTrans)
+	if (m->_miUniqTrans != 0)
 		Cl2DrawLightTbl(out, mx, my, cel, m->_miAnimFrame, m->_miUniqTrans + 3);
 	else if (m->_miLightFlag)
 		Cl2DrawLight(out, mx, my, cel, m->_miAnimFrame);
@@ -345,13 +345,13 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	}
 
 	char trans = 0;
-	if (monster[m]._uniqtype)
+	if (monster[m]._uniqtype != 0)
 		trans = monster[m]._uniqtrans + 4;
 	if (monster[m]._mmode == MM_STONE)
 		trans = 2;
 	if (plr[myplr]._pInfraFlag && light_table_index > 8)
 		trans = 1;
-	if (trans)
+	if (trans != 0)
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, trans);
 	else
 		Cl2DrawLight(out, mx, my, cel, nCel);
@@ -451,7 +451,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 		return;
 	}
 
-	if (!(dFlags[x][y] & BFLAG_LIT) || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
 		Cl2DrawLightTbl(out, px, py, *pCelSprite, nCel, 1);
 		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
@@ -564,7 +564,7 @@ static void drawCell(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	MICROS *pMap = &dpiece_defs_map_2[x][y];
 	level_piece_id = dPiece[x][y];
-	cel_transparency_active = (BYTE)(nTransTable[level_piece_id] & TransList[dTransVal[x][y]]);
+	cel_transparency_active = nTransTable[level_piece_id] && TransList[dTransVal[x][y]];
 	cel_foliage_active = !nSolidTable[level_piece_id];
 	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		level_cel_block = pMap->mt[2 * i];
@@ -678,7 +678,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	if (!(dFlags[x][y] & BFLAG_LIT) && !plr[myplr]._pInfraFlag)
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -806,7 +806,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		assert((DWORD)(sy - 1) < MAXDUNY);
 		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
 	}
-	if (bFlag & BFLAG_MONSTLR && negMon < 0) {
+	if ((bFlag & BFLAG_MONSTLR) != 0 && negMon < 0) {
 		DrawMonsterHelper(out, sx, sy, -1, dx, dy);
 	}
 	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
@@ -1056,9 +1056,9 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 		y = (gnViewportHeight / 2) % TILE_HEIGHT;
 	}
 
-	if (x)
+	if (x != 0)
 		x = (TILE_WIDTH - x) / 2;
-	if (y)
+	if (y != 0)
 		y = (TILE_HEIGHT - y) / 2;
 
 	*offsetX = x;
@@ -1424,7 +1424,7 @@ void ScrollView()
  */
 void EnableFrameCount()
 {
-	frameflag = frameflag == 0;
+	frameflag = !frameflag;
 	framestart = SDL_GetTicks();
 }
 

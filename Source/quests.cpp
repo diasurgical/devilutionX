@@ -679,7 +679,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_MUSHROOM]._qlevel) {
 		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, true);
+			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1);
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 		} else {
 			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
@@ -694,7 +694,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_VEIL]._qlevel + 1 && quests[Q_VEIL]._qactive == QUEST_ACTIVE && quests[Q_VEIL]._qvar1 == 0) {
 		quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, true);
+		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (quests[Q_BETRAYER]._qvar1 >= 4)
@@ -793,7 +793,7 @@ void QuestlogDown()
 void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
-	if (numqlines && qline != 22)
+	if (numqlines != 0 && qline != 22)
 		InitQTextMsg(quests[qlist[(qline - qtopline) / 2]]._qmsg);
 	questlog = false;
 }

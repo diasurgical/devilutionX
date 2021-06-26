@@ -124,7 +124,7 @@ void DrawPlrMsg(const CelOutputBuffer &out)
 
 	pMsg = plr_msgs;
 	for (i = 0; i < PMSG_COUNT; i++) {
-		if (pMsg->str[0])
+		if (pMsg->str[0] != '\0')
 			PrintPlrMsg(out, x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
 		pMsg++;
 		y += 35;
