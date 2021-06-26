@@ -2110,7 +2110,7 @@ bool PM_DoWalk(int pnum, int variant)
 	auto &player = plr[pnum];
 
 	//Play walking sound effect on certain animation frames
-	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || !sgGameInitInfo.bRunInTown)) {
+	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.CurrentFrame == 1
 		    || player.AnimInfo.CurrentFrame == 5) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
@@ -2174,7 +2174,7 @@ static bool WeaponDurDecay(int pnum, int ii)
 {
 	auto &player = plr[pnum];
 
-	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && player.InvBody[ii]._iDamAcFlags & 2) {
+	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & 2) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
 			NetSendCmdDelItem(true, ii);
@@ -2349,7 +2349,7 @@ bool PlrHitMonst(int pnum, int m)
 #else
 	if (hit < hper) {
 #endif
-		if (player._pIFlags & ISPL_FIREDAM && player._pIFlags & ISPL_LIGHTDAM) {
+		if ((player._pIFlags & ISPL_FIREDAM) != 0 && (player._pIFlags & ISPL_LIGHTDAM) != 0) {
 			int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
 			AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 		}
@@ -2397,7 +2397,7 @@ bool PlrHitMonst(int pnum, int m)
 			break;
 		}
 
-		if (player.pDamAcFlags & 0x01 && GenerateRnd(100) < 5) {
+		if ((player.pDamAcFlags & 0x01) != 0 && GenerateRnd(100) < 5) {
 			dam *= 3;
 		}
 

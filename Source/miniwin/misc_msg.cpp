@@ -264,7 +264,7 @@ int32_t PositionForMouse(short x, short y)
 
 int32_t KeystateForMouse(int32_t ret)
 {
-	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
+	ret |= (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
@@ -589,7 +589,8 @@ bool TranslateMessage(const tagMSG *lpMsg)
 		unsigned mod = (DWORD)lpMsg->lParam >> 16;
 
 		bool shift = (mod & KMOD_SHIFT) != 0;
-		bool upper = shift != (mod & KMOD_CAPS);
+		bool caps = (mod & KMOD_CAPS) != 0;
+		bool upper = shift != caps;
 
 		bool isAlpha = (key >= 'A' && key <= 'Z');
 		bool isNumeric = (key >= '0' && key <= '9');
@@ -688,30 +689,31 @@ bool TranslateMessage(const tagMSG *lpMsg)
 	return true;
 }
 
-uint16_t GetAsyncKeyState(int vKey)
+bool GetAsyncKeyState(int vKey)
 {
 	if (vKey == DVL_MK_LBUTTON)
-		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT);
+		return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
 	if (vKey == DVL_MK_RBUTTON)
-		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT);
+		return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
+
 	const Uint8 *state = SDLC_GetKeyState();
 	switch (vKey) {
 	case DVL_VK_CONTROL:
-		return state[SDLC_KEYSTATE_LEFTCTRL] || state[SDLC_KEYSTATE_RIGHTCTRL] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFTCTRL] != 0 || state[SDLC_KEYSTATE_RIGHTCTRL] != 0;
 	case DVL_VK_SHIFT:
-		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFTSHIFT] != 0 || state[SDLC_KEYSTATE_RIGHTSHIFT] != 0;
 	case DVL_VK_MENU:
-		return state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0;
 	case DVL_VK_LEFT:
-		return state[SDLC_KEYSTATE_LEFT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFT] != 0;
 	case DVL_VK_UP:
-		return state[SDLC_KEYSTATE_UP] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_UP] != 0;
 	case DVL_VK_RIGHT:
-		return state[SDLC_KEYSTATE_RIGHT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_RIGHT] != 0;
 	case DVL_VK_DOWN:
-		return state[SDLC_KEYSTATE_DOWN] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_DOWN] != 0;
 	default:
-		return 0;
+		return false;
 	}
 }
 

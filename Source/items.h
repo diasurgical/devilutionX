@@ -184,7 +184,7 @@ struct ItemStruct {
 	uint8_t _iSelFlag;
 	bool _iPostDraw;
 	bool _iIdentified;
-	int8_t _iMagical;
+	item_quality _iMagical;
 	char _iName[64];
 	char _iIName[64];
 	enum item_equip_type _iLoc;

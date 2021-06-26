@@ -237,7 +237,7 @@ void S_ScrollSBuy(int idx)
 		if (!smithitem[idx].isEmpty()) {
 			uint16_t iclr = smithitem[idx].getTextColorWithStatCheck();
 
-			if (smithitem[idx]._iMagical != 0) {
+			if (smithitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
 				AddSText(20, l, smithitem[idx]._iIName, iclr, true);
 			} else {
 				AddSText(20, l, smithitem[idx]._iName, iclr, true);
@@ -385,7 +385,7 @@ void S_ScrollSSell(int idx)
 		if (!storehold[idx].isEmpty()) {
 			uint16_t iclr = storehold[idx].getTextColorWithStatCheck();
 
-			if (storehold[idx]._iMagical != 0 && storehold[idx]._iIdentified) {
+			if (storehold[idx]._iMagical != ITEM_QUALITY_NORMAL && storehold[idx]._iIdentified) {
 				AddSText(20, l, storehold[idx]._iIName, iclr, true);
 				AddSTextVal(l, storehold[idx]._iIvalue);
 			} else {
@@ -609,7 +609,7 @@ void S_ScrollWBuy(int idx)
 		if (!witchitem[idx].isEmpty()) {
 			uint16_t iclr = witchitem[idx].getTextColorWithStatCheck();
 
-			if (witchitem[idx]._iMagical != 0) {
+			if (witchitem[idx]._iMagical != ITEM_QUALITY_NORMAL) {
 				AddSText(20, l, witchitem[idx]._iIName, iclr, true);
 			} else {
 				AddSText(20, l, witchitem[idx]._iName, iclr, true);

@@ -974,7 +974,7 @@ static void PressKey(int vkey)
 		}
 		keymapper.keyPressed(vkey);
 		if (vkey == DVL_VK_RETURN) {
-			if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0)
+			if (GetAsyncKeyState(DVL_VK_MENU))
 				dx_reinit();
 			else
 				control_type_message();
@@ -999,7 +999,7 @@ static void PressKey(int vkey)
 		return;
 	}
 	if (PauseMode == 2) {
-		if (vkey == DVL_VK_RETURN && (GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0)
+		if (vkey == DVL_VK_RETURN && GetAsyncKeyState(DVL_VK_MENU))
 			dx_reinit();
 		return;
 	}
@@ -1007,7 +1007,7 @@ static void PressKey(int vkey)
 	keymapper.keyPressed(vkey);
 
 	if (vkey == DVL_VK_RETURN) {
-		if ((GetAsyncKeyState(DVL_VK_MENU) & 0x8000) != 0) {
+		if (GetAsyncKeyState(DVL_VK_MENU)) {
 			dx_reinit();
 		} else if (stextflag != STORE_NONE) {
 			STextEnter();
@@ -1728,7 +1728,7 @@ static void game_logic()
 	}
 
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v && (GetAsyncKeyState(DVL_VK_SHIFT) & 0x8000) != 0) {
+	if (debug_mode_key_inverted_v && GetAsyncKeyState(DVL_VK_SHIFT)) {
 		ScrollView();
 	}
 #endif

@@ -1036,10 +1036,10 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 		}
 
 		j = 0;
-		for (try2 = 0; j < num && try2 < 100; xp += (Point { 0, 0 } + static_cast<Direction>(GenerateRnd(8))).x, yp += (Point { 0, 0 } + static_cast<Direction>(GenerateRnd(8))).x) { /// BUGFIX: `yp += offset_y`
+		for (try2 = 0; j < num && try2 < 100; xp += Point::fromDirection(static_cast<Direction>(GenerateRnd(8))).x, yp += Point::fromDirection(static_cast<Direction>(GenerateRnd(8))).x) { /// BUGFIX: `yp += Point.y`
 			if (!MonstPlace(xp, yp)
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
-			    || ((leaderf & 2) && ((abs(xp - x1) >= 4) || (abs(yp - y1) >= 4)))) {
+			    || ((leaderf & 2) != 0 && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
 				try2++;
 				continue;
 			}
@@ -1305,7 +1305,7 @@ void M_Enemy(int i)
 	best_dist = -1;
 	bestsameroom = false;
 	Monst = &monster[i];
-	if (Monst->_mFlags & MFLAG_BERSERK || !(Monst->_mFlags & MFLAG_GOLEM)) {
+	if ((Monst->_mFlags & MFLAG_BERSERK) != 0 || (Monst->_mFlags & MFLAG_GOLEM) == 0) {
 		for (pnum = 0; pnum < MAX_PLRS; pnum++) {
 			if (!plr[pnum].plractive || currlevel != plr[pnum].plrlevel || plr[pnum]._pLvlChanging
 			    || (((plr[pnum]._pHitPoints >> 6) == 0) && gbIsMultiplayer))
@@ -1669,7 +1669,7 @@ void SpawnLoot(int i, bool sendmsg)
 		quests[Q_DEFILER]._qlog = false;
 		SpawnMapOfDoom(Monst->position.tile);
 	} else if (Monst->_uniqtype - 1 == UMT_HORKDMN) {
-		if (sgGameInitInfo.bTheoQuest) {
+		if (sgGameInitInfo.bTheoQuest != 0) {
 			SpawnTheodore(Monst->position.tile);
 		} else {
 			CreateAmulet(Monst->position.tile, 13, false, true);
@@ -1677,7 +1677,7 @@ void SpawnLoot(int i, bool sendmsg)
 	} else if (Monst->MType->mtype == MT_HORKSPWN) {
 	} else if (Monst->MType->mtype == MT_NAKRUL) {
 		nSFX = IsUberRoomOpened ? USFX_NAKRUL4 : USFX_NAKRUL5;
-		if (sgGameInitInfo.bCowQuest)
+		if (sgGameInitInfo.bCowQuest != 0)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
@@ -1838,7 +1838,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	if (monster[i]._mhitpoints == 0 || monster[i]._mmode == MM_DEATH) {
+	if (monster[i]._mhitpoints > 0 || monster[i]._mmode == MM_DEATH) {
 		return;
 	}
 
@@ -2048,7 +2048,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(monster[i].MType != nullptr, i);
-	if (monster[i]._mFlags & MFLAG_TARGETS_MONSTER) {
+	if ((monster[i]._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
 		M_TryM2MHit(i, pnum, Hit, MinDam, MaxDam);
 		return;
 	}
@@ -2161,7 +2161,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		}
 		ApplyPlrDamage(pnum, 0, 0, dam);
 	}
-	if (plr[pnum]._pIFlags & ISPL_THORNS) {
+	if ((plr[pnum]._pIFlags & ISPL_THORNS) != 0) {
 		mdam = (GenerateRnd(3) + 1) << 6;
 		monster[i]._mhitpoints -= mdam;
 		if (monster[i]._mhitpoints >> 6 <= 0)
@@ -2177,7 +2177,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		return;
 	}
 	StartPlrHit(pnum, dam, false);
-	if (monster[i]._mFlags & MFLAG_KNOCKBACK) {
+	if ((monster[i]._mFlags & MFLAG_KNOCKBACK) != 0) {
 		if (plr[pnum]._pmode != PM_GOTHIT)
 			StartPlrHit(pnum, 0, true);
 
@@ -2368,7 +2368,7 @@ bool M_DoHeal(int i)
 
 	commitment((DWORD)i < MAXMONSTERS, i);
 	Monst = &monster[i];
-	if (monster[i]._mFlags & MFLAG_NOHEAL) {
+	if ((monster[i]._mFlags & MFLAG_NOHEAL) != 0) {
 		Monst->_mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		Monst->_mmode = MM_SATTACK;
 		return false;
@@ -2413,14 +2413,14 @@ bool M_DoTalk(int i)
 	}
 	if (monster[i]._uniqtype - 1 == UMT_ZHAR
 	    && monster[i].mtalkmsg == TEXT_ZHAR1
-	    && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
+	    && ((monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0)) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		quests[Q_ZHAR]._qlog = true;
 		CreateTypeItem(monster[i].position.tile + Point { 1, 1 }, false, ITYPE_MISC, IMISC_BOOK, true, false);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
-		if (monster[i].mtalkmsg == TEXT_BANNER10 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
+		if (monster[i].mtalkmsg == TEXT_BANNER10 && ((monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0)) {
 			ObjChangeMap(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
 			tren = TransVal;
 			TransVal = 9;
@@ -2440,7 +2440,7 @@ bool M_DoTalk(int i)
 			quests[Q_VEIL]._qactive = QUEST_ACTIVE;
 			quests[Q_VEIL]._qlog = true;
 		}
-		if (monster[i].mtalkmsg == TEXT_VEIL11 && !(monster[i]._mFlags & MFLAG_QUEST_COMPLETE)) {
+		if (monster[i].mtalkmsg == TEXT_VEIL11 && ((monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0)) {
 			SpawnUnique(UITEM_STEELVEIL, monster[i].position.tile + DIR_S);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
@@ -2677,7 +2677,7 @@ bool M_DoStone(int i)
 {
 	commitment((DWORD)i < MAXMONSTERS, i);
 
-	if (!monster[i]._mhitpoints) {
+	if (monster[i]._mhitpoints > 0) {
 		dMonster[monster[i].position.tile.x][monster[i].position.tile.y] = 0;
 		monster[i]._mDelFlag = true;
 	}

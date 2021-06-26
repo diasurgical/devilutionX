@@ -2060,7 +2060,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 	default:
 		break;
 	}
-	if (items[i]._iVAdd1 || items[i]._iVMult1) {
+	if (items[i]._iVAdd1 != 0 || items[i]._iVMult1 != 0) {
 		items[i]._iVAdd2 = PLVal(r, param1, param2, minval, maxval);
 		items[i]._iVMult2 = multval;
 	} else {
@@ -2452,7 +2452,7 @@ void SpawnUnique(_unique_items uid, Point position)
 
 void ItemRndDur(int ii)
 {
-	if (items[ii]._iDurability && items[ii]._iDurability != DUR_INDESTRUCTIBLE)
+	if (items[ii]._iDurability > 0 && items[ii]._iDurability != DUR_INDESTRUCTIBLE)
 		items[ii]._iDurability = GenerateRnd(items[ii]._iMaxDur / 2) + (items[ii]._iMaxDur / 4) + 1;
 }
 
@@ -2516,7 +2516,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster[m]._uniqtype || ((monster[m].MData->mTreasure & 0x8000) && gbIsMultiplayer)) {
+	if (monster[m]._uniqtype != 0 || ((monster[m].MData->mTreasure & 0x8000) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -2525,7 +2525,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 		onlygood = true;
 	} else if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
 		idx = RndItem(m);
-		if (!idx)
+		if (idx == 0)
 			return;
 		if (idx > 0) {
 			idx--;
@@ -2544,7 +2544,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
-	int uper = monster[m]._uniqtype ? 15 : 1;
+	int uper = monster[m]._uniqtype != 0 ? 15 : 1;
 
 	int mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
@@ -2937,7 +2937,7 @@ void ItemDoppel()
 	static int idoppely = 16;
 
 	for (int idoppelx = 16; idoppelx < 96; idoppelx++) {
-		if (dItem[idoppelx][idoppely]) {
+		if (dItem[idoppelx][idoppely] != 0) {
 			ItemStruct *i = &items[dItem[idoppelx][idoppely] - 1];
 			if (i->position.x != idoppelx || i->position.y != idoppely)
 				dItem[idoppelx][idoppely] = 0;
@@ -3850,7 +3850,7 @@ void PrintItemDur(ItemStruct *x)
 				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
 		}
 		AddPanelString(tempstr);
-		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
+		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges > 0) {
 			strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
 			AddPanelString(tempstr);
 		}
@@ -3865,7 +3865,7 @@ void PrintItemDur(ItemStruct *x)
 		AddPanelString(tempstr);
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
 			AddPanelString(_("Not Identified"));
-		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges) {
+		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges > 0) {
 			strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
 			AddPanelString(tempstr);
 		}
@@ -4107,7 +4107,7 @@ bool SmithItemOk(int i)
 		return false;
 	if (AllItemsList[i].itype == ITYPE_GOLD)
 		return false;
-	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell))
+	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell != SPL_NULL))
 		return false;
 	if (AllItemsList[i].itype == ITYPE_RING)
 		return false;
@@ -4385,7 +4385,7 @@ void WitchBookLevel(int ii)
 		return;
 	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
 	int slvl = plr[myplr]._pSplLvl[witchitem[ii]._iSpell];
-	while (slvl) {
+	while (slvl > 0) {
 		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
 		slvl--;
 		if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
