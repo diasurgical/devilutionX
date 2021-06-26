@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <utility>
 
 #include <Aulib/DecoderDrwav.h>
 #include <Aulib/ResamplerSpeex.h>
@@ -136,7 +137,7 @@ int SoundSample::SetChunkStream(std::string filePath)
 #ifndef STREAM_ALL_AUDIO
 int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes)
 {
-	file_data_ = fileData;
+	file_data_ = std::move(fileData);
 	file_data_size_ = dwBytes;
 	SDL_RWops *buf = SDL_RWFromConstMem(file_data_.get(), dwBytes);
 	if (buf == nullptr) {
