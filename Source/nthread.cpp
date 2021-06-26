@@ -27,7 +27,7 @@ bool sgbThreadIsRunning;
 DWORD gdwLargestMsgSize;
 DWORD gdwNormalMsgSize;
 int last_tick;
-float gfProgressToNextGameTick = 0.0f;
+float gfProgressToNextGameTick = 0.0F;
 
 /* data */
 static SDL_Thread *sghThread = nullptr;
@@ -244,15 +244,15 @@ void nthread_UpdateProgressToNextGameTick()
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = last_tick - currentTickCount;
 	if (ticksElapsed <= 0) {
-		gfProgressToNextGameTick = 1.0f; // game tick is due
+		gfProgressToNextGameTick = 1.0F; // game tick is due
 		return;
 	}
 	int ticksAdvanced = gnTickDelay - ticksElapsed;
 	float fraction = (float)ticksAdvanced / (float)gnTickDelay;
-	if (fraction > 1.0f)
-		gfProgressToNextGameTick = 1.0f;
-	if (fraction < 0.0f)
-		gfProgressToNextGameTick = 0.0f;
+	if (fraction > 1.0F)
+		gfProgressToNextGameTick = 1.0F;
+	if (fraction < 0.0F)
+		gfProgressToNextGameTick = 0.0F;
 	gfProgressToNextGameTick = fraction;
 }
 

@@ -919,7 +919,7 @@ void InvMove(AxisDirection dir)
 		if (slot >= SLOTXY_INV_FIRST)
 			mousePos.y -= InventorySlotSizeInPixels.height;
 		else
-			mousePos.y -= (int)((icursH28 / 2.f) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
+			mousePos.y -= (int)((icursH28 / 2.F) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
 	} else {
 		mousePos.x += (InventorySlotSizeInPixels.width / 2);
 		mousePos.y -= (InventorySlotSizeInPixels.height / 2);

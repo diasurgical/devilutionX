@@ -23,28 +23,28 @@ namespace devilution {
 
 namespace {
 
-constexpr float LogBase = 10.0f;
+constexpr float LogBase = 10.0F;
 
 /**
  * Scaling factor for attenuating volume.
  * Picked so that a volume change of -10 dB results in half perceived loudness.
  * VolumeScale = -1000 / log(0.5)
  */
-constexpr float VolumeScale = 3321.9281f;
+constexpr float VolumeScale = 3321.9281F;
 
 /**
  * Min and max volume range, in millibel.
  * -100 dB (muted) to 0 dB (max. loudness).
  */
-constexpr float MillibelMin = -10000.0f;
-constexpr float MillibelMax = 0.0f;
+constexpr float MillibelMin = -10000.0F;
+constexpr float MillibelMax = 0.0F;
 
 /**
  * Stereo separation factor for left/right speaker panning. Lower values increase separation, moving
  * sounds further left/right, while higher values will pull sounds more towards the middle, reducing separation.
  * Current value is tuned to have ~2:1 mix for sounds that happen on the edge of a 640x480 screen.
  */
-constexpr float StereoSeparation = 6000.0f;
+constexpr float StereoSeparation = 6000.0F;
 
 float PanLogToLinear(int logPan)
 {
@@ -53,7 +53,7 @@ float PanLogToLinear(int logPan)
 
 	auto factor = std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation);
 
-	return copysign(1.0f - factor, static_cast<float>(logPan));
+	return copysign(1.0F - factor, static_cast<float>(logPan));
 }
 
 } // namespace
