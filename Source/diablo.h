@@ -28,6 +28,21 @@ enum clicktype : int8_t {
 	CLICK_RIGHT,
 };
 
+/**
+ * @brief Specifices what game logic step is currently executed
+ */
+enum class GameLogicStep {
+	None,
+	ProcessPlayers,
+	ProcessMonsters,
+	ProcessObjects,
+	ProcessMissiles,
+	ProcessItems,
+	ProcessTowners,
+	ProcessItemsTown,
+	ProcessMissilesTown,
+};
+
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
@@ -95,5 +110,9 @@ struct QuickMessage {
 constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
 extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 extern bool gbFriendlyMode;
+/**
+ * @brief Specifices what game logic step is currently executed
+ */
+extern GameLogicStep gGameLogicStep;
 
 } // namespace devilution
