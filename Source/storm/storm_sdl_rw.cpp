@@ -78,7 +78,7 @@ static int SFileRwClose(struct SDL_RWops *context)
 
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 {
-	SDL_RWops *result = new SDL_RWops();
+	auto *result = new SDL_RWops();
 	std::memset(result, 0, sizeof(*result));
 
 #ifndef USE_SDL1

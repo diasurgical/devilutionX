@@ -23,7 +23,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	if (CurrentFrame > RelevantFramesForDistributing)
 		return CurrentFrame;
 
-	float ticksSinceSequenceStarted = (float)TicksSinceSequenceStarted;
+	auto ticksSinceSequenceStarted = (float)TicksSinceSequenceStarted;
 	if (TicksSinceSequenceStarted < 0) {
 		ticksSinceSequenceStarted = 0.0F;
 		Log("GetFrameToUseForRendering: Invalid TicksSinceSequenceStarted {}", TicksSinceSequenceStarted);

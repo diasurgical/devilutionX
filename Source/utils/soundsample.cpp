@@ -60,7 +60,7 @@ float PanLogToLinear(int logPan)
 
 float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 {
-	const float logScaled = math::Remap<float>(logMin, logMax, MillibelMin, MillibelMax, logVolume);
+	const auto logScaled = math::Remap<float>(logMin, logMax, MillibelMin, MillibelMax, logVolume);
 	const auto linVolume = std::pow(LogBase, static_cast<float>(logScaled) / VolumeScale);
 	return linVolume;
 }

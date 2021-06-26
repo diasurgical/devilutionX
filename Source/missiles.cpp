@@ -4683,7 +4683,7 @@ void MI_Cbolt(int i)
 		if (missile[i]._miVar3 == 0) {
 			constexpr int bpath[16] = { -1, 0, 1, -1, 0, 1, -1, -1, 0, 0, 1, 1, 0, 1, -1, 0 };
 
-			Direction md = static_cast<Direction>(missile[i]._miVar2);
+			auto md = static_cast<Direction>(missile[i]._miVar2);
 			switch (bpath[missile[i]._mirnd]) {
 			case -1:
 				md = left[md];

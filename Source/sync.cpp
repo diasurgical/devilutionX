@@ -249,7 +249,7 @@ uint32_t sync_update(int pnum, const byte *pbBuf)
 {
 	uint16_t wLen;
 
-	TSyncHeader *pHdr = (TSyncHeader *)pbBuf;
+	auto *pHdr = (TSyncHeader *)pbBuf;
 	pbBuf += sizeof(*pHdr);
 
 	if (pHdr->bCmd != CMD_SYNCDATA) {

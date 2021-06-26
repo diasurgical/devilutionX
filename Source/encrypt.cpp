@@ -71,7 +71,7 @@ void InitHash()
 
 static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	TDataInfo *pInfo = (TDataInfo *)param;
+	auto *pInfo = (TDataInfo *)param;
 
 	uint32_t sSize;
 	if (*size >= pInfo->size - pInfo->srcOffset) {
@@ -88,7 +88,7 @@ static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 
 static void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	TDataInfo *pInfo = (TDataInfo *)param;
+	auto *pInfo = (TDataInfo *)param;
 
 	memcpy(pInfo->destData + pInfo->destOffset, buf, *size);
 	pInfo->destOffset += *size;
