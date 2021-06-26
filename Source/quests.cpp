@@ -764,7 +764,7 @@ void StartQuestlog()
 
 void QuestlogUp()
 {
-	if (numqlines) {
+	if (numqlines != 0) {
 		if (qline == qtopline) {
 			qline = 22;
 		} else if (qline == 22) {
@@ -778,7 +778,7 @@ void QuestlogUp()
 
 void QuestlogDown()
 {
-	if (numqlines) {
+	if (numqlines != 0) {
 		if (qline == 22) {
 			qline = qtopline;
 		} else if (qline == qtopline + 2 * numqlines - 2) {
@@ -800,15 +800,11 @@ void QuestlogEnter()
 
 void QuestlogESC()
 {
-	int y, i;
-
-	y = (MouseY - 32) / 12;
-	if (numqlines) {
-		for (i = 0; i < numqlines; i++) {
-			if (y == qtopline + 2 * i) {
-				qline = y;
-				QuestlogEnter();
-			}
+	int y = (MouseY - 32) / 12;
+	for (int i = 0; i < numqlines; i++) {
+		if (y == qtopline + 2 * i) {
+			qline = y;
+			QuestlogEnter();
 		}
 	}
 	if (y == 22) {

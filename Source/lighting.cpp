@@ -1125,7 +1125,7 @@ int AddVision(Point position, int r, bool mine)
 		VisionList[numvision]._lid = vid;
 		VisionList[numvision]._ldel = false;
 		VisionList[numvision]._lunflag = false;
-		VisionList[numvision]._lflags = mine != 0;
+		VisionList[numvision]._lflags = mine;
 		numvision++;
 		dovision = true;
 	}

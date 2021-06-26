@@ -5,9 +5,6 @@
 #include <mutex>
 #include <string>
 
-#define SI_SUPPORT_IOSTREAMS
-#include <SimpleIni.h>
-
 #include "storm/storm.h"
 #include "DiabloUI/diabloui.h"
 #include "options.h"
@@ -36,27 +33,6 @@ bool directFileAccess = false;
 std::string *SBasePath = nullptr;
 
 SdlMutex Mutex;
-
-std::string getIniPath()
-{
-	auto path = paths::ConfigPath() + std::string("diablo.ini");
-	return path;
-}
-
-CSimpleIni &getIni()
-{
-	static CSimpleIni ini;
-	static bool isIniLoaded = false;
-	if (!isIniLoaded) {
-		auto path = getIniPath();
-		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
-		ini.SetSpaces(false);
-		if (stream != nullptr)
-			ini.LoadData(*stream);
-		isIniLoaded = true;
-	}
-	return ini;
-}
 
 } // namespace
 
@@ -160,59 +136,6 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		}
 	}
 	return result;
-}
-
-bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
-{
-	bool value = getIni().GetBoolValue(sectionName, keyName, defaultValue);
-	return value;
-}
-
-float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
-{
-	const double value = getIni().GetDoubleValue(sectionName, keyName, defaultValue);
-	return (float)value;
-}
-
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
-{
-	const char *value = getIni().GetValue(sectionName, keyName);
-	if (value == nullptr) {
-		strncpy(string, defaultString, stringSize);
-		return false;
-	}
-	strncpy(string, value, stringSize);
-	return true;
-}
-
-void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
-{
-	auto &ini = getIni();
-	std::string stringValue(value, len ? len : strlen(value));
-	ini.SetValue(sectionName, keyName, stringValue.c_str());
-}
-
-void SaveIni()
-{
-	auto iniPath = getIniPath();
-	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
-	getIni().Save(*stream, true);
-}
-
-int getIniInt(const char *keyname, const char *valuename, int defaultValue)
-{
-	long value = getIni().GetLongValue(keyname, valuename, defaultValue);
-	return value;
-}
-
-void setIniInt(const char *keyname, const char *valuename, int value)
-{
-	getIni().SetLongValue(keyname, valuename, value);
-}
-
-void setIniFloat(const char *keyname, const char *valuename, float value)
-{
-	getIni().SetDoubleValue(keyname, valuename, value);
 }
 
 DWORD SErrGetLastError()

@@ -1270,7 +1270,7 @@ static DWORD On_STRING2(int pnum, TCmd *pCmd)
 	auto *p = (TCmdString *)pCmd;
 
 	int len = strlen(p->str);
-	if (!gbBufferMsgs)
+	if (gbBufferMsgs == 0)
 		SendPlrMsg(pnum, p->str);
 
 	return len + 2; // length of string + nul terminator + sizeof(p->bCmd)

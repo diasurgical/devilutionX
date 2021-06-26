@@ -9,6 +9,7 @@
 
 #include "utils/endian.hpp"
 
+#include "controls/keymapper.hpp"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
@@ -69,6 +70,7 @@ void diablo_color_cyc_logic();
 
 /* rdata */
 
+extern Keymapper keymapper;
 extern bool gbForceWindowed;
 extern bool leveldebug;
 #ifdef _DEBUG
@@ -83,6 +85,10 @@ extern bool debug_mode_dollar_sign;
 extern bool debug_mode_key_i;
 extern int debug_mode_key_j;
 #endif
+/** Default quick messages */
+extern const char *const spszMsgTbl[4];
+/** INI files variable names for quick messages */
+extern const char *const spszMsgNameTbl[4];
 extern bool gbFriendlyMode;
 
 } // namespace devilution

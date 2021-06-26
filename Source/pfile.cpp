@@ -351,7 +351,7 @@ bool pfile_get_file_name(uint8_t lvl, char *dst)
 	const char *fmt;
 
 	if (gbIsMultiplayer) {
-		if (lvl)
+		if (lvl != 0)
 			return false;
 		fmt = "hero";
 	} else {

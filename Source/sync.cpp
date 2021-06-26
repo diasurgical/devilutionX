@@ -123,7 +123,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		} else {
 			pHdr->wItemCI = items[ii]._iCreateInfo;
 			pHdr->dwItemSeed = items[ii]._iSeed;
-			pHdr->bItemId = items[ii]._iIdentified;
+			pHdr->bItemId = items[ii]._iIdentified ? 1 : 0;
 			pHdr->bItemDur = items[ii]._iDurability;
 			pHdr->bItemMDur = items[ii]._iMaxDur;
 			pHdr->bItemCh = items[ii]._iCharges;
@@ -143,7 +143,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		pHdr->wPInvIndx = pItem->IDidx;
 		pHdr->wPInvCI = pItem->_iCreateInfo;
 		pHdr->dwPInvSeed = pItem->_iSeed;
-		pHdr->bPInvId = pItem->_iIdentified;
+		pHdr->bPInvId = pItem->_iIdentified ? 1 : 0;
 	} else {
 		pHdr->bPInvLoc = -1;
 	}

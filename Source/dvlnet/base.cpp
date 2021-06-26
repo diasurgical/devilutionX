@@ -20,7 +20,7 @@ void base::setup_password(std::string pw)
 void base::run_event_handler(_SNETEVENT &ev)
 {
 	auto f = registered_handlers[static_cast<event_type>(ev.eventid)];
-	if (f) {
+	if (f != nullptr) {
 		f(&ev);
 	}
 }

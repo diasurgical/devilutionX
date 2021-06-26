@@ -4277,7 +4277,7 @@ bool OperateShrineMurphys(int pnum)
 	for (auto &item : plr[myplr].InvBody) {
 		if (!item.isEmpty() && GenerateRnd(3) == 0) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
-				if (item._iDurability) {
+				if (item._iDurability > 0) {
 					item._iDurability /= 2;
 					broke = true;
 					break;

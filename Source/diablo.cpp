@@ -71,25 +71,6 @@
 
 namespace devilution {
 
-#ifndef DEFAULT_WIDTH
-#define DEFAULT_WIDTH 640
-#endif
-#ifndef DEFAULT_HEIGHT
-#define DEFAULT_HEIGHT 480
-#endif
-#ifndef DEFAULT_AUDIO_SAMPLE_RATE
-#define DEFAULT_AUDIO_SAMPLE_RATE 22050
-#endif
-#ifndef DEFAULT_AUDIO_CHANNELS
-#define DEFAULT_AUDIO_CHANNELS 2
-#endif
-#ifndef DEFAULT_AUDIO_BUFFER_SIZE
-#define DEFAULT_AUDIO_BUFFER_SIZE 2048
-#endif
-#ifndef DEFAULT_AUDIO_RESAMPLING_QUALITY
-#define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
-#endif
-
 SDL_Window *ghMainWnd;
 DWORD glSeedTbl[NUMLEVELS];
 dungeon_type gnLevelTypeTbl[NUMLEVELS];
@@ -120,8 +101,6 @@ int sgnTimeoutCurs;
 clicktype sgbMouseDown;
 int color_cycle_timer;
 uint16_t gnTickDelay = 50;
-/** Game options */
-Options sgOptions;
 Keymapper keymapper {
 	// Workaround: remove once the INI library has been replaced.
 	[](const std::string &key, const std::string &value) {
@@ -157,15 +136,13 @@ int arrowdebug = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
-/** Default quick messages */
-const char *const spszMsgTbl[] = {
+const char *const spszMsgTbl[4] = {
 	N_("I need help! Come Here!"),
 	N_("Follow me."),
 	N_("Here's something for you."),
 	N_("Now you DIE!")
 };
-/** INI files variable names for quick messages */
-const char *const spszMsgNameTbl[] = { "QuickMessage1", "QuickMessage2", "QuickMessage3", "QuickMessage4" };
+const char *const spszMsgNameTbl[4] = { "QuickMessage1", "QuickMessage2", "QuickMessage3", "QuickMessage4" };
 
 /** To know if these things have been done when we get to the diablo_deinit() function */
 bool was_archives_init = false;
@@ -173,7 +150,6 @@ bool was_archives_init = false;
 bool was_window_init = false;
 bool was_ui_init = false;
 bool was_snd_init = false;
-bool sbWasOptionsLoaded = false;
 
 // Controller support:
 extern void plrctrls_every_frame();
@@ -490,177 +466,6 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 
 	SNetDestroy();
 	return gbRunGameResult;
-}
-
-/**
- * @brief Save game configurations to ini file
- */
-static void SaveOptions()
-{
-	setIniInt("Diablo", "Intro", sgOptions.Diablo.bIntro);
-	setIniInt("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
-	setIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
-
-	setIniInt("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
-	setIniInt("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-	setIniInt("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
-	setIniInt("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
-
-	setIniInt("Audio", "Sample Rate", sgOptions.Audio.nSampleRate);
-	setIniInt("Audio", "Channels", sgOptions.Audio.nChannels);
-	setIniInt("Audio", "Buffer Size", sgOptions.Audio.nBufferSize);
-	setIniInt("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
-	setIniInt("Graphics", "Width", sgOptions.Graphics.nWidth);
-	setIniInt("Graphics", "Height", sgOptions.Graphics.nHeight);
-#ifndef __vita__
-	setIniInt("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
-#endif
-#if !defined(USE_SDL1)
-	setIniInt("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
-#endif
-	setIniInt("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
-	setIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
-	setIniInt("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
-	setIniInt("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
-	setIniInt("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
-	setIniInt("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
-	setIniInt("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
-#ifndef USE_SDL1
-	setIniInt("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
-#endif
-	setIniInt("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
-	setIniInt("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
-
-	setIniInt("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	setIniInt("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
-	setIniInt("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
-	setIniInt("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
-	setIniInt("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
-	setIniInt("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
-	setIniInt("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
-	setIniInt("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
-	setIniInt("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
-	setIniInt("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
-	setIniInt("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
-	setIniInt("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
-	setIniInt("Game", "Auto Equip Weapons", sgOptions.Gameplay.bAutoEquipWeapons);
-	setIniInt("Game", "Auto Equip Armor", sgOptions.Gameplay.bAutoEquipArmor);
-	setIniInt("Game", "Auto Equip Helms", sgOptions.Gameplay.bAutoEquipHelms);
-	setIniInt("Game", "Auto Equip Shields", sgOptions.Gameplay.bAutoEquipShields);
-	setIniInt("Game", "Auto Equip Jewelry", sgOptions.Gameplay.bAutoEquipJewelry);
-	setIniInt("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
-	setIniInt("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
-	setIniInt("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
-
-	setIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
-	setIniInt("Network", "Port", sgOptions.Network.nPort);
-	setIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost);
-
-	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		setIniValue("NetMsg", spszMsgNameTbl[i], sgOptions.Chat.szHotKeyMsgs[i]);
-
-	setIniValue("Controller", "Mapping", sgOptions.Controller.szMapping);
-	setIniInt("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
-	setIniInt("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
-	setIniFloat("Controller", "deadzone", sgOptions.Controller.fDeadzone);
-#ifdef __vita__
-	setIniInt("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
-#endif
-
-	setIniValue("Language", "Code", sgOptions.Language.szCode);
-
-	keymapper.save();
-
-	SaveIni();
-}
-
-/**
- * @brief Load game configurations from ini file
- */
-static void LoadOptions()
-{
-	sgOptions.Diablo.bIntro = getIniBool("Diablo", "Intro", true);
-	sgOptions.Hellfire.bIntro = getIniBool("Hellfire", "Intro", true);
-	getIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
-
-	sgOptions.Audio.nSoundVolume = getIniInt("Audio", "Sound Volume", VOLUME_MAX);
-	sgOptions.Audio.nMusicVolume = getIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.Audio.bWalkingSound = getIniBool("Audio", "Walking Sound", true);
-	sgOptions.Audio.bAutoEquipSound = getIniBool("Audio", "Auto Equip Sound", false);
-
-	sgOptions.Audio.nSampleRate = getIniInt("Audio", "Sample Rate", DEFAULT_AUDIO_SAMPLE_RATE);
-	sgOptions.Audio.nChannels = getIniInt("Audio", "Channels", DEFAULT_AUDIO_CHANNELS);
-	sgOptions.Audio.nBufferSize = getIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
-	sgOptions.Audio.nResamplingQuality = getIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
-
-	sgOptions.Graphics.nWidth = getIniInt("Graphics", "Width", DEFAULT_WIDTH);
-	sgOptions.Graphics.nHeight = getIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-#ifndef __vita__
-	sgOptions.Graphics.bFullscreen = getIniBool("Graphics", "Fullscreen", true);
-#else
-	sgOptions.Graphics.bFullscreen = true;
-#endif
-#if !defined(USE_SDL1)
-	sgOptions.Graphics.bUpscale = getIniBool("Graphics", "Upscale", true);
-#else
-	sgOptions.Graphics.bUpscale = false;
-#endif
-	sgOptions.Graphics.bFitToScreen = getIniBool("Graphics", "Fit to Screen", true);
-	getIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
-	sgOptions.Graphics.bIntegerScaling = getIniBool("Graphics", "Integer Scaling", false);
-	sgOptions.Graphics.bVSync = getIniBool("Graphics", "Vertical Sync", true);
-	sgOptions.Graphics.bBlendedTransparancy = getIniBool("Graphics", "Blended Transparency", true);
-	sgOptions.Graphics.nGammaCorrection = getIniInt("Graphics", "Gamma Correction", 100);
-	sgOptions.Graphics.bColorCycling = getIniBool("Graphics", "Color Cycling", true);
-#ifndef USE_SDL1
-	sgOptions.Graphics.bHardwareCursor = getIniBool("Graphics", "Hardware Cursor", false);
-#else
-	sgOptions.Graphics.bHardwareCursor = false;
-#endif
-	sgOptions.Graphics.bFPSLimit = getIniBool("Graphics", "FPS Limiter", true);
-	sgOptions.Graphics.bShowFPS = getIniInt("Graphics", "Show FPS", false);
-
-	sgOptions.Gameplay.nTickRate = getIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bRunInTown = getIniBool("Game", "Run in Town", false);
-	sgOptions.Gameplay.bGrabInput = getIniBool("Game", "Grab Input", false);
-	sgOptions.Gameplay.bTheoQuest = getIniBool("Game", "Theo Quest", false);
-	sgOptions.Gameplay.bCowQuest = getIniBool("Game", "Cow Quest", false);
-	sgOptions.Gameplay.bFriendlyFire = getIniBool("Game", "Friendly Fire", true);
-	sgOptions.Gameplay.bTestBard = getIniBool("Game", "Test Bard", false);
-	sgOptions.Gameplay.bTestBarbarian = getIniBool("Game", "Test Barbarian", false);
-	sgOptions.Gameplay.bExperienceBar = getIniBool("Game", "Experience Bar", false);
-	sgOptions.Gameplay.bEnemyHealthBar = getIniBool("Game", "Enemy Health Bar", false);
-	sgOptions.Gameplay.bAutoGoldPickup = getIniBool("Game", "Auto Gold Pickup", false);
-	sgOptions.Gameplay.bAdriaRefillsMana = getIniBool("Game", "Adria Refills Mana", false);
-	sgOptions.Gameplay.bAutoEquipWeapons = getIniBool("Game", "Auto Equip Weapons", true);
-	sgOptions.Gameplay.bAutoEquipArmor = getIniBool("Game", "Auto Equip Armor", false);
-	sgOptions.Gameplay.bAutoEquipHelms = getIniBool("Game", "Auto Equip Helms", false);
-	sgOptions.Gameplay.bAutoEquipShields = getIniBool("Game", "Auto Equip Shields", false);
-	sgOptions.Gameplay.bAutoEquipJewelry = getIniBool("Game", "Auto Equip Jewelry", false);
-	sgOptions.Gameplay.bRandomizeQuests = getIniBool("Game", "Randomize Quests", true);
-	sgOptions.Gameplay.bShowMonsterType = getIniBool("Game", "Show Monster Type", false);
-	sgOptions.Gameplay.bDisableCripplingShrines = getIniBool("Game", "Disable Crippling Shrines", false);
-
-	getIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
-	sgOptions.Network.nPort = getIniInt("Network", "Port", 6112);
-	getIniValue("Network", "Previous Host", sgOptions.Network.szPreviousHost, sizeof(sgOptions.Network.szPreviousHost), "");
-
-	for (size_t i = 0; i < sizeof(spszMsgTbl) / sizeof(spszMsgTbl[0]); i++)
-		getIniValue("NetMsg", spszMsgNameTbl[i], sgOptions.Chat.szHotKeyMsgs[i], MAX_SEND_STR_LEN, "");
-
-	getIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
-	sgOptions.Controller.bSwapShoulderButtonMode = getIniBool("Controller", "Swap Shoulder Button Mode", false);
-	sgOptions.Controller.bDpadHotkeys = getIniBool("Controller", "Dpad Hotkeys", false);
-	sgOptions.Controller.fDeadzone = getIniFloat("Controller", "deadzone", 0.07);
-#ifdef __vita__
-	sgOptions.Controller.bRearTouch = getIniBool("Controller", "Enable Rear Touchpad", true);
-#endif
-
-	getIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), "en");
-
-	keymapper.load();
-
-	sbWasOptionsLoaded = true;
 }
 
 static void diablo_init_screen()
@@ -1965,11 +1770,9 @@ static void timeout_cursor(bool bTimeout)
  */
 void game_loop(bool bStartup)
 {
-	int i;
+	uint16_t wait = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
 
-	i = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
-
-	while (i--) {
+	for (unsigned i = 0; i < wait; i++) {
 		if (!multi_handle_delta()) {
 			timeout_cursor(true);
 			break;

@@ -263,7 +263,7 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	pItem->_iPLGetHit = file->nextLE<int32_t>();
 	pItem->_iPLLight = file->nextLE<int32_t>();
 	pItem->_iSplLvlAdd = file->nextLE<int8_t>();
-	pItem->_iRequest = file->nextLE<int8_t>();
+	pItem->_iRequest = file->nextBool8();
 	file->skip(2); // Alignment
 	pItem->_iUid = file->nextLE<int32_t>();
 	pItem->_iFMinDam = file->nextLE<int32_t>();
@@ -687,7 +687,7 @@ static void LoadMissile(LoadHelper *file, int i)
 	pMissile->_miVar5 = file->nextLE<int32_t>();
 	pMissile->_miVar6 = file->nextLE<int32_t>();
 	pMissile->_miVar7 = file->nextLE<int32_t>();
-	pMissile->_miVar8 = file->nextBool32();
+	pMissile->limitReached = file->nextBool32();
 }
 
 static void LoadObject(LoadHelper *file, int i)
@@ -1284,7 +1284,7 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->writeLE<int32_t>(iType);
 	file->writeLE<int32_t>(pItem->position.x);
 	file->writeLE<int32_t>(pItem->position.y);
-	file->writeLE<uint32_t>(pItem->_iAnimFlag);
+	file->writeLE<uint32_t>(pItem->_iAnimFlag ? 1 : 0);
 	file->skip(4); // Skip pointer _iAnimData
 	file->writeLE<int32_t>(pItem->AnimInfo.NumberOfFrames);
 	file->writeLE<int32_t>(pItem->AnimInfo.CurrentFrame);
@@ -1295,8 +1295,8 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->skip(4); // Unused since 1.02
 	file->writeLE<uint8_t>(pItem->_iSelFlag);
 	file->skip(3); // Alignment
-	file->writeLE<uint32_t>(pItem->_iPostDraw);
-	file->writeLE<uint32_t>(pItem->_iIdentified);
+	file->writeLE<uint32_t>(pItem->_iPostDraw ? 1 : 0);
+	file->writeLE<uint32_t>(pItem->_iIdentified ? 1 : 0);
 	file->writeLE<int8_t>(pItem->_iMagical);
 	file->writeBytes(pItem->_iName, 64);
 	file->writeBytes(pItem->_iIName, 64);
@@ -1332,7 +1332,7 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->writeLE<int32_t>(pItem->_iPLGetHit);
 	file->writeLE<int32_t>(pItem->_iPLLight);
 	file->writeLE<int8_t>(pItem->_iSplLvlAdd);
-	file->writeLE<int8_t>(pItem->_iRequest);
+	file->writeLE<int8_t>(pItem->_iRequest ? 1 : 0);
 	file->skip(2); // Alignment
 	file->writeLE<int32_t>(pItem->_iUid);
 	file->writeLE<int32_t>(pItem->_iFMinDam);
@@ -1351,7 +1351,7 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->writeLE<uint8_t>(pItem->_iMinMag);
 	file->writeLE<int8_t>(pItem->_iMinDex);
 	file->skip(1); // Alignment
-	file->writeLE<uint32_t>(pItem->_iStatFlag);
+	file->writeLE<uint32_t>(pItem->_iStatFlag ? 1 : 0);
 	file->writeLE<int32_t>(idx);
 	file->writeLE<uint32_t>(pItem->dwBuff);
 	if (gbIsHellfire)
@@ -1372,7 +1372,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(player._pmode);
 	for (int8_t step : player.walkpath)
 		file->writeLE<int8_t>(step);
-	file->writeLE<uint8_t>(player.plractive);
+	file->writeLE<uint8_t>(player.plractive ? 1 : 0);
 	file->skip(2); // Alignment
 	file->writeLE<int32_t>(player.destAction);
 	file->writeLE<int32_t>(player.destParam1);
@@ -1441,10 +1441,10 @@ static void SavePlayer(SaveHelper *file, int p)
 		file->writeLE<int8_t>(spellType);
 
 	file->writeLE<int32_t>(player._pwtype);
-	file->writeLE<uint8_t>(player._pBlockFlag);
-	file->writeLE<uint8_t>(player._pInvincible);
+	file->writeLE<uint8_t>(player._pBlockFlag ? 1 : 0);
+	file->writeLE<uint8_t>(player._pInvincible ? 1 : 0);
 	file->writeLE<int8_t>(player._pLightRad);
-	file->writeLE<uint8_t>(player._pLvlChanging);
+	file->writeLE<uint8_t>(player._pLvlChanging ? 1 : 0);
 
 	file->writeBytes(player._pName, PLR_NAME_LEN);
 	file->writeLE<int8_t>(static_cast<int8_t>(player._pClass));
@@ -1483,7 +1483,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int8_t>(player._pLghtResist);
 	file->writeLE<int32_t>(player._pGold);
 
-	file->writeLE<uint32_t>(player._pInfraFlag);
+	file->writeLE<uint32_t>(player._pInfraFlag ? 1 : 0);
 	file->writeLE<int32_t>(player.position.temp.x);
 	file->writeLE<int32_t>(player.position.temp.y);
 	file->writeLE<int32_t>(player.tempDirection);
@@ -1494,9 +1494,9 @@ static void SavePlayer(SaveHelper *file, int p)
 	// Write actionFrame for vanilla compatibility
 	file->writeLE<int32_t>(0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		file->writeLE<uint8_t>(player._pLvlVisited[i]);
+		file->writeLE<uint8_t>(player._pLvlVisited[i] ? 1 : 0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		file->writeLE<uint8_t>(player._pSLvlVisited[i]); // only 10 used
+		file->writeLE<uint8_t>(player._pSLvlVisited[i] ? 1 : 0); // only 10 used
 
 	file->skip(2); // Alignment
 
@@ -1565,9 +1565,9 @@ static void SavePlayer(SaveHelper *file, int p)
 	if (gbIsHellfire)
 		file->writeLE<uint8_t>(player.pDungMsgs2);
 	else
-		file->writeLE<uint8_t>(player.pBattleNet);
-	file->writeLE<uint8_t>(player.pManaShield);
-	file->writeLE<uint8_t>(player.pOriginalCathedral);
+		file->writeLE<uint8_t>(player.pBattleNet ? 1 : 0);
+	file->writeLE<uint8_t>(player.pManaShield ? 1 : 0);
+	file->writeLE<uint8_t>(player.pOriginalCathedral ? 1 : 0);
 	file->skip(2); // Available bytes
 	file->writeLE<uint16_t>(player.wReflections);
 	file->skip(14); // Available bytes
@@ -1625,7 +1625,7 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMonster->AnimInfo.NumberOfFrames);
 	file->writeLE<int32_t>(pMonster->AnimInfo.CurrentFrame);
 	file->skip(4); // Skip _meflag
-	file->writeLE<uint32_t>(pMonster->_mDelFlag);
+	file->writeLE<uint32_t>(pMonster->_mDelFlag ? 1 : 0);
 	file->writeLE<int32_t>(pMonster->_mVar1);
 	file->writeLE<int32_t>(pMonster->_mVar2);
 	file->writeLE<int32_t>(pMonster->_mVar3);
@@ -1699,7 +1699,7 @@ static void SaveMissile(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMissile->position.traveled.y);
 	file->writeLE<int32_t>(pMissile->_mimfnum);
 	file->writeLE<int32_t>(pMissile->_mispllvl);
-	file->writeLE<uint32_t>(pMissile->_miDelFlag);
+	file->writeLE<uint32_t>(pMissile->_miDelFlag ? 1 : 0);
 	file->writeLE<uint8_t>(pMissile->_miAnimType);
 	file->skip(3); // Alignment
 	file->writeLE<int32_t>(pMissile->_miAnimFlags);
@@ -1711,15 +1711,15 @@ static void SaveMissile(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMissile->_miAnimCnt);
 	file->writeLE<int32_t>(pMissile->_miAnimAdd);
 	file->writeLE<int32_t>(pMissile->_miAnimFrame);
-	file->writeLE<uint32_t>(pMissile->_miDrawFlag);
-	file->writeLE<uint32_t>(pMissile->_miLightFlag);
-	file->writeLE<uint32_t>(pMissile->_miPreFlag);
+	file->writeLE<uint32_t>(pMissile->_miDrawFlag ? 1 : 0);
+	file->writeLE<uint32_t>(pMissile->_miLightFlag ? 1 : 0);
+	file->writeLE<uint32_t>(pMissile->_miPreFlag ? 1 : 0);
 	file->writeLE<uint32_t>(pMissile->_miUniqTrans);
 	file->writeLE<int32_t>(pMissile->_mirange);
 	file->writeLE<int32_t>(pMissile->_misource);
 	file->writeLE<int32_t>(pMissile->_micaster);
 	file->writeLE<int32_t>(pMissile->_midam);
-	file->writeLE<uint32_t>(pMissile->_miHitFlag);
+	file->writeLE<uint32_t>(pMissile->_miHitFlag ? 1 : 0);
 	file->writeLE<int32_t>(pMissile->_midist);
 	file->writeLE<int32_t>(pMissile->_mlid);
 	file->writeLE<int32_t>(pMissile->_mirnd);
@@ -1730,7 +1730,7 @@ static void SaveMissile(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMissile->_miVar5);
 	file->writeLE<int32_t>(pMissile->_miVar6);
 	file->writeLE<int32_t>(pMissile->_miVar7);
-	file->writeLE<int32_t>(pMissile->_miVar8);
+	file->writeLE<uint32_t>(pMissile->limitReached ? 1 : 0);
 }
 
 static void SaveObject(SaveHelper *file, int i)
@@ -1740,7 +1740,7 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pObject->_otype);
 	file->writeLE<int32_t>(pObject->position.x);
 	file->writeLE<int32_t>(pObject->position.y);
-	file->writeLE<uint32_t>(pObject->_oLight);
+	file->writeLE<uint32_t>(pObject->_oLight ? 1 : 0);
 	file->writeLE<uint32_t>(pObject->_oAnimFlag);
 	file->skip(4); // Skip pointer _oAnimData
 	file->writeLE<int32_t>(pObject->_oAnimDelay);
@@ -1750,17 +1750,17 @@ static void SaveObject(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pObject->_oAnimWidth);
 	file->writeLE<int32_t>(CalculateWidth2(pObject->_oAnimWidth));
 	// Write _oAnimWidth2 for vanilla compatibility
-	file->writeLE<uint32_t>(pObject->_oDelFlag);
+	file->writeLE<uint32_t>(pObject->_oDelFlag ? 1 : 0);
 	file->writeLE<int8_t>(pObject->_oBreak);
 	file->skip(3); // Alignment
-	file->writeLE<uint32_t>(pObject->_oSolidFlag);
-	file->writeLE<uint32_t>(pObject->_oMissFlag);
+	file->writeLE<uint32_t>(pObject->_oSolidFlag ? 1 : 0);
+	file->writeLE<uint32_t>(pObject->_oMissFlag ? 1 : 0);
 
 	file->writeLE<int8_t>(pObject->_oSelFlag);
 	file->skip(3); // Alignment
-	file->writeLE<uint32_t>(pObject->_oPreFlag);
-	file->writeLE<uint32_t>(pObject->_oTrapFlag);
-	file->writeLE<uint32_t>(pObject->_oDoorFlag);
+	file->writeLE<uint32_t>(pObject->_oPreFlag ? 1 : 0);
+	file->writeLE<uint32_t>(pObject->_oTrapFlag ? 1 : 0);
+	file->writeLE<uint32_t>(pObject->_oDoorFlag ? 1 : 0);
 	file->writeLE<int32_t>(pObject->_olid);
 	file->writeLE<int32_t>(pObject->_oRndSeed);
 	file->writeLE<int32_t>(pObject->_oVar1);
@@ -1801,7 +1801,7 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->skip(2); // Alignment
 	if (!gbIsHellfire)
 		file->skip(1); // Alignment
-	file->writeLE<uint32_t>(pQuest->_qlog);
+	file->writeLE<uint32_t>(pQuest->_qlog ? 1 : 0);
 
 	file->writeBE<int32_t>(ReturnLvlX);
 	file->writeBE<int32_t>(ReturnLvlY);
@@ -1816,27 +1816,27 @@ static void SaveLighting(SaveHelper *file, LightListStruct *pLight)
 	file->writeLE<int32_t>(pLight->position.tile.y);
 	file->writeLE<int32_t>(pLight->_lradius);
 	file->writeLE<int32_t>(pLight->_lid);
-	file->writeLE<uint32_t>(pLight->_ldel);
-	file->writeLE<uint32_t>(pLight->_lunflag);
+	file->writeLE<uint32_t>(pLight->_ldel ? 1 : 0);
+	file->writeLE<uint32_t>(pLight->_lunflag ? 1 : 0);
 	file->skip(4); // Unused
 	file->writeLE<int32_t>(pLight->position.old.x);
 	file->writeLE<int32_t>(pLight->position.old.y);
 	file->writeLE<int32_t>(pLight->oldRadious);
 	file->writeLE<int32_t>(pLight->position.offset.x);
 	file->writeLE<int32_t>(pLight->position.offset.y);
-	file->writeLE<uint32_t>(pLight->_lflags);
+	file->writeLE<uint32_t>(pLight->_lflags ? 1 : 0);
 }
 
 static void SavePortal(SaveHelper *file, int i)
 {
 	PortalStruct *pPortal = &portal[i];
 
-	file->writeLE<uint32_t>(pPortal->open);
+	file->writeLE<uint32_t>(pPortal->open ? 1 : 0);
 	file->writeLE<int32_t>(pPortal->position.x);
 	file->writeLE<int32_t>(pPortal->position.y);
 	file->writeLE<int32_t>(pPortal->level);
 	file->writeLE<int32_t>(pPortal->ltype);
-	file->writeLE<uint32_t>(pPortal->setlvl);
+	file->writeLE<uint32_t>(pPortal->setlvl ? 1 : 0);
 }
 
 const int DiabloItemSaveSize = 368;
@@ -1847,7 +1847,7 @@ void SaveHeroItems(PlayerStruct &player)
 	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
 	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
-	file.writeLE<uint8_t>(gbIsHellfire);
+	file.writeLE<uint8_t>(gbIsHellfire ? 1 : 0);
 
 	SaveItems(&file, player.InvBody, NUM_INVLOC);
 	SaveItems(&file, player.InvList, NUM_INV_GRID_ELEM);
@@ -1883,14 +1883,14 @@ void SaveGameData()
 		giNumberOfSmithPremiumItems = 6;
 	}
 
-	file.writeLE<uint8_t>(setlevel);
+	file.writeLE<uint8_t>(setlevel ? 1 : 0);
 	file.writeBE<uint32_t>(setlvlnum);
 	file.writeBE<uint32_t>(currlevel);
 	file.writeBE<uint32_t>(leveltype);
 	file.writeBE<int32_t>(ViewX);
 	file.writeBE<int32_t>(ViewY);
-	file.writeLE<uint8_t>(invflag);
-	file.writeLE<uint8_t>(chrflag);
+	file.writeLE<uint8_t>(invflag ? 1 : 0);
+	file.writeLE<uint8_t>(chrflag ? 1 : 0);
 	file.writeBE<int32_t>(nummonsters);
 	file.writeBE<int32_t>(numitems);
 	file.writeBE<int32_t>(nummissiles);
@@ -1950,7 +1950,7 @@ void SaveGameData()
 	for (int i = 0; i < numitems; i++)
 		SaveItem(&file, &items[itemactive[i]]);
 	for (bool UniqueItemFlag : UniqueItemFlags)
-		file.writeLE<int8_t>(UniqueItemFlag);
+		file.writeLE<uint8_t>(UniqueItemFlag ? 1 : 0);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++)
@@ -1992,7 +1992,7 @@ void SaveGameData()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
-				file.writeLE<uint8_t>(AutomapView[i][j]);
+				file.writeLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)
@@ -2006,7 +2006,7 @@ void SaveGameData()
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		SavePremium(&file, i);
 
-	file.writeLE<uint8_t>(AutomapActive);
+	file.writeLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.writeBE<int32_t>(AutoMapScale);
 }
 
@@ -2089,7 +2089,7 @@ void SaveLevel()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++)
-				file.writeLE<uint8_t>(AutomapView[i][j]);
+				file.writeLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)

@@ -1170,10 +1170,10 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
 {
 	int lPan, lVolume;
 
-	if (plr[myplr].pLvlLoad && gbIsMultiplayer) {
+	if (plr[myplr].pLvlLoad != 0 && gbIsMultiplayer) {
 		return;
 	}
-	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
+	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
 
@@ -1203,12 +1203,12 @@ void PlayEffect(int i, int mode)
 {
 	int sndIdx, mi, lVolume, lPan;
 
-	if (plr[myplr].pLvlLoad) {
+	if (plr[myplr].pLvlLoad != 0) {
 		return;
 	}
 
 	sndIdx = GenerateRnd(2);
-	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
+	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
 

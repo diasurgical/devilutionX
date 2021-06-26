@@ -312,7 +312,7 @@ bool FetchMessage(tagMSG *lpMsg)
 	}
 
 	SDL_Event e;
-	if (!SDL_PollEvent(&e)) {
+	if (SDL_PollEvent(&e) == 0) {
 		return false;
 	}
 

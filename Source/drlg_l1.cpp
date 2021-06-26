@@ -30,11 +30,11 @@ BYTE L5dflags[DMAXX][DMAXY];
 /** Specifies whether a single player quest DUN has been loaded. */
 bool L5setloadflag;
 /** Specifies whether to generate a horizontal room at position 1 in the Cathedral. */
-int HR1;
+bool HR1;
 /** Specifies whether to generate a horizontal room at position 2 in the Cathedral. */
-int HR2;
+bool HR2;
 /** Specifies whether to generate a horizontal room at position 3 in the Cathedral. */
-int HR3;
+bool HR3;
 
 /** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
 bool VR1;
@@ -869,18 +869,18 @@ static void DRLG_L1Shadows()
 			for (i = 0; i < 37; i++) {
 				if (SPATS[i].strig == sd[0][0]) {
 					patflag = true;
-					if (SPATS[i].s1 && SPATS[i].s1 != sd[1][1])
+					if (SPATS[i].s1 != 0 && SPATS[i].s1 != sd[1][1])
 						patflag = false;
-					if (SPATS[i].s2 && SPATS[i].s2 != sd[0][1])
+					if (SPATS[i].s2 != 0 && SPATS[i].s2 != sd[0][1])
 						patflag = false;
-					if (SPATS[i].s3 && SPATS[i].s3 != sd[1][0])
+					if (SPATS[i].s3 != 0 && SPATS[i].s3 != sd[1][0])
 						patflag = false;
 					if (patflag) {
-						if (SPATS[i].nv1 && !L5dflags[x - 1][y - 1])
+						if (SPATS[i].nv1 != 0 && L5dflags[x - 1][y - 1] == 0)
 							dungeon[x - 1][y - 1] = SPATS[i].nv1;
-						if (SPATS[i].nv2 && !L5dflags[x][y - 1])
+						if (SPATS[i].nv2 != 0 && L5dflags[x][y - 1] == 0)
 							dungeon[x][y - 1] = SPATS[i].nv2;
-						if (SPATS[i].nv3 && !L5dflags[x - 1][y])
+						if (SPATS[i].nv3 != 0 && L5dflags[x - 1][y] == 0)
 							dungeon[x - 1][y] = SPATS[i].nv3;
 					}
 				}
@@ -890,7 +890,7 @@ static void DRLG_L1Shadows()
 
 	for (y = 1; y < DMAXY; y++) {
 		for (x = 1; x < DMAXX; x++) {
-			if (dungeon[x - 1][y] == 139 && !L5dflags[x - 1][y]) {
+			if (dungeon[x - 1][y] == 139 && L5dflags[x - 1][y] == 0) {
 				tnv3 = 139;
 				if (dungeon[x][y] == 29)
 					tnv3 = 141;
@@ -906,7 +906,7 @@ static void DRLG_L1Shadows()
 					tnv3 = 141;
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 149 && !L5dflags[x - 1][y]) {
+			if (dungeon[x - 1][y] == 149 && L5dflags[x - 1][y] == 0) {
 				tnv3 = 149;
 				if (dungeon[x][y] == 29)
 					tnv3 = 153;
@@ -922,7 +922,7 @@ static void DRLG_L1Shadows()
 					tnv3 = 153;
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 148 && !L5dflags[x - 1][y]) {
+			if (dungeon[x - 1][y] == 148 && L5dflags[x - 1][y] == 0) {
 				tnv3 = 148;
 				if (dungeon[x][y] == 29)
 					tnv3 = 154;
@@ -995,9 +995,9 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 
 			for (yy = 0; yy < sh && abort; yy++) {
 				for (xx = 0; xx < sw && abort; xx++) {
-					if (miniset[ii] && dungeon[xx + sx][sy + yy] != miniset[ii])
+					if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
 						abort = false;
-					if (L5dflags[xx + sx][sy + yy])
+					if (L5dflags[xx + sx][sy + yy] != 0)
 						abort = false;
 					ii++;
 				}
@@ -1439,19 +1439,19 @@ static void L5firstRoom()
 		if (VR3)
 			L5roomGen(15, 29, 10, 10, 0);
 
-		HR3 = 0;
-		HR2 = 0;
-		HR1 = 0;
+		HR3 = false;
+		HR2 = false;
+		HR1 = false;
 	} else {
 		xs = 1;
 		xe = DMAXX - 1;
 
-		HR1 = GenerateRnd(2);
-		HR2 = GenerateRnd(2);
-		HR3 = GenerateRnd(2);
+		HR1 = GenerateRnd(2) != 0;
+		HR2 = GenerateRnd(2) != 0;
+		HR3 = GenerateRnd(2) != 0;
 
-		if (HR1 + HR3 <= 1)
-			HR2 = 1;
+		if (HR1 && HR3)
+			HR2 = true;
 		if (HR1)
 			L5drawRoom(1, 15, 10, 10);
 		else
@@ -1548,7 +1548,7 @@ static int L5HWallOk(int i, int j)
 	bool wallok;
 
 	for (x = 1; dungeon[i + x][j] == 13; x++) {
-		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || L5dflags[i + x][j])
+		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || L5dflags[i + x][j] != 0)
 			break;
 	}
 
@@ -1574,7 +1574,7 @@ static int L5VWallOk(int i, int j)
 	bool wallok;
 
 	for (y = 1; dungeon[i][j + y] == 13; y++) {
-		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || L5dflags[i][j + y])
+		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || L5dflags[i][j + y] != 0)
 			break;
 	}
 
@@ -1698,7 +1698,7 @@ static void L5AddWall()
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (!L5dflags[i][j]) {
+			if (L5dflags[i][j] == 0) {
 				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
 					x = L5HWallOk(i, j);
 					if (x != -1)
@@ -1993,7 +1993,7 @@ static void DRLG_L5Subs()
 			if (GenerateRnd(4) == 0) {
 				BYTE c = L5BTYPES[dungeon[x][y]];
 
-				if (c && !L5dflags[x][y]) {
+				if (c != 0 && L5dflags[x][y] == 0) {
 					rv = GenerateRnd(16);
 					i = -1;
 
@@ -2006,14 +2006,14 @@ static void DRLG_L5Subs()
 
 					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
 					if (i == 89 && y > 0) {
-						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1])
+						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1] != 0)
 							i = 79;
 						else
 							dungeon[x][y - 1] = 90;
 					}
 					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
 					if (i == 91 && x + 1 < DMAXX) {
-						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y])
+						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y] != 0)
 							i = 80;
 						else
 							dungeon[x + 1][y] = 92;
@@ -2181,13 +2181,13 @@ static void L5FillChambers()
 			}
 		} else {
 			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2))
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
 				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2))
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (GenerateRnd(2))
+				if (GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
@@ -2288,7 +2288,7 @@ void drlg_l1_set_crypt_room(int rx1, int ry1)
 
 	for (int j = 0; j < rh; j++) {
 		for (int i = 0; i < rw; i++) {
-			if (UberRoomPattern[sp]) {
+			if (UberRoomPattern[sp] != 0) {
 				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
 			} else {
@@ -2313,7 +2313,7 @@ void drlg_l1_set_corner_room(int rx1, int ry1)
 
 	for (int j = 0; j < rh; j++) {
 		for (int i = 0; i < rw; i++) {
-			if (CornerstoneRoomPattern[sp]) {
+			if (CornerstoneRoomPattern[sp] != 0) {
 				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
 			} else {
@@ -2326,7 +2326,7 @@ void drlg_l1_set_corner_room(int rx1, int ry1)
 
 static void DRLG_L5FTVR(int i, int j, int x, int y, int d)
 {
-	if (dTransVal[x][y] || dungeon[i][j] != 13) {
+	if (dTransVal[x][y] != 0 || dungeon[i][j] != 13) {
 		if (d == 1) {
 			dTransVal[x][y] = TransVal;
 			dTransVal[x][y + 1] = TransVal;
@@ -2376,7 +2376,7 @@ static void DRLG_L5FloodTVal()
 		int xx = 16;
 
 		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 13 && !dTransVal[xx][yy]) {
+			if (dungeon[i][j] == 13 && dTransVal[xx][yy] == 0) {
 				DRLG_L5FTVR(i, j, xx, yy, 0);
 				TransVal++;
 			}
@@ -2465,7 +2465,7 @@ static void DRLG_L5CornerFix()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
-			if (!(L5dflags[i][j] & DLRG_PROTECTED) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
+			if ((L5dflags[i][j] & DLRG_PROTECTED) == 0 && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
 				dungeon[i][j] = 16;
 				L5dflags[i][j - 1] &= DLRG_PROTECTED;
 			}
@@ -2632,7 +2632,7 @@ static void DRLG_L5(lvl_entry entry)
 
 	for (j = 0; j < DMAXY; j++) {
 		for (i = 0; i < DMAXX; i++) {
-			if (L5dflags[i][j] & ~DLRG_PROTECTED)
+			if ((L5dflags[i][j] & ~DLRG_PROTECTED) != 0)
 				DRLG_PlaceDoor(i, j);
 		}
 	}

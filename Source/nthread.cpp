@@ -80,7 +80,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 {
 	*pfSendAsync = false;
 	sgbPacketCountdown--;
-	if (sgbPacketCountdown) {
+	if (sgbPacketCountdown > 0) {
 		last_tick += gnTickDelay;
 		return true;
 	}

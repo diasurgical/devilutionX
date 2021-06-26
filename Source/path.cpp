@@ -69,7 +69,7 @@ int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, in
 	path_start->position.y = sy;
 	path_2_nodes->NextNode = path_start;
 	// A* search until we find (dx,dy) or fail
-	while ((next_node = GetNextPath())) {
+	while ((next_node = GetNextPath()) != nullptr) {
 		// reached the end, success!
 		if (next_node->position.x == dx && next_node->position.y == dy) {
 			current = next_node;
@@ -300,23 +300,21 @@ PATHNODE *path_get_node2(int dx, int dy)
  */
 void path_next_node(PATHNODE *pPath)
 {
-	PATHNODE *next, *current;
-	int f;
-
-	next = path_2_nodes;
+	PATHNODE *next = path_2_nodes;
 	if (path_2_nodes->NextNode == nullptr) {
 		path_2_nodes->NextNode = pPath;
-	} else {
-		current = path_2_nodes;
-		next = path_2_nodes->NextNode;
-		f = pPath->f;
-		while (next && next->f < f) {
-			current = next;
-			next = next->NextNode;
-		}
-		pPath->NextNode = next;
-		current->NextNode = pPath;
+		return;
 	}
+
+	PATHNODE *current = path_2_nodes;
+	next = path_2_nodes->NextNode;
+	int f = pPath->f;
+	while (next != nullptr && next->f < f) {
+		current = next;
+		next = next->NextNode;
+	}
+	pPath->NextNode = next;
+	current->NextNode = pPath;
 }
 
 /**
@@ -329,7 +327,8 @@ void path_set_coords(PATHNODE *pPath)
 	int i;
 
 	path_push_active_step(pPath);
-	while (gdwCurPathStep) {
+	// while there are path nodes to check
+	while (gdwCurPathStep > 0) {
 		PathOld = path_pop_active_step();
 		for (i = 0; i < 8; i++) {
 			PathAct = PathOld->Child[i];

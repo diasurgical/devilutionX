@@ -256,7 +256,7 @@ bool protocol_zt::get_disconnected(endpoint &peer)
 
 void protocol_zt::disconnect(const endpoint &peer)
 {
-	if (peer_list.count(peer)) {
+	if (peer_list.count(peer) != 0) {
 		if (peer_list[peer].fd != -1) {
 			if (lwip_close(peer_list[peer].fd) < 0) {
 				Log("lwip_close: {}", strerror(errno));
@@ -291,7 +291,7 @@ protocol_zt::~protocol_zt()
 void protocol_zt::endpoint::from_string(const std::string &str)
 {
 	ip_addr_t a;
-	if (!ipaddr_aton(str.c_str(), &a))
+	if (ipaddr_aton(str.c_str(), &a) == 0)
 		return;
 	if (!IP_IS_V6_VAL(a))
 		return;
