@@ -1046,31 +1046,31 @@ msgstr[2] "У вас {:d} золотых. Сколько вы хотите за�
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Menu"
-msgstr ""
+msgstr "Меню"
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Inv"
-msgstr ""
+msgstr "Инвен"
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Map"
-msgstr ""
+msgstr "Карта"
 
 #: Source/controls/modifier_hints.cpp:117
 msgid "Char"
-msgstr ""
+msgstr "Персонаж"
 
 #: Source/controls/modifier_hints.cpp:118
 msgid "Spells"
-msgstr ""
+msgstr "Умения"
 
 #: Source/controls/modifier_hints.cpp:118
 msgid "Quests"
-msgstr ""
+msgstr "Квесты"
 
 #: Source/cursor.cpp:205 Source/spelldat.cpp:22
 msgid "Town Portal"
-msgstr ""
+msgstr "Городской портал"
 
 #: Source/cursor.cpp:206
 msgid "from {:s}"
@@ -1078,7 +1078,7 @@ msgstr ""
 
 #: Source/cursor.cpp:231
 msgid "Portal to"
-msgstr ""
+msgstr "Портал в"
 
 #: Source/cursor.cpp:233
 msgid "The Unholy Altar"
@@ -1086,11 +1086,11 @@ msgstr ""
 
 #: Source/cursor.cpp:235
 msgid "level 15"
-msgstr ""
+msgstr "уровень 15"
 
 #: Source/diablo.cpp:155
 msgid "I need help! Come Here!"
-msgstr ""
+msgstr "Помогите! Ко мне!!!"
 
 #: Source/diablo.cpp:156
 msgid "Follow me."
@@ -1102,7 +1102,7 @@ msgstr ""
 
 #: Source/diablo.cpp:158
 msgid "Now you DIE!"
-msgstr ""
+msgstr "А теперь УМРИИИ!!"
 
 #: Source/diablo.cpp:179
 msgid "Options:\n"
@@ -1190,11 +1190,11 @@ msgstr "версия {:s}"
 
 #: Source/diablo.cpp:1916
 msgid "-- Network timeout --"
-msgstr ""
+msgstr "-- Истекло время ожидания --"
 
 #: Source/diablo.cpp:1917
 msgid "-- Waiting for players --"
-msgstr ""
+msgstr "-- Ожидание игроков --"
 
 #: Source/diablo.cpp:1974
 msgid "No help available"
@@ -1218,7 +1218,7 @@ msgstr "Невозможно соединиться"
 
 #: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
-msgstr ""
+msgstr "ошибка: чтение 0 байтов с сервера"
 
 #: Source/error.cpp:24
 msgid "No automap available in town"
@@ -1242,7 +1242,7 @@ msgstr ""
 
 #: Source/error.cpp:29
 msgid "No Pause in town"
-msgstr ""
+msgstr "В городе нет паузы"
 
 #: Source/error.cpp:30
 msgid "Copying to a hard disk is recommended"
@@ -1250,7 +1250,7 @@ msgstr ""
 
 #: Source/error.cpp:31
 msgid "Multiplayer sync problem"
-msgstr ""
+msgstr "Проблемы с синхронизацией мультиплеера"
 
 #: Source/error.cpp:32
 msgid "No pause in multiplayer"
@@ -1270,7 +1270,7 @@ msgstr ""
 
 #: Source/error.cpp:36
 msgid "New strength is forged through destruction"
-msgstr ""
+msgstr "Новая сила создается через разрушение"
 
 #: Source/error.cpp:37
 msgid "Those who defend seldom attack"
@@ -1759,53 +1759,55 @@ msgstr ""
 
 #: Source/help.cpp:477
 msgid "Hellfire Help"
-msgstr ""
+msgstr "Hellfire Помощь"
 
 #: Source/help.cpp:479
 msgid "Diablo Help"
-msgstr ""
+msgstr "Diablo Помощь"
 
 #: Source/help.cpp:559
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr ""
+msgstr "Нажмите ESC для завершения или клавиши со стрелками для прокрутки."
 
 #: Source/init.cpp:205
 msgid "Some Hellfire MPQs are missing"
-msgstr ""
+msgstr "Некоторые MPQ Hellfire отсутствуют"
 
 #: Source/init.cpp:205
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
+"Не все MPQ Hellfire были найдены.\n"
+"Скопируйте все файлы hf*.mpq."
 
 #: Source/init.cpp:215
 msgid "Unable to create main window"
-msgstr ""
+msgstr "Невозможно создать главное окно"
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:197
 msgid "Gold"
-msgstr ""
+msgstr "Золото"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr ""
+msgstr "Короткий мечь"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
-msgstr ""
+msgstr "Баклер"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
-msgstr ""
+msgstr "Клуб"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
-msgstr ""
+msgstr "Короткий лук"
 
 #: Source/itemdat.cpp:21
 msgid "Short Staff of Mana"
-msgstr ""
+msgstr "Короткое посох маны"
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
@@ -1833,15 +1835,13 @@ msgstr "Кольцо Истины"
 
 # Возможно нужно везде поменять "знак" на "вывеску"
 #: Source/itemdat.cpp:28
-#, fuzzy
 msgid "Tavern Sign"
-msgstr "Знак Таверны"
+msgstr "Знак товерны"
 
 # Или просто шапка/шлем
 #: Source/itemdat.cpp:29 Source/itemdat.cpp:396
-#, fuzzy
 msgid "Harlequin Crest"
-msgstr "Гребень Арлекина"
+msgstr "Крест Арклейна"
 
 #: Source/itemdat.cpp:30 Source/itemdat.cpp:397
 msgid "Veil of Steel"
@@ -1893,9 +1893,8 @@ msgstr "Зелье Маны"
 
 # Заменить везде идентификацию на опознание/распознание?
 #: Source/itemdat.cpp:42 Source/itemdat.cpp:110
-#, fuzzy
 msgid "Scroll of Identify"
-msgstr "Свиток Идентификации"
+msgstr "Свиток идентификации"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
@@ -1914,9 +1913,8 @@ msgid "Potion of Full Mana"
 msgstr "Зелье Полной Маны"
 
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:399
-#, fuzzy
 msgid "Griswold's Edge"
-msgstr "Лезвие Гризвольда"
+msgstr "Лезвие Грисуолда"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:400
 msgid "Bovine Plate"
@@ -1987,73 +1985,73 @@ msgstr "Серый Костюм"
 
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
 msgid "Cap"
-msgstr ""
+msgstr "Шапка"
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
-msgstr ""
+msgstr "Тюбитейка"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
 msgid "Helm"
-msgstr ""
+msgstr "Шлем"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
-msgstr ""
+msgstr "Закрытый шлем"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
-msgstr ""
+msgstr "Корона"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
-msgstr ""
+msgstr "Хороший шлем"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
-msgstr ""
+msgstr "Плащ"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
-msgstr ""
+msgstr "Тряпьё"
 
 #: Source/itemdat.cpp:72
 msgid "Cloak"
-msgstr ""
+msgstr "Мантия"
 
 #: Source/itemdat.cpp:73
 msgid "Robe"
-msgstr ""
+msgstr "Роба"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
-msgstr ""
+msgstr "Стёганые доспехи"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
 #: Source/itemdat.cpp:77 Source/objects.cpp:5534
 msgid "Armor"
-msgstr ""
+msgstr "Доспехи"
 
 #: Source/itemdat.cpp:75
 msgid "Leather Armor"
-msgstr ""
+msgstr "Кожаная броня"
 
 #: Source/itemdat.cpp:76
 msgid "Hard Leather Armor"
-msgstr ""
+msgstr "Тяжёлая кожаная броня"
 
 #: Source/itemdat.cpp:77
 msgid "Studded Leather Armor"
-msgstr ""
+msgstr "Кожаный Доспех с заклёпками"
 
 #: Source/itemdat.cpp:78
 msgid "Ring Mail"
-msgstr ""
+msgstr "Кольцо кольчуги"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:79 Source/itemdat.cpp:80
 #: Source/itemdat.cpp:82
 msgid "Mail"
-msgstr ""
+msgstr "Кольчуга"
 
 #: Source/itemdat.cpp:79
 msgid "Chain Mail"
@@ -2061,16 +2059,16 @@ msgstr ""
 
 #: Source/itemdat.cpp:80
 msgid "Scale Mail"
-msgstr ""
+msgstr "Большая кольчуга"
 
 #: Source/itemdat.cpp:81
 msgid "Breast Plate"
-msgstr ""
+msgstr "Нагрудная пластина"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:83 Source/itemdat.cpp:84
 #: Source/itemdat.cpp:85 Source/itemdat.cpp:86
 msgid "Plate"
-msgstr ""
+msgstr "Пластина"
 
 #: Source/itemdat.cpp:82
 msgid "Splint Mail"
@@ -2078,44 +2076,44 @@ msgstr ""
 
 #: Source/itemdat.cpp:83
 msgid "Plate Mail"
-msgstr ""
+msgstr "Пластинчатая кольчуга"
 
 #: Source/itemdat.cpp:84
 msgid "Field Plate"
-msgstr ""
+msgstr "Полевая пластина"
 
 #: Source/itemdat.cpp:85
 msgid "Gothic Plate"
-msgstr ""
+msgstr "Готическая пластина"
 
 #: Source/itemdat.cpp:86
 msgid "Full Plate Mail"
-msgstr ""
+msgstr "Полная пластинчатая кольчуга"
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
 msgid "Shield"
-msgstr ""
+msgstr "Щит"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
-msgstr ""
+msgstr "Небольшой щит"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr ""
+msgstr "Большой щит"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
-msgstr ""
+msgstr "Воздушный щит"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
-msgstr ""
+msgstr "Городской щит"
 
 #: Source/itemdat.cpp:92
 msgid "Gothic Shield"
-msgstr ""
+msgstr "Готический щит"
 
 #: Source/itemdat.cpp:97
 msgid "Potion of Rejuvenation"
@@ -2127,15 +2125,15 @@ msgstr "Зелье Полного Омоложения"
 
 #: Source/itemdat.cpp:100 Source/items.cpp:69
 msgid "Oil of Accuracy"
-msgstr ""
+msgstr "Смазка точности"
 
 #: Source/itemdat.cpp:101 Source/items.cpp:71
 msgid "Oil of Sharpness"
-msgstr ""
+msgstr "Смазка резкости"
 
 #: Source/itemdat.cpp:102
 msgid "Oil"
-msgstr ""
+msgstr "Смазка"
 
 #: Source/itemdat.cpp:103
 msgid "Elixir of Strength"
@@ -2155,35 +2153,35 @@ msgstr "Эликсир Живучести"
 
 #: Source/itemdat.cpp:107
 msgid "Scroll of Healing"
-msgstr ""
+msgstr "Свиток исцеления"
 
 #: Source/itemdat.cpp:108
 msgid "Scroll of Search"
-msgstr ""
+msgstr "Свиток поиска"
 
 #: Source/itemdat.cpp:109
 msgid "Scroll of Lightning"
-msgstr ""
+msgstr "Свиток освещения"
 
 #: Source/itemdat.cpp:112
 msgid "Scroll of Fire Wall"
-msgstr ""
+msgstr "Свиток Огненного шара"
 
 #: Source/itemdat.cpp:113
 msgid "Scroll of Inferno"
-msgstr ""
+msgstr "Свиток ада"
 
 #: Source/itemdat.cpp:115
 msgid "Scroll of Flash"
-msgstr ""
+msgstr "Свиток вспышки"
 
 #: Source/itemdat.cpp:116
 msgid "Scroll of Infravision"
-msgstr ""
+msgstr "Свиток инфравидиния"
 
 #: Source/itemdat.cpp:117
 msgid "Scroll of Phasing"
-msgstr ""
+msgstr "Свиток Фазирования"
 
 #: Source/itemdat.cpp:118
 msgid "Scroll of Mana Shield"
@@ -2195,7 +2193,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:120
 msgid "Scroll of Fireball"
-msgstr ""
+msgstr "Свиток Фаербола"
 
 #: Source/itemdat.cpp:121
 msgid "Scroll of Stone Curse"
@@ -2203,27 +2201,27 @@ msgstr ""
 
 #: Source/itemdat.cpp:122
 msgid "Scroll of Chain Lightning"
-msgstr ""
+msgstr "Свиток цепной молнии"
 
 #: Source/itemdat.cpp:123
 msgid "Scroll of Guardian"
-msgstr ""
+msgstr "Свиток защиты"
 
 #: Source/itemdat.cpp:125
 msgid "Scroll of Nova"
-msgstr ""
+msgstr "Свиток вспышки"
 
 #: Source/itemdat.cpp:126
 msgid "Scroll of Golem"
-msgstr ""
+msgstr "Свиток голема"
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
-msgstr ""
+msgstr "Свиток телепорта"
 
 #: Source/itemdat.cpp:129
 msgid "Scroll of Apocalypse"
-msgstr ""
+msgstr "Свиток воскрешения"
 
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
@@ -2232,180 +2230,180 @@ msgstr "Книга "
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
-msgstr ""
+msgstr "Фальшион"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
-msgstr ""
+msgstr "Ятаган"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr ""
+msgstr "Клеймор"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
-msgstr ""
+msgstr "Клинок"
 
 #: Source/itemdat.cpp:140
 msgid "Sabre"
-msgstr ""
+msgstr "Сабля"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr ""
+msgstr "Длинный мечь"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
-msgstr ""
+msgstr "Широкий мечь"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr ""
+msgstr "Полуторный меч"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr ""
+msgstr "Двуручный меч"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr ""
+msgstr "Большой меч"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr ""
+msgstr "Маленький топор"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
 msgid "Axe"
-msgstr ""
+msgstr "Топор"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr ""
+msgstr "Большой топор"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr ""
+msgstr "Широкий топор"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
-msgstr ""
+msgstr "Боевой топор"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
-msgstr ""
+msgstr "Двуручный топор"
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
-msgstr ""
+msgstr "Булава"
 
 #: Source/itemdat.cpp:153
 msgid "Morning Star"
-msgstr ""
+msgstr "Утренняя звезда"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr ""
+msgstr "Боевой молот"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
-msgstr ""
+msgstr "Молот"
 
 #: Source/itemdat.cpp:155
 msgid "Spiked Club"
-msgstr ""
+msgstr "Шипованная дубина"
 
 #: Source/itemdat.cpp:157
 msgid "Flail"
-msgstr ""
+msgstr "Молотило"
 
 #: Source/itemdat.cpp:158
 msgid "Maul"
-msgstr ""
+msgstr "Кувалда"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
 #: Source/itemdat.cpp:165 Source/itemdat.cpp:166
 msgid "Bow"
-msgstr ""
+msgstr "Лук"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr ""
+msgstr "Охотничий лук"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr ""
+msgstr "Длинный лук"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
-msgstr ""
+msgstr "Композитный лук"
 
 #: Source/itemdat.cpp:163
 msgid "Short Battle Bow"
-msgstr ""
+msgstr "Короткий боевой лук"
 
 #: Source/itemdat.cpp:164
 msgid "Long Battle Bow"
-msgstr ""
+msgstr "Длинный боевой лук"
 
 #: Source/itemdat.cpp:165
 msgid "Short War Bow"
-msgstr ""
+msgstr "Короткий военный лук"
 
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
-msgstr ""
+msgstr "Длинный военный лук"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170 Source/itemdat.cpp:171
 msgid "Staff"
-msgstr ""
+msgstr "Посох"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
-msgstr ""
+msgstr "Длинный посох"
 
 #: Source/itemdat.cpp:169
 msgid "Composite Staff"
-msgstr ""
+msgstr "Композитный посох"
 
 #: Source/itemdat.cpp:170
 msgid "Quarter Staff"
-msgstr ""
+msgstr "Короткий посох"
 
 #: Source/itemdat.cpp:171
 msgid "War Staff"
-msgstr ""
+msgstr "Военный посох"
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
-msgstr ""
+msgstr "Кольцо"
 
 #: Source/itemdat.cpp:175 Source/itemdat.cpp:176
 msgid "Amulet"
-msgstr ""
+msgstr "Амулет"
 
 #: Source/itemdat.cpp:177 Source/spelldat.cpp:62
 msgid "Rune of Fire"
-msgstr ""
+msgstr "Руна Огня"
 
 #: Source/itemdat.cpp:177 Source/itemdat.cpp:178 Source/itemdat.cpp:179
 #: Source/itemdat.cpp:180 Source/itemdat.cpp:181
 msgid "Rune"
-msgstr ""
+msgstr "Руна"
 
 #: Source/itemdat.cpp:178
 msgid "Rune of Lightning"
-msgstr ""
+msgstr "Руна Молнии"
 
 #: Source/itemdat.cpp:179
 msgid "Greater Rune of Fire"
-msgstr ""
+msgstr "Великая Руна Огня"
 
 #: Source/itemdat.cpp:180
 msgid "Greater Rune of Lightning"
-msgstr ""
+msgstr "Великая Руна Молнии"
 
 #: Source/itemdat.cpp:181 Source/spelldat.cpp:66
 msgid "Rune of Stone"
@@ -2413,487 +2411,487 @@ msgstr ""
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
-msgstr ""
+msgstr "Короткий посох заряженной стрелы"
 
 #: Source/itemdat.cpp:191
 msgid "Tin"
-msgstr ""
+msgstr "Банка"
 
 #: Source/itemdat.cpp:192
 msgid "Brass"
-msgstr ""
+msgstr "Латунь"
 
 #: Source/itemdat.cpp:193
 msgid "Bronze"
-msgstr ""
+msgstr "Бронза"
 
 #: Source/itemdat.cpp:194
 msgid "Iron"
-msgstr ""
+msgstr "Железо"
 
 #: Source/itemdat.cpp:195
 msgid "Steel"
-msgstr ""
+msgstr "Сталь"
 
 #: Source/itemdat.cpp:196
 msgid "Silver"
-msgstr ""
+msgstr "Серебро"
 
 #: Source/itemdat.cpp:198
 msgid "Platinum"
-msgstr ""
+msgstr "Платина"
 
 #: Source/itemdat.cpp:199
 msgid "Mithril"
-msgstr ""
+msgstr "Мирфрил"
 
 #: Source/itemdat.cpp:200
 msgid "Meteoric"
-msgstr ""
+msgstr "Метиорит"
 
 #: Source/itemdat.cpp:201 Source/objects.cpp:93
 msgid "Weird"
-msgstr ""
+msgstr "Таинственный"
 
 #: Source/itemdat.cpp:202
 msgid "Strange"
-msgstr ""
+msgstr "Странный"
 
 #: Source/itemdat.cpp:203
 msgid "Useless"
-msgstr ""
+msgstr "Бесполезный"
 
 #: Source/itemdat.cpp:204
 msgid "Bent"
-msgstr ""
+msgstr "Кривой"
 
 #: Source/itemdat.cpp:205
 msgid "Weak"
-msgstr ""
+msgstr "Хлипкий"
 
 #: Source/itemdat.cpp:206
 msgid "Jagged"
-msgstr ""
+msgstr "Зубчатый"
 
 #: Source/itemdat.cpp:207
 msgid "Deadly"
-msgstr ""
+msgstr "Смертоносный"
 
 #: Source/itemdat.cpp:208
 msgid "Heavy"
-msgstr ""
+msgstr "Тяжелый"
 
 #: Source/itemdat.cpp:209
 msgid "Vicious"
-msgstr ""
+msgstr "Дефектный"
 
 #: Source/itemdat.cpp:210
 msgid "Brutal"
-msgstr ""
+msgstr "Жестокий"
 
 #: Source/itemdat.cpp:211
 msgid "Massive"
-msgstr ""
+msgstr "Массивный"
 
 #: Source/itemdat.cpp:212
 msgid "Savage"
-msgstr ""
+msgstr "Дикий"
 
 #: Source/itemdat.cpp:213
 msgid "Ruthless"
-msgstr ""
+msgstr "Беспощадный"
 
 #: Source/itemdat.cpp:214
 msgid "Merciless"
-msgstr ""
+msgstr "Безжалостный"
 
 #: Source/itemdat.cpp:215
 msgid "Clumsy"
-msgstr ""
+msgstr "Неуклюжий"
 
 #: Source/itemdat.cpp:216
 msgid "Dull"
-msgstr ""
+msgstr "Тупой"
 
 #: Source/itemdat.cpp:217
 msgid "Sharp"
-msgstr ""
+msgstr "Заточеный"
 
 #: Source/itemdat.cpp:218 Source/itemdat.cpp:228
 msgid "Fine"
-msgstr ""
+msgstr "Отличный"
 
 #: Source/itemdat.cpp:219
 msgid "Warrior's"
-msgstr ""
+msgstr "Военный"
 
 #: Source/itemdat.cpp:220
 msgid "Soldier's"
-msgstr ""
+msgstr "Солдатский"
 
 #: Source/itemdat.cpp:221
 msgid "Lord's"
-msgstr ""
+msgstr "Лорда"
 
 #: Source/itemdat.cpp:222
 msgid "Knight's"
-msgstr ""
+msgstr "Рыцарский"
 
 #: Source/itemdat.cpp:223
 msgid "Master's"
-msgstr ""
+msgstr "Мастерский"
 
 #: Source/itemdat.cpp:224
 msgid "Champion's"
-msgstr ""
+msgstr "Чемпионский"
 
 #: Source/itemdat.cpp:225
 msgid "King's"
-msgstr ""
+msgstr "Королевский"
 
 #: Source/itemdat.cpp:226
 msgid "Vulnerable"
-msgstr ""
+msgstr "Уязвимый"
 
 #: Source/itemdat.cpp:227
 msgid "Rusted"
-msgstr ""
+msgstr "Ржавый"
 
 #: Source/itemdat.cpp:229
 msgid "Strong"
-msgstr ""
+msgstr "Сильный"
 
 #: Source/itemdat.cpp:230
 msgid "Grand"
-msgstr ""
+msgstr "Великий"
 
 #: Source/itemdat.cpp:231
 msgid "Valiant"
-msgstr ""
+msgstr "Доблестный"
 
 #: Source/itemdat.cpp:232
 msgid "Glorious"
-msgstr ""
+msgstr "Великолепный"
 
 #: Source/itemdat.cpp:233
 msgid "Blessed"
-msgstr ""
+msgstr "Благославенный"
 
 #: Source/itemdat.cpp:234
 msgid "Saintly"
-msgstr ""
+msgstr "Освящённый"
 
 #: Source/itemdat.cpp:235
 msgid "Awesome"
-msgstr ""
+msgstr "Устрашающий"
 
 #: Source/itemdat.cpp:236 Source/objects.cpp:105
 msgid "Holy"
-msgstr ""
+msgstr "Святой"
 
 #: Source/itemdat.cpp:237
 msgid "Godly"
-msgstr ""
+msgstr "Благочестивый"
 
 #: Source/itemdat.cpp:238
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: Source/itemdat.cpp:239 Source/itemdat.cpp:240
 msgid "Crimson"
-msgstr ""
+msgstr "Малиновый"
 
 #: Source/itemdat.cpp:241
 msgid "Garnet"
-msgstr ""
+msgstr "Гранатовый"
 
 #: Source/itemdat.cpp:242
 msgid "Ruby"
-msgstr ""
+msgstr "Рубиновый"
 
 #: Source/itemdat.cpp:243
 msgid "Blue"
-msgstr ""
+msgstr "Голубой"
 
 #: Source/itemdat.cpp:244
 msgid "Azure"
-msgstr ""
+msgstr "Лазурный"
 
 #: Source/itemdat.cpp:245
 msgid "Lapis"
-msgstr ""
+msgstr "Лазуритовый"
 
 #: Source/itemdat.cpp:246
 msgid "Cobalt"
-msgstr ""
+msgstr "Кобальтовый"
 
 #: Source/itemdat.cpp:247
 msgid "Sapphire"
-msgstr ""
+msgstr "Сапфировый"
 
 #: Source/itemdat.cpp:248
 msgid "White"
-msgstr ""
+msgstr "Белый"
 
 #: Source/itemdat.cpp:249
 msgid "Pearl"
-msgstr ""
+msgstr "Жемчужный"
 
 #: Source/itemdat.cpp:250
 msgid "Ivory"
-msgstr ""
+msgstr "Бежевый"
 
 #: Source/itemdat.cpp:251
 msgid "Crystal"
-msgstr ""
+msgstr "Кристальный"
 
 #: Source/itemdat.cpp:252
 msgid "Diamond"
-msgstr ""
+msgstr "Алмазный"
 
 #: Source/itemdat.cpp:253
 msgid "Topaz"
-msgstr ""
+msgstr "Топазовый"
 
 #: Source/itemdat.cpp:254
 msgid "Amber"
-msgstr ""
+msgstr "Янтарный"
 
 #: Source/itemdat.cpp:255
 msgid "Jade"
-msgstr ""
+msgstr "Нефритовый"
 
 #: Source/itemdat.cpp:256
 msgid "Obsidian"
-msgstr ""
+msgstr "Обсидиановый"
 
 #: Source/itemdat.cpp:257
 msgid "Emerald"
-msgstr ""
+msgstr "Изумрудный"
 
 #: Source/itemdat.cpp:258
 msgid "Hyena's"
-msgstr ""
+msgstr "Гиена"
 
 #: Source/itemdat.cpp:259
 msgid "Frog's"
-msgstr ""
+msgstr "Лягушачий"
 
 #: Source/itemdat.cpp:260
 msgid "Spider's"
-msgstr ""
+msgstr "Паучий"
 
 #: Source/itemdat.cpp:261
 msgid "Raven's"
-msgstr ""
+msgstr "Вороний"
 
 #: Source/itemdat.cpp:262
 msgid "Snake's"
-msgstr ""
+msgstr "Змея"
 
 #: Source/itemdat.cpp:263
 msgid "Serpent's"
-msgstr ""
+msgstr "Змеиный"
 
 #: Source/itemdat.cpp:264
 msgid "Drake's"
-msgstr ""
+msgstr "Утиный"
 
 #: Source/itemdat.cpp:265
 msgid "Dragon's"
-msgstr ""
+msgstr "Драконий"
 
 #: Source/itemdat.cpp:266
 msgid "Wyrm's"
-msgstr ""
+msgstr "Змеевой"
 
 #: Source/itemdat.cpp:267
 msgid "Hydra's"
-msgstr ""
+msgstr "Гидра"
 
 #: Source/itemdat.cpp:268
 msgid "Angel's"
-msgstr ""
+msgstr "Ангельский"
 
 #: Source/itemdat.cpp:269
 msgid "Arch-Angel's"
-msgstr ""
+msgstr "Арханагельский"
 
 #: Source/itemdat.cpp:270
 msgid "Plentiful"
-msgstr ""
+msgstr "Богатый"
 
 #: Source/itemdat.cpp:271
 msgid "Bountiful"
-msgstr ""
+msgstr "Щедрый"
 
 #: Source/itemdat.cpp:272
 msgid "Flaming"
-msgstr ""
+msgstr "Пылающий"
 
 #: Source/itemdat.cpp:273 Source/spelldat.cpp:18
 msgid "Lightning"
-msgstr ""
+msgstr "Светящийся"
 
 #: Source/itemdat.cpp:274
 msgid "Jester's"
-msgstr ""
+msgstr "Шутовской"
 
 #: Source/itemdat.cpp:275
 msgid "Crystalline"
-msgstr ""
+msgstr "Кристаллический"
 
 #: Source/itemdat.cpp:276
 msgid "Doppelganger's"
-msgstr ""
+msgstr "Двойникское"
 
 #: Source/itemdat.cpp:285
 msgid "quality"
-msgstr ""
+msgstr "качество"
 
 #: Source/itemdat.cpp:286
 msgid "maiming"
-msgstr ""
+msgstr "увеличить"
 
 #: Source/itemdat.cpp:287
 msgid "slaying"
-msgstr ""
+msgstr "убийство"
 
 #: Source/itemdat.cpp:288
 msgid "gore"
-msgstr ""
+msgstr "кровь"
 
 #: Source/itemdat.cpp:289
 msgid "carnage"
-msgstr ""
+msgstr "бойня"
 
 #: Source/itemdat.cpp:290
 msgid "slaughter"
-msgstr ""
+msgstr "резня"
 
 #: Source/itemdat.cpp:291
 msgid "pain"
-msgstr ""
+msgstr "боль"
 
 #: Source/itemdat.cpp:292
 msgid "tears"
-msgstr ""
+msgstr "слезы"
 
 #: Source/itemdat.cpp:293
 msgid "health"
-msgstr ""
+msgstr "здоровье"
 
 #: Source/itemdat.cpp:294
 msgid "protection"
-msgstr ""
+msgstr "защита"
 
 #: Source/itemdat.cpp:295
 msgid "absorption"
-msgstr ""
+msgstr "поглощение"
 
 #: Source/itemdat.cpp:296
 msgid "deflection"
-msgstr ""
+msgstr "отклонение"
 
 #: Source/itemdat.cpp:297
 msgid "osmosis"
-msgstr ""
+msgstr "осмос"
 
 #: Source/itemdat.cpp:298
 msgid "frailty"
-msgstr ""
+msgstr "хрупкий"
 
 #: Source/itemdat.cpp:299
 msgid "weakness"
-msgstr ""
+msgstr "слабость"
 
 #: Source/itemdat.cpp:300
 msgid "strength"
-msgstr ""
+msgstr "сила"
 
 #: Source/itemdat.cpp:301
 msgid "might"
-msgstr ""
+msgstr "мощь"
 
 #: Source/itemdat.cpp:302
 msgid "power"
-msgstr ""
+msgstr "энергия"
 
 #: Source/itemdat.cpp:303
 msgid "giants"
-msgstr ""
+msgstr "гигантизм"
 
 #: Source/itemdat.cpp:304
 msgid "titans"
-msgstr ""
+msgstr "титанизм"
 
 #: Source/itemdat.cpp:305
 msgid "paralysis"
-msgstr ""
+msgstr "параличь"
 
 #: Source/itemdat.cpp:306
 msgid "atrophy"
-msgstr ""
+msgstr "атрофия"
 
 #: Source/itemdat.cpp:307
 msgid "dexterity"
-msgstr ""
+msgstr "ловкость"
 
 #: Source/itemdat.cpp:308
 msgid "skill"
-msgstr ""
+msgstr "умения"
 
 #: Source/itemdat.cpp:309
 msgid "accuracy"
-msgstr ""
+msgstr "меткий"
 
 #: Source/itemdat.cpp:310
 msgid "precision"
-msgstr ""
+msgstr "точный"
 
 #: Source/itemdat.cpp:311
 msgid "perfection"
-msgstr ""
+msgstr "совершенный"
 
 #: Source/itemdat.cpp:312
 msgid "the fool"
-msgstr ""
+msgstr "дурак"
 
 #: Source/itemdat.cpp:313
 msgid "dyslexia"
-msgstr ""
+msgstr "дислексия"
 
 #: Source/itemdat.cpp:314
 msgid "magic"
-msgstr ""
+msgstr "магия"
 
 #: Source/itemdat.cpp:315
 msgid "the mind"
-msgstr ""
+msgstr "разум"
 
 #: Source/itemdat.cpp:316
 msgid "brilliance"
-msgstr ""
+msgstr "виликолепный"
 
 #: Source/itemdat.cpp:317
 msgid "sorcery"
-msgstr ""
+msgstr "колдовство"
 
 #: Source/itemdat.cpp:318
 msgid "wizardry"
-msgstr ""
+msgstr "волшебство"
 
 #: Source/itemdat.cpp:319
 msgid "illness"
-msgstr ""
+msgstr "хворь"
 
 #: Source/itemdat.cpp:320
 msgid "disease"
-msgstr ""
+msgstr "болезнь"
 
 #: Source/itemdat.cpp:321
 msgid "vitality"
-msgstr ""
+msgstr "выносливость"
 
 #: Source/itemdat.cpp:322
 msgid "zest"
@@ -2901,563 +2899,563 @@ msgstr ""
 
 #: Source/itemdat.cpp:323
 msgid "vim"
-msgstr ""
+msgstr "энергия"
 
 #: Source/itemdat.cpp:324
 msgid "vigor"
-msgstr ""
+msgstr "сила"
 
 #: Source/itemdat.cpp:325
 msgid "life"
-msgstr ""
+msgstr "жизнь"
 
 #: Source/itemdat.cpp:326
 msgid "trouble"
-msgstr ""
+msgstr "неприятность"
 
 #: Source/itemdat.cpp:327
 msgid "the pit"
-msgstr ""
+msgstr "яма"
 
 #: Source/itemdat.cpp:328
 msgid "the sky"
-msgstr ""
+msgstr "небо"
 
 #: Source/itemdat.cpp:329
 msgid "the moon"
-msgstr ""
+msgstr "луна"
 
 #: Source/itemdat.cpp:330
 msgid "the stars"
-msgstr ""
+msgstr "звёзды"
 
 #: Source/itemdat.cpp:331
 msgid "the heavens"
-msgstr ""
+msgstr "небеса"
 
 #: Source/itemdat.cpp:332
 msgid "the zodiac"
-msgstr ""
+msgstr "зодиака"
 
 #: Source/itemdat.cpp:333
 msgid "the vulture"
-msgstr ""
+msgstr "стервятник"
 
 #: Source/itemdat.cpp:334
 msgid "the jackal"
-msgstr ""
+msgstr "шакал"
 
 #: Source/itemdat.cpp:335
 msgid "the fox"
-msgstr ""
+msgstr "лиса(шики)"
 
 #: Source/itemdat.cpp:336
 msgid "the jaguar"
-msgstr ""
+msgstr "ягуар"
 
 #: Source/itemdat.cpp:337
 msgid "the eagle"
-msgstr ""
+msgstr "орел"
 
 #: Source/itemdat.cpp:338
 msgid "the wolf"
-msgstr ""
+msgstr "волк"
 
 #: Source/itemdat.cpp:339
 msgid "the tiger"
-msgstr ""
+msgstr "тигр"
 
 #: Source/itemdat.cpp:340
 msgid "the lion"
-msgstr ""
+msgstr "лев"
 
 #: Source/itemdat.cpp:341
 msgid "the mammoth"
-msgstr ""
+msgstr "мамонт"
 
 #: Source/itemdat.cpp:342
 msgid "the whale"
-msgstr ""
+msgstr "кит"
 
 #: Source/itemdat.cpp:343
 msgid "fragility"
-msgstr ""
+msgstr "хлипкий"
 
 #: Source/itemdat.cpp:344
 msgid "brittleness"
-msgstr ""
+msgstr "хрупкий"
 
 #: Source/itemdat.cpp:345
 msgid "sturdiness"
-msgstr ""
+msgstr "прочность"
 
 #: Source/itemdat.cpp:346
 msgid "craftsmanship"
-msgstr ""
+msgstr "мастерство"
 
 #: Source/itemdat.cpp:347
 msgid "structure"
-msgstr ""
+msgstr "состав"
 
 #: Source/itemdat.cpp:348
 msgid "the ages"
-msgstr ""
+msgstr "возраст"
 
 #: Source/itemdat.cpp:349
 msgid "the dark"
-msgstr ""
+msgstr "тьма(ямии)"
 
 #: Source/itemdat.cpp:350
 msgid "the night"
-msgstr ""
+msgstr "ночь"
 
 #: Source/itemdat.cpp:351
 msgid "light"
-msgstr ""
+msgstr "свет"
 
 #: Source/itemdat.cpp:352
 msgid "radiance"
-msgstr ""
+msgstr "сияние"
 
 #: Source/itemdat.cpp:353
 msgid "flame"
-msgstr ""
+msgstr "пламя"
 
 #: Source/itemdat.cpp:354
 msgid "fire"
-msgstr ""
+msgstr "огонь"
 
 #: Source/itemdat.cpp:355
 msgid "burning"
-msgstr ""
+msgstr "горящий"
 
 #: Source/itemdat.cpp:356
 msgid "shock"
-msgstr ""
+msgstr "шок"
 
 #: Source/itemdat.cpp:357
 msgid "lightning"
-msgstr ""
+msgstr "молния"
 
 #: Source/itemdat.cpp:358
 msgid "thunder"
-msgstr ""
+msgstr "гром"
 
 #: Source/itemdat.cpp:359
 msgid "many"
-msgstr ""
+msgstr "деньги"
 
 #: Source/itemdat.cpp:360
 msgid "plenty"
-msgstr ""
+msgstr "множество"
 
 #: Source/itemdat.cpp:361
 msgid "thorns"
-msgstr ""
+msgstr "шипы"
 
 #: Source/itemdat.cpp:362
 msgid "corruption"
-msgstr ""
+msgstr "коррупция"
 
 #: Source/itemdat.cpp:363
 msgid "thieves"
-msgstr ""
+msgstr "воры"
 
 #: Source/itemdat.cpp:364
 msgid "the bear"
-msgstr ""
+msgstr "медведь"
 
 #: Source/itemdat.cpp:365
 msgid "the bat"
-msgstr ""
+msgstr "летучая мышь"
 
 #: Source/itemdat.cpp:366
 msgid "vampires"
-msgstr ""
+msgstr "вампир"
 
 #: Source/itemdat.cpp:367
 msgid "the leech"
-msgstr ""
+msgstr "личь"
 
 #: Source/itemdat.cpp:368
 msgid "blood"
-msgstr ""
+msgstr "кровь"
 
 #: Source/itemdat.cpp:369
 msgid "piercing"
-msgstr ""
+msgstr "пирсинг"
 
 #: Source/itemdat.cpp:370
 msgid "puncturing"
-msgstr ""
+msgstr "прокалывание"
 
 #: Source/itemdat.cpp:371
 msgid "bashing"
-msgstr ""
+msgstr "избиение"
 
 #: Source/itemdat.cpp:372
 msgid "readiness"
-msgstr ""
+msgstr "готовность"
 
 #: Source/itemdat.cpp:373
 msgid "swiftness"
-msgstr ""
+msgstr "стремительность"
 
 #: Source/itemdat.cpp:374
 msgid "speed"
-msgstr ""
+msgstr "скорость"
 
 #: Source/itemdat.cpp:375
 msgid "haste"
-msgstr ""
+msgstr "поспешность"
 
 #: Source/itemdat.cpp:376
 msgid "balance"
-msgstr ""
+msgstr "баланс"
 
 #: Source/itemdat.cpp:377
 msgid "stability"
-msgstr ""
+msgstr "стабильность"
 
 #: Source/itemdat.cpp:378
 msgid "harmony"
-msgstr ""
+msgstr "гармония"
 
 #: Source/itemdat.cpp:379
 msgid "blocking"
-msgstr ""
+msgstr "блокирование"
 
 #: Source/itemdat.cpp:380
 msgid "devastation"
-msgstr ""
+msgstr "опустошение"
 
 #: Source/itemdat.cpp:381
 msgid "decay"
-msgstr ""
+msgstr "разлогатся"
 
 #: Source/itemdat.cpp:382
 msgid "peril"
-msgstr ""
+msgstr "риск"
 
 #: Source/itemdat.cpp:391
 msgid "The Butcher's Cleaver"
-msgstr ""
+msgstr "Тесак мясника"
 
 #: Source/itemdat.cpp:401
 msgid "The Rift Bow"
-msgstr ""
+msgstr "Лук Разлома"
 
 #: Source/itemdat.cpp:402
 msgid "The Needler"
-msgstr ""
+msgstr "Игольщик"
 
 #: Source/itemdat.cpp:403
 msgid "The Celestial Bow"
-msgstr ""
+msgstr "Небесный лук"
 
 #: Source/itemdat.cpp:404
 msgid "Deadly Hunter"
-msgstr ""
+msgstr "Смертоносный охотник"
 
 #: Source/itemdat.cpp:405
 msgid "Bow of the Dead"
-msgstr ""
+msgstr "Лук смерти"
 
 #: Source/itemdat.cpp:406
 msgid "The Blackoak Bow"
-msgstr ""
+msgstr "Лук из чёрного дуба"
 
 #: Source/itemdat.cpp:407
 msgid "Flamedart"
-msgstr ""
+msgstr "Пламенный дротик"
 
 #: Source/itemdat.cpp:408
 msgid "Fleshstinger"
-msgstr ""
+msgstr "Жало плоти"
 
 #: Source/itemdat.cpp:409
 msgid "Windforce"
-msgstr ""
+msgstr "Сила ветра"
 
 #: Source/itemdat.cpp:410
 msgid "Eaglehorn"
-msgstr ""
+msgstr "Орлиный крик"
 
 #: Source/itemdat.cpp:411
 msgid "Gonnagal's Dirk"
-msgstr ""
+msgstr "Кортик Гоннагала"
 
 #: Source/itemdat.cpp:412
 msgid "The Defender"
-msgstr ""
+msgstr "Защитник"
 
 #: Source/itemdat.cpp:413
 msgid "Gryphons Claw"
-msgstr ""
+msgstr "Коготь грифона"
 
 #: Source/itemdat.cpp:414
 msgid "Black Razor"
-msgstr ""
+msgstr "Черная бритва"
 
 #: Source/itemdat.cpp:415
 msgid "Gibbous Moon"
-msgstr ""
+msgstr "Лучезарная луна"
 
 #: Source/itemdat.cpp:416
 msgid "Ice Shank"
-msgstr ""
+msgstr "Ледяной стержень"
 
 #: Source/itemdat.cpp:417
 msgid "The Executioner's Blade"
-msgstr ""
+msgstr "Клинок палача"
 
 #: Source/itemdat.cpp:418
 msgid "The Bonesaw"
-msgstr ""
+msgstr "Костяная пила"
 
 #: Source/itemdat.cpp:419
 msgid "Shadowhawk"
-msgstr ""
+msgstr "Теневой ястреб"
 
 #: Source/itemdat.cpp:420
 msgid "Wizardspike"
-msgstr ""
+msgstr "Волшебный шип"
 
 #: Source/itemdat.cpp:421
 msgid "Lightsabre"
-msgstr ""
+msgstr "Лазерный меч"
 
 #: Source/itemdat.cpp:422
 msgid "The Falcon's Talon"
-msgstr ""
+msgstr "Коготь сокола"
 
 #: Source/itemdat.cpp:423 Source/spelldat.cpp:35
 msgid "Inferno"
-msgstr ""
+msgstr "Преисподня"
 
 #: Source/itemdat.cpp:424
 msgid "Doombringer"
-msgstr ""
+msgstr "Несущий гибель"
 
 #: Source/itemdat.cpp:425
 msgid "The Grizzly"
-msgstr ""
+msgstr "Гризли"
 
 #: Source/itemdat.cpp:426
 msgid "The Grandfather"
-msgstr ""
+msgstr "Дедушка"
 
 #: Source/itemdat.cpp:427
 msgid "The Mangler"
-msgstr ""
+msgstr "Манглер"
 
 #: Source/itemdat.cpp:428
 msgid "Sharp Beak"
-msgstr ""
+msgstr "Острый клюв"
 
 #: Source/itemdat.cpp:429
 msgid "BloodSlayer"
-msgstr ""
+msgstr "Кровоубийца"
 
 #: Source/itemdat.cpp:430
 msgid "The Celestial Axe"
-msgstr ""
+msgstr "Небесный топор"
 
 #: Source/itemdat.cpp:431
 msgid "Wicked Axe"
-msgstr ""
+msgstr "Злой топор"
 
 #: Source/itemdat.cpp:432
 msgid "Stonecleaver"
-msgstr ""
+msgstr "Каменный тесак"
 
 #: Source/itemdat.cpp:433
 msgid "Aguinara's Hatchet"
-msgstr ""
+msgstr "Топор Агуинары"
 
 #: Source/itemdat.cpp:434
 msgid "Hellslayer"
-msgstr ""
+msgstr "Адский убийца"
 
 #: Source/itemdat.cpp:435
 msgid "Messerschmidt's Reaver"
-msgstr ""
+msgstr "Похититель Мессершмидта"
 
 #: Source/itemdat.cpp:436
 msgid "Crackrust"
-msgstr ""
+msgstr "Трещины ржавчины"
 
 #: Source/itemdat.cpp:437
 msgid "Hammer of Jholm"
-msgstr ""
+msgstr "Молот Джхольма"
 
 #: Source/itemdat.cpp:438
 msgid "Civerb's Cudgel"
-msgstr ""
+msgstr "Дубинка Сиверба"
 
 #: Source/itemdat.cpp:439
 msgid "The Celestial Star"
-msgstr ""
+msgstr "Небесная Звезда"
 
 #: Source/itemdat.cpp:440
 msgid "Baranar's Star"
-msgstr ""
+msgstr "Звезда Баранара"
 
 #: Source/itemdat.cpp:441
 msgid "Gnarled Root"
-msgstr ""
+msgstr "Корявый корень"
 
 #: Source/itemdat.cpp:442
 msgid "The Cranium Basher"
-msgstr ""
+msgstr "Черепной ударятель"
 
 #: Source/itemdat.cpp:443
 msgid "Schaefer's Hammer"
-msgstr ""
+msgstr "Молот Шефера"
 
 #: Source/itemdat.cpp:444
 msgid "Dreamflange"
-msgstr ""
+msgstr "Кромка грез"
 
 #: Source/itemdat.cpp:445
 msgid "Staff of Shadows"
-msgstr ""
+msgstr "Посох теней"
 
 #: Source/itemdat.cpp:446
 msgid "Immolator"
-msgstr ""
+msgstr "Поджигатель"
 
 #: Source/itemdat.cpp:447
 msgid "Storm Spire"
-msgstr ""
+msgstr "Штормовой дух"
 
 #: Source/itemdat.cpp:448
 msgid "Gleamsong"
-msgstr ""
+msgstr "Глеамсонг"
 
 #: Source/itemdat.cpp:449
 msgid "Thundercall"
-msgstr ""
+msgstr "Громовой вызов"
 
 #: Source/itemdat.cpp:450
 msgid "The Protector"
-msgstr ""
+msgstr "Защитник"
 
 #: Source/itemdat.cpp:451
 msgid "Naj's Puzzler"
-msgstr ""
+msgstr "Головоломка Наджа"
 
 #: Source/itemdat.cpp:452
 msgid "Mindcry"
-msgstr ""
+msgstr "Крик разума"
 
 #: Source/itemdat.cpp:453
 msgid "Rod of Onan"
-msgstr ""
+msgstr "Жезл Онана"
 
 #: Source/itemdat.cpp:454
 msgid "Helm of Sprits"
-msgstr ""
+msgstr "Шлем духов"
 
 #: Source/itemdat.cpp:455
 msgid "Thinking Cap"
-msgstr ""
+msgstr "Кепка мыслителя"
 
 #: Source/itemdat.cpp:456
 msgid "OverLord's Helm"
-msgstr ""
+msgstr "Шлем Владыки"
 
 #: Source/itemdat.cpp:457
 msgid "Fool's Crest"
-msgstr ""
+msgstr "Гребень дурака"
 
 #: Source/itemdat.cpp:458
 msgid "Gotterdamerung"
-msgstr ""
+msgstr "Гибель богов"
 
 #: Source/itemdat.cpp:459
 msgid "Royal Circlet"
-msgstr ""
+msgstr "Королевский венец"
 
 #: Source/itemdat.cpp:460
 msgid "Torn Flesh of Souls"
-msgstr ""
+msgstr "Разорванная плоть душ"
 
 #: Source/itemdat.cpp:461
 msgid "The Gladiator's Bane"
-msgstr ""
+msgstr "Проклятие гладиатора"
 
 #: Source/itemdat.cpp:462
 msgid "The Rainbow Cloak"
-msgstr ""
+msgstr "Плащ радуги"
 
 #: Source/itemdat.cpp:463
 msgid "Leather of Aut"
-msgstr ""
+msgstr "Кожа аута"
 
 #: Source/itemdat.cpp:464
 msgid "Wisdom's Wrap"
-msgstr ""
+msgstr "Накидка мудрости"
 
 #: Source/itemdat.cpp:465
 msgid "Sparking Mail"
-msgstr ""
+msgstr "Сверкающая кольчуга"
 
 #: Source/itemdat.cpp:466
 msgid "Scavenger Carapace"
-msgstr ""
+msgstr "Панцирь мусорщика"
 
 #: Source/itemdat.cpp:467
 msgid "Nightscape"
-msgstr ""
+msgstr "Ночной пейзаж"
 
 #: Source/itemdat.cpp:468
 msgid "Naj's Light Plate"
-msgstr ""
+msgstr "Лёгкая пластина Наджа"
 
 #: Source/itemdat.cpp:469
 msgid "Demonspike Coat"
-msgstr ""
+msgstr "Пальто из демонической шипа"
 
 #: Source/itemdat.cpp:470
 msgid "The Deflector"
-msgstr ""
+msgstr "Отражатель"
 
 #: Source/itemdat.cpp:471
 msgid "Split Skull Shield"
-msgstr ""
+msgstr "Щит из расколотого черепа"
 
 #: Source/itemdat.cpp:472
 msgid "Dragon's Breach"
-msgstr ""
+msgstr "Разлом Дракона"
 
 #: Source/itemdat.cpp:473
 msgid "Blackoak Shield"
-msgstr ""
+msgstr "Щит из Чёрного Дуба"
 
 #: Source/itemdat.cpp:474
 msgid "Holy Defender"
-msgstr ""
+msgstr "Святой Защитник"
 
 #: Source/itemdat.cpp:475
 msgid "Stormshield"
-msgstr ""
+msgstr "Грозовой Щит"
 
 #: Source/itemdat.cpp:476
 msgid "Bramble"
-msgstr ""
+msgstr "Ежевика"
 
 #: Source/itemdat.cpp:477
 msgid "Ring of Regha"
-msgstr ""
+msgstr "Кольцо Регхи"
 
 #: Source/itemdat.cpp:478
 msgid "The Bleeder"
-msgstr ""
+msgstr "Кровотечение"
 
 #: Source/itemdat.cpp:479
 msgid "Constricting Ring"
-msgstr ""
+msgstr "Сужающее кольцо"
 
 #: Source/itemdat.cpp:480
 msgid "Ring of Engagement"
@@ -3574,19 +3572,19 @@ msgstr ""
 #: Source/items.cpp:1527 Source/items.cpp:1569 Source/items.cpp:2161
 #: Source/items.cpp:2180
 msgid "{:s} of {:s}"
-msgstr ""
+msgstr "{:s} of {:s}"
 
 #: Source/items.cpp:2753 Source/player.cpp:1874
 msgid "Ear of {:s}"
-msgstr ""
+msgstr "Початок {:s}"
 
 #: Source/items.cpp:3282 Source/items.cpp:3294
 msgid "increases a weapon's"
-msgstr ""
+msgstr "Стойка с оружием"
 
 #: Source/items.cpp:3284
 msgid "chance to hit"
-msgstr ""
+msgstr "шанс попадания"
 
 #: Source/items.cpp:3288
 msgid "greatly increases a"
@@ -3719,11 +3717,11 @@ msgstr ""
 
 #: Source/items.cpp:3416
 msgid "recover life and mana"
-msgstr ""
+msgstr "восстановить жизнь и ману"
 
 #: Source/items.cpp:3420
 msgid "fully recover life and mana"
-msgstr ""
+msgstr "полностью восстановить жизнь и ману"
 
 #: Source/items.cpp:3431
 msgid "chance to hit: {:+d}%"
@@ -3747,61 +3745,61 @@ msgstr ""
 
 #: Source/items.cpp:3454 Source/items.cpp:3679
 msgid "Resist Fire: {:+d}%"
-msgstr ""
+msgstr "Сопротивление огню: {:d}%"
 
 #: Source/items.cpp:3456
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
-msgstr ""
+msgstr "Сопротивление огню: 75% MAX"
 
 #: Source/items.cpp:3461
 msgid "Resist Lightning: {:+d}%"
-msgstr ""
+msgstr "Сопротивление молнии:  {:d}%"
 
 #: Source/items.cpp:3463
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
-msgstr ""
+msgstr "Сопротивление молнии: 75% MAX"
 
 #: Source/items.cpp:3468
 msgid "Resist Magic: {:+d}%"
-msgstr ""
+msgstr "Сопротивление магии:  {:d}%"
 
 #: Source/items.cpp:3470
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
-msgstr ""
+msgstr "Сопротивление магии: 75% MAX"
 
 #: Source/items.cpp:3475
 msgid "Resist All: {:+d}%"
-msgstr ""
+msgstr "Общее сопротивление:  {:d}%"
 
 #: Source/items.cpp:3477
 #, no-c-format
 msgid "Resist All: 75% MAX"
-msgstr ""
+msgstr "Общее сопротивление: 75% MAX"
 
 #: Source/items.cpp:3481
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "заклинания повышены на {:d} уровень"
+msgstr[1] "заклинания повышены на {:d} уровеня"
+msgstr[2] "заклинания повышены на {:d} уровеней"
 
 #: Source/items.cpp:3483
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "заклинания понижены на {:d} уровень"
+msgstr[1] "заклинания понижены на {:d} уровеня"
+msgstr[2] "заклинания понижены на {:d} уровеней"
 
 #: Source/items.cpp:3485
 msgid "spell levels unchanged (?)"
-msgstr ""
+msgstr "уровни заклинаний без изменений (?)"
 
 #: Source/items.cpp:3488
 msgid "Extra charges"
-msgstr ""
+msgstr "Дополнительные сборы"
 
 #: Source/items.cpp:3491
 msgid "{:d} {:s} charge"
@@ -3828,7 +3826,7 @@ msgstr ""
 
 #: Source/items.cpp:3507
 msgid "{:+d} to strength"
-msgstr ""
+msgstr "{:+d} к силе"
 
 #: Source/items.cpp:3511
 msgid "{:+d} to magic"
@@ -3836,75 +3834,75 @@ msgstr ""
 
 #: Source/items.cpp:3515
 msgid "{:+d} to dexterity"
-msgstr ""
+msgstr "{:+d} к ловкости"
 
 #: Source/items.cpp:3519
 msgid "{:+d} to vitality"
-msgstr ""
+msgstr "{:+d} к выносливости"
 
 #: Source/items.cpp:3523
 msgid "{:+d} to all attributes"
-msgstr ""
+msgstr "{:+d} ко всем атрибутам"
 
 #: Source/items.cpp:3527
 msgid "{:+d} damage from enemies"
-msgstr ""
+msgstr "{:+d} урон от врагов"
 
 #: Source/items.cpp:3531
 msgid "Hit Points: {:+d}"
-msgstr ""
+msgstr "Здоровье: {:+d}"
 
 #: Source/items.cpp:3535
 msgid "Mana: {:+d}"
-msgstr ""
+msgstr "Мана: {:+d}"
 
 #: Source/items.cpp:3538
 msgid "high durability"
-msgstr ""
+msgstr "высокая прочность"
 
 #: Source/items.cpp:3541
 msgid "decreased durability"
-msgstr ""
+msgstr "пониженная прочность"
 
 #: Source/items.cpp:3544
 msgid "indestructible"
-msgstr ""
+msgstr "нерушимый"
 
 #: Source/items.cpp:3547
 msgid "+{:d}%% light radius"
-msgstr ""
+msgstr "+{:d}%% радиус света"
 
 #: Source/items.cpp:3550
 msgid "-{:d}%% light radius"
-msgstr ""
+msgstr "-{:d}%% радиус света"
 
 #: Source/items.cpp:3553
 msgid "multiple arrows per shot"
-msgstr ""
+msgstr "много стрел за выстрел"
 
 #: Source/items.cpp:3557
 msgid "fire arrows damage: {:d}"
-msgstr ""
+msgstr "урон огненных стрел: {:d}"
 
 #: Source/items.cpp:3559
 msgid "fire arrows damage: {:d}-{:d}"
-msgstr ""
+msgstr "урон огненных стрел: {:d}-{:d}"
 
 #: Source/items.cpp:3563
 msgid "lightning arrows damage {:d}"
-msgstr ""
+msgstr "урон грозовых стрел : {:d}"
 
 #: Source/items.cpp:3565
 msgid "lightning arrows damage {:d}-{:d}"
-msgstr ""
+msgstr "урон грозовых стрел: {:d}-{:d}"
 
 #: Source/items.cpp:3569
 msgid "fireball damage: {:d}"
-msgstr ""
+msgstr "урон фаерболов : {:d}"
 
 #: Source/items.cpp:3571
 msgid "fireball damage: {:d}-{:d}"
-msgstr ""
+msgstr "урон фаерболов : {:d}-{:d}"
 
 #: Source/items.cpp:3574
 msgid "attacker takes 1-3 damage"
@@ -3998,9 +3996,9 @@ msgstr ""
 #: Source/items.cpp:3634
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "добавляет {:d} очко к урону"
+msgstr[1] "добавляет {:d} очка к урону"
+msgstr[2] "добавляет {:d} очков к урону"
 
 #: Source/items.cpp:3637
 msgid "fires random speed arrows"
@@ -4040,11 +4038,11 @@ msgstr ""
 
 #: Source/items.cpp:3668
 msgid "lightning damage: {:d}"
-msgstr ""
+msgstr "урон молнии : {:d}"
 
 #: Source/items.cpp:3670
 msgid "lightning damage: {:d}-{:d}"
-msgstr ""
+msgstr "урон молнии : {:d}-{:d}"
 
 #: Source/items.cpp:3673
 msgid "charged bolts on hits"
@@ -4056,7 +4054,7 @@ msgstr ""
 
 #: Source/items.cpp:3685
 msgid "decaying {:+d}% damage"
-msgstr ""
+msgstr "разлагающийся {:+d}% урона"
 
 #: Source/items.cpp:3688
 msgid "2x dmg to monst, 1x to you"
@@ -4069,7 +4067,7 @@ msgstr ""
 
 #: Source/items.cpp:3694
 msgid "low dur, {:+d}% damage"
-msgstr ""
+msgstr "низкая длительность, {:+d}% урон"
 
 #: Source/items.cpp:3700
 msgid "extra AC vs demons"
@@ -4131,52 +4129,52 @@ msgstr ""
 
 #: Source/items.cpp:3834 Source/stores.cpp:201
 msgid " {:d} Str"
-msgstr ""
+msgstr " {:d} Сил"
 
 #: Source/items.cpp:3836 Source/stores.cpp:203
 msgid " {:d} Mag"
-msgstr ""
+msgstr " {:d} Маг"
 
 #: Source/items.cpp:3838 Source/stores.cpp:205
 msgid " {:d} Dex"
-msgstr ""
+msgstr " {:d} Ловк"
 
 #: Source/items.cpp:3849 Source/items.cpp:3896
 msgid "damage: {:d}  Indestructible"
-msgstr ""
+msgstr "урон: {:d}  Несокрушимый"
 
 #: Source/items.cpp:3851 Source/items.cpp:3898
 msgid "damage: {:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "урон: {:d}  Продолжительность: {:d}/{:d}"
 
 #: Source/items.cpp:3854 Source/items.cpp:3901
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr ""
+msgstr "урон: {:d}-{:d}  Несокрушимый"
 
 #: Source/items.cpp:3856 Source/items.cpp:3903
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "урон: {:d}-{:d}  Продолжительность: {:d}/{:d}"
 
 #: Source/items.cpp:3862 Source/items.cpp:3915
 msgid "armor: {:d}  Indestructible"
-msgstr ""
+msgstr "броня:{:d}  Несокрушимая"
 
 #: Source/items.cpp:3864 Source/items.cpp:3917
 msgid "armor: {:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "броня: {:d}  Продолжительность:{:d}/{:d}"
 
 #: Source/items.cpp:3869
 msgid "dam: {:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "проклятие: {:d}  Продолжительность: {:d}/{:d}"
 
 #: Source/items.cpp:3871
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "проклятие: {:d}-{:d}  Продолжительность: {:d}/{:d}"
 
 #: Source/items.cpp:3872 Source/items.cpp:3907 Source/items.cpp:3922
 #: Source/stores.cpp:171
 msgid "Charges: {:d}/{:d}"
-msgstr ""
+msgstr "Начисления: {:d}/{:d}"
 
 #: Source/items.cpp:3884
 msgid "unique item"
@@ -5154,31 +5152,30 @@ msgstr ""
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:1394 Source/msg.cpp:1665 Source/msg.cpp:1687
-#: Source/msg.cpp:1709 Source/msg.cpp:1829 Source/msg.cpp:1850
-#: Source/msg.cpp:1871 Source/msg.cpp:1892
+#: Source/msg.cpp:1394 Source/msg.cpp:1665 Source/msg.cpp:1687 Source/msg.cpp:1709
+#: Source/msg.cpp:1829 Source/msg.cpp:1850 Source/msg.cpp:1871 Source/msg.cpp:1892
 msgid "{:s} has cast an illegal spell."
-msgstr ""
+msgstr "{:s} произнес запрещённое заклинание."
 
 #: Source/msg.cpp:2228 Source/multi.cpp:859
 msgid "Player '{:s}' (level {:d}) just joined the game"
-msgstr ""
+msgstr "Игрок '{:s}' (уровень {:d}) только что присоединился к игре"
 
 #: Source/multi.cpp:262
 msgid "Player '{:s}' just left the game"
-msgstr ""
+msgstr "Игрок '{:s}' только что покинул игру"
 
 #: Source/multi.cpp:265
 msgid "Player '{:s}' killed Diablo and left the game!"
-msgstr ""
+msgstr "Игрок '{:s}' убил Диабло и покинул игру!"
 
 #: Source/multi.cpp:269
 msgid "Player '{:s}' dropped due to timeout"
-msgstr ""
+msgstr "Игрок \"{:s}\" вышел из-за тайм-аута"
 
 #: Source/multi.cpp:861
 msgid "Player '{:s}' (level {:d}) is already in the game"
-msgstr ""
+msgstr "Игрок '{:s}' (уровень {:d}) уже в игре"
 
 #: Source/objects.cpp:90
 msgid "Mysterious"
@@ -5854,15 +5851,15 @@ msgstr ""
 
 #: Source/stores.cpp:182
 msgid "Damage: {:d}-{:d}  "
-msgstr ""
+msgstr "Урон: {:d}-{:d}  "
 
 #: Source/stores.cpp:184
 msgid "Armor: {:d}  "
-msgstr ""
+msgstr "Защита: {:d}  "
 
 #: Source/stores.cpp:186
 msgid "Dur: {:d}/{:d},  "
-msgstr ""
+msgstr "Продолжительность: {:d}/{:d},  "
 
 #: Source/stores.cpp:189
 msgid "Indestructible,  "
