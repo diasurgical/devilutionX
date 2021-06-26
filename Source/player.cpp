@@ -100,7 +100,7 @@ void WalkSides(int pnum, Point vel, const DirectionSettings &walkParams)
 	player.position.temp = player.position.future;
 }
 
-static constexpr std::array<const DirectionSettings, 8> directionSettings { {
+constexpr std::array<const DirectionSettings, 8> directionSettings { {
 	// clang-format off
 	{ DIR_S,  {  1,  1 }, {   0, -32 }, { 0, 0 }, SDIR_S,  PM_WALK2, WalkDownwards },
 	{ DIR_SW, {  0,  1 }, {  32, -16 }, { 0, 0 }, SDIR_SW, PM_WALK2, WalkDownwards },

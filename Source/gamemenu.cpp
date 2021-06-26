@@ -131,7 +131,7 @@ void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item,
 	menu_item->pszStr = names[1];
 }
 
-static int gamemenu_slider_music_sound(TMenuItem *menu_item)
+int gamemenu_slider_music_sound(TMenuItem *menu_item)
 {
 	return gmenu_slider_get(menu_item, VOLUME_MIN, VOLUME_MAX);
 }
@@ -174,7 +174,7 @@ void gamemenu_get_speed()
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
 
-static int gamemenu_slider_gamma()
+int gamemenu_slider_gamma()
 {
 	return gmenu_slider_get(&sgOptionsMenu[2], 30, 100);
 }

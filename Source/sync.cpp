@@ -19,7 +19,7 @@ uint16_t sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
 int sgnSyncPInv;
 
-static void sync_one_monster()
+void sync_one_monster()
 {
 	for (int i = 0; i < nummonsters; i++) {
 		int m = monstactive[i];
@@ -32,7 +32,7 @@ static void sync_one_monster()
 	}
 }
 
-static void sync_monster_pos(TSyncMonster *p, int ndx)
+void sync_monster_pos(TSyncMonster *p, int ndx)
 {
 	p->_mndx = ndx;
 	p->_mx = monster[ndx].position.tile.x;
@@ -44,7 +44,7 @@ static void sync_monster_pos(TSyncMonster *p, int ndx)
 	sgwLRU[ndx] = monster[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
-static bool sync_monster_active(TSyncMonster *p)
+bool sync_monster_active(TSyncMonster *p)
 {
 	int i, m, ndx;
 	uint32_t lru;
@@ -68,7 +68,7 @@ static bool sync_monster_active(TSyncMonster *p)
 	return true;
 }
 
-static bool sync_monster_active2(TSyncMonster *p)
+bool sync_monster_active2(TSyncMonster *p)
 {
 	int i, m, ndx;
 	uint32_t lru;
@@ -96,7 +96,7 @@ static bool sync_monster_active2(TSyncMonster *p)
 	return true;
 }
 
-static void SyncPlrInv(TSyncHeader *pHdr)
+void SyncPlrInv(TSyncHeader *pHdr)
 {
 	int ii;
 	ItemStruct *pItem;
