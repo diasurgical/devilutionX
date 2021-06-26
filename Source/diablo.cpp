@@ -46,7 +46,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
-#include "qol/itemlabels.h"
+#include "qol/labels.h"
 #include "restrict.h"
 #include "setmaps.h"
 #include "stores.h"
@@ -888,7 +888,7 @@ static void ReleaseKey(int vkey)
 	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
 		AltPressed(false);
 	if (vkey == DVL_VK_CONTROL || vkey == DVL_VK_LCONTROL || vkey == DVL_VK_RCONTROL)
-		ToggleItemLabelHighlight();
+		ToggleLabelHighlight();
 }
 
 static void ClosePanels()

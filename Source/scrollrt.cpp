@@ -24,9 +24,9 @@
 #include "missiles.h"
 #include "nthread.h"
 #include "plrmsg.h"
-#include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
+#include "qol/labels.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/endian.hpp"
@@ -548,6 +548,9 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	} else {
 		CelClippedDrawTo(out, objectPosition, cel, object[bv]._oAnimFrame);
 	}
+	// only add labels for positive indexes as negative ones are just parts of one object, displaying labels for them would display multiple ones for a single object
+	if (dObject[x][y] > 0)
+		AddObjectToLabelQueue(bv, sx, sy);
 }
 
 static void scrollrt_draw_dungeon(const CelOutputBuffer &, int, int, int, int);
@@ -1267,7 +1270,7 @@ void DrawView(const CelOutputBuffer &out, int StartX, int StartY)
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 	DrawMonsterHealthBar(out);
-	DrawItemNameLabels(out);
+	DrawLabels(out);
 
 	if (stextflag != STORE_NONE && !qtextflag)
 		DrawSText(out);
