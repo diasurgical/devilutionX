@@ -559,20 +559,20 @@ bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, 
 /**
  * @brief Automatically attempts to equip the specified item in the most appropriate location in the player's body.
  * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
- * @param playerNumber The player number whose inventory will be checked for compatibility with the item.
+ * @param playerId The player number whose inventory will be checked for compatibility with the item.
  * @param item The item to equip.
  * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerNumber, const ItemStruct &item, bool persistItem)
+bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem)
 {
 	if (!CanEquip(item)) {
 		return false;
 	}
 
 	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
-		if (AutoEquip(playerNumber, item, (inv_body_loc)bodyLocation, persistItem)) {
+		if (AutoEquip(playerId, item, (inv_body_loc)bodyLocation, persistItem)) {
 			return true;
 		}
 	}

@@ -66,7 +66,7 @@ void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();
 void objects_44D8C5(_object_id ot, int v2, int ox, int oy);
-void objects_44DA68(int a1, int a2);
+void objects_44DA68(int i, int a2);
 void objects_454AF0(int a1, int a2, int a3);
 void AddObject(_object_id ot, int ox, int oy);
 void Obj_Trap(int i);

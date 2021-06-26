@@ -22,6 +22,6 @@ extern bool leftStickNeedsScaling, rightStickNeedsScaling;
 bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrlEvent);
 
 // Returns direction of the left thumb stick or DPad (if allow_dpad = true).
-AxisDirection GetLeftStickOrDpadDirection(bool allow_dpad = true);
+AxisDirection GetLeftStickOrDpadDirection(bool allowDpad = true);
 
 } // namespace devilution

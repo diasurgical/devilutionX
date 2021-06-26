@@ -43,7 +43,7 @@ public:
 	 * @param dwBytes Length of buffer
 	 * @return 0 on success, -1 otherwise
 	 */
-	int SetChunk(ArraySharedPtr<std::uint8_t> file_data, std::size_t dwBytes);
+	int SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwBytes);
 #endif
 
 #ifndef STREAM_ALL_AUDIO

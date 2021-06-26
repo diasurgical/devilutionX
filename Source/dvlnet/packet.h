@@ -29,7 +29,7 @@ enum packet_type : uint8_t {
 };
 
 // Returns NULL for an invalid packet type.
-const char *packet_type_to_string(uint8_t packet_type);
+const char *packet_type_to_string(uint8_t packetType);
 
 typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
@@ -55,7 +55,7 @@ public:
 
 class wrong_packet_type_exception : public packet_exception {
 public:
-	wrong_packet_type_exception(std::initializer_list<packet_type> expected_types, std::uint8_t actual);
+	wrong_packet_type_exception(std::initializer_list<packet_type> expectedTypes, std::uint8_t actual);
 
 	const char *what() const throw() override
 	{

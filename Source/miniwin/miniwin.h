@@ -45,7 +45,7 @@ bool FetchMessage(tagMSG *lpMsg);
 
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
-bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
+bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam);
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp

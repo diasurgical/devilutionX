@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	AxisDirection Get(AxisDirection axis_direction);
+	AxisDirection Get(AxisDirection axisDirection);
 
 private:
 	int last_left_;
