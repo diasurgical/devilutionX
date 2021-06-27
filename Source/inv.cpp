@@ -358,8 +358,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	auto &player = Players[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
-	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
+	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursSize.width / 2));
+	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursSize.height / 2));
 	Size itemSize { icursSize28 };
 	bool done = false;
 	int r = 0;
