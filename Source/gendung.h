@@ -165,10 +165,8 @@ extern std::array<bool, MAXTILES + 1> nTransTable;
  */
 extern std::array<bool, MAXTILES + 1> nMissileTable;
 extern std::array<bool, MAXTILES + 1> nTrapTable;
-/** Specifies the minimum X-coordinate of the map. */
-extern int dminx;
-/** Specifies the minimum Y-coordinate of the map. */
-extern int dminy;
+/** Specifies the minimum X,Y-coordinates of the map. */
+extern Point dminPosition;
 /** Specifies the maximum X-coordinate of the map. */
 extern int dmaxx;
 /** Specifies the maximum Y-coordinate of the map. */

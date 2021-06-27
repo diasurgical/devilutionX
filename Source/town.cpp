@@ -268,8 +268,7 @@ void TownOpenGrave()
 
 void CreateTown(lvl_entry entry)
 {
-	dminx = 10;
-	dminy = 10;
+	dminPosition = { 10, 10 };
 	dmaxx = 84;
 	dmaxy = 84;
 	DRLG_InitTrans();

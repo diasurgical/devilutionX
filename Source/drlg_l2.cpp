@@ -3172,8 +3172,7 @@ void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 
 	SetRndSeed(rseed);
 
-	dminx = 16;
-	dminy = 16;
+	dminPosition = { 16, 16 };
 	dmaxx = 96;
 	dmaxy = 96;
 
