@@ -488,8 +488,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 	// move cursor to our new location
 	button = ChrBtnsRect[slot];
 	button.position = GetPanelPosition(UiPanels::Character, button.position);
-	Point position = { button.position.x + (button.size.width / 2), button.position.y + (button.size.height / 2) };
-	SetCursorPos(position);
+	SetCursorPos(button.Center());
 }
 
 Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
