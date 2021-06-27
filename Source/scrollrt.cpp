@@ -1223,15 +1223,14 @@ void DrawGame(const Surface &fullOut, int x, int y)
 /**
  * @brief Start rendering of screen, town variation
  * @param out Buffer to render to
- * @param StartX Center of view in dPiece coordinate
- * @param StartY Center of view in dPiece coordinate
+ * @param startPosition Center of view in dPiece coordinates
  */
-void DrawView(const Surface &out, int startX, int startY)
+void DrawView(const Surface &out, Point startPosition)
 {
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif
-	DrawGame(out, startX, startY);
+	DrawGame(out, startPosition.x, startPosition.y);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
@@ -1768,7 +1767,7 @@ void DrawAndBlit()
 
 	nthread_UpdateProgressToNextGameTick();
 
-	DrawView(out, ViewPosition.x, ViewPosition.y);
+	DrawView(out, ViewPosition);
 	if (ctrlPan) {
 		DrawCtrlPan(out);
 	}
