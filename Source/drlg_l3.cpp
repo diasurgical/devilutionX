@@ -8,6 +8,7 @@
 
 #include "drlg_l1.h"
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "lighting.h"
 #include "monster.h"
 #include "objdat.h"

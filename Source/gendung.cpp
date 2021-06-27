@@ -6,6 +6,7 @@
 #include "gendung.h"
 
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "init.h"
 #include "options.h"
 

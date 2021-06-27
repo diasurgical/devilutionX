@@ -12,6 +12,7 @@
 #include "dead.h"
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"

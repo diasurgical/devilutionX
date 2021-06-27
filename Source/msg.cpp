@@ -15,6 +15,7 @@
 #include "drlg_l1.h"
 #include "dthread.h"
 #include "encrypt.h"
+#include "engine/random.hpp"
 #include "gamemenu.h"
 #include "lighting.h"
 #include "missiles.h"

@@ -6,6 +6,7 @@
 
 #include "dx.h"
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "hwcursor.hpp"
 #include "options.h"
 #include "utils/display.h"

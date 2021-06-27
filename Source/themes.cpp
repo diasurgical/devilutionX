@@ -5,6 +5,7 @@
  */
 #include "themes.h"
 
+#include "engine/random.hpp"
 #include "items.h"
 #include "monster.h"
 #include "objects.h"

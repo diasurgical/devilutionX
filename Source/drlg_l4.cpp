@@ -7,6 +7,7 @@
 
 #include "drlg_l1.h"
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"

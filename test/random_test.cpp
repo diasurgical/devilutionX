@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "engine.h"
+#include "engine/random.hpp"
 
 namespace devilution {
 
