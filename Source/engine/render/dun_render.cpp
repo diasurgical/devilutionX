@@ -1375,7 +1375,7 @@ void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 
 } // namespace
 
-void RenderTile(const Surface &out, int x, int y)
+void RenderTile(const Surface &out, Point position)
 {
 	const auto tile = static_cast<TileType>((level_cel_block & 0x7000) >> 12);
 	const auto *mask = GetMask(tile);
@@ -1383,23 +1383,23 @@ void RenderTile(const Surface &out, int x, int y)
 		return;
 
 #ifdef DEBUG_RENDER_OFFSET_X
-	x += DEBUG_RENDER_OFFSET_X;
+	position.x += DEBUG_RENDER_OFFSET_X;
 #endif
 #ifdef DEBUG_RENDER_OFFSET_Y
-	y += DEBUG_RENDER_OFFSET_Y;
+	position.y += DEBUG_RENDER_OFFSET_Y;
 #endif
 #ifdef DEBUG_RENDER_COLOR
 	DBGCOLOR = GetTileDebugColor(tile);
 #endif
 
-	Clip clip = CalculateClip(x, y, Width, GetTileHeight(tile), out);
+	Clip clip = CalculateClip(position.x, position.y, Width, GetTileHeight(tile), out);
 	if (clip.width <= 0 || clip.height <= 0)
 		return;
 
 	const std::uint8_t *tbl = &LightTables[256 * LightTableIndex];
 	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pDungeonCels.get());
 	const auto *src = reinterpret_cast<const std::uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])]);
-	std::uint8_t *dst = out.at(static_cast<int>(x + clip.left), static_cast<int>(y - clip.bottom));
+	std::uint8_t *dst = out.at(static_cast<int>(position.x + clip.left), static_cast<int>(position.y - clip.bottom));
 	const auto dstPitch = out.pitch();
 
 	if (mask == &SolidMask[TILE_HEIGHT - 1]) {
