@@ -1469,8 +1469,7 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 	SetRndSeed(rseed);
 
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	ViewPosition = { 40, 40 };
 
@@ -1485,8 +1484,7 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 void LoadL4Dungeon(const char *path, int vx, int vy)
 {
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	DRLG_InitTrans();
 	InitDungeonFlags();
@@ -1507,8 +1505,7 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 void LoadPreL4Dungeon(const char *path)
 {
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	InitDungeonFlags();
 

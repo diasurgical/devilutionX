@@ -2402,8 +2402,7 @@ void Pass3()
 void LoadL1Dungeon(const char *path, int vx, int vy)
 {
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	DRLG_InitTrans();
 
@@ -2458,8 +2457,7 @@ void LoadPreL1Dungeon(const char *path)
 	}
 
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
@@ -2495,8 +2493,7 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 	SetRndSeed(rseed);
 
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	UberRow = 0;
 	UberCol = 0;
@@ -2519,8 +2516,8 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 
 	DRLG_SetPC();
 
-	for (int j = dminPosition.y; j < dmaxy; j++) {
-		for (int i = dminPosition.x; i < dmaxx; i++) {
+	for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
+		for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
 			if (dPiece[i][j] == 290) {
 				UberRow = i;
 				UberCol = j;

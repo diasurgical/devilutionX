@@ -167,10 +167,8 @@ extern std::array<bool, MAXTILES + 1> nMissileTable;
 extern std::array<bool, MAXTILES + 1> nTrapTable;
 /** Specifies the minimum X,Y-coordinates of the map. */
 extern Point dminPosition;
-/** Specifies the maximum X-coordinate of the map. */
-extern int dmaxx;
-/** Specifies the maximum Y-coordinate of the map. */
-extern int dmaxy;
+/** Specifies the maximum X,Y-coordinates of the map. */
+extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
