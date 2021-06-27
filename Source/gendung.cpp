@@ -192,15 +192,13 @@ void DRLG_InitTrans()
 
 void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 {
-	int i, j;
-
 	x1 = 2 * x1 + 17;
 	y1 = 2 * y1 + 17;
 	x2 = 2 * x2 + 16;
 	y2 = 2 * y2 + 16;
 
-	for (j = y1; j <= y2; j++) {
-		for (i = x1; i <= x2; i++) {
+	for (int j = y1; j <= y2; j++) {
+		for (int i = x1; i <= x2; i++) {
 			dTransVal[i][j] = TransVal;
 		}
 	}
@@ -210,10 +208,8 @@ void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
 
 void DRLG_RectTrans(int x1, int y1, int x2, int y2)
 {
-	int i, j;
-
-	for (j = y1; j <= y2; j++) {
-		for (i = x1; i <= x2; i++) {
+	for (int j = y1; j <= y2; j++) {
+		for (int i = x1; i <= x2; i++) {
 			dTransVal[i][j] = TransVal;
 		}
 	}
@@ -227,28 +223,22 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 
 void DRLG_ListTrans(int num, BYTE *List)
 {
-	int i;
-	BYTE x1, y1, x2, y2;
-
-	for (i = 0; i < num; i++) {
-		x1 = *List++;
-		y1 = *List++;
-		x2 = *List++;
-		y2 = *List++;
+	for (int i = 0; i < num; i++) {
+		uint8_t x1 = *List++;
+		uint8_t y1 = *List++;
+		uint8_t x2 = *List++;
+		uint8_t y2 = *List++;
 		DRLG_RectTrans(x1, y1, x2, y2);
 	}
 }
 
 void DRLG_AreaTrans(int num, BYTE *List)
 {
-	int i;
-	BYTE x1, y1, x2, y2;
-
-	for (i = 0; i < num; i++) {
-		x1 = *List++;
-		y1 = *List++;
-		x2 = *List++;
-		y2 = *List++;
+	for (int i = 0; i < num; i++) {
+		uint8_t x1 = *List++;
+		uint8_t y1 = *List++;
+		uint8_t x2 = *List++;
+		uint8_t y2 = *List++;
 		DRLG_RectTrans(x1, y1, x2, y2);
 		TransVal--;
 	}
@@ -265,15 +255,13 @@ void DRLG_InitSetPC()
 
 void DRLG_SetPC()
 {
-	int i, j, x, y, w, h;
+	int w = 2 * setpc_w;
+	int h = 2 * setpc_h;
+	int x = 2 * setpc_x + 16;
+	int y = 2 * setpc_y + 16;
 
-	w = 2 * setpc_w;
-	h = 2 * setpc_h;
-	x = 2 * setpc_x + 16;
-	y = 2 * setpc_y + 16;
-
-	for (j = 0; j < h; j++) {
-		for (i = 0; i < w; i++) {
+	for (int j = 0; j < h; j++) {
+		for (int i = 0; i < w; i++) {
 			dFlags[i + x][j + y] |= BFLAG_POPULATED;
 		}
 	}
@@ -281,15 +269,13 @@ void DRLG_SetPC()
 
 void Make_SetPC(int x, int y, int w, int h)
 {
-	int i, j, dx, dy, dh, dw;
+	int dw = 2 * w;
+	int dh = 2 * h;
+	int dx = 2 * x + 16;
+	int dy = 2 * y + 16;
 
-	dw = 2 * w;
-	dh = 2 * h;
-	dx = 2 * x + 16;
-	dy = 2 * y + 16;
-
-	for (j = 0; j < dh; j++) {
-		for (i = 0; i < dw; i++) {
+	for (int j = 0; j < dh; j++) {
+		for (int i = 0; i < dw; i++) {
 			dFlags[i + dx][j + dy] |= BFLAG_POPULATED;
 		}
 	}
@@ -297,16 +283,10 @@ void Make_SetPC(int x, int y, int w, int h)
 
 bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
-	int ii, xx, yy;
-	int xSmallest, ySmallest;
-	int xArray[20], yArray[20];
-	int xCount, yCount;
-	bool yFlag, xFlag;
-
-	yFlag = true;
-	xFlag = true;
-	xCount = 0;
-	yCount = 0;
+	bool yFlag = true;
+	bool xFlag = true;
+	int xCount = 0;
+	int yCount = 0;
 
 	// BUGFIX: change '&&' to '||' (fixed)
 	if (x > DMAXX - maxSize || y > DMAXY - maxSize) {
@@ -316,12 +296,12 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 		return false;
 	}
 
-	memset(xArray, 0, sizeof(xArray));
-	memset(yArray, 0, sizeof(yArray));
+	int xArray[20] = {};
+	int yArray[20] = {};
 
-	for (ii = 0; ii < maxSize; ii++) {
+	for (int ii = 0; ii < maxSize; ii++) {
 		if (xFlag) {
-			for (xx = x; xx < x + maxSize; xx++) {
+			for (int xx = x; xx < x + maxSize; xx++) {
 				if (dungeon[xx][y + ii] != floor) {
 					if (xx >= minSize) {
 						break;
@@ -337,7 +317,7 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 			}
 		}
 		if (yFlag) {
-			for (yy = y; yy < y + maxSize; yy++) {
+			for (int yy = y; yy < y + maxSize; yy++) {
 				if (dungeon[x + ii][yy] != floor) {
 					if (yy >= minSize) {
 						break;
@@ -354,16 +334,16 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 		}
 	}
 
-	for (ii = 0; ii < minSize; ii++) {
+	for (int ii = 0; ii < minSize; ii++) {
 		if (xArray[ii] < minSize || yArray[ii] < minSize) {
 			return false;
 		}
 	}
 
-	xSmallest = xArray[0];
-	ySmallest = yArray[0];
+	int xSmallest = xArray[0];
+	int ySmallest = yArray[0];
 
-	for (ii = 0; ii < maxSize; ii++) {
+	for (int ii = 0; ii < maxSize; ii++) {
 		if (xArray[ii] < minSize || yArray[ii] < minSize) {
 			break;
 		}
@@ -382,14 +362,13 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 
 void DRLG_CreateThemeRoom(int themeIndex)
 {
-	int xx, yy;
 	const int lx = themeLoc[themeIndex].x;
 	const int ly = themeLoc[themeIndex].y;
 	const int hx = lx + themeLoc[themeIndex].width;
 	const int hy = ly + themeLoc[themeIndex].height;
 
-	for (yy = ly; yy < hy; yy++) {
-		for (xx = lx; xx < hx; xx++) {
+	for (int yy = ly; yy < hy; yy++) {
+		for (int xx = lx; xx < hx; xx++) {
 			if (leveltype == DTYPE_CATACOMBS) {
 				if (yy == ly || yy == hy - 1) {
 					dungeon[xx][yy] = 2;
@@ -461,48 +440,42 @@ void DRLG_CreateThemeRoom(int themeIndex)
 	}
 	if (leveltype == DTYPE_HELL) {
 		switch (GenerateRnd(2)) {
-		case 0:
-			yy = (ly + hy) / 2;
+		case 0: {
+			int yy = (ly + hy) / 2;
 			dungeon[hx - 1][yy - 1] = 53;
 			dungeon[hx - 1][yy] = 6;
 			dungeon[hx - 1][yy + 1] = 52;
 			dungeon[hx - 2][yy - 1] = 54;
-			break;
-		case 1:
-			xx = (lx + hx) / 2;
+		} break;
+		case 1: {
+			int xx = (lx + hx) / 2;
 			dungeon[xx - 1][hy - 1] = 57;
 			dungeon[xx][hy - 1] = 6;
 			dungeon[xx + 1][hy - 1] = 56;
 			dungeon[xx][hy - 2] = 59;
 			dungeon[xx - 1][hy - 2] = 58;
-			break;
+		} break;
 		}
 	}
 }
 
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
 {
-	int i, j;
-	int themeW, themeH;
-	int rv2, min, max;
-
 	themeCount = 0;
 	memset(themeLoc, 0, sizeof(*themeLoc));
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			int themeW = 0;
+			int themeH = 0;
 			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
-					min = minSize - 2;
-					max = maxSize - 2;
-					rv2 = min + GenerateRnd(GenerateRnd(themeW - min + 1));
-					if (rv2 >= min && rv2 <= max)
-						themeW = rv2;
-					else
+					int min = minSize - 2;
+					int max = maxSize - 2;
+					themeW = min + GenerateRnd(GenerateRnd(themeW - min + 1));
+					if (themeW < min || themeW > max)
 						themeW = min;
-					rv2 = min + GenerateRnd(GenerateRnd(themeH - min + 1));
-					if (rv2 >= min && rv2 <= max)
-						themeH = rv2;
-					else
+					themeH = min + GenerateRnd(GenerateRnd(themeH - min + 1));
+					if (themeH < min || themeH > max)
 						themeH = min;
 				}
 				themeLoc[themeCount].x = i + 1;
@@ -523,13 +496,11 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 
 void DRLG_HoldThemeRooms()
 {
-	int i, x, y, xx, yy;
-
-	for (i = 0; i < themeCount; i++) {
-		for (y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height - 1; y++) {
-			for (x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width - 1; x++) {
-				xx = 2 * x + 16;
-				yy = 2 * y + 16;
+	for (int i = 0; i < themeCount; i++) {
+		for (int y = themeLoc[i].y; y < themeLoc[i].y + themeLoc[i].height - 1; y++) {
+			for (int x = themeLoc[i].x; x < themeLoc[i].x + themeLoc[i].width - 1; x++) {
+				int xx = 2 * x + 16;
+				int yy = 2 * y + 16;
 				dFlags[xx][yy] |= BFLAG_POPULATED;
 				dFlags[xx + 1][yy] |= BFLAG_POPULATED;
 				dFlags[xx][yy + 1] |= BFLAG_POPULATED;

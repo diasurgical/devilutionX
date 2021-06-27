@@ -46,14 +46,11 @@ void sync_monster_pos(TSyncMonster *p, int ndx)
 
 bool sync_monster_active(TSyncMonster *p)
 {
-	int i, m, ndx;
-	uint32_t lru;
+	int ndx = -1;
+	uint32_t lru = 0xFFFFFFFF;
 
-	ndx = -1;
-	lru = 0xFFFFFFFF;
-
-	for (i = 0; i < nummonsters; i++) {
-		m = monstactive[i];
+	for (int i = 0; i < nummonsters; i++) {
+		int m = monstactive[i];
 		if (sgnMonsterPriority[m] < lru && sgwLRU[m] < 0xFFFE) {
 			lru = sgnMonsterPriority[m];
 			ndx = monstactive[i];
@@ -70,17 +67,14 @@ bool sync_monster_active(TSyncMonster *p)
 
 bool sync_monster_active2(TSyncMonster *p)
 {
-	int i, m, ndx;
-	uint32_t lru;
+	int ndx = -1;
+	uint32_t lru = 0xFFFE;
 
-	ndx = -1;
-	lru = 0xFFFE;
-
-	for (i = 0; i < nummonsters; i++) {
+	for (int i = 0; i < nummonsters; i++) {
 		if (sgnMonsters >= nummonsters) {
 			sgnMonsters = 0;
 		}
-		m = monstactive[sgnMonsters];
+		int m = monstactive[sgnMonsters];
 		if (sgwLRU[m] < lru) {
 			lru = sgwLRU[m];
 			ndx = monstactive[sgnMonsters];

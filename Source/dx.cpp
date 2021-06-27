@@ -97,7 +97,8 @@ static void dx_create_primary_surface()
 {
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		int width, height;
+		int width = 0;
+		int height = 0;
 		SDL_RenderGetLogicalSize(renderer, &width, &height);
 		Uint32 format;
 		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)

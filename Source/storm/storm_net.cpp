@@ -22,7 +22,7 @@ static char gpszGamePassword[128] = {};
 static SdlMutex storm_net_mutex;
 #endif
 
-bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes)
+bool SNetReceiveMessage(int *senderplayerid, void **data, uint32_t *databytes)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);

@@ -106,7 +106,7 @@ void base::recv_local(packet &pkt)
 	}
 }
 
-bool base::SNetReceiveMessage(int *sender, char **data, int *size)
+bool base::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
 {
 	poll();
 	if (message_queue.empty())
@@ -115,7 +115,7 @@ bool base::SNetReceiveMessage(int *sender, char **data, int *size)
 	message_queue.pop_front();
 	*sender = message_last.sender;
 	*size = message_last.payload.size();
-	*data = reinterpret_cast<char *>(message_last.payload.data());
+	*data = message_last.payload.data();
 	return true;
 }
 

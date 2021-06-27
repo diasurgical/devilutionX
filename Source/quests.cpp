@@ -113,15 +113,12 @@ int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 
 void InitQuests()
 {
-	int i, initiatedQuests;
-	DWORD z;
-
 	if (!gbIsMultiplayer) {
-		for (i = 0; i < MAXQUESTS; i++) {
-			quests[i]._qactive = QUEST_NOTAVAIL;
+		for (auto &quest : quests) {
+			quest._qactive = QUEST_NOTAVAIL;
 		}
 	} else {
-		for (i = 0; i < MAXQUESTS; i++) {
+		for (int i = 0; i < MAXQUESTS; i++) {
 			if (questlist[i].isSinglePlayerOnly) {
 				quests[i]._qactive = QUEST_NOTAVAIL;
 			}
@@ -133,33 +130,33 @@ void InitQuests()
 
 	questlog = false;
 	WaterDone = 0;
-	initiatedQuests = 0;
+	int initiatedQuests = 0;
 
-	for (z = 0; z < MAXQUESTS; z++) {
-		if (gbIsMultiplayer && questlist[z].isSinglePlayerOnly)
+	for (int i = 0; i < MAXQUESTS; i++) {
+		if (gbIsMultiplayer && questlist[i].isSinglePlayerOnly)
 			continue;
-		quests[z]._qtype = questlist[z]._qdtype;
+		quests[i]._qtype = questlist[i]._qdtype;
 		if (gbIsMultiplayer) {
-			quests[z]._qlevel = questlist[z]._qdmultlvl;
+			quests[i]._qlevel = questlist[i]._qdmultlvl;
 			if (!delta_quest_inited(initiatedQuests)) {
-				quests[z]._qactive = QUEST_INIT;
-				quests[z]._qvar1 = 0;
-				quests[z]._qlog = false;
+				quests[i]._qactive = QUEST_INIT;
+				quests[i]._qvar1 = 0;
+				quests[i]._qlog = false;
 			}
 			initiatedQuests++;
 		} else {
-			quests[z]._qactive = QUEST_INIT;
-			quests[z]._qlevel = questlist[z]._qdlvl;
-			quests[z]._qvar1 = 0;
-			quests[z]._qlog = false;
+			quests[i]._qactive = QUEST_INIT;
+			quests[i]._qlevel = questlist[i]._qdlvl;
+			quests[i]._qvar1 = 0;
+			quests[i]._qlog = false;
 		}
 
-		quests[z]._qslvl = questlist[z]._qslvl;
-		quests[z].position = { 0, 0 };
-		quests[z]._qidx = z;
-		quests[z]._qlvltype = questlist[z]._qlvlt;
-		quests[z]._qvar2 = 0;
-		quests[z]._qmsg = questlist[z]._qdmsg;
+		quests[i]._qslvl = questlist[i]._qslvl;
+		quests[i].position = { 0, 0 };
+		quests[i]._qidx = i;
+		quests[i]._qlvltype = questlist[i]._qlvlt;
+		quests[i]._qvar2 = 0;
+		quests[i]._qmsg = questlist[i]._qdmsg;
 	}
 
 	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
@@ -180,8 +177,8 @@ void InitQuests()
 #endif
 
 	if (gbIsSpawn) {
-		for (z = 0; z < MAXQUESTS; z++) {
-			quests[z]._qactive = QUEST_NOTAVAIL;
+		for (auto &quest : quests) {
+			quest._qactive = QUEST_NOTAVAIL;
 		}
 	}
 
@@ -198,8 +195,6 @@ void CheckQuests()
 {
 	if (gbIsSpawn)
 		return;
-
-	int i, rportx, rporty;
 
 	if (QuestStatus(Q_BETRAYER) && gbIsMultiplayer && quests[Q_BETRAYER]._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, 2 * setpc_x + 20, 2 * setpc_y + 22);
@@ -218,8 +213,8 @@ void CheckQuests()
 	    && (quests[Q_BETRAYER]._qvar2 == 0 || quests[Q_BETRAYER]._qvar2 == 2)) {
 		quests[Q_BETRAYER].position.x = 2 * quests[Q_BETRAYER].position.x + 16;
 		quests[Q_BETRAYER].position.y = 2 * quests[Q_BETRAYER].position.y + 16;
-		rportx = quests[Q_BETRAYER].position.x;
-		rporty = quests[Q_BETRAYER].position.y;
+		int rportx = quests[Q_BETRAYER].position.x;
+		int rporty = quests[Q_BETRAYER].position.y;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
@@ -231,8 +226,8 @@ void CheckQuests()
 	    && setlevel
 	    && setlvlnum == SL_VILEBETRAYER
 	    && quests[Q_BETRAYER]._qvar2 == 4) {
-		rportx = 35;
-		rporty = 32;
+		int rportx = 35;
+		int rporty = 32;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 3;
 	}
@@ -250,15 +245,15 @@ void CheckQuests()
 			WaterDone = 32;
 		}
 	} else if (plr[myplr]._pmode == PM_STAND) {
-		for (i = 0; i < MAXQUESTS; i++) {
-			if (currlevel == quests[i]._qlevel
-			    && quests[i]._qslvl != 0
-			    && quests[i]._qactive != QUEST_NOTAVAIL
-			    && plr[myplr].position.tile == quests[i].position) {
-				if (quests[i]._qlvltype != DTYPE_NONE) {
-					setlvltype = quests[i]._qlvltype;
+		for (auto &quest : quests) {
+			if (currlevel == quest._qlevel
+			    && quest._qslvl != 0
+			    && quest._qactive != QUEST_NOTAVAIL
+			    && plr[myplr].position.tile == quest.position) {
+				if (quest._qlvltype != DTYPE_NONE) {
+					setlvltype = quest._qlvltype;
 				}
-				StartNewLvl(myplr, WM_DIABSETLVL, quests[i]._qslvl);
+				StartNewLvl(myplr, WM_DIABSETLVL, quest._qslvl);
 			}
 		}
 	}
@@ -266,8 +261,6 @@ void CheckQuests()
 
 bool ForceQuests()
 {
-	int i, j, qx, qy, ql;
-
 	if (gbIsSpawn)
 		return false;
 
@@ -275,14 +268,13 @@ bool ForceQuests()
 		return false;
 	}
 
-	for (i = 0; i < MAXQUESTS; i++) {
-
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (i != Q_BETRAYER && currlevel == quests[i]._qlevel && quests[i]._qslvl != 0) {
-			ql = quests[quests[i]._qidx]._qslvl - 1;
-			qx = quests[i].position.x;
-			qy = quests[i].position.y;
+			int ql = quests[quests[i]._qidx]._qslvl - 1;
+			int qx = quests[i].position.x;
+			int qy = quests[i].position.y;
 
-			for (j = 0; j < 7; j++) {
+			for (int j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
 					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(questtrigstr[ql])).c_str());
 					cursmx = qx;
@@ -311,8 +303,6 @@ bool QuestStatus(int i)
 
 void CheckQuestKill(int m, bool sendmsg)
 {
-	int i, j;
-
 	if (gbIsSpawn)
 		return;
 
@@ -338,8 +328,8 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 
-		for (j = 0; j < MAXDUNY; j++) {
-			for (i = 0; i < MAXDUNX; i++) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) {
 				if (dPiece[i][j] == 370) {
 					trigs[numtrigs].position = { i, j };
 					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
@@ -368,10 +358,8 @@ void CheckQuestKill(int m, bool sendmsg)
 
 void DrawButcher()
 {
-	int x, y;
-
-	x = 2 * setpc_x + 16;
-	y = 2 * setpc_y + 16;
+	int x = 2 * setpc_x + 16;
+	int y = 2 * setpc_y + 16;
 	DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
 }
 
@@ -639,8 +627,6 @@ void ResyncMPQuests()
 
 void ResyncQuests()
 {
-	int i, tren, x, y;
-
 	if (gbIsSpawn)
 		return;
 
@@ -659,20 +645,20 @@ void ResyncQuests()
 			    setpc_w + setpc_x + 1,
 			    setpc_h + setpc_y + 1);
 			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
-			for (i = 0; i < nobjects; i++)
+			for (int i = 0; i < nobjects; i++)
 				SyncObjectAnim(objectactive[i]);
-			tren = TransVal;
+			int tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
 		}
 		if (quests[Q_LTBANNER]._qvar1 == 3) {
-			x = setpc_x;
-			y = setpc_y;
+			int x = setpc_x;
+			int y = setpc_y;
 			ObjChangeMapResync(x, y, x + setpc_w + 1, y + setpc_h + 1);
-			for (i = 0; i < nobjects; i++)
+			for (int i = 0; i < nobjects; i++)
 				SyncObjectAnim(objectactive[i]);
-			tren = TransVal;
+			int tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
@@ -704,7 +690,7 @@ void ResyncQuests()
 			ObjChangeMapResync(1, 18, 20, 24);
 		if (quests[Q_BETRAYER]._qvar1 >= 7)
 			InitVPTriggers();
-		for (i = 0; i < nobjects; i++)
+		for (int i = 0; i < nobjects; i++)
 			SyncObjectAnim(objectactive[i]);
 	}
 	if (currlevel == quests[Q_BETRAYER]._qlevel

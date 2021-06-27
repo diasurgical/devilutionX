@@ -86,7 +86,7 @@ static void multi_copy_packet(TBuffer *buf, byte *packet, uint8_t size)
 	p[size] = byte { 0 };
 }
 
-static byte *multi_recv_packet(TBuffer *pBuf, byte *body, DWORD *size)
+static byte *multi_recv_packet(TBuffer *pBuf, byte *body, size_t *size)
 {
 	if (pBuf->dwNextWriteOffset != 0) {
 		byte *src_ptr = pBuf->bData;
@@ -153,21 +153,19 @@ void NetSendLoPri(int playerId, byte *pbMsg, BYTE bLen)
 
 void NetSendHiPri(int playerId, byte *pbMsg, BYTE bLen)
 {
-	DWORD size, len;
-	TPkt pkt;
-
 	if (pbMsg != nullptr && bLen != 0) {
 		multi_copy_packet(&sgHiPriBuf, pbMsg, bLen);
 		multi_send_packet(playerId, pbMsg, bLen);
 	}
 	if (!gbShouldValidatePackage) {
 		gbShouldValidatePackage = true;
+		TPkt pkt;
 		NetRecvPlrData(&pkt);
-		size = gdwNormalMsgSize - sizeof(TPktHdr);
+		size_t size = gdwNormalMsgSize - sizeof(TPktHdr);
 		byte *hipri_body = multi_recv_packet(&sgHiPriBuf, pkt.body, &size);
 		byte *lowpri_body = multi_recv_packet(&sgLoPriBuf, hipri_body, &size);
 		size = sync_all_monsters(lowpri_body, size);
-		len = gdwNormalMsgSize - size;
+		size_t len = gdwNormalMsgSize - size;
 		pkt.hdr.wLen = len;
 		if (!SNetSendMessage(-2, &pkt.hdr, len))
 			nthread_terminate_game("SNetSendMessage");
@@ -176,14 +174,13 @@ void NetSendHiPri(int playerId, byte *pbMsg, BYTE bLen)
 
 void multi_send_msg_packet(uint32_t pmask, byte *src, BYTE len)
 {
-	DWORD v, p, t;
 	TPkt pkt;
-
 	NetRecvPlrData(&pkt);
-	t = len + sizeof(pkt.hdr);
+	size_t t = len + sizeof(pkt.hdr);
 	pkt.hdr.wLen = t;
 	memcpy(pkt.body, src, len);
-	for (v = 1, p = 0; p < MAX_PLRS; p++, v <<= 1) {
+	size_t p = 0;
+	for (size_t v = 1; p < MAX_PLRS; p++, v <<= 1) {
 		if ((v & pmask) != 0) {
 			if (!SNetSendMessage(p, &pkt.hdr, t) && SErrGetLastError() != STORM_ERROR_INVALID_PLAYER) {
 				nthread_terminate_game("SNetSendMessage");
@@ -195,12 +192,9 @@ void multi_send_msg_packet(uint32_t pmask, byte *src, BYTE len)
 
 static void multi_mon_seeds()
 {
-	int i;
-	DWORD l;
-
 	sgdwGameLoops++;
-	l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
-	for (i = 0; i < MAXMONSTERS; i++)
+	uint32_t l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
+	for (int i = 0; i < MAXMONSTERS; i++)
 		monster[i]._mAISeed = l + i;
 }
 
@@ -320,9 +314,6 @@ static void multi_check_drop_player()
 
 static void multi_begin_timeout()
 {
-	int i, nTicks, nLowestActive, nLowestPlayer;
-	BYTE bGroupPlayers, bGroupCount;
-
 	if (!sgbTimeout) {
 		return;
 	}
@@ -332,7 +323,7 @@ static void multi_begin_timeout()
 	}
 #endif
 
-	nTicks = SDL_GetTicks() - sglTimeoutStart;
+	int nTicks = SDL_GetTicks() - sglTimeoutStart;
 	if (nTicks > 20000) {
 		gbRunGame = false;
 		return;
@@ -341,11 +332,11 @@ static void multi_begin_timeout()
 		return;
 	}
 
-	nLowestActive = -1;
-	nLowestPlayer = -1;
-	bGroupPlayers = 0;
-	bGroupCount = 0;
-	for (i = 0; i < MAX_PLRS; i++) {
+	int nLowestActive = -1;
+	int nLowestPlayer = -1;
+	uint8_t bGroupPlayers = 0;
+	uint8_t bGroupCount = 0;
+	for (int i = 0; i < MAX_PLRS; i++) {
 		uint32_t nState = player_state[i];
 		if ((nState & PS_CONNECTED) != 0) {
 			if (nLowestPlayer == -1) {
@@ -447,19 +438,15 @@ static void multi_process_tmsgs()
 
 void multi_process_network_packets()
 {
-	int dx, dy;
-	TPktHdr *pkt;
-	DWORD dwMsgSize;
-	int dwID;
-	bool cond;
-	char *data;
-
 	multi_clear_left_tbl();
 	multi_process_tmsgs();
-	while (SNetReceiveMessage(&dwID, &data, (int *)&dwMsgSize)) {
+
+	int dwID = -1;
+	TPktHdr *pkt;
+	uint32_t dwMsgSize = 0;
+	while (SNetReceiveMessage(&dwID, (void **)&pkt, &dwMsgSize)) {
 		dwRecCount++;
 		multi_clear_left_tbl();
-		pkt = (TPktHdr *)data;
 		if (dwMsgSize < sizeof(TPktHdr))
 			continue;
 		if (dwID < 0 || dwID >= MAX_PLRS)
@@ -473,14 +460,14 @@ void multi_process_network_packets()
 			assert(gbBufferMsgs != 2);
 			plr[dwID]._pHitPoints = pkt->php;
 			plr[dwID]._pMaxHP = pkt->pmhp;
-			cond = gbBufferMsgs == 1;
+			bool cond = gbBufferMsgs == 1;
 			plr[dwID]._pBaseStr = pkt->bstr;
 			plr[dwID]._pBaseMag = pkt->bmag;
 			plr[dwID]._pBaseDex = pkt->bdex;
 			if (!cond && plr[dwID].plractive && plr[dwID]._pHitPoints != 0) {
 				if (currlevel == plr[dwID].plrlevel && !plr[dwID]._pLvlChanging) {
-					dx = abs(plr[dwID].position.tile.x - pkt->px);
-					dy = abs(plr[dwID].position.tile.y - pkt->py);
+					int dx = abs(plr[dwID].position.tile.x - pkt->px);
+					int dy = abs(plr[dwID].position.tile.y - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
 						FixPlrWalkTags(dwID);
 						plr[dwID].position.old = plr[dwID].position.tile;
@@ -509,17 +496,14 @@ void multi_process_network_packets()
 
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, byte *pbSrc, DWORD dwLen)
 {
-	DWORD dwOffset, dwBody, dwMsg;
-	TPkt pkt;
-	TCmdPlrInfoHdr *p;
-
 	assert(pnum != myplr);
 	assert(pbSrc);
 	assert(dwLen <= 0x0ffff);
 
-	dwOffset = 0;
+	uint32_t dwOffset = 0;
 
 	while (dwLen != 0) {
+		TPkt pkt;
 		pkt.hdr.wCheck = LoadBE32("\0\0ip");
 		pkt.hdr.px = 0;
 		pkt.hdr.py = 0;
@@ -530,17 +514,17 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, byte *pbSrc, DWORD dwLen)
 		pkt.hdr.bstr = 0;
 		pkt.hdr.bmag = 0;
 		pkt.hdr.bdex = 0;
-		p = (TCmdPlrInfoHdr *)pkt.body;
+		auto *p = (TCmdPlrInfoHdr *)pkt.body;
 		p->bCmd = bCmd;
 		p->wOffset = dwOffset;
-		dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(*p);
+		size_t dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(*p);
 		if (dwLen < dwBody) {
 			dwBody = dwLen;
 		}
 		assert(dwBody <= 0x0ffff);
 		p->wBytes = dwBody;
 		memcpy(&pkt.body[sizeof(*p)], pbSrc, p->wBytes);
-		dwMsg = sizeof(pkt.hdr);
+		size_t dwMsg = sizeof(pkt.hdr);
 		dwMsg += sizeof(*p);
 		dwMsg += p->wBytes;
 		pkt.hdr.wLen = dwMsg;
@@ -602,21 +586,21 @@ static dungeon_type InitLevelType(int l)
 
 static void SetupLocalCoords()
 {
-	int x, y;
-
 	if (!leveldebug || gbIsMultiplayer) {
 		currlevel = 0;
 		leveltype = DTYPE_TOWN;
 		setlevel = false;
 	}
-	x = 75;
-	y = 68;
+
+	int x = 75;
+	int y = 68;
 #ifdef _DEBUG
 	if (debug_mode_key_inverted_v) {
 		x = 49;
 		y = 23;
 	}
 #endif
+
 	x += plrxoff[myplr];
 	y += plryoff[myplr];
 	plr[myplr].position.tile = { x, y };
@@ -666,13 +650,13 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 
 static void multi_event_handler(bool add)
 {
-	for (int i = 0; i < 3; i++) {
+	for (auto event_type : event_types) {
 		if (add) {
-			if (!SNetRegisterEventHandler(event_types[i], multi_handle_events)) {
+			if (!SNetRegisterEventHandler(event_type, multi_handle_events)) {
 				app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
 			}
 		} else {
-			SNetUnregisterEventHandler(event_types[i]);
+			SNetUnregisterEventHandler(event_type);
 		}
 	}
 }

@@ -53,15 +53,12 @@ int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
  */
 int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
 {
-	PATHNODE *path_start, *next_node, *current;
-	int path_length, i;
-
 	// clear all nodes, create root nodes for the visited/frontier linked lists
 	gdwCurNodes = 0;
 	path_2_nodes = path_new_step();
 	pnode_ptr = path_new_step();
 	gdwCurPathStep = 0;
-	path_start = path_new_step();
+	PATHNODE *path_start = path_new_step();
 	path_start->g = 0;
 	path_start->h = path_get_h_cost(sx, sy, dx, dy);
 	path_start->position.x = sx;
@@ -69,11 +66,12 @@ int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, in
 	path_start->position.y = sy;
 	path_2_nodes->NextNode = path_start;
 	// A* search until we find (dx,dy) or fail
+	PATHNODE *next_node;
 	while ((next_node = GetNextPath()) != nullptr) {
 		// reached the end, success!
 		if (next_node->position.x == dx && next_node->position.y == dy) {
-			current = next_node;
-			path_length = 0;
+			PATHNODE *current = next_node;
+			int path_length = 0;
 			while (current->Parent != nullptr) {
 				if (path_length >= MAX_PATH_LENGTH)
 					break;
@@ -81,6 +79,7 @@ int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, in
 				current = current->Parent;
 			}
 			if (path_length != MAX_PATH_LENGTH) {
+				int i;
 				for (i = 0; i < path_length; i++)
 					path[i] = pnode_vals[path_length - i - 1];
 				return i;
@@ -180,14 +179,10 @@ bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
  */
 bool path_get_path(bool (*PosOk)(int, Point), int PosOkArg, PATHNODE *pPath, int x, int y)
 {
-	int dx, dy;
-	int i;
-	bool ok;
-
-	for (i = 0; i < 8; i++) {
-		dx = pPath->position.x + pathxdir[i];
-		dy = pPath->position.y + pathydir[i];
-		ok = PosOk(PosOkArg, { dx, dy });
+	for (int i = 0; i < 8; i++) {
+		int dx = pPath->position.x + pathxdir[i];
+		int dy = pPath->position.y + pathydir[i];
+		bool ok = PosOk(PosOkArg, { dx, dy });
 		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
 			if (!path_parent_path(pPath, dx, dy, x, y))
 				return false;

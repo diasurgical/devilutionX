@@ -153,10 +153,8 @@ void TownCloseGrave()
  */
 void T_Pass3()
 {
-	int xx, yy, x;
-
-	for (yy = 0; yy < MAXDUNY; yy += 2) {
-		for (xx = 0; xx < MAXDUNX; xx += 2) {
+	for (int yy = 0; yy < MAXDUNY; yy += 2) {
+		for (int xx = 0; xx < MAXDUNX; xx += 2) {
 			dPiece[xx][yy] = 0;
 			dPiece[xx + 1][yy] = 0;
 			dPiece[xx][yy + 1] = 0;
@@ -178,7 +176,7 @@ void T_Pass3()
 			T_FillTile(16, 70, 331);
 		}
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
-			for (x = 36; x < 46; x++) {
+			for (int x = 36; x < 46; x++) {
 				T_FillTile(x, 78, GenerateRnd(4) + 1);
 			}
 		}
@@ -283,8 +281,6 @@ void TownOpenGrave()
  */
 void CreateTown(lvl_entry entry)
 {
-	int x, y;
-
 	dminx = 10;
 	dminy = 10;
 	dmaxx = 84;
@@ -331,8 +327,8 @@ void CreateTown(lvl_entry entry)
 	memset(dItem, 0, sizeof(dItem));
 	memset(dSpecial, 0, sizeof(dSpecial));
 
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
+	for (int y = 0; y < MAXDUNY; y++) {
+		for (int x = 0; x < MAXDUNX; x++) {
 			if (dPiece[x][y] == 360) {
 				dSpecial[x][y] = 1;
 			} else if (dPiece[x][y] == 358) {

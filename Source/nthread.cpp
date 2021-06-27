@@ -51,18 +51,16 @@ void nthread_terminate_game(const char *pszFcn)
 
 uint32_t nthread_send_and_recv_turn(uint32_t cur_turn, int turn_delta)
 {
-	int turn, turn_tmp;
-	DWORD curTurnsInTransit;
-
+	uint32_t curTurnsInTransit;
 	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {
 		nthread_terminate_game("SNetGetTurnsInTransit");
 		return 0;
 	}
 	while (curTurnsInTransit++ < gdwTurnsInTransit) {
 
-		turn_tmp = turn_upper_bit | (cur_turn & 0x7FFFFFFF);
+		int turn_tmp = turn_upper_bit | (cur_turn & 0x7FFFFFFF);
 		turn_upper_bit = 0;
-		turn = turn_tmp;
+		int turn = turn_tmp;
 
 		if (!SNetSendTurn((char *)&turn, sizeof(turn))) {
 			nthread_terminate_game("SNetSendTurn");
