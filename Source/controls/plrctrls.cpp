@@ -136,8 +136,7 @@ void FindItemOrObject()
 				continue;
 			rotations = newRotations;
 			pcursitem = i;
-			cursmx = mx + xx;
-			cursmy = my + yy;
+			cursPosition = Point { mx, my } + Displacement { xx, yy };
 		}
 	}
 
@@ -160,8 +159,7 @@ void FindItemOrObject()
 				continue;
 			rotations = newRotations;
 			pcursobj = o;
-			cursmx = mx + xx;
-			cursmy = my + yy;
+			cursPosition = Point { mx, my } + Displacement { xx, yy };
 		}
 	}
 }
@@ -396,8 +394,7 @@ void FindTrigger()
 			const int newRotations = GetRotaryDistance(missile.position.tile);
 			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
-			cursmx = missile.position.tile.x;
-			cursmy = missile.position.tile.y;
+			cursPosition = missile.position.tile;
 			pcursmissile = mi;
 			distance = newDistance;
 			rotations = newRotations;
@@ -413,8 +410,7 @@ void FindTrigger()
 			const int newDistance = GetDistance({ tx, ty }, 2);
 			if (newDistance == 0)
 				continue;
-			cursmx = tx;
-			cursmy = ty;
+			cursPosition = { tx, ty };
 			pcurstrig = i;
 		}
 
@@ -425,14 +421,13 @@ void FindTrigger()
 				const int newDistance = GetDistance(quest.position, 2);
 				if (newDistance == 0)
 					continue;
-				cursmx = quest.position.x;
-				cursmy = quest.position.y;
+				cursPosition = quest.position;
 				pcursquest = quest._qidx;
 			}
 		}
 	}
 
-	if (pcursmonst != -1 || pcursplr != -1 || cursmx == -1 || cursmy == -1)
+	if (pcursmonst != -1 || pcursplr != -1 || cursPosition.x == -1 || cursPosition.y == -1)
 		return; // Prefer monster/player info text
 
 	CheckTrigForce();
@@ -1308,8 +1303,7 @@ void plrctrls_after_check_curs_move()
 		pcursmissile = -1;
 		pcurstrig = -1;
 		pcursquest = Q_INVALID;
-		cursmx = -1;
-		cursmy = -1;
+		cursPosition = { -1, -1 };
 		if (Players[MyPlayerId]._pInvincible) {
 			return;
 		}
@@ -1393,8 +1387,7 @@ bool SpellHasActorTarget()
 		return false;
 
 	if (spl == SPL_FIREWALL && pcursmonst != -1) {
-		cursmx = Monsters[pcursmonst].position.tile.x;
-		cursmy = Monsters[pcursmonst].position.tile.y;
+		cursPosition = Monsters[pcursmonst].position.tile;
 	}
 
 	return pcursplr != -1 || pcursmonst != -1;
@@ -1412,9 +1405,7 @@ void UpdateSpellTarget()
 
 	int range = myPlayer._pRSpell == SPL_TELEPORT ? 4 : 1;
 
-	auto cursm = myPlayer.position.future + Displacement::fromDirection(myPlayer._pdir) * range;
-	cursmx = cursm.x;
-	cursmy = cursm.y;
+	cursPosition = myPlayer.position.future + Displacement::fromDirection(myPlayer._pdir) * range;
 }
 
 /**
@@ -1424,12 +1415,10 @@ bool TryDropItem()
 {
 	const auto &myPlayer = Players[MyPlayerId];
 
-	cursmx = myPlayer.position.future.x + 1;
-	cursmy = myPlayer.position.future.y;
+	cursPosition = myPlayer.position.future + DIR_SE;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
-		cursmx = myPlayer.position.future.x;
-		cursmy = myPlayer.position.future.y + 1;
+		cursPosition = myPlayer.position.future + DIR_SW;
 		DropItemBeforeTrig();
 	}
 
@@ -1515,9 +1504,9 @@ void PerformSecondaryAction()
 		NewCursor(CURSOR_HAND);
 
 	if (pcursitem != -1) {
-		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
+		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
 	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
+		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
 	} else {
 		auto &myPlayer = Players[MyPlayerId];
 		if (pcursmissile != -1) {

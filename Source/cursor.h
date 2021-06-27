@@ -39,8 +39,7 @@ extern int8_t pcursinvitem;
 extern int8_t pcursitem;
 extern int8_t pcursobj;
 extern int8_t pcursplr;
-extern int cursmx;
-extern int cursmy;
+extern Point cursPosition;
 extern int pcurs;
 
 void InitCursor();

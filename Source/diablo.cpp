@@ -213,27 +213,27 @@ void LeftMouseCmd(bool bShift)
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
-			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
+			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
-			NetSendCmdLocParam1(true, CMD_TALKXY, { cursmx, cursmy }, pcursmonst);
+			NetSendCmdLocParam1(true, CMD_TALKXY, cursPosition, pcursmonst);
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1) {
 			LastMouseButtonAction = MouseActionType::Walk;
-			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
+			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 		}
 		return;
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
-	bNear = myPlayer.position.tile.WalkingDistance({ cursmx, cursmy }) < 2;
+	bNear = myPlayer.position.tile.WalkingDistance(cursPosition) < 2;
 	if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
-		NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
+		NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 	} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && Objects[pcursobj]._oBreak == 1))) {
 		LastMouseButtonAction = MouseActionType::OperateObject;
-		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
+		NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursPosition, pcursobj);
 	} else if (myPlayer.UsesRangedWeapon()) {
 		if (bShift) {
 			LastMouseButtonAction = MouseActionType::Attack;
-			NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
+			NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, cursPosition);
 		} else if (pcursmonst != -1) {
 			if (CanTalkToMonst(Monsters[pcursmonst])) {
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -252,11 +252,11 @@ void LeftMouseCmd(bool bShift)
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 				} else {
 					LastMouseButtonAction = MouseActionType::Attack;
-					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
+					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, cursPosition);
 				}
 			} else {
 				LastMouseButtonAction = MouseActionType::Attack;
-				NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
+				NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, cursPosition);
 			}
 		} else if (pcursmonst != -1) {
 			LastMouseButtonAction = MouseActionType::AttackMonsterTarget;
@@ -268,7 +268,7 @@ void LeftMouseCmd(bool bShift)
 	}
 	if (!bShift && pcursitem == -1 && pcursobj == -1 && pcursmonst == -1 && pcursplr == -1) {
 		LastMouseButtonAction = MouseActionType::Walk;
-		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
+		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, cursPosition);
 	}
 }
 
@@ -326,7 +326,7 @@ void LeftMouseDown(int wParam)
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
-					NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
+					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
 					NewCursor(CURSOR_HAND);
 				}
 			} else {
@@ -589,7 +589,7 @@ void PressChar(char vkey)
 			auto &myPlayer = Players[MyPlayerId];
 			sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
 			NetSendCmdString(1 << MyPlayerId, tempstr);
-			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
+			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursPosition.x, cursPosition.y, dungeon[cursPosition.x][cursPosition.y]);
 			NetSendCmdString(1 << MyPlayerId, tempstr);
 		}
 		return;
@@ -1655,7 +1655,7 @@ bool TryIconCurs()
 		else if (pcursplr != -1)
 			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
 		else
-			NetSendCmdLocParam2(true, CMD_TSPELLXY, { cursmx, cursmy }, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
+			NetSendCmdLocParam2(true, CMD_TSPELLXY, cursPosition, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
