@@ -341,8 +341,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player._pgfxnum = file->nextLE<int32_t>();
 	file->skip(4); // Skip pointer pData
 	player.AnimInfo = {};
-	player.AnimInfo.DelayLen = file->nextLE<int32_t>() + 1;
-	player.AnimInfo.DelayCounter = file->nextLE<int32_t>();
+	player.AnimInfo.TicksPerFrame = file->nextLE<int32_t>() + 1;
+	player.AnimInfo.TickCounterOfCurrentFrame = file->nextLE<int32_t>();
 	player.AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
 	player.AnimInfo.CurrentFrame = file->nextLE<int32_t>();
 	file->skip(4); // Skip _pAnimWidth
@@ -566,8 +566,8 @@ static void LoadMonster(LoadHelper *file, int i)
 
 	file->skip(4); // Skip pointer _mAnimData
 	pMonster->AnimInfo = {};
-	pMonster->AnimInfo.DelayLen = file->nextLE<int32_t>();
-	pMonster->AnimInfo.DelayCounter = file->nextLE<int32_t>();
+	pMonster->AnimInfo.TicksPerFrame = file->nextLE<int32_t>();
+	pMonster->AnimInfo.TickCounterOfCurrentFrame = file->nextLE<int32_t>();
 	pMonster->AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
 	pMonster->AnimInfo.CurrentFrame = file->nextLE<int32_t>();
 	file->skip(4); // Skip _meflag
@@ -1404,8 +1404,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->skip(4); // Unused
 	file->writeLE<int32_t>(player._pgfxnum);
 	file->skip(4); // Skip pointer _pAnimData
-	file->writeLE<int32_t>(std::max(0, player.AnimInfo.DelayLen - 1));
-	file->writeLE<int32_t>(player.AnimInfo.DelayCounter);
+	file->writeLE<int32_t>(std::max(0, player.AnimInfo.TicksPerFrame - 1));
+	file->writeLE<int32_t>(player.AnimInfo.TickCounterOfCurrentFrame);
 	file->writeLE<int32_t>(player.AnimInfo.NumberOfFrames);
 	file->writeLE<int32_t>(player.AnimInfo.CurrentFrame);
 	// write _pAnimWidth for vanilla compatibility
@@ -1622,8 +1622,8 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->skip(2); // Unused
 
 	file->skip(4); // Skip pointer _mAnimData
-	file->writeLE<int32_t>(pMonster->AnimInfo.DelayLen);
-	file->writeLE<int32_t>(pMonster->AnimInfo.DelayCounter);
+	file->writeLE<int32_t>(pMonster->AnimInfo.TicksPerFrame);
+	file->writeLE<int32_t>(pMonster->AnimInfo.TickCounterOfCurrentFrame);
 	file->writeLE<int32_t>(pMonster->AnimInfo.NumberOfFrames);
 	file->writeLE<int32_t>(pMonster->AnimInfo.CurrentFrame);
 	file->skip(4); // Skip _meflag

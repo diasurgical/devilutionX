@@ -41,13 +41,13 @@ public:
 	 */
 	CelSprite *pCelSprite;
 	/**
-	 * @brief Additional delay of each animation in the current animation
+	 * @brief How many game ticks are needed to advance one Animation Frame
 	 */
-	int DelayLen;
+	int TicksPerFrame;
 	/**
-	 * @brief Increases by one each game tick, counting how close we are to DelayLen
+	 * @brief Increases by one each game tick, counting how close we are to TicksPerFrame
 	 */
-	int DelayCounter;
+	int TickCounterOfCurrentFrame;
 	/**
 	 * @brief Number of frames in current animation
 	 */
@@ -76,12 +76,12 @@ public:
 	 * @brief Sets the new Animation with all relevant information for rendering
 	 * @param pCelSprite Pointer to Animation Sprite
 	 * @param numberOfFrames Number of Frames in Animation
-	 * @param delayLen Delay after each Animation sequence
+	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 * @param flags Specifies what special logics are applied to this Animation
 	 * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 */
-	void SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+	void SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
@@ -94,7 +94,7 @@ public:
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
 	 * @param reverseAnimation Play the animation backwards (for example is used for "unseen" monster fading)
-	 * @param dontProgressAnimation Increase DelayCounter but don't change CurrentFrame
+	 * @param dontProgressAnimation Increase TickCounterOfCurrentFrame but don't change CurrentFrame
 	 */
 	void ProcessAnimation(bool reverseAnimation = false, bool dontProgressAnimation = false);
 
