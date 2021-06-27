@@ -1106,8 +1106,7 @@ void Zoom(const Surface &out)
 
 int tileOffsetX;
 int tileOffsetY;
-int tileShiftX;
-int tileShiftY;
+Displacement tileShift;
 int tileColums;
 int tileRows;
 
@@ -1134,7 +1133,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	int columns = tileColums;
 	int rows = tileRows;
 
-	position += Displacement { tileShiftX, tileShiftY };
+	position += tileShift;
 
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
@@ -1549,8 +1548,7 @@ void TilesInView(int *rcolumns, int *rrows)
 
 void CalcViewportGeometry()
 {
-	tileShiftX = 0;
-	tileShiftY = 0;
+	tileShift = { 0, 0 };
 
 	// Adjust by player offset and tile grid alignment
 	int xo = 0;
@@ -1563,13 +1561,13 @@ void CalcViewportGeometry()
 	int lrow = tileRows - RowsCoveredByPanel();
 
 	// Center player tile on screen
-	ShiftGrid(&tileShiftX, &tileShiftY, -tileColums / 2, -lrow / 2);
+	ShiftGrid(&tileShift.deltaX, &tileShift.deltaY, -tileColums / 2, -lrow / 2);
 
 	tileRows *= 2;
 
 	// Align grid
 	if ((tileColums & 1) == 0) {
-		tileShiftY--; // Shift player row to one that can be centered with out pixel offset
+		tileShift.deltaY--; // Shift player row to one that can be centered with out pixel offset
 		if ((lrow & 1) == 0) {
 			// Offset tile to vertically align the player when both rows and colums are even
 			tileRows++;
@@ -1577,7 +1575,7 @@ void CalcViewportGeometry()
 		}
 	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
 		// Offset tile to vertically align the player when both rows and colums are odd
-		ShiftGrid(&tileShiftX, &tileShiftY, 0, -1);
+		ShiftGrid(&tileShift.deltaX, &tileShift.deltaY, 0, -1);
 		tileRows++;
 		tileOffsetY -= TILE_HEIGHT / 2;
 	}
