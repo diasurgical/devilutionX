@@ -412,9 +412,9 @@ void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
 		if (!chrflag && !QuestLogIsOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-			SetCursorPos(MousePosition.x + 160, MousePosition.y);
+			SetCursorPos(MousePosition + Displacement { 160, 0 });
 		} else if (!invflag && !sbookflag && (chrflag || QuestLogIsOpen) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-			SetCursorPos(MousePosition.x - 160, MousePosition.y);
+			SetCursorPos(MousePosition - Displacement { 160, 0 });
 		}
 	}
 	invflag = false;
@@ -911,7 +911,7 @@ void DiabloInitScreen()
 {
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (!sgbControllerActive)
-		SetCursorPos(MousePosition.x, MousePosition.y);
+		SetCursorPos(MousePosition);
 	ScrollInfo.tile = { 0, 0 };
 	ScrollInfo.offset = { 0, 0 };
 	ScrollInfo._sdir = SDIR_NONE;
@@ -1272,11 +1272,11 @@ void InventoryKeyPressed()
 	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		} else if (!sbookflag) { // We opened the invetory
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		}
 	}
@@ -1291,11 +1291,11 @@ void CharacterSheetKeyPressed()
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		} else if (!QuestLogIsOpen) { // We opened the character sheet
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		}
 	}
@@ -1314,11 +1314,11 @@ void QuestLogKeyPressed()
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!QuestLogIsOpen) { // We closed the quest log
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		} else if (!chrflag) { // We opened the character quest log
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		}
 	}
@@ -1349,11 +1349,11 @@ void SpellBookKeyPressed()
 	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
 		} else if (!invflag) { // We opened the invetory
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Displacement { 160, 0 });
 			}
 		}
 	}

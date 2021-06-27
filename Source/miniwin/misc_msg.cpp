@@ -41,13 +41,13 @@ static std::deque<tagMSG> message_queue;
 bool mouseWarping = false;
 Point mousePositionWarping;
 
-void SetCursorPos(int x, int y)
+void SetCursorPos(Point position)
 {
-	mousePositionWarping = { x, y };
+	mousePositionWarping = position;
 	mouseWarping = true;
-	LogicalToOutput(&x, &y);
+	LogicalToOutput(&position.x, &position.y);
 	if (!demo::IsRunning())
-		SDL_WarpMouseInWindow(ghMainWnd, x, y);
+		SDL_WarpMouseInWindow(ghMainWnd, position.x, position.y);
 }
 
 // Moves the mouse to the first attribute "+" button.
@@ -68,7 +68,7 @@ void FocusOnCharInfo()
 	if (stat == -1)
 		return;
 	const Rectangle &rect = ChrBtnsRect[stat];
-	SetCursorPos(rect.position.x + (rect.size.width / 2), rect.position.y + (rect.size.height / 2));
+	SetCursorPos({ rect.position.x + (rect.size.width / 2), rect.position.y + (rect.size.height / 2) });
 }
 
 static int TranslateSdlKey(SDL_Keysym key)
