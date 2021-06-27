@@ -63,46 +63,45 @@ void DrawMonsterHealthBar(const Surface &out)
 
 	const int width = healthBox.w();
 	const int height = healthBox.h();
-	int xPos = (gnScreenWidth - width) / 2;
+	Point position = { (gnScreenWidth - width) / 2, 18 };
 
 	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag)
-			xPos -= SPANEL_WIDTH / 2;
+			position.x -= SPANEL_WIDTH / 2;
 		if (chrflag || QuestLogIsOpen)
-			xPos += SPANEL_WIDTH / 2;
+			position.x += SPANEL_WIDTH / 2;
 	}
 
-	const int yPos = 18;
 	const int border = 3;
 
 	const int maxLife = std::max(monster._mmaxhp, monster._mhitpoints);
 
-	DrawArt(out, xPos, yPos, &healthBox);
-	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
+	DrawArt(out, position, &healthBox);
+	DrawHalfTransparentRectTo(out, position.x + border, position.y + border, width - (border * 2), height - (border * 2));
 	int barProgress = (width * monster._mhitpoints) / maxLife;
 	if (barProgress != 0) {
-		DrawArt(out, xPos + border + 1, yPos + border + 1, &health, 0, barProgress, height - (border * 2) - 2);
+		DrawArt(out, position + Displacement { border + 1, border + 1 }, &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 150 /*beast*/ };
 		Uint8 borderColor = borderColors[monster.MData->mMonstClass];
 		int borderWidth = width - (border * 2);
-		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + border }, borderWidth, borderColor);
-		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + height - border - 1 }, borderWidth, borderColor);
+		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + border }, borderWidth, borderColor);
+		UnsafeDrawHorizontalLine(out, { position.x + border, position.y + height - border - 1 }, borderWidth, borderColor);
 		int borderHeight = height - (border * 2) - 2;
-		UnsafeDrawVerticalLine(out, { xPos + border, yPos + border + 1 }, borderHeight, borderColor);
-		UnsafeDrawVerticalLine(out, { xPos + width - border - 1, yPos + border + 1 }, borderHeight, borderColor);
+		UnsafeDrawVerticalLine(out, { position.x + border, position.y + border + 1 }, borderHeight, borderColor);
+		UnsafeDrawVerticalLine(out, { position.x + width - border - 1, position.y + border + 1 }, borderHeight, borderColor);
 	}
 
-	int barLabelY = yPos + 10 + (height - 11) / 2;
-	DrawString(out, monster.mName, { { xPos - 1, barLabelY + 1 }, { width, height } }, UiFlags::AlignCenter | UiFlags::ColorBlack);
+	int barLabelY = position.y + 10 + (height - 11) / 2;
+	DrawString(out, monster.mName, { position.x - 1, barLabelY + 1, width, height }, UiFlags::AlignCenter | UiFlags::ColorBlack);
 	UiFlags style = UiFlags::ColorSilver;
 	if (monster._uniqtype != 0)
 		style = UiFlags::ColorGold;
 	else if (monster.leader != 0)
 		style = UiFlags::ColorBlue;
-	DrawString(out, monster.mName, { { xPos, barLabelY }, { width, height } }, UiFlags::AlignCenter | style);
+	DrawString(out, monster.mName, { position.x, barLabelY, width, height }, UiFlags::AlignCenter | style);
 
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
@@ -111,10 +110,10 @@ void DrawMonsterHealthBar(const Surface &out)
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
 			if ((monster.mMagicRes & immunes[i]) != 0) {
-				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2 + 1);
+				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
 			} else if ((monster.mMagicRes & resists[i]) != 0) {
-				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2);
+				DrawArt(out, position + Displacement { resOffset, height - 6 }, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}
 		}
