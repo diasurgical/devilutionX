@@ -168,10 +168,10 @@ void LoadOptions()
 	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = GetIniBool("Graphics", "Color Cycling", true);
-#ifndef USE_SDL1
-	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", false);
-#else
-	sgOptions.Graphics.bHardwareCursor = false;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", true);
+	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
+	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
 #endif
 	sgOptions.Graphics.bFPSLimit = GetIniBool("Graphics", "FPS Limiter", true);
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
@@ -252,8 +252,10 @@ void SaveOptions()
 	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	SetIniValue("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
-#ifndef USE_SDL1
+#if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
+	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
+	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
 #endif
 	SetIniValue("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);

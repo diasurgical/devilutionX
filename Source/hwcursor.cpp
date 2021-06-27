@@ -29,6 +29,27 @@ enum class HotpointPosition {
 	Center,
 };
 
+Size ScaledSize(Size size)
+{
+	if (renderer != nullptr) {
+		float scaleX;
+		float scaleY;
+		SDL_RenderGetScale(renderer, &scaleX, &scaleY);
+		size.width *= scaleX;  // NOLINT(bugprone-narrowing-conversions)
+		size.height *= scaleY; // NOLINT(bugprone-narrowing-conversions)
+	}
+	return size;
+}
+
+bool IsCursorSizeAllowed(Size size)
+{
+	if (sgOptions.Graphics.nHardwareCursorMaxSize <= 0)
+		return true;
+	size = ScaledSize(size);
+	return size.width <= sgOptions.Graphics.nHardwareCursorMaxSize
+	    && size.height <= sgOptions.Graphics.nHardwareCursorMaxSize;
+}
+
 Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
 {
 	switch (position) {
@@ -42,23 +63,18 @@ Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
 
 bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 {
-	float scaleX;
-	float scaleY;
-	if (renderer != nullptr) {
-		SDL_RenderGetScale(renderer, &scaleX, &scaleY);
-	}
-
 	SDLCursorUniquePtr newCursor;
-	if (renderer == nullptr || (scaleX == 1.0F && scaleY == 1.0F)) {
+	const Size size { surface->w, surface->h };
+	const Size scaledSize = ScaledSize(size);
+
+	if (size == scaledSize) {
 		const Point hotpoint = GetHotpointPosition(*surface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(surface, hotpoint.x, hotpoint.y) };
 	} else {
 		// SDL does not support BlitScaled from 8-bit to RGBA.
 		SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0) };
 
-		const int scaledW = static_cast<int>(surface->w * scaleX);
-		const int scaledH = static_cast<int>(surface->h * scaleY);
-		SDLSurfaceUniquePtr scaledSurface { SDL_CreateRGBSurfaceWithFormat(0, scaledW, scaledH, 32, SDL_PIXELFORMAT_ARGB8888) };
+		SDLSurfaceUniquePtr scaledSurface { SDL_CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888) };
 		SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };
@@ -73,11 +89,17 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 bool SetHardwareCursorFromSprite(int pcurs)
 {
 	const bool isItem = IsItemSprite(pcurs);
+	if (isItem && !sgOptions.Graphics.bHardwareCursorForItems)
+		return false;
+
 	const int outlineWidth = isItem ? 1 : 0;
 
 	auto size = GetInvItemSize(pcurs);
 	size.width += 2 * outlineWidth;
 	size.height += 2 * outlineWidth;
+
+	if (!IsCursorSizeAllowed(size))
+		return false;
 
 	auto out = Surface::Alloc(size.width, size.height);
 	SDL_SetSurfacePalette(out.surface, Palette);
@@ -113,13 +135,18 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 	case CursorType::UserInterface:
 		// ArtCursor is null while loading the game on the progress screen,
 		// called via palette fade from ShowProgress.
-		if (ArtCursor.surface != nullptr)
-			CurrentCursorInfo.SetEnabled(SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
+		if (ArtCursor.surface != nullptr) {
+			CurrentCursorInfo.SetEnabled(
+			    IsCursorSizeAllowed(Size { ArtCursor.surface->w, ArtCursor.surface->h })
+			    && SetHardwareCursor(ArtCursor.surface.get(), HotpointPosition::TopLeft));
+		}
 		break;
 	case CursorType::Unknown:
 		CurrentCursorInfo.SetEnabled(false);
 		break;
 	}
+	if (!CurrentCursorInfo.Enabled())
+		SetHardwareCursorVisible(false);
 #endif
 }
 
