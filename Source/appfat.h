@@ -35,7 +35,6 @@ void DrawDlg(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 [[noreturn]] void assert_fail(int nLineNo, const char *pszFile, const char *pszFail);
 #endif
 [[noreturn]] void ErrDlg(const char *title, const char *error, const char *logFilePath, int logLineNr);
-[[noreturn]] void FileErrDlg(const char *error);
 [[noreturn]] void InsertCDDlg();
 [[noreturn]] void DirErrorDlg(const char *error);
 
