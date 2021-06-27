@@ -8,7 +8,7 @@ namespace devilution {
 uint32_t sglGameSeed;
 
 /**
- * Specifies the increment used in the Borland C/C++ pseudo-random.
+ * Specifies the increment used in the Borland C/C++ pseudo-random number generator algorithm.
  */
 const uint32_t RndInc = 1;
 
@@ -17,32 +17,9 @@ const uint32_t RndInc = 1;
  */
 const uint32_t RndMult = 0x015A4E35;
 
-/**
- * @brief Set the RNG seed
- * @param s RNG seed
- */
-void SetRndSeed(uint32_t s)
+void SetRndSeed(uint32_t seed)
 {
-	sglGameSeed = s;
-}
-
-/**
- * @brief Advance the internal RNG seed and return the new value
- * @return RNG seed
- */
-int32_t AdvanceRndSeed()
-{
-	sglGameSeed = (RndMult * sglGameSeed) + RndInc;
-	return GetRndSeed();
-}
-
-/**
- * @brief Get the current RNG seed
- * @return RNG seed
- */
-int32_t GetRndSeed()
-{
-	return abs(static_cast<int32_t>(sglGameSeed));
+	sglGameSeed = seed;
 }
 
 uint32_t GetLCGEngineState()
@@ -50,11 +27,17 @@ uint32_t GetLCGEngineState()
 	return sglGameSeed;
 }
 
-/**
- * @brief Main RNG function
- * @param v The upper limit for the return value
- * @return A random number from 0 to (v-1)
- */
+int32_t GetRndSeed()
+{
+	return abs(static_cast<int32_t>(sglGameSeed));
+}
+
+int32_t AdvanceRndSeed()
+{
+	sglGameSeed = (RndMult * sglGameSeed) + RndInc;
+	return GetRndSeed();
+}
+
 int32_t GenerateRnd(int32_t v)
 {
 	if (v <= 0)
