@@ -4340,10 +4340,10 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player._pSplType = RSPLTYPE_INVALID;
 			player._pSplFrom = 3;
 			player.destAction = ACTION_SPELL;
-			player.destParam1 = cursmx;
-			player.destParam2 = cursmy;
+			player.destParam1 = cursPosition.x;
+			player.destParam2 = cursPosition.y;
 			if (p == MyPlayerId && spl == SPL_NOVA)
-				NetSendCmdLoc(MyPlayerId, true, CMD_NOVA, { cursmx, cursmy });
+				NetSendCmdLoc(MyPlayerId, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_SCROLLT:
@@ -4357,8 +4357,8 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player._pSplType = RSPLTYPE_INVALID;
 			player._pSplFrom = 3;
 			player.destAction = ACTION_SPELL;
-			player.destParam1 = cursmx;
-			player.destParam2 = cursmy;
+			player.destParam1 = cursPosition.x;
+			player.destParam2 = cursPosition.y;
 		}
 		break;
 	case IMISC_BOOK:

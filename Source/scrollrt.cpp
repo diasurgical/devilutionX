@@ -1210,7 +1210,7 @@ void DrawView(const Surface &out, int startX, int startY)
 				ver *= 2;
 			}
 			Point center = pixelCoords + hor + ver;
-			if (DebugCoords || (DebugCursorCoords && dunCoords == Point { cursmx, cursmy })) {
+			if (DebugCoords || (DebugCursorCoords && dunCoords == cursPosition)) {
 				char coordstr[10];
 				sprintf(coordstr, "%d:%d", dunCoords.x, dunCoords.y);
 				int textWidth = GetLineWidth(coordstr);

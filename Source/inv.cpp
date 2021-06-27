@@ -1758,7 +1758,7 @@ bool TryInvPut()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	Direction dir = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+	Direction dir = GetDirection(myPlayer.position.tile, cursPosition);
 	if (CanPut(myPlayer.position.tile + dir)) {
 		return true;
 	}
@@ -1780,8 +1780,8 @@ int InvPutItem(PlayerStruct &player, Point position)
 		return -1;
 
 	if (currlevel == 0) {
-		int yp = cursmy;
-		int xp = cursmx;
+		int yp = cursPosition.y;
+		int xp = cursPosition.x;
 		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			Displacement relativePosition = position - player.position.tile;
 			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.deltaX, relativePosition.deltaY);
@@ -2160,7 +2160,7 @@ bool DropItemBeforeTrig()
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
+	NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
 	NewCursor(CURSOR_HAND);
 	return true;
 }

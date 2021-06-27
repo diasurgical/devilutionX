@@ -3529,9 +3529,9 @@ void CheckPlrSpell()
 
 	if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
 		LastMouseButtonAction = MouseActionType::Spell;
-		Direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, myPlayer._pRSpell, sd, sl);
+		NetSendCmdLocParam3(true, CMD_SPELLXYD, cursPosition, myPlayer._pRSpell, sd, sl);
 	} else if (pcursmonst != -1) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
@@ -3543,7 +3543,7 @@ void CheckPlrSpell()
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
+		NetSendCmdLocParam2(true, CMD_SPELLXY, cursPosition, myPlayer._pRSpell, sl);
 	}
 }
 
