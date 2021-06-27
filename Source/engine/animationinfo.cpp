@@ -61,8 +61,8 @@ float AnimationInfo::GetAnimationProgress() const
 	if (RelevantFramesForDistributing <= 0) {
 		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		float ticksPerFrame = (DelayLen + 1);
-		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)CurrentFrame + (DelayCounter / ticksPerFrame);
+		float ticksPerFrame = (TicksPerFrame + 1);
+		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)CurrentFrame + (TickCounterOfCurrentFrame / ticksPerFrame);
 		float fAnimationFraction = totalTicksForCurrentAnimationSequence / ((float)NumberOfFrames * ticksPerFrame);
 		return fAnimationFraction;
 	}
@@ -73,7 +73,7 @@ float AnimationInfo::GetAnimationProgress() const
 	return fAnimationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -83,16 +83,16 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 		SkippedFramesFromPreviousAnimation = 0;
 	}
 
-	if (delayLen <= 0) {
-		Log("SetNewAnimation: Invalid delayLen {}", delayLen);
-		delayLen = 1;
+	if (ticksPerFrame <= 0) {
+		Log("SetNewAnimation: Invalid ticksPerFrame {}", ticksPerFrame);
+		ticksPerFrame = 1;
 	}
 
 	this->pCelSprite = pCelSprite;
 	NumberOfFrames = numberOfFrames;
 	CurrentFrame = 1 + numSkippedFrames;
-	DelayCounter = 0;
-	DelayLen = delayLen;
+	TickCounterOfCurrentFrame = 0;
+	TicksPerFrame = ticksPerFrame;
 	TicksSinceSequenceStarted = 0;
 	RelevantFramesForDistributing = 0;
 	TickModifier = 0.0F;
@@ -108,9 +108,6 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 			// Our distribution logic must also regard this behaviour, so we are not allowed to distribute the skipped animations after the actual hit (_pAnimStopDistributingAfterFrame).
 			relevantAnimationFramesForDistributing = distributeFramesBeforeFrame - 1;
 		}
-
-		// How many game ticks are needed to advance one Animation Frame
-		int ticksPerFrame = delayLen;
 
 		// Game ticks that will be adjusted for the skipped Frames/game ticks
 		int relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
@@ -147,7 +144,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 			// in game tick 5 ProcessPlayer sees Frame = 3 and stops the animation.
 			// But Frame 3 is only shown 1 game tick and all other Frames are shown 2 game ticks.
 			// Thats why we need to remove the Delay of the last Frame from the time (game ticks) the Animation is shown
-			relevantAnimationTicksWithSkipping -= (delayLen - 1);
+			relevantAnimationTicksWithSkipping -= (ticksPerFrame - 1);
 		}
 
 		// The truncated Frames from previous Animation will also be shown, so we also have to distribute them for the given time (game ticks)
@@ -166,28 +163,28 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 
 void AnimationInfo::ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrames, int delayLen)
 {
-	if (numberOfFrames != NumberOfFrames || delayLen != DelayLen) {
+	if (numberOfFrames != NumberOfFrames || delayLen != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
 		if (CurrentFrame > numberOfFrames)
 			CurrentFrame = numberOfFrames;
 		NumberOfFrames = numberOfFrames;
-		DelayLen = delayLen;
+		TicksPerFrame = delayLen;
 		TicksSinceSequenceStarted = 0;
 		RelevantFramesForDistributing = 0;
 		TickModifier = 0.0F;
 	}
 	this->pCelSprite = pCelSprite;
-	DelayLen = delayLen;
+	TicksPerFrame = delayLen;
 }
 
 void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool dontProgressAnimation /*= false*/)
 {
-	DelayCounter++;
+	TickCounterOfCurrentFrame++;
 	if (dontProgressAnimation)
 		return;
 	TicksSinceSequenceStarted++;
-	if (DelayCounter >= DelayLen) {
-		DelayCounter = 0;
+	if (TickCounterOfCurrentFrame >= TicksPerFrame) {
+		TickCounterOfCurrentFrame = 0;
 		if (reverseAnimation) {
 			CurrentFrame--;
 			if (CurrentFrame == 0) {

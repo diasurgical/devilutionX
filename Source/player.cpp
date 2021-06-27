@@ -1216,7 +1216,7 @@ void InitPlayer(int pnum, bool FirstTime)
 			player._pmode = PM_STAND;
 			NewPlrAnim(player, player_graphic::Stand, DIR_S, player._pNFrames, 4);
 			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
-			player.AnimInfo.DelayCounter = GenerateRnd(3);
+			player.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
 			NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 2);
@@ -2904,7 +2904,7 @@ bool PM_DoSpell(int pnum)
 	}
 	auto &player = plr[pnum];
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.DelayLen) + player.AnimInfo.DelayCounter);
+	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.TicksPerFrame) + player.AnimInfo.TickCounterOfCurrentFrame);
 	if (currentSpellFrame == (player._pSFNum + 1)) {
 		CastSpell(
 		    pnum,
@@ -2967,7 +2967,7 @@ bool PM_DoDeath(int pnum)
 			}
 		}
 
-		player.AnimInfo.DelayLen = 10000;
+		player.AnimInfo.TicksPerFrame = 10000;
 		player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames;
 		dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 	}
@@ -3286,7 +3286,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.DelayLen + 1) + player.AnimInfo.DelayCounter);
+	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.TicksPerFrame + 1) + player.AnimInfo.TickCounterOfCurrentFrame);
 	if (player._pmode == PM_SPELL && currentSpellFrame > player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });

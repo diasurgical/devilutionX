@@ -485,8 +485,8 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 	monster[i].MData = monst->MData;
 	monster[i].AnimInfo = {};
 	monster[i].AnimInfo.pCelSprite = monst->Anims[MA_STAND].CelSpritesForDirections[rd] ? &*monst->Anims[MA_STAND].CelSpritesForDirections[rd] : nullptr;
-	monster[i].AnimInfo.DelayLen = monst->Anims[MA_STAND].Rate;
-	monster[i].AnimInfo.DelayCounter = GenerateRnd(monster[i].AnimInfo.DelayLen - 1);
+	monster[i].AnimInfo.TicksPerFrame = monst->Anims[MA_STAND].Rate;
+	monster[i].AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster[i].AnimInfo.TicksPerFrame - 1);
 	monster[i].AnimInfo.NumberOfFrames = monst->Anims[MA_STAND].Frames;
 	monster[i].AnimInfo.CurrentFrame = GenerateRnd(monster[i].AnimInfo.NumberOfFrames - 1) + 1;
 
@@ -1991,7 +1991,7 @@ bool M_DoWalk(int i, int variant)
 		M_StartStand(i, monster[i]._mdir);
 		returnValue = true;
 	} else { //We didn't reach new tile so update monster's "sub-tile" position
-		if (monster[i].AnimInfo.DelayCounter == 0) {
+		if (monster[i].AnimInfo.TickCounterOfCurrentFrame == 0) {
 			if (monster[i].AnimInfo.CurrentFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
 			monster[i].position.offset2 += monster[i].position.velocity;
@@ -2272,7 +2272,7 @@ bool M_DoRSpAttack(int i)
 	commitment(monster[i].MType != nullptr, i);
 	commitment(monster[i].MData != nullptr, i); // BUGFIX: should check MData (fixed)
 
-	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum2 && monster[i].AnimInfo.DelayCounter == 0) {
+	if (monster[i].AnimInfo.CurrentFrame == monster[i].MData->mAFNum2 && monster[i].AnimInfo.TickCounterOfCurrentFrame == 0) {
 		Point sourcePosition = monster[i].position.tile;
 		if (gbIsHellfire) {
 			sourcePosition += monster[i]._mdir;

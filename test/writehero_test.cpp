@@ -292,8 +292,8 @@ static void AssertPlayer(PlayerStruct &player)
 	ASSERT_EQ(player._pmode, 0);
 	ASSERT_EQ(Count8(player.walkpath, MAX_PATH_LENGTH), 25);
 	ASSERT_EQ(player._pgfxnum, 36);
-	ASSERT_EQ(player.AnimInfo.DelayLen, 4);
-	ASSERT_EQ(player.AnimInfo.DelayCounter, 1);
+	ASSERT_EQ(player.AnimInfo.TicksPerFrame, 4);
+	ASSERT_EQ(player.AnimInfo.TickCounterOfCurrentFrame, 1);
 	ASSERT_EQ(player.AnimInfo.NumberOfFrames, 20);
 	ASSERT_EQ(player.AnimInfo.CurrentFrame, 1);
 	ASSERT_EQ(player._pSpell, -1);
