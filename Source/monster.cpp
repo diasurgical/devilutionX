@@ -1757,7 +1757,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 
 	Direction md = pnum >= 0 ? M_GetDir(i) : Monst->_mdir;
 	Monst->_mdir = md;
-	NewMonsterAnim(i, &Monst->MType->Anims[MA_DEATH], md);
+	NewMonsterAnim(i, &Monst->MType->Anims[MA_DEATH], md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	Monst->_mmode = MM_DEATH;
 	Monst->_mgoal = MGOAL_NONE;
 	Monst->position.offset = { 0, 0 };
@@ -1803,7 +1803,7 @@ void M2MStartKill(int i, int mid)
 		md = DIR_S;
 
 	monster[mid]._mdir = md;
-	NewMonsterAnim(mid, &monster[mid].MType->Anims[MA_DEATH], md);
+	NewMonsterAnim(mid, &monster[mid].MType->Anims[MA_DEATH], md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monster[mid]._mmode = MM_DEATH;
 	monster[mid].position.offset = { 0, 0 };
 	monster[mid].position.tile = monster[mid].position.old;
