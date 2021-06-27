@@ -202,7 +202,7 @@ void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool don
 float AnimationInfo::GetProgressToNextGameTick() const
 {
 	if (IsPetrified)
-		return 0.0f;
+		return 0.0;
 	return gfProgressToNextGameTick;
 }
 

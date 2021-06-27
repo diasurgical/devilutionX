@@ -430,30 +430,30 @@ void InitMonsterGFX(int monst)
 		LoadMissileGFX(MFILE_ACIDPUD);
 	}
 	if (mtype == MT_LICH && (MissileFileFlag & 0x100) == 0) {
-		MissileFileFlag |= 0x100u;
+		MissileFileFlag |= 0x100;
 		LoadMissileGFX(MFILE_LICH);
 		LoadMissileGFX(MFILE_EXORA1);
 	}
 	if (mtype == MT_ARCHLICH && (MissileFileFlag & 0x200) == 0) {
-		MissileFileFlag |= 0x200u;
+		MissileFileFlag |= 0x200;
 		LoadMissileGFX(MFILE_ARCHLICH);
 		LoadMissileGFX(MFILE_EXYEL2);
 	}
 	if ((mtype == MT_PSYCHORB || mtype == MT_BONEDEMN) && (MissileFileFlag & 0x400) == 0) {
-		MissileFileFlag |= 0x400u;
+		MissileFileFlag |= 0x400;
 		LoadMissileGFX(MFILE_BONEDEMON);
 	}
 	if (mtype == MT_NECRMORB && (MissileFileFlag & 0x800) == 0) {
-		MissileFileFlag |= 0x800u;
+		MissileFileFlag |= 0x800;
 		LoadMissileGFX(MFILE_NECROMORB);
 		LoadMissileGFX(MFILE_EXRED3);
 	}
 	if (mtype == MT_PSYCHORB && (MissileFileFlag & 0x1000) == 0) {
-		MissileFileFlag |= 0x1000u;
+		MissileFileFlag |= 0x1000;
 		LoadMissileGFX(MFILE_EXBL2);
 	}
 	if (mtype == MT_BONEDEMN && (MissileFileFlag & 0x2000) == 0) {
-		MissileFileFlag |= 0x2000u;
+		MissileFileFlag |= 0x2000;
 		LoadMissileGFX(MFILE_EXBL3);
 	}
 	if (mtype == MT_DIABLO) {
