@@ -1572,7 +1572,7 @@ void M_GetKnockback(int i)
 	if (DirOK(i, d)) {
 		M_ClearSquares(i);
 		monster[i].position.old += d;
-		NewMonsterAnim(i, &monster[i].MType->Anims[MA_GOTHIT], monster[i]._mdir);
+		NewMonsterAnim(i, &monster[i].MType->Anims[MA_GOTHIT], monster[i]._mdir, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 		monster[i]._mmode = MM_GOTHIT;
 		monster[i].position.offset = { 0, 0 };
 		monster[i].position.tile = monster[i].position.old;
@@ -1607,7 +1607,7 @@ void M_StartHit(int i, int pnum, int dam)
 			monster[i]._mgoalvar2 = 0;
 		}
 		if (monster[i]._mmode != MM_STONE) {
-			NewMonsterAnim(i, &monster[i].MType->Anims[MA_GOTHIT], monster[i]._mdir);
+			NewMonsterAnim(i, &monster[i].MType->Anims[MA_GOTHIT], monster[i]._mdir, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 			monster[i]._mmode = MM_GOTHIT;
 			monster[i].position.offset = { 0, 0 };
 			monster[i].position.tile = monster[i].position.old;
@@ -1720,7 +1720,7 @@ void M2MStartHit(int mid, int i, int dam)
 
 		if (monster[mid]._mmode != MM_STONE) {
 			if (monster[mid].MType->mtype != MT_GOLEM) {
-				NewMonsterAnim(mid, &monster[mid].MType->Anims[MA_GOTHIT], monster[mid]._mdir);
+				NewMonsterAnim(mid, &monster[mid].MType->Anims[MA_GOTHIT], monster[mid]._mdir, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 				monster[mid]._mmode = MM_GOTHIT;
 			}
 
