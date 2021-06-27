@@ -948,45 +948,43 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 /**
  * @brief Render a row of tiles
  * @param out Buffer to render to
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Target buffer coordinates
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-void DrawFloor(const Surface &out, int x, int y, int sx, int sy, int rows, int columns)
+void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition, int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
-				level_piece_id = dPiece[x][y];
+			if (tilePosition.x >= 0 && tilePosition.x < MAXDUNX && tilePosition.y >= 0 && tilePosition.y < MAXDUNY) {
+				level_piece_id = dPiece[tilePosition.x][tilePosition.y];
 				if (level_piece_id != 0) {
 					if (!nSolidTable[level_piece_id])
-						DrawFloor(out, x, y, sx, sy);
+						DrawFloor(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
 				} else {
-					world_draw_black_tile(out, sx, sy);
+					world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 				}
 			} else {
-				world_draw_black_tile(out, sx, sy);
+				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 			}
-			ShiftGrid(&x, &y, 1, 0);
-			sx += TILE_WIDTH;
+			ShiftGrid(&tilePosition.x, &tilePosition.y, 1, 0);
+			targetBufferPosition.x += TILE_WIDTH;
 		}
 		// Return to start of row
-		ShiftGrid(&x, &y, -columns, 0);
-		sx -= columns * TILE_WIDTH;
+		ShiftGrid(&tilePosition.x, &tilePosition.y, -columns, 0);
+		targetBufferPosition.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
-		sy += TILE_HEIGHT / 2;
+		targetBufferPosition.y += TILE_HEIGHT / 2;
 		if ((i & 1) != 0) {
-			x++;
+			tilePosition.x++;
 			columns--;
-			sx += TILE_WIDTH / 2;
+			targetBufferPosition.x += TILE_WIDTH / 2;
 		} else {
-			y++;
+			tilePosition.y++;
 			columns++;
-			sx -= TILE_WIDTH / 2;
+			targetBufferPosition.x -= TILE_WIDTH / 2;
 		}
 	}
 }
@@ -1208,7 +1206,7 @@ void DrawGame(const Surface &fullOut, Point position)
 		break;
 	}
 
-	DrawFloor(out, position.x, position.y, sx, sy, rows, columns);
+	DrawFloor(out, position, { sx, sy }, rows, columns);
 	DrawTileContent(out, position.x, position.y, sx, sy, rows, columns);
 
 	if (!zoomflag) {
