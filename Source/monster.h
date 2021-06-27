@@ -166,8 +166,10 @@ struct MonsterStruct { // note: missing field _mAFNum
 	uint8_t _mint;
 	uint32_t _mFlags;
 	uint8_t _msquelch;
-	int _mRndSeed;
-	int _mAISeed;
+	/** Seed used to determine item drops on death */
+	uint32_t _mRndSeed;
+	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
+	uint32_t _mAISeed;
 	uint8_t _uniqtype;
 	uint8_t _uniqtrans;
 	int8_t _udeadval;

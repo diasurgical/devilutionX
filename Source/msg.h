@@ -236,6 +236,10 @@ struct TCmdPItem {
 	uint8_t y;
 	uint16_t wIndx;
 	uint16_t wCI;
+	/**
+	 * Item identifier
+	 * @see ItemStruct::_iSeed
+	 */
 	int32_t dwSeed;
 	uint8_t bId;
 	uint8_t bDur;

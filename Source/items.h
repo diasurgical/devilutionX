@@ -171,6 +171,7 @@ enum icreateinfo_flag2 {
 constexpr int ItemAnimWidth = 96;
 
 struct ItemStruct {
+	/** Randomly generated identifier */
 	int32_t _iSeed;
 	uint16_t _iCreateInfo;
 	enum item_type _itype;
@@ -219,6 +220,7 @@ struct ItemStruct {
 	int16_t _iPLLight;
 	int8_t _iSplLvlAdd;
 	bool _iRequest;
+	/** Unique item ID, used as an index into UniqueItemList */
 	int _iUid;
 	int16_t _iFMinDam;
 	int16_t _iFMaxDam;

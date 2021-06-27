@@ -19,16 +19,20 @@ TEST(RandomTest, RandomEngineParams)
 	// Starting from a seed of 0 means the multiplicand is dropped and the state advances by increment only
 	AdvanceRndSeed();
 	ASSERT_EQ(GetLCGEngineState(), increment) << "Increment factor is incorrect";
-	AdvanceRndSeed();
 
 	// LCGs use a formula of mult * seed + inc. Using a long form in the code to document the expected factors.
+	AdvanceRndSeed();
 	ASSERT_EQ(GetLCGEngineState(), (multiplicand * 1) + increment) << "Multiplicand factor is incorrect";
 
-	// C++11 defines the default seed for a LCG engine as 1, we've had 1 call since then so starting at element 2
+	// C++11 defines the default seed for a LCG engine as 1. The ten thousandth value is commonly used for sanity checking
+	// a sequence, so as we've had one round since state 1 we need to discard another 9999 values to get to the 10000th state.
+	// This loop has an off by one error, so test the 9999th value as well as 10000th
 	for (auto i = 2; i < 10000; i++)
 		AdvanceRndSeed();
-
 	uint32_t expectedState = 3495122800U;
+	ASSERT_EQ(GetLCGEngineState(), expectedState) << "Wrong engine state after 9999 invocations";
+	AdvanceRndSeed();
+	expectedState = 3007658545U;
 	ASSERT_EQ(GetLCGEngineState(), expectedState) << "Wrong engine state after 10000 invocations";
 }
 
@@ -38,7 +42,7 @@ TEST(RandomTest, AbsDistribution)
 	// This relies on undefined behaviour when called on std::numeric_limits<int_t>::min(). See C17 7.22.6.1
 	// The current behaviour is this returns the same value (the most negative number of the type).
 	SetRndSeed(1457187811); // yields -2147483648
-	ASSERT_EQ(AdvanceRndSeed(), -2147483648) << "Invalid distribution";
+	ASSERT_EQ(AdvanceRndSeed(), std::numeric_limits<int32_t>::min()) << "Invalid distribution";
 	SetRndSeed(3604671459U); // yields 0
 	ASSERT_EQ(AdvanceRndSeed(), 0) << "Invalid distribution";
 

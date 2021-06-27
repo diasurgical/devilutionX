@@ -264,7 +264,7 @@ Direction GetDirection(Point start, Point destination);
  */
 int CalculateWidth2(int width);
 
-void SetRndSeed(int32_t s);
+void SetRndSeed(uint32_t s);
 int32_t AdvanceRndSeed();
 int32_t GetRndSeed();
 uint32_t GetLCGEngineState();

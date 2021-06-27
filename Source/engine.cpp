@@ -21,7 +21,7 @@
 namespace devilution {
 
 /** Current game seed */
-int32_t sglGameSeed;
+uint32_t sglGameSeed;
 
 /**
  * Specifies the increment used in the Borland C/C++ pseudo-random.
@@ -242,7 +242,7 @@ int CalculateWidth2(int width)
  * @brief Set the RNG seed
  * @param s RNG seed
  */
-void SetRndSeed(int32_t s)
+void SetRndSeed(uint32_t s)
 {
 	sglGameSeed = s;
 }
@@ -253,8 +253,8 @@ void SetRndSeed(int32_t s)
  */
 int32_t AdvanceRndSeed()
 {
-	sglGameSeed = (RndMult * static_cast<uint32_t>(sglGameSeed)) + RndInc;
-	return abs(sglGameSeed);
+	sglGameSeed = (RndMult * sglGameSeed) + RndInc;
+	return GetRndSeed();
 }
 
 /**
@@ -263,7 +263,7 @@ int32_t AdvanceRndSeed()
  */
 int32_t GetRndSeed()
 {
-	return abs(sglGameSeed);
+	return abs(static_cast<int32_t>(sglGameSeed));
 }
 
 uint32_t GetLCGEngineState()

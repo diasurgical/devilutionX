@@ -22,7 +22,8 @@ enum event_type : uint8_t {
 
 struct GameData {
 	int32_t size;
-	int32_t dwSeed;
+	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
+	uint32_t dwSeed;
 	uint32_t programid;
 	uint8_t versionMajor;
 	uint8_t versionMinor;
