@@ -33,8 +33,7 @@ enum cursor_id : uint8_t {
 
 extern Size cursSize;
 extern int pcursmonst;
-extern int icursW28;
-extern int icursH28;
+extern Size icursSize28;
 extern int icursH;
 extern int8_t pcursinvitem;
 extern int icursW;

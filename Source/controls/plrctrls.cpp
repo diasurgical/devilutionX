@@ -494,7 +494,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
 {
 	Point result = GetPanelPosition(UiPanels::Inventory);
-	result.x -= (icursW28 - 1) * (InventorySlotSizeInPixels.width / 2);
+	result.x -= (icursSize28.width - 1) * (InventorySlotSizeInPixels.width / 2);
 	switch (invSlot) {
 	case INVLOC_HEAD:
 		result.x += ((InvRect[SLOTXY_HEAD_FIRST].x + InvRect[SLOTXY_HEAD_LAST].x) / 2);
@@ -683,7 +683,7 @@ void InvMove(AxisDirection dir)
 		if (isHoldingItem) {
 			if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 				if (Slot == SLOTXY_INV_ROW1_FIRST || Slot == SLOTXY_INV_ROW2_FIRST || Slot == SLOTXY_INV_ROW3_FIRST || Slot == SLOTXY_INV_ROW4_FIRST) {
-					Slot += INV_ROW_SLOT_SIZE - icursW28;
+					Slot += INV_ROW_SLOT_SIZE - icursSize28.width;
 				} else {
 					Slot -= 1;
 				}
@@ -732,8 +732,8 @@ void InvMove(AxisDirection dir)
 		if (isHoldingItem) {
 			if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 				if (
-				    Slot == SLOTXY_INV_ROW1_LAST + 1 - icursW28 || Slot == SLOTXY_INV_ROW2_LAST + 1 - icursW28 || Slot == SLOTXY_INV_ROW3_LAST + 1 - icursW28 || Slot == SLOTXY_INV_ROW4_LAST + 1 - icursW28) {
-					Slot -= INV_ROW_SLOT_SIZE - icursW28;
+				    Slot == SLOTXY_INV_ROW1_LAST + 1 - icursSize28.width || Slot == SLOTXY_INV_ROW2_LAST + 1 - icursSize28.width || Slot == SLOTXY_INV_ROW3_LAST + 1 - icursSize28.width || Slot == SLOTXY_INV_ROW4_LAST + 1 - icursSize28.width) {
+					Slot -= INV_ROW_SLOT_SIZE - icursSize28.width;
 				} else {
 					Slot += 1;
 				}
@@ -849,10 +849,10 @@ void InvMove(AxisDirection dir)
 			} else if (Slot == SLOTXY_RING_RIGHT || Slot == SLOTXY_HAND_RIGHT_FIRST || Slot == SLOTXY_AMULET) {
 				Slot = SLOTXY_INV_ROW1_LAST - 1;
 				mousePos = InvGetSlotCoord(Slot);
-			} else if (Slot <= (SLOTXY_INV_ROW4_LAST - (icursH28 * INV_ROW_SLOT_SIZE))) {
+			} else if (Slot <= (SLOTXY_INV_ROW4_LAST - (icursSize28.height * INV_ROW_SLOT_SIZE))) {
 				Slot += INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(Slot);
-			} else if (Slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
+			} else if (Slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ITYPE_MISC && icursSize28 == Size { 1, 1 }) { // forcing only 1x1 misc items
 				Slot += INV_ROW_SLOT_SIZE;
 				if (Slot > SLOTXY_BELT_LAST)
 					Slot = SLOTXY_BELT_LAST;
@@ -922,7 +922,7 @@ void InvMove(AxisDirection dir)
 		if (Slot >= SLOTXY_INV_FIRST)
 			mousePos.y -= InventorySlotSizeInPixels.height;
 		else
-			mousePos.y -= (int)((icursH28 / 2.0) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
+			mousePos.y -= (int)((icursSize28.height / 2.0) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
 	} else {
 		mousePos.x += (InventorySlotSizeInPixels.width / 2);
 		mousePos.y -= (InventorySlotSizeInPixels.height / 2);
