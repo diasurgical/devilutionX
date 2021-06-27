@@ -21,24 +21,6 @@ int DoomQuestTime;
 bool DoomFlag;
 int DoomQuestState;
 
-/*
-void doom_reset_state()
-{
-	DoomQuestState = std::max(DoomQuestState, 0);
-}
-
-void doom_play_movie()
-{
-	if (DoomQuestState >= 36001)
-		return;
-        DoomQuestState++;
-	if (DoomQuestState == 36001) {
-		PlayInGameMovie("gendata\\doom.smk");
-		DoomQuestState++;
-	}
-}
-*/
-
 int doom_get_frame_from_time()
 {
 	if (DoomQuestState == 36001) {

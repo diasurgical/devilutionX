@@ -1198,7 +1198,7 @@ static void PressChar(int32_t vkey)
 
 static void GetMousePos(int32_t lParam)
 {
-	MousePosition = { (short)(lParam & 0xffff), (short)((lParam >> 16) & 0xffff) };
+	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
 }
 
 void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)

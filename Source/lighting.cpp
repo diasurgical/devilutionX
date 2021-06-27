@@ -667,7 +667,7 @@ void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 	int nCrawlX, nCrawlY, nLineLen, nTrans;
 	int j, k, v, x1adj, x2adj, y1adj, y2adj;
 
-	if (position.x >= 0 && position.x<= MAXDUNX && position.y >= 0 && position.y <= MAXDUNY) {
+	if (position.x >= 0 && position.x <= MAXDUNX && position.y >= 0 && position.y <= MAXDUNY) {
 		if (doautomap) {
 			if (dFlags[position.x][position.y] != 0) {
 				SetAutomapView(position);
@@ -941,7 +941,7 @@ void MakeLightTable()
 #ifdef _DEBUG
 void ToggleLighting()
 {
-	lightflag ^= true;
+	lightflag = !lightflag;
 
 	if (lightflag) {
 		memset(dLight, 0, sizeof(dLight));

@@ -1260,7 +1260,7 @@ void InitPlayer(int pnum, bool FirstTime)
 #ifdef _DEBUG
 	if (debug_mode_dollar_sign && FirstTime) {
 		player._pMemSpells |= 1 << (SPL_TELEPORT - 1);
-		if (!myPlayer._pSplLvl[SPL_TELEPORT]) {
+		if (myPlayer._pSplLvl[SPL_TELEPORT] == 0) {
 			myPlayer._pSplLvl[SPL_TELEPORT] = 1;
 		}
 	}

@@ -767,7 +767,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 		negMon = dMonster[sx][sy - 1];
 
 #ifdef _DEBUG
-	if (visiondebug && bFlag & BFLAG_LIT) {
+	if (visiondebug && (bFlag & BFLAG_LIT) != 0) {
 		CelClippedDrawTo(out, { dx, dy }, *pSquareCel, 1);
 	}
 #endif

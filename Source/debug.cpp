@@ -15,7 +15,6 @@
 namespace devilution {
 
 #ifdef _DEBUG
-bool update_seed_check = false;
 
 #define DEBUGSEEDS 4096
 int seed_index;
@@ -39,10 +38,8 @@ void FreeDebugGFX()
 
 void CheckDungeonClear()
 {
-	int i, j;
-
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
 			if (dMonster[i][j] != 0)
 				app_fatal("Monsters not cleared");
 			if (dPlayer[i][j] != 0)
@@ -58,16 +55,17 @@ void GiveGoldCheat()
 {
 	auto &myPlayer = plr[myplr];
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (myPlayer.InvGrid[i] == 0) {
-			int ni = myPlayer._pNumInv++;
-			SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
-			GetPlrHandSeed(&myPlayer.InvList[ni]);
-			myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-			myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-			myPlayer._pGold += GOLD_MAX_LIMIT;
-			myPlayer.InvGrid[i] = myPlayer._pNumInv;
-		}
+	for (int8_t &itemId : myPlayer.InvGrid) {
+		if (itemId != 0)
+			continue;
+
+		int ni = myPlayer._pNumInv++;
+		SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
+		GetPlrHandSeed(&myPlayer.InvList[ni]);
+		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
+		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
+		myPlayer._pGold += GOLD_MAX_LIMIT;
+		itemId = myPlayer._pNumInv;
 	}
 }
 
@@ -75,15 +73,15 @@ void TakeGoldCheat()
 {
 	auto &myPlayer = plr[myplr];
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		int8_t ig = myPlayer.InvGrid[i];
-		if (ig > 0 && myPlayer.InvList[ig - 1]._itype == ITYPE_GOLD)
-			myPlayer.RemoveInvItem(ig - 1);
-	}
+	for (auto itemId : myPlayer.InvGrid) {
+		itemId -= 1;
 
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (myPlayer.SpdList[i]._itype == ITYPE_GOLD)
-			myPlayer.SpdList[i]._itype = ITYPE_NONE;
+		if (itemId < 0)
+			continue;
+		if (myPlayer.InvList[itemId]._itype != ITYPE_GOLD)
+			continue;
+
+		myPlayer.RemoveInvItem(itemId);
 	}
 
 	myPlayer._pGold = 0;
@@ -146,20 +144,20 @@ void PrintDebugPlayer(bool bNextPlayer)
 
 	auto &player = plr[dbgplr];
 
-	sprintf(dstr, "Plr %i : Active = %i", dbgplr, player.plractive);
+	sprintf(dstr, "Plr %i : Active = %i", dbgplr, player.plractive ? 1 : 0);
 	NetSendCmdString(1 << myplr, dstr);
 
 	if (player.plractive) {
 		sprintf(dstr, "  Plr %i is %s", dbgplr, player._pName);
 		NetSendCmdString(1 << myplr, dstr);
-		sprintf(dstr, "  Lvl = %i : Change = %i", player.plrlevel, player._pLvlChanging);
+		sprintf(dstr, "  Lvl = %i : Change = %i", player.plrlevel, player._pLvlChanging ? 1 : 0);
 		NetSendCmdString(1 << myplr, dstr);
 		const Point target = player.GetTargetPosition();
 		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", player.position.tile.x, player.position.tile.y, target.x, target.y);
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", player._pmode, player.destAction, player.walkpath[0]);
 		NetSendCmdString(1 << myplr, dstr);
-		sprintf(dstr, "  inv = %i : hp = %i", player._pInvincible, player._pHitPoints);
+		sprintf(dstr, "  inv = %i : hp = %i", player._pInvincible ? 1 : 0, player._pHitPoints);
 		NetSendCmdString(1 << myplr, dstr);
 	}
 }
@@ -200,7 +198,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	sprintf(dstr, "Active List = %i, Squelch = %i", bActive, monster[m]._msquelch);
+	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster[m]._msquelch);
 	NetSendCmdString(1 << myplr, dstr);
 }
 
@@ -208,11 +206,9 @@ int dbgmon;
 
 void GetDebugMonster()
 {
-	int mi1, mi2;
-
-	mi1 = pcursmonst;
+	int mi1 = pcursmonst;
 	if (mi1 == -1) {
-		mi2 = dMonster[cursmx][cursmy];
+		int mi2 = dMonster[cursmx][cursmy];
 		if (mi2 != 0) {
 			mi1 = mi2 - 1;
 			if (mi2 <= 0)
@@ -235,6 +231,7 @@ void NextDebugMonster()
 	sprintf(dstr, "Current debug monster = %i", dbgmon);
 	NetSendCmdString(1 << myplr, dstr);
 }
+
 #endif
 
 } // namespace devilution
