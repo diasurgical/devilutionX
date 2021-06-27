@@ -31,11 +31,12 @@ static void CodecInitKey(const char *pszPassword)
 		notch = randState >> 16; // Downcasting to char keeps the 2 least-significant bytes
 	}
 
-	char pw[64];
-	for (std::size_t i = 0; i < sizeof(pw); i++) {
-		if (pszPassword[i] == '\0')
-			i = 0;
-		pw[i] = pszPassword[i];
+	char pw[64]; // Repeat password until 64 char long
+	std::size_t j = 0;
+	for (std::size_t i = 0; i < sizeof(pw); i++, j++) {
+		if (pszPassword[j] == '\0')
+			j = 0;
+		pw[i] = pszPassword[j];
 	}
 
 	char digest[SHA1HashSize];
