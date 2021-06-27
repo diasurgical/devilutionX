@@ -679,25 +679,23 @@ void DrawCell(const Surface &out, int x, int y, int sx, int sy)
 /**
  * @brief Render a floor tiles
  * @param out Target buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Target buffer coordinate
  */
-void DrawFloor(const Surface &out, int x, int y, int sx, int sy)
+void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
 	cel_transparency_active = false;
-	LightTableIndex = dLight[x][y];
+	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
 	arch_draw_type = 1; // Left
-	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
+	level_cel_block = dpiece_defs_map_2[tilePosition.x][tilePosition.y].mt[0];
 	if (level_cel_block != 0) {
-		RenderTile(out, sx, sy);
+		RenderTile(out, targetBufferPosition.x, targetBufferPosition.y);
 	}
 	arch_draw_type = 2; // Right
-	level_cel_block = dpiece_defs_map_2[x][y].mt[1];
+	level_cel_block = dpiece_defs_map_2[tilePosition.x][tilePosition.y].mt[1];
 	if (level_cel_block != 0) {
-		RenderTile(out, sx + TILE_WIDTH / 2, sy);
+		RenderTile(out, targetBufferPosition.x + TILE_WIDTH / 2, targetBufferPosition.y);
 	}
 }
 
@@ -961,7 +959,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 				level_piece_id = dPiece[tilePosition.x][tilePosition.y];
 				if (level_piece_id != 0) {
 					if (!nSolidTable[level_piece_id])
-						DrawFloor(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
+						DrawFloor(out, tilePosition, targetBufferPosition);
 				} else {
 					world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 				}
