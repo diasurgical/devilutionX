@@ -30,8 +30,7 @@ bool QuestLogIsOpen;
 std::optional<CelSprite> pQLogCel;
 /** Contains the quests of the current game. */
 Quest Quests[MAXQUESTS];
-int ReturnLvlX;
-int ReturnLvlY;
+Point ReturnLvlPosition;
 dungeon_type ReturnLevelType;
 int ReturnLevel;
 
@@ -553,28 +552,24 @@ void SetReturnLvlPos()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		ReturnLvlX = Quests[Q_SKELKING].position.x + 1;
-		ReturnLvlY = Quests[Q_SKELKING].position.y;
+		ReturnLvlPosition = Quests[Q_SKELKING].position + DIR_SE;
 		ReturnLevel = Quests[Q_SKELKING]._qlevel;
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_BONECHAMB:
-		ReturnLvlX = Quests[Q_SCHAMB].position.x + 1;
-		ReturnLvlY = Quests[Q_SCHAMB].position.y;
+		ReturnLvlPosition = Quests[Q_SCHAMB].position + DIR_SE;
 		ReturnLevel = Quests[Q_SCHAMB]._qlevel;
 		ReturnLevelType = DTYPE_CATACOMBS;
 		break;
 	case SL_MAZE:
 		break;
 	case SL_POISONWATER:
-		ReturnLvlX = Quests[Q_PWATER].position.x;
-		ReturnLvlY = Quests[Q_PWATER].position.y + 1;
+		ReturnLvlPosition = Quests[Q_PWATER].position + DIR_SW;
 		ReturnLevel = Quests[Q_PWATER]._qlevel;
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
-		ReturnLvlX = Quests[Q_BETRAYER].position.x + 1;
-		ReturnLvlY = Quests[Q_BETRAYER].position.y - 1;
+		ReturnLvlPosition = Quests[Q_BETRAYER].position + DIR_E;
 		ReturnLevel = Quests[Q_BETRAYER]._qlevel;
 		ReturnLevelType = DTYPE_HELL;
 		break;
@@ -587,7 +582,7 @@ void GetReturnLvlPos()
 {
 	if (Quests[Q_BETRAYER]._qactive == QUEST_DONE)
 		Quests[Q_BETRAYER]._qvar2 = 2;
-	ViewPosition = { ReturnLvlX, ReturnLvlY };
+	ViewPosition = ReturnLvlPosition;
 	currlevel = ReturnLevel;
 	leveltype = ReturnLevelType;
 }
