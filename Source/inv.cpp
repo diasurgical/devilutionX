@@ -675,7 +675,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	CalcPlrInv(player, true);
 	if (pnum == MyPlayerId) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
-			SetCursorPos(MousePosition + Displacement(Size { cursW, cursH } / 2));
+			SetCursorPos(MousePosition + Displacement(cursSize / 2));
 		NewCursor(cn);
 	}
 }
@@ -889,7 +889,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
 				if (!IsHardwareCursor()) {
 					// For a hardware cursor, we set the "hot point" to the center of the item instead.
-					SetCursorPos(cursorPosition - Displacement(Size { cursW, cursH } / 2));
+					SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 				}
 			}
 		}
