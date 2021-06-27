@@ -664,12 +664,12 @@ void DrawCell(const Surface &out, int x, int y, int sx, int sy)
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
-			RenderTile(out, sx, sy);
+			RenderTile(out, { sx, sy });
 		}
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(out, sx + TILE_WIDTH / 2, sy);
+			RenderTile(out, { sx + TILE_WIDTH / 2, sy });
 		}
 		sy -= TILE_HEIGHT;
 	}
@@ -690,12 +690,12 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 	arch_draw_type = 1; // Left
 	level_cel_block = dpiece_defs_map_2[tilePosition.x][tilePosition.y].mt[0];
 	if (level_cel_block != 0) {
-		RenderTile(out, targetBufferPosition.x, targetBufferPosition.y);
+		RenderTile(out, targetBufferPosition);
 	}
 	arch_draw_type = 2; // Right
 	level_cel_block = dpiece_defs_map_2[tilePosition.x][tilePosition.y].mt[1];
 	if (level_cel_block != 0) {
-		RenderTile(out, targetBufferPosition.x + TILE_WIDTH / 2, targetBufferPosition.y);
+		RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 });
 	}
 }
 
