@@ -644,7 +644,7 @@ void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
 	}
 }
 
-static void DrawDungeon(const Surface & /*out*/, int /*sx*/, int /*sy*/, int /*dx*/, int /*dy*/);
+static void DrawDungeon(const Surface & /*out*/, Point /*tilePosition*/, Point /*targetBufferPosition*/);
 
 /**
  * @brief Render a cell
@@ -831,48 +831,46 @@ void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
 /**
  * @brief Render object sprites
  * @param out Target buffer
- * @param sx dPiece coordinate
- * @param sy dPiece coordinate
- * @param dx Target buffer coordinate
- * @param dy Target buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Target buffer coordinates
  */
-void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
+void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	assert(sx >= 0 && sx < MAXDUNX);
-	assert(sy >= 0 && sy < MAXDUNY);
+	assert(tilePosition.x >= 0 && tilePosition.x < MAXDUNX);
+	assert(tilePosition.y >= 0 && tilePosition.y < MAXDUNY);
 
-	if (dRendered[sx][sy])
+	if (dRendered[tilePosition.x][tilePosition.y])
 		return;
-	dRendered[sx][sy] = true;
+	dRendered[tilePosition.x][tilePosition.y] = true;
 
-	LightTableIndex = dLight[sx][sy];
+	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
 
-	DrawCell(out, { sx, sy }, { dx, dy });
+	DrawCell(out, tilePosition, targetBufferPosition);
 
-	int8_t bFlag = dFlags[sx][sy];
-	int8_t bDead = dDead[sx][sy];
-	int8_t bMap = dTransVal[sx][sy];
+	int8_t bFlag = dFlags[tilePosition.x][tilePosition.y];
+	int8_t bDead = dDead[tilePosition.x][tilePosition.y];
+	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
 	int negMon = 0;
-	if (sy > 0) // check for OOB
-		negMon = dMonster[sx][sy - 1];
+	if (tilePosition.y > 0) // check for OOB
+		negMon = dMonster[tilePosition.x][tilePosition.y - 1];
 
 #ifdef _DEBUG
 	if (DebugVision && (bFlag & BFLAG_LIT) != 0) {
-		CelClippedDrawTo(out, { dx, dy }, *pSquareCel, 1);
+		CelClippedDrawTo(out, targetBufferPosition, *pSquareCel, 1);
 	}
-	DebugCoordsMap[sx + sy * MAXDUNX] = { dx, dy };
+	DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;
 #endif
 
 	if (MissilePreFlag) {
-		DrawMissile(out, sx, sy, dx, dy, true);
+		DrawMissile(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
 	}
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &Dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
-			int px = dx - CalculateWidth2(pDeadGuy->width);
+			int px = targetBufferPosition.x - CalculateWidth2(pDeadGuy->width);
 			const byte *pCelBuff = pDeadGuy->data[dd];
 			assert(pCelBuff != nullptr);
 			const auto *frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
@@ -883,37 +881,37 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 				break;
 			}
 			if (pDeadGuy->translationPaletteIndex != 0) {
-				Cl2DrawLightTbl(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel, pDeadGuy->translationPaletteIndex);
+				Cl2DrawLightTbl(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel, pDeadGuy->translationPaletteIndex);
 			} else {
-				Cl2DrawLight(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel);
+				Cl2DrawLight(out, px, targetBufferPosition.y, CelSprite(pCelBuff, pDeadGuy->width), nCel);
 			}
 		} while (false);
 	}
-	DrawObject(out, sx, sy, dx, dy, true);
-	DrawItem(out, sx, sy, dx, dy, true);
+	DrawObject(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
+	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
 	if ((bFlag & BFLAG_PLAYERLR) != 0) {
-		int syy = sy - 1;
+		int syy = tilePosition.y - 1;
 		assert(syy >= 0 && syy < MAXDUNY);
-		DrawPlayerHelper(out, sx, syy, dx, dy);
+		DrawPlayerHelper(out, tilePosition.x, syy, targetBufferPosition.x, targetBufferPosition.y);
 	}
 	if ((bFlag & BFLAG_MONSTLR) != 0 && negMon < 0) {
-		DrawMonsterHelper(out, sx, sy, -1, dx, dy);
+		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, -1, targetBufferPosition.x, targetBufferPosition.y);
 	}
 	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
-		DrawDeadPlayer(out, sx, sy, dx, dy);
+		DrawDeadPlayer(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
 	}
-	if (dPlayer[sx][sy] > 0) {
-		DrawPlayerHelper(out, sx, sy, dx, dy);
+	if (dPlayer[tilePosition.x][tilePosition.y] > 0) {
+		DrawPlayerHelper(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
 	}
-	if (dMonster[sx][sy] > 0) {
-		DrawMonsterHelper(out, sx, sy, 0, dx, dy);
+	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
+		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, 0, targetBufferPosition.x, targetBufferPosition.y);
 	}
-	DrawMissile(out, sx, sy, dx, dy, false);
-	DrawObject(out, sx, sy, dx, dy, false);
-	DrawItem(out, sx, sy, dx, dy, false);
+	DrawMissile(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
+	DrawObject(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
+	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
 
 	if (leveltype != DTYPE_TOWN) {
-		char bArch = dSpecial[sx][sy];
+		char bArch = dSpecial[tilePosition.x][tilePosition.y];
 		if (bArch != 0) {
 			cel_transparency_active = TransList[bMap];
 #ifdef _DEBUG
@@ -921,7 +919,7 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 				cel_transparency_active = false; // Turn transparency off here for debugging
 			}
 #endif
-			CelClippedBlitLightTransTo(out, { dx, dy }, *pSpecialCels, bArch);
+			CelClippedBlitLightTransTo(out, targetBufferPosition, *pSpecialCels, bArch);
 #ifdef _DEBUG
 			if (GetAsyncKeyState(DVL_VK_MENU)) {
 				cel_transparency_active = TransList[bMap]; // Turn transparency back to its normal state
@@ -932,10 +930,10 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 		// Tree leaves should always cover player when entering or leaving the tile,
 		// So delay the rendering until after the next row is being drawn.
 		// This could probably have been better solved by sprites in screen space.
-		if (sx > 0 && sy > 0 && dy > TILE_HEIGHT) {
-			char bArch = dSpecial[sx - 1][sy - 1];
+		if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
+			char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
 			if (bArch != 0) {
-				CelDrawTo(out, { dx, dy - TILE_HEIGHT }, *pSpecialCels, bArch);
+				CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, *pSpecialCels, bArch);
 			}
 		}
 	}
@@ -1014,12 +1012,12 @@ void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, int rows,
 					// sprite screen position rather than tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
 						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1)) {              // Has walkable area behind it
-							DrawDungeon(out, x + 1, y - 1, sx + TILE_WIDTH, sy);
+							DrawDungeon(out, Point { x, y } + DIR_E, { sx + TILE_WIDTH, sy });
 						}
 					}
 				}
 				if (dPiece[x][y] != 0) {
-					DrawDungeon(out, x, y, sx, sy);
+					DrawDungeon(out, { x, y }, { sx, sy });
 				}
 			}
 			ShiftGrid(&x, &y, 1, 0);
