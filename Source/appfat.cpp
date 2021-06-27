@@ -123,33 +123,6 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 }
 
 /**
- * @brief Terminates the game with a file not found error dialog.
- */
-void FileErrDlg(const char *error)
-{
-	char text[1024];
-
-	FreeDlg();
-
-	if (error == nullptr)
-		error = "";
-	snprintf(
-	    text,
-	    sizeof(text),
-	    _(/* TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged. */ "Unable to open a required file.\n"
-	                                                                                          "\n"
-	                                                                                          "Verify that the MD5 of diabdat.mpq matches one of the following values\n"
-	                                                                                          "011bc6518e6166206231080a4440b373\n"
-	                                                                                          "68f049866b44688a7af65ba766bef75a\n"
-	                                                                                          "\n"
-	                                                                                          "The problem occurred when loading:\n%s"),
-	    error);
-
-	UiErrorOkDialog(_("Data File Error"), text);
-	app_fatal(nullptr);
-}
-
-/**
  * @brief Terminates the game with an insert CD error dialog.
  */
 void InsertCDDlg()
