@@ -67,8 +67,8 @@ void FocusOnCharInfo()
 	}
 	if (stat == -1)
 		return;
-	const Rectangle &rect = ChrBtnsRect[stat];
-	SetCursorPos({ rect.position.x + (rect.size.width / 2), rect.position.y + (rect.size.height / 2) });
+
+	SetCursorPos(ChrBtnsRect[stat].Center());
 }
 
 static int TranslateSdlKey(SDL_Keysym key)
