@@ -1084,11 +1084,11 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 	}
 	AddLight(diablo.position.tile, 8);
 	DoVision(diablo.position.tile, 8, false, true);
-	int dist = diablo.position.tile.WalkingDistance({ ViewX, ViewY });
+	int dist = diablo.position.tile.WalkingDistance(ViewPosition);
 	if (dist > 20)
 		dist = 20;
-	diablo._mVar3 = ViewX << 16;
-	diablo.position.temp.x = ViewY << 16;
+	diablo._mVar3 = ViewPosition.x << 16;
+	diablo.position.temp.x = ViewPosition.y << 16;
 	diablo.position.temp.y = (int)((diablo._mVar3 - (diablo.position.tile.x << 16)) / (double)dist);
 	diablo.position.offset2.deltaX = (int)((diablo.position.temp.x - (diablo.position.tile.y << 16)) / (double)dist);
 }
@@ -1806,16 +1806,16 @@ bool MonsterDeath(int i)
 
 	monster._mVar1++;
 	if (monster.MType->mtype == MT_DIABLO) {
-		if (monster.position.tile.x < ViewX) {
-			ViewX--;
-		} else if (monster.position.tile.x > ViewX) {
-			ViewX++;
+		if (monster.position.tile.x < ViewPosition.x) {
+			ViewPosition.x--;
+		} else if (monster.position.tile.x > ViewPosition.x) {
+			ViewPosition.x++;
 		}
 
-		if (monster.position.tile.y < ViewY) {
-			ViewY--;
-		} else if (monster.position.tile.y > ViewY) {
-			ViewY++;
+		if (monster.position.tile.y < ViewPosition.y) {
+			ViewPosition.y--;
+		} else if (monster.position.tile.y > ViewPosition.y) {
+			ViewPosition.y++;
 		}
 
 		if (monster._mVar1 == 140)

@@ -182,10 +182,8 @@ extern bool setlevel;
 extern _setlevels setlvlnum;
 /** Specifies the player viewpoint X-coordinate of the map. */
 extern dungeon_type setlvltype;
-/** Specifies the player viewpoint X-coordinate of the map. */
-extern int ViewX;
-/** Specifies the player viewpoint Y-coordinate of the map. */
-extern int ViewY;
+/** Specifies the player viewpoint X,Y-coordinates of the map. */
+extern Point ViewPosition;
 extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;

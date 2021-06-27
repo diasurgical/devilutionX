@@ -1666,8 +1666,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 	}
 
 	if (setview) {
-		ViewX = 2 * sx + 17;
-		ViewY = 2 * sy + 19;
+		ViewPosition = Point { 17, 19 } + Displacement { sx, sy } * 2;
 	}
 
 	return false;
@@ -2290,13 +2289,11 @@ void GenerateLevel(lvl_entry entry)
 				if (!genok) {
 					if (currlevel < 17) {
 						genok = PlaceMiniSet(L3DOWN, 1, 1, -1, -1, true);
-						ViewX += 2;
-						ViewY -= 2;
+						ViewPosition += { 2, -2 };
 					} else {
 						if (currlevel != 20) {
 							genok = PlaceMiniSet(L6DOWN, 1, 1, -1, -1, true);
-							ViewX += 2;
-							ViewY -= 2;
+							ViewPosition += { 2, -2 };
 						}
 					}
 					if (!genok && currlevel == 9) {
@@ -2554,8 +2551,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 	Pass3();
 	DRLG_Init_Globals();
 
-	ViewX = vx;
-	ViewY = vy;
+	ViewPosition = { vx, vy };
 
 	SetMapMonsters(dunData.get(), { 0, 0 });
 	SetMapObjects(dunData.get(), 0, 0);

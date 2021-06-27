@@ -190,7 +190,7 @@ void CelDrawCursor(const Surface &out, Point position, int cursId)
 void InitLevelCursor()
 {
 	NewCursor(CURSOR_HAND);
-	cursPosition = { ViewX, ViewY };
+	cursPosition = ViewPosition;
 	pcurstemp = -1;
 	pcursmonst = -1;
 	pcursobj = -1;
@@ -296,8 +296,8 @@ void CheckCursMove()
 	}
 
 	// Convert to tile grid
-	int mx = ViewX;
-	int my = ViewY;
+	int mx = ViewPosition.x;
+	int my = ViewPosition.y;
 
 	int columns = 0;
 	int rows = 0;

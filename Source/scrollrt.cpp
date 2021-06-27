@@ -1624,66 +1624,66 @@ void ScrollView()
 	scroll = false;
 
 	if (MousePosition.x < 20) {
-		if (dmaxy - 1 <= ViewY || dminx >= ViewX) {
-			if (dmaxy - 1 > ViewY) {
-				ViewY++;
+		if (dmaxy - 1 <= ViewPosition.y || dminx >= ViewPosition.x) {
+			if (dmaxy - 1 > ViewPosition.y) {
+				ViewPosition.y++;
 				scroll = true;
 			}
-			if (dminx < ViewX) {
-				ViewX--;
+			if (dminx < ViewPosition.x) {
+				ViewPosition.x--;
 				scroll = true;
 			}
 		} else {
-			ViewY++;
-			ViewX--;
+			ViewPosition.y++;
+			ViewPosition.x--;
 			scroll = true;
 		}
 	}
 	if (MousePosition.x > gnScreenWidth - 20) {
-		if (dmaxx - 1 <= ViewX || dminy >= ViewY) {
-			if (dmaxx - 1 > ViewX) {
-				ViewX++;
+		if (dmaxx - 1 <= ViewPosition.x || dminy >= ViewPosition.y) {
+			if (dmaxx - 1 > ViewPosition.x) {
+				ViewPosition.x++;
 				scroll = true;
 			}
-			if (dminy < ViewY) {
-				ViewY--;
+			if (dminy < ViewPosition.y) {
+				ViewPosition.y--;
 				scroll = true;
 			}
 		} else {
-			ViewY--;
-			ViewX++;
+			ViewPosition.y--;
+			ViewPosition.x++;
 			scroll = true;
 		}
 	}
 	if (MousePosition.y < 20) {
-		if (dminy >= ViewY || dminx >= ViewX) {
-			if (dminy < ViewY) {
-				ViewY--;
+		if (dminy >= ViewPosition.y || dminx >= ViewPosition.x) {
+			if (dminy < ViewPosition.y) {
+				ViewPosition.y--;
 				scroll = true;
 			}
-			if (dminx < ViewX) {
-				ViewX--;
+			if (dminx < ViewPosition.x) {
+				ViewPosition.x--;
 				scroll = true;
 			}
 		} else {
-			ViewX--;
-			ViewY--;
+			ViewPosition.x--;
+			ViewPosition.y--;
 			scroll = true;
 		}
 	}
 	if (MousePosition.y > gnScreenHeight - 20) {
-		if (dmaxy - 1 <= ViewY || dmaxx - 1 <= ViewX) {
-			if (dmaxy - 1 > ViewY) {
-				ViewY++;
+		if (dmaxy - 1 <= ViewPosition.y || dmaxx - 1 <= ViewPosition.x) {
+			if (dmaxy - 1 > ViewPosition.y) {
+				ViewPosition.y++;
 				scroll = true;
 			}
-			if (dmaxx - 1 > ViewX) {
-				ViewX++;
+			if (dmaxx - 1 > ViewPosition.x) {
+				ViewPosition.x++;
 				scroll = true;
 			}
 		} else {
-			ViewX++;
-			ViewY++;
+			ViewPosition.x++;
+			ViewPosition.y++;
 			scroll = true;
 		}
 	}
@@ -1768,7 +1768,7 @@ void DrawAndBlit()
 
 	nthread_UpdateProgressToNextGameTick();
 
-	DrawView(out, ViewX, ViewY);
+	DrawView(out, ViewPosition.x, ViewPosition.y);
 	if (ctrlPan) {
 		DrawCtrlPan(out);
 	}

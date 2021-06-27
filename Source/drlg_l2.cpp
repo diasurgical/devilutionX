@@ -1716,8 +1716,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 	}
 
 	if (setview) {
-		ViewX = 2 * sx + 21;
-		ViewY = 2 * sy + 22;
+		ViewPosition = Point { 21, 22 } + Displacement { sx, sy } * 2;
 	}
 
 	return true;
@@ -2925,7 +2924,7 @@ void GenerateLevel(lvl_entry entry)
 					doneflag = PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false);
 				}
 			}
-			ViewY -= 2;
+			ViewPosition.y -= 2;
 		} else if (entry == ENTRY_PREV) {
 			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false);
 			if (doneflag) {
@@ -2934,7 +2933,7 @@ void GenerateLevel(lvl_entry entry)
 					doneflag = PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false);
 				}
 			}
-			ViewX--;
+			ViewPosition.x--;
 		} else {
 			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false);
 			if (doneflag) {
@@ -2943,7 +2942,7 @@ void GenerateLevel(lvl_entry entry)
 					doneflag = PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, true);
 				}
 			}
-			ViewY -= 2;
+			ViewPosition.y -= 2;
 		}
 	}
 
@@ -3130,8 +3129,7 @@ void LoadL2Dungeon(const char *path, int vx, int vy)
 
 	InitDungeonPieces();
 
-	ViewX = vx;
-	ViewY = vy;
+	ViewPosition = { vx, vy };
 
 	SetMapMonsters(dunData.get(), { 0, 0 });
 	SetMapObjects(dunData.get(), 0, 0);
