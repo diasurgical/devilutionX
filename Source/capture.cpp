@@ -174,7 +174,7 @@ void CaptureScreen()
 	PaletteGetEntries(256, palette);
 	RedPalette();
 
-	lock_buf();
+	lock_buf(2);
 	const CelOutputBuffer &buf = GlobalBackBuffer();
 	success = CaptureHdr(buf.w(), buf.h(), outStream);
 	if (success) {
@@ -183,7 +183,7 @@ void CaptureScreen()
 	if (success) {
 		success = CapturePal(palette, outStream);
 	}
-	unlock_buf();
+	unlock_buf(2);
 	outStream->close();
 
 	if (!success) {

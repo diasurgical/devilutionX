@@ -2400,7 +2400,7 @@ static DWORD On_ENDSHIELD(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_CHEAT_EXPERIENCE(TCmd *pCmd)
+static DWORD On_CHEAT_EXPERIENCE(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
@@ -2416,7 +2416,7 @@ static DWORD On_CHEAT_EXPERIENCE(TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
-static DWORD On_CHEAT_SPELL_LEVEL(TCmd *pCmd)
+static DWORD On_CHEAT_SPELL_LEVEL(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
@@ -2658,9 +2658,9 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_ENDSHIELD:
 		return On_ENDSHIELD(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:
-		return On_CHEAT_EXPERIENCE(pCmd);
+		return On_CHEAT_EXPERIENCE(pCmd, pnum);
 	case CMD_CHEAT_SPELL_LEVEL:
-		return On_CHEAT_SPELL_LEVEL(pCmd);
+		return On_CHEAT_SPELL_LEVEL(pCmd, pnum);
 	case CMD_NOVA:
 		return On_NOVA(pCmd, pnum);
 	case CMD_SETSHIELD:
