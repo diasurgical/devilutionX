@@ -1716,8 +1716,7 @@ void LoadGame(bool firstflag)
 	SyncInitPlr(MyPlayerId);
 	SyncPlrAnim(MyPlayerId);
 
-	ViewX = viewX;
-	ViewY = viewY;
+	ViewPosition = { viewX, viewY };
 	ActiveMonsterCount = tmpNummonsters;
 	ActiveItemCount = tmpNumitems;
 	ActiveMissileCount = tmpNummissiles;
@@ -1898,8 +1897,8 @@ void SaveGameData()
 	file.WriteBE<uint32_t>(setlvlnum);
 	file.WriteBE<uint32_t>(currlevel);
 	file.WriteBE<uint32_t>(leveltype);
-	file.WriteBE<int32_t>(ViewX);
-	file.WriteBE<int32_t>(ViewY);
+	file.WriteBE<int32_t>(ViewPosition.x);
+	file.WriteBE<int32_t>(ViewPosition.y);
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
 	file.WriteBE<int32_t>(ActiveMonsterCount);

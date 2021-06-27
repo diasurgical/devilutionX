@@ -856,8 +856,7 @@ int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool s
 	}
 
 	if (setview) {
-		ViewX = 2 * sx + 19;
-		ViewY = 2 * sy + 20;
+		ViewPosition = Point { 19, 20 } + Displacement { sx, sy } * 2;
 	}
 
 	if (sx < cx && sy < cy)
@@ -2209,7 +2208,7 @@ void GenerateLevel(lvl_entry entry)
 			} else {
 				if (PlaceMiniSet(PWATERIN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
-				ViewY--;
+				ViewPosition.y--;
 			}
 		}
 		if (Quests[Q_LTBANNER].IsAvailable()) {
@@ -2220,10 +2219,9 @@ void GenerateLevel(lvl_entry entry)
 				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
 				if (entry == ENTRY_PREV) {
-					ViewX = 2 * setpc_x + 20;
-					ViewY = 2 * setpc_y + 28;
+					ViewPosition = Point { 20, 28 } + Displacement { setpc_x, setpc_y } * 2;
 				} else {
-					ViewY--;
+					ViewPosition.y--;
 				}
 			}
 		} else if (entry == ENTRY_MAIN) {
@@ -2244,7 +2242,7 @@ void GenerateLevel(lvl_entry entry)
 					doneflag = false;
 				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
-				ViewY++;
+				ViewPosition.y++;
 			} else {
 				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
@@ -2252,7 +2250,7 @@ void GenerateLevel(lvl_entry entry)
 					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 				}
-				ViewY++;
+				ViewPosition.y++;
 			}
 		} else if (!Players[MyPlayerId].pOriginalCathedral && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
@@ -2260,13 +2258,13 @@ void GenerateLevel(lvl_entry entry)
 					doneflag = false;
 				if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
-				ViewY--;
+				ViewPosition.y--;
 			} else if (currlevel == 21) {
 				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
 				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
-				ViewY += 3;
+				ViewPosition.y += 3;
 			} else {
 				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
@@ -2274,7 +2272,7 @@ void GenerateLevel(lvl_entry entry)
 					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
 				}
-				ViewY += 3;
+				ViewPosition.y += 3;
 			}
 		} else {
 			if (currlevel < 21) {
@@ -2288,7 +2286,7 @@ void GenerateLevel(lvl_entry entry)
 						doneflag = false;
 					else if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
-					ViewY--;
+					ViewPosition.y--;
 				}
 			} else if (currlevel == 21) {
 				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, true, -1) < 0)
@@ -2439,8 +2437,7 @@ void LoadL1Dungeon(const char *path, int vx, int vy)
 
 	FillFloor();
 
-	ViewX = vx;
-	ViewY = vy;
+	ViewPosition = { vx, vy };
 
 	Pass3();
 	DRLG_Init_Globals();

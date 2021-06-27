@@ -587,8 +587,7 @@ void GetReturnLvlPos()
 {
 	if (Quests[Q_BETRAYER]._qactive == QUEST_DONE)
 		Quests[Q_BETRAYER]._qvar2 = 2;
-	ViewX = ReturnLvlX;
-	ViewY = ReturnLvlY;
+	ViewPosition = { ReturnLvlX, ReturnLvlY };
 	currlevel = ReturnLevel;
 	leveltype = ReturnLevelType;
 }
