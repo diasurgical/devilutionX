@@ -292,11 +292,10 @@ void DrawCursor(const Surface &out)
  * @brief Render a missile sprite
  * @param out Output buffer
  * @param m Pointer to Missile struct
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param targetBufferPosition Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface &out, const Missile &missile, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface &out, const Missile &missile, Point targetBufferPosition, bool pre)
 {
 	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
@@ -312,31 +311,29 @@ void DrawMissilePrivate(const Surface &out, const Missile &missile, int sx, int 
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
 		return;
 	}
-	int mx = sx + missile.position.offsetForRendering.deltaX - missile._miAnimWidth2;
-	int my = sy + missile.position.offsetForRendering.deltaY;
+
+	const Point missileRenderPosition { targetBufferPosition + missile.position.offsetForRendering - Displacement { missile._miAnimWidth2, 0 } };
 	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
 	if (missile._miUniqTrans != 0)
-		Cl2DrawLightTbl(out, mx, my, cel, missile._miAnimFrame, missile._miUniqTrans + 3);
+		Cl2DrawLightTbl(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame, missile._miUniqTrans + 3);
 	else if (missile._miLightFlag)
-		Cl2DrawLight(out, mx, my, cel, missile._miAnimFrame);
+		Cl2DrawLight(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
 	else
-		Cl2Draw(out, mx, my, cel, missile._miAnimFrame);
+		Cl2Draw(out, missileRenderPosition.x, missileRenderPosition.y, cel, missile._miAnimFrame);
 }
 
 /**
  * @brief Render a missile sprites for a given tile
  * @param out Output buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  * @param pre Is the sprite in the background
  */
-void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
+void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
-	const auto range = MissilesAtRenderingTile.equal_range(Point { x, y });
+	const auto range = MissilesAtRenderingTile.equal_range(tilePosition);
 	for (auto it = range.first; it != range.second; it++) {
-		DrawMissilePrivate(out, *it->second, sx, sy, pre);
+		DrawMissilePrivate(out, *it->second, targetBufferPosition, pre);
 	}
 }
 
@@ -863,7 +860,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 #endif
 
 	if (MissilePreFlag) {
-		DrawMissile(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
+		DrawMissile(out, tilePosition, targetBufferPosition, true);
 	}
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
@@ -906,7 +903,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
 		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, 0, targetBufferPosition.x, targetBufferPosition.y);
 	}
-	DrawMissile(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
+	DrawMissile(out, tilePosition, targetBufferPosition, false);
 	DrawObject(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
 	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
 
