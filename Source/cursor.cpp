@@ -105,10 +105,8 @@ const int InvItemHeight2[] = {
 Size cursSize;
 /** Current highlighted monster */
 int pcursmonst = -1;
-/** Width of current cursor in inventory cells */
-int icursW28;
-/** Height of current cursor in inventory cells */
-int icursH28;
+/** Size of current cursor in inventory cells */
+Size icursSize28;
 
 /** inv_item value */
 int8_t pcursinvitem;
@@ -169,8 +167,7 @@ void SetICursor(int cursId)
 	auto size = GetInvItemSize(cursId);
 	icursW = size.width;
 	icursH = size.height;
-	icursW28 = icursW / 28;
-	icursH28 = icursH / 28;
+	icursSize28 = Size { icursW, icursH } / 28;
 }
 
 void NewCursor(int cursId)

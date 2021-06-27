@@ -360,7 +360,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
 	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
-	Size itemSize { icursW28, icursH28 };
+	Size itemSize { icursSize28 };
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
