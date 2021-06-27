@@ -48,13 +48,13 @@ void AddWarpMissile(int i, int x, int y)
 
 	missiledata[MIS_TOWN].mlSFX = SFX_NONE;
 	dMissile[x][y] = 0;
-	mi = AddMissile(0, 0, x, y, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	mi = AddMissile({ 0, 0 }, { x, y }, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 
 	if (mi != -1) {
 		SetMissDir(mi, 1);
 
 		if (currlevel != 0)
-			missile[mi]._mlid = AddLight(missile[mi].position.tile.x, missile[mi].position.tile.y, 15);
+			missile[mi]._mlid = AddLight(missile[mi].position.tile, 15);
 
 		missiledata[MIS_TOWN].mlSFX = LS_SENTINEL;
 	}
@@ -140,23 +140,25 @@ void GetPortalLevel()
 		currlevel = 0;
 		plr[myplr].plrlevel = 0;
 		leveltype = DTYPE_TOWN;
+		return;
+	}
+
+	if (portal[portalindex].setlvl) {
+		setlevel = true;
+		setlvlnum = (_setlevels)portal[portalindex].level;
+		currlevel = portal[portalindex].level;
+		plr[myplr].plrlevel = setlvlnum;
+		leveltype = portal[portalindex].ltype;
 	} else {
-		if (portal[portalindex].setlvl) {
-			setlevel = true;
-			setlvlnum = (_setlevels)portal[portalindex].level;
-			currlevel = portal[portalindex].level;
-			plr[myplr].plrlevel = setlvlnum;
-			leveltype = portal[portalindex].ltype;
-		} else {
-			setlevel = false;
-			currlevel = portal[portalindex].level;
-			plr[myplr].plrlevel = currlevel;
-			leveltype = portal[portalindex].ltype;
-		}
-		if (portalindex == myplr) {
-			NetSendCmd(true, CMD_DEACTIVATEPORTAL);
-			DeactivatePortal(portalindex);
-		}
+		setlevel = false;
+		currlevel = portal[portalindex].level;
+		plr[myplr].plrlevel = currlevel;
+		leveltype = portal[portalindex].ltype;
+	}
+
+	if (portalindex == myplr) {
+		NetSendCmd(true, CMD_DEACTIVATEPORTAL);
+		DeactivatePortal(portalindex);
 	}
 }
 

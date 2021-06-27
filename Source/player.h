@@ -5,18 +5,22 @@
  */
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 #include "diablo.h"
 #include "engine.h"
+#include "engine/actor_position.hpp"
+#include "engine/animationinfo.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
 #include "gendung.h"
+#include "interfac.h"
 #include "items.h"
 #include "multi.h"
-#include "spelldat.h"
 #include "path.h"
-#include "interfac.h"
+#include "spelldat.h"
 #include "utils/enum_traits.h"
-#include "engine/animationinfo.h"
 
 namespace devilution {
 
@@ -76,21 +80,18 @@ enum inv_body_loc : uint8_t {
 	NUM_INVLOC,
 };
 
-enum player_graphic : uint16_t {
-	// clang-format off
-	PFILE_STAND     = 1 << 0,
-	PFILE_WALK      = 1 << 1,
-	PFILE_ATTACK    = 1 << 2,
-	PFILE_HIT       = 1 << 3,
-	PFILE_LIGHTNING = 1 << 4,
-	PFILE_FIRE      = 1 << 5,
-	PFILE_MAGIC     = 1 << 6,
-	PFILE_DEATH     = 1 << 7,
-	PFILE_BLOCK     = 1 << 8,
-	// everything except PFILE_DEATH
-	// 0b1_0111_1111
-	PFILE_NONDEATH  = 0x17F
-	// clang-format on
+enum class player_graphic : uint8_t {
+	Stand,
+	Walk,
+	Attack,
+	Hit,
+	Lightning,
+	Fire,
+	Magic,
+	Death,
+	Block,
+
+	LAST = Block
 };
 
 enum anim_weapon_id : uint8_t {
@@ -148,24 +149,42 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
+/**
+ * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
+ */
+struct PlayerAnimationData {
+	/**
+	 * @brief CelSprites for the different directions
+	 */
+	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
+	/**
+	 * @brief Raw Data (binary) of the CL2 file.
+	 *        Is referenced from CelSprite in CelSpritesForDirections
+	 */
+	std::unique_ptr<byte[]> RawData;
+};
+
 struct PlayerStruct {
+	PlayerStruct() = default;
+	PlayerStruct(PlayerStruct &&) noexcept = default;
+	PlayerStruct &operator=(PlayerStruct &&) noexcept = default;
+
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
 	bool plractive;
 	action_id destAction;
 	int destParam1;
 	int destParam2;
-	direction destParam3;
+	Direction destParam3;
 	int destParam4;
 	int plrlevel;
 	ActorPosition position;
-	direction _pdir; // Direction faced by player (direction enum)
+	Direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
-	/*
-	* @brief Contains Information for current Animation
-	*/
+	/**
+	 * @brief Contains Information for current Animation
+	 */
 	AnimationInfo AnimInfo;
-	int _pAnimWidth;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -224,44 +243,28 @@ struct PlayerStruct {
 	int _pGold;
 	bool _pInfraFlag;
 	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
-	direction tempDirection;
+	Direction tempDirection;
 	/** Used for spell level, and X component of _pVar5 */
 	int _pVar4;
 	/** Used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking. When starting to walk the game places the player in the dPlayer array -1 in the Y coordinate, and uses BFLAG_PLAYERLR to check if it should be using -1 to the Y coordinate when rendering the player (also used for storing the level of a spell when the player casts it) */
 	int _pVar5;
-	/** Used for counting how close we are to reaching the next tile when walking (usually counts to 8, which is equal to the walk animation length). */
-	int actionFrame;
 	/** Used for stalling the appearance of the options screen after dying in singleplayer */
 	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];
 	bool _pSLvlVisited[NUMLEVELS]; // only 10 used
-	                               /** Using player_graphic as bitflags */
-	int _pGFXLoad;
-	uint8_t *_pNAnim[8]; // Stand animations
+	/**
+	 * @brief Contains Data (Sprites) for the different Animations
+	 */
+	std::array<PlayerAnimationData, enum_size<player_graphic>::value> AnimationData;
 	int _pNFrames;
-	int _pNWidth;
-	uint8_t *_pWAnim[8]; // Walk animations
 	int _pWFrames;
-	int _pWWidth;
-	uint8_t *_pAAnim[8]; // Attack animations
 	int _pAFrames;
-	int _pAWidth;
 	int _pAFNum;
-	uint8_t *_pLAnim[8]; // Lightning spell cast animations
-	uint8_t *_pFAnim[8]; // Fire spell cast animations
-	uint8_t *_pTAnim[8]; // Generic spell cast animations
 	int _pSFrames;
-	int _pSWidth;
 	int _pSFNum;
-	uint8_t *_pHAnim[8]; // Getting hit animations
 	int _pHFrames;
-	int _pHWidth;
-	uint8_t *_pDAnim[8]; // Death animations
 	int _pDFrames;
-	int _pDWidth;
-	uint8_t *_pBAnim[8]; // Block animations
 	int _pBFrames;
-	int _pBWidth;
 	ItemStruct InvBody[NUM_INVLOC];
 	ItemStruct InvList[NUM_INV_GRID_ELEM];
 	int _pNumInv;
@@ -299,15 +302,25 @@ struct PlayerStruct {
 	uint8_t pDiabloKillLevel;
 	_difficulty pDifficulty;
 	uint32_t pDamAcFlags;
-	uint8_t *_pNData;
-	uint8_t *_pWData;
-	uint8_t *_pAData;
-	uint8_t *_pLData;
-	uint8_t *_pFData;
-	uint8_t *_pTData;
-	uint8_t *_pHData;
-	uint8_t *_pDData;
-	uint8_t *_pBData;
+
+	void CalcScrolls();
+
+	bool HasItem(int item, int *idx = nullptr) const;
+
+	/**
+	 * @brief Remove an item from player inventory
+	 * @param iv invList index of item to be removed
+	 * @param calcScrolls If true, CalcScrolls() gets called after removing item
+	 */
+	void RemoveInvItem(int iv, bool calcScrolls = true);
+
+	/**
+	 * @brief Remove an item from player inventory and return true if the player has the item, return false otherwise
+	 * @param item IDidx of item to be removed
+	 */
+	bool TryRemoveInvItemById(int item);
+
+	void RemoveSpdBarItem(int iv);
 
 	/**
 	 * @brief Gets the most valuable item out of all the player's items that match the given predicate.
@@ -359,20 +372,36 @@ struct PlayerStruct {
 	Point GetTargetPosition() const;
 
 	/**
-	 * @brief Play a speach file.
-	 * @todo Create enum for speachId
-	 * @todo BUGFIX Prevent more then one speach to be played at a time (reject new requests).
+	 * @brief Says a speech line.
+	 * @todo BUGFIX Prevent more then one speech to be played at a time (reject new requests).
 	 */
-	void PlaySpeach(int speachId) const;
+	void Say(HeroSpeech speechId) const;
 	/**
-	 * @brief Play a speach file after a given delay.
-	 * @param delay Multiple of 20ms waith before starting the speach
+	 * @brief Says a speech line after a given delay.
+	 * @param delay Multiple of 50ms wait before starting the speech
 	 */
-	void PlaySpeach(int speachId, int delay) const;
+	void Say(HeroSpeech speechId, int delay) const;
 	/**
-	 * @brief Play a player speach file, with out random variants.
+	 * @brief Says a speech line, without random variants.
 	 */
-	void PlaySpecificSpeach(int speachId) const;
+	void SaySpecific(HeroSpeech speechId) const;
+
+	/**
+	 * @brief Attempts to stop the player from performing any queued up action. If the player is currently walking, his walking will
+	 * stop as soon as he reaches the next tile. If any action was queued with the previous command (like targeting a monster,
+	 * opening a chest, picking an item up, etc) this action will also be cancelled.
+	 */
+	void Stop();
+
+	/**
+	 * @brief Is the player currently walking?
+	 */
+	bool IsWalking() const;
+
+	/**
+	 * @brief Resets all Data of the current PlayerStruct
+	 */
+	void Reset();
 };
 
 extern int myplr;
@@ -380,26 +409,25 @@ extern PlayerStruct plr[MAX_PLRS];
 extern bool deathflag;
 extern int ToBlkTbl[enum_size<HeroClass>::value];
 
-void LoadPlrGFX(int pnum, player_graphic gfxflag);
-void InitPlayerGFX(int pnum);
-void InitPlrGFXMem(int pnum);
-void FreePlayerGFX(int pnum);
+void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
+void InitPlayerGFX(PlayerStruct &player);
+void ResetPlayerGFX(PlayerStruct &player);
 
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
  * @param pnum Player Id
- * @param pData Pointer to Animation Data
+ * @param graphic What player animation should be displayed
+ * @param dir Direction of the animation
  * @param numberOfFrames Number of Frames in Animation
  * @param delayLen Delay after each Animation sequence
- * @param width Width of sprite
- * @param params Specifies what special logics are applied to this Animation
+ * @param flags Specifies what special logics are applied to this Animation
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(int pnum, BYTE *pData, int numberOfFrames, int delayLen, int width, AnimationDistributionParams params = AnimationDistributionParams::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
-void SetPlrAnims(int pnum);
-void CreatePlayer(int pnum, HeroClass c);
-int CalcStatDiff(int pnum);
+void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void SetPlrAnims(PlayerStruct &player);
+void CreatePlayer(int playerId, HeroClass c);
+int CalcStatDiff(PlayerStruct &player);
 #ifdef _DEBUG
 void NextPlrLevel(int pnum);
 #endif
@@ -408,14 +436,14 @@ void AddPlrMonstExper(int lvl, int exp, char pmask);
 void ApplyPlrDamage(int pnum, int dam, int minHP = 0, int frac = 0, int earflag = 0);
 void InitPlayer(int pnum, bool FirstTime);
 void InitMultiView();
-bool SolidLoc(int x, int y);
-void PlrClrTrans(int x, int y);
-void PlrDoTrans(int x, int y);
-void SetPlayerOld(int pnum);
-void FixPlayerLocation(int pnum, direction bDir);
-void StartStand(int pnum, direction dir);
-void StartAttack(int pnum, direction d);
-void StartPlrBlock(int pnum, direction dir);
+bool SolidLoc(Point position);
+void PlrClrTrans(Point position);
+void PlrDoTrans(Point position);
+void SetPlayerOld(PlayerStruct &player);
+void FixPlayerLocation(int pnum, Direction bDir);
+void StartStand(int pnum, Direction dir);
+void StartAttack(int pnum, Direction d);
+void StartPlrBlock(int pnum, Direction dir);
 void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
@@ -428,14 +456,15 @@ void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
-void ClrPlrPath(int pnum);
-bool PosOkPlayer(int pnum, int x, int y);
-void MakePlrPath(int pnum, int xx, int yy, bool endspace);
+void ClrPlrPath(PlayerStruct &player);
+bool PosOkPlayer(int pnum, Point position);
+void MakePlrPath(int pnum, Point targetPosition, bool endspace);
+void CalcPlrStaff(PlayerStruct &player);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);
-void CheckStats(int p);
+void CheckStats(PlayerStruct &player);
 void ModifyPlrStr(int p, int l);
 void ModifyPlrMag(int p, int l);
 void ModifyPlrDex(int p, int l);
@@ -445,7 +474,7 @@ void SetPlrStr(int p, int v);
 void SetPlrMag(int p, int v);
 void SetPlrDex(int p, int v);
 void SetPlrVit(int p, int v);
-void InitDungMsgs(int pnum);
+void InitDungMsgs(PlayerStruct &player);
 void PlayDungMsgs();
 
 /* data */

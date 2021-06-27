@@ -24,9 +24,6 @@ namespace {
 // Forward-declare menu handlers, used by the global menu structs below.
 void gamemenu_previous(bool bActivate);
 void gamemenu_new_game(bool bActivate);
-void gamemenu_quit_game(bool bActivate);
-void gamemenu_load_game(bool bActivate);
-void gamemenu_save_game(bool bActivate);
 void gamemenu_restart_town(bool bActivate);
 void gamemenu_options(bool bActivate);
 void gamemenu_music_volume(bool bActivate);
@@ -81,13 +78,9 @@ const char *const sound_toggle_names[] = {
 
 void gamemenu_update_single()
 {
-	bool enable;
-
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
-	enable = false;
-	if (plr[myplr]._pmode != PM_DEATH && !deathflag)
-		enable = true;
+	bool enable = plr[myplr]._pmode != PM_DEATH && !deathflag;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
@@ -104,75 +97,17 @@ void gamemenu_previous(bool bActivate)
 
 void gamemenu_new_game(bool bActivate)
 {
-	int i;
-
-	for (i = 0; i < MAX_PLRS; i++) {
-		plr[i]._pmode = PM_QUIT;
-		plr[i]._pInvincible = true;
+	for (auto &player : plr) {
+		player._pmode = PM_QUIT;
+		player._pInvincible = true;
 	}
 
 	deathflag = false;
 	force_redraw = 255;
-	scrollrt_draw_game_screen(true);
+	scrollrt_draw_game_screen();
 	CornerStone.activated = false;
 	gbRunGame = false;
 	gamemenu_off();
-}
-
-void gamemenu_quit_game(bool bActivate)
-{
-	gamemenu_new_game(bActivate);
-	gbRunGameResult = false;
-}
-
-void gamemenu_load_game(bool bActivate)
-{
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	gamemenu_off();
-	NewCursor(CURSOR_NONE);
-	InitDiabloMsg(EMSG_LOADING);
-	force_redraw = 255;
-	DrawAndBlit();
-	LoadGame(false);
-	ClrDiabloMsg();
-	CornerStone.activated = false;
-	PaletteFadeOut(8);
-	deathflag = false;
-	force_redraw = 255;
-	DrawAndBlit();
-	LoadPWaterPalette();
-	PaletteFadeIn(8);
-	NewCursor(CURSOR_HAND);
-	interface_msg_pump();
-	SetWindowProc(saveProc);
-}
-
-void gamemenu_save_game(bool bActivate)
-{
-	if (pcurs != CURSOR_HAND) {
-		return;
-	}
-
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
-		gamemenu_off();
-		return;
-	}
-
-	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
-	NewCursor(CURSOR_NONE);
-	gamemenu_off();
-	InitDiabloMsg(EMSG_SAVING);
-	force_redraw = 255;
-	DrawAndBlit();
-	SaveGame();
-	ClrDiabloMsg();
-	force_redraw = 255;
-	NewCursor(CURSOR_HAND);
-	if (CornerStone.activated) {
-		items_427A72();
-	}
-	interface_msg_pump();
-	SetWindowProc(saveProc);
 }
 
 void gamemenu_restart_town(bool bActivate)
@@ -186,7 +121,7 @@ void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item,
 	if (gbSndInited) {
 		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
 		menu_item->pszStr = names[0];
-		gmenu_slider_steps(menu_item, 17);
+		gmenu_slider_steps(menu_item, VOLUME_STEPS);
 		gmenu_slider_set(menu_item, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
@@ -196,7 +131,7 @@ void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item,
 	menu_item->pszStr = names[1];
 }
 
-static int gamemenu_slider_music_sound(TMenuItem *menu_item)
+int gamemenu_slider_music_sound(TMenuItem *menu_item)
 {
 	return gmenu_slider_get(menu_item, VOLUME_MIN, VOLUME_MAX);
 }
@@ -239,7 +174,7 @@ void gamemenu_get_speed()
 	gmenu_slider_set(&sgOptionsMenu[3], 20, 50, sgGameInitInfo.nTickRate);
 }
 
-static int gamemenu_slider_gamma()
+int gamemenu_slider_gamma()
 {
 	return gmenu_slider_get(&sgOptionsMenu[2], 30, 100);
 }
@@ -365,6 +300,62 @@ void gamemenu_speed(bool bActivate)
 }
 
 } // namespace
+
+void gamemenu_quit_game(bool bActivate)
+{
+	gamemenu_new_game(bActivate);
+	gbRunGameResult = false;
+}
+
+void gamemenu_load_game(bool bActivate)
+{
+	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	gamemenu_off();
+	NewCursor(CURSOR_NONE);
+	InitDiabloMsg(EMSG_LOADING);
+	force_redraw = 255;
+	DrawAndBlit();
+	LoadGame(false);
+	ClrDiabloMsg();
+	CornerStone.activated = false;
+	PaletteFadeOut(8);
+	deathflag = false;
+	force_redraw = 255;
+	DrawAndBlit();
+	LoadPWaterPalette();
+	PaletteFadeIn(8);
+	NewCursor(CURSOR_HAND);
+	interface_msg_pump();
+	SetWindowProc(saveProc);
+}
+
+void gamemenu_save_game(bool bActivate)
+{
+	if (pcurs != CURSOR_HAND) {
+		return;
+	}
+
+	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+		gamemenu_off();
+		return;
+	}
+
+	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
+	NewCursor(CURSOR_NONE);
+	gamemenu_off();
+	InitDiabloMsg(EMSG_SAVING);
+	force_redraw = 255;
+	DrawAndBlit();
+	SaveGame();
+	ClrDiabloMsg();
+	force_redraw = 255;
+	NewCursor(CURSOR_HAND);
+	if (CornerStone.activated) {
+		items_427A72();
+	}
+	interface_msg_pump();
+	SetWindowProc(saveProc);
+}
 
 void gamemenu_on()
 {

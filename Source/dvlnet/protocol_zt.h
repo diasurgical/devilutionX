@@ -68,8 +68,8 @@ public:
 	~protocol_zt();
 	void disconnect(const endpoint &peer);
 	bool send(const endpoint &peer, const buffer_t &data);
-	bool send_oob(const endpoint &peer, const buffer_t &data);
-	bool send_oob_mc(const buffer_t &data);
+	bool send_oob(const endpoint &peer, const buffer_t &data) const;
+	bool send_oob_mc(const buffer_t &data) const;
 	bool recv(endpoint &peer, buffer_t &data);
 	bool get_disconnected(endpoint &peer);
 	bool network_online();

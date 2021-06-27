@@ -5,7 +5,7 @@
 namespace devilution {
 
 #ifndef USE_SDL1
-void handle_touch(SDL_Event *event, int current_mouse_x, int current_mouse_y);
+void handle_touch(SDL_Event *event, int currentMouseX, int currentMouseY);
 #endif
 
 } // namespace devilution

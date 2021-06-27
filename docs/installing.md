@@ -59,19 +59,30 @@ sudo apt install devilutionx
 
 </details>
 
+<details><summary>Android</summary>
+
+- Copy the APK file to device and tap on it on device's file explorer or install via `adb install` (if USB debugging is enabled on device).
+- Create a folder called `devilutionx` in the root of the phone's internal memory or SD card, and place the MPQ-files there.
+
+</details>
+
 <details><summary>New Nintendo 3DS</summary>
 
 ### .3dsx installation
 
 - Copy `devilutionx.3dsx` into `sd:/3ds/devilutionx/`.
-- Copy the MPQ files to `sd:/3ds/devilutionx/`.
+- Copy the MPQ files into `sd:/3ds/devilutionx/`.
+- Copy the `CharisSILB.ttf` font file into `sd:/3ds/devilutionx/`.
 - Launch `devilutionx.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
- - *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
+    - *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
 ### .cia installation
 
-- Copy `devilutionx.cia` to your SD card and install with a title manager, e.g. [FBI](https://github.com/Steveice10/FBI). `devilutionx.cia` can be removed after being installed.
+- Copy `devilutionx.cia` to your SD card.
 - Copy the MPQ files to `sd:/3ds/devilutionx/`.
+- Copy the `CharisSILB.ttf` font file into `sd:/3ds/devilutionx/`.
+- Install `devilutionx.cia` with a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
+    - `devilutionx.cia` can be removed after being installed.
 - Launch Diablo from your 3DS Homemenu.
 
 </details>

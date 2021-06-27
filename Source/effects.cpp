@@ -3,9 +3,13 @@
  *
  * Implementation of functions for loading and playing sounds.
  */
+#include "effects.h"
+
+#include "engine/random.hpp"
 #include "init.h"
 #include "player.h"
 #include "sound.h"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 namespace {
@@ -1091,13 +1095,13 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
 	stream_stop();
-	lVolume += sound_get_or_set_sound_volume(1);
+
 	if (lVolume >= VOLUME_MIN) {
 		if (lVolume > VOLUME_MAX)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == nullptr)
 			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
-		pSFX->pSnd->DSB.Play(lVolume, lPan, 0);
+		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan, 0);
 		sgpStreamSFX = pSFX;
 	}
 }
@@ -1132,47 +1136,43 @@ void InitMonsterSND(int monst)
 void FreeMonsterSnd()
 {
 	for (int i = 0; i < nummtypes; i++) {
-		for (int j = 0; j < 4; ++j) {
-			for (int k = 0; k < 2; ++k) {
-				Monsters[i].Snds[j][k] = nullptr;
+		for (auto &variants : Monsters[i].Snds) {
+			for (auto & snd : variants) {
+				snd = nullptr;
 			}
 		}
 	}
 }
 
-bool calc_snd_position(int x, int y, int *plVolume, int *plPan)
+bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 {
 	int pan, volume;
 
-	x -= plr[myplr].position.tile.x;
-	y -= plr[myplr].position.tile.y;
+	const auto &playerPosition = plr[myplr].position.tile;
+	const auto delta = soundPosition - playerPosition;
 
-	pan = (x - y) * 256;
-	*plPan = pan;
+	pan = (delta.x - delta.y) * 256;
+	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
 
-	if (abs(pan) > 6400)
+	volume = playerPosition.ApproxDistance(soundPosition);
+	volume *= -64;
+
+	if (volume <= ATTENUATION_MIN)
 		return false;
 
-	volume = abs(x) > abs(y) ? abs(x) : abs(y);
-	volume *= 64;
 	*plVolume = volume;
-
-	if (volume >= 6400)
-		return false;
-
-	*plVolume = -volume;
 
 	return true;
 }
 
-static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
+static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
 {
 	int lPan, lVolume;
 
-	if (plr[myplr].pLvlLoad && gbIsMultiplayer) {
+	if (plr[myplr].pLvlLoad != 0 && gbIsMultiplayer) {
 		return;
 	}
-	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
+	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
 
@@ -1182,7 +1182,7 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, int x, int y)
 
 	lPan = 0;
 	lVolume = 0;
-	if (loc && !calc_snd_position(x, y, &lVolume, &lPan)) {
+	if (loc && !calc_snd_position(position, &lVolume, &lPan)) {
 		return;
 	}
 
@@ -1202,13 +1202,12 @@ void PlayEffect(int i, int mode)
 {
 	int sndIdx, mi, lVolume, lPan;
 
-
-	if (plr[myplr].pLvlLoad) {
+	if (plr[myplr].pLvlLoad != 0) {
 		return;
 	}
 
 	sndIdx = GenerateRnd(2);
-	if (!gbSndInited || !gbSoundOn || gbBufferMsgs) {
+	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
 
@@ -1218,7 +1217,7 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	if (!calc_snd_position(monster[i].position.tile.x, monster[i].position.tile.y, &lVolume, &lPan))
+	if (!calc_snd_position(monster[i].position.tile, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);
@@ -1260,10 +1259,10 @@ void PlaySFX(_sfx_id psfx)
 {
 	psfx = RndSFX(psfx);
 
-	PlaySFX_priv(&sgSFX[psfx], false, 0, 0);
+	PlaySFX_priv(&sgSFX[psfx], false, { 0, 0 });
 }
 
-void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
+void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory)
 {
 	if (randomizeByCategory) {
 		psfx = RndSFX(psfx);
@@ -1275,7 +1274,7 @@ void PlaySfxLoc(_sfx_id psfx, int x, int y, bool randomizeByCategory)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], true, x, y);
+	PlaySFX_priv(&sgSFX[psfx], true, position);
 }
 
 void sound_stop()
@@ -1295,7 +1294,6 @@ void sound_update()
 	}
 
 	stream_update();
-	CleanupFinishedDuplicateSounds();
 }
 
 void effects_cleanup_sfx()
@@ -1344,20 +1342,23 @@ void sound_init()
 			mask |= (sfx_ROGUE | sfx_SORCERER);
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
-	} else if (plr[myplr]._pClass == HeroClass::Warrior) {
-		mask |= sfx_WARRIOR;
-	} else if (plr[myplr]._pClass == HeroClass::Rogue) {
-		mask |= sfx_ROGUE;
-	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		mask |= sfx_SORCERER;
-	} else if (plr[myplr]._pClass == HeroClass::Monk) {
-		mask |= sfx_MONK;
-	} else if (plr[myplr]._pClass == HeroClass::Bard) {
-		mask |= sfx_ROGUE;
-	} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-		mask |= sfx_WARRIOR;
 	} else {
-		app_fatal("effects:1");
+		auto &myPlayer = plr[myplr];
+		if (myPlayer._pClass == HeroClass::Warrior) {
+			mask |= sfx_WARRIOR;
+		} else if (myPlayer._pClass == HeroClass::Rogue) {
+			mask |= sfx_ROGUE;
+		} else if (myPlayer._pClass == HeroClass::Sorcerer) {
+			mask |= sfx_SORCERER;
+		} else if (myPlayer._pClass == HeroClass::Monk) {
+			mask |= sfx_MONK;
+		} else if (myPlayer._pClass == HeroClass::Bard) {
+			mask |= sfx_ROGUE;
+		} else if (myPlayer._pClass == HeroClass::Barbarian) {
+			mask |= sfx_WARRIOR;
+		} else {
+			app_fatal("effects:1");
+		}
 	}
 
 	priv_sound_init(mask);
@@ -1374,10 +1375,10 @@ void effects_play_sound(const char *snd_file)
 		return;
 	}
 
-	for (uint32_t i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		if (strcasecmp(sgSFX[i].pszName, snd_file) == 0 && sgSFX[i].pSnd != nullptr) {
-			if (!sgSFX[i].pSnd->isPlaying())
-				snd_play_snd(sgSFX[i].pSnd.get(), 0, 0);
+	for (auto &sfx : sgSFX) {
+		if (strcasecmp(sfx.pszName, snd_file) == 0 && sfx.pSnd != nullptr) {
+			if (!sfx.pSnd->isPlaying())
+				snd_play_snd(sfx.pSnd.get(), 0, 0);
 
 			return;
 		}

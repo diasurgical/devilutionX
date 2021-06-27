@@ -7,7 +7,7 @@
 
 #include <SDL.h>
 
-#include "engine.h"
+#include "engine/point.hpp"
 
 namespace devilution {
 
@@ -23,11 +23,11 @@ struct PATHNODE {
 	struct PATHNODE *NextNode;
 };
 
-int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH]);
+int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH]);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
 PATHNODE *GetNextPath();
 bool path_solid_pieces(PATHNODE *pPath, int dx, int dy);
-bool path_get_path(bool (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y);
+bool path_get_path(bool (*PosOk)(int, Point), int PosOkArg, PATHNODE *pPath, int x, int y);
 bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy);
 PATHNODE *path_get_node1(int dx, int dy);
 PATHNODE *path_get_node2(int dx, int dy);

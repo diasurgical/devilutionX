@@ -20,7 +20,7 @@ void base::setup_password(std::string pw)
 void base::run_event_handler(_SNETEVENT &ev)
 {
 	auto f = registered_handlers[static_cast<event_type>(ev.eventid)];
-	if (f) {
+	if (f != nullptr) {
 		f(&ev);
 	}
 }
@@ -119,20 +119,20 @@ bool base::SNetReceiveMessage(int *sender, char **data, int *size)
 	return true;
 }
 
-bool base::SNetSendMessage(int playerID, void *data, unsigned int size)
+bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
 {
-	if (playerID != SNPLAYER_ALL && playerID != SNPLAYER_OTHERS
-	    && (playerID < 0 || playerID >= MAX_PLRS))
+	if (playerId != SNPLAYER_ALL && playerId != SNPLAYER_OTHERS
+	    && (playerId < 0 || playerId >= MAX_PLRS))
 		abort();
-	auto rawMessage = reinterpret_cast<unsigned char *>(data);
+	auto *rawMessage = reinterpret_cast<unsigned char *>(data);
 	buffer_t message(rawMessage, rawMessage + size);
-	if (playerID == plr_self || playerID == SNPLAYER_ALL)
+	if (playerId == plr_self || playerId == SNPLAYER_ALL)
 		message_queue.emplace_back(plr_self, message);
 	plr_t dest;
-	if (playerID == SNPLAYER_ALL || playerID == SNPLAYER_OTHERS)
+	if (playerId == SNPLAYER_ALL || playerId == SNPLAYER_OTHERS)
 		dest = PLR_BROADCAST;
 	else
-		dest = playerID;
+		dest = playerId;
 	if (dest != plr_self) {
 		auto pkt = pktfty->make_packet<PT_MESSAGE>(plr_self, dest, message);
 		send(*pkt);
@@ -187,7 +187,7 @@ bool base::SNetSendTurn(char *data, unsigned int size)
 	return true;
 }
 
-int base::SNetGetProviderCaps(struct _SNETCAPS *caps)
+void base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
 	caps->size = 0;                  // engine writes only ?!?
 	caps->flags = 0;                 // unused
@@ -199,7 +199,6 @@ int base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	caps->defaultturnssec = 10;      // ?
 	caps->defaultturnsintransit = 1; // maximum acceptable number
 	                                 // of turns in queue?
-	return 1;
 }
 
 bool base::SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)

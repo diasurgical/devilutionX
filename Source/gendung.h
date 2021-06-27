@@ -9,6 +9,8 @@
 #include <memory>
 
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
 #include "scrollrt.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -99,6 +101,13 @@ struct THEME_LOC {
 	int16_t height;
 };
 
+struct MegaTile {
+	uint16_t micro1;
+	uint16_t micro2;
+	uint16_t micro3;
+	uint16_t micro4;
+};
+
 struct MICROS {
 	uint16_t mt[16];
 };
@@ -113,25 +122,40 @@ struct ShadowStruct {
 	uint8_t nv3;
 };
 
-extern BYTE dungeon[DMAXX][DMAXY];
-extern BYTE pdungeon[DMAXX][DMAXY];
+extern uint8_t dungeon[DMAXX][DMAXY];
+extern uint8_t pdungeon[DMAXX][DMAXY];
 extern char dflags[DMAXX][DMAXY];
 extern int setpc_x;
 extern int setpc_y;
 extern int setpc_w;
 extern int setpc_h;
-extern std::unique_ptr<BYTE[]> pSetPiece;
+extern std::unique_ptr<uint16_t[]> pSetPiece;
 extern bool setloadflag;
 extern std::optional<CelSprite> pSpecialCels;
-extern std::unique_ptr<BYTE[]> pMegaTiles;
-extern std::unique_ptr<BYTE[]> pLevelPieces;
-extern std::unique_ptr<BYTE[]> pDungeonCels;
-extern char block_lvid[MAXTILES + 1];
-extern bool nBlockTable[MAXTILES + 1];
-extern bool nSolidTable[MAXTILES + 1];
-extern bool nTransTable[MAXTILES + 1];
-extern bool nMissileTable[MAXTILES + 1];
-extern bool nTrapTable[MAXTILES + 1];
+extern std::unique_ptr<MegaTile[]> pMegaTiles;
+extern std::unique_ptr<uint16_t[]> pLevelPieces;
+extern std::unique_ptr<byte[]> pDungeonCels;
+/**
+ * List of transparancy masks to use for dPieces
+ */
+extern std::array<uint8_t, MAXTILES + 1> block_lvid;
+/**
+ * List of light blocking dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nBlockTable;
+/**
+ * List of path blocking dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nSolidTable;
+/**
+ * List of transparent dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nTransTable;
+/**
+ * List of missile blocking dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nMissileTable;
+extern std::array<bool, MAXTILES + 1> nTrapTable;
 extern int dminx;
 extern int dminy;
 extern int dmaxx;

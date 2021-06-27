@@ -10,14 +10,15 @@
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "cursor.h"
+#include "engine/rectangle.hpp"
+#include "hwcursor.hpp"
 #include "inv.h"
+#include "miniwin/miniwin.h"
 #include "movie.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
-#include "utils/log.hpp"
-#include "miniwin/miniwin.h"
-
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -49,28 +50,30 @@ void SetCursorPos(int x, int y)
 // Moves the mouse to the first attribute "+" button.
 void FocusOnCharInfo()
 {
-	if (invflag || plr[myplr]._pStatPts <= 0)
+	auto &myPlayer = plr[myplr];
+
+	if (invflag || myPlayer._pStatPts <= 0)
 		return;
 
 	// Find the first incrementable stat.
 	int stat = -1;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
-		int max = plr[myplr].GetMaximumAttributeValue(attribute);
+		int max = myPlayer.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			if (plr[myplr]._pBaseStr >= max)
+			if (myPlayer._pBaseStr >= max)
 				continue;
 			break;
 		case CharacterAttribute::Magic:
-			if (plr[myplr]._pBaseMag >= max)
+			if (myPlayer._pBaseMag >= max)
 				continue;
 			break;
 		case CharacterAttribute::Dexterity:
-			if (plr[myplr]._pBaseDex >= max)
+			if (myPlayer._pBaseDex >= max)
 				continue;
 			break;
 		case CharacterAttribute::Vitality:
-			if (plr[myplr]._pBaseVit >= max)
+			if (myPlayer._pBaseVit >= max)
 				continue;
 			break;
 		}
@@ -78,8 +81,8 @@ void FocusOnCharInfo()
 	}
 	if (stat == -1)
 		return;
-	const RECT32 &rect = ChrBtnsRect[stat];
-	SetCursorPos(rect.x + (rect.w / 2), rect.y + (rect.h / 2));
+	const Rectangle &rect = ChrBtnsRect[stat];
+	SetCursorPos(rect.position.x + (rect.size.width / 2), rect.position.y + (rect.size.height / 2));
 }
 
 static int TranslateSdlKey(SDL_Keysym key)
@@ -261,7 +264,7 @@ int32_t PositionForMouse(short x, short y)
 
 int32_t KeystateForMouse(int32_t ret)
 {
-	ret |= (SDL_GetModState() & KMOD_SHIFT) ? DVL_MK_SHIFT : 0;
+	ret |= (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }
@@ -282,7 +285,7 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			plr[myplr].PlaySpeach(16); // "Where would I put this?"
+			plr[myplr].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
 		}
 	}
@@ -309,7 +312,7 @@ bool FetchMessage(tagMSG *lpMsg)
 	}
 
 	SDL_Event e;
-	if (!SDL_PollEvent(&e)) {
+	if (SDL_PollEvent(&e) == 0) {
 		return false;
 	}
 
@@ -540,9 +543,11 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_LEAVE:
 			lpMsg->message = DVL_WM_CAPTURECHANGED;
 			break;
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+			ReinitializeHardwareCursor();
+			break;
 		case SDL_WINDOWEVENT_MOVED:
 		case SDL_WINDOWEVENT_RESIZED:
-		case SDL_WINDOWEVENT_SIZE_CHANGED:
 		case SDL_WINDOWEVENT_MINIMIZED:
 		case SDL_WINDOWEVENT_MAXIMIZED:
 		case SDL_WINDOWEVENT_RESTORED:
@@ -584,7 +589,8 @@ bool TranslateMessage(const tagMSG *lpMsg)
 		unsigned mod = (DWORD)lpMsg->lParam >> 16;
 
 		bool shift = (mod & KMOD_SHIFT) != 0;
-		bool upper = shift != (mod & KMOD_CAPS);
+		bool caps = (mod & KMOD_CAPS) != 0;
+		bool upper = shift != caps;
 
 		bool isAlpha = (key >= 'A' && key <= 'Z');
 		bool isNumeric = (key >= '0' && key <= '9');
@@ -683,30 +689,31 @@ bool TranslateMessage(const tagMSG *lpMsg)
 	return true;
 }
 
-uint16_t GetAsyncKeyState(int vKey)
+bool GetAsyncKeyState(int vKey)
 {
 	if (vKey == DVL_MK_LBUTTON)
-		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT);
+		return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_LEFT)) != 0;
 	if (vKey == DVL_MK_RBUTTON)
-		return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT);
+		return (SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON(SDL_BUTTON_RIGHT)) != 0;
+
 	const Uint8 *state = SDLC_GetKeyState();
 	switch (vKey) {
 	case DVL_VK_CONTROL:
-		return state[SDLC_KEYSTATE_LEFTCTRL] || state[SDLC_KEYSTATE_RIGHTCTRL] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFTCTRL] != 0 || state[SDLC_KEYSTATE_RIGHTCTRL] != 0;
 	case DVL_VK_SHIFT:
-		return state[SDLC_KEYSTATE_LEFTSHIFT] || state[SDLC_KEYSTATE_RIGHTSHIFT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFTSHIFT] != 0 || state[SDLC_KEYSTATE_RIGHTSHIFT] != 0;
 	case DVL_VK_MENU:
-		return state[SDLC_KEYSTATE_LALT] || state[SDLC_KEYSTATE_RALT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LALT] != 0 || state[SDLC_KEYSTATE_RALT] != 0;
 	case DVL_VK_LEFT:
-		return state[SDLC_KEYSTATE_LEFT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_LEFT] != 0;
 	case DVL_VK_UP:
-		return state[SDLC_KEYSTATE_UP] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_UP] != 0;
 	case DVL_VK_RIGHT:
-		return state[SDLC_KEYSTATE_RIGHT] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_RIGHT] != 0;
 	case DVL_VK_DOWN:
-		return state[SDLC_KEYSTATE_DOWN] ? 0x8000 : 0;
+		return state[SDLC_KEYSTATE_DOWN] != 0;
 	default:
-		return 0;
+		return false;
 	}
 }
 
@@ -719,7 +726,7 @@ void PushMessage(const tagMSG *lpMsg)
 
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
 {
-	message_queue.push_back({type, wParam, lParam});
+	message_queue.push_back({ type, wParam, lParam });
 
 	return true;
 }

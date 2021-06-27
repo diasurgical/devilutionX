@@ -2,12 +2,14 @@ version: 2
 jobs:
   linux_x86_64:
     docker:
-      - image: debian:testing
+      - image: debian:stretch-backports
     working_directory: ~/repo
     steps:
       - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev rpm wget
+      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
+      - run: apt update -y
+      - run: apt install -y g++ libsdl2-dev libsdl2-ttf-dev git rpm wget
+      - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
@@ -23,100 +25,44 @@ jobs:
       - checkout
       - run: apt-get update -y
       - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev
-      - run: cmake -S. -Bbuild -DRUN_TESTS=ON
+      - run: cmake -S. -Bbuild -DRUN_TESTS=ON -DENABLE_CODECOVERAGE=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
-  linux_x86_64_sdl1:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-ttf2.0-dev libsodium-dev rpm
-      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DUSE_SDL1=ON
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64_sdl1}
-      - run: Packaging/nix/LinuxReleasePackaging.sh
-      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86_64_sdl1.tar.xz}
-  linux_x86:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: dpkg --add-architecture i386
-      - run: apt-get update -y
-      - run: apt-get install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86}
-      - run: Packaging/nix/LinuxReleasePackaging.sh
-      - run: Packaging/nix/AppImage.sh
-      - store_artifacts: {path: ./devilutionx.appimage, destination: devilutionx_linux_x86.appimage}
-      - store_artifacts: {path: ./devilutionx.tar.xz, destination: devilutionx_linux_x86.tar.xz}
-  windows_x86:
-    docker:
-      - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686 wget git sudo
-      - run: Packaging/windows/mingw-prep.sh
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc.cmake
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x86.exe}
-      - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x86.zip}
-  windows_x64:
-    docker:
-    - image: debian:testing
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 wget git sudo
-      - run: Packaging/windows/mingw-prep64.sh
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
-      - run: cmake --build build -j 2 --target package
-      - store_artifacts: {path: ./build/devilutionx.exe, destination: devilutionx_x64.exe}
-      - store_artifacts: {path: ./build/devilutionx.zip, destination: devilutionx_x64.zip}
   switch:
     docker:
       - image: devkitpro/devkita64:latest
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
-      - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake
-      - run: dkp-pacman -Syu --noconfirm
-      # Install cmake files (https://github.com/devkitPro/docker/issues/3)
-      - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
-      - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/switch/devkita64-libnx.cmake
+      - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
+  android:
+    docker:
+      - image: circleci/android:api-28-ndk
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: sudo apt update -y
+      - run: sudo apt install -y g++ cmake ninja-build
+      - run: cd android-project && ./gradlew assembleDebug
+      - store_artifacts: {path: ./android-project/app/build/outputs/apk/debug/app-debug.apk, destination: devilutionx-debug.apk}
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest
     working_directory: ~/repo
     steps:
       - checkout
-      - run: echo deb http://deb.debian.org/debian stretch-backports main > /etc/apt/sources.list.d/debian-backports.list
-      - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
-      - run: apt-get update && apt-get install -y -t 'stretch-backports*' cmake unzip
-      - run: dkp-pacman -Syu --noconfirm
-      - run: dkp-pacman -S --needed --noconfirm --quiet devkitpro-pkgbuild-helpers
-      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.1.0/bannertool.zip
+      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
       - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
       - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
       - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"
       - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
-      - run: cd build && cmake .. -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/3ds.cmake
-      - run: cd build && cmake --build . -j 2
+      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake
+      - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
@@ -148,11 +94,8 @@ workflows:
     jobs:
       - linux_x86_64
       - linux_x86_64_test
-      - linux_x86
-      - windows_x86
-      - windows_x64
-      - linux_x86_64_sdl1
       - switch
+      - android
       - 3ds
       - amigaos-m68k
       - vita

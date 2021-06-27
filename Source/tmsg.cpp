@@ -15,7 +15,7 @@ TMsg *sgpTimedMsgHead;
 
 } // namespace
 
-int tmsg_get(BYTE *pbMsg)
+int tmsg_get(byte *pbMsg)
 {
 	int len;
 	TMsg *head;
@@ -30,15 +30,15 @@ int tmsg_get(BYTE *pbMsg)
 	len = head->hdr.bLen;
 	// BUGFIX: ignores dwMaxLen
 	memcpy(pbMsg, head->body, len);
-	mem_free_dbg(head);
+	std::free(head);
 	return len;
 }
 
-void tmsg_add(BYTE *pbMsg, uint8_t bLen)
+void tmsg_add(byte *pbMsg, uint8_t bLen)
 {
 	TMsg **tail;
 
-	TMsg *msg = (TMsg *)DiabloAllocPtr(bLen + sizeof(*msg));
+	TMsg *msg = static_cast<TMsg *>(std::malloc(bLen + sizeof(*msg)));
 	msg->hdr.pNext = nullptr;
 	msg->hdr.dwTime = SDL_GetTicks() + gnTickDelay * 10;
 	msg->hdr.bLen = bLen;
@@ -60,7 +60,7 @@ void tmsg_cleanup()
 
 	while (sgpTimedMsgHead != nullptr) {
 		next = sgpTimedMsgHead->hdr.pNext;
-		MemFreeDbg(sgpTimedMsgHead);
+		std::free(sgpTimedMsgHead);
 		sgpTimedMsgHead = next;
 	}
 }

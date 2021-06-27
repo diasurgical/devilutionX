@@ -5,6 +5,7 @@
  */
 
 #include "appfat.h"
+#include "utils/file_util.h"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -16,13 +17,13 @@ namespace devilution {
 void ReadOnlyTest()
 {
 	const std::string path = paths::PrefPath() + "Diablo1ReadOnlyTest.foo";
-	FILE *f = fopen(path.c_str(), "wt");
+	FILE *f = FOpen(path.c_str(), "wt");
 	if (f == nullptr) {
 		DirErrorDlg(paths::PrefPath().c_str());
 	}
 
 	fclose(f);
-	remove(path.c_str());
+	RemoveFile(path.c_str());
 }
 
 } // namespace devilution

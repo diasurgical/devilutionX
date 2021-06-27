@@ -1,14 +1,15 @@
 #include "DiabloUI/fonts.h"
 
 #include "diablo.h"
+#include "engine/load_file.hpp"
 #include "utils/file_util.h"
-#include "utils/paths.h"
 #include "utils/log.hpp"
+#include "utils/paths.h"
 
 namespace devilution {
 
 TTF_Font *font = nullptr;
-std::unique_ptr<BYTE[]> FontTables[4];
+std::unique_ptr<uint8_t[]> FontTables[4];
 Art ArtFonts[4][2];
 /** This is so we know ttf has been init when we get to the diablo_deinit() function */
 bool was_fonts_init = false;
@@ -24,10 +25,10 @@ void LoadArtFont(const char *pszFile, int size, int color)
 
 void LoadArtFonts()
 {
-	FontTables[AFT_SMALL] = LoadFileInMem("ui_art\\font16.bin");
-	FontTables[AFT_MED] = LoadFileInMem("ui_art\\font24.bin");
-	FontTables[AFT_BIG] = LoadFileInMem("ui_art\\font30.bin");
-	FontTables[AFT_HUGE] = LoadFileInMem("ui_art\\font42.bin");
+	FontTables[AFT_SMALL] = LoadFileInMem<uint8_t>("ui_art\\font16.bin");
+	FontTables[AFT_MED] = LoadFileInMem<uint8_t>("ui_art\\font24.bin");
+	FontTables[AFT_BIG] = LoadFileInMem<uint8_t>("ui_art\\font30.bin");
+	FontTables[AFT_HUGE] = LoadFileInMem<uint8_t>("ui_art\\font42.bin");
 	LoadArtFont("ui_art\\font16s.pcx", AFT_SMALL, AFC_SILVER);
 	LoadArtFont("ui_art\\font16g.pcx", AFT_SMALL, AFC_GOLD);
 	LoadArtFont("ui_art\\font24s.pcx", AFT_MED, AFC_SILVER);
@@ -63,7 +64,7 @@ void LoadTtfFont()
 	}
 
 	std::string ttfFontPath = paths::TtfPath() + paths::TtfName();
-#ifdef __linux__
+#if defined(__linux__) && !defined(__ANDROID__)
 	if (!FileExists(ttfFontPath.c_str())) {
 		ttfFontPath = "/usr/share/fonts/truetype/" + paths::TtfName();
 	}

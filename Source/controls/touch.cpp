@@ -18,8 +18,8 @@ inline T clip(T v, T amin, T amax)
 		return amin;
 	if (v > amax)
 		return amax;
-	else
-		return v;
+
+	return v;
 }
 
 #define TOUCH_PORT_MAX_NUM 1

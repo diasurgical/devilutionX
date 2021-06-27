@@ -5,6 +5,7 @@
  */
 #include "themes.h"
 
+#include "engine/random.hpp"
 #include "items.h"
 #include "monster.h"
 #include "objects.h"
@@ -196,7 +197,7 @@ bool CheckThemeObj3(int xp, int yp, int t, int f)
 			return false;
 		if (dTransVal[xp + trm3x[i]][yp + trm3y[i]] != themes[t].ttval)
 			return false;
-		if (dObject[xp + trm3x[i]][yp + trm3y[i]])
+		if (dObject[xp + trm3x[i]][yp + trm3y[i]] != 0)
 			return false;
 		if (f != -1 && GenerateRnd(f) == 0)
 			return false;
@@ -511,7 +512,7 @@ void PlaceThemeMonsts(int t, int f)
 		for (xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && !nSolidTable[dPiece[xp][yp]] && dItem[xp][yp] == 0 && dObject[xp][yp] == 0) {
 				if (GenerateRnd(f) == 0) {
-					AddMonster(xp, yp, static_cast<direction>(GenerateRnd(8)), mtype, true);
+					AddMonster({ xp, yp }, static_cast<Direction>(GenerateRnd(8)), mtype, true);
 				}
 			}
 		}
@@ -596,7 +597,7 @@ void Theme_MonstPit(int t)
 			}
 		}
 	}
-	CreateRndItem(ixp, iyp, true, false, true);
+	CreateRndItem({ ixp, iyp }, true, false, true);
 	ItemNoFlippy();
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
 }
@@ -620,45 +621,45 @@ void Theme_SkelRoom(int t)
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp - 1, yp - 1);
+		SpawnSkeleton(i, { xp - 1, yp - 1 });
 	} else {
 		AddObject(OBJ_BANNERL, xp - 1, yp - 1);
 	}
 
 	i = PreSpawnSkeleton();
-	SpawnSkeleton(i, xp, yp - 1);
+	SpawnSkeleton(i, { xp, yp - 1 });
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp + 1, yp - 1);
+		SpawnSkeleton(i, { xp + 1, yp - 1 });
 	} else {
 		AddObject(OBJ_BANNERR, xp + 1, yp - 1);
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp - 1, yp);
+		SpawnSkeleton(i, { xp - 1, yp });
 	} else {
 		AddObject(OBJ_BANNERM, xp - 1, yp);
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp + 1, yp);
+		SpawnSkeleton(i, { xp + 1, yp });
 	} else {
 		AddObject(OBJ_BANNERM, xp + 1, yp);
 	}
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp - 1, yp + 1);
+		SpawnSkeleton(i, { xp - 1, yp + 1 });
 	} else {
 		AddObject(OBJ_BANNERR, xp - 1, yp + 1);
 	}
 
 	i = PreSpawnSkeleton();
-	SpawnSkeleton(i, xp, yp + 1);
+	SpawnSkeleton(i, { xp, yp + 1 });
 
 	if (GenerateRnd(monstrnd[leveltype - 1]) != 0) {
 		i = PreSpawnSkeleton();
-		SpawnSkeleton(i, xp + 1, yp + 1);
+		SpawnSkeleton(i, { xp + 1, yp + 1 });
 	} else {
 		AddObject(OBJ_BANNERL, xp + 1, yp + 1);
 	}
@@ -690,11 +691,11 @@ void Theme_Treasure(int t)
 				int rv = GenerateRnd(treasrnd[leveltype - 1]);
 				// BUGFIX: the `2*` in `2*GenerateRnd(treasrnd...) == 0` has no effect, should probably be `GenerateRnd(2*treasrnd...) == 0`
 				if ((2 * GenerateRnd(treasrnd[leveltype - 1])) == 0) {
-					CreateTypeItem(xp, yp, false, ITYPE_GOLD, IMISC_NONE, false, true);
+					CreateTypeItem({ xp, yp }, false, ITYPE_GOLD, IMISC_NONE, false, true);
 					ItemNoFlippy();
 				}
 				if (rv == 0) {
-					CreateRndItem(xp, yp, false, false, true);
+					CreateRndItem({ xp, yp }, false, false, true);
 					ItemNoFlippy();
 				}
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
@@ -736,7 +737,7 @@ void Theme_Library(int t)
 		for (xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && GenerateRnd(librnd[leveltype - 1]) == 0) {
 				AddObject(OBJ_BOOKSTAND, xp, yp);
-				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp]) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
+				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp] != 0) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
 					oi = dObject[xp][yp] - 1;
 					object[oi]._oSelFlag = 0;
 					object[oi]._oAnimFrame += 2;
@@ -876,7 +877,7 @@ void Theme_GoatShrine(int t)
 	for (yy = themey - 1; yy <= themey + 1; yy++) {
 		for (xx = themex - 1; xx <= themex + 1; xx++) {
 			if (dTransVal[xx][yy] == themes[t].ttval && !nSolidTable[dPiece[xx][yy]] && (xx != themex || yy != themey)) {
-				AddMonster(xx, yy, DIR_SW, themeVar1, true);
+				AddMonster({ xx, yy }, DIR_SW, themeVar1, true);
 			}
 		}
 	}
@@ -1063,7 +1064,7 @@ void CreateThemeRooms()
 			Theme_WeaponRack(i);
 			break;
 		case THEME_NONE:
-			app_fatal("Unknown theme type: %d", themes[i].ttype);
+			app_fatal("Unknown theme type: %i", themes[i].ttype);
 		}
 	}
 	InitObjFlag = false;

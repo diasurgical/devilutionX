@@ -4,8 +4,8 @@
 #include <set>
 
 #include "appfat.h"
-#include "utils/stubs.h"
 #include "utils/log.hpp"
+#include "utils/stubs.h"
 
 namespace devilution {
 

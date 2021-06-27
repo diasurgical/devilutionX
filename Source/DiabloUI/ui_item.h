@@ -24,17 +24,21 @@ enum UiType : uint8_t {
 
 enum UiFlags : uint16_t {
 	// clang-format off
-	UIS_SMALL    = 1 << 0,
-	UIS_MED      = 1 << 1,
-	UIS_BIG      = 1 << 2,
-	UIS_HUGE     = 1 << 3,
-	UIS_CENTER   = 1 << 4,
-	UIS_RIGHT    = 1 << 5,
-	UIS_VCENTER  = 1 << 6,
-	UIS_SILVER   = 1 << 7,
-	UIS_GOLD     = 1 << 8,
-	UIS_DISABLED = 1 << 9,
-	UIS_HIDDEN   = 1 << 10,
+	UIS_SMALL       = 1 << 0,
+	UIS_MED         = 1 << 1,
+	UIS_BIG         = 1 << 2,
+	UIS_HUGE        = 1 << 3,
+	UIS_CENTER      = 1 << 4,
+	UIS_RIGHT       = 1 << 5,
+	UIS_VCENTER     = 1 << 6,
+	UIS_SILVER      = 1 << 7,
+	UIS_GOLD        = 1 << 8,
+	UIS_RED         = 1 << 9,
+	UIS_BLUE        = 1 << 10,
+	UIS_BLACK       = 1 << 11,
+	UIS_DISABLED    = 1 << 12,
+	UIS_HIDDEN      = 1 << 13,
+	UIS_FIT_SPACING = 1 << 14,
 	// clang-format on
 };
 
@@ -181,15 +185,17 @@ public:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(char *value, std::size_t max_length, SDL_Rect rect, int flags = 0)
+	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_EDIT;
+		m_hint = hint;
 		m_value = value;
 		m_max_length = max_length;
 	}
 
 	//private:
+	const char *m_hint;
 	char *m_value;
 	std::size_t m_max_length;
 };

@@ -2,8 +2,9 @@
 
 #include <SDL.h>
 
-#include "utils/stdcompat/optional.hpp"
+#include "utils/file_util.h"
 #include "utils/log.hpp"
+#include "utils/stdcompat/optional.hpp"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -69,15 +70,23 @@ const std::string &BasePath()
 
 const std::string &PrefPath()
 {
-	if (!prefPath)
+	if (!prefPath) {
 		prefPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+		if (FileExistsAndIsWriteable("diablo.ini")) {
+			prefPath = std::string("./");
+		}
+	}
 	return *prefPath;
 }
 
 const std::string &ConfigPath()
 {
-	if (!configPath)
+	if (!configPath) {
 		configPath = FromSDL(SDL_GetPrefPath("diasurgical", "devilution"));
+		if (FileExistsAndIsWriteable("diablo.ini")) {
+			configPath = std::string("./");
+		}
+	}
 	return *configPath;
 }
 

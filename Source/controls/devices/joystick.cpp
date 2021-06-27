@@ -3,8 +3,8 @@
 #include <cstddef>
 
 #include "controls/controller_motion.h"
-#include "utils/stubs.h"
 #include "utils/log.hpp"
+#include "utils/stubs.h"
 
 namespace devilution {
 
@@ -178,6 +178,7 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 	}
 }
 
+// NOLINTNEXTLINE(readability-convert-member-functions-to-static): Not static if joystick mappings are defined.
 bool Joystick::IsHatButtonPressed(ControllerButton button) const
 {
 	switch (button) {

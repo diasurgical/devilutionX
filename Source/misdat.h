@@ -7,7 +7,9 @@
 
 #include <cstdint>
 
+#include "engine.h"
 #include "effects.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
@@ -89,7 +91,7 @@ typedef enum missile_graphic_id : uint8_t {
 } missile_graphic_id;
 
 typedef struct MissileData {
-	void (*mAddProc)(int, int, int, int, int, int, int8_t, int, int);
+	void (*mAddProc)(int, Point, Point, int, int8_t, int, int);
 	void (*mProc)(int);
 	uint8_t mName;
 	bool mDraw;
@@ -105,7 +107,7 @@ typedef struct MisFileData {
 	uint8_t mAnimName;
 	uint8_t mAnimFAmt;
 	uint32_t mFlags;
-	BYTE *mAnimData[16];
+	byte *mAnimData[16];
 	uint8_t mAnimDelay[16];
 	uint8_t mAnimLen[16];
 	int16_t mAnimWidth[16];

@@ -6,6 +6,8 @@
 #include "town.h"
 
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "init.h"
 #include "player.h"
 #include "quests.h"
@@ -17,47 +19,41 @@ namespace {
 
 /**
  * @brief Load level data into dPiece
- * @param P3Tiles Tile set
- * @param pSector Sector data
+ * @param path Path of dun file
  * @param xi upper left destination
- * @param yi upper left destination
- * @param w width of sector
- * @param h height of sector
+ * @param yy upper left destination
  */
-void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
+void T_FillSector(const char *path, int xi, int yy)
 {
-	int i, j, xx, yy, nMap;
-	int16_t v1, v2, v3, v4, ii;
-	uint16_t *Sector;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	ii = 4;
-	yy = yi;
-	for (j = 0; j < h; j++) {
-		xx = xi;
-		for (i = 0; i < w; i++) {
-			uint16_t *Map;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
 
-			Map = (uint16_t *)&pSector[ii];
-			nMap = SDL_SwapLE16(*Map);
-			if (nMap) {
-				Sector = (((uint16_t *)&P3Tiles[(nMap - 1) * 8]));
-				v1 = SDL_SwapLE16(*(Sector + 0)) + 1;
-				v2 = SDL_SwapLE16(*(Sector + 1)) + 1;
-				v3 = SDL_SwapLE16(*(Sector + 2)) + 1;
-				v4 = SDL_SwapLE16(*(Sector + 3)) + 1;
+	const uint16_t *tileLayer = &dunData[2];
 
-			} else {
-				v1 = 0;
-				v2 = 0;
-				v3 = 0;
-				v4 = 0;
+	for (int j = 0; j < height; j++) {
+		int xx = xi;
+		for (int i = 0; i < width; i++) {
+			int v1 = 0;
+			int v2 = 0;
+			int v3 = 0;
+			int v4 = 0;
+
+			int tileId = SDL_SwapLE16(tileLayer[j * width + i]) - 1;
+			if (tileId >= 0) {
+				MegaTile mega = pMegaTiles[tileId];
+				v1 = SDL_SwapLE16(mega.micro1) + 1;
+				v2 = SDL_SwapLE16(mega.micro2) + 1;
+				v3 = SDL_SwapLE16(mega.micro3) + 1;
+				v4 = SDL_SwapLE16(mega.micro4) + 1;
 			}
-			dPiece[xx][yy] = v1;
-			dPiece[xx + 1][yy] = v2;
-			dPiece[xx][yy + 1] = v3;
+
+			dPiece[xx + 0][yy + 0] = v1;
+			dPiece[xx + 1][yy + 0] = v2;
+			dPiece[xx + 0][yy + 1] = v3;
 			dPiece[xx + 1][yy + 1] = v4;
 			xx += 2;
-			ii += 2;
 		}
 		yy += 2;
 	}
@@ -65,26 +61,19 @@ void T_FillSector(BYTE *P3Tiles, BYTE *pSector, int xi, int yi, int w, int h)
 
 /**
  * @brief Load a tile in to dPiece
- * @param P3Tiles Tile set
+ * @param megas Map from mega tiles to macro tiles
  * @param xx upper left destination
  * @param yy upper left destination
  * @param t tile id
  */
-void T_FillTile(BYTE *P3Tiles, int xx, int yy, int t)
+void T_FillTile(MegaTile *megas, int xx, int yy, int t)
 {
-	long v1, v2, v3, v4;
-	uint16_t *Tiles;
+	MegaTile mega = pMegaTiles[t - 1];
 
-	Tiles = ((uint16_t *)&P3Tiles[(t - 1) * 8]);
-	v1 = SDL_SwapLE16(*(Tiles + 0)) + 1;
-	v2 = SDL_SwapLE16(*(Tiles + 1)) + 1;
-	v3 = SDL_SwapLE16(*(Tiles + 2)) + 1;
-	v4 = SDL_SwapLE16(*(Tiles + 3)) + 1;
-
-	dPiece[xx][yy] = v1;
-	dPiece[xx + 1][yy] = v2;
-	dPiece[xx][yy + 1] = v3;
-	dPiece[xx + 1][yy + 1] = v4;
+	dPiece[xx + 0][yy + 0] = SDL_SwapLE16(mega.micro1) + 1;
+	dPiece[xx + 1][yy + 0] = SDL_SwapLE16(mega.micro2) + 1;
+	dPiece[xx + 0][yy + 1] = SDL_SwapLE16(mega.micro3) + 1;
+	dPiece[xx + 1][yy + 1] = SDL_SwapLE16(mega.micro4) + 1;
 }
 
 /**
@@ -175,35 +164,22 @@ void T_Pass3()
 		}
 	}
 
-	auto P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL");
-	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN");
-		T_FillSector(P3Tiles.get(), pSector.get(), 46, 46, 25, 25);
-	}
-	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN");
-		T_FillSector(P3Tiles.get(), pSector.get(), 46, 0, 25, 23);
-	}
-	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN");
-		T_FillSector(P3Tiles.get(), pSector.get(), 0, 46, 23, 25);
-	}
-	{
-		auto pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN");
-		T_FillSector(P3Tiles.get(), pSector.get(), 0, 0, 23, 23);
-	}
+	T_FillSector("Levels\\TownData\\Sector1s.DUN", 46, 46);
+	T_FillSector("Levels\\TownData\\Sector2s.DUN", 46, 0);
+	T_FillSector("Levels\\TownData\\Sector3s.DUN", 0, 46);
+	T_FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(P3Tiles.get(), 48, 20, 320);
+		if (gbIsSpawn || ((plr[myplr].pTownWarps & 1) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
+			T_FillTile(pMegaTiles.get(), 48, 20, 320);
 		}
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(P3Tiles.get(), 16, 68, 332);
-			T_FillTile(P3Tiles.get(), 16, 70, 331);
+		if (gbIsSpawn || ((plr[myplr].pTownWarps & 2) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
+			T_FillTile(pMegaTiles.get(), 16, 68, 332);
+			T_FillTile(pMegaTiles.get(), 16, 70, 331);
 		}
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
+		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles.get(), x, 78, GenerateRnd(4) + 1);
+				T_FillTile(pMegaTiles.get(), x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
@@ -221,9 +197,9 @@ void T_Pass3()
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		T_FillTile(P3Tiles.get(), 60, 70, 342);
+		T_FillTile(pMegaTiles.get(), 60, 70, 342);
 	} else {
-		T_FillTile(P3Tiles.get(), 60, 70, 71);
+		T_FillTile(pMegaTiles.get(), 60, 70, 71);
 	}
 }
 

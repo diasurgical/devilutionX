@@ -6,6 +6,7 @@
 #pragma once
 
 #include "engine.h"
+#include "textdat.h"
 
 namespace devilution {
 
@@ -13,7 +14,7 @@ extern bool qtextflag;
 
 void FreeQuestText();
 void InitQuestText();
-void InitQTextMsg(int m);
+void InitQTextMsg(_speech_id m);
 
 /**
  * @brief Draw the quest dialog window decoration and background.

@@ -3,14 +3,18 @@
 *
 * Adds XP bar QoL feature
 */
+#include "xpbar.h"
+
+#include <array>
+
+#include <fmt/format.h>
 
 #include "DiabloUI/art_draw.h"
 #include "common.h"
 #include "control.h"
+#include "engine/point.hpp"
 #include "options.h"
 #include "utils/language.h"
-
-#include <array>
 
 namespace devilution {
 
@@ -29,16 +33,16 @@ Art xpbarArt;
 
 void DrawBar(const CelOutputBuffer &out, int x, int y, int width, const ColorGradient &gradient)
 {
-	FastDrawHorizLine(out, x, y + 1, width, gradient[gradient.size() * 3 / 4 - 1]);
-	FastDrawHorizLine(out, x, y + 2, width, gradient[gradient.size() - 1]);
-	FastDrawHorizLine(out, x, y + 3, width, gradient[gradient.size() / 2 - 1]);
+	UnsafeDrawHorizontalLine(out, { x, y + 1 }, width, gradient[gradient.size() * 3 / 4 - 1]);
+	UnsafeDrawHorizontalLine(out, { x, y + 2 }, width, gradient[gradient.size() - 1]);
+	UnsafeDrawHorizontalLine(out, { x, y + 3 }, width, gradient[gradient.size() / 2 - 1]);
 }
 
-void DrawEndCap(const CelOutputBuffer &out, int x, int y, int idx, const ColorGradient &gradient)
+void DrawEndCap(const CelOutputBuffer &out, Point point, int idx, const ColorGradient &gradient)
 {
-	SetPixel(out, x, y + 1, gradient[idx * 3 / 4]);
-	SetPixel(out, x, y + 2, gradient[idx]);
-	SetPixel(out, x, y + 3, gradient[idx / 2]);
+	out.SetPixel({ point.x, point.y + 1 }, gradient[idx * 3 / 4]);
+	out.SetPixel({ point.x, point.y + 2 }, gradient[idx]);
+	out.SetPixel({ point.x, point.y + 3 }, gradient[idx / 2]);
 }
 
 } // namespace
@@ -49,7 +53,9 @@ void InitXPBar()
 		LoadMaskedArt("data\\xpbar.pcx", &xpbarArt, 1, 1);
 
 		if (xpbarArt.surface == nullptr) {
-			app_fatal("%s", _("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
+			app_fatal("%s", _("Failed to load UI resources.\n"
+			                  "\n"
+			                  "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 		}
 	}
 }
@@ -64,7 +70,7 @@ void DrawXPBar(const CelOutputBuffer &out)
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
 
-	const PlayerStruct &player = plr[myplr];
+	const auto &player = plr[myplr];
 
 	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
 	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
@@ -101,7 +107,7 @@ void DrawXPBar(const CelOutputBuffer &out)
 	DrawBar(out, xPos, yPos, fullBar, SILVER_GRADIENT);
 
 	// End pixels appear gradually
-	DrawEndCap(out, xPos + fullBar, yPos, fade, SILVER_GRADIENT);
+	DrawEndCap(out, { xPos + static_cast<int>(fullBar), yPos }, fade, SILVER_GRADIENT);
 }
 
 bool CheckXPBarInfo()
@@ -115,38 +121,38 @@ bool CheckXPBarInfo()
 	if (MouseX < backX || MouseX >= backX + BACK_WIDTH || MouseY < backY || MouseY >= backY + BACK_HEIGHT)
 		return false;
 
-	const PlayerStruct &player = plr[myplr];
+	const auto &player = plr[myplr];
 
 	const int charLevel = player._pLevel;
 
-	sprintf(tempstr, _("Level %d"), charLevel);
-	AddPanelString(tempstr, true);
+	strcpy(tempstr, fmt::format(_("Level {:d}"), charLevel).c_str());
+	AddPanelString(tempstr);
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Show a maximum level indicator for max level players.
-		infoclr = COL_GOLD;
+		infoclr = UIS_GOLD;
 
 		strcpy(tempstr, _("Experience: "));
 		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
-		AddPanelString(tempstr, true);
+		AddPanelString(tempstr);
 
-		AddPanelString(_("Maximum Level"), true);
+		AddPanelString(_("Maximum Level"));
 
 		return true;
 	}
 
-	infoclr = COL_WHITE;
+	infoclr = UIS_SILVER;
 
 	strcpy(tempstr, _("Experience: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
-	AddPanelString(tempstr, true);
+	AddPanelString(tempstr);
 
 	strcpy(tempstr, _("Next Level: "));
 	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
-	AddPanelString(tempstr, true);
+	AddPanelString(tempstr);
 
-	sprintf(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), _(" to Level %d"), charLevel + 1);
-	AddPanelString(tempstr, true);
+	strcpy(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level {:d}"), charLevel + 1).c_str());
+	AddPanelString(tempstr);
 
 	return true;
 }

@@ -8,10 +8,10 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/animationinfo.h"
+#include "engine/point.hpp"
 
 namespace devilution {
-
-#define PANELS_COVER (gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT)
 
 enum _scroll_direction : uint8_t {
 	SDIR_NONE,
@@ -37,6 +37,14 @@ extern bool cel_foliage_active;
 extern int level_piece_id;
 extern bool AutoMapShowItems;
 
+/**
+ * @brief Returns the offset for the walking animation
+ * @param animationInfo the current active walking animation
+ * @param dir walking direction
+ * @param cameraMode Adjusts the offset relative to the camera
+ */
+Point GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode = false);
+
 void ClearCursor();
 void ShiftGrid(int *x, int *y, int horizontal, int vertical);
 int RowsCoveredByPanel();
@@ -57,7 +65,7 @@ void ClearScreenBuffer();
 void ScrollView();
 #endif
 void EnableFrameCount();
-void scrollrt_draw_game_screen(bool draw_cursor);
+void scrollrt_draw_game_screen();
 void DrawAndBlit();
 
 } // namespace devilution

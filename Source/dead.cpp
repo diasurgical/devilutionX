@@ -15,6 +15,17 @@ namespace devilution {
 DeadStruct dead[MaxDead];
 int8_t stonendx;
 
+namespace {
+void InitDeadAnimationFromMonster(DeadStruct &d, const CMonster &mon)
+{
+	int i = 0;
+	for (const auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
+		d._deadData[i++] = celSprite->Data();
+	d._deadFrame = mon.Anims[MA_DEATH].Frames;
+	d._deadWidth = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
+}
+} // namespace
+
 void InitDead()
 {
 	int8_t mtypes[MAXMONSTERS] = {};
@@ -25,9 +36,7 @@ void InitDead()
 		if (mtypes[Monsters[i].mtype] != 0)
 			continue;
 
-		dead[nd]._deadData = Monsters[i].Anims[MA_DEATH].Data;
-		dead[nd]._deadFrame = Monsters[i].Anims[MA_DEATH].Frames;
-		dead[nd]._deadWidth = Monsters[i].width;
+		InitDeadAnimationFromMonster(dead[nd], Monsters[i]);
 		dead[nd]._deadtrans = 0;
 		nd++;
 
@@ -55,9 +64,7 @@ void InitDead()
 	for (int i = 0; i < nummonsters; i++) {
 		int mi = monstactive[i];
 		if (monster[mi]._uniqtype != 0) {
-			dead[nd]._deadData = monster[mi].MType->Anims[MA_DEATH].Data;
-			dead[nd]._deadFrame = monster[mi].MType->Anims[MA_DEATH].Frames;
-			dead[nd]._deadWidth = monster[mi].MType->width;
+			InitDeadAnimationFromMonster(dead[nd], *monster[mi].MType);
 			dead[nd]._deadtrans = monster[mi]._uniqtrans + 4;
 			nd++;
 
@@ -68,7 +75,7 @@ void InitDead()
 	assert(static_cast<unsigned>(nd) <= MaxDead);
 }
 
-void AddDead(Point tilePosition, int8_t dv, direction ddir)
+void AddDead(Point tilePosition, int8_t dv, Direction ddir)
 {
 	dDead[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
 }
@@ -82,7 +89,7 @@ void SetDead()
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {
 				if ((dDead[dx][dy] & 0x1F) == monster[mi]._udeadval)
-					ChangeLightXY(monster[mi].mlid, dx, dy);
+					ChangeLightXY(monster[mi].mlid, { dx, dy });
 			}
 		}
 	}

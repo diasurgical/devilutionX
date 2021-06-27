@@ -25,7 +25,7 @@ uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
 	assert(bits < 32);
 	assert(bits > 0);
 
-	if (word >> 31) {
+	if ((word & 0x80000000) != 0) {
 		//moving this part to a separate volatile variable fixes saves in x64-release build in visual studio 2017
 		volatile uint32_t tmp = ((~word) >> (32 - bits));
 		return (word << bits) | (~tmp);
@@ -50,11 +50,11 @@ static void SHA1Init(SHA1Context *context)
 
 static void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	DWORD i, temp;
-	DWORD W[80];
-	DWORD A, B, C, D, E;
+	std::uint32_t i, temp;
+	std::uint32_t W[80];
+	std::uint32_t A, B, C, D, E;
 
-	auto *buf = (DWORD *)context->buffer;
+	auto *buf = (std::uint32_t *)context->buffer;
 	for (i = 0; i < 16; i++)
 		W[i] = SDL_SwapLE32(buf[i]);
 
@@ -111,9 +111,9 @@ static void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += E;
 }
 
-static void SHA1Input(SHA1Context *context, const char *message_array, DWORD len)
+static void SHA1Input(SHA1Context *context, const char *message_array, std::uint32_t len)
 {
-	DWORD i, count;
+	std::uint32_t i, count;
 
 	count = context->count[0] + 8 * len;
 	if (count < context->count[0])
@@ -136,10 +136,10 @@ void SHA1Clear()
 
 void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 {
-	DWORD *Message_Digest_Block;
+	std::uint32_t *Message_Digest_Block;
 	int i;
 
-	Message_Digest_Block = (DWORD *)Message_Digest;
+	Message_Digest_Block = (std::uint32_t *)Message_Digest;
 	if (Message_Digest != nullptr) {
 		for (i = 0; i < 5; i++) {
 			*Message_Digest_Block = SDL_SwapLE32(sgSHA1[n].state[i]);

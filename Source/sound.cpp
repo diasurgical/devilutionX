@@ -6,19 +6,24 @@
 #include "sound.h"
 
 #include <cstdint>
+#include <list>
 #include <memory>
+#include <mutex>
 
-#include <aulib.h>
 #include <Aulib/DecoderDrwav.h>
-#include <Aulib/Stream.h>
 #include <Aulib/ResamplerSpeex.h>
+#include <Aulib/Stream.h>
 #include <SDL.h>
+#include <aulib.h>
 
 #include "init.h"
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
 #include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/log.hpp"
+#include "utils/math.h"
+#include "utils/sdl_mutex.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/stdcompat/shared_ptr_array.hpp"
 #include "utils/stubs.h"
@@ -42,36 +47,49 @@ void LoadMusic(HANDLE handle)
 #ifndef DISABLE_STREAMING_MUSIC
 	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
-	int bytestoread = SFileGetFileSize(handle, 0);
-	musicBuffer = (char *)DiabloAllocPtr(bytestoread);
-	SFileReadFile(handle, musicBuffer, bytestoread, NULL, 0);
-	SFileCloseFile(handle);
+	int bytestoread = SFileGetFileSize(handle);
+	musicBuffer = new char[bytestoread];
+	SFileReadFileThreadSafe(handle, musicBuffer, bytestoread);
+	SFileCloseFileThreadSafe(handle);
 
 	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
 #endif
 	music.emplace(musicRw, std::make_unique<Aulib::DecoderDrwav>(),
-			std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
+	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
 }
 
 void CleanupMusic()
 {
-		music = std::nullopt;
-		sgnMusicTrack = NUM_MUSIC;
+	music = std::nullopt;
+	sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC
 	if (musicBuffer != nullptr) {
-		mem_free_dbg(musicBuffer);
+		delete[] musicBuffer;
 		musicBuffer = nullptr;
 	}
 #endif
 }
 
-std::vector<std::unique_ptr<SoundSample>> duplicateSounds;
-SoundSample *DuplicateSound(const SoundSample &sound) {
+std::list<std::unique_ptr<SoundSample>> duplicateSounds;
+std::optional<SdlMutex> duplicateSoundsMutex;
+
+SoundSample *DuplicateSound(const SoundSample &sound)
+{
 	auto duplicate = std::make_unique<SoundSample>();
 	if (duplicate->DuplicateFrom(sound) != 0)
 		return nullptr;
 	auto *result = duplicate.get();
-	duplicateSounds.push_back(std::move(duplicate));
+	decltype(duplicateSounds.begin()) it;
+	{
+		const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
+		duplicateSounds.push_back(std::move(duplicate));
+		it = duplicateSounds.end();
+		--it;
+	}
+	result->SetFinishCallback([it]([[maybe_unused]] Aulib::Stream &stream) {
+		const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
+		duplicateSounds.erase(it);
+	});
 	return result;
 }
 
@@ -108,25 +126,13 @@ const char *const sgszMusicTracks[NUM_MUSIC] = {
 
 static int CapVolume(int volume)
 {
-	if (volume < VOLUME_MIN) {
-		volume = VOLUME_MIN;
-	} else if (volume > VOLUME_MAX) {
-		volume = VOLUME_MAX;
-	}
-	return volume - volume % 100;
+	return clamp(volume, VOLUME_MIN, VOLUME_MAX);
 }
 
-void ClearDuplicateSounds() {
-	duplicateSounds.clear();
-}
-
-void CleanupFinishedDuplicateSounds()
+void ClearDuplicateSounds()
 {
-	duplicateSounds.erase(
-	    std::remove_if(duplicateSounds.begin(), duplicateSounds.end(), [](const auto &sound) {
-		    return !sound->IsPlaying();
-	    }),
-	    duplicateSounds.end());
+	const std::lock_guard<SdlMutex> lock(*duplicateSoundsMutex);
+	duplicateSounds.clear();
 }
 
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
@@ -143,14 +149,13 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 	}
 
 	SoundSample *sound = &pSnd->DSB;
-	if (pSnd->DSB.IsPlaying()) {
-		sound = DuplicateSound(pSnd->DSB);
+	if (sound->IsPlaying()) {
+		sound = DuplicateSound(*sound);
 		if (sound == nullptr)
 			return;
 	}
 
-	lVolume = CapVolume(lVolume + sgOptions.Audio.nSoundVolume);
-	sound->Play(lVolume, lPan);
+	sound->Play(lVolume, sgOptions.Audio.nSoundVolume, lPan);
 	pSnd->start_tc = tc;
 }
 
@@ -161,22 +166,26 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
 
+#ifndef STREAM_ALL_AUDIO
 	if (stream) {
+#endif
 		error = snd->DSB.SetChunkStream(path);
 		if (error != 0) {
 			ErrSdl();
 		}
+#ifndef STREAM_ALL_AUDIO
 	} else {
 		HANDLE file;
 		if (!SFileOpenFile(path, &file)) {
 			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 		}
-		DWORD dwBytes = SFileGetFileSize(file, nullptr);
+		DWORD dwBytes = SFileGetFileSize(file);
 		auto wave_file = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		SFileReadFile(file, wave_file.get(), dwBytes, nullptr, nullptr);
+		SFileReadFileThreadSafe(file, wave_file.get(), dwBytes);
 		error = snd->DSB.SetChunk(wave_file, dwBytes);
-		SFileCloseFile(file);
+		SFileCloseFileThreadSafe(file);
 	}
+#endif
 	if (error != 0) {
 		ErrSdl();
 	}
@@ -211,12 +220,15 @@ void snd_init()
 	LogVerbose(LogCategory::Audio, "Aulib sampleRate={} channels={} frameSize={} format={:#x}",
 	    Aulib::sampleRate(), Aulib::channelCount(), Aulib::frameSize(), Aulib::sampleFormat());
 
+	duplicateSoundsMutex.emplace();
 	gbSndInited = true;
 }
 
-void snd_deinit() {
+void snd_deinit()
+{
 	if (gbSndInited) {
 		Aulib::quit();
+		duplicateSoundsMutex = std::nullopt;
 	}
 
 	gbSndInited = false;
@@ -252,7 +264,7 @@ void music_start(uint8_t nTrack)
 				return;
 			}
 
-			music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
+			music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
 			if (!music->play(/*iterations=*/0)) {
 				LogError(LogCategory::Audio, "Aulib::Stream::play (from music_start): {}", SDL_GetError());
 				CleanupMusic();
@@ -281,7 +293,7 @@ int sound_get_or_set_music_volume(int volume)
 	sgOptions.Audio.nMusicVolume = volume;
 
 	if (music)
-		music->setVolume(1.F - static_cast<float>(sgOptions.Audio.nMusicVolume) / VOLUME_MIN);
+		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
 
 	return sgOptions.Audio.nMusicVolume;
 }

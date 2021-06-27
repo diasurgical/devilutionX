@@ -19,13 +19,11 @@ uint16_t sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
 int sgnSyncPInv;
 
-static void sync_one_monster()
+void sync_one_monster()
 {
-	int i, m;
-
-	for (i = 0; i < nummonsters; i++) {
-		m = monstactive[i];
-		sgnMonsterPriority[m] = abs(plr[myplr].position.tile.x - monster[m].position.tile.x) + abs(plr[myplr].position.tile.y - monster[m].position.tile.y);
+	for (int i = 0; i < nummonsters; i++) {
+		int m = monstactive[i];
+		sgnMonsterPriority[m] = plr[myplr].position.tile.ManhattanDistance(monster[m].position.tile);
 		if (monster[m]._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
@@ -34,7 +32,7 @@ static void sync_one_monster()
 	}
 }
 
-static void sync_monster_pos(TSyncMonster *p, int ndx)
+void sync_monster_pos(TSyncMonster *p, int ndx)
 {
 	p->_mndx = ndx;
 	p->_mx = monster[ndx].position.tile.x;
@@ -46,7 +44,7 @@ static void sync_monster_pos(TSyncMonster *p, int ndx)
 	sgwLRU[ndx] = monster[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
-static bool sync_monster_active(TSyncMonster *p)
+bool sync_monster_active(TSyncMonster *p)
 {
 	int i, m, ndx;
 	uint32_t lru;
@@ -70,7 +68,7 @@ static bool sync_monster_active(TSyncMonster *p)
 	return true;
 }
 
-static bool sync_monster_active2(TSyncMonster *p)
+bool sync_monster_active2(TSyncMonster *p)
 {
 	int i, m, ndx;
 	uint32_t lru;
@@ -98,7 +96,7 @@ static bool sync_monster_active2(TSyncMonster *p)
 	return true;
 }
 
-static void SyncPlrInv(TSyncHeader *pHdr)
+void SyncPlrInv(TSyncHeader *pHdr)
 {
 	int ii;
 	ItemStruct *pItem;
@@ -125,7 +123,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		} else {
 			pHdr->wItemCI = items[ii]._iCreateInfo;
 			pHdr->dwItemSeed = items[ii]._iSeed;
-			pHdr->bItemId = items[ii]._iIdentified;
+			pHdr->bItemId = items[ii]._iIdentified ? 1 : 0;
 			pHdr->bItemDur = items[ii]._iDurability;
 			pHdr->bItemMDur = items[ii]._iMaxDur;
 			pHdr->bItemCh = items[ii]._iCharges;
@@ -145,7 +143,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 		pHdr->wPInvIndx = pItem->IDidx;
 		pHdr->wPInvCI = pItem->_iCreateInfo;
 		pHdr->dwPInvSeed = pItem->_iSeed;
-		pHdr->bPInvId = pItem->_iIdentified;
+		pHdr->bPInvId = pItem->_iIdentified ? 1 : 0;
 	} else {
 		pHdr->bPInvLoc = -1;
 	}
@@ -158,7 +156,7 @@ static void SyncPlrInv(TSyncHeader *pHdr)
 
 } // namespace
 
-uint32_t sync_all_monsters(const BYTE *pbBuf, uint32_t dwMaxLen)
+uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 {
 	TSyncHeader *pHdr;
 	int i;
@@ -203,16 +201,13 @@ uint32_t sync_all_monsters(const BYTE *pbBuf, uint32_t dwMaxLen)
 
 static void sync_monster(int pnum, const TSyncMonster *p)
 {
-	int ndx, mdx, mdy;
-	uint32_t delta;
-
-	ndx = p->_mndx;
+	int ndx = p->_mndx;
 
 	if (monster[ndx]._mhitpoints <= 0) {
 		return;
 	}
 
-	delta = abs(plr[myplr].position.tile.x - monster[ndx].position.tile.x) + abs(plr[myplr].position.tile.y - monster[ndx].position.tile.y);
+	uint32_t delta = plr[myplr].position.tile.ManhattanDistance(monster[ndx].position.tile);
 	if (delta > 255) {
 		delta = 255;
 	}
@@ -227,11 +222,9 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	mdx = abs(monster[ndx].position.tile.x - p->_mx);
-	mdy = abs(monster[ndx].position.tile.y - p->_my);
-	if (mdx <= 2 && mdy <= 2) {
+	if (monster[ndx].position.tile.WalkingDistance({ p->_mx, p->_my }) <= 2) {
 		if (monster[ndx]._mmode < MM_WALK || monster[ndx]._mmode > MM_WALK3) {
-			direction md = GetDirection(monster[ndx].position.tile, { p->_mx, p->_my });
+			Direction md = GetDirection(monster[ndx].position.tile, { p->_mx, p->_my });
 			if (DirOK(ndx, md)) {
 				M_ClearSquares(ndx);
 				dMonster[monster[ndx].position.tile.x][monster[ndx].position.tile.y] = ndx + 1;
@@ -244,7 +237,7 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 		dMonster[p->_mx][p->_my] = ndx + 1;
 		monster[ndx].position.tile = { p->_mx, p->_my };
 		decode_enemy(ndx, p->_menemy);
-		direction md = GetDirection({ p->_mx, p->_my }, monster[ndx].enemyPosition);
+		Direction md = GetDirection({ p->_mx, p->_my }, monster[ndx].enemyPosition);
 		M_StartStand(ndx, md);
 		monster[ndx]._msquelch = UINT8_MAX;
 	}
@@ -252,12 +245,11 @@ static void sync_monster(int pnum, const TSyncMonster *p)
 	decode_enemy(ndx, p->_menemy);
 }
 
-uint32_t sync_update(int pnum, const BYTE *pbBuf)
+uint32_t sync_update(int pnum, const byte *pbBuf)
 {
-	TSyncHeader *pHdr;
 	uint16_t wLen;
 
-	pHdr = (TSyncHeader *)pbBuf;
+	auto *pHdr = (TSyncHeader *)pbBuf;
 	pbBuf += sizeof(*pHdr);
 
 	if (pHdr->bCmd != CMD_SYNCDATA) {

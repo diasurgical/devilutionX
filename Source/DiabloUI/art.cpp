@@ -1,10 +1,9 @@
-#include "art.h"
+#include "DiabloUI/art.h"
 
 #include <cstddef>
 #include <cstdint>
 #include <memory>
 
-#include "DiabloUI/art.h"
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
@@ -19,7 +18,7 @@ constexpr unsigned PcxPaletteSize = 1 + NumPaletteColors * 3;
 bool LoadPcxMeta(HANDLE handle, int &width, int &height, std::uint8_t &bpp)
 {
 	PCXHeader pcxhdr;
-	if (!SFileReadFile(handle, &pcxhdr, PcxHeaderSize, nullptr, nullptr)) {
+	if (!SFileReadFileThreadSafe(handle, &pcxhdr, PcxHeaderSize)) {
 		return false;
 	}
 	width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
@@ -32,7 +31,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
     BYTE *buffer, std::size_t bufferPitch, SDL_Color *palette)
 {
 	const bool has256ColorPalette = palette != nullptr && bpp == 8;
-	std::uint32_t pixelDataSize = SFileGetFileSize(handle, nullptr);
+	std::uint32_t pixelDataSize = SFileGetFileSize(handle);
 	if (pixelDataSize == static_cast<std::uint32_t>(-1)) {
 		return false;
 	}
@@ -40,8 +39,8 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 
 	// We read 1 extra byte because it delimits the palette.
 	const unsigned readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
-	std::unique_ptr<BYTE[]> fileBuffer = std::make_unique<BYTE[]>(readSize);
-	if (!SFileReadFile(handle, fileBuffer.get(), readSize, nullptr, nullptr)) {
+	std::unique_ptr<BYTE[]> fileBuffer { new BYTE[readSize] };
+	if (!SFileReadFileThreadSafe(handle, fileBuffer.get(), readSize)) {
 		return false;
 	}
 	const unsigned xSkip = bufferPitch - width;
@@ -116,7 +115,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 
 	if (!LoadPcxMeta(handle, width, height, bpp)) {
 		Log("LoadArt(\"{}\"): LoadPcxMeta failed with code {}", pszFile, SErrGetLastError());
-		SFileCloseFile(handle);
+		SFileCloseFileThreadSafe(handle);
 		return;
 	}
 
@@ -124,10 +123,10 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 	if (!LoadPcxPixelsAndPalette(handle, width, height, bpp, static_cast<BYTE *>(artSurface->pixels),
 	        artSurface->pitch, pPalette)) {
 		Log("LoadArt(\"{}\"): LoadPcxPixelsAndPalette failed with code {}", pszFile, SErrGetLastError());
-		SFileCloseFile(handle);
+		SFileCloseFileThreadSafe(handle);
 		return;
 	}
-	SFileCloseFile(handle);
+	SFileCloseFileThreadSafe(handle);
 
 	art->logical_width = artSurface->w;
 	art->frame_height = height / frames;
@@ -142,13 +141,13 @@ void LoadMaskedArt(const char *pszFile, Art *art, int frames, int mask)
 		SDLC_SetColorKey(art->surface.get(), mask);
 }
 
-void LoadArt(Art *art, const BYTE *artData, int w, int h, int frames)
+void LoadArt(Art *art, const std::uint8_t *artData, int w, int h, int frames)
 {
 	constexpr int DefaultArtBpp = 8;
 	constexpr int DefaultArtFormat = SDL_PIXELFORMAT_INDEX8;
 	art->frames = frames;
 	art->surface = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormatFrom(
-	    const_cast<BYTE *>(artData), w, h, DefaultArtBpp, w, DefaultArtFormat) });
+	    const_cast<std::uint8_t *>(artData), w, h, DefaultArtBpp, w, DefaultArtFormat) });
 	art->logical_width = w;
 	art->frame_height = h / frames;
 }

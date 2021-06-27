@@ -1,0 +1,59 @@
+name: Linux_x86
+
+on: [push, pull_request]
+
+jobs:
+  prebuild:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        
+  build:
+    needs: prebuild
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo dpkg --add-architecture i386 && 
+        sudo apt update -y &&
+        sudo apt install -y cmake file g++-multilib git libfmt-dev:i386 libsdl2-dev:i386 libsdl2-ttf-dev:i386 libsodium-dev:i386 rpm wget
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: cmake --build build -j $(nproc) --target package
+
+    - name: Upload-Executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx_linux_x86
+        path: build/devilutionx
+
+    - name: Package
+      run: Packaging/nix/LinuxReleasePackaging.sh && Packaging/nix/AppImage.sh
+
+    - name: Upload-Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx_linux_x86.tar.xz
+        path: devilutionx.tar.xz
+
+    - name: Upload-AppImage
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx_linux_x86.appimage
+        path: devilutionx.appimage

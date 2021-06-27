@@ -1,18 +1,18 @@
-#include "storm/storm.h"
-
 #include <SDL.h>
 #include <SDL_endian.h>
 #include <cstddef>
 #include <cstdint>
+#include <mutex>
 #include <string>
-
-#include "Radon.hpp"
 
 #include "DiabloUI/diabloui.h"
 #include "options.h"
-#include "utils/paths.h"
-#include "utils/stubs.h"
+#include "storm/storm.h"
+#include "utils/file_util.h"
 #include "utils/log.hpp"
+#include "utils/paths.h"
+#include "utils/sdl_mutex.h"
+#include "utils/stubs.h"
 
 // Include Windows headers for Get/SetLastError.
 #if defined(_WIN32)
@@ -32,12 +32,20 @@ namespace {
 bool directFileAccess = false;
 std::string *SBasePath = nullptr;
 
+SdlMutex Mutex;
+
 } // namespace
 
-radon::File &getIni()
+bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh)
 {
-	static radon::File ini(paths::ConfigPath() + "diablo.ini");
-	return ini;
+	const std::lock_guard<SdlMutex> lock(Mutex);
+	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
+}
+
+bool SFileCloseFileThreadSafe(HANDLE hFile)
+{
+	const std::lock_guard<SdlMutex> lock(Mutex);
+	return SFileCloseFile(hFile);
 }
 
 // Converts ASCII characters to lowercase
@@ -130,98 +138,6 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	return result;
 }
 
-bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue)
-{
-	char string[2];
-
-	if (!getIniValue(sectionName, keyName, string, 2))
-		return defaultValue;
-
-	return strtol(string, nullptr, 10) != 0;
-}
-
-float getIniFloat(const char *sectionName, const char *keyName, float defaultValue)
-{
-	radon::Section *section = getIni().getSection(sectionName);
-	if (section == nullptr)
-		return defaultValue;
-
-	radon::Key *key = section->getKey(keyName);
-	if (key == nullptr)
-		return defaultValue;
-
-	return key->getFloatValue();
-}
-
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
-{
-	strncpy(string, defaultString, stringSize);
-
-	radon::Section *section = getIni().getSection(sectionName);
-	if (section == nullptr)
-		return false;
-
-	radon::Key *key = section->getKey(keyName);
-	if (key == nullptr)
-		return false;
-
-	std::string value = key->getStringValue();
-
-	if (string != nullptr)
-		strncpy(string, value.c_str(), stringSize);
-
-	return true;
-}
-
-void setIniValue(const char *sectionName, const char *keyName, const char *value, int len)
-{
-	radon::File &ini = getIni();
-
-	radon::Section *section = ini.getSection(sectionName);
-	if (section == nullptr) {
-		ini.addSection(sectionName);
-		section = ini.getSection(sectionName);
-	}
-
-	std::string stringValue(value, len ? len : strlen(value));
-
-	radon::Key *key = section->getKey(keyName);
-	if (key == nullptr) {
-		section->addKey(radon::Key(keyName, stringValue));
-	} else {
-		key->setValue(stringValue);
-	}
-}
-
-void SaveIni()
-{
-	getIni().saveToFile();
-}
-
-int getIniInt(const char *keyname, const char *valuename, int defaultValue)
-{
-	char string[10];
-	if (!getIniValue(keyname, valuename, string, sizeof(string))) {
-		return defaultValue;
-	}
-
-	return strtol(string, nullptr, sizeof(string));
-}
-
-void setIniInt(const char *keyname, const char *valuename, int value)
-{
-	char str[10];
-	sprintf(str, "%d", value);
-	setIniValue(keyname, valuename, str);
-}
-
-void setIniFloat(const char *keyname, const char *valuename, float value)
-{
-	char str[10];
-	sprintf(str, "%.2f", value);
-	setIniValue(keyname, valuename, str);
-}
-
 DWORD SErrGetLastError()
 {
 	return ::GetLastError();
@@ -245,4 +161,17 @@ bool SFileEnableDirectAccess(bool enable)
 	directFileAccess = enable;
 	return true;
 }
+
+#if defined(_WIN64) || defined(_WIN32)
+bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq)
+{
+	const auto szMpqNameUtf16 = ToWideChar(szMpqName);
+	if (szMpqNameUtf16 == nullptr) {
+		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
+		return false;
+	}
+	return SFileOpenArchive(szMpqNameUtf16.get(), dwPriority, dwFlags, phMpq);
+}
+#endif
+
 } // namespace devilution

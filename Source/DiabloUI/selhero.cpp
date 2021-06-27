@@ -4,6 +4,8 @@
 #include <chrono>
 #include <random>
 
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/scrollbar.h"
@@ -14,10 +16,6 @@
 #include "options.h"
 #include "pfile.h"
 #include "utils/language.h"
-
-#ifdef __3DS__
-#include "platform/ctr/keyboard.h"
-#endif
 
 namespace devilution {
 
@@ -68,7 +66,7 @@ void SelheroUiFocusNavigationYesNo()
 
 void SelheroFreeListItems()
 {
-	for (auto pUIItem : vecSelHeroDlgItems) {
+	for (auto *pUIItem : vecSelHeroDlgItems) {
 		delete pUIItem;
 	}
 	vecSelHeroDlgItems.clear();
@@ -76,7 +74,7 @@ void SelheroFreeListItems()
 
 void SelheroFreeDlgItems()
 {
-	for (auto pUIItem : vecSelDlgItems) {
+	for (auto *pUIItem : vecSelDlgItems) {
 		delete pUIItem;
 	}
 	vecSelDlgItems.clear();
@@ -86,7 +84,7 @@ void SelheroFree()
 {
 	ArtBackground.Unload();
 
-	for (auto pUIItem : vecSelHeroDialog) {
+	for (auto *pUIItem : vecSelHeroDialog) {
 		delete pUIItem;
 	}
 	vecSelHeroDialog.clear();
@@ -101,11 +99,11 @@ void SelheroFree()
 void SelheroSetStats()
 {
 	SELHERO_DIALOG_HERO_IMG->m_frame = static_cast<int>(selhero_heroInfo.heroclass);
-	snprintf(textStats[0], sizeof(textStats[0]), "%d", selhero_heroInfo.level);
-	snprintf(textStats[1], sizeof(textStats[1]), "%d", selhero_heroInfo.strength);
-	snprintf(textStats[2], sizeof(textStats[2]), "%d", selhero_heroInfo.magic);
-	snprintf(textStats[3], sizeof(textStats[3]), "%d", selhero_heroInfo.dexterity);
-	snprintf(textStats[4], sizeof(textStats[4]), "%d", selhero_heroInfo.vitality);
+	snprintf(textStats[0], sizeof(textStats[0]), "%i", selhero_heroInfo.level);
+	snprintf(textStats[1], sizeof(textStats[1]), "%i", selhero_heroInfo.strength);
+	snprintf(textStats[2], sizeof(textStats[2]), "%i", selhero_heroInfo.magic);
+	snprintf(textStats[3], sizeof(textStats[3]), "%i", selhero_heroInfo.dexterity);
+	snprintf(textStats[4], sizeof(textStats[4]), "%i", selhero_heroInfo.vitality);
 }
 
 std::size_t listOffset = 0;
@@ -270,9 +268,7 @@ void SelheroClassSelectorFocus(int value)
 
 bool ShouldPrefillHeroName()
 {
-#if defined __3DS__
-	return false;
-#elif defined(PREFILL_PLAYER_NAME)
+#if defined(PREFILL_PLAYER_NAME)
 	return true;
 #else
 	return sgbControllerActive;
@@ -295,9 +291,6 @@ void SelheroClassSelectorSelect(int value)
 		strncpy(title, _("New Multi Player Hero"), sizeof(title) - 1);
 	}
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
-#if defined __3DS__
-	ctr_vkbdInput(_("Enter Name"), SelheroGenerateName(selhero_heroInfo.heroclass), selhero_heroInfo.name);
-#endif
 	if (ShouldPrefillHeroName())
 		strncpy(selhero_heroInfo.name, SelheroGenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
 	SelheroFreeDlgItems();
@@ -305,7 +298,7 @@ void SelheroClassSelectorSelect(int value)
 	vecSelDlgItems.push_back(new UiArtText(_("Enter Name"), rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 317), 320, 33 };
-	vecSelDlgItems.push_back(new UiEdit(selhero_heroInfo.name, 15, rect2, UIS_MED | UIS_GOLD));
+	vecSelDlgItems.push_back(new UiEdit(_("Enter Name"), selhero_heroInfo.name, 15, rect2, UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 279), (Sint16)(UI_OFFSET_Y + 429), 140, 35 };
 	vecSelDlgItems.push_back(new UiArtTextButton(_("OK"), &UiFocusNavigationSelect, rect3, UIS_CENTER | UIS_BIG | UIS_GOLD));
@@ -342,7 +335,8 @@ void SelheroNameSelect(int value)
 			if (strcasecmp(selhero_heros[i].name, selhero_heroInfo.name) == 0) {
 				ArtBackground.Unload();
 				char dialogText[256];
-				snprintf(dialogText, sizeof(dialogText), _("Character already exists. Do you want to overwrite \"%s\"?"), selhero_heroInfo.name);
+				strncpy(dialogText, fmt::format(_(/* Error message when User tries to create multiple heros with the same name */ "Character already exists. Do you want to overwrite \"{:s}\"?"), selhero_heroInfo.name).c_str(), sizeof(dialogText));
+
 				overwrite = UiSelHeroYesNoDialog(title, dialogText);
 				LoadBackgroundArt("ui_art\\selhero.pcx");
 				break;
@@ -354,7 +348,7 @@ void SelheroNameSelect(int value)
 				SelheroLoadSelect(1);
 				return;
 			}
-			UiErrorOkDialog(_("Unable to create character."), vecSelDlgItems);
+			UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
 		}
 	}
 
@@ -618,7 +612,7 @@ static void UiSelHeroDialog(
 			} else {
 				strncpy(dialogTitle, _("Delete Single Player Hero"), sizeof(dialogTitle) - 1);
 			}
-			snprintf(dialogText, sizeof(dialogText), _("Are you sure you want to delete the character \"%s\"?"), selhero_heroInfo.name);
+			strncpy(dialogText, fmt::format(_("Are you sure you want to delete the character \"{:s}\"?"), selhero_heroInfo.name).c_str(), sizeof(dialogText));
 
 			if (UiSelHeroYesNoDialog(dialogTitle, dialogText))
 				fnremove(&selhero_heroInfo);

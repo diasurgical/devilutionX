@@ -27,9 +27,10 @@ set(USE_DEC_FLUIDSYNTH OFF)
 set(USE_DEC_BASSMIDI OFF)
 set(USE_DEC_WILDMIDI OFF)
 set(USE_DEC_ADLMIDI OFF)
+set(USE_DEC_DRMP3 OFF)
 
 include(FetchContent)
 FetchContent_Declare(SDL_audiolib
-  URL https://github.com/realnc/SDL_audiolib/archive/0fa26cf4e48ed21e696e60ffc88a586ced9fd6fe.zip
-  URL_HASH MD5=1e16b0c49e16ef1a31b60051520b534e)
+  URL https://github.com/realnc/SDL_audiolib/archive/ce8d83768ab9a798f16143cbebdb29a0a6377af3.zip
+  URL_HASH MD5=2e8eb18158aed414380530517ad76d58)
 FetchContent_MakeAvailableExcludeFromAll(SDL_audiolib)

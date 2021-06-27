@@ -8,12 +8,11 @@
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
 #include "palette.h"
-#include "render.h"
 #include "storm/storm.h"
 #include "utils/file_util.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -45,7 +44,7 @@ static bool CaptureHdr(short width, short height, std::ofstream *out)
 }
 
 /**
- * @brief Write the current ingame palette to the PCX file
+ * @brief Write the current in-game palette to the PCX file
  * @param palette Current palette
  * @param out File stream for the PCX file.
  * @return True if successful, else false
@@ -116,7 +115,7 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 static bool CapturePix(const CelOutputBuffer &buf, std::ofstream *out)
 {
 	int width = buf.w();
-	auto pBuffer = std::make_unique<BYTE[]>(2 * width);
+	std::unique_ptr<BYTE[]> pBuffer { new BYTE[2 * width] };
 	BYTE *pixels = buf.begin();
 	for (int height = buf.h(); height > 0; height--) {
 		const BYTE *pBufferEnd = CaptureEnc(pixels, pBuffer.get(), width);
@@ -154,13 +153,7 @@ static void RedPalette()
 		system_palette[i].b = 0;
 	}
 	palette_update();
-	SDL_Rect srcRect {
-		BUFFER_BORDER_LEFT,
-		BUFFER_BORDER_TOP,
-		gnScreenWidth,
-		gnScreenHeight,
-	};
-	BltFast(&srcRect, nullptr);
+	BltFast(nullptr, nullptr);
 	RenderPresent();
 }
 

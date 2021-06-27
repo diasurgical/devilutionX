@@ -25,7 +25,7 @@ void TitleFree()
 	ArtBackgroundWidescreen.Unload();
 	ArtLogos[LOGO_BIG].Unload();
 
-	for (auto pUIItem : vecTitleScreen) {
+	for (auto *pUIItem : vecTitleScreen) {
 		delete pUIItem;
 	}
 	vecTitleScreen.clear();

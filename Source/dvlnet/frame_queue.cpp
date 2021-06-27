@@ -7,7 +7,7 @@
 namespace devilution {
 namespace net {
 
-framesize_t frame_queue::size()
+framesize_t frame_queue::size() const
 {
 	return current_size;
 }
@@ -44,23 +44,20 @@ void frame_queue::write(buffer_t buf)
 
 bool frame_queue::packet_ready()
 {
-	if (!nextsize) {
+	if (nextsize == 0) {
 		if (size() < sizeof(framesize_t))
 			return false;
 		auto szbuf = read(sizeof(framesize_t));
 		std::memcpy(&nextsize, &szbuf[0], sizeof(framesize_t));
-		if (!nextsize)
+		if (nextsize == 0)
 			throw frame_queue_exception();
 	}
-	if (size() >= nextsize)
-		return true;
-
-	return false;
+	return size() >= nextsize;
 }
 
 buffer_t frame_queue::read_packet()
 {
-	if (!nextsize || (size() < nextsize))
+	if (nextsize == 0 || size() < nextsize)
 		throw frame_queue_exception();
 	auto ret = read(nextsize);
 	nextsize = 0;

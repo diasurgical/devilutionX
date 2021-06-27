@@ -3,8 +3,11 @@
  *
  * Implementation of the hell level generation algorithms.
  */
+#include "drlg_l4.h"
 
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"
@@ -202,11 +205,11 @@ void DRLG_LoadL4SP()
 {
 	setloadflag = false;
 	if (QuestStatus(Q_WARLORD)) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Warlord.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
 		setloadflag = true;
 	}
 	if (currlevel == 15 && gbIsMultiplayer) {
-		pSetPiece = LoadFileInMem("Levels\\L4Data\\Vile1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Vile1.DUN");
 		setloadflag = true;
 	}
 }
@@ -216,32 +219,34 @@ void DRLG_FreeL4SP()
 	pSetPiece = nullptr;
 }
 
-void DRLG_L4SetSPRoom(int rx1, int ry1)
+void DRLG_L4SetRoom(const uint16_t *dunData, int rx1, int ry1)
 {
-	int rw, rh, i, j;
-	BYTE *sp;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
 
-	rw = pSetPiece[0];
-	rh = pSetPiece[2];
+	const uint16_t *tileLayer = &dunData[2];
 
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
-
-	sp = &pSetPiece[4];
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				dungeon[i + rx1][j + ry1] = *sp;
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[i + rx1][j + ry1] = tileId;
 				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i + rx1][j + ry1] = 6;
 			}
-			sp += 2;
 		}
 	}
+}
+
+void DRLG_L4SetSPRoom(int rx1, int ry1)
+{
+	setpc_x = rx1;
+	setpc_y = ry1;
+	setpc_w = SDL_SwapLE16(pSetPiece[0]);
+	setpc_h = SDL_SwapLE16(pSetPiece[1]);
+
+	DRLG_L4SetRoom(pSetPiece.get(), rx1, ry1);
 }
 
 static void L4makeDmt()
@@ -1252,53 +1257,31 @@ void L4SaveQuads()
 	}
 }
 
-void DRLG_L4SetRoom(BYTE *pSetPiece, int rx1, int ry1)
-{
-	int rw, rh, i, j;
-	BYTE *sp;
-
-	rw = pSetPiece[0];
-	rh = pSetPiece[2];
-	sp = &pSetPiece[4];
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				dungeon[i + rx1][j + ry1] = *sp;
-				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i + rx1][j + ry1] = 6;
-			}
-			sp += 2;
-		}
-	}
-}
-
 void DRLG_LoadDiabQuads(bool preflag)
 {
 	{
-		auto lpSetPiece = LoadFileInMem("Levels\\L4Data\\diab1.DUN");
+		auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\diab1.DUN");
 		diabquad1x = 4 + l4holdx;
 		diabquad1y = 4 + l4holdy;
-		DRLG_L4SetRoom(lpSetPiece.get(), diabquad1x, diabquad1y);
+		DRLG_L4SetRoom(dunData.get(), diabquad1x, diabquad1y);
 	}
 	{
-		auto lpSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab2b.DUN" : "Levels\\L4Data\\diab2a.DUN");
 		diabquad2x = 27 - l4holdx;
 		diabquad2y = 1 + l4holdy;
-		DRLG_L4SetRoom(lpSetPiece.get(), diabquad2x, diabquad2y);
+		DRLG_L4SetRoom(dunData.get(), diabquad2x, diabquad2y);
 	}
 	{
-		auto lpSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab3b.DUN" : "Levels\\L4Data\\diab3a.DUN");
 		diabquad3x = 1 + l4holdx;
 		diabquad3y = 27 - l4holdy;
-		DRLG_L4SetRoom(lpSetPiece.get(), diabquad3x, diabquad3y);
+		DRLG_L4SetRoom(dunData.get(), diabquad3x, diabquad3y);
 	}
 	{
-		auto lpSetPiece = LoadFileInMem(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
+		auto dunData = LoadFileInMem<uint16_t>(preflag ? "Levels\\L4Data\\diab4b.DUN" : "Levels\\L4Data\\diab4a.DUN");
 		diabquad4x = 28 - l4holdx;
 		diabquad4y = 28 - l4holdy;
-		DRLG_L4SetRoom(lpSetPiece.get(), diabquad4x, diabquad4y);
+		DRLG_L4SetRoom(dunData.get(), diabquad4x, diabquad4y);
 	}
 }
 
@@ -1758,11 +1741,8 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 	DRLG_SetPC();
 }
 
-void LoadL4Dungeon(char *sFileName, int vx, int vy)
+void LoadL4Dungeon(const char *path, int vx, int vy)
 {
-	int i, j, rw, rh;
-	BYTE *lm;
-
 	dminx = 16;
 	dminy = 16;
 	dmaxx = 96;
@@ -1770,40 +1750,23 @@ void LoadL4Dungeon(char *sFileName, int vx, int vy)
 
 	DRLG_InitTrans();
 	InitL4Dungeon();
-	auto pLevelMap = LoadFileInMem(sFileName);
 
-	lm = pLevelMap.get();
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-				dflags[i][j] |= 0x80;
-			} else {
-				dungeon[i][j] = 6;
-			}
-			lm += 2;
-		}
-	}
+	DRLG_L4SetRoom(dunData.get(), 0, 0);
 
 	ViewX = vx;
 	ViewY = vy;
+
 	DRLG_L4Pass3();
 	DRLG_Init_Globals();
 
-	SetMapMonsters(pLevelMap.get(), 0, 0);
-	SetMapObjects(pLevelMap.get(), 0, 0);
+	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapObjects(dunData.get(), 0, 0);
 }
 
-void LoadPreL4Dungeon(char *sFileName)
+void LoadPreL4Dungeon(const char *path)
 {
-	int i, j, rw, rh;
-	BYTE *lm;
-
 	dminx = 16;
 	dminy = 16;
 	dmaxx = 96;
@@ -1811,25 +1774,9 @@ void LoadPreL4Dungeon(char *sFileName)
 
 	InitL4Dungeon();
 
-	auto pLevelMap = LoadFileInMem(sFileName);
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	lm = pLevelMap.get();
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-				dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 6;
-			}
-			lm += 2;
-		}
-	}
+	DRLG_L4SetRoom(dunData.get(), 0, 0);
 }
 
 } // namespace devilution

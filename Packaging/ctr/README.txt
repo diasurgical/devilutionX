@@ -1,38 +1,33 @@
 # DevilutionX (Diablo 1) for Nintendo 3DS
-*New3DS only
 
 ## Installation
 
-<details><summary>.3dsx installation</summary>
+### .3dsx installation
 
 #### Install DevilutionX: Diablo
-1. Download [devilutionx.3dsx](https://github.com/MrHuu/devilutionX-3ds/releases/latest/download/devilutionx.3dsx).
-2. Put `devilutionx.3dsx` into `sd:/3ds/devilutionx/`.
-3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+1. Extract `devilutionx.3dsx` and put it into `sd:/3ds/devilutionx/`.
+2. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
 #### Install DevilutionX: Diablo - Hellfire
-4. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+3. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+    1. *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
-*Note:* When Hellfire is install you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
-
-</details>
-<details><summary>.cia installation</summary>
+### .cia installation
 
 #### Install DevilutionX: Diablo
-1. Download [devilutionx.cia](https://github.com/MrHuu/devilutionX-3ds/releases/latest/download/devilutionx.cia).
-2. Put `devilutionx.cia` on your SD card and install with a title manager, e.g. [FBI](https://github.com/Steveice10/FBI).
-	`devilutionx.cia` can be removed after being installed.
-3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+1. Extract `devilutionx.cia` and place it on your SD card.
+2. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+3. Put the SD card back into the 3DS and install `devilutionx.cia` using a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
+    1. `devilutionx.cia` can be removed after being installed.
 
 ##### Install DevilutionX: Diablo - Hellfire
 4. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
-</details>
 
 ## Usage
 
 When using .3dsx:
 
-- Launch `devilutionx.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
+- Launch DevilutionX with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
 
 or, when using .cia:
 
@@ -61,6 +56,13 @@ or, when using .cia:
 
 - Single finger drag: move the mouse pointer (pointer jumps to finger)
 - Single short tap: left mouse click
+
+## Tips
+
+- For improved performance, change the game's resolution to 640x480. This may be necessary on old 3DS models which may otherwise run slower than the game's intended framerate.
+    - Open diablo.ini located in sd:/3ds/devilutionx.
+    - Update Graphics settings by changing to `Width=640`.
+    - By default, the game will scale to fill the entire top screen. To keep the aspect ratio when scaling, change to `Fit to Screen=0` in Graphics settings as well.
 
 ## Resources
 

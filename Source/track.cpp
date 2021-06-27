@@ -3,9 +3,12 @@
  *
  * Implementation of functionality tracking what the mouse cursor is pointing at.
  */
+#include "track.h"
+
 #include <SDL.h>
 
 #include "cursor.h"
+#include "engine/point.hpp"
 #include "player.h"
 
 namespace devilution {
@@ -26,13 +29,18 @@ void track_process()
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	if (plr[myplr].actionFrame <= 6 && plr[myplr]._pmode != PM_STAND)
+	const auto &player = plr[myplr];
+
+	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
 		return;
 
-	const Point target = plr[myplr].GetTargetPosition();
+	const Point target = player.GetTargetPosition();
 	if (cursmx != target.x || cursmy != target.y) {
 		Uint32 tick = SDL_GetTicks();
-		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * 6) {
+		int TickMultiplier = 6;
+		if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
+			TickMultiplier = 3;
+		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * TickMultiplier) {
 			sgdwLastWalk = tick;
 			NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
 			if (!sgbIsScrolling)

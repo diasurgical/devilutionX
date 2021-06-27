@@ -7,6 +7,9 @@
 
 #include <cstdint>
 
+#include "utils/endian.hpp"
+
+#include "controls/keymapper.hpp"
 #ifdef _DEBUG
 #include "monstdat.h"
 #endif
@@ -40,11 +43,14 @@ extern int force_redraw;
 /* These are defined in fonts.h */
 extern bool was_fonts_init;
 extern void FontsCleanup();
-extern bool light4flag;
 extern int PauseMode;
 extern bool gbNestArt;
 extern bool gbBard;
 extern bool gbBarbarian;
+/**
+ * @brief Don't show Messageboxes or other user-interaction. Needed for UnitTests.
+ */
+extern bool gbQuietMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
@@ -64,6 +70,7 @@ void diablo_color_cyc_logic();
 
 /* rdata */
 
+extern Keymapper keymapper;
 extern bool gbForceWindowed;
 extern bool leveldebug;
 #ifdef _DEBUG
@@ -75,10 +82,19 @@ extern int questdebug;
 extern bool debug_mode_key_w;
 extern bool debug_mode_key_inverted_v;
 extern bool debug_mode_dollar_sign;
-extern bool debug_mode_key_d;
 extern bool debug_mode_key_i;
 extern int debug_mode_key_j;
 #endif
+
+struct QuickMessage {
+    /** Config variable names for quick message */
+    const char *const key;
+    /** Default quick message */
+    const char *const message;
+};
+
+constexpr size_t QUICK_MESSAGE_OPTIONS = 4;
+extern QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS];
 extern bool gbFriendlyMode;
 
 } // namespace devilution

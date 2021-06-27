@@ -32,7 +32,9 @@ void InitMonsterHealthBar()
 	if ((healthBox.surface == nullptr)
 	    || (health.surface == nullptr)
 	    || (resistance.surface == nullptr)) {
-		app_fatal("%s", _("Failed to load UI resources. Is devilutionx.mpq accessible and up to date?"));
+		app_fatal("%s", _("Failed to load UI resources.\n"
+		                  "\n"
+		                  "Make sure devilutionx.mpq is in the game folder and that it is up to date."));
 	}
 }
 
@@ -63,7 +65,7 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	const int height = healthBox.h();
 	int xPos = (gnScreenWidth - width) / 2;
 
-	if (PANELS_COVER) {
+	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag)
 			xPos -= SPANEL_WIDTH / 2;
 		if (chrflag || questlog)
@@ -78,7 +80,7 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 	DrawArt(out, xPos, yPos, &healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
 	int barProgress = (width * mon._mhitpoints) / maxLife;
-	if (barProgress) {
+	if (barProgress != 0) {
 		DrawArt(out, xPos + border + 1, yPos + border + 1, &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
@@ -86,22 +88,21 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 150 /*beast*/ };
 		Uint8 borderColor = borderColors[mon.MData->mMonstClass];
 		int borderWidth = width - (border * 2);
-		FastDrawHorizLine(out, xPos + border, yPos + border, borderWidth, borderColor);
-		FastDrawHorizLine(out, xPos + border, yPos + height - border - 1, borderWidth, borderColor);
+		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + border }, borderWidth, borderColor);
+		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + height - border - 1 }, borderWidth, borderColor);
 		int borderHeight = height - (border * 2) - 2;
-		FastDrawVertLine(out, xPos + border, yPos + border + 1, borderHeight, borderColor);
-		FastDrawVertLine(out, xPos + width - border - 1, yPos + border + 1, borderHeight, borderColor);
+		UnsafeDrawVerticalLine(out, { xPos + border, yPos + border + 1 }, borderHeight, borderColor);
+		UnsafeDrawVerticalLine(out, { xPos + width - border - 1, yPos + border + 1 }, borderHeight, borderColor);
 	}
 
-	int barLableX = xPos + width / 2 - GetTextWidth(mon.mName) / 2;
-	int barLableY = yPos + 10 + (height - 11) / 2;
-	PrintGameStr(out, barLableX - 1, barLableY + 1, mon.mName, COL_BLACK);
-	text_color color = COL_WHITE;
+	int barLabelY = yPos + 10 + (height - 11) / 2;
+	DrawString(out, mon.mName, { xPos - 1, barLabelY + 1, width, height }, UIS_CENTER | UIS_BLACK);
+	uint16_t style = UIS_SILVER;
 	if (mon._uniqtype != 0)
-		color = COL_GOLD;
+		style = UIS_GOLD;
 	else if (mon.leader != 0)
-		color = COL_BLUE;
-	PrintGameStr(out, barLableX, barLableY, mon.mName, color);
+		style = UIS_BLUE;
+	DrawString(out, mon.mName, { xPos, barLabelY, width, height }, UIS_CENTER | style);
 
 	if (mon._uniqtype != 0 || monstkills[mon.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
@@ -109,10 +110,10 @@ void DrawMonsterHealthBar(const CelOutputBuffer &out)
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if (mon.mMagicRes & immunes[i]) {
+			if ((mon.mMagicRes & immunes[i]) != 0) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if (mon.mMagicRes & resists[i]) {
+			} else if ((mon.mMagicRes & resists[i]) != 0) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}

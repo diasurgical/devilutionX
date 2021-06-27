@@ -51,7 +51,7 @@ int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
  * check that each step is a valid position. Store the step directions (see
  * path_directions) in path, which must have room for 24 steps
  */
-int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
+int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
 {
 	PATHNODE *path_start, *next_node, *current;
 	int path_length, i;
@@ -69,7 +69,7 @@ int FindPath(bool (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx,
 	path_start->position.y = sy;
 	path_2_nodes->NextNode = path_start;
 	// A* search until we find (dx,dy) or fail
-	while ((next_node = GetNextPath())) {
+	while ((next_node = GetNextPath()) != nullptr) {
 		// reached the end, success!
 		if (next_node->position.x == dx && next_node->position.y == dy) {
 			current = next_node;
@@ -178,7 +178,7 @@ bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
  *
  * @return false if we ran out of preallocated nodes to use, else true
  */
-bool path_get_path(bool (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y)
+bool path_get_path(bool (*PosOk)(int, Point), int PosOkArg, PATHNODE *pPath, int x, int y)
 {
 	int dx, dy;
 	int i;
@@ -187,7 +187,7 @@ bool path_get_path(bool (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, 
 	for (i = 0; i < 8; i++) {
 		dx = pPath->position.x + pathxdir[i];
 		dy = pPath->position.y + pathydir[i];
-		ok = PosOk(PosOkArg, dx, dy);
+		ok = PosOk(PosOkArg, { dx, dy });
 		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
 			if (!path_parent_path(pPath, dx, dy, x, y))
 				return false;
@@ -253,7 +253,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 			dxdy->g = next_g;
 			dxdy->h = path_get_h_cost(dx, dy, sx, sy);
 			dxdy->f = next_g + dxdy->h;
-			dxdy->position = {dx,dy};
+			dxdy->position = { dx, dy };
 			// add it to the frontier
 			path_next_node(dxdy);
 
@@ -300,23 +300,21 @@ PATHNODE *path_get_node2(int dx, int dy)
  */
 void path_next_node(PATHNODE *pPath)
 {
-	PATHNODE *next, *current;
-	int f;
-
-	next = path_2_nodes;
+	PATHNODE *next = path_2_nodes;
 	if (path_2_nodes->NextNode == nullptr) {
 		path_2_nodes->NextNode = pPath;
-	} else {
-		current = path_2_nodes;
-		next = path_2_nodes->NextNode;
-		f = pPath->f;
-		while (next && next->f < f) {
-			current = next;
-			next = next->NextNode;
-		}
-		pPath->NextNode = next;
-		current->NextNode = pPath;
+		return;
 	}
+
+	PATHNODE *current = path_2_nodes;
+	next = path_2_nodes->NextNode;
+	int f = pPath->f;
+	while (next != nullptr && next->f < f) {
+		current = next;
+		next = next->NextNode;
+	}
+	pPath->NextNode = next;
+	current->NextNode = pPath;
 }
 
 /**
@@ -329,7 +327,8 @@ void path_set_coords(PATHNODE *pPath)
 	int i;
 
 	path_push_active_step(pPath);
-	while (gdwCurPathStep) {
+	// while there are path nodes to check
+	while (gdwCurPathStep > 0) {
 		PathOld = path_pop_active_step();
 		for (i = 0; i < 8; i++) {
 			PathAct = PathOld->Child[i];

@@ -29,7 +29,7 @@ public:
 	virtual bool SNetReceiveTurns(char **data, unsigned int *size,
 	    DWORD *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);
-	virtual int SNetGetProviderCaps(struct _SNETCAPS *caps);
+	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps);
 	virtual bool SNetRegisterEventHandler(event_type evtype,
 	    SEVTHANDLER func);
 	virtual bool SNetUnregisterEventHandler(event_type evtype,
@@ -109,9 +109,9 @@ bool cdwrap<T>::SNetSendTurn(char *data, unsigned int size)
 }
 
 template <class T>
-int cdwrap<T>::SNetGetProviderCaps(struct _SNETCAPS *caps)
+void cdwrap<T>::SNetGetProviderCaps(struct _SNETCAPS *caps)
 {
-	return dvlnet_wrap->SNetGetProviderCaps(caps);
+	dvlnet_wrap->SNetGetProviderCaps(caps);
 }
 
 template <class T>

@@ -47,7 +47,7 @@ static unsigned int dthread_handler(void *data)
 			if (dwMilliseconds >= 1)
 				dwMilliseconds = 1;
 
-			mem_free_dbg(pkt);
+			std::free(pkt);
 
 			if (dwMilliseconds != 0)
 				SDL_Delay(dwMilliseconds);
@@ -69,7 +69,7 @@ void dthread_remove_player(uint8_t pnum)
 	sgMemCrit.Leave();
 }
 
-void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
+void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, int dwLen)
 {
 	TMegaPkt *pkt;
 	TMegaPkt *p;
@@ -78,10 +78,10 @@ void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen)
 		return;
 	}
 
-	pkt = (TMegaPkt *)DiabloAllocPtr(dwLen + 20);
+	pkt = static_cast<TMegaPkt *>(std::malloc(dwLen + 20));
 	pkt->pNext = nullptr;
 	pkt->dwSpaceLeft = pnum;
-	pkt->data[0] = cmd;
+	pkt->data[0] = static_cast<byte>(cmd);
 	*(DWORD *)&pkt->data[4] = dwLen;
 	memcpy(&pkt->data[8], pbSrc, dwLen);
 	sgMemCrit.Enter();
@@ -137,7 +137,7 @@ void dthread_cleanup()
 
 	while (sgpInfoHead != nullptr) {
 		tmp = sgpInfoHead->pNext;
-		MemFreeDbg(sgpInfoHead);
+		std::free(sgpInfoHead);
 		sgpInfoHead = tmp;
 	}
 }

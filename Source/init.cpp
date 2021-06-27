@@ -12,10 +12,10 @@
 #include "dx.h"
 #include "pfile.h"
 #include "storm/storm.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-#include "utils/log.hpp"
-#include "utils/language.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
@@ -139,14 +139,25 @@ void init_archives()
 {
 	std::vector<std::string> paths;
 	paths.reserve(5);
+#ifdef __ANDROID__
+	paths.push_back(std::string(getenv("EXTERNAL_STORAGE")) + "/devilutionx/");
+#else
 	paths.push_back(paths::BasePath());
+#endif
 	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
-#ifdef __linux__
+#ifdef __ANDROID__
+	if (getenv("SECONDARY_STORAGE") != nullptr)
+		paths.emplace_back(std::string(getenv("SECONDARY_STORAGE")) + "/devilutionx/");
+	if (getenv("EXTERNAL_SDCARD_STORAGE") != nullptr)
+		paths.emplace_back(std::string(getenv("EXTERNAL_SDCARD_STORAGE")) + "/devilutionx/");
+#elif defined(__linux__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
+#elif defined(__3DS__)
+	paths.emplace_back("romfs:/");
 #endif
 
 	paths.emplace_back(""); // PWD
@@ -177,7 +188,7 @@ void init_archives()
 	HANDLE fh = nullptr;
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
-	SFileCloseFile(fh);
+	SFileCloseFileThreadSafe(fh);
 
 	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq");
 	if (patch_rt_mpq == nullptr)

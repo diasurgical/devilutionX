@@ -60,10 +60,9 @@ bool tcp_server::empty()
 
 void tcp_server::start_recv(const scc &con)
 {
-	con->socket.async_receive(asio::buffer(con->recv_buffer),
-	    std::bind(&tcp_server::handle_recv, this, con,
-	        std::placeholders::_1,
-	        std::placeholders::_2));
+	con->socket.async_receive(
+	    asio::buffer(con->recv_buffer),
+	    std::bind(&tcp_server::handle_recv, this, con, std::placeholders::_1, std::placeholders::_2));
 }
 
 void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
@@ -157,10 +156,9 @@ void tcp_server::handle_send(const scc &con, const asio::error_code &ec,
 void tcp_server::start_accept()
 {
 	auto nextcon = make_connection();
-	acceptor->async_accept(nextcon->socket,
-	    std::bind(&tcp_server::handle_accept,
-	        this, nextcon,
-	        std::placeholders::_1));
+	acceptor->async_accept(
+	    nextcon->socket,
+	    std::bind(&tcp_server::handle_accept, this, nextcon, std::placeholders::_1));
 }
 
 void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
@@ -182,8 +180,8 @@ void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
 void tcp_server::start_timeout(const scc &con)
 {
 	con->timer.expires_after(std::chrono::seconds(1));
-	con->timer.async_wait(std::bind(&tcp_server::handle_timeout, this, con,
-	    std::placeholders::_1));
+	con->timer.async_wait(
+	    std::bind(&tcp_server::handle_timeout, this, con, std::placeholders::_1));
 }
 
 void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
@@ -194,9 +192,8 @@ void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
 	}
 	if (con->timeout > 0)
 		con->timeout -= 1;
-	if (con->timeout < 0)
+	if (con->timeout <= 0) {
 		con->timeout = 0;
-	if (!con->timeout) {
 		drop_connection(con);
 		return;
 	}
@@ -223,8 +220,7 @@ void tcp_server::close()
 }
 
 tcp_server::~tcp_server()
-{
-}
+    = default;
 
 } // namespace net
 } // namespace devilution

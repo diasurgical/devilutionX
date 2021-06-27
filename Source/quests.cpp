@@ -3,9 +3,16 @@
  *
  * Implementation of functionality for handling quests.
  */
+#include "quests.h"
+
+#include <fmt/format.h>
 
 #include "control.h"
 #include "cursor.h"
+#include "engine/load_file.hpp"
+#include "engine/random.hpp"
+#include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "gendung.h"
 #include "init.h"
 #include "minitext.h"
@@ -36,7 +43,7 @@ int ReturnLvl;
 QuestData questlist[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          _qdtype,     _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
-	{       5,          -1, DTYPE_NONE,      Q_ROCK,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_("The Magic Rock")           },
+	{       5,          -1, DTYPE_NONE,      Q_ROCK,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
 	{       9,          -1, DTYPE_NONE,      Q_MUSHROOM,  100,    SL_NONE,         true,               TEXT_MUSH8,    N_("Black Mushroom")           },
 	{       4,          -1, DTYPE_NONE,      Q_GARBUD,    100,    SL_NONE,         true,               TEXT_GARBUD1,  N_("Gharbad The Weak")         },
 	{       8,          -1, DTYPE_NONE,      Q_ZHAR,      100,    SL_NONE,         true,               TEXT_ZHAR1,    N_("Zhar the Mad")             },
@@ -59,7 +66,7 @@ QuestData questlist[] = {
 	{      17,          17, DTYPE_NONE,      Q_DEFILER,   100,    SL_NONE,         false,              TEXT_DEFILER1, N_("The Defiler")              },
 	{      21,          21, DTYPE_NONE,      Q_NAKRUL,    100,    SL_NONE,         false,              TEXT_NAKRUL1,  "Na-Krul"                      },
 	{      21,          -1, DTYPE_NONE,      Q_CORNSTN,   100,    SL_NONE,         true,               TEXT_CORNSTN,  N_("Cornerstone of the World") },
-	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  N_("The Jersey's Jersey")      },
+	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  N_( /* TRANSLATORS: Quest Name Block end*/ "The Jersey's Jersey")      },
 	// clang-format on
 };
 /**
@@ -73,11 +80,11 @@ char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
  */
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
 const char *const questtrigstr[5] = {
-	N_("King Leoric's Tomb"),
-	N_("The Chamber of Bone"),
-	N_("Maze"),
-	N_("A Dark Passage"),
-	N_("Unholy Altar")
+	N_(/* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
+	N_(/* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
+	N_(/* TRANSLATORS: Quest Map*/ "Maze"),
+	N_(/* TRANSLATORS: Quest Map*/ "A Dark Passage"),
+	N_(/* TRANSLATORS: Quest Map*/ "Unholy Altar")
 };
 /**
  * A quest group containing the three quests the Butcher,
@@ -213,7 +220,7 @@ void CheckQuests()
 		quests[Q_BETRAYER].position.y = 2 * quests[Q_BETRAYER].position.y + 16;
 		rportx = quests[Q_BETRAYER].position.x;
 		rporty = quests[Q_BETRAYER].position.y;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			quests[Q_BETRAYER]._qvar1 = 3;
@@ -226,7 +233,7 @@ void CheckQuests()
 	    && quests[Q_BETRAYER]._qvar2 == 4) {
 		rportx = 35;
 		rporty = 32;
-		AddMissile(rportx, rporty, rportx, rporty, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 3;
 	}
 
@@ -237,13 +244,10 @@ void CheckQuests()
 		    && nummonsters == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile.x, plr[myplr].position.tile.y);
-			LoadPalette("Levels\\L3Data\\L3pwater.pal");
+			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile);
+			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
+			UpdatePWaterPalette();
 			WaterDone = 32;
-		}
-		if (WaterDone > 0) {
-			palette_update_quest_palette(WaterDone);
-			WaterDone--;
 		}
 	} else if (plr[myplr]._pmode == PM_STAND) {
 		for (i = 0; i < MAXQUESTS; i++) {
@@ -280,7 +284,7 @@ bool ForceQuests()
 
 			for (j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
-					sprintf(infostr, _("To %s"), _(questtrigstr[ql]));
+					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(questtrigstr[ql])).c_str());
 					cursmx = qx;
 					cursmy = qy;
 					return true;
@@ -314,21 +318,21 @@ void CheckQuestKill(int m, bool sendmsg)
 
 	if (monster[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(82, 30);
+		plr[myplr].Say(HeroSpeech::RestWellLeoricIllFindYourSon, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_SKELKING);
 
 	} else if (monster[m].MType->mtype == MT_CLEAVER) {
 		quests[Q_BUTCHER]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(80, 30);
+		plr[myplr].Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_BUTCHER);
 	} else if (monster[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(61, 30);
+		plr[myplr].Say(HeroSpeech::ImNotImpressed, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(62, 30);
+		plr[myplr].Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
@@ -343,7 +347,7 @@ void CheckQuestKill(int m, bool sendmsg)
 				}
 			}
 		}
-		plr[myplr].PlaySpeach(83, 30);
+		plr[myplr].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 		if (sendmsg) {
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
@@ -354,11 +358,11 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile(35, 32, 35, 32, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
-		plr[myplr].PlaySpeach(83, 30);
+		AddMissile({ 35, 32 }, { 35, 32 }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		plr[myplr].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
-		plr[myplr].PlaySpeach(94, 30);
+		plr[myplr].Say(HeroSpeech::YourReignOfPainHasEnded, 30);
 	}
 }
 
@@ -378,137 +382,118 @@ void DrawSkelKing(int q, int x, int y)
 
 void DrawWarLord(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
-	int v;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L4Data\\Warlord2.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
-	setpc_w = rw;
-	setpc_h = rh;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	for (j = y; j < y + rh; j++) {
-		for (i = x; i < x + rw; i++) {
-			if (*sp != 0) {
-				v = *sp;
-			} else {
-				v = 6;
-			}
-			dungeon[i][j] = v;
-			sp += 2;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
 		}
 	}
 }
 
 void DrawSChamber(int q, int x, int y)
 {
-	int i, j;
-	int rw, rh;
-	int xx, yy;
-	BYTE *sp;
-	int v;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L2Data\\Bonestr1.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
-	setpc_w = rw;
-	setpc_h = rh;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	for (j = y; j < y + rh; j++) {
-		for (i = x; i < x + rw; i++) {
-			if (*sp != 0) {
-				v = *sp;
-			} else {
-				v = 3;
-			}
-			dungeon[i][j] = v;
-			sp += 2;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
 		}
 	}
-	xx = 2 * x + 22;
-	yy = 2 * y + 23;
-	quests[q].position = { xx, yy };
+
+	quests[q].position = { 2 * x + 22, 2 * y + 23 };
 }
 
 void DrawLTBanner(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L1Data\\Banner1.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
-	setpc_w = rw;
-	setpc_h = rh;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				pdungeon[x + i][y + j] = *sp;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				pdungeon[x + i][y + j] = tileId;
 			}
-			sp += 2;
 		}
 	}
 }
 
 void DrawBlind(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	setpc_w = rw;
-	setpc_h = rh;
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				pdungeon[x + i][y + j] = *sp;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				pdungeon[x + i][y + j] = tileId;
 			}
-			sp += 2;
 		}
 	}
 }
 
 void DrawBlood(int x, int y)
 {
-	int rw, rh;
-	int i, j;
-	BYTE *sp;
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
 
-	auto setp = LoadFileInMem("Levels\\L2Data\\Blood2.DUN");
-	rw = setp[0];
-	sp = &setp[2];
-	rh = *sp;
-	sp += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
 	setpc_x = x;
 	setpc_y = y;
-	setpc_w = rw;
-	setpc_h = rh;
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				dungeon[x + i][y + j] = *sp;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[x + i][y + j] = tileId;
 			}
-			sp += 2;
 		}
 	}
 }
@@ -601,6 +586,16 @@ void LoadPWaterPalette()
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 }
 
+void UpdatePWaterPalette()
+{
+	if (WaterDone > 0) {
+		palette_update_quest_palette(WaterDone);
+		WaterDone--;
+		return;
+	}
+	palette_update_caves();
+}
+
 void ResyncMPQuests()
 {
 	if (gbIsSpawn)
@@ -685,7 +680,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_MUSHROOM]._qlevel) {
 		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && quests[Q_MUSHROOM]._qvar1 == QS_INIT) {
-			SpawnQuestItem(IDI_FUNGALTM, 0, 0, 5, true);
+			SpawnQuestItem(IDI_FUNGALTM, { 0, 0 }, 5, 1);
 			quests[Q_MUSHROOM]._qvar1 = QS_TOMESPAWNED;
 		} else {
 			if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
@@ -700,7 +695,7 @@ void ResyncQuests()
 	}
 	if (currlevel == quests[Q_VEIL]._qlevel + 1 && quests[Q_VEIL]._qactive == QUEST_ACTIVE && quests[Q_VEIL]._qvar1 == 0) {
 		quests[Q_VEIL]._qvar1 = 1;
-		SpawnQuestItem(IDI_GLDNELIX, 0, 0, 5, true);
+		SpawnQuestItem(IDI_GLDNELIX, { 0, 0 }, 5, 1);
 	}
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		if (quests[Q_BETRAYER]._qvar1 >= 4)
@@ -720,51 +715,30 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col)
+static void PrintQLString(const CelOutputBuffer &out, int x, int line, const char *str)
 {
-	int len, width, i, k, sx, sy;
-	BYTE c;
-
-	sx = x + 32;
-	sy = y * 12 + 44;
-	len = strlen(str);
-	k = 0;
-	if (cjustflag) {
-		width = 0;
-		for (i = 0; i < len; i++)
-			width += fontkern[fontframe[gbFontTransTbl[(BYTE)str[i]]]] + 1;
-		if (width < 257)
-			k = (257 - width) / 2;
-		sx += k;
+	int width = GetLineWidth(str);
+	int sx = x + std::max((257 - width) / 2, 0);
+	int sy = line * 12 + 44;
+	if (qline == line) {
+		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 12 : x + 12, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
-	}
-	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)str[i]]];
-		k += fontkern[c] + 1;
-		if (c && k <= 257) {
-			PrintChar(out, sx, sy, c, col);
-		}
-		sx += fontkern[c] + 1;
-	}
-	if (qline == y) {
-		CelDrawTo(out, cjustflag ? x + k + 36 : 276 - x, sy + 1, *pSPentSpn2Cels, PentSpn2Spin());
+	DrawString(out, str, { sx, sy, 257, 0 }, UIS_SILVER);
+	if (qline == line) {
+		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 
 void DrawQuestLog(const CelOutputBuffer &out)
 {
-	int y, i;
-
-	PrintQLString(out, 0, 2, true, _("Quest Log"), COL_GOLD);
-	CelDrawTo(out, 0, 351, *pQLogCel, 1);
-	y = qtopline;
-	for (i = 0; i < numqlines; i++) {
-		PrintQLString(out, 0, y, true, _(questlist[qlist[i]]._qlstr), COL_WHITE);
-		y += 2;
+	DrawString(out, _("Quest Log"), { 32, 44, 257, 0 }, UIS_CENTER);
+	CelDrawTo(out, { 0, 351 }, *pQLogCel, 1);
+	int line = qtopline;
+	for (int i = 0; i < numqlines; i++) {
+		PrintQLString(out, 32, line, _(questlist[qlist[i]]._qlstr));
+		line += 2;
 	}
-	PrintQLString(out, 0, 22, true, _("Close Quest Log"), COL_WHITE);
+	PrintQLString(out, 32, 22, _("Close Quest Log"));
 }
 
 void StartQuestlog()
@@ -791,7 +765,7 @@ void StartQuestlog()
 
 void QuestlogUp()
 {
-	if (numqlines) {
+	if (numqlines != 0) {
 		if (qline == qtopline) {
 			qline = 22;
 		} else if (qline == 22) {
@@ -805,7 +779,7 @@ void QuestlogUp()
 
 void QuestlogDown()
 {
-	if (numqlines) {
+	if (numqlines != 0) {
 		if (qline == 22) {
 			qline = qtopline;
 		} else if (qline == qtopline + 2 * numqlines - 2) {
@@ -820,22 +794,18 @@ void QuestlogDown()
 void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
-	if (numqlines && qline != 22)
+	if (numqlines != 0 && qline != 22)
 		InitQTextMsg(quests[qlist[(qline - qtopline) / 2]]._qmsg);
 	questlog = false;
 }
 
 void QuestlogESC()
 {
-	int y, i;
-
-	y = (MouseY - 32) / 12;
-	if (numqlines) {
-		for (i = 0; i < numqlines; i++) {
-			if (y == qtopline + 2 * i) {
-				qline = y;
-				QuestlogEnter();
-			}
+	int y = (MouseY - 32) / 12;
+	for (int i = 0; i < numqlines; i++) {
+		if (y == qtopline + 2 * i) {
+			qline = y;
+			QuestlogEnter();
 		}
 	}
 	if (y == 22) {
@@ -844,7 +814,7 @@ void QuestlogESC()
 	}
 }
 
-void SetMultiQuest(int q, quest_state s, int l, int v1)
+void SetMultiQuest(int q, quest_state s, bool log, int v1)
 {
 	if (gbIsSpawn)
 		return;
@@ -852,7 +822,8 @@ void SetMultiQuest(int q, quest_state s, int l, int v1)
 	if (quests[q]._qactive != QUEST_DONE) {
 		if (s > quests[q]._qactive)
 			quests[q]._qactive = s;
-		quests[q]._qlog |= l;
+		if (log)
+			quests[q]._qlog = true;
 		if (v1 > quests[q]._qvar1)
 			quests[q]._qvar1 = v1;
 	}

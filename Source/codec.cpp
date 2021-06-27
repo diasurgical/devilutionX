@@ -4,25 +4,25 @@
  * Implementation of save game encryption algorithm.
  */
 
-#include <cstddef>
 #include <cstdint>
 
 #include "appfat.h"
 #include "miniwin/miniwin.h"
 #include "sha.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
 struct CodecSignature {
-	DWORD checksum;
-	BYTE error;
-	BYTE last_chunk_size;
+	uint32_t checksum;
+	uint8_t error;
+	uint8_t last_chunk_size;
 	uint16_t unused;
 };
 
 #define BLOCKSIZE 64
 
-static void codec_init_key(const char *pszPassword)
+static void CodecInitKey(const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
 	uint32_t rand_state = 0x7058;
@@ -54,14 +54,14 @@ static void codec_init_key(const char *pszPassword)
 	memset(key, 0, sizeof(key));
 }
 
-int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword)
+std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)
 {
 	char buf[128];
 	char dst[SHA1HashSize];
 	int i;
 	CodecSignature *sig;
 
-	codec_init_key(pszPassword);
+	CodecInitKey(pszPassword);
 	if (size <= sizeof(CodecSignature))
 		return 0;
 	size -= sizeof(CodecSignature);
@@ -105,7 +105,7 @@ std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
-void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
+void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];
@@ -116,7 +116,7 @@ void codec_encode(BYTE *pbSrcDst, std::size_t size, std::size_t size_64, const c
 
 	if (size_64 != codec_get_encoded_len(size))
 		app_fatal("Invalid encode parameters");
-	codec_init_key(pszPassword);
+	CodecInitKey(pszPassword);
 
 	last_chunk = 0;
 	while (size != 0) {

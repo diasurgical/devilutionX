@@ -100,9 +100,9 @@ void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
 
 void tcp_client::start_recv()
 {
-	sock.async_receive(asio::buffer(recv_buffer),
-	    std::bind(&tcp_client::handle_recv, this,
-	        std::placeholders::_1, std::placeholders::_2));
+	sock.async_receive(
+	    asio::buffer(recv_buffer),
+	    std::bind(&tcp_client::handle_recv, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void tcp_client::handle_send(const asio::error_code &error, size_t bytesSent)
@@ -126,6 +126,7 @@ bool tcp_client::SNetLeaveGame(int type)
 	poll();
 	if (local_server != nullptr)
 		local_server->close();
+	sock.close();
 	return ret;
 }
 
@@ -135,8 +136,7 @@ std::string tcp_client::make_default_gamename()
 }
 
 tcp_client::~tcp_client()
-{
-}
+    = default;
 
 } // namespace net
 } // namespace devilution

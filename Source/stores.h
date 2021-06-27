@@ -7,6 +7,7 @@
 
 #include "control.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -47,8 +48,7 @@ struct STextStruct {
 	int _sx;
 	int _syoff;
 	char _sstr[128];
-	bool _sjust;
-	text_color _sclr;
+	uint16_t flags;
 	int _sline;
 	bool _ssel;
 	int _sval;
@@ -96,10 +96,9 @@ extern ItemStruct boyitem;
 
 void AddStoreHoldRepair(ItemStruct *itm, int i);
 void InitStores();
-int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(const CelOutputBuffer &out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
+void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *text, uint16_t flags, int price = 0);
 void DrawSLine(const CelOutputBuffer &out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
@@ -110,8 +109,6 @@ void STextUp();
 void STextDown();
 void STextPrior();
 void STextNext();
-void SetGoldCurs(int pnum, int i);
-void SetSpdbarGoldCurs(int pnum, int i);
 void TakePlrsMoney(int cost);
 void STextEnter();
 void CheckStoreBtn();

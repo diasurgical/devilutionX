@@ -1,5 +1,7 @@
 #include "selgame.h"
 
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/dialogs.h"
 #include "DiabloUI/selhero.h"
@@ -42,12 +44,12 @@ std::vector<UiItemBase *> vecSelGameDialog;
 
 void selgame_FreeVectors()
 {
-	for (auto pUIItem : vecSelGameDlgItems) {
+	for (auto *pUIItem : vecSelGameDlgItems) {
 		delete pUIItem;
 	}
 	vecSelGameDlgItems.clear();
 
-	for (auto pUIItem : vecSelGameDialog) {
+	for (auto *pUIItem : vecSelGameDialog) {
 		delete pUIItem;
 	}
 	vecSelGameDialog.clear();
@@ -180,7 +182,7 @@ void selgame_GameSelection_Select(int value)
 		vecSelGameDialog.push_back(new UiArtText(_("Enter address"), rect4, UIS_CENTER | UIS_BIG));
 
 		SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 314), 285, 33 };
-		vecSelGameDialog.push_back(new UiEdit(selgame_Ip, 128, rect5, UIS_MED | UIS_GOLD));
+		vecSelGameDialog.push_back(new UiEdit(_("Enter address"), selgame_Ip, 128, rect5, UIS_MED | UIS_GOLD));
 
 		SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(new UiArtTextButton(_("OK"), &UiFocusNavigationSelect, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
@@ -386,7 +388,7 @@ void selgame_Password_Init(int value)
 	vecSelGameDialog.push_back(new UiArtText(_("Enter Password"), rect4, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 314), 285, 33 };
-	vecSelGameDialog.push_back(new UiEdit(selgame_Password, 15, rect5, UIS_MED | UIS_GOLD));
+	vecSelGameDialog.push_back(new UiEdit(_("Enter Password"), selgame_Password, 15, rect5, UIS_MED | UIS_GOLD));
 
 	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(new UiArtTextButton(_("OK"), &UiFocusNavigationSelect, rect6, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
@@ -412,7 +414,7 @@ static bool IsGameCompatible(GameData *data)
 		UiSelOkDialog(title, _("The host is running a different game than you."), false);
 	} else {
 		char msg[64];
-		sprintf(msg, _("Your version %s does not match the host %d.%d.%d."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH);
+		strcpy(msg, fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH).c_str());
 
 		UiSelOkDialog(title, msg, false);
 	}
@@ -445,9 +447,9 @@ void selgame_Password_Select(int value)
 
 	m_game_data->nDifficulty = nDifficulty;
 	m_game_data->nTickRate = nTickRate;
-	m_game_data->bRunInTown = sgOptions.Gameplay.bRunInTown;
-	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest;
-	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest;
+	m_game_data->bRunInTown = sgOptions.Gameplay.bRunInTown ? 1 : 0;
+	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest ? 1 : 0;
+	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest ? 1 : 0;
 
 	if (SNetCreateGame(nullptr, selgame_Password, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
 		UiInitList_clear();

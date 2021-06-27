@@ -7,7 +7,7 @@ using namespace devilution;
 TEST(Automap, InitAutomap)
 {
 	InitAutomapOnce();
-	EXPECT_EQ(automapflag, false);
+	EXPECT_EQ(AutomapActive, false);
 	EXPECT_EQ(AutoMapScale, 50);
 	EXPECT_EQ(AmLine64, 32);
 	EXPECT_EQ(AmLine32, 16);
@@ -19,45 +19,45 @@ TEST(Automap, InitAutomap)
 TEST(Automap, StartAutomap)
 {
 	StartAutomap();
-	EXPECT_EQ(AutoMapXOfs, 0);
-	EXPECT_EQ(AutoMapYOfs, 0);
-	EXPECT_EQ(automapflag, true);
+	EXPECT_EQ(AutomapOffset.x, 0);
+	EXPECT_EQ(AutomapOffset.y, 0);
+	EXPECT_EQ(AutomapActive, true);
 }
 
 TEST(Automap, AutomapUp)
 {
-	AutoMapXOfs = 1;
-	AutoMapYOfs = 1;
+	AutomapOffset.x = 1;
+	AutomapOffset.y = 1;
 	AutomapUp();
-	EXPECT_EQ(AutoMapXOfs, 0);
-	EXPECT_EQ(AutoMapYOfs, 0);
+	EXPECT_EQ(AutomapOffset.x, 0);
+	EXPECT_EQ(AutomapOffset.y, 0);
 }
 
 TEST(Automap, AutomapDown)
 {
-	AutoMapXOfs = 1;
-	AutoMapYOfs = 1;
+	AutomapOffset.x = 1;
+	AutomapOffset.y = 1;
 	AutomapDown();
-	EXPECT_EQ(AutoMapXOfs, 2);
-	EXPECT_EQ(AutoMapYOfs, 2);
+	EXPECT_EQ(AutomapOffset.x, 2);
+	EXPECT_EQ(AutomapOffset.y, 2);
 }
 
 TEST(Automap, AutomapLeft)
 {
-	AutoMapXOfs = 1;
-	AutoMapYOfs = 1;
+	AutomapOffset.x = 1;
+	AutomapOffset.y = 1;
 	AutomapLeft();
-	EXPECT_EQ(AutoMapXOfs, 0);
-	EXPECT_EQ(AutoMapYOfs, 2);
+	EXPECT_EQ(AutomapOffset.x, 0);
+	EXPECT_EQ(AutomapOffset.y, 2);
 }
 
 TEST(Automap, AutomapRight)
 {
-	AutoMapXOfs = 1;
-	AutoMapYOfs = 1;
+	AutomapOffset.x = 1;
+	AutomapOffset.y = 1;
 	AutomapRight();
-	EXPECT_EQ(AutoMapXOfs, 2);
-	EXPECT_EQ(AutoMapYOfs, 0);
+	EXPECT_EQ(AutomapOffset.x, 2);
+	EXPECT_EQ(AutomapOffset.y, 0);
 }
 
 TEST(Automap, AutomapZoomIn)
@@ -113,11 +113,11 @@ TEST(Automap, AutomapZoomOut_Min)
 TEST(Automap, AutomapZoomReset)
 {
 	AutoMapScale = 50;
-	AutoMapXOfs = 1;
-	AutoMapYOfs = 1;
+	AutomapOffset.x = 1;
+	AutomapOffset.y = 1;
 	AutomapZoomReset();
-	EXPECT_EQ(AutoMapXOfs, 0);
-	EXPECT_EQ(AutoMapYOfs, 0);
+	EXPECT_EQ(AutomapOffset.x, 0);
+	EXPECT_EQ(AutomapOffset.y, 0);
 	EXPECT_EQ(AutoMapScale, 50);
 	EXPECT_EQ(AmLine64, 32);
 	EXPECT_EQ(AmLine32, 16);

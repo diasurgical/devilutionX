@@ -102,18 +102,18 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 TEST(Inv, CalculateGold)
 {
 	plr[myplr]._pNumInv = 10;
-	// Set up two slots of gold both in the belt and inventory
-	plr[myplr].SpdList[1]._itype = ITYPE_GOLD;
-	plr[myplr].SpdList[5]._itype = ITYPE_GOLD;
+	// Set up 4 slots of gold in the inventory
+	plr[myplr].InvList[1]._itype = ITYPE_GOLD;
+	plr[myplr].InvList[5]._itype = ITYPE_GOLD;
 	plr[myplr].InvList[2]._itype = ITYPE_GOLD;
 	plr[myplr].InvList[3]._itype = ITYPE_GOLD;
 	// Set the gold amount to arbitrary values
-	plr[myplr].SpdList[1]._ivalue = 100;
-	plr[myplr].SpdList[5]._ivalue = 200;
+	plr[myplr].InvList[1]._ivalue = 100;
+	plr[myplr].InvList[5]._ivalue = 200;
 	plr[myplr].InvList[2]._ivalue = 3;
 	plr[myplr].InvList[3]._ivalue = 30;
 
-	EXPECT_EQ(CalculateGold(myplr), 333);
+	EXPECT_EQ(CalculateGold(plr[myplr]), 333);
 }
 
 // Test automatic gold placing
@@ -131,7 +131,7 @@ TEST(Inv, GoldAutoPlace)
 	plr[myplr].HoldItem._itype = ITYPE_GOLD;
 	plr[myplr].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
-	GoldAutoPlace(myplr);
+	GoldAutoPlace(plr[myplr]);
 	// We expect the inventory:
 	// | 5000 | 900 | ...
 	EXPECT_EQ(plr[myplr].InvList[0]._ivalue, GOLD_MAX_LIMIT);
@@ -149,7 +149,7 @@ TEST(Inv, RemoveInvItem)
 	plr[myplr].InvGrid[1] = -1;
 	plr[myplr].InvList[0]._itype = ITYPE_MISC;
 
-	RemoveInvItem(myplr, 0);
+	plr[myplr].RemoveInvItem(0);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[1], 0);
 	EXPECT_EQ(plr[myplr]._pNumInv, 0);
@@ -169,7 +169,7 @@ TEST(Inv, RemoveInvItem_other_item)
 	plr[myplr].InvGrid[2] = 2;
 	plr[myplr].InvList[1]._itype = ITYPE_RING;
 
-	RemoveInvItem(myplr, 0);
+	plr[myplr].RemoveInvItem(0);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[1], 0);
 	EXPECT_EQ(plr[myplr].InvGrid[2], 1);
@@ -187,7 +187,7 @@ TEST(Inv, RemoveSpdBarItem)
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
 	plr[myplr].SpdList[3]._itype = ITYPE_MISC;
 
-	RemoveSpdBarItem(myplr, 3);
+	plr[myplr].RemoveSpdBarItem(3);
 	EXPECT_EQ(plr[myplr].SpdList[3]._itype, ITYPE_NONE);
 }
 
@@ -203,7 +203,7 @@ TEST(Inv, RemoveScroll_inventory)
 	plr[myplr].InvList[0]._iMiscId = IMISC_SCROLL;
 	plr[myplr].InvList[0]._iSpell = SPL_FIREBOLT;
 
-	RemoveScroll(myplr);
+	RemoveScroll(plr[myplr]);
 	EXPECT_EQ(plr[myplr].InvGrid[0], 0);
 	EXPECT_EQ(plr[myplr]._pNumInv, 0);
 }
@@ -221,6 +221,6 @@ TEST(Inv, RemoveScroll_belt)
 	plr[myplr].SpdList[3]._iMiscId = IMISC_SCROLL;
 	plr[myplr].SpdList[3]._iSpell = SPL_FIREBOLT;
 
-	RemoveScroll(myplr);
+	RemoveScroll(plr[myplr]);
 	EXPECT_EQ(plr[myplr].SpdList[3]._itype, ITYPE_NONE);
 }

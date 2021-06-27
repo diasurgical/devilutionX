@@ -22,6 +22,17 @@ struct SDLSurfaceDeleter {
 
 using SDLSurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>;
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+struct SDLCursorDeleter {
+	void operator()(SDL_Cursor *cursor) const
+	{
+		SDL_FreeCursor(cursor);
+	}
+};
+
+using SDLCursorUniquePtr = std::unique_ptr<SDL_Cursor, SDLCursorDeleter>;
+#endif
+
 /**
  * @brief Deletes the object using `SDL_free`.
  */

@@ -11,7 +11,6 @@ bool gbSoundOn;
 // AllowShortFunctionsOnASingleLine: None
 // clang-format off
 void ClearDuplicateSounds() { }
-void CleanupFinishedDuplicateSounds() { }
 void snd_stop_snd(TSnd *pSnd) { }
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan) { }
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream) { return nullptr; }

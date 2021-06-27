@@ -7,8 +7,8 @@
 
 #include <SDL.h>
 
+#include "engine.h"
 #include "options.h"
-#include "render.h"
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
@@ -39,16 +39,45 @@ SDL_Surface *renderer_texture_surface = nullptr;
 /** 8-bit surface that we render to */
 SDL_Surface *pal_surface;
 
+/** Whether we render directly to the screen surface, i.e. `pal_surface == GetOutputSurface()` */
+bool RenderDirectlyToOutputSurface;
+
+namespace {
+
+bool CanRenderDirectlyToOutputSurface()
+{
+#ifdef USE_SDL1
+#ifdef SDL1_FORCE_DIRECT_RENDER
+	return true;
+#else
+	auto *outputSurface = GetOutputSurface();
+	return ((outputSurface->flags & SDL_DOUBLEBUF) == SDL_DOUBLEBUF
+	    && outputSurface->w == gnScreenWidth && outputSurface->h == gnScreenHeight
+	    && outputSurface->format->BitsPerPixel == 8);
+#endif
+#else // !USE_SDL1
+	return false;
+#endif
+}
+
+} // namespace
+
 static void dx_create_back_buffer()
 {
-	pal_surface = SDL_CreateRGBSurfaceWithFormat(
-	    /*flags=*/0,
-	    /*width=*/BUFFER_BORDER_LEFT + gnScreenWidth + BUFFER_BORDER_RIGHT,
-	    /*height=*/BUFFER_BORDER_TOP + gnScreenHeight + BUFFER_BORDER_BOTTOM,
-	    /*depth=*/8,
-	    SDL_PIXELFORMAT_INDEX8);
-	if (pal_surface == nullptr) {
-		ErrSdl();
+	if (CanRenderDirectlyToOutputSurface()) {
+		Log("{}", "Will render directly to the SDL output surface");
+		pal_surface = GetOutputSurface();
+		RenderDirectlyToOutputSurface = true;
+	} else {
+		pal_surface = SDL_CreateRGBSurfaceWithFormat(
+		    /*flags=*/0,
+		    /*width=*/gnScreenWidth,
+		    /*height=*/gnScreenHeight,
+		    /*depth=*/8,
+		    SDL_PIXELFORMAT_INDEX8);
+		if (pal_surface == nullptr) {
+			ErrSdl();
+		}
 	}
 
 #ifndef USE_SDL1
@@ -137,7 +166,7 @@ CelOutputBuffer GlobalBackBuffer()
 		return CelOutputBuffer();
 	}
 
-	return CelOutputBuffer(pal_surface, SDL_Rect { BUFFER_BORDER_LEFT, BUFFER_BORDER_TOP, gnScreenWidth, gnScreenHeight });
+	return CelOutputBuffer(pal_surface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
 }
 
 void dx_cleanup()
@@ -156,8 +185,10 @@ void dx_cleanup()
 	pal_surface = nullptr;
 	SDL_FreePalette(palette);
 	SDL_FreeSurface(renderer_texture_surface);
+#ifndef USE_SDL1
 	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
+#endif
 	SDL_DestroyWindow(ghMainWnd);
 }
 
@@ -194,6 +225,8 @@ void InitPalette()
 
 void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
 {
+	if (RenderDirectlyToOutputSurface)
+		return;
 	Blit(pal_surface, src_rect, dst_rect);
 }
 
@@ -203,7 +236,6 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 #ifndef USE_SDL1
 	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
 		ErrSdl();
-	return;
 #else
 	if (!OutputRequiresScaling()) {
 		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
@@ -286,9 +318,6 @@ void RenderPresent()
 		}
 
 		// Clear buffer to avoid artifacts in case the window was resized
-#ifndef __vita__
-		// There's no window resizing on vita, so texture always properly overwrites display area.
-		// Thus, there's no need to clear the screen and unnecessarily modify sdl render context state.
 		if (SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255) <= -1) { // TODO only do this if window was resized
 			ErrSdl();
 		}
@@ -296,7 +325,6 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
-#endif
 		if (SDL_RenderCopy(renderer, texture, nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}
@@ -312,12 +340,11 @@ void RenderPresent()
 		LimitFrameRate();
 	}
 #else
-#ifdef __3DS__
-	gspWaitForVBlank();
-#endif
 	if (SDL_Flip(surface) <= -1) {
 		ErrSdl();
 	}
+	if (RenderDirectlyToOutputSurface)
+		pal_surface = GetOutputSurface();
 	LimitFrameRate();
 #endif
 }

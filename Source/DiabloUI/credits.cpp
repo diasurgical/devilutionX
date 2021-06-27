@@ -10,11 +10,12 @@
 #include "DiabloUI/support_lines.h"
 #include "control.h"
 #include "controls/menu_controls.h"
+#include "hwcursor.hpp"
 #include "utils/display.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
-#include "utils/log.hpp"
-#include "utils/language.h"
 
 namespace devilution {
 
@@ -124,7 +125,7 @@ public:
 
 	void Render();
 
-	bool Finished() const
+	[[nodiscard]] bool Finished() const
 	{
 		return finished_;
 	}
@@ -198,6 +199,9 @@ bool TextDialog()
 {
 	CreditsRenderer creditsRenderer;
 	bool endMenu = false;
+
+	if (IsHardwareCursor())
+		SetHardwareCursorVisible(false);
 
 	SDL_Event event;
 	do {

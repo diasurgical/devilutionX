@@ -27,7 +27,7 @@ bool sgbThreadIsRunning;
 DWORD gdwLargestMsgSize;
 DWORD gdwNormalMsgSize;
 int last_tick;
-float gfProgressToNextGameTick = 0.0f;
+float gfProgressToNextGameTick = 0.0;
 
 /* data */
 static SDL_Thread *sghThread = nullptr;
@@ -80,7 +80,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 {
 	*pfSendAsync = false;
 	sgbPacketCountdown--;
-	if (sgbPacketCountdown) {
+	if (sgbPacketCountdown > 0) {
 		last_tick += gnTickDelay;
 		return true;
 	}
@@ -92,10 +92,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		last_tick += gnTickDelay;
 		return true;
 	}
-#ifdef __3DS__
-	return false;
-#else
-	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, &player_state[0])) {
+	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, (unsigned int *)gdwMsgLenTbl, &player_state[0])) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = false;
@@ -112,8 +109,6 @@ bool nthread_recv_turns(bool *pfSendAsync)
 	*pfSendAsync = true;
 	last_tick += gnTickDelay;
 	return true;
-
-#endif
 }
 
 static unsigned int nthread_handler(void *data)
@@ -149,7 +144,7 @@ void nthread_set_turn_upper_bit()
 
 void nthread_start(bool set_turn_upper_bit)
 {
-	const char *err, *err2;
+	const char *err;
 	DWORD largestMsgSize;
 	_SNETCAPS caps;
 
@@ -162,14 +157,11 @@ void nthread_start(bool set_turn_upper_bit)
 	else
 		turn_upper_bit = 0;
 	caps.size = 36;
-	if (!SNetGetProviderCaps(&caps)) {
-		err = SDL_GetError();
-		app_fatal("SNetGetProviderCaps:\n%s", err);
-	}
+	SNetGetProviderCaps(&caps);
 	gdwTurnsInTransit = caps.defaultturnsintransit;
-	if (!caps.defaultturnsintransit)
+	if (gdwTurnsInTransit == 0)
 		gdwTurnsInTransit = 1;
-	if (caps.defaultturnssec <= 20 && caps.defaultturnssec)
+	if (caps.defaultturnssec <= 20 && caps.defaultturnssec != 0)
 		sgbNetUpdateRate = 20 / caps.defaultturnssec;
 	else
 		sgbNetUpdateRate = 1;
@@ -196,8 +188,8 @@ void nthread_start(bool set_turn_upper_bit)
 		nthread_should_run = true;
 		sghThread = CreateThread(nthread_handler, &glpNThreadId);
 		if (sghThread == nullptr) {
-			err2 = SDL_GetError();
-			app_fatal("nthread2:\n%s", err2);
+			err = SDL_GetError();
+			app_fatal("nthread2:\n%s", err);
 		}
 	}
 }
@@ -247,20 +239,20 @@ bool nthread_has_500ms_passed()
 
 void nthread_UpdateProgressToNextGameTick()
 {
-	if (!gbRunGame || PauseMode || (!gbIsMultiplayer && gmenu_is_active())) // if game is not running or paused there is no next gametick in the near future
+	if (!gbRunGame || PauseMode != 0 || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers) // if game is not running or paused there is no next gametick in the near future
 		return;
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = last_tick - currentTickCount;
 	if (ticksElapsed <= 0) {
-		gfProgressToNextGameTick = 1.0f; // game tick is due
+		gfProgressToNextGameTick = 1.0; // game tick is due
 		return;
 	}
 	int ticksAdvanced = gnTickDelay - ticksElapsed;
 	float fraction = (float)ticksAdvanced / (float)gnTickDelay;
-	if (fraction > 1.0f)
-		gfProgressToNextGameTick = 1.0f;
-	if (fraction < 0.0f)
-		gfProgressToNextGameTick = 0.0f;
+	if (fraction > 1.0)
+		gfProgressToNextGameTick = 1.0;
+	if (fraction < 0.0)
+		gfProgressToNextGameTick = 0.0;
 	gfProgressToNextGameTick = fraction;
 }
 

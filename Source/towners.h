@@ -7,10 +7,12 @@
 
 #include <cstdint>
 #include <memory>
+#include "utils/stdcompat/string_view.hpp"
 
 #include "items.h"
 #include "player.h"
 #include "quests.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
@@ -40,9 +42,10 @@ struct TNQ {
 };
 
 struct TownerStruct {
-	uint8_t *_tNAnim[8];
-	std::unique_ptr<BYTE[]> _tNData;
-	uint8_t *_tAnimData;
+	byte *_tNAnim[8];
+	std::unique_ptr<byte[]> _tNData;
+	byte *_tAnimData;
+	 /** Used to get a voice line and text related to active quests when the player speaks to a town npc */
 	int16_t _tSeed;
 	/** Tile position of NPC */
 	Point position;
@@ -52,13 +55,12 @@ struct TownerStruct {
 	uint8_t _tAnimLen;   // Number of frames in current animation
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
-	uint8_t _tNFrames;
-	char _tName[PLR_NAME_LEN];
+	string_view _tName;
 	TNQ qsts[MAXQUESTS];
-	bool _tSelFlag;
-	bool _tMsgSaid;
-	int8_t _tAnimOrder;
-	int8_t _tTalkingToPlayer;
+	/** Specifies the animation frame sequence. */
+	const uint8_t *animOrder; // unowned
+	std::size_t animOrderSize;
+	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
 	bool _tbtcnt;
 	_talker_id _ttype;
 };
@@ -68,8 +70,7 @@ extern TownerStruct towners[NUM_TOWNERS];
 void InitTowners();
 void FreeTownerGFX();
 void ProcessTowners();
-ItemStruct *PlrHasItem(int pnum, int item, int *i);
-void TalkToTowner(int p, int t);
+void TalkToTowner(PlayerStruct &player, int t);
 
 extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
 

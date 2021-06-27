@@ -21,12 +21,12 @@ void SelyesnoFree()
 {
 	ArtBackground.Unload();
 
-	for (auto pUIListItem : vecSelYesNoDialogItems) {
+	for (auto *pUIListItem : vecSelYesNoDialogItems) {
 		delete pUIListItem;
 	}
 	vecSelYesNoDialogItems.clear();
 
-	for (auto pUIItem : vecSelYesNoDialog) {
+	for (auto *pUIItem : vecSelYesNoDialog) {
 		delete pUIItem;
 	}
 	vecSelYesNoDialog.clear();

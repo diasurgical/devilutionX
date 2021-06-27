@@ -5,7 +5,6 @@
  * - Sprite blitting
  * - Drawing
  * - Angle calculation
- * - RNG
  * - Memory allocation
  * - File loading
  * - Video playback
@@ -13,11 +12,19 @@
 #pragma once
 
 #include <algorithm>
-#include <cstddef>
+#include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <memory>
+#include <tuple>
 #include <utility>
+
+// We include `cinttypes` here so that it is included before `inttypes.h`
+// to work around a bug in older GCC versions on some platforms,
+// where including `inttypes.h` before `cinttypes` leads to missing
+// defines for `PRIuMAX` et al. SDL transitively includes `inttypes.h`.
+// See https://gcc.gnu.org/bugzilla/show_bug.cgi?id=97044
+#include <cinttypes>
 
 #include <SDL.h>
 
@@ -26,174 +33,15 @@
 #endif
 
 #include "appfat.h"
+#include "engine/point.hpp"
+#include "engine/size.hpp"
 #include "miniwin/miniwin.h"
+#include "utils/stdcompat/cstddef.hpp"
+
+#define TILE_WIDTH 64
+#define TILE_HEIGHT 32
 
 namespace devilution {
-
-#if defined(__cpp_lib_clamp)
-using std::clamp;
-#else
-template <typename T>
-constexpr const T &clamp(const T &x, const T &lower, const T &upper)
-{
-	return std::min(std::max(x, lower), upper);
-}
-#endif
-
-#define MemFreeDbg(p)       \
-	{                       \
-		void *p__p;         \
-		p__p = p;           \
-		p = NULL;           \
-		mem_free_dbg(p__p); \
-	}
-
-enum direction : uint8_t {
-	DIR_S,
-	DIR_SW,
-	DIR_W,
-	DIR_NW,
-	DIR_N,
-	DIR_NE,
-	DIR_E,
-	DIR_SE,
-	DIR_OMNI,
-};
-
-struct Point {
-	int x;
-	int y;
-
-	bool operator==(const Point &other) const
-	{
-		return x == other.x && y == other.y;
-	}
-
-	bool operator!=(const Point &other) const
-	{
-		return !(*this == other);
-	}
-
-	Point &operator+=(const Point &other)
-	{
-		x += other.x;
-		y += other.y;
-		return *this;
-	}
-
-	Point &operator-=(const Point &other)
-	{
-		x -= other.x;
-		y -= other.y;
-		return *this;
-	}
-
-	friend Point operator+(Point a, const Point &b)
-	{
-		a += b;
-		return a;
-	}
-
-	friend Point operator-(Point a, const Point &b)
-	{
-		a -= b;
-		return a;
-	}
-};
-
-struct ActorPosition {
-	Point tile;
-	/** Future tile position. Set at start of walking animation. */
-	Point future;
-	/** Tile position of player. Set via network on player input. */
-	Point last;
-	/** Most recent position in dPlayer. */
-	Point old;
-	/** Pixel offset from tile. */
-	Point offset;
-	/** Same as offset but contains the value in a higher range */
-	Point offset2;
-	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
-	Point velocity;
-	/** Used for referring to position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks) */
-	Point temp;
-};
-
-// `malloc` that returns a user-friendly error on OOM.
-//
-// Defined as a macro so that:
-// 1. We provide the correct location for the OOM error.
-// 2. Get better attribution from memory profilers.
-#define DiabloAllocPtr(NUM_BYTES)                                                                                    \
-	[](std::size_t num_bytes) {                                                                                      \
-		BYTE *ptr = static_cast<BYTE *>(std::malloc(num_bytes));                                                     \
-		constexpr char kMesage[] = "System memory exhausted.\n"                                                      \
-		                           "Make sure you have at least 64MB of free system memory before running the game"; \
-		if (ptr == NULL)                                                                                             \
-			ErrDlg("Out of Memory Error", kMesage, __FILE__, __LINE__);                                              \
-		return ptr;                                                                                                  \
-	}(NUM_BYTES)
-
-#define mem_free_dbg(PTR) \
-	std::free(PTR)
-
-inline BYTE *CelGetFrameStart(BYTE *pCelBuff, int nCel)
-{
-	DWORD *pFrameTable;
-
-	pFrameTable = (DWORD *)pCelBuff;
-
-	return pCelBuff + SDL_SwapLE32(pFrameTable[nCel]);
-}
-
-template <typename T>
-constexpr uint32_t LoadLE32(const T *b)
-{
-	static_assert(sizeof(T) == 1, "invalid argument");
-
-#if BYTE_ORDER == LITTLE_ENDIAN
-	return ((uint32_t)(b)[3] << 24) | ((uint32_t)(b)[2] << 16) | ((uint32_t)(b)[1] << 8) | (uint32_t)(b)[0];
-#else /* BIG ENDIAN */
-	return ((uint32_t)(b)[0] << 24) | ((uint32_t)(b)[1] << 16) | ((uint32_t)(b)[2] << 8) | (uint32_t)(b)[3];
-#endif
-}
-
-template <typename T>
-constexpr uint32_t LoadBE32(const T *b)
-{
-	static_assert(sizeof(T) == 1, "invalid argument");
-
-#if BYTE_ORDER == LITTLE_ENDIAN
-	return ((uint32_t)(b)[0] << 24) | ((uint32_t)(b)[1] << 16) | ((uint32_t)(b)[2] << 8) | (uint32_t)(b)[3];
-#else /* BIG ENDIAN */
-	return ((uint32_t)(b)[3] << 24) | ((uint32_t)(b)[2] << 16) | ((uint32_t)(b)[1] << 8) | (uint32_t)(b)[0];
-#endif
-}
-
-inline BYTE *CelGetFrame(BYTE *pCelBuff, int nCel, int *nDataSize)
-{
-	DWORD nCellStart = LoadLE32(&pCelBuff[nCel * 4]);
-	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * 4]) - nCellStart;
-	return pCelBuff + nCellStart;
-}
-
-inline const BYTE *CelGetFrame(const BYTE *pCelBuff, int nCel, int *nDataSize)
-{
-	DWORD nCellStart = LoadLE32(&pCelBuff[nCel * 4]);
-	*nDataSize = LoadLE32(&pCelBuff[(nCel + 1) * 4]) - nCellStart;
-	return pCelBuff + nCellStart;
-}
-
-inline const BYTE *CelGetFrameClipped(const BYTE *pCelBuff, int nCel, int *nDataSize)
-{
-	DWORD nDataStart;
-	const BYTE *pRLEBytes = CelGetFrame(pCelBuff, nCel, nDataSize);
-
-	nDataStart = pRLEBytes[1] << 8 | pRLEBytes[0];
-	*nDataSize -= nDataStart;
-
-	return pRLEBytes + nDataStart;
-}
 
 struct CelOutputBuffer {
 	// 8-bit palletized surface.
@@ -258,18 +106,34 @@ struct CelOutputBuffer {
 		return region.h;
 	}
 
-	BYTE *at(int x, int y) const
+	std::uint8_t &operator[](Point p) const
 	{
-		return static_cast<BYTE *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
+		return *at(p.x, p.y);
 	}
 
-	BYTE *begin() const
+	uint8_t *at(int x, int y) const
+	{
+		return static_cast<uint8_t *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
+	}
+
+	uint8_t *begin() const
 	{
 		return at(0, 0);
 	}
-	BYTE *end() const
+	uint8_t *end() const
 	{
 		return at(0, region.h);
+	}
+
+	/**
+	 * @brief Set the value of a single pixel if it is in bounds.
+	 * @param point Target buffer coordinate
+	 * @param col Color index from current palette
+	 */
+	void SetPixel(Point position, std::uint8_t col) const
+	{
+		if (InBounds(position))
+			(*this)[position] = col;
 	}
 
 	/**
@@ -281,9 +145,9 @@ struct CelOutputBuffer {
 		return surface->pitch;
 	}
 
-	bool in_bounds(Sint16 x, Sint16 y) const
+	bool InBounds(Point position) const
 	{
-		return x >= 0 && y >= 0 && x < region.w && y < region.h;
+		return position.x >= 0 && position.y >= 0 && position.x < region.w && position.y < region.h;
 	}
 
 	/**
@@ -311,268 +175,65 @@ struct CelOutputBuffer {
 		subregion.h = h;
 		return CelOutputBuffer(surface, subregion);
 	}
-};
 
-/**
- * Stores a CEL or CL2 sprite and its width(s).
- *
- * The data may be unowned.
- * Eventually we'd like to remove the unowned version.
- */
-class CelSprite {
-public:
-	CelSprite(std::unique_ptr<BYTE[]> data, int width)
-	    : data_(std::move(data))
-	    , data_ptr_(data_.get())
-	    , width_(width)
+	/**
+	 * @brief Clips srcRect and targetPosition to this output buffer.
+	 */
+	void Clip(SDL_Rect *srcRect, Point *targetPosition) const
 	{
-	}
-
-	CelSprite(std::unique_ptr<BYTE[]> data, const int *widths)
-	    : data_(std::move(data))
-	    , data_ptr_(data_.get())
-	    , widths_(widths)
-	{
+		if (targetPosition->x < 0) {
+			srcRect->x -= targetPosition->x;
+			srcRect->w += targetPosition->x;
+			targetPosition->x = 0;
+		}
+		if (targetPosition->y < 0) {
+			srcRect->y -= targetPosition->y;
+			srcRect->h += targetPosition->y;
+			targetPosition->y = 0;
+		}
+		if (targetPosition->x + srcRect->w > region.w) {
+			srcRect->w = region.w - targetPosition->x;
+		}
+		if (targetPosition->y + srcRect->h > region.h) {
+			srcRect->h = region.h - targetPosition->y;
+		}
 	}
 
 	/**
-	 * Constructs an unowned sprite.
-	 * Ideally we'd like to remove all uses of this constructor.
+	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
 	 */
-	CelSprite(const BYTE *data, int width)
-	    : data_ptr_(data)
-	    , width_(width)
-	{
-	}
+	void BlitFrom(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
 
-	CelSprite(CelSprite &&) noexcept = default;
-	CelSprite &operator=(CelSprite &&) noexcept = default;
-
-	[[nodiscard]] const BYTE *Data() const
-	{
-		return data_ptr_;
-	}
-
-	[[nodiscard]] int Width(std::size_t frame = 1) const
-	{
-		return widths_ == nullptr ? width_ : widths_[frame];
-	}
-
-private:
-	std::unique_ptr<BYTE[]> data_;
-	const BYTE *data_ptr_;
-	int width_ = 0;
-	const int *widths_ = nullptr; // unowned
+	/**
+	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
+	 * Source pixels with index 0 are not copied.
+	 */
+	void BlitFromSkipColorIndexZero(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
 };
 
 /**
- * @brief Loads a Cel sprite and sets its width
- */
-CelSprite LoadCel(const char *pszName, int width);
-CelSprite LoadCel(const char *pszName, const int *widths);
-
-/**
- * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
- * of fully transparent columns in the sprite.
- */
-std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame = 1);
-
-/**
- * @brief Blit CEL sprite to the back buffer at the given coordinates
+ * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
+ * @param from Start of the line segment
+ * @param width
+ * @param colorIndex Color index from current palette
  */
-void CelDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
+void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+
+/** Same as DrawHorizontalLine but without bounds clipping. */
+void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
- * @briefBlit CEL sprite to the given buffer, does not perform bounds-checking.
+ * @brief Draw a vertical line segment in the target buffer (top to bottom)
  * @param out Target buffer
- * @param x Cordinate in the target buffer
- * @param y Cordinate in the target buffer
- * @param cel CEL sprite
- * @param frame CEL frame number
+ * @param from Start of the line segment
+ * @param height
+ * @param colorIndex Color index from current palette
  */
-void CelDrawUnsafeTo(const CelOutputBuffer &out, int x, int y, const CelSprite &cel, int frame);
+void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
 
-/**
- * @brief Same as CelDrawTo but with the option to skip parts of the top and bottom of the sprite
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelClippedDrawTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, BYTE *tbl);
-
-/**
- * @brief Same as CelDrawLightTo but with the option to skip parts of the top and bottom of the sprite
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelClippedDrawLightTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Same as CelBlitLightTransSafeTo
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelClippedBlitLightTransTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit CEL sprite, and apply lighting, to the back buffer at the given coordinates, translated to a red hue
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- * @param light Light shade to use
- */
-void CelDrawLightRedTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
-
-/**
- * @brief Blit CEL sprite to the given buffer, checks for drawing outside the buffer.
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- */
-void CelBlitSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth);
-
-/**
- * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelClippedDrawSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit CEL sprite, and apply lighting, to the given buffer, checks for drawing outside the buffer
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- * @param tbl Palette translation table
- */
-void CelBlitLightSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth, BYTE *tbl);
-
-/**
- * @brief Same as CelBlitLightSafeTo but with stippled transparancy applied
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pRLEBytes CEL pixel stream (run-length encoded)
- * @param nDataSize Size of CEL in bytes
- */
-void CelBlitLightTransSafeTo(const CelOutputBuffer &out, int sx, int sy, const BYTE *pRLEBytes, int nDataSize, int nWidth);
-
-/**
- * @brief Same as CelDrawLightRedTo but checks for drawing outside the buffer
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- * @param light Light shade to use
- */
-void CelDrawLightRedSafeTo(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
-
-/**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the target buffer at the given coordianates
- * @param out Target buffer
- * @param col Color index from current palette
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param pCelBuff CEL buffer
- * @param frame CEL frame number
- * @param skipColorIndexZero If true, color in index 0 will be treated as transparent (these are typically used for shadows in sprites)
- */
-void CelBlitOutlineTo(const CelOutputBuffer &out, BYTE col, int sx, int sy, const CelSprite &cel, int frame, bool skipColorIndexZero = true);
-
-/**
- * @brief Set the value of a single pixel in the back buffer, checks bounds
- * @param out Target buffer
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
- * @param col Color index from current palette
- */
-void SetPixel(const CelOutputBuffer &out, int sx, int sy, BYTE col);
-
-/**
- * @brief Blit CL2 sprite, to the back buffer at the given coordianates
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- */
-void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit a solid colder shape one pixel larger then the given sprite shape, to the given buffer at the given coordianates
- * @param col Color index from current palette
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- */
-void Cl2DrawOutline(const CelOutputBuffer &out, BYTE col, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Blit CL2 sprite, and apply a given lighting, to the given buffer at the given coordianates
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- * @param light Light shade to use
- */
-void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
-
-/**
- * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
- * @param out Output buffer
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
- * @param pCelBuff CL2 buffer
- * @param nCel CL2 frame number
- */
-void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
-
-/**
- * @brief Draw a line in the target buffer
- * @param out Target buffer
- * @param x0 Back buffer coordinate
- * @param y0 Back buffer coordinate
- * @param x1 Back buffer coordinate
- * @param y1 Back buffer coordinate
- * @param color_index Color index from current palette
- */
-void DrawLineTo(const CelOutputBuffer &out, int x0, int y0, int x1, int y1, BYTE color_index);
+/** Same as DrawVerticalLine but without bounds clipping. */
+void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
@@ -593,7 +254,7 @@ void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int w
  * @param destination Tile coordinate
  * @return A value from the direction enum
  */
-direction GetDirection(Point start, Point destination);
+Direction GetDirection(Point start, Point destination);
 
 /**
  * @brief Calculate Width2 from the orginal Width
@@ -602,13 +263,6 @@ direction GetDirection(Point start, Point destination);
  */
 int CalculateWidth2(int width);
 
-void SetRndSeed(int32_t s);
-int32_t AdvanceRndSeed();
-int32_t GetRndSeed();
-int32_t GenerateRnd(int32_t v);
-std::unique_ptr<BYTE[]> LoadFileInMem(const char *pszName, DWORD *pdwFileLen = nullptr);
-DWORD LoadFileWithMem(const char *pszName, BYTE *p);
-void Cl2ApplyTrans(BYTE *p, BYTE *ttbl, int nCel);
 void PlayInGameMovie(const char *pszMovie);
 
 } // namespace devilution

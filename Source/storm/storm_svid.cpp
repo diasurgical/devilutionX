@@ -8,8 +8,8 @@
 #include <smacker.h>
 
 #ifndef NOSOUND
-#include <Aulib/Stream.h>
 #include <Aulib/ResamplerSpeex.h>
+#include <Aulib/Stream.h>
 
 #include "utils/push_aulib_decoder.h"
 #endif
@@ -17,8 +17,8 @@
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
-#include "storm/storm_file_wrapper.h"
 #include "storm/storm.h"
+#include "storm/storm_file_wrapper.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -36,7 +36,7 @@ std::uint8_t SVidAudioDepth;
 unsigned long SVidWidth, SVidHeight;
 double SVidFrameEnd;
 double SVidFrameLength;
-BYTE SVidLoop;
+bool SVidLoop;
 smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
 SDL_Palette *SVidPalette;
@@ -136,7 +136,7 @@ bool SVidLoadNextFrame()
 
 bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 {
-	if (flags & 0x10000 || flags & 0x20000000) {
+	if ((flags & 0x10000) != 0 || (flags & 0x20000000) != 0) {
 		return false;
 	}
 
@@ -155,10 +155,10 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	FILE *file = FILE_FromStormHandle(*video);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
-	int bytestoread = SFileGetFileSize(*video, nullptr);
-	SVidBuffer = std::make_unique<uint8_t[]>(bytestoread);
-	SFileReadFile(*video, SVidBuffer.get(), bytestoread, nullptr, nullptr);
-	SFileCloseFile(*video);
+	int bytestoread = SFileGetFileSize(*video);
+	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
+	SFileReadFileThreadSafe(*video, SVidBuffer.get(), bytestoread);
+	SFileCloseFileThreadSafe(*video);
 	*video = nullptr;
 	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
 #endif
@@ -179,7 +179,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	if (enableAudio && depth[0] != 0) {
 		sound_stop(); // Stop in-progress music and sound effects
 
-		smk_enable_audio(SVidSMK, 0, enableAudio);
+		smk_enable_audio(SVidSMK, 0, enableAudio ? 1 : 0);
 		SVidAudioDepth = depth[0];
 		auto decoder = std::make_unique<PushAulibDecoder>(channels[0], rate[0]);
 		SVidAudioDecoder = decoder.get();
@@ -188,14 +188,14 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 		const float volume = static_cast<float>(sgOptions.Audio.nSoundVolume - VOLUME_MIN) / -VOLUME_MIN;
 		SVidAudioStream->setVolume(volume);
 		if (!SVidAudioStream->open()) {
-				LogError(LogCategory::Audio, "Aulib::Stream::open (from SVidPlayBegin): {}", SDL_GetError());
-				SVidAudioStream = std::nullopt;
-				SVidAudioDecoder = nullptr;
+			LogError(LogCategory::Audio, "Aulib::Stream::open (from SVidPlayBegin): {}", SDL_GetError());
+			SVidAudioStream = std::nullopt;
+			SVidAudioDecoder = nullptr;
 		}
 		if (!SVidAudioStream->play()) {
-				LogError(LogCategory::Audio, "Aulib::Stream::play (from SVidPlayBegin): {}", SDL_GetError());
-				SVidAudioStream = std::nullopt;
-				SVidAudioDecoder = nullptr;
+			LogError(LogCategory::Audio, "Aulib::Stream::play (from SVidPlayBegin): {}", SDL_GetError());
+			SVidAudioStream = std::nullopt;
+			SVidAudioDecoder = nullptr;
 		}
 	}
 #endif
@@ -204,7 +204,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	smk_info_all(SVidSMK, nullptr, &nFrames, &SVidFrameLength);
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 
-	smk_enable_video(SVidSMK, enableVideo);
+	smk_enable_video(SVidSMK, enableVideo ? 1 : 0);
 	smk_first(SVidSMK); // Decode first frame
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
@@ -251,7 +251,7 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 
 bool SVidPlayContinue()
 {
-	if (smk_palette_updated(SVidSMK)) {
+	if (smk_palette_updated(SVidSMK) != 0) {
 		SDL_Color colors[256];
 		const unsigned char *paletteData = smk_get_palette(SVidSMK);
 
@@ -387,7 +387,7 @@ void SVidPlayEnd(HANDLE video)
 		if (texture == nullptr) {
 			ErrSdl();
 		}
-		if (renderer && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
+		if (renderer != nullptr && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
 	}

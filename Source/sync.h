@@ -7,12 +7,12 @@
 
 #include <cstdint>
 
-#include "miniwin/miniwin.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
-uint32_t sync_all_monsters(const BYTE *pbBuf, uint32_t dwMaxLen);
-uint32_t sync_update(int pnum, const BYTE *pbBuf);
+uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen);
+uint32_t sync_update(int pnum, const byte *pbBuf);
 void sync_init();
 
 } // namespace devilution

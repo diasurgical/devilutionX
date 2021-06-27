@@ -8,6 +8,8 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
 #include "gendung.h"
 #include "textdat.h"
 #include "utils/stdcompat/optional.hpp"
@@ -83,6 +85,7 @@ void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();
 void LoadPWaterPalette();
+void UpdatePWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
 void DrawQuestLog(const CelOutputBuffer &out);
@@ -91,7 +94,7 @@ void QuestlogUp();
 void QuestlogDown();
 void QuestlogEnter();
 void QuestlogESC();
-void SetMultiQuest(int q, quest_state s, int l, int v1);
+void SetMultiQuest(int q, quest_state s, bool log, int v1);
 
 /* rdata */
 extern QuestData questlist[];

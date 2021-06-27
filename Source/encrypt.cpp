@@ -3,11 +3,10 @@
  *
  * Implementation of functions for compression and decompressing MPQ data.
  */
+#include <SDL.h>
 #include <memory>
 
 #include "encrypt.h"
-
-#include "engine.h"
 #include "pkware.h"
 
 namespace devilution {
@@ -47,7 +46,7 @@ uint32_t Hash(const char *s, int type)
 {
 	uint32_t seed1 = 0x7FED7FED;
 	uint32_t seed2 = 0xEEEEEEEE;
-	while (s != nullptr && *s) {
+	while (s != nullptr && (*s != '\0')) {
 		int8_t ch = *s++;
 		ch = toupper(ch);
 		seed1 = hashtable[type][ch] ^ (seed1 + seed2);
@@ -61,7 +60,7 @@ void InitHash()
 	uint32_t seed = 0x00100001;
 
 	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 5; j++) {
+		for (int j = 0; j < 5; j++) { // NOLINT(modernize-loop-convert)
 			seed = (125 * seed + 3) % 0x2AAAAB;
 			uint32_t ch = (seed & 0xFFFF);
 			seed = (125 * seed + 3) % 0x2AAAAB;
@@ -70,9 +69,9 @@ void InitHash()
 	}
 }
 
-static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
+static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	TDataInfo *pInfo = (TDataInfo *)param;
+	auto *pInfo = (TDataInfo *)param;
 
 	uint32_t sSize;
 	if (*size >= pInfo->size - pInfo->srcOffset) {
@@ -87,23 +86,23 @@ static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 	return sSize;
 }
 
-static void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
+static void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	TDataInfo *pInfo = (TDataInfo *)param;
+	auto *pInfo = (TDataInfo *)param;
 
 	memcpy(pInfo->destData + pInfo->destOffset, buf, *size);
 	pInfo->destOffset += *size;
 }
 
-uint32_t PkwareCompress(uint8_t *srcData, uint32_t size)
+uint32_t PkwareCompress(byte *srcData, uint32_t size)
 {
-	auto ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
+	std::unique_ptr<char[]> ptr { new char[CMP_BUFFER_SIZE] };
 
 	unsigned destSize = 2 * size;
 	if (destSize < 2 * 4096)
 		destSize = 2 * 4096;
 
-	auto destData = std::make_unique<uint8_t[]>(destSize);
+	std::unique_ptr<byte[]> destData { new byte[destSize] };
 
 	TDataInfo param;
 	param.srcData = srcData;
@@ -124,12 +123,12 @@ uint32_t PkwareCompress(uint8_t *srcData, uint32_t size)
 	return size;
 }
 
-void PkwareDecompress(uint8_t *inBuff, int recvSize, int maxBytes)
+void PkwareDecompress(byte *inBuff, int recvSize, int maxBytes)
 {
 	TDataInfo info;
 
-	auto ptr = std::make_unique<char[]>(CMP_BUFFER_SIZE);
-	auto outBuff = std::make_unique<uint8_t[]>(maxBytes);
+	std::unique_ptr<char[]> ptr { new char[CMP_BUFFER_SIZE] };
+	std::unique_ptr<byte[]> outBuff { new byte[maxBytes] };
 
 	info.srcData = inBuff;
 	info.srcOffset = 0;

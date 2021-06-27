@@ -9,6 +9,7 @@
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
+#include "doom.h"
 #include "gmenu.h"
 #include "options.h"
 #include "stores.h"
@@ -246,6 +247,8 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				return true;
 			if (IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 				*action = GameActionSendKey { DVL_VK_F7, ctrlEvent.up };
+			else if (DoomFlag)
+				*action = GameActionSendKey { DVL_VK_ESCAPE, ctrlEvent.up };
 			else if (invflag)
 				*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 			else if (sbookflag)
@@ -348,7 +351,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 AxisDirection GetMoveDirection()
 {
-	return GetLeftStickOrDpadDirection(/*allow_dpad=*/!sgOptions.Controller.bDpadHotkeys);
+	return GetLeftStickOrDpadDirection(/*allowDpad=*/!sgOptions.Controller.bDpadHotkeys);
 }
 
 } // namespace devilution

@@ -5,6 +5,8 @@
  */
 #include "trigs.h"
 
+#include <fmt/format.h>
+
 #include "control.h"
 #include "cursor.h"
 #include "error.h"
@@ -74,7 +76,9 @@ void InitTownTriggers()
 		townwarp = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 1 || (gbIsHellfire && plr[myplr]._pLevel >= 10)) {
+		auto &myPlayer = plr[myplr];
+
+		if (gbIsMultiplayer || (myPlayer.pTownWarps & 1) != 0 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
 			townwarps[0] = true;
 			trigs[numtrigs].position = { 49, 21 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -85,14 +89,14 @@ void InitTownTriggers()
 #endif
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 2 || (gbIsHellfire && plr[myplr]._pLevel >= 15)) {
+		if (gbIsMultiplayer || (myPlayer.pTownWarps & 2) != 0 || (gbIsHellfire && myPlayer._pLevel >= 15)) {
 			townwarps[1] = true;
 			trigs[numtrigs].position = { 17, 69 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 9;
 			numtrigs++;
 		}
-		if (gbIsMultiplayer || plr[myplr].pTownWarps & 4 || (gbIsHellfire && plr[myplr]._pLevel >= 20)) {
+		if (gbIsMultiplayer || (myPlayer.pTownWarps & 4) != 0 || (gbIsHellfire && myPlayer._pLevel >= 20)) {
 			townwarps[2] = true;
 			trigs[numtrigs].position = { 41, 80 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
@@ -394,7 +398,7 @@ bool ForceL1Trig()
 		for (i = 0; L1UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1UpList[i]) {
 				if (currlevel > 1)
-					sprintf(infostr, _("Up to level %i"), currlevel - 1);
+					strcpy(infostr, fmt::format(_("Up to level {:d}"), currlevel - 1).c_str());
 				else
 					strcpy(infostr, _("Up to town"));
 				for (j = 0; j < numtrigs; j++) {
@@ -408,7 +412,7 @@ bool ForceL1Trig()
 		}
 		for (i = 0; L1DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L1DownList[i]) {
-				sprintf(infostr, _("Down to level %i"), currlevel + 1);
+				strcpy(infostr, fmt::format(_("Down to level {:d}"), currlevel + 1).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -421,7 +425,7 @@ bool ForceL1Trig()
 	} else {
 		for (i = 0; L5UpList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5UpList[i]) {
-				sprintf(infostr, _("Up to Crypt level %i"), currlevel - 21);
+				strcpy(infostr, fmt::format(_("Up to Crypt level {:d}"), currlevel - 21).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -437,7 +441,7 @@ bool ForceL1Trig()
 		}
 		for (i = 0; L5DownList[i] != -1; i++) {
 			if (dPiece[cursmx][cursmy] == L5DownList[i]) {
-				sprintf(infostr, _("Down to Crypt level %i"), currlevel - 19);
+				strcpy(infostr, fmt::format(_("Down to Crypt level {:d}"), currlevel - 19).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -481,7 +485,7 @@ bool ForceL2Trig()
 					dx = abs(trigs[j].position.x - cursmx);
 					dy = abs(trigs[j].position.y - cursmy);
 					if (dx < 4 && dy < 4) {
-						sprintf(infostr, _("Up to level %i"), currlevel - 1);
+						strcpy(infostr, fmt::format(_("Up to level {:d}"), currlevel - 1).c_str());
 						cursmx = trigs[j].position.x;
 						cursmy = trigs[j].position.y;
 						return true;
@@ -493,7 +497,7 @@ bool ForceL2Trig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, _("Down to level %i"), currlevel + 1);
+			strcpy(infostr, fmt::format(_("Down to level {:d}"), currlevel + 1).c_str());
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j].position.x;
@@ -533,7 +537,7 @@ bool ForceL3Trig()
 	if (currlevel < 17) {
 		for (i = 0; L3UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L3UpList[i]) {
-				sprintf(infostr, _("Up to level %i"), currlevel - 1);
+				strcpy(infostr, fmt::format(_("Up to level {:d}"), currlevel - 1).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -547,7 +551,7 @@ bool ForceL3Trig()
 			if (dPiece[cursmx][cursmy] == L3DownList[i]
 			    || dPiece[cursmx + 1][cursmy] == L3DownList[i]
 			    || dPiece[cursmx + 2][cursmy] == L3DownList[i]) {
-				sprintf(infostr, _("Down to level %i"), currlevel + 1);
+				strcpy(infostr, fmt::format(_("Down to level {:d}"), currlevel + 1).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -560,7 +564,7 @@ bool ForceL3Trig()
 	} else {
 		for (i = 0; L6UpList[i] != -1; ++i) {
 			if (dPiece[cursmx][cursmy] == L6UpList[i]) {
-				sprintf(infostr, _("Up to Nest level %i"), currlevel - 17);
+				strcpy(infostr, fmt::format(_("Up to Nest level {:d}"), currlevel - 17).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 						cursmx = trigs[j].position.x;
@@ -574,7 +578,7 @@ bool ForceL3Trig()
 			if (dPiece[cursmx][cursmy] == L6DownList[i]
 			    || dPiece[cursmx + 1][cursmy] == L6DownList[i]
 			    || dPiece[cursmx + 2][cursmy] == L6DownList[i]) {
-				sprintf(infostr, _("Down to level %i"), currlevel - 15);
+				strcpy(infostr, fmt::format(_("Down to level {:d}"), currlevel - 15).c_str());
 				for (j = 0; j < numtrigs; j++) {
 					if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 						cursmx = trigs[j].position.x;
@@ -632,7 +636,7 @@ bool ForceL4Trig()
 
 	for (i = 0; L4UpList[i] != -1; ++i) {
 		if (dPiece[cursmx][cursmy] == L4UpList[i]) {
-			sprintf(infostr, _("Up to level %i"), currlevel - 1);
+			strcpy(infostr, fmt::format(_("Up to level {:d}"), currlevel - 1).c_str());
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABPREVLVL) {
 					cursmx = trigs[j].position.x;
@@ -645,7 +649,7 @@ bool ForceL4Trig()
 
 	for (i = 0; L4DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L4DownList[i]) {
-			sprintf(infostr, _("Down to level %i"), currlevel + 1);
+			strcpy(infostr, fmt::format(_("Down to level {:d}"), currlevel + 1).c_str());
 			for (j = 0; j < numtrigs; j++) {
 				if (trigs[j]._tmsg == WM_DIABNEXTLVL) {
 					cursmx = trigs[j].position.x;
@@ -715,7 +719,7 @@ bool ForceSKingTrig()
 
 	for (i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
-			sprintf(infostr, _("Back to Level %i"), quests[Q_SKELKING]._qlevel);
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_SKELKING]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -732,7 +736,7 @@ bool ForceSChambTrig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			sprintf(infostr, _("Back to Level %i"), quests[Q_SCHAMB]._qlevel);
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_SCHAMB]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -749,7 +753,7 @@ bool ForcePWaterTrig()
 
 	for (i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
-			sprintf(infostr, _("Back to Level %i"), quests[Q_PWATER]._qlevel);
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_PWATER]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -814,19 +818,21 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	if (plr[myplr]._pmode != PM_STAND)
+	auto &myPlayer = plr[myplr];
+
+	if (myPlayer._pmode != PM_STAND)
 		return;
 
 	for (int i = 0; i < numtrigs; i++) {
-		if (plr[myplr].position.tile != trigs[i].position) {
+		if (myPlayer.position.tile != trigs[i].position) {
 			continue;
 		}
 
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(myplr, true, CMD_WALKXY, { plr[myplr].position.tile.x, plr[myplr].position.tile.y + 1 });
-				PlaySFX(PS_WARR18);
+				NetSendCmdLoc(myplr, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
+				myPlayer.Say(HeroSpeech::NotAChance);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
 				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
@@ -843,27 +849,27 @@ void CheckTriggers()
 				bool abort = false;
 				diablo_message abortflag;
 
-				auto position = plr[myplr].position.tile;
-				if (trigs[i]._tlvl == 5 && plr[myplr]._pLevel < 8) {
+				auto position = myPlayer.position.tile;
+				if (trigs[i]._tlvl == 5 && myPlayer._pLevel < 8) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
-				if (trigs[i]._tlvl == 9 && plr[myplr]._pLevel < 13) {
+				if (trigs[i]._tlvl == 9 && myPlayer._pLevel < 13) {
 					abort = true;
 					position.x += 1;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
-				if (trigs[i]._tlvl == 13 && plr[myplr]._pLevel < 17) {
+				if (trigs[i]._tlvl == 13 && myPlayer._pLevel < 17) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_17;
 				}
 
 				if (abort) {
-					plr[myplr].PlaySpeach(43);
+					myPlayer.Say(HeroSpeech::ICantGetThereFromHere);
 
 					InitDiabloMsg(abortflag);
 					NetSendCmdLoc(myplr, true, CMD_WALKXY, position);

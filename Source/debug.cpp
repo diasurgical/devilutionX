@@ -5,6 +5,9 @@
  */
 
 #include "cursor.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
+#include "engine/point.hpp"
 #include "inv.h"
 #include "spells.h"
 #include "utils/language.h"
@@ -53,54 +56,57 @@ void CheckDungeonClear()
 
 void GiveGoldCheat()
 {
-	int i, ni;
+	auto &myPlayer = plr[myplr];
 
-	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (plr[myplr].InvGrid[i] == 0) {
-			ni = plr[myplr]._pNumInv++;
-			SetPlrHandItem(&plr[myplr].InvList[ni], IDI_GOLD);
-			GetPlrHandSeed(&plr[myplr].InvList[ni]);
-			plr[myplr].InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-			plr[myplr].InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-			plr[myplr]._pGold += GOLD_MAX_LIMIT;
-			plr[myplr].InvGrid[i] = plr[myplr]._pNumInv;
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		if (myPlayer.InvGrid[i] == 0) {
+			int ni = myPlayer._pNumInv++;
+			SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
+			GetPlrHandSeed(&myPlayer.InvList[ni]);
+			myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
+			myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
+			myPlayer._pGold += GOLD_MAX_LIMIT;
+			myPlayer.InvGrid[i] = myPlayer._pNumInv;
 		}
 	}
 }
 
 void TakeGoldCheat()
 {
-	int i;
-	char ig;
+	auto &myPlayer = plr[myplr];
 
-	for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		ig = plr[myplr].InvGrid[i];
-		if (ig > 0 && plr[myplr].InvList[ig - 1]._itype == ITYPE_GOLD)
-			RemoveInvItem(myplr, ig - 1);
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		int8_t ig = myPlayer.InvGrid[i];
+		if (ig > 0 && myPlayer.InvList[ig - 1]._itype == ITYPE_GOLD)
+			myPlayer.RemoveInvItem(ig - 1);
 	}
 
-	for (i = 0; i < MAXBELTITEMS; i++) {
-		if (plr[myplr].SpdList[i]._itype == ITYPE_GOLD)
-			plr[myplr].SpdList[i]._itype = ITYPE_NONE;
+	for (int i = 0; i < MAXBELTITEMS; i++) {
+		if (myPlayer.SpdList[i]._itype == ITYPE_GOLD)
+			myPlayer.SpdList[i]._itype = ITYPE_NONE;
 	}
 
-	plr[myplr]._pGold = 0;
+	myPlayer._pGold = 0;
 }
 
 void MaxSpellsCheat()
 {
+	auto &myPlayer = plr[myplr];
+
 	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel((spell_id)i) != -1) {
-			plr[myplr]._pMemSpells |= GetSpellBitmask(i);
-			plr[myplr]._pSplLvl[i] = 10;
+			myPlayer._pMemSpells |= GetSpellBitmask(i);
+			myPlayer._pSplLvl[i] = 10;
 		}
 	}
 }
 
 void SetSpellLevelCheat(spell_id spl, int spllvl)
 {
-	plr[myplr]._pMemSpells |= GetSpellBitmask(spl);
-	plr[myplr]._pSplLvl[spl] = spllvl;
+	auto &myPlayer = plr[myplr];
+
+	myPlayer._pMemSpells |= GetSpellBitmask(spl);
+	myPlayer._pSplLvl[spl] = spllvl;
 }
 
 void SetAllSpellsCheat()
@@ -138,20 +144,22 @@ void PrintDebugPlayer(bool bNextPlayer)
 	if (bNextPlayer)
 		dbgplr = ((BYTE)dbgplr + 1) & 3;
 
-	sprintf(dstr, "Plr %i : Active = %i", dbgplr, plr[dbgplr].plractive);
+	auto &player = plr[dbgplr];
+
+	sprintf(dstr, "Plr %i : Active = %i", dbgplr, player.plractive);
 	NetSendCmdString(1 << myplr, dstr);
 
-	if (plr[dbgplr].plractive) {
-		sprintf(dstr, "  Plr %i is %s", dbgplr, plr[dbgplr]._pName);
+	if (player.plractive) {
+		sprintf(dstr, "  Plr %i is %s", dbgplr, player._pName);
 		NetSendCmdString(1 << myplr, dstr);
-		sprintf(dstr, "  Lvl = %i : Change = %i", plr[dbgplr].plrlevel, plr[dbgplr]._pLvlChanging);
+		sprintf(dstr, "  Lvl = %i : Change = %i", player.plrlevel, player._pLvlChanging);
 		NetSendCmdString(1 << myplr, dstr);
-		const Point target = plr[dbgplr].GetTargetPosition();
-		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", plr[dbgplr].position.tile.x, plr[dbgplr].position.tile.y, target.x, target.y);
+		const Point target = player.GetTargetPosition();
+		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", player.position.tile.x, player.position.tile.y, target.x, target.y);
 		NetSendCmdString(1 << myplr, dstr);
-		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", plr[dbgplr]._pmode, plr[dbgplr].destAction, plr[dbgplr].walkpath[0]);
+		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", player._pmode, player.destAction, player.walkpath[0]);
 		NetSendCmdString(1 << myplr, dstr);
-		sprintf(dstr, "  inv = %i : hp = %i", plr[dbgplr]._pInvincible, plr[dbgplr]._pHitPoints);
+		sprintf(dstr, "  inv = %i : hp = %i", player._pInvincible, player._pHitPoints);
 		NetSendCmdString(1 << myplr, dstr);
 	}
 }

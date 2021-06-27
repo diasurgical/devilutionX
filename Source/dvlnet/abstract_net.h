@@ -34,7 +34,7 @@ public:
 	    DWORD *status)
 	    = 0;
 	virtual bool SNetSendTurn(char *data, unsigned int size) = 0;
-	virtual int SNetGetProviderCaps(struct _SNETCAPS *caps) = 0;
+	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps) = 0;
 	virtual bool SNetRegisterEventHandler(event_type evtype,
 	    SEVTHANDLER func)
 	    = 0;

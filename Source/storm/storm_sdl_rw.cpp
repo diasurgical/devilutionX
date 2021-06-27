@@ -22,7 +22,7 @@ static void SFileRwSetHandle(struct SDL_RWops *context, HANDLE handle)
 #ifndef USE_SDL1
 static Sint64 SFileRwSize(struct SDL_RWops *context)
 {
-	return SFileGetFileSize(SFileRwGetHandle(context), nullptr);
+	return SFileGetFileSize(SFileRwGetHandle(context));
 }
 #endif
 
@@ -60,7 +60,7 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 #endif
 {
 	DWORD numRead = 0;
-	if (!SFileReadFile(SFileRwGetHandle(context), ptr, maxnum * size, &numRead, nullptr)) {
+	if (!SFileReadFileThreadSafe(SFileRwGetHandle(context), ptr, maxnum * size, &numRead)) {
 		const DWORD errCode = SErrGetLastError();
 		if (errCode != STORM_ERROR_HANDLE_EOF) {
 			Log("SFileRwRead error: {} {} ERROR CODE {}", (unsigned int)size, (unsigned int)maxnum, (unsigned int)errCode);
@@ -71,14 +71,14 @@ static int SFileRwRead(struct SDL_RWops *context, void *ptr, int size, int maxnu
 
 static int SFileRwClose(struct SDL_RWops *context)
 {
-	SFileCloseFile(SFileRwGetHandle(context));
+	SFileCloseFileThreadSafe(SFileRwGetHandle(context));
 	delete context;
 	return 0;
 }
 
 SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 {
-	SDL_RWops *result = new SDL_RWops();
+	auto *result = new SDL_RWops();
 	std::memset(result, 0, sizeof(*result));
 
 #ifndef USE_SDL1

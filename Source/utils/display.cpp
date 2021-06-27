@@ -4,6 +4,10 @@
 #include <psp2/power.h>
 #endif
 
+#ifdef __3DS__
+#include "platform/ctr/display.hpp"
+#endif
+
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/controller.h"
@@ -30,17 +34,18 @@ extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
-Uint16 borderRight;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
 	Log("Setting video mode {}x{} bpp={} flags=0x{:08X}", width, height, bpp, flags);
-	SDL_SetVideoMode(width, height, bpp, flags);
+	ghMainWnd = SDL_SetVideoMode(width, height, bpp, flags);
+	if (ghMainWnd == nullptr) {
+		ErrSdl();
+	}
 	const SDL_VideoInfo &current = *SDL_GetVideoInfo();
 	Log("Video mode is now {}x{} bpp={} flags=0x{:08X}",
 	    current.current_w, current.current_h, current.vfmt->BitsPerPixel, SDL_GetVideoSurface()->flags);
-	ghMainWnd = SDL_GetVideoSurface();
 }
 
 void SetVideoModeToPrimary(bool fullscreen, int width, int height)
@@ -48,6 +53,10 @@ void SetVideoModeToPrimary(bool fullscreen, int width, int height)
 	int flags = SDL1_VIDEO_MODE_FLAGS | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
+#ifdef __3DS__
+	flags &= ~SDL_FULLSCREEN;
+	flags |= Get3DSScalingFlag(sgOptions.Graphics.bFitToScreen, width, height);
+#endif
 	SetVideoMode(width, height, SDL1_VIDEO_MODE_BPP, flags);
 	if (OutputRequiresScaling())
 		Log("Using software scaling");
@@ -67,12 +76,6 @@ void AdjustToScreenGeometry(int width, int height)
 {
 	gnScreenWidth = width;
 	gnScreenHeight = height;
-
-	borderRight = 64;
-	if ((gnScreenWidth % 4) != 0) {
-		// The buffer needs to be divisible by 4 for the engine to blit correctly
-		borderRight += 4 - gnScreenWidth % 4;
-	}
 
 	gnViewportHeight = gnScreenHeight;
 	if (gnScreenWidth <= PANEL_WIDTH) {
@@ -124,7 +127,7 @@ bool SpawnWindow(const char *lpWindowName)
 	scePowerSetArmClockFrequency(444);
 #endif
 
-#if SDL_VERSION_ATLEAST(2, 0, 6)
+#if SDL_VERSION_ATLEAST(2, 0, 6) && defined(__vita__)
 	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
 #endif
 
@@ -140,6 +143,8 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 #ifndef USE_SDL1
 	initFlags |= SDL_INIT_GAMECONTROLLER;
+
+	SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
 #endif
 	if (SDL_Init(initFlags) <= -1) {
 		ErrSdl();

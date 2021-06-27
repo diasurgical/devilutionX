@@ -5,7 +5,6 @@
  */
 #pragma once
 
-
 #include <cstdint>
 
 #include "objdat.h"
@@ -14,7 +13,7 @@
 namespace devilution {
 
 /** @todo add missing values and apply */
-enum _item_indexes : uint8_t {
+enum _item_indexes : uint16_t {
 	IDI_GOLD,
 	IDI_WARRIOR,
 	IDI_WARRSHLD,
@@ -485,14 +484,14 @@ enum item_effect_type : int8_t {
 	IPL_INVCURS,
 	IPL_THORNS,
 	IPL_NOMANA,
-	IPL_NOHEALPLR,
+	IPL_NOHEALPLR, // unused
 	IPL_0x30,     // Unknown
 	IPL_0x31,     // Unknown
 	IPL_FIREBALL, /* only used in hellfire */
 	IPL_0x33,     // Unknown
 	IPL_ABSHALFTRAP,
 	IPL_KNOCKBACK,
-	IPL_NOHEALMON,
+	IPL_NOHEALMON, // unused
 	IPL_STEALMANA,
 	IPL_STEALLIFE,
 	IPL_TARGAC,
@@ -505,24 +504,24 @@ enum item_effect_type : int8_t {
 	IPL_SETDUR,
 	IPL_NOMINSTR,
 	IPL_SPELL,
-	IPL_FASTSWING,
+	IPL_FASTSWING, // unused
 	IPL_ONEHAND,
 	IPL_3XDAMVDEM,
 	IPL_ALLRESZERO,
 	IPL_0x47, // Unknown
 	IPL_DRAINLIFE,
 	IPL_RNDSTEALLIFE,
-	IPL_INFRAVISION,
+	IPL_INFRAVISION, // unused
 	IPL_SETAC,
 	IPL_ADDACLIFE,
 	IPL_ADDMANAAC,
-	IPL_FIRERESCLVL,
+	IPL_FIRERESCLVL, // unused
 	IPL_AC_CURSE,
 	IDI_LASTDIABLO = IPL_AC_CURSE,
 	IPL_FIRERES_CURSE,
 	IPL_LIGHTRES_CURSE,
 	IPL_MAGICRES_CURSE,
-	IPL_ALLRES_CURSE,
+	IPL_ALLRES_CURSE, // unused
 	IPL_DEVASTATION,
 	IPL_DECAY,
 	IPL_PERIL,

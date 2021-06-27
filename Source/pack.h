@@ -65,6 +65,7 @@ struct PkPlayerStruct {
 	uint8_t pBattleNet;
 	uint8_t pManaShield;
 	uint8_t pDungMsgs2;
+	/** The format the charater is in, 0: Diablo, 1: Hellfire */
 	int8_t bIsHellfire;
 	int8_t bReserved; // For future use
 	uint16_t wReflections;
@@ -78,8 +79,8 @@ struct PkPlayerStruct {
 };
 #pragma pack(pop)
 
-void PackPlayer(PkPlayerStruct *pPack, int pnum, bool manashield);
-void UnPackPlayer(PkPlayerStruct *pPack, int pnum, bool netSync);
+void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashield);
+void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 

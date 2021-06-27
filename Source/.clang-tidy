@@ -32,6 +32,7 @@
 #   A purely stylistic change that we do not want.
 #
 # -modernize-concat-nested-namespaces
+# -modernize-avoid-bind
 #   Compatibility with older compilers.
 Checks: >
   -*,
@@ -47,7 +48,8 @@ Checks: >
   readability-*,
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
-  -modernize-concat-nested-namespaces
+  -modernize-concat-nested-namespaces,
+  -modernize-avoid-bind
 
 HeaderFilterRegex: "^(Source|test)\\.h$"
 
@@ -78,3 +80,8 @@ CheckOptions:
   - { key: google-runtime-int.UnsignedTypePrefix, value: "std::uint" }
   - { key: google-runtime-int.SignedTypePrefix, value: "std::int" }
   - { key: google-runtime-int.TypeSuffix, value: "_t" }
+
+  # `int8_t` aren't used as chars, disable misleading warning.
+  - { key: bugprone-signed-char-misuse.CharTypdefsToIgnore, value: "std::int8_t" }
+
+  - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: true }

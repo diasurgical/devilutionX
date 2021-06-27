@@ -12,14 +12,15 @@
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "hwcursor.hpp"
 #include "palette.h"
 #include "storm/storm.h"
 #include "utils/display.h"
+#include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
 #include "utils/stubs.h"
 #include "utils/utf8.h"
-#include "utils/log.hpp"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -28,6 +29,10 @@
 #ifdef __vita__
 // for virtual keyboard on Vita
 #include "platform/vita/keyboard.h"
+#endif
+#ifdef __3DS__
+// for virtual keyboard on 3DS
+#include "platform/ctr/keyboard.h"
 #endif
 
 namespace devilution {
@@ -94,15 +99,17 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	SDL_StopTextInput(); // input is enabled by default
 #endif
 	textInputActive = false;
-	for (auto &item : items) {
+	for (const auto &item : items) {
 		if (item->m_type == UI_EDIT) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item);
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
 #ifdef __SWITCH__
-			switch_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
+			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
 #elif defined(__vita__)
-			vita_start_text_input("", pItemUIEdit->m_value, pItemUIEdit->m_max_length);
+			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
+#elif defined(__3DS__)
+			ctr_vkbdInput(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #else
 			SDL_StartTextInput();
 #endif
@@ -391,6 +398,8 @@ void UiHandleEvents(SDL_Event *event)
 			gbActive = true;
 		else if (event->window.event == SDL_WINDOWEVENT_HIDDEN)
 			gbActive = false;
+		else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			ReinitializeHardwareCursor();
 	}
 #endif
 }
@@ -569,7 +578,7 @@ bool UiValidPlayerName(const char *name)
 	for (size_t i = 0, n = strlen(tmpname); i < n; i++)
 		tmpname[i]++;
 
-	for (auto bannedName : bannedNames) {
+	for (const auto *bannedName : bannedNames) {
 		if (strstr(tmpname, bannedName) != nullptr)
 			return false;
 	}
@@ -598,7 +607,17 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 	fadeTc = 0;
 	fadeValue = 0;
+
+	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+		SDL_SetSurfacePalette(ArtCursor.surface.get(), palette);
+		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
+#endif
+		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
+	}
+
 	BlackPalette();
+
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	if (DiabloUiSurface() == pal_surface)
 		BltFast(nullptr, nullptr);
@@ -627,13 +646,16 @@ void UiFadeIn()
 	if (fadeValue < 256) {
 		if (fadeValue == 0 && fadeTc == 0)
 			fadeTc = SDL_GetTicks();
+		const int prevFadeValue = fadeValue;
 		fadeValue = (SDL_GetTicks() - fadeTc) / 2.083; // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
 			fadeTc = 0;
 		}
-		SetFadeLevel(fadeValue);
+		if (fadeValue != prevFadeValue)
+			SetFadeLevel(fadeValue);
 	}
+
 	if (DiabloUiSurface() == pal_surface)
 		BltFast(nullptr, nullptr);
 	RenderPresent();
@@ -649,7 +671,7 @@ void DrawSelector(const SDL_Rect &rect)
 	Art *art = &ArtFocus[size];
 
 	int frame = GetAnimationFrame(art->frames);
-	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher then the box
+	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher than the box
 
 	DrawArt(rect.x, y, art, frame);
 	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
@@ -672,6 +694,16 @@ void UiPollAndRender()
 	UiRenderItems(gUiItems);
 	DrawMouse();
 	UiFadeIn();
+
+	// Must happen after the very first UiFadeIn, which sets the cursor.
+	if (IsHardwareCursor())
+		SetHardwareCursorVisible(!sgbControllerActive);
+
+#ifdef __3DS__
+	// Keyboard blocks until input is finished
+	// so defer until after render and fade-in
+	ctr_vkbdFlush();
+#endif
 }
 
 namespace {
@@ -860,7 +892,8 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar *uiSb)
 		if (IsInsideRect(event, UpArrowRect(uiSb))) {
 			scrollBarState.upArrowPressed = true;
 			return true;
-		} else if (IsInsideRect(event, DownArrowRect(uiSb))) {
+		}
+		if (IsInsideRect(event, DownArrowRect(uiSb))) {
 			scrollBarState.downArrowPressed = true;
 			return true;
 		}
@@ -897,7 +930,7 @@ void LoadPalInMem(const SDL_Color *pPal)
 
 void UiRenderItems(const std::vector<UiItemBase *> &items)
 {
-	for (auto &item : items)
+	for (const auto &item : items)
 		RenderItem(item);
 }
 
@@ -913,7 +946,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 #endif
 
 	bool handled = false;
-	for (auto &item : items) {
+	for (const auto &item : items) {
 		if (HandleMouseEvent(*event, item)) {
 			handled = true;
 			break;
@@ -922,7 +955,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
-		for (auto &item : items) {
+		for (const auto &item : items) {
 			if (item->m_type == UI_BUTTON)
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
 		}
@@ -933,7 +966,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 
 void DrawMouse()
 {
-	if (sgbControllerActive)
+	if (IsHardwareCursor() || sgbControllerActive)
 		return;
 
 	DrawArt(MouseX, MouseY, &ArtCursor);

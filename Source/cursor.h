@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -54,6 +55,13 @@ void CheckRportal();
 void CheckTown();
 void CheckCursMove();
 
+inline bool IsItemSprite(int pcurs)
+{
+	return pcurs >= CURSOR_FIRSTITEM;
+}
+
+void CelDrawCursor(const CelOutputBuffer &out, Point position, int pcurs);
+
 /** Returns the sprite for the given inventory index. */
 const CelSprite &GetInvItemSprite(int i);
 
@@ -61,6 +69,6 @@ const CelSprite &GetInvItemSprite(int i);
 int GetInvItemFrame(int i);
 
 /** Returns the width and height for an inventory index. */
-std::pair<int, int> GetInvItemSize(int i);
+Size GetInvItemSize(int i);
 
 } // namespace devilution

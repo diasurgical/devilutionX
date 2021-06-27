@@ -19,6 +19,13 @@ namespace devilution {
 
 #define VOLUME_MIN -1600
 #define VOLUME_MAX 0
+#define VOLUME_STEPS 64
+
+#define ATTENUATION_MIN -6400
+#define ATTENUATION_MAX 0
+
+#define PAN_MIN -6400
+#define PAN_MAX 6400
 
 enum _music_id : uint8_t {
 	TMUSIC_TOWN,
@@ -48,7 +55,6 @@ struct TSnd {
 
 extern bool gbSndInited;
 void ClearDuplicateSounds();
-void CleanupFinishedDuplicateSounds();
 void snd_stop_snd(TSnd *pSnd);
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan);
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream = false);

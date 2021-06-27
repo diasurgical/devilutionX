@@ -199,7 +199,7 @@ bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
 bool SNetLeaveGame(int type);
 
 bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
-bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, DWORD *arraydatabytes, DWORD *arrayplayerstatus);
+bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes, DWORD *arrayplayerstatus);
 
 typedef void (*SEVTHANDLER)(struct _SNETEVENT *);
 
@@ -244,22 +244,17 @@ bool SNetSendTurn(char *data, unsigned int databytes);
 bool SFileOpenFile(const char *filename, HANDLE *phFile);
 
 // Functions implemented in StormLib
+#if defined(_WIN64) || defined(_WIN32)
+bool WINAPI SFileOpenArchive(const wchar_t *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+#else
 bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+#endif
 bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
 bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh);
-DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh);
+DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh = nullptr);
 DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
-
-bool getIniBool(const char *sectionName, const char *keyName, bool defaultValue = false);
-float getIniFloat(const char *sectionName, const char *keyName, float defaultValue);
-bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
-void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
-void SaveIni();
-int getIniInt(const char *keyname, const char *valuename, int defaultValue);
-void setIniInt(const char *keyname, const char *valuename, int value);
-void setIniFloat(const char *keyname, const char *valuename, float value);
 
 // These error codes are used and returned by StormLib.
 // See StormLib/src/StormPort.h
@@ -313,13 +308,22 @@ bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
 bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);
-int SNetGetProviderCaps(struct _SNETCAPS *);
+void SNetGetProviderCaps(struct _SNETCAPS *);
 bool SFileEnableDirectAccess(bool enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }
 
 // Additions to Storm API:
+#if defined(_WIN64) || defined(_WIN32)
+// On Windows, handles wchar conversion and calls the wchar version of SFileOpenArchive.
+bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
+#endif
+
+// Locks ReadFile and CloseFile under a mutex.
+// See https://github.com/ladislav-zezula/StormLib/issues/175
+bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read = nullptr, int *lpDistanceToMoveHigh = nullptr);
+bool SFileCloseFileThreadSafe(HANDLE hFile);
 
 // Sets the file's 64-bit seek position.
 inline std::uint64_t SFileSetFilePointer(HANDLE hFile, std::int64_t offset, int whence)

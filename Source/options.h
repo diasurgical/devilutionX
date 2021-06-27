@@ -61,6 +61,8 @@ struct GraphicsOptions {
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
 	bool bColorCycling;
+	/** @brief Use a hardware cursor (SDL2 only). */
+	bool bHardwareCursor;
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
 	/** @brief Show FPS, even without the -f command line flag. */
@@ -136,7 +138,7 @@ struct NetworkOptions {
 
 struct ChatOptions {
 	/** @brief Quick chat messages. */
-	char szHotKeyMsgs[4][MAX_SEND_STR_LEN];
+	char szHotKeyMsgs[QUICK_MESSAGE_OPTIONS][MAX_SEND_STR_LEN];
 };
 
 struct LanguageOptions {
@@ -156,6 +158,13 @@ struct Options {
 	LanguageOptions Language;
 };
 
+bool getIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
+void setIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
+
 extern Options sgOptions;
+extern bool sbWasOptionsLoaded;
+
+void SaveOptions();
+void LoadOptions();
 
 } // namespace devilution

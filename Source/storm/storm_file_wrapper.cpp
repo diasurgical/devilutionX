@@ -13,7 +13,7 @@ extern "C" {
 ssize_t SFileCookieRead(void *cookie, char *buf, size_t nbytes)
 {
 	DWORD numRead = 0;
-	if (!SFileReadFile(static_cast<HANDLE>(cookie), buf, nbytes, &numRead, nullptr)) {
+	if (!SFileReadFileThreadSafe(static_cast<HANDLE>(cookie), buf, nbytes, &numRead)) {
 		const DWORD errCode = SErrGetLastError();
 		if (errCode != STORM_ERROR_HANDLE_EOF) {
 			Log("SFileRwRead error: {} ERROR CODE {}", (unsigned int)nbytes, (unsigned int)errCode);
@@ -49,7 +49,7 @@ int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
 
 int SFileCookieClose(void *cookie)
 {
-	return SFileCloseFile(static_cast<HANDLE>(cookie)) ? 0 : -1;
+	return SFileCloseFileThreadSafe(static_cast<HANDLE>(cookie)) ? 0 : -1;
 }
 
 } // extern "C"

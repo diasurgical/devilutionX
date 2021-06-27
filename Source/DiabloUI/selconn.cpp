@@ -1,3 +1,5 @@
+#include <fmt/format.h>
+
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/text.h"
 #include "stores.h"
@@ -30,8 +32,12 @@ void SelconnLoad()
 	LoadBackgroundArt("ui_art\\selconn.pcx");
 
 #ifndef NONET
+#ifndef DISABLE_ZERO_TIER
 	vecConnItems.push_back(new UiListItem("Zerotier", SELCONN_ZT));
+#endif
+#ifndef DISABLE_TCP
 	vecConnItems.push_back(new UiListItem(_("Client-Server (TCP)"), SELCONN_TCP));
+#endif
 #endif
 	vecConnItems.push_back(new UiListItem(_("Loopback"), SELCONN_LOOPBACK));
 
@@ -77,12 +83,12 @@ void SelconnFree()
 {
 	ArtBackground.Unload();
 
-	for (auto pUIItem : vecConnItems) {
+	for (auto *pUIItem : vecConnItems) {
 		delete pUIItem;
 	}
 	vecConnItems.clear();
 
-	for (auto pUIMenuItem : vecSelConnDlg) {
+	for (auto *pUIMenuItem : vecSelConnDlg) {
 		delete pUIMenuItem;
 	}
 	vecSelConnDlg.clear();
@@ -112,7 +118,7 @@ void SelconnFocus(int value)
 		break;
 	}
 
-	snprintf(selconn_MaxPlayers, sizeof(selconn_MaxPlayers), _("Players Supported: %d"), players);
+	strncpy(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players).c_str(), sizeof(selconn_MaxPlayers));
 	WordWrapArtStr(selconn_Description, DESCRIPTION_WIDTH);
 }
 

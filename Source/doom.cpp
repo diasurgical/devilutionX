@@ -7,6 +7,9 @@
 
 #include "control.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
+#include "engine/render/cel_render.hpp"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -73,7 +76,7 @@ void doom_draw(const CelOutputBuffer &out)
 		return;
 	}
 
-	CelDrawTo(out, PANEL_X, PANEL_Y - 1, *DoomCel, 1);
+	CelDrawTo(out, { PANEL_X, PANEL_Y - 1 }, *DoomCel, 1);
 }
 
 } // namespace devilution

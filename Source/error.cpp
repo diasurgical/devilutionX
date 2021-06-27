@@ -6,6 +6,8 @@
 #include "error.h"
 
 #include "control.h"
+#include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
 #include "stores.h"
 #include "utils/language.h"
 
@@ -30,49 +32,49 @@ const char *const MsgStrings[] = {
 	N_("No pause in multiplayer"),
 	N_("Loading..."),
 	N_("Saving..."),
-	N_("Some are weakened as one grows strong"),
-	N_("New strength is forged through destruction"),
-	N_("Those who defend seldom attack"),
-	N_("The sword of justice is swift and sharp"),
-	N_("While the spirit is vigilant the body thrives"),
-	N_("The powers of mana refocused renews"),
-	N_("Time cannot diminish the power of steel"),
-	N_("Magic is not always what it seems to be"),
-	N_("What once was opened now is closed"),
-	N_("Intensity comes at the cost of wisdom"),
-	N_("Arcane power brings destruction"),
-	N_("That which cannot be held cannot be harmed"),
-	N_("Crimson and Azure become as the sun"),
-	N_("Knowledge and wisdom at the cost of self"),
-	N_("Drink and be refreshed"),
-	N_("Wherever you go, there you are"),
-	N_("Energy comes at the cost of wisdom"),
-	N_("Riches abound when least expected"),
-	N_("Where avarice fails, patience gains reward"),
-	N_("Blessed by a benevolent companion!"),
-	N_("The hands of men may be guided by fate"),
-	N_("Strength is bolstered by heavenly faith"),
-	N_("The essence of life flows from within"),
-	N_("The way is made clear when viewed from above"),
-	N_("Salvation comes at the cost of wisdom"),
-	N_("Mysteries are revealed in the light of reason"),
-	N_("Those who are last may yet be first"),
-	N_("Generosity brings its own rewards"),
-	N_("You must be at least level 8 to use this."),
-	N_("You must be at least level 13 to use this."),
-	N_("You must be at least level 17 to use this."),
-	N_("Arcane knowledge gained!"),
-	N_("That which does not kill you..."),
-	N_("Knowledge is power."),
-	N_("Give and you shall receive."),
-	N_("Some experience is gained by touch."),
-	N_("There's no place like home."),
-	N_("Spiritual energy is restored."),
-	N_("You feel more agile."),
-	N_("You feel stronger."),
-	N_("You feel wiser."),
-	N_("You feel refreshed."),
-	N_("That which can break will."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Some are weakened as one grows strong"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "New strength is forged through destruction"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Those who defend seldom attack"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "The sword of justice is swift and sharp"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "While the spirit is vigilant the body thrives"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "The powers of mana refocused renews"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Time cannot diminish the power of steel"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Magic is not always what it seems to be"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "What once was opened now is closed"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Intensity comes at the cost of wisdom"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Arcane power brings destruction"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "That which cannot be held cannot be harmed"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Crimson and Azure become as the sun"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Knowledge and wisdom at the cost of self"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Drink and be refreshed"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Wherever you go, there you are"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Energy comes at the cost of wisdom"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Riches abound when least expected"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Where avarice fails, patience gains reward"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Blessed by a benevolent companion!"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "The hands of men may be guided by fate"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Strength is bolstered by heavenly faith"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "The essence of life flows from within"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "The way is made clear when viewed from above"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Salvation comes at the cost of wisdom"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Mysteries are revealed in the light of reason"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Those who are last may yet be first"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Generosity brings its own rewards"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You must be at least level 8 to use this."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You must be at least level 13 to use this."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You must be at least level 17 to use this."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Arcane knowledge gained!"),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "That which does not kill you..."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Knowledge is power."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Give and you shall receive."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Some experience is gained by touch."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "There's no place like home."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "Spiritual energy is restored."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You feel more agile."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You feel stronger."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You feel wiser."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "You feel refreshed."),
+	N_(/* TRANSLATORS: Shrine Text. Keep atmospheric. :) */ "That which can break will."),
 };
 
 void InitDiabloMsg(diablo_message e)
@@ -107,50 +109,28 @@ void ClrDiabloMsg()
 
 void DrawDiabloMsg(const CelOutputBuffer &out)
 {
-	int i, len, width, sx, sy;
-	BYTE c;
+	CelDrawTo(out, { PANEL_X + 101, DIALOG_Y }, *pSTextSlidCels, 1);
+	CelDrawTo(out, { PANEL_X + 527, DIALOG_Y }, *pSTextSlidCels, 4);
+	CelDrawTo(out, { PANEL_X + 101, DIALOG_Y + 48 }, *pSTextSlidCels, 2);
+	CelDrawTo(out, { PANEL_X + 527, DIALOG_Y + 48 }, *pSTextSlidCels, 3);
 
-	CelDrawTo(out, PANEL_X + 101, DIALOG_Y, *pSTextSlidCels, 1);
-	CelDrawTo(out, PANEL_X + 527, DIALOG_Y, *pSTextSlidCels, 4);
-	CelDrawTo(out, PANEL_X + 101, DIALOG_Y + 48, *pSTextSlidCels, 2);
-	CelDrawTo(out, PANEL_X + 527, DIALOG_Y + 48, *pSTextSlidCels, 3);
-
-	sx = PANEL_X + 109;
-	for (i = 0; i < 35; i++) {
-		CelDrawTo(out, sx, DIALOG_Y, *pSTextSlidCels, 5);
-		CelDrawTo(out, sx, DIALOG_Y + 48, *pSTextSlidCels, 7);
+	int sx = PANEL_X + 109;
+	for (int i = 0; i < 35; i++) {
+		CelDrawTo(out, { sx, DIALOG_Y }, *pSTextSlidCels, 5);
+		CelDrawTo(out, { sx, DIALOG_Y + 48 }, *pSTextSlidCels, 7);
 		sx += 12;
 	}
-	sy = DIALOG_Y + 12;
-	for (i = 0; i < 3; i++) {
-		CelDrawTo(out, PANEL_X + 101, sy, *pSTextSlidCels, 6);
-		CelDrawTo(out, PANEL_X + 527, sy, *pSTextSlidCels, 8);
+	int sy = DIALOG_Y + 12;
+	for (int i = 0; i < 3; i++) {
+		CelDrawTo(out, { PANEL_X + 101, sy }, *pSTextSlidCels, 6);
+		CelDrawTo(out, { PANEL_X + 527, sy }, *pSTextSlidCels, 8);
 		sy += 12;
 	}
 
 	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54);
 
 	strcpy(tempstr, _(MsgStrings[msgflag]));
-	sx = PANEL_X + 101;
-	sy = DIALOG_Y + 24;
-	len = strlen(tempstr);
-	width = 0;
-
-	for (i = 0; i < len; i++) {
-		width += fontkern[fontframe[gbFontTransTbl[(BYTE)tempstr[i]]]] + 1;
-	}
-
-	if (width < 442) {
-		sx += (442 - width) / 2;
-	}
-
-	for (i = 0; i < len; i++) {
-		c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-		if (c != '\0') {
-			PrintChar(out, sx, sy, c, COL_GOLD);
-		}
-		sx += fontkern[c] + 1;
-	}
+	DrawString(out, tempstr, { PANEL_X + 101, DIALOG_Y + 24, 442, 0 }, UIS_CENTER);
 
 	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
 		msgdelay = 0;

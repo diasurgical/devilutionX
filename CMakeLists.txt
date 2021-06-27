@@ -13,8 +13,10 @@ include(CMake/genex.cmake)
 
 DEBUG_OPTION(ASAN "Enable address sanitizer")
 DEBUG_OPTION(UBSAN "Enable undefined behaviour sanitizer")
+option(TSAN "Enable thread sanitizer (not compatible with ASAN=ON)" OFF)
 DEBUG_OPTION(DEBUG "Enable debug mode in engine")
 option(GPERF "Build with GPerfTools profiler" OFF)
+cmake_dependent_option(GPERF_HEAP_FIRST_GAME_ITERATION "Save heap profile of the first game iteration" OFF "GPERF" OFF)
 option(DISABLE_LTO "Disable link-time optimization (by default enabled in release mode)" OFF)
 option(PIE "Generate position-independent code" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
@@ -24,12 +26,20 @@ option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
 option(NOSOUND "Disable sound support" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
+option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
 option(USE_GETTEXT "Build translation files using gettext" OFF)
+
+if(NOT NONET)
+  option(DISABLE_TCP "Disable TCP multiplayer option" OFF)
+  option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF)
+endif()
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
 option(DISABLE_STREAMING_SOUNDS "Disable streaming sounds (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_SOUNDS)
+option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
+mark_as_advanced(STREAM_ALL_AUDIO)
 
 RELEASE_OPTION(CPACK "Configure CPack")
 
@@ -106,12 +116,23 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake")
 
-if(SWITCH)
-  set(ASAN OFF)
-  set(UBSAN OFF)
+if(GPERF)
+  if(GPERF_HEAP_FIRST_GAME_ITERATION)
+    set(GPERF_HEAP_MAIN ON)
+  endif()
 
+  # Compile with information about file and line numbers for everything
+  # even in non-Debug build types.
+  if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+    add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-g2>")
+  elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # Use the more size-efficient `-gmlt` option on clang.
+    add_compile_options("$<$<NOT:$<CONFIG:Debug>>:-gmlt>")
+  endif()
+endif()
+
+if(NINTENDO_SWITCH)
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
-  find_package(LIBNX REQUIRED)
   include(switch_defs)
 endif()
 
@@ -162,9 +183,14 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
   include(n3ds_defs)
+endif()
+
+if(ANDROID)
+  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
+  include(android_defs)
 endif()
 
 if(PIE)
@@ -178,15 +204,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-if(NOT NOSOUND)
-  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
-    find_package(SDL_audiolib REQUIRED)
-  else()
-    add_subdirectory(3rdParty/SDL_audiolib)
-  endif()
-endif()
-
-if(NOT N3DS)
+if(NOT NINTENDO_3DS)
   find_package(Threads REQUIRED)
 endif()
 
@@ -211,7 +229,10 @@ if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
-if(USE_SDL1)
+if(ANDROID)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
+elseif(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
@@ -240,16 +261,34 @@ else()
   find_package(SDL2_ttf REQUIRED)
 endif()
 
+if(NOT NONET AND NOT DISABLE_TCP)
+  add_subdirectory(3rdParty/asio)
+  if(NINTENDO_3DS)
+      target_compile_definitions(asio INTERFACE
+        ASIO_DISABLE_THREADS=ON
+        ASIO_HAS_UNISTD_H=ON)
+
+      target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
+  elseif(NINTENDO_SWITCH)
+    include(asio_defs)
+  endif()
+endif()
+
+if(NOT NOSOUND)
+  if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
+    find_package(SDL_audiolib REQUIRED)
+  else()
+    add_subdirectory(3rdParty/SDL_audiolib)
+  endif()
+endif()
+
 add_library(smacker STATIC
   3rdParty/libsmacker/smk_bitstream.c
   3rdParty/libsmacker/smk_hufftree.c
   3rdParty/libsmacker/smacker.c)
+target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
-add_library(Radon STATIC
-  3rdParty/Radon/Radon/source/File.cpp
-  3rdParty/Radon/Radon/source/Key.cpp
-  3rdParty/Radon/Radon/source/Named.cpp
-  3rdParty/Radon/Radon/source/Section.cpp)
+add_subdirectory(3rdParty/simpleini)
 
 add_library(StormLib STATIC
   3rdParty/StormLib/src/FileStream.cpp
@@ -264,11 +303,17 @@ add_library(StormLib STATIC
   3rdParty/StormLib/src/SFileOpenFileEx.cpp
   3rdParty/StormLib/src/SFileReadFile.cpp)
 
+if(WIN32)
+# Enable Unicode for StormLib wchar_t* file APIs
+target_compile_definitions(StormLib PRIVATE -DUNICODE -D_UNICODE)
+endif()
+
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
+target_include_directories(PKWare PUBLIC 3rdParty/PKWare)
 
-set(devilutionx_SRCS
+set(libdevilutionx_SRCS
   Source/appfat.cpp
   Source/automap.cpp
   Source/capture.cpp
@@ -292,6 +337,7 @@ set(devilutionx_SRCS
   Source/gendung.cpp
   Source/gmenu.cpp
   Source/help.cpp
+  Source/hwcursor.cpp
   Source/init.cpp
   Source/interfac.cpp
   Source/inv.cpp
@@ -299,7 +345,6 @@ set(devilutionx_SRCS
   Source/items.cpp
   Source/lighting.cpp
   Source/loadsave.cpp
-  Source/main.cpp
   Source/mainmenu.cpp
   Source/minitext.cpp
   Source/misdat.cpp
@@ -313,6 +358,7 @@ set(devilutionx_SRCS
   Source/nthread.cpp
   Source/objdat.cpp
   Source/objects.cpp
+  Source/options.cpp
   Source/pack.cpp
   Source/palette.cpp
   Source/path.cpp
@@ -321,7 +367,6 @@ set(devilutionx_SRCS
   Source/plrmsg.cpp
   Source/portal.cpp
   Source/quests.cpp
-  Source/render.cpp
   Source/restrict.cpp
   Source/scrollrt.cpp
   Source/setmaps.cpp
@@ -348,11 +393,21 @@ set(devilutionx_SRCS
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
   Source/controls/touch.cpp
+  Source/controls/keymapper.cpp
   Source/engine/animationinfo.cpp
+  Source/engine/load_cel.cpp
+  Source/engine/load_file.cpp
+  Source/engine/random.cpp
+  Source/engine/render/automap_render.cpp
+  Source/engine/render/cel_render.cpp
+  Source/engine/render/cl2_render.cpp
+  Source/engine/render/dun_render.cpp
+  Source/engine/render/text_render.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp
   Source/qol/xpbar.cpp
+  Source/qol/itemlabels.cpp
   Source/utils/console.cpp
   Source/utils/display.cpp
   Source/utils/file_util.cpp
@@ -392,22 +447,18 @@ set(devilutionx_SRCS
   Source/storm/storm_net.cpp
   Source/storm/storm_sdl_rw.cpp
   Source/storm/storm_svid.cpp
-  Source/miniwin/misc_msg.cpp
-  Source/devilutionx.exe.manifest
-  Packaging/macOS/AppIcon.icns
-  Packaging/resources/CharisSILB.ttf
-  Packaging/windows/devilutionx.rc)
+  Source/miniwin/misc_msg.cpp)
 
 if(USE_SDL1)
-  list(APPEND devilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
+  list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
 endif()
 
 if(NOSOUND)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/effects_stubs.cpp
     Source/sound_stubs.cpp)
 else()
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/effects.cpp
     Source/sound.cpp
     Source/utils/push_aulib_decoder.cpp
@@ -415,38 +466,52 @@ else()
 endif()
 
 if(NOT NONET)
-  list(APPEND devilutionx_SRCS
-    Source/dvlnet/tcp_client.cpp
-    Source/dvlnet/tcp_server.cpp
-    Source/dvlnet/protocol_zt.cpp
-    Source/dvlnet/zerotier_native.cpp
-    Source/dvlnet/zerotier_lwip.cpp)
+  if(NOT DISABLE_TCP)
+    list(APPEND libdevilutionx_SRCS
+      Source/dvlnet/tcp_client.cpp
+      Source/dvlnet/tcp_server.cpp)
+  endif()
+  if(NOT DISABLE_ZERO_TIER)
+    list(APPEND libdevilutionx_SRCS
+      Source/dvlnet/protocol_zt.cpp
+      Source/dvlnet/zerotier_native.cpp
+      Source/dvlnet/zerotier_lwip.cpp)
+  endif()
 endif()
 
 set(BIN_TARGET devilutionx)
 
-if(SWITCH)
-  list(APPEND devilutionx_SRCS
+if(NINTENDO_SWITCH)
+  list(APPEND libdevilutionx_SRCS
     Source/platform/switch/network.cpp
     Source/platform/switch/keyboard.cpp
-    Source/platform/switch/docking.cpp)
-  set(BIN_TARGET devilutionx.elf)
+    Source/platform/switch/docking.cpp
+    Source/platform/switch/random.cpp
+    Source/platform/switch/asio/net/if.c
+    Source/platform/switch/asio/sys/signal.c)
 endif()
 
 if(VITA)
-  list(APPEND devilutionx_SRCS
+  list(APPEND libdevilutionx_SRCS
     Source/platform/vita/keyboard.cpp)
 endif()
 
-if(N3DS)
-  list(APPEND devilutionx_SRCS
+if(NINTENDO_3DS)
+  list(APPEND libdevilutionx_SRCS
     Source/platform/ctr/system.cpp
-    Source/platform/ctr/keyboard.cpp)
+    Source/platform/ctr/keyboard.cpp
+    Source/platform/ctr/display.cpp
+    Source/platform/ctr/messagebox.cpp
+    Source/platform/ctr/random.cpp
+    Source/platform/ctr/sockets.cpp
+    Source/platform/ctr/asio/net/if.c
+    Source/platform/ctr/asio/sys/socket.c
+    Source/platform/ctr/asio/sys/uio.c)
   set(BIN_TARGET ${BIN_TARGET}.elf)
 endif()
 
 if(RUN_TESTS)
-  list(APPEND devilutionx_SRCS
+  set(devilutionxtest_SRCS
     test/appfat_test.cpp
     test/automap_test.cpp
     test/control_test.cpp
@@ -463,16 +528,31 @@ if(RUN_TESTS)
     test/file_util_test.cpp
     test/inv_test.cpp
     test/lighting_test.cpp
+    test/main.cpp
     test/missiles_test.cpp
     test/pack_test.cpp
     test/player_test.cpp
+    test/random_test.cpp
     test/scrollrt_test.cpp
     test/stores_test.cpp
     test/writehero_test.cpp
     test/animationinfo_test.cpp)
 endif()
 
-add_executable(${BIN_TARGET} WIN32 MACOSX_BUNDLE ${devilutionx_SRCS})
+add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
+if (ANDROID)
+  add_library(${BIN_TARGET} SHARED Source/main.cpp)
+else()
+  add_executable(${BIN_TARGET}
+    WIN32
+    MACOSX_BUNDLE
+    Source/main.cpp
+    Source/devilutionx.exe.manifest
+    Packaging/macOS/AppIcon.icns
+    Packaging/resources/CharisSILB.ttf
+    Packaging/windows/devilutionx.rc)
+endif()
+target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
 file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
@@ -483,7 +563,7 @@ file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BIN
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(is_multi_config)
   set(CONFIG_PATH $<CONFIG>/config.h)
-  target_include_directories(${BIN_TARGET} PRIVATE ${CMAKE_BINARY_DIR}/$<CONFIG>)
+  target_include_directories(libdevilutionx PUBLIC ${CMAKE_BINARY_DIR}/$<CONFIG>)
 else()
   set(CONFIG_PATH config.h)
 endif()
@@ -497,16 +577,26 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 ")
 
 if(RUN_TESTS)
+  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
   include(CTest)
   include(GoogleTest)
   find_package(GTest REQUIRED)
-  include_directories(${GTEST_INCLUDE_DIRS})
-  add_definitions(-DRUN_TESTS)
-  if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    add_definitions(-fprofile-arcs -ftest-coverage)
+  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
+  target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
+  target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})
+  if(ENABLE_CODECOVERAGE)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+      message(WARNING "Codecoverage not supported with MSVC")
+    else()
+      target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
+      target_compile_options(libdevilutionx PRIVATE -fprofile-arcs -ftest-coverage)
+      target_compile_options(${BIN_TARGET} PRIVATE -fprofile-arcs -ftest-coverage)
+      target_link_options(devilutionx-tests PRIVATE -fprofile-arcs)
+      target_link_options(libdevilutionx PRIVATE -fprofile-arcs)
+      target_link_options(${BIN_TARGET} PRIVATE -fprofile-arcs)
+    endif()
   endif()
-  target_link_libraries(${BIN_TARGET} PRIVATE -fprofile-arcs ${GTEST_LIBRARIES})
-  gtest_add_tests(${BIN_TARGET} "" AUTO)
+  gtest_add_tests(devilutionx-tests "" AUTO)
 endif()
 
 if(GPERF)
@@ -520,34 +610,36 @@ if(USE_GETTEXT)
   endforeach(lang)
 endif()
 
-target_include_directories(${BIN_TARGET} PRIVATE
+target_include_directories(libdevilutionx PUBLIC
   Source
-  3rdParty/PKWare
-  3rdParty/asio/include
-  3rdParty/Radon/Radon/include
-  3rdParty/libsmacker
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT N3DS)
-  target_link_libraries(${BIN_TARGET} PUBLIC
+if(NOT NINTENDO_3DS)
+  target_link_libraries(libdevilutionx PUBLIC
   Threads::Threads)
 endif()
 
-target_link_libraries(${BIN_TARGET} PRIVATE
+target_link_libraries(libdevilutionx PUBLIC
   PKWare
   StormLib
   smacker
-  Radon)
+  simpleini)
 
 if(NOT NONET)
-  target_link_libraries(${BIN_TARGET} PRIVATE sodium)
+  if(NOT DISABLE_TCP)
+    target_link_libraries(libdevilutionx PUBLIC asio)
+  endif()
+  target_link_libraries(libdevilutionx PUBLIC sodium)
 endif()
 
-target_link_libraries(${BIN_TARGET} PRIVATE fmt::fmt)
+target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
 
 genex_for_option(DEBUG)
-target_compile_definitions(${BIN_TARGET} PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
-target_compile_definitions(${BIN_TARGET} PRIVATE ASIO_STANDALONE)
+target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
+
+if(NOT NONET AND NOT DISABLE_TCP)
+  target_compile_definitions(libdevilutionx PUBLIC ASIO_STANDALONE)
+endif()
 
 # Defines without value
 foreach(
@@ -555,9 +647,14 @@ foreach(
   NOSOUND
   NONET
   PREFILL_PLAYER_NAME
+  DISABLE_TCP
+  DISABLE_ZERO_TIER
   DISABLE_STREAMING_MUSIC
   DISABLE_STREAMING_SOUNDS
   GPERF
+  GPERF_HEAP_MAIN
+  GPERF_HEAP_FIRST_GAME_ITERATION
+  STREAM_ALL_AUDIO
 )
 if(${def_name})
   list(APPEND def_list ${def_name})
@@ -578,6 +675,7 @@ foreach(
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   SDL1_FORCE_SVID_VIDEO_MODE
+  SDL1_FORCE_DIRECT_RENDER
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
@@ -631,82 +729,74 @@ foreach(
   endif()
 endforeach(def_name)
 
-genex_for_option(ASAN)
 genex_for_option(UBSAN)
-target_compile_options(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-target_link_libraries(${BIN_TARGET} PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
-target_compile_options(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
-target_link_libraries(${BIN_TARGET} PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+target_compile_options(libdevilutionx PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+target_link_libraries(libdevilutionx PUBLIC $<${UBSAN_GENEX}:-fsanitize=undefined>)
+
+if(TSAN)
+  target_compile_options(libdevilutionx PUBLIC -fsanitize=thread)
+  target_link_libraries(libdevilutionx PUBLIC -fsanitize=thread)
+else()
+  genex_for_option(ASAN)
+  target_compile_options(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+  target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
+endif()
 
 if(USE_SDL1)
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(libdevilutionx PUBLIC
     ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
-  target_compile_definitions(${BIN_TARGET} PRIVATE USE_SDL1)
+  target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
 else()
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(libdevilutionx PUBLIC
     SDL2::SDL2
     ${SDL2_MAIN}
     SDL2::SDL2_ttf)
 endif()
 
 if(NOT NOSOUND)
-  target_link_libraries(${BIN_TARGET} PRIVATE SDL_audiolib)
-endif()
-
-if(SWITCH)
-  target_link_libraries(${BIN_TARGET} PRIVATE switch::libnx
-    -lfreetype -lvorbisfile -lvorbis -logg -lmodplug -lmpg123 -lSDL2 -lopusfile -lopus -lEGL -lglapi -ldrm_nouveau -lpng -lbz2 -lz -lnx)
+  target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
 endif()
 
 if(AMIGA)
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(libdevilutionx PUBLIC
     ${FREETYPE_LIBRARY}
     ${ZLIB_LIBRARY})
   if(NOT WARPOS)
-    target_link_libraries(${BIN_TARGET} PRIVATE -ldebug)
+    target_link_libraries(libdevilutionx PUBLIC -ldebug)
   endif()
 endif()
 
 if (VITA)
-  target_link_libraries(${BIN_TARGET} PRIVATE
+  target_link_libraries(libdevilutionx PUBLIC
         ScePower_stub
         freetype
         png
-        m
         z
-        FLAC
-        vorbisfile
-        vorbis
-        ogg
-        mikmod
-        mpg123
   )
-  target_compile_definitions(${BIN_TARGET} PRIVATE VITA)
+  target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
 
-if(N3DS)
-  target_link_libraries(${BIN_TARGET} PRIVATE ${TREMOR_LIBRARIES})
-  target_include_directories(${BIN_TARGET} PRIVATE ${TREMOR_INCLUDE_DIRS})
-  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::ogg 3ds::mikmod 3ds::mad 3ds::freetype 3ds::bzip2 3ds::png)
-  target_link_libraries(${BIN_TARGET} PRIVATE 3ds::citro3d 3ds::ctrulib)
+if(NINTENDO_3DS)
+  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
+  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
-target_compile_definitions(${BIN_TARGET} PRIVATE ${def_list})
+target_compile_definitions(libdevilutionx PUBLIC ${def_list})
 
 if (GPERF)
-  target_link_libraries(${BIN_TARGET} PRIVATE ${GPERFTOOLS_LIBRARIES})
+  target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT HAIKU AND NOT VITA)
-  target_link_libraries(${BIN_TARGET} PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
+  target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
 if(WIN32)
-  target_link_libraries(${BIN_TARGET} PRIVATE wsock32 ws2_32 wininet)
+  target_link_libraries(libdevilutionx PUBLIC shlwapi wsock32 ws2_32 wininet)
 
   if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    target_compile_options(${BIN_TARGET} PUBLIC $<$<CONFIG:Debug>:-gstabs>)
+    target_compile_options(libdevilutionx PUBLIC $<$<CONFIG:Debug>:-gstabs>)
   endif()
 endif()
 
@@ -716,13 +806,13 @@ if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
 endif()
 
 if(HAIKU)
-  target_link_libraries(${BIN_TARGET} PRIVATE network)
+  target_link_libraries(libdevilutionx PUBLIC network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Change __FILE__ to only show the path relative to the project folder
-  get_target_property(devilutionx_SRCS ${BIN_TARGET} SOURCES)
-  foreach(SOURCE_FILE ${devilutionx_SRCS})
+  get_target_property(libdevilutionx_SRCS ${BIN_TARGET} SOURCES)
+  foreach(SOURCE_FILE ${libdevilutionx_SRCS})
     set_source_files_properties(${SOURCE_FILE} PROPERTIES
       COMPILE_DEFINITIONS __FILE__="${SOURCE_FILE}"
     )
@@ -732,19 +822,18 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 
   # Note: For Valgrind support.
   genex_for_option(DEBUG)
-  target_compile_options(${BIN_TARGET} PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
+  target_compile_options(libdevilutionx PUBLIC $<${DEBUG_GENEX}:-fno-omit-frame-pointer>)
 
   # Warnings for devilutionX
-  target_compile_options(${BIN_TARGET} PRIVATE -Wall -Wextra -Wno-unused-parameter)
+  target_compile_options(libdevilutionx PUBLIC -Wall -Wextra -Wno-unused-parameter)
 
   # For ARM and other default unsigned char platforms
-  target_compile_options(${BIN_TARGET} PRIVATE -fsigned-char)
+  target_compile_options(libdevilutionx PUBLIC -fsigned-char)
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(${BIN_TARGET} PRIVATE "/W0")
-  target_compile_options(${BIN_TARGET} PRIVATE "/Zc:__cplusplus")
-  target_compile_options(${BIN_TARGET} PRIVATE "/permissive-")
+  target_compile_options(libdevilutionx PUBLIC "/W2")
+  target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
 endif()
 
 if(APPLE)
@@ -775,13 +864,26 @@ if(APPLE)
   set(CPACK On)
 endif()
 
-if(SWITCH)
-  set(APP_TITLE "DevilutionX")
-  set(APP_AUTHOR "Devilution Team")
-  set(APP_ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg")
-  set(APP_VERSION ${PROJECT_VERSION})
-  include(nx-utils)
-  build_switch_binaries(${BIN_TARGET})
+if(NINTENDO_SWITCH)
+
+  target_link_libraries(libdevilutionx PUBLIC
+        freetype
+        png
+        bz2
+        z
+  )
+
+  nx_generate_nacp (${BIN_TARGET}.nacp
+    NAME    "DevilutionX"
+    AUTHOR  "Devilution Team"
+    VERSION "${PROJECT_VERSION}"
+  )
+
+  nx_create_nro(${BIN_TARGET}
+    NACP ${BIN_TARGET}.nacp
+    ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
+  )
+
 endif()
 
 if(VITA)
@@ -805,7 +907,7 @@ if(VITA)
   )
 endif()
 
-if(N3DS)
+if(NINTENDO_3DS)
   set(APP_TITLE       "DevilutionX")
   set(APP_DESCRIPTION "DevilutionX port for 3DS")
   set(APP_AUTHOR      "Diasurgical Team")
@@ -814,7 +916,9 @@ if(N3DS)
   set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  set(APP_ROMFS_FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf")
+  set(APP_ROMFS_FILES
+    "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
+    "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
   file(MAKE_DIRECTORY ${APP_ROMFS})
   file(COPY ${APP_ROMFS_FILES}
      DESTINATION ${APP_ROMFS})
@@ -975,7 +1079,7 @@ if(CPACK)
   include(CPack)
 endif()
 
-if(NOT NONET)
+if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   add_subdirectory(3rdParty/libzt)
-  target_link_libraries(${BIN_TARGET} PRIVATE zt-static)
+  target_link_libraries(libdevilutionx PUBLIC zt-static)
 endif()

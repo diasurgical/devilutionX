@@ -10,6 +10,8 @@
 
 #include "diablo.h"
 #include "drlg_l1.h"
+#include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "objects.h"
 #include "player.h"
 #include "quests.h"
@@ -1843,15 +1845,15 @@ static void DRLG_LoadL2SP()
 	setloadflag = false;
 
 	if (QuestStatus(Q_BLIND)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blind1.DUN");
-		pSetPiece[26] = 154;  // Close outer wall
-		pSetPiece[200] = 154; // Close outer wall
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
+		pSetPiece[13] = SDL_SwapLE16(154);  // Close outer wall
+		pSetPiece[100] = SDL_SwapLE16(154); // Close outer wall
 		setloadflag = true;
 	} else if (QuestStatus(Q_BLOOD)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Blood1.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood1.DUN");
 		setloadflag = true;
 	} else if (QuestStatus(Q_SCHAMB)) {
-		pSetPiece = LoadFileInMem("Levels\\L2Data\\Bonestr2.DUN");
+		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr2.DUN");
 		setloadflag = true;
 	}
 }
@@ -1863,28 +1865,25 @@ static void DRLG_FreeL2SP()
 
 static void DRLG_L2SetRoom(int rx1, int ry1)
 {
-	int rw, rh, i, j;
-	BYTE *sp;
-
-	rw = pSetPiece[0];
-	rh = pSetPiece[2];
+	int width = SDL_SwapLE16(pSetPiece[0]);
+	int height = SDL_SwapLE16(pSetPiece[1]);
 
 	setpc_x = rx1;
 	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
+	setpc_w = width;
+	setpc_h = height;
 
-	sp = &pSetPiece[4];
+	uint16_t *tileLayer = &pSetPiece[2];
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp != 0) {
-				dungeon[i + rx1][j + ry1] = *sp;
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[i + rx1][j + ry1] = tileId;
 				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i + rx1][j + ry1] = 3;
 			}
-			sp += 2;
 		}
 	}
 }
@@ -1929,29 +1928,23 @@ static void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool ForceHW)
 
 static void CreateDoorType(int nX, int nY)
 {
-	bool fDoneflag;
-
-	fDoneflag = false;
-
 	if (predungeon[nX - 1][nY] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX + 1][nY] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX][nY - 1] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX][nY + 1] == 68) {
-		fDoneflag = true;
+		return;
 	}
 	if (predungeon[nX][nY] == 66 || predungeon[nX][nY] == 67 || predungeon[nX][nY] == 65 || predungeon[nX][nY] == 69) {
-		fDoneflag = true;
+		return;
 	}
 
-	if (!fDoneflag) {
-		predungeon[nX][nY] = 68;
-	}
+	predungeon[nX][nY] = 68;
 }
 
 static void PlaceHallExt(int nX, int nY)
@@ -2085,7 +2078,7 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 			nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
 			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
-		HallList.push_back({nHx1, nHy1, nHx2, nHy2, nHDir});
+		HallList.push_back({ nHx1, nHy1, nHx2, nHy2, nHDir });
 	}
 
 	if (nRh > nRw) {
@@ -3233,7 +3226,7 @@ static void DRLG_InitL2Vals()
 	}
 }
 
-static void LoadL2DungeonData(BYTE *pLevelMap)
+static void LoadL2DungeonData(const uint16_t *dunData)
 {
 	InitDungeon();
 	DRLG_InitTrans();
@@ -3245,26 +3238,26 @@ static void LoadL2DungeonData(BYTE *pLevelMap)
 		}
 	}
 
-	BYTE *lm = pLevelMap;
-	int rw = *lm;
-	lm += 2;
-	int rh = *lm;
-	lm += 2;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
 
-	for (int j = 0; j < rh; j++) {
-		for (int i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			tileLayer++;
+			if (tileId != 0) {
+				dungeon[i][j] = tileId;
 				dflags[i][j] |= DLRG_PROTECTED;
 			} else {
 				dungeon[i][j] = 3;
 			}
-			lm += 2;
 		}
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 12;
 			}
@@ -3272,11 +3265,11 @@ static void LoadL2DungeonData(BYTE *pLevelMap)
 	}
 }
 
-void LoadL2Dungeon(const char *sFileName, int vx, int vy)
+void LoadL2Dungeon(const char *path, int vx, int vy)
 {
-	auto pLevelMap = LoadFileInMem(sFileName);
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	LoadL2DungeonData(pLevelMap.get());
+	LoadL2DungeonData(dunData.get());
 
 	DRLG_L2Pass3();
 	DRLG_Init_Globals();
@@ -3316,15 +3309,16 @@ void LoadL2Dungeon(const char *sFileName, int vx, int vy)
 
 	ViewX = vx;
 	ViewY = vy;
-	SetMapMonsters(pLevelMap.get(), 0, 0);
-	SetMapObjects(pLevelMap.get(), 0, 0);
+
+	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapObjects(dunData.get(), 0, 0);
 }
 
-void LoadPreL2Dungeon(const char *sFileName)
+void LoadPreL2Dungeon(const char *path)
 {
 	{
-		auto pLevelMap = LoadFileInMem(sFileName);
-		LoadL2DungeonData(pLevelMap.get());
+		auto dunData = LoadFileInMem<uint16_t>(path);
+		LoadL2DungeonData(dunData.get());
 	}
 
 	for (int j = 0; j < DMAXY; j++) {

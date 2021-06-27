@@ -9,10 +9,11 @@
 #include "control.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
-#include "utils/log.hpp"
 #include "utils/language.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 
@@ -214,7 +215,7 @@ void Deinit()
 	if (!fontWasLoaded)
 		UnloadTtfFont();
 
-	for (auto pUIItem : vecOkDialog) {
+	for (auto *pUIItem : vecOkDialog) {
 		delete pUIItem;
 	}
 	vecOkDialog.clear();
@@ -263,24 +264,27 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 	static bool inDialog = false;
 
 	if (!gbActive || inDialog) {
-		if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-			Log("{}", SDL_GetError());
+		if (!IsHardwareCursor()) {
+			if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
+				Log("{}", SDL_GetError());
+			}
 		}
-#ifndef RUN_TESTS
-		if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
-			Log("{}", SDL_GetError());
-#else
-		{
-#endif
-			Log("{}", text);
-			Log("{}", caption);
+		if (!gbQuietMode) {
+			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
+				Log("{}", SDL_GetError());
+			}
 		}
+		Log("{}", text);
+		Log("{}", caption);
 		return;
 	}
 
 	inDialog = true;
 	Init(text, caption, error, !renderBehind.empty());
-	DialogLoop(vecOkDialog, renderBehind);
+	if (font != nullptr)
+		DialogLoop(vecOkDialog, renderBehind);
+	else
+		UiOkDialog(text, caption, error, renderBehind);
 	Deinit();
 	inDialog = false;
 }
@@ -295,9 +299,9 @@ void UiErrorOkDialog(const char *text, const char *caption, bool error)
 	UiOkDialog(text, caption, error, vecNULL);
 }
 
-void UiErrorOkDialog(const char *text, std::vector<UiItemBase *> renderBehind)
+void UiErrorOkDialog(const char *text, const std::vector<UiItemBase *>& renderBehind)
 {
-	UiErrorOkDialog(text, nullptr, std::move(renderBehind));
+	UiErrorOkDialog(text, nullptr, renderBehind);
 }
 
 } // namespace devilution

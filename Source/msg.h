@@ -7,11 +7,12 @@
 
 #include <cstdint>
 
-#include "quests.h"
-#include "objects.h"
-#include "monster.h"
-#include "portal.h"
+#include "engine/point.hpp"
 #include "items.h"
+#include "monster.h"
+#include "objects.h"
+#include "portal.h"
+#include "quests.h"
 
 namespace devilution {
 
@@ -188,7 +189,7 @@ struct TCmdGolem {
 	_cmd_id bCmd;
 	uint8_t _mx;
 	uint8_t _my;
-	direction _mdir;
+	Direction _mdir;
 	int8_t _menemy;
 	int32_t _mhitpoints;
 	uint8_t _currlevel;
@@ -235,6 +236,10 @@ struct TCmdPItem {
 	uint8_t y;
 	uint16_t wIndx;
 	uint16_t wCI;
+	/**
+	 * Item identifier
+	 * @see ItemStruct::_iSeed
+	 */
 	int32_t dwSeed;
 	uint8_t bId;
 	uint8_t bDur;
@@ -356,13 +361,13 @@ struct TPktHdr {
 
 struct TPkt {
 	TPktHdr hdr;
-	uint8_t body[493];
+	byte body[493];
 };
 
 struct DMonsterStr {
 	uint8_t _mx;
 	uint8_t _my;
-	direction _mdir;
+	Direction _mdir;
 	uint8_t _menemy;
 	uint8_t _mactive;
 	int32_t _mhitpoints;
@@ -406,13 +411,13 @@ struct DJunk {
 struct TMegaPkt {
 	struct TMegaPkt *pNext;
 	uint32_t dwSpaceLeft;
-	uint8_t data[32000];
+	byte data[32000];
 };
 #pragma pack(pop)
 
 struct TBuffer {
 	uint32_t dwNextWriteOffset;
-	uint8_t bData[4096];
+	byte bData[4096];
 };
 
 extern bool deltaload;
@@ -433,7 +438,7 @@ void DeltaAddItem(int ii);
 void DeltaSaveLevel();
 void DeltaLoadLevel();
 void NetSendCmd(bool bHiPri, _cmd_id bCmd);
-void NetSendCmdGolem(BYTE mx, BYTE my, direction dir, BYTE menemy, int hp, BYTE cl);
+void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE cl);
 void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1);
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2);
@@ -447,8 +452,8 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDelItem(bool bHiPri, BYTE bLoc);
 void NetSendCmdDItem(bool bHiPri, int ii);
-void NetSendCmdDamage(bool bHiPri, BYTE bPlr, DWORD dwDam);
-void NetSendCmdMonDmg(bool bHiPri, uint16_t bMon, DWORD dwDam);
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, DWORD dwDam);
+void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, DWORD dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
 DWORD ParseCmd(int pnum, TCmd *pCmd);

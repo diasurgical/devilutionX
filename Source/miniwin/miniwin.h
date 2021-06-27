@@ -16,19 +16,6 @@ namespace devilution {
 #define MAX_PATH 260
 #endif
 
-#ifdef __has_attribute
-#define DVL_HAVE_ATTRIBUTE(x) __has_attribute(x)
-#else
-#define DVL_HAVE_ATTRIBUTE(x) 0
-#endif
-
-#if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
-#define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
-	__attribute__((__format__(__printf__, fmtargnum, firstarg)))
-#else
-#define DVL_PRINTF_ATTRIBUTE(fmtargnum)
-#endif
-
 typedef uint32_t DWORD;
 typedef unsigned char BYTE;
 
@@ -52,13 +39,13 @@ struct tagMSG {
 void SetCursorPos(int X, int Y);
 void FocusOnCharInfo();
 
-uint16_t GetAsyncKeyState(int vKey);
+bool GetAsyncKeyState(int vKey);
 
 bool FetchMessage(tagMSG *lpMsg);
 
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
-bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
+bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam);
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
@@ -101,6 +88,7 @@ bool PostMessage(uint32_t Msg, int32_t wParam, int32_t lParam);
 // Virtual key codes.
 //
 // ref: https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
+#define DVL_VK_INVALID 0     // Invalid key
 #define DVL_VK_BACK 0x08     // BACKSPACE key
 #define DVL_VK_TAB 0x09      // TAB key
 #define DVL_VK_RETURN 0x0D   // ENTER key

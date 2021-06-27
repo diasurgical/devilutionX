@@ -8,10 +8,13 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/point.hpp"
+#include "engine/rectangle.hpp"
+#include "engine/render/text_render.hpp"
 #include "spelldat.h"
 #include "spells.h"
-#include "utils/ui_fwd.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/ui_fwd.h"
 
 namespace devilution {
 
@@ -27,21 +30,6 @@ namespace devilution {
 #define RIGHT_PANEL (gnScreenWidth - SPANEL_WIDTH)
 #define RIGHT_PANEL_X RIGHT_PANEL
 
-enum text_color : uint8_t {
-	COL_WHITE,
-	COL_BLUE,
-	COL_RED,
-	COL_GOLD,
-	COL_BLACK,
-};
-
-struct RECT32 {
-	int x;
-	int y;
-	int w;
-	int h;
-};
-
 extern bool drawhpflag;
 extern bool dropGoldFlag;
 extern bool chrbtn[4];
@@ -49,11 +37,10 @@ extern bool lvlbtndown;
 extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
-extern std::optional<CelSprite> pPanelText;
 extern int pnumlines;
 extern bool pinfoflag;
 extern spell_id pSpell;
-extern text_color infoclr;
+extern uint16_t infoclr;
 extern char tempstr[256];
 extern int sbooktab;
 extern spell_type pSplType;
@@ -68,24 +55,22 @@ extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
 
+/**
+ * @brief Check if the UI can cover the game area entierly
+ */
+inline bool CanPanelsCoverView()
+{
+	return gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT;
+}
+
 void DrawSpellList(const CelOutputBuffer &out);
 void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
 
-/**
- * @brief Print letter to the given buffer
- * @param out The buffer to print to
- * @param sx Backbuffer offset
- * @param sy Backbuffer offset
- * @param nCel Number of letter in Windows-1252
- * @param col text_color color value
- */
-void PrintChar(const CelOutputBuffer &out, int sx, int sy, int nCel, text_color col);
-
-void AddPanelString(const char *str, bool just);
+void AddPanelString(const char *str);
 void ClearPanel();
-void DrawPanelBox(const CelOutputBuffer &out, int x, int y, int w, int h, int sx, int sy);
+void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition);
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
@@ -125,14 +110,11 @@ void DoAutoMap();
 void CheckPanelInfo();
 void CheckBtnUp();
 void FreeControlPan();
-bool control_WriteStringToBuffer(BYTE *str);
 
 /**
  * Sets a string to be drawn in the info box and then draws it.
  */
 void DrawInfoBox(const CelOutputBuffer &out);
-
-void PrintGameStr(const CelOutputBuffer &out, int x, int y, const char *str, text_color color);
 void DrawChr(const CelOutputBuffer &out);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
@@ -146,7 +128,6 @@ void CheckSBook();
 void DrawGoldSplit(const CelOutputBuffer &out, int amount);
 void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int goldIndex);
-void control_set_gold_curs(int pnum);
 void DrawTalkPan(const CelOutputBuffer &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
@@ -155,13 +136,6 @@ void control_reset_talk();
 bool control_talk_last_key(int vkey);
 bool control_presskeys(int vkey);
 
-/* rdata */
-extern const BYTE fontframe[128];
-extern const BYTE fontkern[68];
-extern const BYTE gbFontTransTbl[256];
-
-/* data */
-
-extern RECT32 ChrBtnsRect[4];
+extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution

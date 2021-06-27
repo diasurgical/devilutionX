@@ -7,54 +7,50 @@ std::size_t GetArtStrWidth(const char *str, std::size_t size)
 	int strWidth = 0;
 
 	for (size_t i = 0, n = strlen(str); i < n; i++) {
-		BYTE w = FontTables[size][*(BYTE *)&str[i] + 2];
-		if (w != 0)
-			strWidth += w;
-		else
-			strWidth += FontTables[size][0];
+		uint8_t w = FontTables[size][(uint8_t)str[i] + 2];
+		strWidth += (w != 0) ? w : FontTables[size][0];
 	}
 
 	return strWidth;
 }
 
-void WordWrapArtStr(char *text, std::size_t width)
+void WordWrapArtStr(char *text, std::size_t width, std::size_t size)
 {
-	const std::size_t len = strlen(text);
+	const std::size_t textLength = strlen(text);
 	std::size_t lineStart = 0;
-	for (std::size_t i = 0; i <= len; i++) {
-		if (text[i] == '\n') {
+	std::size_t lineWidth = 0;
+	for (std::size_t i = 0; i < textLength; i++) {
+		if (text[i] == '\n') { // Existing line break, scan next line
 			lineStart = i + 1;
-			continue;
-		}
-		if (text[i] != ' ' && i != len) {
-			continue;
-		}
-
-		if (i != len)
-			text[i] = '\0';
-		if (GetArtStrWidth(&text[lineStart], AFT_SMALL) <= width) {
-			if (i != len)
-				text[i] = ' ';
+			lineWidth = 0;
 			continue;
 		}
 
-		std::size_t j;
+		uint8_t w = FontTables[size][(uint8_t)text[i] + 2];
+		lineWidth += (w != 0) ? w : FontTables[size][0];
+
+		if (lineWidth <= width) {
+			continue; // String is still within the limit, continue to the next line
+		}
+
+		std::size_t j; // Backtrack to the previous space
 		for (j = i; j >= lineStart; j--) {
 			if (text[j] == ' ') {
-				break; // Scan for previous space
+				break;
 			}
 		}
 
-		if (j == lineStart) { // Single word longer then width
-			if (i == len)
+		if (j == lineStart) { // Single word longer than width
+			if (i == textLength)
 				break;
 			j = i;
 		}
 
-		if (i != len)
-			text[i] = ' ';
-		text[j] = '\n';
-		lineStart = j + 1;
+		// Break line and continue to next line
+		i = j;
+		text[i] = '\n';
+		lineStart = i + 1;
+		lineWidth = 0;
 	}
 }
 

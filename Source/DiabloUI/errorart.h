@@ -1,8 +1,12 @@
 #pragma once
 
+#include <cstdint>
+
+#include "engine.h"
+
 namespace devilution {
 
-extern const unsigned char btnData[];
-extern const unsigned char popupData[];
+extern const std::uint8_t btnData[];
+extern const std::uint8_t popupData[];
 
 } // namespace devilution
