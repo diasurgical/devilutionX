@@ -1098,8 +1098,8 @@ void LoadGame(bool firstflag)
 	leveltype = static_cast<dungeon_type>(file.nextBE<uint32_t>());
 	if (!setlevel)
 		leveltype = gnLevelTypeTbl[currlevel];
-	int _ViewX = file.nextBE<int32_t>();
-	int _ViewY = file.nextBE<int32_t>();
+	int viewX = file.nextBE<int32_t>();
+	int viewY = file.nextBE<int32_t>();
 	invflag = file.nextBool8();
 	chrflag = file.nextBool8();
 	int _nummonsters = file.nextBE<int32_t>();
@@ -1135,8 +1135,8 @@ void LoadGame(bool firstflag)
 	SyncInitPlr(myplr);
 	SyncPlrAnim(myplr);
 
-	ViewX = _ViewX;
-	ViewY = _ViewY;
+	ViewX = viewX;
+	ViewY = viewY;
 	nummonsters = _nummonsters;
 	numitems = _numitems;
 	nummissiles = _nummissiles;
