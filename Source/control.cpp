@@ -206,10 +206,10 @@ const char *const PanBtnStr[8] = {
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
-	{ 137, 138, 41, 22 },
-	{ 137, 166, 41, 22 },
-	{ 137, 195, 41, 22 },
-	{ 137, 223, 41, 22 }
+	{ {137, 138}, {41, 22} },
+	{ {137, 166}, {41, 22} },
+	{ {137, 195}, {41, 22} },
+	{ {137, 223}, {41, 22} }
 };
 
 /** Maps from spellbook page number and position to spell_id. */

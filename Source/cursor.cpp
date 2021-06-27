@@ -159,39 +159,39 @@ int GetInvItemFrame(int i)
 	return i < InvItems1Size ? i : i - (InvItems1Size - 1);
 }
 
-Size GetInvItemSize(int i)
+Size GetInvItemSize(int cursId)
 {
-	if (i >= InvItems1Size)
-		return { InvItemWidth2[i - (InvItems1Size - 1)], InvItemHeight2[i - (InvItems1Size - 1)] };
-	return { InvItemWidth1[i], InvItemHeight1[i] };
+	if (cursId >= InvItems1Size)
+		return { InvItemWidth2[cursId - (InvItems1Size - 1)], InvItemHeight2[cursId - (InvItems1Size - 1)] };
+	return { InvItemWidth1[cursId], InvItemHeight1[cursId] };
 }
 
-void SetICursor(int i)
+void SetICursor(int cursId)
 {
-	auto size = GetInvItemSize(i);
+	auto size = GetInvItemSize(cursId);
 	icursW = size.width;
 	icursH = size.height;
 	icursW28 = icursW / 28;
 	icursH28 = icursH / 28;
 }
 
-void NewCursor(int i)
+void NewCursor(int cursId)
 {
-	pcurs = i;
-	auto size = GetInvItemSize(i);
+	pcurs = cursId;
+	auto size = GetInvItemSize(cursId);
 	cursW = size.width;
 	cursH = size.height;
-	SetICursor(i);
-	if (IsHardwareCursorEnabled() && GetCurrentCursorInfo() != CursorInfo::GameCursor(pcurs) && pcurs != CURSOR_NONE) {
-		SetHardwareCursor(CursorInfo::GameCursor(pcurs));
+	SetICursor(cursId);
+	if (IsHardwareCursorEnabled() && GetCurrentCursorInfo() != CursorInfo::GameCursor(cursId) && cursId != CURSOR_NONE) {
+		SetHardwareCursor(CursorInfo::GameCursor(cursId));
 	}
 }
 
-void CelDrawCursor(const CelOutputBuffer &out, Point position, int pcurs)
+void CelDrawCursor(const CelOutputBuffer &out, Point position, int cursId)
 {
-	const auto &sprite = GetInvItemSprite(pcurs);
-	const int frame = GetInvItemFrame(pcurs);
-	if (IsItemSprite(pcurs)) {
+	const auto &sprite = GetInvItemSprite(cursId);
+	const int frame = GetInvItemFrame(cursId);
+	if (IsItemSprite(cursId)) {
 		const auto &heldItem = plr[myplr].HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
 		CelDrawItem(heldItem._iStatFlag, out, position, sprite, frame);
@@ -215,10 +215,8 @@ void InitLevelCursor()
 
 void CheckTown()
 {
-	int i, mx;
-
-	for (i = 0; i < nummissiles; i++) {
-		mx = missileactive[i];
+	for (int i = 0; i < nummissiles; i++) {
+		int mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_TOWN) {
 			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
 			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
@@ -241,10 +239,8 @@ void CheckTown()
 
 void CheckRportal()
 {
-	int i, mx;
-
-	for (i = 0; i < nummissiles; i++) {
-		mx = missileactive[i];
+	for (int i = 0; i < nummissiles; i++) {
+		int mx = missileactive[i];
 		if (missile[mx]._mitype == MIS_RPORTAL) {
 			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
 			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)

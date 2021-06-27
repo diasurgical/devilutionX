@@ -25,25 +25,24 @@ struct CodecSignature {
 static void CodecInitKey(const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
-	uint32_t rand_state = 0x7058;
+	uint32_t randState = 0x7058;
 	for (char &notch : key) {
-		rand_state = rand_state * 214013 + 2531011;
-		notch = rand_state >> 16; // Downcasting to char keeps the 2 least-significant bytes
+		randState = randState * 214013 + 2531011;
+		notch = randState >> 16; // Downcasting to char keeps the 2 least-significant bytes
 	}
 
 	char pw[64];
-	std::size_t password_i = 0;
-	for (std::size_t i = 0; i < sizeof(pw); ++i, ++password_i) {
-		if (pszPassword[password_i] == '\0')
-			password_i = 0;
-		pw[i] = pszPassword[password_i];
+	for (std::size_t i = 0; i < sizeof(pw); i++) {
+		if (pszPassword[i] == '\0')
+			i = 0;
+		pw[i] = pszPassword[i];
 	}
 
 	char digest[SHA1HashSize];
 	SHA1Reset(0);
 	SHA1Calculate(0, pw, digest);
 	SHA1Clear();
-	for (std::size_t i = 0; i < sizeof(key); ++i)
+	for (std::size_t i = 0; i < sizeof(key); i++)
 		key[i] ^= digest[i % SHA1HashSize];
 	memset(pw, 0, sizeof(pw));
 	memset(digest, 0, sizeof(digest));
@@ -85,7 +84,7 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	}
 
 	SHA1Result(0, dst);
-	if (sig->checksum != *(DWORD *)dst) {
+	if (sig->checksum != *(uint32_t *)dst) {
 		memset(dst, 0, sizeof(dst));
 		goto error;
 	}
@@ -105,22 +104,19 @@ std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
-void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword)
+void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const char *pszPassword)
 {
 	char buf[128];
 	char tmp[SHA1HashSize];
 	char dst[SHA1HashSize];
-	DWORD chunk;
-	uint16_t last_chunk;
-	CodecSignature *sig;
 
-	if (size_64 != codec_get_encoded_len(size))
+	if (size64 != codec_get_encoded_len(size))
 		app_fatal("Invalid encode parameters");
 	CodecInitKey(pszPassword);
 
-	last_chunk = 0;
+	uint16_t lastChunk = 0;
 	while (size != 0) {
-		chunk = size < BLOCKSIZE ? size : BLOCKSIZE;
+		uint16_t chunk = size < BLOCKSIZE ? size : BLOCKSIZE;
 		memcpy(buf, pbSrcDst, chunk);
 		if (chunk < BLOCKSIZE)
 			memset(buf + chunk, 0, BLOCKSIZE - chunk);
@@ -131,17 +127,17 @@ void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size_64, const c
 		}
 		memset(dst, 0, sizeof(dst));
 		memcpy(pbSrcDst, buf, BLOCKSIZE);
-		last_chunk = chunk;
+		lastChunk = chunk;
 		pbSrcDst += BLOCKSIZE;
 		size -= chunk;
 	}
 	memset(buf, 0, sizeof(buf));
 	SHA1Result(0, tmp);
-	sig = (CodecSignature *)pbSrcDst;
+	auto *sig = (CodecSignature *)pbSrcDst;
 	sig->error = 0;
 	sig->unused = 0;
-	sig->checksum = *(DWORD *)&tmp[0];
-	sig->last_chunk_size = last_chunk;
+	sig->checksum = *(uint32_t *)&tmp[0];
+	sig->last_chunk_size = lastChunk;
 	SHA1Clear();
 }
 
