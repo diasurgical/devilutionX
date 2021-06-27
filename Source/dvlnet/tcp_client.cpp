@@ -102,9 +102,7 @@ void tcp_client::start_recv()
 {
 	sock.async_receive(
 	    asio::buffer(recv_buffer),
-	    [this](auto &&PH1, auto &&PH2) {
-		    handle_recv(std::forward<decltype(PH1)>(PH1), std::forward<decltype(PH2)>(PH2));
-	    });
+	    std::bind(&tcp_client::handle_recv, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void tcp_client::handle_send(const asio::error_code &error, size_t bytesSent)
