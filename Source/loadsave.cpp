@@ -341,7 +341,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player._pgfxnum = file->nextLE<int32_t>();
 	file->skip(4); // Skip pointer pData
 	player.AnimInfo = {};
-	player.AnimInfo.DelayLen = file->nextLE<int32_t>();
+	player.AnimInfo.DelayLen = file->nextLE<int32_t>() + 1;
 	player.AnimInfo.DelayCounter = file->nextLE<int32_t>();
 	player.AnimInfo.NumberOfFrames = file->nextLE<int32_t>();
 	player.AnimInfo.CurrentFrame = file->nextLE<int32_t>();
@@ -1404,7 +1404,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->skip(4); // Unused
 	file->writeLE<int32_t>(player._pgfxnum);
 	file->skip(4); // Skip pointer _pAnimData
-	file->writeLE<int32_t>(player.AnimInfo.DelayLen);
+	file->writeLE<int32_t>(std::max(0, player.AnimInfo.DelayLen - 1));
 	file->writeLE<int32_t>(player.AnimInfo.DelayCounter);
 	file->writeLE<int32_t>(player.AnimInfo.NumberOfFrames);
 	file->writeLE<int32_t>(player.AnimInfo.CurrentFrame);

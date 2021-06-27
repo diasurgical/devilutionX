@@ -4948,9 +4948,9 @@ void ItemStruct::SetNewAnimation(bool showAnimation)
 	int numberOfFrames = ItemAnimLs[it];
 	auto *pCelSprite = itemanims[it] ? &*itemanims[it] : nullptr;
 	if (_iCurs != ICURS_MAGIC_ROCK)
-		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
+		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, numberOfFrames);
 	else
-		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 0);
+		AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, 1);
 	_iPostDraw = false;
 	_iRequest = false;
 	if (showAnimation) {

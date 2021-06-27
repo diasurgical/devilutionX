@@ -83,6 +83,11 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 		SkippedFramesFromPreviousAnimation = 0;
 	}
 
+	if (delayLen <= 0) {
+		Log("SetNewAnimation: Invalid delayLen {}", delayLen);
+		delayLen = 1;
+	}
+
 	this->pCelSprite = pCelSprite;
 	NumberOfFrames = numberOfFrames;
 	CurrentFrame = 1 + numSkippedFrames;
@@ -105,7 +110,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 		}
 
 		// How many game ticks are needed to advance one Animation Frame
-		int ticksPerFrame = (delayLen + 1);
+		int ticksPerFrame = delayLen;
 
 		// Game ticks that will be adjusted for the skipped Frames/game ticks
 		int relevantAnimationTicksForDistribution = relevantAnimationFramesForDistributing * ticksPerFrame;
@@ -142,7 +147,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 			// in game tick 5 ProcessPlayer sees Frame = 3 and stops the animation.
 			// But Frame 3 is only shown 1 game tick and all other Frames are shown 2 game ticks.
 			// Thats why we need to remove the Delay of the last Frame from the time (game ticks) the Animation is shown
-			relevantAnimationTicksWithSkipping -= delayLen;
+			relevantAnimationTicksWithSkipping -= (delayLen - 1);
 		}
 
 		// The truncated Frames from previous Animation will also be shown, so we also have to distribute them for the given time (game ticks)
@@ -181,7 +186,7 @@ void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool don
 	if (dontProgressAnimation)
 		return;
 	TicksSinceSequenceStarted++;
-	if (DelayCounter > DelayLen) {
+	if (DelayCounter >= DelayLen) {
 		DelayCounter = 0;
 		if (reverseAnimation) {
 			CurrentFrame--;
