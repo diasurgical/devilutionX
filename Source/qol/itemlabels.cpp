@@ -31,10 +31,10 @@ bool isLabelHighlighted = false;
 std::array<std::optional<int>, ITEMTYPES> labelCenterOffsets;
 bool invertHighlightToggle = false;
 
-const int borderX = 4;   // minimal horizontal space between labels
-const int borderY = 2;   // minimal vertical space between labels
-const int marginX = 2; // horizontal margins between text and edges of the label
-const int marginY = 1; // vertical margins between text and edges of the label
+const int borderX = 4;               // minimal horizontal space between labels
+const int borderY = 2;               // minimal vertical space between labels
+const int marginX = 2;               // horizontal margins between text and edges of the label
+const int marginY = 1;               // vertical margins between text and edges of the label
 const int height = 11 + marginY * 2; // going above 13 scatters labels of items that are next to each other
 
 } // namespace
@@ -121,7 +121,8 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 		do {
 			canShow = true;
 			for (unsigned int j = 0; j < i; ++j) {
-				itemLabel &a = labelQueue[i], &b = labelQueue[j];
+				itemLabel &a = labelQueue[i];
+				itemLabel &b = labelQueue[j];
 				if (abs(b.pos.y - a.pos.y) < height + borderY) {
 					int widthA = a.width + borderX + marginX * 2;
 					int widthB = b.width + borderX + marginX * 2;

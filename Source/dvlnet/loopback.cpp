@@ -15,7 +15,7 @@ int loopback::join(std::string /*addrstr*/, std::string /*passwd*/)
 	ABORT();
 }
 
-bool loopback::SNetReceiveMessage(int *sender, char **data, int *size)
+bool loopback::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
 {
 	if (message_queue.empty())
 		return false;
@@ -23,7 +23,7 @@ bool loopback::SNetReceiveMessage(int *sender, char **data, int *size)
 	message_queue.pop();
 	*sender = plr_single;
 	*size = message_last.size();
-	*data = reinterpret_cast<char *>(message_last.data());
+	*data = message_last.data();
 	return true;
 }
 

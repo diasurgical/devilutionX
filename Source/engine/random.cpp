@@ -47,4 +47,4 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
-}
+} // namespace devilution

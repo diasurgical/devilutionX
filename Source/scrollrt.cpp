@@ -506,22 +506,23 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	if (dObject[x][y] == 0 || light_table_index >= lightmax)
 		return;
 
-	int sx, sy;
-	int8_t bv;
+	Point objectPosition {};
+
+	int8_t bv = -1;
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
 		if (object[bv]._oPreFlag != pre)
 			return;
-		sx = ox - CalculateWidth2(object[bv]._oAnimWidth);
-		sy = oy;
+		objectPosition.x = ox - CalculateWidth2(object[bv]._oAnimWidth);
+		objectPosition.y = oy;
 	} else {
 		bv = -(dObject[x][y] + 1);
 		if (object[bv]._oPreFlag != pre)
 			return;
 		int xx = object[bv].position.x - x;
 		int yy = object[bv].position.y - y;
-		sx = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(object[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
-		sy = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
+		objectPosition.x = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(object[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
+		objectPosition.y = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
@@ -539,7 +540,6 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 		return;
 	}
 
-	const Point objectPosition { sx, sy };
 	CelSprite cel { object[bv]._oAnimData, object[bv]._oAnimWidth };
 	if (bv == pcursobj)
 		CelBlitOutlineTo(out, 194, objectPosition, cel, object[bv]._oAnimFrame);
@@ -661,14 +661,11 @@ static void DrawItem(const CelOutputBuffer &out, int x, int y, int sx, int sy, b
  */
 static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, int sx, int sy)
 {
-	int mi, px, py;
-	MonsterStruct *pMonster;
-
-	mi = dMonster[x][y + oy];
+	int mi = dMonster[x][y + oy];
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
+		int px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
 		const Point position { px, sy };
 		if (mi == pcursmonst) {
 			CelBlitOutlineTo(out, 166, position, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
@@ -686,7 +683,7 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		return;
 	}
 
-	pMonster = &monster[mi];
+	MonsterStruct *pMonster = &monster[mi];
 	if ((pMonster->_mFlags & MFLAG_HIDDEN) != 0) {
 		return;
 	}
@@ -703,8 +700,8 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 		offset = GetOffsetForWalking(pMonster->AnimInfo, pMonster->_mdir);
 	}
 
-	px = sx + offset.x - CalculateWidth2(cel.Width());
-	py = sy + offset.y;
+	int px = sx + offset.x - CalculateWidth2(cel.Width());
+	int py = sy + offset.y;
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.GetFrameToUseForRendering());
 	}
@@ -1046,7 +1043,8 @@ int RowsCoveredByPanel()
  */
 void CalcTileOffset(int *offsetX, int *offsetY)
 {
-	int x, y;
+	int x;
+	int y;
 
 	if (zoomflag) {
 		x = gnScreenWidth % TILE_WIDTH;
@@ -1106,11 +1104,12 @@ int tileRows;
 
 void CalcViewportGeometry()
 {
-	int xo, yo;
 	tileShiftX = 0;
 	tileShiftY = 0;
 
 	// Adjust by player offset and tile grid alignment
+	int xo = 0;
+	int yo = 0;
 	CalcTileOffset(&xo, &yo);
 	tileOffsetX = 0 - xo;
 	tileOffsetY = 0 - yo - 1 + TILE_HEIGHT / 2;
@@ -1156,8 +1155,6 @@ void CalcViewportGeometry()
  */
 static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 {
-	int sx, sy, columns, rows;
-
 	// Limit rendering to the view area
 	const CelOutputBuffer &out = zoomflag
 	    ? full_out.subregionY(0, gnViewportHeight)
@@ -1168,11 +1165,11 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 	Point offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	sx = offset.x + tileOffsetX;
-	sy = offset.y + tileOffsetY;
+	int sx = offset.x + tileOffsetX;
+	int sy = offset.y + tileOffsetY;
 
-	columns = tileColums;
-	rows = tileRows;
+	int columns = tileColums;
+	int rows = tileRows;
 
 	x += tileShiftX;
 	y += tileShiftY;
@@ -1433,21 +1430,22 @@ void EnableFrameCount()
  */
 static void DrawFPS(const CelOutputBuffer &out)
 {
-	DWORD tc, frames;
 	char String[12];
 
-	if (frameflag && gbActive) {
-		frameend++;
-		tc = SDL_GetTicks();
-		frames = tc - framestart;
-		if (tc - framestart >= 1000) {
-			framestart = tc;
-			framerate = 1000 * frameend / frames;
-			frameend = 0;
-		}
-		snprintf(String, 12, "%i FPS", framerate);
-		DrawString(out, String, Point { 8, 65 }, UIS_RED);
+	if (!frameflag || !gbActive) {
+		return;
 	}
+
+	frameend++;
+	uint32_t tc = SDL_GetTicks();
+	uint32_t frames = tc - framestart;
+	if (tc - framestart >= 1000) {
+		framestart = tc;
+		framerate = 1000 * frameend / frames;
+		frameend = 0;
+	}
+	snprintf(String, 12, "%i FPS", framerate);
+	DrawString(out, String, Point { 8, 65 }, UIS_RED);
 }
 
 /**

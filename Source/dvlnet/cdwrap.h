@@ -23,7 +23,7 @@ private:
 public:
 	virtual int create(std::string addrstr, std::string passwd);
 	virtual int join(std::string addrstr, std::string passwd);
-	virtual bool SNetReceiveMessage(int *sender, char **data, int *size);
+	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
 	virtual bool SNetSendMessage(int dest, void *data,
 	    unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, unsigned int *size,
@@ -84,7 +84,7 @@ void cdwrap<T>::setup_gameinfo(buffer_t info)
 }
 
 template <class T>
-bool cdwrap<T>::SNetReceiveMessage(int *sender, char **data, int *size)
+bool cdwrap<T>::SNetReceiveMessage(int *sender, void **data, uint32_t *size)
 {
 	return dvlnet_wrap->SNetReceiveMessage(sender, data, size);
 }

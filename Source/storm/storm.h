@@ -198,7 +198,7 @@ bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
  */
 bool SNetLeaveGame(int type);
 
-bool SNetReceiveMessage(int *senderplayerid, char **data, int *databytes);
+bool SNetReceiveMessage(int *senderplayerid, void **data, uint32_t *databytes);
 bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes, DWORD *arrayplayerstatus);
 
 typedef void (*SEVTHANDLER)(struct _SNETEVENT *);

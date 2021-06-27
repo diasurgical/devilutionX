@@ -1023,7 +1023,9 @@ const Direction FaceDir[3][3] = {
  */
 bool IsPathBlocked(Point position, Direction dir)
 {
-	Direction d1, d2;
+	Direction d1;
+	Direction d2;
+
 	switch (dir) {
 	case DIR_N:
 		d1 = DIR_NW;
@@ -1262,7 +1264,8 @@ void HandleRightStickMotion()
 	}
 
 	if (IsAutomapActive()) { // move map
-		int dx = 0, dy = 0;
+		int dx = 0;
+		int dy = 0;
 		acc.Pool(&dx, &dy, 32);
 		AutomapOffset.x += dy + dx;
 		AutomapOffset.y += dy - dx;

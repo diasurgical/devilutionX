@@ -201,13 +201,10 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 
 static void PlacePlayer(int pnum)
 {
-	int max, min, x, y;
-	DWORD i;
-	bool done;
 	Point newPosition = {};
 
 	if (plr[pnum].plrlevel == currlevel) {
-		for (i = 0; i < 8; i++) {
+		for (int i = 0; i < 8; i++) {
 			newPosition = plr[pnum].position.tile + Point { plrxoff2[i], plryoff2[i] };
 			if (PosOkPlayer(pnum, newPosition)) {
 				break;
@@ -215,13 +212,14 @@ static void PlacePlayer(int pnum)
 		}
 
 		if (!PosOkPlayer(pnum, newPosition)) {
-			done = false;
+			bool done = false;
 
-			for (max = 1, min = -1; min > -50 && !done; max++, min--) {
-				for (y = min; y <= max && !done; y++) {
+			int min = -1;
+			for (int max = 1; min > -50 && !done; max++, min--) {
+				for (int y = min; y <= max && !done; y++) {
 					newPosition.y = plr[pnum].position.tile.y + y;
 
-					for (x = min; x <= max && !done; x++) {
+					for (int x = min; x <= max && !done; x++) {
 						newPosition.x = plr[pnum].position.tile.x + x;
 
 						if (PosOkPlayer(pnum, newPosition)) {

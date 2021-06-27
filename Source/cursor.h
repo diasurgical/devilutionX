@@ -48,8 +48,8 @@ extern int pcurs;
 
 void InitCursor();
 void FreeCursor();
-void SetICursor(int i);
-void NewCursor(int i);
+void SetICursor(int cursId);
+void NewCursor(int cursId);
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
@@ -69,6 +69,6 @@ const CelSprite &GetInvItemSprite(int i);
 int GetInvItemFrame(int i);
 
 /** Returns the width and height for an inventory index. */
-Size GetInvItemSize(int i);
+Size GetInvItemSize(int cursId);
 
 } // namespace devilution
