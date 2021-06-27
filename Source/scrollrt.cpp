@@ -1104,8 +1104,7 @@ void Zoom(const Surface &out)
 	}
 }
 
-int tileOffsetX;
-int tileOffsetY;
+Displacement tileOffset;
 Displacement tileShift;
 int tileColums;
 int tileRows;
@@ -1127,8 +1126,8 @@ void DrawGame(const Surface &fullOut, Point position)
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	int sx = offset.deltaX + tileOffsetX;
-	int sy = offset.deltaY + tileOffsetY;
+	int sx = offset.deltaX + tileOffset.deltaX;
+	int sy = offset.deltaY + tileOffset.deltaY;
 
 	int columns = tileColums;
 	int rows = tileRows;
@@ -1554,8 +1553,7 @@ void CalcViewportGeometry()
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
-	tileOffsetX = 0 - xo;
-	tileOffsetY = 0 - yo - 1 + TILE_HEIGHT / 2;
+	tileOffset = { -xo, -yo - 1 + TILE_HEIGHT / 2 };
 
 	TilesInView(&tileColums, &tileRows);
 	int lrow = tileRows - RowsCoveredByPanel();
@@ -1571,18 +1569,18 @@ void CalcViewportGeometry()
 		if ((lrow & 1) == 0) {
 			// Offset tile to vertically align the player when both rows and colums are even
 			tileRows++;
-			tileOffsetY -= TILE_HEIGHT / 2;
+			tileOffset.deltaY -= TILE_HEIGHT / 2;
 		}
 	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
 		// Offset tile to vertically align the player when both rows and colums are odd
 		ShiftGrid(&tileShift.deltaX, &tileShift.deltaY, 0, -1);
 		tileRows++;
-		tileOffsetY -= TILE_HEIGHT / 2;
+		tileOffset.deltaY -= TILE_HEIGHT / 2;
 	}
 
 	// Slightly lower the zoomed view
 	if (!zoomflag) {
-		tileOffsetY += TILE_HEIGHT / 4;
+		tileOffset.deltaY += TILE_HEIGHT / 4;
 		if (yo < TILE_HEIGHT / 4)
 			tileRows++;
 	}
