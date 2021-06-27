@@ -32,15 +32,17 @@ const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 
 
 int AddClassHealingBonus(int hp, HeroClass heroClass)
 {
-	if (heroClass == HeroClass::Warrior || heroClass == HeroClass::Monk || heroClass == HeroClass::Barbarian) {
+	switch (heroClass) {
+	case HeroClass::Warrior:
+	case HeroClass::Monk:
+	case HeroClass::Barbarian:
 		return hp * 2;
-	}
-
-	if (heroClass == HeroClass::Rogue || heroClass == HeroClass::Bard) {
+	case HeroClass::Rogue:
+	case HeroClass::Bard:
 		return hp + hp / 2;
+	default:
+		return hp;
 	}
-
-	return hp;
 }
 
 int ScaleSpellEffect(int base, int spellLevel)
