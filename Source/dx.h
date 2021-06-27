@@ -15,8 +15,8 @@ extern bool RenderDirectlyToOutputSurface;
 CelOutputBuffer GlobalBackBuffer();
 
 void dx_init();
-void lock_buf();
-void unlock_buf();
+void lock_buf(int idx);
+void unlock_buf(int idx);
 void dx_cleanup();
 void dx_reinit();
 void InitPalette();
