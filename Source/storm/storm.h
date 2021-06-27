@@ -304,7 +304,7 @@ void SStrCopy(char *dest, const char *src, int max_length);
 
 bool SFileSetBasePath(const char *);
 bool SNetGetOwnerTurnsWaiting(DWORD *);
-bool SNetUnregisterEventHandler(event_type, SEVTHANDLER);
+bool SNetUnregisterEventHandler(event_type);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
 bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);

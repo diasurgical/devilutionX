@@ -90,12 +90,12 @@ void gamemenu_update_multi()
 	gmenu_enable(&sgMultiMenu[2], deathflag);
 }
 
-void gamemenu_previous(bool bActivate)
+void gamemenu_previous(bool /*bActivate*/)
 {
 	gamemenu_on();
 }
 
-void gamemenu_new_game(bool bActivate)
+void gamemenu_new_game(bool /*bActivate*/)
 {
 	for (auto &player : plr) {
 		player._pmode = PM_QUIT;
@@ -110,7 +110,7 @@ void gamemenu_new_game(bool bActivate)
 	gamemenu_off();
 }
 
-void gamemenu_restart_town(bool bActivate)
+void gamemenu_restart_town(bool /*bActivate*/)
 {
 	NetSendCmd(true, CMD_RETOWN);
 }
@@ -179,7 +179,7 @@ int gamemenu_slider_gamma()
 	return gmenu_slider_get(&sgOptionsMenu[2], 30, 100);
 }
 
-void gamemenu_options(bool bActivate)
+void gamemenu_options(bool /*bActivate*/)
 {
 	gamemenu_get_music();
 	gamemenu_get_sound();
@@ -307,7 +307,7 @@ void gamemenu_quit_game(bool bActivate)
 	gbRunGameResult = false;
 }
 
-void gamemenu_load_game(bool bActivate)
+void gamemenu_load_game(bool /*bActivate*/)
 {
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
 	gamemenu_off();
@@ -329,7 +329,7 @@ void gamemenu_load_game(bool bActivate)
 	SetWindowProc(saveProc);
 }
 
-void gamemenu_save_game(bool bActivate)
+void gamemenu_save_game(bool /*bActivate*/)
 {
 	if (pcurs != CURSOR_HAND) {
 		return;

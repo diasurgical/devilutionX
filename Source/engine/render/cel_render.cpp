@@ -303,8 +303,7 @@ std::uint8_t *RenderCelOutlinePixels(
 template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East,
     bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false>
 const byte *RenderCelOutlineRowClipped( // NOLINT(readability-function-cognitive-complexity,misc-no-recursion)
-    const CelOutputBuffer &out, Point position, const byte *src, int srcWidth,
-    ClipX clipX, std::uint8_t color)
+    const CelOutputBuffer &out, Point position, const byte *src, ClipX clipX, std::uint8_t color)
 {
 	std::int_fast16_t remainingWidth = clipX.width;
 	std::uint8_t v;
@@ -373,7 +372,7 @@ void RenderCelOutlineClippedY(const CelOutputBuffer &out, Point position, const 
 	if (position.y == dstHeight) {
 		// After-bottom line - can only draw north.
 		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 		--position.y;
 	}
 	if (src == srcEnd)
@@ -382,13 +381,13 @@ void RenderCelOutlineClippedY(const CelOutputBuffer &out, Point position, const 
 	if (position.y + 1 == dstHeight) {
 		// Bottom line - cannot draw south.
 		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 		--position.y;
 	}
 
 	while (position.y > 0 && src != srcEnd) {
 		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 		--position.y;
 	}
 	if (src == srcEnd)
@@ -396,7 +395,7 @@ void RenderCelOutlineClippedY(const CelOutputBuffer &out, Point position, const 
 
 	if (position.y == 0) {
 		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 		--position.y;
 	}
 	if (src == srcEnd)
@@ -405,7 +404,7 @@ void RenderCelOutlineClippedY(const CelOutputBuffer &out, Point position, const 
 	if (position.y == -1) {
 		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
 		RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 	}
 }
 
@@ -438,7 +437,7 @@ void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const
 		// After-bottom line - can only draw north.
 		src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/false, /*South=*/false, /*East=*/false,
 		    /*ClipWidth=*/true>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 		--position.y;
 	}
 	if (src == srcEnd)
@@ -449,15 +448,15 @@ void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const
 		if (position.x <= 0) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
 			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 		} else if (position.x + clipX.width >= out.w()) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
 			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 		} else {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/false, /*East=*/true,
 			    /*ClipWidth=*/true>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 		}
 		--position.y;
 	}
@@ -466,21 +465,21 @@ void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const
 		while (position.y > 0 && src != srcEnd) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
 			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 			--position.y;
 		}
 	} else if (position.x + clipX.width >= out.w()) {
 		while (position.y > 0 && src != srcEnd) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
 			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 			--position.y;
 		}
 	} else {
 		while (position.y > 0 && src != srcEnd) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/true, /*West=*/true, /*South=*/true, /*East=*/true,
 			    /*ClipWidth=*/true>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 			--position.y;
 		}
 	}
@@ -491,15 +490,15 @@ void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const
 		if (position.x <= 0) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
 			    /*ClipWidth=*/true, /*CheckFirstColumn=*/true, /*CheckLastColumn=*/false>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 		} else if (position.x + clipX.width >= out.w()) {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
 			    /*ClipWidth=*/true, /*CheckFirstColumn=*/false, /*CheckLastColumn=*/true>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 		} else {
 			src = RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/true, /*South=*/true, /*East=*/true,
 			    /*ClipWidth=*/true>(
-			    out, position, src, srcWidth, clipX, color);
+			    out, position, src, clipX, color);
 		}
 		--position.y;
 	}
@@ -510,7 +509,7 @@ void RenderCelOutlineClippedXY(const CelOutputBuffer &out, Point position, const
 		// Special case: the top of the sprite is 1px below the last line, render just the outline above.
 		RenderCelOutlineRowClipped<SkipColorIndexZero, /*North=*/false, /*West=*/false, /*South=*/true, /*East=*/false,
 		    /*ClipWidth=*/true>(
-		    out, position, src, srcWidth, clipX, color);
+		    out, position, src, clipX, color);
 	}
 }
 

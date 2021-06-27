@@ -88,7 +88,7 @@ bool SoundSample::IsPlaying()
 /**
  * @brief Start playing the sound
  */
-void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan, int channel)
+void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan)
 {
 	if (!stream_)
 		return;

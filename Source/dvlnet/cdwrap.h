@@ -32,8 +32,7 @@ public:
 	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps);
 	virtual bool SNetRegisterEventHandler(event_type evtype,
 	    SEVTHANDLER func);
-	virtual bool SNetUnregisterEventHandler(event_type evtype,
-	    SEVTHANDLER func);
+	virtual bool SNetUnregisterEventHandler(event_type evtype);
 	virtual bool SNetLeaveGame(int type);
 	virtual bool SNetDropPlayer(int playerid, DWORD flags);
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
@@ -115,11 +114,11 @@ void cdwrap<T>::SNetGetProviderCaps(struct _SNETCAPS *caps)
 }
 
 template <class T>
-bool cdwrap<T>::SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)
+bool cdwrap<T>::SNetUnregisterEventHandler(event_type evtype)
 {
 	registered_handlers.erase(evtype);
 	if (dvlnet_wrap)
-		return dvlnet_wrap->SNetUnregisterEventHandler(evtype, func);
+		return dvlnet_wrap->SNetUnregisterEventHandler(evtype);
 	else
 		return true;
 }

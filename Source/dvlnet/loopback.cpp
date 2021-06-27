@@ -5,12 +5,12 @@
 namespace devilution {
 namespace net {
 
-int loopback::create(std::string addrstr, std::string passwd)
+int loopback::create(std::string /*addrstr*/, std::string /*passwd*/)
 {
 	return plr_single;
 }
 
-int loopback::join(std::string addrstr, std::string passwd)
+int loopback::join(std::string /*addrstr*/, std::string /*passwd*/)
 {
 	ABORT();
 }
@@ -37,7 +37,7 @@ bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
 	return true;
 }
 
-bool loopback::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
+bool loopback::SNetReceiveTurns(char **data, unsigned int *size, DWORD * /*status*/)
 {
 	for (auto i = 0; i < MAX_PLRS; ++i) {
 		size[i] = 0;
@@ -46,7 +46,7 @@ bool loopback::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
 	return true;
 }
 
-bool loopback::SNetSendTurn(char *data, unsigned int size)
+bool loopback::SNetSendTurn(char * /*data*/, unsigned int /*size*/)
 {
 	return true;
 }
@@ -65,28 +65,27 @@ void loopback::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	                                 // of turns in queue?
 }
 
-bool loopback::SNetRegisterEventHandler(event_type evtype,
-    SEVTHANDLER func)
+bool loopback::SNetRegisterEventHandler(event_type /*evtype*/,
+    SEVTHANDLER /*func*/)
 {
 	// not called in real singleplayer mode
 	// not needed in pseudo multiplayer mode (?)
 	return true;
 }
 
-bool loopback::SNetUnregisterEventHandler(event_type evtype,
-    SEVTHANDLER func)
+bool loopback::SNetUnregisterEventHandler(event_type /*evtype*/)
 {
 	// not called in real singleplayer mode
 	// not needed in pseudo multiplayer mode (?)
 	return true;
 }
 
-bool loopback::SNetLeaveGame(int type)
+bool loopback::SNetLeaveGame(int /*type*/)
 {
 	return true;
 }
 
-bool loopback::SNetDropPlayer(int playerid, DWORD flags)
+bool loopback::SNetDropPlayer(int /*playerid*/, DWORD /*flags*/)
 {
 	return true;
 }

@@ -38,7 +38,7 @@ struct DirectionSettings {
 	Point map;
 	_scroll_direction scrollDir;
 	PLR_MODE walkMode;
-	void (*walkModeHandler)(int, Point, const DirectionSettings &);
+	void (*walkModeHandler)(int, const DirectionSettings &);
 };
 
 void PM_ChangeLightOff(PlayerStruct &player)
@@ -63,14 +63,14 @@ void PM_ChangeLightOff(PlayerStruct &player)
 	ChangeLightOff(player._plid, { x, y });
 }
 
-void WalkUpwards(int pnum, Point vel, const DirectionSettings &walkParams)
+void WalkUpwards(int pnum, const DirectionSettings &walkParams)
 {
 	auto &player = plr[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
 	player.position.temp = walkParams.tileAdd;
 }
 
-void WalkDownwards(int pnum, Point vel, const DirectionSettings &walkParams)
+void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
 {
 	auto &player = plr[pnum];
 	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
@@ -81,7 +81,7 @@ void WalkDownwards(int pnum, Point vel, const DirectionSettings &walkParams)
 	PM_ChangeLightOff(player);
 }
 
-void WalkSides(int pnum, Point vel, const DirectionSettings &walkParams)
+void WalkSides(int pnum, const DirectionSettings &walkParams)
 {
 	auto &player = plr[pnum];
 
@@ -169,7 +169,7 @@ void HandleWalkMode(int pnum, Point vel, Direction dir)
 	//The player's tile position after finishing this movement action
 	player.position.future = dirModeParams.tileAdd + player.position.tile;
 
-	dirModeParams.walkModeHandler(pnum, vel, dirModeParams);
+	dirModeParams.walkModeHandler(pnum, dirModeParams);
 
 	player.position.velocity = vel;
 	player.tempDirection = dirModeParams.dir;

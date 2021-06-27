@@ -19,7 +19,7 @@ event_emul *sghWorkToDoEvent;
 /* rdata */
 static SDL_Thread *sghThread = nullptr;
 
-static unsigned int dthread_handler(void *data)
+static unsigned int dthread_handler(void * /*data*/)
 {
 	const char *error_buf;
 	TMegaPkt *pkt;

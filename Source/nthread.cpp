@@ -111,7 +111,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 	return true;
 }
 
-static unsigned int nthread_handler(void *data)
+static unsigned int nthread_handler(void * /*data*/)
 {
 	int delta;
 	bool received;

@@ -366,7 +366,7 @@ void selgame_Speed_Select(int value)
 	selgame_Password_Init(0);
 }
 
-void selgame_Password_Init(int value)
+void selgame_Password_Init(int /*value*/)
 {
 	memset(&selgame_Password, 0, sizeof(selgame_Password));
 
@@ -424,7 +424,7 @@ static bool IsGameCompatible(GameData *data)
 	return false;
 }
 
-void selgame_Password_Select(int value)
+void selgame_Password_Select(int /*value*/)
 {
 	if (selgame_selectedGame != 0) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);

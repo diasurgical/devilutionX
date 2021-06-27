@@ -559,7 +559,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineBlended(std::uint8_t *dst, co
 }
 
 template <LightType Light>
-DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineStippled(std::uint8_t *dst, const std::uint8_t *src, std::uint_fast8_t n, const std::uint8_t *tbl, std::uint32_t mask)
+DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLineStippled(std::uint8_t *dst, const std::uint8_t *src, const std::uint8_t *tbl, std::uint32_t mask)
 {
 	if (Light == LightType::FullyDark) {
 		ForEachSetBit(mask, [=](int i) { dst[i] = 0; });
@@ -592,7 +592,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderLine(std::uint8_t *dst, const std
 		} else if (Transparency == TransparencyType::Blended) {
 			RenderLineBlended<Light>(dst, src, n, tbl, mask);
 		} else {
-			RenderLineStippled<Light>(dst, src, n, tbl, mask);
+			RenderLineStippled<Light>(dst, src, tbl, mask);
 		}
 	}
 }

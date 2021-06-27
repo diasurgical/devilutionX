@@ -35,7 +35,7 @@ void selok_Free()
 	vecSelOkDialog.clear();
 }
 
-void selok_Select(int value)
+void selok_Select(int /*value*/)
 {
 	selok_endMenu = true;
 }

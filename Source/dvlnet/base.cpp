@@ -201,7 +201,7 @@ void base::SNetGetProviderCaps(struct _SNETCAPS *caps)
 	                                 // of turns in queue?
 }
 
-bool base::SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)
+bool base::SNetUnregisterEventHandler(event_type evtype)
 {
 	registered_handlers.erase(evtype);
 	return true;

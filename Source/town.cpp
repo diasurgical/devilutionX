@@ -66,7 +66,7 @@ void T_FillSector(const char *path, int xi, int yy)
  * @param yy upper left destination
  * @param t tile id
  */
-void T_FillTile(MegaTile *megas, int xx, int yy, int t)
+void T_FillTile(int xx, int yy, int t)
 {
 	MegaTile mega = pMegaTiles[t - 1];
 
@@ -171,15 +171,15 @@ void T_Pass3()
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 1) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(pMegaTiles.get(), 48, 20, 320);
+			T_FillTile(48, 20, 320);
 		}
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 2) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(pMegaTiles.get(), 16, 68, 332);
-			T_FillTile(pMegaTiles.get(), 16, 70, 331);
+			T_FillTile(16, 68, 332);
+			T_FillTile(16, 70, 331);
 		}
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (x = 36; x < 46; x++) {
-				T_FillTile(pMegaTiles.get(), x, 78, GenerateRnd(4) + 1);
+				T_FillTile(x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
@@ -197,9 +197,9 @@ void T_Pass3()
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		T_FillTile(pMegaTiles.get(), 60, 70, 342);
+		T_FillTile(60, 70, 342);
 	} else {
-		T_FillTile(pMegaTiles.get(), 60, 70, 71);
+		T_FillTile(60, 70, 71);
 	}
 }
 

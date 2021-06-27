@@ -75,12 +75,12 @@ void SNetGetProviderCaps(struct _SNETCAPS *caps)
 	dvlnet_inst->SNetGetProviderCaps(caps);
 }
 
-bool SNetUnregisterEventHandler(event_type evtype, SEVTHANDLER func)
+bool SNetUnregisterEventHandler(event_type evtype)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
-	return dvlnet_inst->SNetUnregisterEventHandler(evtype, func);
+	return dvlnet_inst->SNetUnregisterEventHandler(evtype);
 }
 
 bool SNetRegisterEventHandler(event_type evtype, SEVTHANDLER func)

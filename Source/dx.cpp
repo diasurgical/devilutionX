@@ -132,7 +132,7 @@ static void lock_buf_priv()
 	sgdwLockCount++;
 }
 
-void lock_buf(BYTE idx)
+void lock_buf()
 {
 #ifdef _DEBUG
 	++locktbl[idx];
@@ -149,7 +149,7 @@ static void unlock_buf_priv()
 	sgMemCrit.Leave();
 }
 
-void unlock_buf(BYTE idx)
+void unlock_buf()
 {
 #ifdef _DEBUG
 	if (locktbl[idx] == 0)

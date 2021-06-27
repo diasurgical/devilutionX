@@ -1201,7 +1201,7 @@ static void GetMousePos(int32_t lParam)
 	MousePosition = { (short)(lParam & 0xffff), (short)((lParam >> 16) & 0xffff) };
 }
 
-void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam)
+void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 {
 	switch (uMsg) {
 	case DVL_WM_KEYDOWN:

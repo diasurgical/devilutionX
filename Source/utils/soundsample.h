@@ -27,7 +27,7 @@ public:
 
 	void Release();
 	bool IsPlaying();
-	void Play(int logSoundVolume, int logUserVolume, int logPan, int channel = -1);
+	void Play(int logSoundVolume, int logUserVolume, int logPan);
 	void Stop();
 	int SetChunkStream(std::string filePath);
 

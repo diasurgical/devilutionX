@@ -30,8 +30,7 @@ public:
 	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps);
 	virtual bool SNetRegisterEventHandler(event_type evtype,
 	    SEVTHANDLER func);
-	virtual bool SNetUnregisterEventHandler(event_type evtype,
-	    SEVTHANDLER func);
+	virtual bool SNetUnregisterEventHandler(event_type evtype);
 	virtual bool SNetLeaveGame(int type);
 	virtual bool SNetDropPlayer(int playerid, DWORD flags);
 	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);

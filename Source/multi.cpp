@@ -666,17 +666,13 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 
 static void multi_event_handler(bool add)
 {
-	DWORD i;
-	bool (*fn)(event_type, SEVTHANDLER);
-
-	if (add)
-		fn = SNetRegisterEventHandler;
-	else
-		fn = SNetUnregisterEventHandler;
-
-	for (i = 0; i < 3; i++) {
-		if (!fn(event_types[i], multi_handle_events) && add) {
-			app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
+	for (int i = 0; i < 3; i++) {
+		if (add) {
+			if (!SNetRegisterEventHandler(event_types[i], multi_handle_events)) {
+				app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
+			}
+		} else {
+			SNetUnregisterEventHandler(event_types[i]);
 		}
 	}
 }

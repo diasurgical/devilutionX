@@ -322,7 +322,7 @@ void SelheroClassSelectorEsc()
 	SelheroListEsc();
 }
 
-void SelheroNameSelect(int value)
+void SelheroNameSelect(int /*value*/)
 {
 
 	if (!UiValidPlayerName(selhero_heroInfo.name)) {

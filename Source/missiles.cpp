@@ -1213,7 +1213,7 @@ void InitMissiles()
 	myPlayer.wReflections = 0;
 }
 
-void AddHiveExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddHiveExplosion(int mi, Point /*src*/, Point /*dst*/, int midir, int8_t mienemy, int id, int dam)
 {
 	for (int x : { 80, 81 }) {
 		for (int y : { 62, 63 }) {
@@ -1247,7 +1247,7 @@ static bool missiles_found_target(int mi, Point *position, int rad)
 	return false;
 }
 
-void AddFireRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFireRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
@@ -1264,7 +1264,7 @@ void AddFireRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	}
 }
 
-void AddLightningRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLightningRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
@@ -1281,7 +1281,7 @@ void AddLightningRune(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 	}
 }
 
-void AddGreatLightningRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddGreatLightningRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
@@ -1298,7 +1298,7 @@ void AddGreatLightningRune(int mi, Point src, Point dst, int midir, int8_t miene
 	}
 }
 
-void AddImmolationRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddImmolationRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
@@ -1315,7 +1315,7 @@ void AddImmolationRune(int mi, Point src, Point dst, int midir, int8_t mienemy, 
 	}
 }
 
-void AddStoneRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddStoneRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
@@ -1332,7 +1332,7 @@ void AddStoneRune(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	}
 }
 
-void AddReflection(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddReflection(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (id >= 0) {
 		int lvl = 2;
@@ -1348,7 +1348,7 @@ void AddReflection(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	missile[mi]._miDelFlag = false;
 }
 
-void AddBerserk(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBerserk(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._mirange = 0;
 	missile[mi]._miDelFlag = true;
@@ -1396,7 +1396,7 @@ void AddBerserk(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 	}
 }
 
-void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	GetMissileVel(mi, src, dst, 8);
 	missile[mi]._mirange = 9;
@@ -1404,7 +1404,7 @@ void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	PutMissile(mi);
 }
 
-void AddJester(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddJester(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int spell;
 
@@ -1445,7 +1445,7 @@ void AddJester(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	missile[mi]._mirange = 0;
 }
 
-void AddStealPotions(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddStealPotions(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._misource = id;
 	for (int i = 0; i < 3; i++) {
@@ -1520,7 +1520,7 @@ void AddStealPotions(int mi, Point src, Point dst, int midir, int8_t mienemy, in
 	missile[mi]._miDelFlag = true;
 }
 
-void AddManaTrap(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddManaTrap(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._misource = id;
 	for (int i = 0; i < 3; i++) {
@@ -1548,7 +1548,7 @@ void AddManaTrap(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	missile[mi]._miDelFlag = true;
 }
 
-void AddSpecArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddSpecArrow(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	int av = 0;
 
@@ -1576,7 +1576,7 @@ void AddSpecArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._miVar3 = av;
 }
 
-void AddWarp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddWarp(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	int minDistanceSq = std::numeric_limits<int>::max();
 	if (id >= 0) {
@@ -1608,7 +1608,7 @@ void AddWarp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 		UseMana(id, SPL_WARP);
 }
 
-void AddLightningWall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLightningWall(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int dam)
 {
 	GetMissileVel(mi, src, dst, 16);
 	missile[mi]._midam = dam;
@@ -1623,7 +1623,7 @@ void AddLightningWall(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 	}
 }
 
-void AddRuneExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRuneExplosion(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	if (mienemy == TARGET_MONSTERS || mienemy == TARGET_BOTH) {
 		int dmg = 2 * (plr[id]._pLevel + GenerateRndSum(10, 2)) + 4;
@@ -1641,7 +1641,7 @@ void AddRuneExplosion(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 	missile[mi]._mirange = missile[mi]._miAnimLen - 1;
 }
 
-void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -1668,7 +1668,7 @@ void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	missile[mi]._mlid = AddLight(src, 8);
 }
 
-void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int /*id*/, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -1688,7 +1688,7 @@ void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	missile[mi]._mlid = AddLight(src, 8);
 }
 
-void AddLightningArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLightningArrow(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -1706,7 +1706,7 @@ void AddLightningArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, 
 	missile[mi]._midam <<= 6;
 }
 
-void AddMana(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddMana(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	auto &player = plr[id];
 
@@ -1732,7 +1732,7 @@ void AddMana(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	drawmanaflag = true;
 }
 
-void AddMagi(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddMagi(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	auto &player = plr[id];
 
@@ -1743,7 +1743,7 @@ void AddMagi(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	drawmanaflag = true;
 }
 
-void AddRing(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRing(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	if (mienemy == TARGET_MONSTERS)
@@ -1760,7 +1760,7 @@ void AddRing(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	missile[mi]._mirange = 7;
 }
 
-void AddSearch(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddSearch(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	int i, mx, r1, r2;
 	MissileStruct *mis;
@@ -1798,7 +1798,7 @@ void AddSearch(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	}
 }
 
-void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int /*id*/, int /*dam*/)
 {
 	missile[mi]._mirnd = GenerateRnd(15) + 1;
 	if (mienemy != TARGET_MONSTERS) {
@@ -1817,7 +1817,7 @@ void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	missile[mi]._mirange = 256;
 }
 
-void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -1853,7 +1853,7 @@ void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	missile[mi]._mlid = AddLight(src, 5);
 }
 
-void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -1905,7 +1905,7 @@ void GetVileMissPos(int mi, Point dst)
 	missile[mi].position.tile = dst;
 }
 
-void AddRndTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRndTeleport(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	int pn, r1, r2, nTries;
 
@@ -1948,7 +1948,7 @@ void AddRndTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 	}
 }
 
-void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam)
+void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -1977,7 +1977,7 @@ void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int i
 	missile[mi]._mlid = AddLight(src, 8);
 }
 
-void AddMagmaball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddMagmaball(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	GetMissileVel(mi, src, dst, 16);
 	missile[mi].position.traveled.x += 3 * missile[mi].position.velocity.x;
@@ -1992,7 +1992,7 @@ void AddMagmaball(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._mlid = AddLight(src, 8);
 }
 
-void AddKrull(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddKrull(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	GetMissileVel(mi, src, dst, 16);
 	missile[mi]._mirange = 256;
@@ -2001,7 +2001,7 @@ void AddKrull(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	PutMissile(mi);
 }
 
-void AddTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddTeleport(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int i, pn, k, j, tx, ty;
 
@@ -2031,7 +2031,7 @@ void AddTeleport(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	}
 }
 
-void AddLightball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLightball(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int dam)
 {
 	GetMissileVel(mi, src, dst, 16);
 	missile[mi]._midam = dam;
@@ -2046,7 +2046,7 @@ void AddLightball(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	}
 }
 
-void AddFirewall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFirewall(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	missile[mi]._midam = GenerateRndSum(10, 2) + 2;
 	missile[mi]._midam += id >= 0 ? plr[id]._pLevel : currlevel; // BUGFIX: missing parenthesis around ternary (fixed)
@@ -2065,7 +2065,7 @@ void AddFirewall(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	missile[mi]._miVar2 = 0;
 }
 
-void AddFireball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFireball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2090,7 +2090,7 @@ void AddFireball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	missile[mi]._mlid = AddLight(src, 8);
 }
 
-void AddLightctrl(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLightctrl(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy, int id, int dam)
 {
 	if (dam == 0 && mienemy == TARGET_MONSTERS)
 		UseMana(id, SPL_LIGHTNING);
@@ -2101,7 +2101,7 @@ void AddLightctrl(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._mirange = 256;
 }
 
-void AddLightning(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddLightning(int mi, Point /*src*/, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	missile[mi].position.start = dst;
 	if (midir >= 0) {
@@ -2121,7 +2121,7 @@ void AddLightning(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._mlid = AddLight(missile[mi].position.tile, 4);
 }
 
-void AddMisexp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddMisexp(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	if (mienemy != 0 && id > 0) {
 		switch (monster[id].MType->mtype) {
@@ -2151,7 +2151,7 @@ void AddMisexp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	missile[mi]._miVar1 = 0;
 }
 
-void AddWeapexp(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddWeapexp(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	missile[mi].position.tile = src;
 	missile[mi].position.start = src;
@@ -2175,7 +2175,7 @@ bool CheckIfTrig(Point position)
 	return false;
 }
 
-void AddTown(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddTown(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int i, j, k, mx, tx, ty, dp;
 
@@ -2226,7 +2226,7 @@ void AddTown(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	}
 }
 
-void AddFlash(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFlash(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	if (id != -1) {
 		if (mienemy == TARGET_MONSTERS) {
@@ -2243,7 +2243,7 @@ void AddFlash(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	missile[mi]._mirange = 19;
 }
 
-void AddFlash2(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFlash2(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	if (mienemy == TARGET_MONSTERS) {
 		if (id != -1) {
@@ -2258,7 +2258,7 @@ void AddFlash2(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	missile[mi]._mirange = 19;
 }
 
-void AddManashield(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddManashield(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	missile[mi]._mirange = 48 * plr[id]._pLevel;
 	if (mienemy == TARGET_MONSTERS)
@@ -2268,7 +2268,7 @@ void AddManashield(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	plr[id].pManaShield = true;
 }
 
-void AddFiremove(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFiremove(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._midam = GenerateRnd(10) + plr[id]._pLevel + 1;
 	GetMissileVel(mi, src, dst, 16);
@@ -2280,7 +2280,7 @@ void AddFiremove(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	missile[mi].position.offset.y -= 32;
 }
 
-void AddGuardian(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddGuardian(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int pn, k, j, tx, ty;
 
@@ -2329,7 +2329,7 @@ void AddGuardian(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	}
 }
 
-void AddChain(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddChain(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miVar1 = dst.x;
 	missile[mi]._miVar2 = dst.y;
@@ -2337,7 +2337,7 @@ void AddChain(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	UseMana(id, SPL_CHAIN);
 }
 
-void AddBloodStar(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBloodStar(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	SetMissDir(mi, dst.x);
 	missile[mi]._midam = 0;
@@ -2345,7 +2345,7 @@ void AddBloodStar(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._mirange = 250;
 }
 
-void AddBone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBone(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	if (dst.x > 3)
 		dst.x = 2;
@@ -2355,7 +2355,7 @@ void AddBone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	missile[mi]._mirange = 250;
 }
 
-void AddMetlHit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddMetlHit(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	if (dst.x > 3)
 		dst.x = 2;
@@ -2385,7 +2385,7 @@ void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const Monste
 }
 } // namespace
 
-void AddRhino(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRhino(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int graphic = MA_SPECIAL;
 	if (monster[id].MType->mtype < MT_HORNED || monster[id].MType->mtype > MT_OBLORD) {
@@ -2406,7 +2406,7 @@ void AddRhino(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	PutMissile(mi);
 }
 
-void AddFireman(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFireman(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	GetMissileVel(mi, src, dst, 16);
 	auto &mon = monster[id];
@@ -2417,7 +2417,7 @@ void AddFireman(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 	PutMissile(mi);
 }
 
-void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2448,7 +2448,7 @@ void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	}
 }
 
-void AddAcid(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddAcid(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	GetMissileVel(mi, src, dst, 16);
 	SetMissDir(mi, GetDirection16(src, dst));
@@ -2462,7 +2462,7 @@ void AddAcid(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	PutMissile(mi);
 }
 
-void AddFireWallA(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFireWallA(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int dam)
 {
 	missile[mi]._midam = dam;
 	missile[mi].position.velocity = { 0, 0 };
@@ -2471,7 +2471,7 @@ void AddFireWallA(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._miVar2 = 0;
 }
 
-void AddAcidpud(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddAcidpud(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	int monst;
 
@@ -2483,7 +2483,7 @@ void AddAcidpud(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 	missile[mi]._miPreFlag = true;
 }
 
-void AddStone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddStone(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int i, j, k, l, tx, ty, mid;
 
@@ -2527,7 +2527,7 @@ void AddStone(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	}
 }
 
-void AddGolem(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddGolem(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int i;
 	int mx;
@@ -2551,7 +2551,7 @@ void AddGolem(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	UseMana(id, SPL_GOLEM);
 }
 
-void AddEtherealize(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddEtherealize(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	auto &player = plr[id];
 
@@ -2565,12 +2565,12 @@ void AddEtherealize(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 		UseMana(id, SPL_ETHEREALIZE);
 }
 
-void AddDummy(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddDummy(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 }
 
-void AddBlodbur(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBlodbur(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int dam)
 {
 	missile[mi]._midam = dam;
 	missile[mi].position.tile = src;
@@ -2584,7 +2584,7 @@ void AddBlodbur(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 	missile[mi]._mirange = missile[mi]._miAnimLen;
 }
 
-void AddBoom(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBoom(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int dam)
 {
 	missile[mi].position.tile = dst;
 	missile[mi].position.start = dst;
@@ -2594,7 +2594,7 @@ void AddBoom(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	missile[mi]._miVar1 = 0;
 }
 
-void AddHeal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddHeal(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	auto &player = plr[id];
 
@@ -2620,7 +2620,7 @@ void AddHeal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	drawhpflag = true;
 }
 
-void AddHealOther(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddHealOther(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_HEALOTHER);
@@ -2631,7 +2631,7 @@ void AddHealOther(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	}
 }
 
-void AddElement(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddElement(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2654,7 +2654,7 @@ void AddElement(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 
 extern void FocusOnInventory();
 
-void AddIdentify(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddIdentify(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_IDENTIFY);
@@ -2670,7 +2670,7 @@ void AddIdentify(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	}
 }
 
-void AddFirewallC(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFirewallC(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	int i, j, k, tx, ty, pn;
 
@@ -2709,7 +2709,7 @@ void AddFirewallC(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	}
 }
 
-void AddInfra(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddInfra(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	missile[mi]._mirange = ScaleSpellEffect(1584, missile[mi]._mispllvl);
 	missile[mi]._mirange += missile[mi]._mirange * plr[id]._pISplDur / 128;
@@ -2718,7 +2718,7 @@ void AddInfra(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 		UseMana(id, SPL_INFRA);
 }
 
-void AddWave(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddWave(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miVar1 = dst.x;
 	missile[mi]._miVar2 = dst.y;
@@ -2729,7 +2729,7 @@ void AddWave(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	UseMana(id, SPL_WAVE);
 }
 
-void AddNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddNova(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
 	missile[mi]._miVar1 = dst.x;
 	missile[mi]._miVar2 = dst.y;
@@ -2747,7 +2747,7 @@ void AddNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, in
 	missile[mi]._mirange = 1;
 }
 
-void AddBlodboil(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBlodboil(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	auto &player = plr[id];
 
@@ -2769,7 +2769,7 @@ void AddBlodboil(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	player.Say(HeroSpeech::Aaaaargh);
 }
 
-void AddRepair(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRepair(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_REPAIR);
@@ -2785,7 +2785,7 @@ void AddRepair(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	}
 }
 
-void AddRecharge(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRecharge(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_RECHARGE);
@@ -2801,7 +2801,7 @@ void AddRecharge(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 	}
 }
 
-void AddDisarm(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddDisarm(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_DISARM);
@@ -2816,7 +2816,7 @@ void AddDisarm(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	}
 }
 
-void AddApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddApoca(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miVar1 = 8;
 	missile[mi]._miVar2 = src.y - missile[mi]._miVar1;
@@ -2859,7 +2859,7 @@ void AddFlame(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	}
 }
 
-void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2874,7 +2874,7 @@ void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	missile[mi]._mirange = 256;
 }
 
-void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam)
+void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int /*dam*/)
 {
 	assert((DWORD)mi < MAXMISSILES);
 
@@ -2894,7 +2894,7 @@ void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, 
 	missile[mi]._mirange = 256;
 }
 
-void AddHbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int dam)
+void AddHbolt(int mi, Point src, Point dst, int midir, int8_t /*micaster*/, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2915,7 +2915,7 @@ void AddHbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, 
 	UseMana(id, SPL_HBOLT);
 }
 
-void AddResurrect(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddResurrect(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	UseMana(id, SPL_RESURRECT);
 	if (id == myplr) {
@@ -2926,7 +2926,7 @@ void AddResurrect(int mi, Point src, Point dst, int midir, int8_t mienemy, int i
 	missile[mi]._miDelFlag = true;
 }
 
-void AddResurrectBeam(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddResurrectBeam(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	missile[mi].position.tile = dst;
 	missile[mi].position.start = missile[mi].position.tile;
@@ -2934,7 +2934,7 @@ void AddResurrectBeam(int mi, Point src, Point dst, int midir, int8_t mienemy, i
 	missile[mi]._mirange = misfiledata[MFILE_RESSUR1].mAnimLen[0];
 }
 
-void AddTelekinesis(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddTelekinesis(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._miDelFlag = true;
 	UseMana(id, SPL_TELEKINESIS);
@@ -2942,7 +2942,7 @@ void AddTelekinesis(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 		NewCursor(CURSOR_TELEKINESIS);
 }
 
-void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int /*dam*/)
 {
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2963,7 +2963,7 @@ void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	}
 }
 
-void AddRportal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddRportal(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	missile[mi].position.tile = src;
 	missile[mi].position.start = src;
@@ -2973,7 +2973,7 @@ void AddRportal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 	PutMissile(mi);
 }
 
-void AddDiabApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam)
+void AddDiabApoca(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int dam)
 {
 	int players = gbIsMultiplayer ? MAX_PLRS : 1;
 	for (int pnum = 0; pnum < players; pnum++) {

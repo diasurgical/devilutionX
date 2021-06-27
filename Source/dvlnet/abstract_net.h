@@ -38,8 +38,7 @@ public:
 	virtual bool SNetRegisterEventHandler(event_type evtype,
 	    SEVTHANDLER func)
 	    = 0;
-	virtual bool SNetUnregisterEventHandler(event_type evtype,
-	    SEVTHANDLER func)
+	virtual bool SNetUnregisterEventHandler(event_type evtype)
 	    = 0;
 	virtual bool SNetLeaveGame(int type) = 0;
 	virtual bool SNetDropPlayer(int playerid, DWORD flags) = 0;

@@ -4690,12 +4690,12 @@ bool DirOK(int i, Direction mdir)
 	return mcount == monster[i].packsize;
 }
 
-bool PosOkMissile(int entity, Point position)
+bool PosOkMissile(int /*entity*/, Point position)
 {
 	return !nMissileTable[dPiece[position.x][position.y]] && (dFlags[position.x][position.y] & BFLAG_MONSTLR) == 0;
 }
 
-bool CheckNoSolid(int entity, Point position)
+bool CheckNoSolid(int /*entity*/, Point position)
 {
 	return !nSolidTable[dPiece[position.x][position.y]];
 }

@@ -1101,7 +1101,7 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 			lVolume = VOLUME_MAX;
 		if (pSFX->pSnd == nullptr)
 			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
-		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan, 0);
+		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan);
 		sgpStreamSFX = pSFX;
 	}
 }
@@ -1137,7 +1137,7 @@ void FreeMonsterSnd()
 {
 	for (int i = 0; i < nummtypes; i++) {
 		for (auto &variants : Monsters[i].Snds) {
-			for (auto & snd : variants) {
+			for (auto &snd : variants) {
 				snd = nullptr;
 			}
 		}

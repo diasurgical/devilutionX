@@ -28,8 +28,6 @@ bool loop_movie;
  */
 void play_movie(const char *pszMovie, bool user_can_close)
 {
-	HANDLE video_stream;
-
 	movie_playing = true;
 
 #ifndef NOSOUND
@@ -38,7 +36,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 	effects_play_sound("Sfx\\Misc\\blank.wav");
 #endif
 
-	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808, &video_stream)) {
+	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808)) {
 		tagMSG Msg;
 		while (movie_playing) {
 			while (movie_playing && FetchMessage(&Msg)) {
@@ -50,7 +48,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 						movie_playing = false;
 					break;
 				case DVL_WM_QUIT:
-					SVidPlayEnd(video_stream);
+					SVidPlayEnd();
 					diablo_quit(0);
 					break;
 				}
@@ -58,7 +56,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 			if (!SVidPlayContinue())
 				break;
 		}
-		SVidPlayEnd(video_stream);
+		SVidPlayEnd();
 	}
 
 #ifndef NOSOUND

@@ -168,7 +168,7 @@ static void InitCutscene(interface_mode uMsg)
 
 static void DrawCutscene()
 {
-	lock_buf(1);
+	lock_buf();
 	const CelOutputBuffer &out = GlobalBackBuffer();
 	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
 	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 1);
@@ -181,7 +181,7 @@ static void DrawCutscene()
 	    ProgressHeight);
 	SDL_FillRect(out.surface, &rect, BarColor[progress_id]);
 
-	unlock_buf(1);
+	unlock_buf();
 
 	BltFast(&rect, &rect);
 	RenderPresent();

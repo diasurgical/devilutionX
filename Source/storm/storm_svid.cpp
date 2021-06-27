@@ -134,7 +134,7 @@ bool SVidLoadNextFrame()
 
 } // namespace
 
-bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
+bool SVidPlayBegin(const char *filename, int flags)
 {
 	if ((flags & 0x10000) != 0 || (flags & 0x20000000) != 0) {
 		return false;
@@ -150,16 +150,16 @@ bool SVidPlayBegin(const char *filename, int flags, HANDLE *video)
 	//0x800000 // Edge detection
 	//0x200800 // Clear FB
 
-	SFileOpenFile(filename, video);
+	HANDLE video_stream;
+	SFileOpenFile(filename, &video_stream);
 #ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
-	FILE *file = FILE_FromStormHandle(*video);
+	FILE *file = FILE_FromStormHandle(video_stream);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
-	int bytestoread = SFileGetFileSize(*video);
+	int bytestoread = SFileGetFileSize(video_stream);
 	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
-	SFileReadFileThreadSafe(*video, SVidBuffer.get(), bytestoread);
-	SFileCloseFileThreadSafe(*video);
-	*video = nullptr;
+	SFileReadFileThreadSafe(video_stream, SVidBuffer.get(), bytestoread);
+	SFileCloseFileThreadSafe(video_stream);
 	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
 #endif
 	if (SVidSMK == nullptr) {
@@ -357,7 +357,7 @@ bool SVidPlayContinue()
 	return SVidLoadNextFrame();
 }
 
-void SVidPlayEnd(HANDLE video)
+void SVidPlayEnd()
 {
 #ifndef NOSOUND
 	if (HaveAudio()) {
