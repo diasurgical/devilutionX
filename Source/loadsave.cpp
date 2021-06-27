@@ -16,6 +16,7 @@
 #include "doom.h"
 #include "engine.h"
 #include "engine/point.hpp"
+#include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
 #include "lighting.h"

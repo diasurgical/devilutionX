@@ -7,6 +7,7 @@
 
 #include "engine/load_file.hpp"
 #include "engine/point.hpp"
+#include "engine/random.hpp"
 #include "gendung.h"
 #include "lighting.h"
 #include "player.h"

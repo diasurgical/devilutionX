@@ -5,6 +5,7 @@
  */
 #include "pack.h"
 
+#include "engine/random.hpp"
 #include "init.h"
 #include "loadsave.h"
 #include "stores.h"

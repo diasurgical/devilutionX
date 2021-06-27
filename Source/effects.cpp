@@ -5,6 +5,7 @@
  */
 #include "effects.h"
 
+#include "engine/random.hpp"
 #include "init.h"
 #include "player.h"
 #include "sound.h"

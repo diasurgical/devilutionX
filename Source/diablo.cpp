@@ -29,6 +29,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "error.h"
 #include "gamemenu.h"
 #include "gmenu.h"

@@ -5,7 +5,6 @@
  * - Sprite blitting
  * - Drawing
  * - Angle calculation
- * - RNG
  * - Memory allocation
  * - File loading
  * - Video playback
@@ -263,12 +262,6 @@ Direction GetDirection(Point start, Point destination);
  * @return Returns Width2
  */
 int CalculateWidth2(int width);
-
-void SetRndSeed(uint32_t s);
-int32_t AdvanceRndSeed();
-int32_t GetRndSeed();
-uint32_t GetLCGEngineState();
-int32_t GenerateRnd(int32_t v);
 
 void PlayInGameMovie(const char *pszMovie);
 

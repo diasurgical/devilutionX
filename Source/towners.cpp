@@ -3,6 +3,7 @@
 #include "cursor.h"
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
+#include "engine/random.hpp"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"
