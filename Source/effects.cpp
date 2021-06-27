@@ -1135,9 +1135,9 @@ void InitMonsterSND(int monst)
 void FreeMonsterSnd()
 {
 	for (int i = 0; i < nummtypes; i++) {
-		for (auto &Snd : Monsters[i].Snds) {
-			for (int k = 0; k < 2; ++k) {
-				Snd[k] = nullptr;
+		for (auto &variants : Monsters[i].Snds) {
+			for (auto & snd : variants) {
+				snd = nullptr;
 			}
 		}
 	}

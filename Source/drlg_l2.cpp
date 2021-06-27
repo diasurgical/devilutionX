@@ -3256,7 +3256,7 @@ static void LoadL2DungeonData(const uint16_t *dunData)
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 12;
 			}

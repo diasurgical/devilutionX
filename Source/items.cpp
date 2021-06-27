@@ -1322,7 +1322,7 @@ static bool GetItemSpace(Point position, int8_t inum)
 
 	savail = false;
 	for (int j = 0; j < 3; j++) {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) { // NOLINT(modernize-loop-convert)
 			if (itemhold[i][j])
 				savail = true;
 		}

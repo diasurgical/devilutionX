@@ -1090,7 +1090,7 @@ void DRLG_LPass3(int lv)
 	int yy = 16;
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
-		for (int i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			v1 = 0;
 			v2 = 0;
 			v3 = 0;
@@ -1310,7 +1310,7 @@ static void InitL5Dungeon()
 static void L5ClearFlags()
 {
 	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			L5dflags[i][j] &= ~DLRG_CHAMBER;
 		}
 	}

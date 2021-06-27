@@ -103,7 +103,7 @@ bool protocol_zt::send_oob(const endpoint &peer, const buffer_t &data) const
 	return true;
 }
 
-bool protocol_zt::send_oob_mc(const buffer_t &data)
+bool protocol_zt::send_oob_mc(const buffer_t &data) const
 {
 	endpoint mc;
 	std::copy(dvl_multicast_addr, dvl_multicast_addr + 16, mc.addr.begin());

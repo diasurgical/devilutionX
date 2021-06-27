@@ -1589,9 +1589,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				IncProgress();
 			}
 		} else {
-			for (int i = 0; i < MAXDUNX; i++) {
-				for (int j = 0; j < MAXDUNY; j++)
+			for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
+				for (int j = 0; j < MAXDUNY; j++) {
 					dFlags[i][j] |= BFLAG_LIT;
+				}
 			}
 
 			InitTowners();

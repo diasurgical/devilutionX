@@ -1189,49 +1189,49 @@ void LoadGame(bool firstflag)
 		UniqueItemFlag = file.nextBool8();
 
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dLight[i][j] = file.nextLE<int8_t>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dFlags[i][j] = file.nextLE<int8_t>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dPlayer[i][j] = file.nextLE<int8_t>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dItem[i][j] = file.nextLE<int8_t>();
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dMonster[i][j] = file.nextBE<int32_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dDead[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dObject[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dLight[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dPreLight[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++)
+			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				AutomapView[i][j] = file.nextBool8();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dMissile[i][j] = file.nextLE<int8_t>();
 		}
 	}
@@ -1955,49 +1955,49 @@ void SaveGameData()
 		file.writeLE<uint8_t>(UniqueItemFlag ? 1 : 0);
 
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dLight[i][j]);
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dPlayer[i][j]);
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dItem[i][j]);
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeBE<int32_t>(dMonster[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dDead[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dLight[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dPreLight[i][j]);
 		}
 		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++)
+			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dMissile[i][j]);
 		}
 	}
@@ -2033,7 +2033,7 @@ void SaveLevel()
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dDead[i][j]);
 		}
 	}
@@ -2064,37 +2064,37 @@ void SaveLevel()
 		SaveItem(&file, &items[itemactive[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dItem[i][j]);
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeBE<int32_t>(dMonster[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dObject[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dLight[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dPreLight[i][j]);
 		}
 		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++)
+			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				file.writeLE<int8_t>(dMissile[i][j]);
 		}
 	}
@@ -2115,7 +2115,7 @@ void LoadLevel()
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dDead[i][j] = file.nextLE<int8_t>();
 		}
 		SetDead();
@@ -2150,37 +2150,37 @@ void LoadLevel()
 		LoadItem(&file, itemactive[i]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dFlags[i][j] = file.nextLE<int8_t>();
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++)
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dItem[i][j] = file.nextLE<int8_t>();
 	}
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dMonster[i][j] = file.nextBE<int32_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dObject[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dLight[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dPreLight[i][j] = file.nextLE<int8_t>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++)
+			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				AutomapView[i][j] = file.nextBool8();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dMissile[i][j] = 0; /// BUGFIX: supposed to load saved missiles with "file.nextLE<int8_t>()"?
 		}
 	}

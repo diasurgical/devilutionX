@@ -1203,7 +1203,7 @@ void InitMissiles()
 		link._mirange = 0;
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
+		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			dFlags[i][j] &= ~BFLAG_MISSILE;
 		}
 	}

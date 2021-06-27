@@ -2649,7 +2649,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 8;
 			}
@@ -2700,7 +2700,7 @@ void LoadPreL3Dungeon(const char *path)
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			if (dungeon[i][j] == 0) {
 				dungeon[i][j] = 8;
 			}

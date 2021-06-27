@@ -60,7 +60,7 @@ void InitHash()
 	uint32_t seed = 0x00100001;
 
 	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 5; j++) {
+		for (int j = 0; j < 5; j++) { // NOLINT(modernize-loop-convert)
 			seed = (125 * seed + 3) % 0x2AAAAB;
 			uint32_t ch = (seed & 0xFFFF);
 			seed = (125 * seed + 3) % 0x2AAAAB;
