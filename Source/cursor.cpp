@@ -101,10 +101,8 @@ const int InvItemHeight2[] = {
 
 } // namespace
 
-/** Pixel width of the current cursor image */
-int cursW;
-/** Pixel height of the current cursor image */
-int cursH;
+/** Pixel size of the current cursor image */
+Size cursSize;
 /** Current highlighted monster */
 int pcursmonst = -1;
 /** Width of current cursor in inventory cells */
@@ -178,9 +176,7 @@ void SetICursor(int cursId)
 void NewCursor(int cursId)
 {
 	pcurs = cursId;
-	auto size = GetInvItemSize(cursId);
-	cursW = size.width;
-	cursH = size.height;
+	cursSize = GetInvItemSize(cursId);
 	SetICursor(cursId);
 	if (IsHardwareCursorEnabled() && GetCurrentCursorInfo() != CursorInfo::GameCursor(cursId) && cursId != CURSOR_NONE) {
 		SetHardwareCursor(CursorInfo::GameCursor(cursId));
