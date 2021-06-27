@@ -72,13 +72,12 @@ void DrawXPBar(const Surface &out)
 
 	const auto &player = Players[MyPlayerId];
 
-	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
-	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
+	const Point back = { PANEL_LEFT + PANEL_WIDTH / 2 - 155, PANEL_TOP + PANEL_HEIGHT - 11 };
 
-	const int xPos = backX + 3;
-	const int yPos = backY + 2;
+	const int xPos = back.x + 3;
+	const int yPos = back.y + 2;
 
-	DrawArt(out, backX, backY, &xpbarArt);
+	DrawArt(out, back, &xpbarArt);
 
 	const int8_t charLevel = player._pLevel;
 
