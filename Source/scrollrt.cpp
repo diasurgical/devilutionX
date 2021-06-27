@@ -649,29 +649,27 @@ static void DrawDungeon(const Surface & /*out*/, int /*sx*/, int /*sy*/, int /*d
 /**
  * @brief Render a cell
  * @param out Target buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Target buffer coordinate
- * @param sy Target buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Target buffer coordinates
  */
-void DrawCell(const Surface &out, int x, int y, int sx, int sy)
+void DrawCell(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	MICROS *pMap = &dpiece_defs_map_2[x][y];
-	level_piece_id = dPiece[x][y];
-	cel_transparency_active = nTransTable[level_piece_id] && TransList[dTransVal[x][y]];
+	MICROS *pMap = &dpiece_defs_map_2[tilePosition.x][tilePosition.y];
+	level_piece_id = dPiece[tilePosition.x][tilePosition.y];
+	cel_transparency_active = nTransTable[level_piece_id] && TransList[dTransVal[tilePosition.x][tilePosition.y]];
 	cel_foliage_active = !nSolidTable[level_piece_id];
 	for (int i = 0; i < (MicroTileLen / 2); i++) {
 		level_cel_block = pMap->mt[2 * i];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 1 : 0;
-			RenderTile(out, { sx, sy });
+			RenderTile(out, targetBufferPosition);
 		}
 		level_cel_block = pMap->mt[2 * i + 1];
 		if (level_cel_block != 0) {
 			arch_draw_type = i == 0 ? 2 : 0;
-			RenderTile(out, { sx + TILE_WIDTH / 2, sy });
+			RenderTile(out, targetBufferPosition + Displacement { TILE_WIDTH / 2, 0 });
 		}
-		sy -= TILE_HEIGHT;
+		targetBufferPosition.y -= TILE_HEIGHT;
 	}
 	cel_foliage_active = false;
 }
@@ -849,7 +847,7 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 
 	LightTableIndex = dLight[sx][sy];
 
-	DrawCell(out, sx, sy, dx, dy);
+	DrawCell(out, { sx, sy }, { dx, dy });
 
 	int8_t bFlag = dFlags[sx][sy];
 	int8_t bDead = dDead[sx][sy];
