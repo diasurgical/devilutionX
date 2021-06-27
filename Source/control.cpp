@@ -1088,7 +1088,7 @@ void DoSpeedBook()
 		}
 	}
 
-	SetCursorPos(x, y);
+	SetCursorPos({ x, y });
 }
 
 /**
