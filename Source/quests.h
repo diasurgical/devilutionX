@@ -74,8 +74,7 @@ struct QuestDataStruct {
 extern bool QuestLogIsOpen;
 extern std::optional<CelSprite> pQLogCel;
 extern Quest Quests[MAXQUESTS];
-extern int ReturnLvlX;
-extern int ReturnLvlY;
+extern Point ReturnLvlPosition;
 extern dungeon_type ReturnLevelType;
 extern int ReturnLevel;
 

@@ -757,8 +757,8 @@ void LoadQuest(LoadHelper *file, int i)
 		file->Skip(1); // Alignment
 	quest._qlog = file->NextBool32();
 
-	ReturnLvlX = file->NextBE<int32_t>();
-	ReturnLvlY = file->NextBE<int32_t>();
+	ReturnLvlPosition.x = file->NextBE<int32_t>();
+	ReturnLvlPosition.y = file->NextBE<int32_t>();
 	ReturnLevel = file->NextBE<int32_t>();
 	ReturnLevelType = static_cast<dungeon_type>(file->NextBE<int32_t>());
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
@@ -1397,8 +1397,8 @@ void SaveQuest(SaveHelper *file, int i)
 		file->Skip(1); // Alignment
 	file->WriteLE<uint32_t>(quest._qlog ? 1 : 0);
 
-	file->WriteBE<int32_t>(ReturnLvlX);
-	file->WriteBE<int32_t>(ReturnLvlY);
+	file->WriteBE<int32_t>(ReturnLvlPosition.x);
+	file->WriteBE<int32_t>(ReturnLvlPosition.y);
 	file->WriteBE<int32_t>(ReturnLevel);
 	file->WriteBE<int32_t>(ReturnLevelType);
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
