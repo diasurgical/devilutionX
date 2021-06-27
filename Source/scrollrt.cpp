@@ -1114,10 +1114,9 @@ int tileRows;
 /**
  * @brief Configure render and process screen rows
  * @param full_out Buffer to render to
- * @param x Center of view in dPiece coordinate
- * @param y Center of view in dPiece coordinate
+ * @param position Center of view in dPiece coordinate
  */
-void DrawGame(const Surface &fullOut, int x, int y)
+void DrawGame(const Surface &fullOut, Point position)
 {
 	// Limit rendering to the view area
 	const Surface &out = zoomflag
@@ -1135,30 +1134,29 @@ void DrawGame(const Surface &fullOut, int x, int y)
 	int columns = tileColums;
 	int rows = tileRows;
 
-	x += tileShiftX;
-	y += tileShiftY;
+	position += Displacement { tileShiftX, tileShiftY };
 
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
 			if (chrflag || QuestLogIsOpen) {
-				ShiftGrid(&x, &y, 2, 0);
+				ShiftGrid(&position.x, &position.y, 2, 0);
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 			}
 			if (invflag || sbookflag) {
-				ShiftGrid(&x, &y, 2, 0);
+				ShiftGrid(&position.x, &position.y, 2, 0);
 				columns -= 4;
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
 			if (chrflag || QuestLogIsOpen) {
-				ShiftGrid(&x, &y, 1, 0);
+				ShiftGrid(&position.x, &position.y, 1, 0);
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
 			}
 			if (invflag || sbookflag) {
-				ShiftGrid(&x, &y, 1, 0);
+				ShiftGrid(&position.x, &position.y, 1, 0);
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2;
 			}
@@ -1171,12 +1169,12 @@ void DrawGame(const Surface &fullOut, int x, int y)
 	switch (ScrollInfo._sdir) {
 	case SDIR_N:
 		sy -= TILE_HEIGHT;
-		ShiftGrid(&x, &y, 0, -1);
+		ShiftGrid(&position.x, &position.y, 0, -1);
 		rows += 2;
 		break;
 	case SDIR_NE:
 		sy -= TILE_HEIGHT;
-		ShiftGrid(&x, &y, 0, -1);
+		ShiftGrid(&position.x, &position.y, 0, -1);
 		columns++;
 		rows += 2;
 		break;
@@ -1192,19 +1190,19 @@ void DrawGame(const Surface &fullOut, int x, int y)
 		break;
 	case SDIR_SW:
 		sx -= TILE_WIDTH;
-		ShiftGrid(&x, &y, -1, 0);
+		ShiftGrid(&position.x, &position.y, -1, 0);
 		columns++;
 		rows++;
 		break;
 	case SDIR_W:
 		sx -= TILE_WIDTH;
-		ShiftGrid(&x, &y, -1, 0);
+		ShiftGrid(&position.x, &position.y, -1, 0);
 		columns++;
 		break;
 	case SDIR_NW:
 		sx -= TILE_WIDTH / 2;
 		sy -= TILE_HEIGHT / 2;
-		x--;
+		position += DIR_NW;
 		columns++;
 		rows++;
 		break;
@@ -1212,8 +1210,8 @@ void DrawGame(const Surface &fullOut, int x, int y)
 		break;
 	}
 
-	DrawFloor(out, x, y, sx, sy, rows, columns);
-	DrawTileContent(out, x, y, sx, sy, rows, columns);
+	DrawFloor(out, position.x, position.y, sx, sy, rows, columns);
+	DrawTileContent(out, position.x, position.y, sx, sy, rows, columns);
 
 	if (!zoomflag) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
@@ -1230,7 +1228,7 @@ void DrawView(const Surface &out, Point startPosition)
 #ifdef _DEBUG
 	DebugCoordsMap.clear();
 #endif
-	DrawGame(out, startPosition.x, startPosition.y);
+	DrawGame(out, startPosition);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
