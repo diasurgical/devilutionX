@@ -178,7 +178,7 @@ int Joystick::ToSdlJoyButton(ControllerButton button)
 	}
 }
 
-bool Joystick::IsHatButtonPressed(ControllerButton button)
+bool Joystick::IsHatButtonPressed(ControllerButton button) const
 {
 	switch (button) {
 #if defined(JOY_HAT_DPAD_UP_HAT) && defined(JOY_HAT_DPAD_UP)
