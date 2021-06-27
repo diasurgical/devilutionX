@@ -351,7 +351,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 AxisDirection GetMoveDirection()
 {
-	return GetLeftStickOrDpadDirection(/*allow_dpad=*/!sgOptions.Controller.bDpadHotkeys);
+	return GetLeftStickOrDpadDirection(/*allowDpad=*/!sgOptions.Controller.bDpadHotkeys);
 }
 
 } // namespace devilution
