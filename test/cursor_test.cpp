@@ -12,8 +12,8 @@ TEST(Cursor, SetCursor)
 	EXPECT_EQ(pcurs, i);
 	EXPECT_EQ(cursSize.width, 1 * 28);
 	EXPECT_EQ(cursSize.height, 3 * 28);
-	EXPECT_EQ(icursW, 1 * 28);
-	EXPECT_EQ(icursH, 3 * 28);
+	EXPECT_EQ(icursSize.width, 1 * 28);
+	EXPECT_EQ(icursSize.height, 3 * 28);
 	EXPECT_EQ(icursSize28.width, 1);
 	EXPECT_EQ(icursSize28.height, 3);
 }

@@ -110,10 +110,8 @@ Size icursSize28;
 
 /** inv_item value */
 int8_t pcursinvitem;
-/** Pixel width of the current cursor image */
-int icursW;
-/** Pixel height of the current cursor image */
-int icursH;
+/** Pixel size of the current cursor image */
+Size icursSize;
 /** Current highlighted item */
 int8_t pcursitem;
 /** Current highlighted object */
@@ -164,10 +162,8 @@ Size GetInvItemSize(int cursId)
 
 void SetICursor(int cursId)
 {
-	auto size = GetInvItemSize(cursId);
-	icursW = size.width;
-	icursH = size.height;
-	icursSize28 = Size { icursW, icursH } / 28;
+	icursSize = GetInvItemSize(cursId);
+	icursSize28 = icursSize / 28;
 }
 
 void NewCursor(int cursId)
