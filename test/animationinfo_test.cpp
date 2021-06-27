@@ -106,7 +106,7 @@ TEST(AnimationInfo, AttackSwordWarrior) // ProcessAnimationPending should be con
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
+	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
 	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 1),
@@ -169,7 +169,7 @@ TEST(AnimationInfo, AttackSwordWarriorWithFastestAttack) // Skipped frames and P
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
+	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 2, 9),
 	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(4, 0),
 	        new RenderingData(0.0f, 1),
@@ -225,7 +225,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(16, 0, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
+	        new SetNewAnimationData(16, 1, AnimationDistributionFlags::ProcessAnimationPending, 0, 9),
 	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 1),
@@ -270,7 +270,7 @@ TEST(AnimationInfo, AttackSwordWarriorRepeated)
 	        new RenderingData(0.3f, 10),
 
 	        // Start of repeated attack, cause plr[pnum].AnimInfo.CurrentFrame > plr[myplr]._pAFNum
-	        new SetNewAnimationData(16, 0, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
+	        new SetNewAnimationData(16, 1, static_cast<AnimationDistributionFlags>(AnimationDistributionFlags::ProcessAnimationPending | AnimationDistributionFlags::RepeatedAction), 0, 9),
 	        // ProcessAnimation directly after StartAttack (in same GameTick). So we don't see any rendering before.
 	        new GameTickData(2, 0),
 	        new RenderingData(0.0f, 11),
@@ -333,7 +333,7 @@ TEST(AnimationInfo, BlockingWarriorNormal) // Ignored delay for last Frame shoul
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(2, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame),
+	        new SetNewAnimationData(2, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
@@ -361,7 +361,7 @@ TEST(AnimationInfo, BlockingSorcererWithFastBlock) // Skipped frames and ignored
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(6, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4),
+	        new SetNewAnimationData(6, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, 4),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 1),
@@ -389,7 +389,7 @@ TEST(AnimationInfo, HitRecoverySorcererZenMode) // Skipped frames and ignored de
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(8, 0, AnimationDistributionFlags::None, 4),
+	        new SetNewAnimationData(8, 1, AnimationDistributionFlags::None, 4),
 	        new RenderingData(0.0f, 1),
 	        new RenderingData(0.3f, 1),
 	        new RenderingData(0.6f, 2),
@@ -416,7 +416,7 @@ TEST(AnimationInfo, Stand) // Distribution Logic shouldn't change anything here
 {
 	RunAnimationTest(
 	    {
-	        new SetNewAnimationData(10, 3),
+	        new SetNewAnimationData(10, 4),
 	        new RenderingData(0.1f, 1),
 	        new GameTickData(1, 1),
 	        new RenderingData(0.6f, 1),

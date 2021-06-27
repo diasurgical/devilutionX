@@ -185,7 +185,7 @@ void StartWalkAnimation(PlayerStruct &player, Direction dir, bool pmWillBeCalled
 		skippedFrames = 2;
 	if (pmWillBeCalled)
 		skippedFrames += 1;
-	NewPlrAnim(player, player_graphic::Walk, dir, player._pWFrames, 0, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
+	NewPlrAnim(player, player_graphic::Walk, dir, player._pWFrames, 1, AnimationDistributionFlags::ProcessAnimationPending, skippedFrames);
 }
 
 /**
@@ -1214,12 +1214,12 @@ void InitPlayer(int pnum, bool FirstTime)
 
 		if (player._pHitPoints >> 6 > 0) {
 			player._pmode = PM_STAND;
-			NewPlrAnim(player, player_graphic::Stand, DIR_S, player._pNFrames, 3);
+			NewPlrAnim(player, player_graphic::Stand, DIR_S, player._pNFrames, 4);
 			player.AnimInfo.CurrentFrame = GenerateRnd(player._pNFrames - 1) + 1;
 			player.AnimInfo.DelayCounter = GenerateRnd(3);
 		} else {
 			player._pmode = PM_DEATH;
-			NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
+			NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 2);
 			player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
 		}
 
@@ -1367,7 +1367,7 @@ void StartStand(int pnum, Direction dir)
 	auto &player = plr[pnum];
 
 	if (!player._pInvincible || player._pHitPoints != 0 || pnum != myplr) {
-		NewPlrAnim(player, player_graphic::Stand, dir, player._pNFrames, 3);
+		NewPlrAnim(player, player_graphic::Stand, dir, player._pNFrames, 4);
 		player._pmode = PM_STAND;
 		FixPlayerLocation(pnum, dir);
 		FixPlrWalkTags(pnum);
@@ -1452,7 +1452,7 @@ void StartAttack(int pnum, Direction d)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_ATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 1, animationFlags, skippedAnimationFrames, player._pAFNum);
 	player._pmode = PM_ATTACK;
 	FixPlayerLocation(pnum, d);
 	SetPlayerOld(player);
@@ -1480,7 +1480,7 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 	if (player._pmode == PM_RATTACK)
 		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 0, animationFlags, skippedAnimationFrames, player._pAFNum);
+	NewPlrAnim(player, player_graphic::Attack, d, player._pAFrames, 1, animationFlags, skippedAnimationFrames, player._pAFNum);
 
 	player._pmode = PM_RATTACK;
 	FixPlayerLocation(pnum, d);
@@ -1507,7 +1507,7 @@ void StartPlrBlock(int pnum, Direction dir)
 		skippedAnimationFrames = (player._pBFrames - 2); // ISPL_FASTBLOCK means we cancel the animation if frame 2 was shown
 	}
 
-	NewPlrAnim(player, player_graphic::Block, dir, player._pBFrames, 2, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
+	NewPlrAnim(player, player_graphic::Block, dir, player._pBFrames, 3, AnimationDistributionFlags::SkipsDelayOfLastFrame, skippedAnimationFrames);
 
 	player._pmode = PM_BLOCK;
 	FixPlayerLocation(pnum, dir);
@@ -1532,13 +1532,13 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 
 		switch (spelldata[player._pSpell].sType) {
 		case STYPE_FIRE:
-			NewPlrAnim(player, player_graphic::Fire, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, player_graphic::Fire, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_LIGHTNING:
-			NewPlrAnim(player, player_graphic::Lightning, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, player_graphic::Lightning, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 			break;
 		case STYPE_MAGIC:
-			NewPlrAnim(player, player_graphic::Magic, d, player._pSFrames, 0, animationFlags, 0, player._pSFNum);
+			NewPlrAnim(player, player_graphic::Magic, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 			break;
 		}
 	} else {
@@ -1649,7 +1649,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 		skippedAnimationFrames = 0;
 	}
 
-	NewPlrAnim(player, player_graphic::Hit, pd, player._pHFrames, 0, AnimationDistributionFlags::None, skippedAnimationFrames);
+	NewPlrAnim(player, player_graphic::Hit, pd, player._pHFrames, 1, AnimationDistributionFlags::None, skippedAnimationFrames);
 
 	player._pmode = PM_GOTHIT;
 	FixPlayerLocation(pnum, pd);
@@ -1735,7 +1735,7 @@ StartPlayerKill(int pnum, int earflag)
 		SetPlrAnims(player);
 	}
 
-	NewPlrAnim(player, player_graphic::Death, player._pdir, player._pDFrames, 1);
+	NewPlrAnim(player, player_graphic::Death, player._pdir, player._pDFrames, 2);
 
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
@@ -2904,7 +2904,7 @@ bool PM_DoSpell(int pnum)
 	}
 	auto &player = plr[pnum];
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.DelayLen + 1) + player.AnimInfo.DelayCounter);
+	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.DelayLen) + player.AnimInfo.DelayCounter);
 	if (currentSpellFrame == (player._pSFNum + 1)) {
 		CastSpell(
 		    pnum,
