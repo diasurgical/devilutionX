@@ -2482,8 +2482,7 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 	SetRndSeed(rseed);
 
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	DRLG_InitTrans();
 	DRLG_InitSetPC();
@@ -2518,8 +2517,7 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 void LoadL3Dungeon(const char *path, int vx, int vy)
 {
 	dminPosition = { 16, 16 };
-	dmaxx = 96;
-	dmaxy = 96;
+	dmaxPosition = { 96, 96 };
 
 	InitDungeonFlags();
 	DRLG_InitTrans();

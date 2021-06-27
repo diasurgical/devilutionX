@@ -1624,8 +1624,8 @@ void ScrollView()
 	scroll = false;
 
 	if (MousePosition.x < 20) {
-		if (dmaxy - 1 <= ViewPosition.y || dminPosition.x >= ViewPosition.x) {
-			if (dmaxy - 1 > ViewPosition.y) {
+		if (dmaxPosition.y - 1 <= ViewPosition.y || dminPosition.x >= ViewPosition.x) {
+			if (dmaxPosition.y - 1 > ViewPosition.y) {
 				ViewPosition.y++;
 				scroll = true;
 			}
@@ -1640,8 +1640,8 @@ void ScrollView()
 		}
 	}
 	if (MousePosition.x > gnScreenWidth - 20) {
-		if (dmaxx - 1 <= ViewPosition.x || dminPosition.y >= ViewPosition.y) {
-			if (dmaxx - 1 > ViewPosition.x) {
+		if (dmaxPosition.x - 1 <= ViewPosition.x || dminPosition.y >= ViewPosition.y) {
+			if (dmaxPosition.x - 1 > ViewPosition.x) {
 				ViewPosition.x++;
 				scroll = true;
 			}
@@ -1672,12 +1672,12 @@ void ScrollView()
 		}
 	}
 	if (MousePosition.y > gnScreenHeight - 20) {
-		if (dmaxy - 1 <= ViewPosition.y || dmaxx - 1 <= ViewPosition.x) {
-			if (dmaxy - 1 > ViewPosition.y) {
+		if (dmaxPosition.y - 1 <= ViewPosition.y || dmaxPosition.x - 1 <= ViewPosition.x) {
+			if (dmaxPosition.y - 1 > ViewPosition.y) {
 				ViewPosition.y++;
 				scroll = true;
 			}
-			if (dmaxx - 1 > ViewPosition.x) {
+			if (dmaxPosition.x - 1 > ViewPosition.x) {
 				ViewPosition.x++;
 				scroll = true;
 			}
