@@ -694,15 +694,13 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 /**
  * @brief Draw item for a given tile
  * @param out Output buffer
- * @param y dPiece coordinate
- * @param x dPiece coordinate
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  * @param pre Is the sprite in the background
  */
-void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
+void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
-	int8_t bItem = dItem[x][y];
+	int8_t bItem = dItem[tilePosition.x][tilePosition.y];
 
 	if (bItem <= 0)
 		return;
@@ -724,14 +722,14 @@ void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
 		return;
 	}
 
-	int px = sx - CalculateWidth2(cel->Width());
-	const Point position { px, sy };
+	int px = targetBufferPosition.x - CalculateWidth2(cel->Width());
+	const Point position { px, targetBufferPosition.y };
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
 		CelBlitOutlineTo(out, GetOutlineColor(item, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
 	if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames || item._iCurs == ICURS_MAGIC_ROCK)
-		AddItemToLabelQueue(bItem - 1, px, sy);
+		AddItemToLabelQueue(bItem - 1, px, targetBufferPosition.y);
 }
 
 /**
@@ -882,7 +880,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		} while (false);
 	}
 	DrawObject(out, tilePosition, targetBufferPosition, true);
-	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
+	DrawItem(out, tilePosition, targetBufferPosition, true);
 	if ((bFlag & BFLAG_PLAYERLR) != 0) {
 		int syy = tilePosition.y - 1;
 		assert(syy >= 0 && syy < MAXDUNY);
@@ -902,7 +900,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
 	DrawObject(out, tilePosition, targetBufferPosition, false);
-	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
+	DrawItem(out, tilePosition, targetBufferPosition, false);
 
 	if (leveltype != DTYPE_TOWN) {
 		char bArch = dSpecial[tilePosition.x][tilePosition.y];
