@@ -794,14 +794,12 @@ void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
 /**
  * @brief Check if and how a player should be rendered
  * @param out Output buffer
- * @param y dPiece coordinate
- * @param x dPiece coordinate
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  */
-void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
+void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	int8_t p = dPlayer[x][y];
+	int8_t p = dPlayer[tilePosition.x][tilePosition.y];
 	p = p > 0 ? p - 1 : -(p + 1);
 
 	if (p < 0 || p >= MAX_PLRS) {
@@ -814,10 +812,11 @@ void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
 	if (player.IsWalking()) {
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
-	int px = sx + offset.deltaX - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
-	int py = sy + offset.deltaY;
 
-	DrawPlayer(out, p, x, y, px, py);
+	const int width { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()) };
+	const Point playerRenderPosition { targetBufferPosition + offset - Displacement { width, 0 } };
+
+	DrawPlayer(out, p, tilePosition.x, tilePosition.y, playerRenderPosition.x, playerRenderPosition.y);
 }
 
 /**
@@ -884,7 +883,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if ((bFlag & BFLAG_PLAYERLR) != 0) {
 		int syy = tilePosition.y - 1;
 		assert(syy >= 0 && syy < MAXDUNY);
-		DrawPlayerHelper(out, tilePosition.x, syy, targetBufferPosition.x, targetBufferPosition.y);
+		DrawPlayerHelper(out, { tilePosition.x, syy }, targetBufferPosition);
 	}
 	if ((bFlag & BFLAG_MONSTLR) != 0 && negMon < 0) {
 		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, -1, targetBufferPosition.x, targetBufferPosition.y);
@@ -893,7 +892,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawDeadPlayer(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
 	}
 	if (dPlayer[tilePosition.x][tilePosition.y] > 0) {
-		DrawPlayerHelper(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
+		DrawPlayerHelper(out, tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
 		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, 0, targetBufferPosition.x, targetBufferPosition.y);
