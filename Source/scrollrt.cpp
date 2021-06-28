@@ -476,17 +476,16 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
  * @brief Helper for rendering player icons (Mana Shield and Reflect)
  * @param out Output buffer
  * @param pnum Player id
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param position Output buffer coordinates
  * @param lighting Should lighting be applied
  */
-void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lighting)
+void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting)
 {
 	auto &player = Players[pnum];
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, x, y, lighting);
+		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position.x, position.y, lighting);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, x, y + 16, lighting);
+		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, position.x, position.y + 16, lighting);
 }
 
 /**
@@ -536,13 +535,13 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 
 	if (pnum == MyPlayerId) {
 		Cl2Draw(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
-		DrawPlayerIcons(out, pnum, targetBufferPosition.x, targetBufferPosition.y, true);
+		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
 
 	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, 1);
-		DrawPlayerIcons(out, pnum, targetBufferPosition.x, targetBufferPosition.y, true);
+		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
 	}
 
@@ -553,7 +552,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		LightTableIndex -= 5;
 
 	Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
-	DrawPlayerIcons(out, pnum, targetBufferPosition.x, targetBufferPosition.y, false);
+	DrawPlayerIcons(out, pnum, targetBufferPosition, false);
 
 	LightTableIndex = l;
 }
