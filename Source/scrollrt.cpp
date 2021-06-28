@@ -450,9 +450,9 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
+void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, Point position, bool lighting)
 {
-	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
+	position.x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2;
 
 	int width = MissileSpriteData[missileGraphicId].animWidth;
 	byte *pCelBuff = MissileSpriteData[missileGraphicId].animData[0].get();
@@ -460,16 +460,16 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
 	CelSprite cel { pCelBuff, width };
 
 	if (pnum == MyPlayerId) {
-		Cl2Draw(out, x, y, cel, 1);
+		Cl2Draw(out, position.x, position.y, cel, 1);
 		return;
 	}
 
 	if (lighting) {
-		Cl2DrawLightTbl(out, x, y, cel, 1, 1);
+		Cl2DrawLightTbl(out, position.x, position.y, cel, 1, 1);
 		return;
 	}
 
-	Cl2DrawLight(out, x, y, cel, 1);
+	Cl2DrawLight(out, position.x, position.y, cel, 1);
 }
 
 /**
@@ -483,9 +483,9 @@ void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting
 {
 	auto &player = Players[pnum];
 	if (player.pManaShield)
-		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position.x, position.y, lighting);
+		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, position, lighting);
 	if (player.wReflections > 0)
-		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, position.x, position.y + 16, lighting);
+		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, position + Displacement { 0, 16 }, lighting);
 }
 
 /**
