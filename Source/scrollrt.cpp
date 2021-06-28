@@ -558,22 +558,20 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 /**
  * @brief Render a player sprite
  * @param out Output buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  */
-void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
+void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	dFlags[x][y] &= ~BFLAG_DEAD_PLAYER;
+	dFlags[tilePosition.x][tilePosition.y] &= ~BFLAG_DEAD_PLAYER;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		auto &player = Players[i];
-		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile.x == x && player.position.tile.y == y) {
-			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
+		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
+			dFlags[tilePosition.x][tilePosition.y] |= BFLAG_DEAD_PLAYER;
 			const Displacement center { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()), 0 };
-			const Point playerRenderPosition { Point { sx, sy } + player.position.offset - center };
-			DrawPlayer(out, i, { x, y }, playerRenderPosition);
+			const Point playerRenderPosition { targetBufferPosition + player.position.offset - center };
+			DrawPlayer(out, i, tilePosition, playerRenderPosition);
 		}
 	}
 }
@@ -881,7 +879,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawMonsterHelper(out, tilePosition, -1, targetBufferPosition);
 	}
 	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
-		DrawDeadPlayer(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
+		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
 	if (dPlayer[tilePosition.x][tilePosition.y] > 0) {
 		DrawPlayerHelper(out, tilePosition, targetBufferPosition);
