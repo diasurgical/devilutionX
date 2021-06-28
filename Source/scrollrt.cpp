@@ -340,13 +340,11 @@ void DrawMissile(const Surface &out, Point tilePosition, Point targetBufferPosit
 /**
  * @brief Render a monster sprite
  * @param out Output buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param mx Output buffer coordinate
- * @param my Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  * @param m Id of monster
  */
-void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster &monster)
+void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosition, const Monster &monster)
 {
 	if (monster.AnimInfo.pCelSprite == nullptr) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
@@ -430,8 +428,8 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 
 	const auto &cel = *monster.AnimInfo.pCelSprite;
 
-	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
-		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
+	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0) {
+		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, 1);
 		return;
 	}
 	int trans = 0;
@@ -442,9 +440,9 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
 	if (trans != 0)
-		Cl2DrawLightTbl(out, mx, my, cel, nCel, trans);
+		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, trans);
 	else
-		Cl2DrawLight(out, mx, my, cel, nCel);
+		Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel);
 }
 
 /**
@@ -782,7 +780,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, int oy, Point tar
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.AnimInfo.GetFrameToUseForRendering());
 	}
-	DrawMonster(out, tilePosition.x, tilePosition.y, monsterRenderPosition.x, monsterRenderPosition.y, monster);
+	DrawMonster(out, tilePosition, monsterRenderPosition, monster);
 }
 
 /**
