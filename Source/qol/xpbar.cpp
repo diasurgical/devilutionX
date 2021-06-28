@@ -31,11 +31,11 @@ constexpr int BACK_HEIGHT = 9;
 
 Art xpbarArt;
 
-void DrawBar(const CelOutputBuffer &out, int x, int y, int width, const ColorGradient &gradient)
+void DrawBar(const CelOutputBuffer &out, Point screenPosition, int width, const ColorGradient &gradient)
 {
-	UnsafeDrawHorizontalLine(out, { x, y + 1 }, width, gradient[gradient.size() * 3 / 4 - 1]);
-	UnsafeDrawHorizontalLine(out, { x, y + 2 }, width, gradient[gradient.size() - 1]);
-	UnsafeDrawHorizontalLine(out, { x, y + 3 }, width, gradient[gradient.size() / 2 - 1]);
+	UnsafeDrawHorizontalLine(out, screenPosition + Point { 0, 1 }, width, gradient[gradient.size() * 3 / 4 - 1]);
+	UnsafeDrawHorizontalLine(out, screenPosition + Point { 0, 2 }, width, gradient[gradient.size() - 1]);
+	UnsafeDrawHorizontalLine(out, screenPosition + Point { 0, 3 }, width, gradient[gradient.size() / 2 - 1]);
 }
 
 void DrawEndCap(const CelOutputBuffer &out, Point point, int idx, const ColorGradient &gradient)
@@ -72,19 +72,16 @@ void DrawXPBar(const CelOutputBuffer &out)
 
 	const auto &player = plr[myplr];
 
-	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
-	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
+	const Point back = { PANEL_LEFT + PANEL_WIDTH / 2 - 155, PANEL_TOP + PANEL_HEIGHT - 11 };
+	const Point position = back + Point { 3, 2 };
 
-	const int xPos = backX + 3;
-	const int yPos = backY + 2;
-
-	DrawArt(out, backX, backY, &xpbarArt);
+	DrawArt(out, back, &xpbarArt);
 
 	const int charLevel = player._pLevel;
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Draw a nice golden bar for max level characters.
-		DrawBar(out, xPos, yPos, BAR_WIDTH, GOLD_GRADIENT);
+		DrawBar(out, position, BAR_WIDTH, GOLD_GRADIENT);
 
 		return;
 	}
@@ -104,10 +101,10 @@ void DrawXPBar(const CelOutputBuffer &out)
 	const uint64_t fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
 
 	// Draw beginning of bar full brightness
-	DrawBar(out, xPos, yPos, fullBar, SILVER_GRADIENT);
+	DrawBar(out, position, fullBar, SILVER_GRADIENT);
 
 	// End pixels appear gradually
-	DrawEndCap(out, { xPos + static_cast<int>(fullBar), yPos }, fade, SILVER_GRADIENT);
+	DrawEndCap(out, position + Point { static_cast<int>(fullBar), 0 }, fade, SILVER_GRADIENT);
 }
 
 bool CheckXPBarInfo()

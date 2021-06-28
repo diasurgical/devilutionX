@@ -474,7 +474,7 @@ static void diablo_init_screen()
 {
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (!sgbControllerActive)
-		SetCursorPos(MousePosition.x, MousePosition.y);
+		SetCursorPos(MousePosition);
 	ScrollInfo.tile = { 0, 0 };
 	ScrollInfo.offset = { 0, 0 };
 	ScrollInfo._sdir = SDIR_NONE;
@@ -616,21 +616,21 @@ static bool LeftMouseCmd(bool bShift)
 
 	if (leveltype == DTYPE_TOWN) {
 		if (pcursitem != -1 && pcurs == CURSOR_HAND)
-			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
+			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		if (pcursmonst != -1)
-			NetSendCmdLocParam1(true, CMD_TALKXY, { cursmx, cursmy }, pcursmonst);
+			NetSendCmdLocParam1(true, CMD_TALKXY, cursPosition, pcursmonst);
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1)
 			return true;
 	} else {
 		auto &myPlayer = plr[myplr];
-		bNear = myPlayer.position.tile.WalkingDistance({ cursmx, cursmy }) < 2;
+		bNear = myPlayer.position.tile.WalkingDistance(cursPosition) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
-			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
+			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, cursPosition, pcursitem);
 		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && object[pcursobj]._oBreak == 1))) {
-			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
+			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, cursPosition, pcursobj);
 		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {
-				NetSendCmdLoc(myplr, true, CMD_RATTACKXY, { cursmx, cursmy });
+				NetSendCmdLoc(myplr, true, CMD_RATTACKXY, cursPosition);
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(pcursmonst)) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -646,10 +646,10 @@ static bool LeftMouseCmd(bool bShift)
 					if (CanTalkToMonst(pcursmonst)) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
-						NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { cursmx, cursmy });
+						NetSendCmdLoc(myplr, true, CMD_SATTACKXY, cursPosition);
 					}
 				} else {
-					NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { cursmx, cursmy });
+					NetSendCmdLoc(myplr, true, CMD_SATTACKXY, cursPosition);
 				}
 			} else if (pcursmonst != -1) {
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -720,7 +720,7 @@ bool TryIconCurs()
 		else if (pcursplr != -1)
 			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
 		else
-			NetSendCmdLocParam2(true, CMD_TSPELLXY, { cursmx, cursmy }, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
+			NetSendCmdLocParam2(true, CMD_TSPELLXY, cursPosition, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -785,7 +785,7 @@ static bool LeftMouseDown(int wParam)
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
-					NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
+					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
 					NewCursor(CURSOR_HAND);
 				}
 			} else {
@@ -897,9 +897,9 @@ static void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
 		if (!chrflag && !questlog && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-			SetCursorPos(MousePosition.x + 160, MousePosition.y);
+			SetCursorPos(MousePosition + Size { 160, 0 });
 		} else if (!invflag && !sbookflag && (chrflag || questlog) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-			SetCursorPos(MousePosition.x - 160, MousePosition.y);
+			SetCursorPos(MousePosition - Size { 160, 0 });
 		}
 	}
 	invflag = false;
@@ -1184,7 +1184,7 @@ static void PressChar(int32_t vkey)
 			auto &myPlayer = plr[myplr];
 			sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
 			NetSendCmdString(1 << myplr, tempstr);
-			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
+			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursPosition.x, cursPosition.y, dungeon[cursPosition.x][cursPosition.y]);
 			NetSendCmdString(1 << myplr, tempstr);
 		}
 		return;
@@ -1865,11 +1865,11 @@ void inventoryKeyPressed()
 	if (!chrflag && !questlog && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Size { 160, 0 });
 			}
 		} else if (!sbookflag) { // We opened the invetory
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Size { 160, 0 });
 			}
 		}
 	}
@@ -1884,11 +1884,11 @@ void characterSheetKeyPressed()
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!chrflag) { // We closed the character sheet
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Size { 160, 0 });
 			}
 		} else if (!questlog) { // We opened the character sheet
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Size { 160, 0 });
 			}
 		}
 	}
@@ -1907,11 +1907,11 @@ void questLogKeyPressed()
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
 		if (!questlog) { // We closed the quest log
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Size { 160, 0 });
 			}
 		} else if (!chrflag) { // We opened the character quest log
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Size { 160, 0 });
 			}
 		}
 	}
@@ -1942,11 +1942,11 @@ void spellBookKeyPressed()
 	if (!chrflag && !questlog && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x + 160, MousePosition.y);
+				SetCursorPos(MousePosition + Size { 160, 0 });
 			}
 		} else if (!invflag) { // We opened the invetory
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
-				SetCursorPos(MousePosition.x - 160, MousePosition.y);
+				SetCursorPos(MousePosition - Size { 160, 0 });
 			}
 		}
 	}

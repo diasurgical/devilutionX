@@ -134,8 +134,7 @@ void FindItemOrObject()
 				continue;
 			rotations = newRotations;
 			pcursitem = i;
-			cursmx = mx + xx;
-			cursmy = my + yy;
+			cursPosition = Point { mx, my } + Size { xx, yy };
 		}
 	}
 
@@ -158,8 +157,7 @@ void FindItemOrObject()
 				continue;
 			rotations = newRotations;
 			pcursobj = o;
-			cursmx = mx + xx;
-			cursmy = my + yy;
+			cursPosition = Point { mx, my } + Size { xx, yy };
 		}
 	}
 }
@@ -393,8 +391,7 @@ void FindTrigger()
 			const int newRotations = GetRotaryDistance(missile[mi].position.tile);
 			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
-			cursmx = missile[mi].position.tile.x;
-			cursmy = missile[mi].position.tile.y;
+			cursPosition = missile[mi].position.tile;
 			pcursmissile = mi;
 			distance = newDistance;
 			rotations = newRotations;
@@ -410,8 +407,7 @@ void FindTrigger()
 			const int newDistance = GetDistance({ tx, ty }, 2);
 			if (newDistance == 0)
 				continue;
-			cursmx = tx;
-			cursmy = ty;
+			cursPosition = { tx, ty };
 			pcurstrig = i;
 		}
 
@@ -422,14 +418,13 @@ void FindTrigger()
 				const int newDistance = GetDistance(quests[i].position, 2);
 				if (newDistance == 0)
 					continue;
-				cursmx = quests[i].position.x;
-				cursmy = quests[i].position.y;
+				cursPosition = quests[i].position;
 				pcursquest = i;
 			}
 		}
 	}
 
-	if (pcursmonst != -1 || pcursplr != -1 || cursmx == -1 || cursmy == -1)
+	if (pcursmonst != -1 || pcursplr != -1 || cursPosition.x == -1 || cursPosition.y == -1)
 		return; // Prefer monster/player info text
 
 	CheckTrigForce();
@@ -479,16 +474,13 @@ void AttrIncBtnSnap(AxisDirection dir)
 			++slot;
 	}
 
-	// move cursor to our new location
-	int x = ChrBtnsRect[slot].position.x + (ChrBtnsRect[slot].size.width / 2);
-	int y = ChrBtnsRect[slot].position.y + (ChrBtnsRect[slot].size.height / 2);
-	SetCursorPos(x, y);
+	SetCursorPos(ChrBtnsRect[slot].Center());
 }
 
 Point InvGetEquipSlotCoord(const inv_body_loc inv_slot)
 {
 	Point result { RIGHT_PANEL, 0 };
-	result.x -= (icursW28 - 1) * (InventorySlotSizeInPixels.width / 2);
+	result.x -= (icursSize28.width - 1) * (InventorySlotSizeInPixels.width / 2);
 	switch (inv_slot) {
 	case INVLOC_HEAD:
 		result.x += ((InvRect[SLOTXY_HEAD_FIRST].x + InvRect[SLOTXY_HEAD_LAST].x) / 2);
@@ -633,7 +625,7 @@ void ResetInvCursorPosition()
 	mousePos.x += (InventorySlotSizeInPixels.width / 2);
 	mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 
-	SetCursorPos(mousePos.x, mousePos.y);
+	SetCursorPos(mousePos);
 }
 
 /**
@@ -677,7 +669,7 @@ void InvMove(AxisDirection dir)
 		if (isHoldingItem) {
 			if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 				if (slot == SLOTXY_INV_ROW1_FIRST || slot == SLOTXY_INV_ROW2_FIRST || slot == SLOTXY_INV_ROW3_FIRST || slot == SLOTXY_INV_ROW4_FIRST) {
-					slot += INV_ROW_SLOT_SIZE - icursW28;
+					slot += INV_ROW_SLOT_SIZE - icursSize28.width;
 				} else {
 					slot -= 1;
 				}
@@ -726,8 +718,8 @@ void InvMove(AxisDirection dir)
 		if (isHoldingItem) {
 			if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 				if (
-				    slot == SLOTXY_INV_ROW1_LAST + 1 - icursW28 || slot == SLOTXY_INV_ROW2_LAST + 1 - icursW28 || slot == SLOTXY_INV_ROW3_LAST + 1 - icursW28 || slot == SLOTXY_INV_ROW4_LAST + 1 - icursW28) {
-					slot -= INV_ROW_SLOT_SIZE - icursW28;
+				    slot == SLOTXY_INV_ROW1_LAST + 1 - icursSize28.width || slot == SLOTXY_INV_ROW2_LAST + 1 - icursSize28.width || slot == SLOTXY_INV_ROW3_LAST + 1 - icursSize28.width || slot == SLOTXY_INV_ROW4_LAST + 1 - icursSize28.width) {
+					slot -= INV_ROW_SLOT_SIZE - icursSize28.width;
 				} else {
 					slot += 1;
 				}
@@ -843,10 +835,10 @@ void InvMove(AxisDirection dir)
 			} else if (slot == SLOTXY_RING_RIGHT || slot == SLOTXY_HAND_RIGHT_FIRST || slot == SLOTXY_AMULET) {
 				slot = SLOTXY_INV_ROW1_LAST - 1;
 				mousePos = InvGetSlotCoord(slot);
-			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (icursH28 * INV_ROW_SLOT_SIZE))) {
+			} else if (slot <= (SLOTXY_INV_ROW4_LAST - (icursSize28.height * INV_ROW_SLOT_SIZE))) {
 				slot += INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(slot);
-			} else if (slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ITYPE_MISC && icursW28 == 1 && icursH28 == 1) { // forcing only 1x1 misc items
+			} else if (slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ITYPE_MISC && icursSize28 == Size { 1, 1 }) { // forcing only 1x1 misc items
 				slot += INV_ROW_SLOT_SIZE;
 				if (slot > SLOTXY_BELT_LAST)
 					slot = SLOTXY_BELT_LAST;
@@ -916,7 +908,7 @@ void InvMove(AxisDirection dir)
 		if (slot >= SLOTXY_INV_FIRST)
 			mousePos.y -= InventorySlotSizeInPixels.height;
 		else
-			mousePos.y -= (int)((icursH28 / 2.0) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
+			mousePos.y -= (int)((icursSize28.height / 2.0) * InventorySlotSizeInPixels.height) + (InventorySlotSizeInPixels.height / 2);
 	} else {
 		mousePos.x += (InventorySlotSizeInPixels.width / 2);
 		mousePos.y -= (InventorySlotSizeInPixels.height / 2);
@@ -926,7 +918,7 @@ void InvMove(AxisDirection dir)
 		return; // Avoid wobeling when scalled
 	}
 
-	SetCursorPos(mousePos.x, mousePos.y);
+	SetCursorPos(mousePos);
 }
 
 /**
@@ -986,7 +978,7 @@ void HotSpellMove(AxisDirection dir)
 	}
 
 	if (newMousePosition != MousePosition) {
-		SetCursorPos(newMousePosition.x, newMousePosition.y);
+		SetCursorPos(newMousePosition);
 	}
 }
 
@@ -1286,7 +1278,7 @@ void HandleRightStickMotion()
 		static int lastMouseSetTick = 0;
 		const int now = SDL_GetTicks();
 		if (now - lastMouseSetTick > 0) {
-			SetCursorPos(x, y);
+			SetCursorPos({ x, y });
 			lastMouseSetTick = now;
 		}
 	}
@@ -1313,8 +1305,7 @@ void plrctrls_after_check_curs_move()
 		pcursmissile = -1;
 		pcurstrig = -1;
 		pcursquest = -1;
-		cursmx = -1;
-		cursmy = -1;
+		cursPosition = { -1, -1 };
 		if (plr[myplr]._pInvincible) {
 			return;
 		}
@@ -1398,8 +1389,7 @@ bool SpellHasActorTarget()
 		return false;
 
 	if (spl == SPL_FIREWALL && pcursmonst != -1) {
-		cursmx = monster[pcursmonst].position.tile.x;
-		cursmy = monster[pcursmonst].position.tile.y;
+		cursPosition = monster[pcursmonst].position.tile;
 	}
 
 	return pcursplr != -1 || pcursmonst != -1;
@@ -1417,9 +1407,7 @@ void UpdateSpellTarget()
 	if (plr[myplr]._pRSpell == SPL_TELEPORT)
 		range = 4;
 
-	auto cursm = plr[myplr].position.future + Point::fromDirection(plr[myplr]._pdir) * range;
-	cursmx = cursm.x;
-	cursmy = cursm.y;
+	cursPosition = plr[myplr].position.future + Point::fromDirection(plr[myplr]._pdir) * range;
 }
 
 /**
@@ -1429,12 +1417,10 @@ bool TryDropItem()
 {
 	const auto &myPlayer = plr[myplr];
 
-	cursmx = myPlayer.position.future.x + 1;
-	cursmy = myPlayer.position.future.y;
+	cursPosition = myPlayer.position.future + Size { 1, 0 };
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
-		cursmx = myPlayer.position.future.x;
-		cursmy = myPlayer.position.future.y + 1;
+		cursPosition = myPlayer.position.future + Size { 0, 1 };
 		DropItemBeforeTrig();
 	}
 
@@ -1520,9 +1506,9 @@ void PerformSecondaryAction()
 		NewCursor(CURSOR_HAND);
 
 	if (pcursitem != -1) {
-		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
+		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, cursPosition, pcursitem);
 	} else if (pcursobj != -1) {
-		NetSendCmdLocParam1(true, CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
+		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
 	} else if (pcursmissile != -1) {
 		MakePlrPath(myplr, missile[pcursmissile].position.tile, true);
 		plr[myplr].destAction = ACTION_WALK;

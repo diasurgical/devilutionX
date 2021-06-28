@@ -271,14 +271,11 @@ bool ForceQuests()
 	for (int i = 0; i < MAXQUESTS; i++) {
 		if (i != Q_BETRAYER && currlevel == quests[i]._qlevel && quests[i]._qslvl != 0) {
 			int ql = quests[quests[i]._qidx]._qslvl - 1;
-			int qx = quests[i].position.x;
-			int qy = quests[i].position.y;
 
 			for (int j = 0; j < 7; j++) {
-				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
+				if (quests[i].position + Size { questxoff[j], questyoff[j] } == cursPosition) {
 					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(questtrigstr[ql])).c_str());
-					cursmx = qx;
-					cursmy = qy;
+					cursPosition = quests[i].position;
 					return true;
 				}
 			}

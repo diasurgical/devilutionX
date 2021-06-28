@@ -26,7 +26,7 @@ void track_process()
 	if (!sgbIsWalking)
 		return;
 
-	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
+	if (cursPosition.x < 0 || cursPosition.x >= MAXDUNX - 1 || cursPosition.x < 0 || cursPosition.x >= MAXDUNY - 1)
 		return;
 
 	const auto &player = plr[myplr];
@@ -35,14 +35,14 @@ void track_process()
 		return;
 
 	const Point target = player.GetTargetPosition();
-	if (cursmx != target.x || cursmy != target.y) {
+	if (cursPosition != target) {
 		Uint32 tick = SDL_GetTicks();
 		int TickMultiplier = 6;
 		if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
 			TickMultiplier = 3;
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * TickMultiplier) {
 			sgdwLastWalk = tick;
-			NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
+			NetSendCmdLoc(myplr, true, CMD_WALKXY, cursPosition);
 			if (!sgbIsScrolling)
 				sgbIsScrolling = true;
 		}
@@ -58,7 +58,7 @@ void track_repeat_walk(bool rep)
 	if (rep) {
 		sgbIsScrolling = false;
 		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;
-		NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
+		NetSendCmdLoc(myplr, true, CMD_WALKXY, cursPosition);
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = false;
 	}

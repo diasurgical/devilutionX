@@ -1422,7 +1422,7 @@ bool StoreGoldFit(int idx)
 		sz++;
 
 	NewCursor(storehold[idx]._iCurs + CURSOR_FIRSTITEM);
-	int numsqrs = cursW / 28 * (cursH / 28);
+	int numsqrs = cursSize.width / 28 * (cursSize.height / 28);
 	NewCursor(CURSOR_HAND);
 
 	if (numsqrs >= sz)

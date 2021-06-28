@@ -509,11 +509,11 @@ void DoLighting(Point position, int nRadius, int Lnum)
 		yoff = LightList[Lnum].position.offset.y;
 		if (xoff < 0) {
 			xoff += 8;
-			position -= { 1, 0 };
+			position -= Size { 1, 0 };
 		}
 		if (yoff < 0) {
 			yoff += 8;
-			position -= { 0, 1 };
+			position -= Size { 0, 1 };
 		}
 	}
 

@@ -3624,9 +3624,9 @@ void CheckPlrSpell()
 
 	if (addflag) {
 		if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
-			Direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+			Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 			sl = GetSpellLevel(myplr, myPlayer._pRSpell);
-			NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, myPlayer._pRSpell, sd, sl);
+			NetSendCmdLocParam3(true, CMD_SPELLXYD, cursPosition, myPlayer._pRSpell, sd, sl);
 		} else if (pcursmonst != -1) {
 			sl = GetSpellLevel(myplr, myPlayer._pRSpell);
 			NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, sl);
@@ -3635,7 +3635,7 @@ void CheckPlrSpell()
 			NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, sl);
 		} else { //145
 			sl = GetSpellLevel(myplr, myPlayer._pRSpell);
-			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
+			NetSendCmdLocParam2(true, CMD_SPELLXY, cursPosition, myPlayer._pRSpell, sl);
 		}
 		return;
 	}

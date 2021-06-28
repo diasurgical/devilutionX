@@ -208,7 +208,7 @@ void GetDebugMonster()
 {
 	int mi1 = pcursmonst;
 	if (mi1 == -1) {
-		int mi2 = dMonster[cursmx][cursmy];
+		int mi2 = dMonster[cursPosition.x][cursPosition.y];
 		if (mi2 != 0) {
 			mi1 = mi2 - 1;
 			if (mi2 <= 0)

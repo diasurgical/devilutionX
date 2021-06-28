@@ -145,8 +145,8 @@ void CreditsRenderer::Render()
 	prev_offset_y_ = offsetY;
 
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-	DrawArt(PANEL_LEFT - 320, UI_OFFSET_Y, &ArtBackgroundWidescreen);
-	DrawArt(PANEL_LEFT, UI_OFFSET_Y, &ArtBackground);
+	DrawArt({ PANEL_LEFT - 320, UI_OFFSET_Y }, &ArtBackgroundWidescreen);
+	DrawArt({ PANEL_LEFT, UI_OFFSET_Y }, &ArtBackground);
 	if (font == nullptr)
 		return;
 

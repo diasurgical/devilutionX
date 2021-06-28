@@ -16,6 +16,14 @@ struct Rectangle {
 		    && point.y >= this->position.y
 		    && point.y <= (this->position.y + this->size.height);
 	}
+
+	/**
+	 * @brief Computes the center of this rectangle in integer coordinates. Values are truncated towards zero.
+	 */
+	constexpr Point Center() const
+	{
+		return position + (size / 2);
+	}
 };
 
 } // namespace devilution

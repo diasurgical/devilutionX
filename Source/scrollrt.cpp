@@ -201,14 +201,14 @@ static bool ShouldShowCursor()
  */
 static void DrawCursor(const CelOutputBuffer &out)
 {
-	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0 || !ShouldShowCursor()) {
+	if (pcurs <= CURSOR_NONE || cursSize.width == 0 || cursSize.height == 0 || !ShouldShowCursor()) {
 		return;
 	}
 
 	// Copy the buffer before the item cursor and its 1px outline are drawn to a temporary buffer.
 	const int outlineWidth = IsItemSprite(pcurs) ? 1 : 0;
 
-	if (MousePosition.x < -cursW - outlineWidth || MousePosition.x - outlineWidth >= out.w() || MousePosition.y < -cursH - outlineWidth || MousePosition.y - outlineWidth >= out.h())
+	if (MousePosition.x < -cursSize.width - outlineWidth || MousePosition.x - outlineWidth >= out.w() || MousePosition.y < -cursSize.height - outlineWidth || MousePosition.y - outlineWidth >= out.h())
 		return;
 
 	constexpr auto Clip = [](int &pos, std::uint32_t &length, std::uint32_t posEnd) {
@@ -221,15 +221,15 @@ static void DrawCursor(const CelOutputBuffer &out)
 	};
 
 	sgdwCursX = MousePosition.x - outlineWidth;
-	sgdwCursWdt = cursW + 2 * outlineWidth;
+	sgdwCursWdt = cursSize.width + 2 * outlineWidth;
 	Clip(sgdwCursX, sgdwCursWdt, out.w());
 
 	sgdwCursY = MousePosition.y - outlineWidth;
-	sgdwCursHgt = cursH + 2 * outlineWidth;
+	sgdwCursHgt = cursSize.height + 2 * outlineWidth;
 	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-	CelDrawCursor(out, MousePosition + Point { 0, cursH - 1 }, pcurs);
+	CelDrawCursor(out, MousePosition + Point { 0, cursSize.height - 1 }, pcurs);
 }
 
 /**

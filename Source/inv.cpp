@@ -799,9 +799,9 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	auto &player = plr[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
-	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursH / 2));
-	Size itemSize { icursW28, icursH28 };
+	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursSize.width / 2));
+	int j = cursorPosition.y + (IsHardwareCursor() ? 0 : (icursSize.height / 2));
+	Size itemSize { icursSize28 };
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
@@ -1168,7 +1168,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	CalcPlrInv(pnum, true);
 	if (pnum == myplr) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
-			SetCursorPos(MousePosition.x + (cursW / 2), MousePosition.y + (cursH / 2));
+			SetCursorPos(MousePosition + (cursSize / 2));
 		NewCursor(cn);
 	}
 }
@@ -1408,7 +1408,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
 				if (!IsHardwareCursor()) {
 					// For a hardware cursor, we set the "hot point" to the center of the item instead.
-					SetCursorPos(cursorPosition.x - (cursW / 2), cursorPosition.y - (cursH / 2));
+					SetCursorPos(cursorPosition - (cursSize / 2));
 				}
 			}
 		}
@@ -1752,7 +1752,7 @@ bool TryInvPut()
 
 	auto &myPlayer = plr[myplr];
 
-	Direction dir = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+	Direction dir = GetDirection(myPlayer.position.tile, cursPosition);
 	if (CanPut(myPlayer.position.tile + dir)) {
 		return true;
 	}
@@ -1812,8 +1812,8 @@ int InvPutItem(PlayerStruct &player, Point position)
 		return -1;
 
 	if (currlevel == 0) {
-		int yp = cursmy;
-		int xp = cursmx;
+		int yp = cursPosition.y;
+		int xp = cursPosition.x;
 		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			Point relativePosition = position - player.position.tile;
 			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.x, relativePosition.y);
@@ -2212,7 +2212,7 @@ bool DropItemBeforeTrig()
 		return false;
 	}
 
-	NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
+	NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
 	NewCursor(CURSOR_HAND);
 	return true;
 }

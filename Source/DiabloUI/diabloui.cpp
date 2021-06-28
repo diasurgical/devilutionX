@@ -672,8 +672,8 @@ void DrawSelector(const SDL_Rect &rect)
 	int frame = GetAnimationFrame(art->frames);
 	int y = rect.y + (rect.h - art->h()) / 2; // TODO FOCUS_MED appares higher than the box
 
-	DrawArt(rect.x, y, art, frame);
-	DrawArt(rect.x + rect.w - art->w(), y, art, frame);
+	DrawArt({ rect.x, y }, art, frame);
+	DrawArt({ rect.x + rect.w - art->w(), y }, art, frame);
 }
 
 void UiClearScreen()
@@ -730,9 +730,9 @@ void Render(const UiImage *uiImage)
 		x += xOffset;
 	}
 	if (uiImage->m_animated) {
-		DrawAnimatedArt(uiImage->m_art, x, uiImage->m_rect.y);
+		DrawAnimatedArt(uiImage->m_art, { x, uiImage->m_rect.y });
 	} else {
-		DrawArt(x, uiImage->m_rect.y, uiImage->m_art, uiImage->m_frame, uiImage->m_rect.w);
+		DrawArt({ x, uiImage->m_rect.y }, uiImage->m_art, uiImage->m_frame, uiImage->m_rect.w);
 	}
 }
 
@@ -756,11 +756,11 @@ void Render(const UiScrollBar *uiSb)
 {
 	// Bar background (tiled):
 	{
-		const std::size_t bgYEnd = DownArrowRect(uiSb).y;
-		std::size_t bgY = uiSb->m_rect.y + uiSb->m_arrow->h();
+		const int bgYEnd = DownArrowRect(uiSb).y;
+		int bgY = uiSb->m_rect.y + uiSb->m_arrow->h();
 		while (bgY < bgYEnd) {
 			std::size_t drawH = std::min(bgY + uiSb->m_bg->h(), bgYEnd) - bgY;
-			DrawArt(uiSb->m_rect.x, bgY, uiSb->m_bg, 0, SCROLLBAR_BG_WIDTH, drawH);
+			DrawArt({ uiSb->m_rect.x, bgY }, uiSb->m_bg, 0, SCROLLBAR_BG_WIDTH, drawH);
 			bgY += drawH;
 		}
 	}
@@ -769,18 +769,18 @@ void Render(const UiScrollBar *uiSb)
 	{
 		const SDL_Rect rect = UpArrowRect(uiSb);
 		const int frame = static_cast<int>(scrollBarState.upArrowPressed ? ScrollBarArrowFrame_UP_ACTIVE : ScrollBarArrowFrame_UP);
-		DrawArt(rect.x, rect.y, uiSb->m_arrow, frame, rect.w);
+		DrawArt({ rect.x, rect.y }, uiSb->m_arrow, frame, rect.w);
 	}
 	{
 		const SDL_Rect rect = DownArrowRect(uiSb);
 		const int frame = static_cast<int>(scrollBarState.downArrowPressed ? ScrollBarArrowFrame_DOWN_ACTIVE : ScrollBarArrowFrame_DOWN);
-		DrawArt(rect.x, rect.y, uiSb->m_arrow, frame, rect.w);
+		DrawArt({ rect.x, rect.y }, uiSb->m_arrow, frame, rect.w);
 	}
 
 	// Thumb:
 	if (SelectedItemMax > 0) {
 		const SDL_Rect rect = ThumbRect(uiSb, SelectedItem, SelectedItemMax + 1);
-		DrawArt(rect.x, rect.y, uiSb->m_thumb);
+		DrawArt({ rect.x, rect.y }, uiSb->m_thumb);
 	}
 }
 
@@ -968,6 +968,6 @@ void DrawMouse()
 	if (IsHardwareCursor() || sgbControllerActive)
 		return;
 
-	DrawArt(MousePosition.x, MousePosition.y, &ArtCursor);
+	DrawArt(MousePosition, &ArtCursor);
 }
 } // namespace devilution

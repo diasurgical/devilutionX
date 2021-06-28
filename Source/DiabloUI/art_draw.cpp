@@ -6,9 +6,9 @@
 
 namespace devilution {
 
-void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
+void DrawArt(Point screenPosition, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
-	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == nullptr)
+	if (screenPosition.y >= gnScreenHeight || screenPosition.x >= gnScreenWidth || art->surface == nullptr)
 		return;
 
 	SDL_Rect srcRect;
@@ -23,7 +23,7 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 		srcRect.w = srcW;
 	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
-	SDL_Rect dstRect = { screenX, screenY, srcRect.w, srcRect.h };
+	SDL_Rect dstRect = { screenPosition.x, screenPosition.y, srcRect.w, srcRect.h };
 	ScaleOutputRect(&dstRect);
 
 	if (art->surface->format->BitsPerPixel == 8 && art->palette_version != pal_surface_palette_version) {
@@ -36,9 +36,9 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 		ErrSdl();
 }
 
-void DrawArt(const CelOutputBuffer &out, Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
+void DrawArt(const CelOutputBuffer &out, Point screenPosition, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
-	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == nullptr)
+	if (screenPosition.y >= gnScreenHeight || screenPosition.x >= gnScreenWidth || art->surface == nullptr)
 		return;
 
 	SDL_Rect srcRect;
@@ -52,8 +52,8 @@ void DrawArt(const CelOutputBuffer &out, Sint16 screenX, Sint16 screenY, Art *ar
 	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
 	SDL_Rect dstRect;
-	dstRect.x = screenX;
-	dstRect.y = screenY;
+	dstRect.x = screenPosition.x;
+	dstRect.y = screenPosition.y;
 	dstRect.w = srcRect.w;
 	dstRect.h = srcRect.h;
 
@@ -67,9 +67,9 @@ void DrawArt(const CelOutputBuffer &out, Sint16 screenX, Sint16 screenY, Art *ar
 		ErrSdl();
 }
 
-void DrawAnimatedArt(Art *art, int screenX, int screenY)
+void DrawAnimatedArt(Art *art, Point screenPosition)
 {
-	DrawArt(screenX, screenY, art, GetAnimationFrame(art->frames));
+	DrawArt(screenPosition, art, GetAnimationFrame(art->frames));
 }
 
 int GetAnimationFrame(int frames, int fps)

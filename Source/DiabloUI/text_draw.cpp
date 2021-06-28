@@ -90,11 +90,11 @@ void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawText
 		}
 		uint8_t w = FontTables[size][static_cast<uint8_t>(text[i]) + 2];
 		w = (w != 0) ? w : FontTables[size][0];
-		DrawArt(sx, sy, &ArtFonts[size][color], static_cast<uint8_t>(text[i]), w);
+		DrawArt({ sx, sy }, &ArtFonts[size][color], static_cast<uint8_t>(text[i]), w);
 		sx += w;
 	}
 	if (drawTextCursor && GetAnimationFrame(2, 500) != 0) {
-		DrawArt(sx, sy, &ArtFonts[size][color], '|');
+		DrawArt({ sx, sy }, &ArtFonts[size][color], '|');
 	}
 }
 

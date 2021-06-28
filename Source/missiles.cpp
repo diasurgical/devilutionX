@@ -2809,7 +2809,7 @@ void AddDisarm(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mie
 		NewCursor(CURSOR_DISARM);
 		if (sgbControllerActive) {
 			if (pcursobj != -1)
-				NetSendCmdLocParam1(true, CMD_DISARMXY, { cursmx, cursmy }, pcursobj);
+				NetSendCmdLocParam1(true, CMD_DISARMXY, cursPosition, pcursobj);
 			else
 				NewCursor(CURSOR_HAND);
 		}
