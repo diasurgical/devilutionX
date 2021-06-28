@@ -586,15 +586,13 @@ void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
 /**
  * @brief Render an object sprite
  * @param out Output buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param ox Output buffer coordinate
- * @param oy Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  * @param pre Is the sprite in the background
  */
-void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
+void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
-	int8_t bv = dObject[x][y];
+	int8_t bv = dObject[tilePosition.x][tilePosition.y];
 	if (bv == 0 || LightTableIndex >= LightsMax)
 		return;
 
@@ -604,16 +602,15 @@ void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
 		bv = bv - 1;
 		if (Objects[bv]._oPreFlag != pre)
 			return;
-		objectPosition.x = ox - CalculateWidth2(Objects[bv]._oAnimWidth);
-		objectPosition.y = oy;
+		objectPosition = targetBufferPosition - Displacement { CalculateWidth2(Objects[bv]._oAnimWidth), 0 };
 	} else {
 		bv = -(bv + 1);
 		if (Objects[bv]._oPreFlag != pre)
 			return;
-		int xx = Objects[bv].position.x - x;
-		int yy = Objects[bv].position.y - y;
-		objectPosition.x = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(Objects[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
-		objectPosition.y = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
+		int xx = Objects[bv].position.x - tilePosition.x;
+		int yy = Objects[bv].position.y - tilePosition.y;
+		objectPosition.x = (xx * TILE_WIDTH / 2) + targetBufferPosition.x - CalculateWidth2(Objects[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
+		objectPosition.y = targetBufferPosition.y + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
@@ -884,7 +881,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 			}
 		} while (false);
 	}
-	DrawObject(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
+	DrawObject(out, tilePosition, targetBufferPosition, true);
 	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, true);
 	if ((bFlag & BFLAG_PLAYERLR) != 0) {
 		int syy = tilePosition.y - 1;
@@ -904,7 +901,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, 0, targetBufferPosition.x, targetBufferPosition.y);
 	}
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
-	DrawObject(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
+	DrawObject(out, tilePosition, targetBufferPosition, false);
 	DrawItem(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y, false);
 
 	if (leveltype != DTYPE_TOWN) {
