@@ -109,7 +109,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapT
 
 	if ((flags & MapFlagsStairs) != 0) {
 		constexpr int NumStairSteps = 4;
-		const Point offset = { -AmLine8, AmLine4 };
+		const Displacement offset = { -AmLine8, AmLine4 };
 		Point p = { center.x - AmLine8, center.y - AmLine8 - AmLine4 };
 		for (int i = 0; i < NumStairSteps; ++i) {
 			DrawMapLineSE(out, p, AmLine16, MapColorsBright);
@@ -230,12 +230,12 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 			if (dItem[i][j] == 0)
 				continue;
 
-			int px = i - 2 * AutomapOffset.x - ViewX;
-			int py = j - 2 * AutomapOffset.y - ViewY;
+			int px = i - 2 * AutomapOffset.deltaX - ViewX;
+			int py = j - 2 * AutomapOffset.deltaY - ViewY;
 
 			Point screen = {
-				(ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-				(ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+				(ScrollInfo.offset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
+				(ScrollInfo.offset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
 			};
 
 			if (CanPanelsCoverView()) {
@@ -267,12 +267,12 @@ void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
 			tile.y++;
 	}
 
-	int px = tile.x - 2 * AutomapOffset.x - ViewX;
-	int py = tile.y - 2 * AutomapOffset.y - ViewY;
+	int px = tile.x - 2 * AutomapOffset.deltaX - ViewX;
+	int py = tile.y - 2 * AutomapOffset.deltaY - ViewY;
 
 	Point base = {
-		(player.position.offset.x * AutoMapScale / 100 / 2) + (ScrollInfo.offset.x * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-		(player.position.offset.y * AutoMapScale / 100 / 2) + (ScrollInfo.offset.y * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+		(player.position.offset.deltaX * AutoMapScale / 100 / 2) + (ScrollInfo.offset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
+		(player.position.offset.deltaY * AutoMapScale / 100 / 2) + (ScrollInfo.offset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
 	};
 
 	if (CanPanelsCoverView()) {
@@ -442,7 +442,7 @@ std::unique_ptr<uint16_t[]> LoadAutomapData(size_t &tileCount)
 bool AutomapActive;
 bool AutomapView[DMAXX][DMAXY];
 int AutoMapScale;
-Point AutomapOffset;
+Displacement AutomapOffset;
 int AmLine64;
 int AmLine32;
 int AmLine16;
@@ -484,26 +484,26 @@ void StartAutomap()
 
 void AutomapUp()
 {
-	AutomapOffset.x--;
-	AutomapOffset.y--;
+	AutomapOffset.deltaX--;
+	AutomapOffset.deltaY--;
 }
 
 void AutomapDown()
 {
-	AutomapOffset.x++;
-	AutomapOffset.y++;
+	AutomapOffset.deltaX++;
+	AutomapOffset.deltaY++;
 }
 
 void AutomapLeft()
 {
-	AutomapOffset.x--;
-	AutomapOffset.y++;
+	AutomapOffset.deltaX--;
+	AutomapOffset.deltaY++;
 }
 
 void AutomapRight()
 {
-	AutomapOffset.x++;
-	AutomapOffset.y--;
+	AutomapOffset.deltaX++;
+	AutomapOffset.deltaY--;
 }
 
 void AutomapZoomIn()
@@ -540,15 +540,15 @@ void DrawAutomap(const CelOutputBuffer &out)
 	}
 
 	Automap = { (ViewX - 16) / 2, (ViewY - 16) / 2 };
-	while (Automap.x + AutomapOffset.x < 0)
-		AutomapOffset.x++;
-	while (Automap.x + AutomapOffset.x >= DMAXX)
-		AutomapOffset.x--;
+	while (Automap.x + AutomapOffset.deltaX < 0)
+		AutomapOffset.deltaX++;
+	while (Automap.x + AutomapOffset.deltaX >= DMAXX)
+		AutomapOffset.deltaX--;
 
-	while (Automap.y + AutomapOffset.y < 0)
-		AutomapOffset.y++;
-	while (Automap.y + AutomapOffset.y >= DMAXY)
-		AutomapOffset.y--;
+	while (Automap.y + AutomapOffset.deltaY < 0)
+		AutomapOffset.deltaY++;
+	while (Automap.y + AutomapOffset.deltaY >= DMAXY)
+		AutomapOffset.deltaY--;
 
 	Automap += AutomapOffset;
 
@@ -558,7 +558,7 @@ void DrawAutomap(const CelOutputBuffer &out)
 		cells++;
 	if (((gnScreenWidth / 2) % d) >= (AutoMapScale * 32) / 100)
 		cells++;
-	if ((ScrollInfo.offset.x + ScrollInfo.offset.y) != 0)
+	if ((ScrollInfo.offset.deltaX + ScrollInfo.offset.deltaY) != 0)
 		cells++;
 
 	Point screen {
@@ -581,8 +581,8 @@ void DrawAutomap(const CelOutputBuffer &out)
 		screen.y -= AmLine8;
 	}
 
-	screen.x += AutoMapScale * ScrollInfo.offset.x / 100 / 2;
-	screen.y += AutoMapScale * ScrollInfo.offset.y / 100 / 2;
+	screen.x += AutoMapScale * ScrollInfo.offset.deltaX / 100 / 2;
+	screen.y += AutoMapScale * ScrollInfo.offset.deltaY / 100 / 2;
 
 	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag) {

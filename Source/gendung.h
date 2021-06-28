@@ -88,7 +88,7 @@ struct ScrollStruct {
 	/** @brief Tile offset of camera. */
 	Point tile;
 	/** @brief Pixel offset of camera. */
-	Point offset;
+	Displacement offset;
 	/** @brief Move direction of camera. */
 	_scroll_direction _sdir;
 };

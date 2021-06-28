@@ -326,7 +326,7 @@ static void PrintSBookHotkey(const CelOutputBuffer &out, Point position, const s
 	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
 
 	// Draw a drop shadow below and to the left of the text
-	DrawString(out, text.c_str(), position + Point { -1, 1 }, UIS_BLACK);
+	DrawString(out, text.c_str(), position + Displacement { -1, 1 }, UIS_BLACK);
 	// Then draw the text over the top
 	DrawString(out, text.c_str(), position, UIS_SILVER);
 }

@@ -205,7 +205,7 @@ static void PlacePlayer(int pnum)
 
 	if (plr[pnum].plrlevel == currlevel) {
 		for (int i = 0; i < 8; i++) {
-			newPosition = plr[pnum].position.tile + Point { plrxoff2[i], plryoff2[i] };
+			newPosition = plr[pnum].position.tile + Displacement { plrxoff2[i], plryoff2[i] };
 			if (PosOkPlayer(pnum, newPosition)) {
 				break;
 			}

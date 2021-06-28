@@ -127,25 +127,25 @@ const char *const szPlrModeAssert[] = {
 	"quitting"
 };
 
-Point GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
+Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
 {
 	// clang-format off
 	//                                  DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
-	constexpr Point startOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
-	constexpr Point movingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
+	constexpr Displacement startOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
+	constexpr Displacement movingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	constexpr bool isDiagionalWalk[8] = {        false,         true,        false,         true,        false,         true,         false,         true };
 	// clang-format on
 
 	float fAnimationProgress = animationInfo.GetAnimationProgress();
-	Point offset = movingOffset[dir];
+	Displacement offset = movingOffset[dir];
 	offset *= fAnimationProgress;
 
 	// In diagonal walks the offset for y is smaller than x.
 	// This means that sometimes x is updated but y not.
 	// That results in a small stuttering.
 	// To fix this we disallow odd x as this is the only case where y is not updated.
-	if (isDiagionalWalk[dir] && ((offset.x % 2) != 0)) {
-		offset.x -= offset.x > 0 ? 1 : -1;
+	if (isDiagionalWalk[dir] && ((offset.deltaX % 2) != 0)) {
+		offset.deltaX -= offset.deltaX > 0 ? 1 : -1;
 	}
 
 	if (cameraMode) {
@@ -229,7 +229,7 @@ static void DrawCursor(const CelOutputBuffer &out)
 	Clip(sgdwCursY, sgdwCursHgt, out.h());
 
 	BlitCursor(sgSaveBack, sgdwCursWdt, out.at(sgdwCursX, sgdwCursY), out.pitch());
-	CelDrawCursor(out, MousePosition + Point { 0, cursH - 1 }, pcurs);
+	CelDrawCursor(out, MousePosition + Displacement { 0, cursH - 1 }, pcurs);
 }
 
 /**
@@ -256,8 +256,8 @@ void DrawMissilePrivate(const CelOutputBuffer &out, MissileStruct *m, int sx, in
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
 		return;
 	}
-	int mx = sx + m->position.offset.x - m->_miAnimWidth2;
-	int my = sy + m->position.offset.y;
+	int mx = sx + m->position.offset.deltaX - m->_miAnimWidth2;
+	int my = sy + m->position.offset.deltaY;
 	CelSprite cel { m->_miAnimData, m->_miAnimWidth };
 	if (m->_miUniqTrans != 0)
 		Cl2DrawLightTbl(out, mx, my, cel, m->_miAnimFrame, m->_miUniqTrans + 3);
@@ -485,8 +485,8 @@ void DrawDeadPlayer(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 		auto &player = plr[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile.x == x && player.position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			int px = sx + player.position.offset.x - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
-			int py = sy + player.position.offset.y;
+			int px = sx + player.position.offset.deltaX - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
+			int py = sy + player.position.offset.deltaY;
 			DrawPlayer(out, i, x, y, px, py);
 		}
 	}
@@ -695,13 +695,13 @@ static void DrawMonsterHelper(const CelOutputBuffer &out, int x, int y, int oy, 
 
 	const CelSprite &cel = *pMonster->AnimInfo.pCelSprite;
 
-	Point offset = pMonster->position.offset;
+	Displacement offset = pMonster->position.offset;
 	if (pMonster->IsWalking()) {
 		offset = GetOffsetForWalking(pMonster->AnimInfo, pMonster->_mdir);
 	}
 
-	int px = sx + offset.x - CalculateWidth2(cel.Width());
-	int py = sy + offset.y;
+	int px = sx + offset.deltaX - CalculateWidth2(cel.Width());
+	int py = sy + offset.deltaY;
 	if (mi == pcursmonst) {
 		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.GetFrameToUseForRendering());
 	}
@@ -727,12 +727,12 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
 	}
 	auto &player = plr[p];
 
-	Point offset = player.position.offset;
+	Displacement offset = player.position.offset;
 	if (player.IsWalking()) {
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
-	int px = sx + offset.x - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
-	int py = sy + offset.y;
+	int px = sx + offset.deltaX - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
+	int py = sy + offset.deltaY;
 
 	DrawPlayer(out, p, x, y, px, py);
 }
@@ -1162,11 +1162,11 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 
 	// Adjust by player offset and tile grid alignment
 	auto &myPlayer = plr[myplr];
-	Point offset = ScrollInfo.offset;
+	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	int sx = offset.x + tileOffsetX;
-	int sy = offset.y + tileOffsetY;
+	int sx = offset.deltaX + tileOffsetX;
+	int sy = offset.deltaY + tileOffsetY;
 
 	int columns = tileColums;
 	int rows = tileRows;

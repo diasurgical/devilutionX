@@ -2953,7 +2953,7 @@ void OperateBook(int pnum, int i)
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
 		    plr[pnum].position.tile,
-		    object[i].position + Point { -2, -4 },
+		    object[i].position + Displacement { -2, -4 },
 		    plr[pnum]._pdir,
 		    MIS_GUARDIAN,
 		    TARGET_MONSTERS,
@@ -3003,7 +3003,7 @@ void OperateBookLever(int pnum, int i)
 			if (object[i]._otype != OBJ_BLOODBOOK)
 				ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (object[i]._otype == OBJ_BLINDBOOK) {
-				SpawnUnique(UITEM_OPTAMULET, Point { x, y } + Point { 5, 5 });
+				SpawnUnique(UITEM_OPTAMULET, Point { x, y } + Displacement { 5, 5 });
 				tren = TransVal;
 				TransVal = 9;
 				DRLG_MRectTrans(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
@@ -3299,7 +3299,7 @@ void OperatePedistal(int pnum, int i)
 			PlaySfxLoc(LS_BLODSTAR, object[i].position);
 		ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
-		SpawnUnique(UITEM_ARMOFVAL, Point { setpc_x, setpc_y } * 2 + Point { 25, 19 });
+		SpawnUnique(UITEM_ARMOFVAL, Point { setpc_x, setpc_y } * 2 + Displacement { 25, 19 });
 		object[i]._oSelFlag = 0;
 	}
 }
