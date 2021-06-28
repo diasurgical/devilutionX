@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine.h"
+#include "engine/displacement.hpp"
 #include "engine/point.hpp"
 #include "gendung.h"
 
@@ -19,7 +20,7 @@ extern bool AutomapActive;
 extern bool AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern int AutoMapScale;
-extern Point AutomapOffset;
+extern Displacement AutomapOffset;
 extern int AmLine64;
 extern int AmLine32;
 extern int AmLine16;

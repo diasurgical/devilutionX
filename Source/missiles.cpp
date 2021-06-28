@@ -262,21 +262,21 @@ constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
 */
 Direction16 GetDirection16(Point p1, Point p2)
 {
-	Point offset = p2 - p1;
-	Point absolute = abs(offset);
+	Displacement offset = p2 - p1;
+	Displacement absolute = abs(offset);
 
-	bool flipY = offset.x != absolute.x;
-	bool flipX = offset.y != absolute.y;
+	bool flipY = offset.deltaX != absolute.deltaX;
+	bool flipX = offset.deltaY != absolute.deltaY;
 
 	bool flipMedian = false;
-	if (absolute.x > absolute.y) {
-		std::swap(absolute.x, absolute.y);
+	if (absolute.deltaX > absolute.deltaY) {
+		std::swap(absolute.deltaX, absolute.deltaY);
 		flipMedian = true;
 	}
 
 	Direction16 ret = DIR16_S;
-	if (3 * absolute.x <= (absolute.y * 2)) { // mx/my <= 2/3, approximation of tan(33.75)
-		if (5 * absolute.x < absolute.y)      // mx/my < 0.2, approximation of tan(11.25)
+	if (3 * absolute.deltaX <= (absolute.deltaY * 2)) { // mx/my <= 2/3, approximation of tan(33.75)
+		if (5 * absolute.deltaX < absolute.deltaY)      // mx/my < 0.2, approximation of tan(11.25)
 			ret = DIR16_SW;
 		else
 			ret = DIR16_Sw;
@@ -321,8 +321,8 @@ static void GetMissileVel(int i, Point source, Point destination, int v)
 	double dxp = (destination.x + source.y - source.x - destination.y) * (1 << 21);
 	double dyp = (destination.y + destination.x - source.x - source.y) * (1 << 21);
 	double dr = sqrt(dxp * dxp + dyp * dyp);
-	missile[i].position.velocity.x = (dxp * (v << 16)) / dr;
-	missile[i].position.velocity.y = (dyp * (v << 15)) / dr;
+	missile[i].position.velocity.deltaX = (dxp * (v << 16)) / dr;
+	missile[i].position.velocity.deltaY = (dyp * (v << 15)) / dr;
 }
 
 static void PutMissile(int i)
@@ -346,8 +346,8 @@ static void GetMissilePos(int i)
 {
 	int lx, ly;
 
-	int mx = missile[i].position.traveled.x >> 16;
-	int my = missile[i].position.traveled.y >> 16;
+	int mx = missile[i].position.traveled.deltaX >> 16;
+	int my = missile[i].position.traveled.deltaY >> 16;
 	int dx = mx + 2 * my;
 	int dy = 2 * my - mx;
 	if (dx < 0) {
@@ -364,9 +364,9 @@ static void GetMissilePos(int i)
 		ly = dy / 8;
 		dy = dy / 64;
 	}
-	missile[i].position.tile = Point { dx, dy } + missile[i].position.start;
-	missile[i].position.offset.x = mx + (dy * 32) - (dx * 32);
-	missile[i].position.offset.y = my - (dx * 16) - (dy * 16);
+	missile[i].position.tile = missile[i].position.start + Displacement { dx, dy };
+	missile[i].position.offset.deltaX = mx + (dy * 32) - (dx * 32);
+	missile[i].position.offset.deltaY = my - (dx * 16) - (dy * 16);
 	ChangeLightOff(missile[i]._mlid, { lx - (dx * 8), ly - (dy * 8) });
 }
 
@@ -413,8 +413,8 @@ void MoveMissilePos(int i)
 	if (PosOkMonst(missile[i]._misource, { x, y })) {
 		missile[i].position.tile.x += dx;
 		missile[i].position.tile.y += dy;
-		missile[i].position.offset.x += (dy * 32) - (dx * 32);
-		missile[i].position.offset.y -= (dy * 16) + (dx * 16);
+		missile[i].position.offset.deltaX += (dy * 32) - (dx * 32);
+		missile[i].position.offset.deltaY -= (dy * 16) + (dx * 16);
 	}
 }
 
@@ -1589,12 +1589,12 @@ void AddWarp(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, in
 		if (trg->_tmsg == 1032 || trg->_tmsg == 1027 || trg->_tmsg == 1026 || trg->_tmsg == 1028) {
 			Point candidate = trg->position;
 			if ((leveltype == 1 || leveltype == 2) && (trg->_tmsg == 1026 || trg->_tmsg == 1027 || trg->_tmsg == 1028)) {
-				candidate += Point { 0, 1 };
+				candidate += Displacement { 0, 1 };
 			} else {
-				candidate += Point { 1, 0 };
+				candidate += Displacement { 1, 0 };
 			}
-			Point off = src - candidate;
-			int distanceSq = off.y * off.y + off.x * off.x;
+			Displacement off = src - candidate;
+			int distanceSq = off.deltaY * off.deltaY + off.deltaX * off.deltaX;
 			if (distanceSq < minDistanceSq) {
 				minDistanceSq = distanceSq;
 				tile = candidate;
@@ -1631,8 +1631,8 @@ void AddRuneExplosion(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mi
 
 		missile[mi]._midam = dmg;
 
-		constexpr Point offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
-		for (Point offset : offsets)
+		constexpr Displacement offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
+		for (Displacement offset : offsets)
 			CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + offset, true);
 	}
 	missile[mi]._mlid = AddLight(src, 8);
@@ -1980,10 +1980,10 @@ void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int i
 void AddMagmaball(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
 	GetMissileVel(mi, src, dst, 16);
-	missile[mi].position.traveled.x += 3 * missile[mi].position.velocity.x;
-	missile[mi].position.traveled.y += 3 * missile[mi].position.velocity.y;
+	missile[mi].position.traveled.deltaX += 3 * missile[mi].position.velocity.deltaX;
+	missile[mi].position.traveled.deltaY += 3 * missile[mi].position.velocity.deltaY;
 	GetMissilePos(mi);
-	if (!gbIsHellfire || (missile[mi].position.velocity.x & 0xFFFF0000) != 0 || (missile[mi].position.velocity.y & 0xFFFF0000) != 0)
+	if (!gbIsHellfire || (missile[mi].position.velocity.deltaX & 0xFFFF0000) != 0 || (missile[mi].position.velocity.deltaY & 0xFFFF0000) != 0)
 		missile[mi]._mirange = 256;
 	else
 		missile[mi]._mirange = 1;
@@ -2277,7 +2277,7 @@ void AddFiremove(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/
 	missile[mi]._miVar2 = 0;
 	missile[mi].position.tile.x++;
 	missile[mi].position.tile.y++;
-	missile[mi].position.offset.y -= 32;
+	missile[mi].position.offset.deltaY -= 32;
 }
 
 void AddGuardian(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
@@ -2452,7 +2452,7 @@ void AddAcid(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, in
 {
 	GetMissileVel(mi, src, dst, 16);
 	SetMissDir(mi, GetDirection16(src, dst));
-	if ((!gbIsHellfire && (missile[mi].position.velocity.x & 0xFFFF0000) != 0) || (missile[mi].position.velocity.y & 0xFFFF0000) != 0)
+	if ((!gbIsHellfire && (missile[mi].position.velocity.deltaX & 0xFFFF0000) != 0) || (missile[mi].position.velocity.deltaY & 0xFFFF0000) != 0)
 		missile[mi]._mirange = 5 * (monster[id]._mint + 4);
 	else
 		missile[mi]._mirange = 1;
@@ -3161,8 +3161,8 @@ void MI_LArrow(int i)
 		}
 		if (missile[i]._mirange == 0) {
 			missile[i]._mimfnum = 0;
-			missile[i].position.traveled.x -= missile[i].position.velocity.x;
-			missile[i].position.traveled.y -= missile[i].position.velocity.y;
+			missile[i].position.traveled.deltaX -= missile[i].position.velocity.deltaX;
+			missile[i].position.traveled.deltaY -= missile[i].position.velocity.deltaY;
 			GetMissilePos(i);
 			if (missile[i]._mitype == MIS_LARROW)
 				SetMissAnim(i, MFILE_MINILTNG);
@@ -3219,8 +3219,8 @@ void MI_Firebolt(int i)
 
 	missile[i]._mirange--;
 	if (missile[i]._mitype != MIS_BONESPIRIT || missile[i]._mimfnum != 8) {
-		omx = missile[i].position.traveled.x;
-		omy = missile[i].position.traveled.y;
+		omx = missile[i].position.traveled.deltaX;
+		omy = missile[i].position.traveled.deltaY;
 		missile[i].position.traveled += missile[i].position.velocity;
 		GetMissilePos(i);
 		p = missile[i]._misource;
@@ -3392,7 +3392,7 @@ void MI_Firewall(int i)
 	PutMissile(i);
 }
 
-static void FireballUpdate(int i, Point offset, bool alwaysDelete)
+static void FireballUpdate(int i, Displacement offset, bool alwaysDelete)
 {
 	missile[i]._mirange--;
 
@@ -3414,27 +3414,27 @@ static void FireballUpdate(int i, Point offset, bool alwaysDelete)
 			Point m = missile[i].position.tile;
 			ChangeLight(missile[i]._mlid, missile[i].position.tile, missile[i]._miAnimFrame);
 
-			constexpr Point Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
-			for (Point offset : Offsets) {
+			constexpr Displacement Offsets[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+			for (Displacement offset : Offsets) {
 				if (!CheckBlock(p, m + offset))
 					CheckMissileCol(i, dam, dam, false, m + offset, true);
 			}
 
 			if (!TransList[dTransVal[m.x][m.y]]
-			    || (missile[i].position.velocity.x < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
+			    || (missile[i].position.velocity.deltaX < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
 				missile[i].position.tile.x++;
 				missile[i].position.tile.y++;
-				missile[i].position.offset.y -= 32;
+				missile[i].position.offset.deltaY -= 32;
 			}
-			if (missile[i].position.velocity.y > 0
+			if (missile[i].position.velocity.deltaY > 0
 			    && ((TransList[dTransVal[m.x + 1][m.y]] && nSolidTable[dPiece[m.x + 1][m.y]])
 			        || (TransList[dTransVal[m.x - 1][m.y]] && nSolidTable[dPiece[m.x - 1][m.y]]))) {
-				missile[i].position.offset.y -= 32;
+				missile[i].position.offset.deltaY -= 32;
 			}
-			if (missile[i].position.velocity.x > 0
+			if (missile[i].position.velocity.deltaX > 0
 			    && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]])
 			        || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]]))) {
-				missile[i].position.offset.x -= 32;
+				missile[i].position.offset.deltaX -= 32;
 			}
 			missile[i]._mimfnum = 0;
 			SetMissAnim(i, MFILE_BIGEXP);
@@ -3554,16 +3554,16 @@ void MI_Immolation(int i)
 		missile[i]._miVar7--;
 	}
 
-	Point offset = missile[i].position.velocity;
+	Displacement offset = missile[i].position.velocity;
 
 	switch (missile[i]._mimfnum) {
 	case DIR_S:
 	case DIR_N:
-		offset.y = 0;
+		offset.deltaY = 0;
 		break;
 	case DIR_W:
 	case DIR_E:
-		offset.x = 0;
+		offset.deltaX = 0;
 		break;
 	default:
 		break;
@@ -3647,8 +3647,8 @@ void MI_FlashFront(int i)
 	int src = missile[i]._misource;
 	if (missile[i]._micaster == TARGET_MONSTERS && src != -1) {
 		missile[i].position.tile = plr[src].position.tile;
-		missile[i].position.traveled.x = plr[src].position.offset.x << 16;
-		missile[i].position.traveled.y = plr[src].position.offset.y << 16;
+		missile[i].position.traveled.deltaX = plr[src].position.offset.deltaX << 16;
+		missile[i].position.traveled.deltaY = plr[src].position.offset.deltaY << 16;
 	}
 	missile[i]._mirange--;
 	if (missile[i]._mirange == 0) {
@@ -3803,8 +3803,8 @@ void MI_FireNova(int i)
 	}
 	for (const auto &k : vCrawlTable) {
 		if (sx1 != k[6] || sy1 != k[7]) {
-			Point offsets[] = { { k[6], k[7] }, { -k[6], -k[7] }, { -k[6], +k[7] }, { +k[6], -k[7] } };
-			for (Point offset : offsets)
+			Displacement offsets[] = { { k[6], k[7] }, { -k[6], -k[7] }, { -k[6], +k[7] }, { +k[6], -k[7] } };
+			for (Displacement offset : offsets)
 				AddMissile(src, src + offset, dir, MIS_FIRENOVA, en, id, dam, missile[i]._mispllvl);
 			sx1 = k[6];
 			sy1 = k[7];
@@ -3992,8 +3992,8 @@ void MI_Flash(int i)
 	}
 	missile[i]._mirange--;
 
-	constexpr Point Offsets[] = { { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
-	for (Point offset : Offsets)
+	constexpr Displacement Offsets[] = { { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
+	for (Displacement offset : Offsets)
 		CheckMissileCol(i, missile[i]._midam, missile[i]._midam, true, missile[i].position.tile + offset, true);
 
 	if (missile[i]._mirange == 0) {
@@ -4014,8 +4014,8 @@ void MI_Flash2(int i)
 	}
 	missile[i]._mirange--;
 
-	constexpr Point Offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 } };
-	for (Point offset : Offsets)
+	constexpr Displacement Offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 } };
+	for (Displacement offset : Offsets)
 		CheckMissileCol(i, missile[i]._midam, missile[i]._midam, true, missile[i].position.tile + offset, true);
 
 	if (missile[i]._mirange == 0) {
@@ -4053,8 +4053,8 @@ void MI_Etherealize(int i)
 	auto &player = plr[missile[i]._misource];
 
 	missile[i].position.tile = player.position.tile;
-	missile[i].position.traveled.x = player.position.offset.x << 16;
-	missile[i].position.traveled.y = player.position.offset.y << 16;
+	missile[i].position.traveled.deltaX = player.position.offset.deltaX << 16;
+	missile[i].position.traveled.deltaY = player.position.offset.deltaY << 16;
 	if (player._pmode == PM_WALK3) {
 		missile[i].position.start = player.position.future;
 	} else {
@@ -4082,7 +4082,7 @@ void MI_Firemove(int i)
 
 	missile[i].position.tile.x--;
 	missile[i].position.tile.y--;
-	missile[i].position.offset.y += 32;
+	missile[i].position.offset.deltaY += 32;
 	missile[i]._miVar1++;
 	if (missile[i]._miVar1 == missile[i]._miAnimLen) {
 		SetMissDir(i, 1);
@@ -4112,7 +4112,7 @@ void MI_Firemove(int i)
 	}
 	missile[i].position.tile.x++;
 	missile[i].position.tile.y++;
-	missile[i].position.offset.y -= 32;
+	missile[i].position.offset.deltaY -= 32;
 	PutMissile(i);
 }
 
@@ -4289,7 +4289,7 @@ void MI_Acidsplat(int i)
 	if (missile[i]._mirange == missile[i]._miAnimLen) {
 		missile[i].position.tile.x++;
 		missile[i].position.tile.y++;
-		missile[i].position.offset.y -= 32;
+		missile[i].position.offset.deltaY -= 32;
 	}
 	missile[i]._mirange--;
 	if (missile[i]._mirange == 0) {
@@ -4579,10 +4579,10 @@ void MI_Nova(int i)
 	}
 	for (const auto &k : vCrawlTable) {
 		if (sx1 != k[6] || sy1 != k[7]) {
-			AddMissile(src, src + Point { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
-			AddMissile(src, src + Point { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
-			AddMissile(src, src + Point { -k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
-			AddMissile(src, src + Point { k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
+			AddMissile(src, src + Displacement { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
+			AddMissile(src, src + Displacement { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
+			AddMissile(src, src + Displacement { -k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
+			AddMissile(src, src + Displacement { k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
 			sx1 = k[6];
 			sy1 = k[7];
 		}
@@ -4769,8 +4769,8 @@ void MI_Element(int i)
 		if (!CheckBlock(p, c))
 			CheckMissileCol(i, dam, dam, true, c, true);
 
-		constexpr Point Offsets[] = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
-		for (Point offset : Offsets) {
+		constexpr Displacement Offsets[] = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+		for (Displacement offset : Offsets) {
 			if (!CheckBlock(p, c + offset))
 				CheckMissileCol(i, dam, dam, true, c + offset, true);
 		}

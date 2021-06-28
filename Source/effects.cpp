@@ -1151,7 +1151,7 @@ bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 	const auto &playerPosition = plr[myplr].position.tile;
 	const auto delta = soundPosition - playerPosition;
 
-	pan = (delta.x - delta.y) * 256;
+	pan = (delta.deltaX - delta.deltaY) * 256;
 	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
 
 	volume = playerPosition.ApproxDistance(soundPosition);

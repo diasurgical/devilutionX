@@ -106,12 +106,12 @@ uint16_t CircleMenuHintTextColor(bool active)
 */
 void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, const Point &origin)
 {
-	DrawString(out, hint.top, origin + Point { hint.xMid - hint.topW / 2, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));
+	DrawString(out, hint.top, origin + Displacement { hint.xMid - hint.topW / 2, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));
 
-	DrawString(out, hint.left, origin + Point { 0, LineHeight }, CircleMenuHintTextColor(IsLeftActive(hint)));
-	DrawString(out, hint.right, origin + Point { hint.leftW + MidSpaces * SpaceWidth(), LineHeight }, CircleMenuHintTextColor(IsRightActive(hint)));
+	DrawString(out, hint.left, origin + Displacement { 0, LineHeight }, CircleMenuHintTextColor(IsLeftActive(hint)));
+	DrawString(out, hint.right, origin + Displacement { hint.leftW + MidSpaces * SpaceWidth(), LineHeight }, CircleMenuHintTextColor(IsRightActive(hint)));
 
-	DrawString(out, hint.bottom, origin + Point { hint.xMid - hint.bottomW / 2, LineHeight * 2 }, CircleMenuHintTextColor(IsBottomActive(hint)));
+	DrawString(out, hint.bottom, origin + Displacement { hint.xMid - hint.bottomW / 2, LineHeight * 2 }, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
 void DrawStartModifierMenu(const CelOutputBuffer &out)

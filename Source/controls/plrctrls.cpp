@@ -976,11 +976,11 @@ void HotSpellMove(AxisDirection dir)
 	}
 
 	if (dir.y == AxisDirectionY_UP) {
-		if (HSExists(newMousePosition - Point { 0, SPLICONLENGTH })) {
+		if (HSExists(newMousePosition - Displacement { 0, SPLICONLENGTH })) {
 			newMousePosition.y -= SPLICONLENGTH;
 		}
 	} else if (dir.y == AxisDirectionY_DOWN) {
-		if (HSExists(newMousePosition + Point { 0, SPLICONLENGTH })) {
+		if (HSExists(newMousePosition + Displacement { 0, SPLICONLENGTH })) {
 			newMousePosition.y += SPLICONLENGTH;
 		}
 	}
@@ -1267,8 +1267,8 @@ void HandleRightStickMotion()
 		int dx = 0;
 		int dy = 0;
 		acc.Pool(&dx, &dy, 32);
-		AutomapOffset.x += dy + dx;
-		AutomapOffset.y += dy - dx;
+		AutomapOffset.deltaX += dy + dx;
+		AutomapOffset.deltaY += dy - dx;
 		return;
 	}
 

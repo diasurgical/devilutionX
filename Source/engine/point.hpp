@@ -23,13 +23,6 @@ struct Point {
 		return !(*this == other);
 	}
 
-	constexpr Point &operator+=(const Point &other)
-	{
-		x += other.x;
-		y += other.y;
-		return *this;
-	}
-
 	constexpr Point &operator+=(const Displacement &displacement)
 	{
 		x += displacement.deltaX;
@@ -42,10 +35,10 @@ struct Point {
 		return (*this) += Displacement::fromDirection(direction);
 	}
 
-	constexpr Point &operator-=(const Point &other)
+	constexpr Point &operator-=(const Displacement &displacement)
 	{
-		x -= other.x;
-		y -= other.y;
+		x -= displacement.deltaX;
+		y -= displacement.deltaY;
 		return *this;
 	}
 
@@ -63,12 +56,6 @@ struct Point {
 		return *this;
 	}
 
-	constexpr friend Point operator+(Point a, const Point &b)
-	{
-		a += b;
-		return a;
-	}
-
 	constexpr friend Point operator+(Point a, Displacement displacement)
 	{
 		a += displacement;
@@ -81,15 +68,20 @@ struct Point {
 		return a;
 	}
 
-	constexpr friend Point operator-(Point a, const Point &b)
+	constexpr friend Displacement operator-(Point a, const Point &b)
 	{
-		a -= b;
-		return a;
+		return { a.x - b.x, a.y - b.y };
 	}
 
 	constexpr friend Point operator-(const Point &a)
 	{
 		return { -a.x, -a.y };
+	}
+
+	constexpr friend Point operator-(Point a, Displacement displacement)
+	{
+		a -= displacement;
+		return a;
 	}
 
 	constexpr friend Point operator*(Point a, const float factor)
@@ -112,8 +104,8 @@ struct Point {
 
 	constexpr int ApproxDistance(Point other) const
 	{
-		Point offset = abs(other - *this);
-		auto minMax = std::minmax(offset.x, offset.y);
+		Displacement offset = abs(other - *this);
+		auto minMax = std::minmax(offset.deltaX, offset.deltaY);
 		int min = minMax.first;
 		int max = minMax.second;
 
@@ -136,7 +128,7 @@ struct Point {
 		auto vector = *this - other; //No need to call abs() as we square the values anyway
 
 		// Casting multiplication operands to a wide type to address overflow warnings
-		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.x) * vector.x + static_cast<int64_t>(vector.y) * vector.y));
+		return static_cast<int>(std::sqrt(static_cast<int64_t>(vector.deltaX) * vector.deltaX + static_cast<int64_t>(vector.deltaY) * vector.deltaY));
 	}
 
 	constexpr friend Point abs(Point a)
@@ -146,16 +138,16 @@ struct Point {
 
 	constexpr int ManhattanDistance(Point other) const
 	{
-		Point offset = abs(*this - other);
+		Displacement offset = abs(*this - other);
 
-		return offset.x + offset.y;
+		return offset.deltaX + offset.deltaY;
 	}
 
 	constexpr int WalkingDistance(Point other) const
 	{
-		Point offset = abs(*this - other);
+		Displacement offset = abs(*this - other);
 
-		return std::max<int>(offset.x, offset.y);
+		return std::max<int>(offset.deltaX, offset.deltaY);
 	}
 };
 

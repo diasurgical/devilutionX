@@ -267,7 +267,7 @@ void DrawInv(const CelOutputBuffer &out)
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    InvRect[i + SLOTXY_INV_FIRST] + Point { RIGHT_PANEL_X, -1 },
+			    InvRect[i + SLOTXY_INV_FIRST] + Displacement { RIGHT_PANEL_X, -1 },
 			    InventorySlotSizeInPixels);
 		}
 	}
@@ -1815,8 +1815,8 @@ int InvPutItem(PlayerStruct &player, Point position)
 		int yp = cursmy;
 		int xp = cursmx;
 		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			Point relativePosition = position - player.position.tile;
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.x, relativePosition.y);
+			Displacement relativePosition = position - player.position.tile;
+			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.deltaX, relativePosition.deltaY);
 			quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
