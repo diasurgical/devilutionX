@@ -732,21 +732,19 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
 /**
  * @brief Check if and how a monster should be rendered
  * @param out Output buffer
- * @param y dPiece coordinate
- * @param x dPiece coordinate
+ * @param tilePosition dPiece coordinates
  * @param oy dPiece Y offset
- * @param sx Output buffer coordinate
- * @param sy Output buffer coordinate
+ * @param targetBufferPosition Output buffer coordinates
  */
-void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
+void DrawMonsterHelper(const Surface &out, Point tilePosition, int oy, Point targetBufferPosition)
 {
-	int mi = dMonster[x][y + oy];
+	int mi = dMonster[tilePosition.x][tilePosition.y + oy];
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
 		auto &towner = Towners[mi];
-		int px = sx - CalculateWidth2(towner._tAnimWidth);
-		const Point position { px, sy };
+		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
+		const Point position { px, targetBufferPosition.y };
 		if (mi == pcursmonst) {
 			CelBlitOutlineTo(out, 166, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
 		}
@@ -755,7 +753,7 @@ void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
 		return;
 	}
 
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag)
+	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -780,12 +778,11 @@ void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
 		offset = GetOffsetForWalking(monster.AnimInfo, monster._mdir);
 	}
 
-	int px = sx + offset.deltaX - CalculateWidth2(cel.Width());
-	int py = sy + offset.deltaY;
+	const Point monsterRenderPosition { targetBufferPosition + offset - Displacement { CalculateWidth2(cel.Width()), 0 } };
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, cel, monster.AnimInfo.GetFrameToUseForRendering());
+		Cl2DrawOutline(out, 233, monsterRenderPosition.x, monsterRenderPosition.y, cel, monster.AnimInfo.GetFrameToUseForRendering());
 	}
-	DrawMonster(out, x, y, px, py, monster);
+	DrawMonster(out, tilePosition.x, tilePosition.y, monsterRenderPosition.x, monsterRenderPosition.y, monster);
 }
 
 /**
@@ -883,7 +880,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawPlayerHelper(out, { tilePosition.x, syy }, targetBufferPosition);
 	}
 	if ((bFlag & BFLAG_MONSTLR) != 0 && negMon < 0) {
-		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, -1, targetBufferPosition.x, targetBufferPosition.y);
+		DrawMonsterHelper(out, tilePosition, -1, targetBufferPosition);
 	}
 	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
 		DrawDeadPlayer(out, tilePosition.x, tilePosition.y, targetBufferPosition.x, targetBufferPosition.y);
@@ -892,7 +889,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawPlayerHelper(out, tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
-		DrawMonsterHelper(out, tilePosition.x, tilePosition.y, 0, targetBufferPosition.x, targetBufferPosition.y);
+		DrawMonsterHelper(out, tilePosition, 0, targetBufferPosition);
 	}
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
 	DrawObject(out, tilePosition, targetBufferPosition, false);
