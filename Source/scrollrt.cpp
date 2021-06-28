@@ -493,17 +493,15 @@ void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lighting)
  * @brief Render a player sprite
  * @param out Output buffer
  * @param pnum Player id
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param px Output buffer coordinate
- * @param py Output buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Output buffer coordinates
  * @param pCelBuff sprite buffer
  * @param nCel frame
  * @param nWidth width
  */
-void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int py)
+void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
 {
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
+	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
 
@@ -534,17 +532,17 @@ void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int py)
 	}
 
 	if (pnum == pcursplr)
-		Cl2DrawOutline(out, 165, px, py, *pCelSprite, nCel);
+		Cl2DrawOutline(out, 165, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
 
 	if (pnum == MyPlayerId) {
-		Cl2Draw(out, px, py, *pCelSprite, nCel);
-		DrawPlayerIcons(out, pnum, px, py, true);
+		Cl2Draw(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
+		DrawPlayerIcons(out, pnum, targetBufferPosition.x, targetBufferPosition.y, true);
 		return;
 	}
 
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
-		Cl2DrawLightTbl(out, px, py, *pCelSprite, nCel, 1);
-		DrawPlayerIcons(out, pnum, px, py, true);
+	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
+		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, 1);
+		DrawPlayerIcons(out, pnum, targetBufferPosition.x, targetBufferPosition.y, true);
 		return;
 	}
 
@@ -554,8 +552,8 @@ void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int py)
 	else
 		LightTableIndex -= 5;
 
-	Cl2DrawLight(out, px, py, *pCelSprite, nCel);
-	DrawPlayerIcons(out, pnum, px, py, false);
+	Cl2DrawLight(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel);
+	DrawPlayerIcons(out, pnum, targetBufferPosition.x, targetBufferPosition.y, false);
 
 	LightTableIndex = l;
 }
@@ -576,9 +574,9 @@ void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
 		auto &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile.x == x && player.position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
-			int px = sx + player.position.offset.deltaX - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
-			int py = sy + player.position.offset.deltaY;
-			DrawPlayer(out, i, x, y, px, py);
+			const Displacement center { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()), 0 };
+			const Point playerRenderPosition { Point { sx, sy } + player.position.offset - center };
+			DrawPlayer(out, i, { x, y }, playerRenderPosition);
 		}
 	}
 }
@@ -813,10 +811,10 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
 
-	const int width { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()) };
-	const Point playerRenderPosition { targetBufferPosition + offset - Displacement { width, 0 } };
+	const Displacement center { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()), 0 };
+	const Point playerRenderPosition { targetBufferPosition + offset - center };
 
-	DrawPlayer(out, p, tilePosition.x, tilePosition.y, playerRenderPosition.x, playerRenderPosition.y);
+	DrawPlayer(out, p, tilePosition, playerRenderPosition);
 }
 
 /**
