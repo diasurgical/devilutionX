@@ -78,6 +78,13 @@ extern dungeon_type ReturnLevelType;
 extern int ReturnLevel;
 
 void InitQuests();
+
+/**
+ * @brief Deactivates quests from each quest pool at random to provide variety for single player games
+ * @param seed The seed used to control which quests are deactivated
+ * @param quests The available quest list, this function will make some of them inactive by the time it returns
+*/
+void InitialiseQuestPools(uint32_t seed, QuestStruct quests[]);
 void CheckQuests();
 bool ForceQuests();
 bool QuestStatus(int i);

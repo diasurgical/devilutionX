@@ -161,16 +161,8 @@ void InitQuests()
 	}
 
 	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
-		SetRndSeed(glSeedTbl[15]);
-		if (GenerateRnd(2) != 0)
-			Quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
-		else
-			Quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
-
-		Quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		Quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		Quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-		Quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+		// Quests are set from the seed used to generate level 16.
+		InitialiseQuestPools(glSeedTbl[15], Quests);
 	}
 #ifdef _DEBUG
 	if (questdebug != -1)
@@ -190,6 +182,20 @@ void InitQuests()
 	Quests[Q_LTBANNER]._qvar1 = 1;
 	if (gbIsMultiplayer)
 		Quests[Q_BETRAYER]._qvar1 = 2;
+}
+
+void InitialiseQuestPools(uint32_t seed, QuestStruct quests[])
+{
+	SetRndSeed(seed);
+	if (GenerateRnd(2) != 0)
+		quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
+	else
+		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
+
+	quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
 }
 
 void CheckQuests()

@@ -532,6 +532,7 @@ if(RUN_TESTS)
     test/missiles_test.cpp
     test/pack_test.cpp
     test/player_test.cpp
+    test/quests_test.cpp
     test/random_test.cpp
     test/scrollrt_test.cpp
     test/stores_test.cpp

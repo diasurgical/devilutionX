@@ -24,7 +24,7 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev
+      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON -DENABLE_CODECOVERAGE=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
