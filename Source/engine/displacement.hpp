@@ -82,6 +82,30 @@ struct Displacement {
 	{
 		return { abs(a.deltaX), abs(a.deltaY) };
 	}
+
+	static constexpr Displacement fromDirection(Direction direction)
+	{
+		switch (direction) {
+		case DIR_S:
+			return { 1, 1 };
+		case DIR_SW:
+			return { 0, 1 };
+		case DIR_W:
+			return { -1, 1 };
+		case DIR_NW:
+			return { -1, 0 };
+		case DIR_N:
+			return { -1, -1 };
+		case DIR_NE:
+			return { 0, -1 };
+		case DIR_E:
+			return { 1, -1 };
+		case DIR_SE:
+			return { 1, 0 };
+		default:
+			return { 0, 0 };
+		}
+	};
 };
 
 } // namespace devilution

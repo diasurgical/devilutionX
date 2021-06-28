@@ -1037,7 +1037,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 		}
 
 		j = 0;
-		for (try2 = 0; j < num && try2 < 100; xp += Point::fromDirection(static_cast<Direction>(GenerateRnd(8))).x, yp += Point::fromDirection(static_cast<Direction>(GenerateRnd(8))).x) { /// BUGFIX: `yp += Point.y`
+		for (try2 = 0; j < num && try2 < 100; xp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
 			if (!MonstPlace(xp, yp)
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
 			    || ((leaderf & 2) != 0 && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {

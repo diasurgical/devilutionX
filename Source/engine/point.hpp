@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "engine/direction.hpp"
+#include "engine/displacement.hpp"
 #include "utils/stdcompat/abs.hpp"
 #include "utils/stdcompat/algorithm.hpp"
 
@@ -11,30 +12,6 @@ namespace devilution {
 struct Point {
 	int x;
 	int y;
-
-	static constexpr Point fromDirection(Direction direction)
-	{
-		switch (direction) {
-		case DIR_S:
-			return { 1, 1 };
-		case DIR_SW:
-			return { 0, 1 };
-		case DIR_W:
-			return { -1, 1 };
-		case DIR_NW:
-			return { -1, 0 };
-		case DIR_N:
-			return { -1, -1 };
-		case DIR_NE:
-			return { 0, -1 };
-		case DIR_E:
-			return { 1, -1 };
-		case DIR_SE:
-			return { 1, 0 };
-		default:
-			return { 0, 0 };
-		}
-	};
 
 	constexpr bool operator==(const Point &other) const
 	{
@@ -53,9 +30,16 @@ struct Point {
 		return *this;
 	}
 
+	constexpr Point &operator+=(const Displacement &displacement)
+	{
+		x += displacement.deltaX;
+		y += displacement.deltaY;
+		return *this;
+	}
+
 	constexpr Point &operator+=(Direction direction)
 	{
-		return (*this) += Point::fromDirection(direction);
+		return (*this) += Displacement::fromDirection(direction);
 	}
 
 	constexpr Point &operator-=(const Point &other)
@@ -82,6 +66,12 @@ struct Point {
 	constexpr friend Point operator+(Point a, const Point &b)
 	{
 		a += b;
+		return a;
+	}
+
+	constexpr friend Point operator+(Point a, Displacement displacement)
+	{
+		a += displacement;
 		return a;
 	}
 
