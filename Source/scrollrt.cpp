@@ -970,14 +970,12 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 /**
  * @brief Render a row of tile
  * @param out Output buffer
- * @param x dPiece coordinate
- * @param y dPiece coordinate
- * @param sx Buffer coordinate
- * @param sy Buffer coordinate
+ * @param tilePosition dPiece coordinates
+ * @param targetBufferPosition Buffer coordinates
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, int rows, int columns)
+void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferPosition, int rows, int columns)
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
@@ -985,39 +983,39 @@ void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, int rows,
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY) {
-				if (x + 1 < MAXDUNX && y - 1 >= 0 && sx + TILE_WIDTH <= gnScreenWidth) {
+			if (tilePosition.x >= 0 && tilePosition.x < MAXDUNX && tilePosition.y >= 0 && tilePosition.y < MAXDUNY) {
+				if (tilePosition.x + 1 < MAXDUNX && tilePosition.y - 1 >= 0 && targetBufferPosition.x + TILE_WIDTH <= gnScreenWidth) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
 					// A proper fix for this would probably be to layout the sceen and render by
 					// sprite screen position rather than tile position.
-					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
-						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1)) {              // Has walkable area behind it
-							DrawDungeon(out, Point { x, y } + DIR_E, { sx + TILE_WIDTH, sy });
+					if (IsWall(tilePosition.x, tilePosition.y) && (IsWall(tilePosition.x + 1, tilePosition.y) || (tilePosition.x > 0 && IsWall(tilePosition.x - 1, tilePosition.y)))) { // Part of a wall aligned on the x-axis
+						if (IsWalkable(tilePosition.x + 1, tilePosition.y - 1) && IsWalkable(tilePosition.x, tilePosition.y - 1)) {                                                     // Has walkable area behind it
+							DrawDungeon(out, tilePosition + DIR_E, { targetBufferPosition.x + TILE_WIDTH, targetBufferPosition.y });
 						}
 					}
 				}
-				if (dPiece[x][y] != 0) {
-					DrawDungeon(out, { x, y }, { sx, sy });
+				if (dPiece[tilePosition.x][tilePosition.y] != 0) {
+					DrawDungeon(out, tilePosition, targetBufferPosition);
 				}
 			}
-			ShiftGrid(&x, &y, 1, 0);
-			sx += TILE_WIDTH;
+			ShiftGrid(&tilePosition.x, &tilePosition.y, 1, 0);
+			targetBufferPosition.x += TILE_WIDTH;
 		}
 		// Return to start of row
-		ShiftGrid(&x, &y, -columns, 0);
-		sx -= columns * TILE_WIDTH;
+		ShiftGrid(&tilePosition.x, &tilePosition.y, -columns, 0);
+		targetBufferPosition.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
-		sy += TILE_HEIGHT / 2;
+		targetBufferPosition.y += TILE_HEIGHT / 2;
 		if ((i & 1) != 0) {
-			x++;
+			tilePosition.x++;
 			columns--;
-			sx += TILE_WIDTH / 2;
+			targetBufferPosition.x += TILE_WIDTH / 2;
 		} else {
-			y++;
+			tilePosition.y++;
 			columns++;
-			sx -= TILE_WIDTH / 2;
+			targetBufferPosition.x -= TILE_WIDTH / 2;
 		}
 	}
 }
@@ -1182,7 +1180,7 @@ void DrawGame(const Surface &fullOut, Point position)
 	}
 
 	DrawFloor(out, position, { sx, sy }, rows, columns);
-	DrawTileContent(out, position.x, position.y, sx, sy, rows, columns);
+	DrawTileContent(out, position, { sx, sy }, rows, columns);
 
 	if (!zoomflag) {
 		Zoom(fullOut.subregionY(0, gnViewportHeight));
