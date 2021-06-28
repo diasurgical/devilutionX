@@ -323,7 +323,7 @@ static void DrawSpell(const CelOutputBuffer &out)
 static void PrintSBookHotkey(const CelOutputBuffer &out, Point position, const std::string &text)
 {
 	// Align the hot key text with the top-right corner of the spell icon
-	position += { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
+	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
 
 	// Draw a drop shadow below and to the left of the text
 	DrawString(out, text.c_str(), position + Point { -1, 1 }, UIS_BLACK);

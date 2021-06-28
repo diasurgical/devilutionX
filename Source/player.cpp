@@ -1660,13 +1660,13 @@ static void RespawnDeadItem(ItemStruct *itm, Point target)
 	itm->_itype = ITYPE_NONE;
 }
 
-static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Point direction)
+static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Displacement direction)
 {
 	if (itm->isEmpty())
 		return;
 
-	Point target = direction + player.position.tile;
-	if (direction != Point { 0, 0 } && ItemSpaceOk(target)) {
+	Point target = player.position.tile + direction;
+	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(itm, target);
 		player.HoldItem = *itm;
 		NetSendCmdPItem(false, CMD_RESPAWNITEM, target);
@@ -1778,7 +1778,7 @@ StartPlayerKill(int pnum, int earflag)
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = left[pdd];
-							PlrDeadItem(player, &item, Point::fromDirection(pdd));
+							PlrDeadItem(player, &item, Displacement::fromDirection(pdd));
 						}
 
 						CalcPlrInv(pnum, false);
