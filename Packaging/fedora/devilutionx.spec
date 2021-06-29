@@ -49,7 +49,6 @@ desktop-file-install --remove-category="Qt" --dir=%{buildroot}%{_datadir}/applic
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/applications/%{name}-hellfire.desktop
 
-%{_datadir}/fonts/truetype/CharisSILB.ttf
 %{_datadir}/icons/hicolor/512x512/apps/%{name}.png
 %{_datadir}/icons/hicolor/512x512/apps/%{name}-hellfire.png
 
