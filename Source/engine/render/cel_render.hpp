@@ -122,4 +122,30 @@ void CelDrawLightRedSafeTo(const CelOutputBuffer &out, Point position, const Cel
  */
 void CelBlitOutlineTo(const CelOutputBuffer &out, uint8_t col, Point position, const CelSprite &cel, int frame, bool skipColorIndexZero = true);
 
+struct PixelOrPercent {
+	bool isPercent;
+	int value;
+};
+
+struct PixelOrPercentRect {
+	PixelOrPercent x, y, w, h;
+};
+
+struct trnRegion {
+	PixelOrPercentRect region;
+	std::string trn;
+};
+
+constexpr PixelOrPercent operator"" _px(unsigned long long int n)
+{
+	return PixelOrPercent { false, static_cast<int>(n) };
+}
+
+constexpr PixelOrPercent operator"" _perc(unsigned long long int n)
+{
+	return PixelOrPercent { true, static_cast<int>(n) };
+}
+
+void CelDrawLightMultiTRNTo(const ItemStruct &item, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame, const std::vector<trnRegion> &v);
+
 } // namespace devilution

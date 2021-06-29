@@ -7,17 +7,22 @@
 
 #include <cstdint>
 #include <cstring>
+#include <unordered_map>
 
+#include "engine/load_file.hpp"
 #include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
 #include "options.h"
 #include "palette.h"
 #include "scrollrt.h"
 #include "utils/attributes.h"
+#include "cursor.h"
 
 namespace devilution {
 
 namespace {
+
+std::unordered_map<std::string, uint8_t *> gTrnMap;
 
 constexpr bool IsCelTransparent(std::uint8_t control)
 {
@@ -758,6 +763,71 @@ std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame
 		}
 	}
 	return { xBegin, xEnd };
+}
+
+void RenderCelWithMultipleTRN(const ItemStruct &item, const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, const std::vector<trnRegion> &v)
+{
+	auto size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
+	RenderCel(
+	    out, position, src, srcSize, srcWidth, [](std::uint8_t *dst, const std::uint8_t *src, std::size_t w) {
+		    while (w-- > 0) {
+				*dst++ = *src;
+			    ++src;
+		    } },
+	    NullLineEndFn);
+
+	for (const auto &trnv : v) {
+		int y = 0;
+		const auto *dstBegin = &out[position];
+		const auto dstPitch = out.pitch();
+
+		if (gTrnMap[trnv.trn] == nullptr) {
+			gTrnMap[trnv.trn] = (uint8_t *)LoadFileInMem(trnv.trn.c_str()).release(); // remove after preloading ALL trns has been added!
+		}
+
+		auto convert_coords = [size](PixelOrPercentRect rect) {
+			if (rect.x.isPercent) {
+				rect.x.value = (size.width * rect.x.value) / 100;
+			}
+			if (rect.w.isPercent) {
+				rect.w.value = (size.width * rect.w.value) / 100;
+			}
+			if (rect.y.isPercent) {
+				rect.y.value = (size.height * rect.y.value) / 100;
+			}
+			if (rect.h.isPercent) {
+				rect.h.value = (size.height * rect.h.value) / 100;
+			}
+			return rect;
+		};
+
+		RenderCel(
+		    out, position, src, srcSize, srcWidth, [convert_coords, &trnv, &y, dstBegin, dstPitch](std::uint8_t *dst, const std::uint8_t *src, std::size_t w) {
+
+
+		PixelOrPercentRect rect = convert_coords(trnv.region);
+		int startx = rect.x.value;
+		int starty = rect.y.value;
+		int endx = startx + rect.w.value;
+		int endy = starty + rect.h.value;
+		    while (w-- > 0) {
+				const int x = dst - (dstBegin - y * dstPitch);
+				if (y >= starty && y <= endy && x >= startx && x <= endx) {
+					*dst++ = gTrnMap[trnv.trn][static_cast<std::uint8_t>(*src)];
+				} else {
+					dst++;
+				}
+			    ++src;
+		    } },
+		    [&y]() { y++; });
+	}
+}
+
+void CelDrawLightMultiTRNTo(const ItemStruct &item, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame, const std::vector<trnRegion> &v)
+{
+	int nDataSize;
+	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	RenderCelWithMultipleTRN(item, out, position, pRLEBytes, nDataSize, cel.Width(frame), v);
 }
 
 } // namespace devilution
