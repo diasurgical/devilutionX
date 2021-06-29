@@ -649,8 +649,9 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, Point position, const CelSpri
 	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
 }
 
-void CelDrawItem(bool usable, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
+void CelDrawItem(const ItemStruct &item, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame)
 {
+	bool usable = item._iStatFlag;
 	if (!usable) {
 		CelDrawLightRedTo(out, position, cel, frame);
 	} else {

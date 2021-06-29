@@ -8,6 +8,7 @@
 #include <utility>
 
 #include "engine.h"
+#include "items.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 
@@ -84,13 +85,13 @@ void CelDrawLightRedTo(const CelOutputBuffer &out, Point position, const CelSpri
 
 /**
  * @brief Blit item's CEL sprite recolored red if not usable, normal if usable
- * @param usable indicates if the item should be recolored red or not
+ * @param item Item being drawn
  * @param out Target buffer
  * @param position Target buffer coordinate
  * @param cel CEL sprite
  * @param frame CEL frame number
  */
-void CelDrawItem(bool usable, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame);
+void CelDrawItem(const ItemStruct &item, const CelOutputBuffer &out, Point position, const CelSprite &cel, int frame);
 
 /**
  * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer

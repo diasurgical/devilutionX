@@ -194,7 +194,7 @@ void CelDrawCursor(const CelOutputBuffer &out, Point position, int cursId)
 	if (IsItemSprite(cursId)) {
 		const auto &heldItem = plr[myplr].HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
-		CelDrawItem(heldItem._iStatFlag, out, position, sprite, frame);
+		CelDrawItem(heldItem, out, position, sprite, frame);
 	} else {
 		CelClippedDrawTo(out, position, sprite, frame);
 	}
