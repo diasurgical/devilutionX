@@ -784,7 +784,7 @@ static void LoadLighting(LoadHelper *file, LightListStruct *pLight)
 	file->skip(4); // Unused
 	pLight->position.old.x = file->nextLE<int32_t>();
 	pLight->position.old.y = file->nextLE<int32_t>();
-	pLight->oldRadious = file->nextLE<int32_t>();
+	pLight->oldRadius = file->nextLE<int32_t>();
 	pLight->position.offset.x = file->nextLE<int32_t>();
 	pLight->position.offset.y = file->nextLE<int32_t>();
 	pLight->_lflags = file->nextBool32();
@@ -1824,7 +1824,7 @@ static void SaveLighting(SaveHelper *file, LightListStruct *pLight)
 	file->skip(4); // Unused
 	file->writeLE<int32_t>(pLight->position.old.x);
 	file->writeLE<int32_t>(pLight->position.old.y);
-	file->writeLE<int32_t>(pLight->oldRadious);
+	file->writeLE<int32_t>(pLight->oldRadius);
 	file->writeLE<int32_t>(pLight->position.offset.x);
 	file->writeLE<int32_t>(pLight->position.offset.y);
 	file->writeLE<uint32_t>(pLight->_lflags ? 1 : 0);
