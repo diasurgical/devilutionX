@@ -283,18 +283,17 @@ static byte *DeltaImportMonster(byte *src, DMonsterStr *dst)
 
 static byte *DeltaExportJunk(byte *dst)
 {
-	int i, q;
-
-	for (i = 0; i < MAXPORTAL; i++) {
-		if (sgJunk.portal[i].x == 0xFF) {
+	for (auto &portal : sgJunk.portal) {
+		if (portal.x == 0xFF) {
 			*dst++ = byte { 0xFF };
 		} else {
-			memcpy(dst, &sgJunk.portal[i], sizeof(DPortal));
+			memcpy(dst, &portal, sizeof(DPortal));
 			dst += sizeof(DPortal);
 		}
 	}
 
-	for (i = 0, q = 0; i < MAXQUESTS; i++) {
+	int q = 0;
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (!questlist[i].isSinglePlayerOnly) {
 			sgJunk.quests[q].qlog = quests[i]._qlog ? 1 : 0;
 			sgJunk.quests[q].qstate = quests[i]._qactive;
@@ -310,9 +309,7 @@ static byte *DeltaExportJunk(byte *dst)
 
 static void DeltaImportJunk(byte *src)
 {
-	int i, q;
-
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (int i = 0; i < MAXPORTAL; i++) {
 		if (*src == byte { 0xFF }) {
 			memset(&sgJunk.portal[i], 0xFF, sizeof(DPortal));
 			src++;
@@ -330,7 +327,8 @@ static void DeltaImportJunk(byte *src)
 		}
 	}
 
-	for (i = 0, q = 0; i < MAXQUESTS; i++) {
+	int q = 0;
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (!questlist[i].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
@@ -705,21 +703,16 @@ void DeltaSaveLevel()
 
 void DeltaLoadLevel()
 {
-	int ot;
-	int i, j, k, l;
-	int x, y, xx, yy;
-	bool done;
-
 	if (!gbIsMultiplayer)
 		return;
 
 	deltaload = true;
 	if (currlevel != 0) {
-		for (i = 0; i < nummonsters; i++) {
+		for (int i = 0; i < nummonsters; i++) {
 			if (sgLevels[currlevel].monster[i]._mx != 0xFF) {
 				M_ClearSquares(i);
-				x = sgLevels[currlevel].monster[i]._mx;
-				y = sgLevels[currlevel].monster[i]._my;
+				int x = sgLevels[currlevel].monster[i]._mx;
+				int y = sgLevels[currlevel].monster[i]._my;
 				monster[i].position.tile = { x, y };
 				monster[i].position.old = { x, y };
 				monster[i].position.future = { x, y };
@@ -754,7 +747,7 @@ void DeltaLoadLevel()
 		memcpy(AutomapView, &sgLocals[currlevel], sizeof(AutomapView));
 	}
 
-	for (i = 0; i < MAXITEMS; i++) {
+	for (int i = 0; i < MAXITEMS; i++) {
 		if (sgLevels[currlevel].item[i].bCmd != 0xFF) {
 			if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
 				int ii = FindGetItem(
@@ -804,15 +797,15 @@ void DeltaLoadLevel()
 					items[ii]._iAC = sgLevels[currlevel].item[i].bAC;
 					items[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
 				}
-				x = sgLevels[currlevel].item[i].x;
-				y = sgLevels[currlevel].item[i].y;
+				int x = sgLevels[currlevel].item[i].x;
+				int y = sgLevels[currlevel].item[i].y;
 				if (!CanPut({ x, y })) {
-					done = false;
-					for (k = 1; k < 50 && !done; k++) {
-						for (j = -k; j <= k && !done; j++) {
-							yy = y + j;
-							for (l = -k; l <= k && !done; l++) {
-								xx = x + l;
+					bool done = false;
+					for (int k = 1; k < 50 && !done; k++) {
+						for (int j = -k; j <= k && !done; j++) {
+							int yy = y + j;
+							for (int l = -k; l <= k && !done; l++) {
+								int xx = x + l;
 								if (CanPut({ xx, yy })) {
 									done = true;
 									x = xx;
@@ -830,7 +823,7 @@ void DeltaLoadLevel()
 	}
 
 	if (currlevel != 0) {
-		for (i = 0; i < MAXOBJECTS; i++) {
+		for (int i = 0; i < MAXOBJECTS; i++) {
 			switch (sgLevels[currlevel].object[i].bCmd) {
 			case CMD_OPENDOOR:
 			case CMD_CLOSEDOOR:
@@ -846,8 +839,8 @@ void DeltaLoadLevel()
 			}
 		}
 
-		for (i = 0; i < nobjects; i++) {
-			ot = object[objectactive[i]]._otype;
+		for (int i = 0; i < nobjects; i++) {
+			int ot = object[objectactive[i]]._otype;
 			if (ot == OBJ_TRAPL || ot == OBJ_TRAPR)
 				Obj_Trap(objectactive[i]);
 		}

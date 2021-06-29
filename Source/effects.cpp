@@ -1115,17 +1115,15 @@ static void stream_update()
 
 void InitMonsterSND(int monst)
 {
-	char path[MAX_PATH];
-	int mtype, i, j;
-
 	if (!gbSndInited) {
 		return;
 	}
 
-	mtype = Monsters[monst].mtype;
-	for (i = 0; i < 4; i++) {
+	const int mtype = Monsters[monst].mtype;
+	for (int i = 0; i < 4; i++) {
 		if (MonstSndChar[i] != 's' || monsterdata[mtype].snd_special) {
-			for (j = 0; j < 2; j++) {
+			for (int j = 0; j < 2; j++) {
+				char path[MAX_PATH];
 				sprintf(path, monsterdata[mtype].sndfile, MonstSndChar[i], j + 1);
 				Monsters[monst].Snds[i][j] = sound_file_load(path);
 			}
@@ -1146,15 +1144,13 @@ void FreeMonsterSnd()
 
 bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 {
-	int pan, volume;
-
 	const auto &playerPosition = plr[myplr].position.tile;
 	const auto delta = soundPosition - playerPosition;
 
-	pan = (delta.deltaX - delta.deltaY) * 256;
+	int pan = (delta.deltaX - delta.deltaY) * 256;
 	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
 
-	volume = playerPosition.ApproxDistance(soundPosition);
+	int volume = playerPosition.ApproxDistance(soundPosition);
 	volume *= -64;
 
 	if (volume <= ATTENUATION_MIN)
@@ -1167,8 +1163,6 @@ bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 
 static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
 {
-	int lPan, lVolume;
-
 	if (plr[myplr].pLvlLoad != 0 && gbIsMultiplayer) {
 		return;
 	}
@@ -1180,8 +1174,8 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
 		return;
 	}
 
-	lPan = 0;
-	lVolume = 0;
+	int lVolume = 0;
+	int lPan = 0;
 	if (loc && !calc_snd_position(position, &lVolume, &lPan)) {
 		return;
 	}
@@ -1200,23 +1194,23 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
 
 void PlayEffect(int i, int mode)
 {
-	int sndIdx, mi, lVolume, lPan;
-
 	if (plr[myplr].pLvlLoad != 0) {
 		return;
 	}
 
-	sndIdx = GenerateRnd(2);
+	int sndIdx = GenerateRnd(2);
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
 
-	mi = monster[i]._mMTidx;
+	int mi = monster[i]._mMTidx;
 	TSnd *snd = Monsters[mi].Snds[mode][sndIdx].get();
 	if (snd == nullptr || snd->isPlaying()) {
 		return;
 	}
 
+	int lVolume = 0;
+	int lPan = 0;
 	if (!calc_snd_position(monster[i].position.tile, &lVolume, &lPan))
 		return;
 

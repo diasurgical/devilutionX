@@ -464,11 +464,9 @@ Point GetRandomAvailableItemPosition()
 
 void AddInitItems()
 {
-	int j, rnd;
-
 	int curlv = items_get_currlevel();
-	rnd = GenerateRnd(3) + 3;
-	for (j = 0; j < rnd; j++) {
+	int rnd = GenerateRnd(3) + 3;
+	for (int j = 0; j < rnd; j++) {
 		int ii = AllocateItem();
 
 		Point position = GetRandomAvailableItemPosition();
@@ -921,16 +919,11 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 
 void CalcSelfItems(PlayerStruct &player)
 {
-	int i;
-	ItemStruct *pi;
-	bool sf, changeflag;
-	int sa, ma, da;
-
-	sa = 0;
-	ma = 0;
-	da = 0;
-	pi = player.InvBody;
-	for (i = 0; i < NUM_INVLOC; i++, pi++) {
+	int sa = 0;
+	int ma = 0;
+	int da = 0;
+	ItemStruct *pi = player.InvBody;
+	for (int i = 0; i < NUM_INVLOC; i++, pi++) {
 		if (!pi->isEmpty()) {
 			pi->_iStatFlag = true;
 			if (pi->_iIdentified) {
@@ -940,12 +933,14 @@ void CalcSelfItems(PlayerStruct &player)
 			}
 		}
 	}
+
+	bool changeflag;
 	do {
 		changeflag = false;
 		pi = player.InvBody;
-		for (i = 0; i < NUM_INVLOC; i++, pi++) {
+		for (int i = 0; i < NUM_INVLOC; i++, pi++) {
 			if (!pi->isEmpty() && pi->_iStatFlag) {
-				sf = true;
+				bool sf = true;
 				if (sa + player._pBaseStr < pi->_iMinStr)
 					sf = false;
 				if (ma + player._pBaseMag < pi->_iMinMag)
@@ -1091,19 +1086,19 @@ void GetPlrHandSeed(ItemStruct *h)
  */
 void GetGoldSeed(int pnum, ItemStruct *h)
 {
-	int i, ii, s;
-	bool doneflag;
+	int s = 0;
 
+	bool doneflag;
 	do {
 		doneflag = true;
 		s = AdvanceRndSeed();
-		for (i = 0; i < numitems; i++) {
-			ii = itemactive[i];
+		for (int i = 0; i < numitems; i++) {
+			int ii = itemactive[i];
 			if (items[ii]._iSeed == s)
 				doneflag = false;
 		}
 		if (pnum == myplr) {
-			for (i = 0; i < plr[pnum]._pNumInv; i++) {
+			for (int i = 0; i < plr[pnum]._pNumInv; i++) {
 				if (plr[pnum].InvList[i]._iSeed == s)
 					doneflag = false;
 			}
@@ -1307,11 +1302,8 @@ bool ItemSpaceOk(Point position)
 
 static bool GetItemSpace(Point position, int8_t inum)
 {
-	int rs;
-	int xx, yy;
-	bool savail;
-
-	yy = 0;
+	int xx = 0;
+	int yy = 0;
 	for (int j = position.y - 1; j <= position.y + 1; j++) {
 		xx = 0;
 		for (int i = position.x - 1; i <= position.x + 1; i++) {
@@ -1321,7 +1313,7 @@ static bool GetItemSpace(Point position, int8_t inum)
 		yy++;
 	}
 
-	savail = false;
+	bool savail = false;
 	for (int j = 0; j < 3; j++) {
 		for (int i = 0; i < 3; i++) { // NOLINT(modernize-loop-convert)
 			if (itemhold[i][j])
@@ -1329,7 +1321,7 @@ static bool GetItemSpace(Point position, int8_t inum)
 		}
 	}
 
-	rs = GenerateRnd(15) + 1;
+	int rs = GenerateRnd(15) + 1;
 
 	if (!savail)
 		return false;
@@ -1475,16 +1467,11 @@ static bool control_WriteStringToBuffer(const char *str)
 
 void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 {
-	int l[256];
-	char istr[128];
-	int nl, j, preidx;
-	int tmp;
-
-	tmp = GenerateRnd(10);
-	preidx = -1;
-	if (tmp == 0 || onlygood) {
-		nl = 0;
-		for (j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
+	int preidx = -1;
+	if (GenerateRnd(10) == 0 || onlygood) {
+		int nl = 0;
+		int l[256];
+		for (int j = 0; PL_Prefix[j].PLPower != IPL_INVALID; j++) {
 			if (!IsPrefixValidForItemType(j, PLT_STAFF) || PL_Prefix[j].PLMinLvl > lvl)
 				continue;
 			if (onlygood && !PL_Prefix[j].PLOk)
@@ -1498,6 +1485,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 		}
 		if (nl != 0) {
 			preidx = l[GenerateRnd(nl)];
+			char istr[128];
 			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
 			items[i]._iMagical = ITEM_QUALITY_MAGIC;
@@ -1514,6 +1502,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	}
 	if (!control_WriteStringToBuffer(items[i]._iIName)) {
 		strcpy(items[i]._iIName, _(AllItemsList[items[i].IDidx].iSName));
+		char istr[128];
 		if (preidx != -1) {
 			sprintf(istr, "%s %s", _(PL_Prefix[preidx].PLName), items[i]._iIName);
 			strcpy(items[i]._iIName, istr);
@@ -1528,79 +1517,77 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 
 void GetStaffSpell(int i, int lvl, bool onlygood)
 {
-	int l, rv, minc, maxc, v;
-	char istr[68];
-
 	if (!gbIsHellfire && GenerateRnd(4) == 0) {
 		GetItemPower(i, lvl / 2, lvl, PLT_STAFF, onlygood);
-	} else {
-		int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
-		l = lvl / 2;
-		if (l == 0)
-			l = 1;
-		rv = GenerateRnd(maxSpells) + 1;
-
-		if (gbIsSpawn && lvl > 10)
-			lvl = 10;
-
-		int s = SPL_FIREBOLT;
-		enum spell_id bs = SPL_NULL;
-		while (rv > 0) {
-			int sLevel = GetSpellStaffLevel(static_cast<spell_id>(s));
-			if (sLevel != -1 && l >= sLevel) {
-				rv--;
-				bs = static_cast<spell_id>(s);
-			}
-			s++;
-			if (!gbIsMultiplayer && s == SPL_RESURRECT)
-				s = SPL_TELEKINESIS;
-			if (!gbIsMultiplayer && s == SPL_HEALOTHER)
-				s = SPL_FLARE;
-			if (s == maxSpells)
-				s = SPL_FIREBOLT;
-		}
-		if (!control_WriteStringToBuffer(istr))
-			strcpy(istr, fmt::format(_("{:s} of {:s}"), items[i]._iName, _(spelldata[bs].sNameText)).c_str());
-		strcpy(istr, fmt::format(_("Staff of {:s}"), _(spelldata[bs].sNameText)).c_str());
-		strcpy(items[i]._iName, istr);
-		strcpy(items[i]._iIName, istr);
-
-		minc = spelldata[bs].sStaffMin;
-		maxc = spelldata[bs].sStaffMax - minc + 1;
-		items[i]._iSpell = bs;
-		items[i]._iCharges = minc + GenerateRnd(maxc);
-		items[i]._iMaxCharges = items[i]._iCharges;
-
-		items[i]._iMinMag = spelldata[bs].sMinInt;
-		v = items[i]._iCharges * spelldata[bs].sStaffCost / 5;
-		items[i]._ivalue += v;
-		items[i]._iIvalue += v;
-		GetStaffPower(i, lvl, bs, onlygood);
+		return;
 	}
+
+	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
+	int l = lvl / 2;
+	if (l == 0)
+		l = 1;
+	int rv = GenerateRnd(maxSpells) + 1;
+
+	if (gbIsSpawn && lvl > 10)
+		lvl = 10;
+
+	int s = SPL_FIREBOLT;
+	enum spell_id bs = SPL_NULL;
+	while (rv > 0) {
+		int sLevel = GetSpellStaffLevel(static_cast<spell_id>(s));
+		if (sLevel != -1 && l >= sLevel) {
+			rv--;
+			bs = static_cast<spell_id>(s);
+		}
+		s++;
+		if (!gbIsMultiplayer && s == SPL_RESURRECT)
+			s = SPL_TELEKINESIS;
+		if (!gbIsMultiplayer && s == SPL_HEALOTHER)
+			s = SPL_FLARE;
+		if (s == maxSpells)
+			s = SPL_FIREBOLT;
+	}
+
+	char istr[68];
+	if (!control_WriteStringToBuffer(istr))
+		strcpy(istr, fmt::format(_("{:s} of {:s}"), items[i]._iName, _(spelldata[bs].sNameText)).c_str());
+	strcpy(istr, fmt::format(_("Staff of {:s}"), _(spelldata[bs].sNameText)).c_str());
+	strcpy(items[i]._iName, istr);
+	strcpy(items[i]._iIName, istr);
+
+	int minc = spelldata[bs].sStaffMin;
+	int maxc = spelldata[bs].sStaffMax - minc + 1;
+	items[i]._iSpell = bs;
+	items[i]._iCharges = minc + GenerateRnd(maxc);
+	items[i]._iMaxCharges = items[i]._iCharges;
+
+	items[i]._iMinMag = spelldata[bs].sMinInt;
+	int v = items[i]._iCharges * spelldata[bs].sStaffCost / 5;
+	items[i]._ivalue += v;
+	items[i]._iIvalue += v;
+	GetStaffPower(i, lvl, bs, onlygood);
 }
 
 void GetOilType(int i, int max_lvl)
 {
-	int cnt, t, j, r;
-	char rnd[32];
+	int cnt = 2;
+	char rnd[32] = { 5, 6 };
 
 	if (!gbIsMultiplayer) {
 		if (max_lvl == 0)
 			max_lvl = 1;
-		cnt = 0;
 
-		for (j = 0; j < (int)(sizeof(OilLevels) / sizeof(OilLevels[0])); j++) {
+		cnt = 0;
+		for (size_t j = 0; j < sizeof(OilLevels) / sizeof(OilLevels[0]); j++) {
 			if (OilLevels[j] <= max_lvl) {
 				rnd[cnt] = j;
 				cnt++;
 			}
 		}
-		r = GenerateRnd(cnt);
-		t = rnd[r];
-	} else {
-		r = GenerateRnd(2);
-		t = (r != 0 ? 6 : 5);
 	}
+
+	int t = rnd[GenerateRnd(cnt)];
+
 	strcpy(items[i]._iName, _(OilNames[t]));
 	strcpy(items[i]._iIName, _(OilNames[t]));
 	items[i]._iMiscId = OilMagic[t];
@@ -1681,9 +1668,9 @@ int PLVal(int pv, int p1, int p2, int minv, int maxv)
 
 void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval)
 {
-	int r, r2;
+	int r = RndPL(param1, param2);
+	int r2;
 
-	r = RndPL(param1, param2);
 	switch (power) {
 	case IPL_TOHIT:
 		items[i]._iPLToHit += r;
@@ -2230,9 +2217,6 @@ void SetupItem(int i)
 
 int RndItem(int m)
 {
-	int i, ri, r;
-	int ril[512];
-
 	if ((monster[m].MData->mTreasure & 0x8000) != 0)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
 
@@ -2245,8 +2229,10 @@ int RndItem(int m)
 	if (GenerateRnd(100) > 25)
 		return IDI_GOLD + 1;
 
-	ri = 0;
-	for (i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
+	int ril[512];
+
+	int ri = 0;
+	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
 			continue;
 
@@ -2266,17 +2252,16 @@ int RndItem(int m)
 			ri--;
 	}
 
-	r = GenerateRnd(ri);
+	int r = GenerateRnd(ri);
 	return ril[r] + 1;
 }
 
 int RndUItem(int m)
 {
-	int ril[512];
-	bool okflag;
-
 	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
 		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
+
+	int ril[512];
 
 	int curlv = items_get_currlevel();
 	int ri = 0;
@@ -2284,7 +2269,7 @@ int RndUItem(int m)
 		if (!IsItemAvailable(i))
 			continue;
 
-		okflag = true;
+		bool okflag = true;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
 		if (m != -1) {
@@ -2315,10 +2300,10 @@ int RndUItem(int m)
 
 int RndAllItems()
 {
-	int ril[512];
-
 	if (GenerateRnd(100) > 25)
 		return 0;
+
+	int ril[512];
 
 	int curlv = items_get_currlevel();
 	int ri = 0;
@@ -3872,15 +3857,13 @@ void PrintItemDur(ItemStruct *x)
 
 void UseItem(int p, item_misc_id Mid, spell_id spl)
 {
-	int l, j;
-
 	auto &player = plr[p];
 
 	switch (Mid) {
 	case IMISC_HEAL:
-	case IMISC_FOOD:
-		j = player._pMaxHP >> 8;
-		l = ((j / 2) + GenerateRnd(j)) << 6;
+	case IMISC_FOOD: {
+		int j = player._pMaxHP >> 8;
+		int l = ((j / 2) + GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
@@ -3888,15 +3871,15 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
 		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
 		drawhpflag = true;
-		break;
+	} break;
 	case IMISC_FULLHEAL:
 		player._pHitPoints = player._pMaxHP;
 		player._pHPBase = player._pMaxHPBase;
 		drawhpflag = true;
 		break;
-	case IMISC_MANA:
-		j = player._pMaxMana >> 8;
-		l = ((j / 2) + GenerateRnd(j)) << 6;
+	case IMISC_MANA: {
+		int j = player._pMaxMana >> 8;
+		int l = ((j / 2) + GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
@@ -3906,7 +3889,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
 			drawmanaflag = true;
 		}
-		break;
+	} break;
 	case IMISC_FULLMANA:
 		if ((player._pIFlags & ISPL_NOMANA) == 0) {
 			player._pMana = player._pMaxMana;
@@ -3936,9 +3919,9 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			drawhpflag = true;
 		}
 		break;
-	case IMISC_REJUV:
-		j = player._pMaxHP >> 8;
-		l = ((j / 2) + GenerateRnd(j)) << 6;
+	case IMISC_REJUV: {
+		int j = player._pMaxHP >> 8;
+		int l = ((j / 2) + GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue)
@@ -3957,7 +3940,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 			player._pManaBase = std::min(player._pManaBase + l, player._pMaxManaBase);
 			drawmanaflag = true;
 		}
-		break;
+	} break;
 	case IMISC_FULLREJUV:
 		player._pHitPoints = player._pMaxHP;
 		player._pHPBase = player._pMaxHPBase;
@@ -4167,17 +4150,14 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	int maxValue, maxItems;
-
 	ItemStruct holditem;
 	holditem = items[0];
 
+	int maxValue = 140000;
+	int maxItems = 20;
 	if (gbIsHellfire) {
 		maxValue = 200000;
 		maxItems = 25;
-	} else {
-		maxValue = 140000;
-		maxItems = 20;
 	}
 
 	int iCnt = GenerateRnd(maxItems - 10) + 10;
@@ -4394,9 +4374,6 @@ void SpawnWitch(int lvl)
 {
 	constexpr int PinnedItemCount = 3;
 
-	int iCnt;
-	int idata, maxlvl, maxValue;
-
 	int j = PinnedItemCount;
 
 	memset(&items[0], 0, sizeof(*items));
@@ -4415,9 +4392,11 @@ void SpawnWitch(int lvl)
 	witchitem[2]._iCreateInfo = lvl;
 	witchitem[2]._iStatFlag = true;
 
+	int maxValue = 140000;
+	int reservedItems = 12;
 	if (gbIsHellfire) {
-		iCnt = GenerateRnd(WITCH_ITEMS - 10) + 10;
 		maxValue = 200000;
+		reservedItems = 10;
 
 		int books = GenerateRnd(4);
 		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
@@ -4439,18 +4418,16 @@ void SpawnWitch(int lvl)
 			j++;
 			bCnt++;
 		}
-	} else {
-		iCnt = GenerateRnd(WITCH_ITEMS - 12) + 10;
-		maxValue = 140000;
 	}
+	int iCnt = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
 
 	for (int i = j; i < iCnt; i++) {
 		do {
 			memset(&items[0], 0, sizeof(*items));
 			items[0]._iSeed = AdvanceRndSeed();
-			idata = RndWitchItem(lvl) - 1;
+			int idata = RndWitchItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
-			maxlvl = -1;
+			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
 			if (maxlvl == -1 && items[0]._iMiscId == IMISC_STAFF)
