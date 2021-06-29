@@ -333,10 +333,10 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player.position.last.y = file->nextLE<int32_t>();
 	player.position.old.x = file->nextLE<int32_t>();
 	player.position.old.y = file->nextLE<int32_t>();
-	player.position.offset.x = file->nextLE<int32_t>();
-	player.position.offset.y = file->nextLE<int32_t>();
-	player.position.velocity.x = file->nextLE<int32_t>();
-	player.position.velocity.y = file->nextLE<int32_t>();
+	player.position.offset.deltaX = file->nextLE<int32_t>();
+	player.position.offset.deltaY = file->nextLE<int32_t>();
+	player.position.velocity.deltaX = file->nextLE<int32_t>();
+	player.position.velocity.deltaY = file->nextLE<int32_t>();
 	player._pdir = static_cast<Direction>(file->nextLE<int32_t>());
 	file->skip(4); // Unused
 	player._pgfxnum = file->nextLE<int32_t>();
@@ -427,8 +427,8 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player.tempDirection = static_cast<Direction>(file->nextLE<int32_t>());
 	player._pVar4 = file->nextLE<int32_t>();
 	player._pVar5 = file->nextLE<int32_t>();
-	player.position.offset2.x = file->nextLE<int32_t>();
-	player.position.offset2.y = file->nextLE<int32_t>();
+	player.position.offset2.deltaX = file->nextLE<int32_t>();
+	player.position.offset2.deltaY = file->nextLE<int32_t>();
 	file->skip(4); // Skip actionFrame
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		player._pLvlVisited[i] = file->nextBool8();
@@ -555,10 +555,10 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->position.future.y = file->nextLE<int32_t>();
 	pMonster->position.old.x = file->nextLE<int32_t>();
 	pMonster->position.old.y = file->nextLE<int32_t>();
-	pMonster->position.offset.x = file->nextLE<int32_t>();
-	pMonster->position.offset.y = file->nextLE<int32_t>();
-	pMonster->position.velocity.x = file->nextLE<int32_t>();
-	pMonster->position.velocity.y = file->nextLE<int32_t>();
+	pMonster->position.offset.deltaX = file->nextLE<int32_t>();
+	pMonster->position.offset.deltaY = file->nextLE<int32_t>();
+	pMonster->position.velocity.deltaX = file->nextLE<int32_t>();
+	pMonster->position.velocity.deltaY = file->nextLE<int32_t>();
 	pMonster->_mdir = static_cast<Direction>(file->nextLE<int32_t>());
 	pMonster->_menemy = file->nextLE<int32_t>();
 	pMonster->enemyPosition.x = file->nextLE<uint8_t>();
@@ -578,8 +578,8 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->_mVar3 = file->nextLE<int32_t>();
 	pMonster->position.temp.x = file->nextLE<int32_t>();
 	pMonster->position.temp.y = file->nextLE<int32_t>();
-	pMonster->position.offset2.x = file->nextLE<int32_t>();
-	pMonster->position.offset2.y = file->nextLE<int32_t>();
+	pMonster->position.offset2.deltaX = file->nextLE<int32_t>();
+	pMonster->position.offset2.deltaY = file->nextLE<int32_t>();
 	file->skip(4); // Skip actionFrame
 	pMonster->_mmaxhp = file->nextLE<int32_t>();
 	pMonster->_mhitpoints = file->nextLE<int32_t>();
@@ -647,14 +647,14 @@ static void LoadMissile(LoadHelper *file, int i)
 	pMissile->_mitype = file->nextLE<int32_t>();
 	pMissile->position.tile.x = file->nextLE<int32_t>();
 	pMissile->position.tile.y = file->nextLE<int32_t>();
-	pMissile->position.offset.x = file->nextLE<int32_t>();
-	pMissile->position.offset.y = file->nextLE<int32_t>();
-	pMissile->position.velocity.x = file->nextLE<int32_t>();
-	pMissile->position.velocity.y = file->nextLE<int32_t>();
+	pMissile->position.offset.deltaX = file->nextLE<int32_t>();
+	pMissile->position.offset.deltaY = file->nextLE<int32_t>();
+	pMissile->position.velocity.deltaX = file->nextLE<int32_t>();
+	pMissile->position.velocity.deltaY = file->nextLE<int32_t>();
 	pMissile->position.start.x = file->nextLE<int32_t>();
 	pMissile->position.start.y = file->nextLE<int32_t>();
-	pMissile->position.traveled.x = file->nextLE<int32_t>();
-	pMissile->position.traveled.y = file->nextLE<int32_t>();
+	pMissile->position.traveled.deltaX = file->nextLE<int32_t>();
+	pMissile->position.traveled.deltaY = file->nextLE<int32_t>();
 	pMissile->_mimfnum = file->nextLE<int32_t>();
 	pMissile->_mispllvl = file->nextLE<int32_t>();
 	pMissile->_miDelFlag = file->nextBool32();
@@ -1397,10 +1397,10 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(player.position.last.y);
 	file->writeLE<int32_t>(player.position.old.x);
 	file->writeLE<int32_t>(player.position.old.y);
-	file->writeLE<int32_t>(player.position.offset.x);
-	file->writeLE<int32_t>(player.position.offset.y);
-	file->writeLE<int32_t>(player.position.velocity.x);
-	file->writeLE<int32_t>(player.position.velocity.y);
+	file->writeLE<int32_t>(player.position.offset.deltaX);
+	file->writeLE<int32_t>(player.position.offset.deltaY);
+	file->writeLE<int32_t>(player.position.velocity.deltaX);
+	file->writeLE<int32_t>(player.position.velocity.deltaY);
 	file->writeLE<int32_t>(player._pdir);
 	file->skip(4); // Unused
 	file->writeLE<int32_t>(player._pgfxnum);
@@ -1492,8 +1492,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(player.tempDirection);
 	file->writeLE<int32_t>(player._pVar4);
 	file->writeLE<int32_t>(player._pVar5);
-	file->writeLE<int32_t>(player.position.offset2.x);
-	file->writeLE<int32_t>(player.position.offset2.y);
+	file->writeLE<int32_t>(player.position.offset2.deltaX);
+	file->writeLE<int32_t>(player.position.offset2.deltaY);
 	// Write actionFrame for vanilla compatibility
 	file->writeLE<int32_t>(0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
@@ -1612,10 +1612,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMonster->position.future.y);
 	file->writeLE<int32_t>(pMonster->position.old.x);
 	file->writeLE<int32_t>(pMonster->position.old.y);
-	file->writeLE<int32_t>(pMonster->position.offset.x);
-	file->writeLE<int32_t>(pMonster->position.offset.y);
-	file->writeLE<int32_t>(pMonster->position.velocity.x);
-	file->writeLE<int32_t>(pMonster->position.velocity.y);
+	file->writeLE<int32_t>(pMonster->position.offset.deltaX);
+	file->writeLE<int32_t>(pMonster->position.offset.deltaY);
+	file->writeLE<int32_t>(pMonster->position.velocity.deltaX);
+	file->writeLE<int32_t>(pMonster->position.velocity.deltaY);
 	file->writeLE<int32_t>(pMonster->_mdir);
 	file->writeLE<int32_t>(pMonster->_menemy);
 	file->writeLE<uint8_t>(pMonster->enemyPosition.x);
@@ -1634,8 +1634,8 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMonster->_mVar3);
 	file->writeLE<int32_t>(pMonster->position.temp.x);
 	file->writeLE<int32_t>(pMonster->position.temp.y);
-	file->writeLE<int32_t>(pMonster->position.offset2.x);
-	file->writeLE<int32_t>(pMonster->position.offset2.y);
+	file->writeLE<int32_t>(pMonster->position.offset2.deltaX);
+	file->writeLE<int32_t>(pMonster->position.offset2.deltaY);
 	// Write actionFrame for vanilla compatibility
 	file->writeLE<int32_t>(0);
 	file->writeLE<int32_t>(pMonster->_mmaxhp);
@@ -1692,14 +1692,14 @@ static void SaveMissile(SaveHelper *file, int i)
 	file->writeLE<int32_t>(pMissile->_mitype);
 	file->writeLE<int32_t>(pMissile->position.tile.x);
 	file->writeLE<int32_t>(pMissile->position.tile.y);
-	file->writeLE<int32_t>(pMissile->position.offset.x);
-	file->writeLE<int32_t>(pMissile->position.offset.y);
-	file->writeLE<int32_t>(pMissile->position.velocity.x);
-	file->writeLE<int32_t>(pMissile->position.velocity.y);
+	file->writeLE<int32_t>(pMissile->position.offset.deltaX);
+	file->writeLE<int32_t>(pMissile->position.offset.deltaY);
+	file->writeLE<int32_t>(pMissile->position.velocity.deltaX);
+	file->writeLE<int32_t>(pMissile->position.velocity.deltaY);
 	file->writeLE<int32_t>(pMissile->position.start.x);
 	file->writeLE<int32_t>(pMissile->position.start.y);
-	file->writeLE<int32_t>(pMissile->position.traveled.x);
-	file->writeLE<int32_t>(pMissile->position.traveled.y);
+	file->writeLE<int32_t>(pMissile->position.traveled.deltaX);
+	file->writeLE<int32_t>(pMissile->position.traveled.deltaY);
 	file->writeLE<int32_t>(pMissile->_mimfnum);
 	file->writeLE<int32_t>(pMissile->_mispllvl);
 	file->writeLE<uint32_t>(pMissile->_miDelFlag ? 1 : 0);

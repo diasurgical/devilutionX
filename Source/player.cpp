@@ -33,9 +33,9 @@ namespace {
 
 struct DirectionSettings {
 	Direction dir;
-	Point tileAdd;
-	Point offset;
-	Point map;
+	Displacement tileAdd;
+	Displacement offset;
+	Displacement map;
 	_scroll_direction scrollDir;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(int, const DirectionSettings &);
@@ -47,8 +47,8 @@ void PM_ChangeLightOff(PlayerStruct &player)
 		return;
 
 	const LightListStruct *l = &LightList[player._plid];
-	int x = 2 * player.position.offset.y + player.position.offset.x;
-	int y = 2 * player.position.offset.y - player.position.offset.x;
+	int x = 2 * player.position.offset.deltaY + player.position.offset.deltaX;
+	int y = 2 * player.position.offset.deltaY - player.position.offset.deltaX;
 
 	x = (x / 8) * (x < 0 ? 1 : -1);
 	y = (y / 8) * (y < 0 ? 1 : -1);
@@ -67,7 +67,7 @@ void WalkUpwards(int pnum, const DirectionSettings &walkParams)
 {
 	auto &player = plr[pnum];
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
-	player.position.temp = walkParams.tileAdd;
+	player.position.temp = { walkParams.tileAdd.deltaX, walkParams.tileAdd.deltaY };
 }
 
 void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
@@ -85,7 +85,7 @@ void WalkSides(int pnum, const DirectionSettings &walkParams)
 {
 	auto &player = plr[pnum];
 
-	Point const nextPosition = walkParams.map + player.position.tile;
+	Point const nextPosition = player.position.tile + walkParams.map;
 
 	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
 	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
@@ -156,7 +156,7 @@ bool PlrDirOK(int pnum, Direction dir)
 	return true;
 }
 
-void HandleWalkMode(int pnum, Point vel, Direction dir)
+void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 {
 	auto &player = plr[pnum];
 	const auto &dirModeParams = directionSettings[dir];
@@ -167,7 +167,7 @@ void HandleWalkMode(int pnum, Point vel, Direction dir)
 
 	player.position.offset = dirModeParams.offset; // Offset player sprite to align with their previous tile position
 	//The player's tile position after finishing this movement action
-	player.position.future = dirModeParams.tileAdd + player.position.tile;
+	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
 	dirModeParams.walkModeHandler(pnum, dirModeParams);
 
@@ -192,7 +192,7 @@ void StartWalkAnimation(PlayerStruct &player, Direction dir, bool pmWillBeCalled
 /**
  * @brief Start moving a player to a new tile
  */
-void StartWalk(int pnum, Point vel, Direction dir, bool pmWillBeCalled)
+void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 {
 	auto &player = plr[pnum];
 
@@ -1224,7 +1224,7 @@ void InitPlayer(int pnum, bool FirstTime)
 				player.position.tile = { ViewX, ViewY };
 			}
 		} else {
-			for (i = 0; i < 8 && !PosOkPlayer(pnum, Point { plrxoff2[i], plryoff2[i] } + player.position.tile); i++)
+			for (i = 0; i < 8 && !PosOkPlayer(pnum, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
 				;
 			player.position.tile.x += plrxoff2[i];
 			player.position.tile.y += plryoff2[i];
@@ -1396,8 +1396,8 @@ void PM_ChangeOffset(int pnum)
 	}
 	auto &player = plr[pnum];
 
-	int px = player.position.offset2.x / 256;
-	int py = player.position.offset2.y / 256;
+	int px = player.position.offset2.deltaX / 256;
+	int py = player.position.offset2.deltaY / 256;
 
 	player.position.offset2 += player.position.velocity;
 
@@ -1405,14 +1405,13 @@ void PM_ChangeOffset(int pnum)
 		player.position.offset2 += player.position.velocity;
 	}
 
-	player.position.offset = { player.position.offset2.x >> 8, player.position.offset2.y >> 8 };
+	player.position.offset = { player.position.offset2.deltaX >> 8, player.position.offset2.deltaY >> 8 };
 
-	px -= player.position.offset2.x >> 8;
-	py -= player.position.offset2.y >> 8;
+	px -= player.position.offset2.deltaX >> 8;
+	py -= player.position.offset2.deltaY >> 8;
 
 	if (pnum == myplr && ScrollInfo._sdir != SDIR_NONE) {
-		ScrollInfo.offset.x += px;
-		ScrollInfo.offset.y += py;
+		ScrollInfo.offset += { px, py };
 	}
 
 	PM_ChangeLightOff(player);
@@ -1660,13 +1659,13 @@ static void RespawnDeadItem(ItemStruct *itm, Point target)
 	itm->_itype = ITYPE_NONE;
 }
 
-static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Point direction)
+static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Displacement direction)
 {
 	if (itm->isEmpty())
 		return;
 
-	Point target = direction + player.position.tile;
-	if (direction != Point { 0, 0 } && ItemSpaceOk(target)) {
+	Point target = player.position.tile + direction;
+	if (direction != Displacement { 0, 0 } && ItemSpaceOk(target)) {
 		RespawnDeadItem(itm, target);
 		player.HoldItem = *itm;
 		NetSendCmdPItem(false, CMD_RESPAWNITEM, target);
@@ -1676,7 +1675,7 @@ static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Point direction)
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			for (int i = -k; i <= k; i++) {
-				Point target = Point { i, j } + player.position.tile;
+				Point target = player.position.tile + Displacement { i, j };
 				if (ItemSpaceOk(target)) {
 					RespawnDeadItem(itm, target);
 					player.HoldItem = *itm;
@@ -1778,7 +1777,7 @@ StartPlayerKill(int pnum, int earflag)
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = left[pdd];
-							PlrDeadItem(player, &item, Point::fromDirection(pdd));
+							PlrDeadItem(player, &item, Displacement::fromDirection(pdd));
 						}
 
 						CalcPlrInv(pnum, false);
@@ -2104,7 +2103,7 @@ bool PM_DoWalk(int pnum, int variant)
 		switch (variant) {
 		case PM_WALK:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			player.position.tile += player.position.temp;
+			player.position.tile += { player.position.temp.x, player.position.temp.y };
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 			break;
 		case PM_WALK2:
@@ -2736,7 +2735,7 @@ bool PM_DoRangeAttack(int pnum)
 
 		AddMissile(
 		    player.position.tile,
-		    player.position.temp + Point { xoff, yoff },
+		    player.position.temp + Displacement { xoff, yoff },
 		    player._pdir,
 		    mistype,
 		    TARGET_MONSTERS,
@@ -3705,7 +3704,7 @@ void SyncInitPlrPos(int pnum)
 
 	Point position = {};
 	for (int i = 0; i < 8; i++) {
-		position = player.position.tile + Point { plrxoff2[i], plryoff2[i] };
+		position = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
 		if (PosOkPlayer(pnum, position)) {
 			break;
 		}

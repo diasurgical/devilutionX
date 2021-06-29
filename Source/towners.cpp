@@ -21,7 +21,7 @@ int CowClicks;
  * placing cows in Tristram. A single cow may require space of up
  * to three tiles when being placed on the map.
  */
-Point CowOffsets[8] = { { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 } };
+Displacement CowOffsets[8] = { { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 } };
 
 /** Specifies the active sound effect ID for interacting with cows. */
 _sfx_id CowPlaying = SFX_NONE;
@@ -522,7 +522,7 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 	}
 	if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
 		if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.TryRemoveInvItemById(IDI_BRAIN)) {
-			SpawnQuestItem(IDI_SPECELIX, healer.position + Point { 0, 1 }, 0, 0);
+			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0);
 			InitQTextMsg(TEXT_MUSH4);
 			quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
 			Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
@@ -632,7 +632,7 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 		quests[Q_FARMER]._qvar1 = 1;
 		quests[Q_FARMER]._qlog = true;
 		quests[Q_FARMER]._qmsg = TEXT_FARMER1;
-		SpawnRuneBomb(farmer.position + Point { 1, 0 });
+		SpawnRuneBomb(farmer.position + Displacement { 1, 0 });
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_FARMER);
 		break;
@@ -641,7 +641,7 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 		break;
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_FARMER4);
-		SpawnRewardItem(IDI_AURIC, farmer.position + Point { 1, 0 });
+		SpawnRewardItem(IDI_AURIC, farmer.position + Displacement { 1, 0 });
 		quests[Q_FARMER]._qactive = QUEST_HIVE_DONE;
 		quests[Q_FARMER]._qlog = false;
 		if (gbIsMultiplayer)
@@ -724,7 +724,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 		quests[Q_JERSEY]._qvar1 = 1;
 		quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
 		quests[Q_JERSEY]._qlog = true;
-		SpawnRuneBomb(cowFarmer.position + Point { 1, 0 });
+		SpawnRuneBomb(cowFarmer.position + Displacement { 1, 0 });
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_JERSEY);
 		break;

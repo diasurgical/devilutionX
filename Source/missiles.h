@@ -26,13 +26,13 @@ struct ChainStruct {
 struct MissilePosition {
 	Point tile;
 	/** Sprite's pixel offset from tile. */
-	Point offset;
+	Displacement offset;
 	/** Pixel velocity while moving */
-	Point velocity;
+	Displacement velocity;
 	/** Start position */
 	Point start;
 	/** Start position */
-	Point traveled;
+	Displacement traveled;
 };
 
 

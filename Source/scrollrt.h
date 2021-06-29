@@ -43,7 +43,7 @@ extern bool AutoMapShowItems;
  * @param dir walking direction
  * @param cameraMode Adjusts the offset relative to the camera
  */
-Point GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode = false);
+Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode = false);
 
 void ClearCursor();
 void ShiftGrid(int *x, int *y, int horizontal, int vertical);

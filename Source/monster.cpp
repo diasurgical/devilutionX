@@ -1037,7 +1037,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 		}
 
 		j = 0;
-		for (try2 = 0; j < num && try2 < 100; xp += Point::fromDirection(static_cast<Direction>(GenerateRnd(8))).x, yp += Point::fromDirection(static_cast<Direction>(GenerateRnd(8))).x) { /// BUGFIX: `yp += Point.y`
+		for (try2 = 0; j < num && try2 < 100; xp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
 			if (!MonstPlace(xp, yp)
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
 			    || ((leaderf & 2) != 0 && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
@@ -1129,7 +1129,7 @@ void InitMonsters()
 	for (i = 0; i < nt; i++) {
 		for (s = -2; s < 2; s++) {
 			for (t = -2; t < 2; t++)
-				DoVision(Point { s, t } + trigs[i].position, 15, false, false);
+				DoVision(trigs[i].position + Displacement { s, t }, 15, false, false);
 		}
 	}
 	if (!gbIsSpawn)
@@ -1170,7 +1170,7 @@ void InitMonsters()
 	for (i = 0; i < nt; i++) {
 		for (s = -2; s < 2; s++) {
 			for (t = -2; t < 2; t++)
-				DoUnVision(Point { s, t } + trigs[i].position, 15);
+				DoUnVision(trigs[i].position + Displacement { s, t }, 15);
 		}
 	}
 }
@@ -1653,7 +1653,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 	Monst->_mVar3 = ViewX << 16;
 	Monst->position.temp.x = ViewY << 16;
 	Monst->position.temp.y = (int)((Monst->_mVar3 - (Monst->position.tile.x << 16)) / (double)dist);
-	Monst->position.offset2.x = (int)((Monst->position.temp.x - (Monst->position.tile.y << 16)) / (double)dist);
+	Monst->position.offset2.deltaX = (int)((Monst->position.temp.x - (Monst->position.tile.y << 16)) / (double)dist);
 }
 
 void SpawnLoot(int i, bool sendmsg)
@@ -1663,7 +1663,7 @@ void SpawnLoot(int i, bool sendmsg)
 
 	Monst = &monster[i];
 	if (QuestStatus(Q_GARBUD) && Monst->_uniqtype - 1 == UMT_GARBUD) {
-		CreateTypeItem(Monst->position.tile + Point { 1, 1 }, true, ITYPE_MACE, IMISC_NONE, true, false);
+		CreateTypeItem(Monst->position.tile + Displacement { 1, 1 }, true, ITYPE_MACE, IMISC_NONE, true, false);
 	} else if (Monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
@@ -1914,8 +1914,8 @@ void M_ChangeLightOffset(int monst)
 
 	assurance((DWORD)monst < MAXMONSTERS, monst);
 
-	lx = monster[monst].position.offset.x + 2 * monster[monst].position.offset.y;
-	ly = 2 * monster[monst].position.offset.y - monster[monst].position.offset.x;
+	lx = monster[monst].position.offset.deltaX + 2 * monster[monst].position.offset.deltaY;
+	ly = 2 * monster[monst].position.offset.deltaY - monster[monst].position.offset.deltaX;
 
 	if (lx < 0) {
 		sign = -1;
@@ -1996,8 +1996,8 @@ bool M_DoWalk(int i, int variant)
 			if (monster[i].AnimInfo.CurrentFrame == 0 && monster[i].MType->mtype == MT_FLESTHNG)
 				PlayEffect(i, 3);
 			monster[i].position.offset2 += monster[i].position.velocity;
-			monster[i].position.offset.x = monster[i].position.offset2.x >> 4;
-			monster[i].position.offset.y = monster[i].position.offset2.y >> 4;
+			monster[i].position.offset.deltaX = monster[i].position.offset2.deltaX >> 4;
+			monster[i].position.offset.deltaY = monster[i].position.offset2.deltaY >> 4;
 		}
 		returnValue = false;
 	}
@@ -2408,7 +2408,7 @@ bool M_DoTalk(int i)
 			quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
 		}
 		if (monster[i].mtalkmsg == TEXT_GARBUD2 && (monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
-			SpawnItem(i, monster[i].position.tile + Point { 1, 1 }, true);
+			SpawnItem(i, monster[i].position.tile + Displacement { 1, 1 }, true);
 			monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
 	}
@@ -2417,7 +2417,7 @@ bool M_DoTalk(int i)
 	    && (monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
 		quests[Q_ZHAR]._qlog = true;
-		CreateTypeItem(monster[i].position.tile + Point { 1, 1 }, false, ITYPE_MISC, IMISC_BOOK, true, false);
+		CreateTypeItem(monster[i].position.tile + Displacement { 1, 1 }, false, ITYPE_MISC, IMISC_BOOK, true, false);
 		monster[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
@@ -3607,7 +3607,7 @@ void MAI_Scav(int i)
 							done = dDead[Monst->position.tile.x + x][Monst->position.tile.y + y] != 0
 							    && LineClearSolid(
 							        Monst->position.tile,
-							        Monst->position.tile + Point { x, y });
+							        Monst->position.tile + Displacement { x, y });
 						}
 					}
 					x--;
@@ -3621,7 +3621,7 @@ void MAI_Scav(int i)
 							done = dDead[Monst->position.tile.x + x][Monst->position.tile.y + y] != 0
 							    && LineClearSolid(
 							        Monst->position.tile,
-							        Monst->position.tile + Point { x, y });
+							        Monst->position.tile + Displacement { x, y });
 						}
 					}
 					x++;

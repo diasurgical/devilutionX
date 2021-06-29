@@ -13,11 +13,11 @@ struct ActorPosition {
 	/** Most recent position in dPlayer. */
 	Point old;
 	/** Pixel offset from tile. */
-	Point offset;
+	Displacement offset;
 	/** Same as offset but contains the value in a higher range */
-	Point offset2;
+	Displacement offset2;
 	/** Pixel velocity while walking. Indirectly applied to offset via _pvar6/7 */
-	Point velocity;
+	Displacement velocity;
 	/** Used for referring to position of player when finishing moving one tile (also used to define target coordinates for spells and ranged attacks) */
 	Point temp;
 };

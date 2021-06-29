@@ -19,45 +19,45 @@ TEST(Automap, InitAutomap)
 TEST(Automap, StartAutomap)
 {
 	StartAutomap();
-	EXPECT_EQ(AutomapOffset.x, 0);
-	EXPECT_EQ(AutomapOffset.y, 0);
+	EXPECT_EQ(AutomapOffset.deltaX, 0);
+	EXPECT_EQ(AutomapOffset.deltaY, 0);
 	EXPECT_EQ(AutomapActive, true);
 }
 
 TEST(Automap, AutomapUp)
 {
-	AutomapOffset.x = 1;
-	AutomapOffset.y = 1;
+	AutomapOffset.deltaX = 1;
+	AutomapOffset.deltaY = 1;
 	AutomapUp();
-	EXPECT_EQ(AutomapOffset.x, 0);
-	EXPECT_EQ(AutomapOffset.y, 0);
+	EXPECT_EQ(AutomapOffset.deltaX, 0);
+	EXPECT_EQ(AutomapOffset.deltaY, 0);
 }
 
 TEST(Automap, AutomapDown)
 {
-	AutomapOffset.x = 1;
-	AutomapOffset.y = 1;
+	AutomapOffset.deltaX = 1;
+	AutomapOffset.deltaY = 1;
 	AutomapDown();
-	EXPECT_EQ(AutomapOffset.x, 2);
-	EXPECT_EQ(AutomapOffset.y, 2);
+	EXPECT_EQ(AutomapOffset.deltaX, 2);
+	EXPECT_EQ(AutomapOffset.deltaY, 2);
 }
 
 TEST(Automap, AutomapLeft)
 {
-	AutomapOffset.x = 1;
-	AutomapOffset.y = 1;
+	AutomapOffset.deltaX = 1;
+	AutomapOffset.deltaY = 1;
 	AutomapLeft();
-	EXPECT_EQ(AutomapOffset.x, 0);
-	EXPECT_EQ(AutomapOffset.y, 2);
+	EXPECT_EQ(AutomapOffset.deltaX, 0);
+	EXPECT_EQ(AutomapOffset.deltaY, 2);
 }
 
 TEST(Automap, AutomapRight)
 {
-	AutomapOffset.x = 1;
-	AutomapOffset.y = 1;
+	AutomapOffset.deltaX = 1;
+	AutomapOffset.deltaY = 1;
 	AutomapRight();
-	EXPECT_EQ(AutomapOffset.x, 2);
-	EXPECT_EQ(AutomapOffset.y, 0);
+	EXPECT_EQ(AutomapOffset.deltaX, 2);
+	EXPECT_EQ(AutomapOffset.deltaY, 0);
 }
 
 TEST(Automap, AutomapZoomIn)
@@ -113,11 +113,11 @@ TEST(Automap, AutomapZoomOut_Min)
 TEST(Automap, AutomapZoomReset)
 {
 	AutoMapScale = 50;
-	AutomapOffset.x = 1;
-	AutomapOffset.y = 1;
+	AutomapOffset.deltaX = 1;
+	AutomapOffset.deltaY = 1;
 	AutomapZoomReset();
-	EXPECT_EQ(AutomapOffset.x, 0);
-	EXPECT_EQ(AutomapOffset.y, 0);
+	EXPECT_EQ(AutomapOffset.deltaX, 0);
+	EXPECT_EQ(AutomapOffset.deltaY, 0);
 	EXPECT_EQ(AutoMapScale, 50);
 	EXPECT_EQ(AmLine64, 32);
 	EXPECT_EQ(AmLine32, 16);

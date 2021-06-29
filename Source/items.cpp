@@ -456,7 +456,7 @@ Point GetRandomAvailableItemPosition()
 {
 	Point position = {};
 	do {
-		position = Point { 16, 16 } + Point { GenerateRnd(80), GenerateRnd(80) };
+		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
 	} while (!ItemPlace(position));
 
 	return position;
@@ -1370,7 +1370,7 @@ static void GetSuperItemSpace(Point position, int8_t inum)
 	for (int k = 2; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			for (int i = -k; i <= k; i++) {
-				Point offset = { i, j };
+				Displacement offset = { i, j };
 				positionToCheck = position + offset;
 				if (!ItemSpaceOk(positionToCheck))
 					continue;
@@ -1387,7 +1387,7 @@ Point GetSuperItemLoc(Point position)
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			for (int i = -k; i <= k; i++) {
-				Point offset = { i, j };
+				Displacement offset = { i, j };
 				Point positionToCheck = position + offset;
 				if (ItemSpaceOk(positionToCheck)) {
 					return positionToCheck;
@@ -2796,7 +2796,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 			bool failed = false;
 			for (int i = 0; i < randarea && !failed; i++) {
 				for (int j = 0; j < randarea && !failed; j++) {
-					failed = !ItemSpaceOk(position + Point { i, j });
+					failed = !ItemSpaceOk(position + Displacement { i, j });
 				}
 			}
 			if (!failed)

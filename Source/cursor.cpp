@@ -301,17 +301,17 @@ void CheckCursMove()
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
 	const auto &myPlayer = plr[myplr];
-	Point offset = ScrollInfo.offset;
+	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
-	sx -= offset.x - xo;
-	sy -= offset.y - yo;
+	sx -= offset.deltaX - xo;
+	sy -= offset.deltaY - yo;
 
 	// Predict the next frame when walking to avoid input jitter
-	int fx = myPlayer.position.offset2.x / 256;
-	int fy = myPlayer.position.offset2.y / 256;
-	fx -= (myPlayer.position.offset2.x + myPlayer.position.velocity.x) / 256;
-	fy -= (myPlayer.position.offset2.y + myPlayer.position.velocity.y) / 256;
+	int fx = myPlayer.position.offset2.deltaX / 256;
+	int fy = myPlayer.position.offset2.deltaY / 256;
+	fx -= (myPlayer.position.offset2.deltaX + myPlayer.position.velocity.deltaX) / 256;
+	fy -= (myPlayer.position.offset2.deltaY + myPlayer.position.velocity.deltaY) / 256;
 	if (ScrollInfo._sdir != SDIR_NONE) {
 		sx -= fx;
 		sy -= fy;
