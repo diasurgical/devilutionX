@@ -771,8 +771,7 @@ void RenderCelWithMultipleTRN(const ItemStruct &item, const CelOutputBuffer &out
 	RenderCel(
 	    out, position, src, srcSize, srcWidth, [](std::uint8_t *dst, const std::uint8_t *src, std::size_t w) {
 		    while (w-- > 0) {
-				*dst++ = *src;
-			    ++src;
+				*dst++ = *src++;
 		    } },
 	    NullLineEndFn);
 
