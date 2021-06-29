@@ -1005,7 +1005,7 @@ void ChangeLightRadius(int i, int r)
 
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
-	LightList[i].oldRadious = LightList[i]._lradius;
+	LightList[i].oldRadius = LightList[i]._lradius;
 	LightList[i]._lradius = r;
 	dolighting = true;
 }
@@ -1018,7 +1018,7 @@ void ChangeLightXY(int i, Point position)
 
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
-	LightList[i].oldRadious = LightList[i]._lradius;
+	LightList[i].oldRadius = LightList[i]._lradius;
 	LightList[i].position.tile = position;
 	dolighting = true;
 }
@@ -1031,7 +1031,7 @@ void ChangeLightOff(int i, Point position)
 
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
-	LightList[i].oldRadious = LightList[i]._lradius;
+	LightList[i].oldRadius = LightList[i]._lradius;
 	LightList[i].position.offset = position;
 	dolighting = true;
 }
@@ -1044,7 +1044,7 @@ void ChangeLight(int i, Point position, int r)
 
 	LightList[i]._lunflag = true;
 	LightList[i].position.old = LightList[i].position.tile;
-	LightList[i].oldRadious = LightList[i]._lradius;
+	LightList[i].oldRadius = LightList[i]._lradius;
 	LightList[i].position.tile = position;
 	LightList[i]._lradius = r;
 	dolighting = true;
@@ -1063,7 +1063,7 @@ void ProcessLightList()
 				DoUnLight(LightList[j].position.tile.x, LightList[j].position.tile.y, LightList[j]._lradius);
 			}
 			if (LightList[j]._lunflag) {
-				DoUnLight(LightList[j].position.old.x, LightList[j].position.old.y, LightList[j].oldRadious);
+				DoUnLight(LightList[j].position.old.x, LightList[j].position.old.y, LightList[j].oldRadius);
 				LightList[j]._lunflag = false;
 			}
 		}
@@ -1130,7 +1130,7 @@ void ChangeVisionRadius(int id, int r)
 		if (VisionList[i]._lid == id) {
 			VisionList[i]._lunflag = true;
 			VisionList[i].position.old = VisionList[i].position.tile;
-			VisionList[i].oldRadious = VisionList[i]._lradius;
+			VisionList[i].oldRadius = VisionList[i]._lradius;
 			VisionList[i]._lradius = r;
 			dovision = true;
 		}
@@ -1143,7 +1143,7 @@ void ChangeVisionXY(int id, Point position)
 		if (VisionList[i]._lid == id) {
 			VisionList[i]._lunflag = true;
 			VisionList[i].position.old = VisionList[i].position.tile;
-			VisionList[i].oldRadious = VisionList[i]._lradius;
+			VisionList[i].oldRadius = VisionList[i]._lradius;
 			VisionList[i].position.tile = position;
 			dovision = true;
 		}
@@ -1158,7 +1158,7 @@ void ProcessVisionList()
 				DoUnVision(VisionList[i].position.tile, VisionList[i]._lradius);
 			}
 			if (VisionList[i]._lunflag) {
-				DoUnVision(VisionList[i].position.old, VisionList[i].oldRadious);
+				DoUnVision(VisionList[i].position.old, VisionList[i].oldRadius);
 				VisionList[i]._lunflag = false;
 			}
 		}

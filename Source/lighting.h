@@ -32,7 +32,7 @@ struct LightListStruct {
 	int _lid;
 	bool _ldel;
 	bool _lunflag;
-	int oldRadious;
+	int oldRadius;
 	bool _lflags;
 };
 
