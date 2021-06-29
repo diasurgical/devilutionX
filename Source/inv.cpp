@@ -241,7 +241,7 @@ void DrawInv(const CelOutputBuffer &out)
 				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame, false);
 			}
 
-			CelDrawItem(myPlayer.InvBody[slot]._iStatFlag, out, position, cel, celFrame);
+			CelDrawItem(myPlayer.InvBody[slot], out, position, cel, celFrame);
 
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
@@ -289,7 +289,7 @@ void DrawInv(const CelOutputBuffer &out)
 			}
 
 			CelDrawItem(
-			    myPlayer.InvList[ii]._iStatFlag,
+			    myPlayer.InvList[ii],
 			    out,
 			    position,
 			    cel, celFrame);
@@ -325,7 +325,7 @@ void DrawInvBelt(const CelOutputBuffer &out)
 			}
 		}
 
-		CelDrawItem(myPlayer.SpdList[i]._iStatFlag, out, position, cel, celFrame);
+		CelDrawItem(myPlayer.SpdList[i], out, position, cel, celFrame);
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._iStatFlag
