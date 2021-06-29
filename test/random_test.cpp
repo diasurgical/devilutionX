@@ -239,16 +239,24 @@ TEST(RandomTest, VanillaEngine)
 {
 	uint32_t seed = ::testing::UnitTest::GetInstance()->random_seed();
 	auto engine1 = vanilla::RandomEngine(seed);
+
+	engine1.RandomLessThan(0);
+	EXPECT_EQ(engine1.GetCount(), 0) << "vanilla::RandomEngines must not advance when RandomLessThan is called with an invalid limit";
+
 	auto engine2 = vanilla::RandomEngine(seed);
 
 	for (auto i = 0; i < 10; i++)
 		ASSERT_EQ(engine1.RandomInt(), engine2.RandomInt()) << "vanilla::RandomEngines created from the same seed must generate the same sequence";
 
-	auto engine3 = vanilla::RandomEngine(engine1.initialState);
+	EXPECT_EQ(engine1.GetCount(), 10) << "vanilla::RandomEngines must report how many times they have advanced";
 
-	engine3.Discard(10);
+	auto engine3 = vanilla::RandomEngine(engine1.initialState);
+	engine3.Discard(engine1.GetCount());
+
 	ASSERT_EQ(engine3.RandomInRange(5, 24), engine1.RandomInRange(5, 24))
 	    << "vanilla::RandomEngines created from the same seed must produce the same value at the same point in the sequence even if prior calls used different distributions";
+
+	ASSERT_EQ(engine1.GetCount(), engine3.GetCount()) << "vanilla::RandomEngines must report their state accurately";
 
 	auto engine4 = vanilla::RandomEngine(seed);
 	vanilla::SetRndSeed(seed);
@@ -260,6 +268,15 @@ TEST(RandomTest, VanillaEngine)
 		ASSERT_EQ(engine4.RandomLessThan(6435), vanilla::GenerateRnd(6435))
 		    << "vanilla::RandomEngines must generate the same sequence as the global RNG from the same starting seed";
 	}
+
+	auto engine5 = vanilla::RandomEngine(988045466);
+	auto choice = engine5.RandomChoice({ -1, 1, 5, 2 });
+	EXPECT_EQ(choice.has_value(), true) << "vanilla::RandomEngines must choose an option when generating a non-negative number";
+	EXPECT_EQ(choice.value_or(4), 5) << "vanilla::RandomEngines must pick known values from a known seed";
+
+	choice = engine5.RandomChoice({ 2, 3, 4 });
+	EXPECT_EQ(choice.has_value(), false) << "vanilla::RandomEngines must return an empty optional when generating a negative number";
+	EXPECT_EQ(choice.value_or(-10), -10) << "vanilla::RandomEngines must return an empty optional when generating a negative number";
 }
 
 TEST(RandomTest, V1Choices)

@@ -11,6 +11,8 @@
 #include <initializer_list>
 #include <random>
 
+#include "utils/stdcompat/optional.hpp"
+
 namespace devilution {
 
 inline namespace randomV1 {
@@ -247,11 +249,21 @@ public:
 	const uint32_t initialState;
 
 	/**
+	 * @brief Shows how many times the engine has advanced since being created
+	 * @return The number of times the generator function has been called
+	*/
+	uint32_t GetCount() const
+	{
+		return engineCount;
+	}
+
+	/**
 	 * @brief Advances the engine and returns a random value
 	 * @return A random number in the range [0, 2^32)
 	*/
 	uint32_t operator()()
 	{
+		engineCount++;
 		return engine();
 	}
 
@@ -265,6 +277,7 @@ public:
 	*/
 	void Discard(uint32_t rounds = 1)
 	{
+		engineCount += rounds;
 		engine.discard(rounds);
 	}
 
@@ -341,11 +354,34 @@ public:
 		return RandomLessThan(outcomes) == 0;
 	}
 
+	/**
+	 * @brief Returns one of a list of choices at random, where each option has equal chance of being selected.
+	 * @tparam T A common type that all items share
+	 * @param choices The list to choose from
+	 * @return An optional containing one of the list chosen at random, may be empty to represent vanilla RNG bug cases
+	 */
+	template <typename T>
+	std::optional<T> RandomChoice(std::initializer_list<T> choices)
+	{
+		int offset = RandomLessThan(choices.size());
+
+		if (offset < 0) {
+			return {};
+		}
+
+		return *(choices.begin() + offset);
+	}
+
 private:
 	/**
 	 * @brief A LCG using Borland C++ constants.
 	*/
 	std::linear_congruential_engine<uint32_t, 0x015A4E35, 1, 0> engine;
+
+	/**
+	 * @brief The number of times this engine has advanced since being created.
+	*/
+	uint32_t engineCount = 0;
 };
 } // namespace vanilla
 
