@@ -1189,10 +1189,7 @@ void LoadGame(bool firstflag)
 	for (bool &UniqueItemFlag : UniqueItemFlags)
 		UniqueItemFlag = file.nextBool8();
 
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dLight[i][j] = file.nextLE<int8_t>();
-	}
+	file.skip(MAXDUNX * MAXDUNY); // BUGFIX: dLight array is saved/loaded twice (fixed)
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dFlags[i][j] = file.nextLE<int8_t>();
@@ -1955,10 +1952,7 @@ void SaveGameData()
 	for (bool UniqueItemFlag : UniqueItemFlags)
 		file.writeLE<uint8_t>(UniqueItemFlag ? 1 : 0);
 
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			file.writeLE<int8_t>(dLight[i][j]);
-	}
+	file.skip(MAXDUNX * MAXDUNY); // BUGFIX: dLight array is saved/loaded twice (fixed)
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.writeLE<int8_t>(dFlags[i][j] & ~(BFLAG_MISSILE | BFLAG_VISIBLE | BFLAG_DEAD_PLAYER));
