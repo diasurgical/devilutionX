@@ -22,7 +22,7 @@ typedef uint32_t framesize_t;
 
 class frame_queue {
 public:
-	constexpr static framesize_t max_frame_size = 0xFFFF;
+	constexpr static framesize_t max_frame_size = 0x1000;
 
 private:
 	framesize_t current_size = 0;
