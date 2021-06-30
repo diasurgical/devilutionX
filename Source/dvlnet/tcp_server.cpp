@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "dvlnet/base.h"
+#include "plrmsg.h"
 #include "utils/log.hpp"
 
 namespace devilution {
@@ -110,6 +111,8 @@ void tcp_server::handle_recv_newplr(const scc &con, packet &pkt)
 	auto reply = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
 	    pkt.cookie(), newplr,
 	    game_init_info);
+    Log("Player joining, sending PT_JOIN_ACCEPT...");
+    EventPlrMsg("Player joining, sending PT_JOIN_ACCEPT...");
 	start_send(con, *reply);
 	con->plr = newplr;
 	connections[newplr] = con;
