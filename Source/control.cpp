@@ -582,19 +582,17 @@ void DrawLifeFlask(const CelOutputBuffer &out)
 {
 	auto &myPlayer = plr[myplr];
 
-	int filled = myPlayer.UpdateHitPointPercentage();
+	int emptyPortion = 80 - myPlayer.UpdateHitPointPercentage();
 
-	if (filled > 80)
-		filled = 80;
+	// clamping because this function only draws the top 12% of the HP display
+	emptyPortion = clamp(emptyPortion, 0, 11) + 2; // +2 to account for the frame being included in the sprite
 
-	filled = 80 - filled;
-	if (filled > 11)
-		filled = 11;
-	filled += 2;
-
-	DrawFlask(out, pLifeBuff, { 13, 3 }, { PANEL_LEFT + 109, PANEL_TOP - 13 }, filled);
-	if (filled != 13)
-		DrawFlask(out, pBtmBuff, { 109, filled + 3 }, { PANEL_LEFT + 109, PANEL_TOP - 13 + filled }, 13 - filled);
+	// Draw the empty part of the flask
+	DrawFlask(out, pLifeBuff, { 13, 3 }, { PANEL_LEFT + 109, PANEL_TOP - 13 }, emptyPortion);
+	if (emptyPortion < 13) {
+		// Draw the filled part of the flask
+		DrawFlask(out, pBtmBuff, { 109, emptyPortion + 3 }, { PANEL_LEFT + 109, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
+	}
 }
 
 void UpdateLifeFlask(const CelOutputBuffer &out)
