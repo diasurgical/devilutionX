@@ -157,20 +157,7 @@ static void DRLG_L4Shadows()
 {
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXY; x++) {
-			bool okflag = false;
-			if (dungeon[x][y] == 3) {
-				okflag = true;
-			}
-			if (dungeon[x][y] == 4) {
-				okflag = true;
-			}
-			if (dungeon[x][y] == 8) {
-				okflag = true;
-			}
-			if (dungeon[x][y] == 15) {
-				okflag = true;
-			}
-			if (!okflag) {
+			if (IsNoneOf(dungeon[x][y], 3, 4, 8, 15)) {
 				continue;
 			}
 			if (dungeon[x - 1][y] == 6) {
@@ -274,36 +261,9 @@ static int L4HWallOk(int i, int j)
 		}
 	}
 
-	bool wallok = false;
-
-	if (dungeon[i + x][j] == 10) {
-		wallok = true;
-	}
-	if (dungeon[i + x][j] == 12) {
-		wallok = true;
-	}
-	if (dungeon[i + x][j] == 13) {
-		wallok = true;
-	}
-	if (dungeon[i + x][j] == 15) {
-		wallok = true;
-	}
-	if (dungeon[i + x][j] == 16) {
-		wallok = true;
-	}
-	if (dungeon[i + x][j] == 21) {
-		wallok = true;
-	}
-	if (dungeon[i + x][j] == 22) {
-		wallok = true;
-	}
-	if (x <= 3) {
-		wallok = false;
-	}
-
-	if (wallok) {
+	if (IsAnyOf(dungeon[i + x][j], 10, 12, 13, 15, 16, 21, 22) && x > 3)
 		return x;
-	}
+
 	return -1;
 }
 
@@ -322,39 +282,9 @@ static int L4VWallOk(int i, int j)
 		}
 	}
 
-	bool wallok = false;
-
-	if (dungeon[i][j + y] == 8) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 9) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 11) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 14) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 15) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 16) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 21) {
-		wallok = true;
-	}
-	if (dungeon[i][j + y] == 23) {
-		wallok = true;
-	}
-	if (y <= 3) {
-		wallok = false;
-	}
-
-	if (wallok) {
+	if (IsAnyOf(dungeon[i][j + y], 9, 11, 14, 15, 16, 21, 23) && y > 3)
 		return y;
-	}
+
 	return -1;
 }
 
@@ -452,91 +382,13 @@ static void L4AddWall()
 			if (dflags[i][j] != 0) {
 				continue;
 			}
-			if (dungeon[i][j] == 10 && GenerateRnd(100) < WALL_CHANCE) {
+			if (IsAnyOf(dungeon[i][j], 10, 12, 13, 15, 16, 21, 22) && GenerateRnd(100) < WALL_CHANCE) {
 				int x = L4HWallOk(i, j);
 				if (x != -1) {
 					L4HorizWall(i, j, x);
 				}
 			}
-			if (dungeon[i][j] == 12 && GenerateRnd(100) < WALL_CHANCE) {
-				int x = L4HWallOk(i, j);
-				if (x != -1) {
-					L4HorizWall(i, j, x);
-				}
-			}
-			if (dungeon[i][j] == 13 && GenerateRnd(100) < WALL_CHANCE) {
-				int x = L4HWallOk(i, j);
-				if (x != -1) {
-					L4HorizWall(i, j, x);
-				}
-			}
-			if (dungeon[i][j] == 15 && GenerateRnd(100) < WALL_CHANCE) {
-				int x = L4HWallOk(i, j);
-				if (x != -1) {
-					L4HorizWall(i, j, x);
-				}
-			}
-			if (dungeon[i][j] == 16 && GenerateRnd(100) < WALL_CHANCE) {
-				int x = L4HWallOk(i, j);
-				if (x != -1) {
-					L4HorizWall(i, j, x);
-				}
-			}
-			if (dungeon[i][j] == 21 && GenerateRnd(100) < WALL_CHANCE) {
-				int x = L4HWallOk(i, j);
-				if (x != -1) {
-					L4HorizWall(i, j, x);
-				}
-			}
-			if (dungeon[i][j] == 22 && GenerateRnd(100) < WALL_CHANCE) {
-				int x = L4HWallOk(i, j);
-				if (x != -1) {
-					L4HorizWall(i, j, x);
-				}
-			}
-			if (dungeon[i][j] == 8 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 9 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 11 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 14 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 15 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 16 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 21 && GenerateRnd(100) < WALL_CHANCE) {
-				int y = L4VWallOk(i, j);
-				if (y != -1) {
-					L4VertWall(i, j, y);
-				}
-			}
-			if (dungeon[i][j] == 23 && GenerateRnd(100) < WALL_CHANCE) {
+			if (IsAnyOf(dungeon[i][j], 8, 9, 11, 14, 15, 16, 21, 23) && GenerateRnd(100) < WALL_CHANCE) {
 				int y = L4VWallOk(i, j);
 				if (y != -1) {
 					L4VertWall(i, j, y);
@@ -1436,7 +1288,7 @@ static void DRLG_L4TransFix()
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
-			if (IsDURWall(dungeon[i][j]) && dungeon[i][j - 1] == 18) {
+			if (IsDURWall(dungeon[i][j]) && dungeon[i][j - 1] == 18) { // BUGFIX: check if j >= 1
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
 			}
