@@ -44,8 +44,8 @@ struct Point {
 
 	constexpr Point &operator*=(const float factor)
 	{
-		x *= factor;
-		y *= factor;
+		x = static_cast<int>(x * factor);
+		y = static_cast<int>(y * factor);
 		return *this;
 	}
 
