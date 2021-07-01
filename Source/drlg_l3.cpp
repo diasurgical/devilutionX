@@ -1788,7 +1788,6 @@ static bool WoodVertU(int i, int y)
 {
 	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
 	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
-
 		if (IsAnyOf(dungeon[i][y], 7, 10, 126, 129, 134, 136)) {
 			return true;
 		}
@@ -1801,8 +1800,7 @@ static bool WoodVertD(int i, int y)
 {
 	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
 	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
-
-		if (IsAnyOf(dungeon[i][y], 7, 2, 134, 136)) {
+		if (IsAnyOf(dungeon[i][y], 2, 7, 134, 136)) {
 			return true;
 		}
 	}
@@ -1826,7 +1824,7 @@ static bool WoodHorizR(int x, int j)
 {
 	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
 	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
-		if (IsAnyOf(dungeon[x][j], 7, 4, 135, 137)) {
+		if (IsAnyOf(dungeon[x][j], 4, 7, 135, 137)) {
 			return true;
 		}
 	}
