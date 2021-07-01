@@ -1923,7 +1923,7 @@ static void CreateDoorType(int nX, int nY)
 	if (predungeon[nX][nY + 1] == 68) {
 		return;
 	}
-	if (IsAnyOf(predungeon[nX][nY], 66, 67, 65, 69)) {
+	if (IsAnyOf(predungeon[nX][nY], 65, 66, 67, 69)) {
 		return;
 	}
 
@@ -2717,7 +2717,7 @@ static bool CreateDungeon()
 
 	for (int j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
 		for (int i = 0; i < DMAXX; i++) { /// BUGFIX: change '<=' to '<' (fixed)
-			if (IsAnyOf(predungeon[i][j], 67, 66, 69, 65)) {
+			if (IsAnyOf(predungeon[i][j], 65, 66, 67, 69)) {
 				predungeon[i][j] = 35;
 			}
 			if (predungeon[i][j] == 44) {

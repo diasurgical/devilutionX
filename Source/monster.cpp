@@ -1276,7 +1276,7 @@ void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistribution
 
 bool M_Ranged(int i)
 {
-	return IsAnyOf(monster[i]._mAi,AI_SKELBOW, AI_GOATBOW, AI_SUCC, AI_LAZHELP);
+	return IsAnyOf(monster[i]._mAi, AI_SKELBOW, AI_GOATBOW, AI_SUCC, AI_LAZHELP);
 }
 
 bool M_Talker(int i)
