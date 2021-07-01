@@ -44,8 +44,8 @@ struct Displacement {
 
 	constexpr Displacement &operator*=(const float factor)
 	{
-		deltaX *= factor;
-		deltaY *= factor;
+		deltaX = static_cast<int>(deltaX * factor);
+		deltaY = static_cast<int>(deltaY * factor);
 		return *this;
 	}
 
