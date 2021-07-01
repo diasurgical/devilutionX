@@ -43,6 +43,30 @@
 
 namespace devilution {
 
+template <typename V, typename X>
+bool IsAnyOf(const V &v, X x)
+{
+	return v == x;
+}
+
+template <typename V, typename X, typename... Xs>
+bool IsAnyOf(const V &v, X x, Xs... xs)
+{
+	return IsAnyOf(v, x) || IsAnyOf(v, xs...);
+}
+
+template <typename V, typename X>
+bool IsNoneOf(const V &v, X x)
+{
+	return v != x;
+}
+
+template <typename V, typename X, typename... Xs>
+bool IsNoneOf(const V &v, X x, Xs... xs)
+{
+	return IsNoneOf(v, x) && IsNoneOf(v, xs...);
+}
+
 struct CelOutputBuffer {
 	// 8-bit palletized surface.
 	SDL_Surface *surface;
