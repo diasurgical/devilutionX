@@ -1276,20 +1276,12 @@ void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistribution
 
 bool M_Ranged(int i)
 {
-	char ai = monster[i]._mAi;
-	return ai == AI_SKELBOW || ai == AI_GOATBOW || ai == AI_SUCC || ai == AI_LAZHELP;
+	return IsAnyOf(monster[i]._mAi,AI_SKELBOW, AI_GOATBOW, AI_SUCC, AI_LAZHELP);
 }
 
 bool M_Talker(int i)
 {
-	char ai = monster[i]._mAi;
-	return ai == AI_LAZURUS
-	    || ai == AI_WARLORD
-	    || ai == AI_GARBUD
-	    || ai == AI_ZHAR
-	    || ai == AI_SNOTSPIL
-	    || ai == AI_LACHDAN
-	    || ai == AI_LAZHELP;
+	return IsAnyOf(monster[i]._mAi, AI_LAZURUS, AI_WARLORD, AI_GARBUD, AI_ZHAR, AI_SNOTSPIL, AI_LACHDAN, AI_LAZHELP);
 }
 
 void M_Enemy(int i)
@@ -5152,9 +5144,7 @@ bool PosOkMonst3(int i, Point position)
 	if (ret && dObject[position.x][position.y] != 0) {
 		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 		objtype = object[oi]._otype;
-		isdoor = objtype == OBJ_L1LDOOR || objtype == OBJ_L1RDOOR
-		    || objtype == OBJ_L2LDOOR || objtype == OBJ_L2RDOOR
-		    || objtype == OBJ_L3LDOOR || objtype == OBJ_L3RDOOR;
+		isdoor = IsAnyOf(objtype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR);
 		if (object[oi]._oSolidFlag && !isdoor) {
 			ret = false;
 		}
