@@ -769,12 +769,12 @@ int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool s
 
 	int numt = 1;
 	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
+		numt = vanilla::GenerateRnd(tmax - tmin) + tmin;
 	}
 
 	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
+		sx = vanilla::GenerateRnd(DMAXX - sw);
+		sy = vanilla::GenerateRnd(DMAXY - sh);
 		bool abort = false;
 		int found = 0;
 
@@ -911,7 +911,7 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					found = false;
 				}
 			}
-			if (found && GenerateRnd(100) < rndper) {
+			if (found && vanilla::GenerateRnd(100) < rndper) {
 				for (int yy = 0; yy < sh; yy++) {
 					for (int xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
@@ -930,7 +930,7 @@ void FillFloor()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0 && dungeon[i][j] == 13) {
-				int rv = GenerateRnd(3);
+				int rv = vanilla::GenerateRnd(3);
 
 				if (rv == 1)
 					dungeon[i][j] = 162;
@@ -1033,7 +1033,7 @@ bool CheckRoom(int x, int y, int width, int height)
 
 void GenerateRoom(int x, int y, int w, int h, int dir)
 {
-	int dirProb = GenerateRnd(4);
+	int dirProb = vanilla::GenerateRnd(4);
 	int num = 0;
 
 	bool ran;
@@ -1043,8 +1043,8 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 		int cx1;
 		int cy1;
 		do {
-			cw = (GenerateRnd(5) + 2) & ~1;
-			ch = (GenerateRnd(5) + 2) & ~1;
+			cw = (vanilla::GenerateRnd(5) + 2) & ~1;
+			ch = (vanilla::GenerateRnd(5) + 2) & ~1;
 			cx1 = x - cw;
 			cy1 = h / 2 + y - ch / 2;
 			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
@@ -1069,8 +1069,8 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 	int rx;
 	int ry;
 	do {
-		width = (GenerateRnd(5) + 2) & ~1;
-		height = (GenerateRnd(5) + 2) & ~1;
+		width = (vanilla::GenerateRnd(5) + 2) & ~1;
+		height = (vanilla::GenerateRnd(5) + 2) & ~1;
 		rx = w / 2 + x - width / 2;
 		ry = y - height;
 		ran = CheckRoom(rx - 1, ry - 1, width + 2, height + 1);
@@ -1091,13 +1091,13 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 
 void FirstRoom()
 {
-	if (GenerateRnd(2) == 0) {
+	if (vanilla::GenerateRnd(2) == 0) {
 		int ys = 1;
 		int ye = DMAXY - 1;
 
-		VR1 = (GenerateRnd(2) != 0);
-		VR2 = (GenerateRnd(2) != 0);
-		VR3 = (GenerateRnd(2) != 0);
+		VR1 = (vanilla::GenerateRnd(2) != 0);
+		VR2 = (vanilla::GenerateRnd(2) != 0);
+		VR3 = (vanilla::GenerateRnd(2) != 0);
 
 		if (!VR1 || !VR3)
 			VR2 = true;
@@ -1136,9 +1136,9 @@ void FirstRoom()
 		int xs = 1;
 		int xe = DMAXX - 1;
 
-		HR1 = GenerateRnd(2) != 0;
-		HR2 = GenerateRnd(2) != 0;
-		HR3 = GenerateRnd(2) != 0;
+		HR1 = vanilla::GenerateRnd(2) != 0;
+		HR2 = vanilla::GenerateRnd(2) != 0;
+		HR3 = vanilla::GenerateRnd(2) != 0;
 
 		if (!HR1 || !HR3)
 			HR2 = true;
@@ -1277,7 +1277,7 @@ void HorizontalWall(int i, int j, char p, int dx)
 {
 	int8_t dt;
 
-	switch (GenerateRnd(4)) {
+	switch (vanilla::GenerateRnd(4)) {
 	case 0:
 	case 1:
 		dt = 2;
@@ -1299,7 +1299,7 @@ void HorizontalWall(int i, int j, char p, int dx)
 	}
 
 	int8_t wt = 26;
-	if (GenerateRnd(6) == 5)
+	if (vanilla::GenerateRnd(6) == 5)
 		wt = 12;
 
 	if (dt == 12)
@@ -1311,7 +1311,7 @@ void HorizontalWall(int i, int j, char p, int dx)
 		dungeon[i + xx][j] = dt;
 	}
 
-	int xx = GenerateRnd(dx - 1) + 1;
+	int xx = vanilla::GenerateRnd(dx - 1) + 1;
 
 	if (wt == 12) {
 		dungeon[i + xx][j] = wt;
@@ -1325,7 +1325,7 @@ void VerticalWall(int i, int j, char p, int dy)
 {
 	int8_t dt;
 
-	switch (GenerateRnd(4)) {
+	switch (vanilla::GenerateRnd(4)) {
 	case 0:
 	case 1:
 		dt = 1;
@@ -1347,7 +1347,7 @@ void VerticalWall(int i, int j, char p, int dy)
 	}
 
 	int8_t wt = 25;
-	if (GenerateRnd(6) == 5)
+	if (vanilla::GenerateRnd(6) == 5)
 		wt = 11;
 
 	if (dt == 11)
@@ -1359,7 +1359,7 @@ void VerticalWall(int i, int j, char p, int dy)
 		dungeon[i][j + yy] = dt;
 	}
 
-	int yy = GenerateRnd(dy - 1) + 1;
+	int yy = vanilla::GenerateRnd(dy - 1) + 1;
 
 	if (wt == 11) {
 		dungeon[i][j + yy] = wt;
@@ -1375,42 +1375,42 @@ void AddWall()
 		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0) {
 				if (dungeon[i][j] == 3) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 2, x);
 					}
 				}
 				if (dungeon[i][j] == 3) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 1, y);
 					}
 				}
 				if (dungeon[i][j] == 6) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 4, x);
 					}
 				}
 				if (dungeon[i][j] == 7) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 4, y);
 					}
 				}
 				if (dungeon[i][j] == 2) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 2, x);
 					}
 				}
 				if (dungeon[i][j] == 1) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 1, y);
@@ -1642,10 +1642,10 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (GenerateRnd(4) == 0) {
+			if (vanilla::GenerateRnd(4) == 0) {
 				uint8_t c = L5BTYPES[dungeon[x][y]];
 				if (c != 0 && L5dflags[x][y] == 0) {
-					int rv = GenerateRnd(16);
+					int rv = vanilla::GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
 						i++;
@@ -1782,17 +1782,17 @@ void FillChambers()
 	if (currlevel == 24) {
 		if (VR1 || VR2 || VR3) {
 			int c = 1;
-			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
+			if (!VR1 && VR2 && VR3 && vanilla::GenerateRnd(2) != 0)
 				c = 2;
-			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
+			if (VR1 && VR2 && !VR3 && vanilla::GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				c = (GenerateRnd(2) != 0) ? 0 : 2;
+				c = (vanilla::GenerateRnd(2) != 0) ? 0 : 2;
 			}
 
 			if (VR1 && VR2 && VR3)
-				c = GenerateRnd(3);
+				c = vanilla::GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -1807,17 +1807,17 @@ void FillChambers()
 			}
 		} else {
 			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
+			if (!HR1 && HR2 && HR3 && vanilla::GenerateRnd(2) != 0)
 				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
+			if (HR1 && HR2 && !HR3 && vanilla::GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				c = (GenerateRnd(2) != 0) ? 0 : 2;
+				c = (vanilla::GenerateRnd(2) != 0) ? 0 : 2;
 			}
 
 			if (HR1 && HR2 && HR3)
-				c = GenerateRnd(3);
+				c = vanilla::GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -1835,20 +1835,20 @@ void FillChambers()
 	if (currlevel == 21) {
 		if (VR1 || VR2 || VR3) {
 			int c = 1;
-			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
+			if (!VR1 && VR2 && VR3 && vanilla::GenerateRnd(2) != 0)
 				c = 2;
-			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
+			if (VR1 && VR2 && !VR3 && vanilla::GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				if (GenerateRnd(2) != 0)
+				if (vanilla::GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (VR1 && VR2 && VR3)
-				c = GenerateRnd(3);
+				c = vanilla::GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -1863,20 +1863,20 @@ void FillChambers()
 			}
 		} else {
 			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
+			if (!HR1 && HR2 && HR3 && vanilla::GenerateRnd(2) != 0)
 				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
+			if (HR1 && HR2 && !HR3 && vanilla::GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (GenerateRnd(2) != 0)
+				if (vanilla::GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (HR1 && HR2 && HR3)
-				c = GenerateRnd(3);
+				c = vanilla::GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -1894,20 +1894,20 @@ void FillChambers()
 	if (L5setloadflag) {
 		if (VR1 || VR2 || VR3) {
 			int c = 1;
-			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
+			if (!VR1 && VR2 && VR3 && vanilla::GenerateRnd(2) != 0)
 				c = 2;
-			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
+			if (VR1 && VR2 && !VR3 && vanilla::GenerateRnd(2) != 0)
 				c = 0;
 
 			if (VR1 && !VR2 && VR3) {
-				if (GenerateRnd(2) != 0)
+				if (vanilla::GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (VR1 && VR2 && VR3)
-				c = GenerateRnd(3);
+				c = vanilla::GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -1922,20 +1922,20 @@ void FillChambers()
 			}
 		} else {
 			int c = 1;
-			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
+			if (!HR1 && HR2 && HR3 && vanilla::GenerateRnd(2) != 0)
 				c = 2;
-			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
+			if (HR1 && HR2 && !HR3 && vanilla::GenerateRnd(2) != 0)
 				c = 0;
 
 			if (HR1 && !HR2 && HR3) {
-				if (GenerateRnd(2) != 0)
+				if (vanilla::GenerateRnd(2) != 0)
 					c = 0;
 				else
 					c = 2;
 			}
 
 			if (HR1 && HR2 && HR3)
-				c = GenerateRnd(3);
+				c = vanilla::GenerateRnd(3);
 
 			switch (c) {
 			case 0:
@@ -2561,7 +2561,7 @@ void LoadPreL1Dungeon(const char *path)
 
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 {
-	SetRndSeed(rseed);
+	vanilla::SetRndSeed(rseed);
 
 	dminx = 16;
 	dminy = 16;

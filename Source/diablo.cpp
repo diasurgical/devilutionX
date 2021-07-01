@@ -1905,7 +1905,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 		NewCursor(CURSOR_HAND);
 	}
-	SetRndSeed(glSeedTbl[currlevel]);
+	vanilla::SetRndSeed(glSeedTbl[currlevel]);
 	IncProgress();
 	MakeLightTable();
 	LoadLvlGFX();
@@ -1920,7 +1920,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitText();
 	}
 
-	SetRndSeed(glSeedTbl[currlevel]);
+	vanilla::SetRndSeed(glSeedTbl[currlevel]);
 
 	if (leveltype == DTYPE_TOWN)
 		SetupTownStores();
@@ -1942,7 +1942,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		CreateLevel(lvldir);
 		IncProgress();
 		FillSolidBlockTbls();
-		SetRndSeed(glSeedTbl[currlevel]);
+		vanilla::SetRndSeed(glSeedTbl[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
 			GetLevelMTypes();
@@ -1986,24 +1986,24 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				visited = visited || player._pLvlVisited[currlevel];
 		}
 
-		SetRndSeed(glSeedTbl[currlevel]);
+		vanilla::SetRndSeed(glSeedTbl[currlevel]);
 
 		if (leveltype != DTYPE_TOWN) {
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
-				glMid1Seed[currlevel] = GetLCGEngineState();
+				glMid1Seed[currlevel] = vanilla::GetLCGEngineState();
 				InitMonsters();
-				glMid2Seed[currlevel] = GetLCGEngineState();
+				glMid2Seed[currlevel] = vanilla::GetLCGEngineState();
 				IncProgress();
 				InitObjects();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
-				glMid3Seed[currlevel] = GetLCGEngineState();
+				glMid3Seed[currlevel] = vanilla::GetLCGEngineState();
 				InitMissiles();
 				InitDead();
-				glEndSeed[currlevel] = GetLCGEngineState();
+				glEndSeed[currlevel] = vanilla::GetLCGEngineState();
 
 				if (gbIsMultiplayer)
 					DeltaLoadLevel();

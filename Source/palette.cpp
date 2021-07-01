@@ -164,7 +164,7 @@ void LoadRndLvlPal(dungeon_type l)
 		return;
 	}
 
-	int rv = GenerateRnd(4) + 1;
+	int rv = vanilla::GenerateRnd(4) + 1;
 	if (l == DTYPE_CRYPT) {
 		LoadPalette("NLevels\\L5Data\\L5Base.PAL");
 		return;

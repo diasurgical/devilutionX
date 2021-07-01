@@ -2034,7 +2034,7 @@ void SaveLevel()
 	DoUnVision(Players[MyPlayerId].position.tile, Players[MyPlayerId]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
-		glSeedTbl[0] = AdvanceRndSeed();
+		glSeedTbl[0] = vanilla::AdvanceRndSeed();
 
 	char szName[MAX_PATH];
 	GetTempLevelNames(szName);

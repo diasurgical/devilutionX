@@ -178,12 +178,12 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 
 	int numt = 1;
 	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
+		numt = vanilla::GenerateRnd(tmax - tmin) + tmin;
 	}
 
 	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
+		sx = vanilla::GenerateRnd(DMAXX - sw);
+		sy = vanilla::GenerateRnd(DMAXY - sh);
 		bool abort = false;
 		int bailcnt;
 		for (bailcnt = 0; !abort && bailcnt < 200; bailcnt++) {
@@ -192,13 +192,13 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 				abort = false;
 			}
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
+				sx = vanilla::GenerateRnd(DMAXX - sw);
+				sy = vanilla::GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
+				sx = vanilla::GenerateRnd(DMAXX - sw);
+				sy = vanilla::GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
 			int ii = 2;
@@ -333,7 +333,7 @@ bool CheckRoom(int x, int y, int width, int height)
 
 void GenerateRoom(int x, int y, int w, int h, int dir)
 {
-	int dirProb = GenerateRnd(4);
+	int dirProb = vanilla::GenerateRnd(4);
 	int num = 0;
 
 	bool ran;
@@ -343,8 +343,8 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 		int cx1;
 		int cy1;
 		do {
-			cw = (GenerateRnd(5) + 2) & ~1;
-			ch = (GenerateRnd(5) + 2) & ~1;
+			cw = (vanilla::GenerateRnd(5) + 2) & ~1;
+			ch = (vanilla::GenerateRnd(5) + 2) & ~1;
 			cx1 = x - cw;
 			cy1 = h / 2 + y - ch / 2;
 			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
@@ -369,8 +369,8 @@ void GenerateRoom(int x, int y, int w, int h, int dir)
 	int rx;
 	int ry;
 	do {
-		width = (GenerateRnd(5) + 2) & ~1;
-		height = (GenerateRnd(5) + 2) & ~1;
+		width = (vanilla::GenerateRnd(5) + 2) & ~1;
+		height = (vanilla::GenerateRnd(5) + 2) & ~1;
 		rx = w / 2 + x - width / 2;
 		ry = y - height;
 		ran = CheckRoom(rx - 1, ry - 1, width + 2, height + 1);
@@ -402,18 +402,18 @@ void FirstRoom()
 			w = 11;
 			h = 11;
 		} else {
-			w = GenerateRnd(5) + 2;
-			h = GenerateRnd(5) + 2;
+			w = vanilla::GenerateRnd(5) + 2;
+			h = vanilla::GenerateRnd(5) + 2;
 		}
 	}
 
 	int xmin = (20 - w) / 2;
 	int xmax = 19 - w;
-	int x = GenerateRnd(xmax - xmin + 1) + xmin;
+	int x = vanilla::GenerateRnd(xmax - xmin + 1) + xmin;
 
 	int ymin = (20 - h) / 2;
 	int ymax = 19 - h;
-	int y = GenerateRnd(ymax - ymin + 1) + ymin;
+	int y = vanilla::GenerateRnd(ymax - ymin + 1) + ymin;
 
 	if (currlevel == 16) {
 		l4holdx = x;
@@ -432,7 +432,7 @@ void FirstRoom()
 	}
 
 	MapRoom(x, y, w, h);
-	GenerateRoom(x, y, w, h, GenerateRnd(2));
+	GenerateRoom(x, y, w, h, vanilla::GenerateRnd(2));
 }
 
 void SetSetPiecesRoom(int rx1, int ry1)
@@ -575,7 +575,7 @@ void HorizontalWall(int i, int j, int dx)
 		dungeon[i + dx][j] = 29;
 	}
 
-	int xx = GenerateRnd(dx - 3) + 1;
+	int xx = vanilla::GenerateRnd(dx - 3) + 1;
 	dungeon[i + xx][j] = 57;
 	dungeon[i + xx + 2][j] = 56;
 	dungeon[i + xx + 1][j] = 60;
@@ -620,7 +620,7 @@ void VerticalWall(int i, int j, int dy)
 		dungeon[i][j + dy] = 29;
 	}
 
-	int yy = GenerateRnd(dy - 3) + 1;
+	int yy = vanilla::GenerateRnd(dy - 3) + 1;
 	dungeon[i][j + yy] = 53;
 	dungeon[i][j + yy + 2] = 52;
 	dungeon[i][j + yy + 1] = 6;
@@ -642,7 +642,7 @@ void AddWall()
 			}
 			for (auto d : { 10, 12, 13, 15, 16, 21, 22 }) {
 				if (d == dungeon[i][j]) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, x);
@@ -651,7 +651,7 @@ void AddWall()
 			}
 			for (auto d : { 8, 9, 11, 14, 15, 16, 21, 23 }) {
 				if (d == dungeon[i][j]) {
-					AdvanceRndSeed();
+					vanilla::AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, y);
@@ -1015,10 +1015,10 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if (GenerateRnd(3) == 0) {
+			if (vanilla::GenerateRnd(3) == 0) {
 				uint8_t c = L4BTYPES[dungeon[x][y]];
 				if (c != 0 && dflags[x][y] == 0) {
-					int rv = GenerateRnd(16);
+					int rv = vanilla::GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
 						i++;
@@ -1037,11 +1037,11 @@ void Substitution()
 	}
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			int rv = GenerateRnd(10);
+			int rv = vanilla::GenerateRnd(10);
 			if (rv == 0) {
 				uint8_t c = dungeon[x][y];
 				if (L4BTYPES[c] == 6 && dflags[x][y] == 0) {
-					dungeon[x][y] = GenerateRnd(3) + 95;
+					dungeon[x][y] = vanilla::GenerateRnd(3) + 95;
 				}
 			}
 		}
@@ -1068,7 +1068,7 @@ void UShape()
 		}
 	}
 
-	int rv = GenerateRnd(19) + 1;
+	int rv = vanilla::GenerateRnd(19) + 1;
 	do {
 		if (hallok[rv]) {
 			for (int i = 19; i >= 0; i--) {
@@ -1106,7 +1106,7 @@ void UShape()
 		}
 	}
 
-	rv = GenerateRnd(19) + 1;
+	rv = vanilla::GenerateRnd(19) + 1;
 	do {
 		if (hallok[rv]) {
 			for (int j = 19; j >= 0; j--) {
@@ -1532,7 +1532,7 @@ void Pass3()
 
 void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 {
-	SetRndSeed(rseed);
+	vanilla::SetRndSeed(rseed);
 
 	dminx = 16;
 	dminy = 16;

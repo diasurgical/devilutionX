@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-namespace randomV1 {
+inline namespace randomV1 {
 /**
  * @brief Generates a random unsigned integer value
  *
@@ -155,7 +155,7 @@ private:
 };
 } // namespace randomV1
 
-inline namespace vanilla {
+namespace vanilla {
 /**
  * @brief Set the state of the RandomNumberEngine used by the base game to the specific seed
  * 

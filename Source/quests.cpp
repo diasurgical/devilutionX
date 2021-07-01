@@ -186,16 +186,16 @@ void InitQuests()
 
 void InitialiseQuestPools(uint32_t seed, QuestStruct quests[])
 {
-	SetRndSeed(seed);
-	if (GenerateRnd(2) != 0)
+	vanilla::SetRndSeed(seed);
+	if (vanilla::GenerateRnd(2) != 0)
 		quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
 	else
 		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
-	quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup1[vanilla::GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup2[vanilla::GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup3[vanilla::GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	quests[QuestGroup4[vanilla::GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
 }
 
 void CheckQuests()

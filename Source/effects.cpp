@@ -1155,7 +1155,7 @@ _sfx_id RndSFX(_sfx_id psfx)
 		return psfx;
 	}
 
-	return static_cast<_sfx_id>(psfx + GenerateRnd(nRand));
+	return static_cast<_sfx_id>(psfx + vanilla::GenerateRnd(nRand));
 }
 
 void PrivSoundInit(BYTE bLoadMask)

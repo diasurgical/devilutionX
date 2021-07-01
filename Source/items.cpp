@@ -396,7 +396,7 @@ Point GetRandomAvailableItemPosition()
 {
 	Point position = {};
 	do {
-		position = Point { GenerateRnd(80), GenerateRnd(80) } + Displacement { 16, 16 };
+		position = Point { vanilla::GenerateRnd(80), vanilla::GenerateRnd(80) } + Displacement { 16, 16 };
 	} while (!ItemPlace(position));
 
 	return position;
@@ -405,7 +405,7 @@ Point GetRandomAvailableItemPosition()
 void AddInitItems()
 {
 	int curlv = ItemsGetCurrlevel();
-	int rnd = GenerateRnd(3) + 3;
+	int rnd = vanilla::GenerateRnd(3) + 3;
 	for (int j = 0; j < rnd; j++) {
 		int ii = AllocateItem();
 
@@ -414,9 +414,9 @@ void AddInitItems()
 
 		dItem[position.x][position.y] = ii + 1;
 
-		Items[ii]._iSeed = AdvanceRndSeed();
+		Items[ii]._iSeed = vanilla::AdvanceRndSeed();
 
-		if (GenerateRnd(2) != 0)
+		if (vanilla::GenerateRnd(2) != 0)
 			GetItemAttrs(ii, IDI_HEAL, curlv);
 		else
 			GetItemAttrs(ii, IDI_MANA, curlv);
@@ -605,7 +605,7 @@ bool GetItemSpace(Point position, int8_t inum)
 		}
 	}
 
-	int rs = GenerateRnd(15) + 1;
+	int rs = vanilla::GenerateRnd(15) + 1;
 
 	if (!savail)
 		return false;
@@ -676,7 +676,7 @@ void GetBookSpell(int i, int lvl)
 
 	int maxSpells = gbIsHellfire ? MAX_SPELLS : 37;
 
-	rv = GenerateRnd(maxSpells) + 1;
+	rv = vanilla::GenerateRnd(maxSpells) + 1;
 
 	if (gbIsSpawn && lvl > 5)
 		lvl = 5;
@@ -717,7 +717,7 @@ void GetBookSpell(int i, int lvl)
 
 int RndPL(int param1, int param2)
 {
-	return param1 + GenerateRnd(param2 - param1 + 1);
+	return param1 + vanilla::GenerateRnd(param2 - param1 + 1);
 }
 
 int CalculateToHitBonus(int level)
@@ -1147,7 +1147,7 @@ void SaveItemAffix(ItemStruct &item, const PLStruct &affix)
 void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 {
 	int preidx = -1;
-	if (GenerateRnd(10) == 0 || onlygood) {
+	if (vanilla::GenerateRnd(10) == 0 || onlygood) {
 		int nl = 0;
 		int l[256];
 		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
@@ -1163,7 +1163,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			}
 		}
 		if (nl != 0) {
-			preidx = l[GenerateRnd(nl)];
+			preidx = l[vanilla::GenerateRnd(nl)];
 			char istr[128];
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), Items[i]._iIName);
 			strcpy(Items[i]._iIName, istr);
@@ -1193,10 +1193,10 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 	char istr[128];
 	goodorevil goe;
 
-	int pre = GenerateRnd(4);
-	int post = GenerateRnd(3);
+	int pre = vanilla::GenerateRnd(4);
+	int post = vanilla::GenerateRnd(3);
 	if (pre != 0 && post == 0) {
-		if (GenerateRnd(2) != 0)
+		if (vanilla::GenerateRnd(2) != 0)
 			post = 1;
 		else
 			pre = 0;
@@ -1204,7 +1204,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 	int preidx = -1;
 	int sufidx = -1;
 	goe = GOE_ANY;
-	if (!onlygood && GenerateRnd(3) != 0)
+	if (!onlygood && vanilla::GenerateRnd(3) != 0)
 		onlygood = true;
 	if (pre == 0) {
 		int nt = 0;
@@ -1225,7 +1225,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			}
 		}
 		if (nt != 0) {
-			preidx = l[GenerateRnd(nt)];
+			preidx = l[vanilla::GenerateRnd(nt)];
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), Items[i]._iIName);
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
@@ -1246,7 +1246,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			}
 		}
 		if (nl != 0) {
-			sufidx = l[GenerateRnd(nl)];
+			sufidx = l[vanilla::GenerateRnd(nl)];
 			strcpy(istr, fmt::format(_("{:s} of {:s}"), Items[i]._iIName, _(ItemSuffixes[sufidx].PLName)).c_str());
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
@@ -1276,7 +1276,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 
 void GetStaffSpell(int i, int lvl, bool onlygood)
 {
-	if (!gbIsHellfire && GenerateRnd(4) == 0) {
+	if (!gbIsHellfire && vanilla::GenerateRnd(4) == 0) {
 		GetItemPower(i, lvl / 2, lvl, PLT_STAFF, onlygood);
 		return;
 	}
@@ -1285,7 +1285,7 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	int l = lvl / 2;
 	if (l == 0)
 		l = 1;
-	int rv = GenerateRnd(maxSpells) + 1;
+	int rv = vanilla::GenerateRnd(maxSpells) + 1;
 
 	if (gbIsSpawn && lvl > 10)
 		lvl = 10;
@@ -1317,7 +1317,7 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	int minc = spelldata[bs].sStaffMin;
 	int maxc = spelldata[bs].sStaffMax - minc + 1;
 	Items[i]._iSpell = bs;
-	Items[i]._iCharges = minc + GenerateRnd(maxc);
+	Items[i]._iCharges = minc + vanilla::GenerateRnd(maxc);
 	Items[i]._iMaxCharges = Items[i]._iCharges;
 
 	Items[i]._iMinMag = spelldata[bs].sMinInt;
@@ -1345,7 +1345,7 @@ void GetOilType(int i, int maxLvl)
 		}
 	}
 
-	int8_t t = rnd[GenerateRnd(cnt)];
+	int8_t t = rnd[vanilla::GenerateRnd(cnt)];
 
 	strcpy(Items[i]._iName, _(OilNames[t]));
 	strcpy(Items[i]._iIName, _(OilNames[t]));
@@ -1433,12 +1433,12 @@ int RndUItem(MonsterStruct *monster)
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[vanilla::GenerateRnd(ri)];
 }
 
 int RndAllItems()
 {
-	if (GenerateRnd(100) > 25)
+	if (vanilla::GenerateRnd(100) > 25)
 		return 0;
 
 	int ril[512];
@@ -1459,7 +1459,7 @@ int RndAllItems()
 			ri--;
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[vanilla::GenerateRnd(ri)];
 }
 
 int RndTypeItems(int itype, int imid, int lvl)
@@ -1486,14 +1486,14 @@ int RndTypeItems(int itype, int imid, int lvl)
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[vanilla::GenerateRnd(ri)];
 }
 
 _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 {
 	std::bitset<128> uok = {};
 
-	if (GenerateRnd(100) > uper)
+	if (vanilla::GenerateRnd(100) > uper)
 		return UITEM_INVALID;
 
 	int numu = 0;
@@ -1511,7 +1511,7 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 	if (numu == 0)
 		return UITEM_INVALID;
 
-	AdvanceRndSeed();
+	vanilla::AdvanceRndSeed();
 	uint8_t idata = 0;
 	while (numu > 0) {
 		if (uok[idata])
@@ -1547,7 +1547,7 @@ void GetUniqueItem(ItemStruct &item, _unique_items uid)
 void ItemRndDur(int ii)
 {
 	if (Items[ii]._iDurability > 0 && Items[ii]._iDurability != DUR_INDESTRUCTIBLE)
-		Items[ii]._iDurability = GenerateRnd(Items[ii]._iMaxDur / 2) + (Items[ii]._iMaxDur / 4) + 1;
+		Items[ii]._iDurability = vanilla::GenerateRnd(Items[ii]._iMaxDur / 2) + (Items[ii]._iMaxDur / 4) + 1;
 }
 
 void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
@@ -1555,7 +1555,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 	int iblvl;
 
 	Items[ii]._iSeed = iseed;
-	SetRndSeed(iseed);
+	vanilla::SetRndSeed(iseed);
 	GetItemAttrs(ii, idx, lvl / 2);
 	Items[ii]._iCreateInfo = lvl;
 
@@ -1571,7 +1571,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 
 	if (Items[ii]._iMiscId != IMISC_UNIQUE) {
 		iblvl = -1;
-		if (GenerateRnd(100) <= 10 || GenerateRnd(100) <= lvl) {
+		if (vanilla::GenerateRnd(100) <= 10 || vanilla::GenerateRnd(100) <= lvl) {
 			iblvl = lvl;
 		}
 		if (iblvl == -1 && Items[ii]._iMiscId == IMISC_STAFF) {
@@ -1614,7 +1614,7 @@ void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool de
 	GetSuperItemSpace(position, ii);
 	int curlv = ItemsGetCurrlevel();
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
+	SetupAllItems(ii, idx, vanilla::AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -1627,10 +1627,10 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	int idx;
 
 	Items[ii]._iSeed = iseed;
-	SetRndSeed(iseed);
+	vanilla::SetRndSeed(iseed);
 
 	if (gbIsHellfire) {
-		idx = GenerateRnd(7);
+		idx = vanilla::GenerateRnd(7);
 		switch (idx) {
 		case 0:
 			idx = IDI_PORTAL;
@@ -1655,12 +1655,12 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 			break;
 		}
 	} else {
-		if (GenerateRnd(2) != 0)
+		if (vanilla::GenerateRnd(2) != 0)
 			idx = IDI_HEAL;
 		else
 			idx = IDI_MANA;
 
-		if (lvl > 1 && GenerateRnd(3) == 0)
+		if (lvl > 1 && vanilla::GenerateRnd(3) == 0)
 			idx = IDI_PORTAL;
 	}
 
@@ -1745,7 +1745,7 @@ void RepairItem(ItemStruct *i, int lvl)
 
 	int rep = 0;
 	do {
-		rep += lvl + GenerateRnd(lvl);
+		rep += lvl + vanilla::GenerateRnd(lvl);
 		i->_iMaxDur -= std::max(i->_iMaxDur / (lvl + 9), 1);
 		if (i->_iMaxDur == 0) {
 			i->_itype = ITYPE_NONE;
@@ -1815,12 +1815,12 @@ bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 	switch (player._pOilType) {
 	case IMISC_OILACC:
 		if (x->_iPLToHit < 50) {
-			x->_iPLToHit += GenerateRnd(2) + 1;
+			x->_iPLToHit += vanilla::GenerateRnd(2) + 1;
 		}
 		break;
 	case IMISC_OILMAST:
 		if (x->_iPLToHit < 100) {
-			x->_iPLToHit += GenerateRnd(3) + 3;
+			x->_iPLToHit += vanilla::GenerateRnd(3) + 3;
 		}
 		break;
 	case IMISC_OILSHARP:
@@ -1835,7 +1835,7 @@ bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 		}
 		break;
 	case IMISC_OILSKILL:
-		r = GenerateRnd(6) + 5;
+		r = vanilla::GenerateRnd(6) + 5;
 		x->_iMinStr = std::max(0, x->_iMinStr - r);
 		x->_iMinMag = std::max(0, x->_iMinMag - r);
 		x->_iMinDex = std::max(0, x->_iMinDex - r);
@@ -1856,7 +1856,7 @@ bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 		break;
 	case IMISC_OILFORT:
 		if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur < 200) {
-			r = GenerateRnd(41) + 10;
+			r = vanilla::GenerateRnd(41) + 10;
 			x->_iMaxDur += r;
 			x->_iDurability += r;
 		}
@@ -1867,12 +1867,12 @@ bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 		break;
 	case IMISC_OILHARD:
 		if (x->_iAC < 60) {
-			x->_iAC += GenerateRnd(2) + 1;
+			x->_iAC += vanilla::GenerateRnd(2) + 1;
 		}
 		break;
 	case IMISC_OILIMP:
 		if (x->_iAC < 120) {
-			x->_iAC += GenerateRnd(3) + 3;
+			x->_iAC += vanilla::GenerateRnd(3) + 3;
 		}
 		break;
 	default:
@@ -2152,7 +2152,7 @@ int RndVendorItem(int minlvl, int maxlvl)
 			break;
 	}
 
-	return ril[GenerateRnd(ri)] + 1;
+	return ril[vanilla::GenerateRnd(ri)] + 1;
 }
 
 int RndSmithItem(int lvl)
@@ -2221,7 +2221,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 	do {
 		keepGoing = false;
 		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
+		Items[0]._iSeed = vanilla::AdvanceRndSeed();
 		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(0, itemType, plvl);
 		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
@@ -2357,7 +2357,7 @@ int RndHealerItem(int lvl)
 
 void RecreateSmithItem(int ii, int lvl, int iseed)
 {
-	SetRndSeed(iseed);
+	vanilla::SetRndSeed(iseed);
 	int itype = RndSmithItem(lvl) - 1;
 	GetItemAttrs(ii, itype, lvl);
 
@@ -2368,7 +2368,7 @@ void RecreateSmithItem(int ii, int lvl, int iseed)
 
 void RecreatePremiumItem(int ii, int plvl, int iseed)
 {
-	SetRndSeed(iseed);
+	vanilla::SetRndSeed(iseed);
 	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 	GetItemAttrs(ii, itype, plvl);
 	GetItemBonus(ii, plvl / 2, plvl, true, !gbIsHellfire);
@@ -2380,7 +2380,7 @@ void RecreatePremiumItem(int ii, int plvl, int iseed)
 
 void RecreateBoyItem(int ii, int lvl, int iseed)
 {
-	SetRndSeed(iseed);
+	vanilla::SetRndSeed(iseed);
 	int itype = RndBoyItem(lvl) - 1;
 	GetItemAttrs(ii, itype, lvl);
 	GetItemBonus(ii, lvl, 2 * lvl, true, true);
@@ -2395,15 +2395,15 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 	if (idx == IDI_MANA || idx == IDI_FULLMANA || idx == IDI_PORTAL) {
 		GetItemAttrs(ii, idx, lvl);
 	} else if (gbIsHellfire && idx >= 114 && idx <= 117) {
-		SetRndSeed(iseed);
-		AdvanceRndSeed();
+		vanilla::SetRndSeed(iseed);
+		vanilla::AdvanceRndSeed();
 		GetItemAttrs(ii, idx, lvl);
 	} else {
-		SetRndSeed(iseed);
+		vanilla::SetRndSeed(iseed);
 		int itype = RndWitchItem(lvl) - 1;
 		GetItemAttrs(ii, itype, lvl);
 		int iblvl = -1;
-		if (GenerateRnd(100) <= 5)
+		if (vanilla::GenerateRnd(100) <= 5)
 			iblvl = 2 * lvl;
 		if (iblvl == -1 && Items[ii]._iMiscId == IMISC_STAFF)
 			iblvl = 2 * lvl;
@@ -2421,7 +2421,7 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
 		GetItemAttrs(ii, idx, lvl);
 	} else {
-		SetRndSeed(iseed);
+		vanilla::SetRndSeed(iseed);
 		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(ii, itype, lvl);
 	}
@@ -2480,7 +2480,7 @@ void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bo
 
 	while (true) {
 		memset(&Items[ii], 0, sizeof(*Items));
-		SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
+		SetupAllItems(ii, idx, vanilla::AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		if (Items[ii]._iCurs == icurs)
 			break;
 
@@ -2591,7 +2591,7 @@ void InitItems()
 	}
 
 	if (!setlevel) {
-		AdvanceRndSeed(); /* unused */
+		vanilla::AdvanceRndSeed(); /* unused */
 		if (QuestStatus(Q_ROCK))
 			SpawnRock();
 		if (QuestStatus(Q_ANVIL))
@@ -3031,7 +3031,7 @@ void SetPlrHandItem(ItemStruct *h, int idata)
 
 void GetPlrHandSeed(ItemStruct *h)
 {
-	h->_iSeed = AdvanceRndSeed();
+	h->_iSeed = vanilla::AdvanceRndSeed();
 }
 
 /**
@@ -3046,7 +3046,7 @@ void GetGoldSeed(int pnum, ItemStruct *h)
 	bool doneflag;
 	do {
 		doneflag = true;
-		s = AdvanceRndSeed();
+		s = vanilla::AdvanceRndSeed();
 		for (int i = 0; i < ActiveItemCount; i++) {
 			int ii = ActiveItems[i];
 			if (Items[ii]._iSeed == s)
@@ -3289,7 +3289,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 	Items[i]._iClass = AllItemsList[idata].iClass;
 	Items[i]._iMinDam = AllItemsList[idata].iMinDam;
 	Items[i]._iMaxDam = AllItemsList[idata].iMaxDam;
-	Items[i]._iAC = AllItemsList[idata].iMinAC + GenerateRnd(AllItemsList[idata].iMaxAC - AllItemsList[idata].iMinAC + 1);
+	Items[i]._iAC = AllItemsList[idata].iMinAC + vanilla::GenerateRnd(AllItemsList[idata].iMaxAC - AllItemsList[idata].iMinAC + 1);
 	Items[i]._iFlags = AllItemsList[idata].iFlags;
 	Items[i]._iMiscId = AllItemsList[idata].iMiscId;
 	Items[i]._iSpell = AllItemsList[idata].iSpell;
@@ -3320,13 +3320,13 @@ void GetItemAttrs(int i, int idata, int lvl)
 	int itemlevel = ItemsGetCurrlevel();
 	switch (sgGameInitInfo.nDifficulty) {
 	case DIFF_NORMAL:
-		rndv = 5 * itemlevel + GenerateRnd(10 * itemlevel);
+		rndv = 5 * itemlevel + vanilla::GenerateRnd(10 * itemlevel);
 		break;
 	case DIFF_NIGHTMARE:
-		rndv = 5 * (itemlevel + 16) + GenerateRnd(10 * (itemlevel + 16));
+		rndv = 5 * (itemlevel + 16) + vanilla::GenerateRnd(10 * (itemlevel + 16));
 		break;
 	case DIFF_HELL:
-		rndv = 5 * (itemlevel + 32) + GenerateRnd(10 * (itemlevel + 32));
+		rndv = 5 * (itemlevel + 32) + vanilla::GenerateRnd(10 * (itemlevel + 32));
 		break;
 	}
 	if (leveltype == DTYPE_HELL)
@@ -3350,10 +3350,10 @@ int RndItem(const MonsterStruct &monster)
 	if ((monster.MData->mTreasure & 0x4000) != 0)
 		return 0;
 
-	if (GenerateRnd(100) > 40)
+	if (vanilla::GenerateRnd(100) > 40)
 		return 0;
 
-	if (GenerateRnd(100) > 25)
+	if (vanilla::GenerateRnd(100) > 25)
 		return IDI_GOLD + 1;
 
 	int ril[512];
@@ -3379,7 +3379,7 @@ int RndItem(const MonsterStruct &monster)
 			ri--;
 	}
 
-	int r = GenerateRnd(ri);
+	int r = vanilla::GenerateRnd(ri);
 	return ril[r] + 1;
 }
 
@@ -3440,7 +3440,7 @@ void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
+	SetupAllItems(ii, idx, vanilla::AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -3462,7 +3462,7 @@ void CreateRndUseful(Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int curlv = ItemsGetCurrlevel();
 
-	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
+	SetupAllUseful(ii, vanilla::AdvanceRndSeed(), curlv);
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
 }
@@ -3620,8 +3620,8 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 			if (tries > 1000 && randarea > 1)
 				randarea--;
 
-			position.x = GenerateRnd(MAXDUNX);
-			position.y = GenerateRnd(MAXDUNY);
+			position.x = vanilla::GenerateRnd(MAXDUNX);
+			position.y = vanilla::GenerateRnd(MAXDUNY);
 
 			bool failed = false;
 			for (int i = 0; i < randarea && !failed; i++) {
@@ -3647,7 +3647,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	GetItemAttrs(ii, itemid, curlv);
 
 	SetupItem(ii);
-	Items[ii]._iSeed = AdvanceRndSeed();
+	Items[ii]._iSeed = vanilla::AdvanceRndSeed();
 	Items[ii]._iPostDraw = true;
 	if (selflag != 0) {
 		Items[ii]._iSelFlag = selflag;
@@ -3816,7 +3816,7 @@ void DoRecharge(int pnum, int cii)
 	}
 	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
 		int r = GetSpellBookLevel(pi->_iSpell);
-		r = GenerateRnd(player._pLevel / r) + 1;
+		r = vanilla::GenerateRnd(player._pLevel / r) + 1;
 		RechargeItem(pi, r);
 		CalcPlrInv(pnum, true);
 	}
@@ -4247,7 +4247,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_HEAL:
 	case IMISC_FOOD: {
 		int j = player._pMaxHP >> 8;
-		int l = ((j / 2) + GenerateRnd(j)) << 6;
+		int l = ((j / 2) + vanilla::GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
@@ -4263,7 +4263,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_MANA: {
 		int j = player._pMaxMana >> 8;
-		int l = ((j / 2) + GenerateRnd(j)) << 6;
+		int l = ((j / 2) + vanilla::GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard)
@@ -4305,7 +4305,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_REJUV: {
 		int j = player._pMaxHP >> 8;
-		int l = ((j / 2) + GenerateRnd(j)) << 6;
+		int l = ((j / 2) + vanilla::GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue)
@@ -4314,7 +4314,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
 		drawhpflag = true;
 		j = player._pMaxMana >> 8;
-		l = ((j / 2) + GenerateRnd(j)) << 6;
+		l = ((j / 2) + vanilla::GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue)
@@ -4456,11 +4456,11 @@ void SpawnSmith(int lvl)
 		maxItems = 25;
 	}
 
-	int iCnt = GenerateRnd(maxItems - 10) + 10;
+	int iCnt = vanilla::GenerateRnd(maxItems - 10) + 10;
 	for (int i = 0; i < iCnt; i++) {
 		do {
 			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
+			Items[0]._iSeed = vanilla::AdvanceRndSeed();
 			int idata = RndSmithItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 		} while (Items[0]._iIvalue > maxValue);
@@ -4537,7 +4537,7 @@ void SpawnWitch(int lvl)
 		maxValue = 200000;
 		reservedItems = 10;
 
-		int books = GenerateRnd(4);
+		int books = vanilla::GenerateRnd(4);
 		for (int i = 114, bCnt = 0; i <= 117 && bCnt < books; ++i) {
 			if (!WitchItemOk(i))
 				continue;
@@ -4545,8 +4545,8 @@ void SpawnWitch(int lvl)
 				continue;
 
 			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			AdvanceRndSeed();
+			Items[0]._iSeed = vanilla::AdvanceRndSeed();
+			vanilla::AdvanceRndSeed();
 
 			GetItemAttrs(0, i, lvl);
 			witchitem[j] = Items[0];
@@ -4558,16 +4558,16 @@ void SpawnWitch(int lvl)
 			bCnt++;
 		}
 	}
-	int iCnt = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
+	int iCnt = vanilla::GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
 
 	for (int i = j; i < iCnt; i++) {
 		do {
 			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
+			Items[0]._iSeed = vanilla::AdvanceRndSeed();
 			int idata = RndWitchItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 			int maxlvl = -1;
-			if (GenerateRnd(100) <= 5)
+			if (vanilla::GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
 			if (maxlvl == -1 && Items[0]._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
@@ -4608,7 +4608,7 @@ void SpawnBoy(int lvl)
 	do {
 		keepgoing = false;
 		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
+		Items[0]._iSeed = vanilla::AdvanceRndSeed();
 		int itype = RndBoyItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		GetItemBonus(0, lvl, 2 * lvl, true, true);
@@ -4731,10 +4731,10 @@ void SpawnHealer(int lvl)
 	} else {
 		srnd = 2;
 	}
-	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
+	int nsi = vanilla::GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
 	for (int i = srnd; i < nsi; i++) {
 		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
+		Items[0]._iSeed = vanilla::AdvanceRndSeed();
 		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = Items[0];
@@ -4785,7 +4785,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 
 	while (true) {
 		memset(&Items[ii], 0, sizeof(*Items));
-		SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
+		SetupAllItems(ii, idx, vanilla::AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		if (Items[ii]._iMiscId == IMISC_BOOK && Items[ii]._iSpell == ispell)
 			break;
 	}

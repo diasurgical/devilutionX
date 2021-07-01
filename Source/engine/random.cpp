@@ -4,7 +4,7 @@
 
 namespace devilution {
 
-namespace randomV1 {
+inline namespace randomV1 {
 /**
  * @brief Randomly initialise the engine used for non-instanced RNG calls
 */
@@ -53,7 +53,7 @@ bool RandomEngine::RandomBoolean(double chance)
 }
 } // namespace randomV1
 
-inline namespace vanilla {
+namespace vanilla {
 /** Current game seed */
 uint32_t sglGameSeed;
 
