@@ -1788,22 +1788,7 @@ static bool WoodVertU(int i, int y)
 {
 	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
 	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
-		if (dungeon[i][y] == 7) {
-			return true;
-		}
-		if (dungeon[i][y] == 10) {
-			return true;
-		}
-		if (dungeon[i][y] == 126) {
-			return true;
-		}
-		if (dungeon[i][y] == 129) {
-			return true;
-		}
-		if (dungeon[i][y] == 134) {
-			return true;
-		}
-		if (dungeon[i][y] == 136) {
+		if (IsAnyOf(dungeon[i][y], 7, 10, 126, 129, 134, 136)) {
 			return true;
 		}
 	}
@@ -1815,16 +1800,7 @@ static bool WoodVertD(int i, int y)
 {
 	if ((dungeon[i + 1][y] > 152 || dungeon[i + 1][y] < 130)
 	    && (dungeon[i - 1][y] > 152 || dungeon[i - 1][y] < 130)) {
-		if (dungeon[i][y] == 7) {
-			return true;
-		}
-		if (dungeon[i][y] == 2) {
-			return true;
-		}
-		if (dungeon[i][y] == 134) {
-			return true;
-		}
-		if (dungeon[i][y] == 136) {
+		if (IsAnyOf(dungeon[i][y], 2, 7, 134, 136)) {
 			return true;
 		}
 	}
@@ -1836,22 +1812,7 @@ static bool WoodHorizL(int x, int j)
 {
 	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
 	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
-		if (dungeon[x][j] == 7) {
-			return true;
-		}
-		if (dungeon[x][j] == 9) {
-			return true;
-		}
-		if (dungeon[x][j] == 121) {
-			return true;
-		}
-		if (dungeon[x][j] == 124) {
-			return true;
-		}
-		if (dungeon[x][j] == 135) {
-			return true;
-		}
-		if (dungeon[x][j] == 137) {
+		if (IsAnyOf(dungeon[x][j], 7, 9, 121, 124, 135, 137)) {
 			return true;
 		}
 	}
@@ -1863,16 +1824,7 @@ static bool WoodHorizR(int x, int j)
 {
 	if ((dungeon[x][j + 1] > 152 || dungeon[x][j + 1] < 130)
 	    && (dungeon[x][j - 1] > 152 || dungeon[x][j - 1] < 130)) {
-		if (dungeon[x][j] == 7) {
-			return true;
-		}
-		if (dungeon[x][j] == 4) {
-			return true;
-		}
-		if (dungeon[x][j] == 135) {
-			return true;
-		}
-		if (dungeon[x][j] == 137) {
+		if (IsAnyOf(dungeon[x][j], 4, 7, 135, 137)) {
 			return true;
 		}
 	}
@@ -1914,13 +1866,7 @@ void FenceDoorFix()
 				}
 			}
 			if (dungeon[i][j] == 146) {
-				if (dungeon[i + 1][j] != 130 && dungeon[i - 1][j] != 130
-				    && dungeon[i + 1][j] != 132 && dungeon[i - 1][j] != 132
-				    && dungeon[i + 1][j] != 133 && dungeon[i - 1][j] != 133
-				    && dungeon[i + 1][j] != 134 && dungeon[i - 1][j] != 134
-				    && dungeon[i + 1][j] != 136 && dungeon[i - 1][j] != 136
-				    && dungeon[i + 1][j] != 138 && dungeon[i - 1][j] != 138
-				    && dungeon[i + 1][j] != 140 && dungeon[i - 1][j] != 140) {
+				if (IsNoneOf(dungeon[i + 1][j], 130, 132, 133, 145, 136, 138, 140) && IsNoneOf(dungeon[i - 1][j], 130, 132, 133, 145, 136, 138, 140)) {
 					dungeon[i][j] = 7;
 					continue;
 				}
@@ -1933,13 +1879,7 @@ void FenceDoorFix()
 				}
 			}
 			if (dungeon[i][j] == 147) {
-				if (dungeon[i][j + 1] != 131 && dungeon[i][j - 1] != 131
-				    && dungeon[i][j + 1] != 132 && dungeon[i][j - 1] != 132
-				    && dungeon[i][j + 1] != 133 && dungeon[i][j - 1] != 133
-				    && dungeon[i][j + 1] != 135 && dungeon[i][j - 1] != 135
-				    && dungeon[i][j + 1] != 137 && dungeon[i][j - 1] != 137
-				    && dungeon[i][j + 1] != 138 && dungeon[i][j - 1] != 138
-				    && dungeon[i][j + 1] != 139 && dungeon[i][j - 1] != 139) {
+				if (IsNoneOf(dungeon[i][j + 1], 131, 132, 133, 135, 137, 138, 139) && IsNoneOf(dungeon[i][j - 1], 131, 132, 133, 135, 137, 138, 139)) {
 					dungeon[i][j] = 7;
 					continue;
 				}

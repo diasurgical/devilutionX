@@ -1923,7 +1923,7 @@ static void CreateDoorType(int nX, int nY)
 	if (predungeon[nX][nY + 1] == 68) {
 		return;
 	}
-	if (predungeon[nX][nY] == 66 || predungeon[nX][nY] == 67 || predungeon[nX][nY] == 65 || predungeon[nX][nY] == 69) {
+	if (IsAnyOf(predungeon[nX][nY], 65, 66, 67, 69)) {
 		return;
 	}
 
@@ -2717,43 +2717,23 @@ static bool CreateDungeon()
 
 	for (int j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
 		for (int i = 0; i < DMAXX; i++) { /// BUGFIX: change '<=' to '<' (fixed)
-			if (predungeon[i][j] == 67) {
-				predungeon[i][j] = 35;
-			}
-			if (predungeon[i][j] == 66) {
-				predungeon[i][j] = 35;
-			}
-			if (predungeon[i][j] == 69) {
-				predungeon[i][j] = 35;
-			}
-			if (predungeon[i][j] == 65) {
+			if (IsAnyOf(predungeon[i][j], 65, 66, 67, 69)) {
 				predungeon[i][j] = 35;
 			}
 			if (predungeon[i][j] == 44) {
 				predungeon[i][j] = 46;
-				if (predungeon[i - 1][j - 1] == 32) {
-					predungeon[i - 1][j - 1] = 35;
-				}
-				if (predungeon[i - 1][j] == 32) {
-					predungeon[i - 1][j] = 35;
-				}
-				if (predungeon[i - 1][1 + j] == 32) {
-					predungeon[i - 1][1 + j] = 35;
-				}
-				if (predungeon[i + 1][j - 1] == 32) {
-					predungeon[i + 1][j - 1] = 35;
-				}
-				if (predungeon[i + 1][j] == 32) {
-					predungeon[i + 1][j] = 35;
-				}
-				if (predungeon[i + 1][1 + j] == 32) {
-					predungeon[i + 1][1 + j] = 35;
-				}
-				if (predungeon[i][j - 1] == 32) {
-					predungeon[i][j - 1] = 35;
-				}
-				if (predungeon[i][j + 1] == 32) {
-					predungeon[i][j + 1] = 35;
+				for (int a = -1; a <= 1; a++) {
+					for (int b = -1; b <= 1; b++) {
+						if (a == 0 && b == 0)
+							continue;
+						if (i + a < 0 || j + b < 0)
+							continue;
+						if (i + a >= DMAXX || j + b >= DMAXY)
+							continue;
+						if (predungeon[i + a][j + b] == 32) {
+							predungeon[i + a][j + b] = 35;
+						}
+					}
 				}
 			}
 		}
@@ -2846,7 +2826,7 @@ static void DRLG_L2TransFix()
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 14 && dungeon[i][j - 1] == 10) {
+			if (dungeon[i][j] == 14 && dungeon[i][j - 1] == 10) { // BUGFIX: check if j >= 1
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
 				dTransVal[xx + 1][yy + 1] = dTransVal[xx][yy];
 			}

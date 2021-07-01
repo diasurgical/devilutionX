@@ -697,7 +697,7 @@ void AddObjTraps()
 
 			if (GenerateRnd(2) == 0) {
 				xp = i - 1;
-				while (!nSolidTable[dPiece[xp][j]])
+				while (!nSolidTable[dPiece[xp][j]]) // BUGFIX: check if xp >= 0
 					xp--;
 
 				if (!WallTrapLocOkK(xp, j) || i - xp <= 1)
@@ -710,7 +710,7 @@ void AddObjTraps()
 				object[oi]._oTrapFlag = true;
 			} else {
 				yp = j - 1;
-				while (!nSolidTable[dPiece[i][yp]])
+				while (!nSolidTable[dPiece[i][yp]]) // BUGFIX: check if yp >= 0
 					yp--;
 
 				if (!WallTrapLocOkK(i, yp) || j - yp <= 1)
@@ -3632,13 +3632,7 @@ bool OperateShrineThaumaturgic(int pnum)
 	for (int j = 0; j < nobjects; j++) {
 		int v1 = objectactive[j];
 		assert((DWORD)v1 < MAXOBJECTS);
-		if ((object[v1]._otype == OBJ_CHEST1
-		        || object[v1]._otype == OBJ_CHEST2
-		        || object[v1]._otype == OBJ_CHEST3
-		        || object[v1]._otype == OBJ_TCHEST1
-		        || object[v1]._otype == OBJ_TCHEST2
-		        || object[v1]._otype == OBJ_TCHEST3)
-		    && object[v1]._oSelFlag == 0) {
+		if (IsAnyOf(object[v1]._otype, OBJ_CHEST1, OBJ_CHEST2, OBJ_CHEST3, OBJ_TCHEST1, OBJ_TCHEST2, OBJ_TCHEST3) && object[v1]._oSelFlag == 0) {
 			object[v1]._oRndSeed = AdvanceRndSeed();
 			object[v1]._oSelFlag = 1;
 			object[v1]._oAnimFrame -= 2;
@@ -5262,7 +5256,7 @@ void SyncCrux(int i)
 	for (j = 0; j < nobjects; j++) {
 		oi = objectactive[j];
 		type = object[oi]._otype;
-		if (type != OBJ_CRUX1 && type != OBJ_CRUX2 && type != OBJ_CRUX3)
+		if (IsNoneOf(type, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
 			continue;
 		if (object[i]._oVar8 != object[oi]._oVar8 || object[oi]._oBreak == -1)
 			continue;

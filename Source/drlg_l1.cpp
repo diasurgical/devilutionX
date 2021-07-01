@@ -881,50 +881,23 @@ static void DRLG_L1Shadows()
 		for (int x = 1; x < DMAXX; x++) {
 			if (dungeon[x - 1][y] == 139 && L5dflags[x - 1][y] == 0) {
 				uint8_t tnv3 = 139;
-				if (dungeon[x][y] == 29)
+				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 141;
-				if (dungeon[x][y] == 32)
-					tnv3 = 141;
-				if (dungeon[x][y] == 35)
-					tnv3 = 141;
-				if (dungeon[x][y] == 37)
-					tnv3 = 141;
-				if (dungeon[x][y] == 38)
-					tnv3 = 141;
-				if (dungeon[x][y] == 39)
-					tnv3 = 141;
+				}
 				dungeon[x - 1][y] = tnv3;
 			}
 			if (dungeon[x - 1][y] == 149 && L5dflags[x - 1][y] == 0) {
 				uint8_t tnv3 = 149;
-				if (dungeon[x][y] == 29)
+				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 153;
-				if (dungeon[x][y] == 32)
-					tnv3 = 153;
-				if (dungeon[x][y] == 35)
-					tnv3 = 153;
-				if (dungeon[x][y] == 37)
-					tnv3 = 153;
-				if (dungeon[x][y] == 38)
-					tnv3 = 153;
-				if (dungeon[x][y] == 39)
-					tnv3 = 153;
+				}
 				dungeon[x - 1][y] = tnv3;
 			}
 			if (dungeon[x - 1][y] == 148 && L5dflags[x - 1][y] == 0) {
 				uint8_t tnv3 = 148;
-				if (dungeon[x][y] == 29)
+				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 154;
-				if (dungeon[x][y] == 32)
-					tnv3 = 154;
-				if (dungeon[x][y] == 35)
-					tnv3 = 154;
-				if (dungeon[x][y] == 37)
-					tnv3 = 154;
-				if (dungeon[x][y] == 38)
-					tnv3 = 154;
-				if (dungeon[x][y] == 39)
-					tnv3 = 154;
+				}
 				dungeon[x - 1][y] = tnv3;
 			}
 		}
