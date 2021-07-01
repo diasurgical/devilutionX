@@ -582,12 +582,7 @@ void DrawLifeFlask(const CelOutputBuffer &out)
 {
 	auto &myPlayer = plr[myplr];
 
-	double p = 0.0;
-	if (myPlayer._pMaxHP > 0) {
-		p = (double)myPlayer._pHitPoints / (double)myPlayer._pMaxHP * 80.0;
-	}
-	myPlayer._pHPPer = p;
-	int filled = myPlayer._pHPPer;
+	int filled = myPlayer.UpdateHitPointPercentage();
 
 	if (filled > 80)
 		filled = 80;
@@ -606,12 +601,7 @@ void UpdateLifeFlask(const CelOutputBuffer &out)
 {
 	auto &myPlayer = plr[myplr];
 
-	double p = 0.0;
-	if (myPlayer._pMaxHP > 0) {
-		p = (double)myPlayer._pHitPoints / (double)myPlayer._pMaxHP * 80.0;
-	}
-	int filled = p;
-	myPlayer._pHPPer = filled;
+	int filled = myPlayer.UpdateHitPointPercentage();
 
 	if (filled > 69)
 		filled = 69;
@@ -645,7 +635,7 @@ void control_update_life_mana()
 	int maxMana = std::max(myPlayer._pMaxMana, 0);
 	int mana = std::max(myPlayer._pMana, 0);
 	myPlayer._pManaPer = maxMana != 0 ? ((double)mana / (double)maxMana * 80.0) : 0;
-	myPlayer._pHPPer = (double)myPlayer._pHitPoints / (double)myPlayer._pMaxHP * 80.0;
+	myPlayer.UpdateHitPointPercentage();
 }
 
 void UpdateManaFlask(const CelOutputBuffer &out)
