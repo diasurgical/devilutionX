@@ -476,8 +476,29 @@ const BYTE byte_48A3D4[4] = { 1, 1, 2, 202 };
 
 /* data */
 
-BYTE UberRoomPattern[32] = { 4, 6, 115, 130, 6, 13, 129, 108, 1, 13, 1, 107, 103, 13, 146, 106, 102, 13, 129, 168, 1, 13, 7, 2, 3, 13, 0, 0, 0, 0, 0, 0 };
-BYTE CornerstoneRoomPattern[32] = { 5, 5, 4, 2, 2, 2, 6, 1, 111, 172, 0, 1, 1, 172, 0, 0, 25, 1, 0, 0, 0, 1, 7, 2, 2, 2, 3, 0, 0, 0, 0, 0 };
+BYTE UberRoomPattern[26] = {
+	// clang-format off
+	4, 6, // width, height
+
+	115, 130,   6, 13, // pattern
+	129, 108,   1, 13,
+	  1, 107, 103, 13,
+	146, 106, 102, 13,
+	129, 168,   1, 13,
+	  7,   2,   3, 13,
+	// clang-format on
+};
+BYTE CornerstoneRoomPattern[27] = {
+	// clang-format off
+	5, 5, // width, height
+
+	4,   2,   2, 2,  6, // pattern
+	1, 111, 172, 0,  1,
+	1, 172,   0, 0, 25,
+	1,   0,   0, 0,  1,
+	7,   2,   2, 2,  3,
+	// clang-format on
+};
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.

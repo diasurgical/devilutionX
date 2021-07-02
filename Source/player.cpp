@@ -77,6 +77,7 @@ void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
 	player.position.temp = player.position.tile;
 	player.position.tile = player.position.future; // Move player to the next tile to maintain correct render order
 	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
+	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player._plid, player.position.tile);
 	PM_ChangeLightOff(player);
 }
@@ -2153,7 +2154,7 @@ static bool WeaponDurDecay(int pnum, int ii)
 {
 	auto &player = plr[pnum];
 
-	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & 2) != 0) {
+	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
 			NetSendCmdDelItem(true, ii);
@@ -2374,16 +2375,16 @@ bool PlrHitMonst(int pnum, int m)
 		break;
 	}
 
-	if ((player.pDamAcFlags & 0x01) != 0 && GenerateRnd(100) < 5) {
+	if ((player.pDamAcFlags & ISPLHF_DEVASTATION) != 0 && GenerateRnd(100) < 5) {
 		dam *= 3;
 	}
 
-	if ((player.pDamAcFlags & 0x10) != 0 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
+	if ((player.pDamAcFlags & ISPLHF_DOPPELGANGER) != 0 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
 		AddDoppelganger(monster[m]);
 	}
 
 	dam <<= 6;
-	if ((player.pDamAcFlags & 0x08) != 0) {
+	if ((player.pDamAcFlags & ISPLHF_JESTERS) != 0) {
 		int r = GenerateRnd(201);
 		if (r >= 100)
 			r = 100 + (r - 100) * 5;
@@ -2394,7 +2395,7 @@ bool PlrHitMonst(int pnum, int m)
 		dam >>= 2;
 
 	if (pnum == myplr) {
-		if ((player.pDamAcFlags & 0x04) != 0) {
+		if ((player.pDamAcFlags & ISPLHF_PERIL) != 0) {
 			dam2 += player._pIGetHit << 6;
 			if (dam2 >= 0) {
 				ApplyPlrDamage(pnum, 0, 1, dam2);

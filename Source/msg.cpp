@@ -2009,7 +2009,7 @@ static DWORD On_AWAKEGOLEM(TCmd *pCmd, int pnum)
 			int mi = missileactive[i];
 			if (missile[mi]._mitype == MIS_GOLEM && missile[mi]._misource == pnum) {
 				addGolem = false;
-				// BUGFIX: break, don't need to check the rest
+				// CODEFIX: break, don't need to check the rest
 			}
 		}
 		if (addGolem)
@@ -2476,7 +2476,7 @@ static DWORD On_REFLECT(TCmd *pCmd, int pnum)
 static DWORD On_NAKRUL(TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
-		operate_lv24_lever();
+		OperateNakrulLever();
 		IsUberRoomOpened = true;
 		quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		monster_some_crypt();

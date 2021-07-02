@@ -472,7 +472,7 @@ void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
 				if (player.HasItem(IDI_SPECELIX)) {
 					InitQTextMsg(TEXT_MUSH12);
 					quests[Q_MUSHROOM]._qactive = QUEST_DONE;
-					AllItemsList[IDI_SPECELIX].iUsable = true; // TODO modefy item instead of AllItemsList
+					AllItemsList[IDI_SPECELIX].iUsable = true; /// BUGFIX: This will cause the elixir to be usable in the next game
 					return;
 				}
 			}
@@ -859,6 +859,7 @@ void FreeTownerGFX()
 
 void ProcessTowners()
 {
+	// BUGFIX: should be `i < numtowners`, was `i < NUM_TOWNERS`
 	for (auto &towner : towners) {
 		if (towner._ttype == TOWN_DEADGUY) {
 			TownDead(towner);

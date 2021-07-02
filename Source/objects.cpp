@@ -82,7 +82,7 @@ bool InitObjFlag;
 bool LoadMapObjsFlag;
 int numobjfiles;
 
-/** Tracks progress through the tome sequence that spawns Na-Krul (see NaKrulSpellTomesActive()) */
+/** Tracks progress through the tome sequence that spawns Na-Krul (see OperateNakrulBook()) */
 int NaKrulTomeSequence;
 
 /** Specifies the X-coordinate delta between barrels. */
@@ -796,7 +796,7 @@ void AddDiabObjs()
 	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", 2 * diabquad3x, 2 * diabquad3y, diabquad4x, diabquad4y, 9, 9, 3);
 }
 
-void objects_add_lv22(int s)
+void AddCryptStoryBook(int s)
 {
 	int cnt = 0;
 	int xp;
@@ -818,7 +818,7 @@ void objects_add_lv22(int s)
 				return;
 		}
 	}
-	objects_44D8C5(OBJ_STORYBOOK, s, xp, yp);
+	AddCryptBook(OBJ_STORYBOOK, s, xp, yp);
 	AddObject(OBJ_STORYCANDLE, xp - 2, yp + 1);
 	AddObject(OBJ_STORYCANDLE, xp - 2, yp);
 	AddObject(OBJ_STORYCANDLE, xp - 1, yp - 1);
@@ -827,46 +827,46 @@ void objects_add_lv22(int s)
 	AddObject(OBJ_STORYCANDLE, xp + 2, yp + 1);
 }
 
-void objects_add_lv24()
+void AddNakrulGate()
 {
-	objects_rnd_454BEA();
+	AddNakrulLeaver();
 	switch (GenerateRnd(6)) {
 	case 0:
-		objects_454AF0(6, UberRow + 3, UberCol);
-		objects_454AF0(7, UberRow + 2, UberCol - 3);
-		objects_454AF0(8, UberRow + 2, UberCol + 2);
+		AddNakrulBook(6, UberRow + 3, UberCol);
+		AddNakrulBook(7, UberRow + 2, UberCol - 3);
+		AddNakrulBook(8, UberRow + 2, UberCol + 2);
 		break;
 	case 1:
-		objects_454AF0(6, UberRow + 3, UberCol);
-		objects_454AF0(8, UberRow + 2, UberCol - 3);
-		objects_454AF0(7, UberRow + 2, UberCol + 2);
+		AddNakrulBook(6, UberRow + 3, UberCol);
+		AddNakrulBook(8, UberRow + 2, UberCol - 3);
+		AddNakrulBook(7, UberRow + 2, UberCol + 2);
 		break;
 	case 2:
-		objects_454AF0(7, UberRow + 3, UberCol);
-		objects_454AF0(6, UberRow + 2, UberCol - 3);
-		objects_454AF0(8, UberRow + 2, UberCol + 2);
+		AddNakrulBook(7, UberRow + 3, UberCol);
+		AddNakrulBook(6, UberRow + 2, UberCol - 3);
+		AddNakrulBook(8, UberRow + 2, UberCol + 2);
 		break;
 	case 3:
-		objects_454AF0(7, UberRow + 3, UberCol);
-		objects_454AF0(8, UberRow + 2, UberCol - 3);
-		objects_454AF0(6, UberRow + 2, UberCol + 2);
+		AddNakrulBook(7, UberRow + 3, UberCol);
+		AddNakrulBook(8, UberRow + 2, UberCol - 3);
+		AddNakrulBook(6, UberRow + 2, UberCol + 2);
 		break;
 	case 4:
-		objects_454AF0(8, UberRow + 3, UberCol);
-		objects_454AF0(7, UberRow + 2, UberCol - 3);
-		objects_454AF0(6, UberRow + 2, UberCol + 2);
+		AddNakrulBook(8, UberRow + 3, UberCol);
+		AddNakrulBook(7, UberRow + 2, UberCol - 3);
+		AddNakrulBook(6, UberRow + 2, UberCol + 2);
 		break;
 	case 5:
-		objects_454AF0(8, UberRow + 3, UberCol);
-		objects_454AF0(6, UberRow + 2, UberCol - 3);
-		objects_454AF0(7, UberRow + 2, UberCol + 2);
+		AddNakrulBook(8, UberRow + 3, UberCol);
+		AddNakrulBook(6, UberRow + 2, UberCol - 3);
+		AddNakrulBook(7, UberRow + 2, UberCol + 2);
 		break;
 	}
 }
 
-void objects_454AF0(int a1, int a2, int a3)
+void AddNakrulBook(int a1, int a2, int a3)
 {
-	objects_44D8C5(OBJ_STORYBOOK, a1, a2, a3);
+	AddCryptBook(OBJ_STORYBOOK, a1, a2, a3);
 }
 
 void AddStoryBooks()
@@ -1007,16 +1007,16 @@ void InitObjects()
 		if (currlevel == 4 || currlevel == 8 || currlevel == 12)
 			AddStoryBooks();
 		if (currlevel == 21) {
-			objects_add_lv22(1);
+			AddCryptStoryBook(1);
 		} else if (currlevel == 22) {
-			objects_add_lv22(2);
-			objects_add_lv22(3);
+			AddCryptStoryBook(2);
+			AddCryptStoryBook(3);
 		} else if (currlevel == 23) {
-			objects_add_lv22(4);
-			objects_add_lv22(5);
+			AddCryptStoryBook(4);
+			AddCryptStoryBook(5);
 		}
 		if (currlevel == 24) {
-			objects_add_lv24();
+			AddNakrulGate();
 		}
 		if (leveltype == DTYPE_CATHEDRAL) {
 			if (QuestStatus(Q_BUTCHER))
@@ -1606,7 +1606,7 @@ void AddSlainHero()
 	AddObject(OBJ_SLAINHERO, x + 2, y + 2);
 }
 
-void objects_44D8C5(_object_id ot, int v2, int ox, int oy)
+void AddCryptBook(_object_id ot, int v2, int ox, int oy)
 {
 	if (nobjects >= MAXOBJECTS)
 		return;
@@ -1616,11 +1616,11 @@ void objects_44D8C5(_object_id ot, int v2, int ox, int oy)
 	objectactive[nobjects] = oi;
 	dObject[ox][oy] = oi + 1;
 	SetupObject(oi, ox, oy, ot);
-	objects_44DA68(oi, v2);
+	AddCryptObject(oi, v2);
 	nobjects++;
 }
 
-void objects_44DA68(int i, int a2)
+void AddCryptObject(int i, int a2)
 {
 	if (a2 > 5) {
 		switch (a2) {
@@ -2793,7 +2793,7 @@ void OperateLever(int pnum, int i)
 		}
 	}
 	if (currlevel == 24) {
-		operate_lv24_lever();
+		OperateNakrulLever();
 		IsUberLeverActivated = true;
 		mapflag = false;
 		quests[Q_NAKRUL]._qactive = QUEST_DONE;
@@ -4380,7 +4380,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	    && monster[MAX_PLRS]._msquelch == UINT8_MAX
 	    && monster[MAX_PLRS]._mhitpoints > 0) {
 		monster[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
-		M_StartStand(0, monster[MAX_PLRS]._mdir);
+		M_StartStand(0, monster[MAX_PLRS]._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
 		monster[MAX_PLRS]._mgoal = MGOAL_ATTACK2;
 		monster[MAX_PLRS]._mmode = MM_TALK;
 	}
@@ -4633,7 +4633,7 @@ void OperateStoryBook(int pnum, int i)
 	PlaySfxLoc(IS_ISCROL, object[i].position);
 	auto msg = static_cast<_speech_id>(object[i]._oVar2);
 	if (object[i]._oVar8 != 0 && currlevel == 24) {
-		if (!IsUberLeverActivated && quests[Q_NAKRUL]._qactive != QUEST_DONE && NaKrulSpellTomesActive(object[i]._oVar8)) {
+		if (!IsUberLeverActivated && quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(object[i]._oVar8)) {
 			NetSendCmd(false, CMD_NAKRUL);
 			return;
 		}
@@ -5418,11 +5418,11 @@ void GetObjectStr(int i)
 	}
 }
 
-void operate_lv24_lever()
+void OperateNakrulLever()
 {
 	if (currlevel == 24) {
 		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
-		//the part below is the same as objects_454BA8
+		//the part below is the same as SyncNakrulRoom
 		dPiece[UberRow][UberCol] = 298;
 		dPiece[UberRow][UberCol - 1] = 301;
 		dPiece[UberRow][UberCol - 2] = 300;
@@ -5431,7 +5431,7 @@ void operate_lv24_lever()
 	}
 }
 
-void objects_454BA8()
+void SyncNakrulRoom()
 {
 	dPiece[UberRow][UberCol] = 298;
 	dPiece[UberRow][UberCol - 1] = 301;
@@ -5441,7 +5441,7 @@ void objects_454BA8()
 	SetDungeonMicros();
 }
 
-void objects_rnd_454BEA()
+void AddNakrulLeaver()
 {
 	while (true) {
 		int xp = GenerateRnd(80) + 16;
@@ -5463,7 +5463,7 @@ void objects_rnd_454BEA()
 	AddObject(OBJ_LEVER, UberRow + 3, UberCol - 1);
 }
 
-bool NaKrulSpellTomesActive(int s)
+bool OperateNakrulBook(int s)
 {
 	switch (s) {
 	case 6:

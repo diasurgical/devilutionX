@@ -69,9 +69,9 @@ void SetBookMsg(int i, _speech_id msg);
 void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();
-void objects_44D8C5(_object_id ot, int v2, int ox, int oy);
-void objects_44DA68(int i, int a2);
-void objects_454AF0(int a1, int a2, int a3);
+void AddCryptBook(_object_id ot, int v2, int ox, int oy);
+void AddCryptObject(int i, int a2);
+void AddNakrulBook(int a1, int a2, int a3);
 void AddObject(_object_id ot, int ox, int oy);
 void Obj_Trap(int i);
 void ProcessObjects();
@@ -88,9 +88,9 @@ void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
 void SyncObjectAnim(int o);
 void GetObjectStr(int i);
-void operate_lv24_lever();
-void objects_454BA8();
-void objects_rnd_454BEA();
+void OperateNakrulLever();
+void SyncNakrulRoom();
+void AddNakrulLeaver();
 /**
  * @brief Checks whether the player is activating Na-Krul's spell tomes in the correct order
  *
@@ -102,7 +102,7 @@ void objects_rnd_454BEA();
  * @param s the id of the spell tome
  * @return true if the player has activated all three tomes in the correct order, false otherwise
 */
-bool NaKrulSpellTomesActive(int s);
+bool OperateNakrulBook(int s);
 bool objectIsDisabled(int i);
 
 } // namespace devilution

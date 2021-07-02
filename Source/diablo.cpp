@@ -1689,10 +1689,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (currlevel >= 21) {
 		if (currlevel == 21) {
-			items_427ABA(CornerStone.position);
+			CornerstoneLoad(CornerStone.position);
 		}
 		if (quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {
-			objects_454BA8();
+			SyncNakrulRoom();
 		}
 	}
 

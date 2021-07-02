@@ -351,6 +351,18 @@ enum item_special_effect {
 	// clang-format on
 };
 
+typedef enum item_special_effect_hf {
+	// clang-format off
+	ISPLHF_DEVASTATION  = 1 << 0,
+	ISPLHF_DECAY        = 1 << 1,
+	ISPLHF_PERIL        = 1 << 2,
+	ISPLHF_JESTERS      = 1 << 3,
+	ISPLHF_DOPPELGANGER = 1 << 4,
+	ISPLHF_ACDEMON      = 1 << 5,
+	ISPLHF_ACUNDEAD     = 1 << 6,
+	// clang-format on
+} item_special_effect_hf;
+
 enum item_misc_id : int8_t {
 	IMISC_NONE,
 	IMISC_USEFIRST,

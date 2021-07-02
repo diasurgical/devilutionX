@@ -115,7 +115,7 @@ void gamemenu_restart_town(bool /*bActivate*/)
 	NetSendCmd(true, CMD_RETOWN);
 }
 
-void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
+static void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
 {
 #ifndef NOSOUND
 	if (gbSndInited) {
@@ -351,7 +351,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 	force_redraw = 255;
 	NewCursor(CURSOR_HAND);
 	if (CornerStone.activated) {
-		items_427A72();
+		CornerstoneSave();
 	}
 	interface_msg_pump();
 	SetWindowProc(saveProc);

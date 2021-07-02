@@ -490,7 +490,7 @@ void AddInitItems()
 	}
 }
 
-static void items_42390F()
+static void SpawnNote()
 {
 	int id;
 
@@ -547,7 +547,7 @@ void InitItems()
 		if (currlevel > 0 && currlevel < 16)
 			AddInitItems();
 		if (currlevel >= 21 && currlevel <= 23)
-			items_42390F();
+			SpawnNote();
 	}
 
 	uitemflag = false;
@@ -1685,7 +1685,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		items[i]._iPLDam -= r;
 		break;
 	case IPL_DOPPELGANGER:
-		items[i]._iDamAcFlags |= 16;
+		items[i]._iDamAcFlags |= ISPLHF_DOPPELGANGER;
 		[[fallthrough]];
 	case IPL_TOHIT_DAMP:
 		r = RndPL(param1, param2);
@@ -2013,23 +2013,23 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		items[i]._iPLMR -= r;
 		break;
 	case IPL_DEVASTATION:
-		items[i]._iDamAcFlags |= 0x01;
+		items[i]._iDamAcFlags |= ISPLHF_DEVASTATION;
 		break;
 	case IPL_DECAY:
-		items[i]._iDamAcFlags |= 0x02;
+		items[i]._iDamAcFlags |= ISPLHF_DECAY;
 		items[i]._iPLDam += r;
 		break;
 	case IPL_PERIL:
-		items[i]._iDamAcFlags |= 0x04;
+		items[i]._iDamAcFlags |= ISPLHF_PERIL;
 		break;
 	case IPL_JESTERS:
-		items[i]._iDamAcFlags |= 0x08;
+		items[i]._iDamAcFlags |= ISPLHF_JESTERS;
 		break;
 	case IPL_ACDEMON:
-		items[i]._iDamAcFlags |= 0x20;
+		items[i]._iDamAcFlags |= ISPLHF_ACDEMON;
 		break;
 	case IPL_ACUNDEAD:
-		items[i]._iDamAcFlags |= 0x40;
+		items[i]._iDamAcFlags |= ISPLHF_ACUNDEAD;
 		break;
 	case IPL_MANATOLIFE:
 		r2 = ((plr[myplr]._pMaxManaBase >> 6) * 50 / 100);
@@ -2713,7 +2713,7 @@ void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int 
 	items[ii]._iSeed = iseed;
 }
 
-void items_427A72()
+void CornerstoneSave()
 {
 	if (!CornerStone.activated)
 		return;
@@ -2745,7 +2745,7 @@ void hex2bin(const char *src, int bytes, char *target)
 	}
 }
 
-void items_427ABA(Point position)
+void CornerstoneLoad(Point position)
 {
 	PkItemStruct PkSItem;
 

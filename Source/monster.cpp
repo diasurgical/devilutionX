@@ -63,6 +63,43 @@ int nummtypes;
 
 /* data */
 
+// BUGFIX: MWVel velocity values are not rounded consistently. The correct
+// formula for monster walk velocity is calculated as follows (for 16, 32 and 64
+// pixel distances, respectively):
+//
+//    vel16 = (16 << monsterWalkShift) / nframes
+//    vel32 = (32 << monsterWalkShift) / nframes
+//    vel64 = (64 << monsterWalkShift) / nframes
+//
+// The correct monster walk velocity table is as follows:
+//
+//   int MWVel[24][3] = {
+//      { 256, 512, 1024 },
+//      { 128, 256, 512 },
+//      { 85, 171, 341 },
+//      { 64, 128, 256 },
+//      { 51, 102, 205 },
+//      { 43, 85, 171 },
+//      { 37, 73, 146 },
+//      { 32, 64, 128 },
+//      { 28, 57, 114 },
+//      { 26, 51, 102 },
+//      { 23, 47, 93 },
+//      { 21, 43, 85 },
+//      { 20, 39, 79 },
+//      { 18, 37, 73 },
+//      { 17, 34, 68 },
+//      { 16, 32, 64 },
+//      { 15, 30, 60 },
+//      { 14, 28, 57 },
+//      { 13, 27, 54 },
+//      { 13, 26, 51 },
+//      { 12, 24, 49 },
+//      { 12, 23, 47 },
+//      { 11, 22, 45 },
+//      { 11, 21, 43 }
+//   };
+
 /** Maps from monster walk animation frame num to monster velocity. */
 int MWVel[24][3] = {
 	{ 256, 512, 1024 },
@@ -2058,9 +2095,9 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		hper = 1000;
 #endif
 	ac = plr[pnum]._pIBonusAC + plr[pnum]._pIAC;
-	if ((plr[pnum].pDamAcFlags & 0x20) != 0 && monster[i].MData->mMonstClass == MC_DEMON)
+	if ((plr[pnum].pDamAcFlags & ISPLHF_ACDEMON) != 0 && monster[i].MData->mMonstClass == MC_DEMON)
 		ac += 40;
-	if ((plr[pnum].pDamAcFlags & 0x40) != 0 && monster[i].MData->mMonstClass == MC_UNDEAD)
+	if ((plr[pnum].pDamAcFlags & ISPLHF_ACUNDEAD) != 0 && monster[i].MData->mMonstClass == MC_UNDEAD)
 		ac += 20;
 	hit = Hit
 	    + 2 * (monster[i].mLevel - plr[pnum]._pLevel)
@@ -3876,7 +3913,7 @@ void MAI_Golum(int i)
 			monster[monster[i]._menemy].position.last = monster[i].position.tile;
 			for (int j = 0; j < 5; j++) {
 				for (int k = 0; k < 5; k++) {
-					menemy = dMonster[monster[i].position.tile.x + k - 2][monster[i].position.tile.y + j - 2];
+					menemy = dMonster[monster[i].position.tile.x + k - 2][monster[i].position.tile.y + j - 2]; // BUGFIX: Check if indexes are between 0 and 112
 					if (menemy > 0)
 						monster[menemy - 1]._msquelch = UINT8_MAX; // BUGFIX: should be `monster[_menemy-1]`, not monster[_menemy]. (fixed)
 				}
@@ -4484,7 +4521,7 @@ void DeleteMonsterList()
 	while (i < nummonsters) {
 		if (monster[monstactive[i]]._mDelFlag) {
 			DeleteMonster(i);
-			i = 0; // TODO: check if this should be MAX_PLRS.
+			i = 0; // BUGFIX: should be `i = MAX_PLRS`, was 0 (only pseudo delete golems, their monster array indices are special and should not appear in the available monster index list).
 		} else {
 			i++;
 		}

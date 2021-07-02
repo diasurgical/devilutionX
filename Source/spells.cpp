@@ -276,7 +276,7 @@ void DoResurrect(int pnum, int rid)
 		}
 		SetPlayerHitPoints(rid, hp);
 
-		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP);
+		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 		plr[rid]._pMana = 0;
 		plr[rid]._pManaBase = plr[rid]._pMana + (plr[rid]._pMaxManaBase - plr[rid]._pMaxMana);
 
