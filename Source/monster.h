@@ -229,7 +229,7 @@ void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 void DeleteMonster(int i);
 int AddMonster(Point position, Direction dir, int mtype, bool InMap);
-void monster_43C785(int i);
+void AddDoppelganger(MonsterStruct &monster);
 bool M_Talker(int i);
 void M_StartStand(int i, Direction md);
 void M_ClearSquares(int i);
