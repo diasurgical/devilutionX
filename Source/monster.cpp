@@ -1236,31 +1236,35 @@ int AddMonster(Point position, Direction dir, int mtype, bool InMap)
 	return -1;
 }
 
-void monster_43C785(int i)
+void AddDoppelganger(MonsterStruct &monster)
 {
-	int d, j, oi;
-	Point position = {};
+	if (monster.MType == nullptr) {
+		return;
+	}
 
-	if (monster[i].MType != nullptr) {
-		for (d = 0; d < 8; d++) {
-			position = monster[i].position.tile + monster[i]._mdir;
-			if (!SolidLoc(position)) {
-				if (dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0) {
-					if (dObject[position.x][position.y] == 0)
-						break;
-					oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-					if (!object[oi]._oSolidFlag)
-						break;
+	Point target = { 0, 0 };
+	for (int d = 0; d < 8; d++) {
+		const Point position = monster.position.tile + static_cast<Direction>(d);
+		if (!SolidLoc(position)) {
+			if (dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0) {
+				if (dObject[position.x][position.y] == 0) {
+					target = position;
+					break;
+				}
+				int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
+				if (!object[oi]._oSolidFlag) {
+					target = position;
+					break;
 				}
 			}
 		}
-		if (d < 8) {
-			for (j = 0; j < MAX_LVLMTYPES; j++) {
-				if (Monsters[j].mtype == monster[i].MType->mtype)
-					break;
+	}
+	if (target != Point { 0, 0 }) {
+		for (int j = 0; j < MAX_LVLMTYPES; j++) {
+			if (Monsters[j].mtype == monster.MType->mtype) {
+				AddMonster(target, monster._mdir, j, true);
+				break;
 			}
-			if (j < MAX_LVLMTYPES)
-				AddMonster(position, monster[i]._mdir, j, true);
 		}
 	}
 }

@@ -2379,7 +2379,7 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	if ((player.pDamAcFlags & 0x10) != 0 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
-		monster_43C785(m);
+		AddDoppelganger(monster[m]);
 	}
 
 	dam <<= 6;
