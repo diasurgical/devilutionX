@@ -943,6 +943,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				return INVLOC_AMULET;
 			case ILOC_ARMOR:
 				return INVLOC_CHEST;
+			default:
+				app_fatal("Unexpected equipment type");
 			}
 		};
 		inv_body_loc slot = iLocToInvLoc(il);
