@@ -159,7 +159,7 @@ extern void plrctrls_after_game_logic();
 
 void initKeymapActions();
 
-[[noreturn]] static void print_help_and_exit()
+[[noreturn]] static void PrintHelpAndExit()
 {
 	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit"));
@@ -195,11 +195,11 @@ void initKeymapActions();
 	diablo_quit(0);
 }
 
-static void diablo_parse_flags(int argc, char **argv)
+static void DiabloParseFlags(int argc, char **argv)
 {
 	for (int i = 1; i < argc; i++) {
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
-			print_help_and_exit();
+			PrintHelpAndExit();
 		} else if (strcasecmp("--version", argv[i]) == 0) {
 			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
 			diablo_quit(0);
@@ -266,7 +266,7 @@ static void diablo_parse_flags(int argc, char **argv)
 #endif
 		} else {
 			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
-			print_help_and_exit();
+			PrintHelpAndExit();
 		}
 	}
 }
@@ -287,7 +287,7 @@ void FreeGameMem()
 	FreeTownerGFX();
 }
 
-static void start_game(interface_mode uMsg)
+static void StartGame(interface_mode uMsg)
 {
 	zoomflag = true;
 	CalcViewportGeometry();
@@ -307,7 +307,7 @@ static void start_game(interface_mode uMsg)
 	track_repeat_walk(false);
 }
 
-static void free_game()
+static void FreeGame()
 {
 	FreeQol();
 	FreeControlPan();
@@ -328,7 +328,7 @@ static void free_game()
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
-extern void finish_simulated_mouse_clicks(int current_mouse_x, int current_mouse_y);
+extern void finish_simulated_mouse_clicks(int currentMouseX, int currentMouseY);
 extern void plrctrls_after_check_curs_move();
 
 static bool ProcessInput()
@@ -356,13 +356,13 @@ static bool ProcessInput()
 	return true;
 }
 
-static void run_game_loop(interface_mode uMsg)
+static void RunGameLoop(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 	tagMSG msg;
 
 	nthread_ignore_mutex(true);
-	start_game(uMsg);
+	StartGame(uMsg);
 	assert(ghMainWnd);
 	saveProc = SetWindowProc(GM_Game);
 	control_update_life_mana();
@@ -421,7 +421,7 @@ static void run_game_loop(interface_mode uMsg)
 	scrollrt_draw_game_screen();
 	saveProc = SetWindowProc(saveProc);
 	assert(saveProc == GM_Game);
-	free_game();
+	FreeGame();
 
 	if (cineflag) {
 		cineflag = false;
@@ -457,7 +457,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 		if (gbValidSaveFile && gbLoadGame) {
 			uMsg = WM_DIABLOADGAME;
 		}
-		run_game_loop(uMsg);
+		RunGameLoop(uMsg);
 		NetClose();
 
 		// If the player left the game into the main menu,
@@ -470,7 +470,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 	return gbRunGameResult;
 }
 
-static void diablo_init_screen()
+static void DiabloInitScreen()
 {
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (!sgbControllerActive)
@@ -491,7 +491,7 @@ static void SetApplicationVersions()
 	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
 }
 
-static void diablo_init()
+static void DiabloInit()
 {
 	if (sgOptions.Graphics.bShowFPS)
 		EnableFrameCount();
@@ -529,7 +529,7 @@ static void diablo_init()
 
 	InitHash();
 
-	diablo_init_screen();
+	DiabloInitScreen();
 
 #ifndef NOSOUND
 	snd_init();
@@ -542,7 +542,7 @@ static void diablo_init()
 	InitItemGFX();
 }
 
-static void diablo_splash()
+static void DiabloSplash()
 {
 	if (!gbShowIntro)
 		return;
@@ -561,7 +561,7 @@ static void diablo_splash()
 	UiTitleDialog();
 }
 
-static void diablo_deinit()
+static void DiabloDeinit()
 {
 	FreeItemGFX();
 
@@ -587,7 +587,7 @@ static void diablo_deinit()
 
 void diablo_quit(int exitStatus)
 {
-	diablo_deinit();
+	DiabloDeinit();
 	exit(exitStatus);
 }
 
@@ -597,13 +597,13 @@ int DiabloMain(int argc, char **argv)
 	SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
 #endif
 
-	diablo_parse_flags(argc, argv);
+	DiabloParseFlags(argc, argv);
 	initKeymapActions();
 	LoadOptions();
-	diablo_init();
-	diablo_splash();
+	DiabloInit();
+	DiabloSplash();
 	mainmenu_loop();
-	diablo_deinit();
+	DiabloDeinit();
 
 	return 0;
 }
@@ -864,7 +864,7 @@ void diablo_pause_game()
 	}
 }
 
-static void diablo_hotkey_msg(DWORD dwMsg)
+static void DiabloHotkeyMsg(DWORD dwMsg)
 {
 	if (!gbIsMultiplayer) {
 		return;
@@ -879,7 +879,7 @@ static bool PressSysKey(int wParam)
 {
 	if (gmenu_is_active() || wParam != DVL_VK_F10)
 		return false;
-	diablo_hotkey_msg(1);
+	DiabloHotkeyMsg(1);
 	return true;
 }
 
@@ -1708,7 +1708,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		PlaySFX(USFX_SKING1);
 }
 
-static void game_logic()
+static void GameLogic()
 {
 	if (!ProcessInput()) {
 		return;
@@ -1754,7 +1754,7 @@ static void game_logic()
 	plrctrls_after_game_logic();
 }
 
-static void timeout_cursor(bool bTimeout)
+static void TimeoutCursor(bool bTimeout)
 {
 	if (bTimeout) {
 		if (sgnTimeoutCurs == CURSOR_NONE && sgbMouseDown == CLICK_NONE) {
@@ -1784,11 +1784,11 @@ void game_loop(bool bStartup)
 
 	for (unsigned i = 0; i < wait; i++) {
 		if (!multi_handle_delta()) {
-			timeout_cursor(true);
+			TimeoutCursor(true);
 			break;
 		}
-		timeout_cursor(false);
-		game_logic();
+		TimeoutCursor(false);
+		GameLogic();
 
 		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed())
 			break;
@@ -1998,7 +1998,7 @@ void initKeymapActions()
 		keymapper.addAction({
 		    QuickMessages[i].key,
 		    DVL_VK_F9 + i,
-		    [i]() { diablo_hotkey_msg(i); },
+		    [i]() { DiabloHotkeyMsg(i); },
 		});
 	}
 	keymapper.addAction({

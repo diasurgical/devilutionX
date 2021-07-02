@@ -485,11 +485,11 @@ void AttrIncBtnSnap(AxisDirection dir)
 	SetCursorPos(x, y);
 }
 
-Point InvGetEquipSlotCoord(const inv_body_loc inv_slot)
+Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
 {
 	Point result { RIGHT_PANEL, 0 };
 	result.x -= (icursW28 - 1) * (InventorySlotSizeInPixels.width / 2);
-	switch (inv_slot) {
+	switch (invSlot) {
 	case INVLOC_HEAD:
 		result.x += ((InvRect[SLOTXY_HEAD_FIRST].x + InvRect[SLOTXY_HEAD_LAST].x) / 2);
 		result.y += ((InvRect[SLOTXY_HEAD_FIRST].y + InvRect[SLOTXY_HEAD_LAST].y) / 2);

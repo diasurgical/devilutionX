@@ -67,9 +67,9 @@ T SwapBE(T in)
 }
 
 class LoadHelper {
-	std::unique_ptr<byte[]> m_buffer;
-	uint32_t m_cur = 0;
-	size_t m_size;
+	std::unique_ptr<byte[]> m_buffer_;
+	uint32_t m_cur_ = 0;
+	size_t m_size_;
 
 	template <class T>
 	T next()
@@ -79,8 +79,8 @@ class LoadHelper {
 			return 0;
 
 		T value;
-		memcpy(&value, &m_buffer[m_cur], size);
-		m_cur += size;
+		memcpy(&value, &m_buffer_[m_cur_], size);
+		m_cur_ += size;
 
 		return value;
 	}
@@ -88,18 +88,18 @@ class LoadHelper {
 public:
 	LoadHelper(const char *szFileName)
 	{
-		m_buffer = pfile_read(szFileName, &m_size);
+		m_buffer_ = pfile_read(szFileName, &m_size_);
 	}
 
 	bool isValid(uint32_t size = 1)
 	{
-		return m_buffer != nullptr
-		    && m_size >= (m_cur + size);
+		return m_buffer_ != nullptr
+		    && m_size_ >= (m_cur_ + size);
 	}
 
 	void skip(uint32_t size)
 	{
-		m_cur += size;
+		m_cur_ += size;
 	}
 
 	void nextBytes(void *bytes, size_t size)
@@ -107,8 +107,8 @@ public:
 		if (!isValid(size))
 			return;
 
-		memcpy(bytes, &m_buffer[m_cur], size);
-		m_cur += size;
+		memcpy(bytes, &m_buffer_[m_cur_], size);
+		m_cur_ += size;
 	}
 
 	template <class T>
@@ -135,28 +135,28 @@ public:
 };
 
 class SaveHelper {
-	const char *m_szFileName;
-	std::unique_ptr<byte[]> m_buffer;
-	uint32_t m_cur = 0;
-	uint32_t m_capacity;
+	const char *m_szFileName_;
+	std::unique_ptr<byte[]> m_buffer_;
+	uint32_t m_cur_ = 0;
+	uint32_t m_capacity_;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
-	    : m_szFileName(szFileName)
-	    , m_buffer(new byte[codec_get_encoded_len(bufferLen)])
-	    , m_capacity(bufferLen)
+	    : m_szFileName_(szFileName)
+	    , m_buffer_(new byte[codec_get_encoded_len(bufferLen)])
+	    , m_capacity_(bufferLen)
 	{
 	}
 
 	bool isValid(uint32_t len = 1)
 	{
-		return m_buffer != nullptr
-		    && m_capacity >= (m_cur + len);
+		return m_buffer_ != nullptr
+		    && m_capacity_ >= (m_cur_ + len);
 	}
 
 	void skip(uint32_t len)
 	{
-		m_cur += len;
+		m_cur_ += len;
 	}
 
 	void writeBytes(const void *bytes, size_t len)
@@ -164,8 +164,8 @@ public:
 		if (!isValid(len))
 			return;
 
-		memcpy(&m_buffer[m_cur], bytes, len);
-		m_cur += len;
+		memcpy(&m_buffer_[m_cur_], bytes, len);
+		m_cur_ += len;
 	}
 
 	template <class T>
@@ -184,10 +184,10 @@ public:
 
 	~SaveHelper()
 	{
-		const auto encoded_len = codec_get_encoded_len(m_cur);
+		const auto encoded_len = codec_get_encoded_len(m_cur_);
 		const char *const password = pfile_get_password();
-		codec_encode(m_buffer.get(), m_cur, encoded_len, password);
-		mpqapi_write_file(m_szFileName, m_buffer.get(), encoded_len);
+		codec_encode(m_buffer_.get(), m_cur_, encoded_len, password);
+		mpqapi_write_file(m_szFileName_, m_buffer_.get(), encoded_len);
 	}
 };
 
@@ -932,10 +932,10 @@ bool IsHeaderValid(uint32_t magicNumber)
 static void ConvertLevels()
 {
 	// Backup current level state
-	bool _setlevel = setlevel;
-	_setlevels _setlvlnum = setlvlnum;
-	int _currlevel = currlevel;
-	dungeon_type _leveltype = leveltype;
+	bool tmpSetlevel = setlevel;
+	_setlevels tmpSetlvlnum = setlvlnum;
+	int tmpCurrlevel = currlevel;
+	dungeon_type tmpLeveltype = leveltype;
 
 	gbSkipSync = true;
 
@@ -973,10 +973,10 @@ static void ConvertLevels()
 	gbSkipSync = false;
 
 	// Restor current level state
-	setlevel = _setlevel;
-	setlvlnum = _setlvlnum;
-	currlevel = _currlevel;
-	leveltype = _leveltype;
+	setlevel = tmpSetlevel;
+	setlvlnum = tmpSetlvlnum;
+	currlevel = tmpCurrlevel;
+	leveltype = tmpLeveltype;
 }
 
 void LoadHotkeys()
@@ -1103,10 +1103,10 @@ void LoadGame(bool firstflag)
 	int viewY = file.nextBE<int32_t>();
 	invflag = file.nextBool8();
 	chrflag = file.nextBool8();
-	int _nummonsters = file.nextBE<int32_t>();
-	int _numitems = file.nextBE<int32_t>();
-	int _nummissiles = file.nextBE<int32_t>();
-	int _nobjects = file.nextBE<int32_t>();
+	int tmpNummonsters = file.nextBE<int32_t>();
+	int tmpNumitems = file.nextBE<int32_t>();
+	int tmpNummissiles = file.nextBE<int32_t>();
+	int tmpNobjects = file.nextBE<int32_t>();
 
 	if (!gbIsHellfire && currlevel > 17)
 		app_fatal("%s", _("Player is on a Hellfire only level"));
@@ -1138,10 +1138,10 @@ void LoadGame(bool firstflag)
 
 	ViewX = viewX;
 	ViewY = viewY;
-	nummonsters = _nummonsters;
-	numitems = _numitems;
-	nummissiles = _nummissiles;
-	nobjects = _nobjects;
+	nummonsters = tmpNummonsters;
+	numitems = tmpNumitems;
+	nummissiles = tmpNummissiles;
+	nobjects = tmpNobjects;
 
 	for (int &monstkill : monstkills)
 		monstkill = file.nextBE<int32_t>();

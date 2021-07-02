@@ -3864,23 +3864,23 @@ void MAI_Golum(int i)
 		return;
 	}
 
-	int _menemy = monster[i]._menemy;
+	int menemy = monster[i]._menemy;
 
-	int _mex = monster[i].position.tile.x - monster[_menemy].position.future.x;
-	int _mey = monster[i].position.tile.y - monster[_menemy].position.future.y;
-	Direction md = GetDirection(monster[i].position.tile, monster[_menemy].position.tile);
+	int mex = monster[i].position.tile.x - monster[menemy].position.future.x;
+	int mey = monster[i].position.tile.y - monster[menemy].position.future.y;
+	Direction md = GetDirection(monster[i].position.tile, monster[menemy].position.tile);
 	monster[i]._mdir = md;
-	if (abs(_mex) < 2 && abs(_mey) < 2 && have_enemy) {
-		_menemy = monster[i]._menemy;
-		monster[i].enemyPosition = monster[_menemy].position.tile;
-		if (monster[_menemy]._msquelch == 0) {
-			monster[_menemy]._msquelch = UINT8_MAX;
+	if (abs(mex) < 2 && abs(mey) < 2 && have_enemy) {
+		menemy = monster[i]._menemy;
+		monster[i].enemyPosition = monster[menemy].position.tile;
+		if (monster[menemy]._msquelch == 0) {
+			monster[menemy]._msquelch = UINT8_MAX;
 			monster[monster[i]._menemy].position.last = monster[i].position.tile;
 			for (int j = 0; j < 5; j++) {
 				for (int k = 0; k < 5; k++) {
-					_menemy = dMonster[monster[i].position.tile.x + k - 2][monster[i].position.tile.y + j - 2];
-					if (_menemy > 0)
-						monster[_menemy - 1]._msquelch = UINT8_MAX; // BUGFIX: should be `monster[_menemy-1]`, not monster[_menemy]. (fixed)
+					menemy = dMonster[monster[i].position.tile.x + k - 2][monster[i].position.tile.y + j - 2];
+					if (menemy > 0)
+						monster[menemy - 1]._msquelch = UINT8_MAX; // BUGFIX: should be `monster[_menemy-1]`, not monster[_menemy]. (fixed)
 				}
 			}
 		}

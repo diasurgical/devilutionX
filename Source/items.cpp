@@ -2636,7 +2636,7 @@ void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool se
 
 void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
-	bool _gbIsHellfire = gbIsHellfire;
+	bool tmpIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
 
 	if (idx == IDI_GOLD) {
@@ -2645,27 +2645,27 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 		items[ii]._iCreateInfo = icreateinfo;
 		items[ii]._ivalue = ivalue;
 		SetPlrHandGoldCurs(&items[ii]);
-		gbIsHellfire = _gbIsHellfire;
+		gbIsHellfire = tmpIsHellfire;
 		return;
 	}
 
 	if (icreateinfo == 0) {
 		SetPlrHandItem(&items[ii], idx);
 		SetPlrHandSeed(&items[ii], iseed);
-		gbIsHellfire = _gbIsHellfire;
+		gbIsHellfire = tmpIsHellfire;
 		return;
 	}
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
 		if ((icreateinfo & CF_TOWN) != 0) {
 			RecreateTownItem(ii, idx, icreateinfo, iseed);
-			gbIsHellfire = _gbIsHellfire;
+			gbIsHellfire = tmpIsHellfire;
 			return;
 		}
 
 		if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
 			SetupAllUseful(ii, iseed, icreateinfo & CF_LEVEL);
-			gbIsHellfire = _gbIsHellfire;
+			gbIsHellfire = tmpIsHellfire;
 			return;
 		}
 	}
@@ -2683,7 +2683,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
 	SetupAllItems(ii, idx, iseed, level, uper, onlygood, recreate, pregen);
-	gbIsHellfire = _gbIsHellfire;
+	gbIsHellfire = tmpIsHellfire;
 }
 
 void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)

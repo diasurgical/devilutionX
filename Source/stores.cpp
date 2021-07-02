@@ -1460,13 +1460,13 @@ void PlaceStoreGold(int v)
 {
 	auto &myPlayer = plr[myplr];
 
-	for (int gridNum = 0; gridNum < NUM_INV_GRID_ELEM; gridNum++) {
-		if (myPlayer.InvGrid[gridNum] == 0) {
+	for (auto &gridNum : myPlayer.InvGrid) {
+		if (gridNum == 0) {
 			int ii = myPlayer._pNumInv;
 			GetGoldSeed(myplr, &golditem);
 			myPlayer.InvList[ii] = golditem;
 			myPlayer._pNumInv++;
-			myPlayer.InvGrid[gridNum] = myPlayer._pNumInv;
+			gridNum = myPlayer._pNumInv;
 			myPlayer.InvList[ii]._ivalue = v;
 			SetPlrHandGoldCurs(&myPlayer.InvList[ii]);
 			return;

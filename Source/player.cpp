@@ -2287,9 +2287,9 @@ bool PlrHitMonst(int pnum, int m)
 
 	int tmac = monster[m].mArmorClass;
 	if (gbIsHellfire && player._pIEnAc > 0) {
-		int _pIEnAc = player._pIEnAc - 1;
-		if (_pIEnAc > 0)
-			tmac >>= _pIEnAc;
+		int pIEnAc = player._pIEnAc - 1;
+		if (pIEnAc > 0)
+			tmac >>= pIEnAc;
 		else
 			tmac -= tmac / 4;
 

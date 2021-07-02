@@ -1676,7 +1676,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 
 	CelDrawTo(out, { dialogX, 178 }, *pGBoxBuff, 1);
 
-	constexpr auto bufferSize = sizeof(tempstr) / sizeof(*tempstr);
+	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
 
 	// strncpy copies up to the maximum number of characters specified, it does not ensure that a null character is
 	// written to the end of the c-string. To be safe we specify a limit one character shorter than the buffer size and
@@ -1689,10 +1689,10 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	                    initialDropGoldValue),
 	        initialDropGoldValue)
 	        .c_str(),
-	    bufferSize - 1);
+	    BufferSize - 1);
 	// Ensure the prompt shown to the player is terminated properly (in case the formatted/translated string ends up
 	// being longer than 255 characters)
-	tempstr[bufferSize - 1] = '\0';
+	tempstr[BufferSize - 1] = '\0';
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	WordWrapGameString(tempstr, 200);
@@ -1705,7 +1705,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	tempstr[0] = '\0';
 	if (amount > 0) {
 		// snprintf ensures that the destination buffer ends in a null character.
-		snprintf(tempstr, bufferSize, "%u", amount);
+		snprintf(tempstr, BufferSize, "%u", amount);
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
@@ -1748,7 +1748,7 @@ void control_drop_gold(char vkey)
 	}
 }
 
-static void control_set_gold_curs(PlayerStruct &player)
+static void ControlSetGoldCurs(PlayerStruct &player)
 {
 	SetPlrHandGoldCurs(&player.HoldItem);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1768,7 +1768,7 @@ void control_remove_gold(int pnum, int goldIndex)
 	GetGoldSeed(pnum, &player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;
-	control_set_gold_curs(player);
+	ControlSetGoldCurs(player);
 	player._pGold = CalculateGold(player);
 	dropGoldValue = 0;
 }

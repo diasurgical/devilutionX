@@ -1197,7 +1197,7 @@ void SetMapObjects(const uint16_t *dunData, int startx, int starty)
 	InitObjFlag = false;
 }
 
-void DeleteObject_(int oi, int i)
+void DeleteObject(int oi, int i)
 {
 	int ox = object[oi].position.x;
 	int oy = object[oi].position.y;
@@ -2145,7 +2145,7 @@ void ProcessObjects()
 	for (int i = 0; i < nobjects;) {
 		int oi = objectactive[i];
 		if (object[oi]._oDelFlag) {
-			DeleteObject_(oi, i);
+			DeleteObject(oi, i);
 		} else {
 			i++;
 		}
