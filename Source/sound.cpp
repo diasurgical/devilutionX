@@ -102,7 +102,7 @@ bool gbMusicOn = true;
 bool gbSoundOn = true;
 
 /** Maps from track ID to track name in spawn. */
-const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
+const char *const SpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sTowne.wav",
 	"Music\\sLvlA.wav",
 	"Music\\sLvlA.wav",
@@ -113,7 +113,7 @@ const char *const sgszSpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sintro.wav",
 };
 /** Maps from track ID to track name. */
-const char *const sgszMusicTracks[NUM_MUSIC] = {
+const char *const MusicTracks[NUM_MUSIC] = {
 	"Music\\DTowne.wav",
 	"Music\\DLvlA.wav",
 	"Music\\DLvlB.wav",
@@ -249,9 +249,9 @@ void music_start(uint8_t nTrack)
 	music_stop();
 	if (gbMusicOn) {
 		if (spawn_mpq != nullptr)
-			trackPath = sgszSpawnMusicTracks[nTrack];
+			trackPath = SpawnMusicTracks[nTrack];
 		else
-			trackPath = sgszMusicTracks[nTrack];
+			trackPath = MusicTracks[nTrack];
 		HANDLE handle;
 		success = SFileOpenFile(trackPath, &handle);
 		if (!success) {

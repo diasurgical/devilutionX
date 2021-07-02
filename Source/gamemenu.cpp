@@ -66,12 +66,12 @@ TMenuItem sgOptionsMenu[] = {
 	// clang-format on
 };
 /** Specifies the menu names for music enabled and disabled. */
-const char *const music_toggle_names[] = {
+const char *const MusicToggleNames[] = {
 	N_("Music"),
 	N_("Music Disabled"),
 };
 /** Specifies the menu names for sound enabled and disabled. */
-const char *const sound_toggle_names[] = {
+const char *const SoundToggleNames[] = {
 	N_("Sound"),
 	N_("Sound Disabled"),
 };
@@ -138,12 +138,12 @@ int gamemenu_slider_music_sound(TMenuItem *menu_item)
 
 void gamemenu_get_music()
 {
-	gamemenu_sound_music_toggle(music_toggle_names, sgOptionsMenu, sound_get_or_set_music_volume(1));
+	gamemenu_sound_music_toggle(MusicToggleNames, sgOptionsMenu, sound_get_or_set_music_volume(1));
 }
 
 void gamemenu_get_sound()
 {
-	gamemenu_sound_music_toggle(sound_toggle_names, &sgOptionsMenu[1], sound_get_or_set_sound_volume(1));
+	gamemenu_sound_music_toggle(SoundToggleNames, &sgOptionsMenu[1], sound_get_or_set_sound_volume(1));
 }
 
 void gamemenu_get_gamma()

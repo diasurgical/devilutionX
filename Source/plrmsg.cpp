@@ -20,7 +20,7 @@ static BYTE plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
-const uint16_t text_color_from_player_num[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_GOLD };
+const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_GOLD };
 
 void plrmsg_delay(bool delay)
 {
@@ -125,7 +125,7 @@ void DrawPlrMsg(const CelOutputBuffer &out)
 	pMsg = plr_msgs;
 	for (i = 0; i < PMSG_COUNT; i++) {
 		if (pMsg->str[0] != '\0')
-			PrintPlrMsg(out, x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
+			PrintPlrMsg(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
 		pMsg++;
 		y += 35;
 	}

@@ -79,7 +79,7 @@ char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
  * which the hover text of the cursor will be visible.
  */
 char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
-const char *const questtrigstr[5] = {
+const char *const QuestTriggerNames[5] = {
 	N_(/* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
 	N_(/* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
 	N_(/* TRANSLATORS: Quest Map*/ "Maze"),
@@ -276,7 +276,7 @@ bool ForceQuests()
 
 			for (int j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
-					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(questtrigstr[ql])).c_str());
+					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
 					cursmx = qx;
 					cursmy = qy;
 					return true;

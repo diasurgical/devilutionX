@@ -60,7 +60,7 @@ uint32_t player_state[MAX_PLRS];
  * Contains the set of supported event types supported by the multiplayer
  * event handler.
  */
-const event_type event_types[3] = {
+const event_type EventTypes[3] = {
 	EVENT_TYPE_PLAYER_LEAVE_GAME,
 	EVENT_TYPE_PLAYER_CREATE_GAME,
 	EVENT_TYPE_PLAYER_MESSAGE
@@ -650,13 +650,13 @@ static void multi_handle_events(_SNETEVENT *pEvt)
 
 static void multi_event_handler(bool add)
 {
-	for (auto event_type : event_types) {
+	for (auto eventType : EventTypes) {
 		if (add) {
-			if (!SNetRegisterEventHandler(event_type, multi_handle_events)) {
+			if (!SNetRegisterEventHandler(eventType, multi_handle_events)) {
 				app_fatal("SNetRegisterEventHandler:\n%s", SDL_GetError());
 			}
 		} else {
-			SNetUnregisterEventHandler(event_type);
+			SNetUnregisterEventHandler(eventType);
 		}
 	}
 }

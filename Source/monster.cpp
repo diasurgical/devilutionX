@@ -26,6 +26,7 @@
 #include "missiles.h"
 #include "movie.h"
 #include "options.h"
+#include "spelldat.h"
 #include "storm/storm.h"
 #include "themes.h"
 #include "towners.h"
@@ -59,9 +60,6 @@ CMonster Monsters[MAX_LVLMTYPES];
 int monstimgtot;
 int uniquetrans;
 int nummtypes;
-
-/** Maps from monster intelligence factor to missile type. */
-const BYTE counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
 
 /* data */
 
@@ -1488,7 +1486,7 @@ void M_StartAttack(int i)
 	monster[i]._mdir = md;
 }
 
-void M_StartRAttack(int i, int missile_type, int dam)
+void M_StartRAttack(int i, missile_id missile_type, int dam)
 {
 	Direction md = M_GetDir(i);
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md, AnimationDistributionFlags::ProcessAnimationPending);
@@ -1501,7 +1499,7 @@ void M_StartRAttack(int i, int missile_type, int dam)
 	monster[i]._mdir = md;
 }
 
-void M_StartRSpAttack(int i, int missile_type, int dam)
+void M_StartRSpAttack(int i, missile_id missile_type, int dam)
 {
 	Direction md = M_GetDir(i);
 	int distributeFramesBeforeFrame = 0;
@@ -3459,7 +3457,7 @@ void MAI_GoatMc(int i)
 	MAI_Round(i, true);
 }
 
-void MAI_Ranged(int i, int missile_type, bool special)
+void MAI_Ranged(int i, missile_id missile_type, bool special)
 {
 	int fx, fy, mx, my;
 	MonsterStruct *Monst;
@@ -3680,7 +3678,7 @@ void MAI_Garg(int i)
 	MAI_Round(i, false);
 }
 
-void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int lessmissiles)
+void MAI_RoundRanged(int i, missile_id missile_type, bool checkdoors, int dam, int lessmissiles)
 {
 	MonsterStruct *Monst;
 	int mx, my;
@@ -3765,7 +3763,7 @@ void MAI_Diablo(int i)
 	MAI_RoundRanged(i, MIS_DIABAPOCA, false, 40, 0);
 }
 
-void MAI_RR2(int i, int mistype, int dam)
+void MAI_RR2(int i, missile_id mistype, int dam)
 {
 	MonsterStruct *Monst;
 	int mx, my, fx, fy;
@@ -4147,6 +4145,7 @@ void MAI_Counselor(int i)
 		} else if (Monst->_mgoal == MGOAL_NORMAL) {
 			if (abs(mx) >= 2 || abs(my) >= 2) {
 				if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->position.tile, { fx, fy })) {
+					constexpr missile_id counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
 					M_StartRAttack(i, counsmiss[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
 				} else if (GenerateRnd(100) < 30) {
 					Monst->_mgoal = MGOAL_MOVE;
@@ -4162,7 +4161,7 @@ void MAI_Counselor(int i)
 					M_StartFadeout(i, md, false);
 				} else if (Monst->_mVar1 == MM_DELAY
 				    || GenerateRnd(100) < 2 * Monst->_mint + 20) {
-					M_StartRAttack(i, -1, 0);
+					M_StartRAttack(i, MIS_NULL, 0);
 					AddMissile(Monst->position.tile, { 0, 0 }, Monst->_mdir, MIS_FLASH, TARGET_PLAYERS, i, 4, 0);
 					AddMissile(Monst->position.tile, { 0, 0 }, Monst->_mdir, MIS_FLASH2, TARGET_PLAYERS, i, 4, 0);
 				} else

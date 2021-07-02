@@ -91,7 +91,7 @@ int framestart;
 
 /* data */
 
-const char *const szMonModeAssert[] = {
+const char *const MonsterModeNames[] = {
 	"standing",
 	"walking (1)",
 	"walking (2)",
@@ -112,7 +112,7 @@ const char *const szMonModeAssert[] = {
 	"talking"
 };
 
-const char *const szPlrModeAssert[] = {
+const char *const PlayerModeNames[] = {
 	"standing",
 	"walking (1)",
 	"walking (2)",
@@ -326,7 +326,7 @@ static void DrawMonster(const CelOutputBuffer &out, int x, int y, int mx, int my
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (monster[m]._mmode <= 17)
-			szMode = szMonModeAssert[monster[m]._mmode];
+			szMode = MonsterModeNames[monster[m]._mmode];
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster[m].mName,
@@ -430,7 +430,7 @@ static void DrawPlayer(const CelOutputBuffer &out, int pnum, int x, int y, int p
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (player._pmode <= PM_QUIT)
-			szMode = szPlrModeAssert[player._pmode];
+			szMode = PlayerModeNames[player._pmode];
 		Log(
 		    "Drawing player {} \"{}\" {}: facing {}, frame {} of {}",
 		    pnum,

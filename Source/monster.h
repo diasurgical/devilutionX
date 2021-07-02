@@ -16,6 +16,7 @@
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"
 #include "monstdat.h"
+#include "spelldat.h"
 #include "textdat.h"
 
 #ifndef NOSOUND
@@ -254,7 +255,7 @@ void MAI_Fallen(int i);
 void MAI_Cleaver(int i);
 void MAI_Round(int i, bool special);
 void MAI_GoatMc(int i);
-void MAI_Ranged(int i, int missile_type, bool special);
+void MAI_Ranged(int i, missile_id missile_type, bool special);
 void MAI_GoatBow(int i);
 void MAI_Succ(int i);
 void MAI_Lich(int i);
@@ -266,7 +267,7 @@ void MAI_Firebat(int i);
 void MAI_Torchant(int i);
 void MAI_Scav(int i);
 void MAI_Garg(int i);
-void MAI_RoundRanged(int i, int missile_type, bool checkdoors, int dam, int lessmissiles);
+void MAI_RoundRanged(int i, missile_id missile_type, bool checkdoors, int dam, int lessmissiles);
 void MAI_Magma(int i);
 void MAI_Storm(int i);
 void MAI_BoneDemon(int i);

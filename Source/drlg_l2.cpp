@@ -34,8 +34,8 @@ std::list<HALLNODE> HallList;
 int Area_Min = 2;
 int Room_Max = 10;
 int Room_Min = 4;
-const int Dir_Xadd[5] = { 0, 0, 1, 0, -1 };
-const int Dir_Yadd[5] = { 0, -1, 0, 1, 0 };
+const int DirXadd[5] = { 0, 0, 1, 0, -1 };
+const int DirYadd[5] = { 0, -1, 0, 1, 0 };
 const ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0, 50 } };
 //short word_48489A = 0;
 
@@ -2095,8 +2095,8 @@ static void ConnectHall(const HALLNODE &node)
 	CreateDoorType(nX1, nY1);
 	CreateDoorType(nX2, nY2);
 	int nCurrd = nHd;
-	nX2 -= Dir_Xadd[nCurrd];
-	nY2 -= Dir_Yadd[nCurrd];
+	nX2 -= DirXadd[nCurrd];
+	nY2 -= DirYadd[nCurrd];
 	predungeon[nX2][nY2] = 44;
 	bool fInroom = false;
 
@@ -2125,11 +2125,11 @@ static void ConnectHall(const HALLNODE &node)
 		if (predungeon[nX1][nY1] == 65 && (nCurrd == 2 || nCurrd == 3)) {
 			nCurrd = 4;
 		}
-		nX1 += Dir_Xadd[nCurrd];
-		nY1 += Dir_Yadd[nCurrd];
+		nX1 += DirXadd[nCurrd];
+		nY1 += DirYadd[nCurrd];
 		if (predungeon[nX1][nY1] == 32) {
 			if (fInroom) {
-				CreateDoorType(nX1 - Dir_Xadd[nCurrd], nY1 - Dir_Yadd[nCurrd]);
+				CreateDoorType(nX1 - DirXadd[nCurrd], nY1 - DirYadd[nCurrd]);
 			} else {
 				if (fMinusFlag < 50) {
 					if (nCurrd != 1 && nCurrd != 3) {
