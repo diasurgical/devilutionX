@@ -626,9 +626,7 @@ void control_update_life_mana()
 {
 	auto &myPlayer = plr[myplr];
 
-	int maxMana = std::max(myPlayer._pMaxMana, 0);
-	int mana = std::max(myPlayer._pMana, 0);
-	myPlayer._pManaPer = maxMana != 0 ? ((double)mana / (double)maxMana * 80.0) : 0;
+	myPlayer.UpdateManaPercentage();
 	myPlayer.UpdateHitPointPercentage();
 }
 
@@ -636,16 +634,11 @@ void UpdateManaFlask(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
-	int maxMana = std::max(myPlayer._pMaxMana, 0);
-	int mana = std::max(myPlayer._pMana, 0);
-	int filled = maxMana != 0 ? ((double)mana / (double)maxMana * 80.0) : 0;
+	int filled = clamp(myPlayer.UpdateManaPercentage(), 0, 69);
 
-	myPlayer._pManaPer = filled;
-
-	filled = std::min(filled, 69);
-	if (filled != 69)
+	if (filled < 69)
 		DrawFlaskTop(out, { PANEL_X + 464, PANEL_Y }, pManaBuff, 16, 85 - filled);
-	if (filled != 0)
+	if (filled > 0)
 		DrawPanelBox(out, { 464, 85 - filled, 88, filled }, { PANEL_X + 464, PANEL_Y + 69 - filled });
 
 	DrawSpell(out);
