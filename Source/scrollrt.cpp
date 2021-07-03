@@ -1315,7 +1315,7 @@ void DrawView(const Surface &out, int StartX, int StartY)
 	doom_draw(out);
 	DrawInfoBox(out);
 	DrawLifeFlaskUpper(out);
-	DrawManaFlask(out);
+	DrawManaFlaskUpper(out);
 }
 
 extern SDL_Surface *pal_surface;

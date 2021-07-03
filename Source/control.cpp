@@ -607,7 +607,7 @@ void DrawLifeFlaskLower(const Surface &out)
 		DrawPanelBox(out, { 96, 85 - filled, 88, filled }, { 96 + PANEL_X, PANEL_Y + 69 - filled });
 }
 
-void DrawManaFlask(const Surface &out)
+void DrawManaFlaskUpper(const Surface &out)
 {
 	// this function uses the precalculated value of ManaPer from an earlier call to control_update_life_mana() or UpdateManaFlask()
 	int emptyPortion = 80 - plr[myplr]._pManaPer;

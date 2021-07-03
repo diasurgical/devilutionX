@@ -85,7 +85,7 @@ void DrawLifeFlaskUpper(const Surface &out);
  */
 void DrawLifeFlaskLower(const Surface &out);
 
-void DrawManaFlask(const Surface &out);
+void DrawManaFlaskUpper(const Surface &out);
 void control_update_life_mana();
 
 /**
