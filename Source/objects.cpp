@@ -31,41 +31,41 @@
 namespace devilution {
 
 enum shrine_type : uint8_t {
-	SHRINE_MYSTERIOUS,
-	SHRINE_HIDDEN,
-	SHRINE_GLOOMY,
-	SHRINE_WEIRD,
-	SHRINE_MAGICAL,
-	SHRINE_STONE,
-	SHRINE_RELIGIOUS,
-	SHRINE_ENCHANTED,
-	SHRINE_THAUMATURGIC,
-	SHRINE_FASCINATING,
-	SHRINE_CRYPTIC,
-	SHRINE_MAGICAL2,
-	SHRINE_ELDRITCH,
-	SHRINE_EERIE,
-	SHRINE_DIVINE,
-	SHRINE_HOLY,
-	SHRINE_SACRED,
-	SHRINE_SPIRITUAL,
-	SHRINE_SPOOKY,
-	SHRINE_ABANDONED,
-	SHRINE_CREEPY,
-	SHRINE_QUIET,
-	SHRINE_SECLUDED,
-	SHRINE_ORNATE,
-	SHRINE_GLIMMERING,
-	SHRINE_TAINTED,
-	SHRINE_OILY,
-	SHRINE_GLOWING,
-	SHRINE_MENDICANT,
-	SHRINE_SPARKLING,
-	SHRINE_TOWN,
-	SHRINE_SHIMMERING,
-	SHRINE_SOLAR,
-	SHRINE_MURPHYS,
-	NUM_SHRINETYPE
+	ShrineMysterious,
+	ShrineHidden,
+	ShrineGloomy,
+	ShrineWeird,
+	ShrineMagical,
+	ShrineStone,
+	ShrineReligious,
+	ShrineEnchanted,
+	ShrineThaumaturgic,
+	ShrineFascinating,
+	ShrineCryptic,
+	ShrineMagicaL2,
+	ShrineEldritch,
+	ShrineEerie,
+	ShrineDivine,
+	ShrineHoly,
+	ShrineSacred,
+	ShrineSpiritual,
+	ShrineSpooky,
+	ShrineAbandoned,
+	ShrineCreepy,
+	ShrineQuiet,
+	ShrineSecluded,
+	ShrineOrnate,
+	ShrineGlimmering,
+	ShrineTainted,
+	ShrineOily,
+	ShrineGlowing,
+	ShrineMendicant,
+	ShrineSparkling,
+	ShrineTown,
+	ShrineShimmering,
+	ShrineSolar,
+	ShrineMurphys,
+	NumberOfShrineTypes
 };
 
 int trapid;
@@ -208,51 +208,51 @@ char shrinemax[] = {
 
 /**
  * Specifies the game type for which each shrine may appear.
- * SHRINETYPE_ANY - sp & mp
- * SHRINETYPE_SINGLE - sp only
- * SHRINETYPE_MULTI - mp only
+ * ShrineTypeAny - sp & mp
+ * ShrineTypeSingle - sp only
+ * ShrineTypeMulti - mp only
  */
 enum shrine_gametype : uint8_t {
-	SHRINETYPE_ANY,
-	SHRINETYPE_SINGLE,
-	SHRINETYPE_MULTI,
+	ShrineTypeAny,
+	ShrineTypeSingle,
+	ShrineTypeMulti,
 };
 
 shrine_gametype shrineavail[] = {
-	SHRINETYPE_ANY,    // SHRINE_MYSTERIOUS
-	SHRINETYPE_ANY,    // SHRINE_HIDDEN
-	SHRINETYPE_SINGLE, // SHRINE_GLOOMY
-	SHRINETYPE_SINGLE, // SHRINE_WEIRD
-	SHRINETYPE_ANY,    // SHRINE_MAGICAL
-	SHRINETYPE_ANY,    // SHRINE_STONE
-	SHRINETYPE_ANY,    // SHRINE_RELIGIOUS
-	SHRINETYPE_ANY,    // SHRINE_ENCHANTED
-	SHRINETYPE_SINGLE, // SHRINE_THAUMATURGIC
-	SHRINETYPE_ANY,    // SHRINE_FASCINATING
-	SHRINETYPE_ANY,    // SHRINE_CRYPTIC
-	SHRINETYPE_ANY,    // SHRINE_MAGICAL2
-	SHRINETYPE_ANY,    // SHRINE_ELDRITCH
-	SHRINETYPE_ANY,    // SHRINE_EERIE
-	SHRINETYPE_ANY,    // SHRINE_DIVINE
-	SHRINETYPE_ANY,    // SHRINE_HOLY
-	SHRINETYPE_ANY,    // SHRINE_SACRED
-	SHRINETYPE_ANY,    // SHRINE_SPIRITUAL
-	SHRINETYPE_MULTI,  // SHRINE_SPOOKY
-	SHRINETYPE_ANY,    // SHRINE_ABANDONED
-	SHRINETYPE_ANY,    // SHRINE_CREEPY
-	SHRINETYPE_ANY,    // SHRINE_QUIET
-	SHRINETYPE_ANY,    // SHRINE_SECLUDED
-	SHRINETYPE_ANY,    // SHRINE_ORNATE
-	SHRINETYPE_ANY,    // SHRINE_GLIMMERING
-	SHRINETYPE_MULTI,  // SHRINE_TAINTED
-	SHRINETYPE_ANY,    // SHRINE_OILY
-	SHRINETYPE_ANY,    // SHRINE_GLOWING
-	SHRINETYPE_ANY,    // SHRINE_MENDICANT
-	SHRINETYPE_ANY,    // SHRINE_SPARKLING
-	SHRINETYPE_ANY,    // SHRINE_TOWN
-	SHRINETYPE_ANY,    // SHRINE_SHIMMERING
-	SHRINETYPE_SINGLE, // SHRINE_SOLAR
-	SHRINETYPE_ANY,    // SHRINE_MURPHYS
+	ShrineTypeAny,    // Mysterious
+	ShrineTypeAny,    // Hidden
+	ShrineTypeSingle, // Gloomy
+	ShrineTypeSingle, // Weird
+	ShrineTypeAny,    // Magical
+	ShrineTypeAny,    // Stone
+	ShrineTypeAny,    // Religious
+	ShrineTypeAny,    // Enchanted
+	ShrineTypeSingle, // Thaumaturgic
+	ShrineTypeAny,    // Fascinating
+	ShrineTypeAny,    // Cryptic
+	ShrineTypeAny,    // Magical
+	ShrineTypeAny,    // Eldritch
+	ShrineTypeAny,    // Eerie
+	ShrineTypeAny,    // Divine
+	ShrineTypeAny,    // Holy
+	ShrineTypeAny,    // Sacred
+	ShrineTypeAny,    // Spiritual
+	ShrineTypeMulti,  // Spooky
+	ShrineTypeAny,    // Abandoned
+	ShrineTypeAny,    // Creepy
+	ShrineTypeAny,    // Quiet
+	ShrineTypeAny,    // Secluded
+	ShrineTypeAny,    // Ornate
+	ShrineTypeAny,    // Glimmering
+	ShrineTypeMulti,  // Tainted
+	ShrineTypeAny,    // Oily
+	ShrineTypeAny,    // Glowing
+	ShrineTypeAny,    // Mendicant's
+	ShrineTypeAny,    // Sparkling
+	ShrineTypeAny,    // Town
+	ShrineTypeAny,    // Shimmering
+	ShrineTypeSingle, // Solar,
+	ShrineTypeAny,    // Murphy's
 };
 /** Maps from book_id to book name. */
 const char *const StoryBookName[] = {
@@ -1403,17 +1403,17 @@ void AddBarrel(int i, int t)
 
 void AddShrine(int i)
 {
-	bool slist[NUM_SHRINETYPE];
+	bool slist[NumberOfShrineTypes];
 
 	object[i]._oPreFlag = true;
 
-	int shrines = gbIsHellfire ? NUM_SHRINETYPE : 26;
+	int shrines = gbIsHellfire ? NumberOfShrineTypes : 26;
 
 	for (int j = 0; j < shrines; j++) {
 		slist[j] = currlevel >= shrinemin[j] && currlevel <= shrinemax[j];
-		if (gbIsMultiplayer && shrineavail[j] == SHRINETYPE_SINGLE) {
+		if (gbIsMultiplayer && shrineavail[j] == ShrineTypeSingle) {
 			slist[j] = false;
-		} else if (!gbIsMultiplayer && shrineavail[j] == SHRINETYPE_MULTI) {
+		} else if (!gbIsMultiplayer && shrineavail[j] == ShrineTypeMulti) {
 			slist[j] = false;
 		}
 	}
@@ -4195,136 +4195,136 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 	}
 
 	switch (object[i]._oVar1) {
-	case SHRINE_MYSTERIOUS:
+	case ShrineMysterious:
 		if (!OperateShrineMysterious(pnum))
 			return;
 		break;
-	case SHRINE_HIDDEN:
+	case ShrineHidden:
 		if (!OperateShrineHidden(pnum))
 			return;
 		break;
-	case SHRINE_GLOOMY:
+	case ShrineGloomy:
 		if (!OperateShrineGloomy(pnum))
 			return;
 		break;
-	case SHRINE_WEIRD:
+	case ShrineWeird:
 		if (!OperateShrineWeird(pnum))
 			return;
 		break;
-	case SHRINE_MAGICAL:
-	case SHRINE_MAGICAL2:
+	case ShrineMagical:
+	case ShrineMagicaL2:
 		if (!OperateShrineMagical(pnum))
 			return;
 		break;
-	case SHRINE_STONE:
+	case ShrineStone:
 		if (!OperateShrineStone(pnum))
 			return;
 		break;
-	case SHRINE_RELIGIOUS:
+	case ShrineReligious:
 		if (!OperateShrineReligious(pnum))
 			return;
 		break;
-	case SHRINE_ENCHANTED:
+	case ShrineEnchanted:
 		if (!OperateShrineEnchanted(pnum))
 			return;
 		break;
-	case SHRINE_THAUMATURGIC:
+	case ShrineThaumaturgic:
 		if (!OperateShrineThaumaturgic(pnum))
 			return;
 		break;
-	case SHRINE_FASCINATING:
+	case ShrineFascinating:
 		if (!OperateShrineFascinating(pnum))
 			return;
 		break;
-	case SHRINE_CRYPTIC:
+	case ShrineCryptic:
 		if (!OperateShrineCryptic(pnum))
 			return;
 		break;
-	case SHRINE_ELDRITCH:
+	case ShrineEldritch:
 		if (!OperateShrineEldritch(pnum))
 			return;
 		break;
-	case SHRINE_EERIE:
+	case ShrineEerie:
 		if (!OperateShrineEerie(pnum))
 			return;
 		break;
-	case SHRINE_DIVINE:
+	case ShrineDivine:
 		if (!OperateShrineDivine(pnum, object[i].position.x, object[i].position.y))
 			return;
 		break;
-	case SHRINE_HOLY:
+	case ShrineHoly:
 		if (!OperateShrineHoly(pnum))
 			return;
 		break;
-	case SHRINE_SACRED:
+	case ShrineSacred:
 		if (!OperateShrineSacred(pnum))
 			return;
 		break;
-	case SHRINE_SPIRITUAL:
+	case ShrineSpiritual:
 		if (!OperateShrineSpiritual(pnum))
 			return;
 		break;
-	case SHRINE_SPOOKY:
+	case ShrineSpooky:
 		if (!OperateShrineSpooky(pnum))
 			return;
 		break;
-	case SHRINE_ABANDONED:
+	case ShrineAbandoned:
 		if (!OperateShrineAbandoned(pnum))
 			return;
 		break;
-	case SHRINE_CREEPY:
+	case ShrineCreepy:
 		if (!OperateShrineCreepy(pnum))
 			return;
 		break;
-	case SHRINE_QUIET:
+	case ShrineQuiet:
 		if (!OperateShrineQuiet(pnum))
 			return;
 		break;
-	case SHRINE_SECLUDED:
+	case ShrineSecluded:
 		if (!OperateShrineSecluded(pnum))
 			return;
 		break;
-	case SHRINE_ORNATE:
+	case ShrineOrnate:
 		if (!OperateShrineOrnate(pnum))
 			return;
 		break;
-	case SHRINE_GLIMMERING:
+	case ShrineGlimmering:
 		if (!OperateShrineGlimmering(pnum))
 			return;
 		break;
-	case SHRINE_TAINTED:
+	case ShrineTainted:
 		if (!OperateShrineTainted(pnum))
 			return;
 		break;
-	case SHRINE_OILY:
+	case ShrineOily:
 		if (!OperateShrineOily(pnum, object[i].position.x, object[i].position.y))
 			return;
 		break;
-	case SHRINE_GLOWING:
+	case ShrineGlowing:
 		if (!OperateShrineGlowing(pnum))
 			return;
 		break;
-	case SHRINE_MENDICANT:
+	case ShrineMendicant:
 		if (!OperateShrineMendicant(pnum))
 			return;
 		break;
-	case SHRINE_SPARKLING:
+	case ShrineSparkling:
 		if (!OperateShrineSparkling(pnum, object[i].position.x, object[i].position.y))
 			return;
 		break;
-	case SHRINE_TOWN:
+	case ShrineTown:
 		if (!OperateShrineTown(pnum, object[i].position.x, object[i].position.y))
 			return;
 		break;
-	case SHRINE_SHIMMERING:
+	case ShrineShimmering:
 		if (!OperateShrineShimmering(pnum))
 			return;
 		break;
-	case SHRINE_SOLAR:
+	case ShrineSolar:
 		if (!OperateShrineSolar(pnum))
 			return;
 		break;
-	case SHRINE_MURPHYS:
+	case ShrineMurphys:
 		if (!OperateShrineMurphys(pnum))
 			return;
 		break;
@@ -4435,19 +4435,19 @@ int FindValidShrine()
 	bool done = false;
 	int rv;
 	do {
-		rv = GenerateRnd(gbIsHellfire ? NUM_SHRINETYPE : 26);
-		if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != SHRINE_THAUMATURGIC) {
+		rv = GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
+		if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != ShrineThaumaturgic) {
 			done = true;
 		}
 		if (done) {
 			if (gbIsMultiplayer) {
-				if (shrineavail[rv] == SHRINETYPE_SINGLE) {
+				if (shrineavail[rv] == ShrineTypeSingle) {
 					done = false;
 					continue;
 				}
 			}
 			if (!gbIsMultiplayer) {
-				if (shrineavail[rv] == SHRINETYPE_MULTI) {
+				if (shrineavail[rv] == ShrineTypeMulti) {
 					done = false;
 					continue;
 				}
@@ -4670,9 +4670,9 @@ bool objectIsDisabled(int i)
 		return true;
 	if ((object[i]._otype != OBJ_SHRINEL) && (object[i]._otype != OBJ_SHRINER))
 		return false;
-	if ((object[i]._oVar1 == SHRINE_FASCINATING)
-	    || (object[i]._oVar1 == SHRINE_ORNATE)
-	    || (object[i]._oVar1 == SHRINE_SACRED))
+	if ((object[i]._oVar1 == ShrineFascinating)
+	    || (object[i]._oVar1 == ShrineOrnate)
+	    || (object[i]._oVar1 == ShrineSacred))
 		return true;
 	return false;
 }

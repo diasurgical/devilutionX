@@ -4018,11 +4018,11 @@ void InitDungMsgs(PlayerStruct &player)
 
 enum {
 	// clang-format off
-	DMSG_CATHEDRAL = 1 << 0,
-	DMSG_CATACOMBS = 1 << 1,
-	DMSG_CAVES     = 1 << 2,
-	DMSG_HELL      = 1 << 3,
-	DMSG_DIABLO    = 1 << 4,
+	DungMsgCathedral = 1 << 0,
+	DungMsgCatacombs = 1 << 1,
+	DungMsgCaves     = 1 << 2,
+	DungMsgHell      = 1 << 3,
+	DungMsgDiablo    = 1 << 4,
 	// clang-format on
 };
 
@@ -4033,22 +4033,22 @@ void PlayDungMsgs()
 	}
 	auto &myPlayer = plr[myplr];
 
-	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_CATHEDRAL) == 0) {
+	if (currlevel == 1 && !myPlayer._pLvlVisited[1] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgCathedral) == 0) {
 		myPlayer.Say(HeroSpeech::TheSanctityOfThisPlaceHasBeenFouled, 40);
-		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DMSG_CATHEDRAL;
-	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_CATACOMBS) == 0) {
+		myPlayer.pDungMsgs = myPlayer.pDungMsgs | DungMsgCathedral;
+	} else if (currlevel == 5 && !myPlayer._pLvlVisited[5] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgCatacombs) == 0) {
 		myPlayer.Say(HeroSpeech::TheSmellOfDeathSurroundsMe, 40);
-		myPlayer.pDungMsgs |= DMSG_CATACOMBS;
-	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_CAVES) == 0) {
+		myPlayer.pDungMsgs |= DungMsgCatacombs;
+	} else if (currlevel == 9 && !myPlayer._pLvlVisited[9] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgCaves) == 0) {
 		myPlayer.Say(HeroSpeech::ItsHotDownHere, 40);
-		myPlayer.pDungMsgs |= DMSG_CAVES;
-	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_HELL) == 0) {
+		myPlayer.pDungMsgs |= DungMsgCaves;
+	} else if (currlevel == 13 && !myPlayer._pLvlVisited[13] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgHell) == 0) {
 		myPlayer.Say(HeroSpeech::IMustBeGettingClose, 40);
-		myPlayer.pDungMsgs |= DMSG_HELL;
-	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DMSG_DIABLO) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
+		myPlayer.pDungMsgs |= DungMsgHell;
+	} else if (currlevel == 16 && !myPlayer._pLvlVisited[15] && !gbIsMultiplayer && (myPlayer.pDungMsgs & DungMsgDiablo) == 0) { // BUGFIX: _pLvlVisited should check 16 or this message will never play
 		sfxdelay = 40;
 		sfxdnum = PS_DIABLVLINT;
-		myPlayer.pDungMsgs |= DMSG_DIABLO;
+		myPlayer.pDungMsgs |= DungMsgDiablo;
 	} else if (currlevel == 17 && !myPlayer._pLvlVisited[17] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;

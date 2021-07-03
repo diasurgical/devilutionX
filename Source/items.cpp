@@ -37,9 +37,9 @@ std::optional<CelSprite> itemanims[ITEMTYPES];
 
 enum anim_armor_id : uint8_t {
 	// clang-format off
-	ANIM_ID_LIGHT_ARMOR  = 0,
-	ANIM_ID_MEDIUM_ARMOR = 1 << 4,
-	ANIM_ID_HEAVY_ARMOR  = 1 << 5,
+	AnimIdLightArmor  = 0,
+	AnimIdMediumArmor = 1 << 4,
+	AnimIdHeavyArmor  = 1 << 5,
 	// clang-format on
 };
 
@@ -875,7 +875,7 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 	if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 			player._pIAC += player._pLevel / 2;
-		g += ANIM_ID_HEAVY_ARMOR;
+		g += AnimIdHeavyArmor;
 	} else if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk) {
 			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
@@ -883,7 +883,7 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 			else
 				player._pIAC += player._pLevel / 2;
 		}
-		g += ANIM_ID_MEDIUM_ARMOR;
+		g += AnimIdMediumArmor;
 	} else if (player._pClass == HeroClass::Monk) {
 		player._pIAC += player._pLevel * 2;
 	}
