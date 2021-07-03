@@ -609,17 +609,17 @@ void DrawLifeFlaskLower(const Surface &out)
 
 void DrawManaFlask(const Surface &out)
 {
-	int filled = plr[myplr]._pManaPer;
-	if (filled > 80)
-		filled = 80;
-	filled = 80 - filled;
-	if (filled > 11)
-		filled = 11;
-	filled += 2;
+	// this function uses the precalculated value of ManaPer from an earlier call to control_update_life_mana() or UpdateManaFlask()
+	int emptyPortion = 80 - plr[myplr]._pManaPer;
 
-	DrawFlask(out, pManaBuff, { 13, 3 }, { PANEL_LEFT + 475, PANEL_TOP - 13 }, filled);
-	if (filled != 13)
-		DrawFlask(out, pBtmBuff, { 475, filled + 3 }, { PANEL_LEFT + 475, PANEL_TOP - 13 + filled }, 13 - filled);
+	// clamping because this function only draws the top 12% of the Mana display
+	emptyPortion = clamp(emptyPortion, 0, 11) + 2; // +2 to account for the frame being included in the sprite
+
+	// Draw the empty part of the flask
+	DrawFlask(out, pManaBuff, { 13, 3 }, { PANEL_LEFT + 475, PANEL_TOP - 13 }, emptyPortion);
+	if (emptyPortion < 13)
+		// Draw the filled part of the flask
+		DrawFlask(out, pBtmBuff, { 475, emptyPortion + 3 }, { PANEL_LEFT + 475, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
 }
 
 void control_update_life_mana()
