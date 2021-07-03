@@ -90,9 +90,13 @@ void control_update_life_mana();
 
 /**
  * Controls the drawing of the area of the mana flask within the control panel.
- * Also for some reason draws the current right mouse button spell.
  */
 void DrawManaFlaskLower(const Surface &out);
+/**
+ * @brief draws the current right mouse button spell.
+ * @param out screen buffer representing the main UI panel
+*/
+void DrawSpell(const Surface &out);
 
 void InitControlPan();
 void DrawCtrlPan(const Surface &out);

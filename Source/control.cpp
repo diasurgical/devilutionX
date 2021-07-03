@@ -295,10 +295,7 @@ void SetSpellTrans(spell_type t)
 	}
 }
 
-/**
- * Sets the spell frame to draw and its position then draws it.
- */
-static void DrawSpell(const Surface &out)
+void DrawSpell(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 	spell_id spl = myPlayer._pRSpell;
@@ -609,7 +606,7 @@ void DrawLifeFlaskLower(const Surface &out)
 
 void DrawManaFlaskUpper(const Surface &out)
 {
-	// this function uses the precalculated value of ManaPer from an earlier call to control_update_life_mana() or UpdateManaFlask()
+	// this function uses the precalculated value of ManaPer from an earlier call to control_update_life_mana() or DrawManaFlaskLower()
 	int emptyPortion = 80 - plr[myplr]._pManaPer;
 
 	// clamping because this function only draws the top 12% of the Mana display
@@ -630,7 +627,7 @@ void control_update_life_mana()
 	myPlayer.UpdateHitPointPercentage();
 }
 
-void UpdateManaFlask(const Surface &out)
+void DrawManaFlaskLower(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
@@ -640,8 +637,6 @@ void UpdateManaFlask(const Surface &out)
 		DrawFlaskTop(out, { PANEL_X + 464, PANEL_Y }, pManaBuff, 16, 85 - filled);
 	if (filled > 0)
 		DrawPanelBox(out, { 464, 85 - filled, 88, filled }, { PANEL_X + 464, PANEL_Y + 69 - filled });
-
-	DrawSpell(out);
 }
 
 void InitControlPan()

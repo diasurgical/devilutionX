@@ -1595,6 +1595,8 @@ void DrawAndBlit()
 	}
 	if (drawmanaflag) {
 		DrawManaFlaskLower(out);
+
+		DrawSpell(out);
 	}
 	if (drawbtnflag) {
 		DrawCtrlBtns(out);
