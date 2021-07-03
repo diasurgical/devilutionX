@@ -553,7 +553,7 @@ void InitItems()
 	uitemflag = false;
 }
 
-void CalcPlrItemVals(int playerId, bool Loadgfx)
+void CalcPlrItemVals(int playerId, bool loadgfx)
 {
 	auto &player = plr[playerId];
 
@@ -888,7 +888,7 @@ void CalcPlrItemVals(int playerId, bool Loadgfx)
 		player._pIAC += player._pLevel * 2;
 	}
 
-	if (player._pgfxnum != g && Loadgfx) {
+	if (player._pgfxnum != g && loadgfx) {
 		player._pgfxnum = g;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
@@ -1016,13 +1016,13 @@ void CalcPlrBookVals(PlayerStruct &player)
 	}
 }
 
-void CalcPlrInv(int playerId, bool Loadgfx)
+void CalcPlrInv(int playerId, bool loadgfx)
 {
 	auto &player = plr[playerId];
 
 	CalcPlrItemMin(player);
 	CalcSelfItems(player);
-	CalcPlrItemVals(playerId, Loadgfx);
+	CalcPlrItemVals(playerId, loadgfx);
 	CalcPlrItemMin(player);
 	if (playerId == myplr) {
 		CalcPlrBookVals(player);
@@ -1568,18 +1568,18 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	GetStaffPower(i, lvl, bs, onlygood);
 }
 
-void GetOilType(int i, int max_lvl)
+void GetOilType(int i, int maxLvl)
 {
 	int cnt = 2;
 	char rnd[32] = { 5, 6 };
 
 	if (!gbIsMultiplayer) {
-		if (max_lvl == 0)
-			max_lvl = 1;
+		if (maxLvl == 0)
+			maxLvl = 1;
 
 		cnt = 0;
 		for (size_t j = 0; j < sizeof(OilLevels) / sizeof(OilLevels[0]); j++) {
-			if (OilLevels[j] <= max_lvl) {
+			if (OilLevels[j] <= maxLvl) {
 				rnd[cnt] = j;
 				cnt++;
 			}
@@ -2686,7 +2686,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 	gbIsHellfire = tmpIsHellfire;
 }
 
-void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
+void RecreateEar(int ii, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
 	SetPlrHandItem(&items[ii], IDI_EAR);
 	tempstr[0] = (ic >> 8) & 0x7F;
@@ -2695,7 +2695,7 @@ void RecreateEar(int ii, uint16_t ic, int iseed, int Id, int dur, int mdur, int 
 	tempstr[3] = (iseed >> 16) & 0x7F;
 	tempstr[4] = (iseed >> 8) & 0x7F;
 	tempstr[5] = iseed & 0x7F;
-	tempstr[6] = Id & 0x7F;
+	tempstr[6] = id & 0x7F;
 	tempstr[7] = dur & 0x7F;
 	tempstr[8] = mdur & 0x7F;
 	tempstr[9] = ch & 0x7F;
@@ -2885,10 +2885,10 @@ void SpawnTheodore(Point position)
 	SpawnRewardItem(IDI_THEODORE, position);
 }
 
-void RespawnItem(ItemStruct *item, bool FlipFlag)
+void RespawnItem(ItemStruct *item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item->_iCurs];
-	item->SetNewAnimation(FlipFlag);
+	item->SetNewAnimation(flipFlag);
 	item->_iRequest = false;
 
 	if (item->_iCurs == ICURS_MAGIC_ROCK) {
@@ -3202,9 +3202,9 @@ void DoOil(int pnum, int cii)
 	}
 }
 
-void PrintItemOil(char IDidx)
+void PrintItemOil(char iDidx)
 {
-	switch (IDidx) {
+	switch (iDidx) {
 	case IMISC_OILACC:
 		strcpy(tempstr, _("increases a weapon's"));
 		AddPanelString(tempstr);
@@ -3855,11 +3855,11 @@ void PrintItemDur(ItemStruct *x)
 	PrintItemInfo(x);
 }
 
-void UseItem(int p, item_misc_id Mid, spell_id spl)
+void UseItem(int p, item_misc_id mid, spell_id spl)
 {
 	auto &player = plr[p];
 
-	switch (Mid) {
+	switch (mid) {
 	case IMISC_HEAL:
 	case IMISC_FOOD: {
 		int j = player._pMaxHP >> 8;
@@ -4010,7 +4010,7 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_OILPERM:
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
-		player._pOilType = Mid;
+		player._pOilType = mid;
 		if (p != myplr) {
 			return;
 		}

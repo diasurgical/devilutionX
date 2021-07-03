@@ -1363,14 +1363,14 @@ void ui_sound_init()
 	PrivSoundInit(sfx_UI);
 }
 
-void effects_play_sound(const char *snd_file)
+void effects_play_sound(const char *sndFile)
 {
 	if (!gbSndInited || !gbSoundOn) {
 		return;
 	}
 
 	for (auto &sfx : sgSFX) {
-		if (strcasecmp(sfx.pszName, snd_file) == 0 && sfx.pSnd != nullptr) {
+		if (strcasecmp(sfx.pszName, sndFile) == 0 && sfx.pSnd != nullptr) {
 			if (!sfx.pSnd->isPlaying())
 				snd_play_snd(sfx.pSnd.get(), 0, 0);
 

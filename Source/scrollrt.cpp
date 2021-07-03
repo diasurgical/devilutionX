@@ -1153,12 +1153,12 @@ void CalcViewportGeometry()
  * @param x Center of view in dPiece coordinate
  * @param y Center of view in dPiece coordinate
  */
-static void DrawGame(const Surface &full_out, int x, int y)
+static void DrawGame(const Surface &fullOut, int x, int y)
 {
 	// Limit rendering to the view area
 	const Surface &out = zoomflag
-	    ? full_out.subregionY(0, gnViewportHeight)
-	    : full_out.subregionY(0, (gnViewportHeight + 1) / 2);
+	    ? fullOut.subregionY(0, gnViewportHeight)
+	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
 	auto &myPlayer = plr[myplr];
@@ -1250,16 +1250,16 @@ static void DrawGame(const Surface &full_out, int x, int y)
 	DrawTileContent(out, x, y, sx, sy, rows, columns);
 
 	if (!zoomflag) {
-		Zoom(full_out.subregionY(0, gnViewportHeight));
+		Zoom(fullOut.subregionY(0, gnViewportHeight));
 	}
 }
 
 // DevilutionX extension.
 extern void DrawControllerModifierHints(const Surface &out);
 
-void DrawView(const Surface &out, int StartX, int StartY)
+void DrawView(const Surface &out, int startX, int startY)
 {
-	DrawGame(out, StartX, StartY);
+	DrawGame(out, startX, startY);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
@@ -1479,7 +1479,7 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
  * @param draw_sbar Render belt
  * @param draw_btn Render panel buttons
  */
-static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bool draw_sbar, bool draw_btn)
+static void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
 {
 	if (!gbActive || RenderDirectlyToOutputSurface) {
 		return;
@@ -1491,20 +1491,20 @@ static void DrawMain(int dwHgt, bool draw_desc, bool draw_hp, bool draw_mana, bo
 		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
 	}
 	if (dwHgt < gnScreenHeight) {
-		if (draw_sbar) {
+		if (drawSbar) {
 			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
 		}
-		if (draw_desc) {
+		if (drawDesc) {
 			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 60);
 		}
-		if (draw_mana) {
+		if (drawMana) {
 			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
 			DoBlitScreen(PANEL_LEFT + 564, PANEL_TOP + 64, 56, 56);
 		}
-		if (draw_hp) {
+		if (drawHp) {
 			DoBlitScreen(PANEL_LEFT + 96, PANEL_TOP, 88, 72);
 		}
-		if (draw_btn) {
+		if (drawBtn) {
 			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
 			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
 			if (gbIsMultiplayer) {

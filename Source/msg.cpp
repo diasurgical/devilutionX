@@ -300,10 +300,10 @@ DWORD CompressData(byte *buffer, byte *end)
 	return pkSize + 1;
 }
 
-void DeltaImportData(BYTE cmd, DWORD recv_offset)
+void DeltaImportData(BYTE cmd, DWORD recvOffset)
 {
 	if (sgRecvBuf[0] != byte { 0 })
-		PkwareDecompress(&sgRecvBuf[1], recv_offset, sizeof(sgRecvBuf) - 1);
+		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
 
 	byte *src = &sgRecvBuf[1];
 	if (cmd == CMD_DLEVEL_JUNK) {

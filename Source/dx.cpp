@@ -224,50 +224,50 @@ void InitPalette()
 	}
 }
 
-void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect)
+void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect)
 {
 	if (RenderDirectlyToOutputSurface)
 		return;
-	Blit(pal_surface, src_rect, dst_rect);
+	Blit(pal_surface, srcRect, dstRect);
 }
 
-void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
+void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 {
 	SDL_Surface *dst = GetOutputSurface();
 #ifndef USE_SDL1
-	if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
+	if (SDL_BlitSurface(src, srcRect, dst, dstRect) < 0)
 		ErrSdl();
 #else
 	if (!OutputRequiresScaling()) {
-		if (SDL_BlitSurface(src, src_rect, dst, dst_rect) < 0)
+		if (SDL_BlitSurface(src, srcRect, dst, dstRect) < 0)
 			ErrSdl();
 		return;
 	}
 
-	SDL_Rect scaled_dst_rect;
-	if (dst_rect != NULL) {
-		scaled_dst_rect = *dst_rect;
-		ScaleOutputRect(&scaled_dst_rect);
-		dst_rect = &scaled_dst_rect;
+	SDL_Rect scaledDstRect;
+	if (dstRect != NULL) {
+		scaledDstRect = *dstRect;
+		ScaleOutputRect(&scaledDstRect);
+		dstRect = &scaledDstRect;
 	}
 
 	// Same pixel format: We can call BlitScaled directly.
 	if (SDLBackport_PixelFormatFormatEq(src->format, dst->format)) {
-		if (SDL_BlitScaled(src, src_rect, dst, dst_rect) < 0)
+		if (SDL_BlitScaled(src, srcRect, dst, dstRect) < 0)
 			ErrSdl();
 		return;
 	}
 
 	// If the surface has a color key, we must stretch first and can then call BlitSurface.
 	if (SDL_HasColorKey(src)) {
-		SDL_Surface *stretched = SDL_CreateRGBSurface(SDL_SWSURFACE, dst_rect->w, dst_rect->h, src->format->BitsPerPixel,
+		SDL_Surface *stretched = SDL_CreateRGBSurface(SDL_SWSURFACE, dstRect->w, dstRect->h, src->format->BitsPerPixel,
 		    src->format->Rmask, src->format->Gmask, src->format->BitsPerPixel, src->format->Amask);
 		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
 		if (src->format->palette != NULL)
 			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
-		SDL_Rect stretched_rect = { 0, 0, dst_rect->w, dst_rect->h };
-		if (SDL_SoftStretch(src, src_rect, stretched, &stretched_rect) < 0
-		    || SDL_BlitSurface(stretched, &stretched_rect, dst, dst_rect) < 0) {
+		SDL_Rect stretched_rect = { 0, 0, dstRect->w, dstRect->h };
+		if (SDL_SoftStretch(src, srcRect, stretched, &stretched_rect) < 0
+		    || SDL_BlitSurface(stretched, &stretched_rect, dst, dstRect) < 0) {
 			SDL_FreeSurface(stretched);
 			ErrSdl();
 		}
@@ -278,7 +278,7 @@ void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect)
 	// A surface with a non-output pixel format but without a color key needs scaling.
 	// We can convert the format and then call BlitScaled.
 	SDL_Surface *converted = SDL_ConvertSurface(src, dst->format, 0);
-	if (SDL_BlitScaled(converted, src_rect, dst, dst_rect) < 0) {
+	if (SDL_BlitScaled(converted, srcRect, dst, dstRect) < 0) {
 		SDL_FreeSurface(converted);
 		ErrSdl();
 	}

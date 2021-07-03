@@ -20,8 +20,8 @@ void unlock_buf(int idx);
 void dx_cleanup();
 void dx_reinit();
 void InitPalette();
-void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect);
-void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect);
+void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect);
+void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect);
 void RenderPresent();
 void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
 

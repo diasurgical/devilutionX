@@ -223,7 +223,7 @@ struct Archive {
 		return true;
 	}
 
-	bool Close(bool clear_tables = true)
+	bool Close(bool clearTables = true)
 	{
 		if (!stream.IsOpen())
 			return true;
@@ -242,7 +242,7 @@ struct Archive {
 			result = ResizeFile(name.c_str(), size);
 		}
 		name.clear();
-		if (clear_tables) {
+		if (clearTables) {
 			delete[] sgpHashTbl;
 			sgpHashTbl = nullptr;
 			delete[] sgpBlockTbl;
@@ -350,7 +350,7 @@ bool ReadMPQHeader(Archive *archive, _FILEHEADER *hdr)
 	return true;
 }
 
-_BLOCKENTRY *NewBlock(int *block_index)
+_BLOCKENTRY *NewBlock(int *blockIndex)
 {
 	_BLOCKENTRY *blockEntry = cur_archive.sgpBlockTbl;
 
@@ -364,8 +364,8 @@ _BLOCKENTRY *NewBlock(int *block_index)
 		if (blockEntry->sizefile != 0)
 			continue;
 
-		if (block_index != nullptr)
-			*block_index = i;
+		if (blockIndex != nullptr)
+			*blockIndex = i;
 
 		return blockEntry;
 	}
@@ -373,7 +373,7 @@ _BLOCKENTRY *NewBlock(int *block_index)
 	app_fatal("Out of free block entries");
 }
 
-void AllocBlock(uint32_t block_offset, uint32_t block_size)
+void AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 {
 	_BLOCKENTRY *block;
 	int i;
@@ -382,37 +382,37 @@ void AllocBlock(uint32_t block_offset, uint32_t block_size)
 	i = INDEX_ENTRIES;
 	while (i-- != 0) {
 		if (block->offset != 0 && block->flags == 0 && block->sizefile == 0) {
-			if (block->offset + block->sizealloc == block_offset) {
-				block_offset = block->offset;
-				block_size += block->sizealloc;
+			if (block->offset + block->sizealloc == blockOffset) {
+				blockOffset = block->offset;
+				blockSize += block->sizealloc;
 				memset(block, 0, sizeof(_BLOCKENTRY));
-				AllocBlock(block_offset, block_size);
+				AllocBlock(blockOffset, blockSize);
 				return;
 			}
-			if (block_offset + block_size == block->offset) {
-				block_size += block->sizealloc;
+			if (blockOffset + blockSize == block->offset) {
+				blockSize += block->sizealloc;
 				memset(block, 0, sizeof(_BLOCKENTRY));
-				AllocBlock(block_offset, block_size);
+				AllocBlock(blockOffset, blockSize);
 				return;
 			}
 		}
 		block++;
 	}
-	if (block_offset + block_size > cur_archive.size) {
+	if (blockOffset + blockSize > cur_archive.size) {
 		app_fatal("MPQ free list error");
 	}
-	if (block_offset + block_size == cur_archive.size) {
-		cur_archive.size = block_offset;
+	if (blockOffset + blockSize == cur_archive.size) {
+		cur_archive.size = blockOffset;
 	} else {
 		block = NewBlock(nullptr);
-		block->offset = block_offset;
-		block->sizealloc = block_size;
+		block->offset = blockOffset;
+		block->sizealloc = blockSize;
 		block->sizefile = 0;
 		block->flags = 0;
 	}
 }
 
-int FindFreeBlock(uint32_t size, uint32_t *block_size)
+int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 {
 	int result;
 
@@ -428,7 +428,7 @@ int FindFreeBlock(uint32_t size, uint32_t *block_size)
 			continue;
 
 		result = pBlockTbl->offset;
-		*block_size = size;
+		*blockSize = size;
 		pBlockTbl->offset += size;
 		pBlockTbl->sizealloc -= size;
 
@@ -438,21 +438,21 @@ int FindFreeBlock(uint32_t size, uint32_t *block_size)
 		return result;
 	}
 
-	*block_size = size;
+	*blockSize = size;
 	result = cur_archive.size;
 	cur_archive.size += size;
 	return result;
 }
 
-int GetHashIndex(int index, uint32_t hash_a, uint32_t hash_b)
+int GetHashIndex(int index, uint32_t hashA, uint32_t hashB)
 {
 	int i = INDEX_ENTRIES;
 	for (int idx = index & 0x7FF; cur_archive.sgpHashTbl[idx].block != -1; idx = (idx + 1) & 0x7FF) {
 		if (i-- == 0)
 			break;
-		if (cur_archive.sgpHashTbl[idx].hashcheck[0] != hash_a)
+		if (cur_archive.sgpHashTbl[idx].hashcheck[0] != hashA)
 			continue;
-		if (cur_archive.sgpHashTbl[idx].hashcheck[1] != hash_b)
+		if (cur_archive.sgpHashTbl[idx].hashcheck[1] != hashB)
 			continue;
 		if (cur_archive.sgpHashTbl[idx].block == -2)
 			continue;
@@ -468,7 +468,7 @@ int FetchHandle(const char *pszName)
 	return GetHashIndex(Hash(pszName, 0), Hash(pszName, 1), Hash(pszName, 2));
 }
 
-_BLOCKENTRY *AddFile(const char *pszName, _BLOCKENTRY *pBlk, int block_index)
+_BLOCKENTRY *AddFile(const char *pszName, _BLOCKENTRY *pBlk, int blockIndex)
 {
 	uint32_t h1 = Hash(pszName, 0);
 	uint32_t h2 = Hash(pszName, 1);
@@ -489,12 +489,12 @@ _BLOCKENTRY *AddFile(const char *pszName, _BLOCKENTRY *pBlk, int block_index)
 		app_fatal("Out of hash space");
 
 	if (pBlk == nullptr)
-		pBlk = NewBlock(&block_index);
+		pBlk = NewBlock(&blockIndex);
 
 	cur_archive.sgpHashTbl[hIdx].hashcheck[0] = h2;
 	cur_archive.sgpHashTbl[hIdx].hashcheck[1] = h3;
 	cur_archive.sgpHashTbl[hIdx].lcid = 0;
-	cur_archive.sgpHashTbl[hIdx].block = block_index;
+	cur_archive.sgpHashTbl[hIdx].block = blockIndex;
 
 	return pBlk;
 }

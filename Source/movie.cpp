@@ -26,7 +26,7 @@ bool loop_movie;
  * @param pszMovie The file name of the video
  * @param user_can_close Set to false to make the video unskippable.
  */
-void play_movie(const char *pszMovie, bool user_can_close)
+void play_movie(const char *pszMovie, bool userCanClose)
 {
 	movie_playing = true;
 
@@ -44,7 +44,7 @@ void play_movie(const char *pszMovie, bool user_can_close)
 				case DVL_WM_KEYDOWN:
 				case DVL_WM_LBUTTONDOWN:
 				case DVL_WM_RBUTTONDOWN:
-					if (user_can_close || (Msg.message == DVL_WM_KEYDOWN && Msg.wParam == DVL_VK_ESCAPE))
+					if (userCanClose || (Msg.message == DVL_WM_KEYDOWN && Msg.wParam == DVL_VK_ESCAPE))
 						movie_playing = false;
 					break;
 				case DVL_WM_QUIT:
