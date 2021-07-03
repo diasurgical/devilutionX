@@ -3664,7 +3664,7 @@ void DrawUniqueInfo(const CelOutputBuffer &out)
 
 	DrawUTextBack(GlobalBackBuffer());
 
-	Rectangle rect { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12, 257, 0 };
+	Rectangle rect { { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12 }, { 257, 0 } };
 	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UIS_CENTER);
 

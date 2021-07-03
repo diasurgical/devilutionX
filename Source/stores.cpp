@@ -2253,7 +2253,7 @@ void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *
 	}
 	width -= margin * 2;
 
-	const Rectangle rect { sx, sy, width, 0 };
+	const Rectangle rect { { sx, sy }, { width, 0 } };
 	DrawString(out, text, rect, flags);
 	if (price > 0) {
 		char valstr[32];

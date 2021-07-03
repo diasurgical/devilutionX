@@ -1088,7 +1088,7 @@ static void PrintInfo(const CelOutputBuffer &out)
 	if (talkflag)
 		return;
 
-	Rectangle line { PANEL_X + 177, PANEL_Y + LineOffsets[pnumlines][0], 288, 0 };
+	Rectangle line { { PANEL_X + 177, PANEL_Y + LineOffsets[pnumlines][0] }, { 288, 0 } };
 
 	int yo = 0;
 	int lo = 1;
@@ -1175,15 +1175,15 @@ void DrawChr(const CelOutputBuffer &out)
 	auto &myPlayer = plr[myplr];
 
 	CelDrawTo(out, { 0, 351 }, *pChrPanel, 1);
-	DrawString(out, myPlayer._pName, { 20, 32, 131, 0 }, UIS_SILVER | UIS_CENTER);
+	DrawString(out, myPlayer._pName, { { 20, 32 }, { 131, 0 } }, UIS_SILVER | UIS_CENTER);
 
-	DrawString(out, _(ClassStrTbl[static_cast<std::size_t>(myPlayer._pClass)]), { 168, 32, 131, 0 }, UIS_SILVER | UIS_CENTER);
+	DrawString(out, _(ClassStrTbl[static_cast<std::size_t>(myPlayer._pClass)]), { { 168, 32 }, { 131, 0 } }, UIS_SILVER | UIS_CENTER);
 
 	sprintf(chrstr, "%i", myPlayer._pLevel);
-	DrawString(out, chrstr, { 66, 69, 43, 0 }, UIS_SILVER | UIS_CENTER);
+	DrawString(out, chrstr, { { 66, 69 }, { 43, 0 } }, UIS_SILVER | UIS_CENTER);
 
 	sprintf(chrstr, "%i", myPlayer._pExperience);
-	DrawString(out, chrstr, { 216, 69, 84, 0 }, UIS_SILVER | UIS_CENTER);
+	DrawString(out, chrstr, { { 216, 69 }, { 84, 0 } }, UIS_SILVER | UIS_CENTER);
 
 	if (myPlayer._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, _("None"));
@@ -1192,10 +1192,10 @@ void DrawChr(const CelOutputBuffer &out)
 		sprintf(chrstr, "%i", myPlayer._pNextExper);
 		style = UIS_SILVER;
 	}
-	DrawString(out, chrstr, { 216, 97, 84, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 216, 97 }, { 84, 0 } }, style | UIS_CENTER);
 
 	sprintf(chrstr, "%i", myPlayer._pGold);
-	DrawString(out, chrstr, { 216, 146, 84, 0 }, UIS_SILVER | UIS_CENTER);
+	DrawString(out, chrstr, { { 216, 146 }, { 84, 0 } }, UIS_SILVER | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pIBonusAC > 0)
@@ -1203,7 +1203,7 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pIBonusAC < 0)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pIBonusAC + myPlayer._pIAC + myPlayer._pDexterity / 5);
-	DrawString(out, chrstr, { 258, 183, 43, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 258, 183 }, { 43, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pIBonusToHit > 0)
@@ -1211,7 +1211,7 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pIBonusToHit < 0)
 		style = UIS_RED;
 	sprintf(chrstr, "%i%%", (myPlayer._pDexterity / 2) + myPlayer._pIBonusToHit + 50);
-	DrawString(out, chrstr, { 258, 211, 43, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 258, 211 }, { 43, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pIBonusDam > 0)
@@ -1242,9 +1242,9 @@ void DrawChr(const CelOutputBuffer &out)
 	}
 	sprintf(chrstr, "%i-%i", mindam, maxdam);
 	if (mindam >= 100 || maxdam >= 100)
-		DrawString(out, chrstr, { 254, 239, 51, 0 }, style | UIS_CENTER, -1);
+		DrawString(out, chrstr, { { 254, 239 }, { 51, 0 } }, style | UIS_CENTER, -1);
 	else
-		DrawString(out, chrstr, { 258, 239, 43, 0 }, style | UIS_CENTER, 0);
+		DrawString(out, chrstr, { { 258, 239 }, { 43, 0 } }, style | UIS_CENTER, 0);
 
 	style = UIS_BLUE;
 	if (myPlayer._pMagResist == 0)
@@ -1255,7 +1255,7 @@ void DrawChr(const CelOutputBuffer &out)
 		style = UIS_GOLD;
 		strcpy(chrstr, _(/* TRANSLATORS: UI Constrains. Keep translation short please!*/ "MAX"));
 	}
-	DrawString(out, chrstr, { 257, 276, 43, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 257, 276 }, { 43, 0 } }, style | UIS_CENTER);
 
 	style = UIS_BLUE;
 	if (myPlayer._pFireResist == 0)
@@ -1266,7 +1266,7 @@ void DrawChr(const CelOutputBuffer &out)
 		style = UIS_GOLD;
 		strcpy(chrstr, _("MAX"));
 	}
-	DrawString(out, chrstr, { 257, 304, 43, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 257, 304 }, { 43, 0 } }, style | UIS_CENTER);
 
 	style = UIS_BLUE;
 	if (myPlayer._pLghtResist == 0)
@@ -1277,31 +1277,31 @@ void DrawChr(const CelOutputBuffer &out)
 		style = UIS_GOLD;
 		strcpy(chrstr, _("MAX"));
 	}
-	DrawString(out, chrstr, { 257, 332, 43, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 257, 332 }, { 43, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	sprintf(chrstr, "%i", myPlayer._pBaseStr);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) == myPlayer._pBaseStr)
 		style = UIS_GOLD;
-	DrawString(out, chrstr, { 95, 155, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 95, 155 }, { 31, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	sprintf(chrstr, "%i", myPlayer._pBaseMag);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) == myPlayer._pBaseMag)
 		style = UIS_GOLD;
-	DrawString(out, chrstr, { 95, 183, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 95, 183 }, { 31, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	sprintf(chrstr, "%i", myPlayer._pBaseDex);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) == myPlayer._pBaseDex)
 		style = UIS_GOLD;
-	DrawString(out, chrstr, { 95, 211, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 95, 211 }, { 31, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	sprintf(chrstr, "%i", myPlayer._pBaseVit);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) == myPlayer._pBaseVit)
 		style = UIS_GOLD;
-	DrawString(out, chrstr, { 95, 239, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 95, 239 }, { 31, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pStrength > myPlayer._pBaseStr)
@@ -1309,7 +1309,7 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pStrength < myPlayer._pBaseStr)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pStrength);
-	DrawString(out, chrstr, { 143, 155, 30, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 143, 155 }, { 30, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pMagic > myPlayer._pBaseMag)
@@ -1317,7 +1317,7 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pMagic < myPlayer._pBaseMag)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pMagic);
-	DrawString(out, chrstr, { 143, 183, 30, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 143, 183 }, { 30, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pDexterity > myPlayer._pBaseDex)
@@ -1325,7 +1325,7 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pDexterity < myPlayer._pBaseDex)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pDexterity);
-	DrawString(out, chrstr, { 143, 211, 30, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 143, 211 }, { 30, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pVitality > myPlayer._pBaseVit)
@@ -1333,7 +1333,7 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pVitality < myPlayer._pBaseVit)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pVitality);
-	DrawString(out, chrstr, { 143, 239, 30, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 143, 239 }, { 30, 0 } }, style | UIS_CENTER);
 
 	if (myPlayer._pStatPts > 0) {
 		if (CalcStatDiff(myPlayer) < myPlayer._pStatPts) {
@@ -1342,7 +1342,7 @@ void DrawChr(const CelOutputBuffer &out)
 	}
 	if (myPlayer._pStatPts > 0) {
 		sprintf(chrstr, "%i", myPlayer._pStatPts);
-		DrawString(out, chrstr, { 95, 266, 31, 0 }, UIS_RED | UIS_CENTER);
+		DrawString(out, chrstr, { { 95, 266 }, { 31, 0 } }, UIS_RED | UIS_CENTER);
 		if (myPlayer._pBaseStr < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength))
 			CelDrawTo(out, { 137, 159 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2);
 		if (myPlayer._pBaseMag < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic))
@@ -1357,21 +1357,21 @@ void DrawChr(const CelOutputBuffer &out)
 	if (myPlayer._pMaxHP > myPlayer._pMaxHPBase)
 		style = UIS_BLUE;
 	sprintf(chrstr, "%i", myPlayer._pMaxHP >> 6);
-	DrawString(out, chrstr, { 95, 304, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 95, 304 }, { 31, 0 } }, style | UIS_CENTER);
 	if (myPlayer._pHitPoints != myPlayer._pMaxHP)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pHitPoints >> 6);
-	DrawString(out, chrstr, { 143, 304, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 143, 304 }, { 31, 0 } }, style | UIS_CENTER);
 
 	style = UIS_SILVER;
 	if (myPlayer._pMaxMana > myPlayer._pMaxManaBase)
 		style = UIS_BLUE;
 	sprintf(chrstr, "%i", myPlayer._pMaxMana >> 6);
-	DrawString(out, chrstr, { 95, 332, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 95, 332 }, { 31, 0 } }, style | UIS_CENTER);
 	if (myPlayer._pMana != myPlayer._pMaxMana)
 		style = UIS_RED;
 	sprintf(chrstr, "%i", myPlayer._pMana >> 6);
-	DrawString(out, chrstr, { 143, 332, 31, 0 }, style | UIS_CENTER);
+	DrawString(out, chrstr, { { 143, 332 }, { 31, 0 } }, style | UIS_CENTER);
 }
 
 void CheckLvlBtn()
@@ -1391,7 +1391,7 @@ void DrawLevelUpIcon(const CelOutputBuffer &out)
 {
 	if (stextflag == STORE_NONE) {
 		int nCel = lvlbtndown ? 3 : 2;
-		DrawString(out, _("Level Up"), { PANEL_LEFT + 0, PANEL_TOP - 49, 120, 0 }, UIS_SILVER | UIS_CENTER);
+		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 49 }, { 120, 0 } }, UIS_SILVER | UIS_CENTER);
 		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
 	}
 }
@@ -1548,7 +1548,7 @@ void RedBack(const CelOutputBuffer &out)
 
 static void PrintSBookStr(const CelOutputBuffer &out, Point position, const char *text)
 {
-	DrawString(out, text, { RIGHT_PANEL_X + SPLICONLENGTH + position.x, position.y, 222, 0 }, UIS_SILVER);
+	DrawString(out, text, { { RIGHT_PANEL_X + SPLICONLENGTH + position.x, position.y }, { 222, 0 } }, UIS_SILVER);
 }
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
@@ -1700,7 +1700,7 @@ void DrawGoldSplit(const CelOutputBuffer &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, tempstr, { dialogX + 31, 87, 200, 50 }, UIS_GOLD | UIS_CENTER, 1, 17);
+	DrawString(out, tempstr, { { dialogX + 31, 87 }, { 200, 50 } }, UIS_GOLD | UIS_CENTER, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {
@@ -1794,7 +1794,7 @@ void DrawTalkPan(const CelOutputBuffer &out)
 	int x = PANEL_LEFT + 200;
 	int y = PANEL_Y + 22;
 
-	i = DrawString(out, msg, { x, y + i, 250, 39 }, UIS_SILVER, 1, 13, true);
+	i = DrawString(out, msg, { { x, y + i }, { 250, 39 } }, UIS_SILVER, 1, 13, true);
 	msg[i] = '\0';
 
 	x += 46;
@@ -1819,7 +1819,7 @@ void DrawTalkPan(const CelOutputBuffer &out)
 		}
 		auto &player = plr[i];
 		if (player.plractive) {
-			DrawString(out, player._pName, { x, y + 60 + talkBtn * 18, 204, 0 }, color);
+			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
 		}
 
 		talkBtn++;

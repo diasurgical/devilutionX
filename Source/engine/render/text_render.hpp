@@ -80,7 +80,7 @@ int DrawString(const CelOutputBuffer &out, const char *text, const Rectangle &re
 */
 inline int DrawString(const CelOutputBuffer &out, const char *text, const Point &position, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false)
 {
-	return DrawString(out, text, { position.x, position.y, out.w() - position.x, 0 }, flags, spacing, lineHeight, drawTextCursor);
+	return DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, drawTextCursor);
 }
 
 int PentSpn2Spin();

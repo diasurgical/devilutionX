@@ -101,7 +101,7 @@ static void PrintPlrMsg(const CelOutputBuffer &out, int x, int y, int width, cha
 			text[i] = ' ';
 	}
 	WordWrapGameString(text, width);
-	DrawString(out, text, { x, y, width, 0 }, style, 1, 10);
+	DrawString(out, text, { { x, y }, { width, 0 } }, style, 1, 10);
 }
 
 void DrawPlrMsg(const CelOutputBuffer &out)

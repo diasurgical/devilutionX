@@ -709,7 +709,7 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int line, const cha
 	if (qline == line) {
 		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	DrawString(out, str, { sx, sy, 257, 0 }, UIS_SILVER);
+	DrawString(out, str, { { sx, sy }, { 257, 0 } }, UIS_SILVER);
 	if (qline == line) {
 		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
@@ -717,7 +717,7 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int line, const cha
 
 void DrawQuestLog(const CelOutputBuffer &out)
 {
-	DrawString(out, _("Quest Log"), { 32, 44, 257, 0 }, UIS_CENTER);
+	DrawString(out, _("Quest Log"), { { 32, 44 }, { 257, 0 } }, UIS_CENTER);
 	CelDrawTo(out, { 0, 351 }, *pQLogCel, 1);
 	int line = qtopline;
 	for (int i = 0; i < numqlines; i++) {

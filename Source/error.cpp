@@ -130,7 +130,7 @@ void DrawDiabloMsg(const CelOutputBuffer &out)
 	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54);
 
 	strcpy(tempstr, _(MsgStrings[msgflag]));
-	DrawString(out, tempstr, { PANEL_X + 101, DIALOG_Y + 24, 442, 0 }, UIS_CENTER);
+	DrawString(out, tempstr, { { PANEL_X + 101, DIALOG_Y + 24 }, { 442, 0 } }, UIS_CENTER);
 
 	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
 		msgdelay = 0;

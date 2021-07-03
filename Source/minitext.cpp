@@ -116,7 +116,7 @@ void DrawQTextContent(const CelOutputBuffer &out)
 			continue;
 		}
 
-		DrawString(out, line, { sx, sy + i * LineHeight, 543, LineHeight }, UIS_MED, 2);
+		DrawString(out, line, { { sx, sy + i * LineHeight }, { 543, LineHeight } }, UIS_MED, 2);
 	}
 }
 
