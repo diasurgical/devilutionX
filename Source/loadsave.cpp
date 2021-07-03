@@ -5,8 +5,10 @@
  */
 #include "loadsave.h"
 
-#include <SDL.h>
 #include <climits>
+#include <cstring>
+
+#include <SDL.h>
 
 #include "automap.h"
 #include "codec.h"
@@ -156,6 +158,7 @@ public:
 
 	void skip(uint32_t len)
 	{
+		std::memset(&m_buffer_[m_cur_], 0, len);
 		m_cur_ += len;
 	}
 
