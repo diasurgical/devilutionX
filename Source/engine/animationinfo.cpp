@@ -61,15 +61,15 @@ float AnimationInfo::GetAnimationProgress() const
 	if (RelevantFramesForDistributing <= 0) {
 		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		float ticksPerFrame = (TicksPerFrame + 1);
-		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)CurrentFrame + (TickCounterOfCurrentFrame / ticksPerFrame);
-		float fAnimationFraction = totalTicksForCurrentAnimationSequence / ((float)NumberOfFrames * ticksPerFrame);
+		float ticksPerFrame = TicksPerFrame + 1.F;
+		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + CurrentFrame + (TickCounterOfCurrentFrame / ticksPerFrame);
+		float fAnimationFraction = totalTicksForCurrentAnimationSequence / (NumberOfFrames * ticksPerFrame);
 		return fAnimationFraction;
 	}
 
-	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)TicksSinceSequenceStarted;
+	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + TicksSinceSequenceStarted;
 	float fProgressInAnimationFrames = totalTicksForCurrentAnimationSequence * TickModifier;
-	float fAnimationFraction = fProgressInAnimationFrames / (float)NumberOfFrames;
+	float fAnimationFraction = fProgressInAnimationFrames / NumberOfFrames;
 	return fAnimationFraction;
 }
 

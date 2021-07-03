@@ -207,7 +207,7 @@ void LoadOptions()
 	GetIniValue("Controller", "Mapping", sgOptions.Controller.szMapping, sizeof(sgOptions.Controller.szMapping), "");
 	sgOptions.Controller.bSwapShoulderButtonMode = GetIniBool("Controller", "Swap Shoulder Button Mode", false);
 	sgOptions.Controller.bDpadHotkeys = GetIniBool("Controller", "Dpad Hotkeys", false);
-	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07);
+	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07F);
 #ifdef __vita__
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
