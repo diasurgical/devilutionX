@@ -115,7 +115,7 @@ void gamemenu_restart_town(bool /*bActivate*/)
 	NetSendCmd(true, CMD_RETOWN);
 }
 
-static void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
+void gamemenu_sound_music_toggle(const char *const *names, TMenuItem *menu_item, int volume)
 {
 #ifndef NOSOUND
 	if (gbSndInited) {

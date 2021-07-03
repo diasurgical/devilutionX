@@ -1308,7 +1308,7 @@ void M_Enemy(int i)
 	BYTE enemyx;
 	BYTE enemyy;
 
-	int _menemy = -1;
+	int menemy = -1;
 	int best_dist = -1;
 	bool bestsameroom = false;
 	MonsterStruct *Monst = &monster[i];
@@ -1321,9 +1321,9 @@ void M_Enemy(int i)
 			int dist = Monst->position.tile.WalkingDistance(plr[pnum].position.tile);
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < best_dist)
-			    || (_menemy == -1)) {
+			    || (menemy == -1)) {
 				Monst->_mFlags &= ~MFLAG_TARGETS_MONSTER;
-				_menemy = pnum;
+				menemy = pnum;
 				enemyx = plr[pnum].position.future.x;
 				enemyy = plr[pnum].position.future.y;
 				best_dist = dist;
@@ -1357,18 +1357,18 @@ void M_Enemy(int i)
 		bool sameroom = dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[monster[mi].position.tile.x][monster[mi].position.tile.y];
 		if ((sameroom && !bestsameroom)
 		    || ((sameroom || !bestsameroom) && dist < best_dist)
-		    || (_menemy == -1)) {
+		    || (menemy == -1)) {
 			Monst->_mFlags |= MFLAG_TARGETS_MONSTER;
-			_menemy = mi;
+			menemy = mi;
 			enemyx = monster[mi].position.future.x;
 			enemyy = monster[mi].position.future.y;
 			best_dist = dist;
 			bestsameroom = sameroom;
 		}
 	}
-	if (_menemy != -1) {
+	if (menemy != -1) {
 		Monst->_mFlags &= ~MFLAG_NO_ENEMY;
-		Monst->_menemy = _menemy;
+		Monst->_menemy = menemy;
 		Monst->enemyPosition = { enemyx, enemyy };
 	} else {
 		Monst->_mFlags |= MFLAG_NO_ENEMY;
@@ -2420,8 +2420,8 @@ void M_Teleport(int i)
 	if (Monst->_mmode == MM_STONE)
 		return;
 
-	int _mx = Monst->enemyPosition.x;
-	int _my = Monst->enemyPosition.y;
+	int mx = Monst->enemyPosition.x;
+	int my = Monst->enemyPosition.y;
 	int rx = 2 * GenerateRnd(2) - 1;
 	int ry = 2 * GenerateRnd(2) - 1;
 
@@ -2432,8 +2432,8 @@ void M_Teleport(int i)
 	for (int j = -1; j <= 1 && !done; j++) {
 		for (int k = -1; k < 1 && !done; k++) {
 			if (j != 0 || k != 0) {
-				x = _mx + rx * j;
-				y = _my + ry * k;
+				x = mx + rx * j;
+				y = my + ry * k;
 				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && x != Monst->position.tile.x && y != Monst->position.tile.y) {
 					if (PosOkMonst(i, { x, y }))
 						done = true;
@@ -4069,13 +4069,13 @@ void MAI_Garbud(int i)
 		return;
 	}
 
-	int _mx = Monst->position.tile.x;
-	int _my = Monst->position.tile.y;
+	int mx = Monst->position.tile.x;
+	int my = Monst->position.tile.y;
 	Direction md = M_GetDir(i);
 
 	if (Monst->mtalkmsg >= TEXT_GARBUD1
 	    && Monst->mtalkmsg <= TEXT_GARBUD3
-	    && (dFlags[_mx][_my] & BFLAG_VISIBLE) == 0
+	    && (dFlags[mx][my] & BFLAG_VISIBLE) == 0
 	    && Monst->_mgoal == MGOAL_TALKING) {
 		Monst->_mgoal = MGOAL_INQUIRING;
 		switch (Monst->mtalkmsg) {
@@ -4093,7 +4093,7 @@ void MAI_Garbud(int i)
 		}
 	}
 
-	if ((dFlags[_mx][_my] & BFLAG_VISIBLE) != 0) {
+	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 		if (Monst->mtalkmsg == TEXT_GARBUD4) {
 			if (!effect_is_playing(USFX_GARBUD4) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->_mgoal = MGOAL_NORMAL;
@@ -4248,11 +4248,11 @@ void MAI_Lazhelp(int i)
 		return;
 
 	MonsterStruct *Monst = &monster[i];
-	int _mx = Monst->position.tile.x;
-	int _my = Monst->position.tile.y;
+	int mx = Monst->position.tile.x;
+	int my = Monst->position.tile.y;
 	Direction md = M_GetDir(i);
 
-	if ((dFlags[_mx][_my] & BFLAG_VISIBLE) != 0) {
+	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 		if (!gbIsMultiplayer) {
 			if (quests[Q_BETRAYER]._qvar1 <= 5) {
 				Monst->_mgoal = MGOAL_INQUIRING;
@@ -4279,16 +4279,16 @@ void MAI_Lachdanan(int i)
 		return;
 	}
 
-	int _mx = Monst->position.tile.x;
-	int _my = Monst->position.tile.y;
+	int mx = Monst->position.tile.x;
+	int my = Monst->position.tile.y;
 	Direction md = M_GetDir(i);
 
-	if (Monst->mtalkmsg == TEXT_VEIL9 && (dFlags[_mx][_my] & BFLAG_VISIBLE) == 0 && monster[i]._mgoal == MGOAL_TALKING) {
+	if (Monst->mtalkmsg == TEXT_VEIL9 && (dFlags[mx][my] & BFLAG_VISIBLE) == 0 && monster[i]._mgoal == MGOAL_TALKING) {
 		Monst->mtalkmsg = TEXT_VEIL10;
 		monster[i]._mgoal = MGOAL_INQUIRING;
 	}
 
-	if ((dFlags[_mx][_my] & BFLAG_VISIBLE) != 0) {
+	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 		if (Monst->mtalkmsg == TEXT_VEIL11) {
 			if (!effect_is_playing(USFX_LACH3) && Monst->_mgoal == MGOAL_TALKING) {
 				Monst->mtalkmsg = TEXT_NONE;
@@ -4395,15 +4395,15 @@ void ProcessMonsters()
 			M_Enemy(mi);
 		}
 
-		int _menemy;
+		int menemy;
 		if ((Monst->_mFlags & MFLAG_TARGETS_MONSTER) != 0) {
-			_menemy = Monst->_menemy;
-			assurance((DWORD)_menemy < MAXMONSTERS, _menemy);
+			menemy = Monst->_menemy;
+			assurance((DWORD)menemy < MAXMONSTERS, _menemy);
 			Monst->position.last = monster[Monst->_menemy].position.future;
 			Monst->enemyPosition = Monst->position.last;
 		} else {
-			_menemy = Monst->_menemy;
-			assurance((DWORD)_menemy < MAX_PLRS, _menemy);
+			menemy = Monst->_menemy;
+			assurance((DWORD)menemy < MAX_PLRS, _menemy);
 			Monst->enemyPosition = plr[Monst->_menemy].position.future;
 			if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 				Monst->_msquelch = UINT8_MAX;
@@ -4644,7 +4644,7 @@ void SyncMonsterAnim(int i)
 		monster[i].mName = _(UniqMonst[monster[i]._uniqtype - 1].mName);
 	else
 		monster[i].mName = _(monster[i].MData->mName);
-	int _mdir = monster[i]._mdir;
+	int mdir = monster[i]._mdir;
 
 	int graphic = MA_STAND;
 
@@ -4687,8 +4687,8 @@ void SyncMonsterAnim(int i)
 		break;
 	}
 
-	if (monster[i].MType->Anims[graphic].CelSpritesForDirections[_mdir])
-		monster[i].AnimInfo.pCelSprite = &*monster[i].MType->Anims[graphic].CelSpritesForDirections[_mdir];
+	if (monster[i].MType->Anims[graphic].CelSpritesForDirections[mdir])
+		monster[i].AnimInfo.pCelSprite = &*monster[i].MType->Anims[graphic].CelSpritesForDirections[mdir];
 	else
 		monster[i].AnimInfo.pCelSprite = nullptr;
 }
