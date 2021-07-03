@@ -1612,7 +1612,7 @@ int Patterns[100][10] = {
 
 } // namespace
 
-static bool DRLG_L2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
+static bool DrlgL2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
 {
 	int sw = miniset[0];
 	int sh = miniset[1];
@@ -1697,7 +1697,7 @@ static bool DRLG_L2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 	return true;
 }
 
-static void DRLG_L2PlaceRndSet(const BYTE *miniset, int rndper)
+static void DrlgL2PlaceRndSet(const BYTE *miniset, int rndper)
 {
 	int sw = miniset[0];
 	int sh = miniset[1];
@@ -1745,7 +1745,7 @@ static void DRLG_L2PlaceRndSet(const BYTE *miniset, int rndper)
 	}
 }
 
-static void DRLG_L2Subs()
+static void DrlgL2Subs()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
@@ -1781,7 +1781,7 @@ static void DRLG_L2Subs()
 	}
 }
 
-static void DRLG_L2Shadows()
+static void DrlgL2Shadows()
 {
 	int8_t sd[2][2];
 
@@ -1825,7 +1825,7 @@ void InitDungeon()
 	}
 }
 
-static void DRLG_LoadL2SP()
+static void DrlgLoadL2SetPiece()
 {
 	setloadflag = false;
 
@@ -1843,12 +1843,12 @@ static void DRLG_LoadL2SP()
 	}
 }
 
-static void DRLG_FreeL2SP()
+static void DrlgFreeL2SetPiece()
 {
 	pSetPiece = nullptr;
 }
 
-static void DRLG_L2SetRoom(int rx1, int ry1)
+static void DrlgL2SetRoom(int rx1, int ry1)
 {
 	int width = SDL_SwapLE16(pSetPiece[0]);
 	int height = SDL_SwapLE16(pSetPiece[1]);
@@ -2323,7 +2323,7 @@ static void L2TileFix()
 	}
 }
 
-static bool DL2_Cont(bool x1f, bool y1f, bool x2f, bool y2f)
+static bool DL2Cont(bool x1f, bool y1f, bool x2f, bool y2f)
 {
 	if (x1f && x2f && y1f && y2f) {
 		return false;
@@ -2338,7 +2338,7 @@ static bool DL2_Cont(bool x1f, bool y1f, bool x2f, bool y2f)
 	return false;
 }
 
-static int DL2_NumNoChar()
+static int DL2NumNoChar()
 {
 	int t = 0;
 	for (int jj = 0; jj < DMAXY; jj++) {
@@ -2352,7 +2352,7 @@ static int DL2_NumNoChar()
 	return t;
 }
 
-static void DL2_DrawRoom(int x1, int y1, int x2, int y2)
+static void DL2DrawRoom(int x1, int y1, int x2, int y2)
 {
 	for (int jj = y1; jj <= y2; jj++) {
 		for (int ii = x1; ii <= x2; ii++) {
@@ -2369,7 +2369,7 @@ static void DL2_DrawRoom(int x1, int y1, int x2, int y2)
 	}
 }
 
-static void DL2_KnockWalls(int x1, int y1, int x2, int y2)
+static void DL2KnockWalls(int x1, int y1, int x2, int y2)
 {
 	for (int ii = x1 + 1; ii < x2; ii++) {
 		if (predungeon[ii][y1 - 1] == 46 && predungeon[ii][y1 + 1] == 46) {
@@ -2401,10 +2401,10 @@ static void DL2_KnockWalls(int x1, int y1, int x2, int y2)
 	}
 }
 
-static bool DL2_FillVoids()
+static bool DL2FillVoids()
 {
 	int to = 0;
-	while (DL2_NumNoChar() > 700 && to < 100) {
+	while (DL2NumNoChar() > 700 && to < 100) {
 		int xx = GenerateRnd(38) + 1;
 		int yy = GenerateRnd(38) + 1;
 		if (predungeon[xx][yy] != 35) {
@@ -2451,7 +2451,7 @@ static bool DL2_FillVoids()
 				xf2 = true;
 			}
 		}
-		if (DL2_Cont(xf1, yf1, xf2, yf2)) {
+		if (DL2Cont(xf1, yf1, xf2, yf2)) {
 			int x1 = xx;
 			if (xf1) {
 				x1--;
@@ -2514,8 +2514,8 @@ static bool DL2_FillVoids()
 					}
 					x2 -= 2;
 					if (x2 - x1 > 5) {
-						DL2_DrawRoom(x1, y1, x2, y2);
-						DL2_KnockWalls(x1, y1, x2, y2);
+						DL2DrawRoom(x1, y1, x2, y2);
+						DL2KnockWalls(x1, y1, x2, y2);
 					}
 				}
 			} else if (!xf2) {
@@ -2564,8 +2564,8 @@ static bool DL2_FillVoids()
 					}
 					x1 += 2;
 					if (x2 - x1 > 5) {
-						DL2_DrawRoom(x1, y1, x2, y2);
-						DL2_KnockWalls(x1, y1, x2, y2);
+						DL2DrawRoom(x1, y1, x2, y2);
+						DL2KnockWalls(x1, y1, x2, y2);
 					}
 				}
 			} else if (!yf1) {
@@ -2614,8 +2614,8 @@ static bool DL2_FillVoids()
 					}
 					y2 -= 2;
 					if (y2 - y1 > 5) {
-						DL2_DrawRoom(x1, y1, x2, y2);
-						DL2_KnockWalls(x1, y1, x2, y2);
+						DL2DrawRoom(x1, y1, x2, y2);
+						DL2KnockWalls(x1, y1, x2, y2);
 					}
 				}
 			} else if (!yf2) {
@@ -2664,8 +2664,8 @@ static bool DL2_FillVoids()
 					}
 					y1 += 2;
 					if (y2 - y1 > 5) {
-						DL2_DrawRoom(x1, y1, x2, y2);
-						DL2_KnockWalls(x1, y1, x2, y2);
+						DL2DrawRoom(x1, y1, x2, y2);
+						DL2KnockWalls(x1, y1, x2, y2);
 					}
 				}
 			}
@@ -2673,7 +2673,7 @@ static bool DL2_FillVoids()
 		to++;
 	}
 
-	return DL2_NumNoChar() <= 700;
+	return DL2NumNoChar() <= 700;
 }
 
 static bool CreateDungeon()
@@ -2739,7 +2739,7 @@ static bool CreateDungeon()
 		}
 	}
 
-	if (!DL2_FillVoids()) {
+	if (!DL2FillVoids()) {
 		return false;
 	}
 
@@ -2752,12 +2752,12 @@ static bool CreateDungeon()
 	return true;
 }
 
-static void DRLG_L2Pass3()
+static void DrlgL2Pass3()
 {
 	DRLG_LPass3(12 - 1);
 }
 
-static void DRLG_L2FTVR(int i, int j, int x, int y, int d)
+static void DrlgL2FTransparencyValueR(int i, int j, int x, int y, int d)
 {
 	if (dTransVal[x][y] != 0 || dungeon[i][j] != 3) {
 		if (d == 1) {
@@ -2793,25 +2793,25 @@ static void DRLG_L2FTVR(int i, int j, int x, int y, int d)
 		dTransVal[x + 1][y] = TransVal;
 		dTransVal[x][y + 1] = TransVal;
 		dTransVal[x + 1][y + 1] = TransVal;
-		DRLG_L2FTVR(i + 1, j, x + 2, y, 1);
-		DRLG_L2FTVR(i - 1, j, x - 2, y, 2);
-		DRLG_L2FTVR(i, j + 1, x, y + 2, 3);
-		DRLG_L2FTVR(i, j - 1, x, y - 2, 4);
-		DRLG_L2FTVR(i - 1, j - 1, x - 2, y - 2, 5);
-		DRLG_L2FTVR(i + 1, j - 1, x + 2, y - 2, 6);
-		DRLG_L2FTVR(i - 1, j + 1, x - 2, y + 2, 7);
-		DRLG_L2FTVR(i + 1, j + 1, x + 2, y + 2, 8);
+		DrlgL2FTransparencyValueR(i + 1, j, x + 2, y, 1);
+		DrlgL2FTransparencyValueR(i - 1, j, x - 2, y, 2);
+		DrlgL2FTransparencyValueR(i, j + 1, x, y + 2, 3);
+		DrlgL2FTransparencyValueR(i, j - 1, x, y - 2, 4);
+		DrlgL2FTransparencyValueR(i - 1, j - 1, x - 2, y - 2, 5);
+		DrlgL2FTransparencyValueR(i + 1, j - 1, x + 2, y - 2, 6);
+		DrlgL2FTransparencyValueR(i - 1, j + 1, x - 2, y + 2, 7);
+		DrlgL2FTransparencyValueR(i + 1, j + 1, x + 2, y + 2, 8);
 	}
 }
 
-static void DRLG_L2FloodTVal()
+static void DrlgL2FloodTVal()
 {
 	int yy = 16;
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 3 && dTransVal[xx][yy] == 0) {
-				DRLG_L2FTVR(i, j, xx, yy, 0);
+				DrlgL2FTransparencyValueR(i, j, xx, yy, 0);
 				TransVal++;
 			}
 			xx += 2;
@@ -2820,7 +2820,7 @@ static void DRLG_L2FloodTVal()
 	}
 }
 
-static void DRLG_L2TransFix()
+static void DrlgL2TransFix()
 {
 	int yy = 16;
 	for (int j = 0; j < DMAXY; j++) {
@@ -2957,7 +2957,7 @@ void L2DoorFix()
 	}
 }
 
-static void DRLG_L2(lvl_entry entry)
+static void DrlgL2(lvl_entry entry)
 {
 	bool doneflag = false;
 	while (!doneflag) {
@@ -2969,34 +2969,34 @@ static void DRLG_L2(lvl_entry entry)
 		}
 		L2TileFix();
 		if (setloadflag) {
-			DRLG_L2SetRoom(nSx1, nSy1);
+			DrlgL2SetRoom(nSx1, nSy1);
 		}
-		DRLG_L2FloodTVal();
-		DRLG_L2TransFix();
+		DrlgL2FloodTVal();
+		DrlgL2TransFix();
 		if (entry == ENTRY_MAIN) {
-			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true, 0);
+			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true, 0);
 			if (doneflag) {
-				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false, 1);
+				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false, 1);
 				if (doneflag && currlevel == 5) {
-					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false, 6);
 				}
 			}
 			ViewY -= 2;
 		} else if (entry == ENTRY_PREV) {
-			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false, 0);
+			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false, 0);
 			if (doneflag) {
-				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, true, 1);
+				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, true, 1);
 				if (doneflag && currlevel == 5) {
-					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false, 6);
 				}
 			}
 			ViewX--;
 		} else {
-			doneflag = DRLG_L2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false, 0);
+			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false, 0);
 			if (doneflag) {
-				doneflag = DRLG_L2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false, 1);
+				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false, 1);
 				if (doneflag && currlevel == 5) {
-					doneflag = DRLG_L2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, true, 6);
+					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, true, 6);
 				}
 			}
 			ViewY -= 2;
@@ -3008,116 +3008,116 @@ static void DRLG_L2(lvl_entry entry)
 	L2DirtFix();
 
 	DRLG_PlaceThemeRooms(6, 10, 3, 0, false);
-	DRLG_L2PlaceRndSet(CTRDOOR1, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR2, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR3, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR4, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR5, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR6, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR7, 100);
-	DRLG_L2PlaceRndSet(CTRDOOR8, 100);
-	DRLG_L2PlaceRndSet(VARCH33, 100);
-	DRLG_L2PlaceRndSet(VARCH34, 100);
-	DRLG_L2PlaceRndSet(VARCH35, 100);
-	DRLG_L2PlaceRndSet(VARCH36, 100);
-	DRLG_L2PlaceRndSet(VARCH37, 100);
-	DRLG_L2PlaceRndSet(VARCH38, 100);
-	DRLG_L2PlaceRndSet(VARCH39, 100);
-	DRLG_L2PlaceRndSet(VARCH40, 100);
-	DRLG_L2PlaceRndSet(VARCH1, 100);
-	DRLG_L2PlaceRndSet(VARCH2, 100);
-	DRLG_L2PlaceRndSet(VARCH3, 100);
-	DRLG_L2PlaceRndSet(VARCH4, 100);
-	DRLG_L2PlaceRndSet(VARCH5, 100);
-	DRLG_L2PlaceRndSet(VARCH6, 100);
-	DRLG_L2PlaceRndSet(VARCH7, 100);
-	DRLG_L2PlaceRndSet(VARCH8, 100);
-	DRLG_L2PlaceRndSet(VARCH9, 100);
-	DRLG_L2PlaceRndSet(VARCH10, 100);
-	DRLG_L2PlaceRndSet(VARCH11, 100);
-	DRLG_L2PlaceRndSet(VARCH12, 100);
-	DRLG_L2PlaceRndSet(VARCH13, 100);
-	DRLG_L2PlaceRndSet(VARCH14, 100);
-	DRLG_L2PlaceRndSet(VARCH15, 100);
-	DRLG_L2PlaceRndSet(VARCH16, 100);
-	DRLG_L2PlaceRndSet(VARCH17, 100);
-	DRLG_L2PlaceRndSet(VARCH18, 100);
-	DRLG_L2PlaceRndSet(VARCH19, 100);
-	DRLG_L2PlaceRndSet(VARCH20, 100);
-	DRLG_L2PlaceRndSet(VARCH21, 100);
-	DRLG_L2PlaceRndSet(VARCH22, 100);
-	DRLG_L2PlaceRndSet(VARCH23, 100);
-	DRLG_L2PlaceRndSet(VARCH24, 100);
-	DRLG_L2PlaceRndSet(VARCH25, 100);
-	DRLG_L2PlaceRndSet(VARCH26, 100);
-	DRLG_L2PlaceRndSet(VARCH27, 100);
-	DRLG_L2PlaceRndSet(VARCH28, 100);
-	DRLG_L2PlaceRndSet(VARCH29, 100);
-	DRLG_L2PlaceRndSet(VARCH30, 100);
-	DRLG_L2PlaceRndSet(VARCH31, 100);
-	DRLG_L2PlaceRndSet(VARCH32, 100);
-	DRLG_L2PlaceRndSet(HARCH1, 100);
-	DRLG_L2PlaceRndSet(HARCH2, 100);
-	DRLG_L2PlaceRndSet(HARCH3, 100);
-	DRLG_L2PlaceRndSet(HARCH4, 100);
-	DRLG_L2PlaceRndSet(HARCH5, 100);
-	DRLG_L2PlaceRndSet(HARCH6, 100);
-	DRLG_L2PlaceRndSet(HARCH7, 100);
-	DRLG_L2PlaceRndSet(HARCH8, 100);
-	DRLG_L2PlaceRndSet(HARCH9, 100);
-	DRLG_L2PlaceRndSet(HARCH10, 100);
-	DRLG_L2PlaceRndSet(HARCH11, 100);
-	DRLG_L2PlaceRndSet(HARCH12, 100);
-	DRLG_L2PlaceRndSet(HARCH13, 100);
-	DRLG_L2PlaceRndSet(HARCH14, 100);
-	DRLG_L2PlaceRndSet(HARCH15, 100);
-	DRLG_L2PlaceRndSet(HARCH16, 100);
-	DRLG_L2PlaceRndSet(HARCH17, 100);
-	DRLG_L2PlaceRndSet(HARCH18, 100);
-	DRLG_L2PlaceRndSet(HARCH19, 100);
-	DRLG_L2PlaceRndSet(HARCH20, 100);
-	DRLG_L2PlaceRndSet(HARCH21, 100);
-	DRLG_L2PlaceRndSet(HARCH22, 100);
-	DRLG_L2PlaceRndSet(HARCH23, 100);
-	DRLG_L2PlaceRndSet(HARCH24, 100);
-	DRLG_L2PlaceRndSet(HARCH25, 100);
-	DRLG_L2PlaceRndSet(HARCH26, 100);
-	DRLG_L2PlaceRndSet(HARCH27, 100);
-	DRLG_L2PlaceRndSet(HARCH28, 100);
-	DRLG_L2PlaceRndSet(HARCH29, 100);
-	DRLG_L2PlaceRndSet(HARCH30, 100);
-	DRLG_L2PlaceRndSet(HARCH31, 100);
-	DRLG_L2PlaceRndSet(HARCH32, 100);
-	DRLG_L2PlaceRndSet(HARCH33, 100);
-	DRLG_L2PlaceRndSet(HARCH34, 100);
-	DRLG_L2PlaceRndSet(HARCH35, 100);
-	DRLG_L2PlaceRndSet(HARCH36, 100);
-	DRLG_L2PlaceRndSet(HARCH37, 100);
-	DRLG_L2PlaceRndSet(HARCH38, 100);
-	DRLG_L2PlaceRndSet(HARCH39, 100);
-	DRLG_L2PlaceRndSet(HARCH40, 100);
-	DRLG_L2PlaceRndSet(CRUSHCOL, 99);
-	DRLG_L2PlaceRndSet(RUINS1, 10);
-	DRLG_L2PlaceRndSet(RUINS2, 10);
-	DRLG_L2PlaceRndSet(RUINS3, 10);
-	DRLG_L2PlaceRndSet(RUINS4, 10);
-	DRLG_L2PlaceRndSet(RUINS5, 10);
-	DRLG_L2PlaceRndSet(RUINS6, 10);
-	DRLG_L2PlaceRndSet(RUINS7, 50);
-	DRLG_L2PlaceRndSet(PANCREAS1, 1);
-	DRLG_L2PlaceRndSet(PANCREAS2, 1);
-	DRLG_L2PlaceRndSet(BIG1, 3);
-	DRLG_L2PlaceRndSet(BIG2, 3);
-	DRLG_L2PlaceRndSet(BIG3, 3);
-	DRLG_L2PlaceRndSet(BIG4, 3);
-	DRLG_L2PlaceRndSet(BIG5, 3);
-	DRLG_L2PlaceRndSet(BIG6, 20);
-	DRLG_L2PlaceRndSet(BIG7, 20);
-	DRLG_L2PlaceRndSet(BIG8, 3);
-	DRLG_L2PlaceRndSet(BIG9, 20);
-	DRLG_L2PlaceRndSet(BIG10, 20);
-	DRLG_L2Subs();
-	DRLG_L2Shadows();
+	DrlgL2PlaceRndSet(CTRDOOR1, 100);
+	DrlgL2PlaceRndSet(CTRDOOR2, 100);
+	DrlgL2PlaceRndSet(CTRDOOR3, 100);
+	DrlgL2PlaceRndSet(CTRDOOR4, 100);
+	DrlgL2PlaceRndSet(CTRDOOR5, 100);
+	DrlgL2PlaceRndSet(CTRDOOR6, 100);
+	DrlgL2PlaceRndSet(CTRDOOR7, 100);
+	DrlgL2PlaceRndSet(CTRDOOR8, 100);
+	DrlgL2PlaceRndSet(VARCH33, 100);
+	DrlgL2PlaceRndSet(VARCH34, 100);
+	DrlgL2PlaceRndSet(VARCH35, 100);
+	DrlgL2PlaceRndSet(VARCH36, 100);
+	DrlgL2PlaceRndSet(VARCH37, 100);
+	DrlgL2PlaceRndSet(VARCH38, 100);
+	DrlgL2PlaceRndSet(VARCH39, 100);
+	DrlgL2PlaceRndSet(VARCH40, 100);
+	DrlgL2PlaceRndSet(VARCH1, 100);
+	DrlgL2PlaceRndSet(VARCH2, 100);
+	DrlgL2PlaceRndSet(VARCH3, 100);
+	DrlgL2PlaceRndSet(VARCH4, 100);
+	DrlgL2PlaceRndSet(VARCH5, 100);
+	DrlgL2PlaceRndSet(VARCH6, 100);
+	DrlgL2PlaceRndSet(VARCH7, 100);
+	DrlgL2PlaceRndSet(VARCH8, 100);
+	DrlgL2PlaceRndSet(VARCH9, 100);
+	DrlgL2PlaceRndSet(VARCH10, 100);
+	DrlgL2PlaceRndSet(VARCH11, 100);
+	DrlgL2PlaceRndSet(VARCH12, 100);
+	DrlgL2PlaceRndSet(VARCH13, 100);
+	DrlgL2PlaceRndSet(VARCH14, 100);
+	DrlgL2PlaceRndSet(VARCH15, 100);
+	DrlgL2PlaceRndSet(VARCH16, 100);
+	DrlgL2PlaceRndSet(VARCH17, 100);
+	DrlgL2PlaceRndSet(VARCH18, 100);
+	DrlgL2PlaceRndSet(VARCH19, 100);
+	DrlgL2PlaceRndSet(VARCH20, 100);
+	DrlgL2PlaceRndSet(VARCH21, 100);
+	DrlgL2PlaceRndSet(VARCH22, 100);
+	DrlgL2PlaceRndSet(VARCH23, 100);
+	DrlgL2PlaceRndSet(VARCH24, 100);
+	DrlgL2PlaceRndSet(VARCH25, 100);
+	DrlgL2PlaceRndSet(VARCH26, 100);
+	DrlgL2PlaceRndSet(VARCH27, 100);
+	DrlgL2PlaceRndSet(VARCH28, 100);
+	DrlgL2PlaceRndSet(VARCH29, 100);
+	DrlgL2PlaceRndSet(VARCH30, 100);
+	DrlgL2PlaceRndSet(VARCH31, 100);
+	DrlgL2PlaceRndSet(VARCH32, 100);
+	DrlgL2PlaceRndSet(HARCH1, 100);
+	DrlgL2PlaceRndSet(HARCH2, 100);
+	DrlgL2PlaceRndSet(HARCH3, 100);
+	DrlgL2PlaceRndSet(HARCH4, 100);
+	DrlgL2PlaceRndSet(HARCH5, 100);
+	DrlgL2PlaceRndSet(HARCH6, 100);
+	DrlgL2PlaceRndSet(HARCH7, 100);
+	DrlgL2PlaceRndSet(HARCH8, 100);
+	DrlgL2PlaceRndSet(HARCH9, 100);
+	DrlgL2PlaceRndSet(HARCH10, 100);
+	DrlgL2PlaceRndSet(HARCH11, 100);
+	DrlgL2PlaceRndSet(HARCH12, 100);
+	DrlgL2PlaceRndSet(HARCH13, 100);
+	DrlgL2PlaceRndSet(HARCH14, 100);
+	DrlgL2PlaceRndSet(HARCH15, 100);
+	DrlgL2PlaceRndSet(HARCH16, 100);
+	DrlgL2PlaceRndSet(HARCH17, 100);
+	DrlgL2PlaceRndSet(HARCH18, 100);
+	DrlgL2PlaceRndSet(HARCH19, 100);
+	DrlgL2PlaceRndSet(HARCH20, 100);
+	DrlgL2PlaceRndSet(HARCH21, 100);
+	DrlgL2PlaceRndSet(HARCH22, 100);
+	DrlgL2PlaceRndSet(HARCH23, 100);
+	DrlgL2PlaceRndSet(HARCH24, 100);
+	DrlgL2PlaceRndSet(HARCH25, 100);
+	DrlgL2PlaceRndSet(HARCH26, 100);
+	DrlgL2PlaceRndSet(HARCH27, 100);
+	DrlgL2PlaceRndSet(HARCH28, 100);
+	DrlgL2PlaceRndSet(HARCH29, 100);
+	DrlgL2PlaceRndSet(HARCH30, 100);
+	DrlgL2PlaceRndSet(HARCH31, 100);
+	DrlgL2PlaceRndSet(HARCH32, 100);
+	DrlgL2PlaceRndSet(HARCH33, 100);
+	DrlgL2PlaceRndSet(HARCH34, 100);
+	DrlgL2PlaceRndSet(HARCH35, 100);
+	DrlgL2PlaceRndSet(HARCH36, 100);
+	DrlgL2PlaceRndSet(HARCH37, 100);
+	DrlgL2PlaceRndSet(HARCH38, 100);
+	DrlgL2PlaceRndSet(HARCH39, 100);
+	DrlgL2PlaceRndSet(HARCH40, 100);
+	DrlgL2PlaceRndSet(CRUSHCOL, 99);
+	DrlgL2PlaceRndSet(RUINS1, 10);
+	DrlgL2PlaceRndSet(RUINS2, 10);
+	DrlgL2PlaceRndSet(RUINS3, 10);
+	DrlgL2PlaceRndSet(RUINS4, 10);
+	DrlgL2PlaceRndSet(RUINS5, 10);
+	DrlgL2PlaceRndSet(RUINS6, 10);
+	DrlgL2PlaceRndSet(RUINS7, 50);
+	DrlgL2PlaceRndSet(PANCREAS1, 1);
+	DrlgL2PlaceRndSet(PANCREAS2, 1);
+	DrlgL2PlaceRndSet(BIG1, 3);
+	DrlgL2PlaceRndSet(BIG2, 3);
+	DrlgL2PlaceRndSet(BIG3, 3);
+	DrlgL2PlaceRndSet(BIG4, 3);
+	DrlgL2PlaceRndSet(BIG5, 3);
+	DrlgL2PlaceRndSet(BIG6, 20);
+	DrlgL2PlaceRndSet(BIG7, 20);
+	DrlgL2PlaceRndSet(BIG8, 3);
+	DrlgL2PlaceRndSet(BIG9, 20);
+	DrlgL2PlaceRndSet(BIG10, 20);
+	DrlgL2Subs();
+	DrlgL2Shadows();
 
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
@@ -3129,7 +3129,7 @@ static void DRLG_L2(lvl_entry entry)
 	DRLG_CheckQuests(nSx1, nSy1);
 }
 
-static void DRLG_InitL2Vals()
+static void DrlgInitL2Vals()
 {
 	int pc;
 
@@ -3209,7 +3209,7 @@ void LoadL2Dungeon(const char *path, int vx, int vy)
 
 	LoadL2DungeonData(dunData.get());
 
-	DRLG_L2Pass3();
+	DrlgL2Pass3();
 	DRLG_Init_Globals();
 
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -3296,11 +3296,11 @@ void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 
 	DRLG_InitTrans();
 	DRLG_InitSetPC();
-	DRLG_LoadL2SP();
-	DRLG_L2(entry);
-	DRLG_L2Pass3();
-	DRLG_FreeL2SP();
-	DRLG_InitL2Vals();
+	DrlgLoadL2SetPiece();
+	DrlgL2(entry);
+	DrlgL2Pass3();
+	DrlgFreeL2SetPiece();
+	DrlgInitL2Vals();
 	DRLG_SetPC();
 }
 

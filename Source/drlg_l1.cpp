@@ -2288,7 +2288,7 @@ void drlg_l1_set_corner_room(int rx1, int ry1)
 	}
 }
 
-static void DrlgL5Ftvr(int i, int j, int x, int y, int d)
+static void DrlgL5FTransparencyValueR(int i, int j, int x, int y, int d)
 {
 	if (dTransVal[x][y] != 0 || dungeon[i][j] != 13) {
 		if (d == 1) {
@@ -2322,14 +2322,14 @@ static void DrlgL5Ftvr(int i, int j, int x, int y, int d)
 	dTransVal[x + 1][y] = TransVal;
 	dTransVal[x][y + 1] = TransVal;
 	dTransVal[x + 1][y + 1] = TransVal;
-	DrlgL5Ftvr(i + 1, j, x + 2, y, 1);
-	DrlgL5Ftvr(i - 1, j, x - 2, y, 2);
-	DrlgL5Ftvr(i, j + 1, x, y + 2, 3);
-	DrlgL5Ftvr(i, j - 1, x, y - 2, 4);
-	DrlgL5Ftvr(i - 1, j - 1, x - 2, y - 2, 5);
-	DrlgL5Ftvr(i + 1, j - 1, x + 2, y - 2, 6);
-	DrlgL5Ftvr(i - 1, j + 1, x - 2, y + 2, 7);
-	DrlgL5Ftvr(i + 1, j + 1, x + 2, y + 2, 8);
+	DrlgL5FTransparencyValueR(i + 1, j, x + 2, y, 1);
+	DrlgL5FTransparencyValueR(i - 1, j, x - 2, y, 2);
+	DrlgL5FTransparencyValueR(i, j + 1, x, y + 2, 3);
+	DrlgL5FTransparencyValueR(i, j - 1, x, y - 2, 4);
+	DrlgL5FTransparencyValueR(i - 1, j - 1, x - 2, y - 2, 5);
+	DrlgL5FTransparencyValueR(i + 1, j - 1, x + 2, y - 2, 6);
+	DrlgL5FTransparencyValueR(i - 1, j + 1, x - 2, y + 2, 7);
+	DrlgL5FTransparencyValueR(i + 1, j + 1, x + 2, y + 2, 8);
 }
 
 static void DrlgL5FloodTVal()
@@ -2341,7 +2341,7 @@ static void DrlgL5FloodTVal()
 
 		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 13 && dTransVal[xx][yy] == 0) {
-				DrlgL5Ftvr(i, j, xx, yy, 0);
+				DrlgL5FTransparencyValueR(i, j, xx, yy, 0);
 				TransVal++;
 			}
 			xx += 2;

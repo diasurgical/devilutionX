@@ -1106,9 +1106,9 @@ void StoreMove(AxisDirection moveDir)
 	static AxisDirectionRepeater repeater;
 	moveDir = repeater.Get(moveDir);
 	if (moveDir.y == AxisDirectionY_UP)
-		STextUp();
+		StoreUp();
 	else if (moveDir.y == AxisDirectionY_DOWN)
-		STextDown();
+		StoreDown();
 }
 
 using HandleLeftStickOrDPadFn = void (*)(devilution::AxisDirection);

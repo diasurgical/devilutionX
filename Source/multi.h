@@ -60,8 +60,6 @@ void multi_process_network_packets();
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, byte *pbSrc, DWORD dwLen);
 void NetClose();
 bool NetInit(bool bSinglePlayer);
-bool multi_init_single(GameData *gameData);
-bool multi_init_multi(GameData *gameData);
 void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv);
 
 } // namespace devilution
