@@ -1314,6 +1314,7 @@ void DrawView(const Surface &out, int StartX, int StartY)
 	gmenu_draw(out);
 	doom_draw(out);
 	DrawInfoBox(out);
+	control_update_life_mana(); // Update life/mana totals before rendering any portion of the flask.
 	DrawLifeFlaskUpper(out);
 	DrawManaFlaskUpper(out);
 }
