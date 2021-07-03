@@ -101,7 +101,7 @@ static void PrintPlrMsg(const Surface &out, int x, int y, int width, char *text,
 			text[i] = ' ';
 	}
 	WordWrapGameString(text, width);
-	DrawString(out, text, { x, y, width, 0 }, style, 1, 10);
+	DrawString(out, text, { { x, y }, { width, 0 } }, style, 1, 10);
 }
 
 void DrawPlrMsg(const Surface &out)

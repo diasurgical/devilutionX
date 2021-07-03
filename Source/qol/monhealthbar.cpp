@@ -102,7 +102,7 @@ void DrawMonsterHealthBar(const Surface &out)
 		style = UIS_GOLD;
 	else if (mon.leader != 0)
 		style = UIS_BLUE;
-	DrawString(out, mon.mName, { xPos, barLabelY, width, height }, UIS_CENTER | style);
+	DrawString(out, mon.mName, { { xPos, barLabelY }, { width, height } }, UIS_CENTER | style);
 
 	if (mon._uniqtype != 0 || monstkills[mon.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
