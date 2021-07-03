@@ -153,7 +153,7 @@ const BYTE L4BTYPES[140] = {
 
 } // namespace
 
-static void DRLG_L4Shadows()
+static void DrlgL4Shadows()
 {
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXY; x++) {
@@ -742,7 +742,7 @@ static void L4tileFix()
 	}
 }
 
-static void DRLG_L4Subs()
+static void DrlgL4Subs()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
@@ -824,7 +824,7 @@ static void L4makeDungeon()
 	}
 }
 
-static void uShape()
+static void UShape()
 {
 	for (int j = 19; j >= 0; j--) {
 		for (int i = 19; i >= 0; i--) {
@@ -1094,7 +1094,7 @@ void DRLG_LoadDiabQuads(bool preflag)
 	}
 }
 
-static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
+static bool DrlgL4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
 {
 	int sx;
 	int sy;
@@ -1185,7 +1185,7 @@ static bool DRLG_L4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 #pragma GCC optimize("O0")
 #endif
 
-static void DRLG_L4FTVR(int i, int j, int x, int y, int d)
+static void DrlgL4FTransparencyValueR(int i, int j, int x, int y, int d)
 {
 	if (dTransVal[x][y] != 0 || dungeon[i][j] != 6) {
 		if (d == 1) {
@@ -1221,25 +1221,25 @@ static void DRLG_L4FTVR(int i, int j, int x, int y, int d)
 		dTransVal[x + 1][y] = TransVal;
 		dTransVal[x][y + 1] = TransVal;
 		dTransVal[x + 1][y + 1] = TransVal;
-		DRLG_L4FTVR(i + 1, j, x + 2, y, 1);
-		DRLG_L4FTVR(i - 1, j, x - 2, y, 2);
-		DRLG_L4FTVR(i, j + 1, x, y + 2, 3);
-		DRLG_L4FTVR(i, j - 1, x, y - 2, 4);
-		DRLG_L4FTVR(i - 1, j - 1, x - 2, y - 2, 5);
-		DRLG_L4FTVR(i + 1, j - 1, x + 2, y - 2, 6);
-		DRLG_L4FTVR(i - 1, j + 1, x - 2, y + 2, 7);
-		DRLG_L4FTVR(i + 1, j + 1, x + 2, y + 2, 8);
+		DrlgL4FTransparencyValueR(i + 1, j, x + 2, y, 1);
+		DrlgL4FTransparencyValueR(i - 1, j, x - 2, y, 2);
+		DrlgL4FTransparencyValueR(i, j + 1, x, y + 2, 3);
+		DrlgL4FTransparencyValueR(i, j - 1, x, y - 2, 4);
+		DrlgL4FTransparencyValueR(i - 1, j - 1, x - 2, y - 2, 5);
+		DrlgL4FTransparencyValueR(i + 1, j - 1, x + 2, y - 2, 6);
+		DrlgL4FTransparencyValueR(i - 1, j + 1, x - 2, y + 2, 7);
+		DrlgL4FTransparencyValueR(i + 1, j + 1, x + 2, y + 2, 8);
 	}
 }
 
-static void DRLG_L4FloodTVal()
+static void DrlgL4FloodTVal()
 {
 	int yy = 16;
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 6 && dTransVal[xx][yy] == 0) {
-				DRLG_L4FTVR(i, j, xx, yy, 0);
+				DrlgL4FTransparencyValueR(i, j, xx, yy, 0);
 				TransVal++;
 			}
 			xx += 2;
@@ -1282,7 +1282,7 @@ bool IsDLLWall(char dd)
 	return false;
 }
 
-static void DRLG_L4TransFix()
+static void DrlgL4TransFix()
 {
 	int yy = 16;
 	for (int j = 0; j < DMAXY; j++) {
@@ -1323,7 +1323,7 @@ static void DRLG_L4TransFix()
 	}
 }
 
-static void DRLG_L4Corners()
+static void DrlgL4Corners()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
@@ -1359,7 +1359,7 @@ void DRLG_L4GeneralFix()
 	}
 }
 
-static void DRLG_L4(lvl_entry entry)
+static void DrlgL4(lvl_entry entry)
 {
 	int ar;
 	bool doneflag;
@@ -1372,7 +1372,7 @@ static void DRLG_L4(lvl_entry entry)
 			L4FixRim();
 			ar = GetArea();
 			if (ar >= 173) {
-				uShape();
+				UShape();
 			}
 		} while (ar < 173);
 		L4makeDungeon();
@@ -1389,8 +1389,8 @@ static void DRLG_L4(lvl_entry entry)
 			}
 		}
 		L4AddWall();
-		DRLG_L4FloodTVal();
-		DRLG_L4TransFix();
+		DrlgL4FloodTVal();
+		DrlgL4TransFix();
 		if (setloadflag) {
 			DRLG_L4SetSPRoom(SP4x1, SP4y1);
 		}
@@ -1399,72 +1399,72 @@ static void DRLG_L4(lvl_entry entry)
 		}
 		if (QuestStatus(Q_WARLORD)) {
 			if (entry == ENTRY_MAIN) {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
 				if (doneflag && currlevel == 13) {
-					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
 				}
 				ViewX++;
 			} else if (entry == ENTRY_PREV) {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
 				if (doneflag && currlevel == 13) {
-					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
 				}
 				ViewX = 2 * setpc_x + 22;
 				ViewY = 2 * setpc_y + 22;
 			} else {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
 				if (doneflag && currlevel == 13) {
-					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true, 6);
 				}
 				ViewX++;
 			}
 		} else if (currlevel != 15) {
 			if (entry == ENTRY_MAIN) {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
 				if (doneflag && currlevel != 16) {
-					doneflag = DRLG_L4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false, 1);
+					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false, 1);
 				}
 				if (doneflag && currlevel == 13) {
-					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
 				}
 				ViewX++;
 			} else if (entry == ENTRY_PREV) {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
 				if (doneflag && currlevel != 16) {
-					doneflag = DRLG_L4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, true, 1);
+					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, true, 1);
 				}
 				if (doneflag && currlevel == 13) {
-					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
 				}
 				ViewY++;
 			} else {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
 				if (doneflag && currlevel != 16) {
-					doneflag = DRLG_L4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false, 1);
+					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false, 1);
 				}
 				if (doneflag && currlevel == 13) {
-					doneflag = DRLG_L4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true, 6);
 				}
 				ViewX++;
 			}
 		} else {
 			if (entry == ENTRY_MAIN) {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
 				if (doneflag) {
 					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
-						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, false, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, false, 1);
 					} else {
-						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false, 1);
 					}
 				}
 				ViewX++;
 			} else {
-				doneflag = DRLG_L4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
 				if (doneflag) {
 					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
-						doneflag = DRLG_L4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, true, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, true, 1);
 					} else {
-						doneflag = DRLG_L4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true, 1);
 					}
 				}
 				ViewY++;
@@ -1478,9 +1478,9 @@ static void DRLG_L4(lvl_entry entry)
 		DRLG_PlaceThemeRooms(7, 10, 6, 8, true);
 	}
 
-	DRLG_L4Shadows();
-	DRLG_L4Corners();
-	DRLG_L4Subs();
+	DrlgL4Shadows();
+	DrlgL4Corners();
+	DrlgL4Subs();
 	DRLG_Init_Globals();
 
 	if (QuestStatus(Q_WARLORD)) {
@@ -1515,7 +1515,7 @@ static void DRLG_L4(lvl_entry entry)
 	}
 }
 
-static void DRLG_L4Pass3()
+static void DrlgL4Pass3()
 {
 	DRLG_LPass3(30 - 1);
 }
@@ -1534,8 +1534,8 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 
 	DRLG_InitSetPC();
 	DRLG_LoadL4SP();
-	DRLG_L4(entry);
-	DRLG_L4Pass3();
+	DrlgL4(entry);
+	DrlgL4Pass3();
 	DRLG_FreeL4SP();
 	DRLG_SetPC();
 }
@@ -1557,7 +1557,7 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 	ViewX = vx;
 	ViewY = vy;
 
-	DRLG_L4Pass3();
+	DrlgL4Pass3();
 	DRLG_Init_Globals();
 
 	SetMapMonsters(dunData.get(), { 0, 0 });

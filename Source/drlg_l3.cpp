@@ -856,7 +856,7 @@ static void InitL3Dungeon()
 	}
 }
 
-static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
+static bool DrlgL3FillRoom(int x1, int y1, int x2, int y2)
 {
 	if (x1 <= 1 || x2 >= 34 || y1 <= 1 || y2 >= 38) {
 		return false;
@@ -898,7 +898,7 @@ static bool DRLG_L3FillRoom(int x1, int y1, int x2, int y2)
 	return true;
 }
 
-static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
+static void DrlgL3CreateBlock(int x, int y, int obs, int dir)
 {
 	int x1;
 	int y1;
@@ -965,24 +965,24 @@ static void DRLG_L3CreateBlock(int x, int y, int obs, int dir)
 		y2 = y1 + blksizey;
 	}
 
-	if (DRLG_L3FillRoom(x1, y1, x2, y2)) {
+	if (DrlgL3FillRoom(x1, y1, x2, y2)) {
 		int contflag = GenerateRnd(4);
 		if (contflag != 0 && dir != 2) {
-			DRLG_L3CreateBlock(x1, y1, blksizey, 0);
+			DrlgL3CreateBlock(x1, y1, blksizey, 0);
 		}
 		if (contflag != 0 && dir != 3) {
-			DRLG_L3CreateBlock(x2, y1, blksizex, 1);
+			DrlgL3CreateBlock(x2, y1, blksizex, 1);
 		}
 		if (contflag != 0 && dir != 0) {
-			DRLG_L3CreateBlock(x1, y2, blksizey, 2);
+			DrlgL3CreateBlock(x1, y2, blksizey, 2);
 		}
 		if (contflag != 0 && dir != 1) {
-			DRLG_L3CreateBlock(x1, y1, blksizex, 3);
+			DrlgL3CreateBlock(x1, y1, blksizex, 3);
 		}
 	}
 }
 
-static void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
+static void DrlgL3FloorArea(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j <= y2; j++) {
 		for (int i = x1; i <= x2; i++) {
@@ -991,7 +991,7 @@ static void DRLG_L3FloorArea(int x1, int y1, int x2, int y2)
 	}
 }
 
-static void DRLG_L3FillDiags()
+static void DrlgL3FillDiags()
 {
 	for (int j = 0; j < DMAXY - 1; j++) {
 		for (int i = 0; i < DMAXX - 1; i++) {
@@ -1014,7 +1014,7 @@ static void DRLG_L3FillDiags()
 	}
 }
 
-static void DRLG_L3FillSingles()
+static void DrlgL3FillSingles()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {
 		for (int i = 1; i < DMAXX - 1; i++) {
@@ -1028,7 +1028,7 @@ static void DRLG_L3FillSingles()
 	}
 }
 
-static void DRLG_L3FillStraights()
+static void DrlgL3FillStraights()
 {
 	int xc;
 	int yc;
@@ -1111,7 +1111,7 @@ static void DRLG_L3FillStraights()
 	}
 }
 
-static void DRLG_L3Edges()
+static void DrlgL3Edges()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		dungeon[DMAXX - 1][j] = 0;
@@ -1121,7 +1121,7 @@ static void DRLG_L3Edges()
 	}
 }
 
-static int DRLG_L3GetFloorArea()
+static int DrlgL3GetFloorArea()
 {
 	int gfa = 0;
 
@@ -1134,7 +1134,7 @@ static int DRLG_L3GetFloorArea()
 	return gfa;
 }
 
-static void DRLG_L3MakeMegas()
+static void DrlgL3MakeMegas()
 {
 	for (int j = 0; j < DMAXY - 1; j++) {
 		for (int i = 0; i < DMAXX - 1; i++) {
@@ -1164,7 +1164,7 @@ static void DRLG_L3MakeMegas()
 	}
 }
 
-static void DRLG_L3River()
+static void DrlgL3River()
 {
 	int dir;
 	int nodir;
@@ -1415,9 +1415,9 @@ static void DRLG_L3River()
 	}
 }
 
-static bool DRLG_L3Spawn(int x, int y, int *totarea);
+static bool DrlgL3Spawn(int x, int y, int *totarea);
 
-static bool DRLG_L3SpawnEdge(int x, int y, int *totarea)
+static bool DrlgL3SpawnEdge(int x, int y, int *totarea)
 {
 	BYTE i;
 	static BYTE spawntable[15] = { 0x00, 0x0A, 0x43, 0x05, 0x2c, 0x06, 0x09, 0x00, 0x00, 0x1c, 0x83, 0x06, 0x09, 0x0A, 0x05 };
@@ -1439,35 +1439,35 @@ static bool DRLG_L3SpawnEdge(int x, int y, int *totarea)
 	dungeon[x][y] |= 0x80;
 	*totarea += 1;
 
-	if ((spawntable[i] & 8) != 0 && DRLG_L3SpawnEdge(x, y - 1, totarea)) {
+	if ((spawntable[i] & 8) != 0 && DrlgL3SpawnEdge(x, y - 1, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 4) != 0 && DRLG_L3SpawnEdge(x, y + 1, totarea)) {
+	if ((spawntable[i] & 4) != 0 && DrlgL3SpawnEdge(x, y + 1, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 2) != 0 && DRLG_L3SpawnEdge(x + 1, y, totarea)) {
+	if ((spawntable[i] & 2) != 0 && DrlgL3SpawnEdge(x + 1, y, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 1) != 0 && DRLG_L3SpawnEdge(x - 1, y, totarea)) {
+	if ((spawntable[i] & 1) != 0 && DrlgL3SpawnEdge(x - 1, y, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 0x80) != 0 && DRLG_L3Spawn(x, y - 1, totarea)) {
+	if ((spawntable[i] & 0x80) != 0 && DrlgL3Spawn(x, y - 1, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 0x40) != 0 && DRLG_L3Spawn(x, y + 1, totarea)) {
+	if ((spawntable[i] & 0x40) != 0 && DrlgL3Spawn(x, y + 1, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 0x20) != 0 && DRLG_L3Spawn(x + 1, y, totarea)) {
+	if ((spawntable[i] & 0x20) != 0 && DrlgL3Spawn(x + 1, y, totarea)) {
 		return true;
 	}
-	if ((spawntable[i] & 0x10) != 0 && DRLG_L3Spawn(x - 1, y, totarea)) {
+	if ((spawntable[i] & 0x10) != 0 && DrlgL3Spawn(x - 1, y, totarea)) {
 		return true;
 	}
 
 	return false;
 }
 
-static bool DRLG_L3Spawn(int x, int y, int *totarea)
+static bool DrlgL3Spawn(int x, int y, int *totarea)
 {
 	BYTE i;
 	static BYTE spawntable[15] = { 0x00, 0x0A, 0x03, 0x05, 0x0C, 0x06, 0x09, 0x00, 0x00, 0x0C, 0x03, 0x06, 0x09, 0x0A, 0x05 };
@@ -1490,29 +1490,29 @@ static bool DRLG_L3Spawn(int x, int y, int *totarea)
 	*totarea += 1;
 
 	if (i != 8) {
-		if ((spawntable[i] & 8) != 0 && DRLG_L3SpawnEdge(x, y - 1, totarea)) {
+		if ((spawntable[i] & 8) != 0 && DrlgL3SpawnEdge(x, y - 1, totarea)) {
 			return true;
 		}
-		if ((spawntable[i] & 4) != 0 && DRLG_L3SpawnEdge(x, y + 1, totarea)) {
+		if ((spawntable[i] & 4) != 0 && DrlgL3SpawnEdge(x, y + 1, totarea)) {
 			return true;
 		}
-		if ((spawntable[i] & 2) != 0 && DRLG_L3SpawnEdge(x + 1, y, totarea)) {
+		if ((spawntable[i] & 2) != 0 && DrlgL3SpawnEdge(x + 1, y, totarea)) {
 			return true;
 		}
-		if ((spawntable[i] & 1) != 0 && DRLG_L3SpawnEdge(x - 1, y, totarea)) {
+		if ((spawntable[i] & 1) != 0 && DrlgL3SpawnEdge(x - 1, y, totarea)) {
 			return true;
 		}
 	} else {
-		if (DRLG_L3Spawn(x + 1, y, totarea)) {
+		if (DrlgL3Spawn(x + 1, y, totarea)) {
 			return true;
 		}
-		if (DRLG_L3Spawn(x - 1, y, totarea)) {
+		if (DrlgL3Spawn(x - 1, y, totarea)) {
 			return true;
 		}
-		if (DRLG_L3Spawn(x, y + 1, totarea)) {
+		if (DrlgL3Spawn(x, y + 1, totarea)) {
 			return true;
 		}
-		if (DRLG_L3Spawn(x, y - 1, totarea)) {
+		if (DrlgL3Spawn(x, y - 1, totarea)) {
 			return true;
 		}
 	}
@@ -1525,7 +1525,7 @@ static bool DRLG_L3Spawn(int x, int y, int *totarea)
  * an area of at most 40 tiles and disconnected from the map edge.
  * If it finds one, converts it to lava tiles and sets lavapool to true.
  */
-static void DRLG_L3Pool()
+static void DrlgL3Pool()
 {
 	constexpr uint8_t Poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
 
@@ -1538,20 +1538,20 @@ static void DRLG_L3Pool()
 			int totarea = 1;
 			bool found = true;
 			if (dunx + 1 < DMAXX) {
-				found = DRLG_L3Spawn(dunx + 1, duny, &totarea);
+				found = DrlgL3Spawn(dunx + 1, duny, &totarea);
 			}
 			if (dunx - 1 > 0 && !found) {
-				found = DRLG_L3Spawn(dunx - 1, duny, &totarea);
+				found = DrlgL3Spawn(dunx - 1, duny, &totarea);
 			} else {
 				found = true;
 			}
 			if (duny + 1 < DMAXY && !found) {
-				found = DRLG_L3Spawn(dunx, duny + 1, &totarea);
+				found = DrlgL3Spawn(dunx, duny + 1, &totarea);
 			} else {
 				found = true;
 			}
 			if (duny - 1 > 0 && !found) {
-				found = DRLG_L3Spawn(dunx, duny - 1, &totarea);
+				found = DrlgL3Spawn(dunx, duny - 1, &totarea);
 			} else {
 				found = true;
 			}
@@ -1576,7 +1576,7 @@ static void DRLG_L3Pool()
 	}
 }
 
-static void DRLG_L3PoolFix()
+static void DrlgL3PoolFix()
 {
 	for (int duny = 1; duny < DMAXY - 1; duny++) {     // BUGFIX: Change '0' to '1' and 'DMAXY' to 'DMAXY - 1' (fixed)
 		for (int dunx = 1; dunx < DMAXX - 1; dunx++) { // BUGFIX: Change '0' to '1' and 'DMAXX' to 'DMAXX - 1' (fixed)
@@ -1598,7 +1598,7 @@ static void DRLG_L3PoolFix()
 	}
 }
 
-static bool DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
+static bool DrlgL3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
 {
 	int sx;
 	int sy;
@@ -1678,7 +1678,7 @@ static bool DRLG_L3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx,
 	return false;
 }
 
-static void DRLG_L3PlaceRndSet(const BYTE *miniset, int rndper)
+static void DrlgL3PlaceRndSet(const BYTE *miniset, int rndper)
 {
 	int sw = miniset[0];
 	int sh = miniset[1];
@@ -1888,7 +1888,7 @@ void FenceDoorFix()
 	}
 }
 
-static void DRLG_L3Wood()
+static void DrlgL3Wood()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1' (fixed)
@@ -2080,7 +2080,7 @@ static void DRLG_L3Wood()
 	FenceDoorFix();
 }
 
-static bool DRLG_L3Anvil()
+static bool DrlgL3Anvil()
 {
 	int sw = L3ANVIL[0];
 	int sh = L3ANVIL[1];
@@ -2181,7 +2181,7 @@ static void FixL3HallofHeroes()
 	}
 }
 
-static void DRLG_L3LockRec(int x, int y)
+static void DrlgL3LockRec(int x, int y)
 {
 	if (!lockout[x][y]) {
 		return;
@@ -2189,10 +2189,10 @@ static void DRLG_L3LockRec(int x, int y)
 
 	lockout[x][y] = false;
 	lockoutcnt++;
-	DRLG_L3LockRec(x, y - 1);
-	DRLG_L3LockRec(x, y + 1);
-	DRLG_L3LockRec(x - 1, y);
-	DRLG_L3LockRec(x + 1, y);
+	DrlgL3LockRec(x, y - 1);
+	DrlgL3LockRec(x, y + 1);
+	DrlgL3LockRec(x - 1, y);
+	DrlgL3LockRec(x + 1, y);
 }
 
 bool DRLG_L3Lockout()
@@ -2215,12 +2215,12 @@ bool DRLG_L3Lockout()
 	}
 
 	lockoutcnt = 0;
-	DRLG_L3LockRec(fx, fy);
+	DrlgL3LockRec(fx, fy);
 
 	return t == lockoutcnt;
 }
 
-static void DRLG_L3(lvl_entry entry)
+static void DrlgL3(lvl_entry entry)
 {
 	bool found;
 	bool genok;
@@ -2235,102 +2235,102 @@ static void DRLG_L3(lvl_entry entry)
 				int y1 = GenerateRnd(20) + 10;
 				int x2 = x1 + 2;
 				int y2 = y1 + 2;
-				DRLG_L3FillRoom(x1, y1, x2, y2);
-				DRLG_L3CreateBlock(x1, y1, 2, 0);
-				DRLG_L3CreateBlock(x2, y1, 2, 1);
-				DRLG_L3CreateBlock(x1, y2, 2, 2);
-				DRLG_L3CreateBlock(x1, y1, 2, 3);
+				DrlgL3FillRoom(x1, y1, x2, y2);
+				DrlgL3CreateBlock(x1, y1, 2, 0);
+				DrlgL3CreateBlock(x2, y1, 2, 1);
+				DrlgL3CreateBlock(x1, y2, 2, 2);
+				DrlgL3CreateBlock(x1, y1, 2, 3);
 				if (QuestStatus(Q_ANVIL)) {
 					x1 = GenerateRnd(10) + 10;
 					y1 = GenerateRnd(10) + 10;
 					x2 = x1 + 12;
 					y2 = y1 + 12;
-					DRLG_L3FloorArea(x1, y1, x2, y2);
+					DrlgL3FloorArea(x1, y1, x2, y2);
 				}
-				DRLG_L3FillDiags();
-				DRLG_L3FillSingles();
-				DRLG_L3FillStraights();
-				DRLG_L3FillDiags();
-				DRLG_L3Edges();
-				if (DRLG_L3GetFloorArea() >= 600) {
+				DrlgL3FillDiags();
+				DrlgL3FillSingles();
+				DrlgL3FillStraights();
+				DrlgL3FillDiags();
+				DrlgL3Edges();
+				if (DrlgL3GetFloorArea() >= 600) {
 					found = DRLG_L3Lockout();
 				} else {
 					found = false;
 				}
 			} while (!found);
-			DRLG_L3MakeMegas();
+			DrlgL3MakeMegas();
 			if (entry == ENTRY_MAIN) {
 				if (currlevel < 17) {
-					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, true, 0);
+					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, true, 0);
 				} else {
 					if (currlevel != 17)
-						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, true, 0);
+						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, true, 0);
 					else
-						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true, 6);
+						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true, 6);
 				}
 				if (!genok) {
 					if (currlevel < 17) {
-						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false, 1);
+						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false, 1);
 					} else {
 						if (currlevel != 20)
-							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false, 1);
+							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false, 1);
 					}
 					if (!genok && currlevel == 9) {
-						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false, 6);
+						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false, 6);
 					}
 				}
 			} else if (entry == ENTRY_PREV) {
 				if (currlevel < 17) {
-					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, false, 0);
+					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, false, 0);
 				} else {
 					if (currlevel != 17)
-						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, false, 0);
+						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, false, 0);
 					else
-						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, false, 6);
+						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, false, 6);
 				}
 				if (!genok) {
 					if (currlevel < 17) {
-						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, true, 1);
+						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, true, 1);
 						ViewX += 2;
 						ViewY -= 2;
 					} else {
 						if (currlevel != 20) {
-							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, true, 1);
+							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, true, 1);
 							ViewX += 2;
 							ViewY -= 2;
 						}
 					}
 					if (!genok && currlevel == 9) {
-						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false, 6);
+						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false, 6);
 					}
 				}
 			} else {
 				if (currlevel < 17) {
-					genok = DRLG_L3PlaceMiniSet(L3UP, 1, 1, -1, -1, false, 0);
+					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, false, 0);
 				} else {
 					if (currlevel != 17)
-						genok = DRLG_L3PlaceMiniSet(L6UP, 1, 1, -1, -1, false, 0);
+						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, false, 0);
 					else
-						genok = DRLG_L3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true, 6);
+						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true, 6);
 				}
 				if (!genok) {
 					if (currlevel < 17) {
-						genok = DRLG_L3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false, 1);
+						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false, 1);
 					} else {
 						if (currlevel != 20)
-							genok = DRLG_L3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false, 1);
+							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false, 1);
 					}
 					if (!genok && currlevel == 9) {
-						genok = DRLG_L3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, true, 6);
+						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, true, 6);
 					}
 				}
 			}
 			if (!genok && QuestStatus(Q_ANVIL)) {
-				genok = DRLG_L3Anvil();
+				genok = DrlgL3Anvil();
 			}
 		} while (genok);
 		if (currlevel < 17) {
-			DRLG_L3Pool();
+			DrlgL3Pool();
 		} else {
 			if (drlg_l3_hive_rnd_piece(HivePattern41, 30))
 				lavapool++;
@@ -2346,32 +2346,32 @@ static void DRLG_L3(lvl_entry entry)
 	} while (lavapool == 0);
 
 	if (currlevel < 17)
-		DRLG_L3PoolFix();
+		DrlgL3PoolFix();
 	if (currlevel < 17)
 		FixL3Warp();
 
 	if (currlevel < 17) {
-		DRLG_L3PlaceRndSet(L3ISLE1, 70);
-		DRLG_L3PlaceRndSet(L3ISLE2, 70);
-		DRLG_L3PlaceRndSet(L3ISLE3, 30);
-		DRLG_L3PlaceRndSet(L3ISLE4, 30);
-		DRLG_L3PlaceRndSet(L3ISLE1, 100);
-		DRLG_L3PlaceRndSet(L3ISLE2, 100);
-		DRLG_L3PlaceRndSet(L3ISLE5, 90);
+		DrlgL3PlaceRndSet(L3ISLE1, 70);
+		DrlgL3PlaceRndSet(L3ISLE2, 70);
+		DrlgL3PlaceRndSet(L3ISLE3, 30);
+		DrlgL3PlaceRndSet(L3ISLE4, 30);
+		DrlgL3PlaceRndSet(L3ISLE1, 100);
+		DrlgL3PlaceRndSet(L3ISLE2, 100);
+		DrlgL3PlaceRndSet(L3ISLE5, 90);
 	} else {
-		DRLG_L3PlaceRndSet(L6ISLE1, 70);
-		DRLG_L3PlaceRndSet(L6ISLE2, 70);
-		DRLG_L3PlaceRndSet(L6ISLE3, 30);
-		DRLG_L3PlaceRndSet(L6ISLE4, 30);
-		DRLG_L3PlaceRndSet(L6ISLE1, 100);
-		DRLG_L3PlaceRndSet(L6ISLE2, 100);
-		DRLG_L3PlaceRndSet(L6ISLE5, 90);
+		DrlgL3PlaceRndSet(L6ISLE1, 70);
+		DrlgL3PlaceRndSet(L6ISLE2, 70);
+		DrlgL3PlaceRndSet(L6ISLE3, 30);
+		DrlgL3PlaceRndSet(L6ISLE4, 30);
+		DrlgL3PlaceRndSet(L6ISLE1, 100);
+		DrlgL3PlaceRndSet(L6ISLE2, 100);
+		DrlgL3PlaceRndSet(L6ISLE5, 90);
 	}
 
 	if (currlevel < 17)
 		FixL3HallofHeroes();
 	if (currlevel < 17)
-		DRLG_L3River();
+		DrlgL3River();
 
 	if (QuestStatus(Q_ANVIL)) {
 		dungeon[setpc_x + 7][setpc_y + 5] = 7;
@@ -2386,83 +2386,83 @@ static void DRLG_L3(lvl_entry entry)
 		DRLG_PlaceThemeRooms(5, 10, 7, 0, false);
 
 	if (currlevel < 17) {
-		DRLG_L3Wood();
-		DRLG_L3PlaceRndSet(L3TITE1, 10);
-		DRLG_L3PlaceRndSet(L3TITE2, 10);
-		DRLG_L3PlaceRndSet(L3TITE3, 10);
-		DRLG_L3PlaceRndSet(L3TITE6, 20);
-		DRLG_L3PlaceRndSet(L3TITE7, 20);
-		DRLG_L3PlaceRndSet(L3TITE8, 20);
-		DRLG_L3PlaceRndSet(L3TITE9, 20);
-		DRLG_L3PlaceRndSet(L3TITE10, 20);
-		DRLG_L3PlaceRndSet(L3TITE11, 30);
-		DRLG_L3PlaceRndSet(L3TITE12, 20);
-		DRLG_L3PlaceRndSet(L3TITE13, 20);
-		DRLG_L3PlaceRndSet(L3CREV1, 30);
-		DRLG_L3PlaceRndSet(L3CREV2, 30);
-		DRLG_L3PlaceRndSet(L3CREV3, 30);
-		DRLG_L3PlaceRndSet(L3CREV4, 30);
-		DRLG_L3PlaceRndSet(L3CREV5, 30);
-		DRLG_L3PlaceRndSet(L3CREV6, 30);
-		DRLG_L3PlaceRndSet(L3CREV7, 30);
-		DRLG_L3PlaceRndSet(L3CREV8, 30);
-		DRLG_L3PlaceRndSet(L3CREV9, 30);
-		DRLG_L3PlaceRndSet(L3CREV10, 30);
-		DRLG_L3PlaceRndSet(L3CREV11, 30);
-		DRLG_L3PlaceRndSet(L3XTRA1, 25);
-		DRLG_L3PlaceRndSet(L3XTRA2, 25);
-		DRLG_L3PlaceRndSet(L3XTRA3, 25);
-		DRLG_L3PlaceRndSet(L3XTRA4, 25);
-		DRLG_L3PlaceRndSet(L3XTRA5, 25);
+		DrlgL3Wood();
+		DrlgL3PlaceRndSet(L3TITE1, 10);
+		DrlgL3PlaceRndSet(L3TITE2, 10);
+		DrlgL3PlaceRndSet(L3TITE3, 10);
+		DrlgL3PlaceRndSet(L3TITE6, 20);
+		DrlgL3PlaceRndSet(L3TITE7, 20);
+		DrlgL3PlaceRndSet(L3TITE8, 20);
+		DrlgL3PlaceRndSet(L3TITE9, 20);
+		DrlgL3PlaceRndSet(L3TITE10, 20);
+		DrlgL3PlaceRndSet(L3TITE11, 30);
+		DrlgL3PlaceRndSet(L3TITE12, 20);
+		DrlgL3PlaceRndSet(L3TITE13, 20);
+		DrlgL3PlaceRndSet(L3CREV1, 30);
+		DrlgL3PlaceRndSet(L3CREV2, 30);
+		DrlgL3PlaceRndSet(L3CREV3, 30);
+		DrlgL3PlaceRndSet(L3CREV4, 30);
+		DrlgL3PlaceRndSet(L3CREV5, 30);
+		DrlgL3PlaceRndSet(L3CREV6, 30);
+		DrlgL3PlaceRndSet(L3CREV7, 30);
+		DrlgL3PlaceRndSet(L3CREV8, 30);
+		DrlgL3PlaceRndSet(L3CREV9, 30);
+		DrlgL3PlaceRndSet(L3CREV10, 30);
+		DrlgL3PlaceRndSet(L3CREV11, 30);
+		DrlgL3PlaceRndSet(L3XTRA1, 25);
+		DrlgL3PlaceRndSet(L3XTRA2, 25);
+		DrlgL3PlaceRndSet(L3XTRA3, 25);
+		DrlgL3PlaceRndSet(L3XTRA4, 25);
+		DrlgL3PlaceRndSet(L3XTRA5, 25);
 	} else {
-		DRLG_L3PlaceRndSet(HivePattern1, 20);
-		DRLG_L3PlaceRndSet(HivePattern2, 20);
-		DRLG_L3PlaceRndSet(HivePattern3, 20);
-		DRLG_L3PlaceRndSet(HivePattern4, 20);
-		DRLG_L3PlaceRndSet(HivePattern29, 10);
-		DRLG_L3PlaceRndSet(HivePattern30, 15);
-		DRLG_L3PlaceRndSet(HivePattern31, 20);
-		DRLG_L3PlaceRndSet(HivePattern32, 25);
-		DRLG_L3PlaceRndSet(HivePattern33, 30);
-		DRLG_L3PlaceRndSet(HivePattern34, 35);
-		DRLG_L3PlaceRndSet(HivePattern35, 40);
-		DRLG_L3PlaceRndSet(HivePattern36, 45);
-		DRLG_L3PlaceRndSet(HivePattern37, 50);
-		DRLG_L3PlaceRndSet(HivePattern38, 55);
-		DRLG_L3PlaceRndSet(HivePattern38, 10);
-		DRLG_L3PlaceRndSet(HivePattern37, 15);
-		DRLG_L3PlaceRndSet(HivePattern36, 20);
-		DRLG_L3PlaceRndSet(HivePattern35, 25);
-		DRLG_L3PlaceRndSet(HivePattern34, 30);
-		DRLG_L3PlaceRndSet(HivePattern33, 35);
-		DRLG_L3PlaceRndSet(HivePattern32, 40);
-		DRLG_L3PlaceRndSet(HivePattern31, 45);
-		DRLG_L3PlaceRndSet(HivePattern30, 50);
-		DRLG_L3PlaceRndSet(HivePattern29, 55);
-		DRLG_L3PlaceRndSet(HivePattern9, 40);
-		DRLG_L3PlaceRndSet(HivePattern10, 45);
-		DRLG_L3PlaceRndSet(HivePattern5, 25);
-		DRLG_L3PlaceRndSet(HivePattern6, 25);
-		DRLG_L3PlaceRndSet(HivePattern7, 25);
-		DRLG_L3PlaceRndSet(HivePattern8, 25);
-		DRLG_L3PlaceRndSet(HivePattern11, 25);
-		DRLG_L3PlaceRndSet(HivePattern12, 25);
-		DRLG_L3PlaceRndSet(HivePattern13, 25);
-		DRLG_L3PlaceRndSet(HivePattern14, 25);
-		DRLG_L3PlaceRndSet(HivePattern15, 25);
-		DRLG_L3PlaceRndSet(HivePattern17, 25);
-		DRLG_L3PlaceRndSet(HivePattern18, 25);
-		DRLG_L3PlaceRndSet(HivePattern19, 25);
-		DRLG_L3PlaceRndSet(HivePattern20, 25);
-		DRLG_L3PlaceRndSet(HivePattern21, 25);
-		DRLG_L3PlaceRndSet(HivePattern23, 25);
-		DRLG_L3PlaceRndSet(HivePattern24, 25);
-		DRLG_L3PlaceRndSet(HivePattern25, 25);
-		DRLG_L3PlaceRndSet(HivePattern26, 25);
-		DRLG_L3PlaceRndSet(HivePattern16, 25);
-		DRLG_L3PlaceRndSet(HivePattern22, 25);
-		DRLG_L3PlaceRndSet(HivePattern27, 25);
-		DRLG_L3PlaceRndSet(HivePattern28, 25);
+		DrlgL3PlaceRndSet(HivePattern1, 20);
+		DrlgL3PlaceRndSet(HivePattern2, 20);
+		DrlgL3PlaceRndSet(HivePattern3, 20);
+		DrlgL3PlaceRndSet(HivePattern4, 20);
+		DrlgL3PlaceRndSet(HivePattern29, 10);
+		DrlgL3PlaceRndSet(HivePattern30, 15);
+		DrlgL3PlaceRndSet(HivePattern31, 20);
+		DrlgL3PlaceRndSet(HivePattern32, 25);
+		DrlgL3PlaceRndSet(HivePattern33, 30);
+		DrlgL3PlaceRndSet(HivePattern34, 35);
+		DrlgL3PlaceRndSet(HivePattern35, 40);
+		DrlgL3PlaceRndSet(HivePattern36, 45);
+		DrlgL3PlaceRndSet(HivePattern37, 50);
+		DrlgL3PlaceRndSet(HivePattern38, 55);
+		DrlgL3PlaceRndSet(HivePattern38, 10);
+		DrlgL3PlaceRndSet(HivePattern37, 15);
+		DrlgL3PlaceRndSet(HivePattern36, 20);
+		DrlgL3PlaceRndSet(HivePattern35, 25);
+		DrlgL3PlaceRndSet(HivePattern34, 30);
+		DrlgL3PlaceRndSet(HivePattern33, 35);
+		DrlgL3PlaceRndSet(HivePattern32, 40);
+		DrlgL3PlaceRndSet(HivePattern31, 45);
+		DrlgL3PlaceRndSet(HivePattern30, 50);
+		DrlgL3PlaceRndSet(HivePattern29, 55);
+		DrlgL3PlaceRndSet(HivePattern9, 40);
+		DrlgL3PlaceRndSet(HivePattern10, 45);
+		DrlgL3PlaceRndSet(HivePattern5, 25);
+		DrlgL3PlaceRndSet(HivePattern6, 25);
+		DrlgL3PlaceRndSet(HivePattern7, 25);
+		DrlgL3PlaceRndSet(HivePattern8, 25);
+		DrlgL3PlaceRndSet(HivePattern11, 25);
+		DrlgL3PlaceRndSet(HivePattern12, 25);
+		DrlgL3PlaceRndSet(HivePattern13, 25);
+		DrlgL3PlaceRndSet(HivePattern14, 25);
+		DrlgL3PlaceRndSet(HivePattern15, 25);
+		DrlgL3PlaceRndSet(HivePattern17, 25);
+		DrlgL3PlaceRndSet(HivePattern18, 25);
+		DrlgL3PlaceRndSet(HivePattern19, 25);
+		DrlgL3PlaceRndSet(HivePattern20, 25);
+		DrlgL3PlaceRndSet(HivePattern21, 25);
+		DrlgL3PlaceRndSet(HivePattern23, 25);
+		DrlgL3PlaceRndSet(HivePattern24, 25);
+		DrlgL3PlaceRndSet(HivePattern25, 25);
+		DrlgL3PlaceRndSet(HivePattern26, 25);
+		DrlgL3PlaceRndSet(HivePattern16, 25);
+		DrlgL3PlaceRndSet(HivePattern22, 25);
+		DrlgL3PlaceRndSet(HivePattern27, 25);
+		DrlgL3PlaceRndSet(HivePattern28, 25);
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
@@ -2474,7 +2474,7 @@ static void DRLG_L3(lvl_entry entry)
 	DRLG_Init_Globals();
 }
 
-static void DRLG_L3Pass3()
+static void DrlgL3Pass3()
 {
 	DRLG_LPass3(8 - 1);
 }
@@ -2488,8 +2488,8 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 	dmaxy = 96;
 	DRLG_InitTrans();
 	DRLG_InitSetPC();
-	DRLG_L3(entry);
-	DRLG_L3Pass3();
+	DrlgL3(entry);
+	DrlgL3Pass3();
 
 	if (currlevel < 17) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2550,7 +2550,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 		}
 	}
 
-	DRLG_L3Pass3();
+	DrlgL3Pass3();
 	DRLG_Init_Globals();
 
 	ViewX = vx;

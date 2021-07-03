@@ -928,7 +928,7 @@ bool PressEscKey()
 	}
 
 	if (stextflag != STORE_NONE) {
-		STextESC();
+		StoreESC();
 		rv = true;
 	}
 
@@ -1011,7 +1011,7 @@ static void PressKey(int vkey)
 		if (GetAsyncKeyState(DVL_VK_MENU)) {
 			dx_reinit();
 		} else if (stextflag != STORE_NONE) {
-			STextEnter();
+			StoreEnter();
 		} else if (questlog) {
 			QuestlogEnter();
 		} else {
@@ -1019,7 +1019,7 @@ static void PressKey(int vkey)
 		}
 	} else if (vkey == DVL_VK_UP) {
 		if (stextflag != STORE_NONE) {
-			STextUp();
+			StoreUp();
 		} else if (questlog) {
 			QuestlogUp();
 		} else if (helpflag) {
@@ -1029,7 +1029,7 @@ static void PressKey(int vkey)
 		}
 	} else if (vkey == DVL_VK_DOWN) {
 		if (stextflag != STORE_NONE) {
-			STextDown();
+			StoreDown();
 		} else if (questlog) {
 			QuestlogDown();
 		} else if (helpflag) {
@@ -1039,11 +1039,11 @@ static void PressKey(int vkey)
 		}
 	} else if (vkey == DVL_VK_PRIOR) {
 		if (stextflag != STORE_NONE) {
-			STextPrior();
+			StorePrior();
 		}
 	} else if (vkey == DVL_VK_NEXT) {
 		if (stextflag != STORE_NONE) {
-			STextNext();
+			StoreNext();
 		}
 	} else if (vkey == DVL_VK_LEFT) {
 		if (AutomapActive && !talkflag) {
