@@ -20,14 +20,14 @@ namespace devilution {
 
 namespace {
 
-constexpr int BAR_WIDTH = 307;
+constexpr int BarWidth = 307;
 
 using ColorGradient = std::array<Uint8, 12>;
-constexpr ColorGradient GOLD_GRADIENT = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
-constexpr ColorGradient SILVER_GRADIENT = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3 };
+constexpr ColorGradient GoldGradient = { 0xCF, 0xCE, 0xCD, 0xCC, 0xCB, 0xCA, 0xC9, 0xC8, 0xC7, 0xC6, 0xC5, 0xC4 };
+constexpr ColorGradient SilverGradient = { 0xFE, 0xFD, 0xFC, 0xFB, 0xFA, 0xF9, 0xF8, 0xF7, 0xF6, 0xF5, 0xF4, 0xF3 };
 
-constexpr int BACK_WIDTH = 313;
-constexpr int BACK_HEIGHT = 9;
+constexpr int BackWidth = 313;
+constexpr int BackHeight = 9;
 
 Art xpbarArt;
 
@@ -84,7 +84,7 @@ void DrawXPBar(const CelOutputBuffer &out)
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Draw a nice golden bar for max level characters.
-		DrawBar(out, xPos, yPos, BAR_WIDTH, GOLD_GRADIENT);
+		DrawBar(out, xPos, yPos, BarWidth, GoldGradient);
 
 		return;
 	}
@@ -95,19 +95,19 @@ void DrawXPBar(const CelOutputBuffer &out)
 
 	uint64_t prevXpDelta_1 = player._pExperience - prevXp;
 	uint64_t prevXpDelta = ExpLvlsTbl[charLevel] - prevXp;
-	uint64_t fullBar = BAR_WIDTH * prevXpDelta_1 / prevXpDelta;
+	uint64_t fullBar = BarWidth * prevXpDelta_1 / prevXpDelta;
 
 	// Figure out how much to fill the last pixel of the XP bar, to make it gradually appear with gained XP
-	uint64_t onePx = prevXpDelta / BAR_WIDTH + 1;
-	uint64_t lastFullPx = fullBar * prevXpDelta / BAR_WIDTH;
+	uint64_t onePx = prevXpDelta / BarWidth + 1;
+	uint64_t lastFullPx = fullBar * prevXpDelta / BarWidth;
 
-	const uint64_t fade = (prevXpDelta_1 - lastFullPx) * (SILVER_GRADIENT.size() - 1) / onePx;
+	const uint64_t fade = (prevXpDelta_1 - lastFullPx) * (SilverGradient.size() - 1) / onePx;
 
 	// Draw beginning of bar full brightness
-	DrawBar(out, xPos, yPos, fullBar, SILVER_GRADIENT);
+	DrawBar(out, xPos, yPos, fullBar, SilverGradient);
 
 	// End pixels appear gradually
-	DrawEndCap(out, { xPos + static_cast<int>(fullBar), yPos }, fade, SILVER_GRADIENT);
+	DrawEndCap(out, { xPos + static_cast<int>(fullBar), yPos }, fade, SilverGradient);
 }
 
 bool CheckXPBarInfo()
@@ -118,7 +118,7 @@ bool CheckXPBarInfo()
 	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
 	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
 
-	if (MousePosition.x < backX || MousePosition.x >= backX + BACK_WIDTH || MousePosition.y < backY || MousePosition.y >= backY + BACK_HEIGHT)
+	if (MousePosition.x < backX || MousePosition.x >= backX + BackWidth || MousePosition.y < backY || MousePosition.y >= backY + BackHeight)
 		return false;
 
 	const auto &player = plr[myplr];

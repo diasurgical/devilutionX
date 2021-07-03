@@ -1604,8 +1604,8 @@ void AddRuneExplosion(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mi
 
 		missile[mi]._midam = dmg;
 
-		constexpr Displacement offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
-		for (Displacement offset : offsets)
+		constexpr Displacement Offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 }, { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
+		for (Displacement offset : Offsets)
 			CheckMissileCol(mi, dmg, dmg, false, missile[mi].position.tile + offset, true);
 	}
 	missile[mi]._mlid = AddLight(src, 8);
@@ -4590,10 +4590,10 @@ void MI_Cbolt(int i)
 	missile[i]._mirange--;
 	if (missile[i]._miAnimType != MFILE_LGHNING) {
 		if (missile[i]._miVar3 == 0) {
-			constexpr int bpath[16] = { -1, 0, 1, -1, 0, 1, -1, -1, 0, 0, 1, 1, 0, 1, -1, 0 };
+			constexpr int BPath[16] = { -1, 0, 1, -1, 0, 1, -1, -1, 0, 0, 1, 1, 0, 1, -1, 0 };
 
 			auto md = static_cast<Direction>(missile[i]._miVar2);
-			switch (bpath[missile[i]._mirnd]) {
+			switch (BPath[missile[i]._mirnd]) {
 			case -1:
 				md = left[md];
 				break;

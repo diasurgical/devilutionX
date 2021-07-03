@@ -102,7 +102,7 @@ void WalkSides(int pnum, const DirectionSettings &walkParams)
 	player.position.temp = player.position.future;
 }
 
-constexpr std::array<const DirectionSettings, 8> directionSettings { {
+constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
 	{ DIR_S,  {  1,  1 }, {   0, -32 }, { 0, 0 }, SDIR_S,  PM_WALK2, WalkDownwards },
 	{ DIR_SW, {  0,  1 }, {  32, -16 }, { 0, 0 }, SDIR_SW, PM_WALK2, WalkDownwards },
@@ -160,7 +160,7 @@ bool PlrDirOK(int pnum, Direction dir)
 void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 {
 	auto &player = plr[pnum];
-	const auto &dirModeParams = directionSettings[dir];
+	const auto &dirModeParams = WalkSettings[dir];
 	SetPlayerOld(player);
 	if (!PlrDirOK(pnum, dir)) {
 		return;
@@ -206,7 +206,7 @@ void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 	StartWalkAnimation(player, dir, pmWillBeCalled);
 
 	if (pnum == myplr) {
-		ScrollViewPort(player, directionSettings[dir].scrollDir);
+		ScrollViewPort(player, WalkSettings[dir].scrollDir);
 	}
 }
 } // namespace
@@ -503,16 +503,16 @@ int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 Point PlayerStruct::GetTargetPosition() const
 {
 	// clang-format off
-	constexpr int directionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
-	constexpr int directionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
+	constexpr int DirectionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
+	constexpr int DirectionOffsetY[8] = { -1, 0, 0, 1,-1,-1, 1, 1 };
 	// clang-format on
 	Point target = position.future;
 	for (auto step : walkpath) {
 		if (step == WALK_NONE)
 			break;
 		if (step > 0) {
-			target.x += directionOffsetX[step - 1];
-			target.y += directionOffsetY[step - 1];
+			target.x += DirectionOffsetX[step - 1];
+			target.y += DirectionOffsetY[step - 1];
 		}
 	}
 	return target;

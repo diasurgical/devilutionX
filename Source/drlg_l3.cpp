@@ -1527,7 +1527,7 @@ static bool DRLG_L3Spawn(int x, int y, int *totarea)
  */
 static void DRLG_L3Pool()
 {
-	constexpr uint8_t poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
+	constexpr uint8_t Poolsub[15] = { 0, 35, 26, 36, 25, 29, 34, 7, 33, 28, 27, 37, 32, 31, 30 };
 
 	for (int duny = 0; duny < DMAXY; duny++) {
 		for (int dunx = 0; dunx < DMAXY; dunx++) {
@@ -1563,7 +1563,7 @@ static void DRLG_L3Pool()
 					if ((dungeon[i][j] & 0x80) != 0) {
 						dungeon[i][j] &= ~0x80;
 						if (totarea > 4 && poolchance < 25 && !found) {
-							uint8_t k = poolsub[dungeon[i][j]];
+							uint8_t k = Poolsub[dungeon[i][j]];
 							if (k != 0 && k <= 37) {
 								dungeon[i][j] = k;
 							}

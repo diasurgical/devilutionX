@@ -804,7 +804,7 @@ static void LoadPortal(LoadHelper *file, int i)
 
 _item_indexes RemapItemIdxFromDiablo(_item_indexes i)
 {
-	constexpr auto getItemIdValue = [](int i) -> int {
+	constexpr auto GetItemIdValue = [](int i) -> int {
 		if (i == IDI_SORCERER) {
 			return 166;
 		}
@@ -821,12 +821,12 @@ _item_indexes RemapItemIdxFromDiablo(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(getItemIdValue(i));
+	return static_cast<_item_indexes>(GetItemIdValue(i));
 }
 
 _item_indexes RemapItemIdxToDiablo(_item_indexes i)
 {
-	constexpr auto getItemIdValue = [](int i) -> int {
+	constexpr auto GetItemIdValue = [](int i) -> int {
 		if (i == 166) {
 			return IDI_SORCERER;
 		}
@@ -843,12 +843,12 @@ _item_indexes RemapItemIdxToDiablo(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(getItemIdValue(i));
+	return static_cast<_item_indexes>(GetItemIdValue(i));
 }
 
 _item_indexes RemapItemIdxFromSpawn(_item_indexes i)
 {
-	constexpr auto getItemIdValue = [](int i) {
+	constexpr auto GetItemIdValue = [](int i) {
 		if (i >= 62) {
 			i += 9; // Medium and heavy armors
 		}
@@ -874,12 +874,12 @@ _item_indexes RemapItemIdxFromSpawn(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(getItemIdValue(i));
+	return static_cast<_item_indexes>(GetItemIdValue(i));
 }
 
 _item_indexes RemapItemIdxToSpawn(_item_indexes i)
 {
-	constexpr auto getItemIdValue = [](int i) {
+	constexpr auto GetItemIdValue = [](int i) {
 		if (i >= 104) {
 			i -= 1; // Scroll of Apocalypse
 		}
@@ -905,7 +905,7 @@ _item_indexes RemapItemIdxToSpawn(_item_indexes i)
 		return i;
 	};
 
-	return static_cast<_item_indexes>(getItemIdValue(i));
+	return static_cast<_item_indexes>(GetItemIdValue(i));
 }
 
 bool IsHeaderValid(uint32_t magicNumber)

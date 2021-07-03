@@ -4032,8 +4032,8 @@ void MAI_Counselor(int i)
 	} else if (Monst->_mgoal == MGOAL_NORMAL) {
 		if (abs(mx) >= 2 || abs(my) >= 2) {
 			if (v < 5 * (Monst->_mint + 10) && LineClearMissile(Monst->position.tile, { fx, fy })) {
-				constexpr missile_id counsmiss[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
-				M_StartRAttack(i, counsmiss[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
+				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
+				M_StartRAttack(i, MissileTypes[Monst->_mint], Monst->mMinDamage + GenerateRnd(Monst->mMaxDamage - Monst->mMinDamage + 1));
 			} else if (GenerateRnd(100) < 30) {
 				Monst->_mgoal = MGOAL_MOVE;
 				Monst->_mgoalvar1 = 0;

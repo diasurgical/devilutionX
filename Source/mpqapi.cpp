@@ -536,8 +536,8 @@ static bool mpqapi_write_file_contents(const char *pszName, const byte *pbData, 
 		pszName = tmp + 1;
 	Hash(pszName, 3);
 
-	constexpr size_t sectorSize = 4096;
-	const uint32_t num_sectors = (dwLen + (sectorSize - 1)) / sectorSize;
+	constexpr size_t SectorSize = 4096;
+	const uint32_t num_sectors = (dwLen + (SectorSize - 1)) / SectorSize;
 	const uint32_t offset_table_bytesize = sizeof(uint32_t) * (num_sectors + 1);
 	pBlk->offset = mpqapi_find_free_block(dwLen + offset_table_bytesize, &pBlk->sizealloc);
 	pBlk->sizefile = dwLen;
@@ -572,10 +572,10 @@ static bool mpqapi_write_file_contents(const char *pszName, const byte *pbData, 
 #endif
 
 	uint32_t destsize = offset_table_bytesize;
-	byte mpq_buf[sectorSize];
+	byte mpq_buf[SectorSize];
 	std::size_t cur_sector = 0;
 	while (true) {
-		uint32_t len = std::min(dwLen, sectorSize);
+		uint32_t len = std::min(dwLen, SectorSize);
 		memcpy(mpq_buf, pbData, len);
 		pbData += len;
 		len = PkwareCompress(mpq_buf, len);
@@ -583,8 +583,8 @@ static bool mpqapi_write_file_contents(const char *pszName, const byte *pbData, 
 			return false;
 		sectoroffsettable[cur_sector++] = SDL_SwapLE32(destsize);
 		destsize += len; // compressed length
-		if (dwLen > sectorSize)
-			dwLen -= sectorSize;
+		if (dwLen > SectorSize)
+			dwLen -= SectorSize;
 		else
 			break;
 	}
