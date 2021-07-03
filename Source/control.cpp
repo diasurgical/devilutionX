@@ -577,9 +577,7 @@ static void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePos
 
 void DrawLifeFlaskUpper(const Surface &out)
 {
-	auto &myPlayer = plr[myplr];
-
-	int emptyPortion = 80 - myPlayer.UpdateHitPointPercentage();
+	int emptyPortion = 80 - plr[myplr]._pHPPer;
 
 	// clamping because this function only draws the top 12% of the HP display
 	emptyPortion = clamp(emptyPortion, 0, 11) + 2; // +2 to account for the frame being included in the sprite
@@ -594,9 +592,7 @@ void DrawLifeFlaskUpper(const Surface &out)
 
 void DrawLifeFlaskLower(const Surface &out)
 {
-	auto &myPlayer = plr[myplr];
-
-	int filled = clamp(myPlayer.UpdateHitPointPercentage(), 0, 69);
+	int filled = clamp(plr[myplr]._pHPPer, 0, 69);
 
 	if (filled < 69)
 		DrawFlaskTop(out, { 96 + PANEL_X, PANEL_Y }, pLifeBuff, 16, 85 - filled);
@@ -606,7 +602,7 @@ void DrawLifeFlaskLower(const Surface &out)
 
 void DrawManaFlaskUpper(const Surface &out)
 {
-	// this function uses the precalculated value of ManaPer from an earlier call to control_update_life_mana() or DrawManaFlaskLower()
+	// this function uses the precalculated value of ManaPer from an earlier call to control_update_life_mana()
 	int emptyPortion = 80 - plr[myplr]._pManaPer;
 
 	// clamping because this function only draws the top 12% of the Mana display
@@ -629,9 +625,7 @@ void control_update_life_mana()
 
 void DrawManaFlaskLower(const Surface &out)
 {
-	auto &myPlayer = plr[myplr];
-
-	int filled = clamp(myPlayer.UpdateManaPercentage(), 0, 69);
+	int filled = clamp(plr[myplr]._pManaPer, 0, 69);
 
 	if (filled < 69)
 		DrawFlaskTop(out, { PANEL_X + 464, PANEL_Y }, pManaBuff, 16, 85 - filled);
