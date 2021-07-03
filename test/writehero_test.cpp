@@ -300,11 +300,9 @@ static void AssertPlayer(PlayerStruct &player)
 	ASSERT_EQ(player._pSplType, 4);
 	ASSERT_EQ(player._pSplFrom, 0);
 	ASSERT_EQ(player._pTSpell, 0);
-	ASSERT_EQ(player._pTSplType, 0);
 	ASSERT_EQ(player._pRSpell, -1);
 	ASSERT_EQ(player._pRSplType, 4);
 	ASSERT_EQ(player._pSBkSpell, -1);
-	ASSERT_EQ(player._pSBkSplType, 0);
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
 	ASSERT_EQ(player._pSpellFlags, 0);

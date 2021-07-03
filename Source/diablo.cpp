@@ -106,11 +106,11 @@ uint16_t gnTickDelay = 50;
 Keymapper keymapper {
 	// Workaround: remove once the INI library has been replaced.
 	[](const std::string &key, const std::string &value) {
-	    setIniValue("Keymapping", key.c_str(), value.c_str());
+	    SetIniValue("Keymapping", key.c_str(), value.c_str());
 	},
 	[](const std::string &key) -> std::string {
 	    std::array<char, 64> result;
-	    if (!getIniValue("Keymapping", key.c_str(), result.data(), result.size()))
+	    if (!GetIniValue("Keymapping", key.c_str(), result.data(), result.size()))
 		    return {};
 	    return { result.data() };
 	}

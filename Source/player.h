@@ -191,11 +191,9 @@ struct PlayerStruct {
 	spell_type _pSplType;
 	int8_t _pSplFrom; // TODO Create enum
 	spell_id _pTSpell;
-	spell_type _pTSplType;
 	spell_id _pRSpell;
 	spell_type _pRSplType;
 	spell_id _pSBkSpell;
-	spell_type _pSBkSplType;
 	int8_t _pSplLvl[64];
 	uint64_t _pMemSpells;  // Bitmask of learned spells
 	uint64_t _pAblSpells;  // Bitmask of abilities
