@@ -406,12 +406,12 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player._pMaxHPBase = file->nextLE<int32_t>();
 	player._pHitPoints = file->nextLE<int32_t>();
 	player._pMaxHP = file->nextLE<int32_t>();
-	player._pHPPer = file->nextLE<int32_t>();
+	file->skip(sizeof(int32_t)); // hpPer - derived value from hp and maxHP.
 	player._pManaBase = file->nextLE<int32_t>();
 	player._pMaxManaBase = file->nextLE<int32_t>();
 	player._pMana = file->nextLE<int32_t>();
 	player._pMaxMana = file->nextLE<int32_t>();
-	player._pManaPer = file->nextLE<int32_t>();
+	file->skip(sizeof(int32_t)); // manaPer - derived value from mana and maxMana
 	player._pLevel = file->nextLE<int8_t>();
 	player._pMaxLvl = file->nextLE<int8_t>();
 	file->skip(2); // Alignment
@@ -1471,12 +1471,12 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->writeLE<int32_t>(player._pMaxHPBase);
 	file->writeLE<int32_t>(player._pHitPoints);
 	file->writeLE<int32_t>(player._pMaxHP);
-	file->writeLE<int32_t>(player._pHPPer);
+	file->skip(sizeof(int32_t)); // was hpPer, loads never use the stored value
 	file->writeLE<int32_t>(player._pManaBase);
 	file->writeLE<int32_t>(player._pMaxManaBase);
 	file->writeLE<int32_t>(player._pMana);
 	file->writeLE<int32_t>(player._pMaxMana);
-	file->writeLE<int32_t>(player._pManaPer);
+	file->skip(sizeof(int32_t)); // was manaPer, loads never use the stored value
 	file->writeLE<int8_t>(player._pLevel);
 	file->writeLE<int8_t>(player._pMaxLvl);
 	file->skip(2); // Alignment
