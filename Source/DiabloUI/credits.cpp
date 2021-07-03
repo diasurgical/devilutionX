@@ -38,20 +38,20 @@ struct CachedLine {
 
 	CachedLine()
 	{
-		m_index = 0;
-		palette_version = pal_surface_palette_version;
+		mIndex = 0;
+		paletteVersion = pal_surface_palette_version;
 	}
 
 	CachedLine(std::size_t index, SDLSurfaceUniquePtr surface)
 	{
-		m_index = index;
-		m_surface = std::move(surface);
-		palette_version = pal_surface_palette_version;
+		mIndex = index;
+		mSurface = std::move(surface);
+		paletteVersion = pal_surface_palette_version;
 	}
 
-	std::size_t m_index;
-	SDLSurfaceUniquePtr m_surface;
-	unsigned int palette_version;
+	std::size_t mIndex;
+	SDLSurfaceUniquePtr mSurface;
+	unsigned int paletteVersion;
 };
 
 SDL_Surface *RenderText(const char *text, SDL_Color color)
@@ -172,24 +172,24 @@ void CreditsRenderer::Render()
 	Sint16 destY = UI_OFFSET_Y + VIEWPORT.y - (offsetY - linesBegin * LINE_H);
 	for (std::size_t i = linesBegin; i < linesEnd; ++i, destY += LINE_H) {
 		CachedLine &line = lines_[i];
-		if (line.m_surface == nullptr)
+		if (line.mSurface == nullptr)
 			continue;
 
 		// Still fading in: the cached line was drawn with a different fade level.
-		if (line.palette_version != pal_surface_palette_version) {
-			line = PrepareLine(line.m_index);
+		if (line.paletteVersion != pal_surface_palette_version) {
+			line = PrepareLine(line.mIndex);
 		}
 
 		Sint16 destX = PANEL_LEFT + VIEWPORT.x + 31;
 		int j = 0;
-		while (text[line.m_index][j++] == '\t')
+		while (text[line.mIndex][j++] == '\t')
 			destX += 40;
 
 		SDL_Rect dstRect = { destX, destY, 0, 0 };
 		ScaleOutputRect(&dstRect);
-		dstRect.w = line.m_surface->w;
-		dstRect.h = line.m_surface->h;
-		if (SDL_BlitSurface(line.m_surface.get(), nullptr, DiabloUiSurface(), &dstRect) < 0)
+		dstRect.w = line.mSurface->w;
+		dstRect.h = line.mSurface->h;
+		if (SDL_BlitSurface(line.mSurface.get(), nullptr, DiabloUiSurface(), &dstRect) < 0)
 			ErrSdl();
 	}
 	SDL_SetClipRect(DiabloUiSurface(), nullptr);

@@ -16,7 +16,7 @@ namespace devilution {
 struct CodecSignature {
 	uint32_t checksum;
 	uint8_t error;
-	uint8_t last_chunk_size;
+	uint8_t lastChunkSize;
 	uint16_t unused;
 };
 
@@ -90,7 +90,7 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 		goto error;
 	}
 
-	size += sig->last_chunk_size - BLOCKSIZE;
+	size += sig->lastChunkSize - BLOCKSIZE;
 	SHA1Clear();
 	return size;
 error:
@@ -138,7 +138,7 @@ void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const ch
 	sig->error = 0;
 	sig->unused = 0;
 	sig->checksum = *(uint32_t *)&tmp[0];
-	sig->last_chunk_size = lastChunk;
+	sig->lastChunkSize = lastChunk;
 	SHA1Clear();
 }
 

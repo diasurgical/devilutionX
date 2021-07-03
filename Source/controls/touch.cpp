@@ -54,11 +54,11 @@ enum {
 
 struct Touch {
 	int id; // -1: not touching
-	uint32_t time_last_down;
-	int last_x;        // last known screen coordinates
-	int last_y;        // last known screen coordinates
-	float last_down_x; // SDL touch coordinates when last pressed down
-	float last_down_y; // SDL touch coordinates when last pressed down
+	uint32_t timeLastDown;
+	int lastX;        // last known screen coordinates
+	int lastY;        // last known screen coordinates
+	float lastDownX; // SDL touch coordinates when last pressed down
+	float lastDownY; // SDL touch coordinates when last pressed down
 };
 
 static Touch finger[TOUCH_PORT_MAX_NUM][MaxNumFingers]; // keep track of finger status
@@ -169,11 +169,11 @@ static void PreprocessFingerDown(SDL_Event *event)
 			continue;
 		}
 		finger[port][i].id = id;
-		finger[port][i].time_last_down = event->tfinger.timestamp;
-		finger[port][i].last_down_x = event->tfinger.x;
-		finger[port][i].last_down_y = event->tfinger.y;
-		finger[port][i].last_x = x;
-		finger[port][i].last_y = y;
+		finger[port][i].timeLastDown = event->tfinger.timestamp;
+		finger[port][i].lastDownX = event->tfinger.x;
+		finger[port][i].lastDownY = event->tfinger.y;
+		finger[port][i].lastX = x;
+		finger[port][i].lastY = y;
 		break;
 	}
 }
@@ -242,14 +242,14 @@ static void PreprocessFingerUp(SDL_Event *event)
 
 		finger[port][i].id = NO_TOUCH;
 		if (multi_finger_dragging[port] == DragNone) {
-			if ((event->tfinger.timestamp - finger[port][i].time_last_down) > MaxTapTime) {
+			if ((event->tfinger.timestamp - finger[port][i].timeLastDown) > MaxTapTime) {
 				continue;
 			}
 
 			// short (<MAX_TAP_TIME ms) tap is interpreted as right/left mouse click depending on # fingers already down
 			// but only if the finger hasn't moved since it was pressed down by more than MAX_TAP_MOTION_DISTANCE pixels
-			float xrel = ((event->tfinger.x * devilution::GetOutputSurface()->w) - (finger[port][i].last_down_x * devilution::GetOutputSurface()->w));
-			float yrel = ((event->tfinger.y * devilution::GetOutputSurface()->h) - (finger[port][i].last_down_y * devilution::GetOutputSurface()->h));
+			float xrel = ((event->tfinger.x * devilution::GetOutputSurface()->w) - (finger[port][i].lastDownX * devilution::GetOutputSurface()->w));
+			float yrel = ((event->tfinger.y * devilution::GetOutputSurface()->h) - (finger[port][i].lastDownY * devilution::GetOutputSurface()->h));
 			auto maxRSquared = static_cast<float>(MaxTapMotionDistance * MaxTapMotionDistance);
 			if ((xrel * xrel + yrel * yrel) >= maxRSquared) {
 				continue;
@@ -337,8 +337,8 @@ static void PreprocessFingerMotion(SDL_Event *event)
 		for (int i = 0; i < MaxNumFingers; i++) {
 			if (finger[port][i].id != id)
 				continue;
-			finger[port][i].last_x = x;
-			finger[port][i].last_y = y;
+			finger[port][i].lastX = x;
+			finger[port][i].lastY = y;
 		}
 
 		// If we are starting a multi-finger drag, start holding down the mouse button
@@ -349,7 +349,7 @@ static void PreprocessFingerMotion(SDL_Event *event)
 				if (finger[port][i].id == NO_TOUCH) {
 					continue;
 				}
-				if (event->tfinger.timestamp - finger[port][i].time_last_down > MaxTapTime) {
+				if (event->tfinger.timestamp - finger[port][i].timeLastDown > MaxTapTime) {
 					numFingersDownlong++;
 				}
 			}
@@ -359,13 +359,13 @@ static void PreprocessFingerMotion(SDL_Event *event)
 				if (direct_touch) {
 					for (int i = 0; i < MaxNumFingers; i++) {
 						if (finger[port][i].id == id) {
-							uint32_t earliestTime = finger[port][i].time_last_down;
+							uint32_t earliestTime = finger[port][i].timeLastDown;
 							for (int j = 0; j < MaxNumFingers; j++) {
 								if (finger[port][j].id >= 0 && (i != j)) {
-									if (finger[port][j].time_last_down < earliestTime) {
-										mouseDownX = finger[port][j].last_x;
-										mouseDownY = finger[port][j].last_y;
-										earliestTime = finger[port][j].time_last_down;
+									if (finger[port][j].timeLastDown < earliestTime) {
+										mouseDownX = finger[port][j].lastX;
+										mouseDownY = finger[port][j].lastY;
+										earliestTime = finger[port][j].timeLastDown;
 									}
 								}
 							}
@@ -404,7 +404,7 @@ static void PreprocessFingerMotion(SDL_Event *event)
 					if (finger[port][j].id == NO_TOUCH || (j == i)) {
 						continue;
 					}
-					if (finger[port][j].time_last_down < finger[port][i].time_last_down) {
+					if (finger[port][j].timeLastDown < finger[port][i].timeLastDown) {
 						updatePointer = false;
 					}
 				}
