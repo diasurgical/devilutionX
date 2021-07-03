@@ -37,15 +37,15 @@ constexpr float VolumeScale = 3321.9281;
  * Min and max volume range, in millibel.
  * -100 dB (muted) to 0 dB (max. loudness).
  */
-constexpr float MillibelMin = -10000.0;
-constexpr float MillibelMax = 0.0;
+constexpr float MillibelMin = -10000.F;
+constexpr float MillibelMax = 0.F;
 
 /**
  * Stereo separation factor for left/right speaker panning. Lower values increase separation, moving
  * sounds further left/right, while higher values will pull sounds more towards the middle, reducing separation.
  * Current value is tuned to have ~2:1 mix for sounds that happen on the edge of a 640x480 screen.
  */
-constexpr float StereoSeparation = 6000.0;
+constexpr float StereoSeparation = 6000.F;
 
 float PanLogToLinear(int logPan)
 {
@@ -61,9 +61,8 @@ float PanLogToLinear(int logPan)
 
 float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 {
-	const auto logScaled = math::Remap<float>(logMin, logMax, MillibelMin, MillibelMax, logVolume);
-	const auto linVolume = std::pow(LogBase, static_cast<float>(logScaled) / VolumeScale);
-	return linVolume;
+	const auto logScaled = math::Remap(static_cast<float>(logMin), static_cast<float>(logMax), MillibelMin, MillibelMax, static_cast<float>(logVolume));
+	return std::pow(LogBase, logScaled / VolumeScale); // linVolume
 }
 
 ///// SoundSample /////
