@@ -270,9 +270,9 @@ const BYTE PWATERIN[] = {
 	 0,   0,   0,   0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A1B4[4] = { 1, 1, 11, 95 };
-const BYTE byte_48A1B8[8] = { 1, 1, 12, 96 };
-const BYTE byte_48A1C0[8] = {
+const BYTE CryptPattern1[4] = { 1, 1, 11, 95 };
+const BYTE CryptPattern2[8] = { 1, 1, 12, 96 };
+const BYTE CryptPattern3[8] = {
 	// clang-format off
 	1, 3, // width, height
 
@@ -285,7 +285,7 @@ const BYTE byte_48A1C0[8] = {
 	89,
 	// clang-format on
 };
-const BYTE byte_48A1C8[8] = {
+const BYTE CryptPattern4[8] = {
 	// clang-format off
 	3, 1, // width, height
 
@@ -294,11 +294,11 @@ const BYTE byte_48A1C8[8] = {
 	94, 93, 92, // replace
 	// clang-format on
 };
-const BYTE byte_48A1D0[4] = { 1, 1, 13, 97 };
-const BYTE byte_48A1D4[4] = { 1, 1, 13, 98 };
-const BYTE byte_48A1D8[4] = { 1, 1, 13, 99 };
-const BYTE byte_48A1DC[4] = { 1, 1, 13, 100 };
-const BYTE byte_48A1E0[20] = {
+const BYTE CryptPattern5[4] = { 1, 1, 13, 97 };
+const BYTE CryptPattern6[4] = { 1, 1, 13, 98 };
+const BYTE CryptPattern7[4] = { 1, 1, 13, 99 };
+const BYTE CryptPattern8[4] = { 1, 1, 13, 100 };
+const BYTE CryptPattern9[20] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -311,33 +311,33 @@ const BYTE byte_48A1E0[20] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A1F4[4] = { 1, 1, 11, 185 };
-const BYTE byte_48A1F8[4] = { 1, 1, 11, 186 };
-const BYTE byte_48A1FC[4] = { 1, 1, 12, 187 };
-const BYTE byte_48A200[4] = { 1, 1, 12, 188 };
-const BYTE byte_48A204[4] = { 1, 1, 89, 173 };
-const BYTE byte_48A208[4] = { 1, 1, 89, 174 };
-const BYTE byte_48A20C[4] = { 1, 1, 90, 175 };
-const BYTE byte_48A210[4] = { 1, 1, 90, 176 };
-const BYTE byte_48A214[4] = { 1, 1, 91, 177 };
-const BYTE byte_48A218[4] = { 1, 1, 91, 178 };
-const BYTE byte_48A21C[4] = { 1, 1, 92, 179 };
-const BYTE byte_48A220[4] = { 1, 1, 92, 180 };
-const BYTE byte_48A224[4] = { 1, 1, 92, 181 };
-const BYTE byte_48A228[4] = { 1, 1, 92, 182 };
-const BYTE byte_48A22C[4] = { 1, 1, 92, 183 };
-const BYTE byte_48A230[4] = { 1, 1, 92, 184 };
-const BYTE byte_48A234[4] = { 1, 1, 98, 189 };
-const BYTE byte_48A238[4] = { 1, 1, 98, 190 };
-const BYTE byte_48A23C[4] = { 1, 1, 97, 191 };
-const BYTE byte_48A240[4] = { 1, 1, 15, 192 };
-const BYTE byte_48A244[4] = { 1, 1, 99, 193 };
-const BYTE byte_48A248[4] = { 1, 1, 99, 194 };
-const BYTE byte_48A24C[4] = { 1, 1, 100, 195 };
-const BYTE byte_48A250[4] = { 1, 1, 101, 196 };
-const BYTE byte_48A254[4] = { 1, 1, 101, 197 };
-const BYTE byte_48A258[8] = { 1, 1, 101, 198 };
-const BYTE byte_48A260[24] = {
+const BYTE CryptPattern10[4] = { 1, 1, 11, 185 };
+const BYTE CryptPattern11[4] = { 1, 1, 11, 186 };
+const BYTE CryptPattern12[4] = { 1, 1, 12, 187 };
+const BYTE CryptPattern13[4] = { 1, 1, 12, 188 };
+const BYTE CryptPattern14[4] = { 1, 1, 89, 173 };
+const BYTE CryptPattern15[4] = { 1, 1, 89, 174 };
+const BYTE CryptPattern16[4] = { 1, 1, 90, 175 };
+const BYTE CryptPattern17[4] = { 1, 1, 90, 176 };
+const BYTE CryptPattern18[4] = { 1, 1, 91, 177 };
+const BYTE CryptPattern19[4] = { 1, 1, 91, 178 };
+const BYTE CryptPattern20[4] = { 1, 1, 92, 179 };
+const BYTE CryptPattern21[4] = { 1, 1, 92, 180 };
+const BYTE CryptPattern22[4] = { 1, 1, 92, 181 };
+const BYTE CryptPattern23[4] = { 1, 1, 92, 182 };
+const BYTE CryptPattern24[4] = { 1, 1, 92, 183 };
+const BYTE CryptPattern25[4] = { 1, 1, 92, 184 };
+const BYTE CryptPattern26[4] = { 1, 1, 98, 189 };
+const BYTE CryptPattern27[4] = { 1, 1, 98, 190 };
+const BYTE CryptPattern28[4] = { 1, 1, 97, 191 };
+const BYTE CryptPattern29[4] = { 1, 1, 15, 192 };
+const BYTE CryptPattern30[4] = { 1, 1, 99, 193 };
+const BYTE CryptPattern31[4] = { 1, 1, 99, 194 };
+const BYTE CryptPattern32[4] = { 1, 1, 100, 195 };
+const BYTE CryptPattern33[4] = { 1, 1, 101, 196 };
+const BYTE CryptPattern34[4] = { 1, 1, 101, 197 };
+const BYTE CryptPattern35[8] = { 1, 1, 101, 198 };
+const BYTE CryptPattern36[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -350,7 +350,7 @@ const BYTE byte_48A260[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A278[24] = {
+const BYTE CryptPattern37[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -363,7 +363,7 @@ const BYTE byte_48A278[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A290[24] = {
+const BYTE CryptPattern38[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -375,7 +375,7 @@ const BYTE byte_48A290[24] = {
 	0, 169, 0,
 	0,   0, 0,
 };
-const BYTE byte_48A2A8[24] = {
+const BYTE CryptPattern39[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -388,7 +388,7 @@ const BYTE byte_48A2A8[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A2C0[24] = {
+const BYTE CryptPattern40[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -401,7 +401,7 @@ const BYTE byte_48A2C0[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A2D8[20] = {
+const BYTE CryptPattern41[20] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -414,65 +414,65 @@ const BYTE byte_48A2D8[20] = {
 	 0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A2EC[4] = { 1, 1, 13, 163 };
-const BYTE byte_48A2F0[4] = { 1, 1, 13, 164 };
-const BYTE byte_48A2F4[4] = { 1, 1, 13, 165 };
-const BYTE byte_48A2F8[4] = { 1, 1, 13, 166 };
-const BYTE byte_48A2FC[4] = { 1, 1, 1, 112 };
-const BYTE byte_48A300[4] = { 1, 1, 2, 113 };
-const BYTE byte_48A304[4] = { 1, 1, 3, 114 };
-const BYTE byte_48A308[4] = { 1, 1, 4, 115 };
-const BYTE byte_48A30C[4] = { 1, 1, 5, 116 };
-const BYTE byte_48A310[4] = { 1, 1, 6, 117 };
-const BYTE byte_48A314[4] = { 1, 1, 7, 118 };
-const BYTE byte_48A318[4] = { 1, 1, 8, 119 };
-const BYTE byte_48A31C[4] = { 1, 1, 9, 120 };
-const BYTE byte_48A320[4] = { 1, 1, 10, 121 };
-const BYTE byte_48A324[4] = { 1, 1, 11, 122 };
-const BYTE byte_48A328[4] = { 1, 1, 12, 123 };
-const BYTE byte_48A32C[4] = { 1, 1, 13, 124 };
-const BYTE byte_48A330[4] = { 1, 1, 14, 125 };
-const BYTE byte_48A334[4] = { 1, 1, 15, 126 };
-const BYTE byte_48A338[4] = { 1, 1, 16, 127 };
-const BYTE byte_48A33C[4] = { 1, 1, 17, 128 };
-const BYTE byte_48A340[4] = { 1, 1, 1, 129 };
-const BYTE byte_48A344[4] = { 1, 1, 2, 130 };
-const BYTE byte_48A348[4] = { 1, 1, 3, 131 };
-const BYTE byte_48A34C[4] = { 1, 1, 4, 132 };
-const BYTE byte_48A350[4] = { 1, 1, 5, 133 };
-const BYTE byte_48A354[4] = { 1, 1, 6, 134 };
-const BYTE byte_48A358[4] = { 1, 1, 7, 135 };
-const BYTE byte_48A35C[4] = { 1, 1, 8, 136 };
-const BYTE byte_48A360[4] = { 1, 1, 9, 137 };
-const BYTE byte_48A364[4] = { 1, 1, 10, 138 };
-const BYTE byte_48A368[4] = { 1, 1, 11, 139 };
-const BYTE byte_48A36C[4] = { 1, 1, 12, 140 };
-const BYTE byte_48A370[4] = { 1, 1, 13, 141 };
-const BYTE byte_48A374[4] = { 1, 1, 14, 142 };
-const BYTE byte_48A378[4] = { 1, 1, 15, 143 };
-const BYTE byte_48A37C[4] = { 1, 1, 16, 144 };
-const BYTE byte_48A380[4] = { 1, 1, 17, 145 };
-const BYTE byte_48A384[4] = { 1, 1, 1, 146 };
-const BYTE byte_48A388[4] = { 1, 1, 2, 147 };
-const BYTE byte_48A38C[4] = { 1, 1, 3, 148 };
-const BYTE byte_48A390[4] = { 1, 1, 4, 149 };
-const BYTE byte_48A394[4] = { 1, 1, 5, 150 };
-const BYTE byte_48A398[4] = { 1, 1, 6, 151 };
-const BYTE byte_48A39C[4] = { 1, 1, 7, 152 };
-const BYTE byte_48A3A0[4] = { 1, 1, 8, 153 };
-const BYTE byte_48A3A4[4] = { 1, 1, 9, 154 };
-const BYTE byte_48A3A8[4] = { 1, 1, 10, 155 };
-const BYTE byte_48A3AC[4] = { 1, 1, 11, 156 };
-const BYTE byte_48A3B0[4] = { 1, 1, 12, 157 };
-const BYTE byte_48A3B4[4] = { 1, 1, 13, 158 };
-const BYTE byte_48A3B8[4] = { 1, 1, 14, 159 };
-const BYTE byte_48A3BC[4] = { 1, 1, 15, 160 };
-const BYTE byte_48A3C0[4] = { 1, 1, 16, 161 };
-const BYTE byte_48A3C4[4] = { 1, 1, 17, 162 };
-const BYTE byte_48A3C8[4] = { 1, 1, 1, 199 };
-const BYTE byte_48A3CC[4] = { 1, 1, 1, 201 };
-const BYTE byte_48A3D0[4] = { 1, 1, 2, 200 };
-const BYTE byte_48A3D4[4] = { 1, 1, 2, 202 };
+const BYTE CryptPattern42[4] = { 1, 1, 13, 163 };
+const BYTE CryptPattern43[4] = { 1, 1, 13, 164 };
+const BYTE CryptPattern44[4] = { 1, 1, 13, 165 };
+const BYTE CryptPattern45[4] = { 1, 1, 13, 166 };
+const BYTE CryptPattern46[4] = { 1, 1, 1, 112 };
+const BYTE CryptPattern47[4] = { 1, 1, 2, 113 };
+const BYTE CryptPattern48[4] = { 1, 1, 3, 114 };
+const BYTE CryptPattern49[4] = { 1, 1, 4, 115 };
+const BYTE CryptPattern50[4] = { 1, 1, 5, 116 };
+const BYTE CryptPattern51[4] = { 1, 1, 6, 117 };
+const BYTE CryptPattern52[4] = { 1, 1, 7, 118 };
+const BYTE CryptPattern53[4] = { 1, 1, 8, 119 };
+const BYTE CryptPattern54[4] = { 1, 1, 9, 120 };
+const BYTE CryptPattern55[4] = { 1, 1, 10, 121 };
+const BYTE CryptPattern56[4] = { 1, 1, 11, 122 };
+const BYTE CryptPattern57[4] = { 1, 1, 12, 123 };
+const BYTE CryptPattern58[4] = { 1, 1, 13, 124 };
+const BYTE CryptPattern59[4] = { 1, 1, 14, 125 };
+const BYTE CryptPattern60[4] = { 1, 1, 15, 126 };
+const BYTE CryptPattern61[4] = { 1, 1, 16, 127 };
+const BYTE CryptPattern62[4] = { 1, 1, 17, 128 };
+const BYTE CryptPattern63[4] = { 1, 1, 1, 129 };
+const BYTE CryptPattern64[4] = { 1, 1, 2, 130 };
+const BYTE CryptPattern65[4] = { 1, 1, 3, 131 };
+const BYTE CryptPattern66[4] = { 1, 1, 4, 132 };
+const BYTE CryptPattern67[4] = { 1, 1, 5, 133 };
+const BYTE CryptPattern68[4] = { 1, 1, 6, 134 };
+const BYTE CryptPattern69[4] = { 1, 1, 7, 135 };
+const BYTE CryptPattern70[4] = { 1, 1, 8, 136 };
+const BYTE CryptPattern71[4] = { 1, 1, 9, 137 };
+const BYTE CryptPattern72[4] = { 1, 1, 10, 138 };
+const BYTE CryptPattern73[4] = { 1, 1, 11, 139 };
+const BYTE CryptPattern74[4] = { 1, 1, 12, 140 };
+const BYTE CryptPattern75[4] = { 1, 1, 13, 141 };
+const BYTE CryptPattern76[4] = { 1, 1, 14, 142 };
+const BYTE CryptPattern77[4] = { 1, 1, 15, 143 };
+const BYTE CryptPattern78[4] = { 1, 1, 16, 144 };
+const BYTE CryptPattern79[4] = { 1, 1, 17, 145 };
+const BYTE CryptPattern80[4] = { 1, 1, 1, 146 };
+const BYTE CryptPattern81[4] = { 1, 1, 2, 147 };
+const BYTE CryptPattern82[4] = { 1, 1, 3, 148 };
+const BYTE CryptPattern83[4] = { 1, 1, 4, 149 };
+const BYTE CryptPattern84[4] = { 1, 1, 5, 150 };
+const BYTE CryptPattern85[4] = { 1, 1, 6, 151 };
+const BYTE CryptPattern86[4] = { 1, 1, 7, 152 };
+const BYTE CryptPattern87[4] = { 1, 1, 8, 153 };
+const BYTE CryptPattern88[4] = { 1, 1, 9, 154 };
+const BYTE CryptPattern89[4] = { 1, 1, 10, 155 };
+const BYTE CryptPattern90[4] = { 1, 1, 11, 156 };
+const BYTE CryptPattern91[4] = { 1, 1, 12, 157 };
+const BYTE CryptPattern92[4] = { 1, 1, 13, 158 };
+const BYTE CryptPattern93[4] = { 1, 1, 14, 159 };
+const BYTE CryptPattern94[4] = { 1, 1, 15, 160 };
+const BYTE CryptPattern95[4] = { 1, 1, 16, 161 };
+const BYTE CryptPattern96[4] = { 1, 1, 17, 162 };
+const BYTE CryptPattern97[4] = { 1, 1, 1, 199 };
+const BYTE CryptPattern98[4] = { 1, 1, 1, 201 };
+const BYTE CryptPattern99[4] = { 1, 1, 2, 200 };
+const BYTE CryptPattern100[4] = { 1, 1, 2, 202 };
 
 /* data */
 
@@ -2603,11 +2603,11 @@ static void DRLG_L5(lvl_entry entry)
 		DRLG_L5Subs();
 	} else {
 		drlg_l1_crypt_pattern1(10);
-		drlg_l1_crypt_rndset(byte_48A1B4, 95);
-		drlg_l1_crypt_rndset(byte_48A1B8, 95);
-		drlg_l1_crypt_rndset(byte_48A1C0, 100);
-		drlg_l1_crypt_rndset(byte_48A1C8, 100);
-		drlg_l1_crypt_rndset(byte_48A1E0, 60);
+		drlg_l1_crypt_rndset(CryptPattern1, 95);
+		drlg_l1_crypt_rndset(CryptPattern2, 95);
+		drlg_l1_crypt_rndset(CryptPattern3, 100);
+		drlg_l1_crypt_rndset(CryptPattern4, 100);
+		drlg_l1_crypt_rndset(CryptPattern9, 60);
 		drlg_l1_crypt_lavafloor();
 		switch (currlevel) {
 		case 21:
@@ -2711,125 +2711,125 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 
 void drlg_l1_crypt_pattern1(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A3C8, rndper);
-	drlg_l1_crypt_rndset(byte_48A3CC, rndper);
-	drlg_l1_crypt_rndset(byte_48A3D0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3D4, rndper);
+	drlg_l1_crypt_rndset(CryptPattern97, rndper);
+	drlg_l1_crypt_rndset(CryptPattern98, rndper);
+	drlg_l1_crypt_rndset(CryptPattern99, rndper);
+	drlg_l1_crypt_rndset(CryptPattern100, rndper);
 }
 
 void drlg_l1_crypt_pattern2(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A2FC, rndper);
-	drlg_l1_crypt_rndset(byte_48A300, rndper);
-	drlg_l1_crypt_rndset(byte_48A304, rndper);
-	drlg_l1_crypt_rndset(byte_48A308, rndper);
-	drlg_l1_crypt_rndset(byte_48A30C, rndper);
-	drlg_l1_crypt_rndset(byte_48A310, rndper);
-	drlg_l1_crypt_rndset(byte_48A314, rndper);
-	drlg_l1_crypt_rndset(byte_48A318, rndper);
-	drlg_l1_crypt_rndset(byte_48A31C, rndper);
-	drlg_l1_crypt_rndset(byte_48A320, rndper);
-	drlg_l1_crypt_rndset(byte_48A324, rndper);
-	drlg_l1_crypt_rndset(byte_48A328, rndper);
-	drlg_l1_crypt_rndset(byte_48A32C, rndper);
-	drlg_l1_crypt_rndset(byte_48A330, rndper);
-	drlg_l1_crypt_rndset(byte_48A334, rndper);
-	drlg_l1_crypt_rndset(byte_48A338, rndper);
-	drlg_l1_crypt_rndset(byte_48A33C, rndper);
+	drlg_l1_crypt_rndset(CryptPattern46, rndper);
+	drlg_l1_crypt_rndset(CryptPattern47, rndper);
+	drlg_l1_crypt_rndset(CryptPattern48, rndper);
+	drlg_l1_crypt_rndset(CryptPattern49, rndper);
+	drlg_l1_crypt_rndset(CryptPattern50, rndper);
+	drlg_l1_crypt_rndset(CryptPattern51, rndper);
+	drlg_l1_crypt_rndset(CryptPattern52, rndper);
+	drlg_l1_crypt_rndset(CryptPattern53, rndper);
+	drlg_l1_crypt_rndset(CryptPattern54, rndper);
+	drlg_l1_crypt_rndset(CryptPattern55, rndper);
+	drlg_l1_crypt_rndset(CryptPattern56, rndper);
+	drlg_l1_crypt_rndset(CryptPattern57, rndper);
+	drlg_l1_crypt_rndset(CryptPattern58, rndper);
+	drlg_l1_crypt_rndset(CryptPattern59, rndper);
+	drlg_l1_crypt_rndset(CryptPattern60, rndper);
+	drlg_l1_crypt_rndset(CryptPattern61, rndper);
+	drlg_l1_crypt_rndset(CryptPattern62, rndper);
 }
 
 void drlg_l1_crypt_pattern3(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A340, rndper);
-	drlg_l1_crypt_rndset(byte_48A344, rndper);
-	drlg_l1_crypt_rndset(byte_48A348, rndper);
-	drlg_l1_crypt_rndset(byte_48A34C, rndper);
-	drlg_l1_crypt_rndset(byte_48A350, rndper);
-	drlg_l1_crypt_rndset(byte_48A354, rndper);
-	drlg_l1_crypt_rndset(byte_48A358, rndper);
-	drlg_l1_crypt_rndset(byte_48A35C, rndper);
-	drlg_l1_crypt_rndset(byte_48A360, rndper);
-	drlg_l1_crypt_rndset(byte_48A364, rndper);
-	drlg_l1_crypt_rndset(byte_48A368, rndper);
-	drlg_l1_crypt_rndset(byte_48A36C, rndper);
-	drlg_l1_crypt_rndset(byte_48A370, rndper);
-	drlg_l1_crypt_rndset(byte_48A374, rndper);
-	drlg_l1_crypt_rndset(byte_48A378, rndper);
-	drlg_l1_crypt_rndset(byte_48A37C, rndper);
-	drlg_l1_crypt_rndset(byte_48A380, rndper);
+	drlg_l1_crypt_rndset(CryptPattern63, rndper);
+	drlg_l1_crypt_rndset(CryptPattern64, rndper);
+	drlg_l1_crypt_rndset(CryptPattern65, rndper);
+	drlg_l1_crypt_rndset(CryptPattern66, rndper);
+	drlg_l1_crypt_rndset(CryptPattern67, rndper);
+	drlg_l1_crypt_rndset(CryptPattern68, rndper);
+	drlg_l1_crypt_rndset(CryptPattern69, rndper);
+	drlg_l1_crypt_rndset(CryptPattern70, rndper);
+	drlg_l1_crypt_rndset(CryptPattern71, rndper);
+	drlg_l1_crypt_rndset(CryptPattern72, rndper);
+	drlg_l1_crypt_rndset(CryptPattern73, rndper);
+	drlg_l1_crypt_rndset(CryptPattern74, rndper);
+	drlg_l1_crypt_rndset(CryptPattern75, rndper);
+	drlg_l1_crypt_rndset(CryptPattern76, rndper);
+	drlg_l1_crypt_rndset(CryptPattern77, rndper);
+	drlg_l1_crypt_rndset(CryptPattern78, rndper);
+	drlg_l1_crypt_rndset(CryptPattern79, rndper);
 }
 
 void drlg_l1_crypt_pattern4(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A384, rndper);
-	drlg_l1_crypt_rndset(byte_48A388, rndper);
-	drlg_l1_crypt_rndset(byte_48A38C, rndper);
-	drlg_l1_crypt_rndset(byte_48A390, rndper);
-	drlg_l1_crypt_rndset(byte_48A394, rndper);
-	drlg_l1_crypt_rndset(byte_48A398, rndper);
-	drlg_l1_crypt_rndset(byte_48A39C, rndper);
-	drlg_l1_crypt_rndset(byte_48A3A0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3A4, rndper);
-	drlg_l1_crypt_rndset(byte_48A3A8, rndper);
-	drlg_l1_crypt_rndset(byte_48A3AC, rndper);
-	drlg_l1_crypt_rndset(byte_48A3B0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3B4, rndper);
-	drlg_l1_crypt_rndset(byte_48A3B8, rndper);
-	drlg_l1_crypt_rndset(byte_48A3BC, rndper);
-	drlg_l1_crypt_rndset(byte_48A3C0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3C4, rndper);
+	drlg_l1_crypt_rndset(CryptPattern80, rndper);
+	drlg_l1_crypt_rndset(CryptPattern81, rndper);
+	drlg_l1_crypt_rndset(CryptPattern82, rndper);
+	drlg_l1_crypt_rndset(CryptPattern83, rndper);
+	drlg_l1_crypt_rndset(CryptPattern84, rndper);
+	drlg_l1_crypt_rndset(CryptPattern85, rndper);
+	drlg_l1_crypt_rndset(CryptPattern86, rndper);
+	drlg_l1_crypt_rndset(CryptPattern87, rndper);
+	drlg_l1_crypt_rndset(CryptPattern88, rndper);
+	drlg_l1_crypt_rndset(CryptPattern89, rndper);
+	drlg_l1_crypt_rndset(CryptPattern90, rndper);
+	drlg_l1_crypt_rndset(CryptPattern91, rndper);
+	drlg_l1_crypt_rndset(CryptPattern92, rndper);
+	drlg_l1_crypt_rndset(CryptPattern93, rndper);
+	drlg_l1_crypt_rndset(CryptPattern94, rndper);
+	drlg_l1_crypt_rndset(CryptPattern95, rndper);
+	drlg_l1_crypt_rndset(CryptPattern96, rndper);
 }
 
 void drlg_l1_crypt_pattern5(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A260, rndper);
-	drlg_l1_crypt_rndset(byte_48A278, rndper);
-	drlg_l1_crypt_rndset(byte_48A290, rndper);
-	drlg_l1_crypt_rndset(byte_48A2A8, rndper);
-	drlg_l1_crypt_rndset(byte_48A2C0, rndper);
-	drlg_l1_crypt_rndset(byte_48A2D8, rndper);
-	drlg_l1_crypt_rndset(byte_48A2EC, rndper);
-	drlg_l1_crypt_rndset(byte_48A2F0, rndper);
-	drlg_l1_crypt_rndset(byte_48A2F4, rndper);
-	drlg_l1_crypt_rndset(byte_48A2F8, rndper);
+	drlg_l1_crypt_rndset(CryptPattern36, rndper);
+	drlg_l1_crypt_rndset(CryptPattern37, rndper);
+	drlg_l1_crypt_rndset(CryptPattern38, rndper);
+	drlg_l1_crypt_rndset(CryptPattern39, rndper);
+	drlg_l1_crypt_rndset(CryptPattern40, rndper);
+	drlg_l1_crypt_rndset(CryptPattern41, rndper);
+	drlg_l1_crypt_rndset(CryptPattern42, rndper);
+	drlg_l1_crypt_rndset(CryptPattern43, rndper);
+	drlg_l1_crypt_rndset(CryptPattern44, rndper);
+	drlg_l1_crypt_rndset(CryptPattern45, rndper);
 }
 
 void drlg_l1_crypt_pattern6(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A1F4, rndper);
-	drlg_l1_crypt_rndset(byte_48A1FC, rndper);
-	drlg_l1_crypt_rndset(byte_48A1F8, rndper);
-	drlg_l1_crypt_rndset(byte_48A200, rndper);
-	drlg_l1_crypt_rndset(byte_48A204, rndper);
-	drlg_l1_crypt_rndset(byte_48A208, rndper);
-	drlg_l1_crypt_rndset(byte_48A20C, rndper);
-	drlg_l1_crypt_rndset(byte_48A210, rndper);
-	drlg_l1_crypt_rndset(byte_48A214, rndper);
-	drlg_l1_crypt_rndset(byte_48A218, rndper);
-	drlg_l1_crypt_rndset(byte_48A21C, rndper);
-	drlg_l1_crypt_rndset(byte_48A220, rndper);
-	drlg_l1_crypt_rndset(byte_48A224, rndper);
-	drlg_l1_crypt_rndset(byte_48A228, rndper);
-	drlg_l1_crypt_rndset(byte_48A22C, rndper);
-	drlg_l1_crypt_rndset(byte_48A230, rndper);
-	drlg_l1_crypt_rndset(byte_48A234, rndper);
-	drlg_l1_crypt_rndset(byte_48A238, rndper);
-	drlg_l1_crypt_rndset(byte_48A23C, rndper);
-	drlg_l1_crypt_rndset(byte_48A240, rndper);
-	drlg_l1_crypt_rndset(byte_48A244, rndper);
-	drlg_l1_crypt_rndset(byte_48A248, rndper);
-	drlg_l1_crypt_rndset(byte_48A24C, rndper);
-	drlg_l1_crypt_rndset(byte_48A250, rndper);
-	drlg_l1_crypt_rndset(byte_48A254, rndper);
-	drlg_l1_crypt_rndset(byte_48A258, rndper);
+	drlg_l1_crypt_rndset(CryptPattern10, rndper);
+	drlg_l1_crypt_rndset(CryptPattern12, rndper);
+	drlg_l1_crypt_rndset(CryptPattern11, rndper);
+	drlg_l1_crypt_rndset(CryptPattern13, rndper);
+	drlg_l1_crypt_rndset(CryptPattern14, rndper);
+	drlg_l1_crypt_rndset(CryptPattern15, rndper);
+	drlg_l1_crypt_rndset(CryptPattern16, rndper);
+	drlg_l1_crypt_rndset(CryptPattern17, rndper);
+	drlg_l1_crypt_rndset(CryptPattern18, rndper);
+	drlg_l1_crypt_rndset(CryptPattern19, rndper);
+	drlg_l1_crypt_rndset(CryptPattern20, rndper);
+	drlg_l1_crypt_rndset(CryptPattern21, rndper);
+	drlg_l1_crypt_rndset(CryptPattern22, rndper);
+	drlg_l1_crypt_rndset(CryptPattern23, rndper);
+	drlg_l1_crypt_rndset(CryptPattern24, rndper);
+	drlg_l1_crypt_rndset(CryptPattern25, rndper);
+	drlg_l1_crypt_rndset(CryptPattern26, rndper);
+	drlg_l1_crypt_rndset(CryptPattern27, rndper);
+	drlg_l1_crypt_rndset(CryptPattern28, rndper);
+	drlg_l1_crypt_rndset(CryptPattern29, rndper);
+	drlg_l1_crypt_rndset(CryptPattern30, rndper);
+	drlg_l1_crypt_rndset(CryptPattern31, rndper);
+	drlg_l1_crypt_rndset(CryptPattern32, rndper);
+	drlg_l1_crypt_rndset(CryptPattern33, rndper);
+	drlg_l1_crypt_rndset(CryptPattern34, rndper);
+	drlg_l1_crypt_rndset(CryptPattern35, rndper);
 }
 
 void drlg_l1_crypt_pattern7(int rndper)
 {
-	drlg_l1_crypt_rndset(byte_48A1D0, rndper);
-	drlg_l1_crypt_rndset(byte_48A1D4, rndper);
-	drlg_l1_crypt_rndset(byte_48A1D8, rndper);
-	drlg_l1_crypt_rndset(byte_48A1DC, rndper);
+	drlg_l1_crypt_rndset(CryptPattern5, rndper);
+	drlg_l1_crypt_rndset(CryptPattern6, rndper);
+	drlg_l1_crypt_rndset(CryptPattern7, rndper);
+	drlg_l1_crypt_rndset(CryptPattern8, rndper);
 }
 
 } // namespace devilution

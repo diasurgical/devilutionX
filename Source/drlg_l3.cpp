@@ -536,15 +536,15 @@ const BYTE L3ANVIL[] = {
 	0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A76C[] = { 1, 1, 8, 25 };
-const BYTE byte_48A770[] = { 1, 1, 8, 26 };
-const BYTE byte_48A774[] = { 1, 1, 8, 27 };
-const BYTE byte_48A778[] = { 1, 1, 8, 28 };
-const BYTE byte_48A77C[] = { 1, 1, 7, 29 };
-const BYTE byte_48A780[] = { 1, 1, 7, 30 };
-const BYTE byte_48A784[] = { 1, 1, 7, 31 };
-const BYTE byte_48A788[] = { 1, 1, 7, 32 };
-const BYTE byte_48A790[] = {
+const BYTE HivePattern1[] = { 1, 1, 8, 25 };
+const BYTE HivePattern2[] = { 1, 1, 8, 26 };
+const BYTE HivePattern3[] = { 1, 1, 8, 27 };
+const BYTE HivePattern4[] = { 1, 1, 8, 28 };
+const BYTE HivePattern5[] = { 1, 1, 7, 29 };
+const BYTE HivePattern6[] = { 1, 1, 7, 30 };
+const BYTE HivePattern7[] = { 1, 1, 7, 31 };
+const BYTE HivePattern8[] = { 1, 1, 7, 32 };
+const BYTE HivePattern9[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -557,7 +557,7 @@ const BYTE byte_48A790[] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A7A8[] = {
+const BYTE HivePattern10[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -570,25 +570,25 @@ const BYTE byte_48A7A8[] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A7BC[] = { 1, 1, 9, 33 };
-const BYTE byte_48A7C0[] = { 1, 1, 9, 34 };
-const BYTE byte_48A7C4[] = { 1, 1, 9, 35 };
-const BYTE byte_48A7C8[] = { 1, 1, 9, 36 };
-const BYTE byte_48A7CC[] = { 1, 1, 9, 37 };
-const BYTE byte_48A7D0[] = { 1, 1, 11, 38 };
-const BYTE byte_48A7D4[] = { 1, 1, 10, 39 };
-const BYTE byte_48A7D8[] = { 1, 1, 10, 40 };
-const BYTE byte_48A7DC[] = { 1, 1, 10, 41 };
-const BYTE byte_48A7E0[] = { 1, 1, 10, 42 };
-const BYTE byte_48A7E4[] = { 1, 1, 10, 43 };
-const BYTE byte_48A7E8[] = { 1, 1, 11, 44 };
-const BYTE byte_48A7EC[] = { 1, 1, 9, 45 };
-const BYTE byte_48A7F0[] = { 1, 1, 9, 46 };
-const BYTE byte_48A7F4[] = { 1, 1, 10, 47 };
-const BYTE byte_48A7F8[] = { 1, 1, 10, 48 };
-const BYTE byte_48A7FC[] = { 1, 1, 11, 49 };
-const BYTE byte_48A800[] = { 1, 1, 11, 50 };
-const BYTE byte_48A808[] = {
+const BYTE HivePattern11[] = { 1, 1, 9, 33 };
+const BYTE HivePattern12[] = { 1, 1, 9, 34 };
+const BYTE HivePattern13[] = { 1, 1, 9, 35 };
+const BYTE HivePattern14[] = { 1, 1, 9, 36 };
+const BYTE HivePattern15[] = { 1, 1, 9, 37 };
+const BYTE HivePattern16[] = { 1, 1, 11, 38 };
+const BYTE HivePattern17[] = { 1, 1, 10, 39 };
+const BYTE HivePattern18[] = { 1, 1, 10, 40 };
+const BYTE HivePattern19[] = { 1, 1, 10, 41 };
+const BYTE HivePattern20[] = { 1, 1, 10, 42 };
+const BYTE HivePattern21[] = { 1, 1, 10, 43 };
+const BYTE HivePattern22[] = { 1, 1, 11, 44 };
+const BYTE HivePattern23[] = { 1, 1, 9, 45 };
+const BYTE HivePattern24[] = { 1, 1, 9, 46 };
+const BYTE HivePattern25[] = { 1, 1, 10, 47 };
+const BYTE HivePattern26[] = { 1, 1, 10, 48 };
+const BYTE HivePattern27[] = { 1, 1, 11, 49 };
+const BYTE HivePattern28[] = { 1, 1, 11, 50 };
+const BYTE HivePattern29[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -601,7 +601,7 @@ const BYTE byte_48A808[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A820[] = {
+const BYTE HivePattern30[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -614,7 +614,7 @@ const BYTE byte_48A820[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A838[] = {
+const BYTE HivePattern31[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -627,7 +627,7 @@ const BYTE byte_48A838[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A850[] = {
+const BYTE HivePattern32[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -640,7 +640,7 @@ const BYTE byte_48A850[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A868[] = {
+const BYTE HivePattern33[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -653,7 +653,7 @@ const BYTE byte_48A868[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A880[] = {
+const BYTE HivePattern34[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -666,7 +666,7 @@ const BYTE byte_48A880[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A898[] = {
+const BYTE HivePattern35[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -679,7 +679,7 @@ const BYTE byte_48A898[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A8B0[] = {
+const BYTE HivePattern36[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -692,7 +692,7 @@ const BYTE byte_48A8B0[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A8C8[] = {
+const BYTE HivePattern37[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -705,7 +705,7 @@ const BYTE byte_48A8C8[] = {
 	 0,  0, 0,
 	// clang-format on
 };
-const BYTE byte_48A8E0[] = {
+const BYTE HivePattern38[] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -777,7 +777,7 @@ const BYTE L6ISLE5[] = {
 	7, 7,
 	// clang-format on
 };
-const BYTE byte_48A948[] = {
+const BYTE HivePattern39[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -792,7 +792,7 @@ const BYTE byte_48A948[] = {
 	7,   7,   7, 7,
 	// clang-format on
 };
-const BYTE byte_48A970[] = {
+const BYTE HivePattern40[] = {
 	// clang-format off
 	4, 4, // width, height
 
@@ -807,7 +807,7 @@ const BYTE byte_48A970[] = {
 	7,   7,   7, 7,
 	// clang-format on
 };
-const BYTE byte_48A998[] = {
+const BYTE HivePattern41[] = {
 	// clang-format off
 	4, 5, // width, height
 
@@ -824,7 +824,7 @@ const BYTE byte_48A998[] = {
 	7,   7,   7, 7,
 	// clang-format on
 };
-const BYTE byte_48A9C8[] = {
+const BYTE HivePattern42[] = {
 	// clang-format off
 	4, 5, // width, height
 
@@ -2332,13 +2332,13 @@ static void DRLG_L3(lvl_entry entry)
 		if (currlevel < 17) {
 			DRLG_L3Pool();
 		} else {
-			if (drlg_l3_hive_rnd_piece(byte_48A998, 30))
+			if (drlg_l3_hive_rnd_piece(HivePattern41, 30))
 				lavapool++;
-			if (drlg_l3_hive_rnd_piece(byte_48A9C8, 40))
+			if (drlg_l3_hive_rnd_piece(HivePattern42, 40))
 				lavapool++;
-			if (drlg_l3_hive_rnd_piece(byte_48A948, 50))
+			if (drlg_l3_hive_rnd_piece(HivePattern39, 50))
 				lavapool++;
-			if (drlg_l3_hive_rnd_piece(byte_48A970, 60))
+			if (drlg_l3_hive_rnd_piece(HivePattern40, 60))
 				lavapool++;
 			if (lavapool < 3)
 				lavapool = 0;
@@ -2415,54 +2415,54 @@ static void DRLG_L3(lvl_entry entry)
 		DRLG_L3PlaceRndSet(L3XTRA4, 25);
 		DRLG_L3PlaceRndSet(L3XTRA5, 25);
 	} else {
-		DRLG_L3PlaceRndSet(byte_48A76C, 20);
-		DRLG_L3PlaceRndSet(byte_48A770, 20);
-		DRLG_L3PlaceRndSet(byte_48A774, 20);
-		DRLG_L3PlaceRndSet(byte_48A778, 20);
-		DRLG_L3PlaceRndSet(byte_48A808, 10);
-		DRLG_L3PlaceRndSet(byte_48A820, 15);
-		DRLG_L3PlaceRndSet(byte_48A838, 20);
-		DRLG_L3PlaceRndSet(byte_48A850, 25);
-		DRLG_L3PlaceRndSet(byte_48A868, 30);
-		DRLG_L3PlaceRndSet(byte_48A880, 35);
-		DRLG_L3PlaceRndSet(byte_48A898, 40);
-		DRLG_L3PlaceRndSet(byte_48A8B0, 45);
-		DRLG_L3PlaceRndSet(byte_48A8C8, 50);
-		DRLG_L3PlaceRndSet(byte_48A8E0, 55);
-		DRLG_L3PlaceRndSet(byte_48A8E0, 10);
-		DRLG_L3PlaceRndSet(byte_48A8C8, 15);
-		DRLG_L3PlaceRndSet(byte_48A8B0, 20);
-		DRLG_L3PlaceRndSet(byte_48A898, 25);
-		DRLG_L3PlaceRndSet(byte_48A880, 30);
-		DRLG_L3PlaceRndSet(byte_48A868, 35);
-		DRLG_L3PlaceRndSet(byte_48A850, 40);
-		DRLG_L3PlaceRndSet(byte_48A838, 45);
-		DRLG_L3PlaceRndSet(byte_48A820, 50);
-		DRLG_L3PlaceRndSet(byte_48A808, 55);
-		DRLG_L3PlaceRndSet(byte_48A790, 40);
-		DRLG_L3PlaceRndSet(byte_48A7A8, 45);
-		DRLG_L3PlaceRndSet(byte_48A77C, 25);
-		DRLG_L3PlaceRndSet(byte_48A780, 25);
-		DRLG_L3PlaceRndSet(byte_48A784, 25);
-		DRLG_L3PlaceRndSet(byte_48A788, 25);
-		DRLG_L3PlaceRndSet(byte_48A7BC, 25);
-		DRLG_L3PlaceRndSet(byte_48A7C0, 25);
-		DRLG_L3PlaceRndSet(byte_48A7C4, 25);
-		DRLG_L3PlaceRndSet(byte_48A7C8, 25);
-		DRLG_L3PlaceRndSet(byte_48A7CC, 25);
-		DRLG_L3PlaceRndSet(byte_48A7D4, 25);
-		DRLG_L3PlaceRndSet(byte_48A7D8, 25);
-		DRLG_L3PlaceRndSet(byte_48A7DC, 25);
-		DRLG_L3PlaceRndSet(byte_48A7E0, 25);
-		DRLG_L3PlaceRndSet(byte_48A7E4, 25);
-		DRLG_L3PlaceRndSet(byte_48A7EC, 25);
-		DRLG_L3PlaceRndSet(byte_48A7F0, 25);
-		DRLG_L3PlaceRndSet(byte_48A7F4, 25);
-		DRLG_L3PlaceRndSet(byte_48A7F8, 25);
-		DRLG_L3PlaceRndSet(byte_48A7D0, 25);
-		DRLG_L3PlaceRndSet(byte_48A7E8, 25);
-		DRLG_L3PlaceRndSet(byte_48A7FC, 25);
-		DRLG_L3PlaceRndSet(byte_48A800, 25);
+		DRLG_L3PlaceRndSet(HivePattern1, 20);
+		DRLG_L3PlaceRndSet(HivePattern2, 20);
+		DRLG_L3PlaceRndSet(HivePattern3, 20);
+		DRLG_L3PlaceRndSet(HivePattern4, 20);
+		DRLG_L3PlaceRndSet(HivePattern29, 10);
+		DRLG_L3PlaceRndSet(HivePattern30, 15);
+		DRLG_L3PlaceRndSet(HivePattern31, 20);
+		DRLG_L3PlaceRndSet(HivePattern32, 25);
+		DRLG_L3PlaceRndSet(HivePattern33, 30);
+		DRLG_L3PlaceRndSet(HivePattern34, 35);
+		DRLG_L3PlaceRndSet(HivePattern35, 40);
+		DRLG_L3PlaceRndSet(HivePattern36, 45);
+		DRLG_L3PlaceRndSet(HivePattern37, 50);
+		DRLG_L3PlaceRndSet(HivePattern38, 55);
+		DRLG_L3PlaceRndSet(HivePattern38, 10);
+		DRLG_L3PlaceRndSet(HivePattern37, 15);
+		DRLG_L3PlaceRndSet(HivePattern36, 20);
+		DRLG_L3PlaceRndSet(HivePattern35, 25);
+		DRLG_L3PlaceRndSet(HivePattern34, 30);
+		DRLG_L3PlaceRndSet(HivePattern33, 35);
+		DRLG_L3PlaceRndSet(HivePattern32, 40);
+		DRLG_L3PlaceRndSet(HivePattern31, 45);
+		DRLG_L3PlaceRndSet(HivePattern30, 50);
+		DRLG_L3PlaceRndSet(HivePattern29, 55);
+		DRLG_L3PlaceRndSet(HivePattern9, 40);
+		DRLG_L3PlaceRndSet(HivePattern10, 45);
+		DRLG_L3PlaceRndSet(HivePattern5, 25);
+		DRLG_L3PlaceRndSet(HivePattern6, 25);
+		DRLG_L3PlaceRndSet(HivePattern7, 25);
+		DRLG_L3PlaceRndSet(HivePattern8, 25);
+		DRLG_L3PlaceRndSet(HivePattern11, 25);
+		DRLG_L3PlaceRndSet(HivePattern12, 25);
+		DRLG_L3PlaceRndSet(HivePattern13, 25);
+		DRLG_L3PlaceRndSet(HivePattern14, 25);
+		DRLG_L3PlaceRndSet(HivePattern15, 25);
+		DRLG_L3PlaceRndSet(HivePattern17, 25);
+		DRLG_L3PlaceRndSet(HivePattern18, 25);
+		DRLG_L3PlaceRndSet(HivePattern19, 25);
+		DRLG_L3PlaceRndSet(HivePattern20, 25);
+		DRLG_L3PlaceRndSet(HivePattern21, 25);
+		DRLG_L3PlaceRndSet(HivePattern23, 25);
+		DRLG_L3PlaceRndSet(HivePattern24, 25);
+		DRLG_L3PlaceRndSet(HivePattern25, 25);
+		DRLG_L3PlaceRndSet(HivePattern26, 25);
+		DRLG_L3PlaceRndSet(HivePattern16, 25);
+		DRLG_L3PlaceRndSet(HivePattern22, 25);
+		DRLG_L3PlaceRndSet(HivePattern27, 25);
+		DRLG_L3PlaceRndSet(HivePattern28, 25);
 	}
 
 	for (int j = 0; j < DMAXY; j++) {
