@@ -1594,7 +1594,7 @@ void DrawAndBlit()
 		DrawLifeFlaskLower(out);
 	}
 	if (drawmanaflag) {
-		UpdateManaFlask(out);
+		DrawManaFlaskLower(out);
 	}
 	if (drawbtnflag) {
 		DrawCtrlBtns(out);
