@@ -957,53 +957,53 @@ static void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, in
  */
 static void Zoom(const Surface &out)
 {
-	int viewport_width = out.w();
-	int viewport_offset_x = 0;
+	int viewportWidth = out.w();
+	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
 		if (chrflag || questlog) {
-			viewport_width -= SPANEL_WIDTH;
-			viewport_offset_x = SPANEL_WIDTH;
+			viewportWidth -= SPANEL_WIDTH;
+			viewportOffsetX = SPANEL_WIDTH;
 		} else if (invflag || sbookflag) {
-			viewport_width -= SPANEL_WIDTH;
+			viewportWidth -= SPANEL_WIDTH;
 		}
 	}
 
 	// We round to even for the source width and height.
 	// If the width / height was odd, we copy just one extra pixel / row later on.
-	const int src_width = (viewport_width + 1) / 2;
-	const int doubleable_width = viewport_width / 2;
-	const int src_height = (out.h() + 1) / 2;
-	const int doubleable_height = out.h() / 2;
+	const int srcWidth = (viewportWidth + 1) / 2;
+	const int doubleableWidth = viewportWidth / 2;
+	const int srcHeight = (out.h() + 1) / 2;
+	const int doubleableHeight = out.h() / 2;
 
-	BYTE *src = out.at(src_width - 1, src_height - 1);
-	BYTE *dst = out.at(viewport_offset_x + viewport_width - 1, out.h() - 1);
-	const bool odd_viewport_width = (viewport_width % 2) == 1;
+	BYTE *src = out.at(srcWidth - 1, srcHeight - 1);
+	BYTE *dst = out.at(viewportOffsetX + viewportWidth - 1, out.h() - 1);
+	const bool oddViewportWidth = (viewportWidth % 2) == 1;
 
-	for (int hgt = 0; hgt < doubleable_height; hgt++) {
+	for (int hgt = 0; hgt < doubleableHeight; hgt++) {
 		// Double the pixels in the line.
-		for (int i = 0; i < doubleable_width; i++) {
+		for (int i = 0; i < doubleableWidth; i++) {
 			*dst-- = *src;
 			*dst-- = *src;
 			--src;
 		}
 
 		// Copy a single extra pixel if the output width is odd.
-		if (odd_viewport_width) {
+		if (oddViewportWidth) {
 			*dst-- = *src;
 			--src;
 		}
 
 		// Skip the rest of the source line.
-		src -= (out.pitch() - src_width);
+		src -= (out.pitch() - srcWidth);
 
 		// Double the line.
-		memcpy(dst - out.pitch() + 1, dst + 1, viewport_width);
+		memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
 
 		// Skip the rest of the destination line.
-		dst -= 2 * out.pitch() - viewport_width;
+		dst -= 2 * out.pitch() - viewportWidth;
 	}
 	if ((out.h() % 2) == 1) {
-		memcpy(dst - out.pitch() + 1, dst + 1, viewport_width);
+		memcpy(dst - out.pitch() + 1, dst + 1, viewportWidth);
 	}
 }
 
@@ -1431,7 +1431,7 @@ void EnableFrameCount()
  */
 static void DrawFPS(const Surface &out)
 {
-	char String[12];
+	char string[12];
 
 	if (!frameflag || !gbActive) {
 		return;
@@ -1445,8 +1445,8 @@ static void DrawFPS(const Surface &out)
 		framerate = 1000 * frameend / frames;
 		frameend = 0;
 	}
-	snprintf(String, 12, "%i FPS", framerate);
-	DrawString(out, String, Point { 8, 65 }, UIS_RED);
+	snprintf(string, 12, "%i FPS", framerate);
+	DrawString(out, string, Point { 8, 65 }, UIS_RED);
 }
 
 /**
@@ -1460,14 +1460,14 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
 	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
 	using CoordType = decltype(SDL_Rect {}.x);
-	SDL_Rect src_rect {
+	SDL_Rect srcRect {
 		static_cast<CoordType>(dwX),
 		static_cast<CoordType>(dwY),
 		dwWdt, dwHgt
 	};
-	SDL_Rect dst_rect { dwX, dwY, dwWdt, dwHgt };
+	SDL_Rect dstRect { dwX, dwY, dwWdt, dwHgt };
 
-	BltFast(&src_rect, &dst_rect);
+	BltFast(&srcRect, &dstRect);
 }
 
 /**

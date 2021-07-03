@@ -101,10 +101,10 @@ extern int debug_mode_key_j;
 #endif
 
 struct QuickMessage {
-    /** Config variable names for quick message */
-    const char *const key;
-    /** Default quick message */
-    const char *const message;
+	/** Config variable names for quick message */
+	const char *const key;
+	/** Default quick message */
+	const char *const message;
 };
 
 constexpr size_t QUICK_MESSAGE_OPTIONS = 4;

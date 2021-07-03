@@ -189,12 +189,12 @@ static void DrawCutscene()
 
 void interface_msg_pump()
 {
-	tagMSG Msg;
+	tagMSG msg;
 
-	while (FetchMessage(&Msg)) {
-		if (Msg.message != DVL_WM_QUIT) {
-			TranslateMessage(&Msg);
-			PushMessage(&Msg);
+	while (FetchMessage(&msg)) {
+		if (msg.message != DVL_WM_QUIT) {
+			TranslateMessage(&msg);
+			PushMessage(&msg);
 		}
 	}
 }

@@ -9,8 +9,7 @@
 
 #include <cstdint>
 
-namespace devilution
-{
+namespace devilution {
 
 /**
  * @brief Set the state of the RandomNumberEngine used by the base game to the specific seed

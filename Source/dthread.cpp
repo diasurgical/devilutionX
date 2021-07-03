@@ -21,14 +21,14 @@ static SDL_Thread *sghThread = nullptr;
 
 static unsigned int DthreadHandler(void * /*data*/)
 {
-	const char *error_buf;
+	const char *errorBuf;
 	TMegaPkt *pkt;
 	DWORD dwMilliseconds;
 
 	while (dthread_running) {
 		if (sgpInfoHead == nullptr && WaitForEvent(sghWorkToDoEvent) == -1) {
-			error_buf = SDL_GetError();
-			app_fatal("dthread4:\n%s", error_buf);
+			errorBuf = SDL_GetError();
+			app_fatal("dthread4:\n%s", errorBuf);
 		}
 
 		sgMemCrit.Enter();
@@ -97,7 +97,7 @@ void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, int dwLen)
 
 void dthread_start()
 {
-	const char *error_buf;
+	const char *errorBuf;
 
 	if (!gbIsMultiplayer) {
 		return;
@@ -105,16 +105,16 @@ void dthread_start()
 
 	sghWorkToDoEvent = StartEvent();
 	if (sghWorkToDoEvent == nullptr) {
-		error_buf = SDL_GetError();
-		app_fatal("dthread:1\n%s", error_buf);
+		errorBuf = SDL_GetError();
+		app_fatal("dthread:1\n%s", errorBuf);
 	}
 
 	dthread_running = true;
 
 	sghThread = CreateThread(DthreadHandler, &glpDThreadId);
 	if (sghThread == nullptr) {
-		error_buf = SDL_GetError();
-		app_fatal("dthread2:\n%s", error_buf);
+		errorBuf = SDL_GetError();
+		app_fatal("dthread2:\n%s", errorBuf);
 	}
 }
 

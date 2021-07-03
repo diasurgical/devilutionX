@@ -299,7 +299,7 @@ void UiErrorOkDialog(const char *text, const char *caption, bool error)
 	UiOkDialog(text, caption, error, vecNULL);
 }
 
-void UiErrorOkDialog(const char *text, const std::vector<UiItemBase *>& renderBehind)
+void UiErrorOkDialog(const char *text, const std::vector<UiItemBase *> &renderBehind)
 {
 	UiErrorOkDialog(text, nullptr, renderBehind);
 }

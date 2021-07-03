@@ -58,9 +58,9 @@ uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta)
 	}
 	while (curTurnsInTransit++ < gdwTurnsInTransit) {
 
-		int turn_tmp = turn_upper_bit | (curTurn & 0x7FFFFFFF);
+		int turnTmp = turn_upper_bit | (curTurn & 0x7FFFFFFF);
 		turn_upper_bit = 0;
-		int turn = turn_tmp;
+		int turn = turnTmp;
 
 		if (!SNetSendTurn((char *)&turn, sizeof(turn))) {
 			nthread_terminate_game("SNetSendTurn");

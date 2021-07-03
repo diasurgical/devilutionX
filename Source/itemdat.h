@@ -497,10 +497,10 @@ enum item_effect_type : int8_t {
 	IPL_THORNS,
 	IPL_NOMANA,
 	IPL_NOHEALPLR, // unused
-	IPL_0x30,     // Unknown
-	IPL_0x31,     // Unknown
-	IPL_FIREBALL, /* only used in hellfire */
-	IPL_0x33,     // Unknown
+	IPL_0x30,      // Unknown
+	IPL_0x31,      // Unknown
+	IPL_FIREBALL,  /* only used in hellfire */
+	IPL_0x33,      // Unknown
 	IPL_ABSHALFTRAP,
 	IPL_KNOCKBACK,
 	IPL_NOHEALMON, // unused

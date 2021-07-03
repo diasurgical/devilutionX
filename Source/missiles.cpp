@@ -1683,21 +1683,21 @@ void AddMana(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*miene
 {
 	auto &player = plr[id];
 
-	int ManaAmount = (GenerateRnd(10) + 1) << 6;
+	int manaAmount = (GenerateRnd(10) + 1) << 6;
 	for (int i = 0; i < player._pLevel; i++) {
-		ManaAmount += (GenerateRnd(4) + 1) << 6;
+		manaAmount += (GenerateRnd(4) + 1) << 6;
 	}
 	for (int i = 0; i < missile[mi]._mispllvl; i++) {
-		ManaAmount += (GenerateRnd(6) + 1) << 6;
+		manaAmount += (GenerateRnd(6) + 1) << 6;
 	}
 	if (player._pClass == HeroClass::Sorcerer)
-		ManaAmount *= 2;
+		manaAmount *= 2;
 	if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard)
-		ManaAmount += ManaAmount / 2;
-	player._pMana += ManaAmount;
+		manaAmount += manaAmount / 2;
+	player._pMana += manaAmount;
 	if (player._pMana > player._pMaxMana)
 		player._pMana = player._pMaxMana;
-	player._pManaBase += ManaAmount;
+	player._pManaBase += manaAmount;
 	if (player._pManaBase > player._pMaxManaBase)
 		player._pManaBase = player._pMaxManaBase;
 	UseMana(id, SPL_MANA);
@@ -4154,7 +4154,7 @@ void MI_Blood(int i)
 
 void MI_Weapexp(int i)
 {
-	int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
+	constexpr int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
 
 	missile[i]._mirange--;
 	int id = missile[i]._misource;

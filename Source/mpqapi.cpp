@@ -158,12 +158,12 @@ private:
 	bool CheckError(const char *fmt, PrintFArgs... args)
 	{
 		if (s_->fail()) {
-			std::string fmt_with_error = fmt;
-			fmt_with_error.append(": failed with \"{}\"");
-			const char *error_message = std::strerror(errno);
-			if (error_message == nullptr)
-				error_message = "";
-			LogError(LogCategory::System, fmt_with_error.c_str(), args..., error_message);
+			std::string fmtWithError = fmt;
+			fmtWithError.append(": failed with \"{}\"");
+			const char *errorMessage = std::strerror(errno);
+			if (errorMessage == nullptr)
+				errorMessage = "";
+			LogError(LogCategory::System, fmtWithError.c_str(), args..., errorMessage);
 #ifdef _DEBUG
 		} else {
 			LogVerbose(LogCategory::System, fmt, args...);
@@ -338,13 +338,13 @@ bool IsValidMPQHeader(const Archive &archive, _FILEHEADER *hdr)
 
 bool ReadMPQHeader(Archive *archive, _FILEHEADER *hdr)
 {
-	const bool has_hdr = archive->size >= sizeof(*hdr);
-	if (has_hdr) {
+	const bool hasHdr = archive->size >= sizeof(*hdr);
+	if (hasHdr) {
 		if (!archive->stream.Read(reinterpret_cast<char *>(hdr), sizeof(*hdr)))
 			return false;
 		ByteSwapHdr(hdr);
 	}
-	if (!has_hdr || !IsValidMPQHeader(*archive, hdr)) {
+	if (!hasHdr || !IsValidMPQHeader(*archive, hdr)) {
 		InitDefaultMpqHeader(archive, hdr);
 	}
 	return true;
@@ -509,19 +509,19 @@ bool WriteFileContents(const char *pszName, const byte *pbData, size_t dwLen, _B
 	Hash(pszName, 3);
 
 	constexpr size_t SectorSize = 4096;
-	const uint32_t num_sectors = (dwLen + (SectorSize - 1)) / SectorSize;
-	const uint32_t offset_table_bytesize = sizeof(uint32_t) * (num_sectors + 1);
-	pBlk->offset = FindFreeBlock(dwLen + offset_table_bytesize, &pBlk->sizealloc);
+	const uint32_t numSectors = (dwLen + (SectorSize - 1)) / SectorSize;
+	const uint32_t offsetTableByteSize = sizeof(uint32_t) * (numSectors + 1);
+	pBlk->offset = FindFreeBlock(dwLen + offsetTableByteSize, &pBlk->sizealloc);
 	pBlk->sizefile = dwLen;
 	pBlk->flags = 0x80000100;
 
 	// We populate the table of sector offset while we write the data.
 	// We can't pre-populate it because we don't know the compressed sector sizes yet.
 	// First offset is the start of the first sector, last offset is the end of the last sector.
-	std::unique_ptr<uint32_t[]> sectoroffsettable { new uint32_t[num_sectors + 1] };
+	std::unique_ptr<uint32_t[]> sectoroffsettable { new uint32_t[numSectors + 1] };
 
 #ifdef CAN_SEEKP_BEYOND_EOF
-	if (!cur_archive.stream.Seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
+	if (!cur_archive.stream.Seekp(pBlk->offset + offsetTableByteSize, std::ios::beg))
 		return false;
 #else
 	// Ensure we do not Seekp beyond EOF by filling the missing space.
@@ -529,31 +529,31 @@ bool WriteFileContents(const char *pszName, const byte *pbData, size_t dwLen, _B
 	if (!cur_archive.stream.Seekp(0, std::ios::end) || !cur_archive.stream.Tellp(&stream_end))
 		return false;
 	const std::uintmax_t cur_size = stream_end - cur_archive.stream_begin;
-	if (cur_size < pBlk->offset + offset_table_bytesize) {
+	if (cur_size < pBlk->offset + offsetTableByteSize) {
 		if (cur_size < pBlk->offset) {
 			std::unique_ptr<char[]> filler { new char[pBlk->offset - cur_size] };
 			if (!cur_archive.stream.Write(filler.get(), pBlk->offset - cur_size))
 				return false;
 		}
-		if (!cur_archive.stream.Write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
+		if (!cur_archive.stream.Write(reinterpret_cast<const char *>(sectoroffsettable.get()), offsetTableByteSize))
 			return false;
 	} else {
-		if (!cur_archive.stream.Seekp(pBlk->offset + offset_table_bytesize, std::ios::beg))
+		if (!cur_archive.stream.Seekp(pBlk->offset + offsetTableByteSize, std::ios::beg))
 			return false;
 	}
 #endif
 
-	uint32_t destsize = offset_table_bytesize;
-	byte mpq_buf[SectorSize];
-	std::size_t cur_sector = 0;
+	uint32_t destsize = offsetTableByteSize;
+	byte mpqBuf[SectorSize];
+	std::size_t curSector = 0;
 	while (true) {
 		uint32_t len = std::min(dwLen, SectorSize);
-		memcpy(mpq_buf, pbData, len);
+		memcpy(mpqBuf, pbData, len);
 		pbData += len;
-		len = PkwareCompress(mpq_buf, len);
-		if (!cur_archive.stream.Write((char *)mpq_buf, len))
+		len = PkwareCompress(mpqBuf, len);
+		if (!cur_archive.stream.Write((char *)mpqBuf, len))
 			return false;
-		sectoroffsettable[cur_sector++] = SDL_SwapLE32(destsize);
+		sectoroffsettable[curSector++] = SDL_SwapLE32(destsize);
 		destsize += len; // compressed length
 		if (dwLen > SectorSize)
 			dwLen -= SectorSize;
@@ -561,19 +561,19 @@ bool WriteFileContents(const char *pszName, const byte *pbData, size_t dwLen, _B
 			break;
 	}
 
-	sectoroffsettable[num_sectors] = SDL_SwapLE32(destsize);
+	sectoroffsettable[numSectors] = SDL_SwapLE32(destsize);
 	if (!cur_archive.stream.Seekp(pBlk->offset, std::ios::beg))
 		return false;
-	if (!cur_archive.stream.Write(reinterpret_cast<const char *>(sectoroffsettable.get()), offset_table_bytesize))
+	if (!cur_archive.stream.Write(reinterpret_cast<const char *>(sectoroffsettable.get()), offsetTableByteSize))
 		return false;
-	if (!cur_archive.stream.Seekp(destsize - offset_table_bytesize, std::ios::cur))
+	if (!cur_archive.stream.Seekp(destsize - offsetTableByteSize, std::ios::cur))
 		return false;
 
 	if (destsize < pBlk->sizealloc) {
-		const uint32_t block_size = pBlk->sizealloc - destsize;
-		if (block_size >= 1024) {
+		const uint32_t blockSize = pBlk->sizealloc - destsize;
+		if (blockSize >= 1024) {
 			pBlk->sizealloc = destsize;
-			AllocBlock(pBlk->sizealloc + pBlk->offset, block_size);
+			AllocBlock(pBlk->sizealloc + pBlk->offset, blockSize);
 		}
 	}
 	return true;
@@ -591,10 +591,10 @@ void mpqapi_remove_hash_entry(const char *pszName)
 	_HASHENTRY *pHashTbl = &cur_archive.sgpHashTbl[hIdx];
 	_BLOCKENTRY *blockEntry = &cur_archive.sgpBlockTbl[pHashTbl->block];
 	pHashTbl->block = -2;
-	int block_offset = blockEntry->offset;
-	int block_size = blockEntry->sizealloc;
+	int blockOffset = blockEntry->offset;
+	int blockSize = blockEntry->sizealloc;
 	memset(blockEntry, 0, sizeof(*blockEntry));
-	AllocBlock(block_offset, block_size);
+	AllocBlock(blockOffset, blockSize);
 	cur_archive.modified = true;
 }
 
@@ -690,13 +690,13 @@ bool OpenMPQ(const char *pszArchive)
 	}
 	return true;
 on_error:
-	cur_archive.Close(/*clear_tables=*/true);
+	cur_archive.Close(/*clearTables=*/true);
 	return false;
 }
 
 bool mpqapi_flush_and_close(bool bFree)
 {
-	return cur_archive.Close(/*clear_tables=*/bFree);
+	return cur_archive.Close(/*clearTables=*/bFree);
 }
 
 } // namespace devilution

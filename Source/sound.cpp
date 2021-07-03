@@ -180,9 +180,9 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 		}
 		DWORD dwBytes = SFileGetFileSize(file);
-		auto wave_file = MakeArraySharedPtr<std::uint8_t>(dwBytes);
-		SFileReadFileThreadSafe(file, wave_file.get(), dwBytes);
-		error = snd->DSB.SetChunk(wave_file, dwBytes);
+		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
+		SFileReadFileThreadSafe(file, waveFile.get(), dwBytes);
+		error = snd->DSB.SetChunk(waveFile, dwBytes);
 		SFileCloseFileThreadSafe(file);
 	}
 #endif

@@ -50,63 +50,63 @@ static void SHA1Init(SHA1Context *context)
 
 static void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	std::uint32_t W[80];
+	std::uint32_t w[80];
 
 	auto *buf = (std::uint32_t *)context->buffer;
 	for (int i = 0; i < 16; i++)
-		W[i] = SDL_SwapLE32(buf[i]);
+		w[i] = SDL_SwapLE32(buf[i]);
 
 	for (int i = 16; i < 80; i++) {
-		W[i] = W[i - 16] ^ W[i - 14] ^ W[i - 8] ^ W[i - 3];
+		w[i] = w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3];
 	}
 
-	std::uint32_t A = context->state[0];
-	std::uint32_t B = context->state[1];
-	std::uint32_t C = context->state[2];
-	std::uint32_t D = context->state[3];
-	std::uint32_t E = context->state[4];
+	std::uint32_t a = context->state[0];
+	std::uint32_t b = context->state[1];
+	std::uint32_t c = context->state[2];
+	std::uint32_t d = context->state[3];
+	std::uint32_t e = context->state[4];
 
 	for (int i = 0; i < 20; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[i] + 0x5A827999;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+		std::uint32_t temp = SHA1CircularShift(5, a) + ((b & c) | ((~b) & d)) + e + w[i] + 0x5A827999;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(30, b);
+		b = a;
+		a = temp;
 	}
 
 	for (int i = 20; i < 40; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+		std::uint32_t temp = SHA1CircularShift(5, a) + (b ^ c ^ d) + e + w[i] + 0x6ED9EBA1;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(30, b);
+		b = a;
+		a = temp;
 	}
 
 	for (int i = 40; i < 60; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, A) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+		std::uint32_t temp = SHA1CircularShift(5, a) + ((b & c) | (b & d) | (c & d)) + e + w[i] + 0x8F1BBCDC;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(30, b);
+		b = a;
+		a = temp;
 	}
 
 	for (int i = 60; i < 80; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+		std::uint32_t temp = SHA1CircularShift(5, a) + (b ^ c ^ d) + e + w[i] + 0xCA62C1D6;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(30, b);
+		b = a;
+		a = temp;
 	}
 
-	context->state[0] += A;
-	context->state[1] += B;
-	context->state[2] += C;
-	context->state[3] += D;
-	context->state[4] += E;
+	context->state[0] += a;
+	context->state[1] += b;
+	context->state[2] += c;
+	context->state[3] += d;
+	context->state[4] += e;
 }
 
 static void SHA1Input(SHA1Context *context, const char *messageArray, std::uint32_t len)
@@ -132,14 +132,14 @@ void SHA1Clear()
 
 void SHA1Result(int n, char messageDigest[SHA1HashSize])
 {
-	std::uint32_t *Message_Digest_Block;
+	std::uint32_t *messageDigestBlock;
 	int i;
 
-	Message_Digest_Block = (std::uint32_t *)messageDigest;
+	messageDigestBlock = (std::uint32_t *)messageDigest;
 	if (messageDigest != nullptr) {
 		for (i = 0; i < 5; i++) {
-			*Message_Digest_Block = SDL_SwapLE32(sgSHA1[n].state[i]);
-			Message_Digest_Block++;
+			*messageDigestBlock = SDL_SwapLE32(sgSHA1[n].state[i]);
+			messageDigestBlock++;
 		}
 	}
 }

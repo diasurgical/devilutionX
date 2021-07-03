@@ -55,9 +55,9 @@ std::string GetSavePath(uint32_t saveNum)
 		}
 	}
 
-	char save_num_str[21];
-	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%i", saveNum);
-	path.append(save_num_str);
+	char saveNumStr[21];
+	snprintf(saveNumStr, sizeof(saveNumStr) / sizeof(char), "%i", saveNum);
+	path.append(saveNumStr);
 	path.append(ext);
 	return path;
 }
@@ -280,7 +280,7 @@ PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
 
 void pfile_write_hero(bool writeGameData, bool clearTables)
 {
-	PFileScopedArchiveWriter scoped_writer(clearTables);
+	PFileScopedArchiveWriter scopedWriter(clearTables);
 	if (writeGameData) {
 		SaveGameData();
 		RenameTempToPerm();
@@ -338,20 +338,20 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
 	PkPlayerStruct pkplr;
 
-	uint32_t save_num = GetSaveNumberFromName(heroinfo->name);
-	if (save_num >= MAX_CHARACTERS) {
-		for (save_num = 0; save_num < MAX_CHARACTERS; save_num++) {
-			if (hero_names[save_num][0] == '\0')
+	uint32_t saveNum = GetSaveNumberFromName(heroinfo->name);
+	if (saveNum >= MAX_CHARACTERS) {
+		for (saveNum = 0; saveNum < MAX_CHARACTERS; saveNum++) {
+			if (hero_names[saveNum][0] == '\0')
 				break;
 		}
-		if (save_num >= MAX_CHARACTERS)
+		if (saveNum >= MAX_CHARACTERS)
 			return false;
 	}
-	if (!OpenArchive(save_num))
+	if (!OpenArchive(saveNum))
 		return false;
 	mpqapi_remove_hash_entries(GetFileName);
-	strncpy(hero_names[save_num], heroinfo->name, PLR_NAME_LEN);
-	hero_names[save_num][PLR_NAME_LEN - 1] = '\0';
+	strncpy(hero_names[saveNum], heroinfo->name, PLR_NAME_LEN);
+	hero_names[saveNum][PLR_NAME_LEN - 1] = '\0';
 
 	auto &player = plr[0];
 	CreatePlayer(0, heroinfo->heroclass);
@@ -371,10 +371,10 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 bool pfile_delete_save(_uiheroinfo *heroInfo)
 {
-	uint32_t save_num = GetSaveNumberFromName(heroInfo->name);
-	if (save_num < MAX_CHARACTERS) {
-		hero_names[save_num][0] = '\0';
-		RemoveFile(GetSavePath(save_num).c_str());
+	uint32_t saveNum = GetSaveNumberFromName(heroInfo->name);
+	if (saveNum < MAX_CHARACTERS) {
+		hero_names[saveNum][0] = '\0';
+		RemoveFile(GetSavePath(saveNum).c_str());
 	}
 	return true;
 }
@@ -384,8 +384,8 @@ void pfile_read_player_from_save(char name[16], int playerId)
 	HANDLE archive;
 	PkPlayerStruct pkplr;
 
-	uint32_t save_num = GetSaveNumberFromName(name);
-	archive = OpenSaveArchive(save_num);
+	uint32_t saveNum = GetSaveNumberFromName(name);
+	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
 		app_fatal("%s", _("Unable to open archive"));
 	if (!ReadHero(archive, &pkplr))
@@ -410,13 +410,13 @@ bool LevelFileExists()
 
 	GetPermLevelNames(szName);
 
-	uint32_t save_num = GetSaveNumberFromName(plr[myplr]._pName);
-	if (!OpenArchive(save_num))
+	uint32_t saveNum = GetSaveNumberFromName(plr[myplr]._pName);
+	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to read to save file archive"));
 
-	bool has_file = mpqapi_has_file(szName);
+	bool hasFile = mpqapi_has_file(szName);
 	mpqapi_flush_and_close(true);
-	return has_file;
+	return hasFile;
 }
 
 void GetTempLevelNames(char *szTemp)
@@ -429,14 +429,14 @@ void GetTempLevelNames(char *szTemp)
 
 void GetPermLevelNames(char *szPerm)
 {
-	uint32_t save_num = GetSaveNumberFromName(plr[myplr]._pName);
+	uint32_t saveNum = GetSaveNumberFromName(plr[myplr]._pName);
 	GetTempLevelNames(szPerm);
-	if (!OpenArchive(save_num))
+	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to read to save file archive"));
 
-	bool has_file = mpqapi_has_file(szPerm);
+	bool hasFile = mpqapi_has_file(szPerm);
 	mpqapi_flush_and_close(true);
-	if (!has_file) {
+	if (!hasFile) {
 		if (setlevel)
 			sprintf(szPerm, "perms%02d", setlvlnum);
 		else
@@ -449,8 +449,8 @@ void pfile_remove_temp_files()
 	if (gbIsMultiplayer)
 		return;
 
-	uint32_t save_num = GetSaveNumberFromName(plr[myplr]._pName);
-	if (!OpenArchive(save_num))
+	uint32_t saveNum = GetSaveNumberFromName(plr[myplr]._pName);
+	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to write to save file archive"));
 	mpqapi_remove_hash_entries(GetTempSaveNames);
 	mpqapi_flush_and_close(true);
@@ -460,8 +460,8 @@ std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)
 {
 	HANDLE archive;
 
-	uint32_t save_num = GetSaveNumberFromName(plr[myplr]._pName);
-	archive = OpenSaveArchive(save_num);
+	uint32_t saveNum = GetSaveNumberFromName(plr[myplr]._pName);
+	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
 		return nullptr;
 
@@ -475,16 +475,16 @@ std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)
 
 void pfile_update(bool forceSave)
 {
-	static Uint32 save_prev_tc;
+	static Uint32 prevTick;
 
 	if (!gbIsMultiplayer)
 		return;
 
 	Uint32 tick = SDL_GetTicks();
-	if (!forceSave && tick - save_prev_tc <= 60000)
+	if (!forceSave && tick - prevTick <= 60000)
 		return;
 
-	save_prev_tc = tick;
+	prevTick = tick;
 	pfile_write_hero();
 }
 

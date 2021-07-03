@@ -376,22 +376,22 @@ bool IsUniqueAvailable(int i)
 
 static bool IsPrefixValidForItemType(int i, int flgs)
 {
-	int PLIType = PL_Prefix[i].PLIType;
+	int itemTypes = PL_Prefix[i].PLIType;
 
 	if (!gbIsHellfire) {
 		if (i > 82)
 			return false;
 
 		if (i >= 12 && i <= 20)
-			PLIType &= ~PLT_STAFF;
+			itemTypes &= ~PLT_STAFF;
 	}
 
-	return (flgs & PLIType) != 0;
+	return (flgs & itemTypes) != 0;
 }
 
 static bool IsSuffixValidForItemType(int i, int flgs)
 {
-	int PLIType = PL_Suffix[i].PLIType;
+	int itemTypes = PL_Suffix[i].PLIType;
 
 	if (!gbIsHellfire) {
 		if (i > 94)
@@ -403,17 +403,15 @@ static bool IsSuffixValidForItemType(int i, int flgs)
 		    || (i >= 34 && i <= 36)
 		    || (i >= 41 && i <= 44)
 		    || (i >= 60 && i <= 63))
-			PLIType &= ~PLT_STAFF;
+			itemTypes &= ~PLT_STAFF;
 	}
 
-	return (flgs & PLIType) != 0;
+	return (flgs & itemTypes) != 0;
 }
 
 int items_get_currlevel()
 {
-	int lvl;
-
-	lvl = currlevel;
+	int lvl = currlevel;
 	if (currlevel >= 17 && currlevel <= 20)
 		lvl = currlevel - 8;
 	if (currlevel >= 21 && currlevel <= 24)
@@ -2747,7 +2745,7 @@ void hex2bin(const char *src, int bytes, char *target)
 
 void CornerstoneLoad(Point position)
 {
-	PkItemStruct PkSItem;
+	PkItemStruct pkSItem;
 
 	if (CornerStone.activated || position.x == 0 || position.y == 0) {
 		return;
@@ -2769,13 +2767,13 @@ void CornerstoneLoad(Point position)
 	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
 		return;
 
-	hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), (char *)&PkSItem);
+	hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), (char *)&pkSItem);
 
 	int ii = AllocateItem();
 
 	dItem[position.x][position.y] = ii + 1;
 
-	UnPackItem(&PkSItem, &items[ii], (PkSItem.dwBuff & CF_HELLFIRE) != 0);
+	UnPackItem(&pkSItem, &items[ii], (pkSItem.dwBuff & CF_HELLFIRE) != 0);
 	items[ii].position = position;
 	RespawnItem(&items[ii], false);
 	CornerStone.item = items[ii];

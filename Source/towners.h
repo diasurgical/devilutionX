@@ -45,7 +45,7 @@ struct TownerStruct {
 	byte *_tNAnim[8];
 	std::unique_ptr<byte[]> _tNData;
 	byte *_tAnimData;
-	 /** Used to get a voice line and text related to active quests when the player speaks to a town npc */
+	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
 	int16_t _tSeed;
 	/** Tile position of NPC */
 	Point position;

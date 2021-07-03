@@ -671,9 +671,9 @@ void AddObjTraps()
 					continue;
 
 				AddObject(OBJ_TRAPL, xp, j);
-				int8_t oi_trap = dObject[xp][j] - 1;
-				object[oi_trap]._oVar1 = i;
-				object[oi_trap]._oVar2 = j;
+				int8_t oiTrap = dObject[xp][j] - 1;
+				object[oiTrap]._oVar1 = i;
+				object[oiTrap]._oVar2 = j;
 				object[oi]._oTrapFlag = true;
 			} else {
 				int yp = j - 1;
@@ -684,9 +684,9 @@ void AddObjTraps()
 					continue;
 
 				AddObject(OBJ_TRAPR, i, yp);
-				int8_t oi_trap = dObject[i][yp] - 1;
-				object[oi_trap]._oVar1 = i;
-				object[oi_trap]._oVar2 = j;
+				int8_t oiTrap = dObject[i][yp] - 1;
+				object[oiTrap]._oVar1 = i;
+				object[oiTrap]._oVar2 = j;
 				object[oi]._oTrapFlag = true;
 			}
 		}
@@ -1040,55 +1040,55 @@ void InitObjects()
 			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddL2Torches();
 			if (QuestStatus(Q_BLIND)) {
-				_speech_id sp_id;
+				_speech_id spId;
 				switch (plr[myplr]._pClass) {
 				case HeroClass::Warrior:
-					sp_id = TEXT_BLINDING;
+					spId = TEXT_BLINDING;
 					break;
 				case HeroClass::Rogue:
-					sp_id = TEXT_RBLINDING;
+					spId = TEXT_RBLINDING;
 					break;
 				case HeroClass::Sorcerer:
-					sp_id = TEXT_MBLINDING;
+					spId = TEXT_MBLINDING;
 					break;
 				case HeroClass::Monk:
-					sp_id = TEXT_HBLINDING;
+					spId = TEXT_HBLINDING;
 					break;
 				case HeroClass::Bard:
-					sp_id = TEXT_BBLINDING;
+					spId = TEXT_BBLINDING;
 					break;
 				case HeroClass::Barbarian:
-					sp_id = TEXT_BLINDING;
+					spId = TEXT_BLINDING;
 					break;
 				}
-				quests[Q_BLIND]._qmsg = sp_id;
-				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, sp_id);
+				quests[Q_BLIND]._qmsg = spId;
+				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, spId);
 				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", 2 * setpc_x, 2 * setpc_y);
 			}
 			if (QuestStatus(Q_BLOOD)) {
-				_speech_id sp_id;
+				_speech_id spId;
 				switch (plr[myplr]._pClass) {
 				case HeroClass::Warrior:
-					sp_id = TEXT_BLOODY;
+					spId = TEXT_BLOODY;
 					break;
 				case HeroClass::Rogue:
-					sp_id = TEXT_RBLOODY;
+					spId = TEXT_RBLOODY;
 					break;
 				case HeroClass::Sorcerer:
-					sp_id = TEXT_MBLOODY;
+					spId = TEXT_MBLOODY;
 					break;
 				case HeroClass::Monk:
-					sp_id = TEXT_HBLOODY;
+					spId = TEXT_HBLOODY;
 					break;
 				case HeroClass::Bard:
-					sp_id = TEXT_BBLOODY;
+					spId = TEXT_BBLOODY;
 					break;
 				case HeroClass::Barbarian:
-					sp_id = TEXT_BLOODY;
+					spId = TEXT_BLOODY;
 					break;
 				}
-				quests[Q_BLOOD]._qmsg = sp_id;
-				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, sp_id);
+				quests[Q_BLOOD]._qmsg = spId;
+				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, spId);
 				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
 			}
 			InitRndBarrels();
@@ -1099,29 +1099,29 @@ void InitObjects()
 		}
 		if (leveltype == DTYPE_HELL) {
 			if (QuestStatus(Q_WARLORD)) {
-				_speech_id sp_id;
+				_speech_id spId;
 				switch (plr[myplr]._pClass) {
 				case HeroClass::Warrior:
-					sp_id = TEXT_BLOODWAR;
+					spId = TEXT_BLOODWAR;
 					break;
 				case HeroClass::Rogue:
-					sp_id = TEXT_RBLOODWAR;
+					spId = TEXT_RBLOODWAR;
 					break;
 				case HeroClass::Sorcerer:
-					sp_id = TEXT_MBLOODWAR;
+					spId = TEXT_MBLOODWAR;
 					break;
 				case HeroClass::Monk:
-					sp_id = TEXT_HBLOODWAR;
+					spId = TEXT_HBLOODWAR;
 					break;
 				case HeroClass::Bard:
-					sp_id = TEXT_BBLOODWAR;
+					spId = TEXT_BBLOODWAR;
 					break;
 				case HeroClass::Barbarian:
-					sp_id = TEXT_BLOODWAR;
+					spId = TEXT_BLOODWAR;
 					break;
 				}
-				quests[Q_WARLORD]._qmsg = sp_id;
-				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, sp_id);
+				quests[Q_WARLORD]._qmsg = spId;
+				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, spId);
 				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", 2 * setpc_x, 2 * setpc_y);
 			}
 			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
@@ -2054,9 +2054,9 @@ void Obj_BCrossDamage(int i)
 	if (plr[myplr]._pmode == PM_DEATH)
 		return;
 
-	int fire_resist = plr[myplr]._pFireResist;
-	if (fire_resist > 0)
-		damage[leveltype - 1] -= fire_resist * damage[leveltype - 1] / 100;
+	int fireResist = plr[myplr]._pFireResist;
+	if (fireResist > 0)
+		damage[leveltype - 1] -= fireResist * damage[leveltype - 1] / 100;
 
 	if (plr[myplr].position.tile.x != object[i].position.x || plr[myplr].position.tile.y != object[i].position.y - 1)
 		return;
@@ -2812,8 +2812,8 @@ void OperateBook(int pnum, int i)
 	if (object[i]._oSelFlag == 0)
 		return;
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		bool do_add_missile = false;
-		bool missile_added = false;
+		bool doAddMissile = false;
+		bool missileAdded = false;
 		for (int j = 0; j < nobjects; j++) {
 			int oi = objectactive[j];
 			int otype = object[oi]._otype;
@@ -2821,22 +2821,22 @@ void OperateBook(int pnum, int i)
 				dx = 27;
 				dy = 29;
 				object[oi]._oVar6 = 4;
-				do_add_missile = true;
+				doAddMissile = true;
 			}
 			if (otype == OBJ_MCIRCLE2 && object[oi]._oVar6 == 2) {
 				dx = 43;
 				dy = 29;
 				object[oi]._oVar6 = 4;
-				do_add_missile = true;
+				doAddMissile = true;
 			}
-			if (do_add_missile) {
+			if (doAddMissile) {
 				object[dObject[35][36] - 1]._oVar5++;
 				AddMissile(plr[pnum].position.tile, { dx, dy }, plr[pnum]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
-				missile_added = true;
-				do_add_missile = false;
+				missileAdded = true;
+				doAddMissile = false;
 			}
 		}
-		if (!missile_added)
+		if (!missileAdded)
 			return;
 	}
 	object[i]._oSelFlag = 0;
@@ -4809,12 +4809,12 @@ void SyncOpL1Door(int pnum, int cmd, int i)
 	if (pnum == myplr)
 		return;
 
-	bool do_sync = false;
+	bool doSync = false;
 	if (cmd == CMD_OPENDOOR && object[i]._oVar4 == 0)
-		do_sync = true;
+		doSync = true;
 	if (cmd == CMD_CLOSEDOOR && object[i]._oVar4 == 1)
-		do_sync = true;
-	if (!do_sync)
+		doSync = true;
+	if (!doSync)
 		return;
 
 	if (object[i]._otype == OBJ_L1LDOOR)
@@ -4828,12 +4828,12 @@ void SyncOpL2Door(int pnum, int cmd, int i)
 	if (pnum == myplr)
 		return;
 
-	bool do_sync = false;
+	bool doSync = false;
 	if (cmd == CMD_OPENDOOR && object[i]._oVar4 == 0)
-		do_sync = true;
+		doSync = true;
 	if (cmd == CMD_CLOSEDOOR && object[i]._oVar4 == 1)
-		do_sync = true;
-	if (!do_sync)
+		doSync = true;
+	if (!doSync)
 		return;
 
 	if (object[i]._otype == OBJ_L2LDOOR)
@@ -4847,12 +4847,12 @@ void SyncOpL3Door(int pnum, int cmd, int i)
 	if (pnum == myplr)
 		return;
 
-	bool do_sync = false;
+	bool doSync = false;
 	if (cmd == CMD_OPENDOOR && object[i]._oVar4 == 0)
-		do_sync = true;
+		doSync = true;
 	if (cmd == CMD_CLOSEDOOR && object[i]._oVar4 == 1)
-		do_sync = true;
-	if (!do_sync)
+		doSync = true;
+	if (!doSync)
 		return;
 
 	if (object[i]._otype == OBJ_L3LDOOR)

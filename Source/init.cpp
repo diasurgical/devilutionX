@@ -56,16 +56,16 @@ namespace {
 HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpqName)
 {
 	HANDLE archive;
-	std::string mpq_abspath;
+	std::string mpqAbsPath;
 	for (const auto &path : paths) {
-		mpq_abspath = path + mpqName;
-		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
+		mpqAbsPath = path + mpqName;
+		if (SFileOpenArchive(mpqAbsPath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
 			LogVerbose("  Found: {} in {}", mpqName, path);
 			SFileSetBasePath(path.c_str());
 			return archive;
 		}
 		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {
-			LogError("Open error {}: {}", SErrGetLastError(), mpq_abspath);
+			LogError("Open error {}: {}", SErrGetLastError(), mpqAbsPath);
 		}
 	}
 	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
@@ -80,7 +80,7 @@ HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpqName)
 void init_cleanup()
 {
 	if (gbIsMultiplayer && gbRunGame) {
-		pfile_write_hero(/*write_game_data=*/false, /*clear_tables=*/true);
+		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
 	}
 
 	if (spawn_mpq != nullptr) {
@@ -242,11 +242,11 @@ void MainWndProc(uint32_t msg)
 
 WNDPROC SetWindowProc(WNDPROC newProc)
 {
-	WNDPROC OldProc;
+	WNDPROC oldProc;
 
-	OldProc = CurrentProc;
+	oldProc = CurrentProc;
 	CurrentProc = newProc;
-	return OldProc;
+	return oldProc;
 }
 
 } // namespace devilution

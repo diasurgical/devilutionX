@@ -410,7 +410,7 @@ static void RunGameLoop(interface_mode uMsg)
 	}
 
 	if (gbIsMultiplayer) {
-		pfile_write_hero(/*write_game_data=*/false, /*clear_tables=*/true);
+		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
 	}
 
 	PaletteFadeOut(8);

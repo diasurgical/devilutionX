@@ -37,14 +37,14 @@ void play_movie(const char *pszMovie, bool userCanClose)
 #endif
 
 	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808)) {
-		tagMSG Msg;
+		tagMSG msg;
 		while (movie_playing) {
-			while (movie_playing && FetchMessage(&Msg)) {
-				switch (Msg.message) {
+			while (movie_playing && FetchMessage(&msg)) {
+				switch (msg.message) {
 				case DVL_WM_KEYDOWN:
 				case DVL_WM_LBUTTONDOWN:
 				case DVL_WM_RBUTTONDOWN:
-					if (userCanClose || (Msg.message == DVL_WM_KEYDOWN && Msg.wParam == DVL_VK_ESCAPE))
+					if (userCanClose || (msg.message == DVL_WM_KEYDOWN && msg.wParam == DVL_VK_ESCAPE))
 						movie_playing = false;
 					break;
 				case DVL_WM_QUIT:

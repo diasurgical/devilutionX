@@ -83,7 +83,7 @@ ssize_t stream_sendmsg(int socket, const struct msghdr *message, int flags)
 
 ssize_t dgram_sendmsg(int socket, const struct msghdr *message, int flags)
 {
-    return ENOTSUP;
+	return ENOTSUP;
 }
 
 ssize_t sendmsg(int socket, const struct msghdr *message, int flags)
