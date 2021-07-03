@@ -1314,7 +1314,7 @@ void DrawView(const Surface &out, int StartX, int StartY)
 	gmenu_draw(out);
 	doom_draw(out);
 	DrawInfoBox(out);
-	DrawLifeFlask(out);
+	DrawLifeFlaskUpper(out);
 	DrawManaFlask(out);
 }
 
@@ -1591,7 +1591,7 @@ void DrawAndBlit()
 		DrawCtrlPan(out);
 	}
 	if (drawhpflag) {
-		UpdateLifeFlask(out);
+		DrawLifeFlaskLower(out);
 	}
 	if (drawmanaflag) {
 		UpdateManaFlask(out);

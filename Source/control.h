@@ -76,14 +76,14 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
  * First it draws the empty flask cel and then draws the filled part on top if needed.
  */
-void DrawLifeFlask(const Surface &out);
+void DrawLifeFlaskUpper(const Surface &out);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
  * First sets the fill amount then draws the empty flask cel portion then the filled
  * flask portion.
  */
-void UpdateLifeFlask(const Surface &out);
+void DrawLifeFlaskLower(const Surface &out);
 
 void DrawManaFlask(const Surface &out);
 void control_update_life_mana();

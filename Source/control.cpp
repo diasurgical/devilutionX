@@ -578,7 +578,7 @@ static void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePos
 	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
 }
 
-void DrawLifeFlask(const Surface &out)
+void DrawLifeFlaskUpper(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
@@ -595,7 +595,7 @@ void DrawLifeFlask(const Surface &out)
 	}
 }
 
-void UpdateLifeFlask(const Surface &out)
+void DrawLifeFlaskLower(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
