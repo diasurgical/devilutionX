@@ -1483,12 +1483,12 @@ static void L5makeDungeon()
 {
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
-			int i_2 = i * 2;
-			int j_2 = j * 2;
-			L5dungeon[i_2][j_2] = dungeon[i][j];
-			L5dungeon[i_2][j_2 + 1] = dungeon[i][j];
-			L5dungeon[i_2 + 1][j_2] = dungeon[i][j];
-			L5dungeon[i_2 + 1][j_2 + 1] = dungeon[i][j];
+			int i2 = i * 2;
+			int j2 = j * 2;
+			L5dungeon[i2][j2] = dungeon[i][j];
+			L5dungeon[i2][j2 + 1] = dungeon[i][j];
+			L5dungeon[i2 + 1][j2] = dungeon[i][j];
+			L5dungeon[i2 + 1][j2 + 1] = dungeon[i][j];
 		}
 	}
 }

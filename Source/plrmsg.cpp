@@ -26,17 +26,17 @@ void plrmsg_delay(bool delay)
 {
 	int i;
 	_plrmsg *pMsg;
-	static DWORD plrmsg_ticks;
+	static DWORD plrmsgTicks;
 
 	if (delay) {
-		plrmsg_ticks = -SDL_GetTicks();
+		plrmsgTicks = -SDL_GetTicks();
 		return;
 	}
 
-	plrmsg_ticks += SDL_GetTicks();
+	plrmsgTicks += SDL_GetTicks();
 	pMsg = plr_msgs;
 	for (i = 0; i < PMSG_COUNT; i++, pMsg++)
-		pMsg->time += plrmsg_ticks;
+		pMsg->time += plrmsgTicks;
 }
 
 void ErrorPlrMsg(const char *pszMsg)

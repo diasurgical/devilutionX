@@ -50,14 +50,14 @@ void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 
 static void LoadGamma()
 {
-	int gamma_value = sgOptions.Graphics.nGammaCorrection;
+	int gammaValue = sgOptions.Graphics.nGammaCorrection;
 
-	if (gamma_value < 30) {
-		gamma_value = 30;
-	} else if (gamma_value > 100) {
-		gamma_value = 100;
+	if (gammaValue < 30) {
+		gammaValue = 30;
+	} else if (gammaValue > 100) {
+		gammaValue = 100;
 	}
-	sgOptions.Graphics.nGammaCorrection = gamma_value - gamma_value % 5;
+	sgOptions.Graphics.nGammaCorrection = gammaValue - gammaValue % 5;
 }
 
 void palette_init()
@@ -136,14 +136,14 @@ void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 		uint8_t b;
 	};
 
-	std::array<Color, 256> PalData;
+	std::array<Color, 256> palData;
 
-	LoadFileInMem(pszFileName, PalData);
+	LoadFileInMem(pszFileName, palData);
 
-	for (unsigned i = 0; i < PalData.size(); i++) {
-		orig_palette[i].r = PalData[i].r;
-		orig_palette[i].g = PalData[i].g;
-		orig_palette[i].b = PalData[i].b;
+	for (unsigned i = 0; i < palData.size(); i++) {
+		orig_palette[i].r = palData[i].r;
+		orig_palette[i].g = palData[i].g;
+		orig_palette[i].b = palData[i].b;
 #ifndef USE_SDL1
 		orig_palette[i].a = SDL_ALPHA_OPAQUE;
 #endif

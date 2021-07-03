@@ -150,16 +150,16 @@ bool SVidPlayBegin(const char *filename, int flags)
 	//0x800000 // Edge detection
 	//0x200800 // Clear FB
 
-	HANDLE video_stream;
-	SFileOpenFile(filename, &video_stream);
+	HANDLE videoStream;
+	SFileOpenFile(filename, &videoStream);
 #ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
-	FILE *file = FILE_FromStormHandle(video_stream);
+	FILE *file = FILE_FromStormHandle(videoStream);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
-	int bytestoread = SFileGetFileSize(video_stream);
+	int bytestoread = SFileGetFileSize(videoStream);
 	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
-	SFileReadFileThreadSafe(video_stream, SVidBuffer.get(), bytestoread);
-	SFileCloseFileThreadSafe(video_stream);
+	SFileReadFileThreadSafe(videoStream, SVidBuffer.get(), bytestoread);
+	SFileCloseFileThreadSafe(videoStream);
 	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
 #endif
 	if (SVidSMK == nullptr) {

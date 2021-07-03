@@ -187,10 +187,10 @@ public:
 
 	~SaveHelper()
 	{
-		const auto encoded_len = codec_get_encoded_len(m_cur_);
+		const auto encodedLen = codec_get_encoded_len(m_cur_);
 		const char *const password = pfile_get_password();
-		codec_encode(m_buffer_.get(), m_cur_, encoded_len, password);
-		mpqapi_write_file(m_szFileName_, m_buffer_.get(), encoded_len);
+		codec_encode(m_buffer_.get(), m_cur_, encodedLen, password);
+		mpqapi_write_file(m_szFileName_, m_buffer_.get(), encodedLen);
 	}
 };
 
@@ -361,7 +361,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->Skip(2); // Alignment
 	player._pTSpell = static_cast<spell_id>(file->NextLE<int32_t>());
 	file->Skip(sizeof(int8_t)); // Skip _pTSplType
-	file->Skip(3); // Alignment
+	file->Skip(3);              // Alignment
 	player._pRSpell = static_cast<spell_id>(file->NextLE<int32_t>());
 	player._pRSplType = static_cast<spell_type>(file->NextLE<int8_t>());
 	file->Skip(3); // Alignment
@@ -1189,8 +1189,8 @@ void LoadGame(bool firstflag)
 		itemId = file.NextLE<int8_t>();
 	for (int i = 0; i < numitems; i++)
 		LoadItem(&file, itemactive[i]);
-	for (bool &UniqueItemFlag : UniqueItemFlags)
-		UniqueItemFlag = file.NextBool8();
+	for (bool &uniqueItemFlag : UniqueItemFlags)
+		uniqueItemFlag = file.NextBool8();
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -1427,7 +1427,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->Skip(2); // Alignment
 	file->WriteLE<int32_t>(player._pTSpell);
 	file->Skip(sizeof(int8_t)); // Skip _pTSplType
-	file->Skip(3); // Alignment
+	file->Skip(3);              // Alignment
 	file->WriteLE<int32_t>(player._pRSpell);
 	file->WriteLE<int8_t>(player._pRSplType);
 	file->Skip(3); // Alignment
@@ -1955,8 +1955,8 @@ void SaveGameData()
 		file.WriteLE<int8_t>(itemId);
 	for (int i = 0; i < numitems; i++)
 		SaveItem(&file, &items[itemactive[i]]);
-	for (bool UniqueItemFlag : UniqueItemFlags)
-		file.WriteLE<uint8_t>(UniqueItemFlag ? 1 : 0);
+	for (bool uniqueItemFlag : UniqueItemFlags)
+		file.WriteLE<uint8_t>(uniqueItemFlag ? 1 : 0);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2019,12 +2019,12 @@ void SaveGameData()
 void SaveGame()
 {
 	gbValidSaveFile = true;
-	pfile_write_hero(/*write_game_data=*/true);
+	pfile_write_hero(/*writeGameData=*/true);
 }
 
 void SaveLevel()
 {
-	PFileScopedArchiveWriter scoped_writer;
+	PFileScopedArchiveWriter scopedWriter;
 
 	DoUnVision(plr[myplr].position.tile, plr[myplr]._pLightRad); // fix for vision staying on the level
 
@@ -2185,7 +2185,7 @@ void LoadLevel()
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dMissile[i][j] = 0; /// BUGFIX: supposed to load saved missiles with "file.NextLE<int8_t>()"?
+				dMissile[i][j] = 0;           /// BUGFIX: supposed to load saved missiles with "file.NextLE<int8_t>()"?
 		}
 	}
 

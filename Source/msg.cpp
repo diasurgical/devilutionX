@@ -543,15 +543,15 @@ void CheckUpdatePlayer(int pnum)
 
 void PlayerMessageFormat(const char *pszFmt, ...)
 {
-	static DWORD msg_err_timer;
+	static DWORD msgErrTimer;
 	DWORD ticks;
 	char msg[256];
 	va_list va;
 
 	va_start(va, pszFmt);
 	ticks = SDL_GetTicks();
-	if (ticks - msg_err_timer >= 5000) {
-		msg_err_timer = ticks;
+	if (ticks - msgErrTimer >= 5000) {
+		msgErrTimer = ticks;
 		vsprintf(msg, pszFmt, va);
 		ErrorPlrMsg(msg);
 	}

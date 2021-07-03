@@ -495,10 +495,10 @@ void DoLighting(Point position, int nRadius, int lnum)
 {
 	int xoff = 0;
 	int yoff = 0;
-	int light_x = 0;
-	int light_y = 0;
-	int block_x = 0;
-	int block_y = 0;
+	int lightX = 0;
+	int lightY = 0;
+	int blockX = 0;
+	int blockY = 0;
 
 	if (lnum >= 0) {
 		xoff = LightList[lnum].position.offset.x;
@@ -513,24 +513,24 @@ void DoLighting(Point position, int nRadius, int lnum)
 		}
 	}
 
-	int dist_x = xoff;
-	int dist_y = yoff;
+	int distX = xoff;
+	int distY = yoff;
 
-	int min_x = 15;
+	int minX = 15;
 	if (position.x - 15 < 0) {
-		min_x = position.x + 1;
+		minX = position.x + 1;
 	}
-	int max_x = 15;
+	int maxX = 15;
 	if (position.x + 15 > MAXDUNX) {
-		max_x = MAXDUNX - position.x;
+		maxX = MAXDUNX - position.x;
 	}
-	int min_y = 15;
+	int minY = 15;
 	if (position.y - 15 < 0) {
-		min_y = position.y + 1;
+		minY = position.y + 1;
 	}
-	int max_y = 15;
+	int maxY = 15;
 	if (position.y + 15 > MAXDUNY) {
-		max_y = MAXDUNY - position.y;
+		maxY = MAXDUNY - position.y;
 	}
 
 	if (position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY) {
@@ -542,61 +542,61 @@ void DoLighting(Point position, int nRadius, int lnum)
 	}
 
 	int mult = xoff + 8 * yoff;
-	for (int y = 0; y < min_y; y++) {
-		for (int x = 1; x < max_x; x++) {
-			int radius_block = lightblock[mult][y][x];
-			if (radius_block < 128) {
-				int temp_x = position.x + x;
-				int temp_y = position.y + y;
-				int v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < GetLight(temp_x, temp_y))
-						SetLight(temp_x, temp_y, v);
+	for (int y = 0; y < minY; y++) {
+		for (int x = 1; x < maxX; x++) {
+			int radiusBlock = lightblock[mult][y][x];
+			if (radiusBlock < 128) {
+				int tempX = position.x + x;
+				int tempY = position.y + y;
+				int v = lightradius[nRadius][radiusBlock];
+				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
+					if (v < GetLight(tempX, tempY))
+						SetLight(tempX, tempY, v);
 			}
 		}
 	}
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
 	mult = xoff + 8 * yoff;
-	for (int y = 0; y < max_y; y++) {
-		for (int x = 1; x < max_x; x++) {
-			int radius_block = lightblock[mult][y + block_y][x + block_x];
-			if (radius_block < 128) {
-				int temp_x = position.x + y;
-				int temp_y = position.y - x;
-				int v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < GetLight(temp_x, temp_y))
-						SetLight(temp_x, temp_y, v);
+	for (int y = 0; y < maxY; y++) {
+		for (int x = 1; x < maxX; x++) {
+			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
+			if (radiusBlock < 128) {
+				int tempX = position.x + y;
+				int tempY = position.y - x;
+				int v = lightradius[nRadius][radiusBlock];
+				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
+					if (v < GetLight(tempX, tempY))
+						SetLight(tempX, tempY, v);
 			}
 		}
 	}
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
 	mult = xoff + 8 * yoff;
-	for (int y = 0; y < max_y; y++) {
-		for (int x = 1; x < min_x; x++) {
-			int radius_block = lightblock[mult][y + block_y][x + block_x];
-			if (radius_block < 128) {
-				int temp_x = position.x - x;
-				int temp_y = position.y - y;
-				int v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < GetLight(temp_x, temp_y))
-						SetLight(temp_x, temp_y, v);
+	for (int y = 0; y < maxY; y++) {
+		for (int x = 1; x < minX; x++) {
+			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
+			if (radiusBlock < 128) {
+				int tempX = position.x - x;
+				int tempY = position.y - y;
+				int v = lightradius[nRadius][radiusBlock];
+				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
+					if (v < GetLight(tempX, tempY))
+						SetLight(tempX, tempY, v);
 			}
 		}
 	}
-	RotateRadius(&xoff, &yoff, &dist_x, &dist_y, &light_x, &light_y, &block_x, &block_y);
+	RotateRadius(&xoff, &yoff, &distX, &distY, &lightX, &lightY, &blockX, &blockY);
 	mult = xoff + 8 * yoff;
-	for (int y = 0; y < min_y; y++) {
-		for (int x = 1; x < min_x; x++) {
-			int radius_block = lightblock[mult][y + block_y][x + block_x];
-			if (radius_block < 128) {
-				int temp_x = position.x - y;
-				int temp_y = position.y + x;
-				int v = lightradius[nRadius][radius_block];
-				if (temp_x >= 0 && temp_x < MAXDUNX && temp_y >= 0 && temp_y < MAXDUNY)
-					if (v < GetLight(temp_x, temp_y))
-						SetLight(temp_x, temp_y, v);
+	for (int y = 0; y < minY; y++) {
+		for (int x = 1; x < minX; x++) {
+			int radiusBlock = lightblock[mult][y + blockY][x + blockX];
+			if (radiusBlock < 128) {
+				int tempX = position.x - y;
+				int tempY = position.y + x;
+				int v = lightradius[nRadius][radiusBlock];
+				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
+					if (v < GetLight(tempX, tempY))
+						SetLight(tempX, tempY, v);
 			}
 		}
 	}
@@ -606,18 +606,18 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 {
 	nRadius++;
 
-	int min_x = nXPos - nRadius;
-	int max_x = nXPos + nRadius;
-	int min_y = nYPos - nRadius;
-	int max_y = nYPos + nRadius;
+	int minX = nXPos - nRadius;
+	int maxX = nXPos + nRadius;
+	int minY = nYPos - nRadius;
+	int maxY = nYPos + nRadius;
 
-	min_x = std::max(min_x, 0);
-	max_x = std::max(max_x, MAXDUNX);
-	min_y = std::max(min_y, 0);
-	max_y = std::max(max_y, MAXDUNY);
+	minX = std::max(minX, 0);
+	maxX = std::max(maxX, MAXDUNX);
+	minY = std::max(minY, 0);
+	maxY = std::max(maxY, MAXDUNY);
 
-	for (int y = min_y; y < max_y; y++) {
-		for (int x = min_x; x < max_x; x++) {
+	for (int y = minY; y < maxY; y++) {
+		for (int x = minX; x < maxX; x++) {
 			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
 				dLight[x][y] = dPreLight[x][y];
 		}

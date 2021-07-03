@@ -720,11 +720,11 @@ void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int
 	if (player.AnimationData[static_cast<size_t>(graphic)].RawData == nullptr)
 		LoadPlrGFX(player, graphic);
 
-	auto &CelSprites = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections;
+	auto &celSprites = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections;
 
 	CelSprite *pCelSprite = nullptr;
-	if (CelSprites[dir])
-		pCelSprite = &*CelSprites[dir];
+	if (celSprites[dir])
+		pCelSprite = &*celSprites[dir];
 
 	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
 }
@@ -1622,7 +1622,7 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	Direction pd = player._pdir;
 
 	int skippedAnimationFrames = 0;
-	const int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
+	constexpr int ZenFlags = ISPL_FASTRECOVER | ISPL_FASTERRECOVER | ISPL_FASTESTRECOVER;
 	if ((player._pIFlags & ZenFlags) == ZenFlags) { // if multiple hitrecovery modes are present the skipping of frames can go so far, that they skip frames that would skip. so the additional skipping thats skipped. that means we can't add the different modes together.
 		skippedAnimationFrames = 4;
 	} else if ((player._pIFlags & ISPL_FASTESTRECOVER) != 0) {

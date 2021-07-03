@@ -44,7 +44,7 @@ struct Surface {
 	}
 
 	Surface(const Surface &other) = default;
-	Surface& operator=(const Surface &other) = default;
+	Surface &operator=(const Surface &other) = default;
 
 	/**
 	 * @brief Allocate a buffer that owns its underlying data.
@@ -132,8 +132,8 @@ struct Surface {
 	Surface subregionY(int y, int h) const
 	{
 		SDL_Rect subregion = region;
-		subregion.y += static_cast<decltype(SDL_Rect{}.y)>(y);
-		subregion.h = static_cast<decltype(SDL_Rect{}.h)>(h);
+		subregion.y += static_cast<decltype(SDL_Rect {}.y)>(y);
+		subregion.h = static_cast<decltype(SDL_Rect {}.h)>(h);
 		return Surface(surface, subregion);
 	}
 

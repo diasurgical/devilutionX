@@ -35,7 +35,6 @@ struct MissilePosition {
 	Displacement traveled;
 };
 
-
 /*
  *      W  sW  SW   Sw  S
  *              ^
@@ -47,8 +46,7 @@ struct MissilePosition {
  *              |
  *      N  Ne  NE   nE  E
  */
-enum Direction16
-{
+enum Direction16 {
 	DIR16_S,
 	DIR16_Sw,
 	DIR16_SW,

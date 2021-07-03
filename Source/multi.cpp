@@ -91,21 +91,21 @@ void CopyPacket(TBuffer *buf, byte *packet, uint8_t size)
 byte *ReceivePacket(TBuffer *pBuf, byte *body, size_t *size)
 {
 	if (pBuf->dwNextWriteOffset != 0) {
-		byte *src_ptr = pBuf->bData;
+		byte *srcPtr = pBuf->bData;
 		while (true) {
-			auto chunk_size = static_cast<uint8_t>(*src_ptr);
-			if (chunk_size == 0)
+			auto chunkSize = static_cast<uint8_t>(*srcPtr);
+			if (chunkSize == 0)
 				break;
-			if (chunk_size > *size)
+			if (chunkSize > *size)
 				break;
-			src_ptr++;
-			memcpy(body, src_ptr, chunk_size);
-			body += chunk_size;
-			src_ptr += chunk_size;
-			*size -= chunk_size;
+			srcPtr++;
+			memcpy(body, srcPtr, chunkSize);
+			body += chunkSize;
+			srcPtr += chunkSize;
+			*size -= chunkSize;
 		}
-		memcpy(pBuf->bData, src_ptr, (pBuf->bData - src_ptr) + pBuf->dwNextWriteOffset + 1);
-		pBuf->dwNextWriteOffset += (pBuf->bData - src_ptr);
+		memcpy(pBuf->bData, srcPtr, (pBuf->bData - srcPtr) + pBuf->dwNextWriteOffset + 1);
+		pBuf->dwNextWriteOffset += (pBuf->bData - srcPtr);
 		return body;
 	}
 	return body;
@@ -367,7 +367,7 @@ void SetupLocalPositions()
 
 void HandleEvents(_SNETEVENT *pEvt)
 {
-	DWORD LeftReason;
+	DWORD leftReason;
 
 	switch (pEvt->eventid) {
 	case EVENT_TYPE_PLAYER_CREATE_GAME: {
@@ -382,11 +382,11 @@ void HandleEvents(_SNETEVENT *pEvt)
 		sgbPlayerLeftGameTbl[pEvt->playerid] = true;
 		sgbPlayerTurnBitTbl[pEvt->playerid] = false;
 
-		LeftReason = 0;
+		leftReason = 0;
 		if (pEvt->data != nullptr && pEvt->databytes >= sizeof(DWORD))
-			LeftReason = *(DWORD *)pEvt->data;
-		sgdwPlayerLeftReasonTbl[pEvt->playerid] = LeftReason;
-		if (LeftReason == LEAVE_ENDING)
+			leftReason = *(DWORD *)pEvt->data;
+		sgdwPlayerLeftReasonTbl[pEvt->playerid] = leftReason;
+		if (leftReason == LEAVE_ENDING)
 			gbSomebodyWonGameKludge = true;
 
 		sgbSendDeltaTbl[pEvt->playerid] = false;
@@ -487,9 +487,9 @@ void NetSendHiPri(int playerId, byte *pbMsg, BYTE bLen)
 		TPkt pkt;
 		NetReceivePlayerData(&pkt);
 		size_t size = gdwNormalMsgSize - sizeof(TPktHdr);
-		byte *hipri_body = ReceivePacket(&sgHiPriBuf, pkt.body, &size);
-		byte *lowpri_body = ReceivePacket(&sgLoPriBuf, hipri_body, &size);
-		size = sync_all_monsters(lowpri_body, size);
+		byte *hipriBody = ReceivePacket(&sgHiPriBuf, pkt.body, &size);
+		byte *lowpriBody = ReceivePacket(&sgLoPriBuf, hipriBody, &size);
+		size = sync_all_monsters(lowpriBody, size);
 		size_t len = gdwNormalMsgSize - size;
 		pkt.hdr.wLen = len;
 		if (!SNetSendMessage(-2, &pkt.hdr, len))
