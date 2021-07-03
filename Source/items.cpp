@@ -3954,7 +3954,6 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_SCROLL:
 		if (spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			player._pTSplType = RSPLTYPE_INVALID;
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
@@ -3972,7 +3971,6 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 	case IMISC_SCROLLT:
 		if (spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			player._pTSplType = RSPLTYPE_INVALID;
 			if (p == myplr)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
@@ -4032,31 +4030,26 @@ void UseItem(int p, item_misc_id Mid, spell_id spl)
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
-		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
 		player._pTSpell = SPL_RUNELIGHT;
-		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
 		player._pTSpell = SPL_RUNENOVA;
-		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
 		player._pTSpell = SPL_RUNEIMMOLAT;
-		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
 		player._pTSpell = SPL_RUNESTONE;
-		player._pTSplType = RSPLTYPE_INVALID;
 		if (p == myplr)
 			NewCursor(CURSOR_TELEPORT);
 		break;

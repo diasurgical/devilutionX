@@ -23,7 +23,7 @@ namespace {
  * @param xi upper left destination
  * @param yy upper left destination
  */
-void T_FillSector(const char *path, int xi, int yy)
+void FillSector(const char *path, int xi, int yy)
 {
 	auto dunData = LoadFileInMem<uint16_t>(path);
 
@@ -66,7 +66,7 @@ void T_FillSector(const char *path, int xi, int yy)
  * @param yy upper left destination
  * @param t tile id
  */
-void T_FillTile(int xx, int yy, int t)
+void FillTile(int xx, int yy, int t)
 {
 	MegaTile mega = pMegaTiles[t - 1];
 
@@ -151,7 +151,7 @@ void TownCloseGrave()
 /**
  * @brief Initialize all of the levels data
  */
-void T_Pass3()
+void DrlgTPass3()
 {
 	for (int yy = 0; yy < MAXDUNY; yy += 2) {
 		for (int xx = 0; xx < MAXDUNX; xx += 2) {
@@ -162,22 +162,22 @@ void T_Pass3()
 		}
 	}
 
-	T_FillSector("Levels\\TownData\\Sector1s.DUN", 46, 46);
-	T_FillSector("Levels\\TownData\\Sector2s.DUN", 46, 0);
-	T_FillSector("Levels\\TownData\\Sector3s.DUN", 0, 46);
-	T_FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
+	FillSector("Levels\\TownData\\Sector1s.DUN", 46, 46);
+	FillSector("Levels\\TownData\\Sector2s.DUN", 46, 0);
+	FillSector("Levels\\TownData\\Sector3s.DUN", 0, 46);
+	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 1) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(48, 20, 320);
+			FillTile(48, 20, 320);
 		}
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 2) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(16, 68, 332);
-			T_FillTile(16, 70, 331);
+			FillTile(16, 68, 332);
+			FillTile(16, 70, 331);
 		}
 		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
 			for (int x = 36; x < 46; x++) {
-				T_FillTile(x, 78, GenerateRnd(4) + 1);
+				FillTile(x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
@@ -195,9 +195,9 @@ void T_Pass3()
 	}
 
 	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		T_FillTile(60, 70, 342);
+		FillTile(60, 70, 342);
 	} else {
-		T_FillTile(60, 70, 71);
+		FillTile(60, 70, 71);
 	}
 }
 
@@ -317,7 +317,7 @@ void CreateTown(lvl_entry entry)
 		}
 	}
 
-	T_Pass3();
+	DrlgTPass3();
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dLight, 0, sizeof(dLight));
 	memset(dFlags, 0, sizeof(dFlags));

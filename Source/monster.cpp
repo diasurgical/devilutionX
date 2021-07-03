@@ -2784,15 +2784,15 @@ bool M_DumbWalk(int i, Direction md)
 	return ok;
 }
 
-static Direction turn(Direction direction, bool turnLeft)
+static Direction Turn(Direction direction, bool turnLeft)
 {
 	return turnLeft ? left[direction] : right[direction];
 }
 
 bool M_RoundWalk(int i, Direction direction, int *dir)
 {
-	Direction turn45deg = turn(direction, *dir != 0);
-	Direction turn90deg = turn(turn45deg, *dir != 0);
+	Direction turn45deg = Turn(direction, *dir != 0);
+	Direction turn90deg = Turn(turn45deg, *dir != 0);
 
 	if (DirOK(i, turn90deg)) {
 		// Turn 90 degrees
