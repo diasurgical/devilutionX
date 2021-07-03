@@ -32,9 +32,9 @@ struct MoHead {
 		uint16_t minor;
 	} revision;
 
-	uint32_t nb_mappings;
-	uint32_t src_offset;
-	uint32_t dst_offset;
+	uint32_t nbMappings;
+	uint32_t srcOffset;
+	uint32_t dstOffset;
 };
 
 struct MoEntry {
@@ -263,19 +263,19 @@ void LanguageInitialize()
 	}
 
 	// Read entries of source strings
-	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nb_mappings] };
-	if (fseek(fp, head.src_offset, SEEK_SET) != 0)
+	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
+	if (fseek(fp, head.srcOffset, SEEK_SET) != 0)
 		return;
 	// FIXME: Endianness.
-	if (fread(src.get(), sizeof(MoEntry), head.nb_mappings, fp) != head.nb_mappings)
+	if (fread(src.get(), sizeof(MoEntry), head.nbMappings, fp) != head.nbMappings)
 		return;
 
 	// Read entries of target strings
-	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nb_mappings] };
-	if (fseek(fp, head.dst_offset, SEEK_SET) != 0)
+	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
+	if (fseek(fp, head.dstOffset, SEEK_SET) != 0)
 		return;
 	// FIXME: Endianness.
-	if (fread(dst.get(), sizeof(MoEntry), head.nb_mappings, fp) != head.nb_mappings)
+	if (fread(dst.get(), sizeof(MoEntry), head.nbMappings, fp) != head.nbMappings)
 		return;
 
 	std::vector<char> key;
@@ -295,7 +295,7 @@ void LanguageInitialize()
 		translation[i] = {};
 
 	// Read strings described by entries
-	for (uint32_t i = 1; i < head.nb_mappings; i++) {
+	for (uint32_t i = 1; i < head.nbMappings; i++) {
 		if (ReadEntry(fp, &src[i], key) && ReadEntry(fp, &dst[i], value)) {
 			size_t offset = 0;
 			for (int j = 0; j < PluralForms; j++) {
