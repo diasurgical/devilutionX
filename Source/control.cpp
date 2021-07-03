@@ -212,10 +212,10 @@ const char *const PanBtnStr[8] = {
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
-	{ {137, 138}, {41, 22} },
-	{ {137, 166}, {41, 22} },
-	{ {137, 195}, {41, 22} },
-	{ {137, 223}, {41, 22} }
+	{ { 137, 138 }, { 41, 22 } },
+	{ { 137, 166 }, { 41, 22 } },
+	{ { 137, 195 }, { 41, 22 } },
+	{ { 137, 223 }, { 41, 22 } }
 };
 
 /** Maps from spellbook page number and position to spell_id. */
@@ -582,12 +582,13 @@ static void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePos
 }
 
 /**
- * @brief Draws the part of the life/mana flasks potruding above the bottom panel
+ * @brief Draws the part of the life/mana flasks protruding above the bottom panel
+ * @see DrawFlaskLower()
  * @param out The display region to draw to
  * @param sourceBuffer A sprite representing the appropriate background/empty flask style
  * @param offset X coordinate offset for where the flask should be drawn
  * @param fillPer How full the flask is (a value from 0 to 80)
-*/
+ */
 void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
 	// clamping because this function only draws the top 12% of the flask display
@@ -600,17 +601,27 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
 		DrawFlask(out, pBtmBuff, { offset, emptyPortion + 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
 }
 
+/**
+ * @brief Draws the part of the life/mana flasks inside the bottom panel
+ * @see DrawFlaskUpper()
+ * @param out The display region to draw to
+ * @param sourceBuffer A sprite representing the appropriate background/empty flask style
+ * @param offset X coordinate offset for where the flask should be drawn
+ * @param fillPer How full the flask is (a value from 0 to 80)
+ */
 void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
 	int filled = clamp(fillPer, 0, 69);
 
 	if (filled < 69)
 		DrawFlaskTop(out, { PANEL_X + offset, PANEL_Y }, sourceBuffer, 16, 85 - filled);
+
+	// It appears that the panel defaults to having a filled flask and DrawFlaskTop only overlays the appropriate amount of empty space.
+	// This draw might not be necessary?
 	if (filled > 0)
 		DrawPanelBox(out, { offset, 85 - filled, 88, filled }, { PANEL_X + offset, PANEL_Y + 69 - filled });
 }
 
-// the Draw*Flask* functions use precalculated value of HP/ManaPer from an earlier call to control_update_life_mana()
 void DrawLifeFlaskUpper(const Surface &out)
 {
 	constexpr int LifeFlaskUpperOffset = 109;
