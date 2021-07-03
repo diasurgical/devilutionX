@@ -160,14 +160,14 @@ void unlock_buf(int idx) // NOLINT(misc-unused-parameters)
 	UnlockBufPriv();
 }
 
-CelOutputBuffer GlobalBackBuffer()
+Surface GlobalBackBuffer()
 {
 	if (sgdwLockCount == 0) {
 		Log("WARNING: Trying to obtain GlobalBackBuffer() without holding a lock");
-		return CelOutputBuffer();
+		return Surface();
 	}
 
-	return CelOutputBuffer(pal_surface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
+	return Surface(pal_surface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
 }
 
 void dx_cleanup()

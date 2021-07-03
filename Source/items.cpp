@@ -3641,13 +3641,13 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	}
 }
 
-static void DrawUTextBack(const CelOutputBuffer &out)
+static void DrawUTextBack(const Surface &out)
 {
 	CelDrawTo(out, { RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327 }, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
-static void DrawULine(const CelOutputBuffer &out, int y)
+static void DrawULine(const Surface &out, int y)
 {
 	BYTE *src = out.at(26 + RIGHT_PANEL - SPANEL_WIDTH, 25);
 	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, y * 12 + 38);
@@ -3656,7 +3656,7 @@ static void DrawULine(const CelOutputBuffer &out, int y)
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
 }
 
-void DrawUniqueInfo(const CelOutputBuffer &out)
+void DrawUniqueInfo(const Surface &out)
 {
 	if ((chrflag || questlog) && gnScreenWidth < SPANEL_WIDTH * 3) {
 		return;

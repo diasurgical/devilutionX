@@ -14,6 +14,6 @@ void AltPressed(bool pressed);
 bool IsItemLabelHighlighted();
 bool IsHighlightingLabelsEnabled();
 void AddItemToLabelQueue(int id, int x, int y);
-void DrawItemNameLabels(const CelOutputBuffer &out);
+void DrawItemNameLabels(const Surface &out);
 
 } // namespace devilution

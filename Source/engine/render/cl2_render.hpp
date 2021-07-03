@@ -30,7 +30,7 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel);
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
  */
-void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
+void Cl2Draw(const Surface &out, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
  * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the given buffer at the given coordianates
@@ -41,7 +41,7 @@ void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, i
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
  */
-void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame);
+void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame);
 
 /**
  * @brief Blit CL2 sprite, and apply a given lighting, to the given buffer at the given coordianates
@@ -52,7 +52,7 @@ void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, con
  * @param nCel CL2 frame number
  * @param light Light shade to use
  */
-void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light);
+void Cl2DrawLightTbl(const Surface &out, int sx, int sy, const CelSprite &cel, int frame, char light);
 
 /**
  * @brief Blit CL2 sprite, and apply lighting, to the given buffer at the given coordinates
@@ -62,6 +62,6 @@ void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite
  * @param pCelBuff CL2 buffer
  * @param nCel CL2 frame number
  */
-void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame);
+void Cl2DrawLight(const Surface &out, int sx, int sy, const CelSprite &cel, int frame);
 
 } // namespace devilution

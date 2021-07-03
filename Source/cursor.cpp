@@ -187,7 +187,7 @@ void NewCursor(int cursId)
 	}
 }
 
-void CelDrawCursor(const CelOutputBuffer &out, Point position, int cursId)
+void CelDrawCursor(const Surface &out, Point position, int cursId)
 {
 	const auto &sprite = GetInvItemSprite(cursId);
 	const int frame = GetInvItemFrame(cursId);

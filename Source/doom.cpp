@@ -52,7 +52,7 @@ void doom_close()
 	DoomCel = std::nullopt;
 }
 
-void doom_draw(const CelOutputBuffer &out)
+void doom_draw(const Surface &out)
 {
 	if (!DoomFlag) {
 		return;

@@ -606,7 +606,7 @@ struct Clip {
 	std::int_fast16_t height;
 };
 
-Clip CalculateClip(std::int_fast16_t x, std::int_fast16_t y, std::int_fast16_t w, std::int_fast16_t h, const CelOutputBuffer &out)
+Clip CalculateClip(std::int_fast16_t x, std::int_fast16_t y, std::int_fast16_t w, std::int_fast16_t h, const Surface &out)
 {
 	Clip clip;
 	clip.top = y + 1 < h ? h - (y + 1) : 0;
@@ -1375,7 +1375,7 @@ void RenderBlackTileFull(std::uint8_t *dst, int dstPitch)
 
 } // namespace
 
-void RenderTile(const CelOutputBuffer &out, int x, int y)
+void RenderTile(const Surface &out, int x, int y)
 {
 	const auto tile = static_cast<TileType>((level_cel_block & 0x7000) >> 12);
 	const auto *mask = GetMask(tile);
@@ -1432,7 +1432,7 @@ void RenderTile(const CelOutputBuffer &out, int x, int y)
 	}
 }
 
-void world_draw_black_tile(const CelOutputBuffer &out, int sx, int sy)
+void world_draw_black_tile(const Surface &out, int sx, int sy)
 {
 #ifdef DEBUG_RENDER_OFFSET_X
 	sx += DEBUG_RENDER_OFFSET_X;

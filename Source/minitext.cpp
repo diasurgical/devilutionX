@@ -96,7 +96,7 @@ int CalculateTextPosition()
 /**
  * @brief Draw the current text in the quest dialog window
  */
-void DrawQTextContent(const CelOutputBuffer &out)
+void DrawQTextContent(const Surface &out)
 {
 	int y = CalculateTextPosition();
 
@@ -155,13 +155,13 @@ void InitQTextMsg(_speech_id m)
 	PlaySFX(alltext[m].sfxnr);
 }
 
-void DrawQTextBack(const CelOutputBuffer &out)
+void DrawQTextBack(const Surface &out)
 {
 	CelDrawTo(out, { PANEL_X + 24, 327 + UI_OFFSET_Y }, *pTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, PANEL_X + 27, UI_OFFSET_Y + 28, 585, 297);
 }
 
-void DrawQText(const CelOutputBuffer &out)
+void DrawQText(const Surface &out)
 {
 	DrawQTextBack(out);
 	DrawQTextContent(out.subregionY(UI_OFFSET_Y + 49, 260));

@@ -115,7 +115,7 @@ void InitHelp()
 	}
 }
 
-void DrawHelp(const CelOutputBuffer &out)
+void DrawHelp(const Surface &out)
 {
 	DrawSTextHelp();
 	DrawQTextBack(out);

@@ -15,7 +15,7 @@ namespace devilution {
  * @param x Target buffer coordinate
  * @param y Target buffer coordinate
  */
-void RenderTile(const CelOutputBuffer &out, int x, int y);
+void RenderTile(const Surface &out, int x, int y);
 
 /**
  * @brief Render a black 64x31 tile ◆
@@ -23,6 +23,6 @@ void RenderTile(const CelOutputBuffer &out, int x, int y);
  * @param sx Target buffer coordinate (left corner of the tile)
  * @param sy Target buffer coordinate (bottom corner of the tile)
  */
-void world_draw_black_tile(const CelOutputBuffer &out, int sx, int sy);
+void world_draw_black_tile(const Surface &out, int sx, int sy);
 
 } // namespace devilution

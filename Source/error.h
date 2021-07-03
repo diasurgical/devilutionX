@@ -74,6 +74,6 @@ extern diablo_message msgflag;
 
 void InitDiabloMsg(diablo_message e);
 void ClrDiabloMsg();
-void DrawDiabloMsg(const CelOutputBuffer &out);
+void DrawDiabloMsg(const Surface &out);
 
 } // namespace devilution

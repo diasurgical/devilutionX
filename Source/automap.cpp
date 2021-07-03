@@ -55,7 +55,7 @@ enum MapFlags : uint8_t {
 	// clang-format on
 };
 
-void DrawDiamond(const CelOutputBuffer &out, Point center, uint8_t color)
+void DrawDiamond(const Surface &out, Point center, uint8_t color)
 {
 	const Point left { center.x - AmLine16, center.y };
 	const Point top { center.x, center.y - AmLine8 };
@@ -67,14 +67,14 @@ void DrawDiamond(const CelOutputBuffer &out, Point center, uint8_t color)
 	DrawMapLineNE(out, bottom, AmLine8, color);
 }
 
-void DrawMapVerticalDoor(const CelOutputBuffer &out, Point center)
+void DrawMapVerticalDoor(const Surface &out, Point center)
 {
 	DrawMapLineNE(out, { center.x + AmLine8, center.y - AmLine4 }, AmLine4, MapColorsDim);
 	DrawMapLineNE(out, { center.x - AmLine16, center.y + AmLine8 }, AmLine4, MapColorsDim);
 	DrawDiamond(out, center, MapColorsBright);
 }
 
-void DrawMapHorizontalDoor(const CelOutputBuffer &out, Point center)
+void DrawMapHorizontalDoor(const Surface &out, Point center)
 {
 	DrawMapLineSE(out, { center.x - AmLine16, center.y - AmLine8 }, AmLine4, MapColorsDim);
 	DrawMapLineSE(out, { center.x + AmLine8, center.y + AmLine4 }, AmLine4, MapColorsDim);
@@ -84,7 +84,7 @@ void DrawMapHorizontalDoor(const CelOutputBuffer &out, Point center)
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapType)
+void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
 {
 	uint8_t flags = automapType >> 8;
 
@@ -207,7 +207,7 @@ void DrawAutomapTile(const CelOutputBuffer &out, Point center, uint16_t automapT
 	}
 }
 
-void SearchAutomapItem(const CelOutputBuffer &out)
+void SearchAutomapItem(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 	Point tile = myPlayer.position.tile;
@@ -253,7 +253,7 @@ void SearchAutomapItem(const CelOutputBuffer &out)
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
  */
-void DrawAutomapPlr(const CelOutputBuffer &out, int playerId)
+void DrawAutomapPlr(const Surface &out, int playerId)
 {
 	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
@@ -380,7 +380,7 @@ uint16_t GetAutomapType(Point map, bool view)
 /**
  * @brief Renders game info, such as the name of the current level, and in multi player the name of the game and the game password.
  */
-void DrawAutomapText(const CelOutputBuffer &out)
+void DrawAutomapText(const Surface &out)
 {
 	char desc[256];
 	Point linePosition { 8, 20 };
@@ -532,7 +532,7 @@ void AutomapZoomOut()
 	AmLine4 = AmLine8 / 2;
 }
 
-void DrawAutomap(const CelOutputBuffer &out)
+void DrawAutomap(const Surface &out)
 {
 	if (leveltype == DTYPE_TOWN) {
 		DrawAutomapText(out);

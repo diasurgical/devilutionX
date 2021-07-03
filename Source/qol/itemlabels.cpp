@@ -103,14 +103,14 @@ bool IsMouseOverGameArea()
 	return true;
 }
 
-void FillRect(const CelOutputBuffer &out, int x, int y, int width, int height, Uint8 col)
+void FillRect(const Surface &out, int x, int y, int width, int height, Uint8 col)
 {
 	for (int j = 0; j < height; j++) {
 		DrawHorizontalLine(out, { x, y + j }, width, col);
 	}
 }
 
-void DrawItemNameLabels(const CelOutputBuffer &out)
+void DrawItemNameLabels(const Surface &out)
 {
 	isLabelHighlighted = false;
 

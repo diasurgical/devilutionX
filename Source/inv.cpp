@@ -164,7 +164,7 @@ void InitInv()
 	drawsbarflag = false;
 }
 
-static void InvDrawSlotBack(const CelOutputBuffer &out, Point targetPosition, Size size)
+static void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 {
 	SDL_Rect srcRect = MakeSdlRect(0, 0, size.width, size.height);
 	out.Clip(&srcRect, &targetPosition);
@@ -188,7 +188,7 @@ static void InvDrawSlotBack(const CelOutputBuffer &out, Point targetPosition, Si
 	}
 }
 
-void DrawInv(const CelOutputBuffer &out)
+void DrawInv(const Surface &out)
 {
 	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pInvCels, 1);
 
@@ -297,7 +297,7 @@ void DrawInv(const CelOutputBuffer &out)
 	}
 }
 
-void DrawInvBelt(const CelOutputBuffer &out)
+void DrawInvBelt(const Surface &out)
 {
 	if (talkflag) {
 		return;

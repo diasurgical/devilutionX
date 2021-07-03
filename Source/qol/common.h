@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-struct CelOutputBuffer;
+struct Surface;
 
 /**
  * @brief Prints integer into buffer, using ',' as thousands separator.

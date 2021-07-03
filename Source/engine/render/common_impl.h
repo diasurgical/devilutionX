@@ -29,7 +29,7 @@ struct ClipX {
 	std::int_fast16_t width;
 };
 
-inline ClipX CalculateClipX(std::int_fast16_t x, std::size_t w, const CelOutputBuffer &out)
+inline ClipX CalculateClipX(std::int_fast16_t x, std::size_t w, const Surface &out)
 {
 	ClipX clip;
 	clip.left = static_cast<std::int_fast16_t>(x < 0 ? -x : 0);

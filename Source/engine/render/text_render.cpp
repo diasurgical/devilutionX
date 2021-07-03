@@ -137,7 +137,7 @@ uint8_t fontColorTableGold[256];
 uint8_t fontColorTableBlue[256];
 uint8_t fontColorTableRed[256];
 
-void DrawChar(const CelOutputBuffer &out, Point position, GameFontTables size, int nCel, text_color color)
+void DrawChar(const Surface &out, Point position, GameFontTables size, int nCel, text_color color)
 {
 	switch (color) {
 	case ColorWhite:
@@ -269,9 +269,9 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 }
 
 /**
- * @todo replace Rectangle with cropped CelOutputBuffer
+ * @todo replace Rectangle with cropped Surface
  */
-int DrawString(const CelOutputBuffer &out, const char *text, const Rectangle &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
+int DrawString(const Surface &out, const char *text, const Rectangle &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
 	if ((flags & UIS_MED) != 0)

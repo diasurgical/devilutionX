@@ -45,7 +45,7 @@ void FreeMonsterHealthBar()
 	resistance.Unload();
 }
 
-void DrawMonsterHealthBar(const CelOutputBuffer &out)
+void DrawMonsterHealthBar(const Surface &out)
 {
 	if (!sgOptions.Gameplay.bEnemyHealthBar)
 		return;

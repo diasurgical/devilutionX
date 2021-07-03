@@ -35,6 +35,7 @@
 #include "appfat.h"
 #include "engine/point.hpp"
 #include "engine/size.hpp"
+#include "engine/surface.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/cstddef.hpp"
 
@@ -67,174 +68,6 @@ bool IsNoneOf(const V &v, X x, Xs... xs)
 	return IsNoneOf(v, x) && IsNoneOf(v, xs...);
 }
 
-struct CelOutputBuffer {
-	// 8-bit palletized surface.
-	SDL_Surface *surface;
-	SDL_Rect region;
-
-	CelOutputBuffer()
-	    : surface(NULL)
-	    , region(SDL_Rect { 0, 0, 0, 0 })
-	{
-	}
-
-	explicit CelOutputBuffer(SDL_Surface *surface)
-	    : surface(surface)
-	    , region(SDL_Rect { 0, 0, (Uint16)surface->w, (Uint16)surface->h })
-	{
-	}
-
-	CelOutputBuffer(SDL_Surface *surface, SDL_Rect region)
-	    : surface(surface)
-	    , region(region)
-	{
-	}
-
-	CelOutputBuffer(const CelOutputBuffer &other)
-	    : surface(other.surface)
-	    , region(other.region)
-	{
-	}
-
-	void operator=(const CelOutputBuffer &other)
-	{
-		surface = other.surface;
-		region = other.region;
-	}
-
-	/**
-	 * @brief Allocate a buffer that owns its underlying data.
-	 */
-	static CelOutputBuffer Alloc(std::size_t width, std::size_t height)
-	{
-		return CelOutputBuffer(SDL_CreateRGBSurfaceWithFormat(0, width, height, 8, SDL_PIXELFORMAT_INDEX8));
-	}
-
-	/**
-	 * @brief Free the underlying data.
-	 *
-	 * Only use this if the buffer owns its data.
-	 */
-	void Free()
-	{
-		SDL_FreeSurface(this->surface);
-		this->surface = NULL;
-	}
-
-	int w() const
-	{
-		return region.w;
-	}
-	int h() const
-	{
-		return region.h;
-	}
-
-	std::uint8_t &operator[](Point p) const
-	{
-		return *at(p.x, p.y);
-	}
-
-	uint8_t *at(int x, int y) const
-	{
-		return static_cast<uint8_t *>(surface->pixels) + region.x + x + surface->pitch * (region.y + y);
-	}
-
-	uint8_t *begin() const
-	{
-		return at(0, 0);
-	}
-	uint8_t *end() const
-	{
-		return at(0, region.h);
-	}
-
-	/**
-	 * @brief Set the value of a single pixel if it is in bounds.
-	 * @param point Target buffer coordinate
-	 * @param col Color index from current palette
-	 */
-	void SetPixel(Point position, std::uint8_t col) const
-	{
-		if (InBounds(position))
-			(*this)[position] = col;
-	}
-
-	/**
-	 * @brief Line width of the raw underlying byte buffer.
-	 * May be wider than its logical width (for power-of-2 alignment).
-	 */
-	int pitch() const
-	{
-		return surface->pitch;
-	}
-
-	bool InBounds(Point position) const
-	{
-		return position.x >= 0 && position.y >= 0 && position.x < region.w && position.y < region.h;
-	}
-
-	/**
-	 * @brief Returns a subregion of the given buffer.
-	 */
-	CelOutputBuffer subregion(Sint16 x, Sint16 y, Uint16 w, Uint16 h) const
-	{
-		// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
-		using CoordType = decltype(SDL_Rect {}.x);
-		return CelOutputBuffer(
-		    surface,
-		    SDL_Rect {
-		        static_cast<CoordType>(region.x + x),
-		        static_cast<CoordType>(region.y + y),
-		        w, h });
-	}
-
-	/**
-	 * @brief Returns a buffer that starts at `y` of height `h`.
-	 */
-	CelOutputBuffer subregionY(Sint16 y, Sint16 h) const
-	{
-		SDL_Rect subregion = region;
-		subregion.y += y;
-		subregion.h = h;
-		return CelOutputBuffer(surface, subregion);
-	}
-
-	/**
-	 * @brief Clips srcRect and targetPosition to this output buffer.
-	 */
-	void Clip(SDL_Rect *srcRect, Point *targetPosition) const
-	{
-		if (targetPosition->x < 0) {
-			srcRect->x -= targetPosition->x;
-			srcRect->w += targetPosition->x;
-			targetPosition->x = 0;
-		}
-		if (targetPosition->y < 0) {
-			srcRect->y -= targetPosition->y;
-			srcRect->h += targetPosition->y;
-			targetPosition->y = 0;
-		}
-		if (targetPosition->x + srcRect->w > region.w) {
-			srcRect->w = region.w - targetPosition->x;
-		}
-		if (targetPosition->y + srcRect->h > region.h) {
-			srcRect->h = region.h - targetPosition->y;
-		}
-	}
-
-	/**
-	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
-	 */
-	void BlitFrom(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
-
-	/**
-	 * @brief Copies the `srcRect` portion of the given buffer to this buffer at `targetPosition`.
-	 * Source pixels with index 0 are not copied.
-	 */
-	void BlitFromSkipColorIndexZero(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const;
-};
-
 /**
  * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
@@ -242,10 +75,10 @@ struct CelOutputBuffer {
  * @param width
  * @param colorIndex Color index from current palette
  */
-void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex);
 
 /** Same as DrawHorizontalLine but without bounds clipping. */
-void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void UnsafeDrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a vertical line segment in the target buffer (top to bottom)
@@ -254,10 +87,10 @@ void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width,
  * @param height
  * @param colorIndex Color index from current palette
  */
-void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void DrawVerticalLine(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /** Same as DrawVerticalLine but without bounds clipping. */
-void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * Draws a half-transparent rectangle by blacking out odd pixels on odd lines,
@@ -270,7 +103,7 @@ void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, 
  * @param width Rectangle width
  * @param height Rectangle height
  */
-void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height);
+void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, int height);
 
 /**
  * @brief Calculate the best fit direction between two points

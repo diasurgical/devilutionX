@@ -112,7 +112,7 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
  * @param buf Buffer
  * @return True if successful, else false
  */
-static bool CapturePix(const CelOutputBuffer &buf, std::ofstream *out)
+static bool CapturePix(const Surface &buf, std::ofstream *out)
 {
 	int width = buf.w();
 	std::unique_ptr<BYTE[]> pBuffer { new BYTE[2 * width] };
@@ -175,7 +175,7 @@ void CaptureScreen()
 	RedPalette();
 
 	lock_buf(2);
-	const CelOutputBuffer &buf = GlobalBackBuffer();
+	const Surface &buf = GlobalBackBuffer();
 	success = CaptureHdr(buf.w(), buf.h(), outStream);
 	if (success) {
 		success = CapturePix(buf, outStream);

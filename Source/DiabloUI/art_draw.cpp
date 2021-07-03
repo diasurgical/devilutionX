@@ -36,7 +36,7 @@ void DrawArt(Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, 
 		ErrSdl();
 }
 
-void DrawArt(const CelOutputBuffer &out, Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
+void DrawArt(const Surface &out, Sint16 screenX, Sint16 screenY, Art *art, int nFrame, Uint16 srcW, Uint16 srcH)
 {
 	if (screenY >= gnScreenHeight || screenX >= gnScreenWidth || art->surface == nullptr)
 		return;

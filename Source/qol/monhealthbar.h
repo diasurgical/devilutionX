@@ -7,11 +7,11 @@
 
 namespace devilution {
 
-struct CelOutputBuffer;
+struct Surface;
 
 void InitMonsterHealthBar();
 void FreeMonsterHealthBar();
 
-void DrawMonsterHealthBar(const CelOutputBuffer &out);
+void DrawMonsterHealthBar(const Surface &out);
 
 } // namespace devilution

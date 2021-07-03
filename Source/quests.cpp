@@ -701,7 +701,7 @@ void ResyncQuests()
 	}
 }
 
-static void PrintQLString(const CelOutputBuffer &out, int x, int line, const char *str)
+static void PrintQLString(const Surface &out, int x, int line, const char *str)
 {
 	int width = GetLineWidth(str);
 	int sx = x + std::max((257 - width) / 2, 0);
@@ -715,7 +715,7 @@ static void PrintQLString(const CelOutputBuffer &out, int x, int line, const cha
 	}
 }
 
-void DrawQuestLog(const CelOutputBuffer &out)
+void DrawQuestLog(const Surface &out)
 {
 	DrawString(out, _("Quest Log"), { 32, 44, 257, 0 }, UIS_CENTER);
 	CelDrawTo(out, { 0, 351 }, *pQLogCel, 1);

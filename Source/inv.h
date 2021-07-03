@@ -91,9 +91,9 @@ void InitInv();
 /**
  * @brief Render the inventory panel to the given buffer.
  */
-void DrawInv(const CelOutputBuffer &out);
+void DrawInv(const Surface &out);
 
-void DrawInvBelt(const CelOutputBuffer &out);
+void DrawInvBelt(const Surface &out);
 bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item);
 bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem = true);
 bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem = false);

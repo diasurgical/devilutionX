@@ -169,7 +169,7 @@ static void InitCutscene(interface_mode uMsg)
 static void DrawCutscene()
 {
 	lock_buf(1);
-	const CelOutputBuffer &out = GlobalBackBuffer();
+	const Surface &out = GlobalBackBuffer();
 	DrawArt(out, PANEL_X - (ArtCutsceneWidescreen.w() - PANEL_WIDTH) / 2, UI_OFFSET_Y, &ArtCutsceneWidescreen);
 	CelDrawTo(out, { PANEL_X, 480 - 1 + UI_OFFSET_Y }, *sgpBackCel, 1);
 

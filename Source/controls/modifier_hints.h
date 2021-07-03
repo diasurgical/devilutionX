@@ -4,6 +4,6 @@
 
 namespace devilution {
 
-void DrawControllerModifierHints(const CelOutputBuffer &out);
+void DrawControllerModifierHints(const Surface &out);
 
 } // namespace devilution
