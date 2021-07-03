@@ -38,6 +38,26 @@
 #endif
 
 namespace devilution {
+namespace {
+
+enum RotationDirection {
+	RotateRight,
+	RotateLeft
+};
+
+Direction Rotate(Direction direction, RotationDirection spin)
+{
+	switch (spin) {
+	case RotateRight:
+		return right[direction];
+	case RotateLeft:
+		return left[direction];
+	default:
+		app_fatal("Unknown direction");
+	}
+}
+
+} // namespace
 
 #define NIGHTMARE_TO_HIT_BONUS 85
 #define HELL_TO_HIT_BONUS 120
@@ -2784,15 +2804,10 @@ bool M_DumbWalk(int i, Direction md)
 	return ok;
 }
 
-static Direction turn(Direction direction, bool turnLeft)
+bool M_RoundWalk(int i, Direction direction, RotationDirection *spin)
 {
-	return turnLeft ? left[direction] : right[direction];
-}
-
-bool M_RoundWalk(int i, Direction direction, int *dir)
-{
-	Direction turn45deg = turn(direction, *dir != 0);
-	Direction turn90deg = turn(turn45deg, *dir != 0);
+	Direction turn45deg = Rotate(direction, *spin);
+	Direction turn90deg = Rotate(turn45deg, *spin);
 
 	if (DirOK(i, turn90deg)) {
 		// Turn 90 degrees
@@ -2813,7 +2828,7 @@ bool M_RoundWalk(int i, Direction direction, int *dir)
 	}
 
 	// Try 90 degrees in the opposite than desired direction
-	*dir = (*dir == 0) ? 1 : 0;
+	*spin = (*spin == RotateRight) ? RotateLeft : RotateRight;
 	return M_CallWalk(i, opposite[turn90deg]);
 }
 
@@ -3334,7 +3349,7 @@ void MAI_Round(int i, bool special)
 			int dist = std::max(abs(mx), abs(my));
 			if ((Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) || dTransVal[Monst->position.tile.x][Monst->position.tile.y] != dTransVal[fx][fy]) {
 				Monst->_mgoal = MGOAL_NORMAL;
-			} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
+			} else if (!M_RoundWalk(i, md, (RotationDirection *)&Monst->_mgoalvar2)) {
 				M_StartDelay(i, GenerateRnd(10) + 10);
 			}
 		}
@@ -3613,7 +3628,7 @@ void MAI_RoundRanged(int i, missile_id missile_type, bool checkdoors, int dam, i
 			    && (LineClearMissile(Monst->position.tile, { fx, fy }))) {
 				M_StartRSpAttack(i, missile_type, dam);
 			} else {
-				M_RoundWalk(i, md, &Monst->_mgoalvar2);
+				M_RoundWalk(i, md, (RotationDirection *)&Monst->_mgoalvar2);
 			}
 		}
 	} else {
@@ -3700,7 +3715,7 @@ void MAI_RR2(int i, missile_id mistype, int dam)
 			Monst->_mgoalvar3 = 4;
 			if (Monst->_mgoalvar1++ < 2 * dist || !DirOK(i, md)) {
 				if (v < 5 * (Monst->_mint + 16))
-					M_RoundWalk(i, md, &Monst->_mgoalvar2);
+					M_RoundWalk(i, md, (RotationDirection *)&Monst->_mgoalvar2);
 			} else
 				Monst->_mgoal = MGOAL_NORMAL;
 		}
@@ -3833,7 +3848,7 @@ void MAI_SkelKing(int i)
 			Monst->_mgoal = MGOAL_MOVE;
 			if ((Monst->_mgoalvar1++ >= 2 * dist && DirOK(i, md)) || dTransVal[Monst->position.tile.x][Monst->position.tile.y] != dTransVal[fx][fy]) {
 				Monst->_mgoal = MGOAL_NORMAL;
-			} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
+			} else if (!M_RoundWalk(i, md, (RotationDirection *)&Monst->_mgoalvar2)) {
 				M_StartDelay(i, GenerateRnd(10) + 10);
 			}
 		}
@@ -3894,7 +3909,7 @@ void MAI_Rhino(int i)
 			Monst->_mgoal = MGOAL_MOVE;
 			if (Monst->_mgoalvar1++ >= 2 * dist || dTransVal[Monst->position.tile.x][Monst->position.tile.y] != dTransVal[fx][fy]) {
 				Monst->_mgoal = MGOAL_NORMAL;
-			} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
+			} else if (!M_RoundWalk(i, md, (RotationDirection *)&Monst->_mgoalvar2)) {
 				M_StartDelay(i, GenerateRnd(10) + 10);
 			}
 		}
@@ -3966,7 +3981,7 @@ void MAI_HorkDemon(int i)
 		int dist = std::max(abs(mx), abs(my));
 		if (Monst->_mgoalvar1++ >= 2 * dist || dTransVal[Monst->position.tile.x][Monst->position.tile.y] != dTransVal[fx][fy]) {
 			Monst->_mgoal = MGOAL_NORMAL;
-		} else if (!M_RoundWalk(i, md, &Monst->_mgoalvar2)) {
+		} else if (!M_RoundWalk(i, md, (RotationDirection *)&Monst->_mgoalvar2)) {
 			M_StartDelay(i, GenerateRnd(10) + 10);
 		}
 	}
@@ -4023,7 +4038,7 @@ void MAI_Counselor(int i)
 		int dist = std::max(abs(mx), abs(my));
 		if (dist >= 2 && Monst->_msquelch == UINT8_MAX && dTransVal[Monst->position.tile.x][Monst->position.tile.y] == dTransVal[fx][fy]) {
 			if (Monst->_mgoalvar1++ < 2 * dist || !DirOK(i, md)) {
-				M_RoundWalk(i, md, &Monst->_mgoalvar2);
+				M_RoundWalk(i, md,(RotationDirection *) &Monst->_mgoalvar2);
 			} else {
 				Monst->_mgoal = MGOAL_NORMAL;
 				M_StartFadein(i, md, true);
