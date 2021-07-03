@@ -31,14 +31,14 @@ constexpr int BackHeight = 9;
 
 Art xpbarArt;
 
-void DrawBar(const CelOutputBuffer &out, int x, int y, int width, const ColorGradient &gradient)
+void DrawBar(const Surface &out, int x, int y, int width, const ColorGradient &gradient)
 {
 	UnsafeDrawHorizontalLine(out, { x, y + 1 }, width, gradient[gradient.size() * 3 / 4 - 1]);
 	UnsafeDrawHorizontalLine(out, { x, y + 2 }, width, gradient[gradient.size() - 1]);
 	UnsafeDrawHorizontalLine(out, { x, y + 3 }, width, gradient[gradient.size() / 2 - 1]);
 }
 
-void DrawEndCap(const CelOutputBuffer &out, Point point, int idx, const ColorGradient &gradient)
+void DrawEndCap(const Surface &out, Point point, int idx, const ColorGradient &gradient)
 {
 	out.SetPixel({ point.x, point.y + 1 }, gradient[idx * 3 / 4]);
 	out.SetPixel({ point.x, point.y + 2 }, gradient[idx]);
@@ -65,7 +65,7 @@ void FreeXPBar()
 	xpbarArt.Unload();
 }
 
-void DrawXPBar(const CelOutputBuffer &out)
+void DrawXPBar(const Surface &out)
 {
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;

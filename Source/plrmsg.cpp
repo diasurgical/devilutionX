@@ -93,7 +93,7 @@ void InitPlrMsg()
 	plr_msg_slot = 0;
 }
 
-static void PrintPlrMsg(const CelOutputBuffer &out, int x, int y, int width, char *text, uint16_t style)
+static void PrintPlrMsg(const Surface &out, int x, int y, int width, char *text, uint16_t style)
 {
 	int length = strlen(text);
 	for (int i = 0; i < length; i++) {
@@ -104,7 +104,7 @@ static void PrintPlrMsg(const CelOutputBuffer &out, int x, int y, int width, cha
 	DrawString(out, text, { x, y, width, 0 }, style, 1, 10);
 }
 
-void DrawPlrMsg(const CelOutputBuffer &out)
+void DrawPlrMsg(const Surface &out)
 {
 	int i;
 	DWORD x = 10;

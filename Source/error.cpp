@@ -107,7 +107,7 @@ void ClrDiabloMsg()
 
 #define DIALOG_Y ((gnScreenHeight - PANEL_HEIGHT) / 2 - 18)
 
-void DrawDiabloMsg(const CelOutputBuffer &out)
+void DrawDiabloMsg(const Surface &out)
 {
 	CelDrawTo(out, { PANEL_X + 101, DIALOG_Y }, *pSTextSlidCels, 1);
 	CelDrawTo(out, { PANEL_X + 527, DIALOG_Y }, *pSTextSlidCels, 4);

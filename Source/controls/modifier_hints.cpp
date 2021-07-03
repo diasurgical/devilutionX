@@ -104,7 +104,7 @@ uint16_t CircleMenuHintTextColor(bool active)
  * @param hint Struct describing the text to draw and the dimensions of the layout.
  * @param origin Top left corner of the layout (relative to the output buffer).
 */
-void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, const Point &origin)
+void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
 {
 	DrawString(out, hint.top, origin + Displacement { hint.xMid - hint.topW / 2, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));
 
@@ -114,7 +114,7 @@ void DrawCircleMenuHint(const CelOutputBuffer &out, const CircleMenuHint &hint, 
 	DrawString(out, hint.bottom, origin + Displacement { hint.xMid - hint.bottomW / 2, LineHeight * 2 }, CircleMenuHintTextColor(IsBottomActive(hint)));
 }
 
-void DrawStartModifierMenu(const CelOutputBuffer &out)
+void DrawStartModifierMenu(const Surface &out)
 {
 	if (!start_modifier_active)
 		return;
@@ -124,7 +124,7 @@ void DrawStartModifierMenu(const CelOutputBuffer &out)
 	DrawCircleMenuHint(out, Buttons, { PANEL_LEFT + PANEL_WIDTH - Buttons.Width() - CircleMarginX, PANEL_TOP - CircleTop });
 }
 
-void DrawSelectModifierMenu(const CelOutputBuffer &out)
+void DrawSelectModifierMenu(const Surface &out)
 {
 	if (!select_modifier_active)
 		return;
@@ -138,7 +138,7 @@ void DrawSelectModifierMenu(const CelOutputBuffer &out)
 
 } // namespace
 
-void DrawControllerModifierHints(const CelOutputBuffer &out)
+void DrawControllerModifierHints(const Surface &out)
 {
 	DrawStartModifierMenu(out);
 	DrawSelectModifierMenu(out);

@@ -33,9 +33,9 @@
 
 namespace devilution {
 namespace {
-CelOutputBuffer pBtmBuff;
-CelOutputBuffer pLifeBuff;
-CelOutputBuffer pManaBuff;
+Surface pBtmBuff;
+Surface pLifeBuff;
+Surface pManaBuff;
 std::optional<CelSprite> pTalkBtns;
 std::optional<CelSprite> pDurIcons;
 std::optional<CelSprite> pChrButtons;
@@ -233,7 +233,7 @@ spell_id SpellPages[6][7] = {
  * @param cel The CEL sprite
  * @param nCel Index of the cel frame to draw. 0 based.
  */
-static void DrawSpellCel(const CelOutputBuffer &out, Point position, const CelSprite &cel, int nCel)
+static void DrawSpellCel(const Surface &out, Point position, const CelSprite &cel, int nCel)
 {
 	CelDrawLightTo(out, position, cel, nCel, SplTransTbl);
 }
@@ -298,7 +298,7 @@ void SetSpellTrans(spell_type t)
 /**
  * Sets the spell frame to draw and its position then draws it.
  */
-static void DrawSpell(const CelOutputBuffer &out)
+static void DrawSpell(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 	spell_id spl = myPlayer._pRSpell;
@@ -320,7 +320,7 @@ static void DrawSpell(const CelOutputBuffer &out)
 	DrawSpellCel(out, position, *pSpellCels, nCel);
 }
 
-static void PrintSBookHotkey(const CelOutputBuffer &out, Point position, const std::string &text)
+static void PrintSBookHotkey(const Surface &out, Point position, const std::string &text)
 {
 	// Align the hot key text with the top-right corner of the spell icon
 	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
@@ -331,7 +331,7 @@ static void PrintSBookHotkey(const CelOutputBuffer &out, Point position, const s
 	DrawString(out, text.c_str(), position, UIS_SILVER);
 }
 
-void DrawSpellList(const CelOutputBuffer &out)
+void DrawSpellList(const Surface &out)
 {
 	int c;
 	int s;
@@ -542,7 +542,7 @@ void ClearPanel()
 	pinfoflag = false;
 }
 
-void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition)
+void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 {
 	out.BlitFrom(pBtmBuff, srcRect, targetPosition);
 }
@@ -557,7 +557,7 @@ void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosi
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawFlaskTop(const CelOutputBuffer &out, Point position, const CelOutputBuffer &celBuf, int y0, int y1)
+static void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
 {
 	out.BlitFrom(celBuf, SDL_Rect { 0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0 }, position);
 }
@@ -572,13 +572,13 @@ static void DrawFlaskTop(const CelOutputBuffer &out, Point position, const CelOu
  * @param targetPosition Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-static void DrawFlask(const CelOutputBuffer &out, const CelOutputBuffer &celBuf, Point sourcePosition, Point targetPosition, int h)
+static void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
 	constexpr int FlaskWidth = 59;
 	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
 }
 
-void DrawLifeFlask(const CelOutputBuffer &out)
+void DrawLifeFlask(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
@@ -595,7 +595,7 @@ void DrawLifeFlask(const CelOutputBuffer &out)
 	}
 }
 
-void UpdateLifeFlask(const CelOutputBuffer &out)
+void UpdateLifeFlask(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
@@ -611,7 +611,7 @@ void UpdateLifeFlask(const CelOutputBuffer &out)
 		DrawPanelBox(out, { 96, 85 - filled, 88, filled }, { 96 + PANEL_X, PANEL_Y + 69 - filled });
 }
 
-void DrawManaFlask(const CelOutputBuffer &out)
+void DrawManaFlask(const Surface &out)
 {
 	int filled = plr[myplr]._pManaPer;
 	if (filled > 80)
@@ -636,7 +636,7 @@ void control_update_life_mana()
 	myPlayer.UpdateHitPointPercentage();
 }
 
-void UpdateManaFlask(const CelOutputBuffer &out)
+void UpdateManaFlask(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
@@ -657,9 +657,9 @@ void UpdateManaFlask(const CelOutputBuffer &out)
 
 void InitControlPan()
 {
-	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
-	pManaBuff = CelOutputBuffer::Alloc(88, 88);
-	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
+	pBtmBuff = Surface::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
+	pManaBuff = Surface::Alloc(88, 88);
+	pLifeBuff = Surface::Alloc(88, 88);
 
 	pChrPanel = LoadCel("Data\\Char.CEL", SPANEL_WIDTH);
 	if (!gbIsHellfire)
@@ -742,13 +742,13 @@ void InitControlPan()
 	initialDropGoldIndex = 0;
 }
 
-void DrawCtrlPan(const CelOutputBuffer &out)
+void DrawCtrlPan(const Surface &out)
 {
 	DrawPanelBox(out, { 0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT }, { PANEL_X, PANEL_Y });
 	DrawInfoBox(out);
 }
 
-void DrawCtrlBtns(const CelOutputBuffer &out)
+void DrawCtrlBtns(const Surface &out)
 {
 	for (int i = 0; i < 6; i++) {
 		if (!panbtns[i])
@@ -1083,7 +1083,7 @@ void FreeControlPan()
 	pGBoxBuff = std::nullopt;
 }
 
-static void PrintInfo(const CelOutputBuffer &out)
+static void PrintInfo(const Surface &out)
 {
 	if (talkflag)
 		return;
@@ -1104,7 +1104,7 @@ static void PrintInfo(const CelOutputBuffer &out)
 	}
 }
 
-void DrawInfoBox(const CelOutputBuffer &out)
+void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
@@ -1167,7 +1167,7 @@ void DrawInfoBox(const CelOutputBuffer &out)
 		PrintInfo(out);
 }
 
-void DrawChr(const CelOutputBuffer &out)
+void DrawChr(const Surface &out)
 {
 	uint32_t style = UIS_SILVER;
 	char chrstr[64];
@@ -1387,7 +1387,7 @@ void ReleaseLvlBtn()
 	lvlbtndown = false;
 }
 
-void DrawLevelUpIcon(const CelOutputBuffer &out)
+void DrawLevelUpIcon(const Surface &out)
 {
 	if (stextflag == STORE_NONE) {
 		int nCel = lvlbtndown ? 3 : 2;
@@ -1476,7 +1476,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 	}
 }
 
-static int DrawDurIcon4Item(const CelOutputBuffer &out, ItemStruct *pItem, int x, int c)
+static int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 {
 	if (pItem->isEmpty())
 		return x;
@@ -1510,7 +1510,7 @@ static int DrawDurIcon4Item(const CelOutputBuffer &out, ItemStruct *pItem, int x
 	return x - 32 - 8;
 }
 
-void DrawDurIcon(const CelOutputBuffer &out)
+void DrawDurIcon(const Surface &out)
 {
 	bool hasRoomBetweenPanels = gnScreenWidth >= PANEL_WIDTH + 16 + (32 + 8 + 32 + 8 + 32 + 8 + 32) + 16;
 	bool hasRoomUnderPanels = gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
@@ -1533,7 +1533,7 @@ void DrawDurIcon(const CelOutputBuffer &out)
 	DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
-void RedBack(const CelOutputBuffer &out)
+void RedBack(const Surface &out)
 {
 	uint8_t *dst = out.begin();
 	uint8_t *tbl = &pLightTbl[4608];
@@ -1546,7 +1546,7 @@ void RedBack(const CelOutputBuffer &out)
 	}
 }
 
-static void PrintSBookStr(const CelOutputBuffer &out, Point position, const char *text)
+static void PrintSBookStr(const Surface &out, Point position, const char *text)
 {
 	DrawString(out, text, { RIGHT_PANEL_X + SPLICONLENGTH + position.x, position.y, 222, 0 }, UIS_SILVER);
 }
@@ -1578,7 +1578,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 	return st;
 }
 
-void DrawSpellBook(const CelOutputBuffer &out)
+void DrawSpellBook(const Surface &out)
 {
 	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pSpellBkCel, 1);
 	if (gbIsHellfire && sbooktab < 5) {
@@ -1670,7 +1670,7 @@ void CheckSBook()
 	}
 }
 
-void DrawGoldSplit(const CelOutputBuffer &out, int amount)
+void DrawGoldSplit(const Surface &out, int amount)
 {
 	const int dialogX = RIGHT_PANEL_X + 30;
 
@@ -1773,7 +1773,7 @@ void control_remove_gold(int pnum, int goldIndex)
 	dropGoldValue = 0;
 }
 
-void DrawTalkPan(const CelOutputBuffer &out)
+void DrawTalkPan(const Surface &out)
 {
 	if (!talkflag)
 		return;

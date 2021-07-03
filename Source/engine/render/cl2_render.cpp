@@ -93,7 +93,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT const byte *SkipRestOfCl2Line(
 /** Renders a CL2 sprite with only vertical clipping to the output buffer. */
 template <typename RenderPixels, typename RenderFill>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2ClipY(
-    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+    const Surface &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderPixels &renderPixels, const RenderFill &renderFill)
 {
 	const auto *srcEnd = src + srcSize;
@@ -146,7 +146,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2ClipY(
 /** Renders a CEL with both horizontal and vertical clipping to the output buffer. */
 template <typename RenderPixels, typename RenderFill>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2ClipXY( // NOLINT(readability-function-cognitive-complexity)
-    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
+    const Surface &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth, ClipX clipX,
     const RenderPixels &renderPixels, const RenderFill &renderFill)
 {
 	const auto *srcEnd = src + srcSize;
@@ -249,7 +249,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2ClipXY( // NOLINT(readability-
 
 template <typename RenderPixels, typename RenderFill>
 DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2(
-    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
+    const Surface &out, Point position, const byte *src, std::size_t srcSize, std::size_t srcWidth,
     const RenderPixels &renderPixels, const RenderFill &renderFill)
 {
 	const ClipX clipX = CalculateClipX(position.x, srcWidth, out);
@@ -271,7 +271,7 @@ DVL_ALWAYS_INLINE DVL_ATTRIBUTE_HOT void RenderCl2(
  * @param nDataSize Size of CL2 in bytes
  * @param nWidth Width of sprite
  */
-void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
+void Cl2BlitSafe(const Surface &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
 	RenderCl2(
 	    out, { sx, sy }, pRLEBytes, nDataSize, nWidth,
@@ -303,7 +303,7 @@ void Cl2BlitSafe(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEByt
  * @param nWidth With of CL2 sprite
  * @param pTable Light color table
  */
-void Cl2BlitLightSafe(const CelOutputBuffer &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
+void Cl2BlitLightSafe(const Surface &out, int sx, int sy, const byte *pRLEBytes, int nDataSize, int nWidth, uint8_t *pTable)
 {
 	RenderCl2(
 	    out, { sx, sy }, pRLEBytes, nDataSize, nWidth,
@@ -467,7 +467,7 @@ std::uint8_t *RenderCl2OutlinePixels(
 template <bool North, bool West, bool South, bool East,
     bool ClipWidth = false, bool CheckFirstColumn = false, bool CheckLastColumn = false>
 const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive-complexity)
-    const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcWidth,
+    const Surface &out, Point position, const byte *src, std::size_t srcWidth,
     ClipX clipX, std::uint8_t color, SkipSize &skipSize)
 {
 	std::int_fast16_t remainingWidth = clipX.width;
@@ -556,7 +556,7 @@ const byte *RenderCl2OutlineRowClipped( // NOLINT(readability-function-cognitive
 	return src;
 }
 
-void RenderCl2OutlineClippedY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+void RenderCl2OutlineClippedY(const Surface &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
     std::size_t srcWidth, std::uint8_t color)
 {
 	const auto *srcEnd = src + srcSize;
@@ -613,7 +613,7 @@ void RenderCl2OutlineClippedY(const CelOutputBuffer &out, Point position, const 
 	}
 }
 
-void RenderCl2OutlineClippedXY(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
+void RenderCl2OutlineClippedXY(const Surface &out, Point position, const byte *src, std::size_t srcSize, // NOLINT(readability-function-cognitive-complexity)
     std::size_t srcWidth, std::uint8_t color)
 {
 	const auto *srcEnd = src + srcSize;
@@ -718,7 +718,7 @@ void RenderCl2OutlineClippedXY(const CelOutputBuffer &out, Point position, const
 	}
 }
 
-void RenderCl2Outline(const CelOutputBuffer &out, Point position, const byte *src, std::size_t srcSize,
+void RenderCl2Outline(const Surface &out, Point position, const byte *src, std::size_t srcSize,
     std::size_t srcWidth, std::uint8_t color)
 {
 	if (position.x > 0 && position.x + static_cast<int>(srcWidth) < static_cast<int>(out.w())) {
@@ -763,7 +763,7 @@ void Cl2ApplyTrans(byte *p, const std::array<uint8_t, 256> &ttbl, int nCel)
 	}
 }
 
-void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2Draw(const Surface &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	assert(frame > 0);
 
@@ -773,7 +773,7 @@ void Cl2Draw(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, i
 	Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }
 
-void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2DrawOutline(const Surface &out, uint8_t col, int sx, int sy, const CelSprite &cel, int frame)
 {
 	assert(frame > 0);
 
@@ -783,7 +783,7 @@ void Cl2DrawOutline(const CelOutputBuffer &out, uint8_t col, int sx, int sy, con
 	RenderCl2Outline(out, { sx, sy }, pRLEBytes, nDataSize, cel.Width(frame), col);
 }
 
-void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame, char light)
+void Cl2DrawLightTbl(const Surface &out, int sx, int sy, const CelSprite &cel, int frame, char light)
 {
 	assert(frame > 0);
 
@@ -792,7 +792,7 @@ void Cl2DrawLightTbl(const CelOutputBuffer &out, int sx, int sy, const CelSprite
 	Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(light));
 }
 
-void Cl2DrawLight(const CelOutputBuffer &out, int sx, int sy, const CelSprite &cel, int frame)
+void Cl2DrawLight(const Surface &out, int sx, int sy, const CelSprite &cel, int frame)
 {
 	assert(frame > 0);
 

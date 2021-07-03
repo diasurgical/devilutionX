@@ -22,7 +22,7 @@ namespace devilution {
  *
  * The end point is at `{ from.x + 2 * height + 1, from.y - height }`.
  */
-void DrawMapLineNE(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void DrawMapLineNE(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards south east at an `atan(1/2)` angle.
@@ -31,7 +31,7 @@ void DrawMapLineNE(const CelOutputBuffer &out, Point from, int height, std::uint
  *
  * The end point is at `{ from.x + 2 * height + 1, from.y + height }`.
  */
-void DrawMapLineSE(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void DrawMapLineSE(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards north west at an `atan(1/2)` angle.
@@ -40,7 +40,7 @@ void DrawMapLineSE(const CelOutputBuffer &out, Point from, int height, std::uint
  *
  * The end point is at `{ from.x - 2 * height + 1, from.y - height }`.
  */
-void DrawMapLineNW(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void DrawMapLineNW(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards south west at an `atan(1/2)` angle.
@@ -49,7 +49,7 @@ void DrawMapLineNW(const CelOutputBuffer &out, Point from, int height, std::uint
  *
  * The end point is at `{ from.x - 2 * height + 1, from.y + height }`.
  */
-void DrawMapLineSW(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex);
+void DrawMapLineSW(const Surface &out, Point from, int height, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards north east at an `atan(1/2)` angle.
@@ -58,7 +58,7 @@ void DrawMapLineSW(const CelOutputBuffer &out, Point from, int height, std::uint
  *
  * The end point is at `{ from.x + width + 1, from.y - 2 * width }`.
  */
-void DrawMapLineSteepNE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepNE(const Surface &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards south east at an `atan(2)` angle.
@@ -67,7 +67,7 @@ void DrawMapLineSteepNE(const CelOutputBuffer &out, Point from, int width, std::
  *
  * The end point is at `{ from.x + width + 1, from.y + 2 * width }`.
  */
-void DrawMapLineSteepSE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepSE(const Surface &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards north west at an `atan(1/2)` angle.
@@ -76,7 +76,7 @@ void DrawMapLineSteepSE(const CelOutputBuffer &out, Point from, int width, std::
  *
  * The end point is at `{ from.x - (width + 1), from.y - 2 * width }`.
  */
-void DrawMapLineSteepNW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepNW(const Surface &out, Point from, int width, std::uint8_t colorIndex);
 
 /**
  * @brief Draw a line in the target buffer from the given point towards south west at an `atan(1/2)` angle.
@@ -85,6 +85,6 @@ void DrawMapLineSteepNW(const CelOutputBuffer &out, Point from, int width, std::
  *
  * The end point is at `{ from.x - (width + 1), from.y + 2 * width }`.
  */
-void DrawMapLineSteepSW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex);
+void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t colorIndex);
 
 } // namespace devilution

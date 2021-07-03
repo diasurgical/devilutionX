@@ -75,13 +75,13 @@ const char *const TownerNames[] = {
 	"Wirt"
 };
 
-void DrawSTextBack(const CelOutputBuffer &out)
+void DrawSTextBack(const Surface &out)
 {
 	CelDrawTo(out, { PANEL_X + 320 + 24, 327 + UI_OFFSET_Y }, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, PANEL_X + 347, UI_OFFSET_Y + 28, 265, 297);
 }
 
-void DrawSSlider(const CelOutputBuffer &out, int y1, int y2)
+void DrawSSlider(const Surface &out, int y1, int y2)
 {
 	int yd1 = y1 * 12 + 44 + UI_OFFSET_Y;
 	int yd2 = y2 * 12 + 44 + UI_OFFSET_Y;
@@ -2221,7 +2221,7 @@ void FreeStoreMem()
 	pSTextSlidCels = std::nullopt;
 }
 
-static void DrawSelector(const CelOutputBuffer &out, const Rectangle &rect, const char *text, uint16_t flags)
+static void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, uint16_t flags)
 {
 	int lineWidth = GetLineWidth(text);
 
@@ -2238,7 +2238,7 @@ static void DrawSelector(const CelOutputBuffer &out, const Rectangle &rect, cons
 	CelDrawTo(out, { x2, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 }
 
-void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *text, uint16_t flags, int price)
+void PrintSString(const Surface &out, int margin, int line, const char *text, uint16_t flags, int price)
 {
 	int sx = PANEL_X + 32 + margin;
 	if (!stextsize) {
@@ -2266,7 +2266,7 @@ void PrintSString(const CelOutputBuffer &out, int margin, int line, const char *
 	}
 }
 
-void DrawSLine(const CelOutputBuffer &out, int y)
+void DrawSLine(const Surface &out, int y)
 {
 	int sx = 26;
 	int sy = y * 12;
@@ -2403,7 +2403,7 @@ void StartStore(talk_id s)
 	stextflag = s;
 }
 
-void DrawSText(const CelOutputBuffer &out)
+void DrawSText(const Surface &out)
 {
 	int i;
 

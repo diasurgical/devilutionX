@@ -88,7 +88,7 @@ void LoadPWaterPalette();
 void UpdatePWaterPalette();
 void ResyncMPQuests();
 void ResyncQuests();
-void DrawQuestLog(const CelOutputBuffer &out);
+void DrawQuestLog(const Surface &out);
 void StartQuestlog();
 void QuestlogUp();
 void QuestlogDown();

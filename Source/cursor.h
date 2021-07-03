@@ -60,7 +60,7 @@ inline bool IsItemSprite(int cursId)
 	return cursId >= CURSOR_FIRSTITEM;
 }
 
-void CelDrawCursor(const CelOutputBuffer &out, Point position, int cursId);
+void CelDrawCursor(const Surface &out, Point position, int cursId);
 
 /** Returns the sprite for the given inventory index. */
 const CelSprite &GetInvItemSprite(int i);

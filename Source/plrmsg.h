@@ -24,6 +24,6 @@ size_t EventPlrMsg(const char *pszFmt, ...);
 void SendPlrMsg(int pnum, const char *pszStr);
 void ClearPlrMsg();
 void InitPlrMsg();
-void DrawPlrMsg(const CelOutputBuffer &out);
+void DrawPlrMsg(const Surface &out);
 
 } // namespace devilution

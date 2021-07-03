@@ -19,7 +19,7 @@ enum class DirectionY {
 };
 
 template <DirectionX DirX, DirectionY DirY>
-void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void DrawMapLine(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	while (height-- > 0) {
 		out.SetPixel({ from.x, from.y + 1 }, 0);
@@ -35,7 +35,7 @@ void DrawMapLine(const CelOutputBuffer &out, Point from, int height, std::uint8_
 }
 
 template <DirectionX DirX, DirectionY DirY>
-void DrawMapLineSteep(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteep(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	while (width-- > 0) {
 		out.SetPixel(from, colorIndex);
@@ -49,42 +49,42 @@ void DrawMapLineSteep(const CelOutputBuffer &out, Point from, int width, std::ui
 
 } // namespace
 
-void DrawMapLineNE(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void DrawMapLineNE(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	DrawMapLine<DirectionX::EAST, DirectionY::NORTH>(out, from, height, colorIndex);
 }
 
-void DrawMapLineSE(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void DrawMapLineSE(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	DrawMapLine<DirectionX::EAST, DirectionY::SOUTH>(out, from, height, colorIndex);
 }
 
-void DrawMapLineNW(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void DrawMapLineNW(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	DrawMapLine<DirectionX::WEST, DirectionY::NORTH>(out, from, height, colorIndex);
 }
 
-void DrawMapLineSW(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void DrawMapLineSW(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	DrawMapLine<DirectionX::WEST, DirectionY::SOUTH>(out, from, height, colorIndex);
 }
 
-void DrawMapLineSteepNE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepNE(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	DrawMapLineSteep<DirectionX::EAST, DirectionY::NORTH>(out, from, width, colorIndex);
 }
 
-void DrawMapLineSteepSE(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepSE(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	DrawMapLineSteep<DirectionX::EAST, DirectionY::SOUTH>(out, from, width, colorIndex);
 }
 
-void DrawMapLineSteepNW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepNW(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	DrawMapLineSteep<DirectionX::WEST, DirectionY::NORTH>(out, from, width, colorIndex);
 }
 
-void DrawMapLineSteepSW(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawMapLineSteepSW(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	DrawMapLineSteep<DirectionX::WEST, DirectionY::SOUTH>(out, from, width, colorIndex);
 }

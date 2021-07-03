@@ -63,45 +63,45 @@ inline bool CanPanelsCoverView()
 	return gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
 
-void DrawSpellList(const CelOutputBuffer &out);
+void DrawSpellList(const Surface &out);
 void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
 
 void AddPanelString(const char *str);
 void ClearPanel();
-void DrawPanelBox(const CelOutputBuffer &out, SDL_Rect srcRect, Point targetPosition);
+void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
  * First it draws the empty flask cel and then draws the filled part on top if needed.
  */
-void DrawLifeFlask(const CelOutputBuffer &out);
+void DrawLifeFlask(const Surface &out);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
  * First sets the fill amount then draws the empty flask cel portion then the filled
  * flask portion.
  */
-void UpdateLifeFlask(const CelOutputBuffer &out);
+void UpdateLifeFlask(const Surface &out);
 
-void DrawManaFlask(const CelOutputBuffer &out);
+void DrawManaFlask(const Surface &out);
 void control_update_life_mana();
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
  * Also for some reason draws the current right mouse button spell.
  */
-void UpdateManaFlask(const CelOutputBuffer &out);
+void UpdateManaFlask(const Surface &out);
 
 void InitControlPan();
-void DrawCtrlPan(const CelOutputBuffer &out);
+void DrawCtrlPan(const Surface &out);
 
 /**
  * Draws the control panel buttons in their current state. If the button is in the default
  * state draw it from the panel cel(extract its sub-rect). Else draw it from the buttons cel.
  */
-void DrawCtrlBtns(const CelOutputBuffer &out);
+void DrawCtrlBtns(const Surface &out);
 
 void DoSpeedBook();
 void DoPanBtn();
@@ -114,21 +114,21 @@ void FreeControlPan();
 /**
  * Sets a string to be drawn in the info box and then draws it.
  */
-void DrawInfoBox(const CelOutputBuffer &out);
-void DrawChr(const CelOutputBuffer &out);
+void DrawInfoBox(const Surface &out);
+void DrawChr(const Surface &out);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
-void DrawLevelUpIcon(const CelOutputBuffer &out);
+void DrawLevelUpIcon(const Surface &out);
 void CheckChrBtns();
 void ReleaseChrBtns(bool addAllStatPoints);
-void DrawDurIcon(const CelOutputBuffer &out);
-void RedBack(const CelOutputBuffer &out);
-void DrawSpellBook(const CelOutputBuffer &out);
+void DrawDurIcon(const Surface &out);
+void RedBack(const Surface &out);
+void DrawSpellBook(const Surface &out);
 void CheckSBook();
-void DrawGoldSplit(const CelOutputBuffer &out, int amount);
+void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(char vkey);
 void control_remove_gold(int pnum, int goldIndex);
-void DrawTalkPan(const CelOutputBuffer &out);
+void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();
 void control_type_message();

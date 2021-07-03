@@ -35,7 +35,7 @@ void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
 int sgCurrentMenuIdx;
 
-void gmenu_draw_pause(const CelOutputBuffer &out)
+void gmenu_draw_pause(const Surface &out)
 {
 	if (currlevel != 0)
 		RedBack(out);
@@ -145,7 +145,7 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	GmenuUpDown(true);
 }
 
-static void GmenuClearBuffer(const CelOutputBuffer &out, int x, int y, int width, int height)
+static void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
 {
 	BYTE *i = out.at(x, y);
 	while ((height--) != 0) {
@@ -162,7 +162,7 @@ static int GmenuGetLfont(TMenuItem *pItem)
 	return GetLineWidth(_(pItem->pszStr), GameFontBig, 2);
 }
 
-static void GmenuDrawMenuItem(const CelOutputBuffer &out, TMenuItem *pItem, int y)
+static void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 {
 	int w = GmenuGetLfont(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
@@ -194,7 +194,7 @@ static void GameMenuMove()
 		GmenuUpDown(moveDir.y == AxisDirectionY_DOWN);
 }
 
-void gmenu_draw(const CelOutputBuffer &out)
+void gmenu_draw(const Surface &out)
 {
 	if (sgpCurrentMenu != nullptr) {
 		GameMenuMove();

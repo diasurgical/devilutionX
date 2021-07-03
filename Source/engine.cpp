@@ -20,53 +20,7 @@
 
 namespace devilution {
 
-namespace {
-
-template <bool SkipColorIndexZero>
-void BufferBlit(const CelOutputBuffer &src, SDL_Rect srcRect, const CelOutputBuffer &dst, Point dstPosition)
-{
-	// We do not use `SDL_BlitSurface` here because the palettes may be different objects
-	// and SDL would attempt to map them.
-
-	dst.Clip(&srcRect, &dstPosition);
-	if (srcRect.w <= 0 || srcRect.h <= 0)
-		return;
-
-	const std::uint8_t *srcBuf = src.at(srcRect.x, srcRect.y);
-	const auto srcPitch = src.pitch();
-	std::uint8_t *dstBuf = &dst[dstPosition];
-	const auto dstPitch = dst.pitch();
-
-	for (unsigned h = srcRect.h; h != 0; --h) {
-		if (SkipColorIndexZero) {
-			for (unsigned w = srcRect.w; w != 0; --w) {
-				if (*srcBuf != 0)
-					*dstBuf = *srcBuf;
-				++srcBuf, ++dstBuf;
-			}
-			srcBuf += srcPitch - srcRect.w;
-			dstBuf += dstPitch - srcRect.w;
-		} else {
-			std::memcpy(dstBuf, srcBuf, srcRect.w);
-			srcBuf += srcPitch;
-			dstBuf += dstPitch;
-		}
-	}
-}
-
-} // namespace
-
-void CelOutputBuffer::BlitFrom(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const
-{
-	BufferBlit</*SkipColorIndexZero=*/false>(src, srcRect, *this, targetPosition);
-}
-
-void CelOutputBuffer::BlitFromSkipColorIndexZero(const CelOutputBuffer &src, SDL_Rect srcRect, Point targetPosition) const
-{
-	BufferBlit</*SkipColorIndexZero=*/true>(src, srcRect, *this, targetPosition);
-}
-
-void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void DrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	if (from.y < 0 || from.y >= out.h() || from.x >= out.w() || width <= 0 || from.x + width <= 0)
 		return;
@@ -79,12 +33,12 @@ void DrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::
 	return UnsafeDrawHorizontalLine(out, from, width, colorIndex);
 }
 
-void UnsafeDrawHorizontalLine(const CelOutputBuffer &out, Point from, int width, std::uint8_t colorIndex)
+void UnsafeDrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
 	std::memset(&out[from], colorIndex, width);
 }
 
-void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void DrawVerticalLine(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	if (from.x < 0 || from.x >= out.w() || from.y >= out.h() || height <= 0 || from.y + height <= 0)
 		return;
@@ -97,7 +51,7 @@ void DrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::u
 	return UnsafeDrawVerticalLine(out, from, height, colorIndex);
 }
 
-void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, std::uint8_t colorIndex)
+void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uint8_t colorIndex)
 {
 	auto *dst = &out[from];
 	const auto pitch = out.pitch();
@@ -107,7 +61,7 @@ void UnsafeDrawVerticalLine(const CelOutputBuffer &out, Point from, int height, 
 	}
 }
 
-static void DrawHalfTransparentBlendedRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+static void DrawHalfTransparentBlendedRectTo(const Surface &out, int sx, int sy, int width, int height)
 {
 	BYTE *pix = out.at(sx, sy);
 
@@ -120,7 +74,7 @@ static void DrawHalfTransparentBlendedRectTo(const CelOutputBuffer &out, int sx,
 	}
 }
 
-static void DrawHalfTransparentStippledRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+static void DrawHalfTransparentStippledRectTo(const Surface &out, int sx, int sy, int width, int height)
 {
 	BYTE *pix = out.at(sx, sy);
 
@@ -134,7 +88,7 @@ static void DrawHalfTransparentStippledRectTo(const CelOutputBuffer &out, int sx
 	}
 }
 
-void DrawHalfTransparentRectTo(const CelOutputBuffer &out, int sx, int sy, int width, int height)
+void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, int height)
 {
 	if (sx + width < 0)
 		return;
