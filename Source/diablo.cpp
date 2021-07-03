@@ -365,7 +365,6 @@ static void RunGameLoop(interface_mode uMsg)
 	StartGame(uMsg);
 	assert(ghMainWnd);
 	saveProc = SetWindowProc(GM_Game);
-	control_update_life_mana();
 	run_delta_info();
 	gbRunGame = true;
 	gbProcessPlayers = true;

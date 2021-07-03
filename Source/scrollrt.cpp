@@ -1314,8 +1314,9 @@ void DrawView(const Surface &out, int StartX, int StartY)
 	gmenu_draw(out);
 	doom_draw(out);
 	DrawInfoBox(out);
-	DrawLifeFlask(out);
-	DrawManaFlask(out);
+	control_update_life_mana(); // Update life/mana totals before rendering any portion of the flask.
+	DrawLifeFlaskUpper(out);
+	DrawManaFlaskUpper(out);
 }
 
 extern SDL_Surface *pal_surface;
@@ -1591,10 +1592,12 @@ void DrawAndBlit()
 		DrawCtrlPan(out);
 	}
 	if (drawhpflag) {
-		UpdateLifeFlask(out);
+		DrawLifeFlaskLower(out);
 	}
 	if (drawmanaflag) {
-		UpdateManaFlask(out);
+		DrawManaFlaskLower(out);
+
+		DrawSpell(out);
 	}
 	if (drawbtnflag) {
 		DrawCtrlBtns(out);

@@ -74,25 +74,44 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
- * First it draws the empty flask cel and then draws the filled part on top if needed.
+ * The empty flask cel is drawn from the top of the flask to the fill level (there is always a 2 pixel "air gap") and
+ * the filled flask cel is drawn from that level to the top of the control panel if required.
  */
-void DrawLifeFlask(const Surface &out);
+void DrawLifeFlaskUpper(const Surface &out);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
  * First sets the fill amount then draws the empty flask cel portion then the filled
  * flask portion.
  */
-void UpdateLifeFlask(const Surface &out);
+void DrawLifeFlaskLower(const Surface &out);
 
-void DrawManaFlask(const Surface &out);
+/**
+ * Draws the top dome of the mana flask (that part that protrudes out of the control panel).
+ * The empty flask cel is drawn from the top of the flask to the fill level (there is always a 2 pixel "air gap") and
+ * the filled flask cel is drawn from that level to the top of the control panel if required.
+ */
+void DrawManaFlaskUpper(const Surface &out);
+
+/**
+ * Controls the drawing of the area of the mana flask within the control panel.
+ */
+void DrawManaFlaskLower(const Surface &out);
+
+/**
+ * @brief calls on the active player object to update HP/Mana percentage variables
+ *
+ * This is used to ensure that DrawFlask routines display an accurate representation of the players health/mana
+ *
+ * @see PlayerStruct::UpdateHitPointPercentage() and PlayerStruct::UpdateManaPercentage()
+ */
 void control_update_life_mana();
 
 /**
- * Controls the drawing of the area of the life flask within the control panel.
- * Also for some reason draws the current right mouse button spell.
+ * @brief draws the current right mouse button spell.
+ * @param out screen buffer representing the main UI panel
  */
-void UpdateManaFlask(const Surface &out);
+void DrawSpell(const Surface &out);
 
 void InitControlPan();
 void DrawCtrlPan(const Surface &out);

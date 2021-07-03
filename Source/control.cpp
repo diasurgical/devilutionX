@@ -52,6 +52,9 @@ std::optional<CelSprite> pSpellCels;
 BYTE sgbNextTalkSave;
 BYTE sgbTalkSavePos;
 
+/**
+ * @brief Set if the life flask needs to be redrawn during next frame
+*/
 bool drawhpflag;
 bool dropGoldFlag;
 bool panbtns[8];
@@ -59,6 +62,9 @@ bool chrbtn[4];
 bool lvlbtndown;
 char sgszTalkSave[8][80];
 int dropGoldValue;
+/**
+ * @brief Set if the mana flask needs to be redrawn during the next frame
+*/
 bool drawmanaflag;
 bool chrbtnactive;
 char sgszTalkMsg[MAX_SEND_STR_LEN];
@@ -206,10 +212,10 @@ const char *const PanBtnStr[8] = {
 };
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
 Rectangle ChrBtnsRect[4] = {
-	{ {137, 138}, {41, 22} },
-	{ {137, 166}, {41, 22} },
-	{ {137, 195}, {41, 22} },
-	{ {137, 223}, {41, 22} }
+	{ { 137, 138 }, { 41, 22 } },
+	{ { 137, 166 }, { 41, 22 } },
+	{ { 137, 195 }, { 41, 22 } },
+	{ { 137, 223 }, { 41, 22 } }
 };
 
 /** Maps from spellbook page number and position to spell_id. */
@@ -295,10 +301,7 @@ void SetSpellTrans(spell_type t)
 	}
 }
 
-/**
- * Sets the spell frame to draw and its position then draws it.
- */
-static void DrawSpell(const Surface &out)
+void DrawSpell(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 	spell_id spl = myPlayer._pRSpell;
@@ -578,81 +581,75 @@ static void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePos
 	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
 }
 
-void DrawLifeFlask(const Surface &out)
+/**
+ * @brief Draws the part of the life/mana flasks protruding above the bottom panel
+ * @see DrawFlaskLower()
+ * @param out The display region to draw to
+ * @param sourceBuffer A sprite representing the appropriate background/empty flask style
+ * @param offset X coordinate offset for where the flask should be drawn
+ * @param fillPer How full the flask is (a value from 0 to 80)
+ */
+void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	auto &myPlayer = plr[myplr];
-
-	int emptyPortion = 80 - myPlayer.UpdateHitPointPercentage();
-
-	// clamping because this function only draws the top 12% of the HP display
-	emptyPortion = clamp(emptyPortion, 0, 11) + 2; // +2 to account for the frame being included in the sprite
+	// clamping because this function only draws the top 12% of the flask display
+	int emptyPortion = clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
 
 	// Draw the empty part of the flask
-	DrawFlask(out, pLifeBuff, { 13, 3 }, { PANEL_LEFT + 109, PANEL_TOP - 13 }, emptyPortion);
-	if (emptyPortion < 13) {
+	DrawFlask(out, sourceBuffer, { 13, 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 }, emptyPortion);
+	if (emptyPortion < 13)
 		// Draw the filled part of the flask
-		DrawFlask(out, pBtmBuff, { 109, emptyPortion + 3 }, { PANEL_LEFT + 109, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
-	}
+		DrawFlask(out, pBtmBuff, { offset, emptyPortion + 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
 }
 
-void UpdateLifeFlask(const Surface &out)
+/**
+ * @brief Draws the part of the life/mana flasks inside the bottom panel
+ * @see DrawFlaskUpper()
+ * @param out The display region to draw to
+ * @param sourceBuffer A sprite representing the appropriate background/empty flask style
+ * @param offset X coordinate offset for where the flask should be drawn
+ * @param fillPer How full the flask is (a value from 0 to 80)
+ */
+void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
 {
-	auto &myPlayer = plr[myplr];
+	int filled = clamp(fillPer, 0, 69);
 
-	int filled = myPlayer.UpdateHitPointPercentage();
+	if (filled < 69)
+		DrawFlaskTop(out, { PANEL_X + offset, PANEL_Y }, sourceBuffer, 16, 85 - filled);
 
-	if (filled > 69)
-		filled = 69;
-	else if (filled < 0)
-		filled = 0;
-	if (filled != 69)
-		DrawFlaskTop(out, { 96 + PANEL_X, PANEL_Y }, pLifeBuff, 16, 85 - filled);
-	if (filled != 0)
-		DrawPanelBox(out, { 96, 85 - filled, 88, filled }, { 96 + PANEL_X, PANEL_Y + 69 - filled });
+	// It appears that the panel defaults to having a filled flask and DrawFlaskTop only overlays the appropriate amount of empty space.
+	// This draw might not be necessary?
+	if (filled > 0)
+		DrawPanelBox(out, { offset, 85 - filled, 88, filled }, { PANEL_X + offset, PANEL_Y + 69 - filled });
 }
 
-void DrawManaFlask(const Surface &out)
+void DrawLifeFlaskUpper(const Surface &out)
 {
-	int filled = plr[myplr]._pManaPer;
-	if (filled > 80)
-		filled = 80;
-	filled = 80 - filled;
-	if (filled > 11)
-		filled = 11;
-	filled += 2;
+	constexpr int LifeFlaskUpperOffset = 109;
+	DrawFlaskUpper(out, pLifeBuff, LifeFlaskUpperOffset, plr[myplr]._pHPPer);
+}
 
-	DrawFlask(out, pManaBuff, { 13, 3 }, { PANEL_LEFT + 475, PANEL_TOP - 13 }, filled);
-	if (filled != 13)
-		DrawFlask(out, pBtmBuff, { 475, filled + 3 }, { PANEL_LEFT + 475, PANEL_TOP - 13 + filled }, 13 - filled);
+void DrawManaFlaskUpper(const Surface &out)
+{
+	constexpr int ManaFlaskUpperOffset = 475;
+	DrawFlaskUpper(out, pManaBuff, ManaFlaskUpperOffset, plr[myplr]._pManaPer);
+}
+
+void DrawLifeFlaskLower(const Surface &out)
+{
+	constexpr int LifeFlaskLowerOffset = 96;
+	DrawFlaskLower(out, pLifeBuff, LifeFlaskLowerOffset, plr[myplr]._pHPPer);
+}
+
+void DrawManaFlaskLower(const Surface &out)
+{
+	constexpr int ManaFlaskLowerOffeset = 464;
+	DrawFlaskLower(out, pManaBuff, ManaFlaskLowerOffeset, plr[myplr]._pManaPer);
 }
 
 void control_update_life_mana()
 {
-	auto &myPlayer = plr[myplr];
-
-	int maxMana = std::max(myPlayer._pMaxMana, 0);
-	int mana = std::max(myPlayer._pMana, 0);
-	myPlayer._pManaPer = maxMana != 0 ? ((double)mana / (double)maxMana * 80.0) : 0;
-	myPlayer.UpdateHitPointPercentage();
-}
-
-void UpdateManaFlask(const Surface &out)
-{
-	auto &myPlayer = plr[myplr];
-
-	int maxMana = std::max(myPlayer._pMaxMana, 0);
-	int mana = std::max(myPlayer._pMana, 0);
-	int filled = maxMana != 0 ? ((double)mana / (double)maxMana * 80.0) : 0;
-
-	myPlayer._pManaPer = filled;
-
-	filled = std::min(filled, 69);
-	if (filled != 69)
-		DrawFlaskTop(out, { PANEL_X + 464, PANEL_Y }, pManaBuff, 16, 85 - filled);
-	if (filled != 0)
-		DrawPanelBox(out, { 464, 85 - filled, 88, filled }, { PANEL_X + 464, PANEL_Y + 69 - filled });
-
-	DrawSpell(out);
+	plr[myplr].UpdateManaPercentage();
+	plr[myplr].UpdateHitPointPercentage();
 }
 
 void InitControlPan()
