@@ -18,13 +18,13 @@ namespace devilution {
 
 namespace {
 
-struct itemLabel {
+struct ItemLabel {
 	int id, width;
 	Point pos;
 	std::string text;
 };
 
-std::vector<itemLabel> labelQueue;
+std::vector<ItemLabel> labelQueue;
 
 bool altPressed = false;
 bool isLabelHighlighted = false;
@@ -88,7 +88,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 		y *= 2;
 	}
 	x -= nameWidth / 2;
-	labelQueue.push_back(itemLabel { id, nameWidth, { x, y }, textOnGround });
+	labelQueue.push_back(ItemLabel { id, nameWidth, { x, y }, textOnGround });
 }
 
 bool IsMouseOverGameArea()
@@ -121,8 +121,8 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 		do {
 			canShow = true;
 			for (unsigned int j = 0; j < i; ++j) {
-				itemLabel &a = labelQueue[i];
-				itemLabel &b = labelQueue[j];
+				ItemLabel &a = labelQueue[i];
+				ItemLabel &b = labelQueue[j];
 				if (abs(b.pos.y - a.pos.y) < Height + BorderY) {
 					int widthA = a.width + BorderX + MarginX * 2;
 					int widthB = b.width + BorderX + MarginX * 2;
@@ -145,7 +145,7 @@ void DrawItemNameLabels(const CelOutputBuffer &out)
 		} while (!canShow);
 	}
 
-	for (const itemLabel &label : labelQueue) {
+	for (const ItemLabel &label : labelQueue) {
 		ItemStruct &itm = items[label.id];
 
 		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y - Height + MarginY && MousePosition.y < label.pos.y + MarginY) {
