@@ -221,24 +221,24 @@ void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
 	dTransVal[dx][dy] = dTransVal[sx][sy];
 }
 
-void DRLG_ListTrans(int num, BYTE *List)
+void DRLG_ListTrans(int num, BYTE *list)
 {
 	for (int i = 0; i < num; i++) {
-		uint8_t x1 = *List++;
-		uint8_t y1 = *List++;
-		uint8_t x2 = *List++;
-		uint8_t y2 = *List++;
+		uint8_t x1 = *list++;
+		uint8_t y1 = *list++;
+		uint8_t x2 = *list++;
+		uint8_t y2 = *list++;
 		DRLG_RectTrans(x1, y1, x2, y2);
 	}
 }
 
-void DRLG_AreaTrans(int num, BYTE *List)
+void DRLG_AreaTrans(int num, BYTE *list)
 {
 	for (int i = 0; i < num; i++) {
-		uint8_t x1 = *List++;
-		uint8_t y1 = *List++;
-		uint8_t x2 = *List++;
-		uint8_t y2 = *List++;
+		uint8_t x1 = *list++;
+		uint8_t y1 = *list++;
+		uint8_t x2 = *list++;
+		uint8_t y2 = *list++;
 		DRLG_RectTrans(x1, y1, x2, y2);
 		TransVal--;
 	}

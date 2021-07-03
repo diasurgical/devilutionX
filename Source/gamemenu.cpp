@@ -115,25 +115,25 @@ void GamemenuRestartTown(bool /*bActivate*/)
 	NetSendCmd(true, CMD_RETOWN);
 }
 
-void GamemenuSoundMusicToggle(const char *const *names, TMenuItem *menu_item, int volume)
+void GamemenuSoundMusicToggle(const char *const *names, TMenuItem *menuItem, int volume)
 {
 #ifndef NOSOUND
 	if (gbSndInited) {
-		menu_item->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
-		menu_item->pszStr = names[0];
-		gmenu_slider_steps(menu_item, VOLUME_STEPS);
-		gmenu_slider_set(menu_item, VOLUME_MIN, VOLUME_MAX, volume);
+		menuItem->dwFlags |= GMENU_ENABLED | GMENU_SLIDER;
+		menuItem->pszStr = names[0];
+		gmenu_slider_steps(menuItem, VOLUME_STEPS);
+		gmenu_slider_set(menuItem, VOLUME_MIN, VOLUME_MAX, volume);
 		return;
 	}
 #endif
 
-	menu_item->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
-	menu_item->pszStr = names[1];
+	menuItem->dwFlags &= ~(GMENU_ENABLED | GMENU_SLIDER);
+	menuItem->pszStr = names[1];
 }
 
-int GamemenuSliderMusicSound(TMenuItem *menu_item)
+int GamemenuSliderMusicSound(TMenuItem *menuItem)
 {
-	return gmenu_slider_get(menu_item, VOLUME_MIN, VOLUME_MAX);
+	return gmenu_slider_get(menuItem, VOLUME_MIN, VOLUME_MAX);
 }
 
 void GamemenuGetMusic()

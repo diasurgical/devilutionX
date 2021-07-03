@@ -34,7 +34,7 @@ namespace {
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
 
-std::string GetSavePath(uint32_t save_num)
+std::string GetSavePath(uint32_t saveNum)
 {
 	std::string path = paths::PrefPath();
 	const char *ext = ".sv";
@@ -56,7 +56,7 @@ std::string GetSavePath(uint32_t save_num)
 	}
 
 	char save_num_str[21];
-	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%i", save_num);
+	snprintf(save_num_str, sizeof(save_num_str) / sizeof(char), "%i", saveNum);
 	path.append(save_num_str);
 	path.append(ext);
 	return path;
@@ -178,16 +178,16 @@ void EncodeHero(const PkPlayerStruct *pack)
 	mpqapi_write_file("hero", packed.get(), packedLen);
 }
 
-bool OpenArchive(uint32_t save_num)
+bool OpenArchive(uint32_t saveNum)
 {
-	return OpenMPQ(GetSavePath(save_num).c_str());
+	return OpenMPQ(GetSavePath(saveNum).c_str());
 }
 
-HANDLE OpenSaveArchive(uint32_t save_num)
+HANDLE OpenSaveArchive(uint32_t saveNum)
 {
 	HANDLE archive;
 
-	if (SFileOpenArchive(GetSavePath(save_num).c_str(), 0, 0, &archive))
+	if (SFileOpenArchive(GetSavePath(saveNum).c_str(), 0, 0, &archive))
 		return archive;
 	return nullptr;
 }
@@ -265,9 +265,9 @@ const char *pfile_get_password()
 	return gbIsMultiplayer ? PASSWORD_MULTI : PASSWORD_SINGLE;
 }
 
-PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clear_tables)
+PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clearTables)
     : save_num_(GetSaveNumberFromName(plr[myplr]._pName))
-    , clear_tables_(clear_tables)
+    , clear_tables_(clearTables)
 {
 	if (!OpenArchive(save_num_))
 		app_fatal("%s", _("Failed to open player archive for writing."));
@@ -278,10 +278,10 @@ PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
 	mpqapi_flush_and_close(clear_tables_);
 }
 
-void pfile_write_hero(bool write_game_data, bool clear_tables)
+void pfile_write_hero(bool writeGameData, bool clearTables)
 {
-	PFileScopedArchiveWriter scoped_writer(clear_tables);
-	if (write_game_data) {
+	PFileScopedArchiveWriter scoped_writer(clearTables);
+	if (writeGameData) {
 		SaveGameData();
 		RenameTempToPerm();
 	}
@@ -294,7 +294,7 @@ void pfile_write_hero(bool write_game_data, bool clear_tables)
 	}
 }
 
-bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
+bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 {
 	memset(hero_names, 0, sizeof(hero_names));
 
@@ -317,7 +317,7 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 				CalcPlrInv(0, false);
 
 				Game2UiPlayer(plr[0], &uihero, hasSaveGame);
-				ui_add_hero_info(&uihero);
+				uiAddHeroInfo(&uihero);
 			}
 			CloseArchive(&archive);
 		}
@@ -326,12 +326,12 @@ bool pfile_ui_set_hero_infos(bool (*ui_add_hero_info)(_uiheroinfo *))
 	return true;
 }
 
-void pfile_ui_set_class_stats(unsigned int player_class_nr, _uidefaultstats *class_stats)
+void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats)
 {
-	class_stats->strength = StrengthTbl[player_class_nr];
-	class_stats->magic = MagicTbl[player_class_nr];
-	class_stats->dexterity = DexterityTbl[player_class_nr];
-	class_stats->vitality = VitalityTbl[player_class_nr];
+	classStats->strength = StrengthTbl[playerClass];
+	classStats->magic = MagicTbl[playerClass];
+	classStats->dexterity = DexterityTbl[playerClass];
+	classStats->vitality = VitalityTbl[playerClass];
 }
 
 bool pfile_ui_save_create(_uiheroinfo *heroinfo)
@@ -369,9 +369,9 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	return true;
 }
 
-bool pfile_delete_save(_uiheroinfo *hero_info)
+bool pfile_delete_save(_uiheroinfo *heroInfo)
 {
-	uint32_t save_num = GetSaveNumberFromName(hero_info->name);
+	uint32_t save_num = GetSaveNumberFromName(heroInfo->name);
 	if (save_num < MAX_CHARACTERS) {
 		hero_names[save_num][0] = '\0';
 		RemoveFile(GetSavePath(save_num).c_str());
@@ -473,7 +473,7 @@ std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)
 	return buf;
 }
 
-void pfile_update(bool force_save)
+void pfile_update(bool forceSave)
 {
 	static Uint32 save_prev_tc;
 
@@ -481,7 +481,7 @@ void pfile_update(bool force_save)
 		return;
 
 	Uint32 tick = SDL_GetTicks();
-	if (!force_save && tick - save_prev_tc <= 60000)
+	if (!forceSave && tick - save_prev_tc <= 60000)
 		return;
 
 	save_prev_tc = tick;

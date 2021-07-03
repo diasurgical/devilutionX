@@ -1238,11 +1238,11 @@ void DeleteMonster(int i)
 	monstactive[i] = monstactive[nummonsters];
 }
 
-int AddMonster(Point position, Direction dir, int mtype, bool InMap)
+int AddMonster(Point position, Direction dir, int mtype, bool inMap)
 {
 	if (nummonsters < MAXMONSTERS) {
 		int i = monstactive[nummonsters++];
-		if (InMap)
+		if (inMap)
 			dMonster[position.x][position.y] = i + 1;
 		InitMonster(i, dir, mtype, position);
 		return i;
@@ -1419,7 +1419,7 @@ void M_StartSpStand(int i, Direction md)
 	monster[i]._mdir = md;
 }
 
-void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction EndDir)
+void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction endDir)
 {
 	int fx = xadd + monster[i].position.tile.x;
 	int fy = yadd + monster[i].position.tile.y;
@@ -1431,13 +1431,13 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction EndDir
 	monster[i].position.velocity = { xvel, yvel };
 	monster[i]._mVar1 = xadd;
 	monster[i]._mVar2 = yadd;
-	monster[i]._mVar3 = EndDir;
-	monster[i]._mdir = EndDir;
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	monster[i]._mVar3 = endDir;
+	monster[i]._mdir = endDir;
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster[i].position.offset2 = { 0, 0 };
 }
 
-void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction EndDir)
+void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, Direction endDir)
 {
 	int fx = xadd + monster[i].position.tile.x;
 	int fy = yadd + monster[i].position.tile.y;
@@ -1454,13 +1454,13 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i].position.offset = { xoff, yoff };
 	monster[i]._mmode = MM_WALK2;
 	monster[i].position.velocity = { xvel, yvel };
-	monster[i]._mVar3 = EndDir;
-	monster[i]._mdir = EndDir;
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	monster[i]._mVar3 = endDir;
+	monster[i]._mdir = endDir;
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
 
-void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction EndDir)
+void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yadd, int mapx, int mapy, Direction endDir)
 {
 	int fx = xadd + monster[i].position.tile.x;
 	int fy = yadd + monster[i].position.tile.y;
@@ -1481,9 +1481,9 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	monster[i].position.velocity = { xvel, yvel };
 	monster[i]._mVar1 = fx;
 	monster[i]._mVar2 = fy;
-	monster[i]._mVar3 = EndDir;
-	monster[i]._mdir = EndDir;
-	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], EndDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	monster[i]._mVar3 = endDir;
+	monster[i]._mdir = endDir;
+	NewMonsterAnim(i, &monster[i].MType->Anims[MA_WALK], endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	monster[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
 
@@ -1498,12 +1498,12 @@ void M_StartAttack(int i)
 	monster[i]._mdir = md;
 }
 
-void M_StartRAttack(int i, missile_id missile_type, int dam)
+void M_StartRAttack(int i, missile_id missileType, int dam)
 {
 	Direction md = M_GetDir(i);
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_ATTACK], md, AnimationDistributionFlags::ProcessAnimationPending);
 	monster[i]._mmode = MM_RATTACK;
-	monster[i]._mVar1 = missile_type;
+	monster[i]._mVar1 = missileType;
 	monster[i]._mVar2 = dam;
 	monster[i].position.offset = { 0, 0 };
 	monster[i].position.future = monster[i].position.tile;
@@ -1511,7 +1511,7 @@ void M_StartRAttack(int i, missile_id missile_type, int dam)
 	monster[i]._mdir = md;
 }
 
-void M_StartRSpAttack(int i, missile_id missile_type, int dam)
+void M_StartRSpAttack(int i, missile_id missileType, int dam)
 {
 	Direction md = M_GetDir(i);
 	int distributeFramesBeforeFrame = 0;
@@ -1519,7 +1519,7 @@ void M_StartRSpAttack(int i, missile_id missile_type, int dam)
 		distributeFramesBeforeFrame = monster[i].MData->mAFNum2;
 	NewMonsterAnim(i, &monster[i].MType->Anims[MA_SPECIAL], md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
 	monster[i]._mmode = MM_RSPATTACK;
-	monster[i]._mVar1 = missile_type;
+	monster[i]._mVar1 = missileType;
 	monster[i]._mVar2 = 0;
 	monster[i]._mVar3 = dam;
 	monster[i].position.offset = { 0, 0 };
@@ -2012,13 +2012,13 @@ void M_TryM2MHit(int i, int mid, int hper, int mind, int maxd)
 	}
 }
 
-void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
+void M_TryH2HHit(int i, int pnum, int hit, int minDam, int maxDam)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(monster[i].MType != nullptr, i);
 
 	if ((monster[i]._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
-		M_TryM2MHit(i, pnum, Hit, MinDam, MaxDam);
+		M_TryM2MHit(i, pnum, hit, minDam, maxDam);
 		return;
 	}
 	if (plr[pnum]._pHitPoints >> 6 <= 0 || plr[pnum]._pInvincible || (plr[pnum]._pSpellFlags & 1) != 0)
@@ -2036,8 +2036,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		ac += 40;
 	if ((plr[pnum].pDamAcFlags & ISPLHF_ACUNDEAD) != 0 && monster[i].MData->mMonstClass == MC_UNDEAD)
 		ac += 20;
-	int hit = Hit
-	    + 2 * (monster[i].mLevel - plr[pnum]._pLevel)
+	hit += 2 * (monster[i].mLevel - plr[pnum]._pLevel)
 	    + 30
 	    - ac
 	    - plr[pnum]._pDexterity / 5;
@@ -2068,7 +2067,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 		StartPlrBlock(pnum, dir);
 		if (pnum == myplr && plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
-			int dam = GenerateRnd((MaxDam - MinDam + 1) << 6) + (MinDam << 6);
+			int dam = GenerateRnd((maxDam - minDam + 1) << 6) + (minDam << 6);
 			dam += plr[pnum]._pIGetHit << 6;
 			if (dam < 64)
 				dam = 64;
@@ -2110,7 +2109,7 @@ void M_TryH2HHit(int i, int pnum, int Hit, int MinDam, int MaxDam)
 			}
 		}
 	}
-	int dam = (MinDam << 6) + GenerateRnd((MaxDam - MinDam + 1) << 6);
+	int dam = (minDam << 6) + GenerateRnd((maxDam - minDam + 1) << 6);
 	dam += (plr[pnum]._pIGetHit << 6);
 	if (dam < 64)
 		dam = 64;
@@ -3366,7 +3365,7 @@ void MAI_GoatMc(int i)
 	MAI_Round(i, true);
 }
 
-void MAI_Ranged(int i, missile_id missile_type, bool special)
+void MAI_Ranged(int i, missile_id missileType, bool special)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3393,9 +3392,9 @@ void MAI_Ranged(int i, missile_id missile_type, bool special)
 		if (Monst->_mmode == MM_STAND) {
 			if (LineClearMissile(Monst->position.tile, { fx, fy })) {
 				if (special)
-					M_StartRSpAttack(i, missile_type, 4);
+					M_StartRSpAttack(i, missileType, 4);
 				else
-					M_StartRAttack(i, missile_type, 4);
+					M_StartRAttack(i, missileType, 4);
 			} else {
 				Monst->AnimInfo.pCelSprite = &*Monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
 			}
@@ -3583,7 +3582,7 @@ void MAI_Garg(int i)
 	MAI_Round(i, false);
 }
 
-void MAI_RoundRanged(int i, missile_id missile_type, bool checkdoors, int dam, int lessmissiles)
+void MAI_RoundRanged(int i, missile_id missileType, bool checkdoors, int dam, int lessmissiles)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 	MonsterStruct *Monst = &monster[i];
@@ -3611,7 +3610,7 @@ void MAI_RoundRanged(int i, missile_id missile_type, bool checkdoors, int dam, i
 				Monst->_mgoal = MGOAL_NORMAL;
 			} else if (v < (500 * (Monst->_mint + 1) >> lessmissiles)
 			    && (LineClearMissile(Monst->position.tile, { fx, fy }))) {
-				M_StartRSpAttack(i, missile_type, dam);
+				M_StartRSpAttack(i, missileType, dam);
 			} else {
 				M_RoundWalk(i, md, &Monst->_mgoalvar2);
 			}
@@ -3623,7 +3622,7 @@ void MAI_RoundRanged(int i, missile_id missile_type, bool checkdoors, int dam, i
 		if (((dist >= 3 && v < ((500 * (Monst->_mint + 2)) >> lessmissiles))
 		        || v < ((500 * (Monst->_mint + 1)) >> lessmissiles))
 		    && LineClearMissile(Monst->position.tile, { fx, fy })) {
-			M_StartRSpAttack(i, missile_type, dam);
+			M_StartRSpAttack(i, missileType, dam);
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 1000 * (Monst->_mint + 5)
@@ -4561,7 +4560,7 @@ bool LineClearMissile(Point startPoint, Point endPoint)
 	return LineClear(PosOkMissile, 0, startPoint, endPoint);
 }
 
-bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint)
+bool LineClear(bool (*clear)(int, Point), int entity, Point startPoint, Point endPoint)
 {
 	Point position = startPoint;
 
@@ -4597,7 +4596,7 @@ bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point en
 				position.y += yincD;
 			}
 			position.x++;
-			done = position != startPoint && !Clear(entity, position);
+			done = position != startPoint && !clear(entity, position);
 		}
 	} else {
 		if (dy < 0) {
@@ -4629,7 +4628,7 @@ bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point en
 				position.x += xincD;
 			}
 			position.y++;
-			done = position != startPoint && !Clear(entity, position);
+			done = position != startPoint && !clear(entity, position);
 		}
 	}
 	return position == endPoint;

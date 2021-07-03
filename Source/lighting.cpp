@@ -491,7 +491,7 @@ char GetLight(int x, int y)
 	return dLight[x][y];
 }
 
-void DoLighting(Point position, int nRadius, int Lnum)
+void DoLighting(Point position, int nRadius, int lnum)
 {
 	int xoff = 0;
 	int yoff = 0;
@@ -500,9 +500,9 @@ void DoLighting(Point position, int nRadius, int Lnum)
 	int block_x = 0;
 	int block_y = 0;
 
-	if (Lnum >= 0) {
-		xoff = LightList[Lnum].position.offset.x;
-		yoff = LightList[Lnum].position.offset.y;
+	if (lnum >= 0) {
+		xoff = LightList[lnum].position.offset.x;
+		yoff = LightList[lnum].position.offset.y;
 		if (xoff < 0) {
 			xoff += 8;
 			position -= { 1, 0 };

@@ -53,14 +53,14 @@ HANDLE devilutionx_mpq;
 
 namespace {
 
-HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpq_name)
+HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpqName)
 {
 	HANDLE archive;
 	std::string mpq_abspath;
 	for (const auto &path : paths) {
-		mpq_abspath = path + mpq_name;
+		mpq_abspath = path + mpqName;
 		if (SFileOpenArchive(mpq_abspath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
-			LogVerbose("  Found: {} in {}", mpq_name, path);
+			LogVerbose("  Found: {} in {}", mpqName, path);
 			SFileSetBasePath(path.c_str());
 			return archive;
 		}
@@ -69,7 +69,7 @@ HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpq_name)
 		}
 	}
 	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
-		LogVerbose("Missing: {}", mpq_name);
+		LogVerbose("Missing: {}", mpqName);
 	}
 
 	return nullptr;
@@ -228,9 +228,9 @@ void init_create_window()
 #endif
 }
 
-void MainWndProc(uint32_t Msg)
+void MainWndProc(uint32_t msg)
 {
-	switch (Msg) {
+	switch (msg) {
 	case DVL_WM_PAINT:
 		force_redraw = 255;
 		break;
@@ -240,12 +240,12 @@ void MainWndProc(uint32_t Msg)
 	}
 }
 
-WNDPROC SetWindowProc(WNDPROC NewProc)
+WNDPROC SetWindowProc(WNDPROC newProc)
 {
 	WNDPROC OldProc;
 
 	OldProc = CurrentProc;
-	CurrentProc = NewProc;
+	CurrentProc = newProc;
 	return OldProc;
 }
 

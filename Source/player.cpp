@@ -1172,7 +1172,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 }
 
-void InitPlayer(int pnum, bool FirstTime)
+void InitPlayer(int pnum, bool firstTime)
 {
 	DWORD i;
 
@@ -1182,7 +1182,7 @@ void InitPlayer(int pnum, bool FirstTime)
 	auto &player = plr[pnum];
 	auto &myPlayer = plr[myplr];
 
-	if (FirstTime) {
+	if (firstTime) {
 		player._pRSplType = RSPLTYPE_INVALID;
 		player._pRSpell = SPL_INVALID;
 		if (pnum == myplr)
@@ -1221,7 +1221,7 @@ void InitPlayer(int pnum, bool FirstTime)
 		player._pdir = DIR_S;
 
 		if (pnum == myplr) {
-			if (!FirstTime || currlevel != 0) {
+			if (!firstTime || currlevel != 0) {
 				player.position.tile = { ViewX, ViewY };
 			}
 		} else {
@@ -1259,13 +1259,13 @@ void InitPlayer(int pnum, bool FirstTime)
 	}
 
 #ifdef _DEBUG
-	if (debug_mode_dollar_sign && FirstTime) {
+	if (debug_mode_dollar_sign && firstTime) {
 		player._pMemSpells |= 1 << (SPL_TELEPORT - 1);
 		if (myPlayer._pSplLvl[SPL_TELEPORT] == 0) {
 			myPlayer._pSplLvl[SPL_TELEPORT] = 1;
 		}
 	}
-	if (debug_mode_key_inverted_v && FirstTime) {
+	if (debug_mode_key_inverted_v && firstTime) {
 		player._pMemSpells = SPL_INVALID;
 	}
 #endif

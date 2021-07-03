@@ -49,7 +49,7 @@ void nthread_terminate_game(const char *pszFcn)
 	}
 }
 
-uint32_t nthread_send_and_recv_turn(uint32_t cur_turn, int turn_delta)
+uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta)
 {
 	uint32_t curTurnsInTransit;
 	if (!SNetGetTurnsInTransit(&curTurnsInTransit)) {
@@ -58,7 +58,7 @@ uint32_t nthread_send_and_recv_turn(uint32_t cur_turn, int turn_delta)
 	}
 	while (curTurnsInTransit++ < gdwTurnsInTransit) {
 
-		int turn_tmp = turn_upper_bit | (cur_turn & 0x7FFFFFFF);
+		int turn_tmp = turn_upper_bit | (curTurn & 0x7FFFFFFF);
 		turn_upper_bit = 0;
 		int turn = turn_tmp;
 
@@ -67,11 +67,11 @@ uint32_t nthread_send_and_recv_turn(uint32_t cur_turn, int turn_delta)
 			return 0;
 		}
 
-		cur_turn += turn_delta;
-		if (cur_turn >= 0x7FFFFFFF)
-			cur_turn &= 0xFFFF;
+		curTurn += turnDelta;
+		if (curTurn >= 0x7FFFFFFF)
+			curTurn &= 0xFFFF;
 	}
-	return cur_turn;
+	return curTurn;
 }
 
 bool nthread_recv_turns(bool *pfSendAsync)
@@ -140,7 +140,7 @@ void nthread_set_turn_upper_bit()
 	turn_upper_bit = 0x80000000;
 }
 
-void nthread_start(bool set_turn_upper_bit)
+void nthread_start(bool setTurnUpperBit)
 {
 	const char *err;
 	DWORD largestMsgSize;
@@ -150,7 +150,7 @@ void nthread_start(bool set_turn_upper_bit)
 	sgbPacketCountdown = 1;
 	sgbSyncCountdown = 1;
 	sgbTicsOutOfSync = true;
-	if (set_turn_upper_bit)
+	if (setTurnUpperBit)
 		nthread_set_turn_upper_bit();
 	else
 		turn_upper_bit = 0;

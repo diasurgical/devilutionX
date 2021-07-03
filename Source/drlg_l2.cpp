@@ -1873,7 +1873,7 @@ static void DrlgL2SetRoom(int rx1, int ry1)
 	}
 }
 
-static void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool ForceHW)
+static void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool forceHW)
 {
 	predungeon[nX1][nY1] = 67;
 	predungeon[nX1][nY2] = 69;
@@ -1886,7 +1886,7 @@ static void DefineRoom(int nX1, int nY1, int nX2, int nY2, bool ForceHW)
 	RoomList[nRoomCnt].nRoomy1 = nY1;
 	RoomList[nRoomCnt].nRoomy2 = nY2;
 
-	if (ForceHW) {
+	if (forceHW) {
 		for (int i = nX1; i < nX2; i++) {
 			/// BUGFIX: Should loop j between nY1 and nY2 instead of always using nY1.
 			while (i < nY2) {
@@ -1945,11 +1945,11 @@ static void PlaceHallExt(int nX, int nY)
  * @param nY2 Upper Y boundary of the area to draw into.
  * @param nRDest The room number of the parent room this call was invoked for. Zero for empty
  * @param nHDir The direction of the hall from nRDest to this room.
- * @param ForceHW If set, nH and nW are used for room size instead of random values.
- * @param nH Height of the room, if ForceHW is set.
- * @param nW Width of the room, if ForceHW is set.
+ * @param forceHW If set, nH and nW are used for room size instead of random values.
+ * @param nH Height of the room, if forceHW is set.
+ * @param nW Width of the room, if forceHW is set.
  */
-static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool ForceHW, int nH, int nW)
+static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool forceHW, int nH, int nW)
 {
 	if (nRoomCnt >= 80) {
 		return;
@@ -1974,7 +1974,7 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 		nRh = GenerateRnd(nAh - Room_Min) + Room_Min;
 	}
 
-	if (ForceHW) {
+	if (forceHW) {
 		nRw = nW;
 		nRh = nH;
 	}
@@ -2016,9 +2016,9 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 	if (nRy2 <= 1) {
 		nRy2 = 1;
 	}
-	DefineRoom(nRx1, nRy1, nRx2, nRy2, ForceHW);
+	DefineRoom(nRx1, nRy1, nRx2, nRy2, forceHW);
 
-	if (ForceHW) {
+	if (forceHW) {
 		nSx1 = nRx1 + 2;
 		nSy1 = nRy1 + 2;
 		nSx2 = nRx2;
@@ -2678,37 +2678,37 @@ static bool DL2FillVoids()
 
 static bool CreateDungeon()
 {
-	int ForceW = 0;
-	int ForceH = 0;
-	bool ForceHW = false;
+	int forceW = 0;
+	int forceH = 0;
+	bool forceHW = false;
 
 	switch (currlevel) {
 	case 5:
 		if (quests[Q_BLOOD]._qactive != QUEST_NOTAVAIL) {
-			ForceHW = true;
-			ForceH = 20;
-			ForceW = 14;
+			forceHW = true;
+			forceH = 20;
+			forceW = 14;
 		}
 		break;
 	case 6:
 		if (quests[Q_SCHAMB]._qactive != QUEST_NOTAVAIL) {
-			ForceHW = true;
-			ForceW = 10;
-			ForceH = 10;
+			forceHW = true;
+			forceW = 10;
+			forceH = 10;
 		}
 		break;
 	case 7:
 		if (quests[Q_BLIND]._qactive != QUEST_NOTAVAIL) {
-			ForceHW = true;
-			ForceW = 15;
-			ForceH = 15;
+			forceHW = true;
+			forceW = 15;
+			forceH = 15;
 		}
 		break;
 	case 8:
 		break;
 	}
 
-	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, ForceHW, ForceH, ForceW);
+	CreateRoom(2, 2, DMAXX - 1, DMAXY - 1, 0, 0, forceHW, forceH, forceW);
 
 	while (!HallList.empty()) {
 		ConnectHall(HallList.front());

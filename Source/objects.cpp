@@ -4677,13 +4677,13 @@ bool objectIsDisabled(int i)
 	return false;
 }
 
-void OperateObject(int pnum, int i, bool TeleFlag)
+void OperateObject(int pnum, int i, bool teleFlag)
 {
 	bool sendmsg = pnum == myplr;
 	switch (object[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		if (TeleFlag) {
+		if (teleFlag) {
 			if (object[i]._otype == OBJ_L1LDOOR)
 				OperateL1LDoor(pnum, i, true);
 			if (object[i]._otype == OBJ_L1RDOOR)
@@ -4695,7 +4695,7 @@ void OperateObject(int pnum, int i, bool TeleFlag)
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		if (TeleFlag) {
+		if (teleFlag) {
 			if (object[i]._otype == OBJ_L2LDOOR)
 				OperateL2LDoor(pnum, i, true);
 			if (object[i]._otype == OBJ_L2RDOOR)
@@ -4707,7 +4707,7 @@ void OperateObject(int pnum, int i, bool TeleFlag)
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (TeleFlag) {
+		if (teleFlag) {
 			if (object[i]._otype == OBJ_L3LDOOR)
 				OperateL3LDoor(pnum, i, true);
 			if (object[i]._otype == OBJ_L3RDOOR)

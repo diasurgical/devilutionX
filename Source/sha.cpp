@@ -109,7 +109,7 @@ static void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += E;
 }
 
-static void SHA1Input(SHA1Context *context, const char *message_array, std::uint32_t len)
+static void SHA1Input(SHA1Context *context, const char *messageArray, std::uint32_t len)
 {
 	std::uint32_t count = context->count[0] + 8 * len;
 	if (count < context->count[0])
@@ -119,9 +119,9 @@ static void SHA1Input(SHA1Context *context, const char *message_array, std::uint
 	context->count[1] += len >> 29;
 
 	for (int i = len; i >= 64; i -= 64) {
-		memcpy(context->buffer, message_array, sizeof(context->buffer));
+		memcpy(context->buffer, messageArray, sizeof(context->buffer));
 		SHA1ProcessMessageBlock(context);
-		message_array += 64;
+		messageArray += 64;
 	}
 }
 
@@ -130,13 +130,13 @@ void SHA1Clear()
 	memset(sgSHA1, 0, sizeof(sgSHA1));
 }
 
-void SHA1Result(int n, char Message_Digest[SHA1HashSize])
+void SHA1Result(int n, char messageDigest[SHA1HashSize])
 {
 	std::uint32_t *Message_Digest_Block;
 	int i;
 
-	Message_Digest_Block = (std::uint32_t *)Message_Digest;
-	if (Message_Digest != nullptr) {
+	Message_Digest_Block = (std::uint32_t *)messageDigest;
+	if (messageDigest != nullptr) {
 		for (i = 0; i < 5; i++) {
 			*Message_Digest_Block = SDL_SwapLE32(sgSHA1[n].state[i]);
 			Message_Digest_Block++;
@@ -144,11 +144,11 @@ void SHA1Result(int n, char Message_Digest[SHA1HashSize])
 	}
 }
 
-void SHA1Calculate(int n, const char *data, char Message_Digest[SHA1HashSize])
+void SHA1Calculate(int n, const char *data, char messageDigest[SHA1HashSize])
 {
 	SHA1Input(&sgSHA1[n], data, 64);
-	if (Message_Digest != nullptr)
-		SHA1Result(n, Message_Digest);
+	if (messageDigest != nullptr)
+		SHA1Result(n, messageDigest);
 }
 
 void SHA1Reset(int n)
