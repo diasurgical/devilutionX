@@ -599,15 +599,11 @@ void UpdateLifeFlask(const Surface &out)
 {
 	auto &myPlayer = plr[myplr];
 
-	int filled = myPlayer.UpdateHitPointPercentage();
+	int filled = clamp(myPlayer.UpdateHitPointPercentage(), 0, 69);
 
-	if (filled > 69)
-		filled = 69;
-	else if (filled < 0)
-		filled = 0;
-	if (filled != 69)
+	if (filled < 69)
 		DrawFlaskTop(out, { 96 + PANEL_X, PANEL_Y }, pLifeBuff, 16, 85 - filled);
-	if (filled != 0)
+	if (filled > 0)
 		DrawPanelBox(out, { 96, 85 - filled, 88, filled }, { 96 + PANEL_X, PANEL_Y + 69 - filled });
 }
 
