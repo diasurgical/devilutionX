@@ -19,7 +19,7 @@ event_emul *sghWorkToDoEvent;
 /* rdata */
 static SDL_Thread *sghThread = nullptr;
 
-static unsigned int dthread_handler(void * /*data*/)
+static unsigned int DthreadHandler(void * /*data*/)
 {
 	const char *error_buf;
 	TMegaPkt *pkt;
@@ -111,7 +111,7 @@ void dthread_start()
 
 	dthread_running = true;
 
-	sghThread = CreateThread(dthread_handler, &glpDThreadId);
+	sghThread = CreateThread(DthreadHandler, &glpDThreadId);
 	if (sghThread == nullptr) {
 		error_buf = SDL_GetError();
 		app_fatal("dthread2:\n%s", error_buf);

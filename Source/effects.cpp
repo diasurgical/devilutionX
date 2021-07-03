@@ -1090,7 +1090,7 @@ void stream_stop()
 	}
 }
 
-static void stream_play(TSFX *pSFX, int lVolume, int lPan)
+static void StreamPlay(TSFX *pSFX, int lVolume, int lPan)
 {
 	assert(pSFX);
 	assert(pSFX->bFlags & sfx_STREAM);
@@ -1106,7 +1106,7 @@ static void stream_play(TSFX *pSFX, int lVolume, int lPan)
 	}
 }
 
-static void stream_update()
+static void StreamUpdate()
 {
 	if (sgpStreamSFX != nullptr && !sgpStreamSFX->pSnd->isPlaying()) {
 		stream_stop();
@@ -1161,7 +1161,7 @@ bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 	return true;
 }
 
-static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
+static void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 {
 	if (plr[myplr].pLvlLoad != 0 && gbIsMultiplayer) {
 		return;
@@ -1181,7 +1181,7 @@ static void PlaySFX_priv(TSFX *pSFX, bool loc, Point position)
 	}
 
 	if ((pSFX->bFlags & sfx_STREAM) != 0) {
-		stream_play(pSFX, lVolume, lPan);
+		StreamPlay(pSFX, lVolume, lPan);
 		return;
 	}
 
@@ -1253,7 +1253,7 @@ void PlaySFX(_sfx_id psfx)
 {
 	psfx = RndSFX(psfx);
 
-	PlaySFX_priv(&sgSFX[psfx], false, { 0, 0 });
+	PlaySfxPriv(&sgSFX[psfx], false, { 0, 0 });
 }
 
 void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory)
@@ -1268,7 +1268,7 @@ void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory)
 			pSnd->start_tc = 0;
 	}
 
-	PlaySFX_priv(&sgSFX[psfx], true, position);
+	PlaySfxPriv(&sgSFX[psfx], true, position);
 }
 
 void sound_stop()
@@ -1287,7 +1287,7 @@ void sound_update()
 		return;
 	}
 
-	stream_update();
+	StreamUpdate();
 }
 
 void effects_cleanup_sfx()
@@ -1298,7 +1298,7 @@ void effects_cleanup_sfx()
 		sfx.pSnd = nullptr;
 }
 
-static void priv_sound_init(BYTE bLoadMask)
+static void PrivSoundInit(BYTE bLoadMask)
 {
 	DWORD i;
 
@@ -1355,12 +1355,12 @@ void sound_init()
 		}
 	}
 
-	priv_sound_init(mask);
+	PrivSoundInit(mask);
 }
 
 void ui_sound_init()
 {
-	priv_sound_init(sfx_UI);
+	PrivSoundInit(sfx_UI);
 }
 
 void effects_play_sound(const char *snd_file)

@@ -1198,7 +1198,7 @@ void AddHiveExplosion(int mi, Point /*src*/, Point /*dst*/, int midir, int8_t mi
 	missile[mi]._miDelFlag = true;
 }
 
-static bool missiles_found_target(int mi, Point *position, int rad)
+static bool MissilesFoundTarget(int mi, Point *position, int rad)
 {
 	rad = std::min(rad, 19);
 
@@ -1227,7 +1227,7 @@ void AddFireRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNEFIRE);
-		if (missiles_found_target(mi, &dst, 10)) {
+		if (MissilesFoundTarget(mi, &dst, 10)) {
 			missile[mi]._miVar1 = MIS_HIVEEXP;
 			missile[mi]._miDelFlag = false;
 			missile[mi]._mlid = AddLight(dst, 8);
@@ -1244,7 +1244,7 @@ void AddLightningRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mien
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNELIGHT);
-		if (missiles_found_target(mi, &dst, 10)) {
+		if (MissilesFoundTarget(mi, &dst, 10)) {
 			missile[mi]._miVar1 = MIS_LIGHTBALL;
 			missile[mi]._miDelFlag = false;
 			missile[mi]._mlid = AddLight(dst, 8);
@@ -1261,7 +1261,7 @@ void AddGreatLightningRune(int mi, Point src, Point dst, int /*midir*/, int8_t /
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNENOVA);
-		if (missiles_found_target(mi, &dst, 10)) {
+		if (MissilesFoundTarget(mi, &dst, 10)) {
 			missile[mi]._miVar1 = MIS_NOVA;
 			missile[mi]._miDelFlag = false;
 			missile[mi]._mlid = AddLight(dst, 8);
@@ -1278,7 +1278,7 @@ void AddImmolationRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mie
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNEIMMOLAT);
-		if (missiles_found_target(mi, &dst, 10)) {
+		if (MissilesFoundTarget(mi, &dst, 10)) {
 			missile[mi]._miVar1 = MIS_IMMOLATION;
 			missile[mi]._miDelFlag = false;
 			missile[mi]._mlid = AddLight(dst, 8);
@@ -1295,7 +1295,7 @@ void AddStoneRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
 			UseMana(id, SPL_RUNESTONE);
-		if (missiles_found_target(mi, &dst, 10)) {
+		if (MissilesFoundTarget(mi, &dst, 10)) {
 			missile[mi]._miVar1 = MIS_STONE;
 			missile[mi]._miDelFlag = false;
 			missile[mi]._mlid = AddLight(dst, 8);
@@ -3620,7 +3620,7 @@ void MI_Reflect(int i)
 	PutMissile(i);
 }
 
-static void MI_Ring(int i, int type)
+static void MissileRing(int i, int type)
 {
 	int b = CrawlNum[3];
 	missile[i]._miDelFlag = true;
@@ -3652,12 +3652,12 @@ static void MI_Ring(int i, int type)
 
 void MI_FireRing(int i)
 {
-	MI_Ring(i, MIS_FIREWALL);
+	MissileRing(i, MIS_FIREWALL);
 }
 
 void MI_LightningRing(int i)
 {
-	MI_Ring(i, MIS_LIGHTWALL);
+	MissileRing(i, MIS_LIGHTWALL);
 }
 
 void MI_Search(int i)

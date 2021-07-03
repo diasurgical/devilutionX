@@ -53,7 +53,7 @@ HANDLE devilutionx_mpq;
 
 namespace {
 
-HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_name)
+HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpq_name)
 {
 	HANDLE archive;
 	std::string mpq_abspath;
@@ -174,14 +174,14 @@ void init_archives()
 		LogVerbose("MPQ search paths:{}", message);
 	}
 
-	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ");
+	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
 	if (diabdat_mpq == nullptr) {
 		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
-		diabdat_mpq = init_test_access(paths, "diabdat.mpq");
+		diabdat_mpq = LoadMPQ(paths, "diabdat.mpq");
 	}
 
 	if (diabdat_mpq == nullptr) {
-		spawn_mpq = init_test_access(paths, "spawn.mpq");
+		spawn_mpq = LoadMPQ(paths, "spawn.mpq");
 		if (spawn_mpq != nullptr)
 			gbIsSpawn = true;
 	}
@@ -190,31 +190,31 @@ void init_archives()
 		InsertCDDlg();
 	SFileCloseFileThreadSafe(fh);
 
-	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq");
+	patch_rt_mpq = LoadMPQ(paths, "patch_rt.mpq");
 	if (patch_rt_mpq == nullptr)
-		patch_rt_mpq = init_test_access(paths, "patch_sh.mpq");
+		patch_rt_mpq = LoadMPQ(paths, "patch_sh.mpq");
 
-	hellfire_mpq = init_test_access(paths, "hellfire.mpq");
+	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
 	if (hellfire_mpq != nullptr)
 		gbIsHellfire = true;
-	hfmonk_mpq = init_test_access(paths, "hfmonk.mpq");
-	hfbard_mpq = init_test_access(paths, "hfbard.mpq");
+	hfmonk_mpq = LoadMPQ(paths, "hfmonk.mpq");
+	hfbard_mpq = LoadMPQ(paths, "hfbard.mpq");
 	if (hfbard_mpq != nullptr)
 		gbBard = true;
-	hfbarb_mpq = init_test_access(paths, "hfbarb.mpq");
+	hfbarb_mpq = LoadMPQ(paths, "hfbarb.mpq");
 	if (hfbarb_mpq != nullptr)
 		gbBarbarian = true;
-	hfmusic_mpq = init_test_access(paths, "hfmusic.mpq");
-	hfvoice_mpq = init_test_access(paths, "hfvoice.mpq");
-	hfopt1_mpq = init_test_access(paths, "hfopt1.mpq");
-	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq");
+	hfmusic_mpq = LoadMPQ(paths, "hfmusic.mpq");
+	hfvoice_mpq = LoadMPQ(paths, "hfvoice.mpq");
+	hfopt1_mpq = LoadMPQ(paths, "hfopt1.mpq");
+	hfopt2_mpq = LoadMPQ(paths, "hfopt2.mpq");
 
 	if (gbIsHellfire && (hfmonk_mpq == nullptr || hfmusic_mpq == nullptr || hfvoice_mpq == nullptr)) {
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
 		app_fatal(nullptr);
 	}
 
-	devilutionx_mpq = init_test_access(paths, "devilutionx.mpq");
+	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
 }
 
 void init_create_window()

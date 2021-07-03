@@ -41,7 +41,7 @@ struct DirectionSettings {
 	void (*walkModeHandler)(int, const DirectionSettings &);
 };
 
-void PM_ChangeLightOff(PlayerStruct &player)
+void PmChangeLightOff(PlayerStruct &player)
 {
 	if (player._plid == NO_LIGHT)
 		return;
@@ -79,7 +79,7 @@ void WalkDownwards(int pnum, const DirectionSettings & /*walkParams*/)
 	dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	// BUGFIX: missing `if (leveltype != DTYPE_TOWN) {` for call to ChangeLightXY and PM_ChangeLightOff.
 	ChangeLightXY(player._plid, player.position.tile);
-	PM_ChangeLightOff(player);
+	PmChangeLightOff(player);
 }
 
 void WalkSides(int pnum, const DirectionSettings &walkParams)
@@ -96,7 +96,7 @@ void WalkSides(int pnum, const DirectionSettings &walkParams)
 
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player._plid, nextPosition);
-		PM_ChangeLightOff(player);
+		PmChangeLightOff(player);
 	}
 
 	player.position.temp = player.position.future;
@@ -1415,7 +1415,7 @@ void PM_ChangeOffset(int pnum)
 		ScrollInfo.offset += { px, py };
 	}
 
-	PM_ChangeLightOff(player);
+	PmChangeLightOff(player);
 }
 
 void StartAttack(int pnum, Direction d)

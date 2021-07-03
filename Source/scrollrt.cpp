@@ -550,7 +550,7 @@ static void DrawObject(const CelOutputBuffer &out, int x, int y, int ox, int oy,
 	}
 }
 
-static void scrollrt_draw_dungeon(const CelOutputBuffer & /*out*/, int /*sx*/, int /*sy*/, int /*dx*/, int /*dy*/);
+static void DrawDungeon(const CelOutputBuffer & /*out*/, int /*sx*/, int /*sy*/, int /*dx*/, int /*dy*/);
 
 /**
  * @brief Render a cell
@@ -560,7 +560,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer & /*out*/, int /*sx*/, i
  * @param sx Target buffer coordinate
  * @param sy Target buffer coordinate
  */
-static void drawCell(const CelOutputBuffer &out, int x, int y, int sx, int sy)
+static void DrawCell(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	MICROS *pMap = &dpiece_defs_map_2[x][y];
 	level_piece_id = dPiece[x][y];
@@ -590,7 +590,7 @@ static void drawCell(const CelOutputBuffer &out, int x, int y, int sx, int sy)
  * @param sx Target buffer coordinate
  * @param sy Target buffer coordinate
  */
-static void drawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy)
+static void DrawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy)
 {
 	cel_transparency_active = false;
 	light_table_index = dLight[x][y];
@@ -745,7 +745,7 @@ static void DrawPlayerHelper(const CelOutputBuffer &out, int x, int y, int sx, i
  * @param dx Target buffer coordinate
  * @param dy Target buffer coordinate
  */
-static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, int dx, int dy)
+static void DrawDungeon(const CelOutputBuffer &out, int sx, int sy, int dx, int dy)
 {
 	assert((DWORD)sx < MAXDUNX);
 	assert((DWORD)sy < MAXDUNY);
@@ -756,7 +756,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
 
 	light_table_index = dLight[sx][sy];
 
-	drawCell(out, sx, sy, dx, dy);
+	DrawCell(out, sx, sy, dx, dy);
 
 	int8_t bFlag = dFlags[sx][sy];
 	int8_t bDead = dDead[sx][sy];
@@ -858,7 +858,7 @@ static void scrollrt_draw_dungeon(const CelOutputBuffer &out, int sx, int sy, in
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void scrollrt_drawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy, int rows, int columns)
+static void DrawFloor(const CelOutputBuffer &out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
@@ -866,7 +866,7 @@ static void scrollrt_drawFloor(const CelOutputBuffer &out, int x, int y, int sx,
 				level_piece_id = dPiece[x][y];
 				if (level_piece_id != 0) {
 					if (!nSolidTable[level_piece_id])
-						drawFloor(out, x, y, sx, sy);
+						DrawFloor(out, x, y, sx, sy);
 				} else {
 					world_draw_black_tile(out, sx, sy);
 				}
@@ -907,7 +907,7 @@ static void scrollrt_drawFloor(const CelOutputBuffer &out, int x, int y, int sx,
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void scrollrt_draw(const CelOutputBuffer &out, int x, int y, int sx, int sy, int rows, int columns)
+static void DrawTileContent(const CelOutputBuffer &out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
@@ -923,12 +923,12 @@ static void scrollrt_draw(const CelOutputBuffer &out, int x, int y, int sx, int 
 					// sprite screen position rather than tile position.
 					if (IsWall(x, y) && (IsWall(x + 1, y) || (x > 0 && IsWall(x - 1, y)))) { // Part of a wall aligned on the x-axis
 						if (IsWalkable(x + 1, y - 1) && IsWalkable(x, y - 1)) {              // Has walkable area behind it
-							scrollrt_draw_dungeon(out, x + 1, y - 1, sx + TILE_WIDTH, sy);
+							DrawDungeon(out, x + 1, y - 1, sx + TILE_WIDTH, sy);
 						}
 					}
 				}
 				if (dPiece[x][y] != 0) {
-					scrollrt_draw_dungeon(out, x, y, sx, sy);
+					DrawDungeon(out, x, y, sx, sy);
 				}
 			}
 			ShiftGrid(&x, &y, 1, 0);
@@ -1246,8 +1246,8 @@ static void DrawGame(const CelOutputBuffer &full_out, int x, int y)
 		break;
 	}
 
-	scrollrt_drawFloor(out, x, y, sx, sy, rows, columns);
-	scrollrt_draw(out, x, y, sx, sy, rows, columns);
+	DrawFloor(out, x, y, sx, sy, rows, columns);
+	DrawTileContent(out, x, y, sx, sy, rows, columns);
 
 	if (!zoomflag) {
 		Zoom(full_out.subregionY(0, gnViewportHeight));

@@ -62,7 +62,7 @@ bool CanRenderDirectlyToOutputSurface()
 
 } // namespace
 
-static void dx_create_back_buffer()
+static void CreateBackBuffer()
 {
 	if (CanRenderDirectlyToOutputSurface()) {
 		Log("{}", "Will render directly to the SDL output surface");
@@ -93,7 +93,7 @@ static void dx_create_back_buffer()
 	pal_surface_palette_version = 1;
 }
 
-static void dx_create_primary_surface()
+static void CreatePrimarySurface()
 {
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
@@ -118,11 +118,11 @@ void dx_init()
 	SDL_ShowWindow(ghMainWnd);
 #endif
 
-	dx_create_primary_surface();
+	CreatePrimarySurface();
 	palette_init();
-	dx_create_back_buffer();
+	CreateBackBuffer();
 }
-static void lock_buf_priv()
+static void LockBufPriv()
 {
 	sgMemCrit.Enter();
 	if (sgdwLockCount != 0) {
@@ -138,10 +138,10 @@ void lock_buf(int idx) // NOLINT(misc-unused-parameters)
 #ifdef _DEBUG
 	++locktbl[idx];
 #endif
-	lock_buf_priv();
+	LockBufPriv();
 }
 
-static void unlock_buf_priv()
+static void UnlockBufPriv()
 {
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");
@@ -157,7 +157,7 @@ void unlock_buf(int idx) // NOLINT(misc-unused-parameters)
 		app_fatal("Draw lock underflow: 0x%x", idx);
 	--locktbl[idx];
 #endif
-	unlock_buf_priv();
+	UnlockBufPriv();
 }
 
 CelOutputBuffer GlobalBackBuffer()

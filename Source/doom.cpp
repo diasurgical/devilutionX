@@ -30,7 +30,7 @@ int doom_get_frame_from_time()
 	return DoomQuestState / 1200;
 }
 
-static bool doom_load_graphics()
+static bool DoomLoadGraphics()
 {
 	DoomCel = LoadCel("Items\\Map\\MapZtown.CEL", 640);
 	return true;
@@ -39,7 +39,7 @@ static bool doom_load_graphics()
 void doom_init()
 {
 	DoomQuestTime = doom_get_frame_from_time() == 31 ? 31 : 0;
-	if (doom_load_graphics()) {
+	if (DoomLoadGraphics()) {
 		DoomFlag = true;
 	} else {
 		doom_close();

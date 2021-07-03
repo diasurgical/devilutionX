@@ -38,7 +38,7 @@ void mainmenu_refresh_music()
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
-static bool mainmenu_init_menu(_selhero_selections type)
+static bool MainmenuInitMenu(_selhero_selections type)
 {
 	bool success;
 
@@ -54,19 +54,19 @@ static bool mainmenu_init_menu(_selhero_selections type)
 	return success;
 }
 
-static bool mainmenu_single_player()
+static bool MainmenuSinglePlayer()
 {
 	gbIsMultiplayer = false;
-	return mainmenu_init_menu(SELHERO_NEW_DUNGEON);
+	return MainmenuInitMenu(SELHERO_NEW_DUNGEON);
 }
 
-static bool mainmenu_multi_player()
+static bool MainmenuMultiPlayer()
 {
 	gbIsMultiplayer = true;
-	return mainmenu_init_menu(SELHERO_CONNECT);
+	return MainmenuInitMenu(SELHERO_CONNECT);
 }
 
-static void mainmenu_play_intro()
+static void MainmenuPlayIntro()
 {
 	music_stop();
 	if (gbIsHellfire)
@@ -126,11 +126,11 @@ void mainmenu_loop()
 		case MAINMENU_NONE:
 			break;
 		case MAINMENU_SINGLE_PLAYER:
-			if (!mainmenu_single_player())
+			if (!MainmenuSinglePlayer())
 				done = true;
 			break;
 		case MAINMENU_MULTIPLAYER:
-			if (!mainmenu_multi_player())
+			if (!MainmenuMultiPlayer())
 				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
@@ -138,7 +138,7 @@ void mainmenu_loop()
 			if (gbIsSpawn && !gbIsHellfire)
 				done = false;
 			else if (gbActive)
-				mainmenu_play_intro();
+				MainmenuPlayIntro();
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog();

@@ -19,7 +19,7 @@ uint16_t sgwLRU[MAXMONSTERS];
 int sgnSyncItem;
 int sgnSyncPInv;
 
-void sync_one_monster()
+void SyncOneMonster()
 {
 	for (int i = 0; i < nummonsters; i++) {
 		int m = monstactive[i];
@@ -32,7 +32,7 @@ void sync_one_monster()
 	}
 }
 
-void sync_monster_pos(TSyncMonster *p, int ndx)
+void SyncMonsterPos(TSyncMonster *p, int ndx)
 {
 	p->_mndx = ndx;
 	p->_mx = monster[ndx].position.tile.x;
@@ -44,7 +44,7 @@ void sync_monster_pos(TSyncMonster *p, int ndx)
 	sgwLRU[ndx] = monster[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
-bool sync_monster_active(TSyncMonster *p)
+bool SyncMonsterActive(TSyncMonster *p)
 {
 	int ndx = -1;
 	uint32_t lru = 0xFFFFFFFF;
@@ -61,11 +61,11 @@ bool sync_monster_active(TSyncMonster *p)
 		return false;
 	}
 
-	sync_monster_pos(p, ndx);
+	SyncMonsterPos(p, ndx);
 	return true;
 }
 
-bool sync_monster_active2(TSyncMonster *p)
+bool SyncMonsterActive2(TSyncMonster *p)
 {
 	int ndx = -1;
 	uint32_t lru = 0xFFFE;
@@ -86,7 +86,7 @@ bool sync_monster_active2(TSyncMonster *p)
 		return false;
 	}
 
-	sync_monster_pos(p, ndx);
+	SyncMonsterPos(p, ndx);
 	return true;
 }
 
@@ -172,15 +172,15 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 	pHdr->wLen = 0;
 	SyncPlrInv(pHdr);
 	assert(dwMaxLen <= 0xffff);
-	sync_one_monster();
+	SyncOneMonster();
 
 	for (i = 0; i < nummonsters && dwMaxLen >= sizeof(TSyncMonster); i++) {
 		sync = false;
 		if (i < 2) {
-			sync = sync_monster_active2((TSyncMonster *)pbBuf);
+			sync = SyncMonsterActive2((TSyncMonster *)pbBuf);
 		}
 		if (!sync) {
-			sync = sync_monster_active((TSyncMonster *)pbBuf);
+			sync = SyncMonsterActive((TSyncMonster *)pbBuf);
 		}
 		if (!sync) {
 			break;
@@ -193,7 +193,7 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 	return dwMaxLen;
 }
 
-static void sync_monster(int pnum, const TSyncMonster *p)
+static void SyncMonster(int pnum, const TSyncMonster *p)
 {
 	int ndx = p->_mndx;
 
@@ -261,7 +261,7 @@ uint32_t sync_update(int pnum, const byte *pbBuf)
 
 	for (wLen = pHdr->wLen; wLen >= sizeof(TSyncMonster); wLen -= sizeof(TSyncMonster)) {
 		if (currlevel == pHdr->bLevel) {
-			sync_monster(pnum, (TSyncMonster *)pbBuf);
+			SyncMonster(pnum, (TSyncMonster *)pbBuf);
 		}
 		delta_sync_monster((TSyncMonster *)pbBuf, pHdr->bLevel);
 		pbBuf += sizeof(TSyncMonster);

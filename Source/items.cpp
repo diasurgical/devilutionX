@@ -1460,7 +1460,7 @@ void GetBookSpell(int i, int lvl)
 		items[i]._iCurs = ICURS_BOOK_GREY;
 }
 
-static bool control_WriteStringToBuffer(const char *str)
+static bool StringInPanel(const char *str)
 {
 	return GetLineWidth(str, GameFontSmall, 0) < 125;
 }
@@ -1500,7 +1500,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			items[i]._iPrePower = PL_Prefix[preidx].PLPower;
 		}
 	}
-	if (!control_WriteStringToBuffer(items[i]._iIName)) {
+	if (!StringInPanel(items[i]._iIName)) {
 		strcpy(items[i]._iIName, _(AllItemsList[items[i].IDidx].iSName));
 		char istr[128];
 		if (preidx != -1) {
@@ -1549,7 +1549,7 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	}
 
 	char istr[68];
-	if (!control_WriteStringToBuffer(istr))
+	if (!StringInPanel(istr))
 		strcpy(istr, fmt::format(_("{:s} of {:s}"), items[i]._iName, _(spelldata[bs].sNameText)).c_str());
 	strcpy(istr, fmt::format(_("Staff of {:s}"), _(spelldata[bs].sNameText)).c_str());
 	strcpy(items[i]._iName, istr);
@@ -2149,7 +2149,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			items[i]._iSufPower = PL_Suffix[sufidx].PLPower;
 		}
 	}
-	if (!control_WriteStringToBuffer(items[i]._iIName)) {
+	if (!StringInPanel(items[i]._iIName)) {
 		int aii = items[i].IDidx;
 		if (AllItemsList[aii].iSName != nullptr)
 			strcpy(items[i]._iIName, _(AllItemsList[aii].iSName));

@@ -109,7 +109,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 	return true;
 }
 
-static unsigned int nthread_handler(void * /*data*/)
+static unsigned int NthreadHandler(void * /*data*/)
 {
 	int delta;
 	bool received;
@@ -184,7 +184,7 @@ void nthread_start(bool set_turn_upper_bit)
 		sgbThreadIsRunning = false;
 		sgMemCrit.Enter();
 		nthread_should_run = true;
-		sghThread = CreateThread(nthread_handler, &glpNThreadId);
+		sghThread = CreateThread(NthreadHandler, &glpNThreadId);
 		if (sghThread == nullptr) {
 			err = SDL_GetError();
 			app_fatal("nthread2:\n%s", err);

@@ -2351,7 +2351,7 @@ void RedoPlayerVision()
  * @param doorPos Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
 */
-static inline bool isDoorClear(const Point &doorPosition)
+static inline bool IsDoorClear(const Point &doorPosition)
 {
 	return dDead[doorPosition.x][doorPosition.y] == 0
 	    && dMonster[doorPosition.x][doorPosition.y] == 0
@@ -2402,7 +2402,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_CRCLOS, door.position);
 	}
-	if (!deltaload && isDoorClear(door.position)) {
+	if (!deltaload && IsDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
@@ -2483,7 +2483,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		if (!deltaload)
 			PlaySfxLoc(IS_CRCLOS, door.position);
 	}
-	if (isDoorClear(door.position)) {
+	if (IsDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
@@ -2545,7 +2545,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(door.position)) {
+	if (IsDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
@@ -2588,7 +2588,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(door.position)) {
+	if (IsDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
@@ -2630,7 +2630,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(door.position)) {
+	if (IsDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
@@ -2671,7 +2671,7 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	if (!deltaload)
 		PlaySfxLoc(IS_DOORCLOS, door.position);
 
-	if (isDoorClear(door.position)) {
+	if (IsDoorClear(door.position)) {
 		if (pnum == myplr && sendflag)
 			NetSendCmdParam1(true, CMD_CLOSEDOOR, oi);
 		door._oVar4 = 0;
