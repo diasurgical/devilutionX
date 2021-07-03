@@ -423,6 +423,17 @@ struct PlayerStruct {
 
 		return _pHPPer;
 	}
+
+	int UpdateManaPercentage()
+	{
+		if (_pMaxMana <= 0) {
+			_pManaPer = 0;
+		} else {
+			_pManaPer = clamp(_pMana * 80 / _pMaxMana, 0, 80);
+		}
+
+		return _pManaPer;
+	}
 };
 
 extern int myplr;
