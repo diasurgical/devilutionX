@@ -4398,12 +4398,12 @@ void ProcessMonsters()
 		int menemy;
 		if ((Monst->_mFlags & MFLAG_TARGETS_MONSTER) != 0) {
 			menemy = Monst->_menemy;
-			assurance((DWORD)menemy < MAXMONSTERS, _menemy);
+			assurance((DWORD)menemy < MAXMONSTERS, Monst);
 			Monst->position.last = monster[Monst->_menemy].position.future;
 			Monst->enemyPosition = Monst->position.last;
 		} else {
 			menemy = Monst->_menemy;
-			assurance((DWORD)menemy < MAX_PLRS, _menemy);
+			assurance((DWORD)menemy < MAX_PLRS, Monst);
 			Monst->enemyPosition = plr[Monst->_menemy].position.future;
 			if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 				Monst->_msquelch = UINT8_MAX;
