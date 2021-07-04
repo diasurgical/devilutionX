@@ -26,8 +26,8 @@ bool sgbFadedIn = true;
 
 void palette_update()
 {
-	assert(palette);
-	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, palette, system_palette, 0, 256) < 0) {
+	assert(Palette);
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette, system_palette, 0, 256) < 0) {
 		ErrSdl();
 	}
 	pal_surface_palette_version++;

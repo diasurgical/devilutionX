@@ -79,7 +79,7 @@ CachedLine PrepareLine(std::size_t index)
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
 		surface = SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8) };
 		const SDL_Color maskColor = { 0, 255, 0, 0 }; // Any color different from both shadow and text
-		const SDL_Color &textColor = palette->colors[224];
+		const SDL_Color &textColor = Palette->colors[224];
 		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
 		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
 			Log("{}", SDL_GetError());

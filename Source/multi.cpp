@@ -689,7 +689,7 @@ void NetClose()
 
 	sgbNetInited = false;
 	nthread_cleanup();
-	dthread_cleanup();
+	DThreadCleanup();
 	tmsg_cleanup();
 	EventHandler(false);
 	SNetLeaveGame(3);

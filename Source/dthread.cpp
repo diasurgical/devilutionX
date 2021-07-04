@@ -118,7 +118,7 @@ void dthread_start()
 	}
 }
 
-void dthread_cleanup()
+void DThreadCleanup()
 {
 	TMegaPkt *tmp;
 

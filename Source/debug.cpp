@@ -16,10 +16,10 @@ namespace devilution {
 
 #ifdef _DEBUG
 
-#define DEBUGSEEDS 4096
+#define DebugSeeds 4096
 int seed_index;
 int level_seeds[NUMLEVELS + 1];
-int seed_table[DEBUGSEEDS];
+int seed_table[DebugSeeds];
 
 std::optional<CelSprite> pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
@@ -133,22 +133,22 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
 }
 
-int dbgplr;
+int DebugPlayerId;
 
 void PrintDebugPlayer(bool bNextPlayer)
 {
 	char dstr[128];
 
 	if (bNextPlayer)
-		dbgplr = ((BYTE)dbgplr + 1) & 3;
+		DebugPlayerId = ((BYTE)DebugPlayerId + 1) & 3;
 
-	auto &player = plr[dbgplr];
+	auto &player = plr[DebugPlayerId];
 
-	sprintf(dstr, "Plr %i : Active = %i", dbgplr, player.plractive ? 1 : 0);
+	sprintf(dstr, "Plr %i : Active = %i", DebugPlayerId, player.plractive ? 1 : 0);
 	NetSendCmdString(1 << myplr, dstr);
 
 	if (player.plractive) {
-		sprintf(dstr, "  Plr %i is %s", dbgplr, player._pName);
+		sprintf(dstr, "  Plr %i is %s", DebugPlayerId, player._pName);
 		NetSendCmdString(1 << myplr, dstr);
 		sprintf(dstr, "  Lvl = %i : Change = %i", player.plrlevel, player._pLvlChanging ? 1 : 0);
 		NetSendCmdString(1 << myplr, dstr);
@@ -162,18 +162,18 @@ void PrintDebugPlayer(bool bNextPlayer)
 	}
 }
 
-int dbgqst;
+int DebugQuestId;
 
 void PrintDebugQuest()
 {
 	char dstr[128];
 
-	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", dbgqst, quests[dbgqst]._qactive, quests[dbgqst]._qvar1);
+	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, quests[DebugQuestId]._qactive, quests[DebugQuestId]._qvar1);
 	NetSendCmdString(1 << myplr, dstr);
 
-	dbgqst++;
-	if (dbgqst == MAXQUESTS)
-		dbgqst = 0;
+	DebugQuestId++;
+	if (DebugQuestId == MAXQUESTS)
+		DebugQuestId = 0;
 }
 
 void PrintDebugMonster(int m)
@@ -202,7 +202,7 @@ void PrintDebugMonster(int m)
 	NetSendCmdString(1 << myplr, dstr);
 }
 
-int dbgmon;
+int DebugMonsterId;
 
 void GetDebugMonster()
 {
@@ -214,7 +214,7 @@ void GetDebugMonster()
 			if (mi2 <= 0)
 				mi1 = -(mi2 + 1);
 		} else {
-			mi1 = dbgmon;
+			mi1 = DebugMonsterId;
 		}
 	}
 	PrintDebugMonster(mi1);
@@ -224,11 +224,11 @@ void NextDebugMonster()
 {
 	char dstr[128];
 
-	dbgmon++;
-	if (dbgmon == MAXMONSTERS)
-		dbgmon = 0;
+	DebugMonsterId++;
+	if (DebugMonsterId == MAXMONSTERS)
+		DebugMonsterId = 0;
 
-	sprintf(dstr, "Current debug monster = %i", dbgmon);
+	sprintf(dstr, "Current debug monster = %i", DebugMonsterId);
 	NetSendCmdString(1 << myplr, dstr);
 }
 

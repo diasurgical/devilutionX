@@ -780,20 +780,20 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 		do {
 			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
-			int px = dx - CalculateWidth2(pDeadGuy->_deadWidth);
-			const byte *pCelBuff = pDeadGuy->_deadData[dd];
+			int px = dx - CalculateWidth2(pDeadGuy->width);
+			const byte *pCelBuff = pDeadGuy->data[dd];
 			assert(pCelBuff != nullptr);
 			const auto *frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
 			int frames = SDL_SwapLE32(frameTable[0]);
-			int nCel = pDeadGuy->_deadFrame;
+			int nCel = pDeadGuy->frame;
 			if (nCel < 1 || frames > 50 || nCel > frames) {
 				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
 			if (pDeadGuy->_deadtrans != 0) {
-				Cl2DrawLightTbl(out, px, dy, CelSprite(pCelBuff, pDeadGuy->_deadWidth), nCel, pDeadGuy->_deadtrans);
+				Cl2DrawLightTbl(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel, pDeadGuy->_deadtrans);
 			} else {
-				Cl2DrawLight(out, px, dy, CelSprite(pCelBuff, pDeadGuy->_deadWidth), nCel);
+				Cl2DrawLight(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel);
 			}
 		} while (false);
 	}
@@ -1297,7 +1297,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	if (dropGoldFlag) {
 		DrawGoldSplit(out, dropGoldValue);
 	}
-	if (helpflag) {
+	if (HelpFlag) {
 		DrawHelp(out);
 	}
 	if (msgflag != EMSG_NONE) {

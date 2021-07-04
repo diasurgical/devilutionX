@@ -20,7 +20,7 @@ struct CodecSignature {
 	uint16_t unused;
 };
 
-#define BLOCKSIZE 64
+#define BlockSize 64
 
 static void CodecInitKey(const char *pszPassword)
 {
@@ -65,17 +65,17 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	if (size <= sizeof(CodecSignature))
 		return 0;
 	size -= sizeof(CodecSignature);
-	if (size % BLOCKSIZE != 0)
+	if (size % BlockSize != 0)
 		return 0;
-	for (i = size; i != 0; pbSrcDst += BLOCKSIZE, i -= BLOCKSIZE) {
-		memcpy(buf, pbSrcDst, BLOCKSIZE);
+	for (i = size; i != 0; pbSrcDst += BlockSize, i -= BlockSize) {
+		memcpy(buf, pbSrcDst, BlockSize);
 		SHA1Result(0, dst);
-		for (int j = 0; j < BLOCKSIZE; j++) {
+		for (int j = 0; j < BlockSize; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
 		SHA1Calculate(0, buf, nullptr);
 		memset(dst, 0, sizeof(dst));
-		memcpy(pbSrcDst, buf, BLOCKSIZE);
+		memcpy(pbSrcDst, buf, BlockSize);
 	}
 
 	memset(buf, 0, sizeof(buf));
@@ -90,7 +90,7 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 		goto error;
 	}
 
-	size += sig->lastChunkSize - BLOCKSIZE;
+	size += sig->lastChunkSize - BlockSize;
 	SHA1Clear();
 	return size;
 error:
@@ -100,8 +100,8 @@ error:
 
 std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 {
-	if (dwSrcBytes % BLOCKSIZE != 0)
-		dwSrcBytes += BLOCKSIZE - (dwSrcBytes % BLOCKSIZE);
+	if (dwSrcBytes % BlockSize != 0)
+		dwSrcBytes += BlockSize - (dwSrcBytes % BlockSize);
 	return dwSrcBytes + sizeof(CodecSignature);
 }
 
@@ -117,19 +117,19 @@ void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const ch
 
 	uint16_t lastChunk = 0;
 	while (size != 0) {
-		uint16_t chunk = size < BLOCKSIZE ? size : BLOCKSIZE;
+		uint16_t chunk = size < BlockSize ? size : BlockSize;
 		memcpy(buf, pbSrcDst, chunk);
-		if (chunk < BLOCKSIZE)
-			memset(buf + chunk, 0, BLOCKSIZE - chunk);
+		if (chunk < BlockSize)
+			memset(buf + chunk, 0, BlockSize - chunk);
 		SHA1Result(0, dst);
 		SHA1Calculate(0, buf, nullptr);
-		for (int j = 0; j < BLOCKSIZE; j++) {
+		for (int j = 0; j < BlockSize; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
 		memset(dst, 0, sizeof(dst));
-		memcpy(pbSrcDst, buf, BLOCKSIZE);
+		memcpy(pbSrcDst, buf, BlockSize);
 		lastChunk = chunk;
-		pbSrcDst += BLOCKSIZE;
+		pbSrcDst += BlockSize;
 		size -= chunk;
 	}
 	memset(buf, 0, sizeof(buf));

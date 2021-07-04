@@ -35,7 +35,7 @@ int speedspellcount = 0;
 bool InGameMenu()
 {
 	return stextflag != STORE_NONE
-	    || helpflag
+	    || HelpFlag
 	    || talkflag
 	    || qtextflag
 	    || gmenu_is_active()

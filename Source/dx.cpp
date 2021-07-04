@@ -30,7 +30,7 @@ SDL_Renderer *renderer;
 SDL_Texture *texture;
 
 /** Currently active palette */
-SDL_Palette *palette;
+SDL_Palette *Palette;
 unsigned int pal_surface_palette_version = 0;
 
 /** 24-bit renderer texture surface */
@@ -82,7 +82,7 @@ static void CreateBackBuffer()
 
 #ifndef USE_SDL1
 	// In SDL2, `pal_surface` points to the global `palette`.
-	if (SDL_SetSurfacePalette(pal_surface, palette) < 0)
+	if (SDL_SetSurfacePalette(pal_surface, Palette) < 0)
 		ErrSdl();
 #else
 	// In SDL1, `pal_surface` owns its palette and we must update it every
@@ -184,7 +184,7 @@ void dx_cleanup()
 		return;
 	SDL_FreeSurface(pal_surface);
 	pal_surface = nullptr;
-	SDL_FreePalette(palette);
+	SDL_FreePalette(Palette);
 	SDL_FreeSurface(renderer_texture_surface);
 #ifndef USE_SDL1
 	SDL_DestroyTexture(texture);
@@ -218,8 +218,8 @@ void dx_reinit()
 
 void InitPalette()
 {
-	palette = SDL_AllocPalette(256);
-	if (palette == nullptr) {
+	Palette = SDL_AllocPalette(256);
+	if (Palette == nullptr) {
 		ErrSdl();
 	}
 }
