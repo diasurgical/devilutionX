@@ -80,7 +80,7 @@ struct ScrollBarState {
 
 } // namespace
 
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<UiItemBase *> &items, bool itemsWraps, bool (*fnYesNo)())
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)())
 {
 	SelectedItem = 0;
 	SelectedItemMax = std::max(count - 1, 0);
@@ -89,7 +89,9 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
 	gfnListYesNo = fnYesNo;
-	gUiItems = items;
+	gUiItems.clear();
+	for (auto &item : items)
+		gUiItems.push_back(item.get());
 	UiItemsWraps = itemsWraps;
 	ListOffset = nullptr;
 	if (fnFocus != nullptr)
@@ -101,7 +103,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	textInputActive = false;
 	for (const auto &item : items) {
 		if (item->m_type == UI_EDIT) {
-			auto *pItemUIEdit = static_cast<UiEdit *>(item);
+			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
 #ifdef __SWITCH__
@@ -623,21 +625,21 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	RenderPresent();
 }
 
-void UiAddBackground(std::vector<UiItemBase *> *vecDialog)
+void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
 	if (ArtBackgroundWidescreen.surface != nullptr) {
 		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
-		vecDialog->push_back(new UiImage(&ArtBackgroundWidescreen, /*bAnimated=*/false, /*iFrame=*/0, rectw, UIS_CENTER));
+		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, /*bAnimated=*/false, /*iFrame=*/0, rectw, UIS_CENTER));
 	}
 
 	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
-	vecDialog->push_back(new UiImage(&ArtBackground, /*bAnimated=*/false, /*iFrame=*/0, rect, UIS_CENTER));
+	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, /*bAnimated=*/false, /*iFrame=*/0, rect, UIS_CENTER));
 }
 
-void UiAddLogo(std::vector<UiItemBase *> *vecDialog, int size, int y)
+void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
 	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
-	vecDialog->push_back(new UiImage(&ArtLogos[size], /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
+	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
 }
 
 void UiFadeIn()
@@ -933,6 +935,12 @@ void UiRenderItems(const std::vector<UiItemBase *> &items)
 		RenderItem(item);
 }
 
+void UiRenderItems(const std::vector<std::unique_ptr<UiItemBase>> &items)
+{
+	for (const auto &item : items)
+		RenderItem(item.get());
+}
+
 bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 {
 	if (items.empty()) {
@@ -957,6 +965,36 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 		for (const auto &item : items) {
 			if (item->m_type == UI_BUTTON)
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
+		}
+	}
+
+	return handled;
+}
+
+bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiItemBase>> &items)
+{
+	if (items.empty()) {
+		return false;
+	}
+
+	// In SDL2 mouse events already use logical coordinates.
+#ifdef USE_SDL1
+	OutputToLogical(&event->button.x, &event->button.y);
+#endif
+
+	bool handled = false;
+	for (const auto &item : items) {
+		if (HandleMouseEvent(*event, item.get())) {
+			handled = true;
+			break;
+		}
+	}
+
+	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
+		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
+		for (const auto &item : items) {
+			if (item->m_type == UI_BUTTON)
+				HandleGlobalMouseUpButton(static_cast<UiButton *>(item.get()));
 		}
 	}
 
