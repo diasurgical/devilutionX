@@ -54,7 +54,7 @@ struct _uidefaultstats {
 
 struct _uiheroinfo {
 	char name[16];
-	uint16_t level;
+	uint8_t level;
 	HeroClass heroclass;
 	uint8_t herorank;
 	uint16_t strength;

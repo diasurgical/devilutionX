@@ -647,7 +647,7 @@ void ResyncQuests()
 			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
 			for (int i = 0; i < nobjects; i++)
 				SyncObjectAnim(objectactive[i]);
-			int tren = TransVal;
+			auto tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
@@ -658,7 +658,7 @@ void ResyncQuests()
 			ObjChangeMapResync(x, y, x + setpc_w + 1, y + setpc_h + 1);
 			for (int i = 0; i < nobjects; i++)
 				SyncObjectAnim(objectactive[i]);
-			int tren = TransVal;
+			auto tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
