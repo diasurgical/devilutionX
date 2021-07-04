@@ -3671,17 +3671,22 @@ void SyncPlrAnim(int pnum)
 	case PM_BLOCK:
 		graphic = player_graphic::Block;
 		break;
-	case PM_SPELL: {
-		magic_type sType = STYPE_FIRE;
-		if (pnum == myplr)
-			sType = spelldata[player._pSpell].sType;
-		if (sType == STYPE_FIRE)
-			graphic = player_graphic::Fire;
-		else if (sType == STYPE_LIGHTNING)
-			graphic = player_graphic::Lightning;
-		else if (sType == STYPE_MAGIC)
-			graphic = player_graphic::Magic;
-	} break;
+	case PM_SPELL:
+		graphic = player_graphic::Fire;
+		if (pnum == myplr) {
+			switch (spelldata[player._pSpell].sType) {
+			case STYPE_FIRE:
+				graphic = player_graphic::Fire;
+				break;
+			case STYPE_LIGHTNING:
+				graphic = player_graphic::Lightning;
+				break;
+			case STYPE_MAGIC:
+				graphic = player_graphic::Magic;
+				break;
+			}
+		}
+		break;
 	case PM_GOTHIT:
 		graphic = player_graphic::Hit;
 		break;

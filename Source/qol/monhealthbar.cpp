@@ -96,7 +96,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	int barLabelY = yPos + 10 + (height - 11) / 2;
-	DrawString(out, mon.mName, { xPos - 1, barLabelY + 1, width, height }, UIS_CENTER | UIS_BLACK);
+	DrawString(out, mon.mName, { { xPos - 1, barLabelY + 1 }, { width, height } }, UIS_CENTER | UIS_BLACK);
 	uint16_t style = UIS_SILVER;
 	if (mon._uniqtype != 0)
 		style = UIS_GOLD;

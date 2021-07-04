@@ -160,7 +160,7 @@ void DrawItemNameLabels(const Surface &out)
 			FillRect(out, label.pos.x, label.pos.y - Height + MarginY, label.width, Height, PAL8_BLUE + 6);
 		else
 			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - Height + MarginY, label.width, Height);
-		DrawString(out, label.text.c_str(), { label.pos.x + MarginX, label.pos.y, label.width, Height }, itm.getTextColor());
+		DrawString(out, label.text.c_str(), { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } }, itm.getTextColor());
 	}
 	labelQueue.clear();
 }

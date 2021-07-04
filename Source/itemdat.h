@@ -13,7 +13,7 @@
 namespace devilution {
 
 /** @todo add missing values and apply */
-enum _item_indexes : uint16_t {
+enum _item_indexes : int16_t {
 	IDI_GOLD,
 	IDI_WARRIOR,
 	IDI_WARRSHLD,
@@ -64,6 +64,7 @@ enum _item_indexes : uint16_t {
 	IDI_FULLNOTE,
 	IDI_BROWNSUIT,
 	IDI_GREYSUIT,
+	IDI_NONE = -1,
 };
 
 enum item_drop_rate : uint8_t {
