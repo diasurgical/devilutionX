@@ -1625,48 +1625,63 @@ void AddCryptObject(int i, int a2)
 	if (a2 > 5) {
 		switch (a2) {
 		case 6:
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
+			switch (plr[myplr]._pClass) {
+			case HeroClass::Warrior:
+			case HeroClass::Barbarian:
 				object[i]._oVar2 = TEXT_BOOKA;
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+				break;
+			case HeroClass::Rogue:
 				object[i]._oVar2 = TEXT_RBOOKA;
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+				break;
+			case HeroClass::Sorcerer:
 				object[i]._oVar2 = TEXT_MBOOKA;
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
+				break;
+			case HeroClass::Monk:
 				object[i]._oVar2 = TEXT_OBOOKA;
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
+				break;
+			case HeroClass::Bard:
 				object[i]._oVar2 = TEXT_BBOOKA;
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				object[i]._oVar2 = TEXT_BOOKA;
+				break;
 			}
 			break;
 		case 7:
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
+			switch (plr[myplr]._pClass) {
+			case HeroClass::Warrior:
+			case HeroClass::Barbarian:
 				object[i]._oVar2 = TEXT_BOOKB;
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+				break;
+			case HeroClass::Rogue:
 				object[i]._oVar2 = TEXT_RBOOKB;
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+				break;
+			case HeroClass::Sorcerer:
 				object[i]._oVar2 = TEXT_MBOOKB;
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
+				break;
+			case HeroClass::Monk:
 				object[i]._oVar2 = TEXT_OBOOKB;
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
+				break;
+			case HeroClass::Bard:
 				object[i]._oVar2 = TEXT_BBOOKB;
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				object[i]._oVar2 = TEXT_BOOKB;
+				break;
 			}
 			break;
 		case 8:
-			if (plr[myplr]._pClass == HeroClass::Warrior) {
+			switch (plr[myplr]._pClass) {
+			case HeroClass::Warrior:
+			case HeroClass::Barbarian:
 				object[i]._oVar2 = TEXT_BOOKC;
-			} else if (plr[myplr]._pClass == HeroClass::Rogue) {
+				break;
+			case HeroClass::Rogue:
 				object[i]._oVar2 = TEXT_RBOOKC;
-			} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
+				break;
+			case HeroClass::Sorcerer:
 				object[i]._oVar2 = TEXT_MBOOKC;
-			} else if (plr[myplr]._pClass == HeroClass::Monk) {
+				break;
+			case HeroClass::Monk:
 				object[i]._oVar2 = TEXT_OBOOKC;
-			} else if (plr[myplr]._pClass == HeroClass::Bard) {
+				break;
+			case HeroClass::Bard:
 				object[i]._oVar2 = TEXT_BBOOKC;
-			} else if (plr[myplr]._pClass == HeroClass::Barbarian) {
-				object[i]._oVar2 = TEXT_BOOKC;
+				break;
 			}
 			break;
 		}
@@ -1694,8 +1709,6 @@ void AddObject(_object_id ot, int ox, int oy)
 	SetupObject(oi, ox, oy, ot);
 	switch (ot) {
 	case OBJ_L1LIGHT:
-		AddObjLight(oi, 5);
-		break;
 	case OBJ_SKFIRE:
 	case OBJ_CANDLE1:
 	case OBJ_CANDLE2:
@@ -2054,7 +2067,7 @@ void Obj_BCrossDamage(int i)
 	if (plr[myplr]._pmode == PM_DEATH)
 		return;
 
-	int fireResist = plr[myplr]._pFireResist;
+	int8_t fireResist = plr[myplr]._pFireResist;
 	if (fireResist > 0)
 		damage[leveltype - 1] -= fireResist * damage[leveltype - 1] / 100;
 
@@ -2903,7 +2916,7 @@ void OperateBookLever(int pnum, int i)
 				ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (object[i]._otype == OBJ_BLINDBOOK) {
 				SpawnUnique(UITEM_OPTAMULET, Point { x, y } + Displacement { 5, 5 });
-				int tren = TransVal;
+				int8_t tren = TransVal;
 				TransVal = 9;
 				DRLG_MRectTrans(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 				TransVal = tren;
@@ -5154,7 +5167,7 @@ void SyncQSTLever(int i)
 	if (object[i]._oAnimFrame == object[i]._oVar6) {
 		ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 		if (object[i]._otype == OBJ_BLINDBOOK) {
-			int tren = TransVal;
+			int8_t tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			TransVal = tren;

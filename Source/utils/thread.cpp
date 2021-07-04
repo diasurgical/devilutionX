@@ -11,12 +11,14 @@ namespace devilution {
 
 static int SDLCALL ThreadTranslate(void *ptr)
 {
-	auto handler = (unsigned int (*)(void *))ptr;
+	auto handler = (void (*)())ptr;
 
-	return handler(nullptr);
+	handler();
+
+	return 0;
 }
 
-SDL_Thread *CreateThread(unsigned int (*handler)(void *), SDL_threadID *threadId)
+SDL_Thread *CreateThread(void (*handler)(), SDL_threadID *threadId)
 {
 #ifdef USE_SDL1
 	SDL_Thread *ret = SDL_CreateThread(ThreadTranslate, (void *)handler);

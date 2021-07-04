@@ -50,7 +50,6 @@ void play_movie(const char *pszMovie, bool userCanClose)
 				case DVL_WM_QUIT:
 					SVidPlayEnd();
 					diablo_quit(0);
-					break;
 				}
 			}
 			if (!SVidPlayContinue())

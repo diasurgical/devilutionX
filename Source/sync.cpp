@@ -152,20 +152,16 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 {
-	TSyncHeader *pHdr;
-	int i;
-	bool sync;
-
 	if (nummonsters < 1) {
 		return dwMaxLen;
 	}
-	if (dwMaxLen < sizeof(*pHdr) + sizeof(TSyncMonster)) {
+	if (dwMaxLen < sizeof(TSyncHeader) + sizeof(TSyncMonster)) {
 		return dwMaxLen;
 	}
 
-	pHdr = (TSyncHeader *)pbBuf;
-	pbBuf += sizeof(*pHdr);
-	dwMaxLen -= sizeof(*pHdr);
+	auto *pHdr = (TSyncHeader *)pbBuf;
+	pbBuf += sizeof(TSyncHeader);
+	dwMaxLen -= sizeof(TSyncHeader);
 
 	pHdr->bCmd = CMD_SYNCDATA;
 	pHdr->bLevel = currlevel;
@@ -174,8 +170,8 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 	assert(dwMaxLen <= 0xffff);
 	SyncOneMonster();
 
-	for (i = 0; i < nummonsters && dwMaxLen >= sizeof(TSyncMonster); i++) {
-		sync = false;
+	for (int i = 0; i < nummonsters && dwMaxLen >= sizeof(TSyncMonster); i++) {
+		bool sync = false;
 		if (i < 2) {
 			sync = SyncMonsterActive2((TSyncMonster *)pbBuf);
 		}

@@ -1121,10 +1121,10 @@ void InitMonsterSND(int monst)
 
 	const int mtype = Monsters[monst].mtype;
 	for (int i = 0; i < 4; i++) {
-		if (MonstSndChar[i] != 's' || monsterdata[mtype].snd_special) {
+		if (MonstSndChar[i] != 's' || MonsterData[mtype].snd_special) {
 			for (int j = 0; j < 2; j++) {
 				char path[MAX_PATH];
-				sprintf(path, monsterdata[mtype].sndfile, MonstSndChar[i], j + 1);
+				sprintf(path, MonsterData[mtype].sndfile, MonstSndChar[i], j + 1);
 				Monsters[monst].Snds[i][j] = sound_file_load(path);
 			}
 		}

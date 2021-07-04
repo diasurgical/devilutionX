@@ -240,7 +240,7 @@ void BeginTimeout()
 	}
 #endif
 
-	int nTicks = SDL_GetTicks() - sglTimeoutStart;
+	uint32_t nTicks = SDL_GetTicks() - sglTimeoutStart;
 	if (nTicks > 20000) {
 		gbRunGame = false;
 		return;
@@ -287,7 +287,7 @@ void BeginTimeout()
 	}
 }
 
-void HandleAllPackets(int pnum, byte *pData, int nSize)
+void HandleAllPackets(int pnum, byte *pData, size_t nSize)
 {
 	while (nSize != 0) {
 		int nLen = ParseCmd(pnum, (TCmd *)pData);
@@ -301,7 +301,7 @@ void HandleAllPackets(int pnum, byte *pData, int nSize)
 
 void ProcessTmsgs()
 {
-	int cnt;
+	size_t cnt;
 	TPkt pkt;
 
 	while ((cnt = tmsg_get((byte *)&pkt)) != 0) {

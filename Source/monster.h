@@ -132,10 +132,9 @@ struct CMonster {
 #endif
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
-	bool has_special;
 	uint8_t mAFNum;
 	int8_t mdeadval;
-	const MonsterData *MData;
+	const MonsterDataStruct *MData;
 };
 
 struct MonsterStruct { // note: missing field _mAFNum
@@ -192,7 +191,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
 	CMonster *MType;
-	const MonsterData *MData;
+	const MonsterDataStruct *MData;
 
 	/**
 	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
@@ -293,7 +292,6 @@ bool DirOK(int i, Direction mdir);
 bool PosOkMissile(int entity, Point position);
 bool LineClearSolid(Point startPoint, Point endPoint);
 bool LineClearMissile(Point startPoint, Point endPoint);
-bool LineClear(Point startPoint, Point endPoint);
 bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint);
 void SyncMonsterAnim(int i);
 void M_FallenFear(Point position);

@@ -74,7 +74,7 @@ enum monster_resistance : uint8_t {
 	// clang-format on
 };
 
-struct MonsterData {
+struct MonsterDataStruct {
 	const char *mName;
 	const char *GraphicType;
 	const char *sndfile;
@@ -281,7 +281,7 @@ struct UniqMonstStruct {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterData monsterdata[];
+extern const MonsterDataStruct MonsterData[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];

@@ -105,18 +105,6 @@ public:
 		return s_ != nullptr;
 	}
 
-	bool Seekg(std::streampos pos)
-	{
-		s_->seekg(pos);
-		return CheckError("seekg(%" PRIuMAX ")", static_cast<std::uintmax_t>(pos));
-	}
-
-	bool Seekg(std::streamoff pos, std::ios::seekdir dir)
-	{
-		s_->seekg(pos, dir);
-		return CheckError("seekg(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
-	}
-
 	bool Seekp(std::streampos pos)
 	{
 		s_->seekp(pos);
@@ -127,12 +115,6 @@ public:
 	{
 		s_->seekp(pos, dir);
 		return CheckError("seekp(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
-	}
-
-	bool Tellg(std::streampos *result)
-	{
-		*result = s_->tellg();
-		return CheckError("tellg() = %" PRIuMAX, static_cast<std::uintmax_t>(*result));
 	}
 
 	bool Tellp(std::streampos *result)
@@ -194,32 +176,32 @@ struct Archive {
 	_HASHENTRY *sgpHashTbl;
 	_BLOCKENTRY *sgpBlockTbl;
 
-	bool Open(const char *name)
+	bool Open(const char *path)
 	{
 		Close();
 #ifdef _DEBUG
-		Log("Opening {}", name);
+		Log("Opening {}", path);
 #endif
-		exists = FileExists(name);
+		exists = FileExists(path);
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
-			if (!GetFileSize(name, &size)) {
-				Log(R"(GetFileSize("{}") failed with "{}")", name, std::strerror(errno));
+			if (!GetFileSize(path, &size)) {
+				Log(R"(GetFileSize("{}") failed with "{}")", path, std::strerror(errno));
 				return false;
 			}
 #ifdef _DEBUG
-			Log("GetFileSize(\"{}\") = {}", name, size);
+			Log("GetFileSize(\"{}\") = {}", path, size);
 #endif
 		} else {
 			mode |= std::ios::trunc;
 		}
-		if (!stream.Open(name, mode)) {
+		if (!stream.Open(path, mode)) {
 			stream.Close();
 			return false;
 		}
 		modified = !exists;
 
-		this->name = name;
+		name = path;
 		return true;
 	}
 
@@ -475,7 +457,7 @@ _BLOCKENTRY *AddFile(const char *pszName, _BLOCKENTRY *pBlk, int blockIndex)
 	uint32_t h3 = Hash(pszName, 2);
 	if (GetHashIndex(h1, h2, h3) != -1)
 		app_fatal("Hash collision between \"%s\" and existing file\n", pszName);
-	int hIdx = h1 & 0x7FF;
+	unsigned int hIdx = h1 & 0x7FF;
 
 	bool hasSpace = false;
 	for (int i = 0; i < INDEX_ENTRIES; i++) {

@@ -6,6 +6,7 @@
 
 #include "diablo.h"
 #include "gmenu.h"
+#include "nthread.h"
 #include "storm/storm.h"
 #include "utils/thread.h"
 
@@ -20,7 +21,7 @@ DWORD gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
 SDL_threadID glpNThreadId;
 char sgbSyncCountdown;
-int turn_upper_bit;
+uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
 char sgbPacketCountdown;
 bool sgbThreadIsRunning;
@@ -34,19 +35,15 @@ static SDL_Thread *sghThread = nullptr;
 
 void nthread_terminate_game(const char *pszFcn)
 {
-	DWORD sErr;
-
-	sErr = SErrGetLastError();
+	uint32_t sErr = SErrGetLastError();
 	if (sErr == STORM_ERROR_INVALID_PLAYER) {
 		return;
 	}
-	if (sErr == STORM_ERROR_GAME_TERMINATED) {
-		gbGameDestroyed = true;
-	} else if (sErr == STORM_ERROR_NOT_IN_GAME) {
-		gbGameDestroyed = true;
-	} else {
+	if (sErr != STORM_ERROR_GAME_TERMINATED && sErr != STORM_ERROR_NOT_IN_GAME) {
 		app_fatal("%s:\n%s", pszFcn, SDL_GetError());
 	}
+
+	gbGameDestroyed = true;
 }
 
 uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta)
@@ -58,9 +55,9 @@ uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta)
 	}
 	while (curTurnsInTransit++ < gdwTurnsInTransit) {
 
-		int turnTmp = turn_upper_bit | (curTurn & 0x7FFFFFFF);
+		uint32_t turnTmp = turn_upper_bit | (curTurn & 0x7FFFFFFF);
 		turn_upper_bit = 0;
-		int turn = turnTmp;
+		uint32_t turn = turnTmp;
 
 		if (!SNetSendTurn((char *)&turn, sizeof(turn))) {
 			nthread_terminate_game("SNetSendTurn");
@@ -76,7 +73,8 @@ uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta)
 
 bool nthread_recv_turns(bool *pfSendAsync)
 {
-	*pfSendAsync = false;
+	if (pfSendAsync != nullptr)
+		*pfSendAsync = false;
 	sgbPacketCountdown--;
 	if (sgbPacketCountdown > 0) {
 		last_tick += gnTickDelay;
@@ -85,8 +83,8 @@ bool nthread_recv_turns(bool *pfSendAsync)
 	sgbSyncCountdown--;
 	sgbPacketCountdown = sgbNetUpdateRate;
 	if (sgbSyncCountdown != 0) {
-
-		*pfSendAsync = true;
+		if (pfSendAsync != nullptr)
+			*pfSendAsync = true;
 		last_tick += gnTickDelay;
 		return true;
 	}
@@ -104,35 +102,34 @@ bool nthread_recv_turns(bool *pfSendAsync)
 	}
 	sgbSyncCountdown = 4;
 	multi_msg_countdown();
-	*pfSendAsync = true;
+	if (pfSendAsync != nullptr)
+		*pfSendAsync = true;
 	last_tick += gnTickDelay;
 	return true;
 }
 
-static unsigned int NthreadHandler(void * /*data*/)
+static void NthreadHandler()
 {
-	int delta;
-	bool received;
-
-	if (nthread_should_run) {
-		while (true) {
-			sgMemCrit.Enter();
-			if (!nthread_should_run)
-				break;
-			nthread_send_and_recv_turn(0, 0);
-			if (nthread_recv_turns(&received))
-				delta = last_tick - SDL_GetTicks();
-			else
-				delta = gnTickDelay;
-			sgMemCrit.Leave();
-			if (delta > 0)
-				SDL_Delay(delta);
-			if (!nthread_should_run)
-				return 0;
-		}
-		sgMemCrit.Leave();
+	if (!nthread_should_run) {
+		return;
 	}
-	return 0;
+
+	while (true) {
+		sgMemCrit.Enter();
+		if (!nthread_should_run) {
+			sgMemCrit.Leave();
+			break;
+		}
+		nthread_send_and_recv_turn(0, 0);
+		int delta = gnTickDelay;
+		if (nthread_recv_turns())
+			delta = last_tick - SDL_GetTicks();
+		sgMemCrit.Leave();
+		if (delta > 0)
+			SDL_Delay(delta);
+		if (!nthread_should_run)
+			return;
+	}
 }
 
 void nthread_set_turn_upper_bit()
@@ -223,11 +220,8 @@ void nthread_ignore_mutex(bool bStart)
  */
 bool nthread_has_500ms_passed()
 {
-	DWORD currentTickCount;
-	int ticksElapsed;
-
-	currentTickCount = SDL_GetTicks();
-	ticksElapsed = currentTickCount - last_tick;
+	int currentTickCount = SDL_GetTicks();
+	int ticksElapsed = currentTickCount - last_tick;
 	if (!gbIsMultiplayer && ticksElapsed > gnTickDelay * 10) {
 		last_tick = currentTickCount;
 		ticksElapsed = 0;
