@@ -295,14 +295,13 @@ PATHNODE *path_get_node2(int dx, int dy)
  */
 void path_next_node(PATHNODE *pPath)
 {
-	PATHNODE *next = path_2_nodes;
 	if (path_2_nodes->NextNode == nullptr) {
 		path_2_nodes->NextNode = pPath;
 		return;
 	}
 
 	PATHNODE *current = path_2_nodes;
-	next = path_2_nodes->NextNode;
+	PATHNODE *next = path_2_nodes->NextNode;
 	int f = pPath->f;
 	while (next != nullptr && next->f < f) {
 		current = next;

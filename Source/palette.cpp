@@ -291,11 +291,13 @@ void PaletteFadeOut(int fr)
  */
 static void CycleColors(int from, int to)
 {
-	SDL_Color col = system_palette[from];
-	for (int i = from; i < to; i++) {
-		system_palette[i] = system_palette[i + 1];
+	{
+		SDL_Color col = system_palette[from];
+		for (int i = from; i < to; i++) {
+			system_palette[i] = system_palette[i + 1];
+		}
+		system_palette[to] = col;
 	}
-	system_palette[to] = col;
 
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;
@@ -323,11 +325,13 @@ static void CycleColors(int from, int to)
  */
 static void CycleColorsReverse(int from, int to)
 {
-	SDL_Color col = system_palette[to];
-	for (int i = to; i > from; i--) {
-		system_palette[i] = system_palette[i - 1];
+	{
+		SDL_Color col = system_palette[to];
+		for (int i = to; i > from; i--) {
+			system_palette[i] = system_palette[i - 1];
+		}
+		system_palette[from] = col;
 	}
-	system_palette[from] = col;
 
 	if (!sgOptions.Graphics.bBlendedTransparancy)
 		return;

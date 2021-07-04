@@ -258,7 +258,7 @@ int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
 /** Specifies the Y-coordinate delta from a player, used for instanced when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 /** Specifies the frame of each animation for which an action is triggered, for each player class. */
-char PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
+const int PlrGFXAnimLens[enum_size<HeroClass>::value][11] = {
 	{ 10, 16, 8, 2, 20, 20, 6, 20, 8, 9, 14 },
 	{ 8, 18, 8, 4, 20, 16, 7, 20, 8, 10, 12 },
 	{ 8, 16, 8, 6, 20, 12, 8, 20, 8, 12, 8 },
@@ -981,18 +981,19 @@ void CreatePlayer(int playerId, HeroClass c)
 		player._pSplHotKey[i] = SPL_INVALID;
 	}
 
-	if (c == HeroClass::Warrior) {
+	switch (c) {
+	case HeroClass::Warrior:
+	case HeroClass::Bard:
+	case HeroClass::Barbarian:
 		player._pgfxnum = ANIM_ID_SWORD_SHIELD;
-	} else if (c == HeroClass::Rogue) {
+		break;
+	case HeroClass::Rogue:
 		player._pgfxnum = ANIM_ID_BOW;
-	} else if (c == HeroClass::Sorcerer) {
+		break;
+	case HeroClass::Sorcerer:
+	case HeroClass::Monk:
 		player._pgfxnum = ANIM_ID_STAFF;
-	} else if (c == HeroClass::Monk) {
-		player._pgfxnum = ANIM_ID_STAFF;
-	} else if (c == HeroClass::Bard) {
-		player._pgfxnum = ANIM_ID_SWORD_SHIELD;
-	} else if (c == HeroClass::Barbarian) {
-		player._pgfxnum = ANIM_ID_SWORD_SHIELD;
+		break;
 	}
 
 	for (bool &levelVisited : player._pLvlVisited) {
@@ -1757,14 +1758,19 @@ StartPlayerKill(int pnum, int earflag)
 					if (earflag != 0) {
 						SetPlrHandItem(&ear, IDI_EAR);
 						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
-						if (player._pClass == HeroClass::Sorcerer) {
+						switch (player._pClass) {
+						case HeroClass::Sorcerer:
 							ear._iCurs = ICURS_EAR_SORCERER;
-						} else if (player._pClass == HeroClass::Warrior) {
+							break;
+						case HeroClass::Warrior:
 							ear._iCurs = ICURS_EAR_WARRIOR;
-						} else if (player._pClass == HeroClass::Rogue) {
+							break;
+						case HeroClass::Rogue:
+						case HeroClass::Monk:
+						case HeroClass::Bard:
+						case HeroClass::Barbarian:
 							ear._iCurs = ICURS_EAR_ROGUE;
-						} else if (player._pClass == HeroClass::Monk || player._pClass == HeroClass::Bard || player._pClass == HeroClass::Barbarian) {
-							ear._iCurs = ICURS_EAR_ROGUE;
+							break;
 						}
 
 						ear._iCreateInfo = player._pName[0] << 8 | player._pName[1];
@@ -2003,8 +2009,6 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 	switch (fom) {
 	case WM_DIABNEXTLVL:
 	case WM_DIABPREVLVL:
-		player.plrlevel = lvl;
-		break;
 	case WM_DIABRTNLVL:
 	case WM_DIABTOWNWARP:
 		player.plrlevel = lvl;
@@ -2339,8 +2343,7 @@ bool PlrHitMonst(int pnum, int m)
 	int dam2 = dam << 6;
 	dam += player._pDamageMod;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
-		int ddp = player._pLevel;
-		if (GenerateRnd(100) < ddp) {
+		if (GenerateRnd(100) < player._pLevel) {
 			dam *= 2;
 		}
 	}
@@ -3894,9 +3897,7 @@ void ModifyPlrVit(int p, int l)
 	player._pBaseVit += l;
 
 	int ms = l << 6;
-	if (player._pClass == HeroClass::Warrior) {
-		ms *= 2;
-	} else if (player._pClass == HeroClass::Barbarian) {
+	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 		ms *= 2;
 	}
 
@@ -4004,9 +4005,7 @@ void SetPlrVit(int p, int v)
 	player._pBaseVit = v;
 
 	hp = v << 6;
-	if (player._pClass == HeroClass::Warrior) {
-		hp *= 2;
-	} else if (player._pClass == HeroClass::Barbarian) {
+	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 		hp *= 2;
 	}
 

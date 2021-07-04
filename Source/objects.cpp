@@ -2916,7 +2916,7 @@ void OperateBookLever(int pnum, int i)
 				ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			if (object[i]._otype == OBJ_BLINDBOOK) {
 				SpawnUnique(UITEM_OPTAMULET, Point { x, y } + Displacement { 5, 5 });
-				int8_t tren = TransVal;
+				auto tren = TransVal;
 				TransVal = 9;
 				DRLG_MRectTrans(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 				TransVal = tren;
@@ -5164,7 +5164,7 @@ void SyncQSTLever(int i)
 	if (object[i]._oAnimFrame == object[i]._oVar6) {
 		ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 		if (object[i]._otype == OBJ_BLINDBOOK) {
-			int8_t tren = TransVal;
+			auto tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
 			TransVal = tren;
