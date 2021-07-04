@@ -35,7 +35,7 @@ extern int provider;
 
 namespace {
 
-char title[32];
+const char *title = "";
 
 std::vector<UiListItem *> vecSelGameDlgItems;
 std::vector<UiItemBase *> vecSelGameDialog;
@@ -155,7 +155,7 @@ void selgame_GameSelection_Select(int value)
 
 	switch (value) {
 	case 0: {
-		strncpy(title, _("Create Game"), sizeof(title) - 1);
+		title = _("Create Game");
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 211), 295, 35 };
 		vecSelGameDialog.push_back(new UiArtText(_("Select Difficulty"), rect4, UIS_CENTER | UIS_BIG));
@@ -176,7 +176,7 @@ void selgame_GameSelection_Select(int value)
 		break;
 	}
 	case 1: {
-		strncpy(title, _("Join TCP Games"), sizeof(title) - 1);
+		title = _("Join TCP Games");
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 211), 285, 33 };
 		vecSelGameDialog.push_back(new UiArtText(_("Enter address"), rect4, UIS_CENTER | UIS_BIG));
