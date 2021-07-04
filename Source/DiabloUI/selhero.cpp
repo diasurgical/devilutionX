@@ -33,7 +33,7 @@ _uiheroinfo selhero_heros[MAX_CHARACTERS];
 _uiheroinfo selhero_heroInfo;
 const size_t MaxViewportItems = 6;
 char textStats[5][4];
-char title[32];
+const char *title = "";
 _selhero_selections selhero_result;
 bool selhero_navigateYesNo;
 bool selhero_deleteEnabled;
@@ -209,10 +209,7 @@ void SelheroListSelect(int value)
 
 		UiInitList(vecSelHeroDlgItems.size(), SelheroClassSelectorFocus, SelheroClassSelectorSelect, SelheroClassSelectorEsc, vecSelDlgItems);
 		memset(&selhero_heroInfo.name, 0, sizeof(selhero_heroInfo.name));
-		strncpy(title, _("New Single Player Hero"), sizeof(title) - 1);
-		if (selhero_isMultiPlayer) {
-			strncpy(title, _("New Multi Player Hero"), sizeof(title) - 1);
-		}
+		title = selhero_isMultiPlayer ? _("New Multi Player Hero") : _("New Single Player Hero");
 		return;
 	}
 
@@ -234,7 +231,7 @@ void SelheroListSelect(int value)
 		vecSelDlgItems.push_back(new UiArtTextButton(_("Cancel"), &UiFocusNavigationEsc, rect3, UIS_CENTER | UIS_VCENTER | UIS_BIG | UIS_GOLD));
 
 		UiInitList(vecSelHeroDlgItems.size(), SelheroLoadFocus, SelheroLoadSelect, selhero_List_Init, vecSelDlgItems, true);
-		strncpy(title, _("Single Player Characters"), sizeof(title) - 1);
+		title = _("Single Player Characters");
 		return;
 	}
 
@@ -286,10 +283,7 @@ void SelheroClassSelectorSelect(int value)
 		return;
 	}
 
-	strncpy(title, _("New Single Player Hero"), sizeof(title) - 1);
-	if (selhero_isMultiPlayer) {
-		strncpy(title, _("New Multi Player Hero"), sizeof(title) - 1);
-	}
+	title = selhero_isMultiPlayer ? _("New Multi Player Hero") : _("New Single Player Hero");
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 	if (ShouldPrefillHeroName())
 		strncpy(selhero_heroInfo.name, SelheroGenerateName(selhero_heroInfo.heroclass), sizeof(selhero_heroInfo.name) - 1);
@@ -564,9 +558,9 @@ void selhero_List_Init()
 	UiInitList(selhero_SaveCount + 1, SelheroListFocus, SelheroListSelect, SelheroListEsc, vecSelDlgItems, false, SelheroListDeleteYesNo);
 	UiInitScrollBar(scrollBar, MaxViewportItems, &listOffset);
 	if (selhero_isMultiPlayer) {
-		strcpy(title, _("Multi Player Characters"));
+		title = _("Multi Player Characters");
 	} else {
-		strcpy(title, _("Single Player Characters"));
+		title = _("Single Player Characters");
 	}
 }
 
