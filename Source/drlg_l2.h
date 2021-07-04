@@ -22,7 +22,6 @@ struct ROOMNODE {
 	int nRoomy1;
 	int nRoomx2;
 	int nRoomy2;
-	int nRoomDest;
 };
 
 extern BYTE predungeon[DMAXX][DMAXY];

@@ -520,7 +520,6 @@ if(RUN_TESTS)
     test/codec_test.cpp
     test/dead_test.cpp
     test/diablo_test.cpp
-    test/doom_test.cpp
     test/drlg_l1_test.cpp
     test/drlg_l2_test.cpp
     test/drlg_l3_test.cpp

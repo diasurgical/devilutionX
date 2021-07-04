@@ -778,7 +778,7 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 
 	if (light_table_index < lightmax && bDead != 0) {
 		do {
-			DeadStruct *pDeadGuy = &dead[(bDead & 0x1F) - 1];
+			DeadStruct *pDeadGuy = &Dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = dx - CalculateWidth2(pDeadGuy->width);
 			const byte *pCelBuff = pDeadGuy->data[dd];
@@ -790,8 +790,8 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 				Log("Unclipped dead: frame {} of {}, deadnum=={}", nCel, frames, (bDead & 0x1F) - 1);
 				break;
 			}
-			if (pDeadGuy->_deadtrans != 0) {
-				Cl2DrawLightTbl(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel, pDeadGuy->_deadtrans);
+			if (pDeadGuy->translationPaletteIndex != 0) {
+				Cl2DrawLightTbl(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel, pDeadGuy->translationPaletteIndex);
 			} else {
 				Cl2DrawLight(out, px, dy, CelSprite(pCelBuff, pDeadGuy->width), nCel);
 			}

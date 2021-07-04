@@ -1736,8 +1736,6 @@ void control_drop_gold(char vkey)
 			input[strlen(input)] = vkey;
 			if (atoi(input) > initialDropGoldValue)
 				return;
-			if (strlen(input) > strlen(input))
-				return;
 		} else {
 			input[0] = vkey;
 		}
@@ -1787,12 +1785,12 @@ void DrawTalkPan(const Surface &out)
 	}
 	DrawPanelBox(out, { 170, sgbPlrTalkTbl + 80, 310, 55 }, { PANEL_X + 170, PANEL_Y + 64 });
 	char *msg = sgszTalkMsg;
-	int i = 0;
+
 	int x = PANEL_LEFT + 200;
 	int y = PANEL_Y + 22;
 
-	i = DrawString(out, msg, { { x, y + i }, { 250, 39 } }, UIS_SILVER, 1, 13, true);
-	msg[i] = '\0';
+	int idx = DrawString(out, msg, { { x, y }, { 250, 39 } }, UIS_SILVER, 1, 13, true);
+	msg[idx] = '\0';
 
 	x += 46;
 	int talkBtn = 0;

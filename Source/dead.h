@@ -19,10 +19,10 @@ struct DeadStruct {
 	std::array<const byte *, 8> data;
 	int frame;
 	int width;
-	uint8_t _deadtrans;
+	uint8_t translationPaletteIndex;
 };
 
-extern DeadStruct dead[MaxDead];
+extern DeadStruct Dead[MaxDead];
 extern int8_t stonendx;
 
 void InitDead();
