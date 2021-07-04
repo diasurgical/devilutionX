@@ -26,7 +26,7 @@ struct TMsg {
 };
 #pragma pack(pop)
 
-int tmsg_get(byte *pbMsg);
+size_t tmsg_get(byte *pbMsg);
 void tmsg_add(byte *pbMsg, uint8_t bLen);
 void tmsg_start();
 void tmsg_cleanup();

@@ -19,7 +19,7 @@ event_emul *sghWorkToDoEvent;
 /* rdata */
 static SDL_Thread *sghThread = nullptr;
 
-static unsigned int DthreadHandler(void * /*data*/)
+static void DthreadHandler()
 {
 	const char *errorBuf;
 	TMegaPkt *pkt;
@@ -53,8 +53,6 @@ static unsigned int DthreadHandler(void * /*data*/)
 				SDL_Delay(dwMilliseconds);
 		}
 	}
-
-	return 0;
 }
 
 void dthread_remove_player(uint8_t pnum)

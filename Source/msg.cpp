@@ -130,7 +130,6 @@ void SendPacket(int pnum, const void *packet, DWORD dwSize)
 
 int WaitForTurns()
 {
-	bool received;
 	DWORD turns;
 
 	if (sgbDeltaChunks == 0) {
@@ -143,8 +142,9 @@ int WaitForTurns()
 	}
 	multi_process_network_packets();
 	nthread_send_and_recv_turn(0, 0);
-	if (nthread_has_500ms_passed())
-		nthread_recv_turns(&received);
+	if (nthread_has_500ms_passed()) {
+		nthread_recv_turns();
+	}
 
 	if (gbGameDestroyed)
 		return 100;
@@ -326,10 +326,7 @@ DWORD OnLevelData(int pnum, TCmd *pCmd)
 	auto *p = (TCmdPlrInfoHdr *)pCmd;
 
 	if (gbDeltaSender != pnum) {
-		if (p->bCmd == CMD_DLEVEL_END) {
-			gbDeltaSender = pnum;
-			sgbRecvCmd = CMD_DLEVEL_END;
-		} else if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
+		if (p->bCmd == CMD_DLEVEL_END || (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0)) {
 			gbDeltaSender = pnum;
 			sgbRecvCmd = CMD_DLEVEL_END;
 		} else {

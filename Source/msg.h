@@ -308,8 +308,6 @@ struct TSyncHeader {
 	_cmd_id bCmd;
 	uint8_t bLevel;
 	uint16_t wLen;
-	uint8_t bObjId;
-	uint8_t bObjCmd;
 	uint8_t bItemI;
 	uint8_t bItemX;
 	uint8_t bItemY;
@@ -328,12 +326,6 @@ struct TSyncHeader {
 	uint16_t wPInvCI;
 	uint32_t dwPInvSeed;
 	uint8_t bPInvId;
-	uint16_t wToHit;
-	uint16_t wMaxDam;
-	uint8_t bMinStr;
-	uint8_t bMinMag;
-	uint8_t bMinDex;
-	uint8_t bAC;
 };
 
 struct TSyncMonster {

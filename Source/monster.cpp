@@ -240,7 +240,7 @@ int AddMonsterType(_monster_id type, placeflag placeflag)
 		i = nummtypes;
 		nummtypes++;
 		Monsters[i].mtype = type;
-		monstimgtot += monsterdata[type].mImage;
+		monstimgtot += MonsterData[type].mImage;
 		InitMonsterGFX(i);
 		InitMonsterSND(i);
 	}
@@ -311,8 +311,8 @@ void GetLevelMTypes()
 			nt = 0;
 			for (i = MT_WSKELAX; i <= MT_WSKELAX + numskeltypes; i++) {
 				if (IsSkel(i)) {
-					minl = 15 * monsterdata[i].mMinDLvl / 30 + 1;
-					maxl = 15 * monsterdata[i].mMaxDLvl / 30 + 1;
+					minl = 15 * MonsterData[i].mMinDLvl / 30 + 1;
+					maxl = 15 * MonsterData[i].mMaxDLvl / 30 + 1;
 
 					if (currlevel >= minl && currlevel <= maxl) {
 						if ((MonstAvailTbl[i] & mamask) != 0) {
@@ -326,8 +326,8 @@ void GetLevelMTypes()
 
 		nt = 0;
 		for (i = MT_NZOMBIE; i < NUM_MTYPES; i++) {
-			minl = 15 * monsterdata[i].mMinDLvl / 30 + 1;
-			maxl = 15 * monsterdata[i].mMaxDLvl / 30 + 1;
+			minl = 15 * MonsterData[i].mMinDLvl / 30 + 1;
+			maxl = 15 * MonsterData[i].mMaxDLvl / 30 + 1;
 
 			if (currlevel >= minl && currlevel <= maxl) {
 				if ((MonstAvailTbl[i] & mamask) != 0) {
@@ -346,7 +346,7 @@ void GetLevelMTypes()
 
 			while (nt > 0 && nummtypes < MAX_LVLMTYPES && monstimgtot < 4000) {
 				for (i = 0; i < nt;) {
-					if (monsterdata[typelist[i]].mImage > 4000 - monstimgtot) {
+					if (MonsterData[typelist[i]].mImage > 4000 - monstimgtot) {
 						typelist[i] = typelist[--nt];
 						continue;
 					}
@@ -372,16 +372,16 @@ void GetLevelMTypes()
 void InitMonsterGFX(int monst)
 {
 	int mtype = Monsters[monst].mtype;
-	int width = monsterdata[mtype].width;
+	int width = MonsterData[mtype].width;
 
 	for (int anim = 0; anim < 6; anim++) {
-		int frames = monsterdata[mtype].Frames[anim];
+		int frames = MonsterData[mtype].Frames[anim];
 		if (gbIsHellfire && mtype == MT_DIABLO && anim == 3)
 			frames = 2;
 
-		if ((animletter[anim] != 's' || monsterdata[mtype].has_special) && frames > 0) {
+		if ((animletter[anim] != 's' || MonsterData[mtype].has_special) && frames > 0) {
 			char strBuff[256];
-			sprintf(strBuff, monsterdata[mtype].GraphicType, animletter[anim]);
+			sprintf(strBuff, MonsterData[mtype].GraphicType, animletter[anim]);
 
 			byte *celBuf;
 			{
@@ -403,20 +403,19 @@ void InitMonsterGFX(int monst)
 		}
 
 		Monsters[monst].Anims[anim].Frames = frames;
-		Monsters[monst].Anims[anim].Rate = monsterdata[mtype].Rate[anim];
+		Monsters[monst].Anims[anim].Rate = MonsterData[mtype].Rate[anim];
 	}
 
-	Monsters[monst].mMinHP = monsterdata[mtype].mMinHP;
-	Monsters[monst].mMaxHP = monsterdata[mtype].mMaxHP;
+	Monsters[monst].mMinHP = MonsterData[mtype].mMinHP;
+	Monsters[monst].mMaxHP = MonsterData[mtype].mMaxHP;
 	if (!gbIsHellfire && mtype == MT_DIABLO) {
 		Monsters[monst].mMinHP -= 2000;
 		Monsters[monst].mMaxHP -= 2000;
 	}
-	Monsters[monst].has_special = monsterdata[mtype].has_special;
-	Monsters[monst].mAFNum = monsterdata[mtype].mAFNum;
-	Monsters[monst].MData = &monsterdata[mtype];
+	Monsters[monst].mAFNum = MonsterData[mtype].mAFNum;
+	Monsters[monst].MData = &MonsterData[mtype];
 
-	if (monsterdata[mtype].has_trans) {
+	if (MonsterData[mtype].has_trans) {
 		InitMonsterTRN(Monsters[monst]);
 	}
 
@@ -1332,7 +1331,7 @@ void M_Enemy(int i)
 		int mi = monstactive[j];
 		if (mi == i)
 			continue;
-		if (!((monster[mi]._mhitpoints >> 6) > 0))
+		if ((monster[mi]._mhitpoints >> 6) <= 0)
 			continue;
 		if (monster[mi].position.tile.x == 1 && monster[mi].position.tile.y == 0)
 			continue;
@@ -2374,7 +2373,7 @@ bool M_DoTalk(int i)
 	if (monster[i]._uniqtype - 1 == UMT_SNOTSPIL) {
 		if (monster[i].mtalkmsg == TEXT_BANNER10 && (monster[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 			ObjChangeMap(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
-			int tren = TransVal;
+			int8_t tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
@@ -2491,14 +2490,18 @@ void DoEnding()
 	if (gbIsSpawn)
 		return;
 
-	if (plr[myplr]._pClass == HeroClass::Warrior || plr[myplr]._pClass == HeroClass::Barbarian) {
+	switch (plr[myplr]._pClass) {
+	case HeroClass::Sorcerer:
+	case HeroClass::Monk:
+		play_movie("gendata\\DiabVic1.smk", false);
+		break;
+	case HeroClass::Warrior:
+	case HeroClass::Barbarian:
 		play_movie("gendata\\DiabVic2.smk", false);
-	} else if (plr[myplr]._pClass == HeroClass::Sorcerer) {
-		play_movie("gendata\\DiabVic1.smk", false);
-	} else if (plr[myplr]._pClass == HeroClass::Monk) {
-		play_movie("gendata\\DiabVic1.smk", false);
-	} else {
+		break;
+	default:
 		play_movie("gendata\\DiabVic3.smk", false);
+		break;
 	}
 	play_movie("gendata\\Diabend.smk", false);
 
@@ -4409,9 +4412,7 @@ void ProcessMonsters()
 			}
 		}
 		do {
-			if ((monst->_mFlags & MFLAG_SEARCH) == 0) {
-				AiProc[monst->_mAi](mi);
-			} else if (!MAI_Path(mi)) {
+			if ((monst->_mFlags & MFLAG_SEARCH) == 0 || !MAI_Path(mi)) {
 				AiProc[monst->_mAi](mi);
 			}
 			switch (monst->_mmode) {
@@ -4483,7 +4484,7 @@ void FreeMonsters()
 	for (int i = 0; i < nummtypes; i++) {
 		int mtype = Monsters[i].mtype;
 		for (int j = 0; j < 6; j++) {
-			if (animletter[j] != 's' || monsterdata[mtype].has_special) {
+			if (animletter[j] != 's' || MonsterData[mtype].has_special) {
 				Monsters[i].Anims[j].CMem = nullptr;
 			}
 		}
@@ -4725,7 +4726,7 @@ void M_FallenFear(Point position)
 	}
 }
 
-const char *GetMonsterTypeText(const MonsterData &monsterData)
+const char *GetMonsterTypeText(const MonsterDataStruct &monsterData)
 {
 	switch (monsterData.mMonstClass) {
 	case MC_ANIMAL:
@@ -4742,15 +4743,15 @@ const char *GetMonsterTypeText(const MonsterData &monsterData)
 void PrintMonstHistory(int mt)
 {
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		strcpy(tempstr, fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(monsterdata[mt]), monstkills[mt]).c_str());
+		strcpy(tempstr, fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(MonsterData[mt]), monstkills[mt]).c_str());
 	} else {
 		strcpy(tempstr, fmt::format(_("Total kills: {:d}"), monstkills[mt]).c_str());
 	}
 
 	AddPanelString(tempstr);
 	if (monstkills[mt] >= 30) {
-		int minHP = monsterdata[mt].mMinHP;
-		int maxHP = monsterdata[mt].mMaxHP;
+		int minHP = MonsterData[mt].mMinHP;
+		int maxHP = MonsterData[mt].mMaxHP;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
 			minHP -= 2000;
 			maxHP -= 2000;
@@ -4781,7 +4782,7 @@ void PrintMonstHistory(int mt)
 		AddPanelString(tempstr);
 	}
 	if (monstkills[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? monsterdata[mt].mMagicRes : monsterdata[mt].mMagicRes2;
+		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonsterData[mt].mMagicRes : MonsterData[mt].mMagicRes2;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
 			strcpy(tempstr, _("No magic resistance"));
 			AddPanelString(tempstr);
@@ -4915,7 +4916,7 @@ bool PosOkMonst(int i, Point position)
 
 bool monster_posok(int i, Point position)
 {
-	int mi = dMissile[position.x][position.y];
+	int8_t mi = dMissile[position.x][position.y];
 	if (mi == 0 || i < 0) {
 		return true;
 	}

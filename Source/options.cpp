@@ -61,20 +61,17 @@ CSimpleIni &GetIni()
 
 int GetIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
-	long value = GetIni().GetLongValue(keyname, valuename, defaultValue);
-	return value;
+	return GetIni().GetLongValue(keyname, valuename, defaultValue);
 }
 
 bool GetIniBool(const char *sectionName, const char *keyName, bool defaultValue)
 {
-	bool value = GetIni().GetBoolValue(sectionName, keyName, defaultValue);
-	return value;
+	return GetIni().GetBoolValue(sectionName, keyName, defaultValue);
 }
 
 float GetIniFloat(const char *sectionName, const char *keyName, float defaultValue)
 {
-	const double value = GetIni().GetDoubleValue(sectionName, keyName, defaultValue);
-	return (float)value;
+	return (float)GetIni().GetDoubleValue(sectionName, keyName, defaultValue);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, int value)

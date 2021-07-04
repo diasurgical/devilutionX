@@ -15,9 +15,8 @@ TMsg *sgpTimedMsgHead;
 
 } // namespace
 
-int tmsg_get(byte *pbMsg)
+size_t tmsg_get(byte *pbMsg)
 {
-	int len;
 	TMsg *head;
 
 	if (sgpTimedMsgHead == nullptr)
@@ -27,7 +26,7 @@ int tmsg_get(byte *pbMsg)
 		return 0;
 	head = sgpTimedMsgHead;
 	sgpTimedMsgHead = head->hdr.pNext;
-	len = head->hdr.bLen;
+	size_t len = head->hdr.bLen;
 	// BUGFIX: ignores dwMaxLen
 	memcpy(pbMsg, head->body, len);
 	std::free(head);
