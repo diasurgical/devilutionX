@@ -3600,7 +3600,7 @@ static void MissileRing(int i, int type)
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
 	int k = CrawlNum[3];
-	int ck = k + 1;
+	int ck = k + 2;
 	for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
 		int tx = missile[i]._miVar1 + CrawlTable[ck - 1];
 		int ty = missile[i]._miVar2 + CrawlTable[ck];
