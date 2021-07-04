@@ -14,8 +14,6 @@ namespace devilution {
 extern int UberRow;
 extern int UberCol;
 extern bool IsUberRoomOpened;
-extern int UberLeverRow;
-extern int UberLeverCol;
 extern bool IsUberLeverActivated;
 extern int UberDiabloMonsterIndex;
 

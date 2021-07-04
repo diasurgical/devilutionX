@@ -5458,8 +5458,6 @@ void AddNakrulLeaver()
 			break;
 		}
 	}
-	UberLeverRow = UberRow + 3;
-	UberLeverCol = UberCol - 1;
 	AddObject(OBJ_LEVER, UberRow + 3, UberCol - 1);
 }
 

@@ -773,7 +773,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	ReturnLvlY = file->NextBE<int32_t>();
 	ReturnLvl = file->NextBE<int32_t>();
 	ReturnLvlT = static_cast<dungeon_type>(file->NextBE<int32_t>());
-	DoomQuestState = file->NextBE<int32_t>();
+	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
 static void LoadLighting(LoadHelper *file, LightListStruct *pLight)
@@ -1813,7 +1813,7 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->WriteBE<int32_t>(ReturnLvlY);
 	file->WriteBE<int32_t>(ReturnLvl);
 	file->WriteBE<int32_t>(ReturnLvlT);
-	file->WriteBE<int32_t>(DoomQuestState);
+	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
 static void SaveLighting(SaveHelper *file, LightListStruct *pLight)

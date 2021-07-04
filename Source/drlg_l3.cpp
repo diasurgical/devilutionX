@@ -2565,9 +2565,7 @@ void LoadL3Dungeon(const char *path, int vx, int vy)
 				DoLighting({ i, j }, 7, -1);
 			} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
 				DoLighting({ i, j }, 7, -1);
-			} else if (dPiece[i][j] == 150) {
-				DoLighting({ i, j }, 7, -1);
-			} else if (dPiece[i][j] == 152) {
+			} else if (IsAnyOf(dPiece[i][j], 150, 152)) {
 				DoLighting({ i, j }, 7, -1);
 			}
 		}

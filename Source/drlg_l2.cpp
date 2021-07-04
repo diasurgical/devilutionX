@@ -2026,7 +2026,6 @@ static void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir
 	}
 
 	int nRid = nRoomCnt;
-	RoomList[nRid].nRoomDest = nRDest;
 
 	if (nRDest != 0) {
 		int nHx1 = 0;
@@ -3131,19 +3130,13 @@ static void DrlgL2(lvl_entry entry)
 
 static void DrlgInitL2Vals()
 {
-	int pc;
+	int8_t pc;
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 541) {
+			if (IsAnyOf(dPiece[i][j], 541, 178, 551)) {
 				pc = 5;
-			} else if (dPiece[i][j] == 178) {
-				pc = 5;
-			} else if (dPiece[i][j] == 551) {
-				pc = 5;
-			} else if (dPiece[i][j] == 542) {
-				pc = 6;
-			} else if (dPiece[i][j] == 553) {
+			} else if (IsAnyOf(dPiece[i][j], 542, 553)) {
 				pc = 6;
 			} else {
 				continue;
@@ -3214,20 +3207,10 @@ void LoadL2Dungeon(const char *path, int vx, int vy)
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			int pc = 0;
-			if (dPiece[i][j] == 541) {
+			int8_t pc = 0;
+			if (IsAnyOf(dPiece[i][j], 541, 178, 551)) {
 				pc = 5;
-			}
-			if (dPiece[i][j] == 178) {
-				pc = 5;
-			}
-			if (dPiece[i][j] == 551) {
-				pc = 5;
-			}
-			if (dPiece[i][j] == 542) {
-				pc = 6;
-			}
-			if (dPiece[i][j] == 553) {
+			} else if (IsAnyOf(dPiece[i][j], 542, 553)) {
 				pc = 6;
 			}
 			dSpecial[i][j] = pc;

@@ -17,33 +17,12 @@ namespace {
 std::optional<CelSprite> DoomCel;
 } // namespace
 
-int DoomQuestTime;
 bool DoomFlag;
-int DoomQuestState;
-
-int doom_get_frame_from_time()
-{
-	if (DoomQuestState == 36001) {
-		return 31;
-	}
-
-	return DoomQuestState / 1200;
-}
-
-static bool DoomLoadGraphics()
-{
-	DoomCel = LoadCel("Items\\Map\\MapZtown.CEL", 640);
-	return true;
-}
 
 void doom_init()
 {
-	DoomQuestTime = doom_get_frame_from_time() == 31 ? 31 : 0;
-	if (DoomLoadGraphics()) {
-		DoomFlag = true;
-	} else {
-		doom_close();
-	}
+	DoomCel = LoadCel("Items\\Map\\MapZtown.CEL", 640);
+	DoomFlag = true;
 }
 
 void doom_close()

@@ -12,7 +12,7 @@
 
 namespace devilution {
 
-DeadStruct dead[MaxDead];
+DeadStruct Dead[MaxDead];
 int8_t stonendx;
 
 namespace {
@@ -36,27 +36,27 @@ void InitDead()
 		if (mtypes[Monsters[i].mtype] != 0)
 			continue;
 
-		InitDeadAnimationFromMonster(dead[nd], Monsters[i]);
-		dead[nd]._deadtrans = 0;
+		InitDeadAnimationFromMonster(Dead[nd], Monsters[i]);
+		Dead[nd].translationPaletteIndex = 0;
 		nd++;
 
 		Monsters[i].mdeadval = nd;
 		mtypes[Monsters[i].mtype] = nd;
 	}
 
-	for (auto &dead : dead[nd].data)
+	for (auto &dead : Dead[nd].data)
 		dead = misfiledata[MFILE_BLODBUR].mAnimData[0];
-	dead[nd].frame = 8;
-	dead[nd].width = 128;
-	dead[nd]._deadtrans = 0;
+	Dead[nd].frame = 8;
+	Dead[nd].width = 128;
+	Dead[nd].translationPaletteIndex = 0;
 	nd++;
 
-	for (auto &dead : dead[nd].data)
+	for (auto &dead : Dead[nd].data)
 		dead = misfiledata[MFILE_SHATTER1].mAnimData[0];
 
-	dead[nd].frame = 12;
-	dead[nd].width = 128;
-	dead[nd]._deadtrans = 0;
+	Dead[nd].frame = 12;
+	Dead[nd].width = 128;
+	Dead[nd].translationPaletteIndex = 0;
 	nd++;
 
 	stonendx = nd;
@@ -64,8 +64,8 @@ void InitDead()
 	for (int i = 0; i < nummonsters; i++) {
 		int mi = monstactive[i];
 		if (monster[mi]._uniqtype != 0) {
-			InitDeadAnimationFromMonster(dead[nd], *monster[mi].MType);
-			dead[nd]._deadtrans = monster[mi]._uniqtrans + 4;
+			InitDeadAnimationFromMonster(Dead[nd], *monster[mi].MType);
+			Dead[nd].translationPaletteIndex = monster[mi]._uniqtrans + 4;
 			nd++;
 
 			monster[mi]._udeadval = nd;
