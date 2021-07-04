@@ -126,7 +126,7 @@ void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashie
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 {
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(is->idx));
-	if (idx == 0xFFFF) {
+	if (idx == IDI_NONE) {
 		id->_itype = ITYPE_NONE;
 		return;
 	}
