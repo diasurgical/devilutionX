@@ -855,11 +855,6 @@ static int DrlgPlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int
 		ViewY = 2 * sy + 20;
 	}
 
-	if (ldir == 0) {
-		LvlViewX = 2 * sx + 19;
-		LvlViewY = 2 * sy + 20;
-	}
-
 	if (sx < cx && sy < cy)
 		return 0;
 	if (sx > cx && sy < cy)

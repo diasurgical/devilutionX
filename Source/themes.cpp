@@ -28,7 +28,6 @@ int themeVar1;
 ThemeStruct themes[MAXTHEMES];
 bool pFountainFlag;
 bool bFountainFlag;
-bool bCrossFlag;
 
 /** Specifies the set of special theme IDs from which one will be selected at random. */
 theme_id ThemeGood[4] = { THEME_GOATSHRINE, THEME_SHRINE, THEME_SKELROOM, THEME_LIBRARY };
@@ -406,7 +405,6 @@ void InitThemes()
 	pFountainFlag = true;
 	tFountainFlag = true;
 	treasureFlag = true;
-	bCrossFlag = false;
 	weaponFlag = true;
 
 	if (currlevel == 16)
@@ -466,7 +464,7 @@ void HoldThemeRooms()
 	}
 
 	for (int i = 0; i < numthemes; i++) {
-		uint8_t v = themes[i].ttval;
+		int8_t v = themes[i].ttval;
 		for (int y = 0; y < MAXDUNY; y++) {
 			for (int x = 0; x < MAXDUNX; x++) {
 				if (dTransVal[x][y] == v) {
@@ -926,7 +924,6 @@ void Theme_BrnCross(int t)
 		}
 	}
 	PlaceThemeMonsts(t, monstrnd[leveltype - 1]);
-	bCrossFlag = true;
 }
 
 /**

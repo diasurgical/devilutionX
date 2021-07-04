@@ -57,15 +57,6 @@ void InitTownerInfo(int i, const TownerInit &initData)
 	initData.init(towner, initData);
 }
 
-void InitQstSnds(TownerStruct &towner, _talker_id type)
-{
-	for (int i = 0; i < MAXQUESTS; i++) {
-		towner.qsts[i]._qsttype = quests[i]._qtype;
-		towner.qsts[i]._qstmsg = Qtalklist[type][i];
-		towner.qsts[i]._qstmsgact = Qtalklist[type][i] != TEXT_NONE;
-	}
-}
-
 void LoadTownerAnimations(TownerStruct &towner, const char *path, int frames, Direction dir, int delay)
 {
 	towner._tNData = LoadFileInMem(path);
@@ -80,7 +71,6 @@ void LoadTownerAnimations(TownerStruct &towner, const char *path, int frames, Di
  */
 void InitSmith(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
@@ -101,7 +91,6 @@ void InitSmith(TownerStruct &towner, const TownerInit &initData)
 
 void InitBarOwner(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
@@ -124,7 +113,6 @@ void InitBarOwner(TownerStruct &towner, const TownerInit &initData)
 
 void InitTownDead(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
@@ -134,7 +122,6 @@ void InitTownDead(TownerStruct &towner, const TownerInit &initData)
 
 void InitWitch(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
@@ -157,7 +144,6 @@ void InitWitch(TownerStruct &towner, const TownerInit &initData)
 
 void InitBarmaid(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
@@ -167,7 +153,6 @@ void InitBarmaid(TownerStruct &towner, const TownerInit &initData)
 
 void InitBoy(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
@@ -177,7 +162,6 @@ void InitBoy(TownerStruct &towner, const TownerInit &initData)
 
 void InitHealer(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
@@ -200,7 +184,6 @@ void InitHealer(TownerStruct &towner, const TownerInit &initData)
 
 void InitTeller(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
@@ -218,7 +201,6 @@ void InitTeller(TownerStruct &towner, const TownerInit &initData)
 
 void InitDrunk(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
 		// clang-format off
@@ -258,7 +240,6 @@ void InitCows(TownerStruct &towner, const TownerInit &initData)
 
 void InitFarmer(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
@@ -268,7 +249,6 @@ void InitFarmer(TownerStruct &towner, const TownerInit &initData)
 
 void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	const char *celPath = "Towners\\Farmer\\cfrmrn2.CEL";
 	if (quests[Q_JERSEY]._qactive == QUEST_DONE) {
 		celPath = "Towners\\Farmer\\mfrmrn2.CEL";
@@ -282,7 +262,6 @@ void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 
 void InitGirl(TownerStruct &towner, const TownerInit &initData)
 {
-	InitQstSnds(towner, initData.type);
 	const char *celPath = "Towners\\Girl\\Girlw1.CEL";
 	if (quests[Q_GIRL]._qactive == QUEST_DONE) {
 		celPath = "Towners\\Girl\\Girls1.CEL";
@@ -764,7 +743,7 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 		InitQTextMsg(TEXT_GIRL3);
 		return;
 	default:
-		PlaySFX(alltext[TEXT_GIRL1].sfxnr);
+		PlaySFX(Texts[TEXT_GIRL1].sfxnr);
 		return;
 	}
 }

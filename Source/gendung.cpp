@@ -62,10 +62,6 @@ int ViewX;
 /** Specifies the player viewpoint Y-coordinate of the map. */
 int ViewY;
 ScrollStruct ScrollInfo;
-/** Specifies the level viewpoint X-coordinate of the map. */
-int LvlViewX;
-/** Specifies the level viewpoint Y-coordinate of the map. */
-int LvlViewY;
 int MicroTileLen;
 char TransVal;
 /** Specifies the active transparency indices. */
@@ -99,7 +95,7 @@ char dObject[MAXDUNX][MAXDUNY];
 /** Contains the item numbers (items array indices) of the map. */
 int8_t dItem[MAXDUNX][MAXDUNY];
 /** Contains the missile numbers (missiles array indices) of the map. */
-char dMissile[MAXDUNX][MAXDUNY];
+int8_t dMissile[MAXDUNX][MAXDUNY];
 /**
  * Contains the arch frame numbers of the map from the special tileset
  * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.

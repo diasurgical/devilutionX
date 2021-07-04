@@ -1329,7 +1329,7 @@ static void PrivSoundInit(BYTE bLoadMask)
 
 void sound_init()
 {
-	BYTE mask = sfx_MISC;
+	uint8_t mask = sfx_MISC;
 	if (gbIsMultiplayer) {
 		mask |= sfx_WARRIOR;
 		if (!gbIsSpawn)
@@ -1337,20 +1337,22 @@ void sound_init()
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
 	} else {
-		auto &myPlayer = plr[myplr];
-		if (myPlayer._pClass == HeroClass::Warrior) {
+		switch (plr[myplr]._pClass) {
+		case HeroClass::Warrior:
+		case HeroClass::Barbarian:
 			mask |= sfx_WARRIOR;
-		} else if (myPlayer._pClass == HeroClass::Rogue) {
+			break;
+		case HeroClass::Rogue:
+		case HeroClass::Bard:
 			mask |= sfx_ROGUE;
-		} else if (myPlayer._pClass == HeroClass::Sorcerer) {
+			break;
+		case HeroClass::Sorcerer:
 			mask |= sfx_SORCERER;
-		} else if (myPlayer._pClass == HeroClass::Monk) {
+			break;
+		case HeroClass::Monk:
 			mask |= sfx_MONK;
-		} else if (myPlayer._pClass == HeroClass::Bard) {
-			mask |= sfx_ROGUE;
-		} else if (myPlayer._pClass == HeroClass::Barbarian) {
-			mask |= sfx_WARRIOR;
-		} else {
+			break;
+		default:
 			app_fatal("effects:1");
 		}
 	}

@@ -50,8 +50,6 @@ extern bool lightflag;
 void DoLighting(Point position, int nRadius, int Lnum);
 void DoUnVision(Point position, int nRadius);
 void DoVision(Point position, int nRadius, bool doautomap, bool visible);
-void FreeLightTable();
-void InitLightTable();
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();

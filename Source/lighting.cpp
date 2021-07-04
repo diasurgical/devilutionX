@@ -548,7 +548,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				int tempX = position.x + x;
 				int tempY = position.y + y;
-				int v = lightradius[nRadius][radiusBlock];
+				int8_t v = lightradius[nRadius][radiusBlock];
 				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
 					if (v < GetLight(tempX, tempY))
 						SetLight(tempX, tempY, v);
@@ -563,7 +563,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				int tempX = position.x + y;
 				int tempY = position.y - x;
-				int v = lightradius[nRadius][radiusBlock];
+				int8_t v = lightradius[nRadius][radiusBlock];
 				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
 					if (v < GetLight(tempX, tempY))
 						SetLight(tempX, tempY, v);
@@ -578,7 +578,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				int tempX = position.x - x;
 				int tempY = position.y - y;
-				int v = lightradius[nRadius][radiusBlock];
+				int8_t v = lightradius[nRadius][radiusBlock];
 				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
 					if (v < GetLight(tempX, tempY))
 						SetLight(tempX, tempY, v);
@@ -593,7 +593,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				int tempX = position.x - y;
 				int tempY = position.y + x;
-				int v = lightradius[nRadius][radiusBlock];
+				int8_t v = lightradius[nRadius][radiusBlock];
 				if (tempX >= 0 && tempX < MAXDUNX && tempY >= 0 && tempY < MAXDUNY)
 					if (v < GetLight(tempX, tempY))
 						SetLight(tempX, tempY, v);
@@ -731,7 +731,7 @@ void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 						}
 						dFlags[nCrawlX][nCrawlY] |= BFLAG_VISIBLE;
 						if (!nBlockerFlag) {
-							int nTrans = dTransVal[nCrawlX][nCrawlY];
+							int8_t nTrans = dTransVal[nCrawlX][nCrawlY];
 							if (nTrans != 0) {
 								TransList[nTrans] = true;
 							}

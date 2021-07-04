@@ -1055,7 +1055,7 @@ void RemoveEmptyInventory(PlayerStruct &player)
 		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
 			player.RemoveInvItem(idx - 1);
 		}
-	};
+	}
 }
 
 void RemoveEmptyLevelItems()
@@ -1850,8 +1850,8 @@ const int HellfireItemSaveSize = 372;
 
 void SaveHeroItems(PlayerStruct &player)
 {
-	size_t items = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
-	SaveHelper file("heroitems", items * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
+	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
+	SaveHelper file("heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
 
 	file.WriteLE<uint8_t>(gbIsHellfire ? 1 : 0);
 

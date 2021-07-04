@@ -62,20 +62,21 @@ void LoadText(const char *text)
  * @param nSFX The index of the sound in the sgSFX table
  * @return ms/px
  */
-int CalculateTextSpeed(int nSFX)
+uint32_t CalculateTextSpeed(int nSFX)
 {
 	const int numLines = TextLines.size();
 
 #ifndef NOSOUND
 	Uint32 sfxFrames = GetSFXLength(nSFX);
-	assert(sfxFrames != 0);
 #else
 	// Sound is disabled -- estimate length from the number of lines.
 	Uint32 sfxFrames = numLines * 3000;
 #endif
+	assert(sfxFrames != 0);
 
-	int textHeight = LineHeight * numLines;
+	uint32_t textHeight = LineHeight * numLines;
 	textHeight += LineHeight * 5; // adjust so when speaker is done two line are left
+	assert(textHeight != 0);
 
 	return sfxFrames / textHeight;
 }
@@ -106,8 +107,8 @@ void DrawQTextContent(const Surface &out)
 	const unsigned int skipLines = y / LineHeight;
 
 	for (int i = 0; i < 8; i++) {
-		const int lineNumber = skipLines + i;
-		if (lineNumber < 0 || lineNumber >= (int)TextLines.size()) {
+		const unsigned int lineNumber = skipLines + i;
+		if (lineNumber >= TextLines.size()) {
 			continue;
 		}
 
@@ -141,18 +142,18 @@ void InitQuestText()
 
 /**
  * @brief Start the given naration
- * @param m Index of narration from the alltext table
+ * @param m Index of narration from the Texts table
  */
 void InitQTextMsg(_speech_id m)
 {
-	if (alltext[m].scrlltxt) {
+	if (Texts[m].scrlltxt) {
 		questlog = false;
-		LoadText(_(alltext[m].txtstr));
+		LoadText(_(Texts[m].txtstr));
 		qtextflag = true;
-		qtextSpd = CalculateTextSpeed(alltext[m].sfxnr);
+		qtextSpd = CalculateTextSpeed(Texts[m].sfxnr);
 		ScrollStart = SDL_GetTicks();
 	}
-	PlaySFX(alltext[m].sfxnr);
+	PlaySFX(Texts[m].sfxnr);
 }
 
 void DrawQTextBack(const Surface &out)

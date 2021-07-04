@@ -1685,14 +1685,6 @@ static bool DrlgL2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, 
 		ViewX = 2 * sx + 21;
 		ViewY = 2 * sy + 22;
 	}
-	if (ldir == 0) {
-		LvlViewX = 2 * sx + 21;
-		LvlViewY = 2 * sy + 22;
-	}
-	if (ldir == 6) {
-		LvlViewX = 2 * sx + 21;
-		LvlViewY = 2 * sy + 22;
-	}
 
 	return true;
 }

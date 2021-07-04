@@ -1670,10 +1670,6 @@ static bool DrlgL3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, 
 		ViewX = 2 * sx + 17;
 		ViewY = 2 * sy + 19;
 	}
-	if (ldir == 0) {
-		LvlViewX = 2 * sx + 17;
-		LvlViewY = 2 * sy + 19;
-	}
 
 	return false;
 }

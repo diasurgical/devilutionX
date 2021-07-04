@@ -2350,7 +2350,7 @@ bool M_DoTalk(int i)
 	MonsterStruct *monst = &monster[i];
 	M_StartStand(i, monster[i]._mdir);
 	monst->_mgoal = MGOAL_TALKING; // CODEFIX: apply Monst instead of monster[i] in the rest of the function
-	if (effect_is_playing(alltext[monster[i].mtalkmsg].sfxnr))
+	if (effect_is_playing(Texts[monster[i].mtalkmsg].sfxnr))
 		return false;
 	InitQTextMsg(monster[i].mtalkmsg);
 	if (monster[i]._uniqtype - 1 == UMT_GARBUD) {

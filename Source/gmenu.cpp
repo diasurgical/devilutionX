@@ -30,7 +30,6 @@ bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
-int PentSpin_tick;
 void (*gmenu_current_option)();
 TMenuItem *sgpCurrentMenu;
 int sgCurrentMenuIdx;
@@ -130,9 +129,8 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	mouseNavigation = false;
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
-	if (gmFunc != nullptr) {
+	if (gmenu_current_option != nullptr) {
 		gmenu_current_option();
-		pItem = sgpCurrentMenu;
 	}
 	sgCurrentMenuIdx = 0;
 	if (sgpCurrentMenu != nullptr) {

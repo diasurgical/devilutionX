@@ -999,14 +999,14 @@ void CalcPlrBookVals(PlayerStruct &player)
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (player.InvList[i]._itype == ITYPE_MISC && player.InvList[i]._iMiscId == IMISC_BOOK) {
 			player.InvList[i]._iMinMag = spelldata[player.InvList[i]._iSpell].sMinInt;
-			int slvl = player._pSplLvl[player.InvList[i]._iSpell];
+			int8_t spellLevel = player._pSplLvl[player.InvList[i]._iSpell];
 
-			while (slvl != 0) {
+			while (spellLevel != 0) {
 				player.InvList[i]._iMinMag += 20 * player.InvList[i]._iMinMag / 100;
-				slvl--;
+				spellLevel--;
 				if (player.InvList[i]._iMinMag + 20 * player.InvList[i]._iMinMag / 100 > 255) {
 					player.InvList[i]._iMinMag = 255;
-					slvl = 0;
+					spellLevel = 0;
 				}
 			}
 			player.InvList[i]._iStatFlag = ItemMinStats(player, &player.InvList[i]);
@@ -1569,7 +1569,7 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 void GetOilType(int i, int maxLvl)
 {
 	int cnt = 2;
-	char rnd[32] = { 5, 6 };
+	int8_t rnd[32] = { 5, 6 };
 
 	if (!gbIsMultiplayer) {
 		if (maxLvl == 0)
@@ -1584,7 +1584,7 @@ void GetOilType(int i, int maxLvl)
 		}
 	}
 
-	int t = rnd[GenerateRnd(cnt)];
+	int8_t t = rnd[GenerateRnd(cnt)];
 
 	strcpy(items[i]._iName, _(OilNames[t]));
 	strcpy(items[i]._iIName, _(OilNames[t]));
@@ -2524,7 +2524,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster[m]._uniqtype != 0 ? 15 : 1;
 
-	int mLevel = monster[m].MData->mLevel;
+	int8_t mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
@@ -3161,7 +3161,7 @@ static bool OilItem(ItemStruct *x, PlayerStruct &player)
 		}
 		break;
 	case IMISC_OILFORT:
-		if (x->_iMaxDur != 255 && x->_iMaxDur < 200) {
+		if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur < 200) {
 			r = GenerateRnd(41) + 10;
 			x->_iMaxDur += r;
 			x->_iDurability += r;
@@ -3266,9 +3266,6 @@ void PrintItemOil(char iDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_RUNEL:
-		strcpy(tempstr, _("sets lightning trap"));
-		AddPanelString(tempstr);
-		break;
 	case IMISC_GR_RUNEL:
 		strcpy(tempstr, _("sets lightning trap"));
 		AddPanelString(tempstr);
@@ -3322,9 +3319,6 @@ void PrintItemOil(char iDidx)
 		AddPanelString(tempstr);
 		break;
 	case IMISC_ELIXWEAK:
-		strcpy(tempstr, _("decrease strength"));
-		AddPanelString(tempstr);
-		break;
 	case IMISC_ELIXDIS:
 		strcpy(tempstr, _("decrease strength"));
 		AddPanelString(tempstr);
@@ -3368,11 +3362,9 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, fmt::format(_("{:+d}% armor"), x->_iPLAC).c_str());
 		break;
 	case IPL_SETAC:
-		strcpy(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
-		break;
 	case IPL_AC_CURSE:
 		strcpy(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
-		break;
+			break;
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
 		if (x->_iPLFR < 75)
@@ -4124,17 +4116,17 @@ int RndSmithItem(int lvl)
 	return RndVendorItem<SmithItemOk, true>(0, lvl);
 }
 
-void SortVendor(ItemStruct *items)
+void SortVendor(ItemStruct *itemList)
 {
 	int count = 1;
-	while (!items[count].isEmpty())
+	while (!itemList[count].isEmpty())
 		count++;
 
 	auto cmp = [](const ItemStruct &a, const ItemStruct &b) {
 		return a.IDidx < b.IDidx;
 	};
 
-	std::sort(items, items + count, cmp);
+	std::sort(itemList, itemList + count, cmp);
 }
 
 void SpawnSmith(int lvl)
@@ -4197,17 +4189,17 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-static void SpawnOnePremium(int i, int plvl, int myplr)
+static void SpawnOnePremium(int i, int plvl, int playerId)
 {
-	int ivalue = 0;
-	bool keepgoing = false;
-	ItemStruct holditem = items[0];
+	int itemValue = 0;
+	bool keepGoing = false;
+	ItemStruct tempItem = items[0];
 
-	auto &myPlayer = plr[myplr];
+	auto &player = plr[playerId];
 
-	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
-	int dexterity = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity), myPlayer._pDexterity);
-	int magic = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic), myPlayer._pMagic);
+	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
+	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
+	int magic = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Magic), player._pMagic);
 	strength += strength / 5;
 	dexterity += dexterity / 5;
 	magic += magic / 5;
@@ -4217,16 +4209,16 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 	int count = 0;
 
 	do {
-		keepgoing = false;
+		keepGoing = false;
 		memset(&items[0], 0, sizeof(*items));
 		items[0]._iSeed = AdvanceRndSeed();
-		int itype = RndPremiumItem(plvl / 4, plvl) - 1;
-		GetItemAttrs(0, itype, plvl);
+		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
+		GetItemAttrs(0, itemType, plvl);
 		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
 			if (items[0]._iIvalue > 140000) {
-				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
+				keepGoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
 			break;
@@ -4236,14 +4228,14 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_LARMOR:
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
-			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
+			const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
 			    [](const ItemStruct &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
 				        || item._itype == ITYPE_HARMOR;
 			    });
 
-			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
+			itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 			break;
 		}
 		case ITYPE_SHIELD:
@@ -4255,37 +4247,37 @@ static void SpawnOnePremium(int i, int plvl, int myplr)
 		case ITYPE_STAFF:
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
-			const auto *const mostValuablePlayerItem = myPlayer.GetMostValuableItem(
+			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
 			    [](const ItemStruct &item) { return item._itype == items[0]._itype; });
 
-			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
+			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
 		}
 		default:
-			ivalue = 0;
+			itemValue = 0;
 			break;
 		}
-		ivalue *= 0.8;
+		itemValue *= 0.8;
 
 		count++;
-	} while (keepgoing
-	    || ((
+	} while (keepGoing
+			 || ((
 	            items[0]._iIvalue > 200000
 	            || items[0]._iMinStr > strength
 	            || items[0]._iMinMag > magic
 	            || items[0]._iMinDex > dexterity
-	            || items[0]._iIvalue < ivalue)
+	            || items[0]._iIvalue < itemValue)
 	        && count < 150));
 	premiumitems[i] = items[0];
 	premiumitems[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumitems[i]._iIdentified = true;
 	premiumitems[i]._iStatFlag = StoreStatOk(&premiumitems[i]);
-	items[0] = holditem;
+	items[0] = tempItem;
 }
 
 void SpawnPremium(int pnum)
 {
-	int lvl = plr[pnum]._pLevel;
+	int8_t lvl = plr[pnum]._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
@@ -4350,13 +4342,13 @@ void WitchBookLevel(int ii)
 	if (witchitem[ii]._iMiscId != IMISC_BOOK)
 		return;
 	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
-	int slvl = plr[myplr]._pSplLvl[witchitem[ii]._iSpell];
-	while (slvl > 0) {
+	int8_t spellLevel = plr[myplr]._pSplLvl[witchitem[ii]._iSpell];
+	while (spellLevel > 0) {
 		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
-		slvl--;
+		spellLevel--;
 		if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
 			witchitem[ii]._iMinMag = 255;
-			slvl = 0;
+			spellLevel = 0;
 		}
 	}
 }

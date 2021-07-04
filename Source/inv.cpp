@@ -863,13 +863,13 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		}
 	}
 
-	int it = 0;
+	int8_t it = 0;
 	if (il == ILOC_UNEQUIPABLE) {
 		done = true;
 		int ii = r - SLOTXY_INV_FIRST;
 		if (player.HoldItem._itype == ITYPE_GOLD) {
 			if (player.InvGrid[ii] != 0) {
-				int iv = player.InvGrid[ii];
+				int8_t iv = player.InvGrid[ii];
 				if (iv > 0) {
 					if (player.InvList[iv - 1]._itype != ITYPE_GOLD) {
 						it = iv;
@@ -893,7 +893,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 						done = false;
 					} else {
 						if (player.InvGrid[xx + yy] != 0) {
-							int iv = player.InvGrid[xx + yy];
+							int8_t iv = player.InvGrid[xx + yy];
 							if (iv < 0)
 								iv = -iv;
 							if (it != 0) {
@@ -1053,30 +1053,30 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		if (player.HoldItem._itype == ITYPE_GOLD && it == 0) {
 			int ii = r - SLOTXY_INV_FIRST;
 			if (player.InvGrid[ii] > 0) {
-				int il = player.InvGrid[ii] - 1;
-				int gt = player.InvList[il]._ivalue;
+				int invIndex = player.InvGrid[ii] - 1;
+				int gt = player.InvList[invIndex]._ivalue;
 				int ig = player.HoldItem._ivalue + gt;
 				if (ig <= MaxGold) {
-					player.InvList[il]._ivalue = ig;
+					player.InvList[invIndex]._ivalue = ig;
 					player._pGold += player.HoldItem._ivalue;
-					SetPlrHandGoldCurs(&player.InvList[il]);
+					SetPlrHandGoldCurs(&player.InvList[invIndex]);
 				} else {
 					ig = MaxGold - gt;
 					player._pGold += ig;
 					player.HoldItem._ivalue -= ig;
-					player.InvList[il]._ivalue = MaxGold;
-					player.InvList[il]._iCurs = ICURS_GOLD_LARGE;
+					player.InvList[invIndex]._ivalue = MaxGold;
+					player.InvList[invIndex]._iCurs = ICURS_GOLD_LARGE;
 					// BUGFIX: incorrect values here are leftover from beta (fixed)
 					cn = GetGoldCursor(player.HoldItem._ivalue);
 					cn += CURSOR_FIRSTITEM;
 				}
 			} else {
-				int il = player._pNumInv;
-				player.InvList[il] = player.HoldItem;
+				int invIndex = player._pNumInv;
+				player.InvList[invIndex] = player.HoldItem;
 				player._pNumInv++;
 				player.InvGrid[ii] = player._pNumInv;
 				player._pGold += player.HoldItem._ivalue;
-				SetPlrHandGoldCurs(&player.InvList[il]);
+				SetPlrHandGoldCurs(&player.InvList[invIndex]);
 			}
 		} else {
 			if (it == 0) {
@@ -1084,10 +1084,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				player._pNumInv++;
 				it = player._pNumInv;
 			} else {
-				int il = it - 1;
+				int invIndex = it - 1;
 				if (player.HoldItem._itype == ITYPE_GOLD)
 					player._pGold += player.HoldItem._ivalue;
-				cn = SwapItem(&player.InvList[il], &player.HoldItem);
+				cn = SwapItem(&player.InvList[invIndex], &player.HoldItem);
 				if (player.HoldItem._itype == ITYPE_GOLD)
 					player._pGold = CalculateGold(player);
 				for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
@@ -1301,7 +1301,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
 		int ig = r - SLOTXY_INV_FIRST;
-		int ii = player.InvGrid[ig];
+		int8_t ii = player.InvGrid[ig];
 		if (ii != 0) {
 			int iv = (ii < 0) ? -ii : ii;
 
@@ -1421,13 +1421,13 @@ static void CheckBookLevel(PlayerStruct &player)
 		return;
 
 	player.HoldItem._iMinMag = spelldata[player.HoldItem._iSpell].sMinInt;
-	int slvl = player._pSplLvl[player.HoldItem._iSpell];
-	while (slvl != 0) {
+	int8_t spellLevel = player._pSplLvl[player.HoldItem._iSpell];
+	while (spellLevel != 0) {
 		player.HoldItem._iMinMag += 20 * player.HoldItem._iMinMag / 100;
-		slvl--;
+		spellLevel--;
 		if (player.HoldItem._iMinMag + 20 * player.HoldItem._iMinMag / 100 > 255) {
 			player.HoldItem._iMinMag = -1;
-			slvl = 0;
+			spellLevel = 0;
 		}
 	}
 }
