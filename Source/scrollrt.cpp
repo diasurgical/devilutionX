@@ -284,7 +284,7 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
 	if ((dFlags[x][y] & BFLAG_MISSILE) == 0)
 		return;
 
-	if (dMissile[x][y] != -1) {
+	if (dMissile[x][y] > 0) {
 		m = &missile[dMissile[x][y] - 1];
 		DrawMissilePrivate(out, m, sx, sy, pre);
 		return;
