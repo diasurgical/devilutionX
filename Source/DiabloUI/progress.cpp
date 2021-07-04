@@ -19,7 +19,7 @@ Art ArtProgBG;
 Art ProgFil;
 SDL_Surface *msgSurface;
 SDL_Surface *msgShadow;
-std::vector<UiItemBase *> vecProgress;
+std::vector<std::unique_ptr<UiItemBase>> vecProgress;
 bool endMenu;
 
 void DialogActionCancel()
@@ -44,7 +44,7 @@ void ProgressLoad(const char *msg)
 		msgShadow = TTF_RenderText_Solid(font, msg, black);
 	}
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
-	vecProgress.push_back(new UiButton(&SmlButton, _("Cancel"), &DialogActionCancel, rect3, 0));
+	vecProgress.push_back(std::make_unique<UiButton>(&SmlButton, _("Cancel"), &DialogActionCancel, rect3, 0));
 }
 
 void ProgressFree()

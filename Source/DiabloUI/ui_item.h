@@ -293,15 +293,16 @@ public:
 	int m_value;
 };
 
-typedef std::vector<UiListItem *> vUiListItem;
+typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(vUiListItem vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0)
+	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0)
 	    : UiItemBase(x, y, item_width, item_height * vItems.size(), flags)
 	{
 		m_type = UI_LIST;
-		m_vecItems = vItems;
+		for (auto &item : vItems)
+			m_vecItems.push_back(item.get());
 		m_x = x;
 		m_y = y;
 		m_width = item_width;
