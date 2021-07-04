@@ -236,7 +236,6 @@ void MainWndProc(uint32_t msg)
 		break;
 	case DVL_WM_QUERYENDSESSION:
 		diablo_quit(0);
-		break;
 	}
 }
 

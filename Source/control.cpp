@@ -36,10 +36,10 @@ namespace {
 Surface pBtmBuff;
 Surface pLifeBuff;
 Surface pManaBuff;
-std::optional<CelSprite> pTalkBtns;
+std::optional<CelSprite> talkButtons;
 std::optional<CelSprite> pDurIcons;
 std::optional<CelSprite> pChrButtons;
-std::optional<CelSprite> pMultiBtns;
+std::optional<CelSprite> multiButtons;
 std::optional<CelSprite> pPanelButtons;
 std::optional<CelSprite> pChrPanel;
 std::optional<CelSprite> pGBoxBuff;
@@ -674,8 +674,8 @@ void InitControlPan()
 	talkflag = false;
 	if (gbIsMultiplayer) {
 		CelDrawUnsafeTo(pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
-		pMultiBtns = LoadCel("CtrlPan\\P8But2.CEL", 33);
-		pTalkBtns = LoadCel("CtrlPan\\TalkButt.CEL", 61);
+		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
+		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
 		sgszTalkMsg[0] = '\0';
 		for (bool &whisper : whisperList)
@@ -754,11 +754,11 @@ void DrawCtrlBtns(const Surface &out)
 			CelDrawTo(out, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 }, *pPanelButtons, i + 1);
 	}
 	if (numpanbtns == 8) {
-		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *pMultiBtns, panbtns[6] ? 2 : 1);
+		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, panbtns[6] ? 2 : 1);
 		if (gbFriendlyMode)
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *pMultiBtns, panbtns[7] ? 4 : 3);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, panbtns[7] ? 4 : 3);
 		else
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *pMultiBtns, panbtns[7] ? 6 : 5);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, panbtns[7] ? 6 : 5);
 	}
 }
 
@@ -1069,8 +1069,8 @@ void FreeControlPan()
 	pChrPanel = std::nullopt;
 	pSpellCels = std::nullopt;
 	pPanelButtons = std::nullopt;
-	pMultiBtns = std::nullopt;
-	pTalkBtns = std::nullopt;
+	multiButtons = std::nullopt;
+	talkButtons = std::nullopt;
 	pChrButtons = std::nullopt;
 	pDurIcons = std::nullopt;
 	pQLogCel = std::nullopt;
@@ -1806,13 +1806,13 @@ void DrawTalkPan(const Surface &out)
 			color = UIS_GOLD;
 			if (talkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
-				CelDrawTo(out, talkPanPosition, *pTalkBtns, nCel);
+				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 2 : 1;
 			if (talkButtonsDown[talkBtn])
 				nCel += 4;
-			CelDrawTo(out, talkPanPosition, *pTalkBtns, nCel);
+			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 		}
 		auto &player = plr[i];
 		if (player.plractive) {

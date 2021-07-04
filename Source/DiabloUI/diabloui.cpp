@@ -609,7 +609,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 
 	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-		SDL_SetSurfacePalette(ArtCursor.surface.get(), palette);
+		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette);
 		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
 #endif
 		SetHardwareCursor(CursorInfo::UserInterfaceCursor());

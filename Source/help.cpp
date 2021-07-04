@@ -17,7 +17,7 @@
 namespace devilution {
 
 unsigned int SkipLines;
-bool helpflag;
+bool HelpFlag;
 
 const char *const HelpText[] = {
 	N_("$Keyboard Shortcuts:"),
@@ -95,7 +95,7 @@ std::vector<std::string> HelpTextLines;
 
 void InitHelp()
 {
-	helpflag = false;
+	HelpFlag = false;
 	char tempstr[512];
 
 	for (const auto *text : HelpText) {
@@ -154,7 +154,7 @@ void DrawHelp(const Surface &out)
 void DisplayHelp()
 {
 	SkipLines = 0;
-	helpflag = true;
+	HelpFlag = true;
 }
 
 void HelpScrollUp()

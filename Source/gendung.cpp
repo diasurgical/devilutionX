@@ -61,10 +61,6 @@ dungeon_type setlvltype;
 int ViewX;
 /** Specifies the player viewpoint Y-coordinate of the map. */
 int ViewY;
-int ViewBX;
-int ViewBY;
-int ViewDX;
-int ViewDY;
 ScrollStruct ScrollInfo;
 /** Specifies the level viewpoint X-coordinate of the map. */
 int LvlViewX;

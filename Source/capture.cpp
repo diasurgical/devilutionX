@@ -3,6 +3,7 @@
  *
  * Implementation of the screenshot function.
  */
+#include <cstdint>
 #include <fstream>
 
 #include "DiabloUI/diabloui.h"
@@ -23,7 +24,7 @@ namespace devilution {
  * @param out File stream to write to
  * @return True on success
  */
-static bool CaptureHdr(short width, short height, std::ofstream *out)
+static bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
 {
 	PCXHeader buffer;
 

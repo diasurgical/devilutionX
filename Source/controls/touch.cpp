@@ -55,8 +55,8 @@ enum {
 struct Touch {
 	int id; // -1: not touching
 	uint32_t timeLastDown;
-	int lastX;        // last known screen coordinates
-	int lastY;        // last known screen coordinates
+	int lastX;       // last known screen coordinates
+	int lastY;       // last known screen coordinates
 	float lastDownX; // SDL touch coordinates when last pressed down
 	float lastDownY; // SDL touch coordinates when last pressed down
 };

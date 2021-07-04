@@ -80,7 +80,7 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	size.height += 2 * outlineWidth;
 
 	auto out = Surface::Alloc(size.width, size.height);
-	SDL_SetSurfacePalette(out.surface, palette);
+	SDL_SetSurfacePalette(out.surface, Palette);
 
 	// Transparent color must not be used in the sprite itself.
 	// Colors 1-127 are outside of the UI palette so are safe to use.

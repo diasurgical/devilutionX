@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-extern bool helpflag;
+extern bool HelpFlag;
 
 void InitHelp();
 void DrawHelp(const Surface &out);

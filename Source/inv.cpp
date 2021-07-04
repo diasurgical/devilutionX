@@ -141,23 +141,21 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	auto &myPlayer = plr[myplr];
-
-	if (myPlayer._pClass == HeroClass::Warrior) {
+	switch (plr[myplr]._pClass) {
+	case HeroClass::Warrior:
+	case HeroClass::Barbarian:
 		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
-	} else if (myPlayer._pClass == HeroClass::Rogue) {
+		break;
+	case HeroClass::Rogue:
+	case HeroClass::Bard:
 		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", SPANEL_WIDTH);
-	} else if (myPlayer._pClass == HeroClass::Sorcerer) {
+		break;
+	case HeroClass::Sorcerer:
 		pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", SPANEL_WIDTH);
-	} else if (myPlayer._pClass == HeroClass::Monk) {
-		if (!gbIsSpawn)
-			pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", SPANEL_WIDTH);
-		else
-			pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
-	} else if (myPlayer._pClass == HeroClass::Bard) {
-		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", SPANEL_WIDTH);
-	} else if (myPlayer._pClass == HeroClass::Barbarian) {
-		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
+		break;
+	case HeroClass::Monk:
+		pInvCels = LoadCel(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
+		break;
 	}
 
 	invflag = false;

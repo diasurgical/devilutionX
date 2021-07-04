@@ -33,8 +33,6 @@ enum inv_item : int8_t {
 	INVITEM_BELT_FIRST = 47,
 	INVITEM_BELT_LAST  = 54,
 	// clang-format on
-	NUM_INVELEM,
-	INVITEM_INVALID = -1,
 };
 
 // identifiers for each of the inventory squares

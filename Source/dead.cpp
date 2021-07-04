@@ -16,13 +16,13 @@ DeadStruct dead[MaxDead];
 int8_t stonendx;
 
 namespace {
-void InitDeadAnimationFromMonster(DeadStruct &d, const CMonster &mon)
+void InitDeadAnimationFromMonster(DeadStruct &dead, const CMonster &mon)
 {
 	int i = 0;
 	for (const auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
-		d._deadData[i++] = celSprite->Data();
-	d._deadFrame = mon.Anims[MA_DEATH].Frames;
-	d._deadWidth = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
+		dead.data[i++] = celSprite->Data();
+	dead.frame = mon.Anims[MA_DEATH].Frames;
+	dead.width = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
 }
 } // namespace
 
@@ -44,18 +44,18 @@ void InitDead()
 		mtypes[Monsters[i].mtype] = nd;
 	}
 
-	for (auto &d : dead[nd]._deadData)
-		d = misfiledata[MFILE_BLODBUR].mAnimData[0];
-	dead[nd]._deadFrame = 8;
-	dead[nd]._deadWidth = 128;
+	for (auto &dead : dead[nd].data)
+		dead = misfiledata[MFILE_BLODBUR].mAnimData[0];
+	dead[nd].frame = 8;
+	dead[nd].width = 128;
 	dead[nd]._deadtrans = 0;
 	nd++;
 
-	for (auto &d : dead[nd]._deadData)
-		d = misfiledata[MFILE_SHATTER1].mAnimData[0];
+	for (auto &dead : dead[nd].data)
+		dead = misfiledata[MFILE_SHATTER1].mAnimData[0];
 
-	dead[nd]._deadFrame = 12;
-	dead[nd]._deadWidth = 128;
+	dead[nd].frame = 12;
+	dead[nd].width = 128;
 	dead[nd]._deadtrans = 0;
 	nd++;
 

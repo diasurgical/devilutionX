@@ -916,8 +916,8 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (helpflag) {
-		helpflag = false;
+	if (HelpFlag) {
+		HelpFlag = false;
 		rv = true;
 	}
 
@@ -1022,7 +1022,7 @@ static void PressKey(int vkey)
 			StoreUp();
 		} else if (questlog) {
 			QuestlogUp();
-		} else if (helpflag) {
+		} else if (HelpFlag) {
 			HelpScrollUp();
 		} else if (AutomapActive) {
 			AutomapUp();
@@ -1032,7 +1032,7 @@ static void PressKey(int vkey)
 			StoreDown();
 		} else if (questlog) {
 			QuestlogDown();
-		} else if (helpflag) {
+		} else if (HelpFlag) {
 			HelpScrollDown();
 		} else if (AutomapActive) {
 			AutomapDown();
@@ -1057,7 +1057,7 @@ static void PressKey(int vkey)
 		DoAutoMap();
 	} else if (vkey == DVL_VK_SPACE) {
 		ClosePanels();
-		helpflag = false;
+		HelpFlag = false;
 		spselflag = false;
 		if (qtextflag && leveltype == DTYPE_TOWN) {
 			qtextflag = false;
@@ -1814,8 +1814,8 @@ void diablo_color_cyc_logic()
 
 void helpKeyPressed()
 {
-	if (helpflag) {
-		helpflag = false;
+	if (HelpFlag) {
+		HelpFlag = false;
 	} else if (stextflag != STORE_NONE) {
 		ClearPanel();
 		AddPanelString(_("No help available")); /// BUGFIX: message isn't displayed
