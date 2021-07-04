@@ -38,6 +38,130 @@
 
 namespace devilution {
 
+namespace {
+/**
+ * @brief Hash algorithm for point
+ */
+struct PointHash {
+	std::size_t operator()(Point const &s) const noexcept
+	{
+		return s.x ^ (s.y << 1);
+	}
+};
+
+/**
+ * @brief Contains all Missile at rendering position
+ */
+std::unordered_multimap<Point, MissileStruct*, PointHash> MissilesAtRenderingTile;
+
+/**
+ * @brief Could the missile (at the next game tick) collide? This method is a simplified version of CheckMissileCol (for example without random).
+ */
+bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
+{
+	if (tile.x >= MAXDUNX || tile.x < 0)
+		return true;
+	if (tile.y >= MAXDUNY || tile.y < 0)
+		return true;
+	if (checkPlayerAndMonster) {
+		if (dMonster[tile.x][tile.y] > 0)
+			return true;
+		if (dPlayer[tile.x][tile.y] > 0)
+			return true;
+	}
+	int oid = dObject[tile.x][tile.y];
+	if (oid != 0) {
+		oid = oid > 0 ? oid - 1 : -(oid + 1);
+		if (!object[oid]._oMissFlag)
+			return true;
+	}
+	if (nMissileTable[dPiece[tile.x][tile.y]])
+		return true;
+	return false;
+}
+
+void UpdateMissileRendererData(MissileStruct &m)
+{
+	if (m.position.renderingIsFixed)
+		return;
+
+	m.position.tileForRendering = m.position.tile;
+	m.position.offsetForRendering = m.position.offset;
+
+	const MissileMovementDistrubution missileMovement = missiledata[m._mitype].MovementDistribution;
+	// don't calculate missile position if they don't move
+	if (missileMovement  == MissileMovementDistrubution::Disabled)
+		return;
+
+	// when some missiles hit, they change there animation to a explosion and the explosion shouldn't move (for example fireball)
+	if (missiledata[m._mitype].mFileNum != m._miAnimType)
+		return;
+
+	float fProgress = gfProgressToNextGameTick;
+	Displacement velocity = m.position.velocity * fProgress;
+	Displacement traveled = m.position.traveled + velocity;
+
+	int mx = traveled.deltaX >> 16;
+	int my = traveled.deltaY >> 16;
+	int dx = (mx + 2 * my) / 64;
+	int dy = (2 * my - mx) / 64;
+
+	// calculcate the future missile position
+	m.position.tileForRendering = m.position.start + Displacement { dx, dy };
+	m.position.offsetForRendering = { mx + (dy * 32) - (dx * 32), my - (dx * 16) - (dy * 16) };
+
+	// In some cases this calculcated position is invalid.
+	// For example a missile shouldn't move inside a wall.
+	// In this case the game logic don't advance the missile position and removes the missile or shows an explosion animation at the old position.
+	// For the animation distribution logic this means we are not allowed to move to a tile where the missile could collide, cause this could be a invalid position.
+
+	// If we are still at the current tile, this tile was already checked and is a valid tile
+	if (m.position.tileForRendering == m.position.tile)
+		return;
+
+	// If no collision can happen at the new tile we can advance
+	if (!CouldMissileCollide(m.position.tileForRendering, missileMovement == MissileMovementDistrubution::Blockable))
+		return;
+
+	// The new tile could be invalid, so don't advance to it.
+	// We search the last offset that is in the old (valid) tile.
+	// Implementation note: If someone knows the correct math to calculate this without the loop, I would really appreciate it.
+	while (m.position.tile != m.position.tileForRendering) {
+		fProgress -= 0.01f;
+
+		if (fProgress <= 0.0f) {
+			m.position.tileForRendering = m.position.tile;
+			m.position.offsetForRendering = m.position.offset;
+			return;
+		}
+
+		velocity = m.position.velocity * fProgress;
+		traveled = m.position.traveled + velocity;
+
+		mx = traveled.deltaX >> 16;
+		my = traveled.deltaY >> 16;
+		dx = (mx + 2 * my) / 64;
+		dy = (2 * my - mx) / 64;
+
+		m.position.tileForRendering = m.position.start + Displacement { dx, dy };
+		m.position.offsetForRendering = { mx + (dy * 32) - (dx * 32), my - (dx * 16) - (dy * 16) };
+	}
+}
+
+void UpdateMissilesRendererData()
+{
+	MissilesAtRenderingTile.clear();
+
+	for (int i = 0; i < nummissiles; i++) {
+		assert(missileactive[i] < MAXMISSILES);
+		MissileStruct &m = missile[missileactive[i]];
+		UpdateMissileRendererData(m);
+		MissilesAtRenderingTile.insert(std::make_pair(m.position.tileForRendering, &m));
+	}
+}
+
+}
+
 /**
  * Specifies the current light entry.
  */
@@ -240,7 +364,7 @@ static void DrawCursor(const Surface &out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface &out, MissileStruct *m, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface&out, const MissileStruct *m, int sx, int sy, bool pre)
 {
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
@@ -256,8 +380,8 @@ void DrawMissilePrivate(const Surface &out, MissileStruct *m, int sx, int sy, bo
 		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
 		return;
 	}
-	int mx = sx + m->position.offset.deltaX - m->_miAnimWidth2;
-	int my = sy + m->position.offset.deltaY;
+	int mx = sx + m->position.offsetForRendering.deltaX - m->_miAnimWidth2;
+	int my = sy + m->position.offsetForRendering.deltaY;
 	CelSprite cel { m->_miAnimData, m->_miAnimWidth };
 	if (m->_miUniqTrans != 0)
 		Cl2DrawLightTbl(out, mx, my, cel, m->_miAnimFrame, m->_miUniqTrans + 3);
@@ -278,24 +402,9 @@ void DrawMissilePrivate(const Surface &out, MissileStruct *m, int sx, int sy, bo
  */
 void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
 {
-	int i;
-	MissileStruct *m;
-
-	if ((dFlags[x][y] & BFLAG_MISSILE) == 0)
-		return;
-
-	if (dMissile[x][y] > 0) {
-		m = &missile[dMissile[x][y] - 1];
-		DrawMissilePrivate(out, m, sx, sy, pre);
-		return;
-	}
-
-	for (i = 0; i < nummissiles; i++) {
-		assert(missileactive[i] < MAXMISSILES);
-		m = &missile[missileactive[i]];
-		if (m->position.tile.x != x || m->position.tile.y != y)
-			continue;
-		DrawMissilePrivate(out, m, sx, sy, pre);
+	const auto range = MissilesAtRenderingTile.equal_range(Point { x, y });
+	for (auto it = range.first; it != range.second; ++it) {
+		DrawMissilePrivate(out, it->second, sx, sy, pre);
 	}
 }
 
@@ -1200,6 +1309,8 @@ static void DrawGame(const Surface &fullOut, int x, int y)
 			}
 		}
 	}
+
+	UpdateMissilesRendererData();
 
 	// Draw areas moving in and out of the screen
 	switch (ScrollInfo._sdir) {
