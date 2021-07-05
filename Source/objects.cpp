@@ -4030,7 +4030,7 @@ bool OperateShrineGlowing(int pnum)
 	int xpLoss = 0;
 	if (playerXP > 5000) {
 		magicGain = 5;
-		xpLoss = ((double)playerXP * 0.95);
+		xpLoss = static_cast<int>(playerXP * 0.95);
 	}
 	ModifyPlrMag(myplr, magicGain);
 	plr[myplr]._pExperience = xpLoss;

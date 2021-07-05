@@ -1175,8 +1175,8 @@ struct RightStickAccumulator {
 		const int dtc = tc - lastTc;
 		hiresDX += rightStickX * dtc;
 		hiresDY += rightStickY * dtc;
-		const int dx = hiresDX / slowdown;
-		const int dy = hiresDY / slowdown;
+		const int dx = static_cast<int>(hiresDX / slowdown);
+		const int dy = static_cast<int>(hiresDY / slowdown);
 		*x += dx;
 		*y -= dy;
 		lastTc = tc;
