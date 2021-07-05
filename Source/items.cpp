@@ -4257,7 +4257,7 @@ static void SpawnOnePremium(int i, int plvl, int playerId)
 			itemValue = 0;
 			break;
 		}
-		itemValue *= 0.8;
+		itemValue = itemValue * 4 / 5; // avoids forced int > float > int conversion
 
 		count++;
 	} while (keepGoing
@@ -4504,7 +4504,7 @@ void SpawnBoy(int lvl)
 			break;
 		}
 		}
-		ivalue *= 0.8;
+		ivalue = ivalue * 4 / 5; // avoids forced int > float > int conversion
 
 		count++;
 
