@@ -1,4 +1,3 @@
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
@@ -6,13 +5,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: bg\n"
 "X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
@@ -306,7 +307,7 @@ msgstr "Пръстенът на хилядата"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr "\При създаването на тази игра не е продадена нито една душа."
+msgstr "\tПри създаването на тази игра не е продадена нито една душа."
 
 #: Source/DiabloUI/dialogs.cpp:171 Source/DiabloUI/dialogs.cpp:184
 #: Source/DiabloUI/selconn.cpp:74 Source/DiabloUI/selgame.cpp:101
@@ -368,7 +369,7 @@ msgstr "Клиент-сървър (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:42
 msgid "Loopback"
-msgstr "Обратна връзка "
+msgstr "Обратна връзка"
 
 #: Source/DiabloUI/selconn.cpp:48 Source/DiabloUI/selgame.cpp:441
 #: Source/DiabloUI/selgame.cpp:459
@@ -381,7 +382,7 @@ msgstr "Изисквания:"
 
 #: Source/DiabloUI/selconn.cpp:60
 msgid "no gateway needed"
-msgstr "Не е нужен портал"
+msgstr "не е нужен портал"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "Select Connection"
@@ -432,7 +433,7 @@ msgstr "ОТКАЗ"
 
 #: Source/DiabloUI/selgame.cpp:113
 msgid "Create a new game with a difficulty setting of your choice."
-msgstr "Избери игра със трудност по Ваш избор"
+msgstr "Избери игра със трудност по Ваш избор."
 
 #: Source/DiabloUI/selgame.cpp:116
 msgid "Enter an IP or a hostname and join a game already in progress at that address."
@@ -626,7 +627,7 @@ msgstr "Въведете име"
 
 #: Source/DiabloUI/selhero.cpp:339
 msgid "Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n"
-msgstr "Невалидно име. Името не може да съдържа интервал, специални символи или непозволени думи."
+msgstr "Невалидно име. Името не може да съдържа интервал, специални символи или непозволени думи.\n"
 
 #: Source/DiabloUI/selhero.cpp:347
 msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
@@ -695,7 +696,7 @@ msgstr "GOG.com поддържа страница на https://www.gog.com/forum
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "Използвайте връзката за да посетите онлайн форума за Диабло"
+msgstr "Използвайте връзката, за да посетите интернет форума за Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
@@ -1059,7 +1060,7 @@ msgstr "Сега ти ще УМРЕШ!"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:182
 msgid "Options:\n"
-msgstr "Опции:"
+msgstr "Опции:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:183
@@ -1127,8 +1128,6 @@ msgid ""
 "\n"
 "Hellfire options:\n"
 msgstr ""
-"\n"
-"Hellfire специфични опции:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:196
@@ -6099,7 +6098,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
 msgid " Ahh, the story of our King, is it? The tragic fall of Leoric was a harsh blow to this land. The people always loved the King, and now they live in mortal fear of him. The question that I keep asking myself is how he could have fallen so far from the Light, as Leoric had always been the holiest of men. Only the vilest powers of Hell could so utterly destroy a man from within..."
-msgstr ""
+msgstr "O, за историята на Краля, нали? Трагичния крах на Леорик дойде като гръм от ясно небе на тази земя. Хората винаги обичаха Краля, а сега живеят в дълбок страх заради него. Въпросът, който продължавам да си задавам, е, как е могъл да падне толкова далеч от Светилната - все пак Леорик винаги е бил най-светият от всички. Единствено злите сили на Ада могат да принизят толкова ниско човек като него."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:17
@@ -6110,51 +6109,56 @@ msgid ""
 " \n"
 "This is where things take an even darker twist than I thought possible! Our former King has risen from his eternal sleep and now commands a legion of undead minions within the Labyrinth. His body was buried in a tomb three levels beneath the Cathedral. Please, good master, put his soul at ease by destroying his now cursed form..."
 msgstr ""
+"Селото се нуждае от вашата помощ, учителю! Преди няколко месеца, Принц Албрихт, синът на Крал Леорик, бе отвлечен. Побеснял, Кралят реши да обърне всеки камък в селото, за да намери своята рожба. Но с всеки изминал ден, Леорик сякаш изпадаше във все по-дълбока ярост. Обвиняваше невинните селяни за изчезването на сина си, като ги подлагаше на ужасяваща екзекуция. По-малко от половината от нас успяха да се спасят от неговата несъразмерима лудост..\n"
+"\n"
+"Рицарите и свещениците опитаха да го усмирят, но той тръгна срещу тях. За жалост, това доведе до неговата смърт. С последния си дъх, Кралят отправи жестока клетва към бившите си слуги, обещавайки, че те ще му служат вечно в мрака.\n"
+"\n"
+"Точно тогава, събитията придобиха още по-мрачен изглед, какъвто не съм и предполагал! Някогашният ни Крал се надигна от своя вечен сън и в момента ръководи легион от немъртви чудовища в Лабиринта. Тялото му лежи заровено в гробница, цели три нива под Катедралата. Умолявам те, драги учителю, върни душата му в покой, като унищожиш прокълнатата му същност..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
 msgid "As I told you, good master, the King was entombed three levels below. He's down there, waiting in the putrid darkness for his chance to destroy this land..."
-msgstr ""
+msgstr "Както вече споменах, драги учителю, Кралят е загробен на три нива дълбочина.  Лежи долу, в зловещата тъмнина, чакайки момента да изпълни своя коварен план - да унищожи тази земя."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:21
 msgid "The curse of our King has passed, but I fear that it was only part of a greater evil at work. However, we may yet be saved from the darkness that consumes our land, for your victory is a good omen. May Light guide you on your way, good master."
-msgstr ""
+msgstr "Проклятието на Краля отмина, но се опасявам, че това е само малкото зло. Въпреки всичко, може би отново ще бъдем спасени от тъмнината, наблегнала нашата земя, защото твоята победа е само добро знамение."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:23
 msgid "The loss of his son was too much for King Leoric. I did what I could to ease his madness, but in the end it overcame him. A black curse has hung over this kingdom from that day forward, but perhaps if you were to free his spirit from his earthly prison, the curse would be lifted..."
-msgstr ""
+msgstr "Кралят не можа да превъзмогне загубата на сина си. Положих всякакви усилия, за да го избавя от лудостта, но все пак тя го обори."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:25
 msgid "I don't like to think about how the King died. I like to remember him for the kind and just ruler that he was. His death was so sad and seemed very wrong, somehow."
-msgstr ""
+msgstr "Не искам да си спомням за кончината на Краля. Напротив, искам да си го спомням като храбър и деликатен владетел, какъвто беше. За всички, неговата смърт донесе тъга.. Толкова несправедлива."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
 msgid "I made many of the weapons and most of the armor that King Leoric used to outfit his knights. I even crafted a huge two-handed sword of the finest mithril for him, as well as a field crown to match. I still cannot believe how he died, but it must have been some sinister force that drove him insane!"
-msgstr ""
+msgstr "Изковал съм повечето от оръжията и броните, с които Крал Леорик екипираше своите рицари. Дори направих огромен меч от най-добрия митрил за негово величество, както и корона, за да си подхождат. Все още не мога да повярвам, че е мъртъв. Определено трябва да е била някаква злокобла сила, за да го доведе до пълна лудост."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
 msgid "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is King. King, so you hear me? HAIL TO THE KING!"
-msgstr ""
+msgstr "Не ме интересува. Не си представям някакъв скелет да бъде мой господар. Еднственият крал е Леорик. Крал, разбираш ли? ДА ЖИВЕЕ КРАЛЯТ!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:31
 msgid "The dead who walk among the living follow the cursed King. He holds the power to raise yet more warriors for an ever growing army of the undead. If you do not stop his reign, he will surely march across this land and slay all who still live here."
-msgstr ""
+msgstr "Мъртвите, бродещи сред живите, вървят подир прокълнатия Крал. Той притежава силата да призовава още повече войни, така че да увели своята армия от немъртви. Ако не сложиш край на тази жажда за господство, той със сигурност не ще се поколебае да съсече всеки, който живее по тези земи."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:33
 msgid "Look, I'm running a business here. I don't sell information, and I don't care about some King that's been dead longer than I've been alive. If you need something to use against this King of the undead, then I can help you out..."
-msgstr ""
+msgstr "Тук си имам работа. Не продавам информация и не ме блазни някакъв си Крал, който е мъртъв от години. Ако ти трябва нещо, с което да се изправиш срещу този господар на немъртвите, може би мога да ти помогна..."
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
 #: Source/textdat.cpp:35
 msgid "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve my Master for eternity!"
-msgstr ""
+msgstr "Топлата прегръдка на живота, изглежда, е решила да ме посети. Приготви се, ти, простосмъртния, да служиш завинаги на моя Владетел!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
@@ -7062,32 +7066,32 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
 msgid "Griswold knows as much about the art of war as I do about the art of healing. He is a shrewd merchant, but his work is second to none. Oh, I suppose that may be because he is the only blacksmith left here."
-msgstr ""
+msgstr "Грисволд знае толкова за изкуството на войната, колкото аз за изкуството на лечението. Той е ловък търговец и върши незаменима работа. Предполагам това се дължи на факта, че е единственият ковач, който ни остана."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
 msgid "Cain is a true friend and a wise sage. He maintains a vast library and has an innate ability to discern the true nature of many things. If you ever have any questions, he is the person to go to."
-msgstr ""
+msgstr "Кайн - истински приятел и велик мъдрец. Притежава огромна библиотека и има вродената способност да разчита естествотп на много неща. Ако имаш някакви питания, той е точният човек, към когото да се обърнеш."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
 msgid "Even my skills have been unable to fully heal Farnham. Oh, I have been able to mend his body, but his mind and spirit are beyond anything I can do."
-msgstr ""
+msgstr "Моите умения не са достатъчни да излекуват напълно Фарнам. Е, поне успях да възстановия физическото тяло, но разумът и духът не мога да изцеря, това е далеч от възможностите ми."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
 msgid "While I use some limited forms of magic to create the potions and elixirs I store here, Adria is a true sorceress. She never seems to sleep, and she always has access to many mystic tomes and artifacts. I believe her hut may be much more than the hovel it appears to be, but I can never seem to get inside the place."
-msgstr ""
+msgstr "Макар да използвам ограничени магически видове, за да правя отварите и елексирите, които пазя тук, Адрия - тя е истинският майстор. Никога не спи и винаги разполага с най-различни тайни четива и артефакти. Определено колибата, в която живее, е много повече от това, което се вижда отвън. Досега не съм влизал вътре."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
 msgid "Poor Wirt. I did all that was possible for the child, but I know he despises that wooden peg that I was forced to attach to his leg. His wounds were hideous. No one - and especially such a young child - should have to suffer the way he did."
-msgstr ""
+msgstr "Горкият Върт. Направих каквото можах за юнака, но независимо от това, знам, че ненавижда дървеният кол, който се наложи да прикрепя към крака му. Имаше страшни рани. Никой, особено младеж като него, не трябва да преживява това, на което той бе подложен."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
 msgid "I really don't understand why Ogden stays here in Tristram. He suffers from a slight nervous condition, but he is an intelligent and industrious man who would do very well wherever he went. I suppose it may be the fear of the many murders that happen in the surrounding countryside, or perhaps the wishes of his wife that keep him and his family where they are."
-msgstr ""
+msgstr "Наистина не мога да си го обясня, защо Огдън реши да остане тук, в Тристрам. Дори да страда от леки нервни разположения, той е умен и трудолюбив човек, който би преуспял навсякъде. Предполагама, причината за това са многото убииства в околностите или, най-вероятно, желанието на съпругата му го задържат на едно място."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -7096,16 +7100,19 @@ msgid ""
 " \n"
 "She claims that they are visions, but I have no proof of that one way or the other."
 msgstr ""
+"Помощницата на Огдън, барманката, е хубаво момиче. Баба й е болна и страда от деменция.\n"
+"\n"
+"Тя твърди, че имала провидения - няма как да знам дали това е вярно или не."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr ""
+msgstr "Добър ден! С какво мога да бъда полезен?"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
 msgid "My grandmother had a dream that you would come and talk to me. She has visions, you know and can see into the future."
-msgstr ""
+msgstr "Моята баба веднъж ми заяви, че двамата с теб ще се срещнем. Тя има видения и вижда в бъдещето."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:367
@@ -7114,16 +7121,19 @@ msgid ""
 " \n"
 "It would take someone quite brave, like you, to see what she is doing out there."
 msgstr ""
+"Дамата в края на селото, е вещица! Изглежда добра жена и името й, Адрия, звучи доста приятно. Но някак тя ме отблъсква.\n"
+"\n"
+"Може би трябва някой смелчага, като теб, да отиде да види какви ги върши."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:369
 msgid "Our Blacksmith is a point of pride to the people of Tristram. Not only is he a master craftsman who has won many contests within his guild, but he received praises from our King Leoric himself - may his soul rest in peace. Griswold is also a great hero; just ask Cain."
-msgstr ""
+msgstr "Нашият ковач е гордостта на жителите на Тристрам. Не само майстор-занаятчиям, който има участия в множество конкурси в своята гилдия, но той е и носител на благословията на Крал Леорик - мир на праха му. Грисволд също е герой. Попитай Кайн."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
 msgid "Cain has been the storyteller of Tristram for as long as I can remember. He knows so much, and can tell you just about anything about almost everything."
-msgstr ""
+msgstr "Кейн е разказвачът на истории на Тристрам откакто се помня. Знае толкова много, може да ти каже за всеки и за всичко."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -7132,176 +7142,179 @@ msgid ""
 " \n"
 "I know that both Pepin and Ogden feel sympathy for him, but I get so frustrated watching him slip farther and farther into a befuddled stupor every night."
 msgstr ""
+"Фарнам - пиянде, постоянно се облива от алкохол и залива останалите с небивалиците.\n"
+"\n"
+"Знам, Пипин и Огдън му симпатизират. Притеснява ме това да го гледам как изпада и изпада в пълна апатия, всяка нощ."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
 msgid "Pepin saved my grandmother's life, and I know that I can never repay him for that. His ability to heal any sickness is more powerful than the mightiest sword and more mysterious than any spell you can name. If you ever are in need of healing, Pepin can help you."
-msgstr ""
+msgstr "Пипин спаси живота на баба ми, никога няма да мога да му благодаря достатъчно за това. Дарбата му да изцерява всяка болест е много по-мощтна от най-мощният меч и много по-мистериозна от което и да е заклинание, за което се сетиш."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
 msgid "I grew up with Wirt's mother, Canace. Although she was only slightly hurt when those hideous creatures stole him, she never recovered. I think she died of a broken heart. Wirt has become a mean-spirited youngster, looking only to profit from the sweat of others. I know that he suffered and has seen horrors that I cannot even imagine, but some of that darkness hangs over him still."
-msgstr ""
+msgstr "Израстнах в компанията на майката на Върт, Канис. Макр да беше несериозно ранена, когато тези безбожни чудовища го отвлякоха, тя никога не можа да се възстанови. Мисля, че тъгата я довърши. По онова време, Върт го раздаваше като подлец, печелейки от страданията на другите. Знам, че е изстрадал мног и е видял такива ужаси, каквито дори не мога да си представя, обаче част от тези пороци все още го преследват."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
 msgid "Ogden and his wife have taken me and my grandmother into their home and have even let me earn a few gold pieces by working at the inn. I owe so much to them, and hope one day to leave this place and help them start a grand hotel in the east."
-msgstr ""
+msgstr "Огдън и жена му бяха така добри да ни приемат с баба ми в дома си, дори ми позволи да припечелвам някой грош в кръчмата. Длъжник съм им, искрено се надявам някой ден, когато си тръгна оттук, да им помогна да отворят голям хотел на изток."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr ""
+msgstr "Е, с какво мога да помогна?"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
 msgid "If you're looking for a good weapon, let me show this to you. Take your basic blunt weapon, such as a mace. Works like a charm against most of those undying horrors down there, and there's nothing better to shatter skinny little skeletons!"
-msgstr ""
+msgstr "Ако си търсиш сгодно оръжие, нека ти предложа нещо. Да речем, най-обикновено тъпо ръжие, като например боздуган. Върши чудесна работа срещу повечето страшилища, които ще ти се изпречат на пътя. Какво по-добро от това да разсечеш грозните скелети на парчета."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
 msgid "The axe? Aye, that's a good weapon, balanced against any foe. Look how it cleaves the air, and then imagine a nice fat demon head in its path. Keep in mind, however, that it is slow to swing - but talk about dealing a heavy blow!"
-msgstr ""
+msgstr "Брадва?  Да, добро оръжие, подходящо срещу всякакви противници. Погледни как разсича въздуха, сега си представи как остръето минава през дебелата глава на демона. Имай в предвид, че е замахът е бавен, за разлика от това, последващият ефект е поразителен!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
 msgid "Look at that edge, that balance. A sword in the right hands, and against the right foe, is the master of all weapons. Its keen blade finds little to hack or pierce on the undead, but against a living, breathing enemy, a sword will better slice their flesh!"
-msgstr ""
+msgstr "Виж този ръб, какъв баланс. Меч в правилните ръце и срещу правилния враг, майстор на всички оръжия. Острият връх няма какво толкова да разсече или прониже в немъртвите, но пък срещу живия, дишащ противник, мечът ще го раздели наполовина!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
 msgid "Your weapons and armor will show the signs of your struggles against the Darkness. If you bring them to me, with a bit of work and a hot forge, I can restore them to top fighting form."
-msgstr ""
+msgstr "Оръжията и доспехите ти ще търпят поражения при борбата ти срещу Мрака. Донеси ми ги и с чука и малко чалъм на огнището, мога да ги направя като нови."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
 msgid "While I have to practically smuggle in the metals and tools I need from caravans that skirt the edges of our damned town, that witch, Adria, always seems to get whatever she needs. If I knew even the smallest bit about how to harness magic as she did, I could make some truly incredible things."
-msgstr ""
+msgstr "Докато пратически нямам друг избор, освен да си набавям материали и инструменти чрез керваните, прекосяващи нашият проклет град от длъж-нашир, тази вещица, Адрия, винаги получава всичко, от което има нуждае. Ако знаех дори и малко за това, как да използвам магията, както тя го прави, щеше да правя великолепни неща."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
 msgid "Gillian is a nice lass. Shame that her gammer is in such poor health or I would arrange to get both of them out of here on one of the trading caravans."
-msgstr ""
+msgstr "Джилиън... мила девойка. Жалко, че баба й е в такова лошо здраве, иначе досега да съм уредил да ги измъкнат от тук с една от керваните."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
 msgid "Sometimes I think that Cain talks too much, but I guess that is his calling in life. If I could bend steel as well as he can bend your ear, I could make a suit of court plate good enough for an Emperor!"
-msgstr ""
+msgstr "Понякога ми се струва, че Кайн говори твърде много. Може би това е неговото призвание. Ако можех да огъна стомана така, както той може да огъне ухото ти, да съм направил ризница от твърда стомана, като за Император."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
 msgid "I was with Farnham that night that Lazarus led us into Labyrinth. I never saw the Archbishop again, and I may not have survived if Farnham was not at my side. I fear that the attack left his soul as crippled as, well, another did my leg. I cannot fight this battle for him now, but I would if I could."
-msgstr ""
+msgstr "Бях с Фарнхам онази нощ, когато Лазар ни поведе в Лабиринта. Никога повече не видях Архиепископа и да не бях жив сега, ако Фарнхам не беше с мен. Опасявам се, вследствие на нападението, душата му е осакатена, както и кракът ми. Не мога да водя тази битка редом с него в това състояние, де да можех."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
 msgid "A good man who puts the needs of others above his own. You won't find anyone left in Tristram - or anywhere else for that matter - who has a bad thing to say about the healer."
-msgstr ""
+msgstr "Онзи, който слага нуждите на другите пред своите, е истински мъж. Няма да намериш нито в Тристрам, нито някъде другаде, всъщност, някой, който да каже лоша дума за лечителя."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
 msgid "That lad is going to get himself into serious trouble... or I guess I should say, again. I've tried to interest him in working here and learning an honest trade, but he prefers the high profits of dealing in goods of dubious origin. I cannot hold that against him after what happened to him, but I do wish he would at least be careful."
-msgstr ""
+msgstr "Този юнак ще се забърка в сериозни неприятности... Ако трябва да го кажа отново, ще го направя. Опитах да привлеча интереса му, да го накарам да работи тук и да вземе нещо от мен за честния търговски занаят, той обаче предпочете парите от търговията на стока със странен произход. Не мога да го обвинявам в нищо, след това, което го сполетя и поне се надявам, да внимава."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
 msgid "The Innkeeper has little business and no real way of turning a profit. He manages to make ends meet by providing food and lodging for those who occasionally drift through the village, but they are as likely to sneak off into the night as they are to pay him. If it weren't for the stores of grains and dried meats he kept in his cellar, why, most of us would have starved during that first year when the entire countryside was overrun by demons."
-msgstr ""
+msgstr "Кръчмарят води сериозен бизнес, от който не печели достатъчно. Успява да свърже двата края, като предлага храна и престой на онези, които често скиторят из селото и е много вероятно да не му платят за което. Нямаше ли ги запасите от зърна и сушените меса, които пази в мазето си, болшинството от нас щеше да гладуваме през първата година, когато цялата околия беше превзета от демоните."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr ""
+msgstr "Не може ли човек да пие на спокойствие? "
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
 msgid "The gal who brings the drinks? Oh, yeah, what a pretty lady. So nice, too."
-msgstr ""
+msgstr "Мадамата, която сервира напитките? А, да, каква красавица. С един мил глас."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:407
 msgid "Why don't that old crone do somethin' for a change. Sure, sure, she's got stuff, but you listen to me... she's unnatural. I ain't never seen her eat or drink - and you can't trust somebody who doesn't drink at least a little."
-msgstr ""
+msgstr "Защо тази дърта кукумявка не се заеме да прави нещо за разнообразие. Да, да, ясно ми е, че има всичко, но, слушай какво ще ти кажа... има нещо необикновено в нея. Никога не съм я виждал да яде или да пие, а да имаш вяра на някой, който не близва дори капка, не е шега работа."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
 msgid "Cain isn't what he says he is. Sure, sure, he talks a good story... some of 'em are real scary or funny... but I think he knows more than he knows he knows."
-msgstr ""
+msgstr "Кайн не е този, който твърди, че е. Добър разказвач е, безспорно... някои от историите са потресаващи, други смешни....  Мен ако питаш, знае много повече от това, което твърди, че знае."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
 msgid "Griswold? Good old Griswold. I love him like a brother! We fought together, you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
-msgstr ""
+msgstr "Грисволд? Добрият стар Грисволд. Обичам го като свой брат! Бихме се рамо до рамо навремето, когато.... двамата.... Лазар... Лазар... Лазар!!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
 msgid "Hehehe, I like Pepin. He really tries, you know. Listen here, you should make sure you get to know him. Good fella like that with people always wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a hero too..."
-msgstr ""
+msgstr "Ха-ха-ха, харесвам Пипин. Знаеш ли, поне наистина се старае. Да знаеш, трябва да го опознаеш по-отблизо. Добър човечец, който винаги е при онези, които се нуждаят от помощ. Ей, мисля си, че е като теб, герой, а? И аз бях герой..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
 msgid "Wirt is a kid with more problems than even me, and I know all about problems. Listen here - that kid is gotta sweet deal, but he's been there, you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
-msgstr ""
+msgstr "Върт си има повече проблеми, дори и от мен, знам за всички тях. Послушай ме, това хлапе - той беше там, нали разбираш? Загуби си крака! Сега ходи на дървен кол. Колко жалко, колко жалко..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
 msgid "Ogden is the best man in town. I don't think his wife likes me much, but as long as she keeps tappin' kegs, I'll like her just fine. Seems like I been spendin' more time with Ogden than most, but he's so good to me..."
-msgstr ""
+msgstr "Огдън - най-свестният мъж в града. Не мисля, че жена му ме харесва особено много, но докато тя продава бъчви, нямам нищо против това. Напоследък прекавам повече време с Огдън, отколкото с останалите, но поне той ме оценява...."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
 msgid "I wanna tell ya sumthin', 'cause I know all about this stuff. It's my specialty. This here is the best... theeeee best! That other ale ain't no good since those stupid dogs..."
-msgstr ""
+msgstr "Искам да ти споделя нещо, понеже разбирам от това. То ми е в кръвта. Това тук е най-доброто.... от най-най-доброто!  Другото пиво вече не струва откакто нехранимайковците...."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
 msgid "No one ever lis... listens to me. Somewhere - I ain't too sure - but somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and just waitin' for someone to get it."
-msgstr ""
+msgstr "Никой вече не ме слу.... не ме слуша. Някъде, не знам точно къде, но някъде долу, под църквата, лежи имане. Блещука, сияе, само чака някой да го изкопае."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
 msgid "I know you gots your own ideas, and I know you're not gonna believe this, but that weapon you got there - it just ain't no good against those big brutes! Oh, I don't care what Griswold says, they can't make anything like they used to in the old days..."
-msgstr ""
+msgstr "Знам, имаш свои виждания, и още по-добре знам, че няма да повярваш, но това оръжие, твоето - няма да те спаси от тези големи говеда! Не ме интересува какво твърди Грисволд, вече не правят нищо така, както беше навремето."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
 msgid "If I was you... and I ain't... but if I was, I'd sell all that stuff you got and get out of here. That boy out there... He's always got somethin good, but you gotta give him some gold or he won't even show you what he's got."
-msgstr ""
+msgstr "Ако бях на твое място.... а не съм.... но ако бях, щеше да разкарам всичко и да се махна оттук. Онова момче там... той винаги получава по-хубавите неща, но за да ти ги покаже, трябва първо да му платиш."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
 msgid "I sense a soul in search of answers..."
-msgstr ""
+msgstr "Долавям душа, която е излязла на лов за отговори..."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:428
 msgid "Wisdom is earned, not given. If you discover a tome of knowledge, devour its words. Should you already have knowledge of the arcane mysteries scribed within a book, remember - that level of mastery can always increase."
-msgstr ""
+msgstr "Знанията се заработват, не се дават. Ако откриеш книга на знанията, погълни думите й. Ако вече имаш знанията за мистериозните тайни, описани в книга, запомни - обсегът на тази мистерия може да се разшири."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
 msgid "The greatest power is often the shortest lived. You may find ancient words of power written upon scrolls of parchment. The strength of these scrolls lies in the ability of either apprentice or adept to cast them with equal ability. Their weakness is that they must first be read aloud and can never be kept at the ready in your mind. Know also that these scrolls can be read but once, so use them with care."
-msgstr ""
+msgstr "Най-великата сила често е най-краткотрайната. Може да откриеш старинни думи на могъществото, запечатани в свитъци пергамент. Тези свитъци, тяхната сила се крие във възможността всеки чирак или специалист, да ги използва с еднаква полза. Докато слабостта им е там, че трябва да бъдат прочитани на висок глас и никога наизустявани. Също така, знай, че могат да бъдат прочитани само веднъж, използвай ги разумно."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
 msgid "Though the heat of the sun is beyond measure, the mere flame of a candle is of greater danger. No energies, no matter how great, can be used without the proper focus. For many spells, ensorcelled Staves may be charged with magical energies many times over. I have the ability to restore their power - but know that nothing is done without a price."
-msgstr ""
+msgstr "Макар слънчевата топлина да е неизмерима, пламъци на една свещ представляват много по-голямата опасност. Няма енергия, независимо колкото велика да е тя, която може да бъде ползвана, без подходящото съсредоточение."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
 msgid "The sum of our knowledge is in the sum of its people. Should you find a book or scroll that you cannot decipher, do not hesitate to bring it to me. If I can make sense of it I will share what I find."
-msgstr ""
+msgstr "Сборът от нашите знания - това е сборът от хората. Намериш ли книга или свитък, който е непознат за теб, не се притеснявай да го донесеш на мен. Успея ли да го разчета, ще разглася каквото знам."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
 msgid "To a man who only knows Iron, there is no greater magic than Steel. The blacksmith Griswold is more of a sorcerer than he knows. His ability to meld fire and metal is unequaled in this land."
-msgstr ""
+msgstr "За човекът, който познава единствено Желязото, няма по-голяма магия от Стоманата. Ковачът Грисволд е по-скоро магьосник, отколкото това, за което има. Уменията му да топи огън и метал нямат еквивалент на тази земя."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
 msgid "Corruption has the strength of deceit, but innocence holds the power of purity. The young woman Gillian has a pure heart, placing the needs of her matriarch over her own. She fears me, but it is only because she does not understand me."
-msgstr ""
+msgstr "Осквернението борави със силата на измамата, а невинноста наделява със силата на непорочността. Младата невеста, Джилиън, има непокорно сърце, то поставя на преден план нуждите на мащеха й пред нейните собствени такива. Тя се бои от мен, но това е така, защото не ме разбира."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -7311,27 +7324,27 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
 msgid "The higher you place your faith in one man, the farther it has to fall. Farnham has lost his soul, but not to any demon. It was lost when he saw his fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to be gleaned, but you must separate fact from fantasy."
-msgstr ""
+msgstr "На колкото по-високо се намира вярата в един човек, толкова по-дълго ще и трябва, за да падне. Фарнхам загуби девствеността на душата си, но не от демон. Загуби я, когато видя как архиепископ Лазар предава своите съселяни. Той разполага с знания, от които може да черпиш, но трябва да разделиш фактите от възможностите."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
 msgid "The hand, the heart and the mind can perform miracles when they are in perfect harmony. The healer Pepin sees into the body in a way that even I cannot. His ability to restore the sick and injured is magnified by his understanding of the creation of elixirs and potions. He is as great an ally as you have in Tristram."
-msgstr ""
+msgstr "Ръката, сърцето и разумът могат да постигнат чудеса, когато се намират в пълна хармония. Лечителят Пипин вижда в тялото така, както аз не мога. Тази негова способност да вдига на крака болните и ранените се усилват от разбиранията му за елексирите и отварите. Той е толкова полезен съюзник в Тристрам, колкото и ти."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
 msgid "There is much about the future we cannot see, but when it comes it will be the children who wield it. The boy Wirt has a blackness upon his soul, but he poses no threat to the town or its people. His secretive dealings with the urchins and unspoken guilds of nearby towns gain him access to many devices that cannot be easily found in Tristram. While his methods may be reproachful, Wirt can provide assistance for your battle against the encroaching Darkness."
-msgstr ""
+msgstr "Има толкова много неща в бъдещето, които не можем да предвидим, но когато времето настане, децата са онези, които ще ги владеят. Момчето, Върт, има черно петно надвиснало над душата, но той не представлява опасност за града и неговите жители. Тайните му пазарлъци с калпазаните и негласните гилдии от околните градове, му осигуряват достъп до много устройства, които, по принцип, не могат да бъдат намерени лесно в Тристрам. Но макар неговите методи да са долнопробни, Върт може да ти помогне в битката срещу посегателството на Мрака."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
 msgid "Earthen walls and thatched canopy do not a home create. The innkeeper Ogden serves more of a purpose in this town than many understand. He provides shelter for Gillian and her matriarch, maintains what life Farnham has left to him, and provides an anchor for all who are left in the town to what Tristram once was. His tavern, and the simple pleasures that can still be found there, provide a glimpse of a life that the people here remember. It is that memory that continues to feed their hopes for your success."
-msgstr ""
+msgstr "Глинените стени и сламените навеси не градят дом. Кръчмарят, Огдън, допринася много повече в този град, мнозина не го осъзнават. Осигури подслон на Джилиън и майка й, държи Фарнхам на крака доколкото може и обезпечава всеки, останал в  това, което някога беше Тристрам. Неговата кръчма и обикновените емоции, които можеш да усетиш там, дават представа над живота, който хората помнят. Точно този спомен продължава да храни надеждите им за твоя успех."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
 msgid "Pssst... over here..."
-msgstr ""
+msgstr "Псс-т... насам..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:451
@@ -7340,36 +7353,39 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
+"Не всеки в Тристрам има приложение или пазар за това, което намериш в лабиринта. Дори аз, колкото и трудно да е за вярване.\n"
+"\n"
+"Понякога, единствено ти самия можеш да намериш потребност от нещата, които откриеш."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
 msgid "Don't trust everything the drunk says. Too many ales have fogged his vision and his good sense."
-msgstr ""
+msgstr "Не вярвай на всичко, което идва от устата на пияницата. Толкова много бира му замъглява разума, наквасява се здраво."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
 msgid "In case you haven't noticed, I don't buy anything from Tristram. I am an importer of quality goods. If you want to peddle junk, you'll have to see Griswold, Pepin or that witch, Adria. I'm sure that they will snap up whatever you can bring them..."
-msgstr ""
+msgstr "В случай, че не си забелязал, не купувам нищо от Тристрам. Внасям качествени стоки. Ако търгуваш с боклуци, иди при Грисволд, Пипин или оная вещерица, Адрия. Със сигурност ще вземат каквото и да им занесеш."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
 msgid "I guess I owe the blacksmith my life - what there is of it. Sure, Griswold offered me an apprenticeship at the smithy, and he is a nice enough guy, but I'll never get enough money to... well, let's just say that I have definite plans that require a large amount of gold."
-msgstr ""
+msgstr "Дължа живота си на ковача - или това, което е останало от него. Разбира се, Грисволд ми предложи да бъда чирак в ковачницата, той е свестен човек. Но парите няма да ми стигат, за да... нека кажем, че имам планове, които изискват доста злато."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
 msgid "If I were a few years older, I would shower her with whatever riches I could muster, and let me assure you I can get my hands on some very nice stuff. Gillian is a beautiful girl who should get out of Tristram as soon as it is safe. Hmmm... maybe I'll take her with me when I go..."
-msgstr ""
+msgstr "Ако бях малко по-възрастен, щях да я обсипя с всички богатства, които мога да събера и повярвай ми, мога да се сдобия с доста хубави подаръци. Джилиън е красавица, но трябва да се махне от Тристрам, когато стане безопасно. А може би... може би ще я взема със себе си, когато тръгна...."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
 msgid "Cain knows too much. He scares the life out of me - even more than that woman across the river. He keeps telling me about how lucky I am to be alive, and how my story is foretold in legend. I think he's off his crock."
-msgstr ""
+msgstr "Кайн знае твърде много. Плаши ме до смърт, много повече от онази оттатък реката. Той продължава да ми натяква какъв късметлия съм, че съм жив и как историята ми е предсказана в легенда. Защо ли си мисля, че не е наред с главата."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:463
 msgid "Farnham - now there is a man with serious problems, and I know all about how serious problems can be. He trusted too much in the integrity of one man, and Lazarus led him into the very jaws of death. Oh, I know what it's like down there, so don't even start telling me about your plans to destroy the evil that dwells in that Labyrinth. Just watch your legs..."
-msgstr ""
+msgstr "Фарнхам - човек със сериозни проблем, на мен ми е пределно ясно колко сериозни могат да бъдат неговите проблеми. Довери се твърде много на един определен човек, а Лазар го отведе право в леговището на дявола. Доста добре знам какво е там долу, така че не ми идвай с тези приказки, че искаш да унищожиш злото, завардило Лабиринта. Внимавай къде стъпваш..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -7378,27 +7394,30 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
+"Поне докато не се налага да бъдеш кърпен, старият Пипин ще ти свърши работа.\n"
+"\n"
+"Де да имах от онези отвари, които той приготвя, сега щеше да ходя нормално."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
 msgid "Adria truly bothers me. Sure, Cain is creepy in what he can tell you about the past, but that witch can see into your past. She always has some way to get whatever she needs, too. Adria gets her hands on more merchandise than I've seen pass through the gates of the King's Bazaar during High Festival."
-msgstr ""
+msgstr "Адрия ми докарва главоболия. От своя страна, Кайн е стране заради това, което може да ти наприказва за миналото, но Вещицата може да разчете ТВОЕТО минало. Тя винаги намира начини да се сдобие с онова, което и е необходимо. Не само, през ръцете й минава повече стока от всичкото, което съм виждал да минава през портите на Кралския базар по времето на Високия фестивал."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
 msgid "Ogden is a fool for staying here. I could get him out of town for a very reasonable price, but he insists on trying to make a go of it with that stupid tavern. I guess at the least he gives Gillian a place to work, and his wife Garda does make a superb Shepherd's pie..."
-msgstr ""
+msgstr "Огдън е глупак, задето остана тук. Мога да го изкарам от града срещу скромна сума, а той продължава да опитва да печели от проклета кръчма. Поне прибра Джилиън, даде й работа и жена му, Гарда, прави невероятен Овчарски пай..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
 msgid "Beyond the Hall of Heroes lies the Chamber of Bone. Eternal death awaits any who would seek to steal the treasures secured within this room. So speaks the Lord of Terror, and so it is written."
-msgstr ""
+msgstr "Зад Залата на Геройте се намира Залата на Костите. Вечна смърт грози всеки, който се усмели да открадне съкровищата, съхранени в тази стая. Така е записано и така казва Господарят на Злото."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
 #: Source/textdat.cpp:527 Source/textdat.cpp:535
 msgid "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, Valor awaits for the Hero of Light to awaken..."
-msgstr ""
+msgstr "...и затова, заключен зад Портата на Кръвта и Залата на Огъня, Доблестният очаква да бъде пробуден Героят на Светлината..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -7413,21 +7432,29 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
+"Ти не виждаш това, което виждам аз.\n"
+"Облачен поглед и очите гният.\n"
+"Обърни се и тях вече ги няма,\n"
+"шепнейки своята нечувана песен.\n"
+"Тогава ще видиш онова, което не е,\n"
+"Ходят сенки там, където светлината трябва да е.\n"
+"В безумие, в тъмнина,\n"
+"В Залата на Слептите ти ще бъдеш."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
 msgid "The armories of Hell are home to the Warlord of Blood. In his wake lay the mutilated bodies of thousands. Angels and men alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood."
-msgstr ""
+msgstr "Арсеналът на Ада е дом на Военачалника на Кръвта. Зад него лежат осакатените трупове на хиляди хора. Ангели и хората са убити, за да бъдат принесени в безкрайна жертва на Мрачите, които крещят за едно нещо - кръв."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
 msgid "Take heed and bear witness to the truths that lie herein, for they are the last legacy of the Horadrim. There is a war that rages on even now, beyond the fields that we know - between the utopian kingdoms of the High Heavens and the chaotic pits of the Burning Hells. This war is known as the Great Conflict, and it has raged and burned longer than any of the stars in the sky. Neither side ever gains sway for long as the forces of Light and Darkness constantly vie for control over all creation."
-msgstr ""
+msgstr "Бъди внимателен и обследвай истините, които лежат наоколо. Те са последните наследници на Хорадрим. Дори в момента води се война между утопическите царства на Високите небеса и хаотическите бездните на Горящия ад, която е извън предела на извесните ни полета. Тази война, известна като Великия конфликт, бушува и гори повече от която и да е от звездите в небето. Нито една от страните не взема надмощие, докато силите на Светлината и Мрака постоянно воюват за контрол над всяко създание."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:507
 msgid "Take heed and bear witness to the truths that lie herein, for they are the last legacy of the Horadrim. When the Eternal Conflict between the High Heavens and the Burning Hells falls upon mortal soil, it is called the Sin War. Angels and Demons walk amongst humanity in disguise, fighting in secret, away from the prying eyes of mortals. Some daring, powerful mortals have even allied themselves with either side, and helped to dictate the course of the Sin War."
-msgstr ""
+msgstr "Бъди внимателен и обследвай истините, които лежат наоколо. Те са последните наследници на Хорадрим. Когато Вечният конфликт между Високите небеса и Горящия ад  падне върху смъртната почва, се ражда Войната на Греха. Ангели и Демони странстват между хората в прикритие, сражавайки се потайно, далеч от зорките погледи на простосмъртните. Някой от които, по-силните, дори се съюзяват с двете страни, за да насочват Войната на Греха."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:509
@@ -7438,16 +7465,21 @@ msgid ""
 " \n"
 "Be warned that the soulstone must be kept from discovery by those not of the faith. If Diablo were to be released, he would seek a body that is easily controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
+"Бъди внимателен и обследвай истините, които лежат наоколо. Те са последните наследници на Хорадрим. Преди приблизително три хиляди години, се разчу, че тайнствени Трима господари на Горящия ад, са дошли в нашия свят. В продължение на десетилетия, Тримата братя опустошат земите на изток, докато човечеството е оставено да трепери след тях. Нашият орден, Хорадрим, бе основан от група магьосници, с цел да открие и залови Тримата господари веднъж и завинаги.\n"
+"\n"
+"Първоначалните Хорадрими затвориха двама от тях в могъщи артефакти, наречени Камъни на душата и ги заровиха дълбоко под осиротелите източни пясъци. Третото зло успява да избяга от плен и поема на запад, докато повечето от Хорадримите го преследват. А то, извесно като Диабло, Господарят на Ужаса, по-късно също бива заловено, затворено в Камък на душата и загробено, тук, в Лабиринта.\n"
+"\n"
+"Имай в предвид, че този Камък не трябва да бъде откриван от неверниците. Бидейки освободен, Диабло ще опита да се всели в тяло, което лесно може да бъде манипулирано, като например на възрастен или на дете, защото няма да има сили."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:511
 msgid "So it came to be that there was a great revolution within the Burning Hells known as The Dark Exile. The Lesser Evils overthrew the Three Prime Evils and banished their spirit forms to the mortal realm. The demons Belial (the Lord of Lies) and Azmodan (the Lord of Sin) fought to claim rulership of Hell during the absence of the Three Brothers. All of Hell polarized between the factions of Belial and Azmodan while the forces of the High Heavens continually battered upon the very Gates of Hell."
-msgstr ""
+msgstr "Така се случи, че в Горящия ад започна велика революция - нарекоха я Изгнанието на Мрака. По-малкото зло обори Трите големи злини и запрати техните духовни образи в Царството на смъртните. Демоните Белиал - Господарят на Измамата и Азмодан - Господарят на Греха, се сражаваха за власт над Ада, в отсъствието на Тримата братя. Целият Ад се раздели на фракции, на Белиал и на Азмодан, в момент, в който Високите небеса водеха непрестанна битка над Портите на Ада."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:513
 msgid "Many demons traveled to the mortal realm in search of the Three Brothers. These demons were followed to the mortal plane by Angels who hunted them throughout the vast cities of the East. The Angels allied themselves with a secretive Order of mortal magi named the Horadrim, who quickly became adept at hunting demons. They also made many dark enemies in the underworlds."
-msgstr ""
+msgstr "Много демони се отправиха към Царството на смъртните, за да търсят Тримата братя, последвани от Ангелите в света на смъртните, които ги преследваха през обширните градове на Изток. Ангелите се съюзиха с потайния Орден на смъртните магьосници на име Хорадрим, които бързо станаха майсори в улавянето на демони. Така те си създадавадоха множество врагове в подземните светове."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:515
@@ -7456,21 +7488,24 @@ msgid ""
 " \n"
 "Eventually the Horadrim captured Diablo within a Soulstone as well, and buried him under an ancient, forgotten Cathedral. There, the Lord of Terror sleeps and awaits the time of his rebirth. Know ye that he will seek a body of youth and power to possess - one that is innocent and easily controlled. He will then arise to free his Brothers and once more fan the flames of the Sin War..."
 msgstr ""
+"Така се случи, че душевните образи на Трите големи злини бяха изпратени в Царството на смъртните. Накрая, след десетилетия във всяване на хаос на Изток, те биват уловени от прокълнатия Орден на смъртните Хорадрими. Хорадримите използвали артефакти, наречени Камъни на Душата, за да съхранят същността на Мефисто - Господарят на Омразата и Господарят на Унищожението, неговия брат, Баал. По-големият брат, Диабло, Господарят на Ужаса, бяга на запад.\n"
+"\n"
+"В края на крайщата, Хорадримите затварят и Диабло в Камък на душата. и го заравят под древната, забравена Катедрала. Там, Господарят на Ужаса почива и изчаква моментът на своето възраждане. Знай, че той ще иска не младо и енергично тяло, а такова, което лесно може да обладае - невинно и лесно контролируемо. Тогава той ще се надигне, за да освободи братята си и отново ще наклади огньовете на Войната на греховете."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
 msgid "All praises to Diablo - Lord of Terror and Survivor of The Dark Exile. When he awakened from his long slumber, my Lord and Master spoke to me of secrets that few mortals know. He told me the kingdoms of the High Heavens and the pits of the Burning Hells engage in an eternal war. He revealed the powers that have brought this discord to the realms of man. My lord has named the battle for this world and all who exist here the Sin War."
-msgstr ""
+msgstr "Хвала на Диабло - Господарят на Ужаса и оцелял Мрачното изгнание. Когато той се пробужда от дълбокия сън, моят господар и учител, ми разкри  тайни, които мнозина смъртни не знаят. Той ми спомена, че кралствата на Високите небеса и бездните на Горящия ад, дали началото на вековна война. Показа ми силите, които са довели този дисбаланс в света на човека. Моят Господар назова конфликта на този свят и всички останали, които съществуват, Войната на Греха."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:519
 msgid "Glory and Approbation to Diablo - Lord of Terror and Leader of the Three. My Lord spoke to me of his two Brothers, Mephisto and Baal, who were banished to this world long ago. My Lord wishes to bide his time and harness his awesome power so that he may free his captive brothers from their tombs beneath the sands of the east. Once my Lord releases his Brothers, the Sin War will once again know the fury of the Three."
-msgstr ""
+msgstr "Слава и одобрение на Диабло - Господарят на Ужаса и Водач на Трите. Моят Господар ми разказа за неговите двама братя, Мефисто и Баал, които били изпратени на този свят отдавна. Той желае да отдаде времето си и да възбуди своята невероятната сила, за да освободи пленените си братя от техните гробници, дълбоко под пясъците на изток. И когато Господарят разбие оковите, Войната на Греха отново ще усети яростта на Тримата."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
 msgid "Hail and Sacrifice to Diablo - Lord of Terror and Destroyer of Souls. When I awoke my Master from his sleep, he attempted to possess a mortal's form. Diablo attempted to claim the body of King Leoric, but my Master was too weak from his imprisonment. My Lord required a simple and innocent anchor to this world, and so found the boy Albrecht to be perfect for the task. While the good King Leoric was left maddened by Diablo's unsuccessful possession, I kidnapped his son Albrecht and brought him before my Master. I now await Diablo's call and pray that I will be rewarded when he at last emerges as the Lord of this world."
-msgstr ""
+msgstr "Приветствия и жертви за Диабло - Господарят на ужаса и Разрушител на души. Когато пробудих моя Господар от съня, той се опита да приеме образа на смъртен. Диабло се опита да обладае тялото на Крал Леори, но Учителя нямаше сили, задето беше държан в плен. Моят Господар се нуждаеше от обикновен и невинен преход до този свят и той намери малкия Албрихт за най-подходящият за задачата. Докато, в това време, добрият Крал Леорик изпадаше в ярост заради неуспешното владение на Диабло. Аз отвлякох сина му, Албрихт и го отведох при моя Учител. Сега, очаквам Диабло да вземе решение и се надявам, че усилията ми ще бъдат възнаградени, когато бъде провъзгласен за Владетел на този свят."
 
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
@@ -7480,126 +7515,131 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
+"Слава богу, че се върна!\n"
+"\n"
+"Доста неща се промениха, откакто си тръгна, приятелю. Цареше пълен мир, докато Ездачите на мрака не минаха и разрушиха селото. Мнозина завариха смъртта си на място. Онези, които се осмелиха да вдигнат оръжие, бяха жестоко разсечени, някои взети за роби, а други ги застигна най-лошото. Църквата в края на града бе осквернена и ползвана за мрачни ритуали. Писъците, които се чуват през нощта оттам, са нечовешки, но някои от съселяните може и да е оцелял. Следвай пътеката, простираща се между моята таверна и ковачницата, за да стигнеш до църквата - и спаси когото можеш.\n"
+"\n"
+"Може би ще можем да си поговорим по-обширно някой друг път. Успех."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:525 Source/textdat.cpp:533
 msgid "Beyond the Hall of Heroes lies the Chamber of Bone.  Eternal death awaits any who would seek to steal the treasures secured within this room.  So speaks the Lord of Terror, and so it is written."
-msgstr ""
+msgstr "Зад Залата на Геройте се намира Залата на Костите. Онзи, който докосне с задни помисли съкровищата, съхранени в тази стая, го чака вечна смърт. Така казва Господарят на ужаса, така и е писано."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
 msgid "The armories of Hell are home to the Warlord of Blood.  In his wake lay the mutilated bodies of thousands.  Angels and man alike have been cut down to fulfill his endless sacrifices to the Dark ones who scream for one thing - blood."
-msgstr ""
+msgstr "Арсеналът на Ада е дом на Военачалника на Кръвта. Зад него лежат осквернените тела на хиляди хора. Ангели и хора са убити, за да бъдат принесени в жертва на Мрачните, които искат само едно - кръв."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
 msgid "Maintain your quest.  Finding a treasure that is lost is not easy.  Finding a treasure that is hidden less so.  I will leave you with this.  Do not let the sands of time confuse your search."
-msgstr ""
+msgstr "Не прекратявай това приключение. Да намериш изгубено съкровище, не е никак лесно. Но да намериш съкровище, което е скрито, е още по-трудно. Ще ти кажа следното. Не позволявай на пясъците на времето да внесат объркат твоето търсене."
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
 msgid "A what?!  This is foolishness.  There's no treasure buried here in Tristram.  Let me see that!!  Ah, Look these drawings are inaccurate.  They don't match our town at all.  I'd keep my mind on what lies below the cathedral and not what lies below our topsoil."
-msgstr ""
+msgstr "Какво?! Това е глупост. Тук, в Тристрам, няма заровено имане. Дай да видя картата! Да, виж, тези очертания са неверни. Не отговарят на нашия град. Аз бих се съсредоточил над това, което се намира под катедралата, не върху това, което е под почвата."
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
 msgid "I really don't have time to discuss some map you are looking for.  I have many sick people that require my help and yours as well."
-msgstr ""
+msgstr "Нямам време да обсъждам някаква карта, която търсиш. Има доста болни хора, които се нуждаят от моята и от твоята помощ."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
 msgid "The once proud Iswall is trapped deep beneath the surface of this world.  His honor stripped and his visage altered.  He is trapped in immortal torment.  Charged to conceal the very thing that could free him."
-msgstr ""
+msgstr "Някога гордият Исвол, сега е окован дълбоко под повърхността на този свят. Той загуби честта си и същността му се измени. Затворен е в капана на безсмъртни мъчения, задължен да скрие единственото нещо, което може да го освободи."
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
 msgid "I'll bet that Wirt saw you coming and put on an act just so he could laugh at you later when you were running around the town with your nose in the dirt.  I'd ignore it."
-msgstr ""
+msgstr "Готов съм да се обзаложа, че когато Върт те е видял да идваш, ти е скроил някакъв номер, така че да може да ти се присмива когато бягаш из града с нос, заврян в калта. Не му обръщай внимание."
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
 msgid "There was a time when this town was a frequent stop for travelers from far and wide.  Much has changed since then.  But hidden caves and buried treasure are common fantasies of any child.  Wirt seldom indulges in youthful games.  So it may just be his imagination."
-msgstr ""
+msgstr "Навремето, този град беше важна дестинация за пътешествениците от всички краища на земята. Много неща се промениха оттогава. А тайните пещери и заровените съкровища - те саа само в главите на децата.  Вирт рядко взема участие в юношеските игри. Но може просто да си въобразява."
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
 msgid "Listen here.  Come close.  I don't know if you know what I know, but you've have really got something here.  That's a map."
-msgstr ""
+msgstr "Слушай. Ела по близо. Не знам дали знаеш, каквото аз знам, но действително носиш нещо интересно. Това е карта."
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
 msgid "My grandmother often tells me stories about the strange forces that inhabit the graveyard outside of the church.  And it may well interest you to hear one of them.  She said that if you were to leave the proper offering in the cemetary, enter the cathedral to pray for the dead, and then return, the offering would be altered in some strange way.  I don't know if this is just the talk of an old sick woman, but anything seems possible these days."
-msgstr ""
+msgstr "Моята баба често ми разказва истории за някаква странна сила, обитаваща пределите на гробището до църквата. Може би ще ти е интересно да чуеш една от тях. Тя ми прошепна, че ако оставиш подходящия дар в гробището, влезеш в катедралата, за да се помолиш за душите на мъртвите и се върнеш обратно, оставеният предмет щял да придобие друг вид. Не знам дали това е просто измислица в главата на една болна жена, но пък, всичко е възможно."
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
 msgid "Hmmm.  A vast and mysterious treasure you say.  Mmmm.  Maybe I could be interested in picking up a few things from you.  Or better yet, don't you need some rare and expensive supplies to get you through this ordeal?"
-msgstr ""
+msgstr "М-м. Масивно и мистериозно съкровище. М-м-м. Може би трябва да видя какво имаш да ми предложиш. О, всъщност, не ти ли трябват рядки и ценни материали, които да те преведат през това изпитание?"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
 msgid "So, you're the hero everyone's been talking about. Perhaps you could help a poor, simple farmer out of a terrible mess? At the edge of my orchard, just south of here, there's a horrible thing swelling out of the ground! I can't get to my crops or my bales of hay, and my poor cows will starve. The witch gave this to me and said that it would blast that thing out of my field. If you could destroy it, I would be forever grateful. I'd do it myself, but someone has to stay here with the cows..."
-msgstr ""
+msgstr "А, значи ти си героят, за когото всички говорят. Навярно можеш да помогнеш на един беден, прост фермер, да се спаси от беда? На север от тук, в края на овощната ми градина, има някаква ужасна твар, която излиза от земята и запречва пътя. Не мога да стигна до моите култури и до балите, кравите нямат какво да ядат. Вещицата ми даде това и ми каза, че ще пропъди създанието далеч от нивята. Ако можеш да го убиеш, ще ти бъда благодарен до живот. Не искам да оставям кравите без надзор, иначе мога да го направя сам."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
 msgid "I knew that it couldn't be as simple as that witch made it sound. It's a sad world when you can't even trust your neighbors."
-msgstr ""
+msgstr "Предусещах, че няма да е толкова лесно, колкото вещицата смяташе, че ще е. Жалко място е светът, когато не можеш да се довериш на съседите си."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
 msgid "Is it gone? Did you send it back to the dark recesses of Hades that spawned it? You what? Oh, don't tell me you lost it! Those things don't come cheap, you know. You've got to find it, and then blast that horror out of our town."
-msgstr ""
+msgstr "Отиде ли си? Изпрати ли го обратно във владенията на Хадес, откъдето се е пръкнало? Е? Само не ми казвай, че го загуби! Тези неща струват скъпо, дано разбираш. Трябва да го намериш и да го изпъдиш."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
 msgid "I heard the explosion from here! Many thanks to you, kind stranger. What with all these things comin' out of the ground, monsters taking over the church, and so forth, these are trying times. I am but a poor farmer, but here -- take this with my great thanks."
-msgstr ""
+msgstr "Чух тътена от тук. Много ти благодаря, драги ми страннико. Не знам какво става, нито откъде се взеха тези неща, излизащи от земята, чудовищата обитаващи църквата и всичко останало. Живеем в тежки времена. Нищо че съм беден фермер - ето, това е за теб, моят начин да се отблагодаря."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
 msgid "Oh, such a trouble I have...maybe...No, I couldn't impose on you, what with all the other troubles. Maybe after you've cleansed the church of some of those creatures you could come back... and spare a little time to help a poor farmer?"
-msgstr ""
+msgstr "О, каква беда си навлякох... може би... Не, не мога да те забърквам в това, при всичките други проблеми. Може би, после, след като разчистиш църквата от зверчетата, можеш да се върнеш... и да отделиш малко време, за да помогнеш на един беден фермер?"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr ""
+msgstr "Аа-а-ааа! (подсмърча) Ааа-аа-а!(подсмърча)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
 msgid "I lost Theo!  I lost my best friend!  We were playing over by the river, and Theo said he wanted to go look at the big green thing.  I said we shouldn't, but we snuck over there, and then suddenly this BUG came out!  We ran away but Theo fell down and the bug GRABBED him and took him away!"
-msgstr ""
+msgstr "Загубих Тео! Загубих най-добрия си приятел! Играехме си при реката, Тео искаше да отиде да види какво е онова голямо зелено нещо. Казах му, че не трябва да го прави, но... отидохме до него и изведнъж тази голяма буба се показа! Побягнахме, но Тео се спъна и тя го завлече."
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
 msgid "Didja find him?  You gotta find Theodore, please!  He's just little.  He can't take care of himself!  Please!"
-msgstr ""
+msgstr "Диджа го е открила? Трябва да намериш Теодор, моля те! Той е едно малко момче. Не знае да се грижи за себе си! Умолявам те!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
 msgid "You found him!  You found him!  Thank you!  Oh Theo, did those nasty bugs scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, Theo, let's go home!  Thanks again, hero person!"
-msgstr ""
+msgstr "Намерил си го! Намерил си го! Благодаря ти! О, Тео, тези гадни буболечки, изплашиха ли те? Ей! А-а! Нещо се е прилепило към теб! Аа-у! Хайде, Тео, да се връщаме у дома! Отново, благодаря ти, герой!"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
 msgid "We have long lain dormant, and the time to awaken has come.  After our long sleep, we are filled with great hunger.  Soon, now, we shall feed..."
-msgstr ""
+msgstr "Дълго спахме, изглежда е време да ставаме. А след толкова много сън, изпитваме вълчи глад. Ще се наядем, скоро..."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
 msgid "Have you been enjoying yourself, little mammal?  How pathetic. Your little world will be no challenge at all."
-msgstr ""
+msgstr "Доволен ли си, малки бозайко? Колко жалко. Твоят малък свят изобщо няма да бъде проблемен."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
 msgid "These lands shall be defiled, and our brood shall overrun the fields that men call home.  Our tendrils shall envelop this world, and we will feast on the flesh of its denizens.  Man shall become our chattel and sustenance."
-msgstr ""
+msgstr "Тези земи ще бъдат осквернени и нашето племе ще завземе полетата, които хората наричат домове. Нашите корени ще хванат в прегръдка този свят и ние ще се храним от плътта на нейната вярност."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
 msgid "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and fear...how enticing..."
-msgstr ""
+msgstr "Надушвам те... идваш! По-близо! Шшшш... мирисът на кръв и страх... колко съблазнително..."
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -7610,126 +7650,131 @@ msgid ""
 " \n"
 "The stone was of this world -- and of all worlds -- as the Light is both within all things and beyond all things. Light and unity are the products of this holy foundation, a unity of purpose and a unity of possession."
 msgstr ""
+"И в годината на Златната светлина, било речено да бъде издигната велика Катедрала. Основоположният камък на това свето място трябвало да бъде издълбан от прозрачния камък Антираел, кръстен в чест на Ангела, поподелил своята власт с Хорадримите.\n"
+"\n"
+"В годината на Рисуващите сянки, разлюлкяла се земята и Катедралата рухнала и потънала. Когато започнал строежът на катакомбите и замъците и човекът се противопоставял на разрушителната мощ на Войната на Греха, руините са преровени за камъни. Така, крайъгълният камък изчезва от погледа на човека.\n"
+"\n"
+"Камъкът на този и всички други светове, също както Светлината, е над и отвъд всичко останало. Светлината и единството - това са продуктите на това свято основание, единствени цели и единствени притежания."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
 msgid "Moo."
-msgstr ""
+msgstr "Муу."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
 msgid "I said, Moo."
-msgstr ""
+msgstr "Казах: муу."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?"
-msgstr ""
+msgstr "Виж, аз съм крава, разбираш ли?"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
 msgid "All right, all right.  I'm not really a cow.  I don't normally go around like this; but, I was sitting at home minding my own business and all of a sudden these bugs & vines & bulbs & stuff started coming out of the floor... it was horrible!  If only I had something normal to wear, it wouldn't be so bad.  Hey!  Could you go back to my place and get my suit for me?  The brown one, not the gray one, that's for evening wear.  I'd do it myself, but I don't want anyone seeing me like this.  Here, take this, you might need it... to kill those things that have overgrown everything.  You can't miss my house, it's just south of the fork in the river... you know... the one with the overgrown vegetable garden."
-msgstr ""
+msgstr "Добре, добре.  Не съм съвсем крава.  Обикновено не се разхождам така, но изведнъж, както си седя вкъщи и работя, всички тези твари, лозя, луковици и разни работи, започнаха да никнат от пода... страшно беше!  Искаше ми се да имам нещо нормално, което да облека, нещо не чак толкова лошо.  Ей!  Можеш ли да отидеш у дома и да ми донесеш костюма?  Искам да кажа, кафявият по-точно, не сивия - той е за през нощта.  Мога да го направя и сам, но всъщност не искам никой да ме вижда в този вид.  Заповядай, вземи това, може да ти потрябва...  за да убиеш тези неща, избуяли навсякъде.  Няма как да пропуснеш къщата, тя се намира на изток при разклонението на реката... тази с огромната зеленчукова градина..."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
 msgid "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein over there keeps winking at me!"
-msgstr ""
+msgstr "Какво чакаш още? Отиди да вземеш костюма! И побързай! Тази крава отсреща продължава да ми намигва."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
 msgid "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like you wouldn't believe!"
-msgstr ""
+msgstr "Е, взе ли костюма ми? Хайде, дай ми го! Ушите така ме сърбят, нямаш представа!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
 msgid "No no no no!  This is my GRAY suit!  It's for evening wear!  Formal occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need the BROWN suit."
-msgstr ""
+msgstr "Не-не-не! Това е СИВИЯТ костюм! Той е вечерното облекло! За специални случай! Не мога да го облеча сега. Ти, да не би да имаш проблеми със слуха? Трябва ми КАФЯВИЯ."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
 msgid "Ahh, that's MUCH better.  Whew!  At last, some dignity!  Are my antlers on straight?  Good.  Look, thanks a lot for helping me out.  Here, take this as a gift; and, you know... a little fashion tip... you could use a little... you could use a new... yknowwhatImean?  The whole adventurer motif is just so... retro.  Just a word of advice, eh?  Ciao."
-msgstr ""
+msgstr "Е, това вече е по-добре. У-ха! Достойнство, мило мое!  Я кажи, рогата прави ли са? Добре. Слушай, много ти благодаря, че ми помогна. Този подарък е за теб - и още нещо.... един съвет за външния вид... можеш да използваш малко... и нови.... нали разбираш, какво имам предвид? Този приключенски стил... твърде старомоден е. Просто съвет, нали? Чао."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
 msgid "Look.  I'm a cow.  And you, you're monster bait. Get some experience under your belt!  We'll talk..."
-msgstr ""
+msgstr "Виж. Аз съм крава. А ти - плячка за зверовете. Трябва ти доста опит първо! Друг път ще говорим...."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
 msgid "It must truly be a fearsome task I've set before you. If there was just some way that I could... would a flagon of some nice, fresh milk help?"
-msgstr ""
+msgstr "Определено трябва да съм ти поставил доста страховита задача. Ако имаше друг начин да... бутилка с прясно мляко, ще ти свърши ли работа в замяна?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
 msgid "Oh, I could use your help, but perhaps after you've saved the catacombs from the desecration of those beasts."
-msgstr ""
+msgstr "Може да използвам помощта ти, но трябва да разчистиш катакомбите от напаста, която ги обитава."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
 msgid "I need something done, but I couldn't impose on a perfect stranger. Perhaps after you've been here a while I might feel more comfortable asking a favor."
-msgstr ""
+msgstr "Имам една несвършена работа, но така и не мога да попадна на точния човек. Може би, понеже си тук от известно време насам, ще ми е по-удобно да те попитам."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
 msgid "I see in you the potential for greatness.  Perhaps sometime while you are fulfilling your destiny, you could stop by and do a little favor for me?"
-msgstr ""
+msgstr "У теб виждам потенциал за величие. Може би, някой път, докато вървиш по пътя на живота, можеш да се отбиеш и да ми направиш една сулуга?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
 msgid "I think you could probably help me, but perhaps after you've gotten a little more powerful. I wouldn't want to injure the village's only chance to destroy the menace in the church!"
-msgstr ""
+msgstr "Мисля, че можеш да ми помогнеш, но все още си твърде немощен. Не искам да пропилея единствения шанс селото да бъде избавено от напаста, върлуваща около църквата."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
 msgid "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
-msgstr ""
+msgstr "Аз - аз, обявявам се за правдоподобна крава. Измисли си и ти нещо и... тогава ще говорим."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
 msgid "I don't have to explain myself to every tourist that walks by!  Don't you have some monsters to kill?  Maybe we'll talk later.  If you live..."
-msgstr ""
+msgstr "Не съм длъжен да се представям на всеки турист, който минава оттук! Нямаш ли си работа? Може би ще говорим по-късно. Ако все още можеш..."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
 msgid "Quit bugging me.  I'm looking for someone really heroic.  And you're not it.  I can't trust you, you're going to get eaten by monsters any day now... I need someone who's an experienced hero."
-msgstr ""
+msgstr "Престани да ме разиграваш. Търся някой със способностите на герой. А ти не си този. Не мога да ти се доверя, имаш вид на някой, който ще го схрускат зверовете всеки момент. Трябва ми някой с заложби."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
 msgid "All right, I'll cut the bull.  I didn't mean to steer you wrong.  I was sitting at home, feeling moo-dy, when things got really un-stable; a whole stampede of monsters came out of the floor!  I just cowed.  I just happened to be wearing this Jersey when I ran out the door, and now I look udderly ridiculous.  If only I had something normal to wear, it wouldn't be so bad.  Hey!  Can you go back to my place and get my suit for me?  The brown one, not the gray one, that's for evening wear.  I'd do it myself, but I don't want anyone seeing me like this.  Here, take this, you might need it... to kill those things that have overgrown everything.  You can't miss my house, it's just south of the fork in the river... you know... the one with the overgrown vegetable garden."
-msgstr ""
+msgstr "Добре, ще карам направо. Не исках да те вкарвам в заблуждения. Та, както си седя у дома, в приятно настроение, изведнъж нещата излязоха извън контрол - цели пълчища твари заизлизаха от пода! Ужасих се. Точно в този момент носех този пуловер, когато побягнах през вратата и сега, виж ме, изглеждам потресаващо. Де да имах нещо нормално, което да облека, нямаше да е лошо.  Ей! Можеш ли да отидеш вкъщи и да вземеш костюма ми? Имам предвид кафявия, не сивия - той е за през нощта. Нямам нищо против да отида сам, но не искам да ме виждат така. Вземи това, може да ти потрябва.... да си проправиш път през избуялите навсякъде гадинки. Къщата не може да подминеш, тя се намира на юг от разклонението на реката... Онази с буйната зеленчукова градина."
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
 msgid "Cloudy and cooler today.  Casting the nets of necromancy across the void landed two new subspecies of flying horror; a good day's work.  Must remember to order some more bat guano and black candles from Adria; I'm running a bit low."
-msgstr ""
+msgstr "Днес е облачно и хладно. Докато си вършех работата, хванах два нови видя на летящ ужас. Денят мина добре. Дано не забравя да заръчам още гуано и черни свещи на Адрия, защото ми остана малко."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
 msgid "I have tried spells, threats, abjuration and bargaining with this foul creature -- to no avail.  My methods of enslaving lesser demons seem to have no effect on this fearsome beast."
-msgstr ""
+msgstr "Опитах с заклинания, заплахи, прочистване и дори преговарях с това покварно създание - без успех. Методите ми за хващане на малките демони, не подействаха при него."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
 msgid "My home is slowly becoming corrupted by the vileness of this unwanted prisoner.  The crypts are\tfull of shadows that move just beyond the corners of my vision.  The faint scrabble of claws dances at the edges of my hearing. They are searching, I think, for this journal."
-msgstr ""
+msgstr "Домът ми постепенно губи своята жизненост заради този нежелан затворник. Долу, в подземията, витаят множество силуети, които не познавам. Плахото дращене от ноктите танцува на ръба на слуха ми. Мисля, че търсят дневника."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
 msgid "In its ranting, the creature has let slip its name -- Na-Krul.  I have attempted to research the name, but the smaller demons have somehow destroyed my library.  Na-Krul... The name fills me with a cold dread.  I prefer to think of it only as The Creature rather than ponder its true name."
-msgstr ""
+msgstr "В яростта си, създанието издаде своето име -- На-Кул. Опитах да проуча нещо за него в книгите, но по-малките демони все пак успяха да унищожат библиотеката ми. На-Крул.... Това име ме изпълва със страх. Предпочитам да го назовавам като Създанието, отколкото да се замислям над истинското му име. "
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
 msgid "The entrapped creature's howls of fury keep me from gaining much needed sleep.  It rages against the one who sent it to the Void, and it calls foul curses upon me for trapping it here.  Its words fill my heart with terror, and yet I cannot block out its voice."
-msgstr ""
+msgstr "Яростните викове на това същество не ми дават покой. Изглежда, излива яростта си по онзи, който го е изпратил в Пустоща и ме проклина, задето съм отнел свободата му. Думите, виковете, вкаменяват сърцето ми, но не мога да ги спра."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
 msgid "My time is quickly running out.  I must record the ways to weaken the demon, and then conceal that text, lest his minions find some way to use my knowledge to free their lord.  I hope that whoever finds this journal will seek the knowledge."
-msgstr ""
+msgstr "Времето ми изтича. Трябва да запиша методите, чрез които мога да омаломощя демона и да скрия записките, в случай, че неговите слуги се опитат да използват знанията ми, за да освободят своя господар. Надявам се, че онзи, който открие този дневник, ще открие знанията."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -7740,6 +7785,11 @@ msgid ""
 " \n"
 "The spells found in my three grimoires will provide you protected entrance to his domain, but only if cast in their proper sequence.  The levers at the entryway will remove the barriers and free the demon; touch them not!  Use only these spells to gain entry or his power may be too great for you to defeat."
 msgstr ""
+"Онзи, който открие този свитък, е отговорен да спре демоничното създание зад тези стени. Моето време приключи. Дори в момента, неговите дяволски подръжници, дращят в гняв по вратата, зад която се крия.\n"
+"\n"
+"Отнех силите на демона чрез мистериозно заклинание и го затворих между тези велики стени, но се опасявам, че това няма да е достатъчно.\n"
+"\n"
+"Заклинанията, описани в моите гримоари, ще ти осигурят обезпокояван достъп до неговото владение, но само, ако ги прочетеш в правилния ред. Лостовете при входа, ще вдигнат барикадата и освободят демона - тях не докосвай! Използвай единствено силата на заклинанията, за да преминеш, или рискуваш да не можеш да го победиш."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
@@ -7761,103 +7811,103 @@ msgstr ""
 
 #: Source/towners.cpp:96
 msgid "Griswold the Blacksmith"
-msgstr ""
+msgstr "Ковача Грисволд"
 
 #: Source/towners.cpp:119
 msgid "Ogden the Tavern owner"
-msgstr ""
+msgstr "Кръчмаря Огдън"
 
 #: Source/towners.cpp:129
 msgid "Wounded Townsman"
-msgstr ""
+msgstr "Ранения селянин"
 
 #: Source/towners.cpp:152
 msgid "Adria the Witch"
-msgstr ""
+msgstr "Вещицата Адрия"
 
 #: Source/towners.cpp:162
 msgid "Gillian the Barmaid"
-msgstr ""
+msgstr "Барманката Джилиън"
 
 #: Source/towners.cpp:195
 msgid "Pepin the Healer"
-msgstr ""
+msgstr "Лечителя Пепин"
 
 #: Source/towners.cpp:213
 msgid "Cain the Elder"
-msgstr ""
+msgstr "Мъдреца Кайн"
 
 #: Source/towners.cpp:243
 msgid "Cow"
-msgstr ""
+msgstr "Крава"
 
 #: Source/towners.cpp:263
 msgid "Lester the farmer"
-msgstr ""
+msgstr "Фермера Лестър"
 
 #: Source/towners.cpp:277
 msgid "Complete Nut"
-msgstr ""
+msgstr "Лудия"
 
 #: Source/towners.cpp:304
 msgid "Slain Townsman"
-msgstr ""
+msgstr "Убитият селянин"
 
 #: Source/trigs.cpp:328
 msgid "Down to dungeon"
-msgstr ""
+msgstr "Надолу към подземието"
 
 #: Source/trigs.cpp:338
 msgid "Down to catacombs"
-msgstr ""
+msgstr "Надолу към катакомбите"
 
 #: Source/trigs.cpp:349
 msgid "Down to caves"
-msgstr ""
+msgstr "Надолу към пещерите"
 
 #: Source/trigs.cpp:360
 msgid "Down to hell"
-msgstr ""
+msgstr "Надолу към ада"
 
 #: Source/trigs.cpp:371
 msgid "Down to Crypt"
-msgstr ""
+msgstr "Надолу към гробницата"
 
 #: Source/trigs.cpp:379
 msgid "Down to Hive"
-msgstr ""
+msgstr "Надолу към кошера"
 
 #: Source/trigs.cpp:399 Source/trigs.cpp:486 Source/trigs.cpp:538
 #: Source/trigs.cpp:637
 msgid "Up to level {:d}"
-msgstr ""
+msgstr "Нагоре към ниво {:d}"
 
 #: Source/trigs.cpp:401 Source/trigs.cpp:460 Source/trigs.cpp:517
 #: Source/trigs.cpp:599 Source/trigs.cpp:617 Source/trigs.cpp:669
 msgid "Up to town"
-msgstr ""
+msgstr "Надолу към града"
 
 #: Source/trigs.cpp:413 Source/trigs.cpp:498 Source/trigs.cpp:552
 #: Source/trigs.cpp:579 Source/trigs.cpp:650
 msgid "Down to level {:d}"
-msgstr ""
+msgstr "Надолу към ниво {:d}"
 
 #: Source/trigs.cpp:426
 msgid "Up to Crypt level {:d}"
-msgstr ""
+msgstr "Нагоре към Гробница ниво {:d}"
 
 #: Source/trigs.cpp:442
 msgid "Down to Crypt level {:d}"
-msgstr ""
+msgstr "Надолу към Гробница ниво {:d}"
 
 #: Source/trigs.cpp:565
 msgid "Up to Nest level {:d}"
-msgstr ""
+msgstr "Нагоре към Гнездо ниво {:d}"
 
 #: Source/trigs.cpp:683
 msgid "Down to Diablo"
-msgstr ""
+msgstr "Надолу към Диабло"
 
 #: Source/trigs.cpp:720 Source/trigs.cpp:737 Source/trigs.cpp:754
 msgid "Back to Level {:d}"
-msgstr ""
+msgstr "Нагоре към Ниво {:d}"
