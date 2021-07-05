@@ -4564,33 +4564,30 @@ bool OperateFountains(int pnum, int i)
 			return false;
 		if (pnum != myplr)
 			return false;
-		int prev = -1;
-		int add = -1;
-		int cnt = 0;
-		while (true) {
-			int rnd = GenerateRnd(4);
-			if (rnd != prev) {
-				switch (rnd) {
-				case 0:
-					ModifyPlrStr(pnum, add);
-					break;
-				case 1:
-					ModifyPlrMag(pnum, add);
-					break;
-				case 2:
-					ModifyPlrDex(pnum, add);
-					break;
-				case 3:
-					ModifyPlrVit(pnum, add);
-					break;
-				}
-				prev = rnd;
-				add = 1;
-				cnt++;
-			}
-			if (cnt > 1)
+
+		int fromStat = GenerateRnd(4);
+		int toStat = GenerateRnd(3);
+		if (toStat >= fromStat)
+			toStat++;
+
+		std::pair<int, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
+		for (auto alteration : alterations) {
+			switch (alteration.first) {
+			case 0:
+				ModifyPlrStr(pnum, alteration.second);
 				break;
+			case 1:
+				ModifyPlrMag(pnum, alteration.second);
+				break;
+			case 2:
+				ModifyPlrDex(pnum, alteration.second);
+				break;
+			case 3:
+				ModifyPlrVit(pnum, alteration.second);
+				break;
+			}
 		}
+
 		CheckStats(plr[pnum]);
 		applied = true;
 		if (pnum == myplr)
