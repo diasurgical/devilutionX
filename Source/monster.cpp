@@ -2066,7 +2066,7 @@ void M_TryH2HHit(int i, int pnum, int hit, int minDam, int maxDam)
 			dam += plr[pnum]._pIGetHit << 6;
 			if (dam < 64)
 				dam = 64;
-			int mdam = dam * (0.01 * (GenerateRnd(10) + 20));
+			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster[i]._mhitpoints -= mdam;
 			dam -= mdam;
 			if (dam < 0)
@@ -2111,7 +2111,7 @@ void M_TryH2HHit(int i, int pnum, int hit, int minDam, int maxDam)
 	if (pnum == myplr) {
 		if (plr[pnum].wReflections > 0) {
 			plr[pnum].wReflections--;
-			int mdam = dam * (0.01 * (GenerateRnd(10) + 20));
+			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster[i]._mhitpoints -= mdam;
 			dam -= mdam;
 			if (dam < 0)
