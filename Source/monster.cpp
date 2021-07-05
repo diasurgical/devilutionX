@@ -927,7 +927,6 @@ static void PlaceUniques()
 			if (done)
 				break;
 		}
-		mt--;
 		if (u == UMT_GARBUD && quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
 			done = false;
 		if (u == UMT_ZHAR && quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
