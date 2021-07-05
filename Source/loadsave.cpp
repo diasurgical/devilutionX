@@ -70,7 +70,7 @@ T SwapBE(T in)
 
 class LoadHelper {
 	std::unique_ptr<byte[]> m_buffer_;
-	uint32_t m_cur_ = 0;
+	size_t m_cur_ = 0;
 	size_t m_size_;
 
 	template <class T>
@@ -93,13 +93,19 @@ public:
 		m_buffer_ = pfile_read(szFileName, &m_size_);
 	}
 
-	bool IsValid(uint32_t size = 1)
+	bool IsValid(size_t size = 1)
 	{
 		return m_buffer_ != nullptr
 		    && m_size_ >= (m_cur_ + size);
 	}
 
-	void Skip(uint32_t size)
+	template<typename T>
+	constexpr void Skip(void)
+	{
+		Skip(sizeof(T));
+	}
+
+	void Skip(size_t size)
 	{
 		m_cur_ += size;
 	}
@@ -139,8 +145,8 @@ public:
 class SaveHelper {
 	const char *m_szFileName_;
 	std::unique_ptr<byte[]> m_buffer_;
-	uint32_t m_cur_ = 0;
-	uint32_t m_capacity_;
+	size_t m_cur_ = 0;
+	size_t m_capacity_;
 
 public:
 	SaveHelper(const char *szFileName, size_t bufferLen)
@@ -150,13 +156,19 @@ public:
 	{
 	}
 
-	bool IsValid(uint32_t len = 1)
+	bool IsValid(size_t len = 1)
 	{
 		return m_buffer_ != nullptr
 		    && m_capacity_ >= (m_cur_ + len);
 	}
 
-	void Skip(uint32_t len)
+	template<typename T>
+	constexpr void Skip(void)
+	{
+		Skip(sizeof(T));
+	}
+
+	void Skip(size_t len)
 	{
 		std::memset(&m_buffer_[m_cur_], 0, len);
 		m_cur_ += len;
@@ -360,13 +372,13 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player._pSplFrom = file->NextLE<int8_t>();
 	file->Skip(2); // Alignment
 	player._pTSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	file->Skip(sizeof(int8_t)); // Skip _pTSplType
+	file->Skip<int8_t>(); // Skip _pTSplType
 	file->Skip(3);              // Alignment
 	player._pRSpell = static_cast<spell_id>(file->NextLE<int32_t>());
 	player._pRSplType = static_cast<spell_type>(file->NextLE<int8_t>());
 	file->Skip(3); // Alignment
 	player._pSBkSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	file->Skip(sizeof(int8_t)); // Skip _pSBkSplType
+	file->Skip<int8_t>(); // Skip _pSBkSplType
 	for (int8_t &spellLevel : player._pSplLvl)
 		spellLevel = file->NextLE<int8_t>();
 	file->Skip(7); // Alignment
@@ -1298,7 +1310,8 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	file->WriteLE<int32_t>(ItemAnimWidth);
 	// write _iAnimWidth2 for vanilla compatibility
 	file->WriteLE<int32_t>(CalculateWidth2(ItemAnimWidth));
-	file->Skip(4); // Unused since 1.02
+	file->Skip<uint32_t>(); // _delFlag, unused since 1.02
+
 	file->WriteLE<uint8_t>(pItem->_iSelFlag);
 	file->Skip(3); // Alignment
 	file->WriteLE<uint32_t>(pItem->_iPostDraw ? 1 : 0);
@@ -1417,7 +1430,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int32_t>(animWidth);
 	// write _pAnimWidth2 for vanilla compatibility
 	file->WriteLE<int32_t>(CalculateWidth2(animWidth));
-	file->Skip(4); // Skip _peflag
+	file->Skip<uint32_t>(); // Skip _peflag
 	file->WriteLE<int32_t>(player._plid);
 	file->WriteLE<int32_t>(player._pvid);
 
@@ -1426,13 +1439,13 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int8_t>(player._pSplFrom);
 	file->Skip(2); // Alignment
 	file->WriteLE<int32_t>(player._pTSpell);
-	file->Skip(sizeof(int8_t)); // Skip _pTSplType
-	file->Skip(3);              // Alignment
+	file->Skip<int8_t>(); // Skip _pTSplType
+	file->Skip(3);        // Alignment
 	file->WriteLE<int32_t>(player._pRSpell);
 	file->WriteLE<int8_t>(player._pRSplType);
 	file->Skip(3); // Alignment
 	file->WriteLE<int32_t>(player._pSBkSpell);
-	file->Skip(sizeof(int8_t)); // Skip _pSBkSplType
+	file->Skip<int8_t>(); // Skip _pSBkSplType
 	for (int8_t spellLevel : player._pSplLvl)
 		file->WriteLE<int8_t>(spellLevel);
 	file->Skip(7); // Alignment
@@ -1471,12 +1484,12 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int32_t>(player._pMaxHPBase);
 	file->WriteLE<int32_t>(player._pHitPoints);
 	file->WriteLE<int32_t>(player._pMaxHP);
-	file->Skip(sizeof(int32_t)); // Skip _pHPPer
+	file->Skip<int32_t>(); // Skip _pHPPer
 	file->WriteLE<int32_t>(player._pManaBase);
 	file->WriteLE<int32_t>(player._pMaxManaBase);
 	file->WriteLE<int32_t>(player._pMana);
 	file->WriteLE<int32_t>(player._pMaxMana);
-	file->Skip(sizeof(int32_t)); // Skip _pManaPer
+	file->Skip<int32_t>(); // Skip _pManaPer
 	file->WriteLE<int8_t>(player._pLevel);
 	file->WriteLE<int8_t>(player._pMaxLvl);
 	file->Skip(2); // Alignment
@@ -1497,8 +1510,8 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int32_t>(player._pVar5);
 	file->WriteLE<int32_t>(player.position.offset2.deltaX);
 	file->WriteLE<int32_t>(player.position.offset2.deltaY);
-	// Write actionFrame for vanilla compatibility
-	file->WriteLE<int32_t>(0);
+	file->WriteLE<int32_t>(0); // Write actionFrame for vanilla compatibility
+
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file->WriteLE<uint8_t>(player._pLvlVisited[i] ? 1 : 0);
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
@@ -1506,8 +1519,7 @@ static void SavePlayer(SaveHelper *file, int p)
 
 	file->Skip(2); // Alignment
 
-	// Write _pGFXLoad for vanilla compatibility
-	file->WriteLE<int32_t>(0);
+	file->WriteLE<int32_t>(0); // Write _pGFXLoad for vanilla compatibility
 	file->Skip(4 * 8); // Skip pointers _pNAnim
 	file->WriteLE<int32_t>(player._pNFrames);
 	file->Skip(4);     // Skip _pNWidth
@@ -1556,7 +1568,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int32_t>(player._pIGetHit);
 
 	file->WriteLE<int8_t>(player._pISplLvlAdd);
-	file->Skip(1); // Unused
+	file->Skip<uint8_t>(); // Skip _pISplCost
 	file->Skip(2); // Alignment
 	file->WriteLE<int32_t>(player._pISplDur);
 	file->WriteLE<int32_t>(player._pIEnAc);
@@ -1630,7 +1642,7 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pMonster->AnimInfo.TickCounterOfCurrentFrame);
 	file->WriteLE<int32_t>(pMonster->AnimInfo.NumberOfFrames);
 	file->WriteLE<int32_t>(pMonster->AnimInfo.CurrentFrame);
-	file->Skip(4); // Skip _meflag
+	file->Skip<uint32_t>(); // Skip _meflag
 	file->WriteLE<uint32_t>(pMonster->_mDelFlag ? 1 : 0);
 	file->WriteLE<int32_t>(pMonster->_mVar1);
 	file->WriteLE<int32_t>(pMonster->_mVar2);
@@ -1639,8 +1651,7 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pMonster->position.temp.y);
 	file->WriteLE<int32_t>(pMonster->position.offset2.deltaX);
 	file->WriteLE<int32_t>(pMonster->position.offset2.deltaY);
-	// Write actionFrame for vanilla compatibility
-	file->WriteLE<int32_t>(0);
+	file->WriteLE<int32_t>(0); // Write actionFrame for vanilla compatibility
 	file->WriteLE<int32_t>(pMonster->_mmaxhp);
 	file->WriteLE<int32_t>(pMonster->_mhitpoints);
 
@@ -1666,10 +1677,10 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(pMonster->mExp);
 
-	file->WriteLE<uint8_t>(pMonster->mHit < UINT8_MAX ? pMonster->mHit : UINT8_MAX); // For backwards compatibility
+	file->WriteLE<uint8_t>(std::min<uint16_t>(pMonster->mHit, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
 	file->WriteLE<uint8_t>(pMonster->mMinDamage);
 	file->WriteLE<uint8_t>(pMonster->mMaxDamage);
-	file->WriteLE<uint8_t>(pMonster->mHit2 < UINT8_MAX ? pMonster->mHit2 : UINT8_MAX); // For backwards compatibility
+	file->WriteLE<uint8_t>(std::min<uint16_t>(pMonster->mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
 	file->WriteLE<uint8_t>(pMonster->mMinDamage2);
 	file->WriteLE<uint8_t>(pMonster->mMaxDamage2);
 	file->WriteLE<uint8_t>(pMonster->mArmorClass);
@@ -1754,8 +1765,7 @@ static void SaveObject(SaveHelper *file, int i)
 	file->WriteLE<uint32_t>(pObject->_oAnimLen);
 	file->WriteLE<uint32_t>(pObject->_oAnimFrame);
 	file->WriteLE<int32_t>(pObject->_oAnimWidth);
-	file->WriteLE<int32_t>(CalculateWidth2(pObject->_oAnimWidth));
-	// Write _oAnimWidth2 for vanilla compatibility
+	file->WriteLE<int32_t>(CalculateWidth2(pObject->_oAnimWidth)); // Write _oAnimWidth2 for vanilla compatibility
 	file->WriteLE<uint32_t>(pObject->_oDelFlag ? 1 : 0);
 	file->WriteLE<int8_t>(pObject->_oBreak);
 	file->Skip(3); // Alignment
