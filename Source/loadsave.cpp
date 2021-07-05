@@ -1510,7 +1510,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int32_t>(player._pVar5);
 	file->WriteLE<int32_t>(player.position.offset2.deltaX);
 	file->WriteLE<int32_t>(player.position.offset2.deltaY);
-	file->WriteLE<int32_t>(0); // Write actionFrame for vanilla compatibility
+	file->Skip<int32_t>(); // Skip _pVar8
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		file->WriteLE<uint8_t>(player._pLvlVisited[i] ? 1 : 0);
