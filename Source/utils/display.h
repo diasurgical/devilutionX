@@ -58,8 +58,8 @@ void OutputToLogical(T *x, T *y)
 		return;
 	float scaleX;
 	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x /= scaleX;
-	*y /= scaleX;
+	*x = static_cast<T>(*x / scaleX);
+	*y = static_cast<T>(*y / scaleX);
 
 	SDL_Rect view;
 	SDL_RenderGetViewport(renderer, &view);

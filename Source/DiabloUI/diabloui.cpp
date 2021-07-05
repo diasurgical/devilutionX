@@ -646,7 +646,7 @@ void UiFadeIn()
 		if (fadeValue == 0 && fadeTc == 0)
 			fadeTc = SDL_GetTicks();
 		const int prevFadeValue = fadeValue;
-		fadeValue = (SDL_GetTicks() - fadeTc) / 2.083; // 32 frames @ 60hz
+		fadeValue = static_cast<int>((SDL_GetTicks() - fadeTc) / 2.083); // 32 frames @ 60hz
 		if (fadeValue > 256) {
 			fadeValue = 256;
 			fadeTc = 0;

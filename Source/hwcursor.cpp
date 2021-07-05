@@ -56,8 +56,8 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 		// SDL does not support BlitScaled from 8-bit to RGBA.
 		SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0) };
 
-		const int scaledW = surface->w * scaleX; // NOLINT(bugprone-narrowing-conversions)
-		const int scaledH = surface->h * scaleY; // NOLINT(bugprone-narrowing-conversions)
+		const int scaledW = static_cast<int>(surface->w * scaleX);
+		const int scaledH = static_cast<int>(surface->h * scaleY);
 		SDLSurfaceUniquePtr scaledSurface { SDL_CreateRGBSurfaceWithFormat(0, scaledW, scaledH, 32, SDL_PIXELFORMAT_ARGB8888) };
 		SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
