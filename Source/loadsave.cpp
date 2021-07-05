@@ -1311,7 +1311,6 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 	// write _iAnimWidth2 for vanilla compatibility
 	file->WriteLE<int32_t>(CalculateWidth2(ItemAnimWidth));
 	file->Skip<uint32_t>(); // _delFlag, unused since 1.02
-
 	file->WriteLE<uint8_t>(pItem->_iSelFlag);
 	file->Skip(3); // Alignment
 	file->WriteLE<uint32_t>(pItem->_iPostDraw ? 1 : 0);
