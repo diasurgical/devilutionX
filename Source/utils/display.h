@@ -89,8 +89,8 @@ void LogicalToOutput(T *x, T *y)
 
 	float scaleX;
 	SDL_RenderGetScale(renderer, &scaleX, NULL);
-	*x *= scaleX;
-	*y *= scaleX;
+	*x = static_cast<T>(*x * scaleX);
+	*y = static_cast<T>(*x * scaleX);
 #else
 	if (!OutputRequiresScaling())
 		return;
