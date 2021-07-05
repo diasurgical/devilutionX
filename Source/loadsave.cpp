@@ -1651,7 +1651,7 @@ static void SaveMonster(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pMonster->position.temp.y);
 	file->WriteLE<int32_t>(pMonster->position.offset2.deltaX);
 	file->WriteLE<int32_t>(pMonster->position.offset2.deltaY);
-	file->WriteLE<int32_t>(0); // Write actionFrame for vanilla compatibility
+	file->Skip<int32_t>(); // Skip _mVar8
 	file->WriteLE<int32_t>(pMonster->_mmaxhp);
 	file->WriteLE<int32_t>(pMonster->_mhitpoints);
 
