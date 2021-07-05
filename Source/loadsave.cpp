@@ -163,7 +163,7 @@ public:
 	}
 
 	template<typename T>
-	constexpr void Skip(void)
+	constexpr void Skip()
 	{
 		Skip(sizeof(T));
 	}
