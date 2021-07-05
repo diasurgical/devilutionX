@@ -311,7 +311,7 @@ void DeleteMissile(int mi, int i)
 		missileactive[i] = missileactive[nummissiles];
 }
 
-static void GetMissileVel(int i, Point source, Point destination, int v)
+static void UpdateMissileVel(int i, Point source, Point destination, int v)
 {
 	missile[i].position.velocity = { 0, 0 };
 
@@ -1363,7 +1363,7 @@ void AddBerserk(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienem
 
 void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
-	GetMissileVel(mi, src, dst, 8);
+	UpdateMissileVel(mi, src, dst, 8);
 	missile[mi]._mirange = 9;
 	missile[mi]._miVar1 = midir;
 	PutMissile(mi);
@@ -1572,7 +1572,7 @@ void AddWarp(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, in
 
 void AddLightningWall(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int dam)
 {
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	missile[mi]._midam = dam;
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mirange = 255 * (missile[mi]._mispllvl + 1);
@@ -1617,7 +1617,7 @@ void AddImmolation(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 
 		UseMana(id, SPL_FIREBALL);
 	}
-	GetMissileVel(mi, src, dst, sp);
+	UpdateMissileVel(mi, src, dst, sp);
 	SetMissDir(mi, GetDirection16(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -1639,7 +1639,7 @@ void AddFireNova(int mi, Point src, Point dst, int midir, int8_t mienemy, int /*
 	if (mienemy == TARGET_MONSTERS) {
 		sp += std::min(missile[mi]._mispllvl, 34);
 	}
-	GetMissileVel(mi, src, dst, sp);
+	UpdateMissileVel(mi, src, dst, sp);
 	SetMissDir(mi, GetDirection16(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -1655,7 +1655,7 @@ void AddLightningArrow(int mi, Point src, Point dst, int midir, int8_t /*mienemy
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
 	}
-	GetMissileVel(mi, src, dst, 32);
+	UpdateMissileVel(mi, src, dst, 32);
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mirange = 255;
 	if (id < 0) {
@@ -1769,7 +1769,7 @@ void AddCboltArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 	}
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mlid = AddLight(src, 5);
-	GetMissileVel(mi, src, dst, 8);
+	UpdateMissileVel(mi, src, dst, 8);
 	missile[mi]._miVar1 = 5;
 	missile[mi]._miVar2 = midir;
 	missile[mi]._miVar3 = 0;
@@ -1803,7 +1803,7 @@ void AddLArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 				av -= 1;
 		}
 	}
-	GetMissileVel(mi, src, dst, av);
+	UpdateMissileVel(mi, src, dst, av);
 
 	SetMissDir(mi, GetDirection16(src, dst));
 	missile[mi]._mirange = 256;
@@ -1840,7 +1840,7 @@ void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 				av += 8;
 		}
 	}
-	GetMissileVel(mi, src, dst, av);
+	UpdateMissileVel(mi, src, dst, av);
 	missile[mi]._miAnimFrame = GetDirection16(src, dst) + 1;
 	missile[mi]._mirange = 256;
 }
@@ -1928,7 +1928,7 @@ void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int i
 		if (i == nummissiles)
 			UseMana(id, SPL_FIREBOLT);
 	}
-	GetMissileVel(mi, src, dst, sp);
+	UpdateMissileVel(mi, src, dst, sp);
 	SetMissDir(mi, GetDirection16(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -1938,7 +1938,7 @@ void AddFirebolt(int mi, Point src, Point dst, int midir, int8_t micaster, int i
 
 void AddMagmaball(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	missile[mi].position.traveled.deltaX += 3 * missile[mi].position.velocity.deltaX;
 	missile[mi].position.traveled.deltaY += 3 * missile[mi].position.velocity.deltaY;
 	UpdateMissilePos(mi);
@@ -1953,7 +1953,7 @@ void AddMagmaball(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*
 
 void AddKrull(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
 	missile[mi]._miVar2 = src.y;
@@ -1989,7 +1989,7 @@ void AddTeleport(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*miene
 
 void AddLightball(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int dam)
 {
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	missile[mi]._midam = dam;
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mirange = 255;
@@ -2007,7 +2007,7 @@ void AddFirewall(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy, in
 	missile[mi]._midam = GenerateRndSum(10, 2) + 2;
 	missile[mi]._midam += id >= 0 ? plr[id]._pLevel : currlevel; // BUGFIX: missing parenthesis around ternary (fixed)
 	missile[mi]._midam <<= 3;
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	int i = missile[mi]._mispllvl;
 	missile[mi]._mirange = 10;
 	if (i > 0)
@@ -2035,7 +2035,7 @@ void AddFireball(int mi, Point src, Point dst, int midir, int8_t mienemy, int id
 
 		UseMana(id, SPL_FIREBALL);
 	}
-	GetMissileVel(mi, src, dst, sp);
+	UpdateMissileVel(mi, src, dst, sp);
 	SetMissDir(mi, GetDirection16(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -2052,7 +2052,7 @@ void AddLightctrl(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy, i
 		UseMana(id, SPL_LIGHTNING);
 	missile[mi]._miVar1 = src.x;
 	missile[mi]._miVar2 = src.y;
-	GetMissileVel(mi, src, dst, 32);
+	UpdateMissileVel(mi, src, dst, 32);
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mirange = 256;
 }
@@ -2225,7 +2225,7 @@ void AddManashield(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t m
 void AddFiremove(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	missile[mi]._midam = GenerateRnd(10) + plr[id]._pLevel + 1;
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	missile[mi]._mirange = 255;
 	missile[mi]._miVar1 = 0;
 	missile[mi]._miVar2 = 0;
@@ -2346,7 +2346,7 @@ void AddRhino(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int i
 			graphic = MA_ATTACK;
 		}
 	}
-	GetMissileVel(mi, src, dst, 18);
+	UpdateMissileVel(mi, src, dst, 18);
 	InitMissileAnimationFromMonster(missile[mi], midir, monster[id], graphic);
 	if (monster[id].MType->mtype >= MT_NSNAKE && monster[id].MType->mtype <= MT_GSNAKE)
 		missile[mi]._miAnimFrame = 7;
@@ -2359,7 +2359,7 @@ void AddRhino(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int i
 
 void AddFireman(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	auto &mon = monster[id];
 	InitMissileAnimationFromMonster(missile[mi], midir, mon, MA_WALK);
 	if (mon._uniqtype != 0)
@@ -2373,7 +2373,7 @@ void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
 	}
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
 	missile[mi]._miVar2 = src.y;
@@ -2401,7 +2401,7 @@ void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 
 void AddAcid(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	SetMissDir(mi, GetDirection16(src, dst));
 	if ((!gbIsHellfire && (missile[mi].position.velocity.deltaX & 0xFFFF0000) != 0) || (missile[mi].position.velocity.deltaY & 0xFFFF0000) != 0)
 		missile[mi]._mirange = 5 * (monster[id]._mint + 4);
@@ -2588,7 +2588,7 @@ void AddElement(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int
 	int dmg = 2 * (plr[id]._pLevel + GenerateRndSum(10, 2)) + 4;
 	missile[mi]._midam = ScaleSpellEffect(dmg, missile[mi]._mispllvl) / 2;
 
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	SetMissDir(mi, GetDirection(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -2804,7 +2804,7 @@ void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 	if (src == dst) {
 		dst += static_cast<Direction>(midir);
 	}
-	GetMissileVel(mi, src, dst, 32);
+	UpdateMissileVel(mi, src, dst, 32);
 	if (mienemy == TARGET_MONSTERS) {
 		UseMana(id, SPL_FLAME);
 	}
@@ -2827,7 +2827,7 @@ void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, 
 	missile[mi]._miAnimFrame = GenerateRnd(8) + 1;
 	missile[mi]._mlid = AddLight(src, 5);
 
-	GetMissileVel(mi, src, dst, 8);
+	UpdateMissileVel(mi, src, dst, 8);
 	missile[mi]._miVar1 = 5;
 	missile[mi]._miVar2 = midir;
 	missile[mi]._miVar3 = 0;
@@ -2845,7 +2845,7 @@ void AddHbolt(int mi, Point src, Point dst, int midir, int8_t /*micaster*/, int 
 		sp += std::min(missile[mi]._mispllvl * 2, 47);
 	}
 
-	GetMissileVel(mi, src, dst, sp);
+	UpdateMissileVel(mi, src, dst, sp);
 	SetMissDir(mi, GetDirection16(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -2888,7 +2888,7 @@ void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int 
 		dst += static_cast<Direction>(midir);
 	}
 	missile[mi]._midam = 0;
-	GetMissileVel(mi, src, dst, 16);
+	UpdateMissileVel(mi, src, dst, 16);
 	SetMissDir(mi, GetDirection(src, dst));
 	missile[mi]._mirange = 256;
 	missile[mi]._miVar1 = src.x;
@@ -4577,7 +4577,7 @@ void MI_Cbolt(int i)
 			}
 
 			missile[i]._mirnd = (missile[i]._mirnd + 1) & 0xF;
-			GetMissileVel(i, missile[i].position.tile, missile[i].position.tile + md, 8);
+			UpdateMissileVel(i, missile[i].position.tile, missile[i].position.tile + md, 8);
 			missile[i]._miVar3 = 16;
 		} else {
 			missile[i]._miVar3--;
@@ -4671,11 +4671,11 @@ void MI_Element(int i)
 			if (mid > 0) {
 				Direction sd = GetDirection(c, monster[mid].position.tile);
 				SetMissDir(i, sd);
-				GetMissileVel(i, c, monster[mid].position.tile, 16);
+				UpdateMissileVel(i, c, monster[mid].position.tile, 16);
 			} else {
 				Direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
-				GetMissileVel(i, c, c + sd, 16);
+				UpdateMissileVel(i, c, c + sd, 16);
 			}
 		}
 		if (c != Point { missile[i]._miVar1, missile[i]._miVar2 }) {
@@ -4718,11 +4718,11 @@ void MI_Bonespirit(int i)
 			if (mid > 0) {
 				missile[i]._midam = monster[mid]._mhitpoints >> 7;
 				SetMissDir(i, GetDirection(c, monster[mid].position.tile));
-				GetMissileVel(i, c, monster[mid].position.tile, 16);
+				UpdateMissileVel(i, c, monster[mid].position.tile, 16);
 			} else {
 				Direction sd = plr[id]._pdir;
 				SetMissDir(i, sd);
-				GetMissileVel(i, c, c + sd, 16);
+				UpdateMissileVel(i, c, c + sd, 16);
 			}
 		}
 		if (c != Point { missile[i]._miVar1, missile[i]._miVar2 }) {
