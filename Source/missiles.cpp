@@ -4269,27 +4269,30 @@ void MI_Rhino(int i)
 		return;
 	}
 	GetMissilePos(i);
-	Point position = missile[i].position.tile;
-	dMonster[position.x][position.y] = 0;
+	Point prevPos = missile[i].position.tile;
+	Point newPosSnake;
+	dMonster[prevPos.x][prevPos.y] = 0;
 	if (monster[monst]._mAi == AI_SNAKE) {
 		missile[i].position.traveled += missile[i].position.velocity * 2;
 		GetMissilePos(i);
+		newPosSnake = missile[i].position.tile;
 		missile[i].position.traveled -= missile[i].position.velocity;
 	} else {
 		missile[i].position.traveled += missile[i].position.velocity;
 	}
 	GetMissilePos(i);
-	if (!PosOkMonst(monst, position) || (monster[monst]._mAi == AI_SNAKE && !PosOkMonst(monst, position))) {
-		MissToMonst(i, position);
+	Point newPos = missile[i].position.tile;
+	if (!PosOkMonst(monst, newPos) || (monster[monst]._mAi == AI_SNAKE && !PosOkMonst(monst, newPosSnake))) {
+		MissToMonst(i, prevPos);
 		missile[i]._miDelFlag = true;
 		return;
 	}
-	monster[monst].position.future = position;
-	monster[monst].position.old = position;
-	monster[monst].position.tile = position;
-	dMonster[position.x][position.y] = -(monst + 1);
+	monster[monst].position.future = newPos;
+	monster[monst].position.old = newPos;
+	monster[monst].position.tile = newPos;
+	dMonster[newPos.x][newPos.y] = -(monst + 1);
 	if (monster[monst]._uniqtype != 0)
-		ChangeLightXY(missile[i]._mlid, position);
+		ChangeLightXY(missile[i]._mlid, newPos);
 	MoveMissilePos(i);
 	PutMissile(i);
 }
