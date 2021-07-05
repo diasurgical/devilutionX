@@ -1519,7 +1519,7 @@ static void SavePlayer(SaveHelper *file, int p)
 
 	file->Skip(2); // Alignment
 
-	file->WriteLE<int32_t>(0); // Write _pGFXLoad for vanilla compatibility
+	file->Skip<int32_t>(); // Skip _pGFXLoad
 	file->Skip(4 * 8); // Skip pointers _pNAnim
 	file->WriteLE<int32_t>(player._pNFrames);
 	file->Skip(4);     // Skip _pNWidth
