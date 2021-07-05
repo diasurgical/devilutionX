@@ -1347,12 +1347,12 @@ void AddBerserk(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienem
 				continue;
 
 			i = 6;
-			auto slvl = static_cast<double>(GetSpellLevel(id, SPL_BERSERK));
+			auto slvl = GetSpellLevel(id, SPL_BERSERK);
 			monster[dm]._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
-			monster[dm].mMinDamage = ((double)(GenerateRnd(10) + 20) / 100 + 1) * (double)monster[dm].mMinDamage + slvl;
-			monster[dm].mMaxDamage = ((double)(GenerateRnd(10) + 20) / 100 + 1) * (double)monster[dm].mMaxDamage + slvl;
-			monster[dm].mMinDamage2 = ((double)(GenerateRnd(10) + 20) / 100 + 1) * (double)monster[dm].mMinDamage2 + slvl;
-			monster[dm].mMaxDamage2 = ((double)(GenerateRnd(10) + 20) / 100 + 1) * (double)monster[dm].mMaxDamage2 + slvl;
+			monster[dm].mMinDamage = (GenerateRnd(10) + 120) * monster[dm].mMinDamage / 100 + slvl;
+			monster[dm].mMaxDamage = (GenerateRnd(10) + 120) * monster[dm].mMaxDamage / 100 + slvl;
+			monster[dm].mMinDamage2 = (GenerateRnd(10) + 120) * monster[dm].mMinDamage2 / 100 + slvl;
+			monster[dm].mMaxDamage2 = (GenerateRnd(10) + 120) * monster[dm].mMaxDamage2 / 100 + slvl;
 			int r = (currlevel < 17 || currlevel > 20) ? 3 : 9;
 			monster[dm].mlid = AddLight(monster[dm].position.tile, r);
 			UseMana(id, SPL_BERSERK);
