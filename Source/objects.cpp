@@ -4566,7 +4566,7 @@ bool OperateFountains(int pnum, int i)
 			return false;
 
 		int fromStat = GenerateRnd(4);
-		int toStat = GenerateRnd(3);
+		int toStat = abs(GenerateRnd(3));
 		if (toStat >= fromStat)
 			toStat++;
 
