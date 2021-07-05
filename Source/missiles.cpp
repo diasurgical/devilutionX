@@ -1845,7 +1845,7 @@ void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	missile[mi]._mirange = 256;
 }
 
-void GetVileMissPos(int mi, Point dst)
+void UpdateVileMissPos(int mi, Point dst)
 {
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
@@ -1902,7 +1902,7 @@ void AddRndTeleport(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy,
 		if (object[oi]._otype == OBJ_MCIRCLE1 || object[oi]._otype == OBJ_MCIRCLE2) {
 			missile[mi].position.tile = dst;
 			if (!PosOkPlayer(myplr, dst))
-				GetVileMissPos(mi, dst);
+				UpdateVileMissPos(mi, dst);
 		}
 	}
 }
