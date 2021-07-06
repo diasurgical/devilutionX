@@ -732,7 +732,7 @@ static void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
 	if (bItem <= 0)
 		return;
 
-	ItemStruct *pItem = &items[bItem - 1];
+	ItemStruct *pItem = &Items[bItem - 1];
 	if (pItem->_iPostDraw == pre)
 		return;
 
@@ -1396,7 +1396,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	    && (!questlog || gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || gnScreenWidth >= 4 * SPANEL_WIDTH)) {
 		DrawLevelUpIcon(out);
 	}
-	if (uitemflag) {
+	if (ShowUniqueItemInfoBox) {
 		DrawUniqueInfo(out);
 	}
 	if (qtextflag) {

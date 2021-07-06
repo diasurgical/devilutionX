@@ -701,7 +701,7 @@ DWORD OnRequestGetItem(TCmd *pCmd, int pnum)
 				if (p->bPnum != myplr)
 					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 				else
-					InvGetItem(myplr, &items[ii], ii);
+					InvGetItem(myplr, &Items[ii], ii);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, myplr, p->bPnum, p)) {
 				NetSendCmdExtra(p);
@@ -726,9 +726,9 @@ DWORD OnGetItem(TCmd *pCmd, int pnum)
 					if (currlevel != p->bLevel) {
 						ii = SyncPutItem(plr[myplr], plr[myplr].position.tile, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
-							InvGetItem(myplr, &items[ii], ii);
+							InvGetItem(myplr, &Items[ii], ii);
 					} else {
-						InvGetItem(myplr, &items[ii], ii);
+						InvGetItem(myplr, &Items[ii], ii);
 					}
 				} else {
 					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
@@ -767,7 +767,7 @@ DWORD OnRequestAutoGetItem(TCmd *pCmd, int pnum)
 				if (p->bPnum != myplr)
 					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 				else
-					AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
+					AutoGetItem(myplr, &Items[p->bCursitem], p->bCursitem);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, myplr, p->bPnum, p)) {
 				NetSendCmdExtra(p);
@@ -792,9 +792,9 @@ DWORD OnAutoGetItem(TCmd *pCmd, int pnum)
 					if (currlevel != p->bLevel) {
 						int ii = SyncPutItem(plr[myplr], plr[myplr].position.tile, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 						if (ii != -1)
-							AutoGetItem(myplr, &items[ii], ii);
+							AutoGetItem(myplr, &Items[ii], ii);
 					} else {
-						AutoGetItem(myplr, &items[p->bCursitem], p->bCursitem);
+						AutoGetItem(myplr, &Items[p->bCursitem], p->bCursitem);
 					}
 				} else {
 					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
@@ -837,7 +837,7 @@ DWORD OnPutItem(TCmd *pCmd, int pnum)
 			ii = SyncPutItem(plr[pnum], { p->x, p->y }, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
 			PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
-			DeltaPutItem(p, items[ii].position.x, items[ii].position.y, plr[pnum].plrlevel);
+			DeltaPutItem(p, Items[ii].position.x, Items[ii].position.y, plr[pnum].plrlevel);
 			CheckUpdatePlayer(pnum);
 		}
 		return sizeof(*p);
@@ -860,7 +860,7 @@ DWORD OnSyncPutItem(TCmd *pCmd, int pnum)
 		int ii = SyncPutItem(plr[pnum], { p->x, p->y }, p->wIndx, p->wCI, p->dwSeed, p->bId, p->bDur, p->bMDur, p->bCh, p->bMCh, p->wValue, p->dwBuff, p->wToHit, p->wMaxDam, p->bMinStr, p->bMinMag, p->bMinDex, p->bAC);
 		if (ii != -1) {
 			PutItemRecord(p->dwSeed, p->wCI, p->wIndx);
-			DeltaPutItem(p, items[ii].position.x, items[ii].position.y, plr[pnum].plrlevel);
+			DeltaPutItem(p, Items[ii].position.x, Items[ii].position.y, plr[pnum].plrlevel);
 			CheckUpdatePlayer(pnum);
 		}
 		return sizeof(*p);
@@ -1955,9 +1955,9 @@ void DeltaAddItem(int ii)
 	TCmdPItem *pD = sgLevels[currlevel].item;
 	for (i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd != 0xFF
-		    && pD->wIndx == items[ii].IDidx
-		    && pD->wCI == items[ii]._iCreateInfo
-		    && pD->dwSeed == items[ii]._iSeed
+		    && pD->wIndx == Items[ii].IDidx
+		    && pD->wCI == Items[ii]._iCreateInfo
+		    && pD->dwSeed == Items[ii]._iSeed
 		    && (pD->bCmd == CMD_WALKXY || pD->bCmd == CMD_STAND)) {
 			return;
 		}
@@ -1968,24 +1968,24 @@ void DeltaAddItem(int ii)
 		if (pD->bCmd == 0xFF) {
 			sgbDeltaChanged = true;
 			pD->bCmd = CMD_STAND;
-			pD->x = items[ii].position.x;
-			pD->y = items[ii].position.y;
-			pD->wIndx = items[ii].IDidx;
-			pD->wCI = items[ii]._iCreateInfo;
-			pD->dwSeed = items[ii]._iSeed;
-			pD->bId = items[ii]._iIdentified ? 1 : 0;
-			pD->bDur = items[ii]._iDurability;
-			pD->bMDur = items[ii]._iMaxDur;
-			pD->bCh = items[ii]._iCharges;
-			pD->bMCh = items[ii]._iMaxCharges;
-			pD->wValue = items[ii]._ivalue;
-			pD->wToHit = items[ii]._iPLToHit;
-			pD->wMaxDam = items[ii]._iMaxDam;
-			pD->bMinStr = items[ii]._iMinStr;
-			pD->bMinMag = items[ii]._iMinMag;
-			pD->bMinDex = items[ii]._iMinDex;
-			pD->bAC = items[ii]._iAC;
-			pD->dwBuff = items[ii].dwBuff;
+			pD->x = Items[ii].position.x;
+			pD->y = Items[ii].position.y;
+			pD->wIndx = Items[ii].IDidx;
+			pD->wCI = Items[ii]._iCreateInfo;
+			pD->dwSeed = Items[ii]._iSeed;
+			pD->bId = Items[ii]._iIdentified ? 1 : 0;
+			pD->bDur = Items[ii]._iDurability;
+			pD->bMDur = Items[ii]._iMaxDur;
+			pD->bCh = Items[ii]._iCharges;
+			pD->bMCh = Items[ii]._iMaxCharges;
+			pD->wValue = Items[ii]._ivalue;
+			pD->wToHit = Items[ii]._iPLToHit;
+			pD->wMaxDam = Items[ii]._iMaxDam;
+			pD->bMinStr = Items[ii]._iMinStr;
+			pD->bMinMag = Items[ii]._iMinMag;
+			pD->bMinDex = Items[ii]._iMinDex;
+			pD->bAC = Items[ii]._iAC;
+			pD->dwBuff = Items[ii].dwBuff;
 			return;
 		}
 	}
@@ -2058,8 +2058,8 @@ void DeltaLoadLevel()
 				    sgLevels[currlevel].item[i].wCI,
 				    sgLevels[currlevel].item[i].dwSeed);
 				if (ii != -1) {
-					if (dItem[items[ii].position.x][items[ii].position.y] == ii + 1)
-						dItem[items[ii].position.x][items[ii].position.y] = 0;
+					if (dItem[Items[ii].position.x][Items[ii].position.y] == ii + 1)
+						dItem[Items[ii].position.x][Items[ii].position.y] = 0;
 					DeleteItem(ii, i);
 				}
 			}
@@ -2087,18 +2087,18 @@ void DeltaLoadLevel()
 					    sgLevels[currlevel].item[i].wValue,
 					    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
 					if (sgLevels[currlevel].item[i].bId != 0)
-						items[ii]._iIdentified = true;
-					items[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
-					items[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
-					items[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
-					items[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
-					items[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
-					items[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
-					items[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
-					items[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
-					items[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
-					items[ii]._iAC = sgLevels[currlevel].item[i].bAC;
-					items[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
+						Items[ii]._iIdentified = true;
+					Items[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
+					Items[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
+					Items[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
+					Items[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
+					Items[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
+					Items[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
+					Items[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
+					Items[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
+					Items[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
+					Items[ii]._iAC = sgLevels[currlevel].item[i].bAC;
+					Items[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
 				}
 				int x = sgLevels[currlevel].item[i].x;
 				int y = sgLevels[currlevel].item[i].y;
@@ -2118,9 +2118,9 @@ void DeltaLoadLevel()
 						}
 					}
 				}
-				items[ii].position = { x, y };
-				dItem[items[ii].position.x][items[ii].position.y] = ii + 1;
-				RespawnItem(&items[ii], false);
+				Items[ii].position = { x, y };
+				dItem[Items[ii].position.x][Items[ii].position.y] = ii + 1;
+				RespawnItem(&Items[ii], false);
 			}
 		}
 	}
@@ -2298,36 +2298,36 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 	cmd.bLevel = currlevel;
 	cmd.bCursitem = ii;
 	cmd.dwTime = 0;
-	cmd.x = items[ii].position.x;
-	cmd.y = items[ii].position.y;
-	cmd.wIndx = items[ii].IDidx;
+	cmd.x = Items[ii].position.x;
+	cmd.y = Items[ii].position.y;
+	cmd.wIndx = Items[ii].IDidx;
 
-	if (items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = items[ii]._iName[8] | (items[ii]._iName[7] << 8);
-		cmd.dwSeed = items[ii]._iName[12] | ((items[ii]._iName[11] | ((items[ii]._iName[10] | (items[ii]._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = items[ii]._iName[13];
-		cmd.bDur = items[ii]._iName[14];
-		cmd.bMDur = items[ii]._iName[15];
-		cmd.bCh = items[ii]._iName[16];
-		cmd.bMCh = items[ii]._iName[17];
-		cmd.wValue = items[ii]._ivalue | (items[ii]._iName[18] << 8) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = items[ii]._iName[22] | ((items[ii]._iName[21] | ((items[ii]._iName[20] | (items[ii]._iName[19] << 8)) << 8)) << 8);
+	if (Items[ii].IDidx == IDI_EAR) {
+		cmd.wCI = Items[ii]._iName[8] | (Items[ii]._iName[7] << 8);
+		cmd.dwSeed = Items[ii]._iName[12] | ((Items[ii]._iName[11] | ((Items[ii]._iName[10] | (Items[ii]._iName[9] << 8)) << 8)) << 8);
+		cmd.bId = Items[ii]._iName[13];
+		cmd.bDur = Items[ii]._iName[14];
+		cmd.bMDur = Items[ii]._iName[15];
+		cmd.bCh = Items[ii]._iName[16];
+		cmd.bMCh = Items[ii]._iName[17];
+		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iName[18] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
+		cmd.dwBuff = Items[ii]._iName[22] | ((Items[ii]._iName[21] | ((Items[ii]._iName[20] | (Items[ii]._iName[19] << 8)) << 8)) << 8);
 	} else {
-		cmd.wCI = items[ii]._iCreateInfo;
-		cmd.dwSeed = items[ii]._iSeed;
-		cmd.bId = items[ii]._iIdentified ? 1 : 0;
-		cmd.bDur = items[ii]._iDurability;
-		cmd.bMDur = items[ii]._iMaxDur;
-		cmd.bCh = items[ii]._iCharges;
-		cmd.bMCh = items[ii]._iMaxCharges;
-		cmd.wValue = items[ii]._ivalue;
-		cmd.wToHit = items[ii]._iPLToHit;
-		cmd.wMaxDam = items[ii]._iMaxDam;
-		cmd.bMinStr = items[ii]._iMinStr;
-		cmd.bMinMag = items[ii]._iMinMag;
-		cmd.bMinDex = items[ii]._iMinDex;
-		cmd.bAC = items[ii]._iAC;
-		cmd.dwBuff = items[ii].dwBuff;
+		cmd.wCI = Items[ii]._iCreateInfo;
+		cmd.dwSeed = Items[ii]._iSeed;
+		cmd.bId = Items[ii]._iIdentified ? 1 : 0;
+		cmd.bDur = Items[ii]._iDurability;
+		cmd.bMDur = Items[ii]._iMaxDur;
+		cmd.bCh = Items[ii]._iCharges;
+		cmd.bMCh = Items[ii]._iMaxCharges;
+		cmd.wValue = Items[ii]._ivalue;
+		cmd.wToHit = Items[ii]._iPLToHit;
+		cmd.wMaxDam = Items[ii]._iMaxDam;
+		cmd.bMinStr = Items[ii]._iMinStr;
+		cmd.bMinMag = Items[ii]._iMinMag;
+		cmd.bMinDex = Items[ii]._iMinDex;
+		cmd.bAC = Items[ii]._iAC;
+		cmd.dwBuff = Items[ii].dwBuff;
 	}
 
 	if (bHiPri)
@@ -2414,36 +2414,36 @@ void NetSendCmdDItem(bool bHiPri, int ii)
 	TCmdPItem cmd;
 
 	cmd.bCmd = CMD_DROPITEM;
-	cmd.x = items[ii].position.x;
-	cmd.y = items[ii].position.y;
-	cmd.wIndx = items[ii].IDidx;
+	cmd.x = Items[ii].position.x;
+	cmd.y = Items[ii].position.y;
+	cmd.wIndx = Items[ii].IDidx;
 
-	if (items[ii].IDidx == IDI_EAR) {
-		cmd.wCI = items[ii]._iName[8] | (items[ii]._iName[7] << 8);
-		cmd.dwSeed = items[ii]._iName[12] | ((items[ii]._iName[11] | ((items[ii]._iName[10] | (items[ii]._iName[9] << 8)) << 8)) << 8);
-		cmd.bId = items[ii]._iName[13];
-		cmd.bDur = items[ii]._iName[14];
-		cmd.bMDur = items[ii]._iName[15];
-		cmd.bCh = items[ii]._iName[16];
-		cmd.bMCh = items[ii]._iName[17];
-		cmd.wValue = items[ii]._ivalue | (items[ii]._iName[18] << 8) | ((items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
-		cmd.dwBuff = items[ii]._iName[22] | ((items[ii]._iName[21] | ((items[ii]._iName[20] | (items[ii]._iName[19] << 8)) << 8)) << 8);
+	if (Items[ii].IDidx == IDI_EAR) {
+		cmd.wCI = Items[ii]._iName[8] | (Items[ii]._iName[7] << 8);
+		cmd.dwSeed = Items[ii]._iName[12] | ((Items[ii]._iName[11] | ((Items[ii]._iName[10] | (Items[ii]._iName[9] << 8)) << 8)) << 8);
+		cmd.bId = Items[ii]._iName[13];
+		cmd.bDur = Items[ii]._iName[14];
+		cmd.bMDur = Items[ii]._iName[15];
+		cmd.bCh = Items[ii]._iName[16];
+		cmd.bMCh = Items[ii]._iName[17];
+		cmd.wValue = Items[ii]._ivalue | (Items[ii]._iName[18] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6);
+		cmd.dwBuff = Items[ii]._iName[22] | ((Items[ii]._iName[21] | ((Items[ii]._iName[20] | (Items[ii]._iName[19] << 8)) << 8)) << 8);
 	} else {
-		cmd.wCI = items[ii]._iCreateInfo;
-		cmd.dwSeed = items[ii]._iSeed;
-		cmd.bId = items[ii]._iIdentified ? 1 : 0;
-		cmd.bDur = items[ii]._iDurability;
-		cmd.bMDur = items[ii]._iMaxDur;
-		cmd.bCh = items[ii]._iCharges;
-		cmd.bMCh = items[ii]._iMaxCharges;
-		cmd.wValue = items[ii]._ivalue;
-		cmd.wToHit = items[ii]._iPLToHit;
-		cmd.wMaxDam = items[ii]._iMaxDam;
-		cmd.bMinStr = items[ii]._iMinStr;
-		cmd.bMinMag = items[ii]._iMinMag;
-		cmd.bMinDex = items[ii]._iMinDex;
-		cmd.bAC = items[ii]._iAC;
-		cmd.dwBuff = items[ii].dwBuff;
+		cmd.wCI = Items[ii]._iCreateInfo;
+		cmd.dwSeed = Items[ii]._iSeed;
+		cmd.bId = Items[ii]._iIdentified ? 1 : 0;
+		cmd.bDur = Items[ii]._iDurability;
+		cmd.bMDur = Items[ii]._iMaxDur;
+		cmd.bCh = Items[ii]._iCharges;
+		cmd.bMCh = Items[ii]._iMaxCharges;
+		cmd.wValue = Items[ii]._ivalue;
+		cmd.wToHit = Items[ii]._iPLToHit;
+		cmd.wMaxDam = Items[ii]._iMaxDam;
+		cmd.bMinStr = Items[ii]._iMinStr;
+		cmd.bMinMag = Items[ii]._iMinMag;
+		cmd.bMinDex = Items[ii]._iMinDex;
+		cmd.bAC = Items[ii]._iAC;
+		cmd.dwBuff = Items[ii].dwBuff;
 	}
 
 	if (bHiPri)

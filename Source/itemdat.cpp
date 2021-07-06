@@ -185,7 +185,7 @@ ItemDataStruct AllItemsList[] = {
 };
 
 /** Contains the data related to each item prefix. */
-const PLStruct PL_Prefix[] = {
+const PLStruct ItemPrefixes[] = {
 	// clang-format off
 	// PLName,          PLPower,         PLParam1, PLParam2, PLMinLvl, PLIType,                                                          PLGOE,    PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
 	// TRANSLATORS: Item prefix section.
@@ -281,7 +281,7 @@ const PLStruct PL_Prefix[] = {
 };
 
 /** Contains the data related to each item suffix. */
-const PLStruct PL_Suffix[] = {
+const PLStruct ItemSuffixes[] = {
 	// clang-format off
 	// PLName,          PLPower,       PLParam1, PLParam2, PLMinLvl, PLIType,                                                             PLGOE,    PLDouble, PLOk,  PLMinVal, PLMaxVal, PLMultVal
 	// TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)

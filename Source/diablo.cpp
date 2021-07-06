@@ -1846,12 +1846,12 @@ void itemInfoKeyPressed()
 		sprintf(
 		    tempstr,
 		    "IDX = %i  :  Seed = %i  :  CF = %i",
-		    items[pcursitem].IDidx,
-		    items[pcursitem]._iSeed,
-		    items[pcursitem]._iCreateInfo);
+		    Items[pcursitem].IDidx,
+		    Items[pcursitem]._iSeed,
+		    Items[pcursitem]._iCreateInfo);
 		NetSendCmdString(1 << myplr, tempstr);
 	}
-	sprintf(tempstr, "Numitems : %i", numitems);
+	sprintf(tempstr, "Numitems : %i", ActiveItemCount);
 	NetSendCmdString(1 << myplr, tempstr);
 }
 #endif

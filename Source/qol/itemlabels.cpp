@@ -63,7 +63,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 {
 	if (!IsHighlightingLabelsEnabled())
 		return;
-	ItemStruct *it = &items[id];
+	ItemStruct *it = &Items[id];
 
 	const char *textOnGround;
 	if (it->_itype == ITYPE_GOLD) {
@@ -146,7 +146,7 @@ void DrawItemNameLabels(const Surface &out)
 	}
 
 	for (const ItemLabel &label : labelQueue) {
-		ItemStruct &itm = items[label.id];
+		ItemStruct &itm = Items[label.id];
 
 		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y - Height + MarginY && MousePosition.y < label.pos.y + MarginY) {
 			if (!gmenu_is_active() && PauseMode == 0 && !deathflag && IsMouseOverGameArea()) {

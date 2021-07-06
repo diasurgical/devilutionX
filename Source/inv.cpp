@@ -1131,12 +1131,12 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
-	memset(&items[MAXITEMS], 0, sizeof(*items));
+	memset(&Items[MAXITEMS], 0, sizeof(*Items));
 	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	auto &player = plr[pnum];
 
-	player.HoldItem = items[MAXITEMS];
+	player.HoldItem = Items[MAXITEMS];
 
 	if (bId) {
 		player.HoldItem._iIdentified = true;
@@ -1455,13 +1455,13 @@ static void CheckNaKrulNotes(PlayerStruct &player)
 		}
 	}
 
-	int itemNum = itemactive[0];
-	ItemStruct tmp = items[itemNum];
-	memset(&items[itemNum], 0, sizeof(*items));
+	int itemNum = ActiveItems[0];
+	ItemStruct tmp = Items[itemNum];
+	memset(&Items[itemNum], 0, sizeof(*Items));
 	GetItemAttrs(itemNum, IDI_FULLNOTE, 16);
 	SetupItem(itemNum);
-	player.HoldItem = items[itemNum];
-	items[itemNum] = tmp;
+	player.HoldItem = Items[itemNum];
+	Items[itemNum] = tmp;
 }
 
 static void CheckQuestItem(PlayerStruct &player)
@@ -1527,9 +1527,9 @@ void CleanupItems(ItemStruct *item, int ii)
 	}
 
 	int i = 0;
-	while (i < numitems) {
-		if (itemactive[i] == ii) {
-			DeleteItem(itemactive[i], i);
+	while (i < ActiveItemCount) {
+		if (ActiveItems[i] == ii) {
+			DeleteItem(ActiveItems[i], i);
 			i = 0;
 			continue;
 		}
@@ -1608,7 +1608,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	}
 
 	if (done) {
-		CleanupItems(&items[ii], ii);
+		CleanupItems(&Items[ii], ii);
 		return;
 	}
 
@@ -1623,19 +1623,19 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 
 int FindGetItem(int idx, uint16_t ci, int iseed)
 {
-	if (numitems <= 0)
+	if (ActiveItemCount <= 0)
 		return -1;
 
 	int ii;
 	int i = 0;
 	while (true) {
-		ii = itemactive[i];
-		if (items[ii].IDidx == idx && items[ii]._iSeed == iseed && items[ii]._iCreateInfo == ci)
+		ii = ActiveItems[i];
+		if (Items[ii].IDidx == idx && Items[ii]._iSeed == iseed && Items[ii]._iCreateInfo == ci)
 			break;
 
 		i++;
 
-		if (i >= numitems)
+		if (i >= ActiveItemCount)
 			return -1;
 	}
 
@@ -1648,9 +1648,9 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 
 	if (dItem[position.x][position.y] != 0) {
 		ii = dItem[position.x][position.y] - 1;
-		if (items[ii].IDidx == idx
-		    && items[ii]._iSeed == iseed
-		    && items[ii]._iCreateInfo == ci) {
+		if (Items[ii].IDidx == idx
+		    && Items[ii]._iSeed == iseed
+		    && Items[ii]._iCreateInfo == ci) {
 			FindGetItem(idx, ci, iseed);
 		} else {
 			ii = FindGetItem(idx, ci, iseed);
@@ -1662,7 +1662,7 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 	if (ii == -1)
 		return;
 
-	CleanupItems(&items[ii], ii);
+	CleanupItems(&Items[ii], ii);
 	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
@@ -1703,7 +1703,7 @@ bool CanPut(Point position)
 
 bool TryInvPut()
 {
-	if (numitems >= MAXITEMS)
+	if (ActiveItemCount >= MAXITEMS)
 		return false;
 
 	auto &myPlayer = plr[myplr];
@@ -1726,7 +1726,7 @@ bool TryInvPut()
 
 static bool PutItem(PlayerStruct &player, Point &position)
 {
-	if (numitems >= MAXITEMS)
+	if (ActiveItemCount >= MAXITEMS)
 		return false;
 
 	Direction d = GetDirection(player.position.tile, position);
@@ -1795,12 +1795,12 @@ int InvPutItem(PlayerStruct &player, Point position)
 	int ii = AllocateItem();
 
 	dItem[position.x][position.y] = ii + 1;
-	items[ii] = player.HoldItem;
-	items[ii].position = position;
-	RespawnItem(&items[ii], true);
+	Items[ii] = player.HoldItem;
+	Items[ii].position = position;
+	RespawnItem(&Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
-		CornerStone.item = items[ii];
+		CornerStone.item = Items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
@@ -1826,25 +1826,25 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	} else {
 		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (id != 0)
-			items[ii]._iIdentified = true;
-		items[ii]._iDurability = dur;
-		items[ii]._iMaxDur = mdur;
-		items[ii]._iCharges = ch;
-		items[ii]._iMaxCharges = mch;
-		items[ii]._iPLToHit = toHit;
-		items[ii]._iMaxDam = maxDam;
-		items[ii]._iMinStr = minStr;
-		items[ii]._iMinMag = minMag;
-		items[ii]._iMinDex = minDex;
-		items[ii]._iAC = ac;
-		items[ii].dwBuff = ibuff;
+			Items[ii]._iIdentified = true;
+		Items[ii]._iDurability = dur;
+		Items[ii]._iMaxDur = mdur;
+		Items[ii]._iCharges = ch;
+		Items[ii]._iMaxCharges = mch;
+		Items[ii]._iPLToHit = toHit;
+		Items[ii]._iMaxDam = maxDam;
+		Items[ii]._iMinStr = minStr;
+		Items[ii]._iMinMag = minMag;
+		Items[ii]._iMinDex = minDex;
+		Items[ii]._iAC = ac;
+		Items[ii].dwBuff = ibuff;
 	}
 
-	items[ii].position = position;
-	RespawnItem(&items[ii], true);
+	Items[ii].position = position;
+	RespawnItem(&Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
-		CornerStone.item = items[ii];
+		CornerStone.item = Items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
 		quests[Q_CORNSTN]._qlog = false;
 		quests[Q_CORNSTN]._qactive = QUEST_DONE;
