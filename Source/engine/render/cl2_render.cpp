@@ -799,8 +799,8 @@ void Cl2DrawLight(const Surface &out, int sx, int sy, const CelSprite &cel, int 
 	int nDataSize;
 	const byte *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
-	if (light_table_index != 0)
-		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), &pLightTbl[light_table_index * 256]);
+	if (LightTableIndex != 0)
+		Cl2BlitLightSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame), &LightTables[LightTableIndex * 256]);
 	else
 		Cl2BlitSafe(out, sx, sy, pRLEBytes, nDataSize, cel.Width(frame));
 }

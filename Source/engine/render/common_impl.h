@@ -20,7 +20,7 @@ inline std::uint8_t *GetLightTable(char light)
 		idx += 256; // gray colors
 	if (light >= 4)
 		idx += (light - 1) << 8;
-	return &pLightTbl[idx];
+	return &LightTables[idx];
 }
 
 struct ClipX {

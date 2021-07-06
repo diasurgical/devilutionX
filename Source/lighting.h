@@ -26,7 +26,7 @@ struct LightPosition {
 	Point old;
 };
 
-struct LightListStruct {
+struct LightStruct {
 	LightPosition position;
 	int _lradius;
 	int _lid;
@@ -36,16 +36,16 @@ struct LightListStruct {
 	bool _lflags;
 };
 
-extern LightListStruct VisionList[MAXVISION];
-extern uint8_t lightactive[MAXLIGHTS];
-extern LightListStruct LightList[MAXLIGHTS];
-extern int numlights;
-extern int numvision;
-extern char lightmax;
-extern bool dolighting;
-extern int visionid;
-extern std::array<BYTE, LIGHTSIZE> pLightTbl;
-extern bool lightflag;
+extern LightStruct VisionList[MAXVISION];
+extern int VisionCount;
+extern int VisionId;
+extern LightStruct Lights[MAXLIGHTS];
+extern uint8_t ActiveLights[MAXLIGHTS];
+extern int ActiveLightCount;
+extern char LightsMax;
+extern std::array<BYTE, LIGHTSIZE> LightTables;
+extern bool DisableLighting;
+extern bool UpdateLighting;
 
 void DoLighting(Point position, int nRadius, int Lnum);
 void DoUnVision(Point position, int nRadius);
@@ -74,6 +74,6 @@ void lighting_color_cycling();
 /* rdata */
 
 extern const char CrawlTable[2749];
-extern const BYTE vCrawlTable[23][30];
+extern const BYTE VisionCrawlTable[23][30];
 
 } // namespace devilution

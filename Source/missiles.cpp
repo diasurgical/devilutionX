@@ -3710,7 +3710,7 @@ void MI_FireNova(int i)
 		dir = plr[id]._pdir;
 		en = TARGET_MONSTERS;
 	}
-	for (const auto &k : vCrawlTable) {
+	for (const auto &k : VisionCrawlTable) {
 		if (sx1 != k[6] || sy1 != k[7]) {
 			Displacement offsets[] = { { k[6], k[7] }, { -k[6], -k[7] }, { -k[6], +k[7] }, { +k[6], -k[7] } };
 			for (Displacement offset : offsets)
@@ -4042,7 +4042,7 @@ void MI_Guardian(int i)
 		int ex = 0;
 		for (int j = 0; j < 23 && ex != -1; j++) {
 			for (int k = 10; k >= 0 && ex != -1; k -= 2) {
-				const Displacement offset { vCrawlTable[j][k], vCrawlTable[j][k + 1] };
+				const Displacement offset { VisionCrawlTable[j][k], VisionCrawlTable[j][k + 1] };
 				if (offset == Displacement { 0, 0 }) {
 					break;
 				}
@@ -4465,7 +4465,7 @@ void MI_Nova(int i)
 		dir = plr[id]._pdir;
 		en = TARGET_MONSTERS;
 	}
-	for (const auto &k : vCrawlTable) {
+	for (const auto &k : VisionCrawlTable) {
 		if (sx1 != k[6] || sy1 != k[7]) {
 			AddMissile(src, src + Displacement { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);
 			AddMissile(src, src + Displacement { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile[i]._mispllvl);

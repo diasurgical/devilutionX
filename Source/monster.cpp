@@ -875,7 +875,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	char filestr[64];
 	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniq->mTrnName);
-	LoadFileInMem(filestr, &pLightTbl[256 * (uniquetrans + 19)], 256);
+	LoadFileInMem(filestr, &LightTables[256 * (uniquetrans + 19)], 256);
 
 	monst->_uniqtrans = uniquetrans++;
 
@@ -3112,7 +3112,7 @@ void MAI_Sneak(int i)
 	}
 	int mx = monst->position.tile.x;
 	int my = monst->position.tile.y;
-	if (dLight[mx][my] == lightmax) {
+	if (dLight[mx][my] == LightsMax) {
 		return;
 	}
 	mx -= monst->enemyPosition.x;

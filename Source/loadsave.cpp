@@ -788,7 +788,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-static void LoadLighting(LoadHelper *file, LightListStruct *pLight)
+static void LoadLighting(LoadHelper *file, LightStruct *pLight)
 {
 	pLight->position.tile.x = file->NextLE<int32_t>();
 	pLight->position.tile.y = file->NextLE<int32_t>();
@@ -1181,17 +1181,17 @@ void LoadGame(bool firstflag)
 		for (int i = 0; i < nobjects; i++)
 			SyncObjectAnim(objectactive[i]);
 
-		numlights = file.NextBE<int32_t>();
+		ActiveLightCount = file.NextBE<int32_t>();
 
-		for (uint8_t &lightId : lightactive)
+		for (uint8_t &lightId : ActiveLights)
 			lightId = file.NextLE<uint8_t>();
-		for (int i = 0; i < numlights; i++)
-			LoadLighting(&file, &LightList[lightactive[i]]);
+		for (int i = 0; i < ActiveLightCount; i++)
+			LoadLighting(&file, &Lights[ActiveLights[i]]);
 
-		visionid = file.NextBE<int32_t>();
-		numvision = file.NextBE<int32_t>();
+		VisionId = file.NextBE<int32_t>();
+		VisionCount = file.NextBE<int32_t>();
 
-		for (int i = 0; i < numvision; i++)
+		for (int i = 0; i < VisionCount; i++)
 			LoadLighting(&file, &VisionList[i]);
 	}
 
@@ -1824,7 +1824,7 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-static void SaveLighting(SaveHelper *file, LightListStruct *pLight)
+static void SaveLighting(SaveHelper *file, LightStruct *pLight)
 {
 	file->WriteLE<int32_t>(pLight->position.tile.x);
 	file->WriteLE<int32_t>(pLight->position.tile.y);
@@ -1943,17 +1943,17 @@ void SaveGameData()
 		for (int i = 0; i < nobjects; i++)
 			SaveObject(&file, objectactive[i]);
 
-		file.WriteBE<int32_t>(numlights);
+		file.WriteBE<int32_t>(ActiveLightCount);
 
-		for (uint8_t lightId : lightactive)
+		for (uint8_t lightId : ActiveLights)
 			file.WriteLE<uint8_t>(lightId);
-		for (int i = 0; i < numlights; i++)
-			SaveLighting(&file, &LightList[lightactive[i]]);
+		for (int i = 0; i < ActiveLightCount; i++)
+			SaveLighting(&file, &Lights[ActiveLights[i]]);
 
-		file.WriteBE<int32_t>(visionid);
-		file.WriteBE<int32_t>(numvision);
+		file.WriteBE<int32_t>(VisionId);
+		file.WriteBE<int32_t>(VisionCount);
 
-		for (int i = 0; i < numvision; i++)
+		for (int i = 0; i < VisionCount; i++)
 			SaveLighting(&file, &VisionList[i]);
 	}
 
@@ -2205,12 +2205,12 @@ void LoadLevel()
 		AutomapZoomReset();
 		ResyncQuests();
 		SyncPortals();
-		dolighting = true;
+		UpdateLighting = true;
 	}
 
 	for (auto &player : plr) {
 		if (player.plractive && currlevel == player.plrlevel)
-			LightList[player._plid]._lunflag = true;
+			Lights[player._plid]._lunflag = true;
 	}
 }
 

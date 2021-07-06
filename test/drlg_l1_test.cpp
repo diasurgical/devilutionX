@@ -8,14 +8,14 @@ using namespace devilution;
 
 TEST(Drlg_l1, DRLG_Init_Globals_noflag)
 {
-	lightflag = false;
+	DisableLighting = false;
 	DRLG_Init_Globals();
 	EXPECT_EQ(dLight[0][0], 15);
 }
 
 TEST(Drlg_l1, DRLG_Init_Globals)
 {
-	lightflag = true;
+	DisableLighting = true;
 	DRLG_Init_Globals();
 	EXPECT_EQ(dLight[0][0], 0);
 }

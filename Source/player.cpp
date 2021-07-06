@@ -46,7 +46,7 @@ void PmChangeLightOff(PlayerStruct &player)
 	if (player._plid == NO_LIGHT)
 		return;
 
-	const LightListStruct *l = &LightList[player._plid];
+	const LightStruct *l = &Lights[player._plid];
 	int x = 2 * player.position.offset.deltaY + player.position.offset.deltaX;
 	int y = 2 * player.position.offset.deltaY - player.position.offset.deltaX;
 

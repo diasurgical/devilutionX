@@ -39,7 +39,7 @@ void gmenu_draw_pause(const Surface &out)
 	if (currlevel != 0)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
-		light_table_index = 0;
+		LightTableIndex = 0;
 		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UIS_HUGE | UIS_CENTER, 2);
 	}
 }

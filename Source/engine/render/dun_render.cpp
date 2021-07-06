@@ -1396,16 +1396,16 @@ void RenderTile(const Surface &out, int x, int y)
 	if (clip.width <= 0 || clip.height <= 0)
 		return;
 
-	const std::uint8_t *tbl = &pLightTbl[256 * light_table_index];
+	const std::uint8_t *tbl = &LightTables[256 * LightTableIndex];
 	const auto *pFrameTable = reinterpret_cast<const std::uint32_t *>(pDungeonCels.get());
 	const auto *src = reinterpret_cast<const std::uint8_t *>(&pDungeonCels[SDL_SwapLE32(pFrameTable[level_cel_block & 0xFFF])]);
 	std::uint8_t *dst = out.at(static_cast<int>(x + clip.left), static_cast<int>(y - clip.bottom));
 	const auto dstPitch = out.pitch();
 
 	if (mask == &SolidMask[TILE_HEIGHT - 1]) {
-		if (light_table_index == lightmax) {
+		if (LightTableIndex == LightsMax) {
 			RenderTileType<TransparencyType::Solid, LightType::FullyDark>(tile, dst, dstPitch, src, mask, tbl, clip);
-		} else if (light_table_index == 0) {
+		} else if (LightTableIndex == 0) {
 			RenderTileType<TransparencyType::Solid, LightType::FullyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
 		} else {
 			RenderTileType<TransparencyType::Solid, LightType::PartiallyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
@@ -1413,17 +1413,17 @@ void RenderTile(const Surface &out, int x, int y)
 	} else {
 		mask -= clip.bottom;
 		if (sgOptions.Graphics.bBlendedTransparancy) {
-			if (light_table_index == lightmax) {
+			if (LightTableIndex == LightsMax) {
 				RenderTileType<TransparencyType::Blended, LightType::FullyDark>(tile, dst, dstPitch, src, mask, tbl, clip);
-			} else if (light_table_index == 0) {
+			} else if (LightTableIndex == 0) {
 				RenderTileType<TransparencyType::Blended, LightType::FullyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
 			} else {
 				RenderTileType<TransparencyType::Blended, LightType::PartiallyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
 			}
 		} else {
-			if (light_table_index == lightmax) {
+			if (LightTableIndex == LightsMax) {
 				RenderTileType<TransparencyType::Stippled, LightType::FullyDark>(tile, dst, dstPitch, src, mask, tbl, clip);
-			} else if (light_table_index == 0) {
+			} else if (LightTableIndex == 0) {
 				RenderTileType<TransparencyType::Stippled, LightType::FullyLit>(tile, dst, dstPitch, src, mask, tbl, clip);
 			} else {
 				RenderTileType<TransparencyType::Stippled, LightType::PartiallyLit>(tile, dst, dstPitch, src, mask, tbl, clip);

@@ -964,7 +964,7 @@ void DRLG_Init_Globals()
 	memset(dItem, 0, sizeof(dItem));
 	memset(dMissile, 0, sizeof(dMissile));
 	memset(dSpecial, 0, sizeof(dSpecial));
-	int8_t c = lightflag ? 0 : 15;
+	int8_t c = DisableLighting ? 0 : 15;
 	memset(dLight, c, sizeof(dLight));
 }
 
