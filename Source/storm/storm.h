@@ -159,32 +159,6 @@ bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
 bool SNetGetTurnsInTransit(
     DWORD *turns);
 
-// Network provider structures
-typedef struct _client_info {
-	DWORD dwSize; // 60
-	char *pszName;
-	char *pszVersion;
-	DWORD dwProduct;
-	DWORD dwVerbyte;
-	DWORD dwUnk5;
-	DWORD dwMaxPlayers;
-	DWORD dwUnk7;
-	DWORD dwUnk8;
-	DWORD dwUnk9;
-	DWORD dwUnk10; // 0xFF
-	char *pszCdKey;
-	char *pszCdOwner;
-	DWORD dwIsShareware;
-	DWORD dwLangId;
-} client_info;
-
-typedef struct _user_info {
-	DWORD dwSize; // 16
-	char *pszPlayerName;
-	char *pszUnknown;
-	DWORD dwUnknown;
-} user_info;
-
 bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
 
 /*  SNetLeaveGame @ 119

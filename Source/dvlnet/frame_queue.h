@@ -29,15 +29,15 @@ private:
 	std::deque<buffer_t> buffer_deque;
 	framesize_t nextsize = 0;
 
-	framesize_t size() const;
-	buffer_t read(framesize_t s);
+	framesize_t Size() const;
+	buffer_t Read(framesize_t s);
 
 public:
-	bool packet_ready();
-	buffer_t read_packet();
-	void write(buffer_t buf);
+	bool PacketReady();
+	buffer_t ReadPacket();
+	void Write(buffer_t buf);
 
-	static buffer_t make_frame(buffer_t packetbuf);
+	static buffer_t MakeFrame(buffer_t packetbuf);
 };
 
 } // namespace net

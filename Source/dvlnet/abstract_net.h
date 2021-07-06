@@ -62,7 +62,7 @@ public:
 		return std::vector<std::string>();
 	}
 
-	static std::unique_ptr<abstract_net> make_net(provider_t provider);
+	static std::unique_ptr<abstract_net> MakeNet(provider_t provider);
 };
 
 } // namespace net

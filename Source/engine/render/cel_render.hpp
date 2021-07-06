@@ -94,24 +94,6 @@ void CelDrawLightRedTo(const Surface &out, Point position, const CelSprite &cel,
 void CelDrawItem(const ItemStruct &item, const Surface &out, Point position, const CelSprite &cel, int frame);
 
 /**
- * @brief Same as CelClippedDrawTo but checks for drawing outside the buffer
- * @param out Target buffer
- * @param position Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelClippedDrawSafeTo(const Surface &out, Point position, const CelSprite &cel, int frame);
-
-/**
- * @brief Same as CelDrawLightRedTo but checks for drawing outside the buffer
- * @param out Target buffer
- * @param position Target buffer coordinate
- * @param cel CEL sprite
- * @param frame CEL frame number
- */
-void CelDrawLightRedSafeTo(const Surface &out, Point position, const CelSprite &cel, int frame);
-
-/**
  * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the target buffer at the given coordianates
  * @param out Target buffer
  * @param col Color index from current palette

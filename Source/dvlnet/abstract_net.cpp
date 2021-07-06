@@ -17,7 +17,7 @@
 namespace devilution {
 namespace net {
 
-std::unique_ptr<abstract_net> abstract_net::make_net(provider_t provider)
+std::unique_ptr<abstract_net> abstract_net::MakeNet(provider_t provider)
 {
 #ifdef NONET
 	return std::make_unique<loopback>();

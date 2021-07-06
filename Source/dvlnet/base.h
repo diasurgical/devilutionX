@@ -33,7 +33,7 @@ public:
 
 	virtual void poll() = 0;
 	virtual void send(packet &pkt) = 0;
-	virtual void disconnect_net(plr_t plr);
+	virtual void DisconnectNet(plr_t plr);
 
 	void setup_gameinfo(buffer_t info);
 
@@ -71,13 +71,13 @@ protected:
 
 	std::unique_ptr<packet_factory> pktfty;
 
-	void handle_accept(packet &pkt);
-	void recv_local(packet &pkt);
-	void run_event_handler(_SNETEVENT &ev);
+	void HandleAccept(packet &pkt);
+	void RecvLocal(packet &pkt);
+	void RunEventHandler(_SNETEVENT &ev);
 
 private:
-	plr_t get_owner();
-	void clear_msg(plr_t plr);
+	plr_t GetOwner();
+	void ClearMsg(plr_t plr);
 };
 
 } // namespace net

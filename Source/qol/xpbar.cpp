@@ -80,7 +80,7 @@ void DrawXPBar(const Surface &out)
 
 	DrawArt(out, backX, backY, &xpbarArt);
 
-	const int charLevel = player._pLevel;
+	const int8_t charLevel = player._pLevel;
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Draw a nice golden bar for max level characters.
@@ -123,7 +123,7 @@ bool CheckXPBarInfo()
 
 	const auto &player = Players[MyPlayerId];
 
-	const int charLevel = player._pLevel;
+	const int8_t charLevel = player._pLevel;
 
 	strcpy(tempstr, fmt::format(_("Level {:d}"), charLevel).c_str());
 	AddPanelString(tempstr);

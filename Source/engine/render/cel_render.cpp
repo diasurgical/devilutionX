@@ -659,13 +659,6 @@ void CelDrawItem(const ItemStruct &item, const Surface &out, Point position, con
 	}
 }
 
-void CelClippedDrawSafeTo(const Surface &out, Point position, const CelSprite &cel, int frame)
-{
-	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
-}
-
 void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSprite &cel, int frame)
 {
 	int nDataSize;
@@ -680,13 +673,6 @@ void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSpr
 		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	else
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
-}
-
-void CelDrawLightRedSafeTo(const Surface &out, Point position, const CelSprite &cel, int frame)
-{
-	int nDataSize;
-	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
-	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, cel.Width(frame), GetLightTable(1));
 }
 
 void CelDrawUnsafeTo(const Surface &out, Point position, const CelSprite &cel, int frame)
