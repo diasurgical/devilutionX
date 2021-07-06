@@ -607,8 +607,8 @@ struct UItemStruct {
 };
 
 extern ItemDataStruct AllItemsList[];
-extern const PLStruct PL_Prefix[];
-extern const PLStruct PL_Suffix[];
+extern const PLStruct ItemPrefixes[];
+extern const PLStruct ItemSuffixes[];
 extern const UItemStruct UniqueItemList[];
 
 } // namespace devilution

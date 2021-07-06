@@ -747,7 +747,7 @@ static void LoadObject(LoadHelper *file, int i)
 
 static void LoadItem(LoadHelper *file, int i)
 {
-	LoadItemData(file, &items[i]);
+	LoadItemData(file, &Items[i]);
 	GetItemFrm(i);
 }
 
@@ -1072,10 +1072,10 @@ void RemoveEmptyInventory(PlayerStruct &player)
 
 void RemoveEmptyLevelItems()
 {
-	for (int i = numitems; i > 0; i--) {
-		int ii = itemactive[i];
-		if (items[ii].isEmpty()) {
-			dItem[items[ii].position.x][items[ii].position.y] = 0;
+	for (int i = ActiveItemCount; i > 0; i--) {
+		int ii = ActiveItems[i];
+		if (Items[ii].isEmpty()) {
+			dItem[Items[ii].position.x][Items[ii].position.y] = 0;
 			DeleteItem(ii, i);
 		}
 	}
@@ -1154,7 +1154,7 @@ void LoadGame(bool firstflag)
 	ViewX = viewX;
 	ViewY = viewY;
 	ActiveMonsterCount = tmpNummonsters;
-	numitems = tmpNumitems;
+	ActiveItemCount = tmpNumitems;
 	nummissiles = tmpNummissiles;
 	nobjects = tmpNobjects;
 
@@ -1195,12 +1195,12 @@ void LoadGame(bool firstflag)
 			LoadLighting(&file, &VisionList[i]);
 	}
 
-	for (int &itemId : itemactive)
+	for (int &itemId : ActiveItems)
 		itemId = file.NextLE<int8_t>();
-	for (int &itemId : itemavail)
+	for (int &itemId : AvailableItems)
 		itemId = file.NextLE<int8_t>();
-	for (int i = 0; i < numitems; i++)
-		LoadItem(&file, itemactive[i]);
+	for (int i = 0; i < ActiveItemCount; i++)
+		LoadItem(&file, ActiveItems[i]);
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
 
@@ -1906,7 +1906,7 @@ void SaveGameData()
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
 	file.WriteBE<int32_t>(ActiveMonsterCount);
-	file.WriteBE<int32_t>(numitems);
+	file.WriteBE<int32_t>(ActiveItemCount);
 	file.WriteBE<int32_t>(nummissiles);
 	file.WriteBE<int32_t>(nobjects);
 
@@ -1957,12 +1957,12 @@ void SaveGameData()
 			SaveLighting(&file, &VisionList[i]);
 	}
 
-	for (int itemId : itemactive)
+	for (int itemId : ActiveItems)
 		file.WriteLE<int8_t>(itemId);
-	for (int itemId : itemavail)
+	for (int itemId : AvailableItems)
 		file.WriteLE<int8_t>(itemId);
-	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &items[itemactive[i]]);
+	for (int i = 0; i < ActiveItemCount; i++)
+		SaveItem(&file, &Items[ActiveItems[i]]);
 	for (bool uniqueItemFlag : UniqueItemFlags)
 		file.WriteLE<uint8_t>(uniqueItemFlag ? 1 : 0);
 
@@ -2051,7 +2051,7 @@ void SaveLevel()
 	}
 
 	file.WriteBE<int32_t>(ActiveMonsterCount);
-	file.WriteBE<int32_t>(numitems);
+	file.WriteBE<int32_t>(ActiveItemCount);
 	file.WriteBE<int32_t>(nobjects);
 
 	if (leveltype != DTYPE_TOWN) {
@@ -2067,13 +2067,13 @@ void SaveLevel()
 			SaveObject(&file, objectactive[i]);
 	}
 
-	for (int itemId : itemactive)
+	for (int itemId : ActiveItems)
 		file.WriteLE<int8_t>(itemId);
-	for (int itemId : itemavail)
+	for (int itemId : AvailableItems)
 		file.WriteLE<int8_t>(itemId);
 
-	for (int i = 0; i < numitems; i++)
-		SaveItem(&file, &items[itemactive[i]]);
+	for (int i = 0; i < ActiveItemCount; i++)
+		SaveItem(&file, &Items[ActiveItems[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2134,7 +2134,7 @@ void LoadLevel()
 	}
 
 	ActiveMonsterCount = file.NextBE<int32_t>();
-	numitems = file.NextBE<int32_t>();
+	ActiveItemCount = file.NextBE<int32_t>();
 	nobjects = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
@@ -2154,12 +2154,12 @@ void LoadLevel()
 		}
 	}
 
-	for (int &itemId : itemactive)
+	for (int &itemId : ActiveItems)
 		itemId = file.NextLE<int8_t>();
-	for (int &itemId : itemavail)
+	for (int &itemId : AvailableItems)
 		itemId = file.NextLE<int8_t>();
-	for (int i = 0; i < numitems; i++)
-		LoadItem(&file, itemactive[i]);
+	for (int i = 0; i < ActiveItemCount; i++)
+		LoadItem(&file, ActiveItems[i]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)

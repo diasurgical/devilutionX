@@ -1647,16 +1647,16 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 
 static void RespawnDeadItem(ItemStruct *itm, Point target)
 {
-	if (numitems >= MAXITEMS)
+	if (ActiveItemCount >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 
 	dItem[target.x][target.y] = ii + 1;
 
-	items[ii] = *itm;
-	items[ii].position = target;
-	RespawnItem(&items[ii], true);
+	Items[ii] = *itm;
+	Items[ii].position = target;
+	RespawnItem(&Items[ii], true);
 
 	itm->_itype = ITYPE_NONE;
 }
@@ -3168,19 +3168,19 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		case ACTION_PICKUPITEM:
 			if (pnum == myplr) {
 				i = player.destParam1;
-				x = abs(player.position.tile.x - items[i].position.x);
-				y = abs(player.position.tile.y - items[i].position.y);
-				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !items[i]._iRequest) {
+				x = abs(player.position.tile.x - Items[i].position.x);
+				y = abs(player.position.tile.y - Items[i].position.y);
+				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !Items[i]._iRequest) {
 					NetSendCmdGItem(true, CMD_REQUESTGITEM, myplr, myplr, i);
-					items[i]._iRequest = true;
+					Items[i]._iRequest = true;
 				}
 			}
 			break;
 		case ACTION_PICKUPAITEM:
 			if (pnum == myplr) {
 				i = player.destParam1;
-				x = abs(player.position.tile.x - items[i].position.x);
-				y = abs(player.position.tile.y - items[i].position.y);
+				x = abs(player.position.tile.x - Items[i].position.x);
+				y = abs(player.position.tile.y - Items[i].position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
 					NetSendCmdGItem(true, CMD_REQUESTAGITEM, myplr, myplr, i);
 				}

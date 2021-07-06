@@ -156,23 +156,23 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		    SDL_SwapLE16(is->wValue),
 		    SDL_SwapLE32(is->dwBuff));
 	} else {
-		memset(&items[MAXITEMS], 0, sizeof(*items));
+		memset(&Items[MAXITEMS], 0, sizeof(*Items));
 		RecreateItem(MAXITEMS, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
-		items[MAXITEMS]._iMagical = static_cast<item_quality>(is->bId >> 1);
-		items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
-		items[MAXITEMS]._iDurability = is->bDur;
-		items[MAXITEMS]._iMaxDur = is->bMDur;
-		items[MAXITEMS]._iCharges = is->bCh;
-		items[MAXITEMS]._iMaxCharges = is->bMCh;
+		Items[MAXITEMS]._iMagical = static_cast<item_quality>(is->bId >> 1);
+		Items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
+		Items[MAXITEMS]._iDurability = is->bDur;
+		Items[MAXITEMS]._iMaxDur = is->bMDur;
+		Items[MAXITEMS]._iCharges = is->bCh;
+		Items[MAXITEMS]._iMaxCharges = is->bMCh;
 
-		RemoveInvalidItem(&items[MAXITEMS]);
+		RemoveInvalidItem(&Items[MAXITEMS]);
 
 		if (isHellfire)
-			items[MAXITEMS].dwBuff |= CF_HELLFIRE;
+			Items[MAXITEMS].dwBuff |= CF_HELLFIRE;
 		else
-			items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
+			Items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
 	}
-	*id = items[MAXITEMS];
+	*id = Items[MAXITEMS];
 }
 
 static void VerifyGoldSeeds(PlayerStruct &player)

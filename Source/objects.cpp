@@ -2890,7 +2890,7 @@ void OperateBookLever(int pnum, int i)
 {
 	int x = 2 * setpc_x + 16;
 	int y = 2 * setpc_y + 16;
-	if (numitems >= MAXITEMS) {
+	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 	if (object[i]._oSelFlag != 0 && !qtextflag) {
@@ -3031,7 +3031,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 
 void OperateMushPatch(int pnum, int i)
 {
-	if (numitems >= MAXITEMS) {
+	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
@@ -3057,7 +3057,7 @@ void OperateMushPatch(int pnum, int i)
 
 void OperateInnSignChest(int pnum, int i)
 {
-	if (numitems >= MAXITEMS) {
+	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
@@ -3182,7 +3182,7 @@ void OperateL3Door(int pnum, int i, bool sendflag)
 
 void OperatePedistal(int pnum, int i)
 {
-	if (numitems >= MAXITEMS) {
+	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 
@@ -4658,7 +4658,7 @@ void OperateStoryBook(int pnum, int i)
 
 void OperateLazStand(int pnum, int i)
 {
-	if (numitems >= MAXITEMS) {
+	if (ActiveItemCount >= MAXITEMS) {
 		return;
 	}
 

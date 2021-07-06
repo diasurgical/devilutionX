@@ -395,13 +395,13 @@ struct CornerStoneStruct {
 	ItemStruct item;
 };
 
-extern int itemactive[MAXITEMS];
-extern bool uitemflag;
-extern int itemavail[MAXITEMS];
-extern ItemStruct items[MAXITEMS + 1];
+extern ItemStruct Items[MAXITEMS + 1];
+extern int ActiveItems[MAXITEMS];
+extern int ActiveItemCount;
+extern int AvailableItems[MAXITEMS];
+extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
-extern int numitems;
 
 BYTE GetOutlineColor(const ItemStruct &item, bool checkReq);
 bool IsItemAvailable(int i);

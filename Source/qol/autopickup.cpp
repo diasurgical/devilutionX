@@ -49,9 +49,9 @@ void AutoGoldPickup(int pnum)
 		int y = plr[pnum].position.tile.y + pathydir[dir];
 		if (dItem[x][y] != 0) {
 			int itemIndex = dItem[x][y] - 1;
-			if (items[itemIndex]._itype == ITYPE_GOLD) {
+			if (Items[itemIndex]._itype == ITYPE_GOLD) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-				items[itemIndex]._iRequest = true;
+				Items[itemIndex]._iRequest = true;
 				PlaySFX(IS_IGRAB);
 			}
 		}
