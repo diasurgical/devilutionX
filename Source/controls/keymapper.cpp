@@ -38,14 +38,14 @@ Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction g
 	}
 }
 
-Keymapper::ActionIndex Keymapper::addAction(const Action &action)
+Keymapper::ActionIndex Keymapper::AddAction(const Action &action)
 {
 	actions.emplace_back(action);
 
 	return actions.size() - 1;
 }
 
-void Keymapper::keyPressed(int key) const
+void Keymapper::KeyPressed(int key) const
 {
 	auto it = keyIDToAction.find(key);
 	if (it == keyIDToAction.end())
@@ -61,7 +61,7 @@ void Keymapper::keyPressed(int key) const
 	action();
 }
 
-std::string Keymapper::keyNameForAction(ActionIndex actionIndex) const
+std::string Keymapper::KeyNameForAction(ActionIndex actionIndex) const
 {
 	assert(actionIndex < actions.size());
 	auto key = actions[actionIndex].key;
@@ -70,7 +70,7 @@ std::string Keymapper::keyNameForAction(ActionIndex actionIndex) const
 	return it->second;
 }
 
-void Keymapper::save() const
+void Keymapper::Save() const
 {
 	// Use the action vector to go though the actions to keep the same order.
 	for (const auto &action : actions) {
@@ -89,12 +89,12 @@ void Keymapper::save() const
 	}
 }
 
-void Keymapper::load()
+void Keymapper::Load()
 {
 	keyIDToAction.clear();
 
 	for (auto &action : actions) {
-		auto key = getActionKey(action);
+		auto key = GetActionKey(action);
 		action.key = key;
 		if (key == DVL_VK_INVALID) {
 			// Skip if the action has no key bound to it.
@@ -106,7 +106,7 @@ void Keymapper::load()
 	}
 }
 
-int Keymapper::getActionKey(const Keymapper::Action &action)
+int Keymapper::GetActionKey(const Keymapper::Action &action)
 {
 	auto key = getKeyFunction(action.name);
 	if (key.empty())

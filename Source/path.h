@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 
+#include "engine/direction.hpp"
 #include "engine/point.hpp"
 
 namespace devilution {
@@ -39,7 +40,6 @@ PATHNODE *path_new_step();
 
 /* rdata */
 
-extern const char pathxdir[8];
-extern const char pathydir[8];
+extern const Displacement PathDirs[8];
 
 } // namespace devilution

@@ -73,7 +73,7 @@ BYTE SkelChamTrans3[] = {
 };
 
 /** Maps from quest level to quest level names. */
-const char *const quest_level_names[] = {
+const char *const QuestLevelNames[] = {
 	"",
 	N_("Skeleton King's Lair"),
 	N_("Chamber of Bone"),

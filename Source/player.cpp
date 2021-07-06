@@ -1677,11 +1677,11 @@ static void PlrDeadItem(PlayerStruct &player, ItemStruct *itm, Displacement dire
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			for (int i = -k; i <= k; i++) {
-				Point target = player.position.tile + Displacement { i, j };
-				if (ItemSpaceOk(target)) {
-					RespawnDeadItem(itm, target);
+				Point next = player.position.tile + Displacement { i, j };
+				if (ItemSpaceOk(next)) {
+					RespawnDeadItem(itm, next);
 					player.HoldItem = *itm;
-					NetSendCmdPItem(false, CMD_RESPAWNITEM, target);
+					NetSendCmdPItem(false, CMD_RESPAWNITEM, next);
 					return;
 				}
 			}

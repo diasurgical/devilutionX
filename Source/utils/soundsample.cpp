@@ -74,7 +74,7 @@ void SoundSample::Release()
 	file_data_ = nullptr;
 	file_data_size_ = 0;
 #endif
-};
+}
 
 /**
  * @brief Check if a the sound is being played atm
@@ -82,7 +82,7 @@ void SoundSample::Release()
 bool SoundSample::IsPlaying()
 {
 	return stream_ && stream_->isPlaying();
-};
+}
 
 /**
  * @brief Start playing the sound
@@ -103,7 +103,7 @@ void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan)
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
 		return;
 	}
-};
+}
 
 /**
  * @brief Stop playing the sound
@@ -112,7 +112,7 @@ void SoundSample::Stop()
 {
 	if (stream_)
 		stream_->stop();
-};
+}
 
 int SoundSample::SetChunkStream(std::string filePath)
 {
@@ -153,7 +153,7 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 	}
 
 	return 0;
-};
+}
 #endif
 
 /**
@@ -164,6 +164,6 @@ int SoundSample::GetLength() const
 	if (!stream_)
 		return 0;
 	return std::chrono::duration_cast<std::chrono::milliseconds>(stream_->duration()).count();
-};
+}
 
 } // namespace devilution

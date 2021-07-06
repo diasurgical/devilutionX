@@ -400,7 +400,7 @@ void DrawAutomapText(const Surface &out)
 	}
 
 	if (setlevel) {
-		DrawString(out, _(quest_level_names[setlvlnum]), linePosition);
+		DrawString(out, _(QuestLevelNames[setlvlnum]), linePosition);
 		return;
 	}
 

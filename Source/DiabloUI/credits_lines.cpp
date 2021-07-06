@@ -3,7 +3,7 @@
 
 namespace devilution {
 
-const char *const CREDITS_LINES[] = {
+const char *const CreditLines[] = {
 	N_("Game Design"),
 	"	Blizzard North",
 	"",
@@ -552,6 +552,6 @@ const char *const CREDITS_LINES[] = {
 	" "
 };
 
-const std::size_t CREDITS_LINES_SIZE = sizeof(CREDITS_LINES) / sizeof(CREDITS_LINES[0]);
+const std::size_t CreditLinesSize = sizeof(CreditLines) / sizeof(CreditLines[0]);
 
 } // namespace devilution

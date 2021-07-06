@@ -759,7 +759,7 @@ static void DrlgL1Shadows()
 	}
 }
 
-static int DrlgPlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad, int ldir)
+static int DrlgPlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad)
 {
 	int sx;
 	int sy;
@@ -2286,20 +2286,20 @@ static void DrlgL5(lvl_entry entry)
 
 		if (QuestStatus(Q_PWATER)) {
 			if (entry == ENTRY_MAIN) {
-				if (DrlgPlaceMiniSet(PWATERIN, 1, 1, 0, 0, true, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(PWATERIN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 			} else {
-				if (DrlgPlaceMiniSet(PWATERIN, 1, 1, 0, 0, false, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(PWATERIN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
 				ViewY--;
 			}
 		}
 		if (QuestStatus(Q_LTBANNER)) {
 			if (entry == ENTRY_MAIN) {
-				if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 			} else {
-				if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
 				if (entry == ENTRY_PREV) {
 					ViewX = 2 * setpc_x + 20;
@@ -2311,49 +2311,49 @@ static void DrlgL5(lvl_entry entry)
 		} else if (entry == ENTRY_MAIN) {
 			if (currlevel < 21) {
 				if (!Players[MyPlayerId].pOriginalCathedral) {
-					if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1, 0) < 0)
+					if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
-					if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 				} else {
-					if (DrlgPlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, true, -1, 0) < 0)
+					if (DrlgPlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
-					else if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					else if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 				}
 			} else if (currlevel == 21) {
-				if (DrlgPlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1, 6) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
-				if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
 				ViewY++;
 			} else {
-				if (DrlgPlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 				if (currlevel != 24) {
-					if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 				}
 				ViewY++;
 			}
 		} else if (!Players[MyPlayerId].pOriginalCathedral && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
-				if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
-				if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+				if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 				ViewY--;
 			} else if (currlevel == 21) {
-				if (DrlgPlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1, 6) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
-				if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 				ViewY += 3;
 			} else {
-				if (DrlgPlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 				if (currlevel != 24) {
-					if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+					if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
 				}
 				ViewY += 3;
@@ -2361,27 +2361,27 @@ static void DrlgL5(lvl_entry entry)
 		} else {
 			if (currlevel < 21) {
 				if (!Players[MyPlayerId].pOriginalCathedral) {
-					if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+					if (DrlgPlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
-					if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 				} else {
-					if (DrlgPlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, false, -1, 0) < 0)
+					if (DrlgPlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
-					else if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1, 1) < 0)
+					else if (DrlgPlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
 						doneflag = false;
 					ViewY--;
 				}
 			} else if (currlevel == 21) {
-				if (DrlgPlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, true, -1, 6) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
-				if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 					doneflag = false;
 			} else {
-				if (DrlgPlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1, 0) < 0)
+				if (DrlgPlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
 				if (currlevel != 24) {
-					if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1, 1) < 0)
+					if (DrlgPlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
 						doneflag = false;
 				}
 			}
@@ -2462,7 +2462,7 @@ static void DrlgL5(lvl_entry entry)
 
 	if (currlevel < 21) {
 		DrlgL1Shadows();
-		DrlgPlaceMiniSet(LAMPS, 5, 10, 0, 0, false, -1, 4);
+		DrlgPlaceMiniSet(LAMPS, 5, 10, 0, 0, false, -1);
 		DrlgL1Floor();
 	}
 

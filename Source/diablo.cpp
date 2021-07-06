@@ -973,7 +973,7 @@ static void PressKey(int vkey)
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
-		keymapper.keyPressed(vkey);
+		keymapper.KeyPressed(vkey);
 		if (vkey == DVL_VK_RETURN) {
 			if (GetAsyncKeyState(DVL_VK_MENU))
 				dx_reinit();
@@ -1005,7 +1005,7 @@ static void PressKey(int vkey)
 		return;
 	}
 
-	keymapper.keyPressed(vkey);
+	keymapper.KeyPressed(vkey);
 
 	if (vkey == DVL_VK_RETURN) {
 		if (GetAsyncKeyState(DVL_VK_MENU)) {
@@ -1959,20 +1959,20 @@ bool isPlayerDead()
 
 void initKeymapActions()
 {
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "Help",
 	    DVL_VK_F1,
 	    helpKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
 #ifdef _DEBUG
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "ItemInfo",
 	    DVL_VK_INVALID,
 	    itemInfoKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "QuestDebug",
 	    DVL_VK_INVALID,
 	    PrintDebugQuest,
@@ -1980,7 +1980,7 @@ void initKeymapActions()
 	});
 #endif
 	for (int i = 0; i < 4; ++i) {
-		quickSpellActionIndexes[i] = keymapper.addAction({
+		quickSpellActionIndexes[i] = keymapper.AddAction({
 		    std::string("QuickSpell") + std::to_string(i + 1),
 		    DVL_VK_F5 + i,
 		    [i]() {
@@ -1994,43 +1994,43 @@ void initKeymapActions()
 		});
 	}
 	for (int i = 0; i < 4; ++i) {
-		keymapper.addAction({
+		keymapper.AddAction({
 		    QuickMessages[i].key,
 		    DVL_VK_F9 + i,
 		    [i]() { DiabloHotkeyMsg(i); },
 		});
 	}
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "DecreaseGamma",
 	    'G',
 	    DecreaseGamma,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "IncreaseGamma",
 	    'F',
 	    IncreaseGamma,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "Inventory",
 	    'I',
 	    inventoryKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "Character",
 	    'C',
 	    characterSheetKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "QuestLog",
 	    'Q',
 	    questLogKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "Zoom",
 	    'Z',
 	    [] {
@@ -2039,19 +2039,19 @@ void initKeymapActions()
 	    },
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "DisplaySpells",
 	    'S',
 	    displaySpellsKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "SpellBook",
 	    'B',
 	    spellBookKeyPressed,
 	    [&]() { return !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "GameInfo",
 	    'V',
 	    [] {
@@ -2061,13 +2061,16 @@ void initKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
+		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
+		                                   "{:s}, version = {:s}, mode = {:s}"),
+		                       gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty])
+		                       .c_str());
 		    NetSendCmdString(1 << MyPlayerId, pszStr);
 	    },
 	    [&]() { return !isPlayerDead(); },
 	});
 	for (int i = 0; i < 8; ++i) {
-		keymapper.addAction({
+		keymapper.AddAction({
 		    std::string("BeltItem") + std::to_string(i + 1),
 		    '1' + i,
 		    [i] {
@@ -2079,25 +2082,25 @@ void initKeymapActions()
 		    [&]() { return !isPlayerDead(); },
 		});
 	}
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "QuickSave",
 	    DVL_VK_F2,
 	    [] { gamemenu_save_game(false); },
 	    [&]() { return !gbIsMultiplayer && !isPlayerDead(); },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "QuickLoad",
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(false); },
 	    [&]() { return !gbIsMultiplayer && gbValidSaveFile; },
 	});
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "QuitGame",
 	    DVL_VK_INVALID,
 	    [] { gamemenu_quit_game(false); },
 	});
 #ifdef _DEBUG
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "CheatExperience",
 	    DVL_VK_INVALID,
 	    [] {
@@ -2109,7 +2112,7 @@ void initKeymapActions()
 	    [&]() { return !isPlayerDead(); },
 	});
 #endif
-	keymapper.addAction({
+	keymapper.AddAction({
 	    "StopHero",
 	    DVL_VK_INVALID,
 	    [] { Players[MyPlayerId].Stop(); },

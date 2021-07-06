@@ -79,7 +79,7 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 		default:
 			return CutLevel1;
 		}
-	};
+	}
 	case WM_DIABWARPLVL:
 		return CutPortal;
 	case WM_DIABSETLVL:

@@ -214,7 +214,7 @@ void LoadOptions()
 
 	GetIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), "en");
 
-	keymapper.load();
+	keymapper.Load();
 
 	sbWasOptionsLoaded = true;
 }
@@ -298,7 +298,7 @@ void SaveOptions()
 
 	SetIniValue("Language", "Code", sgOptions.Language.szCode);
 
-	keymapper.save();
+	keymapper.Save();
 
 	SaveIni();
 }

@@ -107,8 +107,8 @@ static void GmenuLeftRight(bool isRight)
 	if ((sgpCurrItem->dwFlags & GMENU_SLIDER) == 0)
 		return;
 
-	int step = sgpCurrItem->dwFlags & 0xFFF;
-	int steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	uint16_t step = sgpCurrItem->dwFlags & 0xFFF;
+	uint16_t steps = (sgpCurrItem->dwFlags & 0xFFF000) >> 12;
 	if (isRight) {
 		if (step == steps)
 			return;
@@ -166,9 +166,9 @@ static void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int x = 16 + w / 2;
 		CelDrawTo(out, { x + PANEL_LEFT, y - 10 }, *optbar_cel, 1);
-		int step = pItem->dwFlags & 0xFFF;
-		int nSteps = std::max<int>((pItem->dwFlags & 0xFFF000) >> 12, 2);
-		int pos = step * 256 / nSteps;
+		uint16_t step = pItem->dwFlags & 0xFFF;
+		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
+		uint16_t pos = step * 256 / steps;
 		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
 		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y - 12 }, *option_cel, 1);
 	}
@@ -280,7 +280,7 @@ bool gmenu_on_mouse_move()
 	if (!mouseNavigation)
 		return false;
 
-	int step = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	uint16_t step = (sgpCurrItem->dwFlags & 0xFFF000) >> 12;
 	step *= GmenuGetMouseSlider();
 	step /= 256;
 
@@ -350,7 +350,7 @@ void gmenu_enable(TMenuItem *pMenuItem, bool enable)
 void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 {
 	assert(pItem);
-	int nSteps = std::max((int)(pItem->dwFlags & 0xFFF000) >> 12, 2);
+	uint16_t nSteps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 	pItem->dwFlags &= 0xFFFFF000;
 	pItem->dwFlags |= ((max - min - 1) / 2 + (value - min) * nSteps) / (max - min);
 }
@@ -360,9 +360,9 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
  */
 int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 {
-	int step = pItem->dwFlags & 0xFFF;
-	int nSteps = std::max((int)(pItem->dwFlags & 0xFFF000) >> 12, 2);
-	return min + (step * (max - min) + (nSteps - 1) / 2) / nSteps;
+	uint16_t step = pItem->dwFlags & 0xFFF;
+	uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
+	return min + (step * (max - min) + (steps - 1) / 2) / steps;
 }
 
 /**

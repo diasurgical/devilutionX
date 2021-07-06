@@ -30,8 +30,18 @@ PATHNODE *pnode_tblptr[MAXPATHNODES];
 PATHNODE *path_2_nodes;
 
 /** For iterating over the 8 possible movement directions */
-const char pathxdir[8] = { -1, -1, 1, 1, -1, 0, 1, 0 };
-const char pathydir[8] = { -1, 1, -1, 1, 0, -1, 0, 1 };
+const Displacement PathDirs[8] = {
+	// clang-format off
+	{ -1, -1 },
+	{ -1,  1 },
+	{  1, -1 },
+	{  1,  1 },
+	{ -1,  0 },
+	{  0, -1 },
+	{  1,  0 },
+	{  0,  1 },
+	// clang-format on
+};
 
 /* data */
 
@@ -179,12 +189,11 @@ bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
  */
 bool path_get_path(bool (*posOk)(int, Point), int posOkArg, PATHNODE *pPath, int x, int y)
 {
-	for (int i = 0; i < 8; i++) {
-		int dx = pPath->position.x + pathxdir[i];
-		int dy = pPath->position.y + pathydir[i];
-		bool ok = posOk(posOkArg, { dx, dy });
-		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
-			if (!path_parent_path(pPath, dx, dy, x, y))
+	for (auto dir : PathDirs) {
+		Point tile = pPath->position + dir;
+		bool ok = posOk(posOkArg, tile);
+		if ((ok && path_solid_pieces(pPath, tile.x, tile.y)) || (!ok && tile == Point { x, y })) {
+			if (!path_parent_path(pPath, tile.x, tile.y, x, y))
 				return false;
 		}
 	}

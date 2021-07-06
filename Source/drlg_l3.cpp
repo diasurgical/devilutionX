@@ -1598,7 +1598,7 @@ static void DrlgL3PoolFix()
 	}
 }
 
-static bool DrlgL3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
+static bool DrlgL3PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sx;
 	int sy;
@@ -2257,67 +2257,67 @@ static void DrlgL3(lvl_entry entry)
 			DrlgL3MakeMegas();
 			if (entry == ENTRY_MAIN) {
 				if (currlevel < 17) {
-					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, true, 0);
+					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, true);
 				} else {
 					if (currlevel != 17)
-						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, true, 0);
+						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, true);
 					else
-						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true, 6);
+						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true);
 				}
 				if (!genok) {
 					if (currlevel < 17) {
-						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false, 1);
+						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false);
 					} else {
 						if (currlevel != 20)
-							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false, 1);
+							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false);
 					}
 					if (!genok && currlevel == 9) {
-						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false, 6);
+						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false);
 					}
 				}
 			} else if (entry == ENTRY_PREV) {
 				if (currlevel < 17) {
-					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, false, 0);
+					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, false);
 				} else {
 					if (currlevel != 17)
-						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, false, 0);
+						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, false);
 					else
-						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, false, 6);
+						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, false);
 				}
 				if (!genok) {
 					if (currlevel < 17) {
-						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, true, 1);
+						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, true);
 						ViewX += 2;
 						ViewY -= 2;
 					} else {
 						if (currlevel != 20) {
-							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, true, 1);
+							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, true);
 							ViewX += 2;
 							ViewY -= 2;
 						}
 					}
 					if (!genok && currlevel == 9) {
-						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false, 6);
+						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, false);
 					}
 				}
 			} else {
 				if (currlevel < 17) {
-					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, false, 0);
+					genok = DrlgL3PlaceMiniSet(L3UP, 1, 1, -1, -1, false);
 				} else {
 					if (currlevel != 17)
-						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, false, 0);
+						genok = DrlgL3PlaceMiniSet(L6UP, 1, 1, -1, -1, false);
 					else
-						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true, 6);
+						genok = DrlgL3PlaceMiniSet(L6HOLDWARP, 1, 1, -1, -1, true);
 				}
 				if (!genok) {
 					if (currlevel < 17) {
-						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false, 1);
+						genok = DrlgL3PlaceMiniSet(L3DOWN, 1, 1, -1, -1, false);
 					} else {
 						if (currlevel != 20)
-							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false, 1);
+							genok = DrlgL3PlaceMiniSet(L6DOWN, 1, 1, -1, -1, false);
 					}
 					if (!genok && currlevel == 9) {
-						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, true, 6);
+						genok = DrlgL3PlaceMiniSet(L3HOLDWARP, 1, 1, -1, -1, true);
 					}
 				}
 			}
@@ -2494,9 +2494,7 @@ void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 					DoLighting({ i, j }, 7, -1);
 				} else if (dPiece[i][j] >= 154 && dPiece[i][j] <= 161) {
 					DoLighting({ i, j }, 7, -1);
-				} else if (dPiece[i][j] == 150) {
-					DoLighting({ i, j }, 7, -1);
-				} else if (dPiece[i][j] == 152) {
+				} else if (IsAnyOf(dPiece[i][j], 150, 152)) {
 					DoLighting({ i, j }, 7, -1);
 				}
 			}

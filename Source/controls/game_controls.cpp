@@ -157,7 +157,6 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		case ControllerButton_BUTTON_START:
 		case ControllerButton_BUTTON_BACK:
 			return true;
-			break;
 		default:
 			break;
 		}

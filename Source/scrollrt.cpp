@@ -207,7 +207,6 @@ uint32_t sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
 
-int frames;
 bool frameflag;
 int frameend;
 int framerate;
@@ -452,8 +451,7 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
 		return;
 	}
-
-	char trans = 0;
+	int trans = 0;
 	if (Monsters[m]._uniqtype != 0)
 		trans = Monsters[m]._uniqtrans + 4;
 	if (Monsters[m]._mmode == MM_STONE)
@@ -612,20 +610,20 @@ void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
  */
 static void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
 {
-	if (dObject[x][y] == 0 || LightTableIndex >= LightsMax)
+	int8_t bv = dObject[x][y];
+	if (bv == 0 || LightTableIndex >= LightsMax)
 		return;
 
 	Point objectPosition {};
 
-	int8_t bv = -1;
-	if (dObject[x][y] > 0) {
-		bv = dObject[x][y] - 1;
+	if (bv > 0) {
+		bv = bv - 1;
 		if (Objects[bv]._oPreFlag != pre)
 			return;
 		objectPosition.x = ox - CalculateWidth2(Objects[bv]._oAnimWidth);
 		objectPosition.y = oy;
 	} else {
-		bv = -(dObject[x][y] + 1);
+		bv = -(bv + 1);
 		if (Objects[bv]._oPreFlag != pre)
 			return;
 		int xx = Objects[bv].position.x - x;
@@ -827,7 +825,7 @@ static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, 
  */
 static void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
 {
-	int p = dPlayer[x][y];
+	int8_t p = dPlayer[x][y];
 	p = p > 0 ? p - 1 : -(p + 1);
 
 	if (p < 0 || p >= MAX_PLRS) {
