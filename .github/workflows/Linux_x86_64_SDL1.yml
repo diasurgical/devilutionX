@@ -21,6 +21,13 @@ jobs:
         sudo apt update &&
         sudo apt install -y cmake file g++ git libfmt-dev libsdl-dev libsdl-ttf2.0-dev libsodium-dev rpm
 
+    - name: Cache CMake build folder
+      uses: actions/cache@v2
+      with:
+        path: build
+        key: linux-x86_64-sdl1-cmake-${{ github.sha }}
+        restore-keys: linux-x86_64-sdl1-cmake-
+
     - name: Configure CMake
       shell: bash
       working-directory: ${{github.workspace}}

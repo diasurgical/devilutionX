@@ -27,6 +27,13 @@ jobs:
     - name: Create Build Environment
       run: brew bundle install
 
+    - name: Cache CMake build folder
+      uses: actions/cache@v2
+      with:
+        path: build
+        key: ${{ runner.os }}-cmake-${{ github.sha }}
+        restore-keys: ${{ runner.os }}-cmake-
+
     - name: Configure CMake
       # Use a bash shell so we can use the same syntax for environment variable
       # access regardless of the host operating system
