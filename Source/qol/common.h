@@ -17,7 +17,7 @@ struct Surface;
  * @param n Number to print
  * @return Address of first character after printed number
  */
-char *PrintWithSeparator(char *out, long long n);
+char *PrintWithSeparator(char *out, int64_t n);
 
 void FreeQol();
 void InitQol();

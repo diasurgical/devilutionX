@@ -21,7 +21,7 @@ int tcp_client::create(std::string addrstr, std::string passwd)
 	try {
 		auto port = sgOptions.Network.nPort;
 		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
-		return join(local_server->localhost_self(), passwd);
+		return join(local_server->LocalhostSelf(), passwd);
 	} catch (std::system_error &e) {
 		SDL_SetError("%s", e.what());
 		return -1;
@@ -44,7 +44,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 		SDL_SetError("%s", e.what());
 		return -1;
 	}
-	start_recv();
+	StartReceive();
 	{
 		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
 		    sizeof(cookie_t));
@@ -77,7 +77,7 @@ void tcp_client::poll()
 	ioc.poll();
 }
 
-void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
+void tcp_client::HandleReceive(const asio::error_code &error, size_t bytesRead)
 {
 	if (error) {
 		// error in recv from server
@@ -89,33 +89,33 @@ void tcp_client::handle_recv(const asio::error_code &error, size_t bytesRead)
 		throw std::runtime_error(_("error: read 0 bytes from server"));
 	}
 	recv_buffer.resize(bytesRead);
-	recv_queue.write(std::move(recv_buffer));
+	recv_queue.Write(std::move(recv_buffer));
 	recv_buffer.resize(frame_queue::max_frame_size);
-	while (recv_queue.packet_ready()) {
-		auto pkt = pktfty->make_packet(recv_queue.read_packet());
-		recv_local(*pkt);
+	while (recv_queue.PacketReady()) {
+		auto pkt = pktfty->make_packet(recv_queue.ReadPacket());
+		RecvLocal(*pkt);
 	}
-	start_recv();
+	StartReceive();
 }
 
-void tcp_client::start_recv()
+void tcp_client::StartReceive()
 {
 	sock.async_receive(
 	    asio::buffer(recv_buffer),
-	    std::bind(&tcp_client::handle_recv, this, std::placeholders::_1, std::placeholders::_2));
+	    std::bind(&tcp_client::HandleReceive, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void tcp_client::handle_send(const asio::error_code &error, size_t bytesSent)
+void tcp_client::HandleSend(const asio::error_code &error, size_t bytesSent)
 {
 	// empty for now
 }
 
 void tcp_client::send(packet &pkt)
 {
-	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
+	const auto *frame = new buffer_t(frame_queue::MakeFrame(pkt.Data()));
 	auto buf = asio::buffer(*frame);
 	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytesSent) {
-		handle_send(error, bytesSent);
+		HandleSend(error, bytesSent);
 		delete frame;
 	});
 }
@@ -125,7 +125,7 @@ bool tcp_client::SNetLeaveGame(int type)
 	auto ret = base::SNetLeaveGame(type);
 	poll();
 	if (local_server != nullptr)
-		local_server->close();
+		local_server->Close();
 	sock.close();
 	return ret;
 }

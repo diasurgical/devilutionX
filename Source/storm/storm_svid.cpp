@@ -179,7 +179,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	if (enableAudio && depth[0] != 0) {
 		sound_stop(); // Stop in-progress music and sound effects
 
-		smk_enable_audio(SVidSMK, 0, enableAudio ? 1 : 0);
+		smk_enable_audio(SVidSMK, 0, 1);
 		SVidAudioDepth = depth[0];
 		auto decoder = std::make_unique<PushAulibDecoder>(channels[0], rate[0]);
 		SVidAudioDecoder = decoder.get();

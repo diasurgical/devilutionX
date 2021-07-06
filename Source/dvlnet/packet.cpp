@@ -64,35 +64,35 @@ void CheckPacketTypeOneOf(std::initializer_list<packet_type> expectedTypes, std:
 
 } // namespace
 
-const buffer_t &packet::data()
+const buffer_t &packet::Data()
 {
 	if (!have_decrypted || !have_encrypted)
 		ABORT();
 	return encrypted_buffer;
 }
 
-packet_type packet::type()
+packet_type packet::Type()
 {
 	if (!have_decrypted)
 		ABORT();
 	return m_type;
 }
 
-plr_t packet::src() const
+plr_t packet::Source() const
 {
 	if (!have_decrypted)
 		ABORT();
 	return m_src;
 }
 
-plr_t packet::dest() const
+plr_t packet::Destination() const
 {
 	if (!have_decrypted)
 		ABORT();
 	return m_dest;
 }
 
-const buffer_t &packet::message()
+const buffer_t &packet::Message()
 {
 	if (!have_decrypted)
 		ABORT();
@@ -100,7 +100,7 @@ const buffer_t &packet::message()
 	return m_message;
 }
 
-turn_t packet::turn()
+turn_t packet::Turn()
 {
 	if (!have_decrypted)
 		ABORT();
@@ -108,7 +108,7 @@ turn_t packet::turn()
 	return m_turn;
 }
 
-cookie_t packet::cookie()
+cookie_t packet::Cookie()
 {
 	if (!have_decrypted)
 		ABORT();
@@ -116,7 +116,7 @@ cookie_t packet::cookie()
 	return m_cookie;
 }
 
-plr_t packet::newplr()
+plr_t packet::NewPlayer()
 {
 	if (!have_decrypted)
 		ABORT();
@@ -124,7 +124,7 @@ plr_t packet::newplr()
 	return m_newplr;
 }
 
-const buffer_t &packet::info()
+const buffer_t &packet::Info()
 {
 	if (!have_decrypted)
 		ABORT();
@@ -132,7 +132,7 @@ const buffer_t &packet::info()
 	return m_info;
 }
 
-leaveinfo_t packet::leaveinfo()
+leaveinfo_t packet::LeaveInfo()
 {
 	if (!have_decrypted)
 		ABORT();
@@ -140,7 +140,7 @@ leaveinfo_t packet::leaveinfo()
 	return m_leaveinfo;
 }
 
-void packet_in::create(buffer_t buf)
+void packet_in::Create(buffer_t buf)
 {
 	if (have_encrypted || have_decrypted)
 		ABORT();
@@ -148,7 +148,7 @@ void packet_in::create(buffer_t buf)
 	have_encrypted = true;
 }
 
-void packet_in::decrypt()
+void packet_in::Decrypt()
 {
 	if (!have_encrypted)
 		ABORT();
@@ -185,7 +185,7 @@ void packet_in::decrypt()
 	have_decrypted = true;
 }
 
-void packet_out::encrypt()
+void packet_out::Encrypt()
 {
 	if (!have_decrypted)
 		ABORT();

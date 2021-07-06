@@ -20,7 +20,7 @@ public:
 	virtual int join(std::string addrstr, std::string passwd);
 	virtual void poll();
 	virtual void send(packet &pkt);
-	virtual void disconnect_net(plr_t plr);
+	virtual void DisconnectNet(plr_t plr);
 
 	virtual bool SNetLeaveGame(int type);
 
@@ -73,7 +73,7 @@ bool base_protocol<P>::wait_network()
 }
 
 template <class P>
-void base_protocol<P>::disconnect_net(plr_t plr)
+void base_protocol<P>::DisconnectNet(plr_t plr)
 {
 	proto.disconnect(peers[plr]);
 	peers[plr] = endpoint();
@@ -100,7 +100,7 @@ void base_protocol<P>::send_info_request()
 {
 	auto pkt = pktfty->make_packet<PT_INFO_REQUEST>(PLR_BROADCAST,
 	    PLR_MASTER);
-	proto.send_oob_mc(pkt->data());
+	proto.send_oob_mc(pkt->Data());
 }
 
 template <class P>
@@ -110,7 +110,7 @@ void base_protocol<P>::wait_join()
 	    sizeof(cookie_t));
 	auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
 	    PLR_MASTER, cookie_self, game_init_info);
-	proto.send(firstpeer, pkt->data());
+	proto.send(firstpeer, pkt->Data());
 	for (auto i = 0; i < 500; ++i) {
 		recv();
 		if (plr_self != PLR_BROADCAST)
@@ -154,16 +154,16 @@ void base_protocol<P>::poll()
 template <class P>
 void base_protocol<P>::send(packet &pkt)
 {
-	if (pkt.dest() < MAX_PLRS) {
-		if (pkt.dest() == MyPlayerId)
+	if (pkt.Destination() < MAX_PLRS) {
+		if (pkt.Destination() == MyPlayerId)
 			return;
-		if (peers[pkt.dest()])
-			proto.send(peers[pkt.dest()], pkt.data());
-	} else if (pkt.dest() == PLR_BROADCAST) {
+		if (peers[pkt.Destination()])
+			proto.send(peers[pkt.Destination()], pkt.Data());
+	} else if (pkt.Destination() == PLR_BROADCAST) {
 		for (auto &peer : peers)
 			if (peer)
-				proto.send(peer, pkt.data());
-	} else if (pkt.dest() == PLR_MASTER) {
+				proto.send(peer, pkt.Data());
+	} else if (pkt.Destination() == PLR_MASTER) {
 		throw dvlnet_exception();
 	} else {
 		throw dvlnet_exception();
@@ -189,7 +189,7 @@ void base_protocol<P>::recv()
 		while (proto.get_disconnected(sender)) {
 			for (plr_t i = 0; i < MAX_PLRS; ++i) {
 				if (peers[i] == sender) {
-					disconnect_net(i);
+					DisconnectNet(i);
 					break;
 				}
 			}
@@ -217,22 +217,22 @@ void base_protocol<P>::handle_join_request(packet &pkt, endpoint sender)
 	for (plr_t j = 0; j < MAX_PLRS; ++j) {
 		if ((j != plr_self) && (j != i) && peers[j]) {
 			auto infopkt = pktfty->make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST, j, peers[j].serialize());
-			proto.send(sender, infopkt->data());
+			proto.send(sender, infopkt->Data());
 		}
 	}
 	auto reply = pktfty->make_packet<PT_JOIN_ACCEPT>(plr_self, PLR_BROADCAST,
-	    pkt.cookie(), i,
+	    pkt.Cookie(), i,
 	    game_init_info);
-	proto.send(sender, reply->data());
+	proto.send(sender, reply->Data());
 }
 
 template <class P>
 void base_protocol<P>::recv_decrypted(packet &pkt, endpoint sender)
 {
-	if (pkt.src() == PLR_BROADCAST && pkt.dest() == PLR_MASTER && pkt.type() == PT_INFO_REPLY) {
+	if (pkt.Source() == PLR_BROADCAST && pkt.Destination() == PLR_MASTER && pkt.Type() == PT_INFO_REPLY) {
 		std::string pname;
-		pname.resize(pkt.info().size());
-		std::memcpy(&pname[0], pkt.info().data(), pkt.info().size());
+		pname.resize(pkt.Info().size());
+		std::memcpy(&pname[0], pkt.Info().data(), pkt.Info().size());
 		game_list[pname] = sender;
 		return;
 	}
@@ -242,10 +242,10 @@ void base_protocol<P>::recv_decrypted(packet &pkt, endpoint sender)
 template <class P>
 void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 {
-	if (pkt.src() == PLR_BROADCAST && pkt.dest() == PLR_MASTER) {
-		if (pkt.type() == PT_JOIN_REQUEST) {
+	if (pkt.Source() == PLR_BROADCAST && pkt.Destination() == PLR_MASTER) {
+		if (pkt.Type() == PT_JOIN_REQUEST) {
 			handle_join_request(pkt, sender);
-		} else if (pkt.type() == PT_INFO_REQUEST) {
+		} else if (pkt.Type() == PT_INFO_REQUEST) {
 			if ((plr_self != PLR_BROADCAST) && (get_master() == plr_self)) {
 				buffer_t buf;
 				buf.resize(gamename.size());
@@ -253,24 +253,24 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 				auto reply = pktfty->make_packet<PT_INFO_REPLY>(PLR_BROADCAST,
 				    PLR_MASTER,
 				    buf);
-				proto.send_oob(sender, reply->data());
+				proto.send_oob(sender, reply->Data());
 			}
 		}
 		return;
-	} else if (pkt.src() == PLR_MASTER && pkt.type() == PT_CONNECT) {
+	} else if (pkt.Source() == PLR_MASTER && pkt.Type() == PT_CONNECT) {
 		// addrinfo packets
-		connected_table[pkt.newplr()] = true;
-		peers[pkt.newplr()].unserialize(pkt.info());
+		connected_table[pkt.NewPlayer()] = true;
+		peers[pkt.NewPlayer()].unserialize(pkt.Info());
 		return;
-	} else if (pkt.src() >= MAX_PLRS) {
+	} else if (pkt.Source() >= MAX_PLRS) {
 		// normal packets
 		ABORT();
 	}
-	connected_table[pkt.src()] = true;
-	peers[pkt.src()] = sender;
-	if (pkt.dest() != plr_self && pkt.dest() != PLR_BROADCAST)
+	connected_table[pkt.Source()] = true;
+	peers[pkt.Source()] = sender;
+	if (pkt.Destination() != plr_self && pkt.Destination() != PLR_BROADCAST)
 		return; //packet not for us, drop
-	recv_local(pkt);
+	RecvLocal(pkt);
 }
 
 template <class P>

@@ -255,7 +255,7 @@ static int TranslateSdlKey(SDL_Keysym key)
 
 namespace {
 
-int32_t PositionForMouse(short x, short y)
+int32_t PositionForMouse(int16_t x, int16_t y)
 {
 	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
 }

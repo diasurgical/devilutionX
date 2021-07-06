@@ -271,7 +271,7 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 /**
  * @todo replace Rectangle with cropped Surface
  */
-int DrawString(const Surface &out, const char *text, const Rectangle &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
+uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
 	if ((flags & UIS_MED) != 0)
@@ -312,7 +312,7 @@ int DrawString(const Surface &out, const char *text, const Rectangle &rect, uint
 	if (lineHeight == -1)
 		lineHeight = LineHeights[size];
 
-	unsigned i = 0;
+	uint16_t i = 0;
 	for (; i < textLength; i++) {
 		uint8_t frame = FontFrame[size][FontIndex[static_cast<uint8_t>(text[i])]];
 		int symbolWidth = FontKern[size][frame];
@@ -346,7 +346,7 @@ int DrawString(const Surface &out, const char *text, const Rectangle &rect, uint
 	return i;
 }
 
-int PentSpn2Spin()
+uint8_t PentSpn2Spin()
 {
 	return (SDL_GetTicks() / 50) % 8 + 1;
 }

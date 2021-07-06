@@ -143,7 +143,7 @@ bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData)
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
-	dvlnet_inst = net::abstract_net::make_net(provider);
+	dvlnet_inst = net::abstract_net::MakeNet(provider);
 	return mainmenu_select_hero_dialog(gameData);
 }
 

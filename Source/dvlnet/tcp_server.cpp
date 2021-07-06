@@ -19,10 +19,10 @@ tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
 	auto addr = asio::ip::address::from_string(bindaddr);
 	auto ep = asio::ip::tcp::endpoint(addr, port);
 	acceptor = std::make_unique<asio::ip::tcp::acceptor>(ioc, ep, true);
-	start_accept();
+	StartAccept();
 }
 
-std::string tcp_server::localhost_self()
+std::string tcp_server::LocalhostSelf()
 {
 	auto addr = acceptor->local_endpoint().address();
 	if (addr.is_unspecified()) {
@@ -37,12 +37,12 @@ std::string tcp_server::localhost_self()
 	return addr.to_string();
 }
 
-tcp_server::scc tcp_server::make_connection()
+tcp_server::scc tcp_server::MakeConnection()
 {
 	return std::make_shared<client_connection>(ioc);
 }
 
-plr_t tcp_server::next_free()
+plr_t tcp_server::NextFree()
 {
 	for (plr_t i = 0; i < MAX_PLRS; ++i)
 		if (!connections[i])
@@ -50,7 +50,7 @@ plr_t tcp_server::next_free()
 	return PLR_BROADCAST;
 }
 
-bool tcp_server::empty()
+bool tcp_server::Empty()
 {
 	for (plr_t i = 0; i < MAX_PLRS; ++i)
 		if (connections[i])
@@ -58,155 +58,155 @@ bool tcp_server::empty()
 	return true;
 }
 
-void tcp_server::start_recv(const scc &con)
+void tcp_server::StartReceive(const scc &con)
 {
 	con->socket.async_receive(
 	    asio::buffer(con->recv_buffer),
-	    std::bind(&tcp_server::handle_recv, this, con, std::placeholders::_1, std::placeholders::_2));
+	    std::bind(&tcp_server::HandleReceive, this, con, std::placeholders::_1, std::placeholders::_2));
 }
 
-void tcp_server::handle_recv(const scc &con, const asio::error_code &ec,
+void tcp_server::HandleReceive(const scc &con, const asio::error_code &ec,
     size_t bytesRead)
 {
 	if (ec || bytesRead == 0) {
-		drop_connection(con);
+		DropConnection(con);
 		return;
 	}
 	con->recv_buffer.resize(bytesRead);
-	con->recv_queue.write(std::move(con->recv_buffer));
+	con->recv_queue.Write(std::move(con->recv_buffer));
 	con->recv_buffer.resize(frame_queue::max_frame_size);
-	while (con->recv_queue.packet_ready()) {
+	while (con->recv_queue.PacketReady()) {
 		try {
-			auto pkt = pktfty.make_packet(con->recv_queue.read_packet());
+			auto pkt = pktfty.make_packet(con->recv_queue.ReadPacket());
 			if (con->plr == PLR_BROADCAST) {
-				handle_recv_newplr(con, *pkt);
+				HandleReceiveNewPlayer(con, *pkt);
 			} else {
 				con->timeout = timeout_active;
-				handle_recv_packet(*pkt);
+				HandleReceivePacket(*pkt);
 			}
 		} catch (dvlnet_exception &e) {
 			Log("Network error: {}", e.what());
-			drop_connection(con);
+			DropConnection(con);
 			return;
 		}
 	}
-	start_recv(con);
+	StartReceive(con);
 }
 
-void tcp_server::send_connect(const scc &con)
+void tcp_server::SendConnect(const scc &con)
 {
 	auto pkt = pktfty.make_packet<PT_CONNECT>(PLR_MASTER, PLR_BROADCAST,
 	    con->plr);
-	send_packet(*pkt);
+	SendPacket(*pkt);
 }
 
-void tcp_server::handle_recv_newplr(const scc &con, packet &pkt)
+void tcp_server::HandleReceiveNewPlayer(const scc &con, packet &pkt)
 {
-	auto newplr = next_free();
+	auto newplr = NextFree();
 	if (newplr == PLR_BROADCAST)
 		throw server_exception();
-	if (empty())
-		game_init_info = pkt.info();
+	if (Empty())
+		game_init_info = pkt.Info();
 	auto reply = pktfty.make_packet<PT_JOIN_ACCEPT>(PLR_MASTER, PLR_BROADCAST,
-	    pkt.cookie(), newplr,
+	    pkt.Cookie(), newplr,
 	    game_init_info);
-	start_send(con, *reply);
+	StartSend(con, *reply);
 	con->plr = newplr;
 	connections[newplr] = con;
 	con->timeout = timeout_active;
-	send_connect(con);
+	SendConnect(con);
 }
 
-void tcp_server::handle_recv_packet(packet &pkt)
+void tcp_server::HandleReceivePacket(packet &pkt)
 {
-	send_packet(pkt);
+	SendPacket(pkt);
 }
 
-void tcp_server::send_packet(packet &pkt)
+void tcp_server::SendPacket(packet &pkt)
 {
-	if (pkt.dest() == PLR_BROADCAST) {
+	if (pkt.Destination() == PLR_BROADCAST) {
 		for (auto i = 0; i < MAX_PLRS; ++i)
-			if (i != pkt.src() && connections[i])
-				start_send(connections[i], pkt);
+			if (i != pkt.Source() && connections[i])
+				StartSend(connections[i], pkt);
 	} else {
-		if (pkt.dest() >= MAX_PLRS)
+		if (pkt.Destination() >= MAX_PLRS)
 			throw server_exception();
-		if ((pkt.dest() != pkt.src()) && connections[pkt.dest()])
-			start_send(connections[pkt.dest()], pkt);
+		if ((pkt.Destination() != pkt.Source()) && connections[pkt.Destination()])
+			StartSend(connections[pkt.Destination()], pkt);
 	}
 }
 
-void tcp_server::start_send(const scc &con, packet &pkt)
+void tcp_server::StartSend(const scc &con, packet &pkt)
 {
-	const auto *frame = new buffer_t(frame_queue::make_frame(pkt.data()));
+	const auto *frame = new buffer_t(frame_queue::MakeFrame(pkt.Data()));
 	auto buf = asio::buffer(*frame);
 	asio::async_write(con->socket, buf,
 	    [this, con, frame](const asio::error_code &ec, size_t bytesSent) {
-		    handle_send(con, ec, bytesSent);
+		    HandleSend(con, ec, bytesSent);
 		    delete frame;
 	    });
 }
 
-void tcp_server::handle_send(const scc &con, const asio::error_code &ec,
+void tcp_server::HandleSend(const scc &con, const asio::error_code &ec,
     size_t bytesSent)
 {
 	// empty for now
 }
 
-void tcp_server::start_accept()
+void tcp_server::StartAccept()
 {
-	auto nextcon = make_connection();
+	auto nextcon = MakeConnection();
 	acceptor->async_accept(
 	    nextcon->socket,
-	    std::bind(&tcp_server::handle_accept, this, nextcon, std::placeholders::_1));
+	    std::bind(&tcp_server::HandleAccept, this, nextcon, std::placeholders::_1));
 }
 
-void tcp_server::handle_accept(const scc &con, const asio::error_code &ec)
+void tcp_server::HandleAccept(const scc &con, const asio::error_code &ec)
 {
 	if (ec)
 		return;
-	if (next_free() == PLR_BROADCAST) {
-		drop_connection(con);
+	if (NextFree() == PLR_BROADCAST) {
+		DropConnection(con);
 	} else {
 		asio::ip::tcp::no_delay option(true);
 		con->socket.set_option(option);
 		con->timeout = timeout_connect;
-		start_recv(con);
-		start_timeout(con);
+		StartReceive(con);
+		StartTimeout(con);
 	}
-	start_accept();
+	StartAccept();
 }
 
-void tcp_server::start_timeout(const scc &con)
+void tcp_server::StartTimeout(const scc &con)
 {
 	con->timer.expires_after(std::chrono::seconds(1));
 	con->timer.async_wait(
-	    std::bind(&tcp_server::handle_timeout, this, con, std::placeholders::_1));
+	    std::bind(&tcp_server::HandleTimeout, this, con, std::placeholders::_1));
 }
 
-void tcp_server::handle_timeout(const scc &con, const asio::error_code &ec)
+void tcp_server::HandleTimeout(const scc &con, const asio::error_code &ec)
 {
 	if (ec) {
-		drop_connection(con);
+		DropConnection(con);
 		return;
 	}
 	if (con->timeout > 0)
 		con->timeout -= 1;
 	if (con->timeout <= 0) {
 		con->timeout = 0;
-		drop_connection(con);
+		DropConnection(con);
 		return;
 	}
-	start_timeout(con);
+	StartTimeout(con);
 }
 
-void tcp_server::drop_connection(const scc &con)
+void tcp_server::DropConnection(const scc &con)
 {
 	if (con->plr != PLR_BROADCAST) {
 		auto pkt = pktfty.make_packet<PT_DISCONNECT>(PLR_MASTER, PLR_BROADCAST,
 		    con->plr, LEAVE_DROP);
 		connections[con->plr] = nullptr;
-		send_packet(*pkt);
+		SendPacket(*pkt);
 		// TODO: investigate if it is really ok for the server to
 		//       drop a client directly.
 	}
@@ -214,7 +214,7 @@ void tcp_server::drop_connection(const scc &con)
 	con->socket.close();
 }
 
-void tcp_server::close()
+void tcp_server::Close()
 {
 	acceptor->close();
 }
