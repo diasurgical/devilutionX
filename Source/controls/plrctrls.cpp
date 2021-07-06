@@ -187,7 +187,7 @@ bool HasRangedSpell()
 
 bool CanTargetMonster(int mi)
 {
-	const MonsterStruct &monst = monster[mi];
+	const MonsterStruct &monst = Monsters[mi];
 
 	if ((monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
 		return false;
@@ -218,8 +218,8 @@ void FindRangedTarget()
 		const bool newCanTalk = CanTalkToMonst(mi);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(monster[mi].position.future);
-		const int newRotations = GetRotaryDistance(monster[mi].position.future);
+		const int newDdistance = GetDistanceRanged(Monsters[mi].position.future);
+		const int newRotations = GetRotaryDistance(Monsters[mi].position.future);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -1398,8 +1398,8 @@ bool SpellHasActorTarget()
 		return false;
 
 	if (spl == SPL_FIREWALL && pcursmonst != -1) {
-		cursmx = monster[pcursmonst].position.tile.x;
-		cursmy = monster[pcursmonst].position.tile.y;
+		cursmx = Monsters[pcursmonst].position.tile.x;
+		cursmy = Monsters[pcursmonst].position.tile.y;
 	}
 
 	return pcursplr != -1 || pcursmonst != -1;

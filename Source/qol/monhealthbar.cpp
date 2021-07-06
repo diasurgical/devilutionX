@@ -59,7 +59,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (pcursmonst == -1)
 		return;
 
-	const MonsterStruct &mon = monster[pcursmonst];
+	const MonsterStruct &mon = Monsters[pcursmonst];
 
 	const int width = healthBox.w();
 	const int height = healthBox.h();
@@ -104,7 +104,7 @@ void DrawMonsterHealthBar(const Surface &out)
 		style = UIS_BLUE;
 	DrawString(out, mon.mName, { { xPos, barLabelY }, { width, height } }, UIS_CENTER | style);
 
-	if (mon._uniqtype != 0 || monstkills[mon.MType->mtype] >= 15) {
+	if (mon._uniqtype != 0 || MonsterKillCounts[mon.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 

@@ -2700,8 +2700,8 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 
 void MonstCheckDoors(int m)
 {
-	int mx = monster[m].position.tile.x;
-	int my = monster[m].position.tile.y;
+	int mx = Monsters[m].position.tile.x;
+	int my = Monsters[m].position.tile.y;
 	if (dObject[mx - 1][my - 1] != 0
 	    || dObject[mx][my - 1] != 0
 	    || dObject[mx + 1][my - 1] != 0
@@ -4388,14 +4388,14 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	SetRndSeed(object[i]._oRndSeed);
 	CreateTypeItem(object[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 	if (QuestStatus(Q_ZHAR)
-	    && monster[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
-	    && monster[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
-	    && monster[MAX_PLRS]._msquelch == UINT8_MAX
-	    && monster[MAX_PLRS]._mhitpoints > 0) {
-		monster[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
-		M_StartStand(0, monster[MAX_PLRS]._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
-		monster[MAX_PLRS]._mgoal = MGOAL_ATTACK2;
-		monster[MAX_PLRS]._mmode = MM_TALK;
+	    && Monsters[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
+	    && Monsters[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
+	    && Monsters[MAX_PLRS]._msquelch == UINT8_MAX
+	    && Monsters[MAX_PLRS]._mhitpoints > 0) {
+		Monsters[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
+		M_StartStand(0, Monsters[MAX_PLRS]._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
+		Monsters[MAX_PLRS]._mgoal = MGOAL_ATTACK2;
+		Monsters[MAX_PLRS]._mmode = MM_TALK;
 	}
 	if (pnum == myplr)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
