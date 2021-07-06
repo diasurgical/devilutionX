@@ -1853,7 +1853,7 @@ void Obj_Light(int i, int lr)
 	int ox = object[i].position.x;
 	int oy = object[i].position.y;
 	int tr = lr + 10;
-	if (!lightflag) {
+	if (!DisableLighting) {
 		for (int p = 0; p < MAX_PLRS && !turnon; p++) {
 			if (plr[p].plractive) {
 				if (currlevel == plr[p].plrlevel) {

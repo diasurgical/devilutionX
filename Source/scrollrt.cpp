@@ -165,7 +165,7 @@ void UpdateMissilesRendererData()
 /**
  * Specifies the current light entry.
  */
-int light_table_index;
+int LightTableIndex;
 uint32_t sgdwCursWdtOld;
 int sgdwCursX;
 int sgdwCursY;
@@ -458,7 +458,7 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 		trans = Monsters[m]._uniqtrans + 4;
 	if (Monsters[m]._mmode == MM_STONE)
 		trans = 2;
-	if (plr[myplr]._pInfraFlag && light_table_index > 8)
+	if (plr[myplr]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
 	if (trans != 0)
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, trans);
@@ -560,22 +560,22 @@ static void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int p
 		return;
 	}
 
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 || (plr[myplr]._pInfraFlag && light_table_index > 8)) {
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 || (plr[myplr]._pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawLightTbl(out, px, py, *pCelSprite, nCel, 1);
 		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
 	}
 
-	int l = light_table_index;
-	if (light_table_index < 5)
-		light_table_index = 0;
+	int l = LightTableIndex;
+	if (LightTableIndex < 5)
+		LightTableIndex = 0;
 	else
-		light_table_index -= 5;
+		LightTableIndex -= 5;
 
 	Cl2DrawLight(out, px, py, *pCelSprite, nCel);
 	DrawPlayerIcons(out, pnum, px, py, false);
 
-	light_table_index = l;
+	LightTableIndex = l;
 }
 
 /**
@@ -612,7 +612,7 @@ void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
  */
 static void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
 {
-	if (dObject[x][y] == 0 || light_table_index >= lightmax)
+	if (dObject[x][y] == 0 || LightTableIndex >= LightsMax)
 		return;
 
 	Point objectPosition {};
@@ -702,7 +702,7 @@ static void DrawCell(const Surface &out, int x, int y, int sx, int sy)
 static void DrawFloor(const Surface &out, int x, int y, int sx, int sy)
 {
 	cel_transparency_active = false;
-	light_table_index = dLight[x][y];
+	LightTableIndex = dLight[x][y];
 
 	arch_draw_type = 1; // Left
 	level_cel_block = dpiece_defs_map_2[x][y].mt[0];
@@ -863,7 +863,7 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 		return;
 	dRendered[sx][sy] = true;
 
-	light_table_index = dLight[sx][sy];
+	LightTableIndex = dLight[sx][sy];
 
 	DrawCell(out, sx, sy, dx, dy);
 
@@ -885,7 +885,7 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 		DrawMissile(out, sx, sy, dx, dy, true);
 	}
 
-	if (light_table_index < lightmax && bDead != 0) {
+	if (LightTableIndex < LightsMax && bDead != 0) {
 		do {
 			DeadStruct *pDeadGuy = &Dead[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);

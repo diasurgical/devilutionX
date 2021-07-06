@@ -547,7 +547,7 @@ void CelBlitSafeTo(const Surface &out, Point position, const byte *pRLEBytes, in
 void CelBlitLightTransSafeTo(const Surface &out, Point position, const byte *pRLEBytes, int nDataSize, int nWidth)
 {
 	assert(pRLEBytes != nullptr);
-	const std::uint8_t *tbl = &pLightTbl[light_table_index * 256];
+	const std::uint8_t *tbl = &LightTables[LightTableIndex * 256];
 	bool shift = (reinterpret_cast<uintptr_t>(&out[position]) % 2 == 1);
 	const bool pitchIsEven = (out.pitch() % 2 == 0);
 	RenderCel(
@@ -575,7 +575,7 @@ void CelBlitLightBlendedSafeTo(const Surface &out, Point position, const byte *p
 {
 	assert(pRLEBytes != nullptr);
 	if (tbl == nullptr)
-		tbl = &pLightTbl[light_table_index * 256];
+		tbl = &LightTables[LightTableIndex * 256];
 
 	RenderCel(
 	    out, position, pRLEBytes, nDataSize, nWidth, [tbl](std::uint8_t *dst, const uint8_t *src, std::size_t w) {
@@ -599,7 +599,7 @@ void CelBlitLightSafeTo(const Surface &out, Point position, const byte *pRLEByte
 {
 	assert(pRLEBytes != nullptr);
 	if (tbl == nullptr)
-		tbl = &pLightTbl[light_table_index * 256];
+		tbl = &LightTables[LightTableIndex * 256];
 	RenderCelWithLightTable(out, position, pRLEBytes, nDataSize, nWidth, tbl);
 }
 
@@ -625,7 +625,7 @@ void CelDrawLightTo(const Surface &out, Point position, const CelSprite &cel, in
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrame(cel.Data(), frame, &nDataSize);
 
-	if (light_table_index != 0 || tbl != nullptr)
+	if (LightTableIndex != 0 || tbl != nullptr)
 		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), tbl);
 	else
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
@@ -636,7 +636,7 @@ void CelClippedDrawLightTo(const Surface &out, Point position, const CelSprite &
 	int nDataSize;
 	const auto *pRLEBytes = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
 
-	if (light_table_index != 0)
+	if (LightTableIndex != 0)
 		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	else
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
@@ -676,7 +676,7 @@ void CelClippedBlitLightTransTo(const Surface &out, Point position, const CelSpr
 			CelBlitLightBlendedSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 		else
 			CelBlitLightTransSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));
-	} else if (light_table_index != 0)
+	} else if (LightTableIndex != 0)
 		CelBlitLightSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame), nullptr);
 	else
 		CelBlitSafeTo(out, position, pRLEBytes, nDataSize, cel.Width(frame));

@@ -1458,7 +1458,7 @@ static void UpdateMonsterLights()
 				continue;
 			}
 
-			LightListStruct *lid = &LightList[mon->mlid];
+			LightStruct *lid = &Lights[mon->mlid];
 			if (mon->position.tile != lid->position.tile) {
 				ChangeLightXY(mon->mlid, mon->position.tile);
 			}

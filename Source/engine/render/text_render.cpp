@@ -153,7 +153,7 @@ void DrawChar(const Surface &out, Point position, GameFontTables size, int nCel,
 		CelDrawLightTo(out, position, *fonts[size], nCel, fontColorTableGold);
 		break;
 	case ColorBlack:
-		light_table_index = 15;
+		LightTableIndex = 15;
 		CelDrawLightTo(out, position, *fonts[size], nCel, nullptr);
 		return;
 	}
