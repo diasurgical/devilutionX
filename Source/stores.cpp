@@ -408,7 +408,7 @@ void ScrollSmithSell(int idx)
 void StartSmithSell()
 {
 	stextsize = true;
-	bool sellok = false;
+	bool sellOk = false;
 	storenumh = 0;
 
 	for (auto &item : storehold) {
@@ -417,11 +417,11 @@ void StartSmithSell()
 
 	const auto &myPlayer = Players[MyPlayerId];
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
+	for (int8_t i = 0; i < myPlayer._pNumInv; i++) {
 		if (storenumh >= 48)
 			break;
 		if (SmithSellOk(i)) {
-			sellok = true;
+			sellOk = true;
 			storehold[storenumh] = myPlayer.InvList[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
@@ -438,7 +438,7 @@ void StartSmithSell()
 		if (storenumh >= 48)
 			break;
 		if (SmithSellOk(-(i + 1))) {
-			sellok = true;
+			sellOk = true;
 			storehold[storenumh] = myPlayer.SpdList[i];
 
 			if (storehold[storenumh]._iMagical != ITEM_QUALITY_NORMAL && storehold[storenumh]._iIdentified)
@@ -451,7 +451,7 @@ void StartSmithSell()
 		}
 	}
 
-	if (!sellok) {
+	if (!sellOk) {
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
@@ -771,7 +771,7 @@ bool WitchRechargeOk(int i)
 	return false;
 }
 
-void AddStoreHoldRecharge(ItemStruct itm, int i)
+void AddStoreHoldRecharge(ItemStruct itm, int8_t i)
 {
 	storehold[storenumh] = itm;
 	storehold[storenumh]._ivalue += spelldata[itm._iSpell].sStaffCost;
@@ -1060,7 +1060,7 @@ bool IdItemOk(ItemStruct *i)
 	return !i->_iIdentified;
 }
 
-void AddStoreHoldId(ItemStruct itm, int i)
+void AddStoreHoldId(ItemStruct itm, int8_t i)
 {
 	storehold[storenumh] = itm;
 	storehold[storenumh]._ivalue = 100;
@@ -1549,7 +1549,7 @@ void SmithRepairItem()
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iDurability = storehold[idx]._iMaxDur;
 
-	int i = storehidx[idx];
+	int8_t i = storehidx[idx];
 
 	if (i < 0) {
 		if (i == -1)
@@ -1709,7 +1709,7 @@ void WitchRechargeItem()
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	storehold[idx]._iCharges = storehold[idx]._iMaxCharges;
 
-	int i = storehidx[idx];
+	int8_t i = storehidx[idx];
 	if (i < 0)
 		myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iMaxCharges;
 	else
@@ -1863,7 +1863,7 @@ void StorytellerIdentifyItem()
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	int idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
+	int8_t idx = storehidx[((stextlhold - stextup) / 4) + stextvhold];
 	if (idx < 0) {
 		if (idx == -1)
 			myPlayer.InvBody[INVLOC_HEAD]._iIdentified = true;
@@ -2169,7 +2169,7 @@ ItemStruct witchitem[WITCH_ITEMS];
 int boylevel;
 ItemStruct boyitem;
 
-void AddStoreHoldRepair(ItemStruct *itm, int i)
+void AddStoreHoldRepair(ItemStruct *itm, int8_t i)
 {
 	ItemStruct *item;
 	int v;

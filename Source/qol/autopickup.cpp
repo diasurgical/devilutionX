@@ -44,11 +44,10 @@ void AutoGoldPickup(int pnum)
 	if (!HasRoomForGold())
 		return;
 
-	for (int dir = 0; dir < 8; dir++) {
-		int x = Players[pnum].position.tile.x + pathxdir[dir];
-		int y = Players[pnum].position.tile.y + pathydir[dir];
-		if (dItem[x][y] != 0) {
-			int itemIndex = dItem[x][y] - 1;
+	for (auto pathDir : PathDirs) {
+		Point tile = Players[pnum].position.tile + pathDir;
+		if (dItem[tile.x][tile.y] != 0) {
+			int itemIndex = dItem[tile.x][tile.y] - 1;
 			if (Items[itemIndex]._itype == ITYPE_GOLD) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				Items[itemIndex]._iRequest = true;

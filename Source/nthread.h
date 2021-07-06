@@ -20,10 +20,10 @@ extern DWORD gdwNormalMsgSize;
 extern float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
 
 void nthread_terminate_game(const char *pszFcn);
-DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta);
+DWORD nthread_send_and_recv_turn(DWORD curTurn, int turnDelta);
 bool nthread_recv_turns(bool *pfSendAsync = nullptr);
 void nthread_set_turn_upper_bit();
-void nthread_start(bool set_turn_upper_bit);
+void nthread_start(bool setTurnUpperBit);
 void nthread_cleanup();
 void nthread_ignore_mutex(bool bStart);
 bool nthread_has_500ms_passed();

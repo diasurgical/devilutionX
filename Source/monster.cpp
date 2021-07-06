@@ -204,21 +204,19 @@ void InitMonsterTRN(CMonster &monst)
 
 void InitLevelMonsters()
 {
-	int i;
-
 	LevelMonsterTypeCount = 0;
 	monstimgtot = 0;
 	MissileFileFlag = 0;
 
-	for (i = 0; i < MAX_LVLMTYPES; i++) {
-		LevelMonsterTypes[i].mPlaceFlags = 0;
+	for (auto &levelMonsterType : LevelMonsterTypes) {
+		levelMonsterType.mPlaceFlags = 0;
 	}
 
 	ClrAllMonsters();
 	ActiveMonsterCount = 0;
 	totalmonsters = MAXMONSTERS;
 
-	for (i = 0; i < MAXMONSTERS; i++) {
+	for (int i = 0; i < MAXMONSTERS; i++) {
 		ActiveMonsters[i] = i;
 	}
 
@@ -2347,7 +2345,7 @@ bool M_DoTalk(int i)
 
 	MonsterStruct *monst = &Monsters[i];
 	M_StartStand(i, Monsters[i]._mdir);
-	monst->_mgoal = MGOAL_TALKING; // CODEFIX: apply Monst instead of Monsters[i] in the rest of the function
+	monst->_mgoal = MGOAL_TALKING; // CODEFIX: apply Monst instead of monster[i] in the rest of the function
 	if (effect_is_playing(Texts[Monsters[i].mtalkmsg].sfxnr))
 		return false;
 	InitQTextMsg(Monsters[i].mtalkmsg);

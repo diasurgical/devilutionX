@@ -59,14 +59,14 @@ public:
 	 */
 	Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction);
 
-	ActionIndex addAction(const Action &action);
-	void keyPressed(int key) const;
-	std::string keyNameForAction(ActionIndex actionIndex) const;
-	void save() const;
-	void load();
+	ActionIndex AddAction(const Action &action);
+	void KeyPressed(int key) const;
+	std::string KeyNameForAction(ActionIndex actionIndex) const;
+	void Save() const;
+	void Load();
 
 private:
-	int getActionKey(const Action &action);
+	int GetActionKey(const Action &action);
 
 	std::vector<Action> actions;
 	std::unordered_map<int, std::reference_wrapper<Action>> keyIDToAction;

@@ -445,7 +445,7 @@ void DrawSpellList(const Surface &out)
 				}
 				for (int t = 0; t < 4; t++) {
 					if (myPlayer._pSplHotKey[t] == pSpell && myPlayer._pSplTHotKey[t] == pSplType) {
-						auto hotkeyName = keymapper.keyNameForAction(quickSpellActionIndexes[t]);
+						auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
 						PrintSBookHotkey(out, location, hotkeyName);
 						strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
 						AddPanelString(tempstr);

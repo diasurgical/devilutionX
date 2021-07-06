@@ -26,7 +26,7 @@ const int ShadowOffsetX = 2;
 const int ShadowOffsetY = 2;
 const int LINE_H = 22;
 
-char const *const *text;
+char const *const *Text;
 std::size_t textLines;
 
 // The maximum number of visible lines is the number of whole lines
@@ -66,7 +66,7 @@ SDL_Surface *RenderText(const char *text, SDL_Color color)
 
 CachedLine PrepareLine(std::size_t index)
 {
-	const char *contents = _(text[index]);
+	const char *contents = _(Text[index]);
 	while (contents[0] == '\t')
 		++contents;
 
@@ -182,7 +182,7 @@ void CreditsRenderer::Render()
 
 		Sint16 destX = PANEL_LEFT + VIEWPORT.x + 31;
 		int j = 0;
-		while (text[line.mIndex][j++] == '\t')
+		while (Text[line.mIndex][j++] == '\t')
 			destX += 40;
 
 		SDL_Rect dstRect = { destX, destY, 0, 0 };
@@ -234,8 +234,8 @@ bool TextDialog()
 
 bool UiCreditsDialog()
 {
-	text = CREDITS_LINES;
-	textLines = CREDITS_LINES_SIZE;
+	Text = CreditLines;
+	textLines = CreditLinesSize;
 
 	LoadArt("ui_art\\creditsw.pcx", &ArtBackgroundWidescreen);
 	LoadBackgroundArt("ui_art\\credits.pcx");
@@ -245,7 +245,7 @@ bool UiCreditsDialog()
 
 bool UiSupportDialog()
 {
-	text = SupportLines;
+	Text = SupportLines;
 	textLines = SupportLinesSize;
 
 	if (gbIsHellfire) {

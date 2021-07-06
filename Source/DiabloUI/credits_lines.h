@@ -2,7 +2,7 @@
 
 namespace devilution {
 
-extern const char *const CREDITS_LINES[];
-extern const std::size_t CREDITS_LINES_SIZE;
+extern const char *const CreditLines[];
+extern const std::size_t CreditLinesSize;
 
 } // namespace devilution

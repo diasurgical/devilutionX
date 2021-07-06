@@ -1094,7 +1094,7 @@ void DRLG_LoadDiabQuads(bool preflag)
 	}
 }
 
-static bool DrlgL4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
+static bool DrlgL4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sx;
 	int sy;
@@ -1393,72 +1393,72 @@ static void DrlgL4(lvl_entry entry)
 		}
 		if (QuestStatus(Q_WARLORD)) {
 			if (entry == ENTRY_MAIN) {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
 				if (doneflag && currlevel == 13) {
-					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
 				ViewX++;
 			} else if (entry == ENTRY_PREV) {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel == 13) {
-					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
 				ViewX = 2 * setpc_x + 22;
 				ViewY = 2 * setpc_y + 22;
 			} else {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel == 13) {
-					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true);
 				}
 				ViewX++;
 			}
 		} else if (currlevel != 15) {
 			if (entry == ENTRY_MAIN) {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
 				if (doneflag && currlevel != 16) {
-					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false, 1);
+					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false);
 				}
 				if (doneflag && currlevel == 13) {
-					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
 				ViewX++;
 			} else if (entry == ENTRY_PREV) {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel != 16) {
-					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, true, 1);
+					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, true);
 				}
 				if (doneflag && currlevel == 13) {
-					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
 				ViewY++;
 			} else {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel != 16) {
-					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false, 1);
+					doneflag = DrlgL4PlaceMiniSet(L4DSTAIRS, 1, 1, -1, -1, false);
 				}
 				if (doneflag && currlevel == 13) {
-					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true, 6);
+					doneflag = DrlgL4PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true);
 				}
 				ViewX++;
 			}
 		} else {
 			if (entry == ENTRY_MAIN) {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
 				if (doneflag) {
 					if (!gbIsMultiplayer && Quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
-						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, false, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, false);
 					} else {
-						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false);
 					}
 				}
 				ViewX++;
 			} else {
-				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
+				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag) {
 					if (!gbIsMultiplayer && Quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
-						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, true, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, true);
 					} else {
-						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true, 1);
+						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true);
 					}
 				}
 				ViewY++;

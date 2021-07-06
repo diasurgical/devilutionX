@@ -1612,7 +1612,7 @@ int Patterns[100][10] = {
 
 } // namespace
 
-static bool DrlgL2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int ldir)
+static bool DrlgL2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sw = miniset[0];
 	int sh = miniset[1];
@@ -1775,7 +1775,7 @@ static void DrlgL2Subs()
 
 static void DrlgL2Shadows()
 {
-	int8_t sd[2][2];
+	uint8_t sd[2][2];
 
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXX; x++) {
@@ -2965,29 +2965,29 @@ static void DrlgL2(lvl_entry entry)
 		DrlgL2FloodTVal();
 		DrlgL2TransFix();
 		if (entry == ENTRY_MAIN) {
-			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true, 0);
+			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true);
 			if (doneflag) {
-				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false, 1);
+				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel == 5) {
-					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false);
 				}
 			}
 			ViewY -= 2;
 		} else if (entry == ENTRY_PREV) {
-			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false, 0);
+			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false);
 			if (doneflag) {
-				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, true, 1);
+				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, true);
 				if (doneflag && currlevel == 5) {
-					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false, 6);
+					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, false);
 				}
 			}
 			ViewX--;
 		} else {
-			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false, 0);
+			doneflag = DrlgL2PlaceMiniSet(USTAIRS, 1, 1, -1, -1, false);
 			if (doneflag) {
-				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false, 1);
+				doneflag = DrlgL2PlaceMiniSet(DSTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel == 5) {
-					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, true, 6);
+					doneflag = DrlgL2PlaceMiniSet(WARPSTAIRS, 1, 1, -1, -1, true);
 				}
 			}
 			ViewY -= 2;

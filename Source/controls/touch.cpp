@@ -318,12 +318,12 @@ static void PreprocessFingerMotion(SDL_Event *event)
 			devilution::OutputToLogical(&x, &y);
 		} else {
 			// for relative mode, use the pointer speed setting
-			constexpr float speedFactor = 1.25F;
+			constexpr float SpeedFactor = 1.25F;
 
 			// convert touch events to relative mouse pointer events
 			// Whenever an SDL_event involving the mouse is processed,
-			x = static_cast<int>(mouse_x + (event->tfinger.dx * speedFactor * devilution::GetOutputSurface()->w));
-			y = static_cast<int>(mouse_y + (event->tfinger.dy * speedFactor * devilution::GetOutputSurface()->h));
+			x = static_cast<int>(mouse_x + (event->tfinger.dx * SpeedFactor * devilution::GetOutputSurface()->w));
+			y = static_cast<int>(mouse_y + (event->tfinger.dy * SpeedFactor * devilution::GetOutputSurface()->h));
 		}
 
 		x = clip(x, 0, devilution::GetOutputSurface()->w);

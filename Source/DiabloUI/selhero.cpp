@@ -44,8 +44,6 @@ std::vector<UiItemBase *> vecSelDlgItems;
 
 UiImage *SELHERO_DIALOG_HERO_IMG;
 
-bool bUIElementsLoaded = false;
-
 void SelheroListFocus(int value);
 void SelheroListSelect(int value);
 void SelheroListEsc();
@@ -92,8 +90,6 @@ void SelheroFree()
 	SelheroFreeDlgItems();
 	SelheroFreeListItems();
 	UnloadScrollBar();
-
-	bUIElementsLoaded = false;
 }
 
 void SelheroSetStats()
@@ -572,8 +568,6 @@ static void UiSelHeroDialog(
     _selhero_selections *dlgresult,
     char (*name)[16])
 {
-	bUIElementsLoaded = true;
-
 	do {
 		gfnHeroInfo = fninfo;
 		gfnHeroCreate = fncreate;

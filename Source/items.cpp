@@ -1706,6 +1706,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 			r2 = RndPL(51, 75);
 		if (param1 == 151)
 			r2 = RndPL(76, 100);
+
 		Items[i]._iPLToHit += r2;
 		break;
 	case IPL_TOHIT_DAMP_CURSE:
@@ -1714,6 +1715,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 			r2 = RndPL(1, 5);
 		if (param1 == 50)
 			r2 = RndPL(6, 10);
+
 		Items[i]._iPLToHit -= r2;
 		break;
 	case IPL_ACP:
@@ -1994,7 +1996,6 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 	case IPL_FIRERESCLVL:
 		Items[i]._iPLFR = 30 - Players[MyPlayerId]._pLevel;
 		Items[i]._iPLFR = std::max<int16_t>(Items[i]._iPLFR, 0);
-
 		break;
 	case IPL_FIRERES_CURSE:
 		Items[i]._iPLFR -= r;
