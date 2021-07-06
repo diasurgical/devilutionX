@@ -1135,13 +1135,13 @@ void DrawInfoBox(const Surface &out)
 		if (pcursmonst != -1) {
 			if (leveltype != DTYPE_TOWN) {
 				infoclr = UIS_SILVER;
-				strcpy(infostr, _(monster[pcursmonst].mName));
+				strcpy(infostr, _(Monsters[pcursmonst].mName));
 				ClearPanel();
-				if (monster[pcursmonst]._uniqtype != 0) {
+				if (Monsters[pcursmonst]._uniqtype != 0) {
 					infoclr = UIS_GOLD;
 					PrintUniqueHistory();
 				} else {
-					PrintMonstHistory(monster[pcursmonst].MType->mtype);
+					PrintMonstHistory(Monsters[pcursmonst].MType->mtype);
 				}
 			} else if (pcursitem == -1) {
 				string_view townerName = towners[pcursmonst]._tName;

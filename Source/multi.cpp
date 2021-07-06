@@ -143,7 +143,7 @@ void MonsterSeeds()
 	sgdwGameLoops++;
 	uint32_t l = (sgdwGameLoops >> 8) | (sgdwGameLoops << 24); // _rotr(sgdwGameLoops, 8)
 	for (int i = 0; i < MAXMONSTERS; i++)
-		monster[i]._mAISeed = l + i;
+		Monsters[i]._mAISeed = l + i;
 }
 
 void HandleTurnUpperBit(int pnum)

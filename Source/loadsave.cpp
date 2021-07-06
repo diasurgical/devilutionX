@@ -99,7 +99,7 @@ public:
 		    && m_size_ >= (m_cur_ + size);
 	}
 
-	template<typename T>
+	template <typename T>
 	constexpr void Skip()
 	{
 		Skip(sizeof(T));
@@ -162,7 +162,7 @@ public:
 		    && m_capacity_ >= (m_cur_ + len);
 	}
 
-	template<typename T>
+	template <typename T>
 	constexpr void Skip()
 	{
 		Skip(sizeof(T));
@@ -373,7 +373,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	file->Skip(2); // Alignment
 	player._pTSpell = static_cast<spell_id>(file->NextLE<int32_t>());
 	file->Skip<int8_t>(); // Skip _pTSplType
-	file->Skip(3);              // Alignment
+	file->Skip(3);        // Alignment
 	player._pRSpell = static_cast<spell_id>(file->NextLE<int32_t>());
 	player._pRSplType = static_cast<spell_type>(file->NextLE<int8_t>());
 	file->Skip(3); // Alignment
@@ -552,7 +552,7 @@ bool gbSkipSync = false;
 
 static void LoadMonster(LoadHelper *file, int i)
 {
-	MonsterStruct *pMonster = &monster[i];
+	MonsterStruct *pMonster = &Monsters[i];
 
 	pMonster->_mMTidx = file->NextLE<int32_t>();
 	pMonster->_mmode = static_cast<MON_MODE>(file->NextLE<int32_t>());
@@ -1153,19 +1153,19 @@ void LoadGame(bool firstflag)
 
 	ViewX = viewX;
 	ViewY = viewY;
-	nummonsters = tmpNummonsters;
+	ActiveMonsterCount = tmpNummonsters;
 	numitems = tmpNumitems;
 	nummissiles = tmpNummissiles;
 	nobjects = tmpNobjects;
 
-	for (int &monstkill : monstkills)
+	for (int &monstkill : MonsterKillCounts)
 		monstkill = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : monstactive)
+		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
-		for (int i = 0; i < nummonsters; i++)
-			LoadMonster(&file, monstactive[i]);
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			LoadMonster(&file, ActiveMonsters[i]);
 		for (int &missileId : missileactive)
 			missileId = file.NextLE<int8_t>();
 		for (int &missileId : missileavail)
@@ -1518,7 +1518,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	file->Skip(2); // Alignment
 
 	file->Skip<int32_t>(); // Skip _pGFXLoad
-	file->Skip(4 * 8); // Skip pointers _pNAnim
+	file->Skip(4 * 8);     // Skip pointers _pNAnim
 	file->WriteLE<int32_t>(player._pNFrames);
 	file->Skip(4);     // Skip _pNWidth
 	file->Skip(4 * 8); // Skip pointers _pWAnim
@@ -1567,7 +1567,7 @@ static void SavePlayer(SaveHelper *file, int p)
 
 	file->WriteLE<int8_t>(player._pISplLvlAdd);
 	file->Skip<uint8_t>(); // Skip _pISplCost
-	file->Skip(2); // Alignment
+	file->Skip(2);         // Alignment
 	file->WriteLE<int32_t>(player._pISplDur);
 	file->WriteLE<int32_t>(player._pIEnAc);
 	file->WriteLE<int32_t>(player._pIFMinDam);
@@ -1607,7 +1607,7 @@ static void SavePlayer(SaveHelper *file, int p)
 
 static void SaveMonster(SaveHelper *file, int i)
 {
-	MonsterStruct *pMonster = &monster[i];
+	MonsterStruct *pMonster = &Monsters[i];
 
 	file->WriteLE<int32_t>(pMonster->_mMTidx);
 	file->WriteLE<int32_t>(pMonster->_mmode);
@@ -1905,7 +1905,7 @@ void SaveGameData()
 	file.WriteBE<int32_t>(ViewY);
 	file.WriteLE<uint8_t>(invflag ? 1 : 0);
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
-	file.WriteBE<int32_t>(nummonsters);
+	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(numitems);
 	file.WriteBE<int32_t>(nummissiles);
 	file.WriteBE<int32_t>(nobjects);
@@ -1922,14 +1922,14 @@ void SaveGameData()
 		SaveQuest(&file, i);
 	for (int i = 0; i < MAXPORTAL; i++)
 		SavePortal(&file, i);
-	for (int monstkill : monstkills)
+	for (int monstkill : MonsterKillCounts)
 		file.WriteBE<int32_t>(monstkill);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int monsterId : monstactive)
+		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
-		for (int i = 0; i < nummonsters; i++)
-			SaveMonster(&file, monstactive[i]);
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			SaveMonster(&file, ActiveMonsters[i]);
 		for (int missileId : missileactive)
 			file.WriteLE<int8_t>(missileId);
 		for (int missileId : missileavail)
@@ -2050,15 +2050,15 @@ void SaveLevel()
 		}
 	}
 
-	file.WriteBE<int32_t>(nummonsters);
+	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(numitems);
 	file.WriteBE<int32_t>(nobjects);
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int monsterId : monstactive)
+		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
-		for (int i = 0; i < nummonsters; i++)
-			SaveMonster(&file, monstactive[i]);
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			SaveMonster(&file, ActiveMonsters[i]);
 		for (int objectId : objectactive)
 			file.WriteLE<int8_t>(objectId);
 		for (int objectId : objectavail)
@@ -2133,15 +2133,15 @@ void LoadLevel()
 		SetDead();
 	}
 
-	nummonsters = file.NextBE<int32_t>();
+	ActiveMonsterCount = file.NextBE<int32_t>();
 	numitems = file.NextBE<int32_t>();
 	nobjects = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : monstactive)
+		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
-		for (int i = 0; i < nummonsters; i++)
-			LoadMonster(&file, monstactive[i]);
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			LoadMonster(&file, ActiveMonsters[i]);
 		for (int &objectId : objectactive)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : objectavail)

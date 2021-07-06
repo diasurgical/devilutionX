@@ -1119,13 +1119,13 @@ void InitMonsterSND(int monst)
 		return;
 	}
 
-	const int mtype = Monsters[monst].mtype;
+	const int mtype = LevelMonsterTypes[monst].mtype;
 	for (int i = 0; i < 4; i++) {
 		if (MonstSndChar[i] != 's' || MonsterData[mtype].snd_special) {
 			for (int j = 0; j < 2; j++) {
 				char path[MAX_PATH];
 				sprintf(path, MonsterData[mtype].sndfile, MonstSndChar[i], j + 1);
-				Monsters[monst].Snds[i][j] = sound_file_load(path);
+				LevelMonsterTypes[monst].Snds[i][j] = sound_file_load(path);
 			}
 		}
 	}
@@ -1133,8 +1133,8 @@ void InitMonsterSND(int monst)
 
 void FreeMonsterSnd()
 {
-	for (int i = 0; i < nummtypes; i++) {
-		for (auto &variants : Monsters[i].Snds) {
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+		for (auto &variants : LevelMonsterTypes[i].Snds) {
 			for (auto &snd : variants) {
 				snd = nullptr;
 			}
@@ -1203,15 +1203,15 @@ void PlayEffect(int i, int mode)
 		return;
 	}
 
-	int mi = monster[i]._mMTidx;
-	TSnd *snd = Monsters[mi].Snds[mode][sndIdx].get();
+	int mi = Monsters[i]._mMTidx;
+	TSnd *snd = LevelMonsterTypes[mi].Snds[mode][sndIdx].get();
 	if (snd == nullptr || snd->isPlaying()) {
 		return;
 	}
 
 	int lVolume = 0;
 	int lPan = 0;
-	if (!calc_snd_position(monster[i].position.tile, &lVolume, &lPan))
+	if (!calc_snd_position(Monsters[i].position.tile, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);

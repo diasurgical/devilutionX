@@ -2215,10 +2215,10 @@ void SetupItem(int i)
 
 int RndItem(int m)
 {
-	if ((monster[m].MData->mTreasure & 0x8000) != 0)
-		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
+	if ((Monsters[m].MData->mTreasure & 0x8000) != 0)
+		return -((Monsters[m].MData->mTreasure & 0xFFF) + 1);
 
-	if ((monster[m].MData->mTreasure & 0x4000) != 0)
+	if ((Monsters[m].MData->mTreasure & 0x4000) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -2234,12 +2234,12 @@ int RndItem(int m)
 		if (!IsItemAvailable(i))
 			continue;
 
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster[m].mLevel >= AllItemsList[i].iMinMLvl
+		if (AllItemsList[i].iRnd == IDROP_DOUBLE && Monsters[m].mLevel >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
 		}
-		if (AllItemsList[i].iRnd != IDROP_NEVER && monster[m].mLevel >= AllItemsList[i].iMinMLvl
+		if (AllItemsList[i].iRnd != IDROP_NEVER && Monsters[m].mLevel >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
@@ -2256,8 +2256,8 @@ int RndItem(int m)
 
 int RndUItem(int m)
 {
-	if (m != -1 && (monster[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
-		return -((monster[m].MData->mTreasure & 0xFFF) + 1);
+	if (m != -1 && (Monsters[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
+		return -((Monsters[m].MData->mTreasure & 0xFFF) + 1);
 
 	int ril[512];
 
@@ -2271,7 +2271,7 @@ int RndUItem(int m)
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
 		if (m != -1) {
-			if (monster[m].mLevel < AllItemsList[i].iMinMLvl)
+			if (Monsters[m].mLevel < AllItemsList[i].iMinMLvl)
 				okflag = false;
 		} else {
 			if (2 * curlv < AllItemsList[i].iMinMLvl)
@@ -2494,7 +2494,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster[m]._uniqtype != 0 || ((monster[m].MData->mTreasure & 0x8000) != 0 && gbIsMultiplayer)) {
+	if (Monsters[m]._uniqtype != 0 || ((Monsters[m].MData->mTreasure & 0x8000) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(m);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -2522,10 +2522,10 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
-	int uper = monster[m]._uniqtype != 0 ? 15 : 1;
+	int uper = Monsters[m]._uniqtype != 0 ? 15 : 1;
 
-	int8_t mLevel = monster[m].MData->mLevel;
-	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
+	int8_t mLevel = Monsters[m].MData->mLevel;
+	if (!gbIsHellfire && Monsters[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
@@ -3364,7 +3364,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 	case IPL_SETAC:
 	case IPL_AC_CURSE:
 		strcpy(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
-			break;
+		break;
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
 		if (x->_iPLFR < 75)
@@ -4261,7 +4261,7 @@ static void SpawnOnePremium(int i, int plvl, int playerId)
 
 		count++;
 	} while (keepGoing
-			 || ((
+	    || ((
 	            items[0]._iIvalue > 200000
 	            || items[0]._iMinStr > strength
 	            || items[0]._iMinMag > magic

@@ -182,23 +182,23 @@ void PrintDebugMonster(int m)
 	int i;
 	char dstr[128];
 
-	sprintf(dstr, "Monster %i = %s", m, _(monster[m].mName));
+	sprintf(dstr, "Monster %i = %s", m, _(Monsters[m].mName));
 	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "X = %i, Y = %i", monster[m].position.tile.x, monster[m].position.tile.y);
+	sprintf(dstr, "X = %i, Y = %i", Monsters[m].position.tile.x, Monsters[m].position.tile.y);
 	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "Enemy = %i, HP = %i", monster[m]._menemy, monster[m]._mhitpoints);
+	sprintf(dstr, "Enemy = %i, HP = %i", Monsters[m]._menemy, Monsters[m]._mhitpoints);
 	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "Mode = %i, Var1 = %i", monster[m]._mmode, monster[m]._mVar1);
+	sprintf(dstr, "Mode = %i, Var1 = %i", Monsters[m]._mmode, Monsters[m]._mVar1);
 	NetSendCmdString(1 << myplr, dstr);
 
 	bActive = false;
 
-	for (i = 0; i < nummonsters; i++) {
-		if (monstactive[i] == m)
+	for (i = 0; i < ActiveMonsterCount; i++) {
+		if (ActiveMonsters[i] == m)
 			bActive = true;
 	}
 
-	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster[m]._msquelch);
+	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, Monsters[m]._msquelch);
 	NetSendCmdString(1 << myplr, dstr);
 }
 

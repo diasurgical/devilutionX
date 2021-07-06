@@ -1938,20 +1938,20 @@ void SyncPlrKill(int pnum, int earflag)
 
 void RemovePlrMissiles(int pnum)
 {
-	if (currlevel != 0 && pnum == myplr && (monster[myplr].position.tile.x != 1 || monster[myplr].position.tile.y != 0)) {
+	if (currlevel != 0 && pnum == myplr && (Monsters[myplr].position.tile.x != 1 || Monsters[myplr].position.tile.y != 0)) {
 		M_StartKill(myplr, myplr);
-		AddDead(monster[myplr].position.tile, (monster[myplr].MType)->mdeadval, monster[myplr]._mdir);
-		int mx = monster[myplr].position.tile.x;
-		int my = monster[myplr].position.tile.y;
+		AddDead(Monsters[myplr].position.tile, (Monsters[myplr].MType)->mdeadval, Monsters[myplr]._mdir);
+		int mx = Monsters[myplr].position.tile.x;
+		int my = Monsters[myplr].position.tile.y;
 		dMonster[mx][my] = 0;
-		monster[myplr]._mDelFlag = true;
+		Monsters[myplr]._mDelFlag = true;
 		DeleteMonsterList();
 	}
 
 	for (int i = 0; i < nummissiles; i++) {
 		int am = missileactive[i];
 		if (missile[am]._mitype == MIS_STONE && missile[am]._misource == pnum) {
-			monster[missile[am]._miVar2]._mmode = (MON_MODE)missile[am]._miVar1;
+			Monsters[missile[am]._miVar2]._mmode = (MON_MODE)missile[am]._miVar1;
 		}
 		if (missile[am]._mitype == MIS_MANASHIELD && missile[am]._misource == pnum) {
 			ClearMissileSpot(am);
@@ -2260,15 +2260,15 @@ bool PlrHitMonst(int pnum, int m)
 	}
 	auto &player = plr[pnum];
 
-	if ((monster[m]._mhitpoints >> 6) <= 0) {
+	if ((Monsters[m]._mhitpoints >> 6) <= 0) {
 		return false;
 	}
 
-	if (monster[m].MType->mtype == MT_ILLWEAV && monster[m]._mgoal == MGOAL_RETREAT) {
+	if (Monsters[m].MType->mtype == MT_ILLWEAV && Monsters[m]._mgoal == MGOAL_RETREAT) {
 		return false;
 	}
 
-	if (monster[m]._mmode == MM_CHARGE) {
+	if (Monsters[m]._mmode == MM_CHARGE) {
 		return false;
 	}
 
@@ -2286,11 +2286,11 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	int hit = GenerateRnd(100);
-	if (monster[m]._mmode == MM_STONE) {
+	if (Monsters[m]._mmode == MM_STONE) {
 		hit = 0;
 	}
 
-	int tmac = monster[m].mArmorClass;
+	int tmac = Monsters[m].mArmorClass;
 	if (gbIsHellfire && player._pIEnAc > 0) {
 		int pIEnAc = player._pIEnAc - 1;
 		if (pIEnAc > 0)
@@ -2299,7 +2299,7 @@ bool PlrHitMonst(int pnum, int m)
 			tmac -= tmac / 4;
 
 		if (player._pClass == HeroClass::Barbarian) {
-			tmac -= monster[m].mArmorClass / 8;
+			tmac -= Monsters[m].mArmorClass / 8;
 		}
 
 		if (tmac < 0)
@@ -2356,7 +2356,7 @@ bool PlrHitMonst(int pnum, int m)
 		phanditype = ITYPE_MACE;
 	}
 
-	switch (monster[m].MData->mMonstClass) {
+	switch (Monsters[m].MData->mMonstClass) {
 	case MC_UNDEAD:
 		if (phanditype == ITYPE_SWORD) {
 			dam -= dam / 2;
@@ -2382,8 +2382,8 @@ bool PlrHitMonst(int pnum, int m)
 		dam *= 3;
 	}
 
-	if ((player.pDamAcFlags & ISPLHF_DOPPELGANGER) != 0 && monster[m].MType->mtype != MT_DIABLO && monster[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
-		AddDoppelganger(monster[m]);
+	if ((player.pDamAcFlags & ISPLHF_DOPPELGANGER) != 0 && Monsters[m].MType->mtype != MT_DIABLO && Monsters[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
+		AddDoppelganger(Monsters[m]);
 	}
 
 	dam <<= 6;
@@ -2405,7 +2405,7 @@ bool PlrHitMonst(int pnum, int m)
 			}
 			dam *= 2;
 		}
-		monster[m]._mhitpoints -= dam;
+		Monsters[m]._mhitpoints -= dam;
 	}
 
 	int skdam = 0;
@@ -2456,24 +2456,24 @@ bool PlrHitMonst(int pnum, int m)
 		drawhpflag = true;
 	}
 	if ((player._pIFlags & ISPL_NOHEALPLR) != 0) {
-		monster[m]._mFlags |= MFLAG_NOHEAL;
+		Monsters[m]._mFlags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
 	if (debug_mode_dollar_sign || debug_mode_key_inverted_v) {
-		monster[m]._mhitpoints = 0; /* double check */
+		Monsters[m]._mhitpoints = 0; /* double check */
 	}
 #endif
-	if ((monster[m]._mhitpoints >> 6) <= 0) {
-		if (monster[m]._mmode == MM_STONE) {
+	if ((Monsters[m]._mhitpoints >> 6) <= 0) {
+		if (Monsters[m]._mmode == MM_STONE) {
 			M_StartKill(m, pnum);
-			monster[m].Petrify();
+			Monsters[m].Petrify();
 		} else {
 			M_StartKill(m, pnum);
 		}
 	} else {
-		if (monster[m]._mmode == MM_STONE) {
+		if (Monsters[m]._mmode == MM_STONE) {
 			M_StartHit(m, pnum, dam);
-			monster[m].Petrify();
+			Monsters[m].Petrify();
 		} else {
 			if ((player._pIFlags & ISPL_KNOCKBACK) != 0) {
 				M_GetKnockback(m);
@@ -2666,7 +2666,7 @@ bool PM_DoAttack(int pnum)
 			dx = position.x;
 			dy = position.y;
 			int m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && Monsters[m].position.old.x == dx && Monsters[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
@@ -2674,7 +2674,7 @@ bool PM_DoAttack(int pnum)
 			dx = position.x;
 			dy = position.y;
 			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && monster[m].position.old.x == dx && monster[m].position.old.y == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && Monsters[m].position.old.x == dx && Monsters[m].position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
@@ -2966,7 +2966,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int i = -1;
 	if (player.destAction == ACTION_ATTACKMON) {
 		i = player.destParam1;
-		MakePlrPath(pnum, monster[i].position.future, false);
+		MakePlrPath(pnum, Monsters[i].position.future, false);
 	}
 
 	if (player.destAction == ACTION_ATTACKPLR) {
@@ -2981,9 +2981,9 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
 
 					if (player.destAction == ACTION_ATTACKMON) {
-						x = abs(player.position.future.x - monster[i].position.future.x);
-						y = abs(player.position.future.y - monster[i].position.future.y);
-						d = GetDirection(player.position.future, monster[i].position.future);
+						x = abs(player.position.future.x - Monsters[i].position.future.x);
+						y = abs(player.position.future.y - Monsters[i].position.future.y);
+						d = GetDirection(player.position.future, Monsters[i].position.future);
 					} else {
 						auto &target = plr[player.destParam1];
 						x = abs(player.position.future.x - target.position.future.x);
@@ -2993,7 +2993,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 					if (x < 2 && y < 2) {
 						ClrPlrPath(player);
-						if (player.destAction == ACTION_ATTACKMON && monster[i].mtalkmsg != TEXT_NONE && monster[i].mtalkmsg != TEXT_VILE14) {
+						if (player.destAction == ACTION_ATTACKMON && Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
 							TalktoMonster(i);
 						} else {
 							StartAttack(pnum, d);
@@ -3064,11 +3064,11 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			StartAttack(pnum, d);
 			break;
 		case ACTION_ATTACKMON:
-			x = abs(player.position.tile.x - monster[i].position.future.x);
-			y = abs(player.position.tile.y - monster[i].position.future.y);
+			x = abs(player.position.tile.x - Monsters[i].position.future.x);
+			y = abs(player.position.tile.y - Monsters[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, monster[i].position.future);
-				if (monster[i].mtalkmsg != TEXT_NONE && monster[i].mtalkmsg != TEXT_VILE14) {
+				d = GetDirection(player.position.future, Monsters[i].position.future);
+				if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
 					TalktoMonster(i);
 				} else {
 					StartAttack(pnum, d);
@@ -3090,11 +3090,11 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			break;
 		case ACTION_RATTACKMON:
 			i = player.destParam1;
-			d = GetDirection(player.position.future, monster[i].position.future);
-			if (monster[i].mtalkmsg != TEXT_NONE && monster[i].mtalkmsg != TEXT_VILE14) {
+			d = GetDirection(player.position.future, Monsters[i].position.future);
+			if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
 				TalktoMonster(i);
 			} else {
-				StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
+				StartRangeAttack(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
 			}
 			break;
 		case ACTION_RATTACKPLR: {
@@ -3115,8 +3115,8 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			break;
 		case ACTION_SPELLMON:
 			i = player.destParam1;
-			d = GetDirection(player.position.tile, monster[i].position.future);
-			StartSpell(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
+			d = GetDirection(player.position.tile, Monsters[i].position.future);
+			StartSpell(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
 			player._pVar4 = player.destParam2;
 			break;
 		case ACTION_SPELLPLR: {
@@ -3208,10 +3208,10 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
 			i = player.destParam1;
-			x = abs(player.position.tile.x - monster[i].position.future.x);
-			y = abs(player.position.tile.y - monster[i].position.future.y);
+			x = abs(player.position.tile.x - Monsters[i].position.future.x);
+			y = abs(player.position.tile.y - Monsters[i].position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, monster[i].position.future);
+				d = GetDirection(player.position.future, Monsters[i].position.future);
 				StartAttack(pnum, d);
 			}
 			player.destAction = ACTION_NONE;
@@ -3247,8 +3247,8 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKMON) {
 			i = player.destParam1;
-			d = GetDirection(player.position.tile, monster[i].position.future);
-			StartRangeAttack(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
+			d = GetDirection(player.position.tile, Monsters[i].position.future);
+			StartRangeAttack(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKPLR) {
 			auto &target = plr[player.destParam1];
@@ -3266,8 +3266,8 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLMON) {
 			i = player.destParam1;
-			d = GetDirection(player.position.tile, monster[i].position.future);
-			StartSpell(pnum, d, monster[i].position.future.x, monster[i].position.future.y);
+			d = GetDirection(player.position.tile, Monsters[i].position.future);
+			StartSpell(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLPLR) {
 			auto &target = plr[player.destParam1];
@@ -3516,7 +3516,7 @@ bool PosOkPlayer(int pnum, Point position)
 		if (dMonster[position.x][position.y] <= 0) {
 			return false;
 		}
-		if ((monster[dMonster[position.x][position.y] - 1]._mhitpoints >> 6) > 0) {
+		if ((Monsters[dMonster[position.x][position.y] - 1]._mhitpoints >> 6) > 0) {
 			return false;
 		}
 	}

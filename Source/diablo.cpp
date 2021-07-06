@@ -1450,8 +1450,8 @@ void CreateLevel(lvl_entry lvldir)
 
 static void UpdateMonsterLights()
 {
-	for (int i = 0; i < nummonsters; i++) {
-		MonsterStruct *mon = &monster[monstactive[i]];
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		MonsterStruct *mon = &Monsters[ActiveMonsters[i]];
 		if (mon->mlid != NO_LIGHT) {
 			if (mon->mlid == plr[myplr]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
 				mon->mlid = NO_LIGHT;

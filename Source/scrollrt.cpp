@@ -424,29 +424,29 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 		return;
 	}
 
-	if (monster[m].AnimInfo.pCelSprite == nullptr) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", monster[m].mName);
+	if (Monsters[m].AnimInfo.pCelSprite == nullptr) {
+		Log("Draw Monster \"{}\": NULL Cel Buffer", Monsters[m].mName);
 		return;
 	}
 
-	int nCel = monster[m].AnimInfo.GetFrameToUseForRendering();
-	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster[m].AnimInfo.pCelSprite->Data());
+	int nCel = Monsters[m].AnimInfo.GetFrameToUseForRendering();
+	const auto *frameTable = reinterpret_cast<const uint32_t *>(Monsters[m].AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
-		if (monster[m]._mmode <= 17)
-			szMode = MonsterModeNames[monster[m]._mmode];
+		if (Monsters[m]._mmode <= 17)
+			szMode = MonsterModeNames[Monsters[m]._mmode];
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    monster[m].mName,
+		    Monsters[m].mName,
 		    szMode,
-		    monster[m]._mdir,
+		    Monsters[m]._mdir,
 		    nCel,
 		    frames);
 		return;
 	}
 
-	CelSprite &cel = *monster[m].AnimInfo.pCelSprite;
+	CelSprite &cel = *Monsters[m].AnimInfo.pCelSprite;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
@@ -454,9 +454,9 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 	}
 
 	char trans = 0;
-	if (monster[m]._uniqtype != 0)
-		trans = monster[m]._uniqtrans + 4;
-	if (monster[m]._mmode == MM_STONE)
+	if (Monsters[m]._uniqtype != 0)
+		trans = Monsters[m]._uniqtrans + 4;
+	if (Monsters[m]._mmode == MM_STONE)
 		trans = 2;
 	if (plr[myplr]._pInfraFlag && light_table_index > 8)
 		trans = 1;
@@ -792,7 +792,7 @@ static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, 
 		return;
 	}
 
-	MonsterStruct *pMonster = &monster[mi];
+	MonsterStruct *pMonster = &Monsters[mi];
 	if ((pMonster->_mFlags & MFLAG_HIDDEN) != 0) {
 		return;
 	}

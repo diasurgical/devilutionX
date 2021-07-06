@@ -210,13 +210,13 @@ struct MonsterStruct { // note: missing field _mAFNum
 	bool IsWalking() const;
 };
 
-extern int monstkills[MAXMONSTERS];
-extern int monstactive[MAXMONSTERS];
-extern int nummonsters;
+extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
+extern int LevelMonsterTypeCount;
+extern MonsterStruct Monsters[MAXMONSTERS];
+extern int ActiveMonsters[MAXMONSTERS];
+extern int ActiveMonsterCount;
+extern int MonsterKillCounts[MAXMONSTERS];
 extern bool sgbSaveSoundOn;
-extern MonsterStruct monster[MAXMONSTERS];
-extern CMonster Monsters[MAX_LVLMTYPES];
-extern int nummtypes;
 
 void InitLevelMonsters();
 void GetLevelMTypes();

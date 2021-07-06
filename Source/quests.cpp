@@ -236,7 +236,7 @@ void CheckQuests()
 		if (setlvlnum == quests[Q_PWATER]._qslvl
 		    && quests[Q_PWATER]._qactive != QUEST_INIT
 		    && leveltype == quests[Q_PWATER]._qlvltype
-		    && nummonsters == 4
+		    && ActiveMonsterCount == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
 			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile);
@@ -306,24 +306,24 @@ void CheckQuestKill(int m, bool sendmsg)
 	if (gbIsSpawn)
 		return;
 
-	if (monster[m].MType->mtype == MT_SKING) {
+	if (Monsters[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
 		plr[myplr].Say(HeroSpeech::RestWellLeoricIllFindYourSon, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_SKELKING);
 
-	} else if (monster[m].MType->mtype == MT_CLEAVER) {
+	} else if (Monsters[m].MType->mtype == MT_CLEAVER) {
 		quests[Q_BUTCHER]._qactive = QUEST_DONE;
 		plr[myplr].Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_BUTCHER);
-	} else if (monster[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
 		plr[myplr].Say(HeroSpeech::ImNotImpressed, 30);
-	} else if (monster[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
 		plr[myplr].Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
-	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
@@ -342,7 +342,7 @@ void CheckQuestKill(int m, bool sendmsg)
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
 		}
-	} else if (monster[m]._uniqtype - 1 == UMT_LAZURUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZURUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		InitVPTriggers();
 		quests[Q_BETRAYER]._qvar1 = 7;
@@ -350,7 +350,7 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
 		AddMissile({ 35, 32 }, { 35, 32 }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
 		plr[myplr].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
-	} else if (monster[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
 		plr[myplr].Say(HeroSpeech::YourReignOfPainHasEnded, 30);
 	}
