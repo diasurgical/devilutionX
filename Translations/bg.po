@@ -26,7 +26,7 @@ msgstr "Старши дизайнери"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr "Допълнителен dизайн"
+msgstr "Допълнителен дизайн"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
@@ -50,7 +50,7 @@ msgstr "Програмиране на Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr "Програмиране на серийни комуникации"
+msgstr "Програмиране на сериини комуникации"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
@@ -90,7 +90,7 @@ msgstr "Продуцент"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr "Асистент Продуцент"
+msgstr "Асистент продуцент"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
@@ -215,7 +215,7 @@ msgstr "В памет на"
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
-msgstr "Много специални благодарности на"
+msgstr "Специални благодарности на"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
@@ -227,7 +227,7 @@ msgstr "Софтуерно инженерство"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr "Арт директор"
+msgstr "Художествен директор"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
@@ -259,7 +259,7 @@ msgstr "\tДопълнителна работа"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr "Писане на текстове за прикллюченията"
+msgstr "Оформяне на текстове за приключенията"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
@@ -317,19 +317,20 @@ msgstr "\tПри създаването на тази игра не е прод�
 #: Source/DiabloUI/selhero.cpp:313 Source/DiabloUI/selhero.cpp:564
 #: Source/DiabloUI/selok.cpp:74
 msgid "OK"
-msgstr "ОК"
+msgstr "Добре"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
-msgstr "Един играч"
+msgstr "Единична игра"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr "Игра в мрежа"
+msgstr "Групова игра"
 
 #: Source/DiabloUI/mainmenu.cpp:38
+#, fuzzy
 msgid "Replay Intro"
-msgstr "Повтори Интро"
+msgstr "Начално видео"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Support"
@@ -341,11 +342,12 @@ msgstr "Създатели"
 
 #: Source/DiabloUI/mainmenu.cpp:42
 msgid "Exit Hellfire"
-msgstr "Изход от Хелфайър"
+msgstr "Изход от Hellfire"
 
 #: Source/DiabloUI/mainmenu.cpp:44
+#, fuzzy
 msgid "Show Credits"
-msgstr "Виж Създателите"
+msgstr "Виж създателите"
 
 #: Source/DiabloUI/mainmenu.cpp:45
 msgid "Exit Diablo"
@@ -353,12 +355,14 @@ msgstr "Излез от Диабло"
 
 #. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
 #: Source/DiabloUI/mainmenu.cpp:110
+#, fuzzy
 msgid "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr "Диабло интро видеото е налично самов в пълната версия на Играта. Посетете https://www.gog.com/game/diablo за покупка."
+msgstr "Началното видео е налично само в пълната версия на играта. Посетете https://www.gog.com/game/diablo, за да я закупите."
 
 #: Source/DiabloUI/progress.cpp:46 Source/DiabloUI/selconn.cpp:77
 #: Source/DiabloUI/selhero.cpp:212 Source/DiabloUI/selhero.cpp:238
 #: Source/DiabloUI/selhero.cpp:316 Source/DiabloUI/selhero.cpp:571
+#, fuzzy
 msgid "Cancel"
 msgstr "Отказ"
 
@@ -368,29 +372,33 @@ msgid "Client-Server (TCP)"
 msgstr "Клиент-сървър (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:42
+#, fuzzy
 msgid "Loopback"
 msgstr "Обратна връзка"
 
 #: Source/DiabloUI/selconn.cpp:48 Source/DiabloUI/selgame.cpp:441
 #: Source/DiabloUI/selgame.cpp:459
+#, fuzzy
 msgid "Multi Player Game"
-msgstr "Мрежова Игра"
+msgstr "Групова игра"
 
 #: Source/DiabloUI/selconn.cpp:54
 msgid "Requirements:"
 msgstr "Изисквания:"
 
 #: Source/DiabloUI/selconn.cpp:60
+#, fuzzy
 msgid "no gateway needed"
-msgstr "не е нужен портал"
+msgstr "не е необходим регион"
 
 #: Source/DiabloUI/selconn.cpp:66
 msgid "Select Connection"
 msgstr "Изберете връзка"
 
 #: Source/DiabloUI/selconn.cpp:69
+#, fuzzy
 msgid "Change Gateway"
-msgstr "Смяна на портал"
+msgstr "Промяна на регион"
 
 #: Source/DiabloUI/selconn.cpp:108
 msgid "All computers must be connected to a TCP-compatible network."
@@ -401,43 +409,50 @@ msgid "All computers must be connected to the internet."
 msgstr "Всички компютри трябва да са свързани с интернет."
 
 #: Source/DiabloUI/selconn.cpp:116
+#, fuzzy
 msgid "Play by yourself with no network exposure."
-msgstr "Играй сам без излагане в мрежа."
+msgstr "Играй в единична игра, в която не се изисква свързване към интернет."
 
 #: Source/DiabloUI/selconn.cpp:121
+#, fuzzy
 msgid "Players Supported: {:d}"
-msgstr "Поддържани Играчи: {:d}"
+msgstr "Брой играчи: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:87 Source/DiabloUI/selgame.cpp:382
 msgid "Description:"
 msgstr "Описание:"
 
 #: Source/DiabloUI/selgame.cpp:93
+#, fuzzy
 msgid "Select Action"
-msgstr "Изберете Действие"
+msgstr "Изберете действие"
 
 #: Source/DiabloUI/selgame.cpp:95 Source/DiabloUI/selgame.cpp:158
 #: Source/DiabloUI/selgame.cpp:302
+#, fuzzy
 msgid "Create Game"
-msgstr "Създай Игра"
+msgstr "Създай игра"
 
 #: Source/DiabloUI/selgame.cpp:96
+#, fuzzy
 msgid "Join Game"
-msgstr "Присъедини се в Игра"
+msgstr "Присъедини се към игра"
 
 #: Source/DiabloUI/selgame.cpp:104 Source/DiabloUI/selgame.cpp:173
 #: Source/DiabloUI/selgame.cpp:191 Source/DiabloUI/selgame.cpp:324
 #: Source/DiabloUI/selgame.cpp:397
+#, fuzzy
 msgid "CANCEL"
 msgstr "ОТКАЗ"
 
 #: Source/DiabloUI/selgame.cpp:113
+#, fuzzy
 msgid "Create a new game with a difficulty setting of your choice."
-msgstr "Избери игра със трудност по Ваш избор."
+msgstr "Създай игра с трудност по избор."
 
 #: Source/DiabloUI/selgame.cpp:116
 msgid "Enter an IP or a hostname and join a game already in progress at that address."
-msgstr "Напишете IP или hostname и се присъединете към игра в ход."
+msgstr "Напишете IP или hostname и се присъединете към текущата игра."
 
 #: Source/DiabloUI/selgame.cpp:161
 msgid "Select Difficulty"
@@ -446,22 +461,25 @@ msgstr "Изберете трудност"
 #: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:210
 #: Source/DiabloUI/selgame.cpp:313 Source/DiabloUI/selgame.cpp:333
 #: Source/diablo.cpp:2202
+#, fuzzy
 msgid "Normal"
-msgstr "Нормална"
+msgstr "Нормално"
 
 #: Source/DiabloUI/selgame.cpp:164 Source/DiabloUI/selgame.cpp:214
 #: Source/diablo.cpp:2203
+#, fuzzy
 msgid "Nightmare"
-msgstr "Кошмар"
+msgstr "Кошмарно"
 
 #: Source/DiabloUI/selgame.cpp:165 Source/DiabloUI/selgame.cpp:218
 #: Source/diablo.cpp:2204
+#, fuzzy
 msgid "Hell"
-msgstr "Ад"
+msgstr "Ад на земята"
 
 #: Source/DiabloUI/selgame.cpp:179
 msgid "Join TCP Games"
-msgstr "Присъедини се към TCP Игри"
+msgstr "Присъедини се към TCP игри"
 
 #: Source/DiabloUI/selgame.cpp:182
 msgid "Enter address"
@@ -493,11 +511,11 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:234
 msgid "Your character must reach level 20 before you can enter a multiplayer game of Nightmare difficulty."
-msgstr "Вашият герой трябва да достигне ниво 20 преди да можете да се присъедините към игра от Кошмарна трудност."
+msgstr "Вашият герой трябва да достигне ниво 20, преди да можете да се присъедините към игра от Кошмарна трудност."
 
 #: Source/DiabloUI/selgame.cpp:236
 msgid "Your character must reach level 30 before you can enter a multiplayer game of Hell difficulty."
-msgstr "Вашият герой трябва да достигне ниво 30 преди да можете да се присъедините към игра от Адска трудност."
+msgstr "Вашият герой трябва да достигне ниво 30, преди да можете да се присъедините към игра от Адска трудност."
 
 #: Source/DiabloUI/selgame.cpp:311
 msgid "Select Game Speed"
@@ -545,15 +563,16 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace."
 msgstr ""
 "Най-бърза скорост\n"
-"Слуги на подземното царство ще нападнат изненадващо и без задръжки. Само някой със светкавични рефлекси би се справил с това темпо."
+"Слуги на подземното царство ще нападат изненадващо и без задръжки. Само някой със светкавични рефлекси би се справил с това темпо."
 
 #: Source/DiabloUI/selgame.cpp:388
 msgid "Enter Password"
-msgstr "Въведи Парола"
+msgstr "Въведи парола"
 
 #: Source/DiabloUI/selgame.cpp:414
+#, fuzzy
 msgid "The host is running a different game than you."
-msgstr "Домакинът (Host) играе различна игра в сравнение с Вашата."
+msgstr "Домакинът играе различна игра, в сравнение с Вас."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:417
@@ -562,11 +581,11 @@ msgstr "Вашата версия {:s} не съвпада с тази на до
 
 #: Source/DiabloUI/selhero.cpp:125
 msgid "New Hero"
-msgstr "Нов Герой"
+msgstr "Нов герой"
 
 #: Source/DiabloUI/selhero.cpp:187
 msgid "Choose Class"
-msgstr "Изберете Клас"
+msgstr "Изберете клас"
 
 #: Source/DiabloUI/selhero.cpp:191 Source/control.cpp:90
 msgid "Warrior"
@@ -574,7 +593,7 @@ msgstr "Войн"
 
 #: Source/DiabloUI/selhero.cpp:192 Source/control.cpp:91
 msgid "Rogue"
-msgstr "Пакостница"
+msgstr "Разбойник"
 
 #: Source/DiabloUI/selhero.cpp:193 Source/control.cpp:92
 msgid "Sorcerer"
@@ -593,50 +612,58 @@ msgid "Barbarian"
 msgstr "Варварин"
 
 #: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:295
+#, fuzzy
 msgid "New Single Player Hero"
-msgstr "Нов Герой за Самостоятелна игра"
+msgstr "Нов герой за Единична игра"
 
 #: Source/DiabloUI/selhero.cpp:218 Source/DiabloUI/selhero.cpp:297
+#, fuzzy
 msgid "New Multi Player Hero"
-msgstr "Нов Герой за Мрежова игра"
+msgstr "Нов герой за Групова игра"
 
 #: Source/DiabloUI/selhero.cpp:227
+#, fuzzy
 msgid "Save File Exists"
-msgstr "Файлов запис вече съществува"
+msgstr "Запис с такова име вече съществува"
 
 #: Source/DiabloUI/selhero.cpp:230 Source/gamemenu.cpp:41
 msgid "Load Game"
-msgstr "Зареди Игра"
+msgstr "Зареди игра"
 
 #: Source/DiabloUI/selhero.cpp:231 Source/gamemenu.cpp:40
 #: Source/gamemenu.cpp:51
 msgid "New Game"
-msgstr "Нова Игра"
+msgstr "Нова игра"
 
 #: Source/DiabloUI/selhero.cpp:241 Source/DiabloUI/selhero.cpp:578
+#, fuzzy
 msgid "Single Player Characters"
-msgstr "Герои за самостоятелна игра"
+msgstr "Герои за Единична игра"
 
 #: Source/DiabloUI/selhero.cpp:289
+#, fuzzy
 msgid "The Rogue and Sorcerer are only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr "Пакостницата и магьосникът са достъпни само във пълната версия на Диабло. посетете https://www.gog.com/game/diablo за да я закупите."
+msgstr "Разбойникът и магьосникът са достъпни само в пълната версия на играта. Посетете https://www.gog.com/game/diablo, за да я закупите."
 
 #: Source/DiabloUI/selhero.cpp:301 Source/DiabloUI/selhero.cpp:307
 msgid "Enter Name"
 msgstr "Въведете име"
 
 #: Source/DiabloUI/selhero.cpp:339
+#, fuzzy
 msgid "Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n"
-msgstr "Невалидно име. Името не може да съдържа интервал, специални символи или непозволени думи.\n"
+msgstr "Неправилно име. Името не може да съдържа интервал, специални символи или непозволени думи.\n"
 
 #: Source/DiabloUI/selhero.cpp:347
+#, fuzzy
 msgid "Character already exists. Do you want to overwrite \"{:s}\"?"
-msgstr "Героя вече съществува. Искате ли да презапишете \"{:s}\"?"
+msgstr "Героят вече съществува. Искате ли да презапишете \"{:s}\"?"
 
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:360
+#, fuzzy
 msgid "Unable to create character."
-msgstr "Не е възможно да се създаде герой."
+msgstr "Не е възможно създаването на герой."
 
 #: Source/DiabloUI/selhero.cpp:514 Source/DiabloUI/selhero.cpp:517
 msgid "Level:"
@@ -660,27 +687,31 @@ msgstr "Жизненост:"
 
 #: Source/DiabloUI/selhero.cpp:548
 msgid "Select Hero"
-msgstr "Изберете Герой"
+msgstr "Изберете герой"
 
 #: Source/DiabloUI/selhero.cpp:567
 msgid "Delete"
 msgstr "Изтрий"
 
 #: Source/DiabloUI/selhero.cpp:576
+#, fuzzy
 msgid "Multi Player Characters"
-msgstr "Герои за мрежова игра"
+msgstr "Герои за Групова игра"
 
 #: Source/DiabloUI/selhero.cpp:620
+#, fuzzy
 msgid "Delete Multi Player Hero"
-msgstr "Изтрий Герой за мрежова игра"
+msgstr "Изтрий Герой за Групова игра"
 
 #: Source/DiabloUI/selhero.cpp:622
+#, fuzzy
 msgid "Delete Single Player Hero"
-msgstr "Изтрий Герой за самостоятелна игра"
+msgstr "Изтрий Герой за Единична игра"
 
 #: Source/DiabloUI/selhero.cpp:624
+#, fuzzy
 msgid "Are you sure you want to delete the character \"{:s}\"?"
-msgstr "Сигурни ли сте че искате да изтриете героя \"{:s}\"?"
+msgstr "Наистина ли искате да изтриете героя \"{:s}\"?"
 
 #: Source/DiabloUI/selyesno.cpp:61 Source/stores.cpp:891
 msgid "Yes"
@@ -691,16 +722,19 @@ msgid "No"
 msgstr "Не"
 
 #: Source/DiabloUI/support_lines.cpp:8
+#, fuzzy
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com поддържа страница на https://www.gog.com/forum/diablo"
+msgstr "Страница на играта в GOG.com се намира на адрес, https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
+#, fuzzy
 msgid "Follow the links to visit the discussion boards associated with Diablo."
 msgstr "Използвайте връзката, за да посетите интернет форума за Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
+#, fuzzy
 msgid "and the Hellfire expansion."
-msgstr "и пакета-експанзия Hellfire."
+msgstr "и допълнението Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
@@ -712,23 +746,27 @@ msgstr "бъдат докладвани на: https://github.com/diasurgical/dev
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid "To help us better serve you, please be sure to include the version number,"
-msgstr "За да сме по полезни, моля включете номер на версията, "
+msgstr "За да предложим по-добро качество на продукта, моля, посочете номер на версията, "
 
 #: Source/DiabloUI/support_lines.cpp:15
+#, fuzzy
 msgid "operating system, and the nature of the problem."
-msgstr "операционна система и какъв е проблема."
+msgstr "операционна система и естеството на проблема."
 
 #: Source/DiabloUI/support_lines.cpp:18
+#, fuzzy
 msgid "Disclaimer:"
-msgstr "Отказ от тоговорност:"
+msgstr "Отказ от отговорност:"
 
 #: Source/DiabloUI/support_lines.cpp:19
+#, fuzzy
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr "  DevilutionX не е подкрепян или поддържан от Blizzard Entertainment,"
+msgstr "  DevilutionX не е обвързан и/или поддържан от Blizzard Entertainment,"
 
 #: Source/DiabloUI/support_lines.cpp:20
+#, fuzzy
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
-msgstr "  нито от GOG.com. Blizzard Entertainment или GOG.com не са тествали"
+msgstr "  нито от GOG.com. Blizzard Entertainment или GOG.com не са изпитали"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid "  or certified the quality or compatibility of DevilutionX. All inquiries"
@@ -739,10 +777,12 @@ msgid "  regarding DevilutionX should be directed to Diasurgical, not to Blizzar
 msgstr "  Въпроси за DevilutionX трябва да бъдат насочени към Diasurgical,"
 
 #: Source/DiabloUI/support_lines.cpp:23
+#, fuzzy
 msgid "  Entertainment or GOG.com."
 msgstr "  и не към Blizzard Entertainment или GOG.com."
 
 #: Source/DiabloUI/title.cpp:47
+#, fuzzy
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Запазени права © 1996-2001 Blizzard Entertainment"
 
@@ -759,7 +799,7 @@ msgid ""
 msgstr ""
 "{:s}\n"
 "\n"
-"The error occurred at: {:s} line {:d}"
+"Изглежда има грешка в {:s} при ред {:d}"
 
 #. TRANSLATORS: Error Message when diabdat.mpq is broken. Keep values unchanged.
 #: Source/appfat.cpp:139
@@ -774,18 +814,18 @@ msgid ""
 "The problem occurred when loading:\n"
 "%s"
 msgstr ""
-"Unable to open a required file.\n"
+"Неуспешно разчитане на изискван файл.\n"
 "\n"
-"Verify that the MD5 of diabdat.mpq matches one of the following values\n"
+"Проветете дали MD5 сумата на diabdat.mpq съвпада с една от следните стойности\n"
 "011bc6518e6166206231080a4440b373\n"
 "68f049866b44688a7af65ba766bef75a\n"
 "\n"
-"The problem occurred when loading:\n"
+"Проблемът възникна при зареждането на:\n"
 "%s"
 
 #: Source/appfat.cpp:148 Source/appfat.cpp:167
 msgid "Data File Error"
-msgstr "Data File Error"
+msgstr "Грешка при прочитане на данни от файл"
 
 #: Source/appfat.cpp:163
 msgid ""
@@ -793,22 +833,24 @@ msgid ""
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"Неуспешно прочитане на водещ файлов архив (diabdat.mpq или spawn.mpq).\n"
 "\n"
-"Make sure that it is in the game folder."
+"Уверете се, че се съответният се намира в папката на играта."
 
 #. TRANSLATORS: Error when Program is not allowed to write data
 #: Source/appfat.cpp:178
+#, fuzzy
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
-"Unable to write to location:\n"
+"Неуспешно записване в директория:\n"
 "{:s}"
 
 #: Source/appfat.cpp:180
+#, fuzzy
 msgid "Read-Only Directory Error"
-msgstr "Read-Only Directory Error"
+msgstr "Грешка при отваряне на папка с зададен достъп само за четене"
 
 #: Source/automap.cpp:388
 msgid "game: "
@@ -819,12 +861,14 @@ msgid "password: "
 msgstr "парола: "
 
 #: Source/automap.cpp:407
+#, fuzzy
 msgid "Level: Nest {:d}"
 msgstr "Ниво: Свърталище {:d}"
 
 #: Source/automap.cpp:409
+#, fuzzy
 msgid "Level: Crypt {:d}"
-msgstr "Ниво: Крипта {:d}"
+msgstr "Ниво: Гробница {:d}"
 
 #: Source/automap.cpp:411 Source/items.cpp:3802
 msgid "Level: {:d}"
@@ -843,20 +887,23 @@ msgid "Enter"
 msgstr "Enter"
 
 #: Source/control.cpp:195
+#, fuzzy
 msgid "Character Information"
-msgstr "Информация за Персонажа"
+msgstr "Информация за персонажа"
 
 #: Source/control.cpp:196
+#, fuzzy
 msgid "Quests log"
-msgstr "Приключенски Дневник"
+msgstr "Приключенски дневник"
 
 #: Source/control.cpp:197
+#, fuzzy
 msgid "Automap"
-msgstr "Автоматична Карта"
+msgstr "Автоматична карта"
 
 #: Source/control.cpp:198
 msgid "Main Menu"
-msgstr "Главно Меню"
+msgstr "Главно меню"
 
 #: Source/control.cpp:199
 msgid "Inventory"
@@ -867,8 +914,9 @@ msgid "Spell book"
 msgstr "Книга за Заклинания"
 
 #: Source/control.cpp:201
+#, fuzzy
 msgid "Send Message"
-msgstr "Прати съобщение"
+msgstr "Изпрати съобщение"
 
 #: Source/control.cpp:396 Source/control.cpp:939
 msgid "{:s} Skill"
@@ -891,6 +939,7 @@ msgid "Spell Level {:d}"
 msgstr "Заклинание Ниво {:d}"
 
 #: Source/control.cpp:411 Source/control.cpp:955
+#, fuzzy
 msgid "Scroll of {:s}"
 msgstr "Свитък на {:s}"
 
@@ -901,6 +950,7 @@ msgstr[0] "{:d} Свитък"
 msgstr[1] "{:d} Свитъци"
 
 #: Source/control.cpp:431 Source/control.cpp:976 Source/items.cpp:1572
+#, fuzzy
 msgid "Staff of {:s}"
 msgstr "Жезъл на {:s}"
 
@@ -911,8 +961,9 @@ msgstr[0] "{:d} Заряд"
 msgstr[1] "{:d} Заряди"
 
 #: Source/control.cpp:443
+#, fuzzy
 msgid "Spell Hotkey {:s}"
-msgstr "Клавишна комбинация за заклинания{:s}"
+msgstr "Клавишна комбинация за заклинания {:s}"
 
 #: Source/control.cpp:915
 msgid "Player friendly"
@@ -923,18 +974,22 @@ msgid "Player attack"
 msgstr "Режим атакуващ играч"
 
 #: Source/control.cpp:920
+#, fuzzy
 msgid "Hotkey: {:s}"
 msgstr "Клавишна комбинация: {:s}"
 
 #: Source/control.cpp:929
+#, fuzzy
 msgid "Select current spell button"
-msgstr "Изберете бутон за текъщ заклинание"
+msgstr "Бутон за избор на текущо заклинание"
 
 #: Source/control.cpp:933
+#, fuzzy
 msgid "Hotkey: 's'"
-msgstr "Клавишна комбинзция: 's'"
+msgstr "Клавишна комбинация: 's'"
 
 #: Source/control.cpp:1124 Source/inv.cpp:2053 Source/items.cpp:3040
+#, fuzzy
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} златна монета"
@@ -970,6 +1025,7 @@ msgid "Skill"
 msgstr "Умение"
 
 #: Source/control.cpp:1622
+#, fuzzy
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Жезъл ({:d} заряд)"
@@ -982,6 +1038,7 @@ msgstr "Мана: {:d}  Щета: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1632
+#, fuzzy
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "Мана: {:d}  Щета: няма"
 
@@ -1018,12 +1075,14 @@ msgid "Spells"
 msgstr "Заклинания"
 
 #: Source/controls/modifier_hints.cpp:118
+#, fuzzy
 msgid "Quests"
-msgstr "Мисии"
+msgstr "Задачи"
 
 #: Source/cursor.cpp:207 Source/spelldat.cpp:22
+#, fuzzy
 msgid "Town Portal"
-msgstr "Градски Портал"
+msgstr "Градски портал"
 
 #: Source/cursor.cpp:208
 msgid "from {:s}"
@@ -1034,14 +1093,16 @@ msgid "Portal to"
 msgstr "Портал до"
 
 #: Source/cursor.cpp:235
+#, fuzzy
 msgid "The Unholy Altar"
-msgstr "Нечистивия олтар"
+msgstr "Нечестивия олтар"
 
 #: Source/cursor.cpp:237
 msgid "level 15"
 msgstr "Ниво 15"
 
 #: Source/diablo.cpp:158
+#, fuzzy
 msgid "I need help! Come Here!"
 msgstr "Ела! Нуждая се от помощ!"
 
@@ -1054,73 +1115,87 @@ msgid "Here's something for you."
 msgstr "Ето нещо за теб."
 
 #: Source/diablo.cpp:161
+#, fuzzy
 msgid "Now you DIE!"
-msgstr "Сега ти ще УМРЕШ!"
+msgstr "Сега ще УМРЕШ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:182
+#, fuzzy
 msgid "Options:\n"
 msgstr "Опции:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:183
+#, fuzzy
 msgid "Print this message and exit"
 msgstr "Показване на това съобщение и изход"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:184
+#, fuzzy
 msgid "Print the version and exit"
 msgstr "Показване на версията и изход"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:185
+#, fuzzy
 msgid "Specify the folder of diabdat.mpq"
-msgstr "Уточняване директорията на diabdat.mpq"
+msgstr "Посочете местонахождението на diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:186
+#, fuzzy
 msgid "Specify the folder of save files"
-msgstr "Уточняване директорията на запис-файловете"
+msgstr "Посочете папката с записните файлове"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:187
+#, fuzzy
 msgid "Specify the location of diablo.ini"
-msgstr "Уточняване на директорията на diablo.ini"
+msgstr "Посочете папката с файл diablo.ini"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:188
+#, fuzzy
 msgid "Specify the location of the .ttf font"
-msgstr "Уточняване на директорията с .ttf шрифт"
+msgstr "Посочете местонахождението на .ttf шрифта."
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:189
+#, fuzzy
 msgid "Specify the name of a custom .ttf font"
-msgstr "Уточняване на име на потребителски избран .ttf шрифт"
+msgstr "Въведете името на потребителския .ttf шрифт"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:190
+#, fuzzy
 msgid "Skip startup videos"
-msgstr "Пропускане на видеота при стартиране"
+msgstr "Пропускане на началните видеа"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:191
+#, fuzzy
 msgid "Display frames per second"
-msgstr "Активирайте индикатор за кадри в секунда"
+msgstr "Показване на индикатор за кадри в секунда"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:192
+#, fuzzy
 msgid "Run in windowed mode"
-msgstr "Старирайте приложението в режим на прозорец"
+msgstr "Отваряне на приложението в режим \"в прозорец\""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:193
+#, fuzzy
 msgid "Enable verbose logging"
-msgstr "Активиране на подробно регистриране на команди"
+msgstr "Използване на подробно регистриране на команди"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:194
+#, fuzzy
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Принудително активиране на режим spawn дори ако diabdat.mpq е открит"
+msgstr "Принудително използване на режим spawn, дори когато diabdat.mpq е налице"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:195
@@ -1128,24 +1203,29 @@ msgid ""
 "\n"
 "Hellfire options:\n"
 msgstr ""
+"\n"
+"Настройки на Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:196
+#, fuzzy
 msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Принудително активиране на Diablo режим дори hellfire.mpq да е налице"
+msgstr "Принудително използване на режим Diablo, дори когато hellfire.mpq е налице"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:197
+#, fuzzy
 msgid "Use alternate nest palette"
-msgstr "Използвай алтернативна палитра за ниво Свърталище"
+msgstr "Използване на вторична палитра за ниво Свърталище"
 
 #: Source/diablo.cpp:212
+#, fuzzy
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 msgstr ""
 "\n"
-"Докладвайте бъгове на https://github.com/diasurgical/devilutionX/\n"
+"Докладвайте несъответствия на https://github.com/diasurgical/devilutionX/\n"
 
 #: Source/diablo.cpp:286
 msgid "unrecognized option '{:s}'\n"
@@ -1164,8 +1244,9 @@ msgid "-- Waiting for players --"
 msgstr "-- Изчакване на играчи --"
 
 #: Source/diablo.cpp:1979
+#, fuzzy
 msgid "No help available"
-msgstr "Помощ не е налична"
+msgstr "Не е намерен помощен файл"
 
 #: Source/diablo.cpp:1980
 msgid "while in stores"
@@ -1178,51 +1259,60 @@ msgstr "{:s}, версия = {:s}, режим = {:s}"
 
 #: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
-msgstr "обратна връзка "
+msgstr "обратна връзка"
 
 #: Source/dvlnet/tcp_client.cpp:68
 msgid "Unable to connect"
-msgstr "Невъзможно да се свърже"
+msgstr "Невъзможно свързване"
 
 #: Source/dvlnet/tcp_client.cpp:89
+#, fuzzy
 msgid "error: read 0 bytes from server"
-msgstr "error: read 0 bytes from server"
+msgstr "грешка: прочетени 0 байта от сървъра"
 
 #: Source/error.cpp:24
 msgid "No automap available in town"
-msgstr "Няма налична авто-карта в градът "
+msgstr "Авто-картата не е достъпна в града"
 
 #: Source/error.cpp:25
+#, fuzzy
 msgid "No multiplayer functions in demo"
-msgstr "Няма функция игра в мрежа в тази демонстрация"
+msgstr "Мрежовата функция не е достъпна в демонстрационната версия"
 
 #: Source/error.cpp:26
+#, fuzzy
 msgid "Direct Sound Creation Failed"
-msgstr "Direct Sound Creation Failed"
+msgstr "Грешка при създаване на Direct Sound"
 
 #: Source/error.cpp:27
+#, fuzzy
 msgid "Not available in shareware version"
-msgstr "Не е налично в shareware версията"
+msgstr "Не е налично в пробната версия"
 
 #: Source/error.cpp:28
+#, fuzzy
 msgid "Not enough space to save"
-msgstr "Няма достатъчно място за запис"
+msgstr "Няма достатъчно място за направата на запис"
 
 #: Source/error.cpp:29
+#, fuzzy
 msgid "No Pause in town"
-msgstr "Няма опция пауза в града"
+msgstr "Прекъсването на играта не е позволено в града"
 
 #: Source/error.cpp:30
 msgid "Copying to a hard disk is recommended"
 msgstr "Препоръчително е копирането върху хард-диск "
 
 #: Source/error.cpp:31
+#, fuzzy
 msgid "Multiplayer sync problem"
-msgstr "Multiplayer sync problem"
+msgstr "Проблем с мрежовото синхронизиране"
 
+# Невъзможно прекъсването на играта в в групова игра
 #: Source/error.cpp:32
+#, fuzzy
 msgid "No pause in multiplayer"
-msgstr "Няма опция пауза в Игра в мрежа"
+msgstr "Прекъсването на играта не е позволено в групова игра"
 
 #: Source/error.cpp:33
 msgid "Loading..."
@@ -1234,18 +1324,21 @@ msgstr "Запазване..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:35
+#, fuzzy
 msgid "Some are weakened as one grows strong"
 msgstr "Някои линеят, докато едно расте силно"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:36
+#, fuzzy
 msgid "New strength is forged through destruction"
-msgstr "Нова сила е сътворена от разруха"
+msgstr "Нова сила е сътворена чрез разруха"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:37
+#, fuzzy
 msgid "Those who defend seldom attack"
-msgstr "Които брани, рядко атакува"
+msgstr "Който брани, рядко атакува"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:38
@@ -1254,18 +1347,21 @@ msgstr "Мечът на справедливостта е бърз и остър
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:39
+#, fuzzy
 msgid "While the spirit is vigilant the body thrives"
-msgstr "Духът е бдителен, докато тялото почива"
+msgstr "Тялото заяква, докато духът е бдителен."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:40
+#, fuzzy
 msgid "The powers of mana refocused renews"
-msgstr "Силата на маната са фокусирани"
+msgstr "Мощта на пренасочената мана я подновява"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:41
+#, fuzzy
 msgid "Time cannot diminish the power of steel"
-msgstr "Времето не може да отслаби моща на стоманата"
+msgstr "Времето не може да отслаби мощта на стоманата"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:42
@@ -1279,123 +1375,145 @@ msgstr "Каквото е било отворено, сега е затворе�
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:44
+#, fuzzy
 msgid "Intensity comes at the cost of wisdom"
-msgstr "Усилието идва с цената на проникновение"
+msgstr "Усилието идва на цената на проникновението"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:45
+#, fuzzy
 msgid "Arcane power brings destruction"
-msgstr "Тайнствена сила носи разруха"
+msgstr "Тайнствената сила носи разруха"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:46
 msgid "That which cannot be held cannot be harmed"
-msgstr "Ако не може да се държи не може да се руши"
+msgstr "Онова, което не може да се държи, не може да се повреди."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:47
+#, fuzzy
 msgid "Crimson and Azure become as the sun"
 msgstr "Ален и Лазурен се превръщат като слънцето"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:48
+#, fuzzy
 msgid "Knowledge and wisdom at the cost of self"
 msgstr "Знание и мъдрост на цената на живеца"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:49
+#, fuzzy
 msgid "Drink and be refreshed"
-msgstr "Пии и бъди освежен"
+msgstr "Пий и изпитай бодростта"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:50
+#, fuzzy
 msgid "Wherever you go, there you are"
-msgstr "Където и да отиваш, сега си тук"
+msgstr "Където отидеш, там оставаш"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:51
+#, fuzzy
 msgid "Energy comes at the cost of wisdom"
 msgstr "Енергията идва на цената на мъдростта"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:52
+#, fuzzy
 msgid "Riches abound when least expected"
-msgstr "Богатство когато най-малко го очакваш"
+msgstr "Богатство идва когато най-малко го очакваш"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:53
+#, fuzzy
 msgid "Where avarice fails, patience gains reward"
-msgstr "Където алчността се проваля, търпението носи награди"
+msgstr "Там, където скъперничеството се проваля, търпението носи възнаграждения"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:54
+#, fuzzy
 msgid "Blessed by a benevolent companion!"
 msgstr "Благословен от доброжелателен спътник!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:55
+#, fuzzy
 msgid "The hands of men may be guided by fate"
-msgstr "Хорските дела могат да са направлявани от съдбата"
+msgstr "Човешките дела могат да бъдат направлявани от съдбата"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:56
+#, fuzzy
 msgid "Strength is bolstered by heavenly faith"
-msgstr "Силата е укрепена от небесна воля"
+msgstr "Силата е подсилена с небесна воля"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:57
+#, fuzzy
 msgid "The essence of life flows from within"
-msgstr "Есенцията на живота идва от вътре"
+msgstr "Естеството на живота идва от вътре"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:58
+#, fuzzy
 msgid "The way is made clear when viewed from above"
-msgstr "Пътят е ясен, гледан от високо"
+msgstr "Пътят се вижда по-ясно, бидейки гледан от високо"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:59
+#, fuzzy
 msgid "Salvation comes at the cost of wisdom"
 msgstr "Избавлението идва с цената на мъдростта"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:60
+#, fuzzy
 msgid "Mysteries are revealed in the light of reason"
-msgstr "Загадки са разбулени в светлината на логиката"
+msgstr "Загадките разбулва светлината на логиката"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:61
+#, fuzzy
 msgid "Those who are last may yet be first"
 msgstr "Изостаналите все пак могат и да са първи"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:62
+#, fuzzy
 msgid "Generosity brings its own rewards"
-msgstr "Щедростта носи своите награди"
+msgstr "Щедростта носи своите ползи"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:63
+#, fuzzy
 msgid "You must be at least level 8 to use this."
-msgstr "Вие трябва да сте поне ниво 8 за да използвате това."
+msgstr "Трябва да сте поне ниво 8, за да използвате това."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:64
+#, fuzzy
 msgid "You must be at least level 13 to use this."
-msgstr "Вие трябва да сте поне ниво 13 за да използвате това."
+msgstr "Трябва да сте поне ниво 13, за да използвате това."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:65
+#, fuzzy
 msgid "You must be at least level 17 to use this."
-msgstr "Вие трябва да сте поне ниво 17 за да използвате това."
+msgstr "Трябва да сте поне ниво 17, за да използвате това."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:66
+#, fuzzy
 msgid "Arcane knowledge gained!"
-msgstr "Тайнствено знание е усвоено!"
+msgstr "Усвоено бе Тайнствено знание"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:67
 msgid "That which does not kill you..."
-msgstr "Това което не те убива..."
+msgstr "Това, което не те убива..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:68
@@ -1409,59 +1527,68 @@ msgstr "Дай и ще получиш."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:70
+#, fuzzy
 msgid "Some experience is gained by touch."
-msgstr "Малко опит е усвоен чрез допир."
+msgstr "Малко опит се усвоява чрез допир."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:71
+#, fuzzy
 msgid "There's no place like home."
 msgstr "Няма друго място като у дома."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:72
+#, fuzzy
 msgid "Spiritual energy is restored."
-msgstr "Спритуалната сила е възстановена."
+msgstr "Духовната сила е възстановена."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:73
+#, fuzzy
 msgid "You feel more agile."
 msgstr "Чувстваш се по-сръчен."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:74
+#, fuzzy
 msgid "You feel stronger."
 msgstr "Чувстваш се по-силен."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:75
+#, fuzzy
 msgid "You feel wiser."
 msgstr "Чувстваш се по-мъдър."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:76
+#, fuzzy
 msgid "You feel refreshed."
 msgstr "Чувстваш се освежен."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:77
+#, fuzzy
 msgid "That which can break will."
 msgstr "Чупливото ще се счупи."
 
 #: Source/gamemenu.cpp:38
 msgid "Save Game"
-msgstr "Запази Игра"
+msgstr "Запази игра"
 
 #: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Options"
-msgstr "Опции"
+msgstr "Настройки"
 
 #: Source/gamemenu.cpp:42 Source/gamemenu.cpp:53
 msgid "Quit Game"
-msgstr "Изход от Игра"
+msgstr "Изход от играта"
 
 #: Source/gamemenu.cpp:52
+#, fuzzy
 msgid "Restart In Town"
-msgstr "Рестартирай в града"
+msgstr "Презареждане в града"
 
 #: Source/gamemenu.cpp:62
 msgid "Gamma"
@@ -1508,104 +1635,127 @@ msgid "Pause"
 msgstr "Пауза"
 
 #: Source/help.cpp:23
+#, fuzzy
 msgid "$Keyboard Shortcuts:"
-msgstr "$Keyboard Бързи Клавиши:"
+msgstr "$Бързи клавиши:"
 
 #: Source/help.cpp:24
+#, fuzzy
 msgid "F1:    Open Help Screen"
-msgstr "F1:    Отвори Помощен Диалог"
+msgstr "F1:    Помощен диалог"
 
 #: Source/help.cpp:25
+#, fuzzy
 msgid "Esc:   Display Main Menu"
-msgstr "Esc:   Покажи Главно Меню"
+msgstr "Esc:   Главно меню"
 
 #: Source/help.cpp:26
+#, fuzzy
 msgid "Tab:   Display Auto-map"
-msgstr "Tab:   Покажи Авто-карта"
+msgstr "Tab:   Авто-карта"
 
 #: Source/help.cpp:27
+#, fuzzy
 msgid "Space: Hide all info screens"
-msgstr "Space: Скрий всички информационни екрани"
+msgstr "Space: Скриване на всички информационни екрани"
 
 #: Source/help.cpp:28
+#, fuzzy
 msgid "S: Open Speedbook"
-msgstr "S: Отвори бърз достъп до магия"
+msgstr "S: Отваряне на книга с магии за бърз достъп"
 
 #: Source/help.cpp:29
+#, fuzzy
 msgid "B: Open Spellbook"
-msgstr "B: Отвори книга за заклинания"
+msgstr "B: Отваряне на книга с заклинания"
 
 #: Source/help.cpp:30
+#, fuzzy
 msgid "I: Open Inventory screen"
-msgstr "I: Отвори екран за Инвентар"
+msgstr "I: Отваряне на инвентар"
 
 #: Source/help.cpp:31
+#, fuzzy
 msgid "C: Open Character screen"
-msgstr "C: Отвори екран на Персонажа"
+msgstr "C: Отваряне на прозорец с информация за персонажа"
 
 #: Source/help.cpp:32
+#, fuzzy
 msgid "Q: Open Quest log"
-msgstr "Q: Отвори Приключенски дневник"
+msgstr "Q: Отваряне на Приключенски дневник"
 
 #: Source/help.cpp:33
+#, fuzzy
 msgid "F: Reduce screen brightness"
-msgstr "F: Намали яркост на екрана"
+msgstr "F: Намаляване яркоста на екрана"
 
 #: Source/help.cpp:34
+#, fuzzy
 msgid "G: Increase screen brightness"
-msgstr "G: Увеличи яркост на екрана"
+msgstr "G: Увеличаване яркостта на екрана"
 
 #: Source/help.cpp:35
+#, fuzzy
 msgid "Z: Zoom Game Screen"
-msgstr "Z: Мащабиране на игровия екран"
+msgstr "Z: Мащабиране на екрана"
 
 #: Source/help.cpp:36
+#, fuzzy
 msgid "+ / -: Zoom Automap"
-msgstr "+ / -: Мащабиране на карта"
+msgstr "+ / -: Мащабиране на картата"
 
 #: Source/help.cpp:37
+#, fuzzy
 msgid "1 - 8: Use Belt item"
-msgstr "1 - 8: Използвай предмет от колана"
+msgstr "1 - 8: Използване на предмет от колана"
 
 #: Source/help.cpp:38
+#, fuzzy
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
-msgstr "F5, F6, F7, F8:     Set hotkey for skill or spell"
+msgstr "F5, F6, F7, F8:     Задаване на бърз клавиш за умение или заклинание"
 
 #: Source/help.cpp:39
+#, fuzzy
 msgid "Shift + Left Mouse Button: Attack without moving"
-msgstr "Shift + Left Mouse Button: Attack without moving"
+msgstr "Shift + Left Mouse Button: Замахване в неподвижно състояние"
 
 #: Source/help.cpp:40
+#, fuzzy
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
-msgstr "Shift + Left Mouse Button (on character screen): Assign all stat points"
+msgstr "Shift + Left Mouse Button (в прозореца на персонажа): Усвояване на всички точки за усъвършенстване"
 
+# Unequip... Намирането на подходяща дума е трън в задника.
 #: Source/help.cpp:41
+#, fuzzy
 msgid "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item"
-msgstr "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip item"
+msgstr "Shift + Left Mouse Button (в инвентара): Преместване на предмет в колана или екипиране/разекипиране на предмет"
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr "Shift + Left Mouse Button (on belt): Move item to inventory"
+msgstr "Shift + Left Mouse Button (в колана): Преместване на предмет в инвентара"
 
 #: Source/help.cpp:44
 msgid "$Movement:"
 msgstr "$Movement:"
 
 #: Source/help.cpp:45
+#, fuzzy
 msgid "If you hold the mouse button down while moving, the character will continue to move in that direction."
-msgstr "Ако задържите бутона на мишката, вашият герой ще се придвижи в тази посока.."
+msgstr "Ако задържите бутона на мишката, вашият герой ще се придвижи в съответната на показалеца посока."
 
 #: Source/help.cpp:48
 msgid "$Combat:"
 msgstr "$Combat:"
 
 #: Source/help.cpp:49
+#, fuzzy
 msgid "Holding down the shift key and then left-clicking allows the character to attack without moving."
-msgstr "Holding down the shift key and then left-clicking allows the character to attack without moving."
+msgstr "Задръжте клавиша Shift и натиснете ляв бутон на мишката, за да замахвате, докато сте неподвижни."
 
 #: Source/help.cpp:52
+#, fuzzy
 msgid "$Auto-map:"
-msgstr "$Auto-map:"
+msgstr "$Авто-карта:"
 
 #: Source/help.cpp:53
 msgid "To access the auto-map, click the 'MAP' button on the Information Bar or press 'TAB' on the keyboard. Zooming in and out of the map is done with the + and - keys. Scrolling the map uses the arrow keys."
@@ -1616,16 +1766,18 @@ msgid "$Picking up Objects:"
 msgstr "$Picking up Objects:"
 
 #: Source/help.cpp:59
+#, fuzzy
 msgid "Useable items that are small in size, such as potions or scrolls, are automatically placed in your 'belt' located at the top of the Interface bar . When an item is placed in the belt, a small number appears in that box. Items may be used by either pressing the corresponding number or right-clicking on the item."
-msgstr ""
+msgstr "Използваемите предмети, които са малки по размер, като например отвари и свитъци, автоматично преминават в 'колана', намиращ се в горната ивица на интерфейса. А когато предмет бъде поставен в колана, върху иконката му излиза цифра Предметите могат да бъдат ползвани чрез десен бутон мишката или съответната цифра на клавиатурата."
 
 #: Source/help.cpp:65
 msgid "$Gold"
 msgstr ""
 
 #: Source/help.cpp:66
+#, fuzzy
 msgid "You can select a specific amount of gold to drop byright-clicking on a pile of gold in your inventory."
-msgstr ""
+msgstr "Може да изберете колко злато искате да оставите, като натиснете десен бутон върху купчината златни монети в инвентара."
 
 #: Source/help.cpp:69
 msgid "$Skills & Spells:"
@@ -1668,36 +1820,42 @@ msgid "Shareware Hellfire Help"
 msgstr ""
 
 #: Source/help.cpp:125
+#, fuzzy
 msgid "Hellfire Help"
-msgstr "Хелфайър Помощ"
+msgstr "Помощ за Hellfire"
 
 #: Source/help.cpp:127
+#, fuzzy
 msgid "Shareware Diablo Help"
-msgstr "Shareware Диабло Помощ"
+msgstr "Помощ за пробна версия на Diablo"
 
 #: Source/help.cpp:127
+#, fuzzy
 msgid "Diablo Help"
-msgstr "Диабло Помощ"
+msgstr "Помощ за Diablo"
 
 #: Source/help.cpp:151
+#, fuzzy
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr "Наиснете ESC за да прекъснете или клавишите стрелки за да приплъзнете."
+msgstr "Наиснете ESC, за да прекъснете или клавишните стрелким за да превъртите."
 
 #: Source/init.cpp:205
 msgid "Some Hellfire MPQs are missing"
-msgstr "Някой от Хелфайър MPQ файловете липсват."
+msgstr "Някой от Hellfire MPQ файловете липсват."
 
 #: Source/init.cpp:205
+#, fuzzy
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
-"Не всички Хелфайър MPQ файлове ца намерени.\n"
-"Моля копирайте всички hf*.mpq файлове."
+"Не всички Hellfire MPQ файлове бяха намерени.\n"
+"Моля, поставете всички hf*.mpq файлове."
 
 #: Source/init.cpp:215
+#, fuzzy
 msgid "Unable to create main window"
-msgstr "Unable to create main window"
+msgstr "Невъзможно създаването на основен прозорец"
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:198
 msgid "Gold"
@@ -1705,35 +1863,40 @@ msgstr "Злато"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr "Къс Меч"
+msgstr "Къс меч"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
+#, fuzzy
 msgid "Buckler"
-msgstr "Кръгло Щитче"
+msgstr "Кръгъл щит"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
+#, fuzzy
 msgid "Club"
-msgstr "Палка"
+msgstr "Тояга"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
-msgstr "Къс Лък"
+msgstr "Къс лък"
 
 #: Source/itemdat.cpp:21
+#, fuzzy
 msgid "Short Staff of Mana"
-msgstr "Къса Тояга за Мана"
+msgstr "Къс жезъл за мана"
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
 msgstr "Сатър"
 
 #: Source/itemdat.cpp:23 Source/itemdat.cpp:397
+#, fuzzy
 msgid "The Undead Crown"
-msgstr "Нежива Корона"
+msgstr "Корона на немъртъв"
 
 #: Source/itemdat.cpp:24 Source/itemdat.cpp:398
+#, fuzzy
 msgid "Empyrean Band"
-msgstr "Небесна Гривна"
+msgstr "Небесна гривна"
 
 #: Source/itemdat.cpp:25
 msgid "Magic Rock"
@@ -1741,23 +1904,25 @@ msgstr "Магически камък"
 
 #: Source/itemdat.cpp:26 Source/itemdat.cpp:399
 msgid "Optic Amulet"
-msgstr "Оптичен Амулет"
+msgstr "Оптичен амулет"
 
 #: Source/itemdat.cpp:27 Source/itemdat.cpp:400
 msgid "Ring of Truth"
 msgstr "Пръстен на Истината"
 
 #: Source/itemdat.cpp:28
+#, fuzzy
 msgid "Tavern Sign"
 msgstr "Табела от страноприемница"
 
 #: Source/itemdat.cpp:29 Source/itemdat.cpp:401
+#, fuzzy
 msgid "Harlequin Crest"
-msgstr "Арлекинов Герб"
+msgstr "Арлекинов герб"
 
 #: Source/itemdat.cpp:30 Source/itemdat.cpp:402
 msgid "Veil of Steel"
-msgstr "Стоманено Було"
+msgstr "Стоманено було"
 
 #: Source/itemdat.cpp:31
 msgid "Golden Elixir"
@@ -1769,27 +1934,32 @@ msgstr "Наковалня на Яростта"
 
 #: Source/itemdat.cpp:33 Source/quests.cpp:44
 msgid "Black Mushroom"
-msgstr "Черна Гъба"
+msgstr "Черна гъба"
 
 #: Source/itemdat.cpp:34
 msgid "Brain"
 msgstr "Мозък"
 
+# https://diablo.fandom.com/wiki/Fungal_Tome
 #: Source/itemdat.cpp:35
+#, fuzzy
 msgid "Fungal Tome"
-msgstr "Гъбен Том"
+msgstr "Книга на гъбата"
 
 #: Source/itemdat.cpp:36
+#, fuzzy
 msgid "Spectral Elixir"
-msgstr "Спектрален Еликсир"
+msgstr "Призрачен еликсир"
 
 #: Source/itemdat.cpp:37 Source/monstdat.cpp:80
+#, fuzzy
 msgid "Blood Stone"
-msgstr "Кръвен Камък"
+msgstr "Кръвен камък"
 
 #: Source/itemdat.cpp:38
+#, fuzzy
 msgid "Cathedral Map"
-msgstr "Катедрална Карта"
+msgstr "Карта на катедралата"
 
 #: Source/itemdat.cpp:39
 msgid "Heart"
@@ -1797,19 +1967,19 @@ msgstr "Сърце"
 
 #: Source/itemdat.cpp:40 Source/itemdat.cpp:93
 msgid "Potion of Healing"
-msgstr "Отвара за Лечение"
+msgstr "Отвара за лечение"
 
 #: Source/itemdat.cpp:41 Source/itemdat.cpp:95
 msgid "Potion of Mana"
-msgstr "Отвара за Мана"
+msgstr "Отвара за мана"
 
 #: Source/itemdat.cpp:42 Source/itemdat.cpp:110
 msgid "Scroll of Identify"
-msgstr "Свитък за Разпознаване"
+msgstr "Свитък за разпознаване"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
-msgstr "Свитък за Градски Портал"
+msgstr "Свитък за Градски портал"
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:403
 msgid "Arkaine's Valor"
@@ -1817,31 +1987,32 @@ msgstr "Доблестта на Аркейн"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
-msgstr "Отвара за Пълно Лечение"
+msgstr "Отвара за Пълно лечение"
 
 #: Source/itemdat.cpp:46 Source/itemdat.cpp:96
 msgid "Potion of Full Mana"
-msgstr "Отвара за Пълна Мана"
+msgstr "Отвара за Пълна мана"
 
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:404
 msgid "Griswold's Edge"
 msgstr "Острието на Гризуолд"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
+#, fuzzy
 msgid "Bovine Plate"
-msgstr "Говежда обвивка"
+msgstr "Говежда броня"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
-msgstr "Скиптъра на Лазаръс"
+msgstr "Жезълът на Лазар"
 
 #: Source/itemdat.cpp:50 Source/itemdat.cpp:111
 msgid "Scroll of Resurrect"
-msgstr "Свитък за Въскресение"
+msgstr "Свитък за Възкресение"
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:77
 msgid "Blacksmith Oil"
-msgstr "Ковашко Масло"
+msgstr "Ковашко мсло"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
@@ -1859,8 +2030,9 @@ msgid "Dagger"
 msgstr "Кама"
 
 #: Source/itemdat.cpp:55
+#, fuzzy
 msgid "Rune Bomb"
-msgstr "Руна Бомба"
+msgstr "Рунична бомба"
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
@@ -1868,31 +2040,32 @@ msgstr "Теодор"
 
 #: Source/itemdat.cpp:57
 msgid "Auric Amulet"
-msgstr "Блестящ Амулет"
+msgstr "Блестящ амулет"
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
-msgstr "Разкъсана Бележка 1"
+msgstr "Разкъсана бележка 1"
 
 #: Source/itemdat.cpp:59
 msgid "Torn Note 2"
-msgstr "Разкъсана Бележка 2"
+msgstr "Разкъсана бележка 2"
 
 #: Source/itemdat.cpp:60
 msgid "Torn Note 3"
-msgstr "Разкъсана Бележка 3"
+msgstr "Разкъсана бележка 3"
 
 #: Source/itemdat.cpp:61
+#, fuzzy
 msgid "Reconstructed Note"
-msgstr "Сглобена Бележка"
+msgstr "Възстановена бележка"
 
 #: Source/itemdat.cpp:62
 msgid "Brown Suit"
-msgstr "Кафяв Костюм"
+msgstr "Кафяв костюм"
 
 #: Source/itemdat.cpp:63
 msgid "Grey Suit"
-msgstr "Сив Костюм"
+msgstr "Сив костюм"
 
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
 msgid "Cap"
@@ -1900,7 +2073,7 @@ msgstr "Каска"
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
-msgstr "Ковашка Каска"
+msgstr "Ковашка каска"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
 msgid "Helm"
@@ -1908,7 +2081,7 @@ msgstr "Шлем"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
-msgstr "Пълен Шлем"
+msgstr "Цял шлем"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
@@ -1916,7 +2089,7 @@ msgstr "Корона"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
-msgstr "Велик Шлем"
+msgstr "Велик шлем"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
@@ -1936,28 +2109,30 @@ msgstr "Роба"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
-msgstr "Ватен Плащ"
+msgstr "Ватирана броня"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
 #: Source/itemdat.cpp:77 Source/objects.cpp:5530
+#, fuzzy
 msgid "Armor"
-msgstr "Плащеница"
+msgstr "Броня"
 
 #: Source/itemdat.cpp:75
 msgid "Leather Armor"
-msgstr "Кожена Броня"
+msgstr "Кожена броня"
 
 #: Source/itemdat.cpp:76
 msgid "Hard Leather Armor"
-msgstr "Твърда Кожена Броня"
+msgstr "Твърда кожена броня"
 
 #: Source/itemdat.cpp:77
 msgid "Studded Leather Armor"
-msgstr "Шипирана Кожена броня"
+msgstr "Ошипена кожена броня"
 
 #: Source/itemdat.cpp:78
+#, fuzzy
 msgid "Ring Mail"
-msgstr "Пръстенова Ризница"
+msgstr "Пръстенова ризница"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:79 Source/itemdat.cpp:80
 #: Source/itemdat.cpp:82
@@ -1966,15 +2141,16 @@ msgstr "Ризница"
 
 #: Source/itemdat.cpp:79
 msgid "Chain Mail"
-msgstr "Плетена Ризница"
+msgstr "Плетена ризница"
 
 #: Source/itemdat.cpp:80
+#, fuzzy
 msgid "Scale Mail"
-msgstr "Плочна Ризница"
+msgstr "Плочна ризница"
 
 #: Source/itemdat.cpp:81
 msgid "Breast Plate"
-msgstr "Нагръдни Доспехи"
+msgstr "Нагръдни доспехи"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:83 Source/itemdat.cpp:84
 #: Source/itemdat.cpp:85 Source/itemdat.cpp:86
@@ -1982,14 +2158,17 @@ msgid "Plate"
 msgstr "Доспехи"
 
 #: Source/itemdat.cpp:82
+#, fuzzy
 msgid "Splint Mail"
-msgstr "Везани Доспехи"
+msgstr "Шинирана ризница"
 
 #: Source/itemdat.cpp:83
+#, fuzzy
 msgid "Plate Mail"
 msgstr "Плочни Доспехи"
 
 #: Source/itemdat.cpp:84
+#, fuzzy
 msgid "Field Plate"
 msgstr "Полеви Доспехи"
 
@@ -1998,8 +2177,9 @@ msgid "Gothic Plate"
 msgstr "Готически Доспехи"
 
 #: Source/itemdat.cpp:86
+#, fuzzy
 msgid "Full Plate Mail"
-msgstr "Пълни Плочни Доспехи"
+msgstr "Пълни плочни доспехи"
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
@@ -2008,23 +2188,23 @@ msgstr "Щит"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
-msgstr "Малък Щит"
+msgstr "Малък щит"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr "Голям Щит"
+msgstr "Голям щит"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
-msgstr "Гвардейски Щит"
+msgstr "Гвардейски щит"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
-msgstr "Крепостен Щит"
+msgstr "Крепостен щит"
 
 #: Source/itemdat.cpp:92
 msgid "Gothic Shield"
-msgstr "Готически Щит"
+msgstr "Готически щит"
 
 #: Source/itemdat.cpp:97
 msgid "Potion of Rejuvenation"
@@ -2032,7 +2212,7 @@ msgstr "Отвара за Възобновление"
 
 #: Source/itemdat.cpp:98
 msgid "Potion of Full Rejuvenation"
-msgstr "Отвара за Пълно Възобновление"
+msgstr "Отвара за Пълно възобновление"
 
 #: Source/itemdat.cpp:100 Source/items.cpp:72
 msgid "Oil of Accuracy"
@@ -2076,9 +2256,10 @@ msgstr "Свитък за Мълния"
 
 #: Source/itemdat.cpp:112
 msgid "Scroll of Fire Wall"
-msgstr "Свитък за Огнена Стена"
+msgstr "Свитък за Огнена стена"
 
 #: Source/itemdat.cpp:113
+#, fuzzy
 msgid "Scroll of Inferno"
 msgstr "Свитък за Инферно"
 
@@ -2092,27 +2273,27 @@ msgstr "Свитък за Инфразрение"
 
 #: Source/itemdat.cpp:117
 msgid "Scroll of Phasing"
-msgstr "Свитък за Произволно Положение"
+msgstr "Свитък за Произволно положение"
 
 #: Source/itemdat.cpp:118
 msgid "Scroll of Mana Shield"
-msgstr "Свитък за Мана Щит"
+msgstr "Свитък за Щит от мана"
 
 #: Source/itemdat.cpp:119
 msgid "Scroll of Flame Wave"
-msgstr "Свитък за Огнена Вълна"
+msgstr "Свитък за Огнена вълна"
 
 #: Source/itemdat.cpp:120
 msgid "Scroll of Fireball"
-msgstr "Свитък за Огнена Топка"
+msgstr "Свитък за Огнено кълбо"
 
 #: Source/itemdat.cpp:121
 msgid "Scroll of Stone Curse"
-msgstr "Свитък за Каменно Проклятие"
+msgstr "Свитък за Каменно проклятие"
 
 #: Source/itemdat.cpp:122
 msgid "Scroll of Chain Lightning"
-msgstr "Свитък за Верижна Мълния"
+msgstr "Свитък за Верижна мълния"
 
 #: Source/itemdat.cpp:123
 msgid "Scroll of Guardian"
@@ -2128,7 +2309,7 @@ msgstr "Свитък за Голем"
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
-msgstr "Свитък за Телепорт"
+msgstr "Свитък за Телепортация"
 
 #: Source/itemdat.cpp:129
 msgid "Scroll of Apocalypse"
@@ -2140,6 +2321,7 @@ msgid "Book of "
 msgstr "Книга на"
 
 #: Source/itemdat.cpp:136
+#, fuzzy
 msgid "Falchion"
 msgstr "Фалхион"
 
@@ -2148,8 +2330,9 @@ msgid "Scimitar"
 msgstr "Ятаган"
 
 #: Source/itemdat.cpp:138
+#, fuzzy
 msgid "Claymore"
-msgstr "Клеймор"
+msgstr "Двуострен меч"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
@@ -2161,23 +2344,23 @@ msgstr "Сабя"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr "Дълъг Меч"
+msgstr "Дълъг меч"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
-msgstr "Широк Меч"
+msgstr "Широк меч"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr "Рицарски Меч"
+msgstr "Рицарски меч"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr "Двурък Меч"
+msgstr "Двурък меч"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr "Велик Меч"
+msgstr "Велик меч"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
@@ -2190,7 +2373,7 @@ msgstr "Брадва"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr "Голяма Брадва"
+msgstr "Голяма брадва"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
@@ -2198,7 +2381,7 @@ msgstr "Топор"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
-msgstr "Лабрис"
+msgstr "Бойна брадва"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
@@ -2214,15 +2397,16 @@ msgstr "Зорница"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr "Боен Чук"
+msgstr "Боен чук"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
 msgstr "Чук"
 
 #: Source/itemdat.cpp:155
+#, fuzzy
 msgid "Spiked Club"
-msgstr "Нашипена Бухалка"
+msgstr "Нашипена тояга"
 
 #: Source/itemdat.cpp:157
 msgid "Flail"
@@ -2230,7 +2414,7 @@ msgstr "Млатило"
 
 #: Source/itemdat.cpp:158
 msgid "Maul"
-msgstr "Грамаден Чук"
+msgstr "Грамаден чук"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
@@ -2240,31 +2424,31 @@ msgstr "Лък"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr "Ловен Лък"
+msgstr "Ловен лък"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr "Дълъг Лък"
+msgstr "Дълъг лък"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
-msgstr "Комбиниран Лък"
+msgstr "Комбиниран лък"
 
 #: Source/itemdat.cpp:163
 msgid "Short Battle Bow"
-msgstr "Къс Боен Лък"
+msgstr "Къс боен лък"
 
 #: Source/itemdat.cpp:164
 msgid "Long Battle Bow"
-msgstr "Дълъг Боен Лък"
+msgstr "Дълъг Боен лък"
 
 #: Source/itemdat.cpp:165
 msgid "Short War Bow"
-msgstr "Къс Военен Лък"
+msgstr "Къс военен лък"
 
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
-msgstr "Дълъг Военен Лък"
+msgstr "Дълъг военен лък"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170 Source/itemdat.cpp:171
@@ -2273,19 +2457,19 @@ msgstr "Жезъл"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
-msgstr "Дълъг Жезъл"
+msgstr "Дълъг жезъл"
 
 #: Source/itemdat.cpp:169
 msgid "Composite Staff"
-msgstr "Комбиниран Жезъл"
+msgstr "Комбиниран жезъл"
 
 #: Source/itemdat.cpp:170
 msgid "Quarter Staff"
-msgstr "Четвъртичен Жезъл"
+msgstr "Четвъртичен жезъл"
 
 #: Source/itemdat.cpp:171
 msgid "War Staff"
-msgstr "Военен Жезъл"
+msgstr "Военен жезъл"
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
@@ -2310,11 +2494,11 @@ msgstr "Руна за Мълния"
 
 #: Source/itemdat.cpp:179
 msgid "Greater Rune of Fire"
-msgstr "Мощна Руна за Огън"
+msgstr "Мощна Руна за огън"
 
 #: Source/itemdat.cpp:180
 msgid "Greater Rune of Lightning"
-msgstr "Мощна Руна за Мълния"
+msgstr "Мощна Руна за мълния"
 
 #: Source/itemdat.cpp:181 Source/spelldat.cpp:66
 msgid "Rune of Stone"
@@ -2322,7 +2506,7 @@ msgstr "Руна за Вкаменяване"
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
-msgstr "Къс Жезъл за Светкавична Искра"
+msgstr "Къс жезъл за Светкавична искра"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
@@ -2701,7 +2885,7 @@ msgstr "Закрилата"
 
 #: Source/itemdat.cpp:298
 msgid "absorption"
-msgstr "Абсорбцията"
+msgstr "Поглъщането"
 
 #: Source/itemdat.cpp:299
 msgid "deflection"
@@ -2873,7 +3057,7 @@ msgstr "Орела"
 
 #: Source/itemdat.cpp:341
 msgid "the wolf"
-msgstr "Вълкът"
+msgstr "Вълка"
 
 #: Source/itemdat.cpp:342
 msgid "the tiger"
@@ -2917,7 +3101,7 @@ msgstr "Епохите"
 
 #: Source/itemdat.cpp:352
 msgid "the dark"
-msgstr "Тъмата"
+msgstr "Тъмнината"
 
 #: Source/itemdat.cpp:353
 msgid "the night"
@@ -2945,7 +3129,7 @@ msgstr "Горенето"
 
 #: Source/itemdat.cpp:359
 msgid "shock"
-msgstr "Шока"
+msgstr "Сътресението"
 
 #: Source/itemdat.cpp:360
 msgid "lightning"
@@ -2957,11 +3141,11 @@ msgstr "Гръмотевицата"
 
 #: Source/itemdat.cpp:362
 msgid "many"
-msgstr "Многото"
+msgstr "Множеството"
 
 #: Source/itemdat.cpp:363
 msgid "plenty"
-msgstr "Изобилното"
+msgstr "Изобилието"
 
 #: Source/itemdat.cpp:364
 msgid "thorns"
@@ -3005,7 +3189,7 @@ msgstr "Пробождането"
 
 #: Source/itemdat.cpp:374
 msgid "bashing"
-msgstr "Спукването"
+msgstr "Блъскането"
 
 #: Source/itemdat.cpp:375
 msgid "readiness"
@@ -3037,7 +3221,7 @@ msgstr "Хармонията"
 
 #: Source/itemdat.cpp:382
 msgid "blocking"
-msgstr "Блокирването"
+msgstr "Блокирането"
 
 #: Source/itemdat.cpp:383
 msgid "devastation"
@@ -3055,11 +3239,11 @@ msgstr "Заплахата"
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:396
 msgid "The Butcher's Cleaver"
-msgstr "Месарския Сатър"
+msgstr "Месарския сатър"
 
 #: Source/itemdat.cpp:406
 msgid "The Rift Bow"
-msgstr "Разривен Лък"
+msgstr "Разривен лък"
 
 #: Source/itemdat.cpp:407
 msgid "The Needler"
@@ -3067,7 +3251,7 @@ msgstr "Игленикът"
 
 #: Source/itemdat.cpp:408
 msgid "The Celestial Bow"
-msgstr "Небесния Лък"
+msgstr "Небесния лък"
 
 #: Source/itemdat.cpp:409
 msgid "Deadly Hunter"
@@ -3087,7 +3271,7 @@ msgstr "Огнено острило"
 
 #: Source/itemdat.cpp:413
 msgid "Fleshstinger"
-msgstr "Плътожилеца"
+msgstr "Плътожилец"
 
 #: Source/itemdat.cpp:414
 msgid "Windforce"
@@ -3099,7 +3283,7 @@ msgstr "Орелорог"
 
 #: Source/itemdat.cpp:416
 msgid "Gonnagal's Dirk"
-msgstr "Камата на Гонадал"
+msgstr "Камата на Гонагал"
 
 #: Source/itemdat.cpp:417
 msgid "The Defender"
@@ -3107,15 +3291,16 @@ msgstr "Закрилникът"
 
 #: Source/itemdat.cpp:418
 msgid "Gryphons Claw"
-msgstr "Грифонски Нокът"
+msgstr "Грифонски нокът"
 
 #: Source/itemdat.cpp:419
 msgid "Black Razor"
-msgstr "Черен Бръснач"
+msgstr "Черен бръснач"
 
 #: Source/itemdat.cpp:420
+#, fuzzy
 msgid "Gibbous Moon"
-msgstr "Незавършена Луна"
+msgstr "Непълна луна"
 
 #: Source/itemdat.cpp:421
 msgid "Ice Shank"
@@ -3135,7 +3320,7 @@ msgstr "Сенкоястреб"
 
 #: Source/itemdat.cpp:425
 msgid "Wizardspike"
-msgstr "Чародейски Шип"
+msgstr "Чародейски шип"
 
 #: Source/itemdat.cpp:426
 msgid "Lightsabre"
@@ -3143,7 +3328,7 @@ msgstr "Светосабя"
 
 #: Source/itemdat.cpp:427
 msgid "The Falcon's Talon"
-msgstr "Соколски Нокът"
+msgstr "Соколски нокът"
 
 #: Source/itemdat.cpp:428 Source/spelldat.cpp:35
 msgid "Inferno"
@@ -3171,7 +3356,7 @@ msgstr "Остър Клюн"
 
 #: Source/itemdat.cpp:434
 msgid "BloodSlayer"
-msgstr "Кървав Унищожител"
+msgstr "Кървав унищожител"
 
 #: Source/itemdat.cpp:435
 msgid "The Celestial Axe"
@@ -3194,8 +3379,9 @@ msgid "Hellslayer"
 msgstr "Адски секач"
 
 #: Source/itemdat.cpp:440
+#, fuzzy
 msgid "Messerschmidt's Reaver"
-msgstr "Месършмидстки Похитител"
+msgstr "Опустошителят на Ревър"
 
 #: Source/itemdat.cpp:441
 msgid "Crackrust"
@@ -3203,7 +3389,7 @@ msgstr "Цеперъжд"
 
 #: Source/itemdat.cpp:442
 msgid "Hammer of Jholm"
-msgstr "Чук от Жолм"
+msgstr "Чукът на Жолм"
 
 #: Source/itemdat.cpp:443
 msgid "Civerb's Cudgel"
@@ -3211,7 +3397,7 @@ msgstr "Бухалката на Сиверб"
 
 #: Source/itemdat.cpp:444
 msgid "The Celestial Star"
-msgstr "Небесна Звезда"
+msgstr "Небесна звезда"
 
 #: Source/itemdat.cpp:445
 msgid "Baranar's Star"
@@ -3219,11 +3405,11 @@ msgstr "Звездата на Баранар"
 
 #: Source/itemdat.cpp:446
 msgid "Gnarled Root"
-msgstr "Възлест Корен"
+msgstr "Възлест корен"
 
 #: Source/itemdat.cpp:447
 msgid "The Cranium Basher"
-msgstr "Черепен Трошач"
+msgstr "Черепен трошач"
 
 #: Source/itemdat.cpp:448
 msgid "Schaefer's Hammer"
@@ -3279,7 +3465,7 @@ msgstr "Мислеща Шапка"
 
 #: Source/itemdat.cpp:461
 msgid "OverLord's Helm"
-msgstr "Надзирателски Шлем"
+msgstr "Надзирателски шлем"
 
 #: Source/itemdat.cpp:462
 msgid "Fool's Crest"
@@ -3291,11 +3477,11 @@ msgstr "Залезът на боговете"
 
 #: Source/itemdat.cpp:464
 msgid "Royal Circlet"
-msgstr "Кралска Диадема"
+msgstr "Кралска диадема"
 
 #: Source/itemdat.cpp:465
 msgid "Torn Flesh of Souls"
-msgstr "Откъсната Плът от Души"
+msgstr "Откъсната плът от души"
 
 #: Source/itemdat.cpp:466
 msgid "The Gladiator's Bane"
@@ -3303,23 +3489,24 @@ msgstr "Неволята на Гладиатора"
 
 #: Source/itemdat.cpp:467
 msgid "The Rainbow Cloak"
-msgstr "Пъстроцветната Пелерина"
+msgstr "Пъстроцветната пелерина"
 
 #: Source/itemdat.cpp:468
 msgid "Leather of Aut"
 msgstr "Кожа от Аут"
 
 #: Source/itemdat.cpp:469
+#, fuzzy
 msgid "Wisdom's Wrap"
-msgstr "Обгръщане на Мъдростта"
+msgstr "Прегръдка на Мъдростта"
 
 #: Source/itemdat.cpp:470
 msgid "Sparking Mail"
-msgstr "Искряща Ризница"
+msgstr "Искряща ризница"
 
 #: Source/itemdat.cpp:471
 msgid "Scavenger Carapace"
-msgstr "Мършоядска Коруба"
+msgstr "Мършоядска коруба"
 
 #: Source/itemdat.cpp:472
 msgid "Nightscape"
@@ -3331,7 +3518,7 @@ msgstr "Леките доспехи на Наж"
 
 #: Source/itemdat.cpp:474
 msgid "Demonspike Coat"
-msgstr "Демоншипско Палто"
+msgstr "Демоншипско палто"
 
 #: Source/itemdat.cpp:475
 msgid "The Deflector"
@@ -3339,19 +3526,19 @@ msgstr "Отразителят"
 
 #: Source/itemdat.cpp:476
 msgid "Split Skull Shield"
-msgstr "Сцепен Черепен Щит"
+msgstr "Сцепен черепен щит"
 
 #: Source/itemdat.cpp:477
 msgid "Dragon's Breach"
-msgstr "Драконов Пробив"
+msgstr "Драконов пробив"
 
 #: Source/itemdat.cpp:478
 msgid "Blackoak Shield"
-msgstr "Чернодъбов Щит"
+msgstr "Чернодъбов щит"
 
 #: Source/itemdat.cpp:479
 msgid "Holy Defender"
-msgstr "Свещен Защитник"
+msgstr "Свещен пазител"
 
 #: Source/itemdat.cpp:480
 msgid "Stormshield"
@@ -3371,7 +3558,7 @@ msgstr "Кървящият"
 
 #: Source/itemdat.cpp:484
 msgid "Constricting Ring"
-msgstr "Сътворяващ Пръстен"
+msgstr "Сътворяващ пръстен"
 
 #: Source/itemdat.cpp:485
 msgid "Ring of Engagement"
@@ -3406,8 +3593,9 @@ msgid "Ring of Thunder"
 msgstr "Пръстен на Гръмотевицата"
 
 #: Source/itemdat.cpp:493
+#, fuzzy
 msgid "Amulet of Warding"
-msgstr "Амулет на Пазенето"
+msgstr "Амулет на Бдението"
 
 #: Source/itemdat.cpp:494
 msgid "Gnat Sting"
@@ -3443,7 +3631,7 @@ msgstr "Диамантенострие"
 
 #: Source/itemdat.cpp:502
 msgid "Bone Chain Armor"
-msgstr "Костна Ризница"
+msgstr "Костна ризница"
 
 #: Source/itemdat.cpp:503
 msgid "Demon Plate Armor"
@@ -3451,7 +3639,7 @@ msgstr "Демонски доспехи"
 
 #: Source/itemdat.cpp:504
 msgid "Acolyte's Amulet"
-msgstr "Псалтски Амулет"
+msgstr "Псалтски амулет"
 
 #. TRANSLATORS: Unique Item section end.
 #: Source/itemdat.cpp:506
@@ -3522,8 +3710,9 @@ msgid "greatly increases a weapon's"
 msgstr "значително увеличава"
 
 #: Source/items.cpp:3288
+#, fuzzy
 msgid "damage potential - not bows"
-msgstr "потенциала за щети - не лъкове"
+msgstr "потенциала за щети - изкл. лъкове"
 
 #: Source/items.cpp:3292
 msgid "reduces attributes needed"
@@ -3802,154 +3991,154 @@ msgstr "множество стрели при изстрел"
 
 #: Source/items.cpp:3543
 msgid "fire arrows damage: {:d}"
-msgstr "Щети Огнени Стрели: {:d}"
+msgstr "Щети Огнени стрели: {:d}"
 
 #: Source/items.cpp:3545
 msgid "fire arrows damage: {:d}-{:d}"
-msgstr "Щети Огнени Стрели: {:d}-{:d}"
+msgstr "Щети Огнени стрели: {:d}-{:d}"
 
 #: Source/items.cpp:3549
 msgid "lightning arrows damage {:d}"
-msgstr "Щети Мълниеви Стрели {:d}"
+msgstr "Щети Мълниеви стрели {:d}"
 
 #: Source/items.cpp:3551
 msgid "lightning arrows damage {:d}-{:d}"
-msgstr "Щети Мълниеви Стрели {:d}-{:d}"
+msgstr "Щети Мълниеви стрели {:d}-{:d}"
 
 #: Source/items.cpp:3555
 msgid "fireball damage: {:d}"
-msgstr "Щети Огнена Топка {:d}"
+msgstr "Щети Огнена кълбо {:d}"
 
 #: Source/items.cpp:3557
 msgid "fireball damage: {:d}-{:d}"
-msgstr "Щети Огнена Топка {:d}-{:d}"
+msgstr "Щети Огнено кълбо {:d}-{:d}"
 
 #: Source/items.cpp:3560
 msgid "attacker takes 1-3 damage"
-msgstr "атакуващия получава 1-3 щети "
+msgstr "атакуващият получава 1-3 щети"
 
 #: Source/items.cpp:3563
 msgid "user loses all mana"
-msgstr ""
+msgstr "играчът губи всичката мана"
 
 #: Source/items.cpp:3566
 msgid "you can't heal"
-msgstr ""
+msgstr "не може да се лекувате"
 
 #: Source/items.cpp:3569
 msgid "absorbs half of trap damage"
-msgstr ""
+msgstr "поглъща половината от капаните щети"
 
 #: Source/items.cpp:3572
 msgid "knocks target back"
-msgstr ""
+msgstr "избутва целта назад"
 
 #: Source/items.cpp:3575
 #, no-c-format
 msgid "+200% damage vs. demons"
-msgstr ""
+msgstr "+200% щети срещу демони"
 
 #: Source/items.cpp:3578
 msgid "All Resistance equals 0"
-msgstr ""
+msgstr "Цялaта устойчивост се равнява на 0"
 
 #: Source/items.cpp:3581
 msgid "hit monster doesn't heal"
-msgstr ""
+msgstr "удареният враг не може да се лекува"
 
 #: Source/items.cpp:3585
 #, no-c-format
 msgid "hit steals 3% mana"
-msgstr ""
+msgstr "удар взима 3% мана"
 
 #: Source/items.cpp:3587
 #, no-c-format
 msgid "hit steals 5% mana"
-msgstr ""
+msgstr "удар взима 5% мана"
 
 #: Source/items.cpp:3591
 #, no-c-format
 msgid "hit steals 3% life"
-msgstr ""
+msgstr "удар взима 3% жизненост"
 
 #: Source/items.cpp:3593
 #, no-c-format
 msgid "hit steals 5% life"
-msgstr ""
+msgstr "удар взима 5% жизненост"
 
 #: Source/items.cpp:3596
 msgid "penetrates target's armor"
-msgstr ""
+msgstr "пробива бронята на врата"
 
 #: Source/items.cpp:3600
 msgid "quick attack"
-msgstr ""
+msgstr "светкавичен замах"
 
 #: Source/items.cpp:3602
 msgid "fast attack"
-msgstr ""
+msgstr "бърз замах"
 
 #: Source/items.cpp:3604
 msgid "faster attack"
-msgstr ""
+msgstr "по-бърз замах"
 
 #: Source/items.cpp:3606
 msgid "fastest attack"
-msgstr ""
+msgstr "най-бърз замах"
 
 #: Source/items.cpp:3610
 msgid "fast hit recovery"
-msgstr ""
+msgstr "възстановяване от бърз удар"
 
 #: Source/items.cpp:3612
 msgid "faster hit recovery"
-msgstr ""
+msgstr "възстановяване от по-бърз удар"
 
 #: Source/items.cpp:3614
 msgid "fastest hit recovery"
-msgstr ""
+msgstr "възстановяване от най-бърз удар"
 
 #: Source/items.cpp:3617
 msgid "fast block"
-msgstr ""
+msgstr "бързо блокиране"
 
 #: Source/items.cpp:3620
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "добавя {:d} единица към щетите"
+msgstr[1] "добавя {:d} единици към щетите"
 
 #: Source/items.cpp:3623
 msgid "fires random speed arrows"
-msgstr ""
+msgstr "изстрелва стрели със случайна скорост"
 
 #: Source/items.cpp:3626
 msgid "unusual item damage"
-msgstr ""
+msgstr "щети от необикновен предмет"
 
 #: Source/items.cpp:3629
 msgid "altered durability"
-msgstr ""
+msgstr "променена издръжливост"
 
 #: Source/items.cpp:3632
 msgid "Faster attack swing"
-msgstr ""
+msgstr "по-бърз удар с замах"
 
 #: Source/items.cpp:3635
 msgid "one handed sword"
-msgstr ""
+msgstr "меч за една ръка"
 
 #: Source/items.cpp:3638
 msgid "constantly lose hit points"
-msgstr ""
+msgstr "постоянно губене на жизнени точки"
 
 #: Source/items.cpp:3641
 msgid "life stealing"
-msgstr ""
+msgstr "изсмукване на живот"
 
 #: Source/items.cpp:3644
 msgid "no strength requirement"
-msgstr ""
+msgstr "не е необходима сила"
 
 #: Source/items.cpp:3647
 msgid "see with infravision"
@@ -4505,39 +4694,40 @@ msgstr ""
 
 #: Source/monstdat.cpp:124
 msgid "Counselor"
-msgstr ""
+msgstr "Съветник"
 
 #: Source/monstdat.cpp:125
 msgid "Magistrate"
-msgstr ""
+msgstr "Магистър"
 
 #: Source/monstdat.cpp:126
 msgid "Cabalist"
-msgstr ""
+msgstr "Кабалист"
 
 #: Source/monstdat.cpp:127
 msgid "Advocate"
-msgstr ""
+msgstr "Адвокат"
 
 #: Source/monstdat.cpp:128 Source/spelldat.cpp:36
 msgid "Golem"
-msgstr ""
+msgstr "Голем"
 
 #: Source/monstdat.cpp:129
+#, fuzzy
 msgid "The Dark Lord"
-msgstr ""
+msgstr "Господар на мрака"
 
 #: Source/monstdat.cpp:130
 msgid "The Arch-Litch Malignus"
-msgstr ""
+msgstr "Призракът на Малигнус"
 
 #: Source/monstdat.cpp:131
 msgid "Hellboar"
-msgstr ""
+msgstr "Адски глиган"
 
 #: Source/monstdat.cpp:132
 msgid "Stinger"
-msgstr ""
+msgstr "Убодливец"
 
 #: Source/monstdat.cpp:133
 msgid "Psychorb"
@@ -4545,7 +4735,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:134
 msgid "Arachnon"
-msgstr ""
+msgstr "Арахнон"
 
 #: Source/monstdat.cpp:135
 msgid "Felltwin"
@@ -4557,7 +4747,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:137
 msgid "Venomtail"
-msgstr ""
+msgstr "Отровопашка"
 
 #: Source/monstdat.cpp:138
 msgid "Necromorb"
@@ -4565,7 +4755,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:139
 msgid "Spider Lord"
-msgstr ""
+msgstr "Паяк-господар"
 
 #: Source/monstdat.cpp:140
 msgid "Lashworm"
@@ -4581,19 +4771,19 @@ msgstr ""
 
 #: Source/monstdat.cpp:143
 msgid "Hell Bug"
-msgstr ""
+msgstr "Адска буболечка"
 
 #: Source/monstdat.cpp:144
 msgid "Gravedigger"
-msgstr ""
+msgstr "Гробар"
 
 #: Source/monstdat.cpp:145
 msgid "Tomb Rat"
-msgstr ""
+msgstr "Подземен плъх"
 
 #: Source/monstdat.cpp:146
 msgid "Firebat"
-msgstr ""
+msgstr "Огнен прилеп"
 
 #: Source/monstdat.cpp:147
 msgid "Skullwing"
@@ -4609,7 +4799,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:150
 msgid "Hellbat"
-msgstr ""
+msgstr "Адски прилеп"
 
 #: Source/monstdat.cpp:151
 msgid "Bone Demon"
@@ -4617,7 +4807,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:152
 msgid "Arch Lich"
-msgstr ""
+msgstr "Призрак"
 
 #: Source/monstdat.cpp:153
 msgid "Biclops"
@@ -4625,28 +4815,28 @@ msgstr ""
 
 #: Source/monstdat.cpp:154
 msgid "Flesh Thing"
-msgstr ""
+msgstr "Плътноядец"
 
 #: Source/monstdat.cpp:155
 msgid "Reaper"
-msgstr ""
+msgstr "Жътвар"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:472
 msgid "Gharbad the Weak"
-msgstr ""
+msgstr "Хилавия Гарбад"
 
 #: Source/monstdat.cpp:474 Source/quests.cpp:46
 msgid "Zhar the Mad"
-msgstr ""
+msgstr "Лудият Жар"
 
 #: Source/monstdat.cpp:475
 msgid "Snotspill"
-msgstr ""
+msgstr "Сополивия"
 
 #: Source/monstdat.cpp:476
 msgid "Arch-Bishop Lazarus"
-msgstr ""
+msgstr "Архиепископ Лазар"
 
 #: Source/monstdat.cpp:477
 msgid "Red Vex"
@@ -4658,11 +4848,11 @@ msgstr ""
 
 #: Source/monstdat.cpp:480 Source/quests.cpp:54
 msgid "Warlord of Blood"
-msgstr ""
+msgstr "Военачалник на Кръвта"
 
 #: Source/monstdat.cpp:483 Source/quests.cpp:63
 msgid "The Defiler"
-msgstr ""
+msgstr "Осквернителят"
 
 #: Source/monstdat.cpp:485
 msgid "Bonehead Keenaxe"
@@ -4678,11 +4868,11 @@ msgstr ""
 
 #: Source/monstdat.cpp:488
 msgid "Pukerat the Unclean"
-msgstr ""
+msgstr "Поквареният Пукерат"
 
 #: Source/monstdat.cpp:489
 msgid "Boneripper"
-msgstr ""
+msgstr "Костотрошача"
 
 #: Source/monstdat.cpp:490
 msgid "Rotfeast the Hungry"
@@ -4690,7 +4880,7 @@ msgstr ""
 
 #: Source/monstdat.cpp:491
 msgid "Gutshank the Quick"
-msgstr ""
+msgstr "Светкавицата Гътшанк"
 
 #: Source/monstdat.cpp:492
 msgid "Brokenhead Bangshield"
@@ -4999,15 +5189,15 @@ msgstr ""
 
 #: Source/monster.cpp:4953
 msgid "Animal"
-msgstr ""
+msgstr "Животно"
 
 #: Source/monster.cpp:4955
 msgid "Demon"
-msgstr ""
+msgstr "Демон"
 
 #: Source/monster.cpp:4957
 msgid "Undead"
-msgstr ""
+msgstr "Немъртъв"
 
 #: Source/monster.cpp:4968
 msgid "Type: {:s}  Kills: {:d}"
@@ -5379,7 +5569,7 @@ msgstr ""
 
 #: Source/objects.cpp:5500
 msgid "Barrel"
-msgstr ""
+msgstr "Варел"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5504
@@ -5452,42 +5642,42 @@ msgstr ""
 
 #: Source/objects.cpp:5566
 msgid "Slain Hero"
-msgstr ""
+msgstr "Поваленият герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:5573
 msgid "Trapped {:s}"
-msgstr ""
+msgstr "В капан {:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
 #: Source/objects.cpp:5579
 msgid "{:s} (disabled)"
-msgstr ""
+msgstr "{:s} (изключено)"
 
 #: Source/pfile.cpp:219
 msgid "Failed to open player archive for writing."
-msgstr ""
+msgstr "Неуспешно отваряне на архива на играча за записване."
 
 #: Source/pfile.cpp:391
 msgid "Unable to open archive"
-msgstr ""
+msgstr "Неуспешно отваряне на архив"
 
 #: Source/pfile.cpp:393
 msgid "Unable to load character"
-msgstr ""
+msgstr "Неуспешно зареждане на герой"
 
 #: Source/pfile.cpp:416 Source/pfile.cpp:436
 msgid "Unable to read to save file archive"
-msgstr ""
+msgstr "Неуспешно прочитане на архив за записен файл"
 
 #: Source/pfile.cpp:455
 msgid "Unable to write to save file archive"
-msgstr ""
+msgstr "Неуспешно записване в архив за записен файл"
 
 #. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:75
 msgid "{:s} (lvl {:d}): {:s}"
-msgstr ""
+msgstr "{:s} (ниво {:d}): {:s}"
 
 #: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:54
 msgid ""
@@ -5495,114 +5685,118 @@ msgid ""
 "\n"
 "Make sure devilutionx.mpq is in the game folder and that it is up to date."
 msgstr ""
+"Провалено зареждане на интерфейсни ресурси.\n"
+"\n"
+"Уверете се, че файлът devilutionx.mpq е в папката на играта и е актуален."
 
 #: Source/qol/xpbar.cpp:126
 msgid "Level {:d}"
-msgstr ""
+msgstr "Ниво {:d}"
 
 #: Source/qol/xpbar.cpp:133 Source/qol/xpbar.cpp:144
 msgid "Experience: "
-msgstr ""
+msgstr "Опит: "
 
 #: Source/qol/xpbar.cpp:137
 msgid "Maximum Level"
-msgstr ""
+msgstr "Максимално ниво"
 
 #: Source/qol/xpbar.cpp:148
 msgid "Next Level: "
-msgstr ""
+msgstr "Следващо ниво:"
 
 #: Source/qol/xpbar.cpp:152
 msgid " to Level {:d}"
-msgstr ""
+msgstr " към Ниво {:d}"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:43
 msgid "The Magic Rock"
-msgstr ""
+msgstr "Магическият камък"
 
 #: Source/quests.cpp:45
 msgid "Gharbad The Weak"
-msgstr ""
+msgstr "Гарбад Хилавия"
 
 #: Source/quests.cpp:50
 msgid "Ogden's Sign"
-msgstr ""
+msgstr "Знакът на Огдън"
 
 #: Source/quests.cpp:51
 msgid "Halls of the Blind"
-msgstr ""
+msgstr "Залата на Слепите"
 
 #: Source/quests.cpp:52
 msgid "Valor"
-msgstr ""
+msgstr "Храброст"
 
 #: Source/quests.cpp:55
 msgid "The Curse of King Leoric"
-msgstr ""
+msgstr "Клетвата на Крал Леорик"
 
 #: Source/quests.cpp:56 Source/setmaps.cpp:80
 msgid "Poisoned Water Supply"
-msgstr ""
+msgstr "Поквареният кладенец"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:57 Source/quests.cpp:81
 msgid "The Chamber of Bone"
-msgstr ""
+msgstr "Залата на Костите"
 
 #: Source/quests.cpp:58
 msgid "Archbishop Lazarus"
-msgstr ""
+msgstr "Архиепископ Лазар"
 
 #: Source/quests.cpp:59
 msgid "Grave Matters"
-msgstr ""
+msgstr "Задгробни въпроси"
 
 #: Source/quests.cpp:60
 msgid "Farmer's Orchard"
-msgstr ""
+msgstr "Овощната градина на Фермера"
 
 #: Source/quests.cpp:61
 msgid "Little Girl"
-msgstr ""
+msgstr "Малкото момиче"
 
 #: Source/quests.cpp:62
 msgid "Wandering Trader"
-msgstr ""
+msgstr "Пътуващият търговец"
 
 #: Source/quests.cpp:65 Source/trigs.cpp:437
 msgid "Cornerstone of the World"
-msgstr ""
+msgstr "Крайъгълният камък на Света"
 
 #. TRANSLATORS: Quest Name Block end
 #: Source/quests.cpp:66
+#, fuzzy
 msgid "The Jersey's Jersey"
-msgstr ""
+msgstr "Пуловера на Джърсито"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:80
 msgid "King Leoric's Tomb"
-msgstr ""
+msgstr "Гробницата на Крал Леорик"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:82 Source/setmaps.cpp:79
 msgid "Maze"
-msgstr ""
+msgstr "Лабиринт"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:83
 msgid "A Dark Passage"
-msgstr ""
+msgstr "Мрачен проход"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:84
 msgid "Unholy Altar"
-msgstr ""
+msgstr "Неосветения олтар"
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:284
 msgid "To {:s}"
-msgstr ""
+msgstr "До {:s}"
 
 #: Source/quests.cpp:731
 msgid "Quest Log"
@@ -5613,40 +5807,41 @@ msgid "Close Quest Log"
 msgstr ""
 
 #: Source/setmaps.cpp:77
+#, fuzzy
 msgid "Skeleton King's Lair"
-msgstr ""
+msgstr "Бърлогата на Краля на скелетите"
 
 #: Source/setmaps.cpp:78
 msgid "Chamber of Bone"
-msgstr ""
+msgstr "Зала на Костите"
 
 #: Source/setmaps.cpp:81
 msgid "Archbishop Lazarus' Lair"
-msgstr ""
+msgstr "Бърлогата на Архиепископ Лазар"
 
 #: Source/spelldat.cpp:16
 msgid "Firebolt"
-msgstr ""
+msgstr "Огнен лъч"
 
 #: Source/spelldat.cpp:17
 msgid "Healing"
-msgstr ""
+msgstr "Лекуване"
 
 #: Source/spelldat.cpp:19
 msgid "Flash"
-msgstr ""
+msgstr "Светкавица"
 
 #: Source/spelldat.cpp:20
 msgid "Identify"
-msgstr ""
+msgstr "Разпознаване"
 
 #: Source/spelldat.cpp:21
 msgid "Fire Wall"
-msgstr ""
+msgstr "Огнена стена"
 
 #: Source/spelldat.cpp:23
 msgid "Stone Curse"
-msgstr ""
+msgstr "Каменна клетва"
 
 #: Source/spelldat.cpp:24
 msgid "Infravision"
@@ -5654,11 +5849,11 @@ msgstr ""
 
 #: Source/spelldat.cpp:25
 msgid "Phasing"
-msgstr ""
+msgstr "Поетапност"
 
 #: Source/spelldat.cpp:26
 msgid "Mana Shield"
-msgstr ""
+msgstr "Щит от мана"
 
 #: Source/spelldat.cpp:27
 msgid "Fireball"
@@ -5666,19 +5861,22 @@ msgstr "Огнена топка"
 
 #: Source/spelldat.cpp:29
 msgid "Chain Lightning"
-msgstr ""
+msgstr "Верижна мълния"
 
 #: Source/spelldat.cpp:30
 msgid "Flame Wave"
-msgstr ""
+msgstr "Огнена вълна"
 
 #: Source/spelldat.cpp:31
+#, fuzzy
 msgid "Doom Serpents"
-msgstr ""
+msgstr "Смъртоностни змии"
 
+# Това трябва да се провери.
 #: Source/spelldat.cpp:32
+#, fuzzy
 msgid "Blood Ritual"
-msgstr ""
+msgstr "Кървав ритуал"
 
 #: Source/spelldat.cpp:33
 msgid "Nova"
@@ -5686,59 +5884,63 @@ msgstr ""
 
 #: Source/spelldat.cpp:34
 msgid "Invisibility"
-msgstr ""
+msgstr "Невидимост"
 
 #: Source/spelldat.cpp:37
 msgid "Rage"
-msgstr ""
+msgstr "Ярост"
 
+# Може да се помисли.
 #: Source/spelldat.cpp:38
+#, fuzzy
 msgid "Teleport"
-msgstr ""
+msgstr "Телепортиране"
 
 #: Source/spelldat.cpp:39
 msgid "Apocalypse"
-msgstr ""
+msgstr "Апокалипсис"
 
 #: Source/spelldat.cpp:40
 msgid "Etherealize"
-msgstr ""
+msgstr "Овековечаване"
 
 #: Source/spelldat.cpp:41
 msgid "Item Repair"
-msgstr ""
+msgstr "Поправяне на предмет"
 
 #: Source/spelldat.cpp:42
 msgid "Staff Recharge"
-msgstr ""
+msgstr "Презареждане на жезъл"
 
+# Или: Обезвреждане - което звучи странно.
 #: Source/spelldat.cpp:43
+#, fuzzy
 msgid "Trap Disarm"
-msgstr ""
+msgstr "Премахване на капан"
 
 #: Source/spelldat.cpp:44
 msgid "Elemental"
-msgstr ""
+msgstr "Стихия"
 
 #: Source/spelldat.cpp:45
 msgid "Charged Bolt"
-msgstr ""
+msgstr "Заредена мълния"
 
 #: Source/spelldat.cpp:46
 msgid "Holy Bolt"
-msgstr ""
+msgstr "Свещена мълния"
 
 #: Source/spelldat.cpp:47
 msgid "Resurrect"
-msgstr ""
+msgstr "Възкресяване"
 
 #: Source/spelldat.cpp:48
 msgid "Telekinesis"
-msgstr ""
+msgstr "Телекинеза"
 
 #: Source/spelldat.cpp:49
 msgid "Heal Other"
-msgstr ""
+msgstr "Излекуване на останалите"
 
 #: Source/spelldat.cpp:50
 msgid "Blood Star"
@@ -5750,47 +5952,47 @@ msgstr ""
 
 #: Source/spelldat.cpp:52
 msgid "Mana"
-msgstr ""
+msgstr "Мана"
 
 #: Source/spelldat.cpp:53
 msgid "the Magi"
-msgstr ""
+msgstr "Магьосника"
 
 #: Source/spelldat.cpp:54
 msgid "the Jester"
-msgstr ""
+msgstr "Шегаджията"
 
 #: Source/spelldat.cpp:55
 msgid "Lightning Wall"
-msgstr ""
+msgstr "Светкавична стена"
 
 #: Source/spelldat.cpp:56
 msgid "Immolation"
-msgstr ""
+msgstr "Жертвоприношение"
 
 #: Source/spelldat.cpp:57
 msgid "Warp"
-msgstr ""
+msgstr "Деформиране"
 
 #: Source/spelldat.cpp:58
 msgid "Reflect"
-msgstr ""
+msgstr "Отражение"
 
 #: Source/spelldat.cpp:59
 msgid "Berserk"
-msgstr ""
+msgstr "Обезумялост"
 
 #: Source/spelldat.cpp:60
 msgid "Ring of Fire"
-msgstr ""
+msgstr "Пръстен на Огъня"
 
 #: Source/spelldat.cpp:61
 msgid "Search"
-msgstr ""
+msgstr "Търси"
 
 #: Source/spelldat.cpp:63
 msgid "Rune of Light"
-msgstr ""
+msgstr "Руна на Светлината"
 
 #: Source/spelldat.cpp:64
 msgid "Rune of Nova"
@@ -5798,74 +6000,76 @@ msgstr ""
 
 #: Source/spelldat.cpp:65
 msgid "Rune of Immolation"
-msgstr ""
+msgstr "Руна на Жертвоприношение"
 
 #: Source/stores.cpp:167 Source/stores.cpp:174
 msgid ",  "
-msgstr ""
+msgstr ",  "
 
 #: Source/stores.cpp:183
 msgid "Damage: {:d}-{:d}  "
-msgstr ""
+msgstr "Щети: {:d}-{:d}  "
 
 #: Source/stores.cpp:185
 msgid "Armor: {:d}  "
-msgstr ""
+msgstr "Броня: {:d}  "
 
 #: Source/stores.cpp:187
 msgid "Dur: {:d}/{:d},  "
-msgstr ""
+msgstr "Издр.: {:d}/{:d},  "
 
 #: Source/stores.cpp:190
+#, fuzzy
 msgid "Indestructible,  "
-msgstr ""
+msgstr "Неразрушим,  "
 
 #: Source/stores.cpp:198
+#, fuzzy
 msgid "No required attributes"
-msgstr ""
+msgstr "Няма изисквани атрибути"
 
 #: Source/stores.cpp:228 Source/stores.cpp:953 Source/stores.cpp:1175
 msgid "Welcome to the"
-msgstr ""
+msgstr "Добре дошли в"
 
 #: Source/stores.cpp:229
 msgid "Blacksmith's shop"
-msgstr ""
+msgstr "Работилницата на Ковача"
 
 #: Source/stores.cpp:230 Source/stores.cpp:579 Source/stores.cpp:955
 #: Source/stores.cpp:1014 Source/stores.cpp:1177 Source/stores.cpp:1189
 #: Source/stores.cpp:1201
 msgid "Would you like to:"
-msgstr ""
+msgstr "Искате ли да:"
 
 #: Source/stores.cpp:231
 msgid "Talk to Griswold"
-msgstr ""
+msgstr "Говори с Грисволд"
 
 #: Source/stores.cpp:232
 msgid "Buy basic items"
-msgstr ""
+msgstr "Купуване на обикновени предмети"
 
 #: Source/stores.cpp:233
 msgid "Buy premium items"
-msgstr ""
+msgstr "Купуване на ценни предмети"
 
 #: Source/stores.cpp:234 Source/stores.cpp:582
 msgid "Sell items"
-msgstr ""
+msgstr "Продаване"
 
 #: Source/stores.cpp:235
 msgid "Repair items"
-msgstr ""
+msgstr "Поправяне"
 
 #: Source/stores.cpp:236
 msgid "Leave the shop"
-msgstr ""
+msgstr "Напускане на ателието"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:277 Source/stores.cpp:626 Source/stores.cpp:992
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr ""
+msgstr "Предлагам тези предмети за продажба..             Вашето злато: {:d}"
 
 #: Source/stores.cpp:282 Source/stores.cpp:346 Source/stores.cpp:474
 #: Source/stores.cpp:485 Source/stores.cpp:544 Source/stores.cpp:557
@@ -5874,44 +6078,44 @@ msgstr ""
 #: Source/stores.cpp:1097 Source/stores.cpp:1108 Source/stores.cpp:1141
 #: Source/stores.cpp:1168
 msgid "Back"
-msgstr ""
+msgstr "Назад"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:342
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr ""
+msgstr "Предлагам тези ценни предмети за продажба..             Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:470 Source/stores.cpp:720
 msgid "You have nothing I want.             Your gold: {:d}"
-msgstr ""
+msgstr "Не предлагате това, което ми трябва..             Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:480 Source/stores.cpp:730
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr ""
+msgstr "Имате предмет за продажба?             Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:540
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr ""
+msgstr "Нямате предмет за поправка?             Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:552
 msgid "Repair which item?             Your gold: {:d}"
-msgstr ""
+msgstr "Имате предмет за поправка?             Вашето злато: {:d}"
 
 #: Source/stores.cpp:578
 msgid "Witch's shack"
-msgstr ""
+msgstr "Колибата на Вещицата"
 
 #: Source/stores.cpp:580
 msgid "Talk to Adria"
-msgstr ""
+msgstr "Говори с Адрия"
 
 #: Source/stores.cpp:581 Source/stores.cpp:957
 msgid "Buy items"
-msgstr ""
+msgstr "Купуване на предмети"
 
 #: Source/stores.cpp:583
 msgid "Recharge staves"
@@ -5919,186 +6123,187 @@ msgstr ""
 
 #: Source/stores.cpp:584
 msgid "Leave the shack"
-msgstr ""
+msgstr "Напускане на колибата"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:796
 msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr ""
+msgstr "Нямате предмет за презареждане.             Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:806
 msgid "Recharge which item?             Your gold: {:d}"
-msgstr ""
+msgstr "Имате предмет за презареждане?             Вашето злато: {:d}"
 
 #: Source/stores.cpp:822
 msgid "You do not have enough gold"
-msgstr ""
+msgstr "Нямате достатъчно злато"
 
 #: Source/stores.cpp:830
 msgid "You do not have enough room in inventory"
-msgstr ""
+msgstr "Нямате достатъчно място в инвентара"
 
 #: Source/stores.cpp:866
 msgid "Do we have a deal?"
-msgstr ""
+msgstr "Договорихме ли се?"
 
 #: Source/stores.cpp:869
 msgid "Are you sure you want to identify this item?"
-msgstr ""
+msgstr "Наистина ли искате да разпознаете този предмет?"
 
 #: Source/stores.cpp:875
 msgid "Are you sure you want to buy this item?"
-msgstr ""
+msgstr "Наистина ли искате да купите този предмет?"
 
 #: Source/stores.cpp:878
 msgid "Are you sure you want to recharge this item?"
-msgstr ""
+msgstr "Наистина ли искате да презаредите този предмет?"
 
 #: Source/stores.cpp:882
 msgid "Are you sure you want to sell this item?"
-msgstr ""
+msgstr "Наистина ли искате да продадете този предмет?"
 
 #: Source/stores.cpp:885
 msgid "Are you sure you want to repair this item?"
-msgstr ""
+msgstr "Наистина ли искате да поправите този предмет?"
 
 #: Source/stores.cpp:899 Source/towners.cpp:172
 msgid "Wirt the Peg-legged boy"
-msgstr ""
+msgstr "Върт, момчето с изкуствения крак"
 
 #: Source/stores.cpp:902 Source/stores.cpp:909
 msgid "Talk to Wirt"
-msgstr ""
+msgstr "Говори с Върт"
 
 #: Source/stores.cpp:903
 msgid "I have something for sale,"
-msgstr ""
+msgstr "Имам нещо за продан,"
 
 #: Source/stores.cpp:904
 msgid "but it will cost 50 gold"
-msgstr ""
+msgstr "но това ще ти коства 50 злато"
 
 #: Source/stores.cpp:905
 msgid "just to take a look. "
-msgstr ""
+msgstr "просто да разгледам. "
 
 #: Source/stores.cpp:906
 msgid "What have you got?"
-msgstr ""
+msgstr "Какво имаш?"
 
 #: Source/stores.cpp:907 Source/stores.cpp:910 Source/stores.cpp:1017
 #: Source/stores.cpp:1191
 msgid "Say goodbye"
-msgstr ""
+msgstr "Довиждане"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:918
 msgid "I have this item for sale:             Your gold: {:d}"
-msgstr ""
+msgstr "Имам следните предмети за продан:             Вашето злато: {:d}"
 
 #: Source/stores.cpp:934
 msgid "Leave"
-msgstr ""
+msgstr "Напускане"
 
 #: Source/stores.cpp:954
 msgid "Healer's home"
-msgstr ""
+msgstr "Домът на Лечителя"
 
 #: Source/stores.cpp:956
 msgid "Talk to Pepin"
-msgstr ""
+msgstr "Говори с Пипин"
 
 #: Source/stores.cpp:958
 msgid "Leave Healer's home"
-msgstr ""
+msgstr "Напускане дома на Лечителя"
 
 #: Source/stores.cpp:1013
 msgid "The Town Elder"
-msgstr ""
+msgstr "Градският старейшина"
 
 #: Source/stores.cpp:1015
 msgid "Talk to Cain"
-msgstr ""
+msgstr "Говори с Кайн"
 
 #: Source/stores.cpp:1016
 msgid "Identify an item"
-msgstr ""
+msgstr "Разпознаване на предмет"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1093
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr ""
+msgstr "Нямате нищо за разпознаване.             Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1103
 msgid "Identify which item?             Your gold: {:d}"
-msgstr ""
+msgstr "Имате предмет за разпознаване?             Вашето злато: {:d}"
 
 #: Source/stores.cpp:1120
 msgid "This item is:"
-msgstr ""
+msgstr "Този предмет е:"
 
 #: Source/stores.cpp:1123
 msgid "Done"
-msgstr ""
+msgstr "Готово"
 
 #: Source/stores.cpp:1132
 msgid "Talk to {:s}"
-msgstr ""
+msgstr "Говори с {:s}"
 
 #: Source/stores.cpp:1136
 msgid "Talking to {:s}"
-msgstr ""
+msgstr "Говори с {:s}"
 
 #: Source/stores.cpp:1138
 msgid "is not available"
-msgstr ""
+msgstr "не е налично"
 
 #: Source/stores.cpp:1139
 msgid "in the shareware"
-msgstr ""
+msgstr "в пробната"
 
 #: Source/stores.cpp:1140
 msgid "version"
-msgstr ""
+msgstr "версия"
 
 #: Source/stores.cpp:1167
+#, fuzzy
 msgid "Gossip"
-msgstr ""
+msgstr "Общи приказки"
 
 #: Source/stores.cpp:1176
 msgid "Rising Sun"
-msgstr ""
+msgstr "Изгряващото слънце"
 
 #: Source/stores.cpp:1178
 msgid "Talk to Ogden"
-msgstr ""
+msgstr "Говори с Огдън"
 
 #: Source/stores.cpp:1179
 msgid "Leave the tavern"
-msgstr ""
+msgstr "Напускане на таверната"
 
 #: Source/stores.cpp:1190
 msgid "Talk to Gillian"
-msgstr ""
+msgstr "Говори с Джилиън"
 
 #: Source/stores.cpp:1200 Source/towners.cpp:230
 msgid "Farnham the Drunk"
-msgstr ""
+msgstr "Пияницата Фарнам"
 
 #: Source/stores.cpp:1202
 msgid "Talk to Farnham"
-msgstr ""
+msgstr "Говори с Фарнам"
 
 #: Source/stores.cpp:1203
 msgid "Say Goodbye"
-msgstr ""
+msgstr "Довиждане"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
 msgid " Ahh, the story of our King, is it? The tragic fall of Leoric was a harsh blow to this land. The people always loved the King, and now they live in mortal fear of him. The question that I keep asking myself is how he could have fallen so far from the Light, as Leoric had always been the holiest of men. Only the vilest powers of Hell could so utterly destroy a man from within..."
-msgstr "O, за историята на Краля, нали? Трагичния крах на Леорик дойде като гръм от ясно небе на тази земя. Хората винаги обичаха Краля, а сега живеят в дълбок страх заради него. Въпросът, който продължавам да си задавам, е, как е могъл да падне толкова далеч от Светилната - все пак Леорик винаги е бил най-светият от всички. Единствено злите сили на Ада могат да принизят толкова ниско човек като него."
+msgstr " O, за историята на Краля, нали? Трагичния крах на Леорик дойде като гръм от ясно небе на тази земя. Хората винаги обичаха Краля, а сега живеят в дълбок страх заради него. Въпросът, който продължавам да си задавам, е, как е могъл да падне толкова далеч от Светилната - все пак Леорик винаги е бил най-светият от всички. Единствено злите сили на Ада могат да принизят толкова ниско човек като него."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:17
@@ -6138,7 +6343,7 @@ msgstr "Не искам да си спомням за кончината на К
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
 msgid "I made many of the weapons and most of the armor that King Leoric used to outfit his knights. I even crafted a huge two-handed sword of the finest mithril for him, as well as a field crown to match. I still cannot believe how he died, but it must have been some sinister force that drove him insane!"
-msgstr "Изковал съм повечето от оръжията и броните, с които Крал Леорик екипираше своите рицари. Дори направих огромен меч от най-добрия митрил за негово величество, както и корона, за да си подхождат. Все още не мога да повярвам, че е мъртъв. Определено трябва да е била някаква злокобла сила, за да го доведе до пълна лудост."
+msgstr "Изковал съм повечето от оръжията и броните, с които Крал Леорик екипираше своите рицари. Дори направих огромен меч от най-добрия митрил за негово величество, както и корона, за да си подхождат. Все още не мога да повярвам, че е мъртъв. Определено трябва да е била някаква злокобла сила, за да го доведе до пълна лудост!"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
@@ -6163,7 +6368,7 @@ msgstr "Топлата прегръдка на живота, изглежда, �
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
 msgid "I see that this strange behavior puzzles you as well. I would surmise that since many demons fear the light of the sun and believe that it holds great power, it may be that the rising sun depicted on the sign you speak of has led them to believe that it too holds some arcane powers. Hmm, perhaps they are not all as smart as we had feared..."
-msgstr ""
+msgstr "Забелязвам, това неясно държание притеснява и теб. Подозирам, че след като немалко демони "
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -7061,7 +7266,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
 msgid "Before it was taken over by, well, whatever lurks below, the Cathedral was a place of great learning. There are many books to be found there. If you find any, you should read them all, for some may hold secrets to the workings of the Labyrinth."
-msgstr ""
+msgstr "Преди да бъде завоюван от - всъщност, онова, което грачи долу - Катедралата беше дом на велики знания. Там има много книги. Трябва да ги прочетеш всичките, без значение на коя попаднеш, защото някои от тях пазят тайните за деянията в Лабиринта."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -7091,7 +7296,7 @@ msgstr "Горкият Върт. Направих каквото можах за
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
 msgid "I really don't understand why Ogden stays here in Tristram. He suffers from a slight nervous condition, but he is an intelligent and industrious man who would do very well wherever he went. I suppose it may be the fear of the many murders that happen in the surrounding countryside, or perhaps the wishes of his wife that keep him and his family where they are."
-msgstr "Наистина не мога да си го обясня, защо Огдън реши да остане тук, в Тристрам. Дори да страда от леки нервни разположения, той е умен и трудолюбив човек, който би преуспял навсякъде. Предполагама, причината за това са многото убииства в околностите или, най-вероятно, желанието на съпругата му го задържат на едно място."
+msgstr "Наистина не мога да си го обясня, защо Огдън реши да остане тук, в Тристрам. Дори да страда от леки нервни разстройства, той е умен и трудолюбив човек, който би преуспял навсякъде. Предполагам, причината за това са многото убииства в околностите или, най-вероятно, желанието на съпругата му го задържи на едно място."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -7128,7 +7333,7 @@ msgstr ""
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:369
 msgid "Our Blacksmith is a point of pride to the people of Tristram. Not only is he a master craftsman who has won many contests within his guild, but he received praises from our King Leoric himself - may his soul rest in peace. Griswold is also a great hero; just ask Cain."
-msgstr "Нашият ковач е гордостта на жителите на Тристрам. Не само майстор-занаятчиям, който има участия в множество конкурси в своята гилдия, но той е и носител на благословията на Крал Леорик - мир на праха му. Грисволд също е герой. Попитай Кайн."
+msgstr "Нашият ковач е гордостта на жителите на Тристрам. Не само майстор-занаятчия, който има участия в множество конкурси в своята гилдия, но той е и носител на благословията на Крал Леорик - мир на праха му. Грисволд също е герой. Попитай Кайн."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -7169,7 +7374,7 @@ msgstr "Е, с какво мога да помогна?"
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
 msgid "If you're looking for a good weapon, let me show this to you. Take your basic blunt weapon, such as a mace. Works like a charm against most of those undying horrors down there, and there's nothing better to shatter skinny little skeletons!"
-msgstr "Ако си търсиш сгодно оръжие, нека ти предложа нещо. Да речем, най-обикновено тъпо ръжие, като например боздуган. Върши чудесна работа срещу повечето страшилища, които ще ти се изпречат на пътя. Какво по-добро от това да разсечеш грозните скелети на парчета."
+msgstr "Ако си търсиш сгодно оръжие, нека ти предложа нещо. Да речем, най-обикновено тъпо ръжие, като например боздуган. Върши чудесна работа срещу повечето страшилища, които ще ти се изпречат на пътя. Какво по-добро от това да разсечеш грозните скелети на парчета!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -7199,7 +7404,7 @@ msgstr "Джилиън... мила девойка. Жалко, че баба й 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
 msgid "Sometimes I think that Cain talks too much, but I guess that is his calling in life. If I could bend steel as well as he can bend your ear, I could make a suit of court plate good enough for an Emperor!"
-msgstr "Понякога ми се струва, че Кайн говори твърде много. Може би това е неговото призвание. Ако можех да огъна стомана така, както той може да огъне ухото ти, да съм направил ризница от твърда стомана, като за Император."
+msgstr "Понякога ми се струва, че Кайн говори твърде много. Може би това е неговото призвание. Ако можех да огъна стомана така, както той може да огъне ухото ти, да съм направил ризница от твърда стомана, като за Император!"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -7224,7 +7429,7 @@ msgstr "Кръчмарят води сериозен бизнес, от койт
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr "Не може ли човек да пие на спокойствие? "
+msgstr "Не може ли човек да пие на спокойствие?"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
@@ -7319,7 +7524,7 @@ msgstr "Осквернението борави със силата на изм�
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
 msgid "A chest opened in darkness holds no greater treasure than when it is opened in the light. The storyteller Cain is an enigma, but only to those who do not look. His knowledge of what lies beneath the cathedral is far greater than even he allows himself to realize."
-msgstr ""
+msgstr "Отворен в мрака сандък не ще даде по-голямо съкровище, ако бъде отворен на светло. Разказвачът Кайн е загадка, но само за онези, които не внимават. Знанията му отностно онова, което се намира под катедралата, са много по-големи от това, което той си позволява да осъзнае."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -7422,6 +7627,7 @@ msgstr "...и затова, заключен зад Портата на Кръв
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
 #: Source/textdat.cpp:529 Source/textdat.cpp:537
+#, fuzzy
 msgid ""
 "I can see what you see not.\n"
 "Vision milky then eyes rot.\n"
@@ -7433,13 +7639,13 @@ msgid ""
 "Cast down into the Halls of the Blind."
 msgstr ""
 "Ти не виждаш това, което виждам аз.\n"
-"Облачен поглед и очите гният.\n"
-"Обърни се и тях вече ги няма,\n"
-"шепнейки своята нечувана песен.\n"
+"Мъгляв поглед, очите гният.\n"
+"Завърни се, тях вече ги няма,\n"
+"да шепнат своята нечута песен.\n"
 "Тогава ще видиш онова, което не е,\n"
-"Ходят сенки там, където светлината трябва да е.\n"
-"В безумие, в тъмнина,\n"
-"В Залата на Слептите ти ще бъдеш."
+"А силуети бродят, където светлина трябва да има.\n"
+"В безумие, в мрак,\n"
+"Заробени в Залата на Слептите."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -7609,7 +7815,7 @@ msgstr "Аа-а-ааа! (подсмърча) Ааа-аа-а!(подсмърча)
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
 msgid "I lost Theo!  I lost my best friend!  We were playing over by the river, and Theo said he wanted to go look at the big green thing.  I said we shouldn't, but we snuck over there, and then suddenly this BUG came out!  We ran away but Theo fell down and the bug GRABBED him and took him away!"
-msgstr "Загубих Тео! Загубих най-добрия си приятел! Играехме си при реката, Тео искаше да отиде да види какво е онова голямо зелено нещо. Казах му, че не трябва да го прави, но... отидохме до него и изведнъж тази голяма буба се показа! Побягнахме, но Тео се спъна и тя го завлече."
+msgstr "Загубих Тео! Загубих най-добрия си приятел! Играехме си при реката, Тео искаше да отиде да види какво е онова голямо зелено нещо. Казах му, че не трябва да го прави, но... отидохме до него и изведнъж тази голяма буба се показа! Побягнахме, но Тео се спъна и тя го завлече!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -7679,7 +7885,7 @@ msgstr "Добре, добре.  Не съм съвсем крава.  Обик�
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
 msgid "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein over there keeps winking at me!"
-msgstr "Какво чакаш още? Отиди да вземеш костюма! И побързай! Тази крава отсреща продължава да ми намигва."
+msgstr "Какво чакаш още? Отиди да вземеш костюма! И побързай! Тази крава отсреща продължава да ми намигва!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
@@ -7724,7 +7930,7 @@ msgstr "У теб виждам потенциал за величие. Може 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
 msgid "I think you could probably help me, but perhaps after you've gotten a little more powerful. I wouldn't want to injure the village's only chance to destroy the menace in the church!"
-msgstr "Мисля, че можеш да ми помогнеш, но все още си твърде немощен. Не искам да пропилея единствения шанс селото да бъде избавено от напаста, върлуваща около църквата."
+msgstr "Мисля, че можеш да ми помогнеш, но все още си твърде немощен. Не искам да пропилея единствения шанс селото да бъде избавено от напаста, върлуваща около църквата!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
@@ -7764,7 +7970,7 @@ msgstr "Домът ми постепенно губи своята жизнен�
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
 msgid "In its ranting, the creature has let slip its name -- Na-Krul.  I have attempted to research the name, but the smaller demons have somehow destroyed my library.  Na-Krul... The name fills me with a cold dread.  I prefer to think of it only as The Creature rather than ponder its true name."
-msgstr "В яростта си, създанието издаде своето име -- На-Кул. Опитах да проуча нещо за него в книгите, но по-малките демони все пак успяха да унищожат библиотеката ми. На-Крул.... Това име ме изпълва със страх. Предпочитам да го назовавам като Създанието, отколкото да се замислям над истинското му име. "
+msgstr "В яростта си, създанието издаде своето име -- На-Кул. Опитах да проуча нещо за него в книгите, но по-малките демони все пак успяха да унищожат библиотеката ми. На-Крул.... Това име ме изпълва със страх. Предпочитам да го назовавам като Създанието, отколкото да се замислям над истинското му име."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
