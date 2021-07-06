@@ -2195,6 +2195,9 @@ void LoadLevel()
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dMissile[i][j] = 0;           /// BUGFIX: supposed to load saved missiles with "file.NextLE<int8_t>()"?
 		}
+		//no need to load dLight, we can recreate it accurately from LightList
+		memcpy(dLight, dPreLight, sizeof(dLight));                 // resets the light on loading to get rid of incorrect light
+		ChangeLightXY(plr[myplr]._plid, plr[myplr].position.tile); // forces player light refresh
 	}
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {

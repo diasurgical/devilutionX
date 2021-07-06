@@ -1681,6 +1681,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 	IncProgress();
 	UpdateMonsterLights();
+	memcpy(dLight, dPreLight, sizeof(dLight));                 // resets the light on entering a level to get rid of incorrect light
+	ChangeLightXY(plr[myplr]._plid, plr[myplr].position.tile); // forces player light refresh
 	if (leveltype != DTYPE_TOWN) {
 		ProcessLightList();
 		ProcessVisionList();
