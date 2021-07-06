@@ -10,7 +10,7 @@ Art SmlButton;
 
 void LoadSmlButtonArt()
 {
-	LoadArt(&SmlButton, btnData, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT * 2, 2);
+	LoadArt(&SmlButton, ButtonData, SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT * 2, 2);
 }
 
 void RenderButton(UiButton *button)

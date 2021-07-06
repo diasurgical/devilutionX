@@ -3,7 +3,7 @@
 
 namespace devilution {
 
-const char *const SUPPORT_LINES[] = {
+const char *const SupportLines[] = {
 	"",
 	N_("GOG.com maintains a web site at https://www.gog.com/forum/diablo"),
 	N_("Follow the links to visit the discussion boards associated with Diablo."),
@@ -25,6 +25,6 @@ const char *const SUPPORT_LINES[] = {
 	"",
 };
 
-const std::size_t SUPPORT_LINES_SIZE = sizeof(SUPPORT_LINES) / sizeof(SUPPORT_LINES[0]);
+const std::size_t SupportLinesSize = sizeof(SupportLines) / sizeof(SupportLines[0]);
 
 } // namespace devilution
