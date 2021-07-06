@@ -2,7 +2,7 @@
 
 namespace devilution {
 
-extern const char *const SUPPORT_LINES[];
-extern const std::size_t SUPPORT_LINES_SIZE;
+extern const char *const SupportLines[];
+extern const std::size_t SupportLinesSize;
 
 } // namespace devilution

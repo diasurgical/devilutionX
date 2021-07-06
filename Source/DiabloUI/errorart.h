@@ -6,7 +6,7 @@
 
 namespace devilution {
 
-extern const std::uint8_t btnData[];
-extern const std::uint8_t popupData[];
+extern const std::uint8_t ButtonData[];
+extern const std::uint8_t PopupData[];
 
 } // namespace devilution

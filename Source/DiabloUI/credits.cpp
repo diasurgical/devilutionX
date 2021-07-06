@@ -245,8 +245,8 @@ bool UiCreditsDialog()
 
 bool UiSupportDialog()
 {
-	text = SUPPORT_LINES;
-	textLines = SUPPORT_LINES_SIZE;
+	text = SupportLines;
+	textLines = SupportLinesSize;
 
 	if (gbIsHellfire) {
 		LoadArt("ui_art\\supportw.pcx", &ArtBackgroundWidescreen);

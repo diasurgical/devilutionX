@@ -196,7 +196,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
 	} else {
 		if (error) {
-			LoadArt(&dialogArt, popupData, 385, 280);
+			LoadArt(&dialogArt, PopupData, 385, 280);
 		} else {
 			LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
 		}
