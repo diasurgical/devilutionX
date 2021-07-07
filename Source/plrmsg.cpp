@@ -112,7 +112,7 @@ void DrawPlrMsg(const Surface &out)
 	DWORD width = gnScreenWidth - 20;
 	_plrmsg *pMsg;
 
-	if (chrflag || questlog) {
+	if (chrflag || QuestLogIsOpen) {
 		x += SPANEL_WIDTH;
 		width -= SPANEL_WIDTH;
 	}

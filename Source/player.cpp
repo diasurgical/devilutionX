@@ -3598,8 +3598,8 @@ void CheckPlrSpell()
 			return;
 
 		if (
-		    ((chrflag || questlog) && MousePosition.x < SPANEL_WIDTH && MousePosition.y < SPANEL_HEIGHT)    // inside left panel
-		    || ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) // inside right panel
+		    ((chrflag || QuestLogIsOpen) && MousePosition.x < SPANEL_WIDTH && MousePosition.y < SPANEL_HEIGHT) // inside left panel
+		    || ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT)    // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY
@@ -4056,9 +4056,9 @@ void PlayDungMsgs()
 	} else if (currlevel == 17 && !myPlayer._pLvlVisited[17] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 1) == 0) {
 		sfxdelay = 10;
 		sfxdnum = USFX_DEFILER1;
-		quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
-		quests[Q_DEFILER]._qlog = true;
-		quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
+		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
+		Quests[Q_DEFILER]._qlog = true;
+		Quests[Q_DEFILER]._qmsg = TEXT_DEFILER1;
 		myPlayer.pDungMsgs2 |= 1;
 	} else if (currlevel == 19 && !myPlayer._pLvlVisited[19] && !gbIsMultiplayer && (myPlayer.pDungMsgs2 & 4) == 0) {
 		sfxdelay = 10;

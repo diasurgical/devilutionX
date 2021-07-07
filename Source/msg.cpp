@@ -244,10 +244,10 @@ byte *DeltaExportJunk(byte *dst)
 
 	int q = 0;
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (!questlist[i].isSinglePlayerOnly) {
-			sgJunk.quests[q].qlog = quests[i]._qlog ? 1 : 0;
-			sgJunk.quests[q].qstate = quests[i]._qactive;
-			sgJunk.quests[q].qvar1 = quests[i]._qvar1;
+		if (!QuestData[i].isSinglePlayerOnly) {
+			sgJunk.quests[q].qlog = Quests[i]._qlog ? 1 : 0;
+			sgJunk.quests[q].qstate = Quests[i]._qactive;
+			sgJunk.quests[q].qvar1 = Quests[i]._qvar1;
 			memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
 			dst += sizeof(MultiQuests);
 			q++;
@@ -279,12 +279,12 @@ void DeltaImportJunk(byte *src)
 
 	int q = 0;
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (!questlist[i].isSinglePlayerOnly) {
+		if (!QuestData[i].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
-			quests[i]._qlog = sgJunk.quests[q].qlog != 0;
-			quests[i]._qactive = sgJunk.quests[q].qstate;
-			quests[i]._qvar1 = sgJunk.quests[q].qvar1;
+			Quests[i]._qlog = sgJunk.quests[q].qlog != 0;
+			Quests[i]._qactive = sgJunk.quests[q].qstate;
+			Quests[i]._qvar1 = sgJunk.quests[q].qvar1;
 			q++;
 		}
 	}
@@ -1778,7 +1778,7 @@ DWORD OnNakrul(TCmd *pCmd)
 	if (gbBufferMsgs != 1) {
 		OperateNakrulLever();
 		IsUberRoomOpened = true;
-		quests[Q_NAKRUL]._qactive = QUEST_DONE;
+		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 		monster_some_crypt();
 	}
 	return sizeof(*pCmd);
@@ -2279,9 +2279,9 @@ void NetSendCmdQuest(bool bHiPri, BYTE q)
 
 	cmd.q = q;
 	cmd.bCmd = CMD_SYNCQUEST;
-	cmd.qstate = quests[q]._qactive;
-	cmd.qlog = quests[q]._qlog ? 1 : 0;
-	cmd.qvar1 = quests[q]._qvar1;
+	cmd.qstate = Quests[q]._qactive;
+	cmd.qlog = Quests[q]._qlog ? 1 : 0;
+	cmd.qvar1 = Quests[q]._qvar1;
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else

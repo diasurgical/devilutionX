@@ -770,7 +770,7 @@ static bool LeftMouseDown(int wParam)
 
 	if (MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (questlog && MousePosition.x > 32 && MousePosition.x < 288 && MousePosition.y > 32 && MousePosition.y < 308) {
+			if (QuestLogIsOpen && MousePosition.x > 32 && MousePosition.x < 288 && MousePosition.y > 32 && MousePosition.y < 308) {
 				QuestlogESC();
 			} else if (qtextflag) {
 				qtextflag = false;
@@ -895,16 +895,16 @@ static void ReleaseKey(int vkey)
 static void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
-		if (!chrflag && !questlog && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+		if (!chrflag && !QuestLogIsOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition.x + 160, MousePosition.y);
-		} else if (!invflag && !sbookflag && (chrflag || questlog) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+		} else if (!invflag && !sbookflag && (chrflag || QuestLogIsOpen) && MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 			SetCursorPos(MousePosition.x - 160, MousePosition.y);
 		}
 	}
 	invflag = false;
 	chrflag = false;
 	sbookflag = false;
-	questlog = false;
+	QuestLogIsOpen = false;
 }
 
 bool PressEscKey()
@@ -952,7 +952,7 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (invflag || chrflag || sbookflag || questlog) {
+	if (invflag || chrflag || sbookflag || QuestLogIsOpen) {
 		ClosePanels();
 		rv = true;
 	}
@@ -1012,7 +1012,7 @@ static void PressKey(int vkey)
 			dx_reinit();
 		} else if (stextflag != STORE_NONE) {
 			StoreEnter();
-		} else if (questlog) {
+		} else if (QuestLogIsOpen) {
 			QuestlogEnter();
 		} else {
 			control_type_message();
@@ -1020,7 +1020,7 @@ static void PressKey(int vkey)
 	} else if (vkey == DVL_VK_UP) {
 		if (stextflag != STORE_NONE) {
 			StoreUp();
-		} else if (questlog) {
+		} else if (QuestLogIsOpen) {
 			QuestlogUp();
 		} else if (HelpFlag) {
 			HelpScrollUp();
@@ -1030,7 +1030,7 @@ static void PressKey(int vkey)
 	} else if (vkey == DVL_VK_DOWN) {
 		if (stextflag != STORE_NONE) {
 			StoreDown();
-		} else if (questlog) {
+		} else if (QuestLogIsOpen) {
 			QuestlogDown();
 		} else if (HelpFlag) {
 			HelpScrollDown();
@@ -1690,7 +1690,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (currlevel == 21) {
 			CornerstoneLoad(CornerStone.position);
 		}
-		if (quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {
+		if (Quests[Q_NAKRUL]._qactive == QUEST_DONE && currlevel == 24) {
 			SyncNakrulRoom();
 		}
 	}
@@ -1703,7 +1703,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	while (!IncProgress())
 		;
 
-	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
+	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);
 }
 
@@ -1805,7 +1805,7 @@ void diablo_color_cyc_logic()
 		palette_update_crypt();
 	} else if (currlevel >= 17) {
 		palette_update_hive();
-	} else if (setlevel && setlvlnum == quests[Q_PWATER]._qslvl) {
+	} else if (setlevel && setlvlnum == Quests[Q_PWATER]._qslvl) {
 		UpdatePWaterPalette();
 	} else if (leveltype == DTYPE_CAVES) {
 		palette_update_caves();
@@ -1830,7 +1830,7 @@ void helpKeyPressed()
 			qtextflag = false;
 			stream_stop();
 		}
-		questlog = false;
+		QuestLogIsOpen = false;
 		AutomapActive = false;
 		msgdelay = 0;
 		gamemenu_off();
@@ -1861,7 +1861,7 @@ void inventoryKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	invflag = !invflag;
-	if (!chrflag && !questlog && CanPanelsCoverView()) {
+	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!invflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition.x + 160, MousePosition.y);
@@ -1885,26 +1885,26 @@ void characterSheetKeyPressed()
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition.x - 160, MousePosition.y);
 			}
-		} else if (!questlog) { // We opened the character sheet
+		} else if (!QuestLogIsOpen) { // We opened the character sheet
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition.x + 160, MousePosition.y);
 			}
 		}
 	}
-	questlog = false;
+	QuestLogIsOpen = false;
 }
 
 void questLogKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
-	if (!questlog) {
+	if (!QuestLogIsOpen) {
 		StartQuestlog();
 	} else {
-		questlog = false;
+		QuestLogIsOpen = false;
 	}
 	if (!invflag && !sbookflag && CanPanelsCoverView()) {
-		if (!questlog) { // We closed the quest log
+		if (!QuestLogIsOpen) { // We closed the quest log
 			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition.x - 160, MousePosition.y);
 			}
@@ -1922,7 +1922,7 @@ void displaySpellsKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	chrflag = false;
-	questlog = false;
+	QuestLogIsOpen = false;
 	invflag = false;
 	sbookflag = false;
 	if (!spselflag) {
@@ -1938,7 +1938,7 @@ void spellBookKeyPressed()
 	if (stextflag != STORE_NONE)
 		return;
 	sbookflag = !sbookflag;
-	if (!chrflag && !questlog && CanPanelsCoverView()) {
+	if (!chrflag && !QuestLogIsOpen && CanPanelsCoverView()) {
 		if (!sbookflag) { // We closed the invetory
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition.x + 160, MousePosition.y);

@@ -304,7 +304,7 @@ void GetLevelMTypes()
 		if (QuestStatus(Q_WARLORD))
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_UNIQUE);
 
-		if (gbIsMultiplayer && currlevel == quests[Q_SKELKING]._qlevel) {
+		if (gbIsMultiplayer && currlevel == Quests[Q_SKELKING]._qlevel) {
 
 			AddMonsterType(MT_SKING, PLACE_UNIQUE);
 
@@ -663,7 +663,7 @@ void monster_some_crypt()
 	if (currlevel == 24 && UberDiabloMonsterIndex >= 0 && UberDiabloMonsterIndex < ActiveMonsterCount) {
 		mon = &Monsters[UberDiabloMonsterIndex];
 		PlayEffect(UberDiabloMonsterIndex, 2);
-		quests[Q_NAKRUL]._qlog = false;
+		Quests[Q_NAKRUL]._qlog = false;
 		mon->mArmorClass -= 50;
 		hp = mon->_mmaxhp / 2;
 		mon->mMagicRes = 0;
@@ -836,7 +836,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (gbIsMultiplayer) {
 		if (monst->_mAi == AI_LAZHELP)
 			monst->mtalkmsg = TEXT_NONE;
-		if (monst->_mAi == AI_LAZURUS && quests[Q_BETRAYER]._qvar1 > 3) {
+		if (monst->_mAi == AI_LAZURUS && Quests[Q_BETRAYER]._qvar1 > 3) {
 			monst->_mgoal = MGOAL_NORMAL;
 		} else if (monst->mtalkmsg != TEXT_NONE) {
 			monst->_mgoal = MGOAL_INQUIRING;
@@ -927,15 +927,15 @@ static void PlaceUniques()
 			if (done)
 				break;
 		}
-		if (u == UMT_GARBUD && quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
+		if (u == UMT_GARBUD && Quests[Q_GARBUD]._qactive == QUEST_NOTAVAIL)
 			done = false;
-		if (u == UMT_ZHAR && quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
+		if (u == UMT_ZHAR && Quests[Q_ZHAR]._qactive == QUEST_NOTAVAIL)
 			done = false;
-		if (u == UMT_SNOTSPIL && quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
+		if (u == UMT_SNOTSPIL && Quests[Q_LTBANNER]._qactive == QUEST_NOTAVAIL)
 			done = false;
-		if (u == UMT_LACHDAN && quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
+		if (u == UMT_LACHDAN && Quests[Q_VEIL]._qactive == QUEST_NOTAVAIL)
 			done = false;
-		if (u == UMT_WARLORD && quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
+		if (u == UMT_WARLORD && Quests[Q_WARLORD]._qactive == QUEST_NOTAVAIL)
 			done = false;
 		if (done)
 			PlaceUniqueMonst(u, mt, 8);
@@ -951,7 +951,7 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_BUTCHER, 0, 0);
 		}
 
-		if (currlevel == quests[Q_SKELKING]._qlevel && gbIsMultiplayer) {
+		if (currlevel == Quests[Q_SKELKING]._qlevel && gbIsMultiplayer) {
 			skeltype = 0;
 
 			for (skeltype = 0; skeltype < LevelMonsterTypeCount; skeltype++) {
@@ -988,10 +988,10 @@ void PlaceQuestMonsters()
 			AddMonsterType(UniqMonst[UMT_LACHDAN].mtype, PLACE_SCATTER);
 		}
 		if (QuestStatus(Q_ZHAR) && zharlib == -1) {
-			quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
+			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
-		if (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+		if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			AddMonsterType(UniqMonst[UMT_LAZURUS].mtype, PLACE_UNIQUE);
 			AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
 			PlaceUniqueMonst(UMT_LAZURUS, 0, 0);
@@ -1623,7 +1623,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 {
 	MonsterStruct *monst = &Monsters[i];
 	PlaySFX(USFX_DIABLOD);
-	quests[Q_DIABLO]._qactive = QUEST_DONE;
+	Quests[Q_DIABLO]._qactive = QUEST_DONE;
 	if (sendmsg)
 		NetSendCmdQuest(true, Q_DIABLO);
 	sgbSaveSoundOn = gbSoundOn;
@@ -1661,7 +1661,7 @@ void SpawnLoot(int i, bool sendmsg)
 	} else if (monst->_uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
 			stream_stop();
-		quests[Q_DEFILER]._qlog = false;
+		Quests[Q_DEFILER]._qlog = false;
 		SpawnMapOfDoom(monst->position.tile);
 	} else if (monst->_uniqtype - 1 == UMT_HORKDMN) {
 		if (sgGameInitInfo.bTheoQuest != 0) {
@@ -1676,7 +1676,7 @@ void SpawnLoot(int i, bool sendmsg)
 			nSFX = USFX_NAKRUL6;
 		if (effect_is_playing(nSFX))
 			stream_stop();
-		quests[Q_NAKRUL]._qlog = false;
+		Quests[Q_NAKRUL]._qlog = false;
 		UberDiabloMonsterIndex = -2;
 		CreateMagicWeapon(monst->position.tile, ITYPE_SWORD, ICURS_GREAT_SWORD, false, true);
 		CreateMagicWeapon(monst->position.tile, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
@@ -2353,8 +2353,8 @@ bool M_DoTalk(int i)
 	InitQTextMsg(Monsters[i].mtalkmsg);
 	if (Monsters[i]._uniqtype - 1 == UMT_GARBUD) {
 		if (Monsters[i].mtalkmsg == TEXT_GARBUD1) {
-			quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
-			quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
+			Quests[Q_GARBUD]._qactive = QUEST_ACTIVE;
+			Quests[Q_GARBUD]._qlog = true; // BUGFIX: (?) for other quests qactive and qlog go together, maybe this should actually go into the if above (fixed)
 		}
 		if (Monsters[i].mtalkmsg == TEXT_GARBUD2 && (Monsters[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 			SpawnItem(i, Monsters[i].position.tile + Displacement { 1, 1 }, true);
@@ -2364,8 +2364,8 @@ bool M_DoTalk(int i)
 	if (Monsters[i]._uniqtype - 1 == UMT_ZHAR
 	    && Monsters[i].mtalkmsg == TEXT_ZHAR1
 	    && (Monsters[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
-		quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
-		quests[Q_ZHAR]._qlog = true;
+		Quests[Q_ZHAR]._qactive = QUEST_ACTIVE;
+		Quests[Q_ZHAR]._qlog = true;
 		CreateTypeItem(Monsters[i].position.tile + Displacement { 1, 1 }, false, ITYPE_MISC, IMISC_BOOK, true, false);
 		Monsters[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 	}
@@ -2376,19 +2376,19 @@ bool M_DoTalk(int i)
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
 			TransVal = tren;
-			quests[Q_LTBANNER]._qvar1 = 2;
-			if (quests[Q_LTBANNER]._qactive == QUEST_INIT)
-				quests[Q_LTBANNER]._qactive = QUEST_ACTIVE;
+			Quests[Q_LTBANNER]._qvar1 = 2;
+			if (Quests[Q_LTBANNER]._qactive == QUEST_INIT)
+				Quests[Q_LTBANNER]._qactive = QUEST_ACTIVE;
 			Monsters[i]._mFlags |= MFLAG_QUEST_COMPLETE;
 		}
-		if (quests[Q_LTBANNER]._qvar1 < 2) {
+		if (Quests[Q_LTBANNER]._qvar1 < 2) {
 			app_fatal("SS Talk = %i, Flags = %i", Monsters[i].mtalkmsg, Monsters[i]._mFlags);
 		}
 	}
 	if (Monsters[i]._uniqtype - 1 == UMT_LACHDAN) {
 		if (Monsters[i].mtalkmsg == TEXT_VEIL9) {
-			quests[Q_VEIL]._qactive = QUEST_ACTIVE;
-			quests[Q_VEIL]._qlog = true;
+			Quests[Q_VEIL]._qactive = QUEST_ACTIVE;
+			Quests[Q_VEIL]._qlog = true;
 		}
 		if (Monsters[i].mtalkmsg == TEXT_VEIL11 && (Monsters[i]._mFlags & MFLAG_QUEST_COMPLETE) == 0) {
 			SpawnUnique(UITEM_STEELVEIL, Monsters[i].position.tile + DIR_S);
@@ -2396,9 +2396,9 @@ bool M_DoTalk(int i)
 		}
 	}
 	if (Monsters[i]._uniqtype - 1 == UMT_WARLORD)
-		quests[Q_WARLORD]._qvar1 = 2;
+		Quests[Q_WARLORD]._qvar1 = 2;
 	if (Monsters[i]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) {
-		quests[Q_BETRAYER]._qvar1 = 6;
+		Quests[Q_BETRAYER]._qvar1 = 6;
 		Monsters[i]._mgoal = MGOAL_NORMAL;
 		Monsters[i]._msquelch = UINT8_MAX;
 		Monsters[i].mtalkmsg = TEXT_NONE;
@@ -4162,7 +4162,7 @@ void MAI_SnotSpil(int i)
 		monst->_mgoal = MGOAL_INQUIRING;
 	}
 
-	if (monst->mtalkmsg == TEXT_BANNER11 && quests[Q_LTBANNER]._qvar1 == 3) {
+	if (monst->mtalkmsg == TEXT_BANNER11 && Quests[Q_LTBANNER]._qvar1 == 3) {
 		monst->mtalkmsg = TEXT_NONE;
 		monst->_mgoal = MGOAL_NORMAL;
 	}
@@ -4171,14 +4171,14 @@ void MAI_SnotSpil(int i)
 		if (monst->mtalkmsg == TEXT_BANNER12) {
 			if (!effect_is_playing(USFX_SNOT3) && monst->_mgoal == MGOAL_TALKING) {
 				ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
-				quests[Q_LTBANNER]._qvar1 = 3;
+				Quests[Q_LTBANNER]._qvar1 = 3;
 				RedoPlayerVision();
 				monst->_msquelch = UINT8_MAX;
 				monst->mtalkmsg = TEXT_NONE;
 				monst->_mgoal = MGOAL_NORMAL;
 			}
 		}
-		if (quests[Q_LTBANNER]._qvar1 == 3) {
+		if (Quests[Q_LTBANNER]._qvar1 == 3) {
 			if (monst->_mgoal == MGOAL_NORMAL || monst->_mgoal == MGOAL_ATTACK2)
 				MAI_Fallen(i);
 		}
@@ -4206,29 +4206,29 @@ void MAI_Lazurus(int i)
 			if (monst->mtalkmsg == TEXT_VILE13 && monst->_mgoal == MGOAL_INQUIRING && Players[MyPlayerId].position.tile.x == 35 && Players[MyPlayerId].position.tile.y == 46) {
 				PlayInGameMovie("gendata\\fprst3.smk");
 				monst->_mmode = MM_TALK;
-				quests[Q_BETRAYER]._qvar1 = 5;
+				Quests[Q_BETRAYER]._qvar1 = 5;
 			}
 
 			if (monst->mtalkmsg == TEXT_VILE13 && !effect_is_playing(USFX_LAZ1) && monst->_mgoal == MGOAL_TALKING) {
 				ObjChangeMapResync(1, 18, 20, 24);
 				RedoPlayerVision();
-				quests[Q_BETRAYER]._qvar1 = 6;
+				Quests[Q_BETRAYER]._qvar1 = 6;
 				monst->_mgoal = MGOAL_NORMAL;
 				monst->_msquelch = UINT8_MAX;
 				monst->mtalkmsg = TEXT_NONE;
 			}
 		}
 
-		if (gbIsMultiplayer && monst->mtalkmsg == TEXT_VILE13 && monst->_mgoal == MGOAL_INQUIRING && quests[Q_BETRAYER]._qvar1 <= 3) {
+		if (gbIsMultiplayer && monst->mtalkmsg == TEXT_VILE13 && monst->_mgoal == MGOAL_INQUIRING && Quests[Q_BETRAYER]._qvar1 <= 3) {
 			monst->_mmode = MM_TALK;
 		}
 	}
 
 	if (monst->_mgoal == MGOAL_NORMAL || monst->_mgoal == MGOAL_RETREAT || monst->_mgoal == MGOAL_MOVE) {
-		if (!gbIsMultiplayer && quests[Q_BETRAYER]._qvar1 == 4 && monst->mtalkmsg == TEXT_NONE) { // Fix save games affected by teleport bug
+		if (!gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 4 && monst->mtalkmsg == TEXT_NONE) { // Fix save games affected by teleport bug
 			ObjChangeMapResync(1, 18, 20, 24);
 			RedoPlayerVision();
-			quests[Q_BETRAYER]._qvar1 = 6;
+			Quests[Q_BETRAYER]._qvar1 = 6;
 		}
 		monst->mtalkmsg = TEXT_NONE;
 		MAI_Counselor(i);
@@ -4252,7 +4252,7 @@ void MAI_Lazhelp(int i)
 
 	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 		if (!gbIsMultiplayer) {
-			if (quests[Q_BETRAYER]._qvar1 <= 5) {
+			if (Quests[Q_BETRAYER]._qvar1 <= 5) {
 				monst->_mgoal = MGOAL_INQUIRING;
 			} else {
 				monst->_mgoal = MGOAL_NORMAL;
@@ -4290,7 +4290,7 @@ void MAI_Lachdanan(int i)
 		if (monst->mtalkmsg == TEXT_VEIL11) {
 			if (!effect_is_playing(USFX_LACH3) && monst->_mgoal == MGOAL_TALKING) {
 				monst->mtalkmsg = TEXT_NONE;
-				quests[Q_VEIL]._qactive = QUEST_DONE;
+				Quests[Q_VEIL]._qactive = QUEST_DONE;
 				M_StartKill(i, -1);
 			}
 		}
@@ -5106,9 +5106,9 @@ void TalktoMonster(int i)
 		return;
 	}
 
-	if (QuestStatus(Q_LTBANNER) && quests[Q_LTBANNER]._qvar1 == 2) {
+	if (QuestStatus(Q_LTBANNER) && Quests[Q_LTBANNER]._qvar1 == 2) {
 		if (Players[pnum].TryRemoveInvItemById(IDI_BANNER)) {
-			quests[Q_LTBANNER]._qactive = QUEST_DONE;
+			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monst->mtalkmsg = TEXT_BANNER12;
 			monst->_mgoal = MGOAL_INQUIRING;
 		}

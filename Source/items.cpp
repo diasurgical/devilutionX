@@ -2501,7 +2501,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 			return;
 		}
 		onlygood = true;
-	} else if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
+	} else if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || Quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
 		idx = RndItem(m);
 		if (idx == 0)
 			return;
@@ -2514,7 +2514,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 		}
 	} else {
 		idx = IDI_BRAIN;
-		quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
+		Quests[Q_MUSHROOM]._qvar1 = QS_BRAINSPAWNED;
 	}
 
 	if (ActiveItemCount >= MAXITEMS)
@@ -3648,7 +3648,7 @@ static void DrawULine(const Surface &out, int y)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	if ((chrflag || questlog) && gnScreenWidth < SPANEL_WIDTH * 3) {
+	if ((chrflag || QuestLogIsOpen) && gnScreenWidth < SPANEL_WIDTH * 3) {
 		return;
 	}
 

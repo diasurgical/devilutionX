@@ -1468,45 +1468,45 @@ static void CheckQuestItem(PlayerStruct &player)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (player.HoldItem.IDidx == IDI_OPTAMULET && quests[Q_BLIND]._qactive == QUEST_ACTIVE)
-		quests[Q_BLIND]._qactive = QUEST_DONE;
+	if (player.HoldItem.IDidx == IDI_OPTAMULET && Quests[Q_BLIND]._qactive == QUEST_ACTIVE)
+		Quests[Q_BLIND]._qactive = QUEST_DONE;
 
-	if (player.HoldItem.IDidx == IDI_MUSHROOM && quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
+	if (player.HoldItem.IDidx == IDI_MUSHROOM && Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE && Quests[Q_MUSHROOM]._qvar1 == QS_MUSHSPAWNED) {
 		player.Say(HeroSpeech::NowThatsOneBigMushroom, 10); // BUGFIX: Voice for this quest might be wrong in MP
-		quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
+		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHPICKED;
 	}
 
-	if (player.HoldItem.IDidx == IDI_ANVIL && quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
-		if (quests[Q_ANVIL]._qactive == QUEST_INIT) {
-			quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
+	if (player.HoldItem.IDidx == IDI_ANVIL && Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
+		if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
+			Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 		}
-		if (quests[Q_ANVIL]._qlog) {
+		if (Quests[Q_ANVIL]._qlog) {
 			myPlayer.Say(HeroSpeech::INeedToGetThisToGriswold, 10);
 		}
 	}
 
-	if (player.HoldItem.IDidx == IDI_GLDNELIX && quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
+	if (player.HoldItem.IDidx == IDI_GLDNELIX && Quests[Q_VEIL]._qactive != QUEST_NOTAVAIL) {
 		myPlayer.Say(HeroSpeech::INeedToGetThisToLachdanan, 30);
 	}
 
-	if (player.HoldItem.IDidx == IDI_ROCK && quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
-		if (quests[Q_ROCK]._qactive == QUEST_INIT) {
-			quests[Q_ROCK]._qactive = QUEST_ACTIVE;
+	if (player.HoldItem.IDidx == IDI_ROCK && Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
+		if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
+			Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 		}
-		if (quests[Q_ROCK]._qlog) {
+		if (Quests[Q_ROCK]._qlog) {
 			myPlayer.Say(HeroSpeech::ThisMustBeWhatGriswoldWanted, 10);
 		}
 	}
 
-	if (player.HoldItem.IDidx == IDI_ARMOFVAL && quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
-		quests[Q_BLOOD]._qactive = QUEST_DONE;
+	if (player.HoldItem.IDidx == IDI_ARMOFVAL && Quests[Q_BLOOD]._qactive == QUEST_ACTIVE) {
+		Quests[Q_BLOOD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::MayTheSpiritOfArkaineProtectMe, 20);
 	}
 
 	if (player.HoldItem.IDidx == IDI_MAPOFDOOM) {
-		quests[Q_GRAVE]._qlog = false;
-		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
-		quests[Q_GRAVE]._qvar1 = 1;
+		Quests[Q_GRAVE]._qlog = false;
+		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
+		Quests[Q_GRAVE]._qvar1 = 1;
 		Players[MyPlayerId].Say(HeroSpeech::UhHuh, 10);
 	}
 
@@ -1773,7 +1773,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			Displacement relativePosition = position - player.position.tile;
 			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.deltaX, relativePosition.deltaY);
-			quests[Q_FARMER]._qactive = QUEST_DONE;
+			Quests[Q_FARMER]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_FARMER);
 				return -1;
@@ -1782,7 +1782,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 		}
 		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
 			NetSendCmd(false, CMD_OPENCRYPT);
-			quests[Q_GRAVE]._qactive = QUEST_DONE;
+			Quests[Q_GRAVE]._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
 				NetSendCmdQuest(true, Q_GRAVE);
 			}
@@ -1802,8 +1802,8 @@ int InvPutItem(PlayerStruct &player, Point position)
 	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = Items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
-		quests[Q_CORNSTN]._qlog = false;
-		quests[Q_CORNSTN]._qactive = QUEST_DONE;
+		Quests[Q_CORNSTN]._qlog = false;
+		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 
 	NewCursor(CURSOR_HAND);
@@ -1846,8 +1846,8 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = Items[ii];
 		InitQTextMsg(TEXT_CORNSTN);
-		quests[Q_CORNSTN]._qlog = false;
-		quests[Q_CORNSTN]._qactive = QUEST_DONE;
+		Quests[Q_CORNSTN]._qlog = false;
+		Quests[Q_CORNSTN]._qactive = QUEST_DONE;
 	}
 	return ii;
 }

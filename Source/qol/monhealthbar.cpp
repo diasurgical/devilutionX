@@ -68,7 +68,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag)
 			xPos -= SPANEL_WIDTH / 2;
-		if (chrflag || questlog)
+		if (chrflag || QuestLogIsOpen)
 			xPos += SPANEL_WIDTH / 2;
 	}
 

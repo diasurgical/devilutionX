@@ -56,7 +56,7 @@ struct QuestStruct {
 	bool _qlog;
 };
 
-struct QuestData {
+struct QuestDataStruct {
 	uint8_t _qdlvl;
 	int8_t _qdmultlvl;
 	dungeon_type _qlvlt;
@@ -68,13 +68,13 @@ struct QuestData {
 	const char *_qlstr;
 };
 
-extern bool questlog;
+extern bool QuestLogIsOpen;
 extern std::optional<CelSprite> pQLogCel;
-extern QuestStruct quests[MAXQUESTS];
+extern QuestStruct Quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;
-extern dungeon_type ReturnLvlT;
-extern int ReturnLvl;
+extern dungeon_type ReturnLevelType;
+extern int ReturnLevel;
 
 void InitQuests();
 void CheckQuests();
@@ -97,6 +97,6 @@ void QuestlogESC();
 void SetMultiQuest(int q, quest_state s, bool log, int v1);
 
 /* rdata */
-extern QuestData questlist[];
+extern QuestDataStruct QuestData[];
 
 } // namespace devilution

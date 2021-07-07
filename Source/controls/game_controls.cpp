@@ -25,9 +25,9 @@ DWORD TranslateControllerButtonToKey(ControllerButton controllerButton)
 {
 	switch (controllerButton) {
 	case ControllerButton_BUTTON_A: // Bottom button
-		return questlog ? DVL_VK_SPACE : DVL_VK_ESCAPE;
+		return QuestLogIsOpen ? DVL_VK_SPACE : DVL_VK_ESCAPE;
 	case ControllerButton_BUTTON_B: // Right button
-		return (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || questlog) ? DVL_VK_RETURN : DVL_VK_SPACE;
+		return (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen) ? DVL_VK_RETURN : DVL_VK_SPACE;
 	case ControllerButton_BUTTON_Y: // Top button
 		return DVL_VK_RETURN;
 	case ControllerButton_BUTTON_LEFTSTICK:
@@ -253,7 +253,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				*action = GameAction(GameActionType_TOGGLE_INVENTORY);
 			else if (sbookflag)
 				*action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
-			else if (questlog)
+			else if (QuestLogIsOpen)
 				*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
 			else if (chrflag)
 				*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
@@ -262,7 +262,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			return true;
 		}
 
-		if (!questlog && !sbookflag) {
+		if (!QuestLogIsOpen && !sbookflag) {
 			switch (ctrlEvent.button) {
 			case ControllerButton_IGNORE:
 				return true;
@@ -315,7 +315,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 	}
 
 	// DPad navigation is handled separately for these.
-	if (gmenu_is_active() || questlog || stextflag != STORE_NONE) {
+	if (gmenu_is_active() || QuestLogIsOpen || stextflag != STORE_NONE) {
 		switch (ctrlEvent.button) {
 		case ControllerButton_BUTTON_DPAD_UP:
 		case ControllerButton_BUTTON_DPAD_DOWN:

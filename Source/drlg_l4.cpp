@@ -1010,11 +1010,11 @@ static void L4firstRoom()
 	int w = 14;
 	int h = 14;
 	if (currlevel != 16) {
-		if (currlevel == quests[Q_WARLORD]._qlevel && quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
+		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
 			assert(!gbIsMultiplayer);
 			w = 11;
 			h = 11;
-		} else if (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
 			w = 11;
 			h = 11;
 		} else {
@@ -1035,7 +1035,7 @@ static void L4firstRoom()
 		l4holdx = x;
 		l4holdy = y;
 	}
-	if (QuestStatus(Q_WARLORD) || (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+	if (QuestStatus(Q_WARLORD) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 		SP4x1 = x + 1;
 		SP4y1 = y + 1;
 		SP4x2 = SP4x1 + w;
@@ -1165,8 +1165,8 @@ static bool DrlgL4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, 
 		}
 	}
 
-	if (currlevel == 15 && quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
-		quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
+	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
+		Quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
 	}
 	if (setview) {
 		ViewX = 2 * sx + 21;
@@ -1375,7 +1375,7 @@ static void DrlgL4(lvl_entry entry)
 		if (currlevel == 16) {
 			L4SaveQuads();
 		}
-		if (QuestStatus(Q_WARLORD) || (currlevel == quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+		if (QuestStatus(Q_WARLORD) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 			for (int spi = SP4x1; spi < SP4x2; spi++) {
 				for (int spj = SP4y1; spj < SP4y2; spj++) {
 					dflags[spi][spj] = 1;
@@ -1445,7 +1445,7 @@ static void DrlgL4(lvl_entry entry)
 			if (entry == ENTRY_MAIN) {
 				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true, 0);
 				if (doneflag) {
-					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
+					if (!gbIsMultiplayer && Quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, false, 1);
 					} else {
 						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false, 1);
@@ -1455,7 +1455,7 @@ static void DrlgL4(lvl_entry entry)
 			} else {
 				doneflag = DrlgL4PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false, 0);
 				if (doneflag) {
-					if (!gbIsMultiplayer && quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
+					if (!gbIsMultiplayer && Quests[Q_DIABLO]._qactive != QUEST_ACTIVE) {
 						doneflag = DrlgL4PlaceMiniSet(L4PENTA, 1, 1, -1, -1, true, 1);
 					} else {
 						doneflag = DrlgL4PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true, 1);

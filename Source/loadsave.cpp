@@ -758,7 +758,7 @@ static void LoadPremium(LoadHelper *file, int i)
 
 static void LoadQuest(LoadHelper *file, int i)
 {
-	QuestStruct *pQuest = &quests[i];
+	QuestStruct *pQuest = &Quests[i];
 
 	pQuest->_qlevel = file->NextLE<uint8_t>();
 	pQuest->_qtype = file->NextLE<uint8_t>();
@@ -783,8 +783,8 @@ static void LoadQuest(LoadHelper *file, int i)
 
 	ReturnLvlX = file->NextBE<int32_t>();
 	ReturnLvlY = file->NextBE<int32_t>();
-	ReturnLvl = file->NextBE<int32_t>();
-	ReturnLvlT = static_cast<dungeon_type>(file->NextBE<int32_t>());
+	ReturnLevel = file->NextBE<int32_t>();
+	ReturnLevelType = static_cast<dungeon_type>(file->NextBE<int32_t>());
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
@@ -967,7 +967,7 @@ static void ConvertLevels()
 	}
 
 	setlevel = true; // Convert quest levels
-	for (auto &quest : quests) {
+	for (auto &quest : Quests) {
 		if (quest._qactive == QUEST_NOTAVAIL) {
 			continue;
 		}
@@ -1794,7 +1794,7 @@ static void SavePremium(SaveHelper *file, int i)
 
 static void SaveQuest(SaveHelper *file, int i)
 {
-	QuestStruct *pQuest = &quests[i];
+	QuestStruct *pQuest = &Quests[i];
 
 	file->WriteLE<uint8_t>(pQuest->_qlevel);
 	file->WriteLE<uint8_t>(pQuest->_qtype);
@@ -1819,8 +1819,8 @@ static void SaveQuest(SaveHelper *file, int i)
 
 	file->WriteBE<int32_t>(ReturnLvlX);
 	file->WriteBE<int32_t>(ReturnLvlY);
-	file->WriteBE<int32_t>(ReturnLvl);
-	file->WriteBE<int32_t>(ReturnLvlT);
+	file->WriteBE<int32_t>(ReturnLevel);
+	file->WriteBE<int32_t>(ReturnLevelType);
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 

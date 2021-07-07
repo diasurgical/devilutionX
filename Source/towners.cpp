@@ -45,7 +45,7 @@ void NewTownerAnim(TownerStruct &towner, byte *pAnim, uint8_t numFrames, int del
 
 void InitTownerInfo(int i, const TownerInit &initData)
 {
-	auto &towner = towners[i];
+	auto &towner = Towners[i];
 
 	towner._ttype = initData.type;
 	towner.position = initData.position;
@@ -250,7 +250,7 @@ void InitFarmer(TownerStruct &towner, const TownerInit &initData)
 void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 {
 	const char *celPath = "Towners\\Farmer\\cfrmrn2.CEL";
-	if (quests[Q_JERSEY]._qactive == QUEST_DONE) {
+	if (Quests[Q_JERSEY]._qactive == QUEST_DONE) {
 		celPath = "Towners\\Farmer\\mfrmrn2.CEL";
 	}
 	towner._tAnimWidth = 96;
@@ -263,7 +263,7 @@ void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 void InitGirl(TownerStruct &towner, const TownerInit &initData)
 {
 	const char *celPath = "Towners\\Girl\\Girlw1.CEL";
-	if (quests[Q_GIRL]._qactive == QUEST_DONE) {
+	if (Quests[Q_GIRL]._qactive == QUEST_DONE) {
 		celPath = "Towners\\Girl\\Girls1.CEL";
 	}
 	towner._tAnimWidth = 96;
@@ -276,12 +276,12 @@ void InitGirl(TownerStruct &towner, const TownerInit &initData)
 void TownDead(TownerStruct &towner)
 {
 	if (qtextflag) {
-		if (quests[Q_BUTCHER]._qvar1 == 1)
+		if (Quests[Q_BUTCHER]._qvar1 == 1)
 			towner._tAnimCnt = 0; // Freeze while speaking
 		return;
 	}
 
-	if ((quests[Q_BUTCHER]._qactive == QUEST_DONE || quests[Q_BUTCHER]._qvar1 == 1) && towner._tAnimLen != 1) {
+	if ((Quests[Q_BUTCHER]._qactive == QUEST_DONE || Quests[Q_BUTCHER]._qvar1 == 1) && towner._tAnimLen != 1) {
 		towner._tAnimLen = 1;
 		towner._tName = _("Slain Townsman");
 	}
@@ -301,22 +301,22 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 		return;
 	}
 
-	if (quests[Q_SKELKING]._qactive != QUEST_NOTAVAIL) {
+	if (Quests[Q_SKELKING]._qactive != QUEST_NOTAVAIL) {
 		if (player._pLvlVisited[2] || player._pLvlVisited[4]) {
-			if (quests[Q_SKELKING]._qvar2 == 0) {
-				quests[Q_SKELKING]._qvar2 = 1;
-				quests[Q_SKELKING]._qlog = true;
-				if (quests[Q_SKELKING]._qactive == QUEST_INIT) {
-					quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
-					quests[Q_SKELKING]._qvar1 = 1;
+			if (Quests[Q_SKELKING]._qvar2 == 0) {
+				Quests[Q_SKELKING]._qvar2 = 1;
+				Quests[Q_SKELKING]._qlog = true;
+				if (Quests[Q_SKELKING]._qactive == QUEST_INIT) {
+					Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
+					Quests[Q_SKELKING]._qvar1 = 1;
 				}
 				InitQTextMsg(TEXT_KING2);
 				NetSendCmdQuest(true, Q_SKELKING);
 				return;
 			}
-			if (quests[Q_SKELKING]._qactive == QUEST_DONE && quests[Q_SKELKING]._qvar2 == 1) {
-				quests[Q_SKELKING]._qvar2 = 2;
-				quests[Q_SKELKING]._qvar1 = 2;
+			if (Quests[Q_SKELKING]._qactive == QUEST_DONE && Quests[Q_SKELKING]._qvar2 == 1) {
+				Quests[Q_SKELKING]._qvar2 = 2;
+				Quests[Q_SKELKING]._qvar1 = 2;
 				InitQTextMsg(TEXT_KING4);
 				NetSendCmdQuest(true, Q_SKELKING);
 				return;
@@ -324,22 +324,22 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 		}
 	}
 
-	if (quests[Q_LTBANNER]._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[3] && quests[Q_LTBANNER]._qactive != QUEST_DONE) {
-			if (quests[Q_LTBANNER]._qvar2 == 0) {
-				quests[Q_LTBANNER]._qvar2 = 1;
-				if (quests[Q_LTBANNER]._qactive == QUEST_INIT) {
-					quests[Q_LTBANNER]._qvar1 = 1;
-					quests[Q_LTBANNER]._qactive = QUEST_ACTIVE;
+	if (Quests[Q_LTBANNER]._qactive != QUEST_NOTAVAIL) {
+		if (player._pLvlVisited[3] && Quests[Q_LTBANNER]._qactive != QUEST_DONE) {
+			if (Quests[Q_LTBANNER]._qvar2 == 0) {
+				Quests[Q_LTBANNER]._qvar2 = 1;
+				if (Quests[Q_LTBANNER]._qactive == QUEST_INIT) {
+					Quests[Q_LTBANNER]._qvar1 = 1;
+					Quests[Q_LTBANNER]._qactive = QUEST_ACTIVE;
 				}
-				quests[Q_LTBANNER]._qlog = true;
+				Quests[Q_LTBANNER]._qlog = true;
 				InitQTextMsg(TEXT_BANNER2);
 				return;
 			}
 
-			if (quests[Q_LTBANNER]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_BANNER)) {
-				quests[Q_LTBANNER]._qactive = QUEST_DONE;
-				quests[Q_LTBANNER]._qvar1 = 3;
+			if (Quests[Q_LTBANNER]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_BANNER)) {
+				Quests[Q_LTBANNER]._qactive = QUEST_DONE;
+				Quests[Q_LTBANNER]._qvar1 = 3;
 				SpawnUnique(UITEM_HARCREST, barOwner.position + DIR_SW);
 				InitQTextMsg(TEXT_BANNER3);
 				return;
@@ -353,58 +353,58 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 
 void TalkToDeadguy(PlayerStruct &player, TownerStruct & /*deadguy*/)
 {
-	if (quests[Q_BUTCHER]._qactive == QUEST_DONE)
+	if (Quests[Q_BUTCHER]._qactive == QUEST_DONE)
 		return;
 
-	if (quests[Q_BUTCHER]._qvar1 == 1) {
+	if (Quests[Q_BUTCHER]._qvar1 == 1) {
 		player.SaySpecific(HeroSpeech::YourDeathWillBeAvenged);
 		return;
 	}
 
-	quests[Q_BUTCHER]._qactive = QUEST_ACTIVE;
-	quests[Q_BUTCHER]._qlog = true;
-	quests[Q_BUTCHER]._qmsg = TEXT_BUTCH9;
-	quests[Q_BUTCHER]._qvar1 = 1;
+	Quests[Q_BUTCHER]._qactive = QUEST_ACTIVE;
+	Quests[Q_BUTCHER]._qlog = true;
+	Quests[Q_BUTCHER]._qmsg = TEXT_BUTCH9;
+	Quests[Q_BUTCHER]._qvar1 = 1;
 	InitQTextMsg(TEXT_BUTCH9);
 	NetSendCmdQuest(true, Q_BUTCHER);
 }
 
 void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 {
-	if (quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[4] && quests[Q_ROCK]._qactive != QUEST_DONE) {
-			if (quests[Q_ROCK]._qvar2 == 0) {
-				quests[Q_ROCK]._qvar2 = 1;
-				quests[Q_ROCK]._qlog = true;
-				if (quests[Q_ROCK]._qactive == QUEST_INIT) {
-					quests[Q_ROCK]._qactive = QUEST_ACTIVE;
+	if (Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
+		if (player._pLvlVisited[4] && Quests[Q_ROCK]._qactive != QUEST_DONE) {
+			if (Quests[Q_ROCK]._qvar2 == 0) {
+				Quests[Q_ROCK]._qvar2 = 1;
+				Quests[Q_ROCK]._qlog = true;
+				if (Quests[Q_ROCK]._qactive == QUEST_INIT) {
+					Quests[Q_ROCK]._qactive = QUEST_ACTIVE;
 				}
 				InitQTextMsg(TEXT_INFRA5);
 				return;
 			}
 
-			if (quests[Q_ROCK]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ROCK)) {
-				quests[Q_ROCK]._qactive = QUEST_DONE;
+			if (Quests[Q_ROCK]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ROCK)) {
+				Quests[Q_ROCK]._qactive = QUEST_DONE;
 				SpawnUnique(UITEM_INFRARING, blackSmith.position + DIR_SW);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
 			}
 		}
 	}
-	if (quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
-		if (player._pLvlVisited[9] && quests[Q_ANVIL]._qactive != QUEST_DONE) {
-			if (quests[Q_ANVIL]._qvar2 == 0 && quests[Q_ROCK]._qactive != QUEST_INIT) {
-				quests[Q_ANVIL]._qvar2 = 1;
-				quests[Q_ANVIL]._qlog = true;
-				if (quests[Q_ANVIL]._qactive == QUEST_INIT) {
-					quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
+	if (Quests[Q_ANVIL]._qactive != QUEST_NOTAVAIL) {
+		if (player._pLvlVisited[9] && Quests[Q_ANVIL]._qactive != QUEST_DONE) {
+			if (Quests[Q_ANVIL]._qvar2 == 0 && Quests[Q_ROCK]._qactive != QUEST_INIT) {
+				Quests[Q_ANVIL]._qvar2 = 1;
+				Quests[Q_ANVIL]._qlog = true;
+				if (Quests[Q_ANVIL]._qactive == QUEST_INIT) {
+					Quests[Q_ANVIL]._qactive = QUEST_ACTIVE;
 				}
 				InitQTextMsg(TEXT_ANVIL5);
 				return;
 			}
 
-			if (quests[Q_ANVIL]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ANVIL)) {
-				quests[Q_ANVIL]._qactive = QUEST_DONE;
+			if (Quests[Q_ANVIL]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ANVIL)) {
+				Quests[Q_ANVIL]._qactive = QUEST_DONE;
 				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + DIR_SW);
 				InitQTextMsg(TEXT_ANVIL7);
 				return;
@@ -418,39 +418,39 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 
 void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
 {
-	if (quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
-		if (quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_FUNGALTM)) {
-			quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
-			quests[Q_MUSHROOM]._qlog = true;
-			quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
+	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
+		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_FUNGALTM)) {
+			Quests[Q_MUSHROOM]._qactive = QUEST_ACTIVE;
+			Quests[Q_MUSHROOM]._qlog = true;
+			Quests[Q_MUSHROOM]._qvar1 = QS_TOMEGIVEN;
 			InitQTextMsg(TEXT_MUSH8);
 			return;
 		}
-		if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
-			if (quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_MUSHGIVEN) {
+		if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
+			if (Quests[Q_MUSHROOM]._qvar1 >= QS_TOMEGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_MUSHGIVEN) {
 				if (player.TryRemoveInvItemById(IDI_MUSHROOM)) {
-					quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
-					Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
-					Qtalklist[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
-					quests[Q_MUSHROOM]._qmsg = TEXT_MUSH10;
+					Quests[Q_MUSHROOM]._qvar1 = QS_MUSHGIVEN;
+					QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_MUSH3;
+					QuestDialogTable[TOWN_WITCH][Q_MUSHROOM] = TEXT_NONE;
+					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH10;
 					InitQTextMsg(TEXT_MUSH10);
 					return;
 				}
-				if (quests[Q_MUSHROOM]._qmsg != TEXT_MUSH9) {
-					quests[Q_MUSHROOM]._qmsg = TEXT_MUSH9;
+				if (Quests[Q_MUSHROOM]._qmsg != TEXT_MUSH9) {
+					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH9;
 					InitQTextMsg(TEXT_MUSH9);
 					return;
 				}
 			}
-			if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
+			if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN) {
 				if (player.HasItem(IDI_BRAIN)) {
-					quests[Q_MUSHROOM]._qmsg = TEXT_MUSH11;
+					Quests[Q_MUSHROOM]._qmsg = TEXT_MUSH11;
 					InitQTextMsg(TEXT_MUSH11);
 					return;
 				}
 				if (player.HasItem(IDI_SPECELIX)) {
 					InitQTextMsg(TEXT_MUSH12);
-					quests[Q_MUSHROOM]._qactive = QUEST_DONE;
+					Quests[Q_MUSHROOM]._qactive = QUEST_DONE;
 					AllItemsList[IDI_SPECELIX].iUsable = true; /// BUGFIX: This will cause the elixir to be usable in the next game
 					return;
 				}
@@ -465,9 +465,9 @@ void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
 void TalkToBarmaid(PlayerStruct &player, TownerStruct & /*barmaid*/)
 {
 	if (!player._pLvlVisited[21] && player.HasItem(IDI_MAPOFDOOM)) {
-		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
-		quests[Q_GRAVE]._qlog = true;
-		quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
+		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
+		Quests[Q_GRAVE]._qlog = true;
+		Quests[Q_GRAVE]._qmsg = TEXT_GRAVE8;
 		InitQTextMsg(TEXT_GRAVE8);
 		return;
 	}
@@ -484,27 +484,27 @@ void TalkToDrunk(PlayerStruct & /*player*/, TownerStruct & /*drunk*/)
 
 void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 {
-	if (quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
-		if ((player._pLvlVisited[1] || player._pLvlVisited[5]) && quests[Q_PWATER]._qactive == QUEST_INIT) {
-			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-			quests[Q_PWATER]._qlog = true;
-			quests[Q_PWATER]._qmsg = TEXT_POISON3;
+	if (Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
+		if ((player._pLvlVisited[1] || player._pLvlVisited[5]) && Quests[Q_PWATER]._qactive == QUEST_INIT) {
+			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
+			Quests[Q_PWATER]._qlog = true;
+			Quests[Q_PWATER]._qmsg = TEXT_POISON3;
 			InitQTextMsg(TEXT_POISON3);
 			return;
 		}
-		if (quests[Q_PWATER]._qactive == QUEST_DONE && quests[Q_PWATER]._qvar1 != 2) {
-			quests[Q_PWATER]._qvar1 = 2;
+		if (Quests[Q_PWATER]._qactive == QUEST_DONE && Quests[Q_PWATER]._qvar1 != 2) {
+			Quests[Q_PWATER]._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
 			SpawnUnique(UITEM_TRING, healer.position + DIR_SW);
 			return;
 		}
 	}
-	if (quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
-		if (quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.TryRemoveInvItemById(IDI_BRAIN)) {
+	if (Quests[Q_MUSHROOM]._qactive == QUEST_ACTIVE) {
+		if (Quests[Q_MUSHROOM]._qvar1 >= QS_MUSHGIVEN && Quests[Q_MUSHROOM]._qvar1 < QS_BRAINGIVEN && player.TryRemoveInvItemById(IDI_BRAIN)) {
 			SpawnQuestItem(IDI_SPECELIX, healer.position + Displacement { 0, 1 }, 0, 0);
 			InitQTextMsg(TEXT_MUSH4);
-			quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
-			Qtalklist[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
+			Quests[Q_MUSHROOM]._qvar1 = QS_BRAINGIVEN;
+			QuestDialogTable[TOWN_HEALER][Q_MUSHROOM] = TEXT_NONE;
 			return;
 		}
 	}
@@ -522,25 +522,25 @@ void TalkToBoy(PlayerStruct & /*player*/, TownerStruct & /*boy*/)
 void TalkToStoryteller(PlayerStruct &player, TownerStruct & /*storyteller*/)
 {
 	if (!gbIsMultiplayer) {
-		if (quests[Q_BETRAYER]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_LAZSTAFF)) {
+		if (Quests[Q_BETRAYER]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_LAZSTAFF)) {
 			InitQTextMsg(TEXT_VILE1);
-			quests[Q_BETRAYER]._qlog = true;
-			quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
-			quests[Q_BETRAYER]._qvar1 = 2;
+			Quests[Q_BETRAYER]._qlog = true;
+			Quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
+			Quests[Q_BETRAYER]._qvar1 = 2;
 			return;
 		}
 	} else {
-		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && !quests[Q_BETRAYER]._qlog) {
+		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && !Quests[Q_BETRAYER]._qlog) {
 			InitQTextMsg(TEXT_VILE1);
-			quests[Q_BETRAYER]._qlog = true;
+			Quests[Q_BETRAYER]._qlog = true;
 			NetSendCmdQuest(true, Q_BETRAYER);
 			return;
 		}
 	}
-	if (quests[Q_BETRAYER]._qactive == QUEST_DONE && quests[Q_BETRAYER]._qvar1 == 7) {
-		quests[Q_BETRAYER]._qvar1 = 8;
+	if (Quests[Q_BETRAYER]._qactive == QUEST_DONE && Quests[Q_BETRAYER]._qvar1 == 7) {
+		Quests[Q_BETRAYER]._qvar1 = 8;
 		InitQTextMsg(TEXT_VILE3);
-		quests[Q_DIABLO]._qlog = true;
+		Quests[Q_DIABLO]._qlog = true;
 		if (gbIsMultiplayer) {
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
@@ -584,15 +584,15 @@ void TalkToCow(PlayerStruct &player, TownerStruct &cow)
 
 void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 {
-	switch (quests[Q_FARMER]._qactive) {
+	switch (Quests[Q_FARMER]._qactive) {
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
 		if (player.HasItem(IDI_RUNEBOMB)) {
 			InitQTextMsg(TEXT_FARMER2);
-			quests[Q_FARMER]._qactive = QUEST_ACTIVE;
-			quests[Q_FARMER]._qvar1 = 1;
-			quests[Q_FARMER]._qmsg = TEXT_FARMER1;
-			quests[Q_FARMER]._qlog = true;
+			Quests[Q_FARMER]._qactive = QUEST_ACTIVE;
+			Quests[Q_FARMER]._qvar1 = 1;
+			Quests[Q_FARMER]._qmsg = TEXT_FARMER1;
+			Quests[Q_FARMER]._qlog = true;
 			if (gbIsMultiplayer)
 				NetSendCmdQuest(true, Q_FARMER);
 			break;
@@ -611,10 +611,10 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 		}
 
 		InitQTextMsg(TEXT_FARMER1);
-		quests[Q_FARMER]._qactive = QUEST_ACTIVE;
-		quests[Q_FARMER]._qvar1 = 1;
-		quests[Q_FARMER]._qlog = true;
-		quests[Q_FARMER]._qmsg = TEXT_FARMER1;
+		Quests[Q_FARMER]._qactive = QUEST_ACTIVE;
+		Quests[Q_FARMER]._qvar1 = 1;
+		Quests[Q_FARMER]._qlog = true;
+		Quests[Q_FARMER]._qmsg = TEXT_FARMER1;
 		SpawnRuneBomb(farmer.position + Displacement { 1, 0 });
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_FARMER);
@@ -625,8 +625,8 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 	case QUEST_DONE:
 		InitQTextMsg(TEXT_FARMER4);
 		SpawnRewardItem(IDI_AURIC, farmer.position + Displacement { 1, 0 });
-		quests[Q_FARMER]._qactive = QUEST_HIVE_DONE;
-		quests[Q_FARMER]._qlog = false;
+		Quests[Q_FARMER]._qactive = QUEST_HIVE_DONE;
+		Quests[Q_FARMER]._qlog = false;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_FARMER);
 		break;
@@ -645,24 +645,24 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 	if (player.TryRemoveInvItemById(IDI_BROWNSUIT)) {
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
 		InitQTextMsg(TEXT_JERSEY8);
-		quests[Q_JERSEY]._qactive = QUEST_DONE;
+		Quests[Q_JERSEY]._qactive = QUEST_DONE;
 		return;
 	}
 
 	if (player.HasItem(IDI_RUNEBOMB)) {
 		InitQTextMsg(TEXT_JERSEY5);
-		quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
-		quests[Q_JERSEY]._qvar1 = 1;
-		quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
-		quests[Q_JERSEY]._qlog = true;
+		Quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
+		Quests[Q_JERSEY]._qvar1 = 1;
+		Quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
+		Quests[Q_JERSEY]._qlog = true;
 		return;
 	}
 
-	switch (quests[Q_JERSEY]._qactive) {
+	switch (Quests[Q_JERSEY]._qactive) {
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
 		InitQTextMsg(TEXT_JERSEY1);
-		quests[Q_JERSEY]._qactive = QUEST_HIVE_TEASE1;
+		Quests[Q_JERSEY]._qactive = QUEST_HIVE_TEASE1;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_JERSEY);
 		break;
@@ -674,13 +674,13 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 		break;
 	case QUEST_HIVE_TEASE1:
 		InitQTextMsg(TEXT_JERSEY2);
-		quests[Q_JERSEY]._qactive = QUEST_HIVE_TEASE2;
+		Quests[Q_JERSEY]._qactive = QUEST_HIVE_TEASE2;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_JERSEY);
 		break;
 	case QUEST_HIVE_TEASE2:
 		InitQTextMsg(TEXT_JERSEY3);
-		quests[Q_JERSEY]._qactive = QUEST_HIVE_ACTIVE;
+		Quests[Q_JERSEY]._qactive = QUEST_HIVE_ACTIVE;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_JERSEY);
 		break;
@@ -703,10 +703,10 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 		}
 
 		InitQTextMsg(TEXT_JERSEY4);
-		quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
-		quests[Q_JERSEY]._qvar1 = 1;
-		quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
-		quests[Q_JERSEY]._qlog = true;
+		Quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
+		Quests[Q_JERSEY]._qvar1 = 1;
+		Quests[Q_JERSEY]._qmsg = TEXT_JERSEY4;
+		Quests[Q_JERSEY]._qlog = true;
 		SpawnRuneBomb(cowFarmer.position + Displacement { 1, 0 });
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_JERSEY);
@@ -719,23 +719,23 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 
 void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 {
-	if (quests[Q_GIRL]._qactive != QUEST_DONE && player.TryRemoveInvItemById(IDI_THEODORE)) {
+	if (Quests[Q_GIRL]._qactive != QUEST_DONE && player.TryRemoveInvItemById(IDI_THEODORE)) {
 		InitQTextMsg(TEXT_GIRL4);
 		CreateAmulet(girl.position, 13, false, true);
-		quests[Q_GIRL]._qlog = false;
-		quests[Q_GIRL]._qactive = QUEST_DONE;
+		Quests[Q_GIRL]._qlog = false;
+		Quests[Q_GIRL]._qactive = QUEST_DONE;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_GIRL);
 	}
 
-	switch (quests[Q_GIRL]._qactive) {
+	switch (Quests[Q_GIRL]._qactive) {
 	case QUEST_NOTAVAIL:
 	case QUEST_INIT:
 		InitQTextMsg(TEXT_GIRL2);
-		quests[Q_GIRL]._qactive = QUEST_ACTIVE;
-		quests[Q_GIRL]._qvar1 = 1;
-		quests[Q_GIRL]._qlog = true;
-		quests[Q_GIRL]._qmsg = TEXT_GIRL2;
+		Quests[Q_GIRL]._qactive = QUEST_ACTIVE;
+		Quests[Q_GIRL]._qvar1 = 1;
+		Quests[Q_GIRL]._qlog = true;
+		Quests[Q_GIRL]._qmsg = TEXT_GIRL2;
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_GIRL);
 		return;
@@ -771,10 +771,10 @@ const TownerInit TownerInitList[] = {
 
 } // namespace
 
-TownerStruct towners[NUM_TOWNERS];
+TownerStruct Towners[NUM_TOWNERS];
 
 /** Contains the data related to quest gossip for each towner ID. */
-_speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS] = {
+_speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS] = {
 	// clang-format off
 	//                 Q_ROCK,       Q_MUSHROOM,  Q_GARBUD,  Q_ZHAR,    Q_VEIL,     Q_DIABLO,   Q_BUTCHER,   Q_LTBANNER,   Q_BLIND,     Q_BLOOD,     Q_ANVIL,      Q_WARLORD,    Q_SKELKING,  Q_PWATER,      Q_SCHAMB,   Q_BETRAYER,  Q_GRAVE,     Q_FARMER,  Q_GIRL,    Q_TRADER,  Q_DEFILER, Q_NAKRUL,  Q_CORNSTN, Q_JERSEY
 	/*TOWN_SMITH*/   { TEXT_INFRA6,  TEXT_MUSH6,  TEXT_NONE, TEXT_NONE, TEXT_VEIL5, TEXT_NONE,  TEXT_BUTCH5, TEXT_BANNER6, TEXT_BLIND5, TEXT_BLOOD5, TEXT_ANVIL6,  TEXT_WARLRD5, TEXT_KING7,  TEXT_POISON7,  TEXT_BONE5, TEXT_VILE9,  TEXT_GRAVE2, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE, TEXT_NONE },
@@ -803,7 +803,7 @@ void InitTowners()
 	for (const auto &townerInit : TownerInitList) {
 		switch (townerInit.type) {
 		case TOWN_DEADGUY:
-			if (quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || quests[Q_BUTCHER]._qactive == QUEST_DONE)
+			if (Quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || Quests[Q_BUTCHER]._qactive == QUEST_DONE)
 				continue;
 			break;
 		case TOWN_FARMER:
@@ -811,7 +811,7 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_COWFARM:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 || quests[Q_FARMER]._qactive == 10)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 || Quests[Q_FARMER]._qactive == 10)
 				continue;
 			break;
 		case TOWN_GIRL:
@@ -829,7 +829,7 @@ void InitTowners()
 
 void FreeTownerGFX()
 {
-	for (auto &towner : towners) {
+	for (auto &towner : Towners) {
 		towner._tNData = nullptr;
 	}
 
@@ -839,7 +839,7 @@ void FreeTownerGFX()
 void ProcessTowners()
 {
 	// BUGFIX: should be `i < numtowners`, was `i < NUM_TOWNERS`
-	for (auto &towner : towners) {
+	for (auto &towner : Towners) {
 		if (towner._ttype == TOWN_DEADGUY) {
 			TownDead(towner);
 		}
@@ -868,7 +868,7 @@ void ProcessTowners()
 
 void TalkToTowner(PlayerStruct &player, int t)
 {
-	auto &towner = towners[t];
+	auto &towner = Towners[t];
 
 	if (player.position.tile.WalkingDistance(towner.position) >= 2)
 		return;

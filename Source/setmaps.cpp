@@ -148,9 +148,9 @@ void LoadSetMap()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		if (quests[Q_SKELKING]._qactive == QUEST_INIT) {
-			quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
-			quests[Q_SKELKING]._qvar1 = 1;
+		if (Quests[Q_SKELKING]._qactive == QUEST_INIT) {
+			Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
+			Quests[Q_SKELKING]._qvar1 = 1;
 		}
 		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
@@ -182,18 +182,18 @@ void LoadSetMap()
 		DRLG_SetMapTrans("Levels\\L1Data\\Lv1MazeA.DUN");
 		break;
 	case SL_POISONWATER:
-		if (quests[Q_PWATER]._qactive == QUEST_INIT)
-			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
+		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
+			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
 		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN");
 		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;
 	case SL_VILEBETRAYER:
-		if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
-			quests[Q_BETRAYER]._qvar2 = 4;
-		} else if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
-			quests[Q_BETRAYER]._qvar2 = 3;
+		if (Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			Quests[Q_BETRAYER]._qvar2 = 4;
+		} else if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
+			Quests[Q_BETRAYER]._qvar2 = 3;
 		}
 		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", 35, 36);

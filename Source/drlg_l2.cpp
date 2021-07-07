@@ -2675,21 +2675,21 @@ static bool CreateDungeon()
 
 	switch (currlevel) {
 	case 5:
-		if (quests[Q_BLOOD]._qactive != QUEST_NOTAVAIL) {
+		if (Quests[Q_BLOOD]._qactive != QUEST_NOTAVAIL) {
 			forceHW = true;
 			forceH = 20;
 			forceW = 14;
 		}
 		break;
 	case 6:
-		if (quests[Q_SCHAMB]._qactive != QUEST_NOTAVAIL) {
+		if (Quests[Q_SCHAMB]._qactive != QUEST_NOTAVAIL) {
 			forceHW = true;
 			forceW = 10;
 			forceH = 10;
 		}
 		break;
 	case 7:
-		if (quests[Q_BLIND]._qactive != QUEST_NOTAVAIL) {
+		if (Quests[Q_BLIND]._qactive != QUEST_NOTAVAIL) {
 			forceHW = true;
 			forceW = 15;
 			forceH = 15;
@@ -3244,13 +3244,13 @@ void LoadPreL2Dungeon(const char *path)
 void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	if (!gbIsMultiplayer) {
-		if (currlevel == 7 && quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
+		if (currlevel == 7 && Quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 			currlevel = 6;
 			CreateL2Dungeon(glSeedTbl[6], ENTRY_LOAD);
 			currlevel = 7;
 		}
 		if (currlevel == 8) {
-			if (quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
+			if (Quests[Q_BLIND]._qactive == QUEST_NOTAVAIL) {
 				currlevel = 6;
 				CreateL2Dungeon(glSeedTbl[6], ENTRY_LOAD);
 				currlevel = 8;

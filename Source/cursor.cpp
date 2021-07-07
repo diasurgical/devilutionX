@@ -273,7 +273,7 @@ void CheckCursMove()
 	int sy = MousePosition.y;
 
 	if (CanPanelsCoverView()) {
-		if (chrflag || questlog) {
+		if (chrflag || QuestLogIsOpen) {
 			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)
 				sx -= gnScreenWidth / 4;
 			} else {
@@ -410,7 +410,7 @@ void CheckCursMove()
 	if (sbookflag && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT) {
 		return;
 	}
-	if ((chrflag || questlog) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT) {
+	if ((chrflag || QuestLogIsOpen) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT) {
 		return;
 	}
 

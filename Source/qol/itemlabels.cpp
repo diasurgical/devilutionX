@@ -95,7 +95,7 @@ bool IsMouseOverGameArea()
 {
 	if ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT)
 		return false;
-	if ((chrflag || questlog) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT)
+	if ((chrflag || QuestLogIsOpen) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT)
 		return false;
 	if (MousePosition.y >= PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= PANEL_LEFT + PANEL_WIDTH)
 		return false;

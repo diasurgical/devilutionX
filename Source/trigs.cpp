@@ -109,7 +109,7 @@ void InitTownTriggers()
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 		trigs[numtrigs]._tlvl = 17;
 		numtrigs++;
-		if (gbIsMultiplayer || quests[Q_GRAVE]._qactive == QUEST_DONE) {
+		if (gbIsMultiplayer || Quests[Q_GRAVE]._qactive == QUEST_DONE) {
 			trigs[numtrigs].position = { 36, 24 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 21;
@@ -168,7 +168,7 @@ void InitL2Triggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 267 && (i != quests[Q_SCHAMB].position.x || j != quests[Q_SCHAMB].position.y)) {
+			if (dPiece[i][j] == 267 && (i != Quests[Q_SCHAMB].position.x || j != Quests[Q_SCHAMB].position.y)) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
@@ -271,7 +271,7 @@ void InitL4Triggers()
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 370 && quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			if (dPiece[i][j] == 370 && Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -699,7 +699,7 @@ bool ForceSKingTrig()
 
 	for (i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
-			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_SKELKING]._qlevel).c_str());
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_SKELKING]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -716,7 +716,7 @@ bool ForceSChambTrig()
 
 	for (i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_SCHAMB]._qlevel).c_str());
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_SCHAMB]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -733,7 +733,7 @@ bool ForcePWaterTrig()
 
 	for (i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
-			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_PWATER]._qlevel).c_str());
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_PWATER]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -822,7 +822,7 @@ void CheckTriggers()
 			StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:
-			StartNewLvl(MyPlayerId, trigs[i]._tmsg, ReturnLvl);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, ReturnLevel);
 			break;
 		case WM_DIABTOWNWARP:
 			if (gbIsMultiplayer) {

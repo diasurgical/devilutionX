@@ -58,13 +58,13 @@ struct TownerStruct {
 	_talker_id _ttype;
 };
 
-extern TownerStruct towners[NUM_TOWNERS];
+extern TownerStruct Towners[NUM_TOWNERS];
 
 void InitTowners();
 void FreeTownerGFX();
 void ProcessTowners();
 void TalkToTowner(PlayerStruct &player, int t);
 
-extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
+extern _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS];
 
 } // namespace devilution

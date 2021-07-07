@@ -168,7 +168,7 @@ void PrintDebugQuest()
 {
 	char dstr[128];
 
-	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, quests[DebugQuestId]._qactive, quests[DebugQuestId]._qvar1);
+	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, Quests[DebugQuestId]._qactive, Quests[DebugQuestId]._qvar1);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 
 	DebugQuestId++;
