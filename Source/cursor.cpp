@@ -192,7 +192,7 @@ void CelDrawCursor(const Surface &out, Point position, int cursId)
 	const auto &sprite = GetInvItemSprite(cursId);
 	const int frame = GetInvItemFrame(cursId);
 	if (IsItemSprite(cursId)) {
-		const auto &heldItem = plr[myplr].HoldItem;
+		const auto &heldItem = Players[MyPlayerId].HoldItem;
 		CelBlitOutlineTo(out, GetOutlineColor(heldItem, true), position, sprite, frame, false);
 		CelDrawItem(heldItem, out, position, sprite, frame);
 	} else {
@@ -228,7 +228,7 @@ void CheckTown()
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
-				strcpy(tempstr, fmt::format(_("from {:s}"), plr[missile[mx]._misource]._pName).c_str());
+				strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile[mx]._misource]._pName).c_str());
 				AddPanelString(tempstr);
 				cursmx = missile[mx].position.tile.x;
 				cursmy = missile[mx].position.tile.y;
@@ -300,7 +300,7 @@ void CheckCursMove()
 	int xo = 0;
 	int yo = 0;
 	CalcTileOffset(&xo, &yo);
-	const auto &myPlayer = plr[myplr];
+	const auto &myPlayer = Players[MyPlayerId];
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
@@ -574,7 +574,7 @@ void CheckCursMove()
 	if (pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dPlayer[mx + 1][my] != 0) {
 			int8_t bv = dPlayer[mx + 1][my] > 0 ? dPlayer[mx + 1][my] - 1 : -(dPlayer[mx + 1][my] + 1);
-			if (bv != myplr && plr[bv]._pHitPoints != 0) {
+			if (bv != MyPlayerId && Players[bv]._pHitPoints != 0) {
 				cursmx = mx + 1;
 				cursmy = my;
 				pcursplr = bv;
@@ -582,7 +582,7 @@ void CheckCursMove()
 		}
 		if (flipflag && my + 1 < MAXDUNY && dPlayer[mx][my + 1] != 0) {
 			int8_t bv = dPlayer[mx][my + 1] > 0 ? dPlayer[mx][my + 1] - 1 : -(dPlayer[mx][my + 1] + 1);
-			if (bv != myplr && plr[bv]._pHitPoints != 0) {
+			if (bv != MyPlayerId && Players[bv]._pHitPoints != 0) {
 				cursmx = mx;
 				cursmy = my + 1;
 				pcursplr = bv;
@@ -590,7 +590,7 @@ void CheckCursMove()
 		}
 		if (dPlayer[mx][my] != 0) {
 			int8_t bv = dPlayer[mx][my] > 0 ? dPlayer[mx][my] - 1 : -(dPlayer[mx][my] + 1);
-			if (bv != myplr) {
+			if (bv != MyPlayerId) {
 				cursmx = mx;
 				cursmy = my;
 				pcursplr = bv;
@@ -598,7 +598,7 @@ void CheckCursMove()
 		}
 		if ((dFlags[mx][my] & BFLAG_DEAD_PLAYER) != 0) {
 			for (int i = 0; i < MAX_PLRS; i++) {
-				if (plr[i].position.tile.x == mx && plr[i].position.tile.y == my && i != myplr) {
+				if (Players[i].position.tile.x == mx && Players[i].position.tile.y == my && i != MyPlayerId) {
 					cursmx = mx;
 					cursmy = my;
 					pcursplr = i;
@@ -610,7 +610,7 @@ void CheckCursMove()
 				for (int yy = -1; yy < 2; yy++) {
 					if (mx + xx < MAXDUNX && my + yy < MAXDUNY && (dFlags[mx + xx][my + yy] & BFLAG_DEAD_PLAYER) != 0) {
 						for (int i = 0; i < MAX_PLRS; i++) {
-							if (plr[i].position.tile.x == mx + xx && plr[i].position.tile.y == my + yy && i != myplr) {
+							if (Players[i].position.tile.x == mx + xx && Players[i].position.tile.y == my + yy && i != MyPlayerId) {
 								cursmx = mx + xx;
 								cursmy = my + yy;
 								pcursplr = i;
@@ -622,7 +622,7 @@ void CheckCursMove()
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dPlayer[mx + 1][my + 1] != 0) {
 			int8_t bv = dPlayer[mx + 1][my + 1] > 0 ? dPlayer[mx + 1][my + 1] - 1 : -(dPlayer[mx + 1][my + 1] + 1);
-			if (bv != myplr && plr[bv]._pHitPoints != 0) {
+			if (bv != MyPlayerId && Players[bv]._pHitPoints != 0) {
 				cursmx = mx + 1;
 				cursmy = my + 1;
 				pcursplr = bv;

@@ -155,7 +155,7 @@ template <class P>
 void base_protocol<P>::send(packet &pkt)
 {
 	if (pkt.dest() < MAX_PLRS) {
-		if (pkt.dest() == myplr)
+		if (pkt.dest() == MyPlayerId)
 			return;
 		if (peers[pkt.dest()])
 			proto.send(peers[pkt.dest()], pkt.data());

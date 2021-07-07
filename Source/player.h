@@ -434,10 +434,10 @@ struct PlayerStruct {
 	}
 };
 
-extern int myplr;
-extern PlayerStruct plr[MAX_PLRS];
-extern bool deathflag;
-extern int ToBlkTbl[enum_size<HeroClass>::value];
+extern int MyPlayerId;
+extern PlayerStruct Players[MAX_PLRS];
+extern bool MyPlayerIsDead;
+extern int BlockBonuses[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
 void InitPlayerGFX(PlayerStruct &player);

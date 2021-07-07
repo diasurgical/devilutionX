@@ -360,15 +360,15 @@ TEST(Writehero, pfile_write_hero)
 	gbIsHellfireSaveGame = false;
 	leveltype = DTYPE_TOWN;
 
-	myplr = 0;
+	MyPlayerId = 0;
 	_uiheroinfo info {};
 	strcpy(info.name, "TestPlayer");
 	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
-	UnPackPlayer(&pks, myplr, true);
-	AssertPlayer(plr[0]);
+	UnPackPlayer(&pks, MyPlayerId, true);
+	AssertPlayer(Players[0]);
 	pfile_write_hero();
 
 	std::ifstream f("multi_0.sv", std::ios::binary);

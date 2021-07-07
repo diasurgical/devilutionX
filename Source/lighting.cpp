@@ -940,7 +940,7 @@ void ToggleLighting()
 	}
 
 	memcpy(dLight, dPreLight, sizeof(dLight));
-	for (const auto &player : plr) {
+	for (const auto &player : Players) {
 		if (player.plractive && player.plrlevel == currlevel) {
 			DoLighting(player.position.tile, player._pLightRad, -1);
 		}

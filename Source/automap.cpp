@@ -209,7 +209,7 @@ void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
 
 void SearchAutomapItem(const Surface &out)
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 	Point tile = myPlayer.position.tile;
 	if (myPlayer._pmode == PM_WALK3) {
 		tile = myPlayer.position.future;
@@ -257,7 +257,7 @@ void DrawAutomapPlr(const Surface &out, int playerId)
 {
 	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
-	auto &player = plr[playerId];
+	auto &player = Players[playerId];
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK3) {
 		tile = player.position.future;
@@ -617,8 +617,8 @@ void DrawAutomap(const Surface &out)
 	}
 
 	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
-		auto &player = plr[playerId];
-		if (player.plrlevel == plr[myplr].plrlevel && player.plractive && !player._pLvlChanging) {
+		auto &player = Players[playerId];
+		if (player.plrlevel == Players[MyPlayerId].plrlevel && player.plractive && !player._pLvlChanging) {
 			DrawAutomapPlr(out, playerId);
 		}
 	}

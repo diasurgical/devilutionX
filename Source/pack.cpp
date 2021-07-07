@@ -195,7 +195,7 @@ static void VerifyGoldSeeds(PlayerStruct &player)
 
 void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 {
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	player.position.tile = { pPack->px, pPack->py };
 	player.position.future = { pPack->px, pPack->py };
@@ -219,7 +219,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 	player._pGold = SDL_SwapLE32(pPack->pGold);
 	player._pMaxHPBase = SDL_SwapLE32(pPack->pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(pPack->pHPBase);
-	player._pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(player._pClass)];
+	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
 	if (!netSync)
 		if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 			player._pHPBase = 64;
@@ -257,7 +257,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 		UnPackItem(&packedItem, &player.SpdList[i], isHellfire);
 	}
 
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		for (int i = 0; i < 20; i++)
 			witchitem[i]._itype = ITYPE_NONE;
 	}

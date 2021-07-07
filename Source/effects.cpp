@@ -1144,7 +1144,7 @@ void FreeMonsterSnd()
 
 bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 {
-	const auto &playerPosition = plr[myplr].position.tile;
+	const auto &playerPosition = Players[MyPlayerId].position.tile;
 	const auto delta = soundPosition - playerPosition;
 
 	int pan = (delta.deltaX - delta.deltaY) * 256;
@@ -1163,7 +1163,7 @@ bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
 
 static void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 {
-	if (plr[myplr].pLvlLoad != 0 && gbIsMultiplayer) {
+	if (Players[MyPlayerId].pLvlLoad != 0 && gbIsMultiplayer) {
 		return;
 	}
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
@@ -1194,7 +1194,7 @@ static void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 
 void PlayEffect(int i, int mode)
 {
-	if (plr[myplr].pLvlLoad != 0) {
+	if (Players[MyPlayerId].pLvlLoad != 0) {
 		return;
 	}
 
@@ -1337,7 +1337,7 @@ void sound_init()
 		if (gbIsHellfire)
 			mask |= sfx_MONK;
 	} else {
-		switch (plr[myplr]._pClass) {
+		switch (Players[MyPlayerId]._pClass) {
 		case HeroClass::Warrior:
 		case HeroClass::Barbarian:
 			mask |= sfx_WARRIOR;

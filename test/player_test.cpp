@@ -11,7 +11,7 @@ extern bool PM_DoGotHit(int pnum);
 int RunBlockTest(int frames, int flags)
 {
 	int pnum = 0;
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;

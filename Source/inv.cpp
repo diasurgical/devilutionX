@@ -141,7 +141,7 @@ void FreeInvGFX()
 
 void InitInv()
 {
-	switch (plr[myplr]._pClass) {
+	switch (Players[MyPlayerId]._pClass) {
 	case HeroClass::Warrior:
 	case HeroClass::Barbarian:
 		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
@@ -210,7 +210,7 @@ void DrawInv(const Surface &out)
 		{ 133, 160 }, // chest
 	};
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
 		if (!myPlayer.InvBody[slot].isEmpty()) {
@@ -303,7 +303,7 @@ void DrawInvBelt(const Surface &out)
 
 	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (myPlayer.SpdList[i].isEmpty()) {
@@ -534,7 +534,7 @@ bool CanEquip(PlayerStruct &player, const ItemStruct &item, inv_body_loc bodyLoc
  */
 bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem)
 {
-	auto &player = plr[playerId];
+	auto &player = Players[playerId];
 
 	if (!CanEquip(player, item, bodyLocation)) {
 		return false;
@@ -543,7 +543,7 @@ bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, 
 	if (persistItem) {
 		player.InvBody[bodyLocation] = item;
 
-		if (sgOptions.Audio.bAutoEquipSound && playerId == myplr) {
+		if (sgOptions.Audio.bAutoEquipSound && playerId == MyPlayerId) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 		}
 
@@ -791,7 +791,7 @@ int SwapItem(ItemStruct *a, ItemStruct *b)
 
 void CheckInvPaste(int pnum, Point cursorPosition)
 {
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 	int i = cursorPosition.x + (IsHardwareCursor() ? 0 : (icursW / 2));
@@ -922,7 +922,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
-	if (pnum == myplr)
+	if (pnum == MyPlayerId)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
 	int cn = CURSOR_HAND;
@@ -1013,13 +1013,13 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				player.HoldItem = player.InvBody[INVLOC_HAND_RIGHT];
 			else
 				player.HoldItem = player.InvBody[INVLOC_HAND_LEFT];
-			if (pnum == myplr)
+			if (pnum == MyPlayerId)
 				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			bool done2h = AutoPlaceItemInInventory(player, player.HoldItem, true);
 			player.HoldItem = tempitem;
-			if (pnum == myplr)
+			if (pnum == MyPlayerId)
 				NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 			else
 				SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1122,7 +1122,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		break;
 	}
 	CalcPlrInv(pnum, true);
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
 			SetCursorPos(MousePosition.x + (cursW / 2), MousePosition.y + (cursH / 2));
 		NewCursor(cn);
@@ -1134,7 +1134,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId
 	memset(&Items[MAXITEMS], 0, sizeof(*Items));
 	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	player.HoldItem = Items[MAXITEMS];
 
@@ -1157,7 +1157,7 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId
 
 void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 {
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	if (player._pmode > PM_WALK3) {
 		return;
@@ -1343,7 +1343,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		CalcPlrInv(pnum, true);
 		CheckItemStats(player);
 
-		if (pnum == myplr) {
+		if (pnum == MyPlayerId) {
 			if (automaticallyEquipped) {
 				PlaySFX(ItemInvSnds[ItemCAnimTbl[holdItem._iCurs]]);
 			} else if (!automaticMove || automaticallyMoved) {
@@ -1373,7 +1373,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 void inv_update_rem_item(int pnum, BYTE iv)
 {
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	if (iv < NUM_INVLOC) {
 		player.InvBody[iv]._itype = ITYPE_NONE;
@@ -1385,9 +1385,9 @@ void inv_update_rem_item(int pnum, BYTE iv)
 void CheckInvItem(bool isShiftHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(myplr, MousePosition);
+		CheckInvPaste(MyPlayerId, MousePosition);
 	} else {
-		CheckInvCut(myplr, MousePosition, isShiftHeld);
+		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld);
 	}
 }
 
@@ -1447,7 +1447,7 @@ static void CheckNaKrulNotes(PlayerStruct &player)
 		}
 	}
 
-	plr[myplr].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
+	Players[MyPlayerId].Say(HeroSpeech::JustWhatIWasLookingFor, 10);
 
 	for (auto note : notes) {
 		if (idx != note) {
@@ -1466,7 +1466,7 @@ static void CheckNaKrulNotes(PlayerStruct &player)
 
 static void CheckQuestItem(PlayerStruct &player)
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (player.HoldItem.IDidx == IDI_OPTAMULET && quests[Q_BLIND]._qactive == QUEST_ACTIVE)
 		quests[Q_BLIND]._qactive = QUEST_DONE;
@@ -1507,7 +1507,7 @@ static void CheckQuestItem(PlayerStruct &player)
 		quests[Q_GRAVE]._qlog = false;
 		quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
 		quests[Q_GRAVE]._qvar1 = 1;
-		plr[myplr].Say(HeroSpeech::UhHuh, 10);
+		Players[MyPlayerId].Say(HeroSpeech::UhHuh, 10);
 	}
 
 	CheckNaKrulNotes(player);
@@ -1548,9 +1548,9 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 	if (dItem[item->position.x][item->position.y] == 0)
 		return;
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
-	if (myplr == pnum && pcurs >= CURSOR_FIRSTITEM)
+	if (MyPlayerId == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile);
 
 	item->_iCreateInfo &= ~CF_PREGEN;
@@ -1583,7 +1583,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 	if (dItem[item->position.x][item->position.y] == 0)
 		return;
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	item->_iCreateInfo &= ~CF_PREGEN;
 	player.HoldItem = *item; /// BUGFIX: overwrites cursor item, allowing for belt dupe bug
@@ -1612,7 +1612,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 		return;
 	}
 
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
 	player.HoldItem = *item;
@@ -1706,7 +1706,7 @@ bool TryInvPut()
 	if (ActiveItemCount >= MAXITEMS)
 		return false;
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	Direction dir = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
 	if (CanPut(myPlayer.position.tile + dir)) {
@@ -1877,7 +1877,7 @@ char CheckInvHLight()
 	int8_t rv = -1;
 	infoclr = UIS_SILVER;
 	ItemStruct *pi = nullptr;
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	ClearPanel();
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST) {
@@ -1970,7 +1970,7 @@ bool UseScroll()
 	if (pcurs != CURSOR_HAND)
 		return false;
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (leveltype == DTYPE_TOWN && !spelldata[myPlayer._pRSpell].sTownSpell)
 		return false;
@@ -2018,7 +2018,7 @@ bool UseStaff()
 		return false;
 	}
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], myPlayer._pRSpell);
 }
@@ -2027,7 +2027,7 @@ void StartGoldDrop()
 {
 	initialDropGoldIndex = pcursinvitem;
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (pcursinvitem <= INVITEM_INV_LAST)
 		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
@@ -2046,9 +2046,9 @@ bool UseInvItem(int pnum, int cii)
 	int c;
 	ItemStruct *item;
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
-	if (player._pInvincible && player._pHitPoints == 0 && pnum == myplr)
+	if (player._pInvincible && player._pHitPoints == 0 && pnum == MyPlayerId)
 		return true;
 	if (pcurs != CURSOR_HAND)
 		return true;
@@ -2113,7 +2113,7 @@ bool UseInvItem(int pnum, int cii)
 	int idata = ItemCAnimTbl[item->_iCurs];
 	if (item->_iMiscId == IMISC_BOOK)
 		PlaySFX(IS_RBOOK);
-	else if (pnum == myplr)
+	else if (pnum == MyPlayerId)
 		PlaySFX(ItemInvSnds[idata]);
 
 	UseItem(pnum, item->_iMiscId, item->_iSpell);
@@ -2144,7 +2144,7 @@ void DoTelekinesis()
 	if (pcursobj != -1)
 		NetSendCmdParam1(true, CMD_OPOBJT, pcursobj);
 	if (pcursitem != -1)
-		NetSendCmdGItem(true, CMD_REQUESTAGITEM, myplr, myplr, pcursitem);
+		NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, MyPlayerId, pcursitem);
 	if (pcursmonst != -1 && !M_Talker(pcursmonst) && Monsters[pcursmonst].mtalkmsg == TEXT_NONE)
 		NetSendCmdParam1(true, CMD_KNOCKBACK, pcursmonst);
 	NewCursor(CURSOR_HAND);

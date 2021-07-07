@@ -317,7 +317,7 @@ static void UndrawCursor(const Surface &out)
 
 static bool ShouldShowCursor()
 {
-	return !(sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || plr[myplr]._pStatPts <= 0));
+	return !(sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || Players[MyPlayerId]._pStatPts <= 0));
 }
 
 /**
@@ -458,7 +458,7 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 		trans = Monsters[m]._uniqtrans + 4;
 	if (Monsters[m]._mmode == MM_STONE)
 		trans = 2;
-	if (plr[myplr]._pInfraFlag && LightTableIndex > 8)
+	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
 	if (trans != 0)
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, trans);
@@ -471,14 +471,14 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
  */
 static void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
 {
-	x += CalculateWidth2(plr[pnum].AnimInfo.pCelSprite->Width()) - misfiledata[missileGraphicId].mAnimWidth2[0];
+	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - misfiledata[missileGraphicId].mAnimWidth2[0];
 
 	int width = misfiledata[missileGraphicId].mAnimWidth[0];
 	byte *pCelBuff = misfiledata[missileGraphicId].mAnimData[0];
 
 	CelSprite cel { pCelBuff, width };
 
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		Cl2Draw(out, x, y, cel, 1);
 		return;
 	}
@@ -501,9 +501,9 @@ static void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_i
  */
 static void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lighting)
 {
-	if (plr[pnum].pManaShield)
+	if (Players[pnum].pManaShield)
 		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, x, y, lighting);
-	if (plr[pnum].wReflections > 0)
+	if (Players[pnum].wReflections > 0)
 		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, x, y + 16, lighting);
 }
 
@@ -521,11 +521,11 @@ static void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lig
  */
 static void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int py)
 {
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag && leveltype != DTYPE_TOWN) {
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	auto *pCelSprite = player.AnimInfo.pCelSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
@@ -554,13 +554,13 @@ static void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int p
 	if (pnum == pcursplr)
 		Cl2DrawOutline(out, 165, px, py, *pCelSprite, nCel);
 
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		Cl2Draw(out, px, py, *pCelSprite, nCel);
 		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
 	}
 
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 || (plr[myplr]._pInfraFlag && LightTableIndex > 8)) {
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawLightTbl(out, px, py, *pCelSprite, nCel, 1);
 		DrawPlayerIcons(out, pnum, px, py, true);
 		return;
@@ -591,7 +591,7 @@ void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
 	dFlags[x][y] &= ~BFLAG_DEAD_PLAYER;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = plr[i];
+		auto &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile.x == x && player.position.tile.y == y) {
 			dFlags[x][y] |= BFLAG_DEAD_PLAYER;
 			int px = sx + player.position.offset.deltaX - CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width());
@@ -784,7 +784,7 @@ static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, 
 		return;
 	}
 
-	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !plr[myplr]._pInfraFlag)
+	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -834,7 +834,7 @@ static void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
 		Log("draw player: tried to draw illegal player {}", p);
 		return;
 	}
-	auto &player = plr[p];
+	auto &player = Players[p];
 
 	Displacement offset = player.position.offset;
 	if (player.IsWalking()) {
@@ -1270,7 +1270,7 @@ static void DrawGame(const Surface &fullOut, int x, int y)
 	    : fullOut.subregionY(0, (gnViewportHeight + 1) / 2);
 
 	// Adjust by player offset and tile grid alignment
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 	Displacement offset = ScrollInfo.offset;
 	if (myPlayer.IsWalking())
 		offset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
@@ -1392,7 +1392,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	} else if (questlog) {
 		DrawQuestLog(out);
 	}
-	if (!chrflag && plr[myplr]._pStatPts != 0 && !spselflag
+	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
 	    && (!questlog || gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || gnScreenWidth >= 4 * SPANEL_WIDTH)) {
 		DrawLevelUpIcon(out);
 	}
@@ -1414,7 +1414,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	if (msgflag != EMSG_NONE) {
 		DrawDiabloMsg(out);
 	}
-	if (deathflag) {
+	if (MyPlayerIsDead) {
 		RedBack(out);
 	} else if (PauseMode != 0) {
 		gmenu_draw_pause(out);

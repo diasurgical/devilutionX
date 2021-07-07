@@ -335,8 +335,8 @@ TEST(pack, UnPackItem_diablo)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	plr[myplr]._pMaxManaBase = 125 << 6;
-	plr[myplr]._pMaxHPBase = 125 << 6;
+	Players[MyPlayerId]._pMaxManaBase = 125 << 6;
+	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
 		UnPackItem(&PackedDiabloItems[i], &id, false);
@@ -406,8 +406,8 @@ TEST(pack, UnPackItem_spawn)
 	gbIsMultiplayer = false;
 	gbIsSpawn = true;
 
-	plr[myplr]._pMaxManaBase = 125 << 6;
-	plr[myplr]._pMaxHPBase = 125 << 6;
+	Players[MyPlayerId]._pMaxManaBase = 125 << 6;
+	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
 		UnPackItem(&PackedSpawnItems[i], &id, false);
@@ -450,8 +450,8 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 	gbIsMultiplayer = true;
 	gbIsSpawn = false;
 
-	plr[myplr]._pMaxManaBase = 125 << 6;
-	plr[myplr]._pMaxHPBase = 125 << 6;
+	Players[MyPlayerId]._pMaxManaBase = 125 << 6;
+	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
 		UnPackItem(&PackedDiabloMPItems[i], &id, false);
@@ -659,8 +659,8 @@ TEST(pack, UnPackItem_hellfire)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	plr[myplr]._pMaxManaBase = 125 << 6;
-	plr[myplr]._pMaxHPBase = 125 << 6;
+	Players[MyPlayerId]._pMaxManaBase = 125 << 6;
+	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
 		UnPackItem(&PackedHellfireItems[i], &id, true);
