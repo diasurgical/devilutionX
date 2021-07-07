@@ -2080,11 +2080,11 @@ void M_TryH2HHit(int i, int pnum, int hit, int minDam, int maxDam)
 	}
 	if (Monsters[i].MType->mtype == MT_YZOMBIE && pnum == MyPlayerId) {
 		int currentMissileId = -1;
-		for (int j = 0; j < nummissiles; j++) {
-			int mi = missileactive[j];
-			if (missile[mi]._mitype != MIS_MANASHIELD)
+		for (int j = 0; j < ActiveMissileCount; j++) {
+			int mi = ActiveMissiles[j];
+			if (Missiles[mi]._mitype != MIS_MANASHIELD)
 				continue;
-			if (missile[mi]._misource == pnum)
+			if (Missiles[mi]._misource == pnum)
 				currentMissileId = mi;
 		}
 		if (Players[pnum]._pMaxHP > 64) {
@@ -2093,13 +2093,13 @@ void M_TryH2HHit(int i, int pnum, int hit, int minDam, int maxDam)
 				if (Players[pnum]._pHitPoints > Players[pnum]._pMaxHP) {
 					Players[pnum]._pHitPoints = Players[pnum]._pMaxHP;
 					if (currentMissileId >= 0)
-						missile[currentMissileId]._miVar1 = Players[pnum]._pHitPoints;
+						Missiles[currentMissileId]._miVar1 = Players[pnum]._pHitPoints;
 				}
 				Players[pnum]._pMaxHPBase -= 64;
 				if (Players[pnum]._pHPBase > Players[pnum]._pMaxHPBase) {
 					Players[pnum]._pHPBase = Players[pnum]._pMaxHPBase;
 					if (currentMissileId >= 0)
-						missile[currentMissileId]._miVar2 = Players[pnum]._pHPBase;
+						Missiles[currentMissileId]._miVar2 = Players[pnum]._pHPBase;
 				}
 			}
 		}
@@ -4845,7 +4845,7 @@ void MissToMonst(int i, Point position)
 {
 	assurance((DWORD)i < MAXMISSILES, i);
 
-	MissileStruct *miss = &missile[i];
+	MissileStruct *miss = &Missiles[i];
 	int m = miss->_misource;
 
 	assurance((DWORD)m < MAXMONSTERS, m);
@@ -4923,20 +4923,20 @@ bool monster_posok(int i, Point position)
 	bool fire = false;
 	bool lightning = false;
 	if (mi > 0) {
-		if (missile[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
+		if (Missiles[mi - 1]._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 			fire = true;
-		} else if (missile[mi - 1]._mitype == MIS_LIGHTWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
+		} else if (Missiles[mi - 1]._mitype == MIS_LIGHTWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
 			lightning = true;
 		}
 	} else {
-		for (int j = 0; j < nummissiles; j++) {
-			mi = missileactive[j];
-			if (missile[mi].position.tile == position) {
-				if (missile[mi]._mitype == MIS_FIREWALL) {
+		for (int j = 0; j < ActiveMissileCount; j++) {
+			mi = ActiveMissiles[j];
+			if (Missiles[mi].position.tile == position) {
+				if (Missiles[mi]._mitype == MIS_FIREWALL) {
 					fire = true;
 					break;
 				}
-				if (missile[mi]._mitype == MIS_LIGHTWALL) {
+				if (Missiles[mi]._mitype == MIS_LIGHTWALL) {
 					lightning = true;
 					break;
 				}
@@ -5130,12 +5130,12 @@ void SpawnGolum(int i, Point position, int mi)
 	Monsters[i].position.future = position;
 	Monsters[i].position.old = position;
 	Monsters[i]._pathcount = 0;
-	Monsters[i]._mmaxhp = 2 * (320 * missile[mi]._mispllvl + Players[i]._pMaxMana / 3);
+	Monsters[i]._mmaxhp = 2 * (320 * Missiles[mi]._mispllvl + Players[i]._pMaxMana / 3);
 	Monsters[i]._mhitpoints = Monsters[i]._mmaxhp;
 	Monsters[i].mArmorClass = 25;
-	Monsters[i].mHit = 5 * (missile[mi]._mispllvl + 8) + 2 * Players[i]._pLevel;
-	Monsters[i].mMinDamage = 2 * (missile[mi]._mispllvl + 4);
-	Monsters[i].mMaxDamage = 2 * (missile[mi]._mispllvl + 8);
+	Monsters[i].mHit = 5 * (Missiles[mi]._mispllvl + 8) + 2 * Players[i]._pLevel;
+	Monsters[i].mMinDamage = 2 * (Missiles[mi]._mispllvl + 4);
+	Monsters[i].mMaxDamage = 2 * (Missiles[mi]._mispllvl + 8);
 	Monsters[i]._mFlags |= MFLAG_GOLEM;
 	M_StartSpStand(i, DIR_S);
 	M_Enemy(i);

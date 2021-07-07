@@ -10,7 +10,7 @@
 namespace devilution {
 
 /** Data related to each missile ID. */
-MissileData missiledata[] = {
+MissileDataStruct MissileData[] = {
 	// clang-format off
 	// mAddProc,                   mProc,              mName,             mDraw, mType, mResist,        mFileNum,        miSFX,       mlSFX,       MovementDistribution;
 	{  &AddArrow,                  &MI_Arrow,          MIS_ARROW,         true,      0, MISR_NONE,      MFILE_ARROWS,    SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Blockable   },
@@ -125,7 +125,7 @@ MissileData missiledata[] = {
 };
 
 /** Data related to each missile graphic ID. */
-MisFileData misfiledata[] = {
+MisFileData MissileSpriteData[] = {
 	// clang-format off
 	// mName,     mAnimName, mAnimFAmt, mFlags, mAnimData[16],                                                                                                                                 mAnimDelay[16],                                     mAnimLen[16],                                                       mAnimWidth[16],                                                             mAnimWidth2[16]
 	{ "Arrows",   MFILE_ARROWS,      1, 2, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },

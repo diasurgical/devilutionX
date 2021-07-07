@@ -117,10 +117,10 @@ struct MissileStruct {
 	bool limitReached;
 };
 
-extern int missileactive[MAXMISSILES];
-extern int missileavail[MAXMISSILES];
-extern MissileStruct missile[MAXMISSILES];
-extern int nummissiles;
+extern MissileStruct Missiles[MAXMISSILES];
+extern int AvailableMissiles[MAXMISSILES];
+extern int ActiveMissiles[MAXMISSILES];
+extern int ActiveMissileCount;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);

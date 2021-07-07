@@ -215,23 +215,23 @@ void InitLevelCursor()
 
 void CheckTown()
 {
-	for (int i = 0; i < nummissiles; i++) {
-		int mx = missileactive[i];
-		if (missile[mx]._mitype == MIS_TOWN) {
-			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
-			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
-			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 1)
-			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 1)
-			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 2)
-			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 2)
-			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mx = ActiveMissiles[i];
+		if (Missiles[mx]._mitype == MIS_TOWN) {
+			if ((cursmx == Missiles[mx].position.tile.x - 1 && cursmy == Missiles[mx].position.tile.y)
+			    || (cursmx == Missiles[mx].position.tile.x && cursmy == Missiles[mx].position.tile.y - 1)
+			    || (cursmx == Missiles[mx].position.tile.x - 1 && cursmy == Missiles[mx].position.tile.y - 1)
+			    || (cursmx == Missiles[mx].position.tile.x - 2 && cursmy == Missiles[mx].position.tile.y - 1)
+			    || (cursmx == Missiles[mx].position.tile.x - 2 && cursmy == Missiles[mx].position.tile.y - 2)
+			    || (cursmx == Missiles[mx].position.tile.x - 1 && cursmy == Missiles[mx].position.tile.y - 2)
+			    || (cursmx == Missiles[mx].position.tile.x && cursmy == Missiles[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
-				strcpy(tempstr, fmt::format(_("from {:s}"), Players[missile[mx]._misource]._pName).c_str());
+				strcpy(tempstr, fmt::format(_("from {:s}"), Players[Missiles[mx]._misource]._pName).c_str());
 				AddPanelString(tempstr);
-				cursmx = missile[mx].position.tile.x;
-				cursmy = missile[mx].position.tile.y;
+				cursmx = Missiles[mx].position.tile.x;
+				cursmy = Missiles[mx].position.tile.y;
 			}
 		}
 	}
@@ -239,16 +239,16 @@ void CheckTown()
 
 void CheckRportal()
 {
-	for (int i = 0; i < nummissiles; i++) {
-		int mx = missileactive[i];
-		if (missile[mx]._mitype == MIS_RPORTAL) {
-			if ((cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y)
-			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y - 1)
-			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 1)
-			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 1)
-			    || (cursmx == missile[mx].position.tile.x - 2 && cursmy == missile[mx].position.tile.y - 2)
-			    || (cursmx == missile[mx].position.tile.x - 1 && cursmy == missile[mx].position.tile.y - 2)
-			    || (cursmx == missile[mx].position.tile.x && cursmy == missile[mx].position.tile.y)) {
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mx = ActiveMissiles[i];
+		if (Missiles[mx]._mitype == MIS_RPORTAL) {
+			if ((cursmx == Missiles[mx].position.tile.x - 1 && cursmy == Missiles[mx].position.tile.y)
+			    || (cursmx == Missiles[mx].position.tile.x && cursmy == Missiles[mx].position.tile.y - 1)
+			    || (cursmx == Missiles[mx].position.tile.x - 1 && cursmy == Missiles[mx].position.tile.y - 1)
+			    || (cursmx == Missiles[mx].position.tile.x - 2 && cursmy == Missiles[mx].position.tile.y - 1)
+			    || (cursmx == Missiles[mx].position.tile.x - 2 && cursmy == Missiles[mx].position.tile.y - 2)
+			    || (cursmx == Missiles[mx].position.tile.x - 1 && cursmy == Missiles[mx].position.tile.y - 2)
+			    || (cursmx == Missiles[mx].position.tile.x && cursmy == Missiles[mx].position.tile.y)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Portal to"));
@@ -257,8 +257,8 @@ void CheckRportal()
 				else
 					strcpy(tempstr, _("level 15"));
 				AddPanelString(tempstr);
-				cursmx = missile[mx].position.tile.x;
-				cursmy = missile[mx].position.tile.y;
+				cursmx = Missiles[mx].position.tile.x;
+				cursmy = Missiles[mx].position.tile.y;
 			}
 		}
 	}

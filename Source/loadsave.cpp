@@ -657,7 +657,7 @@ static void LoadMonster(LoadHelper *file, int i)
 
 static void LoadMissile(LoadHelper *file, int i)
 {
-	MissileStruct *pMissile = &missile[i];
+	MissileStruct *pMissile = &Missiles[i];
 
 	pMissile->_mitype = file->NextLE<int32_t>();
 	pMissile->position.tile.x = file->NextLE<int32_t>();
@@ -1155,7 +1155,7 @@ void LoadGame(bool firstflag)
 	ViewY = viewY;
 	ActiveMonsterCount = tmpNummonsters;
 	ActiveItemCount = tmpNumitems;
-	nummissiles = tmpNummissiles;
+	ActiveMissileCount = tmpNummissiles;
 	nobjects = tmpNobjects;
 
 	for (int &monstkill : MonsterKillCounts)
@@ -1166,12 +1166,12 @@ void LoadGame(bool firstflag)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, ActiveMonsters[i]);
-		for (int &missileId : missileactive)
+		for (int &missileId : ActiveMissiles)
 			missileId = file.NextLE<int8_t>();
-		for (int &missileId : missileavail)
+		for (int &missileId : AvailableMissiles)
 			missileId = file.NextLE<int8_t>();
-		for (int i = 0; i < nummissiles; i++)
-			LoadMissile(&file, missileactive[i]);
+		for (int i = 0; i < ActiveMissileCount; i++)
+			LoadMissile(&file, ActiveMissiles[i]);
 		for (int &objectId : objectactive)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : objectavail)
@@ -1699,7 +1699,7 @@ static void SaveMonster(SaveHelper *file, int i)
 
 static void SaveMissile(SaveHelper *file, int i)
 {
-	MissileStruct *pMissile = &missile[i];
+	MissileStruct *pMissile = &Missiles[i];
 
 	file->WriteLE<int32_t>(pMissile->_mitype);
 	file->WriteLE<int32_t>(pMissile->position.tile.x);
@@ -1907,7 +1907,7 @@ void SaveGameData()
 	file.WriteLE<uint8_t>(chrflag ? 1 : 0);
 	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(ActiveItemCount);
-	file.WriteBE<int32_t>(nummissiles);
+	file.WriteBE<int32_t>(ActiveMissileCount);
 	file.WriteBE<int32_t>(nobjects);
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
@@ -1930,12 +1930,12 @@ void SaveGameData()
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, ActiveMonsters[i]);
-		for (int missileId : missileactive)
+		for (int missileId : ActiveMissiles)
 			file.WriteLE<int8_t>(missileId);
-		for (int missileId : missileavail)
+		for (int missileId : AvailableMissiles)
 			file.WriteLE<int8_t>(missileId);
-		for (int i = 0; i < nummissiles; i++)
-			SaveMissile(&file, missileactive[i]);
+		for (int i = 0; i < ActiveMissileCount; i++)
+			SaveMissile(&file, ActiveMissiles[i]);
 		for (int objectId : objectactive)
 			file.WriteLE<int8_t>(objectId);
 		for (int objectId : objectavail)

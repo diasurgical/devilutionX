@@ -1303,9 +1303,9 @@ DWORD OnAwakeGolem(TCmd *pCmd, int pnum)
 		int i;
 		// check if this player already has an active golem
 		bool addGolem = true;
-		for (i = 0; i < nummissiles; i++) {
-			int mi = missileactive[i];
-			if (missile[mi]._mitype == MIS_GOLEM && missile[mi]._misource == pnum) {
+		for (i = 0; i < ActiveMissileCount; i++) {
+			int mi = ActiveMissiles[i];
+			if (Missiles[mi]._mitype == MIS_GOLEM && Missiles[mi]._misource == pnum) {
 				addGolem = false;
 				// CODEFIX: break, don't need to check the rest
 			}
@@ -1556,9 +1556,9 @@ DWORD OnActivatePortal(TCmd *pCmd, int pnum)
 				AddInTownPortal(pnum);
 			else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
-				for (int i = 0; i < nummissiles; i++) {
-					int mi = missileactive[i];
-					if (missile[mi]._mitype == MIS_TOWN && missile[mi]._misource == pnum) {
+				for (int i = 0; i < ActiveMissileCount; i++) {
+					int mi = ActiveMissiles[i];
+					if (Missiles[mi]._mitype == MIS_TOWN && Missiles[mi]._misource == pnum) {
 						addPortal = false;
 						// CODEFIX: break
 					}
@@ -1681,9 +1681,9 @@ DWORD OnSyncQuest(TCmd *pCmd, int pnum)
 DWORD OnEndShield(TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
-		for (int i = 0; i < nummissiles; i++) {
-			int mi = missileactive[i];
-			if (missile[mi]._mitype == MIS_MANASHIELD && missile[mi]._misource == pnum) {
+		for (int i = 0; i < ActiveMissileCount; i++) {
+			int mi = ActiveMissiles[i];
+			if (Missiles[mi]._mitype == MIS_MANASHIELD && Missiles[mi]._misource == pnum) {
 				ClearMissileSpot(mi);
 				DeleteMissile(mi, i);
 			}
@@ -1761,9 +1761,9 @@ DWORD OnRemoveShield(TCmd *pCmd, int pnum)
 DWORD OnReflect(TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
-		for (int i = 0; i < nummissiles; i++) {
-			int mx = missileactive[i];
-			if (missile[mx]._mitype == MIS_REFLECT && missile[mx]._misource == pnum) {
+		for (int i = 0; i < ActiveMissileCount; i++) {
+			int mx = ActiveMissiles[i];
+			if (Missiles[mx]._mitype == MIS_REFLECT && Missiles[mx]._misource == pnum) {
 				ClearMissileSpot(mx);
 				DeleteMissile(mx, i);
 			}

@@ -45,14 +45,14 @@ void InitDead()
 	}
 
 	for (auto &dead : Dead[nd].data)
-		dead = misfiledata[MFILE_BLODBUR].mAnimData[0];
+		dead = MissileSpriteData[MFILE_BLODBUR].mAnimData[0];
 	Dead[nd].frame = 8;
 	Dead[nd].width = 128;
 	Dead[nd].translationPaletteIndex = 0;
 	nd++;
 
 	for (auto &dead : Dead[nd].data)
-		dead = misfiledata[MFILE_SHATTER1].mAnimData[0];
+		dead = MissileSpriteData[MFILE_SHATTER1].mAnimData[0];
 
 	Dead[nd].frame = 12;
 	Dead[nd].width = 128;
