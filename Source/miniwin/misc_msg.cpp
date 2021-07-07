@@ -48,7 +48,7 @@ void SetCursorPos(int x, int y)
 // Moves the mouse to the first attribute "+" button.
 void FocusOnCharInfo()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (invflag || myPlayer._pStatPts <= 0)
 		return;
@@ -283,7 +283,7 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			plr[myplr].Say(HeroSpeech::WhereWouldIPutThis);
+			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
 		}
 	}

@@ -324,7 +324,7 @@ static void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
 
 static void LoadPlayer(LoadHelper *file, int p)
 {
-	auto &player = plr[p];
+	auto &player = Players[p];
 
 	player._pmode = static_cast<PLR_MODE>(file->NextLE<int32_t>());
 
@@ -413,7 +413,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 	player._pDamageMod = file->NextLE<int32_t>();
 	player._pBaseToBlk = file->NextLE<int32_t>();
 	if (player._pBaseToBlk == 0)
-		player._pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(player._pClass)];
+		player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
 	player._pHPBase = file->NextLE<int32_t>();
 	player._pMaxHPBase = file->NextLE<int32_t>();
 	player._pHitPoints = file->NextLE<int32_t>();
@@ -642,7 +642,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	pMonster->leaderflag = file->NextLE<uint8_t>();
 	pMonster->packsize = file->NextLE<uint8_t>();
 	pMonster->mlid = file->NextLE<int8_t>();
-	if (pMonster->mlid == plr[myplr]._plid)
+	if (pMonster->mlid == Players[MyPlayerId]._plid)
 		pMonster->mlid = NO_LIGHT; // Correct incorect values in old saves
 
 	// Omit pointer mName;
@@ -1000,7 +1000,7 @@ void LoadHotkeys()
 	if (!file.IsValid())
 		return;
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	for (auto &spellId : myPlayer._pSplHotKey) {
 		spellId = static_cast<spell_id>(file.NextLE<int32_t>());
@@ -1014,7 +1014,7 @@ void LoadHotkeys()
 
 void SaveHotkeys()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	const size_t nHotkeyTypes = sizeof(myPlayer._pSplHotKey) / sizeof(myPlayer._pSplHotKey[0]);
 	const size_t nHotkeySpells = sizeof(myPlayer._pSplTHotKey) / sizeof(myPlayer._pSplTHotKey[0]);
@@ -1131,9 +1131,9 @@ void LoadGame(bool firstflag)
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
 
-	LoadPlayer(&file, myplr);
+	LoadPlayer(&file, MyPlayerId);
 
-	sgGameInitInfo.nDifficulty = plr[myplr].pDifficulty;
+	sgGameInitInfo.nDifficulty = Players[MyPlayerId].pDifficulty;
 	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
 		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
@@ -1144,12 +1144,12 @@ void LoadGame(bool firstflag)
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		ConvertLevels();
-		RemoveEmptyInventory(plr[myplr]);
+		RemoveEmptyInventory(Players[MyPlayerId]);
 	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
-	SyncInitPlr(myplr);
-	SyncPlrAnim(myplr);
+	SyncInitPlr(MyPlayerId);
+	SyncPlrAnim(MyPlayerId);
 
 	ViewX = viewX;
 	ViewY = viewY;
@@ -1258,7 +1258,7 @@ void LoadGame(bool firstflag)
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
 		LoadPremium(&file, i);
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
-		SpawnPremium(myplr);
+		SpawnPremium(MyPlayerId);
 
 	AutomapActive = file.NextBool8();
 	AutoMapScale = file.NextBE<int32_t>();
@@ -1385,7 +1385,7 @@ static void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
 
 static void SavePlayer(SaveHelper *file, int p)
 {
-	auto &player = plr[p];
+	auto &player = Players[p];
 
 	file->WriteLE<int32_t>(player._pmode);
 	for (int8_t step : player.walkpath)
@@ -1915,8 +1915,8 @@ void SaveGameData()
 		file.WriteBE<int32_t>(gnLevelTypeTbl[i]);
 	}
 
-	plr[myplr].pDifficulty = sgGameInitInfo.nDifficulty;
-	SavePlayer(&file, myplr);
+	Players[MyPlayerId].pDifficulty = sgGameInitInfo.nDifficulty;
+	SavePlayer(&file, MyPlayerId);
 
 	for (int i = 0; i < giNumberQuests; i++)
 		SaveQuest(&file, i);
@@ -2034,7 +2034,7 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scopedWriter;
 
-	DoUnVision(plr[myplr].position.tile, plr[myplr]._pLightRad); // fix for vision staying on the level
+	DoUnVision(Players[MyPlayerId].position.tile, Players[MyPlayerId]._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();
@@ -2112,9 +2112,9 @@ void SaveLevel()
 	}
 
 	if (!setlevel)
-		plr[myplr]._pLvlVisited[currlevel] = true;
+		Players[MyPlayerId]._pLvlVisited[currlevel] = true;
 	else
-		plr[myplr]._pSLvlVisited[setlvlnum] = true;
+		Players[MyPlayerId]._pSLvlVisited[setlvlnum] = true;
 }
 
 void LoadLevel()
@@ -2208,7 +2208,7 @@ void LoadLevel()
 		UpdateLighting = true;
 	}
 
-	for (auto &player : plr) {
+	for (auto &player : Players) {
 		if (player.plractive && currlevel == player.plrlevel)
 			Lights[player._plid]._lunflag = true;
 	}

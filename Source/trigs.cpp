@@ -76,7 +76,7 @@ void InitTownTriggers()
 		townwarp = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
-		auto &myPlayer = plr[myplr];
+		auto &myPlayer = Players[MyPlayerId];
 
 		if (gbIsMultiplayer || (myPlayer.pTownWarps & 1) != 0 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
 			townwarps[0] = true;
@@ -798,7 +798,7 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer._pmode != PM_STAND)
 		return;
@@ -811,18 +811,18 @@ void CheckTriggers()
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(myplr, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
+				NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
 				myPlayer.Say(HeroSpeech::NotAChance);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
+				StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel + 1);
 			}
 			break;
 		case WM_DIABPREVLVL:
-			StartNewLvl(myplr, trigs[i]._tmsg, currlevel - 1);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:
-			StartNewLvl(myplr, trigs[i]._tmsg, ReturnLvl);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, ReturnLvl);
 			break;
 		case WM_DIABTOWNWARP:
 			if (gbIsMultiplayer) {
@@ -852,16 +852,16 @@ void CheckTriggers()
 					myPlayer.Say(HeroSpeech::ICantGetThereFromHere);
 
 					InitDiabloMsg(abortflag);
-					NetSendCmdLoc(myplr, true, CMD_WALKXY, position);
+					NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, position);
 					return;
 				}
 			}
 
-			StartNewLvl(myplr, trigs[i]._tmsg, trigs[i]._tlvl);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, trigs[i]._tlvl);
 			break;
 		case WM_DIABTWARPUP:
 			TWarpFrom = currlevel;
-			StartNewLvl(myplr, trigs[i]._tmsg, 0);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, 0);
 			break;
 		default:
 			app_fatal("Unknown trigger msg");

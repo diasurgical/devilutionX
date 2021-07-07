@@ -10,7 +10,7 @@ TEST(Control, SetSpell)
 	pinfoflag = true;
 	pSpell = SPL_FIREBOLT;
 	pSplType = RSPLTYPE_CHARGES;
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 	SetSpell();
 	EXPECT_EQ(spselflag, false);
 	EXPECT_EQ(myPlayer._pRSpell, SPL_FIREBOLT);

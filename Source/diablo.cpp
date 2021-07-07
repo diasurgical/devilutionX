@@ -245,7 +245,7 @@ static void DiabloParseFlags(int argc, char **argv)
 			leveldebug = true;
 			leveltype = (dungeon_type)SDL_atoi(argv[++i]);
 			currlevel = SDL_atoi(argv[++i]);
-			plr[0].plrlevel = currlevel;
+			Players[0].plrlevel = currlevel;
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
@@ -316,7 +316,7 @@ static void FreeGame()
 	FreeQuestText();
 	FreeStoreMem();
 
-	for (auto &player : plr)
+	for (auto &player : Players)
 		ResetPlayerGFX(player);
 
 	FreeCursor();
@@ -450,7 +450,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 			InitLevels();
 			InitQuests();
 			InitPortals();
-			InitDungMsgs(plr[myplr]);
+			InitDungMsgs(Players[MyPlayerId]);
 		}
 		interface_mode uMsg = WM_DIABNEWGAME;
 		if (gbValidSaveFile && gbLoadGame) {
@@ -621,7 +621,7 @@ static bool LeftMouseCmd(bool bShift)
 		if (pcursitem == -1 && pcursmonst == -1 && pcursplr == -1)
 			return true;
 	} else {
-		auto &myPlayer = plr[myplr];
+		auto &myPlayer = Players[MyPlayerId];
 		bNear = myPlayer.position.tile.WalkingDistance({ cursmx, cursmy }) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
@@ -629,7 +629,7 @@ static bool LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {
-				NetSendCmdLoc(myplr, true, CMD_RATTACKXY, { cursmx, cursmy });
+				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(pcursmonst)) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -645,10 +645,10 @@ static bool LeftMouseCmd(bool bShift)
 					if (CanTalkToMonst(pcursmonst)) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
-						NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { cursmx, cursmy });
+						NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 					}
 				} else {
-					NetSendCmdLoc(myplr, true, CMD_SATTACKXY, { cursmx, cursmy });
+					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 				}
 			} else if (pcursmonst != -1) {
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -682,7 +682,7 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1)
-			CheckIdentify(myplr, pcursinvitem);
+			CheckIdentify(MyPlayerId, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
@@ -690,7 +690,7 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_REPAIR) {
 		if (pcursinvitem != -1)
-			DoRepair(myplr, pcursinvitem);
+			DoRepair(MyPlayerId, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
@@ -698,7 +698,7 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_RECHARGE) {
 		if (pcursinvitem != -1)
-			DoRecharge(myplr, pcursinvitem);
+			DoRecharge(MyPlayerId, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
@@ -706,20 +706,20 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_OIL) {
 		if (pcursinvitem != -1)
-			DoOil(myplr, pcursinvitem);
+			DoOil(MyPlayerId, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
 	}
 
 	if (pcurs == CURSOR_TELEPORT) {
-		auto &myPlayer = plr[myplr];
+		auto &myPlayer = Players[MyPlayerId];
 		if (pcursmonst != -1)
-			NetSendCmdParam3(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
+			NetSendCmdParam3(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
 		else if (pcursplr != -1)
-			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
+			NetSendCmdParam3(true, CMD_TSPELLPID, pcursplr, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
 		else
-			NetSendCmdLocParam2(true, CMD_TSPELLXY, { cursmx, cursmy }, myPlayer._pTSpell, GetSpellLevel(myplr, myPlayer._pTSpell));
+			NetSendCmdLocParam2(true, CMD_TSPELLXY, { cursmx, cursmy }, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
 		NewCursor(CURSOR_HAND);
 		return true;
 	}
@@ -743,7 +743,7 @@ static bool LeftMouseDown(int wParam)
 	if (sgnTimeoutCurs != CURSOR_NONE)
 		return false;
 
-	if (deathflag) {
+	if (MyPlayerIsDead) {
 		control_check_btn_press();
 		return false;
 	}
@@ -788,7 +788,7 @@ static bool LeftMouseDown(int wParam)
 					NewCursor(CURSOR_HAND);
 				}
 			} else {
-				if (plr[myplr]._pStatPts != 0 && !spselflag)
+				if (Players[MyPlayerId]._pStatPts != 0 && !spselflag)
 					CheckLvlBtn();
 				if (!lvlbtndown)
 					return LeftMouseCmd(isShiftHeld);
@@ -822,7 +822,7 @@ static void LeftMouseUp(int wParam)
 
 static void RightMouseDown()
 {
-	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || plr[myplr]._pInvincible) {
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
 		return;
 	}
 
@@ -839,9 +839,9 @@ static void RightMouseDown()
 	if (MousePosition.y >= SPANEL_HEIGHT
 	    || ((!sbookflag || MousePosition.x <= RIGHT_PANEL)
 	        && !TryIconCurs()
-	        && (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem)))) {
+	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {
-			if (pcursinvitem == -1 || !UseInvItem(myplr, pcursinvitem))
+			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
 				CheckPlrSpell();
 		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			NewCursor(CURSOR_HAND);
@@ -969,7 +969,7 @@ static void PressKey(int vkey)
 	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
 		AltPressed(true);
 
-	if (deathflag) {
+	if (MyPlayerIsDead) {
 		if (sgnTimeoutCurs != CURSOR_NONE) {
 			return;
 		}
@@ -1075,7 +1075,7 @@ static void PressKey(int vkey)
  */
 static void PressChar(int32_t vkey)
 {
-	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || deathflag) {
+	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
 		return;
 	}
 	if ((char)vkey == 'p' || (char)vkey == 'P') {
@@ -1114,7 +1114,7 @@ static void PressChar(int32_t vkey)
 			if (arrowdebug > 2) {
 				arrowdebug = 0;
 			}
-			auto &myPlayer = plr[myplr];
+			auto &myPlayer = Players[MyPlayerId];
 			if (arrowdebug == 0) {
 				myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
 				myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
@@ -1146,7 +1146,7 @@ static void PressChar(int32_t vkey)
 	case 'a':
 		if (debug_mode_key_inverted_v) {
 			spelldata[SPL_TELEPORT].sTownSpell = true;
-			auto &myPlayer = plr[myplr];
+			auto &myPlayer = Players[MyPlayerId];
 			myPlayer._pSplLvl[myPlayer._pSpell]++;
 		}
 		return;
@@ -1171,20 +1171,20 @@ static void PressChar(int32_t vkey)
 	case 'R':
 	case 'r':
 		sprintf(tempstr, "seed = %i", glSeedTbl[currlevel]);
-		NetSendCmdString(1 << myplr, tempstr);
+		NetSendCmdString(1 << MyPlayerId, tempstr);
 		sprintf(tempstr, "Mid1 = %i : Mid2 = %i : Mid3 = %i", glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel]);
-		NetSendCmdString(1 << myplr, tempstr);
+		NetSendCmdString(1 << MyPlayerId, tempstr);
 		sprintf(tempstr, "End = %i", glEndSeed[currlevel]);
-		NetSendCmdString(1 << myplr, tempstr);
+		NetSendCmdString(1 << MyPlayerId, tempstr);
 		return;
 	case 'T':
 	case 't':
 		if (debug_mode_key_inverted_v) {
-			auto &myPlayer = plr[myplr];
+			auto &myPlayer = Players[MyPlayerId];
 			sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
-			NetSendCmdString(1 << myplr, tempstr);
+			NetSendCmdString(1 << MyPlayerId, tempstr);
 			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
-			NetSendCmdString(1 << myplr, tempstr);
+			NetSendCmdString(1 << MyPlayerId, tempstr);
 		}
 		return;
 	case '|':
@@ -1453,7 +1453,7 @@ static void UpdateMonsterLights()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		MonsterStruct *mon = &Monsters[ActiveMonsters[i]];
 		if (mon->mlid != NO_LIGHT) {
-			if (mon->mlid == plr[myplr]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+			if (mon->mlid == Players[MyPlayerId]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
 				mon->mlid = NO_LIGHT;
 				continue;
 			}
@@ -1506,7 +1506,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	InitLevelMonsters();
 	IncProgress();
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (!setlevel) {
 		CreateLevel(lvldir);
@@ -1536,7 +1536,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (int i = 0; i < MAX_PLRS; i++) {
-			auto &player = plr[i];
+			auto &player = Players[i];
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
@@ -1551,7 +1551,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		bool visited = false;
 		int players = gbIsMultiplayer ? MAX_PLRS : 1;
 		for (int i = 0; i < players; i++) {
-			auto &player = plr[i];
+			auto &player = Players[i];
 			if (player.plractive)
 				visited = visited || player._pLvlVisited[currlevel];
 		}
@@ -1631,7 +1631,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 
 		for (int i = 0; i < MAX_PLRS; i++) {
-			auto &player = plr[i];
+			auto &player = Players[i];
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
@@ -1657,8 +1657,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	SyncPortals();
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		auto &player = plr[i];
-		if (player.plractive && player.plrlevel == currlevel && (!player._pLvlChanging || i == myplr)) {
+		auto &player = Players[i];
+		if (player.plractive && player.plrlevel == currlevel && (!player._pLvlChanging || i == MyPlayerId)) {
 			if (player._pHitPoints > 0) {
 				if (!gbIsMultiplayer)
 					dPlayer[player.position.tile.x][player.position.tile.y] = i + 1;
@@ -1849,10 +1849,10 @@ void itemInfoKeyPressed()
 		    Items[pcursitem].IDidx,
 		    Items[pcursitem]._iSeed,
 		    Items[pcursitem]._iCreateInfo);
-		NetSendCmdString(1 << myplr, tempstr);
+		NetSendCmdString(1 << MyPlayerId, tempstr);
 	}
 	sprintf(tempstr, "Numitems : %i", ActiveItemCount);
-	NetSendCmdString(1 << myplr, tempstr);
+	NetSendCmdString(1 << MyPlayerId, tempstr);
 }
 #endif
 
@@ -1954,7 +1954,7 @@ void spellBookKeyPressed()
 
 bool isPlayerDead()
 {
-	return plr[myplr]._pmode == PM_DEATH || deathflag;
+	return Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead;
 }
 
 void initKeymapActions()
@@ -2062,7 +2062,7 @@ void initKeymapActions()
 			    _("Hell"),
 		    };
 		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */ "{:s}, version = {:s}, mode = {:s}"), gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]).c_str());
-		    NetSendCmdString(1 << myplr, pszStr);
+		    NetSendCmdString(1 << MyPlayerId, pszStr);
 	    },
 	    [&]() { return !isPlayerDead(); },
 	});
@@ -2071,9 +2071,9 @@ void initKeymapActions()
 		    std::string("BeltItem") + std::to_string(i + 1),
 		    '1' + i,
 		    [i] {
-			    auto &myPlayer = plr[myplr];
+			    auto &myPlayer = Players[MyPlayerId];
 			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
-				    UseInvItem(myplr, INVITEM_BELT_FIRST + i);
+				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
 		    },
 		    [&]() { return !isPlayerDead(); },
@@ -2112,7 +2112,7 @@ void initKeymapActions()
 	keymapper.addAction({
 	    "StopHero",
 	    DVL_VK_INVALID,
-	    [] { plr[myplr].Stop(); },
+	    [] { Players[MyPlayerId].Stop(); },
 	    [&]() { return !isPlayerDead(); },
 	});
 }

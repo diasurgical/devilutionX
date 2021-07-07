@@ -80,14 +80,14 @@ void GamemenuUpdateSingle()
 {
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
-	bool enable = plr[myplr]._pmode != PM_DEATH && !deathflag;
+	bool enable = Players[MyPlayerId]._pmode != PM_DEATH && !MyPlayerIsDead;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
 void GamemenuUpdateMulti()
 {
-	gmenu_enable(&sgMultiMenu[2], deathflag);
+	gmenu_enable(&sgMultiMenu[2], MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -97,12 +97,12 @@ void GamemenuPrevious(bool /*bActivate*/)
 
 void GamemenuNewGame(bool /*bActivate*/)
 {
-	for (auto &player : plr) {
+	for (auto &player : Players) {
 		player._pmode = PM_QUIT;
 		player._pInvincible = true;
 	}
 
-	deathflag = false;
+	MyPlayerIsDead = false;
 	force_redraw = 255;
 	scrollrt_draw_game_screen();
 	CornerStone.activated = false;
@@ -319,7 +319,7 @@ void gamemenu_load_game(bool /*bActivate*/)
 	ClrDiabloMsg();
 	CornerStone.activated = false;
 	PaletteFadeOut(8);
-	deathflag = false;
+	MyPlayerIsDead = false;
 	force_redraw = 255;
 	DrawAndBlit();
 	LoadPWaterPalette();
@@ -335,7 +335,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 		return;
 	}
 
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+	if (Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead) {
 		gamemenu_off();
 		return;
 	}

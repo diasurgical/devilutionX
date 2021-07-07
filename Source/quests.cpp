@@ -215,7 +215,7 @@ void CheckQuests()
 		quests[Q_BETRAYER].position.y = 2 * quests[Q_BETRAYER].position.y + 16;
 		int rportx = quests[Q_BETRAYER].position.x;
 		int rporty = quests[Q_BETRAYER].position.y;
-		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 1;
 		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
 			quests[Q_BETRAYER]._qvar1 = 3;
@@ -228,7 +228,7 @@ void CheckQuests()
 	    && quests[Q_BETRAYER]._qvar2 == 4) {
 		int rportx = 35;
 		int rporty = 32;
-		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quests[Q_BETRAYER]._qvar2 = 3;
 	}
 
@@ -239,21 +239,21 @@ void CheckQuests()
 		    && ActiveMonsterCount == 4
 		    && quests[Q_PWATER]._qactive != QUEST_DONE) {
 			quests[Q_PWATER]._qactive = QUEST_DONE;
-			PlaySfxLoc(IS_QUESTDN, plr[myplr].position.tile);
+			PlaySfxLoc(IS_QUESTDN, Players[MyPlayerId].position.tile);
 			LoadPalette("Levels\\L3Data\\L3pwater.pal", false);
 			UpdatePWaterPalette();
 			WaterDone = 32;
 		}
-	} else if (plr[myplr]._pmode == PM_STAND) {
+	} else if (Players[MyPlayerId]._pmode == PM_STAND) {
 		for (auto &quest : quests) {
 			if (currlevel == quest._qlevel
 			    && quest._qslvl != 0
 			    && quest._qactive != QUEST_NOTAVAIL
-			    && plr[myplr].position.tile == quest.position) {
+			    && Players[MyPlayerId].position.tile == quest.position) {
 				if (quest._qlvltype != DTYPE_NONE) {
 					setlvltype = quest._qlvltype;
 				}
-				StartNewLvl(myplr, WM_DIABSETLVL, quest._qslvl);
+				StartNewLvl(MyPlayerId, WM_DIABSETLVL, quest._qslvl);
 			}
 		}
 	}
@@ -308,21 +308,21 @@ void CheckQuestKill(int m, bool sendmsg)
 
 	if (Monsters[m].MType->mtype == MT_SKING) {
 		quests[Q_SKELKING]._qactive = QUEST_DONE;
-		plr[myplr].Say(HeroSpeech::RestWellLeoricIllFindYourSon, 30);
+		Players[MyPlayerId].Say(HeroSpeech::RestWellLeoricIllFindYourSon, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_SKELKING);
 
 	} else if (Monsters[m].MType->mtype == MT_CLEAVER) {
 		quests[Q_BUTCHER]._qactive = QUEST_DONE;
-		plr[myplr].Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);
+		Players[MyPlayerId].Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);
 		if (sendmsg)
 			NetSendCmdQuest(true, Q_BUTCHER);
 	} else if (Monsters[m]._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		quests[Q_GARBUD]._qactive = QUEST_DONE;
-		plr[myplr].Say(HeroSpeech::ImNotImpressed, 30);
+		Players[MyPlayerId].Say(HeroSpeech::ImNotImpressed, 30);
 	} else if (Monsters[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		quests[Q_ZHAR]._qactive = QUEST_DONE;
-		plr[myplr].Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
+		Players[MyPlayerId].Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
 	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		quests[Q_BETRAYER]._qvar1 = 7;
@@ -337,7 +337,7 @@ void CheckQuestKill(int m, bool sendmsg)
 				}
 			}
 		}
-		plr[myplr].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
+		Players[MyPlayerId].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 		if (sendmsg) {
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
@@ -348,11 +348,11 @@ void CheckQuestKill(int m, bool sendmsg)
 		quests[Q_BETRAYER]._qvar1 = 7;
 		quests[Q_BETRAYER]._qvar2 = 4;
 		quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile({ 35, 32 }, { 35, 32 }, 0, MIS_RPORTAL, TARGET_MONSTERS, myplr, 0, 0);
-		plr[myplr].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
+		AddMissile({ 35, 32 }, { 35, 32 }, 0, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		Players[MyPlayerId].Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 	} else if (Monsters[m]._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		quests[Q_WARLORD]._qactive = QUEST_DONE;
-		plr[myplr].Say(HeroSpeech::YourReignOfPainHasEnded, 30);
+		Players[MyPlayerId].Say(HeroSpeech::YourReignOfPainHasEnded, 30);
 	}
 }
 

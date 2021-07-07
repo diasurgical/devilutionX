@@ -553,7 +553,7 @@ void InitItems()
 
 void CalcPlrItemVals(int playerId, bool loadgfx)
 {
-	auto &player = plr[playerId];
+	auto &player = Players[playerId];
 
 	int mind = 0; // min damage
 	int maxd = 0; // max damage
@@ -686,7 +686,7 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 
 	lrad = clamp(lrad, 2, 15);
 
-	if (player._pLightRad != lrad && playerId == myplr) {
+	if (player._pLightRad != lrad && playerId == MyPlayerId) {
 		ChangeLightRadius(player._plid, lrad);
 		ChangeVisionRadius(player._pvid, lrad);
 		player._pLightRad = lrad;
@@ -795,7 +795,7 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	player._pMaxHP = ihp + player._pMaxHPBase;
 	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
-	if (playerId == myplr && (player._pHitPoints >> 6) <= 0) {
+	if (playerId == MyPlayerId && (player._pHitPoints >> 6) <= 0) {
 		SetPlayerHitPoints(playerId, 0);
 	}
 
@@ -1016,17 +1016,17 @@ void CalcPlrBookVals(PlayerStruct &player)
 
 void CalcPlrInv(int playerId, bool loadgfx)
 {
-	auto &player = plr[playerId];
+	auto &player = Players[playerId];
 
 	CalcPlrItemMin(player);
 	CalcSelfItems(player);
 	CalcPlrItemVals(playerId, loadgfx);
 	CalcPlrItemMin(player);
-	if (playerId == myplr) {
+	if (playerId == MyPlayerId) {
 		CalcPlrBookVals(player);
 		player.CalcScrolls();
 		CalcPlrStaff(player);
-		if (playerId == myplr && currlevel == 0)
+		if (playerId == MyPlayerId && currlevel == 0)
 			RecalcStoreStats();
 	}
 }
@@ -1095,9 +1095,9 @@ void GetGoldSeed(int pnum, ItemStruct *h)
 			if (Items[ii]._iSeed == s)
 				doneflag = false;
 		}
-		if (pnum == myplr) {
-			for (int i = 0; i < plr[pnum]._pNumInv; i++) {
-				if (plr[pnum].InvList[i]._iSeed == s)
+		if (pnum == MyPlayerId) {
+			for (int i = 0; i < Players[pnum]._pNumInv; i++) {
+				if (Players[pnum].InvList[i]._iSeed == s)
 					doneflag = false;
 			}
 		}
@@ -1133,7 +1133,7 @@ void SetPlrHandGoldCurs(ItemStruct *h)
 
 void CreatePlrItems(int playerId)
 {
-	auto &player = plr[playerId];
+	auto &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
 		item._itype = ITYPE_NONE;
@@ -1992,7 +1992,7 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		Items[i]._iLMaxDam = 0;
 		break;
 	case IPL_FIRERESCLVL:
-		Items[i]._iPLFR = 30 - plr[myplr]._pLevel;
+		Items[i]._iPLFR = 30 - Players[MyPlayerId]._pLevel;
 		Items[i]._iPLFR = std::max<int16_t>(Items[i]._iPLFR, 0);
 
 		break;
@@ -2030,12 +2030,12 @@ void SaveItemPower(int i, item_effect_type power, int param1, int param2, int mi
 		Items[i]._iDamAcFlags |= ISPLHF_ACUNDEAD;
 		break;
 	case IPL_MANATOLIFE:
-		r2 = ((plr[myplr]._pMaxManaBase >> 6) * 50 / 100);
+		r2 = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100);
 		Items[i]._iPLMana -= (r2 << 6);
 		Items[i]._iPLHP += (r2 << 6);
 		break;
 	case IPL_LIFETOMANA:
-		r2 = ((plr[myplr]._pMaxHPBase >> 6) * 40 / 100);
+		r2 = ((Players[MyPlayerId]._pMaxHPBase >> 6) * 40 / 100);
 		Items[i]._iPLHP -= (r2 << 6);
 		Items[i]._iPLMana += (r2 << 6);
 		break;
@@ -2209,7 +2209,7 @@ void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells
 
 void SetupItem(int i)
 {
-	Items[i].SetNewAnimation(plr[myplr].pLvlLoad == 0);
+	Items[i].SetNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
 	Items[i]._iIdentified = false;
 }
 
@@ -2985,14 +2985,14 @@ void CheckIdentify(int pnum, int cii)
 	ItemStruct *pi;
 
 	if (cii >= NUM_INVLOC)
-		pi = &plr[pnum].InvList[cii - NUM_INVLOC];
+		pi = &Players[pnum].InvList[cii - NUM_INVLOC];
 	else
-		pi = &plr[pnum].InvBody[cii];
+		pi = &Players[pnum].InvBody[cii];
 
 	pi->_iIdentified = true;
 	CalcPlrInv(pnum, true);
 
-	if (pnum == myplr)
+	if (pnum == MyPlayerId)
 		NewCursor(CURSOR_HAND);
 }
 
@@ -3024,7 +3024,7 @@ void DoRepair(int pnum, int cii)
 {
 	ItemStruct *pi;
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	PlaySfxLoc(IS_REPAIR, player.position.tile);
 
@@ -3037,7 +3037,7 @@ void DoRepair(int pnum, int cii)
 	RepairItem(pi, player._pLevel);
 	CalcPlrInv(pnum, true);
 
-	if (pnum == myplr)
+	if (pnum == MyPlayerId)
 		NewCursor(CURSOR_HAND);
 }
 
@@ -3061,7 +3061,7 @@ void DoRecharge(int pnum, int cii)
 {
 	ItemStruct *pi;
 
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
@@ -3074,7 +3074,7 @@ void DoRecharge(int pnum, int cii)
 		CalcPlrInv(pnum, true);
 	}
 
-	if (pnum == myplr)
+	if (pnum == MyPlayerId)
 		NewCursor(CURSOR_HAND);
 }
 
@@ -3191,11 +3191,11 @@ void DoOil(int pnum, int cii)
 {
 	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
 		return;
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 	if (!OilItem(&player.InvBody[cii], player))
 		return;
 	CalcPlrInv(pnum, true);
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		NewCursor(CURSOR_HAND);
 	}
 }
@@ -3847,7 +3847,7 @@ void PrintItemDur(ItemStruct *x)
 
 void UseItem(int p, item_misc_id mid, spell_id spl)
 {
-	auto &player = plr[p];
+	auto &player = Players[p];
 
 	switch (mid) {
 	case IMISC_HEAL:
@@ -3944,7 +3944,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_SCROLL:
 		if (spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (p == myplr)
+			if (p == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3954,14 +3954,14 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursmx;
 			player.destParam2 = cursmy;
-			if (p == myplr && spl == SPL_NOVA)
-				NetSendCmdLoc(myplr, true, CMD_NOVA, { cursmx, cursmy });
+			if (p == MyPlayerId && spl == SPL_NOVA)
+				NetSendCmdLoc(MyPlayerId, true, CMD_NOVA, { cursmx, cursmy });
 		}
 		break;
 	case IMISC_SCROLLT:
 		if (spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (p == myplr)
+			if (p == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -3983,7 +3983,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player._pManaBase += spelldata[spl].sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
-		if (p == myplr)
+		if (p == MyPlayerId)
 			CalcPlrBookVals(player);
 		drawmanaflag = true;
 		break;
@@ -4001,7 +4001,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
 		player._pOilType = mid;
-		if (p != myplr) {
+		if (p != MyPlayerId) {
 			return;
 		}
 		if (sbookflag) {
@@ -4020,27 +4020,27 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
-		if (p == myplr)
+		if (p == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
 		player._pTSpell = SPL_RUNELIGHT;
-		if (p == myplr)
+		if (p == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
 		player._pTSpell = SPL_RUNENOVA;
-		if (p == myplr)
+		if (p == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
 		player._pTSpell = SPL_RUNEIMMOLAT;
-		if (p == myplr)
+		if (p == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
 		player._pTSpell = SPL_RUNESTONE;
-		if (p == myplr)
+		if (p == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	default:
@@ -4050,7 +4050,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 
 bool StoreStatOk(ItemStruct *h)
 {
-	const auto &myPlayer = plr[myplr];
+	const auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer._pStrength < h->_iMinStr)
 		return false;
@@ -4195,7 +4195,7 @@ static void SpawnOnePremium(int i, int plvl, int playerId)
 	bool keepGoing = false;
 	ItemStruct tempItem = Items[0];
 
-	auto &player = plr[playerId];
+	auto &player = Players[playerId];
 
 	int strength = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Strength), player._pStrength);
 	int dexterity = std::max(player.GetMaximumAttributeValue(CharacterAttribute::Dexterity), player._pDexterity);
@@ -4277,7 +4277,7 @@ static void SpawnOnePremium(int i, int plvl, int playerId)
 
 void SpawnPremium(int pnum)
 {
-	int8_t lvl = plr[pnum]._pLevel;
+	int8_t lvl = Players[pnum]._pLevel;
 	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
 	if (numpremium < maxItems) {
 		for (int i = 0; i < maxItems; i++) {
@@ -4342,7 +4342,7 @@ void WitchBookLevel(int ii)
 	if (witchitem[ii]._iMiscId != IMISC_BOOK)
 		return;
 	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
-	int8_t spellLevel = plr[myplr]._pSplLvl[witchitem[ii]._iSpell];
+	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[witchitem[ii]._iSpell];
 	while (spellLevel > 0) {
 		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
 		spellLevel--;
@@ -4442,7 +4442,7 @@ void SpawnBoy(int lvl)
 	bool keepgoing = false;
 	int count = 0;
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	HeroClass pc = myPlayer._pClass;
 	int strength = std::max(myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength), myPlayer._pStrength);
@@ -4562,7 +4562,7 @@ bool HealerItemOk(int i)
 		return AllItemsList[i].iSpell == SPL_HEALOTHER && gbIsMultiplayer;
 
 	if (!gbIsMultiplayer) {
-		auto &myPlayer = plr[myplr];
+		auto &myPlayer = Players[MyPlayerId];
 
 		if (AllItemsList[i].iMiscId == IMISC_ELIXSTR)
 			return !gbIsHellfire || myPlayer._pBaseStr < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength);

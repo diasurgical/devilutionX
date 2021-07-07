@@ -23,7 +23,7 @@ void SyncOneMonster()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
-		sgnMonsterPriority[m] = plr[myplr].position.tile.ManhattanDistance(Monsters[m].position.tile);
+		sgnMonsterPriority[m] = Players[MyPlayerId].position.tile.ManhattanDistance(Monsters[m].position.tile);
 		if (Monsters[m]._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
@@ -131,7 +131,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	}
 
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
-	pItem = &plr[myplr].InvBody[sgnSyncPInv];
+	pItem = &Players[MyPlayerId].InvBody[sgnSyncPInv];
 	if (!pItem->isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = pItem->IDidx;
@@ -197,12 +197,12 @@ static void SyncMonster(int pnum, const TSyncMonster *p)
 		return;
 	}
 
-	uint32_t delta = plr[myplr].position.tile.ManhattanDistance(Monsters[ndx].position.tile);
+	uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(Monsters[ndx].position.tile);
 	if (delta > 255) {
 		delta = 255;
 	}
 
-	if (delta < p->_mdelta || (delta == p->_mdelta && pnum > myplr)) {
+	if (delta < p->_mdelta || (delta == p->_mdelta && pnum > MyPlayerId)) {
 		return;
 	}
 	if (Monsters[ndx].position.future.x == p->_mx && Monsters[ndx].position.future.y == p->_my) {
@@ -251,7 +251,7 @@ uint32_t sync_update(int pnum, const byte *pbBuf)
 	if (gbBufferMsgs == 1) {
 		return pHdr->wLen + sizeof(*pHdr);
 	}
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		return pHdr->wLen + sizeof(*pHdr);
 	}
 
@@ -270,7 +270,7 @@ uint32_t sync_update(int pnum, const byte *pbBuf)
 
 void sync_init()
 {
-	sgnMonsters = 16 * myplr;
+	sgnMonsters = 16 * MyPlayerId;
 	memset(sgwLRU, 255, sizeof(sgwLRU));
 }
 

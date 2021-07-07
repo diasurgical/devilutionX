@@ -815,7 +815,7 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_GIRL:
-			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !plr->_pLvlVisited[17])
+			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17])
 				continue;
 			break;
 		default:

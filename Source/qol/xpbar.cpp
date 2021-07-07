@@ -70,7 +70,7 @@ void DrawXPBar(const Surface &out)
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
 
-	const auto &player = plr[myplr];
+	const auto &player = Players[MyPlayerId];
 
 	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
 	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
@@ -121,7 +121,7 @@ bool CheckXPBarInfo()
 	if (MousePosition.x < backX || MousePosition.x >= backX + BackWidth || MousePosition.y < backY || MousePosition.y >= backY + BackHeight)
 		return false;
 
-	const auto &player = plr[myplr];
+	const auto &player = Players[MyPlayerId];
 
 	const int charLevel = player._pLevel;
 

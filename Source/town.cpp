@@ -168,14 +168,14 @@ void DrlgTPass3()
 	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || ((plr[myplr].pTownWarps & 1) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
+		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 1) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 10))) {
 			FillTile(48, 20, 320);
 		}
-		if (gbIsSpawn || ((plr[myplr].pTownWarps & 2) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
+		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 2) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 15))) {
 			FillTile(16, 68, 332);
 			FillTile(16, 70, 331);
 		}
-		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
+		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 4) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 20))) {
 			for (int x = 36; x < 46; x++) {
 				FillTile(x, 78, GenerateRnd(4) + 1);
 			}
@@ -188,7 +188,7 @@ void DrlgTPass3()
 		} else {
 			TownCloseHive();
 		}
-		if (quests[Q_GRAVE]._qactive == QUEST_DONE || plr[myplr]._pLvlVisited[21])
+		if (quests[Q_GRAVE]._qactive == QUEST_DONE || Players[MyPlayerId]._pLvlVisited[21])
 			TownOpenGrave();
 		else
 			TownCloseGrave();

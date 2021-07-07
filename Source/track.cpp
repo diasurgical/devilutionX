@@ -29,7 +29,7 @@ void track_process()
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	const auto &player = plr[myplr];
+	const auto &player = Players[MyPlayerId];
 
 	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
 		return;
@@ -42,7 +42,7 @@ void track_process()
 			tickMultiplier = 3;
 		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * tickMultiplier) {
 			sgdwLastWalk = tick;
-			NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
+			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
 			if (!sgbIsScrolling)
 				sgbIsScrolling = true;
 		}
@@ -58,7 +58,7 @@ void track_repeat_walk(bool rep)
 	if (rep) {
 		sgbIsScrolling = false;
 		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;
-		NetSendCmdLoc(myplr, true, CMD_WALKXY, { cursmx, cursmy });
+		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
 	} else if (sgbIsScrolling) {
 		sgbIsScrolling = false;
 	}

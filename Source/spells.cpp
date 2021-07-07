@@ -68,24 +68,24 @@ void UseMana(int id, spell_id sn)
 {
 	int ma; // mana cost
 
-	if (id == myplr) {
-		switch (plr[id]._pSplType) {
+	if (id == MyPlayerId) {
+		switch (Players[id]._pSplType) {
 		case RSPLTYPE_SKILL:
 		case RSPLTYPE_INVALID:
 			break;
 		case RSPLTYPE_SCROLL:
-			RemoveScroll(plr[id]);
+			RemoveScroll(Players[id]);
 			break;
 		case RSPLTYPE_CHARGES:
-			UseStaffCharge(plr[id]);
+			UseStaffCharge(Players[id]);
 			break;
 		case RSPLTYPE_SPELL:
 #ifdef _DEBUG
 			if (!debug_mode_key_inverted_v) {
 #endif
-				ma = GetManaAmount(plr[id], sn);
-				plr[id]._pMana -= ma;
-				plr[id]._pManaBase -= ma;
+				ma = GetManaAmount(Players[id], sn);
+				Players[id]._pMana -= ma;
+				Players[id]._pManaBase -= ma;
 				drawmanaflag = true;
 #ifdef _DEBUG
 			}
@@ -172,16 +172,16 @@ bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 		return false;
 	}
 
-	auto &player = plr[id];
+	auto &player = Players[id];
 
 	return player._pMana >= GetManaAmount(player, sn);
 }
 
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 {
-	Direction dir = plr[id]._pdir;
+	Direction dir = Players[id]._pdir;
 	if (spl == SPL_FIREWALL || spl == SPL_LIGHTWALL) {
-		dir = plr[id].tempDirection;
+		dir = Players[id].tempDirection;
 	}
 
 	for (int i = 0; spelldata[spl].sMissiles[i] != MIS_NULL && i < 3; i++) {
@@ -203,9 +203,9 @@ static void PlacePlayer(int pnum)
 {
 	Point newPosition = {};
 
-	if (plr[pnum].plrlevel == currlevel) {
+	if (Players[pnum].plrlevel == currlevel) {
 		for (int i = 0; i < 8; i++) {
-			newPosition = plr[pnum].position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			newPosition = Players[pnum].position.tile + Displacement { plrxoff2[i], plryoff2[i] };
 			if (PosOkPlayer(pnum, newPosition)) {
 				break;
 			}
@@ -217,10 +217,10 @@ static void PlacePlayer(int pnum)
 			int min = -1;
 			for (int max = 1; min > -50 && !done; max++, min--) {
 				for (int y = min; y <= max && !done; y++) {
-					newPosition.y = plr[pnum].position.tile.y + y;
+					newPosition.y = Players[pnum].position.tile.y + y;
 
 					for (int x = min; x <= max && !done; x++) {
-						newPosition.x = plr[pnum].position.tile.x + x;
+						newPosition.x = Players[pnum].position.tile.x + x;
 
 						if (PosOkPlayer(pnum, newPosition)) {
 							done = true;
@@ -230,11 +230,11 @@ static void PlacePlayer(int pnum)
 			}
 		}
 
-		plr[pnum].position.tile = newPosition;
+		Players[pnum].position.tile = newPosition;
 
 		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 
-		if (pnum == myplr) {
+		if (pnum == MyPlayerId) {
 			ViewX = newPosition.x;
 			ViewY = newPosition.y;
 		}
@@ -250,57 +250,57 @@ void DoResurrect(int pnum, int rid)
 	int hp;
 
 	if ((char)rid != -1) {
-		AddMissile(plr[rid].position.tile, plr[rid].position.tile, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile(Players[rid].position.tile, Players[rid].position.tile, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 	}
 
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		NewCursor(CURSOR_HAND);
 	}
 
-	if ((char)rid != -1 && plr[rid]._pHitPoints == 0) {
-		if (rid == myplr) {
-			deathflag = false;
+	if ((char)rid != -1 && Players[rid]._pHitPoints == 0) {
+		if (rid == MyPlayerId) {
+			MyPlayerIsDead = false;
 			gamemenu_off();
 			drawhpflag = true;
 			drawmanaflag = true;
 		}
 
-		ClrPlrPath(plr[rid]);
-		plr[rid].destAction = ACTION_NONE;
-		plr[rid]._pInvincible = false;
+		ClrPlrPath(Players[rid]);
+		Players[rid].destAction = ACTION_NONE;
+		Players[rid]._pInvincible = false;
 		PlacePlayer(rid);
 
 		hp = 10 << 6;
-		if (plr[rid]._pMaxHPBase < (10 << 6)) {
-			hp = plr[rid]._pMaxHPBase;
+		if (Players[rid]._pMaxHPBase < (10 << 6)) {
+			hp = Players[rid]._pMaxHPBase;
 		}
 		SetPlayerHitPoints(rid, hp);
 
-		plr[rid]._pHPBase = plr[rid]._pHitPoints + (plr[rid]._pMaxHPBase - plr[rid]._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
-		plr[rid]._pMana = 0;
-		plr[rid]._pManaBase = plr[rid]._pMana + (plr[rid]._pMaxManaBase - plr[rid]._pMaxMana);
+		Players[rid]._pHPBase = Players[rid]._pHitPoints + (Players[rid]._pMaxHPBase - Players[rid]._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
+		Players[rid]._pMana = 0;
+		Players[rid]._pManaBase = Players[rid]._pMana + (Players[rid]._pMaxManaBase - Players[rid]._pMaxMana);
 
 		CalcPlrInv(rid, true);
 
-		if (plr[rid].plrlevel == currlevel) {
-			StartStand(rid, plr[rid]._pdir);
+		if (Players[rid].plrlevel == currlevel) {
+			StartStand(rid, Players[rid]._pdir);
 		} else {
-			plr[rid]._pmode = PM_STAND;
+			Players[rid]._pmode = PM_STAND;
 		}
 	}
 }
 
 void DoHealOther(int pnum, uint16_t rid)
 {
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		NewCursor(CURSOR_HAND);
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
 	}
-	auto &player = plr[pnum];
-	auto &target = plr[rid];
+	auto &player = Players[pnum];
+	auto &target = Players[rid];
 
 	if ((target._pHitPoints >> 6) <= 0) {
 		return;
@@ -325,7 +325,7 @@ void DoHealOther(int pnum, uint16_t rid)
 	target._pHitPoints = std::min(target._pHitPoints + hp, target._pMaxHP);
 	target._pHPBase = std::min(target._pHPBase + hp, target._pMaxHPBase);
 
-	if (rid == myplr) {
+	if (rid == MyPlayerId) {
 		drawhpflag = true;
 	}
 }

@@ -104,7 +104,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		return false;
 	}
 
-	pfile_read_player_from_save(gszHero, myplr);
+	pfile_read_player_from_save(gszHero, MyPlayerId);
 
 	return true;
 }
