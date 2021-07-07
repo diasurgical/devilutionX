@@ -708,7 +708,7 @@ static void LoadMissile(LoadHelper *file, int i)
 
 static void LoadObject(LoadHelper *file, int i)
 {
-	ObjectStruct *pObject = &object[i];
+	ObjectStruct *pObject = &Objects[i];
 
 	pObject->_otype = static_cast<_object_id>(file->NextLE<int32_t>());
 	pObject->position.x = file->NextLE<int32_t>();
@@ -1156,7 +1156,7 @@ void LoadGame(bool firstflag)
 	ActiveMonsterCount = tmpNummonsters;
 	ActiveItemCount = tmpNumitems;
 	ActiveMissileCount = tmpNummissiles;
-	nobjects = tmpNobjects;
+	ActiveObjectCount = tmpNobjects;
 
 	for (int &monstkill : MonsterKillCounts)
 		monstkill = file.NextBE<int32_t>();
@@ -1172,14 +1172,14 @@ void LoadGame(bool firstflag)
 			missileId = file.NextLE<int8_t>();
 		for (int i = 0; i < ActiveMissileCount; i++)
 			LoadMissile(&file, ActiveMissiles[i]);
-		for (int &objectId : objectactive)
+		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
-		for (int &objectId : objectavail)
+		for (int &objectId : AvailableObjects)
 			objectId = file.NextLE<int8_t>();
-		for (int i = 0; i < nobjects; i++)
-			LoadObject(&file, objectactive[i]);
-		for (int i = 0; i < nobjects; i++)
-			SyncObjectAnim(objectactive[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			LoadObject(&file, ActiveObjects[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			SyncObjectAnim(ActiveObjects[i]);
 
 		ActiveLightCount = file.NextBE<int32_t>();
 
@@ -1750,7 +1750,7 @@ static void SaveMissile(SaveHelper *file, int i)
 
 static void SaveObject(SaveHelper *file, int i)
 {
-	ObjectStruct *pObject = &object[i];
+	ObjectStruct *pObject = &Objects[i];
 
 	file->WriteLE<int32_t>(pObject->_otype);
 	file->WriteLE<int32_t>(pObject->position.x);
@@ -1908,7 +1908,7 @@ void SaveGameData()
 	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(ActiveItemCount);
 	file.WriteBE<int32_t>(ActiveMissileCount);
-	file.WriteBE<int32_t>(nobjects);
+	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
 		file.WriteBE<uint32_t>(glSeedTbl[i]);
@@ -1936,12 +1936,12 @@ void SaveGameData()
 			file.WriteLE<int8_t>(missileId);
 		for (int i = 0; i < ActiveMissileCount; i++)
 			SaveMissile(&file, ActiveMissiles[i]);
-		for (int objectId : objectactive)
+		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
-		for (int objectId : objectavail)
+		for (int objectId : AvailableObjects)
 			file.WriteLE<int8_t>(objectId);
-		for (int i = 0; i < nobjects; i++)
-			SaveObject(&file, objectactive[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			SaveObject(&file, ActiveObjects[i]);
 
 		file.WriteBE<int32_t>(ActiveLightCount);
 
@@ -2052,19 +2052,19 @@ void SaveLevel()
 
 	file.WriteBE<int32_t>(ActiveMonsterCount);
 	file.WriteBE<int32_t>(ActiveItemCount);
-	file.WriteBE<int32_t>(nobjects);
+	file.WriteBE<int32_t>(ActiveObjectCount);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			SaveMonster(&file, ActiveMonsters[i]);
-		for (int objectId : objectactive)
+		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
-		for (int objectId : objectavail)
+		for (int objectId : AvailableObjects)
 			file.WriteLE<int8_t>(objectId);
-		for (int i = 0; i < nobjects; i++)
-			SaveObject(&file, objectactive[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			SaveObject(&file, ActiveObjects[i]);
 	}
 
 	for (int itemId : ActiveItems)
@@ -2135,22 +2135,22 @@ void LoadLevel()
 
 	ActiveMonsterCount = file.NextBE<int32_t>();
 	ActiveItemCount = file.NextBE<int32_t>();
-	nobjects = file.NextBE<int32_t>();
+	ActiveObjectCount = file.NextBE<int32_t>();
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, ActiveMonsters[i]);
-		for (int &objectId : objectactive)
+		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
-		for (int &objectId : objectavail)
+		for (int &objectId : AvailableObjects)
 			objectId = file.NextLE<int8_t>();
-		for (int i = 0; i < nobjects; i++)
-			LoadObject(&file, objectactive[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			LoadObject(&file, ActiveObjects[i]);
 		if (!gbSkipSync) {
-			for (int i = 0; i < nobjects; i++)
-				SyncObjectAnim(objectactive[i]);
+			for (int i = 0; i < ActiveObjectCount; i++)
+				SyncObjectAnim(ActiveObjects[i]);
 		}
 	}
 

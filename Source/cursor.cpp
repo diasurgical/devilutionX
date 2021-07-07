@@ -632,7 +632,7 @@ void CheckCursMove()
 	if (pcursmonst == -1 && pcursplr == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dObject[mx + 1][my] != 0) {
 			int8_t bv = dObject[mx + 1][my] > 0 ? dObject[mx + 1][my] - 1 : -(dObject[mx + 1][my] + 1);
-			if (object[bv]._oSelFlag >= 2) {
+			if (Objects[bv]._oSelFlag >= 2) {
 				cursmx = mx + 1;
 				cursmy = my;
 				pcursobj = bv;
@@ -640,7 +640,7 @@ void CheckCursMove()
 		}
 		if (flipflag && my + 1 < MAXDUNY && dObject[mx][my + 1] != 0) {
 			int8_t bv = dObject[mx][my + 1] > 0 ? dObject[mx][my + 1] - 1 : -(dObject[mx][my + 1] + 1);
-			if (object[bv]._oSelFlag >= 2) {
+			if (Objects[bv]._oSelFlag >= 2) {
 				cursmx = mx;
 				cursmy = my + 1;
 				pcursobj = bv;
@@ -648,7 +648,7 @@ void CheckCursMove()
 		}
 		if (dObject[mx][my] != 0) {
 			int8_t bv = dObject[mx][my] > 0 ? dObject[mx][my] - 1 : -(dObject[mx][my] + 1);
-			if (object[bv]._oSelFlag == 1 || object[bv]._oSelFlag == 3) {
+			if (Objects[bv]._oSelFlag == 1 || Objects[bv]._oSelFlag == 3) {
 				cursmx = mx;
 				cursmy = my;
 				pcursobj = bv;
@@ -656,7 +656,7 @@ void CheckCursMove()
 		}
 		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dObject[mx + 1][my + 1] != 0) {
 			int8_t bv = dObject[mx + 1][my + 1] > 0 ? dObject[mx + 1][my + 1] - 1 : -(dObject[mx + 1][my + 1] + 1);
-			if (object[bv]._oSelFlag >= 2) {
+			if (Objects[bv]._oSelFlag >= 2) {
 				cursmx = mx + 1;
 				cursmy = my + 1;
 				pcursobj = bv;

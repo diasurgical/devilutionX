@@ -1007,7 +1007,7 @@ DWORD OnOperateObjectTile(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		if (object[p->wParam1]._oSolidFlag || object[p->wParam1]._oDoorFlag)
+		if (Objects[p->wParam1]._oSolidFlag || Objects[p->wParam1]._oDoorFlag)
 			MakePlrPath(pnum, { p->x, p->y }, false);
 		else
 			MakePlrPath(pnum, { p->x, p->y }, true);
@@ -1023,7 +1023,7 @@ DWORD OnDisarm(TCmd *pCmd, int pnum)
 	auto *p = (TCmdLocParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		if (object[p->wParam1]._oSolidFlag || object[p->wParam1]._oDoorFlag)
+		if (Objects[p->wParam1]._oSolidFlag || Objects[p->wParam1]._oDoorFlag)
 			MakePlrPath(pnum, { p->x, p->y }, false);
 		else
 			MakePlrPath(pnum, { p->x, p->y }, true);
@@ -2142,10 +2142,10 @@ void DeltaLoadLevel()
 			}
 		}
 
-		for (int i = 0; i < nobjects; i++) {
-			int ot = object[objectactive[i]]._otype;
+		for (int i = 0; i < ActiveObjectCount; i++) {
+			int ot = Objects[ActiveObjects[i]]._otype;
 			if (ot == OBJ_TRAPL || ot == OBJ_TRAPR)
-				Obj_Trap(objectactive[i]);
+				Obj_Trap(ActiveObjects[i]);
 		}
 	}
 	deltaload = false;

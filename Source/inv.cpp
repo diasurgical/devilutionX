@@ -1674,22 +1674,22 @@ bool CanPut(Point position)
 		return false;
 
 	if (dObject[position.x][position.y] != 0) {
-		if (object[dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1)]._oSolidFlag)
+		if (Objects[dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1)]._oSolidFlag)
 			return false;
 	}
 
 	int8_t oi = dObject[position.x + 1][position.y + 1];
-	if (oi > 0 && object[oi - 1]._oSelFlag != 0) {
+	if (oi > 0 && Objects[oi - 1]._oSelFlag != 0) {
 		return false;
 	}
-	if (oi < 0 && object[-(oi + 1)]._oSelFlag != 0) {
+	if (oi < 0 && Objects[-(oi + 1)]._oSelFlag != 0) {
 		return false;
 	}
 
 	oi = dObject[position.x + 1][position.y];
 	if (oi > 0) {
 		int8_t oi2 = dObject[position.x][position.y + 1];
-		if (oi2 > 0 && object[oi - 1]._oSelFlag != 0 && object[oi2 - 1]._oSelFlag != 0)
+		if (oi2 > 0 && Objects[oi - 1]._oSelFlag != 0 && Objects[oi2 - 1]._oSelFlag != 0)
 			return false;
 	}
 

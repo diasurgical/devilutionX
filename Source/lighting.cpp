@@ -477,7 +477,7 @@ void RotateRadius(int *x, int *y, int *dx, int *dy, int *lx, int *ly, int *bx, i
 
 void SetLight(int x, int y, char v)
 {
-	if (LoadMapObjsFlag)
+	if (LoadingMapObjects)
 		dPreLight[x][y] = v;
 	else
 		dLight[x][y] = v;
@@ -485,7 +485,7 @@ void SetLight(int x, int y, char v)
 
 char GetLight(int x, int y)
 {
-	if (LoadMapObjsFlag)
+	if (LoadingMapObjects)
 		return dPreLight[x][y];
 
 	return dLight[x][y];

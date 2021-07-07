@@ -645,8 +645,8 @@ void ResyncQuests()
 			    setpc_w + setpc_x + 1,
 			    setpc_h + setpc_y + 1);
 			ObjChangeMapResync(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 2, (setpc_h / 2) + setpc_y - 2);
-			for (int i = 0; i < nobjects; i++)
-				SyncObjectAnim(objectactive[i]);
+			for (int i = 0; i < ActiveObjectCount; i++)
+				SyncObjectAnim(ActiveObjects[i]);
 			auto tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
@@ -656,8 +656,8 @@ void ResyncQuests()
 			int x = setpc_x;
 			int y = setpc_y;
 			ObjChangeMapResync(x, y, x + setpc_w + 1, y + setpc_h + 1);
-			for (int i = 0; i < nobjects; i++)
-				SyncObjectAnim(objectactive[i]);
+			for (int i = 0; i < ActiveObjectCount; i++)
+				SyncObjectAnim(ActiveObjects[i]);
 			auto tren = TransVal;
 			TransVal = 9;
 			DRLG_MRectTrans(setpc_x, setpc_y, (setpc_w / 2) + setpc_x + 4, setpc_y + (setpc_h / 2));
@@ -690,8 +690,8 @@ void ResyncQuests()
 			ObjChangeMapResync(1, 18, 20, 24);
 		if (Quests[Q_BETRAYER]._qvar1 >= 7)
 			InitVPTriggers();
-		for (int i = 0; i < nobjects; i++)
-			SyncObjectAnim(objectactive[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			SyncObjectAnim(ActiveObjects[i]);
 	}
 	if (currlevel == Quests[Q_BETRAYER]._qlevel
 	    && !setlevel

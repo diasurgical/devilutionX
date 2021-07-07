@@ -51,12 +51,12 @@ struct ObjectStruct {
 	int _oVar8;
 };
 
-extern int objectactive[MAXOBJECTS];
-extern int nobjects;
-extern int objectavail[MAXOBJECTS];
-extern ObjectStruct object[MAXOBJECTS];
-extern bool InitObjFlag;
-extern bool LoadMapObjsFlag;
+extern ObjectStruct Objects[MAXOBJECTS];
+extern int AvailableObjects[MAXOBJECTS];
+extern int ActiveObjects[MAXOBJECTS];
+extern int ActiveObjectCount;
+extern bool ApplyObjectLighting;
+extern bool LoadingMapObjects;
 
 void InitObjectGFX();
 void FreeObjectGFX();

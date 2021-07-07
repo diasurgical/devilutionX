@@ -2585,7 +2585,7 @@ bool PlrHitObj(int pnum, int mx, int my)
 		oi = -dObject[mx][my] - 1;
 	}
 
-	if (object[oi]._oBreak == 1) {
+	if (Objects[oi]._oBreak == 1) {
 		BreakObject(pnum, oi);
 		return true;
 	}
@@ -3128,14 +3128,14 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		} break;
 		case ACTION_OPERATE:
 			i = player.destParam1;
-			x = abs(player.position.tile.x - object[i].position.x);
-			y = abs(player.position.tile.y - object[i].position.y);
-			if (y > 1 && dObject[object[i].position.x][object[i].position.y - 1] == -(i + 1)) {
-				y = abs(player.position.tile.y - object[i].position.y + 1);
+			x = abs(player.position.tile.x - Objects[i].position.x);
+			y = abs(player.position.tile.y - Objects[i].position.y);
+			if (y > 1 && dObject[Objects[i].position.x][Objects[i].position.y - 1] == -(i + 1)) {
+				y = abs(player.position.tile.y - Objects[i].position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
-				if (object[i]._oBreak == 1) {
-					d = GetDirection(player.position.tile, object[i].position);
+				if (Objects[i]._oBreak == 1) {
+					d = GetDirection(player.position.tile, Objects[i].position);
 					StartAttack(pnum, d);
 				} else {
 					OperateObject(pnum, i, false);
@@ -3144,14 +3144,14 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			break;
 		case ACTION_DISARM:
 			i = player.destParam1;
-			x = abs(player.position.tile.x - object[i].position.x);
-			y = abs(player.position.tile.y - object[i].position.y);
-			if (y > 1 && dObject[object[i].position.x][object[i].position.y - 1] == -(i + 1)) {
-				y = abs(player.position.tile.y - object[i].position.y + 1);
+			x = abs(player.position.tile.x - Objects[i].position.x);
+			y = abs(player.position.tile.y - Objects[i].position.y);
+			if (y > 1 && dObject[Objects[i].position.x][Objects[i].position.y - 1] == -(i + 1)) {
+				y = abs(player.position.tile.y - Objects[i].position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
-				if (object[i]._oBreak == 1) {
-					d = GetDirection(player.position.tile, object[i].position);
+				if (Objects[i]._oBreak == 1) {
+					d = GetDirection(player.position.tile, Objects[i].position);
 					StartAttack(pnum, d);
 				} else {
 					TryDisarm(pnum, i);
@@ -3161,7 +3161,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			break;
 		case ACTION_OPERATETK:
 			i = player.destParam1;
-			if (object[i]._oBreak != 1) {
+			if (Objects[i]._oBreak != 1) {
 				OperateObject(pnum, i, true);
 			}
 			break;
@@ -3226,14 +3226,14 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_OPERATE) {
 			i = player.destParam1;
-			x = abs(player.position.tile.x - object[i].position.x);
-			y = abs(player.position.tile.y - object[i].position.y);
-			if (y > 1 && dObject[object[i].position.x][object[i].position.y - 1] == -(i + 1)) {
-				y = abs(player.position.tile.y - object[i].position.y + 1);
+			x = abs(player.position.tile.x - Objects[i].position.x);
+			y = abs(player.position.tile.y - Objects[i].position.y);
+			if (y > 1 && dObject[Objects[i].position.x][Objects[i].position.y - 1] == -(i + 1)) {
+				y = abs(player.position.tile.y - Objects[i].position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
-				if (object[i]._oBreak == 1) {
-					d = GetDirection(player.position.tile, object[i].position);
+				if (Objects[i]._oBreak == 1) {
+					d = GetDirection(player.position.tile, Objects[i].position);
 					StartAttack(pnum, d);
 				}
 			}
@@ -3528,7 +3528,7 @@ bool PosOkPlayer(int pnum, Point position)
 		} else {
 			bv = -(dObject[position.x][position.y] + 1);
 		}
-		if (object[bv]._oSolidFlag) {
+		if (Objects[bv]._oSolidFlag) {
 			return false;
 		}
 	}
