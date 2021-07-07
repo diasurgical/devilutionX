@@ -1878,10 +1878,10 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 
 	int totalDamage = (dam << 6) + frac;
 	if (totalDamage > 0) {
-		for (int i = 0; i < nummissiles; i++) {
-			int ma = missileactive[i];
-			if (missile[ma]._mitype == MIS_MANASHIELD && missile[ma]._misource == pnum && !missile[ma]._miDelFlag) {
-				if (missile[ma]._mispllvl > 0) {
+		for (int i = 0; i < ActiveMissileCount; i++) {
+			int ma = ActiveMissiles[i];
+			if (Missiles[ma]._mitype == MIS_MANASHIELD && Missiles[ma]._misource == pnum && !Missiles[ma]._miDelFlag) {
+				if (Missiles[ma]._mispllvl > 0) {
 					totalDamage += totalDamage / -3;
 				}
 
@@ -1892,7 +1892,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 					totalDamage = 0;
 				} else {
 					totalDamage -= player._pMana;
-					if (missile[ma]._mispllvl > 0) {
+					if (Missiles[ma]._mispllvl > 0) {
 						totalDamage += totalDamage / 2;
 					}
 					player._pMana = 0;
@@ -1948,16 +1948,16 @@ void RemovePlrMissiles(int pnum)
 		DeleteMonsterList();
 	}
 
-	for (int i = 0; i < nummissiles; i++) {
-		int am = missileactive[i];
-		if (missile[am]._mitype == MIS_STONE && missile[am]._misource == pnum) {
-			Monsters[missile[am]._miVar2]._mmode = (MON_MODE)missile[am]._miVar1;
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int am = ActiveMissiles[i];
+		if (Missiles[am]._mitype == MIS_STONE && Missiles[am]._misource == pnum) {
+			Monsters[Missiles[am]._miVar2]._mmode = (MON_MODE)Missiles[am]._miVar1;
 		}
-		if (missile[am]._mitype == MIS_MANASHIELD && missile[am]._misource == pnum) {
+		if (Missiles[am]._mitype == MIS_MANASHIELD && Missiles[am]._misource == pnum) {
 			ClearMissileSpot(am);
 			DeleteMissile(am, i);
 		}
-		if (missile[am]._mitype == MIS_ETHEREALIZE && missile[am]._misource == pnum) {
+		if (Missiles[am]._mitype == MIS_ETHEREALIZE && Missiles[am]._misource == pnum) {
 			ClearMissileSpot(am);
 			DeleteMissile(am, i);
 		}

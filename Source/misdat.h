@@ -87,7 +87,7 @@ typedef enum missile_graphic_id : uint8_t {
 	MFILE_BONEDEMON,
 	MFILE_EXORA1,
 	MFILE_EXBL3,
-	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata. (fixed)
+	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing MissileSpriteData for any of the missiles that have MFILE_NONE as mFileNum in MissileData. (fixed)
 } missile_graphic_id;
 
 /**
@@ -119,7 +119,7 @@ typedef struct MissileData {
 	_sfx_id mlSFX;
 	_sfx_id miSFX;
 	MissileMovementDistrubution MovementDistribution;
-} MissileData;
+} MissileDataStruct;
 
 typedef struct MisFileData {
 	const char *mName;
@@ -131,9 +131,9 @@ typedef struct MisFileData {
 	uint8_t mAnimLen[16];
 	int16_t mAnimWidth[16];
 	int16_t mAnimWidth2[16];
-} MisFileData;
+} MisFileDataStruct;
 
-extern MissileData missiledata[];
-extern MisFileData misfiledata[];
+extern MissileDataStruct MissileData[];
+extern MisFileDataStruct MissileSpriteData[];
 
 } // namespace devilution

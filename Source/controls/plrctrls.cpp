@@ -382,19 +382,19 @@ void FindTrigger()
 	if (pcursitem != -1 || pcursobj != -1)
 		return; // Prefer showing items/objects over triggers (use of cursm* conflicts)
 
-	for (int i = 0; i < nummissiles; i++) {
-		int mi = missileactive[i];
-		if (missile[mi]._mitype == MIS_TOWN || missile[mi]._mitype == MIS_RPORTAL) {
-			const int newDistance = GetDistance(missile[mi].position.tile, 2);
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mi = ActiveMissiles[i];
+		if (Missiles[mi]._mitype == MIS_TOWN || Missiles[mi]._mitype == MIS_RPORTAL) {
+			const int newDistance = GetDistance(Missiles[mi].position.tile, 2);
 			if (newDistance == 0)
 				continue;
 			if (pcursmissile != -1 && distance < newDistance)
 				continue;
-			const int newRotations = GetRotaryDistance(missile[mi].position.tile);
+			const int newRotations = GetRotaryDistance(Missiles[mi].position.tile);
 			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
-			cursmx = missile[mi].position.tile.x;
-			cursmy = missile[mi].position.tile.y;
+			cursmx = Missiles[mi].position.tile.x;
+			cursmy = Missiles[mi].position.tile.y;
 			pcursmissile = mi;
 			distance = newDistance;
 			rotations = newRotations;
@@ -1524,7 +1524,7 @@ void PerformSecondaryAction()
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 	} else if (pcursmissile != -1) {
-		MakePlrPath(MyPlayerId, missile[pcursmissile].position.tile, true);
+		MakePlrPath(MyPlayerId, Missiles[pcursmissile].position.tile, true);
 		Players[MyPlayerId].destAction = ACTION_WALK;
 	} else if (pcurstrig != -1) {
 		MakePlrPath(MyPlayerId, trigs[pcurstrig].position, true);

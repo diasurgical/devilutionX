@@ -52,7 +52,7 @@ struct PointHash {
 /**
  * @brief Contains all Missile at rendering position
  */
-std::unordered_multimap<Point, MissileStruct*, PointHash> MissilesAtRenderingTile;
+std::unordered_multimap<Point, MissileStruct *, PointHash> MissilesAtRenderingTile;
 
 /**
  * @brief Could the missile (at the next game tick) collide? This method is a simplified version of CheckMissileCol (for example without random).
@@ -88,13 +88,13 @@ void UpdateMissileRendererData(MissileStruct &m)
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
-	const MissileMovementDistrubution missileMovement = missiledata[m._mitype].MovementDistribution;
+	const MissileMovementDistrubution missileMovement = MissileData[m._mitype].MovementDistribution;
 	// don't calculate missile position if they don't move
-	if (missileMovement  == MissileMovementDistrubution::Disabled)
+	if (missileMovement == MissileMovementDistrubution::Disabled)
 		return;
 
 	// when some missiles hit, they change there animation to a explosion and the explosion shouldn't move (for example fireball)
-	if (missiledata[m._mitype].mFileNum != m._miAnimType)
+	if (MissileData[m._mitype].mFileNum != m._miAnimType)
 		return;
 
 	float fProgress = gfProgressToNextGameTick;
@@ -152,15 +152,15 @@ void UpdateMissilesRendererData()
 {
 	MissilesAtRenderingTile.clear();
 
-	for (int i = 0; i < nummissiles; i++) {
-		assert(missileactive[i] < MAXMISSILES);
-		MissileStruct &m = missile[missileactive[i]];
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		assert(ActiveMissiles[i] < MAXMISSILES);
+		MissileStruct &m = Missiles[ActiveMissiles[i]];
 		UpdateMissileRendererData(m);
 		MissilesAtRenderingTile.insert(std::make_pair(m.position.tileForRendering, &m));
 	}
 }
 
-}
+} // namespace
 
 /**
  * Specifies the current light entry.
@@ -364,7 +364,7 @@ static void DrawCursor(const Surface &out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface&out, const MissileStruct *m, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface &out, const MissileStruct *m, int sx, int sy, bool pre)
 {
 	if (m->_miPreFlag != pre || !m->_miDrawFlag)
 		return;
@@ -403,7 +403,7 @@ void DrawMissilePrivate(const Surface&out, const MissileStruct *m, int sx, int s
 void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
 {
 	const auto range = MissilesAtRenderingTile.equal_range(Point { x, y });
-	for (auto it = range.first; it != range.second; ++it) {
+	for (auto it = range.first; it != range.second; it++) {
 		DrawMissilePrivate(out, it->second, sx, sy, pre);
 	}
 }
@@ -471,10 +471,10 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
  */
 static void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
 {
-	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - misfiledata[missileGraphicId].mAnimWidth2[0];
+	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].mAnimWidth2[0];
 
-	int width = misfiledata[missileGraphicId].mAnimWidth[0];
-	byte *pCelBuff = misfiledata[missileGraphicId].mAnimData[0];
+	int width = MissileSpriteData[missileGraphicId].mAnimWidth[0];
+	byte *pCelBuff = MissileSpriteData[missileGraphicId].mAnimData[0];
 
 	CelSprite cel { pCelBuff, width };
 
