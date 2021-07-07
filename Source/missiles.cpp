@@ -1014,8 +1014,8 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 	}
 	if (dObject[mx][my] != 0) {
 		int oi = dObject[mx][my] > 0 ? dObject[mx][my] - 1 : -(dObject[mx][my] + 1);
-		if (!object[oi]._oMissFlag) {
-			if (object[oi]._oBreak == 1)
+		if (!Objects[oi]._oMissFlag) {
+			if (Objects[oi]._oBreak == 1)
 				BreakObject(-1, oi);
 			if (!nodel)
 				Missiles[i]._mirange = 0;
@@ -1899,7 +1899,7 @@ void AddRndTeleport(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy,
 	} else {
 		int oi = dObject[dst.x][dst.y] - 1;
 		// BUGFIX: should only run magic circle check if dObject[dx][dy] is non-zero.
-		if (object[oi]._otype == OBJ_MCIRCLE1 || object[oi]._otype == OBJ_MCIRCLE2) {
+		if (Objects[oi]._otype == OBJ_MCIRCLE1 || Objects[oi]._otype == OBJ_MCIRCLE2) {
 			Missiles[mi].position.tile = dst;
 			if (!PosOkPlayer(MyPlayerId, dst))
 				UpdateVileMissPos(mi, dst);
@@ -3263,7 +3263,7 @@ void MI_Lightball(int i)
 	int8_t obj = dObject[tx][ty];
 	if (obj != 0 && tx == Missiles[i].position.tile.x && ty == Missiles[i].position.tile.y) {
 		int oi = (obj > 0) ? (obj - 1) : -(obj + 1);
-		if (object[oi]._otype == OBJ_SHRINEL || object[oi]._otype == OBJ_SHRINER)
+		if (Objects[oi]._otype == OBJ_SHRINEL || Objects[oi]._otype == OBJ_SHRINER)
 			Missiles[i]._mirange = j;
 	}
 	if (Missiles[i]._mirange == 0)

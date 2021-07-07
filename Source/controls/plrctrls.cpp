@@ -147,9 +147,9 @@ void FindItemOrObject()
 			if (dObject[mx + xx][my + yy] == 0)
 				continue;
 			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
-			if (object[o]._oSelFlag == 0)
+			if (Objects[o]._oSelFlag == 0)
 				continue;
-			if (xx == 0 && yy == 0 && object[o]._oDoorFlag)
+			if (xx == 0 && yy == 0 && Objects[o]._oDoorFlag)
 				continue; // Ignore doorway so we don't get stuck behind barrels
 			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
 			if (rotations < newRotations)

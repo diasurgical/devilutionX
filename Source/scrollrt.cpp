@@ -72,7 +72,7 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 	int oid = dObject[tile.x][tile.y];
 	if (oid != 0) {
 		oid = oid > 0 ? oid - 1 : -(oid + 1);
-		if (!object[oid]._oMissFlag)
+		if (!Objects[oid]._oMissFlag)
 			return true;
 	}
 	if (nMissileTable[dPiece[tile.x][tile.y]])
@@ -620,42 +620,42 @@ static void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pr
 	int8_t bv = -1;
 	if (dObject[x][y] > 0) {
 		bv = dObject[x][y] - 1;
-		if (object[bv]._oPreFlag != pre)
+		if (Objects[bv]._oPreFlag != pre)
 			return;
-		objectPosition.x = ox - CalculateWidth2(object[bv]._oAnimWidth);
+		objectPosition.x = ox - CalculateWidth2(Objects[bv]._oAnimWidth);
 		objectPosition.y = oy;
 	} else {
 		bv = -(dObject[x][y] + 1);
-		if (object[bv]._oPreFlag != pre)
+		if (Objects[bv]._oPreFlag != pre)
 			return;
-		int xx = object[bv].position.x - x;
-		int yy = object[bv].position.y - y;
-		objectPosition.x = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(object[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
+		int xx = Objects[bv].position.x - x;
+		int yy = Objects[bv].position.y - y;
+		objectPosition.x = (xx * TILE_WIDTH / 2) + ox - CalculateWidth2(Objects[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
 		objectPosition.y = oy + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
 	assert(bv >= 0 && bv < MAXOBJECTS);
 
-	byte *pCelBuff = object[bv]._oAnimData;
+	byte *pCelBuff = Objects[bv]._oAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Object type {}: NULL Cel Buffer", object[bv]._otype);
+		Log("Draw Object type {}: NULL Cel Buffer", Objects[bv]._otype);
 		return;
 	}
 
-	uint32_t nCel = object[bv]._oAnimFrame;
+	uint32_t nCel = Objects[bv]._oAnimFrame;
 	uint32_t frames = LoadLE32(pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, object[bv]._otype);
+		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, Objects[bv]._otype);
 		return;
 	}
 
-	CelSprite cel { object[bv]._oAnimData, object[bv]._oAnimWidth };
+	CelSprite cel { Objects[bv]._oAnimData, Objects[bv]._oAnimWidth };
 	if (bv == pcursobj)
-		CelBlitOutlineTo(out, 194, objectPosition, cel, object[bv]._oAnimFrame);
-	if (object[bv]._oLight) {
-		CelClippedDrawLightTo(out, objectPosition, cel, object[bv]._oAnimFrame);
+		CelBlitOutlineTo(out, 194, objectPosition, cel, Objects[bv]._oAnimFrame);
+	if (Objects[bv]._oLight) {
+		CelClippedDrawLightTo(out, objectPosition, cel, Objects[bv]._oAnimFrame);
 	} else {
-		CelClippedDrawTo(out, objectPosition, cel, object[bv]._oAnimFrame);
+		CelClippedDrawTo(out, objectPosition, cel, Objects[bv]._oAnimFrame);
 	}
 }
 

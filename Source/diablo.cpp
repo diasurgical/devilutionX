@@ -625,7 +625,7 @@ static bool LeftMouseCmd(bool bShift)
 		bNear = myPlayer.position.tile.WalkingDistance({ cursmx, cursmy }) < 2;
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
-		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && object[pcursobj]._oBreak == 1))) {
+		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && Objects[pcursobj]._oBreak == 1))) {
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {

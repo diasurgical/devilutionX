@@ -1262,7 +1262,7 @@ void AddDoppelganger(MonsterStruct &monster)
 					break;
 				}
 				int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-				if (!object[oi]._oSolidFlag) {
+				if (!Objects[oi]._oSolidFlag) {
 					target = position;
 					break;
 				}
@@ -4958,7 +4958,7 @@ bool PosOkMonst2(int i, Point position)
 
 	if (dObject[position.x][position.y] != 0) {
 		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-		if (object[oi]._oSolidFlag)
+		if (Objects[oi]._oSolidFlag)
 			return false;
 	}
 
@@ -4970,8 +4970,8 @@ bool PosOkMonst3(int i, Point position)
 	bool isdoor = false;
 	if (dObject[position.x][position.y] != 0) {
 		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-		isdoor = IsAnyOf(object[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR);
-		if (object[oi]._oSolidFlag && !isdoor)
+		isdoor = IsAnyOf(Objects[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR);
+		if (Objects[oi]._oSolidFlag && !isdoor)
 			return false;
 	}
 

@@ -721,8 +721,8 @@ void Theme_Library(int t)
 				AddObject(OBJ_BOOKSTAND, xp, yp);
 				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp] != 0) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
 					int oi = dObject[xp][yp] - 1;
-					object[oi]._oSelFlag = 0;
-					object[oi]._oAnimFrame += 2;
+					Objects[oi]._oSelFlag = 0;
+					Objects[oi]._oAnimFrame += 2;
 				}
 			}
 		}
@@ -977,7 +977,7 @@ void CreateThemeRooms()
 	if (currlevel == 16) {
 		return;
 	}
-	InitObjFlag = true;
+	ApplyObjectLighting = true;
 	for (int i = 0; i < numthemes; i++) {
 		themex = 0;
 		themey = 0;
@@ -1037,7 +1037,7 @@ void CreateThemeRooms()
 			app_fatal("Unknown theme type: %i", themes[i].ttype);
 		}
 	}
-	InitObjFlag = false;
+	ApplyObjectLighting = false;
 	if (leveltype == DTYPE_HELL && themeCount > 0) {
 		UpdateL4Trans();
 	}

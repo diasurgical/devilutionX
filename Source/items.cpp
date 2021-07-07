@@ -1278,20 +1278,20 @@ bool ItemSpaceOk(Point position)
 
 	if (dObject[position.x][position.y] != 0) {
 		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-		if (object[oi]._oSolidFlag)
+		if (Objects[oi]._oSolidFlag)
 			return false;
 	}
 
-	if (dObject[position.x + 1][position.y + 1] > 0 && object[dObject[position.x + 1][position.y + 1] - 1]._oSelFlag != 0)
+	if (dObject[position.x + 1][position.y + 1] > 0 && Objects[dObject[position.x + 1][position.y + 1] - 1]._oSelFlag != 0)
 		return false;
 
-	if (dObject[position.x + 1][position.y + 1] < 0 && object[-(dObject[position.x + 1][position.y + 1] + 1)]._oSelFlag != 0)
+	if (dObject[position.x + 1][position.y + 1] < 0 && Objects[-(dObject[position.x + 1][position.y + 1] + 1)]._oSelFlag != 0)
 		return false;
 
 	if (dObject[position.x + 1][position.y] > 0
 	    && dObject[position.x][position.y + 1] > 0
-	    && object[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0
-	    && object[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0) {
+	    && Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0
+	    && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0) {
 		return false;
 	}
 
@@ -2831,9 +2831,9 @@ void SpawnRock()
 
 	int oi;
 	bool ostand = false;
-	for (int i = 0; i < nobjects && !ostand; i++) {
-		oi = objectactive[i];
-		ostand = object[oi]._otype == OBJ_STAND;
+	for (int i = 0; i < ActiveObjectCount && !ostand; i++) {
+		oi = ActiveObjects[i];
+		ostand = Objects[oi]._otype == OBJ_STAND;
 	}
 
 	if (!ostand)
@@ -2841,8 +2841,8 @@ void SpawnRock()
 
 	int ii = AllocateItem();
 
-	Items[ii].position = object[oi].position;
-	dItem[object[oi].position.x][object[oi].position.y] = ii + 1;
+	Items[ii].position = Objects[oi].position;
+	dItem[Objects[oi].position.x][Objects[oi].position.y] = ii + 1;
 	int curlv = items_get_currlevel();
 	GetItemAttrs(ii, IDI_ROCK, curlv);
 	SetupItem(ii);
