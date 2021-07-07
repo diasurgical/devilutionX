@@ -1011,15 +1011,15 @@ void CheckBtnUp()
 
 		switch (i) {
 		case PanelButtonCharinfo:
-			questlog = false;
+			QuestLogIsOpen = false;
 			chrflag = !chrflag;
 			break;
 		case PanelButtonQlog:
 			chrflag = false;
-			if (!questlog)
+			if (!QuestLogIsOpen)
 				StartQuestlog();
 			else
-				questlog = false;
+				QuestLogIsOpen = false;
 			break;
 		case PanelButtonAutomap:
 			DoAutoMap();
@@ -1144,7 +1144,7 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(Monsters[pcursmonst].MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				string_view townerName = towners[pcursmonst]._tName;
+				string_view townerName = Towners[pcursmonst]._tName;
 				strncpy(infostr, townerName.data(), townerName.length());
 				infostr[townerName.length()] = '\0';
 			}
@@ -1513,7 +1513,7 @@ void DrawDurIcon(const Surface &out)
 	bool hasRoomUnderPanels = gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || questlog) && (invflag || sbookflag))
+		if ((chrflag || QuestLogIsOpen) && (invflag || sbookflag))
 			return;
 	}
 

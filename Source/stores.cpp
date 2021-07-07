@@ -1199,7 +1199,7 @@ void StartTalk()
 
 	int sn = 0;
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog)
+		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog)
 			sn++;
 	}
 
@@ -1214,8 +1214,8 @@ void StartTalk()
 	int sn2 = sn - 2;
 
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog) {
-			AddSText(0, sn, _(questlist[i]._qlstr), UIS_SILVER | UIS_CENTER, true);
+		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog) {
+			AddSText(0, sn, _(QuestData[i]._qlstr), UIS_SILVER | UIS_CENTER, true);
 			sn += la;
 		}
 	}
@@ -2044,7 +2044,7 @@ void TalkEnter()
 
 	int sn = 0;
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog)
+		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog)
 			sn++;
 	}
 	int la = 2;
@@ -2056,16 +2056,16 @@ void TalkEnter()
 	}
 
 	if (stextsel == sn - 2) {
-		SetRndSeed(towners[talker]._tSeed);
+		SetRndSeed(Towners[talker]._tSeed);
 		auto tq = static_cast<_speech_id>(gossipstart + GenerateRnd(gossipend - gossipstart + 1));
 		InitQTextMsg(tq);
 		return;
 	}
 
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (quests[i]._qactive == QUEST_ACTIVE && Qtalklist[talker][i] != TEXT_NONE && quests[i]._qlog) {
+		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog) {
 			if (sn == stextsel) {
-				InitQTextMsg(Qtalklist[talker][i]);
+				InitQTextMsg(QuestDialogTable[talker][i]);
 			}
 			sn += la;
 		}
@@ -2327,7 +2327,7 @@ void StartStore(talk_id s)
 	sbookflag = false;
 	invflag = false;
 	chrflag = false;
-	questlog = false;
+	QuestLogIsOpen = false;
 	dropGoldFlag = false;
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();

@@ -147,7 +147,7 @@ void InitQuestText()
 void InitQTextMsg(_speech_id m)
 {
 	if (Texts[m].scrlltxt) {
-		questlog = false;
+		QuestLogIsOpen = false;
 		LoadText(_(Texts[m].txtstr));
 		qtextflag = true;
 		qtextSpd = CalculateTextSpeed(Texts[m].sfxnr);

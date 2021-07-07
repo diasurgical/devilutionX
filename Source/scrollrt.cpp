@@ -774,13 +774,13 @@ static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, 
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		int px = sx - CalculateWidth2(towners[mi]._tAnimWidth);
+		int px = sx - CalculateWidth2(Towners[mi]._tAnimWidth);
 		const Point position { px, sy };
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, position, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
+			CelBlitOutlineTo(out, 166, position, CelSprite(Towners[mi]._tAnimData, Towners[mi]._tAnimWidth), Towners[mi]._tAnimFrame);
 		}
-		assert(towners[mi]._tAnimData);
-		CelClippedDrawTo(out, position, CelSprite(towners[mi]._tAnimData, towners[mi]._tAnimWidth), towners[mi]._tAnimFrame);
+		assert(Towners[mi]._tAnimData);
+		CelClippedDrawTo(out, position, CelSprite(Towners[mi]._tAnimData, Towners[mi]._tAnimWidth), Towners[mi]._tAnimFrame);
 		return;
 	}
 
@@ -1069,7 +1069,7 @@ static void Zoom(const Surface &out)
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
 	if (CanPanelsCoverView()) {
-		if (chrflag || questlog) {
+		if (chrflag || QuestLogIsOpen) {
 			viewportWidth -= SPANEL_WIDTH;
 			viewportOffsetX = SPANEL_WIDTH;
 		} else if (invflag || sbookflag) {
@@ -1286,7 +1286,7 @@ static void DrawGame(const Surface &fullOut, int x, int y)
 	// Skip rendering parts covered by the panels
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
-			if (chrflag || questlog) {
+			if (chrflag || QuestLogIsOpen) {
 				ShiftGrid(&x, &y, 2, 0);
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
@@ -1297,7 +1297,7 @@ static void DrawGame(const Surface &fullOut, int x, int y)
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
-			if (chrflag || questlog) {
+			if (chrflag || QuestLogIsOpen) {
 				ShiftGrid(&x, &y, 1, 0);
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
@@ -1389,11 +1389,11 @@ void DrawView(const Surface &out, int startX, int startY)
 
 	if (chrflag) {
 		DrawChr(out);
-	} else if (questlog) {
+	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
 	}
 	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
-	    && (!questlog || gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || gnScreenWidth >= 4 * SPANEL_WIDTH)) {
+	    && (!QuestLogIsOpen || gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 74 || gnScreenWidth >= 4 * SPANEL_WIDTH)) {
 		DrawLevelUpIcon(out);
 	}
 	if (ShowUniqueItemInfoBox) {

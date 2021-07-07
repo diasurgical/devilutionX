@@ -470,8 +470,8 @@ void AddTortures()
 }
 void AddCandles()
 {
-	int tx = quests[Q_PWATER].position.x;
-	int ty = quests[Q_PWATER].position.y;
+	int tx = Quests[Q_PWATER].position.x;
+	int ty = Quests[Q_PWATER].position.y;
 	AddObject(OBJ_STORYCANDLE, tx - 2, ty + 1);
 	AddObject(OBJ_STORYCANDLE, tx + 3, ty + 1);
 	AddObject(OBJ_STORYCANDLE, tx - 1, ty + 2);
@@ -1001,7 +1001,7 @@ void InitObjects()
 		AdvanceRndSeed();
 		if (currlevel == 9 && !gbIsMultiplayer)
 			AddSlainHero();
-		if (currlevel == quests[Q_MUSHROOM]._qlevel && quests[Q_MUSHROOM]._qactive == QUEST_INIT)
+		if (currlevel == Quests[Q_MUSHROOM]._qlevel && Quests[Q_MUSHROOM]._qactive == QUEST_INIT)
 			AddMushPatch();
 
 		if (currlevel == 4 || currlevel == 8 || currlevel == 12)
@@ -1061,7 +1061,7 @@ void InitObjects()
 					spId = TEXT_BLINDING;
 					break;
 				}
-				quests[Q_BLIND]._qmsg = spId;
+				Quests[Q_BLIND]._qmsg = spId;
 				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, spId);
 				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", 2 * setpc_x, 2 * setpc_y);
 			}
@@ -1087,7 +1087,7 @@ void InitObjects()
 					spId = TEXT_BLOODY;
 					break;
 				}
-				quests[Q_BLOOD]._qmsg = spId;
+				Quests[Q_BLOOD]._qmsg = spId;
 				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, spId);
 				AddObject(OBJ_PEDISTAL, 2 * setpc_x + 25, 2 * setpc_y + 32);
 			}
@@ -1120,7 +1120,7 @@ void InitObjects()
 					spId = TEXT_BLOODWAR;
 					break;
 				}
-				quests[Q_WARLORD]._qmsg = spId;
+				Quests[Q_WARLORD]._qmsg = spId;
 				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, spId);
 				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", 2 * setpc_x, 2 * setpc_y);
 			}
@@ -1903,8 +1903,8 @@ void Obj_Circle(int i)
 	if (ox == 35 && oy == 36 && object[i]._oVar5 == 3) {
 		object[i]._oVar6 = 4;
 		ObjChangeMapResync(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
-		if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
-			quests[Q_BETRAYER]._qvar1 = 4;
+		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
+			Quests[Q_BETRAYER]._qvar1 = 4;
 		AddMissile(Players[MyPlayerId].position.tile, { 35, 46 }, Players[MyPlayerId]._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		track_repeat_walk(false);
 		sgbMouseDown = CLICK_NONE;
@@ -2809,7 +2809,7 @@ void OperateLever(int pnum, int i)
 		OperateNakrulLever();
 		IsUberLeverActivated = true;
 		mapflag = false;
-		quests[Q_NAKRUL]._qactive = QUEST_DONE;
+		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 	}
 	if (mapflag)
 		ObjChangeMap(object[i]._oVar1, object[i]._oVar2, object[i]._oVar3, object[i]._oVar4);
@@ -2861,7 +2861,7 @@ void OperateBook(int pnum, int i)
 		Players[pnum]._pMemSpells |= GetSpellBitmask(SPL_GUARDIAN);
 		if (Players[pnum]._pSplLvl[SPL_GUARDIAN] < MAX_SPELL_LEVEL)
 			Players[pnum]._pSplLvl[SPL_GUARDIAN]++;
-		quests[Q_SCHAMB]._qactive = QUEST_DONE;
+		Quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		if (!deltaload)
 			PlaySfxLoc(IS_QUESTDN, object[i].position);
 		InitDiabloMsg(EMSG_BONECHAMB);
@@ -2894,22 +2894,22 @@ void OperateBookLever(int pnum, int i)
 		return;
 	}
 	if (object[i]._oSelFlag != 0 && !qtextflag) {
-		if (object[i]._otype == OBJ_BLINDBOOK && quests[Q_BLIND]._qvar1 == 0) {
-			quests[Q_BLIND]._qactive = QUEST_ACTIVE;
-			quests[Q_BLIND]._qlog = true;
-			quests[Q_BLIND]._qvar1 = 1;
+		if (object[i]._otype == OBJ_BLINDBOOK && Quests[Q_BLIND]._qvar1 == 0) {
+			Quests[Q_BLIND]._qactive = QUEST_ACTIVE;
+			Quests[Q_BLIND]._qlog = true;
+			Quests[Q_BLIND]._qvar1 = 1;
 		}
-		if (object[i]._otype == OBJ_BLOODBOOK && quests[Q_BLOOD]._qvar1 == 0) {
-			quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
-			quests[Q_BLOOD]._qlog = true;
-			quests[Q_BLOOD]._qvar1 = 1;
+		if (object[i]._otype == OBJ_BLOODBOOK && Quests[Q_BLOOD]._qvar1 == 0) {
+			Quests[Q_BLOOD]._qactive = QUEST_ACTIVE;
+			Quests[Q_BLOOD]._qlog = true;
+			Quests[Q_BLOOD]._qvar1 = 1;
 			SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 25, 2 * setpc_y + 33 }, 0, 1);
 		}
 		object[i]._otype = object[i]._otype;
-		if (object[i]._otype == OBJ_STEELTOME && quests[Q_WARLORD]._qvar1 == 0) {
-			quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
-			quests[Q_WARLORD]._qlog = true;
-			quests[Q_WARLORD]._qvar1 = 1;
+		if (object[i]._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
+			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
+			Quests[Q_WARLORD]._qlog = true;
+			Quests[Q_WARLORD]._qvar1 = 1;
 		}
 		if (object[i]._oAnimFrame != object[i]._oVar6) {
 			if (object[i]._otype != OBJ_BLOODBOOK)
@@ -2941,9 +2941,9 @@ void OperateSChambBk(int i)
 			SyncObjectAnim(objectactive[j]);
 	}
 	object[i]._oAnimFrame = object[i]._oVar6;
-	if (quests[Q_SCHAMB]._qactive == QUEST_INIT) {
-		quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
-		quests[Q_SCHAMB]._qlog = true;
+	if (Quests[Q_SCHAMB]._qactive == QUEST_INIT) {
+		Quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
+		Quests[Q_SCHAMB]._qlog = true;
 	}
 
 	_speech_id textdef;
@@ -2967,7 +2967,7 @@ void OperateSChambBk(int i)
 		textdef = TEXT_BONER;
 		break;
 	}
-	quests[Q_SCHAMB]._qmsg = textdef;
+	Quests[Q_SCHAMB]._qmsg = textdef;
 	InitQTextMsg(textdef);
 }
 
@@ -3035,7 +3035,7 @@ void OperateMushPatch(int pnum, int i)
 		return;
 	}
 
-	if (quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE) {
+	if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE) {
 		if (!deltaload && pnum == MyPlayerId) {
 			Players[MyPlayerId].Say(HeroSpeech::ICantUseThisYet);
 		}
@@ -3050,7 +3050,7 @@ void OperateMushPatch(int pnum, int i)
 		if (!deltaload) {
 			Point pos = GetSuperItemLoc(object[i].position);
 			SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
-			quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
+			Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 		}
 	}
 }
@@ -3061,7 +3061,7 @@ void OperateInnSignChest(int pnum, int i)
 		return;
 	}
 
-	if (quests[Q_LTBANNER]._qvar1 != 2) {
+	if (Quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == MyPlayerId) {
 			Players[MyPlayerId].Say(HeroSpeech::ICantOpenThisYet);
 		}
@@ -4643,14 +4643,14 @@ void OperateStoryBook(int pnum, int i)
 	PlaySfxLoc(IS_ISCROL, object[i].position);
 	auto msg = static_cast<_speech_id>(object[i]._oVar2);
 	if (object[i]._oVar8 != 0 && currlevel == 24) {
-		if (!IsUberLeverActivated && quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(object[i]._oVar8)) {
+		if (!IsUberLeverActivated && Quests[Q_NAKRUL]._qactive != QUEST_DONE && OperateNakrulBook(object[i]._oVar8)) {
 			NetSendCmd(false, CMD_NAKRUL);
 			return;
 		}
 	} else if (currlevel >= 21) {
-		quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
-		quests[Q_NAKRUL]._qlog = true;
-		quests[Q_NAKRUL]._qmsg = msg;
+		Quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
+		Quests[Q_NAKRUL]._qlog = true;
+		Quests[Q_NAKRUL]._qmsg = msg;
 	}
 	InitQTextMsg(msg);
 	NetSendCmdParam1(false, CMD_OPERATEOBJ, i);

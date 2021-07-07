@@ -385,7 +385,7 @@ bool FetchMessage(tagMSG *lpMsg)
 				else
 					spselflag = false;
 				chrflag = false;
-				questlog = false;
+				QuestLogIsOpen = false;
 				sbookflag = false;
 				StoreSpellCoords();
 			}
@@ -393,7 +393,7 @@ bool FetchMessage(tagMSG *lpMsg)
 		case GameActionType_TOGGLE_CHARACTER_INFO:
 			chrflag = !chrflag;
 			if (chrflag) {
-				questlog = false;
+				QuestLogIsOpen = false;
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
 					NewCursor(CURSOR_HAND);
@@ -401,12 +401,12 @@ bool FetchMessage(tagMSG *lpMsg)
 			}
 			break;
 		case GameActionType_TOGGLE_QUEST_LOG:
-			if (!questlog) {
+			if (!QuestLogIsOpen) {
 				StartQuestlog();
 				chrflag = false;
 				spselflag = false;
 			} else {
-				questlog = false;
+				QuestLogIsOpen = false;
 			}
 			break;
 		case GameActionType_TOGGLE_INVENTORY:

@@ -167,7 +167,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(towners[i].position, 2);
+		int distance = GetDistance(Towners[i].position, 2);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -417,13 +417,13 @@ void FindTrigger()
 
 		if (pcurstrig == -1) {
 			for (int i = 0; i < MAXQUESTS; i++) {
-				if (i == Q_BETRAYER || currlevel != quests[i]._qlevel || quests[i]._qslvl == 0)
+				if (i == Q_BETRAYER || currlevel != Quests[i]._qlevel || Quests[i]._qslvl == 0)
 					continue;
-				const int newDistance = GetDistance(quests[i].position, 2);
+				const int newDistance = GetDistance(Quests[i].position, 2);
 				if (newDistance == 0)
 					continue;
-				cursmx = quests[i].position.x;
-				cursmy = quests[i].position.y;
+				cursmx = Quests[i].position.x;
+				cursmy = Quests[i].position.y;
 				pcursquest = i;
 			}
 		}
@@ -440,7 +440,7 @@ void FindTrigger()
 void Interact()
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
-		NetSendCmdLocParam1(true, CMD_TALKXY, towners[pcursmonst].position, pcursmonst);
+		NetSendCmdLocParam1(true, CMD_TALKXY, Towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (Players[MyPlayerId]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
@@ -1127,7 +1127,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 	if (sbookflag) {
 		return &SpellBookMove;
 	}
-	if (questlog) {
+	if (QuestLogIsOpen) {
 		return &QuestLogMove;
 	}
 	if (stextflag != STORE_NONE) {
@@ -1443,7 +1443,7 @@ bool TryDropItem()
 
 void PerformSpellAction()
 {
-	if (InGameMenu() || questlog || sbookflag)
+	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return;
 
 	if (invflag) {
@@ -1530,7 +1530,7 @@ void PerformSecondaryAction()
 		MakePlrPath(MyPlayerId, trigs[pcurstrig].position, true);
 		Players[MyPlayerId].destAction = ACTION_WALK;
 	} else if (pcursquest != -1) {
-		MakePlrPath(MyPlayerId, quests[pcursquest].position, true);
+		MakePlrPath(MyPlayerId, Quests[pcursquest].position, true);
 		Players[MyPlayerId].destAction = ACTION_WALK;
 	}
 }

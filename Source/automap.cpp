@@ -241,7 +241,7 @@ void SearchAutomapItem(const Surface &out)
 			if (CanPanelsCoverView()) {
 				if (invflag || sbookflag)
 					screen.x -= 160;
-				if (chrflag || questlog)
+				if (chrflag || QuestLogIsOpen)
 					screen.x += 160;
 			}
 			screen.y -= AmLine8;
@@ -278,7 +278,7 @@ void DrawAutomapPlr(const Surface &out, int playerId)
 	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag)
 			base.x -= gnScreenWidth / 4;
-		if (chrflag || questlog)
+		if (chrflag || QuestLogIsOpen)
 			base.x += gnScreenWidth / 4;
 	}
 	base.y -= AmLine8;
@@ -588,7 +588,7 @@ void DrawAutomap(const Surface &out)
 		if (invflag || sbookflag) {
 			screen.x -= gnScreenWidth / 4;
 		}
-		if (chrflag || questlog) {
+		if (chrflag || QuestLogIsOpen) {
 			screen.x += gnScreenWidth / 4;
 		}
 	}

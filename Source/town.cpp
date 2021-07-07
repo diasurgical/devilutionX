@@ -182,19 +182,19 @@ void DrlgTPass3()
 		}
 	}
 	if (gbIsHellfire) {
-		if (quests[Q_FARMER]._qactive == QUEST_DONE || quests[Q_FARMER]._qactive == QUEST_HIVE_DONE
-		    || quests[Q_JERSEY]._qactive == QUEST_DONE || quests[Q_JERSEY]._qactive == QUEST_HIVE_DONE) {
+		if (Quests[Q_FARMER]._qactive == QUEST_DONE || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE
+		    || Quests[Q_JERSEY]._qactive == QUEST_DONE || Quests[Q_JERSEY]._qactive == QUEST_HIVE_DONE) {
 			TownOpenHive();
 		} else {
 			TownCloseHive();
 		}
-		if (quests[Q_GRAVE]._qactive == QUEST_DONE || Players[MyPlayerId]._pLvlVisited[21])
+		if (Quests[Q_GRAVE]._qactive == QUEST_DONE || Players[MyPlayerId]._pLvlVisited[21])
 			TownOpenGrave();
 		else
 			TownCloseGrave();
 	}
 
-	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
+	if (Quests[Q_PWATER]._qactive != QUEST_DONE && Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
 		FillTile(60, 70, 342);
 	} else {
 		FillTile(60, 70, 71);
