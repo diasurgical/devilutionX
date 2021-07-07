@@ -20,7 +20,7 @@ struct PortalStruct {
 	bool setlvl;
 };
 
-extern PortalStruct portal[MAXPORTAL];
+extern PortalStruct Portals[MAXPORTAL];
 
 void InitPortals();
 void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype);

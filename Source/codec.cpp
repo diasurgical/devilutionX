@@ -58,8 +58,6 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 {
 	char buf[128];
 	char dst[SHA1HashSize];
-	int i;
-	CodecSignature *sig;
 
 	CodecInitKey(pszPassword);
 	if (size <= sizeof(CodecSignature))
@@ -67,7 +65,7 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	size -= sizeof(CodecSignature);
 	if (size % BlockSize != 0)
 		return 0;
-	for (i = size; i != 0; pbSrcDst += BlockSize, i -= BlockSize) {
+	for (int i = size; i != 0; pbSrcDst += BlockSize, i -= BlockSize) {
 		memcpy(buf, pbSrcDst, BlockSize);
 		SHA1Result(0, dst);
 		for (int j = 0; j < BlockSize; j++) {
@@ -79,7 +77,7 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	}
 
 	memset(buf, 0, sizeof(buf));
-	sig = (CodecSignature *)pbSrcDst;
+	auto *sig = (CodecSignature *)pbSrcDst;
 	if (sig->error > 0) {
 		goto error;
 	}

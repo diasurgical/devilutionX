@@ -7,8 +7,7 @@
 
 static void utf16_to_utf8(const uint16_t *src, uint8_t *dst)
 {
-	int i;
-	for (i = 0; src[i]; i++) {
+	for (int i = 0; src[i]; i++) {
 		if ((src[i] & 0xFF80) == 0) {
 			*(dst++) = src[i] & 0xFF;
 		} else if ((src[i] & 0xF800) == 0) {
@@ -32,8 +31,7 @@ static void utf16_to_utf8(const uint16_t *src, uint8_t *dst)
 
 static void utf8_to_utf16(const uint8_t *src, uint16_t *dst)
 {
-	int i;
-	for (i = 0; src[i];) {
+	for (int i = 0; src[i];) {
 		if ((src[i] & 0xE0) == 0xE0) {
 			*(dst++) = ((src[i] & 0x0F) << 12) | ((src[i + 1] & 0x3F) << 6) | (src[i + 2] & 0x3F);
 			i += 3;

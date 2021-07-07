@@ -79,12 +79,10 @@ const char *const MsgStrings[] = {
 
 void InitDiabloMsg(diablo_message e)
 {
-	int i;
-
 	if (msgcnt >= sizeof(msgtable))
 		return;
 
-	for (i = 0; i < msgcnt; i++) {
+	for (int i = 0; i < msgcnt; i++) {
 		if (msgtable[i] == e)
 			return;
 	}

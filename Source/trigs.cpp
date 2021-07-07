@@ -695,9 +695,7 @@ void Freeupstairs()
 
 bool ForceSKingTrig()
 {
-	int i;
-
-	for (i = 0; L1UpList[i] != -1; i++) {
+	for (int i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
 			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_SKELKING]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
@@ -712,9 +710,7 @@ bool ForceSKingTrig()
 
 bool ForceSChambTrig()
 {
-	int i;
-
-	for (i = 0; L2DownList[i] != -1; i++) {
+	for (int i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
 			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_SCHAMB]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
@@ -729,9 +725,7 @@ bool ForceSChambTrig()
 
 bool ForcePWaterTrig()
 {
-	int i;
-
-	for (i = 0; L3DownList[i] != -1; i++) {
+	for (int i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
 			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_PWATER]._qlevel).c_str());
 			cursmx = trigs[0].position.x;

@@ -249,8 +249,6 @@ int AddMonsterType(_monster_id type, placeflag placeflag)
 
 void GetLevelMTypes()
 {
-	int i;
-
 	// this array is merged with skeltypes down below.
 	_monster_id typelist[MAXMONSTERS];
 	_monster_id skeltypes[NUM_MTYPES];
@@ -307,7 +305,7 @@ void GetLevelMTypes()
 			AddMonsterType(MT_SKING, PLACE_UNIQUE);
 
 			nt = 0;
-			for (i = MT_WSKELAX; i <= MT_WSKELAX + numskeltypes; i++) {
+			for (int i = MT_WSKELAX; i <= MT_WSKELAX + numskeltypes; i++) {
 				if (IsSkel(i)) {
 					minl = 15 * MonsterData[i].mMinDLvl / 30 + 1;
 					maxl = 15 * MonsterData[i].mMaxDLvl / 30 + 1;
@@ -323,7 +321,7 @@ void GetLevelMTypes()
 		}
 
 		nt = 0;
-		for (i = MT_NZOMBIE; i < NUM_MTYPES; i++) {
+		for (int i = MT_NZOMBIE; i < NUM_MTYPES; i++) {
 			minl = 15 * MonsterData[i].mMinDLvl / 30 + 1;
 			maxl = 15 * MonsterData[i].mMaxDLvl / 30 + 1;
 
@@ -336,14 +334,14 @@ void GetLevelMTypes()
 
 #ifdef _DEBUG
 		if (monstdebug) {
-			for (i = 0; i < debugmonsttypes; i++)
+			for (int i = 0; i < debugmonsttypes; i++)
 				AddMonsterType(DebugMonsters[i], PLACE_SCATTER);
 		} else
 #endif
 		{
 
 			while (nt > 0 && LevelMonsterTypeCount < MAX_LVLMTYPES && monstimgtot < 4000) {
-				for (i = 0; i < nt;) {
+				for (int i = 0; i < nt;) {
 					if (MonsterData[typelist[i]].mImage > 4000 - monstimgtot) {
 						typelist[i] = typelist[--nt];
 						continue;
@@ -353,7 +351,7 @@ void GetLevelMTypes()
 				}
 
 				if (nt != 0) {
-					i = GenerateRnd(nt);
+					int i = GenerateRnd(nt);
 					AddMonsterType(typelist[i], PLACE_SCATTER);
 					typelist[i] = typelist[--nt];
 				}

@@ -1300,30 +1300,28 @@ void effects_cleanup_sfx()
 
 static void PrivSoundInit(BYTE bLoadMask)
 {
-	DWORD i;
-
 	if (!gbSndInited) {
 		return;
 	}
 
-	for (i = 0; i < sizeof(sgSFX) / sizeof(TSFX); i++) {
-		if (sgSFX[i].pSnd != nullptr) {
+	for (auto &sfx : sgSFX) {
+		if (sfx.pSnd != nullptr) {
 			continue;
 		}
 
-		if ((sgSFX[i].bFlags & sfx_STREAM) != 0) {
+		if ((sfx.bFlags & sfx_STREAM) != 0) {
 			continue;
 		}
 
-		if ((sgSFX[i].bFlags & bLoadMask) == 0) {
+		if ((sfx.bFlags & bLoadMask) == 0) {
 			continue;
 		}
 
-		if (!gbIsHellfire && (sgSFX[i].bFlags & sfx_HELLFIRE) != 0) {
+		if (!gbIsHellfire && (sfx.bFlags & sfx_HELLFIRE) != 0) {
 			continue;
 		}
 
-		sgSFX[i].pSnd = sound_file_load(sgSFX[i].pszName);
+		sfx.pSnd = sound_file_load(sfx.pszName);
 	}
 }
 

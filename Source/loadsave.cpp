@@ -807,7 +807,7 @@ static void LoadLighting(LoadHelper *file, LightStruct *pLight)
 
 static void LoadPortal(LoadHelper *file, int i)
 {
-	PortalStruct *pPortal = &portal[i];
+	PortalStruct *pPortal = &Portals[i];
 
 	pPortal->open = file->NextBool32();
 	pPortal->position.x = file->NextLE<int32_t>();
@@ -1843,7 +1843,7 @@ static void SaveLighting(SaveHelper *file, LightStruct *pLight)
 
 static void SavePortal(SaveHelper *file, int i)
 {
-	PortalStruct *pPortal = &portal[i];
+	PortalStruct *pPortal = &Portals[i];
 
 	file->WriteLE<uint32_t>(pPortal->open ? 1 : 0);
 	file->WriteLE<int32_t>(pPortal->position.x);

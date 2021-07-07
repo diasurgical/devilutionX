@@ -325,9 +325,7 @@ void InitObjectGFX()
 
 void FreeObjectGFX()
 {
-	int i;
-
-	for (i = 0; i < numobjfiles; i++) {
+	for (int i = 0; i < numobjfiles; i++) {
 		pObjCels[i] = nullptr;
 	}
 	numobjfiles = 0;

@@ -375,12 +375,10 @@ bool SmithSellOk(int i)
 
 void ScrollSmithSell(int idx)
 {
-	int l;
-
 	ClearSText(5, 21);
 	stextup = 5;
 
-	for (l = 5; l < 20; l += 4) {
+	for (int l = 5; l < 20; l += 4) {
 		if (idx >= storenumh)
 			break;
 		if (!storehold[idx].isEmpty()) {
@@ -629,8 +627,6 @@ void ScrollWitchBuy(int idx)
 
 void StartWitchBuy()
 {
-	int i;
-
 	stextsize = true;
 	stextscrl = true;
 	stextsval = 0;
@@ -647,7 +643,7 @@ void StartWitchBuy()
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
-	for (i = 0; !witchitem[i].isEmpty(); i++) {
+	for (int i = 0; !witchitem[i].isEmpty(); i++) {
 		storenumh++;
 	}
 	stextsmax = storenumh - 4;
@@ -992,11 +988,9 @@ void StartHealer()
 
 void ScrollHealerBuy(int idx)
 {
-	int l;
-
 	ClearSText(5, 21);
 	stextup = 5;
-	for (l = 5; l < 20; l += 4) {
+	for (int l = 5; l < 20; l += 4) {
 		if (!healitem[idx].isEmpty()) {
 			uint16_t iclr = healitem[idx].getTextColorWithStatCheck();
 

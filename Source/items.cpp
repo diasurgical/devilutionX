@@ -510,15 +510,13 @@ static void SpawnNote()
 
 void InitItems()
 {
-	int i;
-
 	memset(&Items[0], 0, sizeof(*Items));
 	GetItemAttrs(0, IDI_GOLD, 1);
 	golditem = Items[0];
 	golditem._iStatFlag = true;
 	ActiveItemCount = 0;
 
-	for (i = 0; i < MAXITEMS; i++) {
+	for (int i = 0; i < MAXITEMS; i++) {
 		Items[i]._itype = ITYPE_NONE;
 		Items[i].position = { 0, 0 };
 		Items[i]._iAnimFlag = false;
@@ -527,7 +525,7 @@ void InitItems()
 		Items[i]._iPostDraw = false;
 	}
 
-	for (i = 0; i < MAXITEMS; i++) {
+	for (int i = 0; i < MAXITEMS; i++) {
 		AvailableItems[i] = i;
 		ActiveItems[i] = 0;
 	}
@@ -560,7 +558,6 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	int tac = 0;  // accuracy
 
 	int g;
-	int i;
 
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
@@ -597,49 +594,48 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	int lmin = 0; // minimum lightning damage
 	int lmax = 0; // maximum lightning damage
 
-	for (i = 0; i < NUM_INVLOC; i++) {
-		ItemStruct *itm = &player.InvBody[i];
-		if (!itm->isEmpty() && itm->_iStatFlag) {
+	for (auto &item : player.InvBody) {
+		if (!item.isEmpty() && item._iStatFlag) {
 
-			mind += itm->_iMinDam;
-			maxd += itm->_iMaxDam;
-			tac += itm->_iAC;
+			mind += item._iMinDam;
+			maxd += item._iMaxDam;
+			tac += item._iAC;
 
-			if (itm->_iSpell != SPL_NULL) {
-				spl |= GetSpellBitmask(itm->_iSpell);
+			if (item._iSpell != SPL_NULL) {
+				spl |= GetSpellBitmask(item._iSpell);
 			}
 
-			if (itm->_iMagical == ITEM_QUALITY_NORMAL || itm->_iIdentified) {
-				bdam += itm->_iPLDam;
-				btohit += itm->_iPLToHit;
-				if (itm->_iPLAC != 0) {
-					int tmpac = itm->_iAC;
-					tmpac *= itm->_iPLAC;
+			if (item._iMagical == ITEM_QUALITY_NORMAL || item._iIdentified) {
+				bdam += item._iPLDam;
+				btohit += item._iPLToHit;
+				if (item._iPLAC != 0) {
+					int tmpac = item._iAC;
+					tmpac *= item._iPLAC;
 					tmpac /= 100;
 					if (tmpac == 0)
-						tmpac = math::Sign(itm->_iPLAC);
+						tmpac = math::Sign(item._iPLAC);
 					bac += tmpac;
 				}
-				iflgs |= itm->_iFlags;
-				pDamAcFlags |= itm->_iDamAcFlags;
-				sadd += itm->_iPLStr;
-				madd += itm->_iPLMag;
-				dadd += itm->_iPLDex;
-				vadd += itm->_iPLVit;
-				fr += itm->_iPLFR;
-				lr += itm->_iPLLR;
-				mr += itm->_iPLMR;
-				dmod += itm->_iPLDamMod;
-				ghit += itm->_iPLGetHit;
-				lrad += itm->_iPLLight;
-				ihp += itm->_iPLHP;
-				imana += itm->_iPLMana;
-				spllvladd += itm->_iSplLvlAdd;
-				enac += itm->_iPLEnAc;
-				fmin += itm->_iFMinDam;
-				fmax += itm->_iFMaxDam;
-				lmin += itm->_iLMinDam;
-				lmax += itm->_iLMaxDam;
+				iflgs |= item._iFlags;
+				pDamAcFlags |= item._iDamAcFlags;
+				sadd += item._iPLStr;
+				madd += item._iPLMag;
+				dadd += item._iPLDex;
+				vadd += item._iPLVit;
+				fr += item._iPLFR;
+				lr += item._iPLLR;
+				mr += item._iPLMR;
+				dmod += item._iPLDamMod;
+				ghit += item._iPLGetHit;
+				lrad += item._iPLLight;
+				ihp += item._iPLHP;
+				imana += item._iPLMana;
+				spllvladd += item._iSplLvlAdd;
+				enac += item._iPLEnAc;
+				fmin += item._iFMinDam;
+				fmax += item._iFMaxDam;
+				lmin += item._iLMinDam;
+				lmax += item._iLMaxDam;
 			}
 		}
 	}

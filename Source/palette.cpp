@@ -35,12 +35,9 @@ void palette_update()
 
 void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
 {
-	int i;
-	double g;
+	double g = sgOptions.Graphics.nGammaCorrection / 100.0;
 
-	g = sgOptions.Graphics.nGammaCorrection / 100.0;
-
-	for (i = 0; i < n; i++) {
+	for (int i = 0; i < n; i++) {
 		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0, g) * 256.0);
 		dst[i].g = static_cast<Uint8>(pow(src[i].g / 256.0, g) * 256.0);
 		dst[i].b = static_cast<Uint8>(pow(src[i].b / 256.0, g) * 256.0);

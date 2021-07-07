@@ -84,11 +84,8 @@ const char *const QuestLevelNames[] = {
 
 int ObjIndex(int x, int y)
 {
-	int i;
-	int oi;
-
-	for (i = 0; i < ActiveObjectCount; i++) {
-		oi = ActiveObjects[i];
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		int oi = ActiveObjects[i];
 		if (Objects[oi].position.x == x && Objects[oi].position.y == y)
 			return oi;
 	}

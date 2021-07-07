@@ -75,9 +75,7 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 		if (!Objects[oid]._oMissFlag)
 			return true;
 	}
-	if (nMissileTable[dPiece[tile.x][tile.y]])
-		return true;
-	return false;
+	return nMissileTable[dPiece[tile.x][tile.y]];
 }
 
 void UpdateMissileRendererData(MissileStruct &m)
@@ -127,9 +125,9 @@ void UpdateMissileRendererData(MissileStruct &m)
 	// We search the last offset that is in the old (valid) tile.
 	// Implementation note: If someone knows the correct math to calculate this without the loop, I would really appreciate it.
 	while (m.position.tile != m.position.tileForRendering) {
-		fProgress -= 0.01f;
+		fProgress -= 0.01F;
 
-		if (fProgress <= 0.0f) {
+		if (fProgress <= 0.0F) {
 			m.position.tileForRendering = m.position.tile;
 			m.position.offsetForRendering = m.position.offset;
 			return;

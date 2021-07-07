@@ -1090,11 +1090,11 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				cn = SwapItem(&player.InvList[invIndex], &player.HoldItem);
 				if (player.HoldItem._itype == ITYPE_GOLD)
 					player._pGold = CalculateGold(player);
-				for (i = 0; i < NUM_INV_GRID_ELEM; i++) {
-					if (player.InvGrid[i] == it)
-						player.InvGrid[i] = 0;
-					if (player.InvGrid[i] == -it)
-						player.InvGrid[i] = 0;
+				for (auto &itemId : player.InvGrid) {
+					if (itemId == it)
+						itemId = 0;
+					if (itemId == -it)
+						itemId = 0;
 				}
 			}
 			int ii = r - SLOTXY_INV_FIRST;

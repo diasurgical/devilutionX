@@ -1175,8 +1175,6 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 
 void InitPlayer(int pnum, bool firstTime)
 {
-	DWORD i;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("InitPlayer: illegal player %i", pnum);
 	}
@@ -1226,6 +1224,7 @@ void InitPlayer(int pnum, bool firstTime)
 				player.position.tile = { ViewX, ViewY };
 			}
 		} else {
+			DWORD i;
 			for (i = 0; i < 8 && !PosOkPlayer(pnum, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
 				;
 			player.position.tile.x += plrxoff2[i];
@@ -1695,10 +1694,6 @@ __attribute__((no_sanitize("shift-base")))
 void
 StartPlayerKill(int pnum, int earflag)
 {
-	bool diablolevel;
-	int i;
-	ItemStruct ear;
-
 	if ((DWORD)pnum >= MAX_PLRS) {
 		app_fatal("StartPlayerKill: illegal player %i", pnum);
 	}
@@ -1712,7 +1707,7 @@ StartPlayerKill(int pnum, int earflag)
 		NetSendCmdParam1(true, CMD_PLRDEAD, earflag);
 	}
 
-	diablolevel = gbIsMultiplayer && player.plrlevel == 16;
+	bool diablolevel = gbIsMultiplayer && player.plrlevel == 16;
 
 	player.Say(HeroSpeech::OofAh);
 
@@ -1731,8 +1726,8 @@ StartPlayerKill(int pnum, int earflag)
 	player.deathFrame = 1;
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
-		for (i = 0; i < NUM_INVLOC; i++) {
-			player.InvBody[i]._itype = ITYPE_NONE;
+		for (auto &item : player.InvBody) {
+			item._itype = ITYPE_NONE;
 		}
 		CalcPlrInv(pnum, false);
 	}
@@ -1756,6 +1751,7 @@ StartPlayerKill(int pnum, int earflag)
 				DropHalfPlayersGold(pnum);
 				if (earflag != -1) {
 					if (earflag != 0) {
+						ItemStruct ear;
 						SetPlrHandItem(&ear, IDI_EAR);
 						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
 						switch (player._pClass) {
@@ -2071,7 +2067,7 @@ void StartWarpLvl(int pnum, int pidx)
 		if (player.plrlevel != 0) {
 			player.plrlevel = 0;
 		} else {
-			player.plrlevel = portal[pidx].level;
+			player.plrlevel = Portals[pidx].level;
 		}
 	}
 
