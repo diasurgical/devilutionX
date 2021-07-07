@@ -59,6 +59,41 @@ CSimpleIni &GetIni()
 	return ini;
 }
 
+static bool IniChanged = false;
+
+/**
+ * @brief Checks if a ini entry is changed by comparing value before and after
+ */
+class IniChangedChecker {
+public:
+	IniChangedChecker(const char *sectionName, const char *keyName)
+	{
+		this->sectionName = sectionName;
+		this->keyName = keyName;
+		std::list<CSimpleIni::Entry> values;
+		if (!GetIni().GetAllValues(sectionName, keyName, values)) {
+			// No entry found in original ini => new entry => changed
+			IniChanged = true;
+		}
+		auto value = GetIni().GetValue(sectionName, keyName);
+		if (value != nullptr)
+			oldValue = value;
+	}
+	~IniChangedChecker()
+	{
+		auto value = GetIni().GetValue(sectionName, keyName);
+		std::string newValue;
+		if (value != nullptr)
+			newValue = value;
+		if (oldValue != newValue)
+			IniChanged = true;
+	}
+private:
+	std::string oldValue;
+	const char *sectionName;
+	const char *keyName;
+};
+
 int GetIniInt(const char *keyname, const char *valuename, int defaultValue)
 {
 	return GetIni().GetLongValue(keyname, valuename, defaultValue);
@@ -76,40 +111,49 @@ float GetIniFloat(const char *sectionName, const char *keyName, float defaultVal
 
 void SetIniValue(const char *keyname, const char *valuename, int value)
 {
+	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetLongValue(keyname, valuename, value);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, std::uint8_t value)
 {
+	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetLongValue(keyname, valuename, value);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, std::uint32_t value)
 {
+	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetLongValue(keyname, valuename, value);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, bool value)
 {
+	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetLongValue(keyname, valuename, value ? 1 : 0);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, float value)
 {
+	IniChangedChecker changedChecker(keyname, valuename);
 	GetIni().SetDoubleValue(keyname, valuename, value);
 }
 
 void SaveIni()
 {
+	if (!IniChanged)
+		return;
 	auto iniPath = GetIniPath();
 	auto stream = CreateFileStream(iniPath.c_str(), std::fstream::out | std::fstream::trunc | std::fstream::binary);
 	GetIni().Save(*stream, true);
+	IniChanged = false;
 }
 
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
 {
+	IniChangedChecker changedChecker(sectionName, keyName);
 	auto &ini = GetIni();
 	std::string stringValue(value, len != 0 ? len : strlen(value));
 	ini.SetValue(sectionName, keyName, stringValue.c_str());
