@@ -133,12 +133,11 @@ void SHA1Clear()
 void SHA1Result(int n, char messageDigest[SHA1HashSize])
 {
 	std::uint32_t *messageDigestBlock;
-	int i;
 
 	messageDigestBlock = (std::uint32_t *)messageDigest;
 	if (messageDigest != nullptr) {
-		for (i = 0; i < 5; i++) {
-			*messageDigestBlock = SDL_SwapLE32(sgSHA1[n].state[i]);
+		for (auto &block : sgSHA1[n].state) {
+			*messageDigestBlock = SDL_SwapLE32(block);
 			messageDigestBlock++;
 		}
 	}

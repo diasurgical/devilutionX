@@ -412,13 +412,11 @@ void DeltaSyncObject(int oi, _cmd_id bCmd, BYTE bLevel)
 
 bool DeltaGetItem(TCmdGItem *pI, BYTE bLevel)
 {
-	int i;
-
 	if (!gbIsMultiplayer)
 		return true;
 
 	TCmdPItem *pD = sgLevels[bLevel].item;
-	for (i = 0; i < MAXITEMS; i++, pD++) {
+	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd == CMD_INVALID || pD->wIndx != pI->wIndx || pD->wCI != pI->wCI || pD->dwSeed != pI->dwSeed)
 			continue;
 
@@ -443,7 +441,7 @@ bool DeltaGetItem(TCmdGItem *pI, BYTE bLevel)
 		return false;
 
 	pD = sgLevels[bLevel].item;
-	for (i = 0; i < MAXITEMS; i++, pD++) {
+	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
 			pD->bCmd = CMD_WALKXY;
@@ -473,13 +471,11 @@ bool DeltaGetItem(TCmdGItem *pI, BYTE bLevel)
 
 void DeltaPutItem(TCmdPItem *pI, int x, int y, BYTE bLevel)
 {
-	int i;
-
 	if (!gbIsMultiplayer)
 		return;
 
 	TCmdPItem *pD = sgLevels[bLevel].item;
-	for (i = 0; i < MAXITEMS; i++, pD++) {
+	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd != CMD_WALKXY
 		    && pD->bCmd != 0xFF
 		    && pD->wIndx == pI->wIndx
@@ -492,7 +488,7 @@ void DeltaPutItem(TCmdPItem *pI, int x, int y, BYTE bLevel)
 	}
 
 	pD = sgLevels[bLevel].item;
-	for (i = 0; i < MAXITEMS; i++, pD++) {
+	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd == 0xFF) {
 			sgbDeltaChanged = true;
 			memcpy(pD, pI, sizeof(TCmdPItem));
@@ -1300,10 +1296,9 @@ DWORD OnAwakeGolem(TCmd *pCmd, int pnum)
 	else if (currlevel != Players[pnum].plrlevel)
 		DeltaSyncGolem(p, pnum, p->_currlevel);
 	else if (pnum != MyPlayerId) {
-		int i;
 		// check if this player already has an active golem
 		bool addGolem = true;
-		for (i = 0; i < ActiveMissileCount; i++) {
+		for (int i = 0; i < ActiveMissileCount; i++) {
 			int mi = ActiveMissiles[i];
 			if (Missiles[mi]._mitype == MIS_GOLEM && Missiles[mi]._misource == pnum) {
 				addGolem = false;
@@ -1947,13 +1942,11 @@ bool delta_quest_inited(int i)
 
 void DeltaAddItem(int ii)
 {
-	int i;
-
 	if (!gbIsMultiplayer)
 		return;
 
 	TCmdPItem *pD = sgLevels[currlevel].item;
-	for (i = 0; i < MAXITEMS; i++, pD++) {
+	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd != 0xFF
 		    && pD->wIndx == Items[ii].IDidx
 		    && pD->wCI == Items[ii]._iCreateInfo
@@ -1964,7 +1957,7 @@ void DeltaAddItem(int ii)
 	}
 
 	pD = sgLevels[currlevel].item;
-	for (i = 0; i < MAXITEMS; i++, pD++) {
+	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd == 0xFF) {
 			sgbDeltaChanged = true;
 			pD->bCmd = CMD_STAND;

@@ -24,8 +24,6 @@ const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UI
 
 void plrmsg_delay(bool delay)
 {
-	int i;
-	_plrmsg *pMsg;
 	static DWORD plrmsgTicks;
 
 	if (delay) {
@@ -34,8 +32,8 @@ void plrmsg_delay(bool delay)
 	}
 
 	plrmsgTicks += SDL_GetTicks();
-	pMsg = plr_msgs;
-	for (i = 0; i < PMSG_COUNT; i++, pMsg++)
+	_plrmsg *pMsg = plr_msgs;
+	for (int i = 0; i < PMSG_COUNT; i++, pMsg++)
 		pMsg->time += plrmsgTicks;
 }
 
@@ -77,11 +75,10 @@ void SendPlrMsg(int pnum, const char *pszStr)
 
 void ClearPlrMsg()
 {
-	int i;
 	_plrmsg *pMsg = plr_msgs;
 	DWORD tick = SDL_GetTicks();
 
-	for (i = 0; i < PMSG_COUNT; i++, pMsg++) {
+	for (int i = 0; i < PMSG_COUNT; i++, pMsg++) {
 		if ((int)(tick - pMsg->time) > 10000)
 			pMsg->str[0] = '\0';
 	}
@@ -106,7 +103,6 @@ static void PrintPlrMsg(const Surface &out, int x, int y, int width, char *text,
 
 void DrawPlrMsg(const Surface &out)
 {
-	int i;
 	DWORD x = 10;
 	DWORD y = 70;
 	DWORD width = gnScreenWidth - 20;
@@ -123,7 +119,7 @@ void DrawPlrMsg(const Surface &out)
 		return;
 
 	pMsg = plr_msgs;
-	for (i = 0; i < PMSG_COUNT; i++) {
+	for (int i = 0; i < PMSG_COUNT; i++) {
 		if (pMsg->str[0] != '\0')
 			PrintPlrMsg(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
 		pMsg++;

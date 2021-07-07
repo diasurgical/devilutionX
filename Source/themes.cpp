@@ -151,13 +151,11 @@ bool TFit_Obj5(int t)
 
 bool TFit_SkelRoom(int t)
 {
-	int i;
-
 	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
 		return false;
 	}
 
-	for (i = 0; i < LevelMonsterTypeCount; i++) {
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 		if (IsSkel(LevelMonsterTypes[i].mtype)) {
 			themeVar1 = i;
 			return TFit_Obj5(t);
@@ -169,9 +167,7 @@ bool TFit_SkelRoom(int t)
 
 bool TFit_GoatShrine(int t)
 {
-	int i;
-
-	for (i = 0; i < LevelMonsterTypeCount; i++) {
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 		if (IsGoat(LevelMonsterTypes[i].mtype)) {
 			themeVar1 = i;
 			return TFit_Obj5(t);
@@ -183,9 +179,7 @@ bool TFit_GoatShrine(int t)
 
 bool CheckThemeObj3(int xp, int yp, int t, int f)
 {
-	int i;
-
-	for (i = 0; i < 9; i++) {
+	for (int i = 0; i < 9; i++) {
 		if (xp + trm3x[i] < 0 || yp + trm3y[i] < 0)
 			return false;
 		if (nSolidTable[dPiece[xp + trm3x[i]][yp + trm3y[i]]])

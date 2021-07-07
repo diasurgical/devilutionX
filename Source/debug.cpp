@@ -178,8 +178,6 @@ void PrintDebugQuest()
 
 void PrintDebugMonster(int m)
 {
-	bool bActive;
-	int i;
 	char dstr[128];
 
 	sprintf(dstr, "Monster %i = %s", m, _(Monsters[m].mName));
@@ -191,9 +189,9 @@ void PrintDebugMonster(int m)
 	sprintf(dstr, "Mode = %i, Var1 = %i", Monsters[m]._mmode, Monsters[m]._mVar1);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 
-	bActive = false;
+	bool bActive = false;
 
-	for (i = 0; i < ActiveMonsterCount; i++) {
+	for (int i = 0; i < ActiveMonsterCount; i++) {
 		if (ActiveMonsters[i] == m)
 			bActive = true;
 	}

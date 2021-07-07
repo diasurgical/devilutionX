@@ -488,9 +488,7 @@ void DrawBlood(int x, int y)
 
 void DRLG_CheckQuests(int x, int y)
 {
-	int i;
-
-	for (i = 0; i < MAXQUESTS; i++) {
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (QuestStatus(i)) {
 			switch (Quests[i]._qtype) {
 			case Q_BUTCHER:
@@ -729,10 +727,8 @@ void DrawQuestLog(const Surface &out)
 
 void StartQuestlog()
 {
-	DWORD i;
-
 	numqlines = 0;
-	for (i = 0; i < MAXQUESTS; i++) {
+	for (int i = 0; i < MAXQUESTS; i++) {
 		if (Quests[i]._qactive == QUEST_ACTIVE && Quests[i]._qlog) {
 			qlist[numqlines] = i;
 			numqlines++;

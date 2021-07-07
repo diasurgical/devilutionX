@@ -14,7 +14,7 @@
 namespace devilution {
 
 /** In-game state of portals. */
-PortalStruct portal[MAXPORTAL];
+PortalStruct Portals[MAXPORTAL];
 /** Current portal number (a portal array index). */
 int portalindex;
 
@@ -25,21 +25,19 @@ int WarpDropY[MAXPORTAL] = { 40, 40, 40, 40 };
 
 void InitPortals()
 {
-	int i;
-
-	for (i = 0; i < MAXPORTAL; i++) {
+	for (int i = 0; i < MAXPORTAL; i++) {
 		if (delta_portal_inited(i))
-			portal[i].open = false;
+			Portals[i].open = false;
 	}
 }
 
 void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 {
-	portal[i].open = o;
-	portal[i].position = { x, y };
-	portal[i].level = lvl;
-	portal[i].ltype = lvltype;
-	portal[i].setlvl = false;
+	Portals[i].open = o;
+	Portals[i].position = { x, y };
+	Portals[i].level = lvl;
+	Portals[i].ltype = lvltype;
+	Portals[i].setlvl = false;
 }
 
 void AddWarpMissile(int i, int x, int y)
@@ -62,10 +60,8 @@ void AddWarpMissile(int i, int x, int y)
 
 void SyncPortals()
 {
-	int i;
-
-	for (i = 0; i < MAXPORTAL; i++) {
-		if (!portal[i].open)
+	for (int i = 0; i < MAXPORTAL; i++) {
+		if (!Portals[i].open)
 			continue;
 		if (currlevel == 0)
 			AddWarpMissile(i, WarpDropX[i], WarpDropY[i]);
@@ -73,8 +69,8 @@ void SyncPortals()
 			int lvl = currlevel;
 			if (setlevel)
 				lvl = setlvlnum;
-			if (portal[i].level == lvl && portal[i].setlvl == setlevel)
-				AddWarpMissile(i, portal[i].position.x, portal[i].position.y);
+			if (Portals[i].level == lvl && Portals[i].setlvl == setlevel)
+				AddWarpMissile(i, Portals[i].position.x, Portals[i].position.y);
 		}
 	}
 }
@@ -86,24 +82,24 @@ void AddInTownPortal(int i)
 
 void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, bool sp)
 {
-	portal[i].open = true;
+	Portals[i].open = true;
 
 	if (lvl != 0) {
-		portal[i].position = { x, y };
-		portal[i].level = lvl;
-		portal[i].ltype = lvltype;
-		portal[i].setlvl = sp;
+		Portals[i].position = { x, y };
+		Portals[i].level = lvl;
+		Portals[i].ltype = lvltype;
+		Portals[i].setlvl = sp;
 	}
 }
 
 void DeactivatePortal(int i)
 {
-	portal[i].open = false;
+	Portals[i].open = false;
 }
 
 bool PortalOnLevel(int i)
 {
-	if (portal[i].level == currlevel)
+	if (Portals[i].level == currlevel)
 		return true;
 
 	return currlevel == 0;
@@ -111,16 +107,13 @@ bool PortalOnLevel(int i)
 
 void RemovePortalMissile(int id)
 {
-	int i;
-	int mi;
-
-	for (i = 0; i < ActiveMissileCount; i++) {
-		mi = ActiveMissiles[i];
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mi = ActiveMissiles[i];
 		if (Missiles[mi]._mitype == MIS_TOWN && Missiles[mi]._misource == id) {
 			dFlags[Missiles[mi].position.tile.x][Missiles[mi].position.tile.y] &= ~BFLAG_MISSILE;
 			dMissile[Missiles[mi].position.tile.x][Missiles[mi].position.tile.y] = 0;
 
-			if (portal[id].level != 0)
+			if (Portals[id].level != 0)
 				AddUnLight(Missiles[mi]._mlid);
 
 			DeleteMissile(mi, i);
@@ -143,17 +136,17 @@ void GetPortalLevel()
 		return;
 	}
 
-	if (portal[portalindex].setlvl) {
+	if (Portals[portalindex].setlvl) {
 		setlevel = true;
-		setlvlnum = (_setlevels)portal[portalindex].level;
-		currlevel = portal[portalindex].level;
+		setlvlnum = (_setlevels)Portals[portalindex].level;
+		currlevel = Portals[portalindex].level;
 		Players[MyPlayerId].plrlevel = setlvlnum;
-		leveltype = portal[portalindex].ltype;
+		leveltype = Portals[portalindex].ltype;
 	} else {
 		setlevel = false;
-		currlevel = portal[portalindex].level;
+		currlevel = Portals[portalindex].level;
 		Players[MyPlayerId].plrlevel = currlevel;
-		leveltype = portal[portalindex].ltype;
+		leveltype = Portals[portalindex].ltype;
 	}
 
 	if (portalindex == MyPlayerId) {
@@ -168,8 +161,8 @@ void GetPortalLvlPos()
 		ViewX = WarpDropX[portalindex] + 1;
 		ViewY = WarpDropY[portalindex] + 1;
 	} else {
-		ViewX = portal[portalindex].position.x;
-		ViewY = portal[portalindex].position.y;
+		ViewX = Portals[portalindex].position.x;
+		ViewY = Portals[portalindex].position.y;
 
 		if (portalindex != MyPlayerId) {
 			ViewX++;
@@ -180,10 +173,8 @@ void GetPortalLvlPos()
 
 bool PosOkPortal(int lvl, int x, int y)
 {
-	int i;
-
-	for (i = 0; i < MAXPORTAL; i++) {
-		if (portal[i].open && portal[i].level == lvl && ((portal[i].position.x == x && portal[i].position.y == y) || (portal[i].position.x == x - 1 && portal[i].position.y == y - 1)))
+	for (auto &portal : Portals) {
+		if (portal.open && portal.level == lvl && ((portal.position.x == x && portal.position.y == y) || (portal.position.x == x - 1 && portal.position.y == y - 1)))
 			return true;
 	}
 	return false;

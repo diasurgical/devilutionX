@@ -504,9 +504,7 @@ void DRLG_HoldThemeRooms()
 
 bool SkipThemeRoom(int x, int y)
 {
-	int i;
-
-	for (i = 0; i < themeCount; i++) {
+	for (int i = 0; i < themeCount; i++) {
 		if (x >= themeLoc[i].x - 2 && x <= themeLoc[i].x + themeLoc[i].width + 2
 		    && y >= themeLoc[i].y - 2 && y <= themeLoc[i].y + themeLoc[i].height + 2)
 			return false;

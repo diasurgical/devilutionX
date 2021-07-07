@@ -53,10 +53,9 @@ static bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
 static bool CapturePal(SDL_Color *palette, std::ofstream *out)
 {
 	BYTE pcxPalette[1 + 256 * 3];
-	int i;
 
 	pcxPalette[0] = 12;
-	for (i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; i++) {
 		pcxPalette[1 + 3 * i + 0] = palette[i].r;
 		pcxPalette[1 + 3 * i + 1] = palette[i].g;
 		pcxPalette[1 + 3 * i + 2] = palette[i].b;
