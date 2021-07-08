@@ -2207,8 +2207,7 @@ void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
 
-	// TODO pos * 2 + {16,16} should be a function so it can be reused, see ObjChangeMap*
-	Point megaOrigin = position * 2 + Displacement { 16, 16 };
+	Point megaOrigin = convertToMapPos(position, position - Point { 0, 0 });
 
 	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
 	ObjSetMicro(megaOrigin + DIR_SE, SDL_SwapLE16(mega.micro2) + 1);
