@@ -835,6 +835,8 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  target_compile_options(libdevilutionx PUBLIC "/experimental:external")
+  target_compile_options(libdevilutionx PUBLIC "/external:W0")
   target_compile_options(libdevilutionx PUBLIC "/W2")
   target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
 endif()
