@@ -133,7 +133,7 @@ bool CheckXPBarInfo()
 		infoclr = UIS_GOLD;
 
 		strcpy(tempstr, _("Experience: "));
-		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
+		PrintWithSeparator(tempstr + strlen(tempstr), ExpLvlsTbl[charLevel - 1]);
 		AddPanelString(tempstr);
 
 		AddPanelString(_("Maximum Level"));
@@ -144,11 +144,11 @@ bool CheckXPBarInfo()
 	infoclr = UIS_SILVER;
 
 	strcpy(tempstr, _("Experience: "));
-	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
+	PrintWithSeparator(tempstr + strlen(tempstr), player._pExperience);
 	AddPanelString(tempstr);
 
 	strcpy(tempstr, _("Next Level: "));
-	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
+	PrintWithSeparator(tempstr + strlen(tempstr), ExpLvlsTbl[charLevel]);
 	AddPanelString(tempstr);
 
 	strcpy(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level {:d}"), charLevel + 1).c_str());
