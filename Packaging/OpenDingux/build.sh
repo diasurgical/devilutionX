@@ -21,11 +21,13 @@ declare -r TARGET="$1"
 declare -r BUILD_DIR="build-${TARGET}"
 declare -rA BUILDROOT_REPOS=(
 	[retrofw]=https://github.com/retrofw/buildroot.git
+	[rg99]=https://github.com/OpenDingux/buildroot.git
 	[rg350]=https://github.com/OpenDingux/buildroot.git
 	[gkd350h]=https://github.com/tonyjih/RG350_buildroot.git
 )
 declare -rA BUILDROOT_DEFCONFIGS=(
 	[retrofw]='RetroFW_defconfig BR2_EXTERNAL=retrofw'
+	[rg99]='od_rs90_defconfig BR2_EXTERNAL=board/opendingux'
 	[rg350]='od_gcw0_defconfig BR2_EXTERNAL=board/opendingux'
 	[gkd350h]='rg350_defconfig BR2_EXTERNAL=board/opendingux'
 )
@@ -53,13 +55,18 @@ prepare_buildroot() {
 	if [[ -d $BUILDROOT ]]; then
 		return
 	fi
-	git clone --depth=1 "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" "$BUILDROOT"
+	if [[ "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" == *.tar.gz ]]; then
+		mkdir -p "$BUILDROOT"
+		curl -L --fail "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" | \
+			tar -xz --strip-components 1 -C "$BUILDROOT"
+	else
+		git clone --depth=1 "${BUILDROOT_REPOS[$BUILDROOT_TARGET]}" "$BUILDROOT"
+	fi
 	cd "$BUILDROOT"
 
 	# Work around a BR2_EXTERNAL initialization bug in older buildroots.
 	mkdir -p output
 	touch output/.br-external.mk
-
 	make ${BUILDROOT_DEFCONFIGS[$BUILDROOT_TARGET]}
 	cd -
 }
