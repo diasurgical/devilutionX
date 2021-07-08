@@ -321,8 +321,8 @@ static void UpdateMissileVel(int i, Point source, Point destination, int v)
 	double dxp = (destination.x + source.y - source.x - destination.y) * (1 << 21);
 	double dyp = (destination.y + destination.x - source.x - source.y) * (1 << 21);
 	double dr = sqrt(dxp * dxp + dyp * dyp);
-	Missiles[i].position.velocity.deltaX = (dxp * (v << 16)) / dr;
-	Missiles[i].position.velocity.deltaY = (dyp * (v << 15)) / dr;
+	Missiles[i].position.velocity.deltaX = static_cast<int>((dxp * (v << 16)) / dr);
+	Missiles[i].position.velocity.deltaY = static_cast<int>((dyp * (v << 15)) / dr);
 }
 
 static void PutMissile(int8_t i)

@@ -35,8 +35,8 @@ Size ScaledSize(Size size)
 		float scaleX;
 		float scaleY;
 		SDL_RenderGetScale(renderer, &scaleX, &scaleY);
-		size.width *= scaleX;  // NOLINT(bugprone-narrowing-conversions)
-		size.height *= scaleY; // NOLINT(bugprone-narrowing-conversions)
+		size.width = static_cast<int>(size.width * scaleX);
+		size.height = static_cast<int>(size.height * scaleY);
 	}
 	return size;
 }
