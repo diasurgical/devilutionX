@@ -2103,6 +2103,9 @@ void AddMisexp(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, 
 	missile[mi].position.offset = missile[dst.x].position.offset;
 	missile[mi].position.traveled = missile[dst.x].position.traveled;
 	missile[mi].position.velocity = { 0, 0 };
+	missile[mi].position.renderingIsFixed = true;
+	missile[mi].position.tileForRendering = missile[dst.x].position.tileForRendering;
+	missile[mi].position.offsetForRendering = missile[dst.x].position.offsetForRendering;
 	missile[mi]._mirange = missile[mi]._miAnimLen;
 	missile[mi]._miVar1 = 0;
 }
@@ -3203,6 +3206,7 @@ void MI_Firebolt(int i)
 				break;
 			case MIS_BONESPIRIT:
 				SetMissDir(i, DIR_OMNI);
+				missile[i].position.velocity = {};
 				missile[i]._mirange = 7;
 				missile[i]._miDelFlag = false;
 				PutMissile(i);
@@ -4732,6 +4736,7 @@ void MI_Bonespirit(int i)
 		}
 		if (missile[i]._mirange == 0) {
 			SetMissDir(i, DIR_OMNI);
+			missile[i].position.velocity = {};
 			missile[i]._mirange = 7;
 		}
 		PutMissile(i);

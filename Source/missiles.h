@@ -33,6 +33,19 @@ struct MissilePosition {
 	Point start;
 	/** Start position */
 	Displacement traveled;
+
+	/**
+      * @brief Specifies the location (tile) while rendering
+      */
+	Point tileForRendering;
+	/**
+      * @brief Specifies the location (offset) while rendering
+      */
+	Displacement offsetForRendering;
+	/**
+      * @brief tileForRendering and offsetForRendering shouldn't be updated while rendering. This is needed for explosion.
+      */
+	bool renderingIsFixed;
 };
 
 /*
