@@ -12,6 +12,7 @@
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
+namespace  {
 
 struct CodecSignature {
 	uint32_t checksum;
@@ -52,6 +53,7 @@ static void CodecInitKey(const char *pszPassword)
 		SHA1Calculate(n, &key[72], nullptr);
 	}
 	memset(key, 0, sizeof(key));
+}
 }
 
 std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)

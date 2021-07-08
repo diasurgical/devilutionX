@@ -16,6 +16,7 @@
 #include "utils/ui_fwd.h"
 
 namespace devilution {
+namespace  {
 
 /**
  * @brief Write the PCX-file header
@@ -155,6 +156,7 @@ static void RedPalette()
 	palette_update();
 	BltFast(nullptr, nullptr);
 	RenderPresent();
+}
 }
 
 /**

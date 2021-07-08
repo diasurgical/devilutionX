@@ -503,8 +503,6 @@ BYTE CornerstoneRoomPattern[27] = {
  */
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
-} // namespace
-
 void DRLG_InitL5Vals()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -881,52 +879,6 @@ static void DrlgL1Floor()
 	}
 }
 
-void DRLG_LPass3(int lv)
-{
-	{
-		MegaTile mega = pMegaTiles[lv];
-		int v1 = SDL_SwapLE16(mega.micro1) + 1;
-		int v2 = SDL_SwapLE16(mega.micro2) + 1;
-		int v3 = SDL_SwapLE16(mega.micro3) + 1;
-		int v4 = SDL_SwapLE16(mega.micro4) + 1;
-
-		for (int j = 0; j < MAXDUNY; j += 2) {
-			for (int i = 0; i < MAXDUNX; i += 2) {
-				dPiece[i + 0][j + 0] = v1;
-				dPiece[i + 1][j + 0] = v2;
-				dPiece[i + 0][j + 1] = v3;
-				dPiece[i + 1][j + 1] = v4;
-			}
-		}
-	}
-
-	int yy = 16;
-	for (int j = 0; j < DMAXY; j++) {
-		int xx = 16;
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			int v1 = 0;
-			int v2 = 0;
-			int v3 = 0;
-			int v4 = 0;
-
-			int tileId = dungeon[i][j] - 1;
-			if (tileId >= 0) {
-				MegaTile mega = pMegaTiles[tileId];
-				v1 = SDL_SwapLE16(mega.micro1) + 1;
-				v2 = SDL_SwapLE16(mega.micro2) + 1;
-				v3 = SDL_SwapLE16(mega.micro3) + 1;
-				v4 = SDL_SwapLE16(mega.micro4) + 1;
-			}
-			dPiece[xx + 0][yy + 0] = v1;
-			dPiece[xx + 1][yy + 0] = v2;
-			dPiece[xx + 0][yy + 1] = v3;
-			dPiece[xx + 1][yy + 1] = v4;
-			xx += 2;
-		}
-		yy += 2;
-	}
-}
-
 static void DrlgL1Pass3()
 {
 	DRLG_LPass3(22 - 1);
@@ -954,20 +906,6 @@ static void DrlgFreeL1Sp()
 	L5pSetPiece = nullptr;
 }
 
-void DRLG_Init_Globals()
-{
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dPlayer, 0, sizeof(dPlayer));
-	memset(dMonster, 0, sizeof(dMonster));
-	memset(dDead, 0, sizeof(dDead));
-	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
-	memset(dMissile, 0, sizeof(dMissile));
-	memset(dSpecial, 0, sizeof(dSpecial));
-	int8_t c = DisableLighting ? 0 : 15;
-	memset(dLight, c, sizeof(dLight));
-}
-
 static void DrlgInitL1Vals()
 {
 	int8_t pc;
@@ -990,100 +928,6 @@ static void DrlgInitL1Vals()
 				continue;
 			}
 			dSpecial[i][j] = pc;
-		}
-	}
-}
-
-void LoadL1Dungeon(const char *path, int vx, int vy)
-{
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
-
-	DRLG_InitTrans();
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 22;
-			L5dflags[i][j] = 0;
-		}
-	}
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(*tileLayer);
-			tileLayer++;
-			if (tileId != 0) {
-				dungeon[i][j] = tileId;
-				L5dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 13;
-			}
-		}
-	}
-
-	DrlgL1Floor();
-
-	ViewX = vx;
-	ViewY = vy;
-
-	DrlgL1Pass3();
-	DRLG_Init_Globals();
-
-	if (currlevel < 17)
-		DrlgInitL1Vals();
-
-	SetMapMonsters(dunData.get(), { 0, 0 });
-	SetMapObjects(dunData.get(), 0, 0);
-}
-
-void LoadPreL1Dungeon(const char *path)
-{
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 22;
-			L5dflags[i][j] = 0;
-		}
-	}
-
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
-
-	auto dunData = LoadFileInMem<uint16_t>(path);
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(*tileLayer);
-			tileLayer++;
-			if (tileId != 0) {
-				dungeon[i][j] = tileId;
-				L5dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 13;
-			}
-		}
-	}
-
-	DrlgL1Floor();
-
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
 }
@@ -1706,6 +1550,31 @@ static void L5tileFix()
 	}
 }
 
+void drlg_l1_set_corner_room(int rx1, int ry1)
+{
+	int rw = CornerstoneRoomPattern[0];
+	int rh = CornerstoneRoomPattern[1];
+
+	setpc_x = rx1;
+	setpc_y = ry1;
+	setpc_w = rw;
+	setpc_h = rh;
+
+	int sp = 2;
+
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
+			if (CornerstoneRoomPattern[sp] != 0) {
+				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
+				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[rx1 + i][ry1 + j] = 13;
+			}
+			sp++;
+		}
+	}
+}
+
 void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
 {
 	int sw = miniset[0];
@@ -1821,6 +1690,35 @@ static void DrlgL5SetRoom(int rx1, int ry1)
 			} else {
 				dungeon[rx1 + i][ry1 + j] = 13;
 			}
+		}
+	}
+}
+
+void drlg_l1_set_crypt_room(int rx1, int ry1)
+{
+	int rw = UberRoomPattern[0];
+	int rh = UberRoomPattern[1];
+
+	UberRow = 2 * rx1 + 6;
+	UberCol = 2 * ry1 + 8;
+	setpc_x = rx1;
+	setpc_y = ry1;
+	setpc_w = rw;
+	setpc_h = rh;
+	IsUberRoomOpened = false;
+	IsUberLeverActivated = false;
+
+	int sp = 2;
+
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
+			if (UberRoomPattern[sp] != 0) {
+				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
+				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[rx1 + i][ry1 + j] = 13;
+			}
+			sp++;
 		}
 	}
 }
@@ -2045,60 +1943,6 @@ static void L5FillChambers()
 	}
 }
 
-void drlg_l1_set_crypt_room(int rx1, int ry1)
-{
-	int rw = UberRoomPattern[0];
-	int rh = UberRoomPattern[1];
-
-	UberRow = 2 * rx1 + 6;
-	UberCol = 2 * ry1 + 8;
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
-	IsUberRoomOpened = false;
-	IsUberLeverActivated = false;
-
-	int sp = 2;
-
-	for (int j = 0; j < rh; j++) {
-		for (int i = 0; i < rw; i++) {
-			if (UberRoomPattern[sp] != 0) {
-				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
-				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[rx1 + i][ry1 + j] = 13;
-			}
-			sp++;
-		}
-	}
-}
-
-void drlg_l1_set_corner_room(int rx1, int ry1)
-{
-	int rw = CornerstoneRoomPattern[0];
-	int rh = CornerstoneRoomPattern[1];
-
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
-
-	int sp = 2;
-
-	for (int j = 0; j < rh; j++) {
-		for (int i = 0; i < rw; i++) {
-			if (CornerstoneRoomPattern[sp] != 0) {
-				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
-				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[rx1 + i][ry1 + j] = 13;
-			}
-			sp++;
-		}
-	}
-}
-
 static void DrlgL5FTransparencyValueR(int i, int j, int x, int y, int d)
 {
 	if (dTransVal[x][y] != 0 || dungeon[i][j] != 13) {
@@ -2249,6 +2093,129 @@ static void DrlgL5CornerFix()
 			}
 		}
 	}
+}
+
+void drlg_l1_crypt_pattern1(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern97, rndper);
+	drlg_l1_crypt_rndset(CryptPattern98, rndper);
+	drlg_l1_crypt_rndset(CryptPattern99, rndper);
+	drlg_l1_crypt_rndset(CryptPattern100, rndper);
+}
+
+void drlg_l1_crypt_pattern2(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern46, rndper);
+	drlg_l1_crypt_rndset(CryptPattern47, rndper);
+	drlg_l1_crypt_rndset(CryptPattern48, rndper);
+	drlg_l1_crypt_rndset(CryptPattern49, rndper);
+	drlg_l1_crypt_rndset(CryptPattern50, rndper);
+	drlg_l1_crypt_rndset(CryptPattern51, rndper);
+	drlg_l1_crypt_rndset(CryptPattern52, rndper);
+	drlg_l1_crypt_rndset(CryptPattern53, rndper);
+	drlg_l1_crypt_rndset(CryptPattern54, rndper);
+	drlg_l1_crypt_rndset(CryptPattern55, rndper);
+	drlg_l1_crypt_rndset(CryptPattern56, rndper);
+	drlg_l1_crypt_rndset(CryptPattern57, rndper);
+	drlg_l1_crypt_rndset(CryptPattern58, rndper);
+	drlg_l1_crypt_rndset(CryptPattern59, rndper);
+	drlg_l1_crypt_rndset(CryptPattern60, rndper);
+	drlg_l1_crypt_rndset(CryptPattern61, rndper);
+	drlg_l1_crypt_rndset(CryptPattern62, rndper);
+}
+
+void drlg_l1_crypt_pattern3(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern63, rndper);
+	drlg_l1_crypt_rndset(CryptPattern64, rndper);
+	drlg_l1_crypt_rndset(CryptPattern65, rndper);
+	drlg_l1_crypt_rndset(CryptPattern66, rndper);
+	drlg_l1_crypt_rndset(CryptPattern67, rndper);
+	drlg_l1_crypt_rndset(CryptPattern68, rndper);
+	drlg_l1_crypt_rndset(CryptPattern69, rndper);
+	drlg_l1_crypt_rndset(CryptPattern70, rndper);
+	drlg_l1_crypt_rndset(CryptPattern71, rndper);
+	drlg_l1_crypt_rndset(CryptPattern72, rndper);
+	drlg_l1_crypt_rndset(CryptPattern73, rndper);
+	drlg_l1_crypt_rndset(CryptPattern74, rndper);
+	drlg_l1_crypt_rndset(CryptPattern75, rndper);
+	drlg_l1_crypt_rndset(CryptPattern76, rndper);
+	drlg_l1_crypt_rndset(CryptPattern77, rndper);
+	drlg_l1_crypt_rndset(CryptPattern78, rndper);
+	drlg_l1_crypt_rndset(CryptPattern79, rndper);
+}
+
+void drlg_l1_crypt_pattern4(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern80, rndper);
+	drlg_l1_crypt_rndset(CryptPattern81, rndper);
+	drlg_l1_crypt_rndset(CryptPattern82, rndper);
+	drlg_l1_crypt_rndset(CryptPattern83, rndper);
+	drlg_l1_crypt_rndset(CryptPattern84, rndper);
+	drlg_l1_crypt_rndset(CryptPattern85, rndper);
+	drlg_l1_crypt_rndset(CryptPattern86, rndper);
+	drlg_l1_crypt_rndset(CryptPattern87, rndper);
+	drlg_l1_crypt_rndset(CryptPattern88, rndper);
+	drlg_l1_crypt_rndset(CryptPattern89, rndper);
+	drlg_l1_crypt_rndset(CryptPattern90, rndper);
+	drlg_l1_crypt_rndset(CryptPattern91, rndper);
+	drlg_l1_crypt_rndset(CryptPattern92, rndper);
+	drlg_l1_crypt_rndset(CryptPattern93, rndper);
+	drlg_l1_crypt_rndset(CryptPattern94, rndper);
+	drlg_l1_crypt_rndset(CryptPattern95, rndper);
+	drlg_l1_crypt_rndset(CryptPattern96, rndper);
+}
+
+void drlg_l1_crypt_pattern5(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern36, rndper);
+	drlg_l1_crypt_rndset(CryptPattern37, rndper);
+	drlg_l1_crypt_rndset(CryptPattern38, rndper);
+	drlg_l1_crypt_rndset(CryptPattern39, rndper);
+	drlg_l1_crypt_rndset(CryptPattern40, rndper);
+	drlg_l1_crypt_rndset(CryptPattern41, rndper);
+	drlg_l1_crypt_rndset(CryptPattern42, rndper);
+	drlg_l1_crypt_rndset(CryptPattern43, rndper);
+	drlg_l1_crypt_rndset(CryptPattern44, rndper);
+	drlg_l1_crypt_rndset(CryptPattern45, rndper);
+}
+
+void drlg_l1_crypt_pattern6(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern10, rndper);
+	drlg_l1_crypt_rndset(CryptPattern12, rndper);
+	drlg_l1_crypt_rndset(CryptPattern11, rndper);
+	drlg_l1_crypt_rndset(CryptPattern13, rndper);
+	drlg_l1_crypt_rndset(CryptPattern14, rndper);
+	drlg_l1_crypt_rndset(CryptPattern15, rndper);
+	drlg_l1_crypt_rndset(CryptPattern16, rndper);
+	drlg_l1_crypt_rndset(CryptPattern17, rndper);
+	drlg_l1_crypt_rndset(CryptPattern18, rndper);
+	drlg_l1_crypt_rndset(CryptPattern19, rndper);
+	drlg_l1_crypt_rndset(CryptPattern20, rndper);
+	drlg_l1_crypt_rndset(CryptPattern21, rndper);
+	drlg_l1_crypt_rndset(CryptPattern22, rndper);
+	drlg_l1_crypt_rndset(CryptPattern23, rndper);
+	drlg_l1_crypt_rndset(CryptPattern24, rndper);
+	drlg_l1_crypt_rndset(CryptPattern25, rndper);
+	drlg_l1_crypt_rndset(CryptPattern26, rndper);
+	drlg_l1_crypt_rndset(CryptPattern27, rndper);
+	drlg_l1_crypt_rndset(CryptPattern28, rndper);
+	drlg_l1_crypt_rndset(CryptPattern29, rndper);
+	drlg_l1_crypt_rndset(CryptPattern30, rndper);
+	drlg_l1_crypt_rndset(CryptPattern31, rndper);
+	drlg_l1_crypt_rndset(CryptPattern32, rndper);
+	drlg_l1_crypt_rndset(CryptPattern33, rndper);
+	drlg_l1_crypt_rndset(CryptPattern34, rndper);
+	drlg_l1_crypt_rndset(CryptPattern35, rndper);
+}
+
+void drlg_l1_crypt_pattern7(int rndper)
+{
+	drlg_l1_crypt_rndset(CryptPattern5, rndper);
+	drlg_l1_crypt_rndset(CryptPattern6, rndper);
+	drlg_l1_crypt_rndset(CryptPattern7, rndper);
+	drlg_l1_crypt_rndset(CryptPattern8, rndper);
 }
 
 static void DrlgL5(lvl_entry entry)
@@ -2476,6 +2443,162 @@ static void DrlgL5(lvl_entry entry)
 	DRLG_CheckQuests(setpc_x, setpc_y);
 }
 
+} // namespace
+
+void DRLG_LPass3(int lv)
+{
+	{
+		MegaTile mega = pMegaTiles[lv];
+		int v1 = SDL_SwapLE16(mega.micro1) + 1;
+		int v2 = SDL_SwapLE16(mega.micro2) + 1;
+		int v3 = SDL_SwapLE16(mega.micro3) + 1;
+		int v4 = SDL_SwapLE16(mega.micro4) + 1;
+
+		for (int j = 0; j < MAXDUNY; j += 2) {
+			for (int i = 0; i < MAXDUNX; i += 2) {
+				dPiece[i + 0][j + 0] = v1;
+				dPiece[i + 1][j + 0] = v2;
+				dPiece[i + 0][j + 1] = v3;
+				dPiece[i + 1][j + 1] = v4;
+			}
+		}
+	}
+
+	int yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
+			int v1 = 0;
+			int v2 = 0;
+			int v3 = 0;
+			int v4 = 0;
+
+			int tileId = dungeon[i][j] - 1;
+			if (tileId >= 0) {
+				MegaTile mega = pMegaTiles[tileId];
+				v1 = SDL_SwapLE16(mega.micro1) + 1;
+				v2 = SDL_SwapLE16(mega.micro2) + 1;
+				v3 = SDL_SwapLE16(mega.micro3) + 1;
+				v4 = SDL_SwapLE16(mega.micro4) + 1;
+			}
+			dPiece[xx + 0][yy + 0] = v1;
+			dPiece[xx + 1][yy + 0] = v2;
+			dPiece[xx + 0][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
+			xx += 2;
+		}
+		yy += 2;
+	}
+}
+
+void DRLG_Init_Globals()
+{
+	memset(dFlags, 0, sizeof(dFlags));
+	memset(dPlayer, 0, sizeof(dPlayer));
+	memset(dMonster, 0, sizeof(dMonster));
+	memset(dDead, 0, sizeof(dDead));
+	memset(dObject, 0, sizeof(dObject));
+	memset(dItem, 0, sizeof(dItem));
+	memset(dMissile, 0, sizeof(dMissile));
+	memset(dSpecial, 0, sizeof(dSpecial));
+	int8_t c = DisableLighting ? 0 : 15;
+	memset(dLight, c, sizeof(dLight));
+}
+
+void LoadL1Dungeon(const char *path, int vx, int vy)
+{
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+
+	DRLG_InitTrans();
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			dungeon[i][j] = 22;
+			L5dflags[i][j] = 0;
+		}
+	}
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			tileLayer++;
+			if (tileId != 0) {
+				dungeon[i][j] = tileId;
+				L5dflags[i][j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i][j] = 13;
+			}
+		}
+	}
+
+	DrlgL1Floor();
+
+	ViewX = vx;
+	ViewY = vy;
+
+	DrlgL1Pass3();
+	DRLG_Init_Globals();
+
+	if (currlevel < 17)
+		DrlgInitL1Vals();
+
+	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapObjects(dunData.get(), 0, 0);
+}
+
+void LoadPreL1Dungeon(const char *path)
+{
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			dungeon[i][j] = 22;
+			L5dflags[i][j] = 0;
+		}
+	}
+
+	dminx = 16;
+	dminy = 16;
+	dmaxx = 96;
+	dmaxy = 96;
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			tileLayer++;
+			if (tileId != 0) {
+				dungeon[i][j] = tileId;
+				L5dflags[i][j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i][j] = 13;
+			}
+		}
+	}
+
+	DrlgL1Floor();
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			pdungeon[i][j] = dungeon[i][j];
+		}
+	}
+}
+
 void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
@@ -2516,129 +2639,6 @@ void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
 			}
 		}
 	}
-}
-
-void drlg_l1_crypt_pattern1(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern97, rndper);
-	drlg_l1_crypt_rndset(CryptPattern98, rndper);
-	drlg_l1_crypt_rndset(CryptPattern99, rndper);
-	drlg_l1_crypt_rndset(CryptPattern100, rndper);
-}
-
-void drlg_l1_crypt_pattern2(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern46, rndper);
-	drlg_l1_crypt_rndset(CryptPattern47, rndper);
-	drlg_l1_crypt_rndset(CryptPattern48, rndper);
-	drlg_l1_crypt_rndset(CryptPattern49, rndper);
-	drlg_l1_crypt_rndset(CryptPattern50, rndper);
-	drlg_l1_crypt_rndset(CryptPattern51, rndper);
-	drlg_l1_crypt_rndset(CryptPattern52, rndper);
-	drlg_l1_crypt_rndset(CryptPattern53, rndper);
-	drlg_l1_crypt_rndset(CryptPattern54, rndper);
-	drlg_l1_crypt_rndset(CryptPattern55, rndper);
-	drlg_l1_crypt_rndset(CryptPattern56, rndper);
-	drlg_l1_crypt_rndset(CryptPattern57, rndper);
-	drlg_l1_crypt_rndset(CryptPattern58, rndper);
-	drlg_l1_crypt_rndset(CryptPattern59, rndper);
-	drlg_l1_crypt_rndset(CryptPattern60, rndper);
-	drlg_l1_crypt_rndset(CryptPattern61, rndper);
-	drlg_l1_crypt_rndset(CryptPattern62, rndper);
-}
-
-void drlg_l1_crypt_pattern3(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern63, rndper);
-	drlg_l1_crypt_rndset(CryptPattern64, rndper);
-	drlg_l1_crypt_rndset(CryptPattern65, rndper);
-	drlg_l1_crypt_rndset(CryptPattern66, rndper);
-	drlg_l1_crypt_rndset(CryptPattern67, rndper);
-	drlg_l1_crypt_rndset(CryptPattern68, rndper);
-	drlg_l1_crypt_rndset(CryptPattern69, rndper);
-	drlg_l1_crypt_rndset(CryptPattern70, rndper);
-	drlg_l1_crypt_rndset(CryptPattern71, rndper);
-	drlg_l1_crypt_rndset(CryptPattern72, rndper);
-	drlg_l1_crypt_rndset(CryptPattern73, rndper);
-	drlg_l1_crypt_rndset(CryptPattern74, rndper);
-	drlg_l1_crypt_rndset(CryptPattern75, rndper);
-	drlg_l1_crypt_rndset(CryptPattern76, rndper);
-	drlg_l1_crypt_rndset(CryptPattern77, rndper);
-	drlg_l1_crypt_rndset(CryptPattern78, rndper);
-	drlg_l1_crypt_rndset(CryptPattern79, rndper);
-}
-
-void drlg_l1_crypt_pattern4(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern80, rndper);
-	drlg_l1_crypt_rndset(CryptPattern81, rndper);
-	drlg_l1_crypt_rndset(CryptPattern82, rndper);
-	drlg_l1_crypt_rndset(CryptPattern83, rndper);
-	drlg_l1_crypt_rndset(CryptPattern84, rndper);
-	drlg_l1_crypt_rndset(CryptPattern85, rndper);
-	drlg_l1_crypt_rndset(CryptPattern86, rndper);
-	drlg_l1_crypt_rndset(CryptPattern87, rndper);
-	drlg_l1_crypt_rndset(CryptPattern88, rndper);
-	drlg_l1_crypt_rndset(CryptPattern89, rndper);
-	drlg_l1_crypt_rndset(CryptPattern90, rndper);
-	drlg_l1_crypt_rndset(CryptPattern91, rndper);
-	drlg_l1_crypt_rndset(CryptPattern92, rndper);
-	drlg_l1_crypt_rndset(CryptPattern93, rndper);
-	drlg_l1_crypt_rndset(CryptPattern94, rndper);
-	drlg_l1_crypt_rndset(CryptPattern95, rndper);
-	drlg_l1_crypt_rndset(CryptPattern96, rndper);
-}
-
-void drlg_l1_crypt_pattern5(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern36, rndper);
-	drlg_l1_crypt_rndset(CryptPattern37, rndper);
-	drlg_l1_crypt_rndset(CryptPattern38, rndper);
-	drlg_l1_crypt_rndset(CryptPattern39, rndper);
-	drlg_l1_crypt_rndset(CryptPattern40, rndper);
-	drlg_l1_crypt_rndset(CryptPattern41, rndper);
-	drlg_l1_crypt_rndset(CryptPattern42, rndper);
-	drlg_l1_crypt_rndset(CryptPattern43, rndper);
-	drlg_l1_crypt_rndset(CryptPattern44, rndper);
-	drlg_l1_crypt_rndset(CryptPattern45, rndper);
-}
-
-void drlg_l1_crypt_pattern6(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern10, rndper);
-	drlg_l1_crypt_rndset(CryptPattern12, rndper);
-	drlg_l1_crypt_rndset(CryptPattern11, rndper);
-	drlg_l1_crypt_rndset(CryptPattern13, rndper);
-	drlg_l1_crypt_rndset(CryptPattern14, rndper);
-	drlg_l1_crypt_rndset(CryptPattern15, rndper);
-	drlg_l1_crypt_rndset(CryptPattern16, rndper);
-	drlg_l1_crypt_rndset(CryptPattern17, rndper);
-	drlg_l1_crypt_rndset(CryptPattern18, rndper);
-	drlg_l1_crypt_rndset(CryptPattern19, rndper);
-	drlg_l1_crypt_rndset(CryptPattern20, rndper);
-	drlg_l1_crypt_rndset(CryptPattern21, rndper);
-	drlg_l1_crypt_rndset(CryptPattern22, rndper);
-	drlg_l1_crypt_rndset(CryptPattern23, rndper);
-	drlg_l1_crypt_rndset(CryptPattern24, rndper);
-	drlg_l1_crypt_rndset(CryptPattern25, rndper);
-	drlg_l1_crypt_rndset(CryptPattern26, rndper);
-	drlg_l1_crypt_rndset(CryptPattern27, rndper);
-	drlg_l1_crypt_rndset(CryptPattern28, rndper);
-	drlg_l1_crypt_rndset(CryptPattern29, rndper);
-	drlg_l1_crypt_rndset(CryptPattern30, rndper);
-	drlg_l1_crypt_rndset(CryptPattern31, rndper);
-	drlg_l1_crypt_rndset(CryptPattern32, rndper);
-	drlg_l1_crypt_rndset(CryptPattern33, rndper);
-	drlg_l1_crypt_rndset(CryptPattern34, rndper);
-	drlg_l1_crypt_rndset(CryptPattern35, rndper);
-}
-
-void drlg_l1_crypt_pattern7(int rndper)
-{
-	drlg_l1_crypt_rndset(CryptPattern5, rndper);
-	drlg_l1_crypt_rndset(CryptPattern6, rndper);
-	drlg_l1_crypt_rndset(CryptPattern7, rndper);
-	drlg_l1_crypt_rndset(CryptPattern8, rndper);
 }
 
 } // namespace devilution
