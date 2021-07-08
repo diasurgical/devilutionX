@@ -241,7 +241,7 @@ spell_id SpellPages[6][7] = {
  * @param cel The CEL sprite
  * @param nCel Index of the cel frame to draw. 0 based.
  */
-static void DrawSpellCel(const Surface &out, Point position, const CelSprite &cel, int nCel)
+void DrawSpellCel(const Surface &out, Point position, const CelSprite &cel, int nCel)
 {
 	CelDrawLightTo(out, position, cel, nCel, SplTransTbl);
 }
@@ -303,7 +303,7 @@ void SetSpellTrans(spell_type t)
 	}
 }
 
-static void PrintSBookHotkey(const Surface &out, Point position, const std::string &text)
+void PrintSBookHotkey(const Surface &out, Point position, const std::string &text)
 {
 	// Align the hot key text with the top-right corner of the spell icon
 	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
@@ -324,7 +324,7 @@ static void PrintSBookHotkey(const Surface &out, Point position, const std::stri
  * @param y0 Top of the flask cel section to draw.
  * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
+void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
 {
 	out.BlitFrom(celBuf, SDL_Rect { 0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0 }, position);
 }
@@ -339,7 +339,7 @@ static void DrawFlaskTop(const Surface &out, Point position, const Surface &celB
  * @param targetPosition Target buffer coordinate.
  * @param h How many lines of the source buffer that will be copied.
  */
-static void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
+void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
 	constexpr int FlaskWidth = 59;
 	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
@@ -386,14 +386,14 @@ void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset,
 		DrawPanelBox(out, { offset, 85 - filled, 88, filled }, { PANEL_X + offset, PANEL_Y + 69 - filled });
 }
 
-void control_set_button_down(int btnId)
+void SetButtonStateDown(int btnId)
 {
 	panbtns[btnId] = true;
 	drawbtnflag = true;
 	panbtndown = true;
 }
 
-static void PrintInfo(const Surface &out)
+void PrintInfo(const Surface &out)
 {
 	if (talkflag)
 		return;
@@ -421,7 +421,7 @@ int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, Char
 	return std::min(remainingStatPoints, pointsToReachCap);
 }
 
-static int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
+int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 {
 	if (pItem->isEmpty())
 		return x;
@@ -455,7 +455,7 @@ static int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 	return x - 32 - 8;
 }
 
-static void PrintSBookStr(const Surface &out, Point position, const char *text)
+void PrintSBookStr(const Surface &out, Point position, const char *text)
 {
 	DrawString(out, text, { { RIGHT_PANEL_X + SPLICONLENGTH + position.x, position.y }, { 222, 0 } }, UIS_SILVER);
 }
@@ -487,13 +487,13 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 	return st;
 }
 
-static void ControlSetGoldCurs(PlayerStruct &player)
+void ControlSetGoldCurs(PlayerStruct &player)
 {
 	SetPlrHandGoldCurs(&player.HoldItem);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void control_reset_talk_msg()
+void ResetTalkMsg()
 {
 	uint32_t pmask = 0;
 
@@ -504,10 +504,10 @@ void control_reset_talk_msg()
 	NetSendCmdString(pmask, sgszTalkMsg);
 }
 
-static void ControlPressEnter()
+void ControlPressEnter()
 {
 	if (sgszTalkMsg[0] != 0) {
-		control_reset_talk_msg();
+		ResetTalkMsg();
 		int i = 0;
 		for (; i < 8; i++) {
 			if (strcmp(sgszTalkSave[i], sgszTalkMsg) == 0)
@@ -531,7 +531,7 @@ static void ControlPressEnter()
 	control_reset_talk();
 }
 
-static void ControlUpDown(int v)
+void ControlUpDown(int v)
 {
 	for (int i = 0; i < 8; i++) {
 		sgbTalkSavePos = (v + sgbTalkSavePos) & 7;
@@ -1017,7 +1017,7 @@ void control_check_btn_press()
 	    && MousePosition.x <= x
 	    && MousePosition.y >= PanBtnPos[3].y + PANEL_TOP
 	    && MousePosition.y <= y) {
-		control_set_button_down(3);
+		SetButtonStateDown(3);
 	}
 	x = PanBtnPos[6].x + PANEL_LEFT + PanBtnPos[6].w;
 	y = PanBtnPos[6].y + PANEL_TOP + PanBtnPos[6].h;
@@ -1025,7 +1025,7 @@ void control_check_btn_press()
 	    && MousePosition.x <= x
 	    && MousePosition.y >= PanBtnPos[6].y + PANEL_TOP
 	    && MousePosition.y <= y) {
-		control_set_button_down(6);
+		SetButtonStateDown(6);
 	}
 }
 

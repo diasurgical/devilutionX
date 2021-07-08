@@ -160,7 +160,7 @@ bool was_window_init = false;
 bool was_ui_init = false;
 bool was_snd_init = false;
 
-static void StartGame(interface_mode uMsg)
+void StartGame(interface_mode uMsg)
 {
 	zoomflag = true;
 	CalcViewportGeometry();
@@ -180,7 +180,7 @@ static void StartGame(interface_mode uMsg)
 	track_repeat_walk(false);
 }
 
-static void FreeGame()
+void FreeGame()
 {
 	FreeQol();
 	FreeControlPan();
@@ -199,7 +199,7 @@ static void FreeGame()
 	FreeGameMem();
 }
 
-static bool ProcessInput()
+bool ProcessInput()
 {
 	if (PauseMode == 2) {
 		return false;
@@ -224,7 +224,7 @@ static bool ProcessInput()
 	return true;
 }
 
-static void RunGameLoop(interface_mode uMsg)
+void RunGameLoop(interface_mode uMsg)
 {
 	WNDPROC saveProc;
 	tagMSG msg;
@@ -296,7 +296,7 @@ static void RunGameLoop(interface_mode uMsg)
 	}
 }
 
-[[noreturn]] static void PrintHelpAndExit()
+[[noreturn]] void PrintHelpAndExit()
 {
 	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit"));
@@ -332,7 +332,7 @@ static void RunGameLoop(interface_mode uMsg)
 	diablo_quit(0);
 }
 
-static void DiabloParseFlags(int argc, char **argv)
+void DiabloParseFlags(int argc, char **argv)
 {
 	for (int i = 1; i < argc; i++) {
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
@@ -406,7 +406,7 @@ static void DiabloParseFlags(int argc, char **argv)
 	}
 }
 
-static void DiabloInitScreen()
+void DiabloInitScreen()
 {
 	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
 	if (!sgbControllerActive)
@@ -418,13 +418,13 @@ static void DiabloInitScreen()
 	ClrDiabloMsg();
 }
 
-static void SetApplicationVersions()
+void SetApplicationVersions()
 {
 	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
 	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
 }
 
-static void DiabloInit()
+void DiabloInit()
 {
 	if (sgOptions.Graphics.bShowFPS)
 		EnableFrameCount();
@@ -475,7 +475,7 @@ static void DiabloInit()
 	InitItemGFX();
 }
 
-static void DiabloSplash()
+void DiabloSplash()
 {
 	if (!gbShowIntro)
 		return;
@@ -494,7 +494,7 @@ static void DiabloSplash()
 	UiTitleDialog();
 }
 
-static void DiabloDeinit()
+void DiabloDeinit()
 {
 	FreeItemGFX();
 
@@ -518,7 +518,7 @@ static void DiabloDeinit()
 		SDL_Quit();
 }
 
-static bool LeftMouseCmd(bool bShift)
+bool LeftMouseCmd(bool bShift)
 {
 	bool bNear;
 
@@ -574,7 +574,7 @@ static bool LeftMouseCmd(bool bShift)
 	return false;
 }
 
-static bool LeftMouseDown(int wParam)
+bool LeftMouseDown(int wParam)
 {
 	if (gmenu_left_mouse(true))
 		return false;
@@ -647,7 +647,7 @@ static bool LeftMouseDown(int wParam)
 	return false;
 }
 
-static void LeftMouseUp(int wParam)
+void LeftMouseUp(int wParam)
 {
 	gmenu_left_mouse(false);
 	control_release_talk_btn();
@@ -662,7 +662,7 @@ static void LeftMouseUp(int wParam)
 		ReleaseStoreBtn();
 }
 
-static void RightMouseDown()
+void RightMouseDown()
 {
 	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
 		return;
@@ -691,7 +691,7 @@ static void RightMouseDown()
 	}
 }
 
-static void DiabloHotkeyMsg(DWORD dwMsg)
+void DiabloHotkeyMsg(DWORD dwMsg)
 {
 	if (!gbIsMultiplayer) {
 		return;
@@ -702,7 +702,7 @@ static void DiabloHotkeyMsg(DWORD dwMsg)
 	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
 
-static bool PressSysKey(int wParam)
+bool PressSysKey(int wParam)
 {
 	if (gmenu_is_active() || wParam != DVL_VK_F10)
 		return false;
@@ -710,7 +710,7 @@ static bool PressSysKey(int wParam)
 	return true;
 }
 
-static void ReleaseKey(int vkey)
+void ReleaseKey(int vkey)
 {
 	if (vkey == DVL_VK_SNAPSHOT)
 		CaptureScreen();
@@ -720,7 +720,7 @@ static void ReleaseKey(int vkey)
 		ToggleItemLabelHighlight();
 }
 
-static void ClosePanels()
+void ClosePanels()
 {
 	if (CanPanelsCoverView()) {
 		if (!chrflag && !QuestLogIsOpen && (invflag || sbookflag) && MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
@@ -735,7 +735,7 @@ static void ClosePanels()
 	QuestLogIsOpen = false;
 }
 
-static void PressKey(int vkey)
+void PressKey(int vkey)
 {
 	if (gmenu_presskeys(vkey) || control_presskeys(vkey)) {
 		return;
@@ -848,7 +848,7 @@ static void PressKey(int vkey)
 /**
  * @internal `return` must be used instead of `break` to be bin exact as C++
  */
-static void PressChar(int32_t vkey)
+void PressChar(int32_t vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
 		return;
@@ -971,7 +971,7 @@ static void PressChar(int32_t vkey)
 	}
 }
 
-static void GetMousePos(int32_t lParam)
+void GetMousePos(int32_t lParam)
 {
 	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
 }
@@ -1094,7 +1094,7 @@ void CreateLevel(lvl_entry lvldir)
 	}
 }
 
-static void UpdateMonsterLights()
+void UpdateMonsterLights()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		MonsterStruct *mon = &Monsters[ActiveMonsters[i]];
@@ -1112,7 +1112,7 @@ static void UpdateMonsterLights()
 	}
 }
 
-static void GameLogic()
+void GameLogic()
 {
 	if (!ProcessInput()) {
 		return;
@@ -1158,7 +1158,7 @@ static void GameLogic()
 	plrctrls_after_game_logic();
 }
 
-static void TimeoutCursor(bool bTimeout)
+void TimeoutCursor(bool bTimeout)
 {
 	if (bTimeout) {
 		if (sgnTimeoutCurs == CURSOR_NONE && sgbMouseDown == CLICK_NONE) {
@@ -1179,7 +1179,7 @@ static void TimeoutCursor(bool bTimeout)
 	}
 }
 
-void helpKeyPressed()
+void HelpKeyPressed()
 {
 	if (HelpFlag) {
 		HelpFlag = false;
@@ -1207,7 +1207,7 @@ void helpKeyPressed()
 }
 
 #ifdef _DEBUG
-void itemInfoKeyPressed()
+void ItemInfoKeyPressed()
 {
 	if (pcursitem != -1) {
 		sprintf(
@@ -1223,7 +1223,7 @@ void itemInfoKeyPressed()
 }
 #endif
 
-void inventoryKeyPressed()
+void InventoryKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
@@ -1242,7 +1242,7 @@ void inventoryKeyPressed()
 	sbookflag = false;
 }
 
-void characterSheetKeyPressed()
+void CharacterSheetKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
@@ -1261,7 +1261,7 @@ void characterSheetKeyPressed()
 	QuestLogIsOpen = false;
 }
 
-void questLogKeyPressed()
+void QuestLogKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
@@ -1284,7 +1284,7 @@ void questLogKeyPressed()
 	chrflag = false;
 }
 
-void displaySpellsKeyPressed()
+void DisplaySpellsKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
@@ -1300,7 +1300,7 @@ void displaySpellsKeyPressed()
 	track_repeat_walk(false);
 }
 
-void spellBookKeyPressed()
+void SpellBookKeyPressed()
 {
 	if (stextflag != STORE_NONE)
 		return;
@@ -1319,31 +1319,31 @@ void spellBookKeyPressed()
 	invflag = false;
 }
 
-bool isPlayerDead()
+bool IsPlayerDead()
 {
 	return Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead;
 }
 
-void initKeymapActions()
+void InitKeymapActions()
 {
 	keymapper.AddAction({
 	    "Help",
 	    DVL_VK_F1,
-	    helpKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    HelpKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 #ifdef _DEBUG
 	keymapper.AddAction({
 	    "ItemInfo",
 	    DVL_VK_INVALID,
-	    itemInfoKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    ItemInfoKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "QuestDebug",
 	    DVL_VK_INVALID,
 	    PrintDebugQuest,
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 #endif
 	for (int i = 0; i < 4; ++i) {
@@ -1357,7 +1357,7 @@ void initKeymapActions()
 			    }
 			    ToggleSpell(i);
 		    },
-		    [&]() { return !isPlayerDead(); },
+		    [&]() { return !IsPlayerDead(); },
 		});
 	}
 	for (int i = 0; i < 4; ++i) {
@@ -1371,31 +1371,31 @@ void initKeymapActions()
 	    "DecreaseGamma",
 	    'G',
 	    DecreaseGamma,
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "IncreaseGamma",
 	    'F',
 	    IncreaseGamma,
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "Inventory",
 	    'I',
-	    inventoryKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    InventoryKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "Character",
 	    'C',
-	    characterSheetKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    CharacterSheetKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "QuestLog",
 	    'Q',
-	    questLogKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    QuestLogKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "Zoom",
@@ -1404,19 +1404,19 @@ void initKeymapActions()
 		    zoomflag = !zoomflag;
 		    CalcViewportGeometry();
 	    },
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "DisplaySpells",
 	    'S',
-	    displaySpellsKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    DisplaySpellsKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "SpellBook",
 	    'B',
-	    spellBookKeyPressed,
-	    [&]() { return !isPlayerDead(); },
+	    SpellBookKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "GameInfo",
@@ -1434,7 +1434,7 @@ void initKeymapActions()
 		                       .c_str());
 		    NetSendCmdString(1 << MyPlayerId, pszStr);
 	    },
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 	for (int i = 0; i < 8; ++i) {
 		keymapper.AddAction({
@@ -1446,14 +1446,14 @@ void initKeymapActions()
 				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
 		    },
-		    [&]() { return !isPlayerDead(); },
+		    [&]() { return !IsPlayerDead(); },
 		});
 	}
 	keymapper.AddAction({
 	    "QuickSave",
 	    DVL_VK_F2,
 	    [] { gamemenu_save_game(false); },
-	    [&]() { return !gbIsMultiplayer && !isPlayerDead(); },
+	    [&]() { return !gbIsMultiplayer && !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
 	    "QuickLoad",
@@ -1476,14 +1476,14 @@ void initKeymapActions()
 			    return;
 		    }
 	    },
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 #endif
 	keymapper.AddAction({
 	    "StopHero",
 	    DVL_VK_INVALID,
 	    [] { Players[MyPlayerId].Stop(); },
-	    [&]() { return !isPlayerDead(); },
+	    [&]() { return !IsPlayerDead(); },
 	});
 }
 
@@ -1559,7 +1559,7 @@ int DiabloMain(int argc, char **argv)
 #endif
 
 	DiabloParseFlags(argc, argv);
-	initKeymapActions();
+	InitKeymapActions();
 	LoadOptions();
 	DiabloInit();
 	DiabloSplash();

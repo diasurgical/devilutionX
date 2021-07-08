@@ -25,7 +25,7 @@ namespace  {
  * @param out File stream to write to
  * @return True on success
  */
-static bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
+bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
 {
 	PCXHeader buffer;
 
@@ -51,7 +51,7 @@ static bool CaptureHdr(int16_t width, int16_t height, std::ofstream *out)
  * @param out File stream for the PCX file.
  * @return True if successful, else false
  */
-static bool CapturePal(SDL_Color *palette, std::ofstream *out)
+bool CapturePal(SDL_Color *palette, std::ofstream *out)
 {
 	BYTE pcxPalette[1 + 256 * 3];
 
@@ -74,7 +74,7 @@ static bool CapturePal(SDL_Color *palette, std::ofstream *out)
 
  * @return Output buffer
  */
-static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
+BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
 {
 	int rleLength;
 
@@ -113,7 +113,7 @@ static BYTE *CaptureEnc(BYTE *src, BYTE *dst, int width)
  * @param buf Buffer
  * @return True if successful, else false
  */
-static bool CapturePix(const Surface &buf, std::ofstream *out)
+bool CapturePix(const Surface &buf, std::ofstream *out)
 {
 	int width = buf.w();
 	std::unique_ptr<BYTE[]> pBuffer { new BYTE[2 * width] };
@@ -131,7 +131,7 @@ static bool CapturePix(const Surface &buf, std::ofstream *out)
 /**
  * Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
  */
-static std::ofstream *CaptureFile(std::string *dstPath)
+std::ofstream *CaptureFile(std::string *dstPath)
 {
 	char filename[sizeof("screen00.PCX") / sizeof(char)];
 	for (int i = 0; i <= 99; ++i) {
@@ -147,7 +147,7 @@ static std::ofstream *CaptureFile(std::string *dstPath)
 /**
  * @brief Make a red version of the given palette and apply it to the screen.
  */
-static void RedPalette()
+void RedPalette()
 {
 	for (int i = 0; i < 255; i++) {
 		system_palette[i].g = 0;
@@ -157,7 +157,7 @@ static void RedPalette()
 	BltFast(nullptr, nullptr);
 	RenderPresent();
 }
-}
+} // namespace
 
 /**
  * @brief Save the current screen to a screen??.PCX (00-99) in file if available, then make the screen red for 200ms.

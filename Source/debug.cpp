@@ -59,7 +59,7 @@ void PrintDebugMonster(int m)
 	NetSendCmdString(1 << MyPlayerId, dstr);
 }
 
-}
+} // namespace
 
 void LoadDebugGFX()
 {
