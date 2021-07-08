@@ -835,6 +835,7 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  target_compile_options(libdevilutionx PUBLIC "/external:I _deps")
   target_compile_options(libdevilutionx PUBLIC "/experimental:anglebrackets")
   target_compile_options(libdevilutionx PUBLIC "/experimental:external")
   target_compile_options(libdevilutionx PUBLIC "/external:W0")
