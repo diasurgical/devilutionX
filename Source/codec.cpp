@@ -23,7 +23,7 @@ struct CodecSignature {
 
 #define BlockSize 64
 
-static void CodecInitKey(const char *pszPassword)
+void CodecInitKey(const char *pszPassword)
 {
 	char key[136]; // last 64 bytes are the SHA1
 	uint32_t randState = 0x7058;
@@ -54,7 +54,7 @@ static void CodecInitKey(const char *pszPassword)
 	}
 	memset(key, 0, sizeof(key));
 }
-}
+} // namespace
 
 std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)
 {
