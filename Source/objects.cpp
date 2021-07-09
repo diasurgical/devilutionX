@@ -5236,17 +5236,15 @@ void SyncL2Doors(int i)
 void SyncL3Doors(int i)
 {
 	Objects[i]._oMissFlag = true;
-	int x = Objects[i].position.x;
-	int y = Objects[i].position.y;
 	Objects[i]._oSelFlag = 2;
 	if (Objects[i]._otype == OBJ_L3LDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 531);
+		ObjSetMicro(Objects[i].position, 531);
 	} else if (Objects[i]._otype == OBJ_L3LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 538);
+		ObjSetMicro(Objects[i].position, 538);
 	} else if (Objects[i]._otype == OBJ_L3RDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 534);
+		ObjSetMicro(Objects[i].position, 534);
 	} else if (Objects[i]._otype == OBJ_L3RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 541);
+		ObjSetMicro(Objects[i].position, 541);
 	}
 }
 
