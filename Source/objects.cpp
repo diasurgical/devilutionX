@@ -2274,7 +2274,7 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	}
 }
 
-void DoorSet(int oi, Point position)
+void DoorSet(Point position, _object_id doorType)
 {
 	int pn = dPiece[position.x][position.y];
 	if (currlevel < 17) {
@@ -2286,9 +2286,9 @@ void DoorSet(int oi, Point position)
 			ObjSetMicro(position, 394);
 			break;
 		case 50:
-			if (Objects[oi]._otype == _object_id::OBJ_L1LDOOR)
+			if (doorType == _object_id::OBJ_L1LDOOR)
 				ObjSetMicro(position, 411);
-			else if (Objects[oi]._otype == _object_id::OBJ_L1RDOOR)
+			else if (doorType == _object_id::OBJ_L1RDOOR)
 				ObjSetMicro(position, 412);
 			break;
 		case 54:
@@ -2338,10 +2338,10 @@ void DoorSet(int oi, Point position)
 			ObjSetMicro(position, 208);
 			break;
 		case 86:
-			if (Objects[oi]._otype == _object_id::OBJ_L1LDOOR) {
+			if (doorType == _object_id::OBJ_L1LDOOR) {
 				ObjSetMicro(position, 232);
 			}
-			if (Objects[oi]._otype == _object_id::OBJ_L1RDOOR) {
+			if (doorType == _object_id::OBJ_L1RDOOR) {
 				ObjSetMicro(position, 234);
 			}
 			break;
@@ -2431,7 +2431,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NE);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(oi, door.position + Direction::DIR_NW);
+		DoorSet(door.position + Direction::DIR_NW, door._otype);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -2512,7 +2512,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NW);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(oi, door.position + Direction::DIR_NE);
+		DoorSet(door.position + Direction::DIR_NE, door._otype);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -5189,7 +5189,7 @@ void SyncL1Doors(int i)
 			doorPosition.x--;
 		}
 	}
-	DoorSet(i, doorPosition);
+	DoorSet(doorPosition, Objects[i]._otype);
 }
 
 void SyncCrux(int i)
