@@ -1697,7 +1697,7 @@ void AddCryptObject(int i, int a2)
 	Objects[i]._oVar4 = Objects[i]._oAnimFrame + 1;
 }
 
-void AddObject(_object_id ot, Point objPos)
+void AddObject(_object_id objType, Point objPos)
 {
 	if (ActiveObjectCount >= MAXOBJECTS)
 		return;
@@ -1706,8 +1706,8 @@ void AddObject(_object_id ot, Point objPos)
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
 	dObject[objPos.x][objPos.y] = oi + 1;
-	SetupObject(oi, objPos, ot);
-	switch (ot) {
+	SetupObject(oi, objPos, objType);
+	switch (objType) {
 	case OBJ_L1LIGHT:
 	case OBJ_SKFIRE:
 	case OBJ_CANDLE1:
@@ -1726,15 +1726,15 @@ void AddObject(_object_id ot, Point objPos)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(oi, objPos, ot);
+		AddL1Door(oi, objPos, objType);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(oi, objPos, ot);
+		AddL2Door(oi, objPos, objType);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(oi, objPos, ot);
+		AddL3Door(oi, objPos, objType);
 		break;
 	case OBJ_BOOK2R:
 		AddSCambBook(oi);
@@ -1742,12 +1742,12 @@ void AddObject(_object_id ot, Point objPos)
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
 	case OBJ_CHEST3:
-		AddChest(oi, ot);
+		AddChest(oi, objType);
 		break;
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		AddChest(oi, ot);
+		AddChest(oi, objType);
 		Objects[oi]._oTrapFlag = true;
 		if (leveltype == DTYPE_CATACOMBS) {
 			Objects[oi]._oVar4 = GenerateRnd(2);
@@ -1773,7 +1773,7 @@ void AddObject(_object_id ot, Point objPos)
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		AddBarrel(oi, ot);
+		AddBarrel(oi, objType);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:

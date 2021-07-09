@@ -19,7 +19,6 @@
 
 namespace devilution {
 
-
 int refreshDelay;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -43,7 +42,7 @@ int sgdwLockCount;
 #ifdef _DEBUG
 int locktbl[256];
 #endif
-static CCritSect sgMemCrit;
+CCritSect sgMemCrit;
 
 bool CanRenderDirectlyToOutputSurface()
 {
@@ -61,7 +60,7 @@ bool CanRenderDirectlyToOutputSurface()
 #endif
 }
 
-static void CreateBackBuffer()
+void CreateBackBuffer()
 {
 	if (CanRenderDirectlyToOutputSurface()) {
 		Log("{}", "Will render directly to the SDL output surface");
@@ -92,7 +91,7 @@ static void CreateBackBuffer()
 	pal_surface_palette_version = 1;
 }
 
-static void CreatePrimarySurface()
+void CreatePrimarySurface()
 {
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
@@ -110,7 +109,7 @@ static void CreatePrimarySurface()
 	}
 }
 
-static void LockBufPriv()
+void LockBufPriv()
 {
 	sgMemCrit.Enter();
 	if (sgdwLockCount != 0) {
@@ -121,7 +120,7 @@ static void LockBufPriv()
 	sgdwLockCount++;
 }
 
-static void UnlockBufPriv()
+void UnlockBufPriv()
 {
 	if (sgdwLockCount == 0)
 		app_fatal("draw main unlock error");

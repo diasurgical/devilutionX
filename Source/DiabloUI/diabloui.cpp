@@ -90,7 +90,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	gfnListEsc = fnEsc;
 	gfnListYesNo = fnYesNo;
 	gUiItems.clear();
-	for (auto &item : items)
+	for (const auto &item : items)
 		gUiItems.push_back(item.get());
 	UiItemsWraps = itemsWraps;
 	ListOffset = nullptr;
