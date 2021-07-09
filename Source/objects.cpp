@@ -5211,33 +5211,33 @@ void SyncL1Doors(ObjectStruct &door)
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
 
-	Direction doorSetDirection { Direction::DIR_OMNI };
+	bool isLeftDoor = door._otype == _object_id::OBJ_L1LDOOR; // otherwise the door is type OBJ_L1RDOOR
+
 	if (currlevel < 17) {
-		if (door._otype == _object_id::OBJ_L1LDOOR) {
+		if (isLeftDoor) {
 			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
 			dSpecial[door.position.x][door.position.y] = 7;
 			objects_set_door_piece(door.position + Direction::DIR_NW);
-			doorSetDirection = Direction::DIR_NE;
+			DoorSet(door.position + Direction::DIR_NE, door._otype);
 		} else {
 			ObjSetMicro(door.position, 395);
 			dSpecial[door.position.x][door.position.y] = 8;
 			objects_set_door_piece(door.position + Direction::DIR_NE);
-			doorSetDirection = Direction::DIR_NW;
+			DoorSet(door.position + Direction::DIR_NW, door._otype);
 		}
 	} else {
-		if (door._otype == _object_id::OBJ_L1LDOOR) {
+		if (isLeftDoor) {
 			ObjSetMicro(door.position, 206);
 			dSpecial[door.position.x][door.position.y] = 1;
 			objects_set_door_piece(door.position + Direction::DIR_NW);
-			doorSetDirection = Direction::DIR_NE;
+			DoorSet(door.position + Direction::DIR_NE, door._otype);
 		} else {
 			ObjSetMicro(door.position, 209);
 			dSpecial[door.position.x][door.position.y] = 2;
 			objects_set_door_piece(door.position + Direction::DIR_NE);
-			doorSetDirection = Direction::DIR_NW;
+			DoorSet(door.position + Direction::DIR_NW, door._otype);
 		}
 	}
-	DoorSet(door.position + doorSetDirection, door._otype);
 }
 
 void SyncL2Doors(ObjectStruct &door)
