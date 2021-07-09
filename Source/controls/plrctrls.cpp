@@ -1427,6 +1427,7 @@ void UpdateSpellTarget()
  */
 bool TryDropItem()
 {
+	blockClicks = true;
 	const auto &myPlayer = Players[MyPlayerId];
 
 	cursmx = myPlayer.position.future.x + 1;

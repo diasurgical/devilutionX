@@ -33,7 +33,11 @@ void track_process()
 	}
 	if (sgbMouseDown == CLICK_LEFT) {
 		track_repeat_walk(LeftMouseDown(isShift));
-		LeftMouseUp(isShift);
+		if (blockClicks) {
+			sgbMouseDown == CLICK_NONE;
+		} else {
+			LeftMouseUp(isShift);
+		}
 	}
 	return;
 

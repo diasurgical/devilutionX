@@ -702,6 +702,7 @@ void DrawSpellList(const Surface &out)
 void SetSpell()
 {
 	spselflag = false;
+	blockClicks = true;
 	if (pSpell == SPL_INVALID) {
 		return;
 	}
@@ -985,6 +986,7 @@ void DoSpeedBook()
  */
 void DoPanBtn()
 {
+	blockClicks = true;
 	for (int i = 0; i < numpanbtns; i++) {
 		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
 		int y = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
@@ -1512,6 +1514,7 @@ void CheckLvlBtn()
 
 void ReleaseLvlBtn()
 {
+	blockClicks = true;
 	if (MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP)
 		chrflag = true;
 	lvlbtndown = false;
@@ -1706,6 +1709,7 @@ void DrawSpellBook(const Surface &out)
 
 void CheckSBook()
 {
+	blockClicks = true;
 	if (MousePosition.x >= RIGHT_PANEL + 11 && MousePosition.x < RIGHT_PANEL + 48 && MousePosition.y >= 18 && MousePosition.y < 314) {
 		spell_id sn = SpellPages[sbooktab][(MousePosition.y - 18) / 43];
 		auto &myPlayer = Players[MyPlayerId];

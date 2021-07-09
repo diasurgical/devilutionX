@@ -1704,6 +1704,7 @@ bool CanPut(Point position)
 
 bool TryInvPut()
 {
+	blockClicks = true;
 	if (ActiveItemCount >= MAXITEMS)
 		return false;
 
@@ -2044,6 +2045,7 @@ void StartGoldDrop()
 
 bool UseInvItem(int pnum, int cii)
 {
+	blockClicks = true;
 	int c;
 	ItemStruct *item;
 

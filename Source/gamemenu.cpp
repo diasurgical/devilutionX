@@ -312,6 +312,7 @@ void gamemenu_load_game(bool /*bActivate*/)
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
 	gamemenu_off();
 	NewCursor(CURSOR_NONE);
+	blockClicks = true;
 	InitDiabloMsg(EMSG_LOADING);
 	force_redraw = 255;
 	DrawAndBlit();
@@ -340,6 +341,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 		return;
 	}
 
+	blockClicks = true;
 	WNDPROC saveProc = SetWindowProc(DisableInputWndProc);
 	NewCursor(CURSOR_NONE);
 	gamemenu_off();
