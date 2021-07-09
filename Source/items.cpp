@@ -3131,12 +3131,25 @@ static bool OilItem(ItemStruct *x, PlayerStruct &player)
 			x->_iMaxDam = x->_iMaxDam + 1;
 		}
 		break;
-	case IMISC_OILDEATH:
-		if (x->_iMaxDam - x->_iMinDam < 30) {
-			x->_iMinDam = x->_iMinDam + 1;
-			x->_iMaxDam = x->_iMaxDam + 2;
+	case IMISC_OILDEATH: {
+		if (x->_iMaxDam - x->_iMinDam < 30)
+			x->_iMaxDam++;
+
+		const auto &orgItem = AllItemsList[x->IDidx];
+
+		const auto orgMinDmg = orgItem.iMinDam;
+		const auto orgMaxDmg = orgItem.iMaxDam;
+
+		const auto maxApplications = 30 - (orgMaxDmg - orgMinDmg);
+		const auto applicationsDone = x->_iMinDam - orgMinDmg;
+
+		if (applicationsDone < maxApplications) {
+			x->_iMaxDam++;
+			x->_iMinDam++;
 		}
+
 		break;
+	}
 	case IMISC_OILSKILL:
 		r = GenerateRnd(6) + 5;
 		x->_iMinStr = std::max(0, x->_iMinStr - r);
