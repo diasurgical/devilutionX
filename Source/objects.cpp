@@ -2274,75 +2274,75 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	}
 }
 
-void DoorSet(int oi, int dx, int dy)
+void DoorSet(int oi, Point position)
 {
-	int pn = dPiece[dx][dy];
+	int pn = dPiece[position.x][position.y];
 	if (currlevel < 17) {
 		if (pn == 43)
-			ObjSetMicro({ dx, dy }, 392);
+			ObjSetMicro(position, 392);
 		if (pn == 45)
-			ObjSetMicro({ dx, dy }, 394);
+			ObjSetMicro(position, 394);
 		if (pn == 50 && Objects[oi]._otype == OBJ_L1LDOOR)
-			ObjSetMicro({ dx, dy }, 411);
+			ObjSetMicro(position, 411);
 		if (pn == 50 && Objects[oi]._otype == OBJ_L1RDOOR)
-			ObjSetMicro({ dx, dy }, 412);
+			ObjSetMicro(position, 412);
 		if (pn == 54)
-			ObjSetMicro({ dx, dy }, 397);
+			ObjSetMicro(position, 397);
 		if (pn == 55)
-			ObjSetMicro({ dx, dy }, 398);
+			ObjSetMicro(position, 398);
 		if (pn == 61)
-			ObjSetMicro({ dx, dy }, 399);
+			ObjSetMicro(position, 399);
 		if (pn == 67)
-			ObjSetMicro({ dx, dy }, 400);
+			ObjSetMicro(position, 400);
 		if (pn == 68)
-			ObjSetMicro({ dx, dy }, 401);
+			ObjSetMicro(position, 401);
 		if (pn == 69)
-			ObjSetMicro({ dx, dy }, 403);
+			ObjSetMicro(position, 403);
 		if (pn == 70)
-			ObjSetMicro({ dx, dy }, 404);
+			ObjSetMicro(position, 404);
 		if (pn == 72)
-			ObjSetMicro({ dx, dy }, 406);
+			ObjSetMicro(position, 406);
 		if (pn == 212)
-			ObjSetMicro({ dx, dy }, 407);
+			ObjSetMicro(position, 407);
 		if (pn == 354)
-			ObjSetMicro({ dx, dy }, 409);
+			ObjSetMicro(position, 409);
 		if (pn == 355)
-			ObjSetMicro({ dx, dy }, 410);
+			ObjSetMicro(position, 410);
 		if (pn == 411)
-			ObjSetMicro({ dx, dy }, 396);
+			ObjSetMicro(position, 396);
 		if (pn == 412)
-			ObjSetMicro({ dx, dy }, 396);
+			ObjSetMicro(position, 396);
 	} else {
 		if (pn == 75)
-			ObjSetMicro({ dx, dy }, 204);
+			ObjSetMicro(position, 204);
 		if (pn == 79)
-			ObjSetMicro({ dx, dy }, 208);
+			ObjSetMicro(position, 208);
 		if (pn == 86 && Objects[oi]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro({ dx, dy }, 232);
+			ObjSetMicro(position, 232);
 		}
 		if (pn == 86 && Objects[oi]._otype == OBJ_L1RDOOR) {
-			ObjSetMicro({ dx, dy }, 234);
+			ObjSetMicro(position, 234);
 		}
 		if (pn == 91)
-			ObjSetMicro({ dx, dy }, 215);
+			ObjSetMicro(position, 215);
 		if (pn == 93)
-			ObjSetMicro({ dx, dy }, 218);
+			ObjSetMicro(position, 218);
 		if (pn == 99)
-			ObjSetMicro({ dx, dy }, 220);
+			ObjSetMicro(position, 220);
 		if (pn == 111)
-			ObjSetMicro({ dx, dy }, 222);
+			ObjSetMicro(position, 222);
 		if (pn == 113)
-			ObjSetMicro({ dx, dy }, 224);
+			ObjSetMicro(position, 224);
 		if (pn == 115)
-			ObjSetMicro({ dx, dy }, 226);
+			ObjSetMicro(position, 226);
 		if (pn == 117)
-			ObjSetMicro({ dx, dy }, 228);
+			ObjSetMicro(position, 228);
 		if (pn == 119)
-			ObjSetMicro({ dx, dy }, 230);
+			ObjSetMicro(position, 230);
 		if (pn == 232)
-			ObjSetMicro({ dx, dy }, 212);
+			ObjSetMicro(position, 212);
 		if (pn == 234)
-			ObjSetMicro({ dx, dy }, 212);
+			ObjSetMicro(position, 212);
 	}
 }
 
@@ -2400,7 +2400,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NE);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(oi, door.position.x - 1, door.position.y);
+		DoorSet(oi, door.position + Direction::DIR_NW);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -2481,7 +2481,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NW);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(oi, door.position.x, door.position.y - 1);
+		DoorSet(oi, door.position + Direction::DIR_NE);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -5158,7 +5158,7 @@ void SyncL1Doors(int i)
 			doorPosition.x--;
 		}
 	}
-	DoorSet(i, doorPosition.x, doorPosition.y);
+	DoorSet(i, doorPosition);
 }
 
 void SyncCrux(int i)
