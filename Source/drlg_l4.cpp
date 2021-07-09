@@ -151,8 +151,6 @@ const BYTE L4BTYPES[140] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 };
 
-} // namespace
-
 static void DrlgL4Shadows()
 {
 	for (int y = 1; y < DMAXY; y++) {
@@ -1513,6 +1511,8 @@ static void DrlgL4Pass3()
 {
 	DRLG_LPass3(30 - 1);
 }
+
+} // namespace
 
 void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 {

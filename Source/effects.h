@@ -1188,7 +1188,9 @@ void ui_sound_init();
 void effects_play_sound(const char *sndFile);
 
 #ifndef NOSOUND
-bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan);
+#ifdef RUN_TESTS
+bool TestCalculatePosition(Point soundPosition, int *plVolume, int *plPan);
+#endif
 int GetSFXLength(int nSFX);
 #endif
 

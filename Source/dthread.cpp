@@ -10,6 +10,8 @@
 
 namespace devilution {
 
+namespace {
+
 static CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
 TMegaPkt *sgpInfoHead; /* may not be right struct */
@@ -53,6 +55,8 @@ static void DthreadHandler()
 				SDL_Delay(dwMilliseconds);
 		}
 	}
+}
+
 }
 
 void dthread_remove_player(uint8_t pnum)
