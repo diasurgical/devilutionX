@@ -5237,14 +5237,17 @@ void SyncL3Doors(int i)
 {
 	Objects[i]._oMissFlag = true;
 	Objects[i]._oSelFlag = 2;
-	if (Objects[i]._otype == OBJ_L3LDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro(Objects[i].position, 531);
-	} else if (Objects[i]._otype == OBJ_L3LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro(Objects[i].position, 538);
-	} else if (Objects[i]._otype == OBJ_L3RDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro(Objects[i].position, 534);
-	} else if (Objects[i]._otype == OBJ_L3RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro(Objects[i].position, 541);
+
+	bool isLeftDoor = Objects[i]._otype == _object_id::OBJ_L3LDOOR; // otherwise the door is type OBJ_L3RDOOR
+
+	switch (Objects[i]._oVar4) {
+	case 0:
+		ObjSetMicro(Objects[i].position, isLeftDoor ? 531 : 534);
+		break;
+	case 1:
+	case 2:
+		ObjSetMicro(Objects[i].position, isLeftDoor ? 538 : 541);
+		break;
 	}
 }
 
