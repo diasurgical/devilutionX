@@ -5215,21 +5215,20 @@ void SyncPedistal(int i)
 void SyncL2Doors(ObjectStruct &door)
 {
 	door._oMissFlag = door._oVar4 != 0;
-	int x = door.position.x;
-	int y = door.position.y;
 	door._oSelFlag = 2;
-	if (door._otype == OBJ_L2LDOOR && door._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 538);
-		dSpecial[x][y] = 0;
-	} else if (door._otype == OBJ_L2LDOOR && (door._oVar4 == 1 || door._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 13);
-		dSpecial[x][y] = 5;
-	} else if (door._otype == OBJ_L2RDOOR && door._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 540);
-		dSpecial[x][y] = 0;
-	} else if (door._otype == OBJ_L2RDOOR && (door._oVar4 == 1 || door._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 17);
-		dSpecial[x][y] = 6;
+
+	bool isLeftDoor = door._otype == _object_id::OBJ_L2LDOOR; // otherwise the door is type OBJ_L2RDOOR
+
+	switch (door._oVar4) {
+	case 0:
+		ObjSetMicro(door.position, isLeftDoor ? 538 : 540);
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	case 1:
+	case 2:
+		ObjSetMicro(door.position, isLeftDoor ? 13 : 17);
+		dSpecial[door.position.x][door.position.y] = isLeftDoor ? 5 : 6;
+		break;
 	}
 }
 
