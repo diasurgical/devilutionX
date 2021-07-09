@@ -69,6 +69,10 @@ extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
+bool LeftMouseDown(int wParam);
+void LeftMouseUp(int wParam);
+void RightMouseDown();
+
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);

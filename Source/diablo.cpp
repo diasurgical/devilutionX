@@ -574,123 +574,6 @@ bool LeftMouseCmd(bool bShift)
 	return false;
 }
 
-bool LeftMouseDown(int wParam)
-{
-	if (gmenu_left_mouse(true))
-		return false;
-
-	if (control_check_talk_btn())
-		return false;
-
-	if (sgnTimeoutCurs != CURSOR_NONE)
-		return false;
-
-	if (MyPlayerIsDead) {
-		control_check_btn_press();
-		return false;
-	}
-
-	if (PauseMode == 2) {
-		return false;
-	}
-	if (DoomFlag) {
-		doom_close();
-		return false;
-	}
-
-	if (spselflag) {
-		SetSpell();
-		return false;
-	}
-
-	if (stextflag != STORE_NONE) {
-		CheckStoreBtn();
-		return false;
-	}
-
-	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
-
-	if (MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH) {
-		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (QuestLogIsOpen && MousePosition.x > 32 && MousePosition.x < 288 && MousePosition.y > 32 && MousePosition.y < 308) {
-				QuestlogESC();
-			} else if (qtextflag) {
-				qtextflag = false;
-				stream_stop();
-			} else if (chrflag && MousePosition.x < SPANEL_WIDTH && MousePosition.y < SPANEL_HEIGHT) {
-				CheckChrBtns();
-			} else if (invflag && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) {
-				if (!dropGoldFlag)
-					CheckInvItem(isShiftHeld);
-			} else if (sbookflag && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) {
-				CheckSBook();
-			} else if (pcurs >= CURSOR_FIRSTITEM) {
-				if (TryInvPut()) {
-					NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
-					NewCursor(CURSOR_HAND);
-				}
-			} else {
-				if (Players[MyPlayerId]._pStatPts != 0 && !spselflag)
-					CheckLvlBtn();
-				if (!lvlbtndown)
-					return LeftMouseCmd(isShiftHeld);
-			}
-		}
-	} else {
-		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
-			CheckInvScrn(isShiftHeld);
-		DoPanBtn();
-		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
-			NewCursor(CURSOR_HAND);
-	}
-
-	return false;
-}
-
-void LeftMouseUp(int wParam)
-{
-	gmenu_left_mouse(false);
-	control_release_talk_btn();
-	bool isShiftHeld = (wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON)) != 0;
-	if (panbtndown)
-		CheckBtnUp();
-	if (chrbtnactive)
-		ReleaseChrBtns(isShiftHeld);
-	if (lvlbtndown)
-		ReleaseLvlBtn();
-	if (stextflag != STORE_NONE)
-		ReleaseStoreBtn();
-}
-
-void RightMouseDown()
-{
-	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
-		return;
-	}
-
-	if (DoomFlag) {
-		doom_close();
-		return;
-	}
-	if (stextflag != STORE_NONE)
-		return;
-	if (spselflag) {
-		SetSpell();
-		return;
-	}
-	if (MousePosition.y >= SPANEL_HEIGHT
-	    || ((!sbookflag || MousePosition.x <= RIGHT_PANEL)
-	        && !TryIconCurs()
-	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
-		if (pcurs == CURSOR_HAND) {
-			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
-				CheckPlrSpell();
-		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
-			NewCursor(CURSOR_HAND);
-		}
-	}
-}
-
 void DiabloHotkeyMsg(DWORD dwMsg)
 {
 	if (!gbIsMultiplayer) {
@@ -1488,6 +1371,123 @@ void InitKeymapActions()
 }
 
 } // namespace
+
+bool LeftMouseDown(int wParam)
+{
+	if (gmenu_left_mouse(true))
+		return false;
+
+	if (control_check_talk_btn())
+		return false;
+
+	if (sgnTimeoutCurs != CURSOR_NONE)
+		return false;
+
+	if (MyPlayerIsDead) {
+		control_check_btn_press();
+		return false;
+	}
+
+	if (PauseMode == 2) {
+		return false;
+	}
+	if (DoomFlag) {
+		doom_close();
+		return false;
+	}
+
+	if (spselflag) {
+		SetSpell();
+		return false;
+	}
+
+	if (stextflag != STORE_NONE) {
+		CheckStoreBtn();
+		return false;
+	}
+
+	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
+
+	if (MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH) {
+		if (!gmenu_is_active() && !TryIconCurs()) {
+			if (QuestLogIsOpen && MousePosition.x > 32 && MousePosition.x < 288 && MousePosition.y > 32 && MousePosition.y < 308) {
+				QuestlogESC();
+			} else if (qtextflag) {
+				qtextflag = false;
+				stream_stop();
+			} else if (chrflag && MousePosition.x < SPANEL_WIDTH && MousePosition.y < SPANEL_HEIGHT) {
+				CheckChrBtns();
+			} else if (invflag && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) {
+				if (!dropGoldFlag)
+					CheckInvItem(isShiftHeld);
+			} else if (sbookflag && MousePosition.x > RIGHT_PANEL && MousePosition.y < SPANEL_HEIGHT) {
+				CheckSBook();
+			} else if (pcurs >= CURSOR_FIRSTITEM) {
+				if (TryInvPut()) {
+					NetSendCmdPItem(true, CMD_PUTITEM, { cursmx, cursmy });
+					NewCursor(CURSOR_HAND);
+				}
+			} else {
+				if (Players[MyPlayerId]._pStatPts != 0 && !spselflag)
+					CheckLvlBtn();
+				if (!lvlbtndown)
+					return LeftMouseCmd(isShiftHeld);
+			}
+		}
+	} else {
+		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
+			CheckInvScrn(isShiftHeld);
+		DoPanBtn();
+		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
+			NewCursor(CURSOR_HAND);
+	}
+
+	return false;
+}
+
+void LeftMouseUp(int wParam)
+{
+	gmenu_left_mouse(false);
+	control_release_talk_btn();
+	bool isShiftHeld = (wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON)) != 0;
+	if (panbtndown)
+		CheckBtnUp();
+	if (chrbtnactive)
+		ReleaseChrBtns(isShiftHeld);
+	if (lvlbtndown)
+		ReleaseLvlBtn();
+	if (stextflag != STORE_NONE)
+		ReleaseStoreBtn();
+}
+
+void RightMouseDown()
+{
+	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
+		return;
+	}
+
+	if (DoomFlag) {
+		doom_close();
+		return;
+	}
+	if (stextflag != STORE_NONE)
+		return;
+	if (spselflag) {
+		SetSpell();
+		return;
+	}
+	if (MousePosition.y >= SPANEL_HEIGHT
+	    || ((!sbookflag || MousePosition.x <= RIGHT_PANEL)
+	        && !TryIconCurs()
+	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
+		if (pcurs == CURSOR_HAND) {
+			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
+				CheckPlrSpell();
+		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
+			NewCursor(CURSOR_HAND);
+		}
+	}
+}
 
 void FreeGameMem()
 {
