@@ -5158,15 +5158,12 @@ void SyncL1Doors(ObjectStruct &door)
 	}
 
 	door._oMissFlag = true;
+	door._oSelFlag = 2;
 
 	Direction doorSetDirection { Direction::DIR_OMNI };
-	door._oSelFlag = 2;
 	if (currlevel < 17) {
 		if (door._otype == _object_id::OBJ_L1LDOOR) {
-			if (door._oVar1 == 214)
-				ObjSetMicro(door.position, 408);
-			else
-				ObjSetMicro(door.position, 393);
+			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
 			dSpecial[door.position.x][door.position.y] = 7;
 			objects_set_door_piece(door.position + Direction::DIR_NW);
 			doorSetDirection = Direction::DIR_NE;
