@@ -146,7 +146,6 @@ void InitQuestText()
  */
 void InitQTextMsg(_speech_id m)
 {
-	SDL_Log("INIT QTEXT MSG");
 	blockClicks = true;
 	if (Texts[m].scrlltxt) {
 		QuestLogIsOpen = false;
