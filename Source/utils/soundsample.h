@@ -16,7 +16,7 @@ namespace devilution {
  * @param logMin Volume range minimum (usually ATTENUATION_MIN for game sounds and VOLUME_MIN for volume sliders)
  * @param logMax Volume range maximum (usually 0)
  * @return Linear volume in the range [0..1]
-*/
+ */
 float VolumeLogToLinear(int logVolume, int logMin, int logMax);
 
 class SoundSample final {

@@ -103,7 +103,7 @@ uint16_t CircleMenuHintTextColor(bool active)
  * @param out The output buffer to draw on.
  * @param hint Struct describing the text to draw and the dimensions of the layout.
  * @param origin Top left corner of the layout (relative to the output buffer).
-*/
+ */
 void DrawCircleMenuHint(const Surface &out, const CircleMenuHint &hint, const Point &origin)
 {
 	DrawString(out, hint.top, origin + Displacement { hint.xMid - hint.topW / 2, 0 }, CircleMenuHintTextColor(IsTopActive(hint)));

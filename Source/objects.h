@@ -76,7 +76,7 @@ void AddNakrulBook(int a1, int a2, int a3);
  * @brief Spawns an object of the given type at the map coordinates provided
  * @param objType Type specifier
  * @param objPos tile coordinates
-*/
+ */
 void AddObject(_object_id objType, Point objPos);
 void Obj_Trap(int i);
 void ProcessObjects();
@@ -106,7 +106,7 @@ void AddNakrulLeaver();
  *
  * @param s the id of the spell tome
  * @return true if the player has activated all three tomes in the correct order, false otherwise
-*/
+ */
 bool OperateNakrulBook(int s);
 bool objectIsDisabled(int i);
 

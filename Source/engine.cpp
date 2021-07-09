@@ -136,7 +136,7 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
  * @param x2 the x coordinate of p2
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
-*/
+ */
 Direction GetDirection(Point start, Point destination)
 {
 	Direction md = DIR_S;
