@@ -2665,6 +2665,7 @@ void StoreEnter()
 
 		return;
 	}
+
 	blockClicks = true;
 	PlaySFX(IS_TITLSLCT);
 	switch (stextflag) {

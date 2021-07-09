@@ -353,12 +353,10 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 
 void TalkToDeadguy(PlayerStruct &player, TownerStruct & /*deadguy*/)
 {
-	SDL_Log("TALK TO DEADGUY");
 	if (Quests[Q_BUTCHER]._qactive == QUEST_DONE)
 		return;
 
 	if (Quests[Q_BUTCHER]._qvar1 == 1) {
-		SDL_Log("YODETH");
 		player.SaySpecific(HeroSpeech::YourDeathWillBeAvenged);
 		return;
 	}
@@ -870,7 +868,6 @@ void ProcessTowners()
 
 void TalkToTowner(PlayerStruct &player, int t)
 {
-	SDL_Log("TALKTOTOWNER");
 	blockClicks = true;
 	auto &towner = Towners[t];
 

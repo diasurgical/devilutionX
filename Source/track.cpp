@@ -63,9 +63,6 @@ void track_process()
 
 void track_repeat_walk(bool rep)
 {
-	//if (sgbIsWalking == rep)
-	//	return;
-
 	sgbIsWalking = rep;
 	if (rep) {
 		sgbIsScrolling = false;
