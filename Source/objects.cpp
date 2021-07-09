@@ -2278,71 +2278,102 @@ void DoorSet(int oi, Point position)
 {
 	int pn = dPiece[position.x][position.y];
 	if (currlevel < 17) {
-		if (pn == 43)
+		switch (pn) {
+		case 43:
 			ObjSetMicro(position, 392);
-		if (pn == 45)
+			break;
+		case 45:
 			ObjSetMicro(position, 394);
-		if (pn == 50 && Objects[oi]._otype == OBJ_L1LDOOR)
-			ObjSetMicro(position, 411);
-		if (pn == 50 && Objects[oi]._otype == OBJ_L1RDOOR)
-			ObjSetMicro(position, 412);
-		if (pn == 54)
+			break;
+		case 50:
+			if (Objects[oi]._otype == _object_id::OBJ_L1LDOOR)
+				ObjSetMicro(position, 411);
+			else if (Objects[oi]._otype == _object_id::OBJ_L1RDOOR)
+				ObjSetMicro(position, 412);
+			break;
+		case 54:
 			ObjSetMicro(position, 397);
-		if (pn == 55)
+			break;
+		case 55:
 			ObjSetMicro(position, 398);
-		if (pn == 61)
+			break;
+		case 61:
 			ObjSetMicro(position, 399);
-		if (pn == 67)
+			break;
+		case 67:
 			ObjSetMicro(position, 400);
-		if (pn == 68)
+			break;
+		case 68:
 			ObjSetMicro(position, 401);
-		if (pn == 69)
+			break;
+		case 69:
 			ObjSetMicro(position, 403);
-		if (pn == 70)
+			break;
+		case 70:
 			ObjSetMicro(position, 404);
-		if (pn == 72)
+			break;
+		case 72:
 			ObjSetMicro(position, 406);
-		if (pn == 212)
+			break;
+		case 212:
 			ObjSetMicro(position, 407);
-		if (pn == 354)
+			break;
+		case 354:
 			ObjSetMicro(position, 409);
-		if (pn == 355)
+			break;
+		case 355:
 			ObjSetMicro(position, 410);
-		if (pn == 411)
+			break;
+		case 411:
+		case 412:
 			ObjSetMicro(position, 396);
-		if (pn == 412)
-			ObjSetMicro(position, 396);
+			break;
+		}
 	} else {
-		if (pn == 75)
+		switch (pn) {
+		case 75:
 			ObjSetMicro(position, 204);
-		if (pn == 79)
+			break;
+		case 79:
 			ObjSetMicro(position, 208);
-		if (pn == 86 && Objects[oi]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro(position, 232);
-		}
-		if (pn == 86 && Objects[oi]._otype == OBJ_L1RDOOR) {
-			ObjSetMicro(position, 234);
-		}
-		if (pn == 91)
+			break;
+		case 86:
+			if (Objects[oi]._otype == _object_id::OBJ_L1LDOOR) {
+				ObjSetMicro(position, 232);
+			}
+			if (Objects[oi]._otype == _object_id::OBJ_L1RDOOR) {
+				ObjSetMicro(position, 234);
+			}
+			break;
+		case 91:
 			ObjSetMicro(position, 215);
-		if (pn == 93)
+			break;
+		case 93:
 			ObjSetMicro(position, 218);
-		if (pn == 99)
+			break;
+		case 99:
 			ObjSetMicro(position, 220);
-		if (pn == 111)
+			break;
+		case 111:
 			ObjSetMicro(position, 222);
-		if (pn == 113)
+			break;
+		case 113:
 			ObjSetMicro(position, 224);
-		if (pn == 115)
+			break;
+		case 115:
 			ObjSetMicro(position, 226);
-		if (pn == 117)
+			break;
+		case 117:
 			ObjSetMicro(position, 228);
-		if (pn == 119)
+			break;
+		case 119:
 			ObjSetMicro(position, 230);
-		if (pn == 232)
+			break;
+		case 232:
+		case 234:
 			ObjSetMicro(position, 212);
-		if (pn == 234)
-			ObjSetMicro(position, 212);
+			break;
+		}
 	}
 }
 
