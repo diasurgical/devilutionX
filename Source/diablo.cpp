@@ -1653,8 +1653,8 @@ void diablo_pause_game()
 	}
 }
 
-bool gameWasAlreadyPaused = false;
-bool minimizePaused = false;
+bool GameWasAlreadyPaused = false;
+bool MinimizePaused = false;
 
 void diablo_focus_pause()
 {
