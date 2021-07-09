@@ -723,7 +723,7 @@ void AddChestTraps()
 	}
 }
 
-void LoadMapObjects(const char *path, int startx, int starty, int x1, int y1, int w, int h, int leveridx)
+void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int leveridx)
 {
 	LoadingMapObjects = true;
 	ApplyObjectLighting = true;
@@ -741,13 +741,14 @@ void LoadMapObjects(const char *path, int startx, int starty, int x1, int y1, in
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
 
+	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				Point mapPos { startx + 16 + i, starty + 16 + j };
+				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
-				SetObjMapRange(ObjIndex(mapPos), x1, y1, x1 + w, y1 + h, leveridx);
+				SetObjMapRange(ObjIndex(mapPos), mapRange.position.x, mapRange.position.y, mapRange.position.x + mapRange.size.width, mapRange.position.y + mapRange.size.height, leveridx);
 			}
 		}
 	}
@@ -756,7 +757,7 @@ void LoadMapObjects(const char *path, int startx, int starty, int x1, int y1, in
 	LoadingMapObjects = false;
 }
 
-void LoadMapObjs(const char *path, int startx, int starty)
+void LoadMapObjs(const char *path, Point start)
 {
 	LoadingMapObjects = true;
 	ApplyObjectLighting = true;
@@ -774,11 +775,12 @@ void LoadMapObjs(const char *path, int startx, int starty)
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
 
+	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], { startx + 16 + i, starty + 16 + j });
+				AddObject(ObjTypeConv[objectId], start + Displacement { i, j });
 			}
 		}
 	}
@@ -789,9 +791,9 @@ void LoadMapObjs(const char *path, int startx, int starty)
 
 void AddDiabObjs()
 {
-	LoadMapObjects("Levels\\L4Data\\diab1.DUN", 2 * diabquad1x, 2 * diabquad1y, diabquad2x, diabquad2y, 11, 12, 1);
-	LoadMapObjects("Levels\\L4Data\\diab2a.DUN", 2 * diabquad2x, 2 * diabquad2y, diabquad3x, diabquad3y, 11, 11, 2);
-	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", 2 * diabquad3x, 2 * diabquad3y, diabquad4x, diabquad4y, 9, 9, 3);
+	LoadMapObjects("Levels\\L4Data\\diab1.DUN", { 2 * diabquad1x, 2 * diabquad1y }, { diabquad2x, diabquad2y, 11, 12 }, 1);
+	LoadMapObjects("Levels\\L4Data\\diab2a.DUN", { 2 * diabquad2x, 2 * diabquad2y }, { diabquad3x, diabquad3y, 11, 11 }, 2);
+	LoadMapObjects("Levels\\L4Data\\diab3a.DUN", { 2 * diabquad3x, 2 * diabquad3y }, { diabquad4x, diabquad4y, 9, 9 }, 3);
 }
 
 void AddCryptStoryBook(int s)
@@ -1061,7 +1063,7 @@ void InitObjects()
 				}
 				Quests[Q_BLIND]._qmsg = spId;
 				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, spId);
-				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", 2 * setpc_x, 2 * setpc_y);
+				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
 			if (QuestStatus(Q_BLOOD)) {
 				_speech_id spId;
@@ -1120,7 +1122,7 @@ void InitObjects()
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
 				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, spId);
-				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", 2 * setpc_x, 2 * setpc_y);
+				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
 			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
 				AddLazStand();
@@ -2192,7 +2194,6 @@ void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
 
-	// TODO pos * 2 + {16,16} should be a function so it can be reused, see ObjChangeMap*
 	Point megaOrigin = position * 2 + Displacement { 16, 16 };
 
 	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
@@ -3206,7 +3207,7 @@ void OperatePedistal(int pnum, int i)
 		if (!deltaload)
 			PlaySfxLoc(LS_BLODSTAR, Objects[i].position);
 		ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
+		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", { 2 * setpc_x, 2 * setpc_y });
 		SpawnUnique(UITEM_ARMOFVAL, Point { setpc_x, setpc_y } * 2 + Displacement { 25, 19 });
 		Objects[i]._oSelFlag = 0;
 	}
@@ -5207,7 +5208,7 @@ void SyncPedistal(int i)
 	}
 	if (Objects[i]._oVar6 == 3) {
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", 2 * setpc_x, 2 * setpc_y);
+		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", { 2 * setpc_x, 2 * setpc_y });
 	}
 }
 
