@@ -5212,22 +5212,22 @@ void SyncPedistal(int i)
 	}
 }
 
-void SyncL2Doors(int i)
+void SyncL2Doors(ObjectStruct &door)
 {
-	Objects[i]._oMissFlag = Objects[i]._oVar4 != 0;
-	int x = Objects[i].position.x;
-	int y = Objects[i].position.y;
-	Objects[i]._oSelFlag = 2;
-	if (Objects[i]._otype == OBJ_L2LDOOR && Objects[i]._oVar4 == 0) {
+	door._oMissFlag = door._oVar4 != 0;
+	int x = door.position.x;
+	int y = door.position.y;
+	door._oSelFlag = 2;
+	if (door._otype == OBJ_L2LDOOR && door._oVar4 == 0) {
 		ObjSetMicro({ x, y }, 538);
 		dSpecial[x][y] = 0;
-	} else if (Objects[i]._otype == OBJ_L2LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
+	} else if (door._otype == OBJ_L2LDOOR && (door._oVar4 == 1 || door._oVar4 == 2)) {
 		ObjSetMicro({ x, y }, 13);
 		dSpecial[x][y] = 5;
-	} else if (Objects[i]._otype == OBJ_L2RDOOR && Objects[i]._oVar4 == 0) {
+	} else if (door._otype == OBJ_L2RDOOR && door._oVar4 == 0) {
 		ObjSetMicro({ x, y }, 540);
 		dSpecial[x][y] = 0;
-	} else if (Objects[i]._otype == OBJ_L2RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
+	} else if (door._otype == OBJ_L2RDOOR && (door._oVar4 == 1 || door._oVar4 == 2)) {
 		ObjSetMicro({ x, y }, 17);
 		dSpecial[x][y] = 6;
 	}
@@ -5271,7 +5271,7 @@ void SyncObjectAnim(int o)
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		SyncL2Doors(o);
+		SyncL2Doors(Objects[o]);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
