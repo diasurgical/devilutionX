@@ -5233,20 +5233,20 @@ void SyncL2Doors(int i)
 	}
 }
 
-void SyncL3Doors(int i)
+void SyncL3Doors(ObjectStruct &door)
 {
-	Objects[i]._oMissFlag = true;
-	Objects[i]._oSelFlag = 2;
+	door._oMissFlag = true;
+	door._oSelFlag = 2;
 
-	bool isLeftDoor = Objects[i]._otype == _object_id::OBJ_L3LDOOR; // otherwise the door is type OBJ_L3RDOOR
+	bool isLeftDoor = door._otype == _object_id::OBJ_L3LDOOR; // otherwise the door is type OBJ_L3RDOOR
 
-	switch (Objects[i]._oVar4) {
+	switch (door._oVar4) {
 	case 0:
-		ObjSetMicro(Objects[i].position, isLeftDoor ? 531 : 534);
+		ObjSetMicro(door.position, isLeftDoor ? 531 : 534);
 		break;
 	case 1:
 	case 2:
-		ObjSetMicro(Objects[i].position, isLeftDoor ? 538 : 541);
+		ObjSetMicro(door.position, isLeftDoor ? 538 : 541);
 		break;
 	}
 }
@@ -5275,7 +5275,7 @@ void SyncObjectAnim(int o)
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		SyncL3Doors(o);
+		SyncL3Doors(Objects[o]);
 		break;
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
