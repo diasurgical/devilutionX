@@ -723,21 +723,6 @@ void AddChestTraps()
 	}
 }
 
-/**
- * @brief Used by the LoadMapObjects routines to translate from "grid" coordinates to "tile" coordinates
- *
- * This appears to be mainly to handle differences in map scale for certain environments where some are
- * based on 2x2 objects and some are 1x1.
- * 
- * @param start Initial location in grid coordinates
- * @param offset Distance from the grid origin
- * @return start + offset + a constant factor of {16, 16}
-*/
-constexpr Point convertToMapPos(Point start, Displacement offset)
-{
-	return start + Displacement { 16, 16 } + offset;
-}
-
 void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int leveridx)
 {
 	LoadingMapObjects = true;
@@ -756,11 +741,12 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
 
+	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				Point mapPos = convertToMapPos(start, { i, j });
+				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
 				SetObjMapRange(ObjIndex(mapPos), mapRange.position.x, mapRange.position.y, mapRange.position.x + mapRange.size.width, mapRange.position.y + mapRange.size.height, leveridx);
 			}
@@ -789,11 +775,12 @@ void LoadMapObjs(const char *path, Point start)
 
 	const uint16_t *objectLayer = &dunData[layer2Offset + width * height * 2];
 
+	start += Displacement { 16, 16 };
 	for (int j = 0; j < height; j++) {
 		for (int i = 0; i < width; i++) {
 			uint8_t objectId = SDL_SwapLE16(objectLayer[j * width + i]);
 			if (objectId != 0) {
-				AddObject(ObjTypeConv[objectId], convertToMapPos(start, { i, j }));
+				AddObject(ObjTypeConv[objectId], start + Displacement { i, j });
 			}
 		}
 	}
@@ -2207,7 +2194,7 @@ void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
 
-	Point megaOrigin = convertToMapPos(position, position - Point { 0, 0 });
+	Point megaOrigin = position * 2 + Displacement { 16, 16 };
 
 	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
 	ObjSetMicro(megaOrigin + DIR_SE, SDL_SwapLE16(mega.micro2) + 1);
