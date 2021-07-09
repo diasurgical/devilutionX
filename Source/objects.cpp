@@ -2180,16 +2180,6 @@ void ObjSetMicro(Point position, int pn)
 	}
 }
 
-void objects_set_door_piece(Point position)
-{
-	int pn = dPiece[position.x][position.y] - 1;
-
-	uint16_t *piece = &pLevelPieces[10 * pn + 8];
-
-	dpiece_defs_map_2[position.x][position.y].mt[0] = SDL_SwapLE16(piece[0]);
-	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
-}
-
 void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
@@ -2272,6 +2262,16 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 			}
 		}
 	}
+}
+
+void objects_set_door_piece(Point position)
+{
+	int pn = dPiece[position.x][position.y] - 1;
+
+	uint16_t *piece = &pLevelPieces[10 * pn + 8];
+
+	dpiece_defs_map_2[position.x][position.y].mt[0] = SDL_SwapLE16(piece[0]);
+	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
 }
 
 void DoorSet(Point position, _object_id doorType)
