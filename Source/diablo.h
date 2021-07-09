@@ -77,7 +77,6 @@ bool TryIconCurs();
 void diablo_pause_game();
 bool PressEscKey();
 void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam);
-void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 void game_loop(bool bStartup);
 void diablo_color_cyc_logic();

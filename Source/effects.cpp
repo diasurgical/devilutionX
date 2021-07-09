@@ -12,18 +12,20 @@
 #include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
+
+int sfxdelay;
+_sfx_id sfxdnum = SFX_NONE;
+
 namespace {
+
 #ifndef DISABLE_STREAMING_SOUNDS
 constexpr bool AllowStreaming = true;
 #else
 constexpr bool AllowStreaming = false;
 #endif
-} // namespace
 
-int sfxdelay;
-_sfx_id sfxdnum = SFX_NONE;
 /** Specifies the sound file and the playback state of the current sound effect. */
-static TSFX *sgpStreamSFX = nullptr;
+TSFX *sgpStreamSFX = nullptr;
 
 /**
  * Monster sound type prefix
@@ -1070,6 +1072,140 @@ TSFX sgSFX[] = {
 	// clang-format on
 };
 
+void StreamPlay(TSFX *pSFX, int lVolume, int lPan)
+{
+	assert(pSFX);
+	assert(pSFX->bFlags & sfx_STREAM);
+	stream_stop();
+
+	if (lVolume >= VOLUME_MIN) {
+		if (lVolume > VOLUME_MAX)
+			lVolume = VOLUME_MAX;
+		if (pSFX->pSnd == nullptr)
+			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
+		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan);
+		sgpStreamSFX = pSFX;
+	}
+}
+
+void StreamUpdate()
+{
+	if (sgpStreamSFX != nullptr && !sgpStreamSFX->pSnd->isPlaying()) {
+		stream_stop();
+	}
+}
+
+bool CalculatePosition(Point soundPosition, int *plVolume, int *plPan)
+{
+	const auto &playerPosition = Players[MyPlayerId].position.tile;
+	const auto delta = soundPosition - playerPosition;
+
+	int pan = (delta.deltaX - delta.deltaY) * 256;
+	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
+
+	int volume = playerPosition.ApproxDistance(soundPosition);
+	volume *= -64;
+
+	if (volume <= ATTENUATION_MIN)
+		return false;
+
+	*plVolume = volume;
+
+	return true;
+}
+
+void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
+{
+	if (Players[MyPlayerId].pLvlLoad != 0 && gbIsMultiplayer) {
+		return;
+	}
+	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
+		return;
+	}
+
+	if ((pSFX->bFlags & (sfx_STREAM | sfx_MISC)) == 0 && pSFX->pSnd != nullptr && pSFX->pSnd->isPlaying()) {
+		return;
+	}
+
+	int lVolume = 0;
+	int lPan = 0;
+	if (loc && !CalculatePosition(position, &lVolume, &lPan)) {
+		return;
+	}
+
+	if ((pSFX->bFlags & sfx_STREAM) != 0) {
+		StreamPlay(pSFX, lVolume, lPan);
+		return;
+	}
+
+	if (pSFX->pSnd == nullptr)
+		pSFX->pSnd = sound_file_load(pSFX->pszName);
+
+	if (pSFX->pSnd != nullptr)
+		snd_play_snd(pSFX->pSnd.get(), lVolume, lPan);
+}
+
+_sfx_id RndSFX(_sfx_id psfx)
+{
+	int nRand;
+
+	switch (psfx) {
+	case PS_WARR69:
+	case PS_MAGE69:
+	case PS_ROGUE69:
+	case PS_MONK69:
+	case PS_SWING:
+	case LS_ACID:
+	case IS_FMAG:
+	case IS_MAGIC:
+	case IS_BHIT:
+		nRand = 2;
+		break;
+	case PS_WARR14:
+	case PS_WARR15:
+	case PS_WARR16:
+	case PS_WARR2:
+	case PS_ROGUE14:
+	case PS_MAGE14:
+	case PS_MONK14:
+		nRand = 3;
+		break;
+	default:
+		return psfx;
+	}
+
+	return static_cast<_sfx_id>(psfx + GenerateRnd(nRand));
+}
+
+void PrivSoundInit(BYTE bLoadMask)
+{
+	if (!gbSndInited) {
+		return;
+	}
+
+	for (auto &sfx : sgSFX) {
+		if (sfx.pSnd != nullptr) {
+			continue;
+		}
+
+		if ((sfx.bFlags & sfx_STREAM) != 0) {
+			continue;
+		}
+
+		if ((sfx.bFlags & bLoadMask) == 0) {
+			continue;
+		}
+
+		if (!gbIsHellfire && (sfx.bFlags & sfx_HELLFIRE) != 0) {
+			continue;
+		}
+
+		sfx.pSnd = sound_file_load(sfx.pszName);
+	}
+}
+
+} // namespace
+
 bool effect_is_playing(int nSFX)
 {
 	TSFX *sfx = &sgSFX[nSFX];
@@ -1087,29 +1223,6 @@ void stream_stop()
 	if (sgpStreamSFX != nullptr) {
 		sgpStreamSFX->pSnd = nullptr;
 		sgpStreamSFX = nullptr;
-	}
-}
-
-static void StreamPlay(TSFX *pSFX, int lVolume, int lPan)
-{
-	assert(pSFX);
-	assert(pSFX->bFlags & sfx_STREAM);
-	stream_stop();
-
-	if (lVolume >= VOLUME_MIN) {
-		if (lVolume > VOLUME_MAX)
-			lVolume = VOLUME_MAX;
-		if (pSFX->pSnd == nullptr)
-			pSFX->pSnd = sound_file_load(pSFX->pszName, AllowStreaming);
-		pSFX->pSnd->DSB.Play(lVolume, sound_get_or_set_sound_volume(1), lPan);
-		sgpStreamSFX = pSFX;
-	}
-}
-
-static void StreamUpdate()
-{
-	if (sgpStreamSFX != nullptr && !sgpStreamSFX->pSnd->isPlaying()) {
-		stream_stop();
 	}
 }
 
@@ -1142,56 +1255,6 @@ void FreeMonsterSnd()
 	}
 }
 
-bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan)
-{
-	const auto &playerPosition = Players[MyPlayerId].position.tile;
-	const auto delta = soundPosition - playerPosition;
-
-	int pan = (delta.deltaX - delta.deltaY) * 256;
-	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
-
-	int volume = playerPosition.ApproxDistance(soundPosition);
-	volume *= -64;
-
-	if (volume <= ATTENUATION_MIN)
-		return false;
-
-	*plVolume = volume;
-
-	return true;
-}
-
-static void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
-{
-	if (Players[MyPlayerId].pLvlLoad != 0 && gbIsMultiplayer) {
-		return;
-	}
-	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
-		return;
-	}
-
-	if ((pSFX->bFlags & (sfx_STREAM | sfx_MISC)) == 0 && pSFX->pSnd != nullptr && pSFX->pSnd->isPlaying()) {
-		return;
-	}
-
-	int lVolume = 0;
-	int lPan = 0;
-	if (loc && !calc_snd_position(position, &lVolume, &lPan)) {
-		return;
-	}
-
-	if ((pSFX->bFlags & sfx_STREAM) != 0) {
-		StreamPlay(pSFX, lVolume, lPan);
-		return;
-	}
-
-	if (pSFX->pSnd == nullptr)
-		pSFX->pSnd = sound_file_load(pSFX->pszName);
-
-	if (pSFX->pSnd != nullptr)
-		snd_play_snd(pSFX->pSnd.get(), lVolume, lPan);
-}
-
 void PlayEffect(int i, int mode)
 {
 	if (Players[MyPlayerId].pLvlLoad != 0) {
@@ -1211,42 +1274,10 @@ void PlayEffect(int i, int mode)
 
 	int lVolume = 0;
 	int lPan = 0;
-	if (!calc_snd_position(Monsters[i].position.tile, &lVolume, &lPan))
+	if (!CalculatePosition(Monsters[i].position.tile, &lVolume, &lPan))
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);
-}
-
-static _sfx_id RndSFX(_sfx_id psfx)
-{
-	int nRand;
-
-	switch (psfx) {
-	case PS_WARR69:
-	case PS_MAGE69:
-	case PS_ROGUE69:
-	case PS_MONK69:
-	case PS_SWING:
-	case LS_ACID:
-	case IS_FMAG:
-	case IS_MAGIC:
-	case IS_BHIT:
-		nRand = 2;
-		break;
-	case PS_WARR14:
-	case PS_WARR15:
-	case PS_WARR16:
-	case PS_WARR2:
-	case PS_ROGUE14:
-	case PS_MAGE14:
-	case PS_MONK14:
-		nRand = 3;
-		break;
-	default:
-		return psfx;
-	}
-
-	return static_cast<_sfx_id>(psfx + GenerateRnd(nRand));
 }
 
 void PlaySFX(_sfx_id psfx)
@@ -1296,33 +1327,6 @@ void effects_cleanup_sfx()
 
 	for (auto &sfx : sgSFX)
 		sfx.pSnd = nullptr;
-}
-
-static void PrivSoundInit(BYTE bLoadMask)
-{
-	if (!gbSndInited) {
-		return;
-	}
-
-	for (auto &sfx : sgSFX) {
-		if (sfx.pSnd != nullptr) {
-			continue;
-		}
-
-		if ((sfx.bFlags & sfx_STREAM) != 0) {
-			continue;
-		}
-
-		if ((sfx.bFlags & bLoadMask) == 0) {
-			continue;
-		}
-
-		if (!gbIsHellfire && (sfx.bFlags & sfx_HELLFIRE) != 0) {
-			continue;
-		}
-
-		sfx.pSnd = sound_file_load(sfx.pszName);
-	}
 }
 
 void sound_init()
@@ -1386,5 +1390,12 @@ int GetSFXLength(int nSFX)
 		    /*stream=*/AllowStreaming && (sgSFX[nSFX].bFlags & sfx_STREAM) != 0);
 	return sgSFX[nSFX].pSnd->DSB.GetLength();
 }
+
+#ifdef RUN_TESTS
+bool TestCalculatePosition(Point soundPosition, int *plVolume, int *plPan)
+{
+	CalculatePosition(soundPosition, plVolume, plPan);
+}
+#endif
 
 } // namespace devilution

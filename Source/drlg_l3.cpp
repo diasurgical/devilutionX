@@ -842,8 +842,6 @@ const BYTE HivePattern42[] = {
 	// clang-format on
 };
 
-} // namespace
-
 static void InitL3Dungeon()
 {
 	memset(dungeon, 0, sizeof(dungeon));
@@ -2474,6 +2472,8 @@ static void DrlgL3Pass3()
 {
 	DRLG_LPass3(8 - 1);
 }
+
+} // namespace
 
 void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 {

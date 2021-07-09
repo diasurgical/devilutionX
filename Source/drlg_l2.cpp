@@ -1610,8 +1610,6 @@ int Patterns[100][10] = {
 	{ 0, 0, 0, 0, 255, 0, 0, 0, 0, 0 },
 };
 
-} // namespace
-
 static bool DrlgL2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sw = miniset[0];
@@ -3187,6 +3185,8 @@ static void LoadL2DungeonData(const uint16_t *dunData)
 		}
 	}
 }
+
+} // namespace
 
 void LoadL2Dungeon(const char *path, int vx, int vy)
 {

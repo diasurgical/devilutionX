@@ -146,7 +146,6 @@ void DrawSpellBook(const Surface &out);
 void CheckSBook();
 void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(char vkey);
-void control_remove_gold(int pnum, int goldIndex);
 void DrawTalkPan(const Surface &out);
 bool control_check_talk_btn();
 void control_release_talk_btn();

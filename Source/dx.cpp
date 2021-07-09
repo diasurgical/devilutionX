@@ -19,11 +19,6 @@
 
 namespace devilution {
 
-int sgdwLockCount;
-#ifdef _DEBUG
-int locktbl[256];
-#endif
-static CCritSect sgMemCrit;
 
 int refreshDelay;
 SDL_Renderer *renderer;
@@ -44,6 +39,12 @@ bool RenderDirectlyToOutputSurface;
 
 namespace {
 
+int sgdwLockCount;
+#ifdef _DEBUG
+int locktbl[256];
+#endif
+static CCritSect sgMemCrit;
+
 bool CanRenderDirectlyToOutputSurface()
 {
 #ifdef USE_SDL1
@@ -59,8 +60,6 @@ bool CanRenderDirectlyToOutputSurface()
 	return false;
 #endif
 }
-
-} // namespace
 
 static void CreateBackBuffer()
 {
@@ -111,17 +110,6 @@ static void CreatePrimarySurface()
 	}
 }
 
-void dx_init()
-{
-#ifndef USE_SDL1
-	SDL_RaiseWindow(ghMainWnd);
-	SDL_ShowWindow(ghMainWnd);
-#endif
-
-	CreatePrimarySurface();
-	palette_init();
-	CreateBackBuffer();
-}
 static void LockBufPriv()
 {
 	sgMemCrit.Enter();
@@ -133,14 +121,6 @@ static void LockBufPriv()
 	sgdwLockCount++;
 }
 
-void lock_buf(int idx) // NOLINT(misc-unused-parameters)
-{
-#ifdef _DEBUG
-	++locktbl[idx];
-#endif
-	LockBufPriv();
-}
-
 static void UnlockBufPriv()
 {
 	if (sgdwLockCount == 0)
@@ -148,6 +128,45 @@ static void UnlockBufPriv()
 
 	sgdwLockCount--;
 	sgMemCrit.Leave();
+}
+
+/**
+ * @brief Limit FPS to avoid high CPU load, use when v-sync isn't available
+ */
+void LimitFrameRate()
+{
+	if (!sgOptions.Graphics.bFPSLimit)
+		return;
+	static uint32_t frameDeadline;
+	uint32_t tc = SDL_GetTicks() * 1000;
+	uint32_t v = 0;
+	if (frameDeadline > tc) {
+		v = tc % refreshDelay;
+		SDL_Delay(v / 1000 + 1); // ceil
+	}
+	frameDeadline = tc + v + refreshDelay;
+}
+
+} // namespace
+
+void dx_init()
+{
+#ifndef USE_SDL1
+	SDL_RaiseWindow(ghMainWnd);
+	SDL_ShowWindow(ghMainWnd);
+#endif
+
+	CreatePrimarySurface();
+	palette_init();
+	CreateBackBuffer();
+}
+
+void lock_buf(int idx) // NOLINT(misc-unused-parameters)
+{
+#ifdef _DEBUG
+	++locktbl[idx];
+#endif
+	LockBufPriv();
 }
 
 void unlock_buf(int idx) // NOLINT(misc-unused-parameters)
@@ -284,23 +303,6 @@ void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 	}
 	SDL_FreeSurface(converted);
 #endif
-}
-
-/**
- * @brief Limit FPS to avoid high CPU load, use when v-sync isn't available
- */
-void LimitFrameRate()
-{
-	if (!sgOptions.Graphics.bFPSLimit)
-		return;
-	static uint32_t frameDeadline;
-	uint32_t tc = SDL_GetTicks() * 1000;
-	uint32_t v = 0;
-	if (frameDeadline > tc) {
-		v = tc % refreshDelay;
-		SDL_Delay(v / 1000 + 1); // ceil
-	}
-	frameDeadline = tc + v + refreshDelay;
 }
 
 void RenderPresent()
