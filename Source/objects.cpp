@@ -5159,37 +5159,37 @@ void SyncL1Doors(ObjectStruct &door)
 
 	door._oMissFlag = true;
 
-	auto doorPosition = door.position;
+	Direction doorSetDirection { Direction::DIR_OMNI };
 	door._oSelFlag = 2;
 	if (currlevel < 17) {
 		if (door._otype == _object_id::OBJ_L1LDOOR) {
 			if (door._oVar1 == 214)
-				ObjSetMicro(doorPosition, 408);
+				ObjSetMicro(door.position, 408);
 			else
-				ObjSetMicro(doorPosition, 393);
-			dSpecial[doorPosition.x][doorPosition.y] = 7;
-			objects_set_door_piece(doorPosition + Direction::DIR_NW);
-			doorPosition.y--;
+				ObjSetMicro(door.position, 393);
+			dSpecial[door.position.x][door.position.y] = 7;
+			objects_set_door_piece(door.position + Direction::DIR_NW);
+			doorSetDirection = Direction::DIR_NE;
 		} else {
-			ObjSetMicro(doorPosition, 395);
-			dSpecial[doorPosition.x][doorPosition.y] = 8;
-			objects_set_door_piece(doorPosition + Direction::DIR_NE);
-			doorPosition.x--;
+			ObjSetMicro(door.position, 395);
+			dSpecial[door.position.x][door.position.y] = 8;
+			objects_set_door_piece(door.position + Direction::DIR_NE);
+			doorSetDirection = Direction::DIR_NW;
 		}
 	} else {
 		if (door._otype == _object_id::OBJ_L1LDOOR) {
-			ObjSetMicro(doorPosition, 206);
-			dSpecial[doorPosition.x][doorPosition.y] = 1;
-			objects_set_door_piece(doorPosition + Direction::DIR_NW);
-			doorPosition.y--;
+			ObjSetMicro(door.position, 206);
+			dSpecial[door.position.x][door.position.y] = 1;
+			objects_set_door_piece(door.position + Direction::DIR_NW);
+			doorSetDirection = Direction::DIR_NE;
 		} else {
-			ObjSetMicro(doorPosition, 209);
-			dSpecial[doorPosition.x][doorPosition.y] = 2;
-			objects_set_door_piece(doorPosition + Direction::DIR_NE);
-			doorPosition.x--;
+			ObjSetMicro(door.position, 209);
+			dSpecial[door.position.x][door.position.y] = 2;
+			objects_set_door_piece(door.position + Direction::DIR_NE);
+			doorSetDirection = Direction::DIR_NW;
 		}
 	}
-	DoorSet(doorPosition, door._otype);
+	DoorSet(door.position + doorSetDirection, door._otype);
 }
 
 void SyncCrux(int i)
