@@ -863,6 +863,61 @@ int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool s
 	return 3;
 }
 
+void CryptRandomSet(const BYTE *miniset, int rndper)
+{
+	int sw = miniset[0];
+	int sh = miniset[1];
+
+	for (int sy = 0; sy < DMAXY - sh; sy++) {
+		for (int sx = 0; sx < DMAXX - sw; sx++) {
+			bool found = true;
+			int ii = 2;
+			for (int yy = 0; yy < sh && found; yy++) {
+				for (int xx = 0; xx < sw && found; xx++) {
+					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
+						found = false;
+					}
+					if (dflags[xx + sx][yy + sy] != 0) {
+						found = false;
+					}
+					ii++;
+				}
+			}
+			int kk = sw * sh + 2;
+			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
+				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
+				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 - NOT A BUG - "fixing" this breaks crypt
+
+				constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
+					return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY) && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY) && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
+				};
+				if (ComparisonWithBoundsCheck({ sx - 1, sy }, { sx - 1, sy })) {
+					found = false;
+				}
+				if (ComparisonWithBoundsCheck({ sx + 1, sy }, { sx - 1, sy })) {
+					found = false;
+				}
+				if (ComparisonWithBoundsCheck({ sx, sy + 1 }, { sx - 1, sy })) {
+					found = false;
+				}
+				if (ComparisonWithBoundsCheck({ sx, sy - 1 }, { sx - 1, sy })) {
+					found = false;
+				}
+			}
+			if (found && GenerateRnd(100) < rndper) {
+				for (int yy = 0; yy < sh; yy++) {
+					for (int xx = 0; xx < sw; xx++) {
+						if (miniset[kk] != 0) {
+							dungeon[xx + sx][yy + sy] = miniset[kk];
+						}
+						kk++;
+					}
+				}
+			}
+		}
+	}
+}
+
 void FillFloor()
 {
 	for (int j = 0; j < DMAXY; j++) {
@@ -877,11 +932,6 @@ void FillFloor()
 			}
 		}
 	}
-}
-
-void CathedralPass3()
-{
-	DRLG_LPass3(22 - 1);
 }
 
 void LoadQuestSetPieces()
@@ -1567,61 +1617,6 @@ void SetCornerRoom(int rx1, int ry1)
 				dungeon[rx1 + i][ry1 + j] = 13;
 			}
 			sp++;
-		}
-	}
-}
-
-void CryptRandomSet(const BYTE *miniset, int rndper)
-{
-	int sw = miniset[0];
-	int sh = miniset[1];
-
-	for (int sy = 0; sy < DMAXY - sh; sy++) {
-		for (int sx = 0; sx < DMAXX - sw; sx++) {
-			bool found = true;
-			int ii = 2;
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = false;
-					}
-					if (dflags[xx + sx][yy + sy] != 0) {
-						found = false;
-					}
-					ii++;
-				}
-			}
-			int kk = sw * sh + 2;
-			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
-				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
-				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 - NOT A BUG - "fixing" this breaks crypt
-
-				constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
-					return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY) && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY) && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
-				};
-				if (ComparisonWithBoundsCheck({ sx - 1, sy }, { sx - 1, sy })) {
-					found = false;
-				}
-				if (ComparisonWithBoundsCheck({ sx + 1, sy }, { sx - 1, sy })) {
-					found = false;
-				}
-				if (ComparisonWithBoundsCheck({ sx, sy + 1 }, { sx - 1, sy })) {
-					found = false;
-				}
-				if (ComparisonWithBoundsCheck({ sx, sy - 1 }, { sx - 1, sy })) {
-					found = false;
-				}
-			}
-			if (found && GenerateRnd(100) < rndper) {
-				for (int yy = 0; yy < sh; yy++) {
-					for (int xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
-					}
-				}
-			}
 		}
 	}
 }
@@ -2437,6 +2432,11 @@ void GenerateCathedralLevel(lvl_entry entry)
 
 	DRLG_Init_Globals();
 	DRLG_CheckQuests(setpc_x, setpc_y);
+}
+
+void CathedralPass3()
+{
+	DRLG_LPass3(22 - 1);
 }
 
 } // namespace
