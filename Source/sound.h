@@ -65,6 +65,8 @@ void music_start(uint8_t nTrack);
 void sound_disable_music(bool disable);
 int sound_get_or_set_music_volume(int volume);
 int sound_get_or_set_sound_volume(int volume);
+void music_mute();
+void music_unmute();
 
 /* data */
 

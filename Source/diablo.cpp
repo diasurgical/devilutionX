@@ -1648,7 +1648,38 @@ void diablo_pause_game()
 			sound_stop();
 			track_repeat_walk(false);
 		}
+
 		force_redraw = 255;
+	}
+}
+
+bool gameWasAlreadyPaused = false;
+bool minimizePaused = false;
+
+void diablo_focus_pause()
+{
+	if (!gbIsMultiplayer) {
+		if (!minimizePaused) {
+			gameWasAlreadyPaused = PauseMode != 0;
+
+			if (!gameWasAlreadyPaused) {
+				PauseMode = 2;
+				sound_stop();
+				track_repeat_walk(false);
+			}
+
+			music_mute();
+			minimizePaused = true;
+		} else {
+			if (!gameWasAlreadyPaused) {
+				PauseMode = 0;
+			}
+
+			music_unmute();
+			minimizePaused = false;
+		}
+		
+		//force_redraw = 255;
 	}
 }
 
