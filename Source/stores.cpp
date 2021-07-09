@@ -2538,6 +2538,7 @@ void StoreESC()
 
 void StoreUp()
 {
+	blockClicks = true;
 	PlaySFX(IS_TITLEMOV);
 	if (stextsel == -1) {
 		return;
@@ -2575,6 +2576,7 @@ void StoreUp()
 
 void StoreDown()
 {
+	blockClicks = true;
 	PlaySFX(IS_TITLEMOV);
 	if (stextsel == -1) {
 		return;
@@ -2612,6 +2614,7 @@ void StoreDown()
 
 void StorePrior()
 {
+	blockClicks = true;
 	PlaySFX(IS_TITLEMOV);
 	if (stextsel != -1 && stextscrl) {
 		if (stextsel == stextup) {
@@ -2627,6 +2630,7 @@ void StorePrior()
 
 void StoreNext()
 {
+	blockClicks = true;
 	PlaySFX(IS_TITLEMOV);
 	if (stextsel != -1 && stextscrl) {
 		if (stextsel == stextdown) {
@@ -2661,7 +2665,7 @@ void StoreEnter()
 
 		return;
 	}
-
+	blockClicks = true;
 	PlaySFX(IS_TITLSLCT);
 	switch (stextflag) {
 	case STORE_SMITH:
@@ -2790,6 +2794,7 @@ void CheckStoreBtn()
 
 void ReleaseStoreBtn()
 {
+	blockClicks = true;
 	stextscrlubtn = -1;
 	stextscrldbtn = -1;
 }

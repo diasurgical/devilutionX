@@ -1384,6 +1384,7 @@ void inv_update_rem_item(int pnum, BYTE iv)
 
 void CheckInvItem(bool isShiftHeld)
 {
+	blockClicks = true;
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(MyPlayerId, MousePosition);
 	} else {

@@ -23,11 +23,19 @@ bool sgbIsWalking;
 
 void track_process()
 {
-	if (!sgbIsWalking)
+	if (blockClicks)
 		return;
-
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
+	int isShift = (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
+	if (sgbMouseDown == CLICK_RIGHT) {
+		RightMouseDown();
+	}
+	if (sgbMouseDown == CLICK_LEFT) {
+		track_repeat_walk(LeftMouseDown(isShift));
+		LeftMouseUp(isShift);
+	}
+	return;
 
 	const auto &player = Players[MyPlayerId];
 
@@ -51,8 +59,8 @@ void track_process()
 
 void track_repeat_walk(bool rep)
 {
-	if (sgbIsWalking == rep)
-		return;
+	//if (sgbIsWalking == rep)
+	//	return;
 
 	sgbIsWalking = rep;
 	if (rep) {

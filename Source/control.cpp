@@ -1144,6 +1144,7 @@ void CheckPanelInfo()
  */
 void CheckBtnUp()
 {
+	blockClicks = true;
 	bool gamemenuOff = true;
 	drawbtnflag = true;
 	panbtndown = false;
@@ -1564,6 +1565,7 @@ void CheckChrBtns()
 
 void ReleaseChrBtns(bool addAllStatPoints)
 {
+	blockClicks = true;
 	chrbtnactive = false;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
 		auto buttonId = static_cast<size_t>(attribute);

@@ -66,6 +66,7 @@ extern bool gbBarbarian;
  */
 extern bool gbQuietMode;
 extern clicktype sgbMouseDown;
+extern bool blockClicks;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
@@ -81,6 +82,10 @@ void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 void game_loop(bool bStartup);
 void diablo_color_cyc_logic();
+
+bool LeftMouseDown(int wParam);
+void LeftMouseUp(int wParam);
+void RightMouseDown();
 
 /* rdata */
 
