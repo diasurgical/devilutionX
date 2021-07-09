@@ -5150,20 +5150,20 @@ void SyncBreakObj(int pnum, int oi)
 		BreakBarrel(pnum, oi, 0, true, false);
 }
 
-void SyncL1Doors(int i)
+void SyncL1Doors(ObjectStruct &door)
 {
-	if (Objects[i]._oVar4 == 0) {
-		Objects[i]._oMissFlag = false;
+	if (door._oVar4 == 0) {
+		door._oMissFlag = false;
 		return;
 	}
 
-	Objects[i]._oMissFlag = true;
+	door._oMissFlag = true;
 
-	auto doorPosition = Objects[i].position;
-	Objects[i]._oSelFlag = 2;
+	auto doorPosition = door.position;
+	door._oSelFlag = 2;
 	if (currlevel < 17) {
-		if (Objects[i]._otype == OBJ_L1LDOOR) {
-			if (Objects[i]._oVar1 == 214)
+		if (door._otype == _object_id::OBJ_L1LDOOR) {
+			if (door._oVar1 == 214)
 				ObjSetMicro(doorPosition, 408);
 			else
 				ObjSetMicro(doorPosition, 393);
@@ -5177,7 +5177,7 @@ void SyncL1Doors(int i)
 			doorPosition.x--;
 		}
 	} else {
-		if (Objects[i]._otype == OBJ_L1LDOOR) {
+		if (door._otype == _object_id::OBJ_L1LDOOR) {
 			ObjSetMicro(doorPosition, 206);
 			dSpecial[doorPosition.x][doorPosition.y] = 1;
 			objects_set_door_piece(doorPosition + Direction::DIR_NW);
@@ -5189,7 +5189,7 @@ void SyncL1Doors(int i)
 			doorPosition.x--;
 		}
 	}
-	DoorSet(doorPosition, Objects[i]._otype);
+	DoorSet(doorPosition, door._otype);
 }
 
 void SyncCrux(int i)
@@ -5297,7 +5297,7 @@ void SyncObjectAnim(int o)
 	switch (Objects[o]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		SyncL1Doors(o);
+		SyncL1Doors(Objects[o]);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
