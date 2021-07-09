@@ -14,7 +14,7 @@ namespace devilution {
  * 
  * @param position The map coordinate to test
  * @return The index of the object at the given position
-*/
+ */
 int ObjIndex(Point position);
 void LoadSetMap();
 

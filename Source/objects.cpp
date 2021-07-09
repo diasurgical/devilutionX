@@ -2362,7 +2362,7 @@ void RedoPlayerVision()
  *
  * @param doorPos Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
-*/
+ */
 static inline bool IsDoorClear(const Point &doorPosition)
 {
 	return dDead[doorPosition.x][doorPosition.y] == 0
@@ -3689,7 +3689,7 @@ bool OperateShrineEerie(int pnum)
  * @param spawnPosition The map tile where the potions will be spawned
  * @return false if the shrine was activated by another player in a multiplayer game and
  *               no changes were made by this instance, true otherwise.
-*/
+ */
 bool OperateShrineDivine(int pnum, Point spawnPosition)
 {
 	if (deltaload)
@@ -3985,7 +3985,7 @@ bool OperateShrineTainted(int pnum)
  * @param spawnPosition Start location for the firewall
  * @return false if the current player did not activate the shrine (i.e. it's a multiplayer
  *         game) and we bailed early to avoid doubling the effects, true otherwise.
-*/
+ */
 bool OperateShrineOily(int pnum, Point spawnPosition)
 {
 	if (deltaload)
@@ -4084,7 +4084,7 @@ bool OperateShrineMendicant(int pnum)
  * @param pnum The player that activated the shrine
  * @param spawnPosition The trap results in casting flash from this location targeting the player
  * @return false if the current player didn't activate the shrine (to avoid doubling the effect), true otherwise
-*/
+ */
 bool OperateShrineSparkling(int pnum, Point spawnPosition)
 {
 	if (deltaload)
@@ -4116,7 +4116,7 @@ bool OperateShrineSparkling(int pnum, Point spawnPosition)
  * @param pnum The player that activated the shrine
  * @param spawnPosition The position of the shrine, the portal will be placed on the side closest to the player
  * @return false if the current player didn't activate the shrine (to avoid doubling the effect), true otherwise
-*/
+ */
 bool OperateShrineTown(int pnum, Point spawnPosition)
 {
 	if (deltaload)

@@ -259,7 +259,7 @@ constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
  * @param x2 the x coordinate of p2
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
-*/
+ */
 Direction16 GetDirection16(Point p1, Point p2)
 {
 	Displacement offset = p2 - p1;
