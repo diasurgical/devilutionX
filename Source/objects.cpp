@@ -2274,7 +2274,7 @@ void objects_set_door_piece(Point position)
 	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
 }
 
-void DoorSet(Point position, _object_id doorType)
+void DoorSet(Point position, bool isLeftDoor)
 {
 	int pn = dPiece[position.x][position.y];
 	if (currlevel < 17) {
@@ -2286,10 +2286,7 @@ void DoorSet(Point position, _object_id doorType)
 			ObjSetMicro(position, 394);
 			break;
 		case 50:
-			if (doorType == _object_id::OBJ_L1LDOOR)
-				ObjSetMicro(position, 411);
-			else if (doorType == _object_id::OBJ_L1RDOOR)
-				ObjSetMicro(position, 412);
+			ObjSetMicro(position, isLeftDoor ? 411 : 412);
 			break;
 		case 54:
 			ObjSetMicro(position, 397);
@@ -2338,12 +2335,7 @@ void DoorSet(Point position, _object_id doorType)
 			ObjSetMicro(position, 208);
 			break;
 		case 86:
-			if (doorType == _object_id::OBJ_L1LDOOR) {
-				ObjSetMicro(position, 232);
-			}
-			if (doorType == _object_id::OBJ_L1RDOOR) {
-				ObjSetMicro(position, 234);
-			}
+			ObjSetMicro(position, isLeftDoor ? 232 : 234);
 			break;
 		case 91:
 			ObjSetMicro(position, 215);
@@ -2431,7 +2423,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NE);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(door.position + Direction::DIR_NW, door._otype);
+		DoorSet(door.position + Direction::DIR_NW, false);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -2512,7 +2504,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NW);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(door.position + Direction::DIR_NE, door._otype);
+		DoorSet(door.position + Direction::DIR_NE, true);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -5211,33 +5203,33 @@ void SyncL1Doors(ObjectStruct &door)
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
 
-	Direction doorSetDirection { Direction::DIR_OMNI };
+	bool isLeftDoor = door._otype == _object_id::OBJ_L1LDOOR; // otherwise the door is type OBJ_L1RDOOR
+
 	if (currlevel < 17) {
-		if (door._otype == _object_id::OBJ_L1LDOOR) {
+		if (isLeftDoor) {
 			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
 			dSpecial[door.position.x][door.position.y] = 7;
 			objects_set_door_piece(door.position + Direction::DIR_NW);
-			doorSetDirection = Direction::DIR_NE;
+			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
 		} else {
 			ObjSetMicro(door.position, 395);
 			dSpecial[door.position.x][door.position.y] = 8;
 			objects_set_door_piece(door.position + Direction::DIR_NE);
-			doorSetDirection = Direction::DIR_NW;
+			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
 		}
 	} else {
-		if (door._otype == _object_id::OBJ_L1LDOOR) {
+		if (isLeftDoor) {
 			ObjSetMicro(door.position, 206);
 			dSpecial[door.position.x][door.position.y] = 1;
 			objects_set_door_piece(door.position + Direction::DIR_NW);
-			doorSetDirection = Direction::DIR_NE;
+			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
 		} else {
 			ObjSetMicro(door.position, 209);
 			dSpecial[door.position.x][door.position.y] = 2;
 			objects_set_door_piece(door.position + Direction::DIR_NE);
-			doorSetDirection = Direction::DIR_NW;
+			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
 		}
 	}
-	DoorSet(door.position + doorSetDirection, door._otype);
 }
 
 void SyncL2Doors(ObjectStruct &door)
