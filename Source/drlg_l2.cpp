@@ -1610,6 +1610,40 @@ int Patterns[100][10] = {
 	{ 0, 0, 0, 0, 255, 0, 0, 0, 0, 0 },
 };
 
+static void DrlgL2Shadows()
+{
+	uint8_t sd[2][2];
+
+	for (int y = 1; y < DMAXY; y++) {
+		for (int x = 1; x < DMAXX; x++) {
+			sd[0][0] = BSTYPESL2[dungeon[x][y]];
+			sd[1][0] = BSTYPESL2[dungeon[x - 1][y]];
+			sd[0][1] = BSTYPESL2[dungeon[x][y - 1]];
+			sd[1][1] = BSTYPESL2[dungeon[x - 1][y - 1]];
+			for (const auto &shadow : SPATSL2) {
+				if (shadow.strig != sd[0][0])
+					continue;
+				if (shadow.s1 != 0 && shadow.s1 != sd[1][1])
+					continue;
+				if (shadow.s2 != 0 && shadow.s2 != sd[0][1])
+					continue;
+				if (shadow.s3 != 0 && shadow.s3 != sd[1][0])
+					continue;
+
+				if (shadow.nv1 != 0) {
+					dungeon[x - 1][y - 1] = shadow.nv1;
+				}
+				if (shadow.nv2 != 0) {
+					dungeon[x][y - 1] = shadow.nv2;
+				}
+				if (shadow.nv3 != 0) {
+					dungeon[x - 1][y] = shadow.nv3;
+				}
+			}
+		}
+	}
+}
+
 static bool DrlgL2PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
 	int sw = miniset[0];
@@ -1735,86 +1769,6 @@ static void DrlgL2PlaceRndSet(const BYTE *miniset, int rndper)
 	}
 }
 
-static void DrlgL2Subs()
-{
-	for (int y = 0; y < DMAXY; y++) {
-		for (int x = 0; x < DMAXX; x++) {
-			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && GenerateRnd(4) == 0) {
-				uint8_t c = BTYPESL2[dungeon[x][y]];
-				if (c != 0) {
-					int rv = GenerateRnd(16);
-					int k = -1;
-					while (rv >= 0) {
-						k++;
-						if (k == sizeof(BTYPESL2)) {
-							k = 0;
-						}
-						if (c == BTYPESL2[k]) {
-							rv--;
-						}
-					}
-					int j;
-					for (j = y - 2; j < y + 2; j++) {
-						for (int i = x - 2; i < x + 2; i++) {
-							if (dungeon[i][j] == k) {
-								j = y + 3;
-								i = x + 2;
-							}
-						}
-					}
-					if (j < y + 3) {
-						dungeon[x][y] = k;
-					}
-				}
-			}
-		}
-	}
-}
-
-static void DrlgL2Shadows()
-{
-	uint8_t sd[2][2];
-
-	for (int y = 1; y < DMAXY; y++) {
-		for (int x = 1; x < DMAXX; x++) {
-			sd[0][0] = BSTYPESL2[dungeon[x][y]];
-			sd[1][0] = BSTYPESL2[dungeon[x - 1][y]];
-			sd[0][1] = BSTYPESL2[dungeon[x][y - 1]];
-			sd[1][1] = BSTYPESL2[dungeon[x - 1][y - 1]];
-			for (const auto &shadow : SPATSL2) {
-				if (shadow.strig != sd[0][0])
-					continue;
-				if (shadow.s1 != 0 && shadow.s1 != sd[1][1])
-					continue;
-				if (shadow.s2 != 0 && shadow.s2 != sd[0][1])
-					continue;
-				if (shadow.s3 != 0 && shadow.s3 != sd[1][0])
-					continue;
-
-				if (shadow.nv1 != 0) {
-					dungeon[x - 1][y - 1] = shadow.nv1;
-				}
-				if (shadow.nv2 != 0) {
-					dungeon[x][y - 1] = shadow.nv2;
-				}
-				if (shadow.nv3 != 0) {
-					dungeon[x - 1][y] = shadow.nv3;
-				}
-			}
-		}
-	}
-}
-
-void InitDungeon()
-{
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			predungeon[i][j] = 32;
-			dflags[i][j] = 0;
-		}
-	}
-}
-
 static void DrlgLoadL2SetPiece()
 {
 	setloadflag = false;
@@ -1838,28 +1792,59 @@ static void DrlgFreeL2SetPiece()
 	pSetPiece = nullptr;
 }
 
-static void DrlgL2SetRoom(int rx1, int ry1)
+static void DrlgInitL2Vals()
 {
-	int width = SDL_SwapLE16(pSetPiece[0]);
-	int height = SDL_SwapLE16(pSetPiece[1]);
+	int8_t pc;
 
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = width;
-	setpc_h = height;
-
-	uint16_t *tileLayer = &pSetPiece[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
-			if (tileId != 0) {
-				dungeon[i + rx1][j + ry1] = tileId;
-				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (IsAnyOf(dPiece[i][j], 541, 178, 551)) {
+				pc = 5;
+			} else if (IsAnyOf(dPiece[i][j], 542, 553)) {
+				pc = 6;
 			} else {
-				dungeon[i + rx1][j + ry1] = 3;
+				continue;
+			}
+			dSpecial[i][j] = pc;
+		}
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] == 132) {
+				dSpecial[i][j + 1] = 2;
+				dSpecial[i][j + 2] = 1;
+			} else if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
+				dSpecial[i + 1][j] = 3;
+				dSpecial[i + 2][j] = 4;
 			}
 		}
+	}
+}
+
+void InitDungeon()
+{
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			predungeon[i][j] = 32;
+			dflags[i][j] = 0;
+		}
+	}
+}
+
+static void DL2DrawRoom(int x1, int y1, int x2, int y2)
+{
+	for (int jj = y1; jj <= y2; jj++) {
+		for (int ii = x1; ii <= x2; ii++) {
+			predungeon[ii][jj] = 46;
+		}
+	}
+	for (int jj = y1; jj <= y2; jj++) {
+		predungeon[x1][jj] = 35;
+		predungeon[x2][jj] = 35;
+	}
+	for (int ii = x1; ii <= x2; ii++) {
+		predungeon[ii][y1] = 35;
+		predungeon[ii][y2] = 35;
 	}
 }
 
@@ -2312,6 +2297,67 @@ static void L2TileFix()
 	}
 }
 
+static void DrlgL2Subs()
+{
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && GenerateRnd(4) == 0) {
+				uint8_t c = BTYPESL2[dungeon[x][y]];
+				if (c != 0) {
+					int rv = GenerateRnd(16);
+					int k = -1;
+					while (rv >= 0) {
+						k++;
+						if (k == sizeof(BTYPESL2)) {
+							k = 0;
+						}
+						if (c == BTYPESL2[k]) {
+							rv--;
+						}
+					}
+					int j;
+					for (j = y - 2; j < y + 2; j++) {
+						for (int i = x - 2; i < x + 2; i++) {
+							if (dungeon[i][j] == k) {
+								j = y + 3;
+								i = x + 2;
+							}
+						}
+					}
+					if (j < y + 3) {
+						dungeon[x][y] = k;
+					}
+				}
+			}
+		}
+	}
+}
+
+static void DrlgL2SetRoom(int rx1, int ry1)
+{
+	int width = SDL_SwapLE16(pSetPiece[0]);
+	int height = SDL_SwapLE16(pSetPiece[1]);
+
+	setpc_x = rx1;
+	setpc_y = ry1;
+	setpc_w = width;
+	setpc_h = height;
+
+	uint16_t *tileLayer = &pSetPiece[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[i + rx1][j + ry1] = tileId;
+				dflags[i + rx1][j + ry1] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i + rx1][j + ry1] = 3;
+			}
+		}
+	}
+}
+
 static bool DL2Cont(bool x1f, bool y1f, bool x2f, bool y2f)
 {
 	if (x1f && x2f && y1f && y2f) {
@@ -2339,23 +2385,6 @@ static int DL2NumNoChar()
 	}
 
 	return t;
-}
-
-static void DL2DrawRoom(int x1, int y1, int x2, int y2)
-{
-	for (int jj = y1; jj <= y2; jj++) {
-		for (int ii = x1; ii <= x2; ii++) {
-			predungeon[ii][jj] = 46;
-		}
-	}
-	for (int jj = y1; jj <= y2; jj++) {
-		predungeon[x1][jj] = 35;
-		predungeon[x2][jj] = 35;
-	}
-	for (int ii = x1; ii <= x2; ii++) {
-		predungeon[ii][y1] = 35;
-		predungeon[ii][y2] = 35;
-	}
 }
 
 static void DL2KnockWalls(int x1, int y1, int x2, int y2)
@@ -2728,7 +2757,7 @@ static bool CreateDungeon()
 		}
 	}
 
-	if (!DL2FillVoids()) {
+	if (!FillVoids()) {
 		return false;
 	}
 
@@ -2739,11 +2768,6 @@ static bool CreateDungeon()
 	}
 
 	return true;
-}
-
-static void DrlgL2Pass3()
-{
-	DRLG_LPass3(12 - 1);
 }
 
 static void DrlgL2FTransparencyValueR(int i, int j, int x, int y, int d)
@@ -3118,35 +3142,6 @@ static void DrlgL2(lvl_entry entry)
 	DRLG_CheckQuests(nSx1, nSy1);
 }
 
-static void DrlgInitL2Vals()
-{
-	int8_t pc;
-
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
-			if (IsAnyOf(dPiece[i][j], 541, 178, 551)) {
-				pc = 5;
-			} else if (IsAnyOf(dPiece[i][j], 542, 553)) {
-				pc = 6;
-			} else {
-				continue;
-			}
-			dSpecial[i][j] = pc;
-		}
-	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 132) {
-				dSpecial[i][j + 1] = 2;
-				dSpecial[i][j + 2] = 1;
-			} else if (dPiece[i][j] == 135 || dPiece[i][j] == 139) {
-				dSpecial[i + 1][j] = 3;
-				dSpecial[i + 2][j] = 4;
-			}
-		}
-	}
-}
-
 static void LoadL2DungeonData(const uint16_t *dunData)
 {
 	InitDungeon();
@@ -3184,6 +3179,11 @@ static void LoadL2DungeonData(const uint16_t *dunData)
 			}
 		}
 	}
+}
+
+static void DrlgL2Pass3()
+{
+	DRLG_LPass3(12 - 1);
 }
 
 } // namespace

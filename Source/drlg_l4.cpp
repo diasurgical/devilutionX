@@ -168,17 +168,86 @@ static void DrlgL4Shadows()
 	}
 }
 
-static void InitL4Dungeon()
+static bool DrlgL4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
-	memset(dung, 0, sizeof(dung));
-	memset(L4dungeon, 0, sizeof(L4dungeon));
+	int sx;
+	int sy;
 
-	for (int j = 0; j < DMAXY; j++) {
-		for (int i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 30;
-			dflags[i][j] = 0;
+	int sw = miniset[0];
+	int sh = miniset[1];
+
+	int numt = 1;
+	if (tmax - tmin != 0) {
+		numt = GenerateRnd(tmax - tmin) + tmin;
+	}
+
+	for (int i = 0; i < numt; i++) {
+		sx = GenerateRnd(DMAXX - sw);
+		sy = GenerateRnd(DMAXY - sh);
+		bool found = false;
+		int bailcnt;
+		for (bailcnt = 0; !found && bailcnt < 200; bailcnt++) {
+			found = true;
+			if (sx >= SP4x1 && sx <= SP4x2 && sy >= SP4y1 && sy <= SP4y2) {
+				found = false;
+			}
+			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
+				sx = GenerateRnd(DMAXX - sw);
+				sy = GenerateRnd(DMAXY - sh);
+				found = false;
+			}
+			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
+				sx = GenerateRnd(DMAXX - sw);
+				sy = GenerateRnd(DMAXY - sh);
+				found = false;
+			}
+			int ii = 2;
+			for (int yy = 0; yy < sh && found; yy++) {
+				for (int xx = 0; xx < sw && found; xx++) {
+					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
+						found = false;
+					}
+					if (dflags[xx + sx][yy + sy] != 0) {
+						found = false;
+					}
+					ii++;
+				}
+			}
+			if (!found) {
+				sx++;
+				if (sx == DMAXX - sw) {
+					sx = 0;
+					sy++;
+					if (sy == DMAXY - sh) {
+						sy = 0;
+					}
+				}
+			}
+		}
+		if (bailcnt >= 200) {
+			return false;
+		}
+		int ii = sw * sh + 2;
+		for (int yy = 0; yy < sh; yy++) {
+			for (int xx = 0; xx < sw; xx++) {
+				if (miniset[ii] != 0) {
+					dungeon[xx + sx][yy + sy] = miniset[ii];
+					dflags[xx + sx][yy + sy] |= 8;
+				}
+				ii++;
+			}
 		}
 	}
+
+	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
+		Quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
+	}
+	if (setview) {
+		ViewX = 2 * sx + 21;
+		ViewY = 2 * sy + 22;
+	}
+
+	return true;
 }
 
 void DRLG_LoadL4SP()
@@ -197,6 +266,19 @@ void DRLG_LoadL4SP()
 void DRLG_FreeL4SP()
 {
 	pSetPiece = nullptr;
+}
+
+static void InitL4Dungeon()
+{
+	memset(dung, 0, sizeof(dung));
+	memset(L4dungeon, 0, sizeof(L4dungeon));
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			dungeon[i][j] = 30;
+			dflags[i][j] = 0;
+		}
+	}
 }
 
 void DRLG_L4SetRoom(const uint16_t *dunData, int rx1, int ry1)
@@ -219,6 +301,139 @@ void DRLG_L4SetRoom(const uint16_t *dunData, int rx1, int ry1)
 	}
 }
 
+static void L4drawRoom(int x, int y, int width, int height)
+{
+	for (int j = 0; j < height && j + y < 20; j++) {
+		for (int i = 0; i < width && i + x < 20; i++) {
+			dung[i + x][j + y] = 1;
+		}
+	}
+}
+
+static bool L4checkRoom(int x, int y, int width, int height)
+{
+	if (x <= 0 || y <= 0) {
+		return false;
+	}
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			if (i + x < 0 || i + x >= 20 || j + y < 0 || j + y >= 20) {
+				return false;
+			}
+			if (dung[i + x][j + y] != 0) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+static void L4roomGen(int x, int y, int w, int h, int dir)
+{
+	bool ran;
+	int dirProb = GenerateRnd(4);
+	int num = 0;
+
+	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
+		int cw;
+		int ch;
+		int cx1;
+		int cy1;
+		do {
+			cw = (GenerateRnd(5) + 2) & ~1;
+			ch = (GenerateRnd(5) + 2) & ~1;
+			cy1 = h / 2 + y - ch / 2;
+			cx1 = x - cw;
+			ran = L4checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
+			num++;
+		} while (!ran && num < 20);
+
+		if (ran)
+			L4drawRoom(cx1, cy1, cw, ch);
+		int cx2 = x + w;
+		bool ran2 = L4checkRoom(cx2, cy1 - 1, cw + 1, ch + 2);
+		if (ran2)
+			L4drawRoom(cx2, cy1, cw, ch);
+		if (ran)
+			L4roomGen(cx1, cy1, cw, ch, 1);
+		if (ran2)
+			L4roomGen(cx2, cy1, cw, ch, 1);
+		return;
+	}
+
+	int width;
+	int height;
+	int rx;
+	int ry;
+	do {
+		width = (GenerateRnd(5) + 2) & ~1;
+		height = (GenerateRnd(5) + 2) & ~1;
+		rx = w / 2 + x - width / 2;
+		ry = y - height;
+		ran = L4checkRoom(rx - 1, ry - 1, width + 2, height + 1);
+		num++;
+	} while (!ran && num < 20);
+
+	if (ran)
+		L4drawRoom(rx, ry, width, height);
+	int ry2 = y + h;
+	bool ran2 = L4checkRoom(rx - 1, ry2, width + 2, height + 1);
+	if (ran2)
+		L4drawRoom(rx, ry2, width, height);
+	if (ran)
+		L4roomGen(rx, ry, width, height, 0);
+	if (ran2)
+		L4roomGen(rx, ry2, width, height, 0);
+}
+
+static void L4firstRoom()
+{
+	int w = 14;
+	int h = 14;
+	if (currlevel != 16) {
+		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
+			assert(!gbIsMultiplayer);
+			w = 11;
+			h = 11;
+		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
+			w = 11;
+			h = 11;
+		} else {
+			w = GenerateRnd(5) + 2;
+			h = GenerateRnd(5) + 2;
+		}
+	}
+
+	int xmin = (20 - w) / 2;
+	int xmax = 19 - w;
+	int x = GenerateRnd(xmax - xmin + 1) + xmin;
+
+	int ymin = (20 - h) / 2;
+	int ymax = 19 - h;
+	int y = GenerateRnd(ymax - ymin + 1) + ymin;
+
+	if (currlevel == 16) {
+		l4holdx = x;
+		l4holdy = y;
+	}
+	if (QuestStatus(Q_WARLORD) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+		SP4x1 = x + 1;
+		SP4y1 = y + 1;
+		SP4x2 = SP4x1 + w;
+		SP4y2 = SP4y1 + h;
+	} else {
+		SP4x1 = 0;
+		SP4y1 = 0;
+		SP4x2 = 0;
+		SP4y2 = 0;
+	}
+
+	L4drawRoom(x, y, w, h);
+	L4roomGen(x, y, w, h, GenerateRnd(2));
+}
+
 void DRLG_L4SetSPRoom(int rx1, int ry1)
 {
 	setpc_x = rx1;
@@ -227,6 +442,50 @@ void DRLG_L4SetSPRoom(int rx1, int ry1)
 	setpc_h = SDL_SwapLE16(pSetPiece[1]);
 
 	DRLG_L4SetRoom(pSetPiece.get(), rx1, ry1);
+}
+
+static void L4makeDungeon()
+{
+	for (int j = 0; j < 20; j++) {
+		for (int i = 0; i < 20; i++) {
+			int k = i * 2;
+			int l = j * 2;
+			L4dungeon[k][l] = dung[i][j];
+			L4dungeon[k][l + 1] = dung[i][j];
+			L4dungeon[k + 1][l] = dung[i][j];
+			L4dungeon[k + 1][l + 1] = dung[i][j];
+		}
+	}
+	for (int j = 0; j < 20; j++) {
+		for (int i = 0; i < 20; i++) {
+			int k = i * 2;
+			int l = j * 2;
+			L4dungeon[k][l + 40] = dung[i][19 - j];
+			L4dungeon[k][l + 41] = dung[i][19 - j];
+			L4dungeon[k + 1][l + 40] = dung[i][19 - j];
+			L4dungeon[k + 1][l + 41] = dung[i][19 - j];
+		}
+	}
+	for (int j = 0; j < 20; j++) {
+		for (int i = 0; i < 20; i++) {
+			int k = i * 2;
+			int l = j * 2;
+			L4dungeon[k + 40][l] = dung[19 - i][j];
+			L4dungeon[k + 40][l + 1] = dung[19 - i][j];
+			L4dungeon[k + 41][l] = dung[19 - i][j];
+			L4dungeon[k + 41][l + 1] = dung[19 - i][j];
+		}
+	}
+	for (int j = 0; j < 20; j++) {
+		for (int i = 0; i < 20; i++) {
+			int k = i * 2;
+			int l = j * 2;
+			L4dungeon[k + 40][l + 40] = dung[19 - i][19 - j];
+			L4dungeon[k + 40][l + 41] = dung[19 - i][19 - j];
+			L4dungeon[k + 41][l + 40] = dung[19 - i][19 - j];
+			L4dungeon[k + 41][l + 41] = dung[19 - i][19 - j];
+		}
+	}
 }
 
 static void L4makeDmt()
@@ -778,50 +1037,6 @@ static void DrlgL4Subs()
 	}
 }
 
-static void L4makeDungeon()
-{
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k][l] = dung[i][j];
-			L4dungeon[k][l + 1] = dung[i][j];
-			L4dungeon[k + 1][l] = dung[i][j];
-			L4dungeon[k + 1][l + 1] = dung[i][j];
-		}
-	}
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k][l + 40] = dung[i][19 - j];
-			L4dungeon[k][l + 41] = dung[i][19 - j];
-			L4dungeon[k + 1][l + 40] = dung[i][19 - j];
-			L4dungeon[k + 1][l + 41] = dung[i][19 - j];
-		}
-	}
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k + 40][l] = dung[19 - i][j];
-			L4dungeon[k + 40][l + 1] = dung[19 - i][j];
-			L4dungeon[k + 41][l] = dung[19 - i][j];
-			L4dungeon[k + 41][l + 1] = dung[19 - i][j];
-		}
-	}
-	for (int j = 0; j < 20; j++) {
-		for (int i = 0; i < 20; i++) {
-			int k = i * 2;
-			int l = j * 2;
-			L4dungeon[k + 40][l + 40] = dung[19 - i][19 - j];
-			L4dungeon[k + 40][l + 41] = dung[19 - i][19 - j];
-			L4dungeon[k + 41][l + 40] = dung[19 - i][19 - j];
-			L4dungeon[k + 41][l + 41] = dung[19 - i][19 - j];
-		}
-	}
-}
-
 static void UShape()
 {
 	for (int j = 19; j >= 0; j--) {
@@ -916,139 +1131,6 @@ static int GetArea()
 	return rv;
 }
 
-static void L4drawRoom(int x, int y, int width, int height)
-{
-	for (int j = 0; j < height && j + y < 20; j++) {
-		for (int i = 0; i < width && i + x < 20; i++) {
-			dung[i + x][j + y] = 1;
-		}
-	}
-}
-
-static bool L4checkRoom(int x, int y, int width, int height)
-{
-	if (x <= 0 || y <= 0) {
-		return false;
-	}
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			if (i + x < 0 || i + x >= 20 || j + y < 0 || j + y >= 20) {
-				return false;
-			}
-			if (dung[i + x][j + y] != 0) {
-				return false;
-			}
-		}
-	}
-
-	return true;
-}
-
-static void L4roomGen(int x, int y, int w, int h, int dir)
-{
-	bool ran;
-	int dirProb = GenerateRnd(4);
-	int num = 0;
-
-	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
-		int cw;
-		int ch;
-		int cx1;
-		int cy1;
-		do {
-			cw = (GenerateRnd(5) + 2) & ~1;
-			ch = (GenerateRnd(5) + 2) & ~1;
-			cy1 = h / 2 + y - ch / 2;
-			cx1 = x - cw;
-			ran = L4checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
-			num++;
-		} while (!ran && num < 20);
-
-		if (ran)
-			L4drawRoom(cx1, cy1, cw, ch);
-		int cx2 = x + w;
-		bool ran2 = L4checkRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2)
-			L4drawRoom(cx2, cy1, cw, ch);
-		if (ran)
-			L4roomGen(cx1, cy1, cw, ch, 1);
-		if (ran2)
-			L4roomGen(cx2, cy1, cw, ch, 1);
-		return;
-	}
-
-	int width;
-	int height;
-	int rx;
-	int ry;
-	do {
-		width = (GenerateRnd(5) + 2) & ~1;
-		height = (GenerateRnd(5) + 2) & ~1;
-		rx = w / 2 + x - width / 2;
-		ry = y - height;
-		ran = L4checkRoom(rx - 1, ry - 1, width + 2, height + 1);
-		num++;
-	} while (!ran && num < 20);
-
-	if (ran)
-		L4drawRoom(rx, ry, width, height);
-	int ry2 = y + h;
-	bool ran2 = L4checkRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2)
-		L4drawRoom(rx, ry2, width, height);
-	if (ran)
-		L4roomGen(rx, ry, width, height, 0);
-	if (ran2)
-		L4roomGen(rx, ry2, width, height, 0);
-}
-
-static void L4firstRoom()
-{
-	int w = 14;
-	int h = 14;
-	if (currlevel != 16) {
-		if (currlevel == Quests[Q_WARLORD]._qlevel && Quests[Q_WARLORD]._qactive != QUEST_NOTAVAIL) {
-			assert(!gbIsMultiplayer);
-			w = 11;
-			h = 11;
-		} else if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
-			w = 11;
-			h = 11;
-		} else {
-			w = GenerateRnd(5) + 2;
-			h = GenerateRnd(5) + 2;
-		}
-	}
-
-	int xmin = (20 - w) / 2;
-	int xmax = 19 - w;
-	int x = GenerateRnd(xmax - xmin + 1) + xmin;
-
-	int ymin = (20 - h) / 2;
-	int ymax = 19 - h;
-	int y = GenerateRnd(ymax - ymin + 1) + ymin;
-
-	if (currlevel == 16) {
-		l4holdx = x;
-		l4holdy = y;
-	}
-	if (QuestStatus(Q_WARLORD) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
-		SP4x1 = x + 1;
-		SP4y1 = y + 1;
-		SP4x2 = SP4x1 + w;
-		SP4y2 = SP4y1 + h;
-	} else {
-		SP4x1 = 0;
-		SP4y1 = 0;
-		SP4x2 = 0;
-		SP4y2 = 0;
-	}
-
-	L4drawRoom(x, y, w, h);
-	L4roomGen(x, y, w, h, GenerateRnd(2));
-}
-
 void L4SaveQuads()
 {
 	int x = l4holdx;
@@ -1090,88 +1172,6 @@ void DRLG_LoadDiabQuads(bool preflag)
 		diabquad4y = 28 - l4holdy;
 		DRLG_L4SetRoom(dunData.get(), diabquad4x, diabquad4y);
 	}
-}
-
-static bool DrlgL4PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
-{
-	int sx;
-	int sy;
-
-	int sw = miniset[0];
-	int sh = miniset[1];
-
-	int numt = 1;
-	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
-	}
-
-	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
-		bool found = false;
-		int bailcnt;
-		for (bailcnt = 0; !found && bailcnt < 200; bailcnt++) {
-			found = true;
-			if (sx >= SP4x1 && sx <= SP4x2 && sy >= SP4y1 && sy <= SP4y2) {
-				found = false;
-			}
-			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				found = false;
-			}
-			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
-				found = false;
-			}
-			int ii = 2;
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = false;
-					}
-					if (dflags[xx + sx][yy + sy] != 0) {
-						found = false;
-					}
-					ii++;
-				}
-			}
-			if (!found) {
-				sx++;
-				if (sx == DMAXX - sw) {
-					sx = 0;
-					sy++;
-					if (sy == DMAXY - sh) {
-						sy = 0;
-					}
-				}
-			}
-		}
-		if (bailcnt >= 200) {
-			return false;
-		}
-		int ii = sw * sh + 2;
-		for (int yy = 0; yy < sh; yy++) {
-			for (int xx = 0; xx < sw; xx++) {
-				if (miniset[ii] != 0) {
-					dungeon[xx + sx][yy + sy] = miniset[ii];
-					dflags[xx + sx][yy + sy] |= 8;
-				}
-				ii++;
-			}
-		}
-	}
-
-	if (currlevel == 15 && Quests[Q_BETRAYER]._qactive >= QUEST_ACTIVE) { /// Lazarus staff skip bug fixed
-		Quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
-	}
-	if (setview) {
-		ViewX = 2 * sx + 21;
-		ViewY = 2 * sy + 22;
-	}
-
-	return true;
 }
 
 #if defined(__3DS__)
