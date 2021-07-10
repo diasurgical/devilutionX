@@ -33,6 +33,406 @@ namespace devilution {
 namespace {
 std::optional<CelSprite> itemanims[ITEMTYPES];
 
+int RndPL(int param1, int param2)
+{
+	return param1 + GenerateRnd(param2 - param1 + 1);
+}
+
+int PLVal(int pv, int p1, int p2, int minv, int maxv)
+{
+	if (p1 == p2)
+		return minv;
+	if (minv == maxv)
+		return minv;
+	return minv + (maxv - minv) * (100 * (pv - p1) / (p2 - p1)) / 100;
+}
+
+void SaveItemPower(ItemStruct &item, const ItemPower &power)
+{
+	int r = RndPL(power.param1, power.param2);
+	int r2;
+
+	switch (power.type) {
+	case IPL_TOHIT:
+		item._iPLToHit += r;
+		break;
+	case IPL_TOHIT_CURSE:
+		item._iPLToHit -= r;
+		break;
+	case IPL_DAMP:
+		item._iPLDam += r;
+		break;
+	case IPL_DAMP_CURSE:
+		item._iPLDam -= r;
+		break;
+	case IPL_DOPPELGANGER:
+		item._iDamAcFlags |= ISPLHF_DOPPELGANGER;
+		[[fallthrough]];
+	case IPL_TOHIT_DAMP:
+		r = RndPL(power.param1, power.param2);
+		item._iPLDam += r;
+		if (power.param1 == 20)
+			r2 = RndPL(1, 5);
+		if (power.param1 == 36)
+			r2 = RndPL(6, 10);
+		if (power.param1 == 51)
+			r2 = RndPL(11, 15);
+		if (power.param1 == 66)
+			r2 = RndPL(16, 20);
+		if (power.param1 == 81)
+			r2 = RndPL(21, 30);
+		if (power.param1 == 96)
+			r2 = RndPL(31, 40);
+		if (power.param1 == 111)
+			r2 = RndPL(41, 50);
+		if (power.param1 == 126)
+			r2 = RndPL(51, 75);
+		if (power.param1 == 151)
+			r2 = RndPL(76, 100);
+		item._iPLToHit += r2;
+		break;
+	case IPL_TOHIT_DAMP_CURSE:
+		item._iPLDam -= r;
+		if (power.param1 == 25)
+			r2 = RndPL(1, 5);
+		if (power.param1 == 50)
+			r2 = RndPL(6, 10);
+		item._iPLToHit -= r2;
+		break;
+	case IPL_ACP:
+		item._iPLAC += r;
+		break;
+	case IPL_ACP_CURSE:
+		item._iPLAC -= r;
+		break;
+	case IPL_SETAC:
+		item._iAC = r;
+		break;
+	case IPL_AC_CURSE:
+		item._iAC -= r;
+		break;
+	case IPL_FIRERES:
+		item._iPLFR += r;
+		break;
+	case IPL_LIGHTRES:
+		item._iPLLR += r;
+		break;
+	case IPL_MAGICRES:
+		item._iPLMR += r;
+		break;
+	case IPL_ALLRES:
+		item._iPLFR = std::max(item._iPLFR + r, 0);
+		item._iPLLR = std::max(item._iPLLR + r, 0);
+		item._iPLMR = std::max(item._iPLMR + r, 0);
+		break;
+	case IPL_SPLLVLADD:
+		item._iSplLvlAdd = r;
+		break;
+	case IPL_CHARGES:
+		item._iCharges *= power.param1;
+		item._iMaxCharges = item._iCharges;
+		break;
+	case IPL_SPELL:
+		item._iSpell = static_cast<spell_id>(power.param1);
+		item._iCharges = power.param2;
+		item._iMaxCharges = power.param2;
+		break;
+	case IPL_FIREDAM:
+		item._iFlags |= ISPL_FIREDAM;
+		item._iFlags &= ~ISPL_LIGHTDAM;
+		item._iFMinDam = power.param1;
+		item._iFMaxDam = power.param2;
+		item._iLMinDam = 0;
+		item._iLMaxDam = 0;
+		break;
+	case IPL_LIGHTDAM:
+		item._iFlags |= ISPL_LIGHTDAM;
+		item._iFlags &= ~ISPL_FIREDAM;
+		item._iLMinDam = power.param1;
+		item._iLMaxDam = power.param2;
+		item._iFMinDam = 0;
+		item._iFMaxDam = 0;
+		break;
+	case IPL_STR:
+		item._iPLStr += r;
+		break;
+	case IPL_STR_CURSE:
+		item._iPLStr -= r;
+		break;
+	case IPL_MAG:
+		item._iPLMag += r;
+		break;
+	case IPL_MAG_CURSE:
+		item._iPLMag -= r;
+		break;
+	case IPL_DEX:
+		item._iPLDex += r;
+		break;
+	case IPL_DEX_CURSE:
+		item._iPLDex -= r;
+		break;
+	case IPL_VIT:
+		item._iPLVit += r;
+		break;
+	case IPL_VIT_CURSE:
+		item._iPLVit -= r;
+		break;
+	case IPL_ATTRIBS:
+		item._iPLStr += r;
+		item._iPLMag += r;
+		item._iPLDex += r;
+		item._iPLVit += r;
+		break;
+	case IPL_ATTRIBS_CURSE:
+		item._iPLStr -= r;
+		item._iPLMag -= r;
+		item._iPLDex -= r;
+		item._iPLVit -= r;
+		break;
+	case IPL_GETHIT_CURSE:
+		item._iPLGetHit += r;
+		break;
+	case IPL_GETHIT:
+		item._iPLGetHit -= r;
+		break;
+	case IPL_LIFE:
+		item._iPLHP += r << 6;
+		break;
+	case IPL_LIFE_CURSE:
+		item._iPLHP -= r << 6;
+		break;
+	case IPL_MANA:
+		item._iPLMana += r << 6;
+		drawmanaflag = true;
+		break;
+	case IPL_MANA_CURSE:
+		item._iPLMana -= r << 6;
+		drawmanaflag = true;
+		break;
+	case IPL_DUR:
+		r2 = r * item._iMaxDur / 100;
+		item._iMaxDur += r2;
+		item._iDurability += r2;
+		break;
+	case IPL_CRYSTALLINE:
+		item._iPLDam += 140 + r * 2;
+		[[fallthrough]];
+	case IPL_DUR_CURSE:
+		item._iMaxDur -= r * item._iMaxDur / 100;
+		item._iMaxDur = std::max<uint8_t>(item._iMaxDur, 1);
+
+		item._iDurability = item._iMaxDur;
+		break;
+	case IPL_INDESTRUCTIBLE:
+		item._iDurability = DUR_INDESTRUCTIBLE;
+		item._iMaxDur = DUR_INDESTRUCTIBLE;
+		break;
+	case IPL_LIGHT:
+		item._iPLLight += power.param1;
+		break;
+	case IPL_LIGHT_CURSE:
+		item._iPLLight -= power.param1;
+		break;
+	case IPL_MULT_ARROWS:
+		item._iFlags |= ISPL_MULT_ARROWS;
+		break;
+	case IPL_FIRE_ARROWS:
+		item._iFlags |= ISPL_FIRE_ARROWS;
+		item._iFlags &= ~ISPL_LIGHT_ARROWS;
+		item._iFMinDam = power.param1;
+		item._iFMaxDam = power.param2;
+		item._iLMinDam = 0;
+		item._iLMaxDam = 0;
+		break;
+	case IPL_LIGHT_ARROWS:
+		item._iFlags |= ISPL_LIGHT_ARROWS;
+		item._iFlags &= ~ISPL_FIRE_ARROWS;
+		item._iLMinDam = power.param1;
+		item._iLMaxDam = power.param2;
+		item._iFMinDam = 0;
+		item._iFMaxDam = 0;
+		break;
+	case IPL_FIREBALL:
+		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
+		item._iFMinDam = power.param1;
+		item._iFMaxDam = power.param2;
+		item._iLMinDam = 0;
+		item._iLMaxDam = 0;
+		break;
+	case IPL_THORNS:
+		item._iFlags |= ISPL_THORNS;
+		break;
+	case IPL_NOMANA:
+		item._iFlags |= ISPL_NOMANA;
+		drawmanaflag = true;
+		break;
+	case IPL_NOHEALPLR:
+		item._iFlags |= ISPL_NOHEALPLR;
+		break;
+	case IPL_ABSHALFTRAP:
+		item._iFlags |= ISPL_ABSHALFTRAP;
+		break;
+	case IPL_KNOCKBACK:
+		item._iFlags |= ISPL_KNOCKBACK;
+		break;
+	case IPL_3XDAMVDEM:
+		item._iFlags |= ISPL_3XDAMVDEM;
+		break;
+	case IPL_ALLRESZERO:
+		item._iFlags |= ISPL_ALLRESZERO;
+		break;
+	case IPL_NOHEALMON:
+		item._iFlags |= ISPL_NOHEALMON;
+		break;
+	case IPL_STEALMANA:
+		if (power.param1 == 3)
+			item._iFlags |= ISPL_STEALMANA_3;
+		if (power.param1 == 5)
+			item._iFlags |= ISPL_STEALMANA_5;
+		drawmanaflag = true;
+		break;
+	case IPL_STEALLIFE:
+		if (power.param1 == 3)
+			item._iFlags |= ISPL_STEALLIFE_3;
+		if (power.param1 == 5)
+			item._iFlags |= ISPL_STEALLIFE_5;
+		drawhpflag = true;
+		break;
+	case IPL_TARGAC:
+		if (gbIsHellfire)
+			item._iPLEnAc = power.param1;
+		else
+			item._iPLEnAc += r;
+		break;
+	case IPL_FASTATTACK:
+		if (power.param1 == 1)
+			item._iFlags |= ISPL_QUICKATTACK;
+		if (power.param1 == 2)
+			item._iFlags |= ISPL_FASTATTACK;
+		if (power.param1 == 3)
+			item._iFlags |= ISPL_FASTERATTACK;
+		if (power.param1 == 4)
+			item._iFlags |= ISPL_FASTESTATTACK;
+		break;
+	case IPL_FASTRECOVER:
+		if (power.param1 == 1)
+			item._iFlags |= ISPL_FASTRECOVER;
+		if (power.param1 == 2)
+			item._iFlags |= ISPL_FASTERRECOVER;
+		if (power.param1 == 3)
+			item._iFlags |= ISPL_FASTESTRECOVER;
+		break;
+	case IPL_FASTBLOCK:
+		item._iFlags |= ISPL_FASTBLOCK;
+		break;
+	case IPL_DAMMOD:
+		item._iPLDamMod += r;
+		break;
+	case IPL_RNDARROWVEL:
+		item._iFlags |= ISPL_RNDARROWVEL;
+		break;
+	case IPL_SETDAM:
+		item._iMinDam = power.param1;
+		item._iMaxDam = power.param2;
+		break;
+	case IPL_SETDUR:
+		item._iDurability = power.param1;
+		item._iMaxDur = power.param1;
+		break;
+	case IPL_FASTSWING:
+		item._iFlags |= ISPL_FASTERATTACK;
+		break;
+	case IPL_ONEHAND:
+		item._iLoc = ILOC_ONEHAND;
+		break;
+	case IPL_DRAINLIFE:
+		item._iFlags |= ISPL_DRAINLIFE;
+		break;
+	case IPL_RNDSTEALLIFE:
+		item._iFlags |= ISPL_RNDSTEALLIFE;
+		break;
+	case IPL_INFRAVISION:
+		item._iFlags |= ISPL_INFRAVISION;
+		break;
+	case IPL_NOMINSTR:
+		item._iMinStr = 0;
+		break;
+	case IPL_INVCURS:
+		item._iCurs = power.param1;
+		break;
+	case IPL_ADDACLIFE:
+		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
+		item._iFMinDam = power.param1;
+		item._iFMaxDam = power.param2;
+		item._iLMinDam = 1;
+		item._iLMaxDam = 0;
+		break;
+	case IPL_ADDMANAAC:
+		item._iFlags |= (ISPL_LIGHTDAM | ISPL_FIREDAM);
+		item._iFMinDam = power.param1;
+		item._iFMaxDam = power.param2;
+		item._iLMinDam = 2;
+		item._iLMaxDam = 0;
+		break;
+	case IPL_FIRERESCLVL:
+		item._iPLFR = 30 - Players[MyPlayerId]._pLevel;
+		item._iPLFR = std::max<int16_t>(item._iPLFR, 0);
+		break;
+	case IPL_FIRERES_CURSE:
+		item._iPLFR -= r;
+		break;
+	case IPL_LIGHTRES_CURSE:
+		item._iPLLR -= r;
+		break;
+	case IPL_MAGICRES_CURSE:
+		item._iPLMR -= r;
+		break;
+	case IPL_ALLRES_CURSE:
+		item._iPLFR -= r;
+		item._iPLLR -= r;
+		item._iPLMR -= r;
+		break;
+	case IPL_DEVASTATION:
+		item._iDamAcFlags |= ISPLHF_DEVASTATION;
+		break;
+	case IPL_DECAY:
+		item._iDamAcFlags |= ISPLHF_DECAY;
+		item._iPLDam += r;
+		break;
+	case IPL_PERIL:
+		item._iDamAcFlags |= ISPLHF_PERIL;
+		break;
+	case IPL_JESTERS:
+		item._iDamAcFlags |= ISPLHF_JESTERS;
+		break;
+	case IPL_ACDEMON:
+		item._iDamAcFlags |= ISPLHF_ACDEMON;
+		break;
+	case IPL_ACUNDEAD:
+		item._iDamAcFlags |= ISPLHF_ACUNDEAD;
+		break;
+	case IPL_MANATOLIFE:
+		r2 = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100);
+		item._iPLMana -= (r2 << 6);
+		item._iPLHP += (r2 << 6);
+		break;
+	case IPL_LIFETOMANA:
+		r2 = ((Players[MyPlayerId]._pMaxHPBase >> 6) * 40 / 100);
+		item._iPLHP -= (r2 << 6);
+		item._iPLMana += (r2 << 6);
+		break;
+	default:
+		break;
+	}
+	if (item._iVAdd1 != 0 || item._iVMult1 != 0) {
+		item._iVAdd2 = PLVal(r, power.param1, power.param2, power.minval, power.maxval);
+		item._iVMult2 = power.multval;
+	} else {
+		item._iVAdd1 = PLVal(r, power.param1, power.param2, power.minval, power.maxval);
+		item._iVMult1 = power.multval;
+	}
+}
+
 } // namespace
 
 enum anim_armor_id : uint8_t {
@@ -1465,7 +1865,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 	if (GenerateRnd(10) == 0 || onlygood) {
 		int nl = 0;
 		int l[256];
-		for (int j = 0; ItemPrefixes[j].PLPower != IPL_INVALID; j++) {
+		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
 			if (!IsPrefixValidForItemType(j, PLT_STAFF) || ItemPrefixes[j].PLMinLvl > lvl)
 				continue;
 			if (onlygood && !ItemPrefixes[j].PLOk)
@@ -1483,15 +1883,8 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), Items[i]._iIName);
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemPower(
-			    i,
-			    ItemPrefixes[preidx].PLPower,
-			    ItemPrefixes[preidx].PLParam1,
-			    ItemPrefixes[preidx].PLParam2,
-			    ItemPrefixes[preidx].PLMinVal,
-			    ItemPrefixes[preidx].PLMaxVal,
-			    ItemPrefixes[preidx].PLMultVal);
-			Items[i]._iPrePower = ItemPrefixes[preidx].PLPower;
+			SaveItemPower(Items[i], ItemPrefixes[preidx].power);
+			Items[i]._iPrePower = ItemPrefixes[preidx].power.type;
 		}
 	}
 	if (!StringInPanel(Items[i]._iIName)) {
@@ -1646,428 +2039,18 @@ void GetItemAttrs(int i, int idata, int lvl)
 	SetPlrHandGoldCurs(&Items[i]);
 }
 
-int RndPL(int param1, int param2)
-{
-	return param1 + GenerateRnd(param2 - param1 + 1);
-}
-
-int PLVal(int pv, int p1, int p2, int minv, int maxv)
-{
-	if (p1 == p2)
-		return minv;
-	if (minv == maxv)
-		return minv;
-	return minv + (maxv - minv) * (100 * (pv - p1) / (p2 - p1)) / 100;
-}
-
-void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval)
-{
-	int r = RndPL(param1, param2);
-	int r2;
-
-	switch (power) {
-	case IPL_TOHIT:
-		Items[i]._iPLToHit += r;
-		break;
-	case IPL_TOHIT_CURSE:
-		Items[i]._iPLToHit -= r;
-		break;
-	case IPL_DAMP:
-		Items[i]._iPLDam += r;
-		break;
-	case IPL_DAMP_CURSE:
-		Items[i]._iPLDam -= r;
-		break;
-	case IPL_DOPPELGANGER:
-		Items[i]._iDamAcFlags |= ISPLHF_DOPPELGANGER;
-		[[fallthrough]];
-	case IPL_TOHIT_DAMP:
-		r = RndPL(param1, param2);
-		Items[i]._iPLDam += r;
-		if (param1 == 20)
-			r2 = RndPL(1, 5);
-		if (param1 == 36)
-			r2 = RndPL(6, 10);
-		if (param1 == 51)
-			r2 = RndPL(11, 15);
-		if (param1 == 66)
-			r2 = RndPL(16, 20);
-		if (param1 == 81)
-			r2 = RndPL(21, 30);
-		if (param1 == 96)
-			r2 = RndPL(31, 40);
-		if (param1 == 111)
-			r2 = RndPL(41, 50);
-		if (param1 == 126)
-			r2 = RndPL(51, 75);
-		if (param1 == 151)
-			r2 = RndPL(76, 100);
-
-		Items[i]._iPLToHit += r2;
-		break;
-	case IPL_TOHIT_DAMP_CURSE:
-		Items[i]._iPLDam -= r;
-		if (param1 == 25)
-			r2 = RndPL(1, 5);
-		if (param1 == 50)
-			r2 = RndPL(6, 10);
-
-		Items[i]._iPLToHit -= r2;
-		break;
-	case IPL_ACP:
-		Items[i]._iPLAC += r;
-		break;
-	case IPL_ACP_CURSE:
-		Items[i]._iPLAC -= r;
-		break;
-	case IPL_SETAC:
-		Items[i]._iAC = r;
-		break;
-	case IPL_AC_CURSE:
-		Items[i]._iAC -= r;
-		break;
-	case IPL_FIRERES:
-		Items[i]._iPLFR += r;
-		break;
-	case IPL_LIGHTRES:
-		Items[i]._iPLLR += r;
-		break;
-	case IPL_MAGICRES:
-		Items[i]._iPLMR += r;
-		break;
-	case IPL_ALLRES:
-		Items[i]._iPLFR = std::max(Items[i]._iPLFR + r, 0);
-		Items[i]._iPLLR = std::max(Items[i]._iPLLR + r, 0);
-		Items[i]._iPLMR = std::max(Items[i]._iPLMR + r, 0);
-		break;
-	case IPL_SPLLVLADD:
-		Items[i]._iSplLvlAdd = r;
-		break;
-	case IPL_CHARGES:
-		Items[i]._iCharges *= param1;
-		Items[i]._iMaxCharges = Items[i]._iCharges;
-		break;
-	case IPL_SPELL:
-		Items[i]._iSpell = static_cast<spell_id>(param1);
-		Items[i]._iCharges = param2;
-		Items[i]._iMaxCharges = param2;
-		break;
-	case IPL_FIREDAM:
-		Items[i]._iFlags |= ISPL_FIREDAM;
-		Items[i]._iFlags &= ~ISPL_LIGHTDAM;
-		Items[i]._iFMinDam = param1;
-		Items[i]._iFMaxDam = param2;
-		Items[i]._iLMinDam = 0;
-		Items[i]._iLMaxDam = 0;
-		break;
-	case IPL_LIGHTDAM:
-		Items[i]._iFlags |= ISPL_LIGHTDAM;
-		Items[i]._iFlags &= ~ISPL_FIREDAM;
-		Items[i]._iLMinDam = param1;
-		Items[i]._iLMaxDam = param2;
-		Items[i]._iFMinDam = 0;
-		Items[i]._iFMaxDam = 0;
-		break;
-	case IPL_STR:
-		Items[i]._iPLStr += r;
-		break;
-	case IPL_STR_CURSE:
-		Items[i]._iPLStr -= r;
-		break;
-	case IPL_MAG:
-		Items[i]._iPLMag += r;
-		break;
-	case IPL_MAG_CURSE:
-		Items[i]._iPLMag -= r;
-		break;
-	case IPL_DEX:
-		Items[i]._iPLDex += r;
-		break;
-	case IPL_DEX_CURSE:
-		Items[i]._iPLDex -= r;
-		break;
-	case IPL_VIT:
-		Items[i]._iPLVit += r;
-		break;
-	case IPL_VIT_CURSE:
-		Items[i]._iPLVit -= r;
-		break;
-	case IPL_ATTRIBS:
-		Items[i]._iPLStr += r;
-		Items[i]._iPLMag += r;
-		Items[i]._iPLDex += r;
-		Items[i]._iPLVit += r;
-		break;
-	case IPL_ATTRIBS_CURSE:
-		Items[i]._iPLStr -= r;
-		Items[i]._iPLMag -= r;
-		Items[i]._iPLDex -= r;
-		Items[i]._iPLVit -= r;
-		break;
-	case IPL_GETHIT_CURSE:
-		Items[i]._iPLGetHit += r;
-		break;
-	case IPL_GETHIT:
-		Items[i]._iPLGetHit -= r;
-		break;
-	case IPL_LIFE:
-		Items[i]._iPLHP += r << 6;
-		break;
-	case IPL_LIFE_CURSE:
-		Items[i]._iPLHP -= r << 6;
-		break;
-	case IPL_MANA:
-		Items[i]._iPLMana += r << 6;
-		drawmanaflag = true;
-		break;
-	case IPL_MANA_CURSE:
-		Items[i]._iPLMana -= r << 6;
-		drawmanaflag = true;
-		break;
-	case IPL_DUR:
-		r2 = r * Items[i]._iMaxDur / 100;
-		Items[i]._iMaxDur += r2;
-		Items[i]._iDurability += r2;
-		break;
-	case IPL_CRYSTALLINE:
-		Items[i]._iPLDam += 140 + r * 2;
-		[[fallthrough]];
-	case IPL_DUR_CURSE:
-		Items[i]._iMaxDur -= r * Items[i]._iMaxDur / 100;
-		Items[i]._iMaxDur = std::max<uint8_t>(Items[i]._iMaxDur, 1);
-
-		Items[i]._iDurability = Items[i]._iMaxDur;
-		break;
-	case IPL_INDESTRUCTIBLE:
-		Items[i]._iDurability = DUR_INDESTRUCTIBLE;
-		Items[i]._iMaxDur = DUR_INDESTRUCTIBLE;
-		break;
-	case IPL_LIGHT:
-		Items[i]._iPLLight += param1;
-		break;
-	case IPL_LIGHT_CURSE:
-		Items[i]._iPLLight -= param1;
-		break;
-	case IPL_MULT_ARROWS:
-		Items[i]._iFlags |= ISPL_MULT_ARROWS;
-		break;
-	case IPL_FIRE_ARROWS:
-		Items[i]._iFlags |= ISPL_FIRE_ARROWS;
-		Items[i]._iFlags &= ~ISPL_LIGHT_ARROWS;
-		Items[i]._iFMinDam = param1;
-		Items[i]._iFMaxDam = param2;
-		Items[i]._iLMinDam = 0;
-		Items[i]._iLMaxDam = 0;
-		break;
-	case IPL_LIGHT_ARROWS:
-		Items[i]._iFlags |= ISPL_LIGHT_ARROWS;
-		Items[i]._iFlags &= ~ISPL_FIRE_ARROWS;
-		Items[i]._iLMinDam = param1;
-		Items[i]._iLMaxDam = param2;
-		Items[i]._iFMinDam = 0;
-		Items[i]._iFMaxDam = 0;
-		break;
-	case IPL_FIREBALL:
-		Items[i]._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
-		Items[i]._iFMinDam = param1;
-		Items[i]._iFMaxDam = param2;
-		Items[i]._iLMinDam = 0;
-		Items[i]._iLMaxDam = 0;
-		break;
-	case IPL_THORNS:
-		Items[i]._iFlags |= ISPL_THORNS;
-		break;
-	case IPL_NOMANA:
-		Items[i]._iFlags |= ISPL_NOMANA;
-		drawmanaflag = true;
-		break;
-	case IPL_NOHEALPLR:
-		Items[i]._iFlags |= ISPL_NOHEALPLR;
-		break;
-	case IPL_ABSHALFTRAP:
-		Items[i]._iFlags |= ISPL_ABSHALFTRAP;
-		break;
-	case IPL_KNOCKBACK:
-		Items[i]._iFlags |= ISPL_KNOCKBACK;
-		break;
-	case IPL_3XDAMVDEM:
-		Items[i]._iFlags |= ISPL_3XDAMVDEM;
-		break;
-	case IPL_ALLRESZERO:
-		Items[i]._iFlags |= ISPL_ALLRESZERO;
-		break;
-	case IPL_NOHEALMON:
-		Items[i]._iFlags |= ISPL_NOHEALMON;
-		break;
-	case IPL_STEALMANA:
-		if (param1 == 3)
-			Items[i]._iFlags |= ISPL_STEALMANA_3;
-		if (param1 == 5)
-			Items[i]._iFlags |= ISPL_STEALMANA_5;
-		drawmanaflag = true;
-		break;
-	case IPL_STEALLIFE:
-		if (param1 == 3)
-			Items[i]._iFlags |= ISPL_STEALLIFE_3;
-		if (param1 == 5)
-			Items[i]._iFlags |= ISPL_STEALLIFE_5;
-		drawhpflag = true;
-		break;
-	case IPL_TARGAC:
-		if (gbIsHellfire)
-			Items[i]._iPLEnAc = param1;
-		else
-			Items[i]._iPLEnAc += r;
-		break;
-	case IPL_FASTATTACK:
-		if (param1 == 1)
-			Items[i]._iFlags |= ISPL_QUICKATTACK;
-		if (param1 == 2)
-			Items[i]._iFlags |= ISPL_FASTATTACK;
-		if (param1 == 3)
-			Items[i]._iFlags |= ISPL_FASTERATTACK;
-		if (param1 == 4)
-			Items[i]._iFlags |= ISPL_FASTESTATTACK;
-		break;
-	case IPL_FASTRECOVER:
-		if (param1 == 1)
-			Items[i]._iFlags |= ISPL_FASTRECOVER;
-		if (param1 == 2)
-			Items[i]._iFlags |= ISPL_FASTERRECOVER;
-		if (param1 == 3)
-			Items[i]._iFlags |= ISPL_FASTESTRECOVER;
-		break;
-	case IPL_FASTBLOCK:
-		Items[i]._iFlags |= ISPL_FASTBLOCK;
-		break;
-	case IPL_DAMMOD:
-		Items[i]._iPLDamMod += r;
-		break;
-	case IPL_RNDARROWVEL:
-		Items[i]._iFlags |= ISPL_RNDARROWVEL;
-		break;
-	case IPL_SETDAM:
-		Items[i]._iMinDam = param1;
-		Items[i]._iMaxDam = param2;
-		break;
-	case IPL_SETDUR:
-		Items[i]._iDurability = param1;
-		Items[i]._iMaxDur = param1;
-		break;
-	case IPL_FASTSWING:
-		Items[i]._iFlags |= ISPL_FASTERATTACK;
-		break;
-	case IPL_ONEHAND:
-		Items[i]._iLoc = ILOC_ONEHAND;
-		break;
-	case IPL_DRAINLIFE:
-		Items[i]._iFlags |= ISPL_DRAINLIFE;
-		break;
-	case IPL_RNDSTEALLIFE:
-		Items[i]._iFlags |= ISPL_RNDSTEALLIFE;
-		break;
-	case IPL_INFRAVISION:
-		Items[i]._iFlags |= ISPL_INFRAVISION;
-		break;
-	case IPL_NOMINSTR:
-		Items[i]._iMinStr = 0;
-		break;
-	case IPL_INVCURS:
-		Items[i]._iCurs = param1;
-		break;
-	case IPL_ADDACLIFE:
-		Items[i]._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
-		Items[i]._iFMinDam = param1;
-		Items[i]._iFMaxDam = param2;
-		Items[i]._iLMinDam = 1;
-		Items[i]._iLMaxDam = 0;
-		break;
-	case IPL_ADDMANAAC:
-		Items[i]._iFlags |= (ISPL_LIGHTDAM | ISPL_FIREDAM);
-		Items[i]._iFMinDam = param1;
-		Items[i]._iFMaxDam = param2;
-		Items[i]._iLMinDam = 2;
-		Items[i]._iLMaxDam = 0;
-		break;
-	case IPL_FIRERESCLVL:
-		Items[i]._iPLFR = 30 - Players[MyPlayerId]._pLevel;
-		Items[i]._iPLFR = std::max<int16_t>(Items[i]._iPLFR, 0);
-		break;
-	case IPL_FIRERES_CURSE:
-		Items[i]._iPLFR -= r;
-		break;
-	case IPL_LIGHTRES_CURSE:
-		Items[i]._iPLLR -= r;
-		break;
-	case IPL_MAGICRES_CURSE:
-		Items[i]._iPLMR -= r;
-		break;
-	case IPL_ALLRES_CURSE:
-		Items[i]._iPLFR -= r;
-		Items[i]._iPLLR -= r;
-		Items[i]._iPLMR -= r;
-		break;
-	case IPL_DEVASTATION:
-		Items[i]._iDamAcFlags |= ISPLHF_DEVASTATION;
-		break;
-	case IPL_DECAY:
-		Items[i]._iDamAcFlags |= ISPLHF_DECAY;
-		Items[i]._iPLDam += r;
-		break;
-	case IPL_PERIL:
-		Items[i]._iDamAcFlags |= ISPLHF_PERIL;
-		break;
-	case IPL_JESTERS:
-		Items[i]._iDamAcFlags |= ISPLHF_JESTERS;
-		break;
-	case IPL_ACDEMON:
-		Items[i]._iDamAcFlags |= ISPLHF_ACDEMON;
-		break;
-	case IPL_ACUNDEAD:
-		Items[i]._iDamAcFlags |= ISPLHF_ACUNDEAD;
-		break;
-	case IPL_MANATOLIFE:
-		r2 = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100);
-		Items[i]._iPLMana -= (r2 << 6);
-		Items[i]._iPLHP += (r2 << 6);
-		break;
-	case IPL_LIFETOMANA:
-		r2 = ((Players[MyPlayerId]._pMaxHPBase >> 6) * 40 / 100);
-		Items[i]._iPLHP -= (r2 << 6);
-		Items[i]._iPLMana += (r2 << 6);
-		break;
-	default:
-		break;
-	}
-	if (Items[i]._iVAdd1 != 0 || Items[i]._iVMult1 != 0) {
-		Items[i]._iVAdd2 = PLVal(r, param1, param2, minval, maxval);
-		Items[i]._iVMult2 = multval;
-	} else {
-		Items[i]._iVAdd1 = PLVal(r, param1, param2, minval, maxval);
-		Items[i]._iVMult1 = multval;
-	}
-}
-
 static void SaveItemSuffix(int i, int sufidx)
 {
-	int param1 = ItemSuffixes[sufidx].PLParam1;
-	int param2 = ItemSuffixes[sufidx].PLParam2;
+	auto power = ItemSuffixes[sufidx].power;
 
 	if (!gbIsHellfire) {
 		if (sufidx >= 84 && sufidx <= 86) {
-			param1 = 2 << param1;
-			param2 = 6 << param2;
+			power.param1 = 2 << power.param1;
+			power.param2 = 6 << power.param2;
 		}
 	}
 
-	SaveItemPower(
-	    i,
-	    ItemSuffixes[sufidx].PLPower,
-	    param1,
-	    param2,
-	    ItemSuffixes[sufidx].PLMinVal,
-	    ItemSuffixes[sufidx].PLMaxVal,
-	    ItemSuffixes[sufidx].PLMultVal);
+	SaveItemPower(Items[i], power);
 }
 
 void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
@@ -2091,14 +2074,14 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		onlygood = true;
 	if (pre == 0) {
 		int nt = 0;
-		for (int j = 0; ItemPrefixes[j].PLPower != IPL_INVALID; j++) {
+		for (int j = 0; ItemPrefixes[j].power.type != IPL_INVALID; j++) {
 			if (!IsPrefixValidForItemType(j, flgs))
 				continue;
 			if (ItemPrefixes[j].PLMinLvl < minlvl || ItemPrefixes[j].PLMinLvl > maxlvl)
 				continue;
 			if (onlygood && !ItemPrefixes[j].PLOk)
 				continue;
-			if (flgs == PLT_STAFF && ItemPrefixes[j].PLPower == IPL_CHARGES)
+			if (flgs == PLT_STAFF && ItemPrefixes[j].power.type == IPL_CHARGES)
 				continue;
 			l[nt] = j;
 			nt++;
@@ -2112,21 +2095,14 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), Items[i]._iIName);
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemPower(
-			    i,
-			    ItemPrefixes[preidx].PLPower,
-			    ItemPrefixes[preidx].PLParam1,
-			    ItemPrefixes[preidx].PLParam2,
-			    ItemPrefixes[preidx].PLMinVal,
-			    ItemPrefixes[preidx].PLMaxVal,
-			    ItemPrefixes[preidx].PLMultVal);
-			Items[i]._iPrePower = ItemPrefixes[preidx].PLPower;
+			SaveItemPower(Items[i], ItemPrefixes[preidx].power);
+			Items[i]._iPrePower = ItemPrefixes[preidx].power.type;
 			goe = ItemPrefixes[preidx].PLGOE;
 		}
 	}
 	if (post != 0) {
 		int nl = 0;
-		for (int j = 0; ItemSuffixes[j].PLPower != IPL_INVALID; j++) {
+		for (int j = 0; ItemSuffixes[j].power.type != IPL_INVALID; j++) {
 			if (IsSuffixValidForItemType(j, flgs)
 			    && ItemSuffixes[j].PLMinLvl >= minlvl && ItemSuffixes[j].PLMinLvl <= maxlvl
 			    && !((goe == GOE_GOOD && ItemSuffixes[j].PLGOE == GOE_EVIL) || (goe == GOE_EVIL && ItemSuffixes[j].PLGOE == GOE_GOOD))
@@ -2141,7 +2117,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemSuffix(i, sufidx);
-			Items[i]._iSufPower = ItemSuffixes[sufidx].PLPower;
+			Items[i]._iSufPower = ItemSuffixes[sufidx].power.type;
 		}
 	}
 	if (!StringInPanel(Items[i]._iIName)) {
@@ -2380,31 +2356,23 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 	return (_unique_items)idata;
 }
 
-void GetUniqueItem(int i, _unique_items uid)
+void GetUniqueItem(ItemStruct &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
-	SaveItemPower(i, UniqueItemList[uid].UIPower1, UniqueItemList[uid].UIParam1, UniqueItemList[uid].UIParam2, 0, 0, 1);
 
-	if (UniqueItemList[uid].UINumPL > 1)
-		SaveItemPower(i, UniqueItemList[uid].UIPower2, UniqueItemList[uid].UIParam3, UniqueItemList[uid].UIParam4, 0, 0, 1);
-	if (UniqueItemList[uid].UINumPL > 2)
-		SaveItemPower(i, UniqueItemList[uid].UIPower3, UniqueItemList[uid].UIParam5, UniqueItemList[uid].UIParam6, 0, 0, 1);
-	if (UniqueItemList[uid].UINumPL > 3)
-		SaveItemPower(i, UniqueItemList[uid].UIPower4, UniqueItemList[uid].UIParam7, UniqueItemList[uid].UIParam8, 0, 0, 1);
-	if (UniqueItemList[uid].UINumPL > 4)
-		SaveItemPower(i, UniqueItemList[uid].UIPower5, UniqueItemList[uid].UIParam9, UniqueItemList[uid].UIParam10, 0, 0, 1);
-	if (UniqueItemList[uid].UINumPL > 5)
-		SaveItemPower(i, UniqueItemList[uid].UIPower6, UniqueItemList[uid].UIParam11, UniqueItemList[uid].UIParam12, 0, 0, 1);
+	for (int i = 0; i < UniqueItemList[uid].UINumPL; i++) {
+		SaveItemPower(item, UniqueItemList[uid].powers[i]);
+	}
 
-	strcpy(Items[i]._iIName, _(UniqueItemList[uid].UIName));
-	Items[i]._iIvalue = UniqueItemList[uid].UIValue;
+	strcpy(item._iIName, _(UniqueItemList[uid].UIName));
+	item._iIvalue = UniqueItemList[uid].UIValue;
 
-	if (Items[i]._iMiscId == IMISC_UNIQUE)
-		Items[i]._iSeed = uid;
+	if (item._iMiscId == IMISC_UNIQUE)
+		item._iSeed = uid;
 
-	Items[i]._iUid = uid;
-	Items[i]._iMagical = ITEM_QUALITY_UNIQUE;
-	Items[i]._iCreateInfo |= CF_UNIQUE;
+	item._iUid = uid;
+	item._iMagical = ITEM_QUALITY_UNIQUE;
+	item._iCreateInfo |= CF_UNIQUE;
 }
 
 void SpawnUnique(_unique_items uid, Point position)
@@ -2421,7 +2389,7 @@ void SpawnUnique(_unique_items uid, Point position)
 		idx++;
 
 	GetItemAttrs(ii, idx, curlv);
-	GetUniqueItem(ii, uid);
+	GetUniqueItem(Items[ii], uid);
 	SetupItem(ii);
 }
 
@@ -2473,14 +2441,14 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 			if (uid == UITEM_INVALID) {
 				GetItemBonus(ii, iblvl / 2, iblvl, onlygood, true);
 			} else {
-				GetUniqueItem(ii, uid);
+				GetUniqueItem(Items[ii], uid);
 			}
 		}
 		if (Items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
 			ItemRndDur(ii);
 	} else {
 		if (Items[ii]._iLoc != ILOC_UNEQUIPABLE) {
-			GetUniqueItem(ii, (_unique_items)iseed); // uid is stored in iseed for uniques
+			GetUniqueItem(Items[ii], (_unique_items)iseed); // uid is stored in iseed for uniques
 		}
 	}
 	SetupItem(ii);
@@ -3658,31 +3626,31 @@ void DrawUniqueInfo(const Surface &out)
 	DrawULine(out, 5);
 
 	rect.position.y += (12 - uitem.UINumPL) * 12;
-	PrintItemPower(uitem.UIPower1, &curruitem);
+	PrintItemPower(uitem.powers[0].type, &curruitem);
 	DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	if (uitem.UINumPL > 1) {
 		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.UIPower2, &curruitem);
+		PrintItemPower(uitem.powers[1].type, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 2) {
 		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.UIPower3, &curruitem);
+		PrintItemPower(uitem.powers[2].type, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 3) {
 		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.UIPower4, &curruitem);
+		PrintItemPower(uitem.powers[3].type, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 4) {
 		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.UIPower5, &curruitem);
+		PrintItemPower(uitem.powers[4].type, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 	if (uitem.UINumPL > 5) {
 		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.UIPower6, &curruitem);
+		PrintItemPower(uitem.powers[5].type, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 }
