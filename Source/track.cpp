@@ -27,8 +27,11 @@ void track_process()
 		return;
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
+
+	const auto &player = Players[MyPlayerId];
+
 	int isShift = (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
-	if (sgbMouseDown == CLICK_RIGHT) {
+	if (sgbMouseDown == CLICK_RIGHT && player.AnimInfo.GetFrameToUseForRendering() > 10) {
 		RightMouseDown();
 	}
 	if (sgbMouseDown == CLICK_LEFT) {
@@ -40,8 +43,6 @@ void track_process()
 		}
 	}
 	return;
-
-	const auto &player = Players[MyPlayerId];
 
 	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
 		return;
