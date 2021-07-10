@@ -2904,7 +2904,7 @@ void OperateBook(int pnum, int i)
 		    Objects[i]._oVar3,
 		    Objects[i]._oVar4);
 		for (int j = 0; j < ActiveObjectCount; j++)
-			SyncObjectAnim(ActiveObjects[j]);
+			SyncObjectAnim(Objects[ActiveObjects[j]]);
 	}
 }
 
@@ -2960,7 +2960,7 @@ void OperateSChambBk(int i)
 	if (Objects[i]._oAnimFrame != Objects[i]._oVar6) {
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 		for (int j = 0; j < ActiveObjectCount; j++)
-			SyncObjectAnim(ActiveObjects[j]);
+			SyncObjectAnim(Objects[ActiveObjects[j]]);
 	}
 	Objects[i]._oAnimFrame = Objects[i]._oVar6;
 	if (Quests[Q_SCHAMB]._qactive == QUEST_INIT) {
@@ -5270,9 +5270,9 @@ void SyncL3Doors(ObjectStruct &door)
 	}
 }
 
-void SyncObjectAnim(int o)
+void SyncObjectAnim(ObjectStruct &object)
 {
-	object_graphic_id index = AllObjects[Objects[o]._otype].ofindex;
+	object_graphic_id index = AllObjects[object._otype].ofindex;
 
 	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
 	if (found == std::end(ObjFileList)) {
@@ -5282,37 +5282,37 @@ void SyncObjectAnim(int o)
 
 	const int i = std::distance(std::begin(ObjFileList), found);
 
-	Objects[o]._oAnimData = pObjCels[i].get();
-	switch (Objects[o]._otype) {
+	object._oAnimData = pObjCels[i].get();
+	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		SyncL1Doors(Objects[o]);
+		SyncL1Doors(object);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		SyncL2Doors(Objects[o]);
+		SyncL2Doors(object);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		SyncL3Doors(Objects[o]);
+		SyncL3Doors(object);
 		break;
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		SyncCrux(Objects[o]);
+		SyncCrux(object);
 		break;
 	case OBJ_LEVER:
 	case OBJ_BOOK2L:
 	case OBJ_SWITCHSKL:
-		SyncLever(Objects[o]);
+		SyncLever(object);
 		break;
 	case OBJ_BOOK2R:
 	case OBJ_BLINDBOOK:
 	case OBJ_STEELTOME:
-		SyncQSTLever(Objects[o]);
+		SyncQSTLever(object);
 		break;
 	case OBJ_PEDISTAL:
-		SyncPedestal(Objects[o], { setpc_x, setpc_y }, setpc_w);
+		SyncPedestal(object, { setpc_x, setpc_y }, setpc_w);
 		break;
 	default:
 		break;
