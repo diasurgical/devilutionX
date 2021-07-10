@@ -272,6 +272,12 @@ void CheckCursMove()
 	int sx = MousePosition.x;
 	int sy = MousePosition.y;
 
+	if (lastMonsterId != -1 && Monsters[lastMonsterId]._mhitpoints > 0) {
+		cursmx = Monsters[lastMonsterId].position.tile.x;
+		cursmy = Monsters[lastMonsterId].position.tile.x;
+		return;
+	}
+
 	if (CanPanelsCoverView()) {
 		if (chrflag || QuestLogIsOpen) {
 			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)

@@ -91,6 +91,7 @@ bool gbQuietMode = false;
 clicktype sgbMouseDown;
 bool blockClicks = false;
 int lastDoorId = -1;
+int lastMonsterId = -1;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
 Keymapper keymapper {
@@ -599,6 +600,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 	case DVL_WM_LBUTTONDOWN:
 		blockClicks = false;
 		lastDoorId = -1;
+		lastMonsterId = pcursmonst;
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_LEFT;
@@ -606,6 +608,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		}
 		return;
 	case DVL_WM_LBUTTONUP:
+		lastMonsterId = -1;
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_LEFT) {
 			sgbMouseDown = CLICK_NONE;
@@ -616,6 +619,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 	case DVL_WM_RBUTTONDOWN:
 		blockClicks = false;
 		lastDoorId = -1;
+		lastMonsterId = pcursmonst;
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_RIGHT;
@@ -623,6 +627,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		}
 		return;
 	case DVL_WM_RBUTTONUP:
+		lastMonsterId = -1;
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_RIGHT) {
 			sgbMouseDown = CLICK_NONE;
