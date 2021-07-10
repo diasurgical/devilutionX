@@ -827,6 +827,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
+	blockClicks = true;
+
 	item_equip_type il = ILOC_UNEQUIPABLE;
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST)
 		il = ILOC_HELM;
@@ -1203,6 +1205,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &headItem = player.InvBody[INVLOC_HEAD];
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST && !headItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = headItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1217,6 +1220,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &leftRingItem = player.InvBody[INVLOC_RING_LEFT];
 	if (r == SLOTXY_RING_LEFT && !leftRingItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = leftRingItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1231,6 +1235,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &rightRingItem = player.InvBody[INVLOC_RING_RIGHT];
 	if (r == SLOTXY_RING_RIGHT && !rightRingItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = rightRingItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1245,6 +1250,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &amuletItem = player.InvBody[INVLOC_AMULET];
 	if (r == SLOTXY_AMULET && !amuletItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = amuletItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1259,6 +1265,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_LEFT_LAST && !leftHandItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = leftHandItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1273,6 +1280,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 	if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST && !rightHandItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = rightHandItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1287,6 +1295,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	ItemStruct &chestItem = player.InvBody[INVLOC_CHEST];
 	if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST && !chestItem.isEmpty()) {
+		blockClicks = true;
 		holdItem = chestItem;
 		if (automaticMove) {
 			automaticallyUnequip = true;
@@ -1303,6 +1312,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		int ig = r - SLOTXY_INV_FIRST;
 		int8_t ii = player.InvGrid[ig];
 		if (ii != 0) {
+			blockClicks = true;
 			int iv = (ii < 0) ? -ii : ii;
 
 			holdItem = player.InvList[iv - 1];
@@ -1323,6 +1333,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 	if (r >= SLOTXY_BELT_FIRST) {
 		ItemStruct &beltItem = player.SpdList[r - SLOTXY_BELT_FIRST];
 		if (!beltItem.isEmpty()) {
+			blockClicks = true;
 			holdItem = beltItem;
 			if (automaticMove) {
 				automaticallyMoved = AutoPlaceItemInInventory(player, holdItem, true);
@@ -1384,7 +1395,6 @@ void inv_update_rem_item(int pnum, BYTE iv)
 
 void CheckInvItem(bool isShiftHeld)
 {
-	blockClicks = true;
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(MyPlayerId, MousePosition);
 	} else {

@@ -1005,7 +1005,6 @@ void DoSpeedBook()
  */
 void DoPanBtn()
 {
-	blockClicks = true;
 	for (int i = 0; i < numpanbtns; i++) {
 		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
 		int y = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
@@ -1014,6 +1013,7 @@ void DoPanBtn()
 				panbtns[i] = true;
 				drawbtnflag = true;
 				panbtndown = true;
+				blockClicks = true;
 			}
 		}
 	}
