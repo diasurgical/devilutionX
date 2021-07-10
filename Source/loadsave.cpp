@@ -1179,7 +1179,7 @@ void LoadGame(bool firstflag)
 		for (int i = 0; i < ActiveObjectCount; i++)
 			LoadObject(&file, ActiveObjects[i]);
 		for (int i = 0; i < ActiveObjectCount; i++)
-			SyncObjectAnim(ActiveObjects[i]);
+			SyncObjectAnim(Objects[ActiveObjects[i]]);
 
 		ActiveLightCount = file.NextBE<int32_t>();
 
@@ -2150,7 +2150,7 @@ void LoadLevel()
 			LoadObject(&file, ActiveObjects[i]);
 		if (!gbSkipSync) {
 			for (int i = 0; i < ActiveObjectCount; i++)
-				SyncObjectAnim(ActiveObjects[i]);
+				SyncObjectAnim(Objects[ActiveObjects[i]]);
 		}
 	}
 

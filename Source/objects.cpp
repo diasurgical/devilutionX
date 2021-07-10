@@ -2904,7 +2904,7 @@ void OperateBook(int pnum, int i)
 		    Objects[i]._oVar3,
 		    Objects[i]._oVar4);
 		for (int j = 0; j < ActiveObjectCount; j++)
-			SyncObjectAnim(ActiveObjects[j]);
+			SyncObjectAnim(Objects[ActiveObjects[j]]);
 	}
 }
 
@@ -2960,7 +2960,7 @@ void OperateSChambBk(int i)
 	if (Objects[i]._oAnimFrame != Objects[i]._oVar6) {
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 		for (int j = 0; j < ActiveObjectCount; j++)
-			SyncObjectAnim(ActiveObjects[j]);
+			SyncObjectAnim(Objects[ActiveObjects[j]]);
 	}
 	Objects[i]._oAnimFrame = Objects[i]._oVar6;
 	if (Quests[Q_SCHAMB]._qactive == QUEST_INIT) {
@@ -5142,7 +5142,7 @@ void SyncBreakObj(int pnum, int oi)
 		BreakBarrel(pnum, oi, 0, true, false);
 }
 
-void SyncCrux(int i)
+void SyncCrux(const ObjectStruct &crux)
 {
 	bool found = true;
 	for (int j = 0; j < ActiveObjectCount; j++) {
@@ -5150,46 +5150,46 @@ void SyncCrux(int i)
 		int type = Objects[oi]._otype;
 		if (IsNoneOf(type, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
 			continue;
-		if (Objects[i]._oVar8 != Objects[oi]._oVar8 || Objects[oi]._oBreak == -1)
+		if (crux._oVar8 != Objects[oi]._oVar8 || Objects[oi]._oBreak == -1)
 			continue;
 		found = false;
 	}
 	if (found)
-		ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+		ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void SyncLever(int i)
+void SyncLever(const ObjectStruct &lever)
 {
-	if (Objects[i]._oSelFlag != 0)
+	if (lever._oSelFlag != 0)
 		return;
 
-	ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+	ObjChangeMap(lever._oVar1, lever._oVar2, lever._oVar3, lever._oVar4);
 }
 
-void SyncQSTLever(int i)
+void SyncQSTLever(const ObjectStruct &qstLever)
 {
-	if (Objects[i]._oAnimFrame == Objects[i]._oVar6) {
-		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		if (Objects[i]._otype == OBJ_BLINDBOOK) {
+	if (qstLever._oAnimFrame == qstLever._oVar6) {
+		ObjChangeMapResync(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
+		if (qstLever._otype == OBJ_BLINDBOOK) {
 			auto tren = TransVal;
 			TransVal = 9;
-			DRLG_MRectTrans(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+			DRLG_MRectTrans(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
 			TransVal = tren;
 		}
 	}
 }
 
-void SyncPedistal(int i)
+void SyncPedestal(const ObjectStruct &pedestal, Point origin, int width)
 {
-	if (Objects[i]._oVar6 == 1)
-		ObjChangeMapResync(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-	if (Objects[i]._oVar6 == 2) {
-		ObjChangeMapResync(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7);
-		ObjChangeMapResync(setpc_x + 6, setpc_y + 3, setpc_x + setpc_w, setpc_y + 7);
+	if (pedestal._oVar6 == 1)
+		ObjChangeMapResync(origin.x, origin.y + 3, origin.x + 2, origin.y + 7);
+	if (pedestal._oVar6 == 2) {
+		ObjChangeMapResync(origin.x, origin.y + 3, origin.x + 2, origin.y + 7);
+		ObjChangeMapResync(origin.x + 6, origin.y + 3, origin.x + width, origin.y + 7);
 	}
-	if (Objects[i]._oVar6 == 3) {
-		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", { 2 * setpc_x, 2 * setpc_y });
+	if (pedestal._oVar6 == 3) {
+		ObjChangeMapResync(pedestal._oVar1, pedestal._oVar2, pedestal._oVar3, pedestal._oVar4);
+		LoadMapObjs("Levels\\L2Data\\Blood2.DUN", origin * 2);
 	}
 }
 
@@ -5270,9 +5270,9 @@ void SyncL3Doors(ObjectStruct &door)
 	}
 }
 
-void SyncObjectAnim(int o)
+void SyncObjectAnim(ObjectStruct &object)
 {
-	object_graphic_id index = AllObjects[Objects[o]._otype].ofindex;
+	object_graphic_id index = AllObjects[object._otype].ofindex;
 
 	const auto &found = std::find(std::begin(ObjFileList), std::end(ObjFileList), index);
 	if (found == std::end(ObjFileList)) {
@@ -5282,37 +5282,37 @@ void SyncObjectAnim(int o)
 
 	const int i = std::distance(std::begin(ObjFileList), found);
 
-	Objects[o]._oAnimData = pObjCels[i].get();
-	switch (Objects[o]._otype) {
+	object._oAnimData = pObjCels[i].get();
+	switch (object._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		SyncL1Doors(Objects[o]);
+		SyncL1Doors(object);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		SyncL2Doors(Objects[o]);
+		SyncL2Doors(object);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		SyncL3Doors(Objects[o]);
+		SyncL3Doors(object);
 		break;
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		SyncCrux(o);
+		SyncCrux(object);
 		break;
 	case OBJ_LEVER:
 	case OBJ_BOOK2L:
 	case OBJ_SWITCHSKL:
-		SyncLever(o);
+		SyncLever(object);
 		break;
 	case OBJ_BOOK2R:
 	case OBJ_BLINDBOOK:
 	case OBJ_STEELTOME:
-		SyncQSTLever(o);
+		SyncQSTLever(object);
 		break;
 	case OBJ_PEDISTAL:
-		SyncPedistal(o);
+		SyncPedestal(object, { setpc_x, setpc_y }, setpc_w);
 		break;
 	default:
 		break;
