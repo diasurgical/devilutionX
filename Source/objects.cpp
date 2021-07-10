@@ -509,7 +509,7 @@ void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
 		AddObject(OBJ_BLOODBOOK, { xp, yp });
 	}
 	int ob = dObject[xp][yp] - 1;
-	SetObjMapRange(ob, x1, y1, x2, y2, leverid);
+	Objects[ob].SetMapRange({ x1, y1 }, { x2, y2 }, leverid);
 	SetBookMsg(ob, msg);
 	leverid++;
 	Objects[ob]._oVar6 = Objects[ob]._oAnimFrame + 1;
@@ -748,7 +748,7 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
-				SetObjMapRange(ObjIndex(mapPos), mapRange.position.x, mapRange.position.y, mapRange.position.x + mapRange.size.width, mapRange.position.y + mapRange.size.height, leveridx);
+				ObjectAtPosition(mapPos).SetMapRange(mapRange, leveridx);
 			}
 		}
 	}
@@ -1245,15 +1245,6 @@ void SetupObject(int i, Point position, _object_id ot)
 	Objects[i]._oPreFlag = false;
 	Objects[i]._oTrapFlag = false;
 	Objects[i]._oDoorFlag = false;
-}
-
-void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v)
-{
-	Objects[i]._oVar1 = x1;
-	Objects[i]._oVar2 = y1;
-	Objects[i]._oVar3 = x2;
-	Objects[i]._oVar4 = y2;
-	Objects[i]._oVar8 = v;
 }
 
 void SetBookMsg(int i, _speech_id msg)

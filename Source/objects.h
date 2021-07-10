@@ -8,6 +8,7 @@
 #include <cstdint>
 
 #include "engine/point.hpp"
+#include "engine/rectangle.hpp"
 #include "itemdat.h"
 #include "objdat.h"
 #include "textdat.h"
@@ -49,6 +50,36 @@ struct ObjectStruct {
 	uint32_t _oVar6;
 	_speech_id _oVar7;
 	int _oVar8;
+
+	/**
+	 * @brief Marks the map region to be refreshed when the player interacts with the object.
+	 *
+	 * Some objects will cause a map region to change when a player interacts with them (e.g. Skeleton King
+	 * antechamber levers). The coordinates used for this region are based on a 40*40 grid overlaying the central
+	 * 80*80 region of the dungeon.
+	 *
+	 * @param topLeft corner of the map region closest to the origin
+	 * @param bottomRight corner of the map region furthest from the origin
+	 * @param v ID/discriminator for the object type? Needs to be investigated further
+	 */
+	constexpr void SetMapRange(Point topLeft, Point bottomRight, int v)
+	{
+		_oVar1 = topLeft.x;
+		_oVar2 = topLeft.y;
+		_oVar3 = bottomRight.x;
+		_oVar4 = bottomRight.y;
+		_oVar8 = v;
+	}
+
+	/**
+	 * @brief Convenience function for SetMapRange(Point, Point, int)
+	 * @param mapRange A rectangle defining the top left corner and size of the affected region
+	 * @param v Object subtype/discriminator
+	 */
+	constexpr void SetMapRange(Rectangle mapRange, int v)
+	{
+		SetMapRange(mapRange.position, mapRange.position + Displacement { mapRange.size }, v);
+	}
 };
 
 extern ObjectStruct Objects[MAXOBJECTS];
@@ -64,7 +95,6 @@ void AddL1Objs(int x1, int y1, int x2, int y2);
 void AddL2Objs(int x1, int y1, int x2, int y2);
 void InitObjects();
 void SetMapObjects(const uint16_t *dunData, int startx, int starty);
-void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v);
 void SetBookMsg(int i, _speech_id msg);
 void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();

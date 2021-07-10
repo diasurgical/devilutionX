@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "direction.hpp"
+#include "size.hpp"
 #include "utils/stdcompat/abs.hpp"
 
 namespace devilution {
@@ -10,6 +11,20 @@ namespace devilution {
 struct Displacement {
 	int deltaX;
 	int deltaY;
+
+	Displacement() = default;
+
+	constexpr Displacement(int deltaX, int deltaY)
+	    : deltaX(deltaX)
+	    , deltaY(deltaY)
+	{
+	}
+
+	explicit constexpr Displacement(const Size &size)
+	    : deltaX(size.width)
+	    , deltaY(size.height)
+	{
+	}
 
 	constexpr bool operator==(const Displacement &other) const
 	{
