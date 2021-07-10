@@ -38,13 +38,13 @@ const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 Art ArtCutsceneWidescreen;
 
-static void FreeInterface()
+void FreeInterface()
 {
 	sgpBackCel = std::nullopt;
 	ArtCutsceneWidescreen.Unload();
 }
 
-static Cutscenes PickCutscene(interface_mode uMsg)
+Cutscenes PickCutscene(interface_mode uMsg)
 {
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
@@ -95,7 +95,7 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 	}
 }
 
-static void InitCutscene(interface_mode uMsg)
+void InitCutscene(interface_mode uMsg)
 {
 	const char *celPath;
 	const char *palPath;
@@ -167,7 +167,7 @@ static void InitCutscene(interface_mode uMsg)
 	sgdwProgress = 0;
 }
 
-static void DrawCutscene()
+void DrawCutscene()
 {
 	lock_buf(1);
 	const Surface &out = GlobalBackBuffer();

@@ -89,7 +89,7 @@ std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
 	}
 }
 
-bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
+bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
 {
 	bool yFlag = true;
 	bool xFlag = true;
@@ -168,7 +168,7 @@ bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, in
 	return true;
 }
 
-void DRLG_CreateThemeRoom(int themeIndex)
+void CreateThemeRoom(int themeIndex)
 {
 	const int lx = themeLoc[themeIndex].x;
 	const int ly = themeLoc[themeIndex].y;
@@ -421,7 +421,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 		for (int i = 0; i < DMAXX; i++) {
 			int themeW = 0;
 			int themeH = 0;
-			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
 					int min = minSize - 2;
 					int max = maxSize - 2;
@@ -441,7 +441,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				else
 					DRLG_MRectTrans(i + 1, j + 1, i + themeW, j + themeH);
 				themeLoc[themeCount].ttval = TransVal - 1;
-				DRLG_CreateThemeRoom(themeCount);
+				CreateThemeRoom(themeCount);
 				themeCount++;
 			}
 		}

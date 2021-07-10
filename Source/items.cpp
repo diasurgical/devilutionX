@@ -328,7 +328,7 @@ int premiumLvlAddHellfire[] = {
 	// clang-format on
 };
 
-static bool IsPrefixValidForItemType(int i, int flgs)
+bool IsPrefixValidForItemType(int i, int flgs)
 {
 	int itemTypes = ItemPrefixes[i].PLIType;
 
@@ -343,7 +343,7 @@ static bool IsPrefixValidForItemType(int i, int flgs)
 	return (flgs & itemTypes) != 0;
 }
 
-static bool IsSuffixValidForItemType(int i, int flgs)
+bool IsSuffixValidForItemType(int i, int flgs)
 {
 	int itemTypes = ItemSuffixes[i].PLIType;
 
@@ -363,7 +363,7 @@ static bool IsSuffixValidForItemType(int i, int flgs)
 	return (flgs & itemTypes) != 0;
 }
 
-int items_get_currlevel()
+int ItemsGetCurrlevel()
 {
 	int lvl = currlevel;
 	if (currlevel >= 17 && currlevel <= 20)
@@ -404,7 +404,7 @@ Point GetRandomAvailableItemPosition()
 
 void AddInitItems()
 {
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	int rnd = GenerateRnd(3) + 3;
 	for (int j = 0; j < rnd; j++) {
 		int ii = AllocateItem();
@@ -430,7 +430,7 @@ void AddInitItems()
 	}
 }
 
-static void SpawnNote()
+void SpawnNote()
 {
 	int id;
 
@@ -494,7 +494,7 @@ void CalcSelfItems(PlayerStruct &player)
 	} while (changeflag);
 }
 
-static bool ItemMinStats(const PlayerStruct &player, ItemStruct *x)
+bool ItemMinStats(const PlayerStruct &player, ItemStruct *x)
 {
 	if (player._pMagic < x->_iMinMag)
 		return false;
@@ -584,7 +584,7 @@ void SetPlrHandSeed(ItemStruct *h, int iseed)
 	h->_iSeed = iseed;
 }
 
-static bool GetItemSpace(Point position, int8_t inum)
+bool GetItemSpace(Point position, int8_t inum)
 {
 	int xx = 0;
 	int yy = 0;
@@ -634,7 +634,7 @@ static bool GetItemSpace(Point position, int8_t inum)
 	return true;
 }
 
-static void GetSuperItemSpace(Point position, int8_t inum)
+void GetSuperItemSpace(Point position, int8_t inum)
 {
 	Point positionToCheck = position;
 	if (GetItemSpace(positionToCheck, inum))
@@ -1115,12 +1115,12 @@ void SaveItemPower(ItemStruct &item, const ItemPower &power)
 	}
 }
 
-static bool StringInPanel(const char *str)
+bool StringInPanel(const char *str)
 {
 	return GetLineWidth(str, GameFontSmall, 0) < 125;
 }
 
-static void SaveItemSuffix(int i, int sufidx)
+void SaveItemSuffix(int i, int sufidx)
 {
 	auto power = ItemSuffixes[sufidx].power;
 
@@ -1391,7 +1391,7 @@ int RndUItem(int m)
 
 	int ril[512];
 
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	int ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
@@ -1433,7 +1433,7 @@ int RndAllItems()
 
 	int ril[512];
 
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	int ri = 0;
 	for (int i = 0; AllItemsList[i].iLoc != ILOC_INVALID; i++) {
 		if (!IsItemAvailable(i))
@@ -1593,14 +1593,14 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 	SetupItem(ii);
 }
 
-static void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool delta)
+void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool delta)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
@@ -1657,7 +1657,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-int char2int(char input)
+int Char2int(char input)
 {
 	if (input >= '0' && input <= '9')
 		return input - '0';
@@ -1666,10 +1666,10 @@ int char2int(char input)
 	return 0;
 }
 
-void hex2bin(const char *src, int bytes, char *target)
+void Hex2bin(const char *src, int bytes, char *target)
 {
 	for (int i = 0; i < bytes; i++, src += 2) {
-		target[i] = (char2int(*src) << 4) | char2int(src[1]);
+		target[i] = (Char2int(*src) << 4) | Char2int(src[1]);
 	}
 }
 
@@ -1692,7 +1692,7 @@ void SpawnRock()
 
 	Items[ii].position = Objects[oi].position;
 	dItem[Objects[oi].position.x][Objects[oi].position.y] = ii + 1;
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(ii, IDI_ROCK, curlv);
 	SetupItem(ii);
 	Items[ii]._iSelFlag = 2;
@@ -1720,7 +1720,7 @@ void ItemDoppel()
 		idoppely = 16;
 }
 
-static void RepairItem(ItemStruct *i, int lvl)
+void RepairItem(ItemStruct *i, int lvl)
 {
 	if (i->_iDurability == i->_iMaxDur) {
 		return;
@@ -1744,7 +1744,7 @@ static void RepairItem(ItemStruct *i, int lvl)
 	i->_iDurability = std::min<int>(i->_iDurability + rep, i->_iMaxDur);
 }
 
-static void RechargeItem(ItemStruct *i, int r)
+void RechargeItem(ItemStruct *i, int r)
 {
 	if (i->_iCharges == i->_iMaxCharges)
 		return;
@@ -1760,7 +1760,7 @@ static void RechargeItem(ItemStruct *i, int r)
 	i->_iCharges = std::min(i->_iCharges, i->_iMaxCharges);
 }
 
-static bool OilItem(ItemStruct *x, PlayerStruct &player)
+bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 {
 	int r;
 
@@ -2011,13 +2011,13 @@ void PrintItemOil(char iDidx)
 	}
 }
 
-static void DrawUTextBack(const Surface &out)
+void DrawUniqueInfoWindow(const Surface &out)
 {
 	CelDrawTo(out, { RIGHT_PANEL_X - SPANEL_WIDTH + 24, 327 }, *pSTextBoxCels, 1);
 	DrawHalfTransparentRectTo(out, RIGHT_PANEL_X - SPANEL_WIDTH + 27, 28, 265, 297);
 }
 
-static void DrawULine(const Surface &out, int y)
+void DrawUniqueInfoDevider(const Surface &out, int y)
 {
 	BYTE *src = out.at(26 + RIGHT_PANEL - SPANEL_WIDTH, 25);
 	BYTE *dst = out.at(26 + RIGHT_PANEL_X - SPANEL_WIDTH, y * 12 + 38);
@@ -2075,7 +2075,7 @@ void PrintItemMisc(ItemStruct *x)
 	}
 }
 
-static void PrintItemInfo(ItemStruct *x)
+void PrintItemInfo(ItemStruct *x)
 {
 	PrintItemMisc(x);
 	uint8_t str = x->_iMinStr;
@@ -2187,7 +2187,7 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-static void SpawnOnePremium(int i, int plvl, int playerId)
+void SpawnOnePremium(int i, int plvl, int playerId)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
@@ -2458,7 +2458,7 @@ void RecalcStoreStats()
 	boyitem._iStatFlag = StoreStatOk(&boyitem);
 }
 
-static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
+void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -2482,7 +2482,7 @@ static void CreateMagicItem(Point position, int lvl, int imisc, int imid, int ic
 		DeltaAddItem(ii);
 }
 
-static void NextItemRecord(int i)
+void NextItemRecord(int i)
 {
 	gnNumGetRecords--;
 
@@ -3305,7 +3305,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 		return;
 
 	int rndv;
-	int itemlevel = items_get_currlevel();
+	int itemlevel = ItemsGetCurrlevel();
 	switch (sgGameInitInfo.nDifficulty) {
 	case DIFF_NORMAL:
 		rndv = 5 * itemlevel + GenerateRnd(10 * itemlevel);
@@ -3378,7 +3378,7 @@ void SpawnUnique(_unique_items uid, Point position)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 
 	int idx = 0;
 	while (AllItemsList[idx].iItemId != UniqueItemList[uid].UIItemId)
@@ -3448,7 +3448,7 @@ void CreateRndUseful(Point position, bool sendmsg)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 
 	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
 	if (sendmsg)
@@ -3459,7 +3459,7 @@ void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool se
 {
 	int idx;
 
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	if (itype != ITYPE_GOLD)
 		idx = RndTypeItems(itype, imisc, curlv);
 	else
@@ -3587,7 +3587,7 @@ void CornerstoneLoad(Point position)
 	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
 		return;
 
-	hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), (char *)&pkSItem);
+	Hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), (char *)&pkSItem);
 
 	int ii = AllocateItem();
 
@@ -3631,7 +3631,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 
 	dItem[position.x][position.y] = ii + 1;
 
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(ii, itemid, curlv);
 
 	SetupItem(ii);
@@ -3653,7 +3653,7 @@ void SpawnRewardItem(int itemid, Point position)
 
 	Items[ii].position = position;
 	dItem[position.x][position.y] = ii + 1;
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(ii, itemid, curlv);
 	Items[ii].SetNewAnimation(true);
 	Items[ii]._iSelFlag = 2;
@@ -3816,7 +3816,7 @@ void DoOil(int pnum, int cii)
 	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
 		return;
 	auto &player = Players[pnum];
-	if (!OilItem(&player.InvBody[cii], player))
+	if (!ApplyOilToItem(&player.InvBody[cii], player))
 		return;
 	CalcPlrInv(pnum, true);
 	if (pnum == MyPlayerId) {
@@ -4119,13 +4119,13 @@ void DrawUniqueInfo(const Surface &out)
 		return;
 	}
 
-	DrawUTextBack(GlobalBackBuffer());
+	DrawUniqueInfoWindow(GlobalBackBuffer());
 
 	Rectangle rect { { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12 }, { 257, 0 } };
 	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UIS_CENTER);
 
-	DrawULine(out, 5);
+	DrawUniqueInfoDevider(out, 5);
 
 	rect.position.y += (12 - uitem.UINumPL) * 12;
 	PrintItemPower(uitem.powers[0].type, &curruitem);
@@ -4804,7 +4804,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 
 void CreateMagicArmor(Point position, int imisc, int icurs, bool sendmsg, bool delta)
 {
-	int lvl = items_get_currlevel();
+	int lvl = ItemsGetCurrlevel();
 	CreateMagicItem(position, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
 }
 
@@ -4819,7 +4819,7 @@ void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool 
 	if (imisc == ITYPE_STAFF)
 		imid = IMISC_STAFF;
 
-	int curlv = items_get_currlevel();
+	int curlv = ItemsGetCurrlevel();
 
 	CreateMagicItem(position, curlv, imisc, imid, icurs, sendmsg, delta);
 }

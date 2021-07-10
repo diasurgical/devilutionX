@@ -132,7 +132,7 @@ namespace {
 
 std::optional<CelSprite> pInvCels;
 
-static void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
+void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 {
 	SDL_Rect srcRect = MakeSdlRect(0, 0, size.width, size.height);
 	out.Clip(&srcRect, &targetPosition);
@@ -162,7 +162,7 @@ static void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
  * @param invListIndex The item's InvList index (it's expected this already has +1 added to it since InvGrid can't store a 0 index)
  * @param itemSize Size of item
  */
-static void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, Size itemSize)
+void AddItemToInvGrid(PlayerStruct &player, int invGridIndex, int invListIndex, Size itemSize)
 {
 	const int pitch = 10;
 	for (int y = 0; y < itemSize.height; y++) {
@@ -909,7 +909,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 	}
 }
 
-static void CheckBookLevel(PlayerStruct &player)
+void CheckBookLevel(PlayerStruct &player)
 {
 	if (player.HoldItem._iMiscId != IMISC_BOOK)
 		return;
@@ -926,7 +926,7 @@ static void CheckBookLevel(PlayerStruct &player)
 	}
 }
 
-static void CheckNaKrulNotes(PlayerStruct &player)
+void CheckNaKrulNotes(PlayerStruct &player)
 {
 	int idx = player.HoldItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
@@ -958,7 +958,7 @@ static void CheckNaKrulNotes(PlayerStruct &player)
 	Items[itemNum] = tmp;
 }
 
-static void CheckQuestItem(PlayerStruct &player)
+void CheckQuestItem(PlayerStruct &player)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -1032,7 +1032,7 @@ void CleanupItems(ItemStruct *item, int ii)
 	}
 }
 
-static bool PutItem(PlayerStruct &player, Point &position)
+bool PutItem(PlayerStruct &player, Point &position)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return false;
@@ -1070,7 +1070,7 @@ static bool PutItem(PlayerStruct &player, Point &position)
 	return false;
 }
 
-static bool CanUseStaff(ItemStruct &staff, spell_id spell)
+bool CanUseStaff(ItemStruct &staff, spell_id spell)
 {
 	return !staff.isEmpty()
 	    && (staff._iMiscId == IMISC_STAFF || staff._iMiscId == IMISC_UNIQUE)
