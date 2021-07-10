@@ -30,10 +30,12 @@ static bool RepeatLeftMouseAttackAction() //Fluffy
 	unsigned long long currentTime = SDL_GetPerformanceCounter();
 	if (currentTime - lastLeftMouseButtonTime > SDL_GetPerformanceFrequency() / 5) { //Check if it's been at least 200ms
 		if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK) {
-			if (Players[MyPlayerId]._pwtype == WT_RANGED)
-				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, {cursmx, cursmy});
-			else
-				NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, {cursmx, cursmy});
+			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY) { 
+				if (Players[MyPlayerId]._pwtype == WT_RANGED)
+					NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, {cursmx, cursmy});
+				else
+					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, {cursmx, cursmy});
+			}
 		} else if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK_MONSTERTARGET && pcursmonst != -1) {
 			if (Players[MyPlayerId]._pwtype == WT_RANGED)
 				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
