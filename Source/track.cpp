@@ -30,14 +30,19 @@ void track_process()
 
 	const auto &player = Players[MyPlayerId];
 
+	if (sgbMouseDown == CLICK_RIGHT && player.AnimInfo.GetFrameToUseForRendering() < 10) // prevents casting a spell twice from a single click
+		return;
+	if (sgbMouseDown == CLICK_LEFT && player.AnimInfo.GetFrameToUseForRendering() < 7) // prevents attacking twice from a single click
+		return;
+
 	int isShift = (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
-	if (sgbMouseDown == CLICK_RIGHT && player.AnimInfo.GetFrameToUseForRendering() > 10) {
+	if (sgbMouseDown == CLICK_RIGHT) {
 		RightMouseDown();
 	}
 	if (sgbMouseDown == CLICK_LEFT) {
 		track_repeat_walk(LeftMouseDown(isShift));
 		if (blockClicks) {
-			sgbMouseDown == CLICK_NONE;
+			sgbMouseDown = CLICK_NONE;
 		} else {
 			LeftMouseUp(isShift);
 		}
