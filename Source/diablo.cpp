@@ -598,6 +598,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_LBUTTONDOWN:
 		blockClicks = false;
+		lastDoorId = -1;
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_LEFT;
@@ -614,6 +615,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_RBUTTONDOWN:
 		blockClicks = false;
+		lastDoorId = -1;
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_RIGHT;
