@@ -306,4 +306,16 @@ int sound_get_or_set_sound_volume(int volume)
 	return sgOptions.Audio.nSoundVolume;
 }
 
+void music_mute()
+{
+	if (music)
+		music->setVolume(VolumeLogToLinear(VOLUME_MIN, VOLUME_MIN, VOLUME_MAX));
+}
+
+void music_unmute()
+{
+	if (music)
+		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
+}
+
 } // namespace devilution

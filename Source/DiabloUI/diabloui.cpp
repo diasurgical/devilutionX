@@ -90,7 +90,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	gfnListEsc = fnEsc;
 	gfnListYesNo = fnYesNo;
 	gUiItems.clear();
-	for (auto &item : items)
+	for (const auto &item : items)
 		gUiItems.push_back(item.get());
 	UiItemsWraps = itemsWraps;
 	ListOffset = nullptr;
@@ -401,6 +401,10 @@ void UiHandleEvents(SDL_Event *event)
 			gbActive = false;
 		else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 			ReinitializeHardwareCursor();
+		else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+			music_mute();
+		else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+			music_unmute();
 	}
 #endif
 }

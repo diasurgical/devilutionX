@@ -19,12 +19,6 @@
 
 namespace devilution {
 
-int sgdwLockCount;
-#ifdef _DEBUG
-int locktbl[256];
-#endif
-static CCritSect sgMemCrit;
-
 int refreshDelay;
 SDL_Renderer *renderer;
 SDL_Texture *texture;
@@ -44,6 +38,12 @@ bool RenderDirectlyToOutputSurface;
 
 namespace {
 
+int sgdwLockCount;
+#ifdef _DEBUG
+int locktbl[256];
+#endif
+CCritSect sgMemCrit;
+
 bool CanRenderDirectlyToOutputSurface()
 {
 #ifdef USE_SDL1
@@ -60,9 +60,7 @@ bool CanRenderDirectlyToOutputSurface()
 #endif
 }
 
-} // namespace
-
-static void CreateBackBuffer()
+void CreateBackBuffer()
 {
 	if (CanRenderDirectlyToOutputSurface()) {
 		Log("{}", "Will render directly to the SDL output surface");
@@ -93,7 +91,7 @@ static void CreateBackBuffer()
 	pal_surface_palette_version = 1;
 }
 
-static void CreatePrimarySurface()
+void CreatePrimarySurface()
 {
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
@@ -111,6 +109,45 @@ static void CreatePrimarySurface()
 	}
 }
 
+void LockBufPriv()
+{
+	sgMemCrit.Enter();
+	if (sgdwLockCount != 0) {
+		sgdwLockCount++;
+		return;
+	}
+
+	sgdwLockCount++;
+}
+
+void UnlockBufPriv()
+{
+	if (sgdwLockCount == 0)
+		app_fatal("draw main unlock error");
+
+	sgdwLockCount--;
+	sgMemCrit.Leave();
+}
+
+/**
+ * @brief Limit FPS to avoid high CPU load, use when v-sync isn't available
+ */
+void LimitFrameRate()
+{
+	if (!sgOptions.Graphics.bFPSLimit)
+		return;
+	static uint32_t frameDeadline;
+	uint32_t tc = SDL_GetTicks() * 1000;
+	uint32_t v = 0;
+	if (frameDeadline > tc) {
+		v = tc % refreshDelay;
+		SDL_Delay(v / 1000 + 1); // ceil
+	}
+	frameDeadline = tc + v + refreshDelay;
+}
+
+} // namespace
+
 void dx_init()
 {
 #ifndef USE_SDL1
@@ -122,16 +159,6 @@ void dx_init()
 	palette_init();
 	CreateBackBuffer();
 }
-static void LockBufPriv()
-{
-	sgMemCrit.Enter();
-	if (sgdwLockCount != 0) {
-		sgdwLockCount++;
-		return;
-	}
-
-	sgdwLockCount++;
-}
 
 void lock_buf(int idx) // NOLINT(misc-unused-parameters)
 {
@@ -139,15 +166,6 @@ void lock_buf(int idx) // NOLINT(misc-unused-parameters)
 	++locktbl[idx];
 #endif
 	LockBufPriv();
-}
-
-static void UnlockBufPriv()
-{
-	if (sgdwLockCount == 0)
-		app_fatal("draw main unlock error");
-
-	sgdwLockCount--;
-	sgMemCrit.Leave();
 }
 
 void unlock_buf(int idx) // NOLINT(misc-unused-parameters)
@@ -284,23 +302,6 @@ void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 	}
 	SDL_FreeSurface(converted);
 #endif
-}
-
-/**
- * @brief Limit FPS to avoid high CPU load, use when v-sync isn't available
- */
-void LimitFrameRate()
-{
-	if (!sgOptions.Graphics.bFPSLimit)
-		return;
-	static uint32_t frameDeadline;
-	uint32_t tc = SDL_GetTicks() * 1000;
-	uint32_t v = 0;
-	if (frameDeadline > tc) {
-		v = tc % refreshDelay;
-		SDL_Delay(v / 1000 + 1); // ceil
-	}
-	frameDeadline = tc + v + refreshDelay;
 }
 
 void RenderPresent()

@@ -542,6 +542,25 @@ void ControlUpDown(int v)
 	}
 }
 
+void RemoveGold(int pnum, int goldIndex)
+{
+	auto &player = Players[pnum];
+
+	int gi = goldIndex - INVITEM_INV_FIRST;
+	player.InvList[gi]._ivalue -= dropGoldValue;
+	if (player.InvList[gi]._ivalue > 0)
+		SetPlrHandGoldCurs(&player.InvList[gi]);
+	else
+		player.RemoveInvItem(gi);
+	SetPlrHandItem(&player.HoldItem, IDI_GOLD);
+	GetGoldSeed(pnum, &player.HoldItem);
+	player.HoldItem._ivalue = dropGoldValue;
+	player.HoldItem._iStatFlag = true;
+	ControlSetGoldCurs(player);
+	player._pGold = CalculateGold(player);
+	dropGoldValue = 0;
+}
+
 } // namespace
 
 void DrawSpell(const Surface &out)
@@ -1788,7 +1807,7 @@ void control_drop_gold(char vkey)
 	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
-			control_remove_gold(MyPlayerId, initialDropGoldIndex);
+			RemoveGold(MyPlayerId, initialDropGoldIndex);
 		dropGoldFlag = false;
 	} else if (vkey == DVL_VK_ESCAPE) {
 		dropGoldFlag = false;
@@ -1806,25 +1825,6 @@ void control_drop_gold(char vkey)
 		}
 		dropGoldValue = atoi(input);
 	}
-}
-
-void control_remove_gold(int pnum, int goldIndex)
-{
-	auto &player = Players[pnum];
-
-	int gi = goldIndex - INVITEM_INV_FIRST;
-	player.InvList[gi]._ivalue -= dropGoldValue;
-	if (player.InvList[gi]._ivalue > 0)
-		SetPlrHandGoldCurs(&player.InvList[gi]);
-	else
-		player.RemoveInvItem(gi);
-	SetPlrHandItem(&player.HoldItem, IDI_GOLD);
-	GetGoldSeed(pnum, &player.HoldItem);
-	player.HoldItem._ivalue = dropGoldValue;
-	player.HoldItem._iStatFlag = true;
-	ControlSetGoldCurs(player);
-	player._pGold = CalculateGold(player);
-	dropGoldValue = 0;
 }
 
 void DrawTalkPan(const Surface &out)

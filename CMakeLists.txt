@@ -524,9 +524,6 @@ if(RUN_TESTS)
     test/dead_test.cpp
     test/diablo_test.cpp
     test/drlg_l1_test.cpp
-    test/drlg_l2_test.cpp
-    test/drlg_l3_test.cpp
-    test/drlg_l4_test.cpp
     test/effects_test.cpp
     test/file_util_test.cpp
     test/inv_test.cpp
@@ -584,6 +581,7 @@ if(RUN_TESTS)
   include(CTest)
   include(GoogleTest)
   find_package(GTest REQUIRED)
+  add_definitions(-DRUN_TESTS)
   target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
   target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
   target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})

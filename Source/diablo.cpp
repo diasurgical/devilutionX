@@ -153,7 +153,9 @@ bool forceSpawn;
 bool forceDiablo;
 int sgnTimeoutCurs;
 bool gbShowIntro = true;
+#ifdef _DEBUG
 int arrowdebug = 0;
+#endif
 /** To know if these things have been done when we get to the diablo_deinit() function */
 bool was_archives_init = false;
 /** To know if surfaces have been initialized or not */
@@ -223,300 +225,6 @@ bool ProcessInput()
 	}
 
 	return true;
-}
-
-void RunGameLoop(interface_mode uMsg)
-{
-	WNDPROC saveProc;
-	tagMSG msg;
-
-	nthread_ignore_mutex(true);
-	StartGame(uMsg);
-	assert(ghMainWnd);
-	saveProc = SetWindowProc(GM_Game);
-	run_delta_info();
-	gbRunGame = true;
-	gbProcessPlayers = true;
-	gbRunGameResult = true;
-	force_redraw = 255;
-	DrawAndBlit();
-	LoadPWaterPalette();
-	PaletteFadeIn(8);
-	force_redraw = 255;
-	gbGameLoopStartup = true;
-	nthread_ignore_mutex(false);
-
-#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
-	unsigned run_game_iteration = 0;
-#endif
-	while (gbRunGame) {
-		while (FetchMessage(&msg)) {
-			if (msg.message == DVL_WM_QUIT) {
-				gbRunGameResult = false;
-				gbRunGame = false;
-				break;
-			}
-			TranslateMessage(&msg);
-			PushMessage(&msg);
-		}
-		if (!gbRunGame)
-			break;
-		if (!nthread_has_500ms_passed()) {
-			ProcessInput();
-			force_redraw |= 1;
-			DrawAndBlit();
-			continue;
-		}
-		diablo_color_cyc_logic();
-		multi_process_network_packets();
-		game_loop(gbGameLoopStartup);
-		gbGameLoopStartup = false;
-		DrawAndBlit();
-#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
-		if (run_game_iteration++ == 0)
-			HeapProfilerDump("first_game_iteration");
-#endif
-	}
-
-	if (gbIsMultiplayer) {
-		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
-	}
-
-	PaletteFadeOut(8);
-	NewCursor(CURSOR_NONE);
-	ClearScreenBuffer();
-	force_redraw = 255;
-	scrollrt_draw_game_screen();
-	saveProc = SetWindowProc(saveProc);
-	assert(saveProc == GM_Game);
-	FreeGame();
-
-	if (cineflag) {
-		cineflag = false;
-		DoEnding();
-	}
-}
-
-[[noreturn]] void PrintHelpAndExit()
-{
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--version", _("Print the version and exit"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-dir", _("Specify the location of the .ttf font"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-name", _("Specify the name of a custom .ttf font"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
-	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
-#ifdef _DEBUG
-	printInConsole("\nDebug options:\n");
-	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
-	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
-	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
-	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
-	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
-	printInConsole("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
-	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
-	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
-	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
-#endif
-	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
-	diablo_quit(0);
-}
-
-void DiabloParseFlags(int argc, char **argv)
-{
-	for (int i = 1; i < argc; i++) {
-		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
-			PrintHelpAndExit();
-		} else if (strcasecmp("--version", argv[i]) == 0) {
-			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
-			diablo_quit(0);
-		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
-			paths::SetBasePath(argv[++i]);
-		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
-			paths::SetPrefPath(argv[++i]);
-		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
-			paths::SetConfigPath(argv[++i]);
-		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
-			paths::SetLangPath(argv[++i]);
-		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
-			paths::SetTtfPath(argv[++i]);
-		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
-			paths::SetTtfName(argv[++i]);
-		} else if (strcasecmp("-n", argv[i]) == 0) {
-			gbShowIntro = false;
-		} else if (strcasecmp("-f", argv[i]) == 0) {
-			EnableFrameCount();
-		} else if (strcasecmp("-x", argv[i]) == 0) {
-			gbForceWindowed = true;
-		} else if (strcasecmp("--spawn", argv[i]) == 0) {
-			forceSpawn = true;
-		} else if (strcasecmp("--diablo", argv[i]) == 0) {
-			forceDiablo = true;
-		} else if (strcasecmp("--nestart", argv[i]) == 0) {
-			gbNestArt = true;
-		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
-			gbVanilla = true;
-		} else if (strcasecmp("--verbose", argv[i]) == 0) {
-			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
-#ifdef _DEBUG
-		} else if (strcasecmp("-^", argv[i]) == 0) {
-			debug_mode_key_inverted_v = true;
-		} else if (strcasecmp("-$", argv[i]) == 0) {
-			debug_mode_dollar_sign = true;
-		} else if (strcasecmp("-i", argv[i]) == 0) {
-			debug_mode_key_i = true;
-		} else if (strcasecmp("-j", argv[i]) == 0) {
-			debug_mode_key_j = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-l", argv[i]) == 0) {
-			setlevel = false;
-			leveldebug = true;
-			leveltype = (dungeon_type)SDL_atoi(argv[++i]);
-			currlevel = SDL_atoi(argv[++i]);
-			Players[0].plrlevel = currlevel;
-		} else if (strcasecmp("-m", argv[i]) == 0) {
-			monstdebug = true;
-			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-q", argv[i]) == 0) {
-			questdebug = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-r", argv[i]) == 0) {
-			setseed = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-t", argv[i]) == 0) {
-			leveldebug = true;
-			setlevel = true;
-			setlvlnum = (_setlevels)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-v", argv[i]) == 0) {
-			visiondebug = true;
-		} else if (strcasecmp("-w", argv[i]) == 0) {
-			debug_mode_key_w = true;
-#endif
-		} else {
-			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
-			PrintHelpAndExit();
-		}
-	}
-}
-
-void DiabloInitScreen()
-{
-	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
-	if (!sgbControllerActive)
-		SetCursorPos(MousePosition.x, MousePosition.y);
-	ScrollInfo.tile = { 0, 0 };
-	ScrollInfo.offset = { 0, 0 };
-	ScrollInfo._sdir = SDIR_NONE;
-
-	ClrDiabloMsg();
-}
-
-void SetApplicationVersions()
-{
-	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
-}
-
-void DiabloInit()
-{
-	if (sgOptions.Graphics.bShowFPS)
-		EnableFrameCount();
-
-	init_create_window();
-	was_window_init = true;
-
-	SFileEnableDirectAccess(true);
-	init_archives();
-	was_archives_init = true;
-
-	if (forceSpawn)
-		gbIsSpawn = true;
-	if (forceDiablo)
-		gbIsHellfire = false;
-
-	gbIsHellfireSaveGame = gbIsHellfire;
-
-	LanguageInitialize();
-
-	SetApplicationVersions();
-
-	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
-		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
-			continue;
-		}
-		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
-	}
-
-	UiInitialize();
-	UiSetSpawned(gbIsSpawn);
-	was_ui_init = true;
-
-	ReadOnlyTest();
-
-	InitHash();
-
-	DiabloInitScreen();
-
-#ifndef NOSOUND
-	snd_init();
-	was_snd_init = true;
-#endif
-
-	ui_sound_init();
-
-	// Item graphics are loaded early, they already get touched during hero selection.
-	InitItemGFX();
-}
-
-void DiabloSplash()
-{
-	if (!gbShowIntro)
-		return;
-
-	play_movie("gendata\\logo.smk", true);
-
-	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
-		play_movie("gendata\\Hellfire.smk", true);
-		sgOptions.Hellfire.bIntro = false;
-	}
-	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
-		play_movie("gendata\\diablo1.smk", true);
-		sgOptions.Diablo.bIntro = false;
-	}
-
-	UiTitleDialog();
-}
-
-void DiabloDeinit()
-{
-	FreeItemGFX();
-
-	if (sbWasOptionsLoaded)
-		SaveOptions();
-	if (was_snd_init) {
-		effects_cleanup_sfx();
-	}
-#ifndef NOSOUND
-	Aulib::quit();
-#endif
-	if (was_ui_init)
-		UiDestroy();
-	if (was_archives_init)
-		init_cleanup();
-	if (was_window_init)
-		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
-	if (was_fonts_init)
-		FontsCleanup();
-	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) != 0)
-		SDL_Quit();
 }
 
 bool LeftMouseCmd(bool bShift)
@@ -858,6 +566,391 @@ void PressChar(int32_t vkey)
 void GetMousePos(int32_t lParam)
 {
 	MousePosition = { (std::int16_t)(lParam & 0xffff), (std::int16_t)((lParam >> 16) & 0xffff) };
+}
+
+void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
+{
+	switch (uMsg) {
+	case DVL_WM_KEYDOWN:
+		PressKey(wParam);
+		return;
+	case DVL_WM_KEYUP:
+		ReleaseKey(wParam);
+		return;
+	case DVL_WM_CHAR:
+		PressChar(wParam);
+		return;
+	case DVL_WM_SYSKEYDOWN:
+		if (PressSysKey(wParam))
+			return;
+		break;
+	case DVL_WM_SYSCOMMAND:
+		if (wParam == DVL_SC_CLOSE) {
+			gbRunGame = false;
+			gbRunGameResult = false;
+			return;
+		}
+		break;
+	case DVL_WM_MOUSEMOVE:
+		GetMousePos(lParam);
+		gmenu_on_mouse_move();
+		return;
+	case DVL_WM_LBUTTONDOWN:
+		blockClicks = false;
+		GetMousePos(lParam);
+		if (sgbMouseDown == CLICK_NONE) {
+			sgbMouseDown = CLICK_LEFT;
+			track_repeat_walk(LeftMouseDown(wParam));
+		}
+		return;
+	case DVL_WM_LBUTTONUP:
+		GetMousePos(lParam);
+		if (sgbMouseDown == CLICK_LEFT) {
+			sgbMouseDown = CLICK_NONE;
+			LeftMouseUp(wParam);
+			track_repeat_walk(false);
+		}
+		return;
+	case DVL_WM_RBUTTONDOWN:
+		blockClicks = false;
+		GetMousePos(lParam);
+		if (sgbMouseDown == CLICK_NONE) {
+			sgbMouseDown = CLICK_RIGHT;
+			RightMouseDown();
+		}
+		return;
+	case DVL_WM_RBUTTONUP:
+		GetMousePos(lParam);
+		if (sgbMouseDown == CLICK_RIGHT) {
+			sgbMouseDown = CLICK_NONE;
+		}
+		return;
+	case DVL_WM_CAPTURECHANGED:
+		sgbMouseDown = CLICK_NONE;
+		track_repeat_walk(false);
+		break;
+	case WM_DIABNEXTLVL:
+	case WM_DIABPREVLVL:
+	case WM_DIABRTNLVL:
+	case WM_DIABSETLVL:
+	case WM_DIABWARPLVL:
+	case WM_DIABTOWNWARP:
+	case WM_DIABTWARPUP:
+	case WM_DIABRETOWN:
+		if (gbIsMultiplayer)
+			pfile_write_hero();
+		nthread_ignore_mutex(true);
+		PaletteFadeOut(8);
+		sound_stop();
+		music_stop();
+		track_repeat_walk(false);
+		sgbMouseDown = CLICK_NONE;
+		ShowProgress((interface_mode)uMsg);
+		force_redraw = 255;
+		DrawAndBlit();
+		LoadPWaterPalette();
+		if (gbRunGame)
+			PaletteFadeIn(8);
+		nthread_ignore_mutex(false);
+		gbGameLoopStartup = true;
+		return;
+	}
+
+	MainWndProc(uMsg);
+}
+
+void RunGameLoop(interface_mode uMsg)
+{
+	WNDPROC saveProc;
+	tagMSG msg;
+
+	nthread_ignore_mutex(true);
+	StartGame(uMsg);
+	assert(ghMainWnd);
+	saveProc = SetWindowProc(GameEventHandler);
+	run_delta_info();
+	gbRunGame = true;
+	gbProcessPlayers = true;
+	gbRunGameResult = true;
+	force_redraw = 255;
+	DrawAndBlit();
+	LoadPWaterPalette();
+	PaletteFadeIn(8);
+	force_redraw = 255;
+	gbGameLoopStartup = true;
+	nthread_ignore_mutex(false);
+
+#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
+	unsigned run_game_iteration = 0;
+#endif
+	while (gbRunGame) {
+		while (FetchMessage(&msg)) {
+			if (msg.message == DVL_WM_QUIT) {
+				gbRunGameResult = false;
+				gbRunGame = false;
+				break;
+			}
+			TranslateMessage(&msg);
+			PushMessage(&msg);
+		}
+		if (!gbRunGame)
+			break;
+		if (!nthread_has_500ms_passed()) {
+			ProcessInput();
+			force_redraw |= 1;
+			DrawAndBlit();
+			continue;
+		}
+		diablo_color_cyc_logic();
+		multi_process_network_packets();
+		game_loop(gbGameLoopStartup);
+		gbGameLoopStartup = false;
+		DrawAndBlit();
+#ifdef GPERF_HEAP_FIRST_GAME_ITERATION
+		if (run_game_iteration++ == 0)
+			HeapProfilerDump("first_game_iteration");
+#endif
+	}
+
+	if (gbIsMultiplayer) {
+		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
+	}
+
+	PaletteFadeOut(8);
+	NewCursor(CURSOR_NONE);
+	ClearScreenBuffer();
+	force_redraw = 255;
+	scrollrt_draw_game_screen();
+	saveProc = SetWindowProc(saveProc);
+	assert(saveProc == GameEventHandler);
+	FreeGame();
+
+	if (cineflag) {
+		cineflag = false;
+		DoEnding();
+	}
+}
+
+[[noreturn]] void PrintHelpAndExit()
+{
+	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "Options:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-h, --help", _("Print this message and exit"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--version", _("Print the version and exit"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-dir", _("Specify the location of the .ttf font"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-name", _("Specify the name of a custom .ttf font"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
+	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
+#ifdef _DEBUG
+	printInConsole("\nDebug options:\n");
+	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
+	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
+	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
+	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
+	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
+	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
+	printInConsole("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
+	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
+	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
+	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
+	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
+#endif
+	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
+	diablo_quit(0);
+}
+
+void DiabloParseFlags(int argc, char **argv)
+{
+	for (int i = 1; i < argc; i++) {
+		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
+			PrintHelpAndExit();
+		} else if (strcasecmp("--version", argv[i]) == 0) {
+			printInConsole("%s v%s\n", PROJECT_NAME, PROJECT_VERSION);
+			diablo_quit(0);
+		} else if (strcasecmp("--data-dir", argv[i]) == 0) {
+			paths::SetBasePath(argv[++i]);
+		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
+			paths::SetPrefPath(argv[++i]);
+		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
+			paths::SetConfigPath(argv[++i]);
+		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
+			paths::SetLangPath(argv[++i]);
+		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
+			paths::SetTtfPath(argv[++i]);
+		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
+			paths::SetTtfName(argv[++i]);
+		} else if (strcasecmp("-n", argv[i]) == 0) {
+			gbShowIntro = false;
+		} else if (strcasecmp("-f", argv[i]) == 0) {
+			EnableFrameCount();
+		} else if (strcasecmp("-x", argv[i]) == 0) {
+			gbForceWindowed = true;
+		} else if (strcasecmp("--spawn", argv[i]) == 0) {
+			forceSpawn = true;
+		} else if (strcasecmp("--diablo", argv[i]) == 0) {
+			forceDiablo = true;
+		} else if (strcasecmp("--nestart", argv[i]) == 0) {
+			gbNestArt = true;
+		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
+			gbVanilla = true;
+		} else if (strcasecmp("--verbose", argv[i]) == 0) {
+			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
+#ifdef _DEBUG
+		} else if (strcasecmp("-^", argv[i]) == 0) {
+			debug_mode_key_inverted_v = true;
+		} else if (strcasecmp("-$", argv[i]) == 0) {
+			debug_mode_dollar_sign = true;
+		} else if (strcasecmp("-i", argv[i]) == 0) {
+			debug_mode_key_i = true;
+		} else if (strcasecmp("-j", argv[i]) == 0) {
+			debug_mode_key_j = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-l", argv[i]) == 0) {
+			setlevel = false;
+			leveldebug = true;
+			leveltype = (dungeon_type)SDL_atoi(argv[++i]);
+			currlevel = SDL_atoi(argv[++i]);
+			Players[0].plrlevel = currlevel;
+		} else if (strcasecmp("-m", argv[i]) == 0) {
+			monstdebug = true;
+			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-q", argv[i]) == 0) {
+			questdebug = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-r", argv[i]) == 0) {
+			setseed = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-t", argv[i]) == 0) {
+			leveldebug = true;
+			setlevel = true;
+			setlvlnum = (_setlevels)SDL_atoi(argv[++i]);
+		} else if (strcasecmp("-v", argv[i]) == 0) {
+			visiondebug = true;
+		} else if (strcasecmp("-w", argv[i]) == 0) {
+			debug_mode_key_w = true;
+#endif
+		} else {
+			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
+			PrintHelpAndExit();
+		}
+	}
+}
+
+void DiabloInitScreen()
+{
+	MousePosition = { gnScreenWidth / 2, gnScreenHeight / 2 };
+	if (!sgbControllerActive)
+		SetCursorPos(MousePosition.x, MousePosition.y);
+	ScrollInfo.tile = { 0, 0 };
+	ScrollInfo.offset = { 0, 0 };
+	ScrollInfo._sdir = SDIR_NONE;
+
+	ClrDiabloMsg();
+}
+
+void SetApplicationVersions()
+{
+	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
+	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
+}
+
+void DiabloInit()
+{
+	if (sgOptions.Graphics.bShowFPS)
+		EnableFrameCount();
+
+	init_create_window();
+	was_window_init = true;
+
+	SFileEnableDirectAccess(true);
+	init_archives();
+	was_archives_init = true;
+
+	if (forceSpawn)
+		gbIsSpawn = true;
+	if (forceDiablo)
+		gbIsHellfire = false;
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+
+	LanguageInitialize();
+
+	SetApplicationVersions();
+
+	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
+		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
+			continue;
+		}
+		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
+	}
+
+	UiInitialize();
+	UiSetSpawned(gbIsSpawn);
+	was_ui_init = true;
+
+	ReadOnlyTest();
+
+	InitHash();
+
+	DiabloInitScreen();
+
+#ifndef NOSOUND
+	snd_init();
+	was_snd_init = true;
+#endif
+
+	ui_sound_init();
+
+	// Item graphics are loaded early, they already get touched during hero selection.
+	InitItemGFX();
+}
+
+void DiabloSplash()
+{
+	if (!gbShowIntro)
+		return;
+
+	play_movie("gendata\\logo.smk", true);
+
+	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
+		play_movie("gendata\\Hellfire.smk", true);
+		sgOptions.Hellfire.bIntro = false;
+	}
+	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
+		play_movie("gendata\\diablo1.smk", true);
+		sgOptions.Diablo.bIntro = false;
+	}
+
+	UiTitleDialog();
+}
+
+void DiabloDeinit()
+{
+	FreeItemGFX();
+
+	if (sbWasOptionsLoaded)
+		SaveOptions();
+	if (was_snd_init) {
+		effects_cleanup_sfx();
+	}
+#ifndef NOSOUND
+	Aulib::quit();
+#endif
+	if (was_ui_init)
+		UiDestroy();
+	if (was_archives_init)
+		init_cleanup();
+	if (was_window_init)
+		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
+	if (was_fonts_init)
+		FontsCleanup();
+	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) != 0)
+		SDL_Quit();
 }
 
 void LoadLvlGFX()
@@ -1649,8 +1742,39 @@ void diablo_pause_game()
 			sound_stop();
 			track_repeat_walk(false);
 		}
+
 		force_redraw = 255;
 	}
+}
+
+bool GameWasAlreadyPaused = false;
+bool MinimizePaused = false;
+
+void diablo_focus_pause()
+{
+	if (gbIsMultiplayer) {
+		return;
+	}
+
+	if (!MinimizePaused) {
+		GameWasAlreadyPaused = PauseMode != 0;
+
+		if (!GameWasAlreadyPaused) {
+			PauseMode = 2;
+			sound_stop();
+			track_repeat_walk(false);
+		}
+
+		music_mute();
+	} else {
+		if (!GameWasAlreadyPaused) {
+			PauseMode = 0;
+		}
+
+		music_unmute();
+	}
+
+	MinimizePaused = !MinimizePaused;
 }
 
 bool PressEscKey()
@@ -1740,97 +1864,6 @@ void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 		return;
 	case DVL_WM_CAPTURECHANGED:
 		sgbMouseDown = CLICK_NONE;
-		return;
-	}
-
-	MainWndProc(uMsg);
-}
-
-void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam)
-{
-	switch (uMsg) {
-	case DVL_WM_KEYDOWN:
-		PressKey(wParam);
-		return;
-	case DVL_WM_KEYUP:
-		ReleaseKey(wParam);
-		return;
-	case DVL_WM_CHAR:
-		PressChar(wParam);
-		return;
-	case DVL_WM_SYSKEYDOWN:
-		if (PressSysKey(wParam))
-			return;
-		break;
-	case DVL_WM_SYSCOMMAND:
-		if (wParam == DVL_SC_CLOSE) {
-			gbRunGame = false;
-			gbRunGameResult = false;
-			return;
-		}
-		break;
-	case DVL_WM_MOUSEMOVE:
-		GetMousePos(lParam);
-		gmenu_on_mouse_move();
-		return;
-	case DVL_WM_LBUTTONDOWN:
-		blockClicks = false;
-		GetMousePos(lParam);
-		if (sgbMouseDown == CLICK_NONE) {
-			sgbMouseDown = CLICK_LEFT;
-			track_repeat_walk(LeftMouseDown(wParam));
-		}
-		return;
-	case DVL_WM_LBUTTONUP:
-		GetMousePos(lParam);
-		if (sgbMouseDown == CLICK_LEFT) {
-			sgbMouseDown = CLICK_NONE;
-			LeftMouseUp(wParam);
-			track_repeat_walk(false);
-		}
-		return;
-	case DVL_WM_RBUTTONDOWN:
-		blockClicks = false;
-		GetMousePos(lParam);
-		if (sgbMouseDown == CLICK_NONE) {
-			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown();
-		}
-		return;
-	case DVL_WM_RBUTTONUP:
-		GetMousePos(lParam);
-		if (sgbMouseDown == CLICK_RIGHT) {
-			sgbMouseDown = CLICK_NONE;
-		}
-		return;
-	case DVL_WM_CAPTURECHANGED:
-		sgbMouseDown = CLICK_NONE;
-		track_repeat_walk(false);
-		break;
-	case WM_DIABNEXTLVL:
-	case WM_DIABPREVLVL:
-	case WM_DIABRTNLVL:
-	case WM_DIABSETLVL:
-	case WM_DIABWARPLVL:
-	case WM_DIABTOWNWARP:
-	case WM_DIABTWARPUP:
-	case WM_DIABRETOWN:
-		if (gbIsMultiplayer)
-			pfile_write_hero();
-		nthread_ignore_mutex(true);
-		PaletteFadeOut(8);
-		sound_stop();
-		music_stop();
-		track_repeat_walk(false);
-		sgbMouseDown = CLICK_NONE;
-		ShowProgress((interface_mode)uMsg);
-		force_redraw = 255;
-		DrawAndBlit();
-		LoadPWaterPalette();
-		if (gbRunGame)
-			PaletteFadeIn(8);
-		nthread_ignore_mutex(false);
-		gbGameLoopStartup = true;
 		return;
 	}
 

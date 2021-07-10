@@ -10,16 +10,18 @@
 
 namespace devilution {
 
-static CCritSect sgMemCrit;
+namespace {
+
+CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
 TMegaPkt *sgpInfoHead; /* may not be right struct */
 bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
 /* rdata */
-static SDL_Thread *sghThread = nullptr;
+SDL_Thread *sghThread = nullptr;
 
-static void DthreadHandler()
+void DthreadHandler()
 {
 	const char *errorBuf;
 	TMegaPkt *pkt;
@@ -54,6 +56,8 @@ static void DthreadHandler()
 		}
 	}
 }
+
+} // namespace
 
 void dthread_remove_player(uint8_t pnum)
 {

@@ -549,8 +549,6 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_MINIMIZED:
 		case SDL_WINDOWEVENT_MAXIMIZED:
 		case SDL_WINDOWEVENT_RESTORED:
-		case SDL_WINDOWEVENT_FOCUS_GAINED:
-		case SDL_WINDOWEVENT_FOCUS_LOST:
 #if SDL_VERSION_ATLEAST(2, 0, 5)
 		case SDL_WINDOWEVENT_TAKE_FOCUS:
 #endif
@@ -567,6 +565,14 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_CLOSE:
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
 			break;
+
+		case SDL_WINDOWEVENT_FOCUS_LOST:
+		case SDL_WINDOWEVENT_FOCUS_GAINED:
+			if (gbRunGameResult) {
+				diablo_focus_pause();
+			}
+			break;
+
 		default:
 			return FalseAvail("SDL_WINDOWEVENT", e.window.event);
 		}

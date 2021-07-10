@@ -1697,7 +1697,7 @@ void AddCryptObject(int i, int a2)
 	Objects[i]._oVar4 = Objects[i]._oAnimFrame + 1;
 }
 
-void AddObject(_object_id ot, Point objPos)
+void AddObject(_object_id objType, Point objPos)
 {
 	if (ActiveObjectCount >= MAXOBJECTS)
 		return;
@@ -1706,8 +1706,8 @@ void AddObject(_object_id ot, Point objPos)
 	AvailableObjects[0] = AvailableObjects[MAXOBJECTS - 1 - ActiveObjectCount];
 	ActiveObjects[ActiveObjectCount] = oi;
 	dObject[objPos.x][objPos.y] = oi + 1;
-	SetupObject(oi, objPos, ot);
-	switch (ot) {
+	SetupObject(oi, objPos, objType);
+	switch (objType) {
 	case OBJ_L1LIGHT:
 	case OBJ_SKFIRE:
 	case OBJ_CANDLE1:
@@ -1726,15 +1726,15 @@ void AddObject(_object_id ot, Point objPos)
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		AddL1Door(oi, objPos, ot);
+		AddL1Door(oi, objPos, objType);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		AddL2Door(oi, objPos, ot);
+		AddL2Door(oi, objPos, objType);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		AddL3Door(oi, objPos, ot);
+		AddL3Door(oi, objPos, objType);
 		break;
 	case OBJ_BOOK2R:
 		AddSCambBook(oi);
@@ -1742,12 +1742,12 @@ void AddObject(_object_id ot, Point objPos)
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
 	case OBJ_CHEST3:
-		AddChest(oi, ot);
+		AddChest(oi, objType);
 		break;
 	case OBJ_TCHEST1:
 	case OBJ_TCHEST2:
 	case OBJ_TCHEST3:
-		AddChest(oi, ot);
+		AddChest(oi, objType);
 		Objects[oi]._oTrapFlag = true;
 		if (leveltype == DTYPE_CATACOMBS) {
 			Objects[oi]._oVar4 = GenerateRnd(2);
@@ -1773,7 +1773,7 @@ void AddObject(_object_id ot, Point objPos)
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
-		AddBarrel(oi, ot);
+		AddBarrel(oi, objType);
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
@@ -2180,16 +2180,6 @@ void ObjSetMicro(Point position, int pn)
 	}
 }
 
-void objects_set_door_piece(Point position)
-{
-	int pn = dPiece[position.x][position.y] - 1;
-
-	uint16_t *piece = &pLevelPieces[10 * pn + 8];
-
-	dpiece_defs_map_2[position.x][position.y].mt[0] = SDL_SwapLE16(piece[0]);
-	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
-}
-
 void ObjSetMini(Point position, int v)
 {
 	MegaTile mega = pMegaTiles[v - 1];
@@ -2274,75 +2264,108 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	}
 }
 
-void DoorSet(int oi, int dx, int dy)
+void objects_set_door_piece(Point position)
 {
-	int pn = dPiece[dx][dy];
+	int pn = dPiece[position.x][position.y] - 1;
+
+	uint16_t *piece = &pLevelPieces[10 * pn + 8];
+
+	dpiece_defs_map_2[position.x][position.y].mt[0] = SDL_SwapLE16(piece[0]);
+	dpiece_defs_map_2[position.x][position.y].mt[1] = SDL_SwapLE16(piece[1]);
+}
+
+void DoorSet(Point position, bool isLeftDoor)
+{
+	int pn = dPiece[position.x][position.y];
 	if (currlevel < 17) {
-		if (pn == 43)
-			ObjSetMicro({ dx, dy }, 392);
-		if (pn == 45)
-			ObjSetMicro({ dx, dy }, 394);
-		if (pn == 50 && Objects[oi]._otype == OBJ_L1LDOOR)
-			ObjSetMicro({ dx, dy }, 411);
-		if (pn == 50 && Objects[oi]._otype == OBJ_L1RDOOR)
-			ObjSetMicro({ dx, dy }, 412);
-		if (pn == 54)
-			ObjSetMicro({ dx, dy }, 397);
-		if (pn == 55)
-			ObjSetMicro({ dx, dy }, 398);
-		if (pn == 61)
-			ObjSetMicro({ dx, dy }, 399);
-		if (pn == 67)
-			ObjSetMicro({ dx, dy }, 400);
-		if (pn == 68)
-			ObjSetMicro({ dx, dy }, 401);
-		if (pn == 69)
-			ObjSetMicro({ dx, dy }, 403);
-		if (pn == 70)
-			ObjSetMicro({ dx, dy }, 404);
-		if (pn == 72)
-			ObjSetMicro({ dx, dy }, 406);
-		if (pn == 212)
-			ObjSetMicro({ dx, dy }, 407);
-		if (pn == 354)
-			ObjSetMicro({ dx, dy }, 409);
-		if (pn == 355)
-			ObjSetMicro({ dx, dy }, 410);
-		if (pn == 411)
-			ObjSetMicro({ dx, dy }, 396);
-		if (pn == 412)
-			ObjSetMicro({ dx, dy }, 396);
+		switch (pn) {
+		case 43:
+			ObjSetMicro(position, 392);
+			break;
+		case 45:
+			ObjSetMicro(position, 394);
+			break;
+		case 50:
+			ObjSetMicro(position, isLeftDoor ? 411 : 412);
+			break;
+		case 54:
+			ObjSetMicro(position, 397);
+			break;
+		case 55:
+			ObjSetMicro(position, 398);
+			break;
+		case 61:
+			ObjSetMicro(position, 399);
+			break;
+		case 67:
+			ObjSetMicro(position, 400);
+			break;
+		case 68:
+			ObjSetMicro(position, 401);
+			break;
+		case 69:
+			ObjSetMicro(position, 403);
+			break;
+		case 70:
+			ObjSetMicro(position, 404);
+			break;
+		case 72:
+			ObjSetMicro(position, 406);
+			break;
+		case 212:
+			ObjSetMicro(position, 407);
+			break;
+		case 354:
+			ObjSetMicro(position, 409);
+			break;
+		case 355:
+			ObjSetMicro(position, 410);
+			break;
+		case 411:
+		case 412:
+			ObjSetMicro(position, 396);
+			break;
+		}
 	} else {
-		if (pn == 75)
-			ObjSetMicro({ dx, dy }, 204);
-		if (pn == 79)
-			ObjSetMicro({ dx, dy }, 208);
-		if (pn == 86 && Objects[oi]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro({ dx, dy }, 232);
+		switch (pn) {
+		case 75:
+			ObjSetMicro(position, 204);
+			break;
+		case 79:
+			ObjSetMicro(position, 208);
+			break;
+		case 86:
+			ObjSetMicro(position, isLeftDoor ? 232 : 234);
+			break;
+		case 91:
+			ObjSetMicro(position, 215);
+			break;
+		case 93:
+			ObjSetMicro(position, 218);
+			break;
+		case 99:
+			ObjSetMicro(position, 220);
+			break;
+		case 111:
+			ObjSetMicro(position, 222);
+			break;
+		case 113:
+			ObjSetMicro(position, 224);
+			break;
+		case 115:
+			ObjSetMicro(position, 226);
+			break;
+		case 117:
+			ObjSetMicro(position, 228);
+			break;
+		case 119:
+			ObjSetMicro(position, 230);
+			break;
+		case 232:
+		case 234:
+			ObjSetMicro(position, 212);
+			break;
 		}
-		if (pn == 86 && Objects[oi]._otype == OBJ_L1RDOOR) {
-			ObjSetMicro({ dx, dy }, 234);
-		}
-		if (pn == 91)
-			ObjSetMicro({ dx, dy }, 215);
-		if (pn == 93)
-			ObjSetMicro({ dx, dy }, 218);
-		if (pn == 99)
-			ObjSetMicro({ dx, dy }, 220);
-		if (pn == 111)
-			ObjSetMicro({ dx, dy }, 222);
-		if (pn == 113)
-			ObjSetMicro({ dx, dy }, 224);
-		if (pn == 115)
-			ObjSetMicro({ dx, dy }, 226);
-		if (pn == 117)
-			ObjSetMicro({ dx, dy }, 228);
-		if (pn == 119)
-			ObjSetMicro({ dx, dy }, 230);
-		if (pn == 232)
-			ObjSetMicro({ dx, dy }, 212);
-		if (pn == 234)
-			ObjSetMicro({ dx, dy }, 212);
 	}
 }
 
@@ -2400,7 +2423,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NE);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(oi, door.position.x - 1, door.position.y);
+		DoorSet(door.position + Direction::DIR_NW, false);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -2481,7 +2504,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		objects_set_door_piece(door.position + Direction::DIR_NW);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(oi, door.position.x, door.position.y - 1);
+		DoorSet(door.position + Direction::DIR_NE, true);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -5119,48 +5142,6 @@ void SyncBreakObj(int pnum, int oi)
 		BreakBarrel(pnum, oi, 0, true, false);
 }
 
-void SyncL1Doors(int i)
-{
-	if (Objects[i]._oVar4 == 0) {
-		Objects[i]._oMissFlag = false;
-		return;
-	}
-
-	Objects[i]._oMissFlag = true;
-
-	auto doorPosition = Objects[i].position;
-	Objects[i]._oSelFlag = 2;
-	if (currlevel < 17) {
-		if (Objects[i]._otype == OBJ_L1LDOOR) {
-			if (Objects[i]._oVar1 == 214)
-				ObjSetMicro(doorPosition, 408);
-			else
-				ObjSetMicro(doorPosition, 393);
-			dSpecial[doorPosition.x][doorPosition.y] = 7;
-			objects_set_door_piece(doorPosition + Direction::DIR_NW);
-			doorPosition.y--;
-		} else {
-			ObjSetMicro(doorPosition, 395);
-			dSpecial[doorPosition.x][doorPosition.y] = 8;
-			objects_set_door_piece(doorPosition + Direction::DIR_NE);
-			doorPosition.x--;
-		}
-	} else {
-		if (Objects[i]._otype == OBJ_L1LDOOR) {
-			ObjSetMicro(doorPosition, 206);
-			dSpecial[doorPosition.x][doorPosition.y] = 1;
-			objects_set_door_piece(doorPosition + Direction::DIR_NW);
-			doorPosition.y--;
-		} else {
-			ObjSetMicro(doorPosition, 209);
-			dSpecial[doorPosition.x][doorPosition.y] = 2;
-			objects_set_door_piece(doorPosition + Direction::DIR_NE);
-			doorPosition.x--;
-		}
-	}
-	DoorSet(i, doorPosition.x, doorPosition.y);
-}
-
 void SyncCrux(int i)
 {
 	bool found = true;
@@ -5212,41 +5193,80 @@ void SyncPedistal(int i)
 	}
 }
 
-void SyncL2Doors(int i)
+void SyncL1Doors(ObjectStruct &door)
 {
-	Objects[i]._oMissFlag = Objects[i]._oVar4 != 0;
-	int x = Objects[i].position.x;
-	int y = Objects[i].position.y;
-	Objects[i]._oSelFlag = 2;
-	if (Objects[i]._otype == OBJ_L2LDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 538);
-		dSpecial[x][y] = 0;
-	} else if (Objects[i]._otype == OBJ_L2LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 13);
-		dSpecial[x][y] = 5;
-	} else if (Objects[i]._otype == OBJ_L2RDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 540);
-		dSpecial[x][y] = 0;
-	} else if (Objects[i]._otype == OBJ_L2RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 17);
-		dSpecial[x][y] = 6;
+	if (door._oVar4 == 0) {
+		door._oMissFlag = false;
+		return;
+	}
+
+	door._oMissFlag = true;
+	door._oSelFlag = 2;
+
+	bool isLeftDoor = door._otype == _object_id::OBJ_L1LDOOR; // otherwise the door is type OBJ_L1RDOOR
+
+	if (currlevel < 17) {
+		if (isLeftDoor) {
+			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
+			dSpecial[door.position.x][door.position.y] = 7;
+			objects_set_door_piece(door.position + Direction::DIR_NW);
+			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
+		} else {
+			ObjSetMicro(door.position, 395);
+			dSpecial[door.position.x][door.position.y] = 8;
+			objects_set_door_piece(door.position + Direction::DIR_NE);
+			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
+		}
+	} else {
+		if (isLeftDoor) {
+			ObjSetMicro(door.position, 206);
+			dSpecial[door.position.x][door.position.y] = 1;
+			objects_set_door_piece(door.position + Direction::DIR_NW);
+			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
+		} else {
+			ObjSetMicro(door.position, 209);
+			dSpecial[door.position.x][door.position.y] = 2;
+			objects_set_door_piece(door.position + Direction::DIR_NE);
+			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
+		}
 	}
 }
 
-void SyncL3Doors(int i)
+void SyncL2Doors(ObjectStruct &door)
 {
-	Objects[i]._oMissFlag = true;
-	int x = Objects[i].position.x;
-	int y = Objects[i].position.y;
-	Objects[i]._oSelFlag = 2;
-	if (Objects[i]._otype == OBJ_L3LDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 531);
-	} else if (Objects[i]._otype == OBJ_L3LDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 538);
-	} else if (Objects[i]._otype == OBJ_L3RDOOR && Objects[i]._oVar4 == 0) {
-		ObjSetMicro({ x, y }, 534);
-	} else if (Objects[i]._otype == OBJ_L3RDOOR && (Objects[i]._oVar4 == 1 || Objects[i]._oVar4 == 2)) {
-		ObjSetMicro({ x, y }, 541);
+	door._oMissFlag = door._oVar4 != 0;
+	door._oSelFlag = 2;
+
+	bool isLeftDoor = door._otype == _object_id::OBJ_L2LDOOR; // otherwise the door is type OBJ_L2RDOOR
+
+	switch (door._oVar4) {
+	case 0:
+		ObjSetMicro(door.position, isLeftDoor ? 538 : 540);
+		dSpecial[door.position.x][door.position.y] = 0;
+		break;
+	case 1:
+	case 2:
+		ObjSetMicro(door.position, isLeftDoor ? 13 : 17);
+		dSpecial[door.position.x][door.position.y] = isLeftDoor ? 5 : 6;
+		break;
+	}
+}
+
+void SyncL3Doors(ObjectStruct &door)
+{
+	door._oMissFlag = true;
+	door._oSelFlag = 2;
+
+	bool isLeftDoor = door._otype == _object_id::OBJ_L3LDOOR; // otherwise the door is type OBJ_L3RDOOR
+
+	switch (door._oVar4) {
+	case 0:
+		ObjSetMicro(door.position, isLeftDoor ? 531 : 534);
+		break;
+	case 1:
+	case 2:
+		ObjSetMicro(door.position, isLeftDoor ? 538 : 541);
+		break;
 	}
 }
 
@@ -5266,15 +5286,15 @@ void SyncObjectAnim(int o)
 	switch (Objects[o]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
-		SyncL1Doors(o);
+		SyncL1Doors(Objects[o]);
 		break;
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
-		SyncL2Doors(o);
+		SyncL2Doors(Objects[o]);
 		break;
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		SyncL3Doors(o);
+		SyncL3Doors(Objects[o]);
 		break;
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
