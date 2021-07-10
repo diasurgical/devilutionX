@@ -91,7 +91,7 @@ void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
-void SyncObjectAnim(int o);
+void SyncObjectAnim(ObjectStruct &object);
 void GetObjectStr(int i);
 void OperateNakrulLever();
 void SyncNakrulRoom();
