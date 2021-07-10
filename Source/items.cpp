@@ -1501,7 +1501,7 @@ _unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
 	if (numu == 0)
 		return UITEM_INVALID;
 
-	GenerateRnd(10); /// BUGFIX: unused, last unique in array always gets chosen
+	AdvanceRndSeed();
 	uint8_t idata = 0;
 	while (numu > 0) {
 		if (uok[idata])
@@ -2384,7 +2384,7 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 		GetItemAttrs(ii, idx, lvl);
 	} else if (gbIsHellfire && idx >= 114 && idx <= 117) {
 		SetRndSeed(iseed);
-		GenerateRnd(1);
+		AdvanceRndSeed();
 		GetItemAttrs(ii, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
@@ -4551,7 +4551,7 @@ void SpawnWitch(int lvl)
 
 			memset(&Items[0], 0, sizeof(*Items));
 			Items[0]._iSeed = AdvanceRndSeed();
-			GenerateRnd(1);
+			AdvanceRndSeed();
 
 			GetItemAttrs(0, i, lvl);
 			witchitem[j] = Items[0];
