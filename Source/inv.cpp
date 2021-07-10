@@ -1541,6 +1541,7 @@ void CleanupItems(ItemStruct *item, int ii)
 
 void InvGetItem(int pnum, ItemStruct *item, int ii)
 {
+	blockClicks = true;
 	if (dropGoldFlag) {
 		dropGoldFlag = false;
 		dropGoldValue = 0;
@@ -1570,6 +1571,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 
 void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
+	blockClicks = true;
 	bool done;
 
 	if (pcurs != CURSOR_HAND) {
