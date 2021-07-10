@@ -19,6 +19,7 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/keymapper.hpp"
+#include "diablo.h"
 #include "doom.h"
 #include "drlg_l1.h"
 #include "drlg_l2.h"
@@ -128,6 +129,11 @@ QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 	{ "QuickMessage3", N_("Here's something for you.") },
 	{ "QuickMessage4", N_("Now you DIE!") }
 };
+
+int lastLeftMouseButtonAction = MOUSEACTION_NONE;  //Fluffy: These are for supporting repeating attacks with leftclick
+int lastRightMouseButtonAction = MOUSEACTION_NONE; //Fluffy: These are for supporting repeating actions with rightclick
+unsigned long long lastLeftMouseButtonTime = 0;
+unsigned long long lastRightMouseButtonTime = 0;
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
@@ -248,14 +254,17 @@ bool LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK; //Fluffy
 				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(pcursmonst)) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 				} else {
+					lastLeftMouseButtonAction = MOUSEACTION_ATTACK_MONSTERTARGET; //Fluffy
 					NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 				}
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_PLAYERTARGET; //Fluffy
 				NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
 			}
 		} else {
@@ -264,14 +273,18 @@ bool LeftMouseCmd(bool bShift)
 					if (CanTalkToMonst(pcursmonst)) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
+						lastLeftMouseButtonAction = MOUSEACTION_ATTACK; //Fluffy
 						NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 					}
 				} else {
+					lastLeftMouseButtonAction = MOUSEACTION_ATTACK; //Fluffy
 					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 				}
 			} else if (pcursmonst != -1) {
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_MONSTERTARGET; //Fluffy
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_PLAYERTARGET; //Fluffy
 				NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 			}
 		}
@@ -284,6 +297,9 @@ bool LeftMouseCmd(bool bShift)
 
 bool LeftMouseDown(int wParam)
 {
+	lastLeftMouseButtonAction = MOUSEACTION_OTHER; //Fluffy
+	lastLeftMouseButtonTime = SDL_GetPerformanceCounter();
+
 	if (gmenu_left_mouse(true))
 		return false;
 
@@ -372,6 +388,9 @@ void LeftMouseUp(int wParam)
 
 void RightMouseDown()
 {
+	lastRightMouseButtonAction = MOUSEACTION_OTHER; //Fluffy
+	lastRightMouseButtonTime = SDL_GetPerformanceCounter();
+
 	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
 		return;
 	}
@@ -392,7 +411,7 @@ void RightMouseDown()
 	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
-				CheckPlrSpell();
+				CheckPlrSpell(true); //Fluffy
 		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			NewCursor(CURSOR_HAND);
 		}
@@ -720,6 +739,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_LBUTTONUP:
 		GetMousePos(lParam);
+		lastLeftMouseButtonAction = MOUSEACTION_NONE; //Fluffy
 		if (sgbMouseDown == CLICK_LEFT) {
 			sgbMouseDown = CLICK_NONE;
 			LeftMouseUp(wParam);
@@ -735,6 +755,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_RBUTTONUP:
 		GetMousePos(lParam);
+		lastRightMouseButtonAction = MOUSEACTION_NONE; //Fluffy
 		if (sgbMouseDown == CLICK_RIGHT) {
 			sgbMouseDown = CLICK_NONE;
 		}

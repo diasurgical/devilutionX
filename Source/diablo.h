@@ -69,6 +69,12 @@ extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
+//Fluffy
+extern int lastLeftMouseButtonAction;
+extern int lastRightMouseButtonAction;
+extern unsigned long long lastLeftMouseButtonTime;
+extern unsigned long long lastRightMouseButtonTime;
+
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);

@@ -3565,7 +3565,7 @@ void CalcPlrStaff(PlayerStruct &player)
 	}
 }
 
-void CheckPlrSpell()
+void CheckPlrSpell(bool mouseClick) //Fluffy: Added mouseClick
 {
 	bool addflag = false;
 	int sl;
@@ -3635,6 +3635,10 @@ void CheckPlrSpell()
 		} else { //145
 			sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
+		}
+		if (mouseClick) { //Fluffy
+			lastRightMouseButtonAction = MOUSEACTION_SPELL;
+			lastRightMouseButtonTime = SDL_GetPerformanceCounter();
 		}
 		return;
 	}

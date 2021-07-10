@@ -149,6 +149,17 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
+enum { //Fluffy
+	MOUSEACTION_NONE,
+	MOUSEACTION_SPELL,
+	MOUSEACTION_SPELL_MONSTERTARGET,
+	MOUSEACTION_SPELL_PLAYERTARGET,
+	MOUSEACTION_ATTACK,
+	MOUSEACTION_ATTACK_MONSTERTARGET,
+	MOUSEACTION_ATTACK_PLAYERTARGET,
+	MOUSEACTION_OTHER,
+};
+
 /**
  * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
  */
@@ -490,7 +501,7 @@ void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, Point position);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
 void CalcPlrStaff(PlayerStruct &player);
-void CheckPlrSpell();
+void CheckPlrSpell(bool mouseClick);
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);

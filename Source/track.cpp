@@ -21,8 +21,51 @@ bool sgbIsWalking;
 
 } // namespace
 
+static bool RepeatLeftMouseAttackAction() //Fluffy
+{
+	if (!(lastLeftMouseButtonAction == MOUSEACTION_ATTACK || lastLeftMouseButtonAction == MOUSEACTION_ATTACK_MONSTERTARGET || lastLeftMouseButtonAction == MOUSEACTION_ATTACK_PLAYERTARGET) || pcurs != CURSOR_HAND || sgbMouseDown != CLICK_LEFT)
+		return false;
+
+	//Repeat action if it's been X duration since the attack or spell cast
+	unsigned long long currentTime = SDL_GetPerformanceCounter();
+	if (currentTime - lastLeftMouseButtonTime > SDL_GetPerformanceFrequency() / 5) { //Check if it's been at least 200ms
+		if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK) {
+			if (Players[MyPlayerId]._pwtype == WT_RANGED)
+				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, {cursmx, cursmy});
+			else
+				NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, {cursmx, cursmy});
+		} else if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK_MONSTERTARGET && pcursmonst != -1) {
+			if (Players[MyPlayerId]._pwtype == WT_RANGED)
+				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
+			else
+				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+		} else if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK_PLAYERTARGET && pcursplr != -1 && !gbFriendlyMode) {
+			if (Players[MyPlayerId]._pwtype == WT_RANGED)
+				NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
+			else
+				NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
+		}
+	}
+	return true;
+}
+
+static bool RepeatRightMouseAction() //Fluffy
+{
+	if (!(lastRightMouseButtonAction == MOUSEACTION_SPELL || lastRightMouseButtonAction == MOUSEACTION_ATTACK) || pcurs != CURSOR_HAND || sgbMouseDown != CLICK_RIGHT)
+		return false;
+
+	//Repeat action if it's been X duration since the attack or spell cast
+	unsigned long long currentTime = SDL_GetPerformanceCounter();
+	if (currentTime - lastRightMouseButtonTime > SDL_GetPerformanceFrequency() / 5) //Check if it's been at least 200ms
+		CheckPlrSpell(true);
+	return true;
+}
+
 void track_process()
 {
+	if (RepeatLeftMouseAttackAction() || RepeatRightMouseAction()) //Fluffy
+		return;
+
 	if (!sgbIsWalking)
 		return;
 
