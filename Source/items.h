@@ -420,7 +420,6 @@ bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(int i, int idata, int lvl);
-void SaveItemPower(int i, item_effect_type power, int param1, int param2, int minval, int maxval, int multval);
 void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood);
 void SetupItem(int i);
 int RndItem(int m);
