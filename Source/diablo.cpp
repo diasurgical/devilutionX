@@ -132,8 +132,8 @@ QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 
 int lastLeftMouseButtonAction = MOUSEACTION_NONE;  //Fluffy: These are for supporting repeating attacks with leftclick
 int lastRightMouseButtonAction = MOUSEACTION_NONE; //Fluffy: These are for supporting repeating actions with rightclick
-unsigned long long lastLeftMouseButtonTime = 0;
-unsigned long long lastRightMouseButtonTime = 0;
+Uint32 lastLeftMouseButtonTime = 0;
+Uint32 lastRightMouseButtonTime = 0;
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
@@ -298,7 +298,7 @@ bool LeftMouseCmd(bool bShift)
 bool LeftMouseDown(int wParam)
 {
 	lastLeftMouseButtonAction = MOUSEACTION_OTHER; //Fluffy
-	lastLeftMouseButtonTime = SDL_GetPerformanceCounter();
+	lastLeftMouseButtonTime = SDL_GetTicks();
 
 	if (gmenu_left_mouse(true))
 		return false;
@@ -389,7 +389,7 @@ void LeftMouseUp(int wParam)
 void RightMouseDown()
 {
 	lastRightMouseButtonAction = MOUSEACTION_OTHER; //Fluffy
-	lastRightMouseButtonTime = SDL_GetPerformanceCounter();
+	lastRightMouseButtonTime = SDL_GetTicks();
 
 	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
 		return;

@@ -72,8 +72,8 @@ extern char gszProductName[64];
 //Fluffy
 extern int lastLeftMouseButtonAction;
 extern int lastRightMouseButtonAction;
-extern unsigned long long lastLeftMouseButtonTime;
-extern unsigned long long lastRightMouseButtonTime;
+extern Uint32 lastLeftMouseButtonTime;
+extern Uint32 lastRightMouseButtonTime;
 
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);

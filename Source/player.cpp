@@ -3638,7 +3638,7 @@ void CheckPlrSpell(bool mouseClick) //Fluffy: Added mouseClick
 		}
 		if (mouseClick) { //Fluffy
 			lastRightMouseButtonAction = MOUSEACTION_SPELL;
-			lastRightMouseButtonTime = SDL_GetPerformanceCounter();
+			lastRightMouseButtonTime = SDL_GetTicks();
 		}
 		return;
 	}

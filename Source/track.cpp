@@ -27,8 +27,8 @@ static bool RepeatLeftMouseAttackAction() //Fluffy
 		return false;
 
 	//Repeat action if it's been X duration since the attack or spell cast
-	unsigned long long currentTime = SDL_GetPerformanceCounter();
-	if (currentTime - lastLeftMouseButtonTime > SDL_GetPerformanceFrequency() / 5) { //Check if it's been at least 200ms
+	Uint32 currentTime = SDL_GetTicks();
+	if (currentTime - lastLeftMouseButtonTime > 200) { //Check if it's been at least 200ms
 		if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK) {
 			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY) { 
 				if (Players[MyPlayerId]._pwtype == WT_RANGED)
@@ -57,8 +57,8 @@ static bool RepeatRightMouseAction() //Fluffy
 		return false;
 
 	//Repeat action if it's been X duration since the attack or spell cast
-	unsigned long long currentTime = SDL_GetPerformanceCounter();
-	if (currentTime - lastRightMouseButtonTime > SDL_GetPerformanceFrequency() / 5) //Check if it's been at least 200ms
+	Uint32 currentTime = SDL_GetTicks();
+	if (currentTime - lastRightMouseButtonTime > 200) //Check if it's been at least 200ms
 		CheckPlrSpell(true);
 	return true;
 }
