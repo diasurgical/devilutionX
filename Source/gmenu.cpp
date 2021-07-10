@@ -33,7 +33,7 @@ BYTE LogoAnim_frame;
 void (*gmenu_current_option)();
 int sgCurrentMenuIdx;
 
-static void GmenuUpDown(bool isDown)
+void GmenuUpDown(bool isDown)
 {
 	if (sgpCurrItem == nullptr) {
 		return;
@@ -61,7 +61,7 @@ static void GmenuUpDown(bool isDown)
 	}
 }
 
-static void GmenuLeftRight(bool isRight)
+void GmenuLeftRight(bool isRight)
 {
 	if ((sgpCurrItem->dwFlags & GMENU_SLIDER) == 0)
 		return;
@@ -82,7 +82,7 @@ static void GmenuLeftRight(bool isRight)
 	sgpCurrItem->fnMenu(false);
 }
 
-static void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
+void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
 {
 	BYTE *i = out.at(x, y);
 	while ((height--) != 0) {
@@ -91,7 +91,7 @@ static void GmenuClearBuffer(const Surface &out, int x, int y, int width, int he
 	}
 }
 
-static int GmenuGetLfont(TMenuItem *pItem)
+int GmenuGetLineWidth(TMenuItem *pItem)
 {
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
 		return 490;
@@ -99,9 +99,9 @@ static int GmenuGetLfont(TMenuItem *pItem)
 	return GetLineWidth(_(pItem->pszStr), GameFontBig, 2);
 }
 
-static void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
+void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 {
-	int w = GmenuGetLfont(pItem);
+	int w = GmenuGetLineWidth(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int x = 16 + w / 2;
 		CelDrawTo(out, { x + PANEL_LEFT, y - 10 }, *optbar_cel, 1);
@@ -121,7 +121,7 @@ static void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	}
 }
 
-static void GameMenuMove()
+void GameMenuMove()
 {
 	static AxisDirectionRepeater repeater;
 	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection());
@@ -131,7 +131,7 @@ static void GameMenuMove()
 		GmenuUpDown(moveDir.y == AxisDirectionY_DOWN);
 }
 
-static bool GmenuMouseNavigation()
+bool GmenuMouseNavigation()
 {
 	if (MousePosition.x < 282 + PANEL_LEFT) {
 		return false;
@@ -142,7 +142,7 @@ static bool GmenuMouseNavigation()
 	return true;
 }
 
-static int GmenuGetMouseSlider()
+int GmenuGetMouseSlider()
 {
 	if (MousePosition.x < 282 + PANEL_LEFT) {
 		return 0;
@@ -321,7 +321,7 @@ bool gmenu_left_mouse(bool isDown)
 	if ((sgpCurrentMenu[i].dwFlags & GMENU_ENABLED) == 0) {
 		return true;
 	}
-	int w = GmenuGetLfont(pItem);
+	int w = GmenuGetLineWidth(pItem);
 	if (MousePosition.x < gnScreenWidth / 2 - w / 2) {
 		return true;
 	}

@@ -21,7 +21,7 @@
 namespace devilution {
 namespace {
 
-static void DrawHalfTransparentBlendedRectTo(const Surface &out, int sx, int sy, int width, int height)
+void DrawHalfTransparentBlendedRectTo(const Surface &out, int sx, int sy, int width, int height)
 {
 	BYTE *pix = out.at(sx, sy);
 
@@ -34,7 +34,7 @@ static void DrawHalfTransparentBlendedRectTo(const Surface &out, int sx, int sy,
 	}
 }
 
-static void DrawHalfTransparentStippledRectTo(const Surface &out, int sx, int sy, int width, int height)
+void DrawHalfTransparentStippledRectTo(const Surface &out, int sx, int sy, int width, int height)
 {
 	BYTE *pix = out.at(sx, sy);
 

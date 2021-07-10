@@ -13,7 +13,7 @@ namespace devilution {
 
 namespace {
 
-static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
+unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
 	auto *pInfo = (TDataInfo *)param;
 
@@ -30,7 +30,7 @@ static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 	return sSize;
 }
 
-static void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
+void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
 	auto *pInfo = (TDataInfo *)param;
 

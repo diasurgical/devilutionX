@@ -1363,7 +1363,7 @@ void GeneralFix()
 
 void GenerateLevel(lvl_entry entry)
 {
-	constexpr int minarea = 173;
+	constexpr int Minarea = 173;
 	int ar;
 	bool doneflag;
 	do {
@@ -1374,10 +1374,10 @@ void GenerateLevel(lvl_entry entry)
 			FirstRoom();
 			FixRim();
 			ar = GetArea();
-			if (ar >= minarea) {
+			if (ar >= Minarea) {
 				UShape();
 			}
-		} while (ar < minarea);
+		} while (ar < Minarea);
 
 		MakeDungeon();
 		MakeDmt();
