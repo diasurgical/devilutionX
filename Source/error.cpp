@@ -13,10 +13,15 @@
 
 namespace devilution {
 
-diablo_message msgtable[MAX_SEND_STR_LEN];
 DWORD msgdelay;
 diablo_message msgflag;
+
+namespace {
+
+diablo_message msgtable[MAX_SEND_STR_LEN];
 uint8_t msgcnt;
+
+} // namespace
 
 /** Maps from error_id to error message. */
 const char *const MsgStrings[] = {

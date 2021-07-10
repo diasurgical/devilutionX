@@ -9,7 +9,6 @@
 #include "engine/point.hpp"
 #include "engine/random.hpp"
 #include "gendung.h"
-#include "lighting.h"
 #include "player.h"
 #include "quests.h"
 
@@ -1375,37 +1374,43 @@ void AddWall()
 	for (int j = 0; j < DMAXY; j++) {
 		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0) {
-				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
+				if (dungeon[i][j] == 3) {
+					GenerateRnd(100);
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 2, x);
 					}
 				}
-				if (dungeon[i][j] == 3 && GenerateRnd(100) < WALL_CHANCE) {
+				if (dungeon[i][j] == 3) {
+					GenerateRnd(100);
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 1, y);
 					}
 				}
-				if (dungeon[i][j] == 6 && GenerateRnd(100) < WALL_CHANCE) {
+				if (dungeon[i][j] == 6) {
+					GenerateRnd(100);
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 4, x);
 					}
 				}
-				if (dungeon[i][j] == 7 && GenerateRnd(100) < WALL_CHANCE) {
+				if (dungeon[i][j] == 7) {
+					GenerateRnd(100);
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 4, y);
 					}
 				}
-				if (dungeon[i][j] == 2 && GenerateRnd(100) < WALL_CHANCE) {
+				if (dungeon[i][j] == 2) {
+					GenerateRnd(100);
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 2, x);
 					}
 				}
-				if (dungeon[i][j] == 1 && GenerateRnd(100) < WALL_CHANCE) {
+				if (dungeon[i][j] == 1) {
+					GenerateRnd(100);
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 1, y);
@@ -2459,66 +2464,6 @@ void Pass3()
 }
 
 } // namespace
-
-void DRLG_LPass3(int lv)
-{
-	{
-		MegaTile mega = pMegaTiles[lv];
-		int v1 = SDL_SwapLE16(mega.micro1) + 1;
-		int v2 = SDL_SwapLE16(mega.micro2) + 1;
-		int v3 = SDL_SwapLE16(mega.micro3) + 1;
-		int v4 = SDL_SwapLE16(mega.micro4) + 1;
-
-		for (int j = 0; j < MAXDUNY; j += 2) {
-			for (int i = 0; i < MAXDUNX; i += 2) {
-				dPiece[i + 0][j + 0] = v1;
-				dPiece[i + 1][j + 0] = v2;
-				dPiece[i + 0][j + 1] = v3;
-				dPiece[i + 1][j + 1] = v4;
-			}
-		}
-	}
-
-	int yy = 16;
-	for (int j = 0; j < DMAXY; j++) {
-		int xx = 16;
-		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-			int v1 = 0;
-			int v2 = 0;
-			int v3 = 0;
-			int v4 = 0;
-
-			int tileId = dungeon[i][j] - 1;
-			if (tileId >= 0) {
-				MegaTile mega = pMegaTiles[tileId];
-				v1 = SDL_SwapLE16(mega.micro1) + 1;
-				v2 = SDL_SwapLE16(mega.micro2) + 1;
-				v3 = SDL_SwapLE16(mega.micro3) + 1;
-				v4 = SDL_SwapLE16(mega.micro4) + 1;
-			}
-			dPiece[xx + 0][yy + 0] = v1;
-			dPiece[xx + 1][yy + 0] = v2;
-			dPiece[xx + 0][yy + 1] = v3;
-			dPiece[xx + 1][yy + 1] = v4;
-			xx += 2;
-		}
-		yy += 2;
-	}
-}
-
-void DRLG_Init_Globals()
-{
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dPlayer, 0, sizeof(dPlayer));
-	memset(dMonster, 0, sizeof(dMonster));
-	memset(dDead, 0, sizeof(dDead));
-	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
-	memset(dMissile, 0, sizeof(dMissile));
-	memset(dSpecial, 0, sizeof(dSpecial));
-	int8_t c = DisableLighting ? 0 : 15;
-	memset(dLight, c, sizeof(dLight));
-}
 
 void LoadL1Dungeon(const char *path, int vx, int vy)
 {

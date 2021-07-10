@@ -11,6 +11,35 @@
 
 namespace devilution {
 
+namespace {
+
+static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
+{
+	auto *pInfo = (TDataInfo *)param;
+
+	uint32_t sSize;
+	if (*size >= pInfo->size - pInfo->srcOffset) {
+		sSize = pInfo->size - pInfo->srcOffset;
+	} else {
+		sSize = *size;
+	}
+
+	memcpy(buf, pInfo->srcData + pInfo->srcOffset, sSize);
+	pInfo->srcOffset += sSize;
+
+	return sSize;
+}
+
+static void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
+{
+	auto *pInfo = (TDataInfo *)param;
+
+	memcpy(pInfo->destData + pInfo->destOffset, buf, *size);
+	pInfo->destOffset += *size;
+}
+
+} // namespace
+
 static uint32_t hashtable[5][256];
 
 void Decrypt(uint32_t *castBlock, uint32_t size, uint32_t key)
@@ -67,31 +96,6 @@ void InitHash()
 			hashtable[j][i] = ch << 16 | (seed & 0xFFFF);
 		}
 	}
-}
-
-static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
-{
-	auto *pInfo = (TDataInfo *)param;
-
-	uint32_t sSize;
-	if (*size >= pInfo->size - pInfo->srcOffset) {
-		sSize = pInfo->size - pInfo->srcOffset;
-	} else {
-		sSize = *size;
-	}
-
-	memcpy(buf, pInfo->srcData + pInfo->srcOffset, sSize);
-	pInfo->srcOffset += sSize;
-
-	return sSize;
-}
-
-static void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
-{
-	auto *pInfo = (TDataInfo *)param;
-
-	memcpy(pInfo->destData + pInfo->destOffset, buf, *size);
-	pInfo->destOffset += *size;
 }
 
 uint32_t PkwareCompress(byte *srcData, uint32_t size)

@@ -8,29 +8,21 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"
+#include "lighting.h"
 #include "options.h"
 
 namespace devilution {
 
-/** Contains the tile IDs of the map. */
 uint8_t dungeon[DMAXX][DMAXY];
-/** Contains a backup of the tile IDs of the map. */
 uint8_t pdungeon[DMAXX][DMAXY];
 char dflags[DMAXX][DMAXY];
-/** Specifies the active set level X-coordinate of the map. */
 int setpc_x;
-/** Specifies the active set level Y-coordinate of the map. */
 int setpc_y;
-/** Specifies the width of the active set level of the map. */
 int setpc_w;
-/** Specifies the height of the active set level of the map. */
 int setpc_h;
-/** Contains the contents of the single player quest DUN file. */
 std::unique_ptr<uint16_t[]> pSetPiece;
-/** Specifies whether a single player quest DUN has been loaded. */
 bool setloadflag;
 std::optional<CelSprite> pSpecialCels;
-/** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<uint16_t[]> pLevelPieces;
 std::unique_ptr<byte[]> pDungeonCels;
@@ -40,70 +32,38 @@ std::array<bool, MAXTILES + 1> nSolidTable;
 std::array<bool, MAXTILES + 1> nTransTable;
 std::array<bool, MAXTILES + 1> nMissileTable;
 std::array<bool, MAXTILES + 1> nTrapTable;
-/** Specifies the minimum X-coordinate of the map. */
 int dminx;
-/** Specifies the minimum Y-coordinate of the map. */
 int dminy;
-/** Specifies the maximum X-coordinate of the map. */
 int dmaxx;
-/** Specifies the maximum Y-coordinate of the map. */
 int dmaxy;
-/** Specifies the active dungeon type of the current game. */
 dungeon_type leveltype;
-/** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
 bool setlevel;
-/** Specifies the active quest level of the current game. */
 _setlevels setlvlnum;
-/** Level type of the active quest level */
 dungeon_type setlvltype;
-/** Specifies the player viewpoint X-coordinate of the map. */
 int ViewX;
-/** Specifies the player viewpoint Y-coordinate of the map. */
 int ViewY;
 ScrollStruct ScrollInfo;
 int MicroTileLen;
 char TransVal;
-/** Specifies the active transparency indices. */
 bool TransList[256];
-/** Contains the piece IDs of each tile on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
-/** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-/** Specifies the transparency at each coordinate of the map. */
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
 int8_t dFlags[MAXDUNX][MAXDUNY];
-/** Contains the player numbers (players array indices) of the map. */
 int8_t dPlayer[MAXDUNX][MAXDUNY];
-/**
- * Contains the NPC numbers of the map. The NPC number represents a
- * towner number (towners array index) in Tristram and a monster number
- * (monsters array index) in the dungeon.
- */
 int16_t dMonster[MAXDUNX][MAXDUNY];
-/**
- * Contains the dead numbers (deads array indices) and dead direction of
- * the map, encoded as specified by the pseudo-code below.
- * dDead[x][y] & 0x1F - index of dead
- * dDead[x][y] >> 0x5 - direction
- */
 int8_t dDead[MAXDUNX][MAXDUNY];
-/** Contains the object numbers (objects array indices) of the map. */
 char dObject[MAXDUNX][MAXDUNY];
-/** Contains the item numbers (items array indices) of the map. */
 int8_t dItem[MAXDUNX][MAXDUNY];
-/** Contains the missile numbers (missiles array indices) of the map. */
 int8_t dMissile[MAXDUNX][MAXDUNY];
-/**
- * Contains the arch frame numbers of the map from the special tileset
- * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
- * "levels/towndata/towns.cel") contains trees rather than arches.
- */
 char dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
+
+namespace {
 
 std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
 {
@@ -126,150 +86,6 @@ std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
 		return LoadFileInMem<uint8_t>("Levels\\L4Data\\L4.SOL", &tileCount);
 	default:
 		app_fatal("FillSolidBlockTbls");
-	}
-}
-
-void FillSolidBlockTbls()
-{
-	size_t tileCount;
-	auto pSBFile = LoadLevelSOLData(tileCount);
-
-	for (unsigned i = 0; i < tileCount; i++) {
-		uint8_t bv = pSBFile[i];
-		nSolidTable[i + 1] = (bv & 0x01) != 0;
-		nBlockTable[i + 1] = (bv & 0x02) != 0;
-		nMissileTable[i + 1] = (bv & 0x04) != 0;
-		nTransTable[i + 1] = (bv & 0x08) != 0;
-		nTrapTable[i + 1] = (bv & 0x80) != 0;
-		block_lvid[i + 1] = (bv & 0x70) >> 4;
-	}
-}
-
-void SetDungeonMicros()
-{
-	MicroTileLen = 10;
-	int blocks = 10;
-
-	if (leveltype == DTYPE_TOWN) {
-		MicroTileLen = 16;
-		blocks = 16;
-	} else if (leveltype == DTYPE_HELL) {
-		MicroTileLen = 12;
-		blocks = 16;
-	}
-
-	for (int y = 0; y < MAXDUNY; y++) {
-		for (int x = 0; x < MAXDUNX; x++) {
-			int lv = dPiece[x][y];
-			MICROS &micros = dpiece_defs_map_2[x][y];
-			if (lv != 0) {
-				lv--;
-				uint16_t *pieces = &pLevelPieces[blocks * lv];
-				for (int i = 0; i < blocks; i++)
-					micros.mt[i] = SDL_SwapLE16(pieces[blocks - 2 + (i & 1) - (i & 0xE)]);
-			} else {
-				for (int i = 0; i < blocks; i++)
-					micros.mt[i] = 0;
-			}
-		}
-	}
-}
-
-void DRLG_InitTrans()
-{
-	memset(dTransVal, 0, sizeof(dTransVal));
-	memset(TransList, 0, sizeof(TransList));
-	TransVal = 1;
-}
-
-void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
-{
-	x1 = 2 * x1 + 17;
-	y1 = 2 * y1 + 17;
-	x2 = 2 * x2 + 16;
-	y2 = 2 * y2 + 16;
-
-	for (int j = y1; j <= y2; j++) {
-		for (int i = x1; i <= x2; i++) {
-			dTransVal[i][j] = TransVal;
-		}
-	}
-
-	TransVal++;
-}
-
-void DRLG_RectTrans(int x1, int y1, int x2, int y2)
-{
-	for (int j = y1; j <= y2; j++) {
-		for (int i = x1; i <= x2; i++) {
-			dTransVal[i][j] = TransVal;
-		}
-	}
-	TransVal++;
-}
-
-void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
-{
-	dTransVal[dx][dy] = dTransVal[sx][sy];
-}
-
-void DRLG_ListTrans(int num, BYTE *list)
-{
-	for (int i = 0; i < num; i++) {
-		uint8_t x1 = *list++;
-		uint8_t y1 = *list++;
-		uint8_t x2 = *list++;
-		uint8_t y2 = *list++;
-		DRLG_RectTrans(x1, y1, x2, y2);
-	}
-}
-
-void DRLG_AreaTrans(int num, BYTE *list)
-{
-	for (int i = 0; i < num; i++) {
-		uint8_t x1 = *list++;
-		uint8_t y1 = *list++;
-		uint8_t x2 = *list++;
-		uint8_t y2 = *list++;
-		DRLG_RectTrans(x1, y1, x2, y2);
-		TransVal--;
-	}
-	TransVal++;
-}
-
-void DRLG_InitSetPC()
-{
-	setpc_x = 0;
-	setpc_y = 0;
-	setpc_w = 0;
-	setpc_h = 0;
-}
-
-void DRLG_SetPC()
-{
-	int w = 2 * setpc_w;
-	int h = 2 * setpc_h;
-	int x = 2 * setpc_x + 16;
-	int y = 2 * setpc_y + 16;
-
-	for (int j = 0; j < h; j++) {
-		for (int i = 0; i < w; i++) {
-			dFlags[i + x][j + y] |= BFLAG_POPULATED;
-		}
-	}
-}
-
-void Make_SetPC(int x, int y, int w, int h)
-{
-	int dw = 2 * w;
-	int dh = 2 * h;
-	int dx = 2 * x + 16;
-	int dy = 2 * y + 16;
-
-	for (int j = 0; j < dh; j++) {
-		for (int i = 0; i < dw; i++) {
-			dFlags[i + dx][j + dy] |= BFLAG_POPULATED;
-		}
 	}
 }
 
@@ -451,6 +267,152 @@ void DRLG_CreateThemeRoom(int themeIndex)
 	}
 }
 
+} // namespace
+
+void FillSolidBlockTbls()
+{
+	size_t tileCount;
+	auto pSBFile = LoadLevelSOLData(tileCount);
+
+	for (unsigned i = 0; i < tileCount; i++) {
+		uint8_t bv = pSBFile[i];
+		nSolidTable[i + 1] = (bv & 0x01) != 0;
+		nBlockTable[i + 1] = (bv & 0x02) != 0;
+		nMissileTable[i + 1] = (bv & 0x04) != 0;
+		nTransTable[i + 1] = (bv & 0x08) != 0;
+		nTrapTable[i + 1] = (bv & 0x80) != 0;
+		block_lvid[i + 1] = (bv & 0x70) >> 4;
+	}
+}
+
+void SetDungeonMicros()
+{
+	MicroTileLen = 10;
+	int blocks = 10;
+
+	if (leveltype == DTYPE_TOWN) {
+		MicroTileLen = 16;
+		blocks = 16;
+	} else if (leveltype == DTYPE_HELL) {
+		MicroTileLen = 12;
+		blocks = 16;
+	}
+
+	for (int y = 0; y < MAXDUNY; y++) {
+		for (int x = 0; x < MAXDUNX; x++) {
+			int lv = dPiece[x][y];
+			MICROS &micros = dpiece_defs_map_2[x][y];
+			if (lv != 0) {
+				lv--;
+				uint16_t *pieces = &pLevelPieces[blocks * lv];
+				for (int i = 0; i < blocks; i++)
+					micros.mt[i] = SDL_SwapLE16(pieces[blocks - 2 + (i & 1) - (i & 0xE)]);
+			} else {
+				for (int i = 0; i < blocks; i++)
+					micros.mt[i] = 0;
+			}
+		}
+	}
+}
+
+void DRLG_InitTrans()
+{
+	memset(dTransVal, 0, sizeof(dTransVal));
+	memset(TransList, 0, sizeof(TransList));
+	TransVal = 1;
+}
+
+void DRLG_MRectTrans(int x1, int y1, int x2, int y2)
+{
+	x1 = 2 * x1 + 17;
+	y1 = 2 * y1 + 17;
+	x2 = 2 * x2 + 16;
+	y2 = 2 * y2 + 16;
+
+	for (int j = y1; j <= y2; j++) {
+		for (int i = x1; i <= x2; i++) {
+			dTransVal[i][j] = TransVal;
+		}
+	}
+
+	TransVal++;
+}
+
+void DRLG_RectTrans(int x1, int y1, int x2, int y2)
+{
+	for (int j = y1; j <= y2; j++) {
+		for (int i = x1; i <= x2; i++) {
+			dTransVal[i][j] = TransVal;
+		}
+	}
+	TransVal++;
+}
+
+void DRLG_CopyTrans(int sx, int sy, int dx, int dy)
+{
+	dTransVal[dx][dy] = dTransVal[sx][sy];
+}
+
+void DRLG_ListTrans(int num, BYTE *list)
+{
+	for (int i = 0; i < num; i++) {
+		uint8_t x1 = *list++;
+		uint8_t y1 = *list++;
+		uint8_t x2 = *list++;
+		uint8_t y2 = *list++;
+		DRLG_RectTrans(x1, y1, x2, y2);
+	}
+}
+
+void DRLG_AreaTrans(int num, BYTE *list)
+{
+	for (int i = 0; i < num; i++) {
+		uint8_t x1 = *list++;
+		uint8_t y1 = *list++;
+		uint8_t x2 = *list++;
+		uint8_t y2 = *list++;
+		DRLG_RectTrans(x1, y1, x2, y2);
+		TransVal--;
+	}
+	TransVal++;
+}
+
+void DRLG_InitSetPC()
+{
+	setpc_x = 0;
+	setpc_y = 0;
+	setpc_w = 0;
+	setpc_h = 0;
+}
+
+void DRLG_SetPC()
+{
+	int w = 2 * setpc_w;
+	int h = 2 * setpc_h;
+	int x = 2 * setpc_x + 16;
+	int y = 2 * setpc_y + 16;
+
+	for (int j = 0; j < h; j++) {
+		for (int i = 0; i < w; i++) {
+			dFlags[i + x][j + y] |= BFLAG_POPULATED;
+		}
+	}
+}
+
+void Make_SetPC(int x, int y, int w, int h)
+{
+	int dw = 2 * w;
+	int dh = 2 * h;
+	int dx = 2 * x + 16;
+	int dy = 2 * y + 16;
+
+	for (int j = 0; j < dh; j++) {
+		for (int i = 0; i < dw; i++) {
+			dFlags[i + dx][j + dy] |= BFLAG_POPULATED;
+		}
+	}
+}
+
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
 {
 	themeCount = 0;
@@ -500,6 +462,66 @@ void DRLG_HoldThemeRooms()
 			}
 		}
 	}
+}
+
+void DRLG_LPass3(int lv)
+{
+	{
+		MegaTile mega = pMegaTiles[lv];
+		int v1 = SDL_SwapLE16(mega.micro1) + 1;
+		int v2 = SDL_SwapLE16(mega.micro2) + 1;
+		int v3 = SDL_SwapLE16(mega.micro3) + 1;
+		int v4 = SDL_SwapLE16(mega.micro4) + 1;
+
+		for (int j = 0; j < MAXDUNY; j += 2) {
+			for (int i = 0; i < MAXDUNX; i += 2) {
+				dPiece[i + 0][j + 0] = v1;
+				dPiece[i + 1][j + 0] = v2;
+				dPiece[i + 0][j + 1] = v3;
+				dPiece[i + 1][j + 1] = v4;
+			}
+		}
+	}
+
+	int yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
+			int v1 = 0;
+			int v2 = 0;
+			int v3 = 0;
+			int v4 = 0;
+
+			int tileId = dungeon[i][j] - 1;
+			if (tileId >= 0) {
+				MegaTile mega = pMegaTiles[tileId];
+				v1 = SDL_SwapLE16(mega.micro1) + 1;
+				v2 = SDL_SwapLE16(mega.micro2) + 1;
+				v3 = SDL_SwapLE16(mega.micro3) + 1;
+				v4 = SDL_SwapLE16(mega.micro4) + 1;
+			}
+			dPiece[xx + 0][yy + 0] = v1;
+			dPiece[xx + 1][yy + 0] = v2;
+			dPiece[xx + 0][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
+			xx += 2;
+		}
+		yy += 2;
+	}
+}
+
+void DRLG_Init_Globals()
+{
+	memset(dFlags, 0, sizeof(dFlags));
+	memset(dPlayer, 0, sizeof(dPlayer));
+	memset(dMonster, 0, sizeof(dMonster));
+	memset(dDead, 0, sizeof(dDead));
+	memset(dObject, 0, sizeof(dObject));
+	memset(dItem, 0, sizeof(dItem));
+	memset(dMissile, 0, sizeof(dMissile));
+	memset(dSpecial, 0, sizeof(dSpecial));
+	int8_t c = DisableLighting ? 0 : 15;
+	memset(dLight, c, sizeof(dLight));
 }
 
 bool SkipThemeRoom(int x, int y)
