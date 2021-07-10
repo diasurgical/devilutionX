@@ -21,14 +21,22 @@ bool sgbIsWalking;
 
 } // namespace
 
+static bool AttackIntervalCheck(Uint32 lastTime)
+{
+	Uint32 currentTime = SDL_GetTicks();
+	if (currentTime - lastTime > (Uint32) gnTickDelay * 4) //Check if it's been at least 200ms
+		return true;
+	else
+		return false;
+}
+
 static bool RepeatLeftMouseAttackAction() //Fluffy
 {
 	if (!(lastLeftMouseButtonAction == MOUSEACTION_ATTACK || lastLeftMouseButtonAction == MOUSEACTION_ATTACK_MONSTERTARGET || lastLeftMouseButtonAction == MOUSEACTION_ATTACK_PLAYERTARGET) || pcurs != CURSOR_HAND || sgbMouseDown != CLICK_LEFT)
 		return false;
 
 	//Repeat action if it's been X duration since the attack or spell cast
-	Uint32 currentTime = SDL_GetTicks();
-	if (currentTime - lastLeftMouseButtonTime > 200) { //Check if it's been at least 200ms
+	if (AttackIntervalCheck(lastLeftMouseButtonTime)) {
 		if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK) {
 			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY) { 
 				if (Players[MyPlayerId]._pwtype == WT_RANGED)
@@ -57,8 +65,7 @@ static bool RepeatRightMouseAction() //Fluffy
 		return false;
 
 	//Repeat action if it's been X duration since the attack or spell cast
-	Uint32 currentTime = SDL_GetTicks();
-	if (currentTime - lastRightMouseButtonTime > 200) //Check if it's been at least 200ms
+	if (AttackIntervalCheck(lastRightMouseButtonTime))
 		CheckPlrSpell(true);
 	return true;
 }
