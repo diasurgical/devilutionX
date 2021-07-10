@@ -720,19 +720,39 @@ int RndPL(int param1, int param2)
 	return param1 + GenerateRnd(param2 - param1 + 1);
 }
 
-int PLVal(int pv, int p1, int p2, int minv, int maxv)
+int CalculateToHitBonus(int level)
 {
-	if (p1 == p2)
-		return minv;
-	if (minv == maxv)
-		return minv;
-	return minv + (maxv - minv) * (100 * (pv - p1) / (p2 - p1)) / 100;
+	switch (level) {
+	case -50:
+		return -RndPL(6, 10);
+	case -25:
+		return -RndPL(1, 5);
+	case 20:
+		return RndPL(1, 5);
+	case 36:
+		return RndPL(6, 10);
+	case 51:
+		return RndPL(11, 15);
+	case 66:
+		return RndPL(16, 20);
+	case 81:
+		return RndPL(21, 30);
+	case 96:
+		return RndPL(31, 40);
+	case 111:
+		return RndPL(41, 50);
+	case 126:
+		return RndPL(51, 75);
+	case 151:
+		return RndPL(76, 100);
+	default:
+		app_fatal("Unknown to hit bonus");
+	}
 }
 
-void SaveItemPower(ItemStruct &item, const ItemPower &power)
+int SaveItemPower(ItemStruct &item, const ItemPower &power)
 {
 	int r = RndPL(power.param1, power.param2);
-	int r2;
 
 	switch (power.type) {
 	case IPL_TOHIT:
@@ -753,33 +773,11 @@ void SaveItemPower(ItemStruct &item, const ItemPower &power)
 	case IPL_TOHIT_DAMP:
 		r = RndPL(power.param1, power.param2);
 		item._iPLDam += r;
-		if (power.param1 == 20)
-			r2 = RndPL(1, 5);
-		if (power.param1 == 36)
-			r2 = RndPL(6, 10);
-		if (power.param1 == 51)
-			r2 = RndPL(11, 15);
-		if (power.param1 == 66)
-			r2 = RndPL(16, 20);
-		if (power.param1 == 81)
-			r2 = RndPL(21, 30);
-		if (power.param1 == 96)
-			r2 = RndPL(31, 40);
-		if (power.param1 == 111)
-			r2 = RndPL(41, 50);
-		if (power.param1 == 126)
-			r2 = RndPL(51, 75);
-		if (power.param1 == 151)
-			r2 = RndPL(76, 100);
-		item._iPLToHit += r2;
+		item._iPLToHit += CalculateToHitBonus(power.param1);
 		break;
 	case IPL_TOHIT_DAMP_CURSE:
 		item._iPLDam -= r;
-		if (power.param1 == 25)
-			r2 = RndPL(1, 5);
-		if (power.param1 == 50)
-			r2 = RndPL(6, 10);
-		item._iPLToHit -= r2;
+		item._iPLToHit += CalculateToHitBonus(-power.param1);
 		break;
 	case IPL_ACP:
 		item._iPLAC += r;
@@ -891,18 +889,17 @@ void SaveItemPower(ItemStruct &item, const ItemPower &power)
 		item._iPLMana -= r << 6;
 		drawmanaflag = true;
 		break;
-	case IPL_DUR:
-		r2 = r * item._iMaxDur / 100;
-		item._iMaxDur += r2;
-		item._iDurability += r2;
-		break;
+	case IPL_DUR: {
+		int bonus = r * item._iMaxDur / 100;
+		item._iMaxDur += bonus;
+		item._iDurability += bonus;
+	} break;
 	case IPL_CRYSTALLINE:
 		item._iPLDam += 140 + r * 2;
 		[[fallthrough]];
 	case IPL_DUR_CURSE:
 		item._iMaxDur -= r * item._iMaxDur / 100;
 		item._iMaxDur = std::max<uint8_t>(item._iMaxDur, 1);
-
 		item._iDurability = item._iMaxDur;
 		break;
 	case IPL_INDESTRUCTIBLE:
@@ -1093,26 +1090,21 @@ void SaveItemPower(ItemStruct &item, const ItemPower &power)
 	case IPL_ACUNDEAD:
 		item._iDamAcFlags |= ISPLHF_ACUNDEAD;
 		break;
-	case IPL_MANATOLIFE:
-		r2 = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100);
-		item._iPLMana -= (r2 << 6);
-		item._iPLHP += (r2 << 6);
-		break;
-	case IPL_LIFETOMANA:
-		r2 = ((Players[MyPlayerId]._pMaxHPBase >> 6) * 40 / 100);
-		item._iPLHP -= (r2 << 6);
-		item._iPLMana += (r2 << 6);
-		break;
+	case IPL_MANATOLIFE: {
+		int portion = ((Players[MyPlayerId]._pMaxManaBase >> 6) * 50 / 100) << 6;
+		item._iPLMana -= portion;
+		item._iPLHP += portion;
+	} break;
+	case IPL_LIFETOMANA: {
+		int portion = ((Players[MyPlayerId]._pMaxHPBase >> 6) * 40 / 100) << 6;
+		item._iPLHP -= portion;
+		item._iPLMana += portion;
+	} break;
 	default:
 		break;
 	}
-	if (item._iVAdd1 != 0 || item._iVMult1 != 0) {
-		item._iVAdd2 = PLVal(r, power.param1, power.param2, power.minval, power.maxval);
-		item._iVMult2 = power.multval;
-	} else {
-		item._iVAdd1 = PLVal(r, power.param1, power.param2, power.minval, power.maxval);
-		item._iVMult1 = power.multval;
-	}
+
+	return r;
 }
 
 bool StringInPanel(const char *str)
@@ -1120,18 +1112,36 @@ bool StringInPanel(const char *str)
 	return GetLineWidth(str, GameFontSmall, 0) < 125;
 }
 
-void SaveItemSuffix(int i, int sufidx)
+int PLVal(int pv, int p1, int p2, int minv, int maxv)
 {
-	auto power = ItemSuffixes[sufidx].power;
+	if (p1 == p2)
+		return minv;
+	if (minv == maxv)
+		return minv;
+	return minv + (maxv - minv) * (100 * (pv - p1) / (p2 - p1)) / 100;
+}
+
+void SaveItemAffix(ItemStruct &item, const PLStruct &affix)
+{
+	auto power = affix.power;
 
 	if (!gbIsHellfire) {
-		if (sufidx >= 84 && sufidx <= 86) {
+		if (power.type == IPL_TARGAC) {
 			power.param1 = 2 << power.param1;
 			power.param2 = 6 << power.param2;
 		}
 	}
 
-	SaveItemPower(Items[i], power);
+	int value = SaveItemPower(item, power);
+
+	value = PLVal(value, power.param1, power.param2, affix.minVal, affix.maxVal);
+	if (item._iVAdd1 != 0 || item._iVMult1 != 0) {
+		item._iVAdd2 = value;
+		item._iVMult2 = affix.multVal;
+	} else {
+		item._iVAdd1 = value;
+		item._iVMult1 = affix.multVal;
+	}
 }
 
 void GetStaffPower(int i, int lvl, int bs, bool onlygood)
@@ -1158,7 +1168,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), Items[i]._iIName);
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemPower(Items[i], ItemPrefixes[preidx].power);
+			SaveItemAffix(Items[i], ItemPrefixes[preidx]);
 			Items[i]._iPrePower = ItemPrefixes[preidx].power.type;
 		}
 	}
@@ -1219,7 +1229,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), Items[i]._iIName);
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemPower(Items[i], ItemPrefixes[preidx].power);
+			SaveItemAffix(Items[i], ItemPrefixes[preidx]);
 			Items[i]._iPrePower = ItemPrefixes[preidx].power.type;
 			goe = ItemPrefixes[preidx].PLGOE;
 		}
@@ -1240,7 +1250,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 			strcpy(istr, fmt::format(_("{:s} of {:s}"), Items[i]._iIName, _(ItemSuffixes[sufidx].PLName)).c_str());
 			strcpy(Items[i]._iIName, istr);
 			Items[i]._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemSuffix(i, sufidx);
+			SaveItemAffix(Items[i], ItemSuffixes[sufidx]);
 			Items[i]._iSufPower = ItemSuffixes[sufidx].power.type;
 		}
 	}
@@ -1517,8 +1527,10 @@ void GetUniqueItem(ItemStruct &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (int i = 0; i < UniqueItemList[uid].UINumPL; i++) {
-		SaveItemPower(item, UniqueItemList[uid].powers[i]);
+	for (const auto &power : UniqueItemList[uid].powers) {
+		if (power.type == IPL_INVALID)
+			break;
+		SaveItemPower(item, power);
 	}
 
 	strcpy(item._iIName, _(UniqueItemList[uid].UIName));
@@ -4127,32 +4139,13 @@ void DrawUniqueInfo(const Surface &out)
 
 	DrawUniqueInfoDevider(out, 5);
 
-	rect.position.y += (12 - uitem.UINumPL) * 12;
-	PrintItemPower(uitem.powers[0].type, &curruitem);
-	DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
-	if (uitem.UINumPL > 1) {
+	rect.position.y += (10 - uitem.UINumPL) * 12;
+	assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
+	for (const auto &power : uitem.powers) {
+		if (power.type == IPL_INVALID)
+			break;
 		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.powers[1].type, &curruitem);
-		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
-	}
-	if (uitem.UINumPL > 2) {
-		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.powers[2].type, &curruitem);
-		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
-	}
-	if (uitem.UINumPL > 3) {
-		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.powers[3].type, &curruitem);
-		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
-	}
-	if (uitem.UINumPL > 4) {
-		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.powers[4].type, &curruitem);
-		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
-	}
-	if (uitem.UINumPL > 5) {
-		rect.position.y += 2 * 12;
-		PrintItemPower(uitem.powers[5].type, &curruitem);
+		PrintItemPower(power.type, &curruitem);
 		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
 	}
 }
