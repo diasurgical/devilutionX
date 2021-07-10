@@ -5009,29 +5009,29 @@ void SyncOpObject(int pnum, int cmd, int i)
 	}
 }
 
-void BreakCrux(int i)
+void BreakCrux(ObjectStruct &crux)
 {
-	Objects[i]._oAnimFlag = 1;
-	Objects[i]._oAnimFrame = 1;
-	Objects[i]._oAnimDelay = 1;
-	Objects[i]._oSolidFlag = true;
-	Objects[i]._oMissFlag = true;
-	Objects[i]._oBreak = -1;
-	Objects[i]._oSelFlag = 0;
+	crux._oAnimFlag = 1;
+	crux._oAnimFrame = 1;
+	crux._oAnimDelay = 1;
+	crux._oSolidFlag = true;
+	crux._oMissFlag = true;
+	crux._oBreak = -1;
+	crux._oSelFlag = 0;
 	bool triggered = true;
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		if (Objects[oi]._otype != OBJ_CRUX1 && Objects[oi]._otype != OBJ_CRUX2 && Objects[oi]._otype != OBJ_CRUX3)
+		const auto &testObject = Objects[ActiveObjects[j]];
+		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
 			continue;
-		if (Objects[i]._oVar8 != Objects[oi]._oVar8 || Objects[oi]._oBreak == -1)
+		if (crux._oVar8 != testObject._oVar8 || testObject._oBreak == -1)
 			continue;
 		triggered = false;
 	}
 	if (!triggered)
 		return;
 	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, Objects[i].position);
-	ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+		PlaySfxLoc(IS_LEVER, crux.position);
+	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
 void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
@@ -5125,7 +5125,7 @@ void BreakObject(int pnum, int oi)
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		BreakCrux(oi);
+		BreakCrux(Objects[oi]);
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
@@ -5146,11 +5146,10 @@ void SyncCrux(const ObjectStruct &crux)
 {
 	bool found = true;
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		int type = Objects[oi]._otype;
-		if (IsNoneOf(type, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+		const auto &testObject = Objects[ActiveObjects[j]];
+		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
 			continue;
-		if (crux._oVar8 != Objects[oi]._oVar8 || Objects[oi]._oBreak == -1)
+		if (crux._oVar8 != testObject._oVar8 || testObject._oBreak == -1)
 			continue;
 		found = false;
 	}
