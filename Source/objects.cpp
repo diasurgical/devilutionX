@@ -5009,6 +5009,30 @@ void SyncOpObject(int pnum, int cmd, int i)
 	}
 }
 
+/**
+ * @brief Checks if all active crux objects of the given type have been broken.
+ * 
+ * Called by BreakCrux and SyncCrux to see if the linked map area needs to be updated. In practice I think this is
+ * always true when called by BreakCrux as there *should* only be one instance of each crux with a given _oVar8 value?
+ * 
+ * @param cruxType Discriminator/type (_oVar8 value) of the crux object which is currently changing state
+ * @return true if all active cruxes of that type on the level are broken, false if at least one remains unbroken
+ */
+bool AreAllCruxesOfTypeBroken(int cruxType)
+{
+	for (int j = 0; j < ActiveObjectCount; j++) {
+		const auto &testObject = Objects[ActiveObjects[j]];
+		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+			continue; // Not a Crux object, keep searching
+		if (cruxType != testObject._oVar8 || testObject._oBreak == -1)
+			continue; // Found either a different crux or a previously broken crux, keep searching
+
+		// Found an unbroken crux of this type
+		return false;
+	}
+	return true;
+}
+
 void BreakCrux(ObjectStruct &crux)
 {
 	crux._oAnimFlag = 1;
@@ -5018,17 +5042,10 @@ void BreakCrux(ObjectStruct &crux)
 	crux._oMissFlag = true;
 	crux._oBreak = -1;
 	crux._oSelFlag = 0;
-	bool triggered = true;
-	for (int j = 0; j < ActiveObjectCount; j++) {
-		const auto &testObject = Objects[ActiveObjects[j]];
-		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
-			continue;
-		if (crux._oVar8 != testObject._oVar8 || testObject._oBreak == -1)
-			continue;
-		triggered = false;
-	}
-	if (!triggered)
+
+	if (!AreAllCruxesOfTypeBroken(crux._oVar8))
 		return;
+
 	if (!deltaload)
 		PlaySfxLoc(IS_LEVER, crux.position);
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
@@ -5144,16 +5161,7 @@ void SyncBreakObj(int pnum, int oi)
 
 void SyncCrux(const ObjectStruct &crux)
 {
-	bool found = true;
-	for (int j = 0; j < ActiveObjectCount; j++) {
-		const auto &testObject = Objects[ActiveObjects[j]];
-		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
-			continue;
-		if (crux._oVar8 != testObject._oVar8 || testObject._oBreak == -1)
-			continue;
-		found = false;
-	}
-	if (found)
+	if (AreAllCruxesOfTypeBroken(crux._oVar8))
 		ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
