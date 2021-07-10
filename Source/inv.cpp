@@ -1571,7 +1571,6 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 
 void AutoGetItem(int pnum, ItemStruct *item, int ii)
 {
-	blockClicks = true;
 	bool done;
 
 	if (pcurs != CURSOR_HAND) {

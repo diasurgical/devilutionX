@@ -664,6 +664,7 @@ void CheckCursMove()
 		}
 	}
 	if (pcursplr == -1 && pcursobj == -1 && pcursmonst == -1) {
+		lastDoorId = -1;
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
 			int8_t bv = dItem[mx + 1][my] - 1;
 			if (Items[bv]._iSelFlag >= 2) {

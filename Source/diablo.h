@@ -67,6 +67,7 @@ extern bool gbBarbarian;
 extern bool gbQuietMode;
 extern clicktype sgbMouseDown;
 extern bool blockClicks;
+extern int lastDoorId;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 

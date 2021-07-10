@@ -90,6 +90,7 @@ bool gbBarbarian;
 bool gbQuietMode = false;
 clicktype sgbMouseDown;
 bool blockClicks = false;
+int lastDoorId = -1;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
 Keymapper keymapper {

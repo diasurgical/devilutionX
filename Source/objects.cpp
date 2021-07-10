@@ -4740,6 +4740,12 @@ bool objectIsDisabled(int i)
 void OperateObject(int pnum, int i, bool teleFlag)
 {
 	bool sendmsg = pnum == MyPlayerId;
+	if (IsAnyOf(Objects[i]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR)) {
+		if (i == lastDoorId)
+			return;
+		else
+			lastDoorId = i;
+	}
 	switch (Objects[i]._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
