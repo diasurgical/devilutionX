@@ -1394,7 +1394,7 @@ int GetSFXLength(int nSFX)
 #ifdef RUN_TESTS
 bool TestCalculatePosition(Point soundPosition, int *plVolume, int *plPan)
 {
-	CalculatePosition(soundPosition, plVolume, plPan);
+	return CalculatePosition(soundPosition, plVolume, plPan);
 }
 #endif
 

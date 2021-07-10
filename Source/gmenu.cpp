@@ -19,60 +19,19 @@
 #include "utils/ui_fwd.h"
 
 namespace devilution {
+
 namespace {
+
 std::optional<CelSprite> optbar_cel;
 std::optional<CelSprite> PentSpin_cel;
 std::optional<CelSprite> option_cel;
 std::optional<CelSprite> sgpLogo;
-} // namespace
-
 bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
 void (*gmenu_current_option)();
-TMenuItem *sgpCurrentMenu;
 int sgCurrentMenuIdx;
-
-void gmenu_draw_pause(const Surface &out)
-{
-	if (currlevel != 0)
-		RedBack(out);
-	if (sgpCurrentMenu == nullptr) {
-		LightTableIndex = 0;
-		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UIS_HUGE | UIS_CENTER, 2);
-	}
-}
-
-void FreeGMenu()
-{
-	sgpLogo = std::nullopt;
-	PentSpin_cel = std::nullopt;
-	option_cel = std::nullopt;
-	optbar_cel = std::nullopt;
-}
-
-void gmenu_init_menu()
-{
-	LogoAnim_frame = 1;
-	sgpCurrentMenu = nullptr;
-	sgpCurrItem = nullptr;
-	gmenu_current_option = nullptr;
-	sgCurrentMenuIdx = 0;
-	mouseNavigation = false;
-	if (gbIsHellfire)
-		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
-	else
-		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
-	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
-	option_cel = LoadCel("Data\\option.CEL", 27);
-	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
-}
-
-bool gmenu_is_active()
-{
-	return sgpCurrentMenu != nullptr;
-}
 
 static void GmenuUpDown(bool isDown)
 {
@@ -123,26 +82,6 @@ static void GmenuLeftRight(bool isRight)
 	sgpCurrItem->fnMenu(false);
 }
 
-void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
-{
-	PauseMode = 0;
-	mouseNavigation = false;
-	sgpCurrentMenu = pItem;
-	gmenu_current_option = gmFunc;
-	if (gmenu_current_option != nullptr) {
-		gmenu_current_option();
-	}
-	sgCurrentMenuIdx = 0;
-	if (sgpCurrentMenu != nullptr) {
-		for (int i = 0; sgpCurrentMenu[i].fnMenu != nullptr; i++) {
-			sgCurrentMenuIdx++;
-		}
-	}
-	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
-	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
-	GmenuUpDown(true);
-}
-
 static void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
 {
 	BYTE *i = out.at(x, y);
@@ -190,6 +129,92 @@ static void GameMenuMove()
 		GmenuLeftRight(moveDir.x == AxisDirectionX_RIGHT);
 	if (moveDir.y != AxisDirectionY_NONE)
 		GmenuUpDown(moveDir.y == AxisDirectionY_DOWN);
+}
+
+static bool GmenuMouseNavigation()
+{
+	if (MousePosition.x < 282 + PANEL_LEFT) {
+		return false;
+	}
+	if (MousePosition.x > 538 + PANEL_LEFT) {
+		return false;
+	}
+	return true;
+}
+
+static int GmenuGetMouseSlider()
+{
+	if (MousePosition.x < 282 + PANEL_LEFT) {
+		return 0;
+	}
+	if (MousePosition.x > 538 + PANEL_LEFT) {
+		return 256;
+	}
+	return MousePosition.x - 282 - PANEL_LEFT;
+}
+
+} // namespace
+
+TMenuItem *sgpCurrentMenu;
+
+void gmenu_draw_pause(const Surface &out)
+{
+	if (currlevel != 0)
+		RedBack(out);
+	if (sgpCurrentMenu == nullptr) {
+		LightTableIndex = 0;
+		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UIS_HUGE | UIS_CENTER, 2);
+	}
+}
+
+void FreeGMenu()
+{
+	sgpLogo = std::nullopt;
+	PentSpin_cel = std::nullopt;
+	option_cel = std::nullopt;
+	optbar_cel = std::nullopt;
+}
+
+void gmenu_init_menu()
+{
+	LogoAnim_frame = 1;
+	sgpCurrentMenu = nullptr;
+	sgpCurrItem = nullptr;
+	gmenu_current_option = nullptr;
+	sgCurrentMenuIdx = 0;
+	mouseNavigation = false;
+	if (gbIsHellfire)
+		sgpLogo = LoadCel("Data\\hf_logo3.CEL", 430);
+	else
+		sgpLogo = LoadCel("Data\\Diabsmal.CEL", 296);
+	PentSpin_cel = LoadCel("Data\\PentSpin.CEL", 48);
+	option_cel = LoadCel("Data\\option.CEL", 27);
+	optbar_cel = LoadCel("Data\\optbar.CEL", 287);
+}
+
+bool gmenu_is_active()
+{
+	return sgpCurrentMenu != nullptr;
+}
+
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
+{
+	PauseMode = 0;
+	mouseNavigation = false;
+	sgpCurrentMenu = pItem;
+	gmenu_current_option = gmFunc;
+	if (gmenu_current_option != nullptr) {
+		gmenu_current_option();
+	}
+	sgCurrentMenuIdx = 0;
+	if (sgpCurrentMenu != nullptr) {
+		for (int i = 0; sgpCurrentMenu[i].fnMenu != nullptr; i++) {
+			sgCurrentMenuIdx++;
+		}
+	}
+	// BUGFIX: OOB access when sgCurrentMenuIdx is 0; should be set to NULL instead. (fixed)
+	sgpCurrItem = sgCurrentMenuIdx > 0 ? &sgpCurrentMenu[sgCurrentMenuIdx - 1] : nullptr;
+	GmenuUpDown(true);
 }
 
 void gmenu_draw(const Surface &out)
@@ -251,28 +276,6 @@ bool gmenu_presskeys(int vkey)
 		break;
 	}
 	return true;
-}
-
-static bool GmenuMouseNavigation()
-{
-	if (MousePosition.x < 282 + PANEL_LEFT) {
-		return false;
-	}
-	if (MousePosition.x > 538 + PANEL_LEFT) {
-		return false;
-	}
-	return true;
-}
-
-static int GmenuGetMouseSlider()
-{
-	if (MousePosition.x < 282 + PANEL_LEFT) {
-		return 0;
-	}
-	if (MousePosition.x > 538 + PANEL_LEFT) {
-		return 256;
-	}
-	return MousePosition.x - 282 - PANEL_LEFT;
 }
 
 bool gmenu_on_mouse_move()

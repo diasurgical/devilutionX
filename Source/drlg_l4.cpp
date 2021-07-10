@@ -5,9 +5,9 @@
  */
 #include "drlg_l4.h"
 
-#include "drlg_l1.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "gendung.h"
 #include "monster.h"
 #include "multi.h"
 #include "objdat.h"
@@ -640,13 +640,15 @@ void AddWall()
 			if (dflags[i][j] != 0) {
 				continue;
 			}
-			if (IsAnyOf(dungeon[i][j], 10, 12, 13, 15, 16, 21, 22) && GenerateRnd(100) < WALL_CHANCE) {
+			if (IsAnyOf(dungeon[i][j], 10, 12, 13, 15, 16, 21, 22)) {
+				GenerateRnd(100);
 				int x = HorizontalWallOk(i, j);
 				if (x != -1) {
 					HorizontalWall(i, j, x);
 				}
 			}
-			if (IsAnyOf(dungeon[i][j], 8, 9, 11, 14, 15, 16, 21, 23) && GenerateRnd(100) < WALL_CHANCE) {
+			if (IsAnyOf(dungeon[i][j], 8, 9, 11, 14, 15, 16, 21, 23)) {
+				GenerateRnd(100);
 				int y = VerticalWallOk(i, j);
 				if (y != -1) {
 					VerticalWall(i, j, y);

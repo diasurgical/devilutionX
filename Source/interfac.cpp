@@ -23,9 +23,10 @@
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
+
 namespace {
+
 std::optional<CelSprite> sgpBackCel;
-} // namespace
 
 uint32_t sgdwProgress;
 int progress_id;
@@ -186,6 +187,8 @@ static void DrawCutscene()
 	BltFast(&rect, &rect);
 	RenderPresent();
 }
+
+} // namespace
 
 void interface_msg_pump()
 {

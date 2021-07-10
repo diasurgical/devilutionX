@@ -25,13 +25,9 @@
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
-namespace {
-std::optional<CelSprite> pInvCels;
-} // namespace
 
 bool invflag;
 bool drawsbarflag;
-int sgdwLastTime; // check name
 
 /**
  * Maps from inventory slot to screen position. The inventory slots are
@@ -132,35 +128,9 @@ const Point InvRect[] = {
 	// clang-format on
 };
 
-/* data */
+namespace {
 
-void FreeInvGFX()
-{
-	pInvCels = std::nullopt;
-}
-
-void InitInv()
-{
-	switch (Players[MyPlayerId]._pClass) {
-	case HeroClass::Warrior:
-	case HeroClass::Barbarian:
-		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
-		break;
-	case HeroClass::Rogue:
-	case HeroClass::Bard:
-		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", SPANEL_WIDTH);
-		break;
-	case HeroClass::Sorcerer:
-		pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", SPANEL_WIDTH);
-		break;
-	case HeroClass::Monk:
-		pInvCels = LoadCel(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
-		break;
-	}
-
-	invflag = false;
-	drawsbarflag = false;
-}
+std::optional<CelSprite> pInvCels;
 
 static void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 {
@@ -182,154 +152,6 @@ static void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size)
 					pix -= PAL16_GRAY - PAL16_BEIGE;
 			}
 			*dst++ = pix;
-		}
-	}
-}
-
-void DrawInv(const Surface &out)
-{
-	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pInvCels, 1);
-
-	Size slotSize[] = {
-		{ 2, 2 }, //head
-		{ 1, 1 }, //left ring
-		{ 1, 1 }, //right ring
-		{ 1, 1 }, //amulet
-		{ 2, 3 }, //left hand
-		{ 2, 3 }, //right hand
-		{ 2, 3 }, // chest
-	};
-
-	Point slotPos[] = {
-		{ 133, 59 },  //head
-		{ 48, 205 },  //left ring
-		{ 249, 205 }, //right ring
-		{ 205, 60 },  //amulet
-		{ 17, 160 },  //left hand
-		{ 248, 160 }, //right hand
-		{ 133, 160 }, // chest
-	};
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
-		if (!myPlayer.InvBody[slot].isEmpty()) {
-			int screenX = slotPos[slot].x;
-			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, { RIGHT_PANEL_X + screenX, screenY }, { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
-
-			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
-
-			auto frameSize = GetInvItemSize(frame);
-
-			// calc item offsets for weapons smaller than 2x3 slots
-			if (slot == INVLOC_HAND_LEFT) {
-				screenX += frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0;
-				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
-			} else if (slot == INVLOC_HAND_RIGHT) {
-				screenX += frameSize.width == InventorySlotSizeInPixels.width ? (INV_SLOT_HALF_SIZE_PX - 1) : 1;
-				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
-			}
-
-			const auto &cel = GetInvItemSprite(frame);
-			const int celFrame = GetInvItemFrame(frame);
-			const Point position { RIGHT_PANEL_X + screenX, screenY };
-
-			if (pcursinvitem == slot) {
-				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame, false);
-			}
-
-			CelDrawItem(myPlayer.InvBody[slot], out, position, cel, celFrame);
-
-			if (slot == INVLOC_HAND_LEFT) {
-				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
-					if (myPlayer._pClass != HeroClass::Barbarian
-					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
-					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, { RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y }, { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
-						LightTableIndex = 0;
-						cel_transparency_active = true;
-
-						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
-						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
-
-						cel_transparency_active = false;
-					}
-				}
-			}
-		}
-	}
-
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
-		if (myPlayer.InvGrid[i] != 0) {
-			InvDrawSlotBack(
-			    out,
-			    InvRect[i + SLOTXY_INV_FIRST] + Displacement { RIGHT_PANEL_X, -1 },
-			    InventorySlotSizeInPixels);
-		}
-	}
-
-	for (int j = 0; j < NUM_INV_GRID_ELEM; j++) {
-		if (myPlayer.InvGrid[j] > 0) { // first slot of an item
-			int ii = myPlayer.InvGrid[j] - 1;
-			int frame = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
-
-			const auto &cel = GetInvItemSprite(frame);
-			const int celFrame = GetInvItemFrame(frame);
-			const Point position { InvRect[j + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].y - 1 };
-			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
-				CelBlitOutlineTo(
-				    out,
-				    GetOutlineColor(myPlayer.InvList[ii], true),
-				    position,
-				    cel, celFrame, false);
-			}
-
-			CelDrawItem(
-			    myPlayer.InvList[ii],
-			    out,
-			    position,
-			    cel, celFrame);
-		}
-	}
-}
-
-void DrawInvBelt(const Surface &out)
-{
-	if (talkflag) {
-		return;
-	}
-
-	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (myPlayer.SpdList[i].isEmpty()) {
-			continue;
-		}
-
-		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
-		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
-		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
-
-		const auto &cel = GetInvItemSprite(frame);
-		const int celFrame = GetInvItemFrame(frame);
-
-		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
-			if (!sgbControllerActive || invflag) {
-				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.SpdList[i], true), position, cel, celFrame, false);
-			}
-		}
-
-		CelDrawItem(myPlayer.SpdList[i], out, position, cel, celFrame);
-
-		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
-		    && myPlayer.SpdList[i]._iStatFlag
-		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
-			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
-			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UIS_SILVER | UIS_RIGHT);
 		}
 	}
 }
@@ -389,36 +211,6 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
 	    && item._itype != ITYPE_GOLD
 	    && item._iStatFlag
 	    && AllItemsList[item.IDidx].iUsable;
-}
-
-/**
- * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed
- * on belt slots and the player has at least one empty slot in his belt.
- * If 'persistItem' is 'True', the item is also placed in the belt.
- * @param player The player on whose belt will be checked.
- * @param item The item to be checked.
- * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
- * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
- */
-bool AutoPlaceItemInBelt(PlayerStruct &player, const ItemStruct &item, bool persistItem)
-{
-	if (!CanBePlacedOnBelt(item)) {
-		return false;
-	}
-
-	for (auto &beltItem : player.SpdList) {
-		if (beltItem.isEmpty()) {
-			if (persistItem) {
-				beltItem = item;
-				player.CalcScrolls();
-				drawsbarflag = true;
-			}
-
-			return true;
-		}
-	}
-
-	return false;
 }
 
 /**
@@ -550,234 +342,6 @@ bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, 
 		NetSendCmdChItem(false, bodyLocation);
 		CalcPlrInv(playerId, true);
 	}
-
-	return true;
-}
-
-/**
- * @brief Automatically attempts to equip the specified item in the most appropriate location in the player's body.
- * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
- * @param playerId The player number whose inventory will be checked for compatibility with the item.
- * @param item The item to equip.
- * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
- * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
- * @return 'True' if the item was equipped and 'False' otherwise.
- */
-bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem)
-{
-	if (!CanEquip(item)) {
-		return false;
-	}
-
-	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
-		if (AutoEquip(playerId, item, (inv_body_loc)bodyLocation, persistItem)) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-/**
- * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
- * @param player The player to check.
- * @param item The item to check.
- * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
- */
-bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
-{
-	if (item.isWeapon()) {
-		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
-		// annoy players who prefer that playstyle.
-		return player._pClass != HeroClass::Monk && sgOptions.Gameplay.bAutoEquipWeapons;
-	}
-
-	if (item.isArmor()) {
-		return sgOptions.Gameplay.bAutoEquipArmor;
-	}
-
-	if (item.isHelm()) {
-		return sgOptions.Gameplay.bAutoEquipHelms;
-	}
-
-	if (item.isShield()) {
-		return sgOptions.Gameplay.bAutoEquipShields;
-	}
-
-	if (item.isJewelry()) {
-		return sgOptions.Gameplay.bAutoEquipJewelry;
-	}
-
-	return true;
-}
-
-/**
- * @brief Checks whether the given item can be placed on the specified player's inventory.
- * If 'persistItem' is 'True', the item is also placed in the inventory.
- * @param item The item to be checked.
- * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
- * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
- */
-bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem)
-{
-	Size itemSize = GetInventorySize(item);
-
-	if (itemSize.height == 1) {
-		for (int i = 30; i <= 39; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		for (int x = 9; x >= 0; x--) {
-			for (int y = 2; y >= 0; y--) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-					return true;
-			}
-		}
-		return false;
-	}
-
-	if (itemSize.height == 2) {
-		for (int x = 10 - itemSize.width; x >= 0; x -= itemSize.width) {
-			for (int y = 0; y < 3; y++) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-					return true;
-			}
-		}
-		if (itemSize.width == 2) {
-			for (int x = 7; x >= 0; x -= 2) {
-				for (int y = 0; y < 3; y++) {
-					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-						return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	if (itemSize == Size { 1, 3 }) {
-		for (int i = 0; i < 20; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		return false;
-	}
-
-	if (itemSize == Size { 2, 3 }) {
-		for (int i = 0; i < 9; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-
-		for (int i = 10; i < 19; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		return false;
-	}
-
-	app_fatal("Unknown item size: %ix%i", itemSize.width, itemSize.height);
-}
-
-/**
- * @brief Checks whether the given item can be placed on the specified player's inventory slot.
- * If 'persistItem' is 'True', the item is also placed in the inventory slot.
- * @param slotIndex The 0-based index of the slot to put the item on.
- * @param item The item to be checked.
- * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
- * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
- */
-bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const ItemStruct &item, bool persistItem)
-{
-	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
-
-	Size itemSize = GetInventorySize(item);
-	for (int j = 0; j < itemSize.height; j++) {
-		if (yy >= NUM_INV_GRID_ELEM) {
-			return false;
-		}
-		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
-		for (int i = 0; i < itemSize.width; i++) {
-			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
-				return false;
-			}
-			xx++;
-		}
-		yy += 10;
-	}
-
-	if (persistItem) {
-		player.InvList[player._pNumInv] = player.HoldItem;
-		player._pNumInv++;
-
-		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize);
-		player.CalcScrolls();
-	}
-
-	return true;
-}
-
-bool GoldAutoPlace(PlayerStruct &player)
-{
-	bool done = false;
-
-	for (int i = 0; i < player._pNumInv && !done; i++) {
-		if (player.InvList[i]._itype != ITYPE_GOLD)
-			continue;
-		if (player.InvList[i]._ivalue >= MaxGold)
-			continue;
-
-		player.InvList[i]._ivalue += player.HoldItem._ivalue;
-		if (player.InvList[i]._ivalue > MaxGold) {
-			player.HoldItem._ivalue = player.InvList[i]._ivalue - MaxGold;
-			SetPlrHandGoldCurs(&player.HoldItem);
-			player.InvList[i]._ivalue = MaxGold;
-			if (gbIsHellfire)
-				GetPlrHandSeed(&player.HoldItem);
-		} else {
-			player.HoldItem._ivalue = 0;
-			done = true;
-		}
-
-		SetPlrHandGoldCurs(&player.InvList[i]);
-		player._pGold = CalculateGold(player);
-	}
-
-	for (int i = 39; i >= 30 && !done; i--) {
-		done = GoldAutoPlaceInInventorySlot(player, i);
-	}
-	for (int x = 9; x >= 0 && !done; x--) {
-		for (int y = 2; y >= 0 && !done; y--) {
-			done = GoldAutoPlaceInInventorySlot(player, 10 * y + x);
-		}
-	}
-
-	return done;
-}
-
-bool GoldAutoPlaceInInventorySlot(PlayerStruct &player, int slotIndex)
-{
-	if (player.InvGrid[slotIndex] != 0) {
-		return false;
-	}
-
-	int ii = player._pNumInv;
-	player.InvList[ii] = player.HoldItem;
-	player._pNumInv++;
-	player.InvGrid[slotIndex] = player._pNumInv;
-	GetPlrHandSeed(&player.InvList[ii]);
-
-	int gold = player.HoldItem._ivalue;
-	if (gold > MaxGold) {
-		gold -= MaxGold;
-		player.HoldItem._ivalue = gold;
-		GetPlrHandSeed(&player.HoldItem);
-		player.InvList[ii]._ivalue = MaxGold;
-		return false;
-	}
-
-	player.HoldItem._ivalue = 0;
-	player._pGold = CalculateGold(player);
-	NewCursor(CURSOR_HAND);
 
 	return true;
 }
@@ -1129,32 +693,6 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
-{
-	memset(&Items[MAXITEMS], 0, sizeof(*Items));
-	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	auto &player = Players[pnum];
-
-	player.HoldItem = Items[MAXITEMS];
-
-	if (bId) {
-		player.HoldItem._iIdentified = true;
-	}
-
-	if (bLoc < NUM_INVLOC) {
-		player.InvBody[bLoc] = player.HoldItem;
-
-		if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-		} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-		}
-	}
-
-	CalcPlrInv(pnum, true);
-}
-
 void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 {
 	auto &player = Players[pnum];
@@ -1371,50 +909,6 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 	}
 }
 
-void inv_update_rem_item(int pnum, BYTE iv)
-{
-	auto &player = Players[pnum];
-
-	if (iv < NUM_INVLOC) {
-		player.InvBody[iv]._itype = ITYPE_NONE;
-	}
-
-	CalcPlrInv(pnum, player._pmode != PM_DEATH);
-}
-
-void CheckInvItem(bool isShiftHeld)
-{
-	if (pcurs >= CURSOR_FIRSTITEM) {
-		CheckInvPaste(MyPlayerId, MousePosition);
-	} else {
-		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld);
-	}
-}
-
-/**
- * Check for interactions with belt
- */
-void CheckInvScrn(bool isShiftHeld)
-{
-	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
-	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
-		CheckInvItem(isShiftHeld);
-	}
-}
-
-void CheckItemStats(PlayerStruct &player)
-{
-	ItemStruct &item = player.HoldItem;
-
-	item._iStatFlag = false;
-
-	if (player._pStrength >= item._iMinStr
-	    && player._pMagic >= item._iMinMag
-	    && player._pDexterity >= item._iMinDex) {
-		item._iStatFlag = true;
-	}
-}
-
 static void CheckBookLevel(PlayerStruct &player)
 {
 	if (player.HoldItem._iMiscId != IMISC_BOOK)
@@ -1535,6 +1029,576 @@ void CleanupItems(ItemStruct *item, int ii)
 		}
 
 		i++;
+	}
+}
+
+static bool PutItem(PlayerStruct &player, Point &position)
+{
+	if (ActiveItemCount >= MAXITEMS)
+		return false;
+
+	Direction d = GetDirection(player.position.tile, position);
+
+	if (position.WalkingDistance(player.position.tile) > 1) {
+		position = player.position.tile + d;
+	}
+	if (CanPut(position))
+		return true;
+
+	position = player.position.tile + left[d];
+	if (CanPut(position))
+		return true;
+
+	position = player.position.tile + right[d];
+	if (CanPut(position))
+		return true;
+
+	for (int l = 1; l < 50; l++) {
+		for (int j = -l; j <= l; j++) {
+			int yp = j + player.position.tile.y;
+			for (int i = -l; i <= l; i++) {
+				int xp = i + player.position.tile.x;
+				if (!CanPut({ xp, yp }))
+					continue;
+
+				position = { xp, yp };
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+static bool CanUseStaff(ItemStruct &staff, spell_id spell)
+{
+	return !staff.isEmpty()
+	    && (staff._iMiscId == IMISC_STAFF || staff._iMiscId == IMISC_UNIQUE)
+	    && staff._iSpell == spell
+	    && staff._iCharges > 0;
+}
+
+void StartGoldDrop()
+{
+	initialDropGoldIndex = pcursinvitem;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (pcursinvitem <= INVITEM_INV_LAST)
+		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
+	else
+		initialDropGoldValue = myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
+
+	dropGoldFlag = true;
+	dropGoldValue = 0;
+
+	if (talkflag)
+		control_reset_talk();
+}
+
+} // namespace
+
+void FreeInvGFX()
+{
+	pInvCels = std::nullopt;
+}
+
+void InitInv()
+{
+	switch (Players[MyPlayerId]._pClass) {
+	case HeroClass::Warrior:
+	case HeroClass::Barbarian:
+		pInvCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
+		break;
+	case HeroClass::Rogue:
+	case HeroClass::Bard:
+		pInvCels = LoadCel("Data\\Inv\\Inv_rog.CEL", SPANEL_WIDTH);
+		break;
+	case HeroClass::Sorcerer:
+		pInvCels = LoadCel("Data\\Inv\\Inv_Sor.CEL", SPANEL_WIDTH);
+		break;
+	case HeroClass::Monk:
+		pInvCels = LoadCel(!gbIsSpawn ? "Data\\Inv\\Inv_Sor.CEL" : "Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
+		break;
+	}
+
+	invflag = false;
+	drawsbarflag = false;
+}
+
+void DrawInv(const Surface &out)
+{
+	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pInvCels, 1);
+
+	Size slotSize[] = {
+		{ 2, 2 }, //head
+		{ 1, 1 }, //left ring
+		{ 1, 1 }, //right ring
+		{ 1, 1 }, //amulet
+		{ 2, 3 }, //left hand
+		{ 2, 3 }, //right hand
+		{ 2, 3 }, // chest
+	};
+
+	Point slotPos[] = {
+		{ 133, 59 },  //head
+		{ 48, 205 },  //left ring
+		{ 249, 205 }, //right ring
+		{ 205, 60 },  //amulet
+		{ 17, 160 },  //left hand
+		{ 248, 160 }, //right hand
+		{ 133, 160 }, // chest
+	};
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (int slot = INVLOC_HEAD; slot < NUM_INVLOC; slot++) {
+		if (!myPlayer.InvBody[slot].isEmpty()) {
+			int screenX = slotPos[slot].x;
+			int screenY = slotPos[slot].y;
+			InvDrawSlotBack(out, { RIGHT_PANEL_X + screenX, screenY }, { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
+
+			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
+
+			auto frameSize = GetInvItemSize(frame);
+
+			// calc item offsets for weapons smaller than 2x3 slots
+			if (slot == INVLOC_HAND_LEFT) {
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
+			} else if (slot == INVLOC_HAND_RIGHT) {
+				screenX += frameSize.width == InventorySlotSizeInPixels.width ? (INV_SLOT_HALF_SIZE_PX - 1) : 1;
+				screenY += frameSize.height == (3 * InventorySlotSizeInPixels.height) ? 0 : -INV_SLOT_HALF_SIZE_PX;
+			}
+
+			const auto &cel = GetInvItemSprite(frame);
+			const int celFrame = GetInvItemFrame(frame);
+			const Point position { RIGHT_PANEL_X + screenX, screenY };
+
+			if (pcursinvitem == slot) {
+				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame, false);
+			}
+
+			CelDrawItem(myPlayer.InvBody[slot], out, position, cel, celFrame);
+
+			if (slot == INVLOC_HAND_LEFT) {
+				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
+					if (myPlayer._pClass != HeroClass::Barbarian
+					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
+					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
+						InvDrawSlotBack(out, { RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y }, { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
+						LightTableIndex = 0;
+						cel_transparency_active = true;
+
+						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
+						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
+						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
+
+						cel_transparency_active = false;
+					}
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+		if (myPlayer.InvGrid[i] != 0) {
+			InvDrawSlotBack(
+			    out,
+			    InvRect[i + SLOTXY_INV_FIRST] + Displacement { RIGHT_PANEL_X, -1 },
+			    InventorySlotSizeInPixels);
+		}
+	}
+
+	for (int j = 0; j < NUM_INV_GRID_ELEM; j++) {
+		if (myPlayer.InvGrid[j] > 0) { // first slot of an item
+			int ii = myPlayer.InvGrid[j] - 1;
+			int frame = myPlayer.InvList[ii]._iCurs + CURSOR_FIRSTITEM;
+
+			const auto &cel = GetInvItemSprite(frame);
+			const int celFrame = GetInvItemFrame(frame);
+			const Point position { InvRect[j + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].y - 1 };
+			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
+				CelBlitOutlineTo(
+				    out,
+				    GetOutlineColor(myPlayer.InvList[ii], true),
+				    position,
+				    cel, celFrame, false);
+			}
+
+			CelDrawItem(
+			    myPlayer.InvList[ii],
+			    out,
+			    position,
+			    cel, celFrame);
+		}
+	}
+}
+
+void DrawInvBelt(const Surface &out)
+{
+	if (talkflag) {
+		return;
+	}
+
+	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (int i = 0; i < MAXBELTITEMS; i++) {
+		if (myPlayer.SpdList[i].isEmpty()) {
+			continue;
+		}
+
+		const Point position { InvRect[i + SLOTXY_BELT_FIRST].x + PANEL_X, InvRect[i + SLOTXY_BELT_FIRST].y + PANEL_Y - 1 };
+		InvDrawSlotBack(out, position, InventorySlotSizeInPixels);
+		int frame = myPlayer.SpdList[i]._iCurs + CURSOR_FIRSTITEM;
+
+		const auto &cel = GetInvItemSprite(frame);
+		const int celFrame = GetInvItemFrame(frame);
+
+		if (pcursinvitem == i + INVITEM_BELT_FIRST) {
+			if (!sgbControllerActive || invflag) {
+				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.SpdList[i], true), position, cel, celFrame, false);
+			}
+		}
+
+		CelDrawItem(myPlayer.SpdList[i], out, position, cel, celFrame);
+
+		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
+		    && myPlayer.SpdList[i]._iStatFlag
+		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
+			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
+			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UIS_SILVER | UIS_RIGHT);
+		}
+	}
+}
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed
+ * on belt slots and the player has at least one empty slot in his belt.
+ * If 'persistItem' is 'True', the item is also placed in the belt.
+ * @param player The player on whose belt will be checked.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
+ * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
+ */
+bool AutoPlaceItemInBelt(PlayerStruct &player, const ItemStruct &item, bool persistItem)
+{
+	if (!CanBePlacedOnBelt(item)) {
+		return false;
+	}
+
+	for (auto &beltItem : player.SpdList) {
+		if (beltItem.isEmpty()) {
+			if (persistItem) {
+				beltItem = item;
+				player.CalcScrolls();
+				drawsbarflag = true;
+			}
+
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * @brief Automatically attempts to equip the specified item in the most appropriate location in the player's body.
+ * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
+ * @param playerId The player number whose inventory will be checked for compatibility with the item.
+ * @param item The item to equip.
+ * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
+ * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
+ * @return 'True' if the item was equipped and 'False' otherwise.
+ */
+bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem)
+{
+	if (!CanEquip(item)) {
+		return false;
+	}
+
+	for (int bodyLocation = INVLOC_HEAD; bodyLocation < NUM_INVLOC; bodyLocation++) {
+		if (AutoEquip(playerId, item, (inv_body_loc)bodyLocation, persistItem)) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+/**
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
+ * @param player The player to check.
+ * @param item The item to check.
+ * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
+ */
+bool AutoEquipEnabled(const PlayerStruct &player, const ItemStruct &item)
+{
+	if (item.isWeapon()) {
+		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
+		// annoy players who prefer that playstyle.
+		return player._pClass != HeroClass::Monk && sgOptions.Gameplay.bAutoEquipWeapons;
+	}
+
+	if (item.isArmor()) {
+		return sgOptions.Gameplay.bAutoEquipArmor;
+	}
+
+	if (item.isHelm()) {
+		return sgOptions.Gameplay.bAutoEquipHelms;
+	}
+
+	if (item.isShield()) {
+		return sgOptions.Gameplay.bAutoEquipShields;
+	}
+
+	if (item.isJewelry()) {
+		return sgOptions.Gameplay.bAutoEquipJewelry;
+	}
+
+	return true;
+}
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory.
+ * If 'persistItem' is 'True', the item is also placed in the inventory.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
+ * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
+ */
+bool AutoPlaceItemInInventory(PlayerStruct &player, const ItemStruct &item, bool persistItem)
+{
+	Size itemSize = GetInventorySize(item);
+
+	if (itemSize.height == 1) {
+		for (int i = 30; i <= 39; i++) {
+			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+				return true;
+		}
+		for (int x = 9; x >= 0; x--) {
+			for (int y = 2; y >= 0; y--) {
+				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
+					return true;
+			}
+		}
+		return false;
+	}
+
+	if (itemSize.height == 2) {
+		for (int x = 10 - itemSize.width; x >= 0; x -= itemSize.width) {
+			for (int y = 0; y < 3; y++) {
+				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
+					return true;
+			}
+		}
+		if (itemSize.width == 2) {
+			for (int x = 7; x >= 0; x -= 2) {
+				for (int y = 0; y < 3; y++) {
+					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	if (itemSize == Size { 1, 3 }) {
+		for (int i = 0; i < 20; i++) {
+			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+				return true;
+		}
+		return false;
+	}
+
+	if (itemSize == Size { 2, 3 }) {
+		for (int i = 0; i < 9; i++) {
+			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+				return true;
+		}
+
+		for (int i = 10; i < 19; i++) {
+			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+				return true;
+		}
+		return false;
+	}
+
+	app_fatal("Unknown item size: %ix%i", itemSize.width, itemSize.height);
+}
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory slot.
+ * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
+bool AutoPlaceItemInInventorySlot(PlayerStruct &player, int slotIndex, const ItemStruct &item, bool persistItem)
+{
+	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
+
+	Size itemSize = GetInventorySize(item);
+	for (int j = 0; j < itemSize.height; j++) {
+		if (yy >= NUM_INV_GRID_ELEM) {
+			return false;
+		}
+		int xx = (slotIndex > 0) ? (slotIndex % 10) : 0;
+		for (int i = 0; i < itemSize.width; i++) {
+			if (xx >= 10 || player.InvGrid[xx + yy] != 0) {
+				return false;
+			}
+			xx++;
+		}
+		yy += 10;
+	}
+
+	if (persistItem) {
+		player.InvList[player._pNumInv] = player.HoldItem;
+		player._pNumInv++;
+
+		AddItemToInvGrid(player, slotIndex, player._pNumInv, itemSize);
+		player.CalcScrolls();
+	}
+
+	return true;
+}
+
+bool GoldAutoPlace(PlayerStruct &player)
+{
+	bool done = false;
+
+	for (int i = 0; i < player._pNumInv && !done; i++) {
+		if (player.InvList[i]._itype != ITYPE_GOLD)
+			continue;
+		if (player.InvList[i]._ivalue >= MaxGold)
+			continue;
+
+		player.InvList[i]._ivalue += player.HoldItem._ivalue;
+		if (player.InvList[i]._ivalue > MaxGold) {
+			player.HoldItem._ivalue = player.InvList[i]._ivalue - MaxGold;
+			SetPlrHandGoldCurs(&player.HoldItem);
+			player.InvList[i]._ivalue = MaxGold;
+			if (gbIsHellfire)
+				GetPlrHandSeed(&player.HoldItem);
+		} else {
+			player.HoldItem._ivalue = 0;
+			done = true;
+		}
+
+		SetPlrHandGoldCurs(&player.InvList[i]);
+		player._pGold = CalculateGold(player);
+	}
+
+	for (int i = 39; i >= 30 && !done; i--) {
+		done = GoldAutoPlaceInInventorySlot(player, i);
+	}
+	for (int x = 9; x >= 0 && !done; x--) {
+		for (int y = 2; y >= 0 && !done; y--) {
+			done = GoldAutoPlaceInInventorySlot(player, 10 * y + x);
+		}
+	}
+
+	return done;
+}
+
+bool GoldAutoPlaceInInventorySlot(PlayerStruct &player, int slotIndex)
+{
+	if (player.InvGrid[slotIndex] != 0) {
+		return false;
+	}
+
+	int ii = player._pNumInv;
+	player.InvList[ii] = player.HoldItem;
+	player._pNumInv++;
+	player.InvGrid[slotIndex] = player._pNumInv;
+	GetPlrHandSeed(&player.InvList[ii]);
+
+	int gold = player.HoldItem._ivalue;
+	if (gold > MaxGold) {
+		gold -= MaxGold;
+		player.HoldItem._ivalue = gold;
+		GetPlrHandSeed(&player.HoldItem);
+		player.InvList[ii]._ivalue = MaxGold;
+		return false;
+	}
+
+	player.HoldItem._ivalue = 0;
+	player._pGold = CalculateGold(player);
+	NewCursor(CURSOR_HAND);
+
+	return true;
+}
+
+void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+{
+	memset(&Items[MAXITEMS], 0, sizeof(*Items));
+	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+
+	auto &player = Players[pnum];
+
+	player.HoldItem = Items[MAXITEMS];
+
+	if (bId) {
+		player.HoldItem._iIdentified = true;
+	}
+
+	if (bLoc < NUM_INVLOC) {
+		player.InvBody[bLoc] = player.HoldItem;
+
+		if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
+		} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
+		}
+	}
+
+	CalcPlrInv(pnum, true);
+}
+
+void inv_update_rem_item(int pnum, BYTE iv)
+{
+	auto &player = Players[pnum];
+
+	if (iv < NUM_INVLOC) {
+		player.InvBody[iv]._itype = ITYPE_NONE;
+	}
+
+	CalcPlrInv(pnum, player._pmode != PM_DEATH);
+}
+
+void CheckInvItem(bool isShiftHeld)
+{
+	if (pcurs >= CURSOR_FIRSTITEM) {
+		CheckInvPaste(MyPlayerId, MousePosition);
+	} else {
+		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld);
+	}
+}
+
+/**
+ * Check for interactions with belt
+ */
+void CheckInvScrn(bool isShiftHeld)
+{
+	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
+	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
+		CheckInvItem(isShiftHeld);
+	}
+}
+
+void CheckItemStats(PlayerStruct &player)
+{
+	ItemStruct &item = player.HoldItem;
+
+	item._iStatFlag = false;
+
+	if (player._pStrength >= item._iMinStr
+	    && player._pMagic >= item._iMinMag
+	    && player._pDexterity >= item._iMinDex) {
+		item._iStatFlag = true;
 	}
 }
 
@@ -1722,44 +1786,6 @@ bool TryInvPut()
 	}
 
 	return CanPut(myPlayer.position.tile);
-}
-
-static bool PutItem(PlayerStruct &player, Point &position)
-{
-	if (ActiveItemCount >= MAXITEMS)
-		return false;
-
-	Direction d = GetDirection(player.position.tile, position);
-
-	if (position.WalkingDistance(player.position.tile) > 1) {
-		position = player.position.tile + d;
-	}
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + left[d];
-	if (CanPut(position))
-		return true;
-
-	position = player.position.tile + right[d];
-	if (CanPut(position))
-		return true;
-
-	for (int l = 1; l < 50; l++) {
-		for (int j = -l; j <= l; j++) {
-			int yp = j + player.position.tile.y;
-			for (int i = -l; i <= l; i++) {
-				int xp = i + player.position.tile.x;
-				if (!CanPut({ xp, yp }))
-					continue;
-
-				position = { xp, yp };
-				return true;
-			}
-		}
-	}
-
-	return false;
 }
 
 int InvPutItem(PlayerStruct &player, Point position)
@@ -1993,14 +2019,6 @@ bool UseScroll()
 	return false;
 }
 
-static bool CanUseStaff(ItemStruct &staff, spell_id spell)
-{
-	return !staff.isEmpty()
-	    && (staff._iMiscId == IMISC_STAFF || staff._iMiscId == IMISC_UNIQUE)
-	    && staff._iSpell == spell
-	    && staff._iCharges > 0;
-}
-
 void UseStaffCharge(PlayerStruct &player)
 {
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
@@ -2021,24 +2039,6 @@ bool UseStaff()
 	auto &myPlayer = Players[MyPlayerId];
 
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], myPlayer._pRSpell);
-}
-
-void StartGoldDrop()
-{
-	initialDropGoldIndex = pcursinvitem;
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	if (pcursinvitem <= INVITEM_INV_LAST)
-		initialDropGoldValue = myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST]._ivalue;
-	else
-		initialDropGoldValue = myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
-
-	dropGoldFlag = true;
-	dropGoldValue = 0;
-
-	if (talkflag)
-		control_reset_talk();
 }
 
 bool UseInvItem(int pnum, int cii)
