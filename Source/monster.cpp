@@ -3197,7 +3197,7 @@ void MAI_Fireman(int i)
 		monst->_mgoal = MGOAL_ATTACK2;
 	}
 	monst->_mdir = md;
-	GenerateRnd(100);
+	AdvanceRndSeed();
 	if (monst->_mmode != MM_STAND)
 		return;
 

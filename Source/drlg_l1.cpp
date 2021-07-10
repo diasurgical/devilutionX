@@ -1375,42 +1375,42 @@ void AddWall()
 		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0) {
 				if (dungeon[i][j] == 3) {
-					GenerateRnd(100);
+					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 2, x);
 					}
 				}
 				if (dungeon[i][j] == 3) {
-					GenerateRnd(100);
+					AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 1, y);
 					}
 				}
 				if (dungeon[i][j] == 6) {
-					GenerateRnd(100);
+					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 4, x);
 					}
 				}
 				if (dungeon[i][j] == 7) {
-					GenerateRnd(100);
+					AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 4, y);
 					}
 				}
 				if (dungeon[i][j] == 2) {
-					GenerateRnd(100);
+					AdvanceRndSeed();
 					int x = HorizontalWallOk(i, j);
 					if (x != -1) {
 						HorizontalWall(i, j, 2, x);
 					}
 				}
 				if (dungeon[i][j] == 1) {
-					GenerateRnd(100);
+					AdvanceRndSeed();
 					int y = VerticalWallOk(i, j);
 					if (y != -1) {
 						VerticalWall(i, j, 1, y);
