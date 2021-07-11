@@ -21,51 +21,55 @@ bool sgbIsWalking;
 
 } // namespace
 
-#define REPEATEDATTACKINTERVAL (Uint32) gnTickDelay * 4 //200ms
-
-static bool RepeatLeftMouseAttackAction() //Fluffy
+static bool RepeatMouseAttack(bool leftButton)
 {
-	if (!(lastLeftMouseButtonAction == MOUSEACTION_ATTACK || lastLeftMouseButtonAction == MOUSEACTION_ATTACK_MONSTERTARGET || lastLeftMouseButtonAction == MOUSEACTION_ATTACK_PLAYERTARGET) || pcurs != CURSOR_HAND || sgbMouseDown != CLICK_LEFT)
+	if (pcurs != CURSOR_HAND)
 		return false;
 
-	//Repeat attack if button has been held down long enough
-	if (SDL_GetTicks() - lastLeftMouseButtonTime >= REPEATEDATTACKINTERVAL) {
-		if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK) {
-			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY) { 
-				if (Players[MyPlayerId]._pwtype == WT_RANGED)
-					NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, {cursmx, cursmy});
-				else
-					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, {cursmx, cursmy});
-			}
-		} else if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK_MONSTERTARGET && pcursmonst != -1) {
-			if (Players[MyPlayerId]._pwtype == WT_RANGED)
-				NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
-			else
-				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
-		} else if (lastLeftMouseButtonAction == MOUSEACTION_ATTACK_PLAYERTARGET && pcursplr != -1 && !gbFriendlyMode) {
-			if (Players[MyPlayerId]._pwtype == WT_RANGED)
-				NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
-			else
-				NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
+	Uint32 timePressed;
+	int lastAction;
+	if (leftButton) {
+		if (sgbMouseDown != CLICK_LEFT)
+			return false;
+		timePressed = lastLeftMouseButtonTime;
+		lastAction = lastLeftMouseButtonAction;
+	} else {
+		if (sgbMouseDown != CLICK_RIGHT)
+			return false;
+		timePressed = lastRightMouseButtonTime;
+		lastAction = lastRightMouseButtonAction;
+	}
+
+	if (lastAction != MOUSEACTION_ATTACK && lastAction != MOUSEACTION_ATTACK_MONSTERTARGET && lastAction != MOUSEACTION_ATTACK_PLAYERTARGET && lastAction != MOUSEACTION_SPELL)
+		return false;
+
+	if (Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - timePressed >= (Uint32)gnTickDelay * 4) {
+		bool rangedAttack = Players[MyPlayerId]._pwtype == WT_RANGED;
+		switch (lastAction) {
+		case MOUSEACTION_ATTACK:
+			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY)
+				NetSendCmdLoc(MyPlayerId, true, rangedAttack ? CMD_RATTACKXY : CMD_SATTACKXY, { cursmx, cursmy });
+			break;
+		case MOUSEACTION_ATTACK_MONSTERTARGET:
+			if (pcursmonst != -1)
+				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
+			break;
+		case MOUSEACTION_ATTACK_PLAYERTARGET:
+			if (pcursplr != -1 && !gbFriendlyMode)
+				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+			break;
+		case MOUSEACTION_SPELL:
+			CheckPlrSpell(true);
+			break;
 		}
 	}
-	return true;
-}
 
-static bool RepeatRightMouseAction() //Fluffy
-{
-	if (!(lastRightMouseButtonAction == MOUSEACTION_SPELL || lastRightMouseButtonAction == MOUSEACTION_ATTACK) || pcurs != CURSOR_HAND || sgbMouseDown != CLICK_RIGHT)
-		return false;
-
-	//Repeat spell cast if button has been held down long enough
-	if (SDL_GetTicks() - lastRightMouseButtonTime >= REPEATEDATTACKINTERVAL)
-		CheckPlrSpell(true);
 	return true;
 }
 
 void track_process()
 {
-	if (RepeatLeftMouseAttackAction() || RepeatRightMouseAction()) //Fluffy
+	if (RepeatMouseAttack(true) || RepeatMouseAttack(false)) //Fluffy
 		return;
 
 	if (!sgbIsWalking)
