@@ -43,7 +43,8 @@ static bool RepeatMouseAttack(bool leftButton)
 	if (lastAction != MOUSEACTION_ATTACK && lastAction != MOUSEACTION_ATTACK_MONSTERTARGET && lastAction != MOUSEACTION_ATTACK_PLAYERTARGET && lastAction != MOUSEACTION_SPELL)
 		return false;
 
-	if (Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - timePressed >= (Uint32)gnTickDelay * 4) {
+	if (Players[MyPlayerId]._pmode != PM_DEATH && Players[MyPlayerId]._pmode != PM_QUIT &&
+		Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - timePressed >= (Uint32)gnTickDelay * 4) {
 		bool rangedAttack = Players[MyPlayerId]._pwtype == WT_RANGED;
 		switch (lastAction) {
 		case MOUSEACTION_ATTACK:
