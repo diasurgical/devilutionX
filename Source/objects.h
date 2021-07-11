@@ -48,7 +48,12 @@ struct ObjectStruct {
 	int _oVar4;
 	int _oVar5;
 	uint32_t _oVar6;
-	_speech_id _oVar7;
+	/**
+	 * @brief ID of a quest message to play when this object is activated.
+	 *
+	 * Used by spell book objects which trigger quest progress for Halls of the Blind, Valor, or Warlord of Blood
+	 */
+	_speech_id bookMessage;
 	int _oVar8;
 
 	/**
@@ -58,16 +63,16 @@ struct ObjectStruct {
 	 * antechamber levers). The coordinates used for this region are based on a 40*40 grid overlaying the central
 	 * 80*80 region of the dungeon.
 	 *
-	 * @param topLeft corner of the map region closest to the origin
-	 * @param bottomRight corner of the map region furthest from the origin
+	 * @param topLeftPosition corner of the map region closest to the origin
+	 * @param bottomRightPosition corner of the map region furthest from the origin
 	 * @param v ID/discriminator for the object type? Needs to be investigated further
 	 */
-	constexpr void SetMapRange(Point topLeft, Point bottomRight, int v)
+	constexpr void SetMapRange(Point topLeftPosition, Point bottomRightPosition, int v)
 	{
-		_oVar1 = topLeft.x;
-		_oVar2 = topLeft.y;
-		_oVar3 = bottomRight.x;
-		_oVar4 = bottomRight.y;
+		_oVar1 = topLeftPosition.x;
+		_oVar2 = topLeftPosition.y;
+		_oVar3 = bottomRightPosition.x;
+		_oVar4 = bottomRightPosition.y;
 		_oVar8 = v;
 	}
 
@@ -95,7 +100,6 @@ void AddL1Objs(int x1, int y1, int x2, int y2);
 void AddL2Objs(int x1, int y1, int x2, int y2);
 void InitObjects();
 void SetMapObjects(const uint16_t *dunData, int startx, int starty);
-void SetBookMsg(int i, _speech_id msg);
 void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();

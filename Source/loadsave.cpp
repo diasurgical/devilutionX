@@ -741,7 +741,7 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oVar4 = file->NextLE<int32_t>();
 	pObject->_oVar5 = file->NextLE<int32_t>();
 	pObject->_oVar6 = file->NextLE<uint32_t>();
-	pObject->_oVar7 = static_cast<_speech_id>(file->NextLE<int32_t>());
+	pObject->bookMessage = static_cast<_speech_id>(file->NextLE<int32_t>());
 	pObject->_oVar8 = file->NextLE<int32_t>();
 }
 
@@ -1783,7 +1783,7 @@ static void SaveObject(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pObject->_oVar4);
 	file->WriteLE<int32_t>(pObject->_oVar5);
 	file->WriteLE<uint32_t>(pObject->_oVar6);
-	file->WriteLE<int32_t>(pObject->_oVar7);
+	file->WriteLE<int32_t>(pObject->bookMessage);
 	file->WriteLE<int32_t>(pObject->_oVar8);
 }
 
