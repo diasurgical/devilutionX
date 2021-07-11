@@ -3710,6 +3710,8 @@ void DeleteItem(int ii, int i)
 	ActiveItemCount--;
 	if (ActiveItemCount > 0 && i != ActiveItemCount)
 		ActiveItems[i] = ActiveItems[ActiveItemCount];
+	if (pcursitem == ii) // Unselect item if player has it highlighted
+		pcursitem = -1;
 }
 
 void ProcessItems()

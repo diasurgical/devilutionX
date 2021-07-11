@@ -380,8 +380,6 @@ void CheckCursMove()
 		} else if (pcursobj != -1) {
 			if (Objects[pcursobj]._oSelFlag < 1)
 				pcursobj = -1;
-		} else if (pcursitem != -1) {
-			//Fluffy TODO
 		} else if (pcursplr != -1) {
 			//Fluffy TODO
 		}
