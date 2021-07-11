@@ -3644,7 +3644,10 @@ void CheckPlrSpell(bool mouseClick) //Fluffy: Added mouseClick
 	}
 
 	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		myPlayer.Say(HeroSpeech::NotEnoughMana);
+		if (!mouseClick || lastRightMouseButtonAction != MOUSEACTION_SPELL_COMPLAINEDABOUTMANA)
+			myPlayer.Say(HeroSpeech::NotEnoughMana);
+		if (mouseClick)
+			lastRightMouseButtonAction = MOUSEACTION_SPELL_COMPLAINEDABOUTMANA;
 	}
 }
 

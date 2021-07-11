@@ -60,6 +60,7 @@ static bool RepeatMouseAttack(bool leftButton)
 				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 			break;
 		case MOUSEACTION_SPELL:
+		case MOUSEACTION_SPELL_COMPLAINEDABOUTMANA:
 			CheckPlrSpell(true);
 			break;
 		}
