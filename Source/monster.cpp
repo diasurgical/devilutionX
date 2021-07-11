@@ -50,6 +50,21 @@ void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistribution
 	monst->_mdir = md;
 }
 
+void StartMonsterGotHit(int monsterId)
+{
+	auto &monster = Monsters[monsterId];
+	if (monster.MType->mtype != MT_GOLEM) {
+		auto animationFlags = gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None;
+		NewMonsterAnim(monsterId, &monster.MType->Anims[MA_GOTHIT], monster._mdir, animationFlags);
+		monster._mmode = MM_GOTHIT;
+	}
+	monster.position.offset = { 0, 0 };
+	monster.position.tile = monster.position.old;
+	monster.position.future = monster.position.old;
+	M_ClearSquares(monsterId);
+	dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+}
+
 } // namespace
 
 #define NIGHTMARE_TO_HIT_BONUS 85
@@ -1574,13 +1589,7 @@ void M_GetKnockback(int i)
 
 	M_ClearSquares(i);
 	Monsters[i].position.old += d;
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_GOTHIT], Monsters[i]._mdir, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-	Monsters[i]._mmode = MM_GOTHIT;
-	Monsters[i].position.offset = { 0, 0 };
-	Monsters[i].position.tile = Monsters[i].position.old;
-	Monsters[i].position.future = Monsters[i].position.tile;
-	M_ClearSquares(i);
-	dMonster[Monsters[i].position.tile.x][Monsters[i].position.tile.y] = i + 1;
+	StartMonsterGotHit(i);
 }
 
 void M_StartHit(int i, int pnum, int dam)
@@ -1608,13 +1617,7 @@ void M_StartHit(int i, int pnum, int dam)
 			Monsters[i]._mgoalvar2 = 0;
 		}
 		if (Monsters[i]._mmode != MM_STONE) {
-			NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_GOTHIT], Monsters[i]._mdir, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-			Monsters[i]._mmode = MM_GOTHIT;
-			Monsters[i].position.offset = { 0, 0 };
-			Monsters[i].position.tile = Monsters[i].position.old;
-			Monsters[i].position.future = Monsters[i].position.old;
-			M_ClearSquares(i);
-			dMonster[Monsters[i].position.tile.x][Monsters[i].position.tile.y] = i + 1;
+			StartMonsterGotHit(i);
 		}
 	}
 }
@@ -1713,16 +1716,7 @@ void M2MStartHit(int mid, int i, int dam)
 		}
 
 		if (Monsters[mid]._mmode != MM_STONE) {
-			if (Monsters[mid].MType->mtype != MT_GOLEM) {
-				NewMonsterAnim(mid, &Monsters[mid].MType->Anims[MA_GOTHIT], Monsters[mid]._mdir, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
-				Monsters[mid]._mmode = MM_GOTHIT;
-			}
-
-			Monsters[mid].position.offset = { 0, 0 };
-			Monsters[mid].position.tile = Monsters[mid].position.old;
-			Monsters[mid].position.future = Monsters[mid].position.old;
-			M_ClearSquares(mid);
-			dMonster[Monsters[mid].position.tile.x][Monsters[mid].position.tile.y] = mid + 1;
+			StartMonsterGotHit(mid);
 		}
 	}
 }
