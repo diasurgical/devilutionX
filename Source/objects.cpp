@@ -1211,6 +1211,8 @@ void DeleteObject(int oi, int i)
 	dObject[ox][oy] = 0;
 	AvailableObjects[-ActiveObjectCount + MAXOBJECTS] = oi;
 	ActiveObjectCount--;
+	if (pcursobj == oi) // Unselect object if this was highlighted by player
+		pcursobj = -1;
 	if (ActiveObjectCount > 0 && i != ActiveObjectCount)
 		ActiveObjects[i] = ActiveObjects[ActiveObjectCount];
 }
