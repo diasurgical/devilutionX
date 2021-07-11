@@ -4773,15 +4773,8 @@ void MI_Rportal(int i)
 	PutMissile(i);
 }
 
-void ProcessMissiles()
+static void DeleteMissiles()
 {
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		dFlags[Missiles[ActiveMissiles[i]].position.tile.x][Missiles[ActiveMissiles[i]].position.tile.y] &= ~BFLAG_MISSILE;
-		dMissile[Missiles[ActiveMissiles[i]].position.tile.x][Missiles[ActiveMissiles[i]].position.tile.y] = 0;
-		if (Missiles[ActiveMissiles[i]].position.tile.x < 0 || Missiles[ActiveMissiles[i]].position.tile.x >= MAXDUNX - 1 || Missiles[ActiveMissiles[i]].position.tile.y < 0 || Missiles[ActiveMissiles[i]].position.tile.y >= MAXDUNY - 1)
-			Missiles[ActiveMissiles[i]]._miDelFlag = true;
-	}
-
 	for (int i = 0; i < ActiveMissileCount;) {
 		if (Missiles[ActiveMissiles[i]]._miDelFlag) {
 			DeleteMissile(ActiveMissiles[i], i);
@@ -4789,32 +4782,42 @@ void ProcessMissiles()
 			i++;
 		}
 	}
+}
+
+void ProcessMissiles()
+{
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		auto &missile = Missiles[ActiveMissiles[i]];
+		const auto &position = missile.position.tile;
+		dFlags[position.x][position.y] &= ~BFLAG_MISSILE;
+		dMissile[position.x][position.y] = 0;
+		if (!InDungeonBounds(position))
+			missile._miDelFlag = true;
+	}
+
+	DeleteMissiles();
 
 	MissilePreFlag = false;
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mi = ActiveMissiles[i];
-		MissileData[Missiles[mi]._mitype].mProc(ActiveMissiles[i]);
-		if ((Missiles[mi]._miAnimFlags & MFLAG_LOCK_ANIMATION) == 0) {
-			Missiles[mi]._miAnimCnt++;
-			if (Missiles[mi]._miAnimCnt >= Missiles[mi]._miAnimDelay) {
-				Missiles[mi]._miAnimCnt = 0;
-				Missiles[mi]._miAnimFrame += Missiles[mi]._miAnimAdd;
-				if (Missiles[mi]._miAnimFrame > Missiles[mi]._miAnimLen)
-					Missiles[mi]._miAnimFrame = 1;
-				if (Missiles[mi]._miAnimFrame < 1)
-					Missiles[mi]._miAnimFrame = Missiles[mi]._miAnimLen;
-			}
-		}
+		auto &missile = Missiles[ActiveMissiles[i]];
+		MissileData[missile._mitype].mProc(ActiveMissiles[i]);
+		if ((missile._miAnimFlags & MFLAG_LOCK_ANIMATION) != 0)
+			continue;
+
+		missile._miAnimCnt++;
+		if (missile._miAnimCnt < missile._miAnimDelay)
+			continue;
+
+		missile._miAnimCnt = 0;
+		missile._miAnimFrame += missile._miAnimAdd;
+		if (missile._miAnimFrame > missile._miAnimLen)
+			missile._miAnimFrame = 1;
+		else if (missile._miAnimFrame < 1)
+			missile._miAnimFrame = missile._miAnimLen;
 	}
 
-	for (int i = 0; i < ActiveMissileCount;) {
-		if (Missiles[ActiveMissiles[i]]._miDelFlag) {
-			DeleteMissile(ActiveMissiles[i], i);
-		} else {
-			i++;
-		}
-	}
+	DeleteMissiles();
 }
 
 void missiles_process_charge()
