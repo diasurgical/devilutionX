@@ -63,28 +63,64 @@ struct ObjectStruct {
 	 * antechamber levers). The coordinates used for this region are based on a 40*40 grid overlaying the central
 	 * 80*80 region of the dungeon.
 	 *
-	 * @param topLeftPosition corner of the map region closest to the origin
-	 * @param bottomRightPosition corner of the map region furthest from the origin
-	 * @param v ID/discriminator for the object type? Needs to be investigated further
+	 * @param topLeftPosition corner of the map region closest to the origin.
+	 * @param bottomRightPosition corner of the map region furthest from the origin.
 	 */
-	constexpr void SetMapRange(Point topLeftPosition, Point bottomRightPosition, int v)
+	constexpr void SetMapRange(Point topLeftPosition, Point bottomRightPosition)
 	{
 		_oVar1 = topLeftPosition.x;
 		_oVar2 = topLeftPosition.y;
 		_oVar3 = bottomRightPosition.x;
 		_oVar4 = bottomRightPosition.y;
-		_oVar8 = v;
 	}
 
 	/**
-	 * @brief Convenience function for SetMapRange(Point, Point, int)
-	 * @param mapRange A rectangle defining the top left corner and size of the affected region
-	 * @param v Object subtype/discriminator
+	 * @brief Convenience function for SetMapRange(Point, Point).
+	 * @param mapRange A rectangle defining the top left corner and size of the affected region.
 	 */
-	constexpr void SetMapRange(Rectangle mapRange, int v)
+	constexpr void SetMapRange(Rectangle mapRange)
 	{
-		SetMapRange(mapRange.position, mapRange.position + Displacement { mapRange.size }, v);
+		SetMapRange(mapRange.position, mapRange.position + Displacement { mapRange.size });
 	}
+
+	/**
+	 * @brief Sets up a generic quest book which will trigger a change in the map when activated.
+	 *
+	 * Books of this type use a generic message (see OperateSChambBook()) compared to the more specific quest books
+	 * initialized by IntializeQuestBook().
+	 *
+	 * @param mapRange The region to be updated when this object is activated.
+	*/
+	constexpr void InitializeBook(Rectangle mapRange)
+	{
+		SetMapRange(mapRange);
+		_oVar6 = _oAnimFrame + 1; // Save the frame number for the open book frame
+	}
+
+	/**
+	 * @brief Initializes this object as a quest book which will cause further changes and play a message when activated.
+	 * @param mapRange The region to be updated when this object is activated.
+	 * @param leverID An ID (distinct from the object index) to identify the new objects spawned after updating the map.
+	 * @param message The quest text to play when this object is activated.
+	 */
+	constexpr void InitializeQuestBook(Rectangle mapRange, int leverID, _speech_id message)
+	{
+		InitializeBook(mapRange);
+		_oVar8 = leverID;
+		bookMessage = message;
+	}
+
+	/**
+	 * @brief Marks an object which was spawned from a sublevel in response to a lever activation.
+	 * @param mapRange The region which was updated to spawn this object.
+	 * @param leverID The id (*not* an object ID/index) of the lever responsible for the map change.
+	 */
+	constexpr void InitializeLoadedObject(Rectangle mapRange, int leverID)
+	{
+		SetMapRange(mapRange);
+		_oVar8 = leverID;
+	}
+
 };
 
 extern ObjectStruct Objects[MAXOBJECTS];

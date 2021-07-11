@@ -518,10 +518,8 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 		AddObject(OBJ_BLOODBOOK, { xp, yp });
 	}
 	int ob = dObject[xp][yp] - 1;
-	Objects[ob].SetMapRange(affectedArea, leverid);
-	Objects[ob].bookMessage = msg;
+	Objects[ob].InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
-	Objects[ob]._oVar6 = Objects[ob]._oAnimFrame + 1;
 }
 
 void InitRndBarrels()
@@ -757,7 +755,7 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
-				ObjectAtPosition(mapPos).SetMapRange(mapRange, leveridx);
+				ObjectAtPosition(mapPos).InitializeLoadedObject(mapRange, leveridx);
 			}
 		}
 	}
@@ -1269,15 +1267,6 @@ void AddL1Door(int i, Point position, _object_id objectType)
 	Objects[i]._oVar4 = 0;
 }
 
-void AddSCambBook(int i)
-{
-	Objects[i]._oVar1 = setpc_x;
-	Objects[i]._oVar2 = setpc_y;
-	Objects[i]._oVar3 = setpc_w + setpc_x + 1;
-	Objects[i]._oVar4 = setpc_h + setpc_y + 1;
-	Objects[i]._oVar6 = Objects[i]._oAnimFrame + 1;
-}
-
 void AddChest(int i, int t)
 {
 	if (GenerateRnd(2) == 0)
@@ -1732,7 +1721,7 @@ void AddObject(_object_id objType, Point objPos)
 		AddL3Door(oi, objPos, objType);
 		break;
 	case OBJ_BOOK2R:
-		AddSCambBook(oi);
+		Objects[oi].InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
