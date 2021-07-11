@@ -40,7 +40,7 @@ static bool RepeatMouseAttack(bool leftButton)
 		lastAction = lastRightMouseButtonAction;
 	}
 
-	if (lastAction != MOUSEACTION_ATTACK && lastAction != MOUSEACTION_ATTACK_MONSTERTARGET && lastAction != MOUSEACTION_ATTACK_PLAYERTARGET && lastAction != MOUSEACTION_SPELL)
+	if (lastAction != MOUSEACTION_ATTACK && lastAction != MOUSEACTION_ATTACK_MONSTERTARGET && lastAction != MOUSEACTION_ATTACK_PLAYERTARGET && lastAction != MOUSEACTION_SPELL && lastAction != MOUSEACTION_SPELL_COMPLAINEDABOUTMANA)
 		return false;
 
 	if (Players[MyPlayerId]._pmode != PM_DEATH && Players[MyPlayerId]._pmode != PM_QUIT &&
