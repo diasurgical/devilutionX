@@ -476,7 +476,16 @@ void AddCandles()
 	AddObject(OBJ_STORYCANDLE, { tx + 2, ty + 2 });
 }
 
-void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
+/**
+ * @brief Attempts to spawn a book somewhere on the current floor which when activated will change a region of the map.
+ *
+ * This object acts like a lever and will cause a change to the map based on what quest is active. The exact effect is
+ * determined by OperateBookLever().
+ *
+ * @param affectedArea The map region to be updated when this object is activated by the player.
+ * @param msg The quest text to play when the player activates the book.
+*/
+void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
 	int cnt = 0;
 	int xp;
@@ -509,8 +518,8 @@ void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
 		AddObject(OBJ_BLOODBOOK, { xp, yp });
 	}
 	int ob = dObject[xp][yp] - 1;
-	Objects[ob].SetMapRange({ x1, y1 }, { x2, y2 }, leverid);
-	SetBookMsg(ob, msg);
+	Objects[ob].SetMapRange(affectedArea, leverid);
+	Objects[ob].bookMessage = msg;
 	leverid++;
 	Objects[ob]._oVar6 = Objects[ob]._oAnimFrame + 1;
 }
@@ -1062,7 +1071,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLIND]._qmsg = spId;
-				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, spId);
+				AddBookLever({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } }, spId);
 				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
 			if (QuestStatus(Q_BLOOD)) {
@@ -1088,7 +1097,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
-				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, spId);
+				AddBookLever({ { setpc_x, setpc_y + 3 }, { 2, 4 } }, spId);
 				AddObject(OBJ_PEDISTAL, { 2 * setpc_x + 25, 2 * setpc_y + 32 });
 			}
 			InitRndBarrels();
@@ -1121,7 +1130,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
-				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, spId);
+				AddBookLever({ { setpc_x, setpc_y }, { setpc_w, setpc_h } }, spId);
 				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
 			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
@@ -1245,11 +1254,6 @@ void SetupObject(int i, Point position, _object_id ot)
 	Objects[i]._oPreFlag = false;
 	Objects[i]._oTrapFlag = false;
 	Objects[i]._oDoorFlag = false;
-}
-
-void SetBookMsg(int i, _speech_id msg)
-{
-	Objects[i]._oVar7 = msg;
 }
 
 void AddL1Door(int i, Point position, _object_id objectType)
@@ -2936,7 +2940,7 @@ void OperateBookLever(int pnum, int i)
 			}
 		}
 		Objects[i]._oAnimFrame = Objects[i]._oVar6;
-		InitQTextMsg(Objects[i]._oVar7);
+		InitQTextMsg(Objects[i].bookMessage);
 		if (pnum == MyPlayerId)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 	}
