@@ -443,7 +443,7 @@ void Interact()
 		NetSendCmdLocParam1(true, CMD_TALKXY, Towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
 		if (Players[MyPlayerId]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
-			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
+			NetSendCmdParam2(true, CMD_ATTACKID, pcursmonst, false);
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
