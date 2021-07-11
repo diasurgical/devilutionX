@@ -94,25 +94,30 @@ ObjectStruct &ObjectAtPosition(Point position)
 
 void AddSKingObjs()
 {
-	ObjectAtPosition({ 64, 34 }).SetMapRange({ 20, 7 }, { 23, 10 }, 1);
-	ObjectAtPosition({ 64, 59 }).SetMapRange({ 20, 14 }, { 21, 16 }, 2);
-	ObjectAtPosition({ 27, 37 }).SetMapRange({ 8, 1 }, { 15, 11 }, 3);
-	ObjectAtPosition({ 46, 35 }).SetMapRange({ 8, 1 }, { 15, 11 }, 3);
-	ObjectAtPosition({ 49, 53 }).SetMapRange({ 8, 1 }, { 15, 11 }, 3);
-	ObjectAtPosition({ 27, 53 }).SetMapRange({ 8, 1 }, { 15, 11 }, 3);
+	constexpr Rectangle region1 { { 20, 7 }, { 3, 3 } };
+	ObjectAtPosition({ 64, 34 }).InitializeLoadedObject(region1, 1);
+
+	constexpr Rectangle region2 { { 20, 14 }, { 1, 2 } };
+	ObjectAtPosition({ 64, 59 }).InitializeLoadedObject(region2, 2);
+
+	constexpr Rectangle region3 { { 8, 1 }, { 7, 10 } };
+	ObjectAtPosition({ 27, 37 }).InitializeLoadedObject(region3, 3);
+	ObjectAtPosition({ 46, 35 }).InitializeLoadedObject(region3, 3);
+	ObjectAtPosition({ 49, 53 }).InitializeLoadedObject(region3, 3);
+	ObjectAtPosition({ 27, 53 }).InitializeLoadedObject(region3, 3);
 }
 
 void AddSChamObjs()
 {
-	ObjectAtPosition({ 37, 30 }).SetMapRange({ 17, 0 }, { 21, 5 }, 1);
-	ObjectAtPosition({ 37, 46 }).SetMapRange({ 13, 0 }, { 16, 5 }, 2);
+	ObjectAtPosition({ 37, 30 }).InitializeLoadedObject({ { 17, 0 }, { 4, 5 } }, 1);
+	ObjectAtPosition({ 37, 46 }).InitializeLoadedObject({ { 13, 0 }, { 3, 5 } }, 2);
 }
 
 void AddVileObjs()
 {
-	ObjectAtPosition({ 26, 45 }).SetMapRange({ 1, 1 }, { 9, 10 }, 1);
-	ObjectAtPosition({ 45, 46 }).SetMapRange({ 11, 1 }, { 20, 10 }, 2);
-	ObjectAtPosition({ 35, 36 }).SetMapRange({ 7, 11 }, { 13, 18 }, 3);
+	ObjectAtPosition({ 26, 45 }).InitializeLoadedObject({ { 1, 1 }, { 8, 9 } }, 1);
+	ObjectAtPosition({ 45, 46 }).InitializeLoadedObject({ { 11, 1 }, { 9, 9 } }, 2);
+	ObjectAtPosition({ 35, 36 }).InitializeLoadedObject({ { 7, 11 }, { 6, 7 } }, 3);
 }
 
 void DRLG_SetMapTrans(const char *path)
