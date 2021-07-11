@@ -3229,7 +3229,7 @@ void MAI_Fallen(int i)
 	if (monst->_mgoal == MGOAL_RETREAT) {
 		if (monst->_mgoalvar1-- == 0) {
 			monst->_mgoal = MGOAL_NORMAL;
-			M_StartStand(i, opposite[monst->_mdir]);
+			M_StartStand(i, opposite[monst->_mgoalvar2]);
 		}
 	}
 
@@ -4713,7 +4713,7 @@ void M_FallenFear(Point position)
 		    && m->_mhitpoints >> 6 > 0) {
 			m->_mgoal = MGOAL_RETREAT;
 			m->_mgoalvar1 = rundist;
-			m->_mdir = GetDirection(position, m->position.tile);
+			m->_mgoalvar2 = GetDirection(position, m->position.tile);
 		}
 	}
 }
