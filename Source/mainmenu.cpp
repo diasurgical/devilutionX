@@ -16,7 +16,7 @@ namespace devilution {
 
 char gszHero[16];
 
-/* data */
+namespace {
 
 /** The active music track id for the main menu. */
 uint8_t menu_music_track_id = TMUSIC_INTRO;
@@ -75,6 +75,8 @@ static void MainmenuPlayIntro()
 		play_movie("gendata\\diablo1.smk", true);
 	mainmenu_refresh_music();
 }
+
+} // namespace
 
 bool mainmenu_select_hero_dialog(GameData *gameData)
 {

@@ -13,18 +13,15 @@
 namespace devilution {
 
 LightStruct VisionList[MAXVISION];
-uint8_t ActiveLights[MAXLIGHTS];
-LightStruct Lights[MAXLIGHTS];
-int ActiveLightCount;
-uint8_t lightradius[16][128];
-bool dovision;
 int VisionCount;
-char LightsMax;
-bool UpdateLighting;
-uint8_t lightblock[64][16][16];
 int VisionId;
+LightStruct Lights[MAXLIGHTS];
+uint8_t ActiveLights[MAXLIGHTS];
+int ActiveLightCount;
+char LightsMax;
 std::array<uint8_t, LIGHTSIZE> LightTables;
 bool DisableLighting;
+bool UpdateLighting;
 
 /**
  * CrawlTable specifies X- and Y-coordinate deltas from a missile target coordinate.
@@ -49,7 +46,7 @@ bool DisableLighting;
  *    |  526
  *    +-------> x
  */
-const char CrawlTable[2749] = {
+const int8_t CrawlTable[2749] = {
 	// clang-format off
 	1, // Table 0, offset 0
 	  0,   0,
@@ -447,6 +444,12 @@ const uint8_t VisionCrawlTable[23][30] = {
 	// clang-format on
 };
 
+namespace {
+
+uint8_t lightradius[16][128];
+bool dovision;
+uint8_t lightblock[64][16][16];
+
 /** RadiusAdj maps from VisionCrawlTable index to lighting vision radius adjustment. */
 const BYTE RadiusAdj[23] = { 0, 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 4, 3, 2, 2, 2, 1, 1, 1, 0, 0, 0, 0 };
 
@@ -490,6 +493,30 @@ char GetLight(Point position)
 
 	return dLight[position.x][position.y];
 }
+
+void DoUnLight(int nXPos, int nYPos, int nRadius)
+{
+	nRadius++;
+
+	int minX = nXPos - nRadius;
+	int maxX = nXPos + nRadius;
+	int minY = nYPos - nRadius;
+	int maxY = nYPos + nRadius;
+
+	minX = std::max(minX, 0);
+	maxX = std::max(maxX, MAXDUNX);
+	minY = std::max(minY, 0);
+	maxY = std::max(maxY, MAXDUNY);
+
+	for (int y = minY; y < maxY; y++) {
+		for (int x = minX; x < maxX; x++) {
+			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
+				dLight[x][y] = dPreLight[x][y];
+		}
+	}
+}
+
+} // namespace
 
 void DoLighting(Point position, int nRadius, int lnum)
 {
@@ -594,28 +621,6 @@ void DoLighting(Point position, int nRadius, int lnum)
 					if (v < GetLight(temp))
 						SetLight(temp, v);
 			}
-		}
-	}
-}
-
-void DoUnLight(int nXPos, int nYPos, int nRadius)
-{
-	nRadius++;
-
-	int minX = nXPos - nRadius;
-	int maxX = nXPos + nRadius;
-	int minY = nYPos - nRadius;
-	int maxY = nYPos + nRadius;
-
-	minX = std::max(minX, 0);
-	maxX = std::max(maxX, MAXDUNX);
-	minY = std::max(minY, 0);
-	maxY = std::max(maxY, MAXDUNY);
-
-	for (int y = minY; y < maxY; y++) {
-		for (int x = minX; x < maxX; x++) {
-			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
-				dLight[x][y] = dPreLight[x][y];
 		}
 	}
 }
