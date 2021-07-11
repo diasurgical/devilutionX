@@ -96,9 +96,11 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 	int xCount = 0;
 	int yCount = 0;
 
-	// BUGFIX: change '&&' to '||' (fixed)
-	if (x > DMAXX - maxSize || y > DMAXY - maxSize) {
-		return false;
+	if (x + maxSize > DMAXX && y + maxSize > DMAXY) {
+		return false; // Original broken bounds check, avoids lower right corner
+	}
+	if (x + minSize > DMAXX || y + minSize > DMAXY) {
+		return false; // Skip definit OOB cases
 	}
 	if (!SkipThemeRoom(x, y)) {
 		return false;
@@ -108,8 +110,8 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 	int yArray[20] = {};
 
 	for (int ii = 0; ii < maxSize; ii++) {
-		if (xFlag) {
-			for (int xx = x; xx < x + maxSize; xx++) {
+		if (xFlag && y + ii < DMAXY) {
+			for (int xx = x; xx < x + maxSize && xx < DMAXX; xx++) {
 				if (dungeon[xx][y + ii] != floor) {
 					if (xx >= minSize) {
 						break;
@@ -124,8 +126,8 @@ bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *wi
 				xCount = 0;
 			}
 		}
-		if (yFlag) {
-			for (int yy = y; yy < y + maxSize; yy++) {
+		if (yFlag && x + ii < DMAXX) {
+			for (int yy = y; yy < y + maxSize && yy < DMAXY; yy++) {
 				if (dungeon[x + ii][yy] != floor) {
 					if (yy >= minSize) {
 						break;
