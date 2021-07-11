@@ -373,15 +373,19 @@ void CheckCursMove()
 		my = MAXDUNY - 1;
 	}
 
-	if (sgbMouseDown == CLICK_LEFT && pcursinvitem == -1) { //Fluffy: While holding down left click we should keep target (but potentially lose it if it dies or goes out of view)
+	//Fluffy: While holding down left click we should keep target (but potentially lose it if it dies or goes out of view)
+	if (sgbMouseDown == CLICK_LEFT && pcursinvitem == -1) {
 		if (pcursmonst != -1) {
-			if (Monsters[pcursmonst]._mDelFlag || Monsters[pcursmonst]._mhitpoints >> 6 <= 0 || !(dFlags[Monsters[pcursmonst].position.tile.x][Monsters[pcursmonst].position.tile.y] & BFLAG_VISIBLE))
+			if (Monsters[pcursmonst]._mDelFlag || Monsters[pcursmonst]._mhitpoints >> 6 <= 0
+				|| !(dFlags[Monsters[pcursmonst].position.tile.x][Monsters[pcursmonst].position.tile.y] & BFLAG_VISIBLE))
 				pcursmonst = -1;
 		} else if (pcursobj != -1) {
 			if (Objects[pcursobj]._oSelFlag < 1)
 				pcursobj = -1;
 		} else if (pcursplr != -1) {
-			//Fluffy TODO
+			if (Players[pcursplr]._pmode == PM_DEATH || Players[pcursplr]._pmode == PM_QUIT || !Players[pcursplr].plractive
+				|| currlevel != Players[pcursplr].plrlevel || Players[pcursplr]._pHitPoints >> 6 <= 0)
+				pcursplr = -1;
 		}
 
 		if (pcursmonst == -1 && pcursobj == -1 && pcursitem == -1 && pcursinvitem == -1 && pcursplr == -1) {
