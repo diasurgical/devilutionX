@@ -26,17 +26,17 @@ static bool RepeatMouseAttack(bool leftButton)
 	if (pcurs != CURSOR_HAND)
 		return false;
 
-	Uint32 timePressed;
+	Uint32 *timePressed;
 	int lastAction;
 	if (leftButton) {
 		if (sgbMouseDown != CLICK_LEFT)
 			return false;
-		timePressed = lastLeftMouseButtonTime;
+		timePressed = &lastLeftMouseButtonTime;
 		lastAction = lastLeftMouseButtonAction;
 	} else {
 		if (sgbMouseDown != CLICK_RIGHT)
 			return false;
-		timePressed = lastRightMouseButtonTime;
+		timePressed = &lastRightMouseButtonTime;
 		lastAction = lastRightMouseButtonAction;
 	}
 
@@ -44,8 +44,9 @@ static bool RepeatMouseAttack(bool leftButton)
 		return false;
 
 	if (Players[MyPlayerId]._pmode != PM_DEATH && Players[MyPlayerId]._pmode != PM_QUIT &&
-		Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - timePressed >= (Uint32)gnTickDelay * 4) {
+		Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - *timePressed >= (Uint32)gnTickDelay * 4) {
 		bool rangedAttack = Players[MyPlayerId]._pwtype == WT_RANGED;
+		*timePressed = SDL_GetTicks();
 		switch (lastAction) {
 		case MOUSEACTION_ATTACK:
 			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY)
