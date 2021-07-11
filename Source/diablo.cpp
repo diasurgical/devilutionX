@@ -2127,6 +2127,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);
+
+	// Reset mouse selection of entities
+	pcursmonst = -1;
+	pcursobj = -1;
+	pcursitem = -1;
+	pcursinvitem = -1;
+	pcursplr = -1;
 }
 
 /**
