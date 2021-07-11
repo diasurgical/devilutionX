@@ -39,6 +39,19 @@
 
 namespace devilution {
 
+namespace {
+
+void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
+{
+	MonsterStruct *monst = &Monsters[i];
+	auto *pCelSprite = &*anim->CelSpritesForDirections[md];
+	monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
+	monst->_mdir = md;
+}
+
+} // namespace
+
 #define NIGHTMARE_TO_HIT_BONUS 85
 #define HELL_TO_HIT_BONUS 120
 
@@ -1273,15 +1286,6 @@ void AddDoppelganger(MonsterStruct &monster)
 			}
 		}
 	}
-}
-
-void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
-{
-	MonsterStruct *monst = &Monsters[i];
-	auto *pCelSprite = &*anim->CelSpritesForDirections[md];
-	monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
-	monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
-	monst->_mdir = md;
 }
 
 bool M_Ranged(int i)
