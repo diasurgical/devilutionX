@@ -55,7 +55,8 @@ void StartMonsterGotHit(int monsterId)
 	auto &monster = Monsters[monsterId];
 	if (monster.MType->mtype != MT_GOLEM) {
 		auto animationFlags = gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None;
-		NewMonsterAnim(monsterId, &monster.MType->Anims[MA_GOTHIT], monster._mdir, animationFlags);
+		int numSkippedFrames = (gbIsHellfire && monster.MType->mtype == MT_DIABLO) ? 4 : 0;
+		NewMonsterAnim(monsterId, &monster.MType->Anims[MA_GOTHIT], monster._mdir, animationFlags, numSkippedFrames);
 		monster._mmode = MM_GOTHIT;
 	}
 	monster.position.offset = { 0, 0 };
@@ -400,8 +401,6 @@ void InitMonsterGFX(int monst)
 
 	for (int anim = 0; anim < 6; anim++) {
 		int frames = MonsterData[mtype].Frames[anim];
-		if (gbIsHellfire && mtype == MT_DIABLO && anim == 3)
-			frames = 2;
 
 		if ((animletter[anim] != 's' || MonsterData[mtype].has_special) && frames > 0) {
 			char strBuff[256];
