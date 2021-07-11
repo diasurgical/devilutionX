@@ -540,7 +540,7 @@ int VerticalWallOk(int i, int j)
 		}
 	}
 
-	if (IsAnyOf(dungeon[i][j + y], 9, 11, 14, 15, 16, 21, 23) && y > 3)
+	if (IsAnyOf(dungeon[i][j + y], 8, 9, 11, 14, 15, 16, 21, 23) && y > 3)
 		return y;
 
 	return -1;
