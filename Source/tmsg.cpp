@@ -38,6 +38,8 @@ void tmsg_add(byte *pbMsg, uint8_t bLen)
 	TMsg **tail;
 
 	TMsg *msg = static_cast<TMsg *>(std::malloc(bLen + sizeof(*msg)));
+	if (msg == nullptr)
+		app_fatal("Failed to allocate memory");
 	msg->hdr.pNext = nullptr;
 	msg->hdr.dwTime = SDL_GetTicks() + gnTickDelay * 10;
 	msg->hdr.bLen = bLen;

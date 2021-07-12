@@ -35,7 +35,7 @@ SDL_Thread *CreateThread(void (*handler)(), SDL_threadID *threadId)
 event_emul *StartEvent()
 {
 	event_emul *ret;
-	ret = (event_emul *)malloc(sizeof(event_emul));
+	ret = new event_emul();
 	ret->mutex = SDL_CreateMutex();
 	if (ret->mutex == nullptr) {
 		ErrSdl();
@@ -51,7 +51,7 @@ void EndEvent(event_emul *event)
 {
 	SDL_DestroyCond(event->cond);
 	SDL_DestroyMutex(event->mutex);
-	free(event);
+	delete event;
 }
 
 void SetEvent(event_emul *e)

@@ -81,6 +81,8 @@ void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, int dwLen)
 	}
 
 	pkt = static_cast<TMegaPkt *>(std::malloc(dwLen + 20));
+	if (pkt == nullptr)
+		app_fatal("Failed to allocate memory");
 	pkt->pNext = nullptr;
 	pkt->dwSpaceLeft = pnum;
 	pkt->data[0] = static_cast<byte>(cmd);

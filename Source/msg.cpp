@@ -60,6 +60,8 @@ void GetNextPacket()
 	TMegaPkt *result;
 
 	sgpCurrPkt = static_cast<TMegaPkt *>(std::malloc(sizeof(TMegaPkt)));
+	if (sgpCurrPkt == nullptr)
+		app_fatal("Failed to allocate memory");
 	sgpCurrPkt->pNext = nullptr;
 	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
 
