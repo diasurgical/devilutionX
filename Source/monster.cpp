@@ -3375,7 +3375,7 @@ void MAI_Ranged(int i, missile_id missileType, bool special)
 				else
 					M_StartRAttack(i, missileType, 4);
 			} else {
-				monst->AnimInfo.pCelSprite = &*monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
+				monst->CheckStandAnimationIsLoaded(md);
 			}
 		}
 		return;
