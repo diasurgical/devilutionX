@@ -16,7 +16,7 @@ DeadStruct Dead[MaxDead];
 int8_t stonendx;
 
 namespace {
-void InitDeadAnimationFromMonster(DeadStruct &dead, CMonster &mon)
+void InitDeadAnimationFromMonster(DeadStruct &dead, const CMonster &mon)
 {
 	int i = 0;
 	auto &animData = mon.GetAnimData(MonsterGraphic::Death);

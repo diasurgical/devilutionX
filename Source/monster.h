@@ -130,7 +130,7 @@ struct CMonster {
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
-	AnimStruct& GetAnimData(MonsterGraphic graphic)
+	const AnimStruct& GetAnimData(MonsterGraphic graphic) const
 	{
 		return Anims[static_cast<int>(graphic)];
 	}
