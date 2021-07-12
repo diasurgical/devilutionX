@@ -4297,7 +4297,7 @@ void MAI_Warlord(int i)
 	if (monst->_mgoal == MGOAL_NORMAL)
 		MAI_SkelSd(i);
 
-	monst->CheckStandAnimationIsLoaded(monst->_mdir);
+	monst->CheckStandAnimationIsLoaded(md);
 }
 
 void DeleteMonsterList()
