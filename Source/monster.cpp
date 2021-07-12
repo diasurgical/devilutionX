@@ -529,6 +529,8 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 {
 	CMonster *monst = &LevelMonsterTypes[mtype];
 
+	auto &animData = monst->Anims[MA_STAND];
+
 	Monsters[i]._mdir = rd;
 	Monsters[i].position.tile = position;
 	Monsters[i].position.future = position;
@@ -539,10 +541,10 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 	Monsters[i].MType = monst;
 	Monsters[i].MData = monst->MData;
 	Monsters[i].AnimInfo = {};
-	Monsters[i].AnimInfo.pCelSprite = monst->Anims[MA_STAND].CelSpritesForDirections[rd] ? &*monst->Anims[MA_STAND].CelSpritesForDirections[rd] : nullptr;
-	Monsters[i].AnimInfo.TicksPerFrame = monst->Anims[MA_STAND].Rate;
+	Monsters[i].AnimInfo.pCelSprite = animData.CelSpritesForDirections[rd] ? &*animData.CelSpritesForDirections[rd] : nullptr;
+	Monsters[i].AnimInfo.TicksPerFrame = animData.Rate;
 	Monsters[i].AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(Monsters[i].AnimInfo.TicksPerFrame - 1);
-	Monsters[i].AnimInfo.NumberOfFrames = monst->Anims[MA_STAND].Frames;
+	Monsters[i].AnimInfo.NumberOfFrames = animData.Frames;
 	Monsters[i].AnimInfo.CurrentFrame = GenerateRnd(Monsters[i].AnimInfo.NumberOfFrames - 1) + 1;
 
 	Monsters[i].mLevel = monst->MData->mLevel;
