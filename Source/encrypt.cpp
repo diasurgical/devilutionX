@@ -4,6 +4,7 @@
  * Implementation of functions for compression and decompressing MPQ data.
  */
 #include <SDL.h>
+#include <cctype>
 #include <memory>
 
 #include "encrypt.h"
