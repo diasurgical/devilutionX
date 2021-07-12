@@ -1917,7 +1917,7 @@ bool M_DoWalk(int i, int variant)
 	commitment(Monsters[i].MType != nullptr, i);
 
 	//Check if we reached new tile
-	bool isAnimationEnd = Monsters[i].AnimInfo.CurrentFrame == Monsters[i].MType->Anims[MA_WALK].Frames;
+	bool isAnimationEnd = Monsters[i].AnimInfo.CurrentFrame == Monsters[i].AnimInfo.NumberOfFrames;
 	if (isAnimationEnd) {
 		switch (variant) {
 		case MM_WALK:
