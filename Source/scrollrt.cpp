@@ -443,7 +443,7 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 		return;
 	}
 
-	CelSprite &cel = *Monsters[m].AnimInfo.pCelSprite;
+	auto &cel = *Monsters[m].AnimInfo.pCelSprite;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
