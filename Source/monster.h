@@ -87,13 +87,13 @@ enum MON_MODE : uint8_t {
 	MM_TALK,
 };
 
-enum {
-	MA_STAND,
-	MA_WALK,
-	MA_ATTACK,
-	MA_GOTHIT,
-	MA_DEATH,
-	MA_SPECIAL,
+enum class MonsterGraphic {
+	Stand,
+	Walk,
+	Attack,
+	GotHit,
+	Death,
+	Special,
 };
 
 enum monster_goal : uint8_t {
@@ -130,9 +130,9 @@ struct CMonster {
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
-	AnimStruct& GetAnimData(int graphic)
+	AnimStruct& GetAnimData(MonsterGraphic graphic)
 	{
-		return Anims[graphic];
+		return Anims[static_cast<int>(graphic)];
 	}
 #ifndef NOSOUND
 	std::unique_ptr<TSnd> Snds[4][2];

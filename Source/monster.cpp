@@ -41,7 +41,7 @@ namespace devilution {
 
 namespace {
 
-void NewMonsterAnim(MonsterStruct& monster, int graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
+void NewMonsterAnim(MonsterStruct &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 {
 	auto &animData = monster.MType->GetAnimData(graphic);
 	auto *pCelSprite = &*animData.CelSpritesForDirections[md];
@@ -56,7 +56,7 @@ void StartMonsterGotHit(int monsterId)
 	if (monster.MType->mtype != MT_GOLEM) {
 		auto animationFlags = gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None;
 		int numSkippedFrames = (gbIsHellfire && monster.MType->mtype == MT_DIABLO) ? 4 : 0;
-		NewMonsterAnim(monster, MA_GOTHIT, monster._mdir, animationFlags, numSkippedFrames);
+		NewMonsterAnim(monster, MonsterGraphic::GotHit, monster._mdir, animationFlags, numSkippedFrames);
 		monster._mmode = MM_GOTHIT;
 	}
 	monster.position.offset = { 0, 0 };
@@ -529,7 +529,7 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 {
 	CMonster *monst = &LevelMonsterTypes[mtype];
 
-	auto &animData = monst->GetAnimData(MA_STAND);
+	auto &animData = monst->GetAnimData(MonsterGraphic::Stand);
 
 	Monsters[i]._mdir = rd;
 	Monsters[i].position.tile = position;
@@ -591,7 +591,7 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 	Monsters[i].mtalkmsg = TEXT_NONE;
 
 	if (Monsters[i]._mAi == AI_GARG) {
-		Monsters[i].AnimInfo.pCelSprite = &*monst->GetAnimData(MA_SPECIAL).CelSpritesForDirections[rd];
+		Monsters[i].AnimInfo.pCelSprite = &*monst->GetAnimData(MonsterGraphic::Special).CelSpritesForDirections[rd];
 		Monsters[i].AnimInfo.CurrentFrame = 1;
 		Monsters[i]._mFlags |= MFLAG_ALLOW_SPECIAL;
 		Monsters[i]._mmode = MM_SATTACK;
@@ -933,7 +933,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	if (monst->_mAi != AI_GARG) {
-		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_STAND).CelSpritesForDirections[monst->_mdir];
+		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[monst->_mdir];
 		monst->AnimInfo.CurrentFrame = GenerateRnd(monst->AnimInfo.NumberOfFrames - 1) + 1;
 		monst->_mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		monst->_mmode = MM_STAND;
@@ -1103,7 +1103,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 				}
 
 				if (Monsters[ActiveMonsterCount]._mAi != AI_GARG) {
-					Monsters[ActiveMonsterCount].AnimInfo.pCelSprite = &*Monsters[ActiveMonsterCount].MType->GetAnimData(MA_STAND).CelSpritesForDirections[Monsters[ActiveMonsterCount]._mdir];
+					Monsters[ActiveMonsterCount].AnimInfo.pCelSprite = &*Monsters[ActiveMonsterCount].MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[Monsters[ActiveMonsterCount]._mdir];
 					Monsters[ActiveMonsterCount].AnimInfo.CurrentFrame = GenerateRnd(Monsters[ActiveMonsterCount].AnimInfo.NumberOfFrames - 1) + 1;
 					Monsters[ActiveMonsterCount]._mFlags &= ~MFLAG_ALLOW_SPECIAL;
 					Monsters[ActiveMonsterCount]._mmode = MM_STAND;
@@ -1395,9 +1395,9 @@ void M_StartStand(int i, Direction md)
 {
 	ClearMVars(i);
 	if (Monsters[i].MType->mtype == MT_GOLEM)
-		NewMonsterAnim(Monsters[i], MA_WALK, md);
+		NewMonsterAnim(Monsters[i], MonsterGraphic::Walk, md);
 	else
-		NewMonsterAnim(Monsters[i], MA_STAND, md);
+		NewMonsterAnim(Monsters[i], MonsterGraphic::Stand, md);
 	Monsters[i]._mVar1 = Monsters[i]._mmode;
 	Monsters[i]._mVar2 = 0;
 	Monsters[i]._mmode = MM_STAND;
@@ -1421,7 +1421,7 @@ void M_StartDelay(int i, int len)
 
 void M_StartSpStand(int i, Direction md)
 {
-	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Special, md);
 	Monsters[i]._mmode = MM_SPSTAND;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1441,7 +1441,7 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction endDir
 	Monsters[i]._mVar1 = xadd;
 	Monsters[i]._mVar2 = yadd;
 	Monsters[i]._mVar3 = endDir;
-	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 0, 0 };
 }
 
@@ -1463,7 +1463,7 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	Monsters[i]._mmode = MM_WALK2;
 	Monsters[i].position.velocity = { xvel, yvel };
 	Monsters[i]._mVar3 = endDir;
-	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
 
@@ -1489,14 +1489,14 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	Monsters[i]._mVar1 = fx;
 	Monsters[i]._mVar2 = fy;
 	Monsters[i]._mVar3 = endDir;
-	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Walk, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
 
 void M_StartAttack(int i)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(Monsters[i], MA_ATTACK, md, AnimationDistributionFlags::ProcessAnimationPending);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Attack, md, AnimationDistributionFlags::ProcessAnimationPending);
 	Monsters[i]._mmode = MM_ATTACK;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1506,7 +1506,7 @@ void M_StartAttack(int i)
 void M_StartRAttack(int i, missile_id missileType, int dam)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(Monsters[i], MA_ATTACK, md, AnimationDistributionFlags::ProcessAnimationPending);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Attack, md, AnimationDistributionFlags::ProcessAnimationPending);
 	Monsters[i]._mmode = MM_RATTACK;
 	Monsters[i]._mVar1 = missileType;
 	Monsters[i]._mVar2 = dam;
@@ -1521,7 +1521,7 @@ void M_StartRSpAttack(int i, missile_id missileType, int dam)
 	int distributeFramesBeforeFrame = 0;
 	if (Monsters[i]._mAi == AI_MEGA)
 		distributeFramesBeforeFrame = Monsters[i].MData->mAFNum2;
-	NewMonsterAnim(Monsters[i], MA_SPECIAL, md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Special, md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
 	Monsters[i]._mmode = MM_RSPATTACK;
 	Monsters[i]._mVar1 = missileType;
 	Monsters[i]._mVar2 = 0;
@@ -1534,7 +1534,7 @@ void M_StartRSpAttack(int i, missile_id missileType, int dam)
 void M_StartSpAttack(int i)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Special, md);
 	Monsters[i]._mmode = MM_SATTACK;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1543,7 +1543,7 @@ void M_StartSpAttack(int i)
 
 void M_StartEat(int i)
 {
-	NewMonsterAnim(Monsters[i], MA_SPECIAL, Monsters[i]._mdir);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Special, Monsters[i]._mdir);
 	Monsters[i]._mmode = MM_SATTACK;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1628,7 +1628,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 		if (k == i || monst->_msquelch == 0)
 			continue;
 
-		NewMonsterAnim(Monsters[k], MA_DEATH, Monsters[k]._mdir);
+		NewMonsterAnim(Monsters[k], MonsterGraphic::Death, Monsters[k]._mdir);
 		Monsters[k]._mmode = MM_DEATH;
 		Monsters[k].position.offset = { 0, 0 };
 		Monsters[k]._mVar1 = 0;
@@ -1734,7 +1734,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 		PlayEffect(i, 2);
 
 	Direction md = pnum >= 0 ? M_GetDir(i) : monst->_mdir;
-	NewMonsterAnim(*monst, MA_DEATH, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+	NewMonsterAnim(*monst, MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monst->_mmode = MM_DEATH;
 	monst->_mgoal = MGOAL_NONE;
 	monst->position.offset = { 0, 0 };
@@ -1779,7 +1779,7 @@ void M2MStartKill(int i, int mid)
 	if (Monsters[mid].MType->mtype == MT_GOLEM)
 		md = DIR_S;
 
-	NewMonsterAnim(Monsters[mid], MA_DEATH, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+	NewMonsterAnim(Monsters[mid], MonsterGraphic::Death, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	Monsters[mid]._mmode = MM_DEATH;
 	Monsters[mid].position.offset = { 0, 0 };
 	Monsters[mid].position.tile = Monsters[mid].position.old;
@@ -1838,7 +1838,7 @@ void M_StartFadein(int i, Direction md, bool backwards)
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(Monsters[i].MType != nullptr, i);
 
-	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Special, md);
 	Monsters[i]._mmode = MM_FADEIN;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1856,7 +1856,7 @@ void M_StartFadeout(int i, Direction md, bool backwards)
 	assurance(Monsters[i].MType != nullptr, i);
 	assurance(Monsters[i].MType != nullptr, i);
 
-	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
+	NewMonsterAnim(Monsters[i], MonsterGraphic::Special, md);
 	Monsters[i]._mmode = MM_FADEOUT;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1873,8 +1873,8 @@ void M_StartHeal(int i)
 	assurance(Monsters[i].MType != nullptr, i);
 
 	MonsterStruct *monst = &Monsters[i];
-	monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_SPECIAL).CelSpritesForDirections[monst->_mdir];
-	monst->AnimInfo.CurrentFrame = monst->MType->GetAnimData(MA_SPECIAL).Frames;
+	monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MonsterGraphic::Special).CelSpritesForDirections[monst->_mdir];
+	monst->AnimInfo.CurrentFrame = monst->MType->GetAnimData(MonsterGraphic::Special).Frames;
 	monst->_mFlags |= MFLAG_LOCK_ANIMATION;
 	monst->_mmode = MM_HEAL;
 	monst->_mVar1 = monst->_mmaxhp / (16 * (GenerateRnd(5) + 4));
@@ -1898,9 +1898,9 @@ bool M_DoStand(int i)
 
 	MonsterStruct *monst = &Monsters[i];
 	if (monst->MType->mtype == MT_GOLEM)
-		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_WALK).CelSpritesForDirections[monst->_mdir];
+		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MonsterGraphic::Walk).CelSpritesForDirections[monst->_mdir];
 	else
-		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_STAND).CelSpritesForDirections[monst->_mdir];
+		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[monst->_mdir];
 
 	if (monst->AnimInfo.CurrentFrame == monst->AnimInfo.NumberOfFrames)
 		M_Enemy(i);
@@ -2579,7 +2579,7 @@ bool M_DoDelay(int i)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	commitment(Monsters[i].MType != nullptr, i);
 
-	Monsters[i].AnimInfo.pCelSprite = &*Monsters[i].MType->GetAnimData(MA_STAND).CelSpritesForDirections[M_GetDir(i)];
+	Monsters[i].AnimInfo.pCelSprite = &*Monsters[i].MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[M_GetDir(i)];
 	if (Monsters[i]._mAi == AI_LAZURUS) {
 		if (Monsters[i]._mVar2 > 8 || Monsters[i]._mVar2 < 0)
 			Monsters[i]._mVar2 = 8;
@@ -2611,7 +2611,7 @@ void M_WalkDir(int i, Direction md)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	int mwi = Monsters[i].MType->GetAnimData(MA_WALK).Frames - 1;
+	int mwi = Monsters[i].MType->GetAnimData(MonsterGraphic::Walk).Frames - 1;
 	switch (md) {
 	case DIR_N:
 		M_StartWalk(i, 0, -MWVel[mwi][1], -1, -1, DIR_N);
@@ -3139,7 +3139,7 @@ void MAI_Sneak(int i)
 	}
 	if (monst->_mmode == MM_STAND) {
 		if (abs(mx) >= 2 || abs(my) >= 2 || v >= 4 * monst->_mint + 10)
-			monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_STAND).CelSpritesForDirections[md];
+			monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[md];
 		else
 			M_StartAttack(i);
 	}
@@ -4611,7 +4611,7 @@ void SyncMonsterAnim(int i)
 		Monsters[i].mName = _(Monsters[i].MData->mName);
 	int mdir = Monsters[i]._mdir;
 
-	int graphic = MA_STAND;
+	MonsterGraphic graphic = MonsterGraphic::Stand;
 
 	switch (Monsters[i]._mmode) {
 	case MM_STAND:
@@ -4621,17 +4621,17 @@ void SyncMonsterAnim(int i)
 	case MM_WALK:
 	case MM_WALK2:
 	case MM_WALK3:
-		graphic = MA_WALK;
+		graphic = MonsterGraphic::Walk;
 		break;
 	case MM_ATTACK:
 	case MM_RATTACK:
-		graphic = MA_ATTACK;
+		graphic = MonsterGraphic::Attack;
 		break;
 	case MM_GOTHIT:
-		graphic = MA_GOTHIT;
+		graphic = MonsterGraphic::GotHit;
 		break;
 	case MM_DEATH:
-		graphic = MA_DEATH;
+		graphic = MonsterGraphic::Death;
 		break;
 	case MM_SATTACK:
 	case MM_FADEIN:
@@ -4639,16 +4639,16 @@ void SyncMonsterAnim(int i)
 	case MM_SPSTAND:
 	case MM_RSPATTACK:
 	case MM_HEAL:
-		graphic = MA_SPECIAL;
+		graphic = MonsterGraphic::Special;
 		break;
 	case MM_CHARGE:
-		graphic = MA_ATTACK;
+		graphic = MonsterGraphic::Attack;
 		Monsters[i].AnimInfo.CurrentFrame = 1;
-		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->GetAnimData(MA_ATTACK).Frames;
+		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->GetAnimData(MonsterGraphic::Attack).Frames;
 		break;
 	default:
 		Monsters[i].AnimInfo.CurrentFrame = 1;
-		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->GetAnimData(MA_STAND).Frames;
+		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->GetAnimData(MonsterGraphic::Stand).Frames;
 		break;
 	}
 
@@ -5177,7 +5177,7 @@ void MonsterStruct::CheckStandAnimationIsLoaded(Direction mdir)
 {
 	if (_mmode == MM_STAND || _mmode == MM_TALK) {
 		_mdir = mdir;
-		AnimInfo.pCelSprite = &*MType->GetAnimData(MA_STAND).CelSpritesForDirections[mdir];
+		AnimInfo.pCelSprite = &*MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[mdir];
 	}
 }
 
