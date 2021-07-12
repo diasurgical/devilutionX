@@ -2322,7 +2322,7 @@ void AddMetlHit(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienem
 namespace {
 void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const MonsterStruct &mon, int graphic)
 {
-	const AnimStruct &anim = mon.MType->Anims[graphic];
+	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
 	mis._mimfnum = midir;
 	mis._miAnimFlags = 0;
 	const auto &celSprite = *anim.CelSpritesForDirections[midir];
@@ -4324,7 +4324,7 @@ void MI_Fireman(int i)
 	if (!PosOkMissile(0, b) || (j > 0 && (Missiles[i]._miVar1 & 1) == 0)) {
 		Missiles[i].position.velocity *= -1;
 		Missiles[i]._mimfnum = opposite[Missiles[i]._mimfnum];
-		Missiles[i]._miAnimData = Monsters[src].MType->Anims[MA_WALK].CelSpritesForDirections[Missiles[i]._mimfnum]->Data();
+		Missiles[i]._miAnimData = Monsters[src].MType->GetAnimData(MA_WALK).CelSpritesForDirections[Missiles[i]._mimfnum]->Data();
 		Missiles[i]._miVar2++;
 		if (j > 0)
 			Missiles[i]._miVar1 |= 1;
@@ -4832,15 +4832,15 @@ void missiles_process_charge()
 
 		CMonster *mon = Monsters[mis->_misource].MType;
 
-		AnimStruct *anim;
+		int graphic;
 		if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
-			anim = &mon->Anims[MA_SPECIAL];
+			graphic = MA_SPECIAL;
 		} else if (mon->mtype >= MT_NSNAKE && mon->mtype <= MT_GSNAKE) {
-			anim = &mon->Anims[MA_ATTACK];
+			graphic = MA_ATTACK;
 		} else {
-			anim = &mon->Anims[MA_WALK];
+			graphic = MA_WALK;
 		}
-		Missiles[mi]._miAnimData = anim->CelSpritesForDirections[mis->_mimfnum]->Data();
+		Missiles[mi]._miAnimData = mon->GetAnimData(graphic).CelSpritesForDirections[mis->_mimfnum]->Data();
 	}
 }
 

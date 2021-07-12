@@ -16,13 +16,14 @@ DeadStruct Dead[MaxDead];
 int8_t stonendx;
 
 namespace {
-void InitDeadAnimationFromMonster(DeadStruct &dead, const CMonster &mon)
+void InitDeadAnimationFromMonster(DeadStruct &dead, CMonster &mon)
 {
 	int i = 0;
-	for (const auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
+	auto &animData = mon.GetAnimData(MA_DEATH);
+	for (const auto &celSprite : animData.CelSpritesForDirections)
 		dead.data[i++] = celSprite->Data();
-	dead.frame = mon.Anims[MA_DEATH].Frames;
-	dead.width = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
+	dead.frame = animData.Frames;
+	dead.width = animData.CelSpritesForDirections[0]->Width();
 }
 } // namespace
 

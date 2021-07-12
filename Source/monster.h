@@ -127,6 +127,13 @@ struct CMonster {
 	/** placeflag enum as a flags*/
 	uint8_t mPlaceFlags;
 	AnimStruct Anims[6];
+	/**
+	 * @brief Returns AnimStruct for specified graphic
+	 */
+	AnimStruct& GetAnimData(int graphic)
+	{
+		return Anims[graphic];
+	}
 #ifndef NOSOUND
 	std::unique_ptr<TSnd> Snds[4][2];
 #endif
