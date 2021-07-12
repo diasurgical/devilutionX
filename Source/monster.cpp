@@ -41,13 +41,13 @@ namespace devilution {
 
 namespace {
 
-void NewMonsterAnim(int i, AnimStruct *anim, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
+void NewMonsterAnim(MonsterStruct& monster, int graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 {
-	MonsterStruct *monst = &Monsters[i];
-	auto *pCelSprite = &*anim->CelSpritesForDirections[md];
-	monst->AnimInfo.SetNewAnimation(pCelSprite, anim->Frames, anim->Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
-	monst->_mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
-	monst->_mdir = md;
+	auto &animData = monster.MType->Anims[graphic];
+	auto *pCelSprite = &*animData.CelSpritesForDirections[md];
+	monster.AnimInfo.SetNewAnimation(pCelSprite, animData.Frames, animData.Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	monster._mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
+	monster._mdir = md;
 }
 
 void StartMonsterGotHit(int monsterId)
@@ -56,7 +56,7 @@ void StartMonsterGotHit(int monsterId)
 	if (monster.MType->mtype != MT_GOLEM) {
 		auto animationFlags = gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None;
 		int numSkippedFrames = (gbIsHellfire && monster.MType->mtype == MT_DIABLO) ? 4 : 0;
-		NewMonsterAnim(monsterId, &monster.MType->Anims[MA_GOTHIT], monster._mdir, animationFlags, numSkippedFrames);
+		NewMonsterAnim(monster, MA_GOTHIT, monster._mdir, animationFlags, numSkippedFrames);
 		monster._mmode = MM_GOTHIT;
 	}
 	monster.position.offset = { 0, 0 };
@@ -1393,9 +1393,9 @@ void M_StartStand(int i, Direction md)
 {
 	ClearMVars(i);
 	if (Monsters[i].MType->mtype == MT_GOLEM)
-		NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_WALK], md);
+		NewMonsterAnim(Monsters[i], MA_WALK, md);
 	else
-		NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_STAND], md);
+		NewMonsterAnim(Monsters[i], MA_STAND, md);
 	Monsters[i]._mVar1 = Monsters[i]._mmode;
 	Monsters[i]._mVar2 = 0;
 	Monsters[i]._mmode = MM_STAND;
@@ -1420,7 +1420,7 @@ void M_StartDelay(int i, int len)
 
 void M_StartSpStand(int i, Direction md)
 {
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_SPECIAL], md);
+	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
 	Monsters[i]._mmode = MM_SPSTAND;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1442,7 +1442,7 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction endDir
 	Monsters[i]._mVar2 = yadd;
 	Monsters[i]._mVar3 = endDir;
 	Monsters[i]._mdir = endDir;
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_WALK], endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 0, 0 };
 }
 
@@ -1465,7 +1465,7 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	Monsters[i].position.velocity = { xvel, yvel };
 	Monsters[i]._mVar3 = endDir;
 	Monsters[i]._mdir = endDir;
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_WALK], endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
 
@@ -1492,14 +1492,14 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	Monsters[i]._mVar2 = fy;
 	Monsters[i]._mVar3 = endDir;
 	Monsters[i]._mdir = endDir;
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_WALK], endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
+	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
 
 void M_StartAttack(int i)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_ATTACK], md, AnimationDistributionFlags::ProcessAnimationPending);
+	NewMonsterAnim(Monsters[i], MA_ATTACK, md, AnimationDistributionFlags::ProcessAnimationPending);
 	Monsters[i]._mmode = MM_ATTACK;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1510,7 +1510,7 @@ void M_StartAttack(int i)
 void M_StartRAttack(int i, missile_id missileType, int dam)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_ATTACK], md, AnimationDistributionFlags::ProcessAnimationPending);
+	NewMonsterAnim(Monsters[i], MA_ATTACK, md, AnimationDistributionFlags::ProcessAnimationPending);
 	Monsters[i]._mmode = MM_RATTACK;
 	Monsters[i]._mVar1 = missileType;
 	Monsters[i]._mVar2 = dam;
@@ -1526,7 +1526,7 @@ void M_StartRSpAttack(int i, missile_id missileType, int dam)
 	int distributeFramesBeforeFrame = 0;
 	if (Monsters[i]._mAi == AI_MEGA)
 		distributeFramesBeforeFrame = Monsters[i].MData->mAFNum2;
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_SPECIAL], md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
+	NewMonsterAnim(Monsters[i], MA_SPECIAL, md, AnimationDistributionFlags::ProcessAnimationPending, 0, distributeFramesBeforeFrame);
 	Monsters[i]._mmode = MM_RSPATTACK;
 	Monsters[i]._mVar1 = missileType;
 	Monsters[i]._mVar2 = 0;
@@ -1540,7 +1540,7 @@ void M_StartRSpAttack(int i, missile_id missileType, int dam)
 void M_StartSpAttack(int i)
 {
 	Direction md = M_GetDir(i);
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_SPECIAL], md);
+	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
 	Monsters[i]._mmode = MM_SATTACK;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1550,7 +1550,7 @@ void M_StartSpAttack(int i)
 
 void M_StartEat(int i)
 {
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_SPECIAL], Monsters[i]._mdir);
+	NewMonsterAnim(Monsters[i], MA_SPECIAL, Monsters[i]._mdir);
 	Monsters[i]._mmode = MM_SATTACK;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1635,7 +1635,7 @@ void M_DiabloDeath(int i, bool sendmsg)
 		if (k == i || monst->_msquelch == 0)
 			continue;
 
-		NewMonsterAnim(k, &Monsters[k].MType->Anims[MA_DEATH], Monsters[k]._mdir);
+		NewMonsterAnim(Monsters[k], MA_DEATH, Monsters[k]._mdir);
 		Monsters[k]._mmode = MM_DEATH;
 		Monsters[k].position.offset = { 0, 0 };
 		Monsters[k]._mVar1 = 0;
@@ -1742,7 +1742,7 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 
 	Direction md = pnum >= 0 ? M_GetDir(i) : monst->_mdir;
 	monst->_mdir = md;
-	NewMonsterAnim(i, &monst->MType->Anims[MA_DEATH], md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+	NewMonsterAnim(*monst, MA_DEATH, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monst->_mmode = MM_DEATH;
 	monst->_mgoal = MGOAL_NONE;
 	monst->position.offset = { 0, 0 };
@@ -1788,7 +1788,7 @@ void M2MStartKill(int i, int mid)
 		md = DIR_S;
 
 	Monsters[mid]._mdir = md;
-	NewMonsterAnim(mid, &Monsters[mid].MType->Anims[MA_DEATH], md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
+	NewMonsterAnim(Monsters[mid], MA_DEATH, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	Monsters[mid]._mmode = MM_DEATH;
 	Monsters[mid].position.offset = { 0, 0 };
 	Monsters[mid].position.tile = Monsters[mid].position.old;
@@ -1847,7 +1847,7 @@ void M_StartFadein(int i, Direction md, bool backwards)
 	assurance((DWORD)i < MAXMONSTERS, i);
 	assurance(Monsters[i].MType != nullptr, i);
 
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_SPECIAL], md);
+	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
 	Monsters[i]._mmode = MM_FADEIN;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
@@ -1866,7 +1866,7 @@ void M_StartFadeout(int i, Direction md, bool backwards)
 	assurance(Monsters[i].MType != nullptr, i);
 	assurance(Monsters[i].MType != nullptr, i);
 
-	NewMonsterAnim(i, &Monsters[i].MType->Anims[MA_SPECIAL], md);
+	NewMonsterAnim(Monsters[i], MA_SPECIAL, md);
 	Monsters[i]._mmode = MM_FADEOUT;
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
