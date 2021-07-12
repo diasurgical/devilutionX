@@ -1402,7 +1402,6 @@ void M_StartStand(int i, Direction md)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 	M_Enemy(i);
 }
 
@@ -1425,7 +1424,6 @@ void M_StartSpStand(int i, Direction md)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 }
 
 void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction endDir)
@@ -1441,7 +1439,6 @@ void M_StartWalk(int i, int xvel, int yvel, int xadd, int yadd, Direction endDir
 	Monsters[i]._mVar1 = xadd;
 	Monsters[i]._mVar2 = yadd;
 	Monsters[i]._mVar3 = endDir;
-	Monsters[i]._mdir = endDir;
 	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 0, 0 };
 }
@@ -1464,7 +1461,6 @@ void M_StartWalk2(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	Monsters[i]._mmode = MM_WALK2;
 	Monsters[i].position.velocity = { xvel, yvel };
 	Monsters[i]._mVar3 = endDir;
-	Monsters[i]._mdir = endDir;
 	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
@@ -1491,7 +1487,6 @@ void M_StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int y
 	Monsters[i]._mVar1 = fx;
 	Monsters[i]._mVar2 = fy;
 	Monsters[i]._mVar3 = endDir;
-	Monsters[i]._mdir = endDir;
 	NewMonsterAnim(Monsters[i], MA_WALK, endDir, AnimationDistributionFlags::ProcessAnimationPending, -1);
 	Monsters[i].position.offset2 = { 16 * xoff, 16 * yoff };
 }
@@ -1504,7 +1499,6 @@ void M_StartAttack(int i)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 }
 
 void M_StartRAttack(int i, missile_id missileType, int dam)
@@ -1517,7 +1511,6 @@ void M_StartRAttack(int i, missile_id missileType, int dam)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 }
 
 void M_StartRSpAttack(int i, missile_id missileType, int dam)
@@ -1534,7 +1527,6 @@ void M_StartRSpAttack(int i, missile_id missileType, int dam)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 }
 
 void M_StartSpAttack(int i)
@@ -1545,7 +1537,6 @@ void M_StartSpAttack(int i)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 }
 
 void M_StartEat(int i)
@@ -1741,7 +1732,6 @@ void MonstStartKill(int i, int pnum, bool sendmsg)
 		PlayEffect(i, 2);
 
 	Direction md = pnum >= 0 ? M_GetDir(i) : monst->_mdir;
-	monst->_mdir = md;
 	NewMonsterAnim(*monst, MA_DEATH, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	monst->_mmode = MM_DEATH;
 	monst->_mgoal = MGOAL_NONE;
@@ -1787,7 +1777,6 @@ void M2MStartKill(int i, int mid)
 	if (Monsters[mid].MType->mtype == MT_GOLEM)
 		md = DIR_S;
 
-	Monsters[mid]._mdir = md;
 	NewMonsterAnim(Monsters[mid], MA_DEATH, md, gGameLogicStep < GameLogicStep::ProcessMonsters ? AnimationDistributionFlags::ProcessAnimationPending : AnimationDistributionFlags::None);
 	Monsters[mid]._mmode = MM_DEATH;
 	Monsters[mid].position.offset = { 0, 0 };
@@ -1852,7 +1841,6 @@ void M_StartFadein(int i, Direction md, bool backwards)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 	Monsters[i]._mFlags &= ~MFLAG_HIDDEN;
 	if (backwards) {
 		Monsters[i]._mFlags |= MFLAG_LOCK_ANIMATION;
@@ -1871,7 +1859,6 @@ void M_StartFadeout(int i, Direction md, bool backwards)
 	Monsters[i].position.offset = { 0, 0 };
 	Monsters[i].position.future = Monsters[i].position.tile;
 	Monsters[i].position.old = Monsters[i].position.tile;
-	Monsters[i]._mdir = md;
 	if (backwards) {
 		Monsters[i]._mFlags |= MFLAG_LOCK_ANIMATION;
 		Monsters[i].AnimInfo.CurrentFrame = Monsters[i].AnimInfo.NumberOfFrames;
