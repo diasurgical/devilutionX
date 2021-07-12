@@ -7,12 +7,18 @@ FetchContent_Declare(libzt
 FetchContent_MakeAvailableExcludeFromAll(libzt)
 
 # External library, ignore all warnings
-target_compile_options(zto_obj PRIVATE -fpermissive -w)
+target_compile_options(zto_obj PRIVATE -w)
 target_compile_options(libnatpmp_obj PRIVATE -w)
-target_compile_options(libzt_obj PRIVATE -fpermissive -w)
+target_compile_options(libzt_obj PRIVATE -w)
 target_compile_options(lwip_obj PRIVATE -w)
 target_compile_options(miniupnpc_obj PRIVATE -w)
-target_compile_options(zt-static PRIVATE -fpermissive -w)
+target_compile_options(zt-static PRIVATE -w)
+
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  target_compile_options(zto_obj PRIVATE -fpermissive)
+  target_compile_options(libzt_obj PRIVATE -fpermissive)
+  target_compile_options(zt-static PRIVATE -fpermissive)
+endif()
 
 target_include_directories(zt-static INTERFACE
   "${libzt_SOURCE_DIR}/include"
