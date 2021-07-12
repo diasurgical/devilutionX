@@ -4097,8 +4097,6 @@ void MAI_Garbud(int i)
 	if (monst->_mgoal == MGOAL_NORMAL || monst->_mgoal == MGOAL_MOVE)
 		MAI_Round(i, true);
 
-	Monsters[i]._mdir = md;
-
 	monst->CheckStandAnimationIsLoaded(md);
 }
 
@@ -4131,8 +4129,6 @@ void MAI_Zhar(int i)
 
 	if (monst->_mgoal == MGOAL_NORMAL || monst->_mgoal == MGOAL_RETREAT || monst->_mgoal == MGOAL_MOVE)
 		MAI_Counselor(i);
-
-	monst->_mdir = md;
 
 	monst->CheckStandAnimationIsLoaded(md);
 }
@@ -4176,8 +4172,6 @@ void MAI_SnotSpil(int i)
 				MAI_Fallen(i);
 		}
 	}
-
-	monst->_mdir = md;
 
 	monst->CheckStandAnimationIsLoaded(md);
 }
@@ -4227,8 +4221,6 @@ void MAI_Lazurus(int i)
 		MAI_Counselor(i);
 	}
 
-	monst->_mdir = md;
-
 	monst->CheckStandAnimationIsLoaded(md);
 }
 
@@ -4256,7 +4248,6 @@ void MAI_Lazhelp(int i)
 	}
 	if (monst->_mgoal == MGOAL_NORMAL)
 		MAI_Succ(i);
-	monst->_mdir = md;
 
 	monst->CheckStandAnimationIsLoaded(md);
 }
@@ -4289,8 +4280,6 @@ void MAI_Lachdanan(int i)
 		}
 	}
 
-	monst->_mdir = md;
-
 	monst->CheckStandAnimationIsLoaded(md);
 }
 
@@ -4318,8 +4307,6 @@ void MAI_Warlord(int i)
 
 	if (monst->_mgoal == MGOAL_NORMAL)
 		MAI_SkelSd(i);
-
-	monst->_mdir = md;
 
 	monst->CheckStandAnimationIsLoaded(monst->_mdir);
 }
@@ -5197,10 +5184,12 @@ void decode_enemy(int m, int enemy)
 	}
 }
 
-void MonsterStruct::CheckStandAnimationIsLoaded(int mdir)
+void MonsterStruct::CheckStandAnimationIsLoaded(Direction mdir)
 {
-	if (_mmode == MM_STAND || _mmode == MM_TALK)
+	if (_mmode == MM_STAND || _mmode == MM_TALK) {
+		_mdir = mdir;
 		AnimInfo.pCelSprite = &*MType->Anims[MA_STAND].CelSpritesForDirections[mdir];
+	}
 }
 
 void MonsterStruct::Petrify()
