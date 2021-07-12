@@ -197,7 +197,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
 	 * @param mdir direction of the monster
 	 */
-	void CheckStandAnimationIsLoaded(int mdir);
+	void CheckStandAnimationIsLoaded(Direction mdir);
 
 	/**
 	 * @brief Sets _mmode to MM_STONE
