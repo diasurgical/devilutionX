@@ -43,7 +43,7 @@ namespace {
 
 void NewMonsterAnim(MonsterStruct& monster, int graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
 {
-	auto &animData = monster.MType->Anims[graphic];
+	auto &animData = monster.MType->GetAnimData(graphic);
 	auto *pCelSprite = &*animData.CelSpritesForDirections[md];
 	monster.AnimInfo.SetNewAnimation(pCelSprite, animData.Frames, animData.Rate, flags, numSkippedFrames, distributeFramesBeforeFrame);
 	monster._mFlags &= ~(MFLAG_LOCK_ANIMATION | MFLAG_ALLOW_SPECIAL);
@@ -529,7 +529,7 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 {
 	CMonster *monst = &LevelMonsterTypes[mtype];
 
-	auto &animData = monst->Anims[MA_STAND];
+	auto &animData = monst->GetAnimData(MA_STAND);
 
 	Monsters[i]._mdir = rd;
 	Monsters[i].position.tile = position;
@@ -591,7 +591,7 @@ void InitMonster(int i, Direction rd, int mtype, Point position)
 	Monsters[i].mtalkmsg = TEXT_NONE;
 
 	if (Monsters[i]._mAi == AI_GARG) {
-		Monsters[i].AnimInfo.pCelSprite = &*monst->Anims[MA_SPECIAL].CelSpritesForDirections[rd];
+		Monsters[i].AnimInfo.pCelSprite = &*monst->GetAnimData(MA_SPECIAL).CelSpritesForDirections[rd];
 		Monsters[i].AnimInfo.CurrentFrame = 1;
 		Monsters[i]._mFlags |= MFLAG_ALLOW_SPECIAL;
 		Monsters[i]._mmode = MM_SATTACK;
@@ -933,7 +933,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	if (monst->_mAi != AI_GARG) {
-		monst->AnimInfo.pCelSprite = &*monst->MType->Anims[MA_STAND].CelSpritesForDirections[monst->_mdir];
+		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_STAND).CelSpritesForDirections[monst->_mdir];
 		monst->AnimInfo.CurrentFrame = GenerateRnd(monst->AnimInfo.NumberOfFrames - 1) + 1;
 		monst->_mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		monst->_mmode = MM_STAND;
@@ -1103,7 +1103,7 @@ void PlaceGroup(int mtype, int num, int leaderf, int leader)
 				}
 
 				if (Monsters[ActiveMonsterCount]._mAi != AI_GARG) {
-					Monsters[ActiveMonsterCount].AnimInfo.pCelSprite = &*Monsters[ActiveMonsterCount].MType->Anims[MA_STAND].CelSpritesForDirections[Monsters[ActiveMonsterCount]._mdir];
+					Monsters[ActiveMonsterCount].AnimInfo.pCelSprite = &*Monsters[ActiveMonsterCount].MType->GetAnimData(MA_STAND).CelSpritesForDirections[Monsters[ActiveMonsterCount]._mdir];
 					Monsters[ActiveMonsterCount].AnimInfo.CurrentFrame = GenerateRnd(Monsters[ActiveMonsterCount].AnimInfo.NumberOfFrames - 1) + 1;
 					Monsters[ActiveMonsterCount]._mFlags &= ~MFLAG_ALLOW_SPECIAL;
 					Monsters[ActiveMonsterCount]._mmode = MM_STAND;
@@ -1873,8 +1873,8 @@ void M_StartHeal(int i)
 	assurance(Monsters[i].MType != nullptr, i);
 
 	MonsterStruct *monst = &Monsters[i];
-	monst->AnimInfo.pCelSprite = &*monst->MType->Anims[MA_SPECIAL].CelSpritesForDirections[monst->_mdir];
-	monst->AnimInfo.CurrentFrame = monst->MType->Anims[MA_SPECIAL].Frames;
+	monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_SPECIAL).CelSpritesForDirections[monst->_mdir];
+	monst->AnimInfo.CurrentFrame = monst->MType->GetAnimData(MA_SPECIAL).Frames;
 	monst->_mFlags |= MFLAG_LOCK_ANIMATION;
 	monst->_mmode = MM_HEAL;
 	monst->_mVar1 = monst->_mmaxhp / (16 * (GenerateRnd(5) + 4));
@@ -1898,9 +1898,9 @@ bool M_DoStand(int i)
 
 	MonsterStruct *monst = &Monsters[i];
 	if (monst->MType->mtype == MT_GOLEM)
-		monst->AnimInfo.pCelSprite = &*monst->MType->Anims[MA_WALK].CelSpritesForDirections[monst->_mdir];
+		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_WALK).CelSpritesForDirections[monst->_mdir];
 	else
-		monst->AnimInfo.pCelSprite = &*monst->MType->Anims[MA_STAND].CelSpritesForDirections[monst->_mdir];
+		monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_STAND).CelSpritesForDirections[monst->_mdir];
 
 	if (monst->AnimInfo.CurrentFrame == monst->AnimInfo.NumberOfFrames)
 		M_Enemy(i);
@@ -2579,7 +2579,7 @@ bool M_DoDelay(int i)
 	commitment((DWORD)i < MAXMONSTERS, i);
 	commitment(Monsters[i].MType != nullptr, i);
 
-	Monsters[i].AnimInfo.pCelSprite = &*Monsters[i].MType->Anims[MA_STAND].CelSpritesForDirections[M_GetDir(i)];
+	Monsters[i].AnimInfo.pCelSprite = &*Monsters[i].MType->GetAnimData(MA_STAND).CelSpritesForDirections[M_GetDir(i)];
 	if (Monsters[i]._mAi == AI_LAZURUS) {
 		if (Monsters[i]._mVar2 > 8 || Monsters[i]._mVar2 < 0)
 			Monsters[i]._mVar2 = 8;
@@ -2611,7 +2611,7 @@ void M_WalkDir(int i, Direction md)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
-	int mwi = Monsters[i].MType->Anims[MA_WALK].Frames - 1;
+	int mwi = Monsters[i].MType->GetAnimData(MA_WALK).Frames - 1;
 	switch (md) {
 	case DIR_N:
 		M_StartWalk(i, 0, -MWVel[mwi][1], -1, -1, DIR_N);
@@ -3139,7 +3139,7 @@ void MAI_Sneak(int i)
 	}
 	if (monst->_mmode == MM_STAND) {
 		if (abs(mx) >= 2 || abs(my) >= 2 || v >= 4 * monst->_mint + 10)
-			monst->AnimInfo.pCelSprite = &*monst->MType->Anims[MA_STAND].CelSpritesForDirections[md];
+			monst->AnimInfo.pCelSprite = &*monst->MType->GetAnimData(MA_STAND).CelSpritesForDirections[md];
 		else
 			M_StartAttack(i);
 	}
@@ -4644,16 +4644,16 @@ void SyncMonsterAnim(int i)
 	case MM_CHARGE:
 		graphic = MA_ATTACK;
 		Monsters[i].AnimInfo.CurrentFrame = 1;
-		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->Anims[MA_ATTACK].Frames;
+		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->GetAnimData(MA_ATTACK).Frames;
 		break;
 	default:
 		Monsters[i].AnimInfo.CurrentFrame = 1;
-		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->Anims[MA_STAND].Frames;
+		Monsters[i].AnimInfo.NumberOfFrames = Monsters[i].MType->GetAnimData(MA_STAND).Frames;
 		break;
 	}
 
-	if (Monsters[i].MType->Anims[graphic].CelSpritesForDirections[mdir])
-		Monsters[i].AnimInfo.pCelSprite = &*Monsters[i].MType->Anims[graphic].CelSpritesForDirections[mdir];
+	if (Monsters[i].MType->GetAnimData(graphic).CelSpritesForDirections[mdir])
+		Monsters[i].AnimInfo.pCelSprite = &*Monsters[i].MType->GetAnimData(graphic).CelSpritesForDirections[mdir];
 	else
 		Monsters[i].AnimInfo.pCelSprite = nullptr;
 }
@@ -5177,7 +5177,7 @@ void MonsterStruct::CheckStandAnimationIsLoaded(Direction mdir)
 {
 	if (_mmode == MM_STAND || _mmode == MM_TALK) {
 		_mdir = mdir;
-		AnimInfo.pCelSprite = &*MType->Anims[MA_STAND].CelSpritesForDirections[mdir];
+		AnimInfo.pCelSprite = &*MType->GetAnimData(MA_STAND).CelSpritesForDirections[mdir];
 	}
 }
 
