@@ -2320,7 +2320,7 @@ void AddMetlHit(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienem
 }
 
 namespace {
-void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const MonsterStruct &mon, int graphic)
+void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const MonsterStruct &mon, MonsterGraphic graphic)
 {
 	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
 	mis._mimfnum = midir;
@@ -2341,12 +2341,12 @@ void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const Monste
 
 void AddRhino(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
-	int graphic = MA_SPECIAL;
+	MonsterGraphic graphic = MonsterGraphic::Special;
 	if (Monsters[id].MType->mtype < MT_HORNED || Monsters[id].MType->mtype > MT_OBLORD) {
 		if (Monsters[id].MType->mtype < MT_NSNAKE || Monsters[id].MType->mtype > MT_GSNAKE) {
-			graphic = MA_WALK;
+			graphic = MonsterGraphic::Walk;
 		} else {
-			graphic = MA_ATTACK;
+			graphic = MonsterGraphic::Attack;
 		}
 	}
 	UpdateMissileVel(mi, src, dst, 18);
@@ -2364,7 +2364,7 @@ void AddFireman(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int
 {
 	UpdateMissileVel(mi, src, dst, 16);
 	auto &mon = Monsters[id];
-	InitMissileAnimationFromMonster(Missiles[mi], midir, mon, MA_WALK);
+	InitMissileAnimationFromMonster(Missiles[mi], midir, mon, MonsterGraphic::Walk);
 	if (mon._uniqtype != 0)
 		Missiles[mi]._miUniqTrans = mon._uniqtrans + 1;
 	dMonster[mon.position.tile.x][mon.position.tile.y] = 0;
@@ -4324,7 +4324,7 @@ void MI_Fireman(int i)
 	if (!PosOkMissile(0, b) || (j > 0 && (Missiles[i]._miVar1 & 1) == 0)) {
 		Missiles[i].position.velocity *= -1;
 		Missiles[i]._mimfnum = opposite[Missiles[i]._mimfnum];
-		Missiles[i]._miAnimData = Monsters[src].MType->GetAnimData(MA_WALK).CelSpritesForDirections[Missiles[i]._mimfnum]->Data();
+		Missiles[i]._miAnimData = Monsters[src].MType->GetAnimData(MonsterGraphic::Walk).CelSpritesForDirections[Missiles[i]._mimfnum]->Data();
 		Missiles[i]._miVar2++;
 		if (j > 0)
 			Missiles[i]._miVar1 |= 1;
@@ -4832,13 +4832,13 @@ void missiles_process_charge()
 
 		CMonster *mon = Monsters[mis->_misource].MType;
 
-		int graphic;
+		MonsterGraphic graphic;
 		if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
-			graphic = MA_SPECIAL;
+			graphic = MonsterGraphic::Special;
 		} else if (mon->mtype >= MT_NSNAKE && mon->mtype <= MT_GSNAKE) {
-			graphic = MA_ATTACK;
+			graphic = MonsterGraphic::Attack;
 		} else {
-			graphic = MA_WALK;
+			graphic = MonsterGraphic::Walk;
 		}
 		Missiles[mi]._miAnimData = mon->GetAnimData(graphic).CelSpritesForDirections[mis->_mimfnum]->Data();
 	}

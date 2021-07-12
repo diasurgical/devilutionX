@@ -19,7 +19,7 @@ namespace {
 void InitDeadAnimationFromMonster(DeadStruct &dead, CMonster &mon)
 {
 	int i = 0;
-	auto &animData = mon.GetAnimData(MA_DEATH);
+	auto &animData = mon.GetAnimData(MonsterGraphic::Death);
 	for (const auto &celSprite : animData.CelSpritesForDirections)
 		dead.data[i++] = celSprite->Data();
 	dead.frame = animData.Frames;
