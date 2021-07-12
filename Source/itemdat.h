@@ -588,7 +588,7 @@ struct UItemStruct {
 	const char *UIName;
 	enum unique_base_item UIItemId;
 	int8_t UIMinLvl;
-	int8_t UINumPL;
+	uint8_t UINumPL;
 	int UIValue;
 	ItemPower powers[6];
 };
