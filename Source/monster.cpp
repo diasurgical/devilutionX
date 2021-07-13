@@ -832,9 +832,7 @@ bool IsRanged(int i)
 
 void UpdateEnemy(int i)
 {
-	BYTE enemyx;
-	BYTE enemyy;
-
+	Point target;
 	int menemy = -1;
 	int bestDist = -1;
 	bool bestsameroom = false;
@@ -851,8 +849,7 @@ void UpdateEnemy(int i)
 			    || (menemy == -1)) {
 				monst->_mFlags &= ~MFLAG_TARGETS_MONSTER;
 				menemy = pnum;
-				enemyx = Players[pnum].position.future.x;
-				enemyy = Players[pnum].position.future.y;
+				target = Players[pnum].position.future;
 				bestDist = dist;
 				bestsameroom = sameroom;
 			}
@@ -887,8 +884,7 @@ void UpdateEnemy(int i)
 		    || (menemy == -1)) {
 			monst->_mFlags |= MFLAG_TARGETS_MONSTER;
 			menemy = mi;
-			enemyx = Monsters[mi].position.future.x;
-			enemyy = Monsters[mi].position.future.y;
+			target = Monsters[mi].position.future;
 			bestDist = dist;
 			bestsameroom = sameroom;
 		}
@@ -896,7 +892,7 @@ void UpdateEnemy(int i)
 	if (menemy != -1) {
 		monst->_mFlags &= ~MFLAG_NO_ENEMY;
 		monst->_menemy = menemy;
-		monst->enemyPosition = { enemyx, enemyy };
+		monst->enemyPosition = target;
 	} else {
 		monst->_mFlags |= MFLAG_NO_ENEMY;
 	}
