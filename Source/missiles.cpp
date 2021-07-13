@@ -683,23 +683,26 @@ bool CheckIfTrig(Point position)
 	return false;
 }
 
-int GuardianTryFireAt(int i, Point src)
+bool GuardianTryFireAt(int i, Point target)
 {
-	int ex = 0;
-	if (LineClearMissile(Missiles[i].position.tile, src)) {
-		if (dMonster[src.x][src.y] > 0 && Monsters[dMonster[src.x][src.y] - 1]._mhitpoints >> 6 > 0 && dMonster[src.x][src.y] - 1 > MAX_PLRS - 1) {
-			Direction dir = GetDirection(Missiles[i].position.tile, src);
-			Missiles[i]._miVar3 = AvailableMissiles[0];
-			AddMissile(Missiles[i].position.tile, src, dir, MIS_FIREBOLT, TARGET_MONSTERS, Missiles[i]._misource, Missiles[i]._midam, GetSpellLevel(Missiles[i]._misource, SPL_FIREBOLT));
-			ex = -1;
-		}
-	}
-	if (ex == -1) {
-		SetMissDir(i, 2);
-		Missiles[i]._miVar2 = 3;
-	}
+	auto &missile = Missiles[i];
+	Point position = missile.position.tile;
 
-	return ex;
+	if (!LineClearMissile(position, target))
+		return false;
+	int mi = dMonster[target.x][target.y] - 1;
+	if (mi < MAX_PLRS)
+		return false;
+	if (Monsters[mi]._mhitpoints >> 6 <= 0)
+		return false;
+
+	Direction dir = GetDirection(position, target);
+	missile._miVar3 = AvailableMissiles[0];
+	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(missile._misource, SPL_FIREBOLT));
+	SetMissDir(i, 2);
+	missile._miVar2 = 3;
+
+	return true;
 }
 
 void FireballUpdate(int i, Displacement offset, bool alwaysDelete)
@@ -4024,9 +4027,9 @@ void MI_Guardian(int i)
 	if ((Missiles[i]._mirange % 16) == 0) {
 		Displacement previous = { 0, 0 };
 
-		int ex = 0;
-		for (int j = 0; j < 23 && ex != -1; j++) {
-			for (int k = 10; k >= 0 && ex != -1; k -= 2) {
+		bool found = true;
+		for (int j = 0; j < 23 && !found; j++) {
+			for (int k = 10; k >= 0 && !found; k -= 2) {
 				const Displacement offset { VisionCrawlTable[j][k], VisionCrawlTable[j][k + 1] };
 				if (offset == Displacement { 0, 0 }) {
 					break;
@@ -4034,23 +4037,13 @@ void MI_Guardian(int i)
 				if (previous == offset) {
 					continue;
 				}
-				ex = GuardianTryFireAt(i, { position.x + offset.deltaX, position.y + offset.deltaY });
-				if (ex == -1) {
-					break;
+				found = GuardianTryFireAt(i, { position.x + offset.deltaX, position.y + offset.deltaY })
+				    || GuardianTryFireAt(i, { position.x - offset.deltaX, position.y - offset.deltaY })
+				    || GuardianTryFireAt(i, { position.x + offset.deltaX, position.y - offset.deltaY })
+				    || GuardianTryFireAt(i, { position.x - offset.deltaX, position.y + offset.deltaY });
+				if (!found) {
+					previous = offset;
 				}
-				ex = GuardianTryFireAt(i, { position.x - offset.deltaX, position.y - offset.deltaY });
-				if (ex == -1) {
-					break;
-				}
-				ex = GuardianTryFireAt(i, { position.x + offset.deltaX, position.y - offset.deltaY });
-				if (ex == -1) {
-					break;
-				}
-				ex = GuardianTryFireAt(i, { position.x - offset.deltaX, position.y + offset.deltaY });
-				if (ex == -1) {
-					break;
-				}
-				previous = offset;
 			}
 		}
 	}
