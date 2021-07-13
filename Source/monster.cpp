@@ -898,6 +898,10 @@ void UpdateEnemy(int i)
 	}
 }
 
+/**
+ * @brief Make the AI wait a bit before thinking again
+ * @param len
+ */
 void AiDelay(int i, int len)
 {
 	if (len <= 0) {
@@ -912,6 +916,9 @@ void AiDelay(int i, int len)
 	Monsters[i]._mmode = MM_DELAY;
 }
 
+/**
+ * @brief Get the direction from the monster to its current enemy
+ */
 Direction GetMonsterDirection(int i)
 {
 	return GetDirection(Monsters[i].position.tile, Monsters[i].enemyPosition);
@@ -2052,6 +2059,9 @@ bool RandomWalk2(int i, Direction md)
 	return ok;
 }
 
+/**
+ * @brief Check if a tile is affected by a spell we are vunerable to
+ */
 bool MonsterIsTileSafe(int i, Point position)
 {
 	int8_t mi = dMissile[position.x][position.y];
@@ -2090,6 +2100,9 @@ bool MonsterIsTileSafe(int i, Point position)
 	return true;
 }
 
+/**
+ * @brief Check that the monster can stand on the tile
+ */
 bool MonsterIsTileClear(int i, Point position)
 {
 	if (SolidLoc(position))
@@ -2104,6 +2117,9 @@ bool MonsterIsTileClear(int i, Point position)
 	return MonsterIsTileSafe(i, position);
 }
 
+/**
+ * @brief Check that the amonster that can open doors can stand on the tile
+ */
 bool MonsterIsTileClearOrDoor(int i, Point position)
 {
 	bool isdoor = false;
