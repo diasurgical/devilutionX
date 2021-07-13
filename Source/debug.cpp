@@ -18,7 +18,7 @@ std::optional<CelSprite> pSquareCel;
 
 #ifdef _DEBUG
 
-namespace  {
+namespace {
 
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];

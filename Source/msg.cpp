@@ -2031,7 +2031,7 @@ void DeltaLoadLevel()
 					if (Monsters[i].position.tile != Point { 0, 0 } && Monsters[i].position.tile != Point { 1, 0 })
 						dMonster[Monsters[i].position.tile.x][Monsters[i].position.tile.y] = i + 1;
 					if (i < MAX_PLRS) {
-						MAI_Golum(i);
+						GolumAi(i);
 						Monsters[i]._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 					} else {
 						M_StartStand(i, Monsters[i]._mdir);

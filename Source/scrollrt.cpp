@@ -443,7 +443,7 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
 		return;
 	}
 
-	auto &cel = *Monsters[m].AnimInfo.pCelSprite;
+	const auto &cel = *Monsters[m].AnimInfo.pCelSprite;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
@@ -523,7 +523,7 @@ static void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int p
 
 	auto &player = Players[pnum];
 
-	auto *pCelSprite = player.AnimInfo.pCelSprite;
+	const auto *pCelSprite = player.AnimInfo.pCelSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
 
 	if (pCelSprite == nullptr) {
@@ -732,7 +732,7 @@ static void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	auto *cel = pItem->AnimInfo.pCelSprite;
+	const auto *cel = pItem->AnimInfo.pCelSprite;
 	if (cel == nullptr) {
 		Log("Draw Item \"{}\" 1: NULL CelSprite", pItem->_iIName);
 		return;

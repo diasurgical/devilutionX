@@ -16,7 +16,7 @@
 #include "utils/ui_fwd.h"
 
 namespace devilution {
-namespace  {
+namespace {
 
 /**
  * @brief Write the PCX-file header

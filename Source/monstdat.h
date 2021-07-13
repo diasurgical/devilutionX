@@ -40,7 +40,7 @@ enum _mai_id : int8_t {
 	AI_COUNSLR,
 	AI_MEGA,
 	AI_DIABLO,
-	AI_LAZURUS,
+	AI_LAZARUS,
 	AI_LAZHELP,
 	AI_LACHDAN,
 	AI_WARLORD,
