@@ -126,21 +126,30 @@ void UpdateMissileVelocity(int i, Point source, Point destination, int v)
 	Missiles[i].position.velocity.deltaY = static_cast<int>((dyp * (v << 15)) / dr);
 }
 
+/**
+ * @brief Add the missile to the lookup tables
+ * @param i Missiles index
+ */
 void PutMissile(int8_t i)
 {
-	int x = Missiles[i].position.tile.x;
-	int y = Missiles[i].position.tile.y;
-	if (!InDungeonBounds({ x, y }))
+	Point position = Missiles[i].position.tile;
+
+	if (!InDungeonBounds(position))
 		Missiles[i]._miDelFlag = true;
-	if (!Missiles[i]._miDelFlag) {
-		dFlags[x][y] |= BFLAG_MISSILE;
-		if (dMissile[x][y] == 0)
-			dMissile[x][y] = i + 1;
-		else
-			dMissile[x][y] = -1;
-		if (Missiles[i]._miPreFlag)
-			MissilePreFlag = true;
+
+	if (Missiles[i]._miDelFlag) {
+		return;
 	}
+
+	dFlags[position.x][position.y] |= BFLAG_MISSILE;
+
+	if (dMissile[position.x][position.y] == 0)
+		dMissile[position.x][position.y] = i + 1;
+	else
+		dMissile[position.x][position.y] = -1;
+
+	if (Missiles[i]._miPreFlag)
+		MissilePreFlag = true;
 }
 
 void UpdateMissilePos(int i)
