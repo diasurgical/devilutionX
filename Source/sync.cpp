@@ -23,8 +23,9 @@ void SyncOneMonster()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int m = ActiveMonsters[i];
-		sgnMonsterPriority[m] = Players[MyPlayerId].position.tile.ManhattanDistance(Monsters[m].position.tile);
-		if (Monsters[m]._msquelch == 0) {
+		auto &monster = Monsters[m];
+		sgnMonsterPriority[m] = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
+		if (monster._msquelch == 0) {
 			sgnMonsterPriority[m] += 0x1000;
 		} else if (sgwLRU[m] != 0) {
 			sgwLRU[m]--;
@@ -34,14 +35,15 @@ void SyncOneMonster()
 
 void SyncMonsterPos(TSyncMonster *p, int ndx)
 {
+	auto &monster = Monsters[ndx];
 	p->_mndx = ndx;
-	p->_mx = Monsters[ndx].position.tile.x;
-	p->_my = Monsters[ndx].position.tile.y;
-	p->_menemy = encode_enemy(ndx);
+	p->_mx = monster.position.tile.x;
+	p->_my = monster.position.tile.y;
+	p->_menemy = encode_enemy(monster);
 	p->_mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
 
 	sgnMonsterPriority[ndx] = 0xFFFF;
-	sgwLRU[ndx] = Monsters[ndx]._msquelch == 0 ? 0xFFFF : 0xFFFE;
+	sgwLRU[ndx] = monster._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
 bool SyncMonsterActive(TSyncMonster *p)
@@ -193,11 +195,13 @@ static void SyncMonster(int pnum, const TSyncMonster *p)
 {
 	int ndx = p->_mndx;
 
-	if (Monsters[ndx]._mhitpoints <= 0) {
+	auto &monster = Monsters[ndx];
+
+	if (monster._mhitpoints <= 0) {
 		return;
 	}
 
-	uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(Monsters[ndx].position.tile);
+	uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
 	if (delta > 255) {
 		delta = 255;
 	}
@@ -205,34 +209,34 @@ static void SyncMonster(int pnum, const TSyncMonster *p)
 	if (delta < p->_mdelta || (delta == p->_mdelta && pnum > MyPlayerId)) {
 		return;
 	}
-	if (Monsters[ndx].position.future.x == p->_mx && Monsters[ndx].position.future.y == p->_my) {
+	if (monster.position.future.x == p->_mx && monster.position.future.y == p->_my) {
 		return;
 	}
-	if (Monsters[ndx]._mmode == MM_CHARGE || Monsters[ndx]._mmode == MM_STONE) {
+	if (monster._mmode == MM_CHARGE || monster._mmode == MM_STONE) {
 		return;
 	}
 
-	if (Monsters[ndx].position.tile.WalkingDistance({ p->_mx, p->_my }) <= 2) {
-		if (Monsters[ndx]._mmode < MM_WALK || Monsters[ndx]._mmode > MM_WALK3) {
-			Direction md = GetDirection(Monsters[ndx].position.tile, { p->_mx, p->_my });
+	if (monster.position.tile.WalkingDistance({ p->_mx, p->_my }) <= 2) {
+		if (monster._mmode < MM_WALK || monster._mmode > MM_WALK3) {
+			Direction md = GetDirection(monster.position.tile, { p->_mx, p->_my });
 			if (DirOK(ndx, md)) {
 				M_ClearSquares(ndx);
-				dMonster[Monsters[ndx].position.tile.x][Monsters[ndx].position.tile.y] = ndx + 1;
+				dMonster[monster.position.tile.x][monster.position.tile.y] = ndx + 1;
 				M_WalkDir(ndx, md);
-				Monsters[ndx]._msquelch = UINT8_MAX;
+				monster._msquelch = UINT8_MAX;
 			}
 		}
 	} else if (dMonster[p->_mx][p->_my] == 0) {
 		M_ClearSquares(ndx);
 		dMonster[p->_mx][p->_my] = ndx + 1;
-		Monsters[ndx].position.tile = { p->_mx, p->_my };
-		decode_enemy(ndx, p->_menemy);
-		Direction md = GetDirection({ p->_mx, p->_my }, Monsters[ndx].enemyPosition);
-		M_StartStand(ndx, md);
-		Monsters[ndx]._msquelch = UINT8_MAX;
+		monster.position.tile = { p->_mx, p->_my };
+		decode_enemy(monster, p->_menemy);
+		Direction md = GetDirection({ p->_mx, p->_my }, monster.enemyPosition);
+		M_StartStand(monster, md);
+		monster._msquelch = UINT8_MAX;
 	}
 
-	decode_enemy(ndx, p->_menemy);
+	decode_enemy(monster, p->_menemy);
 }
 
 uint32_t sync_update(int pnum, const byte *pbBuf)

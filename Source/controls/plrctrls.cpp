@@ -185,17 +185,15 @@ bool HasRangedSpell()
 	    && !spelldata[spl].sTownSpell;
 }
 
-bool CanTargetMonster(int mi)
+bool CanTargetMonster(const MonsterStruct &monster)
 {
-	const MonsterStruct &monst = Monsters[mi];
-
-	if ((monst._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
+	if ((monster._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
 		return false;
-	if (monst._mhitpoints >> 6 <= 0) // dead
+	if (monster._mhitpoints >> 6 <= 0) // dead
 		return false;
 
-	const int mx = monst.position.tile.x;
-	const int my = monst.position.tile.y;
+	const int mx = monster.position.tile.x;
+	const int my = monster.position.tile.y;
 	if ((dFlags[mx][my] & BFLAG_LIT) == 0) // not visible
 		return false;
 	if (dMonster[mx][my] == 0)
@@ -212,14 +210,16 @@ void FindRangedTarget()
 
 	// The first MAX_PLRS monsters are reserved for players' golems.
 	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
-		if (!CanTargetMonster(mi))
+		const auto &monster = Monsters[mi];
+
+		if (!CanTargetMonster(monster))
 			continue;
 
-		const bool newCanTalk = CanTalkToMonst(mi);
+		const bool newCanTalk = CanTalkToMonst(monster);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(Monsters[mi].position.future);
-		const int newRotations = GetRotaryDistance(Monsters[mi].position.future);
+		const int newDdistance = GetDistanceRanged(monster.position.future);
+		const int newRotations = GetRotaryDistance(monster.position.future);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -274,8 +274,9 @@ void FindMeleeTarget()
 
 				if (dMonster[dx][dy] != 0) {
 					const int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
-					if (CanTargetMonster(mi)) {
-						const bool newCanTalk = CanTalkToMonst(mi);
+					const auto &monster = Monsters[mi];
+					if (CanTargetMonster(monster)) {
+						const bool newCanTalk = CanTalkToMonst(monster);
 						if (pcursmonst != -1 && !canTalk && newCanTalk)
 							continue;
 						const int newRotations = GetRotaryDistance({ dx, dy });
@@ -442,7 +443,7 @@ void Interact()
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
 		NetSendCmdLocParam1(true, CMD_TALKXY, Towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
-		if (Players[MyPlayerId]._pwtype != WT_RANGED || CanTalkToMonst(pcursmonst)) {
+		if (Players[MyPlayerId]._pwtype != WT_RANGED || CanTalkToMonst(Monsters[pcursmonst])) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);

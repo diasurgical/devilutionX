@@ -1394,10 +1394,10 @@ void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells
 	}
 }
 
-int RndUItem(int m)
+int RndUItem(MonsterStruct *monster)
 {
-	if (m != -1 && (Monsters[m].MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
-		return -((Monsters[m].MData->mTreasure & 0xFFF) + 1);
+	if (monster != nullptr && (monster->MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
+		return -((monster->MData->mTreasure & 0xFFF) + 1);
 
 	int ril[512];
 
@@ -1410,8 +1410,8 @@ int RndUItem(int m)
 		bool okflag = true;
 		if (AllItemsList[i].iRnd == IDROP_NEVER)
 			okflag = false;
-		if (m != -1) {
-			if (Monsters[m].mLevel < AllItemsList[i].iMinMLvl)
+		if (monster != nullptr) {
+			if (monster->mLevel < AllItemsList[i].iMinMLvl)
 				okflag = false;
 		} else {
 			if (2 * curlv < AllItemsList[i].iMinMLvl)
@@ -3342,12 +3342,12 @@ void SetupItem(int i)
 	Items[i]._iIdentified = false;
 }
 
-int RndItem(int m)
+int RndItem(const MonsterStruct &monster)
 {
-	if ((Monsters[m].MData->mTreasure & 0x8000) != 0)
-		return -((Monsters[m].MData->mTreasure & 0xFFF) + 1);
+	if ((monster.MData->mTreasure & 0x8000) != 0)
+		return -((monster.MData->mTreasure & 0xFFF) + 1);
 
-	if ((Monsters[m].MData->mTreasure & 0x4000) != 0)
+	if ((monster.MData->mTreasure & 0x4000) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -3363,12 +3363,12 @@ int RndItem(int m)
 		if (!IsItemAvailable(i))
 			continue;
 
-		if (AllItemsList[i].iRnd == IDROP_DOUBLE && Monsters[m].mLevel >= AllItemsList[i].iMinMLvl
+		if (AllItemsList[i].iRnd == IDROP_DOUBLE && monster.mLevel >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
 		}
-		if (AllItemsList[i].iRnd != IDROP_NEVER && Monsters[m].mLevel >= AllItemsList[i].iMinMLvl
+		if (AllItemsList[i].iRnd != IDROP_NEVER && monster.mLevel >= AllItemsList[i].iMinMLvl
 		    && ri < 512) {
 			ril[ri] = i;
 			ri++;
@@ -3401,20 +3401,20 @@ void SpawnUnique(_unique_items uid, Point position)
 	SetupItem(ii);
 }
 
-void SpawnItem(int m, Point position, bool sendmsg)
+void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
 {
 	int idx;
 	bool onlygood = true;
 
-	if (Monsters[m]._uniqtype != 0 || ((Monsters[m].MData->mTreasure & 0x8000) != 0 && gbIsMultiplayer)) {
-		idx = RndUItem(m);
+	if (monster._uniqtype != 0 || ((monster.MData->mTreasure & 0x8000) != 0 && gbIsMultiplayer)) {
+		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
 			return;
 		}
 		onlygood = true;
 	} else if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE || Quests[Q_MUSHROOM]._qvar1 != QS_MUSHGIVEN) {
-		idx = RndItem(m);
+		idx = RndItem(monster);
 		if (idx == 0)
 			return;
 		if (idx > 0) {
@@ -3434,10 +3434,10 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 	int ii = AllocateItem();
 	GetSuperItemSpace(position, ii);
-	int uper = Monsters[m]._uniqtype != 0 ? 15 : 1;
+	int uper = monster._uniqtype != 0 ? 15 : 1;
 
-	int8_t mLevel = Monsters[m].MData->mLevel;
-	if (!gbIsHellfire && Monsters[m].MType->mtype == MT_DIABLO)
+	int8_t mLevel = monster.MData->mLevel;
+	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
 	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
@@ -3448,7 +3448,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta)
 {
-	int idx = onlygood ? RndUItem(-1) : RndAllItems();
+	int idx = onlygood ? RndUItem(nullptr) : RndAllItems();
 
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }

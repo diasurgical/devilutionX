@@ -387,16 +387,17 @@ void DeltaLeaveSync(BYTE bLevel)
 
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int ma = ActiveMonsters[i];
-		if (Monsters[ma]._mhitpoints == 0)
+		auto &monster = Monsters[ma];
+		if (monster._mhitpoints == 0)
 			continue;
 		sgbDeltaChanged = true;
 		DMonsterStr *pD = &sgLevels[bLevel].monster[ma];
-		pD->_mx = Monsters[ma].position.tile.x;
-		pD->_my = Monsters[ma].position.tile.y;
-		pD->_mdir = Monsters[ma]._mdir;
-		pD->_menemy = encode_enemy(ma);
-		pD->_mhitpoints = Monsters[ma]._mhitpoints;
-		pD->_mactive = Monsters[ma]._msquelch;
+		pD->_mx = monster.position.tile.x;
+		pD->_my = monster.position.tile.y;
+		pD->_mdir = monster._mdir;
+		pD->_menemy = encode_enemy(monster);
+		pD->_mhitpoints = monster._mhitpoints;
+		pD->_mactive = monster._msquelch;
 	}
 	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
 }
@@ -1320,12 +1321,13 @@ DWORD OnMonstDamage(TCmd *pCmd, int pnum)
 		SendPacket(pnum, p, sizeof(*p)); // BUGFIX: change to sizeof(*p) or it still uses TCmdParam2 size for hellfire (fixed)
 	else if (pnum != MyPlayerId) {
 		if (currlevel == Players[pnum].plrlevel) {
-			Monsters[p->wMon].mWhoHit |= 1 << pnum;
-			if (Monsters[p->wMon]._mhitpoints > 0) {
-				Monsters[p->wMon]._mhitpoints -= p->dwDam;
-				if ((Monsters[p->wMon]._mhitpoints >> 6) < 1)
-					Monsters[p->wMon]._mhitpoints = 1 << 6;
-				delta_monster_hp(p->wMon, Monsters[p->wMon]._mhitpoints, Players[pnum].plrlevel);
+			auto &monster = Monsters[p->wMon];
+			monster.mWhoHit |= 1 << pnum;
+			if (monster._mhitpoints > 0) {
+				monster._mhitpoints -= p->dwDam;
+				if ((monster._mhitpoints >> 6) < 1)
+					monster._mhitpoints = 1 << 6;
+				delta_monster_hp(p->wMon, monster._mhitpoints, Players[pnum].plrlevel);
 			}
 		}
 	}
@@ -2009,34 +2011,35 @@ void DeltaLoadLevel()
 				M_ClearSquares(i);
 				int x = sgLevels[currlevel].monster[i]._mx;
 				int y = sgLevels[currlevel].monster[i]._my;
-				Monsters[i].position.tile = { x, y };
-				Monsters[i].position.old = { x, y };
-				Monsters[i].position.future = { x, y };
+				auto &monster = Monsters[i];
+				monster.position.tile = { x, y };
+				monster.position.old = { x, y };
+				monster.position.future = { x, y };
 				if (sgLevels[currlevel].monster[i]._mhitpoints != -1)
-					Monsters[i]._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
+					monster._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
 				if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
 					M_ClearSquares(i);
-					if (Monsters[i]._mAi != AI_DIABLO) {
-						if (Monsters[i]._uniqtype == 0) {
-							assert(Monsters[i].MType != nullptr);
-							AddDead(Monsters[i].position.tile, Monsters[i].MType->mdeadval, Monsters[i]._mdir);
+					if (monster._mAi != AI_DIABLO) {
+						if (monster._uniqtype == 0) {
+							assert(monster.MType != nullptr);
+							AddDead(monster.position.tile, monster.MType->mdeadval, monster._mdir);
 						} else {
-							AddDead(Monsters[i].position.tile, Monsters[i]._udeadval, Monsters[i]._mdir);
+							AddDead(monster.position.tile, monster._udeadval, monster._mdir);
 						}
 					}
-					Monsters[i]._mDelFlag = true;
+					monster._mDelFlag = true;
 					M_UpdateLeader(i);
 				} else {
-					decode_enemy(i, sgLevels[currlevel].monster[i]._menemy);
-					if (Monsters[i].position.tile != Point { 0, 0 } && Monsters[i].position.tile != Point { 1, 0 })
-						dMonster[Monsters[i].position.tile.x][Monsters[i].position.tile.y] = i + 1;
+					decode_enemy(monster, sgLevels[currlevel].monster[i]._menemy);
+					if (monster.position.tile != Point { 0, 0 } && monster.position.tile != Point { 1, 0 })
+						dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 					if (i < MAX_PLRS) {
 						GolumAi(i);
-						Monsters[i]._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
+						monster._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
 					} else {
-						M_StartStand(i, Monsters[i]._mdir);
+						M_StartStand(monster, monster._mdir);
 					}
-					Monsters[i]._msquelch = sgLevels[currlevel].monster[i]._mactive;
+					monster._msquelch = sgLevels[currlevel].monster[i]._mactive;
 				}
 			}
 		}

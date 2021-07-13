@@ -12,7 +12,7 @@ bool effect_is_playing(int nSFX) { return false; }
 void stream_stop() { }
 void InitMonsterSND(int monst) { }
 void FreeMonsterSnd() { }
-void PlayEffect(int i, int mode) { }
+bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan) { }
 void PlaySFX(_sfx_id psfx) { }
 void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory) { }
 void sound_stop() { }
