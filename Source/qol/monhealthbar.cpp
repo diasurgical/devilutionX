@@ -59,7 +59,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (pcursmonst == -1)
 		return;
 
-	const MonsterStruct &mon = Monsters[pcursmonst];
+	const MonsterStruct &monster = Monsters[pcursmonst];
 
 	const int width = healthBox.w();
 	const int height = healthBox.h();
@@ -75,18 +75,18 @@ void DrawMonsterHealthBar(const Surface &out)
 	const int yPos = 18;
 	const int border = 3;
 
-	const int maxLife = std::max(mon._mmaxhp, mon._mhitpoints);
+	const int maxLife = std::max(monster._mmaxhp, monster._mhitpoints);
 
 	DrawArt(out, xPos, yPos, &healthBox);
 	DrawHalfTransparentRectTo(out, xPos + border, yPos + border, width - (border * 2), height - (border * 2));
-	int barProgress = (width * mon._mhitpoints) / maxLife;
+	int barProgress = (width * monster._mhitpoints) / maxLife;
 	if (barProgress != 0) {
 		DrawArt(out, xPos + border + 1, yPos + border + 1, &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
 	if (sgOptions.Gameplay.bShowMonsterType) {
 		Uint8 borderColors[] = { 248 /*undead*/, 232 /*demon*/, 150 /*beast*/ };
-		Uint8 borderColor = borderColors[mon.MData->mMonstClass];
+		Uint8 borderColor = borderColors[monster.MData->mMonstClass];
 		int borderWidth = width - (border * 2);
 		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + border }, borderWidth, borderColor);
 		UnsafeDrawHorizontalLine(out, { xPos + border, yPos + height - border - 1 }, borderWidth, borderColor);
@@ -96,24 +96,24 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	int barLabelY = yPos + 10 + (height - 11) / 2;
-	DrawString(out, mon.mName, { { xPos - 1, barLabelY + 1 }, { width, height } }, UIS_CENTER | UIS_BLACK);
+	DrawString(out, monster.mName, { { xPos - 1, barLabelY + 1 }, { width, height } }, UIS_CENTER | UIS_BLACK);
 	uint16_t style = UIS_SILVER;
-	if (mon._uniqtype != 0)
+	if (monster._uniqtype != 0)
 		style = UIS_GOLD;
-	else if (mon.leader != 0)
+	else if (monster.leader != 0)
 		style = UIS_BLUE;
-	DrawString(out, mon.mName, { { xPos, barLabelY }, { width, height } }, UIS_CENTER | style);
+	DrawString(out, monster.mName, { { xPos, barLabelY }, { width, height } }, UIS_CENTER | style);
 
-	if (mon._uniqtype != 0 || MonsterKillCounts[mon.MType->mtype] >= 15) {
+	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };
 		monster_resistance resists[] = { RESIST_MAGIC, RESIST_FIRE, RESIST_LIGHTNING };
 
 		int resOffset = 5;
 		for (int i = 0; i < 3; i++) {
-			if ((mon.mMagicRes & immunes[i]) != 0) {
+			if ((monster.mMagicRes & immunes[i]) != 0) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2 + 1);
 				resOffset += resistance.w() + 2;
-			} else if ((mon.mMagicRes & resists[i]) != 0) {
+			} else if ((monster.mMagicRes & resists[i]) != 0) {
 				DrawArt(out, xPos + resOffset, yPos + height - 6, &resistance, i * 2);
 				resOffset += resistance.w() + 2;
 			}

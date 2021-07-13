@@ -10,6 +10,7 @@
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "itemdat.h"
+#include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
 
@@ -151,7 +152,7 @@ void Obj_Trap(int i);
 void ProcessObjects();
 void ObjSetMicro(Point position, int pn);
 void RedoPlayerVision();
-void MonstCheckDoors(int m);
+void MonstCheckDoors(MonsterStruct &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 void TryDisarm(int pnum, int i);

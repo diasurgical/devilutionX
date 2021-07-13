@@ -250,7 +250,7 @@ bool LeftMouseCmd(bool bShift)
 			if (bShift) {
 				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
-				if (CanTalkToMonst(pcursmonst)) {
+				if (CanTalkToMonst(Monsters[pcursmonst])) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 				} else {
 					NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
@@ -261,7 +261,7 @@ bool LeftMouseCmd(bool bShift)
 		} else {
 			if (bShift) {
 				if (pcursmonst != -1) {
-					if (CanTalkToMonst(pcursmonst)) {
+					if (CanTalkToMonst(Monsters[pcursmonst])) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
 						NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
@@ -1188,16 +1188,16 @@ void CreateLevel(lvl_entry lvldir)
 void UpdateMonsterLights()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
-		MonsterStruct *mon = &Monsters[ActiveMonsters[i]];
-		if (mon->mlid != NO_LIGHT) {
-			if (mon->mlid == Players[MyPlayerId]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
-				mon->mlid = NO_LIGHT;
+		auto &monster = Monsters[ActiveMonsters[i]];
+		if (monster.mlid != NO_LIGHT) {
+			if (monster.mlid == Players[MyPlayerId]._plid) { // Fix old saves where some monsters had 0 instead of NO_LIGHT
+				monster.mlid = NO_LIGHT;
 				continue;
 			}
 
-			LightStruct *lid = &Lights[mon->mlid];
-			if (mon->position.tile != lid->position.tile) {
-				ChangeLightXY(mon->mlid, mon->position.tile);
+			LightStruct *lid = &Lights[monster.mlid];
+			if (monster.position.tile != lid->position.tile) {
+				ChangeLightXY(monster.mlid, monster.position.tile);
 			}
 		}
 	}

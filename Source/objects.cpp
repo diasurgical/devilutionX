@@ -19,6 +19,7 @@
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "monster.h"
 #include "options.h"
 #include "setmaps.h"
 #include "stores.h"
@@ -1987,7 +1988,7 @@ void Obj_FlameTrap(int i)
 			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, -1, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
 		}
 
 		if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen)
@@ -2704,10 +2705,10 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void MonstCheckDoors(int m)
+void MonstCheckDoors(MonsterStruct &monster)
 {
-	int mx = Monsters[m].position.tile.x;
-	int my = Monsters[m].position.tile.y;
+	int mx = monster.position.tile.x;
+	int my = monster.position.tile.y;
 	if (dObject[mx - 1][my - 1] != 0
 	    || dObject[mx][my - 1] != 0
 	    || dObject[mx + 1][my - 1] != 0
@@ -4421,15 +4422,18 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	}
 	SetRndSeed(Objects[i]._oRndSeed);
 	CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
-	if (QuestStatus(Q_ZHAR)
-	    && Monsters[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
-	    && Monsters[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
-	    && Monsters[MAX_PLRS]._msquelch == UINT8_MAX
-	    && Monsters[MAX_PLRS]._mhitpoints > 0) {
-		Monsters[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
-		M_StartStand(0, Monsters[MAX_PLRS]._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
-		Monsters[MAX_PLRS]._mgoal = MGOAL_ATTACK2;
-		Monsters[MAX_PLRS]._mmode = MM_TALK;
+
+	if (QuestStatus(Q_ZHAR)) {
+		auto &zhar = Monsters[MAX_PLRS];
+		if (zhar._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
+		    && zhar._uniqtype - 1 == UMT_ZHAR
+		    && zhar._msquelch == UINT8_MAX
+		    && zhar._mhitpoints > 0) {
+			zhar.mtalkmsg = TEXT_ZHAR2;
+			M_StartStand(Monsters[0], zhar._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
+			zhar._mgoal = MGOAL_ATTACK2;
+			zhar._mmode = MM_TALK;
+		}
 	}
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -4995,10 +4999,10 @@ void SyncOpObject(int pnum, int cmd, int i)
 
 /**
  * @brief Checks if all active crux objects of the given type have been broken.
- * 
+ *
  * Called by BreakCrux and SyncCrux to see if the linked map area needs to be updated. In practice I think this is
  * always true when called by BreakCrux as there *should* only be one instance of each crux with a given _oVar8 value?
- * 
+ *
  * @param cruxType Discriminator/type (_oVar8 value) of the crux object which is currently changing state
  * @return true if all active cruxes of that type on the level are broken, false if at least one remains unbroken
  */
@@ -5083,7 +5087,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
 				bool unused;
 				if (dPlayer[xp][yp] > 0)
-					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
 				if (dObject[xp][yp] > 0) {
 					int oi = dObject[xp][yp] - 1;
 					if (Objects[oi]._otype == OBJ_BARRELEX && Objects[oi]._oBreak != -1)

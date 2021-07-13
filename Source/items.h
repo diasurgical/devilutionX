@@ -12,6 +12,7 @@
 #include "engine/point.hpp"
 #include "engine.h"
 #include "itemdat.h"
+#include "monster.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -421,9 +422,9 @@ int AllocateItem();
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(int i, int idata, int lvl);
 void SetupItem(int i);
-int RndItem(int m);
+int RndItem(const MonsterStruct &monster);
 void SpawnUnique(_unique_items uid, Point position);
-void SpawnItem(int m, Point position, bool sendmsg);
+void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);

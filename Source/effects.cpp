@@ -1095,25 +1095,6 @@ void StreamUpdate()
 	}
 }
 
-bool CalculatePosition(Point soundPosition, int *plVolume, int *plPan)
-{
-	const auto &playerPosition = Players[MyPlayerId].position.tile;
-	const auto delta = soundPosition - playerPosition;
-
-	int pan = (delta.deltaX - delta.deltaY) * 256;
-	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
-
-	int volume = playerPosition.ApproxDistance(soundPosition);
-	volume *= -64;
-
-	if (volume <= ATTENUATION_MIN)
-		return false;
-
-	*plVolume = volume;
-
-	return true;
-}
-
 void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 {
 	if (Players[MyPlayerId].pLvlLoad != 0 && gbIsMultiplayer) {
@@ -1129,7 +1110,7 @@ void PlaySfxPriv(TSFX *pSFX, bool loc, Point position)
 
 	int lVolume = 0;
 	int lPan = 0;
-	if (loc && !CalculatePosition(position, &lVolume, &lPan)) {
+	if (loc && !CalculateSoundPosition(position, &lVolume, &lPan)) {
 		return;
 	}
 
@@ -1255,29 +1236,23 @@ void FreeMonsterSnd()
 	}
 }
 
-void PlayEffect(int i, int mode)
+bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan)
 {
-	if (Players[MyPlayerId].pLvlLoad != 0) {
-		return;
-	}
+	const auto &playerPosition = Players[MyPlayerId].position.tile;
+	const auto delta = soundPosition - playerPosition;
 
-	int sndIdx = GenerateRnd(2);
-	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
-		return;
-	}
+	int pan = (delta.deltaX - delta.deltaY) * 256;
+	*plPan = clamp(pan, PAN_MIN, PAN_MAX);
 
-	int mi = Monsters[i]._mMTidx;
-	TSnd *snd = LevelMonsterTypes[mi].Snds[mode][sndIdx].get();
-	if (snd == nullptr || snd->isPlaying()) {
-		return;
-	}
+	int volume = playerPosition.ApproxDistance(soundPosition);
+	volume *= -64;
 
-	int lVolume = 0;
-	int lPan = 0;
-	if (!CalculatePosition(Monsters[i].position.tile, &lVolume, &lPan))
-		return;
+	if (volume <= ATTENUATION_MIN)
+		return false;
 
-	snd_play_snd(snd, lVolume, lPan);
+	*plVolume = volume;
+
+	return true;
 }
 
 void PlaySFX(_sfx_id psfx)
@@ -1390,12 +1365,5 @@ int GetSFXLength(int nSFX)
 		    /*stream=*/AllowStreaming && (sgSFX[nSFX].bFlags & sfx_STREAM) != 0);
 	return sgSFX[nSFX].pSnd->DSB.GetLength();
 }
-
-#ifdef RUN_TESTS
-bool TestCalculatePosition(Point soundPosition, int *plVolume, int *plPan)
-{
-	return CalculatePosition(soundPosition, plVolume, plPan);
-}
-#endif
 
 } // namespace devilution
