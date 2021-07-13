@@ -904,10 +904,12 @@ void AiDelay(int i, int len)
 		return;
 	}
 
-	if (Monsters[i]._mAi != AI_LAZARUS) {
-		Monsters[i]._mVar2 = len;
-		Monsters[i]._mmode = MM_DELAY;
+	if (Monsters[i]._mAi == AI_LAZARUS) {
+		return;
 	}
+
+	Monsters[i]._mVar2 = len;
+	Monsters[i]._mmode = MM_DELAY;
 }
 
 Direction GetMonsterDirection(int i)
