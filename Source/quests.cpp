@@ -323,7 +323,7 @@ void CheckQuestKill(int m, bool sendmsg)
 	} else if (Monsters[m]._uniqtype - 1 == UMT_ZHAR) { //"Zhar the Mad"
 		Quests[Q_ZHAR]._qactive = QUEST_DONE;
 		Players[MyPlayerId].Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
-	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZURUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZARUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		Quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		Quests[Q_BETRAYER]._qvar1 = 7;
 		Quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
@@ -342,7 +342,7 @@ void CheckQuestKill(int m, bool sendmsg)
 			NetSendCmdQuest(true, Q_BETRAYER);
 			NetSendCmdQuest(true, Q_DIABLO);
 		}
-	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZURUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
+	} else if (Monsters[m]._uniqtype - 1 == UMT_LAZARUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		Quests[Q_BETRAYER]._qactive = QUEST_DONE;
 		InitVPTriggers();
 		Quests[Q_BETRAYER]._qvar1 = 7;

@@ -52,7 +52,7 @@ enum : uint8_t {
 	UMT_SKELKING,
 	UMT_ZHAR,
 	UMT_SNOTSPIL,
-	UMT_LAZURUS,
+	UMT_LAZARUS,
 	UMT_RED_VEX,
 	UMT_BLACKJADE,
 	UMT_LACHDAN,
@@ -130,7 +130,7 @@ struct CMonster {
 	/**
 	 * @brief Returns AnimStruct for specified graphic
 	 */
-	const AnimStruct& GetAnimData(MonsterGraphic graphic) const
+	const AnimStruct &GetAnimData(MonsterGraphic graphic) const
 	{
 		return Anims[static_cast<int>(graphic)];
 	}
@@ -244,7 +244,7 @@ void M_UpdateLeader(int i);
 void DoEnding();
 void PrepDoEnding();
 void M_WalkDir(int i, Direction md);
-void MAI_Golum(int i);
+void GolumAi(int i);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();

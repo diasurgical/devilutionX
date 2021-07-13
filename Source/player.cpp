@@ -60,7 +60,7 @@ void PmChangeLightOff(PlayerStruct &player)
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;
 
-	ChangeLightOff(player._plid, { x, y });
+	ChangeLightOffset(player._plid, { x, y });
 }
 
 void WalkUpwards(int pnum, const DirectionSettings &walkParams)
@@ -2140,7 +2140,7 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(player._plid, { 0, 0 });
+			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
 		AutoGoldPickup(pnum);

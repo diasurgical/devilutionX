@@ -21,7 +21,7 @@ namespace {
 /** The active music track id for the main menu. */
 uint8_t menu_music_track_id = TMUSIC_INTRO;
 
-void mainmenu_refresh_music()
+void RefreshMusic()
 {
 	music_start(menu_music_track_id);
 
@@ -38,7 +38,7 @@ void mainmenu_refresh_music()
 	} while (menu_music_track_id == TMUSIC_TOWN || menu_music_track_id == TMUSIC_L1);
 }
 
-static bool MainmenuInitMenu(_selhero_selections type)
+bool InitMenu(_selhero_selections type)
 {
 	bool success;
 
@@ -49,31 +49,31 @@ static bool MainmenuInitMenu(_selhero_selections type)
 
 	success = StartGame(type != SELHERO_CONTINUE, type != SELHERO_CONNECT);
 	if (success)
-		mainmenu_refresh_music();
+		RefreshMusic();
 
 	return success;
 }
 
-static bool MainmenuSinglePlayer()
+bool InitSinglePlayerMenu()
 {
 	gbIsMultiplayer = false;
-	return MainmenuInitMenu(SELHERO_NEW_DUNGEON);
+	return InitMenu(SELHERO_NEW_DUNGEON);
 }
 
-static bool MainmenuMultiPlayer()
+bool InitMultiPlayerMenu()
 {
 	gbIsMultiplayer = true;
-	return MainmenuInitMenu(SELHERO_CONNECT);
+	return InitMenu(SELHERO_CONNECT);
 }
 
-static void MainmenuPlayIntro()
+void PlayIntro()
 {
 	music_stop();
 	if (gbIsHellfire)
 		play_movie("gendata\\Hellfire.smk", true);
 	else
 		play_movie("gendata\\diablo1.smk", true);
-	mainmenu_refresh_music();
+	RefreshMusic();
 }
 
 } // namespace
@@ -116,7 +116,7 @@ void mainmenu_loop()
 	bool done;
 	_mainmenu_selections menu;
 
-	mainmenu_refresh_music();
+	RefreshMusic();
 	done = false;
 
 	do {
@@ -128,11 +128,11 @@ void mainmenu_loop()
 		case MAINMENU_NONE:
 			break;
 		case MAINMENU_SINGLE_PLAYER:
-			if (!MainmenuSinglePlayer())
+			if (!InitSinglePlayerMenu())
 				done = true;
 			break;
 		case MAINMENU_MULTIPLAYER:
-			if (!MainmenuMultiPlayer())
+			if (!InitMultiPlayerMenu())
 				done = true;
 			break;
 		case MAINMENU_ATTRACT_MODE:
@@ -140,7 +140,7 @@ void mainmenu_loop()
 			if (gbIsSpawn && !gbIsHellfire)
 				done = false;
 			else if (gbActive)
-				MainmenuPlayIntro();
+				PlayIntro();
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog();

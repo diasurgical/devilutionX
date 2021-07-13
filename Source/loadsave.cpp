@@ -207,7 +207,7 @@ public:
 	}
 };
 
-static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
+void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 {
 	pItem->_iSeed = file->NextLE<int32_t>();
 	pItem->_iCreateInfo = file->NextLE<uint16_t>();
@@ -297,14 +297,14 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	RemoveInvalidItem(pItem);
 }
 
-static void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
+void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
 {
 	for (int i = 0; i < n; i++) {
 		LoadItemData(file, &pItem[i]);
 	}
 }
 
-static void LoadPlayer(LoadHelper *file, int p)
+void LoadPlayer(LoadHelper *file, int p)
 {
 	auto &player = Players[p];
 
@@ -532,7 +532,7 @@ static void LoadPlayer(LoadHelper *file, int p)
 
 bool gbSkipSync = false;
 
-static void LoadMonster(LoadHelper *file, int i)
+void LoadMonster(LoadHelper *file, int i)
 {
 	MonsterStruct *pMonster = &Monsters[i];
 
@@ -637,7 +637,7 @@ static void LoadMonster(LoadHelper *file, int i)
 	SyncMonsterAnim(i);
 }
 
-static void LoadMissile(LoadHelper *file, int i)
+void LoadMissile(LoadHelper *file, int i)
 {
 	MissileStruct *pMissile = &Missiles[i];
 
@@ -688,7 +688,7 @@ static void LoadMissile(LoadHelper *file, int i)
 	pMissile->limitReached = file->NextBool32();
 }
 
-static void LoadObject(LoadHelper *file, int i)
+void LoadObject(LoadHelper *file, int i)
 {
 	ObjectStruct *pObject = &Objects[i];
 
@@ -727,18 +727,18 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oVar8 = file->NextLE<int32_t>();
 }
 
-static void LoadItem(LoadHelper *file, int i)
+void LoadItem(LoadHelper *file, int i)
 {
 	LoadItemData(file, &Items[i]);
 	GetItemFrm(i);
 }
 
-static void LoadPremium(LoadHelper *file, int i)
+void LoadPremium(LoadHelper *file, int i)
 {
 	LoadItemData(file, &premiumitems[i]);
 }
 
-static void LoadQuest(LoadHelper *file, int i)
+void LoadQuest(LoadHelper *file, int i)
 {
 	QuestStruct *pQuest = &Quests[i];
 
@@ -770,7 +770,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-static void LoadLighting(LoadHelper *file, LightStruct *pLight)
+void LoadLighting(LoadHelper *file, LightStruct *pLight)
 {
 	pLight->position.tile.x = file->NextLE<int32_t>();
 	pLight->position.tile.y = file->NextLE<int32_t>();
@@ -787,7 +787,7 @@ static void LoadLighting(LoadHelper *file, LightStruct *pLight)
 	pLight->_lflags = file->NextBool32();
 }
 
-static void LoadPortal(LoadHelper *file, int i)
+void LoadPortal(LoadHelper *file, int i)
 {
 	PortalStruct *pPortal = &Portals[i];
 
@@ -799,7 +799,7 @@ static void LoadPortal(LoadHelper *file, int i)
 	pPortal->setlvl = file->NextBool32();
 }
 
-static void ConvertLevels()
+void ConvertLevels()
 {
 	// Backup current level state
 	bool tmpSetlevel = setlevel;
@@ -849,7 +849,7 @@ static void ConvertLevels()
 	leveltype = tmpLeveltype;
 }
 
-static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
+void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
 {
 	ItemStruct tempItem;
 
@@ -874,7 +874,7 @@ void RemoveEmptyLevelItems()
 	}
 }
 
-static void SaveItem(SaveHelper *file, ItemStruct *pItem)
+void SaveItem(SaveHelper *file, ItemStruct *pItem)
 {
 	auto idx = pItem->IDidx;
 	if (!gbIsHellfire)
@@ -967,14 +967,14 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 		file->WriteLE<uint32_t>(pItem->_iDamAcFlags);
 }
 
-static void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
+void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
 {
 	for (int i = 0; i < n; i++) {
 		SaveItem(file, &pItem[i]);
 	}
 }
 
-static void SavePlayer(SaveHelper *file, int p)
+void SavePlayer(SaveHelper *file, int p)
 {
 	auto &player = Players[p];
 
@@ -1196,7 +1196,7 @@ static void SavePlayer(SaveHelper *file, int p)
 	// Omit pointer pReserved
 }
 
-static void SaveMonster(SaveHelper *file, int i)
+void SaveMonster(SaveHelper *file, int i)
 {
 	MonsterStruct *pMonster = &Monsters[i];
 
@@ -1288,7 +1288,7 @@ static void SaveMonster(SaveHelper *file, int i)
 	// Omit pointer MData;
 }
 
-static void SaveMissile(SaveHelper *file, int i)
+void SaveMissile(SaveHelper *file, int i)
 {
 	MissileStruct *pMissile = &Missiles[i];
 
@@ -1339,7 +1339,7 @@ static void SaveMissile(SaveHelper *file, int i)
 	file->WriteLE<uint32_t>(pMissile->limitReached ? 1 : 0);
 }
 
-static void SaveObject(SaveHelper *file, int i)
+void SaveObject(SaveHelper *file, int i)
 {
 	ObjectStruct *pObject = &Objects[i];
 
@@ -1378,12 +1378,12 @@ static void SaveObject(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pObject->_oVar8);
 }
 
-static void SavePremium(SaveHelper *file, int i)
+void SavePremium(SaveHelper *file, int i)
 {
 	SaveItem(file, &premiumitems[i]);
 }
 
-static void SaveQuest(SaveHelper *file, int i)
+void SaveQuest(SaveHelper *file, int i)
 {
 	QuestStruct *pQuest = &Quests[i];
 
@@ -1415,7 +1415,7 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-static void SaveLighting(SaveHelper *file, LightStruct *pLight)
+void SaveLighting(SaveHelper *file, LightStruct *pLight)
 {
 	file->WriteLE<int32_t>(pLight->position.tile.x);
 	file->WriteLE<int32_t>(pLight->position.tile.y);
@@ -1432,7 +1432,7 @@ static void SaveLighting(SaveHelper *file, LightStruct *pLight)
 	file->WriteLE<uint32_t>(pLight->_lflags ? 1 : 0);
 }
 
-static void SavePortal(SaveHelper *file, int i)
+void SavePortal(SaveHelper *file, int i)
 {
 	PortalStruct *pPortal = &Portals[i];
 

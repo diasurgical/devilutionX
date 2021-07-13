@@ -1023,7 +1023,7 @@ void ChangeLightXY(int i, Point position)
 	UpdateLighting = true;
 }
 
-void ChangeLightOff(int i, Point position)
+void ChangeLightOffset(int i, Point position)
 {
 	if (DisableLighting || i == NO_LIGHT) {
 		return;

@@ -120,7 +120,6 @@ struct ObjectStruct {
 		SetMapRange(mapRange);
 		_oVar8 = leverID;
 	}
-
 };
 
 extern ObjectStruct Objects[MAXOBJECTS];

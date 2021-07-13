@@ -12,7 +12,7 @@
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
-namespace  {
+namespace {
 
 struct CodecSignature {
 	uint32_t checksum;

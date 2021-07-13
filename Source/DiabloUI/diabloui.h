@@ -113,7 +113,7 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
 void LoadBackgroundArt(const char *pszFile, int frames = 1);
-void UiAddBackground(std::vector<std::unique_ptr<UiItemBase> > *vecDialog);
+void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = LOGO_MED, int y = 0);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
