@@ -797,7 +797,7 @@ void LoadDiabMonsts()
 void DeleteMonster(int i)
 {
 	ActiveMonsterCount--;
-	ActiveMonsters[i] = ActiveMonsters[ActiveMonsterCount];
+	std::swap(ActiveMonsters[i], ActiveMonsters[ActiveMonsterCount]); // This ensures alive monsters are before ActiveMonsterCount in the array and any deleted monster after
 }
 
 void NewMonsterAnim(MonsterStruct &monster, MonsterGraphic graphic, Direction md, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0)
