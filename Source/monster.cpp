@@ -3304,7 +3304,7 @@ void ZharAi(int i)
 	monst->CheckStandAnimationIsLoaded(md);
 }
 
-void MAI_RR2(int i, missile_id mistype, int dam)
+void MegaAi(int i)
 {
 	assurance((DWORD)i < MAXMONSTERS, i);
 
@@ -3348,7 +3348,7 @@ void MAI_RR2(int i, missile_id mistype, int dam)
 	}
 	if (monst->_mgoal == MGOAL_NORMAL) {
 		if (((dist >= 3 && v < 5 * (monst->_mint + 2)) || v < 5 * (monst->_mint + 1) || monst->_mgoalvar3 == 4) && LineClearMissile(monst->position.tile, { fx, fy })) {
-			StartRangedSpecialAttack(i, mistype, dam);
+			StartRangedSpecialAttack(i, MIS_FLAMEC, 0);
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monst->_mint + 25)
@@ -3363,7 +3363,7 @@ void MAI_RR2(int i, missile_id mistype, int dam)
 				if (GenerateRnd(2) != 0)
 					StartAttack(i);
 				else
-					StartRangedSpecialAttack(i, mistype, dam);
+					StartRangedSpecialAttack(i, MIS_FLAMEC, 0);
 			}
 		}
 		monst->_mgoalvar3 = 1;
@@ -3371,11 +3371,6 @@ void MAI_RR2(int i, missile_id mistype, int dam)
 	if (monst->_mmode == MM_STAND) {
 		AiDelay(i, GenerateRnd(10) + 5);
 	}
-}
-
-void MegaAi(int i)
-{
-	MAI_RR2(i, MIS_FLAMEC, 0);
 }
 
 void DiabloAi(int i)
