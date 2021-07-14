@@ -1227,6 +1227,13 @@ void MonsterDeath(int i, int pnum, bool sendmsg)
 	M_FallenFear(monst->position.tile);
 	if ((monst->MType->mtype >= MT_NACID && monst->MType->mtype <= MT_XACID) || monst->MType->mtype == MT_SPIDLORD)
 		AddMissile(monst->position.tile, { 0, 0 }, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, monst->_mint + 1, 0);
+
+	if (pnum >= 0 && pnum < MAX_PLRS) {
+		PlayerStruct &player = Players[pnum];
+		if ((player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_RATTACKMON || player.destAction == ACTION_SPELLMON) && player.destParam1 == i) {
+			player.destAction = ACTION_NONE;
+		}
+	}
 }
 
 void StartDeathFromMonster(int i, int mid)
