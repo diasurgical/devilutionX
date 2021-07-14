@@ -640,20 +640,127 @@ void AddWall()
 			if (dflags[i][j] != 0) {
 				continue;
 			}
-			if (IsAnyOf(dungeon[i][j], 10, 12, 13, 15, 16, 21, 22)) {
+			/*if (IsAnyOf(dungeon[i][j], 10, 12, 13, 15, 16, 21, 22)) { // 1st IsAnyOf
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}*/
+			/*if (IsAnyOf(dungeon[i][j], 8, 9, 11, 14, 15, 16, 21, 23)) { // 2nd IsAnyOf
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}*/
+			/* replacement start */
+			if (dungeon[i][j] == 10) {
 				AdvanceRndSeed();
 				int x = HorizontalWallOk(i, j);
 				if (x != -1) {
 					HorizontalWall(i, j, x);
 				}
 			}
-			if (IsAnyOf(dungeon[i][j], 8, 9, 11, 14, 15, 16, 21, 23)) {
+			if (dungeon[i][j] == 12) {
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}
+			if (dungeon[i][j] == 13) {
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}
+			if (dungeon[i][j] == 15) {
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}
+			if (dungeon[i][j] == 16) {
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}
+			if (dungeon[i][j] == 21) {
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}
+			if (dungeon[i][j] == 22) {
+				AdvanceRndSeed();
+				int x = HorizontalWallOk(i, j);
+				if (x != -1) {
+					HorizontalWall(i, j, x);
+				}
+			}
+			if (dungeon[i][j] == 8) {
 				AdvanceRndSeed();
 				int y = VerticalWallOk(i, j);
 				if (y != -1) {
 					VerticalWall(i, j, y);
 				}
 			}
+			if (dungeon[i][j] == 9) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			if (dungeon[i][j] == 11) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			if (dungeon[i][j] == 14) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			if (dungeon[i][j] == 15) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			if (dungeon[i][j] == 16) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			if (dungeon[i][j] == 21) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			if (dungeon[i][j] == 23) {
+				AdvanceRndSeed();
+				int y = VerticalWallOk(i, j);
+				if (y != -1) {
+					VerticalWall(i, j, y);
+				}
+			}
+			/* replacement end*/
 		}
 	}
 }
