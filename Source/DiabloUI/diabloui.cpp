@@ -725,7 +725,7 @@ void Render(UiText *uiText)
 
 void Render(const UiArtText *uiArtText)
 {
-	DrawArtStr(uiArtText->m_text, uiArtText->m_rect, uiArtText->m_iFlags);
+	DrawArtStr(uiArtText->text(), uiArtText->m_rect, uiArtText->m_iFlags);
 }
 
 void Render(const UiImage *uiImage)

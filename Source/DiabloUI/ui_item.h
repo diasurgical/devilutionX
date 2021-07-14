@@ -135,15 +135,30 @@ class UiArtText : public UiItemBase {
 public:
 	UiArtText(const char *text, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
+	    , m_text(text)
 	{
 		m_type = UI_ART_TEXT;
-		m_text = text;
 	};
+
+	UiArtText(const char **ptext, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	    , m_ptext(ptext)
+	{
+		m_type = UI_ART_TEXT;
+	};
+
+	const char *text() const
+	{
+		if (m_text != nullptr)
+			return m_text;
+		return *m_ptext;
+	}
 
 	~UiArtText() {};
 
-	//private:
-	const char *m_text;
+private:
+	const char *m_text = nullptr;
+	const char **m_ptext = nullptr;
 };
 
 //=============================================================================

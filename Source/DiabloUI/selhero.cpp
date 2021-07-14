@@ -466,7 +466,7 @@ void selhero_Init()
 
 	vecSelDlgItems.clear();
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(title, rect1, UIS_CENTER | UIS_BIG));
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(&title, rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 211), 180, 76 };
 	auto heroImg = std::make_unique<UiImage>(&ArtHero, static_cast<int>(enum_size<HeroClass>::value), rect2);
