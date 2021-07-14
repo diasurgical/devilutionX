@@ -43,10 +43,16 @@ struct MissilePosition {
       * @brief Specifies the location (offset) while rendering
       */
 	Displacement offsetForRendering;
+
 	/**
-      * @brief tileForRendering and offsetForRendering shouldn't be updated while rendering. This is needed for explosion.
+      * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter cause the missile don't move anymore)
       */
-	bool renderingIsFixed;
+	void StopMissile()
+	{
+		velocity = {};
+		if (tileForRendering == tile)
+			offset = offsetForRendering;
+	}
 };
 
 /*

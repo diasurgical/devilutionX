@@ -80,19 +80,12 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 
 void UpdateMissileRendererData(MissileStruct &m)
 {
-	if (m.position.renderingIsFixed)
-		return;
-
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
 
 	const MissileMovementDistrubution missileMovement = MissileData[m._mitype].MovementDistribution;
 	// don't calculate missile position if they don't move
-	if (missileMovement == MissileMovementDistrubution::Disabled)
-		return;
-
-	// when some missiles hit, they change there animation to a explosion and the explosion shouldn't move (for example fireball)
-	if (MissileData[m._mitype].mFileNum != m._miAnimType)
+	if (missileMovement == MissileMovementDistrubution::Disabled || m.position.velocity == Displacement {})
 		return;
 
 	float fProgress = gfProgressToNextGameTick;
