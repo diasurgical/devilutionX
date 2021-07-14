@@ -765,6 +765,7 @@ void FireballUpdate(int i, Displacement offset, bool alwaysDelete)
 			Missiles[i]._mimfnum = 0;
 			SetMissAnim(i, MFILE_BIGEXP);
 			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
+			Missiles[i].position.velocity = {};
 		} else if (Missiles[i].position.tile.x != Missiles[i]._miVar1 || Missiles[i].position.tile.y != Missiles[i]._miVar2) {
 			Missiles[i]._miVar1 = Missiles[i].position.tile.x;
 			Missiles[i]._miVar2 = Missiles[i].position.tile.y;
@@ -2257,9 +2258,6 @@ void AddMisexp(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, 
 	Missiles[mi].position.offset = Missiles[dst.x].position.offset;
 	Missiles[mi].position.traveled = Missiles[dst.x].position.traveled;
 	Missiles[mi].position.velocity = { 0, 0 };
-	Missiles[mi].position.renderingIsFixed = true;
-	Missiles[mi].position.tileForRendering = Missiles[dst.x].position.tileForRendering;
-	Missiles[mi].position.offsetForRendering = Missiles[dst.x].position.offsetForRendering;
 	Missiles[mi]._mirange = Missiles[mi]._miAnimLen;
 	Missiles[mi]._miVar1 = 0;
 }
@@ -3236,14 +3234,14 @@ void MI_LArrow(int i)
 		}
 		if (Missiles[i]._mirange == 0) {
 			Missiles[i]._mimfnum = 0;
-			Missiles[i].position.traveled.deltaX -= Missiles[i].position.velocity.deltaX;
-			Missiles[i].position.traveled.deltaY -= Missiles[i].position.velocity.deltaY;
+			Missiles[i].position.traveled -= Missiles[i].position.velocity;
 			UpdateMissilePos(i);
 			if (Missiles[i]._mitype == MIS_LARROW)
 				SetMissAnim(i, MFILE_MINILTNG);
 			else
 				SetMissAnim(i, MFILE_MAGBLOS);
 			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
+			Missiles[i].position.StopMissile();
 		} else {
 			if (Missiles[i].position.tile.x != Missiles[i]._miVar1 || Missiles[i].position.tile.y != Missiles[i]._miVar2) {
 				Missiles[i]._miVar1 = Missiles[i].position.tile.x;
@@ -3326,6 +3324,7 @@ void MI_Firebolt(int i)
 			Missiles[i]._miDelFlag = true;
 			Missiles[i].position.traveled = { omx, omy };
 			UpdateMissilePos(i);
+			Missiles[i].position.StopMissile();
 			switch (Missiles[i]._mitype) {
 			case MIS_FIREBOLT:
 			case MIS_MAGMABALL:
@@ -3339,7 +3338,6 @@ void MI_Firebolt(int i)
 				break;
 			case MIS_BONESPIRIT:
 				SetMissDir(i, DIR_OMNI);
-				Missiles[i].position.velocity = {};
 				Missiles[i]._mirange = 7;
 				Missiles[i]._miDelFlag = false;
 				PutMissile(i);
@@ -4597,6 +4595,7 @@ void MI_Cbolt(int i)
 			Missiles[i]._miVar1 = 8;
 			Missiles[i]._mimfnum = 0;
 			Missiles[i].position.offset = { 0, 0 };
+			Missiles[i].position.velocity = {};
 			SetMissAnim(i, MFILE_LGHNING);
 			Missiles[i]._mirange = Missiles[i]._miAnimLen;
 			UpdateMissilePos(i);
@@ -4626,6 +4625,7 @@ void MI_Hbolt(int i)
 			Missiles[i]._mimfnum = 0;
 			SetMissAnim(i, MFILE_HOLYEXPL);
 			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
+			Missiles[i].position.StopMissile();
 		} else {
 			if (Missiles[i].position.tile != Point { Missiles[i]._miVar1, Missiles[i]._miVar2 }) {
 				Missiles[i]._miVar1 = Missiles[i].position.tile.x;
@@ -4695,6 +4695,7 @@ void MI_Element(int i)
 			Missiles[i]._mimfnum = 0;
 			SetMissAnim(i, MFILE_BIGEXP);
 			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
+			Missiles[i].position.StopMissile();
 		}
 	}
 	PutMissile(i);

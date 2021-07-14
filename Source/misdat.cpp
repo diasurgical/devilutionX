@@ -74,7 +74,7 @@ MissileDataStruct MissileData[] = {
 	{  &AddMisexp,                 &MI_Acidsplat,      MIS_MISEXP3,       true,      2, MISR_ACID,      MFILE_ACIDSPLA,  SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddAcidpud,                &MI_Acidpud,        MIS_ACIDPUD,       true,      2, MISR_ACID,      MFILE_ACIDPUD,   LS_PUDDLE,   SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddHealOther,              &MI_Dummy,          MIS_HEALOTHER,     false,     1, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
-	{  &AddElement,                &MI_Element,        MIS_ELEMENT,       true,      1, MISR_FIRE,      MFILE_FIRERUN,   LS_ELEMENTL, SFX_NONE,    MissileMovementDistrubution::Blockable   },
+	{  &AddElement,                &MI_Element,        MIS_ELEMENT,       true,      1, MISR_FIRE,      MFILE_FIRERUN,   LS_ELEMENTL, SFX_NONE,    MissileMovementDistrubution::Unblockable },
 	{  &AddResurrectBeam,          &MI_ResurrectBeam,  MIS_RESURRECTBEAM, true,      1, MISR_NONE,      MFILE_RESSUR1,   SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
 	{  &AddBoneSpirit,             &MI_Bonespirit,     MIS_BONESPIRIT,    true,      1, MISR_MAGIC,     MFILE_SKLBALL,   LS_BONESP,   LS_BSIMPCT,  MissileMovementDistrubution::Blockable   },
 	{  &AddWeapexp,                &MI_Weapexp,        MIS_WEAPEXP,       true,      2, MISR_NONE,      MFILE_NONE,      SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Disabled    },
