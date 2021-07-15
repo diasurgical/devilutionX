@@ -170,6 +170,10 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	//The player's tile position after finishing this movement action
 	player.position.future = player.position.tile + dirModeParams.tileAdd;
 
+	if (pnum == MyPlayerId) {
+		ScrollViewPort(player, WalkSettings[dir].scrollDir);
+	}
+
 	dirModeParams.walkModeHandler(pnum, dirModeParams);
 
 	player.position.velocity = vel;
@@ -204,10 +208,6 @@ void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 
 	HandleWalkMode(pnum, vel, dir);
 	StartWalkAnimation(player, dir, pmWillBeCalled);
-
-	if (pnum == MyPlayerId) {
-		ScrollViewPort(player, WalkSettings[dir].scrollDir);
-	}
 }
 } // namespace
 
