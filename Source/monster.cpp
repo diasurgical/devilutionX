@@ -220,7 +220,7 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 	monster.mArmorClass = monsterType.MData->mArmorClass;
 	monster.mMagicRes = monsterType.MData->mMagicRes;
 	monster.leader = 0;
-	monster.leaderflag = 0;
+	monster.leaderflag = MonsterRelation::Individual;
 	monster._mFlags = monsterType.MData->mFlags;
 	monster.mtalkmsg = TEXT_NONE;
 
@@ -360,7 +360,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 
 				if ((leaderAttributes & 2) != 0) {
 					minion.leader = leaderId;
-					minion.leaderflag = 1;
+					minion.leaderflag = MonsterRelation::Minion;
 					minion._mAi = leader._mAi;
 				}
 
@@ -1958,22 +1958,22 @@ void GroupUnity(int i)
 	auto &monster = Monsters[i];
 
 	auto &leader = Monsters[monster.leader];
-	if (monster.leaderflag != 0) {
+	if (monster.leaderflag != MonsterRelation::Individual) {
 		bool clear = IsLineNotSolid(monster.position.tile, leader.position.future);
-		if (clear || monster.leaderflag != 1) {
+		if (clear || monster.leaderflag != MonsterRelation::Minion) {
 			if (clear
-			    && monster.leaderflag == 2
+			    && monster.leaderflag == MonsterRelation::Leader
 			    && monster.position.tile.WalkingDistance(leader.position.future) < 4) {
 				leader.packsize++;
-				monster.leaderflag = 1;
+				monster.leaderflag = MonsterRelation::Minion;
 			}
 		} else {
 			leader.packsize--;
-			monster.leaderflag = 2;
+			monster.leaderflag = MonsterRelation::Leader;
 		}
 	}
 
-	if (monster.leaderflag == 1) {
+	if (monster.leaderflag == MonsterRelation::Minion) {
 		if (monster._msquelch > leader._msquelch) {
 			leader.position.last = monster.position.tile;
 			leader._msquelch = monster._msquelch - 1;
@@ -1984,11 +1984,11 @@ void GroupUnity(int i)
 				leader._mmode = MM_SATTACK;
 			}
 		}
-	} else if (monster._uniqtype != 0) {
+	} else if (monster._uniqtype != MonsterRelation::Individual) {
 		if ((UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) != 0) {
 			for (int j = 0; j < ActiveMonsterCount; j++) {
 				auto &minion = Monsters[ActiveMonsters[j]];
-				if (minion.leaderflag == 1 && minion.leader == i) {
+				if (minion.leaderflag == MonsterRelation::Minion && minion.leader == i) {
 					if (monster._msquelch > minion._msquelch) {
 						minion.position.last = monster.position.tile;
 						minion._msquelch = monster._msquelch - 1;
@@ -2519,9 +2519,9 @@ void ScavengerAi(int i)
 	if (monster._mmode != MM_STAND)
 		return;
 	if (monster._mhitpoints < (monster._mmaxhp / 2) && monster._mgoal != MGOAL_HEALING) {
-		if (monster.leaderflag != 0) {
+		if (monster.leaderflag != MonsterRelation::Individual) {
 			Monsters[monster.leader].packsize--;
-			monster.leaderflag = 0;
+			monster.leaderflag = MonsterRelation::Individual;
 		}
 		monster._mgoal = MGOAL_HEALING;
 		monster._mgoalvar3 = 10;
@@ -4257,11 +4257,11 @@ void M_UpdateLeader(int i)
 
 	for (int j = 0; j < ActiveMonsterCount; j++) {
 		auto &minion = Monsters[ActiveMonsters[j]];
-		if (minion.leaderflag == 1 && minion.leader == i)
-			minion.leaderflag = 0;
+		if (minion.leaderflag == MonsterRelation::Minion && minion.leader == i)
+			minion.leaderflag = MonsterRelation::Individual;
 	}
 
-	if (monster.leaderflag == 1) {
+	if (monster.leaderflag == MonsterRelation::Minion) {
 		Monsters[monster.leader].packsize--;
 	}
 }
@@ -4617,7 +4617,7 @@ bool DirOK(int i, Direction mdir)
 	} else if (mdir == DIR_S)
 		if (SolidLoc(position + DIR_SW) || SolidLoc(position + DIR_SE))
 			return false;
-	if (monster.leaderflag == 1) {
+	if (monster.leaderflag == MonsterRelation::Minion) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
 	}
 	if (monster._uniqtype == 0 || (UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) == 0)
@@ -4634,7 +4634,7 @@ bool DirOK(int i, Direction mdir)
 				mi--;
 			// BUGFIX: should only run pack member check if mi was non-zero prior to executing the body of the above if-statement.
 			auto &minion = Monsters[mi];
-			if (minion.leaderflag == 1
+			if (minion.leaderflag == MonsterRelation::Minion
 			    && minion.leader == i
 			    && minion.position.future == Point { x, y }) {
 				mcount++;
