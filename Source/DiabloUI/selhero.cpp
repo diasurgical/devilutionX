@@ -296,33 +296,17 @@ void SelheroClassSelectorEsc()
 
 void SelheroNameSelect(int /*value*/)
 {
-
 	if (!UiValidPlayerName(selhero_heroInfo.name)) {
 		ArtBackground.Unload();
 		UiSelOkDialog(title, _("Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n"), false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
-	} else {
-		bool overwrite = true;
-		for (std::size_t i = 0; i < selhero_SaveCount; i++) {
-			if (strcasecmp(selhero_heros[i].name, selhero_heroInfo.name) == 0) {
-				ArtBackground.Unload();
-				char dialogText[256];
-				strncpy(dialogText, fmt::format(_(/* Error message when User tries to create multiple heros with the same name */ "Character already exists. Do you want to overwrite \"{:s}\"?"), selhero_heroInfo.name).c_str(), sizeof(dialogText));
-
-				overwrite = UiSelHeroYesNoDialog(title, dialogText);
-				LoadBackgroundArt("ui_art\\selhero.pcx");
-				break;
-			}
-		}
-
-		if (overwrite) {
-			if (gfnHeroCreate(&selhero_heroInfo)) {
-				SelheroLoadSelect(1);
-				return;
-			}
-			UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
-		}
 	}
+
+	if (gfnHeroCreate(&selhero_heroInfo)) {
+		SelheroLoadSelect(1);
+		return;
+	}
+	UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
 
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 	SelheroClassSelectorSelect(0);
