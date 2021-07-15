@@ -43,7 +43,7 @@ extern LightStruct Lights[MAXLIGHTS];
 extern uint8_t ActiveLights[MAXLIGHTS];
 extern int ActiveLightCount;
 extern char LightsMax;
-extern std::array<BYTE, LIGHTSIZE> LightTables;
+extern std::array<uint8_t, LIGHTSIZE> LightTables;
 extern bool DisableLighting;
 extern bool UpdateLighting;
 
@@ -60,7 +60,7 @@ int AddLight(Point position, int r);
 void AddUnLight(int i);
 void ChangeLightRadius(int i, int r);
 void ChangeLightXY(int i, Point position);
-void ChangeLightOff(int i, Point position);
+void ChangeLightOffset(int i, Point position);
 void ChangeLight(int i, Point position, int r);
 void ProcessLightList();
 void SavePreLighting();
@@ -73,7 +73,7 @@ void lighting_color_cycling();
 
 /* rdata */
 
-extern const char CrawlTable[2749];
-extern const BYTE VisionCrawlTable[23][30];
+extern const int8_t CrawlTable[2749];
+extern const uint8_t VisionCrawlTable[23][30];
 
 } // namespace devilution

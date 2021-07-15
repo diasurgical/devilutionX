@@ -18,7 +18,7 @@ std::optional<CelSprite> pSquareCel;
 
 #ifdef _DEBUG
 
-namespace  {
+namespace {
 
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
@@ -39,13 +39,15 @@ void PrintDebugMonster(int m)
 {
 	char dstr[128];
 
-	sprintf(dstr, "Monster %i = %s", m, _(Monsters[m].mName));
+	auto &monster = Monsters[m];
+
+	sprintf(dstr, "Monster %i = %s", m, _(monster.mName));
 	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "X = %i, Y = %i", Monsters[m].position.tile.x, Monsters[m].position.tile.y);
+	sprintf(dstr, "X = %i, Y = %i", monster.position.tile.x, monster.position.tile.y);
 	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "Enemy = %i, HP = %i", Monsters[m]._menemy, Monsters[m]._mhitpoints);
+	sprintf(dstr, "Enemy = %i, HP = %i", monster._menemy, monster._mhitpoints);
 	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "Mode = %i, Var1 = %i", Monsters[m]._mmode, Monsters[m]._mVar1);
+	sprintf(dstr, "Mode = %i, Var1 = %i", monster._mmode, monster._mVar1);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 
 	bool bActive = false;
@@ -55,7 +57,7 @@ void PrintDebugMonster(int m)
 			bActive = true;
 	}
 
-	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, Monsters[m]._msquelch);
+	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster._msquelch);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 }
 

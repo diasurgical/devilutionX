@@ -120,6 +120,4 @@ Direction GetDirection(Point start, Point destination);
  */
 int CalculateWidth2(int width);
 
-void PlayInGameMovie(const char *pszMovie);
-
 } // namespace devilution

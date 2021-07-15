@@ -33,10 +33,11 @@ namespace devilution {
 
 bool gbIsHellfireSaveGame;
 uint8_t giNumberOfLevels;
-uint8_t giNumberQuests;
-uint8_t giNumberOfSmithPremiumItems;
 
 namespace {
+
+uint8_t giNumberQuests;
+uint8_t giNumberOfSmithPremiumItems;
 
 template <class T>
 T SwapLE(T in)
@@ -206,26 +207,7 @@ public:
 	}
 };
 
-} // namespace
-
-void RemoveInvalidItem(ItemStruct *pItem)
-{
-	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
-
-	if (!gbIsHellfire) {
-		isInvalid = isInvalid || (pItem->_itype == ITYPE_STAFF && GetSpellStaffLevel(pItem->_iSpell) == -1);
-		isInvalid = isInvalid || (pItem->_iMiscId == IMISC_BOOK && GetSpellBookLevel(pItem->_iSpell) == -1);
-		isInvalid = isInvalid || pItem->_iDamAcFlags != 0;
-		isInvalid = isInvalid || pItem->_iPrePower > IDI_LASTDIABLO;
-		isInvalid = isInvalid || pItem->_iSufPower > IDI_LASTDIABLO;
-	}
-
-	if (isInvalid) {
-		pItem->_itype = ITYPE_NONE;
-	}
-}
-
-static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
+void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 {
 	pItem->_iSeed = file->NextLE<int32_t>();
 	pItem->_iCreateInfo = file->NextLE<uint16_t>();
@@ -315,14 +297,14 @@ static void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	RemoveInvalidItem(pItem);
 }
 
-static void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
+void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
 {
 	for (int i = 0; i < n; i++) {
 		LoadItemData(file, &pItem[i]);
 	}
 }
 
-static void LoadPlayer(LoadHelper *file, int p)
+void LoadPlayer(LoadHelper *file, int p)
 {
 	auto &player = Players[p];
 
@@ -550,100 +532,98 @@ static void LoadPlayer(LoadHelper *file, int p)
 
 bool gbSkipSync = false;
 
-static void LoadMonster(LoadHelper *file, int i)
+void LoadMonster(LoadHelper *file, MonsterStruct &monster)
 {
-	MonsterStruct *pMonster = &Monsters[i];
-
-	pMonster->_mMTidx = file->NextLE<int32_t>();
-	pMonster->_mmode = static_cast<MON_MODE>(file->NextLE<int32_t>());
-	pMonster->_mgoal = static_cast<monster_goal>(file->NextLE<uint8_t>());
+	monster._mMTidx = file->NextLE<int32_t>();
+	monster._mmode = static_cast<MON_MODE>(file->NextLE<int32_t>());
+	monster._mgoal = static_cast<monster_goal>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
-	pMonster->_mgoalvar1 = file->NextLE<int32_t>();
-	pMonster->_mgoalvar2 = file->NextLE<int32_t>();
-	pMonster->_mgoalvar3 = file->NextLE<int32_t>();
+	monster._mgoalvar1 = file->NextLE<int32_t>();
+	monster._mgoalvar2 = file->NextLE<int32_t>();
+	monster._mgoalvar3 = file->NextLE<int32_t>();
 	file->Skip(4); // Unused
-	pMonster->_pathcount = file->NextLE<uint8_t>();
+	monster._pathcount = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
-	pMonster->position.tile.x = file->NextLE<int32_t>();
-	pMonster->position.tile.y = file->NextLE<int32_t>();
-	pMonster->position.future.x = file->NextLE<int32_t>();
-	pMonster->position.future.y = file->NextLE<int32_t>();
-	pMonster->position.old.x = file->NextLE<int32_t>();
-	pMonster->position.old.y = file->NextLE<int32_t>();
-	pMonster->position.offset.deltaX = file->NextLE<int32_t>();
-	pMonster->position.offset.deltaY = file->NextLE<int32_t>();
-	pMonster->position.velocity.deltaX = file->NextLE<int32_t>();
-	pMonster->position.velocity.deltaY = file->NextLE<int32_t>();
-	pMonster->_mdir = static_cast<Direction>(file->NextLE<int32_t>());
-	pMonster->_menemy = file->NextLE<int32_t>();
-	pMonster->enemyPosition.x = file->NextLE<uint8_t>();
-	pMonster->enemyPosition.y = file->NextLE<uint8_t>();
+	monster.position.tile.x = file->NextLE<int32_t>();
+	monster.position.tile.y = file->NextLE<int32_t>();
+	monster.position.future.x = file->NextLE<int32_t>();
+	monster.position.future.y = file->NextLE<int32_t>();
+	monster.position.old.x = file->NextLE<int32_t>();
+	monster.position.old.y = file->NextLE<int32_t>();
+	monster.position.offset.deltaX = file->NextLE<int32_t>();
+	monster.position.offset.deltaY = file->NextLE<int32_t>();
+	monster.position.velocity.deltaX = file->NextLE<int32_t>();
+	monster.position.velocity.deltaY = file->NextLE<int32_t>();
+	monster._mdir = static_cast<Direction>(file->NextLE<int32_t>());
+	monster._menemy = file->NextLE<int32_t>();
+	monster.enemyPosition.x = file->NextLE<uint8_t>();
+	monster.enemyPosition.y = file->NextLE<uint8_t>();
 	file->Skip(2); // Unused
 
 	file->Skip(4); // Skip pointer _mAnimData
-	pMonster->AnimInfo = {};
-	pMonster->AnimInfo.TicksPerFrame = file->NextLE<int32_t>();
-	pMonster->AnimInfo.TickCounterOfCurrentFrame = file->NextLE<int32_t>();
-	pMonster->AnimInfo.NumberOfFrames = file->NextLE<int32_t>();
-	pMonster->AnimInfo.CurrentFrame = file->NextLE<int32_t>();
+	monster.AnimInfo = {};
+	monster.AnimInfo.TicksPerFrame = file->NextLE<int32_t>();
+	monster.AnimInfo.TickCounterOfCurrentFrame = file->NextLE<int32_t>();
+	monster.AnimInfo.NumberOfFrames = file->NextLE<int32_t>();
+	monster.AnimInfo.CurrentFrame = file->NextLE<int32_t>();
 	file->Skip(4); // Skip _meflag
-	pMonster->_mDelFlag = file->NextBool32();
-	pMonster->_mVar1 = file->NextLE<int32_t>();
-	pMonster->_mVar2 = file->NextLE<int32_t>();
-	pMonster->_mVar3 = file->NextLE<int32_t>();
-	pMonster->position.temp.x = file->NextLE<int32_t>();
-	pMonster->position.temp.y = file->NextLE<int32_t>();
-	pMonster->position.offset2.deltaX = file->NextLE<int32_t>();
-	pMonster->position.offset2.deltaY = file->NextLE<int32_t>();
+	monster._mDelFlag = file->NextBool32();
+	monster._mVar1 = file->NextLE<int32_t>();
+	monster._mVar2 = file->NextLE<int32_t>();
+	monster._mVar3 = file->NextLE<int32_t>();
+	monster.position.temp.x = file->NextLE<int32_t>();
+	monster.position.temp.y = file->NextLE<int32_t>();
+	monster.position.offset2.deltaX = file->NextLE<int32_t>();
+	monster.position.offset2.deltaY = file->NextLE<int32_t>();
 	file->Skip(4); // Skip actionFrame
-	pMonster->_mmaxhp = file->NextLE<int32_t>();
-	pMonster->_mhitpoints = file->NextLE<int32_t>();
+	monster._mmaxhp = file->NextLE<int32_t>();
+	monster._mhitpoints = file->NextLE<int32_t>();
 
-	pMonster->_mAi = static_cast<_mai_id>(file->NextLE<uint8_t>());
-	pMonster->_mint = file->NextLE<uint8_t>();
+	monster._mAi = static_cast<_mai_id>(file->NextLE<uint8_t>());
+	monster._mint = file->NextLE<uint8_t>();
 	file->Skip(2); // Alignment
-	pMonster->_mFlags = file->NextLE<uint32_t>();
-	pMonster->_msquelch = file->NextLE<uint8_t>();
+	monster._mFlags = file->NextLE<uint32_t>();
+	monster._msquelch = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
 	file->Skip(4); // Unused
-	pMonster->position.last.x = file->NextLE<int32_t>();
-	pMonster->position.last.y = file->NextLE<int32_t>();
-	pMonster->_mRndSeed = file->NextLE<uint32_t>();
-	pMonster->_mAISeed = file->NextLE<uint32_t>();
+	monster.position.last.x = file->NextLE<int32_t>();
+	monster.position.last.y = file->NextLE<int32_t>();
+	monster._mRndSeed = file->NextLE<uint32_t>();
+	monster._mAISeed = file->NextLE<uint32_t>();
 	file->Skip(4); // Unused
 
-	pMonster->_uniqtype = file->NextLE<uint8_t>();
-	pMonster->_uniqtrans = file->NextLE<uint8_t>();
-	pMonster->_udeadval = file->NextLE<int8_t>();
+	monster._uniqtype = file->NextLE<uint8_t>();
+	monster._uniqtrans = file->NextLE<uint8_t>();
+	monster._udeadval = file->NextLE<int8_t>();
 
-	pMonster->mWhoHit = file->NextLE<int8_t>();
-	pMonster->mLevel = file->NextLE<int8_t>();
+	monster.mWhoHit = file->NextLE<int8_t>();
+	monster.mLevel = file->NextLE<int8_t>();
 	file->Skip(1); // Alignment
-	pMonster->mExp = file->NextLE<uint16_t>();
+	monster.mExp = file->NextLE<uint16_t>();
 
-	if (i < MAX_PLRS) // Don't skip for golems
-		pMonster->mHit = file->NextLE<uint8_t>();
+	if ((monster._mFlags & MFLAG_GOLEM) != 0) // Don't skip for golems
+		monster.mHit = file->NextLE<uint8_t>();
 	else
 		file->Skip(1); // Skip mHit as it's already initialized
-	pMonster->mMinDamage = file->NextLE<uint8_t>();
-	pMonster->mMaxDamage = file->NextLE<uint8_t>();
+	monster.mMinDamage = file->NextLE<uint8_t>();
+	monster.mMaxDamage = file->NextLE<uint8_t>();
 	file->Skip(1); // Skip mHit2 as it's already initialized
-	pMonster->mMinDamage2 = file->NextLE<uint8_t>();
-	pMonster->mMaxDamage2 = file->NextLE<uint8_t>();
-	pMonster->mArmorClass = file->NextLE<uint8_t>();
+	monster.mMinDamage2 = file->NextLE<uint8_t>();
+	monster.mMaxDamage2 = file->NextLE<uint8_t>();
+	monster.mArmorClass = file->NextLE<uint8_t>();
 	file->Skip(1); // Alignment
-	pMonster->mMagicRes = file->NextLE<uint16_t>();
+	monster.mMagicRes = file->NextLE<uint16_t>();
 	file->Skip(2); // Alignment
 
-	pMonster->mtalkmsg = static_cast<_speech_id>(file->NextLE<int32_t>());
-	if (pMonster->mtalkmsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
-		pMonster->mtalkmsg = TEXT_NONE;
-	pMonster->leader = file->NextLE<uint8_t>();
-	pMonster->leaderflag = file->NextLE<uint8_t>();
-	pMonster->packsize = file->NextLE<uint8_t>();
-	pMonster->mlid = file->NextLE<int8_t>();
-	if (pMonster->mlid == Players[MyPlayerId]._plid)
-		pMonster->mlid = NO_LIGHT; // Correct incorect values in old saves
+	monster.mtalkmsg = static_cast<_speech_id>(file->NextLE<int32_t>());
+	if (monster.mtalkmsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
+		monster.mtalkmsg = TEXT_NONE;
+	monster.leader = file->NextLE<uint8_t>();
+	monster.leaderflag = file->NextLE<uint8_t>();
+	monster.packsize = file->NextLE<uint8_t>();
+	monster.mlid = file->NextLE<int8_t>();
+	if (monster.mlid == Players[MyPlayerId]._plid)
+		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
 	// Omit pointer mName;
 	// Omit pointer MType;
@@ -652,10 +632,10 @@ static void LoadMonster(LoadHelper *file, int i)
 	if (gbSkipSync)
 		return;
 
-	SyncMonsterAnim(i);
+	SyncMonsterAnim(monster);
 }
 
-static void LoadMissile(LoadHelper *file, int i)
+void LoadMissile(LoadHelper *file, int i)
 {
 	MissileStruct *pMissile = &Missiles[i];
 
@@ -706,7 +686,7 @@ static void LoadMissile(LoadHelper *file, int i)
 	pMissile->limitReached = file->NextBool32();
 }
 
-static void LoadObject(LoadHelper *file, int i)
+void LoadObject(LoadHelper *file, int i)
 {
 	ObjectStruct *pObject = &Objects[i];
 
@@ -741,22 +721,22 @@ static void LoadObject(LoadHelper *file, int i)
 	pObject->_oVar4 = file->NextLE<int32_t>();
 	pObject->_oVar5 = file->NextLE<int32_t>();
 	pObject->_oVar6 = file->NextLE<uint32_t>();
-	pObject->_oVar7 = static_cast<_speech_id>(file->NextLE<int32_t>());
+	pObject->bookMessage = static_cast<_speech_id>(file->NextLE<int32_t>());
 	pObject->_oVar8 = file->NextLE<int32_t>();
 }
 
-static void LoadItem(LoadHelper *file, int i)
+void LoadItem(LoadHelper *file, int i)
 {
 	LoadItemData(file, &Items[i]);
 	GetItemFrm(i);
 }
 
-static void LoadPremium(LoadHelper *file, int i)
+void LoadPremium(LoadHelper *file, int i)
 {
 	LoadItemData(file, &premiumitems[i]);
 }
 
-static void LoadQuest(LoadHelper *file, int i)
+void LoadQuest(LoadHelper *file, int i)
 {
 	QuestStruct *pQuest = &Quests[i];
 
@@ -788,7 +768,7 @@ static void LoadQuest(LoadHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-static void LoadLighting(LoadHelper *file, LightStruct *pLight)
+void LoadLighting(LoadHelper *file, LightStruct *pLight)
 {
 	pLight->position.tile.x = file->NextLE<int32_t>();
 	pLight->position.tile.y = file->NextLE<int32_t>();
@@ -805,7 +785,7 @@ static void LoadLighting(LoadHelper *file, LightStruct *pLight)
 	pLight->_lflags = file->NextBool32();
 }
 
-static void LoadPortal(LoadHelper *file, int i)
+void LoadPortal(LoadHelper *file, int i)
 {
 	PortalStruct *pPortal = &Portals[i];
 
@@ -817,134 +797,7 @@ static void LoadPortal(LoadHelper *file, int i)
 	pPortal->setlvl = file->NextBool32();
 }
 
-_item_indexes RemapItemIdxFromDiablo(_item_indexes i)
-{
-	constexpr auto GetItemIdValue = [](int i) -> int {
-		if (i == IDI_SORCERER) {
-			return 166;
-		}
-		if (i >= 156) {
-			i += 5; // Hellfire exclusive items
-		}
-		if (i >= 88) {
-			i += 1; // Scroll of Search
-		}
-		if (i >= 83) {
-			i += 4; // Oils
-		}
-
-		return i;
-	};
-
-	return static_cast<_item_indexes>(GetItemIdValue(i));
-}
-
-_item_indexes RemapItemIdxToDiablo(_item_indexes i)
-{
-	constexpr auto GetItemIdValue = [](int i) -> int {
-		if (i == 166) {
-			return IDI_SORCERER;
-		}
-		if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
-			return -1; // Hellfire exclusive items
-		}
-		if (i >= 93) {
-			i -= 1; // Scroll of Search
-		}
-		if (i >= 87) {
-			i -= 4; // Oils
-		}
-
-		return i;
-	};
-
-	return static_cast<_item_indexes>(GetItemIdValue(i));
-}
-
-_item_indexes RemapItemIdxFromSpawn(_item_indexes i)
-{
-	constexpr auto GetItemIdValue = [](int i) {
-		if (i >= 62) {
-			i += 9; // Medium and heavy armors
-		}
-		if (i >= 96) {
-			i += 1; // Scroll of Stone Curse
-		}
-		if (i >= 98) {
-			i += 1; // Scroll of Guardian
-		}
-		if (i >= 99) {
-			i += 1; // Scroll of ...
-		}
-		if (i >= 101) {
-			i += 1; // Scroll of Golem
-		}
-		if (i >= 102) {
-			i += 1; // Scroll of None
-		}
-		if (i >= 104) {
-			i += 1; // Scroll of Apocalypse
-		}
-
-		return i;
-	};
-
-	return static_cast<_item_indexes>(GetItemIdValue(i));
-}
-
-_item_indexes RemapItemIdxToSpawn(_item_indexes i)
-{
-	constexpr auto GetItemIdValue = [](int i) {
-		if (i >= 104) {
-			i -= 1; // Scroll of Apocalypse
-		}
-		if (i >= 102) {
-			i -= 1; // Scroll of None
-		}
-		if (i >= 101) {
-			i -= 1; // Scroll of Golem
-		}
-		if (i >= 99) {
-			i -= 1; // Scroll of ...
-		}
-		if (i >= 98) {
-			i -= 1; // Scroll of Guardian
-		}
-		if (i >= 96) {
-			i -= 1; // Scroll of Stone Curse
-		}
-		if (i >= 71) {
-			i -= 9; // Medium and heavy armors
-		}
-
-		return i;
-	};
-
-	return static_cast<_item_indexes>(GetItemIdValue(i));
-}
-
-bool IsHeaderValid(uint32_t magicNumber)
-{
-	gbIsHellfireSaveGame = false;
-	if (magicNumber == LoadLE32("SHAR")) {
-		return true;
-	}
-	if (magicNumber == LoadLE32("SHLF")) {
-		gbIsHellfireSaveGame = true;
-		return true;
-	}
-	if (!gbIsSpawn && magicNumber == LoadLE32("RETL")) {
-		return true;
-	}
-	if (!gbIsSpawn && magicNumber == LoadLE32("HELF")) {
-		gbIsHellfireSaveGame = true;
-		return true;
-	}
-
-	return false;
-}
-
-static void ConvertLevels()
+void ConvertLevels()
 {
 	// Backup current level state
 	bool tmpSetlevel = setlevel;
@@ -994,44 +847,7 @@ static void ConvertLevels()
 	leveltype = tmpLeveltype;
 }
 
-void LoadHotkeys()
-{
-	LoadHelper file("hotkeys");
-	if (!file.IsValid())
-		return;
-
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (auto &spellId : myPlayer._pSplHotKey) {
-		spellId = static_cast<spell_id>(file.NextLE<int32_t>());
-	}
-	for (auto &spellType : myPlayer._pSplTHotKey) {
-		spellType = static_cast<spell_type>(file.NextLE<int8_t>());
-	}
-	myPlayer._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
-	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<int8_t>());
-}
-
-void SaveHotkeys()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	const size_t nHotkeyTypes = sizeof(myPlayer._pSplHotKey) / sizeof(myPlayer._pSplHotKey[0]);
-	const size_t nHotkeySpells = sizeof(myPlayer._pSplTHotKey) / sizeof(myPlayer._pSplTHotKey[0]);
-
-	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
-
-	for (auto &spellId : myPlayer._pSplHotKey) {
-		file.WriteLE<int32_t>(spellId);
-	}
-	for (auto &spellType : myPlayer._pSplTHotKey) {
-		file.WriteLE<uint8_t>(spellType);
-	}
-	file.WriteLE<int32_t>(myPlayer._pRSpell);
-	file.WriteLE<uint8_t>(myPlayer._pRSplType);
-}
-
-static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
+void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
 {
 	ItemStruct tempItem;
 
@@ -1042,31 +858,6 @@ static void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
 		if (pItem[i]._iSeed != tempItem._iSeed)
 			continue;
 		pItem[i] = tempItem;
-	}
-}
-
-void LoadHeroItems(PlayerStruct &player)
-{
-	LoadHelper file("heroitems");
-	if (!file.IsValid())
-		return;
-
-	gbIsHellfireSaveGame = file.NextBool8();
-
-	LoadMatchingItems(&file, NUM_INVLOC, player.InvBody);
-	LoadMatchingItems(&file, NUM_INV_GRID_ELEM, player.InvList);
-	LoadMatchingItems(&file, MAXBELTITEMS, player.SpdList);
-
-	gbIsHellfireSaveGame = gbIsHellfire;
-}
-
-void RemoveEmptyInventory(PlayerStruct &player)
-{
-	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
-		int idx = player.InvGrid[i - 1];
-		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
-			player.RemoveInvItem(idx - 1);
-		}
 	}
 }
 
@@ -1081,209 +872,7 @@ void RemoveEmptyLevelItems()
 	}
 }
 
-/**
- * @brief Load game state
- * @param firstflag Can be set to false if we are simply reloading the current game
- */
-void LoadGame(bool firstflag)
-{
-	FreeGameMem();
-	pfile_remove_temp_files();
-
-	LoadHelper file("game");
-	if (!file.IsValid())
-		app_fatal("%s", _("Unable to open save file archive"));
-
-	if (!IsHeaderValid(file.NextLE<uint32_t>()))
-		app_fatal("%s", _("Invalid save file"));
-
-	if (gbIsHellfireSaveGame) {
-		giNumberOfLevels = 25;
-		giNumberQuests = 24;
-		giNumberOfSmithPremiumItems = 15;
-	} else {
-		// Todo initialize additional levels and quests if we are running Hellfire
-		giNumberOfLevels = 17;
-		giNumberQuests = 16;
-		giNumberOfSmithPremiumItems = 6;
-	}
-
-	setlevel = file.NextBool8();
-	setlvlnum = static_cast<_setlevels>(file.NextBE<uint32_t>());
-	currlevel = file.NextBE<uint32_t>();
-	leveltype = static_cast<dungeon_type>(file.NextBE<uint32_t>());
-	if (!setlevel)
-		leveltype = gnLevelTypeTbl[currlevel];
-	int viewX = file.NextBE<int32_t>();
-	int viewY = file.NextBE<int32_t>();
-	invflag = file.NextBool8();
-	chrflag = file.NextBool8();
-	int tmpNummonsters = file.NextBE<int32_t>();
-	int tmpNumitems = file.NextBE<int32_t>();
-	int tmpNummissiles = file.NextBE<int32_t>();
-	int tmpNobjects = file.NextBE<int32_t>();
-
-	if (!gbIsHellfire && currlevel > 17)
-		app_fatal("%s", _("Player is on a Hellfire only level"));
-
-	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
-		glSeedTbl[i] = file.NextBE<uint32_t>();
-		file.Skip(4); // Skip loading gnLevelTypeTbl
-	}
-
-	LoadPlayer(&file, MyPlayerId);
-
-	sgGameInitInfo.nDifficulty = Players[MyPlayerId].pDifficulty;
-	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
-		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
-
-	for (int i = 0; i < giNumberQuests; i++)
-		LoadQuest(&file, i);
-	for (int i = 0; i < MAXPORTAL; i++)
-		LoadPortal(&file, i);
-
-	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		ConvertLevels();
-		RemoveEmptyInventory(Players[MyPlayerId]);
-	}
-
-	LoadGameLevel(firstflag, ENTRY_LOAD);
-	SyncInitPlr(MyPlayerId);
-	SyncPlrAnim(MyPlayerId);
-
-	ViewX = viewX;
-	ViewY = viewY;
-	ActiveMonsterCount = tmpNummonsters;
-	ActiveItemCount = tmpNumitems;
-	ActiveMissileCount = tmpNummissiles;
-	ActiveObjectCount = tmpNobjects;
-
-	for (int &monstkill : MonsterKillCounts)
-		monstkill = file.NextBE<int32_t>();
-
-	if (leveltype != DTYPE_TOWN) {
-		for (int &monsterId : ActiveMonsters)
-			monsterId = file.NextBE<int32_t>();
-		for (int i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, ActiveMonsters[i]);
-		for (int &missileId : ActiveMissiles)
-			missileId = file.NextLE<int8_t>();
-		for (int &missileId : AvailableMissiles)
-			missileId = file.NextLE<int8_t>();
-		for (int i = 0; i < ActiveMissileCount; i++)
-			LoadMissile(&file, ActiveMissiles[i]);
-		for (int &objectId : ActiveObjects)
-			objectId = file.NextLE<int8_t>();
-		for (int &objectId : AvailableObjects)
-			objectId = file.NextLE<int8_t>();
-		for (int i = 0; i < ActiveObjectCount; i++)
-			LoadObject(&file, ActiveObjects[i]);
-		for (int i = 0; i < ActiveObjectCount; i++)
-			SyncObjectAnim(Objects[ActiveObjects[i]]);
-
-		ActiveLightCount = file.NextBE<int32_t>();
-
-		for (uint8_t &lightId : ActiveLights)
-			lightId = file.NextLE<uint8_t>();
-		for (int i = 0; i < ActiveLightCount; i++)
-			LoadLighting(&file, &Lights[ActiveLights[i]]);
-
-		VisionId = file.NextBE<int32_t>();
-		VisionCount = file.NextBE<int32_t>();
-
-		for (int i = 0; i < VisionCount; i++)
-			LoadLighting(&file, &VisionList[i]);
-	}
-
-	for (int &itemId : ActiveItems)
-		itemId = file.NextLE<int8_t>();
-	for (int &itemId : AvailableItems)
-		itemId = file.NextLE<int8_t>();
-	for (int i = 0; i < ActiveItemCount; i++)
-		LoadItem(&file, ActiveItems[i]);
-	for (bool &uniqueItemFlag : UniqueItemFlags)
-		uniqueItemFlag = file.NextBool8();
-
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dLight[i][j] = file.NextLE<int8_t>();
-	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dFlags[i][j] = file.NextLE<int8_t>();
-	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dPlayer[i][j] = file.NextLE<int8_t>();
-	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dItem[i][j] = file.NextLE<int8_t>();
-	}
-
-	if (leveltype != DTYPE_TOWN) {
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dMonster[i][j] = file.NextBE<int32_t>();
-		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dDead[i][j] = file.NextLE<int8_t>();
-		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dObject[i][j] = file.NextLE<int8_t>();
-		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dLight[i][j] = file.NextLE<int8_t>();
-		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dPreLight[i][j] = file.NextLE<int8_t>();
-		}
-		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
-				AutomapView[i][j] = file.NextBool8();
-		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dMissile[i][j] = file.NextLE<int8_t>();
-		}
-	}
-
-	numpremium = file.NextBE<int32_t>();
-	premiumlevel = file.NextBE<int32_t>();
-
-	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
-		LoadPremium(&file, i);
-	if (gbIsHellfire && !gbIsHellfireSaveGame)
-		SpawnPremium(MyPlayerId);
-
-	AutomapActive = file.NextBool8();
-	AutoMapScale = file.NextBE<int32_t>();
-	AutomapZoomReset();
-	ResyncQuests();
-
-	if (leveltype != DTYPE_TOWN)
-		ProcessLightList();
-
-	RedoPlayerVision();
-	ProcessVisionList();
-	missiles_process_charge();
-	ResetPal();
-	NewCursor(CURSOR_HAND);
-	gbProcessPlayers = true;
-
-	if (gbIsHellfireSaveGame != gbIsHellfire) {
-		RemoveEmptyLevelItems();
-		SaveGame();
-	}
-
-	gbIsHellfireSaveGame = gbIsHellfire;
-}
-
-static void SaveItem(SaveHelper *file, ItemStruct *pItem)
+void SaveItem(SaveHelper *file, ItemStruct *pItem)
 {
 	auto idx = pItem->IDidx;
 	if (!gbIsHellfire)
@@ -1376,14 +965,14 @@ static void SaveItem(SaveHelper *file, ItemStruct *pItem)
 		file->WriteLE<uint32_t>(pItem->_iDamAcFlags);
 }
 
-static void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
+void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
 {
 	for (int i = 0; i < n; i++) {
 		SaveItem(file, &pItem[i]);
 	}
 }
 
-static void SavePlayer(SaveHelper *file, int p)
+void SavePlayer(SaveHelper *file, int p)
 {
 	auto &player = Players[p];
 
@@ -1605,99 +1194,97 @@ static void SavePlayer(SaveHelper *file, int p)
 	// Omit pointer pReserved
 }
 
-static void SaveMonster(SaveHelper *file, int i)
+void SaveMonster(SaveHelper *file, MonsterStruct &monster)
 {
-	MonsterStruct *pMonster = &Monsters[i];
-
-	file->WriteLE<int32_t>(pMonster->_mMTidx);
-	file->WriteLE<int32_t>(pMonster->_mmode);
-	file->WriteLE<uint8_t>(pMonster->_mgoal);
+	file->WriteLE<int32_t>(monster._mMTidx);
+	file->WriteLE<int32_t>(monster._mmode);
+	file->WriteLE<uint8_t>(monster._mgoal);
 	file->Skip(3); // Alignment
-	file->WriteLE<int32_t>(pMonster->_mgoalvar1);
-	file->WriteLE<int32_t>(pMonster->_mgoalvar2);
-	file->WriteLE<int32_t>(pMonster->_mgoalvar3);
+	file->WriteLE<int32_t>(monster._mgoalvar1);
+	file->WriteLE<int32_t>(monster._mgoalvar2);
+	file->WriteLE<int32_t>(monster._mgoalvar3);
 	file->Skip(4); // Unused
-	file->WriteLE<uint8_t>(pMonster->_pathcount);
+	file->WriteLE<uint8_t>(monster._pathcount);
 	file->Skip(3); // Alignment
-	file->WriteLE<int32_t>(pMonster->position.tile.x);
-	file->WriteLE<int32_t>(pMonster->position.tile.y);
-	file->WriteLE<int32_t>(pMonster->position.future.x);
-	file->WriteLE<int32_t>(pMonster->position.future.y);
-	file->WriteLE<int32_t>(pMonster->position.old.x);
-	file->WriteLE<int32_t>(pMonster->position.old.y);
-	file->WriteLE<int32_t>(pMonster->position.offset.deltaX);
-	file->WriteLE<int32_t>(pMonster->position.offset.deltaY);
-	file->WriteLE<int32_t>(pMonster->position.velocity.deltaX);
-	file->WriteLE<int32_t>(pMonster->position.velocity.deltaY);
-	file->WriteLE<int32_t>(pMonster->_mdir);
-	file->WriteLE<int32_t>(pMonster->_menemy);
-	file->WriteLE<uint8_t>(pMonster->enemyPosition.x);
-	file->WriteLE<uint8_t>(pMonster->enemyPosition.y);
+	file->WriteLE<int32_t>(monster.position.tile.x);
+	file->WriteLE<int32_t>(monster.position.tile.y);
+	file->WriteLE<int32_t>(monster.position.future.x);
+	file->WriteLE<int32_t>(monster.position.future.y);
+	file->WriteLE<int32_t>(monster.position.old.x);
+	file->WriteLE<int32_t>(monster.position.old.y);
+	file->WriteLE<int32_t>(monster.position.offset.deltaX);
+	file->WriteLE<int32_t>(monster.position.offset.deltaY);
+	file->WriteLE<int32_t>(monster.position.velocity.deltaX);
+	file->WriteLE<int32_t>(monster.position.velocity.deltaY);
+	file->WriteLE<int32_t>(monster._mdir);
+	file->WriteLE<int32_t>(monster._menemy);
+	file->WriteLE<uint8_t>(monster.enemyPosition.x);
+	file->WriteLE<uint8_t>(monster.enemyPosition.y);
 	file->Skip(2); // Unused
 
 	file->Skip(4); // Skip pointer _mAnimData
-	file->WriteLE<int32_t>(pMonster->AnimInfo.TicksPerFrame);
-	file->WriteLE<int32_t>(pMonster->AnimInfo.TickCounterOfCurrentFrame);
-	file->WriteLE<int32_t>(pMonster->AnimInfo.NumberOfFrames);
-	file->WriteLE<int32_t>(pMonster->AnimInfo.CurrentFrame);
+	file->WriteLE<int32_t>(monster.AnimInfo.TicksPerFrame);
+	file->WriteLE<int32_t>(monster.AnimInfo.TickCounterOfCurrentFrame);
+	file->WriteLE<int32_t>(monster.AnimInfo.NumberOfFrames);
+	file->WriteLE<int32_t>(monster.AnimInfo.CurrentFrame);
 	file->Skip<uint32_t>(); // Skip _meflag
-	file->WriteLE<uint32_t>(pMonster->_mDelFlag ? 1 : 0);
-	file->WriteLE<int32_t>(pMonster->_mVar1);
-	file->WriteLE<int32_t>(pMonster->_mVar2);
-	file->WriteLE<int32_t>(pMonster->_mVar3);
-	file->WriteLE<int32_t>(pMonster->position.temp.x);
-	file->WriteLE<int32_t>(pMonster->position.temp.y);
-	file->WriteLE<int32_t>(pMonster->position.offset2.deltaX);
-	file->WriteLE<int32_t>(pMonster->position.offset2.deltaY);
+	file->WriteLE<uint32_t>(monster._mDelFlag ? 1 : 0);
+	file->WriteLE<int32_t>(monster._mVar1);
+	file->WriteLE<int32_t>(monster._mVar2);
+	file->WriteLE<int32_t>(monster._mVar3);
+	file->WriteLE<int32_t>(monster.position.temp.x);
+	file->WriteLE<int32_t>(monster.position.temp.y);
+	file->WriteLE<int32_t>(monster.position.offset2.deltaX);
+	file->WriteLE<int32_t>(monster.position.offset2.deltaY);
 	file->Skip<int32_t>(); // Skip _mVar8
-	file->WriteLE<int32_t>(pMonster->_mmaxhp);
-	file->WriteLE<int32_t>(pMonster->_mhitpoints);
+	file->WriteLE<int32_t>(monster._mmaxhp);
+	file->WriteLE<int32_t>(monster._mhitpoints);
 
-	file->WriteLE<uint8_t>(pMonster->_mAi);
-	file->WriteLE<uint8_t>(pMonster->_mint);
+	file->WriteLE<uint8_t>(monster._mAi);
+	file->WriteLE<uint8_t>(monster._mint);
 	file->Skip(2); // Alignment
-	file->WriteLE<uint32_t>(pMonster->_mFlags);
-	file->WriteLE<uint8_t>(pMonster->_msquelch);
+	file->WriteLE<uint32_t>(monster._mFlags);
+	file->WriteLE<uint8_t>(monster._msquelch);
 	file->Skip(3); // Alignment
 	file->Skip(4); // Unused
-	file->WriteLE<int32_t>(pMonster->position.last.x);
-	file->WriteLE<int32_t>(pMonster->position.last.y);
-	file->WriteLE<uint32_t>(pMonster->_mRndSeed);
-	file->WriteLE<uint32_t>(pMonster->_mAISeed);
+	file->WriteLE<int32_t>(monster.position.last.x);
+	file->WriteLE<int32_t>(monster.position.last.y);
+	file->WriteLE<uint32_t>(monster._mRndSeed);
+	file->WriteLE<uint32_t>(monster._mAISeed);
 	file->Skip(4); // Unused
 
-	file->WriteLE<uint8_t>(pMonster->_uniqtype);
-	file->WriteLE<uint8_t>(pMonster->_uniqtrans);
-	file->WriteLE<int8_t>(pMonster->_udeadval);
+	file->WriteLE<uint8_t>(monster._uniqtype);
+	file->WriteLE<uint8_t>(monster._uniqtrans);
+	file->WriteLE<int8_t>(monster._udeadval);
 
-	file->WriteLE<int8_t>(pMonster->mWhoHit);
-	file->WriteLE<int8_t>(pMonster->mLevel);
+	file->WriteLE<int8_t>(monster.mWhoHit);
+	file->WriteLE<int8_t>(monster.mLevel);
 	file->Skip(1); // Alignment
-	file->WriteLE<uint16_t>(pMonster->mExp);
+	file->WriteLE<uint16_t>(monster.mExp);
 
-	file->WriteLE<uint8_t>(std::min<uint16_t>(pMonster->mHit, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
-	file->WriteLE<uint8_t>(pMonster->mMinDamage);
-	file->WriteLE<uint8_t>(pMonster->mMaxDamage);
-	file->WriteLE<uint8_t>(std::min<uint16_t>(pMonster->mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
-	file->WriteLE<uint8_t>(pMonster->mMinDamage2);
-	file->WriteLE<uint8_t>(pMonster->mMaxDamage2);
-	file->WriteLE<uint8_t>(pMonster->mArmorClass);
+	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(monster.mMinDamage);
+	file->WriteLE<uint8_t>(monster.mMaxDamage);
+	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
+	file->WriteLE<uint8_t>(monster.mMinDamage2);
+	file->WriteLE<uint8_t>(monster.mMaxDamage2);
+	file->WriteLE<uint8_t>(monster.mArmorClass);
 	file->Skip(1); // Alignment
-	file->WriteLE<uint16_t>(pMonster->mMagicRes);
+	file->WriteLE<uint16_t>(monster.mMagicRes);
 	file->Skip(2); // Alignment
 
-	file->WriteLE<int32_t>(pMonster->mtalkmsg == TEXT_NONE ? 0 : pMonster->mtalkmsg); // Replicate original bad mapping of none for monsters
-	file->WriteLE<uint8_t>(pMonster->leader);
-	file->WriteLE<uint8_t>(pMonster->leaderflag);
-	file->WriteLE<uint8_t>(pMonster->packsize);
-	file->WriteLE<int8_t>(pMonster->mlid);
+	file->WriteLE<int32_t>(monster.mtalkmsg == TEXT_NONE ? 0 : monster.mtalkmsg); // Replicate original bad mapping of none for monsters
+	file->WriteLE<uint8_t>(monster.leader);
+	file->WriteLE<uint8_t>(monster.leaderflag);
+	file->WriteLE<uint8_t>(monster.packsize);
+	file->WriteLE<int8_t>(monster.mlid);
 
 	// Omit pointer mName;
 	// Omit pointer MType;
 	// Omit pointer MData;
 }
 
-static void SaveMissile(SaveHelper *file, int i)
+void SaveMissile(SaveHelper *file, int i)
 {
 	MissileStruct *pMissile = &Missiles[i];
 
@@ -1748,7 +1335,7 @@ static void SaveMissile(SaveHelper *file, int i)
 	file->WriteLE<uint32_t>(pMissile->limitReached ? 1 : 0);
 }
 
-static void SaveObject(SaveHelper *file, int i)
+void SaveObject(SaveHelper *file, int i)
 {
 	ObjectStruct *pObject = &Objects[i];
 
@@ -1783,16 +1370,16 @@ static void SaveObject(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pObject->_oVar4);
 	file->WriteLE<int32_t>(pObject->_oVar5);
 	file->WriteLE<uint32_t>(pObject->_oVar6);
-	file->WriteLE<int32_t>(pObject->_oVar7);
+	file->WriteLE<int32_t>(pObject->bookMessage);
 	file->WriteLE<int32_t>(pObject->_oVar8);
 }
 
-static void SavePremium(SaveHelper *file, int i)
+void SavePremium(SaveHelper *file, int i)
 {
 	SaveItem(file, &premiumitems[i]);
 }
 
-static void SaveQuest(SaveHelper *file, int i)
+void SaveQuest(SaveHelper *file, int i)
 {
 	QuestStruct *pQuest = &Quests[i];
 
@@ -1824,7 +1411,7 @@ static void SaveQuest(SaveHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-static void SaveLighting(SaveHelper *file, LightStruct *pLight)
+void SaveLighting(SaveHelper *file, LightStruct *pLight)
 {
 	file->WriteLE<int32_t>(pLight->position.tile.x);
 	file->WriteLE<int32_t>(pLight->position.tile.y);
@@ -1841,7 +1428,7 @@ static void SaveLighting(SaveHelper *file, LightStruct *pLight)
 	file->WriteLE<uint32_t>(pLight->_lflags ? 1 : 0);
 }
 
-static void SavePortal(SaveHelper *file, int i)
+void SavePortal(SaveHelper *file, int i)
 {
 	PortalStruct *pPortal = &Portals[i];
 
@@ -1855,6 +1442,416 @@ static void SavePortal(SaveHelper *file, int i)
 
 const int DiabloItemSaveSize = 368;
 const int HellfireItemSaveSize = 372;
+
+} // namespace
+
+void RemoveInvalidItem(ItemStruct *pItem)
+{
+	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
+
+	if (!gbIsHellfire) {
+		isInvalid = isInvalid || (pItem->_itype == ITYPE_STAFF && GetSpellStaffLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || (pItem->_iMiscId == IMISC_BOOK && GetSpellBookLevel(pItem->_iSpell) == -1);
+		isInvalid = isInvalid || pItem->_iDamAcFlags != 0;
+		isInvalid = isInvalid || pItem->_iPrePower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || pItem->_iSufPower > IDI_LASTDIABLO;
+	}
+
+	if (isInvalid) {
+		pItem->_itype = ITYPE_NONE;
+	}
+}
+
+_item_indexes RemapItemIdxFromDiablo(_item_indexes i)
+{
+	constexpr auto GetItemIdValue = [](int i) -> int {
+		if (i == IDI_SORCERER) {
+			return 166;
+		}
+		if (i >= 156) {
+			i += 5; // Hellfire exclusive items
+		}
+		if (i >= 88) {
+			i += 1; // Scroll of Search
+		}
+		if (i >= 83) {
+			i += 4; // Oils
+		}
+
+		return i;
+	};
+
+	return static_cast<_item_indexes>(GetItemIdValue(i));
+}
+
+_item_indexes RemapItemIdxToDiablo(_item_indexes i)
+{
+	constexpr auto GetItemIdValue = [](int i) -> int {
+		if (i == 166) {
+			return IDI_SORCERER;
+		}
+		if ((i >= 83 && i <= 86) || i == 92 || i >= 161) {
+			return -1; // Hellfire exclusive items
+		}
+		if (i >= 93) {
+			i -= 1; // Scroll of Search
+		}
+		if (i >= 87) {
+			i -= 4; // Oils
+		}
+
+		return i;
+	};
+
+	return static_cast<_item_indexes>(GetItemIdValue(i));
+}
+
+_item_indexes RemapItemIdxFromSpawn(_item_indexes i)
+{
+	constexpr auto GetItemIdValue = [](int i) {
+		if (i >= 62) {
+			i += 9; // Medium and heavy armors
+		}
+		if (i >= 96) {
+			i += 1; // Scroll of Stone Curse
+		}
+		if (i >= 98) {
+			i += 1; // Scroll of Guardian
+		}
+		if (i >= 99) {
+			i += 1; // Scroll of ...
+		}
+		if (i >= 101) {
+			i += 1; // Scroll of Golem
+		}
+		if (i >= 102) {
+			i += 1; // Scroll of None
+		}
+		if (i >= 104) {
+			i += 1; // Scroll of Apocalypse
+		}
+
+		return i;
+	};
+
+	return static_cast<_item_indexes>(GetItemIdValue(i));
+}
+
+_item_indexes RemapItemIdxToSpawn(_item_indexes i)
+{
+	constexpr auto GetItemIdValue = [](int i) {
+		if (i >= 104) {
+			i -= 1; // Scroll of Apocalypse
+		}
+		if (i >= 102) {
+			i -= 1; // Scroll of None
+		}
+		if (i >= 101) {
+			i -= 1; // Scroll of Golem
+		}
+		if (i >= 99) {
+			i -= 1; // Scroll of ...
+		}
+		if (i >= 98) {
+			i -= 1; // Scroll of Guardian
+		}
+		if (i >= 96) {
+			i -= 1; // Scroll of Stone Curse
+		}
+		if (i >= 71) {
+			i -= 9; // Medium and heavy armors
+		}
+
+		return i;
+	};
+
+	return static_cast<_item_indexes>(GetItemIdValue(i));
+}
+
+bool IsHeaderValid(uint32_t magicNumber)
+{
+	gbIsHellfireSaveGame = false;
+	if (magicNumber == LoadLE32("SHAR")) {
+		return true;
+	}
+	if (magicNumber == LoadLE32("SHLF")) {
+		gbIsHellfireSaveGame = true;
+		return true;
+	}
+	if (!gbIsSpawn && magicNumber == LoadLE32("RETL")) {
+		return true;
+	}
+	if (!gbIsSpawn && magicNumber == LoadLE32("HELF")) {
+		gbIsHellfireSaveGame = true;
+		return true;
+	}
+
+	return false;
+}
+
+void LoadHotkeys()
+{
+	LoadHelper file("hotkeys");
+	if (!file.IsValid())
+		return;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto &spellId : myPlayer._pSplHotKey) {
+		spellId = static_cast<spell_id>(file.NextLE<int32_t>());
+	}
+	for (auto &spellType : myPlayer._pSplTHotKey) {
+		spellType = static_cast<spell_type>(file.NextLE<int8_t>());
+	}
+	myPlayer._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	myPlayer._pRSplType = static_cast<spell_type>(file.NextLE<int8_t>());
+}
+
+void SaveHotkeys()
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	const size_t nHotkeyTypes = sizeof(myPlayer._pSplHotKey) / sizeof(myPlayer._pSplHotKey[0]);
+	const size_t nHotkeySpells = sizeof(myPlayer._pSplTHotKey) / sizeof(myPlayer._pSplTHotKey[0]);
+
+	SaveHelper file("hotkeys", (nHotkeyTypes * 4) + nHotkeySpells + 4 + 1);
+
+	for (auto &spellId : myPlayer._pSplHotKey) {
+		file.WriteLE<int32_t>(spellId);
+	}
+	for (auto &spellType : myPlayer._pSplTHotKey) {
+		file.WriteLE<uint8_t>(spellType);
+	}
+	file.WriteLE<int32_t>(myPlayer._pRSpell);
+	file.WriteLE<uint8_t>(myPlayer._pRSplType);
+}
+
+void LoadHeroItems(PlayerStruct &player)
+{
+	LoadHelper file("heroitems");
+	if (!file.IsValid())
+		return;
+
+	gbIsHellfireSaveGame = file.NextBool8();
+
+	LoadMatchingItems(&file, NUM_INVLOC, player.InvBody);
+	LoadMatchingItems(&file, NUM_INV_GRID_ELEM, player.InvList);
+	LoadMatchingItems(&file, MAXBELTITEMS, player.SpdList);
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+}
+
+void RemoveEmptyInventory(PlayerStruct &player)
+{
+	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
+		int idx = player.InvGrid[i - 1];
+		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
+			player.RemoveInvItem(idx - 1);
+		}
+	}
+}
+
+/**
+ * @brief Load game state
+ * @param firstflag Can be set to false if we are simply reloading the current game
+ */
+void LoadGame(bool firstflag)
+{
+	FreeGameMem();
+	pfile_remove_temp_files();
+
+	LoadHelper file("game");
+	if (!file.IsValid())
+		app_fatal("%s", _("Unable to open save file archive"));
+
+	if (!IsHeaderValid(file.NextLE<uint32_t>()))
+		app_fatal("%s", _("Invalid save file"));
+
+	if (gbIsHellfireSaveGame) {
+		giNumberOfLevels = 25;
+		giNumberQuests = 24;
+		giNumberOfSmithPremiumItems = 15;
+	} else {
+		// Todo initialize additional levels and quests if we are running Hellfire
+		giNumberOfLevels = 17;
+		giNumberQuests = 16;
+		giNumberOfSmithPremiumItems = 6;
+	}
+
+	setlevel = file.NextBool8();
+	setlvlnum = static_cast<_setlevels>(file.NextBE<uint32_t>());
+	currlevel = file.NextBE<uint32_t>();
+	leveltype = static_cast<dungeon_type>(file.NextBE<uint32_t>());
+	if (!setlevel)
+		leveltype = gnLevelTypeTbl[currlevel];
+	int viewX = file.NextBE<int32_t>();
+	int viewY = file.NextBE<int32_t>();
+	invflag = file.NextBool8();
+	chrflag = file.NextBool8();
+	int tmpNummonsters = file.NextBE<int32_t>();
+	int tmpNumitems = file.NextBE<int32_t>();
+	int tmpNummissiles = file.NextBE<int32_t>();
+	int tmpNobjects = file.NextBE<int32_t>();
+
+	if (!gbIsHellfire && currlevel > 17)
+		app_fatal("%s", _("Player is on a Hellfire only level"));
+
+	for (uint8_t i = 0; i < giNumberOfLevels; i++) {
+		glSeedTbl[i] = file.NextBE<uint32_t>();
+		file.Skip(4); // Skip loading gnLevelTypeTbl
+	}
+
+	LoadPlayer(&file, MyPlayerId);
+
+	sgGameInitInfo.nDifficulty = Players[MyPlayerId].pDifficulty;
+	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
+		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
+
+	for (int i = 0; i < giNumberQuests; i++)
+		LoadQuest(&file, i);
+	for (int i = 0; i < MAXPORTAL; i++)
+		LoadPortal(&file, i);
+
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		ConvertLevels();
+		RemoveEmptyInventory(Players[MyPlayerId]);
+	}
+
+	LoadGameLevel(firstflag, ENTRY_LOAD);
+	SyncInitPlr(MyPlayerId);
+	SyncPlrAnim(MyPlayerId);
+
+	ViewX = viewX;
+	ViewY = viewY;
+	ActiveMonsterCount = tmpNummonsters;
+	ActiveItemCount = tmpNumitems;
+	ActiveMissileCount = tmpNummissiles;
+	ActiveObjectCount = tmpNobjects;
+
+	for (int &monstkill : MonsterKillCounts)
+		monstkill = file.NextBE<int32_t>();
+
+	if (leveltype != DTYPE_TOWN) {
+		for (int &monsterId : ActiveMonsters)
+			monsterId = file.NextBE<int32_t>();
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+		for (int &missileId : ActiveMissiles)
+			missileId = file.NextLE<int8_t>();
+		for (int &missileId : AvailableMissiles)
+			missileId = file.NextLE<int8_t>();
+		for (int i = 0; i < ActiveMissileCount; i++)
+			LoadMissile(&file, ActiveMissiles[i]);
+		for (int &objectId : ActiveObjects)
+			objectId = file.NextLE<int8_t>();
+		for (int &objectId : AvailableObjects)
+			objectId = file.NextLE<int8_t>();
+		for (int i = 0; i < ActiveObjectCount; i++)
+			LoadObject(&file, ActiveObjects[i]);
+		for (int i = 0; i < ActiveObjectCount; i++)
+			SyncObjectAnim(Objects[ActiveObjects[i]]);
+
+		ActiveLightCount = file.NextBE<int32_t>();
+
+		for (uint8_t &lightId : ActiveLights)
+			lightId = file.NextLE<uint8_t>();
+		for (int i = 0; i < ActiveLightCount; i++)
+			LoadLighting(&file, &Lights[ActiveLights[i]]);
+
+		VisionId = file.NextBE<int32_t>();
+		VisionCount = file.NextBE<int32_t>();
+
+		for (int i = 0; i < VisionCount; i++)
+			LoadLighting(&file, &VisionList[i]);
+	}
+
+	for (int &itemId : ActiveItems)
+		itemId = file.NextLE<int8_t>();
+	for (int &itemId : AvailableItems)
+		itemId = file.NextLE<int8_t>();
+	for (int i = 0; i < ActiveItemCount; i++)
+		LoadItem(&file, ActiveItems[i]);
+	for (bool &uniqueItemFlag : UniqueItemFlags)
+		uniqueItemFlag = file.NextBool8();
+
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+			dLight[i][j] = file.NextLE<int8_t>();
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+			dFlags[i][j] = file.NextLE<int8_t>();
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+			dPlayer[i][j] = file.NextLE<int8_t>();
+	}
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+			dItem[i][j] = file.NextLE<int8_t>();
+	}
+
+	if (leveltype != DTYPE_TOWN) {
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+				dMonster[i][j] = file.NextBE<int32_t>();
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+				dDead[i][j] = file.NextLE<int8_t>();
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+				dObject[i][j] = file.NextLE<int8_t>();
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+				dLight[i][j] = file.NextLE<int8_t>();
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+				dPreLight[i][j] = file.NextLE<int8_t>();
+		}
+		for (int j = 0; j < DMAXY; j++) {
+			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
+				AutomapView[i][j] = file.NextBool8();
+		}
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+				dMissile[i][j] = file.NextLE<int8_t>();
+		}
+	}
+
+	numpremium = file.NextBE<int32_t>();
+	premiumlevel = file.NextBE<int32_t>();
+
+	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
+		LoadPremium(&file, i);
+	if (gbIsHellfire && !gbIsHellfireSaveGame)
+		SpawnPremium(MyPlayerId);
+
+	AutomapActive = file.NextBool8();
+	AutoMapScale = file.NextBE<int32_t>();
+	AutomapZoomReset();
+	ResyncQuests();
+
+	if (leveltype != DTYPE_TOWN)
+		ProcessLightList();
+
+	RedoPlayerVision();
+	ProcessVisionList();
+	missiles_process_charge();
+	ResetPal();
+	NewCursor(CURSOR_HAND);
+	gbProcessPlayers = true;
+
+	if (gbIsHellfireSaveGame != gbIsHellfire) {
+		RemoveEmptyLevelItems();
+		SaveGame();
+	}
+
+	gbIsHellfireSaveGame = gbIsHellfire;
+}
 
 void SaveHeroItems(PlayerStruct &player)
 {
@@ -1929,7 +1926,7 @@ void SaveGameData()
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			SaveMonster(&file, ActiveMonsters[i]);
+			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int missileId : ActiveMissiles)
 			file.WriteLE<int8_t>(missileId);
 		for (int missileId : AvailableMissiles)
@@ -2058,7 +2055,7 @@ void SaveLevel()
 		for (int monsterId : ActiveMonsters)
 			file.WriteBE<int32_t>(monsterId);
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			SaveMonster(&file, ActiveMonsters[i]);
+			SaveMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
 		for (int objectId : AvailableObjects)
@@ -2141,7 +2138,7 @@ void LoadLevel()
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, ActiveMonsters[i]);
+			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)

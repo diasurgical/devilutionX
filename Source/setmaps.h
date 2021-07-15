@@ -6,16 +6,18 @@
 #pragma once
 
 #include "engine.h"
+#include "engine/point.hpp"
+#include "objects.h"
 
 namespace devilution {
 
 /**
- * @brief Find the index of an object given a point in map coordinates
+ * @brief Find an object given a point in map coordinates
  *
  * @param position The map coordinate to test
- * @return The index of the object at the given position
+ * @return A reference to the object
  */
-int ObjIndex(Point position);
+ObjectStruct &ObjectAtPosition(Point position);
 void LoadSetMap();
 
 /* rdata */

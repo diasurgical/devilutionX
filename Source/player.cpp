@@ -60,7 +60,7 @@ void PmChangeLightOff(PlayerStruct &player)
 	if (abs(lx - offx) < 3 && abs(ly - offy) < 3)
 		return;
 
-	ChangeLightOff(player._plid, { x, y });
+	ChangeLightOffset(player._plid, { x, y });
 }
 
 void WalkUpwards(int pnum, const DirectionSettings &walkParams)
@@ -1934,14 +1934,17 @@ void SyncPlrKill(int pnum, int earflag)
 
 void RemovePlrMissiles(int pnum)
 {
-	if (currlevel != 0 && pnum == MyPlayerId && (Monsters[MyPlayerId].position.tile.x != 1 || Monsters[MyPlayerId].position.tile.y != 0)) {
-		M_StartKill(MyPlayerId, MyPlayerId);
-		AddDead(Monsters[MyPlayerId].position.tile, (Monsters[MyPlayerId].MType)->mdeadval, Monsters[MyPlayerId]._mdir);
-		int mx = Monsters[MyPlayerId].position.tile.x;
-		int my = Monsters[MyPlayerId].position.tile.y;
-		dMonster[mx][my] = 0;
-		Monsters[MyPlayerId]._mDelFlag = true;
-		DeleteMonsterList();
+	if (currlevel != 0 && pnum == MyPlayerId) {
+		auto &golem = Monsters[MyPlayerId];
+		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
+			M_StartKill(MyPlayerId, MyPlayerId);
+			AddDead(golem.position.tile, (golem.MType)->mdeadval, golem._mdir);
+			int mx = golem.position.tile.x;
+			int my = golem.position.tile.y;
+			dMonster[mx][my] = 0;
+			golem._mDelFlag = true;
+			DeleteMonsterList();
+		}
 	}
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
@@ -2140,7 +2143,7 @@ bool PM_DoWalk(int pnum, int variant)
 
 		//Reset the "sub-tile" position of the player's light entry to 0
 		if (leveltype != DTYPE_TOWN) {
-			ChangeLightOff(player._plid, { 0, 0 });
+			ChangeLightOffset(player._plid, { 0, 0 });
 		}
 
 		AutoGoldPickup(pnum);
@@ -2254,17 +2257,18 @@ bool PlrHitMonst(int pnum, int m)
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %i", m);
 	}
+	auto &monster = Monsters[m];
 	auto &player = Players[pnum];
 
-	if ((Monsters[m]._mhitpoints >> 6) <= 0) {
+	if ((monster._mhitpoints >> 6) <= 0) {
 		return false;
 	}
 
-	if (Monsters[m].MType->mtype == MT_ILLWEAV && Monsters[m]._mgoal == MGOAL_RETREAT) {
+	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT) {
 		return false;
 	}
 
-	if (Monsters[m]._mmode == MM_CHARGE) {
+	if (monster._mmode == MM_CHARGE) {
 		return false;
 	}
 
@@ -2282,11 +2286,11 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	int hit = GenerateRnd(100);
-	if (Monsters[m]._mmode == MM_STONE) {
+	if (monster._mmode == MM_STONE) {
 		hit = 0;
 	}
 
-	int tmac = Monsters[m].mArmorClass;
+	int tmac = monster.mArmorClass;
 	if (gbIsHellfire && player._pIEnAc > 0) {
 		int pIEnAc = player._pIEnAc - 1;
 		if (pIEnAc > 0)
@@ -2295,7 +2299,7 @@ bool PlrHitMonst(int pnum, int m)
 			tmac -= tmac / 4;
 
 		if (player._pClass == HeroClass::Barbarian) {
-			tmac -= Monsters[m].mArmorClass / 8;
+			tmac -= monster.mArmorClass / 8;
 		}
 
 		if (tmac < 0)
@@ -2317,7 +2321,7 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	bool ret = false;
-	if (CheckMonsterHit(m, &ret)) {
+	if (CheckMonsterHit(monster, &ret)) {
 		return ret;
 	}
 #ifdef _DEBUG
@@ -2352,7 +2356,7 @@ bool PlrHitMonst(int pnum, int m)
 		phanditype = ITYPE_MACE;
 	}
 
-	switch (Monsters[m].MData->mMonstClass) {
+	switch (monster.MData->mMonstClass) {
 	case MC_UNDEAD:
 		if (phanditype == ITYPE_SWORD) {
 			dam -= dam / 2;
@@ -2378,8 +2382,8 @@ bool PlrHitMonst(int pnum, int m)
 		dam *= 3;
 	}
 
-	if ((player.pDamAcFlags & ISPLHF_DOPPELGANGER) != 0 && Monsters[m].MType->mtype != MT_DIABLO && Monsters[m]._uniqtype == 0 && GenerateRnd(100) < 10) {
-		AddDoppelganger(Monsters[m]);
+	if ((player.pDamAcFlags & ISPLHF_DOPPELGANGER) != 0 && monster.MType->mtype != MT_DIABLO && monster._uniqtype == 0 && GenerateRnd(100) < 10) {
+		AddDoppelganger(monster);
 	}
 
 	dam <<= 6;
@@ -2401,7 +2405,7 @@ bool PlrHitMonst(int pnum, int m)
 			}
 			dam *= 2;
 		}
-		Monsters[m]._mhitpoints -= dam;
+		monster._mhitpoints -= dam;
 	}
 
 	int skdam = 0;
@@ -2452,24 +2456,24 @@ bool PlrHitMonst(int pnum, int m)
 		drawhpflag = true;
 	}
 	if ((player._pIFlags & ISPL_NOHEALPLR) != 0) {
-		Monsters[m]._mFlags |= MFLAG_NOHEAL;
+		monster._mFlags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
 	if (debug_mode_dollar_sign || debug_mode_key_inverted_v) {
-		Monsters[m]._mhitpoints = 0; /* double check */
+		monster._mhitpoints = 0; /* double check */
 	}
 #endif
-	if ((Monsters[m]._mhitpoints >> 6) <= 0) {
-		if (Monsters[m]._mmode == MM_STONE) {
+	if ((monster._mhitpoints >> 6) <= 0) {
+		if (monster._mmode == MM_STONE) {
 			M_StartKill(m, pnum);
-			Monsters[m].Petrify();
+			monster.Petrify();
 		} else {
 			M_StartKill(m, pnum);
 		}
 	} else {
-		if (Monsters[m]._mmode == MM_STONE) {
+		if (monster._mmode == MM_STONE) {
 			M_StartHit(m, pnum, dam);
-			Monsters[m].Petrify();
+			monster.Petrify();
 		} else {
 			if ((player._pIFlags & ISPL_KNOCKBACK) != 0) {
 				M_GetKnockback(m);
@@ -2614,7 +2618,7 @@ bool PM_DoAttack(int pnum)
 			} else {
 				m = -(dMonster[dx][dy] + 1);
 			}
-			if (CanTalkToMonst(m)) {
+			if (CanTalkToMonst(Monsters[m])) {
 				player.position.temp.x = 0; /** @todo Looks to be irrelevant, probably just remove it */
 				return false;
 			}
@@ -2662,15 +2666,15 @@ bool PM_DoAttack(int pnum)
 			dx = position.x;
 			dy = position.y;
 			int m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && Monsters[m].position.old.x == dx && Monsters[m].position.old.y == dy) {
+			auto &monster = Monsters[m];
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(monster) && monster.position.old.x == dx && monster.position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
 			position = player.position.tile + left[player._pdir];
 			dx = position.x;
 			dy = position.y;
-			m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(m) && Monsters[m].position.old.x == dx && Monsters[m].position.old.y == dy) {
+			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(monster) && monster.position.old.x == dx && monster.position.old.y == dy) {
 				if (PlrHitMonst(-pnum, m))
 					didhit = true;
 			}
@@ -2990,7 +2994,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 					if (x < 2 && y < 2) {
 						ClrPlrPath(player);
 						if (player.destAction == ACTION_ATTACKMON && Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
-							TalktoMonster(i);
+							TalktoMonster(Monsters[i]);
 						} else {
 							StartAttack(pnum, d);
 						}
@@ -3065,7 +3069,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			if (x <= 1 && y <= 1) {
 				d = GetDirection(player.position.future, Monsters[i].position.future);
 				if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
-					TalktoMonster(i);
+					TalktoMonster(Monsters[i]);
 				} else {
 					StartAttack(pnum, d);
 				}
@@ -3088,7 +3092,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			i = player.destParam1;
 			d = GetDirection(player.position.future, Monsters[i].position.future);
 			if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
-				TalktoMonster(i);
+				TalktoMonster(Monsters[i]);
 			} else {
 				StartRangeAttack(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
 			}

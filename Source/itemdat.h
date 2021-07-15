@@ -569,9 +569,6 @@ struct ItemPower {
 	item_effect_type type;
 	int param1;
 	int param2;
-	int minval;
-	int maxval;
-	int multval;
 };
 
 struct PLStruct {
@@ -582,13 +579,16 @@ struct PLStruct {
 	enum goodorevil PLGOE;
 	bool PLDouble;
 	bool PLOk;
+	int minVal;
+	int maxVal;
+	int multVal;
 };
 
 struct UItemStruct {
 	const char *UIName;
 	enum unique_base_item UIItemId;
 	int8_t UIMinLvl;
-	int8_t UINumPL;
+	uint8_t UINumPL;
 	int UIValue;
 	ItemPower powers[6];
 };

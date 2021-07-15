@@ -6,9 +6,9 @@
 
 #include <algorithm>
 
-#include "drlg_l1.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
+#include "gendung.h"
 #include "lighting.h"
 #include "monster.h"
 #include "objdat.h"
@@ -1865,7 +1865,7 @@ void FenceDoorFix()
 				}
 			}
 			if (dungeon[i][j] == 146) {
-				if (IsNoneOf(dungeon[i + 1][j], 130, 132, 133, 145, 136, 138, 140) && IsNoneOf(dungeon[i - 1][j], 130, 132, 133, 145, 136, 138, 140)) {
+				if (IsNoneOf(dungeon[i + 1][j], 130, 132, 133, 134, 136, 138, 140) && IsNoneOf(dungeon[i - 1][j], 130, 132, 133, 134, 136, 138, 140)) {
 					dungeon[i][j] = 7;
 					continue;
 				}

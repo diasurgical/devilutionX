@@ -251,10 +251,10 @@ const char *const PlayerModeNames[] = {
 Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
 {
 	// clang-format off
-	//                                  DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
+	//                                           DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
 	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
-	constexpr bool IsDiagionalWalk[8] = {        false,         true,        false,         true,        false,         true,         false,         true };
+	constexpr bool IsDiagionalWalk[8]        = {        false,         true,        false,         true,        false,         true,         false,         true };
 	// clang-format on
 
 	float fAnimationProgress = animationInfo.GetAnimationProgress();
@@ -414,45 +414,40 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
  * @param my Output buffer coordinate
  * @param m Id of monster
  */
-static void DrawMonster(const Surface &out, int x, int y, int mx, int my, int m)
+static void DrawMonster(const Surface &out, int x, int y, int mx, int my, const MonsterStruct &monster)
 {
-	if (m < 0 || m >= MAXMONSTERS) {
-		Log("Draw Monster: tried to draw illegal monster {}", m);
+	if (monster.AnimInfo.pCelSprite == nullptr) {
+		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
 		return;
 	}
 
-	if (Monsters[m].AnimInfo.pCelSprite == nullptr) {
-		Log("Draw Monster \"{}\": NULL Cel Buffer", Monsters[m].mName);
-		return;
-	}
-
-	int nCel = Monsters[m].AnimInfo.GetFrameToUseForRendering();
-	const auto *frameTable = reinterpret_cast<const uint32_t *>(Monsters[m].AnimInfo.pCelSprite->Data());
+	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
+	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster.AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
-		if (Monsters[m]._mmode <= 17)
-			szMode = MonsterModeNames[Monsters[m]._mmode];
+		if (monster._mmode <= 17)
+			szMode = MonsterModeNames[monster._mmode];
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
-		    Monsters[m].mName,
+		    monster.mName,
 		    szMode,
-		    Monsters[m]._mdir,
+		    monster._mdir,
 		    nCel,
 		    frames);
 		return;
 	}
 
-	CelSprite &cel = *Monsters[m].AnimInfo.pCelSprite;
+	const auto &cel = *monster.AnimInfo.pCelSprite;
 
 	if ((dFlags[x][y] & BFLAG_LIT) == 0) {
 		Cl2DrawLightTbl(out, mx, my, cel, nCel, 1);
 		return;
 	}
 	int trans = 0;
-	if (Monsters[m]._uniqtype != 0)
-		trans = Monsters[m]._uniqtrans + 4;
-	if (Monsters[m]._mmode == MM_STONE)
+	if (monster._uniqtype != 0)
+		trans = monster._uniqtrans + 4;
+	if (monster._mmode == MM_STONE)
 		trans = 2;
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
@@ -523,7 +518,7 @@ static void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int p
 
 	auto &player = Players[pnum];
 
-	auto *pCelSprite = player.AnimInfo.pCelSprite;
+	const auto *pCelSprite = player.AnimInfo.pCelSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
 
 	if (pCelSprite == nullptr) {
@@ -732,7 +727,7 @@ static void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
 	if (pItem->_iPostDraw == pre)
 		return;
 
-	auto *cel = pItem->AnimInfo.pCelSprite;
+	const auto *cel = pItem->AnimInfo.pCelSprite;
 	if (cel == nullptr) {
 		Log("Draw Item \"{}\" 1: NULL CelSprite", pItem->_iIName);
 		return;
@@ -788,29 +783,29 @@ static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, 
 		return;
 	}
 
-	MonsterStruct *pMonster = &Monsters[mi];
-	if ((pMonster->_mFlags & MFLAG_HIDDEN) != 0) {
+	const auto &monster = Monsters[mi];
+	if ((monster._mFlags & MFLAG_HIDDEN) != 0) {
 		return;
 	}
 
-	if (pMonster->MType == nullptr) {
-		Log("Draw Monster \"{}\": uninitialized monster", pMonster->mName);
+	if (monster.MType == nullptr) {
+		Log("Draw Monster \"{}\": uninitialized monster", monster.mName);
 		return;
 	}
 
-	const CelSprite &cel = *pMonster->AnimInfo.pCelSprite;
+	const CelSprite &cel = *monster.AnimInfo.pCelSprite;
 
-	Displacement offset = pMonster->position.offset;
-	if (pMonster->IsWalking()) {
-		offset = GetOffsetForWalking(pMonster->AnimInfo, pMonster->_mdir);
+	Displacement offset = monster.position.offset;
+	if (monster.IsWalking()) {
+		offset = GetOffsetForWalking(monster.AnimInfo, monster._mdir);
 	}
 
 	int px = sx + offset.deltaX - CalculateWidth2(cel.Width());
 	int py = sy + offset.deltaY;
 	if (mi == pcursmonst) {
-		Cl2DrawOutline(out, 233, px, py, cel, pMonster->AnimInfo.GetFrameToUseForRendering());
+		Cl2DrawOutline(out, 233, px, py, cel, monster.AnimInfo.GetFrameToUseForRendering());
 	}
-	DrawMonster(out, x, y, px, py, mi);
+	DrawMonster(out, x, y, px, py, monster);
 }
 
 /**

@@ -9,10 +9,9 @@
 #include <list>
 
 #include "diablo.h"
-#include "drlg_l1.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
-#include "objects.h"
+#include "gendung.h"
 #include "player.h"
 #include "quests.h"
 #include "setmaps.h"

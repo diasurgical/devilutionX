@@ -139,7 +139,7 @@ void selgame_GameSelection_Select(int value)
 	UiAddLogo(&vecSelGameDialog);
 
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-	vecSelGameDialog.push_back(std::make_unique<UiArtText>(title, rect1, UIS_CENTER | UIS_BIG));
+	vecSelGameDialog.push_back(std::make_unique<UiArtText>(&title, rect1, UIS_CENTER | UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 34), (Sint16)(UI_OFFSET_Y + 211), 205, 33 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Label, rect2, UIS_CENTER | UIS_BIG));

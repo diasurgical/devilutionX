@@ -19,10 +19,11 @@ namespace {
 void InitDeadAnimationFromMonster(DeadStruct &dead, const CMonster &mon)
 {
 	int i = 0;
-	for (const auto &celSprite : mon.Anims[MA_DEATH].CelSpritesForDirections)
+	const auto &animData = mon.GetAnimData(MonsterGraphic::Death);
+	for (const auto &celSprite : animData.CelSpritesForDirections)
 		dead.data[i++] = celSprite->Data();
-	dead.frame = mon.Anims[MA_DEATH].Frames;
-	dead.width = mon.Anims[MA_DEATH].CelSpritesForDirections[0]->Width();
+	dead.frame = animData.Frames;
+	dead.width = animData.CelSpritesForDirections[0]->Width();
 }
 } // namespace
 
@@ -62,13 +63,13 @@ void InitDead()
 	stonendx = nd;
 
 	for (int i = 0; i < ActiveMonsterCount; i++) {
-		int mi = ActiveMonsters[i];
-		if (Monsters[mi]._uniqtype != 0) {
-			InitDeadAnimationFromMonster(Dead[nd], *Monsters[mi].MType);
-			Dead[nd].translationPaletteIndex = Monsters[mi]._uniqtrans + 4;
+		auto &monster = Monsters[ActiveMonsters[i]];
+		if (monster._uniqtype != 0) {
+			InitDeadAnimationFromMonster(Dead[nd], *monster.MType);
+			Dead[nd].translationPaletteIndex = monster._uniqtrans + 4;
 			nd++;
 
-			Monsters[mi]._udeadval = nd;
+			monster._udeadval = nd;
 		}
 	}
 
@@ -83,13 +84,13 @@ void AddDead(Point tilePosition, int8_t dv, Direction ddir)
 void SetDead()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
-		int mi = ActiveMonsters[i];
-		if (Monsters[mi]._uniqtype == 0)
+		auto &monster = Monsters[ActiveMonsters[i]];
+		if (monster._uniqtype == 0)
 			continue;
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {
-				if ((dDead[dx][dy] & 0x1F) == Monsters[mi]._udeadval)
-					ChangeLightXY(Monsters[mi].mlid, { dx, dy });
+				if ((dDead[dx][dy] & 0x1F) == monster._udeadval)
+					ChangeLightXY(monster.mlid, { dx, dy });
 			}
 		}
 	}

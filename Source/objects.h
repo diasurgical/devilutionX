@@ -8,7 +8,9 @@
 #include <cstdint>
 
 #include "engine/point.hpp"
+#include "engine/rectangle.hpp"
 #include "itemdat.h"
+#include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
 
@@ -47,8 +49,78 @@ struct ObjectStruct {
 	int _oVar4;
 	int _oVar5;
 	uint32_t _oVar6;
-	_speech_id _oVar7;
+	/**
+	 * @brief ID of a quest message to play when this object is activated.
+	 *
+	 * Used by spell book objects which trigger quest progress for Halls of the Blind, Valor, or Warlord of Blood
+	 */
+	_speech_id bookMessage;
 	int _oVar8;
+
+	/**
+	 * @brief Marks the map region to be refreshed when the player interacts with the object.
+	 *
+	 * Some objects will cause a map region to change when a player interacts with them (e.g. Skeleton King
+	 * antechamber levers). The coordinates used for this region are based on a 40*40 grid overlaying the central
+	 * 80*80 region of the dungeon.
+	 *
+	 * @param topLeftPosition corner of the map region closest to the origin.
+	 * @param bottomRightPosition corner of the map region furthest from the origin.
+	 */
+	constexpr void SetMapRange(Point topLeftPosition, Point bottomRightPosition)
+	{
+		_oVar1 = topLeftPosition.x;
+		_oVar2 = topLeftPosition.y;
+		_oVar3 = bottomRightPosition.x;
+		_oVar4 = bottomRightPosition.y;
+	}
+
+	/**
+	 * @brief Convenience function for SetMapRange(Point, Point).
+	 * @param mapRange A rectangle defining the top left corner and size of the affected region.
+	 */
+	constexpr void SetMapRange(Rectangle mapRange)
+	{
+		SetMapRange(mapRange.position, mapRange.position + Displacement { mapRange.size });
+	}
+
+	/**
+	 * @brief Sets up a generic quest book which will trigger a change in the map when activated.
+	 *
+	 * Books of this type use a generic message (see OperateSChambBook()) compared to the more specific quest books
+	 * initialized by IntializeQuestBook().
+	 *
+	 * @param mapRange The region to be updated when this object is activated.
+	*/
+	constexpr void InitializeBook(Rectangle mapRange)
+	{
+		SetMapRange(mapRange);
+		_oVar6 = _oAnimFrame + 1; // Save the frame number for the open book frame
+	}
+
+	/**
+	 * @brief Initializes this object as a quest book which will cause further changes and play a message when activated.
+	 * @param mapRange The region to be updated when this object is activated.
+	 * @param leverID An ID (distinct from the object index) to identify the new objects spawned after updating the map.
+	 * @param message The quest text to play when this object is activated.
+	 */
+	constexpr void InitializeQuestBook(Rectangle mapRange, int leverID, _speech_id message)
+	{
+		InitializeBook(mapRange);
+		_oVar8 = leverID;
+		bookMessage = message;
+	}
+
+	/**
+	 * @brief Marks an object which was spawned from a sublevel in response to a lever activation.
+	 * @param mapRange The region which was updated to spawn this object.
+	 * @param leverID The id (*not* an object ID/index) of the lever responsible for the map change.
+	 */
+	constexpr void InitializeLoadedObject(Rectangle mapRange, int leverID)
+	{
+		SetMapRange(mapRange);
+		_oVar8 = leverID;
+	}
 };
 
 extern ObjectStruct Objects[MAXOBJECTS];
@@ -64,8 +136,6 @@ void AddL1Objs(int x1, int y1, int x2, int y2);
 void AddL2Objs(int x1, int y1, int x2, int y2);
 void InitObjects();
 void SetMapObjects(const uint16_t *dunData, int startx, int starty);
-void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v);
-void SetBookMsg(int i, _speech_id msg);
 void GetRndObjLoc(int randarea, int *xx, int *yy);
 void AddMushPatch();
 void AddSlainHero();
@@ -82,7 +152,7 @@ void Obj_Trap(int i);
 void ProcessObjects();
 void ObjSetMicro(Point position, int pn);
 void RedoPlayerVision();
-void MonstCheckDoors(int m);
+void MonstCheckDoors(MonsterStruct &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 void TryDisarm(int pnum, int i);

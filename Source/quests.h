@@ -11,6 +11,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "gendung.h"
+#include "monster.h"
 #include "textdat.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -80,7 +81,7 @@ void InitQuests();
 void CheckQuests();
 bool ForceQuests();
 bool QuestStatus(int i);
-void CheckQuestKill(int m, bool sendmsg);
+void CheckQuestKill(const MonsterStruct &monster, bool sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();

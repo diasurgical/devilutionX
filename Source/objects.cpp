@@ -19,6 +19,7 @@
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "monster.h"
 #include "options.h"
 #include "setmaps.h"
 #include "stores.h"
@@ -476,7 +477,16 @@ void AddCandles()
 	AddObject(OBJ_STORYCANDLE, { tx + 2, ty + 2 });
 }
 
-void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
+/**
+ * @brief Attempts to spawn a book somewhere on the current floor which when activated will change a region of the map.
+ *
+ * This object acts like a lever and will cause a change to the map based on what quest is active. The exact effect is
+ * determined by OperateBookLever().
+ *
+ * @param affectedArea The map region to be updated when this object is activated by the player.
+ * @param msg The quest text to play when the player activates the book.
+*/
+void AddBookLever(Rectangle affectedArea, _speech_id msg)
 {
 	int cnt = 0;
 	int xp;
@@ -509,10 +519,8 @@ void AddBookLever(int x1, int y1, int x2, int y2, _speech_id msg)
 		AddObject(OBJ_BLOODBOOK, { xp, yp });
 	}
 	int ob = dObject[xp][yp] - 1;
-	SetObjMapRange(ob, x1, y1, x2, y2, leverid);
-	SetBookMsg(ob, msg);
+	Objects[ob].InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
-	Objects[ob]._oVar6 = Objects[ob]._oAnimFrame + 1;
 }
 
 void InitRndBarrels()
@@ -748,7 +756,7 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
-				SetObjMapRange(ObjIndex(mapPos), mapRange.position.x, mapRange.position.y, mapRange.position.x + mapRange.size.width, mapRange.position.y + mapRange.size.height, leveridx);
+				ObjectAtPosition(mapPos).InitializeLoadedObject(mapRange, leveridx);
 			}
 		}
 	}
@@ -1062,7 +1070,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLIND]._qmsg = spId;
-				AddBookLever(setpc_x, setpc_y, setpc_w + setpc_x + 1, setpc_h + setpc_y + 1, spId);
+				AddBookLever({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } }, spId);
 				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
 			if (QuestStatus(Q_BLOOD)) {
@@ -1088,7 +1096,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_BLOOD]._qmsg = spId;
-				AddBookLever(setpc_x, setpc_y + 3, setpc_x + 2, setpc_y + 7, spId);
+				AddBookLever({ { setpc_x, setpc_y + 3 }, { 2, 4 } }, spId);
 				AddObject(OBJ_PEDISTAL, { 2 * setpc_x + 25, 2 * setpc_y + 32 });
 			}
 			InitRndBarrels();
@@ -1121,7 +1129,7 @@ void InitObjects()
 					break;
 				}
 				Quests[Q_WARLORD]._qmsg = spId;
-				AddBookLever(setpc_x, setpc_y, setpc_x + setpc_w, setpc_y + setpc_h, spId);
+				AddBookLever({ { setpc_x, setpc_y }, { setpc_w, setpc_h } }, spId);
 				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
 			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
@@ -1247,20 +1255,6 @@ void SetupObject(int i, Point position, _object_id ot)
 	Objects[i]._oDoorFlag = false;
 }
 
-void SetObjMapRange(int i, int x1, int y1, int x2, int y2, int v)
-{
-	Objects[i]._oVar1 = x1;
-	Objects[i]._oVar2 = y1;
-	Objects[i]._oVar3 = x2;
-	Objects[i]._oVar4 = y2;
-	Objects[i]._oVar8 = v;
-}
-
-void SetBookMsg(int i, _speech_id msg)
-{
-	Objects[i]._oVar7 = msg;
-}
-
 void AddL1Door(int i, Point position, _object_id objectType)
 {
 	Objects[i]._oDoorFlag = true;
@@ -1272,15 +1266,6 @@ void AddL1Door(int i, Point position, _object_id objectType)
 		Objects[i]._oVar2 = dPiece[position.x - 1][position.y];
 	}
 	Objects[i]._oVar4 = 0;
-}
-
-void AddSCambBook(int i)
-{
-	Objects[i]._oVar1 = setpc_x;
-	Objects[i]._oVar2 = setpc_y;
-	Objects[i]._oVar3 = setpc_w + setpc_x + 1;
-	Objects[i]._oVar4 = setpc_h + setpc_y + 1;
-	Objects[i]._oVar6 = Objects[i]._oAnimFrame + 1;
 }
 
 void AddChest(int i, int t)
@@ -1737,7 +1722,7 @@ void AddObject(_object_id objType, Point objPos)
 		AddL3Door(oi, objPos, objType);
 		break;
 	case OBJ_BOOK2R:
-		AddSCambBook(oi);
+		Objects[oi].InitializeBook({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } });
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -2003,7 +1988,7 @@ void Obj_FlameTrap(int i)
 			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, -1, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
 		}
 
 		if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen)
@@ -2720,10 +2705,10 @@ void OperateL3LDoor(int pnum, int oi, bool sendflag)
 	}
 }
 
-void MonstCheckDoors(int m)
+void MonstCheckDoors(MonsterStruct &monster)
 {
-	int mx = Monsters[m].position.tile.x;
-	int my = Monsters[m].position.tile.y;
+	int mx = monster.position.tile.x;
+	int my = monster.position.tile.y;
 	if (dObject[mx - 1][my - 1] != 0
 	    || dObject[mx][my - 1] != 0
 	    || dObject[mx + 1][my - 1] != 0
@@ -2945,7 +2930,7 @@ void OperateBookLever(int pnum, int i)
 			}
 		}
 		Objects[i]._oAnimFrame = Objects[i]._oVar6;
-		InitQTextMsg(Objects[i]._oVar7);
+		InitQTextMsg(Objects[i].bookMessage);
 		if (pnum == MyPlayerId)
 			NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 	}
@@ -4437,15 +4422,18 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	}
 	SetRndSeed(Objects[i]._oRndSeed);
 	CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
-	if (QuestStatus(Q_ZHAR)
-	    && Monsters[MAX_PLRS]._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
-	    && Monsters[MAX_PLRS]._uniqtype - 1 == UMT_ZHAR
-	    && Monsters[MAX_PLRS]._msquelch == UINT8_MAX
-	    && Monsters[MAX_PLRS]._mhitpoints > 0) {
-		Monsters[MAX_PLRS].mtalkmsg = TEXT_ZHAR2;
-		M_StartStand(0, Monsters[MAX_PLRS]._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
-		Monsters[MAX_PLRS]._mgoal = MGOAL_ATTACK2;
-		Monsters[MAX_PLRS]._mmode = MM_TALK;
+
+	if (QuestStatus(Q_ZHAR)) {
+		auto &zhar = Monsters[MAX_PLRS];
+		if (zhar._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
+		    && zhar._uniqtype - 1 == UMT_ZHAR
+		    && zhar._msquelch == UINT8_MAX
+		    && zhar._mhitpoints > 0) {
+			zhar.mtalkmsg = TEXT_ZHAR2;
+			M_StartStand(Monsters[0], zhar._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
+			zhar._mgoal = MGOAL_ATTACK2;
+			zhar._mmode = MM_TALK;
+		}
 	}
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -5015,29 +5003,46 @@ void SyncOpObject(int pnum, int cmd, int i)
 	}
 }
 
-void BreakCrux(int i)
+/**
+ * @brief Checks if all active crux objects of the given type have been broken.
+ *
+ * Called by BreakCrux and SyncCrux to see if the linked map area needs to be updated. In practice I think this is
+ * always true when called by BreakCrux as there *should* only be one instance of each crux with a given _oVar8 value?
+ *
+ * @param cruxType Discriminator/type (_oVar8 value) of the crux object which is currently changing state
+ * @return true if all active cruxes of that type on the level are broken, false if at least one remains unbroken
+ */
+bool AreAllCruxesOfTypeBroken(int cruxType)
 {
-	Objects[i]._oAnimFlag = 1;
-	Objects[i]._oAnimFrame = 1;
-	Objects[i]._oAnimDelay = 1;
-	Objects[i]._oSolidFlag = true;
-	Objects[i]._oMissFlag = true;
-	Objects[i]._oBreak = -1;
-	Objects[i]._oSelFlag = 0;
-	bool triggered = true;
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		if (Objects[oi]._otype != OBJ_CRUX1 && Objects[oi]._otype != OBJ_CRUX2 && Objects[oi]._otype != OBJ_CRUX3)
-			continue;
-		if (Objects[i]._oVar8 != Objects[oi]._oVar8 || Objects[oi]._oBreak == -1)
-			continue;
-		triggered = false;
+		const auto &testObject = Objects[ActiveObjects[j]];
+		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+			continue; // Not a Crux object, keep searching
+		if (cruxType != testObject._oVar8 || testObject._oBreak == -1)
+			continue; // Found either a different crux or a previously broken crux, keep searching
+
+		// Found an unbroken crux of this type
+		return false;
 	}
-	if (!triggered)
+	return true;
+}
+
+void BreakCrux(ObjectStruct &crux)
+{
+	crux._oAnimFlag = 1;
+	crux._oAnimFrame = 1;
+	crux._oAnimDelay = 1;
+	crux._oSolidFlag = true;
+	crux._oMissFlag = true;
+	crux._oBreak = -1;
+	crux._oSelFlag = 0;
+
+	if (!AreAllCruxesOfTypeBroken(crux._oVar8))
 		return;
+
 	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, Objects[i].position);
-	ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+		PlaySfxLoc(IS_LEVER, crux.position);
+	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
 void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
@@ -5088,7 +5093,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
 				bool unused;
 				if (dPlayer[xp][yp] > 0)
-					PlayerMHit(dPlayer[xp][yp] - 1, -1, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
 				if (dObject[xp][yp] > 0) {
 					int oi = dObject[xp][yp] - 1;
 					if (Objects[oi]._otype == OBJ_BARRELEX && Objects[oi]._oBreak != -1)
@@ -5131,7 +5136,7 @@ void BreakObject(int pnum, int oi)
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
-		BreakCrux(oi);
+		BreakCrux(Objects[oi]);
 		break;
 	case OBJ_BARREL:
 	case OBJ_BARRELEX:
@@ -5150,17 +5155,7 @@ void SyncBreakObj(int pnum, int oi)
 
 void SyncCrux(const ObjectStruct &crux)
 {
-	bool found = true;
-	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		int type = Objects[oi]._otype;
-		if (IsNoneOf(type, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
-			continue;
-		if (crux._oVar8 != Objects[oi]._oVar8 || Objects[oi]._oBreak == -1)
-			continue;
-		found = false;
-	}
-	if (found)
+	if (AreAllCruxesOfTypeBroken(crux._oVar8))
 		ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
