@@ -640,18 +640,22 @@ void AddWall()
 			if (dflags[i][j] != 0) {
 				continue;
 			}
-			if (IsAnyOf(dungeon[i][j], 10, 12, 13, 15, 16, 21, 22)) {
-				AdvanceRndSeed();
-				int x = HorizontalWallOk(i, j);
-				if (x != -1) {
-					HorizontalWall(i, j, x);
+			for (auto d : { 10, 12, 13, 15, 16, 21, 22 }) {
+				if (d == dungeon[i][j]) {
+					AdvanceRndSeed();
+					int x = HorizontalWallOk(i, j);
+					if (x != -1) {
+						HorizontalWall(i, j, x);
+					}
 				}
 			}
-			if (IsAnyOf(dungeon[i][j], 8, 9, 11, 14, 15, 16, 21, 23)) {
-				AdvanceRndSeed();
-				int y = VerticalWallOk(i, j);
-				if (y != -1) {
-					VerticalWall(i, j, y);
+			for (auto d : { 8, 9, 11, 14, 15, 16, 21, 23 }) {
+				if (d == dungeon[i][j]) {
+					AdvanceRndSeed();
+					int y = VerticalWallOk(i, j);
+					if (y != -1) {
+						VerticalWall(i, j, y);
+					}
 				}
 			}
 		}
