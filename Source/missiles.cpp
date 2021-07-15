@@ -4049,7 +4049,7 @@ void MI_Guardian(int i)
 	if ((Missiles[i]._mirange % 16) == 0) {
 		Displacement previous = { 0, 0 };
 
-		bool found = true;
+		bool found = false;
 		for (int j = 0; j < 23 && !found; j++) {
 			for (int k = 10; k >= 0 && !found; k -= 2) {
 				const Displacement offset { VisionCrawlTable[j][k], VisionCrawlTable[j][k + 1] };
