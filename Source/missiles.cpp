@@ -1485,7 +1485,7 @@ void AddBerserk(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienem
 
 			int dm = dMonster[tx][ty];
 			dm = dm > 0 ? dm - 1 : -(dm + 1);
-			if (dm <= 3)
+			if (dm < MAX_PLRS)
 				continue;
 			auto &monster = Monsters[dm];
 
@@ -2233,7 +2233,7 @@ void AddLightning(int mi, Point /*src*/, Point dst, int midir, int8_t mienemy, i
 
 void AddMisexp(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
-	if (mienemy != 0 && id > 0) {
+	if (mienemy != 0 && id >= 0) {
 		switch (Monsters[id].MType->mtype) {
 		case MT_SUCCUBUS:
 			SetMissAnim(mi, MFILE_FLAREEXP);
@@ -2597,6 +2597,8 @@ void AddStone(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*
 			ty = dst.y + CrawlTable[ck];
 			if (InDungeonBounds({ tx, ty })) {
 				int mid = dMonster[tx][ty];
+				if (mid == 0)
+					continue;
 				mid = mid > 0 ? mid - 1 : -(mid + 1);
 				auto &monster = Monsters[mid];
 				if (mid > MAX_PLRS - 1 && monster._mAi != AI_DIABLO && monster.MType->mtype != MT_NAKRUL) {
@@ -3481,7 +3483,8 @@ void MI_HorkSpawn(int mi)
 						i = 6;
 						auto md = static_cast<Direction>(Missiles[mi]._miVar1);
 						int monsterId = AddMonster({ tx, ty }, md, 1, true);
-						M_StartStand(Monsters[monsterId], md);
+						if (monsterId != -1)
+							M_StartStand(Monsters[monsterId], md);
 						break;
 					}
 				}
