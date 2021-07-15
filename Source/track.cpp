@@ -55,24 +55,6 @@ void track_process()
 			LeftMouseUp(isShift);
 		}
 	}
-	return;
-
-	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
-		return;
-
-	const Point target = player.GetTargetPosition();
-	if (cursmx != target.x || cursmy != target.y) {
-		Uint32 tick = SDL_GetTicks();
-		int tickMultiplier = 6;
-		if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
-			tickMultiplier = 3;
-		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * tickMultiplier) {
-			sgdwLastWalk = tick;
-			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
-			if (!sgbIsScrolling)
-				sgbIsScrolling = true;
-		}
-	}
 }
 
 void track_repeat_walk(bool rep)
