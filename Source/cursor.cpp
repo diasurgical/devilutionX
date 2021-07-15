@@ -272,9 +272,9 @@ void CheckCursMove()
 	int sx = MousePosition.x;
 	int sy = MousePosition.y;
 
-	if (lastMonsterId != -1 && Monsters[lastMonsterId]._mhitpoints > 0) {
+	if (lastMonsterId != -1 && Monsters[lastMonsterId]._mhitpoints > 0 && (SDL_GetModState() & KMOD_SHIFT) == 0) {
 		cursmx = Monsters[lastMonsterId].position.tile.x;
-		cursmy = Monsters[lastMonsterId].position.tile.x;
+		cursmy = Monsters[lastMonsterId].position.tile.y;
 		return;
 	}
 
