@@ -117,7 +117,7 @@ void RemoveScroll(PlayerStruct &player);
 bool UseScroll();
 void UseStaffCharge(PlayerStruct &player);
 bool UseStaff();
-bool UseInvItem(int pnum, int cii);
+bool UseInvItem(int pnum, int cii, bool isHotkey = false);
 void DoTelekinesis();
 int CalculateGold(PlayerStruct &player);
 bool DropItemBeforeTrig();

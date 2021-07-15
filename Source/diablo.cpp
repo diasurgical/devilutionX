@@ -1428,7 +1428,7 @@ void InitKeymapActions()
 		    [i] {
 			    auto &myPlayer = Players[MyPlayerId];
 			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
-				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
+				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i, true);
 			    }
 		    },
 		    [&]() { return !IsPlayerDead(); },

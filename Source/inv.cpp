@@ -2054,9 +2054,10 @@ bool UseStaff()
 	return CanUseStaff(myPlayer.InvBody[INVLOC_HAND_LEFT], myPlayer._pRSpell);
 }
 
-bool UseInvItem(int pnum, int cii)
+bool UseInvItem(int pnum, int cii, bool isHotkey)
 {
-	blockClicks = true;
+	if (!isHotkey)
+		blockClicks = true;
 	int c;
 	ItemStruct *item;
 
