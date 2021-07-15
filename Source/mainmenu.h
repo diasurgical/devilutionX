@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-extern char gszHero[16];
+extern uint32_t gSaveNumber;
 
 bool mainmenu_select_hero_dialog(GameData *gameData);
 void mainmenu_loop();

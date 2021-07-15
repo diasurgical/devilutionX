@@ -186,6 +186,7 @@ void SelheroListSelect(int value)
 
 		UiInitList(vecSelHeroDlgItems.size(), SelheroClassSelectorFocus, SelheroClassSelectorSelect, SelheroClassSelectorEsc, vecSelDlgItems);
 		memset(&selhero_heroInfo.name, 0, sizeof(selhero_heroInfo.name));
+		selhero_heroInfo.saveNumber = MAX_CHARACTERS;
 		title = selhero_isMultiPlayer ? _("New Multi Player Hero") : _("New Single Player Hero");
 		return;
 	}
@@ -550,7 +551,7 @@ static void UiSelHeroDialog(
     void (*fnstats)(unsigned int, _uidefaultstats *),
     bool (*fnremove)(_uiheroinfo *),
     _selhero_selections *dlgresult,
-    char (*name)[16])
+    uint32_t *saveNumber)
 {
 	do {
 		gfnHeroInfo = fninfo;
@@ -592,7 +593,7 @@ static void UiSelHeroDialog(
 	} while (selhero_navigateYesNo);
 
 	*dlgresult = selhero_result;
-	strncpy(*name, selhero_heroInfo.name, sizeof(*name));
+	*saveNumber = selhero_heroInfo.saveNumber;
 }
 
 void UiSelHeroSingDialog(
@@ -601,11 +602,11 @@ void UiSelHeroSingDialog(
     bool (*fnremove)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     _selhero_selections *dlgresult,
-    char (*name)[16],
+    uint32_t *saveNumber,
     _difficulty *difficulty)
 {
 	selhero_isMultiPlayer = false;
-	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
+	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, saveNumber);
 	*difficulty = nDifficulty;
 }
 
@@ -615,10 +616,10 @@ void UiSelHeroMultDialog(
     bool (*fnremove)(_uiheroinfo *),
     void (*fnstats)(unsigned int, _uidefaultstats *),
     _selhero_selections *dlgresult,
-    char (*name)[16])
+    uint32_t *saveNumber)
 {
 	selhero_isMultiPlayer = true;
-	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, name);
+	UiSelHeroDialog(fninfo, fncreate, fnstats, fnremove, dlgresult, saveNumber);
 }
 
 } // namespace devilution

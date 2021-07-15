@@ -454,7 +454,7 @@ bool InitMulti(GameData *gameData)
 	MyPlayerId = playerId;
 	gbIsMultiplayer = true;
 
-	pfile_read_player_from_save(gszHero, MyPlayerId);
+	pfile_read_player_from_save(gSaveNumber, MyPlayerId);
 
 	return true;
 }

@@ -113,18 +113,6 @@ void RenameTempToPerm()
 	assert(!GetPermSaveNames(dwIndex, szPerm));
 }
 
-uint32_t GetSaveNumberFromName(const char *name)
-{
-	uint32_t i;
-
-	for (i = 0; i < MAX_CHARACTERS; i++) {
-		if (strcasecmp(hero_names[i], name) == 0)
-			break;
-	}
-
-	return i;
-}
-
 std::unique_ptr<byte[]> ReadArchive(HANDLE archive, const char *pszName, size_t *pdwLen = nullptr)
 {
 	HANDLE file;
@@ -203,7 +191,6 @@ void CloseArchive(HANDLE *hsArchive)
 
 void Game2UiPlayer(const PlayerStruct &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
-	memset(heroinfo, 0, sizeof(*heroinfo));
 	strncpy(heroinfo->name, player._pName, sizeof(heroinfo->name) - 1);
 	heroinfo->name[sizeof(heroinfo->name) - 1] = '\0';
 	heroinfo->level = player._pLevel;
@@ -266,7 +253,7 @@ const char *pfile_get_password()
 }
 
 PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clearTables)
-    : save_num_(GetSaveNumberFromName(Players[MyPlayerId]._pName))
+    : save_num_(gSaveNumber)
     , clear_tables_(clearTables)
 {
 	if (!OpenArchive(save_num_))
@@ -304,6 +291,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 			PkPlayerStruct pkplr;
 			if (ReadHero(archive, &pkplr)) {
 				_uiheroinfo uihero;
+				uihero.saveNumber = i;
 				strcpy(hero_names[i], pkplr.pName);
 				bool hasSaveGame = ArchiveContainsGame(archive);
 				if (hasSaveGame)
@@ -338,7 +326,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
 	PkPlayerStruct pkplr;
 
-	uint32_t saveNum = GetSaveNumberFromName(heroinfo->name);
+	uint32_t saveNum = heroinfo->saveNumber;
 	if (saveNum >= MAX_CHARACTERS) {
 		for (saveNum = 0; saveNum < MAX_CHARACTERS; saveNum++) {
 			if (hero_names[saveNum][0] == '\0')
@@ -349,6 +337,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	}
 	if (!OpenArchive(saveNum))
 		return false;
+	heroinfo->saveNumber = saveNum;
 	mpqapi_remove_hash_entries(GetFileName);
 	strncpy(hero_names[saveNum], heroinfo->name, PLR_NAME_LEN);
 	hero_names[saveNum][PLR_NAME_LEN - 1] = '\0';
@@ -371,7 +360,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 bool pfile_delete_save(_uiheroinfo *heroInfo)
 {
-	uint32_t saveNum = GetSaveNumberFromName(heroInfo->name);
+	uint32_t saveNum = heroInfo->saveNumber;
 	if (saveNum < MAX_CHARACTERS) {
 		hero_names[saveNum][0] = '\0';
 		RemoveFile(GetSavePath(saveNum).c_str());
@@ -379,12 +368,11 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 	return true;
 }
 
-void pfile_read_player_from_save(char name[16], int playerId)
+void pfile_read_player_from_save(uint32_t saveNum, int playerId)
 {
 	HANDLE archive;
 	PkPlayerStruct pkplr;
 
-	uint32_t saveNum = GetSaveNumberFromName(name);
 	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
 		app_fatal("%s", _("Unable to open archive"));
@@ -410,7 +398,7 @@ bool LevelFileExists()
 
 	GetPermLevelNames(szName);
 
-	uint32_t saveNum = GetSaveNumberFromName(Players[MyPlayerId]._pName);
+	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to read to save file archive"));
 
@@ -429,7 +417,7 @@ void GetTempLevelNames(char *szTemp)
 
 void GetPermLevelNames(char *szPerm)
 {
-	uint32_t saveNum = GetSaveNumberFromName(Players[MyPlayerId]._pName);
+	uint32_t saveNum = gSaveNumber;
 	GetTempLevelNames(szPerm);
 	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to read to save file archive"));
@@ -449,7 +437,7 @@ void pfile_remove_temp_files()
 	if (gbIsMultiplayer)
 		return;
 
-	uint32_t saveNum = GetSaveNumberFromName(Players[MyPlayerId]._pName);
+	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to write to save file archive"));
 	mpqapi_remove_hash_entries(GetTempSaveNames);
@@ -460,7 +448,7 @@ std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)
 {
 	HANDLE archive;
 
-	uint32_t saveNum = GetSaveNumberFromName(Players[MyPlayerId]._pName);
+	uint32_t saveNum = gSaveNumber;
 	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
 		return nullptr;

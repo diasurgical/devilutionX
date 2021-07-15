@@ -120,7 +120,7 @@ void selgame_GameSelection_Focus(int value)
  */
 bool UpdateHeroLevel(_uiheroinfo *pInfo)
 {
-	if (strcasecmp(pInfo->name, gszHero) == 0)
+	if (pInfo->saveNumber == gSaveNumber)
 		heroLevel = pInfo->level;
 
 	return true;
