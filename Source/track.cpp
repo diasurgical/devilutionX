@@ -18,6 +18,7 @@ namespace {
 bool sgbIsScrolling;
 Uint32 sgdwLastWalk;
 bool sgbIsWalking;
+bool destActionSet;
 
 } // namespace
 
@@ -28,17 +29,24 @@ void track_process()
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	const auto &player = Players[MyPlayerId];
+	auto &player = Players[MyPlayerId];
 
+	if (sgbMouseDown == CLICK_NONE) {
+		if (destActionSet) {
+			player.destAction = ACTION_NONE;
+			NetSendCmdParam1(true, CMD_RESETACTION, pcursmonst);
+			destActionSet = false;
+		}
+		return;
+	}
+
+	if (player.destAction == ACTION_NONE)
+		destActionSet = true;
 
 	int isShift = (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
-	if (sgbMouseDown == CLICK_RIGHT && player.AnimInfo.GetFrameToUseForRendering() < 10) // prevents casting a spell twice from a single click
-		return;
 	if (sgbMouseDown == CLICK_RIGHT) {
 		RightMouseDown();
 	}
-	if (sgbMouseDown == CLICK_LEFT && isShift && player.AnimInfo.GetFrameToUseForRendering() < 7) // prevents attacking twice from a single click
-		return;
 	if (sgbMouseDown == CLICK_LEFT) {
 		track_repeat_walk(LeftMouseDown(isShift));
 		if (blockClicks) {
