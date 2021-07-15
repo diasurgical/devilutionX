@@ -115,6 +115,12 @@ enum placeflag : uint8_t {
 	// clang-format on
 };
 
+enum class MonsterRelation : uint8_t {
+	Individual,
+	Minion,
+	Leader,
+};
+
 struct AnimStruct {
 	std::unique_ptr<byte[]> CMem;
 	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
@@ -193,7 +199,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	uint16_t mMagicRes;
 	_speech_id mtalkmsg;
 	uint8_t leader;
-	uint8_t leaderflag;
+	MonsterRelation leaderflag;
 	uint8_t packsize;
 	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
