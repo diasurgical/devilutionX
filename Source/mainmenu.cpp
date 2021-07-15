@@ -14,7 +14,7 @@
 
 namespace devilution {
 
-char gszHero[16];
+uint32_t gSaveNumber;
 
 namespace {
 
@@ -88,7 +88,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		    pfile_delete_save,
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
-		    &gszHero,
+		    &gSaveNumber,
 		    &gameData->nDifficulty);
 
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
@@ -99,14 +99,14 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		    pfile_delete_save,
 		    pfile_ui_set_class_stats,
 		    &dlgresult,
-		    &gszHero);
+		    &gSaveNumber);
 	}
 	if (dlgresult == SELHERO_PREVIOUS) {
 		SErrSetLastError(1223);
 		return false;
 	}
 
-	pfile_read_player_from_save(gszHero, MyPlayerId);
+	pfile_read_player_from_save(gSaveNumber, MyPlayerId);
 
 	return true;
 }
