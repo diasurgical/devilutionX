@@ -32,7 +32,7 @@ std::size_t selhero_SaveCount = 0;
 _uiheroinfo selhero_heros[MAX_CHARACTERS];
 _uiheroinfo selhero_heroInfo;
 const size_t MaxViewportItems = 6;
-char textStats[5][4];
+char textStats[6][4];
 const char *title = "";
 _selhero_selections selhero_result;
 bool selhero_navigateYesNo;
@@ -81,6 +81,7 @@ void SelheroSetStats()
 	snprintf(textStats[2], sizeof(textStats[2]), "%i", selhero_heroInfo.magic);
 	snprintf(textStats[3], sizeof(textStats[3]), "%i", selhero_heroInfo.dexterity);
 	snprintf(textStats[4], sizeof(textStats[4]), "%i", selhero_heroInfo.vitality);
+	snprintf(textStats[5], sizeof(textStats[5]), "%i", selhero_heroInfo.saveNumber);
 }
 
 std::size_t listOffset = 0;
@@ -116,6 +117,7 @@ void SelheroScrollIntoView(std::size_t index)
 bool SelHeroGetHeroInfo(_uiheroinfo *pInfo)
 {
 	selhero_heros[selhero_SaveCount] = *pInfo;
+
 	selhero_SaveCount++;
 
 	return true;
@@ -140,6 +142,7 @@ void SelheroListFocus(int value)
 	strncpy(textStats[2], "--", sizeof(textStats[2]) - 1);
 	strncpy(textStats[3], "--", sizeof(textStats[3]) - 1);
 	strncpy(textStats[4], "--", sizeof(textStats[4]) - 1);
+	strncpy(textStats[5], "--", sizeof(textStats[5]) - 1);
 	SELLIST_DIALOG_DELETE_BUTTON->m_iFlags = baseFlags | UIS_DISABLED;
 	selhero_deleteEnabled = false;
 }
@@ -485,6 +488,13 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Vitality:"), rect12, UIS_RIGHT));
 	SDL_Rect rect13 = { (Sint16)(PANEL_LEFT + 159), (Sint16)(UI_OFFSET_Y + 422), 40, 21 };
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[4], rect13, UIS_CENTER));
+
+#if _DEBUG
+	SDL_Rect rect14 = { (Sint16)(PANEL_LEFT + 39), (Sint16)(UI_OFFSET_Y + 443), 110, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(_("Savegame:"), rect14, UIS_RIGHT));
+	SDL_Rect rect15 = { (Sint16)(PANEL_LEFT + 159), (Sint16)(UI_OFFSET_Y + 443), 40, 21 };
+	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(textStats[5], rect15, UIS_CENTER));
+#endif
 }
 
 void selhero_List_Init()
