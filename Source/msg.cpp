@@ -1264,7 +1264,7 @@ DWORD OnMonstDeath(TCmd *pCmd, int pnum)
 
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId) {
+	else if (pnum != MyPlayerId && p->wParam1 < MAXMONSTERS) {
 		if (currlevel == Players[pnum].plrlevel)
 			M_SyncStartKill(p->wParam1, { p->x, p->y }, pnum);
 		delta_kill_monster(p->wParam1, { p->x, p->y }, Players[pnum].plrlevel);
