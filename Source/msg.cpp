@@ -1070,6 +1070,17 @@ DWORD OnAttackPlayer(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
+DWORD OnResetAction(TCmd *pCmd, int pnum)
+{
+	auto *p = (TCmdParam1 *)pCmd;
+
+	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
+		Players[pnum].destAction = ACTION_NONE;
+	}
+
+	return sizeof(*p);
+}
+
 DWORD OnRangedAttackMonster(TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
@@ -2651,6 +2662,8 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return OnOpenHive(pCmd, pnum);
 	case CMD_OPENCRYPT:
 		return OnOpenCrypt(pCmd);
+	case CMD_RESETACTION:
+		return OnResetAction(pCmd, pnum);
 	default:
 		break;
 	}

@@ -18,43 +18,47 @@ namespace {
 bool sgbIsScrolling;
 Uint32 sgdwLastWalk;
 bool sgbIsWalking;
+bool destActionSet;
 
 } // namespace
 
 void track_process()
 {
-	if (!sgbIsWalking)
+	if (blockClicks)
 		return;
-
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;
 
-	const auto &player = Players[MyPlayerId];
+	auto &player = Players[MyPlayerId];
 
-	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
+	if (sgbMouseDown == CLICK_NONE) {
+		if (destActionSet) {
+			player.destAction = ACTION_NONE;
+			NetSendCmdParam1(true, CMD_RESETACTION, pcursmonst);
+			destActionSet = false;
+		}
 		return;
+	}
 
-	const Point target = player.GetTargetPosition();
-	if (cursmx != target.x || cursmy != target.y) {
-		Uint32 tick = SDL_GetTicks();
-		int tickMultiplier = 6;
-		if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
-			tickMultiplier = 3;
-		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * tickMultiplier) {
-			sgdwLastWalk = tick;
-			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
-			if (!sgbIsScrolling)
-				sgbIsScrolling = true;
+	if (player.destAction == ACTION_NONE)
+		destActionSet = true;
+
+	int isShift = (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
+	if (sgbMouseDown == CLICK_RIGHT) {
+		RightMouseDown();
+	}
+	if (sgbMouseDown == CLICK_LEFT) {
+		track_repeat_walk(LeftMouseDown(isShift));
+		if (blockClicks) {
+			sgbMouseDown = CLICK_NONE;
+		} else {
+			LeftMouseUp(isShift);
 		}
 	}
 }
 
 void track_repeat_walk(bool rep)
 {
-	if (sgbIsWalking == rep)
-		return;
-
-	sgbIsWalking = rep;
 	if (rep) {
 		sgbIsScrolling = false;
 		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;

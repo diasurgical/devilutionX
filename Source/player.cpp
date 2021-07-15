@@ -3166,7 +3166,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_PICKUPITEM:
-			if (pnum == MyPlayerId) {
+			if (pnum == MyPlayerId && !blockClicks) {
 				i = player.destParam1;
 				x = abs(player.position.tile.x - Items[i].position.x);
 				y = abs(player.position.tile.y - Items[i].position.y);
@@ -3177,7 +3177,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_PICKUPAITEM:
-			if (pnum == MyPlayerId) {
+			if (pnum == MyPlayerId && !blockClicks) {
 				i = player.destParam1;
 				x = abs(player.position.tile.x - Items[i].position.x);
 				y = abs(player.position.tile.y - Items[i].position.y);
@@ -3187,7 +3187,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			}
 			break;
 		case ACTION_TALK:
-			if (pnum == MyPlayerId) {
+			if (pnum == MyPlayerId && !blockClicks) {
 				TalkToTowner(player, player.destParam1);
 			}
 			break;

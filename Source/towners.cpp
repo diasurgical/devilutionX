@@ -868,6 +868,7 @@ void ProcessTowners()
 
 void TalkToTowner(PlayerStruct &player, int t)
 {
+	blockClicks = true;
 	auto &towner = Towners[t];
 
 	if (player.position.tile.WalkingDistance(towner.position) >= 2)

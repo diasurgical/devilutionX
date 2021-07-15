@@ -272,6 +272,12 @@ void CheckCursMove()
 	int sx = MousePosition.x;
 	int sy = MousePosition.y;
 
+	if (lastMonsterId != -1 && Monsters[lastMonsterId]._mhitpoints > 0 && (SDL_GetModState() & KMOD_SHIFT) == 0) {
+		cursmx = Monsters[lastMonsterId].position.tile.x;
+		cursmy = Monsters[lastMonsterId].position.tile.y;
+		return;
+	}
+
 	if (CanPanelsCoverView()) {
 		if (chrflag || QuestLogIsOpen) {
 			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)
@@ -664,6 +670,7 @@ void CheckCursMove()
 		}
 	}
 	if (pcursplr == -1 && pcursobj == -1 && pcursmonst == -1) {
+		lastDoorId = -1;
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
 			int8_t bv = dItem[mx + 1][my] - 1;
 			if (Items[bv]._iSelFlag >= 2) {

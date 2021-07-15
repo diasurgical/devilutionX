@@ -128,6 +128,7 @@ enum _cmd_id : uint8_t {
 	FAKE_CMD_SETID,
 	FAKE_CMD_DROPID,
 	NUM_CMDS,
+	CMD_RESETACTION,
 	CMD_INVALID = 0xFF,
 };
 
