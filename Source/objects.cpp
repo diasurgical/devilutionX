@@ -4430,7 +4430,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 		    && zhar._msquelch == UINT8_MAX
 		    && zhar._mhitpoints > 0) {
 			zhar.mtalkmsg = TEXT_ZHAR2;
-			M_StartStand(Monsters[0], zhar._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0.
+			M_StartStand(zhar, zhar._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
 			zhar._mgoal = MGOAL_ATTACK2;
 			zhar._mmode = MM_TALK;
 		}
