@@ -3489,6 +3489,15 @@ void ClrPlrPath(PlayerStruct &player)
 	memset(player.walkpath, WALK_NONE, sizeof(player.walkpath));
 }
 
+/**
+ * @brief Determines if the target position is clear for the given player to stand on.
+ *
+ * This requires an ID instead of a PlayerStruct& to compare with the dPlayer lookup table values.
+ *
+ * @param pnum ID of the player.
+ * @param position Dungeon tile coordinates.
+ * @return False if something (other than the player themselves) is blocking the tile.
+ */
 bool PosOkPlayer(int pnum, Point position)
 {
 	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
@@ -3550,7 +3559,7 @@ void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 		return;
 	}
 
-	int path = FindPath(PosOkPlayer, pnum, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
+	int path = FindPath(std::bind(PosOkPlayer, pnum, std::placeholders::_1), player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
 	if (path == 0) {
 		return;
 	}
