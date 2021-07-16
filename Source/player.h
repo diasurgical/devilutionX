@@ -149,7 +149,7 @@ enum player_weapon_type : uint8_t {
 	WT_RANGED,
 };
 
-enum { //Fluffy
+enum {
 	MOUSEACTION_NONE,
 	MOUSEACTION_SPELL,
 	MOUSEACTION_SPELL_COMPLAINEDABOUTMANA,

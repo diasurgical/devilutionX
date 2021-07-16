@@ -69,7 +69,6 @@ extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
-//Fluffy
 extern int lastLeftMouseButtonAction;
 extern int lastRightMouseButtonAction;
 extern Uint32 lastLeftMouseButtonTime;

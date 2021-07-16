@@ -130,8 +130,8 @@ QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 	{ "QuickMessage4", N_("Now you DIE!") }
 };
 
-int lastLeftMouseButtonAction = MOUSEACTION_NONE;  //Fluffy: These are for supporting repeating attacks with leftclick
-int lastRightMouseButtonAction = MOUSEACTION_NONE; //Fluffy: These are for supporting repeating actions with rightclick
+int lastLeftMouseButtonAction = MOUSEACTION_NONE; // This and the following mouse variables are for handling in-game click-and-hold actions
+int lastRightMouseButtonAction = MOUSEACTION_NONE;
 Uint32 lastLeftMouseButtonTime = 0;
 Uint32 lastRightMouseButtonTime = 0;
 
@@ -254,17 +254,17 @@ bool LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {
-				lastLeftMouseButtonAction = MOUSEACTION_ATTACK; //Fluffy
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK;
 				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(pcursmonst)) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 				} else {
-					lastLeftMouseButtonAction = MOUSEACTION_ATTACK_MONSTERTARGET; //Fluffy
+					lastLeftMouseButtonAction = MOUSEACTION_ATTACK_MONSTERTARGET;
 					NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 				}
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
-				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_PLAYERTARGET; //Fluffy
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_PLAYERTARGET;
 				NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
 			}
 		} else {
@@ -273,18 +273,18 @@ bool LeftMouseCmd(bool bShift)
 					if (CanTalkToMonst(pcursmonst)) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
-						lastLeftMouseButtonAction = MOUSEACTION_ATTACK; //Fluffy
+						lastLeftMouseButtonAction = MOUSEACTION_ATTACK;
 						NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 					}
 				} else {
-					lastLeftMouseButtonAction = MOUSEACTION_ATTACK; //Fluffy
+					lastLeftMouseButtonAction = MOUSEACTION_ATTACK;
 					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 				}
 			} else if (pcursmonst != -1) {
-				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_MONSTERTARGET; //Fluffy
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_MONSTERTARGET;
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
-				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_PLAYERTARGET; //Fluffy
+				lastLeftMouseButtonAction = MOUSEACTION_ATTACK_PLAYERTARGET;
 				NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 			}
 		}
@@ -297,7 +297,7 @@ bool LeftMouseCmd(bool bShift)
 
 bool LeftMouseDown(int wParam)
 {
-	lastLeftMouseButtonAction = MOUSEACTION_OTHER; //Fluffy
+	lastLeftMouseButtonAction = MOUSEACTION_OTHER;
 	lastLeftMouseButtonTime = SDL_GetTicks();
 
 	if (gmenu_left_mouse(true))
@@ -388,7 +388,7 @@ void LeftMouseUp(int wParam)
 
 void RightMouseDown()
 {
-	lastRightMouseButtonAction = MOUSEACTION_OTHER; //Fluffy
+	lastRightMouseButtonAction = MOUSEACTION_OTHER;
 	lastRightMouseButtonTime = SDL_GetTicks();
 
 	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
@@ -411,7 +411,7 @@ void RightMouseDown()
 	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
-				CheckPlrSpell(true); //Fluffy
+				CheckPlrSpell(true);
 		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			NewCursor(CURSOR_HAND);
 		}
@@ -739,7 +739,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_LBUTTONUP:
 		GetMousePos(lParam);
-		lastLeftMouseButtonAction = MOUSEACTION_NONE; //Fluffy
+		lastLeftMouseButtonAction = MOUSEACTION_NONE;
 		if (sgbMouseDown == CLICK_LEFT) {
 			sgbMouseDown = CLICK_NONE;
 			LeftMouseUp(wParam);
@@ -755,7 +755,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_RBUTTONUP:
 		GetMousePos(lParam);
-		lastRightMouseButtonAction = MOUSEACTION_NONE; //Fluffy
+		lastRightMouseButtonAction = MOUSEACTION_NONE;
 		if (sgbMouseDown == CLICK_RIGHT) {
 			sgbMouseDown = CLICK_NONE;
 		}

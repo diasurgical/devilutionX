@@ -72,7 +72,7 @@ static bool RepeatMouseAttack(bool leftButton)
 
 void track_process()
 {
-	if (RepeatMouseAttack(true) || RepeatMouseAttack(false)) //Fluffy
+	if (RepeatMouseAttack(true) || RepeatMouseAttack(false))
 		return;
 
 	if (!sgbIsWalking)
