@@ -91,7 +91,7 @@ int GetDistance(Point destination, int maxDistance)
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath([](Point position){ return PosOkPlayer(MyPlayerId, position); }, Players[MyPlayerId].position.future.x, Players[MyPlayerId].position.future.y, destination.x, destination.y, walkpath);
+	int steps = FindPath([](Point position) { return PosOkPlayer(MyPlayerId, position); }, Players[MyPlayerId].position.future.x, Players[MyPlayerId].position.future.y, destination.x, destination.y, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -1051,7 +1051,7 @@ bool IsPathBlocked(Point position, Direction dir)
 	auto leftStep { position + d1 };
 	auto rightStep { position + d2 };
 
-	if (!nSolidTable[dPiece[leftStep.x][leftStep.y]] && !nSolidTable[dPiece[rightStep.x][rightStep.y]])
+	if (IsTileNotSolid(leftStep) && IsTileNotSolid(rightStep))
 		return false;
 
 	return !PosOkPlayer(MyPlayerId, leftStep) && !PosOkPlayer(MyPlayerId, rightStep);

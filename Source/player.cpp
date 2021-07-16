@@ -1310,7 +1310,7 @@ void PlrDoTrans(Point position)
 
 	for (int i = position.y - 1; i <= position.y + 1; i++) {
 		for (int j = position.x - 1; j <= position.x + 1; j++) {
-			if (!nSolidTable[dPiece[j][i]] && dTransVal[j][i] != 0) {
+			if (IsTileNotSolid({ j, i }) && dTransVal[j][i] != 0) {
 				TransList[dTransVal[j][i]] = true;
 			}
 		}

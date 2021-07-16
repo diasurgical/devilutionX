@@ -3247,7 +3247,7 @@ bool ItemSpaceOk(Point position)
 		return false;
 	}
 
-	return !nSolidTable[dPiece[position.x][position.y]];
+	return IsTileNotSolid(position);
 }
 
 int AllocateItem()
