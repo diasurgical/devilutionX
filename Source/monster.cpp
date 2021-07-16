@@ -1933,13 +1933,11 @@ int AddSkeleton(Point position, Direction dir, bool inMap)
 	return AddMonster(position, dir, m - 1, inMap);
 }
 
-int SpawnSkeleton(Point position, Direction dir)
+void SpawnSkeleton(Point position, Direction dir)
 {
 	int skel = AddSkeleton(position, dir, true);
 	if (skel != -1)
 		StartSpecialStand(Monsters[skel], dir);
-
-	return skel;
 }
 
 bool IsLineNotSolid(Point startPoint, Point endPoint)
