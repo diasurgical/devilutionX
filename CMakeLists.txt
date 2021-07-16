@@ -835,6 +835,7 @@ endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(libdevilutionx PUBLIC "/W3")
+  target_compile_definitions(libdevilutionx PUBLIC _CRT_SECURE_NO_WARNINGS)
   target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
 endif()
 
