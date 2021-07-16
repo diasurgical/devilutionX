@@ -1872,7 +1872,7 @@ void DeltaExportData(int pnum)
 			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), std::move(dst), size);
 		}
 
-		std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1] };
+		std::unique_ptr<byte[]> dst { new byte[MAXPORTAL * sizeof(DPortal) + MAXQUESTS * sizeof(MultiQuests) + 1] };
 		byte *dstEnd = &dst.get()[1];
 		dstEnd = DeltaExportJunk(dstEnd);
 		int size = CompressData(dst.get(), dstEnd);
