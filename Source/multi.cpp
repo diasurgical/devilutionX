@@ -312,6 +312,7 @@ void ProcessTmsgs()
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
 {
+	static_assert(alignof(PkPlayerStruct) == 1, "Fix pkplr alignment");
 	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PkPlayerStruct)] };
 
 	PackPlayer(reinterpret_cast<PkPlayerStruct *>(pkplr.get()), Players[MyPlayerId], true);
