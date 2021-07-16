@@ -4,17 +4,35 @@
  * Implementation of functions for updating game state from network commands.
  */
 
+#include <list>
+
 #include "nthread.h"
 #include "storm/storm.h"
 #include "utils/thread.h"
 
 namespace devilution {
 
+struct DThreadPkt {
+	int pnum;
+	_cmd_id cmd;
+	uint32_t len;
+	std::unique_ptr<byte[]> data;
+
+	DThreadPkt(int pnum, _cmd_id(cmd), byte *src, uint32_t len)
+		: pnum(pnum)
+		, cmd(cmd)
+		, len(len)
+		, data(new byte[len])
+	{
+		memcpy(data.get(), src, len);
+	}
+};
+
 namespace {
 
 CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
-TMegaPkt *sgpInfoHead; /* may not be right struct */
+std::list<DThreadPkt> sgpInfoList;
 bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
@@ -23,37 +41,30 @@ SDL_Thread *sghThread = nullptr;
 
 void DthreadHandler()
 {
-	const char *errorBuf;
-	TMegaPkt *pkt;
-	DWORD dwMilliseconds;
-
 	while (dthread_running) {
-		if (sgpInfoHead == nullptr && WaitForEvent(sghWorkToDoEvent) == -1) {
-			errorBuf = SDL_GetError();
+		if (sgpInfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1) {
+			const char *errorBuf = SDL_GetError();
 			app_fatal("dthread4:\n%s", errorBuf);
 		}
 
 		sgMemCrit.Enter();
-		pkt = sgpInfoHead;
-		if (sgpInfoHead != nullptr)
-			sgpInfoHead = sgpInfoHead->pNext;
-		else
+		if (sgpInfoList .empty()) {
 			ResetEvent(sghWorkToDoEvent);
+			sgMemCrit.Leave();
+		}
+		DThreadPkt pkt = std::move(sgpInfoList.front());
+		sgpInfoList.pop_front();
 		sgMemCrit.Leave();
 
-		if (pkt != nullptr) {
-			if (pkt->dwSpaceLeft != MAX_PLRS)
-				multi_send_zero_packet(pkt->dwSpaceLeft, static_cast<_cmd_id>(pkt->data[0]), &pkt->data[8], *(DWORD *)&pkt->data[4]);
+		if (pkt.pnum != MAX_PLRS)
+			multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
 
-			dwMilliseconds = 1000 * *(DWORD *)&pkt->data[4] / gdwDeltaBytesSec;
-			if (dwMilliseconds >= 1)
-				dwMilliseconds = 1;
+		DWORD dwMilliseconds = 1000 * pkt.len / gdwDeltaBytesSec;
+		if (dwMilliseconds >= 1)
+			dwMilliseconds = 1;
 
-			std::free(pkt);
-
-			if (dwMilliseconds != 0)
-				SDL_Delay(dwMilliseconds);
-		}
+		if (dwMilliseconds != 0)
+			SDL_Delay(dwMilliseconds);
 	}
 }
 
@@ -61,40 +72,24 @@ void DthreadHandler()
 
 void dthread_remove_player(uint8_t pnum)
 {
-	TMegaPkt *pkt;
-
 	sgMemCrit.Enter();
-	for (pkt = sgpInfoHead; pkt != nullptr; pkt = pkt->pNext) {
-		if (pkt->dwSpaceLeft == pnum)
-			pkt->dwSpaceLeft = MAX_PLRS;
+	for (auto &pkt : sgpInfoList) {
+		if (pkt.pnum == pnum)
+			pkt.pnum = MAX_PLRS;
 	}
 	sgMemCrit.Leave();
 }
 
-void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, int dwLen)
+void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, uint32_t len)
 {
-	TMegaPkt *pkt;
-	TMegaPkt *p;
-
 	if (!gbIsMultiplayer) {
 		return;
 	}
 
-	pkt = static_cast<TMegaPkt *>(std::malloc(dwLen + 20));
-	if (pkt == nullptr)
-		app_fatal("Failed to allocate memory");
-	pkt->pNext = nullptr;
-	pkt->dwSpaceLeft = pnum;
-	pkt->data[0] = static_cast<byte>(cmd);
-	*(DWORD *)&pkt->data[4] = dwLen;
-	memcpy(&pkt->data[8], pbSrc, dwLen);
-	sgMemCrit.Enter();
-	p = (TMegaPkt *)&sgpInfoHead;
-	while (p->pNext != nullptr) {
-		p = p->pNext;
-	}
-	p->pNext = pkt;
+	DThreadPkt pkt { pnum, cmd, pbSrc, len };
 
+	sgMemCrit.Enter();
+	sgpInfoList.push_back(std::move(pkt));
 	SetEvent(sghWorkToDoEvent);
 	sgMemCrit.Leave();
 }
@@ -124,8 +119,6 @@ void dthread_start()
 
 void DThreadCleanup()
 {
-	TMegaPkt *tmp;
-
 	if (sghWorkToDoEvent == nullptr) {
 		return;
 	}
@@ -139,11 +132,7 @@ void DThreadCleanup()
 	EndEvent(sghWorkToDoEvent);
 	sghWorkToDoEvent = nullptr;
 
-	while (sgpInfoHead != nullptr) {
-		tmp = sgpInfoHead->pNext;
-		std::free(sgpInfoHead);
-		sgpInfoHead = tmp;
-	}
+	sgpInfoList.clear();
 }
 
 } // namespace devilution
