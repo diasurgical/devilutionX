@@ -208,8 +208,8 @@ void FindRangedTarget()
 	int distance = 0;
 	bool canTalk = false;
 
-	// The first MAX_PLRS monsters are reserved for players' golems.
-	for (int mi = MAX_PLRS; mi < MAXMONSTERS; mi++) {
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		int mi = ActiveMonsters[i];
 		const auto &monster = Monsters[mi];
 
 		if (!CanTargetMonster(monster))
