@@ -7,6 +7,7 @@
 #include <memory>
 
 #include <fmt/format.h>
+#include <list>
 
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
@@ -39,6 +40,16 @@ int dwRecCount;
 
 namespace {
 
+struct TMegaPkt {
+	uint32_t spaceLeft;
+	byte data[32000];
+
+	TMegaPkt()
+		: spaceLeft(sizeof(data))
+	{
+	}
+};
+
 #define MAX_CHUNKS (NUMLEVELS + 4)
 
 DWORD sgdwOwnerWait;
@@ -46,48 +57,31 @@ DWORD sgdwRecvOffset;
 int sgnCurrMegaPlayer;
 DLevel sgLevels[NUMLEVELS];
 BYTE sbLastCmd;
-TMegaPkt *sgpCurrPkt;
 byte sgRecvBuf[sizeof(DLevel) + 1];
 BYTE sgbRecvCmd;
 LocalLevel sgLocals[NUMLEVELS];
 DJunk sgJunk;
-TMegaPkt *sgpMegaPkt;
 bool sgbDeltaChanged;
 BYTE sgbDeltaChunks;
+std::list<TMegaPkt> MegaPktList;
 
 void GetNextPacket()
 {
-	TMegaPkt *result;
-
-	sgpCurrPkt = static_cast<TMegaPkt *>(std::malloc(sizeof(TMegaPkt)));
-	if (sgpCurrPkt == nullptr)
-		app_fatal("Failed to allocate memory");
-	sgpCurrPkt->pNext = nullptr;
-	sgpCurrPkt->dwSpaceLeft = sizeof(result->data);
-
-	result = (TMegaPkt *)&sgpMegaPkt;
-	while (result->pNext != nullptr)
-		result = result->pNext;
-
-	result->pNext = sgpCurrPkt;
+	MegaPktList.emplace_back();
 }
 
 void FreePackets()
 {
-	while (sgpMegaPkt != nullptr) {
-		sgpCurrPkt = sgpMegaPkt->pNext;
-		std::free(sgpMegaPkt);
-		sgpMegaPkt = sgpCurrPkt;
-	}
+	MegaPktList.clear();
 }
 
 void PrePacket()
 {
 	uint8_t playerId = -1;
-	for (TMegaPkt *pkt = sgpMegaPkt; pkt != nullptr; pkt = pkt->pNext) {
-		byte *data = pkt->data;
-		size_t spaceLeft = sizeof(pkt->data);
-		while (spaceLeft != pkt->dwSpaceLeft) {
+	for (TMegaPkt &pkt : MegaPktList) {
+		byte *data = pkt.data;
+		size_t spaceLeft = sizeof(pkt.data);
+		while (spaceLeft != pkt.spaceLeft) {
 			auto cmdId = static_cast<_cmd_id>(*data);
 
 			if (cmdId == FAKE_CMD_SETID) {
@@ -123,11 +117,12 @@ void SendPacket(int pnum, const void *packet, DWORD dwSize)
 		cmd.bPlr = pnum;
 		SendPacket(pnum, &cmd, sizeof(cmd));
 	}
-	if (sgpCurrPkt->dwSpaceLeft < dwSize)
+	if (MegaPktList.back().spaceLeft < dwSize)
 		GetNextPacket();
 
-	memcpy(sgpCurrPkt->data + sizeof(sgpCurrPkt->data) - sgpCurrPkt->dwSpaceLeft, packet, dwSize);
-	sgpCurrPkt->dwSpaceLeft -= dwSize;
+	TMegaPkt &currMegaPkt = MegaPktList.back();
+	memcpy(currMegaPkt.data + sizeof(currMegaPkt.data) - currMegaPkt.spaceLeft, packet, dwSize);
+	currMegaPkt.spaceLeft -= dwSize;
 }
 
 int WaitForTurns()
