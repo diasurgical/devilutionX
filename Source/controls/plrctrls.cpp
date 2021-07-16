@@ -91,7 +91,7 @@ int GetDistance(Point destination, int maxDistance)
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath(PosOkPlayer, MyPlayerId, Players[MyPlayerId].position.future.x, Players[MyPlayerId].position.future.y, destination.x, destination.y, walkpath);
+	int steps = FindPath(std::bind(PosOkPlayer, MyPlayerId, std::placeholders::_1), Players[MyPlayerId].position.future.x, Players[MyPlayerId].position.future.y, destination.x, destination.y, walkpath);
 	if (steps > maxDistance)
 		return 0;
 

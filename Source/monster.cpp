@@ -2135,7 +2135,7 @@ bool AiPlanWalk(int i)
 	if ((Monsters[i]._mFlags & MFLAG_CAN_OPEN_DOOR) == 0)
 		check = MonsterIsTileAvalible;
 
-	if (FindPath(check, i, monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
+	if (FindPath(std::bind(check, i, std::placeholders::_1), monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
 		return false;
 	}
 
