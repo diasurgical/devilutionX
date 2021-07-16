@@ -490,7 +490,7 @@ void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, Point position);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
 void CalcPlrStaff(PlayerStruct &player);
-void CheckPlrSpell();
+void CheckPlrSpell(bool mouseClick);
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);

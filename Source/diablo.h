@@ -43,6 +43,16 @@ enum class GameLogicStep {
 	ProcessMissilesTown,
 };
 
+enum class MouseActionType : int {
+	None,
+	Spell,
+	Spell_ComplainedAboutMana,
+	Attack,
+	Attack_MonsterTarget,
+	Attack_PlayerTarget,
+	Other,
+};
+
 extern SDL_Window *ghMainWnd;
 extern DWORD glSeedTbl[NUMLEVELS];
 extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
@@ -68,6 +78,11 @@ extern bool gbQuietMode;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
+
+extern MouseActionType lastLeftMouseButtonAction;
+extern MouseActionType lastRightMouseButtonAction;
+extern Uint32 lastLeftMouseButtonTime;
+extern Uint32 lastRightMouseButtonTime;
 
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);

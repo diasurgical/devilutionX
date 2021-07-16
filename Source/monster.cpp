@@ -4446,6 +4446,8 @@ void DeleteMonsterList()
 
 	for (int i = MAX_PLRS; i < ActiveMonsterCount;) {
 		if (Monsters[ActiveMonsters[i]]._mDelFlag) {
+			if (pcursmonst == ActiveMonsters[i]) // Unselect monster if player highlighted it
+				pcursmonst = -1;
 			DeleteMonster(i);
 		} else {
 			i++;

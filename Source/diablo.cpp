@@ -19,6 +19,7 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/keymapper.hpp"
+#include "diablo.h"
 #include "doom.h"
 #include "drlg_l1.h"
 #include "drlg_l2.h"
@@ -128,6 +129,11 @@ QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 	{ "QuickMessage3", N_("Here's something for you.") },
 	{ "QuickMessage4", N_("Now you DIE!") }
 };
+
+MouseActionType lastLeftMouseButtonAction = MouseActionType::None; // This and the following mouse variables are for handling in-game click-and-hold actions
+MouseActionType lastRightMouseButtonAction = MouseActionType::None;
+Uint32 lastLeftMouseButtonTime = 0;
+Uint32 lastRightMouseButtonTime = 0;
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
@@ -248,14 +254,17 @@ bool LeftMouseCmd(bool bShift)
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 		} else if (myPlayer._pwtype == WT_RANGED) {
 			if (bShift) {
+				lastLeftMouseButtonAction = MouseActionType::Attack;
 				NetSendCmdLoc(MyPlayerId, true, CMD_RATTACKXY, { cursmx, cursmy });
 			} else if (pcursmonst != -1) {
 				if (CanTalkToMonst(Monsters[pcursmonst])) {
 					NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 				} else {
+					lastLeftMouseButtonAction = MouseActionType::Attack_MonsterTarget;
 					NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 				}
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
+				lastLeftMouseButtonAction = MouseActionType::Attack_PlayerTarget;
 				NetSendCmdParam1(true, CMD_RATTACKPID, pcursplr);
 			}
 		} else {
@@ -264,14 +273,18 @@ bool LeftMouseCmd(bool bShift)
 					if (CanTalkToMonst(Monsters[pcursmonst])) {
 						NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 					} else {
+						lastLeftMouseButtonAction = MouseActionType::Attack;
 						NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 					}
 				} else {
+					lastLeftMouseButtonAction = MouseActionType::Attack;
 					NetSendCmdLoc(MyPlayerId, true, CMD_SATTACKXY, { cursmx, cursmy });
 				}
 			} else if (pcursmonst != -1) {
+				lastLeftMouseButtonAction = MouseActionType::Attack_MonsterTarget;
 				NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 			} else if (pcursplr != -1 && !gbFriendlyMode) {
+				lastLeftMouseButtonAction = MouseActionType::Attack_PlayerTarget;
 				NetSendCmdParam1(true, CMD_ATTACKPID, pcursplr);
 			}
 		}
@@ -284,6 +297,9 @@ bool LeftMouseCmd(bool bShift)
 
 bool LeftMouseDown(int wParam)
 {
+	lastLeftMouseButtonAction = MouseActionType::Other;
+	lastLeftMouseButtonTime = SDL_GetTicks();
+
 	if (gmenu_left_mouse(true))
 		return false;
 
@@ -372,6 +388,9 @@ void LeftMouseUp(int wParam)
 
 void RightMouseDown()
 {
+	lastRightMouseButtonAction = MouseActionType::Other;
+	lastRightMouseButtonTime = SDL_GetTicks();
+
 	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
 		return;
 	}
@@ -392,7 +411,7 @@ void RightMouseDown()
 	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
-				CheckPlrSpell();
+				CheckPlrSpell(true);
 		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			NewCursor(CURSOR_HAND);
 		}
@@ -720,6 +739,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_LBUTTONUP:
 		GetMousePos(lParam);
+		lastLeftMouseButtonAction = MouseActionType::None;
 		if (sgbMouseDown == CLICK_LEFT) {
 			sgbMouseDown = CLICK_NONE;
 			LeftMouseUp(wParam);
@@ -735,6 +755,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		return;
 	case DVL_WM_RBUTTONUP:
 		GetMousePos(lParam);
+		lastRightMouseButtonAction = MouseActionType::None;
 		if (sgbMouseDown == CLICK_RIGHT) {
 			sgbMouseDown = CLICK_NONE;
 		}
@@ -2118,6 +2139,13 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (!gbIsSpawn && setlevel && setlvlnum == SL_SKELKING && Quests[Q_SKELKING]._qactive == QUEST_ACTIVE)
 		PlaySFX(USFX_SKING1);
+
+	// Reset mouse selection of entities
+	pcursmonst = -1;
+	pcursobj = -1;
+	pcursitem = -1;
+	pcursinvitem = -1;
+	pcursplr = -1;
 }
 
 /**

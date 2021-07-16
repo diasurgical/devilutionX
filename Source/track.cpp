@@ -21,8 +21,60 @@ bool sgbIsWalking;
 
 } // namespace
 
+static bool RepeatMouseAttack(bool leftButton)
+{
+	if (pcurs != CURSOR_HAND)
+		return false;
+
+	Uint32 *timePressed;
+	MouseActionType lastAction;
+	if (leftButton) {
+		if (sgbMouseDown != CLICK_LEFT)
+			return false;
+		timePressed = &lastLeftMouseButtonTime;
+		lastAction = lastLeftMouseButtonAction;
+	} else {
+		if (sgbMouseDown != CLICK_RIGHT)
+			return false;
+		timePressed = &lastRightMouseButtonTime;
+		lastAction = lastRightMouseButtonAction;
+	}
+
+	if (lastAction != MouseActionType::Attack && lastAction != MouseActionType::Attack_MonsterTarget && lastAction != MouseActionType::Attack_PlayerTarget && lastAction != MouseActionType::Spell && lastAction != MouseActionType::Spell_ComplainedAboutMana)
+		return false;
+
+	if (Players[MyPlayerId]._pmode != PM_DEATH && Players[MyPlayerId]._pmode != PM_QUIT &&
+		Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - *timePressed >= (Uint32)gnTickDelay * 4) {
+		bool rangedAttack = Players[MyPlayerId]._pwtype == WT_RANGED;
+		*timePressed = SDL_GetTicks();
+		switch (lastAction) {
+		case MouseActionType::Attack:
+			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY)
+				NetSendCmdLoc(MyPlayerId, true, rangedAttack ? CMD_RATTACKXY : CMD_SATTACKXY, { cursmx, cursmy });
+			break;
+		case MouseActionType::Attack_MonsterTarget:
+			if (pcursmonst != -1)
+				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
+			break;
+		case MouseActionType::Attack_PlayerTarget:
+			if (pcursplr != -1 && !gbFriendlyMode)
+				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+			break;
+		case MouseActionType::Spell:
+		case MouseActionType::Spell_ComplainedAboutMana:
+			CheckPlrSpell(true);
+			break;
+		}
+	}
+
+	return true;
+}
+
 void track_process()
 {
+	if (RepeatMouseAttack(true) || RepeatMouseAttack(false))
+		return;
+
 	if (!sgbIsWalking)
 		return;
 

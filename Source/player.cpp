@@ -3572,7 +3572,7 @@ void CalcPlrStaff(PlayerStruct &player)
 	}
 }
 
-void CheckPlrSpell()
+void CheckPlrSpell(bool mouseClick)
 {
 	bool addflag = false;
 	int sl;
@@ -3643,11 +3643,16 @@ void CheckPlrSpell()
 			sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
 		}
+		if (mouseClick)
+			lastRightMouseButtonAction = MouseActionType::Spell;
 		return;
 	}
 
 	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		myPlayer.Say(HeroSpeech::NotEnoughMana);
+		if (!mouseClick || lastRightMouseButtonAction != MouseActionType::Spell_ComplainedAboutMana)
+			myPlayer.Say(HeroSpeech::NotEnoughMana);
+		if (mouseClick)
+			lastRightMouseButtonAction = MouseActionType::Spell_ComplainedAboutMana;
 	}
 }
 
