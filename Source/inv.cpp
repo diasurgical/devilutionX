@@ -363,7 +363,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	Size itemSize { icursW28, icursH28 };
 	bool done = false;
 	int r = 0;
-	for (; r < NUM_XY_SLOTS; r++) {
+	for (; r < NUM_XY_SLOTS && !done; r++) {
 		int xo = RIGHT_PANEL;
 		int yo = 0;
 		if (r >= SLOTXY_BELT_FIRST) {
@@ -374,9 +374,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
 			if (j >= InvRect[r].y + yo - InventorySlotSizeInPixels.height - 1 && j < InvRect[r].y + yo) {
 				done = true;
+				r--;
 			}
 		}
-		if (r == SLOTXY_INV_FIRST) {
+		if (r == SLOTXY_CHEST_LAST) {
 			if ((itemSize.width & 1) == 0)
 				i -= INV_SLOT_HALF_SIZE_PX;
 			if ((itemSize.height & 1) == 0)
@@ -384,9 +385,6 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		}
 		if (r == SLOTXY_INV_LAST && (itemSize.height & 1) == 0)
 			j += INV_SLOT_HALF_SIZE_PX;
-
-		if (done) // found a slot
-			break;
 	}
 	if (!done)
 		return;
