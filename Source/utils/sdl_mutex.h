@@ -5,6 +5,8 @@
 #include <SDL_mutex.h>
 #include <SDL_version.h>
 
+#include "../appfat.h"
+
 namespace devilution {
 
 /*
@@ -16,6 +18,8 @@ public:
 	SdlMutex()
 	    : mutex_(SDL_CreateMutex())
 	{
+		if (mutex_ == nullptr)
+			ErrSdl();
 	}
 
 	~SdlMutex()
