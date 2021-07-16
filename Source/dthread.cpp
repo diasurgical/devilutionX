@@ -42,10 +42,8 @@ SDL_Thread *sghThread = nullptr;
 void DthreadHandler()
 {
 	while (dthread_running) {
-		if (sgpInfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1) {
-			const char *errorBuf = SDL_GetError();
-			app_fatal("dthread4:\n%s", errorBuf);
-		}
+		if (sgpInfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1)
+			app_fatal("dthread4:\n%s", SDL_GetError());
 
 		sgMemCrit.Enter();
 		if (sgpInfoList .empty()) {
