@@ -567,10 +567,10 @@ bool FetchMessage(tagMSG *lpMsg)
 			break;
 
 		case SDL_WINDOWEVENT_FOCUS_LOST:
+			diablo_focus_pause();
+			break;
 		case SDL_WINDOWEVENT_FOCUS_GAINED:
-			if (gbRunGameResult) {
-				diablo_focus_pause();
-			}
+			diablo_focus_unpause();
 			break;
 
 		default:

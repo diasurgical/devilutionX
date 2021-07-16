@@ -1749,29 +1749,37 @@ bool MinimizePaused = false;
 
 void diablo_focus_pause()
 {
-	if (gbIsMultiplayer) {
+	if (gbIsMultiplayer || MinimizePaused) {
 		return;
 	}
 
-	if (!MinimizePaused) {
-		GameWasAlreadyPaused = PauseMode != 0;
+	GameWasAlreadyPaused = PauseMode != 0;
 
-		if (!GameWasAlreadyPaused) {
-			PauseMode = 2;
-			sound_stop();
-			track_repeat_walk(false);
-		}
-
-		music_mute();
-	} else {
-		if (!GameWasAlreadyPaused) {
-			PauseMode = 0;
-		}
-
-		music_unmute();
+	if (!GameWasAlreadyPaused) {
+		PauseMode = 2;
+		sound_stop();
+		track_repeat_walk(false);
 	}
 
-	MinimizePaused = !MinimizePaused;
+	music_mute();
+
+	MinimizePaused = true;
+}
+
+void diablo_focus_unpause()
+{
+	if (gbIsMultiplayer || !MinimizePaused)
+	{
+		return;
+	}
+
+	if (!GameWasAlreadyPaused) {
+		PauseMode = 0;
+	}
+
+	music_unmute();
+
+	MinimizePaused = false;
 }
 
 bool PressEscKey()
@@ -2100,6 +2108,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
 	else
 		music_start(leveltype);
+
+	if (MinimizePaused) {
+		music_mute();
+	}
 
 	while (!IncProgress())
 		;
