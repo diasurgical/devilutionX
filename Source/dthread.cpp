@@ -46,7 +46,7 @@ void DthreadHandler()
 			app_fatal("dthread4:\n%s", SDL_GetError());
 
 		sgMemCrit.Enter();
-		if (sgpInfoList .empty()) {
+		if (sgpInfoList.empty()) {
 			ResetEvent(sghWorkToDoEvent);
 			sgMemCrit.Leave();
 		}
