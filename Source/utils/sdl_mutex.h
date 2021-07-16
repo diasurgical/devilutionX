@@ -5,7 +5,7 @@
 #include <SDL_mutex.h>
 #include <SDL_version.h>
 
-#include "../appfat.h"
+#include "appfat.h"
 
 namespace devilution {
 
