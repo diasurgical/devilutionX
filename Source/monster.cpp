@@ -1157,7 +1157,7 @@ void Teleport(int i)
 				x = mx + rx * j;
 				y = my + ry * k;
 				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && x != monster.position.tile.x && y != monster.position.tile.y) {
-					if (MonsterIsTileAvalible(i, { x, y }))
+					if (MonsterIsTileAvailable(i, { x, y }))
 						done = true;
 				}
 			}
@@ -2046,10 +2046,10 @@ bool RandomWalk2(int i, Direction md)
 /**
  * @brief Check if a tile is affected by a spell we are vunerable to
  */
-bool MonsterIsTileSafe(int i, Point position)
+bool MonsterIsTileSafe(const MonsterStruct &monster, Point position)
 {
 	int8_t mi = dMissile[position.x][position.y];
-	if (mi == 0 || i < 0) {
+	if (mi == 0) {
 		return true;
 	}
 
@@ -2076,9 +2076,9 @@ bool MonsterIsTileSafe(int i, Point position)
 			}
 		}
 	}
-	if (fire && ((Monsters[i].mMagicRes & IMMUNE_FIRE) == 0 || Monsters[i].MType->mtype == MT_DIABLO))
+	if (fire && ((monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO))
 		return false;
-	if (lightning && ((Monsters[i].mMagicRes & IMMUNE_LIGHTNING) == 0 || Monsters[i].MType->mtype == MT_DIABLO))
+	if (lightning && ((monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO))
 		return false;
 
 	return true;
@@ -2098,32 +2098,41 @@ bool MonsterIsTileClear(int i, Point position)
 			return false;
 	}
 
-	return MonsterIsTileSafe(i, position);
+	return MonsterIsTileSafe(Monsters[i], position);
 }
 
 /**
- * @brief Check that the amonster that can open doors can stand on the tile
+ * @brief If a monster can access the given tile (possibly by opening a door)
  */
 bool MonsterIsTileAccessible(int i, Point position)
 {
-	bool isdoor = false;
+	MonsterStruct *monster;
+	if (i >= 0)
+		monster = &Monsters[i];
+
+	bool canOpen = false;
 	if (dObject[position.x][position.y] != 0) {
 		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-		isdoor = IsAnyOf(Objects[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR);
-		if (Objects[oi]._oSolidFlag && !isdoor)
+
+		if (monster != nullptr && (monster->_mFlags & MFLAG_CAN_OPEN_DOOR) != 0)
+			canOpen = IsAnyOf(Objects[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR);
+
+		if (Objects[oi]._oSolidFlag && !canOpen)
 			return false;
 	}
 
-	if ((SolidLoc(position) && !isdoor) || dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
+	if ((SolidLoc(position) && !canOpen) || dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
 		return false;
 
-	return MonsterIsTileSafe(i, position);
+	if (monster == nullptr)
+		return true;
+
+	return MonsterIsTileSafe(*monster, position);
 }
 
 bool AiPlanWalk(int i)
 {
 	int8_t path[MAX_PATH_LENGTH];
-	bool (*check)(int, Point);
 
 	/** Maps from walking path step to facing direction. */
 	const Direction plr2monst[9] = { DIR_S, DIR_NE, DIR_NW, DIR_SE, DIR_SW, DIR_N, DIR_E, DIR_S, DIR_W };
@@ -2131,11 +2140,7 @@ bool AiPlanWalk(int i)
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	check = MonsterIsTileAccessible;
-	if ((Monsters[i]._mFlags & MFLAG_CAN_OPEN_DOOR) == 0)
-		check = MonsterIsTileAvalible;
-
-	if (FindPath(check, i, monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
+	if (FindPath(MonsterIsTileAccessible, i, monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
 		return false;
 	}
 
@@ -2639,7 +2644,7 @@ void RhinoAi(int i)
 	if (monster._mgoal == MGOAL_NORMAL) {
 		if (dist >= 5
 		    && v < 2 * monster._mint + 43
-		    && LineClear(MonsterIsTileAvalible, i, monster.position.tile, { fx, fy })) {
+		    && LineClear(MonsterIsTileAvailable, i, monster.position.tile, { fx, fy })) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, monster._menemy, i, 0, 0) != -1) {
 				if (monster.MData->snd_special)
 					PlayEffect(monster, 3);
@@ -2785,7 +2790,7 @@ void LeoricAi(int i)
 		    && ((dist >= 3 && v < 4 * monster._mint + 35) || v < 6)
 		    && LineClearMissile(monster.position.tile, { fx, fy })) {
 			Point newPosition = monster.position.tile + md;
-			if (MonsterIsTileAvalible(i, newPosition) && ActiveMonsterCount < MAXMONSTERS) {
+			if (MonsterIsTileAvailable(i, newPosition) && ActiveMonsterCount < MAXMONSTERS) {
 				SpawnSkeleton(newPosition, md);
 				StartSpecialStand(monster, md);
 			}
@@ -2842,7 +2847,7 @@ void BatAi(int i)
 	if (monster.MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * monster._mint + 33
-	    && LineClear(MonsterIsTileAvalible, i, monster.position.tile, { fx, fy })) {
+	    && LineClear(MonsterIsTileAvailable, i, monster.position.tile, { fx, fy })) {
 		if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
 			monster._mmode = MM_CHARGE;
@@ -3171,7 +3176,7 @@ void SnakeAi(int i)
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
 	monster._mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClear(MonsterIsTileAvalible, i, monster.position.tile, { fx, fy }) && monster._mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear(MonsterIsTileAvailable, i, monster.position.tile, { fx, fy }) && monster._mVar1 != MM_CHARGE) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(monster, 0);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
@@ -3573,7 +3578,7 @@ void HorkDemonAi(int i)
 	if (monster._mgoal == 1) {
 		if ((abs(mx) >= 3 || abs(my) >= 3) && v < 2 * monster._mint + 43) {
 			Point position = monster.position.tile + monster._mdir;
-			if (MonsterIsTileAvalible(i, position) && ActiveMonsterCount < MAXMONSTERS) {
+			if (MonsterIsTileAvailable(i, position) && ActiveMonsterCount < MAXMONSTERS) {
 				StartRangedSpecialAttack(monster, MIS_HORKDMN, 0);
 			}
 		} else if (abs(mx) < 2 && abs(my) < 2) {
@@ -4602,7 +4607,7 @@ bool DirOK(int i, Direction mdir)
 	auto &monster = Monsters[i];
 	Point position = monster.position.tile;
 	Point futurePosition = position + mdir;
-	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !MonsterIsTileAvalible(i, futurePosition))
+	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !MonsterIsTileAvailable(i, futurePosition))
 		return false;
 	if (mdir == DIR_E) {
 		if (SolidLoc(position + DIR_SE) || (dFlags[position.x + 1][position.y] & BFLAG_MONSTLR) != 0)
@@ -4997,7 +5002,7 @@ void MissToMonst(int i, Point position)
 			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
 			if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
 				Point newPosition = oldPosition + monster._mdir;
-				if (MonsterIsTileAvalible(dMonster[oldPosition.x][oldPosition.y] - 1, newPosition)) {
+				if (MonsterIsTileAvailable(dMonster[oldPosition.x][oldPosition.y] - 1, newPosition)) {
 					m = dMonster[oldPosition.x][oldPosition.y];
 					dMonster[newPosition.x][newPosition.y] = m;
 					dMonster[oldPosition.x][oldPosition.y] = 0;
@@ -5010,7 +5015,10 @@ void MissToMonst(int i, Point position)
 	}
 }
 
-bool MonsterIsTileAvalible(int i, Point position)
+/**
+ * @brief Check that the given tile is available to the monster
+ */
+bool MonsterIsTileAvailable(int i, Point position)
 {
 	if (dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
 		return false;
@@ -5036,7 +5044,7 @@ bool SpawnSkeleton(int ii, Point position)
 	if (ii == -1)
 		return false;
 
-	if (MonsterIsTileAvalible(-1, position)) {
+	if (MonsterIsTileAvailable(-1, position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
 		ActivateSpawn(ii, position.x, position.y, dir);
 		return true;
@@ -5049,7 +5057,7 @@ bool SpawnSkeleton(int ii, Point position)
 	for (int j = position.y - 1; j <= position.y + 1; j++) {
 		int xx = 0;
 		for (int k = position.x - 1; k <= position.x + 1; k++) {
-			monstok[xx][yy] = MonsterIsTileAvalible(-1, { k, j });
+			monstok[xx][yy] = MonsterIsTileAvailable(-1, { k, j });
 			savail = savail || monstok[xx][yy];
 			xx++;
 		}
