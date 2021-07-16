@@ -9,7 +9,7 @@
 #include "DiabloUI/text.h"
 #include "config.h"
 #include "control.h"
-#include "mainmenu.h"
+#include "menu.h"
 #include "options.h"
 #include "storm/storm.h"
 #include "utils/language.h"

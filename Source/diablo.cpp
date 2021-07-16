@@ -38,7 +38,7 @@
 #include "init.h"
 #include "lighting.h"
 #include "loadsave.h"
-#include "mainmenu.h"
+#include "menu.h"
 #include "minitext.h"
 #include "missiles.h"
 #include "movie.h"

@@ -14,7 +14,7 @@
 #include "dthread.h"
 #include "engine/point.hpp"
 #include "engine/random.hpp"
-#include "mainmenu.h"
+#include "menu.h"
 #include "nthread.h"
 #include "options.h"
 #include "pfile.h"
