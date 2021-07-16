@@ -19,7 +19,7 @@ struct DThreadPkt {
 	std::unique_ptr<byte[]> data;
 	uint32_t len;
 
-	DThreadPkt(uint8_t pnum, _cmd_id(cmd), std::unique_ptr<byte[]> &&data, uint32_t len)
+	DThreadPkt(uint8_t pnum, _cmd_id(cmd), std::unique_ptr<byte[]> data, uint32_t len)
 		: pnum(pnum)
 		, cmd(cmd)
 		, data(std::move(data))
