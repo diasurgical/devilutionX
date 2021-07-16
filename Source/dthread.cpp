@@ -55,15 +55,7 @@ void DthreadHandler()
 		InfoList.pop_front();
 		sgMemCrit.Leave();
 
-		if (pkt.pnum != MAX_PLRS)
-			multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
-
-		DWORD dwMilliseconds = 1000 * pkt.len / gdwDeltaBytesSec;
-		if (dwMilliseconds >= 1)
-			dwMilliseconds = 1;
-
-		if (dwMilliseconds != 0)
-			SDL_Delay(dwMilliseconds);
+		multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
 	}
 }
 
@@ -72,10 +64,9 @@ void DthreadHandler()
 void dthread_remove_player(uint8_t pnum)
 {
 	sgMemCrit.Enter();
-	for (auto &pkt : InfoList) {
-		if (pkt.pnum == pnum)
-			pkt.pnum = MAX_PLRS;
-	}
+	InfoList.remove_if([&](DThreadPkt &pkt) {
+		return pkt.pnum == pnum;
+	});
 	sgMemCrit.Leave();
 }
 
