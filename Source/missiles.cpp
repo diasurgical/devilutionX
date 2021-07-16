@@ -4323,7 +4323,7 @@ void MI_Fireman(int i)
 	} else {
 		j = dMonster[b.x][b.y];
 	}
-	if (!PosOkMissile(0, b) || (j > 0 && (Missiles[i]._miVar1 & 1) == 0)) {
+	if (!PosOkMissile(b) || (j > 0 && (Missiles[i]._miVar1 & 1) == 0)) {
 		Missiles[i].position.velocity *= -1;
 		Missiles[i]._mimfnum = opposite[Missiles[i]._mimfnum];
 		Missiles[i]._miAnimData = monster.MType->GetAnimData(MonsterGraphic::Walk).CelSpritesForDirections[Missiles[i]._mimfnum]->Data();

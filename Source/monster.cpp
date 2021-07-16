@@ -1942,14 +1942,14 @@ int SpawnSkeleton(Point position, Direction dir)
 	return skel;
 }
 
-bool IsNotSolid(int /*entity*/, Point position)
+bool IsNotSolid(Point position)
 {
 	return !nSolidTable[dPiece[position.x][position.y]];
 }
 
 bool IsLineNotSolid(Point startPoint, Point endPoint)
 {
-	return LineClear(IsNotSolid, 0, startPoint, endPoint);
+	return LineClear(IsNotSolid, startPoint, endPoint);
 }
 
 void GroupUnity(int i)
@@ -2202,8 +2202,7 @@ bool AiPlanPath(int i)
 	}
 
 	bool clear = LineClear(
-	    MonsterIsTileClear,
-	    i,
+	    std::bind(MonsterIsTileAvalible, i, std::placeholders::_1),
 	    monster.position.tile,
 	    monster.enemyPosition);
 	if (!clear || (monster._pathcount >= 5 && monster._pathcount < 8)) {
@@ -2639,7 +2638,7 @@ void RhinoAi(int i)
 	if (monster._mgoal == MGOAL_NORMAL) {
 		if (dist >= 5
 		    && v < 2 * monster._mint + 43
-		    && LineClear(MonsterIsTileAvalible, i, monster.position.tile, { fx, fy })) {
+		    && LineClear(std::bind(MonsterIsTileAvalible, i, std::placeholders::_1), monster.position.tile, { fx, fy })) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, monster._menemy, i, 0, 0) != -1) {
 				if (monster.MData->snd_special)
 					PlayEffect(monster, 3);
@@ -2842,7 +2841,7 @@ void BatAi(int i)
 	if (monster.MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * monster._mint + 33
-	    && LineClear(MonsterIsTileAvalible, i, monster.position.tile, { fx, fy })) {
+	    && LineClear(std::bind(MonsterIsTileAvalible, i, std::placeholders::_1), monster.position.tile, { fx, fy })) {
 		if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
 			monster._mmode = MM_CHARGE;
@@ -3171,7 +3170,7 @@ void SnakeAi(int i)
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
 	monster._mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClear(MonsterIsTileAvalible, i, monster.position.tile, { fx, fy }) && monster._mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear(std::bind(MonsterIsTileAvalible, i, std::placeholders::_1), monster.position.tile, { fx, fy }) && monster._mVar1 != MM_CHARGE) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(monster, 0);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
@@ -4639,17 +4638,17 @@ bool DirOK(int i, Direction mdir)
 	return mcount == monster.packsize;
 }
 
-bool PosOkMissile(int /*entity*/, Point position)
+bool PosOkMissile(Point position)
 {
 	return !nMissileTable[dPiece[position.x][position.y]] && (dFlags[position.x][position.y] & BFLAG_MONSTLR) == 0;
 }
 
 bool LineClearMissile(Point startPoint, Point endPoint)
 {
-	return LineClear(PosOkMissile, 0, startPoint, endPoint);
+	return LineClear(PosOkMissile, startPoint, endPoint);
 }
 
-bool LineClear(bool (*clear)(int, Point), int entity, Point startPoint, Point endPoint)
+bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint)
 {
 	Point position = startPoint;
 
@@ -4685,7 +4684,7 @@ bool LineClear(bool (*clear)(int, Point), int entity, Point startPoint, Point en
 				position.y += yincD;
 			}
 			position.x++;
-			done = position != startPoint && !clear(entity, position);
+			done = position != startPoint && !clear(position);
 		}
 	} else {
 		if (dy < 0) {
@@ -4717,7 +4716,7 @@ bool LineClear(bool (*clear)(int, Point), int entity, Point startPoint, Point en
 				position.x += xincD;
 			}
 			position.y++;
-			done = position != startPoint && !clear(entity, position);
+			done = position != startPoint && !clear(position);
 		}
 	}
 	return position == endPoint;
