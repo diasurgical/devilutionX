@@ -1050,8 +1050,9 @@ DWORD OnAttackMonster(TCmd *pCmd, int pnum)
 	auto *p = (TCmdParam1 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		if (Players[pnum].position.tile.WalkingDistance(Monsters[p->wParam1].position.future) > 1)
-			MakePlrPath(pnum, Monsters[p->wParam1].position.future, false);
+		Point position = Monsters[p->wParam1].position.future;
+		if (Players[pnum].position.tile.WalkingDistance(position) > 1)
+			MakePlrPath(pnum, position, false);
 		Players[pnum].destAction = ACTION_ATTACKMON;
 		Players[pnum].destParam1 = p->wParam1;
 	}
