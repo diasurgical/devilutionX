@@ -319,7 +319,8 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 		while (placed != 0) {
 			ActiveMonsterCount--;
 			placed--;
-			dMonster[Monsters[ActiveMonsterCount].position.tile.x][Monsters[ActiveMonsterCount].position.tile.y] = 0;
+			const auto &position = Monsters[ActiveMonsterCount].position.tile;
+			dMonster[position.x][position.y] = 0;
 		}
 
 		int xp;
@@ -839,14 +840,15 @@ void UpdateEnemy(MonsterStruct &monster)
 	int menemy = -1;
 	int bestDist = -1;
 	bool bestsameroom = false;
+	const auto &position = monster.position.tile;
 	if ((monster._mFlags & MFLAG_BERSERK) != 0 || (monster._mFlags & MFLAG_GOLEM) == 0) {
 		for (int pnum = 0; pnum < MAX_PLRS; pnum++) {
 			auto &player = Players[pnum];
 			if (!player.plractive || currlevel != player.plrlevel || player._pLvlChanging
 			    || (((player._pHitPoints >> 6) == 0) && gbIsMultiplayer))
 				continue;
-			bool sameroom = (dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[player.position.tile.x][player.position.tile.y]);
-			int dist = monster.position.tile.WalkingDistance(player.position.tile);
+			bool sameroom = (dTransVal[position.x][position.y] == dTransVal[player.position.tile.x][player.position.tile.y]);
+			int dist = position.WalkingDistance(player.position.tile);
 			if ((sameroom && !bestsameroom)
 			    || ((sameroom || !bestsameroom) && dist < bestDist)
 			    || (menemy == -1)) {
@@ -865,14 +867,14 @@ void UpdateEnemy(MonsterStruct &monster)
 			continue;
 		if ((otherMonster._mhitpoints >> 6) <= 0)
 			continue;
-		if (otherMonster.position.tile.x == 1 && otherMonster.position.tile.y == 0)
+		if (otherMonster.position.tile == Point { 1, 0 })
 			continue;
 		if (M_Talker(otherMonster) && otherMonster.mtalkmsg != TEXT_NONE)
 			continue;
 		if ((monster._mFlags & MFLAG_GOLEM) != 0 && (otherMonster._mFlags & MFLAG_GOLEM) != 0) // prevent golems from fighting each other
 			continue;
 
-		int dist = otherMonster.position.tile.WalkingDistance(monster.position.tile);
+		int dist = otherMonster.position.tile.WalkingDistance(position);
 		if (((monster._mFlags & MFLAG_GOLEM) == 0
 		        && (monster._mFlags & MFLAG_BERSERK) == 0
 		        && dist >= 2
@@ -882,7 +884,7 @@ void UpdateEnemy(MonsterStruct &monster)
 		        && (otherMonster._mFlags & MFLAG_GOLEM) == 0)) {
 			continue;
 		}
-		bool sameroom = dTransVal[monster.position.tile.x][monster.position.tile.y] == dTransVal[otherMonster.position.tile.x][otherMonster.position.tile.y];
+		bool sameroom = dTransVal[position.x][position.y] == dTransVal[otherMonster.position.tile.x][otherMonster.position.tile.y];
 		if ((sameroom && !bestsameroom)
 		    || ((sameroom || !bestsameroom) && dist < bestDist)
 		    || (menemy == -1)) {
@@ -1065,9 +1067,8 @@ void StartEating(MonsterStruct &monster)
 	monster.position.old = monster.position.tile;
 }
 
-void DiabloDeath(int i, bool sendmsg)
+void DiabloDeath(MonsterStruct &diablo, bool sendmsg)
 {
-	auto &diablo = Monsters[i];
 	PlaySFX(USFX_DIABLOD);
 	Quests[Q_DIABLO]._qactive = QUEST_DONE;
 	if (sendmsg)
@@ -1077,7 +1078,7 @@ void DiabloDeath(int i, bool sendmsg)
 	for (int j = 0; j < ActiveMonsterCount; j++) {
 		int k = ActiveMonsters[j];
 		auto &monster = Monsters[k];
-		if (k == i || diablo._msquelch == 0)
+		if (monster.MType->mtype == MT_DIABLO || diablo._msquelch == 0)
 			continue;
 
 		NewMonsterAnim(monster, MonsterGraphic::Death, monster._mdir);
@@ -1100,9 +1101,8 @@ void DiabloDeath(int i, bool sendmsg)
 	diablo.position.offset2.deltaX = (int)((diablo.position.temp.x - (diablo.position.tile.y << 16)) / (double)dist);
 }
 
-void SpawnLoot(int i, bool sendmsg)
+void SpawnLoot(MonsterStruct &monster, bool sendmsg)
 {
-	auto &monster = Monsters[i];
 	if (QuestStatus(Q_GARBUD) && monster._uniqtype - 1 == UMT_GARBUD) {
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ITYPE_MACE, IMISC_NONE, true, false);
 	} else if (monster._uniqtype - 1 == UMT_DEFILER) {
@@ -1129,7 +1129,7 @@ void SpawnLoot(int i, bool sendmsg)
 		CreateMagicWeapon(monster.position.tile, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
 		CreateMagicWeapon(monster.position.tile, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
 		CreateSpellBook(monster.position.tile, SPL_APOCA, false, true);
-	} else if (i > MAX_PLRS - 1) { // Golems should not spawn loot
+	} else if (monster.MType->mtype != MT_GOLEM) {
 		SpawnItem(monster, monster.position.tile, sendmsg);
 	}
 }
@@ -1219,9 +1219,9 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	MonsterKillCounts[monster.MType->mtype]++;
 	monster._mhitpoints = 0;
 	SetRndSeed(monster._mRndSeed);
-	SpawnLoot(i, sendmsg);
+	SpawnLoot(monster, sendmsg);
 	if (monster.MType->mtype == MT_DIABLO)
-		DiabloDeath(i, true);
+		DiabloDeath(monster, true);
 	else
 		PlayEffect(monster, 2);
 
@@ -1245,7 +1245,7 @@ void StartDeathFromMonster(int i, int mid)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &killer = Monsters[i];
-	assurance((DWORD)mid < MAXMONSTERS, mid);
+	assert((DWORD)mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
 	assurance(monster.MType != nullptr, mid); /// BUGFIX: should check `mid` (fixed)
 
@@ -1262,10 +1262,10 @@ void StartDeathFromMonster(int i, int mid)
 	monster._mhitpoints = 0;
 	SetRndSeed(monster._mRndSeed);
 
-	SpawnLoot(i, true);
+	SpawnLoot(monster, true);
 
 	if (monster.MType->mtype == MT_DIABLO)
-		DiabloDeath(i, true);
+		DiabloDeath(monster, true);
 	else
 		PlayEffect(monster, 2);
 
@@ -2071,6 +2071,7 @@ bool IsTileSafe(const MonsterStruct &monster, Point position)
 			}
 		}
 	}
+
 	if (fire && ((monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO))
 		return false;
 	if (lightning && ((monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO))
@@ -2698,14 +2699,15 @@ void FallenAi(int i)
 				int ypos = monster.position.tile.y + y;
 				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
 					int m = dMonster[xpos][ypos];
-					if (m > 0) {
-						m--;
-						auto &otherMonster = Monsters[m];
-						if (otherMonster._mAi == AI_FALLEN) {
-							otherMonster._mgoal = MGOAL_ATTACK2;
-							otherMonster._mgoalvar1 = 30 * monster._mint + 105;
-						}
-					}
+					if (m <= 0)
+						continue;
+
+					auto &otherMonster = Monsters[m - 1];
+					if (otherMonster._mAi != AI_FALLEN)
+						continue;
+
+					otherMonster._mgoal = MGOAL_ATTACK2;
+					otherMonster._mgoalvar1 = 30 * monster._mint + 105;
 				}
 			}
 		}
@@ -3615,13 +3617,13 @@ const char *GetMonsterTypeText(const MonsterDataStruct &monsterData)
 	app_fatal("Unknown mMonstClass %i", monsterData.mMonstClass);
 }
 
-void ActivateSpawn(int i, int x, int y, Direction dir)
+void ActivateSpawn(int i, Point position, Direction dir)
 {
 	auto &monster = Monsters[i];
-	dMonster[x][y] = i + 1;
-	monster.position.tile = { x, y };
-	monster.position.future = { x, y };
-	monster.position.old = { x, y };
+	dMonster[position.x][position.y] = i + 1;
+	monster.position.tile = position;
+	monster.position.future = position;
+	monster.position.old = position;
 	StartSpecialStand(monster, dir);
 }
 
@@ -3934,16 +3936,17 @@ void InitMonsterGFX(int monst)
 
 void monster_some_crypt()
 {
-	if (currlevel == 24 && UberDiabloMonsterIndex >= 0 && UberDiabloMonsterIndex < ActiveMonsterCount) {
-		auto &monster = Monsters[UberDiabloMonsterIndex];
-		PlayEffect(monster, 2);
-		Quests[Q_NAKRUL]._qlog = false;
-		monster.mArmorClass -= 50;
-		int hp = monster._mmaxhp / 2;
-		monster.mMagicRes = 0;
-		monster._mhitpoints = hp;
-		monster._mmaxhp = hp;
-	}
+	if (currlevel != 24 || UberDiabloMonsterIndex < 0 || UberDiabloMonsterIndex >= ActiveMonsterCount)
+		return;
+
+	auto &monster = Monsters[UberDiabloMonsterIndex];
+	PlayEffect(monster, 2);
+	Quests[Q_NAKRUL]._qlog = false;
+	monster.mArmorClass -= 50;
+	int hp = monster._mmaxhp / 2;
+	monster.mMagicRes = 0;
+	monster._mhitpoints = hp;
+	monster._mmaxhp = hp;
 }
 
 void InitMonsters()
@@ -4390,11 +4393,11 @@ void GolumAi(int i)
 	if (golem._pathcount > 8)
 		golem._pathcount = 5;
 
-	bool ok = RandomWalk(i, Players[i]._pdir);
-	if (ok)
+	if (RandomWalk(i, Players[i]._pdir))
 		return;
 
 	Direction md = left[golem._mdir];
+	bool ok = false;
 	for (int j = 0; j < 8 && !ok; j++) {
 		md = right[md];
 		ok = DirOK(i, md);
@@ -4407,12 +4410,13 @@ void DeleteMonsterList()
 {
 	for (int i = 0; i < MAX_PLRS; i++) {
 		auto &golem = Monsters[i];
-		if (golem._mDelFlag) {
-			golem.position.tile = { 1, 0 };
-			golem.position.future = { 0, 0 };
-			golem.position.old = { 0, 0 };
-			golem._mDelFlag = false;
-		}
+		if (!golem._mDelFlag)
+			continue;
+
+		golem.position.tile = { 1, 0 };
+		golem.position.future = { 0, 0 };
+		golem.position.old = { 0, 0 };
+		golem._mDelFlag = false;
 	}
 
 	for (int i = MAX_PLRS; i < ActiveMonsterCount;) {
@@ -4758,6 +4762,13 @@ void M_FallenFear(Point position)
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 
+		if (monster._mAi != AI_FALLEN)
+			continue;
+		if (position.WalkingDistance(monster.position.tile) >= 5)
+			continue;
+		if (monster._mhitpoints >> 6 <= 0)
+			continue;
+
 		int rundist;
 		switch (monster.MType->mtype) {
 		case MT_RFALLSP:
@@ -4779,13 +4790,10 @@ void M_FallenFear(Point position)
 		default:
 			continue;
 		}
-		if (monster._mAi == AI_FALLEN
-		    && position.WalkingDistance(monster.position.tile) < 5
-		    && monster._mhitpoints >> 6 > 0) {
-			monster._mgoal = MGOAL_RETREAT;
-			monster._mgoalvar1 = rundist;
-			monster._mgoalvar2 = GetDirection(position, monster.position.tile);
-		}
+
+		monster._mgoal = MGOAL_RETREAT;
+		monster._mgoalvar1 = rundist;
+		monster._mgoalvar2 = GetDirection(position, monster.position.tile);
 	}
 }
 
@@ -5012,7 +5020,7 @@ bool SpawnSkeleton(int ii, Point position)
 
 	if (IsTileAvailable(position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
-		ActivateSpawn(ii, position.x, position.y, dir);
+		ActivateSpawn(ii, position, dir);
 		return true;
 	}
 
@@ -5050,10 +5058,9 @@ bool SpawnSkeleton(int ii, Point position)
 		}
 	}
 
-	int dx = position.x - 1 + x2;
-	int dy = position.y - 1 + y2;
-	Direction dir = GetDirection({ dx, dy }, position);
-	ActivateSpawn(ii, dx, dy, dir);
+	Point spawn = position + Displacement { x2 - 1, y2 - 1 };
+	Direction dir = GetDirection(spawn, position);
+	ActivateSpawn(ii, spawn, dir);
 
 	return true;
 }
@@ -5122,11 +5129,7 @@ void SpawnGolum(int i, Point position, int mi)
 
 bool CanTalkToMonst(const MonsterStruct &monster)
 {
-	if (monster._mgoal == MGOAL_INQUIRING) {
-		return true;
-	}
-
-	return monster._mgoal == MGOAL_TALKING;
+	return IsAnyOf(monster._mgoal, MGOAL_INQUIRING, MGOAL_TALKING);
 }
 
 bool CheckMonsterHit(MonsterStruct &monster, bool *ret)
