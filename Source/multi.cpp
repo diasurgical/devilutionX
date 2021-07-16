@@ -312,7 +312,7 @@ void ProcessTmsgs()
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
 {
-	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PkPlayerStruct)] };
+	std::unique_ptr<byte[]> pkplr { reinterpret_cast<byte *>(new PkPlayerStruct()) };
 
 	PackPlayer(reinterpret_cast<PkPlayerStruct *>(pkplr.get()), Players[MyPlayerId], true);
 	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(pkplr));
