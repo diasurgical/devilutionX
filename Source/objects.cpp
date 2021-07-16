@@ -670,7 +670,7 @@ void AddObjTraps()
 
 			if (GenerateRnd(2) == 0) {
 				int xp = i - 1;
-				while (!nSolidTable[dPiece[xp][j]]) // BUGFIX: check if xp >= 0
+				while (IsTileNotSolid({ xp, j })) // BUGFIX: check if xp >= 0
 					xp--;
 
 				if (!WallTrapLocOkK(xp, j) || i - xp <= 1)
@@ -683,7 +683,7 @@ void AddObjTraps()
 				Objects[oi]._oTrapFlag = true;
 			} else {
 				int yp = j - 1;
-				while (!nSolidTable[dPiece[i][yp]]) // BUGFIX: check if yp >= 0
+				while (IsTileNotSolid({ i, yp })) // BUGFIX: check if yp >= 0
 					yp--;
 
 				if (!WallTrapLocOkK(i, yp) || j - yp <= 1)

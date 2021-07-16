@@ -988,7 +988,7 @@ static void DrawFloor(const Surface &out, int x, int y, int sx, int sy, int rows
 }
 
 #define IsWall(x, y) (dPiece[x][y] == 0 || nSolidTable[dPiece[x][y]] || dSpecial[x][y] != 0)
-#define IsWalkable(x, y) (dPiece[x][y] != 0 && !nSolidTable[dPiece[x][y]])
+#define IsWalkable(x, y) (dPiece[x][y] != 0 && IsTileNotSolid({ x, y }))
 
 /**
  * @brief Render a row of tile
