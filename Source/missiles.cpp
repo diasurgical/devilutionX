@@ -472,7 +472,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 				mid -= 1;
 				if (MonsterMHit(
 				        Missiles[i]._misource,
-				        dMonster[mx][my] - 1,
+				        mid,
 				        mindam,
 				        maxdam,
 				        Missiles[i]._midist,
@@ -482,12 +482,12 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 						Missiles[i]._mirange = 0;
 					Missiles[i]._miHitFlag = true;
 				}
-			} else {
-				if (dMonster[mx][my] < 0
-				    && Monsters[-(dMonster[mx][my] + 1)]._mmode == MM_STONE
+			} else if (mid < 0) {
+				mid = -(mid + 1);
+				if (Monsters[mid]._mmode == MM_STONE
 				    && MonsterMHit(
 				        Missiles[i]._misource,
-				        -(dMonster[mx][my] + 1),
+				        mid,
 				        mindam,
 				        maxdam,
 				        Missiles[i]._midist,
@@ -560,11 +560,13 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 			}
 		}
 	} else {
-		if (dMonster[mx][my] > 0) {
+		int mid = dMonster[mx][my];
+		if (mid > 0) {
+			mid -= 1;
 			if (Missiles[i]._micaster == TARGET_BOTH) {
 				if (MonsterMHit(
 				        Missiles[i]._misource,
-				        dMonster[mx][my] - 1,
+				        mid,
 				        mindam,
 				        maxdam,
 				        Missiles[i]._midist,
@@ -574,7 +576,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 						Missiles[i]._mirange = 0;
 					Missiles[i]._miHitFlag = true;
 				}
-			} else if (MonsterTrapHit(dMonster[mx][my] - 1, mindam, maxdam, Missiles[i]._midist, Missiles[i]._mitype, shift)) {
+			} else if (MonsterTrapHit(mid, mindam, maxdam, Missiles[i]._midist, Missiles[i]._mitype, shift)) {
 				if (!nodel)
 					Missiles[i]._mirange = 0;
 				Missiles[i]._miHitFlag = true;
