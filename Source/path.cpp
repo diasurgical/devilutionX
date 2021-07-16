@@ -6,6 +6,7 @@
 #include "path.h"
 
 #include "gendung.h"
+#include "objects.h"
 
 namespace devilution {
 
@@ -55,6 +56,36 @@ const Displacement PathDirs[8] = {
  *    1|8 4 7
  */
 int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
+
+bool IsTileNotSolid(Point position)
+{
+	return !nSolidTable[dPiece[position.x][position.y]];
+}
+
+bool IsTileSolid(Point position)
+{
+	if (position.x < 0 || position.y < 0 || position.x >= MAXDUNX || position.y >= MAXDUNY) {
+		return false;
+	}
+
+	return nSolidTable[dPiece[position.x][position.y]];
+}
+
+/**
+ * @brief Checks the position is solid or blocked by an object
+ */
+bool IsTileWalkable(Point position, bool ignoreDoors)
+{
+	if (dObject[position.x][position.y] != 0) {
+		int oi = abs(dObject[position.x][position.y]) - 1;
+		if (ignoreDoors && IsAnyOf(Objects[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR))
+			return true;
+		if (Objects[oi]._oSolidFlag)
+			return false;
+	}
+
+	return !IsTileSolid(position);
+}
 
 /**
  * find the shortest path from (sx,sy) to (dx,dy), using PosOk(PosOkArg,x,y) to
