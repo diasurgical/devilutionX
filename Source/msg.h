@@ -398,14 +398,6 @@ struct DJunk {
 };
 #pragma pack(pop)
 
-#pragma pack(push, 1)
-struct TMegaPkt {
-	struct TMegaPkt *pNext;
-	uint32_t dwSpaceLeft;
-	byte data[32000];
-};
-#pragma pack(pop)
-
 struct TBuffer {
 	uint32_t dwNextWriteOffset;
 	byte bData[4096];
