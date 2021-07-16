@@ -26,6 +26,9 @@ struct PATHNODE {
 	struct PATHNODE *NextNode;
 };
 
+bool IsTileNotSolid(Point position);
+bool IsTileSolid(Point position);
+bool IsTileWalkable(Point position, bool ignoreDoors = false);
 int FindPath(const std::function<bool(Point)> &posOk, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH]);
 int path_get_h_cost(int sx, int sy, int dx, int dy);
 PATHNODE *GetNextPath();

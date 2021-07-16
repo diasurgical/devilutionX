@@ -288,7 +288,7 @@ bool MonstPlace(int xp, int yp)
 		return false;
 	}
 
-	return !SolidLoc({ xp, yp });
+	return !IsTileSolid({ xp, yp });
 }
 
 void PlaceMonster(int i, int mtype, int x, int y)
@@ -1157,7 +1157,7 @@ void Teleport(int i)
 				x = mx + rx * j;
 				y = my + ry * k;
 				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && x != monster.position.tile.x && y != monster.position.tile.y) {
-					if (MonsterIsTileAvailable(i, { x, y }))
+					if (IsTileAvailable(monster, { x, y }))
 						done = true;
 				}
 			}
@@ -1942,14 +1942,9 @@ int SpawnSkeleton(Point position, Direction dir)
 	return skel;
 }
 
-bool IsNotSolid(Point position)
-{
-	return !nSolidTable[dPiece[position.x][position.y]];
-}
-
 bool IsLineNotSolid(Point startPoint, Point endPoint)
 {
-	return LineClear(IsNotSolid, startPoint, endPoint);
+	return LineClear(IsTileNotSolid, startPoint, endPoint);
 }
 
 void GroupUnity(int i)
@@ -2046,7 +2041,7 @@ bool RandomWalk2(int i, Direction md)
 /**
  * @brief Check if a tile is affected by a spell we are vunerable to
  */
-bool MonsterIsTileSafe(const MonsterStruct &monster, Point position)
+bool IsTileSafe(const MonsterStruct &monster, Point position)
 {
 	int8_t mi = dMissile[position.x][position.y];
 	if (mi == 0) {
@@ -2085,49 +2080,31 @@ bool MonsterIsTileSafe(const MonsterStruct &monster, Point position)
 }
 
 /**
- * @brief Check that the monster can stand on the tile
+ * @brief Check that the given tile is not currently blocked
  */
-bool MonsterIsTileClear(int i, Point position)
+bool IsTileAvailable(Point position)
 {
-	if (SolidLoc(position))
+	if (dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
 		return false;
 
-	if (dObject[position.x][position.y] != 0) {
-		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-		if (Objects[oi]._oSolidFlag)
-			return false;
-	}
+	if (!IsTileWalkable(position))
+		return false;
 
-	return MonsterIsTileSafe(Monsters[i], position);
+	return true;
 }
 
 /**
  * @brief If a monster can access the given tile (possibly by opening a door)
  */
-bool MonsterIsTileAccessible(int i, Point position)
+bool IsTileAccessible(const MonsterStruct &monster, Point position)
 {
-	MonsterStruct *monster;
-	if (i >= 0)
-		monster = &Monsters[i];
-
-	bool canOpen = false;
-	if (dObject[position.x][position.y] != 0) {
-		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-
-		if (monster != nullptr && (monster->_mFlags & MFLAG_CAN_OPEN_DOOR) != 0)
-			canOpen = IsAnyOf(Objects[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR);
-
-		if (Objects[oi]._oSolidFlag && !canOpen)
-			return false;
-	}
-
-	if ((SolidLoc(position) && !canOpen) || dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
+	if (dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
 		return false;
 
-	if (monster == nullptr)
-		return true;
+	if (!IsTileWalkable(position, (monster._mFlags & MFLAG_CAN_OPEN_DOOR) != 0))
+		return false;
 
-	return MonsterIsTileSafe(*monster, position);
+	return IsTileSafe(monster, position);
 }
 
 bool AiPlanWalk(int i)
@@ -2140,7 +2117,7 @@ bool AiPlanWalk(int i)
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (FindPath(std::bind(MonsterIsTileAccessible, i, std::placeholders::_1), monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
+	if (FindPath([&monster](Point position) { return IsTileAccessible(monster, position); }, monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
 		return false;
 	}
 
@@ -2207,7 +2184,7 @@ bool AiPlanPath(int i)
 	}
 
 	bool clear = LineClear(
-	    std::bind(MonsterIsTileAvailable, i, std::placeholders::_1),
+	    [&monster](Point position) { return IsTileAvailable(monster, position); },
 	    monster.position.tile,
 	    monster.enemyPosition);
 	if (!clear || (monster._pathcount >= 5 && monster._pathcount < 8)) {
@@ -2643,7 +2620,7 @@ void RhinoAi(int i)
 	if (monster._mgoal == MGOAL_NORMAL) {
 		if (dist >= 5
 		    && v < 2 * monster._mint + 43
-		    && LineClear(std::bind(MonsterIsTileAvailable, i, std::placeholders::_1), monster.position.tile, { fx, fy })) {
+		    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy })) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, monster._menemy, i, 0, 0) != -1) {
 				if (monster.MData->snd_special)
 					PlayEffect(monster, 3);
@@ -2789,7 +2766,7 @@ void LeoricAi(int i)
 		    && ((dist >= 3 && v < 4 * monster._mint + 35) || v < 6)
 		    && LineClearMissile(monster.position.tile, { fx, fy })) {
 			Point newPosition = monster.position.tile + md;
-			if (MonsterIsTileAvailable(i, newPosition) && ActiveMonsterCount < MAXMONSTERS) {
+			if (IsTileAvailable(monster, newPosition) && ActiveMonsterCount < MAXMONSTERS) {
 				SpawnSkeleton(newPosition, md);
 				StartSpecialStand(monster, md);
 			}
@@ -2846,7 +2823,7 @@ void BatAi(int i)
 	if (monster.MType->mtype == MT_GLOOM
 	    && (abs(xd) >= 5 || abs(yd) >= 5)
 	    && v < 4 * monster._mint + 33
-	    && LineClear(std::bind(MonsterIsTileAvailable, i, std::placeholders::_1), monster.position.tile, { fx, fy })) {
+	    && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy })) {
 		if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 			dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
 			monster._mmode = MM_CHARGE;
@@ -3175,7 +3152,7 @@ void SnakeAi(int i)
 	Direction md = GetDirection(monster.position.tile, monster.position.last);
 	monster._mdir = md;
 	if (abs(mx) >= 2 || abs(my) >= 2) {
-		if (abs(mx) < 3 && abs(my) < 3 && LineClear(std::bind(MonsterIsTileAvailable, i, std::placeholders::_1), monster.position.tile, { fx, fy }) && monster._mVar1 != MM_CHARGE) {
+		if (abs(mx) < 3 && abs(my) < 3 && LineClear([&monster](Point position) { return IsTileAvailable(monster, position); }, monster.position.tile, { fx, fy }) && monster._mVar1 != MM_CHARGE) {
 			if (AddMissile(monster.position.tile, { fx, fy }, md, MIS_RHINO, pnum, i, 0, 0) != -1) {
 				PlayEffect(monster, 0);
 				dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
@@ -3577,7 +3554,7 @@ void HorkDemonAi(int i)
 	if (monster._mgoal == 1) {
 		if ((abs(mx) >= 3 || abs(my) >= 3) && v < 2 * monster._mint + 43) {
 			Point position = monster.position.tile + monster._mdir;
-			if (MonsterIsTileAvailable(i, position) && ActiveMonsterCount < MAXMONSTERS) {
+			if (IsTileAvailable(monster, position) && ActiveMonsterCount < MAXMONSTERS) {
 				StartRangedSpecialAttack(monster, MIS_HORKDMN, 0);
 			}
 		} else if (abs(mx) < 2 && abs(my) < 2) {
@@ -4002,7 +3979,7 @@ void InitMonsters()
 		int na = 0;
 		for (int s = 16; s < 96; s++) {
 			for (int t = 16; t < 96; t++) {
-				if (!SolidLoc({ s, t }))
+				if (!IsTileSolid({ s, t }))
 					na++;
 			}
 		}
@@ -4099,19 +4076,9 @@ void AddDoppelganger(MonsterStruct &monster)
 	Point target = { 0, 0 };
 	for (int d = 0; d < 8; d++) {
 		const Point position = monster.position.tile + static_cast<Direction>(d);
-		if (!SolidLoc(position)) {
-			if (dPlayer[position.x][position.y] == 0 && dMonster[position.x][position.y] == 0) {
-				if (dObject[position.x][position.y] == 0) {
-					target = position;
-					break;
-				}
-				int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
-				if (!Objects[oi]._oSolidFlag) {
-					target = position;
-					break;
-				}
-			}
-		}
+		if (!IsTileAvailable(position))
+			continue;
+		target = position;
 	}
 	if (target != Point { 0, 0 }) {
 		for (int j = 0; j < MAX_LVLMTYPES; j++) {
@@ -4606,19 +4573,19 @@ bool DirOK(int i, Direction mdir)
 	auto &monster = Monsters[i];
 	Point position = monster.position.tile;
 	Point futurePosition = position + mdir;
-	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !MonsterIsTileAvailable(i, futurePosition))
+	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !IsTileAvailable(monster, futurePosition))
 		return false;
 	if (mdir == DIR_E) {
-		if (SolidLoc(position + DIR_SE) || (dFlags[position.x + 1][position.y] & BFLAG_MONSTLR) != 0)
+		if (IsTileSolid(position + DIR_SE) || (dFlags[position.x + 1][position.y] & BFLAG_MONSTLR) != 0)
 			return false;
 	} else if (mdir == DIR_W) {
-		if (SolidLoc(position + DIR_SW) || (dFlags[position.x][position.y + 1] & BFLAG_MONSTLR) != 0)
+		if (IsTileSolid(position + DIR_SW) || (dFlags[position.x][position.y + 1] & BFLAG_MONSTLR) != 0)
 			return false;
 	} else if (mdir == DIR_N) {
-		if (SolidLoc(position + DIR_NE) || SolidLoc(position + DIR_NW))
+		if (IsTileSolid(position + DIR_NE) || IsTileSolid(position + DIR_NW))
 			return false;
 	} else if (mdir == DIR_S)
-		if (SolidLoc(position + DIR_SW) || SolidLoc(position + DIR_SE))
+		if (IsTileSolid(position + DIR_SW) || IsTileSolid(position + DIR_SE))
 			return false;
 	if (monster.leaderflag == MonsterRelation::Minion) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
@@ -5001,7 +4968,7 @@ void MissToMonst(int i, Point position)
 			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
 			if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
 				Point newPosition = oldPosition + monster._mdir;
-				if (MonsterIsTileAvailable(dMonster[oldPosition.x][oldPosition.y] - 1, newPosition)) {
+				if (IsTileAvailable(Monsters[dMonster[oldPosition.x][oldPosition.y] - 1], newPosition)) {
 					m = dMonster[oldPosition.x][oldPosition.y];
 					dMonster[newPosition.x][newPosition.y] = m;
 					dMonster[oldPosition.x][oldPosition.y] = 0;
@@ -5017,12 +4984,12 @@ void MissToMonst(int i, Point position)
 /**
  * @brief Check that the given tile is available to the monster
  */
-bool MonsterIsTileAvailable(int i, Point position)
+bool IsTileAvailable(const MonsterStruct &monster, Point position)
 {
-	if (dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
+	if (!IsTileAvailable(position))
 		return false;
 
-	return MonsterIsTileClear(i, position);
+	return IsTileSafe(monster, position);
 }
 
 bool IsSkel(int mt)
@@ -5043,7 +5010,7 @@ bool SpawnSkeleton(int ii, Point position)
 	if (ii == -1)
 		return false;
 
-	if (MonsterIsTileAvailable(-1, position)) {
+	if (IsTileAvailable(position)) {
 		Direction dir = GetDirection(position, position); // TODO useless calculation
 		ActivateSpawn(ii, position.x, position.y, dir);
 		return true;
@@ -5056,7 +5023,7 @@ bool SpawnSkeleton(int ii, Point position)
 	for (int j = position.y - 1; j <= position.y + 1; j++) {
 		int xx = 0;
 		for (int k = position.x - 1; k <= position.x + 1; k++) {
-			monstok[xx][yy] = MonsterIsTileAvailable(-1, { k, j });
+			monstok[xx][yy] = IsTileAvailable({ k, j });
 			savail = savail || monstok[xx][yy];
 			xx++;
 		}

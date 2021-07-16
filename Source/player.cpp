@@ -147,11 +147,11 @@ bool PlrDirOK(int pnum, Direction dir)
 	}
 
 	if (dir == DIR_E) {
-		return !SolidLoc(position + DIR_SE) && (dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR) == 0;
+		return !IsTileSolid(position + DIR_SE) && (dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR) == 0;
 	}
 
 	if (dir == DIR_W) {
-		return !SolidLoc(position + DIR_SW) && (dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR) == 0;
+		return !IsTileSolid(position + DIR_SW) && (dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR) == 0;
 	}
 
 	return true;
@@ -1290,15 +1290,6 @@ void InitMultiView()
 
 	ViewX = myPlayer.position.tile.x;
 	ViewY = myPlayer.position.tile.y;
-}
-
-bool SolidLoc(Point position)
-{
-	if (position.x < 0 || position.y < 0 || position.x >= MAXDUNX || position.y >= MAXDUNY) {
-		return false;
-	}
-
-	return nSolidTable[dPiece[position.x][position.y]];
 }
 
 void PlrClrTrans(Point position)
@@ -3504,7 +3495,7 @@ bool PosOkPlayer(int pnum, Point position)
 		return false;
 	if (dPiece[position.x][position.y] == 0)
 		return false;
-	if (SolidLoc(position))
+	if (!IsTileWalkable(position))
 		return false;
 	if (dPlayer[position.x][position.y] != 0) {
 		int8_t p = -1;
@@ -3533,18 +3524,6 @@ bool PosOkPlayer(int pnum, Point position)
 		}
 	}
 
-	if (dObject[position.x][position.y] != 0) {
-		int8_t bv = -1;
-		if (dObject[position.x][position.y] > 0) {
-			bv = dObject[position.x][position.y] - 1;
-		} else {
-			bv = -(dObject[position.x][position.y] + 1);
-		}
-		if (Objects[bv]._oSolidFlag) {
-			return false;
-		}
-	}
-
 	return true;
 }
 
@@ -3559,7 +3538,7 @@ void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 		return;
 	}
 
-	int path = FindPath(std::bind(PosOkPlayer, pnum, std::placeholders::_1), player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
+	int path = FindPath([pnum](Point position) { return PosOkPlayer(pnum, position); }, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
 	if (path == 0) {
 		return;
 	}
