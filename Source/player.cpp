@@ -2963,15 +2963,39 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int x = 0;
 	int y = 0;
 
-	int i = -1;
-	if (player.destAction == ACTION_ATTACKMON) {
-		i = player.destParam1;
-		MakePlrPath(pnum, Monsters[i].position.future, false);
-	}
+	MonsterStruct *monster;
+	PlayerStruct *target;
+	ObjectStruct *object;
+	ItemStruct *item;
 
-	if (player.destAction == ACTION_ATTACKPLR) {
-		auto &target = Players[player.destParam1];
-		MakePlrPath(pnum, target.position.future, false);
+	int targetId = player.destParam1;
+
+	switch (player.destAction) {
+	case ACTION_ATTACKMON:
+	case ACTION_RATTACKMON:
+	case ACTION_SPELLMON:
+		monster = &Monsters[targetId];
+		if (player.destAction == ACTION_ATTACKMON)
+			MakePlrPath(pnum, monster->position.future, false);
+		break;
+	case ACTION_ATTACKPLR:
+	case ACTION_RATTACKPLR:
+	case ACTION_SPELLPLR:
+		target = &Players[targetId];
+		if (player.destAction == ACTION_ATTACKPLR)
+			MakePlrPath(pnum, target->position.future, false);
+		break;
+	case ACTION_OPERATE:
+	case ACTION_DISARM:
+	case ACTION_OPERATETK:
+		object = &Objects[targetId];
+		break;
+	case ACTION_PICKUPITEM:
+	case ACTION_PICKUPAITEM:
+		item = &Items[targetId];
+		break;
+	default:
+		break;
 	}
 
 	Direction d;
@@ -2979,22 +3003,20 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		if (player._pmode == PM_STAND) {
 			if (pnum == MyPlayerId) {
 				if (player.destAction == ACTION_ATTACKMON || player.destAction == ACTION_ATTACKPLR) {
-
 					if (player.destAction == ACTION_ATTACKMON) {
-						x = abs(player.position.future.x - Monsters[i].position.future.x);
-						y = abs(player.position.future.y - Monsters[i].position.future.y);
-						d = GetDirection(player.position.future, Monsters[i].position.future);
+						x = abs(player.position.future.x - monster->position.future.x);
+						y = abs(player.position.future.y - monster->position.future.y);
+						d = GetDirection(player.position.future, monster->position.future);
 					} else {
-						auto &target = Players[player.destParam1];
-						x = abs(player.position.future.x - target.position.future.x);
-						y = abs(player.position.future.y - target.position.future.y);
-						d = GetDirection(player.position.future, target.position.future);
+						x = abs(player.position.future.x - target->position.future.x);
+						y = abs(player.position.future.y - target->position.future.y);
+						d = GetDirection(player.position.future, target->position.future);
 					}
 
 					if (x < 2 && y < 2) {
 						ClrPlrPath(player);
-						if (player.destAction == ACTION_ATTACKMON && Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
-							TalktoMonster(Monsters[i]);
+						if (player.destAction == ACTION_ATTACKMON && monster->mtalkmsg != TEXT_NONE && monster->mtalkmsg != TEXT_VILE14) {
+							TalktoMonster(*monster);
 						} else {
 							StartAttack(pnum, d);
 						}
@@ -3064,45 +3086,41 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			StartAttack(pnum, d);
 			break;
 		case ACTION_ATTACKMON:
-			x = abs(player.position.tile.x - Monsters[i].position.future.x);
-			y = abs(player.position.tile.y - Monsters[i].position.future.y);
+			x = abs(player.position.tile.x - monster->position.future.x);
+			y = abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, Monsters[i].position.future);
-				if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
-					TalktoMonster(Monsters[i]);
+				d = GetDirection(player.position.future, monster->position.future);
+				if (monster->mtalkmsg != TEXT_NONE && monster->mtalkmsg != TEXT_VILE14) {
+					TalktoMonster(*monster);
 				} else {
 					StartAttack(pnum, d);
 				}
 			}
 			break;
-		case ACTION_ATTACKPLR: {
-			auto &target = Players[player.destParam1];
-			x = abs(player.position.tile.x - target.position.future.x);
-			y = abs(player.position.tile.y - target.position.future.y);
+		case ACTION_ATTACKPLR:
+			x = abs(player.position.tile.x - target->position.future.x);
+			y = abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, target.position.future);
+				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(pnum, d);
 			}
-		} break;
+			break;
 		case ACTION_RATTACK:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartRangeAttack(pnum, d, player.destParam1, player.destParam2);
 			break;
 		case ACTION_RATTACKMON:
-			i = player.destParam1;
-			d = GetDirection(player.position.future, Monsters[i].position.future);
-			if (Monsters[i].mtalkmsg != TEXT_NONE && Monsters[i].mtalkmsg != TEXT_VILE14) {
-				TalktoMonster(Monsters[i]);
+			d = GetDirection(player.position.future, monster->position.future);
+			if (monster->mtalkmsg != TEXT_NONE && monster->mtalkmsg != TEXT_VILE14) {
+				TalktoMonster(*monster);
 			} else {
-				StartRangeAttack(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
+				StartRangeAttack(pnum, d, monster->position.future.x, monster->position.future.y);
 			}
 			break;
-		case ACTION_RATTACKPLR: {
-			auto &target = Players[player.destParam1];
-			d = GetDirection(player.position.future, target.position.future);
-			StartRangeAttack(pnum, d, target.position.future.x, target.position.future.y);
-
-		} break;
+		case ACTION_RATTACKPLR:
+			d = GetDirection(player.position.future, target->position.future);
+			StartRangeAttack(pnum, d, target->position.future.x, target->position.future.y);
+			break;
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
@@ -3114,75 +3132,67 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			player._pVar4 = player.destParam4;
 			break;
 		case ACTION_SPELLMON:
-			i = player.destParam1;
-			d = GetDirection(player.position.tile, Monsters[i].position.future);
-			StartSpell(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
+			d = GetDirection(player.position.tile, monster->position.future);
+			StartSpell(pnum, d, monster->position.future.x, monster->position.future.y);
 			player._pVar4 = player.destParam2;
 			break;
-		case ACTION_SPELLPLR: {
-			auto &target = Players[player.destParam1];
-			d = GetDirection(player.position.tile, target.position.future);
-			StartSpell(pnum, d, target.position.future.x, target.position.future.y);
+		case ACTION_SPELLPLR:
+			d = GetDirection(player.position.tile, target->position.future);
+			StartSpell(pnum, d, target->position.future.x, target->position.future.y);
 			player._pVar4 = player.destParam2;
-
-		} break;
+			break;
 		case ACTION_OPERATE:
-			i = player.destParam1;
-			x = abs(player.position.tile.x - Objects[i].position.x);
-			y = abs(player.position.tile.y - Objects[i].position.y);
-			if (y > 1 && dObject[Objects[i].position.x][Objects[i].position.y - 1] == -(i + 1)) {
-				y = abs(player.position.tile.y - Objects[i].position.y + 1);
+			x = abs(player.position.tile.x - object->position.x);
+			y = abs(player.position.tile.y - object->position.y);
+			if (y > 1 && dObject[object->position.x][object->position.y - 1] == -(targetId + 1)) {
+				y = abs(player.position.tile.y - object->position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
-				if (Objects[i]._oBreak == 1) {
-					d = GetDirection(player.position.tile, Objects[i].position);
+				if (object->_oBreak == 1) {
+					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					OperateObject(pnum, i, false);
+					OperateObject(pnum, targetId, false);
 				}
 			}
 			break;
 		case ACTION_DISARM:
-			i = player.destParam1;
-			x = abs(player.position.tile.x - Objects[i].position.x);
-			y = abs(player.position.tile.y - Objects[i].position.y);
-			if (y > 1 && dObject[Objects[i].position.x][Objects[i].position.y - 1] == -(i + 1)) {
-				y = abs(player.position.tile.y - Objects[i].position.y + 1);
+			x = abs(player.position.tile.x - object->position.x);
+			y = abs(player.position.tile.y - object->position.y);
+			if (y > 1 && dObject[object->position.x][object->position.y - 1] == -(targetId + 1)) {
+				y = abs(player.position.tile.y - object->position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
-				if (Objects[i]._oBreak == 1) {
-					d = GetDirection(player.position.tile, Objects[i].position);
+				if (object->_oBreak == 1) {
+					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				} else {
-					TryDisarm(pnum, i);
-					OperateObject(pnum, i, false);
+					TryDisarm(pnum, targetId);
+					OperateObject(pnum, targetId, false);
 				}
 			}
 			break;
 		case ACTION_OPERATETK:
-			i = player.destParam1;
-			if (Objects[i]._oBreak != 1) {
-				OperateObject(pnum, i, true);
+			if (object->_oBreak != 1) {
+				OperateObject(pnum, targetId, true);
 			}
 			break;
 		case ACTION_PICKUPITEM:
 			if (pnum == MyPlayerId) {
-				i = player.destParam1;
-				x = abs(player.position.tile.x - Items[i].position.x);
-				y = abs(player.position.tile.y - Items[i].position.y);
-				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !Items[i]._iRequest) {
-					NetSendCmdGItem(true, CMD_REQUESTGITEM, MyPlayerId, MyPlayerId, i);
-					Items[i]._iRequest = true;
+				x = abs(player.position.tile.x - item->position.x);
+				y = abs(player.position.tile.y - item->position.y);
+				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
+					NetSendCmdGItem(true, CMD_REQUESTGITEM, MyPlayerId, MyPlayerId, targetId);
+					item->_iRequest = true;
 				}
 			}
 			break;
 		case ACTION_PICKUPAITEM:
 			if (pnum == MyPlayerId) {
-				i = player.destParam1;
-				x = abs(player.position.tile.x - Items[i].position.x);
-				y = abs(player.position.tile.y - Items[i].position.y);
+				x = abs(player.position.tile.x - item->position.x);
+				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
-					NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, MyPlayerId, i);
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, MyPlayerId, targetId);
 				}
 			}
 			break;
@@ -3207,33 +3217,30 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			StartAttack(pnum, d);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKMON) {
-			i = player.destParam1;
-			x = abs(player.position.tile.x - Monsters[i].position.future.x);
-			y = abs(player.position.tile.y - Monsters[i].position.future.y);
+			x = abs(player.position.tile.x - monster->position.future.x);
+			y = abs(player.position.tile.y - monster->position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, Monsters[i].position.future);
+				d = GetDirection(player.position.future, monster->position.future);
 				StartAttack(pnum, d);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_ATTACKPLR) {
-			auto &target = Players[player.destParam1];
-			x = abs(player.position.tile.x - target.position.future.x);
-			y = abs(player.position.tile.y - target.position.future.y);
+			x = abs(player.position.tile.x - target->position.future.x);
+			y = abs(player.position.tile.y - target->position.future.y);
 			if (x <= 1 && y <= 1) {
-				d = GetDirection(player.position.future, target.position.future);
+				d = GetDirection(player.position.future, target->position.future);
 				StartAttack(pnum, d);
 			}
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_OPERATE) {
-			i = player.destParam1;
-			x = abs(player.position.tile.x - Objects[i].position.x);
-			y = abs(player.position.tile.y - Objects[i].position.y);
-			if (y > 1 && dObject[Objects[i].position.x][Objects[i].position.y - 1] == -(i + 1)) {
-				y = abs(player.position.tile.y - Objects[i].position.y + 1);
+			x = abs(player.position.tile.x - object->position.x);
+			y = abs(player.position.tile.y - object->position.y);
+			if (y > 1 && dObject[object->position.x][object->position.y - 1] == -(targetId + 1)) {
+				y = abs(player.position.tile.y - object->position.y + 1);
 			}
 			if (x <= 1 && y <= 1) {
-				if (Objects[i]._oBreak == 1) {
-					d = GetDirection(player.position.tile, Objects[i].position);
+				if (object->_oBreak == 1) {
+					d = GetDirection(player.position.tile, object->position);
 					StartAttack(pnum, d);
 				}
 			}
@@ -3246,14 +3253,12 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			StartRangeAttack(pnum, d, player.destParam1, player.destParam2);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKMON) {
-			i = player.destParam1;
-			d = GetDirection(player.position.tile, Monsters[i].position.future);
-			StartRangeAttack(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
+			d = GetDirection(player.position.tile, monster->position.future);
+			StartRangeAttack(pnum, d, monster->position.future.x, monster->position.future.y);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_RATTACKPLR) {
-			auto &target = Players[player.destParam1];
-			d = GetDirection(player.position.tile, target.position.future);
-			StartRangeAttack(pnum, d, target.position.future.x, target.position.future.y);
+			d = GetDirection(player.position.tile, target->position.future);
+			StartRangeAttack(pnum, d, target->position.future.x, target->position.future.y);
 			player.destAction = ACTION_NONE;
 		}
 	}
@@ -3265,14 +3270,12 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLMON) {
-			i = player.destParam1;
-			d = GetDirection(player.position.tile, Monsters[i].position.future);
-			StartSpell(pnum, d, Monsters[i].position.future.x, Monsters[i].position.future.y);
+			d = GetDirection(player.position.tile, monster->position.future);
+			StartSpell(pnum, d, monster->position.future.x, monster->position.future.y);
 			player.destAction = ACTION_NONE;
 		} else if (player.destAction == ACTION_SPELLPLR) {
-			auto &target = Players[player.destParam1];
-			d = GetDirection(player.position.tile, target.position.future);
-			StartSpell(pnum, d, target.position.future.x, target.position.future.y);
+			d = GetDirection(player.position.tile, target->position.future);
+			StartSpell(pnum, d, target->position.future.x, target->position.future.y);
 			player.destAction = ACTION_NONE;
 		}
 	}
