@@ -1,5 +1,5 @@
 /**
- * @file mainmenu.h
+ * @file menu.h
  *
  * Interface of functions for interacting with the main menu.
  */

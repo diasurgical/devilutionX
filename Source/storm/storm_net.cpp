@@ -7,7 +7,7 @@
 #endif
 
 #include "dvlnet/abstract_net.h"
-#include "mainmenu.h"
+#include "menu.h"
 #include "options.h"
 #include "storm/storm_dvlnet.h"
 #include "utils/stubs.h"

@@ -11,7 +11,7 @@
 #include "engine.h"
 #include "init.h"
 #include "loadsave.h"
-#include "mainmenu.h"
+#include "menu.h"
 #include "mpqapi.h"
 #include "pack.h"
 #include "storm/storm.h"
