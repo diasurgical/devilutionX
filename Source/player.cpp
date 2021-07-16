@@ -3637,15 +3637,15 @@ void CheckPlrSpell(bool mouseClick)
 			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
 		}
 		if (mouseClick)
-			lastRightMouseButtonAction = MOUSEACTION_SPELL;
+			lastRightMouseButtonAction = MouseActionType::Spell;
 		return;
 	}
 
 	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		if (!mouseClick || lastRightMouseButtonAction != MOUSEACTION_SPELL_COMPLAINEDABOUTMANA)
+		if (!mouseClick || lastRightMouseButtonAction != MouseActionType::Spell_ComplainedAboutMana)
 			myPlayer.Say(HeroSpeech::NotEnoughMana);
 		if (mouseClick)
-			lastRightMouseButtonAction = MOUSEACTION_SPELL_COMPLAINEDABOUTMANA;
+			lastRightMouseButtonAction = MouseActionType::Spell_ComplainedAboutMana;
 	}
 }
 

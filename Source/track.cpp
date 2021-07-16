@@ -27,7 +27,7 @@ static bool RepeatMouseAttack(bool leftButton)
 		return false;
 
 	Uint32 *timePressed;
-	int lastAction;
+	MouseActionType lastAction;
 	if (leftButton) {
 		if (sgbMouseDown != CLICK_LEFT)
 			return false;
@@ -40,7 +40,7 @@ static bool RepeatMouseAttack(bool leftButton)
 		lastAction = lastRightMouseButtonAction;
 	}
 
-	if (lastAction != MOUSEACTION_ATTACK && lastAction != MOUSEACTION_ATTACK_MONSTERTARGET && lastAction != MOUSEACTION_ATTACK_PLAYERTARGET && lastAction != MOUSEACTION_SPELL && lastAction != MOUSEACTION_SPELL_COMPLAINEDABOUTMANA)
+	if (lastAction != MouseActionType::Attack && lastAction != MouseActionType::Attack_MonsterTarget && lastAction != MouseActionType::Attack_PlayerTarget && lastAction != MouseActionType::Spell && lastAction != MouseActionType::Spell_ComplainedAboutMana)
 		return false;
 
 	if (Players[MyPlayerId]._pmode != PM_DEATH && Players[MyPlayerId]._pmode != PM_QUIT &&
@@ -48,20 +48,20 @@ static bool RepeatMouseAttack(bool leftButton)
 		bool rangedAttack = Players[MyPlayerId]._pwtype == WT_RANGED;
 		*timePressed = SDL_GetTicks();
 		switch (lastAction) {
-		case MOUSEACTION_ATTACK:
+		case MouseActionType::Attack:
 			if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY)
 				NetSendCmdLoc(MyPlayerId, true, rangedAttack ? CMD_RATTACKXY : CMD_SATTACKXY, { cursmx, cursmy });
 			break;
-		case MOUSEACTION_ATTACK_MONSTERTARGET:
+		case MouseActionType::Attack_MonsterTarget:
 			if (pcursmonst != -1)
 				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKID : CMD_ATTACKID, pcursmonst);
 			break;
-		case MOUSEACTION_ATTACK_PLAYERTARGET:
+		case MouseActionType::Attack_PlayerTarget:
 			if (pcursplr != -1 && !gbFriendlyMode)
 				NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 			break;
-		case MOUSEACTION_SPELL:
-		case MOUSEACTION_SPELL_COMPLAINEDABOUTMANA:
+		case MouseActionType::Spell:
+		case MouseActionType::Spell_ComplainedAboutMana:
 			CheckPlrSpell(true);
 			break;
 		}
