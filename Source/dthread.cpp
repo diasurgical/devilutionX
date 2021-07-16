@@ -64,7 +64,7 @@ void DthreadHandler()
 void dthread_remove_player(uint8_t pnum)
 {
 	sgMemCrit.Enter();
-	InfoList.remove_if([&](DThreadPkt &pkt) {
+	InfoList.remove_if([&](auto &pkt) {
 		return pkt.pnum == pnum;
 	});
 	sgMemCrit.Leave();
