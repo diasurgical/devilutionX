@@ -61,7 +61,7 @@ int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
  * check that each step is a valid position. Store the step directions (see
  * path_directions) in path, which must have room for 24 steps
  */
-int FindPath(bool (*posOk)(int, Point), int posOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
+int FindPath(const std::function<bool(Point)> &posOk, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
 {
 	// clear all nodes, create root nodes for the visited/frontier linked lists
 	gdwCurNodes = 0;
@@ -97,7 +97,7 @@ int FindPath(bool (*posOk)(int, Point), int posOkArg, int sx, int sy, int dx, in
 			return 0;
 		}
 		// ran out of nodes, abort!
-		if (!path_get_path(posOk, posOkArg, nextNode, dx, dy))
+		if (!path_get_path(posOk, nextNode, dx, dy))
 			return 0;
 	}
 	// frontier is empty, no path!
@@ -187,11 +187,11 @@ bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
  *
  * @return false if we ran out of preallocated nodes to use, else true
  */
-bool path_get_path(bool (*posOk)(int, Point), int posOkArg, PATHNODE *pPath, int x, int y)
+bool path_get_path(const std::function<bool(Point)> &posOk, PATHNODE *pPath, int x, int y)
 {
 	for (auto dir : PathDirs) {
 		Point tile = pPath->position + dir;
-		bool ok = posOk(posOkArg, tile);
+		bool ok = posOk(tile);
 		if ((ok && path_solid_pieces(pPath, tile.x, tile.y)) || (!ok && tile == Point { x, y })) {
 			if (!path_parent_path(pPath, tile.x, tile.y, x, y))
 				return false;

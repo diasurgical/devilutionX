@@ -2140,7 +2140,7 @@ bool AiPlanWalk(int i)
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (FindPath(MonsterIsTileAccessible, i, monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
+	if (FindPath(std::bind(MonsterIsTileAccessible, i, std::placeholders::_1), monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
 		return false;
 	}
 
@@ -2207,7 +2207,7 @@ bool AiPlanPath(int i)
 	}
 
 	bool clear = LineClear(
-	    std::bind(MonsterIsTileAvalible, i, std::placeholders::_1),
+	    std::bind(MonsterIsTileAvailable, i, std::placeholders::_1),
 	    monster.position.tile,
 	    monster.enemyPosition);
 	if (!clear || (monster._pathcount >= 5 && monster._pathcount < 8)) {
