@@ -5,6 +5,7 @@
  */
 
 #include <list>
+#include <atomic>
 
 #include "nthread.h"
 #include "storm/storm.h"
@@ -13,12 +14,12 @@
 namespace devilution {
 
 struct DThreadPkt {
-	int pnum;
+	uint8_t pnum;
 	_cmd_id cmd;
 	uint32_t len;
 	std::unique_ptr<byte[]> data;
 
-	DThreadPkt(int pnum, _cmd_id(cmd), byte *src, uint32_t len)
+	DThreadPkt(uint8_t pnum, _cmd_id(cmd), byte *src, uint32_t len)
 		: pnum(pnum)
 		, cmd(cmd)
 		, len(len)
@@ -33,7 +34,7 @@ namespace {
 CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
 std::list<DThreadPkt> sgpInfoList;
-bool dthread_running;
+std::atomic_bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
 /* rdata */
@@ -80,13 +81,12 @@ void dthread_remove_player(uint8_t pnum)
 	sgMemCrit.Leave();
 }
 
-void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, uint32_t len)
+void dthread_send_delta(uint8_t pnum, _cmd_id cmd, byte *src, uint32_t len)
 {
-	if (!gbIsMultiplayer) {
+	if (!gbIsMultiplayer)
 		return;
-	}
 
-	DThreadPkt pkt { pnum, cmd, pbSrc, len };
+	DThreadPkt pkt { pnum, cmd, src, len };
 
 	sgMemCrit.Enter();
 	sgpInfoList.push_back(std::move(pkt));
@@ -96,32 +96,18 @@ void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, uint32_t len)
 
 void dthread_start()
 {
-	const char *errorBuf;
-
-	if (!gbIsMultiplayer) {
+	if (!gbIsMultiplayer)
 		return;
-	}
 
 	sghWorkToDoEvent = StartEvent();
-	if (sghWorkToDoEvent == nullptr) {
-		errorBuf = SDL_GetError();
-		app_fatal("dthread:1\n%s", errorBuf);
-	}
-
 	dthread_running = true;
-
 	sghThread = CreateThread(DthreadHandler, &glpDThreadId);
-	if (sghThread == nullptr) {
-		errorBuf = SDL_GetError();
-		app_fatal("dthread2:\n%s", errorBuf);
-	}
 }
 
 void DThreadCleanup()
 {
-	if (sghWorkToDoEvent == nullptr) {
+	if (sghWorkToDoEvent == nullptr)
 		return;
-	}
 
 	dthread_running = false;
 	SetEvent(sghWorkToDoEvent);
