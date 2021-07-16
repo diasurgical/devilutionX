@@ -49,6 +49,7 @@ void DthreadHandler()
 		if (sgpInfoList.empty()) {
 			ResetEvent(sghWorkToDoEvent);
 			sgMemCrit.Leave();
+			continue;
 		}
 		DThreadPkt pkt = std::move(sgpInfoList.front());
 		sgpInfoList.pop_front();
