@@ -32,7 +32,7 @@ namespace {
 
 CCritSect sgMemCrit;
 SDL_threadID glpDThreadId;
-std::list<DThreadPkt> sgpInfoList;
+std::list<DThreadPkt> InfoList;
 std::atomic_bool dthread_running;
 event_emul *sghWorkToDoEvent;
 
@@ -42,17 +42,17 @@ SDL_Thread *sghThread = nullptr;
 void DthreadHandler()
 {
 	while (dthread_running) {
-		if (sgpInfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1)
+		if (InfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1)
 			app_fatal("dthread4:\n%s", SDL_GetError());
 
 		sgMemCrit.Enter();
-		if (sgpInfoList.empty()) {
+		if (InfoList.empty()) {
 			ResetEvent(sghWorkToDoEvent);
 			sgMemCrit.Leave();
 			continue;
 		}
-		DThreadPkt pkt = std::move(sgpInfoList.front());
-		sgpInfoList.pop_front();
+		DThreadPkt pkt = std::move(InfoList.front());
+		InfoList.pop_front();
 		sgMemCrit.Leave();
 
 		if (pkt.pnum != MAX_PLRS)
@@ -72,7 +72,7 @@ void DthreadHandler()
 void dthread_remove_player(uint8_t pnum)
 {
 	sgMemCrit.Enter();
-	for (auto &pkt : sgpInfoList) {
+	for (auto &pkt : InfoList) {
 		if (pkt.pnum == pnum)
 			pkt.pnum = MAX_PLRS;
 	}
@@ -87,7 +87,7 @@ void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uin
 	DThreadPkt pkt { pnum, cmd, std::move(data), len };
 
 	sgMemCrit.Enter();
-	sgpInfoList.push_back(std::move(pkt));
+	InfoList.push_back(std::move(pkt));
 	SetEvent(sghWorkToDoEvent);
 	sgMemCrit.Leave();
 }
@@ -116,7 +116,7 @@ void DThreadCleanup()
 	EndEvent(sghWorkToDoEvent);
 	sghWorkToDoEvent = nullptr;
 
-	sgpInfoList.clear();
+	InfoList.clear();
 }
 
 } // namespace devilution
