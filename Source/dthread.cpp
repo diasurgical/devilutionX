@@ -16,16 +16,15 @@ namespace devilution {
 struct DThreadPkt {
 	uint8_t pnum;
 	_cmd_id cmd;
-	uint32_t len;
 	std::unique_ptr<byte[]> data;
+	uint32_t len;
 
-	DThreadPkt(uint8_t pnum, _cmd_id(cmd), byte *src, uint32_t len)
+	DThreadPkt(uint8_t pnum, _cmd_id(cmd), std::unique_ptr<byte[]> &&data, uint32_t len)
 		: pnum(pnum)
 		, cmd(cmd)
+		, data(std::move(data))
 		, len(len)
-		, data(new byte[len])
 	{
-		memcpy(data.get(), src, len);
 	}
 };
 
@@ -81,12 +80,12 @@ void dthread_remove_player(uint8_t pnum)
 	sgMemCrit.Leave();
 }
 
-void dthread_send_delta(uint8_t pnum, _cmd_id cmd, byte *src, uint32_t len)
+void dthread_send_delta(uint8_t pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len)
 {
 	if (!gbIsMultiplayer)
 		return;
 
-	DThreadPkt pkt { pnum, cmd, src, len };
+	DThreadPkt pkt { pnum, cmd, std::move(data), len };
 
 	sgMemCrit.Enter();
 	sgpInfoList.push_back(std::move(pkt));

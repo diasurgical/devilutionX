@@ -24,6 +24,7 @@
 #include "tmsg.h"
 #include "utils/endian.hpp"
 #include "utils/language.h"
+#include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
 
@@ -311,10 +312,10 @@ void ProcessTmsgs()
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
 {
-	PkPlayerStruct pkplr;
+	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PkPlayerStruct)] };
 
-	PackPlayer(&pkplr, Players[MyPlayerId], true);
-	dthread_send_delta(pnum, cmd, (byte *)&pkplr, sizeof(pkplr));
+	PackPlayer(reinterpret_cast<PkPlayerStruct *>(pkplr.get()), Players[MyPlayerId], true);
+	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(pkplr));
 }
 
 dungeon_type InitLevelType(int l)
