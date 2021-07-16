@@ -87,30 +87,6 @@ const char *const QuestTriggerNames[5] = {
 	N_(/* TRANSLATORS: Quest Map*/ "A Dark Passage"),
 	N_(/* TRANSLATORS: Quest Map*/ "Unholy Altar")
 };
-/**
- * A quest group containing the three quests the Butcher,
- * Ogden's Sign and Gharbad the Weak, which ensures that exactly
- * two of these three quests appear in any single player game.
- */
-int QuestGroup1[3] = { Q_BUTCHER, Q_LTBANNER, Q_GARBUD };
-/**
- * A quest group containing the three quests Halls of the Blind,
- * the Magic Rock and Valor, which ensures that exactly two of
- * these three quests appear in any single player game.
- */
-int QuestGroup2[3] = { Q_BLIND, Q_ROCK, Q_BLOOD };
-/**
- * A quest group containing the three quests Black Mushroom,
- * Zhar the Mad and Anvil of Fury, which ensures that exactly
- * two of these three quests appear in any single player game.
- */
-int QuestGroup3[3] = { Q_MUSHROOM, Q_ZHAR, Q_ANVIL };
-/**
- * A quest group containing the two quests Lachdanan and Warlord
- * of Blood, which ensures that exactly one of these two quests
- * appears in any single player game.
- */
-int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
 
 void InitQuests()
 {
@@ -186,16 +162,54 @@ void InitQuests()
 
 void InitialiseQuestPools(uint32_t seed, QuestStruct quests[])
 {
-	SetRndSeed(seed);
-	if (GenerateRnd(2) != 0)
-		quests[Q_PWATER]._qactive = QUEST_NOTAVAIL;
-	else
-		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
+	/**
+	 * @brief To ensure saved games have the same quests available after saving and loading an RNG is created from
+	 * the provided seed.
+	*/
+	vanilla::RandomEngine rng { seed };
 
-	quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	/**
+	 * @brief The quests Poison Water and Skeleton King share the same quest pool, only one of the two is available in
+	 * a vanilla single player game.
+	 */
+	auto questPool1ID = rng.RandomChoice({ Q_SKELKING, Q_PWATER });
+	quests[questPool1ID.value_or(Q_SKELKING)]._qactive = QUEST_NOTAVAIL;
+
+	/**
+	 * @brief The quests Butcher, Ogden's Sign, and Gharbad the Weak share the same quest pool. A rare bug (present in
+	 * Diablo) allowed all quests to remain active but normally only two of these three quests appear in any single
+	 * player game.
+	 */
+	auto questPool2ID = rng.RandomChoice({ Q_BUTCHER, Q_LTBANNER, Q_GARBUD });
+	if (questPool2ID)
+		quests[*questPool2ID]._qactive = QUEST_NOTAVAIL;
+
+	/**
+	 * @brief The quests Halls of the Blind, the Magic Rock, and Valor share the same quest pool. As above normally only
+	 * two of these three quests appear in any single player game.
+	 */
+	auto questPool3ID = rng.RandomChoice({ Q_BLIND, Q_ROCK, Q_BLOOD });
+	if (questPool3ID)
+		quests[*questPool3ID]._qactive = QUEST_NOTAVAIL;
+
+	/**
+	 * @brief The quests Black Mushroom, Zhar the Mad, and Anvil of Fury share the same quest pool. As above normally
+	 * only two of these three quests appear in any single player game.
+	 */
+	auto questPool4ID = rng.RandomChoice({ Q_MUSHROOM, Q_ZHAR, Q_ANVIL });
+	if (questPool4ID)
+		quests[*questPool4ID]._qactive = QUEST_NOTAVAIL;
+
+	/**
+	 * @brief The quests Lachdanan and Warlord of Blood share the same quest pool. As above normally only one of these
+	 * two quests appears in any single player game.
+	 */
+	auto questPool5ID = rng.RandomChoice({ Q_VEIL, Q_WARLORD });
+	if (questPool5ID)
+		quests[*questPool5ID]._qactive = QUEST_NOTAVAIL;
+
+	// There are no calls to the global RNG functions between now and the next call to vanilla::SetRndSeed
+	// To be absolutely safe we could call vanilla::SetRndSeed(rng.initialState) then vanilla::Discard(rng.GetCount())
 }
 
 void CheckQuests()

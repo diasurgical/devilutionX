@@ -177,7 +177,7 @@ void DrlgTPass3()
 		}
 		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 4) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 20))) {
 			for (int x = 36; x < 46; x++) {
-				FillTile(x, 78, GenerateRnd(4) + 1);
+				FillTile(x, 78, vanilla::GenerateRnd(4) + 1);
 			}
 		}
 	}

@@ -50,7 +50,7 @@ void InitTownerInfo(int i, const TownerInit &initData)
 	towner._ttype = initData.type;
 	towner.position = initData.position;
 	towner.talk = initData.talk;
-	towner._tSeed = AdvanceRndSeed(); // TODO: Narrowing conversion, tSeed might need to be uint16_t
+	towner._tSeed = vanilla::AdvanceRndSeed(); // TODO: Narrowing conversion, tSeed might need to be uint16_t
 
 	dMonster[towner.position.x][towner.position.y] = i + 1;
 
@@ -224,7 +224,7 @@ void InitCows(TownerStruct &towner, const TownerInit &initData)
 		towner._tNAnim[i] = CelGetFrame(CowCels.get(), i);
 	}
 	NewTownerAnim(towner, towner._tNAnim[initData.dir], 12, 3);
-	towner._tAnimFrame = GenerateRnd(11) + 1;
+	towner._tAnimFrame = vanilla::GenerateRnd(11) + 1;
 	towner._tName = _("Cow");
 
 	const Point position = initData.position;
@@ -687,7 +687,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 	case QUEST_HIVE_ACTIVE:
 		if (!player._pLvlVisited[9] && player._pLevel < 15) {
 			_speech_id qt = TEXT_JERSEY12;
-			switch (GenerateRnd(4)) {
+			switch (vanilla::GenerateRnd(4)) {
 			case 0:
 				qt = TEXT_JERSEY9;
 				break;

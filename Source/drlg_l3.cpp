@@ -877,18 +877,18 @@ bool FillRoom(int x1, int y1, int x2, int y2)
 		}
 	}
 	for (int j = y1; j <= y2; j++) {
-		if (GenerateRnd(2) != 0) {
+		if (vanilla::GenerateRnd(2) != 0) {
 			dungeon[x1][j] = 1;
 		}
-		if (GenerateRnd(2) != 0) {
+		if (vanilla::GenerateRnd(2) != 0) {
 			dungeon[x2][j] = 1;
 		}
 	}
 	for (int i = x1; i <= x2; i++) {
-		if (GenerateRnd(2) != 0) {
+		if (vanilla::GenerateRnd(2) != 0) {
 			dungeon[i][y1] = 1;
 		}
-		if (GenerateRnd(2) != 0) {
+		if (vanilla::GenerateRnd(2) != 0) {
 			dungeon[i][y2] = 1;
 		}
 	}
@@ -903,20 +903,20 @@ void CreateBlock(int x, int y, int obs, int dir)
 	int x2;
 	int y2;
 
-	int blksizex = GenerateRnd(2) + 3;
-	int blksizey = GenerateRnd(2) + 3;
+	int blksizex = vanilla::GenerateRnd(2) + 3;
+	int blksizey = vanilla::GenerateRnd(2) + 3;
 
 	if (dir == 0) {
 		y2 = y - 1;
 		y1 = y2 - blksizey;
 		if (blksizex < obs) {
-			x1 = GenerateRnd(blksizex) + x;
+			x1 = vanilla::GenerateRnd(blksizex) + x;
 		}
 		if (blksizex == obs) {
 			x1 = x;
 		}
 		if (blksizex > obs) {
-			x1 = x - GenerateRnd(blksizex);
+			x1 = x - vanilla::GenerateRnd(blksizex);
 		}
 		x2 = blksizex + x1;
 	}
@@ -924,13 +924,13 @@ void CreateBlock(int x, int y, int obs, int dir)
 		x1 = x + 1;
 		x2 = x1 + blksizex;
 		if (blksizey < obs) {
-			y1 = GenerateRnd(blksizey) + y;
+			y1 = vanilla::GenerateRnd(blksizey) + y;
 		}
 		if (blksizey == obs) {
 			y1 = y;
 		}
 		if (blksizey > obs) {
-			y1 = y - GenerateRnd(blksizey);
+			y1 = y - vanilla::GenerateRnd(blksizey);
 		}
 		y2 = y1 + blksizey;
 	}
@@ -938,13 +938,13 @@ void CreateBlock(int x, int y, int obs, int dir)
 		y1 = y + 1;
 		y2 = y1 + blksizey;
 		if (blksizex < obs) {
-			x1 = GenerateRnd(blksizex) + x;
+			x1 = vanilla::GenerateRnd(blksizex) + x;
 		}
 		if (blksizex == obs) {
 			x1 = x;
 		}
 		if (blksizex > obs) {
-			x1 = x - GenerateRnd(blksizex);
+			x1 = x - vanilla::GenerateRnd(blksizex);
 		}
 		x2 = blksizex + x1;
 	}
@@ -952,19 +952,19 @@ void CreateBlock(int x, int y, int obs, int dir)
 		x2 = x - 1;
 		x1 = x2 - blksizex;
 		if (blksizey < obs) {
-			y1 = GenerateRnd(blksizey) + y;
+			y1 = vanilla::GenerateRnd(blksizey) + y;
 		}
 		if (blksizey == obs) {
 			y1 = y;
 		}
 		if (blksizey > obs) {
-			y1 = y - GenerateRnd(blksizey);
+			y1 = y - vanilla::GenerateRnd(blksizey);
 		}
 		y2 = y1 + blksizey;
 	}
 
 	if (FillRoom(x1, y1, x2, y2)) {
-		int contflag = GenerateRnd(4);
+		int contflag = vanilla::GenerateRnd(4);
 		if (contflag != 0 && dir != 2) {
 			CreateBlock(x1, y1, blksizey, 0);
 		}
@@ -995,14 +995,14 @@ void FillDiagonals()
 		for (int i = 0; i < DMAXX - 1; i++) {
 			int v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
-				if (GenerateRnd(2) == 0) {
+				if (vanilla::GenerateRnd(2) == 0) {
 					dungeon[i][j] = 1;
 				} else {
 					dungeon[i + 1][j + 1] = 1;
 				}
 			}
 			if (v == 9) {
-				if (GenerateRnd(2) == 0) {
+				if (vanilla::GenerateRnd(2) == 0) {
 					dungeon[i + 1][j] = 1;
 				} else {
 					dungeon[i][j + 1] = 1;
@@ -1040,9 +1040,9 @@ void FillStraights()
 				}
 				xs++;
 			} else {
-				if (xs > 3 && GenerateRnd(2) != 0) {
+				if (xs > 3 && vanilla::GenerateRnd(2) != 0) {
 					for (int k = xc; k < i; k++) {
-						int rv = GenerateRnd(2);
+						int rv = vanilla::GenerateRnd(2);
 						dungeon[k][j] = rv;
 					}
 				}
@@ -1059,9 +1059,9 @@ void FillStraights()
 				}
 				xs++;
 			} else {
-				if (xs > 3 && GenerateRnd(2) != 0) {
+				if (xs > 3 && vanilla::GenerateRnd(2) != 0) {
 					for (int k = xc; k < i; k++) {
-						int rv = GenerateRnd(2);
+						int rv = vanilla::GenerateRnd(2);
 						dungeon[k][j + 1] = rv;
 					}
 				}
@@ -1078,9 +1078,9 @@ void FillStraights()
 				}
 				ys++;
 			} else {
-				if (ys > 3 && GenerateRnd(2) != 0) {
+				if (ys > 3 && vanilla::GenerateRnd(2) != 0) {
 					for (int k = yc; k < j; k++) {
-						int rv = GenerateRnd(2);
+						int rv = vanilla::GenerateRnd(2);
 						dungeon[i][k] = rv;
 					}
 				}
@@ -1097,9 +1097,9 @@ void FillStraights()
 				}
 				ys++;
 			} else {
-				if (ys > 3 && GenerateRnd(2) != 0) {
+				if (ys > 3 && vanilla::GenerateRnd(2) != 0) {
 					for (int k = yc; k < j; k++) {
-						int rv = GenerateRnd(2);
+						int rv = vanilla::GenerateRnd(2);
 						dungeon[i + 1][k] = rv;
 					}
 				}
@@ -1138,7 +1138,7 @@ void MakeMegas()
 		for (int i = 0; i < DMAXX - 1; i++) {
 			int v = dungeon[i + 1][j + 1] + 2 * dungeon[i][j + 1] + 4 * dungeon[i + 1][j] + 8 * dungeon[i][j];
 			if (v == 6) {
-				int rv = GenerateRnd(2);
+				int rv = vanilla::GenerateRnd(2);
 				if (rv == 0) {
 					v = 12;
 				} else {
@@ -1146,7 +1146,7 @@ void MakeMegas()
 				}
 			}
 			if (v == 9) {
-				int rv = GenerateRnd(2);
+				int rv = vanilla::GenerateRnd(2);
 				if (rv == 0) {
 					v = 13;
 				} else {
@@ -1183,8 +1183,8 @@ void River()
 			int i = 0;
 			// BUGFIX: Replace with `(ry >= DMAXY || dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28) && i < 100` (fixed)
 			while ((ry >= DMAXY || dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28) && i < 100) {
-				rx = GenerateRnd(DMAXX);
-				ry = GenerateRnd(DMAXY);
+				rx = vanilla::GenerateRnd(DMAXX);
+				ry = vanilla::GenerateRnd(DMAXY);
 				i++;
 				// BUGFIX: Move `ry < DMAXY` check before dungeon checks (fixed)
 				while (ry < DMAXY && (dungeon[rx][ry] < 25 || dungeon[rx][ry] > 28)) {
@@ -1232,7 +1232,7 @@ void River()
 				int px = rx;
 				int py = ry;
 				if (dircheck == 0) {
-					dir = GenerateRnd(4);
+					dir = vanilla::GenerateRnd(4);
 				} else {
 					dir = (dir + 1) & 3;
 				}
@@ -1256,10 +1256,10 @@ void River()
 				if (dungeon[rx][ry] == 7) {
 					dircheck = 0;
 					if (dir < 2) {
-						river[2][riveramt] = (BYTE)GenerateRnd(2) + 17;
+						river[2][riveramt] = (BYTE)vanilla::GenerateRnd(2) + 17;
 					}
 					if (dir > 1) {
-						river[2][riveramt] = (BYTE)GenerateRnd(2) + 15;
+						river[2][riveramt] = (BYTE)vanilla::GenerateRnd(2) + 15;
 					}
 					river[0][riveramt] = rx;
 					river[1][riveramt] = ry;
@@ -1372,7 +1372,7 @@ void River()
 			int bridge;
 			while (found == 0 && lpcnt < 30) {
 				lpcnt++;
-				bridge = GenerateRnd(riveramt);
+				bridge = vanilla::GenerateRnd(riveramt);
 				if ((river[2][bridge] == 15 || river[2][bridge] == 16)
 				    && dungeon[river[0][bridge]][river[1][bridge] - 1] == 7
 				    && dungeon[river[0][bridge]][river[1][bridge] + 1] == 7) {
@@ -1553,7 +1553,7 @@ void Pool()
 			} else {
 				found = true;
 			}
-			int poolchance = GenerateRnd(100);
+			int poolchance = vanilla::GenerateRnd(100);
 			for (int j = std::max(duny - totarea, 0); j < std::min(duny + totarea, DMAXY); j++) {
 				for (int i = std::max(dunx - totarea, 0); i < std::min(dunx + totarea, DMAXX); i++) {
 					// BUGFIX: In the following swap the order to first do the
@@ -1603,14 +1603,14 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 
 	int numt = 1;
 	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
+		numt = vanilla::GenerateRnd(tmax - tmin) + tmin;
 	}
 
 	int sx = 0;
 	int sy = 0;
 	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
+		sx = vanilla::GenerateRnd(DMAXX - sw);
+		sy = vanilla::GenerateRnd(DMAXY - sh);
 		bool abort = false;
 		int bailcnt;
 
@@ -1618,13 +1618,13 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 			bailcnt++;
 			abort = true;
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
+				sx = vanilla::GenerateRnd(DMAXX - sw);
+				sy = vanilla::GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
+				sx = vanilla::GenerateRnd(DMAXX - sw);
+				sy = vanilla::GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
 			int ii = 2;
@@ -1712,7 +1712,7 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					}
 				}
 			}
-			if (found && GenerateRnd(100) < rndper) {
+			if (found && vanilla::GenerateRnd(100) < rndper) {
 				for (int yy = 0; yy < sh; yy++) {
 					for (int xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
@@ -1766,7 +1766,7 @@ bool HivePlaceSetRandom(const BYTE *miniset, int rndper)
 					}
 				}
 			}
-			if (found && GenerateRnd(100) < rndper) {
+			if (found && vanilla::GenerateRnd(100) < rndper) {
 				placed = true;
 				for (int yy = 0; yy < sh; yy++) {
 					for (int xx = 0; xx < sw; xx++) {
@@ -1891,7 +1891,7 @@ void Fence()
 {
 	for (int j = 1; j < DMAXY - 1; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX - 1; i++) { // BUGFIX: Change '0' to '1' (fixed)
-			if (dungeon[i][j] == 10 && GenerateRnd(2) != 0) {
+			if (dungeon[i][j] == 10 && vanilla::GenerateRnd(2) != 0) {
 				int x = i;
 				while (dungeon[x][j] == 10) {
 					x++;
@@ -1900,7 +1900,7 @@ void Fence()
 				if (x - i > 0) {
 					dungeon[i][j] = 127;
 					for (int xx = i + 1; xx < x; xx++) {
-						if (GenerateRnd(2) != 0) {
+						if (vanilla::GenerateRnd(2) != 0) {
 							dungeon[xx][j] = 126;
 						} else {
 							dungeon[xx][j] = 129;
@@ -1909,7 +1909,7 @@ void Fence()
 					dungeon[x][j] = 128;
 				}
 			}
-			if (dungeon[i][j] == 9 && GenerateRnd(2) != 0) {
+			if (dungeon[i][j] == 9 && vanilla::GenerateRnd(2) != 0) {
 				int y = j;
 				while (dungeon[i][y] == 9) {
 					y++;
@@ -1918,7 +1918,7 @@ void Fence()
 				if (y - j > 0) {
 					dungeon[i][j] = 123;
 					for (int yy = j + 1; yy < y; yy++) {
-						if (GenerateRnd(2) != 0) {
+						if (vanilla::GenerateRnd(2) != 0) {
 							dungeon[i][yy] = 121;
 						} else {
 							dungeon[i][yy] = 124;
@@ -1927,7 +1927,7 @@ void Fence()
 					dungeon[i][y] = 122;
 				}
 			}
-			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 10 && dungeon[i][j + 1] == 9 && GenerateRnd(2) != 0) {
+			if (dungeon[i][j] == 11 && dungeon[i + 1][j] == 10 && dungeon[i][j + 1] == 9 && vanilla::GenerateRnd(2) != 0) {
 				dungeon[i][j] = 125;
 				int x = i + 1;
 				while (dungeon[x][j] == 10) {
@@ -1935,7 +1935,7 @@ void Fence()
 				}
 				x--;
 				for (int xx = i + 1; xx < x; xx++) {
-					if (GenerateRnd(2) != 0) {
+					if (vanilla::GenerateRnd(2) != 0) {
 						dungeon[xx][j] = 126;
 					} else {
 						dungeon[xx][j] = 129;
@@ -1948,7 +1948,7 @@ void Fence()
 				}
 				y--;
 				for (int yy = j + 1; yy < y; yy++) {
-					if (GenerateRnd(2) != 0) {
+					if (vanilla::GenerateRnd(2) != 0) {
 						dungeon[i][yy] = 121;
 					} else {
 						dungeon[i][yy] = 124;
@@ -1961,8 +1961,8 @@ void Fence()
 
 	for (int j = 1; j < DMAXY; j++) {     // BUGFIX: Change '0' to '1' (fixed)
 		for (int i = 1; i < DMAXX; i++) { // BUGFIX: Change '0' to '1' (fixed)
-			if (dungeon[i][j] == 7 && GenerateRnd(1) == 0 && SkipThemeRoom(i, j)) {
-				int rt = GenerateRnd(2);
+			if (dungeon[i][j] == 7 && vanilla::GenerateRnd(1) == 0 && SkipThemeRoom(i, j)) {
+				int rt = vanilla::GenerateRnd(2);
 				if (rt == 0) {
 					int y1 = j;
 					// BUGFIX: Check `y1 >= 0` first (fixed)
@@ -1984,13 +1984,13 @@ void Fence()
 						skip = false;
 					}
 					if (y2 - y1 > 1 && skip) {
-						int rp = GenerateRnd(y2 - y1 - 1) + y1 + 1;
+						int rp = vanilla::GenerateRnd(y2 - y1 - 1) + y1 + 1;
 						for (int y = y1; y <= y2; y++) {
 							if (y == rp) {
 								continue;
 							}
 							if (dungeon[i][y] == 7) {
-								if (GenerateRnd(2) != 0) {
+								if (vanilla::GenerateRnd(2) != 0) {
 									dungeon[i][y] = 135;
 								} else {
 									dungeon[i][y] = 137;
@@ -2038,13 +2038,13 @@ void Fence()
 						skip = false;
 					}
 					if (x2 - x1 > 1 && skip) {
-						int rp = GenerateRnd(x2 - x1 - 1) + x1 + 1;
+						int rp = vanilla::GenerateRnd(x2 - x1 - 1) + x1 + 1;
 						for (int x = x1; x <= x2; x++) {
 							if (x == rp) {
 								continue;
 							}
 							if (dungeon[x][j] == 7) {
-								if (GenerateRnd(2) != 0) {
+								if (vanilla::GenerateRnd(2) != 0) {
 									dungeon[x][j] = 134;
 								} else {
 									dungeon[x][j] = 136;
@@ -2083,8 +2083,8 @@ bool Anvil()
 {
 	int sw = L3ANVIL[0];
 	int sh = L3ANVIL[1];
-	int sx = GenerateRnd(DMAXX - sw);
-	int sy = GenerateRnd(DMAXY - sh);
+	int sx = vanilla::GenerateRnd(DMAXX - sw);
+	int sy = vanilla::GenerateRnd(DMAXY - sh);
 
 	bool found = false;
 	int trys = 0;
@@ -2230,8 +2230,8 @@ void GenerateLevel(lvl_entry entry)
 		do {
 			do {
 				InitDungeonFlags();
-				int x1 = GenerateRnd(20) + 10;
-				int y1 = GenerateRnd(20) + 10;
+				int x1 = vanilla::GenerateRnd(20) + 10;
+				int y1 = vanilla::GenerateRnd(20) + 10;
 				int x2 = x1 + 2;
 				int y2 = y1 + 2;
 				FillRoom(x1, y1, x2, y2);
@@ -2240,8 +2240,8 @@ void GenerateLevel(lvl_entry entry)
 				CreateBlock(x1, y2, 2, 2);
 				CreateBlock(x1, y1, 2, 3);
 				if (QuestStatus(Q_ANVIL)) {
-					x1 = GenerateRnd(10) + 10;
-					y1 = GenerateRnd(10) + 10;
+					x1 = vanilla::GenerateRnd(10) + 10;
+					y1 = vanilla::GenerateRnd(10) + 10;
 					x2 = x1 + 12;
 					y2 = y1 + 12;
 					FloorArea(x1, y1, x2, y2);
@@ -2482,7 +2482,7 @@ void Pass3()
 
 void CreateL3Dungeon(uint32_t rseed, lvl_entry entry)
 {
-	SetRndSeed(rseed);
+	vanilla::SetRndSeed(rseed);
 
 	dminx = 16;
 	dminy = 16;

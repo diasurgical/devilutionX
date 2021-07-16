@@ -700,7 +700,7 @@ void NetClose()
 bool NetInit(bool bSinglePlayer)
 {
 	while (true) {
-		SetRndSeed(0);
+		vanilla::SetRndSeed(0);
 		sgGameInitInfo.size = sizeof(sgGameInitInfo);
 		sgGameInitInfo.dwSeed = time(nullptr);
 		sgGameInitInfo.programid = GAME_ID;
@@ -757,11 +757,11 @@ bool NetInit(bool bSinglePlayer)
 		NetClose();
 		gbSelectProvider = false;
 	}
-	SetRndSeed(sgGameInitInfo.dwSeed);
+	vanilla::SetRndSeed(sgGameInitInfo.dwSeed);
 	gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
 
 	for (int i = 0; i < NUMLEVELS; i++) {
-		glSeedTbl[i] = AdvanceRndSeed();
+		glSeedTbl[i] = vanilla::AdvanceRndSeed();
 		gnLevelTypeTbl[i] = InitLevelType(i);
 	}
 	if (!SNetGetGameInfo(GAMEINFO_NAME, szPlayerName, 128))

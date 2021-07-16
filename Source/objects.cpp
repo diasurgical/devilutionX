@@ -357,12 +357,12 @@ static bool WallTrapLocOkK(int xp, int yp)
 
 void InitRndLocObj(int min, int max, _object_id objtype)
 {
-	int numobjs = GenerateRnd(max - min) + min;
+	int numobjs = vanilla::GenerateRnd(max - min) + min;
 
 	for (int i = 0; i < numobjs; i++) {
 		while (true) {
-			int xp = GenerateRnd(80) + 16;
-			int yp = GenerateRnd(80) + 16;
+			int xp = vanilla::GenerateRnd(80) + 16;
+			int yp = vanilla::GenerateRnd(80) + 16;
 			if (RndLocOk(xp - 1, yp - 1)
 			    && RndLocOk(xp, yp - 1)
 			    && RndLocOk(xp + 1, yp - 1)
@@ -381,11 +381,11 @@ void InitRndLocObj(int min, int max, _object_id objtype)
 
 void InitRndLocBigObj(int min, int max, _object_id objtype)
 {
-	int numobjs = GenerateRnd(max - min) + min;
+	int numobjs = vanilla::GenerateRnd(max - min) + min;
 	for (int i = 0; i < numobjs; i++) {
 		while (true) {
-			int xp = GenerateRnd(80) + 16;
-			int yp = GenerateRnd(80) + 16;
+			int xp = vanilla::GenerateRnd(80) + 16;
+			int yp = vanilla::GenerateRnd(80) + 16;
 			if (RndLocOk(xp - 1, yp - 2)
 			    && RndLocOk(xp, yp - 2)
 			    && RndLocOk(xp + 1, yp - 2)
@@ -407,7 +407,7 @@ void InitRndLocBigObj(int min, int max, _object_id objtype)
 
 void InitRndLocObj5x5(int min, int max, _object_id objtype)
 {
-	int numobjs = min + GenerateRnd(max - min);
+	int numobjs = min + vanilla::GenerateRnd(max - min);
 	for (int i = 0; i < numobjs; i++) {
 		int xp;
 		int yp;
@@ -415,8 +415,8 @@ void InitRndLocObj5x5(int min, int max, _object_id objtype)
 		bool exit = false;
 		while (!exit) {
 			exit = true;
-			xp = GenerateRnd(80) + 16;
-			yp = GenerateRnd(80) + 16;
+			xp = vanilla::GenerateRnd(80) + 16;
+			yp = vanilla::GenerateRnd(80) + 16;
 			for (int n = -2; n <= 2; n++) {
 				for (int m = -2; m <= 2; m++) {
 					if (!RndLocOk(xp + m, yp + n))
@@ -494,8 +494,8 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 	bool exit = false;
 	while (!exit) {
 		exit = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
+		xp = vanilla::GenerateRnd(80) + 16;
+		yp = vanilla::GenerateRnd(80) + 16;
 		for (int n = -2; n <= 2; n++) {
 			for (int m = -2; m <= 2; m++) {
 				if (!RndLocOk(xp + m, yp + n))
@@ -526,29 +526,29 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 void InitRndBarrels()
 {
 	/** number of groups of barrels to generate */
-	int numobjs = GenerateRnd(5) + 3;
+	int numobjs = vanilla::GenerateRnd(5) + 3;
 	for (int i = 0; i < numobjs; i++) {
 		int xp;
 		int yp;
 		do {
-			xp = GenerateRnd(80) + 16;
-			yp = GenerateRnd(80) + 16;
+			xp = vanilla::GenerateRnd(80) + 16;
+			yp = vanilla::GenerateRnd(80) + 16;
 		} while (!RndLocOk(xp, yp));
-		_object_id o = (GenerateRnd(4) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
+		_object_id o = (vanilla::GenerateRnd(4) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
 		AddObject(o, { xp, yp });
 		bool found = true;
 		/** regulates chance to stop placing barrels in current group */
 		int p = 0;
 		/** number of barrels in current group */
 		int c = 1;
-		while (GenerateRnd(p) == 0 && found) {
+		while (vanilla::GenerateRnd(p) == 0 && found) {
 			/** number of tries of placing next barrel in current group */
 			int t = 0;
 			found = false;
 			while (true) {
 				if (t >= 3)
 					break;
-				int dir = GenerateRnd(8);
+				int dir = vanilla::GenerateRnd(8);
 				xp += bxadd[dir];
 				yp += byadd[dir];
 				found = RndLocOk(xp, yp);
@@ -557,7 +557,7 @@ void InitRndBarrels()
 					break;
 			}
 			if (found) {
-				o = (GenerateRnd(5) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
+				o = (vanilla::GenerateRnd(5) != 0) ? OBJ_BARREL : OBJ_BARRELEX;
 				AddObject(o, { xp, yp });
 				c++;
 			}
@@ -633,16 +633,16 @@ void AddL2Torches()
 				continue;
 
 			int pn = dPiece[i][j];
-			if (pn == 1 && GenerateRnd(3) == 0)
+			if (pn == 1 && vanilla::GenerateRnd(3) == 0)
 				AddObject(OBJ_TORCHL2, { i, j });
 
-			if (pn == 5 && GenerateRnd(3) == 0)
+			if (pn == 5 && vanilla::GenerateRnd(3) == 0)
 				AddObject(OBJ_TORCHR2, { i, j });
 
-			if (pn == 37 && GenerateRnd(10) == 0 && dObject[i - 1][j] == 0)
+			if (pn == 37 && vanilla::GenerateRnd(10) == 0 && dObject[i - 1][j] == 0)
 				AddObject(OBJ_TORCHL, { i - 1, j });
 
-			if (pn == 41 && GenerateRnd(10) == 0 && dObject[i][j - 1] == 0)
+			if (pn == 41 && vanilla::GenerateRnd(10) == 0 && dObject[i][j - 1] == 0)
 				AddObject(OBJ_TORCHR, { i, j - 1 });
 		}
 	}
@@ -661,14 +661,14 @@ void AddObjTraps()
 		rndv = 25;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dObject[i][j] <= 0 || GenerateRnd(100) >= rndv)
+			if (dObject[i][j] <= 0 || vanilla::GenerateRnd(100) >= rndv)
 				continue;
 
 			int8_t oi = dObject[i][j] - 1;
 			if (!AllObjects[Objects[oi]._otype].oTrapFlag)
 				continue;
 
-			if (GenerateRnd(2) == 0) {
+			if (vanilla::GenerateRnd(2) == 0) {
 				int xp = i - 1;
 				while (!nSolidTable[dPiece[xp][j]]) // BUGFIX: check if xp >= 0
 					xp--;
@@ -705,7 +705,7 @@ void AddChestTraps()
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			if (dObject[i][j] > 0) {
 				int8_t oi = dObject[i][j] - 1;
-				if (Objects[oi]._otype >= OBJ_CHEST1 && Objects[oi]._otype <= OBJ_CHEST3 && !Objects[oi]._oTrapFlag && GenerateRnd(100) < 10) {
+				if (Objects[oi]._otype >= OBJ_CHEST1 && Objects[oi]._otype <= OBJ_CHEST3 && !Objects[oi]._oTrapFlag && vanilla::GenerateRnd(100) < 10) {
 					switch (Objects[oi]._otype) {
 					case OBJ_CHEST1:
 						Objects[oi]._otype = OBJ_TCHEST1;
@@ -721,9 +721,9 @@ void AddChestTraps()
 					}
 					Objects[oi]._oTrapFlag = true;
 					if (leveltype == DTYPE_CATACOMBS) {
-						Objects[oi]._oVar4 = GenerateRnd(2);
+						Objects[oi]._oVar4 = vanilla::GenerateRnd(2);
 					} else {
-						Objects[oi]._oVar4 = GenerateRnd(gbIsHellfire ? 6 : 3);
+						Objects[oi]._oVar4 = vanilla::GenerateRnd(gbIsHellfire ? 6 : 3);
 					}
 				}
 			}
@@ -812,8 +812,8 @@ void AddCryptStoryBook(int s)
 	bool exit = false;
 	while (!exit) {
 		exit = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
+		xp = vanilla::GenerateRnd(80) + 16;
+		yp = vanilla::GenerateRnd(80) + 16;
 		for (int n = -2; n <= 2; n++) {
 			for (int m = -3; m <= 3; m++) {
 				if (!RndLocOk(xp + m, yp + n))
@@ -838,7 +838,7 @@ void AddCryptStoryBook(int s)
 void AddNakrulGate()
 {
 	AddNakrulLeaver();
-	switch (GenerateRnd(6)) {
+	switch (vanilla::GenerateRnd(6)) {
 	case 0:
 		AddNakrulBook(6, UberRow + 3, UberCol);
 		AddNakrulBook(7, UberRow + 2, UberCol - 3);
@@ -885,8 +885,8 @@ void AddStoryBooks()
 	bool done = false;
 	while (!done) {
 		done = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
+		xp = vanilla::GenerateRnd(80) + 16;
+		yp = vanilla::GenerateRnd(80) + 16;
 		for (int yy = -2; yy <= 2; yy++) {
 			for (int xx = -3; xx <= 3; xx++) {
 				if (!RndLocOk(xx + xp, yy + yp))
@@ -916,12 +916,12 @@ void AddHookedBodies(int freq)
 			int ii = 16 + i * 2;
 			if (dungeon[i][j] != 1 && dungeon[i][j] != 2)
 				continue;
-			if (GenerateRnd(freq) != 0)
+			if (vanilla::GenerateRnd(freq) != 0)
 				continue;
 			if (!SkipThemeRoom(i, j))
 				continue;
 			if (dungeon[i][j] == 1 && dungeon[i + 1][j] == 6) {
-				switch (GenerateRnd(3)) {
+				switch (vanilla::GenerateRnd(3)) {
 				case 0:
 					AddObject(OBJ_TORTURE1, { ii + 1, jj });
 					break;
@@ -935,7 +935,7 @@ void AddHookedBodies(int freq)
 				continue;
 			}
 			if (dungeon[i][j] == 2 && dungeon[i][j + 1] == 6) {
-				switch (GenerateRnd(2)) {
+				switch (vanilla::GenerateRnd(2)) {
 				case 0:
 					AddObject(OBJ_TORTURE3, { ii, jj });
 					break;
@@ -970,8 +970,8 @@ void AddLazStand()
 	bool found = false;
 	while (!found) {
 		found = true;
-		xp = GenerateRnd(80) + 16;
-		yp = GenerateRnd(80) + 16;
+		xp = vanilla::GenerateRnd(80) + 16;
+		yp = vanilla::GenerateRnd(80) + 16;
 		for (int yy = -3; yy <= 3; yy++) {
 			for (int xx = -2; xx <= 3; xx++) {
 				if (!RndLocOk(xp + xx, yp + yy))
@@ -1006,7 +1006,7 @@ void InitObjects()
 		AddDiabObjs();
 	} else {
 		ApplyObjectLighting = true;
-		AdvanceRndSeed();
+		vanilla::AdvanceRndSeed();
 		if (currlevel == 9 && !gbIsMultiplayer)
 			AddSlainHero();
 		if (currlevel == Quests[Q_MUSHROOM]._qlevel && Quests[Q_MUSHROOM]._qactive == QUEST_INIT)
@@ -1236,9 +1236,9 @@ void SetupObject(int i, Point position, _object_id ot)
 	Objects[i]._oAnimFlag = AllObjects[ot].oAnimFlag;
 	if (AllObjects[ot].oAnimFlag != 0) {
 		Objects[i]._oAnimDelay = AllObjects[ot].oAnimDelay;
-		Objects[i]._oAnimCnt = GenerateRnd(AllObjects[ot].oAnimDelay);
+		Objects[i]._oAnimCnt = vanilla::GenerateRnd(AllObjects[ot].oAnimDelay);
 		Objects[i]._oAnimLen = AllObjects[ot].oAnimLen;
-		Objects[i]._oAnimFrame = GenerateRnd(AllObjects[ot].oAnimLen - 1) + 1;
+		Objects[i]._oAnimFrame = vanilla::GenerateRnd(AllObjects[ot].oAnimLen - 1) + 1;
 	} else {
 		Objects[i]._oAnimDelay = 1000;
 		Objects[i]._oAnimCnt = 0;
@@ -1272,9 +1272,9 @@ void AddL1Door(int i, Point position, _object_id objectType)
 
 void AddChest(int i, int t)
 {
-	if (GenerateRnd(2) == 0)
+	if (vanilla::GenerateRnd(2) == 0)
 		Objects[i]._oAnimFrame += 3;
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 	switch (t) {
 	case OBJ_CHEST1:
 	case OBJ_TCHEST1:
@@ -1282,7 +1282,7 @@ void AddChest(int i, int t)
 			Objects[i]._oVar1 = 1;
 			break;
 		}
-		Objects[i]._oVar1 = GenerateRnd(2);
+		Objects[i]._oVar1 = vanilla::GenerateRnd(2);
 		break;
 	case OBJ_TCHEST2:
 	case OBJ_CHEST2:
@@ -1290,7 +1290,7 @@ void AddChest(int i, int t)
 			Objects[i]._oVar1 = 2;
 			break;
 		}
-		Objects[i]._oVar1 = GenerateRnd(3);
+		Objects[i]._oVar1 = vanilla::GenerateRnd(3);
 		break;
 	case OBJ_TCHEST3:
 	case OBJ_CHEST3:
@@ -1298,10 +1298,10 @@ void AddChest(int i, int t)
 			Objects[i]._oVar1 = 3;
 			break;
 		}
-		Objects[i]._oVar1 = GenerateRnd(4);
+		Objects[i]._oVar1 = vanilla::GenerateRnd(4);
 		break;
 	}
-	Objects[i]._oVar2 = GenerateRnd(8);
+	Objects[i]._oVar2 = vanilla::GenerateRnd(8);
 }
 
 void AddL2Door(int i, Point position, _object_id objectType)
@@ -1328,8 +1328,8 @@ void AddL3Door(int i, Point position, _object_id objectType)
 void AddSarc(int i)
 {
 	dObject[Objects[i].position.x][Objects[i].position.y - 1] = -(i + 1);
-	Objects[i]._oVar1 = GenerateRnd(10);
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oVar1 = vanilla::GenerateRnd(10);
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 	if (Objects[i]._oVar1 >= 8)
 		Objects[i]._oVar2 = PreSpawnSkeleton();
 }
@@ -1357,7 +1357,7 @@ void AddTrap(int i)
 	if (currlevel > 20) {
 		mt = (currlevel - 8) / 3 + 1;
 	}
-	mt = GenerateRnd(mt);
+	mt = vanilla::GenerateRnd(mt);
 	if (mt == 0)
 		Objects[i]._oVar3 = MIS_ARROW;
 	if (mt == 1)
@@ -1380,9 +1380,9 @@ void AddObjLight(int i, int r)
 void AddBarrel(int i, int t)
 {
 	Objects[i]._oVar1 = 0;
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oVar2 = (t == OBJ_BARRELEX) ? 0 : GenerateRnd(10);
-	Objects[i]._oVar3 = GenerateRnd(3);
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
+	Objects[i]._oVar2 = (t == OBJ_BARRELEX) ? 0 : vanilla::GenerateRnd(10);
+	Objects[i]._oVar3 = vanilla::GenerateRnd(3);
 
 	if (Objects[i]._oVar2 >= 8)
 		Objects[i]._oVar4 = PreSpawnSkeleton();
@@ -1407,11 +1407,11 @@ void AddShrine(int i)
 
 	int val;
 	do {
-		val = GenerateRnd(shrines);
+		val = vanilla::GenerateRnd(shrines);
 	} while (!slist[val]);
 
 	Objects[i]._oVar1 = val;
-	if (GenerateRnd(2) != 0) {
+	if (vanilla::GenerateRnd(2) != 0) {
 		Objects[i]._oAnimFrame = 12;
 		Objects[i]._oAnimLen = 22;
 	}
@@ -1419,18 +1419,18 @@ void AddShrine(int i)
 
 void AddBookcase(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 	Objects[i]._oPreFlag = true;
 }
 
 void AddBookstand(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddBloodFtn(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddPurifyingFountain(int i)
@@ -1440,7 +1440,7 @@ void AddPurifyingFountain(int i)
 	dObject[ox][oy - 1] = -(i + 1);
 	dObject[ox - 1][oy] = -(i + 1);
 	dObject[ox - 1][oy - 1] = -(i + 1);
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddArmorStand(int i)
@@ -1450,17 +1450,17 @@ void AddArmorStand(int i)
 		Objects[i]._oSelFlag = 0;
 	}
 
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddGoatShrine(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddCauldron(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddMurkyFountain(int i)
@@ -1470,18 +1470,18 @@ void AddMurkyFountain(int i)
 	dObject[ox][oy - 1] = -(i + 1);
 	dObject[ox - 1][oy] = -(i + 1);
 	dObject[ox - 1][oy - 1] = -(i + 1);
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddTearFountain(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddDecap(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oAnimFrame = GenerateRnd(8) + 1;
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
+	Objects[i]._oAnimFrame = vanilla::GenerateRnd(8) + 1;
 	Objects[i]._oPreFlag = true;
 }
 
@@ -1494,7 +1494,7 @@ void AddVilebook(int i)
 
 void AddMagicCircle(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 	Objects[i]._oPreFlag = true;
 	Objects[i]._oVar6 = 0;
 	Objects[i]._oVar5 = 1;
@@ -1502,7 +1502,7 @@ void AddMagicCircle(int i)
 
 void AddBrnCross(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddPedistal(int i)
@@ -1516,9 +1516,9 @@ void AddPedistal(int i)
 
 void AddStoryBook(int i)
 {
-	SetRndSeed(glSeedTbl[16]);
+	vanilla::SetRndSeed(glSeedTbl[16]);
 
-	Objects[i]._oVar1 = GenerateRnd(3);
+	Objects[i]._oVar1 = vanilla::GenerateRnd(3);
 	if (currlevel == 4)
 		Objects[i]._oVar2 = StoryText[Objects[i]._oVar1][0];
 	else if (currlevel == 8)
@@ -1536,13 +1536,13 @@ void AddWeaponRack(int i)
 		Objects[i]._oAnimFlag = 2;
 		Objects[i]._oSelFlag = 0;
 	}
-	Objects[i]._oRndSeed = AdvanceRndSeed();
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
 }
 
 void AddTorturedBody(int i)
 {
-	Objects[i]._oRndSeed = AdvanceRndSeed();
-	Objects[i]._oAnimFrame = GenerateRnd(4) + 1;
+	Objects[i]._oRndSeed = vanilla::AdvanceRndSeed();
+	Objects[i]._oAnimFrame = vanilla::GenerateRnd(4) + 1;
 	Objects[i]._oPreFlag = true;
 }
 
@@ -1556,8 +1556,8 @@ void GetRndObjLoc(int randarea, int *xx, int *yy)
 		tries++;
 		if (tries > 1000 && randarea > 1)
 			randarea--;
-		*xx = GenerateRnd(MAXDUNX);
-		*yy = GenerateRnd(MAXDUNY);
+		*xx = vanilla::GenerateRnd(MAXDUNX);
+		*yy = vanilla::GenerateRnd(MAXDUNY);
 		bool failed = false;
 		for (int i = 0; i < randarea && !failed; i++) {
 			for (int j = 0; j < randarea && !failed; j++) {
@@ -1737,9 +1737,9 @@ void AddObject(_object_id objType, Point objPos)
 		AddChest(oi, objType);
 		Objects[oi]._oTrapFlag = true;
 		if (leveltype == DTYPE_CATACOMBS) {
-			Objects[oi]._oVar4 = GenerateRnd(2);
+			Objects[oi]._oVar4 = vanilla::GenerateRnd(2);
 		} else {
-			Objects[oi]._oVar4 = GenerateRnd(3);
+			Objects[oi]._oVar4 = vanilla::GenerateRnd(3);
 		}
 		break;
 	case OBJ_SARC:
@@ -2993,7 +2993,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 	if (deltaload) {
 		return;
 	}
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	if (setlevel) {
 		for (int j = 0; j < Objects[i]._oVar1; j++) {
 			CreateRndItem(Objects[i].position, true, sendmsg, false);
@@ -3160,7 +3160,7 @@ void OperateSarc(int pnum, int i, bool sendmsg)
 	}
 	Objects[i]._oAnimFlag = 1;
 	Objects[i]._oAnimDelay = 3;
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	if (Objects[i]._oVar1 <= 2)
 		CreateRndItem(Objects[i].position, false, sendmsg, false);
 	if (Objects[i]._oVar1 >= 8)
@@ -3231,7 +3231,7 @@ void TryDisarm(int pnum, int i)
 		return;
 	}
 	int trapdisper = 2 * Players[pnum]._pDexterity - 5 * currlevel;
-	if (GenerateRnd(100) > trapdisper) {
+	if (vanilla::GenerateRnd(100) > trapdisper) {
 		return;
 	}
 	for (int j = 0; j < ActiveObjectCount; j++) {
@@ -3274,7 +3274,7 @@ bool OperateShrineMysterious(int pnum)
 	ModifyPlrDex(pnum, -1);
 	ModifyPlrVit(pnum, -1);
 
-	switch (static_cast<CharacterAttribute>(GenerateRnd(4))) {
+	switch (static_cast<CharacterAttribute>(vanilla::GenerateRnd(4))) {
 	case CharacterAttribute::Strength:
 		ModifyPlrStr(pnum, 6);
 		break;
@@ -3328,7 +3328,7 @@ bool OperateShrineHidden(int pnum)
 			}
 			if (cnt == 0)
 				break;
-			int r = GenerateRnd(NUM_INVLOC);
+			int r = vanilla::GenerateRnd(NUM_INVLOC);
 			if (Players[pnum].InvBody[r].isEmpty() || Players[pnum].InvBody[r]._iMaxDur == DUR_INDESTRUCTIBLE || Players[pnum].InvBody[r]._iMaxDur == 0)
 				continue;
 
@@ -3530,7 +3530,7 @@ bool OperateShrineEnchanted(int pnum)
 		}
 		int r;
 		do {
-			r = GenerateRnd(maxSpells);
+			r = vanilla::GenerateRnd(maxSpells);
 		} while ((Players[pnum]._pMemSpells & GetSpellBitmask(r + 1)) == 0);
 		if (Players[pnum]._pSplLvl[r + 1] >= 2)
 			Players[pnum]._pSplLvl[r + 1] -= 2;
@@ -3549,7 +3549,7 @@ bool OperateShrineThaumaturgic(int pnum)
 		int v1 = ActiveObjects[j];
 		assert((DWORD)v1 < MAXOBJECTS);
 		if (IsAnyOf(Objects[v1]._otype, OBJ_CHEST1, OBJ_CHEST2, OBJ_CHEST3, OBJ_TCHEST1, OBJ_TCHEST2, OBJ_TCHEST3) && Objects[v1]._oSelFlag == 0) {
-			Objects[v1]._oRndSeed = AdvanceRndSeed();
+			Objects[v1]._oRndSeed = vanilla::AdvanceRndSeed();
 			Objects[v1]._oSelFlag = 1;
 			Objects[v1]._oAnimFrame -= 2;
 		}
@@ -3735,8 +3735,8 @@ bool OperateShrineHoly(int pnum)
 	int yy;
 	uint32_t lv;
 	do {
-		xx = GenerateRnd(MAXDUNX);
-		yy = GenerateRnd(MAXDUNY);
+		xx = vanilla::GenerateRnd(MAXDUNX);
+		yy = vanilla::GenerateRnd(MAXDUNY);
 		lv = dPiece[xx][yy];
 		j++;
 		if (j > MAXDUNX * MAXDUNY)
@@ -3795,10 +3795,10 @@ bool OperateShrineSpiritual(int pnum)
 
 	for (int8_t &gridItem : Players[pnum].InvGrid) {
 		if (gridItem == 0) {
-			int r = 5 * leveltype + GenerateRnd(10 * leveltype);
+			int r = 5 * leveltype + vanilla::GenerateRnd(10 * leveltype);
 			DWORD t = Players[pnum]._pNumInv; // check
 			Players[pnum].InvList[t] = golditem;
-			Players[pnum].InvList[t]._iSeed = AdvanceRndSeed();
+			Players[pnum].InvList[t]._iSeed = vanilla::AdvanceRndSeed();
 			Players[pnum]._pNumInv++;
 			gridItem = Players[pnum]._pNumInv;
 			Players[pnum].InvList[t]._ivalue = r;
@@ -3969,7 +3969,7 @@ bool OperateShrineTainted(int pnum)
 		return true;
 	}
 
-	int r = GenerateRnd(4);
+	int r = vanilla::GenerateRnd(4);
 
 	int v1 = r == 0 ? 1 : -1;
 	int v2 = r == 1 ? 1 : -1;
@@ -4201,7 +4201,7 @@ bool OperateShrineMurphys(int pnum)
 
 	bool broke = false;
 	for (auto &item : Players[MyPlayerId].InvBody) {
-		if (!item.isEmpty() && GenerateRnd(3) == 0) {
+		if (!item.isEmpty() && vanilla::GenerateRnd(3) == 0) {
 			if (item._iDurability != DUR_INDESTRUCTIBLE) {
 				if (item._iDurability > 0) {
 					item._iDurability /= 2;
@@ -4232,7 +4232,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 	if (Objects[i]._oSelFlag == 0)
 		return;
 
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	Objects[i]._oSelFlag = 0;
 
 	if (!deltaload) {
@@ -4400,8 +4400,8 @@ void OperateSkelBook(int pnum, int i, bool sendmsg)
 	if (deltaload) {
 		return;
 	}
-	SetRndSeed(Objects[i]._oRndSeed);
-	if (GenerateRnd(5) != 0)
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
+	if (vanilla::GenerateRnd(5) != 0)
 		CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_SCROLL, sendmsg, false);
 	else
 		CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
@@ -4422,7 +4422,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	if (deltaload) {
 		return;
 	}
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 
 	if (QuestStatus(Q_ZHAR)) {
@@ -4450,7 +4450,7 @@ void OperateDecap(int pnum, int i, bool sendmsg)
 	if (deltaload) {
 		return;
 	}
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	CreateRndItem(Objects[i].position, false, sendmsg, false);
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -4466,8 +4466,8 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 	if (deltaload) {
 		return;
 	}
-	SetRndSeed(Objects[i]._oRndSeed);
-	bool uniqueRnd = (GenerateRnd(2) != 0);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
+	bool uniqueRnd = (vanilla::GenerateRnd(2) != 0);
 	if (currlevel <= 5) {
 		CreateTypeItem(Objects[i].position, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
@@ -4488,7 +4488,7 @@ int FindValidShrine()
 	bool done = false;
 	int rv;
 	do {
-		rv = GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
+		rv = vanilla::GenerateRnd(gbIsHellfire ? NumberOfShrineTypes : 26);
 		if (currlevel >= shrinemin[rv] && currlevel <= shrinemax[rv] && rv != ShrineThaumaturgic) {
 			done = true;
 		}
@@ -4513,7 +4513,7 @@ int FindValidShrine()
 
 void OperateGoatShrine(int pnum, int i, _sfx_id sType)
 {
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	Objects[i]._oVar1 = FindValidShrine();
 	OperateShrine(pnum, i, sType);
 	Objects[i]._oAnimDelay = 2;
@@ -4522,7 +4522,7 @@ void OperateGoatShrine(int pnum, int i, _sfx_id sType)
 
 void OperateCauldron(int pnum, int i, _sfx_id sType)
 {
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	Objects[i]._oVar1 = FindValidShrine();
 	OperateShrine(pnum, i, sType);
 	Objects[i]._oAnimFrame = 3;
@@ -4533,7 +4533,7 @@ void OperateCauldron(int pnum, int i, _sfx_id sType)
 bool OperateFountains(int pnum, int i)
 {
 	bool applied = false;
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
 		if (deltaload)
@@ -4605,8 +4605,8 @@ bool OperateFountains(int pnum, int i)
 		if (pnum != MyPlayerId)
 			return false;
 
-		int fromStat = GenerateRnd(4);
-		int toStat = abs(GenerateRnd(3));
+		int fromStat = vanilla::GenerateRnd(4);
+		int toStat = abs(vanilla::GenerateRnd(3));
 		if (toStat >= fromStat)
 			toStat++;
 
@@ -4646,9 +4646,9 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 
 	if (Objects[i]._oSelFlag == 0)
 		return;
-	SetRndSeed(Objects[i]._oRndSeed);
+	vanilla::SetRndSeed(Objects[i]._oRndSeed);
 
-	switch (GenerateRnd(4) + ITYPE_SWORD) {
+	switch (vanilla::GenerateRnd(4) + ITYPE_SWORD) {
 	case ITYPE_SWORD:
 		weaponType = ITYPE_SWORD;
 		break;
@@ -5104,7 +5104,7 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 			PlaySfxLoc(IS_POPPOP5, Objects[i].position);
 		else
 			PlaySfxLoc(IS_BARREL, Objects[i].position);
-		SetRndSeed(Objects[i]._oRndSeed);
+		vanilla::SetRndSeed(Objects[i]._oRndSeed);
 		if (Objects[i]._oVar2 <= 1) {
 			if (Objects[i]._oVar3 == 0)
 				CreateRndUseful(Objects[i].position, sendmsg);
@@ -5124,7 +5124,7 @@ void BreakObject(int pnum, int oi)
 	if (pnum != -1) {
 		int mind = Players[pnum]._pIMinDam;
 		int maxd = Players[pnum]._pIMaxDam;
-		objdam = GenerateRnd(maxd - mind + 1) + mind;
+		objdam = vanilla::GenerateRnd(maxd - mind + 1) + mind;
 		objdam += Players[pnum]._pDamageMod + Players[pnum]._pIBonusDamMod + objdam * Players[pnum]._pIBonusDam / 100;
 	}
 
@@ -5497,8 +5497,8 @@ void SyncNakrulRoom()
 void AddNakrulLeaver()
 {
 	while (true) {
-		int xp = GenerateRnd(80) + 16;
-		int yp = GenerateRnd(80) + 16;
+		int xp = vanilla::GenerateRnd(80) + 16;
+		int yp = vanilla::GenerateRnd(80) + 16;
 		if (RndLocOk(xp - 1, yp - 1)
 		    && RndLocOk(xp, yp - 1)
 		    && RndLocOk(xp + 1, yp - 1)

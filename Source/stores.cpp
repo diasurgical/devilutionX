@@ -1619,7 +1619,7 @@ void WitchBuyItem()
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 
 	if (idx < 3)
-		myPlayer.HoldItem._iSeed = AdvanceRndSeed();
+		myPlayer.HoldItem._iSeed = vanilla::AdvanceRndSeed();
 
 	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
 	StoreAutoPlace();
@@ -1782,10 +1782,10 @@ void HealerBuyItem()
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (!gbIsMultiplayer) {
 		if (idx < 2)
-			item._iSeed = AdvanceRndSeed();
+			item._iSeed = vanilla::AdvanceRndSeed();
 	} else {
 		if (idx < 3)
-			item._iSeed = AdvanceRndSeed();
+			item._iSeed = vanilla::AdvanceRndSeed();
 	}
 
 	TakePlrsMoney(item._iIvalue);
@@ -2050,8 +2050,8 @@ void TalkEnter()
 	}
 
 	if (stextsel == sn - 2) {
-		SetRndSeed(Towners[talker]._tSeed);
-		auto tq = static_cast<_speech_id>(gossipstart + GenerateRnd(gossipend - gossipstart + 1));
+		vanilla::SetRndSeed(Towners[talker]._tSeed);
+		auto tq = static_cast<_speech_id>(gossipstart + vanilla::GenerateRnd(gossipend - gossipstart + 1));
 		InitQTextMsg(tq);
 		return;
 	}
@@ -2206,7 +2206,7 @@ void InitStores()
 
 void SetupTownStores()
 {
-	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
+	vanilla::SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
 
 	auto &myPlayer = Players[MyPlayerId];
 

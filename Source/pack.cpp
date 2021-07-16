@@ -187,7 +187,7 @@ static void VerifyGoldSeeds(PlayerStruct &player)
 				continue;
 			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
 				continue;
-			player.InvList[i]._iSeed = AdvanceRndSeed();
+			player.InvList[i]._iSeed = vanilla::AdvanceRndSeed();
 			j = -1;
 		}
 	}

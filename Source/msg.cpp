@@ -383,7 +383,7 @@ void DeltaLeaveSync(BYTE bLevel)
 	if (!gbIsMultiplayer)
 		return;
 	if (currlevel == 0)
-		glSeedTbl[0] = AdvanceRndSeed();
+		glSeedTbl[0] = vanilla::AdvanceRndSeed();
 	if (currlevel <= 0)
 		return;
 

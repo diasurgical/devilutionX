@@ -1651,14 +1651,14 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 
 	int numt = 1;
 	if (tmax - tmin != 0) {
-		numt = GenerateRnd(tmax - tmin) + tmin;
+		numt = vanilla::GenerateRnd(tmax - tmin) + tmin;
 	}
 
 	int sx = 0;
 	int sy = 0;
 	for (int i = 0; i < numt; i++) {
-		sx = GenerateRnd(DMAXX - sw);
-		sy = GenerateRnd(DMAXY - sh);
+		sx = vanilla::GenerateRnd(DMAXX - sw);
+		sy = vanilla::GenerateRnd(DMAXY - sh);
 		bool abort = false;
 		int bailcnt;
 
@@ -1668,13 +1668,13 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 				abort = false;
 			}
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
+				sx = vanilla::GenerateRnd(DMAXX - sw);
+				sy = vanilla::GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
-				sx = GenerateRnd(DMAXX - sw);
-				sy = GenerateRnd(DMAXY - sh);
+				sx = vanilla::GenerateRnd(DMAXX - sw);
+				sy = vanilla::GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
 			int ii = 2;
@@ -1757,7 +1757,7 @@ void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 					}
 				}
 			}
-			if (found && GenerateRnd(100) < rndper) {
+			if (found && vanilla::GenerateRnd(100) < rndper) {
 				for (int yy = 0; yy < sh; yy++) {
 					for (int xx = 0; xx < sw; xx++) {
 						if (miniset[kk] != 0) {
@@ -1939,15 +1939,15 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 
 	int nRw = nAw;
 	if (nAw > Room_Max) {
-		nRw = GenerateRnd(Room_Max - Room_Min) + Room_Min;
+		nRw = vanilla::GenerateRnd(Room_Max - Room_Min) + Room_Min;
 	} else if (nAw > Room_Min) {
-		nRw = GenerateRnd(nAw - Room_Min) + Room_Min;
+		nRw = vanilla::GenerateRnd(nAw - Room_Min) + Room_Min;
 	}
 	int nRh = nAh;
 	if (nAh > Room_Max) {
-		nRh = GenerateRnd(Room_Max - Room_Min) + Room_Min;
+		nRh = vanilla::GenerateRnd(Room_Max - Room_Min) + Room_Min;
 	} else if (nAh > Room_Min) {
-		nRh = GenerateRnd(nAh - Room_Min) + Room_Min;
+		nRh = vanilla::GenerateRnd(nAh - Room_Min) + Room_Min;
 	}
 
 	if (forceHW) {
@@ -1955,8 +1955,8 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 		nRh = nH;
 	}
 
-	int nRx1 = GenerateRnd(nX2 - nX1) + nX1;
-	int nRy1 = GenerateRnd(nY2 - nY1) + nY1;
+	int nRx1 = vanilla::GenerateRnd(nX2 - nX1) + nX1;
+	int nRy1 = vanilla::GenerateRnd(nY2 - nY1) + nY1;
 	int nRx2 = nRw + nRx1;
 	int nRy2 = nRh + nRy1;
 	if (nRx2 > nX2) {
@@ -2009,32 +2009,32 @@ void CreateRoom(int nX1, int nY1, int nX2, int nY2, int nRDest, int nHDir, bool 
 		int nHx2 = 0;
 		int nHy2 = 0;
 		if (nHDir == 1) {
-			nHx1 = GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
+			nHx1 = vanilla::GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
 			nHy1 = nRy1;
 			int nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
-			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
+			nHx2 = vanilla::GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
 			nHy2 = RoomList[nRDest].nRoomy2;
 		}
 		if (nHDir == 3) {
-			nHx1 = GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
+			nHx1 = vanilla::GenerateRnd(nRx2 - nRx1 - 2) + nRx1 + 1;
 			nHy1 = nRy2;
 			int nHw = RoomList[nRDest].nRoomx2 - RoomList[nRDest].nRoomx1 - 2;
-			nHx2 = GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
+			nHx2 = vanilla::GenerateRnd(nHw) + RoomList[nRDest].nRoomx1 + 1;
 			nHy2 = RoomList[nRDest].nRoomy1;
 		}
 		if (nHDir == 2) {
 			nHx1 = nRx2;
-			nHy1 = GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
+			nHy1 = vanilla::GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
 			nHx2 = RoomList[nRDest].nRoomx1;
 			int nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
-			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
+			nHy2 = vanilla::GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
 		if (nHDir == 4) {
 			nHx1 = nRx1;
-			nHy1 = GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
+			nHy1 = vanilla::GenerateRnd(nRy2 - nRy1 - 2) + nRy1 + 1;
 			nHx2 = RoomList[nRDest].nRoomx2;
 			int nHh = RoomList[nRDest].nRoomy2 - RoomList[nRDest].nRoomy1 - 2;
-			nHy2 = GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
+			nHy2 = vanilla::GenerateRnd(nHh) + RoomList[nRDest].nRoomy1 + 1;
 		}
 		HallList.push_back({ nHx1, nHy1, nHx2, nHy2, nHDir });
 	}
@@ -2063,8 +2063,8 @@ void ConnectHall(const HALLNODE &node)
 	int nHd = node.nHalldir;
 
 	bool fDoneflag = false;
-	int fMinusFlag = GenerateRnd(100);
-	int fPlusFlag = GenerateRnd(100);
+	int fMinusFlag = vanilla::GenerateRnd(100);
+	int fPlusFlag = vanilla::GenerateRnd(100);
 	int nOrigX1 = nX1;
 	int nOrigY1 = nY1;
 	CreateDoorType(nX1, nY1);
@@ -2138,7 +2138,7 @@ void ConnectHall(const HALLNODE &node)
 			if (nRp > 30) {
 				nRp = 30;
 			}
-			if (GenerateRnd(100) < nRp) {
+			if (vanilla::GenerateRnd(100) < nRp) {
 				if (nX2 <= nX1 || nX1 >= DMAXX) {
 					nCurrd = 4;
 				} else {
@@ -2150,7 +2150,7 @@ void ConnectHall(const HALLNODE &node)
 			if (nRp > 80) {
 				nRp = 80;
 			}
-			if (GenerateRnd(100) < nRp) {
+			if (vanilla::GenerateRnd(100) < nRp) {
 				if (nY2 <= nY1 || nY1 >= DMAXY) {
 					nCurrd = 1;
 				} else {
@@ -2302,10 +2302,10 @@ void Substitution()
 {
 	for (int y = 0; y < DMAXY; y++) {
 		for (int x = 0; x < DMAXX; x++) {
-			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && GenerateRnd(4) == 0) {
+			if ((x < nSx1 || x > nSx2) && (y < nSy1 || y > nSy2) && vanilla::GenerateRnd(4) == 0) {
 				uint8_t c = BTYPESL2[dungeon[x][y]];
 				if (c != 0) {
-					int rv = GenerateRnd(16);
+					int rv = vanilla::GenerateRnd(16);
 					int i = -1;
 					while (rv >= 0) {
 						i++;
@@ -2631,8 +2631,8 @@ bool FillVoids()
 {
 	int to = 0;
 	while (CountEmptyTiles() > 700 && to < 100) {
-		int xx = GenerateRnd(38) + 1;
-		int yy = GenerateRnd(38) + 1;
+		int xx = vanilla::GenerateRnd(38) + 1;
+		int yy = vanilla::GenerateRnd(38) + 1;
 		if (predungeon[xx][yy] != 35) {
 			continue;
 		}
@@ -3236,7 +3236,7 @@ void CreateL2Dungeon(uint32_t rseed, lvl_entry entry)
 		}
 	}
 
-	SetRndSeed(rseed);
+	vanilla::SetRndSeed(rseed);
 
 	dminx = 16;
 	dminy = 16;
