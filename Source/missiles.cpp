@@ -198,7 +198,7 @@ void MoveMissilePos(int i)
 	}
 	int x = Missiles[i].position.tile.x + dx;
 	int y = Missiles[i].position.tile.y + dy;
-	if (MonsterIsTileAvalible(Missiles[i]._misource, { x, y })) {
+	if (MonsterIsTileAvailable(Missiles[i]._misource, { x, y })) {
 		Missiles[i].position.tile.x += dx;
 		Missiles[i].position.tile.y += dy;
 		Missiles[i].position.offset.deltaX += (dy * 32) - (dx * 32);
@@ -4288,7 +4288,7 @@ void MI_Rhino(int i)
 	}
 	UpdateMissilePos(i);
 	Point newPos = Missiles[i].position.tile;
-	if (!MonsterIsTileAvalible(monst, newPos) || (monster._mAi == AI_SNAKE && !MonsterIsTileAvalible(monst, newPosSnake))) {
+	if (!MonsterIsTileAvailable(monst, newPos) || (monster._mAi == AI_SNAKE && !MonsterIsTileAvailable(monst, newPosSnake))) {
 		MissToMonst(i, prevPos);
 		Missiles[i]._miDelFlag = true;
 		return;
@@ -4315,7 +4315,7 @@ void MI_Fireman(int i)
 	Point c = (monster._mFlags & MFLAG_TARGETS_MONSTER) == 0 ? Players[enemy].position.tile : Monsters[enemy].position.tile;
 
 	int j = 0;
-	if (b != a && (((Missiles[i]._miVar1 & 1) != 0 && a.WalkingDistance(c) >= 4) || Missiles[i]._miVar2 > 1) && MonsterIsTileAvalible(Missiles[i]._misource, a)) {
+	if (b != a && (((Missiles[i]._miVar1 & 1) != 0 && a.WalkingDistance(c) >= 4) || Missiles[i]._miVar2 > 1) && MonsterIsTileAvailable(Missiles[i]._misource, a)) {
 		MissToMonst(i, a);
 		Missiles[i]._miDelFlag = true;
 	} else if ((monster._mFlags & MFLAG_TARGETS_MONSTER) == 0) {
