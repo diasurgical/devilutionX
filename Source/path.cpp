@@ -78,7 +78,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors)
 {
 	if (dObject[position.x][position.y] != 0) {
 		int oi = abs(dObject[position.x][position.y]) - 1;
-		if (ignoreDoors && IsAnyOf(Objects[oi]._otype, OBJ_L1LDOOR, OBJ_L1RDOOR, OBJ_L2LDOOR, OBJ_L2RDOOR, OBJ_L3LDOOR, OBJ_L3RDOOR))
+		if (ignoreDoors && Objects[oi].IsDoor())
 			return true;
 		if (Objects[oi]._oSolidFlag)
 			return false;
