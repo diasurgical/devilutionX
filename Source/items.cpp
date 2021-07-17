@@ -119,11 +119,11 @@ namespace {
 
 std::optional<CelSprite> itemanims[ITEMTYPES];
 
-enum anim_armor_id : uint8_t {
+enum class PlayerArmorGraphic : uint8_t {
 	// clang-format off
-	AnimIdLightArmor  = 0,
-	AnimIdMediumArmor = 1 << 4,
-	AnimIdHeavyArmor  = 1 << 5,
+	Light  = 0,
+	Medium = 1 << 4,
+	Heavy  = 1 << 5,
 	// clang-format on
 };
 ItemStruct curruitem;
@@ -2617,8 +2617,6 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	int maxd = 0; // max damage
 	int tac = 0;  // accuracy
 
-	int g;
-
 	int bdam = 0;   // bonus damage
 	int btohit = 0; // bonus chance to hit
 	int bac = 0;    // bonus accuracy
@@ -2884,52 +2882,54 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	}
 	player._pwtype = WT_MELEE;
 
-	g = 0;
-
+	item_type weaponItemType = item_type::ITYPE_NONE;
+	bool holdsShield = false;
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
 	    && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
-		g = player.InvBody[INVLOC_HAND_LEFT]._itype;
+		weaponItemType = player.InvBody[INVLOC_HAND_LEFT]._itype;
 	}
 
 	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()
 	    && player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON
 	    && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
-		g = player.InvBody[INVLOC_HAND_RIGHT]._itype;
-	}
-
-	switch (g) {
-	case ITYPE_SWORD:
-		g = ANIM_ID_SWORD;
-		break;
-	case ITYPE_AXE:
-		g = ANIM_ID_AXE;
-		break;
-	case ITYPE_BOW:
-		player._pwtype = WT_RANGED;
-		g = ANIM_ID_BOW;
-		break;
-	case ITYPE_MACE:
-		g = ANIM_ID_MACE;
-		break;
-	case ITYPE_STAFF:
-		g = ANIM_ID_STAFF;
-		break;
+		weaponItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	}
 
 	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 		player._pBlockFlag = true;
-		g++;
+		holdsShield = true;
 	}
 	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 		player._pBlockFlag = true;
-		g++;
+		holdsShield = true;
 	}
 
+	PlayerWeaponGraphic animWeaponId = holdsShield ? PlayerWeaponGraphic::UnarmedShield : PlayerWeaponGraphic::Unarmed;
+	switch (weaponItemType) {
+	case ITYPE_SWORD:
+		animWeaponId = holdsShield ? PlayerWeaponGraphic::SwordShield : PlayerWeaponGraphic::Sword;
+		break;
+	case ITYPE_AXE:
+		animWeaponId = PlayerWeaponGraphic::Axe;
+		break;
+	case ITYPE_BOW:
+		player._pwtype = WT_RANGED;
+		animWeaponId = PlayerWeaponGraphic::Bow;
+		break;
+	case ITYPE_MACE:
+		animWeaponId = holdsShield ? PlayerWeaponGraphic::MaceShield : PlayerWeaponGraphic::Mace;
+		break;
+	case ITYPE_STAFF:
+		animWeaponId = PlayerWeaponGraphic::Staff;
+		break;
+	}
+
+	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
 	if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 			player._pIAC += player._pLevel / 2;
-		g += AnimIdHeavyArmor;
+		animArmorId = PlayerArmorGraphic::Heavy;
 	} else if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk) {
 			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
@@ -2937,13 +2937,14 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 			else
 				player._pIAC += player._pLevel / 2;
 		}
-		g += AnimIdMediumArmor;
+		animArmorId = PlayerArmorGraphic::Medium;
 	} else if (player._pClass == HeroClass::Monk) {
 		player._pIAC += player._pLevel * 2;
 	}
 
-	if (player._pgfxnum != g && loadgfx) {
-		player._pgfxnum = g;
+	int gfxNum = static_cast<int>(animWeaponId) | static_cast<int>(animArmorId);
+	if (player._pgfxnum != gfxNum && loadgfx) {
+		player._pgfxnum = gfxNum;
 		ResetPlayerGFX(player);
 		SetPlrAnims(player);
 		if (player._pmode == PM_STAND) {
@@ -2954,7 +2955,7 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 			player.AnimInfo.ChangeAnimationData(&*player.AnimationData[static_cast<size_t>(player_graphic::Walk)].CelSpritesForDirections[player._pdir], player._pWFrames, 0);
 		}
 	} else {
-		player._pgfxnum = g;
+		player._pgfxnum = gfxNum;
 	}
 
 	if (player.InvBody[INVLOC_AMULET].isEmpty() || player.InvBody[INVLOC_AMULET].IDidx != IDI_AURIC) {
