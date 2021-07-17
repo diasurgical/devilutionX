@@ -64,6 +64,9 @@ static bool RepeatMouseAttack(bool leftButton)
 		case MouseActionType::Spell_ComplainedAboutMana:
 			CheckPlrSpell(true);
 			break;
+		case MouseActionType::Other:
+		case MouseActionType::None:
+			break;
 		}
 	}
 

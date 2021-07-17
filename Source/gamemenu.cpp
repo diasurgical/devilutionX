@@ -131,10 +131,12 @@ void GamemenuSoundMusicToggle(const char *const *names, TMenuItem *menuItem, int
 	menuItem->pszStr = names[1];
 }
 
+#ifndef NOSOUND
 int GamemenuSliderMusicSound(TMenuItem *menuItem)
 {
 	return gmenu_slider_get(menuItem, VOLUME_MIN, VOLUME_MAX);
 }
+#endif
 
 void GamemenuGetMusic()
 {
@@ -190,8 +192,6 @@ void GamemenuOptions(bool /*bActivate*/)
 
 void GamemenuMusicVolume(bool bActivate)
 {
-	int volume;
-
 #ifndef NOSOUND
 	if (bActivate) {
 		if (gbMusicOn) {
@@ -212,7 +212,7 @@ void GamemenuMusicVolume(bool bActivate)
 			music_start(lt);
 		}
 	} else {
-		volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
+		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
 		sound_get_or_set_music_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbMusicOn) {
@@ -239,7 +239,6 @@ void GamemenuMusicVolume(bool bActivate)
 void GamemenuSoundVolume(bool bActivate)
 {
 #ifndef NOSOUND
-	int volume;
 	if (bActivate) {
 		if (gbSoundOn) {
 			gbSoundOn = false;
@@ -250,7 +249,7 @@ void GamemenuSoundVolume(bool bActivate)
 			sound_get_or_set_sound_volume(VOLUME_MAX);
 		}
 	} else {
-		volume = GamemenuSliderMusicSound(&sgOptionsMenu[1]);
+		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[1]);
 		sound_get_or_set_sound_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbSoundOn) {
