@@ -38,7 +38,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors = false);
  * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
  * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
  */
-int FindPath(const std::function<bool(Point)> &posOk, Point start, Point destination, int8_t path[MAX_PATH_LENGTH]);
+int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH]);
 
 /**
  * @brief check if stepping from a given position to a neighbouring tile cuts a corner.
@@ -50,14 +50,14 @@ int FindPath(const std::function<bool(Point)> &posOk, Point start, Point destina
  *
  * @return true if step is allowed
  */
-bool path_solid_pieces(Point sourcePosition, Point destinationPosition);
+bool path_solid_pieces(Point startPosition, Point destinationPosition);
 
 /**
- * @brief heuristic, estimated cost from sourcePosition to destinationPosition.
+ * @brief heuristic, estimated cost from startPosition to destinationPosition.
  *
  * This is an internal function that is only exposed to allow for testing the way path weights are determined.
  */
-int path_get_h_cost(Point sourcePosition, Point destinationPosition);
+int path_get_h_cost(Point startPosition, Point destinationPosition);
 
 /** For iterating over the 8 possible movement directions */
 const Displacement PathDirs[8] = {

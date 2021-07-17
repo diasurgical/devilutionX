@@ -131,9 +131,9 @@ PATHNODE *path_pop_active_step()
  * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
  * except diagonal steps which are times 3
  */
-int path_check_equal(Point position, Point destination)
+int path_check_equal(Point startPosition, Point destinationPosition)
 {
-	if (position.x == destination.x || position.y == destination.y)
+	if (startPosition.x == destinationPosition.x || startPosition.y == destinationPosition.y)
 		return 2;
 
 	return 3;
@@ -165,7 +165,9 @@ void path_set_coords(PATHNODE *pPath)
 }
 
 /**
- * each step direction is assigned a number like this:
+ * Returns a number representing the direction from a starting tile to a neighbouring tile.
+ *
+ * Used in the pathfinding code, each step direction is assigned a number like this:
  *       dx
  *     -1 0 1
  *     +-----
@@ -173,16 +175,18 @@ void path_set_coords(PATHNODE *pPath)
  * dy 0|2 0 3
  *    1|8 4 7
  */
-constexpr int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
-
-int8_t GetPathDirection(Point sourcePosition, Point destinationPosition)
+int8_t GetPathDirection(Point startPosition, Point destinationPosition)
 {
-	return path_directions[3 * (destinationPosition.y - sourcePosition.y) + 4 + destinationPosition.x - sourcePosition.x];
+	constexpr int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
+	return path_directions[3 * (destinationPosition.y - startPosition.y) + 4 + destinationPosition.x - startPosition.x];
 }
 
 /**
- * @brief add a step from pPath to (dx,dy), return 1 if successful, and update the frontier/visited nodes accordingly
+ * @brief add a step from pPath to destination, return 1 if successful, and update the frontier/visited nodes accordingly
  *
+ * @param pPath pointer to the current path node
+ * @param candidatePosition expected to be a neighbour of the current path node position
+ * @param destinationPosition where we hope to end up
  * @return true if step successfully added, false if we ran out of nodes to use
  */
 bool path_parent_path(PATHNODE *pPath, Point candidatePosition, Point destinationPosition)
@@ -297,7 +301,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors)
 	return !IsTileSolid(position);
 }
 
-int FindPath(const std::function<bool(Point)> &posOk, Point start, Point destination, int8_t path[MAX_PATH_LENGTH])
+int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH])
 {
 	/**
 	 * for reconstructing the path after the A* search is done. The longest
@@ -312,15 +316,15 @@ int FindPath(const std::function<bool(Point)> &posOk, Point start, Point destina
 	gdwCurPathStep = 0;
 	PATHNODE *pathStart = path_new_step();
 	pathStart->g = 0;
-	pathStart->h = path_get_h_cost(start, destination);
+	pathStart->h = path_get_h_cost(startPosition, destinationPosition);
 	pathStart->f = pathStart->h + pathStart->g;
-	pathStart->position = start;
+	pathStart->position = startPosition;
 	path_2_nodes->NextNode = pathStart;
 	// A* search until we find (dx,dy) or fail
 	PATHNODE *nextNode;
 	while ((nextNode = GetNextPath()) != nullptr) {
 		// reached the end, success!
-		if (nextNode->position == destination) {
+		if (nextNode->position == destinationPosition) {
 			PATHNODE *current = nextNode;
 			int pathLength = 0;
 			while (current->Parent != nullptr) {
@@ -338,25 +342,25 @@ int FindPath(const std::function<bool(Point)> &posOk, Point start, Point destina
 			return 0;
 		}
 		// ran out of nodes, abort!
-		if (!path_get_path(posOk, nextNode, destination))
+		if (!path_get_path(posOk, nextNode, destinationPosition))
 			return 0;
 	}
 	// frontier is empty, no path!
 	return 0;
 }
 
-int path_get_h_cost(Point sourcePosition, Point destinationPosition)
+int path_get_h_cost(Point startPosition, Point destinationPosition)
 {
 	// see path_check_equal for why this is times 2
-	return 2 * sourcePosition.ManhattanDistance(destinationPosition);
+	return 2 * startPosition.ManhattanDistance(destinationPosition);
 }
 
-bool path_solid_pieces(Point sourcePosition, Point destinationPosition)
+bool path_solid_pieces(Point startPosition, Point destinationPosition)
 {
 	// These checks are written as if working backwards from the destination to the source, given
 	// both tiles are expected to be adjacent this doesn't matter beyond being a bit confusing
 	bool rv = true;
-	switch (GetPathDirection(sourcePosition, destinationPosition)) {
+	switch (GetPathDirection(startPosition, destinationPosition)) {
 	case 5: // Stepping north
 		rv = IsTileNotSolid(destinationPosition + DIR_SW) && IsTileNotSolid(destinationPosition + DIR_SE);
 		break;
