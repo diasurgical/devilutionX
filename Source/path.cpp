@@ -380,9 +380,9 @@ void path_set_coords(PATHNODE *pPath)
  */
 void path_push_active_step(PATHNODE *pPath)
 {
-	int stackIndex = gdwCurPathStep;
+	assert(gdwCurPathStep < MAXPATHNODES);
+	pnode_tblptr[gdwCurPathStep] = pPath;
 	gdwCurPathStep++;
-	pnode_tblptr[stackIndex] = pPath;
 }
 
 /**
@@ -391,6 +391,7 @@ void path_push_active_step(PATHNODE *pPath)
 PATHNODE *path_pop_active_step()
 {
 	gdwCurPathStep--;
+	assert(gdwCurPathStep >= 0);
 	return pnode_tblptr[gdwCurPathStep];
 }
 
@@ -399,12 +400,10 @@ PATHNODE *path_pop_active_step()
  */
 PATHNODE *path_new_step()
 {
-	PATHNODE *newNode;
-
-	if (gdwCurNodes == MAXPATHNODES)
+	if (gdwCurNodes >= MAXPATHNODES)
 		return nullptr;
 
-	newNode = &path_nodes[gdwCurNodes];
+	PATHNODE *newNode = &path_nodes[gdwCurNodes];
 	gdwCurNodes++;
 	memset(newNode, 0, sizeof(PATHNODE));
 	return newNode;
