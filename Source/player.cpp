@@ -1191,11 +1191,6 @@ void InitPlayer(int pnum, bool firstTime)
 		player._pSBkSpell = SPL_INVALID;
 		player._pSpell = player._pRSpell;
 		player._pSplType = player._pRSplType;
-		if (static_cast<PlayerWeaponGraphic>((player._pgfxnum & 0xF)) == PlayerWeaponGraphic::Bow) {
-			player._pwtype = WT_RANGED;
-		} else {
-			player._pwtype = WT_MELEE;
-		}
 		player.pManaShield = false;
 	}
 
