@@ -42,14 +42,11 @@ bool SNetSendMessage(int playerID, void *data, unsigned int databytes)
 	return dvlnet_inst->SNetSendMessage(playerID, data, databytes);
 }
 
-bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes,
-    DWORD *arrayplayerstatus)
+bool SNetReceiveTurns(int arraysize, char **arraydata, size_t *arraydatabytes, uint32_t *arrayplayerstatus)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
-	if (a1 != 0)
-		UNIMPLEMENTED();
 	if (arraysize != MAX_PLRS)
 		UNIMPLEMENTED();
 	if (!dvlnet_inst->SNetReceiveTurns(arraydata, arraydatabytes, arrayplayerstatus)) {

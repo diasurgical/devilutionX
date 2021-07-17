@@ -1950,7 +1950,7 @@ bool control_talk_last_key(int vkey)
 	if (!talkflag)
 		return false;
 
-	if ((DWORD)vkey < DVL_VK_SPACE)
+	if (vkey >= 0 && vkey < DVL_VK_SPACE)
 		return false;
 
 	std::size_t result = strlen(sgszTalkMsg);

@@ -85,7 +85,7 @@ constexpr size_t MAXPATHNODES = 300;
 /** Notes visisted by the path finding algorithm. */
 PATHNODE path_nodes[MAXPATHNODES];
 /** the number of in-use nodes in path_nodes */
-int gdwCurNodes;
+uint32_t gdwCurNodes;
 /**
  * @brief zero one of the preallocated nodes and return a pointer to it, or NULL if none are available
  */

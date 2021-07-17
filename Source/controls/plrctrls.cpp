@@ -1188,7 +1188,7 @@ struct RightStickAccumulator {
 		lastTc = SDL_GetTicks();
 	}
 
-	DWORD lastTc;
+	uint32_t lastTc;
 	float hiresDX;
 	float hiresDY;
 };

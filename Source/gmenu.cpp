@@ -224,7 +224,7 @@ void gmenu_draw(const Surface &out)
 		if (gmenu_current_option != nullptr)
 			gmenu_current_option();
 		if (gbIsHellfire) {
-			const DWORD ticks = SDL_GetTicks();
+			const uint32_t ticks = SDL_GetTicks();
 			if ((int)(ticks - LogoAnim_tick) > 25) {
 				LogoAnim_frame++;
 				if (LogoAnim_frame > 16)

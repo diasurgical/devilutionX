@@ -64,7 +64,7 @@ std::size_t SelectedItem = 0;
 
 namespace {
 
-DWORD fadeTc;
+uint32_t fadeTc;
 int fadeValue = 0;
 
 struct ScrollBarState {
