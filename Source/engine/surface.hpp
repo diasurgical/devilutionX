@@ -49,7 +49,7 @@ struct Surface {
 	/**
 	 * @brief Allocate a buffer that owns its underlying data.
 	 */
-	static Surface Alloc(std::size_t width, std::size_t height)
+	static Surface Alloc(int width, int height)
 	{
 		return Surface(SDL_CreateRGBSurfaceWithFormat(0, width, height, 8, SDL_PIXELFORMAT_INDEX8));
 	}

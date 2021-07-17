@@ -1953,7 +1953,7 @@ bool control_talk_last_key(int vkey)
 	if ((DWORD)vkey < DVL_VK_SPACE)
 		return false;
 
-	int result = strlen(sgszTalkMsg);
+	std::size_t result = strlen(sgszTalkMsg);
 	if (result < 78) {
 		sgszTalkMsg[result] = vkey;
 		sgszTalkMsg[result + 1] = '\0';
@@ -1973,7 +1973,7 @@ bool control_presskeys(int vkey)
 	} else if (vkey == DVL_VK_RETURN) {
 		ControlPressEnter();
 	} else if (vkey == DVL_VK_BACK) {
-		int len = strlen(sgszTalkMsg);
+		std::size_t len = strlen(sgszTalkMsg);
 		if (len > 0)
 			sgszTalkMsg[len - 1] = '\0';
 	} else if (vkey == DVL_VK_DOWN) {
