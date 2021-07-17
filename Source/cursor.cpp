@@ -377,15 +377,15 @@ void CheckCursMove()
 	if (sgbMouseDown == CLICK_LEFT && pcursinvitem == -1) {
 		if (pcursmonst != -1) {
 			if (Monsters[pcursmonst]._mDelFlag || Monsters[pcursmonst]._mhitpoints >> 6 <= 0
-				|| !(dFlags[Monsters[pcursmonst].position.tile.x][Monsters[pcursmonst].position.tile.y] & BFLAG_VISIBLE))
+			    || ((dFlags[Monsters[pcursmonst].position.tile.x][Monsters[pcursmonst].position.tile.y] & BFLAG_VISIBLE) == 0))
 				pcursmonst = -1;
 		} else if (pcursobj != -1) {
 			if (Objects[pcursobj]._oSelFlag < 1)
 				pcursobj = -1;
 		} else if (pcursplr != -1) {
 			if (Players[pcursplr]._pmode == PM_DEATH || Players[pcursplr]._pmode == PM_QUIT || !Players[pcursplr].plractive
-				|| currlevel != Players[pcursplr].plrlevel || Players[pcursplr]._pHitPoints >> 6 <= 0
-				|| !(dFlags[Players[pcursplr].position.tile.x][Players[pcursplr].position.tile.y] & BFLAG_VISIBLE))
+			    || currlevel != Players[pcursplr].plrlevel || Players[pcursplr]._pHitPoints >> 6 <= 0
+			    || ((dFlags[Players[pcursplr].position.tile.x][Players[pcursplr].position.tile.y] & BFLAG_VISIBLE) == 0))
 				pcursplr = -1;
 		}
 

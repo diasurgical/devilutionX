@@ -4,8 +4,8 @@
  * Implementation of functions for updating game state from network commands.
  */
 
-#include <list>
 #include <atomic>
+#include <list>
 #include <mutex>
 
 #include "nthread.h"
@@ -21,10 +21,10 @@ struct DThreadPkt {
 	uint32_t len;
 
 	DThreadPkt(int pnum, _cmd_id(cmd), std::unique_ptr<byte[]> data, uint32_t len)
-		: pnum(pnum)
-		, cmd(cmd)
-		, data(std::move(data))
-		, len(len)
+	    : pnum(pnum)
+	    , cmd(cmd)
+	    , data(std::move(data))
+	    , len(len)
 	{
 	}
 };

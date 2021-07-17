@@ -395,18 +395,19 @@ void UiHandleEvents(SDL_Event *event)
 	HandleControllerAddedOrRemovedEvent(*event);
 
 	if (event->type == SDL_WINDOWEVENT) {
-		if (event->window.event == SDL_WINDOWEVENT_SHOWN)
+		if (event->window.event == SDL_WINDOWEVENT_SHOWN) {
 			gbActive = true;
-		else if (event->window.event == SDL_WINDOWEVENT_HIDDEN)
+		} else if (event->window.event == SDL_WINDOWEVENT_HIDDEN) {
 			gbActive = false;
-		else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+		} else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
 			ReinitializeHardwareCursor();
 #ifndef NOSOUND
-		else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST)
+		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST) {
 			music_mute();
-		else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
+		} else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED) {
 			music_unmute();
 #endif
+		}
 	}
 #endif
 }
