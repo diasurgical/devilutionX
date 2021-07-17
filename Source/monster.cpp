@@ -1177,7 +1177,7 @@ void MonsterHitMonster(int mid, int i, int dam)
 {
 	assert((DWORD)mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
-	assurance(monster.MType != nullptr, mid);
+	assert(monster.MType != nullptr);
 
 	if (i >= 0 && i < MAX_PLRS)
 		monster.mWhoHit |= 1 << i;
@@ -1209,8 +1209,7 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-
-	assurance(monster.MType != nullptr, i);
+	assert(monster.MType != nullptr);
 
 	if (pnum >= 0)
 		monster.mWhoHit |= 1 << pnum;
@@ -1247,7 +1246,7 @@ void StartDeathFromMonster(int i, int mid)
 	auto &killer = Monsters[i];
 	assert((DWORD)mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
-	assurance(monster.MType != nullptr, mid); /// BUGFIX: should check `mid` (fixed)
+	assert(monster.MType != nullptr);
 
 	delta_kill_monster(mid, monster.position.tile, currlevel);
 	NetSendCmdLocParam1(false, CMD_MONSTDEATH, monster.position.tile, mid);
@@ -1356,7 +1355,7 @@ bool MonsterWalk(int i, int variant)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	commitment(monster.MType != nullptr, i);
+	assert(monster.MType != nullptr);
 
 	//Check if we reached new tile
 	bool isAnimationEnd = monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames;
@@ -1401,7 +1400,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 {
 	assert((DWORD)mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
-	assurance(monster.MType != nullptr, mid);
+	assert(monster.MType != nullptr);
 
 	if (monster._mhitpoints >> 6 > 0 && (monster.MType->mtype != MT_ILLWEAV || monster._mgoal != MGOAL_RETREAT)) {
 		int hit = GenerateRnd(100);
@@ -1434,7 +1433,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	assurance(monster.MType != nullptr, i);
+	assert(monster.MType != nullptr);
 
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
 		MonsterAttackMonster(i, pnum, hit, minDam, maxDam);
@@ -1582,8 +1581,8 @@ bool MonsterAttack(int i)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	commitment(monster.MType != nullptr, i);
-	commitment(monster.MData != nullptr, i); // BUGFIX: should check MData (fixed)
+	assert(monster.MType != nullptr);
+	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum) {
 		MonsterAttackPlayer(i, monster._menemy, monster.mHit, monster.mMinDamage, monster.mMaxDamage);
@@ -1612,8 +1611,8 @@ bool MonaterRangedAttack(int i)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	commitment(monster.MType != nullptr, i);
-	commitment(monster.MData != nullptr, i);
+	assert(monster.MType != nullptr);
+	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum) {
 		if (monster._mVar1 != -1) {
@@ -1652,8 +1651,8 @@ bool MonsterRangedSpecialAttack(int i)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	commitment(monster.MType != nullptr, i);
-	commitment(monster.MData != nullptr, i); // BUGFIX: should check MData (fixed)
+	assert(monster.MType != nullptr);
+	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum2 && monster.AnimInfo.TickCounterOfCurrentFrame == 0) {
 		Point sourcePosition = monster.position.tile;
@@ -1693,8 +1692,8 @@ bool MonsterSpecialAttack(int i)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	commitment(monster.MType != nullptr, i);
-	commitment(monster.MData != nullptr, i);
+	assert(monster.MType != nullptr);
+	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum2)
 		MonsterAttackPlayer(i, monster._menemy, monster.mHit2, monster.mMinDamage2, monster.mMaxDamage2);
@@ -1839,7 +1838,7 @@ bool MonsterDeath(int i)
 {
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
-	commitment(monster.MType != nullptr, i);
+	assert(monster.MType != nullptr);
 
 	monster._mVar1++;
 	if (monster.MType->mtype == MT_DIABLO) {
@@ -2258,7 +2257,7 @@ void AiAvoidance(int i, bool special)
 
 void AiRanged(int i, missile_id missileType, bool special)
 {
-	assurance((DWORD)i < MAXMONSTERS, i);
+	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -4224,7 +4223,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 
 void M_UpdateLeader(int i)
 {
-	assurance((DWORD)i < MAXMONSTERS, i);
+	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	for (int j = 0; j < ActiveMonsterCount; j++) {
@@ -4307,7 +4306,7 @@ void PrepDoEnding()
 
 void M_WalkDir(int i, Direction md)
 {
-	assurance((DWORD)i < MAXMONSTERS, i);
+	assert((DWORD)i < MAXMONSTERSassert);
 
 	int mwi = Monsters[i].MType->GetAnimData(MonsterGraphic::Walk).Frames - 1;
 	switch (md) {
@@ -4470,15 +4469,12 @@ void ProcessMonsters()
 			UpdateEnemy(monster);
 		}
 
-		int menemy;
 		if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
-			menemy = monster._menemy;
-			assurance((DWORD)menemy < MAXMONSTERS, menemy);
+			assert((DWORD)monster._menemy < MAXMONSTERS);
 			monster.position.last = Monsters[monster._menemy].position.future;
 			monster.enemyPosition = monster.position.last;
 		} else {
-			menemy = monster._menemy;
-			assurance((DWORD)menemy < MAX_PLRS, menemy);
+			assert((DWORD)monster._menemy < MAX_PLRS);
 			monster.enemyPosition = Players[monster._menemy].position.future;
 			if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 				monster._msquelch = UINT8_MAX;
@@ -4927,7 +4923,7 @@ void PlayEffect(MonsterStruct &monster, int mode)
 
 void MissToMonst(int i, Point position)
 {
-	assurance((DWORD)i < MAXMISSILES, i);
+	assert((DWORD)i < MAXMISSILES);
 
 	MissileStruct *miss = &Missiles[i];
 	int m = miss->_misource;
