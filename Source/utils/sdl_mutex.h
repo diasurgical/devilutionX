@@ -34,19 +34,26 @@ public:
 
 	void lock() noexcept // NOLINT(readability-identifier-naming)
 	{
-		SDL_LockMutex(mutex_);
+		int err = SDL_LockMutex(mutex_);
+		if (err == -1)
+			ErrSdl();
 	}
 
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 	bool try_lock() noexcept // NOLINT(readability-identifier-naming)
 	{
-		return SDL_TryLockMutex(mutex_) == 0;
+		int err = SDL_TryLockMutex(mutex_);
+		if (err == -1)
+			ErrSdl();
+		return err == 0;
 	}
 #endif
 
 	void unlock() noexcept // NOLINT(readability-identifier-naming)
 	{
-		SDL_UnlockMutex(mutex_);
+		int err = SDL_UnlockMutex(mutex_);
+		if (err == -1)
+			ErrSdl();
 	}
 
 private:
