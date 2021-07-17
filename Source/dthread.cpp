@@ -6,9 +6,10 @@
 
 #include <list>
 #include <atomic>
+#include <mutex>
 
 #include "nthread.h"
-#include "storm/storm.h"
+#include "utils/sdl_mutex.h"
 #include "utils/thread.h"
 
 namespace devilution {
@@ -30,7 +31,7 @@ struct DThreadPkt {
 
 namespace {
 
-CCritSect sgMemCrit;
+SdlMutex DthreadMutex;
 SDL_threadID glpDThreadId;
 std::list<DThreadPkt> InfoList;
 std::atomic_bool dthread_running;
@@ -45,15 +46,15 @@ void DthreadHandler()
 		if (InfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1)
 			app_fatal("dthread4:\n%s", SDL_GetError());
 
-		sgMemCrit.Enter();
+		DthreadMutex.lock();
 		if (InfoList.empty()) {
 			ResetEvent(sghWorkToDoEvent);
-			sgMemCrit.Leave();
+			DthreadMutex.unlock();
 			continue;
 		}
 		DThreadPkt pkt = std::move(InfoList.front());
 		InfoList.pop_front();
-		sgMemCrit.Leave();
+		DthreadMutex.unlock();
 
 		multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
 	}
@@ -63,11 +64,10 @@ void DthreadHandler()
 
 void dthread_remove_player(uint8_t pnum)
 {
-	sgMemCrit.Enter();
+	std::lock_guard lock(DthreadMutex);
 	InfoList.remove_if([&](auto &pkt) {
 		return pkt.pnum == pnum;
 	});
-	sgMemCrit.Leave();
 }
 
 void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len)
@@ -77,10 +77,9 @@ void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uin
 
 	DThreadPkt pkt { pnum, cmd, std::move(data), len };
 
-	sgMemCrit.Enter();
+	std::lock_guard lock(DthreadMutex);
 	InfoList.push_back(std::move(pkt));
 	SetEvent(sghWorkToDoEvent);
-	sgMemCrit.Leave();
 }
 
 void dthread_start()
