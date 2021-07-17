@@ -2116,7 +2116,7 @@ bool AiPlanWalk(int i)
 	assert((DWORD)i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (FindPath([&monster](Point position) { return IsTileAccessible(monster, position); }, monster.position.tile.x, monster.position.tile.y, monster.enemyPosition.x, monster.enemyPosition.y, path) == 0) {
+	if (FindPath([&monster](Point position) { return IsTileAccessible(monster, position); }, monster.position.tile, monster.enemyPosition, path) == 0) {
 		return false;
 	}
 

@@ -3538,7 +3538,7 @@ void MakePlrPath(int pnum, Point targetPosition, bool endspace)
 		return;
 	}
 
-	int path = FindPath([pnum](Point position) { return PosOkPlayer(pnum, position); }, player.position.future.x, player.position.future.y, targetPosition.x, targetPosition.y, player.walkpath);
+	int path = FindPath([pnum](Point position) { return PosOkPlayer(pnum, position); }, player.position.future, targetPosition, player.walkpath);
 	if (path == 0) {
 		return;
 	}

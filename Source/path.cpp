@@ -92,7 +92,7 @@ bool IsTileWalkable(Point position, bool ignoreDoors)
  * check that each step is a valid position. Store the step directions (see
  * path_directions) in path, which must have room for 24 steps
  */
-int FindPath(const std::function<bool(Point)> &posOk, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
+int FindPath(const std::function<bool(Point)> &posOk, Point start, Point destination, int8_t path[MAX_PATH_LENGTH])
 {
 	// clear all nodes, create root nodes for the visited/frontier linked lists
 	gdwCurNodes = 0;
@@ -101,16 +101,15 @@ int FindPath(const std::function<bool(Point)> &posOk, int sx, int sy, int dx, in
 	gdwCurPathStep = 0;
 	PATHNODE *pathStart = path_new_step();
 	pathStart->g = 0;
-	pathStart->h = path_get_h_cost(sx, sy, dx, dy);
-	pathStart->position.x = sx;
+	pathStart->h = path_get_h_cost(start, destination);
 	pathStart->f = pathStart->h + pathStart->g;
-	pathStart->position.y = sy;
+	pathStart->position = start;
 	path_2_nodes->NextNode = pathStart;
 	// A* search until we find (dx,dy) or fail
 	PATHNODE *nextNode;
 	while ((nextNode = GetNextPath()) != nullptr) {
 		// reached the end, success!
-		if (nextNode->position.x == dx && nextNode->position.y == dy) {
+		if (nextNode->position == destination) {
 			PATHNODE *current = nextNode;
 			int pathLength = 0;
 			while (current->Parent != nullptr) {
@@ -128,7 +127,7 @@ int FindPath(const std::function<bool(Point)> &posOk, int sx, int sy, int dx, in
 			return 0;
 		}
 		// ran out of nodes, abort!
-		if (!path_get_path(posOk, nextNode, dx, dy))
+		if (!path_get_path(posOk, nextNode, destination))
 			return 0;
 	}
 	// frontier is empty, no path!
@@ -138,16 +137,10 @@ int FindPath(const std::function<bool(Point)> &posOk, int sx, int sy, int dx, in
 /**
  * @brief heuristic, estimated cost from (sx,sy) to (dx,dy)
  */
-int path_get_h_cost(int sx, int sy, int dx, int dy)
+int path_get_h_cost(Point source, Point destination)
 {
-	int deltaX = abs(sx - dx);
-	int deltaY = abs(sy - dy);
-
-	int min = deltaX < deltaY ? deltaX : deltaY;
-	int max = deltaX > deltaY ? deltaX : deltaY;
-
 	// see path_check_equal for why this is times 2
-	return 2 * (min + max);
+	return 2 * source.ManhattanDistance(destination);
 }
 
 /**
@@ -157,9 +150,9 @@ int path_get_h_cost(int sx, int sy, int dx, int dy)
  * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
  * except diagonal steps which are times 3
  */
-int path_check_equal(PATHNODE *pPath, int dx, int dy)
+int path_check_equal(Point position, Point destination)
 {
-	if (pPath->position.x == dx || pPath->position.y == dy)
+	if (position.x == destination.x || position.y == destination.y)
 		return 2;
 
 	return 3;
@@ -184,7 +177,7 @@ PATHNODE *GetNextPath()
 }
 
 /**
- * @brief check if stepping from pPath to (dx,dy) cuts a corner.
+ * @brief check if stepping from a given position to a neighbouring tile cuts a corner.
  *
  * If you step from A to B, both Xs need to be clear:
  *
@@ -193,21 +186,23 @@ PATHNODE *GetNextPath()
  *
  *  @return true if step is allowed
  */
-bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
+bool path_solid_pieces(Point position, Point destination)
 {
+	// These checks are written as if working backwards from the destination to the source, given
+	// both tiles are expected to be adjacent this doesn't matter beyond being a bit confusing
 	bool rv = true;
-	switch (path_directions[3 * (dy - pPath->position.y) + 3 - pPath->position.x + 1 + dx]) {
-	case 5:
-		rv = IsTileNotSolid({ dx, dy + 1 }) && IsTileNotSolid({ dx + 1, dy });
+	switch (path_directions[3 * (destination.y - position.y) + 3 - position.x + 1 + destination.x]) {
+	case 5: // Stepping north
+		rv = IsTileNotSolid(destination + DIR_SW) && IsTileNotSolid(destination + DIR_SE);
 		break;
-	case 6:
-		rv = IsTileNotSolid({ dx, dy + 1 }) && IsTileNotSolid({ dx - 1, dy });
+	case 6: // Stepping east
+		rv = IsTileNotSolid(destination + DIR_SW) && IsTileNotSolid(destination + DIR_NW);
 		break;
-	case 7:
-		rv = IsTileNotSolid({ dx, dy - 1 }) && IsTileNotSolid({ dx - 1, dy });
+	case 7: // Stepping south
+		rv = IsTileNotSolid(destination + DIR_NE) && IsTileNotSolid(destination + DIR_NW);
 		break;
-	case 8:
-		rv = IsTileNotSolid({ dx + 1, dy }) && IsTileNotSolid({ dx, dy - 1 });
+	case 8: // Stepping west
+		rv = IsTileNotSolid(destination + DIR_SE) && IsTileNotSolid(destination + DIR_NE);
 		break;
 	}
 	return rv;
@@ -218,13 +213,13 @@ bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
  *
  * @return false if we ran out of preallocated nodes to use, else true
  */
-bool path_get_path(const std::function<bool(Point)> &posOk, PATHNODE *pPath, int x, int y)
+bool path_get_path(const std::function<bool(Point)> &posOk, PATHNODE *pPath, Point destination)
 {
 	for (auto dir : PathDirs) {
 		Point tile = pPath->position + dir;
 		bool ok = posOk(tile);
-		if ((ok && path_solid_pieces(pPath, tile.x, tile.y)) || (!ok && tile == Point { x, y })) {
-			if (!path_parent_path(pPath, tile.x, tile.y, x, y))
+		if ((ok && path_solid_pieces(pPath->position, tile)) || (!ok && tile == destination)) {
+			if (!path_parent_path(pPath, tile, destination))
 				return false;
 		}
 	}
@@ -237,13 +232,13 @@ bool path_get_path(const std::function<bool(Point)> &posOk, PATHNODE *pPath, int
  *
  * @return true if step successfully added, false if we ran out of nodes to use
  */
-bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
+bool path_parent_path(PATHNODE *pPath, Point candidatePosition, Point destinationPosition)
 {
-	int nextG = pPath->g + path_check_equal(pPath, dx, dy);
+	int nextG = pPath->g + path_check_equal(pPath->position, candidatePosition);
 
 	// 3 cases to consider
 	// case 1: (dx,dy) is already on the frontier
-	PATHNODE *dxdy = path_get_node1(dx, dy);
+	PATHNODE *dxdy = path_get_node1(candidatePosition);
 	if (dxdy != nullptr) {
 		int i;
 		for (i = 0; i < 8; i++) {
@@ -252,7 +247,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 		}
 		pPath->Child[i] = dxdy;
 		if (nextG < dxdy->g) {
-			if (path_solid_pieces(pPath, dx, dy)) {
+			if (path_solid_pieces(pPath->position, candidatePosition)) {
 				// we'll explore it later, just update
 				dxdy->Parent = pPath;
 				dxdy->g = nextG;
@@ -261,7 +256,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 		}
 	} else {
 		// case 2: (dx,dy) was already visited
-		dxdy = path_get_node2(dx, dy);
+		dxdy = path_get_node2(candidatePosition);
 		if (dxdy != nullptr) {
 			int i;
 			for (i = 0; i < 8; i++) {
@@ -269,7 +264,7 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 					break;
 			}
 			pPath->Child[i] = dxdy;
-			if (nextG < dxdy->g && path_solid_pieces(pPath, dx, dy)) {
+			if (nextG < dxdy->g && path_solid_pieces(pPath->position, candidatePosition)) {
 				// update the node
 				dxdy->Parent = pPath;
 				dxdy->g = nextG;
@@ -284,9 +279,9 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 				return false;
 			dxdy->Parent = pPath;
 			dxdy->g = nextG;
-			dxdy->h = path_get_h_cost(dx, dy, sx, sy);
+			dxdy->h = path_get_h_cost(candidatePosition, destinationPosition);
 			dxdy->f = nextG + dxdy->h;
-			dxdy->position = { dx, dy };
+			dxdy->position = candidatePosition;
 			// add it to the frontier
 			path_next_node(dxdy);
 
@@ -302,13 +297,13 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 }
 
 /**
- * @brief return a node for (dx,dy) on the frontier, or NULL if not found
+ * @brief return a node for a position on the frontier, or NULL if not found
  */
-PATHNODE *path_get_node1(int dx, int dy)
+PATHNODE *path_get_node1(Point targetPosition)
 {
 	PATHNODE *result = path_2_nodes->NextNode;
 	while (result != nullptr) {
-		if (result->position.x == dx && result->position.y == dy)
+		if (result->position == targetPosition)
 			return result;
 		result = result->NextNode;
 	}
@@ -316,13 +311,13 @@ PATHNODE *path_get_node1(int dx, int dy)
 }
 
 /**
- * @brief return a node for (dx,dy) if it was visited, or NULL if not found
+ * @brief return a node for a given position if it was visited, or NULL if not found
  */
-PATHNODE *path_get_node2(int dx, int dy)
+PATHNODE *path_get_node2(Point targetPosition)
 {
 	PATHNODE *result = pnode_ptr->NextNode;
 	while (result != nullptr) {
-		if (result->position.x == dx && result->position.y == dy)
+		if (result->position == targetPosition)
 			return result;
 		result = result->NextNode;
 	}
@@ -363,10 +358,10 @@ void path_set_coords(PATHNODE *pPath)
 			if (pathAct == nullptr)
 				break;
 
-			if (pathOld->g + path_check_equal(pathOld, pathAct->position.x, pathAct->position.y) < pathAct->g) {
-				if (path_solid_pieces(pathOld, pathAct->position.x, pathAct->position.y)) {
+			if (pathOld->g + path_check_equal(pathOld->position, pathAct->position) < pathAct->g) {
+				if (path_solid_pieces(pathOld->position, pathAct->position)) {
 					pathAct->Parent = pathOld;
-					pathAct->g = pathOld->g + path_check_equal(pathOld, pathAct->position.x, pathAct->position.y);
+					pathAct->g = pathOld->g + path_check_equal(pathOld->position, pathAct->position);
 					pathAct->f = pathAct->g + pathAct->h;
 					path_push_active_step(pathAct);
 				}
