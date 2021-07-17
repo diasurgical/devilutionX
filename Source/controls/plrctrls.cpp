@@ -91,7 +91,7 @@ int GetDistance(Point destination, int maxDistance)
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath([](Point position) { return PosOkPlayer(MyPlayerId, position); }, Players[MyPlayerId].position.future.x, Players[MyPlayerId].position.future.y, destination.x, destination.y, walkpath);
+	int steps = FindPath([](Point position) { return PosOkPlayer(MyPlayerId, position); }, Players[MyPlayerId].position.future, destination, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -293,10 +293,7 @@ void FindMeleeTarget()
 				continue;
 			}
 
-			PATHNODE pPath;
-			pPath.position = { node.x, node.y };
-
-			if (path_solid_pieces(&pPath, dx, dy)) {
+			if (path_solid_pieces({ node.x, node.y }, { dx, dy })) {
 				queue.push_back({ dx, dy, node.steps + 1 });
 				visited[dx][dy] = true;
 			}

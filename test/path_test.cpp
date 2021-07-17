@@ -12,32 +12,32 @@ TEST(PathTest, Heuristics)
 {
 	constexpr Point source { 25, 32 };
 	Point destination = source;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 0) << "Wrong cost for travelling to the same tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 0) << "Wrong cost for travelling to the same tile";
 
 	destination = source + Direction::DIR_NE;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::DIR_SE;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::DIR_SW;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::DIR_NW;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 
 	destination = source + Direction::DIR_N;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_E;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_S;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_W;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_SW + Direction::DIR_SE; // Effectively the same as DIR_S
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 
 	destination = source + Direction::DIR_NE + Direction::DIR_N;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 6) << "Wrong cost for travelling to a { 2, 1 } offset";
+	EXPECT_EQ(path_get_h_cost(source, destination), 6) << "Wrong cost for travelling to a { 2, 1 } offset";
 	destination = source + Direction::DIR_SE + Direction::DIR_SE;
-	EXPECT_EQ(path_get_h_cost(source.x, source.y, destination.x, destination.y), 4) << "Wrong cost for travelling to a { 2, 0 } offset";
+	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to a { 2, 0 } offset";
 }
 
 TEST(PathTest, Solid)
@@ -58,55 +58,51 @@ TEST(PathTest, Solid)
 
 TEST(PathTest, SolidPieces)
 {
-	PATHNODE node1 { 0, 0, 0, { 0, 0 } };
-	PATHNODE node2 { 0, 0, 0, { 0, 1 } };
-	PATHNODE node3 { 0, 0, 0, { 1, 0 } };
-	PATHNODE node4 { 0, 0, 0, { 1, 1 } };
 	dPiece[0][0] = 0;
 	dPiece[0][1] = 0;
 	dPiece[1][0] = 0;
 	dPiece[1][1] = 0;
 	nSolidTable[0] = false;
-	EXPECT_TRUE(path_solid_pieces(&node1, 1, 1)) << "A step in open space is free of solid pieces";
-	EXPECT_TRUE(path_solid_pieces(&node4, 0, 0)) << "A step in open space is free of solid pieces";
-	EXPECT_TRUE(path_solid_pieces(&node3, 0, 1)) << "A step in open space is free of solid pieces";
-	EXPECT_TRUE(path_solid_pieces(&node2, 1, 0)) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "A step in open space is free of solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "A step in open space is free of solid pieces";
 
 	nSolidTable[1] = true;
 	dPiece[1][0] = 1;
-	EXPECT_TRUE(path_solid_pieces(&node2, 1, 0)) << "Can path to a destination which is solid";
-	EXPECT_TRUE(path_solid_pieces(&node3, 0, 1)) << "Can path from a starting position which is solid";
-	EXPECT_TRUE(path_solid_pieces(&node2, 1, 1)) << "Stepping in a cardinal direction ignores solid pieces";
-	EXPECT_TRUE(path_solid_pieces(&node3, 1, 1)) << "Stepping in a cardinal direction ignores solid pieces";
-	EXPECT_TRUE(path_solid_pieces(&node1, 1, 0)) << "Stepping in a cardinal direction ignores solid pieces";
-	EXPECT_TRUE(path_solid_pieces(&node4, 1, 0)) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can path to a destination which is solid";
+	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can path from a starting position which is solid";
+	EXPECT_TRUE(path_solid_pieces({ 0, 1 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 1, 0 }, { 1, 1 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 0, 0 }, { 1, 0 })) << "Stepping in a cardinal direction ignores solid pieces";
+	EXPECT_TRUE(path_solid_pieces({ 1, 1 }, { 1, 0 })) << "Stepping in a cardinal direction ignores solid pieces";
 
-	EXPECT_FALSE(path_solid_pieces(&node1, 1, 1)) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces(&node4, 0, 0)) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
 	dPiece[0][1] = 1;
-	EXPECT_FALSE(path_solid_pieces(&node1, 1, 1)) << "Can't walk through the boundary between two corners";
-	EXPECT_FALSE(path_solid_pieces(&node4, 0, 0)) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't walk through the boundary between two corners";
 	dPiece[1][0] = 0;
-	EXPECT_FALSE(path_solid_pieces(&node1, 1, 1)) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces(&node4, 0, 0)) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 0, 0 }, { 1, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 1, 1 }, { 0, 0 })) << "Can't cut a solid corner";
 	dPiece[0][1] = 0;
 
 	dPiece[0][0] = 1;
-	EXPECT_FALSE(path_solid_pieces(&node3, 0, 1)) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces(&node2, 1, 0)) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
 	dPiece[1][1] = 1;
-	EXPECT_FALSE(path_solid_pieces(&node3, 0, 1)) << "Can't walk through the boundary between two corners";
-	EXPECT_FALSE(path_solid_pieces(&node2, 1, 0)) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't walk through the boundary between two corners";
+	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't walk through the boundary between two corners";
 	dPiece[0][0] = 0;
-	EXPECT_FALSE(path_solid_pieces(&node3, 0, 1)) << "Can't cut a solid corner";
-	EXPECT_FALSE(path_solid_pieces(&node2, 1, 0)) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 1, 0 }, { 0, 1 })) << "Can't cut a solid corner";
+	EXPECT_FALSE(path_solid_pieces({ 0, 1 }, { 1, 0 })) << "Can't cut a solid corner";
 	dPiece[1][1] = 0;
 }
 
 void CheckPath(Point startPosition, Point destinationPosition, std::vector<int8_t> expectedSteps)
 {
 	static int8_t pathSteps[MAX_PATH_LENGTH];
-	auto pathLength = FindPath([](Point) { return true; }, startPosition.x, startPosition.y, destinationPosition.x, destinationPosition.y, pathSteps);
+	auto pathLength = FindPath([](Point) { return true; }, startPosition, destinationPosition, pathSteps);
 
 	EXPECT_EQ(pathLength, expectedSteps.size()) << "Wrong path length for a path from " << startPosition << " to " << destinationPosition;
 	// Die early if the wrong path length is returned as we don't want to read oob in expectedSteps
