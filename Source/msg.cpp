@@ -2346,6 +2346,9 @@ void NetSendCmdLoc(int playerId, bool bHiPri, _cmd_id bCmd, Point position)
 		NetSendHiPri(playerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(playerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, position, 0, 0);
 }
 
 void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1)
@@ -2360,6 +2363,9 @@ void NetSendCmdLocParam1(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, position, wParam1, 0);
 }
 
 void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2)
@@ -2375,6 +2381,9 @@ void NetSendCmdLocParam2(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, position, wParam1, wParam2);
 }
 
 void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3)
@@ -2391,6 +2400,9 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, position, wParam1, wParam2);
 }
 
 void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
@@ -2420,6 +2432,9 @@ void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.UpdatePreviewCelSprite(bCmd, {}, wParam1, 0);
 }
 
 void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2)

@@ -217,6 +217,10 @@ struct Player {
 	 * @brief Contains Information for current Animation
 	 */
 	AnimationInfo AnimInfo;
+	/**
+	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
+	 */
+	CelSprite *pPreviewCelSprite;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
@@ -651,6 +655,15 @@ struct Player {
 			return true;
 		return false;
 	}
+
+	/**
+	 * @brief Updates pPreviewCelSprite according to new requested command
+	 * @param cmdId What command is requested
+	 * @param point Point for the command
+	 * @param wParam1 First Parameter
+	 * @param wParam2 Second Parameter
+	 */
+	void UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1, uint16_t wParam2);
 };
 
 extern DVL_API_FOR_TEST int MyPlayerId;
