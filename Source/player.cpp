@@ -601,10 +601,10 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		c = HeroClass::Warrior;
 	}
 
-	auto animWeaponId = static_cast<anim_weapon_id>(player._pgfxnum & 0xF);
+	auto animWeaponId = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
 	int animationWidth = 96;
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[animWeaponId]);
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[static_cast<std::size_t>(animWeaponId)]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	switch (graphic) {
@@ -628,7 +628,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		szCel = "AT";
 		if (c == HeroClass::Monk)
 			animationWidth = 130;
-		else if (animWeaponId != ANIM_ID_BOW || !(c == HeroClass::Warrior || c == HeroClass::Barbarian))
+		else if (animWeaponId != PlayerWeaponGraphic::Bow || !(c == HeroClass::Warrior || c == HeroClass::Barbarian))
 			animationWidth = 128;
 		break;
 	case player_graphic::Hit:
@@ -666,7 +666,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 			animationWidth = 128;
 		break;
 	case player_graphic::Death:
-		if (animWeaponId != ANIM_ID_UNARMED)
+		if (animWeaponId != PlayerWeaponGraphic::Unarmed)
 			return;
 		szCel = "DT";
 		animationWidth = (c == HeroClass::Monk) ? 160 : 128;
@@ -760,59 +760,59 @@ void SetPlrAnims(PlayerStruct &player)
 	}
 	player._pSFNum = PlrGFXAnimLens[static_cast<std::size_t>(pc)][10];
 
-	auto gn = static_cast<anim_weapon_id>(player._pgfxnum & 0xF);
+	auto gn = static_cast<PlayerWeaponGraphic>(player._pgfxnum & 0xF);
 	if (pc == HeroClass::Warrior) {
-		if (gn == ANIM_ID_BOW) {
+		if (gn == PlayerWeaponGraphic::Bow) {
 			if (leveltype != DTYPE_TOWN) {
 				player._pNFrames = 8;
 			}
 			player._pAFNum = 11;
-		} else if (gn == ANIM_ID_AXE) {
+		} else if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 20;
 			player._pAFNum = 10;
-		} else if (gn == ANIM_ID_STAFF) {
+		} else if (gn == PlayerWeaponGraphic::Staff) {
 			player._pAFrames = 16;
 			player._pAFNum = 11;
 		}
 	} else if (pc == HeroClass::Rogue) {
-		if (gn == ANIM_ID_AXE) {
+		if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 22;
 			player._pAFNum = 13;
-		} else if (gn == ANIM_ID_BOW) {
+		} else if (gn == PlayerWeaponGraphic::Bow) {
 			player._pAFrames = 12;
 			player._pAFNum = 7;
-		} else if (gn == ANIM_ID_STAFF) {
+		} else if (gn == PlayerWeaponGraphic::Staff) {
 			player._pAFrames = 16;
 			player._pAFNum = 11;
 		}
 	} else if (pc == HeroClass::Sorcerer) {
-		if (gn == ANIM_ID_UNARMED) {
+		if (gn == PlayerWeaponGraphic::Unarmed) {
 			player._pAFrames = 20;
-		} else if (gn == ANIM_ID_UNARMED_SHIELD) {
+		} else if (gn == PlayerWeaponGraphic::UnarmedShield) {
 			player._pAFNum = 9;
-		} else if (gn == ANIM_ID_BOW) {
+		} else if (gn == PlayerWeaponGraphic::Bow) {
 			player._pAFrames = 20;
 			player._pAFNum = 16;
-		} else if (gn == ANIM_ID_AXE) {
+		} else if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 24;
 			player._pAFNum = 16;
 		}
 	} else if (pc == HeroClass::Monk) {
 		switch (gn) {
-		case ANIM_ID_UNARMED:
-		case ANIM_ID_UNARMED_SHIELD:
+		case PlayerWeaponGraphic::Unarmed:
+		case PlayerWeaponGraphic::UnarmedShield:
 			player._pAFrames = 12;
 			player._pAFNum = 7;
 			break;
-		case ANIM_ID_BOW:
+		case PlayerWeaponGraphic::Bow:
 			player._pAFrames = 20;
 			player._pAFNum = 14;
 			break;
-		case ANIM_ID_AXE:
+		case PlayerWeaponGraphic::Axe:
 			player._pAFrames = 23;
 			player._pAFNum = 14;
 			break;
-		case ANIM_ID_STAFF:
+		case PlayerWeaponGraphic::Staff:
 			player._pAFrames = 13;
 			player._pAFNum = 8;
 			break;
@@ -820,29 +820,29 @@ void SetPlrAnims(PlayerStruct &player)
 			break;
 		}
 	} else if (pc == HeroClass::Bard) {
-		if (gn == ANIM_ID_AXE) {
+		if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 22;
 			player._pAFNum = 13;
-		} else if (gn == ANIM_ID_BOW) {
+		} else if (gn == PlayerWeaponGraphic::Bow) {
 			player._pAFrames = 12;
 			player._pAFNum = 11;
-		} else if (gn == ANIM_ID_STAFF) {
+		} else if (gn == PlayerWeaponGraphic::Staff) {
 			player._pAFrames = 16;
 			player._pAFNum = 11;
 		}
 	} else if (pc == HeroClass::Barbarian) {
-		if (gn == ANIM_ID_AXE) {
+		if (gn == PlayerWeaponGraphic::Axe) {
 			player._pAFrames = 20;
 			player._pAFNum = 8;
-		} else if (gn == ANIM_ID_BOW) {
+		} else if (gn == PlayerWeaponGraphic::Bow) {
 			if (leveltype != DTYPE_TOWN) {
 				player._pNFrames = 8;
 			}
 			player._pAFNum = 11;
-		} else if (gn == ANIM_ID_STAFF) {
+		} else if (gn == PlayerWeaponGraphic::Staff) {
 			player._pAFrames = 16;
 			player._pAFNum = 11;
-		} else if (gn == ANIM_ID_MACE || gn == ANIM_ID_MACE_SHIELD) {
+		} else if (gn == PlayerWeaponGraphic::Mace || gn == PlayerWeaponGraphic::MaceShield) {
 			player._pAFNum = 8;
 		}
 	}
@@ -981,20 +981,22 @@ void CreatePlayer(int playerId, HeroClass c)
 		player._pSplHotKey[i] = SPL_INVALID;
 	}
 
+	PlayerWeaponGraphic animWeaponId = PlayerWeaponGraphic::Unarmed;
 	switch (c) {
 	case HeroClass::Warrior:
 	case HeroClass::Bard:
 	case HeroClass::Barbarian:
-		player._pgfxnum = ANIM_ID_SWORD_SHIELD;
+		animWeaponId = PlayerWeaponGraphic::SwordShield;
 		break;
 	case HeroClass::Rogue:
-		player._pgfxnum = ANIM_ID_BOW;
+		animWeaponId = PlayerWeaponGraphic::Bow;
 		break;
 	case HeroClass::Sorcerer:
 	case HeroClass::Monk:
-		player._pgfxnum = ANIM_ID_STAFF;
+		animWeaponId = PlayerWeaponGraphic::Staff;
 		break;
 	}
+	player._pgfxnum = static_cast<int>(animWeaponId);
 
 	for (bool &levelVisited : player._pLvlVisited) {
 		levelVisited = false;
@@ -1189,7 +1191,7 @@ void InitPlayer(int pnum, bool firstTime)
 		player._pSBkSpell = SPL_INVALID;
 		player._pSpell = player._pRSpell;
 		player._pSplType = player._pRSplType;
-		if ((player._pgfxnum & 0xF) == ANIM_ID_BOW) {
+		if (static_cast<PlayerWeaponGraphic>((player._pgfxnum & 0xF)) == PlayerWeaponGraphic::Bow) {
 			player._pwtype = WT_RANGED;
 		} else {
 			player._pwtype = WT_MELEE;

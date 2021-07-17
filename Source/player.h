@@ -94,16 +94,16 @@ enum class player_graphic : uint8_t {
 	LAST = Block
 };
 
-enum anim_weapon_id : uint8_t {
-	ANIM_ID_UNARMED,
-	ANIM_ID_UNARMED_SHIELD,
-	ANIM_ID_SWORD,
-	ANIM_ID_SWORD_SHIELD,
-	ANIM_ID_BOW,
-	ANIM_ID_AXE,
-	ANIM_ID_MACE,
-	ANIM_ID_MACE_SHIELD,
-	ANIM_ID_STAFF,
+enum class PlayerWeaponGraphic : uint8_t {
+	Unarmed,
+	UnarmedShield,
+	Sword,
+	SwordShield,
+	Bow,
+	Axe,
+	Mace,
+	MaceShield,
+	Staff,
 };
 
 enum PLR_MODE : uint8_t {
@@ -180,7 +180,7 @@ struct PlayerStruct {
 	int plrlevel;
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
-	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
+	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (PlayerWeaponGraphic) and higher values define armour (starting with PlayerArmorGraphic)
 	/**
 	 * @brief Contains Information for current Animation
 	 */
