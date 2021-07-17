@@ -531,6 +531,7 @@ if(RUN_TESTS)
     test/main.cpp
     test/missiles_test.cpp
     test/pack_test.cpp
+    test/path_test.cpp
     test/player_test.cpp
     test/quests_test.cpp
     test/random_test.cpp
