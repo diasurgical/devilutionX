@@ -73,7 +73,7 @@
 namespace devilution {
 
 SDL_Window *ghMainWnd;
-DWORD glSeedTbl[NUMLEVELS];
+uint32_t glSeedTbl[NUMLEVELS];
 dungeon_type gnLevelTypeTbl[NUMLEVELS];
 Point MousePosition;
 bool gbRunGame;
@@ -418,7 +418,7 @@ void RightMouseDown()
 	}
 }
 
-void DiabloHotkeyMsg(DWORD dwMsg)
+void DiabloHotkeyMsg(uint32_t dwMsg)
 {
 	if (!gbIsMultiplayer) {
 		return;

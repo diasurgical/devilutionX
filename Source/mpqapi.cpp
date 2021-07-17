@@ -336,7 +336,7 @@ _BLOCKENTRY *NewBlock(int *blockIndex)
 {
 	_BLOCKENTRY *blockEntry = cur_archive.sgpBlockTbl;
 
-	for (DWORD i = 0; i < INDEX_ENTRIES; i++, blockEntry++) {
+	for (int i = 0; i < INDEX_ENTRIES; i++, blockEntry++) {
 		if (blockEntry->offset != 0)
 			continue;
 		if (blockEntry->sizealloc != 0)

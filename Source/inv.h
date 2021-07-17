@@ -111,7 +111,7 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
 bool CanPut(Point position);
 bool TryInvPut();
 int InvPutItem(PlayerStruct &player, Point position);
-int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
+int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac);
 char CheckInvHLight();
 void RemoveScroll(PlayerStruct &player);
 bool UseScroll();

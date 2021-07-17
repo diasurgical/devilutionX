@@ -140,7 +140,7 @@ bool base::SNetSendMessage(int playerId, void *data, unsigned int size)
 	return true;
 }
 
-bool base::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
+bool base::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 {
 	poll();
 	bool allTurnsArrived = true;
@@ -229,7 +229,7 @@ bool base::SNetLeaveGame(int type)
 	return true;
 }
 
-bool base::SNetDropPlayer(int playerid, DWORD flags)
+bool base::SNetDropPlayer(int playerid, uint32_t flags)
 {
 	auto pkt = pktfty->make_packet<PT_DISCONNECT>(plr_self,
 	    PLR_BROADCAST,
@@ -250,13 +250,13 @@ plr_t base::GetOwner()
 	return PLR_BROADCAST; // should be unreachable
 }
 
-bool base::SNetGetOwnerTurnsWaiting(DWORD *turns)
+bool base::SNetGetOwnerTurnsWaiting(uint32_t *turns)
 {
 	*turns = turn_queue[GetOwner()].size();
 	return true;
 }
 
-bool base::SNetGetTurnsInTransit(DWORD *turns)
+bool base::SNetGetTurnsInTransit(uint32_t *turns)
 {
 	*turns = turn_queue[plr_self].size();
 	return true;

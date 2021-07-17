@@ -23,6 +23,6 @@ void InitPalette();
 void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect);
 void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect);
 void RenderPresent();
-void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
+void PaletteGetEntries(int dwNumEntries, SDL_Color *lpEntries);
 
 } // namespace devilution

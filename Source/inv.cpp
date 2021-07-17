@@ -706,8 +706,8 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	bool done = false;
 
-	int r = 0;
-	for (; (DWORD)r < NUM_XY_SLOTS; r++) {
+	uint32_t r = 0;
+	for (; r < NUM_XY_SLOTS; r++) {
 		int xo = RIGHT_PANEL;
 		int yo = 0;
 		if (r >= SLOTXY_BELT_FIRST) {
@@ -1834,7 +1834,7 @@ int InvPutItem(PlayerStruct &player, Point position)
 	return ii;
 }
 
-int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, DWORD ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
+int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
 	if (!PutItem(player, position))
 		return -1;
@@ -1878,8 +1878,8 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 
 char CheckInvHLight()
 {
-	int r = 0;
-	for (; (DWORD)r < NUM_XY_SLOTS; r++) {
+	uint32_t r = 0;
+	for (; r < NUM_XY_SLOTS; r++) {
 		int xo = RIGHT_PANEL;
 		int yo = 0;
 		if (r >= SLOTXY_BELT_FIRST) {
@@ -1895,7 +1895,7 @@ char CheckInvHLight()
 		}
 	}
 
-	if ((DWORD)r >= NUM_XY_SLOTS)
+	if (r >= NUM_XY_SLOTS)
 		return -1;
 
 	int8_t rv = -1;

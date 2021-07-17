@@ -7,7 +7,6 @@
 #include <cstdint>
 
 #include "appfat.h"
-#include "miniwin/miniwin.h"
 #include "sha.h"
 #include "utils/stdcompat/cstddef.hpp"
 

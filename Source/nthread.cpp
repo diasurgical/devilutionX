@@ -13,11 +13,11 @@
 namespace devilution {
 
 BYTE sgbNetUpdateRate;
-DWORD gdwMsgLenTbl[MAX_PLRS];
+size_t gdwMsgLenTbl[MAX_PLRS];
 static CCritSect sgMemCrit;
 DWORD gdwDeltaBytesSec;
 bool nthread_should_run;
-DWORD gdwTurnsInTransit;
+uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
 SDL_threadID glpNThreadId;
 char sgbSyncCountdown;
@@ -25,8 +25,8 @@ uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
 char sgbPacketCountdown;
 bool sgbThreadIsRunning;
-DWORD gdwLargestMsgSize;
-DWORD gdwNormalMsgSize;
+uint32_t gdwLargestMsgSize;
+uint32_t gdwNormalMsgSize;
 int last_tick;
 float gfProgressToNextGameTick = 0.0;
 
@@ -88,7 +88,7 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		last_tick += gnTickDelay;
 		return true;
 	}
-	if (!SNetReceiveTurns(0, MAX_PLRS, (char **)glpMsgTbl, (unsigned int *)gdwMsgLenTbl, &player_state[0])) {
+	if (!SNetReceiveTurns(MAX_PLRS, (char **)glpMsgTbl, gdwMsgLenTbl, &player_state[0])) {
 		if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 			nthread_terminate_game("SNetReceiveTurns");
 		sgbTicsOutOfSync = false;
@@ -139,10 +139,6 @@ void nthread_set_turn_upper_bit()
 
 void nthread_start(bool setTurnUpperBit)
 {
-	const char *err;
-	DWORD largestMsgSize;
-	_SNETCAPS caps;
-
 	last_tick = SDL_GetTicks();
 	sgbPacketCountdown = 1;
 	sgbSyncCountdown = 1;
@@ -151,6 +147,7 @@ void nthread_start(bool setTurnUpperBit)
 		nthread_set_turn_upper_bit();
 	else
 		turn_upper_bit = 0;
+	_SNETCAPS caps;
 	caps.size = 36;
 	SNetGetProviderCaps(&caps);
 	gdwTurnsInTransit = caps.defaultturnsintransit;
@@ -160,7 +157,7 @@ void nthread_start(bool setTurnUpperBit)
 		sgbNetUpdateRate = 20 / caps.defaultturnssec;
 	else
 		sgbNetUpdateRate = 1;
-	largestMsgSize = 512;
+	uint32_t largestMsgSize = 512;
 	if (caps.maxmessagesize < 0x200)
 		largestMsgSize = caps.maxmessagesize;
 	gdwDeltaBytesSec = caps.bytessec / 4;
@@ -183,7 +180,7 @@ void nthread_start(bool setTurnUpperBit)
 		nthread_should_run = true;
 		sghThread = CreateThread(NthreadHandler, &glpNThreadId);
 		if (sghThread == nullptr) {
-			err = SDL_GetError();
+			const char *err = SDL_GetError();
 			app_fatal("nthread2:\n%s", err);
 		}
 	}

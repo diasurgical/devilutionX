@@ -24,19 +24,17 @@ public:
 	virtual int create(std::string addrstr, std::string passwd);
 	virtual int join(std::string addrstr, std::string passwd);
 	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
-	virtual bool SNetSendMessage(int dest, void *data,
-	    unsigned int size);
-	virtual bool SNetReceiveTurns(char **data, unsigned int *size,
-	    DWORD *status);
+	virtual bool SNetSendMessage(int dest, void *data, unsigned int size);
+	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
 	virtual bool SNetSendTurn(char *data, unsigned int size);
 	virtual void SNetGetProviderCaps(struct _SNETCAPS *caps);
 	virtual bool SNetRegisterEventHandler(event_type evtype,
 	    SEVTHANDLER func);
 	virtual bool SNetUnregisterEventHandler(event_type evtype);
 	virtual bool SNetLeaveGame(int type);
-	virtual bool SNetDropPlayer(int playerid, DWORD flags);
-	virtual bool SNetGetOwnerTurnsWaiting(DWORD *turns);
-	virtual bool SNetGetTurnsInTransit(DWORD *turns);
+	virtual bool SNetDropPlayer(int playerid, uint32_t flags);
+	virtual bool SNetGetOwnerTurnsWaiting(uint32_t *turns);
+	virtual bool SNetGetTurnsInTransit(uint32_t *turns);
 	virtual void setup_gameinfo(buffer_t info);
 	virtual std::string make_default_gamename();
 
@@ -96,7 +94,7 @@ bool cdwrap<T>::SNetSendMessage(int playerID, void *data, unsigned int size)
 }
 
 template <class T>
-bool cdwrap<T>::SNetReceiveTurns(char **data, unsigned int *size, DWORD *status)
+bool cdwrap<T>::SNetReceiveTurns(char **data, size_t *size, uint32_t *status)
 {
 	return dvlnet_wrap->SNetReceiveTurns(data, size, status);
 }
@@ -140,19 +138,19 @@ bool cdwrap<T>::SNetLeaveGame(int type)
 }
 
 template <class T>
-bool cdwrap<T>::SNetDropPlayer(int playerid, DWORD flags)
+bool cdwrap<T>::SNetDropPlayer(int playerid, uint32_t flags)
 {
 	return dvlnet_wrap->SNetDropPlayer(playerid, flags);
 }
 
 template <class T>
-bool cdwrap<T>::SNetGetOwnerTurnsWaiting(DWORD *turns)
+bool cdwrap<T>::SNetGetOwnerTurnsWaiting(uint32_t *turns)
 {
 	return dvlnet_wrap->SNetGetOwnerTurnsWaiting(turns);
 }
 
 template <class T>
-bool cdwrap<T>::SNetGetTurnsInTransit(DWORD *turns)
+bool cdwrap<T>::SNetGetTurnsInTransit(uint32_t *turns)
 {
 	return dvlnet_wrap->SNetGetTurnsInTransit(turns);
 }

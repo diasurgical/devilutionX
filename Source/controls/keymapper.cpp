@@ -10,8 +10,7 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#include "../control.h"
-#include "../miniwin/miniwin.h"
+#include "control.h"
 #include "utils/log.hpp"
 
 namespace devilution {

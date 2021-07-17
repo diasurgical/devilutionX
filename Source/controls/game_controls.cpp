@@ -21,7 +21,7 @@ bool select_modifier_active = false;
 
 namespace {
 
-DWORD TranslateControllerButtonToKey(ControllerButton controllerButton)
+uint32_t TranslateControllerButtonToKey(ControllerButton controllerButton)
 {
 	switch (controllerButton) {
 	case ControllerButton_BUTTON_A: // Bottom button

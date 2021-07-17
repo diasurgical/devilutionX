@@ -7,7 +7,7 @@
 namespace devilution {
 namespace {
 int mainmenu_attract_time_out; //seconds
-DWORD dwAttractTicks;
+uint32_t dwAttractTicks;
 
 std::vector<std::unique_ptr<UiItemBase>> vecMainMenuDialog;
 std::vector<std::unique_ptr<UiListItem>> vecMenuItems;

@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-DWORD msgdelay;
+uint32_t msgdelay;
 diablo_message msgflag;
 
 namespace {

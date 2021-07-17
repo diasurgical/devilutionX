@@ -340,7 +340,7 @@ public:
 	int indexAt(Sint16 y) const
 	{
 		ASSERT(y >= m_rect.y);
-		const int index = (y - m_rect.y) / m_height;
+		const size_t index = (y - m_rect.y) / m_height;
 		ASSERT(index < m_vecItems.size());
 		return index;
 	}

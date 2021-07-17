@@ -54,7 +54,7 @@ enum class MouseActionType : int {
 };
 
 extern SDL_Window *ghMainWnd;
-extern DWORD glSeedTbl[NUMLEVELS];
+extern uint32_t glSeedTbl[NUMLEVELS];
 extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
 extern bool gbRunGame;

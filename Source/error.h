@@ -69,7 +69,7 @@ enum diablo_message : uint8_t {
 	EMSG_SHRINE_MURPHYS,
 };
 
-extern DWORD msgdelay;
+extern uint32_t msgdelay;
 extern diablo_message msgflag;
 
 void InitDiabloMsg(diablo_message e);
