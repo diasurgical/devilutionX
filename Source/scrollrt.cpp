@@ -514,6 +514,11 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 	const auto *pCelSprite = player.AnimInfo.pCelSprite;
 	int nCel = player.AnimInfo.GetFrameToUseForRendering();
 
+	if (player.pPreviewCelSprite != nullptr) {
+		pCelSprite = player.pPreviewCelSprite;
+		nCel = 1;
+	}
+
 	if (pCelSprite == nullptr) {
 		Log("Drawing player {} \"{}\": NULL CelSprite", pnum, player._pName);
 		return;
