@@ -66,5 +66,5 @@ or, when using .cia:
 
 ## Resources
 
-* Discord: https://discord.gg/aQBQdDe
+* Discord: https://discord.gg/YQKCAYQ
 * GitHub: https://github.com/diasurgical/devilutionX
