@@ -2034,7 +2034,7 @@ void DeltaLoadLevel()
 					M_UpdateLeader(i);
 				} else {
 					decode_enemy(monster, sgLevels[currlevel].monster[i]._menemy);
-					if (monster.position.tile != Point { 0, 0 } && monster.position.tile != Point { 1, 0 })
+					if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
 						dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 					if (i < MAX_PLRS) {
 						GolumAi(i);

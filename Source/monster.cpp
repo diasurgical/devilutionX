@@ -867,7 +867,7 @@ void UpdateEnemy(MonsterStruct &monster)
 			continue;
 		if ((otherMonster._mhitpoints >> 6) <= 0)
 			continue;
-		if (otherMonster.position.tile == Point { 1, 0 })
+		if (otherMonster.position.tile == GolemHoldingCell)
 			continue;
 		if (M_Talker(otherMonster) && otherMonster.mtalkmsg != TEXT_NONE)
 			continue;
@@ -3954,10 +3954,10 @@ void InitMonsters()
 		CheckDungeonClear();
 #endif
 	if (!setlevel) {
-		AddMonster({ 1, 0 }, DIR_S, 0, false);
-		AddMonster({ 1, 0 }, DIR_S, 0, false);
-		AddMonster({ 1, 0 }, DIR_S, 0, false);
-		AddMonster({ 1, 0 }, DIR_S, 0, false);
+		AddMonster(GolemHoldingCell, DIR_S, 0, false);
+		AddMonster(GolemHoldingCell, DIR_S, 0, false);
+		AddMonster(GolemHoldingCell, DIR_S, 0, false);
+		AddMonster(GolemHoldingCell, DIR_S, 0, false);
 	}
 
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
@@ -4020,10 +4020,10 @@ void InitMonsters()
 void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
-	AddMonster({ 1, 0 }, DIR_S, 0, false);
-	AddMonster({ 1, 0 }, DIR_S, 0, false);
-	AddMonster({ 1, 0 }, DIR_S, 0, false);
-	AddMonster({ 1, 0 }, DIR_S, 0, false);
+	AddMonster(GolemHoldingCell, DIR_S, 0, false);
+	AddMonster(GolemHoldingCell, DIR_S, 0, false);
+	AddMonster(GolemHoldingCell, DIR_S, 0, false);
+	AddMonster(GolemHoldingCell, DIR_S, 0, false);
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqMonst[UMT_LAZARUS].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
@@ -4411,7 +4411,7 @@ void DeleteMonsterList()
 		if (!golem._mDelFlag)
 			continue;
 
-		golem.position.tile = { 1, 0 };
+		golem.position.tile = GolemHoldingCell;
 		golem.position.future = { 0, 0 };
 		golem.position.old = { 0, 0 };
 		golem._mDelFlag = false;

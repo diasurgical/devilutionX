@@ -18,6 +18,8 @@ namespace devilution {
 
 #define MAXMISSILES 125
 
+constexpr Point GolemHoldingCell = Point { 1, 0 };
+
 struct ChainStruct {
 	int idx;
 	int _mitype;

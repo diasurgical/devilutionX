@@ -2654,7 +2654,7 @@ void AddGolem(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, i
 	Missiles[mi]._miVar2 = src.y;
 	Missiles[mi]._miVar4 = dst.x;
 	Missiles[mi]._miVar5 = dst.y;
-	if (Monsters[id].position.tile != Point { 1, 0 } && id == MyPlayerId)
+	if (Monsters[id].position.tile != GolemHoldingCell && id == MyPlayerId)
 		M_StartKill(id, id);
 	UseMana(id, SPL_GOLEM);
 }
@@ -3157,7 +3157,7 @@ void MI_Dummy(int i)
 void MI_Golem(int mi)
 {
 	int src = Missiles[mi]._misource;
-	if (Monsters[src].position.tile == Point { 1, 0 }) {
+	if (Monsters[src].position.tile == GolemHoldingCell) {
 		for (int i = 0; i < 6; i++) {
 			int k = CrawlNum[i];
 			int ck = k + 2;
