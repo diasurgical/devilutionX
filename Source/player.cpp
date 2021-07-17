@@ -603,8 +603,8 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 
 	auto animWeaponId = static_cast<anim_weapon_id>(player._pgfxnum & 0xF);
 	int animationWidth = 96;
+	bool useUnarmedAnimationInTown = false;
 
-	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[animWeaponId]);
 	const char *cs = ClassPathTbl[static_cast<std::size_t>(c)];
 
 	switch (graphic) {
@@ -639,27 +639,24 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 			animationWidth = 98;
 		break;
 	case player_graphic::Lightning:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "LM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
 			animationWidth = 128;
 		break;
 	case player_graphic::Fire:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "FM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
 			animationWidth = 128;
 		break;
 	case player_graphic::Magic:
-		if (leveltype == DTYPE_TOWN)
-			return;
 		szCel = "QM";
+		useUnarmedAnimationInTown = true;
 		if (c == HeroClass::Monk)
 			animationWidth = 114;
 		else if (c == HeroClass::Sorcerer)
@@ -684,6 +681,21 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 		app_fatal("PLR:2");
 	}
 
+	if (leveltype == DTYPE_TOWN && useUnarmedAnimationInTown) {
+		// If the hero don't hold the weapon in town then we should use the unarmed animation for casting
+		switch (animWeaponId) {
+		case ANIM_ID_MACE:
+		case ANIM_ID_SWORD:
+			animWeaponId = ANIM_ID_UNARMED;
+			break;
+		case ANIM_ID_SWORD_SHIELD:
+		case ANIM_ID_MACE_SHIELD:
+			animWeaponId = ANIM_ID_UNARMED_SHIELD;
+			break;
+		}
+	}
+
+	sprintf(prefix, "%c%c%c", CharChar[static_cast<std::size_t>(c)], ArmourChar[player._pgfxnum >> 4], WepChar[animWeaponId]);
 	sprintf(pszName, R"(PlrGFX\%s\%s\%s%s.CL2)", cs, prefix, prefix, szCel);
 	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
@@ -1508,25 +1520,20 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		return;
 	}
 
-	if (leveltype != DTYPE_TOWN) {
-		auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
-		if (player._pmode == PM_SPELL)
-			animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
+	auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
+	if (player._pmode == PM_SPELL)
+		animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
 
-		switch (spelldata[player._pSpell].sType) {
-		case STYPE_FIRE:
-			NewPlrAnim(player, player_graphic::Fire, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-			break;
-		case STYPE_LIGHTNING:
-			NewPlrAnim(player, player_graphic::Lightning, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-			break;
-		case STYPE_MAGIC:
-			NewPlrAnim(player, player_graphic::Magic, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-			break;
-		}
-	} else {
-		// Start new stand animation so that currentframe is reset
-		StartStand(pnum, d);
+	switch (spelldata[player._pSpell].sType) {
+	case STYPE_FIRE:
+		NewPlrAnim(player, player_graphic::Fire, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
+		break;
+	case STYPE_LIGHTNING:
+		NewPlrAnim(player, player_graphic::Lightning, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
+		break;
+	case STYPE_MAGIC:
+		NewPlrAnim(player, player_graphic::Magic, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
+		break;
 	}
 
 	PlaySfxLoc(spelldata[player._pSpell].sSFX, player.position.tile);
@@ -2869,8 +2876,7 @@ bool PM_DoSpell(int pnum)
 	}
 	auto &player = Players[pnum];
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : ((player.AnimInfo.CurrentFrame * player.AnimInfo.TicksPerFrame) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (currentSpellFrame == (player._pSFNum + 1)) {
+	if (player.AnimInfo.CurrentFrame == (player._pSFNum + 1)) {
 		CastSpell(
 		    pnum,
 		    player._pSpell,
@@ -2885,7 +2891,7 @@ bool PM_DoSpell(int pnum)
 		}
 	}
 
-	if (currentSpellFrame >= player._pSFrames) {
+	if (player.AnimInfo.CurrentFrame >= player._pSFrames) {
 		StartStand(pnum, player._pdir);
 		ClearPlrPVars(player);
 		return true;
@@ -3254,8 +3260,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		}
 	}
 
-	int currentSpellFrame = leveltype != DTYPE_TOWN ? player.AnimInfo.CurrentFrame : (player.AnimInfo.CurrentFrame * (player.AnimInfo.TicksPerFrame + 1) + player.AnimInfo.TickCounterOfCurrentFrame);
-	if (player._pmode == PM_SPELL && currentSpellFrame > player._pSFNum) {
+	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame > player._pSFNum) {
 		if (player.destAction == ACTION_SPELL) {
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
