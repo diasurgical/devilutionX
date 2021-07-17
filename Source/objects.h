@@ -121,6 +121,15 @@ struct ObjectStruct {
 		SetMapRange(mapRange);
 		_oVar8 = leverID;
 	}
+
+	/**
+	 * @brief Check if this object is a door
+	 * @return True if the object is one of the door types (see _object_id)
+	 */
+	bool IsDoor() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR);
+	}
 };
 
 extern ObjectStruct Objects[MAXOBJECTS];
