@@ -1782,7 +1782,9 @@ void diablo_focus_pause()
 		track_repeat_walk(false);
 	}
 
+#ifndef NOSOUND
 	music_mute();
+#endif
 
 	MinimizePaused = true;
 }
@@ -1798,7 +1800,9 @@ void diablo_focus_unpause()
 		PauseMode = 0;
 	}
 
+#ifndef NOSOUND
 	music_unmute();
+#endif
 
 	MinimizePaused = false;
 }
@@ -2131,7 +2135,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		music_start(leveltype);
 
 	if (MinimizePaused) {
+#ifndef NOSOUND
 		music_mute();
+#endif
 	}
 
 	while (!IncProgress())

@@ -401,10 +401,12 @@ void UiHandleEvents(SDL_Event *event)
 			gbActive = false;
 		else if (event->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 			ReinitializeHardwareCursor();
+#ifndef NOSOUND
 		else if (event->window.event == SDL_WINDOWEVENT_FOCUS_LOST)
 			music_mute();
 		else if (event->window.event == SDL_WINDOWEVENT_FOCUS_GAINED)
 			music_unmute();
+#endif
 	}
 #endif
 }

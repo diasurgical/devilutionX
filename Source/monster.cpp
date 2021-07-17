@@ -4900,6 +4900,7 @@ void PrintUniqueHistory()
 
 void PlayEffect(MonsterStruct &monster, int mode)
 {
+#ifndef NOSOUND
 	if (Players[MyPlayerId].pLvlLoad != 0) {
 		return;
 	}
@@ -4921,6 +4922,7 @@ void PlayEffect(MonsterStruct &monster, int mode)
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);
+#endif
 }
 
 void MissToMonst(int i, Point position)
