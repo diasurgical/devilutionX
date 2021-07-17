@@ -44,7 +44,7 @@ static bool RepeatMouseAttack(bool leftButton)
 		return false;
 
 	if (Players[MyPlayerId]._pmode != PM_DEATH && Players[MyPlayerId]._pmode != PM_QUIT && Players[MyPlayerId].destAction == ACTION_NONE && SDL_GetTicks() - *timePressed >= (Uint32)gnTickDelay * 4) {
-		bool rangedAttack = Players[MyPlayerId]._pwtype == WT_RANGED;
+		bool rangedAttack = Players[MyPlayerId].UsesRangedWeapon();
 		*timePressed = SDL_GetTicks();
 		switch (lastAction) {
 		case MouseActionType::Attack:

@@ -374,7 +374,7 @@ void LoadPlayer(LoadHelper *file, int p)
 	for (auto &spellType : player._pSplTHotKey)
 		spellType = static_cast<spell_type>(file->NextLE<int8_t>());
 
-	player._pwtype = static_cast<player_weapon_type>(file->NextLE<int32_t>());
+	file->Skip<int32_t>(); // Skip _pwtype
 	player._pBlockFlag = file->NextBool8();
 	player._pInvincible = file->NextBool8();
 	player._pLightRad = file->NextLE<int8_t>();
@@ -1047,7 +1047,7 @@ void SavePlayer(SaveHelper *file, int p)
 	for (auto &spellType : player._pSplTHotKey)
 		file->WriteLE<int8_t>(spellType);
 
-	file->WriteLE<int32_t>(player._pwtype);
+	file->WriteLE<int32_t>(player.UsesRangedWeapon() ? 1 : 0);
 	file->WriteLE<uint8_t>(player._pBlockFlag ? 1 : 0);
 	file->WriteLE<uint8_t>(player._pInvincible ? 1 : 0);
 	file->WriteLE<int8_t>(player._pLightRad);

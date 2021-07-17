@@ -2880,7 +2880,6 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iClass == ICLASS_WEAPON && player.InvBody[INVLOC_HAND_RIGHT]._iLoc != ILOC_TWOHAND && player.InvBody[INVLOC_HAND_LEFT].isEmpty())
 			player._pBlockFlag = true;
 	}
-	player._pwtype = WT_MELEE;
 
 	item_type weaponItemType = item_type::ITYPE_NONE;
 	bool holdsShield = false;
@@ -2914,7 +2913,6 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 		animWeaponId = PlayerWeaponGraphic::Axe;
 		break;
 	case ITYPE_BOW:
-		player._pwtype = WT_RANGED;
 		animWeaponId = PlayerWeaponGraphic::Bow;
 		break;
 	case ITYPE_MACE:

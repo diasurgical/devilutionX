@@ -144,11 +144,6 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
-enum player_weapon_type : uint8_t {
-	WT_MELEE,
-	WT_RANGED,
-};
-
 /**
  * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
  */
@@ -201,7 +196,6 @@ struct PlayerStruct {
 	uint8_t _pSpellFlags;
 	spell_id _pSplHotKey[4];
 	spell_type _pSplTHotKey[4];
-	player_weapon_type _pwtype;
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -432,6 +426,14 @@ struct PlayerStruct {
 
 		return _pManaPer;
 	}
+
+	/**
+	 * @brief Does the player currently have a ranged weapon equipped?
+	 */
+	bool UsesRangedWeapon() const
+	{
+		return static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF) == PlayerWeaponGraphic::Bow;
+	};
 };
 
 extern int MyPlayerId;

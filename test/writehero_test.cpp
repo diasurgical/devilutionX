@@ -306,7 +306,7 @@ static void AssertPlayer(PlayerStruct &player)
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
 	ASSERT_EQ(player._pSpellFlags, 0);
-	ASSERT_EQ(player._pwtype, 1);
+	ASSERT_TRUE(player.UsesRangedWeapon());
 	ASSERT_EQ(player._pBlockFlag, 0);
 	ASSERT_EQ(player._pLightRad, 11);
 	ASSERT_EQ(player._pDamageMod, 101);
