@@ -41,8 +41,8 @@ namespace {
 
 #define MAX_CHUNKS (NUMLEVELS + 4)
 
-DWORD sgdwOwnerWait;
-DWORD sgdwRecvOffset;
+uint32_t sgdwOwnerWait;
+uint32_t sgdwRecvOffset;
 int sgnCurrMegaPlayer;
 DLevel sgLevels[NUMLEVELS];
 BYTE sbLastCmd;
@@ -106,7 +106,7 @@ void PrePacket()
 				continue;
 			}
 
-			int pktSize = ParseCmd(playerId, (TCmd *)data);
+			uint32_t pktSize = ParseCmd(playerId, (TCmd *)data);
 			data += pktSize;
 			spaceLeft -= pktSize;
 		}
@@ -2452,7 +2452,7 @@ void NetSendCmdDItem(bool bHiPri, int ii)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, DWORD dwDam)
+void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam)
 {
 	TCmdDamage cmd;
 
@@ -2465,7 +2465,7 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, DWORD dwDam)
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, DWORD dwDam)
+void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam)
 {
 	TCmdMonDamage cmd;
 

@@ -36,7 +36,7 @@ SdlMutex Mutex;
 
 } // namespace
 
-bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh)
+bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh)
 {
 	const std::lock_guard<SdlMutex> lock(Mutex);
 	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
@@ -138,12 +138,12 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	return result;
 }
 
-DWORD SErrGetLastError()
+uint32_t SErrGetLastError()
 {
 	return ::GetLastError();
 }
 
-void SErrSetLastError(DWORD dwErrCode)
+void SErrSetLastError(uint32_t dwErrCode)
 {
 	::SetLastError(dwErrCode);
 }

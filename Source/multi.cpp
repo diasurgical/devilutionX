@@ -35,7 +35,6 @@ uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 PkPlayerStruct netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
-DWORD sgbSentThisCycle;
 bool gbShouldValidatePackage;
 BYTE gbActivePlayers;
 bool gbGameDestroyed;
@@ -68,6 +67,8 @@ const event_type EventTypes[3] = {
 };
 
 namespace {
+
+uint32_t sgbSentThisCycle;
 
 void BufferInit(TBuffer *pBuf)
 {
@@ -781,7 +782,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 	if (MyPlayerId == pnum) {
 		return;
 	}
-	assert((DWORD)pnum < MAX_PLRS);
+	assert(pnum >= 0 && pnum < MAX_PLRS);
 	auto &player = Players[pnum];
 
 	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {

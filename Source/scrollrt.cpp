@@ -840,8 +840,8 @@ static void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
  */
 static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 {
-	assert((DWORD)sx < MAXDUNX);
-	assert((DWORD)sy < MAXDUNY);
+	assert(sx >= 0 && sx < MAXDUNX);
+	assert(sy >= 0 && sy < MAXDUNY);
 
 	if (dRendered[sx][sy])
 		return;
@@ -893,8 +893,9 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 	DrawObject(out, sx, sy, dx, dy, true);
 	DrawItem(out, sx, sy, dx, dy, true);
 	if ((bFlag & BFLAG_PLAYERLR) != 0) {
-		assert((DWORD)(sy - 1) < MAXDUNY);
-		DrawPlayerHelper(out, sx, sy - 1, dx, dy);
+		int syy = sy - 1;
+		assert(syy >= 0 && syy < MAXDUNY);
+		DrawPlayerHelper(out, sx, syy, dx, dy);
 	}
 	if ((bFlag & BFLAG_MONSTLR) != 0 && negMon < 0) {
 		DrawMonsterHelper(out, sx, sy, -1, dx, dy);

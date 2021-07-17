@@ -2977,7 +2977,7 @@ void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 
 void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int /*dam*/)
 {
-	assert((DWORD)mi < MAXMISSILES);
+	assert(mi >= 0 && mi < MAXMISSILES);
 
 	Missiles[mi]._mirnd = GenerateRnd(15) + 1;
 	Missiles[mi]._midam = (micaster == 0) ? (GenerateRnd(Players[id]._pMagic / 4) + 1) : 15;
@@ -3592,10 +3592,10 @@ void MI_LightningArrow(int i)
 
 	int mx = Missiles[i].position.tile.x;
 	int my = Missiles[i].position.tile.y;
-	assert((DWORD)mx < MAXDUNX);
-	assert((DWORD)my < MAXDUNY);
+	assert(mx >= 0 && mx < MAXDUNX);
+	assert(my >= 0 && my < MAXDUNY);
 	int pn = dPiece[mx][my];
-	assert((DWORD)pn <= MAXTILES);
+	assert(pn >= 0 && pn <= MAXTILES);
 
 	if (Missiles[i]._misource == -1) {
 		if ((mx != Missiles[i].position.start.x || my != Missiles[i].position.start.y) && nMissileTable[pn]) {
@@ -3789,7 +3789,7 @@ void MI_SpecArrow(int i)
 
 void MI_Lightctrl(int i)
 {
-	assert((DWORD)i < MAXMISSILES);
+	assert(i >= 0 && i < MAXMISSILES);
 	Missiles[i]._mirange--;
 
 	int dam;
@@ -3810,10 +3810,10 @@ void MI_Lightctrl(int i)
 
 	int mx = Missiles[i].position.tile.x;
 	int my = Missiles[i].position.tile.y;
-	assert((DWORD)mx < MAXDUNX);
-	assert((DWORD)my < MAXDUNY);
+	assert(mx >= 0 && mx < MAXDUNX);
+	assert(my >= 0 && my < MAXDUNY);
 	int pn = dPiece[mx][my];
-	assert((DWORD)pn <= MAXTILES);
+	assert(pn >= 0 && pn <= MAXTILES);
 
 	if (id != -1 || Point { mx, my } != Missiles[i].position.start) {
 		if (nMissileTable[pn]) {
@@ -4047,7 +4047,7 @@ void MI_Firemove(int i)
 
 void MI_Guardian(int i)
 {
-	assert((DWORD)i < MAXMISSILES);
+	assert(i >= 0 && i < MAXMISSILES);
 
 	Missiles[i]._mirange--;
 
@@ -4427,7 +4427,7 @@ void MI_Wave(int i)
 {
 	bool f1 = false;
 	bool f2 = false;
-	assert((DWORD)i < MAXMISSILES);
+	assert(i >= 0 && i < MAXMISSILES);
 
 	int id = Missiles[i]._misource;
 	Point src = Missiles[i].position.tile;
@@ -4436,7 +4436,7 @@ void MI_Wave(int i)
 	Direction dirb = right[right[sd]];
 	Point na = src + sd;
 	int pn = dPiece[na.x][na.y];
-	assert((DWORD)pn <= MAXTILES);
+	assert(pn >= 0 && pn <= MAXTILES);
 	if (!nMissileTable[pn]) {
 		Direction pdir = Players[id]._pdir;
 		AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, Missiles[i]._mispllvl);
@@ -4444,7 +4444,7 @@ void MI_Wave(int i)
 		Point nb = src + sd + dirb;
 		for (int j = 0; j < (Missiles[i]._mispllvl / 2) + 2; j++) {
 			pn = dPiece[na.x][na.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
-			assert((DWORD)pn <= MAXTILES);
+			assert(pn >= 0 && pn <= MAXTILES);
 			if (nMissileTable[pn] || f1 || !InDungeonBounds(na)) {
 				f1 = true;
 			} else {
@@ -4452,7 +4452,7 @@ void MI_Wave(int i)
 				na += dira;
 			}
 			pn = dPiece[nb.x][nb.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
-			assert((DWORD)pn <= MAXTILES);
+			assert(pn >= 0 && pn <= MAXTILES);
 			if (nMissileTable[pn] || f2 || !InDungeonBounds(nb)) {
 				f2 = true;
 			} else {

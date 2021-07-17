@@ -1221,7 +1221,7 @@ void InitPlayer(int pnum, bool firstTime)
 				player.position.tile = { ViewX, ViewY };
 			}
 		} else {
-			DWORD i;
+			unsigned i;
 			for (i = 0; i < 8 && !PosOkPlayer(pnum, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
 				;
 			player.position.tile.x += plrxoff2[i];

@@ -406,7 +406,7 @@ int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 			continue;
 		if (pBlockTbl->sizefile != 0)
 			continue;
-		if ((DWORD)pBlockTbl->sizealloc < size)
+		if (pBlockTbl->sizealloc < size)
 			continue;
 
 		result = pBlockTbl->offset;
@@ -625,7 +625,6 @@ bool mpqapi_has_file(const char *pszName)
 
 bool OpenMPQ(const char *pszArchive)
 {
-	DWORD key;
 	_FILEHEADER fhdr;
 
 	InitHash();
@@ -644,7 +643,7 @@ bool OpenMPQ(const char *pszArchive)
 		if (fhdr.blockcount > 0) {
 			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.sgpBlockTbl), BlockEntrySize))
 				goto on_error;
-			key = Hash("(block table)", 3);
+			uint32_t key = Hash("(block table)", 3);
 			Decrypt((DWORD *)cur_archive.sgpBlockTbl, BlockEntrySize, key);
 		}
 		cur_archive.sgpHashTbl = new _HASHENTRY[HashEntrySize / sizeof(_HASHENTRY)];
@@ -652,7 +651,7 @@ bool OpenMPQ(const char *pszArchive)
 		if (fhdr.hashcount > 0) {
 			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.sgpHashTbl), HashEntrySize))
 				goto on_error;
-			key = Hash("(hash table)", 3);
+			uint32_t key = Hash("(hash table)", 3);
 			Decrypt((DWORD *)cur_archive.sgpHashTbl, HashEntrySize, key);
 		}
 

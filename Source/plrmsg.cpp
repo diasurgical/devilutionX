@@ -24,7 +24,7 @@ const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UI
 
 void plrmsg_delay(bool delay)
 {
-	static DWORD plrmsgTicks;
+	static uint32_t plrmsgTicks;
 
 	if (delay) {
 		plrmsgTicks = -SDL_GetTicks();
@@ -76,7 +76,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 void ClearPlrMsg()
 {
 	_plrmsg *pMsg = plr_msgs;
-	DWORD tick = SDL_GetTicks();
+	uint32_t tick = SDL_GetTicks();
 
 	for (int i = 0; i < PMSG_COUNT; i++, pMsg++) {
 		if ((int)(tick - pMsg->time) > 10000)

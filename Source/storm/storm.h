@@ -132,7 +132,7 @@ bool SNetDestroy();
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetDropPlayer(int playerid, DWORD flags);
+bool SNetDropPlayer(int playerid, uint32_t flags);
 
 /*  SNetGetGameInfo @ 107
  *
@@ -156,8 +156,7 @@ bool SNetGetGameInfo(game_info type, void *dst, unsigned int length);
  *
  *  Returns true if the function was called successfully and false otherwise.
  */
-bool SNetGetTurnsInTransit(
-    DWORD *turns);
+bool SNetGetTurnsInTransit(uint32_t *turns);
 
 bool SNetJoinGame(char *gameName, char *gamePassword, int *playerid);
 
@@ -225,7 +224,7 @@ bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFl
 #endif
 bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
-bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read, int *lpDistanceToMoveHigh);
+bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh);
 DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh = nullptr);
 DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
@@ -248,7 +247,7 @@ bool WINAPI SFileCloseFile(HANDLE hFile);
  *
  *  Returns the last error set within the Storm library.
  */
-DWORD SErrGetLastError();
+uint32_t SErrGetLastError();
 
 /*  SErrSetLastError @ 465
  *
@@ -256,7 +255,7 @@ DWORD SErrGetLastError();
  *
  *  dwErrCode:  The error code that will be set.
  */
-void SErrSetLastError(DWORD dwErrCode);
+void SErrSetLastError(uint32_t dwErrCode);
 
 // Values for dwErrCode
 #define STORM_ERROR_GAME_TERMINATED 0x85100069
@@ -277,7 +276,7 @@ void SErrSetLastError(DWORD dwErrCode);
 void SStrCopy(char *dest, const char *src, int max_length);
 
 bool SFileSetBasePath(const char *);
-bool SNetGetOwnerTurnsWaiting(DWORD *);
+bool SNetGetOwnerTurnsWaiting(uint32_t *);
 bool SNetUnregisterEventHandler(event_type);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
@@ -296,7 +295,7 @@ bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HA
 
 // Locks ReadFile and CloseFile under a mutex.
 // See https://github.com/ladislav-zezula/StormLib/issues/175
-bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, DWORD nNumberOfBytesToRead, DWORD *read = nullptr, int *lpDistanceToMoveHigh = nullptr);
+bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read = nullptr, int *lpDistanceToMoveHigh = nullptr);
 bool SFileCloseFileThreadSafe(HANDLE hFile);
 
 // Sets the file's 64-bit seek position.

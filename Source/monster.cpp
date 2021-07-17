@@ -1136,7 +1136,7 @@ void SpawnLoot(MonsterStruct &monster, bool sendmsg)
 
 void Teleport(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode == MM_STONE)
@@ -1175,7 +1175,7 @@ void Teleport(int i)
 
 void MonsterHitMonster(int mid, int i, int dam)
 {
-	assert((DWORD)mid < MAXMONSTERS);
+	assert(mid >= 0 && mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
@@ -1207,7 +1207,7 @@ void MonsterHitMonster(int mid, int i, int dam)
 
 void StartMonsterDeath(int i, int pnum, bool sendmsg)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 
@@ -1242,9 +1242,9 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 
 void StartDeathFromMonster(int i, int mid)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &killer = Monsters[i];
-	assert((DWORD)mid < MAXMONSTERS);
+	assert(mid >= 0 && mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
@@ -1353,7 +1353,7 @@ bool MonsterIdle(MonsterStruct &monster)
  */
 bool MonsterWalk(int i, int variant)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 
@@ -1398,7 +1398,7 @@ bool MonsterWalk(int i, int variant)
 
 void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 {
-	assert((DWORD)mid < MAXMONSTERS);
+	assert(mid >= 0 && mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
 	assert(monster.MType != nullptr);
 
@@ -1431,7 +1431,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 
 void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 
@@ -1579,7 +1579,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 
 bool MonsterAttack(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 	assert(monster.MData != nullptr);
@@ -1609,7 +1609,7 @@ bool MonsterAttack(int i)
 
 bool MonaterRangedAttack(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 	assert(monster.MData != nullptr);
@@ -1649,7 +1649,7 @@ bool MonaterRangedAttack(int i)
 
 bool MonsterRangedSpecialAttack(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 	assert(monster.MData != nullptr);
@@ -1690,7 +1690,7 @@ bool MonsterRangedSpecialAttack(int i)
 
 bool MonsterSpecialAttack(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 	assert(monster.MData != nullptr);
@@ -1836,7 +1836,7 @@ bool MonsterGotHit(MonsterStruct &monster)
 
 bool MonsterDeath(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 
@@ -1946,7 +1946,7 @@ bool IsLineNotSolid(Point startPoint, Point endPoint)
 
 void GroupUnity(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster.leaderflag == MonsterRelation::Individual) {
@@ -2112,7 +2112,7 @@ bool AiPlanWalk(int i)
 	/** Maps from walking path step to facing direction. */
 	const Direction plr2monst[9] = { DIR_S, DIR_NE, DIR_NW, DIR_SE, DIR_SW, DIR_N, DIR_E, DIR_S, DIR_W };
 
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (FindPath([&monster](Point position) { return IsTileAccessible(monster, position); }, monster.position.tile, monster.enemyPosition, path) == 0) {
@@ -2167,7 +2167,7 @@ bool RoundWalk(int i, Direction direction, int *dir)
 
 bool AiPlanPath(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster.MType->mtype != MT_GOLEM) {
@@ -2203,7 +2203,7 @@ bool AiPlanPath(int i)
 
 void AiAvoidance(int i, bool special)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2257,7 +2257,7 @@ void AiAvoidance(int i, bool special)
 
 void AiRanged(int i, missile_id missileType, bool special)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -2302,7 +2302,7 @@ void AiRanged(int i, missile_id missileType, bool special)
 
 void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, int lessmissiles)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2360,7 +2360,7 @@ void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, 
 
 void ZombieAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -2395,7 +2395,7 @@ void ZombieAi(int i)
 
 void OverlordAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2425,7 +2425,7 @@ void OverlordAi(int i)
 
 void SkeletonAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2455,7 +2455,7 @@ void SkeletonAi(int i)
 
 void SkeletonBowAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2492,7 +2492,7 @@ void SkeletonBowAi(int i)
 
 void ScavengerAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND)
@@ -2583,7 +2583,7 @@ void ScavengerAi(int i)
 
 void RhinoAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2658,7 +2658,7 @@ void GoatBowAi(int i)
 
 void FallenAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mgoal == MGOAL_ATTACK2) {
@@ -2728,7 +2728,7 @@ void MagmaAi(int i)
 
 void LeoricAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2790,7 +2790,7 @@ void LeoricAi(int i)
 
 void BatAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	int pnum = monster._menemy;
@@ -2848,7 +2848,7 @@ void BatAi(int i)
 
 void GargoyleAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	int dx = monster.position.tile.x - monster.position.last.x;
@@ -2884,7 +2884,7 @@ void GargoyleAi(int i)
 
 void ButcherAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -2914,7 +2914,7 @@ void SuccubusAi(int i)
 
 void SneakAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -2980,7 +2980,7 @@ void StormAi(int i)
 
 void FiremanAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0)
@@ -3035,7 +3035,7 @@ void FiremanAi(int i)
 
 void GharbadAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -3094,7 +3094,7 @@ void AcidAi(int i)
 
 void SnotSpilAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -3137,7 +3137,7 @@ void SnotSpilAi(int i)
 
 void SnakeAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	char pattern[6] = { 1, 1, 0, -1, -1, 0 };
@@ -3198,7 +3198,7 @@ void SnakeAi(int i)
 
 void CounselorAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -3262,7 +3262,7 @@ void CounselorAi(int i)
 
 void ZharAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -3295,7 +3295,7 @@ void ZharAi(int i)
 
 void MegaAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	int mx = monster.position.tile.x - monster.enemyPosition.x;
@@ -3369,7 +3369,7 @@ void DiabloAi(int i)
 
 void LazarusAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -3417,7 +3417,7 @@ void LazarusAi(int i)
 
 void LazarusMinionAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND)
@@ -3446,7 +3446,7 @@ void LazarusMinionAi(int i)
 
 void LachdananAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -3477,7 +3477,7 @@ void LachdananAi(int i)
 
 void WarlordAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND) {
@@ -3515,7 +3515,7 @@ void TorchantAi(int i)
 
 void HorkDemonAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mmode != MM_STAND || monster._msquelch == 0) {
@@ -4183,7 +4183,7 @@ void M_StartHit(int i, int pnum, int dam)
 
 void M_StartKill(int i, int pnum)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (MyPlayerId == pnum) {
@@ -4200,7 +4200,7 @@ void M_StartKill(int i, int pnum)
 
 void M_SyncStartKill(int i, Point position, int pnum)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	if (monster._mhitpoints > 0 || monster._mmode == MM_DEATH) {
@@ -4223,7 +4223,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 
 void M_UpdateLeader(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	for (int j = 0; j < ActiveMonsterCount; j++) {
@@ -4306,7 +4306,7 @@ void PrepDoEnding()
 
 void M_WalkDir(int i, Direction md)
 {
-	assert((DWORD)i < MAXMONSTERSassert);
+	assert(i >= 0 && i < MAXMONSTERS);
 
 	int mwi = Monsters[i].MType->GetAnimData(MonsterGraphic::Walk).Frames - 1;
 	switch (md) {
@@ -4341,7 +4341,7 @@ void M_WalkDir(int i, Direction md)
 
 void GolumAi(int i)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &golem = Monsters[i];
 
 	if (golem.position.tile.x == 1 && golem.position.tile.y == 0) {
@@ -4431,7 +4431,7 @@ void ProcessMonsters()
 {
 	DeleteMonsterList();
 
-	assert((DWORD)ActiveMonsterCount <= MAXMONSTERS);
+	assert(ActiveMonsterCount >= 0 && ActiveMonsterCount <= MAXMONSTERS);
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int mi = ActiveMonsters[i];
 		auto &monster = Monsters[mi];
@@ -4470,11 +4470,11 @@ void ProcessMonsters()
 		}
 
 		if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
-			assert((DWORD)monster._menemy < MAXMONSTERS);
+			assert(monster._menemy >= 0 && monster._menemy < MAXMONSTERS);
 			monster.position.last = Monsters[monster._menemy].position.future;
 			monster.enemyPosition = monster.position.last;
 		} else {
-			assert((DWORD)monster._menemy < MAX_PLRS);
+			assert(monster._menemy >= 0 && monster._menemy < MAX_PLRS);
 			monster.enemyPosition = Players[monster._menemy].position.future;
 			if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 				monster._msquelch = UINT8_MAX;
@@ -4567,7 +4567,7 @@ void FreeMonsters()
 
 bool DirOK(int i, Direction mdir)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	Point position = monster.position.tile;
 	Point futurePosition = position + mdir;
@@ -4923,12 +4923,12 @@ void PlayEffect(MonsterStruct &monster, int mode)
 
 void MissToMonst(int i, Point position)
 {
-	assert((DWORD)i < MAXMISSILES);
+	assert(i >= 0 && i < MAXMISSILES);
 
 	MissileStruct *miss = &Missiles[i];
 	int m = miss->_misource;
 
-	assert((DWORD)m < MAXMONSTERS);
+	assert(m >= 0 && m < MAXMONSTERS);
 	auto &monster = Monsters[m];
 
 	Point oldPosition = miss->position.tile;
@@ -5095,7 +5095,7 @@ void TalktoMonster(MonsterStruct &monster)
 
 void SpawnGolum(int i, Point position, int mi)
 {
-	assert((DWORD)i < MAXMONSTERS);
+	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
 	dMonster[position.x][position.y] = i + 1;
