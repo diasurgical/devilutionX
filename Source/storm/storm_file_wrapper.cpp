@@ -12,9 +12,9 @@ extern "C" {
 
 ssize_t SFileCookieRead(void *cookie, char *buf, size_t nbytes)
 {
-	DWORD numRead = 0;
+	size_t numRead = 0;
 	if (!SFileReadFileThreadSafe(static_cast<HANDLE>(cookie), buf, nbytes, &numRead)) {
-		const DWORD errCode = SErrGetLastError();
+		const auto errCode = SErrGetLastError();
 		if (errCode != STORM_ERROR_HANDLE_EOF) {
 			Log("SFileRwRead error: {} ERROR CODE {}", (unsigned int)nbytes, (unsigned int)errCode);
 		}
@@ -40,7 +40,7 @@ int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
 	}
 	const std::uint64_t spos = SFileSetFilePointer(static_cast<HANDLE>(cookie), *pos, swhence);
 	if (spos == static_cast<std::uint64_t>(-1)) {
-		Log("SFileRwSeek error: {}", (unsigned int)SErrGetLastError());
+		Log("SFileRwSeek error: {}", SErrGetLastError());
 		return -1;
 	}
 	*pos = static_cast<off64_t>(spos);

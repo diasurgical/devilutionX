@@ -96,7 +96,7 @@ bool SNetDestroy()
 	return true;
 }
 
-bool SNetDropPlayer(int playerid, DWORD flags)
+bool SNetDropPlayer(int playerid, uint32_t flags)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -186,7 +186,7 @@ bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 /**
  * @brief Is this the mirror image of SNetGetTurnsInTransit?
  */
-bool SNetGetOwnerTurnsWaiting(DWORD *turns)
+bool SNetGetOwnerTurnsWaiting(uint32_t *turns)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -194,7 +194,7 @@ bool SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return dvlnet_inst->SNetGetOwnerTurnsWaiting(turns);
 }
 
-bool SNetGetTurnsInTransit(DWORD *turns)
+bool SNetGetTurnsInTransit(uint32_t *turns)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);

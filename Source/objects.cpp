@@ -3547,7 +3547,7 @@ bool OperateShrineThaumaturgic(int pnum)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		int v1 = ActiveObjects[j];
-		assert((DWORD)v1 < MAXOBJECTS);
+		assert(v1 >= 0 && v1 < MAXOBJECTS);
 		if (IsAnyOf(Objects[v1]._otype, OBJ_CHEST1, OBJ_CHEST2, OBJ_CHEST3, OBJ_TCHEST1, OBJ_TCHEST2, OBJ_TCHEST3) && Objects[v1]._oSelFlag == 0) {
 			Objects[v1]._oRndSeed = AdvanceRndSeed();
 			Objects[v1]._oSelFlag = 1;
@@ -4227,7 +4227,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		dropGoldValue = 0;
 	}
 
-	assert((DWORD)i < MAXOBJECTS);
+	assert(i >= 0 && i < MAXOBJECTS);
 
 	if (Objects[i]._oSelFlag == 0)
 		return;

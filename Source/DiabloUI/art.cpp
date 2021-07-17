@@ -11,7 +11,7 @@
 
 namespace devilution {
 namespace {
-constexpr unsigned PcxHeaderSize = 128;
+constexpr size_t PcxHeaderSize = 128;
 constexpr unsigned NumPaletteColors = 256;
 constexpr unsigned PcxPaletteSize = 1 + NumPaletteColors * 3;
 
@@ -38,7 +38,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 	pixelDataSize -= PcxHeaderSize + (has256ColorPalette ? PcxPaletteSize : 0);
 
 	// We read 1 extra byte because it delimits the palette.
-	const unsigned readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
+	const size_t readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
 	std::unique_ptr<BYTE[]> fileBuffer { new BYTE[readSize] };
 	if (!SFileReadFileThreadSafe(handle, fileBuffer.get(), readSize)) {
 		return false;

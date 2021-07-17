@@ -47,7 +47,7 @@ void LoadMusic(HANDLE handle)
 #ifndef DISABLE_STREAMING_MUSIC
 	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
-	int bytestoread = SFileGetFileSize(handle);
+	size_t bytestoread = SFileGetFileSize(handle);
 	musicBuffer = new char[bytestoread];
 	SFileReadFileThreadSafe(handle, musicBuffer, bytestoread);
 	SFileCloseFileThreadSafe(handle);
@@ -137,13 +137,11 @@ void ClearDuplicateSounds()
 
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	DWORD tc;
-
 	if (pSnd == nullptr || !gbSoundOn) {
 		return;
 	}
 
-	tc = SDL_GetTicks();
+	uint32_t tc = SDL_GetTicks();
 	if (tc - pSnd->start_tc < 80) {
 		return;
 	}
@@ -177,7 +175,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		if (!SFileOpenFile(path, &file)) {
 			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 		}
-		DWORD dwBytes = SFileGetFileSize(file);
+		size_t dwBytes = SFileGetFileSize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		SFileReadFileThreadSafe(file, waveFile.get(), dwBytes);
 		int error = snd->DSB.SetChunk(waveFile, dwBytes);
@@ -243,7 +241,7 @@ void music_start(uint8_t nTrack)
 	bool success;
 	const char *trackPath;
 
-	assert((DWORD)nTrack < NUM_MUSIC);
+	assert(nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
 		if (spawn_mpq != nullptr)
