@@ -1863,24 +1863,25 @@ void run_delta_info()
 void DeltaExportData(int pnum)
 {
 	if (sgbDeltaChanged) {
-		int size;
-		std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1] };
-		byte *dstEnd;
 		for (int i = 0; i < NUMLEVELS; i++) {
-			dstEnd = &dst[1];
+			std::unique_ptr<byte[]> dst { new byte[sizeof(DLevel) + 1] };
+			byte *dstEnd = &dst.get()[1];
 			dstEnd = DeltaExportItem(dstEnd, sgLevels[i].item);
 			dstEnd = DeltaExportObject(dstEnd, sgLevels[i].object);
 			dstEnd = DeltaExportMonster(dstEnd, sgLevels[i].monster);
-			size = CompressData(dst.get(), dstEnd);
-			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), dst.get(), size);
+			int size = CompressData(dst.get(), dstEnd);
+			dthread_send_delta(pnum, static_cast<_cmd_id>(i + CMD_DLEVEL_0), std::move(dst), size);
 		}
-		dstEnd = &dst[1];
+
+		std::unique_ptr<byte[]> dst { new byte[sizeof(DJunk) + 1] };
+		byte *dstEnd = &dst.get()[1];
 		dstEnd = DeltaExportJunk(dstEnd);
-		size = CompressData(dst.get(), dstEnd);
-		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, dst.get(), size);
+		int size = CompressData(dst.get(), dstEnd);
+		dthread_send_delta(pnum, CMD_DLEVEL_JUNK, std::move(dst), size);
 	}
-	byte src { 0 };
-	dthread_send_delta(pnum, CMD_DLEVEL_END, &src, 1);
+
+	std::unique_ptr<byte[]> src { new byte[1] { static_cast<byte>(0) } };
+	dthread_send_delta(pnum, CMD_DLEVEL_END, std::move(src), 1);
 }
 
 void delta_init()
