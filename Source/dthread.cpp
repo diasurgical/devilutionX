@@ -64,7 +64,7 @@ void DthreadHandler()
 
 void dthread_remove_player(uint8_t pnum)
 {
-	std::lock_guard lock(DthreadMutex);
+	std::lock_guard<SdlMutex> lock(DthreadMutex);
 	InfoList.remove_if([&](auto &pkt) {
 		return pkt.pnum == pnum;
 	});
@@ -77,7 +77,7 @@ void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uin
 
 	DThreadPkt pkt { pnum, cmd, std::move(data), len };
 
-	std::lock_guard lock(DthreadMutex);
+	std::lock_guard<SdlMutex> lock(DthreadMutex);
 	InfoList.push_back(std::move(pkt));
 	SetEvent(sghWorkToDoEvent);
 }
