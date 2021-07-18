@@ -2651,20 +2651,22 @@ bool PM_DoAttack(int pnum)
 		                    || (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD && player.InvBody[INVLOC_HAND_RIGHT]._iLoc == ILOC_TWOHAND))
 		                && !(player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD))))) {
 			position = player.position.tile + right[player._pdir];
-			dx = position.x;
-			dy = position.y;
-			int m = ((dMonster[dx][dy] > 0) ? dMonster[dx][dy] : -dMonster[dx][dy]) - 1;
-			auto &monster = Monsters[m];
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(monster) && monster.position.old.x == dx && monster.position.old.y == dy) {
-				if (PlrHitMonst(-pnum, m))
-					didhit = true;
+			if (dMonster[position.x][position.y] != 0) {
+				int m = abs(dMonster[position.x][position.y]) - 1;
+				auto &monster = Monsters[m];
+				if (!CanTalkToMonst(monster) && monster.position.old == position) {
+					if (PlrHitMonst(-pnum, m))
+						didhit = true;
+				}
 			}
 			position = player.position.tile + left[player._pdir];
-			dx = position.x;
-			dy = position.y;
-			if (dMonster[dx][dy] != 0 && !CanTalkToMonst(monster) && monster.position.old.x == dx && monster.position.old.y == dy) {
-				if (PlrHitMonst(-pnum, m))
-					didhit = true;
+			if (dMonster[position.x][position.y] != 0) {
+				int m = abs(dMonster[position.x][position.y]) - 1;
+				auto &monster = Monsters[m];
+				if (!CanTalkToMonst(monster) && monster.position.old == position) {
+					if (PlrHitMonst(-pnum, m))
+						didhit = true;
+				}
 			}
 		}
 
