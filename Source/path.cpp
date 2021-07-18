@@ -181,6 +181,15 @@ int8_t GetPathDirection(Point startPosition, Point destinationPosition)
 }
 
 /**
+ * @brief heuristic, estimated cost from startPosition to destinationPosition.
+ */
+int path_get_heuristic_cost(Point startPosition, Point destinationPosition)
+{
+	// see path_check_equal for why this is times 2
+	return 2 * startPosition.ManhattanDistance(destinationPosition);
+}
+
+/**
  * @brief add a step from pPath to destination, return 1 if successful, and update the frontier/visited nodes accordingly
  *
  * @param pPath pointer to the current path node
@@ -235,7 +244,7 @@ bool path_parent_path(PATHNODE *pPath, Point candidatePosition, Point destinatio
 				return false;
 			dxdy->Parent = pPath;
 			dxdy->g = nextG;
-			dxdy->h = path_get_h_cost(candidatePosition, destinationPosition);
+			dxdy->h = path_get_heuristic_cost(candidatePosition, destinationPosition);
 			dxdy->f = nextG + dxdy->h;
 			dxdy->position = candidatePosition;
 			// add it to the frontier
@@ -271,7 +280,7 @@ bool path_get_path(const std::function<bool(Point)> &posOk, PATHNODE *pPath, Poi
 	return true;
 }
 
-}
+} // namespace
 
 bool IsTileNotSolid(Point position)
 {
@@ -315,7 +324,7 @@ int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point
 	gdwCurPathStep = 0;
 	PATHNODE *pathStart = path_new_step();
 	pathStart->g = 0;
-	pathStart->h = path_get_h_cost(startPosition, destinationPosition);
+	pathStart->h = path_get_heuristic_cost(startPosition, destinationPosition);
 	pathStart->f = pathStart->h + pathStart->g;
 	pathStart->position = startPosition;
 	path_2_nodes->NextNode = pathStart;
@@ -348,12 +357,6 @@ int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point
 	return 0;
 }
 
-int path_get_h_cost(Point startPosition, Point destinationPosition)
-{
-	// see path_check_equal for why this is times 2
-	return 2 * startPosition.ManhattanDistance(destinationPosition);
-}
-
 bool path_solid_pieces(Point startPosition, Point destinationPosition)
 {
 	// These checks are written as if working backwards from the destination to the source, given
@@ -375,5 +378,12 @@ bool path_solid_pieces(Point startPosition, Point destinationPosition)
 	}
 	return rv;
 }
+
+#ifdef RUN_TESTS
+int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition)
+{
+	return path_get_heuristic_cost(startPosition, destinationPosition);
+}
+#endif
 
 } // namespace devilution

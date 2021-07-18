@@ -145,12 +145,6 @@ void AddL1Objs(int x1, int y1, int x2, int y2);
 void AddL2Objs(int x1, int y1, int x2, int y2);
 void InitObjects();
 void SetMapObjects(const uint16_t *dunData, int startx, int starty);
-void GetRndObjLoc(int randarea, int *xx, int *yy);
-void AddMushPatch();
-void AddSlainHero();
-void AddCryptBook(_object_id ot, int v2, int ox, int oy);
-void AddCryptObject(int i, int a2);
-void AddNakrulBook(int a1, int a2, int a3);
 /**
  * @brief Spawns an object of the given type at the map coordinates provided
  * @param objType Type specifier
@@ -159,7 +153,6 @@ void AddNakrulBook(int a1, int a2, int a3);
 void AddObject(_object_id objType, Point objPos);
 void Obj_Trap(int i);
 void ProcessObjects();
-void ObjSetMicro(Point position, int pn);
 void RedoPlayerVision();
 void MonstCheckDoors(MonsterStruct &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);

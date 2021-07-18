@@ -52,13 +52,6 @@ int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point
  */
 bool path_solid_pieces(Point startPosition, Point destinationPosition);
 
-/**
- * @brief heuristic, estimated cost from startPosition to destinationPosition.
- *
- * This is an internal function that is only exposed to allow for testing the way path weights are determined.
- */
-int path_get_h_cost(Point startPosition, Point destinationPosition);
-
 /** For iterating over the 8 possible movement directions */
 const Displacement PathDirs[8] = {
 	// clang-format off

@@ -8,36 +8,39 @@
 
 namespace devilution {
 
+extern int TestPathGetHCost(Point startPosition, Point destinationPosition);
+extern int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition);
+
 TEST(PathTest, Heuristics)
 {
 	constexpr Point source { 25, 32 };
 	Point destination = source;
-	EXPECT_EQ(path_get_h_cost(source, destination), 0) << "Wrong cost for travelling to the same tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 0) << "Wrong cost for travelling to the same tile";
 
 	destination = source + Direction::DIR_NE;
-	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::DIR_SE;
-	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::DIR_SW;
-	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 	destination = source + Direction::DIR_NW;
-	EXPECT_EQ(path_get_h_cost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 
 	destination = source + Direction::DIR_N;
-	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_E;
-	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_S;
-	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_W;
-	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 	destination = source + Direction::DIR_SW + Direction::DIR_SE; // Effectively the same as DIR_S
-	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 
 	destination = source + Direction::DIR_NE + Direction::DIR_N;
-	EXPECT_EQ(path_get_h_cost(source, destination), 6) << "Wrong cost for travelling to a { 2, 1 } offset";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 6) << "Wrong cost for travelling to a { 2, 1 } offset";
 	destination = source + Direction::DIR_SE + Direction::DIR_SE;
-	EXPECT_EQ(path_get_h_cost(source, destination), 4) << "Wrong cost for travelling to a { 2, 0 } offset";
+	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to a { 2, 0 } offset";
 }
 
 TEST(PathTest, Solid)
