@@ -1944,11 +1944,8 @@ bool IsLineNotSolid(Point startPoint, Point endPoint)
 	return LineClear(IsTileNotSolid, startPoint, endPoint);
 }
 
-void GroupUnity(int i)
+void GroupUnity(MonsterStruct &monster)
 {
-	assert(i >= 0 && i < MAXMONSTERS);
-	auto &monster = Monsters[i];
-
 	if (monster.leaderRelation == LeaderRelation::None)
 		return;
 
@@ -4525,7 +4522,7 @@ void ProcessMonsters()
 				break;
 			}
 			if (raflag) {
-				GroupUnity(mi);
+				GroupUnity(monster);
 			}
 		} while (raflag);
 		if (monster._mmode != MM_STONE) {
