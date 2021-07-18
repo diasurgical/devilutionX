@@ -15,6 +15,9 @@ namespace devilution {
 
 /** In-game state of portals. */
 PortalStruct Portals[MAXPORTAL];
+
+namespace {
+
 /** Current portal number (a portal array index). */
 int portalindex;
 
@@ -22,6 +25,8 @@ int portalindex;
 int WarpDropX[MAXPORTAL] = { 57, 59, 61, 63 };
 /** Y-coordinate of each players portal in town. */
 int WarpDropY[MAXPORTAL] = { 40, 40, 40, 40 };
+
+} // namespace
 
 void InitPortals()
 {

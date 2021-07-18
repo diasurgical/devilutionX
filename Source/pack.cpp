@@ -13,6 +13,28 @@
 
 namespace devilution {
 
+namespace {
+
+static void VerifyGoldSeeds(PlayerStruct &player)
+{
+	for (int i = 0; i < player._pNumInv; i++) {
+		if (player.InvList[i].IDidx != IDI_GOLD)
+			continue;
+		for (int j = 0; j < player._pNumInv; j++) {
+			if (i == j)
+				continue;
+			if (player.InvList[j].IDidx != IDI_GOLD)
+				continue;
+			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
+				continue;
+			player.InvList[i]._iSeed = AdvanceRndSeed();
+			j = -1;
+		}
+	}
+}
+
+} // namespace
+
 void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
 	memset(id, 0, sizeof(*id));
@@ -173,24 +195,6 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 			Items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
 	}
 	*id = Items[MAXITEMS];
-}
-
-static void VerifyGoldSeeds(PlayerStruct &player)
-{
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i].IDidx != IDI_GOLD)
-			continue;
-		for (int j = 0; j < player._pNumInv; j++) {
-			if (i == j)
-				continue;
-			if (player.InvList[j].IDidx != IDI_GOLD)
-				continue;
-			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
-				continue;
-			player.InvList[i]._iSeed = AdvanceRndSeed();
-			j = -1;
-		}
-	}
 }
 
 void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)

@@ -14,13 +14,28 @@
 
 namespace devilution {
 
+namespace {
+
 #define PMSG_COUNT 8
 
-static BYTE plr_msg_slot;
+static uint8_t plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
 const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_GOLD };
+
+static void PrintPlrMsg(const Surface &out, int x, int y, int width, char *text, uint16_t style)
+{
+	int length = strlen(text);
+	for (int i = 0; i < length; i++) {
+		if (text[i] == '\n')
+			text[i] = ' ';
+	}
+	WordWrapGameString(text, width);
+	DrawString(out, text, { { x, y }, { width, 0 } }, style, 1, 10);
+}
+
+} // namespace
 
 void plrmsg_delay(bool delay)
 {
@@ -88,17 +103,6 @@ void InitPlrMsg()
 {
 	memset(plr_msgs, 0, sizeof(plr_msgs));
 	plr_msg_slot = 0;
-}
-
-static void PrintPlrMsg(const Surface &out, int x, int y, int width, char *text, uint16_t style)
-{
-	int length = strlen(text);
-	for (int i = 0; i < length; i++) {
-		if (text[i] == '\n')
-			text[i] = ' ';
-	}
-	WordWrapGameString(text, width);
-	DrawString(out, text, { { x, y }, { width, 0 } }, style, 1, 10);
 }
 
 void DrawPlrMsg(const Surface &out)

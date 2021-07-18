@@ -1841,7 +1841,6 @@ void LoadGame(bool firstflag)
 	RedoPlayerVision();
 	ProcessVisionList();
 	missiles_process_charge();
-	ResetPal();
 	NewCursor(CURSOR_HAND);
 	gbProcessPlayers = true;
 

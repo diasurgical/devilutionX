@@ -14,24 +14,51 @@ namespace devilution {
 
 BYTE sgbNetUpdateRate;
 size_t gdwMsgLenTbl[MAX_PLRS];
-static CCritSect sgMemCrit;
-DWORD gdwDeltaBytesSec;
-bool nthread_should_run;
 uint32_t gdwTurnsInTransit;
 uintptr_t glpMsgTbl[MAX_PLRS];
+uint32_t gdwLargestMsgSize;
+uint32_t gdwNormalMsgSize;
+float gfProgressToNextGameTick = 0.0;
+
+namespace {
+
+CCritSect sgMemCrit;
+DWORD gdwDeltaBytesSec;
+bool nthread_should_run;
 SDL_threadID glpNThreadId;
 char sgbSyncCountdown;
 uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
 char sgbPacketCountdown;
 bool sgbThreadIsRunning;
-uint32_t gdwLargestMsgSize;
-uint32_t gdwNormalMsgSize;
 int last_tick;
-float gfProgressToNextGameTick = 0.0;
+SDL_Thread *sghThread = nullptr;
 
-/* data */
-static SDL_Thread *sghThread = nullptr;
+void NthreadHandler()
+{
+	if (!nthread_should_run) {
+		return;
+	}
+
+	while (true) {
+		sgMemCrit.Enter();
+		if (!nthread_should_run) {
+			sgMemCrit.Leave();
+			break;
+		}
+		nthread_send_and_recv_turn(0, 0);
+		int delta = gnTickDelay;
+		if (nthread_recv_turns())
+			delta = last_tick - SDL_GetTicks();
+		sgMemCrit.Leave();
+		if (delta > 0)
+			SDL_Delay(delta);
+		if (!nthread_should_run)
+			return;
+	}
+}
+
+} // namespace
 
 void nthread_terminate_game(const char *pszFcn)
 {
@@ -106,30 +133,6 @@ bool nthread_recv_turns(bool *pfSendAsync)
 		*pfSendAsync = true;
 	last_tick += gnTickDelay;
 	return true;
-}
-
-static void NthreadHandler()
-{
-	if (!nthread_should_run) {
-		return;
-	}
-
-	while (true) {
-		sgMemCrit.Enter();
-		if (!nthread_should_run) {
-			sgMemCrit.Leave();
-			break;
-		}
-		nthread_send_and_recv_turn(0, 0);
-		int delta = gnTickDelay;
-		if (nthread_recv_turns())
-			delta = last_tick - SDL_GetTicks();
-		sgMemCrit.Leave();
-		if (delta > 0)
-			SDL_Delay(delta);
-		if (!nthread_should_run)
-			return;
-	}
 }
 
 void nthread_set_turn_upper_bit()
