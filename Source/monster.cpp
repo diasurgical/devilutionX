@@ -1952,7 +1952,10 @@ void GroupUnity(int i)
 	if (monster.leaderRelation == LeaderRelation::None)
 		return;
 
+	// Someone with a leaderRelation should have a leader ...
 	assert(monster.leader >= 0);
+	// And no unique monster would be a minion of someone else!
+	assert(monster._uniqtype == 0);
 
 	auto &leader = Monsters[monster.leader];
 	if (IsLineNotSolid(monster.position.tile, leader.position.future)) {
@@ -1975,23 +1978,6 @@ void GroupUnity(int i)
 		if (leader._mAi == AI_GARG && (leader._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
 			leader._mFlags &= ~MFLAG_ALLOW_SPECIAL;
 			leader._mmode = MM_SATTACK;
-		}
-		return;
-	}
-
-	if (monster._uniqtype == 0 || (UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) == 0)
-		return;
-	for (int j = 0; j < ActiveMonsterCount; j++) {
-		auto &minion = Monsters[ActiveMonsters[j]];
-		if (minion.leaderRelation != LeaderRelation::Leashed || minion.leader != i)
-			continue;
-		if (monster._msquelch > minion._msquelch) {
-			minion.position.last = monster.position.tile;
-			minion._msquelch = monster._msquelch - 1;
-		}
-		if (minion._mAi == AI_GARG && (minion._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
-			minion._mFlags &= ~MFLAG_ALLOW_SPECIAL;
-			minion._mmode = MM_SATTACK;
 		}
 	}
 }
