@@ -619,7 +619,7 @@ void LoadMonster(LoadHelper *file, MonsterStruct &monster)
 	if (monster.mtalkmsg == TEXT_KING1) // Fix original bad mapping of NONE for monsters
 		monster.mtalkmsg = TEXT_NONE;
 	monster.leader = file->NextLE<uint8_t>();
-	monster.leaderflag = static_cast<MonsterRelation>(file->NextLE<uint8_t>());
+	monster.leaderRelation = static_cast<LeaderRelation>(file->NextLE<uint8_t>());
 	monster.packsize = file->NextLE<uint8_t>();
 	monster.mlid = file->NextLE<int8_t>();
 	if (monster.mlid == Players[MyPlayerId]._plid)
@@ -1275,7 +1275,7 @@ void SaveMonster(SaveHelper *file, MonsterStruct &monster)
 
 	file->WriteLE<int32_t>(monster.mtalkmsg == TEXT_NONE ? 0 : monster.mtalkmsg); // Replicate original bad mapping of none for monsters
 	file->WriteLE<uint8_t>(monster.leader);
-	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderflag));
+	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderRelation));
 	file->WriteLE<uint8_t>(monster.packsize);
 	file->WriteLE<int8_t>(monster.mlid);
 
