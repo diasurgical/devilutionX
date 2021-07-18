@@ -56,6 +56,11 @@ public:
 			ErrSdl();
 	}
 
+	SDL_mutex *get()
+	{
+		return mutex_;
+	}
+
 private:
 	SDL_mutex *mutex_;
 };
