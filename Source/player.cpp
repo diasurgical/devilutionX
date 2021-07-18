@@ -3613,32 +3613,32 @@ void CheckPlrSpell(bool mouseClick)
 		return;
 	}
 
-	if (addflag) {
-		if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
-			Direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
-			sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-			NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, myPlayer._pRSpell, sd, sl);
-		} else if (pcursmonst != -1) {
-			sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-			NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, sl);
-		} else if (pcursplr != -1) {
-			sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-			NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, sl);
-		} else { //145
-			sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-			NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
+	if (!addflag) {
+		if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
+			if (!mouseClick || LastMouseButtonAction != MouseActionType::SpellOutOfMana)
+				myPlayer.Say(HeroSpeech::NotEnoughMana);
+			if (mouseClick)
+				LastMouseButtonAction = MouseActionType::SpellOutOfMana;
 		}
-		if (mouseClick)
-			lastRightMouseButtonAction = MouseActionType::Spell;
 		return;
 	}
 
-	if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-		if (!mouseClick || lastRightMouseButtonAction != MouseActionType::Spell_ComplainedAboutMana)
-			myPlayer.Say(HeroSpeech::NotEnoughMana);
-		if (mouseClick)
-			lastRightMouseButtonAction = MouseActionType::Spell_ComplainedAboutMana;
+	if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
+		Direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
+		NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, myPlayer._pRSpell, sd, sl);
+	} else if (pcursmonst != -1) {
+		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
+		NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, sl);
+	} else if (pcursplr != -1) {
+		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
+		NetSendCmdParam3(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, sl);
+	} else { //145
+		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
+		NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
 	}
+	if (mouseClick)
+		LastMouseButtonAction = MouseActionType::Spell;
 }
 
 void SyncPlrAnim(int pnum)
