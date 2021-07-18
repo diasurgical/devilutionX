@@ -90,16 +90,16 @@ std::optional<CelSprite> pSBkIconCels;
 std::optional<CelSprite> pSpellBkCel;
 std::optional<CelSprite> pSpellCels;
 
-BYTE sgbNextTalkSave;
-BYTE sgbTalkSavePos;
 
-bool panbtns[8];
-char sgszTalkSave[8][80];
-char sgszTalkMsg[MAX_SEND_STR_LEN];
-bool talkButtonsDown[3];
+bool PanelButtons[8];
+int PanelButtonIndex;
+char TalkSave[8][80];
+uint8_t TalkSaveIndex;
+uint8_t NextTalkSave;
+char TalkMessage[MAX_SEND_STR_LEN];
+bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
-bool whisperList[MAX_PLRS];
-int numpanbtns;
+bool WhisperList[MAX_PLRS];
 char panelstr[4][64];
 uint8_t SplTransTbl[256];
 
@@ -388,7 +388,7 @@ void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset,
 
 void SetButtonStateDown(int btnId)
 {
-	panbtns[btnId] = true;
+	PanelButtons[btnId] = true;
 	drawbtnflag = true;
 	panbtndown = true;
 }
@@ -498,35 +498,35 @@ void ResetTalkMsg()
 	uint32_t pmask = 0;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (whisperList[i])
+		if (WhisperList[i])
 			pmask |= 1 << i;
 	}
-	NetSendCmdString(pmask, sgszTalkMsg);
+	NetSendCmdString(pmask, TalkMessage);
 }
 
 void ControlPressEnter()
 {
-	if (sgszTalkMsg[0] != 0) {
+	if (TalkMessage[0] != 0) {
 		ResetTalkMsg();
-		int i = 0;
+		uint8_t i = 0;
 		for (; i < 8; i++) {
-			if (strcmp(sgszTalkSave[i], sgszTalkMsg) == 0)
+			if (strcmp(TalkSave[i], TalkMessage) == 0)
 				break;
 		}
 		if (i >= 8) {
-			strcpy(sgszTalkSave[sgbNextTalkSave], sgszTalkMsg);
-			sgbNextTalkSave++;
-			sgbNextTalkSave &= 7;
+			strcpy(TalkSave[NextTalkSave], TalkMessage);
+			NextTalkSave++;
+			NextTalkSave &= 7;
 		} else {
-			BYTE talkSave = sgbNextTalkSave - 1;
+			uint8_t talkSave = NextTalkSave - 1;
 			talkSave &= 7;
 			if (i != talkSave) {
-				strcpy(sgszTalkSave[i], sgszTalkSave[talkSave]);
-				strcpy(sgszTalkSave[talkSave], sgszTalkMsg);
+				strcpy(TalkSave[i], TalkSave[talkSave]);
+				strcpy(TalkSave[talkSave], TalkMessage);
 			}
 		}
-		sgszTalkMsg[0] = '\0';
-		sgbTalkSavePos = sgbNextTalkSave;
+		TalkMessage[0] = '\0';
+		TalkSaveIndex = NextTalkSave;
 	}
 	control_reset_talk();
 }
@@ -534,9 +534,9 @@ void ControlPressEnter()
 void ControlUpDown(int v)
 {
 	for (int i = 0; i < 8; i++) {
-		sgbTalkSavePos = (v + sgbTalkSavePos) & 7;
-		if (sgszTalkSave[sgbTalkSavePos][0] != 0) {
-			strcpy(sgszTalkMsg, sgszTalkSave[sgbTalkSavePos]);
+		TalkSaveIndex = (v + TalkSaveIndex) & 7;
+		if (TalkSave[TalkSaveIndex][0] != 0) {
+			strcpy(TalkMessage, TalkSave[TalkSaveIndex]);
 			return;
 		}
 	}
@@ -856,22 +856,22 @@ void InitControlPan()
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
-		sgszTalkMsg[0] = '\0';
-		for (bool &whisper : whisperList)
+		TalkMessage[0] = '\0';
+		for (bool &whisper : WhisperList)
 			whisper = true;
-		for (bool &talkButtonDown : talkButtonsDown)
+		for (bool &talkButtonDown : TalkButtonsDown)
 			talkButtonDown = false;
 	}
 	panelflag = false;
 	lvlbtndown = false;
 	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
-	for (bool &panbtn : panbtns)
+	for (bool &panbtn : PanelButtons)
 		panbtn = false;
 	panbtndown = false;
 	if (!gbIsMultiplayer)
-		numpanbtns = 6;
+		PanelButtonIndex = 6;
 	else
-		numpanbtns = 8;
+		PanelButtonIndex = 8;
 	pChrButtons = LoadCel("Data\\CharBut.CEL", 41);
 	for (bool &buttonEnabled : chrbtn)
 		buttonEnabled = false;
@@ -927,17 +927,17 @@ void DrawCtrlPan(const Surface &out)
 void DrawCtrlBtns(const Surface &out)
 {
 	for (int i = 0; i < 6; i++) {
-		if (!panbtns[i])
+		if (!PanelButtons[i])
 			DrawPanelBox(out, { PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20 }, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
 		else
 			CelDrawTo(out, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 }, *pPanelButtons, i + 1);
 	}
-	if (numpanbtns == 8) {
-		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, panbtns[6] ? 2 : 1);
+	if (PanelButtonIndex == 8) {
+		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 2 : 1);
 		if (gbFriendlyMode)
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, panbtns[7] ? 4 : 3);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 4 : 3);
 		else
-			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, panbtns[7] ? 6 : 5);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 6 : 5);
 	}
 }
 
@@ -1004,12 +1004,12 @@ void DoSpeedBook()
  */
 void DoPanBtn()
 {
-	for (int i = 0; i < numpanbtns; i++) {
+	for (int i = 0; i < PanelButtonIndex; i++) {
 		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
 		int y = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= x) {
 			if (MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= y) {
-				panbtns[i] = true;
+				PanelButtons[i] = true;
 				drawbtnflag = true;
 				panbtndown = true;
 			}
@@ -1068,7 +1068,7 @@ void CheckPanelInfo()
 {
 	panelflag = false;
 	ClearPanel();
-	for (int i = 0; i < numpanbtns; i++) {
+	for (int i = 0; i < PanelButtonIndex; i++) {
 		int xend = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= yend) {
@@ -1168,11 +1168,11 @@ void CheckBtnUp()
 	panbtndown = false;
 
 	for (int i = 0; i < 8; i++) {
-		if (!panbtns[i]) {
+		if (!PanelButtons[i]) {
 			continue;
 		}
 
-		panbtns[i] = false;
+		PanelButtons[i] = false;
 
 		if (MousePosition.x < PanBtnPos[i].x + PANEL_LEFT
 		    || MousePosition.x > PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w
@@ -1838,7 +1838,7 @@ void DrawTalkPan(const Surface &out)
 		DrawPanelBox(out, { 180, sgbPlrTalkTbl + i + 70, i + 284, 1 }, { PANEL_X + 180, i + PANEL_Y + 54 });
 	}
 	DrawPanelBox(out, { 170, sgbPlrTalkTbl + 80, 310, 55 }, { PANEL_X + 170, PANEL_Y + 64 });
-	char *msg = sgszTalkMsg;
+	char *msg = TalkMessage;
 
 	int x = PANEL_LEFT + 200;
 	int y = PANEL_Y + 22;
@@ -1854,15 +1854,15 @@ void DrawTalkPan(const Surface &out)
 
 		uint16_t color = UIS_RED;
 		const Point talkPanPosition { 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y };
-		if (whisperList[i]) {
+		if (WhisperList[i]) {
 			color = UIS_GOLD;
-			if (talkButtonsDown[talkBtn]) {
+			if (TalkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
 				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 2 : 1;
-			if (talkButtonsDown[talkBtn])
+			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
 			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
 		}
@@ -1889,11 +1889,11 @@ bool control_check_talk_btn()
 	if (MousePosition.y > 123 + PANEL_TOP)
 		return false;
 
-	for (bool &talkButtonDown : talkButtonsDown) {
+	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
 
-	talkButtonsDown[(MousePosition.y - (69 + PANEL_TOP)) / 18] = true;
+	TalkButtonsDown[(MousePosition.y - (69 + PANEL_TOP)) / 18] = true;
 
 	return true;
 }
@@ -1903,7 +1903,7 @@ void control_release_talk_btn()
 	if (!talkflag)
 		return;
 
-	for (bool &talkButtonDown : talkButtonsDown)
+	for (bool &talkButtonDown : TalkButtonsDown)
 		talkButtonDown = false;
 
 	if (MousePosition.x < 172 + PANEL_LEFT || MousePosition.y < 69 + PANEL_TOP || MousePosition.x > 233 + PANEL_LEFT || MousePosition.y > 123 + PANEL_TOP)
@@ -1917,7 +1917,7 @@ void control_release_talk_btn()
 			off--;
 	}
 	if (p <= MAX_PLRS)
-		whisperList[p - 1] = !whisperList[p - 1];
+		WhisperList[p - 1] = !WhisperList[p - 1];
 }
 
 void control_type_message()
@@ -1926,13 +1926,13 @@ void control_type_message()
 		return;
 
 	talkflag = true;
-	sgszTalkMsg[0] = '\0';
-	for (bool &talkButtonDown : talkButtonsDown) {
+	TalkMessage[0] = '\0';
+	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
 	sgbPlrTalkTbl = PANEL_HEIGHT + 16;
 	force_redraw = 255;
-	sgbTalkSavePos = sgbNextTalkSave;
+	TalkSaveIndex = NextTalkSave;
 }
 
 void control_reset_talk()
@@ -1953,10 +1953,10 @@ bool control_talk_last_key(int vkey)
 	if (vkey >= 0 && vkey < DVL_VK_SPACE)
 		return false;
 
-	std::size_t result = strlen(sgszTalkMsg);
+	std::size_t result = strlen(TalkMessage);
 	if (result < 78) {
-		sgszTalkMsg[result] = vkey;
-		sgszTalkMsg[result + 1] = '\0';
+		TalkMessage[result] = vkey;
+		TalkMessage[result + 1] = '\0';
 	}
 	return true;
 }
@@ -1973,9 +1973,9 @@ bool control_presskeys(int vkey)
 	} else if (vkey == DVL_VK_RETURN) {
 		ControlPressEnter();
 	} else if (vkey == DVL_VK_BACK) {
-		std::size_t len = strlen(sgszTalkMsg);
+		std::size_t len = strlen(TalkMessage);
 		if (len > 0)
-			sgszTalkMsg[len - 1] = '\0';
+			TalkMessage[len - 1] = '\0';
 	} else if (vkey == DVL_VK_DOWN) {
 		ControlUpDown(1);
 	} else if (vkey == DVL_VK_UP) {
