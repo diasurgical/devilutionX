@@ -1964,29 +1964,30 @@ void DeltaAddItem(int ii)
 
 	pD = sgLevels[currlevel].item;
 	for (int i = 0; i < MAXITEMS; i++, pD++) {
-		if (pD->bCmd == 0xFF) {
-			sgbDeltaChanged = true;
-			pD->bCmd = CMD_STAND;
-			pD->x = Items[ii].position.x;
-			pD->y = Items[ii].position.y;
-			pD->wIndx = Items[ii].IDidx;
-			pD->wCI = Items[ii]._iCreateInfo;
-			pD->dwSeed = Items[ii]._iSeed;
-			pD->bId = Items[ii]._iIdentified ? 1 : 0;
-			pD->bDur = Items[ii]._iDurability;
-			pD->bMDur = Items[ii]._iMaxDur;
-			pD->bCh = Items[ii]._iCharges;
-			pD->bMCh = Items[ii]._iMaxCharges;
-			pD->wValue = Items[ii]._ivalue;
-			pD->wToHit = Items[ii]._iPLToHit;
-			pD->wMaxDam = Items[ii]._iMaxDam;
-			pD->bMinStr = Items[ii]._iMinStr;
-			pD->bMinMag = Items[ii]._iMinMag;
-			pD->bMinDex = Items[ii]._iMinDex;
-			pD->bAC = Items[ii]._iAC;
-			pD->dwBuff = Items[ii].dwBuff;
-			return;
-		}
+		if (pD->bCmd != 0xFF)
+			continue;
+
+		sgbDeltaChanged = true;
+		pD->bCmd = CMD_STAND;
+		pD->x = Items[ii].position.x;
+		pD->y = Items[ii].position.y;
+		pD->wIndx = Items[ii].IDidx;
+		pD->wCI = Items[ii]._iCreateInfo;
+		pD->dwSeed = Items[ii]._iSeed;
+		pD->bId = Items[ii]._iIdentified ? 1 : 0;
+		pD->bDur = Items[ii]._iDurability;
+		pD->bMDur = Items[ii]._iMaxDur;
+		pD->bCh = Items[ii]._iCharges;
+		pD->bMCh = Items[ii]._iMaxCharges;
+		pD->wValue = Items[ii]._ivalue;
+		pD->wToHit = Items[ii]._iPLToHit;
+		pD->wMaxDam = Items[ii]._iMaxDam;
+		pD->bMinStr = Items[ii]._iMinStr;
+		pD->bMinMag = Items[ii]._iMinMag;
+		pD->bMinDex = Items[ii]._iMinDex;
+		pD->bAC = Items[ii]._iAC;
+		pD->dwBuff = Items[ii].dwBuff;
+		return;
 	}
 }
 
@@ -2003,6 +2004,30 @@ void DeltaSaveLevel()
 	DeltaLeaveSync(currlevel);
 }
 
+namespace {
+
+Point GetItemPosition(Point position)
+{
+	if (CanPut(position))
+		return position;
+
+	for (int k = 1; k < 50; k++) {
+		for (int j = -k; j <= k; j++) {
+			int yy = position.y + j;
+			for (int l = -k; l <= k; l++) {
+				int xx = position.x + l;
+				if (CanPut({ xx, yy }))
+					return { xx, yy };
+
+			}
+		}
+	}
+
+	return position;
+}
+
+} //namespace
+
 void DeltaLoadLevel()
 {
 	if (!gbIsMultiplayer)
@@ -2011,117 +2036,103 @@ void DeltaLoadLevel()
 	deltaload = true;
 	if (currlevel != 0) {
 		for (int i = 0; i < ActiveMonsterCount; i++) {
-			if (sgLevels[currlevel].monster[i]._mx != 0xFF) {
+			if (sgLevels[currlevel].monster[i]._mx == 0xFF)
+				continue;
+
+			M_ClearSquares(i);
+			int x = sgLevels[currlevel].monster[i]._mx;
+			int y = sgLevels[currlevel].monster[i]._my;
+			auto &monster = Monsters[i];
+			monster.position.tile = { x, y };
+			monster.position.old = { x, y };
+			monster.position.future = { x, y };
+			if (sgLevels[currlevel].monster[i]._mhitpoints != -1)
+				monster._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
+			if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
 				M_ClearSquares(i);
-				int x = sgLevels[currlevel].monster[i]._mx;
-				int y = sgLevels[currlevel].monster[i]._my;
-				auto &monster = Monsters[i];
-				monster.position.tile = { x, y };
-				monster.position.old = { x, y };
-				monster.position.future = { x, y };
-				if (sgLevels[currlevel].monster[i]._mhitpoints != -1)
-					monster._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
-				if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
-					M_ClearSquares(i);
-					if (monster._mAi != AI_DIABLO) {
-						if (monster._uniqtype == 0) {
-							assert(monster.MType != nullptr);
-							AddDead(monster.position.tile, monster.MType->mdeadval, monster._mdir);
-						} else {
-							AddDead(monster.position.tile, monster._udeadval, monster._mdir);
-						}
-					}
-					monster._mDelFlag = true;
-					M_UpdateLeader(i);
-				} else {
-					decode_enemy(monster, sgLevels[currlevel].monster[i]._menemy);
-					if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
-						dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
-					if (i < MAX_PLRS) {
-						GolumAi(i);
-						monster._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
+				if (monster._mAi != AI_DIABLO) {
+					if (monster._uniqtype == 0) {
+						assert(monster.MType != nullptr);
+						AddDead(monster.position.tile, monster.MType->mdeadval, monster._mdir);
 					} else {
-						M_StartStand(monster, monster._mdir);
+						AddDead(monster.position.tile, monster._udeadval, monster._mdir);
 					}
-					monster._msquelch = sgLevels[currlevel].monster[i]._mactive;
 				}
+				monster._mDelFlag = true;
+				M_UpdateLeader(i);
+			} else {
+				decode_enemy(monster, sgLevels[currlevel].monster[i]._menemy);
+				if (monster.position.tile != Point { 0, 0 } && monster.position.tile != GolemHoldingCell)
+					dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
+				if (i < MAX_PLRS) {
+					GolumAi(i);
+					monster._mFlags |= (MFLAG_TARGETS_MONSTER | MFLAG_GOLEM);
+				} else {
+					M_StartStand(monster, monster._mdir);
+				}
+				monster._msquelch = sgLevels[currlevel].monster[i]._mactive;
 			}
 		}
 		memcpy(AutomapView, &sgLocals[currlevel], sizeof(AutomapView));
 	}
 
 	for (int i = 0; i < MAXITEMS; i++) {
-		if (sgLevels[currlevel].item[i].bCmd != 0xFF) {
-			if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
-				int ii = FindGetItem(
+		if (sgLevels[currlevel].item[i].bCmd != 0xFF)
+			continue;
+
+		if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
+			int ii = FindGetItem(
+			    sgLevels[currlevel].item[i].wIndx,
+			    sgLevels[currlevel].item[i].wCI,
+			    sgLevels[currlevel].item[i].dwSeed);
+			if (ii != -1) {
+				if (dItem[Items[ii].position.x][Items[ii].position.y] == ii + 1)
+					dItem[Items[ii].position.x][Items[ii].position.y] = 0;
+				DeleteItem(ii, i);
+			}
+		}
+		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
+			int ii = AllocateItem();
+
+			if (sgLevels[currlevel].item[i].wIndx == IDI_EAR) {
+				RecreateEar(
+				    ii,
+				    sgLevels[currlevel].item[i].wCI,
+				    sgLevels[currlevel].item[i].dwSeed,
+				    sgLevels[currlevel].item[i].bId,
+				    sgLevels[currlevel].item[i].bDur,
+				    sgLevels[currlevel].item[i].bMDur,
+				    sgLevels[currlevel].item[i].bCh,
+				    sgLevels[currlevel].item[i].bMCh,
+				    sgLevels[currlevel].item[i].wValue,
+				    sgLevels[currlevel].item[i].dwBuff);
+			} else {
+				RecreateItem(
+				    ii,
 				    sgLevels[currlevel].item[i].wIndx,
 				    sgLevels[currlevel].item[i].wCI,
-				    sgLevels[currlevel].item[i].dwSeed);
-				if (ii != -1) {
-					if (dItem[Items[ii].position.x][Items[ii].position.y] == ii + 1)
-						dItem[Items[ii].position.x][Items[ii].position.y] = 0;
-					DeleteItem(ii, i);
-				}
+				    sgLevels[currlevel].item[i].dwSeed,
+				    sgLevels[currlevel].item[i].wValue,
+				    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
+				if (sgLevels[currlevel].item[i].bId != 0)
+					Items[ii]._iIdentified = true;
+				Items[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
+				Items[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
+				Items[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
+				Items[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
+				Items[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
+				Items[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
+				Items[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
+				Items[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
+				Items[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
+				Items[ii]._iAC = sgLevels[currlevel].item[i].bAC;
+				Items[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
 			}
-			if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
-				int ii = AllocateItem();
-
-				if (sgLevels[currlevel].item[i].wIndx == IDI_EAR) {
-					RecreateEar(
-					    ii,
-					    sgLevels[currlevel].item[i].wCI,
-					    sgLevels[currlevel].item[i].dwSeed,
-					    sgLevels[currlevel].item[i].bId,
-					    sgLevels[currlevel].item[i].bDur,
-					    sgLevels[currlevel].item[i].bMDur,
-					    sgLevels[currlevel].item[i].bCh,
-					    sgLevels[currlevel].item[i].bMCh,
-					    sgLevels[currlevel].item[i].wValue,
-					    sgLevels[currlevel].item[i].dwBuff);
-				} else {
-					RecreateItem(
-					    ii,
-					    sgLevels[currlevel].item[i].wIndx,
-					    sgLevels[currlevel].item[i].wCI,
-					    sgLevels[currlevel].item[i].dwSeed,
-					    sgLevels[currlevel].item[i].wValue,
-					    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
-					if (sgLevels[currlevel].item[i].bId != 0)
-						Items[ii]._iIdentified = true;
-					Items[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
-					Items[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
-					Items[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
-					Items[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
-					Items[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
-					Items[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
-					Items[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
-					Items[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
-					Items[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
-					Items[ii]._iAC = sgLevels[currlevel].item[i].bAC;
-					Items[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
-				}
-				int x = sgLevels[currlevel].item[i].x;
-				int y = sgLevels[currlevel].item[i].y;
-				if (!CanPut({ x, y })) {
-					bool done = false;
-					for (int k = 1; k < 50 && !done; k++) {
-						for (int j = -k; j <= k && !done; j++) {
-							int yy = y + j;
-							for (int l = -k; l <= k && !done; l++) {
-								int xx = x + l;
-								if (CanPut({ xx, yy })) {
-									done = true;
-									x = xx;
-									y = yy;
-								}
-							}
-						}
-					}
-				}
-				Items[ii].position = { x, y };
-				dItem[Items[ii].position.x][Items[ii].position.y] = ii + 1;
-				RespawnItem(&Items[ii], false);
-			}
+			int x = sgLevels[currlevel].item[i].x;
+			int y = sgLevels[currlevel].item[i].y;
+			Items[ii].position = GetItemPosition({ x, y });
+			dItem[Items[ii].position.x][Items[ii].position.y] = ii + 1;
+			RespawnItem(&Items[ii], false);
 		}
 	}
 
