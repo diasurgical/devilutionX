@@ -220,7 +220,7 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 	monster.mArmorClass = monsterType.MData->mArmorClass;
 	monster.mMagicRes = monsterType.MData->mMagicRes;
 	monster.leader = 0;
-	monster.leaderflag = MonsterRelation::Individual;
+	monster.leaderRelation = LeaderRelation::None;
 	monster._mFlags = monsterType.MData->mFlags;
 	monster.mtalkmsg = TEXT_NONE;
 
@@ -361,7 +361,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 
 				if ((leaderAttributes & 2) != 0) {
 					minion.leader = leaderId;
-					minion.leaderflag = MonsterRelation::Minion;
+					minion.leaderRelation = LeaderRelation::Leashed;
 					minion._mAi = leader._mAi;
 				}
 
@@ -1949,25 +1949,25 @@ void GroupUnity(int i)
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (monster.leaderflag == MonsterRelation::Individual)
+	if (monster.leaderRelation == LeaderRelation::None)
 		return;
 
 	assert(monster.leader >= 0);
 
 	auto &leader = Monsters[monster.leader];
 	if (IsLineNotSolid(monster.position.tile, leader.position.future)) {
-		if (monster.leaderflag == MonsterRelation::Leader
+		if (monster.leaderRelation == LeaderRelation::Separated
 		    && monster.position.tile.WalkingDistance(leader.position.future) < 4) {
 			// Reunite the separated monster with the pack
 			leader.packsize++;
-			monster.leaderflag = MonsterRelation::Minion;
+			monster.leaderRelation = LeaderRelation::Leashed;
 		}
-	} else if (monster.leaderflag == MonsterRelation::Minion) {
+	} else if (monster.leaderRelation == LeaderRelation::Leashed) {
 		leader.packsize--;
-		monster.leaderflag = MonsterRelation::Leader;
+		monster.leaderRelation = LeaderRelation::Separated;
 	}
 
-	if (monster.leaderflag == MonsterRelation::Minion) {
+	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		if (monster._msquelch > leader._msquelch) {
 			leader.position.last = monster.position.tile;
 			leader._msquelch = monster._msquelch - 1;
@@ -1983,7 +1983,7 @@ void GroupUnity(int i)
 		return;
 	for (int j = 0; j < ActiveMonsterCount; j++) {
 		auto &minion = Monsters[ActiveMonsters[j]];
-		if (minion.leaderflag != MonsterRelation::Minion || minion.leader != i)
+		if (minion.leaderRelation != LeaderRelation::Leashed || minion.leader != i)
 			continue;
 		if (monster._msquelch > minion._msquelch) {
 			minion.position.last = monster.position.tile;
@@ -2497,9 +2497,9 @@ void ScavengerAi(int i)
 	if (monster._mmode != MM_STAND)
 		return;
 	if (monster._mhitpoints < (monster._mmaxhp / 2) && monster._mgoal != MGOAL_HEALING) {
-		if (monster.leaderflag != MonsterRelation::Individual) {
+		if (monster.leaderRelation != LeaderRelation::None) {
 			Monsters[monster.leader].packsize--;
-			monster.leaderflag = MonsterRelation::Individual;
+			monster.leaderRelation = LeaderRelation::None;
 		}
 		monster._mgoal = MGOAL_HEALING;
 		monster._mgoalvar3 = 10;
@@ -4227,11 +4227,11 @@ void M_UpdateLeader(int i)
 
 	for (int j = 0; j < ActiveMonsterCount; j++) {
 		auto &minion = Monsters[ActiveMonsters[j]];
-		if (minion.leaderflag == MonsterRelation::Minion && minion.leader == i)
-			minion.leaderflag = MonsterRelation::Individual;
+		if (minion.leaderRelation == LeaderRelation::Leashed && minion.leader == i)
+			minion.leaderRelation = LeaderRelation::None;
 	}
 
-	if (monster.leaderflag == MonsterRelation::Minion) {
+	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		Monsters[monster.leader].packsize--;
 	}
 }
@@ -4584,7 +4584,7 @@ bool DirOK(int i, Direction mdir)
 	} else if (mdir == DIR_S)
 		if (IsTileSolid(position + DIR_SW) || IsTileSolid(position + DIR_SE))
 			return false;
-	if (monster.leaderflag == MonsterRelation::Minion) {
+	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
 	}
 	if (monster._uniqtype == 0 || (UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) == 0)
@@ -4599,7 +4599,7 @@ bool DirOK(int i, Direction mdir)
 				continue;
 
 			auto &minion = Monsters[(mi < 0) ? -(mi + 1) : (mi - 1)];
-			if (minion.leaderflag == MonsterRelation::Minion
+			if (minion.leaderRelation == LeaderRelation::Leashed
 			    && minion.leader == i
 			    && minion.position.future == Point { x, y }) {
 				mcount++;
