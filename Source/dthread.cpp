@@ -95,11 +95,12 @@ void DThreadCleanup()
 	if (!DthreadRunning)
 		return;
 
-	DthreadMutex->lock();
-	DthreadRunning = false;
-	InfoList.clear();
-	WorkToDo->signal();
-	DthreadMutex->unlock();
+	{
+		std::lock_guard<SdlMutex> lock(*DthreadMutex);
+		DthreadRunning = false;
+		InfoList.clear();
+		WorkToDo->signal();
+	}
 
 	if (sghThread != nullptr && glpDThreadId != SDL_GetThreadID(nullptr)) {
 		SDL_WaitThread(sghThread, nullptr);
