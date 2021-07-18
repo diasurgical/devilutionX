@@ -103,7 +103,7 @@ PATHNODE *path_new_step()
 /** A stack for recursively searching nodes */
 PATHNODE *pnode_tblptr[MAXPATHNODES];
 /** size of the pnode_tblptr stack */
-int gdwCurPathStep;
+uint32_t gdwCurPathStep;
 /**
  * @brief push pPath onto the pnode_tblptr stack
  */
@@ -120,7 +120,6 @@ void path_push_active_step(PATHNODE *pPath)
 PATHNODE *path_pop_active_step()
 {
 	gdwCurPathStep--;
-	assert(gdwCurPathStep >= 0);
 	return pnode_tblptr[gdwCurPathStep];
 }
 
