@@ -267,7 +267,7 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 	}
 }
 
-bool MonstPlace(int xp, int yp)
+bool CanPlaceMonster(int xp, int yp)
 {
 	char f;
 
@@ -334,7 +334,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 			do {
 				xp = GenerateRnd(80) + 16;
 				yp = GenerateRnd(80) + 16;
-			} while (!MonstPlace(xp, yp));
+			} while (!CanPlaceMonster(xp, yp));
 		}
 		int x1 = xp;
 		int y1 = yp;
@@ -345,7 +345,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 
 		int j = 0;
 		for (int try2 = 0; j < num && try2 < 100; xp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
-			if (!MonstPlace(xp, yp)
+			if (!CanPlaceMonster(xp, yp)
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
 			    || ((leaderAttributes & 2) != 0 && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
 				try2++;
@@ -412,7 +412,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		int count2 = 0;
 		for (int x = xp - 3; x < xp + 3; x++) {
 			for (int y = yp - 3; y < yp + 3; y++) {
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && MonstPlace(x, y)) {
+				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && CanPlaceMonster(x, y)) {
 					count2++;
 				}
 			}
@@ -425,7 +425,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			}
 		}
 
-		if (MonstPlace(xp, yp)) {
+		if (CanPlaceMonster(xp, yp)) {
 			break;
 		}
 	}
