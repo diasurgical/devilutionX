@@ -250,6 +250,7 @@ bool LeftMouseCmd(bool bShift)
 		if (pcursitem != -1 && pcurs == CURSOR_HAND && !bShift) {
 			NetSendCmdLocParam1(true, invflag ? CMD_GOTOGETITEM : CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
 		} else if (pcursobj != -1 && (!objectIsDisabled(pcursobj)) && (!bShift || (bNear && Objects[pcursobj]._oBreak == 1))) {
+			LastMouseButtonAction = MouseActionType::OperateObject;
 			NetSendCmdLocParam1(true, pcurs == CURSOR_DISARM ? CMD_DISARMXY : CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
 		} else if (myPlayer.UsesRangedWeapon()) {
 			if (bShift) {

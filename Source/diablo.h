@@ -50,6 +50,7 @@ enum class MouseActionType : int {
 	Attack,
 	AttackMonsterTarget,
 	AttackPlayerTarget,
+	OperateObject,
 	Other,
 };
 
