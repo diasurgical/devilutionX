@@ -4203,7 +4203,7 @@ void M_SyncStartKill(int i, Point position, int pnum)
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (monster._mhitpoints > 0 || monster._mmode == MM_DEATH) {
+	if (monster._mhitpoints == 0 || monster._mmode == MM_DEATH) {
 		return;
 	}
 
