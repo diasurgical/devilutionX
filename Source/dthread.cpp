@@ -4,12 +4,11 @@
  * Implementation of functions for updating game state from network commands.
  */
 
-#include <atomic>
 #include <list>
 #include <mutex>
 
 #include "nthread.h"
-#include "utils/sdl_mutex.h"
+#include "utils/sdl_cond.h"
 #include "utils/thread.h"
 
 namespace devilution {
@@ -31,32 +30,30 @@ struct DThreadPkt {
 
 namespace {
 
-SdlMutex DthreadMutex;
+std::optional<SdlMutex> DthreadMutex;
 SDL_threadID glpDThreadId;
 std::list<DThreadPkt> InfoList;
-std::atomic_bool dthread_running;
-event_emul *sghWorkToDoEvent;
+bool DthreadRunning;
+std::optional<SdlCond> WorkToDo;
 
 /* rdata */
 SDL_Thread *sghThread = nullptr;
 
 void DthreadHandler()
 {
-	while (dthread_running) {
-		if (InfoList.empty() && WaitForEvent(sghWorkToDoEvent) == -1)
-			app_fatal("dthread4:\n%s", SDL_GetError());
+	std::lock_guard<SdlMutex> lock(*DthreadMutex);
+	while (true) {
+		while (!InfoList.empty()) {
+			DThreadPkt pkt = std::move(InfoList.front());
+			InfoList.pop_front();
 
-		DthreadMutex.lock();
-		if (InfoList.empty()) {
-			ResetEvent(sghWorkToDoEvent);
-			DthreadMutex.unlock();
-			continue;
+			DthreadMutex->unlock();
+			multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
+			DthreadMutex->lock();
 		}
-		DThreadPkt pkt = std::move(InfoList.front());
-		InfoList.pop_front();
-		DthreadMutex.unlock();
-
-		multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
+		if (!DthreadRunning)
+			return;
+		WorkToDo->wait(*DthreadMutex);
 	}
 }
 
@@ -64,7 +61,7 @@ void DthreadHandler()
 
 void dthread_remove_player(uint8_t pnum)
 {
-	std::lock_guard<SdlMutex> lock(DthreadMutex);
+	std::lock_guard<SdlMutex> lock(*DthreadMutex);
 	InfoList.remove_if([&](auto &pkt) {
 		return pkt.pnum == pnum;
 	});
@@ -77,9 +74,9 @@ void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uin
 
 	DThreadPkt pkt { pnum, cmd, std::move(data), len };
 
-	std::lock_guard<SdlMutex> lock(DthreadMutex);
+	std::lock_guard<SdlMutex> lock(*DthreadMutex);
 	InfoList.push_back(std::move(pkt));
-	SetEvent(sghWorkToDoEvent);
+	WorkToDo->signal();
 }
 
 void dthread_start()
@@ -87,26 +84,30 @@ void dthread_start()
 	if (!gbIsMultiplayer)
 		return;
 
-	sghWorkToDoEvent = StartEvent();
-	dthread_running = true;
+	DthreadRunning = true;
+	DthreadMutex.emplace();
+	WorkToDo.emplace();
 	sghThread = CreateThread(DthreadHandler, &glpDThreadId);
 }
 
 void DThreadCleanup()
 {
-	if (sghWorkToDoEvent == nullptr)
+	if (!DthreadRunning)
 		return;
 
-	dthread_running = false;
-	SetEvent(sghWorkToDoEvent);
+	DthreadMutex->lock();
+	DthreadRunning = false;
+	InfoList.clear();
+	WorkToDo->signal();
+	DthreadMutex->unlock();
+
 	if (sghThread != nullptr && glpDThreadId != SDL_GetThreadID(nullptr)) {
 		SDL_WaitThread(sghThread, nullptr);
 		sghThread = nullptr;
 	}
-	EndEvent(sghWorkToDoEvent);
-	sghWorkToDoEvent = nullptr;
 
-	InfoList.clear();
+	DthreadMutex = std::nullopt;
+	WorkToDo = std::nullopt;
 }
 
 } // namespace devilution
