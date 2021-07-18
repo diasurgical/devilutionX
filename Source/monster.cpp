@@ -1949,14 +1949,13 @@ void GroupUnity(int i)
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 
-	if (monster.leaderflag == MonsterRelation::Individual) {
-		return;
-	}
-
-	if (monster.leader != 0) {
-		auto &leader = Monsters[monster.leader];
-		if (IsLineNotSolid(monster.position.tile, leader.position.future)) {
-			if (monster.leaderflag == MonsterRelation::Leader && monster.position.tile.WalkingDistance(leader.position.future) < 4) {
+	auto &leader = Monsters[monster.leader];
+	if (monster.leaderflag != MonsterRelation::Individual) {
+		bool clear = IsLineNotSolid(monster.position.tile, leader.position.future);
+		if (clear || monster.leaderflag != MonsterRelation::Minion) {
+			if (clear
+			    && monster.leaderflag == MonsterRelation::Leader
+			    && monster.position.tile.WalkingDistance(leader.position.future) < 4) {
 				leader.packsize++;
 				monster.leaderflag = MonsterRelation::Minion;
 			}
@@ -1964,34 +1963,35 @@ void GroupUnity(int i)
 			leader.packsize--;
 			monster.leaderflag = MonsterRelation::Leader;
 		}
-
-		if (monster.leaderflag == MonsterRelation::Minion) {
-			if (monster._msquelch > leader._msquelch) {
-				leader.position.last = monster.position.tile;
-				leader._msquelch = monster._msquelch - 1;
-			}
-		}
 	}
 
-	if (monster._mAi == AI_GARG && (monster._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
-		if (monster.leaderflag == MonsterRelation::Minion || monster.packsize > 0) {
-			monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
-			monster._mmode = MM_SATTACK;
+	if (monster.leaderflag == MonsterRelation::Minion) {
+		if (monster._msquelch > leader._msquelch) {
+			leader.position.last = monster.position.tile;
+			leader._msquelch = monster._msquelch - 1;
 		}
-	}
-
-	if (monster.leaderflag == MonsterRelation::Leader && monster._uniqtype != 0) {
-		if ((UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) == 0) {
-			return;
-		}
-		for (int j = 0; j < ActiveMonsterCount; j++) {
-			auto &minion = Monsters[ActiveMonsters[j]];
-			if (minion.leaderflag != MonsterRelation::Minion || minion.leader != i) {
-				continue;
+		if (leader._mAi == AI_GARG) {
+			if ((leader._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
+				leader._mFlags &= ~MFLAG_ALLOW_SPECIAL;
+				leader._mmode = MM_SATTACK;
 			}
-			if (monster._msquelch > minion._msquelch) {
-				minion.position.last = monster.position.tile;
-				minion._msquelch = monster._msquelch - 1;
+		}
+	} else if (monster._uniqtype != 0) {
+		if ((UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) != 0) {
+			for (int j = 0; j < ActiveMonsterCount; j++) {
+				auto &minion = Monsters[ActiveMonsters[j]];
+				if (minion.leaderflag == MonsterRelation::Minion && minion.leader == i) {
+					if (monster._msquelch > minion._msquelch) {
+						minion.position.last = monster.position.tile;
+						minion._msquelch = monster._msquelch - 1;
+					}
+					if (minion._mAi == AI_GARG) {
+						if ((minion._mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
+							minion._mFlags &= ~MFLAG_ALLOW_SPECIAL;
+							minion._mmode = MM_SATTACK;
+						}
+					}
+				}
 			}
 		}
 	}
