@@ -207,7 +207,7 @@ void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
 	}
 }
 
-void SearchAutomapItem(const Surface &out)
+void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 {
 	auto &myPlayer = Players[MyPlayerId];
 	Point tile = myPlayer.position.tile;
@@ -234,8 +234,8 @@ void SearchAutomapItem(const Surface &out)
 			int py = j - 2 * AutomapOffset.deltaY - ViewY;
 
 			Point screen = {
-				(ScrollInfo.offset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-				(ScrollInfo.offset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+				(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
+				(myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
 			};
 
 			if (CanPanelsCoverView()) {
@@ -253,7 +253,7 @@ void SearchAutomapItem(const Surface &out)
 /**
  * @brief Renders an arrow on the automap, centered on and facing the direction of the player.
  */
-void DrawAutomapPlr(const Surface &out, int playerId)
+void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int playerId)
 {
 	int playerColor = MapColorsPlayer + (8 * playerId) % 128;
 
@@ -270,9 +270,13 @@ void DrawAutomapPlr(const Surface &out, int playerId)
 	int px = tile.x - 2 * AutomapOffset.deltaX - ViewX;
 	int py = tile.y - 2 * AutomapOffset.deltaY - ViewY;
 
+	Displacement playerOffset = player.position.offset;
+	if (player.IsWalking())
+		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
+
 	Point base = {
-		(player.position.offset.deltaX * AutoMapScale / 100 / 2) + (ScrollInfo.offset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-		(player.position.offset.deltaY * AutoMapScale / 100 / 2) + (ScrollInfo.offset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+		(playerOffset.deltaX * AutoMapScale / 100 / 2) + (myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
+		(playerOffset.deltaY * AutoMapScale / 100 / 2) + (myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
 	};
 
 	if (CanPanelsCoverView()) {
@@ -552,13 +556,18 @@ void DrawAutomap(const Surface &out)
 
 	Automap += AutomapOffset;
 
+	const auto &myPlayer = Players[MyPlayerId];
+	Displacement myPlayerOffset = ScrollInfo.offset;
+	if (myPlayer.IsWalking())
+		myPlayerOffset = GetOffsetForWalking(myPlayer.AnimInfo, myPlayer._pdir, true);
+
 	int d = (AutoMapScale * 64) / 100;
 	int cells = 2 * (gnScreenWidth / 2 / d) + 1;
 	if (((gnScreenWidth / 2) % d) != 0)
 		cells++;
 	if (((gnScreenWidth / 2) % d) >= (AutoMapScale * 32) / 100)
 		cells++;
-	if ((ScrollInfo.offset.deltaX + ScrollInfo.offset.deltaY) != 0)
+	if ((myPlayerOffset.deltaX + myPlayerOffset.deltaY) != 0)
 		cells++;
 
 	Point screen {
@@ -581,8 +590,8 @@ void DrawAutomap(const Surface &out)
 		screen.y -= AmLine8;
 	}
 
-	screen.x += AutoMapScale * ScrollInfo.offset.deltaX / 100 / 2;
-	screen.y += AutoMapScale * ScrollInfo.offset.deltaY / 100 / 2;
+	screen.x += AutoMapScale * myPlayerOffset.deltaX / 100 / 2;
+	screen.y += AutoMapScale * myPlayerOffset.deltaY / 100 / 2;
 
 	if (CanPanelsCoverView()) {
 		if (invflag || sbookflag) {
@@ -618,13 +627,13 @@ void DrawAutomap(const Surface &out)
 
 	for (int playerId = 0; playerId < MAX_PLRS; playerId++) {
 		auto &player = Players[playerId];
-		if (player.plrlevel == Players[MyPlayerId].plrlevel && player.plractive && !player._pLvlChanging) {
-			DrawAutomapPlr(out, playerId);
+		if (player.plrlevel == myPlayer.plrlevel && player.plractive && !player._pLvlChanging) {
+			DrawAutomapPlr(out, myPlayerOffset, playerId);
 		}
 	}
 
 	if (AutoMapShowItems)
-		SearchAutomapItem(out);
+		SearchAutomapItem(out, myPlayerOffset);
 
 	DrawAutomapText(out);
 }
