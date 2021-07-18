@@ -3,67 +3,61 @@
  *
  * Implementation of functionality transmitting chat messages.
  */
+#include <list>
 #include "tmsg.h"
-
 #include "diablo.h"
 
 namespace devilution {
 
 namespace {
 
-TMsg *sgpTimedMsgHead;
+struct TMsg {
+	uint32_t time;
+	std::unique_ptr<byte[]> body;
+	uint8_t len;
+
+	TMsg(uint32_t time, byte *data, uint8_t len)
+		: time(time)
+		, body(new byte[len])
+		, len(len)
+	{
+		memcpy(body.get(), data, len);
+	}
+};
+
+std::list<TMsg> TimedMsgList;
 
 } // namespace
 
-size_t tmsg_get(byte *pbMsg)
+uint8_t tmsg_get(std::unique_ptr<byte[]> *msg)
 {
-	TMsg *head;
-
-	if (sgpTimedMsgHead == nullptr)
+	if (TimedMsgList.empty())
 		return 0;
 
-	if ((int)(sgpTimedMsgHead->hdr.dwTime - SDL_GetTicks()) >= 0)
+	TMsg &head = TimedMsgList.front();
+	if ((int)(head.time - SDL_GetTicks()) >= 0)
 		return 0;
-	head = sgpTimedMsgHead;
-	sgpTimedMsgHead = head->hdr.pNext;
-	size_t len = head->hdr.bLen;
-	// BUGFIX: ignores dwMaxLen
-	memcpy(pbMsg, head->body, len);
-	std::free(head);
+
+	uint8_t len = head.len;
+	*msg = std::move(head.body);
+	TimedMsgList.pop_front();
 	return len;
 }
 
-void tmsg_add(byte *pbMsg, uint8_t bLen)
+void tmsg_add(byte *msg, uint8_t len)
 {
-	TMsg **tail;
-
-	TMsg *msg = static_cast<TMsg *>(std::malloc(bLen + sizeof(*msg)));
-	if (msg == nullptr)
-		app_fatal("Failed to allocate memory");
-	msg->hdr.pNext = nullptr;
-	msg->hdr.dwTime = SDL_GetTicks() + gnTickDelay * 10;
-	msg->hdr.bLen = bLen;
-	memcpy(msg->body, pbMsg, bLen);
-	for (tail = &sgpTimedMsgHead; *tail != nullptr; tail = &(*tail)->hdr.pNext) {
-		;
-	}
-	*tail = msg;
+	uint32_t time = SDL_GetTicks() + gnTickDelay * 10;
+	TimedMsgList.emplace_back(time, msg, len);
 }
 
 void tmsg_start()
 {
-	assert(!sgpTimedMsgHead);
+	assert(TimedMsgList.empty());
 }
 
 void tmsg_cleanup()
 {
-	TMsg *next;
-
-	while (sgpTimedMsgHead != nullptr) {
-		next = sgpTimedMsgHead->hdr.pNext;
-		std::free(sgpTimedMsgHead);
-		sgpTimedMsgHead = next;
-	}
+	TimedMsgList.clear();
 }
 
 } // namespace devilution

@@ -303,12 +303,11 @@ void HandleAllPackets(int pnum, byte *pData, size_t nSize)
 
 void ProcessTmsgs()
 {
-	size_t cnt;
-	TPkt pkt;
+	uint8_t cnt;
+	std::unique_ptr<byte[]> msg;
 
-	while ((cnt = tmsg_get((byte *)&pkt)) != 0) {
-		HandleAllPackets(MyPlayerId, (byte *)&pkt, cnt);
-	}
+	while ((cnt = tmsg_get(&msg)) != 0)
+		HandleAllPackets(MyPlayerId, msg.get(), cnt);
 }
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
