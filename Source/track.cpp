@@ -54,6 +54,14 @@ bool RepeatMouseAction()
 	case MouseActionType::SpellOutOfMana:
 		CheckPlrSpell(true);
 		break;
+	case MouseActionType::OperateObject:
+		if (pcursobj != -1) {
+			auto &object = Objects[pcursobj];
+			if (object.IsDoor())
+				break;
+			NetSendCmdLocParam1(true, CMD_OPOBJXY, object.position, pcursobj);
+		}
+		break;
 	case MouseActionType::Other:
 	case MouseActionType::None:
 		return false;
