@@ -5,8 +5,8 @@
  */
 #include <list>
 
-#include "tmsg.h"
 #include "diablo.h"
+#include "tmsg.h"
 
 namespace devilution {
 

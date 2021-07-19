@@ -115,18 +115,19 @@ byte *ReceivePacket(TBuffer *pBuf, byte *body, size_t *size)
 
 void NetReceivePlayerData(TPkt *pkt)
 {
-	const Point target = Players[MyPlayerId].GetTargetPosition();
+	const auto &myPlayer = Players[MyPlayerId];
+	const Point target = myPlayer.GetTargetPosition();
 
 	pkt->hdr.wCheck = LoadBE32("\0\0ip");
-	pkt->hdr.px = Players[MyPlayerId].position.tile.x;
-	pkt->hdr.py = Players[MyPlayerId].position.tile.y;
+	pkt->hdr.px = myPlayer.position.tile.x;
+	pkt->hdr.py = myPlayer.position.tile.y;
 	pkt->hdr.targx = target.x;
 	pkt->hdr.targy = target.y;
-	pkt->hdr.php = Players[MyPlayerId]._pHitPoints;
-	pkt->hdr.pmhp = Players[MyPlayerId]._pMaxHP;
-	pkt->hdr.bstr = Players[MyPlayerId]._pBaseStr;
-	pkt->hdr.bmag = Players[MyPlayerId]._pBaseMag;
-	pkt->hdr.bdex = Players[MyPlayerId]._pBaseDex;
+	pkt->hdr.php = myPlayer._pHitPoints;
+	pkt->hdr.pmhp = myPlayer._pMaxHP;
+	pkt->hdr.bstr = myPlayer._pBaseStr;
+	pkt->hdr.bmag = myPlayer._pBaseMag;
+	pkt->hdr.bdex = myPlayer._pBaseDex;
 }
 
 void SendPacket(int playerId, void *packet, BYTE dwSize)
@@ -179,7 +180,9 @@ void ParseTurn(int pnum, uint32_t turn)
 
 void PlayerLeftMsg(int pnum, bool left)
 {
-	if (!Players[pnum].plractive) {
+	auto &player = Players[pnum];
+
+	if (!player.plractive) {
 		return;
 	}
 
@@ -199,11 +202,11 @@ void PlayerLeftMsg(int pnum, bool left)
 			pszFmt = _("Player '{:s}' dropped due to timeout");
 			break;
 		}
-		EventPlrMsg(fmt::format(pszFmt, Players[pnum]._pName).c_str());
+		EventPlrMsg(fmt::format(pszFmt, player._pName).c_str());
 	}
-	Players[pnum].plractive = false;
-	Players[pnum]._pName[0] = '\0';
-	ResetPlayerGFX(Players[pnum]);
+	player.plractive = false;
+	player._pName[0] = '\0';
+	ResetPlayerGFX(player);
 	gbActivePlayers--;
 }
 
@@ -358,13 +361,16 @@ void SetupLocalPositions()
 
 	x += plrxoff[MyPlayerId];
 	y += plryoff[MyPlayerId];
-	Players[MyPlayerId].position.tile = { x, y };
-	Players[MyPlayerId].position.future = { x, y };
-	Players[MyPlayerId].plrlevel = currlevel;
-	Players[MyPlayerId]._pLvlChanging = true;
-	Players[MyPlayerId].pLvlLoad = 0;
-	Players[MyPlayerId]._pmode = PM_NEWLVL;
-	Players[MyPlayerId].destAction = ACTION_NONE;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	myPlayer.position.tile = { x, y };
+	myPlayer.position.future = { x, y };
+	myPlayer.plrlevel = currlevel;
+	myPlayer._pLvlChanging = true;
+	myPlayer.pLvlLoad = 0;
+	myPlayer._pmode = PM_NEWLVL;
+	myPlayer.destAction = ACTION_NONE;
 }
 
 void HandleEvents(_SNETEVENT *pEvt)
@@ -750,8 +756,9 @@ bool NetInit(bool bSinglePlayer)
 		SetupLocalPositions();
 		SendPlayerInfo(-2, CMD_SEND_PLRINFO);
 
-		ResetPlayerGFX(Players[MyPlayerId]);
-		Players[MyPlayerId].plractive = true;
+		auto &myPlayer = Players[MyPlayerId];
+		ResetPlayerGFX(myPlayer);
+		myPlayer.plractive = true;
 		gbActivePlayers = 1;
 
 		if (!sgbPlayerTurnBitTbl[MyPlayerId] || msg_wait_resync())

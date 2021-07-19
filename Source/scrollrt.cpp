@@ -485,9 +485,10 @@ static void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_i
  */
 static void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lighting)
 {
-	if (Players[pnum].pManaShield)
+	auto &player = Players[pnum];
+	if (player.pManaShield)
 		DrawPlayerIconHelper(out, pnum, MFILE_MANASHLD, x, y, lighting);
-	if (Players[pnum].wReflections > 0)
+	if (player.wReflections > 0)
 		DrawPlayerIconHelper(out, pnum, MFILE_REFLECT, x, y + 16, lighting);
 }
 

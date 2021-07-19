@@ -1411,11 +1411,11 @@ void UpdateSpellTarget()
 	pcursplr = -1;
 	pcursmonst = -1;
 
-	int range = 1;
-	if (Players[MyPlayerId]._pRSpell == SPL_TELEPORT)
-		range = 4;
+	auto &myPlayer = Players[MyPlayerId];
 
-	auto cursm = Players[MyPlayerId].position.future + Displacement::fromDirection(Players[MyPlayerId]._pdir) * range;
+	int range = myPlayer._pRSpell == SPL_TELEPORT ? 4 : 1;
+
+	auto cursm = myPlayer.position.future + Displacement::fromDirection(myPlayer._pdir) * range;
 	cursmx = cursm.x;
 	cursmy = cursm.y;
 }

@@ -68,30 +68,31 @@ void UseMana(int id, spell_id sn)
 {
 	int ma; // mana cost
 
-	if (id == MyPlayerId) {
-		switch (Players[id]._pSplType) {
-		case RSPLTYPE_SKILL:
-		case RSPLTYPE_INVALID:
-			break;
-		case RSPLTYPE_SCROLL:
-			RemoveScroll(Players[id]);
-			break;
-		case RSPLTYPE_CHARGES:
-			UseStaffCharge(Players[id]);
-			break;
-		case RSPLTYPE_SPELL:
+	if (id != MyPlayerId)
+		return;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	switch (myPlayer._pSplType) {
+	case RSPLTYPE_SKILL:
+	case RSPLTYPE_INVALID:
+		break;
+	case RSPLTYPE_SCROLL:
+		RemoveScroll(myPlayer);
+		break;
+	case RSPLTYPE_CHARGES:
+		UseStaffCharge(myPlayer);
+		break;
+	case RSPLTYPE_SPELL:
 #ifdef _DEBUG
-			if (!debug_mode_key_inverted_v) {
-#endif
-				ma = GetManaAmount(Players[id], sn);
-				Players[id]._pMana -= ma;
-				Players[id]._pManaBase -= ma;
-				drawmanaflag = true;
-#ifdef _DEBUG
-			}
-#endif
+		if (debug_mode_key_inverted_v)
 			break;
-		}
+#endif
+		ma = GetManaAmount(myPlayer, sn);
+		myPlayer._pMana -= ma;
+		myPlayer._pManaBase -= ma;
+		drawmanaflag = true;
+		break;
 	}
 }
 
