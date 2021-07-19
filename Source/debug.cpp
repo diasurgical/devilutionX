@@ -14,16 +14,54 @@
 
 namespace devilution {
 
+std::optional<CelSprite> pSquareCel;
+
 #ifdef _DEBUG
 
-#define DebugSeeds 4096
-int seed_index;
-int level_seeds[NUMLEVELS + 1];
-int seed_table[DebugSeeds];
+namespace {
 
-std::optional<CelSprite> pSquareCel;
 char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
 char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
+
+int DebugPlayerId;
+int DebugQuestId;
+int DebugMonsterId;
+
+void SetSpellLevelCheat(spell_id spl, int spllvl)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	myPlayer._pMemSpells |= GetSpellBitmask(spl);
+	myPlayer._pSplLvl[spl] = spllvl;
+}
+
+void PrintDebugMonster(int m)
+{
+	char dstr[128];
+
+	auto &monster = Monsters[m];
+
+	sprintf(dstr, "Monster %i = %s", m, _(monster.mName));
+	NetSendCmdString(1 << MyPlayerId, dstr);
+	sprintf(dstr, "X = %i, Y = %i", monster.position.tile.x, monster.position.tile.y);
+	NetSendCmdString(1 << MyPlayerId, dstr);
+	sprintf(dstr, "Enemy = %i, HP = %i", monster._menemy, monster._mhitpoints);
+	NetSendCmdString(1 << MyPlayerId, dstr);
+	sprintf(dstr, "Mode = %i, Var1 = %i", monster._mmode, monster._mVar1);
+	NetSendCmdString(1 << MyPlayerId, dstr);
+
+	bool bActive = false;
+
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		if (ActiveMonsters[i] == m)
+			bActive = true;
+	}
+
+	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster._msquelch);
+	NetSendCmdString(1 << MyPlayerId, dstr);
+}
+
+} // namespace
 
 void LoadDebugGFX()
 {
@@ -53,7 +91,7 @@ void CheckDungeonClear()
 
 void GiveGoldCheat()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	for (int8_t &itemId : myPlayer.InvGrid) {
 		if (itemId != 0)
@@ -71,7 +109,7 @@ void GiveGoldCheat()
 
 void TakeGoldCheat()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	for (auto itemId : myPlayer.InvGrid) {
 		itemId -= 1;
@@ -89,7 +127,7 @@ void TakeGoldCheat()
 
 void MaxSpellsCheat()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel((spell_id)i) != -1) {
@@ -97,14 +135,6 @@ void MaxSpellsCheat()
 			myPlayer._pSplLvl[i] = 10;
 		}
 	}
-}
-
-void SetSpellLevelCheat(spell_id spl, int spllvl)
-{
-	auto &myPlayer = plr[myplr];
-
-	myPlayer._pMemSpells |= GetSpellBitmask(spl);
-	myPlayer._pSplLvl[spl] = spllvl;
 }
 
 void SetAllSpellsCheat()
@@ -133,8 +163,6 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
 }
 
-int DebugPlayerId;
-
 void PrintDebugPlayer(bool bNextPlayer)
 {
 	char dstr[128];
@@ -142,67 +170,37 @@ void PrintDebugPlayer(bool bNextPlayer)
 	if (bNextPlayer)
 		DebugPlayerId = ((BYTE)DebugPlayerId + 1) & 3;
 
-	auto &player = plr[DebugPlayerId];
+	auto &player = Players[DebugPlayerId];
 
 	sprintf(dstr, "Plr %i : Active = %i", DebugPlayerId, player.plractive ? 1 : 0);
-	NetSendCmdString(1 << myplr, dstr);
+	NetSendCmdString(1 << MyPlayerId, dstr);
 
 	if (player.plractive) {
 		sprintf(dstr, "  Plr %i is %s", DebugPlayerId, player._pName);
-		NetSendCmdString(1 << myplr, dstr);
+		NetSendCmdString(1 << MyPlayerId, dstr);
 		sprintf(dstr, "  Lvl = %i : Change = %i", player.plrlevel, player._pLvlChanging ? 1 : 0);
-		NetSendCmdString(1 << myplr, dstr);
+		NetSendCmdString(1 << MyPlayerId, dstr);
 		const Point target = player.GetTargetPosition();
 		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", player.position.tile.x, player.position.tile.y, target.x, target.y);
-		NetSendCmdString(1 << myplr, dstr);
+		NetSendCmdString(1 << MyPlayerId, dstr);
 		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", player._pmode, player.destAction, player.walkpath[0]);
-		NetSendCmdString(1 << myplr, dstr);
+		NetSendCmdString(1 << MyPlayerId, dstr);
 		sprintf(dstr, "  inv = %i : hp = %i", player._pInvincible ? 1 : 0, player._pHitPoints);
-		NetSendCmdString(1 << myplr, dstr);
+		NetSendCmdString(1 << MyPlayerId, dstr);
 	}
 }
-
-int DebugQuestId;
 
 void PrintDebugQuest()
 {
 	char dstr[128];
 
-	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, quests[DebugQuestId]._qactive, quests[DebugQuestId]._qvar1);
-	NetSendCmdString(1 << myplr, dstr);
+	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, Quests[DebugQuestId]._qactive, Quests[DebugQuestId]._qvar1);
+	NetSendCmdString(1 << MyPlayerId, dstr);
 
 	DebugQuestId++;
 	if (DebugQuestId == MAXQUESTS)
 		DebugQuestId = 0;
 }
-
-void PrintDebugMonster(int m)
-{
-	bool bActive;
-	int i;
-	char dstr[128];
-
-	sprintf(dstr, "Monster %i = %s", m, _(monster[m].mName));
-	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "X = %i, Y = %i", monster[m].position.tile.x, monster[m].position.tile.y);
-	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "Enemy = %i, HP = %i", monster[m]._menemy, monster[m]._mhitpoints);
-	NetSendCmdString(1 << myplr, dstr);
-	sprintf(dstr, "Mode = %i, Var1 = %i", monster[m]._mmode, monster[m]._mVar1);
-	NetSendCmdString(1 << myplr, dstr);
-
-	bActive = false;
-
-	for (i = 0; i < nummonsters; i++) {
-		if (monstactive[i] == m)
-			bActive = true;
-	}
-
-	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster[m]._msquelch);
-	NetSendCmdString(1 << myplr, dstr);
-}
-
-int DebugMonsterId;
 
 void GetDebugMonster()
 {
@@ -229,7 +227,7 @@ void NextDebugMonster()
 		DebugMonsterId = 0;
 
 	sprintf(dstr, "Current debug monster = %i", DebugMonsterId);
-	NetSendCmdString(1 << myplr, dstr);
+	NetSendCmdString(1 << MyPlayerId, dstr);
 }
 
 #endif

@@ -57,8 +57,8 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size = GameFont
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  * @param drawTextCursor Whether to draw an animated cursor sprite at the end of the text (default is to display nothing).
  * @return The number of characters rendered, including characters "drawn" outside the buffer.
-*/
-int DrawString(const Surface &out, const char *text, const Rectangle &rect, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
+ */
+uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
@@ -77,12 +77,12 @@ int DrawString(const Surface &out, const char *text, const Rectangle &rect, uint
  * @param lineHeight Allows overriding the default line height, useful for multi-line strings.
  * @param drawTextCursor Whether to draw an animated cursor sprite at the end of the text (default is to display nothing).
  * @return The number of characters rendered (could be less than the string length if it wrapped past the bottom of the buffer).
-*/
-inline int DrawString(const Surface &out, const char *text, const Point &position, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false)
+ */
+inline uint16_t DrawString(const Surface &out, const char *text, const Point &position, uint16_t flags = 0, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false)
 {
 	return DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, drawTextCursor);
 }
 
-int PentSpn2Spin();
+uint8_t PentSpn2Spin();
 
 } // namespace devilution

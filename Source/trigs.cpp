@@ -76,7 +76,7 @@ void InitTownTriggers()
 		townwarp = gbIsMultiplayer && !gbIsSpawn;
 	}
 	if (!gbIsSpawn) {
-		auto &myPlayer = plr[myplr];
+		auto &myPlayer = Players[MyPlayerId];
 
 		if (gbIsMultiplayer || (myPlayer.pTownWarps & 1) != 0 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
 			townwarps[0] = true;
@@ -109,7 +109,7 @@ void InitTownTriggers()
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 		trigs[numtrigs]._tlvl = 17;
 		numtrigs++;
-		if (gbIsMultiplayer || quests[Q_GRAVE]._qactive == QUEST_DONE) {
+		if (gbIsMultiplayer || Quests[Q_GRAVE]._qactive == QUEST_DONE) {
 			trigs[numtrigs].position = { 36, 24 };
 			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 			trigs[numtrigs]._tlvl = 21;
@@ -168,7 +168,7 @@ void InitL2Triggers()
 	numtrigs = 0;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 267 && (i != quests[Q_SCHAMB].position.x || j != quests[Q_SCHAMB].position.y)) {
+			if (dPiece[i][j] == 267 && (i != Quests[Q_SCHAMB].position.x || j != Quests[Q_SCHAMB].position.y)) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
 				numtrigs++;
@@ -271,7 +271,7 @@ void InitL4Triggers()
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 370 && quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			if (dPiece[i][j] == 370 && Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
 				trigs[numtrigs].position = { i, j };
 				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 				numtrigs++;
@@ -695,11 +695,9 @@ void Freeupstairs()
 
 bool ForceSKingTrig()
 {
-	int i;
-
-	for (i = 0; L1UpList[i] != -1; i++) {
+	for (int i = 0; L1UpList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L1UpList[i]) {
-			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_SKELKING]._qlevel).c_str());
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_SKELKING]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -712,11 +710,9 @@ bool ForceSKingTrig()
 
 bool ForceSChambTrig()
 {
-	int i;
-
-	for (i = 0; L2DownList[i] != -1; i++) {
+	for (int i = 0; L2DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L2DownList[i]) {
-			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_SCHAMB]._qlevel).c_str());
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_SCHAMB]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -729,11 +725,9 @@ bool ForceSChambTrig()
 
 bool ForcePWaterTrig()
 {
-	int i;
-
-	for (i = 0; L3DownList[i] != -1; i++) {
+	for (int i = 0; L3DownList[i] != -1; i++) {
 		if (dPiece[cursmx][cursmy] == L3DownList[i]) {
-			strcpy(infostr, fmt::format(_("Back to Level {:d}"), quests[Q_PWATER]._qlevel).c_str());
+			strcpy(infostr, fmt::format(_("Back to Level {:d}"), Quests[Q_PWATER]._qlevel).c_str());
 			cursmx = trigs[0].position.x;
 			cursmy = trigs[0].position.y;
 
@@ -798,7 +792,7 @@ void CheckTrigForce()
 
 void CheckTriggers()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer._pmode != PM_STAND)
 		return;
@@ -811,18 +805,18 @@ void CheckTriggers()
 		switch (trigs[i]._tmsg) {
 		case WM_DIABNEXTLVL:
 			if (gbIsSpawn && currlevel >= 2) {
-				NetSendCmdLoc(myplr, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
+				NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { myPlayer.position.tile.x, myPlayer.position.tile.y + 1 });
 				myPlayer.Say(HeroSpeech::NotAChance);
 				InitDiabloMsg(EMSG_NOT_IN_SHAREWARE);
 			} else {
-				StartNewLvl(myplr, trigs[i]._tmsg, currlevel + 1);
+				StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel + 1);
 			}
 			break;
 		case WM_DIABPREVLVL:
-			StartNewLvl(myplr, trigs[i]._tmsg, currlevel - 1);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, currlevel - 1);
 			break;
 		case WM_DIABRTNLVL:
-			StartNewLvl(myplr, trigs[i]._tmsg, ReturnLvl);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, ReturnLevel);
 			break;
 		case WM_DIABTOWNWARP:
 			if (gbIsMultiplayer) {
@@ -852,16 +846,16 @@ void CheckTriggers()
 					myPlayer.Say(HeroSpeech::ICantGetThereFromHere);
 
 					InitDiabloMsg(abortflag);
-					NetSendCmdLoc(myplr, true, CMD_WALKXY, position);
+					NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, position);
 					return;
 				}
 			}
 
-			StartNewLvl(myplr, trigs[i]._tmsg, trigs[i]._tlvl);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, trigs[i]._tlvl);
 			break;
 		case WM_DIABTWARPUP:
 			TWarpFrom = currlevel;
-			StartNewLvl(myplr, trigs[i]._tmsg, 0);
+			StartNewLvl(MyPlayerId, trigs[i]._tmsg, 0);
 			break;
 		default:
 			app_fatal("Unknown trigger msg");

@@ -37,15 +37,15 @@ constexpr float VolumeScale = 3321.9281;
  * Min and max volume range, in millibel.
  * -100 dB (muted) to 0 dB (max. loudness).
  */
-constexpr float MillibelMin = -10000.0;
-constexpr float MillibelMax = 0.0;
+constexpr float MillibelMin = -10000.F;
+constexpr float MillibelMax = 0.F;
 
 /**
  * Stereo separation factor for left/right speaker panning. Lower values increase separation, moving
  * sounds further left/right, while higher values will pull sounds more towards the middle, reducing separation.
  * Current value is tuned to have ~2:1 mix for sounds that happen on the edge of a 640x480 screen.
  */
-constexpr float StereoSeparation = 6000.0;
+constexpr float StereoSeparation = 6000.F;
 
 float PanLogToLinear(int logPan)
 {
@@ -54,16 +54,15 @@ float PanLogToLinear(int logPan)
 
 	auto factor = std::pow(LogBase, static_cast<float>(-std::abs(logPan)) / StereoSeparation);
 
-	return copysign(1.0 - factor, static_cast<float>(logPan));
+	return copysign(1.F - factor, static_cast<float>(logPan));
 }
 
 } // namespace
 
 float VolumeLogToLinear(int logVolume, int logMin, int logMax)
 {
-	const auto logScaled = math::Remap<float>(logMin, logMax, MillibelMin, MillibelMax, logVolume);
-	const auto linVolume = std::pow(LogBase, static_cast<float>(logScaled) / VolumeScale);
-	return linVolume;
+	const auto logScaled = math::Remap(static_cast<float>(logMin), static_cast<float>(logMax), MillibelMin, MillibelMax, static_cast<float>(logVolume));
+	return std::pow(LogBase, logScaled / VolumeScale); // linVolume
 }
 
 ///// SoundSample /////
@@ -75,7 +74,7 @@ void SoundSample::Release()
 	file_data_ = nullptr;
 	file_data_size_ = 0;
 #endif
-};
+}
 
 /**
  * @brief Check if a the sound is being played atm
@@ -83,7 +82,7 @@ void SoundSample::Release()
 bool SoundSample::IsPlaying()
 {
 	return stream_ && stream_->isPlaying();
-};
+}
 
 /**
  * @brief Start playing the sound
@@ -104,7 +103,7 @@ void SoundSample::Play(int logSoundVolume, int logUserVolume, int logPan)
 		LogError(LogCategory::Audio, "Aulib::Stream::play (from SoundSample::Play): {}", SDL_GetError());
 		return;
 	}
-};
+}
 
 /**
  * @brief Stop playing the sound
@@ -113,7 +112,7 @@ void SoundSample::Stop()
 {
 	if (stream_)
 		stream_->stop();
-};
+}
 
 int SoundSample::SetChunkStream(std::string filePath)
 {
@@ -154,7 +153,7 @@ int SoundSample::SetChunk(ArraySharedPtr<std::uint8_t> fileData, std::size_t dwB
 	}
 
 	return 0;
-};
+}
 #endif
 
 /**
@@ -165,6 +164,6 @@ int SoundSample::GetLength() const
 	if (!stream_)
 		return 0;
 	return std::chrono::duration_cast<std::chrono::milliseconds>(stream_->duration()).count();
-};
+}
 
 } // namespace devilution

@@ -17,38 +17,14 @@ namespace devilution {
 SDL_Color logical_palette[256];
 SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
-Uint8 paletteTransparencyLookup[256][256]; //Lookup table for transparency
+Uint8 paletteTransparencyLookup[256][256];
 
-/* data */
+namespace {
 
 /** Specifies whether the palette has max brightness. */
 bool sgbFadedIn = true;
 
-void palette_update()
-{
-	assert(Palette);
-	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette, system_palette, 0, 256) < 0) {
-		ErrSdl();
-	}
-	pal_surface_palette_version++;
-}
-
-void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
-{
-	int i;
-	double g;
-
-	g = sgOptions.Graphics.nGammaCorrection / 100.0;
-
-	for (i = 0; i < n; i++) {
-		dst[i].r = pow(src[i].r / 256.0, g) * 256.0;
-		dst[i].g = pow(src[i].g / 256.0, g) * 256.0;
-		dst[i].b = pow(src[i].b / 256.0, g) * 256.0;
-	}
-	force_redraw = 255;
-}
-
-static void LoadGamma()
+void LoadGamma()
 {
 	int gammaValue = sgOptions.Graphics.nGammaCorrection;
 
@@ -60,14 +36,7 @@ static void LoadGamma()
 	sgOptions.Graphics.nGammaCorrection = gammaValue - gammaValue % 5;
 }
 
-void palette_init()
-{
-	LoadGamma();
-	memcpy(system_palette, orig_palette, sizeof(orig_palette));
-	InitPalette();
-}
-
-static Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skipFrom, int skipTo)
+Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skipFrom, int skipTo)
 {
 	Uint8 best;
 	Uint32 bestDiff = SDL_MAX_UINT32;
@@ -100,7 +69,7 @@ static Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skip
  * @param skipTo Do not use colors between skipFrom and this index
  * @param toUpdate Only update the first n colors
  */
-static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, int toUpdate = 256)
+void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, int toUpdate = 256)
 {
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -124,6 +93,104 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
 			paletteTransparencyLookup[i][j] = best;
 		}
 	}
+}
+
+/**
+ * @brief Cycle the given range of colors in the palette
+ * @param from First color index of the range
+ * @param to First color index of the range
+ */
+void CycleColors(int from, int to)
+{
+	{
+		SDL_Color col = system_palette[from];
+		for (int i = from; i < to; i++) {
+			system_palette[i] = system_palette[i + 1];
+		}
+		system_palette[to] = col;
+	}
+
+	if (!sgOptions.Graphics.bBlendedTransparancy)
+		return;
+
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[from];
+		for (int j = from; j < to; j++) {
+			palette[j] = palette[j + 1];
+		}
+		palette[to] = col;
+	}
+
+	Uint8 colRow[256];
+	memcpy(colRow, &paletteTransparencyLookup[from], sizeof(*paletteTransparencyLookup));
+	for (int i = from; i < to; i++) {
+		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i + 1], sizeof(*paletteTransparencyLookup));
+	}
+	memcpy(&paletteTransparencyLookup[to], colRow, sizeof(colRow));
+}
+
+/**
+ * @brief Cycle the given range of colors in the palette in reverse direction
+ * @param from First color index of the range
+ * @param to First color index of the range
+ */
+void CycleColorsReverse(int from, int to)
+{
+	{
+		SDL_Color col = system_palette[to];
+		for (int i = to; i > from; i--) {
+			system_palette[i] = system_palette[i - 1];
+		}
+		system_palette[from] = col;
+	}
+
+	if (!sgOptions.Graphics.bBlendedTransparancy)
+		return;
+
+	for (auto &palette : paletteTransparencyLookup) {
+		Uint8 col = palette[to];
+		for (int j = to; j > from; j--) {
+			palette[j] = palette[j - 1];
+		}
+		palette[from] = col;
+	}
+
+	Uint8 colRow[256];
+	memcpy(colRow, &paletteTransparencyLookup[to], sizeof(*paletteTransparencyLookup));
+	for (int i = to; i > from; i--) {
+		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i - 1], sizeof(*paletteTransparencyLookup));
+	}
+	memcpy(&paletteTransparencyLookup[from], colRow, sizeof(colRow));
+}
+
+} // namespace
+
+void palette_update()
+{
+	assert(Palette);
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette, system_palette, 0, 256) < 0) {
+		ErrSdl();
+	}
+	pal_surface_palette_version++;
+}
+
+void ApplyGamma(SDL_Color *dst, const SDL_Color *src, int n)
+{
+	double g = sgOptions.Graphics.nGammaCorrection / 100.0;
+
+	for (int i = 0; i < n; i++) {
+		dst[i].r = static_cast<Uint8>(pow(src[i].r / 256.0, g) * 256.0);
+		dst[i].g = static_cast<Uint8>(pow(src[i].g / 256.0, g) * 256.0);
+		dst[i].b = static_cast<Uint8>(pow(src[i].b / 256.0, g) * 256.0);
+	}
+	force_redraw = 255;
+}
+
+void palette_init()
+{
+	LoadGamma();
+	memcpy(system_palette, orig_palette, sizeof(orig_palette));
+	InitPalette();
 }
 
 void LoadPalette(const char *pszFileName, bool blend /*= true*/)
@@ -183,10 +250,6 @@ void LoadRndLvlPal(dungeon_type l)
 		sprintf(szFileName, "Levels\\L%iData\\L%i_%i.PAL", l, l, rv);
 	}
 	LoadPalette(szFileName);
-}
-
-void ResetPal()
-{
 }
 
 void IncreaseGamma()
@@ -284,111 +347,49 @@ void PaletteFadeOut(int fr)
 	sgbFadedIn = false;
 }
 
-/**
- * @brief Cycle the given range of colors in the palette
- * @param from First color index of the range
- * @param to First color index of the range
- */
-static void CycleColors(int from, int to)
-{
-	SDL_Color col = system_palette[from];
-	for (int i = from; i < to; i++) {
-		system_palette[i] = system_palette[i + 1];
-	}
-	system_palette[to] = col;
-
-	if (!sgOptions.Graphics.bBlendedTransparancy)
-		return;
-
-	for (auto &palette : paletteTransparencyLookup) {
-		Uint8 col = palette[from];
-		for (int j = from; j < to; j++) {
-			palette[j] = palette[j + 1];
-		}
-		palette[to] = col;
-	}
-
-	Uint8 colRow[256];
-	memcpy(colRow, &paletteTransparencyLookup[from], sizeof(*paletteTransparencyLookup));
-	for (int i = from; i < to; i++) {
-		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i + 1], sizeof(*paletteTransparencyLookup));
-	}
-	memcpy(&paletteTransparencyLookup[to], colRow, sizeof(colRow));
-}
-
-/**
- * @brief Cycle the given range of colors in the palette in reverse direction
- * @param from First color index of the range
- * @param to First color index of the range
- */
-static void CycleColorsReverse(int from, int to)
-{
-	SDL_Color col = system_palette[to];
-	for (int i = to; i > from; i--) {
-		system_palette[i] = system_palette[i - 1];
-	}
-	system_palette[from] = col;
-
-	if (!sgOptions.Graphics.bBlendedTransparancy)
-		return;
-
-	for (auto &palette : paletteTransparencyLookup) {
-		Uint8 col = palette[to];
-		for (int j = to; j > from; j--) {
-			palette[j] = palette[j - 1];
-		}
-		palette[from] = col;
-	}
-
-	Uint8 colRow[256];
-	memcpy(colRow, &paletteTransparencyLookup[to], sizeof(*paletteTransparencyLookup));
-	for (int i = to; i > from; i--) {
-		memcpy(&paletteTransparencyLookup[i], &paletteTransparencyLookup[i - 1], sizeof(*paletteTransparencyLookup));
-	}
-	memcpy(&paletteTransparencyLookup[from], colRow, sizeof(colRow));
-}
-
 void palette_update_caves()
 {
 	CycleColors(1, 31);
 	palette_update();
 }
 
-int dword_6E2D58;
-int dword_6E2D54;
 void palette_update_crypt()
 {
-	if (dword_6E2D58 > 1) {
+	static int LaveDelay = 0;
+	static int GlowDelay = 0;
+
+	if (LaveDelay > 1) {
 		CycleColorsReverse(1, 15);
-		dword_6E2D58 = 0;
+		LaveDelay = 0;
 	} else {
-		dword_6E2D58++;
+		LaveDelay++;
 	}
-	if (dword_6E2D54 > 0) {
+	if (GlowDelay > 0) {
 		CycleColorsReverse(16, 31);
 		palette_update();
-		dword_6E2D54++;
+		GlowDelay++;
 	} else {
-		dword_6E2D54 = 1;
+		GlowDelay = 1;
 	}
 }
 
-int dword_6E2D5C;
-int dword_6E2D60;
 void palette_update_hive()
 {
-	if (dword_6E2D60 == 2) {
+	static int WaveDelay = 0;
+	static int BubbleDelay = 0;
+
+	if (WaveDelay == 2) {
 		CycleColorsReverse(1, 8);
-		dword_6E2D60 = 0;
+		WaveDelay = 0;
 	} else {
-		dword_6E2D60++;
+		WaveDelay++;
 	}
-	if (dword_6E2D5C == 2) {
+	if (BubbleDelay == 2) {
 		CycleColorsReverse(9, 15);
 		palette_update();
-		dword_6E2D5C = 0;
+		BubbleDelay = 0;
 	} else {
-		dword_6E2D5C++;
+		BubbleDelay++;
 	}
 }
 

@@ -99,7 +99,8 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 	if (!GetFileAttributesExW(&pathUtf16[0], GetFileExInfoStandard, &attr)) {
 		return false;
 	}
-	*size = (attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
+	// C4293 in msvc when shifting a 32 bit type by 32 bits.
+	*size = static_cast<std::uintmax_t>(attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
 #else
 	struct ::stat statResult;

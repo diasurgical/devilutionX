@@ -50,7 +50,6 @@ void play_movie(const char *pszMovie, bool userCanClose)
 				case DVL_WM_QUIT:
 					SVidPlayEnd();
 					diablo_quit(0);
-					break;
 				}
 			}
 			if (!SVidPlayContinue())
@@ -67,6 +66,21 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	SDL_GetMouseState(&MousePosition.x, &MousePosition.y);
 	OutputToLogical(&MousePosition.x, &MousePosition.y);
+}
+
+/**
+ * @brief Fade to black and play a video
+ * @param pszMovie file path of movie
+ */
+void PlayInGameMovie(const char *pszMovie)
+{
+	PaletteFadeOut(8);
+	play_movie(pszMovie, false);
+	ClearScreenBuffer();
+	force_redraw = 255;
+	scrollrt_draw_game_screen();
+	PaletteFadeIn(8);
+	force_redraw = 255;
 }
 
 } // namespace devilution

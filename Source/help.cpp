@@ -16,8 +16,11 @@
 
 namespace devilution {
 
-unsigned int SkipLines;
 bool HelpFlag;
+
+namespace {
+
+unsigned int SkipLines;
 
 const char *const HelpText[] = {
 	N_("$Keyboard Shortcuts:"),
@@ -93,16 +96,18 @@ const char *const HelpText[] = {
 
 std::vector<std::string> HelpTextLines;
 
+} // namespace
+
 void InitHelp()
 {
 	HelpFlag = false;
-	char tempstr[512];
+	char tempString[512];
 
 	for (const auto *text : HelpText) {
-		strcpy(tempstr, _(text));
+		strcpy(tempString, _(text));
 
-		WordWrapGameString(tempstr, 577);
-		const string_view paragraph = tempstr;
+		WordWrapGameString(tempString, 577);
+		const string_view paragraph = tempString;
 
 		size_t previous = 0;
 		while (true) {

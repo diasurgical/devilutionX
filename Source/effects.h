@@ -1177,7 +1177,7 @@ bool effect_is_playing(int nSFX);
 void stream_stop();
 void InitMonsterSND(int monst);
 void FreeMonsterSnd();
-void PlayEffect(int i, int mode);
+bool CalculateSoundPosition(Point soundPosition, int *plVolume, int *plPan);
 void PlaySFX(_sfx_id psfx);
 void PlaySfxLoc(_sfx_id psfx, Point position, bool randomizeByCategory = true);
 void sound_stop();
@@ -1188,7 +1188,6 @@ void ui_sound_init();
 void effects_play_sound(const char *sndFile);
 
 #ifndef NOSOUND
-bool calc_snd_position(Point soundPosition, int *plVolume, int *plPan);
 int GetSFXLength(int nSFX);
 #endif
 

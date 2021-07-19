@@ -306,7 +306,7 @@ static void AssertPlayer(PlayerStruct &player)
 	ASSERT_EQ(player._pAblSpells, 134217728);
 	ASSERT_EQ(player._pScrlSpells, 0);
 	ASSERT_EQ(player._pSpellFlags, 0);
-	ASSERT_EQ(player._pwtype, 1);
+	ASSERT_TRUE(player.UsesRangedWeapon());
 	ASSERT_EQ(player._pBlockFlag, 0);
 	ASSERT_EQ(player._pLightRad, 11);
 	ASSERT_EQ(player._pDamageMod, 101);
@@ -360,15 +360,15 @@ TEST(Writehero, pfile_write_hero)
 	gbIsHellfireSaveGame = false;
 	leveltype = DTYPE_TOWN;
 
-	myplr = 0;
+	MyPlayerId = 0;
 	_uiheroinfo info {};
 	strcpy(info.name, "TestPlayer");
 	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
-	UnPackPlayer(&pks, myplr, true);
-	AssertPlayer(plr[0]);
+	UnPackPlayer(&pks, MyPlayerId, true);
+	AssertPlayer(Players[0]);
 	pfile_write_hero();
 
 	std::ifstream f("multi_0.sv", std::ios::binary);

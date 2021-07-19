@@ -135,15 +135,30 @@ class UiArtText : public UiItemBase {
 public:
 	UiArtText(const char *text, SDL_Rect rect, int flags = 0)
 	    : UiItemBase(rect, flags)
+	    , m_text(text)
 	{
 		m_type = UI_ART_TEXT;
-		m_text = text;
 	};
+
+	UiArtText(const char **ptext, SDL_Rect rect, int flags = 0)
+	    : UiItemBase(rect, flags)
+	    , m_ptext(ptext)
+	{
+		m_type = UI_ART_TEXT;
+	};
+
+	const char *text() const
+	{
+		if (m_text != nullptr)
+			return m_text;
+		return *m_ptext;
+	}
 
 	~UiArtText() {};
 
-	//private:
-	const char *m_text;
+private:
+	const char *m_text = nullptr;
+	const char **m_ptext = nullptr;
 };
 
 //=============================================================================
@@ -293,15 +308,16 @@ public:
 	int m_value;
 };
 
-typedef std::vector<UiListItem *> vUiListItem;
+typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(vUiListItem vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0)
-	    : UiItemBase(x, y, item_width, item_height * vItems.size(), flags)
+	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0)
+	    : UiItemBase(x, y, item_width, static_cast<Uint16>(item_height * vItems.size()), flags)
 	{
 		m_type = UI_LIST;
-		m_vecItems = vItems;
+		for (auto &item : vItems)
+			m_vecItems.push_back(item.get());
 		m_x = x;
 		m_y = y;
 		m_width = item_width;
@@ -324,7 +340,7 @@ public:
 	int indexAt(Sint16 y) const
 	{
 		ASSERT(y >= m_rect.y);
-		const std::size_t index = (y - m_rect.y) / m_height;
+		const size_t index = (y - m_rect.y) / m_height;
 		ASSERT(index < m_vecItems.size());
 		return index;
 	}

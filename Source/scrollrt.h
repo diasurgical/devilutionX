@@ -29,7 +29,7 @@ enum _scroll_direction : uint8_t {
 extern bool sgbControllerActive;
 extern bool IsMovingMouseCursorWithController();
 
-extern int light_table_index;
+extern int LightTableIndex;
 extern uint32_t level_cel_block;
 extern char arch_draw_type;
 extern bool cel_transparency_active;

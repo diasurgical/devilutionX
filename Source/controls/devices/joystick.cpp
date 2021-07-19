@@ -245,7 +245,6 @@ bool Joystick::ProcessAxisMotion(const SDL_Event &event)
 	default:
 		return false;
 	}
-	return true;
 }
 
 void Joystick::Add(int deviceIndex)
@@ -310,7 +309,6 @@ Joystick *Joystick::Get(const SDL_Event &event)
 		return Get(event.jhat.which);
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
-		return Get(event.jbutton.which);
 		return Get(event.jbutton.which);
 	default:
 		return nullptr;

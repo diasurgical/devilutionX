@@ -87,8 +87,26 @@ typedef enum missile_graphic_id : uint8_t {
 	MFILE_BONEDEMON,
 	MFILE_EXORA1,
 	MFILE_EXBL3,
-	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing misfiledata for any of the missiles that have MFILE_NONE as mFileNum in missiledata. (fixed)
+	MFILE_NONE, // BUGFIX: should be `MFILE_NONE = MFILE_SCBSEXPD+1`, i.e. MFILE_NULL, since there would otherwise be an out-of-bounds in SetMissAnim when accessing MissileSpriteData for any of the missiles that have MFILE_NONE as mFileNum in MissileData. (fixed)
 } missile_graphic_id;
+
+/**
+ * @brief Specifies what if and how movement distribution is applied
+ */
+enum class MissileMovementDistrubution {
+	/**
+      * @brief No movement distribution is calculated. Normally this means the missile doesn't move at all.
+      */
+	Disabled,
+	/**
+      * @brief The missile moves and if it hits a enemey it stops (for example firebolt)
+      */
+	Blockable,
+	/**
+      * @brief The missile moves and even it hits a enemy it keeps moving (for example flame wave)
+      */
+	Unblockable,
+};
 
 typedef struct MissileData {
 	void (*mAddProc)(int, Point, Point, int, int8_t, int, int);
@@ -100,7 +118,8 @@ typedef struct MissileData {
 	uint8_t mFileNum;
 	_sfx_id mlSFX;
 	_sfx_id miSFX;
-} MissileData;
+	MissileMovementDistrubution MovementDistribution;
+} MissileDataStruct;
 
 typedef struct MisFileData {
 	const char *mName;
@@ -112,9 +131,9 @@ typedef struct MisFileData {
 	uint8_t mAnimLen[16];
 	int16_t mAnimWidth[16];
 	int16_t mAnimWidth2[16];
-} MisFileData;
+} MisFileDataStruct;
 
-extern MissileData missiledata[];
-extern MisFileData misfiledata[];
+extern MissileDataStruct MissileData[];
+extern MisFileDataStruct MissileSpriteData[];
 
 } // namespace devilution

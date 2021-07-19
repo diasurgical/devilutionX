@@ -565,50 +565,37 @@ enum affix_item_type : uint8_t {
 	// clang-format on
 };
 
+struct ItemPower {
+	item_effect_type type;
+	int param1;
+	int param2;
+};
+
 struct PLStruct {
 	const char *PLName;
-	enum item_effect_type PLPower;
-	int PLParam1;
-	int PLParam2;
+	ItemPower power;
 	int8_t PLMinLvl;
 	int PLIType; // affix_item_type as bit flags
 	enum goodorevil PLGOE;
 	bool PLDouble;
 	bool PLOk;
-	int PLMinVal;
-	int PLMaxVal;
-	int PLMultVal;
+	int minVal;
+	int maxVal;
+	int multVal;
 };
 
 struct UItemStruct {
 	const char *UIName;
 	enum unique_base_item UIItemId;
 	int8_t UIMinLvl;
-	int8_t UINumPL;
+	uint8_t UINumPL;
 	int UIValue;
-	enum item_effect_type UIPower1;
-	int UIParam1;
-	int UIParam2;
-	enum item_effect_type UIPower2;
-	int UIParam3;
-	int UIParam4;
-	enum item_effect_type UIPower3;
-	int UIParam5;
-	int UIParam6;
-	enum item_effect_type UIPower4;
-	int UIParam7;
-	int UIParam8;
-	enum item_effect_type UIPower5;
-	int UIParam9;
-	int UIParam10;
-	enum item_effect_type UIPower6;
-	int UIParam11;
-	int UIParam12;
+	ItemPower powers[6];
 };
 
 extern ItemDataStruct AllItemsList[];
-extern const PLStruct PL_Prefix[];
-extern const PLStruct PL_Suffix[];
+extern const PLStruct ItemPrefixes[];
+extern const PLStruct ItemSuffixes[];
 extern const UItemStruct UniqueItemList[];
 
 } // namespace devilution

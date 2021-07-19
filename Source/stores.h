@@ -94,7 +94,7 @@ extern int boylevel;
 /** Current item sold by Wirt */
 extern ItemStruct boyitem;
 
-void AddStoreHoldRepair(ItemStruct *itm, int i);
+void AddStoreHoldRepair(ItemStruct *itm, int8_t i);
 void InitStores();
 void SetupTownStores();
 void FreeStoreMem();

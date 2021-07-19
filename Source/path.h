@@ -5,8 +5,11 @@
  */
 #pragma once
 
+#include <functional>
+
 #include <SDL.h>
 
+#include "engine/direction.hpp"
 #include "engine/point.hpp"
 
 namespace devilution {
@@ -23,23 +26,44 @@ struct PATHNODE {
 	struct PATHNODE *NextNode;
 };
 
-int FindPath(bool (*PosOk)(int, Point), int PosOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH]);
-int path_get_h_cost(int sx, int sy, int dx, int dy);
-PATHNODE *GetNextPath();
-bool path_solid_pieces(PATHNODE *pPath, int dx, int dy);
-bool path_get_path(bool (*PosOk)(int, Point), int PosOkArg, PATHNODE *pPath, int x, int y);
-bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy);
-PATHNODE *path_get_node1(int dx, int dy);
-PATHNODE *path_get_node2(int dx, int dy);
-void path_next_node(PATHNODE *pPath);
-void path_set_coords(PATHNODE *pPath);
-void path_push_active_step(PATHNODE *pPath);
-PATHNODE *path_pop_active_step();
-PATHNODE *path_new_step();
+bool IsTileNotSolid(Point position);
+bool IsTileSolid(Point position);
 
-/* rdata */
+/**
+ * @brief Checks the position is solid or blocked by an object
+ */
+bool IsTileWalkable(Point position, bool ignoreDoors = false);
 
-extern const char pathxdir[8];
-extern const char pathydir[8];
+/**
+ * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
+ * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
+ */
+int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH]);
+
+/**
+ * @brief check if stepping from a given position to a neighbouring tile cuts a corner.
+ *
+ * If you step from A to B, both Xs need to be clear:
+ *
+ *  AX
+ *  XB
+ *
+ * @return true if step is allowed
+ */
+bool path_solid_pieces(Point startPosition, Point destinationPosition);
+
+/** For iterating over the 8 possible movement directions */
+const Displacement PathDirs[8] = {
+	// clang-format off
+	{ -1, -1 }, //DIR_N
+	{ -1,  1 }, //DIR_W
+	{  1, -1 }, //DIR_E
+	{  1,  1 }, //DIR_S
+	{ -1,  0 }, //DIR_NW
+	{  0, -1 }, //DIR_NE
+	{  1,  0 }, //DIR_SE
+	{  0,  1 }, //DIR_SW
+	// clang-format on
+};
 
 } // namespace devilution

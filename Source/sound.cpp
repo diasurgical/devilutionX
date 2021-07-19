@@ -47,7 +47,7 @@ void LoadMusic(HANDLE handle)
 #ifndef DISABLE_STREAMING_MUSIC
 	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
-	int bytestoread = SFileGetFileSize(handle);
+	size_t bytestoread = SFileGetFileSize(handle);
 	musicBuffer = new char[bytestoread];
 	SFileReadFileThreadSafe(handle, musicBuffer, bytestoread);
 	SFileCloseFileThreadSafe(handle);
@@ -137,13 +137,11 @@ void ClearDuplicateSounds()
 
 void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 {
-	DWORD tc;
-
 	if (pSnd == nullptr || !gbSoundOn) {
 		return;
 	}
 
-	tc = SDL_GetTicks();
+	uint32_t tc = SDL_GetTicks();
 	if (tc - pSnd->start_tc < 80) {
 		return;
 	}
@@ -161,7 +159,6 @@ void snd_play_snd(TSnd *pSnd, int lVolume, int lPan)
 
 std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 {
-	int error = 0;
 
 	auto snd = std::make_unique<TSnd>();
 	snd->start_tc = SDL_GetTicks() - 80 - 1;
@@ -169,8 +166,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 #ifndef STREAM_ALL_AUDIO
 	if (stream) {
 #endif
-		error = snd->DSB.SetChunkStream(path);
-		if (error != 0) {
+		if (snd->DSB.SetChunkStream(path) != 0) {
 			ErrSdl();
 		}
 #ifndef STREAM_ALL_AUDIO
@@ -179,16 +175,16 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 		if (!SFileOpenFile(path, &file)) {
 			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 		}
-		DWORD dwBytes = SFileGetFileSize(file);
+		size_t dwBytes = SFileGetFileSize(file);
 		auto waveFile = MakeArraySharedPtr<std::uint8_t>(dwBytes);
 		SFileReadFileThreadSafe(file, waveFile.get(), dwBytes);
-		error = snd->DSB.SetChunk(waveFile, dwBytes);
+		int error = snd->DSB.SetChunk(waveFile, dwBytes);
 		SFileCloseFileThreadSafe(file);
+		if (error != 0) {
+			ErrSdl();
+		}
 	}
 #endif
-	if (error != 0) {
-		ErrSdl();
-	}
 
 	return snd;
 }
@@ -245,7 +241,7 @@ void music_start(uint8_t nTrack)
 	bool success;
 	const char *trackPath;
 
-	assert((DWORD)nTrack < NUM_MUSIC);
+	assert(nTrack < NUM_MUSIC);
 	music_stop();
 	if (gbMusicOn) {
 		if (spawn_mpq != nullptr)
@@ -306,6 +302,18 @@ int sound_get_or_set_sound_volume(int volume)
 	sgOptions.Audio.nSoundVolume = volume;
 
 	return sgOptions.Audio.nSoundVolume;
+}
+
+void music_mute()
+{
+	if (music)
+		music->setVolume(VolumeLogToLinear(VOLUME_MIN, VOLUME_MIN, VOLUME_MAX));
+}
+
+void music_unmute()
+{
+	if (music)
+		music->setVolume(VolumeLogToLinear(sgOptions.Audio.nMusicVolume, VOLUME_MIN, VOLUME_MAX));
 }
 
 } // namespace devilution

@@ -94,16 +94,16 @@ enum class player_graphic : uint8_t {
 	LAST = Block
 };
 
-enum anim_weapon_id : uint8_t {
-	ANIM_ID_UNARMED,
-	ANIM_ID_UNARMED_SHIELD,
-	ANIM_ID_SWORD,
-	ANIM_ID_SWORD_SHIELD,
-	ANIM_ID_BOW,
-	ANIM_ID_AXE,
-	ANIM_ID_MACE,
-	ANIM_ID_MACE_SHIELD,
-	ANIM_ID_STAFF,
+enum class PlayerWeaponGraphic : uint8_t {
+	Unarmed,
+	UnarmedShield,
+	Sword,
+	SwordShield,
+	Bow,
+	Axe,
+	Mace,
+	MaceShield,
+	Staff,
 };
 
 enum PLR_MODE : uint8_t {
@@ -144,11 +144,6 @@ enum action_id : int8_t {
 	// clang-format on
 };
 
-enum player_weapon_type : uint8_t {
-	WT_MELEE,
-	WT_RANGED,
-};
-
 /**
  * @brief Contains Data (CelSprites) for a player graphic (player_graphic)
  */
@@ -180,7 +175,7 @@ struct PlayerStruct {
 	int plrlevel;
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
-	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (anim_weapon_id) and higher values define armour (starting with anim_armor_id)
+	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (PlayerWeaponGraphic) and higher values define armour (starting with PlayerArmorGraphic)
 	/**
 	 * @brief Contains Information for current Animation
 	 */
@@ -201,7 +196,6 @@ struct PlayerStruct {
 	uint8_t _pSpellFlags;
 	spell_id _pSplHotKey[4];
 	spell_type _pSplTHotKey[4];
-	player_weapon_type _pwtype;
 	bool _pBlockFlag;
 	bool _pInvincible;
 	int8_t _pLightRad;
@@ -432,12 +426,20 @@ struct PlayerStruct {
 
 		return _pManaPer;
 	}
+
+	/**
+	 * @brief Does the player currently have a ranged weapon equipped?
+	 */
+	bool UsesRangedWeapon() const
+	{
+		return static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF) == PlayerWeaponGraphic::Bow;
+	};
 };
 
-extern int myplr;
-extern PlayerStruct plr[MAX_PLRS];
-extern bool deathflag;
-extern int ToBlkTbl[enum_size<HeroClass>::value];
+extern int MyPlayerId;
+extern PlayerStruct Players[MAX_PLRS];
+extern bool MyPlayerIsDead;
+extern int BlockBonuses[enum_size<HeroClass>::value];
 
 void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
 void InitPlayerGFX(PlayerStruct &player);
@@ -466,19 +468,16 @@ void AddPlrMonstExper(int lvl, int exp, char pmask);
 void ApplyPlrDamage(int pnum, int dam, int minHP = 0, int frac = 0, int earflag = 0);
 void InitPlayer(int pnum, bool FirstTime);
 void InitMultiView();
-bool SolidLoc(Point position);
 void PlrClrTrans(Point position);
 void PlrDoTrans(Point position);
 void SetPlayerOld(PlayerStruct &player);
 void FixPlayerLocation(int pnum, Direction bDir);
 void StartStand(int pnum, Direction dir);
-void StartAttack(int pnum, Direction d);
 void StartPlrBlock(int pnum, Direction dir);
 void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
-void DropHalfPlayersGold(int pnum);
 void StripTopGold(int pnum);
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
@@ -490,7 +489,7 @@ void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(int pnum, Point position);
 void MakePlrPath(int pnum, Point targetPosition, bool endspace);
 void CalcPlrStaff(PlayerStruct &player);
-void CheckPlrSpell();
+void CheckPlrSpell(bool mouseClick);
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);

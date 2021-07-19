@@ -19,28 +19,150 @@
 #include "utils/ui_fwd.h"
 
 namespace devilution {
+
 namespace {
+
 std::optional<CelSprite> optbar_cel;
 std::optional<CelSprite> PentSpin_cel;
 std::optional<CelSprite> option_cel;
 std::optional<CelSprite> sgpLogo;
-} // namespace
-
 bool mouseNavigation;
 TMenuItem *sgpCurrItem;
 int LogoAnim_tick;
 BYTE LogoAnim_frame;
-int PentSpin_tick;
 void (*gmenu_current_option)();
-TMenuItem *sgpCurrentMenu;
 int sgCurrentMenuIdx;
+
+void GmenuUpDown(bool isDown)
+{
+	if (sgpCurrItem == nullptr) {
+		return;
+	}
+	mouseNavigation = false;
+	int i = sgCurrentMenuIdx;
+	if (sgCurrentMenuIdx != 0) {
+		while (i != 0) {
+			i--;
+			if (isDown) {
+				sgpCurrItem++;
+				if (sgpCurrItem->fnMenu == nullptr)
+					sgpCurrItem = &sgpCurrentMenu[0];
+			} else {
+				if (sgpCurrItem == sgpCurrentMenu)
+					sgpCurrItem = &sgpCurrentMenu[sgCurrentMenuIdx];
+				sgpCurrItem--;
+			}
+			if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
+				if (i != 0)
+					PlaySFX(IS_TITLEMOV);
+				return;
+			}
+		}
+	}
+}
+
+void GmenuLeftRight(bool isRight)
+{
+	if ((sgpCurrItem->dwFlags & GMENU_SLIDER) == 0)
+		return;
+
+	uint16_t step = sgpCurrItem->dwFlags & 0xFFF;
+	uint16_t steps = (sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	if (isRight) {
+		if (step == steps)
+			return;
+		step++;
+	} else {
+		if (step == 0)
+			return;
+		step--;
+	}
+	sgpCurrItem->dwFlags &= 0xFFFFF000;
+	sgpCurrItem->dwFlags |= step;
+	sgpCurrItem->fnMenu(false);
+}
+
+void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
+{
+	BYTE *i = out.at(x, y);
+	while ((height--) != 0) {
+		memset(i, 205, width);
+		i -= out.pitch();
+	}
+}
+
+int GmenuGetLineWidth(TMenuItem *pItem)
+{
+	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
+		return 490;
+
+	return GetLineWidth(_(pItem->pszStr), GameFontBig, 2);
+}
+
+void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
+{
+	int w = GmenuGetLineWidth(pItem);
+	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
+		int x = 16 + w / 2;
+		CelDrawTo(out, { x + PANEL_LEFT, y - 10 }, *optbar_cel, 1);
+		uint16_t step = pItem->dwFlags & 0xFFF;
+		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
+		uint16_t pos = step * 256 / steps;
+		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
+		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y - 12 }, *option_cel, 1);
+	}
+
+	int x = (gnScreenWidth - w) / 2;
+	uint16_t style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UIS_SILVER : UIS_BLACK;
+	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UIS_HUGE, 2);
+	if (pItem == sgpCurrItem) {
+		CelDrawTo(out, { x - 54, y + 1 }, *PentSpin_cel, PentSpn2Spin());
+		CelDrawTo(out, { x + 4 + w, y + 1 }, *PentSpin_cel, PentSpn2Spin());
+	}
+}
+
+void GameMenuMove()
+{
+	static AxisDirectionRepeater repeater;
+	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection());
+	if (moveDir.x != AxisDirectionX_NONE)
+		GmenuLeftRight(moveDir.x == AxisDirectionX_RIGHT);
+	if (moveDir.y != AxisDirectionY_NONE)
+		GmenuUpDown(moveDir.y == AxisDirectionY_DOWN);
+}
+
+bool GmenuMouseNavigation()
+{
+	if (MousePosition.x < 282 + PANEL_LEFT) {
+		return false;
+	}
+	if (MousePosition.x > 538 + PANEL_LEFT) {
+		return false;
+	}
+	return true;
+}
+
+int GmenuGetMouseSlider()
+{
+	if (MousePosition.x < 282 + PANEL_LEFT) {
+		return 0;
+	}
+	if (MousePosition.x > 538 + PANEL_LEFT) {
+		return 256;
+	}
+	return MousePosition.x - 282 - PANEL_LEFT;
+}
+
+} // namespace
+
+TMenuItem *sgpCurrentMenu;
 
 void gmenu_draw_pause(const Surface &out)
 {
 	if (currlevel != 0)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
-		light_table_index = 0;
+		LightTableIndex = 0;
 		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UIS_HUGE | UIS_CENTER, 2);
 	}
 }
@@ -75,64 +197,14 @@ bool gmenu_is_active()
 	return sgpCurrentMenu != nullptr;
 }
 
-static void GmenuUpDown(bool isDown)
-{
-	if (sgpCurrItem == nullptr) {
-		return;
-	}
-	mouseNavigation = false;
-	int i = sgCurrentMenuIdx;
-	if (sgCurrentMenuIdx != 0) {
-		while (i != 0) {
-			i--;
-			if (isDown) {
-				sgpCurrItem++;
-				if (sgpCurrItem->fnMenu == nullptr)
-					sgpCurrItem = &sgpCurrentMenu[0];
-			} else {
-				if (sgpCurrItem == sgpCurrentMenu)
-					sgpCurrItem = &sgpCurrentMenu[sgCurrentMenuIdx];
-				sgpCurrItem--;
-			}
-			if ((sgpCurrItem->dwFlags & GMENU_ENABLED) != 0) {
-				if (i != 0)
-					PlaySFX(IS_TITLEMOV);
-				return;
-			}
-		}
-	}
-}
-
-static void GmenuLeftRight(bool isRight)
-{
-	if ((sgpCurrItem->dwFlags & GMENU_SLIDER) == 0)
-		return;
-
-	int step = sgpCurrItem->dwFlags & 0xFFF;
-	int steps = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
-	if (isRight) {
-		if (step == steps)
-			return;
-		step++;
-	} else {
-		if (step == 0)
-			return;
-		step--;
-	}
-	sgpCurrItem->dwFlags &= 0xFFFFF000;
-	sgpCurrItem->dwFlags |= step;
-	sgpCurrItem->fnMenu(false);
-}
-
 void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 {
 	PauseMode = 0;
 	mouseNavigation = false;
 	sgpCurrentMenu = pItem;
 	gmenu_current_option = gmFunc;
-	if (gmFunc != nullptr) {
+	if (gmenu_current_option != nullptr) {
 		gmenu_current_option();
-		pItem = sgpCurrentMenu;
 	}
 	sgCurrentMenuIdx = 0;
 	if (sgpCurrentMenu != nullptr) {
@@ -145,55 +217,6 @@ void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)())
 	GmenuUpDown(true);
 }
 
-static void GmenuClearBuffer(const Surface &out, int x, int y, int width, int height)
-{
-	BYTE *i = out.at(x, y);
-	while ((height--) != 0) {
-		memset(i, 205, width);
-		i -= out.pitch();
-	}
-}
-
-static int GmenuGetLfont(TMenuItem *pItem)
-{
-	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
-		return 490;
-
-	return GetLineWidth(_(pItem->pszStr), GameFontBig, 2);
-}
-
-static void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
-{
-	int w = GmenuGetLfont(pItem);
-	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
-		int x = 16 + w / 2;
-		CelDrawTo(out, { x + PANEL_LEFT, y - 10 }, *optbar_cel, 1);
-		int step = pItem->dwFlags & 0xFFF;
-		int nSteps = std::max<int>((pItem->dwFlags & 0xFFF000) >> 12, 2);
-		int pos = step * 256 / nSteps;
-		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
-		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y - 12 }, *option_cel, 1);
-	}
-
-	int x = (gnScreenWidth - w) / 2;
-	uint16_t style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UIS_SILVER : UIS_BLACK;
-	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UIS_HUGE, 2);
-	if (pItem == sgpCurrItem) {
-		CelDrawTo(out, { x - 54, y + 1 }, *PentSpin_cel, PentSpn2Spin());
-		CelDrawTo(out, { x + 4 + w, y + 1 }, *PentSpin_cel, PentSpn2Spin());
-	}
-}
-
-static void GameMenuMove()
-{
-	static AxisDirectionRepeater repeater;
-	const AxisDirection moveDir = repeater.Get(GetLeftStickOrDpadDirection());
-	if (moveDir.x != AxisDirectionX_NONE)
-		GmenuLeftRight(moveDir.x == AxisDirectionX_RIGHT);
-	if (moveDir.y != AxisDirectionY_NONE)
-		GmenuUpDown(moveDir.y == AxisDirectionY_DOWN);
-}
-
 void gmenu_draw(const Surface &out)
 {
 	if (sgpCurrentMenu != nullptr) {
@@ -201,7 +224,7 @@ void gmenu_draw(const Surface &out)
 		if (gmenu_current_option != nullptr)
 			gmenu_current_option();
 		if (gbIsHellfire) {
-			const DWORD ticks = SDL_GetTicks();
+			const uint32_t ticks = SDL_GetTicks();
 			if ((int)(ticks - LogoAnim_tick) > 25) {
 				LogoAnim_frame++;
 				if (LogoAnim_frame > 16)
@@ -255,34 +278,12 @@ bool gmenu_presskeys(int vkey)
 	return true;
 }
 
-static bool GmenuMouseNavigation()
-{
-	if (MousePosition.x < 282 + PANEL_LEFT) {
-		return false;
-	}
-	if (MousePosition.x > 538 + PANEL_LEFT) {
-		return false;
-	}
-	return true;
-}
-
-static int GmenuGetMouseSlider()
-{
-	if (MousePosition.x < 282 + PANEL_LEFT) {
-		return 0;
-	}
-	if (MousePosition.x > 538 + PANEL_LEFT) {
-		return 256;
-	}
-	return MousePosition.x - 282 - PANEL_LEFT;
-}
-
 bool gmenu_on_mouse_move()
 {
 	if (!mouseNavigation)
 		return false;
 
-	int step = (int)(sgpCurrItem->dwFlags & 0xFFF000) >> 12;
+	uint16_t step = (sgpCurrItem->dwFlags & 0xFFF000) >> 12;
 	step *= GmenuGetMouseSlider();
 	step /= 256;
 
@@ -320,7 +321,7 @@ bool gmenu_left_mouse(bool isDown)
 	if ((sgpCurrentMenu[i].dwFlags & GMENU_ENABLED) == 0) {
 		return true;
 	}
-	int w = GmenuGetLfont(pItem);
+	int w = GmenuGetLineWidth(pItem);
 	if (MousePosition.x < gnScreenWidth / 2 - w / 2) {
 		return true;
 	}
@@ -352,7 +353,7 @@ void gmenu_enable(TMenuItem *pMenuItem, bool enable)
 void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 {
 	assert(pItem);
-	int nSteps = std::max((int)(pItem->dwFlags & 0xFFF000) >> 12, 2);
+	uint16_t nSteps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 	pItem->dwFlags &= 0xFFFFF000;
 	pItem->dwFlags |= ((max - min - 1) / 2 + (value - min) * nSteps) / (max - min);
 }
@@ -362,9 +363,9 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
  */
 int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 {
-	int step = pItem->dwFlags & 0xFFF;
-	int nSteps = std::max((int)(pItem->dwFlags & 0xFFF000) >> 12, 2);
-	return min + (step * (max - min) + (nSteps - 1) / 2) / nSteps;
+	uint16_t step = pItem->dwFlags & 0xFFF;
+	uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
+	return min + (step * (max - min) + (steps - 1) / 2) / steps;
 }
 
 /**

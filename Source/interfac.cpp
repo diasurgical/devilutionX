@@ -23,9 +23,10 @@
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
+
 namespace {
+
 std::optional<CelSprite> sgpBackCel;
-} // namespace
 
 uint32_t sgdwProgress;
 int progress_id;
@@ -37,13 +38,13 @@ const int BarPos[3][2] = { { 53, 37 }, { 53, 421 }, { 53, 37 } };
 
 Art ArtCutsceneWidescreen;
 
-static void FreeInterface()
+void FreeInterface()
 {
 	sgpBackCel = std::nullopt;
 	ArtCutsceneWidescreen.Unload();
 }
 
-static Cutscenes PickCutscene(interface_mode uMsg)
+Cutscenes PickCutscene(interface_mode uMsg)
 {
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
@@ -55,7 +56,7 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 	case WM_DIABPREVLVL:
 	case WM_DIABTOWNWARP:
 	case WM_DIABTWARPUP: {
-		int lvl = plr[myplr].plrlevel;
+		int lvl = Players[MyPlayerId].plrlevel;
 		if (lvl == 1 && uMsg == WM_DIABNEXTLVL)
 			return CutTown;
 		if (lvl == 16 && uMsg == WM_DIABNEXTLVL)
@@ -79,7 +80,7 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 		default:
 			return CutLevel1;
 		}
-	};
+	}
 	case WM_DIABWARPLVL:
 		return CutPortal;
 	case WM_DIABSETLVL:
@@ -94,7 +95,7 @@ static Cutscenes PickCutscene(interface_mode uMsg)
 	}
 }
 
-static void InitCutscene(interface_mode uMsg)
+void InitCutscene(interface_mode uMsg)
 {
 	const char *celPath;
 	const char *palPath;
@@ -166,7 +167,7 @@ static void InitCutscene(interface_mode uMsg)
 	sgdwProgress = 0;
 }
 
-static void DrawCutscene()
+void DrawCutscene()
 {
 	lock_buf(1);
 	const Surface &out = GlobalBackBuffer();
@@ -186,6 +187,8 @@ static void DrawCutscene()
 	BltFast(&rect, &rect);
 	RenderPresent();
 }
+
+} // namespace
 
 void interface_msg_pump()
 {
@@ -235,7 +238,7 @@ void ShowProgress(interface_mode uMsg)
 	sound_init();
 	IncProgress();
 
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	switch (uMsg) {
 	case WM_DIABLOADGAME:
@@ -389,7 +392,6 @@ void ShowProgress(interface_mode uMsg)
 
 	NetSendCmdLocParam1(true, CMD_PLAYER_JOINLEVEL, myPlayer.position.tile, myPlayer.plrlevel);
 	plrmsg_delay(false);
-	ResetPal();
 
 	if (gbSomebodyWonGameKludge && myPlayer.plrlevel == 16) {
 		PrepDoEnding();

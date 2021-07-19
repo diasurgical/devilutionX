@@ -88,7 +88,7 @@ bool protocol_zt::network_online()
 
 bool protocol_zt::send(const endpoint &peer, const buffer_t &data)
 {
-	peer_list[peer].send_queue.push_back(frame_queue::make_frame(data));
+	peer_list[peer].send_queue.push_back(frame_queue::MakeFrame(data));
 	return true;
 }
 
@@ -151,7 +151,7 @@ bool protocol_zt::recv_peer(const endpoint &peer)
 	while (true) {
 		auto len = lwip_recv(peer_list[peer].fd, buf, sizeof(buf), 0);
 		if (len >= 0) {
-			peer_list[peer].recv_queue.write(buffer_t(buf, buf + len));
+			peer_list[peer].recv_queue.Write(buffer_t(buf, buf + len));
 		} else {
 			return errno == EAGAIN || errno == EWOULDBLOCK;
 		}
@@ -233,9 +233,9 @@ bool protocol_zt::recv(endpoint &peer, buffer_t &data)
 	}
 
 	for (auto &p : peer_list) {
-		if (p.second.recv_queue.packet_ready()) {
+		if (p.second.recv_queue.PacketReady()) {
 			peer = p.first;
-			data = p.second.recv_queue.read_packet();
+			data = p.second.recv_queue.ReadPacket();
 			return true;
 		}
 	}

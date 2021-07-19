@@ -48,7 +48,7 @@ void SetCursorPos(int x, int y)
 // Moves the mouse to the first attribute "+" button.
 void FocusOnCharInfo()
 {
-	auto &myPlayer = plr[myplr];
+	auto &myPlayer = Players[MyPlayerId];
 
 	if (invflag || myPlayer._pStatPts <= 0)
 		return;
@@ -255,7 +255,7 @@ static int TranslateSdlKey(SDL_Keysym key)
 
 namespace {
 
-int32_t PositionForMouse(short x, short y)
+int32_t PositionForMouse(int16_t x, int16_t y)
 {
 	return (((uint16_t)(y & 0xFFFF)) << 16) | (uint16_t)(x & 0xFFFF);
 }
@@ -283,7 +283,7 @@ bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		if (!TryDropItem()) {
-			plr[myplr].Say(HeroSpeech::WhereWouldIPutThis);
+			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
 		}
 	}
@@ -385,7 +385,7 @@ bool FetchMessage(tagMSG *lpMsg)
 				else
 					spselflag = false;
 				chrflag = false;
-				questlog = false;
+				QuestLogIsOpen = false;
 				sbookflag = false;
 				StoreSpellCoords();
 			}
@@ -393,7 +393,7 @@ bool FetchMessage(tagMSG *lpMsg)
 		case GameActionType_TOGGLE_CHARACTER_INFO:
 			chrflag = !chrflag;
 			if (chrflag) {
-				questlog = false;
+				QuestLogIsOpen = false;
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
 					NewCursor(CURSOR_HAND);
@@ -401,12 +401,12 @@ bool FetchMessage(tagMSG *lpMsg)
 			}
 			break;
 		case GameActionType_TOGGLE_QUEST_LOG:
-			if (!questlog) {
+			if (!QuestLogIsOpen) {
 				StartQuestlog();
 				chrflag = false;
 				spselflag = false;
 			} else {
-				questlog = false;
+				QuestLogIsOpen = false;
 			}
 			break;
 		case GameActionType_TOGGLE_INVENTORY:
@@ -549,8 +549,6 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_MINIMIZED:
 		case SDL_WINDOWEVENT_MAXIMIZED:
 		case SDL_WINDOWEVENT_RESTORED:
-		case SDL_WINDOWEVENT_FOCUS_GAINED:
-		case SDL_WINDOWEVENT_FOCUS_LOST:
 #if SDL_VERSION_ATLEAST(2, 0, 5)
 		case SDL_WINDOWEVENT_TAKE_FOCUS:
 #endif
@@ -567,6 +565,14 @@ bool FetchMessage(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_CLOSE:
 			lpMsg->message = DVL_WM_QUERYENDSESSION;
 			break;
+
+		case SDL_WINDOWEVENT_FOCUS_LOST:
+			diablo_focus_pause();
+			break;
+		case SDL_WINDOWEVENT_FOCUS_GAINED:
+			diablo_focus_unpause();
+			break;
+
 		default:
 			return FalseAvail("SDL_WINDOWEVENT", e.window.event);
 		}

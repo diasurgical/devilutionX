@@ -11,6 +11,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "gendung.h"
+#include "monster.h"
 #include "textdat.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -56,7 +57,7 @@ struct QuestStruct {
 	bool _qlog;
 };
 
-struct QuestData {
+struct QuestDataStruct {
 	uint8_t _qdlvl;
 	int8_t _qdmultlvl;
 	dungeon_type _qlvlt;
@@ -68,19 +69,26 @@ struct QuestData {
 	const char *_qlstr;
 };
 
-extern bool questlog;
+extern bool QuestLogIsOpen;
 extern std::optional<CelSprite> pQLogCel;
-extern QuestStruct quests[MAXQUESTS];
+extern QuestStruct Quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;
-extern dungeon_type ReturnLvlT;
-extern int ReturnLvl;
+extern dungeon_type ReturnLevelType;
+extern int ReturnLevel;
 
 void InitQuests();
+
+/**
+ * @brief Deactivates quests from each quest pool at random to provide variety for single player games
+ * @param seed The seed used to control which quests are deactivated
+ * @param quests The available quest list, this function will make some of them inactive by the time it returns
+*/
+void InitialiseQuestPools(uint32_t seed, QuestStruct quests[]);
 void CheckQuests();
 bool ForceQuests();
 bool QuestStatus(int i);
-void CheckQuestKill(int m, bool sendmsg);
+void CheckQuestKill(const MonsterStruct &monster, bool sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
 void GetReturnLvlPos();
@@ -97,6 +105,6 @@ void QuestlogESC();
 void SetMultiQuest(int q, quest_state s, bool log, int v1);
 
 /* rdata */
-extern QuestData questlist[];
+extern QuestDataStruct QuestData[];
 
 } // namespace devilution

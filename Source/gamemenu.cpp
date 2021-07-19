@@ -80,14 +80,14 @@ void GamemenuUpdateSingle()
 {
 	gmenu_enable(&sgSingleMenu[3], gbValidSaveFile);
 
-	bool enable = plr[myplr]._pmode != PM_DEATH && !deathflag;
+	bool enable = Players[MyPlayerId]._pmode != PM_DEATH && !MyPlayerIsDead;
 
 	gmenu_enable(&sgSingleMenu[0], enable);
 }
 
 void GamemenuUpdateMulti()
 {
-	gmenu_enable(&sgMultiMenu[2], deathflag);
+	gmenu_enable(&sgMultiMenu[2], MyPlayerIsDead);
 }
 
 void GamemenuPrevious(bool /*bActivate*/)
@@ -97,12 +97,12 @@ void GamemenuPrevious(bool /*bActivate*/)
 
 void GamemenuNewGame(bool /*bActivate*/)
 {
-	for (auto &player : plr) {
+	for (auto &player : Players) {
 		player._pmode = PM_QUIT;
 		player._pInvincible = true;
 	}
 
-	deathflag = false;
+	MyPlayerIsDead = false;
 	force_redraw = 255;
 	scrollrt_draw_game_screen();
 	CornerStone.activated = false;
@@ -131,10 +131,12 @@ void GamemenuSoundMusicToggle(const char *const *names, TMenuItem *menuItem, int
 	menuItem->pszStr = names[1];
 }
 
+#ifndef NOSOUND
 int GamemenuSliderMusicSound(TMenuItem *menuItem)
 {
 	return gmenu_slider_get(menuItem, VOLUME_MIN, VOLUME_MAX);
 }
+#endif
 
 void GamemenuGetMusic()
 {
@@ -190,8 +192,6 @@ void GamemenuOptions(bool /*bActivate*/)
 
 void GamemenuMusicVolume(bool bActivate)
 {
-	int volume;
-
 #ifndef NOSOUND
 	if (bActivate) {
 		if (gbMusicOn) {
@@ -212,7 +212,7 @@ void GamemenuMusicVolume(bool bActivate)
 			music_start(lt);
 		}
 	} else {
-		volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
+		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[0]);
 		sound_get_or_set_music_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbMusicOn) {
@@ -239,7 +239,6 @@ void GamemenuMusicVolume(bool bActivate)
 void GamemenuSoundVolume(bool bActivate)
 {
 #ifndef NOSOUND
-	int volume;
 	if (bActivate) {
 		if (gbSoundOn) {
 			gbSoundOn = false;
@@ -250,7 +249,7 @@ void GamemenuSoundVolume(bool bActivate)
 			sound_get_or_set_sound_volume(VOLUME_MAX);
 		}
 	} else {
-		volume = GamemenuSliderMusicSound(&sgOptionsMenu[1]);
+		int volume = GamemenuSliderMusicSound(&sgOptionsMenu[1]);
 		sound_get_or_set_sound_volume(volume);
 		if (volume == VOLUME_MIN) {
 			if (gbSoundOn) {
@@ -319,7 +318,7 @@ void gamemenu_load_game(bool /*bActivate*/)
 	ClrDiabloMsg();
 	CornerStone.activated = false;
 	PaletteFadeOut(8);
-	deathflag = false;
+	MyPlayerIsDead = false;
 	force_redraw = 255;
 	DrawAndBlit();
 	LoadPWaterPalette();
@@ -335,7 +334,7 @@ void gamemenu_save_game(bool /*bActivate*/)
 		return;
 	}
 
-	if (plr[myplr]._pmode == PM_DEATH || deathflag) {
+	if (Players[MyPlayerId]._pmode == PM_DEATH || MyPlayerIsDead) {
 		gamemenu_off();
 		return;
 	}

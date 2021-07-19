@@ -5,13 +5,13 @@
 using namespace devilution;
 
 namespace devilution {
-extern bool PM_DoGotHit(int pnum);
+extern bool TestPlayerDoGotHit(int pnum);
 }
 
 int RunBlockTest(int frames, int flags)
 {
 	int pnum = 0;
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;
@@ -19,7 +19,7 @@ int RunBlockTest(int frames, int flags)
 
 	int i = 1;
 	for (; i < 100; i++) {
-		PM_DoGotHit(pnum);
+		TestPlayerDoGotHit(pnum);
 		if (player._pmode != PM_GOTHIT)
 			break;
 		player.AnimInfo.CurrentFrame++;

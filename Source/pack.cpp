@@ -13,6 +13,28 @@
 
 namespace devilution {
 
+namespace {
+
+void VerifyGoldSeeds(PlayerStruct &player)
+{
+	for (int i = 0; i < player._pNumInv; i++) {
+		if (player.InvList[i].IDidx != IDI_GOLD)
+			continue;
+		for (int j = 0; j < player._pNumInv; j++) {
+			if (i == j)
+				continue;
+			if (player.InvList[j].IDidx != IDI_GOLD)
+				continue;
+			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
+				continue;
+			player.InvList[i]._iSeed = AdvanceRndSeed();
+			j = -1;
+		}
+	}
+}
+
+} // namespace
+
 void PackItem(PkItemStruct *id, const ItemStruct *is)
 {
 	memset(id, 0, sizeof(*id));
@@ -156,46 +178,28 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		    SDL_SwapLE16(is->wValue),
 		    SDL_SwapLE32(is->dwBuff));
 	} else {
-		memset(&items[MAXITEMS], 0, sizeof(*items));
+		memset(&Items[MAXITEMS], 0, sizeof(*Items));
 		RecreateItem(MAXITEMS, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
-		items[MAXITEMS]._iMagical = static_cast<item_quality>(is->bId >> 1);
-		items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
-		items[MAXITEMS]._iDurability = is->bDur;
-		items[MAXITEMS]._iMaxDur = is->bMDur;
-		items[MAXITEMS]._iCharges = is->bCh;
-		items[MAXITEMS]._iMaxCharges = is->bMCh;
+		Items[MAXITEMS]._iMagical = static_cast<item_quality>(is->bId >> 1);
+		Items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
+		Items[MAXITEMS]._iDurability = is->bDur;
+		Items[MAXITEMS]._iMaxDur = is->bMDur;
+		Items[MAXITEMS]._iCharges = is->bCh;
+		Items[MAXITEMS]._iMaxCharges = is->bMCh;
 
-		RemoveInvalidItem(&items[MAXITEMS]);
+		RemoveInvalidItem(&Items[MAXITEMS]);
 
 		if (isHellfire)
-			items[MAXITEMS].dwBuff |= CF_HELLFIRE;
+			Items[MAXITEMS].dwBuff |= CF_HELLFIRE;
 		else
-			items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
+			Items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
 	}
-	*id = items[MAXITEMS];
-}
-
-static void VerifyGoldSeeds(PlayerStruct &player)
-{
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i].IDidx != IDI_GOLD)
-			continue;
-		for (int j = 0; j < player._pNumInv; j++) {
-			if (i == j)
-				continue;
-			if (player.InvList[j].IDidx != IDI_GOLD)
-				continue;
-			if (player.InvList[i]._iSeed != player.InvList[j]._iSeed)
-				continue;
-			player.InvList[i]._iSeed = AdvanceRndSeed();
-			j = -1;
-		}
-	}
+	*id = Items[MAXITEMS];
 }
 
 void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 {
-	auto &player = plr[pnum];
+	auto &player = Players[pnum];
 
 	player.position.tile = { pPack->px, pPack->py };
 	player.position.future = { pPack->px, pPack->py };
@@ -219,7 +223,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 	player._pGold = SDL_SwapLE32(pPack->pGold);
 	player._pMaxHPBase = SDL_SwapLE32(pPack->pMaxHPBase);
 	player._pHPBase = SDL_SwapLE32(pPack->pHPBase);
-	player._pBaseToBlk = ToBlkTbl[static_cast<std::size_t>(player._pClass)];
+	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
 	if (!netSync)
 		if ((int)(player._pHPBase & 0xFFFFFFC0) < 64)
 			player._pHPBase = 64;
@@ -257,7 +261,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 		UnPackItem(&packedItem, &player.SpdList[i], isHellfire);
 	}
 
-	if (pnum == myplr) {
+	if (pnum == MyPlayerId) {
 		for (int i = 0; i < 20; i++)
 			witchitem[i]._itype = ITYPE_NONE;
 	}

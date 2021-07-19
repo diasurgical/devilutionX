@@ -6,122 +6,63 @@
 #include "path.h"
 
 #include "gendung.h"
+#include "objects.h"
 
 namespace devilution {
 
-#define MAXPATHNODES 300
+namespace {
 
-/** Notes visisted by the path finding algorithm. */
-PATHNODE path_nodes[MAXPATHNODES];
-/** size of the pnode_tblptr stack */
-int gdwCurPathStep;
-/** the number of in-use nodes in path_nodes */
-int gdwCurNodes;
-/**
- * for reconstructing the path after the A* search is done. The longest
- * possible path is actually 24 steps, even though we can fit 25
- */
-int8_t pnode_vals[MAX_PATH_LENGTH];
-/** A linked list of all visited nodes */
-PATHNODE *pnode_ptr;
-/** A stack for recursively searching nodes */
-PATHNODE *pnode_tblptr[MAXPATHNODES];
 /** A linked list of the A* frontier, sorted by distance */
 PATHNODE *path_2_nodes;
-
-/** For iterating over the 8 possible movement directions */
-const char pathxdir[8] = { -1, -1, 1, 1, -1, 0, 1, 0 };
-const char pathydir[8] = { -1, 1, -1, 1, 0, -1, 0, 1 };
-
-/* data */
-
 /**
- * each step direction is assigned a number like this:
- *       dx
- *     -1 0 1
- *     +-----
- *   -1|5 1 6
- * dy 0|2 0 3
- *    1|8 4 7
+ * @brief return a node for a position on the frontier, or NULL if not found
  */
-int8_t path_directions[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
-
-/**
- * find the shortest path from (sx,sy) to (dx,dy), using PosOk(PosOkArg,x,y) to
- * check that each step is a valid position. Store the step directions (see
- * path_directions) in path, which must have room for 24 steps
- */
-int FindPath(bool (*posOk)(int, Point), int posOkArg, int sx, int sy, int dx, int dy, int8_t path[MAX_PATH_LENGTH])
+PATHNODE *GetNode1(Point targetPosition)
 {
-	// clear all nodes, create root nodes for the visited/frontier linked lists
-	gdwCurNodes = 0;
-	path_2_nodes = path_new_step();
-	pnode_ptr = path_new_step();
-	gdwCurPathStep = 0;
-	PATHNODE *pathStart = path_new_step();
-	pathStart->g = 0;
-	pathStart->h = path_get_h_cost(sx, sy, dx, dy);
-	pathStart->position.x = sx;
-	pathStart->f = pathStart->h + pathStart->g;
-	pathStart->position.y = sy;
-	path_2_nodes->NextNode = pathStart;
-	// A* search until we find (dx,dy) or fail
-	PATHNODE *nextNode;
-	while ((nextNode = GetNextPath()) != nullptr) {
-		// reached the end, success!
-		if (nextNode->position.x == dx && nextNode->position.y == dy) {
-			PATHNODE *current = nextNode;
-			int pathLength = 0;
-			while (current->Parent != nullptr) {
-				if (pathLength >= MAX_PATH_LENGTH)
-					break;
-				pnode_vals[pathLength++] = path_directions[3 * (current->position.y - current->Parent->position.y) - current->Parent->position.x + 4 + current->position.x];
-				current = current->Parent;
-			}
-			if (pathLength != MAX_PATH_LENGTH) {
-				int i;
-				for (i = 0; i < pathLength; i++)
-					path[i] = pnode_vals[pathLength - i - 1];
-				return i;
-			}
-			return 0;
-		}
-		// ran out of nodes, abort!
-		if (!path_get_path(posOk, posOkArg, nextNode, dx, dy))
-			return 0;
+	PATHNODE *result = path_2_nodes->NextNode;
+	while (result != nullptr) {
+		if (result->position == targetPosition)
+			return result;
+		result = result->NextNode;
 	}
-	// frontier is empty, no path!
-	return 0;
+	return nullptr;
 }
 
 /**
- * @brief heuristic, estimated cost from (sx,sy) to (dx,dy)
+ * @brief insert pPath into the frontier (keeping the frontier sorted by total distance)
  */
-int path_get_h_cost(int sx, int sy, int dx, int dy)
+void NextNode(PATHNODE *pPath)
 {
-	int deltaX = abs(sx - dx);
-	int deltaY = abs(sy - dy);
+	if (path_2_nodes->NextNode == nullptr) {
+		path_2_nodes->NextNode = pPath;
+		return;
+	}
 
-	int min = deltaX < deltaY ? deltaX : deltaY;
-	int max = deltaX > deltaY ? deltaX : deltaY;
-
-	// see path_check_equal for why this is times 2
-	return 2 * (min + max);
+	PATHNODE *current = path_2_nodes;
+	PATHNODE *next = path_2_nodes->NextNode;
+	int f = pPath->f;
+	while (next != nullptr && next->f < f) {
+		current = next;
+		next = next->NextNode;
+	}
+	pPath->NextNode = next;
+	current->NextNode = pPath;
 }
 
+/** A linked list of all visited nodes */
+PATHNODE *pnode_ptr;
 /**
- * @brief return 2 if pPath is horizontally/vertically aligned with (dx,dy), else 3
- *
- * This approximates that diagonal movement on a square grid should have a cost
- * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
- * except diagonal steps which are times 3
+ * @brief return a node for this position if it was visited, or NULL if not found
  */
-int path_check_equal(PATHNODE *pPath, int dx, int dy)
+PATHNODE *GetNode2(Point targetPosition)
 {
-	if (pPath->position.x == dx || pPath->position.y == dy)
-		return 2;
-
-	return 3;
+	PATHNODE *result = pnode_ptr->NextNode;
+	while (result != nullptr) {
+		if (result->position == targetPosition)
+			return result;
+		result = result->NextNode;
+	}
+	return nullptr;
 }
 
 /**
@@ -129,9 +70,7 @@ int path_check_equal(PATHNODE *pPath, int dx, int dy)
  */
 PATHNODE *GetNextPath()
 {
-	PATHNODE *result;
-
-	result = path_2_nodes->NextNode;
+	PATHNODE *result = path_2_nodes->NextNode;
 	if (result == nullptr) {
 		return result;
 	}
@@ -142,80 +81,139 @@ PATHNODE *GetNextPath()
 	return result;
 }
 
+constexpr size_t MAXPATHNODES = 300;
+
+/** Notes visisted by the path finding algorithm. */
+PATHNODE path_nodes[MAXPATHNODES];
+/** the number of in-use nodes in path_nodes */
+uint32_t gdwCurNodes;
 /**
- * @brief check if stepping from pPath to (dx,dy) cuts a corner.
- *
- * If you step from A to B, both Xs need to be clear:
- *
- *  AX
- *  XB
- *
- *  @return true if step is allowed
+ * @brief zero one of the preallocated nodes and return a pointer to it, or NULL if none are available
  */
-bool path_solid_pieces(PATHNODE *pPath, int dx, int dy)
+PATHNODE *NewStep()
 {
-	bool rv = true;
-	switch (path_directions[3 * (dy - pPath->position.y) + 3 - pPath->position.x + 1 + dx]) {
-	case 5:
-		rv = !nSolidTable[dPiece[dx][dy + 1]] && !nSolidTable[dPiece[dx + 1][dy]];
-		break;
-	case 6:
-		rv = !nSolidTable[dPiece[dx][dy + 1]] && !nSolidTable[dPiece[dx - 1][dy]];
-		break;
-	case 7:
-		rv = !nSolidTable[dPiece[dx][dy - 1]] && !nSolidTable[dPiece[dx - 1][dy]];
-		break;
-	case 8:
-		rv = !nSolidTable[dPiece[dx + 1][dy]] && !nSolidTable[dPiece[dx][dy - 1]];
-		break;
-	}
-	return rv;
+	if (gdwCurNodes >= MAXPATHNODES)
+		return nullptr;
+
+	PATHNODE *newNode = &path_nodes[gdwCurNodes];
+	gdwCurNodes++;
+	memset(newNode, 0, sizeof(PATHNODE));
+	return newNode;
+}
+
+/** A stack for recursively searching nodes */
+PATHNODE *pnode_tblptr[MAXPATHNODES];
+/** size of the pnode_tblptr stack */
+uint32_t gdwCurPathStep;
+/**
+ * @brief push pPath onto the pnode_tblptr stack
+ */
+void PushActiveStep(PATHNODE *pPath)
+{
+	assert(gdwCurPathStep < MAXPATHNODES);
+	pnode_tblptr[gdwCurPathStep] = pPath;
+	gdwCurPathStep++;
 }
 
 /**
- * @brief perform a single step of A* bread-first search by trying to step in every possible direction from pPath with goal (x,y). Check each step with PosOk
- *
- * @return false if we ran out of preallocated nodes to use, else true
+ * @brief pop and return a node from the pnode_tblptr stack
  */
-bool path_get_path(bool (*posOk)(int, Point), int posOkArg, PATHNODE *pPath, int x, int y)
+PATHNODE *PopActiveStep()
 {
-	for (int i = 0; i < 8; i++) {
-		int dx = pPath->position.x + pathxdir[i];
-		int dy = pPath->position.y + pathydir[i];
-		bool ok = posOk(posOkArg, { dx, dy });
-		if ((ok && path_solid_pieces(pPath, dx, dy)) || (!ok && dx == x && dy == y)) {
-			if (!path_parent_path(pPath, dx, dy, x, y))
-				return false;
+	gdwCurPathStep--;
+	return pnode_tblptr[gdwCurPathStep];
+}
+
+/**
+ * @brief return 2 if pPath is horizontally/vertically aligned with (dx,dy), else 3
+ *
+ * This approximates that diagonal movement on a square grid should have a cost
+ * of sqrt(2). That's approximately 1.5, so they multiply all step costs by 2,
+ * except diagonal steps which are times 3
+ */
+int CheckEqual(Point startPosition, Point destinationPosition)
+{
+	if (startPosition.x == destinationPosition.x || startPosition.y == destinationPosition.y)
+		return 2;
+
+	return 3;
+}
+
+/**
+ * @brief update all path costs using depth-first search starting at pPath
+ */
+void SetCoords(PATHNODE *pPath)
+{
+	PushActiveStep(pPath);
+	// while there are path nodes to check
+	while (gdwCurPathStep > 0) {
+		PATHNODE *pathOld = PopActiveStep();
+		for (auto *pathAct : pathOld->Child) {
+			if (pathAct == nullptr)
+				break;
+
+			if (pathOld->g + CheckEqual(pathOld->position, pathAct->position) < pathAct->g) {
+				if (path_solid_pieces(pathOld->position, pathAct->position)) {
+					pathAct->Parent = pathOld;
+					pathAct->g = pathOld->g + CheckEqual(pathOld->position, pathAct->position);
+					pathAct->f = pathAct->g + pathAct->h;
+					PushActiveStep(pathAct);
+				}
+			}
 		}
 	}
-
-	return true;
 }
 
 /**
- * @brief add a step from pPath to (dx,dy), return 1 if successful, and update the frontier/visited nodes accordingly
+ * Returns a number representing the direction from a starting tile to a neighbouring tile.
  *
+ * Used in the pathfinding code, each step direction is assigned a number like this:
+ *       dx
+ *     -1 0 1
+ *     +-----
+ *   -1|5 1 6
+ * dy 0|2 0 3
+ *    1|8 4 7
+ */
+int8_t GetPathDirection(Point startPosition, Point destinationPosition)
+{
+	constexpr int8_t PathDirections[9] = { 5, 1, 6, 2, 0, 3, 8, 4, 7 };
+	return PathDirections[3 * (destinationPosition.y - startPosition.y) + 4 + destinationPosition.x - startPosition.x];
+}
+
+/**
+ * @brief heuristic, estimated cost from startPosition to destinationPosition.
+ */
+int GetHeuristicCost(Point startPosition, Point destinationPosition)
+{
+	// see path_check_equal for why this is times 2
+	return 2 * startPosition.ManhattanDistance(destinationPosition);
+}
+
+/**
+ * @brief add a step from pPath to destination, return 1 if successful, and update the frontier/visited nodes accordingly
+ *
+ * @param pPath pointer to the current path node
+ * @param candidatePosition expected to be a neighbour of the current path node position
+ * @param destinationPosition where we hope to end up
  * @return true if step successfully added, false if we ran out of nodes to use
  */
-bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
+bool ParentPath(PATHNODE *pPath, Point candidatePosition, Point destinationPosition)
 {
-	int nextG;
-	PATHNODE *dxdy;
-	int i;
-
-	nextG = pPath->g + path_check_equal(pPath, dx, dy);
+	int nextG = pPath->g + CheckEqual(pPath->position, candidatePosition);
 
 	// 3 cases to consider
 	// case 1: (dx,dy) is already on the frontier
-	dxdy = path_get_node1(dx, dy);
+	PATHNODE *dxdy = GetNode1(candidatePosition);
 	if (dxdy != nullptr) {
+		int i;
 		for (i = 0; i < 8; i++) {
 			if (pPath->Child[i] == nullptr)
 				break;
 		}
 		pPath->Child[i] = dxdy;
 		if (nextG < dxdy->g) {
-			if (path_solid_pieces(pPath, dx, dy)) {
+			if (path_solid_pieces(pPath->position, candidatePosition)) {
 				// we'll explore it later, just update
 				dxdy->Parent = pPath;
 				dxdy->g = nextG;
@@ -224,34 +222,36 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 		}
 	} else {
 		// case 2: (dx,dy) was already visited
-		dxdy = path_get_node2(dx, dy);
+		dxdy = GetNode2(candidatePosition);
 		if (dxdy != nullptr) {
+			int i;
 			for (i = 0; i < 8; i++) {
 				if (pPath->Child[i] == nullptr)
 					break;
 			}
 			pPath->Child[i] = dxdy;
-			if (nextG < dxdy->g && path_solid_pieces(pPath, dx, dy)) {
+			if (nextG < dxdy->g && path_solid_pieces(pPath->position, candidatePosition)) {
 				// update the node
 				dxdy->Parent = pPath;
 				dxdy->g = nextG;
 				dxdy->f = nextG + dxdy->h;
 				// already explored, so re-update others starting from that node
-				path_set_coords(dxdy);
+				SetCoords(dxdy);
 			}
 		} else {
 			// case 3: (dx,dy) is totally new
-			dxdy = path_new_step();
+			dxdy = NewStep();
 			if (dxdy == nullptr)
 				return false;
 			dxdy->Parent = pPath;
 			dxdy->g = nextG;
-			dxdy->h = path_get_h_cost(dx, dy, sx, sy);
+			dxdy->h = GetHeuristicCost(candidatePosition, destinationPosition);
 			dxdy->f = nextG + dxdy->h;
-			dxdy->position = { dx, dy };
+			dxdy->position = candidatePosition;
 			// add it to the frontier
-			path_next_node(dxdy);
+			NextNode(dxdy);
 
+			int i;
 			for (i = 0; i < 8; i++) {
 				if (pPath->Child[i] == nullptr)
 					break;
@@ -263,118 +263,128 @@ bool path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy)
 }
 
 /**
- * @brief return a node for (dx,dy) on the frontier, or NULL if not found
+ * @brief perform a single step of A* bread-first search by trying to step in every possible direction from pPath with goal (x,y). Check each step with PosOk
+ *
+ * @return false if we ran out of preallocated nodes to use, else true
  */
-PATHNODE *path_get_node1(int dx, int dy)
+bool GetPath(const std::function<bool(Point)> &posOk, PATHNODE *pPath, Point destination)
 {
-	PATHNODE *result = path_2_nodes->NextNode;
-	while (result != nullptr) {
-		if (result->position.x == dx && result->position.y == dy)
-			return result;
-		result = result->NextNode;
-	}
-	return nullptr;
-}
-
-/**
- * @brief return a node for (dx,dy) if it was visited, or NULL if not found
- */
-PATHNODE *path_get_node2(int dx, int dy)
-{
-	PATHNODE *result = pnode_ptr->NextNode;
-	while (result != nullptr) {
-		if (result->position.x == dx && result->position.y == dy)
-			return result;
-		result = result->NextNode;
-	}
-	return nullptr;
-}
-
-/**
- * @brief insert pPath into the frontier (keeping the frontier sorted by total distance)
- */
-void path_next_node(PATHNODE *pPath)
-{
-	PATHNODE *next = path_2_nodes;
-	if (path_2_nodes->NextNode == nullptr) {
-		path_2_nodes->NextNode = pPath;
-		return;
-	}
-
-	PATHNODE *current = path_2_nodes;
-	next = path_2_nodes->NextNode;
-	int f = pPath->f;
-	while (next != nullptr && next->f < f) {
-		current = next;
-		next = next->NextNode;
-	}
-	pPath->NextNode = next;
-	current->NextNode = pPath;
-}
-
-/**
- * @brief update all path costs using depth-first search starting at pPath
- */
-void path_set_coords(PATHNODE *pPath)
-{
-	PATHNODE *pathOld;
-	PATHNODE *pathAct;
-	int i;
-
-	path_push_active_step(pPath);
-	// while there are path nodes to check
-	while (gdwCurPathStep > 0) {
-		pathOld = path_pop_active_step();
-		for (i = 0; i < 8; i++) {
-			pathAct = pathOld->Child[i];
-			if (pathAct == nullptr)
-				break;
-
-			if (pathOld->g + path_check_equal(pathOld, pathAct->position.x, pathAct->position.y) < pathAct->g) {
-				if (path_solid_pieces(pathOld, pathAct->position.x, pathAct->position.y)) {
-					pathAct->Parent = pathOld;
-					pathAct->g = pathOld->g + path_check_equal(pathOld, pathAct->position.x, pathAct->position.y);
-					pathAct->f = pathAct->g + pathAct->h;
-					path_push_active_step(pathAct);
-				}
-			}
+	for (auto dir : PathDirs) {
+		Point tile = pPath->position + dir;
+		bool ok = posOk(tile);
+		if ((ok && path_solid_pieces(pPath->position, tile)) || (!ok && tile == destination)) {
+			if (!ParentPath(pPath, tile, destination))
+				return false;
 		}
 	}
+
+	return true;
 }
 
-/**
- * @brief push pPath onto the pnode_tblptr stack
- */
-void path_push_active_step(PATHNODE *pPath)
+} // namespace
+
+bool IsTileNotSolid(Point position)
 {
-	int stackIndex = gdwCurPathStep;
-	gdwCurPathStep++;
-	pnode_tblptr[stackIndex] = pPath;
+	return !nSolidTable[dPiece[position.x][position.y]];
 }
 
-/**
- * @brief pop and return a node from the pnode_tblptr stack
- */
-PATHNODE *path_pop_active_step()
+bool IsTileSolid(Point position)
 {
-	gdwCurPathStep--;
-	return pnode_tblptr[gdwCurPathStep];
+	if (position.x < 0 || position.y < 0 || position.x >= MAXDUNX || position.y >= MAXDUNY) {
+		return false;
+	}
+
+	return nSolidTable[dPiece[position.x][position.y]];
 }
 
-/**
- * @brief zero one of the preallocated nodes and return a pointer to it, or NULL if none are available
- */
-PATHNODE *path_new_step()
+bool IsTileWalkable(Point position, bool ignoreDoors)
 {
-	PATHNODE *newNode;
+	if (dObject[position.x][position.y] != 0) {
+		int oi = abs(dObject[position.x][position.y]) - 1;
+		if (ignoreDoors && Objects[oi].IsDoor())
+			return true;
+		if (Objects[oi]._oSolidFlag)
+			return false;
+	}
 
-	if (gdwCurNodes == MAXPATHNODES)
-		return nullptr;
-
-	newNode = &path_nodes[gdwCurNodes];
-	gdwCurNodes++;
-	memset(newNode, 0, sizeof(PATHNODE));
-	return newNode;
+	return !IsTileSolid(position);
 }
+
+int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH])
+{
+	/**
+	 * for reconstructing the path after the A* search is done. The longest
+	 * possible path is actually 24 steps, even though we can fit 25
+	 */
+	static int8_t pnodeVals[MAX_PATH_LENGTH];
+
+	// clear all nodes, create root nodes for the visited/frontier linked lists
+	gdwCurNodes = 0;
+	path_2_nodes = NewStep();
+	pnode_ptr = NewStep();
+	gdwCurPathStep = 0;
+	PATHNODE *pathStart = NewStep();
+	pathStart->g = 0;
+	pathStart->h = GetHeuristicCost(startPosition, destinationPosition);
+	pathStart->f = pathStart->h + pathStart->g;
+	pathStart->position = startPosition;
+	path_2_nodes->NextNode = pathStart;
+	// A* search until we find (dx,dy) or fail
+	PATHNODE *nextNode;
+	while ((nextNode = GetNextPath()) != nullptr) {
+		// reached the end, success!
+		if (nextNode->position == destinationPosition) {
+			PATHNODE *current = nextNode;
+			int pathLength = 0;
+			while (current->Parent != nullptr) {
+				if (pathLength >= MAX_PATH_LENGTH)
+					break;
+				pnodeVals[pathLength++] = GetPathDirection(current->Parent->position, current->position);
+				current = current->Parent;
+			}
+			if (pathLength != MAX_PATH_LENGTH) {
+				int i;
+				for (i = 0; i < pathLength; i++)
+					path[i] = pnodeVals[pathLength - i - 1];
+				return i;
+			}
+			return 0;
+		}
+		// ran out of nodes, abort!
+		if (!GetPath(posOk, nextNode, destinationPosition))
+			return 0;
+	}
+	// frontier is empty, no path!
+	return 0;
+}
+
+bool path_solid_pieces(Point startPosition, Point destinationPosition)
+{
+	// These checks are written as if working backwards from the destination to the source, given
+	// both tiles are expected to be adjacent this doesn't matter beyond being a bit confusing
+	bool rv = true;
+	switch (GetPathDirection(startPosition, destinationPosition)) {
+	case 5: // Stepping north
+		rv = IsTileNotSolid(destinationPosition + DIR_SW) && IsTileNotSolid(destinationPosition + DIR_SE);
+		break;
+	case 6: // Stepping east
+		rv = IsTileNotSolid(destinationPosition + DIR_SW) && IsTileNotSolid(destinationPosition + DIR_NW);
+		break;
+	case 7: // Stepping south
+		rv = IsTileNotSolid(destinationPosition + DIR_NE) && IsTileNotSolid(destinationPosition + DIR_NW);
+		break;
+	case 8: // Stepping west
+		rv = IsTileNotSolid(destinationPosition + DIR_SE) && IsTileNotSolid(destinationPosition + DIR_NE);
+		break;
+	}
+	return rv;
+}
+
+#ifdef RUN_TESTS
+int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition)
+{
+	return GetHeuristicCost(startPosition, destinationPosition);
+}
+#endif
 
 } // namespace devilution

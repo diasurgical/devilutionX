@@ -73,7 +73,7 @@ BYTE SkelChamTrans3[] = {
 };
 
 /** Maps from quest level to quest level names. */
-const char *const quest_level_names[] = {
+const char *const QuestLevelNames[] = {
 	"",
 	N_("Skeleton King's Lair"),
 	N_("Chamber of Bone"),
@@ -82,40 +82,42 @@ const char *const quest_level_names[] = {
 	N_("Archbishop Lazarus' Lair"),
 };
 
-int ObjIndex(int x, int y)
+ObjectStruct &ObjectAtPosition(Point position)
 {
-	int i;
-	int oi;
-
-	for (i = 0; i < nobjects; i++) {
-		oi = objectactive[i];
-		if (object[oi].position.x == x && object[oi].position.y == y)
-			return oi;
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		int oi = ActiveObjects[i];
+		if (Objects[oi].position == position)
+			return Objects[oi];
 	}
-	app_fatal("ObjIndex: Active object not found at (%i,%i)", x, y);
+	app_fatal("ObjectAtPosition: Active object not found at (%i,%i)", position.x, position.y);
 }
 
 void AddSKingObjs()
 {
-	SetObjMapRange(ObjIndex(64, 34), 20, 7, 23, 10, 1);
-	SetObjMapRange(ObjIndex(64, 59), 20, 14, 21, 16, 2);
-	SetObjMapRange(ObjIndex(27, 37), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(46, 35), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(49, 53), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(27, 53), 8, 1, 15, 11, 3);
+	constexpr Rectangle SmallSecretRoom { { 20, 7 }, { 3, 3 } };
+	ObjectAtPosition({ 64, 34 }).InitializeLoadedObject(SmallSecretRoom, 1);
+
+	constexpr Rectangle Gate { { 20, 14 }, { 1, 2 } };
+	ObjectAtPosition({ 64, 59 }).InitializeLoadedObject(Gate, 2);
+
+	constexpr Rectangle LargeSecretRoom { { 8, 1 }, { 7, 10 } };
+	ObjectAtPosition({ 27, 37 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 46, 35 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 49, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 27, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);
 }
 
 void AddSChamObjs()
 {
-	SetObjMapRange(ObjIndex(37, 30), 17, 0, 21, 5, 1);
-	SetObjMapRange(ObjIndex(37, 46), 13, 0, 16, 5, 2);
+	ObjectAtPosition({ 37, 30 }).InitializeLoadedObject({ { 17, 0 }, { 4, 5 } }, 1);
+	ObjectAtPosition({ 37, 46 }).InitializeLoadedObject({ { 13, 0 }, { 3, 5 } }, 2);
 }
 
 void AddVileObjs()
 {
-	SetObjMapRange(ObjIndex(26, 45), 1, 1, 9, 10, 1);
-	SetObjMapRange(ObjIndex(45, 46), 11, 1, 20, 10, 2);
-	SetObjMapRange(ObjIndex(35, 36), 7, 11, 13, 18, 3);
+	ObjectAtPosition({ 26, 45 }).InitializeLoadedObject({ { 1, 1 }, { 8, 9 } }, 1);
+	ObjectAtPosition({ 45, 46 }).InitializeLoadedObject({ { 11, 1 }, { 9, 9 } }, 2);
+	ObjectAtPosition({ 35, 36 }).InitializeLoadedObject({ { 7, 11 }, { 6, 7 } }, 3);
 }
 
 void DRLG_SetMapTrans(const char *path)
@@ -148,9 +150,9 @@ void LoadSetMap()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		if (quests[Q_SKELKING]._qactive == QUEST_INIT) {
-			quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
-			quests[Q_SKELKING]._qvar1 = 1;
+		if (Quests[Q_SKELKING]._qactive == QUEST_INIT) {
+			Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
+			Quests[Q_SKELKING]._qvar1 = 1;
 		}
 		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
@@ -182,18 +184,18 @@ void LoadSetMap()
 		DRLG_SetMapTrans("Levels\\L1Data\\Lv1MazeA.DUN");
 		break;
 	case SL_POISONWATER:
-		if (quests[Q_PWATER]._qactive == QUEST_INIT)
-			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
+		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
+			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
 		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN");
 		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;
 	case SL_VILEBETRAYER:
-		if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
-			quests[Q_BETRAYER]._qvar2 = 4;
-		} else if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
-			quests[Q_BETRAYER]._qvar2 = 3;
+		if (Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			Quests[Q_BETRAYER]._qvar2 = 4;
+		} else if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
+			Quests[Q_BETRAYER]._qvar2 = 3;
 		}
 		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", 35, 36);

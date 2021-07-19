@@ -36,19 +36,19 @@ void ScaleJoystickAxes(float *x, float *y, float deadzone)
 	float magnitude = std::sqrt(analogX * analogX + analogY * analogY);
 	if (magnitude >= deadZone) {
 		// find scaled axis values with magnitudes between zero and maximum
-		float scalingFactor = 1.0 / magnitude * (magnitude - deadZone) / (maximum - deadZone);
+		float scalingFactor = 1.F / magnitude * (magnitude - deadZone) / (maximum - deadZone);
 		analogX = (analogX * scalingFactor);
 		analogY = (analogY * scalingFactor);
 
 		// clamp to ensure results will never exceed the max_axis value
-		float clampingFactor = 1.0;
+		float clampingFactor = 1.F;
 		float absAnalogX = std::fabs(analogX);
 		float absAnalogY = std::fabs(analogY);
 		if (absAnalogX > 1.0 || absAnalogY > 1.0) {
 			if (absAnalogX > absAnalogY) {
-				clampingFactor = 1 / absAnalogX;
+				clampingFactor = 1.F / absAnalogX;
 			} else {
-				clampingFactor = 1 / absAnalogY;
+				clampingFactor = 1.F / absAnalogY;
 			}
 		}
 		*x = (clampingFactor * analogX);
@@ -76,16 +76,16 @@ bool SimulateRightStickWithDpad(ControllerButtonEvent ctrlEvent)
 		return false;
 	switch (ctrlEvent.button) {
 	case ControllerButton_BUTTON_DPAD_LEFT:
-		rightStickX = ctrlEvent.up ? 0 : -1;
+		rightStickX = ctrlEvent.up ? 0.F : -1.F;
 		break;
 	case ControllerButton_BUTTON_DPAD_RIGHT:
-		rightStickX = ctrlEvent.up ? 0 : 1;
+		rightStickX = ctrlEvent.up ? 0.F : 1.F;
 		break;
 	case ControllerButton_BUTTON_DPAD_UP:
-		rightStickY = ctrlEvent.up ? 0 : 1;
+		rightStickY = ctrlEvent.up ? 0.F : 1.F;
 		break;
 	case ControllerButton_BUTTON_DPAD_DOWN:
-		rightStickY = ctrlEvent.up ? 0 : -1;
+		rightStickY = ctrlEvent.up ? 0.F : -1.F;
 		break;
 	default:
 		return false;

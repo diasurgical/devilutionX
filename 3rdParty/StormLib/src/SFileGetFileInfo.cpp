@@ -443,10 +443,10 @@ bool WINAPI SFileGetFileInfo(
 
         case SFileInfoCRC32:
             return GetInfo(pvFileInfo, cbFileInfo, &hf->pFileEntry->dwCrc32, sizeof(DWORD), pcbLengthNeeded);
+        default:
+            // Invalid info class
+            return GetInfo_ReturnError(ERROR_INVALID_PARAMETER);
     }
-
-    // Invalid info class
-    return GetInfo_ReturnError(ERROR_INVALID_PARAMETER);
 }
 
 #ifdef FULL

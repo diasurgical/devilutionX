@@ -8,29 +8,21 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "init.h"
+#include "lighting.h"
 #include "options.h"
 
 namespace devilution {
 
-/** Contains the tile IDs of the map. */
 uint8_t dungeon[DMAXX][DMAXY];
-/** Contains a backup of the tile IDs of the map. */
 uint8_t pdungeon[DMAXX][DMAXY];
 char dflags[DMAXX][DMAXY];
-/** Specifies the active set level X-coordinate of the map. */
 int setpc_x;
-/** Specifies the active set level Y-coordinate of the map. */
 int setpc_y;
-/** Specifies the width of the active set level of the map. */
 int setpc_w;
-/** Specifies the height of the active set level of the map. */
 int setpc_h;
-/** Contains the contents of the single player quest DUN file. */
 std::unique_ptr<uint16_t[]> pSetPiece;
-/** Specifies whether a single player quest DUN has been loaded. */
 bool setloadflag;
 std::optional<CelSprite> pSpecialCels;
-/** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
 std::unique_ptr<MegaTile[]> pMegaTiles;
 std::unique_ptr<uint16_t[]> pLevelPieces;
 std::unique_ptr<byte[]> pDungeonCels;
@@ -40,74 +32,38 @@ std::array<bool, MAXTILES + 1> nSolidTable;
 std::array<bool, MAXTILES + 1> nTransTable;
 std::array<bool, MAXTILES + 1> nMissileTable;
 std::array<bool, MAXTILES + 1> nTrapTable;
-/** Specifies the minimum X-coordinate of the map. */
 int dminx;
-/** Specifies the minimum Y-coordinate of the map. */
 int dminy;
-/** Specifies the maximum X-coordinate of the map. */
 int dmaxx;
-/** Specifies the maximum Y-coordinate of the map. */
 int dmaxy;
-/** Specifies the active dungeon type of the current game. */
 dungeon_type leveltype;
-/** Specifies the active dungeon level of the current game. */
 BYTE currlevel;
 bool setlevel;
-/** Specifies the active quest level of the current game. */
 _setlevels setlvlnum;
-/** Level type of the active quest level */
 dungeon_type setlvltype;
-/** Specifies the player viewpoint X-coordinate of the map. */
 int ViewX;
-/** Specifies the player viewpoint Y-coordinate of the map. */
 int ViewY;
 ScrollStruct ScrollInfo;
-/** Specifies the level viewpoint X-coordinate of the map. */
-int LvlViewX;
-/** Specifies the level viewpoint Y-coordinate of the map. */
-int LvlViewY;
 int MicroTileLen;
 char TransVal;
-/** Specifies the active transparency indices. */
 bool TransList[256];
-/** Contains the piece IDs of each tile on the map. */
 int dPiece[MAXDUNX][MAXDUNY];
-/** Specifies the dungeon piece information for a given coordinate and block number. */
 MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-/** Specifies the transparency at each coordinate of the map. */
 int8_t dTransVal[MAXDUNX][MAXDUNY];
 char dLight[MAXDUNX][MAXDUNY];
 char dPreLight[MAXDUNX][MAXDUNY];
 int8_t dFlags[MAXDUNX][MAXDUNY];
-/** Contains the player numbers (players array indices) of the map. */
 int8_t dPlayer[MAXDUNX][MAXDUNY];
-/**
- * Contains the NPC numbers of the map. The NPC number represents a
- * towner number (towners array index) in Tristram and a monster number
- * (monsters array index) in the dungeon.
- */
 int16_t dMonster[MAXDUNX][MAXDUNY];
-/**
- * Contains the dead numbers (deads array indices) and dead direction of
- * the map, encoded as specified by the pseudo-code below.
- * dDead[x][y] & 0x1F - index of dead
- * dDead[x][y] >> 0x5 - direction
- */
 int8_t dDead[MAXDUNX][MAXDUNY];
-/** Contains the object numbers (objects array indices) of the map. */
 char dObject[MAXDUNX][MAXDUNY];
-/** Contains the item numbers (items array indices) of the map. */
 int8_t dItem[MAXDUNX][MAXDUNY];
-/** Contains the missile numbers (missiles array indices) of the map. */
-char dMissile[MAXDUNX][MAXDUNY];
-/**
- * Contains the arch frame numbers of the map from the special tileset
- * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
- * "levels/towndata/towns.cel") contains trees rather than arches.
- */
+int8_t dMissile[MAXDUNX][MAXDUNY];
 char dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
 THEME_LOC themeLoc[MAXTHEMES];
+
+namespace {
 
 std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
 {
@@ -132,6 +88,188 @@ std::unique_ptr<uint8_t[]> LoadLevelSOLData(size_t &tileCount)
 		app_fatal("FillSolidBlockTbls");
 	}
 }
+
+bool WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
+{
+	bool yFlag = true;
+	bool xFlag = true;
+	int xCount = 0;
+	int yCount = 0;
+
+	if (x + maxSize > DMAXX && y + maxSize > DMAXY) {
+		return false; // Original broken bounds check, avoids lower right corner
+	}
+	if (x + minSize > DMAXX || y + minSize > DMAXY) {
+		return false; // Skip definit OOB cases
+	}
+	if (!SkipThemeRoom(x, y)) {
+		return false;
+	}
+
+	int xArray[20] = {};
+	int yArray[20] = {};
+
+	for (int ii = 0; ii < maxSize; ii++) {
+		if (xFlag && y + ii < DMAXY) {
+			for (int xx = x; xx < x + maxSize && xx < DMAXX; xx++) {
+				if (dungeon[xx][y + ii] != floor) {
+					if (xx >= minSize) {
+						break;
+					}
+					xFlag = false;
+				} else {
+					xCount++;
+				}
+			}
+			if (xFlag) {
+				xArray[ii] = xCount;
+				xCount = 0;
+			}
+		}
+		if (yFlag && x + ii < DMAXX) {
+			for (int yy = y; yy < y + maxSize && yy < DMAXY; yy++) {
+				if (dungeon[x + ii][yy] != floor) {
+					if (yy >= minSize) {
+						break;
+					}
+					yFlag = false;
+				} else {
+					yCount++;
+				}
+			}
+			if (yFlag) {
+				yArray[ii] = yCount;
+				yCount = 0;
+			}
+		}
+	}
+
+	for (int ii = 0; ii < minSize; ii++) {
+		if (xArray[ii] < minSize || yArray[ii] < minSize) {
+			return false;
+		}
+	}
+
+	int xSmallest = xArray[0];
+	int ySmallest = yArray[0];
+
+	for (int ii = 0; ii < maxSize; ii++) {
+		if (xArray[ii] < minSize || yArray[ii] < minSize) {
+			break;
+		}
+		if (xArray[ii] < xSmallest) {
+			xSmallest = xArray[ii];
+		}
+		if (yArray[ii] < ySmallest) {
+			ySmallest = yArray[ii];
+		}
+	}
+
+	*width = xSmallest - 2;
+	*height = ySmallest - 2;
+	return true;
+}
+
+void CreateThemeRoom(int themeIndex)
+{
+	const int lx = themeLoc[themeIndex].x;
+	const int ly = themeLoc[themeIndex].y;
+	const int hx = lx + themeLoc[themeIndex].width;
+	const int hy = ly + themeLoc[themeIndex].height;
+
+	for (int yy = ly; yy < hy; yy++) {
+		for (int xx = lx; xx < hx; xx++) {
+			if (leveltype == DTYPE_CATACOMBS) {
+				if (yy == ly || yy == hy - 1) {
+					dungeon[xx][yy] = 2;
+				} else if (xx == lx || xx == hx - 1) {
+					dungeon[xx][yy] = 1;
+				} else {
+					dungeon[xx][yy] = 3;
+				}
+			}
+			if (leveltype == DTYPE_CAVES) {
+				if (yy == ly || yy == hy - 1) {
+					dungeon[xx][yy] = 134;
+				} else if (xx == lx || xx == hx - 1) {
+					dungeon[xx][yy] = 137;
+				} else {
+					dungeon[xx][yy] = 7;
+				}
+			}
+			if (leveltype == DTYPE_HELL) {
+				if (yy == ly || yy == hy - 1) {
+					dungeon[xx][yy] = 2;
+				} else if (xx == lx || xx == hx - 1) {
+					dungeon[xx][yy] = 1;
+				} else {
+					dungeon[xx][yy] = 6;
+				}
+			}
+		}
+	}
+
+	if (leveltype == DTYPE_CATACOMBS) {
+		dungeon[lx][ly] = 8;
+		dungeon[hx - 1][ly] = 7;
+		dungeon[lx][hy - 1] = 9;
+		dungeon[hx - 1][hy - 1] = 6;
+	}
+	if (leveltype == DTYPE_CAVES) {
+		dungeon[lx][ly] = 150;
+		dungeon[hx - 1][ly] = 151;
+		dungeon[lx][hy - 1] = 152;
+		dungeon[hx - 1][hy - 1] = 138;
+	}
+	if (leveltype == DTYPE_HELL) {
+		dungeon[lx][ly] = 9;
+		dungeon[hx - 1][ly] = 16;
+		dungeon[lx][hy - 1] = 15;
+		dungeon[hx - 1][hy - 1] = 12;
+	}
+
+	if (leveltype == DTYPE_CATACOMBS) {
+		switch (GenerateRnd(2)) {
+		case 0:
+			dungeon[hx - 1][(ly + hy) / 2] = 4;
+			break;
+		case 1:
+			dungeon[(lx + hx) / 2][hy - 1] = 5;
+			break;
+		}
+	}
+	if (leveltype == DTYPE_CAVES) {
+		switch (GenerateRnd(2)) {
+		case 0:
+			dungeon[hx - 1][(ly + hy) / 2] = 147;
+			break;
+		case 1:
+			dungeon[(lx + hx) / 2][hy - 1] = 146;
+			break;
+		}
+	}
+	if (leveltype == DTYPE_HELL) {
+		switch (GenerateRnd(2)) {
+		case 0: {
+			int yy = (ly + hy) / 2;
+			dungeon[hx - 1][yy - 1] = 53;
+			dungeon[hx - 1][yy] = 6;
+			dungeon[hx - 1][yy + 1] = 52;
+			dungeon[hx - 2][yy - 1] = 54;
+		} break;
+		case 1: {
+			int xx = (lx + hx) / 2;
+			dungeon[xx - 1][hy - 1] = 57;
+			dungeon[xx][hy - 1] = 6;
+			dungeon[xx + 1][hy - 1] = 56;
+			dungeon[xx][hy - 2] = 59;
+			dungeon[xx - 1][hy - 2] = 58;
+		} break;
+		}
+	}
+}
+
+} // namespace
 
 void FillSolidBlockTbls()
 {
@@ -277,184 +415,6 @@ void Make_SetPC(int x, int y, int w, int h)
 	}
 }
 
-bool DRLG_WillThemeRoomFit(int floor, int x, int y, int minSize, int maxSize, int *width, int *height)
-{
-	bool yFlag = true;
-	bool xFlag = true;
-	int xCount = 0;
-	int yCount = 0;
-
-	// BUGFIX: change '&&' to '||' (fixed)
-	if (x > DMAXX - maxSize || y > DMAXY - maxSize) {
-		return false;
-	}
-	if (!SkipThemeRoom(x, y)) {
-		return false;
-	}
-
-	int xArray[20] = {};
-	int yArray[20] = {};
-
-	for (int ii = 0; ii < maxSize; ii++) {
-		if (xFlag) {
-			for (int xx = x; xx < x + maxSize; xx++) {
-				if (dungeon[xx][y + ii] != floor) {
-					if (xx >= minSize) {
-						break;
-					}
-					xFlag = false;
-				} else {
-					xCount++;
-				}
-			}
-			if (xFlag) {
-				xArray[ii] = xCount;
-				xCount = 0;
-			}
-		}
-		if (yFlag) {
-			for (int yy = y; yy < y + maxSize; yy++) {
-				if (dungeon[x + ii][yy] != floor) {
-					if (yy >= minSize) {
-						break;
-					}
-					yFlag = false;
-				} else {
-					yCount++;
-				}
-			}
-			if (yFlag) {
-				yArray[ii] = yCount;
-				yCount = 0;
-			}
-		}
-	}
-
-	for (int ii = 0; ii < minSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			return false;
-		}
-	}
-
-	int xSmallest = xArray[0];
-	int ySmallest = yArray[0];
-
-	for (int ii = 0; ii < maxSize; ii++) {
-		if (xArray[ii] < minSize || yArray[ii] < minSize) {
-			break;
-		}
-		if (xArray[ii] < xSmallest) {
-			xSmallest = xArray[ii];
-		}
-		if (yArray[ii] < ySmallest) {
-			ySmallest = yArray[ii];
-		}
-	}
-
-	*width = xSmallest - 2;
-	*height = ySmallest - 2;
-	return true;
-}
-
-void DRLG_CreateThemeRoom(int themeIndex)
-{
-	const int lx = themeLoc[themeIndex].x;
-	const int ly = themeLoc[themeIndex].y;
-	const int hx = lx + themeLoc[themeIndex].width;
-	const int hy = ly + themeLoc[themeIndex].height;
-
-	for (int yy = ly; yy < hy; yy++) {
-		for (int xx = lx; xx < hx; xx++) {
-			if (leveltype == DTYPE_CATACOMBS) {
-				if (yy == ly || yy == hy - 1) {
-					dungeon[xx][yy] = 2;
-				} else if (xx == lx || xx == hx - 1) {
-					dungeon[xx][yy] = 1;
-				} else {
-					dungeon[xx][yy] = 3;
-				}
-			}
-			if (leveltype == DTYPE_CAVES) {
-				if (yy == ly || yy == hy - 1) {
-					dungeon[xx][yy] = 134;
-				} else if (xx == lx || xx == hx - 1) {
-					dungeon[xx][yy] = 137;
-				} else {
-					dungeon[xx][yy] = 7;
-				}
-			}
-			if (leveltype == DTYPE_HELL) {
-				if (yy == ly || yy == hy - 1) {
-					dungeon[xx][yy] = 2;
-				} else if (xx == lx || xx == hx - 1) {
-					dungeon[xx][yy] = 1;
-				} else {
-					dungeon[xx][yy] = 6;
-				}
-			}
-		}
-	}
-
-	if (leveltype == DTYPE_CATACOMBS) {
-		dungeon[lx][ly] = 8;
-		dungeon[hx - 1][ly] = 7;
-		dungeon[lx][hy - 1] = 9;
-		dungeon[hx - 1][hy - 1] = 6;
-	}
-	if (leveltype == DTYPE_CAVES) {
-		dungeon[lx][ly] = 150;
-		dungeon[hx - 1][ly] = 151;
-		dungeon[lx][hy - 1] = 152;
-		dungeon[hx - 1][hy - 1] = 138;
-	}
-	if (leveltype == DTYPE_HELL) {
-		dungeon[lx][ly] = 9;
-		dungeon[hx - 1][ly] = 16;
-		dungeon[lx][hy - 1] = 15;
-		dungeon[hx - 1][hy - 1] = 12;
-	}
-
-	if (leveltype == DTYPE_CATACOMBS) {
-		switch (GenerateRnd(2)) {
-		case 0:
-			dungeon[hx - 1][(ly + hy) / 2] = 4;
-			break;
-		case 1:
-			dungeon[(lx + hx) / 2][hy - 1] = 5;
-			break;
-		}
-	}
-	if (leveltype == DTYPE_CAVES) {
-		switch (GenerateRnd(2)) {
-		case 0:
-			dungeon[hx - 1][(ly + hy) / 2] = 147;
-			break;
-		case 1:
-			dungeon[(lx + hx) / 2][hy - 1] = 146;
-			break;
-		}
-	}
-	if (leveltype == DTYPE_HELL) {
-		switch (GenerateRnd(2)) {
-		case 0: {
-			int yy = (ly + hy) / 2;
-			dungeon[hx - 1][yy - 1] = 53;
-			dungeon[hx - 1][yy] = 6;
-			dungeon[hx - 1][yy + 1] = 52;
-			dungeon[hx - 2][yy - 1] = 54;
-		} break;
-		case 1: {
-			int xx = (lx + hx) / 2;
-			dungeon[xx - 1][hy - 1] = 57;
-			dungeon[xx][hy - 1] = 6;
-			dungeon[xx + 1][hy - 1] = 56;
-			dungeon[xx][hy - 2] = 59;
-			dungeon[xx - 1][hy - 2] = 58;
-		} break;
-		}
-	}
-}
-
 void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize)
 {
 	themeCount = 0;
@@ -463,7 +423,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 		for (int i = 0; i < DMAXX; i++) {
 			int themeW = 0;
 			int themeH = 0;
-			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && DRLG_WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
+			if (dungeon[i][j] == floor && GenerateRnd(freq) == 0 && WillThemeRoomFit(floor, i, j, minSize, maxSize, &themeW, &themeH)) {
 				if (rndSize) {
 					int min = minSize - 2;
 					int max = maxSize - 2;
@@ -483,7 +443,7 @@ void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rn
 				else
 					DRLG_MRectTrans(i + 1, j + 1, i + themeW, j + themeH);
 				themeLoc[themeCount].ttval = TransVal - 1;
-				DRLG_CreateThemeRoom(themeCount);
+				CreateThemeRoom(themeCount);
 				themeCount++;
 			}
 		}
@@ -506,11 +466,69 @@ void DRLG_HoldThemeRooms()
 	}
 }
 
+void DRLG_LPass3(int lv)
+{
+	{
+		MegaTile mega = pMegaTiles[lv];
+		int v1 = SDL_SwapLE16(mega.micro1) + 1;
+		int v2 = SDL_SwapLE16(mega.micro2) + 1;
+		int v3 = SDL_SwapLE16(mega.micro3) + 1;
+		int v4 = SDL_SwapLE16(mega.micro4) + 1;
+
+		for (int j = 0; j < MAXDUNY; j += 2) {
+			for (int i = 0; i < MAXDUNX; i += 2) {
+				dPiece[i + 0][j + 0] = v1;
+				dPiece[i + 1][j + 0] = v2;
+				dPiece[i + 0][j + 1] = v3;
+				dPiece[i + 1][j + 1] = v4;
+			}
+		}
+	}
+
+	int yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
+			int v1 = 0;
+			int v2 = 0;
+			int v3 = 0;
+			int v4 = 0;
+
+			int tileId = dungeon[i][j] - 1;
+			if (tileId >= 0) {
+				MegaTile mega = pMegaTiles[tileId];
+				v1 = SDL_SwapLE16(mega.micro1) + 1;
+				v2 = SDL_SwapLE16(mega.micro2) + 1;
+				v3 = SDL_SwapLE16(mega.micro3) + 1;
+				v4 = SDL_SwapLE16(mega.micro4) + 1;
+			}
+			dPiece[xx + 0][yy + 0] = v1;
+			dPiece[xx + 1][yy + 0] = v2;
+			dPiece[xx + 0][yy + 1] = v3;
+			dPiece[xx + 1][yy + 1] = v4;
+			xx += 2;
+		}
+		yy += 2;
+	}
+}
+
+void DRLG_Init_Globals()
+{
+	memset(dFlags, 0, sizeof(dFlags));
+	memset(dPlayer, 0, sizeof(dPlayer));
+	memset(dMonster, 0, sizeof(dMonster));
+	memset(dDead, 0, sizeof(dDead));
+	memset(dObject, 0, sizeof(dObject));
+	memset(dItem, 0, sizeof(dItem));
+	memset(dMissile, 0, sizeof(dMissile));
+	memset(dSpecial, 0, sizeof(dSpecial));
+	int8_t c = DisableLighting ? 0 : 15;
+	memset(dLight, c, sizeof(dLight));
+}
+
 bool SkipThemeRoom(int x, int y)
 {
-	int i;
-
-	for (i = 0; i < themeCount; i++) {
+	for (int i = 0; i < themeCount; i++) {
 		if (x >= themeLoc[i].x - 2 && x <= themeLoc[i].x + themeLoc[i].width + 2
 		    && y >= themeLoc[i].y - 2 && y <= themeLoc[i].y + themeLoc[i].height + 2)
 			return false;

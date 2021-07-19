@@ -50,5 +50,5 @@ Saves are compatible with PC saves from Diablo 1 and DevilutionX.
 
 ## Resources
 
-* Discord: https://discord.gg/aQBQdDe
+* Discord: https://discord.gg/YQKCAYQ
 * GitHub: https://github.com/diasurgical/devilutionX

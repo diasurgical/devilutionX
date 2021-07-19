@@ -156,7 +156,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	FILE *file = FILE_FromStormHandle(videoStream);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
-	int bytestoread = SFileGetFileSize(videoStream);
+	size_t bytestoread = SFileGetFileSize(videoStream);
 	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
 	SFileReadFileThreadSafe(videoStream, SVidBuffer.get(), bytestoread);
 	SFileCloseFileThreadSafe(videoStream);
@@ -179,7 +179,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	if (enableAudio && depth[0] != 0) {
 		sound_stop(); // Stop in-progress music and sound effects
 
-		smk_enable_audio(SVidSMK, 0, enableAudio ? 1 : 0);
+		smk_enable_audio(SVidSMK, 0, 1);
 		SVidAudioDepth = depth[0];
 		auto decoder = std::make_unique<PushAulibDecoder>(channels[0], rate[0]);
 		SVidAudioDecoder = decoder.get();
@@ -244,7 +244,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 		ErrSdl();
 	}
 
-	SVidFrameEnd = SDL_GetTicks() * 1000 + SVidFrameLength;
+	SVidFrameEnd = SDL_GetTicks() * 1000.0 + SVidFrameLength;
 	SDL_FillRect(GetOutputSurface(), nullptr, 0x000000);
 	return true;
 }
@@ -275,7 +275,7 @@ bool SVidPlayContinue()
 		}
 	}
 
-	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
+	if (SDL_GetTicks() * 1000.0 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video and audio if the system is to slow
 	}
 
@@ -291,7 +291,7 @@ bool SVidPlayContinue()
 	}
 #endif
 
-	if (SDL_GetTicks() * 1000 >= SVidFrameEnd) {
+	if (SDL_GetTicks() * 1000.0 >= SVidFrameEnd) {
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
 	}
 
@@ -349,9 +349,9 @@ bool SVidPlayContinue()
 
 	RenderPresent();
 
-	double now = SDL_GetTicks() * 1000;
+	double now = SDL_GetTicks() * 1000.0;
 	if (now < SVidFrameEnd) {
-		SDL_Delay((SVidFrameEnd - now) / 1000); // wait with next frame if the system is too fast
+		SDL_Delay(static_cast<Uint32>((SVidFrameEnd - now) / 1000.0)); // wait with next frame if the system is too fast
 	}
 
 	return SVidLoadNextFrame();

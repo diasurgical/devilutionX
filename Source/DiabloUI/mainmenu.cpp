@@ -7,10 +7,10 @@
 namespace devilution {
 namespace {
 int mainmenu_attract_time_out; //seconds
-DWORD dwAttractTicks;
+uint32_t dwAttractTicks;
 
-std::vector<UiItemBase *> vecMainMenuDialog;
-std::vector<UiListItem *> vecMenuItems;
+std::vector<std::unique_ptr<UiItemBase>> vecMainMenuDialog;
+std::vector<std::unique_ptr<UiListItem>> vecMenuItems;
 
 _mainmenu_selections MainMenuResult;
 
@@ -33,16 +33,16 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 {
 	gfnSoundFunction = fnSound;
 
-	vecMenuItems.push_back(new UiListItem(_("Single Player"), MAINMENU_SINGLE_PLAYER));
-	vecMenuItems.push_back(new UiListItem(_("Multi Player"), MAINMENU_MULTIPLAYER));
-	vecMenuItems.push_back(new UiListItem(_("Replay Intro"), MAINMENU_REPLAY_INTRO));
-	vecMenuItems.push_back(new UiListItem(_("Support"), MAINMENU_SHOW_SUPPORT));
+	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Single Player"), MAINMENU_SINGLE_PLAYER));
+	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
+	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Replay Intro"), MAINMENU_REPLAY_INTRO));
+	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
 	if (gbIsHellfire) {
-		vecMenuItems.push_back(new UiListItem(_("Credits"), MAINMENU_SHOW_CREDITS));
-		vecMenuItems.push_back(new UiListItem(_("Exit Hellfire"), MAINMENU_EXIT_DIABLO));
+		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Credits"), MAINMENU_SHOW_CREDITS));
+		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Exit Hellfire"), MAINMENU_EXIT_DIABLO));
 	} else {
-		vecMenuItems.push_back(new UiListItem(_("Show Credits"), MAINMENU_SHOW_CREDITS));
-		vecMenuItems.push_back(new UiListItem(_("Exit Diablo"), MAINMENU_EXIT_DIABLO));
+		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
+		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Exit Diablo"), MAINMENU_EXIT_DIABLO));
 	}
 
 	if (!gbSpawned || gbIsHellfire) {
@@ -56,10 +56,10 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
 
-	vecMainMenuDialog.push_back(new UiList(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
+	vecMainMenuDialog.push_back(std::make_unique<UiList>(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UIS_HUGE | UIS_GOLD | UIS_CENTER));
 
 	SDL_Rect rect = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
-	vecMainMenuDialog.push_back(new UiArtText(name, rect, UIS_SMALL));
+	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect, UIS_SMALL));
 
 	UiInitList(vecMenuItems.size(), nullptr, UiMainMenuSelect, MainmenuEsc, vecMainMenuDialog, true);
 }
@@ -69,14 +69,8 @@ void MainmenuFree()
 	ArtBackgroundWidescreen.Unload();
 	ArtBackground.Unload();
 
-	for (auto *pUIItem : vecMainMenuDialog) {
-		delete pUIItem;
-	}
 	vecMainMenuDialog.clear();
 
-	for (auto *pUIMenuItem : vecMenuItems) {
-		delete pUIMenuItem;
-	}
 	vecMenuItems.clear();
 }
 

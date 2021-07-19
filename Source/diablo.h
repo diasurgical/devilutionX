@@ -43,8 +43,19 @@ enum class GameLogicStep {
 	ProcessMissilesTown,
 };
 
+enum class MouseActionType : int {
+	None,
+	Spell,
+	SpellOutOfMana,
+	Attack,
+	AttackMonsterTarget,
+	AttackPlayerTarget,
+	OperateObject,
+	Other,
+};
+
 extern SDL_Window *ghMainWnd;
-extern DWORD glSeedTbl[NUMLEVELS];
+extern uint32_t glSeedTbl[NUMLEVELS];
 extern dungeon_type gnLevelTypeTbl[NUMLEVELS];
 extern Point MousePosition;
 extern bool gbRunGame;
@@ -69,15 +80,19 @@ extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
+extern MouseActionType LastMouseButtonAction;
+extern uint32_t LastMouseButtonTime;
+
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
 [[noreturn]] void diablo_quit(int exitStatus);
 int DiabloMain(int argc, char **argv);
 bool TryIconCurs();
 void diablo_pause_game();
+void diablo_focus_pause();
+void diablo_focus_unpause();
 bool PressEscKey();
 void DisableInputWndProc(uint32_t uMsg, int32_t wParam, int32_t lParam);
-void GM_Game(uint32_t uMsg, int32_t wParam, int32_t lParam);
 void LoadGameLevel(bool firstflag, lvl_entry lvldir);
 void game_loop(bool bStartup);
 void diablo_color_cyc_logic();

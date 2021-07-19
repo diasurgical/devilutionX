@@ -11,11 +11,14 @@
 #include "engine.h"
 #include "engine/point.hpp"
 #include "misdat.h"
+#include "monster.h"
 #include "spelldat.h"
 
 namespace devilution {
 
 #define MAXMISSILES 125
+
+constexpr Point GolemHoldingCell = Point { 1, 0 };
 
 struct ChainStruct {
 	int idx;
@@ -33,6 +36,25 @@ struct MissilePosition {
 	Point start;
 	/** Start position */
 	Displacement traveled;
+
+	/**
+      * @brief Specifies the location (tile) while rendering
+      */
+	Point tileForRendering;
+	/**
+      * @brief Specifies the location (offset) while rendering
+      */
+	Displacement offsetForRendering;
+
+	/**
+      * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter cause the missile don't move anymore)
+      */
+	void StopMissile()
+	{
+		velocity = {};
+		if (tileForRendering == tile)
+			offset = offsetForRendering;
+	}
 };
 
 /*
@@ -104,10 +126,10 @@ struct MissileStruct {
 	bool limitReached;
 };
 
-extern int missileactive[MAXMISSILES];
-extern int missileavail[MAXMISSILES];
-extern MissileStruct missile[MAXMISSILES];
-extern int nummissiles;
+extern MissileStruct Missiles[MAXMISSILES];
+extern int AvailableMissiles[MAXMISSILES];
+extern int ActiveMissiles[MAXMISSILES];
+extern int ActiveMissileCount;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
@@ -115,8 +137,7 @@ int GetSpellLevel(int playerId, spell_id sn);
 Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
-bool PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
-void SetMissAnim(int mi, int animtype);
+bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
 void SetMissDir(int mi, int dir);
 void LoadMissileGFX(BYTE mi);
 void InitMissileGFX();
@@ -208,7 +229,7 @@ void AddRportal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id,
 void AddDiabApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
 int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl);
 void MI_Dummy(int i);
-void MI_Golem(int i);
+void MI_Golem(int mi);
 void MI_Manashield(int i);
 void MI_LArrow(int i);
 void MI_Arrow(int i);
@@ -218,7 +239,7 @@ void MI_Krull(int i);
 void MI_Acidpud(int i);
 void MI_Firewall(int i);
 void MI_Fireball(int i);
-void MI_HorkSpawn(int i);
+void MI_HorkSpawn(int mi);
 void MI_Rune(int i);
 void MI_LightningWall(int i);
 void MI_HiveExplode(int i);
@@ -239,7 +260,7 @@ void MI_Flash2(int i);
 void MI_Etherealize(int i);
 void MI_Firemove(int i);
 void MI_Guardian(int i);
-void MI_Chain(int i);
+void MI_Chain(int mi);
 void MI_Blood(int i);
 void MI_Weapexp(int i);
 void MI_Misexp(int i);

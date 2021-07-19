@@ -37,7 +37,7 @@ bool loopback::SNetSendMessage(int dest, void *data, unsigned int size)
 	return true;
 }
 
-bool loopback::SNetReceiveTurns(char **data, unsigned int *size, DWORD * /*status*/)
+bool loopback::SNetReceiveTurns(char **data, size_t *size, uint32_t * /*status*/)
 {
 	for (auto i = 0; i < MAX_PLRS; ++i) {
 		size[i] = 0;
@@ -85,7 +85,7 @@ bool loopback::SNetLeaveGame(int /*type*/)
 	return true;
 }
 
-bool loopback::SNetDropPlayer(int /*playerid*/, DWORD /*flags*/)
+bool loopback::SNetDropPlayer(int /*playerid*/, uint32_t /*flags*/)
 {
 	return true;
 }
@@ -94,13 +94,13 @@ void loopback::setup_gameinfo(buffer_t info)
 {
 }
 
-bool loopback::SNetGetOwnerTurnsWaiting(DWORD *turns)
+bool loopback::SNetGetOwnerTurnsWaiting(uint32_t *turns)
 {
 	*turns = 0;
 	return true;
 }
 
-bool loopback::SNetGetTurnsInTransit(DWORD *turns)
+bool loopback::SNetGetTurnsInTransit(uint32_t *turns)
 {
 	*turns = 0;
 	return true;

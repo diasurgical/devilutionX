@@ -7,7 +7,7 @@
 #endif
 
 #include "dvlnet/abstract_net.h"
-#include "mainmenu.h"
+#include "menu.h"
 #include "options.h"
 #include "storm/storm_dvlnet.h"
 #include "utils/stubs.h"
@@ -42,14 +42,11 @@ bool SNetSendMessage(int playerID, void *data, unsigned int databytes)
 	return dvlnet_inst->SNetSendMessage(playerID, data, databytes);
 }
 
-bool SNetReceiveTurns(int a1, int arraysize, char **arraydata, unsigned int *arraydatabytes,
-    DWORD *arrayplayerstatus)
+bool SNetReceiveTurns(int arraysize, char **arraydata, size_t *arraydatabytes, uint32_t *arrayplayerstatus)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
-	if (a1 != 0)
-		UNIMPLEMENTED();
 	if (arraysize != MAX_PLRS)
 		UNIMPLEMENTED();
 	if (!dvlnet_inst->SNetReceiveTurns(arraydata, arraydatabytes, arrayplayerstatus)) {
@@ -99,7 +96,7 @@ bool SNetDestroy()
 	return true;
 }
 
-bool SNetDropPlayer(int playerid, DWORD flags)
+bool SNetDropPlayer(int playerid, uint32_t flags)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -143,7 +140,7 @@ bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData)
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
-	dvlnet_inst = net::abstract_net::make_net(provider);
+	dvlnet_inst = net::abstract_net::MakeNet(provider);
 	return mainmenu_select_hero_dialog(gameData);
 }
 
@@ -189,7 +186,7 @@ bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 /**
  * @brief Is this the mirror image of SNetGetTurnsInTransit?
  */
-bool SNetGetOwnerTurnsWaiting(DWORD *turns)
+bool SNetGetOwnerTurnsWaiting(uint32_t *turns)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
@@ -197,7 +194,7 @@ bool SNetGetOwnerTurnsWaiting(DWORD *turns)
 	return dvlnet_inst->SNetGetOwnerTurnsWaiting(turns);
 }
 
-bool SNetGetTurnsInTransit(DWORD *turns)
+bool SNetGetTurnsInTransit(uint32_t *turns)
 {
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);

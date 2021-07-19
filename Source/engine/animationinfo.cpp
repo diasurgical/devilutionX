@@ -61,19 +61,19 @@ float AnimationInfo::GetAnimationProgress() const
 	if (RelevantFramesForDistributing <= 0) {
 		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		float ticksPerFrame = (TicksPerFrame + 1);
-		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)CurrentFrame + (TickCounterOfCurrentFrame / ticksPerFrame);
-		float fAnimationFraction = totalTicksForCurrentAnimationSequence / ((float)NumberOfFrames * ticksPerFrame);
+		float ticksPerFrame = TicksPerFrame + 1.F;
+		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + CurrentFrame + (TickCounterOfCurrentFrame / ticksPerFrame);
+		float fAnimationFraction = totalTicksForCurrentAnimationSequence / (NumberOfFrames * ticksPerFrame);
 		return fAnimationFraction;
 	}
 
-	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)TicksSinceSequenceStarted;
+	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + TicksSinceSequenceStarted;
 	float fProgressInAnimationFrames = totalTicksForCurrentAnimationSequence * TickModifier;
-	float fAnimationFraction = fProgressInAnimationFrames / (float)NumberOfFrames;
+	float fAnimationFraction = fProgressInAnimationFrames / NumberOfFrames;
 	return fAnimationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -88,7 +88,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 		ticksPerFrame = 1;
 	}
 
-	this->pCelSprite = pCelSprite;
+	this->pCelSprite = celSprite;
 	NumberOfFrames = numberOfFrames;
 	CurrentFrame = 1 + numSkippedFrames;
 	TickCounterOfCurrentFrame = 0;
@@ -161,7 +161,7 @@ void AnimationInfo::SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, i
 	}
 }
 
-void AnimationInfo::ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrames, int delayLen)
+void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int delayLen)
 {
 	if (numberOfFrames != NumberOfFrames || delayLen != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
@@ -173,7 +173,7 @@ void AnimationInfo::ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrame
 		RelevantFramesForDistributing = 0;
 		TickModifier = 0.0F;
 	}
-	this->pCelSprite = pCelSprite;
+	this->pCelSprite = celSprite;
 	TicksPerFrame = delayLen;
 }
 

@@ -168,33 +168,33 @@ void DrlgTPass3()
 	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || ((plr[myplr].pTownWarps & 1) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
+		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 1) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 10))) {
 			FillTile(48, 20, 320);
 		}
-		if (gbIsSpawn || ((plr[myplr].pTownWarps & 2) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
+		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 2) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 15))) {
 			FillTile(16, 68, 332);
 			FillTile(16, 70, 331);
 		}
-		if (gbIsSpawn || ((plr[myplr].pTownWarps & 4) == 0 && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
+		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 4) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 20))) {
 			for (int x = 36; x < 46; x++) {
 				FillTile(x, 78, GenerateRnd(4) + 1);
 			}
 		}
 	}
 	if (gbIsHellfire) {
-		if (quests[Q_FARMER]._qactive == QUEST_DONE || quests[Q_FARMER]._qactive == QUEST_HIVE_DONE
-		    || quests[Q_JERSEY]._qactive == QUEST_DONE || quests[Q_JERSEY]._qactive == QUEST_HIVE_DONE) {
+		if (Quests[Q_FARMER]._qactive == QUEST_DONE || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE
+		    || Quests[Q_JERSEY]._qactive == QUEST_DONE || Quests[Q_JERSEY]._qactive == QUEST_HIVE_DONE) {
 			TownOpenHive();
 		} else {
 			TownCloseHive();
 		}
-		if (quests[Q_GRAVE]._qactive == QUEST_DONE || plr[myplr]._pLvlVisited[21])
+		if (Quests[Q_GRAVE]._qactive == QUEST_DONE || Players[MyPlayerId]._pLvlVisited[21])
 			TownOpenGrave();
 		else
 			TownCloseGrave();
 	}
 
-	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
+	if (Quests[Q_PWATER]._qactive != QUEST_DONE && Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
 		FillTile(60, 70, 342);
 	} else {
 		FillTile(60, 70, 71);

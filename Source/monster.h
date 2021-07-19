@@ -52,7 +52,7 @@ enum : uint8_t {
 	UMT_SKELKING,
 	UMT_ZHAR,
 	UMT_SNOTSPIL,
-	UMT_LAZURUS,
+	UMT_LAZARUS,
 	UMT_RED_VEX,
 	UMT_BLACKJADE,
 	UMT_LACHDAN,
@@ -87,13 +87,13 @@ enum MON_MODE : uint8_t {
 	MM_TALK,
 };
 
-enum {
-	MA_STAND,
-	MA_WALK,
-	MA_ATTACK,
-	MA_GOTHIT,
-	MA_DEATH,
-	MA_SPECIAL,
+enum class MonsterGraphic {
+	Stand,
+	Walk,
+	Attack,
+	GotHit,
+	Death,
+	Special,
 };
 
 enum monster_goal : uint8_t {
@@ -115,6 +115,22 @@ enum placeflag : uint8_t {
 	// clang-format on
 };
 
+/**
+ * @brief Defines the relation of the monster to a monster pack.
+ *        If value is differnt from Individual MonsterStruct.leader must also be set
+ */
+enum class LeaderRelation : uint8_t {
+	None,
+	/**
+	 * @brief Minion that sticks with the leader
+	 */
+	Leashed,
+	/**
+	 * @brief Minion that was separated from leader and acts individual until it reaches the leader again
+	 */
+	Separated,
+};
+
 struct AnimStruct {
 	std::unique_ptr<byte[]> CMem;
 	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
@@ -127,15 +143,21 @@ struct CMonster {
 	/** placeflag enum as a flags*/
 	uint8_t mPlaceFlags;
 	AnimStruct Anims[6];
+	/**
+	 * @brief Returns AnimStruct for specified graphic
+	 */
+	const AnimStruct &GetAnimData(MonsterGraphic graphic) const
+	{
+		return Anims[static_cast<int>(graphic)];
+	}
 #ifndef NOSOUND
 	std::unique_ptr<TSnd> Snds[4][2];
 #endif
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
-	bool has_special;
 	uint8_t mAFNum;
 	int8_t mdeadval;
-	const MonsterData *MData;
+	const MonsterDataStruct *MData;
 };
 
 struct MonsterStruct { // note: missing field _mAFNum
@@ -187,18 +209,18 @@ struct MonsterStruct { // note: missing field _mAFNum
 	uint16_t mMagicRes;
 	_speech_id mtalkmsg;
 	uint8_t leader;
-	uint8_t leaderflag;
+	LeaderRelation leaderRelation;
 	uint8_t packsize;
 	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
 	CMonster *MType;
-	const MonsterData *MData;
+	const MonsterDataStruct *MData;
 
 	/**
 	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
 	 * @param mdir direction of the monster
 	 */
-	void CheckStandAnimationIsLoaded(int mdir);
+	void CheckStandAnimationIsLoaded(Direction mdir);
 
 	/**
 	 * @brief Sets _mmode to MM_STONE
@@ -211,112 +233,58 @@ struct MonsterStruct { // note: missing field _mAFNum
 	bool IsWalking() const;
 };
 
-extern int monstkills[MAXMONSTERS];
-extern int monstactive[MAXMONSTERS];
-extern int nummonsters;
+extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
+extern int LevelMonsterTypeCount;
+extern MonsterStruct Monsters[MAXMONSTERS];
+extern int ActiveMonsters[MAXMONSTERS];
+extern int ActiveMonsterCount;
+extern int MonsterKillCounts[MAXMONSTERS];
 extern bool sgbSaveSoundOn;
-extern MonsterStruct monster[MAXMONSTERS];
-extern CMonster Monsters[MAX_LVLMTYPES];
-extern int nummtypes;
 
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);
-void InitMonster(int i, Direction rd, int mtype, Point position);
-void ClrAllMonsters();
 void monster_some_crypt();
-void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
-void DeleteMonster(int i);
-int AddMonster(Point position, Direction dir, int mtype, bool InMap);
+int AddMonster(Point position, Direction dir, int mtype, bool inMap);
 void AddDoppelganger(MonsterStruct &monster);
-bool M_Talker(int i);
-void M_StartStand(int i, Direction md);
+bool M_Talker(MonsterStruct &monster);
+void M_StartStand(MonsterStruct &monster, Direction md);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int pnum, int dam);
 void M_StartKill(int i, int pnum);
 void M_SyncStartKill(int i, Point position, int pnum);
-void M_Teleport(int i);
 void M_UpdateLeader(int i);
 void DoEnding();
 void PrepDoEnding();
 void M_WalkDir(int i, Direction md);
-void MAI_Zombie(int i);
-void MAI_SkelSd(int i);
-void MAI_Snake(int i);
-void MAI_Bat(int i);
-void MAI_SkelBow(int i);
-void MAI_Fat(int i);
-void MAI_Sneak(int i);
-void MAI_Fireman(int i);
-void MAI_Fallen(int i);
-void MAI_Cleaver(int i);
-void MAI_Round(int i, bool special);
-void MAI_GoatMc(int i);
-void MAI_Ranged(int i, missile_id missileType, bool special);
-void MAI_GoatBow(int i);
-void MAI_Succ(int i);
-void MAI_Lich(int i);
-void MAI_ArchLich(int i);
-void MAI_Psychorb(int i);
-void MAI_Necromorb(int i);
-void MAI_AcidUniq(int i);
-void MAI_Firebat(int i);
-void MAI_Torchant(int i);
-void MAI_Scav(int i);
-void MAI_Garg(int i);
-void MAI_RoundRanged(int i, missile_id missileType, bool checkdoors, int dam, int lessmissiles);
-void MAI_Magma(int i);
-void MAI_Storm(int i);
-void MAI_BoneDemon(int i);
-void MAI_Acid(int i);
-void MAI_Diablo(int i);
-void MAI_Mega(int i);
-void MAI_Golum(int i);
-void MAI_SkelKing(int i);
-void MAI_Rhino(int i);
-void MAI_HorkDemon(int i);
-void MAI_Counselor(int i);
-void MAI_Garbud(int i);
-void MAI_Zhar(int i);
-void MAI_SnotSpil(int i);
-void MAI_Lazurus(int i);
-void MAI_Lazhelp(int i);
-void MAI_Lachdanan(int i);
-void MAI_Warlord(int i);
+void GolumAi(int i);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
 bool DirOK(int i, Direction mdir);
-bool PosOkMissile(int entity, Point position);
-bool LineClearSolid(Point startPoint, Point endPoint);
+bool PosOkMissile(Point position);
 bool LineClearMissile(Point startPoint, Point endPoint);
-bool LineClear(Point startPoint, Point endPoint);
-bool LineClear(bool (*Clear)(int, Point), int entity, Point startPoint, Point endPoint);
-void SyncMonsterAnim(int i);
+bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint);
+void SyncMonsterAnim(MonsterStruct &monster);
 void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
+void PlayEffect(MonsterStruct &monster, int mode);
 void MissToMonst(int i, Point position);
-bool PosOkMonst(int i, Point position);
-bool monster_posok(int i, Point position);
-bool PosOkMonst2(int i, Point position);
-bool PosOkMonst3(int i, Point position);
+bool IsTileAvailable(const MonsterStruct &monster, Point position);
 bool IsSkel(int mt);
 bool IsGoat(int mt);
-int M_SpawnSkel(Point position, Direction dir);
 bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
-void TalktoMonster(int i);
+void TalktoMonster(MonsterStruct &monster);
 void SpawnGolum(int i, Point position, int mi);
-bool CanTalkToMonst(int m);
-bool CheckMonsterHit(int m, bool *ret);
-int encode_enemy(int m);
-void decode_enemy(int m, int enemy);
-
-/* data */
+bool CanTalkToMonst(const MonsterStruct &monster);
+bool CheckMonsterHit(MonsterStruct &monster, bool *ret);
+int encode_enemy(MonsterStruct &monster);
+void decode_enemy(MonsterStruct &monster, int enemy);
 
 extern Direction left[8];
 extern Direction right[8];

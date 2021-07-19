@@ -12,7 +12,7 @@ namespace {
 
 bool HasRoomForGold()
 {
-	for (int idx : plr[myplr].InvGrid) {
+	for (int idx : Players[MyPlayerId].InvGrid) {
 		// Secondary item cell. No need to check those as we'll go through the main item cells anyway.
 		if (idx < 0)
 			continue;
@@ -22,7 +22,7 @@ bool HasRoomForGold()
 			return true;
 
 		// Main item cell. Potentially a gold pile so check it.
-		auto item = plr[myplr].InvList[idx - 1];
+		auto item = Players[MyPlayerId].InvList[idx - 1];
 		if (item._itype == ITYPE_GOLD && item._ivalue < MaxGold)
 			return true;
 	}
@@ -37,21 +37,20 @@ void AutoGoldPickup(int pnum)
 	if (!sgOptions.Gameplay.bAutoGoldPickup)
 		return;
 
-	if (pnum != myplr)
+	if (pnum != MyPlayerId)
 		return;
 	if (leveltype == DTYPE_TOWN)
 		return;
 	if (!HasRoomForGold())
 		return;
 
-	for (int dir = 0; dir < 8; dir++) {
-		int x = plr[pnum].position.tile.x + pathxdir[dir];
-		int y = plr[pnum].position.tile.y + pathydir[dir];
-		if (dItem[x][y] != 0) {
-			int itemIndex = dItem[x][y] - 1;
-			if (items[itemIndex]._itype == ITYPE_GOLD) {
+	for (auto pathDir : PathDirs) {
+		Point tile = Players[pnum].position.tile + pathDir;
+		if (dItem[tile.x][tile.y] != 0) {
+			int itemIndex = dItem[tile.x][tile.y] - 1;
+			if (Items[itemIndex]._itype == ITYPE_GOLD) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-				items[itemIndex]._iRequest = true;
+				Items[itemIndex]._iRequest = true;
 				PlaySFX(IS_IGRAB);
 			}
 		}

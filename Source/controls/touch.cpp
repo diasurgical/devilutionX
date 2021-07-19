@@ -148,8 +148,8 @@ static void PreprocessFingerDown(SDL_Event *event)
 	int y = mouse_y;
 
 	if (direct_touch) {
-		x = event->tfinger.x * visible_width + x_borderwidth;
-		y = event->tfinger.y * visible_height + y_borderwidth;
+		x = static_cast<int>(event->tfinger.x * visible_width) + x_borderwidth;
+		y = static_cast<int>(event->tfinger.y * visible_height) + y_borderwidth;
 		devilution::OutputToLogical(&x, &y);
 	}
 
@@ -269,8 +269,8 @@ static void PreprocessFingerUp(SDL_Event *event)
 				// need to raise the button later
 				simulated_click_start_time[port][0] = event->tfinger.timestamp;
 				if (direct_touch) {
-					x = event->tfinger.x * visible_width + x_borderwidth;
-					y = event->tfinger.y * visible_height + y_borderwidth;
+					x = static_cast<int>(event->tfinger.x * visible_width) + x_borderwidth;
+					y = static_cast<int>(event->tfinger.y * visible_height) + y_borderwidth;
 					devilution::OutputToLogical(&x, &y);
 				}
 			}
@@ -311,27 +311,25 @@ static void PreprocessFingerMotion(SDL_Event *event)
 	if (numFingersDown >= 1) {
 		int x = mouse_x;
 		int y = mouse_y;
-		int xrel = 0;
-		int yrel = 0;
 
 		if (direct_touch) {
-			x = event->tfinger.x * visible_width + x_borderwidth;
-			y = event->tfinger.y * visible_height + y_borderwidth;
+			x = static_cast<int>(event->tfinger.x * visible_width) + x_borderwidth;
+			y = static_cast<int>(event->tfinger.y * visible_height) + y_borderwidth;
 			devilution::OutputToLogical(&x, &y);
 		} else {
 			// for relative mode, use the pointer speed setting
-			float speedFactor = 1.0;
+			constexpr float SpeedFactor = 1.25F;
 
 			// convert touch events to relative mouse pointer events
 			// Whenever an SDL_event involving the mouse is processed,
-			x = (mouse_x + (event->tfinger.dx * 1.25 * speedFactor * devilution::GetOutputSurface()->w));
-			y = (mouse_y + (event->tfinger.dy * 1.25 * speedFactor * devilution::GetOutputSurface()->h));
+			x = static_cast<int>(mouse_x + (event->tfinger.dx * SpeedFactor * devilution::GetOutputSurface()->w));
+			y = static_cast<int>(mouse_y + (event->tfinger.dy * SpeedFactor * devilution::GetOutputSurface()->h));
 		}
 
 		x = clip(x, 0, devilution::GetOutputSurface()->w);
 		y = clip(y, 0, devilution::GetOutputSurface()->h);
-		xrel = x - mouse_x;
-		yrel = y - mouse_y;
+		int xrel = x - mouse_x;
+		int yrel = y - mouse_y;
 
 		// update the current finger's coordinates so we can track it later
 		for (int i = 0; i < MaxNumFingers; i++) {

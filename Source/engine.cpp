@@ -19,6 +19,35 @@
 #include "options.h"
 
 namespace devilution {
+namespace {
+
+void DrawHalfTransparentBlendedRectTo(const Surface &out, int sx, int sy, int width, int height)
+{
+	BYTE *pix = out.at(sx, sy);
+
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++) {
+			*pix = paletteTransparencyLookup[0][*pix];
+			pix++;
+		}
+		pix += out.pitch() - width;
+	}
+}
+
+void DrawHalfTransparentStippledRectTo(const Surface &out, int sx, int sy, int width, int height)
+{
+	BYTE *pix = out.at(sx, sy);
+
+	for (int row = 0; row < height; row++) {
+		for (int col = 0; col < width; col++) {
+			if (((row & 1) != 0 && (col & 1) != 0) || ((row & 1) == 0 && (col & 1) == 0))
+				*pix = 0;
+			pix++;
+		}
+		pix += out.pitch() - width;
+	}
+}
+} // namespace
 
 void DrawHorizontalLine(const Surface &out, Point from, int width, std::uint8_t colorIndex)
 {
@@ -58,33 +87,6 @@ void UnsafeDrawVerticalLine(const Surface &out, Point from, int height, std::uin
 	while (height-- > 0) {
 		*dst = colorIndex;
 		dst += pitch;
-	}
-}
-
-static void DrawHalfTransparentBlendedRectTo(const Surface &out, int sx, int sy, int width, int height)
-{
-	BYTE *pix = out.at(sx, sy);
-
-	for (int row = 0; row < height; row++) {
-		for (int col = 0; col < width; col++) {
-			*pix = paletteTransparencyLookup[0][*pix];
-			pix++;
-		}
-		pix += out.pitch() - width;
-	}
-}
-
-static void DrawHalfTransparentStippledRectTo(const Surface &out, int sx, int sy, int width, int height)
-{
-	BYTE *pix = out.at(sx, sy);
-
-	for (int row = 0; row < height; row++) {
-		for (int col = 0; col < width; col++) {
-			if (((row & 1) != 0 && (col & 1) != 0) || ((row & 1) == 0 && (col & 1) == 0))
-				*pix = 0;
-			pix++;
-		}
-		pix += out.pitch() - width;
 	}
 }
 
@@ -136,7 +138,7 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
  * @param x2 the x coordinate of p2
  * @param y2 the y coordinate of p2
  * @return the direction of the p1->p2 vector
-*/
+ */
 Direction GetDirection(Point start, Point destination)
 {
 	Direction md = DIR_S;
@@ -177,21 +179,6 @@ Direction GetDirection(Point start, Point destination)
 int CalculateWidth2(int width)
 {
 	return (width - 64) / 2;
-}
-
-/**
- * @brief Fade to black and play a video
- * @param pszMovie file path of movie
- */
-void PlayInGameMovie(const char *pszMovie)
-{
-	PaletteFadeOut(8);
-	play_movie(pszMovie, false);
-	ClearScreenBuffer();
-	force_redraw = 255;
-	scrollrt_draw_game_screen();
-	PaletteFadeIn(8);
-	force_redraw = 255;
 }
 
 } // namespace devilution

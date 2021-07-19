@@ -4,142 +4,111 @@
  * Implementation of functions for updating game state from network commands.
  */
 
+#include <list>
+#include <mutex>
+
 #include "nthread.h"
-#include "storm/storm.h"
+#include "utils/sdl_cond.h"
 #include "utils/thread.h"
 
 namespace devilution {
 
-static CCritSect sgMemCrit;
+struct DThreadPkt {
+	int pnum;
+	_cmd_id cmd;
+	std::unique_ptr<byte[]> data;
+	uint32_t len;
+
+	DThreadPkt(int pnum, _cmd_id(cmd), std::unique_ptr<byte[]> data, uint32_t len)
+	    : pnum(pnum)
+	    , cmd(cmd)
+	    , data(std::move(data))
+	    , len(len)
+	{
+	}
+};
+
+namespace {
+
+std::optional<SdlMutex> DthreadMutex;
 SDL_threadID glpDThreadId;
-TMegaPkt *sgpInfoHead; /* may not be right struct */
-bool dthread_running;
-event_emul *sghWorkToDoEvent;
+std::list<DThreadPkt> InfoList;
+bool DthreadRunning;
+std::optional<SdlCond> WorkToDo;
 
 /* rdata */
-static SDL_Thread *sghThread = nullptr;
+SDL_Thread *sghThread = nullptr;
 
-static unsigned int DthreadHandler(void * /*data*/)
+void DthreadHandler()
 {
-	const char *errorBuf;
-	TMegaPkt *pkt;
-	DWORD dwMilliseconds;
+	std::lock_guard<SdlMutex> lock(*DthreadMutex);
+	while (true) {
+		while (!InfoList.empty()) {
+			DThreadPkt pkt = std::move(InfoList.front());
+			InfoList.pop_front();
 
-	while (dthread_running) {
-		if (sgpInfoHead == nullptr && WaitForEvent(sghWorkToDoEvent) == -1) {
-			errorBuf = SDL_GetError();
-			app_fatal("dthread4:\n%s", errorBuf);
+			DthreadMutex->unlock();
+			multi_send_zero_packet(pkt.pnum, pkt.cmd, pkt.data.get(), pkt.len);
+			DthreadMutex->lock();
 		}
-
-		sgMemCrit.Enter();
-		pkt = sgpInfoHead;
-		if (sgpInfoHead != nullptr)
-			sgpInfoHead = sgpInfoHead->pNext;
-		else
-			ResetEvent(sghWorkToDoEvent);
-		sgMemCrit.Leave();
-
-		if (pkt != nullptr) {
-			if (pkt->dwSpaceLeft != MAX_PLRS)
-				multi_send_zero_packet(pkt->dwSpaceLeft, static_cast<_cmd_id>(pkt->data[0]), &pkt->data[8], *(DWORD *)&pkt->data[4]);
-
-			dwMilliseconds = 1000 * *(DWORD *)&pkt->data[4] / gdwDeltaBytesSec;
-			if (dwMilliseconds >= 1)
-				dwMilliseconds = 1;
-
-			std::free(pkt);
-
-			if (dwMilliseconds != 0)
-				SDL_Delay(dwMilliseconds);
-		}
+		if (!DthreadRunning)
+			return;
+		WorkToDo->wait(*DthreadMutex);
 	}
-
-	return 0;
 }
+
+} // namespace
 
 void dthread_remove_player(uint8_t pnum)
 {
-	TMegaPkt *pkt;
-
-	sgMemCrit.Enter();
-	for (pkt = sgpInfoHead; pkt != nullptr; pkt = pkt->pNext) {
-		if (pkt->dwSpaceLeft == pnum)
-			pkt->dwSpaceLeft = MAX_PLRS;
-	}
-	sgMemCrit.Leave();
+	std::lock_guard<SdlMutex> lock(*DthreadMutex);
+	InfoList.remove_if([&](auto &pkt) {
+		return pkt.pnum == pnum;
+	});
 }
 
-void dthread_send_delta(int pnum, _cmd_id cmd, byte *pbSrc, int dwLen)
+void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len)
 {
-	TMegaPkt *pkt;
-	TMegaPkt *p;
-
-	if (!gbIsMultiplayer) {
+	if (!gbIsMultiplayer)
 		return;
-	}
 
-	pkt = static_cast<TMegaPkt *>(std::malloc(dwLen + 20));
-	pkt->pNext = nullptr;
-	pkt->dwSpaceLeft = pnum;
-	pkt->data[0] = static_cast<byte>(cmd);
-	*(DWORD *)&pkt->data[4] = dwLen;
-	memcpy(&pkt->data[8], pbSrc, dwLen);
-	sgMemCrit.Enter();
-	p = (TMegaPkt *)&sgpInfoHead;
-	while (p->pNext != nullptr) {
-		p = p->pNext;
-	}
-	p->pNext = pkt;
+	DThreadPkt pkt { pnum, cmd, std::move(data), len };
 
-	SetEvent(sghWorkToDoEvent);
-	sgMemCrit.Leave();
+	std::lock_guard<SdlMutex> lock(*DthreadMutex);
+	InfoList.push_back(std::move(pkt));
+	WorkToDo->signal();
 }
 
 void dthread_start()
 {
-	const char *errorBuf;
-
-	if (!gbIsMultiplayer) {
+	if (!gbIsMultiplayer)
 		return;
-	}
 
-	sghWorkToDoEvent = StartEvent();
-	if (sghWorkToDoEvent == nullptr) {
-		errorBuf = SDL_GetError();
-		app_fatal("dthread:1\n%s", errorBuf);
-	}
-
-	dthread_running = true;
-
+	DthreadRunning = true;
+	DthreadMutex.emplace();
+	WorkToDo.emplace();
 	sghThread = CreateThread(DthreadHandler, &glpDThreadId);
-	if (sghThread == nullptr) {
-		errorBuf = SDL_GetError();
-		app_fatal("dthread2:\n%s", errorBuf);
-	}
 }
 
 void DThreadCleanup()
 {
-	TMegaPkt *tmp;
-
-	if (sghWorkToDoEvent == nullptr) {
+	if (!DthreadRunning)
 		return;
+
+	{
+		std::lock_guard<SdlMutex> lock(*DthreadMutex);
+		DthreadRunning = false;
+		InfoList.clear();
+		WorkToDo->signal();
 	}
 
-	dthread_running = false;
-	SetEvent(sghWorkToDoEvent);
 	if (sghThread != nullptr && glpDThreadId != SDL_GetThreadID(nullptr)) {
 		SDL_WaitThread(sghThread, nullptr);
 		sghThread = nullptr;
 	}
-	EndEvent(sghWorkToDoEvent);
-	sghWorkToDoEvent = nullptr;
 
-	while (sgpInfoHead != nullptr) {
-		tmp = sgpInfoHead->pNext;
-		std::free(sgpInfoHead);
-		sgpInfoHead = tmp;
-	}
+	DthreadMutex = std::nullopt;
+	WorkToDo = std::nullopt;
 }
 
 } // namespace devilution

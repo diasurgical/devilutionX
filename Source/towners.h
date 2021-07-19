@@ -35,12 +35,6 @@ enum _talker_id : uint8_t {
 	NUM_TOWNER_TYPES,
 };
 
-struct TNQ {
-	uint8_t _qsttype;
-	uint8_t _qstmsg;
-	bool _qstmsgact;
-};
-
 struct TownerStruct {
 	byte *_tNAnim[8];
 	std::unique_ptr<byte[]> _tNData;
@@ -56,7 +50,6 @@ struct TownerStruct {
 	uint8_t _tAnimFrame; // Current frame of animation.
 	uint8_t _tAnimFrameCnt;
 	string_view _tName;
-	TNQ qsts[MAXQUESTS];
 	/** Specifies the animation frame sequence. */
 	const uint8_t *animOrder; // unowned
 	std::size_t animOrderSize;
@@ -65,13 +58,13 @@ struct TownerStruct {
 	_talker_id _ttype;
 };
 
-extern TownerStruct towners[NUM_TOWNERS];
+extern TownerStruct Towners[NUM_TOWNERS];
 
 void InitTowners();
 void FreeTownerGFX();
 void ProcessTowners();
 void TalkToTowner(PlayerStruct &player, int t);
 
-extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
+extern _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS];
 
 } // namespace devilution

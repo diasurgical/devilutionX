@@ -68,7 +68,7 @@ int PushAulibDecoder::doDecoding(float buf[], int len, bool &callAgain)
 	callAgain = false;
 
 	const auto writeFloats = [&buf](const std::int16_t *samples, unsigned count) {
-		constexpr float Scale = std::numeric_limits<std::int16_t>::max() + 1;
+		constexpr float Scale = std::numeric_limits<std::int16_t>::max() + 1.F;
 		for (unsigned i = 0; i < count; ++i) {
 			buf[i] = static_cast<float>(samples[i]) / Scale;
 		}

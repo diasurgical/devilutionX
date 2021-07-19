@@ -5,12 +5,22 @@
  */
 #pragma once
 
+#include "engine.h"
+#include "engine/point.hpp"
+#include "objects.h"
+
 namespace devilution {
 
-int ObjIndex(int x, int y);
+/**
+ * @brief Find an object given a point in map coordinates
+ *
+ * @param position The map coordinate to test
+ * @return A reference to the object
+ */
+ObjectStruct &ObjectAtPosition(Point position);
 void LoadSetMap();
 
 /* rdata */
-extern const char *const quest_level_names[];
+extern const char *const QuestLevelNames[];
 
 } // namespace devilution

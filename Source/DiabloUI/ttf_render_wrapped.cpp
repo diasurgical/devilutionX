@@ -142,7 +142,7 @@ SDL_Surface *RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, SDL_Colo
 	SDLC_SetColorKey(textbuf, 0);
 
 	// Reduced space between lines to roughly match Diablo.
-	const int lineskip = 0.7 * TTF_FontLineSkip(font);
+	const int lineskip = TTF_FontLineSkip(font) * 7 / 10; // avoids forced int > float > int conversion
 	SDL_Rect dest = { 0, 0, 0, 0 };
 	for (std::size_t line = 0; line < numLines; line++) {
 		text = strLines[line];

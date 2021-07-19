@@ -70,7 +70,7 @@ void DrawXPBar(const Surface &out)
 	if (!sgOptions.Gameplay.bExperienceBar)
 		return;
 
-	const auto &player = plr[myplr];
+	const auto &player = Players[MyPlayerId];
 
 	const int backX = PANEL_LEFT + PANEL_WIDTH / 2 - 155;
 	const int backY = PANEL_TOP + PANEL_HEIGHT - 11;
@@ -80,7 +80,7 @@ void DrawXPBar(const Surface &out)
 
 	DrawArt(out, backX, backY, &xpbarArt);
 
-	const int charLevel = player._pLevel;
+	const int8_t charLevel = player._pLevel;
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Draw a nice golden bar for max level characters.
@@ -121,9 +121,9 @@ bool CheckXPBarInfo()
 	if (MousePosition.x < backX || MousePosition.x >= backX + BackWidth || MousePosition.y < backY || MousePosition.y >= backY + BackHeight)
 		return false;
 
-	const auto &player = plr[myplr];
+	const auto &player = Players[MyPlayerId];
 
-	const int charLevel = player._pLevel;
+	const int8_t charLevel = player._pLevel;
 
 	strcpy(tempstr, fmt::format(_("Level {:d}"), charLevel).c_str());
 	AddPanelString(tempstr);
@@ -133,7 +133,7 @@ bool CheckXPBarInfo()
 		infoclr = UIS_GOLD;
 
 		strcpy(tempstr, _("Experience: "));
-		PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, ExpLvlsTbl[charLevel - 1]);
+		PrintWithSeparator(tempstr + strlen(tempstr), ExpLvlsTbl[charLevel - 1]);
 		AddPanelString(tempstr);
 
 		AddPanelString(_("Maximum Level"));
@@ -144,11 +144,11 @@ bool CheckXPBarInfo()
 	infoclr = UIS_SILVER;
 
 	strcpy(tempstr, _("Experience: "));
-	PrintWithSeparator(tempstr + SDL_arraysize("Experience: ") - 1, player._pExperience);
+	PrintWithSeparator(tempstr + strlen(tempstr), player._pExperience);
 	AddPanelString(tempstr);
 
 	strcpy(tempstr, _("Next Level: "));
-	PrintWithSeparator(tempstr + SDL_arraysize("Next Level: ") - 1, ExpLvlsTbl[charLevel]);
+	PrintWithSeparator(tempstr + strlen(tempstr), ExpLvlsTbl[charLevel]);
 	AddPanelString(tempstr);
 
 	strcpy(PrintWithSeparator(tempstr, ExpLvlsTbl[charLevel] - player._pExperience), fmt::format(_(" to Level {:d}"), charLevel + 1).c_str());

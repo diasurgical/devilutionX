@@ -15,8 +15,8 @@ char dialogText[256];
 
 bool selok_endMenu;
 
-std::vector<UiListItem *> vecSelOkDialogItems;
-std::vector<UiItemBase *> vecSelOkDialog;
+std::vector<std::unique_ptr<UiListItem>> vecSelOkDialogItems;
+std::vector<std::unique_ptr<UiItemBase>> vecSelOkDialog;
 
 #define MESSAGE_WIDTH 280
 
@@ -24,14 +24,8 @@ void selok_Free()
 {
 	ArtBackground.Unload();
 
-	for (auto *pUIListItem : vecSelOkDialogItems) {
-		delete pUIListItem;
-	}
 	vecSelOkDialogItems.clear();
 
-	for (auto *pUIItem : vecSelOkDialog) {
-		delete pUIItem;
-	}
 	vecSelOkDialog.clear();
 }
 
@@ -62,17 +56,17 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	if (title != nullptr) {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-		vecSelOkDialog.push_back(new UiArtText(title, rect1, UIS_CENTER | UIS_BIG));
+		vecSelOkDialog.push_back(std::make_unique<UiArtText>(title, rect1, UIS_CENTER | UIS_BIG));
 
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 210), 560, 168 };
-		vecSelOkDialog.push_back(new UiArtText(dialogText, rect2, UIS_MED));
+		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect2, UIS_MED));
 	} else {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 197), 560, 168 };
-		vecSelOkDialog.push_back(new UiArtText(dialogText, rect1, UIS_MED));
+		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect1, UIS_MED));
 	}
 
-	vecSelOkDialogItems.push_back(new UiListItem(_("OK"), 0));
-	vecSelOkDialog.push_back(new UiList(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
+	vecSelOkDialogItems.push_back(std::make_unique<UiListItem>(_("OK"), 0));
+	vecSelOkDialog.push_back(std::make_unique<UiList>(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UIS_CENTER | UIS_BIG | UIS_GOLD));
 
 	strncpy(dialogText, body, sizeof(dialogText) - 1);
 	WordWrapArtStr(dialogText, MESSAGE_WIDTH);

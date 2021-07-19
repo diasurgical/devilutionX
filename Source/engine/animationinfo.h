@@ -39,7 +39,7 @@ public:
 	/**
 	 * @brief Pointer to Animation Sprite
 	 */
-	CelSprite *pCelSprite;
+	const CelSprite *pCelSprite;
 	/**
 	 * @brief How many game ticks are needed to advance one Animation Frame
 	 */
@@ -74,22 +74,22 @@ public:
 
 	/**
 	 * @brief Sets the new Animation with all relevant information for rendering
-	 * @param pCelSprite Pointer to Animation Sprite
+	 * @param celSprite Pointer to Animation Sprite
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 * @param flags Specifies what special logics are applied to this Animation
 	 * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
 	 */
-	void SetNewAnimation(CelSprite *pCelSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+	void SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
-	 * @param pCelSprite Pointer to Animation Sprite
+	 * @param celSprite Pointer to Animation Sprite
 	 * @param numberOfFrames Number of Frames in Animation
 	 * @param delayLen Delay after each Animation sequence
 	 */
-	void ChangeAnimationData(CelSprite *pCelSprite, int numberOfFrames, int delayLen);
+	void ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int delayLen);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)

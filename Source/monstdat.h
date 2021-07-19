@@ -40,7 +40,7 @@ enum _mai_id : int8_t {
 	AI_COUNSLR,
 	AI_MEGA,
 	AI_DIABLO,
-	AI_LAZURUS,
+	AI_LAZARUS,
 	AI_LAZHELP,
 	AI_LACHDAN,
 	AI_WARLORD,
@@ -74,7 +74,7 @@ enum monster_resistance : uint8_t {
 	// clang-format on
 };
 
-struct MonsterData {
+struct MonsterDataStruct {
 	const char *mName;
 	const char *GraphicType;
 	const char *sndfile;
@@ -263,6 +263,24 @@ enum _monster_availability : uint8_t {
 	MAT_RETAIL,
 };
 
+/**
+ * @brief Defines if and how a group of monsters should be spawned with the unique monster
+ */
+enum class UniqueMonsterPack {
+	/**
+	 * @brief Don't spawn a group of monsters with the unique monster
+	 */
+	None,
+	/**
+	 * @brief Spawn a group of monsters that are independent from the unique monster
+	 */
+	Independent,
+	/**
+	 * @brief Spawn a group of monsters that are leashed to the unique monster
+	 */
+	Leashed,
+};
+
 struct UniqMonstStruct {
 	_monster_id mtype;
 	const char *mName;
@@ -275,13 +293,17 @@ struct UniqMonstStruct {
 	uint8_t mMaxDamage;
 	/** Using monster_resistance as bitflags */
 	uint16_t mMagicRes;
-	uint16_t mUnqAttr; // TODO create enum
-	uint8_t mUnqVar1;
-	uint8_t mUnqVar2;
+	/**
+	 * @brief Defines if and how a group of monsters should be spawned with the unique monster
+	 */
+
+	UniqueMonsterPack monsterPack;
+	uint8_t customHitpoints;
+	uint8_t customArmorClass;
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterData monsterdata[];
+extern const MonsterDataStruct MonsterData[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];
