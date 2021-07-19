@@ -4,6 +4,7 @@
  * Implementation of functionality transmitting chat messages.
  */
 #include <list>
+
 #include "tmsg.h"
 #include "diablo.h"
 
@@ -17,9 +18,9 @@ struct TMsg {
 	uint8_t len;
 
 	TMsg(uint32_t time, byte *data, uint8_t len)
-		: time(time)
-		, body(new byte[len])
-		, len(len)
+	    : time(time)
+	    , body(new byte[len])
+	    , len(len)
 	{
 		memcpy(body.get(), data, len);
 	}

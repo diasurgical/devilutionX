@@ -24,7 +24,7 @@ namespace {
 /** Specifies whether the palette has max brightness. */
 bool sgbFadedIn = true;
 
-static void LoadGamma()
+void LoadGamma()
 {
 	int gammaValue = sgOptions.Graphics.nGammaCorrection;
 
@@ -36,7 +36,7 @@ static void LoadGamma()
 	sgOptions.Graphics.nGammaCorrection = gammaValue - gammaValue % 5;
 }
 
-static Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skipFrom, int skipTo)
+Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skipFrom, int skipTo)
 {
 	Uint8 best;
 	Uint32 bestDiff = SDL_MAX_UINT32;
@@ -69,7 +69,7 @@ static Uint8 FindBestMatchForColor(SDL_Color *palette, SDL_Color color, int skip
  * @param skipTo Do not use colors between skipFrom and this index
  * @param toUpdate Only update the first n colors
  */
-static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, int toUpdate = 256)
+void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, int toUpdate = 256)
 {
 	for (int i = 0; i < 256; i++) {
 		for (int j = 0; j < 256; j++) {
@@ -100,7 +100,7 @@ static void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int ski
  * @param from First color index of the range
  * @param to First color index of the range
  */
-static void CycleColors(int from, int to)
+void CycleColors(int from, int to)
 {
 	{
 		SDL_Color col = system_palette[from];
@@ -134,7 +134,7 @@ static void CycleColors(int from, int to)
  * @param from First color index of the range
  * @param to First color index of the range
  */
-static void CycleColorsReverse(int from, int to)
+void CycleColorsReverse(int from, int to)
 {
 	{
 		SDL_Color col = system_palette[to];
@@ -355,41 +355,41 @@ void palette_update_caves()
 
 void palette_update_crypt()
 {
-	static int dword_6E2D58 = 0;
-	static int dword_6E2D54 = 0;
+	static int LaveDelay = 0;
+	static int GlowDelay = 0;
 
-	if (dword_6E2D58 > 1) {
+	if (LaveDelay > 1) {
 		CycleColorsReverse(1, 15);
-		dword_6E2D58 = 0;
+		LaveDelay = 0;
 	} else {
-		dword_6E2D58++;
+		LaveDelay++;
 	}
-	if (dword_6E2D54 > 0) {
+	if (GlowDelay > 0) {
 		CycleColorsReverse(16, 31);
 		palette_update();
-		dword_6E2D54++;
+		GlowDelay++;
 	} else {
-		dword_6E2D54 = 1;
+		GlowDelay = 1;
 	}
 }
 
 void palette_update_hive()
 {
-	static int dword_6E2D60 = 0;
-	static int dword_6E2D5C = 0;
+	static int WaveDelay = 0;
+	static int BubbleDelay = 0;
 
-	if (dword_6E2D60 == 2) {
+	if (WaveDelay == 2) {
 		CycleColorsReverse(1, 8);
-		dword_6E2D60 = 0;
+		WaveDelay = 0;
 	} else {
-		dword_6E2D60++;
+		WaveDelay++;
 	}
-	if (dword_6E2D5C == 2) {
+	if (BubbleDelay == 2) {
 		CycleColorsReverse(9, 15);
 		palette_update();
-		dword_6E2D5C = 0;
+		BubbleDelay = 0;
 	} else {
-		dword_6E2D5C++;
+		BubbleDelay++;
 	}
 }
 
