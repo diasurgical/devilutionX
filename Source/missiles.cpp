@@ -2012,7 +2012,7 @@ void UpdateVileMissPos(int mi, Point dst)
 			int yy = j + dst.y;
 			for (int i = -k; i <= k; i++) {
 				int xx = i + dst.x;
-				if (PosOkPlayer(MyPlayerId, { xx, yy })) {
+				if (PosOkPlayer(Players[MyPlayerId], { xx, yy })) {
 					Missiles[mi].position.tile = { xx, yy };
 					return;
 				}
@@ -2061,7 +2061,7 @@ void AddRndTeleport(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy,
 		// BUGFIX: should only run magic circle check if dObject[dx][dy] is non-zero.
 		if (Objects[oi]._otype == OBJ_MCIRCLE1 || Objects[oi]._otype == OBJ_MCIRCLE2) {
 			Missiles[mi].position.tile = dst;
-			if (!PosOkPlayer(MyPlayerId, dst))
+			if (!PosOkPlayer(Players[MyPlayerId], dst))
 				UpdateVileMissPos(mi, dst);
 		}
 	}

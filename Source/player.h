@@ -447,7 +447,6 @@ void ResetPlayerGFX(PlayerStruct &player);
 
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
- * @param pnum Player Id
  * @param graphic What player animation should be displayed
  * @param dir Direction of the animation
  * @param numberOfFrames Number of Frames in Animation
@@ -486,8 +485,8 @@ void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
-bool PosOkPlayer(int pnum, Point position);
-void MakePlrPath(int pnum, Point targetPosition, bool endspace);
+bool PosOkPlayer(PlayerStruct &player, Point position);
+void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(PlayerStruct &player);
 void CheckPlrSpell(bool mouseClick);
 void SyncPlrAnim(int pnum);

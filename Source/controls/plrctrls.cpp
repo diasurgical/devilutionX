@@ -91,7 +91,8 @@ int GetDistance(Point destination, int maxDistance)
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	int steps = FindPath([](Point position) { return PosOkPlayer(MyPlayerId, position); }, Players[MyPlayerId].position.future, destination, walkpath);
+	auto &myPlayer = Players[MyPlayerId];
+	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
 	if (steps > maxDistance)
 		return 0;
 
@@ -246,9 +247,11 @@ void FindMeleeTarget()
 	};
 	std::list<SearchNode> queue;
 
+	auto &myPlayer = Players[MyPlayerId];
+
 	{
-		const int startX = Players[MyPlayerId].position.future.x;
-		const int startY = Players[MyPlayerId].position.future.y;
+		const int startX = myPlayer.position.future.x;
+		const int startY = myPlayer.position.future.y;
 		visited[startX][startY] = true;
 		queue.push_back({ startX, startY, 0 });
 	}
@@ -269,7 +272,7 @@ void FindMeleeTarget()
 				continue;
 			}
 
-			if (!PosOkPlayer(MyPlayerId, { dx, dy })) {
+			if (!PosOkPlayer(myPlayer, { dx, dy })) {
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
@@ -1051,7 +1054,9 @@ bool IsPathBlocked(Point position, Direction dir)
 	if (IsTileNotSolid(leftStep) && IsTileNotSolid(rightStep))
 		return false;
 
-	return !PosOkPlayer(MyPlayerId, leftStep) && !PosOkPlayer(MyPlayerId, rightStep);
+	auto &myPlayer = Players[MyPlayerId];
+
+	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
 bool CanChangeDirection(const PlayerStruct &player)
@@ -1083,7 +1088,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (CanChangeDirection(player))
 		player._pdir = pdir;
 
-	if (PosOkPlayer(playerId, delta) && IsPathBlocked(player.position.future, pdir))
+	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
 		return; // Don't start backtrack around obstacles
 
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
@@ -1521,15 +1526,18 @@ void PerformSecondaryAction()
 		NetSendCmdLocParam1(true, CMD_GOTOAGETITEM, { cursmx, cursmy }, pcursitem);
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, { cursmx, cursmy }, pcursobj);
-	} else if (pcursmissile != -1) {
-		MakePlrPath(MyPlayerId, Missiles[pcursmissile].position.tile, true);
-		Players[MyPlayerId].destAction = ACTION_WALK;
-	} else if (pcurstrig != -1) {
-		MakePlrPath(MyPlayerId, trigs[pcurstrig].position, true);
-		Players[MyPlayerId].destAction = ACTION_WALK;
-	} else if (pcursquest != -1) {
-		MakePlrPath(MyPlayerId, Quests[pcursquest].position, true);
-		Players[MyPlayerId].destAction = ACTION_WALK;
+	} else {
+		auto &myPlayer = Players[MyPlayerId];
+		if (pcursmissile != -1) {
+			MakePlrPath(myPlayer, Missiles[pcursmissile].position.tile, true);
+			myPlayer.destAction = ACTION_WALK;
+		} else if (pcurstrig != -1) {
+			MakePlrPath(myPlayer, trigs[pcurstrig].position, true);
+			myPlayer.destAction = ACTION_WALK;
+		} else if (pcursquest != -1) {
+			MakePlrPath(myPlayer, Quests[pcursquest].position, true);
+			myPlayer.destAction = ACTION_WALK;
+		}
 	}
 }
 

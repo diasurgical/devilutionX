@@ -319,16 +319,11 @@ void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
 	}
 }
 
-bool PlrDirOK(int pnum, Direction dir)
+bool PlrDirOK(PlayerStruct &player, Direction dir)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrDirOK: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
-	if (futurePosition.x < 0 || dPiece[futurePosition.x][futurePosition.y] == 0 || !PosOkPlayer(pnum, futurePosition)) {
+	if (futurePosition.x < 0 || dPiece[futurePosition.x][futurePosition.y] == 0 || !PosOkPlayer(player, futurePosition)) {
 		return false;
 	}
 
@@ -348,7 +343,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	auto &player = Players[pnum];
 	const auto &dirModeParams = WalkSettings[dir];
 	SetPlayerOld(player);
-	if (!PlrDirOK(pnum, dir)) {
+	if (!PlrDirOK(player, dir)) {
 		return;
 	}
 
@@ -1590,7 +1585,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			return;
 		}
 		if (player.destAction == ACTION_ATTACKMON)
-			MakePlrPath(pnum, monster->position.future, false);
+			MakePlrPath(player, monster->position.future, false);
 		break;
 	case ACTION_ATTACKPLR:
 	case ACTION_RATTACKPLR:
@@ -1601,7 +1596,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 			return;
 		}
 		if (player.destAction == ACTION_ATTACKPLR)
-			MakePlrPath(pnum, target->position.future, false);
+			MakePlrPath(player, target->position.future, false);
 		break;
 	case ACTION_OPERATE:
 	case ACTION_DISARM:
@@ -2813,7 +2808,7 @@ void InitPlayer(int pnum, bool firstTime)
 			}
 		} else {
 			unsigned i;
-			for (i = 0; i < 8 && !PosOkPlayer(pnum, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
+			for (i = 0; i < 8 && !PosOkPlayer(player, player.position.tile + Displacement { plrxoff2[i], plryoff2[i] }); i++)
 				;
 			player.position.tile.x += plrxoff2[i];
 			player.position.tile.y += plryoff2[i];
@@ -3493,11 +3488,10 @@ void ClrPlrPath(PlayerStruct &player)
  *
  * This requires an ID instead of a PlayerStruct& to compare with the dPlayer lookup table values.
  *
- * @param pnum ID of the player.
  * @param position Dungeon tile coordinates.
  * @return False if something (other than the player themselves) is blocking the tile.
  */
-bool PosOkPlayer(int pnum, Point position)
+bool PosOkPlayer(PlayerStruct &player, Point position)
 {
 	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
 		return false;
@@ -3506,16 +3500,8 @@ bool PosOkPlayer(int pnum, Point position)
 	if (!IsTileWalkable(position))
 		return false;
 	if (dPlayer[position.x][position.y] != 0) {
-		int8_t p = -1;
-		if (dPlayer[position.x][position.y] > 0) {
-			p = dPlayer[position.x][position.y] - 1;
-		} else {
-			p = -(dPlayer[position.x][position.y] + 1);
-		}
-		if (p != pnum
-		    && p >= 0
-		    && p < MAX_PLRS
-		    && Players[p]._pHitPoints != 0) {
+		auto &otherPlayer = Players[abs(dPlayer[position.x][position.y]) - 1];
+		if (&otherPlayer == &player && otherPlayer._pHitPoints != 0) {
 			return false;
 		}
 	}
@@ -3535,18 +3521,13 @@ bool PosOkPlayer(int pnum, Point position)
 	return true;
 }
 
-void MakePlrPath(int pnum, Point targetPosition, bool endspace)
+void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("MakePlrPath: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	if (player.position.future == targetPosition) {
 		return;
 	}
 
-	int path = FindPath([pnum](Point position) { return PosOkPlayer(pnum, position); }, player.position.future, targetPosition, player.walkpath);
+	int path = FindPath([&player](Point position) { return PosOkPlayer(player, position); }, player.position.future, targetPosition, player.walkpath);
 	if (path == 0) {
 		return;
 	}
@@ -3718,19 +3699,19 @@ void SyncInitPlrPos(int pnum)
 	Point position = {};
 	for (int i = 0; i < 8; i++) {
 		position = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
-		if (PosOkPlayer(pnum, position)) {
+		if (PosOkPlayer(player, position)) {
 			break;
 		}
 	}
 
-	if (!PosOkPlayer(pnum, position)) {
+	if (!PosOkPlayer(player, position)) {
 		bool posOk = false;
 		for (int range = 1; range < 50 && !posOk; range++) {
 			for (int yy = -range; yy <= range && !posOk; yy++) {
 				position.y = yy + player.position.tile.y;
 				for (int xx = -range; xx <= range && !posOk; xx++) {
 					position.x = xx + player.position.tile.x;
-					if (PosOkPlayer(pnum, position) && !PosOkPortal(currlevel, position.x, position.y)) {
+					if (PosOkPlayer(player, position) && !PosOkPortal(currlevel, position.x, position.y)) {
 						posOk = true;
 					}
 				}

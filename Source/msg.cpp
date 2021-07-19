@@ -45,7 +45,7 @@ struct TMegaPkt {
 	byte data[32000];
 
 	TMegaPkt()
-		: spaceLeft(sizeof(data))
+	    : spaceLeft(sizeof(data))
 	{
 	}
 };
@@ -609,14 +609,14 @@ DWORD OnSyncData(TCmd *pCmd, int pnum)
 	return sync_update(pnum, (const byte *)pCmd);
 }
 
-DWORD OnWalk(TCmd *pCmd, int pnum)
+DWORD OnWalk(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		ClrPlrPath(Players[pnum]);
-		MakePlrPath(pnum, { p->x, p->y }, true);
-		Players[pnum].destAction = ACTION_NONE;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		ClrPlrPath(player);
+		MakePlrPath(player, { p->x, p->y }, true);
+		player.destAction = ACTION_NONE;
 	}
 
 	return sizeof(*p);
@@ -670,14 +670,14 @@ DWORD OnAddVitality(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnGotoGetItem(TCmd *pCmd, int pnum)
+DWORD OnGotoGetItem(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		MakePlrPath(pnum, { p->x, p->y }, false);
-		Players[pnum].destAction = ACTION_PICKUPITEM;
-		Players[pnum].destParam1 = p->wParam1;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, { p->x, p->y }, false);
+		player.destAction = ACTION_PICKUPITEM;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
@@ -736,14 +736,14 @@ DWORD OnGetItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnGotoAutoGetItem(TCmd *pCmd, int pnum)
+DWORD OnGotoAutoGetItem(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		MakePlrPath(pnum, { p->x, p->y }, false);
-		Players[pnum].destAction = ACTION_PICKUPAITEM;
-		Players[pnum].destParam1 = p->wParam1;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, { p->x, p->y }, false);
+		player.destAction = ACTION_PICKUPAITEM;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
@@ -884,15 +884,15 @@ DWORD OnRespawnItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAttackTile(TCmd *pCmd, int pnum)
+DWORD OnAttackTile(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		MakePlrPath(pnum, { p->x, p->y }, false);
-		Players[pnum].destAction = ACTION_ATTACK;
-		Players[pnum].destParam1 = p->x;
-		Players[pnum].destParam2 = p->y;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, { p->x, p->y }, false);
+		player.destAction = ACTION_ATTACK;
+		player.destParam1 = p->x;
+		player.destParam2 = p->y;
 	}
 
 	return sizeof(*p);
@@ -996,33 +996,27 @@ DWORD OnTargetSpellTile(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnOperateObjectTile(TCmd *pCmd, int pnum)
+DWORD OnOperateObjectTile(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		if (Objects[p->wParam1]._oSolidFlag || Objects[p->wParam1]._oDoorFlag)
-			MakePlrPath(pnum, { p->x, p->y }, false);
-		else
-			MakePlrPath(pnum, { p->x, p->y }, true);
-		Players[pnum].destAction = ACTION_OPERATE;
-		Players[pnum].destParam1 = p->wParam1;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, { p->x, p->y }, !Objects[p->wParam1]._oSolidFlag && !Objects[p->wParam1]._oDoorFlag);
+		player.destAction = ACTION_OPERATE;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
 }
 
-DWORD OnDisarm(TCmd *pCmd, int pnum)
+DWORD OnDisarm(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		if (Objects[p->wParam1]._oSolidFlag || Objects[p->wParam1]._oDoorFlag)
-			MakePlrPath(pnum, { p->x, p->y }, false);
-		else
-			MakePlrPath(pnum, { p->x, p->y }, true);
-		Players[pnum].destAction = ACTION_DISARM;
-		Players[pnum].destParam1 = p->wParam1;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, { p->x, p->y }, !Objects[p->wParam1]._oSolidFlag && !Objects[p->wParam1]._oDoorFlag);
+		player.destAction = ACTION_DISARM;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
@@ -1040,29 +1034,29 @@ DWORD OnOperateObjectTelekinesis(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAttackMonster(TCmd *pCmd, int pnum)
+DWORD OnAttackMonster(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		Point position = Monsters[p->wParam1].position.future;
-		if (Players[pnum].position.tile.WalkingDistance(position) > 1)
-			MakePlrPath(pnum, position, false);
-		Players[pnum].destAction = ACTION_ATTACKMON;
-		Players[pnum].destParam1 = p->wParam1;
+		if (player.position.tile.WalkingDistance(position) > 1)
+			MakePlrPath(player, position, false);
+		player.destAction = ACTION_ATTACKMON;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
 }
 
-DWORD OnAttackPlayer(TCmd *pCmd, int pnum)
+DWORD OnAttackPlayer(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		MakePlrPath(pnum, Players[p->wParam1].position.future, false);
-		Players[pnum].destAction = ACTION_ATTACKPLR;
-		Players[pnum].destParam1 = p->wParam1;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, Players[p->wParam1].position.future, false);
+		player.destAction = ACTION_ATTACKPLR;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
@@ -1218,14 +1212,14 @@ DWORD OnHealOther(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnTalkXY(TCmd *pCmd, int pnum)
+DWORD OnTalkXY(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		MakePlrPath(pnum, { p->x, p->y }, false);
-		Players[pnum].destAction = ACTION_TALK;
-		Players[pnum].destParam1 = p->wParam1;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+		MakePlrPath(player, { p->x, p->y }, false);
+		player.destAction = ACTION_TALK;
+		player.destParam1 = p->wParam1;
 	}
 
 	return sizeof(*p);
@@ -2013,7 +2007,6 @@ Point GetItemPosition(Point position)
 				int xx = position.x + l;
 				if (CanPut({ xx, yy }))
 					return { xx, yy };
-
 			}
 		}
 	}
@@ -2507,11 +2500,13 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	if (sgwPackPlrOffsetTbl[pnum] != 0 && sbLastCmd != CMD_ACK_PLRINFO && sbLastCmd != CMD_SEND_PLRINFO)
 		return 0;
 
+	auto &player = Players[pnum];
+
 	switch (pCmd->bCmd) {
 	case CMD_SYNCDATA:
 		return OnSyncData(pCmd, pnum);
 	case CMD_WALKXY:
-		return OnWalk(pCmd, pnum);
+		return OnWalk(pCmd, player);
 	case CMD_ADDSTR:
 		return OnAddStrength(pCmd, pnum);
 	case CMD_ADDDEX:
@@ -2521,13 +2516,13 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_ADDVIT:
 		return OnAddVitality(pCmd, pnum);
 	case CMD_GOTOGETITEM:
-		return OnGotoGetItem(pCmd, pnum);
+		return OnGotoGetItem(pCmd, player);
 	case CMD_REQUESTGITEM:
 		return OnRequestGetItem(pCmd, pnum);
 	case CMD_GETITEM:
 		return OnGetItem(pCmd, pnum);
 	case CMD_GOTOAGETITEM:
-		return OnGotoAutoGetItem(pCmd, pnum);
+		return OnGotoAutoGetItem(pCmd, player);
 	case CMD_REQUESTAGITEM:
 		return OnRequestAutoGetItem(pCmd, pnum);
 	case CMD_AGETITEM:
@@ -2541,7 +2536,7 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_RESPAWNITEM:
 		return OnRespawnItem(pCmd, pnum);
 	case CMD_ATTACKXY:
-		return OnAttackTile(pCmd, pnum);
+		return OnAttackTile(pCmd, player);
 	case CMD_SATTACKXY:
 		return OnStandingAttackTile(pCmd, pnum);
 	case CMD_RATTACKXY:
@@ -2553,15 +2548,15 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_TSPELLXY:
 		return OnTargetSpellTile(pCmd, pnum);
 	case CMD_OPOBJXY:
-		return OnOperateObjectTile(pCmd, pnum);
+		return OnOperateObjectTile(pCmd, player);
 	case CMD_DISARMXY:
-		return OnDisarm(pCmd, pnum);
+		return OnDisarm(pCmd, player);
 	case CMD_OPOBJT:
 		return OnOperateObjectTelekinesis(pCmd, pnum);
 	case CMD_ATTACKID:
-		return OnAttackMonster(pCmd, pnum);
+		return OnAttackMonster(pCmd, player);
 	case CMD_ATTACKPID:
-		return OnAttackPlayer(pCmd, pnum);
+		return OnAttackPlayer(pCmd, player);
 	case CMD_RATTACKID:
 		return OnRangedAttackMonster(pCmd, pnum);
 	case CMD_RATTACKPID:
@@ -2581,7 +2576,7 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 	case CMD_HEALOTHER:
 		return OnHealOther(pCmd, pnum);
 	case CMD_TALKXY:
-		return OnTalkXY(pCmd, pnum);
+		return OnTalkXY(pCmd, player);
 	case CMD_DEBUG:
 		return OnDebug(pCmd);
 	case CMD_NEWLVL:
