@@ -18,13 +18,13 @@ namespace {
 
 #define PMSG_COUNT 8
 
-static uint8_t plr_msg_slot;
+uint8_t plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
 const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_SILVER, UIS_GOLD };
 
-static void PrintPlrMsg(const Surface &out, int x, int y, int width, char *text, uint16_t style)
+void PrintChatMessage(const Surface &out, int x, int y, int width, char *text, uint16_t style)
 {
 	int length = strlen(text);
 	for (int i = 0; i < length; i++) {
@@ -125,7 +125,7 @@ void DrawPlrMsg(const Surface &out)
 	pMsg = plr_msgs;
 	for (int i = 0; i < PMSG_COUNT; i++) {
 		if (pMsg->str[0] != '\0')
-			PrintPlrMsg(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
+			PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
 		pMsg++;
 		y += 35;
 	}

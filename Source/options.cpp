@@ -59,7 +59,7 @@ CSimpleIni &GetIni()
 	return ini;
 }
 
-static bool IniChanged = false;
+bool IniChanged = false;
 
 /**
  * @brief Checks if a ini entry is changed by comparing value before and after
@@ -68,30 +68,31 @@ class IniChangedChecker {
 public:
 	IniChangedChecker(const char *sectionName, const char *keyName)
 	{
-		this->sectionName = sectionName;
-		this->keyName = keyName;
+		this->sectionName_ = sectionName;
+		this->keyName_ = keyName;
 		std::list<CSimpleIni::Entry> values;
 		if (!GetIni().GetAllValues(sectionName, keyName, values)) {
 			// No entry found in original ini => new entry => changed
 			IniChanged = true;
 		}
-		auto value = GetIni().GetValue(sectionName, keyName);
+		const auto *value = GetIni().GetValue(sectionName, keyName);
 		if (value != nullptr)
-			oldValue = value;
+			oldValue_ = value;
 	}
 	~IniChangedChecker()
 	{
-		auto value = GetIni().GetValue(sectionName, keyName);
+		const auto *value = GetIni().GetValue(sectionName_, keyName_);
 		std::string newValue;
 		if (value != nullptr)
 			newValue = value;
-		if (oldValue != newValue)
+		if (oldValue_ != newValue)
 			IniChanged = true;
 	}
+
 private:
-	std::string oldValue;
-	const char *sectionName;
-	const char *keyName;
+	std::string oldValue_;
+	const char *sectionName_;
+	const char *keyName_;
 };
 
 int GetIniInt(const char *keyname, const char *valuename, int defaultValue)

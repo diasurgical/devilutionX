@@ -15,7 +15,7 @@ namespace devilution {
 
 namespace {
 
-static void VerifyGoldSeeds(PlayerStruct &player)
+void VerifyGoldSeeds(PlayerStruct &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (player.InvList[i].IDidx != IDI_GOLD)

@@ -299,7 +299,7 @@ bool RndLocOk(int xp, int yp)
 	return leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
 }
 
-static bool WallTrapLocOkK(int xp, int yp)
+bool CanPlaceWallTrap(int xp, int yp)
 {
 	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
 		return false;
@@ -519,7 +519,7 @@ void InitRndBarrels()
 	}
 }
 
-void add_crypt_objs(int x1, int y1, int x2, int y2)
+void AddCryptObjects(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
@@ -598,7 +598,7 @@ void AddObjTraps()
 				while (IsTileNotSolid({ xp, j })) // BUGFIX: check if xp >= 0
 					xp--;
 
-				if (!WallTrapLocOkK(xp, j) || i - xp <= 1)
+				if (!CanPlaceWallTrap(xp, j) || i - xp <= 1)
 					continue;
 
 				AddObject(OBJ_TRAPL, { xp, j });
@@ -611,7 +611,7 @@ void AddObjTraps()
 				while (IsTileNotSolid({ i, yp })) // BUGFIX: check if yp >= 0
 					yp--;
 
-				if (!WallTrapLocOkK(i, yp) || j - yp <= 1)
+				if (!CanPlaceWallTrap(i, yp) || j - yp <= 1)
 					continue;
 
 				AddObject(OBJ_TRAPR, { i, yp });
@@ -1191,7 +1191,7 @@ void AddTrap(int i)
 	Objects[i]._oVar4 = 0;
 }
 
-void AddObjLight(int i, int r)
+void AddObjectLight(int i, int r)
 {
 	if (ApplyObjectLighting) {
 		DoLighting(Objects[i].position, r, -1);
@@ -1408,7 +1408,7 @@ void AddMushPatch()
 	}
 }
 
-void Obj_Light(int i, int lightRadius)
+void UpdateObjectLight(int i, int lightRadius)
 {
 	if (Objects[i]._oVar1 == -1) {
 		return;
@@ -1441,7 +1441,7 @@ void Obj_Light(int i, int lightRadius)
 	}
 }
 
-void Obj_Circle(int i)
+void UpdateCircle(int i)
 {
 	if (Players[MyPlayerId].position.tile != Objects[i].position) {
 		if (Objects[i]._otype == OBJ_MCIRCLE1)
@@ -1478,7 +1478,7 @@ void Obj_Circle(int i)
 	}
 }
 
-void Obj_StopAnim(int i)
+void ObjectStopAnim(int i)
 {
 	if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen) {
 		Objects[i]._oAnimCnt = 0;
@@ -1486,7 +1486,7 @@ void Obj_StopAnim(int i)
 	}
 }
 
-void Obj_Door(int i)
+void UpdateDoor(int i)
 {
 	if (Objects[i]._oVar4 == 0) {
 		Objects[i]._oSelFlag = 3;
@@ -1505,7 +1505,7 @@ void Obj_Door(int i)
 	Objects[i]._oMissFlag = true;
 }
 
-void Obj_Sarc(int i)
+void UpdateSarcoffagus(int i)
 {
 	if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen)
 		Objects[i]._oAnimFlag = 0;
@@ -1524,7 +1524,7 @@ void ActivateTrapLine(int ttype, int tid)
 	}
 }
 
-void Obj_FlameTrap(int i)
+void UpdateFlameTrap(int i)
 {
 	if (Objects[i]._oVar2 != 0) {
 		if (Objects[i]._oVar4 != 0) {
@@ -1578,7 +1578,7 @@ void Obj_FlameTrap(int i)
 	}
 }
 
-void Obj_BCrossDamage(int i)
+void UpdateBurningCrossDamage(int i)
 {
 	int damage[4] = { 6, 8, 10, 12 };
 
@@ -1682,7 +1682,7 @@ void ObjL2Special(int x1, int y1, int x2, int y2)
 	}
 }
 
-void objects_set_door_piece(Point position)
+void SetDoorPiece(Point position)
 {
 	int pn = dPiece[position.x][position.y] - 1;
 
@@ -1795,7 +1795,7 @@ void DoorSet(Point position, bool isLeftDoor)
  * @param doorPos Map tile where the door is in its closed position
  * @return true if the door is free to be closed, false if anything is blocking it
  */
-static inline bool IsDoorClear(const Point &doorPosition)
+inline bool IsDoorClear(const Point &doorPosition)
 {
 	return dDead[doorPosition.x][doorPosition.y] == 0
 	    && dMonster[doorPosition.x][doorPosition.y] == 0
@@ -1829,7 +1829,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		} else {
 			dSpecial[door.position.x][door.position.y] = 2;
 		}
-		objects_set_door_piece(door.position + Direction::DIR_NE);
+		SetDoorPiece(door.position + Direction::DIR_NE);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(door.position + Direction::DIR_NW, false);
@@ -1910,7 +1910,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		} else {
 			dSpecial[door.position.x][door.position.y] = 1;
 		}
-		objects_set_door_piece(door.position + Direction::DIR_NW);
+		SetDoorPiece(door.position + Direction::DIR_NW);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
 		DoorSet(door.position + Direction::DIR_NE, true);
@@ -4274,24 +4274,24 @@ void SyncL1Doors(ObjectStruct &door)
 		if (isLeftDoor) {
 			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
 			dSpecial[door.position.x][door.position.y] = 7;
-			objects_set_door_piece(door.position + Direction::DIR_NW);
+			SetDoorPiece(door.position + Direction::DIR_NW);
 			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
 		} else {
 			ObjSetMicro(door.position, 395);
 			dSpecial[door.position.x][door.position.y] = 8;
-			objects_set_door_piece(door.position + Direction::DIR_NE);
+			SetDoorPiece(door.position + Direction::DIR_NE);
 			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
 		}
 	} else {
 		if (isLeftDoor) {
 			ObjSetMicro(door.position, 206);
 			dSpecial[door.position.x][door.position.y] = 1;
-			objects_set_door_piece(door.position + Direction::DIR_NW);
+			SetDoorPiece(door.position + Direction::DIR_NW);
 			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
 		} else {
 			ObjSetMicro(door.position, 209);
 			dSpecial[door.position.x][door.position.y] = 2;
-			objects_set_door_piece(door.position + Direction::DIR_NE);
+			SetDoorPiece(door.position + Direction::DIR_NE);
 			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
 		}
 	}
@@ -4462,7 +4462,7 @@ void InitObjects()
 				AddObject(OBJ_SIGNCHEST, { 2 * setpc_x + 26, 2 * setpc_y + 19 });
 			InitRndLocBigObj(10, 15, OBJ_SARC);
 			if (currlevel >= 21)
-				add_crypt_objs(0, 0, MAXDUNX, MAXDUNY);
+				AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
 			else
 				AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
@@ -4648,16 +4648,16 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_CANDLE1:
 	case OBJ_CANDLE2:
 	case OBJ_BOOKCANDLE:
-		AddObjLight(oi, 5);
+		AddObjectLight(oi, 5);
 		break;
 	case OBJ_STORYCANDLE:
-		AddObjLight(oi, 3);
+		AddObjectLight(oi, 3);
 		break;
 	case OBJ_TORCHL:
 	case OBJ_TORCHR:
 	case OBJ_TORCHL2:
 	case OBJ_TORCHR2:
-		AddObjLight(oi, 8);
+		AddObjectLight(oi, 8);
 		break;
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -4760,7 +4760,7 @@ void AddObject(_object_id objType, Point objPos)
 	case OBJ_BCROSS:
 	case OBJ_TBCROSS:
 		AddBrnCross(oi);
-		AddObjLight(oi, 5);
+		AddObjectLight(oi, 5);
 		break;
 	case OBJ_PEDISTAL:
 		AddPedistal(oi);
@@ -4831,15 +4831,15 @@ void ProcessObjects()
 		int oi = ActiveObjects[i];
 		switch (Objects[oi]._otype) {
 		case OBJ_L1LIGHT:
-			Obj_Light(oi, 10);
+			UpdateObjectLight(oi, 10);
 			break;
 		case OBJ_SKFIRE:
 		case OBJ_CANDLE2:
 		case OBJ_BOOKCANDLE:
-			Obj_Light(oi, 5);
+			UpdateObjectLight(oi, 5);
 			break;
 		case OBJ_STORYCANDLE:
-			Obj_Light(oi, 3);
+			UpdateObjectLight(oi, 3);
 			break;
 		case OBJ_CRUX1:
 		case OBJ_CRUX2:
@@ -4848,7 +4848,7 @@ void ProcessObjects()
 		case OBJ_BARRELEX:
 		case OBJ_SHRINEL:
 		case OBJ_SHRINER:
-			Obj_StopAnim(oi);
+			ObjectStopAnim(oi);
 			break;
 		case OBJ_L1LDOOR:
 		case OBJ_L1RDOOR:
@@ -4856,19 +4856,19 @@ void ProcessObjects()
 		case OBJ_L2RDOOR:
 		case OBJ_L3LDOOR:
 		case OBJ_L3RDOOR:
-			Obj_Door(oi);
+			UpdateDoor(oi);
 			break;
 		case OBJ_TORCHL:
 		case OBJ_TORCHR:
 		case OBJ_TORCHL2:
 		case OBJ_TORCHR2:
-			Obj_Light(oi, 8);
+			UpdateObjectLight(oi, 8);
 			break;
 		case OBJ_SARC:
-			Obj_Sarc(oi);
+			UpdateSarcoffagus(oi);
 			break;
 		case OBJ_FLAMEHOLE:
-			Obj_FlameTrap(oi);
+			UpdateFlameTrap(oi);
 			break;
 		case OBJ_TRAPL:
 		case OBJ_TRAPR:
@@ -4876,12 +4876,12 @@ void ProcessObjects()
 			break;
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
-			Obj_Circle(oi);
+			UpdateCircle(oi);
 			break;
 		case OBJ_BCROSS:
 		case OBJ_TBCROSS:
-			Obj_Light(oi, 10);
-			Obj_BCrossDamage(oi);
+			UpdateObjectLight(oi, 10);
+			UpdateBurningCrossDamage(oi);
 			break;
 		default:
 			break;
