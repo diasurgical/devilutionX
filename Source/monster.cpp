@@ -576,9 +576,9 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	monster._uniqtrans = uniquetrans++;
 
-	if ((uniqueData.mUnqAttr & 4) != 0) {
-		monster.mHit = uniqueData.mUnqVar1;
-		monster.mHit2 = uniqueData.mUnqVar1;
+	if (uniqueData.customHitpoints != 0) {
+		monster.mHit = uniqueData.customHitpoints;
+		monster.mHit2 = uniqueData.customHitpoints;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
@@ -588,8 +588,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			monster.mHit2 += HELL_TO_HIT_BONUS;
 		}
 	}
-	if ((uniqueData.mUnqAttr & 8) != 0) {
-		monster.mArmorClass = uniqueData.mUnqVar1;
+	if (uniqueData.customArmorClass != 0) {
+		monster.mArmorClass = uniqueData.customArmorClass;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mArmorClass += NIGHTMARE_AC_BONUS;

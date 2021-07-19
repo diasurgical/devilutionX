@@ -276,8 +276,8 @@ struct UniqMonstStruct {
 	/** Using monster_resistance as bitflags */
 	uint16_t mMagicRes;
 	uint16_t mUnqAttr; // TODO create enum
-	uint8_t mUnqVar1;
-	uint8_t mUnqVar2;
+	uint8_t customHitpoints;
+	uint8_t customArmorClass;
 	_speech_id mtalkmsg;
 };
 
