@@ -273,11 +273,13 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 		RenameTempToPerm();
 	}
 	PkPlayerStruct pkplr;
-	PackPlayer(&pkplr, Players[MyPlayerId], !gbIsMultiplayer);
+	auto &myPlayer = Players[MyPlayerId];
+
+	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer);
 	EncodeHero(&pkplr);
 	if (!gbVanilla) {
 		SaveHotkeys();
-		SaveHeroItems(Players[MyPlayerId]);
+		SaveHeroItems(myPlayer);
 	}
 }
 
@@ -297,14 +299,15 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
+				auto &player = Players[0];
 				UnPackPlayer(&pkplr, 0, false);
 
 				CloseArchive(&archive);
-				LoadHeroItems(Players[0]);
-				RemoveEmptyInventory(Players[0]);
+				LoadHeroItems(player);
+				RemoveEmptyInventory(player);
 				CalcPlrInv(0, false);
 
-				Game2UiPlayer(Players[0], &uihero, hasSaveGame);
+				Game2UiPlayer(player, &uihero, hasSaveGame);
 				uiAddHeroInfo(&uihero);
 			}
 			CloseArchive(&archive);
@@ -385,10 +388,12 @@ void pfile_read_player_from_save(uint32_t saveNum, int playerId)
 
 	CloseArchive(&archive);
 
+	auto &player = Players[playerId];
+
 	UnPackPlayer(&pkplr, playerId, false);
 
-	LoadHeroItems(Players[playerId]);
-	RemoveEmptyInventory(Players[playerId]);
+	LoadHeroItems(player);
+	RemoveEmptyInventory(player);
 	CalcPlrInv(playerId, false);
 }
 

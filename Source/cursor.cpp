@@ -383,9 +383,10 @@ void CheckCursMove()
 			if (Objects[pcursobj]._oSelFlag < 1)
 				pcursobj = -1;
 		} else if (pcursplr != -1) {
-			if (Players[pcursplr]._pmode == PM_DEATH || Players[pcursplr]._pmode == PM_QUIT || !Players[pcursplr].plractive
-			    || currlevel != Players[pcursplr].plrlevel || Players[pcursplr]._pHitPoints >> 6 <= 0
-			    || ((dFlags[Players[pcursplr].position.tile.x][Players[pcursplr].position.tile.y] & BFLAG_VISIBLE) == 0))
+			auto &targetPlayer = Players[pcursplr];
+			if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
+			    || currlevel != targetPlayer.plrlevel || targetPlayer._pHitPoints >> 6 <= 0
+			    || ((dFlags[targetPlayer.position.tile.x][targetPlayer.position.tile.y] & BFLAG_VISIBLE) == 0))
 				pcursplr = -1;
 		}
 

@@ -168,14 +168,15 @@ void DrlgTPass3()
 	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
 	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 1) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 10))) {
+		auto &myPlayer = Players[MyPlayerId];
+		if (gbIsSpawn || ((myPlayer.pTownWarps & 1) == 0 && (!gbIsHellfire || myPlayer._pLevel < 10))) {
 			FillTile(48, 20, 320);
 		}
-		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 2) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 15))) {
+		if (gbIsSpawn || ((myPlayer.pTownWarps & 2) == 0 && (!gbIsHellfire || myPlayer._pLevel < 15))) {
 			FillTile(16, 68, 332);
 			FillTile(16, 70, 331);
 		}
-		if (gbIsSpawn || ((Players[MyPlayerId].pTownWarps & 4) == 0 && (!gbIsHellfire || Players[MyPlayerId]._pLevel < 20))) {
+		if (gbIsSpawn || ((myPlayer.pTownWarps & 4) == 0 && (!gbIsHellfire || myPlayer._pLevel < 20))) {
 			for (int x = 36; x < 46; x++) {
 				FillTile(x, 78, GenerateRnd(4) + 1);
 			}

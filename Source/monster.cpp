@@ -3364,7 +3364,8 @@ void LazarusAi(int i)
 	Direction md = GetMonsterDirection(monster);
 	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 		if (!gbIsMultiplayer) {
-			if (monster.mtalkmsg == TEXT_VILE13 && monster._mgoal == MGOAL_INQUIRING && Players[MyPlayerId].position.tile.x == 35 && Players[MyPlayerId].position.tile.y == 46) {
+			auto &myPlayer = Players[MyPlayerId];
+			if (monster.mtalkmsg == TEXT_VILE13 && monster._mgoal == MGOAL_INQUIRING && myPlayer.position.tile.x == 35 && myPlayer.position.tile.y == 46) {
 				PlayInGameMovie("gendata\\fprst3.smk");
 				monster._mmode = MM_TALK;
 				Quests[Q_BETRAYER]._qvar1 = 5;
@@ -4273,7 +4274,9 @@ void PrepDoEnding()
 	MyPlayerIsDead = false;
 	cineflag = true;
 
-	Players[MyPlayerId].pDiabloKillLevel = std::max(Players[MyPlayerId].pDiabloKillLevel, static_cast<uint8_t>(sgGameInitInfo.nDifficulty + 1));
+	auto &myPlayer = Players[MyPlayerId];
+
+	myPlayer.pDiabloKillLevel = std::max(myPlayer.pDiabloKillLevel, static_cast<uint8_t>(sgGameInitInfo.nDifficulty + 1));
 
 	for (auto &player : Players) {
 		player._pmode = PM_QUIT;
@@ -4458,10 +4461,11 @@ void ProcessMonsters()
 			monster.enemyPosition = monster.position.last;
 		} else {
 			assert(monster._menemy >= 0 && monster._menemy < MAX_PLRS);
-			monster.enemyPosition = Players[monster._menemy].position.future;
+			auto &player = Players[monster._menemy];
+			monster.enemyPosition = player.position.future;
 			if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
 				monster._msquelch = UINT8_MAX;
-				monster.position.last = Players[monster._menemy].position.future;
+				monster.position.last = player.position.future;
 			} else if (monster._msquelch != 0 && monster.MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'
 				monster._msquelch--;
 			}
@@ -5056,21 +5060,21 @@ int PreSpawnSkeleton()
 
 void TalktoMonster(MonsterStruct &monster)
 {
-	int pnum = monster._menemy;
+	auto &player = Players[monster._menemy];
 	monster._mmode = MM_TALK;
 	if (monster._mAi != AI_SNOTSPIL && monster._mAi != AI_LACHDAN) {
 		return;
 	}
 
 	if (QuestStatus(Q_LTBANNER) && Quests[Q_LTBANNER]._qvar1 == 2) {
-		if (Players[pnum].TryRemoveInvItemById(IDI_BANNER)) {
+		if (player.TryRemoveInvItemById(IDI_BANNER)) {
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.mtalkmsg = TEXT_BANNER12;
 			monster._mgoal = MGOAL_INQUIRING;
 		}
 	}
 	if (QuestStatus(Q_VEIL) && monster.mtalkmsg >= TEXT_VEIL9) {
-		if (Players[pnum].TryRemoveInvItemById(IDI_GLDNELIX)) {
+		if (player.TryRemoveInvItemById(IDI_GLDNELIX)) {
 			monster.mtalkmsg = TEXT_VEIL11;
 			monster._mgoal = MGOAL_INQUIRING;
 		}
@@ -5080,29 +5084,30 @@ void TalktoMonster(MonsterStruct &monster)
 void SpawnGolum(int i, Point position, int mi)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
-	auto &monster = Monsters[i];
+	auto &player = Players[i];
+	auto &golem = Monsters[i];
 
 	dMonster[position.x][position.y] = i + 1;
-	monster.position.tile = position;
-	monster.position.future = position;
-	monster.position.old = position;
-	monster._pathcount = 0;
-	monster._mmaxhp = 2 * (320 * Missiles[mi]._mispllvl + Players[i]._pMaxMana / 3);
-	monster._mhitpoints = monster._mmaxhp;
-	monster.mArmorClass = 25;
-	monster.mHit = 5 * (Missiles[mi]._mispllvl + 8) + 2 * Players[i]._pLevel;
-	monster.mMinDamage = 2 * (Missiles[mi]._mispllvl + 4);
-	monster.mMaxDamage = 2 * (Missiles[mi]._mispllvl + 8);
-	monster._mFlags |= MFLAG_GOLEM;
-	StartSpecialStand(monster, DIR_S);
-	UpdateEnemy(monster);
+	golem.position.tile = position;
+	golem.position.future = position;
+	golem.position.old = position;
+	golem._pathcount = 0;
+	golem._mmaxhp = 2 * (320 * Missiles[mi]._mispllvl + player._pMaxMana / 3);
+	golem._mhitpoints = golem._mmaxhp;
+	golem.mArmorClass = 25;
+	golem.mHit = 5 * (Missiles[mi]._mispllvl + 8) + 2 * player._pLevel;
+	golem.mMinDamage = 2 * (Missiles[mi]._mispllvl + 4);
+	golem.mMaxDamage = 2 * (Missiles[mi]._mispllvl + 8);
+	golem._mFlags |= MFLAG_GOLEM;
+	StartSpecialStand(golem, DIR_S);
+	UpdateEnemy(golem);
 	if (i == MyPlayerId) {
 		NetSendCmdGolem(
-		    monster.position.tile.x,
-		    monster.position.tile.y,
-		    monster._mdir,
-		    monster._menemy,
-		    monster._mhitpoints,
+		    golem.position.tile.x,
+		    golem.position.tile.y,
+		    golem._mdir,
+		    golem._menemy,
+		    golem._mhitpoints,
 		    currlevel);
 	}
 }

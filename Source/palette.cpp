@@ -355,41 +355,41 @@ void palette_update_caves()
 
 void palette_update_crypt()
 {
-	static int LaveDelay = 0;
-	static int GlowDelay = 0;
+	static int laveDelay = 0;
+	static int glowDelay = 0;
 
-	if (LaveDelay > 1) {
+	if (laveDelay > 1) {
 		CycleColorsReverse(1, 15);
-		LaveDelay = 0;
+		laveDelay = 0;
 	} else {
-		LaveDelay++;
+		laveDelay++;
 	}
-	if (GlowDelay > 0) {
+	if (glowDelay > 0) {
 		CycleColorsReverse(16, 31);
 		palette_update();
-		GlowDelay++;
+		glowDelay++;
 	} else {
-		GlowDelay = 1;
+		glowDelay = 1;
 	}
 }
 
 void palette_update_hive()
 {
-	static int WaveDelay = 0;
-	static int BubbleDelay = 0;
+	static int waveDelay = 0;
+	static int bubbleDelay = 0;
 
-	if (WaveDelay == 2) {
+	if (waveDelay == 2) {
 		CycleColorsReverse(1, 8);
-		WaveDelay = 0;
+		waveDelay = 0;
 	} else {
-		WaveDelay++;
+		waveDelay++;
 	}
-	if (BubbleDelay == 2) {
+	if (bubbleDelay == 2) {
 		CycleColorsReverse(9, 15);
 		palette_update();
-		BubbleDelay = 0;
+		bubbleDelay = 0;
 	} else {
-		BubbleDelay++;
+		bubbleDelay++;
 	}
 }
 
