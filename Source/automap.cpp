@@ -275,8 +275,8 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 		playerOffset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 
 	Point base = {
-		(playerOffset.deltaX * AutoMapScale / 100 / 2) + (myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
-		(playerOffset.deltaY * AutoMapScale / 100 / 2) + (myPlayerOffset.deltaY * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
+		((playerOffset.deltaX + myPlayerOffset.deltaX) * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
+		((playerOffset.deltaY + myPlayerOffset.deltaY) * AutoMapScale / 100 / 2) + (px + py) * AmLine8 + (gnScreenHeight - PANEL_HEIGHT) / 2
 	};
 
 	if (CanPanelsCoverView()) {
