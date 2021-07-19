@@ -267,7 +267,7 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 	}
 }
 
-bool MonstPlace(int xp, int yp)
+bool CanPlaceMonster(int xp, int yp)
 {
 	char f;
 
@@ -309,7 +309,7 @@ void PlaceMonster(int i, int mtype, int x, int y)
 	InitMonster(Monsters[i], rd, mtype, { x, y });
 }
 
-void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
+void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int leaderId)
 {
 	int placed = 0;
 
@@ -325,7 +325,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 
 		int xp;
 		int yp;
-		if ((leaderAttributes & 1) != 0) {
+		if (uniqueMonsterPack != UniqueMonsterPack::None) {
 			int offset = GenerateRnd(8);
 			auto position = leader.position.tile + static_cast<Direction>(offset);
 			xp = position.x;
@@ -334,7 +334,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 			do {
 				xp = GenerateRnd(80) + 16;
 				yp = GenerateRnd(80) + 16;
-			} while (!MonstPlace(xp, yp));
+			} while (!CanPlaceMonster(xp, yp));
 		}
 		int x1 = xp;
 		int y1 = yp;
@@ -345,21 +345,21 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 
 		int j = 0;
 		for (int try2 = 0; j < num && try2 < 100; xp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX, yp += Displacement::fromDirection(static_cast<Direction>(GenerateRnd(8))).deltaX) { /// BUGFIX: `yp += Point.y`
-			if (!MonstPlace(xp, yp)
+			if (!CanPlaceMonster(xp, yp)
 			    || (dTransVal[xp][yp] != dTransVal[x1][y1])
-			    || ((leaderAttributes & 2) != 0 && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
+			    || (uniqueMonsterPack == UniqueMonsterPack::Leashed && (abs(xp - x1) >= 4 || abs(yp - y1) >= 4))) {
 				try2++;
 				continue;
 			}
 
 			PlaceMonster(ActiveMonsterCount, mtype, xp, yp);
-			if ((leaderAttributes & 1) != 0) {
+			if (uniqueMonsterPack != UniqueMonsterPack::None) {
 				auto &minion = Monsters[ActiveMonsterCount];
 				minion._mmaxhp *= 2;
 				minion._mhitpoints = minion._mmaxhp;
 				minion._mint = leader._mint;
 
-				if ((leaderAttributes & 2) != 0) {
+				if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
 					minion.leader = leaderId;
 					minion.leaderRelation = LeaderRelation::Leashed;
 					minion._mAi = leader._mAi;
@@ -382,7 +382,7 @@ void PlaceGroup(int mtype, int num, int leaderAttributes, int leaderId)
 		}
 	}
 
-	if ((leaderAttributes & 2) != 0) {
+	if (uniqueMonsterPack == UniqueMonsterPack::Leashed) {
 		leader.packsize = placed;
 	}
 }
@@ -412,7 +412,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		int count2 = 0;
 		for (int x = xp - 3; x < xp + 3; x++) {
 			for (int y = yp - 3; y < yp + 3; y++) {
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && MonstPlace(x, y)) {
+				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && CanPlaceMonster(x, y)) {
 					count2++;
 				}
 			}
@@ -425,7 +425,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			}
 		}
 
-		if (MonstPlace(xp, yp)) {
+		if (CanPlaceMonster(xp, yp)) {
 			break;
 		}
 	}
@@ -576,9 +576,9 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	monster._uniqtrans = uniquetrans++;
 
-	if ((uniqueData.mUnqAttr & 4) != 0) {
-		monster.mHit = uniqueData.mUnqVar1;
-		monster.mHit2 = uniqueData.mUnqVar1;
+	if (uniqueData.customHitpoints != 0) {
+		monster.mHit = uniqueData.customHitpoints;
+		monster.mHit2 = uniqueData.customHitpoints;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
@@ -588,8 +588,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			monster.mHit2 += HELL_TO_HIT_BONUS;
 		}
 	}
-	if ((uniqueData.mUnqAttr & 8) != 0) {
-		monster.mArmorClass = uniqueData.mUnqVar1;
+	if (uniqueData.customArmorClass != 0) {
+		monster.mArmorClass = uniqueData.customArmorClass;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mArmorClass += NIGHTMARE_AC_BONUS;
@@ -600,8 +600,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	ActiveMonsterCount++;
 
-	if ((uniqueData.mUnqAttr & 1) != 0) {
-		PlaceGroup(miniontype, bosspacksize, uniqueData.mUnqAttr, ActiveMonsterCount - 1);
+	if (uniqueData.monsterPack != UniqueMonsterPack::None) {
+		PlaceGroup(miniontype, bosspacksize, uniqueData.monsterPack, ActiveMonsterCount - 1);
 	}
 
 	if (monster._mAi != AI_GARG) {
@@ -3987,7 +3987,7 @@ void InitMonsters()
 				na = GenerateRnd(2) + 2;
 			else
 				na = GenerateRnd(3) + 3;
-			PlaceGroup(mtype, na, 0, 0);
+			PlaceGroup(mtype, na, UniqueMonsterPack::None, 0);
 		}
 	}
 	for (int i = 0; i < nt; i++) {
@@ -4570,7 +4570,7 @@ bool DirOK(int i, Direction mdir)
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
 	}
-	if (monster._uniqtype == 0 || (UniqMonst[monster._uniqtype - 1].mUnqAttr & 2) == 0)
+	if (monster._uniqtype == 0 || UniqMonst[monster._uniqtype - 1].monsterPack == UniqueMonsterPack::Leashed)
 		return true;
 	int mcount = 0;
 	for (int x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {

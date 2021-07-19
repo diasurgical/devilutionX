@@ -263,6 +263,24 @@ enum _monster_availability : uint8_t {
 	MAT_RETAIL,
 };
 
+/**
+ * @brief Defines if and how a group of monsters should be spawned with the unique monster
+ */
+enum class UniqueMonsterPack {
+	/**
+	 * @brief Don't spawn a group of monsters with the unique monster
+	 */
+	None,
+	/**
+	 * @brief Spawn a group of monsters that are independent from the unique monster
+	 */
+	Independent,
+	/**
+	 * @brief Spawn a group of monsters that are leashed to the unique monster
+	 */
+	Leashed,
+};
+
 struct UniqMonstStruct {
 	_monster_id mtype;
 	const char *mName;
@@ -275,9 +293,13 @@ struct UniqMonstStruct {
 	uint8_t mMaxDamage;
 	/** Using monster_resistance as bitflags */
 	uint16_t mMagicRes;
-	uint16_t mUnqAttr; // TODO create enum
-	uint8_t mUnqVar1;
-	uint8_t mUnqVar2;
+	/**
+	 * @brief Defines if and how a group of monsters should be spawned with the unique monster
+	 */
+
+	UniqueMonsterPack monsterPack;
+	uint8_t customHitpoints;
+	uint8_t customArmorClass;
 	_speech_id mtalkmsg;
 };
 
