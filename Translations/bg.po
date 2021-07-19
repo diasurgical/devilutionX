@@ -4007,7 +4007,7 @@ msgstr "щети мълнийни стрели {:d}-{:d}"
 
 #: Source/items.cpp:3555
 msgid "fireball damage: {:d}"
-msgstr "щети огнена кълбо {:d}"
+msgstr "щети огненo кълбо {:d}"
 
 #: Source/items.cpp:3557
 msgid "fireball damage: {:d}-{:d}"
