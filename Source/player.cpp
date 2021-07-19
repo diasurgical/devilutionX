@@ -319,7 +319,7 @@ void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
 	}
 }
 
-bool PlrDirOK(PlayerStruct &player, Direction dir)
+bool PlrDirOK(const PlayerStruct &player, Direction dir)
 {
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
@@ -3491,7 +3491,7 @@ void ClrPlrPath(PlayerStruct &player)
  * @param position Dungeon tile coordinates.
  * @return False if something (other than the player themselves) is blocking the tile.
  */
-bool PosOkPlayer(PlayerStruct &player, Point position)
+bool PosOkPlayer(const PlayerStruct &player, Point position)
 {
 	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
 		return false;
@@ -3501,7 +3501,7 @@ bool PosOkPlayer(PlayerStruct &player, Point position)
 		return false;
 	if (dPlayer[position.x][position.y] != 0) {
 		auto &otherPlayer = Players[abs(dPlayer[position.x][position.y]) - 1];
-		if (&otherPlayer == &player && otherPlayer._pHitPoints != 0) {
+		if (&otherPlayer != &player && otherPlayer._pHitPoints != 0) {
 			return false;
 		}
 	}

@@ -485,7 +485,7 @@ void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
 void ClrPlrPath(PlayerStruct &player);
-bool PosOkPlayer(PlayerStruct &player, Point position);
+bool PosOkPlayer(const PlayerStruct &player, Point position);
 void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(PlayerStruct &player);
 void CheckPlrSpell(bool mouseClick);
