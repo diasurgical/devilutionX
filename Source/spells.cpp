@@ -201,28 +201,29 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 
 static void PlacePlayer(int pnum)
 {
+	auto &player = Players[pnum];
 	Point newPosition = {};
 
-	if (Players[pnum].plrlevel == currlevel) {
+	if (player.plrlevel == currlevel) {
 		for (int i = 0; i < 8; i++) {
-			newPosition = Players[pnum].position.tile + Displacement { plrxoff2[i], plryoff2[i] };
-			if (PosOkPlayer(pnum, newPosition)) {
+			newPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			if (PosOkPlayer(player, newPosition)) {
 				break;
 			}
 		}
 
-		if (!PosOkPlayer(pnum, newPosition)) {
+		if (!PosOkPlayer(player, newPosition)) {
 			bool done = false;
 
 			int min = -1;
 			for (int max = 1; min > -50 && !done; max++, min--) {
 				for (int y = min; y <= max && !done; y++) {
-					newPosition.y = Players[pnum].position.tile.y + y;
+					newPosition.y = player.position.tile.y + y;
 
 					for (int x = min; x <= max && !done; x++) {
-						newPosition.x = Players[pnum].position.tile.x + x;
+						newPosition.x = player.position.tile.x + x;
 
-						if (PosOkPlayer(pnum, newPosition)) {
+						if (PosOkPlayer(player, newPosition)) {
 							done = true;
 						}
 					}
@@ -230,7 +231,7 @@ static void PlacePlayer(int pnum)
 			}
 		}
 
-		Players[pnum].position.tile = newPosition;
+		player.position.tile = newPosition;
 
 		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 

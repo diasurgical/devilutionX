@@ -599,36 +599,37 @@ void multi_process_network_packets()
 			continue;
 		if (pkt->wLen != dwMsgSize)
 			continue;
-		Players[dwID].position.last = { pkt->px, pkt->py };
+		auto &player = Players[dwID];
+		player.position.last = { pkt->px, pkt->py };
 		if (dwID != MyPlayerId) {
 			assert(gbBufferMsgs != 2);
-			Players[dwID]._pHitPoints = pkt->php;
-			Players[dwID]._pMaxHP = pkt->pmhp;
+			player._pHitPoints = pkt->php;
+			player._pMaxHP = pkt->pmhp;
 			bool cond = gbBufferMsgs == 1;
-			Players[dwID]._pBaseStr = pkt->bstr;
-			Players[dwID]._pBaseMag = pkt->bmag;
-			Players[dwID]._pBaseDex = pkt->bdex;
-			if (!cond && Players[dwID].plractive && Players[dwID]._pHitPoints != 0) {
-				if (currlevel == Players[dwID].plrlevel && !Players[dwID]._pLvlChanging) {
-					int dx = abs(Players[dwID].position.tile.x - pkt->px);
-					int dy = abs(Players[dwID].position.tile.y - pkt->py);
+			player._pBaseStr = pkt->bstr;
+			player._pBaseMag = pkt->bmag;
+			player._pBaseDex = pkt->bdex;
+			if (!cond && player.plractive && player._pHitPoints != 0) {
+				if (currlevel == player.plrlevel && !player._pLvlChanging) {
+					int dx = abs(player.position.tile.x - pkt->px);
+					int dy = abs(player.position.tile.y - pkt->py);
 					if ((dx > 3 || dy > 3) && dPlayer[pkt->px][pkt->py] == 0) {
 						FixPlrWalkTags(dwID);
-						Players[dwID].position.old = Players[dwID].position.tile;
+						player.position.old = player.position.tile;
 						FixPlrWalkTags(dwID);
-						Players[dwID].position.tile = { pkt->px, pkt->py };
-						Players[dwID].position.future = { pkt->px, pkt->py };
-						dPlayer[Players[dwID].position.tile.x][Players[dwID].position.tile.y] = dwID + 1;
+						player.position.tile = { pkt->px, pkt->py };
+						player.position.future = { pkt->px, pkt->py };
+						dPlayer[player.position.tile.x][player.position.tile.y] = dwID + 1;
 					}
-					dx = abs(Players[dwID].position.future.x - Players[dwID].position.tile.x);
-					dy = abs(Players[dwID].position.future.y - Players[dwID].position.tile.y);
+					dx = abs(player.position.future.x - player.position.tile.x);
+					dy = abs(player.position.future.y - player.position.tile.y);
 					if (dx > 1 || dy > 1) {
-						Players[dwID].position.future = Players[dwID].position.tile;
+						player.position.future = player.position.tile;
 					}
-					MakePlrPath(dwID, { pkt->targx, pkt->targy }, true);
+					MakePlrPath(player, { pkt->targx, pkt->targy }, true);
 				} else {
-					Players[dwID].position.tile = { pkt->px, pkt->py };
-					Players[dwID].position.future = { pkt->px, pkt->py };
+					player.position.tile = { pkt->px, pkt->py };
+					player.position.future = { pkt->px, pkt->py };
 				}
 			}
 		}
