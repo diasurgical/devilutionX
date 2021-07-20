@@ -52,14 +52,6 @@ void CalcTileOffset(int *offsetX, int *offsetY);
 void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
 
-/**
- * @brief Start rendering of screen, town variation
- * @param out Buffer to render to
- * @param StartX Center of view in dPiece coordinate
- * @param StartY Center of view in dPiece coordinate
- */
-void DrawView(const Surface &out, int StartX, int StartY);
-
 void ClearScreenBuffer();
 #ifdef _DEBUG
 void ScrollView();

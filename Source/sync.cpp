@@ -150,47 +150,6 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-} // namespace
-
-uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
-{
-	if (ActiveMonsterCount < 1) {
-		return dwMaxLen;
-	}
-	if (dwMaxLen < sizeof(TSyncHeader) + sizeof(TSyncMonster)) {
-		return dwMaxLen;
-	}
-
-	auto *pHdr = (TSyncHeader *)pbBuf;
-	pbBuf += sizeof(TSyncHeader);
-	dwMaxLen -= sizeof(TSyncHeader);
-
-	pHdr->bCmd = CMD_SYNCDATA;
-	pHdr->bLevel = currlevel;
-	pHdr->wLen = 0;
-	SyncPlrInv(pHdr);
-	assert(dwMaxLen <= 0xffff);
-	SyncOneMonster();
-
-	for (int i = 0; i < ActiveMonsterCount && dwMaxLen >= sizeof(TSyncMonster); i++) {
-		bool sync = false;
-		if (i < 2) {
-			sync = SyncMonsterActive2((TSyncMonster *)pbBuf);
-		}
-		if (!sync) {
-			sync = SyncMonsterActive((TSyncMonster *)pbBuf);
-		}
-		if (!sync) {
-			break;
-		}
-		pbBuf += sizeof(TSyncMonster);
-		pHdr->wLen += sizeof(TSyncMonster);
-		dwMaxLen -= sizeof(TSyncMonster);
-	}
-
-	return dwMaxLen;
-}
-
 static void SyncMonster(int pnum, const TSyncMonster *p)
 {
 	int ndx = p->_mndx;
@@ -237,6 +196,47 @@ static void SyncMonster(int pnum, const TSyncMonster *p)
 	}
 
 	decode_enemy(monster, p->_menemy);
+}
+
+} // namespace
+
+uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
+{
+	if (ActiveMonsterCount < 1) {
+		return dwMaxLen;
+	}
+	if (dwMaxLen < sizeof(TSyncHeader) + sizeof(TSyncMonster)) {
+		return dwMaxLen;
+	}
+
+	auto *pHdr = (TSyncHeader *)pbBuf;
+	pbBuf += sizeof(TSyncHeader);
+	dwMaxLen -= sizeof(TSyncHeader);
+
+	pHdr->bCmd = CMD_SYNCDATA;
+	pHdr->bLevel = currlevel;
+	pHdr->wLen = 0;
+	SyncPlrInv(pHdr);
+	assert(dwMaxLen <= 0xffff);
+	SyncOneMonster();
+
+	for (int i = 0; i < ActiveMonsterCount && dwMaxLen >= sizeof(TSyncMonster); i++) {
+		bool sync = false;
+		if (i < 2) {
+			sync = SyncMonsterActive2((TSyncMonster *)pbBuf);
+		}
+		if (!sync) {
+			sync = SyncMonsterActive((TSyncMonster *)pbBuf);
+		}
+		if (!sync) {
+			break;
+		}
+		pbBuf += sizeof(TSyncMonster);
+		pHdr->wLen += sizeof(TSyncMonster);
+		dwMaxLen -= sizeof(TSyncMonster);
+	}
+
+	return dwMaxLen;
 }
 
 uint32_t sync_update(int pnum, const byte *pbBuf)

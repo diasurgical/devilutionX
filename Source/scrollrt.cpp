@@ -38,6 +38,39 @@
 
 namespace devilution {
 
+/**
+ * Specifies the current light entry.
+ */
+int LightTableIndex;
+
+/**
+ * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
+ *
+ * frameNum  := block & 0x0FFF
+ * frameType := block & 0x7000 >> 12
+ */
+uint32_t level_cel_block;
+bool AutoMapShowItems;
+/**
+ * Specifies the type of arches to render.
+ */
+char arch_draw_type;
+/**
+ * Specifies whether transparency is active for the current CEL file being decoded.
+ */
+bool cel_transparency_active;
+/**
+ * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
+ */
+bool cel_foliage_active = false;
+/**
+ * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
+ */
+int level_piece_id;
+
+// DevilutionX extension.
+extern void DrawControllerModifierHints(const Surface &out);
+
 namespace {
 /**
  * @brief Hash algorithm for point
@@ -151,12 +184,6 @@ void UpdateMissilesRendererData()
 	}
 }
 
-} // namespace
-
-/**
- * Specifies the current light entry.
- */
-int LightTableIndex;
 uint32_t sgdwCursWdtOld;
 int sgdwCursX;
 int sgdwCursY;
@@ -165,34 +192,10 @@ int sgdwCursY;
  */
 uint32_t sgdwCursHgt;
 
-/**
- * Specifies the current MIN block of the level CEL file, as used during rendering of the level tiles.
- *
- * frameNum  := block & 0x0FFF
- * frameType := block & 0x7000 >> 12
- */
-uint32_t level_cel_block;
 int sgdwCursXOld;
 int sgdwCursYOld;
-bool AutoMapShowItems;
-/**
- * Specifies the type of arches to render.
- */
-char arch_draw_type;
-/**
- * Specifies whether transparency is active for the current CEL file being decoded.
- */
-bool cel_transparency_active;
-/**
- * Specifies whether foliage (tile has extra content that overlaps previous tile) being rendered.
- */
-bool cel_foliage_active = false;
-/**
- * Specifies the current dungeon piece ID of the level, as used during rendering of the level tiles.
- */
-int level_piece_id;
+
 uint32_t sgdwCursWdt;
-void (*DrawPlrProc)(int, int, int, int, int, BYTE *, int, int, int, int);
 BYTE sgSaveBack[8192];
 uint32_t sgdwCursHgtOld;
 
@@ -202,8 +205,6 @@ bool frameflag;
 int frameend;
 int framerate;
 int framestart;
-
-/* data */
 
 const char *const MonsterModeNames[] = {
 	"standing",
@@ -240,45 +241,6 @@ const char *const PlayerModeNames[] = {
 	"changing levels",
 	"quitting"
 };
-
-Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
-{
-	// clang-format off
-	//                                           DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
-	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
-	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
-	constexpr bool IsDiagionalWalk[8]        = {        false,         true,        false,         true,        false,         true,         false,         true };
-	// clang-format on
-
-	float fAnimationProgress = animationInfo.GetAnimationProgress();
-	Displacement offset = MovingOffset[dir];
-	offset *= fAnimationProgress;
-
-	// In diagonal walks the offset for y is smaller than x.
-	// This means that sometimes x is updated but y not.
-	// That results in a small stuttering.
-	// To fix this we disallow odd x as this is the only case where y is not updated.
-	if (IsDiagionalWalk[dir] && ((offset.deltaX % 2) != 0)) {
-		offset.deltaX -= offset.deltaX > 0 ? 1 : -1;
-	}
-
-	if (cameraMode) {
-		offset = -offset;
-	} else {
-		offset += StartOffset[dir];
-	}
-
-	return offset;
-}
-
-/**
- * @brief Clear cursor state
- */
-void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
-{
-	sgdwCursWdt = 0;
-	sgdwCursWdtOld = 0;
-}
 
 static void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32_t srcPitch)
 {
@@ -1102,145 +1064,12 @@ static void Zoom(const Surface &out)
 	}
 }
 
-/**
- * @brief Shifting the view area along the logical grid
- *        Note: this won't allow you to shift between even and odd rows
- * @param horizontal Shift the screen left or right
- * @param vertical Shift the screen up or down
- */
-void ShiftGrid(int *x, int *y, int horizontal, int vertical)
-{
-	*x += vertical + horizontal;
-	*y += vertical - horizontal;
-}
-
-/**
- * @brief Gets the number of rows covered by the main panel
- */
-int RowsCoveredByPanel()
-{
-	if (gnScreenWidth <= PANEL_WIDTH) {
-		return 0;
-	}
-
-	int rows = PANEL_HEIGHT / TILE_HEIGHT;
-	if (!zoomflag) {
-		rows /= 2;
-	}
-
-	return rows;
-}
-
-/**
- * @brief Calculate the offset needed for centering tiles in view area
- * @param offsetX Offset in pixels
- * @param offsetY Offset in pixels
- */
-void CalcTileOffset(int *offsetX, int *offsetY)
-{
-	int x;
-	int y;
-
-	if (zoomflag) {
-		x = gnScreenWidth % TILE_WIDTH;
-		y = gnViewportHeight % TILE_HEIGHT;
-	} else {
-		x = (gnScreenWidth / 2) % TILE_WIDTH;
-		y = (gnViewportHeight / 2) % TILE_HEIGHT;
-	}
-
-	if (x != 0)
-		x = (TILE_WIDTH - x) / 2;
-	if (y != 0)
-		y = (TILE_HEIGHT - y) / 2;
-
-	*offsetX = x;
-	*offsetY = y;
-}
-
-/**
- * @brief Calculate the needed diamond tile to cover the view area
- * @param columns Tiles needed per row
- * @param rows Both even and odd rows
- */
-void TilesInView(int *rcolumns, int *rrows)
-{
-	int columns = gnScreenWidth / TILE_WIDTH;
-	if ((gnScreenWidth % TILE_WIDTH) != 0) {
-		columns++;
-	}
-	int rows = gnViewportHeight / TILE_HEIGHT;
-	if ((gnViewportHeight % TILE_HEIGHT) != 0) {
-		rows++;
-	}
-
-	if (!zoomflag) {
-		// Half the number of tiles, rounded up
-		if ((columns & 1) != 0) {
-			columns++;
-		}
-		columns /= 2;
-		if ((rows & 1) != 0) {
-			rows++;
-		}
-		rows /= 2;
-	}
-
-	*rcolumns = columns;
-	*rrows = rows;
-}
-
 int tileOffsetX;
 int tileOffsetY;
 int tileShiftX;
 int tileShiftY;
 int tileColums;
 int tileRows;
-
-void CalcViewportGeometry()
-{
-	tileShiftX = 0;
-	tileShiftY = 0;
-
-	// Adjust by player offset and tile grid alignment
-	int xo = 0;
-	int yo = 0;
-	CalcTileOffset(&xo, &yo);
-	tileOffsetX = 0 - xo;
-	tileOffsetY = 0 - yo - 1 + TILE_HEIGHT / 2;
-
-	TilesInView(&tileColums, &tileRows);
-	int lrow = tileRows - RowsCoveredByPanel();
-
-	// Center player tile on screen
-	ShiftGrid(&tileShiftX, &tileShiftY, -tileColums / 2, -lrow / 2);
-
-	tileRows *= 2;
-
-	// Align grid
-	if ((tileColums & 1) == 0) {
-		tileShiftY--; // Shift player row to one that can be centered with out pixel offset
-		if ((lrow & 1) == 0) {
-			// Offset tile to vertically align the player when both rows and colums are even
-			tileRows++;
-			tileOffsetY -= TILE_HEIGHT / 2;
-		}
-	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
-		// Offset tile to vertically align the player when both rows and colums are odd
-		ShiftGrid(&tileShiftX, &tileShiftY, 0, -1);
-		tileRows++;
-		tileOffsetY -= TILE_HEIGHT / 2;
-	}
-
-	// Slightly lower the zoomed view
-	if (!zoomflag) {
-		tileOffsetY += TILE_HEIGHT / 4;
-		if (yo < TILE_HEIGHT / 4)
-			tileRows++;
-	}
-
-	tileRows++; // Cover lower edge saw tooth, right edge accounted for in scrollrt_draw()
-}
 
 /**
  * @brief Configure render and process screen rows
@@ -1351,9 +1180,12 @@ static void DrawGame(const Surface &fullOut, int x, int y)
 	}
 }
 
-// DevilutionX extension.
-extern void DrawControllerModifierHints(const Surface &out);
-
+/**
+ * @brief Start rendering of screen, town variation
+ * @param out Buffer to render to
+ * @param StartX Center of view in dPiece coordinate
+ * @param StartY Center of view in dPiece coordinate
+ */
 void DrawView(const Surface &out, int startX, int startY)
 {
 	DrawGame(out, startX, startY);
@@ -1414,6 +1246,275 @@ void DrawView(const Surface &out, int startX, int startY)
 	control_update_life_mana(); // Update life/mana totals before rendering any portion of the flask.
 	DrawLifeFlaskUpper(out);
 	DrawManaFlaskUpper(out);
+}
+
+/**
+ * @brief Display the current average FPS over 1 sec
+ */
+static void DrawFPS(const Surface &out)
+{
+	char string[12];
+
+	if (!frameflag || !gbActive) {
+		return;
+	}
+
+	frameend++;
+	uint32_t tc = SDL_GetTicks();
+	uint32_t frames = tc - framestart;
+	if (tc - framestart >= 1000) {
+		framestart = tc;
+		framerate = 1000 * frameend / frames;
+		frameend = 0;
+	}
+	snprintf(string, 12, "%i FPS", framerate);
+	DrawString(out, string, Point { 8, 65 }, UIS_RED);
+}
+
+/**
+ * @brief Update part of the screen from the back buffer
+ * @param dwX Back buffer coordinate
+ * @param dwY Back buffer coordinate
+ * @param dwWdt Back buffer coordinate
+ * @param dwHgt Back buffer coordinate
+ */
+static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
+{
+	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
+	using CoordType = decltype(SDL_Rect {}.x);
+	SDL_Rect srcRect {
+		static_cast<CoordType>(dwX),
+		static_cast<CoordType>(dwY),
+		dwWdt, dwHgt
+	};
+	SDL_Rect dstRect { dwX, dwY, dwWdt, dwHgt };
+
+	BltFast(&srcRect, &dstRect);
+}
+
+/**
+ * @brief Check render pipeline and blit individual screen parts
+ * @param dwHgt Section of screen to update from top to bottom
+ * @param draw_desc Render info box
+ * @param draw_hp Render health bar
+ * @param draw_mana Render mana bar
+ * @param draw_sbar Render belt
+ * @param draw_btn Render panel buttons
+ */
+static void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
+{
+	if (!gbActive || RenderDirectlyToOutputSurface) {
+		return;
+	}
+
+	assert(dwHgt >= 0 && dwHgt <= gnScreenHeight);
+
+	if (dwHgt > 0) {
+		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
+	}
+	if (dwHgt < gnScreenHeight) {
+		if (drawSbar) {
+			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
+		}
+		if (drawDesc) {
+			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 60);
+		}
+		if (drawMana) {
+			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
+			DoBlitScreen(PANEL_LEFT + 564, PANEL_TOP + 64, 56, 56);
+		}
+		if (drawHp) {
+			DoBlitScreen(PANEL_LEFT + 96, PANEL_TOP, 88, 72);
+		}
+		if (drawBtn) {
+			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
+			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
+			if (gbIsMultiplayer) {
+				DoBlitScreen(PANEL_LEFT + 84, PANEL_TOP + 91, 36, 32);
+				DoBlitScreen(PANEL_LEFT + 524, PANEL_TOP + 91, 36, 32);
+			}
+		}
+		if (sgdwCursWdtOld != 0) {
+			DoBlitScreen(sgdwCursXOld, sgdwCursYOld, sgdwCursWdtOld, sgdwCursHgtOld);
+		}
+		if (sgdwCursWdt != 0) {
+			DoBlitScreen(sgdwCursX, sgdwCursY, sgdwCursWdt, sgdwCursHgt);
+		}
+	}
+}
+
+} // namespace
+
+Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
+{
+	// clang-format off
+	//                                           DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
+	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
+	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
+	constexpr bool IsDiagionalWalk[8]        = {        false,         true,        false,         true,        false,         true,         false,         true };
+	// clang-format on
+
+	float fAnimationProgress = animationInfo.GetAnimationProgress();
+	Displacement offset = MovingOffset[dir];
+	offset *= fAnimationProgress;
+
+	// In diagonal walks the offset for y is smaller than x.
+	// This means that sometimes x is updated but y not.
+	// That results in a small stuttering.
+	// To fix this we disallow odd x as this is the only case where y is not updated.
+	if (IsDiagionalWalk[dir] && ((offset.deltaX % 2) != 0)) {
+		offset.deltaX -= offset.deltaX > 0 ? 1 : -1;
+	}
+
+	if (cameraMode) {
+		offset = -offset;
+	} else {
+		offset += StartOffset[dir];
+	}
+
+	return offset;
+}
+
+/**
+ * @brief Clear cursor state
+ */
+void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
+{
+	sgdwCursWdt = 0;
+	sgdwCursWdtOld = 0;
+}
+
+/**
+ * @brief Shifting the view area along the logical grid
+ *        Note: this won't allow you to shift between even and odd rows
+ * @param horizontal Shift the screen left or right
+ * @param vertical Shift the screen up or down
+ */
+void ShiftGrid(int *x, int *y, int horizontal, int vertical)
+{
+	*x += vertical + horizontal;
+	*y += vertical - horizontal;
+}
+
+/**
+ * @brief Gets the number of rows covered by the main panel
+ */
+int RowsCoveredByPanel()
+{
+	if (gnScreenWidth <= PANEL_WIDTH) {
+		return 0;
+	}
+
+	int rows = PANEL_HEIGHT / TILE_HEIGHT;
+	if (!zoomflag) {
+		rows /= 2;
+	}
+
+	return rows;
+}
+
+/**
+ * @brief Calculate the offset needed for centering tiles in view area
+ * @param offsetX Offset in pixels
+ * @param offsetY Offset in pixels
+ */
+void CalcTileOffset(int *offsetX, int *offsetY)
+{
+	int x;
+	int y;
+
+	if (zoomflag) {
+		x = gnScreenWidth % TILE_WIDTH;
+		y = gnViewportHeight % TILE_HEIGHT;
+	} else {
+		x = (gnScreenWidth / 2) % TILE_WIDTH;
+		y = (gnViewportHeight / 2) % TILE_HEIGHT;
+	}
+
+	if (x != 0)
+		x = (TILE_WIDTH - x) / 2;
+	if (y != 0)
+		y = (TILE_HEIGHT - y) / 2;
+
+	*offsetX = x;
+	*offsetY = y;
+}
+
+/**
+ * @brief Calculate the needed diamond tile to cover the view area
+ * @param columns Tiles needed per row
+ * @param rows Both even and odd rows
+ */
+void TilesInView(int *rcolumns, int *rrows)
+{
+	int columns = gnScreenWidth / TILE_WIDTH;
+	if ((gnScreenWidth % TILE_WIDTH) != 0) {
+		columns++;
+	}
+	int rows = gnViewportHeight / TILE_HEIGHT;
+	if ((gnViewportHeight % TILE_HEIGHT) != 0) {
+		rows++;
+	}
+
+	if (!zoomflag) {
+		// Half the number of tiles, rounded up
+		if ((columns & 1) != 0) {
+			columns++;
+		}
+		columns /= 2;
+		if ((rows & 1) != 0) {
+			rows++;
+		}
+		rows /= 2;
+	}
+
+	*rcolumns = columns;
+	*rrows = rows;
+}
+
+void CalcViewportGeometry()
+{
+	tileShiftX = 0;
+	tileShiftY = 0;
+
+	// Adjust by player offset and tile grid alignment
+	int xo = 0;
+	int yo = 0;
+	CalcTileOffset(&xo, &yo);
+	tileOffsetX = 0 - xo;
+	tileOffsetY = 0 - yo - 1 + TILE_HEIGHT / 2;
+
+	TilesInView(&tileColums, &tileRows);
+	int lrow = tileRows - RowsCoveredByPanel();
+
+	// Center player tile on screen
+	ShiftGrid(&tileShiftX, &tileShiftY, -tileColums / 2, -lrow / 2);
+
+	tileRows *= 2;
+
+	// Align grid
+	if ((tileColums & 1) == 0) {
+		tileShiftY--; // Shift player row to one that can be centered with out pixel offset
+		if ((lrow & 1) == 0) {
+			// Offset tile to vertically align the player when both rows and colums are even
+			tileRows++;
+			tileOffsetY -= TILE_HEIGHT / 2;
+		}
+	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
+		// Offset tile to vertically align the player when both rows and colums are odd
+		ShiftGrid(&tileShiftX, &tileShiftY, 0, -1);
+		tileRows++;
+		tileOffsetY -= TILE_HEIGHT / 2;
+	}
+
+	// Slightly lower the zoomed view
+	if (!zoomflag) {
+		tileOffsetY += TILE_HEIGHT / 4;
+		if (yo < TILE_HEIGHT / 4)
+			tileRows++;
+	}
+
+	tileRows++; // Cover lower edge saw tooth, right edge accounted for in scrollrt_draw()
 }
 
 extern SDL_Surface *pal_surface;
@@ -1521,101 +1622,6 @@ void EnableFrameCount()
 {
 	frameflag = !frameflag;
 	framestart = SDL_GetTicks();
-}
-
-/**
- * @brief Display the current average FPS over 1 sec
- */
-static void DrawFPS(const Surface &out)
-{
-	char string[12];
-
-	if (!frameflag || !gbActive) {
-		return;
-	}
-
-	frameend++;
-	uint32_t tc = SDL_GetTicks();
-	uint32_t frames = tc - framestart;
-	if (tc - framestart >= 1000) {
-		framestart = tc;
-		framerate = 1000 * frameend / frames;
-		frameend = 0;
-	}
-	snprintf(string, 12, "%i FPS", framerate);
-	DrawString(out, string, Point { 8, 65 }, UIS_RED);
-}
-
-/**
- * @brief Update part of the screen from the back buffer
- * @param dwX Back buffer coordinate
- * @param dwY Back buffer coordinate
- * @param dwWdt Back buffer coordinate
- * @param dwHgt Back buffer coordinate
- */
-static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
-{
-	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
-	using CoordType = decltype(SDL_Rect {}.x);
-	SDL_Rect srcRect {
-		static_cast<CoordType>(dwX),
-		static_cast<CoordType>(dwY),
-		dwWdt, dwHgt
-	};
-	SDL_Rect dstRect { dwX, dwY, dwWdt, dwHgt };
-
-	BltFast(&srcRect, &dstRect);
-}
-
-/**
- * @brief Check render pipeline and blit individual screen parts
- * @param dwHgt Section of screen to update from top to bottom
- * @param draw_desc Render info box
- * @param draw_hp Render health bar
- * @param draw_mana Render mana bar
- * @param draw_sbar Render belt
- * @param draw_btn Render panel buttons
- */
-static void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
-{
-	if (!gbActive || RenderDirectlyToOutputSurface) {
-		return;
-	}
-
-	assert(dwHgt >= 0 && dwHgt <= gnScreenHeight);
-
-	if (dwHgt > 0) {
-		DoBlitScreen(0, 0, gnScreenWidth, dwHgt);
-	}
-	if (dwHgt < gnScreenHeight) {
-		if (drawSbar) {
-			DoBlitScreen(PANEL_LEFT + 204, PANEL_TOP + 5, 232, 28);
-		}
-		if (drawDesc) {
-			DoBlitScreen(PANEL_LEFT + 176, PANEL_TOP + 46, 288, 60);
-		}
-		if (drawMana) {
-			DoBlitScreen(PANEL_LEFT + 460, PANEL_TOP, 88, 72);
-			DoBlitScreen(PANEL_LEFT + 564, PANEL_TOP + 64, 56, 56);
-		}
-		if (drawHp) {
-			DoBlitScreen(PANEL_LEFT + 96, PANEL_TOP, 88, 72);
-		}
-		if (drawBtn) {
-			DoBlitScreen(PANEL_LEFT + 8, PANEL_TOP + 5, 72, 119);
-			DoBlitScreen(PANEL_LEFT + 556, PANEL_TOP + 5, 72, 48);
-			if (gbIsMultiplayer) {
-				DoBlitScreen(PANEL_LEFT + 84, PANEL_TOP + 91, 36, 32);
-				DoBlitScreen(PANEL_LEFT + 524, PANEL_TOP + 91, 36, 32);
-			}
-		}
-		if (sgdwCursWdtOld != 0) {
-			DoBlitScreen(sgdwCursXOld, sgdwCursYOld, sgdwCursWdtOld, sgdwCursHgtOld);
-		}
-		if (sgdwCursWdt != 0) {
-			DoBlitScreen(sgdwCursX, sgdwCursY, sgdwCursWdt, sgdwCursHgt);
-		}
-	}
 }
 
 /**

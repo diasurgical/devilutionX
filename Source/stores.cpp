@@ -22,6 +22,29 @@
 
 namespace devilution {
 
+ItemStruct golditem;
+
+std::optional<CelSprite> pSTextBoxCels;
+std::optional<CelSprite> pSTextSlidCels;
+
+talk_id stextflag;
+
+int storenumh;
+char storehidx[48];
+ItemStruct storehold[48];
+
+ItemStruct smithitem[SMITH_ITEMS];
+int numpremium;
+int premiumlevel;
+ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
+
+ItemStruct healitem[20];
+
+ItemStruct witchitem[WITCH_ITEMS];
+
+int boylevel;
+ItemStruct boyitem;
+
 namespace {
 
 /** The current towner being interacted with */
@@ -2138,30 +2161,24 @@ int TakeGold(PlayerStruct &player, int cost, bool skipMaxPiles)
 	return cost;
 }
 
+static void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, uint16_t flags)
+{
+	int lineWidth = GetLineWidth(text);
+
+	int x1 = rect.position.x - 20;
+	if ((flags & UIS_CENTER) != 0)
+		x1 += (rect.size.width - lineWidth) / 2;
+
+	CelDrawTo(out, { x1, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+
+	int x2 = rect.position.x + rect.size.width + 5;
+	if ((flags & UIS_CENTER) != 0)
+		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
+
+	CelDrawTo(out, { x2, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+}
+
 } // namespace
-
-ItemStruct golditem;
-
-std::optional<CelSprite> pSTextBoxCels;
-std::optional<CelSprite> pSTextSlidCels;
-
-talk_id stextflag;
-
-int storenumh;
-char storehidx[48];
-ItemStruct storehold[48];
-
-ItemStruct smithitem[SMITH_ITEMS];
-int numpremium;
-int premiumlevel;
-ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
-
-ItemStruct healitem[20];
-
-ItemStruct witchitem[WITCH_ITEMS];
-
-int boylevel;
-ItemStruct boyitem;
 
 void AddStoreHoldRepair(ItemStruct *itm, int8_t i)
 {
@@ -2232,23 +2249,6 @@ void FreeStoreMem()
 {
 	pSTextBoxCels = std::nullopt;
 	pSTextSlidCels = std::nullopt;
-}
-
-static void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, uint16_t flags)
-{
-	int lineWidth = GetLineWidth(text);
-
-	int x1 = rect.position.x - 20;
-	if ((flags & UIS_CENTER) != 0)
-		x1 += (rect.size.width - lineWidth) / 2;
-
-	CelDrawTo(out, { x1, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
-
-	int x2 = rect.position.x + rect.size.width + 5;
-	if ((flags & UIS_CENTER) != 0)
-		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
-
-	CelDrawTo(out, { x2, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 }
 
 void PrintSString(const Surface &out, int margin, int line, const char *text, uint16_t flags, int price)
