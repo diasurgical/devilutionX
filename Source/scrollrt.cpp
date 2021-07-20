@@ -721,13 +721,14 @@ void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
-		int px = sx - CalculateWidth2(Towners[mi]._tAnimWidth);
+		auto &towner = Towners[mi];
+		int px = sx - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, sy };
 		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, position, CelSprite(Towners[mi]._tAnimData, Towners[mi]._tAnimWidth), Towners[mi]._tAnimFrame);
+			CelBlitOutlineTo(out, 166, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
 		}
-		assert(Towners[mi]._tAnimData);
-		CelClippedDrawTo(out, position, CelSprite(Towners[mi]._tAnimData, Towners[mi]._tAnimWidth), Towners[mi]._tAnimFrame);
+		assert(towner._tAnimData);
+		CelClippedDrawTo(out, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
 		return;
 	}
 
