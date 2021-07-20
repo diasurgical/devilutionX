@@ -7055,7 +7055,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
 msgid "I used to have a nice ring; it was a really expensive one, with blue and green and red and silver. Don't remember what happened to it, though. I really miss that ring..."
-msgstr "Някога имах хубав пръстен; беше много скъп, със синьо, зелено, червено и сребърно. Не си спомням обаче какво стана с него. Много ми липсва този пръстен..."
+msgstr "Някога имах хубав пръстен, изключително ценен, със синьо, зелено, червено и сребърно. Не си спомням, обаче, какво стана с него. Много ми липсва този пръстен..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
