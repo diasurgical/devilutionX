@@ -61,7 +61,7 @@ void ClearReadiedSpell(PlayerStruct &player)
 	}
 }
 
-static void PlacePlayer(int pnum)
+void PlacePlayer(int pnum)
 {
 	auto &player = Players[pnum];
 	Point newPosition = {};

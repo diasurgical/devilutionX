@@ -242,7 +242,7 @@ const char *const PlayerModeNames[] = {
 	"quitting"
 };
 
-static void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32_t srcPitch)
+void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32_t srcPitch)
 {
 	for (std::uint32_t i = 0; i < sgdwCursHgt; ++i, src += srcPitch, dst += dstPitch) {
 		memcpy(dst, src, sgdwCursWdt);
@@ -252,7 +252,7 @@ static void BlitCursor(BYTE *dst, std::uint32_t dstPitch, BYTE *src, std::uint32
 /**
  * @brief Remove the cursor from the buffer
  */
-static void UndrawCursor(const Surface &out)
+void UndrawCursor(const Surface &out)
 {
 	if (sgdwCursWdt == 0) {
 		return;
@@ -267,7 +267,7 @@ static void UndrawCursor(const Surface &out)
 	sgdwCursWdt = 0;
 }
 
-static bool ShouldShowCursor()
+bool ShouldShowCursor()
 {
 	return !(sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || Players[MyPlayerId]._pStatPts <= 0));
 }
@@ -275,7 +275,7 @@ static bool ShouldShowCursor()
 /**
  * @brief Save the content behind the cursor to a temporary buffer, then draw the cursor.
  */
-static void DrawCursor(const Surface &out)
+void DrawCursor(const Surface &out)
 {
 	if (pcurs <= CURSOR_NONE || cursW == 0 || cursH == 0 || !ShouldShowCursor()) {
 		return;
@@ -369,7 +369,7 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
  * @param my Output buffer coordinate
  * @param m Id of monster
  */
-static void DrawMonster(const Surface &out, int x, int y, int mx, int my, const MonsterStruct &monster)
+void DrawMonster(const Surface &out, int x, int y, int mx, int my, const MonsterStruct &monster)
 {
 	if (monster.AnimInfo.pCelSprite == nullptr) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
@@ -415,7 +415,7 @@ static void DrawMonster(const Surface &out, int x, int y, int mx, int my, const 
 /**
  * @brief Helper for rendering a specific player icon (Mana Shield or Reflect)
  */
-static void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
+void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
 {
 	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].mAnimWidth2[0];
 
@@ -445,7 +445,7 @@ static void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_i
  * @param sy Output buffer coordinate
  * @param lighting Should lighting be applied
  */
-static void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lighting)
+void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lighting)
 {
 	auto &player = Players[pnum];
 	if (player.pManaShield)
@@ -466,7 +466,7 @@ static void DrawPlayerIcons(const Surface &out, int pnum, int x, int y, bool lig
  * @param nCel frame
  * @param nWidth width
  */
-static void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int py)
+void DrawPlayer(const Surface &out, int pnum, int x, int y, int px, int py)
 {
 	if ((dFlags[x][y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
@@ -557,7 +557,7 @@ void DrawDeadPlayer(const Surface &out, int x, int y, int sx, int sy)
  * @param oy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
+void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
 {
 	int8_t bv = dObject[x][y];
 	if (bv == 0 || LightTableIndex >= LightsMax)
@@ -616,7 +616,7 @@ static void DrawDungeon(const Surface & /*out*/, int /*sx*/, int /*sy*/, int /*d
  * @param sx Target buffer coordinate
  * @param sy Target buffer coordinate
  */
-static void DrawCell(const Surface &out, int x, int y, int sx, int sy)
+void DrawCell(const Surface &out, int x, int y, int sx, int sy)
 {
 	MICROS *pMap = &dpiece_defs_map_2[x][y];
 	level_piece_id = dPiece[x][y];
@@ -646,7 +646,7 @@ static void DrawCell(const Surface &out, int x, int y, int sx, int sy)
  * @param sx Target buffer coordinate
  * @param sy Target buffer coordinate
  */
-static void DrawFloor(const Surface &out, int x, int y, int sx, int sy)
+void DrawFloor(const Surface &out, int x, int y, int sx, int sy)
 {
 	cel_transparency_active = false;
 	LightTableIndex = dLight[x][y];
@@ -672,7 +672,7 @@ static void DrawFloor(const Surface &out, int x, int y, int sx, int sy)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-static void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
+void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
 {
 	int8_t bItem = dItem[x][y];
 
@@ -715,7 +715,7 @@ static void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  */
-static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
+void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, int sy)
 {
 	int mi = dMonster[x][y + oy];
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
@@ -772,7 +772,7 @@ static void DrawMonsterHelper(const Surface &out, int x, int y, int oy, int sx, 
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  */
-static void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
+void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
 {
 	int8_t p = dPlayer[x][y];
 	p = p > 0 ? p - 1 : -(p + 1);
@@ -801,7 +801,7 @@ static void DrawPlayerHelper(const Surface &out, int x, int y, int sx, int sy)
  * @param dx Target buffer coordinate
  * @param dy Target buffer coordinate
  */
-static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
+void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 {
 	assert(sx >= 0 && sx < MAXDUNX);
 	assert(sy >= 0 && sy < MAXDUNY);
@@ -915,7 +915,7 @@ static void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void DrawFloor(const Surface &out, int x, int y, int sx, int sy, int rows, int columns)
+void DrawFloor(const Surface &out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
@@ -964,7 +964,7 @@ static void DrawFloor(const Surface &out, int x, int y, int sx, int sy, int rows
  * @param rows Number of rows
  * @param columns Tile in a row
  */
-static void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, int rows, int columns)
+void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, int rows, int columns)
 {
 	// Keep evaluating until MicroTiles can't affect screen
 	rows += MicroTileLen;
@@ -1012,7 +1012,7 @@ static void DrawTileContent(const Surface &out, int x, int y, int sx, int sy, in
 /**
  * @brief Scale up the top left part of the buffer 2x.
  */
-static void Zoom(const Surface &out)
+void Zoom(const Surface &out)
 {
 	int viewportWidth = out.w();
 	int viewportOffsetX = 0;
@@ -1077,7 +1077,7 @@ int tileRows;
  * @param x Center of view in dPiece coordinate
  * @param y Center of view in dPiece coordinate
  */
-static void DrawGame(const Surface &fullOut, int x, int y)
+void DrawGame(const Surface &fullOut, int x, int y)
 {
 	// Limit rendering to the view area
 	const Surface &out = zoomflag
@@ -1251,7 +1251,7 @@ void DrawView(const Surface &out, int startX, int startY)
 /**
  * @brief Display the current average FPS over 1 sec
  */
-static void DrawFPS(const Surface &out)
+void DrawFPS(const Surface &out)
 {
 	char string[12];
 
@@ -1278,7 +1278,7 @@ static void DrawFPS(const Surface &out)
  * @param dwWdt Back buffer coordinate
  * @param dwHgt Back buffer coordinate
  */
-static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
+void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
 	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
 	using CoordType = decltype(SDL_Rect {}.x);
@@ -1301,7 +1301,7 @@ static void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
  * @param draw_sbar Render belt
  * @param draw_btn Render panel buttons
  */
-static void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
+void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSbar, bool drawBtn)
 {
 	if (!gbActive || RenderDirectlyToOutputSurface) {
 		return;

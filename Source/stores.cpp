@@ -2161,7 +2161,7 @@ int TakeGold(PlayerStruct &player, int cost, bool skipMaxPiles)
 	return cost;
 }
 
-static void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, uint16_t flags)
+void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, uint16_t flags)
 {
 	int lineWidth = GetLineWidth(text);
 

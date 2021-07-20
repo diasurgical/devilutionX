@@ -150,7 +150,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-static void SyncMonster(int pnum, const TSyncMonster *p)
+void SyncMonster(int pnum, const TSyncMonster *p)
 {
 	int ndx = p->_mndx;
 

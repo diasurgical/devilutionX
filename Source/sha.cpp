@@ -35,7 +35,7 @@ uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
 	return (word << bits) | (word >> (32 - bits));
 }
 
-static void SHA1Init(SHA1Context *context)
+void SHA1Init(SHA1Context *context)
 {
 	context->count[0] = 0;
 	context->count[1] = 0;
@@ -46,7 +46,7 @@ static void SHA1Init(SHA1Context *context)
 	context->state[4] = 0xC3D2E1F0;
 }
 
-static void SHA1ProcessMessageBlock(SHA1Context *context)
+void SHA1ProcessMessageBlock(SHA1Context *context)
 {
 	std::uint32_t w[80];
 
@@ -107,7 +107,7 @@ static void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += e;
 }
 
-static void SHA1Input(SHA1Context *context, const char *messageArray, std::uint32_t len)
+void SHA1Input(SHA1Context *context, const char *messageArray, std::uint32_t len)
 {
 	std::uint32_t count = context->count[0] + 8 * len;
 	if (count < context->count[0])
