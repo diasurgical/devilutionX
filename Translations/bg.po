@@ -6906,7 +6906,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
 msgid "Every child hears the story of the warrior Arkaine and his mystic armor known as Valor. If you could find its resting place, you would be well protected against the evil in the Labyrinth."
-msgstr "Всяко дете знае историята на воина Аркайн и неговата мистична броня, известна като Доблест. Ако успееш да намериш мястото, където тя е съхранена, ще бъдеш добре защитен от злото дебнещо в Лабиринта."
+msgstr "Всяко дете знае историята на война Аркайн и неговата мистична броня, известна като Доблест. Ако успееш да намериш мястото, където тя е съхранена, ще бъдеш добре защитен от злото дебнещо в Лабиринта."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
