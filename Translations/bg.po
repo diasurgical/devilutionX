@@ -7958,7 +7958,7 @@ msgstr "Доволен ли си, малки бозайнико? Колко жа
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
 msgid "These lands shall be defiled, and our brood shall overrun the fields that men call home.  Our tendrils shall envelop this world, and we will feast on the flesh of its denizens.  Man shall become our chattel and sustenance."
-msgstr "Тези земи ще бъдат осквернени и нашето племе ще завземе полетата, които хората наричат домове. Нашите пипала ще хванат в прегръдка този свят и ние ще се храним от плътта на нейните обитатели. Човекът ще бъде наш скот и препитание."
+msgstr "Тези земи ще бъдат осквернени и нашето челяд ще завземе полетата, които хората наричат домове. Нашите пипала ще хванат в прегръдка този свят и ние ще се храним от плътта на неговите обитатели. Човекът ще бъде наш скот и препитание."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
