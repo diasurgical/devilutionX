@@ -1070,11 +1070,10 @@ void DiabloDeinit()
 
 	if (sbWasOptionsLoaded)
 		SaveOptions();
-	if (was_snd_init) {
+	if (was_snd_init)
 		effects_cleanup_sfx();
-	}
 #ifndef NOSOUND
-	Aulib::quit();
+	snd_deinit();
 #endif
 	if (was_ui_init)
 		UiDestroy();

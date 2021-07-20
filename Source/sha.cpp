@@ -17,6 +17,8 @@ namespace devilution {
 
 namespace {
 
+SHA1Context sgSHA1[3];
+
 /**
  * Diablo-"SHA1" circular left shift, portable version.
  */
@@ -32,10 +34,6 @@ uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
 	}
 	return (word << bits) | (word >> (32 - bits));
 }
-
-} // namespace
-
-SHA1Context sgSHA1[3];
 
 static void SHA1Init(SHA1Context *context)
 {
@@ -124,6 +122,8 @@ static void SHA1Input(SHA1Context *context, const char *messageArray, std::uint3
 		messageArray += 64;
 	}
 }
+
+} // namespace
 
 void SHA1Clear()
 {

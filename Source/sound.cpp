@@ -34,6 +34,10 @@ bool gbSndInited;
 /** The active background music track id. */
 _music_id sgnMusicTrack = NUM_MUSIC;
 
+bool gbMusicOn = true;
+/** Specifies whether sound effects are enabled. */
+bool gbSoundOn = true;
+
 namespace {
 
 std::optional<Aulib::Stream> music;
@@ -93,14 +97,6 @@ SoundSample *DuplicateSound(const SoundSample &sound)
 	return result;
 }
 
-} // namespace
-
-/* data */
-
-bool gbMusicOn = true;
-/** Specifies whether sound effects are enabled. */
-bool gbSoundOn = true;
-
 /** Maps from track ID to track name in spawn. */
 const char *const SpawnMusicTracks[NUM_MUSIC] = {
 	"Music\\sTowne.wav",
@@ -128,6 +124,8 @@ static int CapVolume(int volume)
 {
 	return clamp(volume, VOLUME_MIN, VOLUME_MAX);
 }
+
+} // namespace
 
 void ClearDuplicateSounds()
 {

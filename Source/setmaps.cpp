@@ -18,6 +18,18 @@
 
 namespace devilution {
 
+/** Maps from quest level to quest level names. */
+const char *const QuestLevelNames[] = {
+	"",
+	N_("Skeleton King's Lair"),
+	N_("Chamber of Bone"),
+	N_("Maze"),
+	N_("Poisoned Water Supply"),
+	N_("Archbishop Lazarus' Lair"),
+};
+
+namespace {
+
 // BUGFIX: constant data should be const
 BYTE SkelKingTrans1[] = {
 	19, 47, 26, 55,
@@ -72,26 +84,6 @@ BYTE SkelChamTrans3[] = {
 	50, 43, 59, 51
 };
 
-/** Maps from quest level to quest level names. */
-const char *const QuestLevelNames[] = {
-	"",
-	N_("Skeleton King's Lair"),
-	N_("Chamber of Bone"),
-	N_("Maze"),
-	N_("Poisoned Water Supply"),
-	N_("Archbishop Lazarus' Lair"),
-};
-
-ObjectStruct &ObjectAtPosition(Point position)
-{
-	for (int i = 0; i < ActiveObjectCount; i++) {
-		int oi = ActiveObjects[i];
-		if (Objects[oi].position == position)
-			return Objects[oi];
-	}
-	app_fatal("ObjectAtPosition: Active object not found at (%i,%i)", position.x, position.y);
-}
-
 void AddSKingObjs()
 {
 	constexpr Rectangle SmallSecretRoom { { 20, 7 }, { 3, 3 } };
@@ -141,6 +133,18 @@ void DRLG_SetMapTrans(const char *path)
 			transparantLayer++;
 		}
 	}
+}
+
+} // namespace
+
+ObjectStruct &ObjectAtPosition(Point position)
+{
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		int oi = ActiveObjects[i];
+		if (Objects[oi].position == position)
+			return Objects[oi];
+	}
+	app_fatal("ObjectAtPosition: Active object not found at (%i,%i)", position.x, position.y);
 }
 
 /**

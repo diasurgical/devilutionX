@@ -15,6 +15,97 @@
 
 namespace devilution {
 
+namespace {
+
+/**
+ * @brief Gets a value indicating whether the player's current readied spell is a valid spell. Readied spells can be
+ * invalidaded in a few scenarios where the spell comes from items, for example (like dropping the only scroll that
+ * provided the spell).
+ * @param player The player whose readied spell is to be checked.
+ * @return 'true' when the readied spell is currently valid, and 'false' otherwise.
+ */
+bool IsReadiedSpellValid(const PlayerStruct &player)
+{
+	switch (player._pRSplType) {
+	case RSPLTYPE_SKILL:
+	case RSPLTYPE_SPELL:
+	case RSPLTYPE_INVALID:
+		return true;
+
+	case RSPLTYPE_CHARGES:
+		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
+
+	case RSPLTYPE_SCROLL:
+		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
+
+	default:
+		return false;
+	}
+}
+
+/**
+ * @brief Clears the current player's readied spell selection.
+ * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
+ * @param player The player whose readied spell is to be cleared.
+ */
+void ClearReadiedSpell(PlayerStruct &player)
+{
+	if (player._pRSpell != SPL_INVALID) {
+		player._pRSpell = SPL_INVALID;
+		force_redraw = 255;
+	}
+
+	if (player._pRSplType != RSPLTYPE_INVALID) {
+		player._pRSplType = RSPLTYPE_INVALID;
+		force_redraw = 255;
+	}
+}
+
+static void PlacePlayer(int pnum)
+{
+	auto &player = Players[pnum];
+	Point newPosition = {};
+
+	if (player.plrlevel == currlevel) {
+		for (int i = 0; i < 8; i++) {
+			newPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			if (PosOkPlayer(player, newPosition)) {
+				break;
+			}
+		}
+
+		if (!PosOkPlayer(player, newPosition)) {
+			bool done = false;
+
+			int min = -1;
+			for (int max = 1; min > -50 && !done; max++, min--) {
+				for (int y = min; y <= max && !done; y++) {
+					newPosition.y = player.position.tile.y + y;
+
+					for (int x = min; x <= max && !done; x++) {
+						newPosition.x = player.position.tile.x + x;
+
+						if (PosOkPlayer(player, newPosition)) {
+							done = true;
+						}
+					}
+				}
+			}
+		}
+
+		player.position.tile = newPosition;
+
+		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
+
+		if (pnum == MyPlayerId) {
+			ViewX = newPosition.x;
+			ViewY = newPosition.y;
+		}
+	}
+}
+
+} // namespace
+
 int GetManaAmount(PlayerStruct &player, spell_id sn)
 {
 	int ma; // mana amount
@@ -97,50 +188,6 @@ void UseMana(int id, spell_id sn)
 }
 
 /**
- * @brief Gets a value indicating whether the player's current readied spell is a valid spell. Readied spells can be
- * invalidaded in a few scenarios where the spell comes from items, for example (like dropping the only scroll that
- * provided the spell).
- * @param player The player whose readied spell is to be checked.
- * @return 'true' when the readied spell is currently valid, and 'false' otherwise.
- */
-bool IsReadiedSpellValid(const PlayerStruct &player)
-{
-	switch (player._pRSplType) {
-	case RSPLTYPE_SKILL:
-	case RSPLTYPE_SPELL:
-	case RSPLTYPE_INVALID:
-		return true;
-
-	case RSPLTYPE_CHARGES:
-		return (player._pISpells & GetSpellBitmask(player._pRSpell)) != 0;
-
-	case RSPLTYPE_SCROLL:
-		return (player._pScrlSpells & GetSpellBitmask(player._pRSpell)) != 0;
-
-	default:
-		return false;
-	}
-}
-
-/**
- * @brief Clears the current player's readied spell selection.
- * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
- * @param player The player whose readied spell is to be cleared.
- */
-void ClearReadiedSpell(PlayerStruct &player)
-{
-	if (player._pRSpell != SPL_INVALID) {
-		player._pRSpell = SPL_INVALID;
-		force_redraw = 255;
-	}
-
-	if (player._pRSplType != RSPLTYPE_INVALID) {
-		player._pRSplType = RSPLTYPE_INVALID;
-		force_redraw = 255;
-	}
-}
-
-/**
  * @brief Ensures the player's current readied spell is a valid selection for the character. If the current selection is
  * incompatible with the player's items and spell (for example, if the player does not currently have access to the spell),
  * the selection is cleared.
@@ -196,49 +243,6 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
 
 		for (int i = (spllvl / 2) + 3; i > 0; i--) {
 			AddMissile({ sx, sy }, { dx, dy }, dir, MIS_CBOLT, TARGET_MONSTERS, id, 0, spllvl);
-		}
-	}
-}
-
-static void PlacePlayer(int pnum)
-{
-	auto &player = Players[pnum];
-	Point newPosition = {};
-
-	if (player.plrlevel == currlevel) {
-		for (int i = 0; i < 8; i++) {
-			newPosition = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
-			if (PosOkPlayer(player, newPosition)) {
-				break;
-			}
-		}
-
-		if (!PosOkPlayer(player, newPosition)) {
-			bool done = false;
-
-			int min = -1;
-			for (int max = 1; min > -50 && !done; max++, min--) {
-				for (int y = min; y <= max && !done; y++) {
-					newPosition.y = player.position.tile.y + y;
-
-					for (int x = min; x <= max && !done; x++) {
-						newPosition.x = player.position.tile.x + x;
-
-						if (PosOkPlayer(player, newPosition)) {
-							done = true;
-						}
-					}
-				}
-			}
-		}
-
-		player.position.tile = newPosition;
-
-		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
-
-		if (pnum == MyPlayerId) {
-			ViewX = newPosition.x;
-			ViewY = newPosition.y;
 		}
 	}
 }

@@ -26,15 +26,10 @@
 
 namespace devilution {
 
-int qtopline;
 bool QuestLogIsOpen;
 std::optional<CelSprite> pQLogCel;
 /** Contains the quests of the current game. */
 QuestStruct Quests[MAXQUESTS];
-int qline;
-int qlist[MAXQUESTS];
-int numqlines;
-int WaterDone;
 int ReturnLvlX;
 int ReturnLvlY;
 dungeon_type ReturnLevelType;
@@ -70,6 +65,15 @@ QuestDataStruct QuestData[] = {
 	{       9,           9, DTYPE_NONE,      Q_JERSEY,    100,    SL_NONE,         false,              TEXT_JERSEY4,  N_( /* TRANSLATORS: Quest Name Block end*/ "The Jersey's Jersey")      },
 	// clang-format on
 };
+
+namespace {
+
+int qtopline;
+int qline;
+int qlist[MAXQUESTS];
+int numqlines;
+int WaterDone;
+
 /**
  * Specifies a delta in X-coordinates from the quest entrance for
  * which the hover text of the cursor will be visible.
@@ -111,6 +115,152 @@ int QuestGroup3[3] = { Q_MUSHROOM, Q_ZHAR, Q_ANVIL };
  * appears in any single player game.
  */
 int QuestGroup4[2] = { Q_VEIL, Q_WARLORD };
+
+void DrawButcher()
+{
+	int x = 2 * setpc_x + 16;
+	int y = 2 * setpc_y + 16;
+	DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
+}
+
+void DrawSkelKing(int q, int x, int y)
+{
+	Quests[q].position = { 2 * x + 28, 2 * y + 23 };
+}
+
+void DrawWarLord(int x, int y)
+{
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	setpc_x = x;
+	setpc_y = y;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
+		}
+	}
+}
+
+void DrawSChamber(int q, int x, int y)
+{
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	setpc_x = x;
+	setpc_y = y;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
+		}
+	}
+
+	Quests[q].position = { 2 * x + 22, 2 * y + 23 };
+}
+
+void DrawLTBanner(int x, int y)
+{
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	setpc_x = x;
+	setpc_y = y;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				pdungeon[x + i][y + j] = tileId;
+			}
+		}
+	}
+}
+
+void DrawBlind(int x, int y)
+{
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	setpc_x = x;
+	setpc_y = y;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				pdungeon[x + i][y + j] = tileId;
+			}
+		}
+	}
+}
+
+void DrawBlood(int x, int y)
+{
+	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	setpc_x = x;
+	setpc_y = y;
+	setpc_w = width;
+	setpc_h = height;
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[x + i][y + j] = tileId;
+			}
+		}
+	}
+}
+
+static void PrintQLString(const Surface &out, int x, int line, const char *str)
+{
+	int width = GetLineWidth(str);
+	int sx = x + std::max((257 - width) / 2, 0);
+	int sy = line * 12 + 44;
+	if (qline == line) {
+		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+	}
+	DrawString(out, str, { { sx, sy }, { 257, 0 } }, UIS_SILVER);
+	if (qline == line) {
+		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+	}
+}
+
+} // namespace
 
 void InitQuests()
 {
@@ -365,136 +515,6 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 	}
 }
 
-void DrawButcher()
-{
-	int x = 2 * setpc_x + 16;
-	int y = 2 * setpc_y + 16;
-	DRLG_RectTrans(x + 3, y + 3, x + 10, y + 10);
-}
-
-void DrawSkelKing(int q, int x, int y)
-{
-	Quests[q].position = { 2 * x + 28, 2 * y + 23 };
-}
-
-void DrawWarLord(int x, int y)
-{
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord2.DUN");
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	setpc_x = x;
-	setpc_y = y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
-			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 6;
-		}
-	}
-}
-
-void DrawSChamber(int q, int x, int y)
-{
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr1.DUN");
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	setpc_x = x;
-	setpc_y = y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
-			dungeon[x + i][y + j] = (tileId != 0) ? tileId : 3;
-		}
-	}
-
-	Quests[q].position = { 2 * x + 22, 2 * y + 23 };
-}
-
-void DrawLTBanner(int x, int y)
-{
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	setpc_x = x;
-	setpc_y = y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
-			if (tileId != 0) {
-				pdungeon[x + i][y + j] = tileId;
-			}
-		}
-	}
-}
-
-void DrawBlind(int x, int y)
-{
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	setpc_x = x;
-	setpc_y = y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
-			if (tileId != 0) {
-				pdungeon[x + i][y + j] = tileId;
-			}
-		}
-	}
-}
-
-void DrawBlood(int x, int y)
-{
-	auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
-
-	int width = SDL_SwapLE16(dunData[0]);
-	int height = SDL_SwapLE16(dunData[1]);
-
-	setpc_x = x;
-	setpc_y = y;
-	setpc_w = width;
-	setpc_h = height;
-
-	const uint16_t *tileLayer = &dunData[2];
-
-	for (int j = 0; j < height; j++) {
-		for (int i = 0; i < width; i++) {
-			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
-			if (tileId != 0) {
-				dungeon[x + i][y + j] = tileId;
-			}
-		}
-	}
-}
-
 void DRLG_CheckQuests(int x, int y)
 {
 	for (int i = 0; i < MAXQUESTS; i++) {
@@ -705,20 +725,6 @@ void ResyncQuests()
 	    && (Quests[Q_BETRAYER]._qvar2 == 1 || Quests[Q_BETRAYER]._qvar2 >= 3)
 	    && (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE || Quests[Q_BETRAYER]._qactive == QUEST_DONE)) {
 		Quests[Q_BETRAYER]._qvar2 = 2;
-	}
-}
-
-static void PrintQLString(const Surface &out, int x, int line, const char *str)
-{
-	int width = GetLineWidth(str);
-	int sx = x + std::max((257 - width) / 2, 0);
-	int sy = line * 12 + 44;
-	if (qline == line) {
-		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
-	}
-	DrawString(out, str, { { sx, sy }, { 257, 0 } }, UIS_SILVER);
-	if (qline == line) {
-		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 
