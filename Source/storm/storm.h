@@ -72,36 +72,6 @@ struct _SNETEVENT {
 #define WINAPI
 #endif
 
-#ifdef __cplusplus
-struct CCritSect {
-	SDL_mutex *m_critsect;
-
-	CCritSect()
-	{
-		m_critsect = SDL_CreateMutex();
-		if (m_critsect == NULL) {
-			ErrSdl();
-		}
-	}
-	~CCritSect()
-	{
-		SDL_DestroyMutex(m_critsect);
-	}
-	void Enter()
-	{
-		if (SDL_LockMutex(m_critsect) < 0) {
-			ErrSdl();
-		}
-	}
-	void Leave()
-	{
-		if (SDL_UnlockMutex(m_critsect) < 0) {
-			ErrSdl();
-		}
-	}
-};
-#endif
-
 // Game states
 #define GAMESTATE_PRIVATE 0x01
 #define GAMESTATE_FULL 0x02

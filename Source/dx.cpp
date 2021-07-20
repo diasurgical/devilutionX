@@ -11,6 +11,7 @@
 #include "options.h"
 #include "storm/storm.h"
 #include "utils/display.h"
+#include "utils/sdl_mutex.h"
 #include "utils/log.hpp"
 
 #ifdef __3DS__
@@ -42,7 +43,7 @@ int sgdwLockCount;
 #ifdef _DEBUG
 int locktbl[256];
 #endif
-CCritSect sgMemCrit;
+SdlMutex MemCrit;
 
 bool CanRenderDirectlyToOutputSurface()
 {
@@ -111,7 +112,7 @@ void CreatePrimarySurface()
 
 void LockBufPriv()
 {
-	sgMemCrit.Enter();
+	MemCrit.lock();
 	if (sgdwLockCount != 0) {
 		sgdwLockCount++;
 		return;
@@ -126,7 +127,7 @@ void UnlockBufPriv()
 		app_fatal("draw main unlock error");
 
 	sgdwLockCount--;
-	sgMemCrit.Leave();
+	MemCrit.unlock();
 }
 
 /**
@@ -194,9 +195,9 @@ void dx_cleanup()
 	if (ghMainWnd != nullptr)
 		SDL_HideWindow(ghMainWnd);
 #endif
-	sgMemCrit.Enter();
+	MemCrit.lock();
 	sgdwLockCount = 0;
-	sgMemCrit.Leave();
+	MemCrit.unlock();
 
 	if (pal_surface == nullptr)
 		return;
