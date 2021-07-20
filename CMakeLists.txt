@@ -417,7 +417,6 @@ set(libdevilutionx_SRCS
   Source/utils/file_util.cpp
   Source/utils/language.cpp
   Source/utils/paths.cpp
-  Source/utils/thread.cpp
   Source/utils/sdl_thread.cpp
   Source/DiabloUI/art.cpp
   Source/DiabloUI/art_draw.cpp
