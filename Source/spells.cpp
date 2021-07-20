@@ -253,46 +253,48 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
  */
 void DoResurrect(int pnum, int rid)
 {
-	int hp;
-
-	if ((char)rid != -1) {
-		AddMissile(Players[rid].position.tile, Players[rid].position.tile, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
-	}
-
 	if (pnum == MyPlayerId) {
 		NewCursor(CURSOR_HAND);
 	}
 
-	if ((char)rid != -1 && Players[rid]._pHitPoints == 0) {
-		if (rid == MyPlayerId) {
-			MyPlayerIsDead = false;
-			gamemenu_off();
-			drawhpflag = true;
-			drawmanaflag = true;
-		}
+	if (rid == -1)
+		return;
 
-		ClrPlrPath(Players[rid]);
-		Players[rid].destAction = ACTION_NONE;
-		Players[rid]._pInvincible = false;
-		PlacePlayer(rid);
+	auto &target = Players[rid];
 
-		hp = 10 << 6;
-		if (Players[rid]._pMaxHPBase < (10 << 6)) {
-			hp = Players[rid]._pMaxHPBase;
-		}
-		SetPlayerHitPoints(rid, hp);
+	AddMissile(target.position.tile, target.position.tile, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 
-		Players[rid]._pHPBase = Players[rid]._pHitPoints + (Players[rid]._pMaxHPBase - Players[rid]._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
-		Players[rid]._pMana = 0;
-		Players[rid]._pManaBase = Players[rid]._pMana + (Players[rid]._pMaxManaBase - Players[rid]._pMaxMana);
+	if (target._pHitPoints != 0)
+		return;
 
-		CalcPlrInv(rid, true);
+	if (rid == MyPlayerId) {
+		MyPlayerIsDead = false;
+		gamemenu_off();
+		drawhpflag = true;
+		drawmanaflag = true;
+	}
 
-		if (Players[rid].plrlevel == currlevel) {
-			StartStand(rid, Players[rid]._pdir);
-		} else {
-			Players[rid]._pmode = PM_STAND;
-		}
+	ClrPlrPath(target);
+	target.destAction = ACTION_NONE;
+	target._pInvincible = false;
+	PlacePlayer(rid);
+
+	int hp = 10 << 6;
+	if (target._pMaxHPBase < (10 << 6)) {
+		hp = target._pMaxHPBase;
+	}
+	SetPlayerHitPoints(rid, hp);
+
+	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
+	target._pMana = 0;
+	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
+
+	CalcPlrInv(rid, true);
+
+	if (target.plrlevel == currlevel) {
+		StartStand(rid, target._pdir);
+	} else {
+		target._pmode = PM_STAND;
 	}
 }
 

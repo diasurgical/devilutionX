@@ -5083,7 +5083,7 @@ void TalktoMonster(MonsterStruct &monster)
 
 void SpawnGolum(int i, Point position, int mi)
 {
-	assert(i >= 0 && i < MAXMONSTERS);
+	assert(i >= 0 && i < MAX_PLRS);
 	auto &player = Players[i];
 	auto &golem = Monsters[i];
 

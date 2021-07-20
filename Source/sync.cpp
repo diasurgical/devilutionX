@@ -94,54 +94,50 @@ bool SyncMonsterActive2(TSyncMonster *p)
 
 void SyncPlrInv(TSyncHeader *pHdr)
 {
-	int ii;
-	ItemStruct *pItem;
-
+	pHdr->bItemI = -1;
 	if (ActiveItemCount > 0) {
 		if (sgnSyncItem >= ActiveItemCount) {
 			sgnSyncItem = 0;
 		}
-		ii = ActiveItems[sgnSyncItem++];
-		pHdr->bItemI = ii;
-		pHdr->bItemX = Items[ii].position.x;
-		pHdr->bItemY = Items[ii].position.y;
-		pHdr->wItemIndx = Items[ii].IDidx;
-		if (Items[ii].IDidx == IDI_EAR) {
-			pHdr->wItemCI = (Items[ii]._iName[7] << 8) | Items[ii]._iName[8];
-			pHdr->dwItemSeed = (Items[ii]._iName[9] << 24) | (Items[ii]._iName[10] << 16) | (Items[ii]._iName[11] << 8) | Items[ii]._iName[12];
-			pHdr->bItemId = Items[ii]._iName[13];
-			pHdr->bItemDur = Items[ii]._iName[14];
-			pHdr->bItemMDur = Items[ii]._iName[15];
-			pHdr->bItemCh = Items[ii]._iName[16];
-			pHdr->bItemMCh = Items[ii]._iName[17];
-			pHdr->wItemVal = (Items[ii]._iName[18] << 8) | ((Items[ii]._iCurs - ICURS_EAR_SORCERER) << 6) | Items[ii]._ivalue;
-			pHdr->dwItemBuff = (Items[ii]._iName[19] << 24) | (Items[ii]._iName[20] << 16) | (Items[ii]._iName[21] << 8) | Items[ii]._iName[22];
+		pHdr->bItemI = ActiveItems[sgnSyncItem];
+		sgnSyncItem++;
+		auto &item = Items[pHdr->bItemI];
+		pHdr->bItemX = item.position.x;
+		pHdr->bItemY = item.position.y;
+		pHdr->wItemIndx = item.IDidx;
+		if (item.IDidx == IDI_EAR) {
+			pHdr->wItemCI = (item._iName[7] << 8) | item._iName[8];
+			pHdr->dwItemSeed = (item._iName[9] << 24) | (item._iName[10] << 16) | (item._iName[11] << 8) | item._iName[12];
+			pHdr->bItemId = item._iName[13];
+			pHdr->bItemDur = item._iName[14];
+			pHdr->bItemMDur = item._iName[15];
+			pHdr->bItemCh = item._iName[16];
+			pHdr->bItemMCh = item._iName[17];
+			pHdr->wItemVal = (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6) | item._ivalue;
+			pHdr->dwItemBuff = (item._iName[19] << 24) | (item._iName[20] << 16) | (item._iName[21] << 8) | item._iName[22];
 		} else {
-			pHdr->wItemCI = Items[ii]._iCreateInfo;
-			pHdr->dwItemSeed = Items[ii]._iSeed;
-			pHdr->bItemId = Items[ii]._iIdentified ? 1 : 0;
-			pHdr->bItemDur = Items[ii]._iDurability;
-			pHdr->bItemMDur = Items[ii]._iMaxDur;
-			pHdr->bItemCh = Items[ii]._iCharges;
-			pHdr->bItemMCh = Items[ii]._iMaxCharges;
-			if (Items[ii].IDidx == IDI_GOLD) {
-				pHdr->wItemVal = Items[ii]._ivalue;
+			pHdr->wItemCI = item._iCreateInfo;
+			pHdr->dwItemSeed = item._iSeed;
+			pHdr->bItemId = item._iIdentified ? 1 : 0;
+			pHdr->bItemDur = item._iDurability;
+			pHdr->bItemMDur = item._iMaxDur;
+			pHdr->bItemCh = item._iCharges;
+			pHdr->bItemMCh = item._iMaxCharges;
+			if (item.IDidx == IDI_GOLD) {
+				pHdr->wItemVal = item._ivalue;
 			}
 		}
-	} else {
-		pHdr->bItemI = -1;
 	}
 
+	pHdr->bPInvLoc = -1;
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
-	pItem = &Players[MyPlayerId].InvBody[sgnSyncPInv];
-	if (!pItem->isEmpty()) {
+	const auto &item = Players[MyPlayerId].InvBody[sgnSyncPInv];
+	if (!item.isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
-		pHdr->wPInvIndx = pItem->IDidx;
-		pHdr->wPInvCI = pItem->_iCreateInfo;
-		pHdr->dwPInvSeed = pItem->_iSeed;
-		pHdr->bPInvId = pItem->_iIdentified ? 1 : 0;
-	} else {
-		pHdr->bPInvLoc = -1;
+		pHdr->wPInvIndx = item.IDidx;
+		pHdr->wPInvCI = item._iCreateInfo;
+		pHdr->dwPInvSeed = item._iSeed;
+		pHdr->bPInvId = item._iIdentified ? 1 : 0;
 	}
 
 	sgnSyncPInv++;
