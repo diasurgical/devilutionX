@@ -9,6 +9,7 @@
 #include "nthread.h"
 #include "storm/storm.h"
 #include "utils/thread.h"
+#include "utils/sdl_mutex.h"
 
 namespace devilution {
 
@@ -22,7 +23,7 @@ float gfProgressToNextGameTick = 0.0;
 
 namespace {
 
-CCritSect sgMemCrit;
+SdlMutex MemCrit;
 DWORD gdwDeltaBytesSec;
 bool nthread_should_run;
 SDL_threadID glpNThreadId;
@@ -41,16 +42,16 @@ void NthreadHandler()
 	}
 
 	while (true) {
-		sgMemCrit.Enter();
+		MemCrit.lock();
 		if (!nthread_should_run) {
-			sgMemCrit.Leave();
+			MemCrit.unlock();
 			break;
 		}
 		nthread_send_and_recv_turn(0, 0);
 		int delta = gnTickDelay;
 		if (nthread_recv_turns())
 			delta = last_tick - SDL_GetTicks();
-		sgMemCrit.Leave();
+		MemCrit.unlock();
 		if (delta > 0)
 			SDL_Delay(delta);
 		if (!nthread_should_run)
@@ -179,7 +180,7 @@ void nthread_start(bool setTurnUpperBit)
 		gdwNormalMsgSize = largestMsgSize;
 	if (gbIsMultiplayer) {
 		sgbThreadIsRunning = false;
-		sgMemCrit.Enter();
+		MemCrit.lock();
 		nthread_should_run = true;
 		sghThread = CreateThread(NthreadHandler, &glpNThreadId);
 		if (sghThread == nullptr) {
@@ -197,7 +198,7 @@ void nthread_cleanup()
 	gdwLargestMsgSize = 0;
 	if (sghThread != nullptr && glpNThreadId != SDL_GetThreadID(nullptr)) {
 		if (!sgbThreadIsRunning)
-			sgMemCrit.Leave();
+			MemCrit.unlock();
 		SDL_WaitThread(sghThread, nullptr);
 		sghThread = nullptr;
 	}
@@ -207,9 +208,9 @@ void nthread_ignore_mutex(bool bStart)
 {
 	if (sghThread != nullptr) {
 		if (bStart)
-			sgMemCrit.Leave();
+			MemCrit.unlock();
 		else
-			sgMemCrit.Enter();
+			MemCrit.lock();
 		sgbThreadIsRunning = bStart;
 	}
 }
