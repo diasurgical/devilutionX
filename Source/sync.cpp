@@ -131,7 +131,7 @@ void SyncPlrInv(TSyncHeader *pHdr)
 
 	pHdr->bPInvLoc = -1;
 	assert(sgnSyncPInv > -1 && sgnSyncPInv < NUM_INVLOC);
-	auto &item = Players[MyPlayerId].InvBody[sgnSyncPInv];
+	const auto &item = Players[MyPlayerId].InvBody[sgnSyncPInv];
 	if (!item.isEmpty()) {
 		pHdr->bPInvLoc = sgnSyncPInv;
 		pHdr->wPInvIndx = item.IDidx;
