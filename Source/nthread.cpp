@@ -8,8 +8,8 @@
 #include "gmenu.h"
 #include "nthread.h"
 #include "storm/storm.h"
-#include "utils/thread.h"
 #include "utils/sdl_mutex.h"
+#include "utils/sdl_thread.h"
 
 namespace devilution {
 
@@ -26,14 +26,13 @@ namespace {
 SdlMutex MemCrit;
 DWORD gdwDeltaBytesSec;
 bool nthread_should_run;
-SDL_threadID glpNThreadId;
 char sgbSyncCountdown;
 uint32_t turn_upper_bit;
 bool sgbTicsOutOfSync;
 char sgbPacketCountdown;
 bool sgbThreadIsRunning;
 int last_tick;
-SDL_Thread *sghThread = nullptr;
+SdlThread Thread;
 
 void NthreadHandler()
 {
@@ -182,11 +181,7 @@ void nthread_start(bool setTurnUpperBit)
 		sgbThreadIsRunning = false;
 		MemCrit.lock();
 		nthread_should_run = true;
-		sghThread = CreateThread(NthreadHandler, &glpNThreadId);
-		if (sghThread == nullptr) {
-			const char *err = SDL_GetError();
-			app_fatal("nthread2:\n%s", err);
-		}
+		Thread = { NthreadHandler };
 	}
 }
 
@@ -196,23 +191,23 @@ void nthread_cleanup()
 	gdwTurnsInTransit = 0;
 	gdwNormalMsgSize = 0;
 	gdwLargestMsgSize = 0;
-	if (sghThread != nullptr && glpNThreadId != SDL_GetThreadID(nullptr)) {
+	if (Thread.joinable() && Thread.get_id() != this_sdl_thread::get_id()) {
 		if (!sgbThreadIsRunning)
 			MemCrit.unlock();
-		SDL_WaitThread(sghThread, nullptr);
-		sghThread = nullptr;
+		Thread.join();
 	}
 }
 
 void nthread_ignore_mutex(bool bStart)
 {
-	if (sghThread != nullptr) {
-		if (bStart)
-			MemCrit.unlock();
-		else
-			MemCrit.lock();
-		sgbThreadIsRunning = bStart;
-	}
+	if (!Thread.joinable())
+		return;
+
+	if (bStart)
+		MemCrit.unlock();
+	else
+		MemCrit.lock();
+	sgbThreadIsRunning = bStart;
 }
 
 /**
