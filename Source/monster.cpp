@@ -4575,7 +4575,7 @@ bool DirOK(int i, Direction mdir)
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
 	}
-	if (monster._uniqtype == 0 || UniqMonst[monster._uniqtype - 1].monsterPack == UniqueMonsterPack::Leashed)
+	if (monster._uniqtype == 0 || UniqMonst[monster._uniqtype - 1].monsterPack != UniqueMonsterPack::Leashed)
 		return true;
 	int mcount = 0;
 	for (int x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
