@@ -5477,7 +5477,7 @@ msgstr "Дневник: Срещата"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:266
 msgid "Journal: The Tirade"
-msgstr "Дневник: Гневната"
+msgstr "Дневник: Гневния вой"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:267
