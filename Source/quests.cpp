@@ -246,7 +246,7 @@ void DrawBlood(int x, int y)
 	}
 }
 
-static void PrintQLString(const Surface &out, int x, int line, const char *str)
+void PrintQLString(const Surface &out, int x, int line, const char *str)
 {
 	int width = GetLineWidth(str);
 	int sx = x + std::max((257 - width) / 2, 0);

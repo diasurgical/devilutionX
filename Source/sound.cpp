@@ -120,7 +120,7 @@ const char *const MusicTracks[NUM_MUSIC] = {
 	"Music\\Dintro.wav",
 };
 
-static int CapVolume(int volume)
+int CapVolume(int volume)
 {
 	return clamp(volume, VOLUME_MIN, VOLUME_MAX);
 }
