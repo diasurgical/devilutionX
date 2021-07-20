@@ -9,7 +9,7 @@
 
 #include "nthread.h"
 #include "utils/sdl_cond.h"
-#include "utils/thread.h"
+#include "utils/sdl_thread.h"
 
 namespace devilution {
 
@@ -31,13 +31,12 @@ struct DThreadPkt {
 namespace {
 
 std::optional<SdlMutex> DthreadMutex;
-SDL_threadID glpDThreadId;
 std::list<DThreadPkt> InfoList;
 bool DthreadRunning;
 std::optional<SdlCond> WorkToDo;
 
 /* rdata */
-SDL_Thread *sghThread = nullptr;
+SdlThread Thread;
 
 void DthreadHandler()
 {
@@ -87,7 +86,7 @@ void dthread_start()
 	DthreadRunning = true;
 	DthreadMutex.emplace();
 	WorkToDo.emplace();
-	sghThread = CreateThread(DthreadHandler, &glpDThreadId);
+	Thread = { DthreadHandler };
 }
 
 void DThreadCleanup()
@@ -102,11 +101,7 @@ void DThreadCleanup()
 		WorkToDo->signal();
 	}
 
-	if (sghThread != nullptr && glpDThreadId != SDL_GetThreadID(nullptr)) {
-		SDL_WaitThread(sghThread, nullptr);
-		sghThread = nullptr;
-	}
-
+	Thread.join();
 	DthreadMutex = std::nullopt;
 	WorkToDo = std::nullopt;
 }
