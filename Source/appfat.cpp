@@ -12,6 +12,7 @@
 #include "storm/storm.h"
 #include "utils/language.h"
 #include "utils/ui_fwd.h"
+#include "utils/sdl_thread.h"
 
 namespace devilution {
 
@@ -41,11 +42,11 @@ void MsgBox(const char *pszFmt, va_list va)
  */
 void FreeDlg()
 {
-	if (Terminating && CleanupThreadId != SDL_GetThreadID(nullptr))
+	if (Terminating && CleanupThreadId != this_sdl_thread::get_id())
 		SDL_Delay(20000);
 
 	Terminating = true;
-	CleanupThreadId = SDL_GetThreadID(nullptr);
+	CleanupThreadId = this_sdl_thread::get_id();
 
 	if (gbIsMultiplayer) {
 		if (SNetLeaveGame(3))
