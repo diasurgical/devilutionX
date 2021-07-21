@@ -1371,13 +1371,13 @@ void AddHiveExplosion(int mi, Point /*src*/, Point /*dst*/, int midir, int8_t mi
 	Missiles[mi]._miDelFlag = true;
 }
 
-void AddFireRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
+void AddRune(int mi, Point src, Point dst, int id, spell_id spellID, missile_id missileID)
 {
 	if (LineClearMissile(src, dst)) {
 		if (id >= 0)
-			UseMana(id, SPL_RUNEFIRE);
+			UseMana(id, spellID);
 		if (MissilesFoundTarget(mi, &dst, 10)) {
-			Missiles[mi]._miVar1 = MIS_HIVEEXP;
+			Missiles[mi]._miVar1 = missileID;
 			Missiles[mi]._miDelFlag = false;
 			Missiles[mi]._mlid = AddLight(dst, 8);
 		} else {
@@ -1386,40 +1386,21 @@ void AddFireRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/
 	} else {
 		Missiles[mi]._miDelFlag = true;
 	}
+}
+
+void AddFireRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
+{
+	AddRune(mi, src, dst, id, SPL_RUNEFIRE, MIS_HIVEEXP);
 }
 
 void AddLightningRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
-	if (LineClearMissile(src, dst)) {
-		if (id >= 0)
-			UseMana(id, SPL_RUNELIGHT);
-		if (MissilesFoundTarget(mi, &dst, 10)) {
-			Missiles[mi]._miVar1 = MIS_LIGHTBALL;
-			Missiles[mi]._miDelFlag = false;
-			Missiles[mi]._mlid = AddLight(dst, 8);
-		} else {
-			Missiles[mi]._miDelFlag = true;
-		}
-	} else {
-		Missiles[mi]._miDelFlag = true;
-	}
+	AddRune(mi, src, dst, id, SPL_RUNELIGHT, MIS_LIGHTBALL);
 }
 
 void AddGreatLightningRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
-	if (LineClearMissile(src, dst)) {
-		if (id >= 0)
-			UseMana(id, SPL_RUNENOVA);
-		if (MissilesFoundTarget(mi, &dst, 10)) {
-			Missiles[mi]._miVar1 = MIS_NOVA;
-			Missiles[mi]._miDelFlag = false;
-			Missiles[mi]._mlid = AddLight(dst, 8);
-		} else {
-			Missiles[mi]._miDelFlag = true;
-		}
-	} else {
-		Missiles[mi]._miDelFlag = true;
-	}
+	AddRune(mi, src, dst, id, SPL_RUNENOVA, MIS_NOVA);
 }
 
 void AddImmolationRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
