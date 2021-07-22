@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 #include "engine.h"
 #include "effects.h"
@@ -121,19 +122,59 @@ typedef struct MissileData {
 	MissileMovementDistrubution MovementDistribution;
 } MissileDataStruct;
 
-typedef struct MisFileData {
-	const char *mName;
-	uint8_t mAnimName;
-	uint8_t mAnimFAmt;
-	uint32_t mFlags;
-	byte *mAnimData[16];
-	uint8_t mAnimDelay[16];
-	uint8_t mAnimLen[16];
-	int16_t mAnimWidth[16];
-	int16_t mAnimWidth2[16];
-} MisFileDataStruct;
+struct MisFileData {
+	const char *name;
+	uint8_t animName;
+	uint8_t animFAmt;
+	uint32_t flags;
+	std::array<byte *, 16> animData = {};
+	std::array<uint8_t, 16> animDelay = {};
+	std::array<uint8_t, 16> animLen = {};
+	std::array<int16_t, 16> animWidth = {};
+	std::array<int16_t, 16> animWidth2 = {};
+
+private:
+	std::vector<std::unique_ptr<byte[]>> pinnedMem;
+
+public:
+	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags)
+		: name(name)
+		, animName(animName)
+		, animFAmt(animFAmt)
+		, flags(flags)
+	{
+	}
+
+	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+		    std::array<uint8_t, 16> animDelay, std::array<uint8_t, 16> animLen,
+		    std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2);
+
+	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+		    uint8_t animDelay, uint8_t animLen,
+		    int16_t animWidth, int16_t animWidth2);
+
+	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+		    uint8_t animDelay, std::array<uint8_t, 16> animLen,
+		    int16_t animWidth, int16_t animWidth2);
+
+	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+		    std::array<uint8_t, 16> animDelay, uint8_t animLen,
+		    int16_t animWidth, int16_t animWidth2);
+
+	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+		    uint8_t animDelay, std::array<uint8_t, 16> animLen,
+		    std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2);
+
+	void LoadGFX();
+
+	void FreeGFX()
+	{
+		animData = {};
+		pinnedMem.clear();
+	}
+};
 
 extern MissileDataStruct MissileData[];
-extern MisFileDataStruct MissileSpriteData[];
+extern MisFileData MissileSpriteData[];
 
 } // namespace devilution

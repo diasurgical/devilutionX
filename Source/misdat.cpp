@@ -6,6 +6,8 @@
 #include "misdat.h"
 
 #include "missiles.h"
+#include "engine/load_file.hpp"
+#include "engine/cel_header.hpp"
 
 namespace devilution {
 
@@ -127,68 +129,162 @@ MissileDataStruct MissileData[] = {
 /** Data related to each missile graphic ID. */
 MisFileData MissileSpriteData[] = {
 	// clang-format off
-	// mName,     mAnimName, mAnimFAmt, mFlags, mAnimData[16],                                                                                                                                 mAnimDelay[16],                                     mAnimLen[16],                                                       mAnimWidth[16],                                                             mAnimWidth2[16]
-	{ "Arrows",   MFILE_ARROWS,      1, 2, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Fireba",   MFILE_FIREBA,     16, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16 } },
-	{ "Guard",    MFILE_GUARD,       3, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 14,  3,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Lghning",  MFILE_LGHNING,     1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Firewal",  MFILE_FIREWAL,     2, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 13, 11,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128, 128,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32, 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "MagBlos",  MFILE_MAGBLOS,     1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Portal",   MFILE_PORTAL,      2, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Bluexfr",  MFILE_BLUEXFR,     1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 19,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  48,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Bluexbk",  MFILE_BLUEXBK,     1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 19,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  48,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Manashld", MFILE_MANASHLD,    1, 2, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Blood",    MFILE_BLOOD,       4, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15,  8,  8,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96, 128, 128, 128,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 32, 32, 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Bone",     MFILE_BONE,        3, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  8,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128, 128, 128,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32, 32, 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Metlhit",  MFILE_METLHIT,     3, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 10, 10, 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Farrow",   MFILE_FARROW,     16, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16 } },
-	{ "Doom",     MFILE_DOOM,        9, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16,  0,  0,  0,  0,  0,  0,  0 } },
-	{ " ",        MFILE_0F,          1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Blodbur",  MFILE_BLODBUR,     2, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128, 128,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32, 32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Newexp",   MFILE_NEWEXP,      1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Shatter1", MFILE_SHATTER1,    1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Bigexp",   MFILE_BIGEXP,      1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  48,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Inferno",  MFILE_INFERNO,     1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 20,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Thinlght", MFILE_THINLGHT,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Flare",    MFILE_FLARE,       1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Flareexp", MFILE_FLAREEXP,    1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Magball",  MFILE_MAGBALL,     8, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16, 16, 16, 16, 16, 16, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128, 128, 128, 128, 128, 128, 128, 128,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32, 32, 32, 32, 32, 32, 32, 32,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Krull",    MFILE_KRULL,       1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 14,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Miniltng", MFILE_MINILTNG,    1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  64,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Holy",     MFILE_HOLY,       16, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16 } },
-	{ "Holyexpl", MFILE_HOLYEXPL,    1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  48,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Larrow",   MFILE_LARROW,     16, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4,  4 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16 } },
-	{ "Firarwex", MFILE_FIRARWEX,    1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  64,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Acidbf",   MFILE_ACIDBF,     16, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16 } },
-	{ "Acidspla", MFILE_ACIDSPLA,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Acidpud",  MFILE_ACIDPUD,     2, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  9,  4,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Ethrshld", MFILE_ETHRSHLD,    1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Firerun",  MFILE_FIRERUN,     8, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0 }, { 12, 12, 12, 12, 12, 12, 12, 12,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,  96,  96,  96,  96,  96,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16, 16, 16, 16, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Ressur1",  MFILE_RESSUR1,     1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Sklball",  MFILE_SKLBALL,     9, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0 }, { 16, 16, 16, 16, 16, 16, 16, 16,  8,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16, 16, 16, 16, 16, 16, 16,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Rportal",  MFILE_RPORTAL,     2, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Fireplar", MFILE_FIREPLAR,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 17,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  48,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Scubmisb", MFILE_SCUBMISB,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Scbsexpb", MFILE_SCBSEXPB,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Scubmisc", MFILE_SCUBMISC,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Scbsexpc", MFILE_SCBSEXPC,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Scubmisd", MFILE_SCUBMISD,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "Scbsexpd", MFILE_SCBSEXPD,    1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  6,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 128,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  32,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "spawns",   MFILE_SPAWNS,      8, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  9,  9,  9,  9,  9,  9,  9,  9,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,  96,  96,  96,  96,  96,  96,  96,  0,  0,  0,  0,  0,  0,  0,  0 }, {  16, 16, 16, 16, 16, 16, 16, 16,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "reflect",  MFILE_REFLECT,     1, 2, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  1,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 160,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  64,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "ms_ora",   MFILE_LICH,       16, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
-	{ "ms_bla",   MFILE_MSBLA,      16, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
-	{ "ms_reb",   MFILE_NECROMORB,  16, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
-	{ "ms_yeb",   MFILE_ARCHLICH,   16, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
-	{ "rglows1",  MFILE_RUNE,        1, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   8,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "ex_yel2",  MFILE_EXYEL2,      1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 220,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  78,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "ex_blu2",  MFILE_EXBL2,       1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 10,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 212,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  86,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "ex_red3",  MFILE_EXRED3,      1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 292,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 114,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "ms_blb",   MFILE_BONEDEMON,  16, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 }, {  96,  96,  96,  96,  96,  96,  96,  96, 96, 96, 96, 96, 96, 96, 96, 96 }, {   8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8,  8 } },
-	{ "ex_ora1",  MFILE_EXORA1,      1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 13,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {  96,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { -12,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "ex_blu3",  MFILE_EXBL3,       1, 1, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  7,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 292,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, { 114,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
-	{ "",         MFILE_NONE,        0, 0, { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, {  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,   0,   0,   0,   0,   0,   0,   0,  0,  0,  0,  0,  0,  0,  0,  0 }, {   0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0 } },
+	// name,      animName,        animFAmt, flags,                animDelay[16], animLen[16],                           animWidth[16],          animWidth2[16]
+	{ "Arrows",   MFILE_ARROWS,     1,       MFLAG_LOCK_ANIMATION,    0,            16,                                     96,                     16               },
+	{ "Fireba",   MFILE_FIREBA,    16,       0,                       0,            14,                                     96,                     16               },
+	{ "Guard",    MFILE_GUARD,      3,       0,                       1,          { 15, 14,  3 },                           96,                     16               },
+	{ "Lghning",  MFILE_LGHNING,    1,       0,                       0,             8,                                     96,                     16               },
+	{ "Firewal",  MFILE_FIREWAL,    2,       0,                       0,          { 13, 11 },                              128,                     32               },
+	{ "MagBlos",  MFILE_MAGBLOS,    1,       0,                       1,            10,                                    128,                     32               },
+	{ "Portal",   MFILE_PORTAL,     2,       0,                    {  0, 1 },       16,                                     96,                     16               },
+	{ "Bluexfr",  MFILE_BLUEXFR,    1,       0,                       0,            19,                                    160,                     48               },
+	{ "Bluexbk",  MFILE_BLUEXBK,    1,       0,                       0,            19,                                    160,                     48               },
+	{ "Manashld", MFILE_MANASHLD,   1,       MFLAG_LOCK_ANIMATION,    0,             1,                                     96,                     16               },
+	{ "Blood",    MFILE_BLOOD,      4,       0,                       0,          { 15,  8,  8,  8 },                    {  96, 128, 128, 128 }, {  16, 32, 32, 32 } },
+	{ "Bone",     MFILE_BONE,       3,       0,                       2,             8,                                    128,                     32               },
+	{ "Metlhit",  MFILE_METLHIT,    3,       0,                       2,            10,                                     96,                     16               },
+	{ "Farrow",   MFILE_FARROW,    16,       0,                       0,             4,                                     96,                     16               },
+	{ "Doom",     MFILE_DOOM,       9,       MFLAG_HIDDEN,            1,            15,                                     96,                     16               },
+	{ " ",        MFILE_0F,         1,       MFLAG_HIDDEN,            0,             0,                                      0,                      0               },
+	{ "Blodbur",  MFILE_BLODBUR,    2,       0,                       2,             8,                                    128,                     32               },
+	{ "Newexp",   MFILE_NEWEXP,     1,       0,                       1,            15,                                     96,                     16               },
+	{ "Shatter1", MFILE_SHATTER1,   1,       0,                       1,            12,                                    128,                     32               },
+	{ "Bigexp",   MFILE_BIGEXP,     1,       0,                       0,            15,                                    160,                     48               },
+	{ "Inferno",  MFILE_INFERNO,    1,       0,                       0,            20,                                     96,                     16               },
+	{ "Thinlght", MFILE_THINLGHT,   1,       MFLAG_HIDDEN,            0,             8,                                     96,                     16               },
+	{ "Flare",    MFILE_FLARE,      1,       0,                       0,            16,                                    128,                     32               },
+	{ "Flareexp", MFILE_FLAREEXP,   1,       0,                       0,             7,                                    128,                     32               },
+	{ "Magball",  MFILE_MAGBALL,    8,       MFLAG_HIDDEN,            1,            16,                                    128,                     32               },
+	{ "Krull",    MFILE_KRULL,      1,       MFLAG_HIDDEN,            0,            14,                                     96,                     16               },
+	{ "Miniltng", MFILE_MINILTNG,   1,       0,                       1,             8,                                     64,                      0               },
+	{ "Holy",     MFILE_HOLY,      16,       0,                    {  1, 0 },       14,                                     96,                     16               },
+	{ "Holyexpl", MFILE_HOLYEXPL,   1,       0,                       0,             8,                                    160,                     48               },
+	{ "Larrow",   MFILE_LARROW,    16,       0,                       0,             4,                                     96,                     16               },
+	{ "Firarwex", MFILE_FIRARWEX,   1,       0,                       0,             6,                                     64,                      0               },
+	{ "Acidbf",   MFILE_ACIDBF,    16,       MFLAG_HIDDEN,            0,             8,                                     96,                     16               },
+	{ "Acidspla", MFILE_ACIDSPLA,   1,       MFLAG_HIDDEN,            0,             8,                                     96,                     16               },
+	{ "Acidpud",  MFILE_ACIDPUD,    2,       MFLAG_HIDDEN,            0,          {  9,  4 },                               96,                     16               },
+	{ "Ethrshld", MFILE_ETHRSHLD,   1,       0,                       0,             1,                                     96,                     16               },
+	{ "Firerun",  MFILE_FIRERUN,    8,       0,                       1,            12,                                     96,                     16               },
+	{ "Ressur1",  MFILE_RESSUR1,    1,       0,                       0,            16,                                     96,                     16               },
+	{ "Sklball",  MFILE_SKLBALL,    9,       0,                       1,          { 16, 16, 16, 16, 16, 16, 16, 16, 8 },    96,                     16               },
+	{ "Rportal",  MFILE_RPORTAL,    2,       0,                       0,            16,                                     96,                     16               },
+	{ "Fireplar", MFILE_FIREPLAR,   1,       MFLAG_HIDDEN,            1,            17,                                    160,                     48               },
+	{ "Scubmisb", MFILE_SCUBMISB,   1,       MFLAG_HIDDEN,            0,            16,                                     96,                     16               },
+	{ "Scbsexpb", MFILE_SCBSEXPB,   1,       MFLAG_HIDDEN,            0,             6,                                    128,                     32               },
+	{ "Scubmisc", MFILE_SCUBMISC,   1,       MFLAG_HIDDEN,            0,            16,                                     96,                     16               },
+	{ "Scbsexpc", MFILE_SCBSEXPC,   1,       MFLAG_HIDDEN,            0,             6,                                    128,                     32               },
+	{ "Scubmisd", MFILE_SCUBMISD,   1,       MFLAG_HIDDEN,            0,            16,                                     96,                     16               },
+	{ "Scbsexpd", MFILE_SCBSEXPD,   1,       MFLAG_HIDDEN,            0,             6,                                    128,                     32               },
+	{ "spawns",   MFILE_SPAWNS,     8,       MFLAG_HIDDEN,            0,             9,                                     96,                     16               },
+	{ "reflect",  MFILE_REFLECT,    1,       MFLAG_LOCK_ANIMATION,    0,             1,                                    160,                     64               },
+	{ "ms_ora",   MFILE_LICH,      16,       MFLAG_HIDDEN,            0,            15,                                     96,                      8               },
+	{ "ms_bla",   MFILE_MSBLA,     16,       MFLAG_HIDDEN,            0,            15,                                     96,                      8               },
+	{ "ms_reb",   MFILE_NECROMORB, 16,       MFLAG_HIDDEN,            0,            15,                                     96,                      8               },
+	{ "ms_yeb",   MFILE_ARCHLICH,  16,       MFLAG_HIDDEN,            0,            15,                                     96,                      8               },
+	{ "rglows1",  MFILE_RUNE,       1,       0,                       0,            10,                                     96,                      8               },
+	{ "ex_yel2",  MFILE_EXYEL2,     1,       MFLAG_HIDDEN,            0,            10,                                    220,                     78               },
+	{ "ex_blu2",  MFILE_EXBL2,      1,       MFLAG_HIDDEN,            0,            10,                                    212,                     86               },
+	{ "ex_red3",  MFILE_EXRED3,     1,       MFLAG_HIDDEN,            0,             7,                                    292,                    114               },
+	{ "ms_blb",   MFILE_BONEDEMON, 16,       MFLAG_HIDDEN,            0,            15,                                     96,                      8               },
+	{ "ex_ora1",  MFILE_EXORA1,     1,       MFLAG_HIDDEN,            0,            13,                                     96,                    -12               },
+	{ "ex_blu3",  MFILE_EXBL3,      1,       MFLAG_HIDDEN,            0,             7,                                    292,                    114               },
+	{ "",         MFILE_NONE,       0,       0                                                                                                                       },
 	// clang-format on
 };
+
+MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+			 std::array<uint8_t, 16> animDelay, std::array<uint8_t, 16> animLen,
+			 std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2)
+	: name(name)
+	, animName(animName)
+	, animFAmt(animFAmt)
+	, flags(flags)
+	, animDelay(animDelay)
+	, animLen(animLen)
+	, animWidth(animWidth)
+	, animWidth2(animWidth2)
+{
+	if (flags & MFLAG_ALLOW_SPECIAL)
+		pinnedMem.reserve(1);
+	else
+		pinnedMem.reserve(animFAmt);
+}
+
+namespace  {
+
+template <typename T>
+constexpr std::array<T, 16> duplicate(T value, unsigned count)
+{
+	std::array<T, 16> ret = {};
+	for (unsigned i = 0; i < count; i++)
+		ret[i] = value;
+	return ret;
+}
+
+} //namespace
+
+MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+			 uint8_t animDelay, uint8_t animLen,
+			 int16_t animWidth, int16_t animWidth2)
+	: MisFileData(name, animName, animFAmt, flags,
+		      duplicate<uint8_t>(animDelay, animFAmt), duplicate<uint8_t>(animLen, animFAmt),
+		      duplicate<int16_t>(animWidth, animFAmt), duplicate<int16_t>(animWidth2, animFAmt))
+{
+}
+
+MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+			 uint8_t animDelay, std::array<uint8_t, 16> animLen,
+			 int16_t animWidth, int16_t animWidth2)
+	: MisFileData(name, animName, animFAmt, flags,
+		      duplicate<uint8_t>(animDelay, animFAmt), animLen,
+		      duplicate<int16_t>(animWidth, animFAmt), duplicate<int16_t>(animWidth2, animFAmt))
+{
+}
+
+MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+			 std::array<uint8_t, 16> animDelay, uint8_t animLen,
+			 int16_t animWidth, int16_t animWidth2)
+	: MisFileData(name, animName, animFAmt, flags,
+		      animDelay, duplicate<uint8_t>(animLen, animFAmt),
+		      duplicate<int16_t>(animWidth, animFAmt), duplicate<int16_t>(animWidth2, animFAmt))
+{
+}
+
+MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+			 uint8_t animDelay, std::array<uint8_t, 16> animLen,
+			 std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2)
+	: MisFileData(name, animName, animFAmt, flags,
+		      duplicate<uint8_t>(animDelay, animFAmt), animLen,
+		      animWidth, animWidth2)
+{
+}
+
+void MisFileData::LoadGFX()
+{
+	if (animData[0] != nullptr)
+		return;
+
+	char pszName[256];
+	if ((flags & MFLAG_ALLOW_SPECIAL) != 0) {
+		sprintf(pszName, "Missiles\\%s.CL2", name);
+		auto file = LoadFileInMem(pszName);
+		for (int i = 0; i < animFAmt; i++)
+			animData[i] = CelGetFrame(file.get(), i);
+		pinnedMem.push_back(std::move(file));
+	} else if (animFAmt == 1) {
+		sprintf(pszName, "Missiles\\%s.CL2", name);
+		auto file = LoadFileInMem(pszName);
+		animData[0] = file.get();
+		pinnedMem.push_back(std::move(file));
+	} else {
+		for (unsigned i = 0; i < animFAmt; i++) {
+			sprintf(pszName, "Missiles\\%s%u.CL2", name, i + 1);
+			auto file = LoadFileInMem(pszName);
+			animData[i] = file.get();
+			pinnedMem.push_back(std::move(file));
+		}
+	}
+}
 
 } // namespace devilution

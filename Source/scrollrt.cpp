@@ -417,10 +417,10 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
  */
 void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missileGraphicId, int x, int y, bool lighting)
 {
-	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].mAnimWidth2[0];
+	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2[0];
 
-	int width = MissileSpriteData[missileGraphicId].mAnimWidth[0];
-	byte *pCelBuff = MissileSpriteData[missileGraphicId].mAnimData[0];
+	int width = MissileSpriteData[missileGraphicId].animWidth[0];
+	byte *pCelBuff = MissileSpriteData[missileGraphicId].animData[0];
 
 	CelSprite cel { pCelBuff, width };
 
