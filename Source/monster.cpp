@@ -3211,6 +3211,9 @@ void CounselorAi(int i)
 				monster._mgoal = MGOAL_NORMAL;
 				StartFadein(monster, md, true);
 			}
+		} else {
+			monster._mgoal = MGOAL_NORMAL;
+			StartFadein(monster, md, true);
 		}
 	} else if (monster._mgoal == MGOAL_NORMAL) {
 		if (abs(mx) >= 2 || abs(my) >= 2) {
