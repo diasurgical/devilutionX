@@ -488,7 +488,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
 					int dir = Missiles[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].mAnimFAmt;
+					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
 					else if (dir > mAnimFAmt)
@@ -523,7 +523,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
 					int dir = Missiles[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].mAnimFAmt;
+					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
 					else if (dir > mAnimFAmt)
@@ -572,7 +572,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
 					int dir = Missiles[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].mAnimFAmt;
+					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
 					else if (dir > mAnimFAmt)
@@ -614,34 +614,14 @@ void SetMissAnim(int mi, int animtype)
 	}
 
 	Missiles[mi]._miAnimType = animtype;
-	Missiles[mi]._miAnimFlags = MissileSpriteData[animtype].mFlags;
-	Missiles[mi]._miAnimData = MissileSpriteData[animtype].mAnimData[dir];
-	Missiles[mi]._miAnimDelay = MissileSpriteData[animtype].mAnimDelay[dir];
-	Missiles[mi]._miAnimLen = MissileSpriteData[animtype].mAnimLen[dir];
-	Missiles[mi]._miAnimWidth = MissileSpriteData[animtype].mAnimWidth[dir];
-	Missiles[mi]._miAnimWidth2 = MissileSpriteData[animtype].mAnimWidth2[dir];
+	Missiles[mi]._miAnimFlags = MissileSpriteData[animtype].flags;
+	Missiles[mi]._miAnimData = MissileSpriteData[animtype].animData[dir];
+	Missiles[mi]._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
+	Missiles[mi]._miAnimLen = MissileSpriteData[animtype].animLen[dir];
+	Missiles[mi]._miAnimWidth = MissileSpriteData[animtype].animWidth[dir];
+	Missiles[mi]._miAnimWidth2 = MissileSpriteData[animtype].animWidth2[dir];
 	Missiles[mi]._miAnimCnt = 0;
 	Missiles[mi]._miAnimFrame = 1;
-}
-
-void FreeMissileGFX(int mi)
-{
-	if ((MissileSpriteData[mi].mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
-		if (MissileSpriteData[mi].mAnimData[0] != nullptr) {
-			auto *p = (DWORD *)MissileSpriteData[mi].mAnimData[0];
-			p -= MissileSpriteData[mi].mAnimFAmt;
-			delete[] p;
-			MissileSpriteData[mi].mAnimData[0] = nullptr;
-		}
-		return;
-	}
-
-	for (int i = 0; i < MissileSpriteData[mi].mAnimFAmt; i++) {
-		if (MissileSpriteData[mi].mAnimData[i] != nullptr) {
-			delete[] MissileSpriteData[mi].mAnimData[i];
-			MissileSpriteData[mi].mAnimData[i] = nullptr;
-		}
-	}
 }
 
 bool MissilesFoundTarget(int mi, Point *position, int rad)
@@ -1229,50 +1209,32 @@ void SetMissDir(int mi, int dir)
 
 void LoadMissileGFX(BYTE mi)
 {
-	MisFileData *mfd = &MissileSpriteData[mi];
-	if (mfd->mAnimData[0] != nullptr)
-		return;
-
-	char pszName[256];
-	if ((mfd->mFlags & MFLAG_ALLOW_SPECIAL) != 0) {
-		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
-		byte *file = LoadFileInMem(pszName).release();
-		for (int i = 0; i < mfd->mAnimFAmt; i++)
-			mfd->mAnimData[i] = CelGetFrame(file, i);
-	} else if (mfd->mAnimFAmt == 1) {
-		sprintf(pszName, "Missiles\\%s.CL2", mfd->mName);
-		mfd->mAnimData[0] = LoadFileInMem(pszName).release();
-	} else {
-		for (unsigned i = 0; i < mfd->mAnimFAmt; i++) {
-			sprintf(pszName, "Missiles\\%s%u.CL2", mfd->mName, i + 1);
-			mfd->mAnimData[i] = LoadFileInMem(pszName).release();
-		}
-	}
+	MissileSpriteData[mi].LoadGFX();
 }
 
 void InitMissileGFX()
 {
-	for (int mi = 0; MissileSpriteData[mi].mAnimFAmt != 0; mi++) {
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
 		if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
 			break;
-		if ((MissileSpriteData[mi].mFlags & MFLAG_HIDDEN) == 0)
+		if ((MissileSpriteData[mi].flags & MFLAG_HIDDEN) == 0)
 			LoadMissileGFX(mi);
 	}
 }
 
 void FreeMissiles()
 {
-	for (int mi = 0; MissileSpriteData[mi].mAnimFAmt != 0; mi++) {
-		if ((MissileSpriteData[mi].mFlags & MFLAG_HIDDEN) == 0)
-			FreeMissileGFX(mi);
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
+		if ((MissileSpriteData[mi].flags & MFLAG_HIDDEN) == 0)
+			MissileSpriteData[mi].FreeGFX();
 	}
 }
 
 void FreeMissiles2()
 {
-	for (int mi = 0; MissileSpriteData[mi].mAnimFAmt != 0; mi++) {
-		if ((MissileSpriteData[mi].mFlags & MFLAG_HIDDEN) != 0)
-			FreeMissileGFX(mi);
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
+		if ((MissileSpriteData[mi].flags & MFLAG_HIDDEN) != 0)
+			MissileSpriteData[mi].FreeGFX();
 	}
 }
 
@@ -2500,7 +2462,7 @@ void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 			SetMissAnim(mi, MFILE_SCUBMISC);
 	}
 
-	if (MissileSpriteData[Missiles[mi]._miAnimType].mAnimFAmt == 16) {
+	if (MissileSpriteData[Missiles[mi]._miAnimType].animFAmt == 16) {
 		SetMissDir(mi, GetDirection16(src, dst));
 	}
 }
@@ -2986,7 +2948,7 @@ void AddResurrectBeam(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*
 	Missiles[mi].position.tile = dst;
 	Missiles[mi].position.start = Missiles[mi].position.tile;
 	Missiles[mi].position.velocity = { 0, 0 };
-	Missiles[mi]._mirange = MissileSpriteData[MFILE_RESSUR1].mAnimLen[0];
+	Missiles[mi]._mirange = MissileSpriteData[MFILE_RESSUR1].animLen[0];
 }
 
 void AddTelekinesis(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
@@ -3078,7 +3040,7 @@ int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int
 	Missiles[mi]._mispllvl = spllvl;
 	Missiles[mi]._mimfnum = midir;
 
-	if (Missiles[mi]._miAnimType == MFILE_NONE || MissileSpriteData[Missiles[mi]._miAnimType].mAnimFAmt < 8)
+	if (Missiles[mi]._miAnimType == MFILE_NONE || MissileSpriteData[Missiles[mi]._miAnimType].animFAmt < 8)
 		SetMissDir(mi, 0);
 	else
 		SetMissDir(mi, midir);
@@ -4805,7 +4767,7 @@ void missiles_process_charge()
 		int mi = ActiveMissiles[i];
 		MissileStruct *mis = &Missiles[mi];
 
-		mis->_miAnimData = MissileSpriteData[mis->_miAnimType].mAnimData[mis->_mimfnum];
+		mis->_miAnimData = MissileSpriteData[mis->_miAnimType].animData[mis->_mimfnum];
 		if (mis->_mitype != MIS_RHINO)
 			continue;
 
