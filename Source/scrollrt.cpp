@@ -1359,14 +1359,6 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	Displacement offset = MovingOffset[dir];
 	offset *= fAnimationProgress;
 
-	// In diagonal walks the offset for y is smaller than x.
-	// This means that sometimes x is updated but y not.
-	// That results in a small stuttering.
-	// To fix this we disallow odd x as this is the only case where y is not updated.
-	if (IsDiagionalWalk[dir] && ((offset.deltaX % 2) != 0)) {
-		offset.deltaX -= offset.deltaX > 0 ? 1 : -1;
-	}
-
 	if (cameraMode) {
 		offset = -offset;
 	} else {
