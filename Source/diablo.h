@@ -45,8 +45,10 @@ enum class GameLogicStep {
 
 enum class MouseActionType : int {
 	None,
+	Walk,
 	Spell,
-	SpellOutOfMana,
+	SpellMonsterTarget,
+	SpellPlayerTarget,
 	Attack,
 	AttackMonsterTarget,
 	AttackPlayerTarget,
