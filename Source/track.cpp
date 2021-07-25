@@ -15,28 +15,41 @@ namespace devilution {
 
 namespace {
 
-bool sgbIsScrolling;
-uint32_t sgdwLastWalk;
-bool sgbIsWalking;
+void RepeatWalk(PlayerStruct &player)
+{
+	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
+		return;
 
-bool RepeatMouseAction()
+	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
+		return;
+
+	const Point target = player.GetTargetPosition();
+	if (cursmx == target.x && cursmy == target.y)
+		return;
+
+	NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
+}
+
+} // namespace
+
+void RepeatMouseAction()
 {
 	if (pcurs != CURSOR_HAND)
-		return false;
+		return;
 
 	if (sgbMouseDown == CLICK_NONE)
-		return false;
+		return;
+
+	if (LastMouseButtonAction == MouseActionType::None)
+		return;
 
 	auto &myPlayer = Players[MyPlayerId];
-	if (myPlayer._pmode == PM_DEATH
-	    || myPlayer._pmode == PM_QUIT
-	    || myPlayer.destAction != ACTION_NONE
-	    || SDL_GetTicks() - LastMouseButtonTime < gnTickDelay * 4) {
-		return true;
-	}
+	if (myPlayer.destAction != ACTION_NONE)
+		return;
+	if (!myPlayer.CanChangeAction())
+		return;
 
 	bool rangedAttack = myPlayer.UsesRangedWeapon();
-	LastMouseButtonTime = SDL_GetTicks();
 	switch (LastMouseButtonAction) {
 	case MouseActionType::Attack:
 		if (cursmx >= 0 && cursmx < MAXDUNX && cursmy >= 0 && cursmy < MAXDUNY)
@@ -51,8 +64,15 @@ bool RepeatMouseAction()
 			NetSendCmdParam1(true, rangedAttack ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 		break;
 	case MouseActionType::Spell:
-	case MouseActionType::SpellOutOfMana:
-		CheckPlrSpell(true);
+		CheckPlrSpell();
+		break;
+	case MouseActionType::SpellMonsterTarget:
+		if (pcursmonst != -1)
+			CheckPlrSpell();
+		break;
+	case MouseActionType::SpellPlayerTarget:
+		if (pcursplr != -1 && !gbFriendlyMode)
+			CheckPlrSpell();
 		break;
 	case MouseActionType::OperateObject:
 		if (pcursobj != -1) {
@@ -62,65 +82,17 @@ bool RepeatMouseAction()
 			NetSendCmdLocParam1(true, CMD_OPOBJXY, object.position, pcursobj);
 		}
 		break;
-	case MouseActionType::Other:
+	case MouseActionType::Walk:
+		RepeatWalk(myPlayer);
+		break;
 	case MouseActionType::None:
-		return false;
-	}
-
-	return true;
-}
-
-} // namespace
-
-void track_process()
-{
-	if (RepeatMouseAction())
-		return;
-
-	if (!sgbIsWalking)
-		return;
-
-	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
-		return;
-
-	const auto &player = Players[MyPlayerId];
-
-	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
-		return;
-
-	const Point target = player.GetTargetPosition();
-	if (cursmx != target.x || cursmy != target.y) {
-		uint32_t tick = SDL_GetTicks();
-		int tickMultiplier = 6;
-		if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
-			tickMultiplier = 3;
-		if ((int)(tick - sgdwLastWalk) >= gnTickDelay * tickMultiplier) {
-			sgdwLastWalk = tick;
-			NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
-			if (!sgbIsScrolling)
-				sgbIsScrolling = true;
-		}
-	}
-}
-
-void track_repeat_walk(bool rep)
-{
-	if (sgbIsWalking == rep)
-		return;
-
-	sgbIsWalking = rep;
-	if (rep) {
-		sgbIsScrolling = false;
-		sgdwLastWalk = SDL_GetTicks() - gnTickDelay;
-		NetSendCmdLoc(MyPlayerId, true, CMD_WALKXY, { cursmx, cursmy });
-	} else if (sgbIsScrolling) {
-		sgbIsScrolling = false;
+		break;
 	}
 }
 
 bool track_isscrolling()
 {
-	return sgbIsScrolling;
+	return LastMouseButtonAction == MouseActionType::Walk;
 }
 
 } // namespace devilution

@@ -433,7 +433,22 @@ struct PlayerStruct {
 	bool UsesRangedWeapon() const
 	{
 		return static_cast<PlayerWeaponGraphic>(_pgfxnum & 0xF) == PlayerWeaponGraphic::Bow;
-	};
+	}
+
+	bool CanChangeAction()
+	{
+		if (_pmode == PM_STAND)
+			return true;
+		if (_pmode == PM_ATTACK && AnimInfo.CurrentFrame > _pAFNum)
+			return true;
+		if (_pmode == PM_RATTACK && AnimInfo.CurrentFrame > _pAFNum)
+			return true;
+		if (_pmode == PM_SPELL && AnimInfo.CurrentFrame > _pSFNum)
+			return true;
+		if (IsWalking() && AnimInfo.CurrentFrame == AnimInfo.NumberOfFrames)
+			return true;
+		return false;
+	}
 };
 
 extern int MyPlayerId;
@@ -488,7 +503,7 @@ void ClrPlrPath(PlayerStruct &player);
 bool PosOkPlayer(const PlayerStruct &player, Point position);
 void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace);
 void CalcPlrStaff(PlayerStruct &player);
-void CheckPlrSpell(bool mouseClick);
+void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);

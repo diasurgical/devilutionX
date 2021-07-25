@@ -373,8 +373,8 @@ void CheckCursMove()
 		my = MAXDUNY - 1;
 	}
 
-	// While holding down left click we should retain target (but potentially lose it if it dies, goes out of view, etc)
-	if (sgbMouseDown == CLICK_LEFT && pcursinvitem == -1) {
+	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
+	if (sgbMouseDown != CLICK_NONE && pcursinvitem == -1) {
 		if (pcursmonst != -1) {
 			if (Monsters[pcursmonst]._mDelFlag || Monsters[pcursmonst]._mhitpoints >> 6 <= 0
 			    || ((dFlags[Monsters[pcursmonst].position.tile.x][Monsters[pcursmonst].position.tile.y] & BFLAG_VISIBLE) == 0))

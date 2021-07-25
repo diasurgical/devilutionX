@@ -1059,19 +1059,6 @@ bool IsPathBlocked(Point position, Direction dir)
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
 
-bool CanChangeDirection(const PlayerStruct &player)
-{
-	if (player._pmode == PM_STAND)
-		return true;
-	if (player._pmode == PM_ATTACK && player.AnimInfo.CurrentFrame > player._pAFNum)
-		return true;
-	if (player._pmode == PM_RATTACK && player.AnimInfo.CurrentFrame > player._pAFNum)
-		return true;
-	if (player._pmode == PM_SPELL && player.AnimInfo.CurrentFrame > player._pSFNum)
-		return true;
-	return false;
-}
-
 void WalkInDir(int playerId, AxisDirection dir)
 {
 	auto &player = Players[playerId];
@@ -1085,7 +1072,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	const Direction pdir = FaceDir[static_cast<std::size_t>(dir.x)][static_cast<std::size_t>(dir.y)];
 	const auto delta = player.position.future + pdir;
 
-	if (CanChangeDirection(player))
+	if (!player.IsWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
@@ -1481,7 +1468,7 @@ void PerformSpellAction()
 	}
 
 	UpdateSpellTarget();
-	CheckPlrSpell(false);
+	CheckPlrSpell();
 }
 
 void CtrlUseInvItem()

@@ -1474,7 +1474,7 @@ void UpdateCircle(int i)
 		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 			Quests[Q_BETRAYER]._qvar1 = 4;
 		AddMissile(myPlayer.position.tile, { 35, 46 }, myPlayer._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, MyPlayerId, 0, 0);
-		track_repeat_walk(false);
+		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
 		StartStand(MyPlayerId, DIR_S);

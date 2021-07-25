@@ -7,8 +7,7 @@
 
 namespace devilution {
 
-void track_process();
-void track_repeat_walk(bool rep);
+void RepeatMouseAction();
 bool track_isscrolling();
 
 } // namespace devilution
