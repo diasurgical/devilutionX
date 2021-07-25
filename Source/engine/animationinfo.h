@@ -87,9 +87,9 @@ public:
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
 	 * @param celSprite Pointer to Animation Sprite
 	 * @param numberOfFrames Number of Frames in Animation
-	 * @param delayLen Delay after each Animation sequence
+	 * @param ticksPerFrame How many game ticks are needed to advance one Animation Frame
 	 */
-	void ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int delayLen);
+	void ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame);
 
 	/**
 	 * @brief Process the Animation for a game tick (for example advances the frame)
