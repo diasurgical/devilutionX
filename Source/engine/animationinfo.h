@@ -111,7 +111,7 @@ private:
 	/**
 	 * @brief Number of game ticks after the current animation sequence started
 	 */
-	int TicksSinceSequenceStarted;
+	float TicksSinceSequenceStarted;
 	/**
 	 * @brief Animation Frames that will be adjusted for the skipped Frames/game ticks
 	 */
