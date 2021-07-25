@@ -490,6 +490,18 @@ void StartRangeAttack(int pnum, Direction d, int cx, int cy)
 	player.position.temp = { cx, cy };
 }
 
+player_graphic GetPlayerGraphicForSpell(spell_id spellId)
+{
+	switch (spelldata[spellId].sType) {
+	case STYPE_FIRE:
+		return player_graphic::Fire;
+	case STYPE_LIGHTNING:
+		return player_graphic::Lightning;
+	default:
+		return player_graphic::Magic;
+	}
+}
+
 void StartSpell(int pnum, Direction d, int cx, int cy)
 {
 	if ((DWORD)pnum >= MAX_PLRS)
@@ -505,18 +517,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		auto animationFlags = AnimationDistributionFlags::ProcessAnimationPending;
 		if (player._pmode == PM_SPELL)
 			animationFlags = static_cast<AnimationDistributionFlags>(animationFlags | AnimationDistributionFlags::RepeatedAction);
-
-		switch (spelldata[player._pSpell].sType) {
-		case STYPE_FIRE:
-			NewPlrAnim(player, player_graphic::Fire, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-			break;
-		case STYPE_LIGHTNING:
-			NewPlrAnim(player, player_graphic::Lightning, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-			break;
-		case STYPE_MAGIC:
-			NewPlrAnim(player, player_graphic::Magic, d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
-			break;
-		}
+		NewPlrAnim(player, GetPlayerGraphicForSpell(player._pSpell), d, player._pSFrames, 1, animationFlags, 0, player._pSFNum);
 	} else {
 		// Start new stand animation so that currentframe is reset
 		d = player._pdir;
