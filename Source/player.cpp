@@ -2129,6 +2129,10 @@ void Player::RestorePartialMana()
 
 void LoadPlrGFX(Player &player, player_graphic graphic)
 {
+	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
+	if (animationData.RawData != nullptr)
+		return;
+
 	char prefix[16];
 	char pszName[256];
 	const char *szCel;
@@ -2224,12 +2228,13 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	}
 
 	sprintf(pszName, R"(PlrGFX\%s\%s\%s%s.CL2)", cs, prefix, prefix, szCel);
-	auto &animationData = player.AnimationData[static_cast<size_t>(graphic)];
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
 void InitPlayerGFX(Player &player)
 {
+	ResetPlayerGFX(player);
+
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
 		LoadPlrGFX(player, player_graphic::Death);
@@ -2256,8 +2261,7 @@ void ResetPlayerGFX(Player &player)
 
 void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
-	if (player.AnimationData[static_cast<size_t>(graphic)].RawData == nullptr)
-		LoadPlrGFX(player, graphic);
+	LoadPlrGFX(player, graphic);
 
 	auto &celSprite = player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
 
