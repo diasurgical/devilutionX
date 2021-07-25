@@ -7,6 +7,7 @@
 #include "animationinfo.h"
 #include "appfat.h"
 #include "nthread.h"
+#include "utils/stdcompat/algorithm.hpp"
 #include "utils/log.hpp"
 
 namespace devilution {
@@ -161,20 +162,19 @@ void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFram
 	}
 }
 
-void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int delayLen)
+void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame)
 {
-	if (numberOfFrames != NumberOfFrames || delayLen != TicksPerFrame) {
+	if (numberOfFrames != NumberOfFrames || ticksPerFrame != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
-		if (CurrentFrame > numberOfFrames)
-			CurrentFrame = numberOfFrames;
+		CurrentFrame = clamp(CurrentFrame, 1, numberOfFrames);
 		NumberOfFrames = numberOfFrames;
-		TicksPerFrame = delayLen;
+		TicksPerFrame = ticksPerFrame;
 		TicksSinceSequenceStarted = 0;
 		RelevantFramesForDistributing = 0;
 		TickModifier = 0.0F;
 	}
 	this->pCelSprite = celSprite;
-	TicksPerFrame = delayLen;
+	TicksPerFrame = ticksPerFrame;
 }
 
 void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool dontProgressAnimation /*= false*/)
