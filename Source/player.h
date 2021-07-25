@@ -221,6 +221,10 @@ struct Player {
 	 * @brief Contains a optional preview CelSprite that is displayed until the current command is handled by the game logic
 	 */
 	CelSprite *pPreviewCelSprite;
+	/**
+	 * @brief Contains the progress to next game tick when pPreviewCelSprite was set
+	 */
+	float progressToNextGameTickWhenPreviewWasSet;
 	int _plid;
 	int _pvid;
 	spell_id _pSpell;
