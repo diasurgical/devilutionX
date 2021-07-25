@@ -75,7 +75,7 @@ float AnimationInfo::GetAnimationProgress() const
 	return animationFraction;
 }
 
-void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/, float previewShownGameTickFragments /*= 0.F*/)
 {
 	if ((flags & AnimationDistributionFlags::RepeatedAction) == AnimationDistributionFlags::RepeatedAction && distributeFramesBeforeFrame != 0 && NumberOfFrames == numberOfFrames && CurrentFrame >= distributeFramesBeforeFrame && CurrentFrame != NumberOfFrames) {
 		// We showed the same Animation (for example a melee attack) before but truncated the Animation.
@@ -128,6 +128,11 @@ void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFram
 			// This also means Rendering should never hapen with TicksSinceSequenceStarted < 0.
 			TicksSinceSequenceStarted = -1.F;
 		}
+
+		// The preview animation was shown some times (less then one game tick)
+		// So we overall have a longer time the animation is shown
+		TicksSinceSequenceStarted += previewShownGameTickFragments;
+		relevantAnimationTicksWithSkipping += previewShownGameTickFragments;
 
 		if ((flags & AnimationDistributionFlags::SkipsDelayOfLastFrame) == AnimationDistributionFlags::SkipsDelayOfLastFrame) {
 			// The logic for player/monster/... (not ProcessAnimation) only checks the frame not the delay.

@@ -23,6 +23,7 @@
 #include "loadsave.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "nthread.h"
 #include "options.h"
 #include "player.h"
 #include "qol/autopickup.h"
@@ -2263,6 +2264,7 @@ void Player::UpdatePreviewCelSprite(_cmd_id cmdId, Point point, uint16_t wParam1
 	auto &celSprites = AnimationData[static_cast<size_t>(*graphic)].CelSpritesForDirections[static_cast<size_t>(dir)];
 	if (celSprites && pPreviewCelSprite != &*celSprites) {
 		pPreviewCelSprite = &*celSprites;
+		progressToNextGameTickWhenPreviewWasSet = gfProgressToNextGameTick;
 	}
 }
 
@@ -2406,7 +2408,10 @@ void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numbe
 
 	CelSprite *pCelSprite = celSprite ? &*celSprite : nullptr;
 
-	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
+	float previewShownGameTickFragments = 0.F;
+	if (pCelSprite == player.pPreviewCelSprite)
+		previewShownGameTickFragments = clamp(1.F - player.progressToNextGameTickWhenPreviewWasSet, 0.F, 1.F);
+	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame, previewShownGameTickFragments);
 }
 
 void SetPlrAnims(Player &player)

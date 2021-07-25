@@ -80,8 +80,9 @@ public:
 	 * @param flags Specifies what special logics are applied to this Animation
 	 * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
 	 * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
+	 * @param previewShownGameTickFragments Defines how long (in game ticks fraction) the preview animation was shown
 	 */
-	void SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+	void SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0, float previewShownGameTickFragments = 0.F);
 
 	/**
 	 * @brief Changes the Animation Data on-the-fly. This is needed if a animation is currently in progress and the player changes his gear.
