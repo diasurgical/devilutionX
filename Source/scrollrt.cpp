@@ -519,6 +519,8 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
+	targetBufferPosition -= { CalculateWidth2(pCelSprite == nullptr ? 96 : pCelSprite->Width()), 0 };
+
 	int frames = SDL_SwapLE32(*reinterpret_cast<const DWORD *>(pCelSprite->Data()));
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
@@ -806,8 +808,7 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
 		offset = GetOffsetForWalking(player.AnimInfo, player._pdir);
 	}
 
-	const Displacement center { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()), 0 };
-	const Point playerRenderPosition { targetBufferPosition + offset - center };
+	const Point playerRenderPosition { targetBufferPosition + offset };
 
 	DrawPlayer(out, p, tilePosition, playerRenderPosition);
 }
