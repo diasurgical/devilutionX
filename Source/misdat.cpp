@@ -223,6 +223,9 @@ void MisFileData::LoadGFX()
 	if (animData[0] != nullptr)
 		return;
 
+	if ((flags & MFLAG_HIDDEN) != 0)
+		return;
+
 	char pszName[256];
 	if ((flags & MFLAG_ALLOW_SPECIAL) != 0) {
 		sprintf(pszName, "Missiles\\%s.CL2", name);

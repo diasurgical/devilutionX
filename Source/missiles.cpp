@@ -1217,25 +1217,20 @@ void InitMissileGFX()
 	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
 		if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
 			break;
-		if ((MissileSpriteData[mi].flags & MFLAG_HIDDEN) == 0)
-			LoadMissileGFX(mi);
+		LoadMissileGFX(mi);
 	}
 }
 
 void FreeMissiles()
 {
-	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
-		if ((MissileSpriteData[mi].flags & MFLAG_HIDDEN) == 0)
-			MissileSpriteData[mi].FreeGFX();
-	}
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++)
+		MissileSpriteData[mi].FreeGFX();
 }
 
 void FreeMissiles2()
 {
-	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
-		if ((MissileSpriteData[mi].flags & MFLAG_HIDDEN) != 0)
-			MissileSpriteData[mi].FreeGFX();
-	}
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++)
+		MissileSpriteData[mi].FreeGFX();
 }
 
 void InitMissiles()
