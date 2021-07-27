@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class DevilutionXSDLActivity extends SDLActivity {
-	private final String SharewareTitle = "Shareware version";
 	private SharedPreferences mPrefs;
 	final private String shouldShowInstallationGuidePref = "shouldShowInstallationGuide";
 	private String externalDir;
@@ -63,7 +62,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 				+ externalDir.split("/Android")[1]
 				+ ".\n\nIf you don't have the original game then you can buy Diablo from GOG.com.";
 		new AlertDialog.Builder(this)
-				.setTitle(SharewareTitle)
+				.setTitle("Shareware version")
 				.setPositiveButton("OK", null)
 				.setMessage(message)
 				.show();
@@ -90,6 +89,10 @@ public class DevilutionXSDLActivity extends SDLActivity {
 			}
 		} catch (IOException exception) {
 			Log.e("copyFile", exception.getMessage());
+			if (dst.exists()) {
+				//noinspection ResultOfMethodCallIgnored
+				dst.delete();
+			}
 			return false;
 		}
 
