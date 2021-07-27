@@ -12,12 +12,11 @@
 
 #include "control.h"
 #include "utils/log.hpp"
+#include "options.h"
 
 namespace devilution {
 
-Keymapper::Keymapper(SetConfigKeyFunction setKeyFunction, GetConfigKeyFunction getKeyFunction)
-    : setKeyFunction(std::move(setKeyFunction))
-    , getKeyFunction(std::move(getKeyFunction))
+Keymapper::Keymapper()
 {
 	// Insert all supported keys: a-z, 0-9 and F1-F12.
 	keyIDToKeyName.reserve(('Z' - 'A' + 1) + ('9' - '0' + 1) + 12);
@@ -75,7 +74,7 @@ void Keymapper::Save() const
 	for (const auto &action : actions) {
 		if (action.key == DVL_VK_INVALID) {
 			// Just add an empty config entry if the action is unbound.
-			setKeyFunction(action.name, "");
+			SetIniValue("Keymapping", action.name.c_str(), "");
 			continue;
 		}
 
@@ -84,7 +83,7 @@ void Keymapper::Save() const
 			Log("Keymapper: no name found for key '{}'", action.key);
 			continue;
 		}
-		setKeyFunction(action.name, keyNameIt->second);
+		SetIniValue("Keymapping", action.name.c_str(), keyNameIt->second.c_str());
 	}
 }
 
@@ -107,7 +106,11 @@ void Keymapper::Load()
 
 int Keymapper::GetActionKey(const Keymapper::Action &action)
 {
-	auto key = getKeyFunction(action.name);
+	std::array<char, 64> result;
+	if (!GetIniValue("Keymapping", action.name.c_str(), result.data(), result.size()))
+		return {};
+
+	std::string key = result.data();
 	if (key.empty())
 		return action.defaultKey; // Return the default key if no key has been set.
 
