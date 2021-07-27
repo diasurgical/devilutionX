@@ -72,23 +72,28 @@ public class DevilutionXSDLActivity extends SDLActivity {
 
 	private boolean copyFile(File src, File dst) {
 		try {
-			try (InputStream in = new FileInputStream(src)) {
-				try (OutputStream out = new FileOutputStream(dst)) {
+			InputStream in = new FileInputStream(src);
+			try {
+				OutputStream out = new FileOutputStream(dst);
+				try {
 					// Transfer bytes from in to out
 					byte[] buf = new byte[1024];
 					int len;
 					while ((len = in.read(buf)) > 0) {
 						out.write(buf, 0, len);
 					}
-
-					return true;
+				} finally {
+					out.close();
 				}
+			} finally {
+				in.close();
 			}
 		} catch (IOException exception) {
 			Log.e("copyFile", exception.getMessage());
+			return false;
 		}
 
-		return false;
+		return  true;
 	}
 
 	private void migrateFile(File file) {
