@@ -123,7 +123,7 @@ typedef struct MissileData {
 	MissileMovementDistrubution MovementDistribution;
 } MissileDataStruct;
 
-struct MisFileData {
+struct MissileFileData {
 	const char *name;
 	uint8_t animName;
 	uint8_t animFAmt;
@@ -134,17 +134,17 @@ struct MisFileData {
 	AutofillArray<int16_t, 16> animWidth = {};
 	AutofillArray<int16_t, 16> animWidth2 = {};
 
-	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags)
-		: name(name)
-		, animName(animName)
-		, animFAmt(animFAmt)
-		, flags(flags)
+	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags)
+	    : name(name)
+	    , animName(animName)
+	    , animFAmt(animFAmt)
+	    , flags(flags)
 	{
 	}
 
-	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-		    AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
-		    AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
+	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+			AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
+			AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
 
 	void LoadGFX();
 
@@ -155,6 +155,6 @@ struct MisFileData {
 };
 
 extern MissileDataStruct MissileData[];
-extern MisFileData MissileSpriteData[];
+extern MissileFileData MissileSpriteData[];
 
 } // namespace devilution

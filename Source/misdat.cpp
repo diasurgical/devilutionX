@@ -127,7 +127,7 @@ MissileDataStruct MissileData[] = {
 };
 
 /** Data related to each missile graphic ID. */
-MisFileData MissileSpriteData[] = {
+MissileFileData MissileSpriteData[] = {
 	// clang-format off
 	// name,      animName,        animFAmt, flags,                animDelay[16], animLen[16],                           animWidth[16],          animWidth2[16]
 	{ "Arrows",   MFILE_ARROWS,     1,       MFLAG_LOCK_ANIMATION,    0,            16,                                     96,                     16               },
@@ -193,21 +193,21 @@ MisFileData MissileSpriteData[] = {
 	// clang-format on
 };
 
-MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-			 AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
-			 AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2)
-	: name(name)
-	, animName(animName)
-	, animFAmt(animFAmt)
-	, flags(flags)
-	, animDelay(animDelay)
-	, animLen(animLen)
-	, animWidth(animWidth)
-	, animWidth2(animWidth2)
+MissileFileData::MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+				 AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
+				 AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2)
+    : name(name)
+    , animName(animName)
+    , animFAmt(animFAmt)
+    , flags(flags)
+    , animDelay(animDelay)
+    , animLen(animLen)
+    , animWidth(animWidth)
+    , animWidth2(animWidth2)
 {
 }
 
-void MisFileData::LoadGFX()
+void MissileFileData::LoadGFX()
 {
 	if (animData[0] != nullptr)
 		return;
