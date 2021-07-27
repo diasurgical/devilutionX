@@ -92,18 +92,7 @@ bool gbQuietMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
-Keymapper keymapper {
-	// Workaround: remove once the INI library has been replaced.
-	[](const std::string &key, const std::string &value) {
-	    SetIniValue("Keymapping", key.c_str(), value.c_str());
-	},
-	[](const std::string &key) -> std::string {
-	    std::array<char, 64> result;
-	    if (!GetIniValue("Keymapping", key.c_str(), result.data(), result.size()))
-		    return {};
-	    return { result.data() };
-	}
-};
+Keymapper keymapper;
 std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
