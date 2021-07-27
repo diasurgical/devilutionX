@@ -139,7 +139,6 @@ void DeleteMissile(int mi, int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
 bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
 void SetMissDir(int mi, int dir);
-void LoadMissileGFX(BYTE mi);
 void InitMissileGFX();
 void FreeMissiles();
 void FreeMissiles2();
