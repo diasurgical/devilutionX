@@ -3843,75 +3843,75 @@ void InitMonsterGFX(int monst)
 
 	if (mtype >= MT_NMAGMA && mtype <= MT_WMAGMA && (MissileFileFlag & 1) == 0) {
 		MissileFileFlag |= 1;
-		LoadMissileGFX(MFILE_MAGBALL);
+		MissileSpriteData[MFILE_MAGBALL].LoadGFX();
 	}
 	if (mtype >= MT_STORM && mtype <= MT_MAEL && (MissileFileFlag & 2) == 0) {
 		MissileFileFlag |= 2;
-		LoadMissileGFX(MFILE_THINLGHT);
+		MissileSpriteData[MFILE_THINLGHT].LoadGFX();
 	}
 	if (mtype == MT_SUCCUBUS && (MissileFileFlag & 4) == 0) {
 		MissileFileFlag |= 4;
-		LoadMissileGFX(MFILE_FLARE);
-		LoadMissileGFX(MFILE_FLAREEXP);
+		MissileSpriteData[MFILE_FLARE].LoadGFX();
+		MissileSpriteData[MFILE_FLAREEXP].LoadGFX();
 	}
 	if (mtype >= MT_INCIN && mtype <= MT_HELLBURN && (MissileFileFlag & 8) == 0) {
 		MissileFileFlag |= 8;
-		LoadMissileGFX(MFILE_KRULL);
+		MissileSpriteData[MFILE_KRULL].LoadGFX();
 	}
 	if (mtype == MT_SNOWWICH && (MissileFileFlag & 0x20) == 0) {
 		MissileFileFlag |= 0x20;
-		LoadMissileGFX(MFILE_SCUBMISB);
-		LoadMissileGFX(MFILE_SCBSEXPB);
+		MissileSpriteData[MFILE_SCUBMISB].LoadGFX();
+		MissileSpriteData[MFILE_SCBSEXPB].LoadGFX();
 	}
 	if (mtype == MT_HLSPWN && (MissileFileFlag & 0x40) == 0) {
 		MissileFileFlag |= 0x40;
-		LoadMissileGFX(MFILE_SCUBMISD);
-		LoadMissileGFX(MFILE_SCBSEXPD);
+		MissileSpriteData[MFILE_SCUBMISD].LoadGFX();
+		MissileSpriteData[MFILE_SCBSEXPD].LoadGFX();
 	}
 	if (mtype == MT_SOLBRNR && (MissileFileFlag & 0x80) == 0) {
 		MissileFileFlag |= 0x80;
-		LoadMissileGFX(MFILE_SCUBMISC);
-		LoadMissileGFX(MFILE_SCBSEXPC);
+		MissileSpriteData[MFILE_SCUBMISC].LoadGFX();
+		MissileSpriteData[MFILE_SCBSEXPC].LoadGFX();
 	}
 	if (mtype >= MT_INCIN && mtype <= MT_HELLBURN && (MissileFileFlag & 8) == 0) {
 		MissileFileFlag |= 8;
-		LoadMissileGFX(MFILE_KRULL);
+		MissileSpriteData[MFILE_KRULL].LoadGFX();
 	}
 	if (((mtype >= MT_NACID && mtype <= MT_XACID) || mtype == MT_SPIDLORD) && (MissileFileFlag & 0x10) == 0) {
 		MissileFileFlag |= 0x10;
-		LoadMissileGFX(MFILE_ACIDBF);
-		LoadMissileGFX(MFILE_ACIDSPLA);
-		LoadMissileGFX(MFILE_ACIDPUD);
+		MissileSpriteData[MFILE_ACIDBF].LoadGFX();
+		MissileSpriteData[MFILE_ACIDSPLA].LoadGFX();
+		MissileSpriteData[MFILE_ACIDPUD].LoadGFX();
 	}
 	if (mtype == MT_LICH && (MissileFileFlag & 0x100) == 0) {
 		MissileFileFlag |= 0x100;
-		LoadMissileGFX(MFILE_LICH);
-		LoadMissileGFX(MFILE_EXORA1);
+		MissileSpriteData[MFILE_LICH].LoadGFX();
+		MissileSpriteData[MFILE_EXORA1].LoadGFX();
 	}
 	if (mtype == MT_ARCHLICH && (MissileFileFlag & 0x200) == 0) {
 		MissileFileFlag |= 0x200;
-		LoadMissileGFX(MFILE_ARCHLICH);
-		LoadMissileGFX(MFILE_EXYEL2);
+		MissileSpriteData[MFILE_ARCHLICH].LoadGFX();
+		MissileSpriteData[MFILE_EXYEL2].LoadGFX();
 	}
 	if ((mtype == MT_PSYCHORB || mtype == MT_BONEDEMN) && (MissileFileFlag & 0x400) == 0) {
 		MissileFileFlag |= 0x400;
-		LoadMissileGFX(MFILE_BONEDEMON);
+		MissileSpriteData[MFILE_BONEDEMON].LoadGFX();
 	}
 	if (mtype == MT_NECRMORB && (MissileFileFlag & 0x800) == 0) {
 		MissileFileFlag |= 0x800;
-		LoadMissileGFX(MFILE_NECROMORB);
-		LoadMissileGFX(MFILE_EXRED3);
+		MissileSpriteData[MFILE_NECROMORB].LoadGFX();
+		MissileSpriteData[MFILE_EXRED3].LoadGFX();
 	}
 	if (mtype == MT_PSYCHORB && (MissileFileFlag & 0x1000) == 0) {
 		MissileFileFlag |= 0x1000;
-		LoadMissileGFX(MFILE_EXBL2);
+		MissileSpriteData[MFILE_EXBL2].LoadGFX();
 	}
 	if (mtype == MT_BONEDEMN && (MissileFileFlag & 0x2000) == 0) {
 		MissileFileFlag |= 0x2000;
-		LoadMissileGFX(MFILE_EXBL3);
+		MissileSpriteData[MFILE_EXBL3].LoadGFX();
 	}
 	if (mtype == MT_DIABLO) {
-		LoadMissileGFX(MFILE_FIREPLAR);
+		MissileSpriteData[MFILE_FIREPLAR].LoadGFX();
 	}
 }
 

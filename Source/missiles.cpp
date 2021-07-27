@@ -1207,17 +1207,12 @@ void SetMissDir(int mi, int dir)
 	SetMissAnim(mi, Missiles[mi]._miAnimType);
 }
 
-void LoadMissileGFX(BYTE mi)
-{
-	MissileSpriteData[mi].LoadGFX();
-}
-
 void InitMissileGFX()
 {
 	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
 		if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
 			break;
-		LoadMissileGFX(mi);
+		MissileSpriteData[mi].LoadGFX();
 	}
 }
 
