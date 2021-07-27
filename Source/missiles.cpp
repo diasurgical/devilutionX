@@ -615,7 +615,7 @@ void SetMissAnim(int mi, int animtype)
 
 	Missiles[mi]._miAnimType = animtype;
 	Missiles[mi]._miAnimFlags = MissileSpriteData[animtype].flags;
-	Missiles[mi]._miAnimData = MissileSpriteData[animtype].animData[dir];
+	Missiles[mi]._miAnimData = MissileSpriteData[animtype].animData[dir].get();
 	Missiles[mi]._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
 	Missiles[mi]._miAnimLen = MissileSpriteData[animtype].animLen[dir];
 	Missiles[mi]._miAnimWidth = MissileSpriteData[animtype].animWidth[dir];
@@ -4762,7 +4762,7 @@ void missiles_process_charge()
 		int mi = ActiveMissiles[i];
 		MissileStruct *mis = &Missiles[mi];
 
-		mis->_miAnimData = MissileSpriteData[mis->_miAnimType].animData[mis->_mimfnum];
+		mis->_miAnimData = MissileSpriteData[mis->_miAnimType].animData[mis->_mimfnum].get();
 		if (mis->_mitype != MIS_RHINO)
 			continue;
 
