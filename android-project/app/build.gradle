@@ -16,7 +16,7 @@ android {
         if (buildAsApplication) {
             applicationId "org.diasurgical.devilutionx"
         }
-        minSdkVersion 21
+        minSdkVersion 18
         targetSdkVersion 29 // Upgrade to 30 after november 2021
         versionCode 18
         versionName "1.2.1"
