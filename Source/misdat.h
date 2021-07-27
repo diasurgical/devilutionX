@@ -128,16 +128,12 @@ struct MisFileData {
 	uint8_t animName;
 	uint8_t animFAmt;
 	uint32_t flags;
-	AutofillArray<byte *, 16> animData = {};
+	std::array<std::unique_ptr<byte[]>, 16> animData;
 	AutofillArray<uint8_t, 16> animDelay = {};
 	AutofillArray<uint8_t, 16> animLen = {};
 	AutofillArray<int16_t, 16> animWidth = {};
 	AutofillArray<int16_t, 16> animWidth2 = {};
 
-private:
-	std::vector<std::unique_ptr<byte[]>> pinnedMem;
-
-public:
 	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags)
 		: name(name)
 		, animName(animName)
@@ -155,7 +151,6 @@ public:
 	void FreeGFX()
 	{
 		animData = {};
-		pinnedMem.clear();
 	}
 };
 

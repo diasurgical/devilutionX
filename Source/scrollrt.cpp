@@ -420,7 +420,7 @@ void DrawPlayerIconHelper(const Surface &out, int pnum, missile_graphic_id missi
 	x += CalculateWidth2(Players[pnum].AnimInfo.pCelSprite->Width()) - MissileSpriteData[missileGraphicId].animWidth2[0];
 
 	int width = MissileSpriteData[missileGraphicId].animWidth[0];
-	byte *pCelBuff = MissileSpriteData[missileGraphicId].animData[0];
+	byte *pCelBuff = MissileSpriteData[missileGraphicId].animData[0].get();
 
 	CelSprite cel { pCelBuff, width };
 

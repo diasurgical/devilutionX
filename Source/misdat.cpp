@@ -205,17 +205,6 @@ MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, u
 	, animWidth(animWidth)
 	, animWidth2(animWidth2)
 {
-	if (flags & MFLAG_ALLOW_SPECIAL)
-		pinnedMem.reserve(1);
-	else
-		pinnedMem.reserve(animFAmt);
-
-	for (int i = animFAmt; i < 16; i++) {
-		animDelay[i] = 0;
-		animLen[i] = 0;
-		animWidth = 0;
-		animWidth2 = 0;
-	}
 }
 
 void MisFileData::LoadGFX()
@@ -227,23 +216,13 @@ void MisFileData::LoadGFX()
 		return;
 
 	char pszName[256];
-	if ((flags & MFLAG_ALLOW_SPECIAL) != 0) {
+	if (animFAmt == 1) {
 		sprintf(pszName, "Missiles\\%s.CL2", name);
-		auto file = LoadFileInMem(pszName);
-		for (int i = 0; i < animFAmt; i++)
-			animData[i] = CelGetFrame(file.get(), i);
-		pinnedMem.push_back(std::move(file));
-	} else if (animFAmt == 1) {
-		sprintf(pszName, "Missiles\\%s.CL2", name);
-		auto file = LoadFileInMem(pszName);
-		animData[0] = file.get();
-		pinnedMem.push_back(std::move(file));
+		animData[0] = LoadFileInMem(pszName);
 	} else {
 		for (unsigned i = 0; i < animFAmt; i++) {
 			sprintf(pszName, "Missiles\\%s%u.CL2", name, i + 1);
-			auto file = LoadFileInMem(pszName);
-			animData[i] = file.get();
-			pinnedMem.push_back(std::move(file));
+			animData[i] = LoadFileInMem(pszName);
 		}
 	}
 }
