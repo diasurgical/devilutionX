@@ -5,7 +5,7 @@
 
 	<string name="guide_full_installation">За да играете пълната версия на играта се нуждаете от файла DIABDAT.MPQ от оригиналната PC/Mac версия на играта поставен в Android/data/org.diasurgical.devilutionx/files.<br/>\n<br/>\nАко нямате оригиналната версия на играта, можете да закупите Diablo от <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
 	<string name="guide_shareware">Като алтернатива можете да изтеглите пробната версия на играта.</string>
-	<string name="faq_link">Вижте <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Упътването за инсталация</a> за повече детайли.</string>
+	<string name="faq_link">Вижте <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Упътването за инсталация</a> за повече информация.</string>
 	<string name="game_data_retry">Опитайте отново</string>
 	<string name="title_activity_data">Игрови ресурси</string>
 	<string name="download_spawn">Ресурси от Пробна версия</string>
