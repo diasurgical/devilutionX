@@ -8,4 +8,7 @@
 	<string name="game_data_retry">Check again</string>
 	<string name="title_activity_data">Game Data</string>
 	<string name="download_spawn">Download Shareware Data</string>
+	<string name="missing_game_data">Game data missing</string>
+	<string name="download_started">Download started</string>
+	<string name="shareware_data">Diablo Shareware Data</string>
 </resources>

@@ -1,5 +1,6 @@
 package org.diasurgical.devilutionx;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-public class DataActivity extends AppCompatActivity {
+public class DataActivity extends Activity {
 	private String externalDir;
 	private DownloadReceiver mReceiver;
 	private boolean isDownloading = false;
@@ -43,7 +43,7 @@ public class DataActivity extends AppCompatActivity {
 
 	private void startGame() {
 		if (missingGameData()) {
-			Toast toast = Toast.makeText(getApplicationContext(), "Game data missing", Toast.LENGTH_SHORT);
+			Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.missing_game_data), Toast.LENGTH_SHORT);
 			toast.show();
 			return;
 		}
@@ -73,7 +73,7 @@ public class DataActivity extends AppCompatActivity {
 
 		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
 				.setTitle(fileName)
-				.setDescription("Diablo Shareware Data")
+				.setDescription(getString(R.string.shareware_data))
 				.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
 		request.setDestinationInExternalFilesDir(this, null, fileName);
@@ -88,7 +88,7 @@ public class DataActivity extends AppCompatActivity {
 		isDownloading = true;
 		view.setEnabled(false);
 
-		Toast toast = Toast.makeText(getApplicationContext(), "Download started", Toast.LENGTH_SHORT);
+		Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.download_started), Toast.LENGTH_SHORT);
 		toast.show();
 	}
 
