@@ -73,7 +73,7 @@ void InitCorpses()
 
 void AddCorpse(Point tilePosition, int8_t dv, Direction ddir)
 {
-	dCorpse[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
+	dCorpse[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (static_cast<int>(ddir) << 5);
 }
 
 void SyncUniqDead()

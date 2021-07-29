@@ -846,7 +846,7 @@ void Theme_GoatShrine(int t)
 	for (int yy = themey - 1; yy <= themey + 1; yy++) {
 		for (int xx = themex - 1; xx <= themex + 1; xx++) {
 			if (dTransVal[xx][yy] == themes[t].ttval && IsTileNotSolid({ xx, yy }) && (xx != themex || yy != themey)) {
-				AddMonster({ xx, yy }, DIR_SW, themeVar1, true);
+				AddMonster({ xx, yy }, Direction::SouthWest, themeVar1, true);
 			}
 		}
 	}

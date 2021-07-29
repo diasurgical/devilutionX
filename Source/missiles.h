@@ -142,7 +142,24 @@ Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
+
+/**
+ * @brief Sets the missile sprite to represent the direction of travel
+ * @param missile this object
+ * @param dir Sprite frame representing the desired facing
+*/
 void SetMissDir(Missile &missile, int dir);
+
+/**
+ * @brief Overload to convert a Direction value to the appropriate sprite frame
+ * @param missile this object
+ * @param dir Desired facing
+*/
+inline void SetMissDir(Missile &missile, Direction dir)
+{
+	SetMissDir(missile, static_cast<int>(dir));
+}
+
 void InitMissiles();
 void AddHiveExplosion(Missile &missile, Point dst, Direction midir);
 void AddFireRune(Missile &missile, Point dst, Direction midir);

@@ -976,7 +976,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.destAction);
 	file.WriteLE<int32_t>(player.destParam1);
 	file.WriteLE<int32_t>(player.destParam2);
-	file.WriteLE<int32_t>(player.destParam3);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.destParam3));
 	file.WriteLE<int32_t>(player.destParam4);
 	file.WriteLE<int32_t>(player.plrlevel);
 	file.WriteLE<int32_t>(player.position.tile.x);
@@ -997,7 +997,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.position.offset.deltaY);
 	file.WriteLE<int32_t>(player.position.velocity.deltaX);
 	file.WriteLE<int32_t>(player.position.velocity.deltaY);
-	file.WriteLE<int32_t>(player._pdir);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player._pdir));
 	file.Skip(4); // Unused
 	file.WriteLE<int32_t>(player._pgfxnum);
 	file.Skip(4); // Skip pointer _pAnimData
@@ -1089,7 +1089,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<uint32_t>(player._pInfraFlag ? 1 : 0);
 	file.WriteLE<int32_t>(player.position.temp.x);
 	file.WriteLE<int32_t>(player.position.temp.y);
-	file.WriteLE<int32_t>(player.tempDirection);
+	file.WriteLE<int32_t>(static_cast<int32_t>(player.tempDirection));
 	file.WriteLE<int32_t>(player._pVar4);
 	file.WriteLE<int32_t>(player._pVar5);
 	file.WriteLE<int32_t>(player.position.offset2.deltaX);
@@ -1220,7 +1220,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<int32_t>(monster.position.offset.deltaY);
 	file->WriteLE<int32_t>(monster.position.velocity.deltaX);
 	file->WriteLE<int32_t>(monster.position.velocity.deltaY);
-	file->WriteLE<int32_t>(monster._mdir);
+	file->WriteLE<int32_t>(static_cast<int32_t>(monster._mdir));
 	file->WriteLE<int32_t>(monster._menemy);
 	file->WriteLE<uint8_t>(monster.enemyPosition.x);
 	file->WriteLE<uint8_t>(monster.enemyPosition.y);

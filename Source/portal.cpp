@@ -49,7 +49,7 @@ void AddWarpMissile(int i, int x, int y)
 {
 	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
 
-	int mi = AddMissile({ 0, 0 }, { x, y }, DIR_S, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	int mi = AddMissile({ 0, 0 }, { x, y }, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 	if (mi == -1)
 		return;
 

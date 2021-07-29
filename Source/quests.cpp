@@ -398,7 +398,7 @@ void CheckQuests()
 		quest.position.y = 2 * quest.position.y + 16;
 		int rportx = quest.position.x;
 		int rporty = quest.position.y;
-		AddMissile({ rportx, rporty }, { rportx, rporty }, DIR_S, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 1;
 		if (quest._qactive == QUEST_ACTIVE) {
 			quest._qvar1 = 3;
@@ -411,7 +411,7 @@ void CheckQuests()
 	    && quest._qvar2 == 4) {
 		int rportx = 35;
 		int rporty = 32;
-		AddMissile({ rportx, rporty }, { rportx, rporty }, DIR_S, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile({ rportx, rporty }, { rportx, rporty }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		quest._qvar2 = 3;
 	}
 
@@ -521,7 +521,7 @@ void CheckQuestKill(const Monster &monster, bool sendmsg)
 		Quests[Q_BETRAYER]._qvar1 = 7;
 		Quests[Q_BETRAYER]._qvar2 = 4;
 		Quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
-		AddMissile({ 35, 32 }, { 35, 32 }, DIR_S, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile({ 35, 32 }, { 35, 32 }, Direction::South, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
 		myPlayer.Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 	} else if (monster._uniqtype - 1 == UMT_WARLORD) { //"Warlord of Blood"
 		Quests[Q_WARLORD]._qactive = QUEST_DONE;
@@ -566,24 +566,24 @@ void SetReturnLvlPos()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		ReturnLvlPosition = Quests[Q_SKELKING].position + DIR_SE;
+		ReturnLvlPosition = Quests[Q_SKELKING].position + Direction::SouthEast;
 		ReturnLevel = Quests[Q_SKELKING]._qlevel;
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_BONECHAMB:
-		ReturnLvlPosition = Quests[Q_SCHAMB].position + DIR_SE;
+		ReturnLvlPosition = Quests[Q_SCHAMB].position + Direction::SouthEast;
 		ReturnLevel = Quests[Q_SCHAMB]._qlevel;
 		ReturnLevelType = DTYPE_CATACOMBS;
 		break;
 	case SL_MAZE:
 		break;
 	case SL_POISONWATER:
-		ReturnLvlPosition = Quests[Q_PWATER].position + DIR_SW;
+		ReturnLvlPosition = Quests[Q_PWATER].position + Direction::SouthWest;
 		ReturnLevel = Quests[Q_PWATER]._qlevel;
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
-		ReturnLvlPosition = Quests[Q_BETRAYER].position + DIR_E;
+		ReturnLvlPosition = Quests[Q_BETRAYER].position + Direction::East;
 		ReturnLevel = Quests[Q_BETRAYER]._qlevel;
 		ReturnLevelType = DTYPE_HELL;
 		break;

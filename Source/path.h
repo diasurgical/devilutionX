@@ -55,14 +55,14 @@ bool path_solid_pieces(Point startPosition, Point destinationPosition);
 /** For iterating over the 8 possible movement directions */
 const Displacement PathDirs[8] = {
 	// clang-format off
-	{ -1, -1 }, //DIR_N
-	{ -1,  1 }, //DIR_W
-	{  1, -1 }, //DIR_E
-	{  1,  1 }, //DIR_S
-	{ -1,  0 }, //DIR_NW
-	{  0, -1 }, //DIR_NE
-	{  1,  0 }, //DIR_SE
-	{  0,  1 }, //DIR_SW
+	{ -1, -1 }, //Direction::North
+	{ -1,  1 }, //Direction::West
+	{  1, -1 }, //Direction::East
+	{  1,  1 }, //Direction::South
+	{ -1,  0 }, //Direction::NorthWest
+	{  0, -1 }, //Direction::NorthEast
+	{  1,  0 }, //Direction::SouthEast
+	{  0,  1 }, //Direction::SouthWest
 	// clang-format on
 };
 

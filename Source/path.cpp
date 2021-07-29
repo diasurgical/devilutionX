@@ -365,16 +365,16 @@ bool path_solid_pieces(Point startPosition, Point destinationPosition)
 	bool rv = true;
 	switch (GetPathDirection(startPosition, destinationPosition)) {
 	case 5: // Stepping north
-		rv = IsTileNotSolid(destinationPosition + DIR_SW) && IsTileNotSolid(destinationPosition + DIR_SE);
+		rv = IsTileNotSolid(destinationPosition + Direction::SouthWest) && IsTileNotSolid(destinationPosition + Direction::SouthEast);
 		break;
 	case 6: // Stepping east
-		rv = IsTileNotSolid(destinationPosition + DIR_SW) && IsTileNotSolid(destinationPosition + DIR_NW);
+		rv = IsTileNotSolid(destinationPosition + Direction::SouthWest) && IsTileNotSolid(destinationPosition + Direction::NorthWest);
 		break;
 	case 7: // Stepping south
-		rv = IsTileNotSolid(destinationPosition + DIR_NE) && IsTileNotSolid(destinationPosition + DIR_NW);
+		rv = IsTileNotSolid(destinationPosition + Direction::NorthEast) && IsTileNotSolid(destinationPosition + Direction::NorthWest);
 		break;
 	case 8: // Stepping west
-		rv = IsTileNotSolid(destinationPosition + DIR_SE) && IsTileNotSolid(destinationPosition + DIR_NE);
+		rv = IsTileNotSolid(destinationPosition + Direction::SouthEast) && IsTileNotSolid(destinationPosition + Direction::NorthEast);
 		break;
 	}
 	return rv;
