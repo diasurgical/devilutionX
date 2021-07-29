@@ -636,17 +636,17 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
 	if (ArtBackgroundWidescreen.surface != nullptr) {
 		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
-		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, /*bAnimated=*/false, /*iFrame=*/0, rectw, UiFlags::UIS_CENTER));
+		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, rectw, UiFlags::UIS_CENTER));
 	}
 
 	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, /*bAnimated=*/false, /*iFrame=*/0, rect, UiFlags::UIS_CENTER));
+	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, rect, UiFlags::UIS_CENTER));
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
 	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], /*bAnimated=*/true, /*iFrame=*/0, rect, UiFlags::UIS_CENTER));
+	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], rect, UiFlags::UIS_CENTER, /*bAnimated=*/true));
 }
 
 void UiFadeIn()

@@ -457,7 +457,7 @@ void selhero_Init()
 	vecSelHeroDialog.push_back(std::make_unique<UiArtText>(&title, rect1, UiFlags::UIS_CENTER | UiFlags::UIS_BIG));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 30), (Sint16)(UI_OFFSET_Y + 211), 180, 76 };
-	auto heroImg = std::make_unique<UiImage>(&ArtHero, static_cast<int>(enum_size<HeroClass>::value), rect2);
+	auto heroImg = std::make_unique<UiImage>(&ArtHero, rect2, UiFlags::NONE, /*bAnimated=*/false, static_cast<int>(enum_size<HeroClass>::value));
 	SELHERO_DIALOG_HERO_IMG = heroImg.get();
 	vecSelHeroDialog.push_back(std::move(heroImg));
 

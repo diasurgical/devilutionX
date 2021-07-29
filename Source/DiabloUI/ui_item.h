@@ -80,23 +80,12 @@ inline bool HasAnyOf(UiFlags lhs, UiFlags test)
 
 class UiItemBase {
 public:
-	UiItemBase(SDL_Rect rect, UiFlags flags)
+	UiItemBase(UiType type, SDL_Rect rect, UiFlags flags)
+	    : m_type(type)
+	    , m_rect(rect)
+	    , m_iFlags(flags)
 	{
-		m_rect = rect;
-		m_iFlags = flags;
-	};
-
-	UiItemBase(Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags)
-	{
-		SDL_Rect tmp;
-		tmp.x = x;
-		tmp.y = y;
-		tmp.w = item_width;
-		tmp.h = item_height;
-
-		m_rect = tmp;
-		m_iFlags = flags;
-	};
+	}
 
 	virtual ~UiItemBase() {};
 
@@ -130,31 +119,12 @@ public:
 
 class UiImage : public UiItemBase {
 public:
-	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::NONE, bool animated = false, int frame = 0)
+	    : UiItemBase(UI_IMAGE, rect, flags)
+	    , m_art(art)
+	    , m_animated(animated)
+	    , m_frame(frame)
 	{
-		m_type = UI_IMAGE;
-		m_art = art;
-		m_animated = false;
-		m_frame = 0;
-	};
-
-	UiImage(Art *art, bool bAnimated, int iFrame, SDL_Rect rect, UiFlags flags)
-	    : UiItemBase(rect, flags)
-	{
-		m_type = UI_IMAGE;
-		m_art = art;
-		m_animated = bAnimated;
-		m_frame = iFrame;
-	};
-
-	UiImage(Art *art, int frame, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
-	{
-		m_type = UI_IMAGE;
-		m_art = art;
-		m_animated = false;
-		m_frame = frame;
 	}
 
 	~UiImage() {};
@@ -169,19 +139,29 @@ public:
 
 class UiArtText : public UiItemBase {
 public:
+	/**
+	 * @brief Constructs a UI element containing a (presumed to be) static line of text
+	 * @param text Pointer to the first character of a c-string
+	 * @param rect screen region defining the area to draw the text
+	 * @param flags UiFlags controlling color/alignment/size
+	 */
 	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	    : UiItemBase(UI_ART_TEXT, rect, flags)
 	    , m_text(text)
 	{
-		m_type = UI_ART_TEXT;
-	};
+	}
 
+	/**
+	 * @brief Constructs a UI element containing a line of text that may change between frames
+	 * @param ptext Pointer to a c-string (pointer to a pointer to the first character)
+	 * @param rect screen region defining the area to draw the text
+	 * @param flags UiFlags controlling color/alignment/size
+	 */
 	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	    : UiItemBase(UI_ART_TEXT, rect, flags)
 	    , m_ptext(ptext)
 	{
-		m_type = UI_ART_TEXT;
-	};
+	}
 
 	const char *text() const
 	{
@@ -202,13 +182,12 @@ private:
 class UiScrollBar : public UiItemBase {
 public:
 	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	    : UiItemBase(UI_SCROLLBAR, rect, flags)
+	    , m_bg(bg)
+	    , m_thumb(thumb)
+	    , m_arrow(arrow)
 	{
-		m_type = UI_SCROLLBAR;
-		m_bg = bg;
-		m_thumb = thumb;
-		m_arrow = arrow;
-	};
+	}
 
 	//private:
 	Art *m_bg;
@@ -221,12 +200,12 @@ public:
 class UiArtTextButton : public UiItemBase {
 public:
 	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	    : UiItemBase(UI_ART_TEXT_BUTTON, rect, flags)
+	    , m_text(text)
+	    , m_action(action)
 	{
-		m_type = UI_ART_TEXT_BUTTON;
-		m_text = text;
-		m_action = action;
-	};
+	}
+
 	//private:
 	const char *m_text;
 	void (*m_action)();
@@ -237,12 +216,11 @@ public:
 class UiEdit : public UiItemBase {
 public:
 	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	    : UiItemBase(UI_EDIT, rect, flags)
+	    , m_hint(hint)
+	    , m_value(value)
+	    , m_max_length(max_length)
 	{
-		m_type = UI_EDIT;
-		m_hint = hint;
-		m_value = value;
-		m_max_length = max_length;
 	}
 
 	//private:
@@ -257,30 +235,13 @@ public:
 
 class UiText : public UiItemBase {
 public:
-	UiText(const char *text, SDL_Color color1, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE, SDL_Color color = { 243, 243, 243, 0 })
+	    : UiItemBase(UI_TEXT, rect, flags)
+	    , m_color(color)
+	    , m_shadow_color({ 0, 0, 0, 0 })
+	    , m_text(text)
+	    , m_render_cache()
 	{
-		m_type = UI_TEXT;
-		m_color = color1;
-
-		SDL_Color color2 = { 0, 0, 0, 0 };
-		m_shadow_color = color2;
-
-		m_text = text;
-	}
-
-	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
-	{
-		m_type = UI_TEXT;
-
-		SDL_Color color1 = { 243, 243, 243, 0 };
-		m_color = color1;
-
-		SDL_Color color2 = { 0, 0, 0, 0 };
-		m_shadow_color = color2;
-
-		m_text = text;
 	}
 
 	//private:
@@ -299,13 +260,13 @@ public:
 class UiButton : public UiItemBase {
 public:
 	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(rect, flags)
+	    : UiItemBase(UI_BUTTON, rect, flags)
+	    , m_art(art)
+	    , m_text(text)
+	    , m_action(action)
+	    , m_pressed(false)
+	    , m_render_cache()
 	{
-		m_type = UI_BUTTON;
-		m_art = art;
-		m_text = text;
-		m_action = action;
-		m_pressed = false;
 	}
 
 	enum FrameKey : uint8_t {
@@ -330,14 +291,12 @@ public:
 class UiListItem {
 public:
 	UiListItem(const char *text = "", int value = 0)
+	    : m_text(text)
+	    , m_value(value)
 	{
-		m_text = text;
-		m_value = value;
 	}
 
-	~UiListItem()
-	{
-	}
+	~UiListItem() {};
 
 	//private:
 	const char *m_text;
@@ -349,16 +308,15 @@ typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 class UiList : public UiItemBase {
 public:
 	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::NONE)
-	    : UiItemBase(x, y, item_width, static_cast<Uint16>(item_height * vItems.size()), flags)
+	    : UiItemBase(UI_LIST, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
+	    , m_x(x)
+	    , m_y(y)
+	    , m_width(item_width)
+	    , m_height(item_height)
 	{
-		m_type = UI_LIST;
 		for (auto &item : vItems)
 			m_vecItems.push_back(item.get());
-		m_x = x;
-		m_y = y;
-		m_width = item_width;
-		m_height = item_height;
-	};
+	}
 
 	~UiList() {};
 
