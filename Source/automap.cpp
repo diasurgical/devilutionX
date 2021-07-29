@@ -264,7 +264,7 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 	Point tile = myPlayer.position.tile;
 	if (myPlayer._pmode == PM_WALK3) {
 		tile = myPlayer.position.future;
-		if (myPlayer._pdir == DIR_W)
+		if (myPlayer._pdir == Direction::West)
 			tile.x++;
 		else
 			tile.y++;
@@ -312,7 +312,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK3) {
 		tile = player.position.future;
-		if (player._pdir == DIR_W)
+		if (player._pdir == Direction::West)
 			tile.x++;
 		else
 			tile.y++;
@@ -339,49 +339,49 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	base.y -= AmLine8;
 
 	switch (player._pdir) {
-	case DIR_N: {
+	case Direction::North: {
 		const Point point { base.x, base.y - AmLine16 };
 		DrawVerticalLine(out, point, AmLine16, playerColor);
 		DrawMapLineSteepNE(out, { point.x - AmLine4, point.y + 2 * AmLine4 }, AmLine4, playerColor);
 		DrawMapLineSteepNW(out, { point.x + AmLine4, point.y + 2 * AmLine4 }, AmLine4, playerColor);
 	} break;
-	case DIR_NE: {
+	case Direction::NorthEast: {
 		const Point point { base.x + AmLine16, base.y - AmLine8 };
 		DrawHorizontalLine(out, { point.x - AmLine8, point.y }, AmLine8, playerColor);
 		DrawMapLineNE(out, { point.x - 2 * AmLine8, point.y + AmLine8 }, AmLine8, playerColor);
 		DrawMapLineSteepSW(out, point, AmLine4, playerColor);
 	} break;
-	case DIR_E: {
+	case Direction::East: {
 		const Point point { base.x + AmLine16, base.y };
 		DrawMapLineNW(out, point, AmLine4, playerColor);
 		DrawHorizontalLine(out, { point.x - AmLine16, point.y }, AmLine16, playerColor);
 		DrawMapLineSW(out, point, AmLine4, playerColor);
 	} break;
-	case DIR_SE: {
+	case Direction::SouthEast: {
 		const Point point { base.x + AmLine16, base.y + AmLine8 };
 		DrawMapLineSE(out, { point.x - 2 * AmLine8, point.y - AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, { point.x - (AmLine8 + 1), point.y }, AmLine8 + 1, playerColor);
 		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 	} break;
-	case DIR_S: {
+	case Direction::South: {
 		const Point point { base.x, base.y + AmLine16 };
 		DrawVerticalLine(out, { point.x, point.y - AmLine16 }, AmLine16, playerColor);
 		DrawMapLineSteepSW(out, { point.x + AmLine4, point.y - 2 * AmLine4 }, AmLine4, playerColor);
 		DrawMapLineSteepSE(out, { point.x - AmLine4, point.y - 2 * AmLine4 }, AmLine4, playerColor);
 	} break;
-	case DIR_SW: {
+	case Direction::SouthWest: {
 		const Point point { base.x - AmLine16, base.y + AmLine8 };
 		DrawMapLineSteepNE(out, point, AmLine4, playerColor);
 		DrawMapLineSW(out, { point.x + 2 * AmLine8, point.y - AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, point, AmLine8 + 1, playerColor);
 	} break;
-	case DIR_W: {
+	case Direction::West: {
 		const Point point { base.x - AmLine16, base.y };
 		DrawMapLineNE(out, point, AmLine4, playerColor);
 		DrawHorizontalLine(out, point, AmLine16 + 1, playerColor);
 		DrawMapLineSE(out, point, AmLine4, playerColor);
 	} break;
-	case DIR_NW: {
+	case Direction::NorthWest: {
 		const Point point { base.x - AmLine16, base.y - AmLine8 };
 		DrawMapLineNW(out, { point.x + 2 * AmLine8, point.y + AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, point, AmLine8 + 1, playerColor);

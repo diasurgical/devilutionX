@@ -170,20 +170,20 @@ void MoveMissilePos(Missile &missile)
 	Displacement offset;
 
 	switch (missile._mimfnum) {
-	case DIR_NW:
-	case DIR_N:
-	case DIR_NE:
+	case Direction::NorthWest:
+	case Direction::North:
+	case Direction::NorthEast:
 		offset = { 0, 0 };
 		break;
-	case DIR_E:
+	case Direction::East:
 		offset = { 1, 0 };
 		break;
-	case DIR_W:
+	case Direction::West:
 		offset = { 0, 1 };
 		break;
-	case DIR_S:
-	case DIR_SW:
-	case DIR_SE:
+	case Direction::South:
+	case Direction::SouthWest:
+	case Direction::SouthEast:
 		offset = { 1, 1 };
 		break;
 	}
@@ -835,7 +835,7 @@ void SpawnLightning(Missile &missile, int dam)
 			AddMissile(
 			    position,
 			    missile.position.start,
-			    DIR_S,
+			    Direction::South,
 			    type,
 			    missile._micaster,
 			    missile._misource,
@@ -1429,7 +1429,7 @@ void AddHorkSpawn(Missile &missile, Point dst, Direction midir)
 {
 	UpdateMissileVelocity(missile, dst, 8);
 	missile._mirange = 9;
-	missile.var1 = midir;
+	missile.var1 = static_cast<int32_t>(midir);
 	PutMissile(missile);
 }
 
@@ -1780,7 +1780,7 @@ void AddCboltArrow(Missile &missile, Point dst, Direction midir)
 	missile._mlid = AddLight(missile.position.start, 5);
 	UpdateMissileVelocity(missile, dst, 8);
 	missile.var1 = 5;
-	missile.var2 = midir;
+	missile.var2 = static_cast<int32_t>(midir);
 	missile._mirange = 256;
 }
 
@@ -2280,9 +2280,9 @@ namespace {
 void InitMissileAnimationFromMonster(Missile &mis, Direction midir, const Monster &mon, MonsterGraphic graphic)
 {
 	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
-	mis._mimfnum = midir;
+	mis._mimfnum = static_cast<int32_t>(midir);
 	mis._miAnimFlags = MissileDataFlags::None;
-	const auto &celSprite = *anim.CelSpritesForDirections[midir];
+	const auto &celSprite = *anim.CelSpritesForDirections[mis._mimfnum];
 	mis._miAnimData = celSprite.Data();
 	mis._miAnimDelay = anim.Rate;
 	mis._miAnimLen = anim.Frames;
@@ -2596,8 +2596,8 @@ void AddFirewallC(Missile &missile, Point dst, Direction midir)
 	}
 
 	if (!missile._miDelFlag) {
-		missile.var3 = left[left[midir]];
-		missile.var4 = right[right[midir]];
+		missile.var3 = static_cast<int>(Left(Left(midir)));
+		missile.var4 = static_cast<int>(Right(Right(midir)));
 		missile._mirange = 7;
 		UseMana(missile._misource, SPL_FIREWALL);
 	}
@@ -2774,7 +2774,7 @@ void AddCbolt(Missile &missile, Point dst, Direction midir)
 
 	UpdateMissileVelocity(missile, dst, 8);
 	missile.var1 = 5;
-	missile.var2 = midir;
+	missile.var2 = static_cast<int>(midir);
 	missile._mirange = 256;
 }
 
@@ -2860,7 +2860,7 @@ void AddDiabApoca(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		if (!LineClearMissile(missile.position.start, player.position.future))
 			continue;
 
-		AddMissile({ 0, 0 }, player.position.future, DIR_S, MIS_BOOM2, missile._micaster, missile._misource, missile._midam, 0);
+		AddMissile({ 0, 0 }, player.position.future, Direction::South, MIS_BOOM2, missile._micaster, missile._misource, missile._midam, 0);
 	}
 	missile._miDelFlag = true;
 }
@@ -3340,7 +3340,7 @@ void MI_FireRing(Missile &missile)
 			continue;
 		}
 
-		AddMissile(target, target, DIR_S, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
+		AddMissile(target, target, Direction::South, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
 	}
 }
 
@@ -3400,7 +3400,7 @@ void MI_FireNova(Missile &missile)
 	int id = missile._misource;
 	int dam = missile._midam;
 	Point src = missile.position.tile;
-	Direction dir = DIR_S;
+	Direction dir = Direction::South;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = Players[id]._pdir;
@@ -3428,7 +3428,7 @@ void MI_SpecArrow(Missile &missile)
 	Point dst = { missile.var1, missile.var2 };
 	int spllvl = missile.var3;
 	missile_id mitype = MIS_ARROW;
-	Direction dir = DIR_S;
+	Direction dir = Direction::South;
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (id != -1) {
 		auto &player = Players[id];
@@ -3598,7 +3598,7 @@ void MI_Firemove(Missile &missile)
 		ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile.var2]);
 		missile.var2++;
 	}
-	missile.position.tile += DIR_S;
+	missile.position.tile += Direction::South;
 	missile.position.offset.deltaY -= 32;
 	PutMissile(missile);
 }
@@ -3750,7 +3750,7 @@ void MI_Acidsplat(Missile &missile)
 		missile._miDelFlag = true;
 		int monst = missile._misource;
 		int dam = (Monsters[monst].MData->mLevel >= 2 ? 2 : 1);
-		AddMissile(missile.position.tile, { 0, 0 }, DIR_S, MIS_ACIDPUD, TARGET_PLAYERS, monst, dam, missile._mispllvl);
+		AddMissile(missile.position.tile, { 0, 0 }, Direction::South, MIS_ACIDPUD, TARGET_PLAYERS, monst, dam, missile._mispllvl);
 	} else {
 		PutMissile(missile);
 	}
@@ -3945,8 +3945,8 @@ void MI_Wave(Missile &missile)
 	int id = missile._misource;
 	Point src = missile.position.tile;
 	Direction sd = GetDirection(src, { missile.var1, missile.var2 });
-	Direction dira = left[left[sd]];
-	Direction dirb = right[right[sd]];
+	Direction dira = Left(Left(sd));
+	Direction dirb = Right(Right(sd));
 	Point na = src + sd;
 	int pn = dPiece[na.x][na.y];
 	assert(pn >= 0 && pn <= MAXTILES);
@@ -3987,7 +3987,7 @@ void MI_Nova(Missile &missile)
 	int id = missile._misource;
 	int dam = missile._midam;
 	Point src = missile.position.tile;
-	Direction dir = DIR_S;
+	Direction dir = Direction::South;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
 		dir = Players[id]._pdir;
@@ -4075,7 +4075,7 @@ void MI_Flamec(Missile &missile)
 			AddMissile(
 			    missile.position.tile,
 			    missile.position.start,
-			    DIR_S,
+			    Direction::South,
 			    MIS_FLAME,
 			    missile._micaster,
 			    src,
@@ -4103,10 +4103,10 @@ void MI_Cbolt(Missile &missile)
 			auto md = static_cast<Direction>(missile.var2);
 			switch (BPath[missile._mirnd]) {
 			case -1:
-				md = left[md];
+				md = Left(md);
 				break;
 			case 1:
-				md = right[md];
+				md = Right(md);
 				break;
 			}
 

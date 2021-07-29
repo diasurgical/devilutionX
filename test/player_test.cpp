@@ -15,7 +15,7 @@ int RunBlockTest(int frames, int flags)
 
 	player._pHFrames = frames;
 	player._pIFlags = flags;
-	StartPlrHit(pnum, 5, Direction::DIR_S);
+	StartPlrHit(pnum, 5, false);
 
 	int i = 1;
 	for (; i < 100; i++) {

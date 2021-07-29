@@ -17,29 +17,29 @@ TEST(PathTest, Heuristics)
 	Point destination = source;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 0) << "Wrong cost for travelling to the same tile";
 
-	destination = source + Direction::DIR_NE;
+	destination = source + Direction::NorthEast;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
-	destination = source + Direction::DIR_SE;
+	destination = source + Direction::SouthEast;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
-	destination = source + Direction::DIR_SW;
+	destination = source + Direction::SouthWest;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
-	destination = source + Direction::DIR_NW;
+	destination = source + Direction::NorthWest;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 2) << "Wrong cost for travelling to horizontal/vertical adjacent tile";
 
-	destination = source + Direction::DIR_N;
+	destination = source + Direction::North;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
-	destination = source + Direction::DIR_E;
+	destination = source + Direction::East;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
-	destination = source + Direction::DIR_S;
+	destination = source + Direction::South;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
-	destination = source + Direction::DIR_W;
+	destination = source + Direction::West;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
-	destination = source + Direction::DIR_SW + Direction::DIR_SE; // Effectively the same as DIR_S
+	destination = source + Direction::SouthWest + Direction::SouthEast; // Effectively the same as Direction::South
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to diagonally adjacent tile";
 
-	destination = source + Direction::DIR_NE + Direction::DIR_N;
+	destination = source + Direction::NorthEast + Direction::North;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 6) << "Wrong cost for travelling to a { 2, 1 } offset";
-	destination = source + Direction::DIR_SE + Direction::DIR_SE;
+	destination = source + Direction::SouthEast + Direction::SouthEast;
 	EXPECT_EQ(TestPathGetHeuristicCost(source, destination), 4) << "Wrong cost for travelling to a { 2, 0 } offset";
 }
 

@@ -103,25 +103,41 @@ struct Displacement {
 		return { abs(a.deltaX), abs(a.deltaY) };
 	}
 
+	/**
+	 * @brief Returns a new Displacement object in screen coordinates.
+	 *
+	 * Transforming from world space to screen space involves a rotation of -135° and scaling to fit within a 64x32 pixel tile (since Diablo uses isometric projection)
+	 * 32 and 16 are used as the x/y scaling factors being half the relevant max dimension, the rotation matrix is [[-, +], [-, -]] as sin(-135°) = cos(-135°) = ~-0.7.
+	 *
+	 * [-32,  32] [dx] = [-32dx +  32dy] = [  32dy - 32dx ] = [ 32(dy - dx)]
+	 * [-16, -16] [dy] = [-16dx + -16dy] = [-(16dy + 16dx)] = [-16(dy + dx)]
+	 *
+	 * @return A representation of the original displacement in screen coordinates.
+	 */
+	constexpr Displacement WorldToScreen() const
+	{
+		return { (deltaY - deltaX) * 32, (deltaY + deltaX) * -16 };
+	}
+
 private:
 	static constexpr Displacement fromDirection(Direction direction)
 	{
 		switch (direction) {
-		case DIR_S:
+		case Direction::South:
 			return { 1, 1 };
-		case DIR_SW:
+		case Direction::SouthWest:
 			return { 0, 1 };
-		case DIR_W:
+		case Direction::West:
 			return { -1, 1 };
-		case DIR_NW:
+		case Direction::NorthWest:
 			return { -1, 0 };
-		case DIR_N:
+		case Direction::North:
 			return { -1, -1 };
-		case DIR_NE:
+		case Direction::NorthEast:
 			return { 0, -1 };
-		case DIR_E:
+		case Direction::East:
 			return { 1, -1 };
-		case DIR_SE:
+		case Direction::SouthEast:
 			return { 1, 0 };
 		default:
 			return { 0, 0 };

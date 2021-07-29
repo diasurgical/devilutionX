@@ -1475,11 +1475,11 @@ void UpdateCircle(int i)
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 			Quests[Q_BETRAYER]._qvar1 = 4;
-		AddMissile(myPlayer.position.tile, { 35, 46 }, DIR_S, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
-		StartStand(MyPlayerId, DIR_S);
+		StartStand(MyPlayerId, Direction::South);
 	}
 }
 
@@ -1612,9 +1612,9 @@ void ObjSetMini(Point position, int v)
 	Point megaOrigin = position * 2 + Displacement { 16, 16 };
 
 	ObjSetMicro(megaOrigin, SDL_SwapLE16(mega.micro1) + 1);
-	ObjSetMicro(megaOrigin + DIR_SE, SDL_SwapLE16(mega.micro2) + 1);
-	ObjSetMicro(megaOrigin + DIR_SW, SDL_SwapLE16(mega.micro3) + 1);
-	ObjSetMicro(megaOrigin + DIR_S, SDL_SwapLE16(mega.micro4) + 1);
+	ObjSetMicro(megaOrigin + Direction::SouthEast, SDL_SwapLE16(mega.micro2) + 1);
+	ObjSetMicro(megaOrigin + Direction::SouthWest, SDL_SwapLE16(mega.micro3) + 1);
+	ObjSetMicro(megaOrigin + Direction::South, SDL_SwapLE16(mega.micro4) + 1);
 }
 
 void ObjL1Special(int x1, int y1, int x2, int y2)
@@ -1836,10 +1836,10 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		} else {
 			dSpecial[door.position.x][door.position.y] = 2;
 		}
-		SetDoorPiece(door.position + Direction::DIR_NE);
+		SetDoorPiece(door.position + Direction::NorthEast);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(door.position + Direction::DIR_NW, false);
+		DoorSet(door.position + Direction::NorthWest, false);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -1861,21 +1861,21 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		ObjSetMicro(door.position, door._oVar1);
 		if (currlevel < 17) {
 			if (door._oVar2 != 50) {
-				ObjSetMicro(door.position + Direction::DIR_NW, door._oVar2);
+				ObjSetMicro(door.position + Direction::NorthWest, door._oVar2);
 			} else {
 				if (dPiece[door.position.x - 1][door.position.y] == 396)
-					ObjSetMicro(door.position + Direction::DIR_NW, 411);
+					ObjSetMicro(door.position + Direction::NorthWest, 411);
 				else
-					ObjSetMicro(door.position + Direction::DIR_NW, 50);
+					ObjSetMicro(door.position + Direction::NorthWest, 50);
 			}
 		} else {
 			if (door._oVar2 != 86) {
-				ObjSetMicro(door.position + Direction::DIR_NW, door._oVar2);
+				ObjSetMicro(door.position + Direction::NorthWest, door._oVar2);
 			} else {
 				if (dPiece[door.position.x - 1][door.position.y] == 210)
-					ObjSetMicro(door.position + Direction::DIR_NW, 232);
+					ObjSetMicro(door.position + Direction::NorthWest, 232);
 				else
-					ObjSetMicro(door.position + Direction::DIR_NW, 86);
+					ObjSetMicro(door.position + Direction::NorthWest, 86);
 			}
 		}
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -1917,10 +1917,10 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		} else {
 			dSpecial[door.position.x][door.position.y] = 1;
 		}
-		SetDoorPiece(door.position + Direction::DIR_NW);
+		SetDoorPiece(door.position + Direction::NorthWest);
 		door._oAnimFrame += 2;
 		door._oPreFlag = true;
-		DoorSet(door.position + Direction::DIR_NE, true);
+		DoorSet(door.position + Direction::NorthEast, true);
 		door._oVar4 = 1;
 		door._oSelFlag = 2;
 		RedoPlayerVision();
@@ -1942,21 +1942,21 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		ObjSetMicro(door.position, door._oVar1);
 		if (currlevel < 17) {
 			if (door._oVar2 != 50) {
-				ObjSetMicro(door.position + Direction::DIR_NE, door._oVar2);
+				ObjSetMicro(door.position + Direction::NorthEast, door._oVar2);
 			} else {
 				if (dPiece[door.position.x][door.position.y - 1] == 396)
-					ObjSetMicro(door.position + Direction::DIR_NE, 412);
+					ObjSetMicro(door.position + Direction::NorthEast, 412);
 				else
-					ObjSetMicro(door.position + Direction::DIR_NE, 50);
+					ObjSetMicro(door.position + Direction::NorthEast, 50);
 			}
 		} else {
 			if (door._oVar2 != 86) {
-				ObjSetMicro(door.position + Direction::DIR_NE, door._oVar2);
+				ObjSetMicro(door.position + Direction::NorthEast, door._oVar2);
 			} else {
 				if (dPiece[door.position.x][door.position.y - 1] == 210)
-					ObjSetMicro(door.position + Direction::DIR_NE, 234);
+					ObjSetMicro(door.position + Direction::NorthEast, 234);
 				else
-					ObjSetMicro(door.position + Direction::DIR_NE, 86);
+					ObjSetMicro(door.position + Direction::NorthEast, 86);
 			}
 		}
 		dSpecial[door.position.x][door.position.y] = 0;
@@ -2208,7 +2208,7 @@ void OperateBook(int pnum, int i)
 			}
 			if (doAddMissile) {
 				Objects[dObject[35][36] - 1]._oVar5++;
-				AddMissile(player.position.tile, { dx, dy }, DIR_S, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
+				AddMissile(player.position.tile, { dx, dy }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
 				missileAdded = true;
 				doAddMissile = false;
 			}
@@ -3050,7 +3050,7 @@ bool OperateShrineHoly(int pnum)
 	if (deltaload)
 		return false;
 
-	AddMissile(Players[pnum].position.tile, { 0, 0 }, DIR_S, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
+	AddMissile(Players[pnum].position.tile, { 0, 0 }, Direction::South, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
 
 	if (pnum != MyPlayerId)
 		return false;
@@ -4299,25 +4299,25 @@ void SyncL1Doors(Object &door)
 		if (isLeftDoor) {
 			ObjSetMicro(door.position, door._oVar1 == 214 ? 408 : 393);
 			dSpecial[door.position.x][door.position.y] = 7;
-			SetDoorPiece(door.position + Direction::DIR_NW);
-			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
+			SetDoorPiece(door.position + Direction::NorthWest);
+			DoorSet(door.position + Direction::NorthEast, isLeftDoor);
 		} else {
 			ObjSetMicro(door.position, 395);
 			dSpecial[door.position.x][door.position.y] = 8;
-			SetDoorPiece(door.position + Direction::DIR_NE);
-			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
+			SetDoorPiece(door.position + Direction::NorthEast);
+			DoorSet(door.position + Direction::NorthWest, isLeftDoor);
 		}
 	} else {
 		if (isLeftDoor) {
 			ObjSetMicro(door.position, 206);
 			dSpecial[door.position.x][door.position.y] = 1;
-			SetDoorPiece(door.position + Direction::DIR_NW);
-			DoorSet(door.position + Direction::DIR_NE, isLeftDoor);
+			SetDoorPiece(door.position + Direction::NorthWest);
+			DoorSet(door.position + Direction::NorthEast, isLeftDoor);
 		} else {
 			ObjSetMicro(door.position, 209);
 			dSpecial[door.position.x][door.position.y] = 2;
-			SetDoorPiece(door.position + Direction::DIR_NE);
-			DoorSet(door.position + Direction::DIR_NW, isLeftDoor);
+			SetDoorPiece(door.position + Direction::NorthEast);
+			DoorSet(door.position + Direction::NorthWest, isLeftDoor);
 		}
 	}
 }

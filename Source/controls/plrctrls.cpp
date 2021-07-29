@@ -59,8 +59,8 @@ int GetRotaryDistance(Point destination)
 	if (myPlayer.position.future == destination)
 		return -1;
 
-	int d1 = myPlayer._pdir;
-	int d2 = GetDirection(myPlayer.position.future, destination);
+	int d1 = static_cast<int>(myPlayer._pdir);
+	int d2 = static_cast<int>(GetDirection(myPlayer.position.future, destination));
 
 	int d = abs(d1 - d2);
 	if (d > 4)
@@ -1006,10 +1006,10 @@ void SpellBookMove(AxisDirection dir)
 }
 
 const Direction FaceDir[3][3] = {
-	// NONE      UP      DOWN
-	{ DIR_S, DIR_N, DIR_S },   // NONE
-	{ DIR_W, DIR_NW, DIR_SW }, // LEFT
-	{ DIR_E, DIR_NE, DIR_SE }, // RIGHT
+	// NONE             UP                DOWN
+	{ Direction::South, Direction::North, Direction::South },        // NONE
+	{ Direction::West, Direction::NorthWest, Direction::SouthWest }, // LEFT
+	{ Direction::East, Direction::NorthEast, Direction::SouthEast }, // RIGHT
 };
 
 /**
@@ -1028,21 +1028,21 @@ bool IsPathBlocked(Point position, Direction dir)
 	Direction d2;
 
 	switch (dir) {
-	case DIR_N:
-		d1 = DIR_NW;
-		d2 = DIR_NE;
+	case Direction::North:
+		d1 = Direction::NorthWest;
+		d2 = Direction::NorthEast;
 		break;
-	case DIR_E:
-		d1 = DIR_NE;
-		d2 = DIR_SE;
+	case Direction::East:
+		d1 = Direction::NorthEast;
+		d2 = Direction::SouthEast;
 		break;
-	case DIR_S:
-		d1 = DIR_SE;
-		d2 = DIR_SW;
+	case Direction::South:
+		d1 = Direction::SouthEast;
+		d2 = Direction::SouthWest;
 		break;
-	case DIR_W:
-		d1 = DIR_SW;
-		d2 = DIR_NW;
+	case Direction::West:
+		d1 = Direction::SouthWest;
+		d2 = Direction::NorthWest;
 		break;
 	default:
 		return false;
@@ -1415,10 +1415,10 @@ bool TryDropItem()
 {
 	const auto &myPlayer = Players[MyPlayerId];
 
-	cursPosition = myPlayer.position.future + DIR_SE;
+	cursPosition = myPlayer.position.future + Direction::SouthEast;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
-		cursPosition = myPlayer.position.future + DIR_SW;
+		cursPosition = myPlayer.position.future + Direction::SouthWest;
 		DropItemBeforeTrig();
 	}
 

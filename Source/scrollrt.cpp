@@ -850,9 +850,8 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (LightTableIndex < LightsMax && bDead != 0) {
 		do {
 			Corpse *pDeadGuy = &Corpses[(bDead & 0x1F) - 1];
-			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = targetBufferPosition.x - CalculateWidth2(pDeadGuy->width);
-			const byte *pCelBuff = pDeadGuy->data[dd];
+			const byte *pCelBuff = pDeadGuy->data[(bDead >> 5) & 7];
 			assert(pCelBuff != nullptr);
 			const auto *frameTable = reinterpret_cast<const uint32_t *>(pCelBuff);
 			int frames = SDL_SwapLE32(frameTable[0]);
@@ -943,11 +942,11 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
 			}
-			tilePosition += DIR_E;
+			tilePosition += Direction::East;
 			targetBufferPosition.x += TILE_WIDTH;
 		}
 		// Return to start of row
-		tilePosition += Displacement(DIR_W) * columns;
+		tilePosition += Displacement(Direction::West) * columns;
 		targetBufferPosition.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
@@ -991,7 +990,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 					// sprite screen position rather than tile position.
 					if (IsWall(tilePosition.x, tilePosition.y) && (IsWall(tilePosition.x + 1, tilePosition.y) || (tilePosition.x > 0 && IsWall(tilePosition.x - 1, tilePosition.y)))) { // Part of a wall aligned on the x-axis
 						if (IsWalkable(tilePosition.x + 1, tilePosition.y - 1) && IsWalkable(tilePosition.x, tilePosition.y - 1)) {                                                     // Has walkable area behind it
-							DrawDungeon(out, tilePosition + DIR_E, { targetBufferPosition.x + TILE_WIDTH, targetBufferPosition.y });
+							DrawDungeon(out, tilePosition + Direction::East, { targetBufferPosition.x + TILE_WIDTH, targetBufferPosition.y });
 						}
 					}
 				}
@@ -999,11 +998,11 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 					DrawDungeon(out, tilePosition, targetBufferPosition);
 				}
 			}
-			tilePosition += DIR_E;
+			tilePosition += Direction::East;
 			targetBufferPosition.x += TILE_WIDTH;
 		}
 		// Return to start of row
-		tilePosition += Displacement(DIR_W) * columns;
+		tilePosition += Displacement(Direction::West) * columns;
 		targetBufferPosition.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
@@ -1109,23 +1108,23 @@ void DrawGame(const Surface &fullOut, Point position)
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
 			if (chrflag || QuestLogIsOpen) {
-				position += Displacement(DIR_E) * 2;
+				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 			}
 			if (invflag || sbookflag) {
-				position += Displacement(DIR_E) * 2;
+				position += Displacement(Direction::East) * 2;
 				columns -= 4;
 				sx += -TILE_WIDTH / 2;
 			}
 		} else {
 			if (chrflag || QuestLogIsOpen) {
-				position += DIR_E;
+				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2; // SPANEL_WIDTH accounted for in Zoom()
 			}
 			if (invflag || sbookflag) {
-				position += DIR_E;
+				position += Direction::East;
 				columns -= 2;
 				sx += -TILE_WIDTH / 2 / 2;
 			}
@@ -1138,12 +1137,12 @@ void DrawGame(const Surface &fullOut, Point position)
 	switch (ScrollInfo._sdir) {
 	case SDIR_N:
 		sy -= TILE_HEIGHT;
-		position += DIR_N;
+		position += Direction::North;
 		rows += 2;
 		break;
 	case SDIR_NE:
 		sy -= TILE_HEIGHT;
-		position += DIR_N;
+		position += Direction::North;
 		columns++;
 		rows += 2;
 		break;
@@ -1159,19 +1158,19 @@ void DrawGame(const Surface &fullOut, Point position)
 		break;
 	case SDIR_SW:
 		sx -= TILE_WIDTH;
-		position += DIR_W;
+		position += Direction::West;
 		columns++;
 		rows++;
 		break;
 	case SDIR_W:
 		sx -= TILE_WIDTH;
-		position += DIR_W;
+		position += Direction::West;
 		columns++;
 		break;
 	case SDIR_NW:
 		sx -= TILE_WIDTH / 2;
 		sy -= TILE_HEIGHT / 2;
-		position += DIR_NW;
+		position += Direction::NorthWest;
 		columns++;
 		rows++;
 		break;
@@ -1403,19 +1402,19 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
 {
 	// clang-format off
-	//                                           DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
+	//                                           South,        SouthWest,    West,         NorthWest,    North,        NorthEast,     East,         SouthEast,
 	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	// clang-format on
 
 	float fAnimationProgress = animationInfo.GetAnimationProgress();
-	Displacement offset = MovingOffset[dir];
+	Displacement offset = MovingOffset[static_cast<size_t>(dir)];
 	offset *= fAnimationProgress;
 
 	if (cameraMode) {
 		offset = -offset;
 	} else {
-		offset += StartOffset[dir];
+		offset += StartOffset[static_cast<size_t>(dir)];
 	}
 
 	return offset;
@@ -1510,8 +1509,8 @@ void CalcViewportGeometry()
 	int lrow = tileRows - RowsCoveredByPanel();
 
 	// Center player tile on screen
-	tileShift += Displacement(DIR_W) * (tileColums / 2);
-	tileShift += Displacement(DIR_N) * (lrow / 2);
+	tileShift += Displacement(Direction::West) * (tileColums / 2);
+	tileShift += Displacement(Direction::North) * (lrow / 2);
 
 	tileRows *= 2;
 
@@ -1525,7 +1524,7 @@ void CalcViewportGeometry()
 		}
 	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
 		// Offset tile to vertically align the player when both rows and colums are odd
-		tileShift += Displacement(DIR_N);
+		tileShift += Displacement(Direction::North);
 		tileRows++;
 		tileOffset.deltaY -= TILE_HEIGHT / 2;
 	}

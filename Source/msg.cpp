@@ -1532,11 +1532,11 @@ DWORD OnPlayerJoinLevel(TCmd *pCmd, int pnum)
 		if (currlevel == player.plrlevel) {
 			SyncInitPlr(pnum);
 			if ((player._pHitPoints >> 6) > 0) {
-				StartStand(pnum, DIR_S);
+				StartStand(pnum, Direction::South);
 			} else {
 				player._pgfxnum = 0;
 				player._pmode = PM_DEATH;
-				NewPlrAnim(player, player_graphic::Death, DIR_S, player._pDFrames, 1);
+				NewPlrAnim(player, player_graphic::Death, Direction::South, player._pDFrames, 1);
 				player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames - 1;
 				dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
 			}
@@ -1779,7 +1779,7 @@ DWORD OnOpenHive(TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam2 *)pCmd;
 	if (gbBufferMsgs != 1) {
-		AddMissile({ p->x, p->y }, { p->wParam1, p->wParam2 }, DIR_S, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile({ p->x, p->y }, { p->wParam1, p->wParam2 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
 		InitTownTriggers();
 	}

@@ -214,6 +214,26 @@ struct Monster { // note: missing field _mAFNum
 	const MonsterData *MData;
 
 	/**
+	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
+	 * @param graphic Animation sequence of interest
+	 * @param direction Desired direction the monster should be visually facing
+	*/
+	void ActivateAnimation(MonsterGraphic graphic, Direction direction)
+	{
+		auto &celSprite = this->MType->GetAnimData(graphic).CelSpritesForDirections[static_cast<size_t>(direction)];
+		this->AnimInfo.pCelSprite = celSprite ? &*celSprite : nullptr;
+	}
+
+	/**
+	 * @brief Sets the current cell sprite to match the desired animation sequence using the direction the monster is currently facing
+	 * @param graphic Animation sequence of interest
+	*/
+	void ActivateAnimationForCurrentDirection(MonsterGraphic graphic)
+	{
+		this->ActivateAnimation(graphic, this->_mdir);
+	}
+
+	/**
 	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
 	 * @param mdir direction of the monster
 	 */
@@ -282,9 +302,5 @@ bool CanTalkToMonst(const Monster &monster);
 bool CheckMonsterHit(Monster &monster, bool *ret);
 int encode_enemy(Monster &monster);
 void decode_enemy(Monster &monster, int enemy);
-
-extern Direction left[8];
-extern Direction right[8];
-extern Direction opposite[8];
 
 } // namespace devilution

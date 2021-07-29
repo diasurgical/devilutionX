@@ -148,30 +148,30 @@ Direction GetDirection(Point start, Point destination)
 	if (mx >= 0) {
 		if (my >= 0) {
 			if (5 * mx <= (my * 2)) // mx/my <= 0.4, approximation of tan(22.5)
-				return DIR_SW;
-			md = DIR_S;
+				return Direction::SouthWest;
+			md = Direction::South;
 		} else {
 			my = -my;
 			if (5 * mx <= (my * 2))
-				return DIR_NE;
-			md = DIR_E;
+				return Direction::NorthEast;
+			md = Direction::East;
 		}
 		if (5 * my <= (mx * 2)) // my/mx <= 0.4
-			md = DIR_SE;
+			md = Direction::SouthEast;
 	} else {
 		mx = -mx;
 		if (my >= 0) {
 			if (5 * mx <= (my * 2))
-				return DIR_SW;
-			md = DIR_W;
+				return Direction::SouthWest;
+			md = Direction::West;
 		} else {
 			my = -my;
 			if (5 * mx <= (my * 2))
-				return DIR_NE;
-			md = DIR_N;
+				return Direction::NorthEast;
+			md = Direction::North;
 		}
 		if (5 * my <= (mx * 2))
-			md = DIR_NW;
+			md = Direction::NorthWest;
 	}
 	return md;
 }

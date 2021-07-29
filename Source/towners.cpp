@@ -63,7 +63,7 @@ void LoadTownerAnimations(Towner &towner, const char *path, int frames, Directio
 	for (auto &animation : towner._tNAnim) {
 		animation = towner.data.get();
 	}
-	NewTownerAnim(towner, towner._tNAnim[dir], frames, delay);
+	NewTownerAnim(towner, towner.GetAnimationPointer(dir), frames, delay);
 }
 
 /**
@@ -223,12 +223,12 @@ void InitCows(Towner &towner, const TownerData &townerData)
 	for (int i = 0; i < 8; i++) {
 		towner._tNAnim[i] = CelGetFrame(CowCels.get(), i);
 	}
-	NewTownerAnim(towner, towner._tNAnim[townerData.dir], 12, 3);
+	NewTownerAnim(towner, towner.GetAnimationPointer(townerData.dir), 12, 3);
 	towner._tAnimFrame = GenerateRnd(11) + 1;
 	towner.name = _("Cow");
 
 	const Point position = townerData.position;
-	const Point offset = position + CowOffsets[townerData.dir];
+	const Point offset = position + CowOffsets[static_cast<size_t>(townerData.dir)];
 	int index = -dMonster[position.x][position.y];
 	if (dMonster[position.x][offset.y] == 0)
 		dMonster[position.x][offset.y] = index;
@@ -338,7 +338,7 @@ void TalkToBarOwner(Player &player, Towner &barOwner)
 			if (bannerQuest._qvar2 == 1 && player.TryRemoveInvItemById(IDI_BANNER)) {
 				bannerQuest._qactive = QUEST_DONE;
 				bannerQuest._qvar1 = 3;
-				SpawnUnique(UITEM_HARCREST, barOwner.position + DIR_SW);
+				SpawnUnique(UITEM_HARCREST, barOwner.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_BANNER3);
 				return;
 			}
@@ -384,7 +384,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 
 			if (Quests[Q_ROCK]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ROCK)) {
 				Quests[Q_ROCK]._qactive = QUEST_DONE;
-				SpawnUnique(UITEM_INFRARING, blackSmith.position + DIR_SW);
+				SpawnUnique(UITEM_INFRARING, blackSmith.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_INFRA7);
 				return;
 			}
@@ -404,7 +404,7 @@ void TalkToBlackSmith(Player &player, Towner &blackSmith)
 
 			if (Quests[Q_ANVIL]._qvar2 == 1 && player.TryRemoveInvItemById(IDI_ANVIL)) {
 				Quests[Q_ANVIL]._qactive = QUEST_DONE;
-				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + DIR_SW);
+				SpawnUnique(UITEM_GRISWOLD, blackSmith.position + Direction::SouthWest);
 				InitQTextMsg(TEXT_ANVIL7);
 				return;
 			}
@@ -494,7 +494,7 @@ void TalkToHealer(Player &player, Towner &healer)
 		if (Quests[Q_PWATER]._qactive == QUEST_DONE && Quests[Q_PWATER]._qvar1 != 2) {
 			Quests[Q_PWATER]._qvar1 = 2;
 			InitQTextMsg(TEXT_POISON5);
-			SpawnUnique(UITEM_TRING, healer.position + DIR_SW);
+			SpawnUnique(UITEM_TRING, healer.position + Direction::SouthWest);
 			return;
 		}
 	}
@@ -650,11 +650,11 @@ void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 	auto &quest = Quests[Q_JERSEY];
 
 	if (player.TryRemoveInvItemById(IDI_BROWNSUIT)) {
-		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
+		SpawnUnique(UITEM_BOVINE, cowFarmer.position + Direction::SouthEast);
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
 		auto curFrame = cowFarmer._tAnimFrame;
-		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, DIR_SW, 3);
+		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, Direction::SouthWest, 3);
 		cowFarmer._tAnimFrame = std::min(curFrame, cowFarmer._tAnimLen);
 		return;
 	}
@@ -737,7 +737,7 @@ void TalkToGirl(Player &player, Towner &girl)
 		quest._qlog = false;
 		quest._qactive = QUEST_DONE;
 		auto curFrame = girl._tAnimFrame;
-		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, DIR_S, 6);
+		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, Direction::South, 6);
 		girl._tAnimFrame = std::min(curFrame, girl._tAnimLen);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
@@ -765,22 +765,22 @@ void TalkToGirl(Player &player, Towner &girl)
 
 const TownerData TownersData[] = {
 	// clang-format off
-	// type         position    dir     init           talk
-	{ TOWN_SMITH,   { 62, 63 }, DIR_SW, InitSmith,     TalkToBlackSmith  },
-	{ TOWN_HEALER,  { 55, 79 }, DIR_SE, InitHealer,    TalkToHealer      },
-	{ TOWN_DEADGUY, { 24, 32 }, DIR_N,  InitTownDead,  TalkToDeadguy     },
-	{ TOWN_TAVERN,  { 55, 62 }, DIR_SW, InitBarOwner,  TalkToBarOwner    },
-	{ TOWN_STORY,   { 62, 71 }, DIR_S,  InitTeller,    TalkToStoryteller },
-	{ TOWN_DRUNK,   { 71, 84 }, DIR_S,  InitDrunk,     TalkToDrunk       },
-	{ TOWN_WITCH,   { 80, 20 }, DIR_S,  InitWitch,     TalkToWitch       },
-	{ TOWN_BMAID,   { 43, 66 }, DIR_S,  InitBarmaid,   TalkToBarmaid     },
-	{ TOWN_PEGBOY,  { 11, 53 }, DIR_S,  InitBoy,       TalkToBoy         },
-	{ TOWN_COW,     { 58, 16 }, DIR_SW, InitCows,      TalkToCow         },
-	{ TOWN_COW,     { 56, 14 }, DIR_NW, InitCows,      TalkToCow         },
-	{ TOWN_COW,     { 59, 20 }, DIR_N,  InitCows,      TalkToCow         },
-	{ TOWN_COWFARM, { 61, 22 }, DIR_SW, InitCowFarmer, TalkToCowFarmer   },
-	{ TOWN_FARMER,  { 62, 16 }, DIR_S,  InitFarmer,    TalkToFarmer      },
-	{ TOWN_GIRL,    { 77, 43 }, DIR_S,  InitGirl,      TalkToGirl        },
+	// type         position    dir                   init           talk
+	{ TOWN_SMITH,   { 62, 63 }, Direction::SouthWest, InitSmith,     TalkToBlackSmith  },
+	{ TOWN_HEALER,  { 55, 79 }, Direction::SouthEast, InitHealer,    TalkToHealer      },
+	{ TOWN_DEADGUY, { 24, 32 }, Direction::North,     InitTownDead,  TalkToDeadguy     },
+	{ TOWN_TAVERN,  { 55, 62 }, Direction::SouthWest, InitBarOwner,  TalkToBarOwner    },
+	{ TOWN_STORY,   { 62, 71 }, Direction::South,     InitTeller,    TalkToStoryteller },
+	{ TOWN_DRUNK,   { 71, 84 }, Direction::South,     InitDrunk,     TalkToDrunk       },
+	{ TOWN_WITCH,   { 80, 20 }, Direction::South,     InitWitch,     TalkToWitch       },
+	{ TOWN_BMAID,   { 43, 66 }, Direction::South,     InitBarmaid,   TalkToBarmaid     },
+	{ TOWN_PEGBOY,  { 11, 53 }, Direction::South,     InitBoy,       TalkToBoy         },
+	{ TOWN_COW,     { 58, 16 }, Direction::SouthWest, InitCows,      TalkToCow         },
+	{ TOWN_COW,     { 56, 14 }, Direction::NorthWest, InitCows,      TalkToCow         },
+	{ TOWN_COW,     { 59, 20 }, Direction::North,     InitCows,      TalkToCow         },
+	{ TOWN_COWFARM, { 61, 22 }, Direction::SouthWest, InitCowFarmer, TalkToCowFarmer   },
+	{ TOWN_FARMER,  { 62, 16 }, Direction::South,     InitFarmer,    TalkToFarmer      },
+	{ TOWN_GIRL,    { 77, 43 }, Direction::South,     InitGirl,      TalkToGirl        },
 	// clang-format on
 };
 

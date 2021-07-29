@@ -1024,11 +1024,11 @@ bool PutItem(Player &player, Point &position)
 	if (CanPut(position))
 		return true;
 
-	position = player.position.tile + left[d];
+	position = player.position.tile + Left(d);
 	if (CanPut(position))
 		return true;
 
-	position = player.position.tile + right[d];
+	position = player.position.tile + Right(d);
 	if (CanPut(position))
 		return true;
 
@@ -1711,11 +1711,11 @@ bool TryInvPut()
 		return true;
 	}
 
-	if (CanPut(myPlayer.position.tile + left[dir])) {
+	if (CanPut(myPlayer.position.tile + Left(dir))) {
 		return true;
 	}
 
-	if (CanPut(myPlayer.position.tile + right[dir])) {
+	if (CanPut(myPlayer.position.tile + Right(dir))) {
 		return true;
 	}
 
