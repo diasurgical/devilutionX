@@ -96,13 +96,13 @@ void DrawMonsterHealthBar(const Surface &out)
 	}
 
 	int barLabelY = yPos + 10 + (height - 11) / 2;
-	DrawString(out, monster.mName, { { xPos - 1, barLabelY + 1 }, { width, height } }, UIS_CENTER | UIS_BLACK);
-	uint16_t style = UIS_SILVER;
+	DrawString(out, monster.mName, { { xPos - 1, barLabelY + 1 }, { width, height } }, UiFlags::UIS_CENTER | UiFlags::UIS_BLACK);
+	UiFlags style = UiFlags::UIS_SILVER;
 	if (monster._uniqtype != 0)
-		style = UIS_GOLD;
+		style = UiFlags::UIS_GOLD;
 	else if (monster.leader != 0)
-		style = UIS_BLUE;
-	DrawString(out, monster.mName, { { xPos, barLabelY }, { width, height } }, UIS_CENTER | style);
+		style = UiFlags::UIS_BLUE;
+	DrawString(out, monster.mName, { { xPos, barLabelY }, { width, height } }, UiFlags::UIS_CENTER | style);
 
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };

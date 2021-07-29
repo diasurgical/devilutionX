@@ -271,39 +271,39 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 /**
  * @todo replace Rectangle with cropped Surface
  */
-uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, uint16_t flags, int spacing, int lineHeight, bool drawTextCursor)
+uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
-	if ((flags & UIS_MED) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_MED))
 		size = GameFontMed;
-	else if ((flags & UIS_HUGE) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_HUGE))
 		size = GameFontBig;
 
 	text_color color = ColorGold;
-	if ((flags & UIS_SILVER) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_SILVER))
 		color = ColorWhite;
-	else if ((flags & UIS_BLUE) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_BLUE))
 		color = ColorBlue;
-	else if ((flags & UIS_RED) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_RED))
 		color = ColorRed;
-	else if ((flags & UIS_BLACK) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_BLACK))
 		color = ColorBlack;
 
 	const size_t textLength = strlen(text);
 
 	int charactersInLine = 0;
 	int lineWidth = 0;
-	if ((flags & (UIS_CENTER | UIS_RIGHT | UIS_FIT_SPACING)) != 0)
+	if (HasAnyOf(flags, (UiFlags::UIS_CENTER | UiFlags::UIS_RIGHT | UiFlags::UIS_FIT_SPACING)))
 		lineWidth = GetLineWidth(text, size, spacing, &charactersInLine);
 
 	int maxSpacing = spacing;
-	if ((flags & UIS_FIT_SPACING) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_FIT_SPACING))
 		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
 	Point characterPosition = rect.position;
-	if ((flags & UIS_CENTER) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
 		characterPosition.x += (rect.size.width - lineWidth) / 2;
-	else if ((flags & UIS_RIGHT) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
 		characterPosition.x += rect.size.width - lineWidth;
 
 	int rightMargin = rect.position.x + rect.size.width;
@@ -321,16 +321,16 @@ uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect,
 				break;
 			characterPosition.y += lineHeight;
 
-			if ((flags & (UIS_CENTER | UIS_RIGHT | UIS_FIT_SPACING)) != 0)
+			if (HasAnyOf(flags, (UiFlags::UIS_CENTER | UiFlags::UIS_RIGHT | UiFlags::UIS_FIT_SPACING)))
 				lineWidth = GetLineWidth(&text[i + 1], size, spacing, &charactersInLine);
 
-			if ((flags & UIS_FIT_SPACING) != 0)
+			if (HasAnyOf(flags, UiFlags::UIS_FIT_SPACING))
 				spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
 			characterPosition.x = rect.position.x;
-			if ((flags & UIS_CENTER) != 0)
+			if (HasAnyOf(flags, UiFlags::UIS_CENTER))
 				characterPosition.x += (rect.size.width - lineWidth) / 2;
-			else if ((flags & UIS_RIGHT) != 0)
+			else if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
 				characterPosition.x += rect.size.width - lineWidth;
 		}
 		if (frame != 0) {

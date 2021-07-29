@@ -361,18 +361,18 @@ struct ItemStruct {
 	{
 		switch (_iMagical) {
 		case ITEM_QUALITY_MAGIC:
-			return UIS_BLUE;
+			return UiFlags::UIS_BLUE;
 		case ITEM_QUALITY_UNIQUE:
-			return UIS_GOLD;
+			return UiFlags::UIS_GOLD;
 		default:
-			return UIS_SILVER;
+			return UiFlags::UIS_SILVER;
 		}
 	}
 
 	UiFlags getTextColorWithStatCheck() const
 	{
 		if (!_iStatFlag)
-			return UIS_RED;
+			return UiFlags::UIS_RED;
 		return getTextColor();
 	}
 
