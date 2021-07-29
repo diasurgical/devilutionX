@@ -56,6 +56,8 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
+      - run: apt-get update -y
+      - run: apt-get install -y ffmpeg
       - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
       - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
       - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
