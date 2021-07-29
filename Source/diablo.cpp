@@ -824,17 +824,29 @@ void RunGameLoop(interface_mode uMsg)
 		}
 		if (!gbRunGame)
 			break;
-		if (!nthread_has_500ms_passed()) {
-			ProcessInput();
+
+		bool drawGame = true;
+		bool processInput = true;
+		bool runGameLoop = demoMode ? GetDemoRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed();
+		if (!runGameLoop) {
+			if (recordDemo != -1)
+				demoRecording << static_cast<uint32_t>(DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
+			if (processInput)
+				ProcessInput();
+			if (!drawGame)
+				continue;
 			force_redraw |= 1;
 			DrawAndBlit();
 			continue;
 		}
+		if (recordDemo != -1)
+			demoRecording << static_cast<uint32_t>(DemoMsgType::GameTick) << "," << gfProgressToNextGameTick << "\n";
 		diablo_color_cyc_logic();
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
-		DrawAndBlit();
+		if (drawGame)
+			DrawAndBlit();
 		logicTick++;
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 		if (run_game_iteration++ == 0)
@@ -2184,7 +2196,7 @@ void game_loop(bool bStartup)
 		TimeoutCursor(false);
 		GameLogic();
 
-		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed())
+		if (!gbRunGame || !gbIsMultiplayer || demoMode || recordDemo != -1 || !nthread_has_500ms_passed())
 			break;
 	}
 }
