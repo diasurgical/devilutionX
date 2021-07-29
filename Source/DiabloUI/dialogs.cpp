@@ -176,7 +176,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 
 		SDL_Color color = { 255, 255, 0, 0 };
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 147), (Sint16)(UI_OFFSET_Y + 110), 345, 20 };
-		vecOkDialog.push_back(std::make_unique<UiText>(text, color, rect2, UiFlags::UIS_CENTER));
+		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::UIS_CENTER, color));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 147), (Sint16)(UI_OFFSET_Y + 141), 345, 190 };
 		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect3, UiFlags::UIS_CENTER));
