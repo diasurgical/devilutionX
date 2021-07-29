@@ -91,7 +91,6 @@ bool gbBarbarian;
 bool gbQuietMode = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
-int logicTick;
 char gszProductName[64] = "DevilutionX vUnknown";
 Keymapper keymapper {
 	// Workaround: remove once the INI library has been replaced.
@@ -822,13 +821,13 @@ void RunGameLoop(interface_mode uMsg)
 	unsigned run_game_iteration = 0;
 #endif
 
-	logicTick = 0;
+	int logicTick = 0;
 
 	if (timedemo)
 		startTime = SDL_GetTicks();
 
 	while (gbRunGame) {
-		while (FetchMessage(&msg, logicTick)) {
+		while (FetchMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = false;
 				gbRunGame = false;
@@ -839,12 +838,20 @@ void RunGameLoop(interface_mode uMsg)
 		}
 		if (!gbRunGame)
 			break;
-		if (!nthread_has_500ms_passed()) {
+
+		bool runGameLoop = timedemo ? GetDemoRunGameLoop() : nthread_has_500ms_passed();
+		if (!runGameLoop) {
+			if (recordDemo != -1)
+				demoRecording << static_cast<uint32_t>(DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
 			ProcessInput();
+			if (timedemo)
+				continue;
 			force_redraw |= 1;
 			DrawAndBlit();
 			continue;
 		}
+		if (recordDemo != -1)
+			demoRecording << static_cast<uint32_t>(DemoMsgType::GameTick) << "," << gfProgressToNextGameTick << "\n";
 		diablo_color_cyc_logic();
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
@@ -2199,7 +2206,7 @@ void game_loop(bool bStartup)
 		TimeoutCursor(false);
 		GameLogic();
 
-		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed())
+		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed() || timedemo || recordDemo != -1)
 			break;
 	}
 }

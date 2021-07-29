@@ -33,14 +33,22 @@ struct tagMSG {
 	int32_t lParam;
 };
 
+enum class DemoMsgType {
+	GameTick = 0,
+	Rendering = 1,
+	Message = 2,
+};
+
 struct demoMsg {
-	int tick;
+	DemoMsgType type;
 	uint32_t message;
 	int32_t wParam;
 	int32_t lParam;
+	float progressToNextGameTick;
 };
 
 extern std::ofstream demoRecording;
+bool GetDemoRunGameLoop();
 
 //
 // Everything else
@@ -53,7 +61,7 @@ bool GetAsyncKeyState(int vKey);
 
 void CreateDemoFile(int i);
 bool LoadDemoMessages(int i);
-bool FetchMessage(tagMSG *lpMsg, int tick);
+bool FetchMessage(tagMSG *lpMsg);
 
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
