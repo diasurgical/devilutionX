@@ -1210,7 +1210,7 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 			if (monster == nullptr)
 				if ((player._pIFlags & ISPL_ABSHALFTRAP) != 0)
 					dam /= 2;
-			dam += (player._pIGetHit << 6);
+			dam += player._pIGetHit * 64;
 		} else {
 			dam = mind + GenerateRnd(maxd - mind + 1);
 			if (monster == nullptr)
@@ -3082,16 +3082,17 @@ int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int
 	if (ActiveMissileCount >= MAXMISSILES - 1)
 		return -1;
 
-	auto &player = Players[id];
-
-	if (mitype == MIS_MANASHIELD && player.pManaShield) {
-		if (currlevel != player.plrlevel)
-			return -1;
-
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mi = ActiveMissiles[i];
-			if (Missiles[mi]._mitype == MIS_MANASHIELD && Missiles[mi]._misource == id)
+	if (mitype == MIS_MANASHIELD) {
+		auto &player = Players[id];
+		if (player.pManaShield) {
+			if (currlevel != player.plrlevel)
 				return -1;
+
+			for (int i = 0; i < ActiveMissileCount; i++) {
+				int mi = ActiveMissiles[i];
+				if (Missiles[mi]._mitype == MIS_MANASHIELD && Missiles[mi]._misource == id)
+					return -1;
+			}
 		}
 	}
 
