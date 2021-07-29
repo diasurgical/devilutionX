@@ -34,6 +34,7 @@ struct tagMSG {
 };
 
 enum class DemoMsgType {
+	GameTick = 0,
 	Rendering = 1,
 	Message = 2,
 };
@@ -43,9 +44,11 @@ struct demoMsg {
 	uint32_t message;
 	int32_t wParam;
 	int32_t lParam;
+	float progressToNextGameTick;
 };
 
 extern std::ofstream demoRecording;
+bool GetDemoRunGameLoop(bool &drawGame, bool &processInput);
 
 //
 // Everything else
