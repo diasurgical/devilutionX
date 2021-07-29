@@ -12,27 +12,27 @@ namespace devilution {
 
 namespace {
 
-TextAlignment XAlignmentFromFlags(int flags)
+TextAlignment XAlignmentFromFlags(UiFlags flags)
 {
-	if ((flags & UIS_CENTER) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
 		return TextAlignment_CENTER;
-	if ((flags & UIS_RIGHT) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
 		return TextAlignment_END;
 	return TextAlignment_BEGIN;
 }
 
-int AlignXOffset(int flags, const SDL_Rect &dest, int w)
+int AlignXOffset(UiFlags flags, const SDL_Rect &dest, int w)
 {
-	if ((flags & UIS_CENTER) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
 		return (dest.w - w) / 2;
-	if ((flags & UIS_RIGHT) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
 		return dest.w - w;
 	return 0;
 }
 
 } // namespace
 
-void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
+void DrawTTF(const char *text, const SDL_Rect &rectIn, UiFlags flags,
     const SDL_Color &textColor, const SDL_Color &shadowColor,
     TtfSurfaceCache &renderCache)
 {
@@ -54,7 +54,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 	SDL_Rect destRect = rect;
 	ScaleOutputRect(&destRect);
 	destRect.x += AlignXOffset(flags, destRect, textSurface->w);
-	destRect.y += (flags & UIS_VCENTER) != 0 ? (destRect.h - textSurface->h) / 2 : 0;
+	destRect.y += HasAnyOf(flags, UiFlags::UIS_VCENTER) ? (destRect.h - textSurface->h) / 2 : 0;
 
 	SDL_Rect shadowRect = destRect;
 	++shadowRect.x;
@@ -65,20 +65,20 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, int flags,
 		ErrSdl();
 }
 
-void DrawArtStr(const char *text, const SDL_Rect &rect, int flags, bool drawTextCursor)
+void DrawArtStr(const char *text, const SDL_Rect &rect, UiFlags flags, bool drawTextCursor)
 {
 	_artFontTables size = AFT_SMALL;
-	_artFontColors color = (flags & UIS_GOLD) != 0 ? AFC_GOLD : AFC_SILVER;
+	_artFontColors color = HasAnyOf(flags, UiFlags::UIS_GOLD) ? AFC_GOLD : AFC_SILVER;
 
-	if ((flags & UIS_MED) != 0)
+	if (HasAnyOf(flags, UiFlags::UIS_MED))
 		size = AFT_MED;
-	else if ((flags & UIS_BIG) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_BIG))
 		size = AFT_BIG;
-	else if ((flags & UIS_HUGE) != 0)
+	else if (HasAnyOf(flags, UiFlags::UIS_HUGE))
 		size = AFT_HUGE;
 
 	const int x = rect.x + AlignXOffset(flags, rect, GetArtStrWidth(text, size));
-	const int y = rect.y + ((flags & UIS_VCENTER) != 0 ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
+	const int y = rect.y + (HasAnyOf(flags, UiFlags::UIS_VCENTER) ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
 
 	int sx = x;
 	int sy = y;

@@ -40,7 +40,7 @@ extern bool chrbtnactive;
 extern int pnumlines;
 extern bool pinfoflag;
 extern spell_id pSpell;
-extern uint16_t infoclr;
+extern UiFlags InfoColor;
 extern char tempstr[256];
 extern int sbooktab;
 extern spell_type pSplType;

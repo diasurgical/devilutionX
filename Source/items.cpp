@@ -3761,7 +3761,7 @@ void GetItemStr(int i)
 		else
 			strcpy(infostr, Items[i]._iName);
 
-		infoclr = Items[i].getTextColor();
+		InfoColor = Items[i].getTextColor();
 	} else {
 		int nGold = Items[i]._ivalue;
 		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
@@ -4138,7 +4138,7 @@ void DrawUniqueInfo(const Surface &out)
 
 	Rectangle rect { { 32 + RIGHT_PANEL - SPANEL_WIDTH, 44 + 2 * 12 }, { 257, 0 } };
 	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
-	DrawString(out, _(uitem.UIName), rect, UIS_CENTER);
+	DrawString(out, _(uitem.UIName), rect, UiFlags::UIS_CENTER);
 
 	DrawUniqueInfoDevider(out, 5);
 
@@ -4149,7 +4149,7 @@ void DrawUniqueInfo(const Surface &out)
 			break;
 		rect.position.y += 2 * 12;
 		PrintItemPower(power.type, &curruitem);
-		DrawString(out, tempstr, rect, UIS_SILVER | UIS_CENTER);
+		DrawString(out, tempstr, rect, UiFlags::UIS_SILVER | UiFlags::UIS_CENTER);
 	}
 }
 

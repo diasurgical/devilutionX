@@ -34,14 +34,14 @@ void UiTitleDialog()
 {
 	if (gbIsHellfire) {
 		SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
-		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
-		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackground, /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
+		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, /*bAnimated=*/true, /*iFrame=*/0, rect, UiFlags::UIS_CENTER));
+		vecTitleScreen.push_back(std::make_unique<UiImage>(&ArtBackground, /*bAnimated=*/true, /*iFrame=*/0, rect, UiFlags::UIS_CENTER));
 	} else {
 		UiAddBackground(&vecTitleScreen);
 		UiAddLogo(&vecTitleScreen, LOGO_BIG, 182);
 
 		SDL_Rect rect = { (Sint16)(PANEL_LEFT + 49), (Sint16)(UI_OFFSET_Y + 410), 550, 26 };
-		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment"), rect, UIS_MED | UIS_CENTER));
+		vecTitleScreen.push_back(std::make_unique<UiArtText>(_("Copyright © 1996-2001 Blizzard Entertainment"), rect, UiFlags::UIS_MED | UiFlags::UIS_CENTER));
 	}
 	TitleLoad();
 

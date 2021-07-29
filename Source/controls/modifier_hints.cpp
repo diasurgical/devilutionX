@@ -93,9 +93,9 @@ bool IsLeftActive(const CircleMenuHint &hint)
 	return IsControllerButtonPressed(ControllerButton_BUTTON_X);
 }
 
-uint16_t CircleMenuHintTextColor(bool active)
+UiFlags CircleMenuHintTextColor(bool active)
 {
-	return active ? UIS_BLUE : UIS_GOLD;
+	return active ? UiFlags::UIS_BLUE : UiFlags::UIS_GOLD;
 }
 
 /**

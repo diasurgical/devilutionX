@@ -126,9 +126,9 @@ void UiInitScrollBar(UiScrollBar *uiSb, std::size_t viewportSize, const std::siz
 	ListViewportSize = viewportSize;
 	ListOffset = currentOffset;
 	if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax + 1)) {
-		uiSb->add_flag(UIS_HIDDEN);
+		uiSb->add_flag(UiFlags::UIS_HIDDEN);
 	} else {
-		uiSb->remove_flag(UIS_HIDDEN);
+		uiSb->remove_flag(UiFlags::UIS_HIDDEN);
 	}
 }
 
@@ -636,17 +636,17 @@ void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog)
 {
 	if (ArtBackgroundWidescreen.surface != nullptr) {
 		SDL_Rect rectw = { 0, UI_OFFSET_Y, 0, 0 };
-		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, /*bAnimated=*/false, /*iFrame=*/0, rectw, UIS_CENTER));
+		vecDialog->push_back(std::make_unique<UiImage>(&ArtBackgroundWidescreen, /*bAnimated=*/false, /*iFrame=*/0, rectw, UiFlags::UIS_CENTER));
 	}
 
 	SDL_Rect rect = { 0, UI_OFFSET_Y, 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, /*bAnimated=*/false, /*iFrame=*/0, rect, UIS_CENTER));
+	vecDialog->push_back(std::make_unique<UiImage>(&ArtBackground, /*bAnimated=*/false, /*iFrame=*/0, rect, UiFlags::UIS_CENTER));
 }
 
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size, int y)
 {
 	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y + y), 0, 0 };
-	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], /*bAnimated=*/true, /*iFrame=*/0, rect, UIS_CENTER));
+	vecDialog->push_back(std::make_unique<UiImage>(&ArtLogos[size], /*bAnimated=*/true, /*iFrame=*/0, rect, UiFlags::UIS_CENTER));
 }
 
 void UiFadeIn()
@@ -734,7 +734,7 @@ void Render(const UiArtText *uiArtText)
 void Render(const UiImage *uiImage)
 {
 	int x = uiImage->m_rect.x;
-	if ((uiImage->m_iFlags & UIS_CENTER) != 0 && uiImage->m_art != nullptr) {
+	if (HasAnyOf(uiImage->m_iFlags, UiFlags::UIS_CENTER) && uiImage->m_art != nullptr) {
 		const int xOffset = GetCenterOffset(uiImage->m_art->w(), uiImage->m_rect.w);
 		x += xOffset;
 	}
@@ -805,7 +805,7 @@ void Render(const UiEdit *uiEdit)
 
 void RenderItem(UiItemBase *item)
 {
-	if (item->has_flag(UIS_HIDDEN))
+	if (item->has_flag(UiFlags::UIS_HIDDEN))
 		return;
 	switch (item->m_type) {
 	case UI_TEXT:
@@ -911,7 +911,7 @@ bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar *uiSb)
 
 bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 {
-	if (item->has_any_flag(UIS_HIDDEN | UIS_DISABLED) || !IsInsideRect(event, item->m_rect))
+	if (item->has_any_flag(UiFlags::UIS_HIDDEN | UiFlags::UIS_DISABLED) || !IsInsideRect(event, item->m_rect))
 		return false;
 	switch (item->m_type) {
 	case UI_ART_TEXT_BUTTON:

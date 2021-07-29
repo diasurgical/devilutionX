@@ -1267,7 +1267,7 @@ void DrawInvBelt(const Surface &out)
 		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
-			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UIS_SILVER | UIS_RIGHT);
+			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UiFlags::UIS_SILVER | UiFlags::UIS_RIGHT);
 		}
 	}
 }
@@ -1899,7 +1899,7 @@ char CheckInvHLight()
 		return -1;
 
 	int8_t rv = -1;
-	infoclr = UIS_SILVER;
+	InfoColor = UiFlags::UIS_SILVER;
 	ItemStruct *pi = nullptr;
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -1954,7 +1954,7 @@ char CheckInvHLight()
 		int nGold = pi->_ivalue;
 		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 	} else {
-		infoclr = pi->getTextColor();
+		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {
 			strcpy(infostr, pi->_iIName);
 			PrintItemDetails(pi);

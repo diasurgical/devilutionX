@@ -22,8 +22,9 @@ enum UiType : uint8_t {
 	UI_EDIT,
 };
 
-enum UiFlags : uint16_t {
+enum class UiFlags {
 	// clang-format off
+	NONE            = 0,
 	UIS_SMALL       = 1 << 0,
 	UIS_MED         = 1 << 1,
 	UIS_BIG         = 1 << 2,
@@ -42,15 +43,50 @@ enum UiFlags : uint16_t {
 	// clang-format on
 };
 
+inline UiFlags operator|(UiFlags lhs, UiFlags rhs)
+{
+	using T = std::underlying_type_t<UiFlags>;
+	return static_cast<UiFlags>(static_cast<T>(lhs) | static_cast<T>(rhs));
+}
+
+inline UiFlags operator|=(UiFlags &lhs, UiFlags rhs)
+{
+	lhs = lhs | rhs;
+	return lhs;
+}
+
+inline UiFlags operator&(UiFlags lhs, UiFlags rhs)
+{
+	using T = std::underlying_type_t<UiFlags>;
+	return static_cast<UiFlags>(static_cast<T>(lhs) & static_cast<T>(rhs));
+}
+
+inline UiFlags operator&=(UiFlags &lhs, UiFlags rhs)
+{
+	lhs = lhs & rhs;
+	return lhs;
+}
+
+inline UiFlags operator~(UiFlags value)
+{
+	using T = std::underlying_type_t<UiFlags>;
+	return static_cast<UiFlags>(~static_cast<T>(value));
+}
+
+inline bool HasAnyOf(UiFlags lhs, UiFlags test)
+{
+	return (lhs & test) != UiFlags::NONE;
+}
+
 class UiItemBase {
 public:
-	UiItemBase(SDL_Rect rect, int flags)
+	UiItemBase(SDL_Rect rect, UiFlags flags)
 	{
 		m_rect = rect;
 		m_iFlags = flags;
 	};
 
-	UiItemBase(Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags)
+	UiItemBase(Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags)
 	{
 		SDL_Rect tmp;
 		tmp.x = x;
@@ -66,12 +102,12 @@ public:
 
 	bool has_flag(UiFlags flag) const
 	{
-		return m_iFlags & flag;
+		return (m_iFlags & flag) == flag;
 	}
 
-	bool has_any_flag(int flags) const
+	bool has_any_flag(UiFlags flags) const
 	{
-		return (m_iFlags & flags) != 0;
+		return HasAnyOf(m_iFlags, flags);
 	}
 
 	void add_flag(UiFlags flag)
@@ -87,14 +123,14 @@ public:
 	//protected:
 	UiType m_type;
 	SDL_Rect m_rect;
-	int m_iFlags;
+	UiFlags m_iFlags;
 };
 
 //=============================================================================
 
 class UiImage : public UiItemBase {
 public:
-	UiImage(Art *art, SDL_Rect rect, int flags = 0)
+	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_IMAGE;
@@ -103,7 +139,7 @@ public:
 		m_frame = 0;
 	};
 
-	UiImage(Art *art, bool bAnimated, int iFrame, SDL_Rect rect, int flags)
+	UiImage(Art *art, bool bAnimated, int iFrame, SDL_Rect rect, UiFlags flags)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_IMAGE;
@@ -112,7 +148,7 @@ public:
 		m_frame = iFrame;
 	};
 
-	UiImage(Art *art, int frame, SDL_Rect rect, int flags = 0)
+	UiImage(Art *art, int frame, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_IMAGE;
@@ -133,14 +169,14 @@ public:
 
 class UiArtText : public UiItemBase {
 public:
-	UiArtText(const char *text, SDL_Rect rect, int flags = 0)
+	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	    , m_text(text)
 	{
 		m_type = UI_ART_TEXT;
 	};
 
-	UiArtText(const char **ptext, SDL_Rect rect, int flags = 0)
+	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	    , m_ptext(ptext)
 	{
@@ -165,7 +201,7 @@ private:
 
 class UiScrollBar : public UiItemBase {
 public:
-	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, int flags = 0)
+	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_SCROLLBAR;
@@ -184,7 +220,7 @@ public:
 
 class UiArtTextButton : public UiItemBase {
 public:
-	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_ART_TEXT_BUTTON;
@@ -200,7 +236,7 @@ public:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, int flags = 0)
+	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_EDIT;
@@ -221,7 +257,7 @@ public:
 
 class UiText : public UiItemBase {
 public:
-	UiText(const char *text, SDL_Color color1, SDL_Rect rect, int flags = 0)
+	UiText(const char *text, SDL_Color color1, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_TEXT;
@@ -233,7 +269,7 @@ public:
 		m_text = text;
 	}
 
-	UiText(const char *text, SDL_Rect rect, int flags = 0)
+	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_TEXT;
@@ -262,7 +298,7 @@ public:
 
 class UiButton : public UiItemBase {
 public:
-	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, int flags = 0)
+	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(rect, flags)
 	{
 		m_type = UI_BUTTON;
@@ -312,7 +348,7 @@ typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, int flags = 0)
+	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::NONE)
 	    : UiItemBase(x, y, item_width, static_cast<Uint16>(item_height * vItems.size()), flags)
 	{
 		m_type = UI_LIST;
