@@ -83,7 +83,6 @@ extern uint16_t gnTickDelay;
 extern char gszProductName[64];
 
 extern MouseActionType LastMouseButtonAction;
-extern uint32_t LastMouseButtonTime;
 
 void FreeGameMem();
 bool StartGame(bool bNewGame, bool bSinglePlayer);
