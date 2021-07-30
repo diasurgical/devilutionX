@@ -940,7 +940,7 @@ if(NINTENDO_3DS)
 endif()
 
 if(CPACK)
-  if(NOT SYSTEM_BITS MATCHES x64 AND WIN32)
+  if(WIN32)
     set(CPACK_PACKAGE_FILE_NAME "devilutionx")
     set(CPACK_PACKAGE_NAME ${project_name})
     set(CPACK_GENERATOR "ZIP")
@@ -955,62 +955,22 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/libfreetype-6.dll"
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/"
       DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/i686-w64-mingw32/bin/SDL2.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/SDL2_ttf.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/zlib1.dll"
-      DESTINATION "."
+      FILES_MATCHING PATTERN "*.dll"
+      PATTERN "Testing" EXCLUDE
+      PATTERN "CMakeFiles" EXCLUDE
+      PATTERN "3rdParty" EXCLUDE
+      PATTERN "_deps" EXCLUDE
+      PATTERN ".cmake" EXCLUDE
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
       DESTINATION "LICENSE"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/i686-w64-mingw32/bin/LICENSE.freetype.txt"
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.freetype.txt"
       DESTINATION "LICENSE"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/README-SDL.txt"
-      DESTINATION "LICENSE"
-    )
-
-  elseif(SYSTEM_BITS MATCHES x64 AND WIN32)
-    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
-    set(CPACK_PACKAGE_NAME ${project_name})
-    set(CPACK_GENERATOR "ZIP")
-    set(CPACK_STRIP_FILES TRUE)
-    install(TARGETS ${BIN_TARGET} DESTINATION .)
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/libfreetype-6.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/x86_64-w64-mingw32/bin/SDL2.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/SDL2_ttf.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/zlib1.dll"
-      DESTINATION "."
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
-      DESTINATION "LICENSE"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2_ttf-2.0.15/x86_64-w64-mingw32/bin/LICENSE.freetype.txt"
-      DESTINATION "LICENSE"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/SDL2-2.0.14/README-SDL.txt"
+    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/README-SDL.txt"
       DESTINATION "LICENSE"
     )
 
