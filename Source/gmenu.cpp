@@ -113,8 +113,8 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	}
 
 	int x = (gnScreenWidth - w) / 2;
-	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::UIS_SILVER : UiFlags::UIS_BLACK;
-	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::UIS_HUGE, 2);
+	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::ColorSilver : UiFlags::ColorBlack;
+	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::FontHuge, 2);
 	if (pItem == sgpCurrItem) {
 		CelDrawTo(out, { x - 54, y + 1 }, *PentSpin_cel, PentSpn2Spin());
 		CelDrawTo(out, { x + 4 + w, y + 1 }, *PentSpin_cel, PentSpn2Spin());
@@ -163,7 +163,7 @@ void gmenu_draw_pause(const Surface &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		LightTableIndex = 0;
-		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UiFlags::UIS_HUGE | UiFlags::UIS_CENTER, 2);
+		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UiFlags::FontHuge | UiFlags::AlignCenter, 2);
 	}
 }
 

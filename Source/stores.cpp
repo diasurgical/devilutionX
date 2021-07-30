@@ -239,15 +239,15 @@ void StartSmith()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 1, _("Welcome to the"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 3, _("Blacksmith's shop"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 7, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 10, _("Talk to Griswold"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 12, _("Buy basic items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 14, _("Buy premium items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 16, _("Sell items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 18, _("Repair items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 20, _("Leave the shop"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 1, _("Welcome to the"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 3, _("Blacksmith's shop"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 7, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 10, _("Talk to Griswold"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 12, _("Buy basic items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 14, _("Buy premium items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 16, _("Sell items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Repair items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 20, _("Leave the shop"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -287,11 +287,11 @@ void StartSmithBuy()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithBuy(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
@@ -351,10 +351,10 @@ bool StartSmithPremiumBuy()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	OffsetSTextY(22, 6);
 
 	stextsmax = storenumh - 4;
@@ -478,10 +478,10 @@ void StartSmithSell()
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 		strcpy(tempstr, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-		AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 		OffsetSTextY(22, 6);
 		return;
 	}
@@ -493,11 +493,11 @@ void StartSmithSell()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -568,10 +568,10 @@ void StartSmithRepair()
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 		strcpy(tempstr, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-		AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 		OffsetSTextY(22, 6);
 		return;
 	}
@@ -583,11 +583,11 @@ void StartSmithRepair()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("Repair which item?             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -611,13 +611,13 @@ void StartWitch()
 	FillManaPlayer();
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, _("Witch's shack"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 9, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 12, _("Talk to Adria"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 14, _("Buy items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 16, _("Sell items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 18, _("Recharge staves"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 20, _("Leave the shack"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 2, _("Witch's shack"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 12, _("Talk to Adria"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 14, _("Buy items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 16, _("Sell items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Recharge staves"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 20, _("Leave the shack"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -658,11 +658,11 @@ void StartWitchBuy()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollWitchBuy(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
@@ -752,10 +752,10 @@ void StartWitchSell()
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 		strcpy(tempstr, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-		AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 		OffsetSTextY(22, 6);
 		return;
 	}
@@ -767,11 +767,11 @@ void StartWitchSell()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -833,10 +833,10 @@ void StartWitchRecharge()
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 		strcpy(tempstr, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-		AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 		OffsetSTextY(22, 6);
 		return;
 	}
@@ -848,11 +848,11 @@ void StartWitchRecharge()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("Recharge which item?             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -862,7 +862,7 @@ void StoreNoMoney()
 	stextscrl = false;
 	stextsize = true;
 	ClearSText(5, 23);
-	AddSText(0, 14, _("You do not have enough gold"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 14, _("You do not have enough gold"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 }
 
 void StoreNoRoom()
@@ -870,7 +870,7 @@ void StoreNoRoom()
 	StartStore(stextshold);
 	stextscrl = false;
 	ClearSText(5, 23);
-	AddSText(0, 14, _("You do not have enough room in inventory"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 14, _("You do not have enough room in inventory"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 }
 
 void StoreConfirm()
@@ -931,27 +931,27 @@ void StoreConfirm()
 	default:
 		app_fatal("Unknown store dialog %i", stextshold);
 	}
-	AddSText(0, 15, tempstr, UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
-	AddSText(0, 18, _("Yes"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 20, _("No"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 15, tempstr, UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+	AddSText(0, 18, _("Yes"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 20, _("No"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 }
 
 void StartBoy()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, _("Wirt the Peg-legged boy"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 2, _("Wirt the Peg-legged boy"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(5);
 	if (!boyitem.isEmpty()) {
-		AddSText(0, 8, _("Talk to Wirt"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-		AddSText(0, 12, _("I have something for sale,"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-		AddSText(0, 14, _("but it will cost 50 gold"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-		AddSText(0, 16, _("just to take a look. "), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-		AddSText(0, 18, _("What have you got?"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-		AddSText(0, 20, _("Say goodbye"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 8, _("Talk to Wirt"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+		AddSText(0, 12, _("I have something for sale,"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 14, _("but it will cost 50 gold"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 16, _("just to take a look. "), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 18, _("What have you got?"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+		AddSText(0, 20, _("Say goodbye"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	} else {
-		AddSText(0, 12, _("Talk to Wirt"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-		AddSText(0, 18, _("Say goodbye"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 12, _("Talk to Wirt"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+		AddSText(0, 18, _("Say goodbye"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	}
 }
 
@@ -963,7 +963,7 @@ void SStartBoyBuy()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("I have this item for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
@@ -978,7 +978,7 @@ void SStartBoyBuy()
 	else
 		AddSTextVal(10, boyitem._iIvalue + (boyitem._iIvalue / 2));
 	PrintStoreItem(&boyitem, 11, itemColor);
-	AddSText(0, 22, _("Leave"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 22, _("Leave"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -999,12 +999,12 @@ void StartHealer()
 	HealPlayer();
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 1, _("Welcome to the"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 3, _("Healer's home"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 9, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 12, _("Talk to Pepin"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 14, _("Buy items"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 16, _("Leave Healer's home"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 1, _("Welcome to the"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 3, _("Healer's home"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 12, _("Talk to Pepin"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 14, _("Buy items"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 16, _("Leave Healer's home"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1038,11 +1038,11 @@ void StartHealerBuy()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollHealerBuy(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	OffsetSTextY(22, 6);
 
 	storenumh = 0;
@@ -1058,11 +1058,11 @@ void StartStoryteller()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, _("The Town Elder"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 9, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 12, _("Talk to Cain"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 14, _("Identify an item"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
-	AddSText(0, 18, _("Say goodbye"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 2, _("The Town Elder"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 12, _("Talk to Cain"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 14, _("Identify an item"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Say goodbye"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 }
 
@@ -1156,10 +1156,10 @@ void StartStorytellerIdentify()
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 		strcpy(tempstr, fmt::format(_("You have nothing to identify.             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-		AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
-		AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 		OffsetSTextY(22, 6);
 		return;
 	}
@@ -1171,11 +1171,11 @@ void StartStorytellerIdentify()
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
 	strcpy(tempstr, fmt::format(_("Identify which item?             Your gold: {:d}"), myPlayer._pGold).c_str());
 
-	AddSText(0, 1, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	OffsetSTextY(22, 6);
 }
 
@@ -1189,10 +1189,10 @@ void StartStorytellerIdentifyShow()
 
 	UiFlags itemColor = item.getTextColorWithStatCheck();
 
-	AddSText(0, 7, _("This item is:"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
+	AddSText(0, 7, _("This item is:"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	AddSText(20, 11, item._iIName, itemColor, false);
 	PrintStoreItem(&item, 12, itemColor);
-	AddSText(0, 18, _("Done"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 18, _("Done"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 }
 
 void StartTalk()
@@ -1202,15 +1202,15 @@ void StartTalk()
 	stextsize = false;
 	stextscrl = false;
 	strcpy(tempstr, fmt::format(_("Talk to {:s}"), TownerNames[talker]).c_str());
-	AddSText(0, 2, tempstr, UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
+	AddSText(0, 2, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(5);
 	if (gbIsSpawn) {
 		strcpy(tempstr, fmt::format(_("Talking to {:s}"), TownerNames[talker]).c_str());
-		AddSText(0, 10, tempstr, UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
-		AddSText(0, 12, _("is not available"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
-		AddSText(0, 14, _("in the shareware"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
-		AddSText(0, 16, _("version"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, false);
-		AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+		AddSText(0, 10, tempstr, UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+		AddSText(0, 12, _("is not available"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+		AddSText(0, 14, _("in the shareware"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+		AddSText(0, 16, _("version"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 		return;
 	}
 
@@ -1232,23 +1232,23 @@ void StartTalk()
 
 	for (int i = 0; i < MAXQUESTS; i++) {
 		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog) {
-			AddSText(0, sn, _(QuestData[i]._qlstr), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+			AddSText(0, sn, _(QuestData[i]._qlstr), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 			sn += la;
 		}
 	}
-	AddSText(0, sn2, _("Gossip"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 22, _("Back"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, sn2, _("Gossip"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 }
 
 void StartTavern()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 1, _("Welcome to the"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 3, _("Rising Sun"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 9, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 12, _("Talk to Ogden"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 18, _("Leave the tavern"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 1, _("Welcome to the"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 3, _("Rising Sun"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 12, _("Talk to Ogden"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Leave the tavern"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1257,10 +1257,10 @@ void StartBarmaid()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, "Gillian", UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 9, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 12, _("Talk to Gillian"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 18, _("Say goodbye"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 2, "Gillian", UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 12, _("Talk to Gillian"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Say goodbye"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -1269,10 +1269,10 @@ void StartDrunk()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, _("Farnham the Drunk"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 9, _("Would you like to:"), UiFlags::UIS_GOLD | UiFlags::UIS_CENTER, false);
-	AddSText(0, 12, _("Talk to Farnham"), UiFlags::UIS_BLUE | UiFlags::UIS_CENTER, true);
-	AddSText(0, 18, _("Say Goodbye"), UiFlags::UIS_SILVER | UiFlags::UIS_CENTER, true);
+	AddSText(0, 2, _("Farnham the Drunk"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 12, _("Talk to Farnham"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
+	AddSText(0, 18, _("Say Goodbye"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSLine(5);
 	storenumh = 20;
 }
@@ -2166,13 +2166,13 @@ void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, U
 	int lineWidth = GetLineWidth(text);
 
 	int x1 = rect.position.x - 20;
-	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x1 += (rect.size.width - lineWidth) / 2;
 
 	CelDrawTo(out, { x1, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 
 	int x2 = rect.position.x + rect.size.width + 5;
-	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
 
 	CelDrawTo(out, { x2, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
@@ -2271,7 +2271,7 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 	if (price > 0) {
 		char valstr[32];
 		sprintf(valstr, "%i", price);
-		DrawString(out, valstr, rect, flags | UiFlags::UIS_RIGHT);
+		DrawString(out, valstr, rect, flags | UiFlags::AlignRight);
 	}
 
 	if (stextsel == line) {
@@ -2309,7 +2309,7 @@ void ClearSText(int s, int e)
 		stext[i]._sx = 0;
 		stext[i]._syoff = 0;
 		stext[i]._sstr[0] = 0;
-		stext[i].flags = UiFlags::NONE;
+		stext[i].flags = UiFlags::None;
 		stext[i]._sline = 0;
 		stext[i]._ssel = false;
 		stext[i]._sval = 0;

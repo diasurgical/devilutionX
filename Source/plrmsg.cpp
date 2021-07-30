@@ -22,7 +22,7 @@ uint8_t plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
-const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::UIS_SILVER, UiFlags::UIS_SILVER, UiFlags::UIS_SILVER, UiFlags::UIS_SILVER, UiFlags::UIS_GOLD };
+const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::ColorSilver, UiFlags::ColorSilver, UiFlags::ColorSilver, UiFlags::ColorSilver, UiFlags::ColorGold };
 
 void PrintChatMessage(const Surface &out, int x, int y, int width, char *text, UiFlags style)
 {

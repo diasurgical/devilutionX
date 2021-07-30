@@ -56,17 +56,17 @@ void UiSelOkDialog(const char *title, const char *body, bool background)
 
 	if (title != nullptr) {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 24), (Sint16)(UI_OFFSET_Y + 161), 590, 35 };
-		vecSelOkDialog.push_back(std::make_unique<UiArtText>(title, rect1, UiFlags::UIS_CENTER | UiFlags::UIS_BIG));
+		vecSelOkDialog.push_back(std::make_unique<UiArtText>(title, rect1, UiFlags::AlignCenter | UiFlags::FontBig));
 
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 210), 560, 168 };
-		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect2, UiFlags::UIS_MED));
+		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect2, UiFlags::FontMedium));
 	} else {
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 140), (Sint16)(UI_OFFSET_Y + 197), 560, 168 };
-		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect1, UiFlags::UIS_MED));
+		vecSelOkDialog.push_back(std::make_unique<UiArtText>(dialogText, rect1, UiFlags::FontMedium));
 	}
 
 	vecSelOkDialogItems.push_back(std::make_unique<UiListItem>(_("OK"), 0));
-	vecSelOkDialog.push_back(std::make_unique<UiList>(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::UIS_CENTER | UiFlags::UIS_BIG | UiFlags::UIS_GOLD));
+	vecSelOkDialog.push_back(std::make_unique<UiList>(vecSelOkDialogItems, PANEL_LEFT + 230, (UI_OFFSET_Y + 390), 180, 35, UiFlags::AlignCenter | UiFlags::FontBig | UiFlags::ColorGold));
 
 	strncpy(dialogText, body, sizeof(dialogText) - 1);
 	WordWrapArtStr(dialogText, MESSAGE_WIDTH);

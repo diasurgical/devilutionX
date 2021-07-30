@@ -14,18 +14,18 @@ namespace {
 
 TextAlignment XAlignmentFromFlags(UiFlags flags)
 {
-	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		return TextAlignment_CENTER;
-	if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
+	if (HasAnyOf(flags, UiFlags::AlignRight))
 		return TextAlignment_END;
 	return TextAlignment_BEGIN;
 }
 
 int AlignXOffset(UiFlags flags, const SDL_Rect &dest, int w)
 {
-	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		return (dest.w - w) / 2;
-	if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
+	if (HasAnyOf(flags, UiFlags::AlignRight))
 		return dest.w - w;
 	return 0;
 }
@@ -54,7 +54,7 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, UiFlags flags,
 	SDL_Rect destRect = rect;
 	ScaleOutputRect(&destRect);
 	destRect.x += AlignXOffset(flags, destRect, textSurface->w);
-	destRect.y += HasAnyOf(flags, UiFlags::UIS_VCENTER) ? (destRect.h - textSurface->h) / 2 : 0;
+	destRect.y += HasAnyOf(flags, UiFlags::VerticalCenter) ? (destRect.h - textSurface->h) / 2 : 0;
 
 	SDL_Rect shadowRect = destRect;
 	++shadowRect.x;
@@ -68,17 +68,17 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, UiFlags flags,
 void DrawArtStr(const char *text, const SDL_Rect &rect, UiFlags flags, bool drawTextCursor)
 {
 	_artFontTables size = AFT_SMALL;
-	_artFontColors color = HasAnyOf(flags, UiFlags::UIS_GOLD) ? AFC_GOLD : AFC_SILVER;
+	_artFontColors color = HasAnyOf(flags, UiFlags::ColorGold) ? AFC_GOLD : AFC_SILVER;
 
-	if (HasAnyOf(flags, UiFlags::UIS_MED))
+	if (HasAnyOf(flags, UiFlags::FontMedium))
 		size = AFT_MED;
-	else if (HasAnyOf(flags, UiFlags::UIS_BIG))
+	else if (HasAnyOf(flags, UiFlags::FontBig))
 		size = AFT_BIG;
-	else if (HasAnyOf(flags, UiFlags::UIS_HUGE))
+	else if (HasAnyOf(flags, UiFlags::FontHuge))
 		size = AFT_HUGE;
 
 	const int x = rect.x + AlignXOffset(flags, rect, GetArtStrWidth(text, size));
-	const int y = rect.y + (HasAnyOf(flags, UiFlags::UIS_VCENTER) ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
+	const int y = rect.y + (HasAnyOf(flags, UiFlags::VerticalCenter) ? (rect.h - ArtFonts[size][color].h()) / 2 : 0);
 
 	int sx = x;
 	int sy = y;

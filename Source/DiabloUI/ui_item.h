@@ -24,22 +24,22 @@ enum class UiType {
 
 enum class UiFlags {
 	// clang-format off
-	NONE            = 0,
-	UIS_SMALL       = 1 << 0,
-	UIS_MED         = 1 << 1,
-	UIS_BIG         = 1 << 2,
-	UIS_HUGE        = 1 << 3,
-	UIS_CENTER      = 1 << 4,
-	UIS_RIGHT       = 1 << 5,
-	UIS_VCENTER     = 1 << 6,
-	UIS_SILVER      = 1 << 7,
-	UIS_GOLD        = 1 << 8,
-	UIS_RED         = 1 << 9,
-	UIS_BLUE        = 1 << 10,
-	UIS_BLACK       = 1 << 11,
-	UIS_DISABLED    = 1 << 12,
-	UIS_HIDDEN      = 1 << 13,
-	UIS_FIT_SPACING = 1 << 14,
+	None              = 0,
+	FontSmall         = 1 << 0,
+	FontMedium        = 1 << 1,
+	FontBig           = 1 << 2,
+	FontHuge          = 1 << 3,
+	AlignCenter       = 1 << 4,
+	AlignRight        = 1 << 5,
+	VerticalCenter    = 1 << 6,
+	ColorSilver       = 1 << 7,
+	ColorGold         = 1 << 8,
+	ColorRed          = 1 << 9,
+	ColorBlue         = 1 << 10,
+	ColorBlack        = 1 << 11,
+	ElementDisabled   = 1 << 12,
+	ElementHidden     = 1 << 13,
+	KerningFitSpacing = 1 << 14,
 	// clang-format on
 };
 
@@ -75,7 +75,7 @@ inline UiFlags operator~(UiFlags value)
 
 inline bool HasAnyOf(UiFlags lhs, UiFlags test)
 {
-	return (lhs & test) != UiFlags::NONE;
+	return (lhs & test) != UiFlags::None;
 }
 
 class UiItemBase {
@@ -119,7 +119,7 @@ public:
 
 class UiImage : public UiItemBase {
 public:
-	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::NONE, bool animated = false, int frame = 0)
+	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
 	    : UiItemBase(UiType::UI_IMAGE, rect, flags)
 	    , m_art(art)
 	    , m_animated(animated)
@@ -145,7 +145,7 @@ public:
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
 	 */
-	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
+	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_ART_TEXT, rect, flags)
 	    , m_text(text)
 	{
@@ -157,7 +157,7 @@ public:
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
 	 */
-	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
+	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_ART_TEXT, rect, flags)
 	    , m_ptext(ptext)
 	{
@@ -181,7 +181,7 @@ private:
 
 class UiScrollBar : public UiItemBase {
 public:
-	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
+	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_SCROLLBAR, rect, flags)
 	    , m_bg(bg)
 	    , m_thumb(thumb)
@@ -199,7 +199,7 @@ public:
 
 class UiArtTextButton : public UiItemBase {
 public:
-	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::NONE)
+	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_ART_TEXT_BUTTON, rect, flags)
 	    , m_text(text)
 	    , m_action(action)
@@ -215,7 +215,7 @@ public:
 
 class UiEdit : public UiItemBase {
 public:
-	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, UiFlags flags = UiFlags::NONE)
+	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_EDIT, rect, flags)
 	    , m_hint(hint)
 	    , m_value(value)
@@ -235,7 +235,7 @@ public:
 
 class UiText : public UiItemBase {
 public:
-	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::NONE, SDL_Color color = { 243, 243, 243, 0 })
+	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None, SDL_Color color = { 243, 243, 243, 0 })
 	    : UiItemBase(UiType::UI_TEXT, rect, flags)
 	    , m_color(color)
 	    , m_shadow_color({ 0, 0, 0, 0 })
@@ -259,7 +259,7 @@ public:
 
 class UiButton : public UiItemBase {
 public:
-	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::NONE)
+	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_BUTTON, rect, flags)
 	    , m_art(art)
 	    , m_text(text)
@@ -307,7 +307,7 @@ typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::NONE)
+	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None)
 	    : UiItemBase(UiType::UI_LIST, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
 	    , m_x(x)
 	    , m_y(y)

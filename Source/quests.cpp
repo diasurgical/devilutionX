@@ -254,7 +254,7 @@ void PrintQLString(const Surface &out, int x, int line, const char *str)
 	if (qline == line) {
 		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	DrawString(out, str, { { sx, sy }, { 257, 0 } }, UiFlags::UIS_SILVER);
+	DrawString(out, str, { { sx, sy }, { 257, 0 } }, UiFlags::ColorSilver);
 	if (qline == line) {
 		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
@@ -730,7 +730,7 @@ void ResyncQuests()
 
 void DrawQuestLog(const Surface &out)
 {
-	DrawString(out, _("Quest Log"), { { 32, 44 }, { 257, 0 } }, UiFlags::UIS_CENTER);
+	DrawString(out, _("Quest Log"), { { 32, 44 }, { 257, 0 } }, UiFlags::AlignCenter);
 	CelDrawTo(out, { 0, 351 }, *pQLogCel, 1);
 	int line = qtopline;
 	for (int i = 0; i < numqlines; i++) {

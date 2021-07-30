@@ -5552,13 +5552,13 @@ void GetObjectStr(int i)
 		if (Objects[i]._oTrapFlag) {
 			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
 			strcpy(infostr, tempstr);
-			InfoColor = UiFlags::UIS_RED;
+			InfoColor = UiFlags::ColorRed;
 		}
 	}
 	if (objectIsDisabled(i)) {
 		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
 		strcpy(infostr, tempstr);
-		InfoColor = UiFlags::UIS_RED;
+		InfoColor = UiFlags::ColorRed;
 	}
 }
 

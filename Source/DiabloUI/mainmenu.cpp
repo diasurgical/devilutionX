@@ -56,10 +56,10 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
 
-	vecMainMenuDialog.push_back(std::make_unique<UiList>(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UiFlags::UIS_HUGE | UiFlags::UIS_GOLD | UiFlags::UIS_CENTER));
+	vecMainMenuDialog.push_back(std::make_unique<UiList>(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UiFlags::FontHuge | UiFlags::ColorGold | UiFlags::AlignCenter));
 
 	SDL_Rect rect = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
-	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect, UiFlags::UIS_SMALL));
+	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect, UiFlags::FontSmall));
 
 	UiInitList(vecMenuItems.size(), nullptr, UiMainMenuSelect, MainmenuEsc, vecMainMenuDialog, true);
 }

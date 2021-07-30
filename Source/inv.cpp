@@ -1267,7 +1267,7 @@ void DrawInvBelt(const Surface &out)
 		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
-			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UiFlags::UIS_SILVER | UiFlags::UIS_RIGHT);
+			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UiFlags::ColorSilver | UiFlags::AlignRight);
 		}
 	}
 }
@@ -1899,7 +1899,7 @@ char CheckInvHLight()
 		return -1;
 
 	int8_t rv = -1;
-	InfoColor = UiFlags::UIS_SILVER;
+	InfoColor = UiFlags::ColorSilver;
 	ItemStruct *pi = nullptr;
 	auto &myPlayer = Players[MyPlayerId];
 

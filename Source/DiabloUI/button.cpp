@@ -29,7 +29,7 @@ void RenderButton(UiButton *button)
 
 	SDL_Color color1 = { 243, 243, 243, 0 };
 	SDL_Color color2 = { 0, 0, 0, 0 };
-	DrawTTF(button->m_text, textRect, UiFlags::UIS_CENTER,
+	DrawTTF(button->m_text, textRect, UiFlags::AlignCenter,
 	    color1, color2, button->m_render_cache);
 }
 
