@@ -23,7 +23,7 @@ enum ScrollBarArrowFrame : uint8_t {
 extern Art ArtScrollBarThumb;
 const Uint16 SCROLLBAR_ARROW_WIDTH = 25;
 
-inline SDL_Rect UpArrowRect(const UiScrollBar *sb)
+inline SDL_Rect UpArrowRect(const UiScrollbar *sb)
 {
 	SDL_Rect Tmp;
 	Tmp.x = sb->m_rect.x;
@@ -34,7 +34,7 @@ inline SDL_Rect UpArrowRect(const UiScrollBar *sb)
 	return Tmp;
 }
 
-inline SDL_Rect DownArrowRect(const UiScrollBar *sb)
+inline SDL_Rect DownArrowRect(const UiScrollbar *sb)
 {
 	SDL_Rect Tmp;
 	Tmp.x = sb->m_rect.x;
@@ -45,12 +45,12 @@ inline SDL_Rect DownArrowRect(const UiScrollBar *sb)
 	return Tmp;
 }
 
-inline Uint16 BarHeight(const UiScrollBar *sb)
+inline Uint16 BarHeight(const UiScrollbar *sb)
 {
 	return sb->m_rect.h - 2 * sb->m_arrow->h();
 }
 
-inline SDL_Rect BarRect(const UiScrollBar *sb)
+inline SDL_Rect BarRect(const UiScrollbar *sb)
 {
 	SDL_Rect Tmp;
 	Tmp.x = sb->m_rect.x;
@@ -61,7 +61,7 @@ inline SDL_Rect BarRect(const UiScrollBar *sb)
 	return Tmp;
 }
 
-inline SDL_Rect ThumbRect(const UiScrollBar *sb, std::size_t selected_index, std::size_t num_items)
+inline SDL_Rect ThumbRect(const UiScrollbar *sb, std::size_t selected_index, std::size_t num_items)
 {
 	const int THUMB_OFFSET_X = 3;
 	const int thumb_max_y = BarHeight(sb) - sb->m_thumb->h();

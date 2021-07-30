@@ -102,7 +102,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 #endif
 	textInputActive = false;
 	for (const auto &item : items) {
-		if (item->m_type == UiType::UI_EDIT) {
+		if (item->m_type == UiType::Edit) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
@@ -121,7 +121,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	}
 }
 
-void UiInitScrollBar(UiScrollBar *uiSb, std::size_t viewportSize, const std::size_t *currentOffset)
+void UiInitScrollBar(UiScrollbar *uiSb, std::size_t viewportSize, const std::size_t *currentOffset)
 {
 	ListViewportSize = viewportSize;
 	ListOffset = currentOffset;
@@ -761,7 +761,7 @@ void Render(const UiList *uiList)
 	}
 }
 
-void Render(const UiScrollBar *uiSb)
+void Render(const UiScrollbar *uiSb)
 {
 	// Bar background (tiled):
 	{
@@ -808,28 +808,28 @@ void RenderItem(UiItemBase *item)
 	if (item->has_flag(UiFlags::ElementHidden))
 		return;
 	switch (item->m_type) {
-	case UiType::UI_TEXT:
+	case UiType::Text:
 		Render(static_cast<UiText *>(item));
 		break;
-	case UiType::UI_ART_TEXT:
+	case UiType::ArtText:
 		Render(static_cast<UiArtText *>(item));
 		break;
-	case UiType::UI_IMAGE:
+	case UiType::Image:
 		Render(static_cast<UiImage *>(item));
 		break;
-	case UiType::UI_ART_TEXT_BUTTON:
+	case UiType::ArtTextButton:
 		Render(static_cast<UiArtTextButton *>(item));
 		break;
-	case UiType::UI_BUTTON:
+	case UiType::Button:
 		RenderButton(static_cast<UiButton *>(item));
 		break;
-	case UiType::UI_LIST:
+	case UiType::List:
 		Render(static_cast<UiList *>(item));
 		break;
-	case UiType::UI_SCROLLBAR:
-		Render(static_cast<UiScrollBar *>(item));
+	case UiType::Scrollbar:
+		Render(static_cast<UiScrollbar *>(item));
 		break;
-	case UiType::UI_EDIT:
+	case UiType::Edit:
 		Render(static_cast<UiEdit *>(item));
 		break;
 	}
@@ -873,7 +873,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 	return true;
 }
 
-bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollBar *uiSb)
+bool HandleMouseEventScrollBar(const SDL_Event &event, const UiScrollbar *uiSb)
 {
 	if (event.button.button != SDL_BUTTON_LEFT)
 		return false;
@@ -914,14 +914,14 @@ bool HandleMouseEvent(const SDL_Event &event, UiItemBase *item)
 	if (item->has_any_flag(UiFlags::ElementHidden | UiFlags::ElementDisabled) || !IsInsideRect(event, item->m_rect))
 		return false;
 	switch (item->m_type) {
-	case UiType::UI_ART_TEXT_BUTTON:
+	case UiType::ArtTextButton:
 		return HandleMouseEventArtTextButton(event, static_cast<UiArtTextButton *>(item));
-	case UiType::UI_BUTTON:
+	case UiType::Button:
 		return HandleMouseEventButton(event, static_cast<UiButton *>(item));
-	case UiType::UI_LIST:
+	case UiType::List:
 		return HandleMouseEventList(event, static_cast<UiList *>(item));
-	case UiType::UI_SCROLLBAR:
-		return HandleMouseEventScrollBar(event, static_cast<UiScrollBar *>(item));
+	case UiType::Scrollbar:
+		return HandleMouseEventScrollBar(event, static_cast<UiScrollbar *>(item));
 	default:
 		return false;
 	}
@@ -970,7 +970,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
 		for (const auto &item : items) {
-			if (item->m_type == UiType::UI_BUTTON)
+			if (item->m_type == UiType::Button)
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item));
 		}
 	}
@@ -1000,7 +1000,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 	if (event->type == SDL_MOUSEBUTTONUP && event->button.button == SDL_BUTTON_LEFT) {
 		scrollBarState.downArrowPressed = scrollBarState.upArrowPressed = false;
 		for (const auto &item : items) {
-			if (item->m_type == UiType::UI_BUTTON)
+			if (item->m_type == UiType::Button)
 				HandleGlobalMouseUpButton(static_cast<UiButton *>(item.get()));
 		}
 	}
