@@ -121,7 +121,6 @@ QuickMessage QuickMessages[QUICK_MESSAGE_OPTIONS] = {
 
 /** This and the following mouse variables are for handling in-game click-and-hold actions */
 MouseActionType LastMouseButtonAction = MouseActionType::None;
-uint32_t LastMouseButtonTime = 0;
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
@@ -288,7 +287,6 @@ void LeftMouseCmd(bool bShift)
 void LeftMouseDown(int wParam)
 {
 	LastMouseButtonAction = MouseActionType::None;
-	LastMouseButtonTime = SDL_GetTicks();
 
 	if (gmenu_left_mouse(true))
 		return;
@@ -377,7 +375,6 @@ void LeftMouseUp(int wParam)
 void RightMouseDown()
 {
 	LastMouseButtonAction = MouseActionType::None;
-	LastMouseButtonTime = SDL_GetTicks();
 
 	if (gmenu_is_active() || sgnTimeoutCurs != CURSOR_NONE || PauseMode == 2 || Players[MyPlayerId]._pInvincible) {
 		return;
