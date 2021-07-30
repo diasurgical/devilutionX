@@ -4,7 +4,7 @@
 
 	<string name="guide_full_installation">Per giocare alla versione completa devi inserire DIABDAT.MPQ dal gioco originale in Android/data/org.diasurgical.devilutionx/files.<br/>\n<br/>\nSe non possiedi una copia originale puoi acquistare Diablo su <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
 	<string name="guide_shareware">In alternativa puoi scaricare la versione spawn, per giocare alla parte shareware del gioco.</string>
-	<string name="faq_link">Consulta <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Istruzioni per l'Installazione</a> per ulteriori dettagli.</string>
+	<string name="faq_link">Consulta <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Istruzioni per l\'Installazione</a> per ulteriori dettagli.</string>
         <string name="game_data_retry">Controlla di nuovo</string>
         <string name="title_activity_data">Dati Gioco</string>
         <string name="download_spawn">Scarica Dati Shareware</string>
