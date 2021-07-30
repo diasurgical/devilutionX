@@ -550,6 +550,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 		}
 	} else {
 		// Start new stand animation so that currentframe is reset
+		d = player._pdir;
 		StartStand(pnum, d);
 	}
 
