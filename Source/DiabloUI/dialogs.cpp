@@ -166,7 +166,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 200), (Sint16)(UI_OFFSET_Y + 211), 240, 80 };
-		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::UIS_CENTER));
+		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::AlignCenter));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 265), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect3));
@@ -176,10 +176,10 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 
 		SDL_Color color = { 255, 255, 0, 0 };
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 147), (Sint16)(UI_OFFSET_Y + 110), 345, 20 };
-		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::UIS_CENTER, color));
+		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::AlignCenter, color));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 147), (Sint16)(UI_OFFSET_Y + 141), 345, 190 };
-		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect3, UiFlags::UIS_CENTER));
+		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect3, UiFlags::AlignCenter));
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 335), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect4));

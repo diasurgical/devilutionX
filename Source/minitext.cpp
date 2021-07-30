@@ -117,7 +117,7 @@ void DrawQTextContent(const Surface &out)
 			continue;
 		}
 
-		DrawString(out, line, { { sx, sy + i * LineHeight }, { 543, LineHeight } }, UiFlags::UIS_MED, 2);
+		DrawString(out, line, { { sx, sy + i * LineHeight }, { 543, LineHeight } }, UiFlags::FontMedium, 2);
 	}
 }
 

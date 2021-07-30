@@ -274,36 +274,36 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
-	if (HasAnyOf(flags, UiFlags::UIS_MED))
+	if (HasAnyOf(flags, UiFlags::FontMedium))
 		size = GameFontMed;
-	else if (HasAnyOf(flags, UiFlags::UIS_HUGE))
+	else if (HasAnyOf(flags, UiFlags::FontHuge))
 		size = GameFontBig;
 
 	text_color color = ColorGold;
-	if (HasAnyOf(flags, UiFlags::UIS_SILVER))
+	if (HasAnyOf(flags, UiFlags::ColorSilver))
 		color = ColorWhite;
-	else if (HasAnyOf(flags, UiFlags::UIS_BLUE))
+	else if (HasAnyOf(flags, UiFlags::ColorBlue))
 		color = ColorBlue;
-	else if (HasAnyOf(flags, UiFlags::UIS_RED))
+	else if (HasAnyOf(flags, UiFlags::ColorRed))
 		color = ColorRed;
-	else if (HasAnyOf(flags, UiFlags::UIS_BLACK))
+	else if (HasAnyOf(flags, UiFlags::ColorBlack))
 		color = ColorBlack;
 
 	const size_t textLength = strlen(text);
 
 	int charactersInLine = 0;
 	int lineWidth = 0;
-	if (HasAnyOf(flags, (UiFlags::UIS_CENTER | UiFlags::UIS_RIGHT | UiFlags::UIS_FIT_SPACING)))
+	if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
 		lineWidth = GetLineWidth(text, size, spacing, &charactersInLine);
 
 	int maxSpacing = spacing;
-	if (HasAnyOf(flags, UiFlags::UIS_FIT_SPACING))
+	if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
 		spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
 	Point characterPosition = rect.position;
-	if (HasAnyOf(flags, UiFlags::UIS_CENTER))
+	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		characterPosition.x += (rect.size.width - lineWidth) / 2;
-	else if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
+	else if (HasAnyOf(flags, UiFlags::AlignRight))
 		characterPosition.x += rect.size.width - lineWidth;
 
 	int rightMargin = rect.position.x + rect.size.width;
@@ -321,16 +321,16 @@ uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect,
 				break;
 			characterPosition.y += lineHeight;
 
-			if (HasAnyOf(flags, (UiFlags::UIS_CENTER | UiFlags::UIS_RIGHT | UiFlags::UIS_FIT_SPACING)))
+			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
 				lineWidth = GetLineWidth(&text[i + 1], size, spacing, &charactersInLine);
 
-			if (HasAnyOf(flags, UiFlags::UIS_FIT_SPACING))
+			if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
 				spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
 
 			characterPosition.x = rect.position.x;
-			if (HasAnyOf(flags, UiFlags::UIS_CENTER))
+			if (HasAnyOf(flags, UiFlags::AlignCenter))
 				characterPosition.x += (rect.size.width - lineWidth) / 2;
-			else if (HasAnyOf(flags, UiFlags::UIS_RIGHT))
+			else if (HasAnyOf(flags, UiFlags::AlignRight))
 				characterPosition.x += rect.size.width - lineWidth;
 		}
 		if (frame != 0) {
