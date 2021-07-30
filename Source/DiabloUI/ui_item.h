@@ -12,14 +12,14 @@
 namespace devilution {
 
 enum class UiType {
-	UI_TEXT,
-	UI_ART_TEXT,
-	UI_ART_TEXT_BUTTON,
-	UI_IMAGE,
-	UI_BUTTON,
-	UI_LIST,
-	UI_SCROLLBAR,
-	UI_EDIT,
+	Text,
+	ArtText,
+	ArtTextButton,
+	Image,
+	Button,
+	List,
+	Scrollbar,
+	Edit,
 };
 
 enum class UiFlags {
@@ -120,7 +120,7 @@ public:
 class UiImage : public UiItemBase {
 public:
 	UiImage(Art *art, SDL_Rect rect, UiFlags flags = UiFlags::None, bool animated = false, int frame = 0)
-	    : UiItemBase(UiType::UI_IMAGE, rect, flags)
+	    : UiItemBase(UiType::Image, rect, flags)
 	    , m_art(art)
 	    , m_animated(animated)
 	    , m_frame(frame)
@@ -146,7 +146,7 @@ public:
 	 * @param flags UiFlags controlling color/alignment/size
 	 */
 	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_ART_TEXT, rect, flags)
+	    : UiItemBase(UiType::ArtText, rect, flags)
 	    , m_text(text)
 	{
 	}
@@ -158,7 +158,7 @@ public:
 	 * @param flags UiFlags controlling color/alignment/size
 	 */
 	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_ART_TEXT, rect, flags)
+	    : UiItemBase(UiType::ArtText, rect, flags)
 	    , m_ptext(ptext)
 	{
 	}
@@ -179,10 +179,10 @@ private:
 
 //=============================================================================
 
-class UiScrollBar : public UiItemBase {
+class UiScrollbar : public UiItemBase {
 public:
-	UiScrollBar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_SCROLLBAR, rect, flags)
+	UiScrollbar(Art *bg, Art *thumb, Art *arrow, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	    : UiItemBase(UiType::Scrollbar, rect, flags)
 	    , m_bg(bg)
 	    , m_thumb(thumb)
 	    , m_arrow(arrow)
@@ -200,7 +200,7 @@ public:
 class UiArtTextButton : public UiItemBase {
 public:
 	UiArtTextButton(const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_ART_TEXT_BUTTON, rect, flags)
+	    : UiItemBase(UiType::ArtTextButton, rect, flags)
 	    , m_text(text)
 	    , m_action(action)
 	{
@@ -216,7 +216,7 @@ public:
 class UiEdit : public UiItemBase {
 public:
 	UiEdit(const char *hint, char *value, std::size_t max_length, SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_EDIT, rect, flags)
+	    : UiItemBase(UiType::Edit, rect, flags)
 	    , m_hint(hint)
 	    , m_value(value)
 	    , m_max_length(max_length)
@@ -236,7 +236,7 @@ public:
 class UiText : public UiItemBase {
 public:
 	UiText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None, SDL_Color color = { 243, 243, 243, 0 })
-	    : UiItemBase(UiType::UI_TEXT, rect, flags)
+	    : UiItemBase(UiType::Text, rect, flags)
 	    , m_color(color)
 	    , m_shadow_color({ 0, 0, 0, 0 })
 	    , m_text(text)
@@ -260,7 +260,7 @@ public:
 class UiButton : public UiItemBase {
 public:
 	UiButton(Art *art, const char *text, void (*action)(), SDL_Rect rect, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_BUTTON, rect, flags)
+	    : UiItemBase(UiType::Button, rect, flags)
 	    , m_art(art)
 	    , m_text(text)
 	    , m_action(action)
@@ -308,7 +308,7 @@ typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 class UiList : public UiItemBase {
 public:
 	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None)
-	    : UiItemBase(UiType::UI_LIST, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
+	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
 	    , m_x(x)
 	    , m_y(y)
 	    , m_width(item_width)
