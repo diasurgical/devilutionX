@@ -53,6 +53,13 @@ public class DataActivity extends Activity {
 		this.finish();
 	}
 
+	protected void onDestroy() {
+		if (mReceiver != null)
+			unregisterReceiver(mReceiver);
+
+		super.onDestroy();
+	}
+
 	/**
 	 * Check if the game data is present
 	 */
