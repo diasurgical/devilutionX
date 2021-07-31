@@ -941,6 +941,17 @@ endif()
 
 if(CPACK)
   if(WIN32)
+    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+      set(SDL2_WIN32_DLLS_DIR "${CMAKE_BINARY_DIR}")
+      set(SDL2_WIN32_LICENSES_DIR "${PROJECT_SOURCE_DIR}/Packaging/resources")
+    else()
+      set(SDL2_WIN32_DLLS_DIR "${SDL2_EXEC_PREFIX}/bin")
+      set(SDL2_WIN32_LICENSES_DIR "${SDL2_EXEC_PREFIX}/bin")
+    endif()
+
+    file(GLOB _SDL2_ALL_DLLS "${SDL2_EXEC_PREFIX}/bin/*.dll")
+    file(GLOB _SDL2_ALL_LICENSES "${SDL2_EXEC_PREFIX}/bin/LICENSE*.txt")
+
     set(CPACK_PACKAGE_FILE_NAME "devilutionx")
     set(CPACK_PACKAGE_NAME ${project_name})
     set(CPACK_GENERATOR "ZIP")
@@ -955,22 +966,20 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
       DESTINATION "."
     )
-    install(DIRECTORY "${CMAKE_BINARY_DIR}/"
-      DESTINATION "."
-      FILES_MATCHING PATTERN "*.dll"
-      PATTERN "Testing" EXCLUDE
-      PATTERN "CMakeFiles" EXCLUDE
-      PATTERN "3rdParty" EXCLUDE
-      PATTERN "_deps" EXCLUDE
-      PATTERN ".cmake" EXCLUDE
-    )
+
+    foreach (_SDL2_WIN32_DLL_PATH ${SDL2_WIN32_ALL_DLLS})
+      install(FILES "${_SDL2_WIN32_DLL_PATH}"
+        DESTINATION "."
+      )
+    endforeach()
+
+    foreach (_SDL2_WIN32_LICENSE_PATH ${SDL2_WIN32_ALL_LICENSES})
+      install(FILES "${_SDL2_WIN32_LICENSE_PATH}"
+        DESTINATION "LICENSE"
+      )
+    endforeach()
+
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
-      DESTINATION "LICENSE"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.freetype.txt"
-      DESTINATION "LICENSE"
-    )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/README-SDL.txt"
       DESTINATION "LICENSE"
     )
 
