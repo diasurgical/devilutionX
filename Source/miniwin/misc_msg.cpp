@@ -593,6 +593,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 
 std::ofstream demoRecording;
 static std::deque<demoMsg> demo_message_queue;
+static uint32_t demoModeLastTick = 0;
 
 void CreateDemoFile(int i)
 {
@@ -683,6 +684,8 @@ bool LoadDemoMessages(int i)
 
 	demofile.close();
 
+	demoModeLastTick = SDL_GetTicks();
+
 	return true;
 }
 
@@ -724,7 +727,7 @@ bool DemoMessage(tagMSG *lpMsg)
 	return false;
 }
 
-bool GetDemoRunGameLoop()
+bool GetDemoRunGameLoop(bool &drawGame)
 {
 	if (demo_message_queue.empty())
 		app_fatal("Demo queue empty");
@@ -732,6 +735,27 @@ bool GetDemoRunGameLoop()
 	if (dmsg.type == DemoMsgType::Message)
 		app_fatal("Unexpected Message");
 	gfProgressToNextGameTick = dmsg.progressToNextGameTick;
+	if (timedemo) {
+		// disable additonal rendering to speedup replay
+		drawGame = dmsg.type == DemoMsgType::GameTick;
+	} else {
+		int currentTickCount = SDL_GetTicks();
+		int ticksElapsed = currentTickCount - demoModeLastTick;
+		bool tickDue = ticksElapsed >= gnTickDelay;
+		if (dmsg.type == DemoMsgType::Rendering) {
+			if (tickDue) {
+				// we are behind the recording => disable rendering to speedup replay
+				drawGame = false;
+			}
+		} else {
+			if (!tickDue) {
+				int missingTicks = gnTickDelay - ticksElapsed;
+				SDL_Delay(missingTicks);
+				currentTickCount += missingTicks;
+			}
+			demoModeLastTick = currentTickCount;
+		}
+	}
 	demo_message_queue.pop_front();
 	return dmsg.type == DemoMsgType::GameTick;
 }

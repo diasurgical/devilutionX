@@ -839,12 +839,13 @@ void RunGameLoop(interface_mode uMsg)
 		if (!gbRunGame)
 			break;
 
-		bool runGameLoop = demoMode ? GetDemoRunGameLoop() : nthread_has_500ms_passed();
+		bool drawGame = true;
+		bool runGameLoop = demoMode ? GetDemoRunGameLoop(drawGame) : nthread_has_500ms_passed();
 		if (!runGameLoop) {
 			if (recordDemo != -1)
 				demoRecording << static_cast<uint32_t>(DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
 			ProcessInput();
-			if (timedemo)
+			if (!drawGame)
 				continue;
 			force_redraw |= 1;
 			DrawAndBlit();
@@ -856,7 +857,8 @@ void RunGameLoop(interface_mode uMsg)
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
-		DrawAndBlit();
+		if (drawGame)
+			DrawAndBlit();
 		logicTick++;
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 		if (run_game_iteration++ == 0)
@@ -2206,7 +2208,7 @@ void game_loop(bool bStartup)
 		TimeoutCursor(false);
 		GameLogic();
 
-		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed() || timedemo || recordDemo != -1)
+		if (!gbRunGame || !gbIsMultiplayer || !nthread_has_500ms_passed() || demoMode || recordDemo != -1)
 			break;
 	}
 }
