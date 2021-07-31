@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-07-29 02:30+0200\n"
+"POT-Creation-Date: 2021-07-31 18:31+0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
 "X-Poedit-Basepath: ..\n"
@@ -454,17 +454,17 @@ msgstr "Выберете сложность"
 
 #: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
 #: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:327
-#: Source/diablo.cpp:1525
+#: Source/diablo.cpp:1522
 msgid "Normal"
 msgstr "Нормальная"
 
 #: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:208
-#: Source/diablo.cpp:1526
+#: Source/diablo.cpp:1523
 msgid "Nightmare"
 msgstr "Кошмарная"
 
 #: Source/DiabloUI/selgame.cpp:159 Source/DiabloUI/selgame.cpp:212
-#: Source/diablo.cpp:1527
+#: Source/diablo.cpp:1524
 msgid "Hell"
 msgstr "Адская"
 
@@ -1087,72 +1087,72 @@ msgid "Now you DIE!"
 msgstr "А теперь УМРИИИ!!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:858
+#: Source/diablo.cpp:855
 msgid "Options:\n"
 msgstr "Параметры:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:859
+#: Source/diablo.cpp:856
 msgid "Print this message and exit"
 msgstr "Напечатать это сообщение и выйти"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:860
+#: Source/diablo.cpp:857
 msgid "Print the version and exit"
 msgstr "Напечатать версию и выйти"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:861
+#: Source/diablo.cpp:858
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Указать папку с diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:862
+#: Source/diablo.cpp:859
 msgid "Specify the folder of save files"
 msgstr "Указать папку с сохранениями"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:863
+#: Source/diablo.cpp:860
 msgid "Specify the location of diablo.ini"
 msgstr "Указать путь к diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:864
+#: Source/diablo.cpp:861
 msgid "Specify the location of the .ttf font"
 msgstr "Указать путь к .ttf шрифту"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:862
 msgid "Specify the name of a custom .ttf font"
 msgstr "Указать имя собственного .ttf шрифта"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:866
+#: Source/diablo.cpp:863
 msgid "Skip startup videos"
 msgstr "Пропустить вступительный ролик"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:867
+#: Source/diablo.cpp:864
 msgid "Display frames per second"
 msgstr "Отображать кадры в секунду"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:868
+#: Source/diablo.cpp:865
 msgid "Run in windowed mode"
 msgstr "Запустить в оконном режиме"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:869
+#: Source/diablo.cpp:866
 msgid "Enable verbose logging"
 msgstr "Включить подробное логирование"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:870
+#: Source/diablo.cpp:867
 msgid "Force spawn mode even if diabdat.mpq is found"
 msgstr "Принудительный режим spawn, даже если diabdat.mpq был найден"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:871
+#: Source/diablo.cpp:868
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1161,16 +1161,16 @@ msgstr ""
 "Параметры Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:872
+#: Source/diablo.cpp:869
 msgid "Force diablo mode even if hellfire.mpq is found"
 msgstr "Принудительный режим diablo, даже если hellfire.mpq был найден"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:873
+#: Source/diablo.cpp:870
 msgid "Use alternate nest palette"
 msgstr "Использовать альтернативную палитру для уровней гнезда"
 
-#: Source/diablo.cpp:888
+#: Source/diablo.cpp:885
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1178,32 +1178,32 @@ msgstr ""
 "\n"
 "Сообщайте об ошибках на https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:960
+#: Source/diablo.cpp:957
 msgid "unrecognized option '{:s}'\n"
 msgstr "неизвестный параметр '{:s}'\n"
 
-#: Source/diablo.cpp:981
+#: Source/diablo.cpp:978
 msgid "version {:s}"
 msgstr "версия {:s}"
 
-#: Source/diablo.cpp:1266
+#: Source/diablo.cpp:1263
 msgid "-- Network timeout --"
 msgstr "-- Истекло время ожидания --"
 
-#: Source/diablo.cpp:1267
+#: Source/diablo.cpp:1264
 msgid "-- Waiting for players --"
 msgstr "-- Ожидание игроков --"
 
-#: Source/diablo.cpp:1286
+#: Source/diablo.cpp:1283
 msgid "No help available"
 msgstr ""
 
-#: Source/diablo.cpp:1287
+#: Source/diablo.cpp:1284
 msgid "while in stores"
 msgstr ""
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1530
+#: Source/diablo.cpp:1527
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr ""
 
@@ -3659,12 +3659,16 @@ msgid "sets petrification trap"
 msgstr ""
 
 #: Source/items.cpp:1963
+#, fuzzy
+#| msgid "recover life and mana"
 msgid "restore all life"
-msgstr ""
+msgstr "восстановить жизнь и ману"
 
 #: Source/items.cpp:1967
+#, fuzzy
+#| msgid "recover life and mana"
 msgid "restore some life"
-msgstr ""
+msgstr "восстановить жизнь и ману"
 
 #: Source/items.cpp:1971
 msgid "recover life"
@@ -3675,8 +3679,10 @@ msgid "deadly heal"
 msgstr ""
 
 #: Source/items.cpp:1979
+#, fuzzy
+#| msgid "recover life and mana"
 msgid "restore some mana"
-msgstr ""
+msgstr "восстановить жизнь и ману"
 
 #: Source/items.cpp:1983
 #, fuzzy
@@ -3773,7 +3779,7 @@ msgid " {:d} Dex"
 msgstr " {:d} Ловк"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3556 Source/player.cpp:3127
+#: Source/items.cpp:3556 Source/player.cpp:3128
 msgid "Ear of {:s}"
 msgstr "Початок {:s}"
 
@@ -10149,3 +10155,18 @@ msgstr "Спуститься к Диабло"
 #: Source/trigs.cpp:700 Source/trigs.cpp:715 Source/trigs.cpp:730
 msgid "Back to Level {:d}"
 msgstr "Вернуться на Уровень {:d}"
+
+#, fuzzy
+#~| msgid "recover life and mana"
+#~ msgid "recover mana"
+#~ msgstr "восстановить жизнь и ману"
+
+#, fuzzy
+#~| msgid "recover life and mana"
+#~ msgid "recover life and mana"
+#~ msgstr "восстановить жизнь и ману"
+
+#, fuzzy
+#~| msgid "recover life and mana"
+#~ msgid "fully recover life and mana"
+#~ msgstr "восстановить жизнь и ману"
