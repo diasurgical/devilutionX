@@ -3848,7 +3848,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_DAMP:
 	case IPL_DAMP_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d}% damage"), x->_iPLDam).c_str());
+		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("{:+d}% damage"), x->_iPLDam).c_str());
 		break;
 	case IPL_TOHIT_DAMP:
 	case IPL_TOHIT_DAMP_CURSE:
@@ -3856,7 +3856,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_ACP:
 	case IPL_ACP_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d}% armor"), x->_iPLAC).c_str());
+		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("{:+d}% armor"), x->_iPLAC).c_str());
 		break;
 	case IPL_SETAC:
 	case IPL_AC_CURSE:
@@ -4096,7 +4096,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("occasional triple damage"));
 		break;
 	case IPL_DECAY:
-		strcpy(tempstr, fmt::format(_("decaying {:+d}% damage"), x->_iPLDam).c_str());
+		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("decaying {:+d}% damage"), x->_iPLDam).c_str());
 		break;
 	case IPL_PERIL:
 		strcpy(tempstr, _("2x dmg to monst, 1x to you"));
@@ -4105,7 +4105,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		/*xgettext:no-c-format*/ strcpy(tempstr, _("Random 0 - 500% damage"));
 		break;
 	case IPL_CRYSTALLINE:
-		strcpy(tempstr, fmt::format(_("low dur, {:+d}% damage"), x->_iPLDam).c_str());
+		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("low dur, {:+d}% damage"), x->_iPLDam).c_str());
 		break;
 	case IPL_DOPPELGANGER:
 		strcpy(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
