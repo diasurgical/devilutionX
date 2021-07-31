@@ -48,7 +48,7 @@ struct demoMsg {
 };
 
 extern std::ofstream demoRecording;
-bool GetDemoRunGameLoop(bool &drawGame);
+bool GetDemoRunGameLoop(bool &drawGame, bool &processInput);
 
 //
 // Everything else

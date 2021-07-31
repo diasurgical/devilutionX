@@ -727,35 +727,35 @@ bool DemoMessage(tagMSG *lpMsg)
 	return false;
 }
 
-bool GetDemoRunGameLoop(bool &drawGame)
+bool GetDemoRunGameLoop(bool &drawGame, bool &processInput)
 {
 	if (demo_message_queue.empty())
 		app_fatal("Demo queue empty");
 	demoMsg dmsg = demo_message_queue.front();
 	if (dmsg.type == DemoMsgType::Message)
 		app_fatal("Unexpected Message");
-	gfProgressToNextGameTick = dmsg.progressToNextGameTick;
-	if (timedemo) {
-		// disable additonal rendering to speedup replay
-		drawGame = dmsg.type == DemoMsgType::GameTick;
-	} else {
+	// disable additonal rendering to speedup replay
+	drawGame = dmsg.type == DemoMsgType::GameTick;
+	if (!timedemo) {
 		int currentTickCount = SDL_GetTicks();
 		int ticksElapsed = currentTickCount - demoModeLastTick;
 		bool tickDue = ticksElapsed >= gnTickDelay;
-		if (dmsg.type == DemoMsgType::Rendering) {
-			if (tickDue) {
-				// we are behind the recording => disable rendering to speedup replay
-				drawGame = false;
+		if (tickDue) {
+			if (dmsg.type == DemoMsgType::GameTick) {
+				demoModeLastTick = currentTickCount;
 			}
 		} else {
-			if (!tickDue) {
-				int missingTicks = gnTickDelay - ticksElapsed;
-				SDL_Delay(missingTicks);
-				currentTickCount += missingTicks;
+			float progressToNextGameTick = clamp((float)ticksElapsed / (float)gnTickDelay, 0.F, 1.F);
+			if (dmsg.progressToNextGameTick > progressToNextGameTick) {
+				// we are ahead of the replay => add a additional rendering for smoothness
+				gfProgressToNextGameTick = progressToNextGameTick;
+				processInput = false;
+				drawGame = true;
+				return false;
 			}
-			demoModeLastTick = currentTickCount;
 		}
 	}
+	gfProgressToNextGameTick = dmsg.progressToNextGameTick;
 	demo_message_queue.pop_front();
 	return dmsg.type == DemoMsgType::GameTick;
 }

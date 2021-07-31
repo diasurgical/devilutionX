@@ -840,11 +840,13 @@ void RunGameLoop(interface_mode uMsg)
 			break;
 
 		bool drawGame = true;
-		bool runGameLoop = demoMode ? GetDemoRunGameLoop(drawGame) : nthread_has_500ms_passed();
+		bool processInput = true;
+		bool runGameLoop = demoMode ? GetDemoRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed();
 		if (!runGameLoop) {
 			if (recordDemo != -1)
 				demoRecording << static_cast<uint32_t>(DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
-			ProcessInput();
+			if (processInput)
+				ProcessInput();
 			if (!drawGame)
 				continue;
 			force_redraw |= 1;
