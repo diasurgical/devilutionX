@@ -839,7 +839,7 @@ void RunGameLoop(interface_mode uMsg)
 		if (!gbRunGame)
 			break;
 
-		bool runGameLoop = timedemo ? GetDemoRunGameLoop() : nthread_has_500ms_passed();
+		bool runGameLoop = demoMode ? GetDemoRunGameLoop() : nthread_has_500ms_passed();
 		if (!runGameLoop) {
 			if (recordDemo != -1)
 				demoRecording << static_cast<uint32_t>(DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
