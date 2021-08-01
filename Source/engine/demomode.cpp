@@ -173,7 +173,7 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 		app_fatal("Unexpected Message");
 	if (Timedemo) {
 		// disable additonal rendering to speedup replay
-		drawGame = dmsg.type == DemoMsgType::GameTick;
+		drawGame = dmsg.type == DemoMsgType::GameTick && !gbQuietMode;
 	} else {
 		int currentTickCount = SDL_GetTicks();
 		int ticksElapsed = currentTickCount - DemoModeLastTick;
