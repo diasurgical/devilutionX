@@ -47,11 +47,9 @@ int dropGoldValue;
 bool drawmanaflag;
 bool chrbtnactive;
 int pnumlines;
-spell_id pSpell;
 UiFlags InfoColor;
 char tempstr[256];
 int sbooktab;
-spell_type pSplType;
 int8_t initialDropGoldIndex;
 bool talkflag;
 bool sbookflag;
@@ -581,6 +579,64 @@ void RemoveGold(int pnum, int goldIndex)
 	dropGoldValue = 0;
 }
 
+bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
+{
+	pSpell = spell_id::SPL_INVALID;
+	pSplType = spell_type::RSPLTYPE_INVALID;
+
+	uint64_t mask;
+
+	int x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+	int y = PANEL_Y - 17;
+
+	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
+		auto &myPlayer = Players[MyPlayerId];
+		switch ((spell_type)i) {
+		case RSPLTYPE_SKILL:
+			mask = myPlayer._pAblSpells;
+			break;
+		case RSPLTYPE_SPELL:
+			mask = myPlayer._pMemSpells;
+			break;
+		case RSPLTYPE_SCROLL:
+			mask = myPlayer._pScrlSpells;
+			break;
+		case RSPLTYPE_CHARGES:
+			mask = myPlayer._pISpells;
+			break;
+		case RSPLTYPE_INVALID:
+			break;
+		}
+		int8_t j = SPL_FIREBOLT;
+		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
+			if ((mask & spl) == 0)
+				continue;
+			int lx = x;
+			int ly = y - SPLICONLENGTH;
+			if (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH) {
+				pSpell = (spell_id) j;
+				pSplType = (spell_type)i;
+				if (myPlayer._pClass == HeroClass::Monk && j == SPL_SEARCH)
+					pSplType = RSPLTYPE_SKILL;
+				return true;
+			}
+			x -= SPLICONLENGTH;
+			if (x == PANEL_X + 12 - SPLICONLENGTH) {
+				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+				y -= SPLICONLENGTH;
+			}
+		}
+		if (mask != 0 && x != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
+			x -= SPLICONLENGTH;
+		if (x == PANEL_X + 12 - SPLICONLENGTH) {
+			x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+			y -= SPLICONLENGTH;
+		}
+	}
+
+	return false;
+}
+
 } // namespace
 
 void DrawSpell(const Surface &out)
@@ -611,7 +667,7 @@ void DrawSpellList(const Surface &out)
 	int s;
 	uint64_t mask;
 
-	pSpell = SPL_INVALID;
+	spell_id pSpell = SPL_INVALID;
 	infostr[0] = '\0';
 	Point location;
 	int &x = location.x;
@@ -663,7 +719,7 @@ void DrawSpellList(const Surface &out)
 			int ly = y - SPLICONLENGTH;
 			if (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH) {
 				pSpell = (spell_id)j;
-				pSplType = (spell_type)i;
+				spell_type pSplType = (spell_type)i;
 				if (myPlayer._pClass == HeroClass::Monk && j == SPL_SEARCH)
 					pSplType = RSPLTYPE_SKILL;
 				DrawSpellCel(out, location, *pSpellCels, c);
@@ -738,8 +794,11 @@ void DrawSpellList(const Surface &out)
 
 void SetSpell()
 {
+	spell_id pSpell;
+	spell_type pSplType;
+
 	spselflag = false;
-	if (pSpell == SPL_INVALID) {
+	if (!GetSpellListSelection(pSpell, pSplType)) {
 		return;
 	}
 
@@ -754,7 +813,10 @@ void SetSpell()
 
 void SetSpeedSpell(int slot)
 {
-	if (pSpell == SPL_INVALID) {
+	spell_id pSpell;
+	spell_type pSplType;
+
+	if (!GetSpellListSelection(pSpell, pSplType)) {
 		return;
 	}
 	auto &myPlayer = Players[MyPlayerId];
