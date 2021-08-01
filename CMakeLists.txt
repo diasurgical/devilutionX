@@ -946,11 +946,16 @@ if(CPACK)
       set(SDL2_WIN32_LICENSES_DIR "${PROJECT_SOURCE_DIR}/Packaging/resources")
     else()
       set(SDL2_WIN32_DLLS_DIR "${SDL2_EXEC_PREFIX}/bin")
-      set(SDL2_WIN32_LICENSES_DIR "${SDL2_EXEC_PREFIX}/bin")
+      set(SDL2_WIN32_LICENSES_DIR "${PROJECT_SOURCE_DIR}/Packaging/resources")
     endif()
 
-    file(GLOB SDL2_WIN32_ALL_DLLS "${SDL2_WIN32_DLLS_DIR}/*.dll")
-    file(GLOB SDL2_WIN32_ALL_LICENSES "${SDL2_WIN32_LICENSES_DIR}/LICENSE*.txt")
+    file(GLOB SDL2_WIN32_ALL_DLLS
+      LIST_DIRECTORIES false
+      "${SDL2_WIN32_DLLS_DIR}/*.dll")
+    file(GLOB SDL2_WIN32_ALL_LICENSES
+      LIST_DIRECTORIES false
+      "${SDL2_WIN32_LICENSES_DIR}/LICENSE*.txt"
+      "${SDL2_WIN32_LICENSES_DIR}/README*.txt")
 
     set(CPACK_PACKAGE_FILE_NAME "devilutionx")
     set(CPACK_PACKAGE_NAME ${project_name})
@@ -967,21 +972,17 @@ if(CPACK)
       DESTINATION "."
     )
 
-    foreach (_SDL2_WIN32_DLL_PATH ${SDL2_WIN32_ALL_DLLS})
+    foreach(_SDL2_WIN32_DLL_PATH ${SDL2_WIN32_ALL_DLLS})
       install(FILES "${_SDL2_WIN32_DLL_PATH}"
         DESTINATION "."
       )
     endforeach()
 
-    foreach (_SDL2_WIN32_LICENSE_PATH ${SDL2_WIN32_ALL_LICENSES})
+    foreach(_SDL2_WIN32_LICENSE_PATH ${SDL2_WIN32_ALL_LICENSES})
       install(FILES "${_SDL2_WIN32_LICENSE_PATH}"
         DESTINATION "LICENSE"
       )
     endforeach()
-
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/LICENSE.CharisSILB.txt"
-      DESTINATION "LICENSE"
-    )
 
   elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     string(TOLOWER ${PROJECT_NAME} project_name)
