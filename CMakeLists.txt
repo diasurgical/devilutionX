@@ -949,8 +949,8 @@ if(CPACK)
       set(SDL2_WIN32_LICENSES_DIR "${SDL2_EXEC_PREFIX}/bin")
     endif()
 
-    file(GLOB _SDL2_ALL_DLLS "${SDL2_EXEC_PREFIX}/bin/*.dll")
-    file(GLOB _SDL2_ALL_LICENSES "${SDL2_EXEC_PREFIX}/bin/LICENSE*.txt")
+    file(GLOB SDL2_WIN32_ALL_DLLS "${SDL2_WIN32_DLLS_DIR}/*.dll")
+    file(GLOB SDL2_WIN32_ALL_LICENSES "${SDL2_WIN32_LICENSES_DIR}/LICENSE*.txt")
 
     set(CPACK_PACKAGE_FILE_NAME "devilutionx")
     set(CPACK_PACKAGE_NAME ${project_name})
