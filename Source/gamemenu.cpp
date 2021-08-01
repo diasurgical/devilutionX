@@ -101,8 +101,10 @@ void GamemenuNewGame(bool /*bActivate*/)
 	}
 
 	MyPlayerIsDead = false;
-	force_redraw = 255;
-	scrollrt_draw_game_screen();
+	if (!gbQuietMode) {
+		force_redraw = 255;
+		scrollrt_draw_game_screen();
+	}
 	CornerStone.activated = false;
 	gbRunGame = false;
 	gamemenu_off();

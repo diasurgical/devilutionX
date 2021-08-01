@@ -153,7 +153,7 @@ void StartGame(interface_mode uMsg)
 #ifdef _DEBUG
 	LoadDebugGFX();
 #endif
-	assert(ghMainWnd);
+	assert(gbQuietMode || ghMainWnd);
 	music_stop();
 	InitMonsterHealthBar();
 	InitXPBar();
@@ -693,16 +693,20 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		if (gbIsMultiplayer)
 			pfile_write_hero();
 		nthread_ignore_mutex(true);
-		PaletteFadeOut(8);
-		sound_stop();
+		if (!gbQuietMode) {
+			PaletteFadeOut(8);
+			sound_stop();
+		}
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ShowProgress((interface_mode)uMsg);
 		force_redraw = 255;
-		DrawAndBlit();
-		LoadPWaterPalette();
-		if (gbRunGame)
-			PaletteFadeIn(8);
+		if (!gbQuietMode) {
+			DrawAndBlit();
+			LoadPWaterPalette();
+			if (gbRunGame)
+				PaletteFadeIn(8);
+		}
 		nthread_ignore_mutex(false);
 		gbGameLoopStartup = true;
 		return;
@@ -719,17 +723,19 @@ void RunGameLoop(interface_mode uMsg)
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
-	assert(ghMainWnd);
+	assert(gbQuietMode || ghMainWnd);
 	EventHandler previousHandler = SetEventHandler(GameEventHandler);
 	run_delta_info();
 	gbRunGame = true;
 	gbProcessPlayers = true;
 	gbRunGameResult = true;
-	force_redraw = 255;
-	DrawAndBlit();
-	LoadPWaterPalette();
-	PaletteFadeIn(8);
-	force_redraw = 255;
+	if (!gbQuietMode) {
+		force_redraw = 255;
+		DrawAndBlit();
+		LoadPWaterPalette();
+		PaletteFadeIn(8);
+		force_redraw = 255;
+	}
 	gbGameLoopStartup = true;
 	nthread_ignore_mutex(false);
 
@@ -798,13 +804,15 @@ void RunGameLoop(interface_mode uMsg)
 		sfile_write_stash();
 	}
 
-	PaletteFadeOut(8);
-	NewCursor(CURSOR_NONE);
-	ClearScreenBuffer();
-	force_redraw = 255;
-	scrollrt_draw_game_screen();
+	if (!gbQuietMode) {
+		PaletteFadeOut(8);
+		NewCursor(CURSOR_NONE);
+		ClearScreenBuffer();
+		force_redraw = 255;
+		scrollrt_draw_game_screen();
+	}
 	previousHandler = SetEventHandler(previousHandler);
-	assert(previousHandler == GameEventHandler);
+	assert(gbQuietMode || previousHandler == GameEventHandler);
 	FreeGame();
 
 	if (cineflag) {
@@ -2299,7 +2307,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 	IncProgress();
 
-	if (firstflag) {
+	if (firstflag && !gbQuietMode) {
 		InitControlPan();
 	}
 	IncProgress();

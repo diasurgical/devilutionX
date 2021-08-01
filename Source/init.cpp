@@ -187,12 +187,14 @@ void LoadGameArchives()
 		if (spawn_mpq)
 			gbIsSpawn = true;
 	}
-	SDL_RWops *handle = OpenAsset("ui_art\\title.pcx");
-	if (handle == nullptr) {
-		LogError("{}", SDL_GetError());
-		InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
+	if (!gbQuietMode) {
+		SDL_RWops *handle = OpenAsset("ui_art\\title.pcx");
+		if (handle == nullptr) {
+			LogError("{}", SDL_GetError());
+			InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
+		}
+		SDL_RWclose(handle);
 	}
-	SDL_RWclose(handle);
 
 	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
 	if (hellfire_mpq)
