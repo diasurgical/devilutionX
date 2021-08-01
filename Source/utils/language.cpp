@@ -190,13 +190,13 @@ void ParseMetadata(char *ptr)
 	}
 }
 
-bool ReadEntry(FILE *fp, MoEntry *e, std::vector<char> &result)
+bool ReadEntry(SDL_RWops *rw, MoEntry *e, std::vector<char> &result)
 {
-	if (fseek(fp, e->offset, SEEK_SET) != 0)
+	if (SDL_RWseek(rw, e->offset, RW_SEEK_SET) == -1)
 		return false;
 	result.resize(e->length + 1);
 	result.back() = '\0';
-	return (fread(result.data(), sizeof(char), e->length, fp) == e->length);
+	return (SDL_RWread(rw, result.data(), sizeof(char), e->length) == e->length);
 }
 
 } // namespace
@@ -237,11 +237,11 @@ const char *LanguageMetadata(const char *key)
 
 bool HasTranslation(const std::string &locale)
 {
-	std::string gmoPath = paths::LangPath() + "./" + locale + ".gmo";
+	std::string gmoPath = paths::LangPath() + locale + ".gmo";
 	if (FileExists(gmoPath.c_str()))
 		return true;
 
-	std::string moPath = paths::LangPath() + "./" + locale + ".mo";
+	std::string moPath = paths::LangPath() + locale + ".mo";
 	if (FileExists(moPath.c_str()))
 		return true;
 
@@ -250,12 +250,12 @@ bool HasTranslation(const std::string &locale)
 
 void LanguageInitialize()
 {
-	FILE *fp;
+	SDL_RWops *rw;
 
-	auto path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".gmo";
-	if ((fp = FOpen(path.c_str(), "rb")) == nullptr) {
-		path = paths::LangPath() + "./" + sgOptions.Language.szCode + ".mo";
-		if ((fp = FOpen(path.c_str(), "rb")) == nullptr) {
+	auto path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
+	if ((rw = SDL_RWFromFile(path.c_str(), "r+b")) == nullptr) {
+		path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
+		if ((rw = SDL_RWFromFile(path.c_str(), "r+b")) == nullptr) {
 			perror(path.c_str());
 			return;
 		}
@@ -263,7 +263,7 @@ void LanguageInitialize()
 	// Read header and do sanity checks
 	// FIXME: Endianness.
 	MoHead head;
-	if (fread(&head, sizeof(MoHead), 1, fp) != 1) {
+	if (SDL_RWread(rw, &head, sizeof(MoHead), 1) != 1) {
 		return;
 	}
 
@@ -277,25 +277,25 @@ void LanguageInitialize()
 
 	// Read entries of source strings
 	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
-	if (fseek(fp, head.srcOffset, SEEK_SET) != 0)
+	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1)
 		return;
 	// FIXME: Endianness.
-	if (fread(src.get(), sizeof(MoEntry), head.nbMappings, fp) != head.nbMappings)
+	if (SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings)
 		return;
 
 	// Read entries of target strings
 	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
-	if (fseek(fp, head.dstOffset, SEEK_SET) != 0)
+	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1)
 		return;
 	// FIXME: Endianness.
-	if (fread(dst.get(), sizeof(MoEntry), head.nbMappings, fp) != head.nbMappings)
+	if (SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings)
 		return;
 
 	std::vector<char> key;
 	std::vector<char> value;
 
 	// MO header
-	if (!ReadEntry(fp, &src[0], key) && ReadEntry(fp, &dst[0], value))
+	if (!ReadEntry(rw, &src[0], key) && ReadEntry(rw, &dst[0], value))
 		return;
 
 	if (key[0] != '\0')
@@ -309,7 +309,7 @@ void LanguageInitialize()
 
 	// Read strings described by entries
 	for (uint32_t i = 1; i < head.nbMappings; i++) {
-		if (ReadEntry(fp, &src[i], key) && ReadEntry(fp, &dst[i], value)) {
+		if (ReadEntry(rw, &src[i], key) && ReadEntry(rw, &dst[i], value)) {
 			size_t offset = 0;
 			for (int j = 0; j < PluralForms; j++) {
 				const char *text = value.data() + offset;
