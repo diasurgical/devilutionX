@@ -235,6 +235,19 @@ const char *LanguageMetadata(const char *key)
 	return it->second;
 }
 
+bool HasTranslation(const std::string &locale)
+{
+	std::string gmoPath = paths::LangPath() + "./" + locale + ".gmo";
+	if (FileExists(gmoPath.c_str()))
+		return true;
+
+	std::string moPath = paths::LangPath() + "./" + locale + ".mo";
+	if (FileExists(moPath.c_str()))
+		return true;
+
+	return false;
+}
+
 void LanguageInitialize()
 {
 	FILE *fp;
