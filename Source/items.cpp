@@ -3443,7 +3443,9 @@ void FreeItemGFX()
 
 void GetItemFrm(Item &item)
 {
-	item.AnimInfo.celSprite.emplace(*itemanims[ItemCAnimTbl[item._iCurs]]);
+	int it = ItemCAnimTbl[item._iCurs];
+	if (itemanims[it])
+		item.AnimInfo.celSprite.emplace(*itemanims[it]);
 }
 
 void GetItemStr(Item &item)
