@@ -8,6 +8,11 @@
 #include <fstream>
 #include <locale>
 
+#ifdef __ANDROID__
+#include "SDL.h"
+#include <jni.h>
+#endif
+
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -261,14 +266,30 @@ void LoadOptions()
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
+#ifdef __ANDROID__
+	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
+	jobject activity = (jobject)SDL_AndroidGetActivity();
+	jclass clazz(env->GetObjectClass(activity));
+	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
+	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
+	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
+	std::string locale = cLocale;
+	env->ReleaseStringUTFChars(jLocale, cLocale);
+	env->DeleteLocalRef(jLocale);
+	env->DeleteLocalRef(activity);
+	env->DeleteLocalRef(clazz);
+#else
 	std::string locale = std::locale("").name().substr(0, 5);
-	SDL_Log("prefered locale %s", locale.c_str());
+#endif
+
+	LogVerbose("Prefered locale: {}", locale);
 	if (!HasTranslation(locale)) {
 		locale = locale.substr(0, 2);
 		if (!HasTranslation(locale)) {
 			locale = "en";
 		}
 	}
+	LogVerbose("Best match locale: {}", locale);
 
 	GetIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), locale.c_str());
 
