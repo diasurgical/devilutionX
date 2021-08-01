@@ -6,6 +6,7 @@
 
 #include <cstdint>
 #include <fstream>
+#include <locale>
 
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
@@ -13,6 +14,7 @@
 #include "diablo.h"
 #include "options.h"
 #include "utils/file_util.h"
+#include "utils/language.h"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -259,7 +261,16 @@ void LoadOptions()
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
-	GetIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), "en");
+	std::string locale = std::locale("").name().substr(0, 5);
+	SDL_Log("prefered locale %s", locale.c_str());
+	if (!HasTranslation(locale)) {
+		locale = locale.substr(0, 2);
+		if (!HasTranslation(locale)) {
+			locale = "en";
+		}
+	}
+
+	GetIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), locale.c_str());
 
 	keymapper.Load();
 
