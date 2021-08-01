@@ -62,13 +62,13 @@ bool FileExists(const char *path)
 		return false;
 	}
 	return true;
-#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
 	return ::access(path, F_OK) == 0;
 #else
-	FILE *file = std::fopen(path, "rb");
+	SDL_RWops *file = SDL_RWFromFile(path, "r+b");
 	if (file == NULL)
 		return false;
-	std::fclose(file);
+	SDL_RWclose(file);
 	return true;
 #endif
 }
