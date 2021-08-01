@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Locale;
 
 public class DevilutionXSDLActivity extends SDLActivity {
 	private String externalDir;
@@ -125,6 +126,14 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		for (File internalFile : getFilesDir().listFiles()) {
 			migrateFile(internalFile);
 		}
+	}
+
+	/**
+	 * This method is called by SDL using JNI.
+	 */
+	public String getLocale()
+	{
+		return Locale.getDefault().toString();
 	}
 
 	protected String[] getArguments() {
