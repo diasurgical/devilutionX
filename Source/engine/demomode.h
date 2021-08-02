@@ -12,7 +12,7 @@ namespace devilution {
 namespace demo {
 
 void InitPlayBack(int demoNumber, bool timedemo);
-void InitRecording(int recordNumber);
+void InitRecording(int recordNumber, bool createDemoReference);
 void OverrideOptions();
 
 bool IsRunning();

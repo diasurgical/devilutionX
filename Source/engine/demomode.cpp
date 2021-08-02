@@ -32,6 +32,7 @@ struct demoMsg {
 int DemoNumber = -1;
 bool Timedemo = false;
 int RecordNumber = -1;
+bool CreateDemoReference = false;
 
 std::ofstream DemoRecording;
 std::deque<demoMsg> Demo_Message_Queue;
@@ -132,9 +133,10 @@ void InitPlayBack(int demoNumber, bool timedemo)
 		diablo_quit(1);
 	}
 }
-void InitRecording(int recordNumber)
+void InitRecording(int recordNumber, bool createDemoReference)
 {
 	RecordNumber = recordNumber;
+	CreateDemoReference = createDemoReference;
 }
 void OverrideOptions()
 {
@@ -278,8 +280,11 @@ void NotifyGameLoopEnd()
 {
 	if (IsRecording()) {
 		DemoRecording.close();
+		if (CreateDemoReference)
+			pfile_write_hero_demo(RecordNumber);
 
 		RecordNumber = -1;
+		CreateDemoReference = false;
 	}
 
 	if (IsRunning()) {
@@ -287,6 +292,19 @@ void NotifyGameLoopEnd()
 		SDL_Log("%d frames, %.2f seconds: %.1f fps", LogicTick, secounds, LogicTick / secounds);
 		gbRunGameResult = false;
 		gbRunGame = false;
+
+		HeroCompareResult compareResult = pfile_compare_hero_demo(DemoNumber);
+		switch (compareResult) {
+		case HeroCompareResult::ReferenceNotFound:
+			SDL_Log("Timedemo: No final comparision cause reference is not present.");
+			break;
+		case HeroCompareResult::Same:
+			SDL_Log("Timedemo: Same outcome as inital run. :)");
+			break;
+		case HeroCompareResult::Difference:
+			SDL_Log("Timedemo: Different outcome then inital run. ;(");
+			break;
+		}
 	}
 }
 
