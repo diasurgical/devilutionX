@@ -884,6 +884,7 @@ void DiabloParseFlags(int argc, char **argv)
 	bool timedemo = false;
 	int demoNumber = -1;
 	int recordNumber = -1;
+	bool createDemoReference = false;
 	for (int i = 1; i < argc; i++) {
 		const string_view arg = argv[i];
 		if (arg == "-h" || arg == "--help") {
@@ -927,6 +928,8 @@ void DiabloParseFlags(int argc, char **argv)
 				diablo_quit(0);
 			}
 			recordNumber = SDL_atoi(argv[++i]);
+		} else if (strcasecmp("--create-reference", argv[i]) == 0) {
+			createDemoReference = true;
 		} else if (arg == "-n") {
 			gbShowIntro = false;
 		} else if (arg == "-f") {
@@ -971,7 +974,7 @@ void DiabloParseFlags(int argc, char **argv)
 	if (demoNumber != -1)
 		demo::InitPlayBack(demoNumber, timedemo);
 	if (recordNumber != -1)
-		demo::InitRecording(recordNumber);
+		demo::InitRecording(recordNumber, createDemoReference);
 }
 
 void DiabloInitScreen()
