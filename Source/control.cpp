@@ -90,7 +90,6 @@ std::optional<CelSprite> pSBkIconCels;
 std::optional<CelSprite> pSpellBkCel;
 std::optional<CelSprite> pSpellCels;
 
-
 bool PanelButtons[8];
 int PanelButtonIndex;
 char TalkSave[8][80];
@@ -1296,7 +1295,7 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				string_view townerName = Towners[pcursmonst]._tName;
+				string_view townerName = Towners[pcursmonst].name;
 				strncpy(infostr, townerName.data(), townerName.length());
 				infostr[townerName.length()] = '\0';
 			}

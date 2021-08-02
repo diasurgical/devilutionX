@@ -153,7 +153,7 @@ struct Point {
 		return std::max<int>(offset.deltaX, offset.deltaY);
 	}
 
-	#ifdef RUN_TESTS
+#ifdef RUN_TESTS
 	/**
 	 * @brief Format points nicely in test failure messages
 	 * @param stream output stream, expected to have overloads for int and char*
@@ -164,7 +164,7 @@ struct Point {
 	{
 		return stream << "(x: " << point.x << ", y: " << point.y << ")";
 	}
-	#endif
+#endif
 };
 
 } // namespace devilution

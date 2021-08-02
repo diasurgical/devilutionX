@@ -1,12 +1,11 @@
 #include <SDL.h>
 #include <cstdint>
 #include <deque>
-#include <string>
 #include <sstream>
+#include <string>
 
 #include "control.h"
 #include "controls/controller.h"
-#include "utils/paths.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
@@ -16,15 +15,16 @@
 #include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
+#include "menu.h"
 #include "miniwin/miniwin.h"
 #include "movie.h"
-#include "utils/display.h"
-#include "utils/log.hpp"
-#include "utils/sdl_compat.h"
-#include "utils/stubs.h"
-#include "menu.h"
 #include "nthread.h"
 #include "storm/storm.h"
+#include "utils/display.h"
+#include "utils/log.hpp"
+#include "utils/paths.h"
+#include "utils/sdl_compat.h"
+#include "utils/stubs.h"
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -631,11 +631,11 @@ bool LoadDemoMessages(int i)
 		return false;
 	}
 
-	std::string line, number;
-
+	std::string line;
 	std::getline(demofile, line);
 	std::stringstream header(line);
 
+	std::string number;
 	std::getline(header, number, ','); // Demo version
 	if (std::stoi(number) != 0) {
 		return false;
@@ -657,7 +657,7 @@ bool LoadDemoMessages(int i)
 
 		std::getline(command, number, ',');
 		int typeNum = std::stoi(number);
-		DemoMsgType type = static_cast<DemoMsgType>(typeNum);
+		auto type = static_cast<DemoMsgType>(typeNum);
 
 		std::getline(command, number, ',');
 		float progressToNextGameTick = std::stof(number);
@@ -689,7 +689,7 @@ bool LoadDemoMessages(int i)
 bool DemoMessage(tagMSG *lpMsg)
 {
 	SDL_Event e;
-	if (SDL_PollEvent(&e)) {
+	if (SDL_PollEvent(&e) != 0) {
 		if (e.type == SDL_QUIT) {
 			lpMsg->message = DVL_WM_QUIT;
 			lpMsg->lParam = 0;

@@ -49,7 +49,8 @@ Checks: >
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
   -modernize-concat-nested-namespaces,
-  -modernize-avoid-bind
+  -modernize-avoid-bind,
+  -readability-magic-numbers
 
 HeaderFilterRegex: "^(Source|test)\\.h$"
 

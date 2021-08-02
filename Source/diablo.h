@@ -53,7 +53,6 @@ enum class MouseActionType : int {
 	AttackMonsterTarget,
 	AttackPlayerTarget,
 	OperateObject,
-	Other,
 };
 
 extern SDL_Window *ghMainWnd;

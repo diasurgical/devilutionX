@@ -11,8 +11,8 @@
 #endif
 
 #include "control.h"
-#include "utils/log.hpp"
 #include "options.h"
+#include "utils/log.hpp"
 
 namespace devilution {
 

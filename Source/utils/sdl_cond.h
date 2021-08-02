@@ -46,4 +46,3 @@ private:
 };
 
 } // namespace devilution
-

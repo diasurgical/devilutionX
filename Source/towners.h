@@ -37,24 +37,27 @@ enum _talker_id : uint8_t {
 
 struct TownerStruct {
 	byte *_tNAnim[8];
-	std::unique_ptr<byte[]> _tNData;
+	std::unique_ptr<byte[]> data;
 	byte *_tAnimData;
 	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
-	int16_t _tSeed;
+	int16_t seed;
 	/** Tile position of NPC */
 	Point position;
 	int16_t _tAnimWidth;
-	int16_t _tAnimDelay; // Tick length of each frame in the current animation
-	int16_t _tAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	uint8_t _tAnimLen;   // Number of frames in current animation
-	uint8_t _tAnimFrame; // Current frame of animation.
+	/** Tick length of each frame in the current animation */
+	int16_t _tAnimDelay;
+	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
+	int16_t _tAnimCnt;
+	/** Number of frames in current animation */
+	uint8_t _tAnimLen;
+	/** Current frame of animation. */
+	uint8_t _tAnimFrame;
 	uint8_t _tAnimFrameCnt;
-	string_view _tName;
+	string_view name;
 	/** Specifies the animation frame sequence. */
 	const uint8_t *animOrder; // unowned
 	std::size_t animOrderSize;
-	void (*talk)(PlayerStruct &player, TownerStruct &barOwner);
-	bool _tbtcnt;
+	void (*talk)(PlayerStruct &player, TownerStruct &towner);
 	_talker_id _ttype;
 };
 

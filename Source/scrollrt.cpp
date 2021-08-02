@@ -1352,7 +1352,6 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	//                                           DIR_S,        DIR_SW,       DIR_W,	       DIR_NW,        DIR_N,        DIR_NE,        DIR_E,        DIR_SE,
 	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
-	constexpr bool IsDiagionalWalk[8]        = {        false,         true,        false,         true,        false,         true,         false,         true };
 	// clang-format on
 
 	float fAnimationProgress = animationInfo.GetAnimationProgress();

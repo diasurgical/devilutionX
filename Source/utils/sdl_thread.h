@@ -10,20 +10,20 @@
 namespace devilution {
 
 namespace this_sdl_thread {
-	inline SDL_threadID get_id()
-	{
-		return SDL_GetThreadID(nullptr);
-	}
+inline SDL_threadID get_id()
+{
+	return SDL_GetThreadID(nullptr);
+}
 } //namespace this_sdl_thread
 
 class SdlThread final {
 	static int SDLCALL ThreadTranslate(void *ptr);
 	static void ThreadDeleter(SDL_Thread *thread);
 
-	std::unique_ptr<SDL_Thread, void(*)(SDL_Thread *)> thread { nullptr, ThreadDeleter };
+	std::unique_ptr<SDL_Thread, void (*)(SDL_Thread *)> thread { nullptr, ThreadDeleter };
 
 public:
-	SdlThread(int (SDLCALL *handler)(void *), void *data)
+	SdlThread(int(SDLCALL *handler)(void *), void *data)
 #ifdef USE_SDL1
 	    : thread(SDL_CreateThread(handler, data), ThreadDeleter)
 #else
@@ -64,4 +64,3 @@ public:
 };
 
 } // namespace devilution
-

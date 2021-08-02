@@ -2921,7 +2921,7 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	case ITYPE_STAFF:
 		animWeaponId = PlayerWeaponGraphic::Staff;
 		break;
-    default:
+	default:
 		break;
 	}
 

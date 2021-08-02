@@ -242,10 +242,7 @@ bool HasTranslation(const std::string &locale)
 		return true;
 
 	std::string moPath = paths::LangPath() + locale + ".mo";
-	if (FileExists(moPath.c_str()))
-		return true;
-
-	return false;
+	return FileExists(moPath.c_str());
 }
 
 void LanguageInitialize()

@@ -76,7 +76,7 @@ void PlayIntro()
 	RefreshMusic();
 }
 
-bool Dummy_GetHeroInfo(_uiheroinfo *pInfo)
+bool DummyGetHeroInfo(_uiheroinfo * /*pInfo*/)
 {
 	return true;
 }
@@ -87,7 +87,7 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 {
 	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
 	if (demoMode) {
-		pfile_ui_set_hero_infos(Dummy_GetHeroInfo);
+		pfile_ui_set_hero_infos(DummyGetHeroInfo);
 		gbLoadGame = true;
 	} else if (!gbIsMultiplayer) {
 		UiSelHeroSingDialog(

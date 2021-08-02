@@ -7,8 +7,8 @@
 #include "animationinfo.h"
 #include "appfat.h"
 #include "nthread.h"
-#include "utils/stdcompat/algorithm.hpp"
 #include "utils/log.hpp"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 

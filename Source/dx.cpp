@@ -11,8 +11,8 @@
 #include "options.h"
 #include "storm/storm.h"
 #include "utils/display.h"
-#include "utils/sdl_mutex.h"
 #include "utils/log.hpp"
+#include "utils/sdl_mutex.h"
 
 #ifdef __3DS__
 #include <3ds.h>
