@@ -152,14 +152,6 @@ void CalculateUIRectangle()
 	};
 }
 
-void AdjustToScreenGeometry(Size windowSize)
-{
-	gnScreenWidth = windowSize.width;
-	gnScreenHeight = windowSize.height;
-	CalculateUIRectangle();
-	CalculatePanelAreas();
-}
-
 Size GetPreferredWindowSize()
 {
 	Size windowSize = *sgOptions.Graphics.resolution;
@@ -174,6 +166,14 @@ Size GetPreferredWindowSize()
 }
 
 } // namespace
+
+void AdjustToScreenGeometry(Size windowSize)
+{
+	gnScreenWidth = windowSize.width;
+	gnScreenHeight = windowSize.height;
+	CalculateUIRectangle();
+	CalculatePanelAreas();
+}
 
 float GetDpiScalingFactor()
 {

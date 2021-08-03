@@ -1462,6 +1462,7 @@ bool CanPlayerTakeAction()
 {
 	return !IsPlayerDead() && IsGameRunning();
 }
+} // namespace
 
 void InitKeymapActions()
 {
@@ -1709,7 +1710,6 @@ void InitKeymapActions()
 	    });
 #endif
 }
-} // namespace
 
 void FreeGameMem()
 {

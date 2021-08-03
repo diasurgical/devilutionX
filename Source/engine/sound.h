@@ -10,6 +10,7 @@
 #include <string>
 
 #include "levels/gendung.h"
+#include "utils/attributes.h"
 
 #ifndef NOSOUND
 #include "utils/soundsample.h"
@@ -68,7 +69,7 @@ void music_unmute();
 
 /* data */
 
-extern bool gbMusicOn;
-extern bool gbSoundOn;
+extern DVL_API_FOR_TEST bool gbMusicOn;
+extern DVL_API_FOR_TEST bool gbSoundOn;
 
 } // namespace devilution
