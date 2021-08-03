@@ -1358,7 +1358,7 @@ void DrawChr(const Surface &out)
 		style = UiFlags::ColorBlue;
 	if (myPlayer._pIBonusToHit < 0)
 		style = UiFlags::ColorRed;
-	sprintf(chrstr, "%i%%", (myPlayer._pDexterity / 2) + myPlayer._pIBonusToHit + 50);
+	sprintf(chrstr, "%i%%", (myPlayer.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW ? myPlayer.GetRangedToHit() : myPlayer.GetMeleeToHit()));
 	DrawString(out, chrstr, { { 258, 211 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;

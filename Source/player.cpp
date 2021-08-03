@@ -912,11 +912,7 @@ bool PlrHitMonst(int pnum, int m)
 		tmac -= player._pIEnAc;
 	}
 
-	hper += (player._pDexterity / 2) + player._pLevel + 50 - tmac;
-	if (player._pClass == HeroClass::Warrior) {
-		hper += 20;
-	}
-	hper += player._pIBonusToHit;
+	hper += player.GetMeleeToHit() - tmac;
 	hper = clamp(hper, 5, 95);
 
 	bool ret = false;
@@ -1106,12 +1102,8 @@ bool PlrHitPlr(int pnum, int8_t p)
 
 	int hit = GenerateRnd(100);
 
-	int hper = (attacker._pDexterity / 2) + attacker._pLevel + 50 - target.GetArmor();
+	int hper = attacker.GetMeleeToHit() - target.GetArmor();
 
-	if (attacker._pClass == HeroClass::Warrior) {
-		hper += 20;
-	}
-	hper += attacker._pIBonusToHit;
 	if (hper < 5) {
 		hper = 5;
 	}

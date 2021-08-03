@@ -32,6 +32,8 @@ namespace devilution {
 #define MAX_SPELL_LEVEL 15
 #define PLR_NAME_LEN 32
 
+constexpr int BaseHitChance = 50;
+
 /** Walking directions */
 enum {
 	// clang-format off
@@ -401,6 +403,43 @@ struct PlayerStruct {
 	int GetArmor() const
 	{
 		return _pIBonusAC + _pIAC + _pDexterity / 5;
+	}
+
+	/**
+	 * @brief Return player's melee to hit value
+	 */
+	int GetMeleeToHit() const
+	{
+		int hper = _pLevel + _pDexterity / 2 + _pIBonusToHit + BaseHitChance;
+		if (_pClass == HeroClass::Warrior)
+			hper += 20;
+		return hper;
+	}
+
+	/**
+	 * @brief Return player's ranged to hit value
+	 */
+	int GetRangedToHit() const
+	{
+		int hper = _pLevel + _pDexterity + _pIBonusToHit + BaseHitChance;
+		if (_pClass == HeroClass::Rogue)
+			hper += 20;
+		else if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Bard)
+			hper += 10;
+		return hper;
+	}
+
+	/**
+	 * @brief Return magic hit chance
+	 */
+	int GetMagicToHit() const
+	{
+		int hper = _pMagic + BaseHitChance;
+		if (_pClass == HeroClass::Sorcerer)
+			hper += 20;
+		else if (_pClass == HeroClass::Bard)
+			hper += 10;
+		return hper;
 	}
 
 	/**
