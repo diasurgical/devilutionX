@@ -39,6 +39,10 @@ void play_movie(const char *pszMovie, bool userCanClose)
 	effects_play_sound("Sfx\\Misc\\blank.wav");
 #endif
 
+	if (IsHardwareCursorEnabled()) {
+		SetHardwareCursorVisible(false);
+	}
+
 	if (SVidPlayBegin(pszMovie, loop_movie ? 0x100C0808 : 0x10280808)) {
 		tagMSG msg;
 		while (movie_playing) {
