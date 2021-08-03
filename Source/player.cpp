@@ -1106,7 +1106,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 
 	int hit = GenerateRnd(100);
 
-	int hper = (attacker._pDexterity / 2) + attacker._pLevel + 50 - (target._pIBonusAC + target._pIAC + target._pDexterity / 5);
+	int hper = (attacker._pDexterity / 2) + attacker._pLevel + 50 - target.GetArmor();
 
 	if (attacker._pClass == HeroClass::Warrior) {
 		hper += 20;
