@@ -64,6 +64,9 @@ set(devilutionx_fixtures
   Levels/L4Data/Vile1.DUN
   Levels/L4Data/Warlord.DUN
   Levels/L4Data/Warlord2.DUN
+  timedemo/WarriorLevel1to2/demo_0.dmo
+  timedemo/WarriorLevel1to2/demo_0_reference_spawn_0.sv
+  timedemo/WarriorLevel1to2/spawn_0.sv
 )
 
 foreach(fixture ${devilutionx_fixtures})
