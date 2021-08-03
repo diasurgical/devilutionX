@@ -388,9 +388,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		hit = player._pIBonusToHit
 		    + player._pLevel
 		    - (dist * dist / 2)
-		    - target._pDexterity / 5
-		    - target._pIBonusAC
-		    - target._pIAC
+		    - target.GetArmor()
 		    + player._pDexterity + 50;
 		if (player._pClass == HeroClass::Rogue)
 			hit += 20;
@@ -1136,7 +1134,7 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 #endif
 	int hper = 40;
 	if (MissileData[mtype].mType == 0) {
-		int tac = player._pIAC + player._pIBonusAC + player._pDexterity / 5;
+		int tac = player.GetArmor();
 		if (monster != nullptr) {
 			hper = monster->mHit
 			    + ((monster->mLevel - player._pLevel) * 2)

@@ -1350,7 +1350,7 @@ void DrawChr(const Surface &out)
 		style = UiFlags::ColorBlue;
 	if (myPlayer._pIBonusAC < 0)
 		style = UiFlags::ColorRed;
-	sprintf(chrstr, "%i", myPlayer._pIBonusAC + myPlayer._pIAC + myPlayer._pDexterity / 5);
+	sprintf(chrstr, "%i", myPlayer.GetArmor());
 	DrawString(out, chrstr, { { 258, 183 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;

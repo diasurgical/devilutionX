@@ -396,6 +396,14 @@ struct PlayerStruct {
 	void Reset();
 
 	/**
+	 * @brief Return player's armor value
+	 */
+	int GetArmor() const
+	{
+		return _pIBonusAC + _pIAC + _pDexterity / 5;
+	}
+
+	/**
 	 * @brief Calculates the players current Hit Points as a percentage of their max HP and stores it for later reference
 	 *
 	 * The stored value is unused...

@@ -1450,15 +1450,14 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if (debug_mode_dollar_sign || debug_mode_key_inverted_v)
 		hper = 1000;
 #endif
-	int ac = player._pIBonusAC + player._pIAC;
+	int ac = player.GetArmor();
 	if ((player.pDamAcFlags & ISPLHF_ACDEMON) != 0 && monster.MData->mMonstClass == MC_DEMON)
 		ac += 40;
 	if ((player.pDamAcFlags & ISPLHF_ACUNDEAD) != 0 && monster.MData->mMonstClass == MC_UNDEAD)
 		ac += 20;
 	hit += 2 * (monster.mLevel - player._pLevel)
 	    + 30
-	    - ac
-	    - player._pDexterity / 5;
+	    - ac;
 	if (hit < 15)
 		hit = 15;
 	if (currlevel == 14 && hit < 20)
