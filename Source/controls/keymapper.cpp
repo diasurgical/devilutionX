@@ -108,11 +108,11 @@ int Keymapper::GetActionKey(const Keymapper::Action &action)
 {
 	std::array<char, 64> result;
 	if (!GetIniValue("Keymapping", action.name.c_str(), result.data(), result.size()))
-		return {};
+		return action.defaultKey; // Return the default key if no key has been set.
 
 	std::string key = result.data();
 	if (key.empty())
-		return action.defaultKey; // Return the default key if no key has been set.
+		return DVL_VK_INVALID;
 
 	auto keyIt = keyNameToKeyID.find(key);
 	if (keyIt == keyNameToKeyID.end()) {
