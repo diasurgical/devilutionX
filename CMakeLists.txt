@@ -943,11 +943,10 @@ if(CPACK)
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
       set(SDL2_WIN32_DLLS_DIR "${CMAKE_BINARY_DIR}")
-      set(SDL2_WIN32_LICENSES_DIR "${PROJECT_SOURCE_DIR}/Packaging/resources")
     else()
       set(SDL2_WIN32_DLLS_DIR "${SDL2_EXEC_PREFIX}/bin")
-      set(SDL2_WIN32_LICENSES_DIR "${PROJECT_SOURCE_DIR}/Packaging/resources")
     endif()
+    set(SDL2_WIN32_LICENSES_DIR "${PROJECT_SOURCE_DIR}/Packaging/resources")
 
     file(GLOB SDL2_WIN32_ALL_DLLS
       LIST_DIRECTORIES false
