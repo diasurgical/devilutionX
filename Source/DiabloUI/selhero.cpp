@@ -299,17 +299,18 @@ void SelheroClassSelectorEsc()
 
 void SelheroNameSelect(int /*value*/)
 {
-	if (!UiValidPlayerName(selhero_heroInfo.name)) {
+	// only check names in multiplayer, we don't care about them in single
+	if (selhero_isMultiPlayer && !UiValidPlayerName(selhero_heroInfo.name)) { 
 		ArtBackground.Unload();
 		UiSelOkDialog(title, _("Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n"), false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
+	} else{
+		if (gfnHeroCreate(&selhero_heroInfo)) {
+			SelheroLoadSelect(1);
+			return;
+		}
+		UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
 	}
-
-	if (gfnHeroCreate(&selhero_heroInfo)) {
-		SelheroLoadSelect(1);
-		return;
-	}
-	UiErrorOkDialog(_(/* TRANSLATORS: Error Message */ "Unable to create character."), vecSelDlgItems);
 
 	memset(selhero_heroInfo.name, '\0', sizeof(selhero_heroInfo.name));
 	SelheroClassSelectorSelect(0);
