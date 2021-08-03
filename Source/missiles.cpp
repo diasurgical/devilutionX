@@ -244,23 +244,12 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	if (pnum != -1) {
 		const auto &player = Players[pnum];
 		if (MissileData[t].mType == 0) {
-			hper = player._pDexterity;
-			hper += player._pIBonusToHit;
-			hper += player._pLevel;
+			hper = player.GetRangedToHit();
 			hper -= monster.mArmorClass;
 			hper -= (dist * dist) / 2;
 			hper += player._pIEnAc;
-			hper += 50;
-			if (player._pClass == HeroClass::Rogue)
-				hper += 20;
-			if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
-				hper += 10;
 		} else {
-			hper = player._pMagic - (monster.mLevel * 2) - dist + 50;
-			if (player._pClass == HeroClass::Sorcerer)
-				hper += 20;
-			else if (player._pClass == HeroClass::Bard)
-				hper += 10;
+			hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
 		}
 	} else {
 		hper = GenerateRnd(75) - monster.mLevel * 2;
@@ -385,24 +374,13 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 
 	int hit;
 	if (MissileData[mtype].mType == 0) {
-		hit = player._pIBonusToHit
-		    + player._pLevel
+		hit = player.GetRangedToHit()
 		    - (dist * dist / 2)
-		    - target.GetArmor()
-		    + player._pDexterity + 50;
-		if (player._pClass == HeroClass::Rogue)
-			hit += 20;
-		if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
-			hit += 10;
+		    - target.GetArmor();
 	} else {
-		hit = player._pMagic
+		hit = player.GetMagicToHit()
 		    - (target._pLevel * 2)
-		    - dist
-		    + 50;
-		if (player._pClass == HeroClass::Sorcerer)
-			hit += 20;
-		else if (player._pClass == HeroClass::Bard)
-			hit += 10;
+		    - dist;
 	}
 
 	hit = clamp(hit, 5, 95);
