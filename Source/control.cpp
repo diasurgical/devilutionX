@@ -308,9 +308,9 @@ void PrintSBookHotkey(const Surface &out, Point position, const std::string &tex
 	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 17 - SPLICONLENGTH };
 
 	// Draw a drop shadow below and to the left of the text
-	DrawString(out, text.c_str(), position + Displacement { -1, 1 }, UiFlags::ColorBlack);
+	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
 	// Then draw the text over the top
-	DrawString(out, text.c_str(), position, UiFlags::ColorSilver);
+	DrawString(out, text, position, UiFlags::ColorSilver);
 }
 
 /**

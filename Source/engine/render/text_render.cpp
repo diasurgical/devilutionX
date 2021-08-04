@@ -197,13 +197,12 @@ void InitText()
 	}
 }
 
-int GetLineWidth(const char *text, GameFontTables size, int spacing, int *charactersInLine)
+int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
 
-	size_t textLength = strlen(text);
 	size_t i = 0;
-	for (; i < textLength; i++) {
+	for (; i < text.length(); i++) {
 		if (text[i] == '\n')
 			break;
 
@@ -271,7 +270,7 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size, int spaci
 /**
  * @todo replace Rectangle with cropped Surface
  */
-uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, bool drawTextCursor)
+uint16_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight, bool drawTextCursor)
 {
 	GameFontTables size = GameFontSmall;
 	if (HasAnyOf(flags, UiFlags::FontMedium))
@@ -288,8 +287,6 @@ uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect,
 		color = ColorRed;
 	else if (HasAnyOf(flags, UiFlags::ColorBlack))
 		color = ColorBlack;
-
-	const size_t textLength = strlen(text);
 
 	int charactersInLine = 0;
 	int lineWidth = 0;
@@ -313,7 +310,7 @@ uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect,
 		lineHeight = LineHeights[size];
 
 	uint16_t i = 0;
-	for (; i < textLength; i++) {
+	for (; i < text.length(); i++) {
 		uint8_t frame = FontFrame[size][FontIndex[static_cast<uint8_t>(text[i])]];
 		int symbolWidth = FontKern[size][frame];
 		if (text[i] == '\n' || characterPosition.x + symbolWidth > rightMargin) {

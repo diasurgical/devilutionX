@@ -14,6 +14,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/rectangle.hpp"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -35,7 +36,7 @@ void InitText();
  * @param charactersInLine Receives characters read until newline or terminator
  * @return Line width in pixels
  */
-int GetLineWidth(const char *text, GameFontTables size = GameFontSmall, int spacing = 1, int *charactersInLine = nullptr);
+int GetLineWidth(string_view text, GameFontTables size = GameFontSmall, int spacing = 1, int *charactersInLine = nullptr);
 void WordWrapGameString(char *text, size_t width, GameFontTables size = GameFontSmall, int spacing = 1);
 
 /**
@@ -58,7 +59,7 @@ void WordWrapGameString(char *text, size_t width, GameFontTables size = GameFont
  * @param drawTextCursor Whether to draw an animated cursor sprite at the end of the text (default is to display nothing).
  * @return The number of characters rendered, including characters "drawn" outside the buffer.
  */
-uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
+uint16_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false);
 
 /**
  * @brief Draws a line of text at the given position relative to the origin of the output buffer.
@@ -78,7 +79,7 @@ uint16_t DrawString(const Surface &out, const char *text, const Rectangle &rect,
  * @param drawTextCursor Whether to draw an animated cursor sprite at the end of the text (default is to display nothing).
  * @return The number of characters rendered (could be less than the string length if it wrapped past the bottom of the buffer).
  */
-inline uint16_t DrawString(const Surface &out, const char *text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false)
+inline uint16_t DrawString(const Surface &out, string_view text, const Point &position, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1, bool drawTextCursor = false)
 {
 	return DrawString(out, text, { position, { out.w() - position.x, 0 } }, flags, spacing, lineHeight, drawTextCursor);
 }
