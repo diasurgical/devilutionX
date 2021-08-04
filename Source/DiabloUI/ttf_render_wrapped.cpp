@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <vector>
 
 #include <SDL.h>
 #ifdef USE_SDL1
@@ -42,31 +43,19 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 		return {};
 	}
 
-	std::size_t numLines = 1;
-	char *str = nullptr;
-	char **strLines = nullptr;
+	std::unique_ptr<char []> str;
+	std::vector<char *> strLines;
 	if (wrapLength > 0 && *text != '\0') {
 		const char *wrapDelims = " \t\r\n";
 		const std::size_t strLen = std::strlen(text);
 
-		numLines = 0;
+		str.reset(new char[strLen + 1]);
 
-		str = SDL_stack_alloc(char, strLen + 1);
-		if (str == nullptr) {
-			TTF_SetError("Out of memory");
-			return {};
-		}
-
-		std::memcpy(str, text, strLen + 1);
-		char *tok = str;
-		char *end = str + strLen;
+		std::memcpy(str.get(), text, strLen + 1);
+		char *tok = str.get();
+		char *end = str.get() + strLen;
 		do {
-			strLines = (char **)SDL_realloc(strLines, (numLines + 1) * sizeof(*strLines));
-			if (strLines == nullptr) {
-				TTF_SetError("Out of memory");
-				return {};
-			}
-			strLines[numLines++] = tok;
+			strLines.push_back(tok);
 
 			/* Look for the end of the line */
 			char *spot;
@@ -117,19 +106,13 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 		} while (tok < end);
 	}
 
-	if (strLines == nullptr) {
-		SDL_stack_free(str);
+	if (strLines.empty())
 		return SDLSurfaceUniquePtr{ TTF_RenderText_Solid(font, text, fg) };
-	}
 
 	/* Create the target surface */
-	SDLSurfaceUniquePtr textbuf { SDL_CreateRGBSurface(SDL_SWSURFACE, (numLines > 1) ? wrapLength : width, height * numLines + (lineSpace * (numLines - 1)), 8, 0, 0, 0, 0) };
-	if (textbuf == nullptr) {
-		if (strLines != nullptr)
-			SDL_free(strLines);
-		SDL_stack_free(str);
+	SDLSurfaceUniquePtr textbuf { SDL_CreateRGBSurface(SDL_SWSURFACE, (strLines.size() > 1) ? wrapLength : width, height * strLines.size() + (lineSpace * (strLines.size() - 1)), 8, 0, 0, 0, 0) };
+	if (textbuf == nullptr)
 		return {};
-	}
 
 	/* Fill the palette with the foreground color */
 	SDL_Palette *palette = textbuf->format->palette;
@@ -144,17 +127,14 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 	// Reduced space between lines to roughly match Diablo.
 	const int lineskip = TTF_FontLineSkip(font) * 7 / 10; // avoids forced int > float > int conversion
 	SDL_Rect dest = { 0, 0, 0, 0 };
-	for (std::size_t line = 0; line < numLines; line++) {
-		text = strLines[line];
-		if (text == nullptr || *text == '\0') {
+	for (auto text : strLines) {
+		if (*text == '\0') {
 			dest.y += lineskip;
 			continue;
 		}
-		SDL_Surface *tmp = TTF_RenderText_Solid(font, text, fg);
+		SDLSurfaceUniquePtr tmp { TTF_RenderText_Solid(font, text, fg) };
 		if (tmp == nullptr) {
 			Log("{}", TTF_GetError());
-			SDL_free(strLines);
-			SDL_stack_free(str);
 			return {};
 		}
 
@@ -172,12 +152,9 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 			dest.x = 0;
 			break;
 		}
-		SDL_BlitSurface(tmp, nullptr, textbuf.get(), &dest);
+		SDL_BlitSurface(tmp.get(), nullptr, textbuf.get(), &dest);
 		dest.y += lineskip;
-		SDL_FreeSurface(tmp);
 	}
-	SDL_free(strLines);
-	SDL_stack_free(str);
 	return textbuf;
 }
 
