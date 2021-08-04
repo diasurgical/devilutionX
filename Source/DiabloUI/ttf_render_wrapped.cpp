@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstring>
 #include <vector>
+#include <algorithm>
 
 #include <SDL.h>
 #ifdef USE_SDL1
@@ -18,14 +19,11 @@ namespace devilution {
 
 namespace {
 
-SDL_bool CharacterIsDelimiter(char c, const char *delimiters)
+bool CharacterIsDelimiter(char c)
 {
-	while (*delimiters != '\0') {
-		if (c == *delimiters)
-			return SDL_TRUE;
-		++delimiters;
-	}
-	return SDL_FALSE;
+	constexpr char Delimiters[] = { ' ', '\t', '\r', '\n' };
+
+	return std::find(std::begin(Delimiters), std::end(Delimiters), c) != std::end(Delimiters);
 }
 
 } // namespace
@@ -46,7 +44,6 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 	std::unique_ptr<char []> str;
 	std::vector<char *> strLines;
 	if (wrapLength > 0 && *text != '\0') {
-		const char *wrapDelims = " \t\r\n";
 		const std::size_t strLen = std::strlen(text);
 
 		str.reset(new char[strLen + 1]);
@@ -74,11 +71,11 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 			/* Get the longest string that will fit in the desired space */
 			for (;;) {
 				/* Strip trailing whitespace */
-				while (spot > tok && CharacterIsDelimiter(spot[-1], wrapDelims) == SDL_TRUE) {
+				while (spot > tok && CharacterIsDelimiter(spot[-1])) {
 					--spot;
 				}
 				if (spot == tok) {
-					if (CharacterIsDelimiter(*spot, wrapDelims) == SDL_TRUE) {
+					if (CharacterIsDelimiter(*spot)) {
 						*spot = '\0';
 					}
 					break;
@@ -95,7 +92,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 				/* Back up and try again... */
 				*spot = delim;
 
-				while (spot > tok && (CharacterIsDelimiter(spot[-1], wrapDelims) == SDL_FALSE)) {
+				while (spot > tok && !CharacterIsDelimiter(spot[-1])) {
 					--spot;
 				}
 				if (spot > tok) {
