@@ -30,6 +30,7 @@
 #include "trigs.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
+#include "utils/stdcompat/optional.hpp"
 #include "options.h"
 
 #ifdef _DEBUG
@@ -80,9 +81,9 @@ Rectangle ChrBtnsRect[4] = {
 
 namespace {
 
-Surface pBtmBuff;
-Surface pLifeBuff;
-Surface pManaBuff;
+std::optional<OwnedSurface> pBtmBuff;
+std::optional<OwnedSurface> pLifeBuff;
+std::optional<OwnedSurface> pManaBuff;
 std::optional<CelSprite> talkButtons;
 std::optional<CelSprite> pDurIcons;
 std::optional<CelSprite> pChrButtons;
@@ -384,7 +385,7 @@ void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset,
 	DrawFlask(out, sourceBuffer, { 13, 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 }, emptyPortion);
 	if (emptyPortion < 13)
 		// Draw the filled part of the flask
-		DrawFlask(out, pBtmBuff, { offset, emptyPortion + 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
+		DrawFlask(out, *pBtmBuff, { offset, emptyPortion + 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
 }
 
 /**
@@ -889,31 +890,31 @@ Point GetPanelPosition(UiPanels panel, Point offset)
 
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 {
-	out.BlitFrom(pBtmBuff, srcRect, targetPosition);
+	out.BlitFrom(*pBtmBuff, srcRect, targetPosition);
 }
 
 void DrawLifeFlaskUpper(const Surface &out)
 {
 	constexpr int LifeFlaskUpperOffset = 109;
-	DrawFlaskUpper(out, pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
 }
 
 void DrawManaFlaskUpper(const Surface &out)
 {
 	constexpr int ManaFlaskUpperOffset = 475;
-	DrawFlaskUpper(out, pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
 }
 
 void DrawLifeFlaskLower(const Surface &out)
 {
 	constexpr int LifeFlaskLowerOffset = 96;
-	DrawFlaskLower(out, pLifeBuff, LifeFlaskLowerOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, Players[MyPlayerId]._pHPPer);
 }
 
 void DrawManaFlaskLower(const Surface &out)
 {
 	constexpr int ManaFlaskLowerOffeset = 464;
-	DrawFlaskLower(out, pManaBuff, ManaFlaskLowerOffeset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, Players[MyPlayerId]._pManaPer);
 }
 
 void control_update_life_mana()
@@ -924,9 +925,9 @@ void control_update_life_mana()
 
 void InitControlPan()
 {
-	pBtmBuff = Surface::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (IsChatAvailable() ? 2 : 1));
-	pManaBuff = Surface::Alloc(88, 88);
-	pLifeBuff = Surface::Alloc(88, 88);
+	pBtmBuff.emplace(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (IsChatAvailable() ? 2 : 1));
+	pManaBuff.emplace(88, 88);
+	pLifeBuff.emplace(88, 88);
 
 	pChrPanel = LoadCel("Data\\Char.CEL", SPANEL_WIDTH);
 	if (!gbIsHellfire)
@@ -934,16 +935,16 @@ void InitControlPan()
 	else
 		pSpellCels = LoadCel("Data\\SpelIcon.CEL", SPLICONLENGTH);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	CelDrawUnsafeTo(pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
+	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
 	{
 		const Point bulbsPosition { 0, 87 };
 		const CelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
-		CelDrawUnsafeTo(pLifeBuff, bulbsPosition, statusPanel, 1);
-		CelDrawUnsafeTo(pManaBuff, bulbsPosition, statusPanel, 2);
+		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 1);
+		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 2);
 	}
 	talkflag = false;
 	if (IsChatAvailable()) {
-		CelDrawUnsafeTo(pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
+		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
 		sgbPlrTalkTbl = 0;
@@ -1323,9 +1324,9 @@ void CheckBtnUp()
 
 void FreeControlPan()
 {
-	pBtmBuff.Free();
-	pManaBuff.Free();
-	pLifeBuff.Free();
+	pBtmBuff = std::nullopt;
+	pManaBuff = std::nullopt;
+	pLifeBuff = std::nullopt;
 	pChrPanel = std::nullopt;
 	pSpellCels = std::nullopt;
 	pPanelButtons = std::nullopt;

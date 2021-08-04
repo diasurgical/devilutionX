@@ -74,7 +74,7 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 		// SDL does not support BlitScaled from 8-bit to RGBA.
 		SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0) };
 
-		SDLSurfaceUniquePtr scaledSurface =  SDLWrap::CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888);
+		SDLSurfaceUniquePtr scaledSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888);
 		SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };
@@ -101,7 +101,7 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	if (!IsCursorSizeAllowed(size))
 		return false;
 
-	auto out = Surface::Alloc(size.width, size.height);
+	OwnedSurface out { size };
 	SDL_SetSurfacePalette(out.surface, Palette);
 
 	// Transparent color must not be used in the sprite itself.
@@ -112,7 +112,6 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	CelDrawCursor(out, { outlineWidth, size.height - outlineWidth }, pcurs);
 
 	const bool result = SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
-	out.Free();
 	return result;
 }
 #endif
