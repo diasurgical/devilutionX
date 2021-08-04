@@ -732,7 +732,7 @@ msgstr "Não"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com mantem um site em https://www.gog.com/forum/diablo"
+msgstr "GOG.com mantém um site em https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
@@ -887,7 +887,7 @@ msgstr "Automapa"
 
 #: Source/control.cpp:216
 msgid "Main Menu"
-msgstr "Menu principal"
+msgstr "Menu Principal"
 
 #: Source/control.cpp:217
 msgid "Inventory"
@@ -1014,7 +1014,7 @@ msgstr "Mana: {:d}  Dano: {:d} - {:d}"
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1702
 msgid "Mana: {:d}   Dam: n/a"
-msgstr "Mana: {:d}   Dano: n/d"
+msgstr "Mana: {:d}   Dano: NA"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1705
@@ -1620,7 +1620,7 @@ msgstr "1 - 8: Usar item do cinto"
 #: Source/help.cpp:41
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
 msgstr ""
-"F5, F6, F7, F8:     Estabelecer tecla de atalho para habilidade ou feitiço"
+"F5, F6, F7, F8:     Definir tecla de atalho para habilidade ou feitiço"
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button: Attack without moving"
