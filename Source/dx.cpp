@@ -13,6 +13,7 @@
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_mutex.h"
+#include "utils/sdl_wrap.h"
 
 #ifdef __3DS__
 #include <3ds.h>
@@ -279,18 +280,16 @@ void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 
 	// If the surface has a color key, we must stretch first and can then call BlitSurface.
 	if (SDL_HasColorKey(src)) {
-		SDL_Surface *stretched = SDL_CreateRGBSurface(SDL_SWSURFACE, dstRect->w, dstRect->h, src->format->BitsPerPixel,
+		SDLSurfaceUniquePtr stretched = SDLWrap::CreateRGBSurface(SDL_SWSURFACE, dstRect->w, dstRect->h, src->format->BitsPerPixel,
 		    src->format->Rmask, src->format->Gmask, src->format->BitsPerPixel, src->format->Amask);
-		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
+		SDL_SetColorKey(stretched.get(), SDL_SRCCOLORKEY, src->format->colorkey);
 		if (src->format->palette != NULL)
-			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
+			SDL_SetPalette(stretched.get(), SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
 		SDL_Rect stretched_rect = { 0, 0, dstRect->w, dstRect->h };
-		if (SDL_SoftStretch(src, srcRect, stretched, &stretched_rect) < 0
-		    || SDL_BlitSurface(stretched, &stretched_rect, dst, dstRect) < 0) {
-			SDL_FreeSurface(stretched);
+		if (SDL_SoftStretch(src, srcRect, stretched.get(), &stretched_rect) < 0
+		    || SDL_BlitSurface(stretched.get(), &stretched_rect, dst, dstRect) < 0) {
 			ErrSdl();
 		}
-		SDL_FreeSurface(stretched);
 		return;
 	}
 

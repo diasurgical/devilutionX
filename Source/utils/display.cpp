@@ -17,6 +17,7 @@
 #include "controls/game_controls.h"
 #include "options.h"
 #include "utils/log.hpp"
+#include "utils/sdl_wrap.h"
 
 #ifdef USE_SDL1
 #ifndef SDL1_VIDEO_MODE_BPP
@@ -290,22 +291,20 @@ void ScaleOutputRect(SDL_Rect *rect)
 #ifdef USE_SDL1
 namespace {
 
-SDL_Surface *CreateScaledSurface(SDL_Surface *src)
+SDLSurfaceUniquePtr CreateScaledSurface(SDL_Surface *src)
 {
 	SDL_Rect stretched_rect = { 0, 0, static_cast<Uint16>(src->w), static_cast<Uint16>(src->h) };
 	ScaleOutputRect(&stretched_rect);
-	SDL_Surface *stretched = SDL_CreateRGBSurface(
+	SDLSurfaceUniquePtr stretched = SDLWrap::CreateRGBSurface(
 	    SDL_SWSURFACE, stretched_rect.w, stretched_rect.h, src->format->BitsPerPixel,
 	    src->format->Rmask, src->format->Gmask, src->format->Bmask, src->format->Amask);
 	if (SDL_HasColorKey(src)) {
-		SDL_SetColorKey(stretched, SDL_SRCCOLORKEY, src->format->colorkey);
+		SDL_SetColorKey(stretched.get(), SDL_SRCCOLORKEY, src->format->colorkey);
 		if (src->format->palette != NULL)
-			SDL_SetPalette(stretched, SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
+			SDL_SetPalette(stretched.get(), SDL_LOGPAL, src->format->palette->colors, 0, src->format->palette->ncolors);
 	}
-	if (SDL_SoftStretch((src), NULL, stretched, &stretched_rect) < 0) {
-		SDL_FreeSurface(stretched);
+	if (SDL_SoftStretch((src), NULL, stretched.get(), &stretched_rect) < 0)
 		ErrSdl();
-	}
 	return stretched;
 }
 
@@ -316,7 +315,7 @@ SDLSurfaceUniquePtr ScaleSurfaceToOutput(SDLSurfaceUniquePtr surface)
 {
 #ifdef USE_SDL1
 	if (OutputRequiresScaling())
-		return SDLSurfaceUniquePtr { CreateScaledSurface(surface.get()) };
+		return CreateScaledSurface(surface.get());
 #endif
 	return surface;
 }
