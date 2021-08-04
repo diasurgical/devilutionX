@@ -1039,10 +1039,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 
 	int hit = GenerateRnd(100);
 	int hper = 90 - (BYTE)monster.mArmorClass - dist;
-	if (hper < 5)
-		hper = 5;
-	if (hper > 95)
-		hper = 95;
+	hper = clamp(hper, 5, 95);
 	bool ret;
 	if (CheckMonsterHit(monster, &ret)) {
 		return ret;
@@ -1125,17 +1122,14 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 		hper += (monster->mLevel * 2) - (player._pLevel * 2) - (dist * 2);
 	}
 
-	if (hper < 10)
-		hper = 10;
-	if (currlevel == 14 && hper < 20) {
-		hper = 20;
-	}
-	if (currlevel == 15 && hper < 25) {
-		hper = 25;
-	}
-	if (currlevel == 16 && hper < 30) {
-		hper = 30;
-	}
+	int minhit = 10;
+	if (currlevel == 14)
+		minhit = 20;
+	if (currlevel == 15)
+		minhit = 25;
+	if (currlevel == 16)
+		minhit = 30;
+	hper = clamp(hper, minhit, 100);
 
 	int blk = 100;
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
@@ -1150,11 +1144,7 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 	int blkper = player._pBaseToBlk + player._pDexterity;
 	if (monster != nullptr)
 		blkper -= (monster->mLevel - player._pLevel) * 2;
-
-	if (blkper < 0)
-		blkper = 0;
-	if (blkper > 100)
-		blkper = 100;
+	blkper = clamp(blkper, 0, 100);
 
 	int8_t resper;
 	switch (MissileData[mtype].mResist) {

@@ -1103,13 +1103,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	int hit = GenerateRnd(100);
 
 	int hper = attacker.GetMeleeToHit() - target.GetArmor();
-
-	if (hper < 5) {
-		hper = 5;
-	}
-	if (hper > 95) {
-		hper = 95;
-	}
+	hper = clamp(hper, 5, 95);
 
 	int blk = 100;
 	if ((target._pmode == PM_STAND || target._pmode == PM_ATTACK) && target._pBlockFlag) {
@@ -1117,12 +1111,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 	}
 
 	int blkper = target._pDexterity + target._pBaseToBlk + (target._pLevel * 2) - (attacker._pLevel * 2);
-	if (blkper < 0) {
-		blkper = 0;
-	}
-	if (blkper > 100) {
-		blkper = 100;
-	}
+	blkper = clamp(blkper, 0, 100);
 
 	if (hit >= hper) {
 		return false;
