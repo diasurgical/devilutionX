@@ -42,9 +42,9 @@ void DrawTTF(const char *text, const SDL_Rect &rectIn, UiFlags flags,
 
 	const auto xAlign = XAlignmentFromFlags(flags);
 	if (renderCache.text == nullptr)
-		renderCache.text = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, textColor, rect.w, xAlign) });
+		renderCache.text = ScaleSurfaceToOutput(RenderUTF8_Solid_Wrapped(font, text, textColor, rect.w, xAlign));
 	if (renderCache.shadow == nullptr)
-		renderCache.shadow = ScaleSurfaceToOutput(SDLSurfaceUniquePtr { RenderUTF8_Solid_Wrapped(font, text, shadowColor, rect.w, xAlign) });
+		renderCache.shadow = ScaleSurfaceToOutput(RenderUTF8_Solid_Wrapped(font, text, shadowColor, rect.w, xAlign));
 
 	SDL_Surface *textSurface = renderCache.text.get();
 	SDL_Surface *shadowSurface = renderCache.shadow.get();
