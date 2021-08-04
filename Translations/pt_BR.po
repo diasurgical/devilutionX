@@ -732,12 +732,12 @@ msgstr "Não"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com mentem um site em https://www.gog.com/forum/diablo"
+msgstr "GOG.com mantem um site em https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
 msgstr ""
-"Siga os links para visitar os fóruns de discussão associados com Diablo."
+"Siga os links para visitar os fóruns de discussão associados ao Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
@@ -766,11 +766,11 @@ msgstr "sistema operacional e a natureza do problema."
 
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
-msgstr "Isenção de responsabilidade:"
+msgstr "Aviso legal:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr " DevilutionX não é compatível nem mantido pela Blizzard Entertainment,"
+msgstr " DevilutionX não é suportado nem mantido pela Blizzard Entertainment,"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
@@ -780,14 +780,14 @@ msgstr " nem GOG.com. Nem Blizzard Entertainment ou GOG.com não testaram"
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
 msgstr ""
-" ou certificado a qualidade ou compatibilidade de DevilutionX. Todas as "
+" ou certificaram a qualidade ou compatibilidade de DevilutionX. Todas as "
 "questões"
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
 "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
 msgstr ""
-" com respeito a DevilutionX devem se dirigir a Diasurgical, não a Blizzard"
+" com respeito a DevilutionX devem ser dirigidas a Diasurgical, não a Blizzard"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
@@ -1121,7 +1121,7 @@ msgstr "Especifique o lacal de diablo.ini"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:891
 msgid "Specify the location of the .ttf font"
-msgstr "Especifique o lacal da fonte .ttf"
+msgstr "Especifique o local da fonte .ttf"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:892
@@ -1199,7 +1199,7 @@ msgstr ""
 
 #: Source/diablo.cpp:1000
 msgid "unrecognized option '{:s}'\n"
-msgstr "opção não reconhecida '{:s}'\n"
+msgstr "opção '{:s}' não reconhecida\n"
 
 #: Source/diablo.cpp:1021
 msgid "version {:s}"
@@ -1575,7 +1575,7 @@ msgstr "Tab:   Mostrar automapa"
 
 #: Source/help.cpp:30
 msgid "Space: Hide all info screens"
-msgstr "Espaço: Ocultar todas as janelas de informação"
+msgstr "Espaço: Ocultar todas as telas de informação"
 
 #: Source/help.cpp:31
 msgid "S: Open Speedbook"
@@ -1611,11 +1611,11 @@ msgstr "Z: Zoom da tela do jogo"
 
 #: Source/help.cpp:39
 msgid "+ / -: Zoom Automap"
-msgstr "+ / -: Zoom automático"
+msgstr "+ / -: Zoom do automapa"
 
 #: Source/help.cpp:40
 msgid "1 - 8: Use Belt item"
-msgstr "1 - 8: Usar item de cinto"
+msgstr "1 - 8: Usar item do cinto"
 
 #: Source/help.cpp:41
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
@@ -1624,7 +1624,7 @@ msgstr ""
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button: Attack without moving"
-msgstr "Shift + clique esquerdo: Atacar sem se mover"
+msgstr "Shift + botão esquerdo do mouse: Atacar sem se mover"
 
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
