@@ -15,6 +15,7 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_wrap.h"
+#include "utils/ttf_wrap.h"
 
 namespace devilution {
 
@@ -105,7 +106,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 	}
 
 	if (strLines.empty())
-		return SDLSurfaceUniquePtr{ TTF_RenderText_Solid(font, text, fg) };
+		return TTFWrap::RenderText_Solid(font, text, fg);
 
 	/* Create the target surface */
 	auto textbuf = SDLWrap::CreateRGBSurface(SDL_SWSURFACE, (strLines.size() > 1) ? wrapLength : width, height * strLines.size() + (lineSpace * (strLines.size() - 1)), 8, 0, 0, 0, 0);
@@ -128,11 +129,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 			dest.y += lineskip;
 			continue;
 		}
-		SDLSurfaceUniquePtr tmp { TTF_RenderText_Solid(font, text, fg) };
-		if (tmp == nullptr) {
-			Log("{}", TTF_GetError());
-			return {};
-		}
+		SDLSurfaceUniquePtr tmp = TTFWrap::RenderText_Solid(font, text, fg);
 
 		dest.w = static_cast<Uint16>(tmp->w);
 		dest.h = static_cast<Uint16>(tmp->h);
