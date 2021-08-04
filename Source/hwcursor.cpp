@@ -15,7 +15,7 @@
 #include "cursor.h"
 #include "engine.h"
 #include "utils/display.h"
-#include "utils/sdl_ptrs.h"
+#include "utils/sdl_wrap.h"
 
 namespace devilution {
 namespace {
@@ -74,7 +74,7 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 		// SDL does not support BlitScaled from 8-bit to RGBA.
 		SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0) };
 
-		SDLSurfaceUniquePtr scaledSurface { SDL_CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888) };
+		SDLSurfaceUniquePtr scaledSurface =  SDLWrap::CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888);
 		SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };

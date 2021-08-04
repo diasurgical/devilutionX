@@ -16,6 +16,7 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/sdl_ptrs.h"
+#include "utils/sdl_wrap.h"
 
 namespace devilution {
 
@@ -77,7 +78,7 @@ CachedLine PrepareLine(std::size_t index)
 	SDLSurfaceUniquePtr surface;
 	if (text != nullptr) {
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
-		surface = SDLSurfaceUniquePtr { SDL_CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8) };
+		surface = SDLWrap::CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8);
 		const SDL_Color maskColor = { 0, 255, 0, 0 }; // Any color different from both shadow and text
 		const SDL_Color &textColor = Palette->colors[224];
 		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
