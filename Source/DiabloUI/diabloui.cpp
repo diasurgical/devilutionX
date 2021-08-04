@@ -18,7 +18,7 @@
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
-#include "utils/sdl_ptrs.h"
+#include "utils/sdl_wrap.h"
 #include "utils/stubs.h"
 #include "utils/utf8.h"
 
@@ -484,7 +484,7 @@ void LoadHeros()
 		portraitOrder[static_cast<std::size_t>(HeroClass::Barbarian)] = 6;
 	}
 
-	SDL_Surface *heros = SDL_CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(enum_size<HeroClass>::value) + 1), 8, SDL_PIXELFORMAT_INDEX8);
+	SDLSurfaceUniquePtr heros = SDLWrap::CreateRGBSurfaceWithFormat(0, ArtHero.w(), portraitHeight * (static_cast<int>(enum_size<HeroClass>::value) + 1), 8, SDL_PIXELFORMAT_INDEX8);
 
 	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
 		int offset = portraitOrder[i] * portraitHeight;
@@ -493,7 +493,7 @@ void LoadHeros()
 		}
 		SDL_Rect srcRect = MakeRect(0, offset, ArtHero.w(), portraitHeight);
 		SDL_Rect dstRect = MakeRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
-		SDL_BlitSurface(ArtHero.surface.get(), &srcRect, heros, &dstRect);
+		SDL_BlitSurface(ArtHero.surface.get(), &srcRect, heros.get(), &dstRect);
 	}
 
 	for (int i = 0; i <= static_cast<int>(enum_size<HeroClass>::value); i++) {
@@ -505,10 +505,10 @@ void LoadHeros()
 			continue;
 
 		SDL_Rect dstRect = MakeRect(0, i * portraitHeight, portrait.w(), portraitHeight);
-		SDL_BlitSurface(portrait.surface.get(), nullptr, heros, &dstRect);
+		SDL_BlitSurface(portrait.surface.get(), nullptr, heros.get(), &dstRect);
 	}
 
-	ArtHero.surface = SDLSurfaceUniquePtr { heros };
+	ArtHero.surface = std::move(heros);
 	ArtHero.frame_height = portraitHeight;
 	ArtHero.frames = static_cast<int>(enum_size<HeroClass>::value);
 }

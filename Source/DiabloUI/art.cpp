@@ -8,6 +8,7 @@
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
+#include "utils/sdl_wrap.h"
 
 namespace devilution {
 namespace {
@@ -121,7 +122,7 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette)
 		return;
 	}
 
-	SDLSurfaceUniquePtr artSurface { SDL_CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, GetPcxSdlPixelFormat(bpp)) };
+	SDLSurfaceUniquePtr artSurface = SDLWrap::CreateRGBSurfaceWithFormat(SDL_SWSURFACE, width, height, bpp, GetPcxSdlPixelFormat(bpp));
 	if (!LoadPcxPixelsAndPalette(handle, width, height, bpp, static_cast<BYTE *>(artSurface->pixels),
 	        artSurface->pitch, pPalette)) {
 		Log("LoadArt(\"{}\"): LoadPcxPixelsAndPalette failed with code {}", pszFile, SErrGetLastError());
