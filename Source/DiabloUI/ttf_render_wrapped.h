@@ -2,6 +2,7 @@
 
 #include <SDL_ttf.h>
 #include <cstdint>
+#include "utils/sdl_ptrs.h"
 
 namespace devilution {
 
@@ -17,7 +18,7 @@ enum TextAlignment : uint8_t {
  *
  * This method is slow. Caching the result is recommended.
  */
-SDL_Surface *RenderUTF8_Solid_Wrapped(
+SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(
     TTF_Font *font, const char *text, SDL_Color fg, Uint32 wrapLength, const int xAlign = TextAlignment_BEGIN);
 
 } // namespace devilution
