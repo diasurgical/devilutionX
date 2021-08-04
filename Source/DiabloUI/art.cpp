@@ -44,6 +44,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 		return false;
 	}
 	const unsigned xSkip = bufferPitch - width;
+	const unsigned srcSkip = width % 2;
 	BYTE *dataPtr = fileBuffer.get();
 	for (int j = 0; j < height; j++) {
 		for (int x = 0; x < width;) {
@@ -60,6 +61,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 			buffer += runLength;
 			x += runLength;
 		}
+		dataPtr += srcSkip;
 		buffer += xSkip;
 	}
 
