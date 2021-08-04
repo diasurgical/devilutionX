@@ -917,12 +917,7 @@ bool PlrHitMonst(int pnum, int m)
 		hper += 20;
 	}
 	hper += player._pIBonusToHit;
-	if (hper < 5) {
-		hper = 5;
-	}
-	if (hper > 95) {
-		hper = 95;
-	}
+	hper = clamp(hper, 5, 95);
 
 	bool ret = false;
 	if (CheckMonsterHit(monster, &ret)) {
