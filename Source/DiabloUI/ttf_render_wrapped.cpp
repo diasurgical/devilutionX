@@ -43,7 +43,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 		return {};
 	}
 
-	std::unique_ptr<char []> str;
+	std::unique_ptr<char[]> str;
 	std::vector<char *> strLines;
 	if (wrapLength > 0 && *text != '\0') {
 		const std::size_t strLen = std::strlen(text);

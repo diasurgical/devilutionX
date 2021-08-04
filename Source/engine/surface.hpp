@@ -15,6 +15,7 @@
 
 #include "engine/point.hpp"
 #include "utils/sdl_geometry.h"
+#include "utils/sdl_wrap.h"
 
 namespace devilution {
 
@@ -45,25 +46,6 @@ struct Surface {
 
 	Surface(const Surface &other) = default;
 	Surface &operator=(const Surface &other) = default;
-
-	/**
-	 * @brief Allocate a buffer that owns its underlying data.
-	 */
-	static Surface Alloc(int width, int height)
-	{
-		return Surface(SDL_CreateRGBSurfaceWithFormat(0, width, height, 8, SDL_PIXELFORMAT_INDEX8));
-	}
-
-	/**
-	 * @brief Free the underlying data.
-	 *
-	 * Only use this if the buffer owns its data.
-	 */
-	void Free()
-	{
-		SDL_FreeSurface(this->surface);
-		this->surface = nullptr;
-	}
 
 	int w() const
 	{
@@ -170,6 +152,27 @@ struct Surface {
 	 * Source pixels with index 0 are not copied.
 	 */
 	void BlitFromSkipColorIndexZero(const Surface &src, SDL_Rect srcRect, Point targetPosition) const;
+};
+
+class OwnedSurface : public Surface {
+	SDLSurfaceUniquePtr pinnedSurface;
+
+public:
+	explicit OwnedSurface(SDLSurfaceUniquePtr surface)
+	    : Surface(surface.get())
+	    , pinnedSurface(std::move(surface))
+	{
+	}
+
+	OwnedSurface(int width, int height)
+	    : OwnedSurface(SDLWrap::CreateRGBSurfaceWithFormat(0, width, height, 8, SDL_PIXELFORMAT_INDEX8))
+	{
+	}
+
+	OwnedSurface(Size size)
+	    : OwnedSurface(size.width, size.height)
+	{
+	}
 };
 
 } // namespace devilution
