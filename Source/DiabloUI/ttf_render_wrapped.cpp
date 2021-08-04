@@ -14,6 +14,7 @@
 
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
+#include "utils/sdl_wrap.h"
 
 namespace devilution {
 
@@ -107,9 +108,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 		return SDLSurfaceUniquePtr{ TTF_RenderText_Solid(font, text, fg) };
 
 	/* Create the target surface */
-	SDLSurfaceUniquePtr textbuf { SDL_CreateRGBSurface(SDL_SWSURFACE, (strLines.size() > 1) ? wrapLength : width, height * strLines.size() + (lineSpace * (strLines.size() - 1)), 8, 0, 0, 0, 0) };
-	if (textbuf == nullptr)
-		return {};
+	auto textbuf = SDLWrap::CreateRGBSurface(SDL_SWSURFACE, (strLines.size() > 1) ? wrapLength : width, height * strLines.size() + (lineSpace * (strLines.size() - 1)), 8, 0, 0, 0, 0);
 
 	/* Fill the palette with the foreground color */
 	SDL_Palette *palette = textbuf->format->palette;
