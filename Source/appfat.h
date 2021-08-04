@@ -13,6 +13,8 @@ namespace devilution {
 
 #define ErrSdl() ErrDlg("SDL Error", SDL_GetError(), __FILE__, __LINE__)
 
+#define ErrTtf() ErrDlg("TTF Error", TTF_GetError(), __FILE__, __LINE__)
+
 #undef assert
 
 #ifndef _DEBUG
