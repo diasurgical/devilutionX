@@ -456,7 +456,7 @@ int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 
 void PrintSBookStr(const Surface &out, Point position, const char *text)
 {
-	DrawString(out, text, { { RIGHT_PANEL_X + SPLICONLENGTH + position.x, position.y }, { 222, 0 } }, UiFlags::ColorSilver);
+	DrawString(out, text, { { RIGHT_PANEL_X + SPLICONLENGTH + position.x, RIGHT_PANEL_Y + position.y }, { 222, 0 } }, UiFlags::ColorSilver);
 }
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
@@ -1322,16 +1322,16 @@ void DrawChr(const Surface &out)
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	CelDrawTo(out, { 0, 351 }, *pChrPanel, 1);
-	DrawString(out, myPlayer._pName, { { 20, 32 }, { 131, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
+	CelDrawTo(out, { LEFT_PANEL_X, LEFT_PANEL_Y + 351 }, *pChrPanel, 1);
+	DrawString(out, myPlayer._pName, { { LEFT_PANEL_X + 20, LEFT_PANEL_Y + 32 }, { 131, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
 
-	DrawString(out, _(ClassStrTbl[static_cast<std::size_t>(myPlayer._pClass)]), { { 168, 32 }, { 131, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
+	DrawString(out, _(ClassStrTbl[static_cast<std::size_t>(myPlayer._pClass)]), { { LEFT_PANEL_X + 168, LEFT_PANEL_Y + 32 }, { 131, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
 
 	sprintf(chrstr, "%i", myPlayer._pLevel);
-	DrawString(out, chrstr, { { 66, 69 }, { 43, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 66, LEFT_PANEL_Y + 69 }, { 43, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
 
 	sprintf(chrstr, "%i", myPlayer._pExperience);
-	DrawString(out, chrstr, { { 216, 69 }, { 84, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 216, LEFT_PANEL_Y + 69 }, { 84, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
 
 	if (myPlayer._pLevel == MAXCHARLEVEL - 1) {
 		strcpy(chrstr, _("None"));
@@ -1340,10 +1340,10 @@ void DrawChr(const Surface &out)
 		sprintf(chrstr, "%i", myPlayer._pNextExper);
 		style = UiFlags::ColorSilver;
 	}
-	DrawString(out, chrstr, { { 216, 97 }, { 84, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 216, LEFT_PANEL_Y + 97 }, { 84, 0 } }, style | UiFlags::AlignCenter);
 
 	sprintf(chrstr, "%i", myPlayer._pGold);
-	DrawString(out, chrstr, { { 216, 146 }, { 84, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 216, LEFT_PANEL_Y + 146 }, { 84, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pIBonusAC > 0)
@@ -1351,7 +1351,7 @@ void DrawChr(const Surface &out)
 	if (myPlayer._pIBonusAC < 0)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer.GetArmor());
-	DrawString(out, chrstr, { { 258, 183 }, { 43, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 258, LEFT_PANEL_Y + 183 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pIBonusToHit > 0)
@@ -1359,7 +1359,7 @@ void DrawChr(const Surface &out)
 	if (myPlayer._pIBonusToHit < 0)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i%%", (myPlayer.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW ? myPlayer.GetRangedToHit() : myPlayer.GetMeleeToHit()));
-	DrawString(out, chrstr, { { 258, 211 }, { 43, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 258, LEFT_PANEL_Y + 211 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pIBonusDam > 0)
@@ -1390,9 +1390,9 @@ void DrawChr(const Surface &out)
 	}
 	sprintf(chrstr, "%i-%i", mindam, maxdam);
 	if (mindam >= 100 || maxdam >= 100)
-		DrawString(out, chrstr, { { 254, 239 }, { 51, 0 } }, style | UiFlags::AlignCenter, -1);
+		DrawString(out, chrstr, { { LEFT_PANEL_X + 254, LEFT_PANEL_Y + 239 }, { 51, 0 } }, style | UiFlags::AlignCenter, -1);
 	else
-		DrawString(out, chrstr, { { 258, 239 }, { 43, 0 } }, style | UiFlags::AlignCenter, 0);
+		DrawString(out, chrstr, { { LEFT_PANEL_X + 258, LEFT_PANEL_Y + 239 }, { 43, 0 } }, style | UiFlags::AlignCenter, 0);
 
 	style = UiFlags::ColorBlue;
 	if (myPlayer._pMagResist == 0)
@@ -1403,7 +1403,7 @@ void DrawChr(const Surface &out)
 		style = UiFlags::ColorGold;
 		strcpy(chrstr, _(/* TRANSLATORS: UI Constrains. Keep translation short please!*/ "MAX"));
 	}
-	DrawString(out, chrstr, { { 257, 276 }, { 43, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 257, LEFT_PANEL_Y + 276 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorBlue;
 	if (myPlayer._pFireResist == 0)
@@ -1414,7 +1414,7 @@ void DrawChr(const Surface &out)
 		style = UiFlags::ColorGold;
 		strcpy(chrstr, _("MAX"));
 	}
-	DrawString(out, chrstr, { { 257, 304 }, { 43, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 257, LEFT_PANEL_Y + 304 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorBlue;
 	if (myPlayer._pLghtResist == 0)
@@ -1425,31 +1425,31 @@ void DrawChr(const Surface &out)
 		style = UiFlags::ColorGold;
 		strcpy(chrstr, _("MAX"));
 	}
-	DrawString(out, chrstr, { { 257, 332 }, { 43, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 257, LEFT_PANEL_Y + 332 }, { 43, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	sprintf(chrstr, "%i", myPlayer._pBaseStr);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength) == myPlayer._pBaseStr)
 		style = UiFlags::ColorGold;
-	DrawString(out, chrstr, { { 95, 155 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 155 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	sprintf(chrstr, "%i", myPlayer._pBaseMag);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic) == myPlayer._pBaseMag)
 		style = UiFlags::ColorGold;
-	DrawString(out, chrstr, { { 95, 183 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 183 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	sprintf(chrstr, "%i", myPlayer._pBaseDex);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity) == myPlayer._pBaseDex)
 		style = UiFlags::ColorGold;
-	DrawString(out, chrstr, { { 95, 211 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 211 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	sprintf(chrstr, "%i", myPlayer._pBaseVit);
 	if (myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality) == myPlayer._pBaseVit)
 		style = UiFlags::ColorGold;
-	DrawString(out, chrstr, { { 95, 239 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 239 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pStrength > myPlayer._pBaseStr)
@@ -1457,7 +1457,7 @@ void DrawChr(const Surface &out)
 	if (myPlayer._pStrength < myPlayer._pBaseStr)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer._pStrength);
-	DrawString(out, chrstr, { { 143, 155 }, { 30, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 143, LEFT_PANEL_Y + 155 }, { 30, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pMagic > myPlayer._pBaseMag)
@@ -1465,7 +1465,7 @@ void DrawChr(const Surface &out)
 	if (myPlayer._pMagic < myPlayer._pBaseMag)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer._pMagic);
-	DrawString(out, chrstr, { { 143, 183 }, { 30, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 143, LEFT_PANEL_Y + 183 }, { 30, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pDexterity > myPlayer._pBaseDex)
@@ -1473,7 +1473,7 @@ void DrawChr(const Surface &out)
 	if (myPlayer._pDexterity < myPlayer._pBaseDex)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer._pDexterity);
-	DrawString(out, chrstr, { { 143, 211 }, { 30, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 143, LEFT_PANEL_Y + 211 }, { 30, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pVitality > myPlayer._pBaseVit)
@@ -1481,7 +1481,7 @@ void DrawChr(const Surface &out)
 	if (myPlayer._pVitality < myPlayer._pBaseVit)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer._pVitality);
-	DrawString(out, chrstr, { { 143, 239 }, { 30, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 143, LEFT_PANEL_Y + 239 }, { 30, 0 } }, style | UiFlags::AlignCenter);
 
 	if (myPlayer._pStatPts > 0) {
 		if (CalcStatDiff(myPlayer) < myPlayer._pStatPts) {
@@ -1490,36 +1490,36 @@ void DrawChr(const Surface &out)
 	}
 	if (myPlayer._pStatPts > 0) {
 		sprintf(chrstr, "%i", myPlayer._pStatPts);
-		DrawString(out, chrstr, { { 95, 266 }, { 31, 0 } }, UiFlags::ColorRed | UiFlags::AlignCenter);
+		DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 266 }, { 31, 0 } }, UiFlags::ColorRed | UiFlags::AlignCenter);
 		if (myPlayer._pBaseStr < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength))
-			CelDrawTo(out, { 137, 159 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2);
+			CelDrawTo(out, { LEFT_PANEL_X + 137, LEFT_PANEL_Y + 159 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2);
 		if (myPlayer._pBaseMag < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic))
-			CelDrawTo(out, { 137, 187 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 5 : 4);
+			CelDrawTo(out, { LEFT_PANEL_X + 137, LEFT_PANEL_Y + 187 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 5 : 4);
 		if (myPlayer._pBaseDex < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity))
-			CelDrawTo(out, { 137, 216 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 7 : 6);
+			CelDrawTo(out, { LEFT_PANEL_X + 137, LEFT_PANEL_Y + 216 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 7 : 6);
 		if (myPlayer._pBaseVit < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality))
-			CelDrawTo(out, { 137, 244 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8);
+			CelDrawTo(out, { LEFT_PANEL_X + 137, LEFT_PANEL_Y + 244 }, *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8);
 	}
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pMaxHP > myPlayer._pMaxHPBase)
 		style = UiFlags::ColorBlue;
 	sprintf(chrstr, "%i", myPlayer._pMaxHP >> 6);
-	DrawString(out, chrstr, { { 95, 304 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 304 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 	if (myPlayer._pHitPoints != myPlayer._pMaxHP)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer._pHitPoints >> 6);
-	DrawString(out, chrstr, { { 143, 304 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 143, LEFT_PANEL_Y + 304 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 
 	style = UiFlags::ColorSilver;
 	if (myPlayer._pMaxMana > myPlayer._pMaxManaBase)
 		style = UiFlags::ColorBlue;
 	sprintf(chrstr, "%i", myPlayer._pMaxMana >> 6);
-	DrawString(out, chrstr, { { 95, 332 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 95, LEFT_PANEL_Y + 332 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 	if (myPlayer._pMana != myPlayer._pMaxMana)
 		style = UiFlags::ColorRed;
 	sprintf(chrstr, "%i", myPlayer._pMana >> 6);
-	DrawString(out, chrstr, { { 143, 332 }, { 31, 0 } }, style | UiFlags::AlignCenter);
+	DrawString(out, chrstr, { { LEFT_PANEL_X + 143, LEFT_PANEL_Y + 332 }, { 31, 0 } }, style | UiFlags::AlignCenter);
 }
 
 void CheckLvlBtn()
@@ -1574,7 +1574,7 @@ void CheckChrBtns()
 			continue;
 		}
 		auto buttonId = static_cast<size_t>(attribute);
-		if (ChrBtnsRect[buttonId].Contains(MousePosition)) {
+		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - LEFT_PANEL_X, MousePosition.y - LEFT_PANEL_Y })) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
 		}
@@ -1590,7 +1590,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			continue;
 
 		chrbtn[buttonId] = false;
-		if (ChrBtnsRect[buttonId].Contains(MousePosition)) {
+		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - LEFT_PANEL_X, MousePosition.y - LEFT_PANEL_Y })) {
 			auto &myPlayer = Players[MyPlayerId];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
@@ -1655,16 +1655,16 @@ void RedBack(const Surface &out)
 
 void DrawSpellBook(const Surface &out)
 {
-	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pSpellBkCel, 1);
+	CelDrawTo(out, { RIGHT_PANEL_X, RIGHT_PANEL_Y + 351 }, *pSpellBkCel, 1);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, { RIGHT_PANEL_X + 61 * sbooktab + 7, 348 }, *pSBkBtnCel, sbooktab + 1);
+		CelDrawTo(out, { RIGHT_PANEL_X + 61 * sbooktab + 7, RIGHT_PANEL_Y + 348 }, *pSBkBtnCel, sbooktab + 1);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
 		int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, { sx, 348 }, *pSBkBtnCel, sbooktab + 1);
+		CelDrawTo(out, { sx, RIGHT_PANEL_Y + 348 }, *pSBkBtnCel, sbooktab + 1);
 	}
 	auto &myPlayer = Players[MyPlayerId];
 	uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
@@ -1675,7 +1675,7 @@ void DrawSpellBook(const Surface &out)
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
-			const Point spellCellPosition { RIGHT_PANEL_X + 11, yp };
+			const Point spellCellPosition { RIGHT_PANEL_X + 11, RIGHT_PANEL_Y + yp };
 			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
 			if (sn == myPlayer._pRSpell && st == myPlayer._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
@@ -1723,8 +1723,8 @@ void DrawSpellBook(const Surface &out)
 
 void CheckSBook()
 {
-	if (MousePosition.x >= RIGHT_PANEL + 11 && MousePosition.x < RIGHT_PANEL + 48 && MousePosition.y >= 18 && MousePosition.y < 314) {
-		spell_id sn = SpellPages[sbooktab][(MousePosition.y - 18) / 43];
+	if (MousePosition.x >= RIGHT_PANEL_X + 11 && MousePosition.x < RIGHT_PANEL_X + 48 && MousePosition.y >= RIGHT_PANEL_Y + 18 && MousePosition.y < RIGHT_PANEL_Y + 314) {
+		spell_id sn = SpellPages[sbooktab][(MousePosition.y - RIGHT_PANEL_Y - 18) / 43];
 		auto &myPlayer = Players[MyPlayerId];
 		uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
@@ -1740,8 +1740,8 @@ void CheckSBook()
 			force_redraw = 255;
 		}
 	}
-	if (MousePosition.x >= RIGHT_PANEL + 7 && MousePosition.x < RIGHT_PANEL + 311 && MousePosition.y >= SPANEL_WIDTH && MousePosition.y < 349) {
-		sbooktab = (MousePosition.x - (RIGHT_PANEL + 7)) / (gbIsHellfire ? 61 : 76);
+	if (MousePosition.x >= RIGHT_PANEL_X + 7 && MousePosition.x < RIGHT_PANEL_X + 311 && MousePosition.y >= RIGHT_PANEL_Y + SPANEL_WIDTH && MousePosition.y < RIGHT_PANEL_Y + 349) {
+		sbooktab = (MousePosition.x - (RIGHT_PANEL_X + 7)) / (gbIsHellfire ? 61 : 76);
 	}
 }
 
@@ -1749,7 +1749,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 {
 	const int dialogX = RIGHT_PANEL_X + 30;
 
-	CelDrawTo(out, { dialogX, 178 }, *pGBoxBuff, 1);
+	CelDrawTo(out, { dialogX, RIGHT_PANEL_Y + 178 }, *pGBoxBuff, 1);
 
 	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
 
@@ -1775,7 +1775,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, tempstr, { { dialogX + 31, 87 }, { 200, 50 } }, UiFlags::ColorGold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, tempstr, { { dialogX + 31, RIGHT_PANEL_Y + 87 }, { 200, 50 } }, UiFlags::ColorGold | UiFlags::AlignCenter, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {
@@ -1784,7 +1784,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, tempstr, Point { dialogX + 37, 140 }, UiFlags::ColorSilver, 1, -1, true);
+	DrawString(out, tempstr, Point { dialogX + 37, RIGHT_PANEL_Y + 140 }, UiFlags::ColorSilver, 1, -1, true);
 }
 
 void control_drop_gold(char vkey)
