@@ -1129,7 +1129,7 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 		minhit = 25;
 	if (currlevel == 16)
 		minhit = 30;
-	hper = clamp(hper, minhit, 100);
+	hper = std::max(hper, minhit);
 
 	int blk = 100;
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
