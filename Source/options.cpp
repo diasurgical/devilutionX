@@ -157,6 +157,15 @@ void SaveIni()
 	IniChanged = false;
 }
 
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+bool HardwareCursorDefault()
+{
+	SDL_version v;
+	SDL_GetVersion(&v);
+	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
+}
+#endif
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -223,7 +232,7 @@ void LoadOptions()
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = GetIniBool("Graphics", "Color Cycling", true);
 #if SDL_VERSION_ATLEAST(2, 0, 0)
-	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", true);
+	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
 	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
 	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
 #endif
