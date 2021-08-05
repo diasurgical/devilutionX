@@ -1312,7 +1312,7 @@ void plrctrls_after_check_curs_move()
 			return;
 		}
 		if (!invflag) {
-			*infostr = '\0';
+			infostr = "";
 			ClearPanel();
 			FindActor();
 			FindItemOrObject();

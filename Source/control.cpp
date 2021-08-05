@@ -57,7 +57,7 @@ bool talkflag;
 bool sbookflag;
 bool chrflag;
 bool drawbtnflag;
-char infostr[64];
+StringVariant infostr;
 bool panelflag;
 int initialDropGoldValue;
 bool panbtndown;
@@ -401,7 +401,7 @@ void PrintInfo(const Surface &out)
 
 	int yo = 0;
 	int lo = 1;
-	if (infostr[0] != '\0') {
+	if (infostr.length() > 0) {
 		DrawString(out, infostr, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
 		yo = 1;
 		lo = 0;
@@ -591,7 +591,7 @@ void DrawSpellList(const Surface &out)
 	uint64_t mask;
 
 	pSpell = SPL_INVALID;
-	infostr[0] = '\0';
+	infostr = "";
 	Point location;
 	int &x = location.x;
 	int &y = location.y;
@@ -650,10 +650,10 @@ void DrawSpellList(const Surface &out)
 				DrawSpellCel(out, location, *pSpellCels, c);
 				switch (pSplType) {
 				case RSPLTYPE_SKILL:
-					strcpy(infostr, fmt::format(_("{:s} Skill"), _(spelldata[pSpell].sSkillText)).c_str());
+					infostr = fmt::format(_("{:s} Skill"), _(spelldata[pSpell].sSkillText));
 					break;
 				case RSPLTYPE_SPELL:
-					strcpy(infostr, fmt::format(_("{:s} Spell"), _(spelldata[pSpell].sNameText)).c_str());
+					infostr = fmt::format(_("{:s} Spell"), _(spelldata[pSpell].sNameText));
 					if (pSpell == SPL_HBOLT) {
 						strcpy(tempstr, _("Damages undead only"));
 						AddPanelString(tempstr);
@@ -665,7 +665,7 @@ void DrawSpellList(const Surface &out)
 					AddPanelString(tempstr);
 					break;
 				case RSPLTYPE_SCROLL: {
-					strcpy(infostr, fmt::format(_("Scroll of {:s}"), _(spelldata[pSpell].sNameText)).c_str());
+					infostr = fmt::format(_("Scroll of {:s}"), _(spelldata[pSpell].sNameText));
 					int v = 0;
 					for (int t = 0; t < myPlayer._pNumInv; t++) {
 						if (!myPlayer.InvList[t].isEmpty()
@@ -685,7 +685,7 @@ void DrawSpellList(const Surface &out)
 					AddPanelString(tempstr);
 				} break;
 				case RSPLTYPE_CHARGES: {
-					strcpy(infostr, fmt::format(_("Staff of {:s}"), _(spelldata[pSpell].sNameText)).c_str());
+					infostr = fmt::format(_("Staff of {:s}"), _(spelldata[pSpell].sNameText));
 					int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 					strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
 					AddPanelString(tempstr);
@@ -876,7 +876,7 @@ void InitControlPan()
 		buttonEnabled = false;
 	chrbtnactive = false;
 	pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
-	strcpy(infostr, "");
+	infostr = "";
 	ClearPanel();
 	drawhpflag = true;
 	drawmanaflag = true;
@@ -1072,12 +1072,12 @@ void CheckPanelInfo()
 		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
 		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= yend) {
 			if (i != 7) {
-				strcpy(infostr, _(PanBtnStr[i]));
+				infostr = _(PanBtnStr[i]);
 			} else {
 				if (gbFriendlyMode)
-					strcpy(infostr, _("Player friendly"));
+					infostr = _("Player friendly");
 				else
-					strcpy(infostr, _("Player attack"));
+					infostr = _("Player attack");
 			}
 			if (PanBtnHotKey[i] != nullptr) {
 				strcpy(tempstr, fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])).c_str());
@@ -1089,7 +1089,7 @@ void CheckPanelInfo()
 		}
 	}
 	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
-		strcpy(infostr, _("Select current spell button"));
+		infostr = _("Select current spell button");
 		InfoColor = UiFlags::ColorSilver;
 		panelflag = true;
 		pinfoflag = true;
@@ -1255,7 +1255,7 @@ void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
-		infostr[0] = '\0';
+		infostr = "";
 		InfoColor = UiFlags::ColorSilver;
 		ClearPanel();
 	}
@@ -1265,16 +1265,16 @@ void DrawInfoBox(const Surface &out)
 		auto &myPlayer = Players[MyPlayerId];
 		if (myPlayer.HoldItem._itype == ITYPE_GOLD) {
 			int nGold = myPlayer.HoldItem._ivalue;
-			strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+			infostr = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 		} else if (!myPlayer.HoldItem._iStatFlag) {
 			ClearPanel();
 			AddPanelString(_("Requirements not met"));
 			pinfoflag = true;
 		} else {
 			if (myPlayer.HoldItem._iIdentified)
-				strcpy(infostr, myPlayer.HoldItem._iIName);
+				infostr = myPlayer.HoldItem._iIName;
 			else
-				strcpy(infostr, myPlayer.HoldItem._iName);
+				infostr = myPlayer.HoldItem._iName;
 			InfoColor = myPlayer.HoldItem.getTextColor();
 		}
 	} else {
@@ -1286,7 +1286,7 @@ void DrawInfoBox(const Surface &out)
 			const auto &monster = Monsters[pcursmonst];
 			if (leveltype != DTYPE_TOWN) {
 				InfoColor = UiFlags::ColorSilver;
-				strcpy(infostr, _(monster.mName));
+				infostr = _(monster.mName);
 				ClearPanel();
 				if (monster._uniqtype != 0) {
 					InfoColor = UiFlags::ColorGold;
@@ -1295,15 +1295,13 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				string_view townerName = Towners[pcursmonst].name;
-				strncpy(infostr, townerName.data(), townerName.length());
-				infostr[townerName.length()] = '\0';
+				infostr = Towners[pcursmonst].name;
 			}
 		}
 		if (pcursplr != -1) {
 			InfoColor = UiFlags::ColorGold;
 			auto &target = Players[pcursplr];
-			strcpy(infostr, target._pName);
+			infostr = target._pName;
 			ClearPanel();
 			strcpy(tempstr, fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel).c_str());
 			AddPanelString(tempstr);
@@ -1311,7 +1309,7 @@ void DrawInfoBox(const Surface &out)
 			AddPanelString(tempstr);
 		}
 	}
-	if (infostr[0] != '\0' || pnumlines != 0)
+	if (infostr.length() > 0 || pnumlines != 0)
 		PrintInfo(out);
 }
 

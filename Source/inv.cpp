@@ -1952,14 +1952,14 @@ char CheckInvHLight()
 
 	if (pi->_itype == ITYPE_GOLD) {
 		int nGold = pi->_ivalue;
-		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+		infostr = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 	} else {
 		InfoColor = pi->getTextColor();
 		if (pi->_iIdentified) {
-			strcpy(infostr, pi->_iIName);
+			infostr = pi->_iIName;
 			PrintItemDetails(pi);
 		} else {
-			strcpy(infostr, pi->_iName);
+			infostr = pi->_iName;
 			PrintItemDur(pi);
 		}
 	}

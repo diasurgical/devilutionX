@@ -15,6 +15,7 @@
 #include "spells.h"
 #include "utils/stdcompat/optional.hpp"
 #include "utils/ui_fwd.h"
+#include "utils/string_variant.hpp"
 
 namespace devilution {
 
@@ -49,7 +50,7 @@ extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern bool drawbtnflag;
-extern char infostr[64];
+extern StringVariant infostr;
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;

@@ -3757,14 +3757,14 @@ void GetItemStr(int i)
 {
 	if (Items[i]._itype != ITYPE_GOLD) {
 		if (Items[i]._iIdentified)
-			strcpy(infostr, Items[i]._iIName);
+			infostr = Items[i]._iIName;
 		else
-			strcpy(infostr, Items[i]._iName);
+			infostr = Items[i]._iName;
 
 		InfoColor = Items[i].getTextColor();
 	} else {
 		int nGold = Items[i]._ivalue;
-		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+		infostr = fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold);
 	}
 }
 
