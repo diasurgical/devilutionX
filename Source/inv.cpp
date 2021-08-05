@@ -364,8 +364,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
-		int xo = RIGHT_PANEL;
-		int yo = 0;
+		int xo = RIGHT_PANEL_X;
+		int yo = RIGHT_PANEL_Y;
 		if (r >= SLOTXY_BELT_FIRST) {
 			xo = PANEL_LEFT;
 			yo = PANEL_TOP;
@@ -708,8 +708,8 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = RIGHT_PANEL;
-		int yo = 0;
+		int xo = RIGHT_PANEL_X;
+		int yo = RIGHT_PANEL_Y;
 		if (r >= SLOTXY_BELT_FIRST) {
 			xo = PANEL_LEFT;
 			yo = PANEL_TOP;
@@ -1126,7 +1126,7 @@ void InitInv()
 
 void DrawInv(const Surface &out)
 {
-	CelDrawTo(out, { RIGHT_PANEL_X, 351 }, *pInvCels, 1);
+	CelDrawTo(out, { RIGHT_PANEL_X, RIGHT_PANEL_Y + 351 }, *pInvCels, 1);
 
 	Size slotSize[] = {
 		{ 2, 2 }, //head
@@ -1154,7 +1154,7 @@ void DrawInv(const Surface &out)
 		if (!myPlayer.InvBody[slot].isEmpty()) {
 			int screenX = slotPos[slot].x;
 			int screenY = slotPos[slot].y;
-			InvDrawSlotBack(out, { RIGHT_PANEL_X + screenX, screenY }, { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
+			InvDrawSlotBack(out, { RIGHT_PANEL_X + screenX, RIGHT_PANEL_Y + screenY }, { slotSize[slot].width * InventorySlotSizeInPixels.width, slotSize[slot].height * InventorySlotSizeInPixels.height });
 
 			int frame = myPlayer.InvBody[slot]._iCurs + CURSOR_FIRSTITEM;
 
@@ -1171,7 +1171,7 @@ void DrawInv(const Surface &out)
 
 			const auto &cel = GetInvItemSprite(frame);
 			const int celFrame = GetInvItemFrame(frame);
-			const Point position { RIGHT_PANEL_X + screenX, screenY };
+			const Point position { RIGHT_PANEL_X + screenX, RIGHT_PANEL_Y + screenY };
 
 			if (pcursinvitem == slot) {
 				CelBlitOutlineTo(out, GetOutlineColor(myPlayer.InvBody[slot], true), position, cel, celFrame, false);
@@ -1184,12 +1184,12 @@ void DrawInv(const Surface &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, { RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y }, { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
+						InvDrawSlotBack(out, { RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x, RIGHT_PANEL_Y + slotPos[INVLOC_HAND_RIGHT].y }, { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						LightTableIndex = 0;
 						cel_transparency_active = true;
 
 						const int dstX = RIGHT_PANEL_X + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-						const int dstY = slotPos[INVLOC_HAND_RIGHT].y;
+						const int dstY = RIGHT_PANEL_Y + slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
 						cel_transparency_active = false;
@@ -1203,7 +1203,7 @@ void DrawInv(const Surface &out)
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    InvRect[i + SLOTXY_INV_FIRST] + Displacement { RIGHT_PANEL_X, -1 },
+			    InvRect[i + SLOTXY_INV_FIRST] + Displacement { RIGHT_PANEL_X, RIGHT_PANEL_Y - 1 },
 			    InventorySlotSizeInPixels);
 		}
 	}
@@ -1215,7 +1215,7 @@ void DrawInv(const Surface &out)
 
 			const auto &cel = GetInvItemSprite(frame);
 			const int celFrame = GetInvItemFrame(frame);
-			const Point position { InvRect[j + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].y - 1 };
+			const Point position { InvRect[j + SLOTXY_INV_FIRST].x + RIGHT_PANEL_X, InvRect[j + SLOTXY_INV_FIRST].y + RIGHT_PANEL_Y - 1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 				CelBlitOutlineTo(
 				    out,
@@ -1880,8 +1880,8 @@ char CheckInvHLight()
 {
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = RIGHT_PANEL;
-		int yo = 0;
+		int xo = RIGHT_PANEL_X;
+		int yo = RIGHT_PANEL_Y;
 		if (r >= SLOTXY_BELT_FIRST) {
 			xo = PANEL_LEFT;
 			yo = PANEL_TOP;

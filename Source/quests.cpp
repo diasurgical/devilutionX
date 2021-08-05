@@ -252,11 +252,11 @@ void PrintQLString(const Surface &out, int x, int line, const char *str)
 	int sx = x + std::max((257 - width) / 2, 0);
 	int sy = line * 12 + 44;
 	if (qline == line) {
-		CelDrawTo(out, { sx - 20, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, { LEFT_PANEL_X + sx - 20, LEFT_PANEL_Y + sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	DrawString(out, str, { { sx, sy }, { 257, 0 } }, UiFlags::ColorSilver);
+	DrawString(out, str, { { LEFT_PANEL_X + sx, LEFT_PANEL_Y + sy }, { 257, 0 } }, UiFlags::ColorSilver);
 	if (qline == line) {
-		CelDrawTo(out, { sx + width + 7, sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, { LEFT_PANEL_X + sx + width + 7, LEFT_PANEL_Y + sy + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 
@@ -730,8 +730,8 @@ void ResyncQuests()
 
 void DrawQuestLog(const Surface &out)
 {
-	DrawString(out, _("Quest Log"), { { 32, 44 }, { 257, 0 } }, UiFlags::AlignCenter);
-	CelDrawTo(out, { 0, 351 }, *pQLogCel, 1);
+	DrawString(out, _("Quest Log"), { { LEFT_PANEL_X + 32, LEFT_PANEL_Y + 44 }, { 257, 0 } }, UiFlags::AlignCenter);
+	CelDrawTo(out, { LEFT_PANEL_X, LEFT_PANEL_Y + 351 }, *pQLogCel, 1);
 	int line = qtopline;
 	for (int i = 0; i < numqlines; i++) {
 		PrintQLString(out, 32, line, _(QuestData[qlist[i]]._qlstr));
@@ -798,7 +798,7 @@ void QuestlogEnter()
 
 void QuestlogESC()
 {
-	int y = (MousePosition.y - 32) / 12;
+	int y = (MousePosition.y - LEFT_PANEL_Y - 32) / 12;
 	for (int i = 0; i < numqlines; i++) {
 		if (y == qtopline + 2 * i) {
 			qline = y;

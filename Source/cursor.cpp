@@ -430,14 +430,14 @@ void CheckCursMove()
 	if (DoomFlag) {
 		return;
 	}
-	if (invflag && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT) {
+	if (invflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT) {
+	if (sbookflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT) {
+	if ((chrflag || QuestLogIsOpen) && MousePosition.x > LEFT_PANEL_X && MousePosition.x < LEFT_PANEL_X + SPANEL_WIDTH && MousePosition.y > LEFT_PANEL_Y && MousePosition.y < LEFT_PANEL_Y + SPANEL_HEIGHT) {
 		return;
 	}
 

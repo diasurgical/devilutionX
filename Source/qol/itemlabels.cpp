@@ -93,9 +93,9 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 bool IsMouseOverGameArea()
 {
-	if ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL && MousePosition.y <= SPANEL_HEIGHT)
+	if ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT)
 		return false;
-	if ((chrflag || QuestLogIsOpen) && MousePosition.x < SPANEL_WIDTH && MousePosition.y <= SPANEL_HEIGHT)
+	if ((chrflag || QuestLogIsOpen) && MousePosition.x > LEFT_PANEL_X && MousePosition.x < LEFT_PANEL_X + SPANEL_WIDTH && MousePosition.y > LEFT_PANEL_Y && MousePosition.y < LEFT_PANEL_Y + SPANEL_HEIGHT)
 		return false;
 	if (MousePosition.y >= PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= PANEL_LEFT + PANEL_WIDTH)
 		return false;
