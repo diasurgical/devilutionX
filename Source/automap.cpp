@@ -22,11 +22,6 @@
 namespace devilution {
 
 namespace {
-/**
- * Maps from tile_id to automap type.
- */
-std::array<uint16_t, 256> AutomapTypes;
-
 Point Automap;
 
 enum MapColors : uint8_t {
@@ -40,20 +35,47 @@ enum MapColors : uint8_t {
 	MapColorsItem = (PAL8_BLUE + 1),
 };
 
-constexpr uint16_t MapFlagsType = 0x000F;
-/** these are in the second byte */
-enum MapFlags : uint8_t {
+/** The general shape of the tile */
+enum class AutomapTypes : uint8_t {
+	None,
+	Diamond,
+	Vertical,
+	Horizontal,
+	Cross,
+	FenceVertical,
+	FenceHorizontal,
+	Corner,
+	CaveHorizontalCross,
+	CaveVerticalCross,
+	CaveHorizontal,
+	CaveVertical,
+	CaveCross,
+};
+
+/** Additional details about the given tile */
+enum AutomapFlags : uint8_t {
 	// clang-format off
-	MapFlagsMapVerticalDoor   = 1 << 0,
-	MapFlagsMapHorizontalDoor = 1 << 1,
-	MapFlagsVerticalArch      = 1 << 2,
-	MapFlagsHorizontalArch    = 1 << 3,
-	MapFlagsVerticalGrate     = 1 << 4,
-	MapFlagsHorizontalGrate   = 1 << 5,
-	MapFlagsDirt              = 1 << 6,
-	MapFlagsStairs            = 1 << 7,
+	AutomapFlagVerticalDoor    = 1 << 0,
+	AutomapFlagHorizontalDoor  = 1 << 1,
+	AutomapFlagVerticalArch    = 1 << 2,
+	AutomapFlagHorizontalArch  = 1 << 3,
+	AutomapFlagVerticalGrate   = 1 << 4,
+	AutomapFlagHorizontalGrate = 1 << 5,
+	AutomapFlagDirt            = 1 << 6,
+	AutomapFlagStairs          = 1 << 7,
 	// clang-format on
 };
+
+struct AutomapTile {
+	AutomapTypes type;
+	/** Uses AutomapFlags for flags */
+	uint8_t flags;
+};
+
+/**
+ * Maps from tile_id to automap type.
+ */
+std::array<AutomapTile, 256> AutomapTypeTiles;
 
 void DrawDiamond(const Surface &out, Point center, uint8_t color)
 {
@@ -84,11 +106,12 @@ void DrawMapHorizontalDoor(const Surface &out, Point center)
 /**
  * @brief Renders the given automap shape at the specified screen coordinates.
  */
-void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
+void DrawAutomapTile(const Surface &out, Point center, AutomapTile tile)
 {
-	uint8_t flags = automapType >> 8;
+	if (tile.type == AutomapTypes::None)
+		return;
 
-	if ((flags & MapFlagsDirt) != 0) {
+	if ((tile.flags & AutomapFlagDirt) != 0) {
 		out.SetPixel(center, MapColorsDim);
 		out.SetPixel({ center.x - AmLine8, center.y - AmLine4 }, MapColorsDim);
 		out.SetPixel({ center.x - AmLine8, center.y + AmLine4 }, MapColorsDim);
@@ -107,7 +130,7 @@ void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
 		out.SetPixel({ center.x, center.y + AmLine16 }, MapColorsDim);
 	}
 
-	if ((flags & MapFlagsStairs) != 0) {
+	if ((tile.flags & AutomapFlagStairs) != 0) {
 		constexpr int NumStairSteps = 4;
 		const Displacement offset = { -AmLine8, AmLine4 };
 		Point p = { center.x - AmLine8, center.y - AmLine8 - AmLine4 };
@@ -121,77 +144,80 @@ void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
 	bool drawHorizontal = false;
 	bool drawCaveHorizontal = false;
 	bool drawCaveVertical = false;
-	switch (automapType & MapFlagsType) {
-	case 1: // stand-alone column or other unpassable object
+	switch (tile.type) {
+	case AutomapTypes::Diamond: // stand-alone column or other unpassable object
 		DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
 		break;
-	case 2:
-	case 5:
+	case AutomapTypes::Vertical:
+	case AutomapTypes::FenceVertical:
 		drawVertical = true;
 		break;
-	case 3:
-	case 6:
+	case AutomapTypes::Horizontal:
+	case AutomapTypes::FenceHorizontal:
 		drawHorizontal = true;
 		break;
-	case 4:
+	case AutomapTypes::Cross:
 		drawVertical = true;
 		drawHorizontal = true;
 		break;
-	case 8:
+	case AutomapTypes::CaveHorizontalCross:
 		drawVertical = true;
 		drawCaveHorizontal = true;
 		break;
-	case 9:
+	case AutomapTypes::CaveVerticalCross:
 		drawHorizontal = true;
 		drawCaveVertical = true;
 		break;
-	case 10:
+	case AutomapTypes::CaveHorizontal:
 		drawCaveHorizontal = true;
 		break;
-	case 11:
+	case AutomapTypes::CaveVertical:
 		drawCaveVertical = true;
 		break;
-	case 12:
+	case AutomapTypes::CaveCross:
 		drawCaveHorizontal = true;
 		drawCaveVertical = true;
+		break;
+	case AutomapTypes::Corner:
+	case AutomapTypes::None:
 		break;
 	}
 
-	if (drawVertical) {                               // right-facing obstacle
-		if ((flags & MapFlagsMapVerticalDoor) != 0) { // two wall segments with a door in the middle
+	if (drawVertical) {                                    // right-facing obstacle
+		if ((tile.flags & AutomapFlagVerticalDoor) != 0) { // two wall segments with a door in the middle
 			DrawMapVerticalDoor(out, { center.x - AmLine16, center.y - AmLine8 });
 		}
-		if ((flags & MapFlagsVerticalGrate) != 0) { // right-facing half-wall
+		if ((tile.flags & AutomapFlagVerticalGrate) != 0) { // right-facing half-wall
 			DrawMapLineNE(out, { center.x - AmLine32, center.y }, AmLine8, MapColorsDim);
-			flags |= MapFlagsVerticalArch;
+			tile.flags |= AutomapFlagVerticalArch;
 		}
-		if ((flags & MapFlagsVerticalArch) != 0) { // window or passable column
+		if ((tile.flags & AutomapFlagVerticalArch) != 0) { // window or passable column
 			DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
 		}
-		if ((flags & (MapFlagsMapVerticalDoor | MapFlagsVerticalGrate | MapFlagsVerticalArch)) == 0) {
+		if ((tile.flags & (AutomapFlagVerticalDoor | AutomapFlagVerticalGrate | AutomapFlagVerticalArch)) == 0) {
 			DrawMapLineNE(out, { center.x - AmLine32, center.y }, AmLine16, MapColorsDim);
 		}
 	}
 
 	if (drawHorizontal) { // left-facing obstacle
-		if ((flags & MapFlagsMapHorizontalDoor) != 0) {
+		if ((tile.flags & AutomapFlagHorizontalDoor) != 0) {
 			DrawMapHorizontalDoor(out, { center.x + AmLine16, center.y - AmLine8 });
 		}
-		if ((flags & MapFlagsHorizontalGrate) != 0) {
+		if ((tile.flags & AutomapFlagHorizontalGrate) != 0) {
 			DrawMapLineSE(out, { center.x + AmLine16, center.y - AmLine8 }, AmLine8, MapColorsDim);
-			flags |= MapFlagsHorizontalArch;
+			tile.flags |= AutomapFlagHorizontalArch;
 		}
-		if ((flags & MapFlagsHorizontalArch) != 0) {
+		if ((tile.flags & AutomapFlagHorizontalArch) != 0) {
 			DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
 		}
-		if ((flags & (MapFlagsMapHorizontalDoor | MapFlagsHorizontalGrate | MapFlagsHorizontalArch)) == 0) {
+		if ((tile.flags & (AutomapFlagHorizontalDoor | AutomapFlagHorizontalGrate | AutomapFlagHorizontalArch)) == 0) {
 			DrawMapLineSE(out, { center.x, center.y - AmLine16 }, AmLine16, MapColorsDim);
 		}
 	}
 
 	// For caves the horizontal/vertical flags are swapped
 	if (drawCaveHorizontal) {
-		if ((flags & MapFlagsMapVerticalDoor) != 0) {
+		if ((tile.flags & AutomapFlagVerticalDoor) != 0) {
 			DrawMapHorizontalDoor(out, { center.x - AmLine16, center.y + AmLine8 });
 		} else {
 			DrawMapLineSE(out, { center.x - AmLine32, center.y }, AmLine16, MapColorsDim);
@@ -199,7 +225,7 @@ void DrawAutomapTile(const Surface &out, Point center, uint16_t automapType)
 	}
 
 	if (drawCaveVertical) {
-		if ((flags & MapFlagsMapHorizontalDoor) != 0) {
+		if ((tile.flags & AutomapFlagHorizontalDoor) != 0) {
 			DrawMapVerticalDoor(out, { center.x + AmLine16, center.y + AmLine8 });
 		} else {
 			DrawMapLineNE(out, { center.x, center.y + AmLine16 }, AmLine16, MapColorsDim);
@@ -341,44 +367,68 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 }
 
 /**
+ * @brief Check if a given tile has the provided AutomapTile flag
+ */
+bool HasAutomapFlag(Point position, AutomapFlags type)
+{
+	if (position.x < 0 || position.x >= DMAXX || position.y < 0 || position.y >= DMAXX) {
+		return false;
+	}
+
+	return (AutomapTypeTiles[dungeon[position.x][position.y]].flags & type) != 0;
+}
+
+/**
  * @brief Returns the automap shape at the given coordinate.
  */
-uint16_t GetAutomapType(Point map, bool view)
+AutomapTile GetAutomapType(Point position)
 {
-	if (view && map.x == -1 && map.y >= 0 && map.y < DMAXY && AutomapView[0][map.y]) {
-		if ((GetAutomapType({ 0, map.y }, false) & (MapFlagsDirt << 8)) != 0) {
-			return 0;
-		}
-		return MapFlagsDirt << 8;
+	if (position.x < 0 || position.x >= DMAXX || position.y < 0 || position.y >= DMAXX) {
+		return {};
 	}
 
-	if (view && map.y == -1 && map.x >= 0 && map.x < DMAXY && AutomapView[map.x][0]) {
-		if ((GetAutomapType({ map.x, 0 }, false) & (MapFlagsDirt << 8)) != 0) {
-			return 0;
-		}
-		return MapFlagsDirt << 8;
-	}
-
-	if (map.x < 0 || map.x >= DMAXX) {
-		return 0;
-	}
-	if (map.y < 0 || map.y >= DMAXX) {
-		return 0;
-	}
-	if (!AutomapView[map.x][map.y] && view) {
-		return 0;
-	}
-
-	uint16_t rv = AutomapTypes[dungeon[map.x][map.y]];
-	if (rv == 7) {
-		if (((GetAutomapType({ map.x - 1, map.y }, false) >> 8) & MapFlagsHorizontalArch) != 0) {
-			if (((GetAutomapType({ map.x, map.y - 1 }, false) >> 8) & MapFlagsVerticalArch) != 0) {
-				rv = 1;
+	AutomapTile tile = AutomapTypeTiles[dungeon[position.x][position.y]];
+	if (tile.type == AutomapTypes::Corner) {
+		if (HasAutomapFlag({ position.x - 1, position.y }, AutomapFlagHorizontalArch)) {
+			if (HasAutomapFlag({ position.x, position.y - 1 }, AutomapFlagVerticalArch)) {
+				tile.type = AutomapTypes::Diamond;
 			}
 		}
 	}
 
-	return rv;
+	return tile;
+}
+
+/**
+ * @brief Returns the automap shape at the given coordinate.
+ */
+AutomapTile GetAutomapTypeView(Point map)
+{
+	if (map.x == -1 && map.y >= 0 && map.y < DMAXY && AutomapView[0][map.y]) {
+		if (HasAutomapFlag({ 0, map.y }, AutomapFlagDirt)) {
+			return {};
+		}
+		return { AutomapTypes::None, AutomapFlagDirt };
+	}
+
+	if (map.y == -1 && map.x >= 0 && map.x < DMAXY && AutomapView[map.x][0]) {
+		if (HasAutomapFlag({ map.x, 0 }, AutomapFlagDirt)) {
+			return {};
+		}
+		return { AutomapTypes::None, AutomapFlagDirt };
+	}
+
+	if (map.x < 0 || map.x >= DMAXX) {
+		return {};
+	}
+	if (map.y < 0 || map.y >= DMAXX) {
+		return {};
+	}
+	if (!AutomapView[map.x][map.y]) {
+		return {};
+	}
+
+	return GetAutomapType(map);
 }
 
 /**
@@ -421,21 +471,21 @@ void DrawAutomapText(const Surface &out)
 	}
 }
 
-std::unique_ptr<uint16_t[]> LoadAutomapData(size_t &tileCount)
+std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
 		if (currlevel < 21)
-			return LoadFileInMem<uint16_t>("Levels\\L1Data\\L1.AMP", &tileCount);
-		return LoadFileInMem<uint16_t>("NLevels\\L5Data\\L5.AMP", &tileCount);
+			return LoadFileInMem<AutomapTile>("Levels\\L1Data\\L1.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("NLevels\\L5Data\\L5.AMP", &tileCount);
 	case DTYPE_CATACOMBS:
-		return LoadFileInMem<uint16_t>("Levels\\L2Data\\L2.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("Levels\\L2Data\\L2.AMP", &tileCount);
 	case DTYPE_CAVES:
 		if (currlevel < 17)
-			return LoadFileInMem<uint16_t>("Levels\\L3Data\\L3.AMP", &tileCount);
-		return LoadFileInMem<uint16_t>("NLevels\\L6Data\\L6.AMP", &tileCount);
+			return LoadFileInMem<AutomapTile>("Levels\\L3Data\\L3.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("NLevels\\L6Data\\L6.AMP", &tileCount);
 	case DTYPE_HELL:
-		return LoadFileInMem<uint16_t>("Levels\\L4Data\\L4.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("Levels\\L4Data\\L4.AMP", &tileCount);
 	default:
 		return nullptr;
 	}
@@ -467,11 +517,10 @@ void InitAutomapOnce()
 void InitAutomap()
 {
 	size_t tileCount = 0;
-	std::unique_ptr<uint16_t[]> tileTypes = LoadAutomapData(tileCount);
+	std::unique_ptr<AutomapTile[]> tileTypes = LoadAutomapData(tileCount);
 	for (unsigned i = 0; i < tileCount; i++) {
-		AutomapTypes[i + 1] = tileTypes[i];
+		AutomapTypeTiles[i + 1] = tileTypes[i];
 	}
-	tileTypes = nullptr;
 
 	memset(AutomapView, 0, sizeof(AutomapView));
 
@@ -607,18 +656,14 @@ void DrawAutomap(const Surface &out)
 	for (int i = 0; i <= cells + 1; i++) {
 		Point tile1 = screen;
 		for (int j = 0; j < cells; j++) {
-			uint16_t mapType = GetAutomapType({ map.x + j, map.y - j }, true);
-			if (mapType != 0)
-				DrawAutomapTile(out, tile1, mapType);
+			DrawAutomapTile(out, tile1, GetAutomapTypeView({ map.x + j, map.y - j }));
 			tile1.x += AmLine64;
 		}
 		map.y++;
 
 		Point tile2 { screen.x - AmLine32, screen.y + AmLine16 };
 		for (int j = 0; j <= cells; j++) {
-			uint16_t mapType = GetAutomapType({ map.x + j, map.y - j }, true);
-			if (mapType != 0)
-				DrawAutomapTile(out, tile2, mapType);
+			DrawAutomapTile(out, tile2, GetAutomapTypeView({ map.x + j, map.y - j }));
 			tile2.x += AmLine64;
 		}
 		map.x++;
@@ -638,9 +683,9 @@ void DrawAutomap(const Surface &out)
 	DrawAutomapText(out);
 }
 
-void SetAutomapView(Point tile)
+void SetAutomapView(Point position)
 {
-	const Point map { (tile.x - 16) / 2, (tile.y - 16) / 2 };
+	const Point map { (position.x - 16) / 2, (position.y - 16) / 2 };
 
 	if (map.x < 0 || map.x >= DMAXX || map.y < 0 || map.y >= DMAXY) {
 		return;
@@ -648,60 +693,68 @@ void SetAutomapView(Point tile)
 
 	AutomapView[map.x][map.y] = true;
 
-	uint16_t mapType = GetAutomapType(map, false);
-	uint16_t solid = mapType & 0x4000;
+	AutomapTile tile = GetAutomapType(map);
+	bool solid = (tile.flags & AutomapFlagDirt) != 0;
 
-	switch (mapType & MapFlagsType) {
-	case 2:
-		if (solid != 0) {
-			if (GetAutomapType({ map.x, map.y + 1 }, false) == 0x4007)
+	switch (tile.type) {
+	case AutomapTypes::Vertical:
+		if (solid) {
+			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
+			if (tileSW.type == AutomapTypes::Corner && (tileSW.flags & AutomapFlagDirt) != 0)
 				AutomapView[map.x][map.y + 1] = true;
-		} else if ((GetAutomapType({ map.x - 1, map.y }, false) & 0x4000) != 0) {
+		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt)) {
 			AutomapView[map.x - 1][map.y] = true;
 		}
 		break;
-	case 3:
-		if (solid != 0) {
-			if (GetAutomapType({ map.x + 1, map.y }, false) == 0x4007)
+	case AutomapTypes::Horizontal:
+		if (solid) {
+			auto tileSE = GetAutomapType({ map.x + 1, map.y });
+			if (tileSE.type == AutomapTypes::Corner && (tileSE.flags & AutomapFlagDirt) != 0)
 				AutomapView[map.x + 1][map.y] = true;
-		} else if ((GetAutomapType({ map.x, map.y - 1 }, false) & 0x4000) != 0) {
+		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt)) {
 			AutomapView[map.x][map.y - 1] = true;
 		}
 		break;
-	case 4:
-		if (solid != 0) {
-			if (GetAutomapType({ map.x, map.y + 1 }, false) == 0x4007)
+	case AutomapTypes::Cross:
+		if (solid) {
+			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
+			if (tileSW.type == AutomapTypes::Corner && (tileSW.flags & AutomapFlagDirt) != 0)
 				AutomapView[map.x][map.y + 1] = true;
-			if (GetAutomapType({ map.x + 1, map.y }, false) == 0x4007)
+			auto tileSE = GetAutomapType({ map.x + 1, map.y });
+			if (tileSE.type == AutomapTypes::Corner && (tileSE.flags & AutomapFlagDirt) != 0)
 				AutomapView[map.x + 1][map.y] = true;
 		} else {
-			if ((GetAutomapType({ map.x - 1, map.y }, false) & 0x4000) != 0)
+			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt))
 				AutomapView[map.x - 1][map.y] = true;
-			if ((GetAutomapType({ map.x, map.y - 1 }, false) & 0x4000) != 0)
+			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt))
 				AutomapView[map.x][map.y - 1] = true;
-			if ((GetAutomapType({ map.x - 1, map.y - 1 }, false) & 0x4000) != 0)
+			if (HasAutomapFlag({ map.x - 1, map.y - 1 }, AutomapFlagDirt))
 				AutomapView[map.x - 1][map.y - 1] = true;
 		}
 		break;
-	case 5:
-		if (solid != 0) {
-			if ((GetAutomapType({ map.x, map.y - 1 }, false) & 0x4000) != 0)
+	case AutomapTypes::FenceVertical:
+		if (solid) {
+			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt))
 				AutomapView[map.x][map.y - 1] = true;
-			if (GetAutomapType({ map.x, map.y + 1 }, false) == 0x4007)
+			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
+			if (tileSW.type == AutomapTypes::Corner && (tileSW.flags & AutomapFlagDirt) != 0)
 				AutomapView[map.x][map.y + 1] = true;
-		} else if ((GetAutomapType({ map.x - 1, map.y }, false) & 0x4000) != 0) {
+		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt)) {
 			AutomapView[map.x - 1][map.y] = true;
 		}
 		break;
-	case 6:
-		if (solid != 0) {
-			if ((GetAutomapType({ map.x - 1, map.y }, false) & 0x4000) != 0)
+	case AutomapTypes::FenceHorizontal:
+		if (solid) {
+			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt))
 				AutomapView[map.x - 1][map.y] = true;
-			if (GetAutomapType({ map.x + 1, map.y }, false) == 0x4007)
+			auto tileSE = GetAutomapType({ map.x + 1, map.y });
+			if (tileSE.type == AutomapTypes::Corner && (tileSE.flags & AutomapFlagDirt) != 0)
 				AutomapView[map.x + 1][map.y] = true;
-		} else if ((GetAutomapType({ map.x, map.y - 1 }, false) & 0x4000) != 0) {
+		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt)) {
 			AutomapView[map.x][map.y - 1] = true;
 		}
+		break;
+	default:
 		break;
 	}
 }
