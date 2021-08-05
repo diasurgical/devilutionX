@@ -454,7 +454,7 @@ int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 	return x - 32 - 8;
 }
 
-void PrintSBookStr(const Surface &out, Point position, const char *text)
+void PrintSBookStr(const Surface &out, Point position, string_view text)
 {
 	DrawString(out, text, { { RIGHT_PANEL_X + SPLICONLENGTH + position.x, position.y }, { 222, 0 } }, UiFlags::ColorSilver);
 }
@@ -1668,40 +1668,42 @@ void DrawSpellBook(const Surface &out)
 				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
 			PrintSBookStr(out, { 10, yp - 23 }, _(spelldata[sn].sNameText));
+			StringVariant lastLine;
 			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, _("Skill"));
+				lastLine = _("Skill");
 				break;
 			case RSPLTYPE_CHARGES: {
 				int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
+				lastLine = fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges);
 			} break;
 			default: {
 				int mana = GetManaAmount(myPlayer, sn) >> 6;
 				int min;
 				int max;
 				GetDamageAmt(sn, &min, &max);
+				StringVariant line;
 				if (min != -1) {
-					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: {:d} - {:d}"), mana, min, max).c_str());
+					line = fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: {:d} - {:d}"), mana, min, max);
 				} else {
-					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}   Dam: n/a"), mana).c_str());
+					line = fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}   Dam: n/a"), mana);
 				}
 				if (sn == SPL_BONESPIRIT) {
-					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: 1/3 tgt hp"), mana).c_str());
+					line = fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: 1/3 tgt hp"), mana);
 				}
-				PrintSBookStr(out, { 10, yp - 1 }, tempstr);
+				PrintSBookStr(out, { 10, yp - 1 }, line);
 				int lvl = myPlayer._pSplLvl[sn] + myPlayer._pISplLvlAdd;
 				if (lvl < 0) {
 					lvl = 0;
 				}
 				if (lvl == 0) {
-					strcpy(tempstr, _("Spell Level 0 - Unusable"));
+					lastLine = _("Spell Level 0 - Unusable");
 				} else {
-					strcpy(tempstr, fmt::format(_("Spell Level {:d}"), lvl).c_str());
+					lastLine =  fmt::format(_("Spell Level {:d}"), lvl);
 				}
 			} break;
 			}
-			PrintSBookStr(out, { 10, yp - 12 }, tempstr);
+			PrintSBookStr(out, { 10, yp - 12 }, lastLine);
 		}
 		yp += 43;
 	}
