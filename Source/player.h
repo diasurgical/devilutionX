@@ -443,6 +443,18 @@ struct PlayerStruct {
 	}
 
 	/**
+	 * @brief Return block chance
+	 * @param useLevel - indicate if player's level should be added to block chance (the only case where it isn't is blocking a trap)
+	 */
+	int GetBlockChance(bool useLevel = true) const
+	{
+		int blkper = _pDexterity + _pBaseToBlk;
+		if (useLevel)
+			blkper += _pLevel * 2;
+		return blkper;
+	}
+
+	/**
 	 * @brief Calculates the players current Hit Points as a percentage of their max HP and stores it for later reference
 	 *
 	 * The stored value is unused...
