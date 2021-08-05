@@ -99,7 +99,7 @@ char TalkMessage[MAX_SEND_STR_LEN];
 bool TalkButtonsDown[3];
 int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
-char panelstr[4][64];
+StringVariant panelstr[4];
 uint8_t SplTransTbl[256];
 
 /** Map of hero class names */
@@ -654,15 +654,12 @@ void DrawSpellList(const Surface &out)
 					break;
 				case RSPLTYPE_SPELL:
 					infostr = fmt::format(_("{:s} Spell"), _(spelldata[pSpell].sNameText));
-					if (pSpell == SPL_HBOLT) {
-						strcpy(tempstr, _("Damages undead only"));
-						AddPanelString(tempstr);
-					}
+					if (pSpell == SPL_HBOLT)
+						AddPanelString(_("Damages undead only"));
 					if (s == 0)
-						strcpy(tempstr, _("Spell Level 0 - Unusable"));
+						AddPanelString(_("Spell Level 0 - Unusable"));
 					else
-						strcpy(tempstr, fmt::format(_("Spell Level {:d}"), s).c_str());
-					AddPanelString(tempstr);
+						AddPanelString(fmt::format(_("Spell Level {:d}"), s));
 					break;
 				case RSPLTYPE_SCROLL: {
 					infostr = fmt::format(_("Scroll of {:s}"), _(spelldata[pSpell].sNameText));
@@ -681,14 +678,12 @@ void DrawSpellList(const Surface &out)
 							v++;
 						}
 					}
-					strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", v), v).c_str());
-					AddPanelString(tempstr);
+					AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", v), v));
 				} break;
 				case RSPLTYPE_CHARGES: {
 					infostr = fmt::format(_("Staff of {:s}"), _(spelldata[pSpell].sNameText));
 					int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-					strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
-					AddPanelString(tempstr);
+					AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges));
 				} break;
 				case RSPLTYPE_INVALID:
 					break;
@@ -697,8 +692,7 @@ void DrawSpellList(const Surface &out)
 					if (myPlayer._pSplHotKey[t] == pSpell && myPlayer._pSplTHotKey[t] == pSplType) {
 						auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
 						PrintSBookHotkey(out, location, hotkeyName);
-						strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
-						AddPanelString(tempstr);
+						AddPanelString(fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()));
 					}
 				}
 			}
@@ -781,13 +775,18 @@ void ToggleSpell(int slot)
 	}
 }
 
-void AddPanelString(const char *str)
+template <typename T>
+void AddPanelString(T str)
 {
-	strcpy(panelstr[pnumlines], str);
-
+	panelstr[pnumlines] = str;
 	if (pnumlines < 4)
 		pnumlines++;
 }
+
+template void AddPanelString<const char *>(const char *);
+template void AddPanelString<char *>(char *);
+template void AddPanelString<string_view>(string_view);
+template void AddPanelString<std::string>(std::string);
 
 void ClearPanel()
 {
@@ -1079,10 +1078,8 @@ void CheckPanelInfo()
 				else
 					infostr = _("Player attack");
 			}
-			if (PanBtnHotKey[i] != nullptr) {
-				strcpy(tempstr, fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])).c_str());
-				AddPanelString(tempstr);
-			}
+			if (PanBtnHotKey[i] != nullptr)
+				AddPanelString(fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])));
 			InfoColor = UiFlags::ColorSilver;
 			panelflag = true;
 			pinfoflag = true;
@@ -1093,31 +1090,26 @@ void CheckPanelInfo()
 		InfoColor = UiFlags::ColorSilver;
 		panelflag = true;
 		pinfoflag = true;
-		strcpy(tempstr, _("Hotkey: 's'"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Hotkey: 's'"));
 		auto &myPlayer = Players[MyPlayerId];
 		spell_id v = myPlayer._pRSpell;
 		if (v != SPL_INVALID) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, fmt::format(_("{:s} Skill"), _(spelldata[v].sSkillText)).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("{:s} Skill"), _(spelldata[v].sSkillText)));
 				break;
 			case RSPLTYPE_SPELL: {
-				strcpy(tempstr, fmt::format(_("{:s} Spell"), _(spelldata[v].sNameText)).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("{:s} Spell"), _(spelldata[v].sNameText)));
 				int c = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[v];
 				if (c < 0)
 					c = 0;
 				if (c == 0)
-					strcpy(tempstr, _("Spell Level 0 - Unusable"));
+					AddPanelString(_("Spell Level 0 - Unusable"));
 				else
-					strcpy(tempstr, fmt::format(_("Spell Level {:d}"), c).c_str());
-				AddPanelString(tempstr);
+					AddPanelString(fmt::format(_("Spell Level {:d}"), c));
 			} break;
 			case RSPLTYPE_SCROLL: {
-				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), _(spelldata[v].sNameText)).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Scroll of {:s}"), _(spelldata[v].sNameText)));
 				int s = 0;
 				for (int i = 0; i < myPlayer._pNumInv; i++) {
 					if (!myPlayer.InvList[i].isEmpty()
@@ -1133,14 +1125,11 @@ void CheckPanelInfo()
 						s++;
 					}
 				}
-				strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", s), s).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", s), s));
 			} break;
 			case RSPLTYPE_CHARGES:
-				strcpy(tempstr, fmt::format(_("Staff of {:s}"), _(spelldata[v].sNameText)).c_str());
-				AddPanelString(tempstr);
-				strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges).c_str());
-				AddPanelString(tempstr);
+				AddPanelString(fmt::format(_("Staff of {:s}"), _(spelldata[v].sNameText)));
+				AddPanelString(fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges));
 				break;
 			case RSPLTYPE_INVALID:
 				break;
@@ -1303,10 +1292,8 @@ void DrawInfoBox(const Surface &out)
 			auto &target = Players[pcursplr];
 			infostr = target._pName;
 			ClearPanel();
-			strcpy(tempstr, fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel).c_str());
-			AddPanelString(tempstr);
-			strcpy(tempstr, fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6).c_str());
-			AddPanelString(tempstr);
+			AddPanelString(fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel));
+			AddPanelString(fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6).c_str());
 		}
 	}
 	if (infostr.length() > 0 || pnumlines != 0)

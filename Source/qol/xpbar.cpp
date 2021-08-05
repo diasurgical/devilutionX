@@ -125,8 +125,7 @@ bool CheckXPBarInfo()
 
 	const int8_t charLevel = player._pLevel;
 
-	strcpy(tempstr, fmt::format(_("Level {:d}"), charLevel).c_str());
-	AddPanelString(tempstr);
+	AddPanelString(fmt::format(_("Level {:d}"), charLevel));
 
 	if (charLevel == MAXCHARLEVEL - 1) {
 		// Show a maximum level indicator for max level players.

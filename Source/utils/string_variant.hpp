@@ -30,7 +30,18 @@ public:
 	{
 	}
 
+	explicit StringVariant(char *cstr)
+	    : str(cstr)
+	{
+	}
+
 	StringVariant &operator =(const char *cstr)
+	{
+		*this = StringVariant(cstr);
+		return *this;
+	}
+
+	StringVariant &operator =(char *cstr)
 	{
 		*this = StringVariant(cstr);
 		return *this;

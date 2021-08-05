@@ -1885,140 +1885,102 @@ void PrintItemOil(char iDidx)
 {
 	switch (iDidx) {
 	case IMISC_OILACC:
-		strcpy(tempstr, _("increases a weapon's"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("chance to hit"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increases a weapon's"));
+		AddPanelString(_("chance to hit"));
 		break;
 	case IMISC_OILMAST:
-		strcpy(tempstr, _("greatly increases a"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("weapon's chance to hit"));
-		AddPanelString(tempstr);
+		AddPanelString(_("greatly increases a"));
+		AddPanelString(_("weapon's chance to hit"));
 		break;
 	case IMISC_OILSHARP:
-		strcpy(tempstr, _("increases a weapon's"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("damage potential"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increases a weapon's"));
+		AddPanelString(_("damage potential"));
 		break;
 	case IMISC_OILDEATH:
-		strcpy(tempstr, _("greatly increases a weapon's"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("damage potential - not bows"));
-		AddPanelString(tempstr);
+		AddPanelString(_("greatly increases a weapon's"));
+		AddPanelString(_("damage potential - not bows"));
 		break;
 	case IMISC_OILSKILL:
-		strcpy(tempstr, _("reduces attributes needed"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("to use armor or weapons"));
-		AddPanelString(tempstr);
+		AddPanelString(_("reduces attributes needed"));
+		AddPanelString(_("to use armor or weapons"));
 		break;
 	case IMISC_OILBSMTH:
-		/*xgettext:no-c-format*/ strcpy(tempstr, _("restores 20% of an"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("item's durability"));
-		AddPanelString(tempstr);
+		/*xgettext:no-c-format*/ AddPanelString(_("restores 20% of an"));
+		AddPanelString(_("item's durability"));
 		break;
 	case IMISC_OILFORT:
-		strcpy(tempstr, _("increases an item's"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("current and max durability"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increases an item's"));
+		AddPanelString(_("current and max durability"));
 		break;
 	case IMISC_OILPERM:
-		strcpy(tempstr, _("makes an item indestructible"));
-		AddPanelString(tempstr);
+		AddPanelString(_("makes an item indestructible"));
 		break;
 	case IMISC_OILHARD:
-		strcpy(tempstr, _("increases the armor class"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("of armor and shields"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increases the armor class"));
+		AddPanelString(_("of armor and shields"));
 		break;
 	case IMISC_OILIMP:
-		strcpy(tempstr, _("greatly increases the armor"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("class of armor and shields"));
-		AddPanelString(tempstr);
+		AddPanelString(_("greatly increases the armor"));
+		AddPanelString(_("class of armor and shields"));
 		break;
 	case IMISC_RUNEF:
-		strcpy(tempstr, _("sets fire trap"));
-		AddPanelString(tempstr);
+		AddPanelString(_("sets fire trap"));
 		break;
 	case IMISC_RUNEL:
 	case IMISC_GR_RUNEL:
-		strcpy(tempstr, _("sets lightning trap"));
-		AddPanelString(tempstr);
+		AddPanelString(_("sets lightning trap"));
 		break;
 	case IMISC_GR_RUNEF:
-		strcpy(tempstr, _("sets fire trap"));
-		AddPanelString(tempstr);
+		AddPanelString(_("sets fire trap"));
 		break;
 	case IMISC_RUNES:
-		strcpy(tempstr, _("sets petrification trap"));
-		AddPanelString(tempstr);
+		AddPanelString(_("sets petrification trap"));
 		break;
 	case IMISC_FULLHEAL:
-		strcpy(tempstr, _("restore all life"));
-		AddPanelString(tempstr);
+		AddPanelString(_("restore all life"));
 		break;
 	case IMISC_HEAL:
-		strcpy(tempstr, _("restore some life"));
-		AddPanelString(tempstr);
+		AddPanelString(_("restore some life"));
 		break;
 	case IMISC_OLDHEAL:
-		strcpy(tempstr, _("recover life"));
-		AddPanelString(tempstr);
+		AddPanelString(_("recover life"));
 		break;
 	case IMISC_DEADHEAL:
-		strcpy(tempstr, _("deadly heal"));
-		AddPanelString(tempstr);
+		AddPanelString(_("deadly heal"));
 		break;
 	case IMISC_MANA:
-		strcpy(tempstr, _("restore some mana"));
-		AddPanelString(tempstr);
+		AddPanelString(_("restore some mana"));
 		break;
 	case IMISC_FULLMANA:
-		strcpy(tempstr, _("restore all mana"));
-		AddPanelString(tempstr);
+		AddPanelString(_("restore all mana"));
 		break;
 	case IMISC_ELIXSTR:
-		strcpy(tempstr, _("increase strength"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increase strength"));
 		break;
 	case IMISC_ELIXMAG:
-		strcpy(tempstr, _("increase magic"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increase magic"));
 		break;
 	case IMISC_ELIXDEX:
-		strcpy(tempstr, _("increase dexterity"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increase dexterity"));
 		break;
 	case IMISC_ELIXVIT:
-		strcpy(tempstr, _("increase vitality"));
-		AddPanelString(tempstr);
+		AddPanelString(_("increase vitality"));
 		break;
 	case IMISC_ELIXWEAK:
 	case IMISC_ELIXDIS:
-		strcpy(tempstr, _("decrease strength"));
-		AddPanelString(tempstr);
+		AddPanelString(_("decrease strength"));
 		break;
 	case IMISC_ELIXCLUM:
-		strcpy(tempstr, _("decrease dexterity"));
-		AddPanelString(tempstr);
+		AddPanelString(_("decrease dexterity"));
 		break;
 	case IMISC_ELIXSICK:
-		strcpy(tempstr, _("decrease vitality"));
-		AddPanelString(tempstr);
+		AddPanelString(_("decrease vitality"));
 		break;
 	case IMISC_REJUV:
-		strcpy(tempstr, _("restore some life and mana"));
-		AddPanelString(tempstr);
+		AddPanelString(_("restore some life and mana"));
 		break;
 	case IMISC_FULLREJUV:
-		strcpy(tempstr, _("restore all life and mana"));
-		AddPanelString(tempstr);
+		AddPanelString(_("restore all life and mana"));
 		break;
 	}
 }
@@ -2040,51 +2002,35 @@ void DrawUniqueInfoDevider(const Surface &out, int y)
 
 void PrintItemMisc(ItemStruct *x)
 {
-	if (x->_iMiscId == IMISC_SCROLL) {
-		strcpy(tempstr, _("Right-click to read"));
-		AddPanelString(tempstr);
-	}
+	if (x->_iMiscId == IMISC_SCROLL)
+		AddPanelString(_("Right-click to read"));
 	if (x->_iMiscId == IMISC_SCROLLT) {
-		strcpy(tempstr, _("Right-click to read, then"));
-		AddPanelString(tempstr);
-		strcpy(tempstr, _("left-click to target"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Right-click to read, then"));
+		AddPanelString(_("left-click to target"));
 	}
 	if (x->_iMiscId >= IMISC_USEFIRST && x->_iMiscId <= IMISC_USELAST) {
 		PrintItemOil(x->_iMiscId);
-		strcpy(tempstr, _("Right-click to use"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Right-click to use"));
 	}
 	if (x->_iMiscId > IMISC_OILFIRST && x->_iMiscId < IMISC_OILLAST) {
 		PrintItemOil(x->_iMiscId);
-		strcpy(tempstr, _("Right click to use"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Right click to use"));
 	}
 	if (x->_iMiscId > IMISC_RUNEFIRST && x->_iMiscId < IMISC_RUNELAST) {
 		PrintItemOil(x->_iMiscId);
-		strcpy(tempstr, _("Right click to use"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Right click to use"));
 	}
 	if (x->_iMiscId == IMISC_BOOK) {
-		strcpy(tempstr, _("Right-click to read"));
-		AddPanelString(tempstr);
+		AddPanelString(_("Right-click to read"));
 	}
-	if (x->_iMiscId == IMISC_NOTE) {
-		strcpy(tempstr, _("Right click to read"));
-		AddPanelString(tempstr);
-	}
-	if (x->_iMiscId == IMISC_MAPOFDOOM) {
-		strcpy(tempstr, _("Right-click to view"));
-		AddPanelString(tempstr);
-	}
-	if (x->_iMiscId == IMISC_EAR) {
-		strcpy(tempstr, fmt::format(_("Level: {:d}"), x->_ivalue).c_str());
-		AddPanelString(tempstr);
-	}
-	if (x->_iMiscId == IMISC_AURIC) {
-		strcpy(tempstr, _("Doubles gold capacity"));
-		AddPanelString(tempstr);
-	}
+	if (x->_iMiscId == IMISC_NOTE)
+		AddPanelString(_("Right click to read"));
+	if (x->_iMiscId == IMISC_MAPOFDOOM)
+		AddPanelString(_("Right-click to view"));
+	if (x->_iMiscId == IMISC_EAR)
+		AddPanelString(fmt::format(_("Level: {:d}"), x->_ivalue));
+	if (x->_iMiscId == IMISC_AURIC)
+		AddPanelString(_("Doubles gold capacity"));
 }
 
 void PrintItemInfo(ItemStruct *x)
@@ -4158,32 +4104,24 @@ void PrintItemDetails(ItemStruct *x)
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				strcpy(tempstr, fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam).c_str());
+				AddPanelString(fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam));
 			else
-				strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
+				AddPanelString(fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur));
 		} else {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam).c_str());
+				AddPanelString(fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam));
 			else
-				strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
+				AddPanelString(fmt::format(_(/* TRANSLATORS: Dur: is durability */ "damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur));
 		}
-		AddPanelString(tempstr);
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-			strcpy(tempstr, fmt::format(_("armor: {:d}  Indestructible"), x->_iAC).c_str());
+			AddPanelString(fmt::format(_("armor: {:d}  Indestructible"), x->_iAC));
 		else
-			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur).c_str());
-		AddPanelString(tempstr);
+			AddPanelString(fmt::format(_(/* TRANSLATORS: Dur: is durability */ "armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur));
 	}
-	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0) {
-		if (x->_iMinDam == x->_iMaxDam)
-			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: dam: is damage Dur: is durability */ "dam: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
-		else
-			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: dam: is damage Dur: is durability */ "dam: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
-		strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
-		AddPanelString(tempstr);
-	}
+	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0)
+		AddPanelString(fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges));
 	if (x->_iPrePower != -1) {
 		PrintItemPower(x->_iPrePower, x);
 		AddPanelString(tempstr);
@@ -4205,35 +4143,29 @@ void PrintItemDur(ItemStruct *x)
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				strcpy(tempstr, fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam).c_str());
+				AddPanelString(fmt::format(_("damage: {:d}  Indestructible"), x->_iMinDam));
 			else
-				strcpy(tempstr, fmt::format(_("damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur).c_str());
+				AddPanelString(fmt::format(_("damage: {:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iDurability, x->_iMaxDur));
 		} else {
 			if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam).c_str());
+				AddPanelString(fmt::format(_("damage: {:d}-{:d}  Indestructible"), x->_iMinDam, x->_iMaxDam));
 			else
-				strcpy(tempstr, fmt::format(_("damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur).c_str());
+				AddPanelString(fmt::format(_("damage: {:d}-{:d}  Dur: {:d}/{:d}"), x->_iMinDam, x->_iMaxDam, x->_iDurability, x->_iMaxDur));
 		}
-		AddPanelString(tempstr);
-		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges > 0) {
-			strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
-			AddPanelString(tempstr);
-		}
+		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges > 0)
+			AddPanelString(fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges));
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
 			AddPanelString(_("Not Identified"));
 	}
 	if (x->_iClass == ICLASS_ARMOR) {
 		if (x->_iMaxDur == DUR_INDESTRUCTIBLE)
-			strcpy(tempstr, fmt::format(_("armor: {:d}  Indestructible"), x->_iAC).c_str());
+			AddPanelString(fmt::format(_("armor: {:d}  Indestructible"), x->_iAC));
 		else
-			strcpy(tempstr, fmt::format(_("armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur).c_str());
-		AddPanelString(tempstr);
+			AddPanelString(fmt::format(_("armor: {:d}  Dur: {:d}/{:d}"), x->_iAC, x->_iDurability, x->_iMaxDur));
 		if (x->_iMagical != ITEM_QUALITY_NORMAL)
 			AddPanelString(_("Not Identified"));
-		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges > 0) {
-			strcpy(tempstr, fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges).c_str());
-			AddPanelString(tempstr);
-		}
+		if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges > 0)
+			AddPanelString(fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges));
 	}
 	if (x->_itype == ITYPE_RING || x->_itype == ITYPE_AMULET)
 		AddPanelString(_("Not Identified"));

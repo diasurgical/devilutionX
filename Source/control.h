@@ -69,7 +69,9 @@ void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
 
-void AddPanelString(const char *str);
+template <typename T>
+void AddPanelString(T str);
+
 void ClearPanel();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 
