@@ -4860,20 +4860,18 @@ void PrintUniqueHistory()
 	int res = monster.mMagicRes & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING);
 	if (res == 0) {
 		AddPanelString(_("No resistances"));
-		strcpy(tempstr, _("No Immunities"));
+		AddPanelString(_("No Immunities"));
 	} else {
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING)) != 0)
-			strcpy(tempstr, _("Some Magic Resistances"));
+			AddPanelString(_("Some Magic Resistances"));
 		else
-			strcpy(tempstr, _("No resistances"));
-		AddPanelString(tempstr);
+			AddPanelString(_("No resistances"));
 		if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
-			strcpy(tempstr, _("Some Magic Immunities"));
+			AddPanelString(_("Some Magic Immunities"));
 		} else {
-			strcpy(tempstr, _("No Immunities"));
+			AddPanelString(_("No Immunities"));
 		}
 	}
-	AddPanelString(tempstr);
 	pinfoflag = true;
 }
 
