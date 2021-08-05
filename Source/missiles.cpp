@@ -394,7 +394,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, b
 		blkper = GenerateRnd(100);
 	}
 
-	int blk = target._pDexterity + target._pBaseToBlk + (target._pLevel * 2) - (player._pLevel * 2);
+	int blk = target.GetBlockChance() - (player._pLevel * 2);
 	blk = clamp(blk, 0, 100);
 
 	int dam;
@@ -1141,7 +1141,7 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 	if (mtype == MIS_ACIDPUD)
 		blk = 100;
 
-	int blkper = player._pBaseToBlk + player._pDexterity;
+	int blkper = player.GetBlockChance(false);
 	if (monster != nullptr)
 		blkper -= (monster->mLevel - player._pLevel) * 2;
 	blkper = clamp(blkper, 0, 100);

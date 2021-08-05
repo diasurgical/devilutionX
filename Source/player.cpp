@@ -1110,7 +1110,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		blk = GenerateRnd(100);
 	}
 
-	int blkper = target._pDexterity + target._pBaseToBlk + (target._pLevel * 2) - (attacker._pLevel * 2);
+	int blkper = target.GetBlockChance() - (attacker._pLevel * 2);
 	blkper = clamp(blkper, 0, 100);
 
 	if (hit >= hper) {

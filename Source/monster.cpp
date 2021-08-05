@@ -1470,10 +1470,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
 		blkper = GenerateRnd(100);
 	}
-	int blk = player._pDexterity
-	    + player._pBaseToBlk
-	    - (monster.mLevel * 2)
-	    + (player._pLevel * 2);
+	int blk = player.GetBlockChance() - (monster.mLevel * 2);
 	blk = clamp(blk, 0, 100);
 	if (hper >= hit)
 		return;
