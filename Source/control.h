@@ -27,9 +27,9 @@ namespace devilution {
 
 #define SPANEL_WIDTH 320
 #define SPANEL_HEIGHT 352
-#define LEFT_PANEL_X (gnScreenWidth / 4 - SPANEL_WIDTH / 2)
+#define LEFT_PANEL_X 0
 #define LEFT_PANEL_Y ((gnScreenHeight - PANEL_HEIGHT - SPANEL_HEIGHT) / 2)
-#define RIGHT_PANEL_X (LEFT_PANEL_X + gnScreenWidth / 2)
+#define RIGHT_PANEL_X (gnScreenWidth - SPANEL_WIDTH)
 #define RIGHT_PANEL_Y LEFT_PANEL_Y
 
 extern bool drawhpflag;
