@@ -899,7 +899,7 @@ msgstr "Livro de feitiços"
 
 #: Source/control.cpp:219
 msgid "Send Message"
-msgstr "Enviar mensagem"
+msgstr "Enviar Mensagem"
 
 #: Source/control.cpp:654 Source/control.cpp:1104
 msgid "{:s} Skill"
@@ -938,7 +938,7 @@ msgstr "Cajado de {:s}"
 #: Source/control.cpp:691 Source/control.cpp:1143
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
-msgstr[0] "{:d} cargas"
+msgstr[0] "{:d} carga"
 msgstr[1] "{:d} cargas"
 
 #: Source/control.cpp:701
@@ -959,7 +959,7 @@ msgstr "Tecla de atalho: {:s}"
 
 #: Source/control.cpp:1093
 msgid "Select current spell button"
-msgstr "Selecionar feitiço atual"
+msgstr "Selecionar botão do feitiço atual"
 
 #: Source/control.cpp:1097
 msgid "Hotkey: 's'"
@@ -2774,7 +2774,7 @@ msgstr "Cristalino"
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:278
 msgid "Doppelganger's"
-msgstr "De Doppelganger"
+msgstr "Do Impostor"
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
@@ -3067,7 +3067,7 @@ msgstr "do choque"
 
 #: Source/itemdat.cpp:360
 msgid "lightning"
-msgstr "do raio"
+msgstr "do relâmpago"
 
 #: Source/itemdat.cpp:361
 msgid "thunder"
@@ -3644,7 +3644,7 @@ msgstr "reduz atributo requerido"
 
 #: Source/items.cpp:1914
 msgid "to use armor or weapons"
-msgstr "usar armaduras ou armas"
+msgstr "para usar armaduras ou armas"
 
 #: Source/items.cpp:1918
 #, no-c-format
@@ -3832,21 +3832,21 @@ msgstr "classe de armadura: {:d}"
 
 #: Source/items.cpp:3868 Source/items.cpp:4093
 msgid "Resist Fire: {:+d}%"
-msgstr "Resistência à fogo: {:+d}%"
+msgstr "Resistência a fogo: {:+d}%"
 
 #: Source/items.cpp:3870
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
-msgstr "Resistência à fogo: 75% MAX"
+msgstr "Resistência a fogo: 75% MAX"
 
 #: Source/items.cpp:3875
 msgid "Resist Lightning: {:+d}%"
-msgstr "Resistência à raios: {:+d}%"
+msgstr "Resistência a raios: {:+d}%"
 
 #: Source/items.cpp:3877
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
-msgstr "Resistir raios: 75% MÁX"
+msgstr "Resistência a raios: 75% MAX"
 
 #: Source/items.cpp:3882
 msgid "Resist Magic: {:+d}%"
@@ -3855,7 +3855,7 @@ msgstr "Resistência à magia: {:+d}%"
 #: Source/items.cpp:3884
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
-msgstr "Resistência à magia: 75% MÁX"
+msgstr "Resistência à magia: 75% MAX"
 
 #: Source/items.cpp:3889
 msgid "Resist All: {:+d}%"
