@@ -136,7 +136,7 @@ void AddSLine(int y)
 {
 	stext[y]._sx = 0;
 	stext[y]._syoff = 0;
-	stext[y]._sstr[0] = 0;
+	stext[y]._sstr = "";
 	stext[y]._sline = 1;
 }
 
@@ -150,11 +150,12 @@ void OffsetSTextY(int y, int yo)
 	stext[y]._syoff = yo;
 }
 
-void AddSText(int x, int y, const char *str, UiFlags flags, bool sel)
+template <typename T>
+void AddSText(int x, int y, T str, UiFlags flags, bool sel)
 {
 	stext[y]._sx = x;
 	stext[y]._syoff = 0;
-	strcpy(stext[y]._sstr, str);
+	stext[y]._sstr = str;
 	stext[y].flags = flags;
 	stext[y]._sline = 0;
 	stext[y]._ssel = sel;
@@ -2161,7 +2162,7 @@ int TakeGold(PlayerStruct &player, int cost, bool skipMaxPiles)
 	return cost;
 }
 
-void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, UiFlags flags)
+void DrawSelector(const Surface &out, const Rectangle &rect, string_view text, UiFlags flags)
 {
 	int lineWidth = GetLineWidth(text);
 
@@ -2251,7 +2252,7 @@ void FreeStoreMem()
 	pSTextSlidCels = std::nullopt;
 }
 
-void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price)
+void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price)
 {
 	int sx = PANEL_X + 32 + margin;
 	if (!stextsize) {
@@ -2308,7 +2309,7 @@ void ClearSText(int s, int e)
 	for (int i = s; i < e; i++) {
 		stext[i]._sx = 0;
 		stext[i]._syoff = 0;
-		stext[i]._sstr[0] = 0;
+		stext[i]._sstr = "";
 		stext[i].flags = UiFlags::None;
 		stext[i]._sline = 0;
 		stext[i]._ssel = false;
@@ -2452,7 +2453,7 @@ void DrawSText(const Surface &out)
 	for (int i = 0; i < STORE_LINES; i++) {
 		if (stext[i]._sline != 0)
 			DrawSLine(out, i);
-		if (stext[i]._sstr[0] != '\0')
+		if (stext[i]._sstr.length() > 0)
 			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
 	}
 

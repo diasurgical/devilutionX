@@ -47,7 +47,7 @@ enum talk_id : uint8_t {
 struct STextStruct {
 	int _sx;
 	int _syoff;
-	char _sstr[128];
+	StringVariant _sstr;
 	UiFlags flags;
 	int _sline;
 	bool _ssel;
@@ -98,7 +98,7 @@ void AddStoreHoldRepair(ItemStruct *itm, int8_t i);
 void InitStores();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
+void PrintSString(const Surface &out, int margin, int line, string_view text, UiFlags flags, int price = 0);
 void DrawSLine(const Surface &out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
