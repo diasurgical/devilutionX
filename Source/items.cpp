@@ -3785,293 +3785,299 @@ void DoOil(int pnum, int cii)
 	}
 }
 
-void PrintItemPower(char plidx, ItemStruct *x)
+StringVariant FormatItemPower(char plidx, ItemStruct *x)
 {
 	switch (plidx) {
 	case IPL_TOHIT:
 	case IPL_TOHIT_CURSE:
-		strcpy(tempstr, fmt::format(_("chance to hit: {:+d}%"), x->_iPLToHit).c_str());
-		break;
+		return StringVariant{ fmt::format(_("chance to hit: {:+d}%"), x->_iPLToHit) };
 	case IPL_DAMP:
 	case IPL_DAMP_CURSE:
-		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("{:+d}% damage"), x->_iPLDam).c_str());
+		/*xgettext:no-c-format*/ return StringVariant{ fmt::format(_("{:+d}% damage"), x->_iPLDam) };
 		break;
 	case IPL_TOHIT_DAMP:
 	case IPL_TOHIT_DAMP_CURSE:
-		strcpy(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
+		return StringVariant{ fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam) };
 		break;
 	case IPL_ACP:
 	case IPL_ACP_CURSE:
-		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("{:+d}% armor"), x->_iPLAC).c_str());
+		/*xgettext:no-c-format*/ return StringVariant{ fmt::format(_("{:+d}% armor"), x->_iPLAC) };
 		break;
 	case IPL_SETAC:
 	case IPL_AC_CURSE:
-		strcpy(tempstr, fmt::format(_("armor class: {:d}"), x->_iAC).c_str());
+		return StringVariant{ fmt::format(_("armor class: {:d}"), x->_iAC) };
 		break;
 	case IPL_FIRERES:
 	case IPL_FIRERES_CURSE:
 		if (x->_iPLFR < 75)
-			strcpy(tempstr, fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR).c_str());
+			return StringVariant{ fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR) };
 		else
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Fire: 75% MAX"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("Resist Fire: 75% MAX") };
 		break;
 	case IPL_LIGHTRES:
 	case IPL_LIGHTRES_CURSE:
 		if (x->_iPLLR < 75)
-			strcpy(tempstr, fmt::format(_("Resist Lightning: {:+d}%"), x->_iPLLR).c_str());
+			return StringVariant{ fmt::format(_("Resist Lightning: {:+d}%"), x->_iPLLR) };
 		else
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Lightning: 75% MAX"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("Resist Lightning: 75% MAX") };
 		break;
 	case IPL_MAGICRES:
 	case IPL_MAGICRES_CURSE:
 		if (x->_iPLMR < 75)
-			strcpy(tempstr, fmt::format(_("Resist Magic: {:+d}%"), x->_iPLMR).c_str());
+			return StringVariant{ fmt::format(_("Resist Magic: {:+d}%"), x->_iPLMR) };
 		else
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist Magic: 75% MAX"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("Resist Magic: 75% MAX") };
 		break;
 	case IPL_ALLRES:
 	case IPL_ALLRES_CURSE:
 		if (x->_iPLFR < 75)
-			strcpy(tempstr, fmt::format(_("Resist All: {:+d}%"), x->_iPLFR).c_str());
+			return StringVariant{ fmt::format(_("Resist All: {:+d}%"), x->_iPLFR) };
 		if (x->_iPLFR >= 75)
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("Resist All: 75% MAX"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("Resist All: 75% MAX") };
 		break;
 	case IPL_SPLLVLADD:
 		if (x->_iSplLvlAdd > 0)
-			strcpy(tempstr, fmt::format(ngettext("spells are increased {:d} level", "spells are increased {:d} levels", x->_iSplLvlAdd), x->_iSplLvlAdd).c_str());
+			return StringVariant{ fmt::format(ngettext("spells are increased {:d} level", "spells are increased {:d} levels", x->_iSplLvlAdd), x->_iSplLvlAdd) };
 		else if (x->_iSplLvlAdd < 0)
-			strcpy(tempstr, fmt::format(ngettext("spells are decreased {:d} level", "spells are decreased {:d} levels", -x->_iSplLvlAdd), -x->_iSplLvlAdd).c_str());
+			return StringVariant{ fmt::format(ngettext("spells are decreased {:d} level", "spells are decreased {:d} levels", -x->_iSplLvlAdd), -x->_iSplLvlAdd) };
 		else if (x->_iSplLvlAdd == 0)
-			strcpy(tempstr, _("spell levels unchanged (?)"));
+			return StringVariant{ _("spell levels unchanged (?)") };
 		break;
 	case IPL_CHARGES:
-		strcpy(tempstr, _("Extra charges"));
+		return StringVariant{ _("Extra charges") };
 		break;
 	case IPL_SPELL:
-		strcpy(tempstr, fmt::format(ngettext("{:d} {:s} charge", "{:d} {:s} charges", x->_iMaxCharges), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText)).c_str());
+		return StringVariant{ fmt::format(ngettext("{:d} {:s} charge", "{:d} {:s} charges", x->_iMaxCharges), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText)) };
 		break;
 	case IPL_FIREDAM:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			strcpy(tempstr, fmt::format(_("Fire hit damage: {:d}"), x->_iFMinDam).c_str());
+			return StringVariant{ fmt::format(_("Fire hit damage: {:d}"), x->_iFMinDam) };
 		else
-			strcpy(tempstr, fmt::format(_("Fire hit damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			return StringVariant{ fmt::format(_("Fire hit damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam) };
 		break;
 	case IPL_LIGHTDAM:
 		if (x->_iLMinDam == x->_iLMaxDam)
-			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}"), x->_iLMinDam).c_str());
+			return StringVariant{ fmt::format(_("Lightning hit damage: {:d}"), x->_iLMinDam) };
 		else
-			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
+			return StringVariant{ fmt::format(_("Lightning hit damage: {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam) };
 		break;
 	case IPL_STR:
 	case IPL_STR_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d} to strength"), x->_iPLStr).c_str());
+		return StringVariant{ fmt::format(_("{:+d} to strength"), x->_iPLStr) };
 		break;
 	case IPL_MAG:
 	case IPL_MAG_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d} to magic"), x->_iPLMag).c_str());
+		return StringVariant{ fmt::format(_("{:+d} to magic"), x->_iPLMag) };
 		break;
 	case IPL_DEX:
 	case IPL_DEX_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d} to dexterity"), x->_iPLDex).c_str());
+		return StringVariant{ fmt::format(_("{:+d} to dexterity"), x->_iPLDex) };
 		break;
 	case IPL_VIT:
 	case IPL_VIT_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d} to vitality"), x->_iPLVit).c_str());
+		return StringVariant{ fmt::format(_("{:+d} to vitality"), x->_iPLVit) };
 		break;
 	case IPL_ATTRIBS:
 	case IPL_ATTRIBS_CURSE:
-		strcpy(tempstr, fmt::format(_("{:+d} to all attributes"), x->_iPLStr).c_str());
+		return StringVariant{ fmt::format(_("{:+d} to all attributes"), x->_iPLStr) };
 		break;
 	case IPL_GETHIT_CURSE:
 	case IPL_GETHIT:
-		strcpy(tempstr, fmt::format(_("{:+d} damage from enemies"), x->_iPLGetHit).c_str());
+		return StringVariant{ fmt::format(_("{:+d} damage from enemies"), x->_iPLGetHit) };
 		break;
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
-		strcpy(tempstr, fmt::format(_("Hit Points: {:+d}"), x->_iPLHP >> 6).c_str());
+		return StringVariant{ fmt::format(_("Hit Points: {:+d}"), x->_iPLHP >> 6) };
 		break;
 	case IPL_MANA:
 	case IPL_MANA_CURSE:
-		strcpy(tempstr, fmt::format(_("Mana: {:+d}"), x->_iPLMana >> 6).c_str());
+		return StringVariant{ fmt::format(_("Mana: {:+d}"), x->_iPLMana >> 6) };
 		break;
 	case IPL_DUR:
-		strcpy(tempstr, _("high durability"));
+		return StringVariant{ _("high durability") };
 		break;
 	case IPL_DUR_CURSE:
-		strcpy(tempstr, _("decreased durability"));
+		return StringVariant{ _("decreased durability") };
 		break;
 	case IPL_INDESTRUCTIBLE:
-		strcpy(tempstr, _("indestructible"));
+		return StringVariant{ _("indestructible") };
 		break;
 	case IPL_LIGHT:
-		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("+{:d}% light radius"), 10 * x->_iPLLight).c_str());
+		/*xgettext:no-c-format*/ return StringVariant{ fmt::format(_("+{:d}% light radius"), 10 * x->_iPLLight) };
 		break;
 	case IPL_LIGHT_CURSE:
-		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("-{:d}% light radius"), -10 * x->_iPLLight).c_str());
+		/*xgettext:no-c-format*/ return StringVariant{ fmt::format(_("-{:d}% light radius"), -10 * x->_iPLLight) };
 		break;
 	case IPL_MULT_ARROWS:
-		strcpy(tempstr, _("multiple arrows per shot"));
+		return StringVariant{ _("multiple arrows per shot") };
 		break;
 	case IPL_FIRE_ARROWS:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			strcpy(tempstr, fmt::format(_("fire arrows damage: {:d}"), x->_iFMinDam).c_str());
+			return StringVariant{ fmt::format(_("fire arrows damage: {:d}"), x->_iFMinDam) };
 		else
-			strcpy(tempstr, fmt::format(_("fire arrows damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			return StringVariant{ fmt::format(_("fire arrows damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam) };
 		break;
 	case IPL_LIGHT_ARROWS:
 		if (x->_iLMinDam == x->_iLMaxDam)
-			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}"), x->_iLMinDam).c_str());
+			return StringVariant{ fmt::format(_("lightning arrows damage {:d}"), x->_iLMinDam) };
 		else
-			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
+			return StringVariant{ fmt::format(_("lightning arrows damage {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam) };
 		break;
 	case IPL_FIREBALL:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			strcpy(tempstr, fmt::format(_("fireball damage: {:d}"), x->_iFMinDam).c_str());
+			return StringVariant{ fmt::format(_("fireball damage: {:d}"), x->_iFMinDam) };
 		else
-			strcpy(tempstr, fmt::format(_("fireball damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			return StringVariant{ fmt::format(_("fireball damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam) };
 		break;
 	case IPL_THORNS:
-		strcpy(tempstr, _("attacker takes 1-3 damage"));
+		return StringVariant{ _("attacker takes 1-3 damage") };
 		break;
 	case IPL_NOMANA:
-		strcpy(tempstr, _("user loses all mana"));
+		return StringVariant{ _("user loses all mana") };
 		break;
 	case IPL_NOHEALPLR:
-		strcpy(tempstr, _("you can't heal"));
+		return StringVariant{ _("you can't heal") };
 		break;
 	case IPL_ABSHALFTRAP:
-		strcpy(tempstr, _("absorbs half of trap damage"));
+		return StringVariant{ _("absorbs half of trap damage") };
 		break;
 	case IPL_KNOCKBACK:
-		strcpy(tempstr, _("knocks target back"));
+		return StringVariant{ _("knocks target back") };
 		break;
 	case IPL_3XDAMVDEM:
-		/*xgettext:no-c-format*/ strcpy(tempstr, _("+200% damage vs. demons"));
+		/*xgettext:no-c-format*/ return StringVariant{ _("+200% damage vs. demons") };
 		break;
 	case IPL_ALLRESZERO:
-		strcpy(tempstr, _("All Resistance equals 0"));
+		return StringVariant{ _("All Resistance equals 0") };
 		break;
 	case IPL_NOHEALMON:
-		strcpy(tempstr, _("hit monster doesn't heal"));
+		return StringVariant{ _("hit monster doesn't heal") };
 		break;
 	case IPL_STEALMANA:
 		if ((x->_iFlags & ISPL_STEALMANA_3) != 0)
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% mana"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("hit steals 3% mana") };
 		if ((x->_iFlags & ISPL_STEALMANA_5) != 0)
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% mana"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("hit steals 5% mana") };
 		break;
 	case IPL_STEALLIFE:
 		if ((x->_iFlags & ISPL_STEALLIFE_3) != 0)
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 3% life"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("hit steals 3% life") };
 		if ((x->_iFlags & ISPL_STEALLIFE_5) != 0)
-			/*xgettext:no-c-format*/ strcpy(tempstr, _("hit steals 5% life"));
+			/*xgettext:no-c-format*/ return StringVariant{ _("hit steals 5% life") };
 		break;
 	case IPL_TARGAC:
-		strcpy(tempstr, _("penetrates target's armor"));
+		return StringVariant{ _("penetrates target's armor") };
 		break;
 	case IPL_FASTATTACK:
 		if ((x->_iFlags & ISPL_QUICKATTACK) != 0)
-			strcpy(tempstr, _("quick attack"));
+			return StringVariant{ _("quick attack") };
 		if ((x->_iFlags & ISPL_FASTATTACK) != 0)
-			strcpy(tempstr, _("fast attack"));
+			return StringVariant{ _("fast attack") };
 		if ((x->_iFlags & ISPL_FASTERATTACK) != 0)
-			strcpy(tempstr, _("faster attack"));
+			return StringVariant{ _("faster attack") };
 		if ((x->_iFlags & ISPL_FASTESTATTACK) != 0)
-			strcpy(tempstr, _("fastest attack"));
+			return StringVariant{ _("fastest attack") };
 		break;
 	case IPL_FASTRECOVER:
 		if ((x->_iFlags & ISPL_FASTRECOVER) != 0)
-			strcpy(tempstr, _("fast hit recovery"));
+			return StringVariant{ _("fast hit recovery") };
 		if ((x->_iFlags & ISPL_FASTERRECOVER) != 0)
-			strcpy(tempstr, _("faster hit recovery"));
+			return StringVariant{ _("faster hit recovery") };
 		if ((x->_iFlags & ISPL_FASTESTRECOVER) != 0)
-			strcpy(tempstr, _("fastest hit recovery"));
+			return StringVariant{ _("fastest hit recovery") };
 		break;
 	case IPL_FASTBLOCK:
-		strcpy(tempstr, _("fast block"));
+		return StringVariant{ _("fast block") };
 		break;
 	case IPL_DAMMOD:
-		strcpy(tempstr, fmt::format(ngettext("adds {:d} point to damage", "adds {:d} points to damage", x->_iPLDamMod), x->_iPLDamMod).c_str());
+		return StringVariant{ fmt::format(ngettext("adds {:d} point to damage", "adds {:d} points to damage", x->_iPLDamMod), x->_iPLDamMod) };
 		break;
 	case IPL_RNDARROWVEL:
-		strcpy(tempstr, _("fires random speed arrows"));
+		return StringVariant{ _("fires random speed arrows") };
 		break;
 	case IPL_SETDAM:
-		strcpy(tempstr, _("unusual item damage"));
+		return StringVariant{ _("unusual item damage") };
 		break;
 	case IPL_SETDUR:
-		strcpy(tempstr, _("altered durability"));
+		return StringVariant{ _("altered durability") };
 		break;
 	case IPL_FASTSWING:
-		strcpy(tempstr, _("Faster attack swing"));
+		return StringVariant{ _("Faster attack swing") };
 		break;
 	case IPL_ONEHAND:
-		strcpy(tempstr, _("one handed sword"));
+		return StringVariant{ _("one handed sword") };
 		break;
 	case IPL_DRAINLIFE:
-		strcpy(tempstr, _("constantly lose hit points"));
+		return StringVariant{ _("constantly lose hit points") };
 		break;
 	case IPL_RNDSTEALLIFE:
-		strcpy(tempstr, _("life stealing"));
+		return StringVariant{ _("life stealing") };
 		break;
 	case IPL_NOMINSTR:
-		strcpy(tempstr, _("no strength requirement"));
+		return StringVariant{ _("no strength requirement") };
 		break;
 	case IPL_INFRAVISION:
-		strcpy(tempstr, _("see with infravision"));
+		return StringVariant{ _("see with infravision") };
 		break;
 	case IPL_INVCURS:
-		strcpy(tempstr, " ");
+		return StringVariant{ " " };
 		break;
 	case IPL_ADDACLIFE:
 		if (x->_iFMinDam == x->_iFMaxDam)
-			strcpy(tempstr, fmt::format(_("lightning damage: {:d}"), x->_iFMinDam).c_str());
+			return StringVariant{ fmt::format(_("lightning damage: {:d}"), x->_iFMinDam) };
 		else
-			strcpy(tempstr, fmt::format(_("lightning damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam).c_str());
+			return StringVariant{ fmt::format(_("lightning damage: {:d}-{:d}"), x->_iFMinDam, x->_iFMaxDam) };
 		break;
 	case IPL_ADDMANAAC:
-		strcpy(tempstr, _("charged bolts on hits"));
+		return StringVariant{ _("charged bolts on hits") };
 		break;
 	case IPL_FIRERESCLVL:
 		if (x->_iPLFR <= 0)
-			strcpy(tempstr, " ");
+			return StringVariant{ " " };
 		else if (x->_iPLFR >= 1)
-			strcpy(tempstr, fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR).c_str());
+			return StringVariant{ fmt::format(_("Resist Fire: {:+d}%"), x->_iPLFR) };
 		break;
 	case IPL_DEVASTATION:
-		strcpy(tempstr, _("occasional triple damage"));
+		return StringVariant{ _("occasional triple damage") };
 		break;
 	case IPL_DECAY:
-		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("decaying {:+d}% damage"), x->_iPLDam).c_str());
+		/*xgettext:no-c-format*/ return StringVariant{ fmt::format(_("decaying {:+d}% damage"), x->_iPLDam) };
 		break;
 	case IPL_PERIL:
-		strcpy(tempstr, _("2x dmg to monst, 1x to you"));
+		return StringVariant{ _("2x dmg to monst, 1x to you") };
 		break;
 	case IPL_JESTERS:
-		/*xgettext:no-c-format*/ strcpy(tempstr, _("Random 0 - 500% damage"));
+		/*xgettext:no-c-format*/ return StringVariant{ _("Random 0 - 500% damage") };
 		break;
 	case IPL_CRYSTALLINE:
-		/*xgettext:no-c-format*/ strcpy(tempstr, fmt::format(_("low dur, {:+d}% damage"), x->_iPLDam).c_str());
+		/*xgettext:no-c-format*/ return StringVariant{ fmt::format(_("low dur, {:+d}% damage"), x->_iPLDam) };
 		break;
 	case IPL_DOPPELGANGER:
-		strcpy(tempstr, fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam).c_str());
+		return StringVariant{ fmt::format(_("to hit: {:+d}%, {:+d}% damage"), x->_iPLToHit, x->_iPLDam) };
 		break;
 	case IPL_ACDEMON:
-		strcpy(tempstr, _("extra AC vs demons"));
+		return StringVariant{ _("extra AC vs demons") };
 		break;
 	case IPL_ACUNDEAD:
-		strcpy(tempstr, _("extra AC vs undead"));
+		return StringVariant{ _("extra AC vs undead") };
 		break;
 	case IPL_MANATOLIFE:
-		/*xgettext:no-c-format*/ strcpy(tempstr, _("50% Mana moved to Health"));
+		/*xgettext:no-c-format*/ return StringVariant{ _("50% Mana moved to Health") };
 		break;
 	case IPL_LIFETOMANA:
-		/*xgettext:no-c-format*/ strcpy(tempstr, _("40% Health moved to Mana"));
+		/*xgettext:no-c-format*/ return StringVariant{ _("40% Health moved to Mana") };
 		break;
 	default:
-		strcpy(tempstr, _("Another ability (NW)"));
+		return StringVariant{ _("Another ability (NW)") };
 		break;
 	}
+}
+
+void PrintItemPower(char plidx, ItemStruct *x)
+{
+	string_view text = FormatItemPower(plidx, x);
+	strncpy(tempstr, text.data(), text.length());
+	tempstr[text.length()] = '\0';
 }
 
 void DrawUniqueInfo(const Surface &out)
@@ -4094,8 +4100,7 @@ void DrawUniqueInfo(const Surface &out)
 		if (power.type == IPL_INVALID)
 			break;
 		rect.position.y += 2 * 12;
-		PrintItemPower(power.type, &curruitem);
-		DrawString(out, tempstr, rect, UiFlags::ColorSilver | UiFlags::AlignCenter);
+		DrawString(out, FormatItemPower(power.type, &curruitem), rect, UiFlags::ColorSilver | UiFlags::AlignCenter);
 	}
 }
 
@@ -4122,14 +4127,10 @@ void PrintItemDetails(ItemStruct *x)
 	}
 	if (x->_iMiscId == IMISC_STAFF && x->_iMaxCharges != 0)
 		AddPanelString(fmt::format(_("Charges: {:d}/{:d}"), x->_iCharges, x->_iMaxCharges));
-	if (x->_iPrePower != -1) {
-		PrintItemPower(x->_iPrePower, x);
-		AddPanelString(tempstr);
-	}
-	if (x->_iSufPower != -1) {
-		PrintItemPower(x->_iSufPower, x);
-		AddPanelString(tempstr);
-	}
+	if (x->_iPrePower != -1)
+		AddPanelString(FormatItemPower(x->_iPrePower, x));
+	if (x->_iSufPower != -1)
+		AddPanelString(FormatItemPower(x->_iSufPower, x));
 	if (x->_iMagical == ITEM_QUALITY_UNIQUE) {
 		AddPanelString(_("unique item"));
 		ShowUniqueItemInfoBox = true;

@@ -787,6 +787,7 @@ template void AddPanelString<const char *>(const char *);
 template void AddPanelString<char *>(char *);
 template void AddPanelString<string_view>(string_view);
 template void AddPanelString<std::string>(std::string);
+template void AddPanelString<StringVariant>(StringVariant);
 
 void ClearPanel()
 {
