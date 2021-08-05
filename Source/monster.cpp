@@ -1458,14 +1458,14 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	hit += 2 * (monster.mLevel - player._pLevel)
 	    + 30
 	    - ac;
-	if (hit < 15)
-		hit = 15;
-	if (currlevel == 14 && hit < 20)
-		hit = 20;
-	if (currlevel == 15 && hit < 25)
-		hit = 25;
-	if (currlevel == 16 && hit < 30)
-		hit = 30;
+	int minhit = 15;
+	if (currlevel == 14)
+		minhit = 20;
+	if (currlevel == 15)
+		minhit = 25;
+	if (currlevel == 16)
+		minhit = 30;
+	hit = std::max(hit, minhit);
 	int blkper = 100;
 	if ((player._pmode == PM_STAND || player._pmode == PM_ATTACK) && player._pBlockFlag) {
 		blkper = GenerateRnd(100);
@@ -1474,10 +1474,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	    + player._pBaseToBlk
 	    - (monster.mLevel * 2)
 	    + (player._pLevel * 2);
-	if (blk < 0)
-		blk = 0;
-	if (blk > 100)
-		blk = 100;
+	blk = clamp(blk, 0, 100);
 	if (hper >= hit)
 		return;
 	if (blkper < blk) {

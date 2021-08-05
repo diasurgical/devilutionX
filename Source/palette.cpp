@@ -27,12 +27,7 @@ bool sgbFadedIn = true;
 void LoadGamma()
 {
 	int gammaValue = sgOptions.Graphics.nGammaCorrection;
-
-	if (gammaValue < 30) {
-		gammaValue = 30;
-	} else if (gammaValue > 100) {
-		gammaValue = 100;
-	}
+	gammaValue = clamp(gammaValue, 30, 100);
 	sgOptions.Graphics.nGammaCorrection = gammaValue - gammaValue % 5;
 }
 
