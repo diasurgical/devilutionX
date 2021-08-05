@@ -286,9 +286,9 @@ void StartSmithBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
+	std::string prompt = fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithBuy(stextsval);
@@ -350,9 +350,9 @@ bool StartSmithPremiumBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
+	std::string prompt = fmt::format(_("I have these premium items for sale:     Your gold: {:d}"), Players[MyPlayerId]._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
@@ -477,9 +477,9 @@ void StartSmithSell()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		strcpy(tempstr, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold).c_str());
+		std::string prompt = fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold);
 
-		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
 		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
@@ -492,9 +492,9 @@ void StartSmithSell()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold).c_str());
+	std::string prompt = fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
@@ -567,9 +567,9 @@ void StartSmithRepair()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		strcpy(tempstr, fmt::format(_("You have nothing to repair.             Your gold: {:d}"), myPlayer._pGold).c_str());
+		std::string prompt = fmt::format(_("You have nothing to repair.             Your gold: {:d}"), myPlayer._pGold);
 
-		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
 		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
@@ -582,9 +582,9 @@ void StartSmithRepair()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("Repair which item?             Your gold: {:d}"), myPlayer._pGold).c_str());
+	std::string prompt = fmt::format(_("Repair which item?             Your gold: {:d}"), myPlayer._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
@@ -657,9 +657,9 @@ void StartWitchBuy()
 	stextsmax = 20;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
+	std::string prompt = fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollWitchBuy(stextsval);
@@ -751,9 +751,9 @@ void StartWitchSell()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		strcpy(tempstr, fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold).c_str());
+		std::string prompt = fmt::format(_("You have nothing I want.             Your gold: {:d}"), myPlayer._pGold);
 
-		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
 		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
@@ -766,9 +766,9 @@ void StartWitchSell()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold).c_str());
+	std::string prompt = fmt::format(_("Which item is for sale?             Your gold: {:d}"), myPlayer._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
@@ -832,9 +832,9 @@ void StartWitchRecharge()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		strcpy(tempstr, fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), myPlayer._pGold).c_str());
+		std::string prompt = fmt::format(_("You have nothing to recharge.             Your gold: {:d}"), myPlayer._pGold);
 
-		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
 		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
@@ -847,9 +847,9 @@ void StartWitchRecharge()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("Recharge which item?             Your gold: {:d}"), myPlayer._pGold).c_str());
+	std::string prompt = fmt::format(_("Recharge which item?             Your gold: {:d}"), myPlayer._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
@@ -906,33 +906,34 @@ void StoreConfirm()
 	AddSTextVal(8, item._iIvalue);
 	PrintStoreItem(&item, 9, itemColor);
 
+	string_view prompt;
 	switch (stextshold) {
 	case STORE_BBOY:
-		strcpy(tempstr, _("Do we have a deal?"));
+		prompt = _("Do we have a deal?");
 		break;
 	case STORE_SIDENTIFY:
-		strcpy(tempstr, _("Are you sure you want to identify this item?"));
+		prompt = _("Are you sure you want to identify this item?");
 		break;
 	case STORE_HBUY:
 	case STORE_SPBUY:
 	case STORE_WBUY:
 	case STORE_SBUY:
-		strcpy(tempstr, _("Are you sure you want to buy this item?"));
+		prompt = _("Are you sure you want to buy this item?");
 		break;
 	case STORE_WRECHARGE:
-		strcpy(tempstr, _("Are you sure you want to recharge this item?"));
+		prompt = _("Are you sure you want to recharge this item?");
 		break;
 	case STORE_SSELL:
 	case STORE_WSELL:
-		strcpy(tempstr, _("Are you sure you want to sell this item?"));
+		prompt = _("Are you sure you want to sell this item?");
 		break;
 	case STORE_SREPAIR:
-		strcpy(tempstr, _("Are you sure you want to repair this item?"));
+		prompt = _("Are you sure you want to repair this item?");
 		break;
 	default:
 		app_fatal("Unknown store dialog %i", stextshold);
 	}
-	AddSText(0, 15, tempstr, UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+	AddSText(0, 15, prompt, UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	AddSText(0, 18, _("Yes"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 	AddSText(0, 20, _("No"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 }
@@ -962,9 +963,9 @@ void SStartBoyBuy()
 	stextscrl = false;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("I have this item for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
+	std::string prompt = fmt::format(_("I have this item for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	UiFlags itemColor = boyitem.getTextColorWithStatCheck();
@@ -1037,9 +1038,9 @@ void StartHealerBuy()
 	stextsval = 0;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold).c_str());
+	std::string prompt = fmt::format(_("I have these items for sale:             Your gold: {:d}"), Players[MyPlayerId]._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollHealerBuy(stextsval);
@@ -1155,9 +1156,9 @@ void StartStorytellerIdentify()
 		stextscrl = false;
 
 		/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-		strcpy(tempstr, fmt::format(_("You have nothing to identify.             Your gold: {:d}"), myPlayer._pGold).c_str());
+		std::string prompt = fmt::format(_("You have nothing to identify.             Your gold: {:d}"), myPlayer._pGold);
 
-		AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+		AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 		AddSLine(3);
 		AddSLine(21);
 		AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
@@ -1170,9 +1171,9 @@ void StartStorytellerIdentify()
 	stextsmax = myPlayer._pNumInv;
 
 	/* TRANSLATORS: This text is white space sensitive. Check for correct alignment! */
-	strcpy(tempstr, fmt::format(_("Identify which item?             Your gold: {:d}"), myPlayer._pGold).c_str());
+	std::string prompt = fmt::format(_("Identify which item?             Your gold: {:d}"), myPlayer._pGold);
 
-	AddSText(0, 1, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 1, std::move(prompt), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(3);
 	AddSLine(21);
 	ScrollSmithSell(stextsval);
@@ -1202,12 +1203,10 @@ void StartTalk()
 
 	stextsize = false;
 	stextscrl = false;
-	strcpy(tempstr, fmt::format(_("Talk to {:s}"), TownerNames[talker]).c_str());
-	AddSText(0, 2, tempstr, UiFlags::ColorGold | UiFlags::AlignCenter, false);
+	AddSText(0, 2, fmt::format(_("Talk to {:s}"), TownerNames[talker]), UiFlags::ColorGold | UiFlags::AlignCenter, false);
 	AddSLine(5);
 	if (gbIsSpawn) {
-		strcpy(tempstr, fmt::format(_("Talking to {:s}"), TownerNames[talker]).c_str());
-		AddSText(0, 10, tempstr, UiFlags::ColorSilver | UiFlags::AlignCenter, false);
+		AddSText(0, 10, fmt::format(_("Talking to {:s}"), TownerNames[talker]), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 		AddSText(0, 12, _("is not available"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 		AddSText(0, 14, _("in the shareware"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 		AddSText(0, 16, _("version"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
