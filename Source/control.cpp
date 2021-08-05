@@ -792,6 +792,8 @@ template void AddPanelString<StringVariant>(StringVariant);
 void ClearPanel()
 {
 	pnumlines = 0;
+	for (auto &str : panelstr)
+		str = "";
 	pinfoflag = false;
 }
 
