@@ -46,11 +46,11 @@ Checks: >
   performance-*,
   portability-*,
   readability-*,
+  -readability-magic-numbers,
   -modernize-avoid-c-arrays,
   -modernize-use-trailing-return-type,
   -modernize-concat-nested-namespaces,
-  -modernize-avoid-bind,
-  -readability-magic-numbers
+  -modernize-avoid-bind
 
 HeaderFilterRegex: "^(Source|test)\\.h$"
 
