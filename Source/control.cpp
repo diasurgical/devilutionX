@@ -46,7 +46,6 @@ int dropGoldValue;
 bool drawmanaflag;
 bool chrbtnactive;
 int pnumlines;
-bool pinfoflag;
 spell_id pSpell;
 UiFlags InfoColor;
 char tempstr[256];
@@ -792,7 +791,6 @@ void AddPanelString(const char *str)
 void ClearPanel()
 {
 	pnumlines = 0;
-	pinfoflag = false;
 }
 
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
@@ -1085,14 +1083,12 @@ void CheckPanelInfo()
 			}
 			InfoColor = UiFlags::ColorSilver;
 			panelflag = true;
-			pinfoflag = true;
 		}
 	}
 	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
 		strcpy(infostr, _("Select current spell button"));
 		InfoColor = UiFlags::ColorSilver;
 		panelflag = true;
-		pinfoflag = true;
 		strcpy(tempstr, _("Hotkey: 's'"));
 		AddPanelString(tempstr);
 		auto &myPlayer = Players[MyPlayerId];
@@ -1152,7 +1148,6 @@ void CheckPanelInfo()
 
 	if (CheckXPBarInfo()) {
 		panelflag = true;
-		pinfoflag = true;
 	}
 }
 
@@ -1269,7 +1264,6 @@ void DrawInfoBox(const Surface &out)
 		} else if (!myPlayer.HoldItem._iStatFlag) {
 			ClearPanel();
 			AddPanelString(_("Requirements not met"));
-			pinfoflag = true;
 		} else {
 			if (myPlayer.HoldItem._iIdentified)
 				strcpy(infostr, myPlayer.HoldItem._iIName);
