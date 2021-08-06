@@ -327,19 +327,19 @@ void LeftMouseDown(int wParam)
 
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 
-	if (MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH) {
+	if (!MainPanel.Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (QuestLogIsOpen && MousePosition.x > LEFT_PANEL_X + 32 && MousePosition.x < LEFT_PANEL_X + 288 && MousePosition.y > LEFT_PANEL_Y + 32 && MousePosition.y < LEFT_PANEL_Y + 308) {
+			if (QuestLogIsOpen && LeftPanel.Contains(MousePosition)) {
 				QuestlogESC();
 			} else if (qtextflag) {
 				qtextflag = false;
 				stream_stop();
-			} else if (chrflag && MousePosition.x > LEFT_PANEL_X && MousePosition.x < LEFT_PANEL_X + SPANEL_WIDTH && MousePosition.y > LEFT_PANEL_Y && MousePosition.y < LEFT_PANEL_Y + SPANEL_HEIGHT) {
+			} else if (chrflag && LeftPanel.Contains(MousePosition)) {
 				CheckChrBtns();
-			} else if (invflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
+			} else if (invflag && RightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld);
-			} else if (sbookflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
+			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
@@ -395,10 +395,9 @@ void RightMouseDown()
 		SetSpell();
 		return;
 	}
-	if (MousePosition.y <= RIGHT_PANEL_Y || MousePosition.y >= RIGHT_PANEL_Y + SPANEL_HEIGHT
-	    || ((!sbookflag || MousePosition.x <= RIGHT_PANEL_X || MousePosition.x >= RIGHT_PANEL_X + SPANEL_WIDTH)
+	if ((!sbookflag || !RightPanel.Contains(MousePosition))
 	        && !TryIconCurs()
-	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
+	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
 				CheckPlrSpell();

@@ -465,8 +465,11 @@ void AttrIncBtnSnap(AxisDirection dir)
 
 	// first, find our cursor location
 	int slot = 0;
+	Rectangle button;
 	for (int i = 0; i < 4; i++) {
-		if (ChrBtnsRect[i].Contains(MousePosition)) {
+		button = ChrBtnsRect[i];
+		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		if (button.Contains(MousePosition)) {
 			slot = i;
 			break;
 		}
@@ -481,14 +484,16 @@ void AttrIncBtnSnap(AxisDirection dir)
 	}
 
 	// move cursor to our new location
-	int x = ChrBtnsRect[slot].position.x + (ChrBtnsRect[slot].size.width / 2);
-	int y = ChrBtnsRect[slot].position.y + (ChrBtnsRect[slot].size.height / 2);
+	button = ChrBtnsRect[slot];
+	button.position = GetPanelPosition(UiPanels::Character, button.position);
+	int x = button.position.x + (button.size.width / 2);
+	int y = button.position.y + (button.size.height / 2);
 	SetCursorPos(x, y);
 }
 
 Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
 {
-	Point result { RIGHT_PANEL_X, RIGHT_PANEL_Y };
+	Point result = GetPanelPosition(UiPanels::Inventory);
 	result.x -= (icursW28 - 1) * (InventorySlotSizeInPixels.width / 2);
 	switch (invSlot) {
 	case INVLOC_HEAD:
@@ -558,7 +563,7 @@ Point InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 Point InvGetSlotCoord(int slot)
 {
 	assert(slot <= SLOTXY_INV_LAST);
-	return { InvRect[slot].x + RIGHT_PANEL_X, InvRect[slot].y + RIGHT_PANEL_Y };
+	return GetPanelPosition(UiPanels::Inventory, InvRect[slot]);
 }
 
 /**
@@ -567,7 +572,7 @@ Point InvGetSlotCoord(int slot)
 Point BeltGetSlotCoord(int slot)
 {
 	assert(slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST);
-	return { InvRect[slot].x + PANEL_LEFT, InvRect[slot].y + PANEL_TOP };
+	return GetPanelPosition(UiPanels::Main, InvRect[slot]);
 }
 
 /**

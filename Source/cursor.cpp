@@ -423,21 +423,21 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (MousePosition.y > PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= PANEL_LEFT + PANEL_WIDTH) {
+	if (MainPanel.Contains(MousePosition)) {
 		CheckPanelInfo();
 		return;
 	}
 	if (DoomFlag) {
 		return;
 	}
-	if (invflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
+	if (invflag && RightPanel.Contains(MousePosition)) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
+	if (sbookflag && RightPanel.Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && MousePosition.x > LEFT_PANEL_X && MousePosition.x < LEFT_PANEL_X + SPANEL_WIDTH && MousePosition.y > LEFT_PANEL_Y && MousePosition.y < LEFT_PANEL_Y + SPANEL_HEIGHT) {
+	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) {
 		return;
 	}
 

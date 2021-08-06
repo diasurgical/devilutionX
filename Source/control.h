@@ -27,10 +27,6 @@ namespace devilution {
 
 #define SPANEL_WIDTH 320
 #define SPANEL_HEIGHT 352
-#define LEFT_PANEL_X 0
-#define LEFT_PANEL_Y ((gnScreenHeight - PANEL_HEIGHT - SPANEL_HEIGHT) / 2)
-#define RIGHT_PANEL_X (gnScreenWidth - SPANEL_WIDTH)
-#define RIGHT_PANEL_Y LEFT_PANEL_Y
 
 extern bool drawhpflag;
 extern bool dropGoldFlag;
@@ -55,6 +51,9 @@ extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
+extern Rectangle MainPanel;
+extern Rectangle LeftPanel;
+extern Rectangle RightPanel;
 
 /**
  * @brief Check if the UI can cover the game area entierly
@@ -72,6 +71,7 @@ void ToggleSpell(int slot);
 void AddPanelString(const char *str);
 void ClearPanel();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
+Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
 
 /**
  * Draws the top dome of the life flask (that part that protrudes out of the control panel).
