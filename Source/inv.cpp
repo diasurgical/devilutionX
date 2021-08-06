@@ -1203,7 +1203,7 @@ void DrawInv(const Surface &out)
 		if (myPlayer.InvGrid[i] != 0) {
 			InvDrawSlotBack(
 			    out,
-			    InvRect[i + SLOTXY_INV_FIRST] + Displacement { rectRightPanel.position.x, rectRightPanel.position.y - 1 },
+			    GetPanelPosition(UiPanels::Inventory, InvRect[i + SLOTXY_INV_FIRST]) + Displacement { 0, -1 },
 			    InventorySlotSizeInPixels);
 		}
 	}
