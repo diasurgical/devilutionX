@@ -558,7 +558,7 @@ Point InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 Point InvGetSlotCoord(int slot)
 {
 	assert(slot <= SLOTXY_INV_LAST);
-	return GetPanelPosition(UiPanels::Inventory, { InvRect[slot].x, InvRect[slot].y });
+	return GetPanelPosition(UiPanels::Inventory, InvRect[slot]);
 }
 
 /**
