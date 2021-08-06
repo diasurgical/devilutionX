@@ -325,19 +325,19 @@ void LeftMouseDown(int wParam)
 
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 
-	if (MousePosition.y < PANEL_TOP || MousePosition.x < PANEL_LEFT || MousePosition.x >= PANEL_LEFT + PANEL_WIDTH) {
+	if (!rectMainPanel.Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (QuestLogIsOpen && MousePosition.x > LEFT_PANEL_X + 32 && MousePosition.x < LEFT_PANEL_X + 288 && MousePosition.y > LEFT_PANEL_Y + 32 && MousePosition.y < LEFT_PANEL_Y + 308) {
+			if (QuestLogIsOpen && rectLeftPanel.Contains(MousePosition)) {
 				QuestlogESC();
 			} else if (qtextflag) {
 				qtextflag = false;
 				stream_stop();
-			} else if (chrflag && MousePosition.x > LEFT_PANEL_X && MousePosition.x < LEFT_PANEL_X + SPANEL_WIDTH && MousePosition.y > LEFT_PANEL_Y && MousePosition.y < LEFT_PANEL_Y + SPANEL_HEIGHT) {
+			} else if (chrflag && rectLeftPanel.Contains(MousePosition)) {
 				CheckChrBtns();
-			} else if (invflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
+			} else if (invflag && rectRightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld);
-			} else if (sbookflag && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) {
+			} else if (sbookflag && rectRightPanel.Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
@@ -393,8 +393,8 @@ void RightMouseDown()
 		SetSpell();
 		return;
 	}
-	if (MousePosition.y <= RIGHT_PANEL_Y || MousePosition.y >= RIGHT_PANEL_Y + SPANEL_HEIGHT
-	    || ((!sbookflag || MousePosition.x <= RIGHT_PANEL_X || MousePosition.x >= RIGHT_PANEL_X + SPANEL_WIDTH)
+	if (MousePosition.y <= rectRightPanel.position.y || MousePosition.y >= rectRightPanel.position.y + SPANEL_HEIGHT
+	    || ((!sbookflag || MousePosition.x <= rectRightPanel.position.x || MousePosition.x >= rectRightPanel.position.x + SPANEL_WIDTH)
 	        && !TryIconCurs()
 	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {

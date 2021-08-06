@@ -34,6 +34,7 @@ extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
+Rectangle rectMainPanel;
 Rectangle rectLeftPanel;
 Rectangle rectRightPanel;
 
@@ -125,6 +126,7 @@ void CalculatePreferdWindowSize(int &width, int &height)
 
 void CalculateSubPanelArea(void)
 {
+	rectMainPanel = { { (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT }, { PANEL_WIDTH, PANEL_HEIGHT } };
 	rectLeftPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
 	rectRightPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
 

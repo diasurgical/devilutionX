@@ -43,6 +43,14 @@ enum class UiFlags {
 	// clang-format on
 };
 
+enum class UiPanels {
+	Main,
+	Quest,
+	Character,
+	Spell,
+	Inventory,
+};
+
 inline UiFlags operator|(UiFlags lhs, UiFlags rhs)
 {
 	using T = std::underlying_type_t<UiFlags>;

@@ -3544,12 +3544,12 @@ void CheckPlrSpell()
 		if (pcurs != CURSOR_HAND)
 			return;
 
-		if (MousePosition.y >= PANEL_TOP && MousePosition.x >= PANEL_LEFT && MousePosition.x <= PANEL_LEFT + PANEL_WIDTH) // inside main panel
+		if (rectMainPanel.Contains(MousePosition)) // inside main panel
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && MousePosition.x > LEFT_PANEL_X && MousePosition.x < LEFT_PANEL_X + SPANEL_WIDTH && MousePosition.y > LEFT_PANEL_Y && MousePosition.y < LEFT_PANEL_Y + SPANEL_HEIGHT) // inside left panel
-		    || ((invflag || sbookflag) && MousePosition.x > RIGHT_PANEL_X && MousePosition.x < RIGHT_PANEL_X + SPANEL_WIDTH && MousePosition.y > RIGHT_PANEL_Y && MousePosition.y < RIGHT_PANEL_Y + SPANEL_HEIGHT) // inside right panel
+		    ((chrflag || QuestLogIsOpen) && rectLeftPanel.Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && rectRightPanel.Contains(MousePosition)) // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY

@@ -488,7 +488,7 @@ void AttrIncBtnSnap(AxisDirection dir)
 
 Point InvGetEquipSlotCoord(const inv_body_loc invSlot)
 {
-	Point result { RIGHT_PANEL_X, RIGHT_PANEL_Y };
+	Point result = GetPanelPosition(UiPanels::Inventory);
 	result.x -= (icursW28 - 1) * (InventorySlotSizeInPixels.width / 2);
 	switch (invSlot) {
 	case INVLOC_HEAD:
@@ -558,7 +558,7 @@ Point InvGetEquipSlotCoordFromInvSlot(const inv_xy_slot slot)
 Point InvGetSlotCoord(int slot)
 {
 	assert(slot <= SLOTXY_INV_LAST);
-	return { InvRect[slot].x + RIGHT_PANEL_X, InvRect[slot].y + RIGHT_PANEL_Y };
+	return GetPanelPosition(UiPanels::Inventory, { InvRect[slot].x, InvRect[slot].y });
 }
 
 /**
@@ -567,7 +567,7 @@ Point InvGetSlotCoord(int slot)
 Point BeltGetSlotCoord(int slot)
 {
 	assert(slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST);
-	return { InvRect[slot].x + PANEL_LEFT, InvRect[slot].y + PANEL_TOP };
+	return GetPanelPosition(UiPanels::Main, { InvRect[slot].x, InvRect[slot].y });
 }
 
 /**
