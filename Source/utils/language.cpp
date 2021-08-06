@@ -237,21 +237,21 @@ const char *LanguageMetadata(const char *key)
 
 bool HasTranslation(const std::string &locale)
 {
-	std::string gmoPath = paths::LangPath() + locale + ".gmo";
-	if (FileExists(gmoPath.c_str()))
+	std::string moPath = paths::LangPath() + locale + ".mo";
+	if (FileExists(moPath.c_str()))
 		return true;
 
-	std::string moPath = paths::LangPath() + locale + ".mo";
-	return FileExists(moPath.c_str());
+	std::string gmoPath = paths::LangPath() + locale + ".gmo";
+	return FileExists(gmoPath.c_str());
 }
 
 void LanguageInitialize()
 {
 	SDL_RWops *rw;
 
-	auto path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
+	auto path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
 	if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
-		path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
+		path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
 		if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
 			perror(path.c_str());
 			return;
