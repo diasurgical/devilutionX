@@ -93,11 +93,11 @@ void AddItemToLabelQueue(int id, int x, int y)
 
 bool IsMouseOverGameArea()
 {
-	if ((invflag || sbookflag) && rectRightPanel.Contains(MousePosition))
+	if ((invflag || sbookflag) && RightPanel.Contains(MousePosition))
 		return false;
-	if ((chrflag || QuestLogIsOpen) && rectLeftPanel.Contains(MousePosition))
+	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition))
 		return false;
-	if (rectMainPanel.Contains(MousePosition))
+	if (MainPanel.Contains(MousePosition))
 		return false;
 
 	return true;

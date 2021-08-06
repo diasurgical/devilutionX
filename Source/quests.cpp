@@ -798,8 +798,8 @@ void QuestlogEnter()
 
 void QuestlogESC()
 {
-	Rectangle innerArea = { { rectLeftPanel.position.x + 32, rectLeftPanel.position.y + 32 }, { 288 - 32, 308 - 32 } };
-	int y = (MousePosition.y - rectLeftPanel.position.y - 32) / 12;
+	Rectangle innerArea = { { LeftPanel.position.x + 32, LeftPanel.position.y + 32 }, { 288 - 32, 308 - 32 } };
+	int y = (MousePosition.y - LeftPanel.position.y - 32) / 12;
 	if (!innerArea.Contains(MousePosition))
 		return;
 	for (int i = 0; i < numqlines; i++) {

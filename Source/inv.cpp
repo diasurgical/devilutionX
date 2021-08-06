@@ -364,8 +364,8 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
-		int xo = rectRightPanel.position.x;
-		int yo = rectRightPanel.position.y;
+		int xo = RightPanel.position.x;
+		int yo = RightPanel.position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
 			xo = PANEL_LEFT;
 			yo = PANEL_TOP;
@@ -708,8 +708,8 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = rectRightPanel.position.x;
-		int yo = rectRightPanel.position.y;
+		int xo = RightPanel.position.x;
+		int yo = RightPanel.position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
 			xo = PANEL_LEFT;
 			yo = PANEL_TOP;
@@ -1188,8 +1188,8 @@ void DrawInv(const Surface &out)
 						LightTableIndex = 0;
 						cel_transparency_active = true;
 
-						const int dstX = rectRightPanel.position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-						const int dstY = rectRightPanel.position.y + slotPos[INVLOC_HAND_RIGHT].y;
+						const int dstX = RightPanel.position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
+						const int dstY = RightPanel.position.y + slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
 						cel_transparency_active = false;
@@ -1880,8 +1880,8 @@ char CheckInvHLight()
 {
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = rectRightPanel.position.x;
-		int yo = rectRightPanel.position.y;
+		int xo = RightPanel.position.x;
+		int yo = RightPanel.position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
 			xo = PANEL_LEFT;
 			yo = PANEL_TOP;

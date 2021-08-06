@@ -325,19 +325,19 @@ void LeftMouseDown(int wParam)
 
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 
-	if (!rectMainPanel.Contains(MousePosition)) {
+	if (!MainPanel.Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
-			if (QuestLogIsOpen && rectLeftPanel.Contains(MousePosition)) {
+			if (QuestLogIsOpen && LeftPanel.Contains(MousePosition)) {
 				QuestlogESC();
 			} else if (qtextflag) {
 				qtextflag = false;
 				stream_stop();
-			} else if (chrflag && rectLeftPanel.Contains(MousePosition)) {
+			} else if (chrflag && LeftPanel.Contains(MousePosition)) {
 				CheckChrBtns();
-			} else if (invflag && rectRightPanel.Contains(MousePosition)) {
+			} else if (invflag && RightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld);
-			} else if (sbookflag && rectRightPanel.Contains(MousePosition)) {
+			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
@@ -393,9 +393,9 @@ void RightMouseDown()
 		SetSpell();
 		return;
 	}
-	if ((!sbookflag || !rectRightPanel.Contains(MousePosition))
+	if ((!sbookflag || !RightPanel.Contains(MousePosition))
 	        && !TryIconCurs()
-	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
+	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
 				CheckPlrSpell();

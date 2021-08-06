@@ -2026,13 +2026,13 @@ void PrintItemOil(char iDidx)
 void DrawUniqueInfoWindow(const Surface &out)
 {
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 1);
-	DrawHalfTransparentRectTo(out, rectRightPanel.position.x - SPANEL_WIDTH + 27, rectRightPanel.position.y + 28, 265, 297);
+	DrawHalfTransparentRectTo(out, RightPanel.position.x - SPANEL_WIDTH + 27, RightPanel.position.y + 28, 265, 297);
 }
 
 void DrawUniqueInfoDevider(const Surface &out, int y)
 {
-	BYTE *src = out.at(26 + rectRightPanel.position.x - SPANEL_WIDTH, rectRightPanel.position.y + 25);
-	BYTE *dst = out.at(26 + rectRightPanel.position.x - SPANEL_WIDTH, rectRightPanel.position.y + y * 12 + 38);
+	BYTE *src = out.at(26 + RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y + 25);
+	BYTE *dst = out.at(26 + RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y + y * 12 + 38);
 
 	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
@@ -4130,13 +4130,13 @@ void PrintItemPower(char plidx, ItemStruct *x)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	if ((chrflag || QuestLogIsOpen) && rectLeftPanel.Contains({ rectRightPanel.position.x - SPANEL_WIDTH, rectRightPanel.position.y })) {
+	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains({ RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y })) {
 		return;
 	}
 
 	DrawUniqueInfoWindow(GlobalBackBuffer());
 
-	Rectangle rect { { 32 + rectRightPanel.position.x - SPANEL_WIDTH, 44 + rectRightPanel.position.y + 2 * 12 }, { 257, 0 } };
+	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 2 * 12 }, { 257, 0 } };
 	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 

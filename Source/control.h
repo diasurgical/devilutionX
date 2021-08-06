@@ -52,9 +52,9 @@ extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
-extern Rectangle rectMainPanel;
-extern Rectangle rectLeftPanel;
-extern Rectangle rectRightPanel;
+extern Rectangle MainPanel;
+extern Rectangle LeftPanel;
+extern Rectangle RightPanel;
 
 /**
  * @brief Check if the UI can cover the game area entierly

@@ -815,18 +815,19 @@ bool IsPanelOpen(UiPanels panel)
 
 Point GetPanelPosition(UiPanels panel, Point offset)
 {
-	switch(panel)
-	{
+	Displacement displacement { offset.x, offset.y };
+
+	switch (panel) {
 	case UiPanels::Main:
-		return { rectMainPanel.position.x + offset.x, rectMainPanel.position.y + offset.y };
+		return MainPanel.position + displacement;
 	case UiPanels::Quest:
 	case UiPanels::Character:
-		return { rectLeftPanel.position.x + offset.x, rectLeftPanel.position.y + offset.y };
+		return LeftPanel.position + displacement;
 	case UiPanels::Spell:
 	case UiPanels::Inventory:
-		return { rectRightPanel.position.x + offset.x, rectRightPanel.position.y + offset.y };
+		return RightPanel.position + displacement;
 	default:
-		return { rectMainPanel.position.x + offset.x, rectMainPanel.position.y + offset.y };
+		return MainPanel.position + displacement;
 	}
 }
 
@@ -1609,7 +1610,7 @@ void CheckChrBtns()
 			continue;
 		}
 		auto buttonId = static_cast<size_t>(attribute);
-		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - rectLeftPanel.position.x, MousePosition.y - rectLeftPanel.position.y })) {
+		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - LeftPanel.position.x, MousePosition.y - LeftPanel.position.y })) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
 		}
@@ -1625,7 +1626,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			continue;
 
 		chrbtn[buttonId] = false;
-		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - rectLeftPanel.position.x, MousePosition.y - rectLeftPanel.position.y })) {
+		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - LeftPanel.position.x, MousePosition.y - LeftPanel.position.y })) {
 			auto &myPlayer = Players[MyPlayerId];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
@@ -1761,7 +1762,7 @@ void CheckSBook()
 	Rectangle iconArea = { GetPanelPosition(UiPanels::Spell, { 11, 18 }), { 48 - 11, 314 - 18 } };
 	Rectangle tabArea = { GetPanelPosition(UiPanels::Spell, { 7, 320 }), { 311 - 7, 349 - 320 } };
 	if (iconArea.Contains(MousePosition)) {
-		spell_id sn = SpellPages[sbooktab][(MousePosition.y - rectRightPanel.position.y - 18) / 43];
+		spell_id sn = SpellPages[sbooktab][(MousePosition.y - RightPanel.position.y - 18) / 43];
 		auto &myPlayer = Players[MyPlayerId];
 		uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
@@ -1778,7 +1779,7 @@ void CheckSBook()
 		}
 	}
 	if (tabArea.Contains(MousePosition)) {
-		sbooktab = (MousePosition.x - (rectRightPanel.position.x + 7)) / (gbIsHellfire ? 61 : 76);
+		sbooktab = (MousePosition.x - (RightPanel.position.x + 7)) / (gbIsHellfire ? 61 : 76);
 	}
 }
 

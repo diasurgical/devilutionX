@@ -423,21 +423,21 @@ void CheckCursMove()
 		cursmy = my;
 		return;
 	}
-	if (rectMainPanel.Contains(MousePosition)) {
+	if (MainPanel.Contains(MousePosition)) {
 		CheckPanelInfo();
 		return;
 	}
 	if (DoomFlag) {
 		return;
 	}
-	if (invflag && rectRightPanel.Contains(MousePosition)) {
+	if (invflag && RightPanel.Contains(MousePosition)) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && rectRightPanel.Contains(MousePosition)) {
+	if (sbookflag && RightPanel.Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && rectLeftPanel.Contains(MousePosition)) {
+	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) {
 		return;
 	}
 
