@@ -34,6 +34,8 @@ extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
+Rectangle rectLeftPanel;
+Rectangle rectRightPanel;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
@@ -119,6 +121,47 @@ void CalculatePreferdWindowSize(int &width, int &height)
 		height = mode.h / wFactor;
 	}
 #endif
+}
+
+void CalculateSubPanelArea(void)
+{
+	rectLeftPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
+	rectRightPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
+
+	switch(sgOptions.Gameplay.nSPanelHAlign)
+	{
+		case 0: // left
+			rectLeftPanel.position.x = 0;
+			break;
+		case 1: // center
+			rectLeftPanel.position.x = (gnScreenWidth / 2 - rectLeftPanel.size.width) / 2;
+			break;
+		case 2: // right
+			rectLeftPanel.position.x = gnScreenWidth / 2 - rectLeftPanel.size.width;
+			break;
+		default:
+			rectLeftPanel.position.x = 0;
+			break;
+	}
+
+	switch(sgOptions.Gameplay.nSPanelVAlign)
+	{
+		case 0: // top
+			rectLeftPanel.position.y = 0;
+			break;
+		case 1: // center
+			rectLeftPanel.position.y = (gnScreenHeight - rectLeftPanel.size.height - PANEL_HEIGHT) / 2;
+			break;
+		case 2: // bottom
+			rectLeftPanel.position.y = gnScreenHeight - rectLeftPanel.size.height - PANEL_HEIGHT;
+			break;
+		default:
+			rectLeftPanel.position.y = 0;
+			break;
+	}
+
+	rectRightPanel.position.x = gnScreenWidth - rectRightPanel.size.width - rectLeftPanel.position.x;
+	rectRightPanel.position.y = rectLeftPanel.position.y;
 }
 
 bool SpawnWindow(const char *lpWindowName)
@@ -252,6 +295,8 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 		AdjustToScreenGeometry(width, height);
 	}
+
+	CalculateSubPanelArea();
 
 	return ghMainWnd != nullptr;
 }
