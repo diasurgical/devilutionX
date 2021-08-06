@@ -34,9 +34,6 @@ extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
-Rectangle MainPanel;
-Rectangle LeftPanel;
-Rectangle RightPanel;
 
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
@@ -255,8 +252,6 @@ bool SpawnWindow(const char *lpWindowName)
 #endif
 		AdjustToScreenGeometry(width, height);
 	}
-
-	CalculatePanelAreas();
 
 	return ghMainWnd != nullptr;
 }

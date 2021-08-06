@@ -63,6 +63,9 @@ bool panelflag;
 int initialDropGoldValue;
 bool panbtndown;
 bool spselflag;
+Rectangle MainPanel;
+Rectangle LeftPanel;
+Rectangle RightPanel;
 
 extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
@@ -992,6 +995,8 @@ void InitControlPan()
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
+
+	CalculatePanelAreas();
 }
 
 void DrawCtrlPan(const Surface &out)
@@ -1651,7 +1656,9 @@ void CheckChrBtns()
 			continue;
 		}
 		auto buttonId = static_cast<size_t>(attribute);
-		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - LeftPanel.position.x, MousePosition.y - LeftPanel.position.y })) {
+		Rectangle button = ChrBtnsRect[buttonId];
+		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		if (button.Contains(MousePosition)) {
 			chrbtn[buttonId] = true;
 			chrbtnactive = true;
 		}
@@ -1667,7 +1674,9 @@ void ReleaseChrBtns(bool addAllStatPoints)
 			continue;
 
 		chrbtn[buttonId] = false;
-		if (ChrBtnsRect[buttonId].Contains({ MousePosition.x - LeftPanel.position.x, MousePosition.y - LeftPanel.position.y })) {
+		Rectangle button = ChrBtnsRect[buttonId];
+		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		if (button.Contains(MousePosition)) {
 			auto &myPlayer = Players[MyPlayerId];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
