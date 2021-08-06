@@ -393,8 +393,7 @@ void RightMouseDown()
 		SetSpell();
 		return;
 	}
-	if (MousePosition.y <= rectRightPanel.position.y || MousePosition.y >= rectRightPanel.position.y + SPANEL_HEIGHT
-	    || ((!sbookflag || MousePosition.x <= rectRightPanel.position.x || MousePosition.x >= rectRightPanel.position.x + SPANEL_WIDTH)
+	if ((!sbookflag || !rectRightPanel.Contains(MousePosition))
 	        && !TryIconCurs()
 	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem)))) {
 		if (pcurs == CURSOR_HAND) {
