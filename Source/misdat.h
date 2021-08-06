@@ -10,6 +10,7 @@
 
 #include "engine.h"
 #include "effects.h"
+#include "utils/autofill_array.h"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -127,11 +128,11 @@ struct MisFileData {
 	uint8_t animName;
 	uint8_t animFAmt;
 	uint32_t flags;
-	std::array<byte *, 16> animData = {};
-	std::array<uint8_t, 16> animDelay = {};
-	std::array<uint8_t, 16> animLen = {};
-	std::array<int16_t, 16> animWidth = {};
-	std::array<int16_t, 16> animWidth2 = {};
+	AutofillArray<byte *, 16> animData = {};
+	AutofillArray<uint8_t, 16> animDelay = {};
+	AutofillArray<uint8_t, 16> animLen = {};
+	AutofillArray<int16_t, 16> animWidth = {};
+	AutofillArray<int16_t, 16> animWidth2 = {};
 
 private:
 	std::vector<std::unique_ptr<byte[]>> pinnedMem;
@@ -146,24 +147,8 @@ public:
 	}
 
 	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-		    std::array<uint8_t, 16> animDelay, std::array<uint8_t, 16> animLen,
-		    std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2);
-
-	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-		    uint8_t animDelay, uint8_t animLen,
-		    int16_t animWidth, int16_t animWidth2);
-
-	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-		    uint8_t animDelay, std::array<uint8_t, 16> animLen,
-		    int16_t animWidth, int16_t animWidth2);
-
-	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-		    std::array<uint8_t, 16> animDelay, uint8_t animLen,
-		    int16_t animWidth, int16_t animWidth2);
-
-	MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-		    uint8_t animDelay, std::array<uint8_t, 16> animLen,
-		    std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2);
+		    AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
+		    AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
 
 	void LoadGFX();
 
