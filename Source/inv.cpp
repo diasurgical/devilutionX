@@ -1215,7 +1215,7 @@ void DrawInv(const Surface &out)
 
 			const auto &cel = GetInvItemSprite(frame);
 			const int celFrame = GetInvItemFrame(frame);
-			const Point position = GetPanelPosition(UiPanels::Inventory, { InvRect[j + SLOTXY_INV_FIRST].x, InvRect[j + SLOTXY_INV_FIRST].y - 1 });
+			const Point position = GetPanelPosition(UiPanels::Inventory, InvRect[j + SLOTXY_INV_FIRST]) + Displacement { 0, -1 };
 			if (pcursinvitem == ii + INVITEM_INV_FIRST) {
 				CelBlitOutlineTo(
 				    out,
