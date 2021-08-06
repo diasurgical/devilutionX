@@ -807,11 +807,11 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_FARMER:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0)
-				continue;
+			//if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0)
+			//	continue;
 			break;
 		case TOWN_COWFARM:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 || Quests[Q_FARMER]._qactive == 10)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 )
 				continue;
 			break;
 		case TOWN_GIRL:
