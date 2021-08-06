@@ -160,9 +160,14 @@ void SaveIni()
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorDefault()
 {
+#ifdef __ANDROID__
+	// See https://github.com/diasurgical/devilutionX/issues/2502
+	return false;
+#else
 	SDL_version v;
 	SDL_GetVersion(&v);
 	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
+#endif
 }
 #endif
 
