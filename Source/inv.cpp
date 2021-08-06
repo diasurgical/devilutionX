@@ -1184,7 +1184,7 @@ void DrawInv(const Surface &out)
 					if (myPlayer._pClass != HeroClass::Barbarian
 					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
 					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
-						InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, { slotPos[INVLOC_HAND_RIGHT].x, slotPos[INVLOC_HAND_RIGHT].y }), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
+						InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						LightTableIndex = 0;
 						cel_transparency_active = true;
 
