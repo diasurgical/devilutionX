@@ -51,6 +51,7 @@ int RowsCoveredByPanel();
 void CalcTileOffset(int *offsetX, int *offsetY);
 void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
+bool MarkObject4Search(int i);
 
 void ClearScreenBuffer();
 #ifdef _DEBUG

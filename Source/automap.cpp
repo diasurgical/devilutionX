@@ -33,6 +33,8 @@ enum MapColors : uint8_t {
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
+	/** color for objects on automap */
+	MapColorsObject = (PAL8_BLUE + 5), // same as used in DrawObject
 };
 
 struct AutomapTile {
@@ -278,7 +280,23 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
-			if (dItem[i][j] == 0)
+			bool  markCell = false;
+			uint8_t cellCollor;
+			if (dItem[i][j] != 0) {
+				markCell = true;
+				cellCollor = MapColorsItem;
+			}
+
+			if (dObject[i][j] != 0)
+			{
+				int o = dObject[i][j] > 0 ? dObject[i][j] - 1 : -dObject[i][j] + 1; // why? (copied from other place
+				if (MarkObject4Search(o)) {
+					markCell = true;
+					cellCollor = MapColorsObject;
+				}
+			}
+
+			if (!markCell)
 				continue;
 
 			int px = i - 2 * AutomapOffset.deltaX - ViewX;
@@ -296,7 +314,7 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 					screen.x += 160;
 			}
 			screen.y -= AmLine8;
-			DrawDiamond(out, screen, MapColorsItem);
+			DrawDiamond(out, screen, cellCollor);
 		}
 	}
 }

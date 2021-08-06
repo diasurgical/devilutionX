@@ -597,7 +597,7 @@ void DrawObject(const Surface &out, int x, int y, int ox, int oy, bool pre)
 	}
 
 	CelSprite cel { Objects[bv]._oAnimData, Objects[bv]._oAnimWidth };
-	if (bv == pcursobj)
+	if (bv == pcursobj || MarkObject4Search(bv))
 		CelBlitOutlineTo(out, 194, objectPosition, cel, Objects[bv]._oAnimFrame);
 	if (Objects[bv]._oLight) {
 		CelClippedDrawLightTo(out, objectPosition, cel, Objects[bv]._oAnimFrame);
@@ -1345,6 +1345,13 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 }
 
 } // namespace
+
+bool MarkObject4Search(int i)
+{
+	bool isCont   = Objects[i].isAnyContainer();
+	bool isEmpty  = Objects[i]._oSelFlag == 0;
+	return AutoMapShowItems && isCont && !isEmpty;
+}
 
 Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)
 {
