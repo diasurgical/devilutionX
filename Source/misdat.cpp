@@ -194,8 +194,8 @@ MisFileData MissileSpriteData[] = {
 };
 
 MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-			 std::array<uint8_t, 16> animDelay, std::array<uint8_t, 16> animLen,
-			 std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2)
+			 AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
+			 AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2)
 	: name(name)
 	, animName(animName)
 	, animFAmt(animFAmt)
@@ -209,55 +209,13 @@ MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, u
 		pinnedMem.reserve(1);
 	else
 		pinnedMem.reserve(animFAmt);
-}
 
-namespace  {
-
-template <typename T>
-constexpr std::array<T, 16> duplicate(T value, unsigned count)
-{
-	std::array<T, 16> ret = {};
-	for (unsigned i = 0; i < count; i++)
-		ret[i] = value;
-	return ret;
-}
-
-} //namespace
-
-MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-			 uint8_t animDelay, uint8_t animLen,
-			 int16_t animWidth, int16_t animWidth2)
-	: MisFileData(name, animName, animFAmt, flags,
-		      duplicate<uint8_t>(animDelay, animFAmt), duplicate<uint8_t>(animLen, animFAmt),
-		      duplicate<int16_t>(animWidth, animFAmt), duplicate<int16_t>(animWidth2, animFAmt))
-{
-}
-
-MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-			 uint8_t animDelay, std::array<uint8_t, 16> animLen,
-			 int16_t animWidth, int16_t animWidth2)
-	: MisFileData(name, animName, animFAmt, flags,
-		      duplicate<uint8_t>(animDelay, animFAmt), animLen,
-		      duplicate<int16_t>(animWidth, animFAmt), duplicate<int16_t>(animWidth2, animFAmt))
-{
-}
-
-MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-			 std::array<uint8_t, 16> animDelay, uint8_t animLen,
-			 int16_t animWidth, int16_t animWidth2)
-	: MisFileData(name, animName, animFAmt, flags,
-		      animDelay, duplicate<uint8_t>(animLen, animFAmt),
-		      duplicate<int16_t>(animWidth, animFAmt), duplicate<int16_t>(animWidth2, animFAmt))
-{
-}
-
-MisFileData::MisFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
-			 uint8_t animDelay, std::array<uint8_t, 16> animLen,
-			 std::array<int16_t, 16> animWidth, std::array<int16_t, 16> animWidth2)
-	: MisFileData(name, animName, animFAmt, flags,
-		      duplicate<uint8_t>(animDelay, animFAmt), animLen,
-		      animWidth, animWidth2)
-{
+	for (int i = animFAmt; i < 16; i++) {
+		animDelay[i] = 0;
+		animLen[i] = 0;
+		animWidth = 0;
+		animWidth2 = 0;
+	}
 }
 
 void MisFileData::LoadGFX()
