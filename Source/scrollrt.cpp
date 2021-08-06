@@ -1212,7 +1212,7 @@ void DrawView(const Surface &out, int startX, int startY)
 		DrawQuestLog(out);
 	}
 	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
-	    && (!QuestLogIsOpen || !rectLeftPanel.Contains({ rectMainPanel.position.x, rectMainPanel.position.y - 74 }))) {
+	    && (!QuestLogIsOpen || !rectLeftPanel.Contains(rectMainPanel + Displacement { 0,  -74 }))) {
 		DrawLevelUpIcon(out);
 	}
 	if (ShowUniqueItemInfoBox) {
