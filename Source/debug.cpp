@@ -20,9 +20,6 @@ std::optional<CelSprite> pSquareCel;
 
 namespace {
 
-char dMonsDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
-char dFlagDbg[NUMLEVELS][MAXDUNX][MAXDUNY];
-
 int DebugPlayerId;
 int DebugQuestId;
 int DebugMonsterId;
@@ -72,21 +69,6 @@ void LoadDebugGFX()
 void FreeDebugGFX()
 {
 	pSquareCel = std::nullopt;
-}
-
-void CheckDungeonClear()
-{
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) {
-			if (dMonster[i][j] != 0)
-				app_fatal("Monsters not cleared");
-			if (dPlayer[i][j] != 0)
-				app_fatal("Players not cleared");
-
-			dMonsDbg[currlevel][i][j] = dFlags[i][j] & BFLAG_VISIBLE;
-			dFlagDbg[currlevel][i][j] = dFlags[i][j] & BFLAG_POPULATED;
-		}
-	}
 }
 
 void GiveGoldCheat()

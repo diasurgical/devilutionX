@@ -141,7 +141,7 @@ void DrawHalfTransparentRectTo(const Surface &out, int sx, int sy, int width, in
  */
 Direction GetDirection(Point start, Point destination)
 {
-	Direction md = DIR_S;
+	Direction md;
 
 	int mx = destination.x - start.x;
 	int my = destination.y - start.y;
