@@ -123,18 +123,24 @@ typedef struct MissileData {
 	MissileMovementDistrubution MovementDistribution;
 } MissileDataStruct;
 
+enum class MissileDataFlags {
+	None        = 0,
+	NoGraphics  = 1 << 0,
+	NotAnimated = 1 << 1,
+};
+
 struct MissileFileData {
 	const char *name;
 	uint8_t animName;
 	uint8_t animFAmt;
-	uint32_t flags;
+	MissileDataFlags flags;
 	std::array<std::unique_ptr<byte[]>, 16> animData;
 	AutofillArray<uint8_t, 16> animDelay = {};
 	AutofillArray<uint8_t, 16> animLen = {};
 	AutofillArray<int16_t, 16> animWidth = {};
 	AutofillArray<int16_t, 16> animWidth2 = {};
 
-	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags)
+	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags)
 	    : name(name)
 	    , animName(animName)
 	    , animFAmt(animFAmt)
@@ -142,7 +148,7 @@ struct MissileFileData {
 	{
 	}
 
-	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, uint32_t flags,
+	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
 			AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
 			AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
 

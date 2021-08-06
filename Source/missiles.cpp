@@ -2377,7 +2377,7 @@ void InitMissileAnimationFromMonster(MissileStruct &mis, int midir, const Monste
 {
 	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
 	mis._mimfnum = midir;
-	mis._miAnimFlags = 0;
+	mis._miAnimFlags = MissileDataFlags::None;
 	const auto &celSprite = *anim.CelSpritesForDirections[midir];
 	mis._miAnimData = celSprite.Data();
 	mis._miAnimDelay = anim.Rate;
@@ -4733,7 +4733,7 @@ void ProcessMissiles()
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		auto &missile = Missiles[ActiveMissiles[i]];
 		MissileData[missile._mitype].mProc(ActiveMissiles[i]);
-		if ((missile._miAnimFlags & MFLAG_LOCK_ANIMATION) != 0)
+		if (missile._miAnimFlags == MissileDataFlags::NotAnimated)
 			continue;
 
 		missile._miAnimCnt++;
