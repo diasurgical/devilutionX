@@ -53,7 +53,7 @@ public:
 		return *this;
 	}
 
-	StringVariant &operator =(const std::string &str)
+	StringVariant &operator =(std::string &str)
 	{
 		*this = StringVariant(std::move(str));
 		return *this;
