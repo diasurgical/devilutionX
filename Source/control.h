@@ -46,7 +46,7 @@ extern UiFlags InfoColor;
 extern char tempstr[256];
 extern int sbooktab;
 extern spell_type pSplType;
-extern int initialDropGoldIndex;
+extern int8_t initialDropGoldIndex;
 extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
@@ -153,7 +153,7 @@ bool control_check_talk_btn();
 void control_release_talk_btn();
 void control_type_message();
 void control_reset_talk();
-bool control_talk_last_key(int vkey);
+bool control_talk_last_key(char vkey);
 bool control_presskeys(int vkey);
 
 extern Rectangle ChrBtnsRect[4];

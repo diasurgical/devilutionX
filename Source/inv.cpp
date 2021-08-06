@@ -1876,9 +1876,9 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	return ii;
 }
 
-char CheckInvHLight()
+int8_t CheckInvHLight()
 {
-	uint32_t r = 0;
+	int8_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
 		int xo = RIGHT_PANEL_X;
 		int yo = RIGHT_PANEL_Y;
@@ -1932,10 +1932,10 @@ char CheckInvHLight()
 		rv = INVLOC_CHEST;
 		pi = &myPlayer.InvBody[rv];
 	} else if (r >= SLOTXY_INV_FIRST && r <= SLOTXY_INV_LAST) {
-		r = abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
-		if (r == 0)
+		int8_t itemId = abs(myPlayer.InvGrid[r - SLOTXY_INV_FIRST]);
+		if (itemId == 0)
 			return -1;
-		int ii = r - 1;
+		int ii = itemId - 1;
 		rv = ii + INVITEM_INV_FIRST;
 		pi = &myPlayer.InvList[ii];
 	} else if (r >= SLOTXY_BELT_FIRST) {
