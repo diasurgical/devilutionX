@@ -30,6 +30,7 @@
 #include "trigs.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
+#include "options.h"
 
 namespace devilution {
 /**
@@ -793,6 +794,46 @@ void ClearPanel()
 {
 	pnumlines = 0;
 	pinfoflag = false;
+}
+
+void CalculatePanelAreas(void)
+{
+	MainPanel = { { (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT }, { PANEL_WIDTH, PANEL_HEIGHT } };
+	LeftPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
+	RightPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
+
+	switch (sgOptions.Gameplay.nSPanelHAlign) {
+	case 0: // left
+		LeftPanel.position.x = 0;
+		break;
+	case 1: // center
+		LeftPanel.position.x = (gnScreenWidth / 2 - LeftPanel.size.width) / 2;
+		break;
+	case 2: // right
+		LeftPanel.position.x = gnScreenWidth / 2 - LeftPanel.size.width;
+		break;
+	default:
+		LeftPanel.position.x = 0;
+		break;
+	}
+
+	switch (sgOptions.Gameplay.nSPanelVAlign) {
+	case 0: // top
+		LeftPanel.position.y = 0;
+		break;
+	case 1: // center
+		LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
+		break;
+	case 2: // bottom
+		LeftPanel.position.y = gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT;
+		break;
+	default:
+		LeftPanel.position.y = 0;
+		break;
+	}
+
+	RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
+	RightPanel.position.y = LeftPanel.position.y;
 }
 
 bool IsPanelOpen(UiPanels panel)
