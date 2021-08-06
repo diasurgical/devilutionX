@@ -567,7 +567,7 @@ Point InvGetSlotCoord(int slot)
 Point BeltGetSlotCoord(int slot)
 {
 	assert(slot >= SLOTXY_BELT_FIRST && slot <= SLOTXY_BELT_LAST);
-	return GetPanelPosition(UiPanels::Main, { InvRect[slot].x, InvRect[slot].y });
+	return GetPanelPosition(UiPanels::Main, InvRect[slot]);
 }
 
 /**
