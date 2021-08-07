@@ -1669,7 +1669,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 	SetupItem(ii);
 }
 
-int Char2int(char input)
+uint8_t Char2int(uint8_t input)
 {
 	if (input >= '0' && input <= '9')
 		return input - '0';
@@ -1678,10 +1678,10 @@ int Char2int(char input)
 	return 0;
 }
 
-void Hex2bin(const char *src, int bytes, char *target)
+void Hex2bin(const char *src, int bytes, uint8_t *target)
 {
 	for (int i = 0; i < bytes; i++, src += 2) {
-		target[i] = (Char2int(*src) << 4) | Char2int(src[1]);
+		target[i] = (Char2int(src[0]) << 4) | Char2int(src[1]);
 	}
 }
 
@@ -3535,22 +3535,22 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 void RecreateEar(int ii, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
 	SetPlrHandItem(&Items[ii], IDI_EAR);
-	tempstr[0] = (ic >> 8) & 0x7F;
-	tempstr[1] = ic & 0x7F;
-	tempstr[2] = (iseed >> 24) & 0x7F;
-	tempstr[3] = (iseed >> 16) & 0x7F;
-	tempstr[4] = (iseed >> 8) & 0x7F;
-	tempstr[5] = iseed & 0x7F;
-	tempstr[6] = id & 0x7F;
-	tempstr[7] = dur & 0x7F;
-	tempstr[8] = mdur & 0x7F;
-	tempstr[9] = ch & 0x7F;
-	tempstr[10] = mch & 0x7F;
-	tempstr[11] = (ivalue >> 8) & 0x7F;
-	tempstr[12] = (ibuff >> 24) & 0x7F;
-	tempstr[13] = (ibuff >> 16) & 0x7F;
-	tempstr[14] = (ibuff >> 8) & 0x7F;
-	tempstr[15] = ibuff & 0x7F;
+	tempstr[0] = static_cast<char>((ic >> 8) & 0x7F);
+	tempstr[1] = static_cast<char>(ic & 0x7F);
+	tempstr[2] = static_cast<char>((iseed >> 24) & 0x7F);
+	tempstr[3] = static_cast<char>((iseed >> 16) & 0x7F);
+	tempstr[4] = static_cast<char>((iseed >> 8) & 0x7F);
+	tempstr[5] = static_cast<char>(iseed & 0x7F);
+	tempstr[6] = static_cast<char>(id & 0x7F);
+	tempstr[7] = static_cast<char>(dur & 0x7F);
+	tempstr[8] = static_cast<char>(mdur & 0x7F);
+	tempstr[9] = static_cast<char>(ch & 0x7F);
+	tempstr[10] = static_cast<char>(mch & 0x7F);
+	tempstr[11] = static_cast<char>((ivalue >> 8) & 0x7F);
+	tempstr[12] = static_cast<char>((ibuff >> 24) & 0x7F);
+	tempstr[13] = static_cast<char>((ibuff >> 16) & 0x7F);
+	tempstr[14] = static_cast<char>((ibuff >> 8) & 0x7F);
+	tempstr[15] = static_cast<char>(ibuff & 0x7F);
 	tempstr[16] = '\0';
 	strcpy(Items[ii]._iName, fmt::format(_(/* TRANSLATORS: {:s} will be a Character Name */ "Ear of {:s}"), tempstr).c_str());
 	Items[ii]._iCurs = ((ivalue >> 6) & 3) + ICURS_EAR_SORCERER;
@@ -3566,7 +3566,7 @@ void CornerstoneSave()
 	if (!CornerStone.item.isEmpty()) {
 		PkItemStruct id;
 		PackItem(&id, &CornerStone.item);
-		BYTE *buffer = (BYTE *)&id;
+		const auto *buffer = reinterpret_cast<char *>(&id);
 		for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
 			sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
 		}
@@ -3599,7 +3599,7 @@ void CornerstoneLoad(Point position)
 	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
 		return;
 
-	Hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), (char *)&pkSItem);
+	Hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), reinterpret_cast<uint8_t *>(&pkSItem));
 
 	int ii = AllocateItem();
 

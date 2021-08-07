@@ -564,12 +564,12 @@ void PressKey(int vkey)
 /**
  * @internal `return` must be used instead of `break` to be bin exact as C++
  */
-void PressChar(int32_t vkey)
+void PressChar(char vkey)
 {
 	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
 		return;
 	}
-	if ((char)vkey == 'p' || (char)vkey == 'P') {
+	if (vkey == 'p' || vkey == 'P') {
 		diablo_pause_game();
 		return;
 	}
@@ -702,7 +702,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		ReleaseKey(wParam);
 		return;
 	case DVL_WM_CHAR:
-		PressChar(wParam);
+		PressChar((char)wParam);
 		return;
 	case DVL_WM_SYSKEYDOWN:
 		if (PressSysKey(wParam))

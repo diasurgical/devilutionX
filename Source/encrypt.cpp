@@ -16,7 +16,7 @@ namespace {
 
 unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	auto *pInfo = (TDataInfo *)param;
+	auto *pInfo = reinterpret_cast<TDataInfo *>(param);
 
 	uint32_t sSize;
 	if (*size >= pInfo->size - pInfo->srcOffset) {
@@ -33,7 +33,7 @@ unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOL
 
 void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	auto *pInfo = (TDataInfo *)param;
+	auto *pInfo = reinterpret_cast<TDataInfo *>(param);
 
 	memcpy(pInfo->destData + pInfo->destOffset, buf, *size);
 	pInfo->destOffset += *size;

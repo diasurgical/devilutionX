@@ -126,7 +126,7 @@ struct ShadowStruct {
 extern uint8_t dungeon[DMAXX][DMAXY];
 /** Contains a backup of the tile IDs of the map. */
 extern uint8_t pdungeon[DMAXX][DMAXY];
-extern char dflags[DMAXX][DMAXY];
+extern uint8_t dflags[DMAXX][DMAXY];
 /** Specifies the active set level X-coordinate of the map. */
 extern int setpc_x;
 /** Specifies the active set level Y-coordinate of the map. */

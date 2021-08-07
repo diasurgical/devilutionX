@@ -15,7 +15,7 @@ namespace devilution {
 
 uint8_t dungeon[DMAXX][DMAXY];
 uint8_t pdungeon[DMAXX][DMAXY];
-char dflags[DMAXX][DMAXY];
+uint8_t dflags[DMAXX][DMAXY];
 int setpc_x;
 int setpc_y;
 int setpc_w;

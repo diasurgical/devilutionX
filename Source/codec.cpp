@@ -8,6 +8,7 @@
 
 #include "appfat.h"
 #include "sha.h"
+#include "utils/endian.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -24,22 +25,22 @@ struct CodecSignature {
 
 void CodecInitKey(const char *pszPassword)
 {
-	char key[136]; // last 64 bytes are the SHA1
+	byte key[136]; // last 64 bytes are the SHA1
 	uint32_t randState = 0x7058;
-	for (char &notch : key) {
+	for (auto &notch : key) {
 		randState = randState * 214013 + 2531011;
-		notch = randState >> 16; // Downcasting to char keeps the 2 least-significant bytes
+		notch = static_cast<byte>(randState >> 16); // Downcasting to byte keeps the 2 least-significant bytes
 	}
 
-	char pw[64]; // Repeat password until 64 char long
+	byte pw[64]; // Repeat password until 64 char long
 	std::size_t j = 0;
 	for (std::size_t i = 0; i < sizeof(pw); i++, j++) {
 		if (pszPassword[j] == '\0')
 			j = 0;
-		pw[i] = pszPassword[j];
+		pw[i] = static_cast<byte>(pszPassword[j]);
 	}
 
-	char digest[SHA1HashSize];
+	byte digest[SHA1HashSize];
 	SHA1Reset(0);
 	SHA1Calculate(0, pw, digest);
 	SHA1Clear();
@@ -57,8 +58,8 @@ void CodecInitKey(const char *pszPassword)
 
 std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword)
 {
-	char buf[128];
-	char dst[SHA1HashSize];
+	byte buf[128];
+	byte dst[SHA1HashSize];
 
 	CodecInitKey(pszPassword);
 	if (size <= sizeof(CodecSignature))
@@ -78,13 +79,13 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	}
 
 	memset(buf, 0, sizeof(buf));
-	auto *sig = (CodecSignature *)pbSrcDst;
+	auto *sig = reinterpret_cast<CodecSignature *>(pbSrcDst);
 	if (sig->error > 0) {
 		goto error;
 	}
 
 	SHA1Result(0, dst);
-	if (sig->checksum != *(uint32_t *)dst) {
+	if (sig->checksum != *reinterpret_cast<uint32_t *>(dst)) {
 		memset(dst, 0, sizeof(dst));
 		goto error;
 	}
@@ -106,9 +107,9 @@ std::size_t codec_get_encoded_len(std::size_t dwSrcBytes)
 
 void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const char *pszPassword)
 {
-	char buf[128];
-	char tmp[SHA1HashSize];
-	char dst[SHA1HashSize];
+	byte buf[128];
+	byte tmp[SHA1HashSize];
+	byte dst[SHA1HashSize];
 
 	if (size64 != codec_get_encoded_len(size))
 		app_fatal("Invalid encode parameters");
@@ -133,10 +134,10 @@ void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const ch
 	}
 	memset(buf, 0, sizeof(buf));
 	SHA1Result(0, tmp);
-	auto *sig = (CodecSignature *)pbSrcDst;
+	auto *sig = reinterpret_cast<CodecSignature *>(pbSrcDst);
 	sig->error = 0;
 	sig->unused = 0;
-	sig->checksum = *(uint32_t *)&tmp[0];
+	sig->checksum = *reinterpret_cast<uint32_t *>(tmp);
 	sig->lastChunkSize = lastChunk;
 	SHA1Clear();
 }

@@ -52,7 +52,7 @@ UiFlags InfoColor;
 char tempstr[256];
 int sbooktab;
 spell_type pSplType;
-int initialDropGoldIndex;
+int8_t initialDropGoldIndex;
 bool talkflag;
 bool sbookflag;
 bool chrflag;
@@ -2005,7 +2005,7 @@ void control_reset_talk()
 	force_redraw = 255;
 }
 
-bool control_talk_last_key(int vkey)
+bool control_talk_last_key(char vkey)
 {
 	if (!gbIsMultiplayer)
 		return false;

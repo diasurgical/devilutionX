@@ -1644,7 +1644,7 @@ void LoadHeroItems(PlayerStruct &player)
 void RemoveEmptyInventory(PlayerStruct &player)
 {
 	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
-		int idx = player.InvGrid[i - 1];
+		int8_t idx = player.InvGrid[i - 1];
 		if (idx > 0 && player.InvList[idx - 1].isEmpty()) {
 			player.RemoveInvItem(idx - 1);
 		}

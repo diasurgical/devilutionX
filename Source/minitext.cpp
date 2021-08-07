@@ -83,7 +83,7 @@ uint32_t CalculateTextSpeed(int nSFX)
 
 int CalculateTextPosition()
 {
-	Uint32 currTime = SDL_GetTicks();
+	uint32_t currTime = SDL_GetTicks();
 
 	int y = (currTime - ScrollStart) / qtextSpd - 260;
 
