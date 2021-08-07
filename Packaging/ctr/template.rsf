@@ -5,7 +5,7 @@ BasicInfo:
 
 RomFs:
   # Specifies the root path of the read only file system to include in the ROM.
-  RootPath                : build/romfs
+  RootPath                : romfs
 
 TitleInfo:
   Category                : Application
