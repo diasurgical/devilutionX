@@ -12,3 +12,4 @@ build/
 /local.properties
 
 /app/src/main/assets/CharisSILB.ttf
+/app/src/main/assets/*.gmo
