@@ -264,8 +264,9 @@ void LoadOptions()
 	sgOptions.Gameplay.bRandomizeQuests = GetIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = GetIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bDisableCripplingShrines = GetIniBool("Game", "Disable Crippling Shrines", false);
+	sgOptions.Gameplay.bSPanelCustomPlacement = GetIniInt("Game", "Side Panel Custom Placement", 0);
 	sgOptions.Gameplay.nSPanelHAlign = GetIniInt("Game", "Side Panel Horizontal Alignment", 0);
-	sgOptions.Gameplay.nSPanelVAlign = GetIniInt("Game", "Side Panel Vertical Alignment", 0);
+	sgOptions.Gameplay.nSPanelVAlign = GetIniInt("Game", "Side Panel Vertical Alignment", 1);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -375,6 +376,7 @@ void SaveOptions()
 	SetIniValue("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
 	SetIniValue("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 	SetIniValue("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
+	SetIniValue("Game", "Side Panel Custom Placement", sgOptions.Gameplay.bSPanelCustomPlacement);
 	SetIniValue("Game", "Side Panel Horizontal Alignment", sgOptions.Gameplay.nSPanelHAlign);
 	SetIniValue("Game", "Side Panel Vertical Alignment", sgOptions.Gameplay.nSPanelVAlign);
 
