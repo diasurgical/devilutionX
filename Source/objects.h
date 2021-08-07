@@ -137,8 +137,8 @@ struct ObjectStruct {
 	 */
 	bool IsChest() const
 	{
-		return IsAnyOf(_otype, _object_id::OBJ_CHEST1,  _object_id::OBJ_CHEST2,  _object_id::OBJ_CHEST3,
-		                       _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3, _object_id::OBJ_SIGNCHEST);
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3,
+		    _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3, _object_id::OBJ_SIGNCHEST);
 	}
 
 	/**
@@ -148,19 +148,16 @@ struct ObjectStruct {
 	bool IsBookContainer() const
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_BOOKSHELF, _object_id::OBJ_BOOKCASEL, _object_id::OBJ_BOOKCASER,
-				               _object_id::OBJ_BOOKSTAND, _object_id::OBJ_SKELBOOK);
+		    _object_id::OBJ_BOOKSTAND, _object_id::OBJ_SKELBOOK);
 	}
 
 	bool isAnyContainer() const
 	{
-		return     IsChest()
-				|| IsBookContainer()
-				|| IsAnyOf(_otype, _object_id::OBJ_ARMORSTAND, _object_id::OBJ_WARARMOR, _object_id::OBJ_WARWEAP, _object_id::OBJ_WEAPONRACK,
-				                  _object_id::OBJ_SARC, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX,
-				                  _object_id::OBJ_DECAP
-				   );
-				                  
-
+		return IsChest()
+		    || IsBookContainer()
+		    || IsAnyOf(_otype, _object_id::OBJ_ARMORSTAND, _object_id::OBJ_WARARMOR, _object_id::OBJ_WARWEAP, _object_id::OBJ_WEAPONRACK,
+		        _object_id::OBJ_SARC, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX,
+		        _object_id::OBJ_DECAP);
 	}
 };
 

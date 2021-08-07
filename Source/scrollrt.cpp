@@ -1348,8 +1348,8 @@ void DrawMain(int dwHgt, bool drawDesc, bool drawHp, bool drawMana, bool drawSba
 
 bool MarkObject4Search(int i)
 {
-	bool isCont   = Objects[i].isAnyContainer();
-	bool isEmpty  = Objects[i]._oSelFlag == 0;
+	bool isCont = Objects[i].isAnyContainer();
+	bool isEmpty = Objects[i]._oSelFlag == 0;
 	return AutoMapShowItems && isCont && !isEmpty;
 }
 

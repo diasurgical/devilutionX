@@ -284,15 +284,14 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
-			bool  markCell = false;
+			bool markCell = false;
 			uint8_t cellCollor;
 			if (dItem[i][j] != 0) {
 				markCell = true;
 				cellCollor = MapColorsItem;
 			}
 
-			if (dObject[i][j] != 0)
-			{
+			if (dObject[i][j] != 0) {
 				int o = dObject[i][j] > 0 ? dObject[i][j] - 1 : -dObject[i][j] + 1; // why? (copied from other place
 				if (MarkObject4Search(o)) {
 					markCell = true;
