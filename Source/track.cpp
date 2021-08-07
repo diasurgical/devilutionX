@@ -10,6 +10,7 @@
 #include "cursor.h"
 #include "engine/point.hpp"
 #include "player.h"
+#include "stores.h"
 
 namespace devilution {
 
@@ -38,6 +39,9 @@ void RepeatMouseAction()
 		return;
 
 	if (sgbMouseDown == CLICK_NONE)
+		return;
+
+	if (stextflag != STORE_NONE)
 		return;
 
 	if (LastMouseButtonAction == MouseActionType::None)
