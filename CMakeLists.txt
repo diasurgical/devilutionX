@@ -917,7 +917,7 @@ if(NINTENDO_3DS)
   set(APP_AUTHOR      "Diasurgical Team")
   set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
   set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
-  set(APP_AUDIO       "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner_audio.wav")
+  set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   set(APP_ROMFS_FILES
@@ -927,7 +927,15 @@ if(NINTENDO_3DS)
 
   find_program(FFMPEG ffmpeg)
   if(FFMPEG)
-    execute_process(COMMAND ${FFMPEG} -y -ss 3.3 -t 3 -i "${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav" -af "afade=t=in:st=0:d=0.1,afade=t=out:st=2.9:d=0.1" ${APP_AUDIO})
+    add_custom_command(OUTPUT ${APP_AUDIO}
+      COMMAND ${FFMPEG} -y -ss 3.3 -t 3 -i "${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav" -af "afade=t=in:st=0:d=0.1,afade=t=out:st=2.9:d=0.1" ${APP_AUDIO}
+      DEPENDS ${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav
+      VERBATIM)
+  else()
+    add_custom_command(OUTPUT ${APP_AUDIO}
+      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav ${APP_AUDIO}
+      DEPENDS ${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav
+      VERBATIM)
   endif()
 
   file(MAKE_DIRECTORY ${APP_ROMFS})
