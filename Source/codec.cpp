@@ -29,7 +29,7 @@ void CodecInitKey(const char *pszPassword)
 	uint32_t randState = 0x7058;
 	for (auto &notch : key) {
 		randState = randState * 214013 + 2531011;
-		notch = static_cast<byte>(randState >> 16); // Downcasting to char keeps the 2 least-significant bytes
+		notch = static_cast<byte>(randState >> 16); // Downcasting to byte keeps the 2 least-significant bytes
 	}
 
 	byte pw[64]; // Repeat password until 64 char long
