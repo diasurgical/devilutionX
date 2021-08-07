@@ -608,7 +608,7 @@ endif()
 
 if(USE_GETTEXT)
   find_package(Gettext)
-  foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN)
+  foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
   endforeach(lang)
 endif()
