@@ -936,7 +936,7 @@ if(NINTENDO_3DS)
 
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
-  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO} ${APP_ROMFS})
+  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
 endif()
 
 if(CPACK)
