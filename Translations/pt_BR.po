@@ -5593,7 +5593,7 @@ msgstr "Não é possível carregar o personagem"
 
 #: Source/pfile.cpp:408 Source/pfile.cpp:428
 msgid "Unable to read to save file archive"
-msgstr "Não é possível ler para salvar o arquivo"
+msgstr "Não foi possível ler para salvar o arquivo"
 
 #: Source/pfile.cpp:447
 msgid "Unable to write to save file archive"
