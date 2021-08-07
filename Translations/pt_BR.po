@@ -1408,7 +1408,7 @@ msgstr "A salvação vem à custa de sabedoria"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:65
 msgid "Mysteries are revealed in the light of reason"
-Mistérios são revelados à luz da razão
+msgstr "Mistérios são revelados à luz da razão"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:66
@@ -1577,7 +1577,7 @@ msgstr "Espaço: Ocultar todas as telas de informação"
 
 #: Source/help.cpp:31
 msgid "S: Open Speedbook"
-msgstr "S: Abrir livro da velocidade"
+msgstr "S: Abrir livro de acesso rápido"
 
 #: Source/help.cpp:32
 msgid "B: Open Spellbook"
@@ -1627,7 +1627,7 @@ msgstr "Shift + botão esquerdo do mouse: Atacar sem se mover"
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
 msgstr ""
-"Shift + clique esquerdo (na tela de personagem): Atribuir todos os pontos de "
+"Shift + clique esquerdo do mouse (na tela de personagem): Adicionar todos os pontos em um mesmo atributo "
 "estatística"
 
 #: Source/help.cpp:44
@@ -1731,7 +1731,7 @@ msgstr ""
 
 #: Source/help.cpp:79
 msgid "$Using the Speedbook for Spells"
-msgstr "$Uso do Livro da velocidade para feitiços"
+msgstr "$Uso do Livro de acesso rápido para feitiços"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1740,7 +1740,7 @@ msgid ""
 "skill or spell, simply right-click in the main play area."
 msgstr ""
 "Ao clicar com o botão esquerdo no botão 'feitiço preparado' será aberto o "
-"'Livro da velocidade' que lhe permite selecionar uma habilidade ou feitiço "
+"'Livro de acesso rápido' que lhe permite selecionar uma habilidade ou feitiço "
 "para uso imediato.  Para usar uma habilidade ou um feitiço preparado, "
 "simplesmente clique com o botão direito na área de jogo principal."
 
@@ -1763,7 +1763,7 @@ msgid ""
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
 "Você pode designar até quatro teclas de atalho para habilidades, feitiços ou "
-"pergaminhos.  Comece abrindo o 'livro da velocidade' como descrito na seção "
+"pergaminhos.  Comece abrindo o 'livro de acesso rápido' como descrito na seção "
 "anterior. Pressione as teclas F5, F6, F7 ou F8 depois de destacar o feitiço "
 "que deseja designar."
 
@@ -1821,7 +1821,7 @@ msgstr "Ouro"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr "Espada curta"
+msgstr "Espada Curta"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
@@ -3161,7 +3161,7 @@ msgstr "da devastação"
 
 #: Source/itemdat.cpp:384
 msgid "decay"
-msgstr "decair"
+msgstr "declínio"
 
 #. TRANSLATORS: Item suffix section end.
 #: Source/itemdat.cpp:386
@@ -3555,7 +3555,7 @@ msgstr "Devorador de almas"
 
 #: Source/itemdat.cpp:501
 msgid "Diamondedge"
-msgstr "Diamonedge"
+msgstr "Diamondedge"
 
 #: Source/itemdat.cpp:502
 msgid "Bone Chain Armor"
@@ -3655,7 +3655,7 @@ msgstr "durabilidade do item"
 
 #: Source/items.cpp:1924
 msgid "increases an item's"
-msgstr "aumenta la de un artículo"
+msgstr "aumenta"
 
 #: Source/items.cpp:1926
 msgid "current and max durability"
@@ -3687,7 +3687,7 @@ msgstr "coloca armadilha de fogo"
 
 #: Source/items.cpp:1951
 msgid "sets lightning trap"
-msgstr "coloca armadilha de raios"
+msgstr "coloca armadilha de relâmpagos"
 
 #: Source/items.cpp:1959
 msgid "sets petrification trap"
@@ -3751,7 +3751,7 @@ msgstr "restaura um pouco de vida e mana"
 
 #: Source/items.cpp:2020
 msgid "restore all life and mana"
-msgstr "restaura toda a vida e a mana"
+msgstr "restaura toda a vida e mana"
 
 #: Source/items.cpp:2044 Source/items.cpp:2069
 msgid "Right-click to read"
@@ -3874,7 +3874,7 @@ msgstr[1] "feitiços aumentam {:d} níveis"
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "feitiços diminuem {:d} nível"
-msgstr[1] "feitiços diminuem {:d}  níveis"
+msgstr[1] "feitiços diminuem {:d} níveis"
 
 #: Source/items.cpp:3899
 msgid "spell levels unchanged (?)"
@@ -4138,7 +4138,7 @@ msgstr "triplo dano ocasional"
 #: Source/items.cpp:4099
 #, no-c-format
 msgid "decaying {:+d}% damage"
-msgstr "{:+d}% de dano em decomposição"
+msgstr "declínio de {:+d}% de dano"
 
 #: Source/items.cpp:4102
 msgid "2x dmg to monst, 1x to you"
@@ -4165,12 +4165,12 @@ msgstr "AC extra vs mortos vivos"
 #: Source/items.cpp:4120
 #, no-c-format
 msgid "50% Mana moved to Health"
-msgstr "50% de Mana se moveu para a Vida"
+msgstr "50% de Mana foi para a Vida"
 
 #: Source/items.cpp:4123
 #, no-c-format
 msgid "40% Health moved to Mana"
-msgstr "40% de Mana se moveu para a Vida"
+msgstr "40% de Mana foi para a Vida"
 
 #: Source/items.cpp:4126
 msgid "Another ability (NW)"
@@ -4228,7 +4228,7 @@ msgstr "Não identificado"
 
 #: Source/loadsave.cpp:1665 Source/loadsave.cpp:2122
 msgid "Unable to open save file archive"
-msgstr "Não é possível abrir o arquivo salvo"
+msgstr "Não foi possível abrir o arquivo salvo"
 
 #: Source/loadsave.cpp:1668
 msgid "Invalid save file"
@@ -4236,11 +4236,11 @@ msgstr "Jogo salvo inválido"
 
 #: Source/loadsave.cpp:1697
 msgid "Player is on a Hellfire only level"
-msgstr "O jogador está em um nível único do Hellfire"
+msgstr "O jogador está em um nível somente Hellfire"
 
 #: Source/loadsave.cpp:1884
 msgid "Invalid game state"
-msgstr "Estado do jogo inválido"
+msgstr "Estado de jogo inválido"
 
 #: Source/menu.cpp:138
 msgid "Unable to display mainmenu"
@@ -5183,7 +5183,7 @@ msgstr "Algumas imunidades a magia"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
-msgstr "Está tentando deixar cair um item do chão?"
+msgstr "Está tentando jogar um item do chão?"
 
 #: Source/msg.cpp:950 Source/msg.cpp:973 Source/msg.cpp:996 Source/msg.cpp:1110
 #: Source/msg.cpp:1132 Source/msg.cpp:1154 Source/msg.cpp:1176
@@ -5581,7 +5581,7 @@ msgstr "{:s} (desativado)"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
-msgstr "Não é possível abrir o arquivo do reprodutor para escrever."
+msgstr "Não foi possível abrir o arquivo do jogador para escrita."
 
 #: Source/pfile.cpp:381
 msgid "Unable to open archive"
@@ -5597,7 +5597,7 @@ msgstr "Não é possível ler para salvar o arquivo"
 
 #: Source/pfile.cpp:447
 msgid "Unable to write to save file archive"
-msgstr "Não é possível escrever para salvar o arquivo"
+msgstr "Não foi possível escrever para salvar o arquivo"
 
 #. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:89
@@ -5916,7 +5916,7 @@ msgstr "Anel de fogo"
 
 #: Source/spelldat.cpp:61
 msgid "Search"
-msgstr "Buscar"
+msgstr "Procurar"
 
 #: Source/spelldat.cpp:63
 msgid "Rune of Light"
@@ -7298,7 +7298,7 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
-"Salvou a minha alma da condenação, e por isso estou agora em dívida com "
+"Você salvou a minha alma da danação, e por isso estou agora em dívida com "
 "você. Se houver alguma forma pela qual eu possa lhe recompensar do além-"
 "túmulo eu a encontrarei, mas, por agora, tome o meu elmo. Na jornada que "
 "estou prestes a seguir ele terá pouca serventia. Que lhe proteja contra os "
@@ -9542,7 +9542,7 @@ msgid ""
 "cathedral and not what lies below our topsoil."
 msgstr ""
 "O quê?! Isso é uma tolice. Não há nenhum tesouro enterrado aqui em Tristram. "
-"Deixe-me ver isso! Olha, esses desenhos são imprecisos. Eles não combinam "
+"Deixe-me ver isso! Olha, esses desenhos são imprecisos. Eles não encaixam "
 "com a nossa cidade. Eu me concentraria no que está sob a catedral e não no "
 "que está sob nossa camada superficial do solo."
 
@@ -9564,7 +9564,7 @@ msgid ""
 msgstr ""
 "O outrora orgulhoso Iswall está preso nas profundezas da superfície deste "
 "mundo. Sua honra foi despojada e seu rosto alterado. Ele está preso em "
-"tormento imortal. Encarregado por ocultar a coisa que poderia libertá-lo."
+"tormento imortal. Encarregado por ocultar a única coisa que poderia libertá-lo."
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -9622,7 +9622,7 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
-"Mmm. Um vasto e misterioso tesouro, você diz?  Mmmm.  Talvez você eu esteja "
+"Humm. Um vasto e misterioso tesouro, você diz?  Hummm.  Talvez eu esteja "
 "interessado em pegar algumas coisas de você... ou melhor ainda, você não "
 "precisa de alguns suprimentos raros e caros para passar por esse teste?"
 
@@ -9639,7 +9639,7 @@ msgid ""
 msgstr ""
 "Então, você é o herói de quem todos estão falando. Você poderia ajudar um "
 "simples e pobre fazendeiro a resolver um problema terrível? Na beira do meu "
-"pomar, ao sul daqui, há uma coisa horrível que incha do chão! Não consigo "
+"pomar, ao sul daqui, há uma coisa horrível saindo do chão! Não consigo "
 "chegar às minhas plantações ou aos fardos de feno, e minhas pobres vacas "
 "morrerão de fome. A bruxa me deu isso e disse que explodiria aquela coisa do "
 "meu campo. Se puder destruí-la, serei eternamente grato a você. Eu mesmo "
@@ -9695,7 +9695,7 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr "Waaaah! (sniff) Waaaah! (sniff)"
+msgstr "Buáááá! (sniff) Buáááá! (sniff)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
@@ -9705,9 +9705,9 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
-"Eu perdi theo!  Perdi meu melhor amigo!  Estávamos brincando perto do rio, e "
+"Eu perdi Theo!  Perdi meu melhor amigo!  Estávamos brincando perto do rio, e "
 "Theo disse que queria ir ver a grande coisa verde.  Eu disse que não "
-"deveríamos, mas nós nos esgueiroumos até lá, e de repente esse INSETO saiu!  "
+"deveríamos, mas nós nos esgueiramos até lá, e de repente esse INSETO saiu!  "
 "Nós fugimos, mas Theo caiu e o inseto o agarrou e o levou embora!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
@@ -9745,7 +9745,7 @@ msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
 msgstr ""
-"Está se divertido, pequeno mamífero?  Que patético. Seu mundinho não será "
+"Está se divertindo, pequeno mamífero?  Que patético. Seu mundinho não será "
 "nenhum desafio."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
@@ -9756,8 +9756,8 @@ msgid ""
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
 "Estas terras serão contaminadas, e nossa ninhada invadirá os campos que os "
-"homens chamam de lar.  Nossos tentáculos envolverão este mundo, e nós nos "
-"banquetearemos com a carne de seus habitantes.  O homem se tornará nosso bem "
+"homens chamam de lar.  Nossos tentáculos envolverão este mundo, e nós faremos"
+"um banquete com a carne de seus habitantes.  O homem se tornará nosso bem "
 "e sustento."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
@@ -9967,7 +9967,7 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
-"Pare de me incomodar.  Estou procurando alguém muito heroico.  E você não "
+"Pare de me incomodar.  Estou procurando alguém muito heróico.  E você não "
 "é.  Não posso confiar em você, pois será devorado por monstros a qualquer "
 "momento... Preciso de alguém que seja um herói experiente."
 
@@ -10159,7 +10159,7 @@ msgstr "Lester, o fazendeiro"
 
 #: Source/towners.cpp:260
 msgid "Complete Nut"
-msgstr "Maluco completo"
+msgstr "Completamente Louco"
 
 #: Source/towners.cpp:286
 msgid "Slain Townsman"
@@ -10187,7 +10187,7 @@ msgstr "Descer para a cripta"
 
 #: Source/trigs.cpp:371
 msgid "Down to Hive"
-msgstr "Descer para a colmeia"
+msgstr "Descer para a Colmeia"
 
 #: Source/trigs.cpp:388 Source/trigs.cpp:473 Source/trigs.cpp:523
 #: Source/trigs.cpp:620
@@ -10214,7 +10214,7 @@ msgstr "Descer para o nível {:d} da cripta"
 
 #: Source/trigs.cpp:550
 msgid "Up to Nest level {:d}"
-msgstr "Subir para o nível {:d} do ninho"
+msgstr "Subir para o nível {:d} do Ninho"
 
 #: Source/trigs.cpp:666
 msgid "Down to Diablo"
@@ -10222,4 +10222,4 @@ msgstr "Descer para Diablo"
 
 #: Source/trigs.cpp:700 Source/trigs.cpp:715 Source/trigs.cpp:730
 msgid "Back to Level {:d}"
-msgstr "Voltar ao nível {:d}"
+msgstr "Voltar ao Nível {:d}"
