@@ -36,7 +36,6 @@ extern int dropGoldValue;
 extern bool drawmanaflag;
 extern bool chrbtnactive;
 extern int pnumlines;
-extern bool pinfoflag;
 extern spell_id pSpell;
 extern UiFlags InfoColor;
 extern char tempstr[256];

@@ -3931,10 +3931,6 @@ void monster_some_crypt()
 
 void InitMonsters()
 {
-#ifdef _DEBUG
-	if (gbIsMultiplayer)
-		CheckDungeonClear();
-#endif
 	if (!setlevel) {
 		AddMonster(GolemHoldingCell, DIR_S, 0, false);
 		AddMonster(GolemHoldingCell, DIR_S, 0, false);
@@ -4848,7 +4844,6 @@ void PrintMonstHistory(int mt)
 			}
 		}
 	}
-	pinfoflag = true;
 }
 
 void PrintUniqueHistory()
@@ -4877,7 +4872,6 @@ void PrintUniqueHistory()
 		}
 	}
 	AddPanelString(tempstr);
-	pinfoflag = true;
 }
 
 void PlayEffect(MonsterStruct &monster, int mode)

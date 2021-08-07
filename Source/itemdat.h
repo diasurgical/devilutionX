@@ -446,7 +446,6 @@ struct ItemDataStruct {
 	enum spell_id iSpell;
 	bool iUsable;
 	uint16_t iValue;
-	uint16_t iMaxValue;
 };
 
 enum item_effect_type : int8_t {

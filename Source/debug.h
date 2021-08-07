@@ -14,7 +14,6 @@ namespace devilution {
 extern std::optional<CelSprite> pSquareCel;
 
 void FreeDebugGFX();
-void CheckDungeonClear();
 void LoadDebugGFX();
 void GiveGoldCheat();
 void TakeGoldCheat();

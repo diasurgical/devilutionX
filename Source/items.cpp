@@ -2103,7 +2103,6 @@ void PrintItemInfo(ItemStruct *x)
 			strcpy(tempstr + strlen(tempstr), fmt::format(_(" {:d} Dex"), dex).c_str());
 		AddPanelString(tempstr);
 	}
-	pinfoflag = true;
 }
 
 bool SmithItemOk(int i)
