@@ -830,7 +830,7 @@ void CalculatePanelAreas(void)
 			LeftPanel.position.y = gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT;
 			break;
 		default:
-			LeftPanel.position.y = 0;
+			LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
 			break;
 		}
 	} else {
