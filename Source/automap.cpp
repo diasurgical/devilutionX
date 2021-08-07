@@ -13,6 +13,7 @@
 #include "inv.h"
 #include "monster.h"
 #include "palette.h"
+#include "missiles.h"
 #include "player.h"
 #include "setmaps.h"
 #include "utils/language.h"
@@ -272,11 +273,14 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 			tile.y++;
 	}
 
-	const int startX = clamp(tile.x - 8, 0, MAXDUNX);
-	const int startY = clamp(tile.y - 8, 0, MAXDUNY);
+	int spellLevel = GetSpellLevel(MyPlayerId, SPL_SEARCH);
+	int levelRangeExtension = spellLevel / 3;
 
-	const int endX = clamp(tile.x + 8, 0, MAXDUNX);
-	const int endY = clamp(tile.y + 8, 0, MAXDUNY);
+	const int startX = clamp(tile.x - 8 - levelRangeExtension, 0, MAXDUNX);
+	const int startY = clamp(tile.y - 8 - levelRangeExtension, 0, MAXDUNY);
+
+	const int endX = clamp(tile.x + 8 + levelRangeExtension, 0, MAXDUNX);
+	const int endY = clamp(tile.y + 8 + levelRangeExtension, 0, MAXDUNY);
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
