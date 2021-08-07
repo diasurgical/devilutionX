@@ -118,10 +118,6 @@ struct GameplayOptions {
 	bool bShowMonsterType;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	bool bDisableCripplingShrines;
-	/** @brief Side panel horizontal alignment (left/center/right) */
-	int nSPanelHAlign;
-	/** @brief Side panel vertical alignment (top/center/bottom) */
-	int nSPanelVAlign;
 };
 
 struct ControllerOptions {
