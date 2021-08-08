@@ -128,8 +128,8 @@ void init_cleanup()
 		hfopt2_mpq = nullptr;
 	}
 	if (devilutionx_mpq != nullptr) {
-		SFileCloseArchive(patch_rt_mpq);
-		patch_rt_mpq = nullptr;
+		SFileCloseArchive(devilutionx_mpq);
+		devilutionx_mpq = nullptr;
 	}
 
 	NetClose();
