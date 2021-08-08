@@ -58,16 +58,16 @@ struct AutomapTile {
 	/** Additional details about the given tile */
 	enum class Flags : uint8_t {
 		// clang-format off
-		VerticalDoor     = 1 << 0,
-		HorizontalDoor   = 1 << 1,
-		VerticalArch     = 1 << 2,
-		HorizontalArch   = 1 << 3,
-		VerticalGrate    = 1 << 4,
-		HorizontalGrate  = 1 << 5,
-		VerticalObject   = VerticalDoor | VerticalArch | VerticalGrate,
-		HorizontalObject = HorizontalDoor | HorizontalArch | HorizontalGrate,
-		Dirt             = 1 << 6,
-		Stairs           = 1 << 7,
+		VerticalDoor      = 1 << 0,
+		HorizontalDoor    = 1 << 1,
+		VerticalArch      = 1 << 2,
+		HorizontalArch    = 1 << 3,
+		VerticalGrate     = 1 << 4,
+		HorizontalGrate   = 1 << 5,
+		VerticalPassage   = VerticalDoor | VerticalArch | VerticalGrate,
+		HorizontalPassage = HorizontalDoor | HorizontalArch | HorizontalGrate,
+		Dirt              = 1 << 6,
+		Stairs            = 1 << 7,
 		// clang-format on
 	};
 
@@ -146,7 +146,7 @@ void DrawStairs(const Surface &out, Point center)
  */
 void DrawHorizontal(const Surface &out, Point center, AutomapTile tile)
 {
-	if (!tile.HasFlag(AutomapTile::Flags::HorizontalObject)) {
+	if (!tile.HasFlag(AutomapTile::Flags::HorizontalPassage)) {
 		DrawMapLineSE(out, { center.x, center.y - AmLine16 }, AmLine16, MapColorsDim);
 		return;
 	}
@@ -166,7 +166,7 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile)
  */
 void DrawVertical(const Surface &out, Point center, AutomapTile tile)
 {
-	if (!tile.HasFlag(AutomapTile::Flags::VerticalObject)) {
+	if (!tile.HasFlag(AutomapTile::Flags::VerticalPassage)) {
 		DrawMapLineNE(out, { center.x - AmLine32, center.y }, AmLine16, MapColorsDim);
 		return;
 	}
