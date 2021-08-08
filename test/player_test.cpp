@@ -175,5 +175,5 @@ static void AssertPlayer(PlayerStruct &player)
 TEST(Player, CreatePlayer)
 {
 	CreatePlayer(0, HeroClass::Rogue);
-    AssertPlayer(Players[0]);
+	AssertPlayer(Players[0]);
 }
