@@ -234,10 +234,9 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	if (pnum != -1) {
 		const auto &player = Players[pnum];
 		if (MissileData[t].mType == 0) {
-			hper = player.GetRangedToHit();
-			hper -= monster.mArmorClass;
+			hper = player.GetRangedPiercingToHit();
+			hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
 			hper -= (dist * dist) / 2;
-			hper += player._pIEnAc;
 		} else {
 			hper = player.GetMagicToHit() - (monster.mLevel * 2) - dist;
 		}
