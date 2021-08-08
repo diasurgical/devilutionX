@@ -2441,14 +2441,6 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	player._pLevel = 1;
 
-	if (player._pClass == HeroClass::Monk) {
-		player._pDamageMod = (player._pStrength + player._pDexterity) * player._pLevel / 150;
-	} else if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Bard) {
-		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
-	} else {
-		player._pDamageMod = player._pStrength * player._pLevel / 100;
-	}
-
 	player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(c)];
 
 	player._pHitPoints = (player._pVitality + 10) << 6;
@@ -2479,15 +2471,6 @@ void CreatePlayer(int playerId, HeroClass c)
 	player._pExperience = 0;
 	player._pNextExper = ExpLvlsTbl[1];
 	player._pArmorClass = 0;
-	if (player._pClass == HeroClass::Barbarian) {
-		player._pMagResist = 1;
-		player._pFireResist = 1;
-		player._pLghtResist = 1;
-	} else {
-		player._pMagResist = 0;
-		player._pFireResist = 0;
-		player._pLghtResist = 0;
-	}
 	player._pLightRad = 10;
 	player._pInfraFlag = false;
 
@@ -3743,12 +3726,6 @@ void ModifyPlrStr(int p, int l)
 	player._pStrength += l;
 	player._pBaseStr += l;
 
-	if (player._pClass == HeroClass::Rogue) {
-		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
-	} else {
-		player._pDamageMod = player._pLevel * player._pStrength / 100;
-	}
-
 	CalcPlrInv(p, true);
 
 	if (p == MyPlayerId) {
@@ -3808,10 +3785,6 @@ void ModifyPlrDex(int p, int l)
 	player._pBaseDex += l;
 	CalcPlrInv(p, true);
 
-	if (player._pClass == HeroClass::Rogue) {
-		player._pDamageMod = player._pLevel * (player._pDexterity + player._pStrength) / 200;
-	}
-
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETDEX, player._pBaseDex);
 	}
@@ -3866,8 +3839,6 @@ void SetPlayerHitPoints(int pnum, int val)
 
 void SetPlrStr(int p, int v)
 {
-	int dm;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("SetPlrStr: illegal player %i", p);
 	}
@@ -3875,14 +3846,6 @@ void SetPlrStr(int p, int v)
 
 	player._pBaseStr = v;
 	CalcPlrInv(p, true);
-
-	if (player._pClass == HeroClass::Rogue) {
-		dm = player._pLevel * (player._pStrength + player._pDexterity) / 200;
-	} else {
-		dm = player._pLevel * player._pStrength / 100;
-	}
-
-	player._pDamageMod = dm;
 }
 
 void SetPlrMag(int p, int v)
@@ -3910,8 +3873,6 @@ void SetPlrMag(int p, int v)
 
 void SetPlrDex(int p, int v)
 {
-	int dm;
-
 	if ((DWORD)p >= MAX_PLRS) {
 		app_fatal("SetPlrDex: illegal player %i", p);
 	}
@@ -3919,14 +3880,6 @@ void SetPlrDex(int p, int v)
 
 	player._pBaseDex = v;
 	CalcPlrInv(p, true);
-
-	if (player._pClass == HeroClass::Rogue) {
-		dm = player._pLevel * (player._pStrength + player._pDexterity) / 200;
-	} else {
-		dm = player._pStrength * player._pLevel / 100;
-	}
-
-	player._pDamageMod = dm;
 }
 
 void SetPlrVit(int p, int v)
