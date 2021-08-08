@@ -16,6 +16,7 @@ find_package(PNG REQUIRED)
 #additional compilation definitions
 add_definitions(-D__3DS__)
 set(TTF_FONT_DIR \"romfs:/\")
+set(MO_LANG_DIR \"romfs:/\")
 
 #SDL video mode parameters
 set(SDL1_VIDEO_MODE_BPP 8)

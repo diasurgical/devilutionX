@@ -610,6 +610,7 @@ if(USE_GETTEXT)
   find_package(Gettext)
   foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
+    list(APPEND devilutionx_TRANSLATIONS ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
 
     if(VITA)
       list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "${lang}.gmo")
@@ -677,6 +678,7 @@ foreach(
   DEFAULT_AUDIO_CHANNELS
   DEFAULT_AUDIO_BUFFER_SIZE
   DEFAULT_AUDIO_RESAMPLING_QUALITY
+  MO_LANG_DIR
   TTF_FONT_DIR
   TTF_FONT_NAME
   SDL1_VIDEO_MODE_BPP
@@ -925,9 +927,10 @@ if(NINTENDO_3DS)
   set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  set(APP_ROMFS_FILES
-    "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-    "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq")
+  list(APPEND APP_ROMFS_FILES
+    ${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf
+    ${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq
+    ${devilutionx_TRANSLATIONS})
   set(APP_VERSION ${PROJECT_VERSION})
 
   find_program(FFMPEG ffmpeg)
@@ -943,13 +946,20 @@ if(NINTENDO_3DS)
       VERBATIM)
   endif()
 
-  file(MAKE_DIRECTORY ${APP_ROMFS})
-  file(COPY ${APP_ROMFS_FILES}
-     DESTINATION ${APP_ROMFS})
+  add_custom_target(romfs_directory
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
+    
+  add_custom_target(romfs_files
+    COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
+    DEPENDS romfs_directory)
 
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
+  
+  get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
+  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
+  add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
 if(CPACK)
