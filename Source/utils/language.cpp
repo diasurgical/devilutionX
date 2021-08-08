@@ -250,9 +250,9 @@ void LanguageInitialize()
 	SDL_RWops *rw;
 
 	auto path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
-	if ((rw = SDL_RWFromFile(path.c_str(), "r+b")) == nullptr) {
+	if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
 		path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
-		if ((rw = SDL_RWFromFile(path.c_str(), "r+b")) == nullptr) {
+		if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
 			perror(path.c_str());
 			return;
 		}
