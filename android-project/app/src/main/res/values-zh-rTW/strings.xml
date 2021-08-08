@@ -1,0 +1,14 @@
+<resources>
+	<string name="app_name" translatable="false">DevilutionX</string>
+	<!-- Strings used for fragments for navigation -->
+
+	<string name="guide_full_installation">要玩完整版，你必須將原版遊戲中的DIABDAT.MPQ放到Android/data/org.diasurgical.devilutionx/files中。<br/>\n<br/>\n如果你没有原版遊戲，那麼你可以從<a href="https://www.gog.com/game/diablo">GOG.com</a>購買暗黑破壞神。</string>
+	<string name="guide_shareware">另外，你也可以下載Spawn版來玩遊戲的共享軟體部分。</string>
+	<string name="faq_link">請參閱<a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">安裝說明</a>以了解更多細節。</string>
+	<string name="game_data_retry">再次檢查</string>
+	<string name="title_activity_data">遊戲資料</string>
+	<string name="download_spawn">下載共享軟體資料</string>
+	<string name="missing_game_data">遊戲資料遺失</string>
+	<string name="download_started">開始下載</string>
+	<string name="shareware_data">暗黑破壞神共享軟體資料</string>
+</resources>
