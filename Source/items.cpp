@@ -2589,7 +2589,9 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	int mLevel = monster[m].MData->mLevel;
 	if (!gbIsHellfire && monster[m].MType->mtype == MT_DIABLO)
 		mLevel -= 15;
-
+	Point bkp = items[ii].position;
+	memset(&items[ii], 0, sizeof(ItemStruct));
+	items[ii].position = bkp;
 	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	std::string tmp(items[ii]._iIName);
