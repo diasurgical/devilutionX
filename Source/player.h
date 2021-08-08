@@ -416,7 +416,20 @@ struct PlayerStruct {
 	}
 
 	/**
+	 * @brief Return player's melee to hit value, including armor piercing
+	 */
+	int GetMeleePiercingToHit() const
+	{
+		int hper = GetMeleeToHit();
+		//in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
+		if (!gbIsHellfire)
+			hper += _pIEnAc;
+		return hper;
+	}
+
+	/**
 	 * @brief Return player's ranged to hit value
+	 * @param pierceArmor - indicate if player's armor piercing should be included - true vs monsters, false vs players
 	 */
 	int GetRangedToHit() const
 	{
@@ -425,6 +438,15 @@ struct PlayerStruct {
 			hper += 20;
 		else if (_pClass == HeroClass::Warrior || _pClass == HeroClass::Bard)
 			hper += 10;
+		return hper;
+	}
+
+	int GetRangedPiercingToHit() const
+	{
+		int hper = GetRangedToHit();
+		//in hellfire armor piercing ignores % of enemy armor instead, no way to include it here
+		if (!gbIsHellfire)
+			hper += _pIEnAc;
 		return hper;
 	}
 
@@ -451,6 +473,30 @@ struct PlayerStruct {
 		if (useLevel)
 			blkper += _pLevel * 2;
 		return blkper;
+	}
+
+	/**
+	 * @brief Return monster armor value after including player's armor piercing % (hellfire only)
+	 * @param monsterArmor - monster armor before applying % armor pierce
+	 * @param isMelee - indicates if it's melee or ranged combat
+	 */
+	int CalculateArmorPierce(int monsterArmor, bool isMelee) const
+	{
+		int tmac = monsterArmor;
+		if (gbIsHellfire && _pIEnAc > 0) {
+			int pIEnAc = _pIEnAc - 1;
+			if (pIEnAc > 0)
+				tmac >>= pIEnAc;
+			else
+				tmac -= tmac / 4;
+		}
+		if (isMelee && _pClass == HeroClass::Barbarian) {
+			tmac -= monsterArmor / 8;
+		}
+		if (tmac < 0)
+			tmac = 0;
+
+		return tmac;
 	}
 
 	/**

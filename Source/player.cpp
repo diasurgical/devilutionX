@@ -905,25 +905,7 @@ bool PlrHitMonst(int pnum, int m)
 		hit = 0;
 	}
 
-	int tmac = monster.mArmorClass;
-	if (gbIsHellfire && player._pIEnAc > 0) {
-		int pIEnAc = player._pIEnAc - 1;
-		if (pIEnAc > 0)
-			tmac >>= pIEnAc;
-		else
-			tmac -= tmac / 4;
-
-		if (player._pClass == HeroClass::Barbarian) {
-			tmac -= monster.mArmorClass / 8;
-		}
-
-		if (tmac < 0)
-			tmac = 0;
-	} else {
-		tmac -= player._pIEnAc;
-	}
-
-	hper += player.GetMeleeToHit() - tmac;
+	hper += player.GetMeleePiercingToHit() - player.CalculateArmorPierce(monster.mArmorClass, true);
 	hper = clamp(hper, 5, 95);
 
 	bool ret = false;
