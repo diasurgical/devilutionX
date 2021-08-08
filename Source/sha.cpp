@@ -19,7 +19,6 @@ namespace {
 
 struct SHA1Context {
 	uint32_t state[SHA1HashSize / sizeof(uint32_t)];
-	size_t count;
 	uint32_t buffer[BlockSize / sizeof(uint32_t)];
 };
 
@@ -43,7 +42,6 @@ uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
 
 void SHA1Init(SHA1Context *context)
 {
-	context->count = 0;
 	context->state[0] = 0x67452301;
 	context->state[1] = 0xEFCDAB89;
 	context->state[2] = 0x98BADCFE;
@@ -113,9 +111,7 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 
 void SHA1Input(SHA1Context *context, const byte *messageArray, std::size_t len)
 {
-	context->count += 8 * len;
-
-	for (auto i = len; i >= BlockSize; i -= BlockSize) {
+	for (auto i = len / BlockSize; i != 0; i--) {
 		memcpy(context->buffer, messageArray, BlockSize);
 		SHA1ProcessMessageBlock(context);
 		messageArray += BlockSize;
