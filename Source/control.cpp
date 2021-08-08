@@ -579,10 +579,16 @@ void RemoveGold(int pnum, int goldIndex)
 	dropGoldValue = 0;
 }
 
-bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
+struct SpellListItem {
+	Point location;
+	spell_type type;
+	spell_id id;
+	bool isSelected;
+};
+
+std::vector<SpellListItem> GetSpellListItems()
 {
-	pSpell = spell_id::SPL_INVALID;
-	pSplType = spell_type::RSPLTYPE_INVALID;
+	std::vector<SpellListItem> spellListItems;
 
 	uint64_t mask;
 
@@ -613,13 +619,8 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 				continue;
 			int lx = x;
 			int ly = y - SPLICONLENGTH;
-			if (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH) {
-				pSpell = (spell_id) j;
-				pSplType = (spell_type)i;
-				if (myPlayer._pClass == HeroClass::Monk && j == SPL_SEARCH)
-					pSplType = RSPLTYPE_SKILL;
-				return true;
-			}
+			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
+			spellListItems.emplace_back(SpellListItem { { x, y }, (spell_type)i, (spell_id)j, isSelected });
 			x -= SPLICONLENGTH;
 			if (x == PANEL_X + 12 - SPLICONLENGTH) {
 				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
@@ -631,6 +632,25 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 		if (x == PANEL_X + 12 - SPLICONLENGTH) {
 			x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
 			y -= SPLICONLENGTH;
+		}
+	}
+
+	return spellListItems;
+}
+
+bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
+{
+	pSpell = spell_id::SPL_INVALID;
+	pSplType = spell_type::RSPLTYPE_INVALID;
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto &spellListItem : GetSpellListItems()) {
+		if (spellListItem.isSelected) {
+			pSpell = spellListItem.id;
+			pSplType = spellListItem.type;
+			if (myPlayer._pClass == HeroClass::Monk && spellListItem.id == SPL_SEARCH)
+				pSplType = RSPLTYPE_SKILL;
+			return true;
 		}
 	}
 
@@ -663,131 +683,86 @@ void DrawSpell(const Surface &out)
 
 void DrawSpellList(const Surface &out)
 {
-	int c;
-	int s;
-	uint64_t mask;
-
-	spell_id pSpell = SPL_INVALID;
 	infostr[0] = '\0';
-	Point location;
-	int &x = location.x;
-	int &y = location.y;
-	x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-	y = PANEL_Y - 17;
 	ClearPanel();
 
-	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
-		auto &myPlayer = Players[MyPlayerId];
-		switch ((spell_type)i) {
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto &spellListItem : GetSpellListItems()) {
+		spell_type transType = spellListItem.type;
+		int spellLevel = 0;
+		const SpellData &spellDataItem = spelldata[static_cast<size_t>(spellListItem.id)];
+		if (currlevel == 0 && !spellDataItem.sTownSpell) {
+			transType = RSPLTYPE_INVALID;
+		}
+		if (spellListItem.type == RSPLTYPE_SPELL) {
+			spellLevel = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellListItem.id], 0);
+			if (spellLevel == 0)
+				transType = RSPLTYPE_INVALID;
+		}
+
+		SetSpellTrans(transType);
+		DrawSpellCel(out, spellListItem.location, *pSpellCels, SpellITbl[static_cast<size_t>(spellListItem.id)]);
+
+		if (!spellListItem.isSelected)
+			continue;
+
+		switch (spellListItem.type) {
 		case RSPLTYPE_SKILL:
-			SetSpellTrans(RSPLTYPE_SKILL);
-			mask = myPlayer._pAblSpells;
-			c = SPLICONLAST + 3;
+			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 3);
+			strcpy(infostr, fmt::format(_("{:s} Skill"), _(spellDataItem.sSkillText)).c_str());
 			break;
 		case RSPLTYPE_SPELL:
-			mask = myPlayer._pMemSpells;
-			c = SPLICONLAST + 4;
+			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 4);
+			strcpy(infostr, fmt::format(_("{:s} Spell"), _(spellDataItem.sNameText)).c_str());
+			if (spellListItem.id == SPL_HBOLT) {
+				strcpy(tempstr, _("Damages undead only"));
+				AddPanelString(tempstr);
+			}
+			if (spellLevel == 0)
+				strcpy(tempstr, _("Spell Level 0 - Unusable"));
+			else
+				strcpy(tempstr, fmt::format(_("Spell Level {:d}"), spellLevel).c_str());
+			AddPanelString(tempstr);
 			break;
-		case RSPLTYPE_SCROLL:
-			SetSpellTrans(RSPLTYPE_SCROLL);
-			mask = myPlayer._pScrlSpells;
-			c = SPLICONLAST + 1;
-			break;
-		case RSPLTYPE_CHARGES:
-			SetSpellTrans(RSPLTYPE_CHARGES);
-			mask = myPlayer._pISpells;
-			c = SPLICONLAST + 2;
-			break;
+		case RSPLTYPE_SCROLL: {
+			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 1);
+			strcpy(infostr, fmt::format(_("Scroll of {:s}"), _(spellDataItem.sNameText)).c_str());
+			int v = 0;
+			for (int t = 0; t < myPlayer._pNumInv; t++) {
+				if (!myPlayer.InvList[t].isEmpty()
+				    && (myPlayer.InvList[t]._iMiscId == IMISC_SCROLL || myPlayer.InvList[t]._iMiscId == IMISC_SCROLLT)
+				    && myPlayer.InvList[t]._iSpell == spellListItem.id) {
+					v++;
+				}
+			}
+			for (auto &item : myPlayer.SpdList) {
+				if (!item.isEmpty()
+				    && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)
+				    && item._iSpell == spellListItem.id) {
+					v++;
+				}
+			}
+			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", v), v).c_str());
+			AddPanelString(tempstr);
+		} break;
+		case RSPLTYPE_CHARGES: {
+			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 2);
+			strcpy(infostr, fmt::format(_("Staff of {:s}"), _(spellDataItem.sNameText)).c_str());
+			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
+			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
+			AddPanelString(tempstr);
+		} break;
 		case RSPLTYPE_INVALID:
 			break;
 		}
-		int8_t j = SPL_FIREBOLT;
-		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
-			if ((mask & spl) == 0)
-				continue;
-			if (i == RSPLTYPE_SPELL) {
-				s = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[j], 0);
-				spell_type trans = RSPLTYPE_INVALID;
-				if (s > 0)
-					trans = RSPLTYPE_SPELL;
-				SetSpellTrans(trans);
+		for (int t = 0; t < 4; t++) {
+			if (myPlayer._pSplHotKey[t] == spellListItem.id && myPlayer._pSplTHotKey[t] == spellListItem.type) {
+				auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
+				PrintSBookHotkey(out, spellListItem.location, hotkeyName);
+				strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
+				AddPanelString(tempstr);
 			}
-			if (currlevel == 0 && !spelldata[j].sTownSpell)
-				SetSpellTrans(RSPLTYPE_INVALID);
-			DrawSpellCel(out, location, *pSpellCels, SpellITbl[j]);
-			int lx = x;
-			int ly = y - SPLICONLENGTH;
-			if (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH) {
-				pSpell = (spell_id)j;
-				spell_type pSplType = (spell_type)i;
-				if (myPlayer._pClass == HeroClass::Monk && j == SPL_SEARCH)
-					pSplType = RSPLTYPE_SKILL;
-				DrawSpellCel(out, location, *pSpellCels, c);
-				switch (pSplType) {
-				case RSPLTYPE_SKILL:
-					strcpy(infostr, fmt::format(_("{:s} Skill"), _(spelldata[pSpell].sSkillText)).c_str());
-					break;
-				case RSPLTYPE_SPELL:
-					strcpy(infostr, fmt::format(_("{:s} Spell"), _(spelldata[pSpell].sNameText)).c_str());
-					if (pSpell == SPL_HBOLT) {
-						strcpy(tempstr, _("Damages undead only"));
-						AddPanelString(tempstr);
-					}
-					if (s == 0)
-						strcpy(tempstr, _("Spell Level 0 - Unusable"));
-					else
-						strcpy(tempstr, fmt::format(_("Spell Level {:d}"), s).c_str());
-					AddPanelString(tempstr);
-					break;
-				case RSPLTYPE_SCROLL: {
-					strcpy(infostr, fmt::format(_("Scroll of {:s}"), _(spelldata[pSpell].sNameText)).c_str());
-					int v = 0;
-					for (int t = 0; t < myPlayer._pNumInv; t++) {
-						if (!myPlayer.InvList[t].isEmpty()
-						    && (myPlayer.InvList[t]._iMiscId == IMISC_SCROLL || myPlayer.InvList[t]._iMiscId == IMISC_SCROLLT)
-						    && myPlayer.InvList[t]._iSpell == pSpell) {
-							v++;
-						}
-					}
-					for (auto &item : myPlayer.SpdList) {
-						if (!item.isEmpty()
-						    && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)
-						    && item._iSpell == pSpell) {
-							v++;
-						}
-					}
-					strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", v), v).c_str());
-					AddPanelString(tempstr);
-				} break;
-				case RSPLTYPE_CHARGES: {
-					strcpy(infostr, fmt::format(_("Staff of {:s}"), _(spelldata[pSpell].sNameText)).c_str());
-					int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
-					strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
-					AddPanelString(tempstr);
-				} break;
-				case RSPLTYPE_INVALID:
-					break;
-				}
-				for (int t = 0; t < 4; t++) {
-					if (myPlayer._pSplHotKey[t] == pSpell && myPlayer._pSplTHotKey[t] == pSplType) {
-						auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
-						PrintSBookHotkey(out, location, hotkeyName);
-						strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
-						AddPanelString(tempstr);
-					}
-				}
-			}
-			x -= SPLICONLENGTH;
-			if (x == PANEL_X + 12 - SPLICONLENGTH) {
-				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-				y -= SPLICONLENGTH;
-			}
-		}
-		if (mask != 0 && x != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
-			x -= SPLICONLENGTH;
-		if (x == PANEL_X + 12 - SPLICONLENGTH) {
-			x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-			y -= SPLICONLENGTH;
 		}
 	}
 }
