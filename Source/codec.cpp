@@ -22,8 +22,6 @@ struct CodecSignature {
 	uint16_t unused;
 };
 
-#define BlockSize 64
-
 // https://stackoverflow.com/a/45172360 - helper to make up for not having an implicit initializer for std::byte
 template <typename... Ts>
 std::array<byte, sizeof...(Ts)> make_bytes(Ts &&...args) noexcept

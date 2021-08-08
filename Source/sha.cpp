@@ -5,8 +5,8 @@
  */
 #include "sha.h"
 
-#include <SDL.h>
 #include <cstdint>
+#include <SDL.h>
 
 #include "appfat.h"
 
@@ -16,6 +16,12 @@ namespace devilution {
 // right shifts (sign bit extension).
 
 namespace {
+
+struct SHA1Context {
+	uint32_t state[SHA1HashSize / sizeof(uint32_t)];
+	size_t count;
+	uint32_t buffer[BlockSize / sizeof(uint32_t)];
+};
 
 SHA1Context sgSHA1[3];
 
@@ -37,8 +43,7 @@ uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
 
 void SHA1Init(SHA1Context *context)
 {
-	context->count[0] = 0;
-	context->count[1] = 0;
+	context->count = 0;
 	context->state[0] = 0x67452301;
 	context->state[1] = 0xEFCDAB89;
 	context->state[2] = 0x98BADCFE;
@@ -106,19 +111,14 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += e;
 }
 
-void SHA1Input(SHA1Context *context, const byte *messageArray, std::uint32_t len)
+void SHA1Input(SHA1Context *context, const byte *messageArray, std::size_t len)
 {
-	std::uint32_t count = context->count[0] + 8 * len;
-	if (count < context->count[0])
-		context->count[1]++;
+	context->count += 8 * len;
 
-	context->count[0] = count;
-	context->count[1] += len >> 29;
-
-	for (int i = len; i >= 64; i -= 64) {
-		memcpy(context->buffer, messageArray, sizeof(context->buffer));
+	for (auto i = len; i >= BlockSize; i -= BlockSize) {
+		memcpy(context->buffer, messageArray, BlockSize);
 		SHA1ProcessMessageBlock(context);
-		messageArray += 64;
+		messageArray += BlockSize;
 	}
 }
 
@@ -131,9 +131,7 @@ void SHA1Clear()
 
 void SHA1Result(int n, byte messageDigest[SHA1HashSize])
 {
-	std::uint32_t *messageDigestBlock;
-
-	messageDigestBlock = (std::uint32_t *)messageDigest;
+	std::uint32_t *messageDigestBlock = reinterpret_cast<std::uint32_t *>(messageDigest);
 	if (messageDigest != nullptr) {
 		for (auto &block : sgSHA1[n].state) {
 			*messageDigestBlock = SDL_SwapLE32(block);
@@ -142,9 +140,9 @@ void SHA1Result(int n, byte messageDigest[SHA1HashSize])
 	}
 }
 
-void SHA1Calculate(int n, const byte *data, byte messageDigest[SHA1HashSize])
+void SHA1Calculate(int n, const byte data[BlockSize], byte messageDigest[SHA1HashSize])
 {
-	SHA1Input(&sgSHA1[n], data, 64);
+	SHA1Input(&sgSHA1[n], data, BlockSize);
 	if (messageDigest != nullptr)
 		SHA1Result(n, messageDigest);
 }
