@@ -5,8 +5,8 @@
  */
 #include "sha.h"
 
-#include <SDL.h>
 #include <cstdint>
+#include <SDL.h>
 
 #include "appfat.h"
 
@@ -17,28 +17,30 @@ namespace devilution {
 
 namespace {
 
+struct SHA1Context {
+	uint32_t state[SHA1HashSize / sizeof(uint32_t)];
+	uint32_t buffer[BlockSize / sizeof(uint32_t)];
+};
+
 SHA1Context sgSHA1[3];
 
 /**
  * Diablo-"SHA1" circular left shift, portable version.
  */
-uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
+uint32_t SHA1CircularShift(uint32_t word, size_t bits)
 {
 	assert(bits < 32);
 	assert(bits > 0);
 
-	if ((word & 0x80000000) != 0) {
-		//moving this part to a separate volatile variable fixes saves in x64-release build in visual studio 2017
-		volatile uint32_t tmp = ((~word) >> (32 - bits));
-		return (word << bits) | (~tmp);
-	}
+	// The SHA-like algorithm as originally implemented treated word as a signed value and used arithmetic right shifts
+	//  (sign-extending). This results in the high 32-`bits` bits being set to 1.
+	if ((word & (1 << 31)) != 0)
+		return (0xFFFFFFFF << bits) | (word >> (32 - bits));
 	return (word << bits) | (word >> (32 - bits));
 }
 
 void SHA1Init(SHA1Context *context)
 {
-	context->count[0] = 0;
-	context->count[1] = 0;
 	context->state[0] = 0x67452301;
 	context->state[1] = 0xEFCDAB89;
 	context->state[2] = 0x98BADCFE;
@@ -64,37 +66,37 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 	std::uint32_t e = context->state[4];
 
 	for (int i = 0; i < 20; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, a) + ((b & c) | ((~b) & d)) + e + w[i] + 0x5A827999;
+		std::uint32_t temp = SHA1CircularShift(a, 5) + ((b & c) | ((~b) & d)) + e + w[i] + 0x5A827999;
 		e = d;
 		d = c;
-		c = SHA1CircularShift(30, b);
+		c = SHA1CircularShift(b, 30);
 		b = a;
 		a = temp;
 	}
 
 	for (int i = 20; i < 40; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, a) + (b ^ c ^ d) + e + w[i] + 0x6ED9EBA1;
+		std::uint32_t temp = SHA1CircularShift(a, 5) + (b ^ c ^ d) + e + w[i] + 0x6ED9EBA1;
 		e = d;
 		d = c;
-		c = SHA1CircularShift(30, b);
+		c = SHA1CircularShift(b, 30);
 		b = a;
 		a = temp;
 	}
 
 	for (int i = 40; i < 60; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, a) + ((b & c) | (b & d) | (c & d)) + e + w[i] + 0x8F1BBCDC;
+		std::uint32_t temp = SHA1CircularShift(a, 5) + ((b & c) | (b & d) | (c & d)) + e + w[i] + 0x8F1BBCDC;
 		e = d;
 		d = c;
-		c = SHA1CircularShift(30, b);
+		c = SHA1CircularShift(b, 30);
 		b = a;
 		a = temp;
 	}
 
 	for (int i = 60; i < 80; i++) {
-		std::uint32_t temp = SHA1CircularShift(5, a) + (b ^ c ^ d) + e + w[i] + 0xCA62C1D6;
+		std::uint32_t temp = SHA1CircularShift(a, 5) + (b ^ c ^ d) + e + w[i] + 0xCA62C1D6;
 		e = d;
 		d = c;
-		c = SHA1CircularShift(30, b);
+		c = SHA1CircularShift(b, 30);
 		b = a;
 		a = temp;
 	}
@@ -106,19 +108,12 @@ void SHA1ProcessMessageBlock(SHA1Context *context)
 	context->state[4] += e;
 }
 
-void SHA1Input(SHA1Context *context, const byte *messageArray, std::uint32_t len)
+void SHA1Input(SHA1Context *context, const byte *messageArray, std::size_t len)
 {
-	std::uint32_t count = context->count[0] + 8 * len;
-	if (count < context->count[0])
-		context->count[1]++;
-
-	context->count[0] = count;
-	context->count[1] += len >> 29;
-
-	for (int i = len; i >= 64; i -= 64) {
-		memcpy(context->buffer, messageArray, sizeof(context->buffer));
+	for (auto i = len / BlockSize; i != 0; i--) {
+		memcpy(context->buffer, messageArray, BlockSize);
 		SHA1ProcessMessageBlock(context);
-		messageArray += 64;
+		messageArray += BlockSize;
 	}
 }
 
@@ -131,9 +126,7 @@ void SHA1Clear()
 
 void SHA1Result(int n, byte messageDigest[SHA1HashSize])
 {
-	std::uint32_t *messageDigestBlock;
-
-	messageDigestBlock = (std::uint32_t *)messageDigest;
+	std::uint32_t *messageDigestBlock = reinterpret_cast<std::uint32_t *>(messageDigest);
 	if (messageDigest != nullptr) {
 		for (auto &block : sgSHA1[n].state) {
 			*messageDigestBlock = SDL_SwapLE32(block);
@@ -142,9 +135,9 @@ void SHA1Result(int n, byte messageDigest[SHA1HashSize])
 	}
 }
 
-void SHA1Calculate(int n, const byte *data, byte messageDigest[SHA1HashSize])
+void SHA1Calculate(int n, const byte data[BlockSize], byte messageDigest[SHA1HashSize])
 {
-	SHA1Input(&sgSHA1[n], data, 64);
+	SHA1Input(&sgSHA1[n], data, BlockSize);
 	if (messageDigest != nullptr)
 		SHA1Result(n, messageDigest);
 }
