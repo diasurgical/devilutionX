@@ -1566,8 +1566,10 @@ void CheckLvlBtn()
 
 void ReleaseLvlBtn()
 {
-	if (MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP)
+	if (MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP) {
+		QuestLogIsOpen = false;
 		chrflag = true;
+	}
 	lvlbtndown = false;
 }
 
