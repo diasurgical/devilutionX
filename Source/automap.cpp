@@ -35,41 +35,48 @@ enum MapColors : uint8_t {
 	MapColorsItem = (PAL8_BLUE + 1),
 };
 
-/** The general shape of the tile */
-enum class AutomapTypes : uint8_t {
-	None,
-	Diamond,
-	Vertical,
-	Horizontal,
-	Cross,
-	FenceVertical,
-	FenceHorizontal,
-	Corner,
-	CaveHorizontalCross,
-	CaveVerticalCross,
-	CaveHorizontal,
-	CaveVertical,
-	CaveCross,
-};
-
-/** Additional details about the given tile */
-enum AutomapFlags : uint8_t {
-	// clang-format off
-	AutomapFlagVerticalDoor    = 1 << 0,
-	AutomapFlagHorizontalDoor  = 1 << 1,
-	AutomapFlagVerticalArch    = 1 << 2,
-	AutomapFlagHorizontalArch  = 1 << 3,
-	AutomapFlagVerticalGrate   = 1 << 4,
-	AutomapFlagHorizontalGrate = 1 << 5,
-	AutomapFlagDirt            = 1 << 6,
-	AutomapFlagStairs          = 1 << 7,
-	// clang-format on
-};
-
 struct AutomapTile {
-	AutomapTypes type;
-	/** Uses AutomapFlags for flags */
-	uint8_t flags;
+	/** The general shape of the tile */
+	enum class Types : uint8_t {
+		None,
+		Diamond,
+		Vertical,
+		Horizontal,
+		Cross,
+		FenceVertical,
+		FenceHorizontal,
+		Corner,
+		CaveHorizontalCross,
+		CaveVerticalCross,
+		CaveHorizontal,
+		CaveVertical,
+		CaveCross,
+	};
+
+	Types type;
+
+	/** Additional details about the given tile */
+	enum class Flags : uint8_t {
+		// clang-format off
+		VerticalDoor     = 1 << 0,
+		HorizontalDoor   = 1 << 1,
+		VerticalArch     = 1 << 2,
+		HorizontalArch   = 1 << 3,
+		VerticalGrate    = 1 << 4,
+		HorizontalGrate  = 1 << 5,
+		VerticalObject   = VerticalDoor | VerticalArch | VerticalGrate,
+		HorizontalObject = HorizontalDoor | HorizontalArch | HorizontalGrate,
+		Dirt             = 1 << 6,
+		Stairs           = 1 << 7,
+		// clang-format on
+	};
+
+	Flags flags;
+
+	constexpr bool HasFlag(Flags test) const
+	{
+		return (static_cast<uint8_t>(flags) & static_cast<uint8_t>(test)) != 0;
+	}
 };
 
 /**
@@ -139,17 +146,17 @@ void DrawStairs(const Surface &out, Point center)
  */
 void DrawHorizontal(const Surface &out, Point center, AutomapTile tile)
 {
-	if ((tile.flags & (AutomapFlagHorizontalDoor | AutomapFlagHorizontalGrate | AutomapFlagHorizontalArch)) == 0) {
+	if (!tile.HasFlag(AutomapTile::Flags::HorizontalObject)) {
 		DrawMapLineSE(out, { center.x, center.y - AmLine16 }, AmLine16, MapColorsDim);
 		return;
 	}
-	if ((tile.flags & AutomapFlagHorizontalDoor) != 0) {
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapHorizontalDoor(out, { center.x + AmLine16, center.y - AmLine8 });
 	}
-	if ((tile.flags & AutomapFlagHorizontalGrate) != 0) {
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalGrate)) {
 		DrawMapLineSE(out, { center.x + AmLine16, center.y - AmLine8 }, AmLine8, MapColorsDim);
 		DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
-	} else if ((tile.flags & AutomapFlagHorizontalArch) != 0) {
+	} else if (tile.HasFlag(AutomapTile::Flags::HorizontalArch)) {
 		DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
 	}
 }
@@ -159,17 +166,17 @@ void DrawHorizontal(const Surface &out, Point center, AutomapTile tile)
  */
 void DrawVertical(const Surface &out, Point center, AutomapTile tile)
 {
-	if ((tile.flags & (AutomapFlagVerticalDoor | AutomapFlagVerticalGrate | AutomapFlagVerticalArch)) == 0) {
+	if (!tile.HasFlag(AutomapTile::Flags::VerticalObject)) {
 		DrawMapLineNE(out, { center.x - AmLine32, center.y }, AmLine16, MapColorsDim);
 		return;
 	}
-	if ((tile.flags & AutomapFlagVerticalDoor) != 0) { // two wall segments with a door in the middle
+	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) { // two wall segments with a door in the middle
 		DrawMapVerticalDoor(out, { center.x - AmLine16, center.y - AmLine8 });
 	}
-	if ((tile.flags & AutomapFlagVerticalGrate) != 0) { // right-facing half-wall
+	if (tile.HasFlag(AutomapTile::Flags::VerticalGrate)) { // right-facing half-wall
 		DrawMapLineNE(out, { center.x - AmLine32, center.y }, AmLine8, MapColorsDim);
 		DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
-	} else if ((tile.flags & AutomapFlagVerticalArch) != 0) { // window or passable column
+	} else if (tile.HasFlag(AutomapTile::Flags::VerticalArch)) { // window or passable column
 		DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
 	}
 }
@@ -179,7 +186,7 @@ void DrawVertical(const Surface &out, Point center, AutomapTile tile)
  */
 void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile)
 {
-	if ((tile.flags & AutomapFlagVerticalDoor) != 0) {
+	if (tile.HasFlag(AutomapTile::Flags::VerticalDoor)) {
 		DrawMapHorizontalDoor(out, { center.x - AmLine16, center.y + AmLine8 });
 	} else {
 		DrawMapLineSE(out, { center.x - AmLine32, center.y }, AmLine16, MapColorsDim);
@@ -191,7 +198,7 @@ void DrawCaveHorizontal(const Surface &out, Point center, AutomapTile tile)
  */
 void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile)
 {
-	if ((tile.flags & AutomapFlagHorizontalDoor) != 0) {
+	if (tile.HasFlag(AutomapTile::Flags::HorizontalDoor)) {
 		DrawMapVerticalDoor(out, { center.x + AmLine16, center.y + AmLine8 });
 	} else {
 		DrawMapLineNE(out, { center.x, center.y + AmLine16 }, AmLine16, MapColorsDim);
@@ -203,53 +210,53 @@ void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile)
  */
 void DrawAutomapTile(const Surface &out, Point center, AutomapTile tile)
 {
-	if (tile.type == AutomapTypes::None)
+	if (tile.type == AutomapTile::Types::None)
 		return;
 
-	if ((tile.flags & AutomapFlagDirt) != 0) {
+	if (tile.HasFlag(AutomapTile::Flags::Dirt)) {
 		DrawDirt(out, center);
 	}
 
-	if ((tile.flags & AutomapFlagStairs) != 0) {
+	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
 		DrawStairs(out, center);
 	}
 
 	switch (tile.type) {
-	case AutomapTypes::Diamond: // stand-alone column or other unpassable object
+	case AutomapTile::Types::Diamond: // stand-alone column or other unpassable object
 		DrawDiamond(out, { center.x, center.y - AmLine8 }, MapColorsDim);
 		break;
-	case AutomapTypes::Vertical:
-	case AutomapTypes::FenceVertical:
+	case AutomapTile::Types::Vertical:
+	case AutomapTile::Types::FenceVertical:
 		DrawVertical(out, center, tile);
 		break;
-	case AutomapTypes::Horizontal:
-	case AutomapTypes::FenceHorizontal:
+	case AutomapTile::Types::Horizontal:
+	case AutomapTile::Types::FenceHorizontal:
 		DrawHorizontal(out, center, tile);
 		break;
-	case AutomapTypes::Cross:
+	case AutomapTile::Types::Cross:
 		DrawVertical(out, center, tile);
 		DrawHorizontal(out, center, tile);
 		break;
-	case AutomapTypes::CaveHorizontalCross:
+	case AutomapTile::Types::CaveHorizontalCross:
 		DrawVertical(out, center, tile);
 		DrawCaveHorizontal(out, center, tile);
 		break;
-	case AutomapTypes::CaveVerticalCross:
+	case AutomapTile::Types::CaveVerticalCross:
 		DrawHorizontal(out, center, tile);
 		DrawCaveVertical(out, center, tile);
 		break;
-	case AutomapTypes::CaveHorizontal:
+	case AutomapTile::Types::CaveHorizontal:
 		DrawCaveHorizontal(out, center, tile);
 		break;
-	case AutomapTypes::CaveVertical:
+	case AutomapTile::Types::CaveVertical:
 		DrawCaveVertical(out, center, tile);
 		break;
-	case AutomapTypes::CaveCross:
+	case AutomapTile::Types::CaveCross:
 		DrawCaveHorizontal(out, center, tile);
 		DrawCaveVertical(out, center, tile);
 		break;
-	case AutomapTypes::Corner:
-	case AutomapTypes::None:
+	case AutomapTile::Types::Corner:
+	case AutomapTile::Types::None:
 		break;
 	}
 }
@@ -390,13 +397,13 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 /**
  * @brief Check if a given tile has the provided AutomapTile flag
  */
-bool HasAutomapFlag(Point position, AutomapFlags type)
+bool HasAutomapFlag(Point position, AutomapTile::Flags type)
 {
 	if (position.x < 0 || position.x >= DMAXX || position.y < 0 || position.y >= DMAXX) {
 		return false;
 	}
 
-	return (AutomapTypeTiles[dungeon[position.x][position.y]].flags & type) != 0;
+	return AutomapTypeTiles[dungeon[position.x][position.y]].HasFlag(type);
 }
 
 /**
@@ -409,10 +416,10 @@ AutomapTile GetAutomapType(Point position)
 	}
 
 	AutomapTile tile = AutomapTypeTiles[dungeon[position.x][position.y]];
-	if (tile.type == AutomapTypes::Corner) {
-		if (HasAutomapFlag({ position.x - 1, position.y }, AutomapFlagHorizontalArch)) {
-			if (HasAutomapFlag({ position.x, position.y - 1 }, AutomapFlagVerticalArch)) {
-				tile.type = AutomapTypes::Diamond;
+	if (tile.type == AutomapTile::Types::Corner) {
+		if (HasAutomapFlag({ position.x - 1, position.y }, AutomapTile::Flags::HorizontalArch)) {
+			if (HasAutomapFlag({ position.x, position.y - 1 }, AutomapTile::Flags::VerticalArch)) {
+				tile.type = AutomapTile::Types::Diamond;
 			}
 		}
 	}
@@ -426,17 +433,17 @@ AutomapTile GetAutomapType(Point position)
 AutomapTile GetAutomapTypeView(Point map)
 {
 	if (map.x == -1 && map.y >= 0 && map.y < DMAXY && AutomapView[0][map.y]) {
-		if (HasAutomapFlag({ 0, map.y }, AutomapFlagDirt)) {
+		if (HasAutomapFlag({ 0, map.y }, AutomapTile::Flags::Dirt)) {
 			return {};
 		}
-		return { AutomapTypes::None, AutomapFlagDirt };
+		return { AutomapTile::Types::None, AutomapTile::Flags::Dirt };
 	}
 
 	if (map.y == -1 && map.x >= 0 && map.x < DMAXY && AutomapView[map.x][0]) {
-		if (HasAutomapFlag({ map.x, 0 }, AutomapFlagDirt)) {
+		if (HasAutomapFlag({ map.x, 0 }, AutomapTile::Flags::Dirt)) {
 			return {};
 		}
-		return { AutomapTypes::None, AutomapFlagDirt };
+		return { AutomapTile::Types::None, AutomapTile::Flags::Dirt };
 	}
 
 	if (map.x < 0 || map.x >= DMAXX) {
@@ -715,63 +722,63 @@ void SetAutomapView(Point position)
 	AutomapView[map.x][map.y] = true;
 
 	AutomapTile tile = GetAutomapType(map);
-	bool solid = (tile.flags & AutomapFlagDirt) != 0;
+	bool solid = tile.HasFlag(AutomapTile::Flags::Dirt);
 
 	switch (tile.type) {
-	case AutomapTypes::Vertical:
+	case AutomapTile::Types::Vertical:
 		if (solid) {
 			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
-			if (tileSW.type == AutomapTypes::Corner && (tileSW.flags & AutomapFlagDirt) != 0)
+			if (tileSW.type == AutomapTile::Types::Corner && tileSW.HasFlag(AutomapTile::Flags::Dirt))
 				AutomapView[map.x][map.y + 1] = true;
-		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt)) {
+		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt)) {
 			AutomapView[map.x - 1][map.y] = true;
 		}
 		break;
-	case AutomapTypes::Horizontal:
+	case AutomapTile::Types::Horizontal:
 		if (solid) {
 			auto tileSE = GetAutomapType({ map.x + 1, map.y });
-			if (tileSE.type == AutomapTypes::Corner && (tileSE.flags & AutomapFlagDirt) != 0)
+			if (tileSE.type == AutomapTile::Types::Corner && tileSE.HasFlag(AutomapTile::Flags::Dirt))
 				AutomapView[map.x + 1][map.y] = true;
-		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt)) {
+		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt)) {
 			AutomapView[map.x][map.y - 1] = true;
 		}
 		break;
-	case AutomapTypes::Cross:
+	case AutomapTile::Types::Cross:
 		if (solid) {
 			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
-			if (tileSW.type == AutomapTypes::Corner && (tileSW.flags & AutomapFlagDirt) != 0)
+			if (tileSW.type == AutomapTile::Types::Corner && tileSW.HasFlag(AutomapTile::Flags::Dirt))
 				AutomapView[map.x][map.y + 1] = true;
 			auto tileSE = GetAutomapType({ map.x + 1, map.y });
-			if (tileSE.type == AutomapTypes::Corner && (tileSE.flags & AutomapFlagDirt) != 0)
+			if (tileSE.type == AutomapTile::Types::Corner && tileSE.HasFlag(AutomapTile::Flags::Dirt))
 				AutomapView[map.x + 1][map.y] = true;
 		} else {
-			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt))
+			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt))
 				AutomapView[map.x - 1][map.y] = true;
-			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt))
+			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt))
 				AutomapView[map.x][map.y - 1] = true;
-			if (HasAutomapFlag({ map.x - 1, map.y - 1 }, AutomapFlagDirt))
+			if (HasAutomapFlag({ map.x - 1, map.y - 1 }, AutomapTile::Flags::Dirt))
 				AutomapView[map.x - 1][map.y - 1] = true;
 		}
 		break;
-	case AutomapTypes::FenceVertical:
+	case AutomapTile::Types::FenceVertical:
 		if (solid) {
-			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt))
+			if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt))
 				AutomapView[map.x][map.y - 1] = true;
 			auto tileSW = GetAutomapType({ map.x, map.y + 1 });
-			if (tileSW.type == AutomapTypes::Corner && (tileSW.flags & AutomapFlagDirt) != 0)
+			if (tileSW.type == AutomapTile::Types::Corner && tileSW.HasFlag(AutomapTile::Flags::Dirt))
 				AutomapView[map.x][map.y + 1] = true;
-		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt)) {
+		} else if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt)) {
 			AutomapView[map.x - 1][map.y] = true;
 		}
 		break;
-	case AutomapTypes::FenceHorizontal:
+	case AutomapTile::Types::FenceHorizontal:
 		if (solid) {
-			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapFlagDirt))
+			if (HasAutomapFlag({ map.x - 1, map.y }, AutomapTile::Flags::Dirt))
 				AutomapView[map.x - 1][map.y] = true;
 			auto tileSE = GetAutomapType({ map.x + 1, map.y });
-			if (tileSE.type == AutomapTypes::Corner && (tileSE.flags & AutomapFlagDirt) != 0)
+			if (tileSE.type == AutomapTile::Types::Corner && tileSE.HasFlag(AutomapTile::Flags::Dirt))
 				AutomapView[map.x + 1][map.y] = true;
-		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapFlagDirt)) {
+		} else if (HasAutomapFlag({ map.x, map.y - 1 }, AutomapTile::Flags::Dirt)) {
 			AutomapView[map.x][map.y - 1] = true;
 		}
 		break;
