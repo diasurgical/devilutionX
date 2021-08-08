@@ -1127,8 +1127,8 @@ void SaveItemAffix(ItemStruct &item, const PLStruct &affix)
 
 	if (!gbIsHellfire) {
 		if (power.type == IPL_TARGAC) {
-			power.param1 = 2 << power.param1;
-			power.param2 = 6 << power.param2;
+			power.param1 = 1 << power.param1;
+			power.param2 = 3 << power.param2;
 		}
 	}
 
