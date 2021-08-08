@@ -2592,6 +2592,7 @@ void SpawnItem(int m, Point position, bool sendmsg)
 	Point bkp = items[ii].position;
 	memset(&items[ii], 0, sizeof(ItemStruct));
 	items[ii].position = bkp;
+	memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	std::string tmp(items[ii]._iIName);
