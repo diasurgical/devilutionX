@@ -291,9 +291,8 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 				cellCollor = MapColorsItem;
 			}
 
-			if (dObject[i][j] != 0) {
-				int o = dObject[i][j] > 0 ? dObject[i][j] - 1 : -dObject[i][j] + 1; // why? (copied from other place
-				if (MarkObject4Search(o)) {
+			if (dObject[i][j] > 0) {
+				if (MarkObject4Search(dObject[i][j] - 1)) {
 					markCell = true;
 					cellCollor = MapColorsObject;
 				}
