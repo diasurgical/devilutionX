@@ -610,6 +610,10 @@ if(USE_GETTEXT)
   find_package(Gettext)
   foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
+
+    if(VITA)
+      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "${lang}.gmo")
+    endif()
   endforeach(lang)
 endif()
 
@@ -908,6 +912,7 @@ if(VITA)
     FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
     FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
     FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
+    ${VITA_TRANSLATIONS_LIST}
   )
 endif()
 
