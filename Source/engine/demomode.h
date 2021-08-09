@@ -13,9 +13,9 @@ namespace demo {
 
 void InitPlayBack(int demoNumber, bool timedemo);
 void InitRecording(int recordNumber);
+void OverrideOptions();
 
 bool IsRunning();
-bool IsTimedemo();
 bool IsRecording();
 
 bool GetRunGameLoop(bool &drawGame, bool &processInput);

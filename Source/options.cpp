@@ -225,10 +225,8 @@ void LoadOptions()
 	sgOptions.Audio.nBufferSize = GetIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
 	sgOptions.Audio.nResamplingQuality = GetIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
-	if (!demo::IsRunning()) {
-		sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
-		sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-	}
+	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
+	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
 #ifndef __vita__
 	sgOptions.Graphics.bFullscreen = GetIniBool("Graphics", "Fullscreen", true);
 #else
@@ -354,6 +352,9 @@ void LoadOptions()
 	GetIniValue("Language", "Code", sgOptions.Language.szCode, sizeof(sgOptions.Language.szCode), locale.c_str());
 
 	keymapper.Load();
+
+	if (demo::IsRunning())
+		demo::OverrideOptions();
 
 	sbWasOptionsLoaded = true;
 }

@@ -15,7 +15,6 @@
 #include "controls/devices/joystick.h"
 #include "controls/devices/kbcontroller.h"
 #include "controls/game_controls.h"
-#include "engine/demomode.h"
 #include "options.h"
 #include "utils/log.hpp"
 
@@ -173,7 +172,7 @@ bool SpawnWindow(const char *lpWindowName)
 	int width = sgOptions.Graphics.nWidth;
 	int height = sgOptions.Graphics.nHeight;
 
-	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen && !demo::IsRunning()) {
+	if (sgOptions.Graphics.bUpscale && sgOptions.Graphics.bFitToScreen) {
 		CalculatePreferdWindowSize(width, height);
 	}
 	AdjustToScreenGeometry(width, height);
@@ -221,7 +220,7 @@ bool SpawnWindow(const char *lpWindowName)
 #ifndef USE_SDL1
 		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
 
-		if (sgOptions.Graphics.bVSync && !demo::IsTimedemo()) {
+		if (sgOptions.Graphics.bVSync) {
 			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
 		}
 

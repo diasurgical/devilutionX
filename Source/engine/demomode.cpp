@@ -46,6 +46,9 @@ uint32_t DemoModeLastTick = 0;
 int LogicTick = 0;
 int StartTime = 0;
 
+int DemoGraphicsWidth = 640;
+int DemoGraphicsHeight = 480;
+
 void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, int32_t wParam, int32_t lParam, float progressToNextGameTick)
 {
 	demoMsg msg;
@@ -82,12 +85,10 @@ bool LoadDemoMessages(int i)
 	gSaveNumber = std::stoi(number);
 
 	std::getline(header, number, ',');
-	uint32_t width = std::stoi(number);
-	sgOptions.Graphics.nWidth = width;
+	DemoGraphicsWidth = std::stoi(number);
 
 	std::getline(header, number, ',');
-	uint32_t height = std::stoi(number);
-	sgOptions.Graphics.nHeight = height;
+	DemoGraphicsHeight = std::stoi(number);
 
 	while (std::getline(demofile, line)) {
 		std::stringstream command(line);
@@ -141,15 +142,20 @@ void InitRecording(int recordNumber)
 {
 	RecordNumber = recordNumber;
 }
+void OverrideOptions()
+{
+	sgOptions.Graphics.nWidth = DemoGraphicsWidth;
+	sgOptions.Graphics.nHeight = DemoGraphicsHeight;
+	sgOptions.Graphics.bFitToScreen = false;
+	if (Timedemo) {
+		sgOptions.Graphics.bVSync = false;
+		sgOptions.Graphics.bFPSLimit = false;
+	}
+}
 
 bool IsRunning()
 {
 	return DemoNumber != -1;
-}
-
-bool IsTimedemo()
-{
-	return Timedemo;
 }
 
 bool IsRecording()
