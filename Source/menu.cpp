@@ -5,6 +5,7 @@
  */
 
 #include "DiabloUI/diabloui.h"
+#include "engine/demomode.h"
 #include "init.h"
 #include "movie.h"
 #include "options.h"
@@ -86,7 +87,7 @@ bool DummyGetHeroInfo(_uiheroinfo * /*pInfo*/)
 bool mainmenu_select_hero_dialog(GameData *gameData)
 {
 	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
-	if (demoMode) {
+	if (demo::IsRunning()) {
 		pfile_ui_set_hero_infos(DummyGetHeroInfo);
 		gbLoadGame = true;
 	} else if (!gbIsMultiplayer) {
@@ -116,9 +117,6 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 
 	pfile_read_player_from_save(gSaveNumber, MyPlayerId);
 
-	if (recordDemo != -1)
-		CreateDemoFile(recordDemo);
-
 	return true;
 }
 
@@ -132,7 +130,7 @@ void mainmenu_loop()
 
 	do {
 		menu = MAINMENU_NONE;
-		if (demoMode)
+		if (demo::IsRunning())
 			menu = MAINMENU_SINGLE_PLAYER;
 		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
 			app_fatal("%s", _("Unable to display mainmenu"));

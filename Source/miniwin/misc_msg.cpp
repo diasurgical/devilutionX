@@ -1,7 +1,6 @@
 #include <SDL.h>
 #include <cstdint>
 #include <deque>
-#include <sstream>
 #include <string>
 
 #include "control.h"
@@ -12,17 +11,16 @@
 #include "controls/remap_keyboard.h"
 #include "controls/touch.h"
 #include "cursor.h"
+#include "engine/demomode.h"
 #include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
 #include "menu.h"
 #include "miniwin/miniwin.h"
 #include "movie.h"
-#include "nthread.h"
 #include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
-#include "utils/paths.h"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
 
@@ -48,7 +46,7 @@ void SetCursorPos(int x, int y)
 	mousePositionWarping = { x, y };
 	mouseWarping = true;
 	LogicalToOutput(&x, &y);
-	if (!demoMode)
+	if (!demo::IsRunning())
 		SDL_WarpMouseInWindow(ghMainWnd, x, y);
 }
 
@@ -592,192 +590,12 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	return true;
 }
 
-std::ofstream demoRecording;
-static std::deque<demoMsg> demo_message_queue;
-uint32_t demoModeLastTick = 0;
-
-void CreateDemoFile(int i)
-{
-	char demoFilename[16];
-	snprintf(demoFilename, 15, "demo_%d.dmo", i);
-	demoRecording.open(paths::PrefPath() + demoFilename, std::fstream::trunc);
-
-	demoRecording << "0," << gSaveNumber << "," << gnScreenWidth << "," << gnScreenHeight << "\n";
-}
-
-void SaveDemoMessage(tagMSG *lpMsg)
-{
-	demoRecording << static_cast<uint32_t>(DemoMsgType::Message) << "," << gfProgressToNextGameTick << "," << lpMsg->message << "," << lpMsg->wParam << "," << lpMsg->lParam << "\n";
-}
-
-void PumpDemoMessage(DemoMsgType demoMsgType, uint32_t message, int32_t wParam, int32_t lParam, float progressToNextGameTick)
-{
-	demoMsg msg;
-	msg.type = demoMsgType;
-	msg.message = message;
-	msg.wParam = wParam;
-	msg.lParam = lParam;
-	msg.progressToNextGameTick = progressToNextGameTick;
-
-	demo_message_queue.push_back(msg);
-}
-
-bool LoadDemoMessages(int i)
-{
-	std::ifstream demofile;
-	char demoFilename[16];
-	snprintf(demoFilename, 15, "demo_%d.dmo", i);
-	demofile.open(paths::PrefPath() + demoFilename);
-	if (!demofile.is_open()) {
-		return false;
-	}
-
-	std::string line;
-	std::getline(demofile, line);
-	std::stringstream header(line);
-
-	std::string number;
-	std::getline(header, number, ','); // Demo version
-	if (std::stoi(number) != 0) {
-		return false;
-	}
-
-	std::getline(header, number, ',');
-	gSaveNumber = std::stoi(number);
-
-	std::getline(header, number, ',');
-	uint32_t width = std::stoi(number);
-	sgOptions.Graphics.nWidth = width;
-
-	std::getline(header, number, ',');
-	uint32_t height = std::stoi(number);
-	sgOptions.Graphics.nHeight = height;
-
-	while (std::getline(demofile, line)) {
-		std::stringstream command(line);
-
-		std::getline(command, number, ',');
-		int typeNum = std::stoi(number);
-		auto type = static_cast<DemoMsgType>(typeNum);
-
-		std::getline(command, number, ',');
-		float progressToNextGameTick = std::stof(number);
-
-		switch (type) {
-		case DemoMsgType::Message: {
-			std::getline(command, number, ',');
-			uint32_t message = std::stoi(number);
-			std::getline(command, number, ',');
-			int32_t wParam = std::stoi(number);
-			std::getline(command, number, ',');
-			int32_t lParam = std::stoi(number);
-			PumpDemoMessage(type, message, wParam, lParam, progressToNextGameTick);
-			break;
-		}
-		default:
-			PumpDemoMessage(type, 0, 0, 0, progressToNextGameTick);
-			break;
-		}
-	}
-
-	demofile.close();
-
-	demoModeLastTick = SDL_GetTicks();
-
-	return true;
-}
-
-bool DemoMessage(tagMSG *lpMsg)
-{
-	SDL_Event e;
-	if (SDL_PollEvent(&e) != 0) {
-		if (e.type == SDL_QUIT) {
-			lpMsg->message = DVL_WM_QUIT;
-			lpMsg->lParam = 0;
-			lpMsg->wParam = 0;
-			return true;
-		}
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-			demo_message_queue.clear();
-			message_queue.clear();
-			demoMode = false;
-			timedemo = false;
-			last_tick = SDL_GetTicks();
-		}
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_KP_PLUS && sgGameInitInfo.nTickRate < 255) {
-			sgGameInitInfo.nTickRate++;
-			sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
-			gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
-		}
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_KP_MINUS && sgGameInitInfo.nTickRate > 1) {
-			sgGameInitInfo.nTickRate--;
-			sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
-			gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
-		}
-	}
-
-	if (!demo_message_queue.empty()) {
-		demoMsg dmsg = demo_message_queue.front();
-		if (dmsg.type == DemoMsgType::Message) {
-			lpMsg->message = dmsg.message;
-			lpMsg->lParam = dmsg.lParam;
-			lpMsg->wParam = dmsg.wParam;
-			gfProgressToNextGameTick = dmsg.progressToNextGameTick;
-			demo_message_queue.pop_front();
-			return true;
-		}
-	}
-
-	lpMsg->message = 0;
-	lpMsg->lParam = 0;
-	lpMsg->wParam = 0;
-
-	return false;
-}
-
-bool GetDemoRunGameLoop(bool &drawGame, bool &processInput)
-{
-	if (demo_message_queue.empty())
-		app_fatal("Demo queue empty");
-	demoMsg dmsg = demo_message_queue.front();
-	if (dmsg.type == DemoMsgType::Message)
-		app_fatal("Unexpected Message");
-	// disable additonal rendering to speedup replay
-	drawGame = dmsg.type == DemoMsgType::GameTick;
-	if (!timedemo) {
-		int currentTickCount = SDL_GetTicks();
-		int ticksElapsed = currentTickCount - demoModeLastTick;
-		bool tickDue = ticksElapsed >= gnTickDelay;
-		if (tickDue) {
-			if (dmsg.type == DemoMsgType::GameTick) {
-				demoModeLastTick = currentTickCount;
-			}
-		} else {
-			float progressToNextGameTick = clamp((float)ticksElapsed / (float)gnTickDelay, 0.F, 1.F);
-			if (dmsg.progressToNextGameTick > progressToNextGameTick) {
-				// we are ahead of the replay => add a additional rendering for smoothness
-				gfProgressToNextGameTick = progressToNextGameTick;
-				processInput = false;
-				drawGame = true;
-				return false;
-			}
-		}
-	}
-	gfProgressToNextGameTick = dmsg.progressToNextGameTick;
-	demo_message_queue.pop_front();
-	return dmsg.type == DemoMsgType::GameTick;
-}
-
 bool FetchMessage(tagMSG *lpMsg)
 {
-	if (demoMode) {
-		return DemoMessage(lpMsg);
-	}
+	bool available = demo::IsRunning() ? demo::FetchMessage(lpMsg) : FetchMessage_Real(lpMsg);
 
-	bool available = FetchMessage_Real(lpMsg);
-
-	if (recordDemo != -1 && available && gbRunGame)
-		SaveDemoMessage(lpMsg);
+	if (available && demo::IsRecording())
+		demo::RecordMessage(lpMsg);
 
 	return available;
 }
@@ -929,6 +747,11 @@ bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam)
 	message_queue.push_back({ type, wParam, lParam });
 
 	return true;
+}
+
+void ClearMessageQueue()
+{
+	message_queue.clear();
 }
 
 } // namespace devilution

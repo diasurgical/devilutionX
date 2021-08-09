@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 
+#include "engine/demomode.h"
 #include "engine.h"
 #include "options.h"
 #include "storm/storm.h"
@@ -333,7 +334,7 @@ void RenderPresent()
 		}
 		SDL_RenderPresent(renderer);
 
-		if (!sgOptions.Graphics.bVSync && !timedemo) {
+		if (!sgOptions.Graphics.bVSync && !demo::IsTimedemo()) {
 			LimitFrameRate();
 		}
 	} else {

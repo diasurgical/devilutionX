@@ -5,6 +5,7 @@
  */
 
 #include "diablo.h"
+#include "engine/demomode.h"
 #include "gmenu.h"
 #include "nthread.h"
 #include "storm/storm.h"
@@ -227,7 +228,7 @@ bool nthread_has_500ms_passed()
 
 void nthread_UpdateProgressToNextGameTick()
 {
-	if (!gbRunGame || PauseMode != 0 || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers || demoMode) // if game is not running or paused there is no next gametick in the near future
+	if (!gbRunGame || PauseMode != 0 || (!gbIsMultiplayer && gmenu_is_active()) || !gbProcessPlayers || demo::IsRunning()) // if game is not running or paused there is no next gametick in the near future
 		return;
 	int currentTickCount = SDL_GetTicks();
 	int ticksElapsed = last_tick - currentTickCount;

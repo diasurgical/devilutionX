@@ -26,6 +26,7 @@
 #include <SimpleIni.h>
 
 #include "diablo.h"
+#include "engine/demomode.h"
 #include "options.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
@@ -224,7 +225,7 @@ void LoadOptions()
 	sgOptions.Audio.nBufferSize = GetIniInt("Audio", "Buffer Size", DEFAULT_AUDIO_BUFFER_SIZE);
 	sgOptions.Audio.nResamplingQuality = GetIniInt("Audio", "Resampling Quality", DEFAULT_AUDIO_RESAMPLING_QUALITY);
 
-	if (!demoMode) {
+	if (!demo::IsRunning()) {
 		sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
 		sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
 	}

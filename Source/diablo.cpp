@@ -28,6 +28,7 @@
 #include "dx.h"
 #include "encrypt.h"
 #include "engine/cel_sprite.hpp"
+#include "engine/demomode.h"
 #include "engine/load_cel.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
@@ -97,9 +98,6 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
 bool leveldebug = false;
-int recordDemo = -1;
-bool demoMode = false;
-bool timedemo = false;
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
@@ -784,9 +782,10 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 
 void RunGameLoop(interface_mode uMsg)
 {
+	demo::NotifyGameLoopStart();
+
 	WNDPROC saveProc;
 	tagMSG msg;
-	int startTime;
 
 	nthread_ignore_mutex(true);
 	StartGame(uMsg);
@@ -808,11 +807,6 @@ void RunGameLoop(interface_mode uMsg)
 	unsigned run_game_iteration = 0;
 #endif
 
-	int logicTick = 0;
-
-	if (timedemo)
-		startTime = SDL_GetTicks();
-
 	while (gbRunGame) {
 		while (FetchMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
@@ -828,10 +822,10 @@ void RunGameLoop(interface_mode uMsg)
 
 		bool drawGame = true;
 		bool processInput = true;
-		bool runGameLoop = demoMode ? GetDemoRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed();
+		bool runGameLoop = demo::IsRunning() ? demo::GetRunGameLoop(drawGame, processInput) : nthread_has_500ms_passed();
+		if (demo::IsRecording())
+			demo::RecordGameLoopResult(runGameLoop);
 		if (!runGameLoop) {
-			if (recordDemo != -1)
-				demoRecording << static_cast<uint32_t>(DemoMsgType::Rendering) << "," << gfProgressToNextGameTick << "\n";
 			if (processInput)
 				ProcessInput();
 			if (!drawGame)
@@ -840,27 +834,20 @@ void RunGameLoop(interface_mode uMsg)
 			DrawAndBlit();
 			continue;
 		}
-		if (recordDemo != -1)
-			demoRecording << static_cast<uint32_t>(DemoMsgType::GameTick) << "," << gfProgressToNextGameTick << "\n";
+
 		diablo_color_cyc_logic();
 		multi_process_network_packets();
 		game_loop(gbGameLoopStartup);
 		gbGameLoopStartup = false;
 		if (drawGame)
 			DrawAndBlit();
-		logicTick++;
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 		if (run_game_iteration++ == 0)
 			HeapProfilerDump("first_game_iteration");
 #endif
 	}
 
-	if (timedemo) {
-		float secounds = (SDL_GetTicks() - startTime) / 1000.0;
-		SDL_Log("%d frames, %.2f seconds: %.1f fps", logicTick, secounds, logicTick / secounds);
-		gbRunGameResult = false;
-		gbRunGame = false;
-	}
+	demo::NotifyGameLoopEnd();
 
 	if (gbIsMultiplayer) {
 		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
@@ -922,6 +909,9 @@ void RunGameLoop(interface_mode uMsg)
 
 void DiabloParseFlags(int argc, char **argv)
 {
+	bool timedemo = false;
+	int demoNumber = -1;
+	int recordNumber = -1;
 	for (int i = 1; i < argc; i++) {
 		if (strcasecmp("-h", argv[i]) == 0 || strcasecmp("--help", argv[i]) == 0) {
 			PrintHelpAndExit();
@@ -933,15 +923,12 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (strcasecmp("--save-dir", argv[i]) == 0) {
 			paths::SetPrefPath(argv[++i]);
 		} else if (strcasecmp("--demo", argv[i]) == 0) {
-			demoMode = true;
-			if (!LoadDemoMessages(SDL_atoi(argv[++i]))) {
-				SDL_Log("Unable to load demo file");
-				diablo_quit(1);
-			}
+			demoNumber = SDL_atoi(argv[++i]);
+			gbShowIntro = false;
 		} else if (strcasecmp("--timedemo", argv[i]) == 0) {
 			timedemo = true;
 		} else if (strcasecmp("--record", argv[i]) == 0) {
-			recordDemo = SDL_atoi(argv[++i]);
+			recordNumber = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
 			paths::SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
@@ -1002,6 +989,11 @@ void DiabloParseFlags(int argc, char **argv)
 			PrintHelpAndExit();
 		}
 	}
+
+	if (demoNumber != -1)
+		demo::InitPlayBack(demoNumber, timedemo);
+	if (recordNumber != -1)
+		demo::InitRecording(recordNumber);
 }
 
 void DiabloInitScreen()
@@ -1096,10 +1088,8 @@ void DiabloDeinit()
 {
 	FreeItemGFX();
 
-	if (sbWasOptionsLoaded && !demoMode)
+	if (sbWasOptionsLoaded && !demo::IsRunning())
 		SaveOptions();
-	if (demoRecording.is_open())
-		demoRecording.close();
 	if (was_snd_init)
 		effects_cleanup_sfx();
 #ifndef NOSOUND
@@ -2198,7 +2188,7 @@ void game_loop(bool bStartup)
 		TimeoutCursor(false);
 		GameLogic();
 
-		if (!gbRunGame || !gbIsMultiplayer || demoMode || recordDemo != -1 || !nthread_has_500ms_passed())
+		if (!gbRunGame || !gbIsMultiplayer || demo::IsRunning() || demo::IsRecording() || !nthread_has_500ms_passed())
 			break;
 	}
 }

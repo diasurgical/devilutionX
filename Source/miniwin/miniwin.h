@@ -8,8 +8,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <iostream>
-#include <fstream>
 
 namespace devilution {
 
@@ -33,23 +31,6 @@ struct tagMSG {
 	int32_t lParam;
 };
 
-enum class DemoMsgType {
-	GameTick = 0,
-	Rendering = 1,
-	Message = 2,
-};
-
-struct demoMsg {
-	DemoMsgType type;
-	uint32_t message;
-	int32_t wParam;
-	int32_t lParam;
-	float progressToNextGameTick;
-};
-
-extern std::ofstream demoRecording;
-bool GetDemoRunGameLoop(bool &drawGame, bool &processInput);
-
 //
 // Everything else
 //
@@ -59,13 +40,12 @@ void FocusOnCharInfo();
 
 bool GetAsyncKeyState(int vKey);
 
-void CreateDemoFile(int i);
-bool LoadDemoMessages(int i);
 bool FetchMessage(tagMSG *lpMsg);
 
 bool TranslateMessage(const tagMSG *lpMsg);
 void PushMessage(const tagMSG *lpMsg);
 bool PostMessage(uint32_t type, int32_t wParam, int32_t lParam);
+void ClearMessageQueue();
 
 #ifdef _MSC_VER
 #define strcasecmp _stricmp
