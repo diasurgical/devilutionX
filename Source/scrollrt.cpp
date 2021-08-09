@@ -1350,7 +1350,7 @@ bool MarkObject4Search(int i)
 {
 	bool isCont = Objects[i].isAnyContainer();
 	bool isEmpty = Objects[i]._oSelFlag == 0;
-	return AutoMapShowItems && isCont && !isEmpty;
+	return sgOptions.Gameplay.bImprovedSearchSpell && AutoMapShowItems && isCont && !isEmpty;
 }
 
 Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direction dir, bool cameraMode /*= false*/)

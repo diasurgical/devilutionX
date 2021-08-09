@@ -272,6 +272,7 @@ void LoadOptions()
 	sgOptions.Gameplay.bRandomizeQuests = GetIniBool("Game", "Randomize Quests", true);
 	sgOptions.Gameplay.bShowMonsterType = GetIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bDisableCripplingShrines = GetIniBool("Game", "Disable Crippling Shrines", false);
+	sgOptions.Gameplay.bImprovedSearchSpell = GetIniBool("Game", "Improved Search Spell", false);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -420,6 +421,7 @@ void SaveOptions()
 	SetIniValue("Game", "Randomize Quests", sgOptions.Gameplay.bRandomizeQuests);
 	SetIniValue("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 	SetIniValue("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
+	SetIniValue("Game", "Improved Search Spell", sgOptions.Gameplay.bImprovedSearchSpell);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);

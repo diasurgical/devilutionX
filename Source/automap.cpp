@@ -19,6 +19,7 @@
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
+#include "options.h"
 
 namespace devilution {
 
@@ -272,9 +273,11 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 		else
 			tile.y++;
 	}
-
-	int spellLevel = GetSpellLevel(MyPlayerId, SPL_SEARCH);
-	int levelRangeExtension = spellLevel / 3;
+	int levelRangeExtension = 0;
+	if (sgOptions.Gameplay.bImprovedSearchSpell) {
+		int spellLevel = GetSpellLevel(MyPlayerId, SPL_SEARCH);
+		levelRangeExtension = spellLevel / 3;
+	}
 
 	const int startX = clamp(tile.x - 8 - levelRangeExtension, 0, MAXDUNX);
 	const int startY = clamp(tile.y - 8 - levelRangeExtension, 0, MAXDUNY);
