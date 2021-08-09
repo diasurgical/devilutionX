@@ -605,7 +605,6 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT] = player.HoldItem;
 		}
-		player.ReadySpellFromEquipment(inv_body_loc::INVLOC_HAND_LEFT);
 		break;
 	case ILOC_UNEQUIPABLE:
 		if (player.HoldItem._itype == ITYPE_GOLD && it == 0) {
