@@ -327,9 +327,7 @@ void LoadOptions()
 	memset( &bootParam, 0, sizeof(SceAppUtilBootParam) );
 	sceAppUtilInit( &initParam, &bootParam );
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
-	LogInfo("Locale {}", language);
 	std::string locale = std::string(vita_locales[language]);
-	LogInfo("Locale {}", locale);
 	sceAppUtilShutdown();
 #else
 	std::string locale = std::locale("").name().substr(0, 5);
