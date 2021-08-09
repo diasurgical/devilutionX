@@ -18,23 +18,23 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr "Projeto de jogo"
+msgstr "Design do Jogo"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr "Projetistas sêniores"
+msgstr "Projetistas Sêniores"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr "Projeto adicional"
+msgstr "Projeto Adicional"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr "Programador líder"
+msgstr "Programador Líder"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr "Programadores sêniores"
+msgstr "Programadores Sêniores"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
@@ -42,7 +42,7 @@ msgstr "Programação"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr "Programadores convidados especiais"
+msgstr "Programadores Convidados Especiais"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
@@ -50,15 +50,15 @@ msgstr "Programação Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr "Programação de comunicação serial"
+msgstr "Programação de Comunicação Serial"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr "Programação do instalador"
+msgstr "Programação do Instalador"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr "Diretores de arte"
+msgstr "Diretores de Arte"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
@@ -66,23 +66,23 @@ msgstr "Arte"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr "Arte técnica"
+msgstr "Arte Técnica"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr "Diretores de arte cinematográfica"
+msgstr "Diretores de Arte Cinematográfica"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr "Arte cinematográfica 3D"
+msgstr "Arte Cinematográfica 3D"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr "Arte técnica cinematográfica"
+msgstr "Arte Técnica Cinematográfica"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr "Produtor executivo"
+msgstr "Produtor Executivo"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
@@ -90,12 +90,12 @@ msgstr "Produtor"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr "Produtor associado"
+msgstr "Produtor Associado"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr "Equipe de ataque Diablo"
+msgstr "Equipe Strike Team Diablo"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:70
 msgid "Music"
@@ -103,19 +103,19 @@ msgstr "Música"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr "Projeto de som"
+msgstr "Design de Som"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr "Música cinematográfica e som"
+msgstr "Música Cinematográfica e Som"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr "Produção de voz, direção e elenco"
+msgstr "Produção de Voz, Direção e Elenco"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr "Roteiro e história"
+msgstr "Roteiro e História"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
@@ -127,11 +127,11 @@ msgstr "Vozes"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr "Engenheiro de gravação"
+msgstr "Engenheiro de Gravação"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr "Design e layout do manual"
+msgstr "Design e Layout do Manual"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
@@ -139,21 +139,19 @@ msgstr "Arte manual"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
-msgstr "Diretor provisório de controle de qualidade (Testador principal)"
+msgstr "Diretor provisório do Controle de Qualidade (Testador Líder)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr "Equipe de assalto do controle de qualidade (Testadores)"
+msgstr "Equipe de Assalto do Controle de Qualidade (Testadores)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr ""
-"Forças especiais do controle de qualidade (Testadores de compatibilidade)"
+msgstr "Forças Especiais do Controle de Qualidade (Testadores de Compatibilidade)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr ""
-"Suporte de artilharia do controle de qualidade (Testadores adicionais) "
+msgstr "Suporte de Artilharia do Controle de Qualidade (Testadores Adicionais) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
@@ -372,7 +370,7 @@ msgstr "Cancelar"
 #: Source/DiabloUI/selconn.cpp:39 Source/DiabloUI/selgame.cpp:78
 #: Source/DiabloUI/selgame.cpp:373
 msgid "Client-Server (TCP)"
-msgstr "Cliente-servidor (TCP)"
+msgstr "Cliente-Servidor (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:42
 msgid "Loopback"
@@ -381,7 +379,7 @@ msgstr "Loopback"
 #: Source/DiabloUI/selconn.cpp:48 Source/DiabloUI/selgame.cpp:435
 #: Source/DiabloUI/selgame.cpp:453
 msgid "Multi Player Game"
-msgstr "Jogo multijogador"
+msgstr "Jogo Multijogador"
 
 #: Source/DiabloUI/selconn.cpp:54
 msgid "Requirements:"
@@ -397,12 +395,11 @@ msgstr "Selecione uma conexão"
 
 #: Source/DiabloUI/selconn.cpp:69
 msgid "Change Gateway"
-msgstr "Mudar gateway"
+msgstr "Mudar Gateway"
 
 #: Source/DiabloUI/selconn.cpp:102
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr ""
-"Todos os computadores devem estar conectados a uma rede TCP compatível."
+msgstr "Todos os computadores devem estar conectados a uma rede compatível com TCP."
 
 #: Source/DiabloUI/selconn.cpp:106
 msgid "All computers must be connected to the internet."
@@ -414,7 +411,7 @@ msgstr "Jogue sozinho sem exposição na rede."
 
 #: Source/DiabloUI/selconn.cpp:115
 msgid "Players Supported: {:d}"
-msgstr "Jogadores suport.: {:d}"
+msgstr "Jogadores Suport.: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:81 Source/DiabloUI/selgame.cpp:376
 msgid "Description:"
@@ -422,7 +419,7 @@ msgstr "Descrição:"
 
 #: Source/DiabloUI/selgame.cpp:87
 msgid "Select Action"
-msgstr "Selecionar ação"
+msgstr "Selecionar Ação"
 
 #: Source/DiabloUI/selgame.cpp:89 Source/DiabloUI/selgame.cpp:152
 #: Source/DiabloUI/selgame.cpp:296
@@ -453,7 +450,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:155
 msgid "Select Difficulty"
-msgstr "Selecionar dificuldade"
+msgstr "Selecionar Dificuldade"
 
 #: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
 #: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:327
@@ -484,8 +481,8 @@ msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
-"Dificuldade normal\n"
-"É aqui que um personagem inicial deve começar a busca para derrotar Diablo."
+"Dificuldade Normal\n"
+"É aqui que um personagem inicial deve começar a jornada para derrotar Diablo."
 
 #: Source/DiabloUI/selgame.cpp:209
 msgid ""
@@ -493,8 +490,8 @@ msgid ""
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
-"Dificuldade pesadelo\n"
-"Os habitantes do labirinto foram reforçados e provarão ser um grande "
+"Dificuldade Pesadelo\n"
+"Os habitantes do Labirinto foram reforçados e provarão ser um grande "
 "desafio. Recomendado apenas para personagens experientes."
 
 #: Source/DiabloUI/selgame.cpp:213
@@ -503,7 +500,7 @@ msgid ""
 "The most powerful of the underworld's creatures lurk at the gateway into "
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
-"Dificuldade inferno\n"
+"Dificuldade Inferno\n"
 "As mais poderosas criaturas do submundo se escondem na porta de entrada do "
 "Inferno. Somente os personagens mais experientes devem se aventurar nesse "
 "reino."
@@ -534,11 +531,11 @@ msgstr "Rápido"
 
 #: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:335
 msgid "Faster"
-msgstr "Muito rápido"
+msgstr "Muito Rápido"
 
 #: Source/DiabloUI/selgame.cpp:310 Source/DiabloUI/selgame.cpp:339
 msgid "Fastest"
-msgstr "Super rápido"
+msgstr "Super Rápido"
 
 #: Source/DiabloUI/selgame.cpp:328
 msgid ""
@@ -546,7 +543,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "Velocidade: Normal\n"
-"É aqui que um personagem iniciante deve começar a missão para derrotar "
+"É aqui que um personagem iniciante deve começar a jornada para derrotar "
 "Diablo."
 
 #: Source/DiabloUI/selgame.cpp:332
@@ -556,7 +553,7 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Velocidade: Rápido\n"
-"Os habitantes do Labirinto foram apressados e provarão ser um desafio maior. "
+"Os habitantes do Labirinto foram acelerados e provarão ser um desafio maior. "
 "Isso é recomendado apenas para personagens experientes."
 
 #: Source/DiabloUI/selgame.cpp:336
@@ -565,8 +562,8 @@ msgid ""
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
-"Velocidade: Muito rápido\n"
-"A maioria dos monstros da masmorra irá procurá-lo mais rápido do que nunca. "
+"Velocidade: Muito Rápido\n"
+"A maioria dos monstros da masmorra irão procurá-lo mais rápido do que nunca. "
 "Apenas um campeão experiente deve tentar a sorte nesta velocidade."
 
 #: Source/DiabloUI/selgame.cpp:340
@@ -575,7 +572,7 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
-"Velocidade: Super rápido\n"
+"Velocidade: Super Sápido\n"
 "Os asseclas do submundo correrão para atacar sem hesitação. Apenas um "
 "verdadeiro demônio da velocidade deve entrar neste ritmo."
 
@@ -598,7 +595,7 @@ msgstr "Novo herói"
 
 #: Source/DiabloUI/selhero.cpp:163
 msgid "Choose Class"
-msgstr "Escolha uma classe"
+msgstr "Escolha uma Classe"
 
 #: Source/DiabloUI/selhero.cpp:167 Source/control.cpp:108
 msgid "Warrior"
@@ -626,24 +623,24 @@ msgstr "Bárbaro"
 
 #: Source/DiabloUI/selhero.cpp:193 Source/DiabloUI/selhero.cpp:267
 msgid "New Multi Player Hero"
-msgstr "Novo herói multijogador"
+msgstr "Novo Herói Multijogador"
 
 #: Source/DiabloUI/selhero.cpp:193 Source/DiabloUI/selhero.cpp:267
 msgid "New Single Player Hero"
-msgstr "Novo herói"
+msgstr "Novo Herói"
 
 #: Source/DiabloUI/selhero.cpp:201
 msgid "Save File Exists"
-msgstr "Jogo salvo existente"
+msgstr "Jogo Salvo Existente"
 
 #: Source/DiabloUI/selhero.cpp:204 Source/gamemenu.cpp:41
 msgid "Load Game"
-msgstr "Carregar jogo"
+msgstr "Carregar Jogo"
 
 #: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:40
 #: Source/gamemenu.cpp:51
 msgid "New Game"
-msgstr "Novo jogo"
+msgstr "Novo Jogo"
 
 #: Source/DiabloUI/selhero.cpp:215 Source/DiabloUI/selhero.cpp:538
 msgid "Single Player Characters"
@@ -654,7 +651,7 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"O Ladino e o Feiticeiro estão disponíveis apenas na versão comercial "
+"A Ladina e o Feiticeiro estão disponíveis apenas na versão comercial "
 "completa do Diablo. Visite https://www.gog.com/game/diablo para comprar."
 
 #: Source/DiabloUI/selhero.cpp:273 Source/DiabloUI/selhero.cpp:276
@@ -696,7 +693,7 @@ msgstr "Vitalidade:"
 
 #: Source/DiabloUI/selhero.cpp:494
 msgid "Savegame:"
-msgstr "Jogo salvo:"
+msgstr "Jogo Salvo:"
 
 #: Source/DiabloUI/selhero.cpp:506
 msgid "Select Hero"
@@ -708,15 +705,15 @@ msgstr "Apagar"
 
 #: Source/DiabloUI/selhero.cpp:536
 msgid "Multi Player Characters"
-msgstr "Personagens multijogador"
+msgstr "Personagens Multijogador"
 
 #: Source/DiabloUI/selhero.cpp:578
 msgid "Delete Multi Player Hero"
-msgstr "Apagar herói multijogador"
+msgstr "Apagar Herói Multijogador"
 
 #: Source/DiabloUI/selhero.cpp:580
 msgid "Delete Single Player Hero"
-msgstr "Apagar herói"
+msgstr "Apagar Herói"
 
 #: Source/DiabloUI/selhero.cpp:582
 msgid "Are you sure you want to delete the character \"{:s}\"?"
@@ -736,8 +733,7 @@ msgstr "GOG.com mantém um site em https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr ""
-"Siga os links para visitar os fóruns de discussão associados ao Diablo."
+msgstr "Siga os links para visitar os fóruns de discussão associados ao Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
@@ -770,17 +766,17 @@ msgstr "Aviso legal:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr " DevilutionX não é suportado nem mantido pela Blizzard Entertainment,"
+msgstr "  DevilutionX não é suportado nem mantido pela Blizzard Entertainment,"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
-msgstr " nem GOG.com. Nem Blizzard Entertainment ou GOG.com não testaram"
+msgstr " nem GOG.com. Nem Blizzard Entertainment ou GOG.com testaram"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
 msgstr ""
-" ou certificaram a qualidade ou compatibilidade de DevilutionX. Todas as "
+"  ou certificaram a qualidade ou compatibilidade de DevilutionX. Todas as "
 "questões"
 
 #: Source/DiabloUI/support_lines.cpp:22
