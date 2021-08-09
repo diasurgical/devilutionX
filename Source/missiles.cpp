@@ -2557,8 +2557,8 @@ void AddStone(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*
 			int mid = dMonster[tx][ty];
 			if (mid == 0)
 				continue;
-
-			auto &monster = Monsters[abs(mid) - 1];
+			mid = abs(mid) - 1;
+			auto &monster = Monsters[mid];
 
 			if (IsAnyOf(monster.MType->mtype, MT_GOLEM, MT_DIABLO, MT_NAKRUL))
 				continue;
