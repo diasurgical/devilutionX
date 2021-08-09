@@ -13,6 +13,11 @@
 #include <jni.h>
 #endif
 
+#ifdef __vita__
+#include <psp2/apputil.h>
+#include <psp2/system_param.h>
+#endif
+
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -292,6 +297,40 @@ void LoadOptions()
 	env->DeleteLocalRef(jLocale);
 	env->DeleteLocalRef(activity);
 	env->DeleteLocalRef(clazz);
+#elif defined(__vita__)
+	int32_t language;
+	const char* vita_locales[] = {
+		"ja_JP",
+		"en_US",
+		"fr_FR",
+		"es_ES",
+		"de_DE",
+		"it_IT",
+		"nl_NL",
+		"pt_PT",
+		"ru_RU",
+		"ko_KR",
+		"zh_TW",
+		"zh_CN",
+		"fi_FI",
+		"sv_SE",
+		"da_DK",
+		"no_NO",
+		"pl_PL",
+		"pt_BR",
+		"en_GB",
+		"tr_TR",
+	};
+	SceAppUtilInitParam initParam;
+	SceAppUtilBootParam bootParam;
+	memset( &initParam, 0, sizeof(SceAppUtilInitParam) );
+	memset( &bootParam, 0, sizeof(SceAppUtilBootParam) );
+	sceAppUtilInit( &initParam, &bootParam );
+	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
+	LogInfo("Locale {}", language);
+	std::string locale = std::string(vita_locales[language]);
+	LogInfo("Locale {}", locale);
+	sceAppUtilShutdown();
 #else
 	std::string locale = std::locale("").name().substr(0, 5);
 #endif

@@ -786,6 +786,7 @@ endif()
 if (VITA)
   target_link_libraries(libdevilutionx PUBLIC
         ScePower_stub
+        SceAppUtil_stub
         freetype
         png
         z
