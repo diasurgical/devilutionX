@@ -22,7 +22,7 @@ msgstr "遊戲設計"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr "高級設計師"
+msgstr "資深設計師"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
@@ -34,7 +34,7 @@ msgstr "首席程式設計師"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr "高級程式設計師"
+msgstr "資深程式設計師"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
@@ -42,11 +42,11 @@ msgstr "程式設計"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr "特邀程式設計師"
+msgstr "特約程式設計師"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
-msgstr "戰網程式設計"
+msgstr "Battle.net程式設計"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
@@ -58,31 +58,31 @@ msgstr "安裝程式程式設計"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr "藝術總監"
+msgstr "美術總監"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr "藝術品"
+msgstr "美術設計"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr "技術藝術品"
+msgstr "技術美術設計"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr "電影藝術導演"
+msgstr "影片美術總監"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr "3D電影藝術品"
+msgstr "3D影片美術設計"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr "電影技術藝術品"
+msgstr "影片技術美術設計"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr "執行製片人"
+msgstr "執行製作人"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
@@ -90,12 +90,12 @@ msgstr "製作人"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr "副製片人"
+msgstr "助理製作人"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr "破壞神突擊隊"
+msgstr "暗黑破壞神突擊小組"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:70
 msgid "Music"
@@ -103,19 +103,19 @@ msgstr "音樂"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr "音響設計"
+msgstr "音效設計"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr "電影音樂與聲音"
+msgstr "影片音樂和音效"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr "聲音製作、導演和播音"
+msgstr "語音製作、導演和配音"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr "指令碼和故事"
+msgstr "劇本和故事"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
@@ -123,83 +123,83 @@ msgstr "語音編輯"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr "聲音"
+msgstr "語音"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr "錄音工程師"
+msgstr "錄音師"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr "手動設計和佈局"
+msgstr "使用手冊設計和編排"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
-msgstr "手工藝術品"
+msgstr "使用手冊美術設計"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
-msgstr "QA臨時總監（鉛試驗器）"
+msgstr "短期品保總監（測試主管）"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr "QA突擊隊（測試人員）"
+msgstr "品保突擊小組（測試人員）"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr "QA特別行動小組（相容性測試人員）"
+msgstr "品保特別行動小組（相容性測試人員）"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr "QA炮兵支援（附加測試人員）"
+msgstr "品保火力支援小組（附加測試人員）"
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
-msgstr "QA反情報"
+msgstr "品保反情小組"
 
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
-msgstr "網路資訊服務秩序"
+msgstr "NIS系統維護管理"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
-msgstr "客戶支援"
+msgstr "客服人員"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
-msgstr "銷售額"
+msgstr "銷售人員"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
-msgstr "鄧塞爾"
+msgstr "Dunsel"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr "達比里先生的背景歌手"
+msgstr "Dabiri先生的和聲"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr "公共關係"
+msgstr "公關人員"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr "營銷"
+msgstr "行銷人員"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr "國際銷售"
+msgstr "國際銷售人員"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
-msgstr "美國銷售"
+msgstr "美國銷售人員"
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr "製造業"
+msgstr "製造商"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr "法律與商業"
+msgstr "法律和商業"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
@@ -211,7 +211,7 @@ msgstr "感謝"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
-msgstr "爲了紀念"
+msgstr "以玆紀念"
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
@@ -227,11 +227,11 @@ msgstr "軟體工程"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr "藝術總監"
+msgstr "美術總監"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr "藝術家"
+msgstr "美術"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
@@ -239,11 +239,11 @@ msgstr "設計"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr "聲音設計、SFX和音訊工程"
+msgstr "音效設計、混音和音訊工程"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr "質量保證負責人"
+msgstr "品保主管"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
@@ -251,7 +251,7 @@ msgstr "測試人員"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr "手冊"
+msgstr "使用手冊"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
@@ -259,11 +259,11 @@ msgstr "\t附加工作"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr "任務文字寫作"
+msgstr "任務文字撰寫"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
-msgstr "幸虧"
+msgstr "感謝"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
@@ -271,15 +271,15 @@ msgstr "\t\t\t特別感謝暴雪娛樂"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr "Sierra On-Line Inc. Northwest"
+msgstr "\t\t\t雪樂山線上"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr "質量保證經理"
+msgstr "品保經理"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr "質量保證鉛測試儀"
+msgstr "品保測試主管"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
@@ -291,23 +291,23 @@ msgstr "附加測試人員"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr "產品營銷經理"
+msgstr "產品行銷經理"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr "公共關係經理"
+msgstr "公關經理"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr "副產品經理"
+msgstr "助理產品經理"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr "一千枚戒指"
+msgstr "最初的一千名Beta測試人員（The Ring of One Thousand）"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr "\t在這個遊戲的製作過程中沒有靈魂被出賣。"
+msgstr "\t在這個遊戲的製作過程中沒有任何靈魂被出賣。"
 
 #: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
 #: Source/DiabloUI/selconn.cpp:74 Source/DiabloUI/selgame.cpp:95
@@ -317,7 +317,7 @@ msgstr "\t在這個遊戲的製作過程中沒有靈魂被出賣。"
 #: Source/DiabloUI/selhero.cpp:279 Source/DiabloUI/selhero.cpp:524
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
-msgstr "好啊"
+msgstr "好"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"

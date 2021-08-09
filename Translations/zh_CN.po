@@ -749,7 +749,7 @@ msgstr "免责声明: "
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr "暴雪娱乐不支持或维护DeviceX，"
+msgstr "暴雪娱乐不支持或维护DevilutionX，"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
@@ -758,7 +758,7 @@ msgstr "也不是GOG.com。暴雪娱乐和GOG.com都没有进行测试"
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr "或者证明了DeviceX的质量或兼容性。所有查询"
+msgstr "或者证明了DevilutionX的质量或兼容性。所有查询"
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
@@ -5565,7 +5565,7 @@ msgid ""
 msgstr ""
 "无法加载UI资源。\n"
 "\n"
-"DeviceX.mpq是否在游戏目录且是最新的？"
+"devilutionx.mpq是否在游戏目录且是最新的？"
 
 #: Source/qol/xpbar.cpp:128
 msgid "Level {:d}"
