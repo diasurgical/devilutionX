@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DeviltutionX\n"
-"POT-Creation-Date: 2021-08-08 18:55+0200\n"
+"POT-Creation-Date: 2021-08-09 14:40+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: muziling <pieceking@qq.com>\n"
 "Language-Team: Emiliano Augusto Gonzalez\n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 3.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
@@ -815,23 +815,23 @@ msgstr ""
 msgid "Read-Only Directory Error"
 msgstr "只读目录错误"
 
-#: Source/automap.cpp:394
+#: Source/automap.cpp:472
 msgid "game: "
 msgstr "游戏: "
 
-#: Source/automap.cpp:400
+#: Source/automap.cpp:478
 msgid "password: "
 msgstr "密码: "
 
-#: Source/automap.cpp:413
+#: Source/automap.cpp:491
 msgid "Level: Nest {:d}"
 msgstr "层数: {:d}巢穴"
 
-#: Source/automap.cpp:415
+#: Source/automap.cpp:493
 msgid "Level: Crypt {:d}"
 msgstr "层数: {:d}墓穴"
 
-#: Source/automap.cpp:417 Source/items.cpp:2081
+#: Source/automap.cpp:495 Source/items.cpp:2081
 msgid "Level: {:d}"
 msgstr "等级: {:d}"
 
