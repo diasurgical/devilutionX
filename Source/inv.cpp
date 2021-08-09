@@ -605,11 +605,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			NetSendCmdChItem(false, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT] = player.HoldItem;
 		}
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && player.InvBody[INVLOC_HAND_LEFT]._iSpell != SPL_NULL && player.InvBody[INVLOC_HAND_LEFT]._iCharges > 0) {
-			player._pRSpell = player.InvBody[INVLOC_HAND_LEFT]._iSpell;
-			player._pRSplType = RSPLTYPE_CHARGES;
-			force_redraw = 255;
-		}
+		player.ReadySpellFromEquipment(inv_body_loc::INVLOC_HAND_LEFT);
 		break;
 	case ILOC_UNEQUIPABLE:
 		if (player.HoldItem._itype == ITYPE_GOLD && it == 0) {
