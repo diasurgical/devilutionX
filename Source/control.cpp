@@ -491,7 +491,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 		st = RSPLTYPE_SKILL;
 	}
 	if (st == RSPLTYPE_SPELL) {
-		if (!CheckSpell(MyPlayerId, ii, st, true)) {
+		if (CheckSpell(MyPlayerId, ii, st, true) != SpellCheckResult::Success) {
 			st = RSPLTYPE_INVALID;
 		}
 		if ((char)(myPlayer._pSplLvl[ii] + myPlayer._pISplLvlAdd) <= 0) {
@@ -668,7 +668,7 @@ void DrawSpell(const Surface &out)
 	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
 		int tlvl = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spl];
-		if (!CheckSpell(MyPlayerId, spl, st, true))
+		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;

@@ -3556,11 +3556,12 @@ void CheckPlrSpell()
 				return;
 		}
 	}
-
+	SpellCheckResult spellcheck = SpellCheckResult::Success;
 	switch (myPlayer._pRSplType) {
 	case RSPLTYPE_SKILL:
 	case RSPLTYPE_SPELL:
-		addflag = CheckSpell(MyPlayerId, rspell, myPlayer._pRSplType, false);
+		spellcheck = CheckSpell(MyPlayerId, rspell, myPlayer._pRSplType, false);
+		addflag = spellcheck == SpellCheckResult::Success;
 		break;
 	case RSPLTYPE_SCROLL:
 		addflag = UseScroll();
@@ -3574,7 +3575,19 @@ void CheckPlrSpell()
 
 	if (!addflag) {
 		if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-			myPlayer.Say(HeroSpeech::NotEnoughMana);
+			HeroSpeech sentence;
+			switch (spellcheck) {
+			case SpellCheckResult::Fail_NoMana:
+				sentence = HeroSpeech::NotEnoughMana;
+				break;
+			case SpellCheckResult::Fail_Level0:
+				sentence = HeroSpeech::ICantCastThatYet;
+				break;
+			default:
+				sentence = HeroSpeech::ICantDoThat;
+				break;
+			}
+			myPlayer.Say(sentence);
 			LastMouseButtonAction = MouseActionType::None;
 		}
 		return;
