@@ -453,19 +453,22 @@ msgstr ""
 msgid "Select Difficulty"
 msgstr "Выберете сложность"
 
-#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
 #: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:327
-#: Source/diablo.cpp:1567
+msgid "Normal"
+msgstr "Нормальная"
+
+#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
+#: Source/diablo.cpp:1568
 msgid "Normal"
 msgstr "Нормальная"
 
 #: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:208
-#: Source/diablo.cpp:1568
+#: Source/diablo.cpp:1569
 msgid "Nightmare"
 msgstr "Кошмарная"
 
 #: Source/DiabloUI/selgame.cpp:159 Source/DiabloUI/selgame.cpp:212
-#: Source/diablo.cpp:1569
+#: Source/diablo.cpp:1570
 msgid "Hell"
 msgstr "Адская"
 

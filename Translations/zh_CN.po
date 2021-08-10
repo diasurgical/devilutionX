@@ -449,8 +449,11 @@ msgstr "输入IP或主机名，然后在该地址加入正在进行的游戏。"
 msgid "Select Difficulty"
 msgstr "选择难度"
 
-#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
 #: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:327
+msgid "Normal"
+msgstr "正常"
+
+#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
 #: Source/diablo.cpp:1568
 msgid "Normal"
 msgstr "正常"
