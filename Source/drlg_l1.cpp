@@ -1959,7 +1959,7 @@ void FloodTransparancyValues()
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 13 && dTransVal[xx][yy] == 0) {
+			if (dungeon[i][j] == tileID && dTransVal[xx][yy] == 0) {
 				FindTransparencyValues(tileID, i, j, xx, yy, 0);
 				TransVal++;
 			}
