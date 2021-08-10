@@ -430,14 +430,14 @@ AutomapTile GetAutomapType(Point position)
 AutomapTile GetAutomapTypeView(Point map)
 {
 	if (map.x == -1 && map.y >= 0 && map.y < DMAXY && AutomapView[0][map.y]) {
-		if (HasAutomapFlag({ 0, map.y }, AutomapTile::Flags::Dirt)) {
+		if (HasAutomapFlag({ 0, map.y + 1 }, AutomapTile::Flags::Dirt) && HasAutomapFlag({ 0, map.y }, AutomapTile::Flags::Dirt) && HasAutomapFlag({ 0, map.y - 1 }, AutomapTile::Flags::Dirt)) {
 			return {};
 		}
 		return { AutomapTile::Types::None, AutomapTile::Flags::Dirt };
 	}
 
 	if (map.y == -1 && map.x >= 0 && map.x < DMAXY && AutomapView[map.x][0]) {
-		if (HasAutomapFlag({ map.x, 0 }, AutomapTile::Flags::Dirt)) {
+		if (HasAutomapFlag({ map.x + 1, 0 }, AutomapTile::Flags::Dirt) && HasAutomapFlag({ map.x, 0 }, AutomapTile::Flags::Dirt) && HasAutomapFlag({ map.x - 1, 0 }, AutomapTile::Flags::Dirt)) {
 			return {};
 		}
 		return { AutomapTile::Types::None, AutomapTile::Flags::Dirt };
