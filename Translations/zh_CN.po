@@ -1021,7 +1021,11 @@ msgstr "法术"
 msgid "Quests"
 msgstr "任务"
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "城镇传送门"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "城镇传送门"
 

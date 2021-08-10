@@ -1045,7 +1045,11 @@ msgstr "{:s} Spruch"
 msgid "Quests"
 msgstr "Questtagebuch"
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "Stadtportal"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "Stadtportal"
 

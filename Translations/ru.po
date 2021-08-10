@@ -1049,7 +1049,11 @@ msgstr "Магия"
 msgid "Quests"
 msgstr "Квесты"
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "Городской портал"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "Городской портал"
 

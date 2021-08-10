@@ -976,7 +976,11 @@ msgstr ""
 msgid "Quests"
 msgstr ""
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr ""
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr ""
 

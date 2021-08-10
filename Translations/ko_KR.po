@@ -1053,7 +1053,11 @@ msgstr "주문"
 msgid "Quests"
 msgstr "퀘스트"
 
-#: Source/cursor.cpp:208 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "마을 차원문"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "마을 차원문"
 

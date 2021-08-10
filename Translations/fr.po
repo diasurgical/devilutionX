@@ -1069,7 +1069,11 @@ msgstr "Sorts"
 msgid "Quests"
 msgstr "Quêtes"
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "Portail vers la ville"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "Portail vers la ville"
 

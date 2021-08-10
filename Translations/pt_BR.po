@@ -1051,7 +1051,11 @@ msgstr "Feitiços"
 msgid "Quests"
 msgstr "Missões"
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "Portal da cidade"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "Portal da cidade"
 

@@ -1047,7 +1047,11 @@ msgstr "Magie"
 msgid "Quests"
 msgstr "Missioni"
 
-#: Source/cursor.cpp:230 Source/spelldat.cpp:22
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "Portale Cittadino"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "Portale Cittadino"
 

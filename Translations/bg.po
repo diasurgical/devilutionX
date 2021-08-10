@@ -1061,8 +1061,11 @@ msgstr "Заклинания"
 msgid "Quests"
 msgstr "Задачи"
 
-#: Source/cursor.cpp:207 Source/spelldat.cpp:22
-#, fuzzy
+#: Source/cursor.cpp:230
+msgid "Town Portal"
+msgstr "Градски портал"
+
+#: Source/spelldat.cpp:22
 msgid "Town Portal"
 msgstr "Градски портал"
 
