@@ -1689,6 +1689,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 
 void diablo_quit(int exitStatus)
 {
+	FreeGameMem();
 	DiabloDeinit();
 	exit(exitStatus);
 }
