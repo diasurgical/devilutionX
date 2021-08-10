@@ -1306,7 +1306,6 @@ void GenerateLevel(lvl_entry entry)
 	constexpr int Minarea = 173;
 	int ar;
 	bool doneflag;
-	uint8_t floorID = 6;
 	do {
 		DRLG_InitTrans();
 
@@ -1334,7 +1333,7 @@ void GenerateLevel(lvl_entry entry)
 			}
 		}
 		AddWall();
-		FloodTransparencyValues(floorID);
+		FloodTransparencyValues(6);
 		FixTransparency();
 		if (setloadflag) {
 			SetSetPiecesRoom(SP4x1, SP4y1);

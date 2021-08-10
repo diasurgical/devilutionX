@@ -2184,7 +2184,6 @@ void GenerateLevel(lvl_entry entry)
 	}
 
 	bool doneflag;
-	uint8_t floorID = 13;
 	do {
 		DRLG_InitTrans();
 
@@ -2199,7 +2198,7 @@ void GenerateLevel(lvl_entry entry)
 		FixTilesPatterns();
 		AddWall();
 		ClearFlags();
-		FloodTransparencyValues(floorID);
+		FloodTransparencyValues(13);
 
 		doneflag = true;
 

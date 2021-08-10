@@ -2904,7 +2904,6 @@ void FixDoors()
 void GenerateLevel(lvl_entry entry)
 {
 	bool doneflag = false;
-	uint8_t floorID = 3;
 	while (!doneflag) {
 		nRoomCnt = 0;
 		InitDungeonFlags();
@@ -2916,7 +2915,7 @@ void GenerateLevel(lvl_entry entry)
 		if (setloadflag) {
 			SetRoom(nSx1, nSy1);
 		}
-		FloodTransparencyValues(floorID);
+		FloodTransparencyValues(3);
 		FixTransparency();
 		if (entry == ENTRY_MAIN) {
 			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true);
