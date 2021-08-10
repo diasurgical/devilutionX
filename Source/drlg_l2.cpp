@@ -2765,12 +2765,12 @@ bool CreateDungeon()
 void FloodTransparancyValues()
 {
 	int yy = 16;
-	uint8_t tileID = 3;
+	uint8_t floorID = 3;
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == tileID && dTransVal[xx][yy] == 0) {
-				FindTransparencyValues(tileID, i, j, xx, yy, 0);
+			if (dungeon[i][j] == floorID && dTransVal[xx][yy] == 0) {
+				FindTransparencyValues(i, j, xx, yy, 0, floorID);
 				TransVal++;
 			}
 			xx += 2;
