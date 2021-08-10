@@ -359,16 +359,11 @@ void CheckCursMove()
 	if (flipx) {
 		mx++;
 	}
-
-	if (mx < 0) {
-		mx = 0;
-	}
+	mx = std::max(mx, 0);
 	if (mx >= MAXDUNX) {
 		mx = MAXDUNX - 1;
 	}
-	if (my < 0) {
-		my = 0;
-	}
+	my = std::max(my, 0);
 	if (my >= MAXDUNY) {
 		my = MAXDUNY - 1;
 	}
