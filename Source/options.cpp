@@ -302,7 +302,7 @@ void LoadOptions()
 	env->DeleteLocalRef(activity);
 	env->DeleteLocalRef(clazz);
 #elif defined(__vita__)
-	int32_t language;
+	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
 	const char* vita_locales[] = {
 		"ja_JP",
 		"en_US",
@@ -331,6 +331,8 @@ void LoadOptions()
 	memset( &bootParam, 0, sizeof(SceAppUtilBootParam) );
 	sceAppUtilInit( &initParam, &bootParam );
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
+	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
+		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
 	std::string locale = std::string(vita_locales[language]);
 	sceAppUtilShutdown();
 #elif defined(__3DS__)
