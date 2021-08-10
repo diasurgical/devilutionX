@@ -18,6 +18,10 @@
 #include <psp2/system_param.h>
 #endif
 
+#ifdef __3DS__
+#include "platform/ctr/locale.hpp"
+#endif
+
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -329,6 +333,8 @@ void LoadOptions()
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
 	std::string locale = std::string(vita_locales[language]);
 	sceAppUtilShutdown();
+#elif defined(__3DS__)
+	std::string locale = n3ds::GetLocale();
 #else
 	std::string locale = std::locale("").name().substr(0, 5);
 #endif

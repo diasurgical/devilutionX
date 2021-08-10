@@ -507,6 +507,7 @@ if(NINTENDO_3DS)
     Source/platform/ctr/messagebox.cpp
     Source/platform/ctr/random.cpp
     Source/platform/ctr/sockets.cpp
+    Source/platform/ctr/locale.cpp
     Source/platform/ctr/asio/net/if.c
     Source/platform/ctr/asio/sys/socket.c
     Source/platform/ctr/asio/sys/uio.c)
