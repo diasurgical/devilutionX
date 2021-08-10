@@ -210,9 +210,6 @@ void DrawCaveVertical(const Surface &out, Point center, AutomapTile tile)
  */
 void DrawAutomapTile(const Surface &out, Point center, AutomapTile tile)
 {
-	if (tile.type == AutomapTile::Types::None)
-		return;
-
 	if (tile.HasFlag(AutomapTile::Flags::Dirt)) {
 		DrawDirt(out, center);
 	}
