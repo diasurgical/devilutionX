@@ -1952,23 +1952,6 @@ void FillChambers()
 	}
 }
 
-void FloodTransparancyValues()
-{
-	int yy = 16;
-	uint8_t tileID = 13;
-	for (int j = 0; j < DMAXY; j++) {
-		int xx = 16;
-		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == tileID && dTransVal[xx][yy] == 0) {
-				FindTransparencyValues(tileID, i, j, xx, yy, 0);
-				TransVal++;
-			}
-			xx += 2;
-		}
-		yy += 2;
-	}
-}
-
 void FixTransparency()
 {
 	int yy = 16;
@@ -2215,7 +2198,7 @@ void GenerateLevel(lvl_entry entry)
 		FixTilesPatterns();
 		AddWall();
 		ClearFlags();
-		FloodTransparancyValues();
+		FloodTransparencyValues(13);
 
 		doneflag = true;
 
