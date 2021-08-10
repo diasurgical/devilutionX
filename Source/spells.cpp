@@ -114,11 +114,7 @@ int GetManaAmount(PlayerStruct &player, spell_id sn)
 	int adj = 0;
 
 	// spell level
-	int sl = player._pSplLvl[sn] + player._pISplLvlAdd - 1;
-
-	if (sl < 0) {
-		sl = 0;
-	}
+	int sl = std::max(player._pSplLvl[sn] + player._pISplLvlAdd - 1, 0);
 
 	if (sl > 0) {
 		adj = sl * spelldata[sn].sManaAdj;
@@ -138,8 +134,7 @@ int GetManaAmount(PlayerStruct &player, spell_id sn)
 		ma = (spelldata[sn].sManaCost - adj);
 	}
 
-	if (ma < 0)
-		ma = 0;
+	ma = std::max(ma, 0);
 	ma <<= 6;
 
 	if (gbIsHellfire && player._pClass == HeroClass::Sorcerer) {
