@@ -4812,7 +4812,7 @@ void PrintMonstHistory(int mt)
 			minHP = 4 * minHP + hpBonusHell;
 			maxHP = 4 * maxHP + hpBonusHell;
 		}
-		strcpy(tempstr, fmt::format(_("Hit Points: {:d}-{:d}"), minHP, maxHP).c_str());
+		strcpy(tempstr, fmt::format(_("Life: {:d}-{:d}"), minHP, maxHP).c_str());
 		AddPanelString(tempstr);
 	}
 	if (MonsterKillCounts[mt] >= 15) {

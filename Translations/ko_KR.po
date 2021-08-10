@@ -983,7 +983,7 @@ msgstr "{:s}, 레벨: {:d}"
 
 # {:d} 순서 확인 필요
 #: Source/control.cpp:1193
-msgid "Hit Points {:d} of {:d}"
+msgid "Life {:d} of {:d}"
 msgstr "히트 포인트 {:d} / {:d}"
 
 #: Source/control.cpp:1220
@@ -3831,7 +3831,7 @@ msgid "{:+d} damage from enemies"
 msgstr ""
 
 #: Source/items.cpp:3510
-msgid "Hit Points: {:+d}"
+msgid "Life: {:+d}"
 msgstr ""
 
 #: Source/items.cpp:3514
@@ -4003,7 +4003,7 @@ msgid "one handed sword"
 msgstr ""
 
 #: Source/items.cpp:3631
-msgid "constantly lose hit points"
+msgid "constantly lose life"
 msgstr ""
 
 #: Source/items.cpp:3634
@@ -5081,7 +5081,7 @@ msgid "Total kills: {:d}"
 msgstr ""
 
 #: Source/monster.cpp:4972
-msgid "Hit Points: {:d}-{:d}"
+msgid "Life: {:d}-{:d}"
 msgstr ""
 
 #: Source/monster.cpp:4982

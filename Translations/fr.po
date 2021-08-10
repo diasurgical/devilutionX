@@ -993,7 +993,7 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Niveau: {:d}"
 
 #: Source/control.cpp:1311
-msgid "Hit Points {:d} of {:d}"
+msgid "Life {:d} of {:d}"
 msgstr "Dommages {:d} sur {:d}"
 
 #: Source/control.cpp:1338
@@ -3928,7 +3928,7 @@ msgid "{:+d} damage from enemies"
 msgstr "{:+d} dégâts des ennemis"
 
 #: Source/items.cpp:3945
-msgid "Hit Points: {:+d}"
+msgid "Life: {:+d}"
 msgstr "Points de vie:{:+d}"
 
 #: Source/items.cpp:3949
@@ -4107,7 +4107,7 @@ msgid "one handed sword"
 msgstr "épée à une main"
 
 #: Source/items.cpp:4066
-msgid "constantly lose hit points"
+msgid "constantly lose life"
 msgstr "perdre constamment des points de vie"
 
 #: Source/items.cpp:4069
@@ -5140,7 +5140,7 @@ msgid "Total kills: {:d}"
 msgstr "Total Victimes: {:d}"
 
 #: Source/monster.cpp:4822
-msgid "Hit Points: {:d}-{:d}"
+msgid "Life: {:d}-{:d}"
 msgstr "Points de vie:{:d}-{:d}"
 
 #: Source/monster.cpp:4828

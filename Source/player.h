@@ -455,11 +455,11 @@ struct PlayerStruct {
 	}
 
 	/**
-	 * @brief Calculates the players current Hit Points as a percentage of their max HP and stores it for later reference
+	 * @brief Calculates the players current Life as a percentage of their max HP and stores it for later reference
 	 *
 	 * The stored value is unused...
 	 * @see _pHPPer
-	 * @return The players current hit points as a percentage of their maximum (from 0 to 80%)
+	 * @return The players current life as a percentage of their maximum (from 0 to 80%)
 	*/
 	int UpdateHitPointPercentage()
 	{

@@ -3941,7 +3941,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		break;
 	case IPL_LIFE:
 	case IPL_LIFE_CURSE:
-		strcpy(tempstr, fmt::format(_("Hit Points: {:+d}"), x->_iPLHP >> 6).c_str());
+		strcpy(tempstr, fmt::format(_("Life: {:+d}"), x->_iPLHP >> 6).c_str());
 		break;
 	case IPL_MANA:
 	case IPL_MANA_CURSE:
@@ -4062,7 +4062,7 @@ void PrintItemPower(char plidx, ItemStruct *x)
 		strcpy(tempstr, _("one handed sword"));
 		break;
 	case IPL_DRAINLIFE:
-		strcpy(tempstr, _("constantly lose hit points"));
+		strcpy(tempstr, _("constantly lose life"));
 		break;
 	case IPL_RNDSTEALLIFE:
 		strcpy(tempstr, _("life stealing"));

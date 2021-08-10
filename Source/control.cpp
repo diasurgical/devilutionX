@@ -1343,7 +1343,7 @@ void DrawInfoBox(const Surface &out)
 			ClearPanel();
 			strcpy(tempstr, fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel).c_str());
 			AddPanelString(tempstr);
-			strcpy(tempstr, fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6).c_str());
+			strcpy(tempstr, fmt::format(_("Life {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6).c_str());
 			AddPanelString(tempstr);
 		}
 	}

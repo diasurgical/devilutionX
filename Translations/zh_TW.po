@@ -967,7 +967,7 @@ msgid "{:s}, Level: {:d}"
 msgstr "{:s}，層數: {:d}"
 
 #: Source/control.cpp:1346
-msgid "Hit Points {:d} of {:d}"
+msgid "Life {:d} of {:d}"
 msgstr "生命點{:d}的{:d}"
 
 #: Source/control.cpp:1373
@@ -3918,7 +3918,7 @@ msgid "{:+d} damage from enemies"
 msgstr "{:+d}敵人傷害"
 
 #: Source/items.cpp:3944
-msgid "Hit Points: {:+d}"
+msgid "Life: {:+d}"
 msgstr "生命值: {:+d}"
 
 #: Source/items.cpp:3948
@@ -4094,7 +4094,7 @@ msgid "one handed sword"
 msgstr "單手劍"
 
 #: Source/items.cpp:4065
-msgid "constantly lose hit points"
+msgid "constantly lose life"
 msgstr "不斷失去生命值"
 
 #: Source/items.cpp:4068
@@ -5128,7 +5128,7 @@ msgid "Total kills: {:d}"
 msgstr "擊殺總數: {:d}"
 
 #: Source/monster.cpp:4811
-msgid "Hit Points: {:d}-{:d}"
+msgid "Life: {:d}-{:d}"
 msgstr "生命值: {:d}-{:d}"
 
 #: Source/monster.cpp:4817
