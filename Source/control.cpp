@@ -650,9 +650,7 @@ void DrawSpellList(const Surface &out)
 			if ((mask & spl) == 0)
 				continue;
 			if (i == RSPLTYPE_SPELL) {
-				s = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[j];
-				if (s < 0)
-					s = 0;
+				s = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[j], 0);
 				spell_type trans = RSPLTYPE_INVALID;
 				if (s > 0)
 					trans = RSPLTYPE_SPELL;
@@ -1144,9 +1142,7 @@ void CheckPanelInfo()
 			case RSPLTYPE_SPELL: {
 				strcpy(tempstr, fmt::format(_("{:s} Spell"), _(spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
-				int c = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[v];
-				if (c < 0)
-					c = 0;
+				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[v], 0);
 				if (c == 0)
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
@@ -1746,10 +1742,7 @@ void DrawSpellBook(const Surface &out)
 					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: 1/3 tgt hp"), mana).c_str());
 				}
 				PrintSBookStr(out, { 10, yp - 1 }, tempstr);
-				int lvl = myPlayer._pSplLvl[sn] + myPlayer._pISplLvlAdd;
-				if (lvl < 0) {
-					lvl = 0;
-				}
+				int lvl = std::max(myPlayer._pSplLvl[sn] + myPlayer._pISplLvlAdd, 0);
 				if (lvl == 0) {
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				} else {
