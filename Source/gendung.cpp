@@ -549,7 +549,7 @@ void InitLevels()
 	setlevel = false;
 }
 
-void FindTransparencyValues(int tileID, int i, int j, int x, int y, int d)
+void FindTransparencyValues(uint8_t tileID, int i, int j, int x, int y, int d)
 {
 	if (dTransVal[x][y] != 0 || dungeon[i][j] != tileID) {
 		if (d == 1) {

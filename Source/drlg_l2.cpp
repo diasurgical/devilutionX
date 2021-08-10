@@ -2765,7 +2765,7 @@ bool CreateDungeon()
 void FloodTransparancyValues()
 {
 	int yy = 16;
-	int tileID = 3;
+	uint8_t tileID = 3;
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {

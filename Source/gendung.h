@@ -247,6 +247,6 @@ void DRLG_LPass3(int lv);
 void DRLG_Init_Globals();
 bool SkipThemeRoom(int x, int y);
 void InitLevels();
-void FindTransparencyValues(int tileID, int i, int j, int x, int y, int d);
+void FindTransparencyValues(uint8_t tileID, int i, int j, int x, int y, int d);
 
 } // namespace devilution
