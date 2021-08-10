@@ -1190,62 +1190,15 @@ void LoadDiabQuads(bool preflag)
 #pragma GCC optimize("O0")
 #endif
 
-void FindTransparencyValues(int i, int j, int x, int y, int d)
-{
-	if (dTransVal[x][y] != 0 || dungeon[i][j] != 6) {
-		if (d == 1) {
-			dTransVal[x][y] = TransVal;
-			dTransVal[x][y + 1] = TransVal;
-		}
-		if (d == 2) {
-			dTransVal[x + 1][y] = TransVal;
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 3) {
-			dTransVal[x][y] = TransVal;
-			dTransVal[x + 1][y] = TransVal;
-		}
-		if (d == 4) {
-			dTransVal[x][y + 1] = TransVal;
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 5) {
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 6) {
-			dTransVal[x][y + 1] = TransVal;
-		}
-		if (d == 7) {
-			dTransVal[x + 1][y] = TransVal;
-		}
-		if (d == 8) {
-			dTransVal[x][y] = TransVal;
-		}
-		return;
-	}
-
-	dTransVal[x][y] = TransVal;
-	dTransVal[x + 1][y] = TransVal;
-	dTransVal[x][y + 1] = TransVal;
-	dTransVal[x + 1][y + 1] = TransVal;
-	FindTransparencyValues(i + 1, j, x + 2, y, 1);
-	FindTransparencyValues(i - 1, j, x - 2, y, 2);
-	FindTransparencyValues(i, j + 1, x, y + 2, 3);
-	FindTransparencyValues(i, j - 1, x, y - 2, 4);
-	FindTransparencyValues(i - 1, j - 1, x - 2, y - 2, 5);
-	FindTransparencyValues(i + 1, j - 1, x + 2, y - 2, 6);
-	FindTransparencyValues(i - 1, j + 1, x - 2, y + 2, 7);
-	FindTransparencyValues(i + 1, j + 1, x + 2, y + 2, 8);
-}
-
 void FloodTransparancyValues()
 {
 	int yy = 16;
+	uint8_t tileID = 6;
 	for (int j = 0; j < DMAXY; j++) {
 		int xx = 16;
 		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 6 && dTransVal[xx][yy] == 0) {
-				FindTransparencyValues(i, j, xx, yy, 0);
+			if (dungeon[i][j] == tileID && dTransVal[xx][yy] == 0) {
+				FindTransparencyValues(tileID, i, j, xx, yy, 0);
 				TransVal++;
 			}
 			xx += 2;

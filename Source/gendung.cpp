@@ -549,4 +549,52 @@ void InitLevels()
 	setlevel = false;
 }
 
+void FindTransparencyValues(uint8_t tileID, int i, int j, int x, int y, int d)
+{
+	if (dTransVal[x][y] != 0 || dungeon[i][j] != tileID) {
+		if (d == 1) {
+			dTransVal[x][y] = TransVal;
+			dTransVal[x][y + 1] = TransVal;
+		}
+		if (d == 2) {
+			dTransVal[x + 1][y] = TransVal;
+			dTransVal[x + 1][y + 1] = TransVal;
+		}
+		if (d == 3) {
+			dTransVal[x][y] = TransVal;
+			dTransVal[x + 1][y] = TransVal;
+		}
+		if (d == 4) {
+			dTransVal[x][y + 1] = TransVal;
+			dTransVal[x + 1][y + 1] = TransVal;
+		}
+		if (d == 5) {
+			dTransVal[x + 1][y + 1] = TransVal;
+		}
+		if (d == 6) {
+			dTransVal[x][y + 1] = TransVal;
+		}
+		if (d == 7) {
+			dTransVal[x + 1][y] = TransVal;
+		}
+		if (d == 8) {
+			dTransVal[x][y] = TransVal;
+		}
+		return;
+	}
+
+	dTransVal[x][y] = TransVal;
+	dTransVal[x + 1][y] = TransVal;
+	dTransVal[x][y + 1] = TransVal;
+	dTransVal[x + 1][y + 1] = TransVal;
+	FindTransparencyValues(tileID, i + 1, j, x + 2, y, 1);
+	FindTransparencyValues(tileID, i - 1, j, x - 2, y, 2);
+	FindTransparencyValues(tileID, i, j + 1, x, y + 2, 3);
+	FindTransparencyValues(tileID, i, j - 1, x, y - 2, 4);
+	FindTransparencyValues(tileID, i - 1, j - 1, x - 2, y - 2, 5);
+	FindTransparencyValues(tileID, i + 1, j - 1, x + 2, y - 2, 6);
+	FindTransparencyValues(tileID, i - 1, j + 1, x - 2, y + 2, 7);
+	FindTransparencyValues(tileID, i + 1, j + 1, x + 2, y + 2, 8);
+}
+
 } // namespace devilution
