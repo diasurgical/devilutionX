@@ -127,13 +127,14 @@ int GetManaAmount(PlayerStruct &player, spell_id sn)
 	}
 
 	if (sn == SPL_HEAL || sn == SPL_HEALOTHER) {
-		ma = std::max((spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj), 0);
+		ma = (spelldata[SPL_HEAL].sManaCost + 2 * player._pLevel - adj);
 	} else if (spelldata[sn].sManaCost == 255) {
-		ma = std::max(((BYTE)player._pMaxManaBase - adj), 0);
+		ma = ((BYTE)player._pMaxManaBase - adj);
 	} else {
-		ma = std::max((spelldata[sn].sManaCost - adj), 0);
+		ma = (spelldata[sn].sManaCost - adj);
 	}
 
+	ma = std::max(ma, 0);
 	ma <<= 6;
 
 	if (gbIsHellfire && player._pClass == HeroClass::Sorcerer) {
