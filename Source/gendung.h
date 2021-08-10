@@ -248,5 +248,6 @@ void DRLG_Init_Globals();
 bool SkipThemeRoom(int x, int y);
 void InitLevels();
 void FindTransparencyValues(int i, int j, int x, int y, int d, uint8_t floorID);
+void FloodTransparencyValues(uint8_t floorID);
 
 } // namespace devilution

@@ -597,4 +597,21 @@ void FindTransparencyValues(int i, int j, int x, int y, int d, uint8_t floorID)
 	FindTransparencyValues(i + 1, j + 1, x + 2, y + 2, 8, floorID);
 }
 
+void FloodTransparencyValues(uint8_t floorID)
+{
+	int yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
+		for (int i = 0; i < DMAXX; i++) {
+			if (dungeon[i][j] == floorID && dTransVal[xx][yy] == 0) {
+				FindTransparencyValues(i, j, xx, yy, 0, floorID);
+				TransVal++;
+			}
+			xx += 2;
+		}
+		yy += 2;
+	}
+}
+
+
 } // namespace devilution

@@ -2762,23 +2762,6 @@ bool CreateDungeon()
 	return true;
 }
 
-void FloodTransparancyValues()
-{
-	int yy = 16;
-	uint8_t floorID = 3;
-	for (int j = 0; j < DMAXY; j++) {
-		int xx = 16;
-		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == floorID && dTransVal[xx][yy] == 0) {
-				FindTransparencyValues(i, j, xx, yy, 0, floorID);
-				TransVal++;
-			}
-			xx += 2;
-		}
-		yy += 2;
-	}
-}
-
 void FixTransparency()
 {
 	int yy = 16;
@@ -2921,6 +2904,7 @@ void FixDoors()
 void GenerateLevel(lvl_entry entry)
 {
 	bool doneflag = false;
+	uint8_t floorID = 3;
 	while (!doneflag) {
 		nRoomCnt = 0;
 		InitDungeonFlags();
@@ -2932,7 +2916,7 @@ void GenerateLevel(lvl_entry entry)
 		if (setloadflag) {
 			SetRoom(nSx1, nSy1);
 		}
-		FloodTransparancyValues();
+		FloodTransparencyValues(floorID);
 		FixTransparency();
 		if (entry == ENTRY_MAIN) {
 			doneflag = PlaceMiniSet(USTAIRS, 1, 1, -1, -1, true);

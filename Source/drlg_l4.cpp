@@ -1190,23 +1190,6 @@ void LoadDiabQuads(bool preflag)
 #pragma GCC optimize("O0")
 #endif
 
-void FloodTransparancyValues()
-{
-	int yy = 16;
-	uint8_t floorID = 6;
-	for (int j = 0; j < DMAXY; j++) {
-		int xx = 16;
-		for (int i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == floorID && dTransVal[xx][yy] == 0) {
-				FindTransparencyValues(i, j, xx, yy, 0, floorID);
-				TransVal++;
-			}
-			xx += 2;
-		}
-		yy += 2;
-	}
-}
-
 #if defined(__3DS__)
 #pragma GCC pop_options
 #endif
@@ -1323,6 +1306,7 @@ void GenerateLevel(lvl_entry entry)
 	constexpr int Minarea = 173;
 	int ar;
 	bool doneflag;
+	uint8_t floorID = 6;
 	do {
 		DRLG_InitTrans();
 
@@ -1350,7 +1334,7 @@ void GenerateLevel(lvl_entry entry)
 			}
 		}
 		AddWall();
-		FloodTransparancyValues();
+		FloodTransparencyValues(floorID);
 		FixTransparency();
 		if (setloadflag) {
 			SetSetPiecesRoom(SP4x1, SP4y1);
