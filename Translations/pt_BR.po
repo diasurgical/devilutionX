@@ -572,7 +572,7 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
-"Velocidade: Super Sápido\n"
+"Velocidade: Super Rápido\n"
 "Os asseclas do submundo correrão para atacar sem hesitação. Apenas um "
 "verdadeiro demônio da velocidade deve entrar neste ritmo."
 
@@ -3831,7 +3831,7 @@ msgstr "Resistência a fogo: {:+d}%"
 #: Source/items.cpp:3870
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
-msgstr "Resistência a fogo: 75% MAX"
+msgstr "Resistência a fogo: 75% MÁX"
 
 #: Source/items.cpp:3875
 msgid "Resist Lightning: {:+d}%"
@@ -3840,7 +3840,7 @@ msgstr "Resistência a raios: {:+d}%"
 #: Source/items.cpp:3877
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
-msgstr "Resistência a raios: 75% MAX"
+msgstr "Resistência a raios: 75% MÁX"
 
 #: Source/items.cpp:3882
 msgid "Resist Magic: {:+d}%"
@@ -3849,7 +3849,7 @@ msgstr "Resistência à magia: {:+d}%"
 #: Source/items.cpp:3884
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
-msgstr "Resistência à magia: 75% MAX"
+msgstr "Resistência à magia: 75% MÁX"
 
 #: Source/items.cpp:3889
 msgid "Resist All: {:+d}%"
@@ -3858,7 +3858,7 @@ msgstr "Resistência a tudo: {:+d}%"
 #: Source/items.cpp:3891
 #, no-c-format
 msgid "Resist All: 75% MAX"
-msgstr "Resistência a tudo: 75% MAX"
+msgstr "Resistência a tudo: 75% MÁX"
 
 #: Source/items.cpp:3895
 msgid "spells are increased {:d} level"
@@ -3924,7 +3924,7 @@ msgstr "{:+d} a todos os atributos"
 
 #: Source/items.cpp:3941
 msgid "{:+d} damage from enemies"
-msgstr "{:+d} de dano de inimigos"
+msgstr "{:+d} de dano a inimigos"
 
 #: Source/items.cpp:3945
 msgid "Hit Points: {:+d}"
@@ -3958,7 +3958,7 @@ msgstr "-{:d}% de alcance de visão"
 
 #: Source/items.cpp:3967
 msgid "multiple arrows per shot"
-msgstr "várias flechas por tiro"
+msgstr "várias flechas por disparo"
 
 #: Source/items.cpp:3971
 msgid "fire arrows damage: {:d}"
@@ -3970,11 +3970,11 @@ msgstr "dano das flechas de fogo: {:d}-{:d}"
 
 #: Source/items.cpp:3977
 msgid "lightning arrows damage {:d}"
-msgstr "flechas de raios {:d}"
+msgstr "dano das flechas de raios {:d}"
 
 #: Source/items.cpp:3979
 msgid "lightning arrows damage {:d}-{:d}"
-msgstr "flechas de raios {:d}-{:d}"
+msgstr "dano das flechas de raios {:d}-{:d}"
 
 #: Source/items.cpp:3983
 msgid "fireball damage: {:d}"
@@ -10119,23 +10119,23 @@ msgstr "Efficio Obitus Ut Inimicus."
 
 #: Source/towners.cpp:89
 msgid "Griswold the Blacksmith"
-msgstr "Griswold, o ferreiro"
+msgstr "Griswold, o Ferreiro"
 
 #: Source/towners.cpp:111
 msgid "Ogden the Tavern owner"
-msgstr "Ogden, o dono da taverna"
+msgstr "Ogden, o Dono da Taverna"
 
 #: Source/towners.cpp:120
 msgid "Wounded Townsman"
-msgstr "Aldeão ferido"
+msgstr "Aldeão Ferido"
 
 #: Source/towners.cpp:142
 msgid "Adria the Witch"
-msgstr "Ádria, a bruxa"
+msgstr "Ádria, a Bruxa"
 
 #: Source/towners.cpp:151
 msgid "Gillian the Barmaid"
-msgstr "Gillian, a atendente"
+msgstr "Gillian, a Atendente"
 
 #: Source/towners.cpp:182
 msgid "Pepin the Healer"
@@ -10159,7 +10159,7 @@ msgstr "Completamente Louco"
 
 #: Source/towners.cpp:286
 msgid "Slain Townsman"
-msgstr "Aldeão assassinado"
+msgstr "Aldeão Assassinado"
 
 #: Source/trigs.cpp:320
 msgid "Down to dungeon"
@@ -10179,7 +10179,7 @@ msgstr "Descer para o inferno"
 
 #: Source/trigs.cpp:363
 msgid "Down to Crypt"
-msgstr "Descer para a cripta"
+msgstr "Descer para a Cripta"
 
 #: Source/trigs.cpp:371
 msgid "Down to Hive"
@@ -10202,11 +10202,11 @@ msgstr "Descer para o nível {:d}"
 
 #: Source/trigs.cpp:415
 msgid "Up to Crypt level {:d}"
-msgstr "Subir para o nível {:d} da cripta"
+msgstr "Subir para o nível {:d} da Cripta"
 
 #: Source/trigs.cpp:431
 msgid "Down to Crypt level {:d}"
-msgstr "Descer para o nível {:d} da cripta"
+msgstr "Descer para o nível {:d} da Cripta"
 
 #: Source/trigs.cpp:550
 msgid "Up to Nest level {:d}"
@@ -10214,7 +10214,7 @@ msgstr "Subir para o nível {:d} do Ninho"
 
 #: Source/trigs.cpp:666
 msgid "Down to Diablo"
-msgstr "Descer para Diablo"
+msgstr "Descer para o Diablo"
 
 #: Source/trigs.cpp:700 Source/trigs.cpp:715 Source/trigs.cpp:730
 msgid "Back to Level {:d}"
