@@ -2797,9 +2797,13 @@ msgstr "Обилни"
 msgid "Flaming"
 msgstr "Пламени"
 
-#: Source/itemdat.cpp:274 Source/spelldat.cpp:18
+#: Source/itemdat.cpp:274
 msgid "Lightning"
 msgstr "Мълния"
+
+#: Source/spelldat.cpp:18
+msgid "Lightning"
+msgstr "Светкавични"
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"

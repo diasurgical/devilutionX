@@ -2755,7 +2755,11 @@ msgstr "Munifico"
 msgid "Flaming"
 msgstr "Fiamma"
 
-#: Source/itemdat.cpp:274 Source/spelldat.cpp:18
+#: Source/itemdat.cpp:274
+msgid "Lightning"
+msgstr "Fulmine"
+
+#: Source/spelldat.cpp:18
 msgid "Lightning"
 msgstr "Fulmine"
 

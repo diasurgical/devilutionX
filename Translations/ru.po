@@ -2761,7 +2761,11 @@ msgstr "Щедрый"
 msgid "Flaming"
 msgstr "Пылающий"
 
-#: Source/itemdat.cpp:274 Source/spelldat.cpp:18
+#: Source/itemdat.cpp:274
+msgid "Lightning"
+msgstr "Светящийся"
+
+#: Source/spelldat.cpp:18
 msgid "Lightning"
 msgstr "Светящийся"
 

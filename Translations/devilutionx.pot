@@ -2596,7 +2596,11 @@ msgstr ""
 msgid "Flaming"
 msgstr ""
 
-#: Source/itemdat.cpp:274 Source/spelldat.cpp:18
+#: Source/itemdat.cpp:274
+msgid "Lightning"
+msgstr ""
+
+#: Source/spelldat.cpp:18
 msgid "Lightning"
 msgstr ""
 

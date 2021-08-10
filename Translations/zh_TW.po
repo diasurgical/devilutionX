@@ -2731,7 +2731,11 @@ msgstr "慷慨的"
 msgid "Flaming"
 msgstr "烈焰"
 
-#: Source/itemdat.cpp:274 Source/spelldat.cpp:18
+#: Source/itemdat.cpp:274
+msgid "Lightning"
+msgstr "閃電術"
+
+#: Source/spelldat.cpp:18
 msgid "Lightning"
 msgstr "閃電術"
 
