@@ -10,15 +10,10 @@
 namespace devilution {
 
 enum class SpellCheckResult : uint8_t {
-	Success = 0,
+	Success,
 	Fail_NoMana,
 	Fail_Level0,
 	Fail_Busy,
-	/* following values may be used as result of refactored UseStaff or UseScroll function
-	Fail_NoCharge,
-	Fail_NoScroll,
-	Fail_WrongPlace,
-	*/
 };
 
 int GetManaAmount(PlayerStruct &player, spell_id sn);

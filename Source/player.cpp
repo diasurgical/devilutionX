@@ -3575,19 +3575,17 @@ void CheckPlrSpell()
 
 	if (!addflag) {
 		if (myPlayer._pRSplType == RSPLTYPE_SPELL) {
-			HeroSpeech sentence;
 			switch (spellcheck) {
 			case SpellCheckResult::Fail_NoMana:
-				sentence = HeroSpeech::NotEnoughMana;
+				myPlayer.Say(HeroSpeech::NotEnoughMana);
 				break;
 			case SpellCheckResult::Fail_Level0:
-				sentence = HeroSpeech::ICantCastThatYet;
+				myPlayer.Say(HeroSpeech::ICantCastThatYet);
 				break;
 			default:
-				sentence = HeroSpeech::ICantDoThat;
+				myPlayer.Say(HeroSpeech::ICantDoThat);
 				break;
 			}
-			myPlayer.Say(sentence);
 			LastMouseButtonAction = MouseActionType::None;
 		}
 		return;
