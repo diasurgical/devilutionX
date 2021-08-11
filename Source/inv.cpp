@@ -451,7 +451,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 						done = false;
 					} else {
 						if (player.InvGrid[xx + yy] != 0) {
-							int8_t iv = std::max<uint8_t>(player.InvGrid[xx + yy], 0);
+							int8_t iv = abs(player.InvGrid[xx + yy]);
 							if (it != 0) {
 								if (it != iv)
 									done = false;
