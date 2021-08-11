@@ -587,11 +587,11 @@ msgstr "战士"
 
 #: Source/DiabloUI/selhero.cpp:168 Source/control.cpp:109
 msgid "Rogue"
-msgstr "弓箭手"
+msgstr "流亡者"
 
 #: Source/DiabloUI/selhero.cpp:169 Source/control.cpp:110
 msgid "Sorcerer"
-msgstr "法师"
+msgstr "巫师"
 
 #: Source/DiabloUI/selhero.cpp:171 Source/control.cpp:111
 msgid "Monk"
@@ -1116,7 +1116,7 @@ msgstr "启用详细日志记录"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:867
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "即使找到diabdat.mpq，也强制生成模式"
+msgstr "即使找到diabdat.mpq，也使用强制生成模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:868
