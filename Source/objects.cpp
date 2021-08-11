@@ -3409,7 +3409,7 @@ bool OperateShrineGlowing(int pnum)
 	auto &myPlayer = Players[MyPlayerId];
 
 	// Add 0-5 points to Magic (0.1% of the players XP)
-	ModifyPlrMag(MyPlayerId, std::min(myPlayer._pExperience / 1000, 5U));
+	ModifyPlrMag(MyPlayerId, static_cast<int>(std::min<uint32_t>(myPlayer._pExperience / 1000, 5)));
 
 	// Take 5% of the players experience to offset the bonus, unless they're very low level in which case take all their experience.
 	if (myPlayer._pExperience > 5000)
