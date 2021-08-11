@@ -299,9 +299,7 @@ void StartSmithBuy()
 		storenumh++;
 	}
 
-	stextsmax = storenumh - 4;
-	if (stextsmax < 0)
-		stextsmax = 0;
+	stextsmax = std::max(storenumh - 4, 0);
 }
 
 void ScrollSmithPremiumBuy(int boughtitems)
@@ -357,9 +355,7 @@ bool StartSmithPremiumBuy()
 	AddSText(0, 22, _("Back"), UiFlags::ColorSilver | UiFlags::AlignCenter, false);
 	OffsetSTextY(22, 6);
 
-	stextsmax = storenumh - 4;
-	if (stextsmax < 0)
-		stextsmax = 0;
+	stextsmax = std::max(storenumh - 4, 0);
 
 	ScrollSmithPremiumBuy(stextsval);
 
@@ -421,9 +417,7 @@ void ScrollSmithSell(int idx)
 		idx++;
 	}
 
-	stextsmax = storenumh - 4;
-	if (stextsmax < 0)
-		stextsmax = 0;
+	stextsmax = std::max(storenumh - 4, 0);
 }
 
 void StartSmithSell()
@@ -1049,9 +1043,8 @@ void StartHealerBuy()
 	for (int i = 0; !healitem[i].isEmpty(); i++) {
 		storenumh++;
 	}
-	stextsmax = storenumh - 4;
-	if (stextsmax < 0)
-		stextsmax = 0;
+
+	stextsmax = std::max(storenumh - 4, 0);
 }
 
 void StartStoryteller()
