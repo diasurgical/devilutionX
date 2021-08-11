@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DeviltutionX\n"
-"POT-Creation-Date: 2021-08-09 14:40+0800\n"
+"POT-Creation-Date: 2021-08-11 07:52+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: muziling <pieceking@qq.com>\n"
 "Language-Team: Emiliano Augusto Gonzalez\n"
@@ -5055,71 +5055,71 @@ msgstr "格里姆斯派克"
 msgid "Doomlock"
 msgstr "杜姆洛克"
 
-#: Source/monster.cpp:3587
+#: Source/monster.cpp:3591
 msgid "Animal"
 msgstr "动物"
 
-#: Source/monster.cpp:3589
+#: Source/monster.cpp:3593
 msgid "Demon"
 msgstr "恶魔"
 
-#: Source/monster.cpp:3591
+#: Source/monster.cpp:3595
 msgid "Undead"
 msgstr "亡灵"
 
-#: Source/monster.cpp:4776
+#: Source/monster.cpp:4780
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "类型: {:s} 击杀: {:d}"
 
-#: Source/monster.cpp:4778
+#: Source/monster.cpp:4782
 msgid "Total kills: {:d}"
 msgstr "击杀总数: {:d}"
 
-#: Source/monster.cpp:4811
+#: Source/monster.cpp:4815
 msgid "Life: {:d}-{:d}"
 msgstr "生命值: {:d}-{:d}"
 
-#: Source/monster.cpp:4817
+#: Source/monster.cpp:4821
 msgid "No magic resistance"
 msgstr "没有魔法抵抗"
 
-#: Source/monster.cpp:4821
+#: Source/monster.cpp:4825
 msgid "Resists: "
 msgstr "抗性: "
 
-#: Source/monster.cpp:4823 Source/monster.cpp:4834
+#: Source/monster.cpp:4827 Source/monster.cpp:4838
 msgid "Magic "
 msgstr "魔法"
 
-#: Source/monster.cpp:4825 Source/monster.cpp:4836
+#: Source/monster.cpp:4829 Source/monster.cpp:4840
 msgid "Fire "
 msgstr "火"
 
-#: Source/monster.cpp:4827 Source/monster.cpp:4838
+#: Source/monster.cpp:4831 Source/monster.cpp:4842
 msgid "Lightning "
 msgstr "闪电"
 
-#: Source/monster.cpp:4832
+#: Source/monster.cpp:4836
 msgid "Immune: "
 msgstr "免疫: "
 
-#: Source/monster.cpp:4850
+#: Source/monster.cpp:4854
 msgid "Type: {:s}"
 msgstr "类型: {:s}"
 
-#: Source/monster.cpp:4856 Source/monster.cpp:4863
+#: Source/monster.cpp:4860 Source/monster.cpp:4867
 msgid "No resistances"
 msgstr "无抗性"
 
-#: Source/monster.cpp:4858 Source/monster.cpp:4868
+#: Source/monster.cpp:4862 Source/monster.cpp:4872
 msgid "No Immunities"
 msgstr "无免疫"
 
-#: Source/monster.cpp:4861
+#: Source/monster.cpp:4865
 msgid "Some Magic Resistances"
 msgstr "一些魔法抵抗"
 
-#: Source/monster.cpp:4866
+#: Source/monster.cpp:4870
 msgid "Some Magic Immunities"
 msgstr "一些魔法免疫"
 
