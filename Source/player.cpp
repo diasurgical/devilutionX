@@ -2669,19 +2669,11 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		int powerLvlCap = player._pLevel < 0 ? 0 : player._pLevel;
-		if (powerLvlCap >= 50) {
-			powerLvlCap = 50;
-		}
-		// cap to 1/20 of current levels xp
-		if (exp >= ExpLvlsTbl[powerLvlCap] / 20) {
-			exp = ExpLvlsTbl[powerLvlCap] / 20;
-		}
-		// cap to 200 * current level
-		int expCap = 200 * powerLvlCap;
-		if (exp >= expCap) {
-			exp = expCap;
-		}
+		auto clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 0, 50);
+
+		// for low level characters experience gain is capped to 1/20 of current levels xp
+		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.
+		exp = std::min({ exp, /* level 0-5: */ ExpLvlsTbl[clampedPlayerLevel] / 20, /* level 6-50: */ 200 * clampedPlayerLevel });
 	}
 
 	player._pExperience += exp;
