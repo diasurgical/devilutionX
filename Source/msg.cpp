@@ -1443,11 +1443,14 @@ DWORD OnBreakObject(TCmd *pCmd, int pnum)
 DWORD OnChangePlayerItems(TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdChItem *)pCmd;
+	auto bodyLocation = static_cast<inv_body_loc>(p->bLoc);
 
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (pnum != MyPlayerId)
 		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
+
+	Players[pnum].ReadySpellFromEquipment(bodyLocation);
 
 	return sizeof(*p);
 }

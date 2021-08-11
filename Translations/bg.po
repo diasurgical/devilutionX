@@ -1847,12 +1847,8 @@ msgstr "$Злато:"
 
 #: Source/help.cpp:69
 #, fuzzy
-msgid ""
-"You can select a specific amount of gold to drop byright-clicking on a pile "
-"of gold in your inventory."
-msgstr ""
-"Може да изберете колко злато искате да оставите, като натиснете десен бутон "
-"върху купчината златни монети в инвентара."
+msgid "You can select a specific amount of gold to drop by right-clicking on a pile of gold in your inventory."
+msgstr "Може да изберете колко злато искате да оставите, като натиснете десен бутон върху купчината златни монети в инвентара."
 
 #: Source/help.cpp:72
 msgid "$Skills & Spells:"
@@ -1878,15 +1874,8 @@ msgid "$Using the Speedbook for Spells"
 msgstr "$Използване на Бърз списък за Заклинания:"
 
 #: Source/help.cpp:80
-msgid ""
-"Left-clicking on the 'readied spell' button will open the 'Speedbook' which "
-"allows you to select a skill or spell for immediate use.  To use a readied "
-"skill or spell, simply right-click in the main play area."
-msgstr ""
-"Натискане с левия бутон на мишката върху бутона 'Подготвено заклинание' ще "
-"отвори 'Бърз лист', която ви позволява да изберете умение или заклинание за "
-"незабавна употреба.  За да използвате Подготвеното умение или заклинание, "
-"просто натиснете с десния бутон на мишката в основната игрална зона."
+msgid "Left-clicking on the 'readied spell' button will open the 'Speedbook' which allows you to select a skill or spell for immediate use. To use a readied skill or spell, simply right-click in the main play area."
+msgstr "Натискане с левия бутон на мишката върху бутона 'Подготвено заклинание' ще отвори 'Бърз лист', която ви позволява да изберете умение или заклинание за незабавна употреба. За да използвате Подготвеното умение или заклинание, просто натиснете с десния бутон на мишката в основната игрална зона."
 
 #: Source/help.cpp:84
 msgid ""
@@ -1901,15 +1890,8 @@ msgid "$Setting Spell Hotkeys"
 msgstr "$Задаване бързи клавиши за заклинания"
 
 #: Source/help.cpp:87
-msgid ""
-"You can assign up to four Hotkeys for skills, spells or scrolls.  Start by "
-"opening the 'speedbook' as described in the section above. Press the F5, F6, "
-"F7 or F8 keys after highlighting the spell you wish to assign."
-msgstr ""
-"Може да зададете до четири бързи клавиша за умения, заклинания или свитъци. "
-"Започнете с отварянето на ‘бърз лист’ както е обяснено в горния абзац. "
-"Натиснете клавиши F5, F6, F7 или F8 след като посочите заклинанието което "
-"искате да зададете."
+msgid "You can assign up to four Hotkeys for skills, spells or scrolls. Start by opening the 'speedbook' as described in the section above. Press the F5, F6, F7 or F8 keys after highlighting the spell you wish to assign."
+msgstr "Може да зададете до четири бързи клавиша за умения, заклинания или свитъци. Започнете с отварянето на ‘бърз лист’ както е обяснено в горния абзац. Натиснете клавиши F5, F6, F7 или F8 след като посочите заклинанието което искате да зададете."
 
 #: Source/help.cpp:92
 msgid "$Spell Books"

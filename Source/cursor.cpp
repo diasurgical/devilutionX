@@ -360,18 +360,8 @@ void CheckCursMove()
 		mx++;
 	}
 
-	if (mx < 0) {
-		mx = 0;
-	}
-	if (mx >= MAXDUNX) {
-		mx = MAXDUNX - 1;
-	}
-	if (my < 0) {
-		my = 0;
-	}
-	if (my >= MAXDUNY) {
-		my = MAXDUNY - 1;
-	}
+	mx = clamp(mx, 0, MAXDUNX - 1);
+	my = clamp(my, 0, MAXDUNY - 1);
 
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
 	if (sgbMouseDown != CLICK_NONE && pcursinvitem == -1) {

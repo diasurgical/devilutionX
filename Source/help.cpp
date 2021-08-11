@@ -66,7 +66,7 @@ const char *const HelpText[] = {
 	   "the corresponding number or right-clicking on the item."),
 	"",
 	N_("$Gold"),
-	N_("You can select a specific amount of gold to drop by"
+	N_("You can select a specific amount of gold to drop by "
 	   "right-clicking on a pile of gold in your inventory."),
 	"",
 	N_("$Skills & Spells:"),
@@ -78,13 +78,13 @@ const char *const HelpText[] = {
 	"",
 	N_("$Using the Speedbook for Spells"),
 	N_("Left-clicking on the 'readied spell' button will open the 'Speedbook' "
-	   "which allows you to select a skill or spell for immediate use.  "
+	   "which allows you to select a skill or spell for immediate use. "
 	   "To use a readied skill or spell, simply right-click in the main play "
 	   "area."),
 	N_("Shift + Left-clicking on the 'select current spell' button will clear the readied spell"),
 	"",
 	N_("$Setting Spell Hotkeys"),
-	N_("You can assign up to four Hotkeys for skills, spells or scrolls.  "
+	N_("You can assign up to four Hotkeys for skills, spells or scrolls. "
 	   "Start by opening the 'speedbook' as described in the section above. "
 	   "Press the F5, F6, F7 or F8 keys after highlighting the spell you "
 	   "wish to assign."),

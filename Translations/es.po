@@ -1727,7 +1727,7 @@ msgstr "Oro"
 
 #: Source/help.cpp:69
 msgid ""
-"You can select a specific amount of gold to drop byright-clicking on a pile "
+"You can select a specific amount of gold to drop by right-clicking on a pile "
 "of gold in your inventory."
 msgstr ""
 "Puede seleccionar una cantidad específica de oro para colocar haciendo clic "
@@ -1759,12 +1759,12 @@ msgstr "$Uso del Speedbook para hechizos"
 #: Source/help.cpp:80
 msgid ""
 "Left-clicking on the 'readied spell' button will open the 'Speedbook' which "
-"allows you to select a skill or spell for immediate use.  To use a readied "
+"allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
 "Al hacer clic con el botón izquierdo en el botón 'hechizo preparado' se "
 "abrirá el 'Speedbook' que le permite seleccionar una habilidad o hechizo "
-"para uso inmediato.  Para usar una habilidad o un hechizo preparados, "
+"para uso inmediato. Para usar una habilidad o un hechizo preparados, "
 "simplemente haga clic con el botón derecho en el área de juego principal."
 
 #: Source/help.cpp:84
@@ -1779,12 +1779,12 @@ msgstr ""
 
 #: Source/help.cpp:87
 msgid ""
-"You can assign up to four Hotkeys for skills, spells or scrolls.  Start by "
+"You can assign up to four Hotkeys for skills, spells or scrolls. Start by "
 "opening the 'speedbook' as described in the section above. Press the F5, F6, "
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
 "Puede asignar hasta cuatro teclas de acceso rápido para habilidades, "
-"hechizos o pergaminos.  Empiece por abrir el 'speedbook' como se describe en "
+"hechizos o pergaminos. Empiece por abrir el 'speedbook' como se describe en "
 "la sección anterior. Presione las eclas F5, F6, F7 o F8 después de resaltar "
 "el hechizo que desea asignar."
 
