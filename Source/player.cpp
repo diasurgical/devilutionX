@@ -2655,7 +2655,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 		return;
 	}
 
-	if ((DWORD)pnum >= MAX_PLRS) {
+	if (pnum >= MAX_PLRS || pnum < 0) {
 		app_fatal("AddPlrExperience: illegal player %i", pnum);
 	}
 	auto &player = Players[pnum];
@@ -2685,7 +2685,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 
 	player._pExperience += exp;
-	if ((DWORD)player._pExperience > MAXEXP) {
+	if (player._pExperience > MAXEXP || player._pExperience < 0) {
 		player._pExperience = MAXEXP;
 	}
 
