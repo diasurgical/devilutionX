@@ -9,9 +9,16 @@
 
 namespace devilution {
 
+enum class SpellCheckResult : uint8_t {
+	Success,
+	Fail_NoMana,
+	Fail_Level0,
+	Fail_Busy,
+};
+
 int GetManaAmount(PlayerStruct &player, spell_id sn);
 void UseMana(int id, spell_id sn);
-bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
+SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
 void EnsureValidReadiedSpell(PlayerStruct &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
 void DoResurrect(int pnum, int rid);

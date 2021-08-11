@@ -196,28 +196,31 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 	}
 }
 
-bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
+SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 {
 #ifdef _DEBUG
 	if (debug_mode_key_inverted_v)
-		return true;
+		return SpellCheckResult::Success;
 #endif
 
 	if (!manaonly && pcurs != CURSOR_HAND) {
-		return false;
+		return SpellCheckResult::Fail_Busy;
 	}
 
 	if (st == RSPLTYPE_SKILL) {
-		return true;
+		return SpellCheckResult::Success;
 	}
 
 	if (GetSpellLevel(id, sn) <= 0) {
-		return false;
+		return SpellCheckResult::Fail_Level0;
 	}
 
 	auto &player = Players[id];
+	if (player._pMana < GetManaAmount(player, sn)) {
+		return SpellCheckResult::Fail_NoMana;
+	}
 
-	return player._pMana >= GetManaAmount(player, sn);
+	return SpellCheckResult::Success;
 }
 
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
