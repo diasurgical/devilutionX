@@ -14,7 +14,7 @@ void UseMana(int id, spell_id sn);
 bool CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
 void EnsureValidReadiedSpell(PlayerStruct &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
-void DoResurrect(int pnum, int rid);
+void DoResurrect(int pnum, uint16_t rid);
 void DoHealOther(int pnum, uint16_t rid);
 int GetSpellBookLevel(spell_id s);
 int GetSpellStaffLevel(spell_id s);
