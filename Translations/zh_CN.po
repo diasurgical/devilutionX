@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: DeviltutionX\n"
-"POT-Creation-Date: 2021-08-09 14:40+0800\n"
+"Project-Id-Version: DevilutionX\n"
+"POT-Creation-Date: 2021-08-12 11:44+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: muziling <pieceking@qq.com>\n"
 "Language-Team: Emiliano Augusto Gonzalez\n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_\n"
@@ -151,7 +151,7 @@ msgstr "QA特别行动小组（兼容性测试人员）"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr "QA火速支撑（附加测试人员）"
+msgstr "QA火力支援（附加测试人员）"
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
@@ -518,7 +518,7 @@ msgstr "选择游戏速度"
 
 #: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:331
 msgid "Fast"
-msgstr "快速的"
+msgstr "快速"
 
 #: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:335
 msgid "Faster"
@@ -585,27 +585,27 @@ msgstr "新英雄"
 msgid "Choose Class"
 msgstr "选择职业"
 
-#: Source/DiabloUI/selhero.cpp:167 Source/control.cpp:110
+#: Source/DiabloUI/selhero.cpp:167 Source/control.cpp:108
 msgid "Warrior"
 msgstr "战士"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/control.cpp:111
+#: Source/DiabloUI/selhero.cpp:168 Source/control.cpp:109
 msgid "Rogue"
 msgstr "流亡者"
 
-#: Source/DiabloUI/selhero.cpp:169 Source/control.cpp:112
+#: Source/DiabloUI/selhero.cpp:169 Source/control.cpp:110
 msgid "Sorcerer"
 msgstr "巫师"
 
-#: Source/DiabloUI/selhero.cpp:171 Source/control.cpp:113
+#: Source/DiabloUI/selhero.cpp:171 Source/control.cpp:111
 msgid "Monk"
 msgstr "武僧"
 
-#: Source/DiabloUI/selhero.cpp:174 Source/control.cpp:114
+#: Source/DiabloUI/selhero.cpp:174 Source/control.cpp:112
 msgid "Bard"
 msgstr "吟游诗人"
 
-#: Source/DiabloUI/selhero.cpp:177 Source/control.cpp:115
+#: Source/DiabloUI/selhero.cpp:177 Source/control.cpp:113
 msgid "Barbarian"
 msgstr "野蛮人"
 
@@ -663,11 +663,11 @@ msgstr "等级: "
 
 #: Source/DiabloUI/selhero.cpp:474
 msgid "Strength:"
-msgstr "强度: "
+msgstr "力量: "
 
 #: Source/DiabloUI/selhero.cpp:479
 msgid "Magic:"
-msgstr "魔术: "
+msgstr "魔法: "
 
 #: Source/DiabloUI/selhero.cpp:484
 msgid "Dexterity:"
@@ -815,184 +815,184 @@ msgstr ""
 msgid "Read-Only Directory Error"
 msgstr "只读目录错误"
 
-#: Source/automap.cpp:472
+#: Source/automap.cpp:469
 msgid "game: "
 msgstr "游戏: "
 
-#: Source/automap.cpp:478
+#: Source/automap.cpp:475
 msgid "password: "
 msgstr "密码: "
 
-#: Source/automap.cpp:491
+#: Source/automap.cpp:488
 msgid "Level: Nest {:d}"
 msgstr "层数: {:d}巢穴"
 
-#: Source/automap.cpp:493
+#: Source/automap.cpp:490
 msgid "Level: Crypt {:d}"
 msgstr "层数: {:d}墓穴"
 
-#: Source/automap.cpp:495 Source/items.cpp:2081
+#: Source/automap.cpp:492 Source/items.cpp:2081
 msgid "Level: {:d}"
 msgstr "等级: {:d}"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:210
 msgid "Tab"
 msgstr "标签"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:210
 msgid "Esc"
 msgstr "电子稳定控制系统"
 
-#: Source/control.cpp:212
+#: Source/control.cpp:210
 msgid "Enter"
 msgstr "输入"
 
-#: Source/control.cpp:215
+#: Source/control.cpp:213
 msgid "Character Information"
 msgstr "角色信息"
 
-#: Source/control.cpp:216
+#: Source/control.cpp:214
 msgid "Quests log"
 msgstr "任务日志"
 
-#: Source/control.cpp:217
+#: Source/control.cpp:215
 msgid "Automap"
 msgstr "自动映射"
 
-#: Source/control.cpp:218
+#: Source/control.cpp:216
 msgid "Main Menu"
 msgstr "主菜单"
 
-#: Source/control.cpp:219
+#: Source/control.cpp:217
 msgid "Inventory"
 msgstr "库存"
 
-#: Source/control.cpp:220
+#: Source/control.cpp:218
 msgid "Spell book"
 msgstr "法术书"
 
-#: Source/control.cpp:221
+#: Source/control.cpp:219
 msgid "Send Message"
 msgstr "发送消息"
 
-#: Source/control.cpp:674 Source/control.cpp:1141
+#: Source/control.cpp:713 Source/control.cpp:1176
 msgid "{:s} Skill"
 msgstr "{:s}技能"
 
-#: Source/control.cpp:677 Source/control.cpp:1145
+#: Source/control.cpp:717 Source/control.cpp:1180
 msgid "{:s} Spell"
 msgstr "{:s}法术"
 
-#: Source/control.cpp:679
+#: Source/control.cpp:719
 msgid "Damages undead only"
 msgstr "只伤害亡灵"
 
-#: Source/control.cpp:683 Source/control.cpp:1151 Source/control.cpp:1754
+#: Source/control.cpp:723 Source/control.cpp:1184 Source/control.cpp:1784
 msgid "Spell Level 0 - Unusable"
 msgstr "法术等级0-无法使用"
 
-#: Source/control.cpp:685 Source/control.cpp:1153 Source/control.cpp:1756
+#: Source/control.cpp:725 Source/control.cpp:1186 Source/control.cpp:1786
 msgid "Spell Level {:d}"
 msgstr "法术等级{:d}"
 
-#: Source/control.cpp:689 Source/control.cpp:1157
+#: Source/control.cpp:730 Source/control.cpp:1190
 msgid "Scroll of {:s}"
 msgstr "{:s}卷轴"
 
-#: Source/control.cpp:705 Source/control.cpp:1174
+#: Source/control.cpp:746 Source/control.cpp:1207
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d}卷轴"
 
-#: Source/control.cpp:709 Source/control.cpp:1178 Source/items.cpp:1313
+#: Source/control.cpp:751 Source/control.cpp:1211 Source/items.cpp:1313
 msgid "Staff of {:s}"
 msgstr "{:s}的法杖"
 
-#: Source/control.cpp:711 Source/control.cpp:1180
+#: Source/control.cpp:753 Source/control.cpp:1213
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d}充能"
 
-#: Source/control.cpp:721
+#: Source/control.cpp:763
 msgid "Spell Hotkey {:s}"
 msgstr "法术热键 {:d}"
 
-#: Source/control.cpp:1118
+#: Source/control.cpp:1153
 msgid "Player friendly"
 msgstr "对玩家友好"
 
-#: Source/control.cpp:1120
+#: Source/control.cpp:1155
 msgid "Player attack"
 msgstr "玩家攻击"
 
-#: Source/control.cpp:1123
+#: Source/control.cpp:1158
 msgid "Hotkey: {:s}"
 msgstr "热键: {:s}"
 
-#: Source/control.cpp:1131
+#: Source/control.cpp:1166
 msgid "Select current spell button"
 msgstr "选择当前法术按钮"
 
-#: Source/control.cpp:1134
+#: Source/control.cpp:1169
 msgid "Hotkey: 's'"
 msgstr "热键: “s”"
 
-#: Source/control.cpp:1305 Source/inv.cpp:1955 Source/items.cpp:3766
+#: Source/control.cpp:1338 Source/inv.cpp:1950 Source/items.cpp:3766
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d}金币 "
+msgstr[0] "{:d}金币堆"
 
-#: Source/control.cpp:1308
+#: Source/control.cpp:1341
 msgid "Requirements not met"
 msgstr "未满足条件"
 
-#: Source/control.cpp:1344
+#: Source/control.cpp:1377
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}，层数: {:d}"
 
-#: Source/control.cpp:1346
+#: Source/control.cpp:1379
 msgid "Hit Points {:d} of {:d}"
 msgstr "生命点{:d}的{:d}"
 
-#: Source/control.cpp:1373
+#: Source/control.cpp:1406
 msgid "None"
 msgstr "没有一个"
 
 #. TRANSLATORS: UI Constrains. Keep translation short please!
-#: Source/control.cpp:1440 Source/control.cpp:1451 Source/control.cpp:1462
+#: Source/control.cpp:1473 Source/control.cpp:1484 Source/control.cpp:1495
 msgid "MAX"
 msgstr "马克斯"
 
-#: Source/control.cpp:1580
+#: Source/control.cpp:1613
 msgid "Level Up"
 msgstr "升级"
 
-#: Source/control.cpp:1729
+#: Source/control.cpp:1762
 msgid "Skill"
 msgstr "技能"
 
-#: Source/control.cpp:1733
+#: Source/control.cpp:1766
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "法杖（{:d} 充能）"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1741
+#: Source/control.cpp:1774
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "法力: {:d} 伤害: {:d}-{:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1743
+#: Source/control.cpp:1776
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "法力: {:d} 伤害: n/a"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1746
+#: Source/control.cpp:1779
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "法力: {:d} 伤害: 1/3 tgt hp"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1806
+#: Source/control.cpp:1836
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "你有 {:d} 金币。你想要取出多少？"
@@ -1035,7 +1035,7 @@ msgstr "通向"
 
 #: Source/cursor.cpp:256
 msgid "The Unholy Altar"
-msgstr "邪恶的祭坛"
+msgstr "不洁祭坛"
 
 #: Source/cursor.cpp:258
 msgid "level 15"
@@ -1120,7 +1120,7 @@ msgstr "启用详细日志记录"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:898
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "即使找到diabdat.mpq，也强制生成模式"
+msgstr "即使找到diabdat.mpq，也使用强制生成模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:899
@@ -1287,7 +1287,7 @@ msgstr "时间不能削弱钢铁的力量"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:47
 msgid "Magic is not always what it seems to be"
-msgstr "魔术并不总是看起来的那样"
+msgstr "魔法并不总是看起来的那样"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:48
@@ -1769,7 +1769,7 @@ msgstr "短剑"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
-msgstr "小圆盾"
+msgstr "圆盾"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
@@ -1789,11 +1789,11 @@ msgstr "切肉者"
 
 #: Source/itemdat.cpp:23 Source/itemdat.cpp:397
 msgid "The Undead Crown"
-msgstr "不死之冠"
+msgstr "不死王冠"
 
 #: Source/itemdat.cpp:24 Source/itemdat.cpp:398
 msgid "Empyrean Band"
-msgstr "太阳带"
+msgstr "碧空之戒"
 
 #: Source/itemdat.cpp:25
 msgid "Magic Rock"
@@ -1801,11 +1801,11 @@ msgstr "魔石"
 
 #: Source/itemdat.cpp:26 Source/itemdat.cpp:399
 msgid "Optic Amulet"
-msgstr "神圣护符"
+msgstr "明眼护符"
 
 #: Source/itemdat.cpp:27 Source/itemdat.cpp:400
 msgid "Ring of Truth"
-msgstr "真理之环"
+msgstr "实相之戒"
 
 #: Source/itemdat.cpp:28
 msgid "Tavern Sign"
@@ -1845,7 +1845,7 @@ msgstr "光谱药剂"
 
 #: Source/itemdat.cpp:37 Source/monstdat.cpp:80
 msgid "Blood Stone"
-msgstr "血石"
+msgstr "鲜血石"
 
 #: Source/itemdat.cpp:38
 msgid "Cathedral Map"
@@ -1885,7 +1885,7 @@ msgstr "全法力药剂"
 
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:404
 msgid "Griswold's Edge"
-msgstr "格里斯沃尔德之锋"
+msgstr "格里斯沃尔德的锐利"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
 msgid "Bovine Plate"
@@ -1893,7 +1893,7 @@ msgstr "牛板"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
-msgstr "拉撒雷茲之杖"
+msgstr "拉扎鲁斯之杖"
 
 #: Source/itemdat.cpp:50 Source/itemdat.cpp:111
 msgid "Scroll of Resurrect"
@@ -1905,7 +1905,7 @@ msgstr "铁匠之油"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
-msgstr "短杖"
+msgstr "短法杖"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:135 Source/itemdat.cpp:136
 #: Source/itemdat.cpp:137 Source/itemdat.cpp:138 Source/itemdat.cpp:141
@@ -1916,7 +1916,7 @@ msgstr "剑"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:134
 msgid "Dagger"
-msgstr "匕首"
+msgstr "长匕首"
 
 #: Source/itemdat.cpp:55
 msgid "Rune Bomb"
@@ -1972,15 +1972,15 @@ msgstr "全护盔"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
-msgstr "王冠"
+msgstr "皇冠"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
-msgstr "重盔"
+msgstr "巨型战盔"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
-msgstr "披肩"
+msgstr "斗篷"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
@@ -2047,7 +2047,7 @@ msgstr "板条甲"
 
 #: Source/itemdat.cpp:83
 msgid "Plate Mail"
-msgstr "板链甲"
+msgstr "板条锁甲"
 
 #: Source/itemdat.cpp:84
 msgid "Field Plate"
@@ -2072,7 +2072,7 @@ msgstr "小盾"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr "大盾"
+msgstr "大盾牌"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
@@ -2205,11 +2205,11 @@ msgstr "弯刃剑"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
-msgstr "弯刀"
+msgstr "西米塔弯刀"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr "双手大剑"
+msgstr "双刃大剑"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
@@ -2229,7 +2229,7 @@ msgstr "阔剑"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr "手半剑"
+msgstr "重剑"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
@@ -2237,7 +2237,7 @@ msgstr "双手剑"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr "重剑"
+msgstr "双手巨剑"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
@@ -2254,7 +2254,7 @@ msgstr "大斧"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr "宽刃斧"
+msgstr "阔斧"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
@@ -2262,7 +2262,7 @@ msgstr "战斗斧"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
-msgstr "重斧"
+msgstr "大斧"
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
@@ -2290,7 +2290,7 @@ msgstr "连枷"
 
 #: Source/itemdat.cpp:158
 msgid "Maul"
-msgstr "大锤"
+msgstr "大头锤"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
@@ -2837,7 +2837,7 @@ msgstr "诵读困难"
 
 #: Source/itemdat.cpp:317
 msgid "magic"
-msgstr "魔术"
+msgstr "魔法"
 
 #: Source/itemdat.cpp:318
 msgid "the mind"
@@ -3115,7 +3115,7 @@ msgstr "危险"
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:396
 msgid "The Butcher's Cleaver"
-msgstr "屠夫的切肉刀"
+msgstr "屠夫的剁肉刀"
 
 #: Source/itemdat.cpp:406
 msgid "The Rift Bow"
@@ -3663,7 +3663,7 @@ msgstr "恢复所有法力"
 
 #: Source/items.cpp:1987
 msgid "increase strength"
-msgstr "增强力量"
+msgstr "增加力量"
 
 #: Source/items.cpp:1991
 msgid "increase magic"
@@ -3735,15 +3735,15 @@ msgstr "需求: "
 
 #: Source/items.cpp:2099 Source/stores.cpp:213
 msgid " {:d} Str"
-msgstr "{:d}力量"
+msgstr "{:d} 力量"
 
 #: Source/items.cpp:2101 Source/stores.cpp:215
 msgid " {:d} Mag"
-msgstr "{:d}魔法"
+msgstr "{:d} 魔法"
 
 #: Source/items.cpp:2103 Source/stores.cpp:217
 msgid " {:d} Dex"
-msgstr "{:d}敏捷"
+msgstr "{:d} 敏捷"
 
 #. TRANSLATORS: {:s} will be a Character Name
 #: Source/items.cpp:3555 Source/player.cpp:3104
@@ -3849,27 +3849,27 @@ msgstr "闪电伤害: {:d}-{:d}"
 
 #: Source/items.cpp:3920
 msgid "{:+d} to strength"
-msgstr "{:+d}力量"
+msgstr "{:+d} 力量"
 
 #: Source/items.cpp:3924
 msgid "{:+d} to magic"
-msgstr "{:+d}魔法"
+msgstr "{:+d} 魔法"
 
 #: Source/items.cpp:3928
 msgid "{:+d} to dexterity"
-msgstr "{:+d}敏捷"
+msgstr "{:+d} 敏捷"
 
 #: Source/items.cpp:3932
 msgid "{:+d} to vitality"
-msgstr "{:+d}活力"
+msgstr "{:+d} 活力"
 
 #: Source/items.cpp:3936
 msgid "{:+d} to all attributes"
-msgstr "{:+d}到所有属性"
+msgstr "{:+d} 所有属性"
 
 #: Source/items.cpp:3940
 msgid "{:+d} damage from enemies"
-msgstr "{:+d}敌人伤害"
+msgstr "{:+d} 来自敌人的伤害"
 
 #: Source/items.cpp:3944
 msgid "Hit Points: {:+d}"
@@ -3894,16 +3894,16 @@ msgstr "坚不可摧"
 #: Source/items.cpp:3960
 #, no-c-format
 msgid "+{:d}% light radius"
-msgstr "+{:d}% l照亮范围"
+msgstr "+{:d}% 照亮范围"
 
 #: Source/items.cpp:3963
 #, no-c-format
 msgid "-{:d}% light radius"
-msgstr "-{:d}% l照亮范围"
+msgstr "-{:d}% 照亮范围"
 
 #: Source/items.cpp:3966
 msgid "multiple arrows per shot"
-msgstr "射出多重箭"
+msgstr "多重射击"
 
 #: Source/items.cpp:3970
 msgid "fire arrows damage: {:d}"
@@ -3952,7 +3952,7 @@ msgstr "击退目标"
 #: Source/items.cpp:4002
 #, no-c-format
 msgid "+200% damage vs. demons"
-msgstr "+对恶魔造成200%伤害"
+msgstr "+200% 对恶魔的伤害"
 
 #: Source/items.cpp:4005
 msgid "All Resistance equals 0"
@@ -3960,27 +3960,27 @@ msgstr "所有抗性变为0"
 
 #: Source/items.cpp:4008
 msgid "hit monster doesn't heal"
-msgstr "命中怪物无法治愈"
+msgstr "命中怪物无法自愈"
 
 #: Source/items.cpp:4012
 #, no-c-format
 msgid "hit steals 3% mana"
-msgstr "命中窃取3%法力值"
+msgstr "命中时3%法力偷取"
 
 #: Source/items.cpp:4014
 #, no-c-format
 msgid "hit steals 5% mana"
-msgstr "命中窃取5%法力值"
+msgstr "命中时5%法力偷取"
 
 #: Source/items.cpp:4018
 #, no-c-format
 msgid "hit steals 3% life"
-msgstr "命中时窃取3%生命值"
+msgstr "命中时3%生命偷取"
 
 #: Source/items.cpp:4020
 #, no-c-format
 msgid "hit steals 5% life"
-msgstr "命中时窃取5%生命值"
+msgstr "命中时5%生命偷取"
 
 #: Source/items.cpp:4023
 msgid "penetrates target's armor"
@@ -4021,15 +4021,15 @@ msgstr "快速格挡"
 #: Source/items.cpp:4047
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] "增加{:d}点到伤害"
+msgstr[0] "增加{:d}点伤害"
 
 #: Source/items.cpp:4050
 msgid "fires random speed arrows"
-msgstr "发射随机速度箭头"
+msgstr "发射随机速度箭矢"
 
 #: Source/items.cpp:4053
 msgid "unusual item damage"
-msgstr "异常物品损坏"
+msgstr "异常的物品损坏"
 
 #: Source/items.cpp:4056
 msgid "altered durability"
@@ -4049,7 +4049,7 @@ msgstr "不断失去生命值"
 
 #: Source/items.cpp:4068
 msgid "life stealing"
-msgstr "窃取生命"
+msgstr "生命偷取"
 
 #: Source/items.cpp:4071
 msgid "no strength requirement"
@@ -4078,7 +4078,7 @@ msgstr "有概率造成三倍伤害"
 #: Source/items.cpp:4098
 #, no-c-format
 msgid "decaying {:+d}% damage"
-msgstr "衰弱 {:+d}% d伤害"
+msgstr "减少 {:+d}% d伤害"
 
 #: Source/items.cpp:4101
 msgid "2x dmg to monst, 1x to you"
@@ -4118,12 +4118,12 @@ msgstr "另一种能力（NW）"
 
 #: Source/items.cpp:4160 Source/items.cpp:4207
 msgid "damage: {:d}  Indestructible"
-msgstr "伤害: {:d} 坚不可摧"
+msgstr "伤害: {:d}  坚不可摧"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4162 Source/items.cpp:4209
 msgid "damage: {:d}  Dur: {:d}/{:d}"
-msgstr "伤害: {:d} Dur: {:d}/{:d}"
+msgstr "伤害: {:d} 耐久: {:d}/{:d}"
 
 #: Source/items.cpp:4165 Source/items.cpp:4212
 msgid "damage: {:d}-{:d}  Indestructible"
@@ -4193,27 +4193,27 @@ msgstr "僵尸"
 
 #: Source/monstdat.cpp:20
 msgid "Ghoul"
-msgstr "食尸鬼"
+msgstr "尸鬼"
 
 #: Source/monstdat.cpp:21
 msgid "Rotting Carcass"
-msgstr "腐烂的尸体"
+msgstr "腐尸"
 
 #: Source/monstdat.cpp:22
 msgid "Black Death"
-msgstr "黑死病"
+msgstr "黑死病躯"
 
 #: Source/monstdat.cpp:23 Source/monstdat.cpp:31
 msgid "Fallen One"
-msgstr "倒下的那个"
+msgstr "堕落者"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
 msgid "Carver"
-msgstr "利刃魔"
+msgstr "剁肉魔"
 
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
 msgid "Devil Kin"
-msgstr "魔鬼亲戚"
+msgstr "魔皮"
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
 msgid "Dark One"
@@ -4225,27 +4225,27 @@ msgstr "骷髅"
 
 #: Source/monstdat.cpp:28
 msgid "Corpse Axe"
-msgstr "尸斧"
+msgstr "尸骸斧兵"
 
 #: Source/monstdat.cpp:29 Source/monstdat.cpp:41
 msgid "Burning Dead"
-msgstr "烈焰亡骨"
+msgstr "烈焰亡灵"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
 msgid "Horror"
-msgstr "恐怖骸骨"
+msgstr "骇魔"
 
 #: Source/monstdat.cpp:35
 msgid "Scavenger"
-msgstr "食腐动物"
+msgstr "食腐魔"
 
 #: Source/monstdat.cpp:36
 msgid "Plague Eater"
-msgstr "食瘟者"
+msgstr "食疫魔"
 
 #: Source/monstdat.cpp:37
 msgid "Shadow Beast"
-msgstr "影兽"
+msgstr "暗影兽"
 
 #: Source/monstdat.cpp:38
 msgid "Bone Gasher"
@@ -4253,7 +4253,7 @@ msgstr "骨裂"
 
 #: Source/monstdat.cpp:40
 msgid "Corpse Bow"
-msgstr "尸弓"
+msgstr "尸骸弓兵"
 
 #: Source/monstdat.cpp:43
 msgid "Skeleton Captain"
@@ -4261,87 +4261,87 @@ msgstr "骷髅队长"
 
 #: Source/monstdat.cpp:44
 msgid "Corpse Captain"
-msgstr "僵尸队长"
+msgstr "尸骸队长"
 
 #: Source/monstdat.cpp:45
 msgid "Burning Dead Captain"
-msgstr "烧死的船长"
+msgstr "烈焰亡灵队长"
 
 #: Source/monstdat.cpp:46
 msgid "Horror Captain"
-msgstr "恐惧队长"
+msgstr "骇魔队长"
 
 #: Source/monstdat.cpp:47
 msgid "Invisible Lord"
-msgstr "看不见的领主"
+msgstr "无形之主"
 
 #: Source/monstdat.cpp:48 Source/objects.cpp:100
 msgid "Hidden"
-msgstr "隐藏"
+msgstr "潜行魔"
 
 #: Source/monstdat.cpp:49
 msgid "Stalker"
-msgstr "追踪者"
+msgstr "追踪魔"
 
 #: Source/monstdat.cpp:50
 msgid "Unseen"
-msgstr "看不见的"
+msgstr "隐形魔"
 
 #: Source/monstdat.cpp:51
 msgid "Illusion Weaver"
-msgstr "幻觉编织者"
+msgstr "幻像编织者"
 
 #: Source/monstdat.cpp:52
 msgid "Satyr Lord"
-msgstr "色狼领主"
+msgstr "色欲领主"
 
 #: Source/monstdat.cpp:53 Source/monstdat.cpp:61
 msgid "Flesh Clan"
-msgstr "肉身氏族"
+msgstr "血肉氏族"
 
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
 msgid "Stone Clan"
-msgstr "石门"
+msgstr "岩石氏族"
 
 #: Source/monstdat.cpp:55 Source/monstdat.cpp:63
 msgid "Fire Clan"
-msgstr "火族"
+msgstr "火焰氏族"
 
 #: Source/monstdat.cpp:56 Source/monstdat.cpp:64
 msgid "Night Clan"
-msgstr "黑夜氏族"
+msgstr "暗夜氏族"
 
 #: Source/monstdat.cpp:57
 msgid "Fiend"
-msgstr "妖蝠"
+msgstr "魔翼"
 
 #: Source/monstdat.cpp:58
 msgid "Blink"
-msgstr "眨眼"
+msgstr "闪翼"
 
 #: Source/monstdat.cpp:59
 msgid "Gloom"
-msgstr "幽暗"
+msgstr "幽翼"
 
 #: Source/monstdat.cpp:60
 msgid "Familiar"
-msgstr "熟悉的"
+msgstr "雷翼"
 
 #: Source/monstdat.cpp:65
 msgid "Acid Beast"
-msgstr "酸兽"
+msgstr "酸液兽"
 
 #: Source/monstdat.cpp:66
 msgid "Poison Spitter"
-msgstr "吐毒者"
+msgstr "喷毒兽"
 
 #: Source/monstdat.cpp:67
 msgid "Pit Beast"
-msgstr "嗜血兽"
+msgstr "深渊兽"
 
 #: Source/monstdat.cpp:68
 msgid "Lava Maw"
-msgstr "熔岩肚"
+msgstr "岩浆喉"
 
 #: Source/monstdat.cpp:69 Source/monstdat.cpp:473
 msgid "Skeleton King"
@@ -4353,23 +4353,23 @@ msgstr "屠夫"
 
 #: Source/monstdat.cpp:71
 msgid "Overlord"
-msgstr "霸王"
+msgstr "领主"
 
 #: Source/monstdat.cpp:72
 msgid "Mud Man"
-msgstr "泥人"
+msgstr "污泥魔"
 
 #: Source/monstdat.cpp:73
 msgid "Toad Demon"
-msgstr "蛤蟆怪"
+msgstr "蟾魔"
 
 #: Source/monstdat.cpp:74
 msgid "Flayed One"
-msgstr "剥皮者"
+msgstr "剥皮魔"
 
 #: Source/monstdat.cpp:75
 msgid "Wyrm"
-msgstr "冰龙"
+msgstr "异魔"
 
 #: Source/monstdat.cpp:76
 msgid "Cave Slug"
@@ -4377,7 +4377,7 @@ msgstr "洞穴蛞蝓"
 
 #: Source/monstdat.cpp:77
 msgid "Devil Wyrm"
-msgstr "魔鬼Wyrm"
+msgstr "有翼异魔"
 
 #: Source/monstdat.cpp:78
 msgid "Devourer"
@@ -4385,27 +4385,27 @@ msgstr "吞食虫"
 
 #: Source/monstdat.cpp:79
 msgid "Magma Demon"
-msgstr "岩浆恶魔"
+msgstr "岩浆魔"
 
 #: Source/monstdat.cpp:81
 msgid "Hell Stone"
-msgstr "地狱之石"
+msgstr "地狱石"
 
 #: Source/monstdat.cpp:82
 msgid "Lava Lord"
-msgstr "熔岩领主"
+msgstr "岩浆领主"
 
 #: Source/monstdat.cpp:83
 msgid "Horned Demon"
-msgstr "长角恶魔"
+msgstr "长角魔"
 
 #: Source/monstdat.cpp:84
 msgid "Mud Runner"
-msgstr "泥浆泵"
+msgstr "污泥奔行魔"
 
 #: Source/monstdat.cpp:85
 msgid "Frost Charger"
-msgstr "霜冻加料机"
+msgstr "冰霜冲锋魔"
 
 #: Source/monstdat.cpp:86
 msgid "Obsidian Lord"
@@ -4417,7 +4417,7 @@ msgstr "老骨头"
 
 #: Source/monstdat.cpp:88
 msgid "Red Death"
-msgstr "红色死亡"
+msgstr "猩红死者"
 
 #: Source/monstdat.cpp:89
 msgid "Litch Demon"
@@ -4425,11 +4425,11 @@ msgstr "石斑魔鬼"
 
 #: Source/monstdat.cpp:90
 msgid "Undead Balrog"
-msgstr "不死巴尔罗格"
+msgstr "不死炎魔"
 
 #: Source/monstdat.cpp:91
 msgid "Incinerator"
-msgstr "焚化炉"
+msgstr "焚焰"
 
 #: Source/monstdat.cpp:92
 msgid "Flame Lord"
@@ -4449,21 +4449,19 @@ msgstr "红色风暴"
 
 #: Source/monstdat.cpp:96
 msgid "Storm Rider"
-msgstr "风暴骑士"
+msgstr "风暴骑手"
 
 #: Source/monstdat.cpp:97
 msgid "Storm Lord"
 msgstr "风暴领主"
 
 #: Source/monstdat.cpp:98
-#, fuzzy
-#| msgid "Maelstorm"
 msgid "Maelstrom"
-msgstr "大旋涡"
+msgstr "漩涡魔"
 
 #: Source/monstdat.cpp:99
 msgid "Devil Kin Brute"
-msgstr "恶魔族畜生"
+msgstr "魔族凶兽"
 
 #: Source/monstdat.cpp:100
 msgid "Winged-Demon"
@@ -4471,7 +4469,7 @@ msgstr "翼妖"
 
 #: Source/monstdat.cpp:101
 msgid "Gargoyle"
-msgstr "滴水嘴"
+msgstr "石像鬼"
 
 #: Source/monstdat.cpp:102
 msgid "Blood Claw"
@@ -4479,7 +4477,7 @@ msgstr "血爪"
 
 #: Source/monstdat.cpp:103
 msgid "Death Wing"
-msgstr "死亡之翼"
+msgstr "死翼"
 
 #: Source/monstdat.cpp:104
 msgid "Slayer"
@@ -4487,11 +4485,11 @@ msgstr "屠杀者"
 
 #: Source/monstdat.cpp:105 Source/spelldat.cpp:28
 msgid "Guardian"
-msgstr "墓穴守卫"
+msgstr "守护者"
 
 #: Source/monstdat.cpp:106
 msgid "Vortex Lord"
-msgstr "漩涡领主"
+msgstr "漩涡王"
 
 #: Source/monstdat.cpp:107
 msgid "Balrog"
@@ -4499,19 +4497,19 @@ msgstr "炎魔"
 
 #: Source/monstdat.cpp:108
 msgid "Cave Viper"
-msgstr "洞穴毒蛇"
+msgstr "洞穴虺蛇"
 
 #: Source/monstdat.cpp:109
 msgid "Fire Drake"
-msgstr "火龙兽"
+msgstr "火焰蛟蛇"
 
 #: Source/monstdat.cpp:110
 msgid "Gold Viper"
-msgstr "金毒蛇"
+msgstr "金色虺蛇"
 
 #: Source/monstdat.cpp:111
 msgid "Azure Drake"
-msgstr "碧蓝龙兽"
+msgstr "碧蓝蛟蛇"
 
 #: Source/monstdat.cpp:112
 msgid "Black Knight"
@@ -4519,7 +4517,7 @@ msgstr "黑骑士"
 
 #: Source/monstdat.cpp:113
 msgid "Doom Guard"
-msgstr "毁灭守卫"
+msgstr "末日守卫"
 
 #: Source/monstdat.cpp:114
 msgid "Steel Lord"
@@ -4551,15 +4549,15 @@ msgstr "魅魔"
 
 #: Source/monstdat.cpp:121
 msgid "Snow Witch"
-msgstr "雪巫婆"
+msgstr "冰雪妖女"
 
 #: Source/monstdat.cpp:122
 msgid "Hell Spawn"
-msgstr "地狱恶灵"
+msgstr "地狱妖女"
 
 #: Source/monstdat.cpp:123
 msgid "Soul Burner"
-msgstr "燃魂"
+msgstr "燃魂妖女"
 
 #: Source/monstdat.cpp:124
 msgid "Counselor"
@@ -4567,15 +4565,15 @@ msgstr "顾问"
 
 #: Source/monstdat.cpp:125
 msgid "Magistrate"
-msgstr "地方执法官"
+msgstr "执法官"
 
 #: Source/monstdat.cpp:126
 msgid "Cabalist"
-msgstr "阴谋家"
+msgstr "秘法师"
 
 #: Source/monstdat.cpp:127
 msgid "Advocate"
-msgstr "提倡"
+msgstr "检察长"
 
 #: Source/monstdat.cpp:128 Source/spelldat.cpp:36
 msgid "Golem"
@@ -4583,11 +4581,11 @@ msgstr "傀儡"
 
 #: Source/monstdat.cpp:129
 msgid "The Dark Lord"
-msgstr "黑魔王"
+msgstr "黑暗之王"
 
 #: Source/monstdat.cpp:130
 msgid "The Arch-Litch Malignus"
-msgstr "拱形石蕊"
+msgstr "高阶巫妖马利葛奴斯"
 
 #: Source/monstdat.cpp:131
 msgid "Hellboar"
@@ -4595,23 +4593,23 @@ msgstr "地狱猪"
 
 #: Source/monstdat.cpp:132
 msgid "Stinger"
-msgstr "钉刺者"
+msgstr "蝎尾刺"
 
 #: Source/monstdat.cpp:133
 msgid "Psychorb"
-msgstr "精神病"
+msgstr "精神失控者"
 
 #: Source/monstdat.cpp:134
 msgid "Arachnon"
-msgstr "蛛网膜"
+msgstr "蛛网魔"
 
 #: Source/monstdat.cpp:135
 msgid "Felltwin"
-msgstr "孪生兄弟"
+msgstr "孪生者"
 
 #: Source/monstdat.cpp:136
 msgid "Hork Spawn"
-msgstr "霍克产卵"
+msgstr "腐尸诞生者"
 
 #: Source/monstdat.cpp:137
 msgid "Venomtail"
@@ -4635,7 +4633,7 @@ msgstr "托尔昌特"
 
 #: Source/monstdat.cpp:142 Source/monstdat.cpp:482
 msgid "Hork Demon"
-msgstr "霍克恶魔"
+msgstr "腐尸恶魔"
 
 #: Source/monstdat.cpp:143
 msgid "Hell Bug"
@@ -4643,7 +4641,7 @@ msgstr "地狱虫"
 
 #: Source/monstdat.cpp:144
 msgid "Gravedigger"
-msgstr "掘墓人"
+msgstr "掘墓者"
 
 #: Source/monstdat.cpp:145
 msgid "Tomb Rat"
@@ -4651,7 +4649,7 @@ msgstr "墓鼠"
 
 #: Source/monstdat.cpp:146
 msgid "Firebat"
-msgstr "火焰兵"
+msgstr "火焰蝙"
 
 #: Source/monstdat.cpp:147
 msgid "Skullwing"
@@ -4667,7 +4665,7 @@ msgstr "地穴恶魔"
 
 #: Source/monstdat.cpp:150
 msgid "Hellbat"
-msgstr "蓝蝙蝠"
+msgstr "地狱蝙蝠"
 
 #: Source/monstdat.cpp:151
 msgid "Bone Demon"
@@ -4675,15 +4673,15 @@ msgstr "骨妖"
 
 #: Source/monstdat.cpp:152
 msgid "Arch Lich"
-msgstr "剥皮大法"
+msgstr "高阶巫妖"
 
 #: Source/monstdat.cpp:153
 msgid "Biclops"
-msgstr "双色"
+msgstr "双钩"
 
 #: Source/monstdat.cpp:154
 msgid "Flesh Thing"
-msgstr "肉体的东西"
+msgstr "血肉构造体"
 
 #: Source/monstdat.cpp:155
 msgid "Reaper"
@@ -4692,7 +4690,7 @@ msgstr "收割者"
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:472
 msgid "Gharbad the Weak"
-msgstr "加巴德弱者"
+msgstr "虚弱的贾巴德"
 
 #: Source/monstdat.cpp:474 Source/quests.cpp:45
 msgid "Zhar the Mad"
@@ -4700,15 +4698,15 @@ msgstr "疯狂的扎尔"
 
 #: Source/monstdat.cpp:475
 msgid "Snotspill"
-msgstr "鼻涕丸"
+msgstr "鼻屎"
 
 #: Source/monstdat.cpp:476
 msgid "Arch-Bishop Lazarus"
-msgstr "拉撒雷茲大主教"
+msgstr "大主教拉扎鲁斯"
 
 #: Source/monstdat.cpp:477
 msgid "Red Vex"
-msgstr "红色烦恼"
+msgstr "红色暴戾"
 
 #: Source/monstdat.cpp:478
 msgid "Black Jade"
@@ -4716,7 +4714,7 @@ msgstr "黑玉"
 
 #: Source/monstdat.cpp:480 Source/quests.cpp:53
 msgid "Warlord of Blood"
-msgstr "鲜血督军"
+msgstr "鲜血战神"
 
 #: Source/monstdat.cpp:483 Source/quests.cpp:62
 msgid "The Defiler"
@@ -4724,35 +4722,35 @@ msgstr "污染者"
 
 #: Source/monstdat.cpp:485
 msgid "Bonehead Keenaxe"
-msgstr "骷髅头"
+msgstr "骷髅头基纳克斯 "
 
 #: Source/monstdat.cpp:486
 msgid "Bladeskin the Slasher"
-msgstr "刀砍机中的刀锋"
+msgstr "撕裂者刀锋"
 
 #: Source/monstdat.cpp:487
 msgid "Soulpus"
-msgstr "灵魂"
+msgstr "放逐之魂"
 
 #: Source/monstdat.cpp:488
 msgid "Pukerat the Unclean"
-msgstr "吐在不干净的地方"
+msgstr "不洁的普克拉特"
 
 #: Source/monstdat.cpp:489
 msgid "Boneripper"
-msgstr "博内里珀"
+msgstr "剥骨者"
 
 #: Source/monstdat.cpp:490
 msgid "Rotfeast the Hungry"
-msgstr "让饥饿的人饱餐一顿"
+msgstr "饥饿的食腐狂"
 
 #: Source/monstdat.cpp:491
 msgid "Gutshank the Quick"
-msgstr "格特申克快"
+msgstr "迅捷的古申克"
 
 #: Source/monstdat.cpp:492
 msgid "Brokenhead Bangshield"
-msgstr "断头盾"
+msgstr "碎颅·猛盾"
 
 #: Source/monstdat.cpp:494
 msgid "Rotcarnage"
@@ -4760,15 +4758,15 @@ msgstr "轮回屠杀"
 
 #: Source/monstdat.cpp:495
 msgid "Shadowbite"
-msgstr "暗影"
+msgstr "影咬"
 
 #: Source/monstdat.cpp:496
 msgid "Deadeye"
-msgstr "死神"
+msgstr "死眼"
 
 #: Source/monstdat.cpp:497
 msgid "Madeye the Dead"
-msgstr "疯狂的死人"
+msgstr "疯眼·亡魂"
 
 #: Source/monstdat.cpp:499
 msgid "Skullfire"
@@ -4804,7 +4802,7 @@ msgstr "燃烧的灰烬"
 
 #: Source/monstdat.cpp:507
 msgid "Shadowcrow"
-msgstr "暗影乌鸦"
+msgstr "影鸦"
 
 #: Source/monstdat.cpp:508
 msgid "Blightstone the Weak"
@@ -4812,15 +4810,15 @@ msgstr "把石头砸在弱者身上"
 
 #: Source/monstdat.cpp:509
 msgid "Bilefroth the Pit Master"
-msgstr "比尔弗罗斯坑主"
+msgstr "拜弗洛斯·深渊领主"
 
 #: Source/monstdat.cpp:510
 msgid "Bloodskin Darkbow"
-msgstr "血色暗影"
+msgstr "血皮·暗弓"
 
 #: Source/monstdat.cpp:511
 msgid "Foulwing"
-msgstr "福林"
+msgstr "邪翼"
 
 #: Source/monstdat.cpp:512
 msgid "Shadowdrinker"
@@ -4832,15 +4830,15 @@ msgstr "危险品搬运工"
 
 #: Source/monstdat.cpp:514
 msgid "Deathspit"
-msgstr "临终遗言"
+msgstr "夺命喷"
 
 #: Source/monstdat.cpp:515
 msgid "Bloodgutter"
-msgstr "血沟"
+msgstr "刨脏"
 
 #: Source/monstdat.cpp:516
 msgid "Deathshade Fleshmaul"
-msgstr "死荫肉搏"
+msgstr "死亡之影·肉锤"
 
 #: Source/monstdat.cpp:517
 msgid "Warmaggot the Mad"
@@ -4856,11 +4854,11 @@ msgstr "疫病"
 
 #: Source/monstdat.cpp:520
 msgid "Nightwing the Cold"
-msgstr "寒冷的夜晚"
+msgstr "冰之夜翼"
 
 #: Source/monstdat.cpp:521
 msgid "Gorestone"
-msgstr "金石"
+msgstr "血肉石"
 
 #: Source/monstdat.cpp:522
 msgid "Bronzefist Firestone"
@@ -4872,19 +4870,19 @@ msgstr "愤怒之火注定"
 
 #: Source/monstdat.cpp:524
 msgid "Firewound the Grim"
-msgstr "阴森的森林被火烧得团团转"
+msgstr "火伤·凶魔"
 
 #: Source/monstdat.cpp:525
 msgid "Baron Sludge"
-msgstr "男爵污泥"
+msgstr "污泥男爵"
 
 #: Source/monstdat.cpp:526
 msgid "Blighthorn Steelmace"
-msgstr "白头苍蝇"
+msgstr "病角·钢锤"
 
 #: Source/monstdat.cpp:527
 msgid "Chaoshowler"
-msgstr "朝绍勒"
+msgstr "疯嚎"
 
 #: Source/monstdat.cpp:528
 msgid "Doomgrin the Rotting"
@@ -4908,7 +4906,7 @@ msgstr "魔骨"
 
 #: Source/monstdat.cpp:533
 msgid "Brokenstorm"
-msgstr "破坏者"
+msgstr "破碎风暴"
 
 #: Source/monstdat.cpp:534
 msgid "Stormbane"
@@ -4916,11 +4914,11 @@ msgstr "风暴轨迹"
 
 #: Source/monstdat.cpp:535
 msgid "Oozedrool"
-msgstr "蛋黄"
+msgstr "渗脓"
 
 #: Source/monstdat.cpp:536
 msgid "Goldblight of the Flame"
-msgstr "火焰的金色枯萎病"
+msgstr "火之金翼"
 
 #: Source/monstdat.cpp:537
 msgid "Blackstorm"
@@ -4928,15 +4926,15 @@ msgstr "黑色风暴"
 
 #: Source/monstdat.cpp:538
 msgid "Plaguewrath"
-msgstr "瘟疫之怒"
+msgstr "怒疫"
 
 #: Source/monstdat.cpp:539
 msgid "The Flayer"
-msgstr "鞭子"
+msgstr "扒皮"
 
 #: Source/monstdat.cpp:540
 msgid "Bluehorn"
-msgstr "蓝喇叭"
+msgstr "蓝角"
 
 #: Source/monstdat.cpp:541
 msgid "Warpfire Hellspawn"
@@ -4944,7 +4942,7 @@ msgstr "战火地狱产卵"
 
 #: Source/monstdat.cpp:542
 msgid "Fangspeir"
-msgstr "方斯皮尔"
+msgstr "蟠蛇牙"
 
 #: Source/monstdat.cpp:543
 msgid "Festerskull"
@@ -4960,11 +4958,11 @@ msgstr "黑舌"
 
 #: Source/monstdat.cpp:546
 msgid "Viletouch"
-msgstr "Viletouch村"
+msgstr "邪触"
 
 #: Source/monstdat.cpp:547
 msgid "Viperflame"
-msgstr "毒蛇"
+msgstr "毒焰"
 
 #: Source/monstdat.cpp:548
 msgid "Fangskin"
@@ -4972,15 +4970,15 @@ msgstr "牙皮"
 
 #: Source/monstdat.cpp:549
 msgid "Witchfire the Unholy"
-msgstr "巫师之火"
+msgstr "不洁的巫师之火"
 
 #: Source/monstdat.cpp:550
 msgid "Blackskull"
-msgstr "黑头骨"
+msgstr "黑颅"
 
 #: Source/monstdat.cpp:551
 msgid "Soulslash"
-msgstr "灵魂冲击"
+msgstr "灵魂撕裂者"
 
 #: Source/monstdat.cpp:552
 msgid "Windspawn"
@@ -4988,35 +4986,35 @@ msgstr "风挡"
 
 #: Source/monstdat.cpp:553
 msgid "Lord of the Pit"
-msgstr "坑主"
+msgstr "深渊领主"
 
 #: Source/monstdat.cpp:554
 msgid "Rustweaver"
-msgstr "锈织工"
+msgstr "骨锈编织者"
 
 #: Source/monstdat.cpp:555
 msgid "Howlingire the Shade"
-msgstr "在阴凉处嚎叫"
+msgstr "隐蔽的嚎叫"
 
 #: Source/monstdat.cpp:556
 msgid "Doomcloud"
-msgstr "末日之声"
+msgstr "末日阴云"
 
 #: Source/monstdat.cpp:557
 msgid "Bloodmoon Soulfire"
-msgstr "血月灵魂之火"
+msgstr "血月灵魂火焰"
 
 #: Source/monstdat.cpp:558
 msgid "Witchmoon"
-msgstr "女巫月亮"
+msgstr "巫月"
 
 #: Source/monstdat.cpp:559
 msgid "Gorefeast"
-msgstr "戈雷弗特"
+msgstr "残暴盛宴"
 
 #: Source/monstdat.cpp:560
 msgid "Graywar the Slayer"
-msgstr "格雷瓦尔杀手"
+msgstr "格雷沃·屠杀者"
 
 #: Source/monstdat.cpp:561
 msgid "Dreadjudge"
@@ -5024,127 +5022,127 @@ msgstr "恐惧法官"
 
 #: Source/monstdat.cpp:562
 msgid "Stareye the Witch"
-msgstr "女巫星眼"
+msgstr "星眼·女魔"
 
 #: Source/monstdat.cpp:563
 msgid "Steelskull the Hunter"
-msgstr "猎人钢头骨"
+msgstr "钢颅·猎杀者"
 
 #: Source/monstdat.cpp:564
 msgid "Sir Gorash"
-msgstr "戈拉什爵士"
+msgstr "格拉什爵士"
 
 #: Source/monstdat.cpp:565
 msgid "The Vizier"
-msgstr "维齐尔"
+msgstr "维兹尔"
 
 #: Source/monstdat.cpp:567
 msgid "Bloodlust"
-msgstr "嗜血"
+msgstr "嗜血者"
 
 #: Source/monstdat.cpp:569
 msgid "Fleshdancer"
-msgstr "肉身舞者"
+msgstr "血肉舞者"
 
 #: Source/monstdat.cpp:570
 msgid "Grimspike"
-msgstr "格里姆斯派克"
+msgstr "恐惧之钉"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:572
 msgid "Doomlock"
 msgstr "杜姆洛克"
 
-#: Source/monster.cpp:3587
+#: Source/monster.cpp:3591
 msgid "Animal"
-msgstr "动物"
+msgstr "野兽"
 
-#: Source/monster.cpp:3589
+#: Source/monster.cpp:3593
 msgid "Demon"
 msgstr "恶魔"
 
-#: Source/monster.cpp:3591
+#: Source/monster.cpp:3595
 msgid "Undead"
 msgstr "亡灵"
 
-#: Source/monster.cpp:4776
+#: Source/monster.cpp:4780
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "类型: {:s} 击杀: {:d}"
 
-#: Source/monster.cpp:4778
+#: Source/monster.cpp:4782
 msgid "Total kills: {:d}"
 msgstr "击杀总数: {:d}"
 
-#: Source/monster.cpp:4811
+#: Source/monster.cpp:4815
 msgid "Hit Points: {:d}-{:d}"
 msgstr "生命值: {:d}-{:d}"
 
-#: Source/monster.cpp:4817
+#: Source/monster.cpp:4821
 msgid "No magic resistance"
 msgstr "没有魔法抵抗"
 
-#: Source/monster.cpp:4821
+#: Source/monster.cpp:4825
 msgid "Resists: "
 msgstr "抗性: "
 
-#: Source/monster.cpp:4823 Source/monster.cpp:4834
-msgid "Magic "
-msgstr "魔法"
-
-#: Source/monster.cpp:4825 Source/monster.cpp:4836
-msgid "Fire "
-msgstr "火"
-
 #: Source/monster.cpp:4827 Source/monster.cpp:4838
+msgid "Magic "
+msgstr "魔法 "
+
+#: Source/monster.cpp:4829 Source/monster.cpp:4840
+msgid "Fire "
+msgstr "火焰 "
+
+#: Source/monster.cpp:4831 Source/monster.cpp:4842
 msgid "Lightning "
 msgstr "闪电"
 
-#: Source/monster.cpp:4832
+#: Source/monster.cpp:4836
 msgid "Immune: "
 msgstr "免疫: "
 
-#: Source/monster.cpp:4850
+#: Source/monster.cpp:4854
 msgid "Type: {:s}"
 msgstr "类型: {:s}"
 
-#: Source/monster.cpp:4856 Source/monster.cpp:4863
+#: Source/monster.cpp:4860 Source/monster.cpp:4867
 msgid "No resistances"
 msgstr "无抗性"
 
-#: Source/monster.cpp:4858 Source/monster.cpp:4868
+#: Source/monster.cpp:4862 Source/monster.cpp:4872
 msgid "No Immunities"
 msgstr "无免疫"
 
-#: Source/monster.cpp:4861
+#: Source/monster.cpp:4865
 msgid "Some Magic Resistances"
 msgstr "一些魔法抵抗"
 
-#: Source/monster.cpp:4866
+#: Source/monster.cpp:4870
 msgid "Some Magic Immunities"
 msgstr "一些魔法免疫"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
-msgstr "想扔地板吗？"
+msgstr "尝试扔掉一些物品?"
 
 #: Source/msg.cpp:950 Source/msg.cpp:973 Source/msg.cpp:996 Source/msg.cpp:1110
 #: Source/msg.cpp:1132 Source/msg.cpp:1154 Source/msg.cpp:1176
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s}施放了非法法术。"
 
-#: Source/msg.cpp:1519 Source/multi.cpp:824
+#: Source/msg.cpp:1522 Source/multi.cpp:824
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "玩家{:s}(等级{:d})刚加入了游戏"
 
-#: Source/msg.cpp:1835
+#: Source/msg.cpp:1838
 msgid "Waiting for game data..."
 msgstr "正在等待游戏数据。。。"
 
-#: Source/msg.cpp:1843
+#: Source/msg.cpp:1846
 msgid "The game ended"
 msgstr "比赛结束了"
 
-#: Source/msg.cpp:1849
+#: Source/msg.cpp:1852
 msgid "Unable to get level data"
 msgstr "无法获取层数据"
 
@@ -5227,7 +5225,7 @@ msgstr "幽灵般的"
 
 #: Source/objects.cpp:118
 msgid "Abandoned"
-msgstr "被遗弃的"
+msgstr "被弃者"
 
 #: Source/objects.cpp:119
 msgid "Creepy"
@@ -5400,7 +5398,7 @@ msgstr "头骨杠杆"
 
 #: Source/objects.cpp:5448
 msgid "Mythical Book"
-msgstr "神话书"
+msgstr "神秘之书"
 
 #: Source/objects.cpp:5452
 msgid "Small Chest"
@@ -5436,7 +5434,7 @@ msgstr "罐子"
 
 #: Source/objects.cpp:5480
 msgid "Barrel"
-msgstr "桶"
+msgstr "木桶"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5484
@@ -5445,7 +5443,7 @@ msgstr "{:s}神殿"
 
 #: Source/objects.cpp:5488
 msgid "Skeleton Tome"
-msgstr "骷髅大部头"
+msgstr "骸骨堆"
 
 #: Source/objects.cpp:5491
 msgid "Library Book"
@@ -5461,11 +5459,11 @@ msgstr "断头尸体"
 
 #: Source/objects.cpp:5500
 msgid "Book of the Blind"
-msgstr "盲人书"
+msgstr "目盲之书"
 
 #: Source/objects.cpp:5503
 msgid "Book of Blood"
-msgstr "血书"
+msgstr "鲜血之书"
 
 #: Source/objects.cpp:5506
 msgid "Purifying Spring"
@@ -5481,7 +5479,7 @@ msgstr "山羊神殿"
 
 #: Source/objects.cpp:5519
 msgid "Cauldron"
-msgstr "大锅"
+msgstr "熏炉"
 
 #: Source/objects.cpp:5522
 msgid "Murky Pool"
@@ -5493,7 +5491,7 @@ msgstr "泪泉"
 
 #: Source/objects.cpp:5528
 msgid "Steel Tome"
-msgstr "钢卷轴"
+msgstr "钢铁之书"
 
 #: Source/objects.cpp:5531
 msgid "Pedestal of Blood"
@@ -5565,7 +5563,7 @@ msgid ""
 msgstr ""
 "无法加载UI资源。\n"
 "\n"
-"devilutionx.mpq是否在游戏目录且是最新的？"
+"DevilutionX.mpq是否在游戏目录且是最新的？"
 
 #: Source/qol/xpbar.cpp:128
 msgid "Level {:d}"
@@ -5594,7 +5592,7 @@ msgstr "魔石"
 
 #: Source/quests.cpp:44
 msgid "Gharbad The Weak"
-msgstr "加巴德弱者"
+msgstr "虚弱的贾巴德"
 
 #: Source/quests.cpp:49
 msgid "Ogden's Sign"
@@ -5602,7 +5600,7 @@ msgstr "奥格登征"
 
 #: Source/quests.cpp:50
 msgid "Halls of the Blind"
-msgstr "盲人大厅"
+msgstr "目盲之厅"
 
 #: Source/quests.cpp:51
 msgid "Valor"
@@ -5619,11 +5617,11 @@ msgstr "中毒供水"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:56 Source/quests.cpp:89
 msgid "The Chamber of Bone"
-msgstr "骨腔"
+msgstr "白骨密室"
 
 #: Source/quests.cpp:57
 msgid "Archbishop Lazarus"
-msgstr "大主教拉撒雷茲"
+msgstr "大主教拉扎鲁斯"
 
 #: Source/quests.cpp:58
 msgid "Grave Matters"
@@ -5653,7 +5651,7 @@ msgstr "球衣是球衣"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:88
 msgid "King Leoric's Tomb"
-msgstr "利奥里克国王墓"
+msgstr "李奥瑞克王的陵寝"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:90 Source/setmaps.cpp:26
@@ -5689,11 +5687,11 @@ msgstr "骷髅王的巢穴"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
-msgstr "骨腔"
+msgstr "白骨大厅"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
-msgstr "拉撒雷茲大主教的巢穴"
+msgstr "拉扎鲁斯大主教的巢穴"
 
 #: Source/spelldat.cpp:16
 msgid "Firebolt"
@@ -5713,15 +5711,15 @@ msgstr "鉴定"
 
 #: Source/spelldat.cpp:21
 msgid "Fire Wall"
-msgstr "火焰墙"
+msgstr "火墙"
 
 #: Source/spelldat.cpp:23
 msgid "Stone Curse"
-msgstr "石头诅咒"
+msgstr "石化诅咒"
 
 #: Source/spelldat.cpp:24
 msgid "Infravision"
-msgstr "红外线"
+msgstr "夜视"
 
 #: Source/spelldat.cpp:25
 msgid "Phasing"
@@ -5769,11 +5767,11 @@ msgstr "传送术"
 
 #: Source/spelldat.cpp:39
 msgid "Apocalypse"
-msgstr "启示录"
+msgstr "天启"
 
 #: Source/spelldat.cpp:40
 msgid "Etherealize"
-msgstr "以太化"
+msgstr "灵化术"
 
 #: Source/spelldat.cpp:41
 msgid "Item Repair"
@@ -5801,7 +5799,7 @@ msgstr "圣光弹"
 
 #: Source/spelldat.cpp:47
 msgid "Resurrect"
-msgstr "使复兴"
+msgstr "复活术"
 
 #: Source/spelldat.cpp:48
 msgid "Telekinesis"
@@ -5825,15 +5823,15 @@ msgstr "法力"
 
 #: Source/spelldat.cpp:53
 msgid "the Magi"
-msgstr "东方三博士"
+msgstr "法师的"
 
 #: Source/spelldat.cpp:54
 msgid "the Jester"
-msgstr "小丑"
+msgstr "小丑的"
 
 #: Source/spelldat.cpp:55
 msgid "Lightning Wall"
-msgstr "避雷墙"
+msgstr "闪电墙"
 
 #: Source/spelldat.cpp:56
 msgid "Immolation"
@@ -5845,7 +5843,7 @@ msgstr "扭曲"
 
 #: Source/spelldat.cpp:58
 msgid "Reflect"
-msgstr "反映"
+msgstr "反射"
 
 #: Source/spelldat.cpp:59
 msgid "Berserk"
@@ -5861,7 +5859,7 @@ msgstr "搜索"
 
 #: Source/spelldat.cpp:63
 msgid "Rune of Light"
-msgstr "光符文"
+msgstr "光之符文"
 
 #: Source/spelldat.cpp:64
 msgid "Rune of Nova"
@@ -5873,7 +5871,7 @@ msgstr "献祭符文"
 
 #: Source/stores.cpp:178 Source/stores.cpp:185
 msgid ",  "
-msgstr ","
+msgstr ",  "
 
 #: Source/stores.cpp:194
 msgid "Damage: {:d}-{:d}  "
@@ -5885,11 +5883,11 @@ msgstr "护甲: {:d}"
 
 #: Source/stores.cpp:198
 msgid "Dur: {:d}/{:d},  "
-msgstr "杜尔: {:d}/{:d}，"
+msgstr "耐久: {:d}/{:d}，"
 
 #: Source/stores.cpp:201
 msgid "Indestructible,  "
-msgstr "坚不可摧，"
+msgstr "坚不可摧,  "
 
 #: Source/stores.cpp:209
 msgid "No required attributes"
@@ -5978,7 +5976,7 @@ msgstr "女巫小屋"
 
 #: Source/stores.cpp:616
 msgid "Talk to Adria"
-msgstr "和艾德里亚谈谈"
+msgstr "和艾德莉亚谈谈"
 
 #: Source/stores.cpp:617 Source/stores.cpp:1006
 msgid "Buy items"
@@ -6024,7 +6022,7 @@ msgstr "您确定要购买此商品吗？"
 
 #: Source/stores.cpp:922
 msgid "Are you sure you want to recharge this item?"
-msgstr "您确定要为该物品充值吗？"
+msgstr "您确定要为该物品充能吗？"
 
 #: Source/stores.cpp:926
 msgid "Are you sure you want to sell this item?"
@@ -6032,15 +6030,15 @@ msgstr "你确定要卖这个东西吗？"
 
 #: Source/stores.cpp:929
 msgid "Are you sure you want to repair this item?"
-msgstr "确定要修复此项目吗？"
+msgstr "确定要修复此物品吗？"
 
 #: Source/stores.cpp:943 Source/towners.cpp:160
 msgid "Wirt the Peg-legged boy"
-msgstr "你是那个假腿男孩吗"
+msgstr "假腿男孩怀特"
 
 #: Source/stores.cpp:946 Source/stores.cpp:953
 msgid "Talk to Wirt"
-msgstr "和沃特谈谈"
+msgstr "和怀特谈谈"
 
 #: Source/stores.cpp:947
 msgid "I have something for sale,"
@@ -6078,7 +6076,7 @@ msgstr "疗养院"
 
 #: Source/stores.cpp:1005
 msgid "Talk to Pepin"
-msgstr "和佩平谈谈"
+msgstr "和佩金谈谈"
 
 #: Source/stores.cpp:1007
 msgid "Leave Healer's home"
@@ -6152,15 +6150,15 @@ msgstr "离开酒馆"
 
 #: Source/stores.cpp:1262
 msgid "Talk to Gillian"
-msgstr "和阿娇谈谈"
+msgstr "和吉莉安谈谈"
 
 #: Source/stores.cpp:1272 Source/towners.cpp:215
 msgid "Farnham the Drunk"
-msgstr "醉汉法纳姆"
+msgstr "醉汉法恩汉"
 
 #: Source/stores.cpp:1274
 msgid "Talk to Farnham"
-msgstr "和法纳姆谈谈"
+msgstr "和法恩汉谈谈"
 
 #: Source/stores.cpp:1275
 msgid "Say Goodbye"
@@ -6277,7 +6275,7 @@ msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING!"
 msgstr ""
-"我才不管呢。听着，没有骷髅会是我的国王。利奥里克是国王。国王，你听见了吗？向"
+"我才不管呢。听着，没有骷髅会是我的国王。李奥瑞克是国王。国王，你听见了吗？向"
 "国王致敬"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
@@ -6352,7 +6350,7 @@ msgid ""
 msgstr ""
 "哦，你不必把我的牌子拿回来，但我想它确实可以帮我省下再做一个牌子的费用。好"
 "吧，让我想想，我能给你什么作为找到它的费用？嗯，我们这里有什么。。。啊，是"
-"的！这顶帽子是一个魔术师不久前留下来的，他把它放在一个房间里。也许对你有价值"
+"的！这顶帽子是一个魔法师不久前留下来的，他把它放在一个房间里。也许对你有价值"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -6474,15 +6472,15 @@ msgstr ""
 "我的真名是老凯恩，我是一个古老兄弟会的最后一个后代，这个兄弟会致力于保护一个"
 "永恒邪恶的秘密。一个很明显已经被释放的恶魔。\n"
 " \n"
-"拉撒雷茲大主教曾经是莱奥里克国王最信任的顾问，他带领一队普通的市民进入迷宫，"
+"拉扎鲁斯大主教曾经是莱奥里克国王最信任的顾问，他带领一队普通的市民进入迷宫，"
 "寻找国王失踪的儿子阿尔布雷希特。过了很长一段时间他们才回来，只有少数人带着生"
 "命逃走了。\n"
 " \n"
-"诅咒我是个傻瓜！我当时应该怀疑他暗中的背叛。一定是拉撒路自己绑架了阿尔布雷希"
-"特，然后把他藏在迷宫里。我不明白大主教为什么转向黑暗，或者他对这个孩子有什么"
-"兴趣，除非他打算把他献给他的黑暗主人！\n"
+"诅咒我是个傻瓜！我当时应该怀疑他暗中的背叛。一定是拉扎鲁斯自己绑架了阿尔布雷"
+"希特，然后把他藏在迷宫里。我不明白大主教为什么转向黑暗，或者他对这个孩子有什"
+"么兴趣，除非他打算把他献给他的黑暗主人！\n"
 " \n"
-"那一定是他的计划！他的“救援队”的幸存者说，拉撒路最后一次被看到跑进迷宫最深"
+"那一定是他的计划！他的“救援队”的幸存者说，拉扎鲁斯最后一次被看到跑进迷宫最深"
 "处。你必须赶快把王子从这个疯狂恶魔的祭剑中救出来"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
@@ -6491,7 +6489,7 @@ msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
 msgstr ""
-"你必须赶快把阿尔布雷希特从拉撒路手中救出来。王子和这个王国的人民都指望着你"
+"你必须赶快把阿尔布雷希特从拉扎鲁斯手中救出来。王子和这个王国的人民都指望着你"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -6507,9 +6505,9 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
-"你的故事很残酷，我的朋友。拉撒路一定会因为他那可怕的行为在地狱里被烧死。你描"
-"述的那个男孩不是我们的王子，但我相信阿尔布雷希特可能还处在危险之中。你所说的"
-"权力的象征一定是迷宫中心的一个入口。\n"
+"你的故事很残酷，我的朋友。拉扎鲁斯一定会因为他那可怕的行为在地狱里被烧死。你"
+"描述的那个男孩不是我们的王子，但我相信阿尔布雷希特可能还处在危险之中。你所说"
+"的权力的象征一定是迷宫中心的一个入口。\n"
 " \n"
 "你要知道，我的朋友，你所反对的邪恶是恐怖的黑魔王。他被世人称为迪亚波罗。几个"
 "世纪前，正是他被囚禁在迷宫里，我担心他又一次企图在人类的王国里制造混乱。你必"
@@ -6523,9 +6521,9 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
-"拉撒路是大主教，他带领许多市民进入迷宫。那天我失去了很多好朋友，拉撒路再也没"
-"有回来。我想他是和其他大多数人一起被杀的。如果你能帮我一个忙，好主人-请不要和"
-"法纳姆谈论那一天"
+"拉扎鲁斯是大主教，他带领许多市民进入迷宫。那天我失去了很多好朋友，拉扎鲁斯再"
+"也没有回来。我想他是和其他大多数人一起被杀的。如果你能帮我一个忙，好主人-请不"
+"要和法恩汉谈论那一天"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -6535,9 +6533,9 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
-"当我听说镇上的人那天晚上打算干什么时，我很震惊。我想在所有人中，拉撒路应该更"
-"有理智。他是一位大主教，似乎总是那么关心特里斯特拉姆的市民。这么多人受伤，我"
-"救不了他们"
+"当我听说镇上的人那天晚上打算干什么时，我很震惊。我想在所有人中，拉扎鲁斯应该"
+"更有理智。他是一位大主教，似乎总是那么关心特里斯特拉姆的市民。这么多人受伤，"
+"我救不了他们"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -6546,8 +6544,8 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
-"我记得拉撒路是一个非常和善和乐于奉献的人。他在我母亲的葬礼上发表了讲话，在非"
-"常困难的时候支持我和我的祖母。我每晚都祈祷，不知何故，他还活着，安然无恙"
+"我记得拉扎鲁斯是一个非常和善和乐于奉献的人。他在我母亲的葬礼上发表了讲话，在"
+"非常困难的时候支持我和我的祖母。我每晚都祈祷，不知何故，他还活着，安然无恙"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -6557,9 +6555,9 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
-"拉撒路领我们进迷宫的时候，我在那里。他谈到了神圣的报应，但当我们开始与那些地"
-"狱之子战斗时，他甚至没有举起他的狼牙棒来对付他们。他只不过是往黑暗的仆人们所"
-"住的昏暗无边的房间里跑得更深"
+"拉扎鲁斯领我们进迷宫的时候，我在那里。他谈到了神圣的报应，但当我们开始与那些"
+"地狱之子战斗时，他甚至没有举起他的狼牙棒来对付他们。他只不过是往黑暗的仆人们"
+"所住的昏暗无边的房间里跑得更深"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -6578,8 +6576,8 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
-"我不认识你们所说的拉撒路，但我确实感觉到他内心有很大的矛盾。他带来了巨大的危"
-"险，他将不择手段地为黑暗势力服务，黑暗势力将他视为他们的"
+"我不认识你们所说的拉扎鲁斯，但我确实感觉到他内心有很大的矛盾。他带来了巨大的"
+"危险，他将不择手段地为黑暗势力服务，黑暗势力将他视为他们的"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -6588,8 +6586,8 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
-"是的，正义的拉撒路，他对那里的怪物非常有效。没救我的腿，是吗？听着，我给你一"
-"个免费的建议。问问法纳姆，他在那儿"
+"是的，正义的拉扎鲁斯，他对那里的怪物非常有效。没救我的腿，是吗？听着，我给你"
+"一个免费的建议。问问法恩汉，他在那儿"
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -6678,7 +6676,7 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
-"佩平告诉了你真相。我们很快就会急需淡水。我试过清理其中一口小井，但它散发着死"
+"佩金告诉了你真相。我们很快就会急需淡水。我试过清理其中一口小井，但它散发着死"
 "水的臭味。一定是源头堵塞了"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
@@ -6794,9 +6792,9 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
-"似乎拉撒路大主教怂恿许多市民冒险进入迷宫寻找国王失踪的儿子。他利用他们的恐"
+"似乎拉扎鲁斯大主教怂恿许多市民冒险进入迷宫寻找国王失踪的儿子。他利用他们的恐"
 "惧，把他们鞭打成一群疯狂的暴徒。他们中没有一个人准备好面对冰冷的地球上的一"
-"切。。。拉撒路把他们丢在那里，丢在难以形容的恐惧魔爪里，等死"
+"切。。。拉扎鲁斯把他们丢在那里，丢在难以形容的恐惧魔爪里，等死"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -6804,7 +6802,7 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
-"是的，法纳姆喃喃地说了一些关于一个笨重的畜生挥舞着凶器的事。我相信他叫他屠夫"
+"是的，法恩汉喃喃地说了一些关于一个笨重的畜生挥舞着凶器的事。我相信他叫他屠夫"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -6816,10 +6814,10 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
-"借着光明，我知道这个邪恶的恶魔。当拉撒路率领的少数几名冲锋幸存者从大教堂爬出"
-"来时，许多人身上留下了他愤怒的伤疤。我不知道他以前是怎么切开受害者的，但这不"
-"可能是这个世界的。它留下的伤口溃烂与疾病，甚至我发现他们几乎不可能治疗。如果"
-"你打算和这个恶魔战斗，要小心"
+"借着光明，我知道这个邪恶的恶魔。当拉扎鲁斯率领的少数几名冲锋幸存者从大教堂爬"
+"出来时，许多人身上留下了他愤怒的伤疤。我不知道他以前是怎么切开受害者的，但这"
+"不可能是这个世界的。它留下的伤口溃烂与疾病，甚至我发现他们几乎不可能治疗。如"
+"果你打算和这个恶魔战斗，要小心"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
@@ -6827,7 +6825,7 @@ msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
 msgstr ""
-"当法纳姆说起屠夫杀人的事时，我立刻打消了这个念头。但既然是你提出来的，也许是"
+"当法恩汉说起屠夫杀人的事时，我立刻打消了这个念头。但既然是你提出来的，也许是"
 "真的"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
@@ -6840,7 +6838,7 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
-"我看到法纳姆所说的屠夫在我朋友的尸体上划出一条小路。他挥舞着一把斧头般大的砍"
+"我看到法恩汉所说的屠夫在我朋友的尸体上划出一条小路。他挥舞着一把斧头般大的砍"
 "刀，砍断四肢，砍倒站在那里的勇士。我被一群尖叫着的小恶魔从纷争中分离出来，不"
 "知怎的我找到了通向外面的楼梯。我再也没见过那可怕的野兽，但他那血迹斑斑的面容"
 "至今萦绕在我心头"
@@ -6862,7 +6860,7 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
-"屠夫是个虐待狂，喜欢别人的折磨和痛苦。你见过他在酒鬼法纳姆的作品。他的毁灭将"
+"屠夫是个虐待狂，喜欢别人的折磨和痛苦。你见过他在酒鬼法恩汉的作品。他的毁灭将"
 "对确保这个村庄的安全大有帮助"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
@@ -6888,7 +6886,7 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
-"请听我说。拉撒路大主教，他带我们到这里来寻找失踪的王子。那混蛋把我们引入陷"
+"请听我说。拉扎鲁斯大主教，他带我们到这里来寻找失踪的王子。那混蛋把我们引入陷"
 "阱！现在每个人都死了。。。被一个叫屠夫的恶魔杀死。为我们报仇！找到这个屠夫，"
 "杀了他，让我们的灵魂最终安息"
 
@@ -6940,7 +6938,7 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
-"如果你对失明有疑问，你应该和佩平谈谈。我知道他给了我祖母一种药水，帮助她消除"
+"如果你对失明有疑问，你应该和佩金谈谈。我知道他给了我祖母一种药水，帮助她消除"
 "视力，所以也许他也能帮你"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
@@ -7293,8 +7291,8 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
-"隐马尔可夫模型。。。这听起来像是我应该记住的，但我一直忙于学习新的治疗方法和"
-"创造更好的长生不老药，我一定忘记了。对不起"
+"嗯。。。这听起来像是我应该记住的，但我一直忙于学习新的治疗方法和创造更好的长"
+"生不老药，我一定忘记了。对不起"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -7560,8 +7558,8 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
-"女巫艾德里亚想要一个黑蘑菇？我对黑蘑菇的了解和对红鲱鱼的了解一样多。也许治疗"
-"者佩平可以告诉你更多，但这是我的任何故事或书籍中都找不到的"
+"女巫艾德莉亚想要一个黑蘑菇？我对黑蘑菇的了解和对红鲱鱼的了解一样多。也许治疗"
+"者佩金可以告诉你更多，但这是我的任何故事或书籍中都找不到的"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -7571,7 +7569,7 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
-"我就这么说吧。我和嘉达永远不会给我们的贵宾提供黑蘑菇。如果艾德里亚想在炖菜里"
+"我就这么说吧。我和嘉达永远不会给我们的贵宾提供黑蘑菇。如果艾德莉亚想在炖菜里"
 "放些蘑菇，那是她的事，但我帮不了你。黑蘑菇。。。恶心"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
@@ -7750,7 +7748,7 @@ msgid ""
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
 "如果女巫帮不了你，建议你去见凯恩，你凭什么认为我什么都知道？听起来这是一件非"
-"常严重的事情。你应该像阿德里亚建议的那样，赶快去见讲故事的人"
+"常严重的事情。你应该像艾德莉亚建议的那样，赶快去见讲故事的人"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -7761,7 +7759,7 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
-"我对这张地图上的文字不太了解，但也许艾德里亚或凯恩能帮你破译这是指什么。\n"
+"我对这张地图上的文字不太了解，但也许艾德莉亚或凯恩能帮你破译这是指什么。\n"
 " \n"
 "我可以看到这是一张我们天空中星星的地图，但比这更是超出我的能力"
 
@@ -7785,7 +7783,7 @@ msgid ""
 "answers that you seek."
 msgstr ""
 "我以前从未见过这样的地图。你从哪儿弄来的？虽然我不知道该怎么读这篇文章，但凯"
-"恩或阿德里亚也许能提供你所寻求的答案"
+"恩或艾德莉亚也许能提供你所寻求的答案"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
@@ -7813,7 +7811,7 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
-"我一直在找地图，但那肯定不是。你应该把这个给艾德里亚看-她可能会告诉你是什么。"
+"我一直在找地图，但那肯定不是。你应该把这个给艾德莉亚看-她可能会告诉你是什么。"
 "我要说一件事；它看起来很老，而且老通常意味着有价值"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
@@ -7905,7 +7903,7 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill."
 msgstr ""
-"格里斯沃尔德——一个行动力和勇气都很强的人。我打赌他从没告诉过你他进迷宫救沃特"
+"格里斯沃尔德——一个行动力和勇气都很强的人。我打赌他从没告诉过你他进迷宫救怀特"
 "的事，是吗？他知道在那里会有很多危险，但话说回来，你也是。他是一个技艺高超的"
 "工匠，如果他声称能以任何方式帮助你，你可以指望他的诚实和他的技能"
 
@@ -7931,8 +7929,8 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
-"可怜的法纳姆。他令人不安地提醒人们，在那黑暗的一天，注定要与拉撒路一起进入大"
-"教堂的集会。他带着生命逃走了，但他的勇气和大部分的理智都留在了某个黑暗的坑"
+"可怜的法恩汉。他令人不安地提醒人们，在那黑暗的一天，注定要与拉扎鲁斯一起进入"
+"大教堂的集会。他带着生命逃走了，但他的勇气和大部分的理智都留在了某个黑暗的坑"
 "里。如今，他只在酒馆的最底层找到安慰，但在他不断的闲谈中，偶尔也隐藏着一些真"
 "相"
 
@@ -7945,7 +7943,7 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
-"女巫艾德里亚是特里斯特拉姆的一个异类。她是在大教堂被亵渎后不久到达的，而大多"
+"女巫艾德莉亚是特里斯特拉姆的一个异类。她是在大教堂被亵渎后不久到达的，而大多"
 "数人都在逃离。她在城镇边缘建了一间小屋，似乎是一夜之间建成的，她能接触到许多"
 "奇怪而神秘的文物和知识的大部头，连我都从未见过"
 
@@ -7960,7 +7958,7 @@ msgid ""
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
 "维特的故事是一个可怕而悲惨的故事。他从他母亲的怀抱中被带到迷宫里，被那些挥舞"
-"邪恶长矛的邪恶小恶魔们拖进了迷宫。那天还有许多孩子被带走，包括利奥里克国王的"
+"邪恶长矛的邪恶小恶魔们拖进了迷宫。那天还有许多孩子被带走，包括李奥瑞克国王的"
 "儿子。宫殿的骑士们下楼去了，但再也没有回来。铁匠找到了那个男孩，但那是在那些"
 "邪恶的野兽开始折磨他以获取他们的虐待狂般的快乐之后"
 
@@ -7972,7 +7970,7 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
-"啊，佩平。我把他视为真正的朋友——也许是我在这里最亲密的朋友。他有时有点烦躁不"
+"啊，佩金。我把他视为真正的朋友——也许是我在这里最亲密的朋友。他有时有点烦躁不"
 "安，但从来没有一个更关心和体贴的灵魂存在过。他的知识和技能为数不多，他的大门"
 "总是敞开的"
 
@@ -7985,9 +7983,9 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
-"阿娇是个好女人。她因兴高采烈和爽朗的笑声而备受崇拜，在我心中占有特殊的地位。"
-"她留在酒馆里养活年迈的祖母，因为她病得不能旅行了。我有时担心她的安全，但我知"
-"道村里的任何男人都宁愿死也不愿看到她受到伤害"
+"吉莉安是个好女人。她因兴高采烈和爽朗的笑声而备受崇拜，在我心中占有特殊的地"
+"位。她留在酒馆里养活年迈的祖母，因为她病得不能旅行了。我有时担心她的安全，但"
+"我知道村里的任何男人都宁愿死也不愿看到她受到伤害"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
@@ -8020,7 +8018,7 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
-"法纳姆在这里待的时间太长了，他用廉价的啤酒来消愁。我想让他离开，但他在迷宫里"
+"法恩汉在这里待的时间太长了，他用廉价的啤酒来消愁。我想让他离开，但他在迷宫里"
 "的时候确实很痛苦"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
@@ -8032,7 +8030,7 @@ msgid ""
 "Well, no matter. If you ever have need to trade in items of sorcery, she "
 "maintains a strangely well-stocked hut just across the river."
 msgstr ""
-"艾德里亚的智慧超过了她的年龄，但我必须承认——她有点吓到我了。\n"
+"艾德莉亚的智慧超过了她的年龄，但我必须承认——她有点吓到我了。\n"
 " \n"
 "好吧，没关系。如果你需要交易巫术物品，她在河对岸有一个奇怪的仓库"
 
@@ -8063,7 +8061,7 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
-"佩平是个好人，当然也是村里最慷慨的人。他总是关心别人的需要，但无论他走到哪"
+"佩金是个好人，当然也是村里最慷慨的人。他总是关心别人的需要，但无论他走到哪"
 "里，总有一些麻烦跟着他"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
@@ -8075,7 +8073,7 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
-"阿娇，我的酒吧女招待？如果不是因为她对大坝的责任感，她早就从这里逃走了。\n"
+"吉莉安，我的酒吧女招待？如果不是因为她对大坝的责任感，她早就从这里逃走了。\n"
 " \n"
 "天知道我求她离开，告诉她我会照顾那个老妇人，但她太可爱了，太体贴了"
 
@@ -8133,7 +8131,7 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
-"就连我的技能也无法完全治愈法纳姆。哦，我已经能修好他的身体了，但是他的精神和"
+"就连我的技能也无法完全治愈法恩汉。哦，我已经能修好他的身体了，但是他的精神和"
 "精神我无能为力"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
@@ -8145,7 +8143,7 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
-"当我使用一些有限的魔法来创造我储存在这里的药剂和长生不老药时，阿德里亚是一个"
+"当我使用一些有限的魔法来创造我储存在这里的药剂和长生不老药时，艾德莉亚是一个"
 "真正的女巫。她似乎从不睡觉，她总是能接触到许多神秘的大部头和文物。我相信她的"
 "小屋可能比看上去的小屋要大得多，但我似乎永远也进不了这个地方"
 
@@ -8207,7 +8205,7 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
-"镇边的那个女人是个女巫！她看起来很好，她的名字叫艾德里亚，很讨人喜欢，但我很"
+"镇边的那个女人是个女巫！她看起来很好，她的名字叫艾德莉亚，很讨人喜欢，但我很"
 "害怕她。\n"
 " \n"
 "像你这样勇敢的人才能看到她在外面干什么"
@@ -8242,9 +8240,9 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
-"法纳姆是个酒鬼，他的肚子里装满了啤酒，其他人的耳朵里全是废话。\n"
+"法恩汉是个酒鬼，他的肚子里装满了啤酒，其他人的耳朵里全是废话。\n"
 " \n"
-"我知道佩平和奥格登都同情他，但每天晚上看着他越来越昏迷不醒，我感到非常沮丧"
+"我知道佩金和奥格登都同情他，但每天晚上看着他越来越昏迷不醒，我感到非常沮丧"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -8254,8 +8252,8 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
-"佩平救了我祖母的命，我知道我永远也报答不了他。他治愈任何疾病的能力比最强大的"
-"剑更强大，比你能说出的任何法术都更神秘。如果你需要治疗，Pepin可以帮助你"
+"佩金救了我祖母的命，我知道我永远也报答不了他。他治愈任何疾病的能力比最强大的"
+"剑更强大，比你能说出的任何法术都更神秘。如果你需要治疗，佩金可以帮助你"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -8267,7 +8265,7 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
-"我和沃特的母亲，加那斯一起长大。虽然当那些可怕的生物偷走他时，她只是受到了轻"
+"我和怀特的母亲，加那斯一起长大。虽然当那些可怕的生物偷走他时，她只是受到了轻"
 "微的伤害，但她始终没有康复。我想她死于心碎。维特成了一个小气鬼，只想从别人的"
 "汗水中获利。我知道他受苦受难，经历过我无法想象的恐惧，但他身上仍然笼罩着一些"
 "黑暗"
@@ -8351,8 +8349,8 @@ msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
 msgstr ""
-"阿娇是个好姑娘。可惜她的男朋友身体这么差，否则我会安排他们两个都乘商队离开这"
-"里"
+"吉莉安是个好姑娘。可惜她的男朋友身体这么差，否则我会安排他们两个都乘商队离开"
+"这里"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -8372,9 +8370,9 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
-"那天晚上我和法纳姆在一起，拉撒路把我们领进了迷宫。我再也见不到大主教了，如果"
-"法纳姆不在我身边，我可能就活不下去了。我担心这次袭击使他的灵魂像另一次袭击我"
-"的腿一样残废。我现在不能为他而战，但如果可以的话我会的"
+"那天晚上我和法恩汉在一起，拉扎鲁斯把我们领进了迷宫。我再也见不到大主教了，如"
+"果法恩汉不在我身边，我可能就活不下去了。我担心这次袭击使他的灵魂像另一次袭击"
+"我的腿一样残废。我现在不能为他而战，但如果可以的话我会的"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -8453,7 +8451,7 @@ msgid ""
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
 "格里斯沃尔德？善良的老格里斯沃尔德。我像兄弟一样爱他！我们一起战斗，你知道，"
-"当。。。我们。。。拉撒路。。。拉撒路。。。拉撒路"
+"当。。。我们。。。拉扎鲁斯。。。拉扎鲁斯。。。拉扎鲁斯"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -8463,7 +8461,7 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
-"呵呵，我喜欢佩平。他真的很努力，你知道的。听着，你应该了解他。像这样的好人总"
+"呵呵，我喜欢佩金。他真的很努力，你知道的。听着，你应该了解他。像这样的好人总"
 "是有人想帮忙。嘿，我想那会有点像你，英雄？我也是个英雄"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
@@ -8597,8 +8595,8 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
-"腐败有欺骗的力量，而清白有纯洁的力量。年轻的阿娇有一颗纯洁的心，把女家长的需"
-"要凌驾于自己的需要之上。她害怕我，但那只是因为她不了解我"
+"腐败有欺骗的力量，而清白有纯洁的力量。年轻的吉莉安有一颗纯洁的心，把女家长的"
+"需要凌驾于自己的需要之上。她害怕我，但那只是因为她不了解我"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -8619,9 +8617,9 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
-"你对一个人的信心越高，他就越会堕落。法纳姆已经失去了他的灵魂，但不是任何恶"
-"魔。当他看到他的同乡们被拉撒路大主教出卖时，他失去了理智。他有知识可以收集，"
-"但你必须把事实和幻想分开"
+"你对一个人的信心越高，他就越会堕落。法恩汉已经失去了他的灵魂，但不是任何恶"
+"魔。当他看到他的同乡们被拉扎鲁斯大主教出卖时，他失去了理智。他有知识可以收"
+"集，但你必须把事实和幻想分开"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -8632,7 +8630,7 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
-"手、心和心在完美的和谐中就能创造奇迹。治疗者佩平以一种连我都看不到的方式观察"
+"手、心和心在完美的和谐中就能创造奇迹。治疗者佩金以一种连我都看不到的方式观察"
 "身体。他对长生不老药和药水的理解使他恢复病人和伤者的能力得到了放大。他和你在"
 "特里斯特拉姆一样是个伟大的盟友"
 
@@ -8664,10 +8662,10 @@ msgid ""
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
 "土墙和茅草屋顶不是一个家。旅馆老板奥格登在这个镇上的作用比许多人所理解的要大"
-"得多。他为阿娇和她的女族长提供庇护所，维持法纳姆留给他的生活，并为留在镇上的"
-"所有人提供一个锚，让他们回到特里斯特拉姆曾经的样子。他的小酒馆，以及在那里仍"
-"然可以找到的简单的乐趣，让我们看到了这里的人们所记得的生活。正是这段记忆，让"
-"他们对你的成功充满了希望"
+"得多。他为吉莉安和她的女族长提供庇护所，维持法恩汉留给他的生活，并为留在镇上"
+"的所有人提供一个锚，让他们回到特里斯特拉姆曾经的样子。他的小酒馆，以及在那里"
+"仍然可以找到的简单的乐趣，让我们看到了这里的人们所记得的生活。正是这段记忆，"
+"让他们对你的成功充满了希望"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
@@ -8703,7 +8701,7 @@ msgid ""
 "whatever you can bring them..."
 msgstr ""
 "如果你没注意到，我不会从崔斯特瑞买任何东西。我是一个进口优质商品的进口商。如"
-"果你想兜售垃圾，你得去看看格里斯沃尔德，佩平或那个女巫，阿德里亚。我相信他们"
+"果你想兜售垃圾，你得去看看格里斯沃尔德，佩金或那个女巫，艾德莉亚。我相信他们"
 "会抢购你能带给他们的任何东西"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
@@ -8727,8 +8725,8 @@ msgid ""
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
 "如果我再大几岁，我会尽我所能给她带来财富，让我向你保证，我可以得到一些非常好"
-"的东西。阿娇是一个美丽的女孩，她应该尽快离开特里斯特拉姆，只要它是安全的。六"
-"羟甲基三聚氰胺六甲醚。。。也许我去的时候会带她一起去"
+"的东西。吉莉安是一个美丽的女孩，她应该尽快离开特里斯特拉姆，只要它是安全的。"
+"嗯。。。也许我去的时候会带她一起去"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -8749,9 +8747,9 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
-"法纳姆-现在有一个男人有严重的问题，我知道所有的严重问题可以。他过于相信一个人"
-"的正直，拉撒路就把他带进了死亡的深渊。哦，我知道下面是什么样的，所以别告诉我"
-"你打算消灭迷宫里的恶魔。小心你的腿"
+"法恩汉-现在有一个男人有严重的问题，我知道所有的严重问题可以。他过于相信一个人"
+"的正直，拉扎鲁斯就把他带进了死亡的深渊。哦，我知道下面是什么样的，所以别告诉"
+"我你打算消灭迷宫里的恶魔。小心你的腿"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -8761,7 +8759,7 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
-"只要你不需要任何东西复位，老佩平是一样好，他们来了。\n"
+"只要你不需要任何东西复位，老佩金是一样好，他们来了。\n"
 " \n"
 "如果我有一些他酿造的药水，我可能还有腿"
 
@@ -8773,7 +8771,7 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
-"阿德里亚真让我烦恼。当然，凯恩对你说的关于过去的事是令人毛骨悚然的，但那个女"
+"艾德莉亚真让我烦恼。当然，凯恩对你说的关于过去的事是令人毛骨悚然的，但那个女"
 "巫能看透你的过去。她也总有办法得到她需要的东西。阿德里娅拿到的商品比我在节日"
 "期间穿过国王集市的大门看到的还要多"
 
@@ -8786,8 +8784,8 @@ msgid ""
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
 "奥格登呆在这里真是个傻瓜。我可以以一个非常合理的价格把他弄到城外去，但他坚持"
-"要和那家愚蠢的酒馆混过去。我想至少他给了阿娇一个工作的地方，他的妻子嘉达做了"
-"一个很棒的牧羊派"
+"要和那家愚蠢的酒馆混过去。我想至少他给了吉莉安一个工作的地方，他的妻子嘉达做"
+"了一个很棒的牧羊派"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -9102,7 +9100,7 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
-"我敢打赌，沃特看见你来了，就装出一副样子，这样他就可以在你鼻子埋在泥土里在城"
+"我敢打赌，怀特看见你来了，就装出一副样子，这样他就可以在你鼻子埋在泥土里在城"
 "里跑的时候嘲笑你了。我会忽略它"
 
 #. TRANSLATORS: Quest text spoken by Cain
@@ -9485,7 +9483,7 @@ msgid ""
 "running a bit low."
 msgstr ""
 "今天多云凉爽。将亡灵之网撒向虚空，降落了两个新的飞行恐惧亚种；一天的好工作。"
-"一定要记得从阿德里亚订购更多的蝙蝠粪和黑蜡烛；我的血压有点低"
+"一定要记得从艾德莉亚订购更多的蝙蝠粪和黑蜡烛；我的血压有点低"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -9595,19 +9593,19 @@ msgstr "酒馆老板奥格登"
 
 #: Source/towners.cpp:120
 msgid "Wounded Townsman"
-msgstr "受伤的市民"
+msgstr "受伤的镇民"
 
 #: Source/towners.cpp:142
 msgid "Adria the Witch"
-msgstr "女巫艾德里亚"
+msgstr "女巫艾德莉亚"
 
 #: Source/towners.cpp:151
 msgid "Gillian the Barmaid"
-msgstr "酒吧女招待阿娇"
+msgstr "酒吧女招待吉莉安"
 
 #: Source/towners.cpp:182
 msgid "Pepin the Healer"
-msgstr "医治者"
+msgstr "医治者佩金"
 
 #: Source/towners.cpp:199
 msgid "Cain the Elder"
@@ -9623,11 +9621,11 @@ msgstr "农夫莱斯特"
 
 #: Source/towners.cpp:260
 msgid "Complete Nut"
-msgstr "全套螺母"
+msgstr "完整的纳特"
 
 #: Source/towners.cpp:286
 msgid "Slain Townsman"
-msgstr "被杀的老乡"
+msgstr "被杀的镇民"
 
 #: Source/trigs.cpp:320
 msgid "Down to dungeon"
