@@ -1172,7 +1172,7 @@ void Teleport(int i)
 		monster._mdir = GetMonsterDirection(monster);
 
 		if (monster.mlid != NO_LIGHT) {
-		    ChangeLightXY(monster.mlid, { x, y });
+			ChangeLightXY(monster.mlid, { x, y });
 		}
 	}
 }

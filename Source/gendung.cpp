@@ -613,5 +613,4 @@ void FloodTransparencyValues(uint8_t floorID)
 	}
 }
 
-
 } // namespace devilution

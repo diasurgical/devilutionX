@@ -303,7 +303,7 @@ void LoadOptions()
 	env->DeleteLocalRef(clazz);
 #elif defined(__vita__)
 	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	const char* vita_locales[] = {
+	const char *vita_locales[] = {
 		"ja_JP",
 		"en_US",
 		"fr_FR",
@@ -327,9 +327,9 @@ void LoadOptions()
 	};
 	SceAppUtilInitParam initParam;
 	SceAppUtilBootParam bootParam;
-	memset( &initParam, 0, sizeof(SceAppUtilInitParam) );
-	memset( &bootParam, 0, sizeof(SceAppUtilBootParam) );
-	sceAppUtilInit( &initParam, &bootParam );
+	memset(&initParam, 0, sizeof(SceAppUtilInitParam));
+	memset(&bootParam, 0, sizeof(SceAppUtilBootParam));
+	sceAppUtilInit(&initParam, &bootParam);
 	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
 	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
 		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
