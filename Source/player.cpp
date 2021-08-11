@@ -2665,10 +2665,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 
 	// Adjust xp based on difference in level between player and monster
-	exp = static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0));
-	if (exp < 0) {
-		exp = 0;
-	}
+	exp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
@@ -3716,32 +3713,16 @@ void CheckStats(PlayerStruct &player)
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			if (player._pBaseStr > maxStatPoint) {
-				player._pBaseStr = maxStatPoint;
-			} else if (player._pBaseStr < 0) {
-				player._pBaseStr = 0;
-			}
+			player._pBaseStr = clamp(player._pBaseStr, 0 , maxStatPoint);
 			break;
 		case CharacterAttribute::Magic:
-			if (player._pBaseMag > maxStatPoint) {
-				player._pBaseMag = maxStatPoint;
-			} else if (player._pBaseMag < 0) {
-				player._pBaseMag = 0;
-			}
+			player._pBaseMag = clamp(player._pBaseMag, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Dexterity:
-			if (player._pBaseDex > maxStatPoint) {
-				player._pBaseDex = maxStatPoint;
-			} else if (player._pBaseDex < 0) {
-				player._pBaseDex = 0;
-			}
+			player._pBaseDex = clamp(player._pBaseDex, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Vitality:
-			if (player._pBaseVit > maxStatPoint) {
-				player._pBaseVit = maxStatPoint;
-			} else if (player._pBaseVit < 0) {
-				player._pBaseVit = 0;
-			}
+			player._pBaseVit = clamp(player._pBaseVit, 0, maxStatPoint);
 			break;
 		}
 	}
