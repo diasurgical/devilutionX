@@ -161,7 +161,7 @@ int WaitForTurns()
 byte *DeltaExportItem(byte *dst, TCmdPItem *src)
 {
 	for (int i = 0; i < MAXITEMS; i++, src++) {
-		if (src->bCmd == 0xFF) {
+		if (src->bCmd == CMD_INVALID) {
 			*dst++ = byte { 0xFF };
 		} else {
 			memcpy(dst, src, sizeof(TCmdPItem));
@@ -475,7 +475,7 @@ void DeltaPutItem(TCmdPItem *pI, int x, int y, BYTE bLevel)
 	TCmdPItem *pD = sgLevels[bLevel].item;
 	for (int i = 0; i < MAXITEMS; i++, pD++) {
 		if (pD->bCmd != CMD_WALKXY
-		    && pD->bCmd != 0xFF
+		    && pD->bCmd != CMD_INVALID
 		    && pD->wIndx == pI->wIndx
 		    && pD->wCI == pI->wCI
 		    && pD->dwSeed == pI->dwSeed) {
@@ -487,7 +487,7 @@ void DeltaPutItem(TCmdPItem *pI, int x, int y, BYTE bLevel)
 
 	pD = sgLevels[bLevel].item;
 	for (int i = 0; i < MAXITEMS; i++, pD++) {
-		if (pD->bCmd == 0xFF) {
+		if (pD->bCmd == CMD_INVALID) {
 			sgbDeltaChanged = true;
 			memcpy(pD, pI, sizeof(TCmdPItem));
 			pD->bCmd = CMD_ACK_PLRINFO;
@@ -1961,7 +1961,7 @@ void DeltaAddItem(int ii)
 
 	TCmdPItem *pD = sgLevels[currlevel].item;
 	for (int i = 0; i < MAXITEMS; i++, pD++) {
-		if (pD->bCmd != 0xFF
+		if (pD->bCmd != CMD_INVALID
 		    && pD->wIndx == Items[ii].IDidx
 		    && pD->wCI == Items[ii]._iCreateInfo
 		    && pD->dwSeed == Items[ii]._iSeed
@@ -1972,7 +1972,7 @@ void DeltaAddItem(int ii)
 
 	pD = sgLevels[currlevel].item;
 	for (int i = 0; i < MAXITEMS; i++, pD++) {
-		if (pD->bCmd != 0xFF)
+		if (pD->bCmd != CMD_INVALID)
 			continue;
 
 		sgbDeltaChanged = true;
@@ -2084,7 +2084,7 @@ void DeltaLoadLevel()
 	}
 
 	for (int i = 0; i < MAXITEMS; i++) {
-		if (sgLevels[currlevel].item[i].bCmd != 0xFF)
+		if (sgLevels[currlevel].item[i].bCmd == CMD_INVALID)
 			continue;
 
 		if (sgLevels[currlevel].item[i].bCmd == CMD_WALKXY) {
