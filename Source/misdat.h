@@ -124,9 +124,11 @@ typedef struct MissileData {
 } MissileDataStruct;
 
 enum class MissileDataFlags {
+	// clang-format off
 	None        = 0,
 	NoGraphics  = 1 << 0,
 	NotAnimated = 1 << 1,
+	// clang-format on
 };
 
 struct MissileFileData {
@@ -149,8 +151,8 @@ struct MissileFileData {
 	}
 
 	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
-			AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
-			AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
+	    AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
+	    AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
 
 	void LoadGFX();
 
