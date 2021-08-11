@@ -441,23 +441,17 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				}
 			}
 		} else {
-			int yy = INV_ROW_SLOT_SIZE * ((ii / INV_ROW_SLOT_SIZE) - ((itemSize.height - 1) / 2));
-			if (yy < 0)
-				yy = 0;
+			int yy = std::max(INV_ROW_SLOT_SIZE * ((ii / INV_ROW_SLOT_SIZE) - ((itemSize.height - 1) / 2)), 0);
 			for (j = 0; j < itemSize.height && done; j++) {
 				if (yy >= NUM_INV_GRID_ELEM)
 					done = false;
-				int xx = (ii % INV_ROW_SLOT_SIZE) - ((itemSize.width - 1) / 2);
-				if (xx < 0)
-					xx = 0;
+				int xx = std::max((ii % INV_ROW_SLOT_SIZE) - ((itemSize.width - 1) / 2), 0);
 				for (i = 0; i < itemSize.width && done; i++) {
 					if (xx >= INV_ROW_SLOT_SIZE) {
 						done = false;
 					} else {
 						if (player.InvGrid[xx + yy] != 0) {
-							int8_t iv = player.InvGrid[xx + yy];
-							if (iv < 0)
-								iv = -iv;
+							int8_t iv = std::max<uint8_t>(player.InvGrid[xx + yy], 0);
 							if (it != 0) {
 								if (it != iv)
 									done = false;
