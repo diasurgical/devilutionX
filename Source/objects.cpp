@@ -3408,19 +3408,17 @@ bool OperateShrineGlowing(int pnum)
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	int playerXP = myPlayer._pExperience;
-	int magicGain = playerXP / 1000;
-	int xpLoss = 0;
-	if (playerXP > 5000) {
-		magicGain = 5;
-		xpLoss = static_cast<int>(playerXP * 0.95);
-	}
-	ModifyPlrMag(MyPlayerId, magicGain);
-	myPlayer._pExperience = xpLoss;
+	// Add 0-5 points to Magic (0.1% of the players XP)
+	ModifyPlrMag(MyPlayerId, std::min(myPlayer._pExperience / 1000, 5U));
 
-	if (sgOptions.Gameplay.bExperienceBar) {
+	// Take 5% of the players experience to offset the bonus, unless they're very low level in which case take all their experience.
+	if (myPlayer._pExperience > 5000)
+		myPlayer._pExperience = static_cast<uint32_t>(myPlayer._pExperience * 0.95);
+	else
+		myPlayer._pExperience = 0;
+
+	if (sgOptions.Gameplay.bExperienceBar)
 		force_redraw = 255;
-	}
 
 	CheckStats(Players[pnum]);
 

@@ -46,7 +46,7 @@ struct PkPlayerStruct {
 	uint8_t pBaseVit;
 	int8_t pLevel;
 	uint8_t pStatPts;
-	int32_t pExperience;
+	uint32_t pExperience;
 	int32_t pGold;
 	int32_t pHPBase;
 	int32_t pMaxHPBase;

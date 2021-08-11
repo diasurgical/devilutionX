@@ -92,7 +92,7 @@ int BlockBonuses[enum_size<HeroClass>::value] = {
 };
 
 /** Specifies the experience point limit of each level. */
-int ExpLvlsTbl[MAXCHARLEVEL] = {
+uint32_t ExpLvlsTbl[MAXCHARLEVEL] = {
 	0,
 	2000,
 	4620,
@@ -2477,7 +2477,6 @@ void CreatePlayer(int playerId, HeroClass c)
 
 	player._pMaxLvl = player._pLevel;
 	player._pExperience = 0;
-	player._pMaxExp = player._pExperience;
 	player._pNextExper = ExpLvlsTbl[1];
 	player._pArmorClass = 0;
 	if (player._pClass == HeroClass::Barbarian) {
@@ -2647,8 +2646,6 @@ void NextPlrLevel(int pnum)
 	CalcPlrInv(pnum, true);
 }
 
-#define MAXEXP 2000000000
-
 void AddPlrExperience(int pnum, int lvl, int exp)
 {
 	if (pnum != MyPlayerId) {
@@ -2665,21 +2662,21 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	}
 
 	// Adjust xp based on difference in level between player and monster
-	exp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
+	uint32_t clampedExp = std::max(static_cast<int>(exp * (1 + (lvl - player._pLevel) / 10.0)), 0);
 
 	// Prevent power leveling
 	if (gbIsMultiplayer) {
-		auto clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 0, 50);
+		const uint32_t clampedPlayerLevel = clamp(static_cast<int>(player._pLevel), 0, 50);
 
 		// for low level characters experience gain is capped to 1/20 of current levels xp
 		// for high level characters experience gain is capped to 200 * current level - this is a smaller value than 1/20 of the exp needed for the next level after level 5.
-		exp = std::min({ exp, /* level 0-5: */ ExpLvlsTbl[clampedPlayerLevel] / 20, /* level 6-50: */ 200 * clampedPlayerLevel });
+		clampedExp = std::min({ clampedExp, /* level 0-5: */ ExpLvlsTbl[clampedPlayerLevel] / 20U, /* level 6-50: */ 200U * clampedPlayerLevel });
 	}
 
-	player._pExperience += exp;
-	if (player._pExperience > MAXEXP || player._pExperience < 0) {
-		player._pExperience = MAXEXP;
-	}
+	constexpr uint32_t MaxExperience = 2000000000U;
+
+	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay
+	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
 
 	if (sgOptions.Gameplay.bExperienceBar) {
 		force_redraw = 255;

@@ -409,9 +409,9 @@ void LoadPlayer(LoadHelper *file, int p)
 	player._pLevel = file->NextLE<int8_t>();
 	player._pMaxLvl = file->NextLE<int8_t>();
 	file->Skip(2); // Alignment
-	player._pExperience = file->NextLE<int32_t>();
-	player._pMaxExp = file->NextLE<int32_t>();
-	player._pNextExper = file->NextLE<int32_t>();
+	player._pExperience = file->NextLE<uint32_t>();
+	file->Skip<uint32_t>();                        // Skip _pMaxExp - unused
+	player._pNextExper = file->NextLE<uint32_t>(); // This can be calculated based on pLevel (which in turn could be calculated based on pExperience)
 	player._pArmorClass = file->NextLE<int8_t>();
 	player._pMagResist = file->NextLE<int8_t>();
 	player._pFireResist = file->NextLE<int8_t>();
@@ -1081,9 +1081,9 @@ void SavePlayer(SaveHelper *file, int p)
 	file->WriteLE<int8_t>(player._pLevel);
 	file->WriteLE<int8_t>(player._pMaxLvl);
 	file->Skip(2); // Alignment
-	file->WriteLE<int32_t>(player._pExperience);
-	file->WriteLE<int32_t>(player._pMaxExp);
-	file->WriteLE<int32_t>(player._pNextExper);
+	file->WriteLE<uint32_t>(player._pExperience);
+	file->Skip<uint32_t>(); // Skip _pMaxExp
+	file->WriteLE<uint32_t>(player._pNextExper);
 	file->WriteLE<int8_t>(player._pArmorClass);
 	file->WriteLE<int8_t>(player._pMagResist);
 	file->WriteLE<int8_t>(player._pFireResist);

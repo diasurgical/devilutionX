@@ -89,7 +89,7 @@ void DrawXPBar(const Surface &out)
 		return;
 	}
 
-	const int prevXp = ExpLvlsTbl[charLevel - 1];
+	const uint64_t prevXp = ExpLvlsTbl[charLevel - 1];
 	if (player._pExperience < prevXp)
 		return;
 

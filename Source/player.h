@@ -227,9 +227,8 @@ struct PlayerStruct {
 	int _pManaPer;
 	int8_t _pLevel;
 	int8_t _pMaxLvl;
-	int _pExperience;
-	int _pMaxExp;
-	int _pNextExper;
+	uint32_t _pExperience;
+	uint32_t _pNextExper;
 	int8_t _pArmorClass;
 	int8_t _pMagResist;
 	int8_t _pFireResist;
@@ -603,6 +602,6 @@ extern int StrengthTbl[enum_size<HeroClass>::value];
 extern int MagicTbl[enum_size<HeroClass>::value];
 extern int DexterityTbl[enum_size<HeroClass>::value];
 extern int VitalityTbl[enum_size<HeroClass>::value];
-extern int ExpLvlsTbl[MAXCHARLEVEL];
+extern uint32_t ExpLvlsTbl[MAXCHARLEVEL];
 
 } // namespace devilution
