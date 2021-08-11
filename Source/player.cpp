@@ -905,7 +905,9 @@ bool PlrHitMonst(int pnum, int m)
 		if (player._pClass == HeroClass::Barbarian) {
 			tmac -= monster.mArmorClass / 8;
 		}
-		tmac = std::max(tmac, 0);
+
+		if (tmac < 0)
+			tmac = 0;
 	} else {
 		tmac -= player._pIEnAc;
 	}
