@@ -3546,7 +3546,7 @@ void CheckPlrSpell()
 
 		if (
 		    ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && RightPanel.Contains(MousePosition)) // inside right panel
+		    || ((invflag || sbookflag) && RightPanel.Contains(MousePosition))  // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY
@@ -3713,7 +3713,7 @@ void CheckStats(PlayerStruct &player)
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
 		switch (attribute) {
 		case CharacterAttribute::Strength:
-			player._pBaseStr = clamp(player._pBaseStr, 0 , maxStatPoint);
+			player._pBaseStr = clamp(player._pBaseStr, 0, maxStatPoint);
 			break;
 		case CharacterAttribute::Magic:
 			player._pBaseMag = clamp(player._pBaseMag, 0, maxStatPoint);

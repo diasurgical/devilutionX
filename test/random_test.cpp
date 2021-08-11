@@ -132,7 +132,8 @@ TEST(RandomTest, ShiftModDistributionSignCarry)
 // The Diablo LCG implementation attempts to improve the quality of generated numbers that would only use the low
 // bits of the LCG output but due to applying this after taking the absolute value this introduces bias. This may
 // be an inconsistency with the implementation in devilutionx, see the comment for RandomTest_ShiftModDistributionHighBits
-TEST(RandomTest, ShiftModDistributionLowBits) {
+TEST(RandomTest, ShiftModDistributionLowBits)
+{
 	// All the following seeds generate values less than 2^16, so after shifting they give a 0 value
 	constexpr auto maxBound = 65534;
 

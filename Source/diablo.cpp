@@ -396,8 +396,8 @@ void RightMouseDown()
 		return;
 	}
 	if ((!sbookflag || !RightPanel.Contains(MousePosition))
-	        && !TryIconCurs()
-	        && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
+	    && !TryIconCurs()
+	    && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
 				CheckPlrSpell();

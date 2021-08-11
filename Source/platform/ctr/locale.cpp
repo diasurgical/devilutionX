@@ -20,7 +20,7 @@ public:
 	}
 };
 
-}
+} // namespace
 
 std::string GetLocale()
 {

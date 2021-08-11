@@ -113,7 +113,7 @@ void CheckPath(Point startPosition, Point destinationPosition, std::vector<int8_
 
 	for (auto i = 0; i < pathLength; i++) {
 		EXPECT_EQ(pathSteps[i], expectedSteps[i]) << "Path step " << i << " differs from expectation for a path from "
-			<< startPosition << " to " << destinationPosition; // this shouldn't be a requirement but...
+		                                          << startPosition << " to " << destinationPosition; // this shouldn't be a requirement but...
 
 		// Path directions are all jacked up compared to the Direction enum. Most consumers have their own mapping definition
 		//startPosition += Direction { path[i] - 1 };

@@ -300,11 +300,11 @@ void SelheroClassSelectorEsc()
 void SelheroNameSelect(int /*value*/)
 {
 	// only check names in multiplayer, we don't care about them in single
-	if (selhero_isMultiPlayer && !UiValidPlayerName(selhero_heroInfo.name)) { 
+	if (selhero_isMultiPlayer && !UiValidPlayerName(selhero_heroInfo.name)) {
 		ArtBackground.Unload();
 		UiSelOkDialog(title, _("Invalid name. A name cannot contain spaces, reserved characters, or reserved words.\n"), false);
 		LoadBackgroundArt("ui_art\\selhero.pcx");
-	} else{
+	} else {
 		if (gfnHeroCreate(&selhero_heroInfo)) {
 			SelheroLoadSelect(1);
 			return;
