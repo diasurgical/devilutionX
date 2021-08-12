@@ -1,6 +1,7 @@
 #include "./sdl2_to_1_2_backports.h"
 
 #include <cstddef>
+#include <algorithm>
 
 #include "./console.h"
 
@@ -449,24 +450,16 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 
 	final_src.x = (Sint16)SDL_floor(src_x0 + 0.5);
 	final_src.y = (Sint16)SDL_floor(src_y0 + 0.5);
-	src_w = (int)SDL_floor(src_x1 + 1 + 0.5) - (int)SDL_floor(src_x0 + 0.5);
-	src_h = (int)SDL_floor(src_y1 + 1 + 0.5) - (int)SDL_floor(src_y0 + 0.5);
-	if (src_w < 0)
-		src_w = 0;
-	if (src_h < 0)
-		src_h = 0;
+	src_w = std::max((int)SDL_floor(src_x1 + 1 + 0.5) - (int)SDL_floor(src_x0 + 0.5), 0);
+	src_h = std::max((int)SDL_floor(src_y1 + 1 + 0.5) - (int)SDL_floor(src_y0 + 0.5), 0);
 
 	final_src.w = static_cast<Uint16>(src_w);
 	final_src.h = static_cast<Uint16>(src_h);
 
 	final_dst.x = (Sint16)SDL_floor(dst_x0 + 0.5);
 	final_dst.y = (Sint16)SDL_floor(dst_y0 + 0.5);
-	dst_w = (int)SDL_floor(dst_x1 - dst_x0 + 1.5);
-	dst_h = (int)SDL_floor(dst_y1 - dst_y0 + 1.5);
-	if (dst_w < 0)
-		dst_w = 0;
-	if (dst_h < 0)
-		dst_h = 0;
+	dst_w = std::max((int)SDL_floor(dst_x1 - dst_x0 + 1.5), 0);
+	dst_h = std::max((int)SDL_floor(dst_y1 - dst_y0 + 1.5), 0);
 
 	final_dst.w = static_cast<Uint16>(dst_w);
 	final_dst.h = static_cast<Uint16>(dst_h);
