@@ -5,6 +5,12 @@
 
 namespace devilution {
 
+/**
+ * @brief Offers an interface similar to variant<string, string_view>
+ * Assignments from char * work like assignments from string, and those from const char *, like assignments from string_view.
+ * The intention is to use string and string_view almost exclusively in the codebase.
+ * The constructors and assignment operators dealing with (const) char * will go away once a critical mass is reached.
+ */
 class StringVariant
 {
 	std::string str;
