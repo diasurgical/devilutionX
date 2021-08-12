@@ -249,14 +249,15 @@ void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl)
  * @param pnum player index
  * @param rid target player index
  */
-void DoResurrect(int pnum, int rid)
+void DoResurrect(int pnum, uint16_t rid)
 {
 	if (pnum == MyPlayerId) {
 		NewCursor(CURSOR_HAND);
 	}
 
-	if (rid == -1)
+	if ((DWORD)pnum >= MAX_PLRS || rid >= MAX_PLRS) {
 		return;
+	}
 
 	auto &target = Players[rid];
 
