@@ -2606,10 +2606,7 @@ void StorePrior()
 	PlaySFX(IS_TITLEMOV);
 	if (stextsel != -1 && stextscrl) {
 		if (stextsel == stextup) {
-			if (stextsval != 0) {
-				stextsval -= 4;
-			}
-			stextsval = std::max(stextsval, 0);
+			stextsval = std::max(stextsval - 4, 0);
 		} else {
 			stextsel = stextup;
 		}
