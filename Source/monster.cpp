@@ -189,10 +189,7 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 	}
 
 	if (!gbIsMultiplayer) {
-		monster._mmaxhp /= 2;
-		if (monster._mmaxhp < 64) {
-			monster._mmaxhp = 64;
-		}
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
 	}
 
 	monster._mhitpoints = monster._mmaxhp;
@@ -509,12 +506,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	monster.mName = _(uniqueData.mName);
 	monster._mmaxhp = uniqueData.mmaxhp << 6;
 
-	if (!gbIsMultiplayer) {
-		monster._mmaxhp = monster._mmaxhp / 2;
-		if (monster._mmaxhp < 64) {
-			monster._mmaxhp = 64;
-		}
-	}
+	if (!gbIsMultiplayer)
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
 
 	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = uniqueData.mAi;
@@ -1522,9 +1515,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		}
 	}
 	int dam = (minDam << 6) + GenerateRnd((maxDam - minDam + 1) << 6);
-	dam += (player._pIGetHit << 6);
-	if (dam < 64)
-		dam = 64;
+	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (pnum == MyPlayerId) {
 		if (player.wReflections > 0) {
 			player.wReflections--;
