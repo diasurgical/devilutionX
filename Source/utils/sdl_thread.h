@@ -34,7 +34,7 @@ public:
 			ErrSdl();
 	}
 
-	SdlThread(void (*handler)(void))
+	explicit SdlThread(void (*handler)(void))
 	    : SdlThread(ThreadTranslate, (void *)handler)
 	{
 	}

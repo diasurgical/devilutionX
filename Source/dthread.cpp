@@ -86,7 +86,7 @@ void dthread_start()
 	DthreadRunning = true;
 	DthreadMutex.emplace();
 	WorkToDo.emplace();
-	Thread = { DthreadHandler };
+	Thread = SdlThread { DthreadHandler };
 }
 
 void DThreadCleanup()

@@ -181,7 +181,7 @@ void nthread_start(bool setTurnUpperBit)
 		sgbThreadIsRunning = false;
 		MemCrit.lock();
 		nthread_should_run = true;
-		Thread = { NthreadHandler };
+		Thread = SdlThread { NthreadHandler };
 	}
 }
 
