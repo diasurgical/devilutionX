@@ -79,7 +79,7 @@ std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPasswo
 	for (auto i = size; i != 0; pbSrcDst += BlockSize, i -= BlockSize) {
 		memcpy(buf, pbSrcDst, BlockSize);
 		SHA1Result(0, dst);
-		for (int j = 0; j < BlockSize; j++) {
+		for (unsigned j = 0; j < BlockSize; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
 		SHA1Calculate(0, buf, nullptr);
@@ -132,7 +132,7 @@ void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size64, const ch
 			memset(buf + chunk, 0, BlockSize - chunk);
 		SHA1Result(0, dst);
 		SHA1Calculate(0, buf, nullptr);
-		for (int j = 0; j < BlockSize; j++) {
+		for (unsigned j = 0; j < BlockSize; j++) {
 			buf[j] ^= dst[j % SHA1HashSize];
 		}
 		memset(dst, 0, sizeof(dst));
