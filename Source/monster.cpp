@@ -188,9 +188,8 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 		monster.mLevel -= 15;
 	}
 
-	if (!gbIsMultiplayer) {
+	if (!gbIsMultiplayer)
 		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
-	}
 
 	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = monsterType.MData->mAi;
