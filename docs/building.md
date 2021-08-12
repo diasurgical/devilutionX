@@ -9,11 +9,11 @@ cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-mixer-dev libsdl2-ttf-dev libsodium-dev
+sudo apt-get install cmake g++ libsdl2-ttf-dev libsodium-dev
 ```
 ### Installing dependencies on Fedora
 ```
-sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel SDL2_mixer-devel libsodium-devel libasan libubsan
+sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel libsodium-devel libasan libubsan
 ```
 ### Compiling
 ```
@@ -38,7 +38,7 @@ cmake --build . -j $(sysctl -n hw.physicalcpu)
 
 ### Installing dependencies
 ```
-pkg install cmake sdl2_mixer sdl2_ttf libsodium
+pkg install cmake sdl2_ttf libsodium
 ```
 ### Compiling
 ```
@@ -51,7 +51,7 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkgin install cmake SDL2_mixer SDL2_ttf libsodium
+pkgin install cmake SDL2_ttf libsodium
 ```
 ### Compiling
 ```
@@ -65,7 +65,7 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkg_add cmake sdl2-mixer sdl2-ttf libsodium gmake
+pkg_add cmake sdl2-ttf libsodium gmake
 ```
 ### Compiling
 ```
@@ -81,7 +81,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 
 ### 32-bit
 
-Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
+Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686
@@ -89,7 +89,7 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-ming
 
 ### 64-bit
 
-Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
+Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64
@@ -130,17 +130,17 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
    For the 64-bit version of the dependencies please run this command:
 
    ```
-   vcpkg install fmt:x64-windows sdl2:x64-windows sdl2-mixer:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows gtest:x64-windows
+   vcpkg install fmt:x64-windows sdl2:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows gtest:x64-windows
    ```
 
    For the 32-bit version of the dependencies please run this command:
 
    ```
-   vcpkg install fmt:x86-windows sdl2:x86-windows sdl2-mixer:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows gtest:x86-windows
+   vcpkg install fmt:x86-windows sdl2:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows gtest:x86-windows
    ```
 
 * **Manually**
-1. Download and place the MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_mixer](https://www.libsdl.org/projects/SDL_mixer/), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
+1. Download and place the MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
 2. If dependencies are not found or you wish to place them in other location - configure required path variables in _"Manage Configurations..."_ dialog inside Visual Studio or in _cmake-gui_.
 
 ### Compiling
@@ -241,11 +241,11 @@ make
 
 ### Installing dependencies on 32 bit Haiku
 ```
-pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_mixer_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86
+pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86
 ```
 ### Installing dependencies on 64 bit Haiku
 ```
-pkgman install cmake devel:libsdl2 devel:libsdl2_mixer devel:libsdl2_ttf devel:libsodium
+pkgman install cmake devel:libsdl2 devel:libsdl2_ttf devel:libsodium
 ```
 ### Compiling on 32 bit Haiku
 ```
