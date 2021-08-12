@@ -5,6 +5,8 @@
  */
 #include "lighting.h"
 
+#include <algorithm>
+
 #include "automap.h"
 #include "diablo.h"
 #include "engine/load_file.hpp"
@@ -629,23 +631,10 @@ void DoUnVision(Point position, int nRadius)
 {
 	nRadius++;
 	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	int y1 = position.y - nRadius;
-	int y2 = position.y + nRadius;
-	int x1 = position.x - nRadius;
-	int x2 = position.x + nRadius;
-
-	if (y1 < 0) {
-		y1 = 0;
-	}
-	if (y2 > MAXDUNY) {
-		y2 = MAXDUNY;
-	}
-	if (x1 < 0) {
-		x1 = 0;
-	}
-	if (x2 > MAXDUNX) {
-		x2 = MAXDUNX;
-	}
+	int y1 = std::max(position.y - nRadius, 0);
+	int y2 = std::min(position.y + nRadius, MAXDUNY);
+	int x1 = std::max(position.x - nRadius, 0);
+	int x2 = std::min(position.x + nRadius, MAXDUNX);
 
 	for (int i = x1; i < x2; i++) {
 		for (int j = y1; j < y2; j++) {
