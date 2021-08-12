@@ -1484,9 +1484,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		if (pnum == MyPlayerId && player.wReflections > 0) {
 			player.wReflections--;
 			int dam = GenerateRnd((maxDam - minDam + 1) << 6) + (minDam << 6);
-			dam += player._pIGetHit << 6;
-			if (dam < 64)
-				dam = 64;
+			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster._mhitpoints -= mdam;
 			dam = std::max(dam - mdam, 0);
