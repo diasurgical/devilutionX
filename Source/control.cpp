@@ -657,6 +657,11 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 	return false;
 }
 
+bool IsChatAvailable()
+{
+	return gbIsMultiplayer;
+}
+
 } // namespace
 
 void DrawSpell(const Surface &out)
@@ -905,7 +910,7 @@ void control_update_life_mana()
 
 void InitControlPan()
 {
-	pBtmBuff = Surface::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
+	pBtmBuff = Surface::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (IsChatAvailable() ? 2 : 1));
 	pManaBuff = Surface::Alloc(88, 88);
 	pLifeBuff = Surface::Alloc(88, 88);
 
@@ -923,7 +928,7 @@ void InitControlPan()
 		CelDrawUnsafeTo(pManaBuff, bulbsPosition, statusPanel, 2);
 	}
 	talkflag = false;
-	if (gbIsMultiplayer) {
+	if (IsChatAvailable()) {
 		CelDrawUnsafeTo(pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
 		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
 		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
@@ -940,7 +945,7 @@ void InitControlPan()
 	for (bool &panbtn : PanelButtons)
 		panbtn = false;
 	panbtndown = false;
-	if (!gbIsMultiplayer)
+	if (!IsChatAvailable())
 		PanelButtonIndex = 6;
 	else
 		PanelButtonIndex = 8;
@@ -1995,7 +2000,7 @@ void control_release_talk_btn()
 
 void control_type_message()
 {
-	if (!gbIsMultiplayer)
+	if (!IsChatAvailable())
 		return;
 
 	talkflag = true;
@@ -2017,7 +2022,7 @@ void control_reset_talk()
 
 bool control_talk_last_key(char vkey)
 {
-	if (!gbIsMultiplayer)
+	if (!IsChatAvailable())
 		return false;
 
 	if (!talkflag)
@@ -2036,7 +2041,7 @@ bool control_talk_last_key(char vkey)
 
 bool control_presskeys(int vkey)
 {
-	if (!gbIsMultiplayer)
+	if (!IsChatAvailable())
 		return false;
 	if (!talkflag)
 		return false;
