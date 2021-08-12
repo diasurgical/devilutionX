@@ -10,7 +10,6 @@
 
 #include "engine.h"
 #include "effects.h"
-#include "utils/autofill_array.h"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -137,10 +136,10 @@ struct MissileFileData {
 	uint8_t animFAmt;
 	MissileDataFlags flags;
 	std::array<std::unique_ptr<byte[]>, 16> animData;
-	AutofillArray<uint8_t, 16> animDelay = {};
-	AutofillArray<uint8_t, 16> animLen = {};
-	AutofillArray<int16_t, 16> animWidth = {};
-	AutofillArray<int16_t, 16> animWidth2 = {};
+	std::array<uint8_t, 16> animDelay = {};
+	std::array<uint8_t, 16> animLen = {};
+	std::array<int16_t, 16> animWidth = {};
+	std::array<int16_t, 16> animWidth2 = {};
 
 	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags)
 	    : name(name)
@@ -151,8 +150,8 @@ struct MissileFileData {
 	}
 
 	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
-	    AutofillArray<uint8_t, 16> animDelay, AutofillArray<uint8_t, 16> animLen,
-	    AutofillArray<int16_t, 16> animWidth, AutofillArray<int16_t, 16> animWidth2);
+	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
+	    std::initializer_list<int16_t> animWidth, std::initializer_list<int16_t> animWidth2);
 
 	void LoadGFX();
 
