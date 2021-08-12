@@ -1489,9 +1489,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 				dam = 64;
 			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster._mhitpoints -= mdam;
-			dam -= mdam;
-			if (dam < 0)
-				dam = 0;
+			dam = std::max(dam - mdam, 0);
 			if (monster._mhitpoints >> 6 <= 0)
 				M_StartKill(i, pnum);
 			else
@@ -1534,9 +1532,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 			player.wReflections--;
 			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster._mhitpoints -= mdam;
-			dam -= mdam;
-			if (dam < 0)
-				dam = 0;
+			dam = std::max(dam - mdam, 0);
 			if (monster._mhitpoints >> 6 <= 0)
 				M_StartKill(i, pnum);
 			else
