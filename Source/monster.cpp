@@ -188,12 +188,8 @@ void InitMonster(MonsterStruct &monster, Direction rd, int mtype, Point position
 		monster.mLevel -= 15;
 	}
 
-	if (!gbIsMultiplayer) {
-		monster._mmaxhp /= 2;
-		if (monster._mmaxhp < 64) {
-			monster._mmaxhp = 64;
-		}
-	}
+	if (!gbIsMultiplayer)
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
 
 	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = monsterType.MData->mAi;
@@ -509,12 +505,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	monster.mName = _(uniqueData.mName);
 	monster._mmaxhp = uniqueData.mmaxhp << 6;
 
-	if (!gbIsMultiplayer) {
-		monster._mmaxhp = monster._mmaxhp / 2;
-		if (monster._mmaxhp < 64) {
-			monster._mmaxhp = 64;
-		}
-	}
+	if (!gbIsMultiplayer)
+		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
 
 	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = uniqueData.mAi;
@@ -1484,14 +1476,10 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		if (pnum == MyPlayerId && player.wReflections > 0) {
 			player.wReflections--;
 			int dam = GenerateRnd((maxDam - minDam + 1) << 6) + (minDam << 6);
-			dam += player._pIGetHit << 6;
-			if (dam < 64)
-				dam = 64;
+			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster._mhitpoints -= mdam;
-			dam -= mdam;
-			if (dam < 0)
-				dam = 0;
+			dam = std::max(dam - mdam, 0);
 			if (monster._mhitpoints >> 6 <= 0)
 				M_StartKill(i, pnum);
 			else
@@ -1526,17 +1514,13 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		}
 	}
 	int dam = (minDam << 6) + GenerateRnd((maxDam - minDam + 1) << 6);
-	dam += (player._pIGetHit << 6);
-	if (dam < 64)
-		dam = 64;
+	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (pnum == MyPlayerId) {
 		if (player.wReflections > 0) {
 			player.wReflections--;
 			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 			monster._mhitpoints -= mdam;
-			dam -= mdam;
-			if (dam < 0)
-				dam = 0;
+			dam = std::max(dam - mdam, 0);
 			if (monster._mhitpoints >> 6 <= 0)
 				M_StartKill(i, pnum);
 			else
