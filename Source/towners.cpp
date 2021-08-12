@@ -742,6 +742,9 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 	case QUEST_ACTIVE:
 		InitQTextMsg(TEXT_GIRL3);
 		return;
+	case QUEST_DONE:
+		// do nothing
+		return;
 	default:
 		PlaySFX(Texts[TEXT_GIRL1].sfxnr);
 		return;
