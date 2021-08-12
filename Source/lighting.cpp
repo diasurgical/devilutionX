@@ -1099,13 +1099,14 @@ int AddVision(Point position, int r, bool mine)
 	int vid = -1; // BUGFIX: if VisionCount >= MAXVISION behavior is undefined (fixed)
 
 	if (VisionCount < MAXVISION) {
-		VisionList[VisionCount].position.tile = position;
-		VisionList[VisionCount]._lradius = r;
+		auto &vision = VisionList[VisionCount];
+		vision.position.tile = position;
+		vision._lradius = r;
 		vid = VisionId++;
-		VisionList[VisionCount]._lid = vid;
-		VisionList[VisionCount]._ldel = false;
-		VisionList[VisionCount]._lunflag = false;
-		VisionList[VisionCount]._lflags = mine;
+		vision._lid = vid;
+		vision._ldel = false;
+		vision._lunflag = false;
+		vision._lflags = mine;
 		VisionCount++;
 		dovision = true;
 	}
@@ -1116,11 +1117,12 @@ int AddVision(Point position, int r, bool mine)
 void ChangeVisionRadius(int id, int r)
 {
 	for (int i = 0; i < VisionCount; i++) {
-		if (VisionList[i]._lid == id) {
-			VisionList[i]._lunflag = true;
-			VisionList[i].position.old = VisionList[i].position.tile;
-			VisionList[i].oldRadius = VisionList[i]._lradius;
-			VisionList[i]._lradius = r;
+		auto &vision = VisionList[i];
+		if (vision._lid == id) {
+			vision._lunflag = true;
+			vision.position.old = vision.position.tile;
+			vision.oldRadius = vision._lradius;
+			vision._lradius = r;
 			dovision = true;
 		}
 	}
@@ -1129,11 +1131,12 @@ void ChangeVisionRadius(int id, int r)
 void ChangeVisionXY(int id, Point position)
 {
 	for (int i = 0; i < VisionCount; i++) {
-		if (VisionList[i]._lid == id) {
-			VisionList[i]._lunflag = true;
-			VisionList[i].position.old = VisionList[i].position.tile;
-			VisionList[i].oldRadius = VisionList[i]._lradius;
-			VisionList[i].position.tile = position;
+		auto &vision = VisionList[i];
+		if (vision._lid == id) {
+			vision._lunflag = true;
+			vision.position.old = vision.position.tile;
+			vision.oldRadius = vision._lradius;
+			vision.position.tile = position;
 			dovision = true;
 		}
 	}
@@ -1143,34 +1146,37 @@ void ProcessVisionList()
 {
 	if (dovision) {
 		for (int i = 0; i < VisionCount; i++) {
-			if (VisionList[i]._ldel) {
-				DoUnVision(VisionList[i].position.tile, VisionList[i]._lradius);
+			auto &vision = VisionList[i];
+			if (vision._ldel) {
+				DoUnVision(vision.position.tile, vision._lradius);
 			}
-			if (VisionList[i]._lunflag) {
-				DoUnVision(VisionList[i].position.old, VisionList[i].oldRadius);
-				VisionList[i]._lunflag = false;
+			if (vision._lunflag) {
+				DoUnVision(vision.position.old, vision.oldRadius);
+				vision._lunflag = false;
 			}
 		}
 		for (int i = 0; i < TransVal; i++) {
 			TransList[i] = false;
 		}
 		for (int i = 0; i < VisionCount; i++) {
-			if (!VisionList[i]._ldel) {
+			auto &vision = VisionList[i];
+			if (!vision._ldel) {
 				DoVision(
-				    VisionList[i].position.tile,
-				    VisionList[i]._lradius,
-				    VisionList[i]._lflags,
-				    VisionList[i]._lflags);
+				    vision.position.tile,
+				    vision._lradius,
+				    vision._lflags,
+				    vision._lflags);
 			}
 		}
 		bool delflag;
 		do {
 			delflag = false;
 			for (int i = 0; i < VisionCount; i++) {
-				if (VisionList[i]._ldel) {
+				auto &vision = VisionList[i];
+				if (vision._ldel) {
 					VisionCount--;
 					if (VisionCount > 0 && i != VisionCount) {
-						VisionList[i] = VisionList[VisionCount];
+						vision = VisionList[VisionCount];
 					}
 					delflag = true;
 				}
