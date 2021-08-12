@@ -663,9 +663,7 @@ void StartWitchBuy()
 	for (int i = 0; !witchitem[i].isEmpty(); i++) {
 		storenumh++;
 	}
-	stextsmax = storenumh - 4;
-	if (stextsmax < 0)
-		stextsmax = 0;
+	stextsmax = std::max(storenumh - 4, 0);
 }
 
 bool WitchSellOk(int i)
@@ -2608,10 +2606,7 @@ void StorePrior()
 	PlaySFX(IS_TITLEMOV);
 	if (stextsel != -1 && stextscrl) {
 		if (stextsel == stextup) {
-			if (stextsval != 0)
-				stextsval -= 4;
-			if (stextsval < 0)
-				stextsval = 0;
+			stextsval = std::max(stextsval - 4, 0);
 		} else {
 			stextsel = stextup;
 		}
