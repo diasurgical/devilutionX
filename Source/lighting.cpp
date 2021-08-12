@@ -631,10 +631,10 @@ void DoUnVision(Point position, int nRadius)
 {
 	nRadius++;
 	nRadius++; // increasing the radius even further here prevents leaving stray vision tiles behind and doesn't seem to affect monster AI - applying new vision happens in the same tick
-	int y1 = std::max(position.y - nRadius, 0);
-	int y2 = std::min(position.y + nRadius, MAXDUNY);
 	int x1 = std::max(position.x - nRadius, 0);
+	int y1 = std::max(position.y - nRadius, 0);
 	int x2 = std::min(position.x + nRadius, MAXDUNX);
+	int y2 = std::min(position.y + nRadius, MAXDUNY);
 
 	for (int i = x1; i < x2; i++) {
 		for (int j = y1; j < y2; j++) {
