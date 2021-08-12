@@ -1,3 +1,5 @@
+#include "player_test.h"
+
 #include <cstdio>
 #include <fstream>
 #include <gtest/gtest.h>
@@ -210,36 +212,6 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	PackItemSword(pPack->InvList + PrepareInvSlot(pPack, 20, 1));
 
 	pPack->_pNumInv = 2;
-}
-
-static int CountItems(ItemStruct *items, int n)
-{
-	int count = n;
-	for (int i = 0; i < n; i++)
-		if (items[i].isEmpty())
-			count--;
-
-	return count;
-}
-
-static int Count8(int8_t *ints, int n)
-{
-	int count = n;
-	for (int i = 0; i < n; i++)
-		if (ints[i] == 0)
-			count--;
-
-	return count;
-}
-
-static int CountBool(bool *bools, int n)
-{
-	int count = n;
-	for (int i = 0; i < n; i++)
-		if (!bools[i])
-			count--;
-
-	return count;
 }
 
 static void AssertPlayer(PlayerStruct &player)
