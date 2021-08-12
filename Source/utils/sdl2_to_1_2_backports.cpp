@@ -458,8 +458,8 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 
 	final_dst.x = (Sint16)SDL_floor(dst_x0 + 0.5);
 	final_dst.y = (Sint16)SDL_floor(dst_y0 + 0.5);
-	dst_w = std::max((int)SDL_floor(dst_x1 - dst_x0 + 1.5), 0);
-	dst_h = std::max((int)SDL_floor(dst_y1 - dst_y0 + 1.5), 0);
+	dst_w = std::max(static_cast<int>(SDL_floor(dst_x1 - dst_x0 + 1.5)), 0);
+	dst_h = std::max(static_cast<int>(SDL_floor(dst_y1 - dst_y0 + 1.5)), 0);
 
 	final_dst.w = static_cast<Uint16>(dst_w);
 	final_dst.h = static_cast<Uint16>(dst_h);
