@@ -135,23 +135,15 @@ struct MissileFileData {
 	uint8_t animName;
 	uint8_t animFAmt;
 	MissileDataFlags flags;
-	std::array<std::unique_ptr<byte[]>, 16> animData;
 	std::array<uint8_t, 16> animDelay = {};
 	std::array<uint8_t, 16> animLen = {};
-	std::array<int16_t, 16> animWidth = {};
-	std::array<int16_t, 16> animWidth2 = {};
-
-	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags)
-	    : name(name)
-	    , animName(animName)
-	    , animFAmt(animFAmt)
-	    , flags(flags)
-	{
-	}
+	int16_t animWidth;
+	int16_t animWidth2;
+	std::array<std::unique_ptr<byte[]>, 16> animData;
 
 	MissileFileData(const char *name, uint8_t animName, uint8_t animFAmt, MissileDataFlags flags,
 	    std::initializer_list<uint8_t> animDelay, std::initializer_list<uint8_t> animLen,
-	    std::initializer_list<int16_t> animWidth, std::initializer_list<int16_t> animWidth2);
+	    int16_t animWidth, int16_t animWidth2);
 
 	void LoadGFX();
 
