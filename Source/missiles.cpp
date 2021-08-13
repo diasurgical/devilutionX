@@ -1182,20 +1182,30 @@ void InitMissileGFX()
 	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
 		if (!gbIsHellfire && mi > MFILE_SCBSEXPD)
 			break;
+		if (MissileSpriteData[mi].flags == MissileDataFlags::MonsterOwned)
+			continue;
 		MissileSpriteData[mi].LoadGFX();
 	}
 }
 
 void FreeMissiles()
 {
-	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++)
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
+		if (MissileSpriteData[mi].flags == MissileDataFlags::MonsterOwned)
+			continue;
+
 		MissileSpriteData[mi].FreeGFX();
+	}
 }
 
 void FreeMissiles2()
 {
-	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++)
+	for (int mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
+		if (MissileSpriteData[mi].flags != MissileDataFlags::MonsterOwned)
+			continue;
+
 		MissileSpriteData[mi].FreeGFX();
+	}
 }
 
 void InitMissiles()
