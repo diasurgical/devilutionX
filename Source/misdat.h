@@ -124,9 +124,9 @@ typedef struct MissileData {
 
 enum class MissileDataFlags {
 	// clang-format off
-	None        = 0,
-	NoGraphics  = 1 << 0,
-	NotAnimated = 1 << 1,
+	None         = 0,
+	MonsterOwned = 1 << 0,
+	NotAnimated  = 1 << 1,
 	// clang-format on
 };
 
