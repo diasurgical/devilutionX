@@ -405,17 +405,6 @@ void RightMouseDown()
 	}
 }
 
-void DiabloHotkeyMsg(uint32_t dwMsg)
-{
-	if (!gbIsMultiplayer) {
-		return;
-	}
-
-	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
-
-	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
-}
-
 bool PressSysKey(int wParam)
 {
 	if (gmenu_is_active() || wParam != DVL_VK_F10)

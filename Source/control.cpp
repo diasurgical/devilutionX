@@ -2065,4 +2065,15 @@ bool control_presskeys(int vkey)
 	return true;
 }
 
+void DiabloHotkeyMsg(uint32_t dwMsg)
+{
+	if (!IsChatAvailable()) {
+		return;
+	}
+
+	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
+
+	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+}
+
 } // namespace devilution
