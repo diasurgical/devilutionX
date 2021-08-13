@@ -220,15 +220,16 @@ void InitCows(TownerStruct &towner, const TownerInit &initData)
 	towner._tAnimWidth = 128;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
+	auto dir = GenerateRnd(8);
 	for (int i = 0; i < 8; i++) {
 		towner._tNAnim[i] = CelGetFrame(CowCels.get(), i);
 	}
-	NewTownerAnim(towner, towner._tNAnim[initData.dir], 12, 3);
+	NewTownerAnim(towner, towner._tNAnim[dir], 12, 3);
 	towner._tAnimFrame = GenerateRnd(11) + 1;
 	towner.name = _("Cow");
 
 	const Point position = initData.position;
-	const Point offset = position + CowOffsets[initData.dir];
+	const Point offset = position + CowOffsets[dir];
 	int index = -dMonster[position.x][position.y];
 	if (dMonster[position.x][offset.y] == 0)
 		dMonster[position.x][offset.y] = index;
