@@ -2941,61 +2941,6 @@ void StormAi(int i)
 	AiRangedAvoidance(i, MIS_LIGHTCTRL2, true, 4, 0);
 }
 
-void FiremanAi(int i)
-{
-	assert(i >= 0 && i < MAXMONSTERS);
-	auto &monster = Monsters[i];
-
-	if (monster._mmode != MM_STAND || monster._msquelch == 0)
-		return;
-
-	int pnum = monster._menemy;
-	int fx = monster.enemyPosition.x;
-	int fy = monster.enemyPosition.y;
-	int xd = monster.position.tile.x - fx;
-	int yd = monster.position.tile.y - fy;
-
-	Direction md = GetMonsterDirection(monster);
-	if (monster._mgoal == MGOAL_NORMAL) {
-		if (LineClearMissile(monster.position.tile, { fx, fy })
-		    && AddMissile(monster.position.tile, { fx, fy }, md, MIS_FIREMAN, pnum, i, 0, 0) != -1) {
-			monster._mmode = MM_CHARGE;
-			monster._mgoal = MGOAL_ATTACK2;
-			monster._mgoalvar1 = 0;
-		}
-	} else if (monster._mgoal == MGOAL_ATTACK2) {
-		if (monster._mgoalvar1 == 3) {
-			monster._mgoal = MGOAL_NORMAL;
-			StartFadeout(monster, md, true);
-		} else if (LineClearMissile(monster.position.tile, { fx, fy })) {
-			StartRangedAttack(monster, MIS_KRULL, 4);
-			monster._mgoalvar1++;
-		} else {
-			AiDelay(monster, GenerateRnd(10) + 5);
-			monster._mgoalvar1++;
-		}
-	} else if (monster._mgoal == MGOAL_RETREAT) {
-		StartFadein(monster, md, false);
-		monster._mgoal = MGOAL_ATTACK2;
-	}
-	monster._mdir = md;
-	AdvanceRndSeed();
-	if (monster._mmode != MM_STAND)
-		return;
-
-	if (abs(xd) < 2 && abs(yd) < 2 && monster._mgoal == MGOAL_NORMAL) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit, monster.mMinDamage, monster.mMaxDamage);
-		monster._mgoal = MGOAL_RETREAT;
-		if (!RandomWalk(i, opposite[md])) {
-			StartFadein(monster, md, false);
-			monster._mgoal = MGOAL_ATTACK2;
-		}
-	} else if (!RandomWalk(i, md) && (monster._mgoal == MGOAL_NORMAL || monster._mgoal == MGOAL_RETREAT)) {
-		StartFadein(monster, md, false);
-		monster._mgoal = MGOAL_ATTACK2;
-	}
-}
-
 void GharbadAi(int i)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -3610,7 +3555,7 @@ void (*AiProc[])(int i) = {
 	&SuccubusAi,
 	&SneakAi,
 	&StormAi,
-	&FiremanAi,
+	nullptr,
 	&GharbadAi,
 	&AcidAvoidanceAi,
 	&AcidAi,
@@ -3827,12 +3772,6 @@ void InitMonsterGFX(int monst)
 		MissileSpriteData[MFILE_MAGBALL].LoadGFX();
 	if (mtype >= MT_STORM && mtype <= MT_MAEL)
 		MissileSpriteData[MFILE_THINLGHT].LoadGFX();
-	if (mtype == MT_SUCCUBUS) {
-		MissileSpriteData[MFILE_FLARE].LoadGFX();
-		MissileSpriteData[MFILE_FLAREEXP].LoadGFX();
-	}
-	if (mtype >= MT_INCIN && mtype <= MT_HELLBURN)
-		MissileSpriteData[MFILE_KRULL].LoadGFX();
 	if (mtype == MT_SNOWWICH) {
 		MissileSpriteData[MFILE_SCUBMISB].LoadGFX();
 		MissileSpriteData[MFILE_SCBSEXPB].LoadGFX();
@@ -3845,8 +3784,6 @@ void InitMonsterGFX(int monst)
 		MissileSpriteData[MFILE_SCUBMISC].LoadGFX();
 		MissileSpriteData[MFILE_SCBSEXPC].LoadGFX();
 	}
-	if (mtype >= MT_INCIN && mtype <= MT_HELLBURN)
-		MissileSpriteData[MFILE_KRULL].LoadGFX();
 	if ((mtype >= MT_NACID && mtype <= MT_XACID) || mtype == MT_SPIDLORD) {
 		MissileSpriteData[MFILE_ACIDBF].LoadGFX();
 		MissileSpriteData[MFILE_ACIDSPLA].LoadGFX();
