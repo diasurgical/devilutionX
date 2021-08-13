@@ -200,7 +200,7 @@ std::array<T, 16> maybeAutofill(std::initializer_list<T> list)
 {
 	assert(list.size() <= 16);
 
-	std::array<T, 16> ret;
+	std::array<T, 16> ret = {};
 
 	if (list.size() == 1) {
 		ret.fill(*list.begin());
