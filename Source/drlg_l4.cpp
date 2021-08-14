@@ -254,7 +254,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 void LoadQuestSetPieces()
 {
 	setloadflag = false;
-	if (QuestStatus(Q_WARLORD)) {
+	if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD])) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
 		setloadflag = true;
 	}
@@ -419,7 +419,7 @@ void FirstRoom()
 		l4holdx = x;
 		l4holdy = y;
 	}
-	if (QuestStatus(Q_WARLORD) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+	if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD]) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 		SP4x1 = x + 1;
 		SP4y1 = y + 1;
 		SP4x2 = SP4x1 + w;
@@ -1325,7 +1325,7 @@ void GenerateLevel(lvl_entry entry)
 		if (currlevel == 16) {
 			SaveQuads();
 		}
-		if (QuestStatus(Q_WARLORD) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
+		if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD]) || (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer)) {
 			for (int spi = SP4x1; spi < SP4x2; spi++) {
 				for (int spj = SP4y1; spj < SP4y2; spj++) {
 					dflags[spi][spj] = 1;
@@ -1341,7 +1341,7 @@ void GenerateLevel(lvl_entry entry)
 		if (currlevel == 16) {
 			LoadDiabQuads(true);
 		}
-		if (QuestStatus(Q_WARLORD)) {
+		if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD])) {
 			if (entry == ENTRY_MAIN) {
 				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, true);
 				if (doneflag && currlevel == 13) {
@@ -1427,7 +1427,7 @@ void GenerateLevel(lvl_entry entry)
 	Substitution();
 	DRLG_Init_Globals();
 
-	if (QuestStatus(Q_WARLORD)) {
+	if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD])) {
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) {
 				pdungeon[i][j] = dungeon[i][j];

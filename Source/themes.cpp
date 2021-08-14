@@ -421,7 +421,7 @@ void InitThemes()
 	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
 		for (int i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
-		if (QuestStatus(Q_ZHAR)) {
+		if (QuestStatus(Quests[Q_ZHAR], QuestData[Q_ZHAR])) {
 			for (int j = 0; j < themeCount; j++) {
 				themes[j].ttval = themeLoc[j].ttval;
 				if (SpecialThemeFit(j, THEME_LIBRARY)) {
@@ -723,7 +723,7 @@ void Theme_Library(int t)
 		}
 	}
 
-	if (QuestStatus(Q_ZHAR)) {
+	if (QuestStatus(Quests[Q_ZHAR], QuestData[Q_ZHAR])) {
 		if (t == zharlib) {
 			return;
 		}

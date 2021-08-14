@@ -87,7 +87,7 @@ void InitQuests();
 void InitialiseQuestPools(uint32_t seed, QuestStruct quests[]);
 void CheckQuests();
 bool ForceQuests();
-bool QuestStatus(int i);
+bool QuestStatus(QuestStruct &quest, QuestDataStruct &questData);
 void CheckQuestKill(const MonsterStruct &monster, bool sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
