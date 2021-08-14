@@ -128,6 +128,11 @@ void DrawCtrlBtns(const Surface &out);
 void DoSpeedBook();
 
 /**
+ * Clears panel button flags.
+*/
+void ClearPanBtn();
+
+/**
  * Checks if the mouse cursor is within any of the panel buttons and flag it if so.
  */
 void DoPanBtn();

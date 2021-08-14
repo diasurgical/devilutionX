@@ -9,6 +9,7 @@
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
+#include "controls/touch/event_handlers.h"
 #include "cursor.h"
 #include "engine/demomode.h"
 #include "engine/rectangle.hpp"
@@ -313,6 +314,21 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		lpMsg->message = DVL_WM_QUIT;
 		return true;
 	}
+
+#if !defined(USE_SDL1) && !defined(__vita__)
+	if (!movie_playing) {
+		if (IsAnyOf(e.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP) && e.button.which == SDL_TOUCH_MOUSEID)
+			return true;
+		if (e.type == SDL_MOUSEMOTION && e.motion.which == SDL_TOUCH_MOUSEID)
+			return true;
+		if (e.type == SDL_MOUSEWHEEL && e.wheel.which == SDL_TOUCH_MOUSEID)
+			return true;
+	}
+#endif
+
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+	HandleTouchEvent(e);
+#endif
 
 #ifdef __vita__
 	handle_touch(&e, MousePosition.x, MousePosition.y);
