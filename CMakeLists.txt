@@ -487,7 +487,8 @@ endif()
 
 if (VIRTUAL_GAMEPAD)
   list(APPEND libdevilutionx_SRCS
-    Source/controls/touch/gamepad.cpp)
+    Source/controls/touch/gamepad.cpp
+    Source/controls/touch/renderers.cpp)
 endif()
 
 set(BIN_TARGET devilutionx)
