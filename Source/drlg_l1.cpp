@@ -944,7 +944,7 @@ void FillFloor()
 void LoadQuestSetPieces()
 {
 	L5setloadflag = false;
-	
+
 	if (QuestStatus(Quests[Q_BUTCHER], QuestData[Q_BUTCHER])) {
 		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\rnd6.DUN");
 		L5setloadflag = true;
