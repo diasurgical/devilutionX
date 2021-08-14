@@ -4,7 +4,10 @@
  * Implementation of debug functions.
  */
 
+#ifdef _DEBUG
+
 #include "cursor.h"
+#include "debug.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
@@ -15,8 +18,6 @@
 namespace devilution {
 
 std::optional<CelSprite> pSquareCel;
-
-#ifdef _DEBUG
 
 namespace {
 
@@ -57,6 +58,122 @@ void PrintDebugMonster(int m)
 	sprintf(dstr, "Active List = %i, Squelch = %i", bActive ? 1 : 0, monster._msquelch);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 }
+
+struct DebugCmdItem {
+	const std::string_view text;
+	const std::string_view description;
+	const std::string_view requiredParameter;
+	std::string (*actionProc)(const std::string_view);
+};
+
+extern std::vector<DebugCmdItem> DebugCmdList;
+
+std::string DebugCmdHelp(const std::string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "Available Debug Commands: ";
+		int lenCurrentLine = ret.length();
+		bool first = true;
+		for (const auto &dbgCmd : DebugCmdList) {
+			if ((dbgCmd.text.length() + lenCurrentLine + 2) > MAX_SEND_STR_LEN) {
+				ret.append("\n");
+				lenCurrentLine = dbgCmd.text.length();
+			} else {
+				if (first)
+					first = false;
+				else
+					ret.append(" - ");
+				lenCurrentLine += (dbgCmd.text.length() + 2);
+			}
+			ret.append(dbgCmd.text);
+		}
+		return ret;
+	} else {
+		auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return elem.text == parameter; });
+		if (debugCmdIterator == DebugCmdList.end())
+			return fmt::format("Debug command {} wasn't found", parameter);
+		auto &dbgCmdItem = *debugCmdIterator;
+		if (dbgCmdItem.requiredParameter.empty())
+			return fmt::format("Description: {}\nParameters: No additional parameter needed.", dbgCmdItem.description);
+		return fmt::format("Description: {}\nParameters: {}", dbgCmdItem.description, dbgCmdItem.requiredParameter);
+	}
+}
+
+std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
+{
+	GiveGoldCheat();
+	return "You are now rich! If only this was as easy in real life...";
+}
+
+std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
+{
+	TakeGoldCheat();
+	return "You are poor...";
+}
+
+std::string DebugCmdWarpToLevel(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	auto level = atoi(parameter.data());
+	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
+		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
+	if (myPlayer.plrlevel == level)
+		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
+	return fmt::format("Welcome to level {}.", level);
+}
+
+std::string DebugCmdResetLevel(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	auto level = atoi(parameter.data());
+	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
+		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
+	myPlayer._pLvlVisited[level] = false;
+	if (myPlayer.plrlevel == level)
+		return fmt::format("Level {} can't be cleaned, cause you still occupy it!", level);
+	return fmt::format("Level {} was restored and looks fabulous.", level);
+}
+
+std::string DebugCmdGodMode(const std::string_view parameter)
+{
+	debug_mode_key_inverted_v = !debug_mode_key_inverted_v;
+	if (debug_mode_key_inverted_v)
+		return "A god descended.";
+	return "You are mortal, beware of the darkness.";
+}
+
+std::string DebugCmdLevelUp(const std::string_view parameter)
+{
+	int levels = std::max(1, atoi(parameter.data()));
+	for (int i = 0; i < levels; i++)
+		NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
+	return "New experience leads to new insights.";
+}
+
+std::string DebugCmdGetAllSpells(const std::string_view parameter)
+{
+	SetAllSpellsCheat();
+	return "Magic is no mystery for me.";
+}
+
+std::string DebugCmdMaxSpellLevel(const std::string_view parameter)
+{
+	MaxSpellsCheat();
+	return "Knowledge is power.";
+}
+
+std::vector<DebugCmdItem> DebugCmdList = {
+	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
+	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
+	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
+	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
+	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
+	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
+	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
+	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
+};
 
 } // namespace
 
@@ -212,6 +329,33 @@ void NextDebugMonster()
 	NetSendCmdString(1 << MyPlayerId, dstr);
 }
 
-#endif
+bool CheckDebugTextCommand(const std::string_view text)
+{
+	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0; });
+	if (debugCmdIterator == DebugCmdList.end())
+		return false;
+
+	auto &dbgCmd = *debugCmdIterator;
+	std::string_view parameter = "";
+	if (text.length() > (dbgCmd.text.length() + 1))
+		parameter = text.substr(dbgCmd.text.length() + 1);
+	const auto result = dbgCmd.actionProc(parameter);
+
+	const std::string delim = "\n";
+	auto start = 0U;
+	auto end = result.find(delim);
+	while (end != std::string::npos) {
+		const auto line = result.substr(start, end - start);
+		NetSendCmdString(1 << MyPlayerId, line.c_str());
+		start = end + delim.length();
+		end = result.find(delim, start);
+	}
+	if (start != result.length())
+		NetSendCmdString(1 << MyPlayerId, result.substr(start).c_str());
+
+	return true;
+}
 
 } // namespace devilution
+
+#endif

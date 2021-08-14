@@ -32,6 +32,10 @@
 #include "utils/sdl_geometry.h"
 #include "options.h"
 
+#ifdef _DEBUG
+#include "debug.h"
+#endif
+
 namespace devilution {
 /**
  * @brief Set if the life flask needs to be redrawn during next frame
@@ -513,12 +517,18 @@ void ControlSetGoldCurs(PlayerStruct &player)
 
 void ResetTalkMsg()
 {
+#ifdef _DEBUG
+	if (CheckDebugTextCommand(TalkMessage))
+		return;
+#endif
+
 	uint32_t pmask = 0;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		if (WhisperList[i])
 			pmask |= 1 << i;
 	}
+
 	NetSendCmdString(pmask, TalkMessage);
 }
 
@@ -659,7 +669,11 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 
 bool IsChatAvailable()
 {
+#ifdef _DEBUG
+	return true;
+#else
 	return gbIsMultiplayer;
+#endif
 }
 
 } // namespace
@@ -2074,6 +2088,10 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
 
 	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+
+#ifdef _DEBUG
+	CheckDebugTextCommand(sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+#endif
 }
 
 } // namespace devilution
