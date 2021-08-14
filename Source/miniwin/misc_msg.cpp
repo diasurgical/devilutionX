@@ -703,6 +703,16 @@ bool DemoMessage(tagMSG *lpMsg)
 			timedemo = false;
 			last_tick = SDL_GetTicks();
 		}
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_KP_PLUS && sgGameInitInfo.nTickRate < 255) {
+			sgGameInitInfo.nTickRate++;
+			sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
+			gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
+		}
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_KP_MINUS && sgGameInitInfo.nTickRate > 1) {
+			sgGameInitInfo.nTickRate--;
+			sgOptions.Gameplay.nTickRate = sgGameInitInfo.nTickRate;
+			gnTickDelay = 1000 / sgGameInitInfo.nTickRate;
+		}
 	}
 
 	if (!demo_message_queue.empty()) {
