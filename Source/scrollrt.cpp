@@ -5,6 +5,7 @@
  */
 
 #include "automap.h"
+#include "controls/touch/renderers.h"
 #include "cursor.h"
 #include "dead.h"
 #include "doom.h"
@@ -30,6 +31,7 @@
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
+#include "utils/display.h"
 #include "utils/endian.hpp"
 #include "utils/log.hpp"
 
@@ -1745,6 +1747,12 @@ void DrawAndBlit()
 	unlock_buf(0);
 
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
+
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+	SDL_Surface *sdlOutputSurface = GetOutputSurface();
+	Surface outputSurface(sdlOutputSurface);
+	DrawVirtualGamepad(outputSurface);
+#endif
 
 	RenderPresent();
 
