@@ -19,6 +19,7 @@
 #endif
 #include "DiabloUI/diabloui.h"
 #include "controls/keymapper.hpp"
+#include "controls/touch/gamepad.h"
 #include "diablo.h"
 #include "doom.h"
 #include "drlg_l1.h"
@@ -955,6 +956,10 @@ void DiabloInit()
 		}
 		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
+
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+	InitializeVirtualGamepad();
+#endif
 
 	UiInitialize();
 	UiSetSpawned(gbIsSpawn);

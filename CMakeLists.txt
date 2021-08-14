@@ -487,6 +487,11 @@ if(NOT NONET)
   endif()
 endif()
 
+if (VIRTUAL_GAMEPAD)
+  list(APPEND libdevilutionx_SRCS
+    Source/controls/touch/gamepad.cpp)
+endif()
+
 set(BIN_TARGET devilutionx)
 
 if(NINTENDO_SWITCH)
@@ -683,6 +688,7 @@ foreach(
   GPERF_HEAP_MAIN
   GPERF_HEAP_FIRST_GAME_ITERATION
   STREAM_ALL_AUDIO
+  VIRTUAL_GAMEPAD
 )
 if(${def_name})
   list(APPEND def_list ${def_name})
