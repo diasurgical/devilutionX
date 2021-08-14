@@ -489,6 +489,7 @@ endif()
 
 if (VIRTUAL_GAMEPAD)
   list(APPEND libdevilutionx_SRCS
+    Source/controls/touch/event_handlers.cpp
     Source/controls/touch/gamepad.cpp
     Source/controls/touch/renderers.cpp)
 endif()

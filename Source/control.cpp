@@ -1065,6 +1065,14 @@ void DoSpeedBook()
 	SetCursorPos({ x, y });
 }
 
+void ClearPanBtn()
+{
+	for (int i = 0; i < PanelButtonIndex; i++)
+		PanelButtons[i] = false;
+	drawbtnflag = true;
+	panbtndown = false;
+}
+
 void DoPanBtn()
 {
 	for (int i = 0; i < PanelButtonIndex; i++) {

@@ -9,6 +9,7 @@
 #include "controls/menu_controls.h"
 #include "controls/modifier_hints.h"
 #include "controls/plrctrls.h"
+#include "controls/touch/gamepad.h"
 #include "doom.h"
 #include "gmenu.h"
 #include "options.h"
@@ -96,6 +97,37 @@ bool HandleStartAndSelect(const ControllerButtonEvent &ctrlEvent, GameAction *ac
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action)
 {
 	const bool inGameMenu = InGameMenu();
+
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+	if (event.type == SDL_FINGERDOWN) {
+		if (VirtualGamepadState.primaryActionButton.isHeld && VirtualGamepadState.primaryActionButton.didStateChange) {
+			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+				*action = GameAction(GameActionType_PRIMARY_ACTION);
+			else if (sgpCurrentMenu != nullptr || stextflag != STORE_NONE || QuestLogIsOpen)
+				*action = GameActionSendKey { DVL_VK_RETURN, false };
+			else
+				*action = GameActionSendKey { DVL_VK_SPACE, false };
+			return true;
+		}
+		if (VirtualGamepadState.secondaryActionButton.isHeld && VirtualGamepadState.secondaryActionButton.didStateChange) {
+			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+				*action = GameAction(GameActionType_SECONDARY_ACTION);
+			return true;
+		}
+		if (VirtualGamepadState.spellActionButton.isHeld && VirtualGamepadState.spellActionButton.didStateChange) {
+			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
+				*action = GameAction(GameActionType_CAST_SPELL);
+			return true;
+		}
+		if (VirtualGamepadState.cancelButton.isHeld && VirtualGamepadState.cancelButton.didStateChange) {
+			if (inGameMenu || sbookflag)
+				*action = GameActionSendKey { DVL_VK_ESCAPE, false };
+			else if (DoomFlag || invflag || QuestLogIsOpen || chrflag || spselflag)
+				*action = GameActionSendKey { DVL_VK_SPACE, false };
+			return true;
+		}
+	}
+#endif
 
 	if (HandleStartAndSelect(ctrlEvent, action))
 		return true;
