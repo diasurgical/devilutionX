@@ -267,9 +267,8 @@ void ShowProgress(interface_mode uMsg)
 		}
 		IncProgress();
 		FreeGameMem();
-		currlevel++;
+		currlevel = myPlayer.plrlevel;
 		leveltype = gnLevelTypeTbl[currlevel];
-		assert(myPlayer.plrlevel == currlevel);
 		IncProgress();
 		LoadGameLevel(false, ENTRY_MAIN);
 		IncProgress();
