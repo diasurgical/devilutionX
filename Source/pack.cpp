@@ -112,14 +112,13 @@ void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashie
 		PackItem(&pPack->InvBody[i], &player.InvBody[i]);
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+	pPack->_pNumInv = player._pNumInv;
+	for (int i = 0; i < pPack->_pNumInv; i++) {
 		PackItem(&pPack->InvList[i], &player.InvList[i]);
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
 		pPack->InvGrid[i] = player.InvGrid[i];
-
-	pPack->_pNumInv = player._pNumInv;
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		PackItem(&pPack->SpdList[i], &player.SpdList[i]);
@@ -243,7 +242,8 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 		UnPackItem(&packedItem, &player.InvBody[i], isHellfire);
 	}
 
-	for (int i = 0; i < NUM_INV_GRID_ELEM; i++) {
+	player._pNumInv = pPack->_pNumInv;
+	for (int i = 0; i < player._pNumInv; i++) {
 		auto packedItem = pPack->InvList[i];
 		bool isHellfire = netSync ? ((packedItem.dwBuff & CF_HELLFIRE) != 0) : (pPack->bIsHellfire != 0);
 		UnPackItem(&packedItem, &player.InvList[i], isHellfire);
@@ -252,7 +252,6 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
 		player.InvGrid[i] = pPack->InvGrid[i];
 
-	player._pNumInv = pPack->_pNumInv;
 	VerifyGoldSeeds(player);
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
