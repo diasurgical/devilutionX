@@ -48,6 +48,8 @@ void InitDead()
 	for (auto &dead : Dead[nd].data)
 		dead = MissileSpriteData[MFILE_SHATTER1].animData[0].get();
 
+	nd++; // Unused blood spatter
+
 	Dead[nd].frame = 12;
 	Dead[nd].width = 128;
 	Dead[nd].translationPaletteIndex = 0;
