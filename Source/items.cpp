@@ -415,6 +415,7 @@ void AddInitItems()
 		dItem[position.x][position.y] = ii + 1;
 
 		Items[ii]._iSeed = AdvanceRndSeed();
+		SetRndSeed(Items[ii]._iSeed);
 
 		if (GenerateRnd(2) != 0)
 			GetItemAttrs(ii, IDI_HEAL, curlv);
@@ -2221,6 +2222,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		keepGoing = false;
 		memset(&Items[0], 0, sizeof(*Items));
 		Items[0]._iSeed = AdvanceRndSeed();
+		SetRndSeed(Items[0]._iSeed);
 		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(0, itemType, plvl);
 		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
@@ -4461,6 +4463,7 @@ void SpawnSmith(int lvl)
 		do {
 			memset(&Items[0], 0, sizeof(*Items));
 			Items[0]._iSeed = AdvanceRndSeed();
+			SetRndSeed(Items[0]._iSeed);
 			int idata = RndSmithItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 		} while (Items[0]._iIvalue > maxValue);
@@ -4546,6 +4549,7 @@ void SpawnWitch(int lvl)
 
 			memset(&Items[0], 0, sizeof(*Items));
 			Items[0]._iSeed = AdvanceRndSeed();
+			SetRndSeed(Items[0]._iSeed);
 			AdvanceRndSeed();
 
 			GetItemAttrs(0, i, lvl);
@@ -4564,6 +4568,7 @@ void SpawnWitch(int lvl)
 		do {
 			memset(&Items[0], 0, sizeof(*Items));
 			Items[0]._iSeed = AdvanceRndSeed();
+			SetRndSeed(Items[0]._iSeed);
 			int idata = RndWitchItem(lvl) - 1;
 			GetItemAttrs(0, idata, lvl);
 			int maxlvl = -1;
@@ -4609,6 +4614,7 @@ void SpawnBoy(int lvl)
 		keepgoing = false;
 		memset(&Items[0], 0, sizeof(*Items));
 		Items[0]._iSeed = AdvanceRndSeed();
+		SetRndSeed(Items[0]._iSeed);
 		int itype = RndBoyItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		GetItemBonus(0, lvl, 2 * lvl, true, true);
@@ -4735,6 +4741,7 @@ void SpawnHealer(int lvl)
 	for (int i = srnd; i < nsi; i++) {
 		memset(&Items[0], 0, sizeof(*Items));
 		Items[0]._iSeed = AdvanceRndSeed();
+		SetRndSeed(Items[0]._iSeed);
 		int itype = RndHealerItem(lvl) - 1;
 		GetItemAttrs(0, itype, lvl);
 		healitem[i] = Items[0];
