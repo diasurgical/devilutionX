@@ -648,6 +648,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
 		InitQTextMsg(TEXT_JERSEY8);
 		Quests[Q_JERSEY]._qactive = QUEST_DONE;
+		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, DIR_SW, 3);
 		return;
 	}
 
@@ -726,6 +727,7 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 		CreateAmulet(girl.position, 13, false, true);
 		Quests[Q_GIRL]._qlog = false;
 		Quests[Q_GIRL]._qactive = QUEST_DONE;
+		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, DIR_S, 6);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_GIRL);
 	}
