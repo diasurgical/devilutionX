@@ -353,7 +353,7 @@ void CheckQuests()
 	if (gbIsSpawn)
 		return;
 
-	if (QuestStatus(Quests[Q_BETRAYER], QuestData[Q_BETRAYER]) && gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 2) {
+	if (QuestStatus(Q_BETRAYER) && gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
 		Quests[Q_BETRAYER]._qvar1 = 3;
 		NetSendCmdQuest(true, Q_BETRAYER);
@@ -445,15 +445,15 @@ bool ForceQuests()
 	return false;
 }
 
-bool QuestStatus(QuestStruct &quest, QuestDataStruct &questData)
+bool QuestStatus(int i)
 {
 	if (setlevel)
 		return false;
-	if (currlevel != quest._qlevel)
+	if (currlevel != Quests[i]._qlevel)
 		return false;
-	if (quest._qactive == QUEST_NOTAVAIL)
+	if (Quests[i]._qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && questData.isSinglePlayerOnly)
+	if (gbIsMultiplayer && QuestData[i].isSinglePlayerOnly)
 		return false;
 	return true;
 }
@@ -518,7 +518,7 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 void DRLG_CheckQuests(int x, int y)
 {
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (QuestStatus(Quests[i], QuestData[i])) {
+		if (QuestStatus(i)) {
 			switch (Quests[i]._qtype) {
 			case Q_BUTCHER:
 				DrawButcher();
@@ -632,7 +632,7 @@ void ResyncMPQuests()
 		Quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_BETRAYER);
 	}
-	if (QuestStatus(Quests[Q_BETRAYER], QuestData[Q_BETRAYER]))
+	if (QuestStatus(Q_BETRAYER))
 		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
 	if (Quests[Q_GRAVE]._qactive == QUEST_INIT && currlevel == Quests[Q_GRAVE]._qlevel - 1) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
@@ -657,7 +657,7 @@ void ResyncQuests()
 	if (gbIsSpawn)
 		return;
 
-	if (QuestStatus(Quests[Q_LTBANNER], QuestData[Q_LTBANNER])) {
+	if (QuestStatus(Q_LTBANNER)) {
 		if (Quests[Q_LTBANNER]._qvar1 == 1) {
 			ObjChangeMapResync(
 			    setpc_w + setpc_x - 2,

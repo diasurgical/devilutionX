@@ -1775,15 +1775,15 @@ void LoadQuestSetPieces()
 {
 	setloadflag = false;
 
-	if (QuestStatus(Quests[Q_BLIND], QuestData[Q_BLIND])) {
+	if (QuestStatus(Q_BLIND)) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind1.DUN");
 		pSetPiece[13] = SDL_SwapLE16(154);  // Close outer wall
 		pSetPiece[100] = SDL_SwapLE16(154); // Close outer wall
 		setloadflag = true;
-	} else if (QuestStatus(Quests[Q_BLOOD], QuestData[Q_BLOOD])) {
+	} else if (QuestStatus(Q_BLOOD)) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood1.DUN");
 		setloadflag = true;
-	} else if (QuestStatus(Quests[Q_SCHAMB], QuestData[Q_SCHAMB])) {
+	} else if (QuestStatus(Q_SCHAMB)) {
 		pSetPiece = LoadFileInMem<uint16_t>("Levels\\L2Data\\Bonestr2.DUN");
 		setloadflag = true;
 	}

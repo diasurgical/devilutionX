@@ -690,7 +690,7 @@ void PlaceQuestMonsters()
 	int skeltype;
 
 	if (!setlevel) {
-		if (QuestStatus(Quests[Q_BUTCHER], QuestData[Q_BUTCHER])) {
+		if (QuestStatus(Q_BUTCHER)) {
 			PlaceUniqueMonst(UMT_BUTCHER, 0, 0);
 		}
 
@@ -706,31 +706,31 @@ void PlaceQuestMonsters()
 			PlaceUniqueMonst(UMT_SKELKING, skeltype, 30);
 		}
 
-		if (QuestStatus(Quests[Q_LTBANNER], QuestData[Q_LTBANNER])) {
+		if (QuestStatus(Q_LTBANNER)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner1.DUN");
 			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
-		if (QuestStatus(Quests[Q_BLOOD], QuestData[Q_BLOOD])) {
+		if (QuestStatus(Q_BLOOD)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blood2.DUN");
 			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
-		if (QuestStatus(Quests[Q_BLIND], QuestData[Q_BLIND])) {
+		if (QuestStatus(Q_BLIND)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L2Data\\Blind2.DUN");
 			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 		}
-		if (QuestStatus(Quests[Q_ANVIL], QuestData[Q_ANVIL])) {
+		if (QuestStatus(Q_ANVIL)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
 			SetMapMonsters(dunData.get(), Point { setpc_x + 2, setpc_y + 2 } * 2);
 		}
-		if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD])) {
+		if (QuestStatus(Q_WARLORD)) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
 			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
-		if (QuestStatus(Quests[Q_VEIL], QuestData[Q_VEIL])) {
+		if (QuestStatus(Q_VEIL)) {
 			AddMonsterType(UniqMonst[UMT_LACHDAN].mtype, PLACE_SCATTER);
 		}
-		if (QuestStatus(Quests[Q_ZHAR], QuestData[Q_ZHAR]) && zharlib == -1) {
+		if (QuestStatus(Q_ZHAR) && zharlib == -1) {
 			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
@@ -1094,7 +1094,7 @@ void DiabloDeath(MonsterStruct &diablo, bool sendmsg)
 
 void SpawnLoot(MonsterStruct &monster, bool sendmsg)
 {
-	if (QuestStatus(Quests[Q_GARBUD], QuestData[Q_GARBUD]) && monster._uniqtype - 1 == UMT_GARBUD) {
+	if (QuestStatus(Q_GARBUD) && monster._uniqtype - 1 == UMT_GARBUD) {
 		CreateTypeItem(monster.position.tile + Displacement { 1, 1 }, true, ITYPE_MACE, IMISC_NONE, true, false);
 	} else if (monster._uniqtype - 1 == UMT_DEFILER) {
 		if (effect_is_playing(USFX_DEFILER8))
@@ -3642,17 +3642,17 @@ void GetLevelMTypes()
 	}
 
 	if (!setlevel) {
-		if (QuestStatus(Quests[Q_BUTCHER], QuestData[Q_BUTCHER]))
+		if (QuestStatus(Q_BUTCHER))
 			AddMonsterType(MT_CLEAVER, PLACE_SPECIAL);
-		if (QuestStatus(Quests[Q_GARBUD], QuestData[Q_GARBUD]))
+		if (QuestStatus(Q_GARBUD))
 			AddMonsterType(UniqMonst[UMT_GARBUD].mtype, PLACE_UNIQUE);
-		if (QuestStatus(Quests[Q_ZHAR], QuestData[Q_ZHAR]))
+		if (QuestStatus(Q_ZHAR))
 			AddMonsterType(UniqMonst[UMT_ZHAR].mtype, PLACE_UNIQUE);
-		if (QuestStatus(Quests[Q_LTBANNER], QuestData[Q_LTBANNER]))
+		if (QuestStatus(Q_LTBANNER))
 			AddMonsterType(UniqMonst[UMT_SNOTSPIL].mtype, PLACE_UNIQUE);
-		if (QuestStatus(Quests[Q_VEIL], QuestData[Q_VEIL]))
+		if (QuestStatus(Q_VEIL))
 			AddMonsterType(UniqMonst[UMT_LACHDAN].mtype, PLACE_UNIQUE);
-		if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD]))
+		if (QuestStatus(Q_WARLORD))
 			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_UNIQUE);
 
 		if (gbIsMultiplayer && currlevel == Quests[Q_SKELKING]._qlevel) {
@@ -4956,14 +4956,14 @@ void TalktoMonster(MonsterStruct &monster)
 		return;
 	}
 
-	if (QuestStatus(Quests[Q_LTBANNER], QuestData[Q_LTBANNER]) && Quests[Q_LTBANNER]._qvar1 == 2) {
+	if (QuestStatus(Q_LTBANNER) && Quests[Q_LTBANNER]._qvar1 == 2) {
 		if (player.TryRemoveInvItemById(IDI_BANNER)) {
 			Quests[Q_LTBANNER]._qactive = QUEST_DONE;
 			monster.mtalkmsg = TEXT_BANNER12;
 			monster._mgoal = MGOAL_INQUIRING;
 		}
 	}
-	if (QuestStatus(Quests[Q_VEIL], QuestData[Q_VEIL]) && monster.mtalkmsg >= TEXT_VEIL9) {
+	if (QuestStatus(Q_VEIL) && monster.mtalkmsg >= TEXT_VEIL9) {
 		if (player.TryRemoveInvItemById(IDI_GLDNELIX)) {
 			monster.mtalkmsg = TEXT_VEIL11;
 			monster._mgoal = MGOAL_INQUIRING;

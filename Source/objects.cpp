@@ -462,11 +462,11 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 		}
 	}
 
-	if (QuestStatus(Quests[Q_BLIND], QuestData[Q_BLIND]))
+	if (QuestStatus(Q_BLIND))
 		AddObject(OBJ_BLINDBOOK, { xp, yp });
-	if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD]))
+	if (QuestStatus(Q_WARLORD))
 		AddObject(OBJ_STEELTOME, { xp, yp });
-	if (QuestStatus(Quests[Q_BLOOD], QuestData[Q_BLOOD])) {
+	if (QuestStatus(Q_BLOOD)) {
 		xp = 2 * setpc_x + 25;
 		yp = 2 * setpc_y + 40;
 		AddObject(OBJ_BLOODBOOK, { xp, yp });
@@ -3791,7 +3791,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 	SetRndSeed(Objects[i]._oRndSeed);
 	CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
 
-	if (QuestStatus(Quests[Q_ZHAR], QuestData[Q_ZHAR])) {
+	if (QuestStatus(Q_ZHAR)) {
 		auto &zhar = Monsters[MAX_PLRS];
 		if (zhar._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 		    && zhar._uniqtype - 1 == UMT_ZHAR
@@ -4420,7 +4420,7 @@ void InitObjectGFX()
 		}
 
 		if (AllObjects[i].oquest != -1) {
-			if (QuestStatus(Quests[AllObjects[i].oquest], QuestData[AllObjects[i].oquest]))
+			if (QuestStatus(AllObjects[i].oquest))
 				fileload[AllObjects[i].ofindex] = true;
 		}
 	}
@@ -4514,11 +4514,11 @@ void InitObjects()
 			AddNakrulGate();
 		}
 		if (leveltype == DTYPE_CATHEDRAL) {
-			if (QuestStatus(Quests[Q_BUTCHER], QuestData[Q_BUTCHER]))
+			if (QuestStatus(Q_BUTCHER))
 				AddTortures();
-			if (QuestStatus(Quests[Q_PWATER], QuestData[Q_PWATER]))
+			if (QuestStatus(Q_PWATER))
 				AddCandles();
-			if (QuestStatus(Quests[Q_LTBANNER], QuestData[Q_LTBANNER]))
+			if (QuestStatus(Q_LTBANNER))
 				AddObject(OBJ_SIGNCHEST, { 2 * setpc_x + 26, 2 * setpc_y + 19 });
 			InitRndLocBigObj(10, 15, OBJ_SARC);
 			if (currlevel >= 21)
@@ -4528,13 +4528,13 @@ void InitObjects()
 			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_CATACOMBS) {
-			if (QuestStatus(Quests[Q_ROCK], QuestData[Q_ROCK]))
+			if (QuestStatus(Q_ROCK))
 				InitRndLocObj5x5(1, 1, OBJ_STAND);
-			if (QuestStatus(Quests[Q_SCHAMB], QuestData[Q_SCHAMB]))
+			if (QuestStatus(Q_SCHAMB))
 				InitRndLocObj5x5(1, 1, OBJ_BOOK2R);
 			AddL2Objs(0, 0, MAXDUNX, MAXDUNY);
 			AddL2Torches();
-			if (QuestStatus(Quests[Q_BLIND], QuestData[Q_BLIND])) {
+			if (QuestStatus(Q_BLIND)) {
 				_speech_id spId;
 				switch (Players[MyPlayerId]._pClass) {
 				case HeroClass::Warrior:
@@ -4560,7 +4560,7 @@ void InitObjects()
 				AddBookLever({ { setpc_x, setpc_y }, { setpc_w + 1, setpc_h + 1 } }, spId);
 				LoadMapObjs("Levels\\L2Data\\Blind2.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
-			if (QuestStatus(Quests[Q_BLOOD], QuestData[Q_BLOOD])) {
+			if (QuestStatus(Q_BLOOD)) {
 				_speech_id spId;
 				switch (Players[MyPlayerId]._pClass) {
 				case HeroClass::Warrior:
@@ -4593,7 +4593,7 @@ void InitObjects()
 			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_HELL) {
-			if (QuestStatus(Quests[Q_WARLORD], QuestData[Q_WARLORD])) {
+			if (QuestStatus(Q_WARLORD)) {
 				_speech_id spId;
 				switch (Players[MyPlayerId]._pClass) {
 				case HeroClass::Warrior:
@@ -4619,7 +4619,7 @@ void InitObjects()
 				AddBookLever({ { setpc_x, setpc_y }, { setpc_w, setpc_h } }, spId);
 				LoadMapObjs("Levels\\L4Data\\Warlord.DUN", { 2 * setpc_x, 2 * setpc_y });
 			}
-			if (QuestStatus(Quests[Q_BETRAYER], QuestData[Q_BETRAYER]) && !gbIsMultiplayer)
+			if (QuestStatus(Q_BETRAYER) && !gbIsMultiplayer)
 				AddLazStand();
 			InitRndBarrels();
 			AddL4Goodies();
