@@ -241,7 +241,7 @@ byte *DeltaExportJunk(byte *dst)
 
 	int q = 0;
 	for (auto &quest : Quests) {
-		if (!QuestData[q].isSinglePlayerOnly) {
+		if (!QuestData[quest._qidx].isSinglePlayerOnly) {
 			sgJunk.quests[q].qlog = quest._qlog ? 1 : 0;
 			sgJunk.quests[q].qstate = quest._qactive;
 			sgJunk.quests[q].qvar1 = quest._qvar1;
