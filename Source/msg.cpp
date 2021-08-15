@@ -240,11 +240,11 @@ byte *DeltaExportJunk(byte *dst)
 	}
 
 	int q = 0;
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (!QuestData[i].isSinglePlayerOnly) {
-			sgJunk.quests[q].qlog = Quests[i]._qlog ? 1 : 0;
-			sgJunk.quests[q].qstate = Quests[i]._qactive;
-			sgJunk.quests[q].qvar1 = Quests[i]._qvar1;
+	for (auto &quest : Quests) {
+		if (!QuestData[q].isSinglePlayerOnly) {
+			sgJunk.quests[q].qlog = quest._qlog ? 1 : 0;
+			sgJunk.quests[q].qstate = quest._qactive;
+			sgJunk.quests[q].qvar1 = quest._qvar1;
 			memcpy(dst, &sgJunk.quests[q], sizeof(MultiQuests));
 			dst += sizeof(MultiQuests);
 			q++;
@@ -275,13 +275,13 @@ void DeltaImportJunk(byte *src)
 	}
 
 	int q = 0;
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (!QuestData[i].isSinglePlayerOnly) {
+	for (auto &quest : Quests) {
+		if (!QuestData[q].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
-			Quests[i]._qlog = sgJunk.quests[q].qlog != 0;
-			Quests[i]._qactive = sgJunk.quests[q].qstate;
-			Quests[i]._qvar1 = sgJunk.quests[q].qvar1;
+			quest._qlog = sgJunk.quests[q].qlog != 0;
+			quest._qactive = sgJunk.quests[q].qstate;
+			quest._qvar1 = sgJunk.quests[q].qvar1;
 			q++;
 		}
 	}

@@ -269,10 +269,12 @@ void InitQuests()
 			quest._qactive = QUEST_NOTAVAIL;
 		}
 	} else {
-		for (int i = 0; i < MAXQUESTS; i++) {
-			if (QuestData[i].isSinglePlayerOnly) {
-				Quests[i]._qactive = QUEST_NOTAVAIL;
+		int q = 0;
+		for (auto &quest : Quests) {
+			if (QuestData[q].isSinglePlayerOnly) {
+				quest._qactive = QUEST_NOTAVAIL;
 			}
+			q++;
 		}
 	}
 
@@ -283,31 +285,33 @@ void InitQuests()
 	WaterDone = 0;
 	int initiatedQuests = 0;
 
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (gbIsMultiplayer && QuestData[i].isSinglePlayerOnly)
+	int q = 0;
+	for (auto &quest : Quests) {
+		if (gbIsMultiplayer && QuestData[q].isSinglePlayerOnly)
 			continue;
-		Quests[i]._qtype = QuestData[i]._qdtype;
+		quest._qtype = QuestData[q]._qdtype;
 		if (gbIsMultiplayer) {
-			Quests[i]._qlevel = QuestData[i]._qdmultlvl;
+			quest._qlevel = QuestData[q]._qdmultlvl;
 			if (!delta_quest_inited(initiatedQuests)) {
-				Quests[i]._qactive = QUEST_INIT;
-				Quests[i]._qvar1 = 0;
-				Quests[i]._qlog = false;
+				quest._qactive = QUEST_INIT;
+				quest._qvar1 = 0;
+				quest._qlog = false;
 			}
 			initiatedQuests++;
 		} else {
-			Quests[i]._qactive = QUEST_INIT;
-			Quests[i]._qlevel = QuestData[i]._qdlvl;
-			Quests[i]._qvar1 = 0;
-			Quests[i]._qlog = false;
+			quest._qactive = QUEST_INIT;
+			quest._qlevel = QuestData[q]._qdlvl;
+			quest._qvar1 = 0;
+			quest._qlog = false;
 		}
 
-		Quests[i]._qslvl = QuestData[i]._qslvl;
-		Quests[i].position = { 0, 0 };
-		Quests[i]._qidx = i;
-		Quests[i]._qlvltype = QuestData[i]._qlvlt;
-		Quests[i]._qvar2 = 0;
-		Quests[i]._qmsg = QuestData[i]._qdmsg;
+		quest._qslvl = QuestData[q]._qslvl;
+		quest.position = { 0, 0 };
+		quest._qidx = q;
+		quest._qlvltype = QuestData[q]._qlvlt;
+		quest._qvar2 = 0;
+		quest._qmsg = QuestData[q]._qdmsg;
+		q++;
 	}
 
 	if (!gbIsMultiplayer && sgOptions.Gameplay.bRandomizeQuests) {
@@ -425,11 +429,11 @@ bool ForceQuests()
 		return false;
 	}
 
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (i != Q_BETRAYER && currlevel == Quests[i]._qlevel && Quests[i]._qslvl != 0) {
-			int ql = Quests[Quests[i]._qidx]._qslvl - 1;
-			int qx = Quests[i].position.x;
-			int qy = Quests[i].position.y;
+	for (auto &quest : Quests) {
+		if (quest._qidx != Q_BETRAYER && currlevel == quest._qlevel && quest._qslvl != 0) {
+			int ql = quest._qslvl - 1;
+			int qx = quest.position.x;
+			int qy = quest.position.y;
 
 			for (int j = 0; j < 7; j++) {
 				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
@@ -517,9 +521,9 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 
 void DRLG_CheckQuests(int x, int y)
 {
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (QuestStatus(static_cast<quest_id>(i))) {
-			switch (Quests[i]._qtype) {
+	for (auto &quest : Quests) {
+		if (QuestStatus(static_cast<quest_id>(quest._qidx))) {
+			switch (quest._qtype) {
 			case Q_BUTCHER:
 				DrawButcher();
 				break;
@@ -536,10 +540,10 @@ void DRLG_CheckQuests(int x, int y)
 				DrawWarLord(x, y);
 				break;
 			case Q_SKELKING:
-				DrawSkelKing(i, x, y);
+				DrawSkelKing(quest._qidx, x, y);
 				break;
 			case Q_SCHAMB:
-				DrawSChamber(i, x, y);
+				DrawSChamber(quest._qidx, x, y);
 				break;
 			}
 		}
@@ -743,9 +747,9 @@ void DrawQuestLog(const Surface &out)
 void StartQuestlog()
 {
 	numqlines = 0;
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (Quests[i]._qactive == QUEST_ACTIVE && Quests[i]._qlog) {
-			qlist[numqlines] = i;
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_ACTIVE && quest._qlog) {
+			qlist[numqlines] = quest._qidx;
 			numqlines++;
 		}
 	}

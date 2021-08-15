@@ -1206,8 +1206,8 @@ void StartTalk()
 	}
 
 	int sn = 0;
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog)
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_ACTIVE && QuestDialogTable[talker][quest._qidx] != TEXT_NONE && quest._qlog)
 			sn++;
 	}
 
@@ -1221,9 +1221,9 @@ void StartTalk()
 
 	int sn2 = sn - 2;
 
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog) {
-			AddSText(0, sn, _(QuestData[i]._qlstr), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_ACTIVE && QuestDialogTable[talker][quest._qidx] != TEXT_NONE && quest._qlog) {
+			AddSText(0, sn, _(QuestData[quest._qidx]._qlstr), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 			sn += la;
 		}
 	}
@@ -2051,8 +2051,8 @@ void TalkEnter()
 	}
 
 	int sn = 0;
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog)
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_ACTIVE && QuestDialogTable[talker][quest._qidx] != TEXT_NONE && quest._qlog)
 			sn++;
 	}
 	int la = 2;
@@ -2070,10 +2070,10 @@ void TalkEnter()
 		return;
 	}
 
-	for (int i = 0; i < MAXQUESTS; i++) {
-		if (Quests[i]._qactive == QUEST_ACTIVE && QuestDialogTable[talker][i] != TEXT_NONE && Quests[i]._qlog) {
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_ACTIVE && QuestDialogTable[talker][quest._qidx] != TEXT_NONE && quest._qlog) {
 			if (sn == stextsel) {
-				InitQTextMsg(QuestDialogTable[talker][i]);
+				InitQTextMsg(QuestDialogTable[talker][quest._qidx]);
 			}
 			sn += la;
 		}
