@@ -12,6 +12,7 @@
 #include "engine/point.hpp"
 #include "gendung.h"
 #include "monster.h"
+#include "objdat.h"
 #include "textdat.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -87,7 +88,7 @@ void InitQuests();
 void InitialiseQuestPools(uint32_t seed, QuestStruct quests[]);
 void CheckQuests();
 bool ForceQuests();
-bool QuestStatus(int i);
+bool QuestStatus(quest_id questId);
 void CheckQuestKill(const MonsterStruct &monster, bool sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();
