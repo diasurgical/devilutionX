@@ -727,6 +727,7 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, DIR_S, 6);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_GIRL);
+		return;
 	}
 
 	switch (Quests[Q_GIRL]._qactive) {
