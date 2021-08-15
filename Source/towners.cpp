@@ -630,6 +630,8 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_FARMER);
 		break;
+	case QUEST_HIVE_DONE:
+		break;
 	default:
 		InitQTextMsg(TEXT_FARMER4);
 		break;
