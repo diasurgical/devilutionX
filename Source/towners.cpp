@@ -638,6 +638,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 {
 	if (player.TryRemoveInvItemById(IDI_GREYSUIT)) {
 		InitQTextMsg(TEXT_JERSEY7);
+		return;
 	}
 
 	if (player.TryRemoveInvItemById(IDI_BROWNSUIT)) {
