@@ -76,7 +76,7 @@ void SelconnLoad()
 	SDL_Rect rect10 = { (Sint16)(PANEL_LEFT + 454), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelConnDlg.push_back(std::make_unique<UiArtTextButton>(_("Cancel"), &UiFocusNavigationEsc, rect10, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontBig | UiFlags::ColorGold));
 
-	UiInitList(vecConnItems.size(), SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg);
+	UiInitList(vecConnItems.size(), SelconnFocus, SelconnSelect, SelconnEsc, vecSelConnDlg, true);
 }
 
 void SelconnFree()
