@@ -262,14 +262,10 @@ void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 
 void InitGirl(TownerStruct &towner, const TownerInit &initData)
 {
-	const char *celPath = "Towners\\Girl\\Girlw1.CEL";
-	if (Quests[Q_GIRL]._qactive == QUEST_DONE) {
-		celPath = "Towners\\Girl\\Girls1.CEL";
-	}
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, celPath, 20, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\Girl\\Girlw1.CEL", 20, initData.dir, 6);
 	towner.name = "Celia";
 }
 
@@ -821,7 +817,7 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_GIRL:
-			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17])
+			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
 				continue;
 			break;
 		default:
