@@ -744,10 +744,7 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 	case QUEST_ACTIVE:
 		InitQTextMsg(TEXT_GIRL3);
 		return;
-	case QUEST_DONE:
-		return;
 	default:
-		PlaySFX(Texts[TEXT_GIRL1].sfxnr);
 		return;
 	}
 }
@@ -815,7 +812,7 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_COWFARM:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 || Quests[Q_FARMER]._qactive == 10)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
 				continue;
 			break;
 		case TOWN_GIRL:
