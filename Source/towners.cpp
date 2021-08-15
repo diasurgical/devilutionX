@@ -811,7 +811,7 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_FARMER:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
 				continue;
 			break;
 		case TOWN_COWFARM:
