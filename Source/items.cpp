@@ -3650,6 +3650,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 
 	SetupItem(ii);
 	Items[ii]._iSeed = AdvanceRndSeed();
+	SetRndSeed(Items[ii]._iSeed);
 	Items[ii]._iPostDraw = true;
 	if (selflag != 0) {
 		Items[ii]._iSelFlag = selflag;
