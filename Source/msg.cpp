@@ -276,7 +276,7 @@ void DeltaImportJunk(byte *src)
 
 	int q = 0;
 	for (auto &quest : Quests) {
-		if (!QuestData[quest._idx].isSinglePlayerOnly) {
+		if (!QuestData[quest._qidx].isSinglePlayerOnly) {
 			memcpy(&sgJunk.quests[q], src, sizeof(MultiQuests));
 			src += sizeof(MultiQuests);
 			quest._qlog = sgJunk.quests[q].qlog != 0;
