@@ -3920,7 +3920,7 @@ void AddDoppelganger(Monster &monster)
 	}
 }
 
-bool M_Talker(Monster &monster)
+bool M_Talker(const Monster &monster)
 {
 	return IsAnyOf(monster._mAi, AI_LAZARUS, AI_WARLORD, AI_GARBUD, AI_ZHAR, AI_SNOTSPIL, AI_LACHDAN, AI_LAZHELP);
 }

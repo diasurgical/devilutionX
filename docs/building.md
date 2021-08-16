@@ -12,11 +12,11 @@ although we have a fallback if necessary.
 
 ### Installing dependencies on Debian and Ubuntu
 ```
-sudo apt-get install cmake g++ libsdl2-ttf-dev libsodium-dev
+sudo apt-get install cmake g++ libsdl2-ttf-dev libsodium-dev libpng-dev
 ```
 ### Installing dependencies on Fedora
 ```
-sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel libsodium-devel libasan libubsan
+sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel libsodium-devel libpng-devel libasan libubsan
 ```
 ### Compiling
 ```
@@ -41,7 +41,7 @@ cmake --build . -j $(sysctl -n hw.physicalcpu)
 
 ### Installing dependencies
 ```
-pkg install cmake sdl2_ttf libsodium
+pkg install cmake sdl2_ttf libsodium libpng
 ```
 ### Compiling
 ```
@@ -54,7 +54,7 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkgin install cmake SDL2_ttf libsodium
+pkgin install cmake SDL2_ttf libsodium libpng
 ```
 ### Compiling
 ```
@@ -68,7 +68,7 @@ cmake --build . -j $(sysctl -n hw.ncpu)
 
 ### Installing dependencies
 ```
-pkg_add cmake sdl2-ttf libsodium gmake
+pkg_add cmake sdl2-ttf libsodium libpng gmake
 ```
 ### Compiling
 ```
@@ -84,7 +84,7 @@ cmake --build . -j $(sysctl -n hw.ncpuonline)
 
 ### 32-bit
 
-Download and place the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
+Download the 32bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.11.tar.gz) and place them in `/usr/i686-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep.sh`.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-mingw-w64-i686
@@ -92,7 +92,7 @@ sudo apt-get install cmake gcc-mingw-w64-i686 g++-mingw-w64-i686 pkg-config-ming
 
 ### 64-bit
 
-Download and place the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
+Download the 64bit MinGW Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) as well as headers for [zlib](https://zlib.net/zlib-1.2.11.tar.gz) and place them in `/usr/x86_64-w64-mingw32`. This can be done automatically by running `Packaging/windows/mingw-prep64.sh`.
 
 ```
 sudo apt-get install cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64
@@ -124,7 +124,6 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 ### Installing dependencies
 Make sure to install the `C++ CMake tools for Windows` component for Visual Studio.
 
-* **Using vcpkg (recommended)**
 1. Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
 
    Don't forget to perform _user-wide integration_ step for additional convenience.
@@ -133,18 +132,14 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
    For the 64-bit version of the dependencies please run this command:
 
    ```
-   vcpkg install fmt:x64-windows sdl2:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows gtest:x64-windows
+   vcpkg install fmt:x64-windows sdl2:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows libpng:x64-windows gtest:x64-windows
    ```
 
    For the 32-bit version of the dependencies please run this command:
 
    ```
-   vcpkg install fmt:x86-windows sdl2:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows gtest:x86-windows
+   vcpkg install fmt:x86-windows sdl2:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows libpng:x86-windows gtest:x86-windows
    ```
-
-* **Manually**
-1. Download and place the MSVC Development Libraries of [SDL2](https://www.libsdl.org/download-2.0.php), [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/) and [Libsodium](https://github.com/jedisct1/libsodium/releases) in `%USERPROFILE%\AppData\Local\Microsoft\WindowsApps\`.
-2. If dependencies are not found or you wish to place them in other location - configure required path variables in _"Manage Configurations..."_ dialog inside Visual Studio or in _cmake-gui_.
 
 ### Compiling
 
@@ -208,8 +203,8 @@ https://devkitpro.org/wiki/Getting_Started
 ```
 sudo (dkp-)pacman -S \
 		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype 3ds-cmake \
-		3ds-pkg-config picasso 3dslink
+		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype 3ds-libpng \
+		3ds-cmake 3ds-pkg-config picasso 3dslink
 ```
 - Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
   - Copy binaries to: `/opt/devkitpro/tools/bin/`
@@ -236,7 +231,7 @@ cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 make
 ```
-[PlayStation Vita manual](docs/manual/platforms/vita.md)
+[PlayStation Vita manual](/docs/manual/platforms/vita.md)
 </details>
 
 
@@ -244,11 +239,11 @@ make
 
 ### Installing dependencies on 32 bit Haiku
 ```
-pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86
+pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86 devel:libpng_x86
 ```
 ### Installing dependencies on 64 bit Haiku
 ```
-pkgman install cmake devel:libsdl2 devel:libsdl2_ttf devel:libsodium
+pkgman install cmake devel:libsdl2 devel:libsdl2_ttf devel:libsodium devel:libpng
 ```
 ### Compiling on 32 bit Haiku
 ```

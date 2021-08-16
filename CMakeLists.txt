@@ -76,6 +76,9 @@ option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
                        "DEVILUTIONX_SYSTEM_LIBFMT AND NOT DIST" ON)
 
+option(DEVILUTIONX_SYSTEM_LIBPNG "Use system-provided libpng" ON)
+cmake_dependent_option(DEVILUTIONX_STATIC_LIBPNG "Link static libpng" OFF
+                       "DEVILUTIONX_SYSTEM_LIBPNG AND NOT DIST" ON)
 
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
@@ -231,6 +234,21 @@ if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
 endif()
 
+if(DEVILUTIONX_SYSTEM_LIBPNG)
+  find_package(PNG QUIET)
+  if(PNG_FOUND)
+    message("-- Found png ${PNG_VERSION_STRING}")
+  else()
+    message("-- Suitable system png package not found, will use png from source")
+  endif()
+  if(NOT TARGET PNG::PNG AND TARGET 3ds::png)
+    add_library(PNG::PNG ALIAS 3ds::png)
+  endif()
+endif()
+if(NOT PNG_FOUND)
+  add_subdirectory(3rdParty/libpng)
+endif()
+
 if(ANDROID)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
@@ -275,6 +293,8 @@ if(NOT NONET AND NOT DISABLE_TCP)
     include(asio_defs)
   endif()
 endif()
+
+add_subdirectory(3rdParty/SDL_image)
 
 if(NOT NOSOUND)
   if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
@@ -668,6 +688,7 @@ if(NOT NONET)
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
+target_link_libraries(libdevilutionx PUBLIC PNG::PNG)
 
 genex_for_option(DEBUG)
 target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
@@ -790,6 +811,7 @@ else()
     ${SDL2_MAIN}
     SDL2::SDL2_ttf)
 endif()
+target_link_libraries(libdevilutionx PUBLIC SDL_image)
 
 if(NOT NOSOUND)
   target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
@@ -809,14 +831,13 @@ if (VITA)
         ScePower_stub
         SceAppUtil_stub
         freetype
-        png
         z
   )
   target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
 
 if(NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2 3ds::png)
+  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2)
   target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
@@ -907,7 +928,6 @@ if(NINTENDO_SWITCH)
 
   target_link_libraries(libdevilutionx PUBLIC
         freetype
-        png
         bz2
         z
   )

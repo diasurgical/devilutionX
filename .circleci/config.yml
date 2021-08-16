@@ -9,7 +9,7 @@ jobs:
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt update -y
       - run: apt install -y g++ libsdl2-dev libsdl2-ttf-dev git rpm wget
-      - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev
+      - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
@@ -24,7 +24,7 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev
+      - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev libpng-dev
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON -DENABLE_CODECOVERAGE=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test

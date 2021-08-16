@@ -275,7 +275,7 @@ void InitMonsters();
 void SetMapMonsters(const uint16_t *dunData, Point startPosition);
 int AddMonster(Point position, Direction dir, int mtype, bool inMap);
 void AddDoppelganger(Monster &monster);
-bool M_Talker(Monster &monster);
+bool M_Talker(const Monster &monster);
 void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
