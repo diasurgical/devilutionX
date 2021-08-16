@@ -347,5 +347,5 @@ TEST(Writehero, pfile_write_hero)
 	std::vector<unsigned char> s(picosha2::k_digest_size);
 	picosha2::hash256(f, s.begin(), s.end());
 	EXPECT_EQ(picosha2::bytes_to_hex_string(s.begin(), s.end()),
-	    "08e9807d1281e4273268f4e265757b4429cfec7c3e8b6deb89dfa109d6797b1c");
+	    "bb44189eabfddfb4f37bd5960f9bb4720bbfd8f3c352476c5f7ac38e9c48e053");
 }
