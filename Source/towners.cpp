@@ -262,14 +262,10 @@ void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 
 void InitGirl(TownerStruct &towner, const TownerInit &initData)
 {
-	const char *celPath = "Towners\\Girl\\Girlw1.CEL";
-	if (Quests[Q_GIRL]._qactive == QUEST_DONE) {
-		celPath = "Towners\\Girl\\Girls1.CEL";
-	}
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, celPath, 20, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\Girl\\Girlw1.CEL", 20, initData.dir, 6);
 	towner.name = "Celia";
 }
 
@@ -642,12 +638,14 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 {
 	if (player.TryRemoveInvItemById(IDI_GREYSUIT)) {
 		InitQTextMsg(TEXT_JERSEY7);
+		return;
 	}
 
 	if (player.TryRemoveInvItemById(IDI_BROWNSUIT)) {
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
 		InitQTextMsg(TEXT_JERSEY8);
 		Quests[Q_JERSEY]._qactive = QUEST_DONE;
+		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, DIR_SW, 3);
 		return;
 	}
 
@@ -726,8 +724,10 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 		CreateAmulet(girl.position, 13, false, true);
 		Quests[Q_GIRL]._qlog = false;
 		Quests[Q_GIRL]._qactive = QUEST_DONE;
+		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, DIR_S, 6);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, Q_GIRL);
+		return;
 	}
 
 	switch (Quests[Q_GIRL]._qactive) {
@@ -744,10 +744,7 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 	case QUEST_ACTIVE:
 		InitQTextMsg(TEXT_GIRL3);
 		return;
-	case QUEST_DONE:
-		return;
 	default:
-		PlaySFX(Texts[TEXT_GIRL1].sfxnr);
 		return;
 	}
 }
@@ -811,15 +808,15 @@ void InitTowners()
 				continue;
 			break;
 		case TOWN_FARMER:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
 				continue;
 			break;
 		case TOWN_COWFARM:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0 || Quests[Q_FARMER]._qactive == 10)
+			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
 				continue;
 			break;
 		case TOWN_GIRL:
-			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17])
+			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
 				continue;
 			break;
 		default:

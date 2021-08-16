@@ -15,7 +15,6 @@
 
 namespace devilution {
 
-bool townwarps[3];
 bool trigflag;
 int numtrigs;
 TriggerStruct trigs[MAXTRIGGERS];
@@ -64,57 +63,81 @@ void InitNoTriggers()
 	trigflag = false;
 }
 
+bool IsWarpOpen(dungeon_type type)
+{
+	if (gbIsSpawn)
+		return false;
+
+	if (gbIsMultiplayer && type != DTYPE_NEST) // Opening the nest is part of in town quest
+		return true;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (type == DTYPE_CATACOMBS && (myPlayer.pTownWarps & 1) != 0)
+		return true;
+	if (type == DTYPE_CAVES && (myPlayer.pTownWarps & 2) != 0)
+		return true;
+	if (type == DTYPE_HELL && (myPlayer.pTownWarps & 4) != 0)
+		return true;
+
+	if (gbIsHellfire) {
+		if (type == DTYPE_CATACOMBS && myPlayer._pLevel >= 10)
+			return true;
+		if (type == DTYPE_CAVES && myPlayer._pLevel >= 15)
+			return true;
+		if (type == DTYPE_HELL && myPlayer._pLevel >= 20)
+			return true;
+		if (type == DTYPE_NEST && IsAnyOf(Quests[Q_FARMER]._qactive, QUEST_DONE, QUEST_HIVE_DONE))
+			return true;
+		if (type == DTYPE_CRYPT && Quests[Q_GRAVE]._qactive == QUEST_DONE)
+			return true;
+	}
+
+	return false;
+}
+
 void InitTownTriggers()
 {
 	numtrigs = 0;
 
+	// Cathedral
 	trigs[numtrigs].position = { 25, 29 };
 	trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
 	numtrigs++;
 
-	for (bool &townwarp : townwarps) {
-		townwarp = gbIsMultiplayer && !gbIsSpawn;
-	}
-	if (!gbIsSpawn) {
-		auto &myPlayer = Players[MyPlayerId];
-
-		if (gbIsMultiplayer || (myPlayer.pTownWarps & 1) != 0 || (gbIsHellfire && myPlayer._pLevel >= 10)) {
-			townwarps[0] = true;
-			trigs[numtrigs].position = { 49, 21 };
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 5;
+	if (IsWarpOpen(DTYPE_CATACOMBS)) {
+		trigs[numtrigs].position = { 49, 21 };
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 5;
 #ifdef _DEBUG
-			if (debug_mode_key_j != 0)
-				trigs[numtrigs]._tlvl = debug_mode_key_j;
+		if (debug_mode_key_j != 0)
+			trigs[numtrigs]._tlvl = debug_mode_key_j;
 #endif
-			numtrigs++;
-		}
-		if (gbIsMultiplayer || (myPlayer.pTownWarps & 2) != 0 || (gbIsHellfire && myPlayer._pLevel >= 15)) {
-			townwarps[1] = true;
-			trigs[numtrigs].position = { 17, 69 };
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 9;
-			numtrigs++;
-		}
-		if (gbIsMultiplayer || (myPlayer.pTownWarps & 4) != 0 || (gbIsHellfire && myPlayer._pLevel >= 20)) {
-			townwarps[2] = true;
-			trigs[numtrigs].position = { 41, 80 };
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 13;
-			numtrigs++;
-		}
+		numtrigs++;
 	}
-	if (gbIsHellfire) {
+	if (IsWarpOpen(DTYPE_CAVES)) {
+		trigs[numtrigs].position = { 17, 69 };
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 9;
+		numtrigs++;
+	}
+	if (IsWarpOpen(DTYPE_HELL)) {
+		trigs[numtrigs].position = { 41, 80 };
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 13;
+		numtrigs++;
+	}
+	if (IsWarpOpen(DTYPE_NEST)) {
 		trigs[numtrigs].position = { 80, 62 };
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 		trigs[numtrigs]._tlvl = 17;
 		numtrigs++;
-		if (gbIsMultiplayer || Quests[Q_GRAVE]._qactive == QUEST_DONE) {
-			trigs[numtrigs].position = { 36, 24 };
-			trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
-			trigs[numtrigs]._tlvl = 21;
-			numtrigs++;
-		}
+	}
+	if (IsWarpOpen(DTYPE_CRYPT)) {
+		trigs[numtrigs].position = { 36, 24 };
+		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
+		trigs[numtrigs]._tlvl = 21;
+		numtrigs++;
 	}
 
 	trigflag = false;
@@ -315,8 +338,10 @@ void InitVPTriggers()
 
 bool ForceTownTrig()
 {
-	for (int i = 0; TownDownList[i] != -1; i++) {
-		if (dPiece[cursmx][cursmy] == TownDownList[i]) {
+	for (auto tileId : TownDownList) {
+		if (tileId == -1)
+			break;
+		if (dPiece[cursmx][cursmy] == tileId) {
 			strcpy(infostr, _("Down to dungeon"));
 			cursmx = 25;
 			cursmy = 29;
@@ -324,9 +349,11 @@ bool ForceTownTrig()
 		}
 	}
 
-	if (townwarps[0]) {
-		for (int i = 0; TownWarp1List[i] != -1; i++) {
-			if (dPiece[cursmx][cursmy] == TownWarp1List[i]) {
+	if (IsWarpOpen(DTYPE_CATACOMBS)) {
+		for (auto tileId : TownWarp1List) {
+			if (tileId == -1)
+				break;
+			if (dPiece[cursmx][cursmy] == tileId) {
 				strcpy(infostr, _("Down to catacombs"));
 				cursmx = 49;
 				cursmy = 21;
@@ -335,7 +362,7 @@ bool ForceTownTrig()
 		}
 	}
 
-	if (townwarps[1]) {
+	if (IsWarpOpen(DTYPE_CAVES)) {
 		for (int i = 1199; i <= 1220; i++) {
 			if (dPiece[cursmx][cursmy] == i) {
 				strcpy(infostr, _("Down to caves"));
@@ -346,7 +373,7 @@ bool ForceTownTrig()
 		}
 	}
 
-	if (townwarps[2]) {
+	if (IsWarpOpen(DTYPE_HELL)) {
 		for (int i = 1240; i <= 1255; i++) {
 			if (dPiece[cursmx][cursmy] == i) {
 				strcpy(infostr, _("Down to hell"));
@@ -357,20 +384,27 @@ bool ForceTownTrig()
 		}
 	}
 
-	if (gbIsHellfire) {
-		for (int i = 0; TownCryptList[i] != -1; i++) {
-			if (dPiece[cursmx][cursmy] == TownCryptList[i]) {
-				strcpy(infostr, _("Down to Crypt"));
-				cursmx = 36;
-				cursmy = 24;
-				return true;
-			}
-		}
-		for (int i = 0; TownHiveList[i] != -1; i++) {
-			if (dPiece[cursmx][cursmy] == TownHiveList[i]) {
+	if (IsWarpOpen(DTYPE_NEST)) {
+		for (auto tileId : TownHiveList) {
+			if (tileId == -1)
+				break;
+			if (dPiece[cursmx][cursmy] == tileId) {
 				strcpy(infostr, _("Down to Hive"));
 				cursmx = 80;
 				cursmy = 62;
+				return true;
+			}
+		}
+	}
+
+	if (IsWarpOpen(DTYPE_CRYPT)) {
+		for (auto tileId : TownCryptList) {
+			if (tileId == -1)
+				break;
+			if (dPiece[cursmx][cursmy] == tileId) {
+				strcpy(infostr, _("Down to Crypt"));
+				cursmx = 36;
+				cursmy = 24;
 				return true;
 			}
 		}
@@ -830,13 +864,13 @@ void CheckTriggers()
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
-				if (trigs[i]._tlvl == 9 && myPlayer._pLevel < 13) {
+				if (IsAnyOf(trigs[i]._tlvl, 9, 17) && myPlayer._pLevel < 13) {
 					abort = true;
 					position.x += 1;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
-				if (trigs[i]._tlvl == 13 && myPlayer._pLevel < 17) {
+				if (IsAnyOf(trigs[i]._tlvl, 13, 21) && myPlayer._pLevel < 17) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_17;

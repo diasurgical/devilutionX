@@ -445,15 +445,15 @@ bool ForceQuests()
 	return false;
 }
 
-bool QuestStatus(int i)
+bool QuestStatus(quest_id questId)
 {
 	if (setlevel)
 		return false;
-	if (currlevel != Quests[i]._qlevel)
+	if (currlevel != Quests[questId]._qlevel)
 		return false;
-	if (Quests[i]._qactive == QUEST_NOTAVAIL)
+	if (Quests[questId]._qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && QuestData[i].isSinglePlayerOnly)
+	if (gbIsMultiplayer && QuestData[questId].isSinglePlayerOnly)
 		return false;
 	return true;
 }
@@ -518,7 +518,7 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 void DRLG_CheckQuests(int x, int y)
 {
 	for (int i = 0; i < MAXQUESTS; i++) {
-		if (QuestStatus(i)) {
+		if (QuestStatus(static_cast<quest_id>(i))) {
 			switch (Quests[i]._qtype) {
 			case Q_BUTCHER:
 				DrawButcher();
