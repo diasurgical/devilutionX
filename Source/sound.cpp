@@ -43,7 +43,7 @@ namespace {
 std::optional<Aulib::Stream> music;
 
 #ifdef DISABLE_STREAMING_MUSIC
-char *musicBuffer;
+std::unique_ptr<char[]> musicBuffer;
 #endif
 
 void LoadMusic(HANDLE handle)
@@ -52,11 +52,11 @@ void LoadMusic(HANDLE handle)
 	SDL_RWops *musicRw = SFileRw_FromStormHandle(handle);
 #else
 	size_t bytestoread = SFileGetFileSize(handle);
-	musicBuffer = new char[bytestoread];
-	SFileReadFileThreadSafe(handle, musicBuffer, bytestoread);
+	musicBuffer.reset(new char[bytestoread]);
+	SFileReadFileThreadSafe(handle, musicBuffer.get(), bytestoread);
 	SFileCloseFileThreadSafe(handle);
 
-	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer, bytestoread);
+	SDL_RWops *musicRw = SDL_RWFromConstMem(musicBuffer.get(), bytestoread);
 #endif
 	music.emplace(musicRw, std::make_unique<Aulib::DecoderDrwav>(),
 	    std::make_unique<Aulib::ResamplerSpeex>(sgOptions.Audio.nResamplingQuality), /*closeRw=*/true);
@@ -67,10 +67,7 @@ void CleanupMusic()
 	music = std::nullopt;
 	sgnMusicTrack = NUM_MUSIC;
 #ifdef DISABLE_STREAMING_MUSIC
-	if (musicBuffer != nullptr) {
-		delete[] musicBuffer;
-		musicBuffer = nullptr;
-	}
+	musicBuffer = nullptr;
 #endif
 }
 
