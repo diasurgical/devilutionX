@@ -138,12 +138,11 @@ void tcp_server::SendPacket(packet &pkt)
 
 void tcp_server::StartSend(const scc &con, packet &pkt)
 {
-	const auto *frame = new buffer_t(frame_queue::MakeFrame(pkt.Data()));
+	auto frame = std::make_unique<buffer_t>(frame_queue::MakeFrame(pkt.Data()));
 	auto buf = asio::buffer(*frame);
 	asio::async_write(con->socket, buf,
-	    [this, con, frame](const asio::error_code &ec, size_t bytesSent) {
+	    [this, con, frame = std::move(frame)](const asio::error_code &ec, size_t bytesSent) {
 		    HandleSend(con, ec, bytesSent);
-		    delete frame;
 	    });
 }
 

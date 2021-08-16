@@ -112,11 +112,10 @@ void tcp_client::HandleSend(const asio::error_code &error, size_t bytesSent)
 
 void tcp_client::send(packet &pkt)
 {
-	const auto *frame = new buffer_t(frame_queue::MakeFrame(pkt.Data()));
+	auto frame = std::make_unique<buffer_t>(frame_queue::MakeFrame(pkt.Data()));
 	auto buf = asio::buffer(*frame);
-	asio::async_write(sock, buf, [this, frame](const asio::error_code &error, size_t bytesSent) {
+	asio::async_write(sock, buf, [this, frame = std::move(frame)](const asio::error_code &error, size_t bytesSent) {
 		HandleSend(error, bytesSent);
-		delete frame;
 	});
 }
 
