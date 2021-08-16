@@ -2,6 +2,9 @@
 set(ASAN OFF)
 set(UBSAN OFF)
 set(DEVILUTIONX_SYSTEM_LIBSODIUM OFF)
+set(DEVILUTIONX_SYSTEM_LIBFMT OFF)
+set(DEVILUTIONX_STATIC_LIBSODIUM ON)
+set(DEVILUTIONX_STATIC_LIBFMT ON)
 set(DISABLE_ZERO_TIER ON)
 set(USE_SDL1 ON)
 set(PREFILL_PLAYER_NAME ON)
@@ -11,7 +14,6 @@ list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
 find_package(CITRO3D REQUIRED)
 find_package(FREETYPE REQUIRED)
 find_package(BZIP2 REQUIRED)
-find_package(PNG REQUIRED)
 
 #additional compilation definitions
 add_definitions(-D__3DS__)
