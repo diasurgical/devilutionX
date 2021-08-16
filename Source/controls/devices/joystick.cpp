@@ -11,7 +11,7 @@ namespace devilution {
 // Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
 
-std::vector<Joystick> *const Joystick::joysticks_ = new std::vector<Joystick>;
+std::vector<Joystick> Joystick::joysticks_;
 
 ControllerButton Joystick::ToControllerButton(const SDL_Event &event)
 {
@@ -263,7 +263,7 @@ void Joystick::Add(int deviceIndex)
 #ifndef USE_SDL1
 	result.instance_id_ = SDL_JoystickInstanceID(result.sdl_joystick_);
 #endif
-	joysticks_->push_back(result);
+	joysticks_.push_back(result);
 	sgbControllerActive = true;
 }
 
@@ -271,12 +271,12 @@ void Joystick::Remove(SDL_JoystickID instanceId)
 {
 #ifndef USE_SDL1
 	Log("Removing joystick (instance id: {})", instanceId);
-	for (std::size_t i = 0; i < joysticks_->size(); ++i) {
-		const Joystick &joystick = (*joysticks_)[i];
+	for (std::size_t i = 0; i < joysticks_.size(); ++i) {
+		const Joystick &joystick = joysticks_[i];
 		if (joystick.instance_id_ != instanceId)
 			continue;
-		joysticks_->erase(joysticks_->begin() + i);
-		sgbControllerActive = !joysticks_->empty();
+		joysticks_.erase(joysticks_.begin() + i);
+		sgbControllerActive = !joysticks_.empty();
 		return;
 	}
 	Log("Joystick not found with instance id: {}", instanceId);
@@ -285,12 +285,12 @@ void Joystick::Remove(SDL_JoystickID instanceId)
 
 const std::vector<Joystick> &Joystick::All()
 {
-	return *joysticks_;
+	return joysticks_;
 }
 
 Joystick *Joystick::Get(SDL_JoystickID instanceId)
 {
-	for (auto &joystick : *joysticks_) {
+	for (auto &joystick : joysticks_) {
 		if (joystick.instance_id_ == instanceId)
 			return &joystick;
 	}
@@ -318,7 +318,7 @@ Joystick *Joystick::Get(const SDL_Event &event)
 	case SDL_JOYHATMOTION:
 	case SDL_JOYBUTTONDOWN:
 	case SDL_JOYBUTTONUP:
-		return joysticks_->empty() ? NULL : &(*joysticks_)[0];
+		return joysticks_.empty() ? NULL : &joysticks_[0];
 	default:
 		return NULL;
 #endif
@@ -327,7 +327,7 @@ Joystick *Joystick::Get(const SDL_Event &event)
 
 bool Joystick::IsPressedOnAnyJoystick(ControllerButton button)
 {
-	for (auto &joystick : *joysticks_)
+	for (auto &joystick : joysticks_)
 		if (joystick.IsPressed(button))
 			return true;
 	return false;
