@@ -128,20 +128,17 @@ bool CapturePix(const Surface &buf, std::ofstream *out)
 	return true;
 }
 
-/**
- * Returns a pointer because in GCC < 5 ofstream itself is not moveable due to a bug.
- */
-std::ofstream *CaptureFile(std::string *dstPath)
+std::ofstream CaptureFile(std::string *dstPath)
 {
 	char filename[sizeof("screen00.PCX") / sizeof(char)];
 	for (int i = 0; i <= 99; ++i) {
 		snprintf(filename, sizeof(filename) / sizeof(char), "screen%02d.PCX", i);
 		*dstPath = paths::PrefPath() + filename;
 		if (!FileExists(dstPath->c_str())) {
-			return new std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
+			return std::ofstream(*dstPath, std::ios::binary | std::ios::trunc);
 		}
 	}
-	return nullptr;
+	return {};
 }
 
 /**
@@ -169,8 +166,8 @@ void CaptureScreen()
 	std::string fileName;
 	bool success;
 
-	std::ofstream *outStream = CaptureFile(&fileName);
-	if (outStream == nullptr)
+	std::ofstream outStream = CaptureFile(&fileName);
+	if (!outStream.is_open())
 		return;
 	DrawAndBlit();
 	PaletteGetEntries(256, palette);
@@ -178,15 +175,15 @@ void CaptureScreen()
 
 	lock_buf(2);
 	const Surface &buf = GlobalBackBuffer();
-	success = CaptureHdr(buf.w(), buf.h(), outStream);
+	success = CaptureHdr(buf.w(), buf.h(), &outStream);
 	if (success) {
-		success = CapturePix(buf, outStream);
+		success = CapturePix(buf, &outStream);
 	}
 	if (success) {
-		success = CapturePal(palette, outStream);
+		success = CapturePal(palette, &outStream);
 	}
 	unlock_buf(2);
-	outStream->close();
+	outStream.close();
 
 	if (!success) {
 		Log("Failed to save screenshot at {}", fileName);
@@ -200,7 +197,6 @@ void CaptureScreen()
 	}
 	palette_update();
 	force_redraw = 255;
-	delete outStream;
 }
 
 } // namespace devilution
