@@ -1798,6 +1798,7 @@ DWORD OnOpenHive(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1) {
 		AddMissile({ p->x, p->y }, { p->wParam1, p->wParam2 }, 0, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
+		InitTownTriggers();
 	}
 	return sizeof(*p);
 }

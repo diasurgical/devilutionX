@@ -6,6 +6,7 @@
 #pragma once
 
 #include "engine/point.hpp"
+#include "gendung.h"
 #include "interfac.h"
 
 namespace devilution {
@@ -24,6 +25,7 @@ extern TriggerStruct trigs[MAXTRIGGERS];
 extern int TWarpFrom;
 
 void InitNoTriggers();
+bool IsWarpOpen(dungeon_type type);
 void InitTownTriggers();
 void InitL1Triggers();
 void InitL2Triggers();
