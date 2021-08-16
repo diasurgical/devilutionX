@@ -61,7 +61,7 @@ HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpqName)
 		mpqAbsPath = path + mpqName;
 		if (SFileOpenArchive(mpqAbsPath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
 			LogVerbose("  Found: {} in {}", mpqName, path);
-			SFileSetBasePath(path.c_str());
+			SFileSetBasePath(path);
 			return archive;
 		}
 		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {

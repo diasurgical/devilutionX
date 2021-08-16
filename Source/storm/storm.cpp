@@ -13,6 +13,7 @@
 #include "utils/paths.h"
 #include "utils/sdl_mutex.h"
 #include "utils/stubs.h"
+#include "utils/stdcompat/optional.hpp"
 
 // Include Windows headers for Get/SetLastError.
 #if defined(_WIN32)
@@ -30,7 +31,7 @@ namespace devilution {
 namespace {
 
 bool directFileAccess = false;
-std::string *SBasePath = nullptr;
+std::optional<std::string> SBasePath;
 
 SdlMutex Mutex;
 
@@ -81,7 +82,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 {
 	bool result = false;
 
-	if (directFileAccess && SBasePath != nullptr) {
+	if (directFileAccess && SBasePath) {
 		std::string path = *SBasePath + filename;
 		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
@@ -148,12 +149,9 @@ void SErrSetLastError(uint32_t dwErrCode)
 	::SetLastError(dwErrCode);
 }
 
-bool SFileSetBasePath(const char *path)
+void SFileSetBasePath(string_view path)
 {
-	if (SBasePath == nullptr)
-		SBasePath = new std::string;
-	*SBasePath = path;
-	return true;
+	SBasePath.emplace(path);
 }
 
 bool SFileEnableDirectAccess(bool enable)
