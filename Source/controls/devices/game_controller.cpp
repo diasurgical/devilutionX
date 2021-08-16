@@ -15,7 +15,7 @@ namespace devilution {
 // Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
 
-std::vector<GameController> *const GameController::controllers_ = new std::vector<GameController>;
+std::vector<GameController> GameController::controllers_;
 
 ControllerButton GameController::ToControllerButton(const SDL_Event &event)
 {
@@ -165,7 +165,7 @@ void GameController::Add(int joystickIndex)
 	}
 	SDL_Joystick *const sdlJoystick = SDL_GameControllerGetJoystick(result.sdl_game_controller_);
 	result.instance_id_ = SDL_JoystickInstanceID(sdlJoystick);
-	controllers_->push_back(result);
+	controllers_.push_back(result);
 
 	const SDL_JoystickGUID guid = SDL_JoystickGetGUID(sdlJoystick);
 	SDLUniquePtr<char> mapping { SDL_GameControllerMappingForGUID(guid) };
@@ -177,12 +177,12 @@ void GameController::Add(int joystickIndex)
 void GameController::Remove(SDL_JoystickID instanceId)
 {
 	Log("Removing game controller with instance id {}", instanceId);
-	for (std::size_t i = 0; i < controllers_->size(); ++i) {
-		const GameController &controller = (*controllers_)[i];
+	for (std::size_t i = 0; i < controllers_.size(); ++i) {
+		const GameController &controller = controllers_[i];
 		if (controller.instance_id_ != instanceId)
 			continue;
-		controllers_->erase(controllers_->begin() + i);
-		sgbControllerActive = !controllers_->empty();
+		controllers_.erase(controllers_.begin() + i);
+		sgbControllerActive = !controllers_.empty();
 		return;
 	}
 	Log("Game controller not found with instance id: {}", instanceId);
@@ -190,7 +190,7 @@ void GameController::Remove(SDL_JoystickID instanceId)
 
 GameController *GameController::Get(SDL_JoystickID instanceId)
 {
-	for (auto &controller : *controllers_) {
+	for (auto &controller : controllers_) {
 		if (controller.instance_id_ == instanceId)
 			return &controller;
 	}
@@ -212,12 +212,12 @@ GameController *GameController::Get(const SDL_Event &event)
 
 const std::vector<GameController> &GameController::All()
 {
-	return *controllers_;
+	return controllers_;
 }
 
 bool GameController::IsPressedOnAnyController(ControllerButton button)
 {
-	for (auto &controller : *controllers_)
+	for (auto &controller : controllers_)
 		if (controller.IsPressed(button))
 			return true;
 	return false;

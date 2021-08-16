@@ -11,7 +11,7 @@
 namespace devilution {
 
 class GameController {
-	static std::vector<GameController> *const controllers_;
+	static std::vector<GameController> controllers_;
 
 public:
 	static void Add(int joystickIndex);
