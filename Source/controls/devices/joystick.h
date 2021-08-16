@@ -15,7 +15,7 @@
 namespace devilution {
 
 class Joystick {
-	static std::vector<Joystick> *const joysticks_;
+	static std::vector<Joystick> joysticks_;
 
 public:
 	static void Add(int deviceIndex);
