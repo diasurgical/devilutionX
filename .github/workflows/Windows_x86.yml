@@ -37,7 +37,7 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}
       shell: bash
-      run: cmake --build build -j $(nproc) --target package
+      run: cmake --build build -j $(nproc) --target package --verbose
 
     - name: Upload-Package
       uses: actions/upload-artifact@v2

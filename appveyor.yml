@@ -17,7 +17,7 @@ before_build:
 
 build:
   project: $(APPVEYOR_BUILD_FOLDER)\$(APPVEYOR_PROJECT_NAME).sln
-  verbosity: minimal
+  verbosity: normal
 artifacts:
   - path: Debug\devilutionx.exe
     name: devilutionx.exe

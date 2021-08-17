@@ -11,7 +11,7 @@ jobs:
       - run: apt install -y g++ libsdl2-dev libsdl2-ttf-dev git rpm wget
       - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
-      - run: cmake --build build -j 2 --target package
+      - run: cmake --build build -j 2 --target package --verbose
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_linux_x86_64}
       - run: Packaging/nix/LinuxReleasePackaging.sh
       - run: Packaging/nix/AppImage.sh
@@ -26,8 +26,8 @@ jobs:
       - run: apt-get update -y
       - run: apt-get install -y cmake curl g++ git lcov libgtest-dev libgmock-dev libfmt-dev libsdl2-dev libsdl2-ttf-dev libsodium-dev
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON -DENABLE_CODECOVERAGE=ON
-      - run: cmake --build build -j 2
-      - run: cmake --build build -j 2 --target test
+      - run: cmake --build build -j 2 --verbose
+      - run: cmake --build build -j 2 --target test --verbose
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
@@ -38,7 +38,7 @@ jobs:
     steps:
       - checkout
       - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
-      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --verbose
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
   android:
     docker:
@@ -64,7 +64,7 @@ jobs:
       - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"
       - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake
-      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --verbose
       - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
@@ -75,7 +75,7 @@ jobs:
       - checkout
       - run: Packaging/amiga/prep.sh
       - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
-      - run: cd build && make -j2
+      - run: cd build && make -j2 VERBOSE=1
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
   vita:
     docker:
@@ -87,7 +87,7 @@ jobs:
       - run: mkdir -p /usr/local && ln -sf /home/user/vitasdk /usr/local/vitasdk
       - run: apk --no-cache add git cmake ninja bash pkgconfig
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
-      - run: cmake --build build -j 2
+      - run: cmake --build build -j 2 --verbose
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
 
 workflows:
