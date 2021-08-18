@@ -6,6 +6,7 @@
 #include <SDL.h>
 #include <cctype>
 #include <memory>
+#include <array>
 
 #include "encrypt.h"
 #include "pkware.h"
@@ -39,9 +40,22 @@ void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(rea
 	pInfo->destOffset += *size;
 }
 
-} // namespace
+const std::array<std::array<uint32_t, 256>, 5> hashtable = []() {
+	uint32_t seed = 0x00100001;
+	std::array<std::array<uint32_t, 256>, 5> ret = {};
 
-static uint32_t hashtable[5][256];
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 5; j++) { // NOLINT(modernize-loop-convert)
+			seed = (125 * seed + 3) % 0x2AAAAB;
+			uint32_t ch = (seed & 0xFFFF);
+			seed = (125 * seed + 3) % 0x2AAAAB;
+			ret[j][i] = ch << 16 | (seed & 0xFFFF);
+		}
+	}
+	return ret;
+}();
+
+} // namespace
 
 void Decrypt(uint32_t *castBlock, uint32_t size, uint32_t key)
 {
@@ -83,20 +97,6 @@ uint32_t Hash(const char *s, int type)
 		seed2 += ch + seed1 + (seed2 << 5) + 3;
 	}
 	return seed1;
-}
-
-void InitHash()
-{
-	uint32_t seed = 0x00100001;
-
-	for (int i = 0; i < 256; i++) {
-		for (int j = 0; j < 5; j++) { // NOLINT(modernize-loop-convert)
-			seed = (125 * seed + 3) % 0x2AAAAB;
-			uint32_t ch = (seed & 0xFFFF);
-			seed = (125 * seed + 3) % 0x2AAAAB;
-			hashtable[j][i] = ch << 16 | (seed & 0xFFFF);
-		}
-	}
 }
 
 uint32_t PkwareCompress(byte *srcData, uint32_t size)

@@ -1058,8 +1058,6 @@ void DiabloInit()
 
 	ReadOnlyTest();
 
-	InitHash();
-
 	DiabloInitScreen();
 
 #ifndef NOSOUND
