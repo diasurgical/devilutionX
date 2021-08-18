@@ -287,30 +287,30 @@ void InitQuests()
 
 	int q = 0;
 	for (auto &quest : Quests) {
-		if (gbIsMultiplayer && QuestData[q].isSinglePlayerOnly)
-			continue;
-		quest._qtype = QuestData[q]._qdtype;
-		if (gbIsMultiplayer) {
-			quest._qlevel = QuestData[q]._qdmultlvl;
-			if (!delta_quest_inited(initiatedQuests)) {
+		if (!gbIsMultiplayer || !QuestData[q].isSinglePlayerOnly) {
+			quest._qtype = QuestData[q]._qdtype;
+			if (gbIsMultiplayer) {
+				quest._qlevel = QuestData[q]._qdmultlvl;
+				if (!delta_quest_inited(initiatedQuests)) {
+					quest._qactive = QUEST_INIT;
+					quest._qvar1 = 0;
+					quest._qlog = false;
+				}
+				initiatedQuests++;
+			} else {
 				quest._qactive = QUEST_INIT;
+				quest._qlevel = QuestData[q]._qdlvl;
 				quest._qvar1 = 0;
 				quest._qlog = false;
 			}
-			initiatedQuests++;
-		} else {
-			quest._qactive = QUEST_INIT;
-			quest._qlevel = QuestData[q]._qdlvl;
-			quest._qvar1 = 0;
-			quest._qlog = false;
-		}
 
-		quest._qslvl = QuestData[q]._qslvl;
-		quest.position = { 0, 0 };
-		quest._qidx = q;
-		quest._qlvltype = QuestData[q]._qlvlt;
-		quest._qvar2 = 0;
-		quest._qmsg = QuestData[q]._qdmsg;
+			quest._qslvl = QuestData[q]._qslvl;
+			quest.position = { 0, 0 };
+			quest._qidx = q;
+			quest._qlvltype = QuestData[q]._qlvlt;
+			quest._qvar2 = 0;
+			quest._qmsg = QuestData[q]._qdmsg;
+		}
 		q++;
 	}
 
