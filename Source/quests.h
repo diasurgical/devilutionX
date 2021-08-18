@@ -63,6 +63,7 @@ struct QuestDataStruct {
 	uint8_t _qdlvl;
 	int8_t _qdmultlvl;
 	dungeon_type _qlvlt;
+	int8_t questBookOrder;
 	uint8_t _qdrnd;
 	_setlevels _qslvl;
 	bool isSinglePlayerOnly;
