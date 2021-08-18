@@ -852,7 +852,8 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
 		return false;
 
-	const std::size_t index = uiList->indexAt(event.button.y);
+	std::size_t index = uiList->indexAt(event.button.y);
+	index += (ListOffset == nullptr ? 0 : *ListOffset);
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
 		UiFocus(index);
