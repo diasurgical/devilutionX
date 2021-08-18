@@ -945,13 +945,13 @@ void LoadQuestSetPieces()
 {
 	L5setloadflag = false;
 
-	if (QuestStatus(Q_BUTCHER)) {
+	if (Quests[Q_BUTCHER].IsAvailable()) {
 		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\rnd6.DUN");
 		L5setloadflag = true;
-	} else if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
+	} else if (Quests[Q_SKELKING].IsAvailable() && !gbIsMultiplayer) {
 		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\SKngDO.DUN");
 		L5setloadflag = true;
-	} else if (QuestStatus(Q_LTBANNER)) {
+	} else if (Quests[Q_LTBANNER].IsAvailable()) {
 		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner2.DUN");
 		L5setloadflag = true;
 	}
@@ -2202,7 +2202,7 @@ void GenerateLevel(lvl_entry entry)
 
 		doneflag = true;
 
-		if (QuestStatus(Q_PWATER)) {
+		if (Quests[Q_PWATER].IsAvailable()) {
 			if (entry == ENTRY_MAIN) {
 				if (PlaceMiniSet(PWATERIN, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;
@@ -2212,7 +2212,7 @@ void GenerateLevel(lvl_entry entry)
 				ViewY--;
 			}
 		}
-		if (QuestStatus(Q_LTBANNER)) {
+		if (Quests[Q_LTBANNER].IsAvailable()) {
 			if (entry == ENTRY_MAIN) {
 				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
 					doneflag = false;

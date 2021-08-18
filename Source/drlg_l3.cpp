@@ -2239,7 +2239,7 @@ void GenerateLevel(lvl_entry entry)
 				CreateBlock(x2, y1, 2, 1);
 				CreateBlock(x1, y2, 2, 2);
 				CreateBlock(x1, y1, 2, 3);
-				if (QuestStatus(Q_ANVIL)) {
+				if (Quests[Q_ANVIL].IsAvailable()) {
 					x1 = GenerateRnd(10) + 10;
 					y1 = GenerateRnd(10) + 10;
 					x2 = x1 + 12;
@@ -2324,7 +2324,7 @@ void GenerateLevel(lvl_entry entry)
 					}
 				}
 			}
-			if (!genok && QuestStatus(Q_ANVIL)) {
+			if (!genok && Quests[Q_ANVIL].IsAvailable()) {
 				genok = Anvil();
 			}
 		} while (genok);
@@ -2372,7 +2372,7 @@ void GenerateLevel(lvl_entry entry)
 	if (currlevel < 17)
 		River();
 
-	if (QuestStatus(Q_ANVIL)) {
+	if (Quests[Q_ANVIL].IsAvailable()) {
 		dungeon[setpc_x + 7][setpc_y + 5] = 7;
 		dungeon[setpc_x + 8][setpc_y + 5] = 7;
 		dungeon[setpc_x + 9][setpc_y + 5] = 7;

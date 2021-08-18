@@ -357,7 +357,7 @@ void CheckQuests()
 	if (gbIsSpawn)
 		return;
 
-	if (QuestStatus(Q_BETRAYER) && gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 2) {
+	if (Quests[Q_BETRAYER].IsAvailable() && gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
 		Quests[Q_BETRAYER]._qvar1 = 3;
 		NetSendCmdQuest(true, Q_BETRAYER);
@@ -449,19 +449,6 @@ bool ForceQuests()
 	return false;
 }
 
-bool QuestStatus(quest_id questId)
-{
-	if (setlevel)
-		return false;
-	if (currlevel != Quests[questId]._qlevel)
-		return false;
-	if (Quests[questId]._qactive == QUEST_NOTAVAIL)
-		return false;
-	if (gbIsMultiplayer && QuestData[questId].isSinglePlayerOnly)
-		return false;
-	return true;
-}
-
 void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 {
 	if (gbIsSpawn)
@@ -522,7 +509,7 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 void DRLG_CheckQuests(int x, int y)
 {
 	for (auto &quest : Quests) {
-		if (QuestStatus(static_cast<quest_id>(quest._qidx))) {
+		if (Quests[static_cast<quest_id>(quest._qidx)].IsAvailable()) {
 			switch (quest._qtype) {
 			case Q_BUTCHER:
 				DrawButcher();
@@ -636,7 +623,7 @@ void ResyncMPQuests()
 		Quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
 		NetSendCmdQuest(true, Q_BETRAYER);
 	}
-	if (QuestStatus(Q_BETRAYER))
+	if (Quests[Q_BETRAYER].IsAvailable())
 		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
 	if (Quests[Q_GRAVE]._qactive == QUEST_INIT && currlevel == Quests[Q_GRAVE]._qlevel - 1) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
@@ -661,7 +648,7 @@ void ResyncQuests()
 	if (gbIsSpawn)
 		return;
 
-	if (QuestStatus(Q_LTBANNER)) {
+	if (Quests[Q_LTBANNER].IsAvailable()) {
 		if (Quests[Q_LTBANNER]._qvar1 == 1) {
 			ObjChangeMapResync(
 			    setpc_w + setpc_x - 2,
@@ -831,6 +818,20 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1)
 		if (v1 > Quests[q]._qvar1)
 			Quests[q]._qvar1 = v1;
 	}
+}
+
+bool QuestStruct::IsAvailable()
+{
+	if (setlevel)
+		return false;
+	if (currlevel != _qlevel)
+		return false;
+	if (_qactive == QUEST_NOTAVAIL)
+		return false;
+	if (gbIsMultiplayer && QuestData[_qidx].isSinglePlayerOnly)
+		return false;
+
+	return true;
 }
 
 } // namespace devilution
