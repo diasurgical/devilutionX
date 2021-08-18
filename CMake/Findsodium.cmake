@@ -55,26 +55,26 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
     endif()
 
     if(sodium_USE_STATIC_LIBS)
-    if(sodium_PKG_STATIC_LIBRARIES)
+      if(sodium_PKG_STATIC_LIBRARIES)
         foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
-            if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
-                list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
-            endif()
+          if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
+            list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
+          endif()
         endforeach()
         list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES)
-    else()
+      else()
         # if pkgconfig for libsodium doesn't provide
         # static lib info, then override PKG_STATIC here..
-            set(sodium_PKG_STATIC_LIBRARIES libsodium.a)
-        endif()
+        set(sodium_PKG_STATIC_LIBRARIES libsodium.a)
+      endif()
 
-        set(XPREFIX sodium_PKG_STATIC)
+      set(XPREFIX sodium_PKG_STATIC)
     else()
-    if(sodium_PKG_LIBRARIES STREQUAL "")
-            set(sodium_PKG_LIBRARIES sodium)
-        endif()
+      if(sodium_PKG_LIBRARIES STREQUAL "")
+        set(sodium_PKG_LIBRARIES sodium)
+      endif()
 
-        set(XPREFIX sodium_PKG)
+      set(XPREFIX sodium_PKG)
     endif()
 
     find_path(sodium_INCLUDE_DIR sodium.h
