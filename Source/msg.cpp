@@ -1279,7 +1279,7 @@ DWORD OnKillGolem(TCmd *pCmd, int pnum)
 	else if (pnum != MyPlayerId) {
 		if (currlevel == p->wParam1)
 			M_SyncStartKill(pnum, { p->x, p->y }, pnum);
-		delta_kill_monster(pnum, { p->x, p->y }, Players[pnum].plrlevel);
+		delta_kill_monster(pnum, { p->x, p->y }, p->wParam1);
 	}
 
 	return sizeof(*p);
