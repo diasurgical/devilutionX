@@ -38,41 +38,53 @@ int ReturnLevel;
 /** Contains the data related to each quest_id. */
 QuestDataStruct QuestData[] = {
 	// clang-format off
-	// _qdlvl,  _qdmultlvl, _qlvlt,          _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
-	{       5,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
-	{       9,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_MUSH8,    N_("Black Mushroom")           },
-	{       4,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_GARBUD1,  N_("Gharbad The Weak")         },
-	{       8,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_ZHAR1,    N_("Zhar the Mad")             },
-	{      14,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_VEIL9,    "Lachdanan"                    },
-	{      15,          -1, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_VILE3,    "Diablo"                       },
-	{       2,           2, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_BUTCH9,   N_("The Butcher")              },
-	{       4,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_BANNER2,  N_("Ogden's Sign")             },
-	{       7,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_BLINDING, N_("Halls of the Blind")       },
-	{       5,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_BLOODY,   N_("Valor")                    },
-	{      10,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_ANVIL5,   N_("Anvil of Fury")            },
-	{      13,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_BLOODWAR, N_("Warlord of Blood")         },
-	{       3,           3, DTYPE_CATHEDRAL, 100,    SL_SKELKING,     false,              TEXT_KING2,    N_("The Curse of King Leoric") },
-	{       2,          -1, DTYPE_CAVES,     100,    SL_POISONWATER,  true,               TEXT_POISON3,  N_("Poisoned Water Supply")    },
-	{       6,          -1, DTYPE_CATACOMBS, 100,    SL_BONECHAMB,    true,               TEXT_BONER,    N_("The Chamber of Bone")      },
-	{      15,          15, DTYPE_CATHEDRAL, 100,    SL_VILEBETRAYER, false,              TEXT_VILE1,    N_("Archbishop Lazarus")       },
-	{      17,          17, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_GRAVE7,   N_("Grave Matters")            },
-	{      9,            9, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_FARMER1,  N_("Farmer's Orchard")         },
-	{      17,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_GIRL2,    N_("Little Girl")              },
-	{      19,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_TRADER,   N_("Wandering Trader")         },
-	{      17,          17, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_DEFILER1, N_("The Defiler")              },
-	{      21,          21, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_NAKRUL1,  "Na-Krul"                      },
-	{      21,          -1, DTYPE_NONE,      100,    SL_NONE,         true,               TEXT_CORNSTN,  N_("Cornerstone of the World") },
-	{       9,           9, DTYPE_NONE,      100,    SL_NONE,         false,              TEXT_JERSEY4,  N_( /* TRANSLATORS: Quest Name Block end*/ "The Jersey's Jersey")      },
+	// _qdlvl,  _qdmultlvl, _qlvlt,          bookOrder,   _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
+	{       5,          -1, DTYPE_NONE,          5,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
+	{       9,          -1, DTYPE_NONE,         10,      100,    SL_NONE,         true,               TEXT_MUSH8,    N_("Black Mushroom")           },
+	{       4,          -1, DTYPE_NONE,          3,      100,    SL_NONE,         true,               TEXT_GARBUD1,  N_("Gharbad The Weak")         },
+	{       8,          -1, DTYPE_NONE,          9,      100,    SL_NONE,         true,               TEXT_ZHAR1,    N_("Zhar the Mad")             },
+	{      14,          -1, DTYPE_NONE,         21,      100,    SL_NONE,         true,               TEXT_VEIL9,    "Lachdanan"                    },
+	{      15,          -1, DTYPE_NONE,         23,      100,    SL_NONE,         false,              TEXT_VILE3,    "Diablo"                       },
+	{       2,           2, DTYPE_NONE,          0,      100,    SL_NONE,         false,              TEXT_BUTCH9,   N_("The Butcher")              },
+	{       4,          -1, DTYPE_NONE,          4,      100,    SL_NONE,         true,               TEXT_BANNER2,  N_("Ogden's Sign")             },
+	{       7,          -1, DTYPE_NONE,          8,      100,    SL_NONE,         true,               TEXT_BLINDING, N_("Halls of the Blind")       },
+	{       5,          -1, DTYPE_NONE,          6,      100,    SL_NONE,         true,               TEXT_BLOODY,   N_("Valor")                    },
+	{      10,          -1, DTYPE_NONE,         11,      100,    SL_NONE,         true,               TEXT_ANVIL5,   N_("Anvil of Fury")            },
+	{      13,          -1, DTYPE_NONE,         20,      100,    SL_NONE,         true,               TEXT_BLOODWAR, N_("Warlord of Blood")         },
+	{       3,           3, DTYPE_CATHEDRAL,     2,      100,    SL_SKELKING,     false,              TEXT_KING2,    N_("The Curse of King Leoric") },
+	{       2,          -1, DTYPE_CAVES,         1,      100,    SL_POISONWATER,  true,               TEXT_POISON3,  N_("Poisoned Water Supply")    },
+	{       6,          -1, DTYPE_CATACOMBS,     7,      100,    SL_BONECHAMB,    true,               TEXT_BONER,    N_("The Chamber of Bone")      },
+	{      15,          15, DTYPE_CATHEDRAL,    22,      100,    SL_VILEBETRAYER, false,              TEXT_VILE1,    N_("Archbishop Lazarus")       },
+	{      17,          17, DTYPE_NONE,         17,      100,    SL_NONE,         false,              TEXT_GRAVE7,   N_("Grave Matters")            },
+	{      9,            9, DTYPE_NONE,         12,      100,    SL_NONE,         false,              TEXT_FARMER1,  N_("Farmer's Orchard")         },
+	{      17,          -1, DTYPE_NONE,         14,      100,    SL_NONE,         true,               TEXT_GIRL2,    N_("Little Girl")              },
+	{      19,          -1, DTYPE_NONE,         16,      100,    SL_NONE,         true,               TEXT_TRADER,   N_("Wandering Trader")         },
+	{      17,          17, DTYPE_NONE,         15,      100,    SL_NONE,         false,              TEXT_DEFILER1, N_("The Defiler")              },
+	{      21,          21, DTYPE_NONE,         19,      100,    SL_NONE,         false,              TEXT_NAKRUL1,  "Na-Krul"                      },
+	{      21,          -1, DTYPE_NONE,         18,      100,    SL_NONE,         true,               TEXT_CORNSTN,  N_("Cornerstone of the World") },
+	{       9,           9, DTYPE_NONE,         13,      100,    SL_NONE,         false,              TEXT_JERSEY4,  N_( /* TRANSLATORS: Quest Name Block end*/ "The Jersey's Jersey")      },
 	// clang-format on
 };
 
 namespace {
 
-int qtopline;
-int qline;
-quest_id qlist[MAXQUESTS];
-int numqlines;
 int WaterDone;
+
+/** Indices of quests to display in quest log window. `fistfinishedEntry` are active quests the rest are completed */
+quest_id qlist[MAXQUESTS];
+/** Overall number of qlist entries */
+int qlistCnt;
+/** First (nonselectable) finished quest in list */
+int firstFinishedEntry;
+/** Currently selected quest list item */
+int selectedEntry;
+
+constexpr Rectangle panelInnerRect { { 32, 26 }, { 280, 300 } };
+constexpr int lineHeight = 12;
+constexpr int maxSpacing = lineHeight * 2;
+int topY;
+int lineSpacing;
+int act2finSpacing;
 
 /**
  * Specifies a delta in X-coordinates from the quest entrance for
@@ -246,16 +258,32 @@ void DrawBlood(int x, int y)
 	}
 }
 
-void PrintQLString(const Surface &out, int x, int line, const char *str)
+int QuestLogMouseToEntry()
+{
+	Rectangle innerArea = panelInnerRect;
+	innerArea.position += Displacement(LeftPanel.position.x, LeftPanel.position.y);
+	if (!innerArea.Contains(MousePosition) || (qlistCnt == 0))
+		return -1;
+	int y = MousePosition.y - innerArea.position.y;
+	for (int i = 0; i < firstFinishedEntry; i++) {
+		if ((y >= topY + i * lineSpacing)
+		    && (y < topY + i * lineSpacing + lineHeight)) {
+			return i;
+		}
+	}
+	return -1;
+}
+
+void PrintQLString(const Surface &out, int x, int y, const char *str, bool marked, bool disabled = false)
 {
 	int width = GetLineWidth(str);
 	int sx = x + std::max((257 - width) / 2, 0);
-	int sy = line * 12 + 44;
-	if (qline == line) {
+	int sy = y + lineHeight; //seems that DrawString y is the text base line -> so add a lines height
+	if (marked) {
 		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { sx - 20, sy + 1 }), *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { sx, sy }), { 257, 0 } }, UiFlags::ColorSilver);
-	if (qline == line) {
+	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { sx, sy }), { 257, 0 } }, disabled ? UiFlags::ColorGold : UiFlags::ColorSilver);
+	if (marked) {
 		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { sx + width + 7, sy + 1 }), *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
@@ -721,45 +749,82 @@ void ResyncQuests()
 
 void DrawQuestLog(const Surface &out)
 {
-	DrawString(out, _("Quest Log"), { GetPanelPosition(UiPanels::Quest, { 32, 44 }), { 257, 0 } }, UiFlags::AlignCenter);
-	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 1);
-	int line = qtopline;
-	for (int i = 0; i < numqlines; i++) {
-		PrintQLString(out, 32, line, _(QuestData[qlist[i]]._qlstr));
-		line += 2;
+	int l = QuestLogMouseToEntry();
+	if (l >= 0) {
+		selectedEntry = l;
 	}
-	PrintQLString(out, 32, 22, _("Close Quest Log"));
+	const auto x = panelInnerRect.position.x;
+	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 1);
+	int y = panelInnerRect.position.y + topY;
+	for (int i = 0; i < qlistCnt; i++) {
+		if (i == firstFinishedEntry) {
+			y += act2finSpacing;
+		}
+		PrintQLString(out, x, y, _(QuestData[qlist[i]]._qlstr), i == selectedEntry, i >= firstFinishedEntry);
+		y += lineSpacing;
+	}
 }
 
 void StartQuestlog()
 {
-	numqlines = 0;
+
+	auto sortQuestIdx = [](int a, int b) {
+		return QuestData[a].questBookOrder < QuestData[b].questBookOrder;
+	};
+
+	qlistCnt = 0;
 	for (auto &quest : Quests) {
 		if (quest._qactive == QUEST_ACTIVE && quest._qlog) {
-			qlist[numqlines] = quest._qidx;
-			numqlines++;
+			qlist[qlistCnt] = quest._qidx;
+			qlistCnt++;
 		}
 	}
-	if (numqlines > 5) {
-		qtopline = 5 - (numqlines / 2);
-	} else {
-		qtopline = 8;
+	firstFinishedEntry = qlistCnt;
+	for (auto &quest : Quests) {
+		if (quest._qactive == QUEST_DONE || quest._qactive == QUEST_HIVE_DONE) {
+			qlist[qlistCnt] = quest._qidx;
+			qlistCnt++;
+		}
 	}
-	qline = 22;
-	if (numqlines != 0)
-		qline = qtopline;
+
+	std::sort(&qlist[0], &qlist[firstFinishedEntry], sortQuestIdx);
+	std::sort(&qlist[firstFinishedEntry], &qlist[qlistCnt], sortQuestIdx);
+
+	bool twoBlocks = firstFinishedEntry != 0 && firstFinishedEntry < qlistCnt;
+
+	topY = 0;
+	act2finSpacing = !twoBlocks ? 0 : lineHeight / 2;
+
+	int overallMinHeight = qlistCnt * lineHeight + act2finSpacing;
+	int space = panelInnerRect.size.height;
+
+	if (qlistCnt > 0) {
+		int additionalSpace = space - overallMinHeight;
+		int addLineSpacing = additionalSpace / qlistCnt;
+		addLineSpacing = std::min(maxSpacing - lineHeight, addLineSpacing);
+		lineSpacing = lineHeight + addLineSpacing;
+		if (twoBlocks) {
+			int additionalSepSpace = additionalSpace - (addLineSpacing * qlistCnt);
+			additionalSepSpace = std::min(lineHeight, additionalSepSpace);
+			act2finSpacing = std::max(4, additionalSepSpace);
+		}
+
+		int overallHeight = qlistCnt * lineSpacing + act2finSpacing;
+		topY += (space - overallHeight) / 2;
+	}
+
+	selectedEntry = firstFinishedEntry == 0 ? -1 : 0;
 	QuestLogIsOpen = true;
 }
 
 void QuestlogUp()
 {
-	if (numqlines != 0) {
-		if (qline == qtopline) {
-			qline = 22;
-		} else if (qline == 22) {
-			qline = qtopline + 2 * numqlines - 2;
-		} else {
-			qline -= 2;
+	if (firstFinishedEntry == 0) {
+		selectedEntry = -1;
+	} else {
+		selectedEntry--;
+		if (selectedEntry < 0) {
+			selectedEntry = firstFinishedEntry - 1;
 		}
 		PlaySFX(IS_TITLEMOV);
 	}
@@ -767,13 +832,12 @@ void QuestlogUp()
 
 void QuestlogDown()
 {
-	if (numqlines != 0) {
-		if (qline == 22) {
-			qline = qtopline;
-		} else if (qline == qtopline + 2 * numqlines - 2) {
-			qline = 22;
-		} else {
-			qline += 2;
+	if (firstFinishedEntry == 0) {
+		selectedEntry = -1;
+	} else {
+		selectedEntry++;
+		if (selectedEntry == firstFinishedEntry) {
+			selectedEntry = 0;
 		}
 		PlaySFX(IS_TITLEMOV);
 	}
@@ -782,25 +846,15 @@ void QuestlogDown()
 void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
-	if (numqlines != 0 && qline != 22)
-		InitQTextMsg(Quests[qlist[(qline - qtopline) / 2]]._qmsg);
+	if (qlistCnt != 0 && selectedEntry < firstFinishedEntry)
+		InitQTextMsg(Quests[qlist[selectedEntry]]._qmsg);
 	QuestLogIsOpen = false;
 }
 
 void QuestlogESC()
 {
-	Rectangle innerArea = { { LeftPanel.position.x + 32, LeftPanel.position.y + 32 }, { 288 - 32, 308 - 32 } };
-	int y = (MousePosition.y - LeftPanel.position.y - 32) / 12;
-	if (!innerArea.Contains(MousePosition))
-		return;
-	for (int i = 0; i < numqlines; i++) {
-		if (y == qtopline + 2 * i) {
-			qline = y;
-			QuestlogEnter();
-		}
-	}
-	if (y == 22) {
-		qline = 22;
+	int l = QuestLogMouseToEntry();
+	if (l != -1) {
 		QuestlogEnter();
 	}
 }
