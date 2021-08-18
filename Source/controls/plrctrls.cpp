@@ -417,15 +417,15 @@ void FindTrigger()
 		}
 
 		if (pcurstrig == -1) {
-			for (int i = 0; i < MAXQUESTS; i++) {
-				if (i == Q_BETRAYER || currlevel != Quests[i]._qlevel || Quests[i]._qslvl == 0)
+			for (auto &quest : Quests) {
+				if (quest._qidx == Q_BETRAYER || currlevel != quest._qlevel || quest._qslvl == 0)
 					continue;
-				const int newDistance = GetDistance(Quests[i].position, 2);
+				const int newDistance = GetDistance(quest.position, 2);
 				if (newDistance == 0)
 					continue;
-				cursmx = Quests[i].position.x;
-				cursmy = Quests[i].position.y;
-				pcursquest = i;
+				cursmx = quest.position.x;
+				cursmy = quest.position.y;
+				pcursquest = quest._qidx;
 			}
 		}
 	}
