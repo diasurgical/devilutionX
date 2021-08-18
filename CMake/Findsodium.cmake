@@ -56,12 +56,19 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
 
     if(sodium_USE_STATIC_LIBS)
       if(sodium_PKG_STATIC_LIBRARIES)
+	# Create a temporary list to manipulate the list of libraries we found
+	set(sodium_PKG_STATIC_LIBRARIES_TMP "")
+
+	# Mangle the library names into the format we need
         foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
           if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
-            list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
+            list(APPEND sodium_PKG_STATIC_LIBRARIES_TMP "lib${_libname}.a")
           endif()
         endforeach()
-        list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES)
+
+        list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES_TMP)
+	# Replace the list with our processed one
+	set(sodium_PKG_STATIC_LIBRARIES ${sodium_PKG_STATIC_LIBRARIES_TMP})
       else()
         # if pkgconfig for libsodium doesn't provide
         # static lib info, then override PKG_STATIC here..
@@ -77,6 +84,8 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
       set(XPREFIX sodium_PKG)
     endif()
 
+    # Feed pkgconfig results (if found) into standard find_* to populate
+    # the right CMake cache variables
     find_path(sodium_INCLUDE_DIR sodium.h
         HINTS ${${XPREFIX}_INCLUDE_DIRS}
     )
