@@ -56,6 +56,8 @@ struct QuestStruct {
 	uint8_t _qvar1;
 	uint8_t _qvar2;
 	bool _qlog;
+
+	bool IsAvailable();
 };
 
 struct QuestDataStruct {
@@ -88,7 +90,6 @@ void InitQuests();
 void InitialiseQuestPools(uint32_t seed, QuestStruct quests[]);
 void CheckQuests();
 bool ForceQuests();
-bool QuestStatus(quest_id questId);
 void CheckQuestKill(const MonsterStruct &monster, bool sendmsg);
 void DRLG_CheckQuests(int x, int y);
 void SetReturnLvlPos();

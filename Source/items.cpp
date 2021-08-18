@@ -2593,9 +2593,9 @@ void InitItems()
 
 	if (!setlevel) {
 		AdvanceRndSeed(); /* unused */
-		if (QuestStatus(Q_ROCK))
+		if (Quests[Q_ROCK].IsAvailable())
 			SpawnRock();
-		if (QuestStatus(Q_ANVIL))
+		if (Quests[Q_ANVIL].IsAvailable())
 			SpawnQuestItem(IDI_ANVIL, { 2 * setpc_x + 27, 2 * setpc_y + 27 }, 0, 1);
 		if (sgGameInitInfo.bCowQuest != 0 && currlevel == 20)
 			SpawnQuestItem(IDI_BROWNSUIT, { 25, 25 }, 3, 1);
