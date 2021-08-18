@@ -627,8 +627,6 @@ bool OpenMPQ(const char *pszArchive)
 {
 	_FILEHEADER fhdr;
 
-	InitHash();
-
 	if (!cur_archive.Open(pszArchive)) {
 		return false;
 	}
