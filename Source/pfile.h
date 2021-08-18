@@ -31,6 +31,7 @@ const char *pfile_get_password();
 void pfile_write_hero(bool writeGameData = false, bool clearTables = !gbIsMultiplayer);
 bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *));
 void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classStats);
+uint32_t pfile_ui_get_first_unused_save_num();
 bool pfile_ui_save_create(_uiheroinfo *heroinfo);
 bool pfile_delete_save(_uiheroinfo *heroInfo);
 void pfile_read_player_from_save(uint32_t saveNum, int playerId);

@@ -325,19 +325,23 @@ void pfile_ui_set_class_stats(unsigned int playerClass, _uidefaultstats *classSt
 	classStats->vitality = VitalityTbl[playerClass];
 }
 
+uint32_t pfile_ui_get_first_unused_save_num()
+{
+	uint32_t saveNum;
+	for (saveNum = 0; saveNum < MAX_CHARACTERS; saveNum++) {
+		if (hero_names[saveNum][0] == '\0')
+			break;
+	}
+	return saveNum;
+}
+
 bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
 	PkPlayerStruct pkplr;
 
 	uint32_t saveNum = heroinfo->saveNumber;
-	if (saveNum >= MAX_CHARACTERS) {
-		for (saveNum = 0; saveNum < MAX_CHARACTERS; saveNum++) {
-			if (hero_names[saveNum][0] == '\0')
-				break;
-		}
-		if (saveNum >= MAX_CHARACTERS)
-			return false;
-	}
+	if (saveNum >= MAX_CHARACTERS)
+		return false;
 	if (!OpenArchive(saveNum))
 		return false;
 	heroinfo->saveNumber = saveNum;

@@ -189,7 +189,8 @@ void SelheroListSelect(int value)
 
 		UiInitList(vecSelHeroDlgItems.size(), SelheroClassSelectorFocus, SelheroClassSelectorSelect, SelheroClassSelectorEsc, vecSelDlgItems, true);
 		memset(&selhero_heroInfo.name, 0, sizeof(selhero_heroInfo.name));
-		selhero_heroInfo.saveNumber = MAX_CHARACTERS;
+		selhero_heroInfo.saveNumber = pfile_ui_get_first_unused_save_num();
+		SelheroSetStats();
 		title = selhero_isMultiPlayer ? _("New Multi Player Hero") : _("New Single Player Hero");
 		return;
 	}
