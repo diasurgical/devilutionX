@@ -169,7 +169,7 @@ public:
 	{
 	}
 
-	OwnedSurface(Size size)
+	explicit OwnedSurface(Size size)
 	    : OwnedSurface(size.width, size.height)
 	{
 	}
