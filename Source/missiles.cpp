@@ -627,7 +627,7 @@ void SetMissAnim(int mi, int animtype)
 bool MissilesFoundTarget(int mi, Point *position, int rad)
 {
 	rad = std::min(rad, 19);
-
+	auto &missile = Missiles[mi];
 	for (int i = 0; i < rad; i++) {
 		int k = CrawlNum[i];
 		int ck = k + 2;
@@ -641,7 +641,7 @@ bool MissilesFoundTarget(int mi, Point *position, int rad)
 			if (nSolidTable[dp] || dObject[tx][ty] != 0 || dMissile[tx][ty] != 0)
 				continue;
 
-			Missiles[mi].position.tile = { tx, ty };
+			missile.position.tile = { tx, ty };
 			*position = { tx, ty };
 			return true;
 		}
