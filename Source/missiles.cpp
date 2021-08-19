@@ -2935,7 +2935,6 @@ void AddDiabApoca(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienem
 
 int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl)
 {
-
 	if (ActiveMissileCount >= MAXMISSILES - 1)
 		return -1;
 
