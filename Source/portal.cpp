@@ -52,9 +52,9 @@ void AddWarpMissile(int i, int x, int y)
 	MissileData[MIS_TOWN].mlSFX = SFX_NONE;
 	dMissile[x][y] = 0;
 	mi = AddMissile({ 0, 0 }, { x, y }, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
-	auto &missile = Missiles[mi];
 
 	if (mi != -1) {
+		auto &missile = Missiles[mi];
 		SetMissDir(missile, 1);
 
 		if (currlevel != 0)
