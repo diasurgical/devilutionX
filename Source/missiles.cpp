@@ -4652,13 +4652,12 @@ void missiles_process_charge()
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mi = ActiveMissiles[i];
 		auto &missile = Missiles[mi];
-		MissileStruct *mis = &Missiles[mi];
 
-		mis->_miAnimData = MissileSpriteData[mis->_miAnimType].animData[mis->_mimfnum].get();
-		if (mis->_mitype != MIS_RHINO)
+		missile._miAnimData = MissileSpriteData[missile._miAnimType].animData[missile._mimfnum].get();
+		if (missile._mitype != MIS_RHINO)
 			continue;
 
-		CMonster *mon = Monsters[mis->_misource].MType;
+		CMonster *mon = Monsters[missile._misource].MType;
 
 		MonsterGraphic graphic;
 		if (mon->mtype >= MT_HORNED && mon->mtype <= MT_OBLORD) {
@@ -4668,7 +4667,7 @@ void missiles_process_charge()
 		} else {
 			graphic = MonsterGraphic::Walk;
 		}
-		missile._miAnimData = mon->GetAnimData(graphic).CelSpritesForDirections[mis->_mimfnum]->Data();
+		missile._miAnimData = mon->GetAnimData(graphic).CelSpritesForDirections[missile._mimfnum]->Data();
 	}
 }
 
