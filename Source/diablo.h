@@ -107,7 +107,6 @@ extern _monster_id DebugMonsters[10];
 extern int debugmonsttypes;
 extern bool visiondebug;
 extern int questdebug;
-extern bool debug_mode_key_w;
 extern bool debug_mode_key_inverted_v;
 extern bool debug_mode_key_i;
 extern int debug_mode_key_j;

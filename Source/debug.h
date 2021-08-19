@@ -18,10 +18,6 @@ extern bool DebugGodMode;
 
 void FreeDebugGFX();
 void LoadDebugGFX();
-void GiveGoldCheat();
-void TakeGoldCheat();
-void MaxSpellsCheat();
-void SetAllSpellsCheat();
 void PrintDebugPlayer(bool bNextPlayer);
 void PrintDebugQuest();
 void GetDebugMonster();
