@@ -52,12 +52,13 @@ void AddWarpMissile(int i, int x, int y)
 	MissileData[MIS_TOWN].mlSFX = SFX_NONE;
 	dMissile[x][y] = 0;
 	mi = AddMissile({ 0, 0 }, { x, y }, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	auto &missile = Missiles[mi];
 
 	if (mi != -1) {
-		SetMissDir(mi, 1);
+		SetMissDir(missile, 1);
 
 		if (currlevel != 0)
-			Missiles[mi]._mlid = AddLight(Missiles[mi].position.tile, 15);
+			missile._mlid = AddLight(missile.position.tile, 15);
 
 		MissileData[MIS_TOWN].mlSFX = LS_SENTINEL;
 	}
@@ -114,12 +115,13 @@ void RemovePortalMissile(int id)
 {
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mi = ActiveMissiles[i];
-		if (Missiles[mi]._mitype == MIS_TOWN && Missiles[mi]._misource == id) {
-			dFlags[Missiles[mi].position.tile.x][Missiles[mi].position.tile.y] &= ~BFLAG_MISSILE;
-			dMissile[Missiles[mi].position.tile.x][Missiles[mi].position.tile.y] = 0;
+		auto &missile = Missiles[mi];
+		if (missile._mitype == MIS_TOWN && missile._misource == id) {
+			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~BFLAG_MISSILE;
+			dMissile[missile.position.tile.x][missile.position.tile.y] = 0;
 
 			if (Portals[id].level != 0)
-				AddUnLight(Missiles[mi]._mlid);
+				AddUnLight(missile._mlid);
 
 			DeleteMissile(mi, i);
 		}
