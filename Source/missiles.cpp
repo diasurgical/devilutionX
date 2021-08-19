@@ -156,18 +156,19 @@ void PutMissile(int8_t i)
 
 void UpdateMissilePos(int i)
 {
-	int mx = Missiles[i].position.traveled.deltaX >> 16;
-	int my = Missiles[i].position.traveled.deltaY >> 16;
+	auto &missile = Missiles[i];
+	int mx = missile.position.traveled.deltaX >> 16;
+	int my = missile.position.traveled.deltaY >> 16;
 	int dx = mx + 2 * my;
 	int dy = 2 * my - mx;
 	int lx = dx / 8;
 	dx = dx / 64;
 	int ly = dy / 8;
 	dy = dy / 64;
-	Missiles[i].position.tile = Missiles[i].position.start + Displacement { dx, dy };
-	Missiles[i].position.offset.deltaX = mx + (dy * 32) - (dx * 32);
-	Missiles[i].position.offset.deltaY = my - (dx * 16) - (dy * 16);
-	ChangeLightOffset(Missiles[i]._mlid, { lx - (dx * 8), ly - (dy * 8) });
+	missile.position.tile = missile.position.start + Displacement { dx, dy };
+	missile.position.offset.deltaX = mx + (dy * 32) - (dx * 32);
+	missile.position.offset.deltaY = my - (dx * 16) - (dy * 16);
+	ChangeLightOffset(missile._mlid, { lx - (dx * 8), ly - (dy * 8) });
 }
 
 void MoveMissilePos(int i)
