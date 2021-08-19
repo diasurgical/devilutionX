@@ -4674,9 +4674,9 @@ void missiles_process_charge()
 
 void ClearMissileSpot(int mi)
 {
-	auto &missile = Missiles[mi];
-	dFlags[missile.position.tile.x][missile.position.tile.y] &= ~BFLAG_MISSILE;
-	dMissile[missile.position.tile.x][missile.position.tile.y] = 0;
+	auto &missileTile = Missiles[mi].position.tile;
+	dFlags[missileTile.x][missileTile.y] &= ~BFLAG_MISSILE;
+	dMissile[missileTile.x][missileTile.y] = 0;
 }
 
 } // namespace devilution
