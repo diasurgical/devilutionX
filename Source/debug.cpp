@@ -103,13 +103,41 @@ std::string DebugCmdHelp(const std::string_view parameter)
 
 std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 {
-	GiveGoldCheat();
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (int8_t &itemId : myPlayer.InvGrid) {
+		if (itemId != 0)
+			continue;
+
+		int ni = myPlayer._pNumInv++;
+		SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
+		GetPlrHandSeed(&myPlayer.InvList[ni]);
+		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
+		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
+		myPlayer._pGold += GOLD_MAX_LIMIT;
+		itemId = myPlayer._pNumInv;
+	}
+
 	return "You are now rich! If only this was as easy in real life...";
 }
 
 std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
 {
-	TakeGoldCheat();
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto itemId : myPlayer.InvGrid) {
+		itemId -= 1;
+
+		if (itemId < 0)
+			continue;
+		if (myPlayer.InvList[itemId]._itype != ITYPE_GOLD)
+			continue;
+
+		myPlayer.RemoveInvItem(itemId);
+	}
+
+	myPlayer._pGold = 0;
+
 	return "You are poor...";
 }
 
@@ -179,92 +207,6 @@ std::string DebugCmdLevelUp(const std::string_view parameter)
 
 std::string DebugCmdGetAllSpells(const std::string_view parameter)
 {
-	SetAllSpellsCheat();
-	return "Magic is no mystery for me.";
-}
-
-std::string DebugCmdMaxSpellLevel(const std::string_view parameter)
-{
-	MaxSpellsCheat();
-	return "Knowledge is power.";
-}
-
-std::vector<DebugCmdItem> DebugCmdList = {
-	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
-	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
-	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
-	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
-	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
-	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
-	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
-	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
-	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
-	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
-};
-
-} // namespace
-
-void LoadDebugGFX()
-{
-	if (visiondebug)
-		pSquareCel = LoadCel("Data\\Square.CEL", 64);
-}
-
-void FreeDebugGFX()
-{
-	pSquareCel = std::nullopt;
-}
-
-void GiveGoldCheat()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int8_t &itemId : myPlayer.InvGrid) {
-		if (itemId != 0)
-			continue;
-
-		int ni = myPlayer._pNumInv++;
-		SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
-		GetPlrHandSeed(&myPlayer.InvList[ni]);
-		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-		myPlayer._pGold += GOLD_MAX_LIMIT;
-		itemId = myPlayer._pNumInv;
-	}
-}
-
-void TakeGoldCheat()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (auto itemId : myPlayer.InvGrid) {
-		itemId -= 1;
-
-		if (itemId < 0)
-			continue;
-		if (myPlayer.InvList[itemId]._itype != ITYPE_GOLD)
-			continue;
-
-		myPlayer.RemoveInvItem(itemId);
-	}
-
-	myPlayer._pGold = 0;
-}
-
-void MaxSpellsCheat()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
-		if (GetSpellBookLevel((spell_id)i) != -1) {
-			myPlayer._pMemSpells |= GetSpellBitmask(i);
-			myPlayer._pSplLvl[i] = 10;
-		}
-	}
-}
-
-void SetAllSpellsCheat()
-{
 	SetSpellLevelCheat(SPL_FIREBOLT, 8);
 	SetSpellLevelCheat(SPL_CBOLT, 11);
 	SetSpellLevelCheat(SPL_HBOLT, 10);
@@ -287,6 +229,49 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_GOLEM, 2);
 	SetSpellLevelCheat(SPL_FLARE, 1);
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
+
+	return "Magic is no mystery for me.";
+}
+
+std::string DebugCmdMaxSpellLevel(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
+		if (GetSpellBookLevel((spell_id)i) != -1) {
+			myPlayer._pMemSpells |= GetSpellBitmask(i);
+			myPlayer._pSplLvl[i] = 10;
+		}
+	}
+
+	return "Knowledge is power.";
+}
+
+std::vector<DebugCmdItem> DebugCmdList = {
+	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
+	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
+	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
+	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
+	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
+	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
+	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
+	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
+	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
+	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
+};
+
+} // namespace
+
+void LoadDebugGFX()
+{
+	if (visiondebug)
+		pSquareCel = LoadCel("Data\\Square.CEL", 64);
+}
+
+void FreeDebugGFX()
+{
+	pSquareCel = std::nullopt;
 }
 
 void PrintDebugPlayer(bool bNextPlayer)
