@@ -385,17 +385,18 @@ void FindTrigger()
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mi = ActiveMissiles[i];
-		if (Missiles[mi]._mitype == MIS_TOWN || Missiles[mi]._mitype == MIS_RPORTAL) {
-			const int newDistance = GetDistance(Missiles[mi].position.tile, 2);
+		auto &missile = Missiles[mi];
+		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
+			const int newDistance = GetDistance(missile.position.tile, 2);
 			if (newDistance == 0)
 				continue;
 			if (pcursmissile != -1 && distance < newDistance)
 				continue;
-			const int newRotations = GetRotaryDistance(Missiles[mi].position.tile);
+			const int newRotations = GetRotaryDistance(missile.position.tile);
 			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
-			cursmx = Missiles[mi].position.tile.x;
-			cursmy = Missiles[mi].position.tile.y;
+			cursmx = missile.position.tile.x;
+			cursmy = missile.position.tile.y;
 			pcursmissile = mi;
 			distance = newDistance;
 			rotations = newRotations;

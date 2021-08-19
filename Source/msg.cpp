@@ -1298,7 +1298,8 @@ DWORD OnAwakeGolem(TCmd *pCmd, int pnum)
 		bool addGolem = true;
 		for (int i = 0; i < ActiveMissileCount; i++) {
 			int mi = ActiveMissiles[i];
-			if (Missiles[mi]._mitype == MIS_GOLEM && Missiles[mi]._misource == pnum) {
+			auto &missile = Missiles[mi];
+			if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
 				addGolem = false;
 				// CODEFIX: break, don't need to check the rest
 			}
@@ -1561,7 +1562,8 @@ DWORD OnActivatePortal(TCmd *pCmd, int pnum)
 				bool addPortal = true;
 				for (int i = 0; i < ActiveMissileCount; i++) {
 					int mi = ActiveMissiles[i];
-					if (Missiles[mi]._mitype == MIS_TOWN && Missiles[mi]._misource == pnum) {
+					auto &missile = Missiles[mi];
+					if (missile._mitype == MIS_TOWN && missile._misource == pnum) {
 						addPortal = false;
 						// CODEFIX: break
 					}
@@ -1686,7 +1688,8 @@ DWORD OnEndShield(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
 		for (int i = 0; i < ActiveMissileCount; i++) {
 			int mi = ActiveMissiles[i];
-			if (Missiles[mi]._mitype == MIS_MANASHIELD && Missiles[mi]._misource == pnum) {
+			auto &missile = Missiles[mi];
+			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
 				ClearMissileSpot(mi);
 				DeleteMissile(mi, i);
 			}

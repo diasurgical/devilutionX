@@ -1490,9 +1490,10 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		int currentMissileId = -1;
 		for (int j = 0; j < ActiveMissileCount; j++) {
 			int mi = ActiveMissiles[j];
-			if (Missiles[mi]._mitype != MIS_MANASHIELD)
+			auto &missile = Missiles[mi];
+			if (missile._mitype != MIS_MANASHIELD)
 				continue;
-			if (Missiles[mi]._misource == pnum)
+			if (missile._misource == pnum)
 				currentMissileId = mi;
 		}
 		if (player._pMaxHP > 64) {
@@ -2019,12 +2020,13 @@ bool IsTileSafe(const MonsterStruct &monster, Point position)
 	} else {
 		for (int j = 0; j < ActiveMissileCount; j++) {
 			mi = ActiveMissiles[j];
-			if (Missiles[mi].position.tile == position) {
-				if (Missiles[mi]._mitype == MIS_FIREWALL) {
+			auto &missile = Missiles[mi];
+			if (missile.position.tile == position) {
+				if (missile._mitype == MIS_FIREWALL) {
 					fire = true;
 					break;
 				}
-				if (Missiles[mi]._mitype == MIS_LIGHTWALL) {
+				if (missile._mitype == MIS_LIGHTWALL) {
 					lightning = true;
 					break;
 				}
@@ -4976,18 +4978,19 @@ void SpawnGolum(int i, Point position, int mi)
 	assert(i >= 0 && i < MAX_PLRS);
 	auto &player = Players[i];
 	auto &golem = Monsters[i];
+	auto &missile = Missiles[mi];
 
 	dMonster[position.x][position.y] = i + 1;
 	golem.position.tile = position;
 	golem.position.future = position;
 	golem.position.old = position;
 	golem._pathcount = 0;
-	golem._mmaxhp = 2 * (320 * Missiles[mi]._mispllvl + player._pMaxMana / 3);
+	golem._mmaxhp = 2 * (320 * missile._mispllvl + player._pMaxMana / 3);
 	golem._mhitpoints = golem._mmaxhp;
 	golem.mArmorClass = 25;
-	golem.mHit = 5 * (Missiles[mi]._mispllvl + 8) + 2 * player._pLevel;
-	golem.mMinDamage = 2 * (Missiles[mi]._mispllvl + 4);
-	golem.mMaxDamage = 2 * (Missiles[mi]._mispllvl + 8);
+	golem.mHit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
+	golem.mMinDamage = 2 * (missile._mispllvl + 4);
+	golem.mMaxDamage = 2 * (missile._mispllvl + 8);
 	golem._mFlags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, DIR_S);
 	UpdateEnemy(golem);
