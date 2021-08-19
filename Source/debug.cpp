@@ -12,6 +12,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "inv.h"
+#include "setmaps.h"
 #include "spells.h"
 #include "utils/language.h"
 
@@ -118,8 +119,10 @@ std::string DebugCmdWarpToLevel(const std::string_view parameter)
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
-	if (myPlayer.plrlevel == level)
+	if (!setlevel && myPlayer.plrlevel == level)
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+
+	setlevel = false;
 	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
 	return fmt::format("Welcome to level {}.", level);
 }
