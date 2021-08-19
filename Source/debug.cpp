@@ -12,6 +12,7 @@
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "inv.h"
+#include "lighting.h"
 #include "setmaps.h"
 #include "spells.h"
 #include "utils/language.h"
@@ -198,6 +199,13 @@ std::string DebugCmdGodMode(const std::string_view parameter)
 	return "You are mortal, beware of the darkness.";
 }
 
+std::string DebugCmdLighting(const std::string_view parameter)
+{
+	ToggleLighting();
+
+	return "All raindrops are the same.";
+}
+
 std::string DebugCmdVision(const std::string_view parameter)
 {
 	DebugVision = !DebugVision;
@@ -268,6 +276,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
 	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
 	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
+	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
 };
 
 } // namespace

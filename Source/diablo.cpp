@@ -614,12 +614,6 @@ void PressChar(char vkey)
 	case 'd':
 		PrintDebugPlayer(false);
 		return;
-	case 'L':
-	case 'l':
-		if (debug_mode_key_inverted_v) {
-			ToggleLighting();
-		}
-		return;
 	case 'M':
 		NextDebugMonster();
 		return;
