@@ -656,9 +656,8 @@ bool CheckIfTrig(Point position)
 	return false;
 }
 
-bool GuardianTryFireAt(int i, Point target)
+bool GuardianTryFireAt(MissileStruct &missile, Point target)
 {
-	auto &missile = Missiles[i];
 	Point position = missile.position.tile;
 
 	if (!LineClearMissile(position, target))
@@ -3896,10 +3895,10 @@ void MI_Guardian(int i)
 				if (previous == offset) {
 					continue;
 				}
-				found = GuardianTryFireAt(i, { position.x + offset.deltaX, position.y + offset.deltaY })
-				    || GuardianTryFireAt(i, { position.x - offset.deltaX, position.y - offset.deltaY })
-				    || GuardianTryFireAt(i, { position.x + offset.deltaX, position.y - offset.deltaY })
-				    || GuardianTryFireAt(i, { position.x - offset.deltaX, position.y + offset.deltaY });
+				found = GuardianTryFireAt(missile, { position.x + offset.deltaX, position.y + offset.deltaY })
+				    || GuardianTryFireAt(missile, { position.x - offset.deltaX, position.y - offset.deltaY })
+				    || GuardianTryFireAt(missile, { position.x + offset.deltaX, position.y - offset.deltaY })
+				    || GuardianTryFireAt(missile, { position.x - offset.deltaX, position.y + offset.deltaY });
 				if (!found) {
 					previous = offset;
 				}
