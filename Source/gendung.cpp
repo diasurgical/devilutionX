@@ -587,11 +587,6 @@ bool SkipThemeRoom(int x, int y)
 
 void InitLevels()
 {
-#ifdef _DEBUG
-	if (leveldebug)
-		return;
-#endif
-
 	currlevel = 0;
 	leveltype = DTYPE_TOWN;
 	setlevel = false;

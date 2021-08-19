@@ -97,7 +97,6 @@ Keymapper keymapper;
 std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
-bool leveldebug = false;
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
@@ -884,11 +883,9 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
-	printInConsole("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
 	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
-	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
@@ -947,12 +944,6 @@ void DiabloParseFlags(int argc, char **argv)
 			debug_mode_key_i = true;
 		} else if (strcasecmp("-j", argv[i]) == 0) {
 			debug_mode_key_j = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-l", argv[i]) == 0) {
-			setlevel = false;
-			leveldebug = true;
-			leveltype = (dungeon_type)SDL_atoi(argv[++i]);
-			currlevel = SDL_atoi(argv[++i]);
-			Players[0].plrlevel = currlevel;
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
@@ -960,10 +951,6 @@ void DiabloParseFlags(int argc, char **argv)
 			questdebug = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-r", argv[i]) == 0) {
 			setseed = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-t", argv[i]) == 0) {
-			leveldebug = true;
-			setlevel = true;
-			setlvlnum = (_setlevels)SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-v", argv[i]) == 0) {
 			visiondebug = true;
 		} else if (strcasecmp("-w", argv[i]) == 0) {

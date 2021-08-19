@@ -344,11 +344,9 @@ dungeon_type InitLevelType(int l)
 
 void SetupLocalPositions()
 {
-	if (!leveldebug || gbIsMultiplayer) {
-		currlevel = 0;
-		leveltype = DTYPE_TOWN;
-		setlevel = false;
-	}
+	currlevel = 0;
+	leveltype = DTYPE_TOWN;
+	setlevel = false;
 
 	int x = 75;
 	int y = 68;
