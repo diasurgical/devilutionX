@@ -2932,40 +2932,35 @@ void AddDiabApoca(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienem
 	missile._miDelFlag = true;
 }
 
+namespace {
+
+bool CanAddEffect(int playerId, int type)
+{
+	if (currlevel != Players[playerId].plrlevel)
+		return false;
+
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mi = ActiveMissiles[i];
+		auto &missile = Missiles[mi];
+		if (missile._mitype == type && missile._misource == playerId)
+			return false;
+	}
+
+	return true;
+}
+
+} // namespace
+
 int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl)
 {
 	if (ActiveMissileCount >= MAXMISSILES - 1)
 		return -1;
 
-	if (mitype == MIS_MANASHIELD) {
-		auto &player = Players[id];
-		if (player.pManaShield) {
-			if (currlevel != player.plrlevel)
-				return -1;
+	if (mitype == MIS_MANASHIELD && Players[id].pManaShield && !CanAddEffect(id, mitype))
+		return -1;
 
-			for (int i = 0; i < ActiveMissileCount; i++) {
-				int mi = ActiveMissiles[i];
-				auto &missile = Missiles[mi];
-				if (missile._mitype == MIS_MANASHIELD && missile._misource == id)
-					return -1;
-			}
-		}
-	}
-
-	if (mitype == MIS_REFLECT) {
-		auto &player = Players[id];
-		if (player.wReflections) {
-			if (currlevel != player.plrlevel)
-				return -1;
-
-			for (int i = 0; i < ActiveMissileCount; i++) {
-				int mi = ActiveMissiles[i];
-				auto &missile = Missiles[mi];
-				if (missile._mitype == MIS_REFLECT && missile._misource == id)
-					return -1;
-			}
-		}
-	}
+	if (mitype == MIS_REFLECT && Players[id].wReflections > 0 && !CanAddEffect(id, mitype))
+		return -1;
 
 	int mi = AvailableMissiles[0];
 	auto &missile = Missiles[mi];
@@ -4685,10 +4680,11 @@ void missiles_process_charge()
 	}
 }
 
-void ClearMissileSpot(Point &missileTile)
+void ClearMissileSpot(const MissileStruct &missile)
 {
-	dFlags[missileTile.x][missileTile.y] &= ~BFLAG_MISSILE;
-	dMissile[missileTile.x][missileTile.y] = 0;
+	const Point tile = missile.position.tile;
+	dFlags[tile.x][tile.y] &= ~BFLAG_MISSILE;
+	dMissile[tile.x][tile.y] = 0;
 }
 
 } // namespace devilution
