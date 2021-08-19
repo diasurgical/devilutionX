@@ -134,12 +134,13 @@ void UpdateMissileVelocity(MissileStruct &missile, Point source, Point destinati
  */
 void PutMissile(int8_t i)
 {
-	Point position = Missiles[i].position.tile;
+	auto &missile = Missiles[i];
+	Point position = missile.position.tile;
 
 	if (!InDungeonBounds(position))
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 
-	if (Missiles[i]._miDelFlag) {
+	if (missile._miDelFlag) {
 		return;
 	}
 
@@ -150,7 +151,7 @@ void PutMissile(int8_t i)
 	else
 		dMissile[position.x][position.y] = -1;
 
-	if (Missiles[i]._miPreFlag)
+	if (missile._miPreFlag)
 		MissilePreFlag = true;
 }
 
@@ -175,8 +176,9 @@ void MoveMissilePos(int i)
 {
 	int dx;
 	int dy;
+	auto &missile = Missiles[i];
 
-	switch (Missiles[i]._mimfnum) {
+	switch (missile._mimfnum) {
 	case DIR_NW:
 	case DIR_N:
 	case DIR_NE:
@@ -198,13 +200,13 @@ void MoveMissilePos(int i)
 		dy = 1;
 		break;
 	}
-	int x = Missiles[i].position.tile.x + dx;
-	int y = Missiles[i].position.tile.y + dy;
-	if (IsTileAvailable(Monsters[Missiles[i]._misource], { x, y })) {
-		Missiles[i].position.tile.x += dx;
-		Missiles[i].position.tile.y += dy;
-		Missiles[i].position.offset.deltaX += (dy * 32) - (dx * 32);
-		Missiles[i].position.offset.deltaY -= (dy * 16) + (dx * 16);
+	int x = missile.position.tile.x + dx;
+	int y = missile.position.tile.y + dy;
+	if (IsTileAvailable(Monsters[missile._misource], { x, y })) {
+		missile.position.tile.x += dx;
+		missile.position.tile.y += dy;
+		missile.position.offset.deltaX += (dy * 32) - (dx * 32);
+		missile.position.offset.deltaY -= (dy * 16) + (dx * 16);
 	}
 }
 
@@ -436,6 +438,7 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 
 	int mx = position.x;
 	int my = position.y;
+	auto &missile = Missiles[i];
 
 	if (i >= MAXMISSILES || i < 0)
 		return;
@@ -443,53 +446,53 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 		return;
 	if (my >= MAXDUNY || my < 0)
 		return;
-	if (Missiles[i]._micaster != TARGET_BOTH && Missiles[i]._misource != -1) {
-		if (Missiles[i]._micaster == TARGET_MONSTERS) {
+	if (missile._micaster != TARGET_BOTH && missile._misource != -1) {
+		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
 			if (mid > 0) {
 				mid -= 1;
 				if (MonsterMHit(
-				        Missiles[i]._misource,
+				        missile._misource,
 				        mid,
 				        mindam,
 				        maxdam,
-				        Missiles[i]._midist,
-				        Missiles[i]._mitype,
+				        missile._midist,
+				        missile._mitype,
 				        shift)) {
 					if (!nodel)
-						Missiles[i]._mirange = 0;
-					Missiles[i]._miHitFlag = true;
+						missile._mirange = 0;
+					missile._miHitFlag = true;
 				}
 			} else if (mid < 0) {
 				mid = -(mid + 1);
 				if (Monsters[mid]._mmode == MM_STONE
 				    && MonsterMHit(
-				        Missiles[i]._misource,
+				        missile._misource,
 				        mid,
 				        mindam,
 				        maxdam,
-				        Missiles[i]._midist,
-				        Missiles[i]._mitype,
+				        missile._midist,
+				        missile._mitype,
 				        shift)) {
 					if (!nodel)
-						Missiles[i]._mirange = 0;
-					Missiles[i]._miHitFlag = true;
+						missile._mirange = 0;
+					missile._miHitFlag = true;
 				}
 			}
 			if (dPlayer[mx][my] > 0
-			    && dPlayer[mx][my] - 1 != Missiles[i]._misource
+			    && dPlayer[mx][my] - 1 != missile._misource
 			    && Plr2PlrMHit(
-			        Missiles[i]._misource,
+			        missile._misource,
 			        dPlayer[mx][my] - 1,
 			        mindam,
 			        maxdam,
-			        Missiles[i]._midist,
-			        Missiles[i]._mitype,
+			        missile._midist,
+			        missile._mitype,
 			        shift,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					int dir = Missiles[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].animFAmt;
+					int dir = missile._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
+					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
 					else if (dir > mAnimFAmt)
@@ -497,34 +500,34 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 
 					SetMissDir(i, dir);
 				} else if (!nodel) {
-					Missiles[i]._mirange = 0;
+					missile._mirange = 0;
 				}
-				Missiles[i]._miHitFlag = true;
+				missile._miHitFlag = true;
 			}
 		} else {
-			auto &monster = Monsters[Missiles[i]._misource];
+			auto &monster = Monsters[missile._misource];
 			if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0
 			    && dMonster[mx][my] > 0
 			    && (Monsters[dMonster[mx][my] - 1]._mFlags & MFLAG_GOLEM) != 0
-			    && MonsterTrapHit(dMonster[mx][my] - 1, mindam, maxdam, Missiles[i]._midist, Missiles[i]._mitype, shift)) {
+			    && MonsterTrapHit(dMonster[mx][my] - 1, mindam, maxdam, missile._midist, missile._mitype, shift)) {
 				if (!nodel)
-					Missiles[i]._mirange = 0;
-				Missiles[i]._miHitFlag = true;
+					missile._mirange = 0;
+				missile._miHitFlag = true;
 			}
 			if (dPlayer[mx][my] > 0
 			    && PlayerMHit(
 			        dPlayer[mx][my] - 1,
 			        &monster,
-			        Missiles[i]._midist,
+			        missile._midist,
 			        mindam,
 			        maxdam,
-			        Missiles[i]._mitype,
+			        missile._mitype,
 			        shift,
 			        0,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					int dir = Missiles[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].animFAmt;
+					int dir = missile._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
+					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
 					else if (dir > mAnimFAmt)
@@ -532,48 +535,48 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 
 					SetMissDir(i, dir);
 				} else if (!nodel) {
-					Missiles[i]._mirange = 0;
+					missile._mirange = 0;
 				}
-				Missiles[i]._miHitFlag = true;
+				missile._miHitFlag = true;
 			}
 		}
 	} else {
 		int mid = dMonster[mx][my];
 		if (mid > 0) {
 			mid -= 1;
-			if (Missiles[i]._micaster == TARGET_BOTH) {
+			if (missile._micaster == TARGET_BOTH) {
 				if (MonsterMHit(
-				        Missiles[i]._misource,
+				        missile._misource,
 				        mid,
 				        mindam,
 				        maxdam,
-				        Missiles[i]._midist,
-				        Missiles[i]._mitype,
+				        missile._midist,
+				        missile._mitype,
 				        shift)) {
 					if (!nodel)
-						Missiles[i]._mirange = 0;
-					Missiles[i]._miHitFlag = true;
+						missile._mirange = 0;
+					missile._miHitFlag = true;
 				}
-			} else if (MonsterTrapHit(mid, mindam, maxdam, Missiles[i]._midist, Missiles[i]._mitype, shift)) {
+			} else if (MonsterTrapHit(mid, mindam, maxdam, missile._midist, missile._mitype, shift)) {
 				if (!nodel)
-					Missiles[i]._mirange = 0;
-				Missiles[i]._miHitFlag = true;
+					missile._mirange = 0;
+				missile._miHitFlag = true;
 			}
 		}
 		if (dPlayer[mx][my] > 0) {
 			if (PlayerMHit(
 			        dPlayer[mx][my] - 1,
 			        nullptr,
-			        Missiles[i]._midist,
+			        missile._midist,
 			        mindam,
 			        maxdam,
-			        Missiles[i]._mitype,
+			        missile._mitype,
 			        shift,
-			        (Missiles[i]._miAnimType == MFILE_FIREWAL || Missiles[i]._miAnimType == MFILE_LGHNING) ? 1 : 0,
+			        (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					int dir = Missiles[i]._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[Missiles[i]._miAnimType].animFAmt;
+					int dir = missile._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
+					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
 					else if (dir > mAnimFAmt)
@@ -581,9 +584,9 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 
 					SetMissDir(i, dir);
 				} else if (!nodel) {
-					Missiles[i]._mirange = 0;
+					missile._mirange = 0;
 				}
-				Missiles[i]._miHitFlag = true;
+				missile._miHitFlag = true;
 			}
 		}
 	}
@@ -593,22 +596,21 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 			if (Objects[oi]._oBreak == 1)
 				BreakObject(-1, oi);
 			if (!nodel)
-				Missiles[i]._mirange = 0;
-			Missiles[i]._miHitFlag = false;
+				missile._mirange = 0;
+			missile._miHitFlag = false;
 		}
 	}
 	if (nMissileTable[dPiece[mx][my]]) {
 		if (!nodel)
-			Missiles[i]._mirange = 0;
-		Missiles[i]._miHitFlag = false;
+			missile._mirange = 0;
+		missile._miHitFlag = false;
 	}
-	if (Missiles[i]._mirange == 0 && MissileData[Missiles[i]._mitype].miSFX != -1)
-		PlaySfxLoc(MissileData[Missiles[i]._mitype].miSFX, Missiles[i].position.tile);
+	if (missile._mirange == 0 && MissileData[missile._mitype].miSFX != -1)
+		PlaySfxLoc(MissileData[missile._mitype].miSFX, missile.position.tile);
 }
 
-void SetMissAnim(int mi, int animtype)
+void SetMissAnim(MissileStruct &missile, int animtype)
 {
-	auto &missile = Missiles[mi];
 	int dir = missile._mimfnum;
 
 	if (animtype > MFILE_NONE) {
@@ -683,25 +685,26 @@ bool GuardianTryFireAt(int i, Point target)
 
 void FireballUpdate(int i, Displacement offset, bool alwaysDelete)
 {
-	Missiles[i]._mirange--;
+	auto &missile = Missiles[i];
+	missile._mirange--;
 
-	int id = Missiles[i]._misource;
-	Point p = (Missiles[i]._micaster == TARGET_MONSTERS) ? Players[id].position.tile : Monsters[id].position.tile;
+	int id = missile._misource;
+	Point p = (missile._micaster == TARGET_MONSTERS) ? Players[id].position.tile : Monsters[id].position.tile;
 
-	if (Missiles[i]._miAnimType == MFILE_BIGEXP) {
-		if (Missiles[i]._mirange == 0) {
-			Missiles[i]._miDelFlag = true;
-			AddUnLight(Missiles[i]._mlid);
+	if (missile._miAnimType == MFILE_BIGEXP) {
+		if (missile._mirange == 0) {
+			missile._miDelFlag = true;
+			AddUnLight(missile._mlid);
 		}
 	} else {
-		int dam = Missiles[i]._midam;
-		Missiles[i].position.traveled += offset;
+		int dam = missile._midam;
+		missile.position.traveled += offset;
 		UpdateMissilePos(i);
-		if (Missiles[i].position.tile != Missiles[i].position.start)
-			CheckMissileCol(i, dam, dam, false, Missiles[i].position.tile, false);
-		if (Missiles[i]._mirange == 0) {
-			Point m = Missiles[i].position.tile;
-			ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, Missiles[i]._miAnimFrame);
+		if (missile.position.tile != missile.position.start)
+			CheckMissileCol(i, dam, dam, false, missile.position.tile, false);
+		if (missile._mirange == 0) {
+			Point m = missile.position.tile;
+			ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 
 			constexpr Displacement Pattern[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
 			for (auto shift : Pattern) {
@@ -710,32 +713,32 @@ void FireballUpdate(int i, Displacement offset, bool alwaysDelete)
 			}
 
 			if (!TransList[dTransVal[m.x][m.y]]
-			    || (Missiles[i].position.velocity.deltaX < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
-				Missiles[i].position.tile.x++;
-				Missiles[i].position.tile.y++;
-				Missiles[i].position.offset.deltaY -= 32;
+			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
+				missile.position.tile.x++;
+				missile.position.tile.y++;
+				missile.position.offset.deltaY -= 32;
 			}
-			if (Missiles[i].position.velocity.deltaY > 0
+			if (missile.position.velocity.deltaY > 0
 			    && ((TransList[dTransVal[m.x + 1][m.y]] && nSolidTable[dPiece[m.x + 1][m.y]])
 			        || (TransList[dTransVal[m.x - 1][m.y]] && nSolidTable[dPiece[m.x - 1][m.y]]))) {
-				Missiles[i].position.offset.deltaY -= 32;
+				missile.position.offset.deltaY -= 32;
 			}
-			if (Missiles[i].position.velocity.deltaX > 0
+			if (missile.position.velocity.deltaX > 0
 			    && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]])
 			        || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]]))) {
-				Missiles[i].position.offset.deltaX -= 32;
+				missile.position.offset.deltaX -= 32;
 			}
-			Missiles[i]._mimfnum = 0;
-			SetMissAnim(i, MFILE_BIGEXP);
-			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
-			Missiles[i].position.velocity = {};
-		} else if (Missiles[i].position.tile.x != Missiles[i]._miVar1 || Missiles[i].position.tile.y != Missiles[i]._miVar2) {
-			Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-			Missiles[i]._miVar2 = Missiles[i].position.tile.y;
-			ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, 8);
+			missile._mimfnum = 0;
+			SetMissAnim(missile, MFILE_BIGEXP);
+			missile._mirange = missile._miAnimLen - 1;
+			missile.position.velocity = {};
+		} else if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
+			missile._miVar1 = missile.position.tile.x;
+			missile._miVar2 = missile.position.tile.y;
+			ChangeLight(missile._mlid, missile.position.tile, 8);
 		}
 		if (alwaysDelete)
-			Missiles[i]._miDelFlag = true;
+			missile._miDelFlag = true;
 	}
 
 	PutMissile(i);
@@ -1176,7 +1179,7 @@ void SetMissDir(int mi, int dir)
 {
 	auto &missile = Missiles[mi];
 	missile._mimfnum = dir;
-	SetMissAnim(mi, missile._miAnimType);
+	SetMissAnim(missile, missile._miAnimType);
 }
 
 void InitMissileGFX()
@@ -2105,47 +2108,49 @@ void AddLightning(int mi, Point /*src*/, Point dst, int midir, int8_t mienemy, i
 
 void AddMisexp(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
+	auto &missile = Missiles[mi];
 	if (mienemy != 0 && id >= 0) {
 		switch (Monsters[id].MType->mtype) {
 		case MT_SUCCUBUS:
-			SetMissAnim(mi, MFILE_FLAREEXP);
+			SetMissAnim(missile, MFILE_FLAREEXP);
 			break;
 		case MT_SNOWWICH:
-			SetMissAnim(mi, MFILE_SCBSEXPB);
+			SetMissAnim(missile, MFILE_SCBSEXPB);
 			break;
 		case MT_HLSPWN:
-			SetMissAnim(mi, MFILE_SCBSEXPD);
+			SetMissAnim(missile, MFILE_SCBSEXPD);
 			break;
 		case MT_SOLBRNR:
-			SetMissAnim(mi, MFILE_SCBSEXPC);
+			SetMissAnim(missile, MFILE_SCBSEXPC);
 			break;
 		default:
 			break;
 		}
 	}
 
-	Missiles[mi].position.tile = Missiles[dst.x].position.tile;
-	Missiles[mi].position.start = Missiles[dst.x].position.start;
-	Missiles[mi].position.offset = Missiles[dst.x].position.offset;
-	Missiles[mi].position.traveled = Missiles[dst.x].position.traveled;
-	Missiles[mi].position.velocity = { 0, 0 };
-	Missiles[mi]._mirange = Missiles[mi]._miAnimLen;
-	Missiles[mi]._miVar1 = 0;
+	missile.position.tile = Missiles[dst.x].position.tile;
+	missile.position.start = Missiles[dst.x].position.start;
+	missile.position.offset = Missiles[dst.x].position.offset;
+	missile.position.traveled = Missiles[dst.x].position.traveled;
+	missile.position.velocity = { 0, 0 };
+	missile._mirange = missile._miAnimLen;
+	missile._miVar1 = 0;
 }
 
 void AddWeapexp(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, int /*id*/, int /*dam*/)
 {
-	Missiles[mi].position.tile = src;
-	Missiles[mi].position.start = src;
-	Missiles[mi].position.velocity = { 0, 0 };
-	Missiles[mi]._miVar1 = 0;
-	Missiles[mi]._miVar2 = dst.x;
-	Missiles[mi]._mimfnum = 0;
+	auto &missile = Missiles[mi];
+	missile.position.tile = src;
+	missile.position.start = src;
+	missile.position.velocity = { 0, 0 };
+	missile._miVar1 = 0;
+	missile._miVar2 = dst.x;
+	missile._mimfnum = 0;
 	if (dst.x == 1)
-		SetMissAnim(mi, MFILE_MAGBLOS);
+		SetMissAnim(missile, MFILE_MAGBLOS);
 	else
-		SetMissAnim(mi, MFILE_MINILTNG);
-	Missiles[mi]._mirange = Missiles[mi]._miAnimLen - 1;
+		SetMissAnim(missile, MFILE_MINILTNG);
+	missile._mirange = missile._miAnimLen - 1;
 }
 
 void AddTown(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
@@ -2371,13 +2376,13 @@ void AddFlare(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	} else if (id > 0) {
 		auto &monster = Monsters[id];
 		if (monster.MType->mtype == MT_SUCCUBUS)
-			SetMissAnim(mi, MFILE_FLARE);
+			SetMissAnim(missile, MFILE_FLARE);
 		if (monster.MType->mtype == MT_SNOWWICH)
-			SetMissAnim(mi, MFILE_SCUBMISB);
+			SetMissAnim(missile, MFILE_SCUBMISB);
 		if (monster.MType->mtype == MT_HLSPWN)
-			SetMissAnim(mi, MFILE_SCUBMISD);
+			SetMissAnim(missile, MFILE_SCUBMISD);
 		if (monster.MType->mtype == MT_SOLBRNR)
-			SetMissAnim(mi, MFILE_SCUBMISC);
+			SetMissAnim(missile, MFILE_SCUBMISC);
 	}
 
 	if (MissileSpriteData[missile._miAnimType].animFAmt == 16) {
@@ -2982,12 +2987,13 @@ void MI_Golem(int mi)
 
 void MI_LArrow(int i)
 {
-	Missiles[i]._mirange--;
-	int p = Missiles[i]._misource;
-	if (Missiles[i]._miAnimType == MFILE_MINILTNG || Missiles[i]._miAnimType == MFILE_MAGBLOS) {
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, Missiles[i]._miAnimFrame + 5);
-		missile_resistance rst = MissileData[Missiles[i]._mitype].mResist;
-		if (Missiles[i]._mitype == MIS_LARROW) {
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	int p = missile._misource;
+	if (missile._miAnimType == MFILE_MINILTNG || missile._miAnimType == MFILE_MAGBLOS) {
+		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
+		missile_resistance rst = MissileData[missile._mitype].mResist;
+		if (missile._mitype == MIS_LARROW) {
 			int mind;
 			int maxd;
 			if (p != -1) {
@@ -2998,9 +3004,9 @@ void MI_LArrow(int i)
 				maxd = GenerateRnd(10) + 1 + currlevel * 2;
 			}
 			MissileData[MIS_LARROW].mResist = MISR_LIGHTNING;
-			CheckMissileCol(i, mind, maxd, false, Missiles[i].position.tile, true);
+			CheckMissileCol(i, mind, maxd, false, missile.position.tile, true);
 		}
-		if (Missiles[i]._mitype == MIS_FARROW) {
+		if (missile._mitype == MIS_FARROW) {
 			int mind;
 			int maxd;
 			if (p != -1) {
@@ -3011,18 +3017,18 @@ void MI_LArrow(int i)
 				maxd = GenerateRnd(10) + 1 + currlevel * 2;
 			}
 			MissileData[MIS_FARROW].mResist = MISR_FIRE;
-			CheckMissileCol(i, mind, maxd, false, Missiles[i].position.tile, true);
+			CheckMissileCol(i, mind, maxd, false, missile.position.tile, true);
 		}
-		MissileData[Missiles[i]._mitype].mResist = rst;
+		MissileData[missile._mitype].mResist = rst;
 	} else {
-		Missiles[i]._midist++;
-		Missiles[i].position.traveled += Missiles[i].position.velocity;
+		missile._midist++;
+		missile.position.traveled += missile.position.velocity;
 		UpdateMissilePos(i);
 
 		int mind;
 		int maxd;
 		if (p != -1) {
-			if (Missiles[i]._micaster == TARGET_MONSTERS) {
+			if (missile._micaster == TARGET_MONSTERS) {
 				mind = Players[p]._pIMinDam;
 				maxd = Players[p]._pIMaxDam;
 			} else {
@@ -3034,49 +3040,50 @@ void MI_LArrow(int i)
 			maxd = GenerateRnd(10) + 1 + currlevel * 2;
 		}
 
-		if (Missiles[i].position.tile != Missiles[i].position.start) {
-			missile_resistance rst = MissileData[Missiles[i]._mitype].mResist;
-			MissileData[Missiles[i]._mitype].mResist = MISR_NONE;
-			CheckMissileCol(i, mind, maxd, false, Missiles[i].position.tile, false);
-			MissileData[Missiles[i]._mitype].mResist = rst;
+		if (missile.position.tile != missile.position.start) {
+			missile_resistance rst = MissileData[missile._mitype].mResist;
+			MissileData[missile._mitype].mResist = MISR_NONE;
+			CheckMissileCol(i, mind, maxd, false, missile.position.tile, false);
+			MissileData[missile._mitype].mResist = rst;
 		}
-		if (Missiles[i]._mirange == 0) {
-			Missiles[i]._mimfnum = 0;
-			Missiles[i].position.traveled -= Missiles[i].position.velocity;
+		if (missile._mirange == 0) {
+			missile._mimfnum = 0;
+			missile.position.traveled -= missile.position.velocity;
 			UpdateMissilePos(i);
-			if (Missiles[i]._mitype == MIS_LARROW)
-				SetMissAnim(i, MFILE_MINILTNG);
+			if (missile._mitype == MIS_LARROW)
+				SetMissAnim(missile, MFILE_MINILTNG);
 			else
-				SetMissAnim(i, MFILE_MAGBLOS);
-			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
-			Missiles[i].position.StopMissile();
+				SetMissAnim(missile, MFILE_MAGBLOS);
+			missile._mirange = missile._miAnimLen - 1;
+			missile.position.StopMissile();
 		} else {
-			if (Missiles[i].position.tile.x != Missiles[i]._miVar1 || Missiles[i].position.tile.y != Missiles[i]._miVar2) {
-				Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-				Missiles[i]._miVar2 = Missiles[i].position.tile.y;
-				ChangeLight(Missiles[i]._mlid, { Missiles[i]._miVar1, Missiles[i]._miVar2 }, 5);
+			if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
+				missile._miVar1 = missile.position.tile.x;
+				missile._miVar2 = missile.position.tile.y;
+				ChangeLight(missile._mlid, { missile._miVar1, missile._miVar2 }, 5);
 			}
 		}
 	}
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
 	PutMissile(i);
 }
 
 void MI_Arrow(int i)
 {
-	Missiles[i]._mirange--;
-	Missiles[i]._midist++;
-	Missiles[i].position.traveled += Missiles[i].position.velocity;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	missile._midist++;
+	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(i);
-	int p = Missiles[i]._misource;
+	int p = missile._misource;
 
 	int mind;
 	int maxd;
 	if (p != -1) {
-		if (Missiles[i]._micaster == TARGET_MONSTERS) {
+		if (missile._micaster == TARGET_MONSTERS) {
 			mind = Players[p]._pIMinDam;
 			maxd = Players[p]._pIMaxDam;
 		} else {
@@ -3087,33 +3094,34 @@ void MI_Arrow(int i)
 		mind = currlevel;
 		maxd = 2 * currlevel;
 	}
-	if (Missiles[i].position.tile != Missiles[i].position.start)
-		CheckMissileCol(i, mind, maxd, false, Missiles[i].position.tile, false);
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	if (missile.position.tile != missile.position.start)
+		CheckMissileCol(i, mind, maxd, false, missile.position.tile, false);
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 	PutMissile(i);
 }
 
 void MI_Firebolt(int i)
 {
 	int d;
+	auto &missile = Missiles[i];
 
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mitype != MIS_BONESPIRIT || Missiles[i]._mimfnum != 8) {
-		int omx = Missiles[i].position.traveled.deltaX;
-		int omy = Missiles[i].position.traveled.deltaY;
-		Missiles[i].position.traveled += Missiles[i].position.velocity;
+	missile._mirange--;
+	if (missile._mitype != MIS_BONESPIRIT || missile._mimfnum != 8) {
+		int omx = missile.position.traveled.deltaX;
+		int omy = missile.position.traveled.deltaY;
+		missile.position.traveled += missile.position.velocity;
 		UpdateMissilePos(i);
-		int p = Missiles[i]._misource;
+		int p = missile._misource;
 		if (p != -1) {
-			if (Missiles[i]._micaster == TARGET_MONSTERS) {
+			if (missile._micaster == TARGET_MONSTERS) {
 				auto &player = Players[p];
-				switch (Missiles[i]._mitype) {
+				switch (missile._mitype) {
 				case MIS_FIREBOLT:
-					d = GenerateRnd(10) + (player._pMagic / 8) + Missiles[i]._mispllvl + 1;
+					d = GenerateRnd(10) + (player._pMagic / 8) + missile._mispllvl + 1;
 					break;
 				case MIS_FLARE:
-					d = 3 * Missiles[i]._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
+					d = 3 * missile._mispllvl - (player._pMagic / 8) + (player._pMagic / 2);
 					break;
 				case MIS_BONESPIRIT:
 					d = 0;
@@ -3126,64 +3134,64 @@ void MI_Firebolt(int i)
 		} else {
 			d = currlevel + GenerateRnd(2 * currlevel);
 		}
-		if (Missiles[i].position.tile != Missiles[i].position.start) {
-			CheckMissileCol(i, d, d, false, Missiles[i].position.tile, false);
+		if (missile.position.tile != missile.position.start) {
+			CheckMissileCol(i, d, d, false, missile.position.tile, false);
 		}
-		if (Missiles[i]._mirange == 0) {
-			Missiles[i]._miDelFlag = true;
-			Missiles[i].position.traveled = { omx, omy };
+		if (missile._mirange == 0) {
+			missile._miDelFlag = true;
+			missile.position.traveled = { omx, omy };
 			UpdateMissilePos(i);
-			Missiles[i].position.StopMissile();
-			switch (Missiles[i]._mitype) {
+			missile.position.StopMissile();
+			switch (missile._mitype) {
 			case MIS_FIREBOLT:
 			case MIS_MAGMABALL:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_MISEXP, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_MISEXP, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_FLARE:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_MISEXP2, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_MISEXP2, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_ACID:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_MISEXP3, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_MISEXP3, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_BONESPIRIT:
 				SetMissDir(i, DIR_OMNI);
-				Missiles[i]._mirange = 7;
-				Missiles[i]._miDelFlag = false;
+				missile._mirange = 7;
+				missile._miDelFlag = false;
 				PutMissile(i);
 				return;
 			case MIS_LICH:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_EXORA1, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_EXORA1, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_PSYCHORB:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_EXBL2, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_EXBL2, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_NECROMORB:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_EXRED3, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_EXRED3, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_ARCHLICH:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_EXYEL2, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_EXYEL2, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_BONEDEMON:
-				AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_EXBL3, Missiles[i]._micaster, Missiles[i]._misource, 0, 0);
+				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_EXBL3, missile._micaster, missile._misource, 0, 0);
 				break;
 			}
-			if (Missiles[i]._mlid != NO_LIGHT)
-				AddUnLight(Missiles[i]._mlid);
+			if (missile._mlid != NO_LIGHT)
+				AddUnLight(missile._mlid);
 			PutMissile(i);
 		} else {
-			if (Missiles[i].position.tile.x != Missiles[i]._miVar1 || Missiles[i].position.tile.y != Missiles[i]._miVar2) {
-				Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-				Missiles[i]._miVar2 = Missiles[i].position.tile.y;
-				if (Missiles[i]._mlid != NO_LIGHT)
-					ChangeLight(Missiles[i]._mlid, { Missiles[i]._miVar1, Missiles[i]._miVar2 }, 8);
+			if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
+				missile._miVar1 = missile.position.tile.x;
+				missile._miVar2 = missile.position.tile.y;
+				if (missile._mlid != NO_LIGHT)
+					ChangeLight(missile._mlid, { missile._miVar1, missile._miVar2 }, 8);
 			}
 			PutMissile(i);
 		}
-	} else if (Missiles[i]._mirange == 0) {
-		if (Missiles[i]._mlid != NO_LIGHT)
-			AddUnLight(Missiles[i]._mlid);
-		Missiles[i]._miDelFlag = true;
-		PlaySfxLoc(LS_BSIMPCT, Missiles[i].position.tile);
+	} else if (missile._mirange == 0) {
+		if (missile._mlid != NO_LIGHT)
+			AddUnLight(missile._mlid);
+		missile._miDelFlag = true;
+		PlaySfxLoc(LS_BSIMPCT, missile.position.tile);
 		PutMissile(i);
 	} else
 		PutMissile(i);
@@ -3191,38 +3199,40 @@ void MI_Firebolt(int i)
 
 void MI_Lightball(int i)
 {
-	int tx = Missiles[i]._miVar1;
-	int ty = Missiles[i]._miVar2;
-	Missiles[i]._mirange--;
-	Missiles[i].position.traveled += Missiles[i].position.velocity;
+	auto &missile = Missiles[i];
+	int tx = missile._miVar1;
+	int ty = missile._miVar2;
+	missile._mirange--;
+	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(i);
-	int j = Missiles[i]._mirange;
-	CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, false, Missiles[i].position.tile, false);
-	if (Missiles[i]._miHitFlag)
-		Missiles[i]._mirange = j;
+	int j = missile._mirange;
+	CheckMissileCol(i, missile._midam, missile._midam, false, missile.position.tile, false);
+	if (missile._miHitFlag)
+		missile._mirange = j;
 	int8_t obj = dObject[tx][ty];
-	if (obj != 0 && tx == Missiles[i].position.tile.x && ty == Missiles[i].position.tile.y) {
+	if (obj != 0 && tx == missile.position.tile.x && ty == missile.position.tile.y) {
 		int oi = (obj > 0) ? (obj - 1) : -(obj + 1);
 		if (Objects[oi]._otype == OBJ_SHRINEL || Objects[oi]._otype == OBJ_SHRINER)
-			Missiles[i]._mirange = j;
+			missile._mirange = j;
 	}
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 	PutMissile(i);
 }
 
 void MI_Acidpud(int i)
 {
-	Missiles[i]._mirange--;
-	int range = Missiles[i]._mirange;
-	CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile, false);
-	Missiles[i]._mirange = range;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	int range = missile._mirange;
+	CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile, false);
+	missile._mirange = range;
 	if (range == 0) {
-		if (Missiles[i]._mimfnum != 0) {
-			Missiles[i]._miDelFlag = true;
+		if (missile._mimfnum != 0) {
+			missile._miDelFlag = true;
 		} else {
 			SetMissDir(i, 1);
-			Missiles[i]._mirange = Missiles[i]._miAnimLen;
+			missile._mirange = missile._miAnimLen;
 		}
 	}
 	PutMissile(i);
@@ -3231,34 +3241,36 @@ void MI_Acidpud(int i)
 void MI_Firewall(int i)
 {
 	constexpr int ExpLight[14] = { 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 12 };
+	auto &missile = Missiles[i];
 
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == Missiles[i]._miVar1) {
+	missile._mirange--;
+	if (missile._mirange == missile._miVar1) {
 		SetMissDir(i, 1);
-		Missiles[i]._miAnimFrame = GenerateRnd(11) + 1;
+		missile._miAnimFrame = GenerateRnd(11) + 1;
 	}
-	if (Missiles[i]._mirange == Missiles[i]._miAnimLen - 1) {
+	if (missile._mirange == missile._miAnimLen - 1) {
 		SetMissDir(i, 0);
-		Missiles[i]._miAnimFrame = 13;
-		Missiles[i]._miAnimAdd = -1;
+		missile._miAnimFrame = 13;
+		missile._miAnimAdd = -1;
 	}
-	CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile, true);
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile, true);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
-	if (Missiles[i]._mimfnum != 0 && Missiles[i]._mirange != 0 && Missiles[i]._miAnimAdd != -1 && Missiles[i]._miVar2 < 12) {
-		if (Missiles[i]._miVar2 == 0)
-			Missiles[i]._mlid = AddLight(Missiles[i].position.tile, ExpLight[0]);
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, ExpLight[Missiles[i]._miVar2]);
-		Missiles[i]._miVar2++;
+	if (missile._mimfnum != 0 && missile._mirange != 0 && missile._miAnimAdd != -1 && missile._miVar2 < 12) {
+		if (missile._miVar2 == 0)
+			missile._mlid = AddLight(missile.position.tile, ExpLight[0]);
+		ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile._miVar2]);
+		missile._miVar2++;
 	}
 	PutMissile(i);
 }
 
 void MI_Fireball(int i)
 {
-	FireballUpdate(i, Missiles[i].position.velocity, false);
+	auto &missile = Missiles[i];
+	FireballUpdate(i, missile.position.velocity, false);
 }
 
 void MI_HorkSpawn(int mi)
@@ -3299,124 +3311,129 @@ void MI_HorkSpawn(int mi)
 
 void MI_Rune(int i)
 {
-	int mx = Missiles[i].position.tile.x;
-	int my = Missiles[i].position.tile.y;
+	auto &missile = Missiles[i];
+	int mx = missile.position.tile.x;
+	int my = missile.position.tile.y;
 	int mid = dMonster[mx][my];
 	int8_t pid = dPlayer[mx][my];
 	if (mid != 0 || pid != 0) {
 		Direction dir;
 		if (mid != 0) {
 			mid = (mid > 0) ? (mid - 1) : -(mid + 1);
-			dir = GetDirection(Missiles[i].position.tile, Monsters[mid].position.tile);
+			dir = GetDirection(missile.position.tile, Monsters[mid].position.tile);
 		} else {
 			pid = (pid > 0) ? (pid - 1) : -(pid + 1);
-			dir = GetDirection(Missiles[i].position.tile, Players[pid].position.tile);
+			dir = GetDirection(missile.position.tile, Players[pid].position.tile);
 		}
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
-		AddMissile({ mx, my }, { mx, my }, dir, Missiles[i]._miVar1, TARGET_BOTH, Missiles[i]._misource, Missiles[i]._midam, Missiles[i]._mispllvl);
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
+		AddMissile({ mx, my }, { mx, my }, dir, missile._miVar1, TARGET_BOTH, missile._misource, missile._midam, missile._mispllvl);
 	}
 	PutMissile(i);
 }
 
 void MI_LightningWall(int i)
 {
-	Missiles[i]._mirange--;
-	int range = Missiles[i]._mirange;
-	CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile, false);
-	if (Missiles[i]._miHitFlag)
-		Missiles[i]._mirange = range;
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	int range = missile._mirange;
+	CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile, false);
+	if (missile._miHitFlag)
+		missile._mirange = range;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 	PutMissile(i);
 }
 
 void MI_HiveExplode(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange <= 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._mirange <= 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
 	PutMissile(i);
 }
 
 void MI_LightningArrow(int i)
 {
-	Missiles[i]._mirange--;
-	Missiles[i].position.traveled += Missiles[i].position.velocity;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(i);
 
-	int mx = Missiles[i].position.tile.x;
-	int my = Missiles[i].position.tile.y;
+	int mx = missile.position.tile.x;
+	int my = missile.position.tile.y;
 	assert(mx >= 0 && mx < MAXDUNX);
 	assert(my >= 0 && my < MAXDUNY);
 	int pn = dPiece[mx][my];
 	assert(pn >= 0 && pn <= MAXTILES);
 
-	if (Missiles[i]._misource == -1) {
-		if ((mx != Missiles[i].position.start.x || my != Missiles[i].position.start.y) && nMissileTable[pn]) {
-			Missiles[i]._mirange = 0;
+	if (missile._misource == -1) {
+		if ((mx != missile.position.start.x || my != missile.position.start.y) && nMissileTable[pn]) {
+			missile._mirange = 0;
 		}
 	} else if (nMissileTable[pn]) {
-		Missiles[i]._mirange = 0;
+		missile._mirange = 0;
 	}
 
 	if (!nMissileTable[pn]) {
-		if ((mx != Missiles[i]._miVar1 || my != Missiles[i]._miVar2) && mx > 0 && my > 0 && mx < MAXDUNX && my < MAXDUNY) {
-			if (Missiles[i]._misource != -1) {
-				if (Missiles[i]._micaster == TARGET_PLAYERS
-				    && IsAnyOf(Monsters[Missiles[i]._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+		if ((mx != missile._miVar1 || my != missile._miVar2) && mx > 0 && my > 0 && mx < MAXDUNX && my < MAXDUNY) {
+			if (missile._misource != -1) {
+				if (missile._micaster == TARGET_PLAYERS
+				    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
 					AddMissile(
-					    Missiles[i].position.tile,
-					    Missiles[i].position.start,
+					    missile.position.tile,
+					    missile.position.start,
 					    i,
 					    MIS_LIGHTNING2,
-					    Missiles[i]._micaster,
-					    Missiles[i]._misource,
-					    Missiles[i]._midam,
-					    Missiles[i]._mispllvl);
+					    missile._micaster,
+					    missile._misource,
+					    missile._midam,
+					    missile._mispllvl);
 				} else {
 					AddMissile(
-					    Missiles[i].position.tile,
-					    Missiles[i].position.start,
+					    missile.position.tile,
+					    missile.position.start,
 					    i,
 					    MIS_LIGHTNING,
-					    Missiles[i]._micaster,
-					    Missiles[i]._misource,
-					    Missiles[i]._midam,
-					    Missiles[i]._mispllvl);
+					    missile._micaster,
+					    missile._misource,
+					    missile._midam,
+					    missile._mispllvl);
 				}
 			} else {
 				AddMissile(
-				    Missiles[i].position.tile,
-				    Missiles[i].position.start,
+				    missile.position.tile,
+				    missile.position.start,
 				    i,
 				    MIS_LIGHTNING,
-				    Missiles[i]._micaster,
-				    Missiles[i]._misource,
-				    Missiles[i]._midam,
-				    Missiles[i]._mispllvl);
+				    missile._micaster,
+				    missile._misource,
+				    missile._midam,
+				    missile._mispllvl);
 			}
-			Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-			Missiles[i]._miVar2 = Missiles[i].position.tile.y;
+			missile._miVar1 = missile.position.tile.x;
+			missile._miVar2 = missile.position.tile.y;
 		}
 	}
 
-	if (Missiles[i]._mirange == 0 || mx <= 0 || my <= 0 || mx >= MAXDUNX || my > MAXDUNY) { // BUGFIX my >= MAXDUNY
-		Missiles[i]._miDelFlag = true;
+	if (missile._mirange == 0 || mx <= 0 || my <= 0 || mx >= MAXDUNX || my > MAXDUNY) { // BUGFIX my >= MAXDUNY
+		missile._miDelFlag = true;
 	}
 }
 
 void MI_Reflect(int i)
 {
-	int src = Missiles[i]._misource;
+	auto &missile = Missiles[i];
+	int src = missile._misource;
 	auto &player = Players[src];
 
 	if (src != MyPlayerId && currlevel != player.plrlevel)
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 	if (player.wReflections <= 0) {
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 		NetSendCmd(true, CMD_REFLECT);
 	}
 	PutMissile(i);
@@ -3424,16 +3441,17 @@ void MI_Reflect(int i)
 
 void MI_FireRing(int i)
 {
-	Missiles[i]._miDelFlag = true;
-	int8_t src = Missiles[i]._micaster;
+	auto &missile = Missiles[i];
+	missile._miDelFlag = true;
+	int8_t src = missile._micaster;
 	uint8_t lvl = src > 0 ? Players[src]._pLevel : currlevel;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
 	int k = CrawlNum[3];
 	int ck = k + 2;
 	for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-		int tx = Missiles[i]._miVar1 + CrawlTable[ck - 1];
-		int ty = Missiles[i]._miVar2 + CrawlTable[ck];
+		int tx = missile._miVar1 + CrawlTable[ck - 1];
+		int ty = missile._miVar2 + CrawlTable[ck];
 		if (!InDungeonBounds({ tx, ty }))
 			continue;
 		int dp = dPiece[tx][ty];
@@ -3441,61 +3459,63 @@ void MI_FireRing(int i)
 			continue;
 		if (dObject[tx][ty] != 0)
 			continue;
-		if (!LineClearMissile(Missiles[i].position.tile, { tx, ty }))
+		if (!LineClearMissile(missile.position.tile, { tx, ty }))
 			continue;
-		if (nMissileTable[dp] || Missiles[i].limitReached) {
-			Missiles[i].limitReached = true;
+		if (nMissileTable[dp] || missile.limitReached) {
+			missile.limitReached = true;
 			continue;
 		}
 
-		AddMissile({ tx, ty }, { tx, ty }, 0, MIS_FIREWALL, TARGET_BOTH, src, dmg, Missiles[i]._mispllvl);
+		AddMissile({ tx, ty }, { tx, ty }, 0, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
 	}
 }
 
 void MI_Search(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange != 0)
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._mirange != 0)
 		return;
 
-	Missiles[i]._miDelFlag = true;
-	PlaySfxLoc(IS_CAST7, Players[Missiles[i]._miVar1].position.tile);
+	missile._miDelFlag = true;
+	PlaySfxLoc(IS_CAST7, Players[missile._miVar1].position.tile);
 	AutoMapShowItems = false;
 }
 
 void MI_LightningWallC(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
 		return;
 	}
 
-	int id = Missiles[i]._misource;
+	int id = missile._misource;
 	int lvl = (id > -1) ? Players[id]._pLevel : 0;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
 
 	{
-		Point position = { Missiles[i]._miVar1, Missiles[i]._miVar2 };
-		Point target = position + static_cast<Direction>(Missiles[i]._miVar3);
+		Point position = { missile._miVar1, missile._miVar2 };
+		Point target = position + static_cast<Direction>(missile._miVar3);
 
-		if (!Missiles[i].limitReached && GrowWall(id, position, target, MIS_LIGHTWALL, Missiles[i]._mispllvl, dmg)) {
-			Missiles[i]._miVar1 = target.x;
-			Missiles[i]._miVar2 = target.y;
+		if (!missile.limitReached && GrowWall(id, position, target, MIS_LIGHTWALL, missile._mispllvl, dmg)) {
+			missile._miVar1 = target.x;
+			missile._miVar2 = target.y;
 		} else {
-			Missiles[i].limitReached = true;
+			missile.limitReached = true;
 		}
 	}
 
 	{
-		Point position = { Missiles[i]._miVar5, Missiles[i]._miVar6 };
-		Point target = position + static_cast<Direction>(Missiles[i]._miVar4);
+		Point position = { missile._miVar5, missile._miVar6 };
+		Point target = position + static_cast<Direction>(missile._miVar4);
 
-		if (Missiles[i]._miVar7 == 0 && GrowWall(id, position, target, MIS_LIGHTWALL, Missiles[i]._mispllvl, dmg)) {
-			Missiles[i]._miVar5 = target.x;
-			Missiles[i]._miVar6 = target.y;
+		if (missile._miVar7 == 0 && GrowWall(id, position, target, MIS_LIGHTWALL, missile._mispllvl, dmg)) {
+			missile._miVar5 = target.x;
+			missile._miVar6 = target.y;
 		} else {
-			Missiles[i]._miVar7 = 1;
+			missile._miVar7 = 1;
 		}
 	}
 }
@@ -3504,9 +3524,10 @@ void MI_FireNova(int i)
 {
 	int sx1 = 0;
 	int sy1 = 0;
-	int id = Missiles[i]._misource;
-	int dam = Missiles[i]._midam;
-	Point src = Missiles[i].position.tile;
+	auto &missile = Missiles[i];
+	int id = missile._misource;
+	int dam = missile._midam;
+	Point src = missile.position.tile;
 	Direction dir = DIR_S;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
@@ -3517,23 +3538,24 @@ void MI_FireNova(int i)
 		if (sx1 != k[6] || sy1 != k[7]) {
 			Displacement offsets[] = { { k[6], k[7] }, { -k[6], -k[7] }, { -k[6], +k[7] }, { +k[6], -k[7] } };
 			for (Displacement offset : offsets)
-				AddMissile(src, src + offset, dir, MIS_FIRENOVA, en, id, dam, Missiles[i]._mispllvl);
+				AddMissile(src, src + offset, dir, MIS_FIRENOVA, en, id, dam, missile._mispllvl);
 			sx1 = k[6];
 			sy1 = k[7];
 		}
 	}
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	missile._mirange--;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 }
 
 void MI_SpecArrow(int i)
 {
-	int id = Missiles[i]._misource;
-	int dam = Missiles[i]._midam;
-	Point src = Missiles[i].position.tile;
-	Point dst = { Missiles[i]._miVar1, Missiles[i]._miVar2 };
-	int spllvl = Missiles[i]._miVar3;
+	auto &missile = Missiles[i];
+	int id = missile._misource;
+	int dam = missile._midam;
+	Point src = missile.position.tile;
+	Point dst = { missile._miVar1, missile._miVar2 };
+	int spllvl = missile._miVar3;
 	int mitype = 0;
 	Direction dir = DIR_S;
 	mienemy_type micaster = TARGET_PLAYERS;
@@ -3562,20 +3584,21 @@ void MI_SpecArrow(int i)
 		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 		AddMissile(src, dst, dir, mitype, micaster, id, dam, spllvl);
 	}
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	missile._mirange--;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 }
 
 void MI_Lightctrl(int i)
 {
 	assert(i >= 0 && i < MAXMISSILES);
-	Missiles[i]._mirange--;
+	auto &missile = Missiles[i];
+	missile._mirange--;
 
 	int dam;
-	int id = Missiles[i]._misource;
+	int id = missile._misource;
 	if (id != -1) {
-		if (Missiles[i]._micaster == TARGET_MONSTERS) {
+		if (missile._micaster == TARGET_MONSTERS) {
 			dam = (GenerateRnd(2) + GenerateRnd(Players[id]._pLevel) + 2) << 6;
 		} else {
 			auto &monster = Monsters[id];
@@ -3585,78 +3608,79 @@ void MI_Lightctrl(int i)
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
 	}
 
-	Missiles[i].position.traveled += Missiles[i].position.velocity;
+	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(i);
 
-	int mx = Missiles[i].position.tile.x;
-	int my = Missiles[i].position.tile.y;
+	int mx = missile.position.tile.x;
+	int my = missile.position.tile.y;
 	assert(mx >= 0 && mx < MAXDUNX);
 	assert(my >= 0 && my < MAXDUNY);
 	int pn = dPiece[mx][my];
 	assert(pn >= 0 && pn <= MAXTILES);
 
-	if (id != -1 || Point { mx, my } != Missiles[i].position.start) {
+	if (id != -1 || Point { mx, my } != missile.position.start) {
 		if (nMissileTable[pn]) {
-			Missiles[i]._mirange = 0;
+			missile._mirange = 0;
 		}
 	}
 	if (!nMissileTable[pn]
-	    && Point { mx, my } != Point { Missiles[i]._miVar1, Missiles[i]._miVar2 }
+	    && Point { mx, my } != Point { missile._miVar1, missile._miVar2 }
 	    && InDungeonBounds({ mx, my })) {
 		if (id != -1) {
-			if (Missiles[i]._micaster == TARGET_PLAYERS
+			if (missile._micaster == TARGET_PLAYERS
 			    && IsAnyOf(Monsters[id].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
 				AddMissile(
-				    Missiles[i].position.tile,
-				    Missiles[i].position.start,
+				    missile.position.tile,
+				    missile.position.start,
 				    i,
 				    MIS_LIGHTNING2,
-				    Missiles[i]._micaster,
+				    missile._micaster,
 				    id,
 				    dam,
-				    Missiles[i]._mispllvl);
+				    missile._mispllvl);
 			} else {
 				AddMissile(
-				    Missiles[i].position.tile,
-				    Missiles[i].position.start,
+				    missile.position.tile,
+				    missile.position.start,
 				    i,
 				    MIS_LIGHTNING,
-				    Missiles[i]._micaster,
+				    missile._micaster,
 				    id,
 				    dam,
-				    Missiles[i]._mispllvl);
+				    missile._mispllvl);
 			}
 		} else {
 			AddMissile(
-			    Missiles[i].position.tile,
-			    Missiles[i].position.start,
+			    missile.position.tile,
+			    missile.position.start,
 			    i,
 			    MIS_LIGHTNING,
-			    Missiles[i]._micaster,
+			    missile._micaster,
 			    id,
 			    dam,
-			    Missiles[i]._mispllvl);
+			    missile._mispllvl);
 		}
-		Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-		Missiles[i]._miVar2 = Missiles[i].position.tile.y;
+		missile._miVar1 = missile.position.tile.x;
+		missile._miVar2 = missile.position.tile.y;
 	}
 	assert(mx != 0 && my != 0);
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
 	}
 }
 
 void MI_Lightning(int i)
 {
-	Missiles[i]._mirange--;
-	int j = Missiles[i]._mirange;
-	if (Missiles[i].position.tile != Missiles[i].position.start)
-		CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile, false);
-	if (Missiles[i]._miHitFlag)
-		Missiles[i]._mirange = j;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	int j = missile._mirange;
+	if (missile.position.tile != missile.position.start)
+		CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile, false);
+	if (missile._miHitFlag)
+		missile._mirange = j;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
 	PutMissile(i);
 }
@@ -3664,53 +3688,55 @@ void MI_Lightning(int i)
 void MI_Town(int i)
 {
 	int expLight[17] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15 };
+	auto &missile = Missiles[i];
 
-	if (Missiles[i]._mirange > 1)
-		Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == Missiles[i]._miVar1)
+	if (missile._mirange > 1)
+		missile._mirange--;
+	if (missile._mirange == missile._miVar1)
 		SetMissDir(i, 1);
-	if (currlevel != 0 && Missiles[i]._mimfnum != 1 && Missiles[i]._mirange != 0) {
-		if (Missiles[i]._miVar2 == 0)
-			Missiles[i]._mlid = AddLight(Missiles[i].position.tile, 1);
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, expLight[Missiles[i]._miVar2]);
-		Missiles[i]._miVar2++;
+	if (currlevel != 0 && missile._mimfnum != 1 && missile._mirange != 0) {
+		if (missile._miVar2 == 0)
+			missile._mlid = AddLight(missile.position.tile, 1);
+		ChangeLight(missile._mlid, missile.position.tile, expLight[missile._miVar2]);
+		missile._miVar2++;
 	}
 
 	for (int p = 0; p < MAX_PLRS; p++) {
 		auto &player = Players[p];
-		if (player.plractive && currlevel == player.plrlevel && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == Missiles[i].position.tile) {
+		if (player.plractive && currlevel == player.plrlevel && !player._pLvlChanging && player._pmode == PM_STAND && player.position.tile == missile.position.tile) {
 			ClrPlrPath(player);
 			if (p == MyPlayerId) {
-				NetSendCmdParam1(true, CMD_WARP, Missiles[i]._misource);
+				NetSendCmdParam1(true, CMD_WARP, missile._misource);
 				player._pmode = PM_NEWLVL;
 			}
 		}
 	}
 
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
 	PutMissile(i);
 }
 
 void MI_Flash(int i)
 {
-	if (Missiles[i]._micaster == TARGET_MONSTERS) {
-		if (Missiles[i]._misource != -1)
-			Players[Missiles[i]._misource]._pInvincible = true;
+	auto &missile = Missiles[i];
+	if (missile._micaster == TARGET_MONSTERS) {
+		if (missile._misource != -1)
+			Players[missile._misource]._pInvincible = true;
 	}
-	Missiles[i]._mirange--;
+	missile._mirange--;
 
 	constexpr Displacement Offsets[] = { { -1, 0 }, { 0, 0 }, { 1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 } };
 	for (Displacement offset : Offsets)
-		CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile + offset, true);
+		CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		if (Missiles[i]._micaster == TARGET_MONSTERS) {
-			if (Missiles[i]._misource != -1)
-				Players[Missiles[i]._misource]._pInvincible = false;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		if (missile._micaster == TARGET_MONSTERS) {
+			if (missile._misource != -1)
+				Players[missile._misource]._pInvincible = false;
 		}
 	}
 	PutMissile(i);
@@ -3718,21 +3744,22 @@ void MI_Flash(int i)
 
 void MI_Flash2(int i)
 {
-	if (Missiles[i]._micaster == TARGET_MONSTERS) {
-		if (Missiles[i]._misource != -1)
-			Players[Missiles[i]._misource]._pInvincible = true;
+	auto &missile = Missiles[i];
+	if (missile._micaster == TARGET_MONSTERS) {
+		if (missile._misource != -1)
+			Players[missile._misource]._pInvincible = true;
 	}
-	Missiles[i]._mirange--;
+	missile._mirange--;
 
 	constexpr Displacement Offsets[] = { { -1, -1 }, { 0, -1 }, { 1, -1 } };
 	for (Displacement offset : Offsets)
-		CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile + offset, true);
+		CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile + offset, true);
 
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		if (Missiles[i]._micaster == TARGET_MONSTERS) {
-			if (Missiles[i]._misource != -1)
-				Players[Missiles[i]._misource]._pInvincible = false;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		if (missile._micaster == TARGET_MONSTERS) {
+			if (missile._misource != -1)
+				Players[missile._misource]._pInvincible = false;
 		}
 	}
 	PutMissile(i);
@@ -3740,16 +3767,17 @@ void MI_Flash2(int i)
 
 void MI_Manashield(int i)
 {
-	int id = Missiles[i]._misource;
+	auto &missile = Missiles[i];
+	int id = missile._misource;
 	if (id != MyPlayerId) {
 		if (currlevel != Players[id].plrlevel)
-			Missiles[i]._miDelFlag = true;
+			missile._miDelFlag = true;
 	} else {
 		if (Players[id]._pMana <= 0 || !Players[id].plractive)
-			Missiles[i]._mirange = 0;
+			missile._mirange = 0;
 
-		if (Missiles[i]._mirange == 0) {
-			Missiles[i]._miDelFlag = true;
+		if (missile._mirange == 0) {
+			missile._miDelFlag = true;
 			NetSendCmd(true, CMD_ENDSHIELD);
 		}
 	}
@@ -3759,59 +3787,61 @@ void MI_Manashield(int i)
 void MI_Firemove(int i)
 {
 	constexpr int ExpLight[14] = { 2, 3, 4, 5, 5, 6, 7, 8, 9, 10, 11, 12, 12 };
+	auto &missile = Missiles[i];
 
-	Missiles[i].position.tile.x--;
-	Missiles[i].position.tile.y--;
-	Missiles[i].position.offset.deltaY += 32;
-	Missiles[i]._miVar1++;
-	if (Missiles[i]._miVar1 == Missiles[i]._miAnimLen) {
+	missile.position.tile.x--;
+	missile.position.tile.y--;
+	missile.position.offset.deltaY += 32;
+	missile._miVar1++;
+	if (missile._miVar1 == missile._miAnimLen) {
 		SetMissDir(i, 1);
-		Missiles[i]._miAnimFrame = GenerateRnd(11) + 1;
+		missile._miAnimFrame = GenerateRnd(11) + 1;
 	}
-	Missiles[i].position.traveled += Missiles[i].position.velocity;
+	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(i);
-	int j = Missiles[i]._mirange;
-	CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, false, Missiles[i].position.tile, false);
-	if (Missiles[i]._miHitFlag)
-		Missiles[i]._mirange = j;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	int j = missile._mirange;
+	CheckMissileCol(i, missile._midam, missile._midam, false, missile.position.tile, false);
+	if (missile._miHitFlag)
+		missile._mirange = j;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
-	if (Missiles[i]._mimfnum != 0 || Missiles[i]._mirange == 0) {
-		if (Missiles[i].position.tile.x != Missiles[i]._miVar3 || Missiles[i].position.tile.y != Missiles[i]._miVar4) {
-			Missiles[i]._miVar3 = Missiles[i].position.tile.x;
-			Missiles[i]._miVar4 = Missiles[i].position.tile.y;
-			ChangeLight(Missiles[i]._mlid, { Missiles[i]._miVar3, Missiles[i]._miVar4 }, 8);
+	if (missile._mimfnum != 0 || missile._mirange == 0) {
+		if (missile.position.tile.x != missile._miVar3 || missile.position.tile.y != missile._miVar4) {
+			missile._miVar3 = missile.position.tile.x;
+			missile._miVar4 = missile.position.tile.y;
+			ChangeLight(missile._mlid, { missile._miVar3, missile._miVar4 }, 8);
 		}
 	} else {
-		if (Missiles[i]._miVar2 == 0)
-			Missiles[i]._mlid = AddLight(Missiles[i].position.tile, ExpLight[0]);
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, ExpLight[Missiles[i]._miVar2]);
-		Missiles[i]._miVar2++;
+		if (missile._miVar2 == 0)
+			missile._mlid = AddLight(missile.position.tile, ExpLight[0]);
+		ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile._miVar2]);
+		missile._miVar2++;
 	}
-	Missiles[i].position.tile.x++;
-	Missiles[i].position.tile.y++;
-	Missiles[i].position.offset.deltaY -= 32;
+	missile.position.tile.x++;
+	missile.position.tile.y++;
+	missile.position.offset.deltaY -= 32;
 	PutMissile(i);
 }
 
 void MI_Guardian(int i)
 {
 	assert(i >= 0 && i < MAXMISSILES);
+	auto &missile = Missiles[i];
 
-	Missiles[i]._mirange--;
+	missile._mirange--;
 
-	if (Missiles[i]._miVar2 > 0) {
-		Missiles[i]._miVar2--;
+	if (missile._miVar2 > 0) {
+		missile._miVar2--;
 	}
-	if (Missiles[i]._mirange == Missiles[i]._miVar1 || (Missiles[i]._mimfnum == MFILE_GUARD && Missiles[i]._miVar2 == 0)) {
+	if (missile._mirange == missile._miVar1 || (missile._mimfnum == MFILE_GUARD && missile._miVar2 == 0)) {
 		SetMissDir(i, 1);
 	}
 
-	Point position = Missiles[i].position.tile;
+	Point position = missile.position.tile;
 
-	if ((Missiles[i]._mirange % 16) == 0) {
+	if ((missile._mirange % 16) == 0) {
 		Displacement previous = { 0, 0 };
 
 		bool found = false;
@@ -3835,23 +3865,23 @@ void MI_Guardian(int i)
 		}
 	}
 
-	if (Missiles[i]._mirange == 14) {
+	if (missile._mirange == 14) {
 		SetMissDir(i, 0);
-		Missiles[i]._miAnimFrame = 15;
-		Missiles[i]._miAnimAdd = -1;
+		missile._miAnimFrame = 15;
+		missile._miAnimAdd = -1;
 	}
 
-	Missiles[i]._miVar3 += Missiles[i]._miAnimAdd;
+	missile._miVar3 += missile._miAnimAdd;
 
-	if (Missiles[i]._miVar3 > 15) {
-		Missiles[i]._miVar3 = 15;
-	} else if (Missiles[i]._miVar3 > 0) {
-		ChangeLight(Missiles[i]._mlid, position, Missiles[i]._miVar3);
+	if (missile._miVar3 > 15) {
+		missile._miVar3 = 15;
+	} else if (missile._miVar3 > 0) {
+		ChangeLight(missile._mlid, position, missile._miVar3);
 	}
 
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
 
 	PutMissile(i);
@@ -3885,31 +3915,32 @@ void MI_Chain(int mi)
 void MI_Weapexp(int i)
 {
 	constexpr int ExpLight[10] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2 };
+	auto &missile = Missiles[i];
 
-	Missiles[i]._mirange--;
-	int id = Missiles[i]._misource;
+	missile._mirange--;
+	int id = missile._misource;
 	int mind;
 	int maxd;
-	if (Missiles[i]._miVar2 == 1) {
+	if (missile._miVar2 == 1) {
 		mind = Players[id]._pIFMinDam;
 		maxd = Players[id]._pIFMaxDam;
-		MissileData[Missiles[i]._mitype].mResist = MISR_FIRE;
+		MissileData[missile._mitype].mResist = MISR_FIRE;
 	} else {
 		mind = Players[id]._pILMinDam;
 		maxd = Players[id]._pILMaxDam;
-		MissileData[Missiles[i]._mitype].mResist = MISR_LIGHTNING;
+		MissileData[missile._mitype].mResist = MISR_LIGHTNING;
 	}
-	CheckMissileCol(i, mind, maxd, false, Missiles[i].position.tile, false);
-	if (Missiles[i]._miVar1 == 0) {
-		Missiles[i]._mlid = AddLight(Missiles[i].position.tile, 9);
+	CheckMissileCol(i, mind, maxd, false, missile.position.tile, false);
+	if (missile._miVar1 == 0) {
+		missile._mlid = AddLight(missile.position.tile, 9);
 	} else {
-		if (Missiles[i]._mirange != 0)
-			ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, ExpLight[Missiles[i]._miVar1]);
+		if (missile._mirange != 0)
+			ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile._miVar1]);
 	}
-	Missiles[i]._miVar1++;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	missile._miVar1++;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	} else {
 		PutMissile(i);
 	}
@@ -3918,34 +3949,36 @@ void MI_Weapexp(int i)
 void MI_Misexp(int i)
 {
 	constexpr int ExpLight[] = { 9, 10, 11, 12, 11, 10, 8, 6, 4, 2, 1, 0, 0, 0, 0 };
+	auto &missile = Missiles[i];
 
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	missile._mirange--;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	} else {
-		if (Missiles[i]._miVar1 == 0)
-			Missiles[i]._mlid = AddLight(Missiles[i].position.tile, 9);
+		if (missile._miVar1 == 0)
+			missile._mlid = AddLight(missile.position.tile, 9);
 		else
-			ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, ExpLight[Missiles[i]._miVar1]);
-		Missiles[i]._miVar1++;
+			ChangeLight(missile._mlid, missile.position.tile, ExpLight[missile._miVar1]);
+		missile._miVar1++;
 		PutMissile(i);
 	}
 }
 
 void MI_Acidsplat(int i)
 {
-	if (Missiles[i]._mirange == Missiles[i]._miAnimLen) {
-		Missiles[i].position.tile.x++;
-		Missiles[i].position.tile.y++;
-		Missiles[i].position.offset.deltaY -= 32;
+	auto &missile = Missiles[i];
+	if (missile._mirange == missile._miAnimLen) {
+		missile.position.tile.x++;
+		missile.position.tile.y++;
+		missile.position.offset.deltaY -= 32;
 	}
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		int monst = Missiles[i]._misource;
+	missile._mirange--;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		int monst = missile._misource;
 		int dam = (Monsters[monst].MData->mLevel >= 2 ? 2 : 1);
-		AddMissile(Missiles[i].position.tile, { i, 0 }, Missiles[i]._mimfnum, MIS_ACIDPUD, TARGET_PLAYERS, monst, dam, Missiles[i]._mispllvl);
+		AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_ACIDPUD, TARGET_PLAYERS, monst, dam, missile._mispllvl);
 	} else {
 		PutMissile(i);
 	}
@@ -3953,22 +3986,23 @@ void MI_Acidsplat(int i)
 
 void MI_Teleport(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange <= 0) {
-		Missiles[i]._miDelFlag = true;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._mirange <= 0) {
+		missile._miDelFlag = true;
 		return;
 	}
 
-	int id = Missiles[i]._misource;
+	int id = missile._misource;
 	auto &player = Players[id];
 
 	dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 	PlrClrTrans(player.position.tile);
-	player.position.tile = { Missiles[i].position.tile.x, Missiles[i].position.tile.y };
+	player.position.tile = { missile.position.tile.x, missile.position.tile.y };
 	player.position.future = player.position.tile;
 	player.position.old = player.position.tile;
 	PlrDoTrans(player.position.tile);
-	Missiles[i]._miVar1 = 1;
+	missile._miVar1 = 1;
 	dPlayer[player.position.tile.x][player.position.tile.y] = id + 1;
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player._plid, player.position.tile);
@@ -3982,69 +4016,72 @@ void MI_Teleport(int i)
 
 void MI_Stone(int i)
 {
-	Missiles[i]._mirange--;
-	auto &monster = Monsters[Missiles[i]._miVar2];
-	if (monster._mhitpoints == 0 && Missiles[i]._miAnimType != MFILE_SHATTER1) {
-		Missiles[i]._mimfnum = 0;
-		Missiles[i]._miDrawFlag = true;
-		SetMissAnim(i, MFILE_SHATTER1);
-		Missiles[i]._mirange = 11;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	auto &monster = Monsters[missile._miVar2];
+	if (monster._mhitpoints == 0 && missile._miAnimType != MFILE_SHATTER1) {
+		missile._mimfnum = 0;
+		missile._miDrawFlag = true;
+		SetMissAnim(missile, MFILE_SHATTER1);
+		missile._mirange = 11;
 	}
 	if (monster._mmode != MM_STONE) {
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 		return;
 	}
 
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
 		if (monster._mhitpoints > 0) {
-			monster._mmode = (MON_MODE)Missiles[i]._miVar1;
+			monster._mmode = (MON_MODE)missile._miVar1;
 			monster.AnimInfo.IsPetrified = false;
 		} else {
 			AddDead(monster.position.tile, stonendx, monster._mdir);
 		}
 	}
-	if (Missiles[i]._miAnimType == MFILE_SHATTER1)
+	if (missile._miAnimType == MFILE_SHATTER1)
 		PutMissile(i);
 }
 
 void MI_Boom(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._miVar1 == 0)
-		CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, false, Missiles[i].position.tile, true);
-	if (Missiles[i]._miHitFlag)
-		Missiles[i]._miVar1 = 1;
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._miVar1 == 0)
+		CheckMissileCol(i, missile._midam, missile._midam, false, missile.position.tile, true);
+	if (missile._miHitFlag)
+		missile._miVar1 = 1;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 	PutMissile(i);
 }
 
 void MI_Rhino(int i)
 {
-	int monst = Missiles[i]._misource;
+	auto &missile = Missiles[i];
+	int monst = missile._misource;
 	auto &monster = Monsters[monst];
 	if (monster._mmode != MM_CHARGE) {
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 		return;
 	}
 	UpdateMissilePos(i);
-	Point prevPos = Missiles[i].position.tile;
+	Point prevPos = missile.position.tile;
 	Point newPosSnake;
 	dMonster[prevPos.x][prevPos.y] = 0;
 	if (monster._mAi == AI_SNAKE) {
-		Missiles[i].position.traveled += Missiles[i].position.velocity * 2;
+		missile.position.traveled += missile.position.velocity * 2;
 		UpdateMissilePos(i);
-		newPosSnake = Missiles[i].position.tile;
-		Missiles[i].position.traveled -= Missiles[i].position.velocity;
+		newPosSnake = missile.position.tile;
+		missile.position.traveled -= missile.position.velocity;
 	} else {
-		Missiles[i].position.traveled += Missiles[i].position.velocity;
+		missile.position.traveled += missile.position.velocity;
 	}
 	UpdateMissilePos(i);
-	Point newPos = Missiles[i].position.tile;
+	Point newPos = missile.position.tile;
 	if (!IsTileAvailable(monster, newPos) || (monster._mAi == AI_SNAKE && !IsTileAvailable(monster, newPosSnake))) {
 		MissToMonst(i, prevPos);
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 		return;
 	}
 	monster.position.future = newPos;
@@ -4052,83 +4089,86 @@ void MI_Rhino(int i)
 	monster.position.tile = newPos;
 	dMonster[newPos.x][newPos.y] = -(monst + 1);
 	if (monster._uniqtype != 0)
-		ChangeLightXY(Missiles[i]._mlid, newPos);
+		ChangeLightXY(missile._mlid, newPos);
 	MoveMissilePos(i);
 	PutMissile(i);
 }
 
 void MI_FirewallC(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
 		return;
 	}
 
-	int id = Missiles[i]._misource;
+	int id = missile._misource;
 
 	{
-		Point position = { Missiles[i]._miVar1, Missiles[i]._miVar2 };
-		Point target = position + static_cast<Direction>(Missiles[i]._miVar3);
+		Point position = { missile._miVar1, missile._miVar2 };
+		Point target = position + static_cast<Direction>(missile._miVar3);
 
-		if (!Missiles[i].limitReached && GrowWall(id, position, target, MIS_FIREWALL, Missiles[i]._mispllvl, 0)) {
-			Missiles[i]._miVar1 = target.x;
-			Missiles[i]._miVar2 = target.y;
+		if (!missile.limitReached && GrowWall(id, position, target, MIS_FIREWALL, missile._mispllvl, 0)) {
+			missile._miVar1 = target.x;
+			missile._miVar2 = target.y;
 		} else {
-			Missiles[i].limitReached = true;
+			missile.limitReached = true;
 		}
 	}
 
 	{
-		Point position = { Missiles[i]._miVar5, Missiles[i]._miVar6 };
-		Point target = position + static_cast<Direction>(Missiles[i]._miVar4);
+		Point position = { missile._miVar5, missile._miVar6 };
+		Point target = position + static_cast<Direction>(missile._miVar4);
 
-		if (Missiles[i]._miVar7 == 0 && GrowWall(id, position, target, MIS_FIREWALL, Missiles[i]._mispllvl, 0)) {
-			Missiles[i]._miVar5 = target.x;
-			Missiles[i]._miVar6 = target.y;
+		if (missile._miVar7 == 0 && GrowWall(id, position, target, MIS_FIREWALL, missile._mispllvl, 0)) {
+			missile._miVar5 = target.x;
+			missile._miVar6 = target.y;
 		} else {
-			Missiles[i]._miVar7 = 1;
+			missile._miVar7 = 1;
 		}
 	}
 }
 
 void MI_Infra(int i)
 {
-	Missiles[i]._mirange--;
-	Players[Missiles[i]._misource]._pInfraFlag = true;
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		CalcPlrItemVals(Missiles[i]._misource, true);
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	Players[missile._misource]._pInfraFlag = true;
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		CalcPlrItemVals(missile._misource, true);
 	}
 }
 
 void MI_Apoca(int i)
 {
-	int id = Missiles[i]._misource;
+	auto &missile = Missiles[i];
+	int id = missile._misource;
 	bool exit = false;
 	int j;
 	int k;
-	for (j = Missiles[i]._miVar2; j < Missiles[i]._miVar3 && !exit; j++) {
-		for (k = Missiles[i]._miVar4; k < Missiles[i]._miVar5 && !exit; k++) {
+	for (j = missile._miVar2; j < missile._miVar3 && !exit; j++) {
+		for (k = missile._miVar4; k < missile._miVar5 && !exit; k++) {
 			if (dMonster[k][j] < MAX_PLRS)
 				continue;
 			if (nSolidTable[dPiece[k][j]])
 				continue;
-			if (gbIsHellfire && !LineClearMissile(Missiles[i].position.tile, { k, j }))
+			if (gbIsHellfire && !LineClearMissile(missile.position.tile, { k, j }))
 				continue;
-			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, Missiles[i]._midam, 0);
+			AddMissile({ k, j }, { k, j }, Players[id]._pdir, MIS_BOOM, TARGET_MONSTERS, id, missile._midam, 0);
 			exit = true;
 		}
 		if (!exit) {
-			Missiles[i]._miVar4 = Missiles[i]._miVar6;
+			missile._miVar4 = missile._miVar6;
 		}
 	}
 
 	if (exit) {
-		Missiles[i]._miVar2 = j - 1;
-		Missiles[i]._miVar4 = k;
+		missile._miVar2 = j - 1;
+		missile._miVar4 = k;
 	} else {
-		Missiles[i]._miDelFlag = true;
+		missile._miDelFlag = true;
 	}
 }
 
@@ -4138,9 +4178,10 @@ void MI_Wave(int i)
 	bool f2 = false;
 	assert(i >= 0 && i < MAXMISSILES);
 
-	int id = Missiles[i]._misource;
-	Point src = Missiles[i].position.tile;
-	Direction sd = GetDirection(src, { Missiles[i]._miVar1, Missiles[i]._miVar2 });
+	auto &missile = Missiles[i];
+	int id = missile._misource;
+	Point src = missile.position.tile;
+	Direction sd = GetDirection(src, { missile._miVar1, missile._miVar2 });
 	Direction dira = left[left[sd]];
 	Direction dirb = right[right[sd]];
 	Point na = src + sd;
@@ -4148,16 +4189,16 @@ void MI_Wave(int i)
 	assert(pn >= 0 && pn <= MAXTILES);
 	if (!nMissileTable[pn]) {
 		Direction pdir = Players[id]._pdir;
-		AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, Missiles[i]._mispllvl);
+		AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile._mispllvl);
 		na += dira;
 		Point nb = src + sd + dirb;
-		for (int j = 0; j < (Missiles[i]._mispllvl / 2) + 2; j++) {
+		for (int j = 0; j < (missile._mispllvl / 2) + 2; j++) {
 			pn = dPiece[na.x][na.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
 			assert(pn >= 0 && pn <= MAXTILES);
 			if (nMissileTable[pn] || f1 || !InDungeonBounds(na)) {
 				f1 = true;
 			} else {
-				AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, Missiles[i]._mispllvl);
+				AddMissile(na, na + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile._mispllvl);
 				na += dira;
 			}
 			pn = dPiece[nb.x][nb.y]; // BUGFIX: dPiece is accessed before check against dungeon size and 0
@@ -4165,24 +4206,25 @@ void MI_Wave(int i)
 			if (nMissileTable[pn] || f2 || !InDungeonBounds(nb)) {
 				f2 = true;
 			} else {
-				AddMissile(nb, nb + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, Missiles[i]._mispllvl);
+				AddMissile(nb, nb + sd, pdir, MIS_FIREMOVE, TARGET_MONSTERS, id, 0, missile._mispllvl);
 				nb += dirb;
 			}
 		}
 	}
 
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	missile._mirange--;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 }
 
 void MI_Nova(int i)
 {
 	int sx1 = 0;
 	int sy1 = 0;
-	int id = Missiles[i]._misource;
-	int dam = Missiles[i]._midam;
-	Point src = Missiles[i].position.tile;
+	auto &missile = Missiles[i];
+	int id = missile._misource;
+	int dam = missile._midam;
+	Point src = missile.position.tile;
 	Direction dir = DIR_S;
 	mienemy_type en = TARGET_PLAYERS;
 	if (id != -1) {
@@ -4191,28 +4233,29 @@ void MI_Nova(int i)
 	}
 	for (const auto &k : VisionCrawlTable) {
 		if (sx1 != k[6] || sy1 != k[7]) {
-			AddMissile(src, src + Displacement { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, Missiles[i]._mispllvl);
-			AddMissile(src, src + Displacement { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, Missiles[i]._mispllvl);
-			AddMissile(src, src + Displacement { -k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, Missiles[i]._mispllvl);
-			AddMissile(src, src + Displacement { k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, Missiles[i]._mispllvl);
+			AddMissile(src, src + Displacement { k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
+			AddMissile(src, src + Displacement { -k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
+			AddMissile(src, src + Displacement { -k[6], k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
+			AddMissile(src, src + Displacement { k[6], -k[7] }, dir, MIS_LIGHTBALL, en, id, dam, missile._mispllvl);
 			sx1 = k[6];
 			sy1 = k[7];
 		}
 	}
-	Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == 0)
-		Missiles[i]._miDelFlag = true;
+	missile._mirange--;
+	if (missile._mirange == 0)
+		missile._miDelFlag = true;
 }
 
 void MI_Blodboil(int i)
 {
-	Missiles[i]._mirange--;
+	auto &missile = Missiles[i];
+	missile._mirange--;
 
-	if (Missiles[i]._mirange != 0) {
+	if (missile._mirange != 0) {
 		return;
 	}
 
-	int id = Missiles[i]._miVar1;
+	int id = missile._miVar1;
 	auto &player = Players[id];
 
 	int hpdif = player._pMaxHP - player._pHitPoints;
@@ -4221,11 +4264,11 @@ void MI_Blodboil(int i)
 		player._pSpellFlags &= ~0x2;
 		player._pSpellFlags |= 4;
 		int lvl = player._pLevel * 2;
-		Missiles[i]._mirange = lvl + 10 * Missiles[i]._mispllvl + 245;
+		missile._mirange = lvl + 10 * missile._mispllvl + 245;
 	} else {
 		player._pSpellFlags &= ~0x4;
-		Missiles[i]._miDelFlag = true;
-		hpdif += Missiles[i]._miVar2;
+		missile._miDelFlag = true;
+		hpdif += missile._miVar2;
 	}
 
 	CalcPlrItemVals(id, true);
@@ -4236,55 +4279,57 @@ void MI_Blodboil(int i)
 
 void MI_Flame(int i)
 {
-	Missiles[i]._mirange--;
-	Missiles[i]._miVar2--;
-	int k = Missiles[i]._mirange;
-	CheckMissileCol(i, Missiles[i]._midam, Missiles[i]._midam, true, Missiles[i].position.tile, false);
-	if (Missiles[i]._mirange == 0 && Missiles[i]._miHitFlag)
-		Missiles[i]._mirange = k;
-	if (Missiles[i]._miVar2 == 0)
-		Missiles[i]._miAnimFrame = 20;
-	if (Missiles[i]._miVar2 <= 0) {
-		k = Missiles[i]._miAnimFrame;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	missile._miVar2--;
+	int k = missile._mirange;
+	CheckMissileCol(i, missile._midam, missile._midam, true, missile.position.tile, false);
+	if (missile._mirange == 0 && missile._miHitFlag)
+		missile._mirange = k;
+	if (missile._miVar2 == 0)
+		missile._miAnimFrame = 20;
+	if (missile._miVar2 <= 0) {
+		k = missile._miAnimFrame;
 		if (k > 11)
 			k = 24 - k;
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, k);
+		ChangeLight(missile._mlid, missile.position.tile, k);
 	}
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
-	if (Missiles[i]._miVar2 <= 0)
+	if (missile._miVar2 <= 0)
 		PutMissile(i);
 }
 
 void MI_Flamec(int i)
 {
-	Missiles[i]._mirange--;
-	int src = Missiles[i]._misource;
-	Missiles[i].position.traveled += Missiles[i].position.velocity;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	int src = missile._misource;
+	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(i);
-	if (Missiles[i].position.tile.x != Missiles[i]._miVar1 || Missiles[i].position.tile.y != Missiles[i]._miVar2) {
-		int id = dPiece[Missiles[i].position.tile.x][Missiles[i].position.tile.y];
+	if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
+		int id = dPiece[missile.position.tile.x][missile.position.tile.y];
 		if (!nMissileTable[id]) {
 			AddMissile(
-			    Missiles[i].position.tile,
-			    Missiles[i].position.start,
+			    missile.position.tile,
+			    missile.position.start,
 			    i,
 			    MIS_FLAME,
-			    Missiles[i]._micaster,
+			    missile._micaster,
 			    src,
-			    Missiles[i]._miVar3,
-			    Missiles[i]._mispllvl);
+			    missile._miVar3,
+			    missile._mispllvl);
 		} else {
-			Missiles[i]._mirange = 0;
+			missile._mirange = 0;
 		}
-		Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-		Missiles[i]._miVar2 = Missiles[i].position.tile.y;
-		Missiles[i]._miVar3++;
+		missile._miVar1 = missile.position.tile.x;
+		missile._miVar2 = missile.position.tile.y;
+		missile._miVar3++;
 	}
-	if (Missiles[i]._mirange == 0 || Missiles[i]._miVar3 == 3)
-		Missiles[i]._miDelFlag = true;
+	if (missile._mirange == 0 || missile._miVar3 == 3)
+		missile._miDelFlag = true;
 }
 
 void MI_Cbolt(int i)
@@ -4319,7 +4364,7 @@ void MI_Cbolt(int i)
 			missile._mimfnum = 0;
 			missile.position.offset = { 0, 0 };
 			missile.position.velocity = {};
-			SetMissAnim(i, MFILE_LGHNING);
+			SetMissAnim(missile, MFILE_LGHNING);
 			missile._mirange = missile._miAnimLen;
 			UpdateMissilePos(i);
 		}
@@ -4334,33 +4379,34 @@ void MI_Cbolt(int i)
 
 void MI_Hbolt(int i)
 {
-	Missiles[i]._mirange--;
-	if (Missiles[i]._miAnimType != MFILE_HOLYEXPL) {
-		Missiles[i].position.traveled += Missiles[i].position.velocity;
+	auto &missile = Missiles[i];
+	missile._mirange--;
+	if (missile._miAnimType != MFILE_HOLYEXPL) {
+		missile.position.traveled += missile.position.velocity;
 		UpdateMissilePos(i);
-		int dam = Missiles[i]._midam;
-		if (Missiles[i].position.tile != Missiles[i].position.start) {
-			CheckMissileCol(i, dam, dam, false, Missiles[i].position.tile, false);
+		int dam = missile._midam;
+		if (missile.position.tile != missile.position.start) {
+			CheckMissileCol(i, dam, dam, false, missile.position.tile, false);
 		}
-		if (Missiles[i]._mirange == 0) {
-			Missiles[i].position.traveled -= Missiles[i].position.velocity;
+		if (missile._mirange == 0) {
+			missile.position.traveled -= missile.position.velocity;
 			UpdateMissilePos(i);
-			Missiles[i]._mimfnum = 0;
-			SetMissAnim(i, MFILE_HOLYEXPL);
-			Missiles[i]._mirange = Missiles[i]._miAnimLen - 1;
-			Missiles[i].position.StopMissile();
+			missile._mimfnum = 0;
+			SetMissAnim(missile, MFILE_HOLYEXPL);
+			missile._mirange = missile._miAnimLen - 1;
+			missile.position.StopMissile();
 		} else {
-			if (Missiles[i].position.tile != Point { Missiles[i]._miVar1, Missiles[i]._miVar2 }) {
-				Missiles[i]._miVar1 = Missiles[i].position.tile.x;
-				Missiles[i]._miVar2 = Missiles[i].position.tile.y;
-				ChangeLight(Missiles[i]._mlid, { Missiles[i]._miVar1, Missiles[i]._miVar2 }, 8);
+			if (missile.position.tile != Point { missile._miVar1, missile._miVar2 }) {
+				missile._miVar1 = missile.position.tile.x;
+				missile._miVar2 = missile.position.tile.y;
+				ChangeLight(missile._mlid, { missile._miVar1, missile._miVar2 }, 8);
 			}
 		}
 	} else {
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, Missiles[i]._miAnimFrame + 7);
-		if (Missiles[i]._mirange == 0) {
-			Missiles[i]._miDelFlag = true;
-			AddUnLight(Missiles[i]._mlid);
+		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 7);
+		if (missile._mirange == 0) {
+			missile._miDelFlag = true;
+			AddUnLight(missile._mlid);
 		}
 	}
 	PutMissile(i);
@@ -4417,7 +4463,7 @@ void MI_Element(int i)
 		}
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;
-			SetMissAnim(i, MFILE_BIGEXP);
+			SetMissAnim(missile, MFILE_BIGEXP);
 			missile._mirange = missile._miAnimLen - 1;
 			missile.position.StopMissile();
 		}
@@ -4485,21 +4531,22 @@ void MI_ResurrectBeam(int i)
 void MI_Rportal(int i)
 {
 	int expLight[17] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 15, 15 };
+	auto &missile = Missiles[i];
 
-	if (Missiles[i]._mirange > 1)
-		Missiles[i]._mirange--;
-	if (Missiles[i]._mirange == Missiles[i]._miVar1)
+	if (missile._mirange > 1)
+		missile._mirange--;
+	if (missile._mirange == missile._miVar1)
 		SetMissDir(i, 1);
 
-	if (currlevel != 0 && Missiles[i]._mimfnum != 1 && Missiles[i]._mirange != 0) {
-		if (Missiles[i]._miVar2 == 0)
-			Missiles[i]._mlid = AddLight(Missiles[i].position.tile, 1);
-		ChangeLight(Missiles[i]._mlid, Missiles[i].position.tile, expLight[Missiles[i]._miVar2]);
-		Missiles[i]._miVar2++;
+	if (currlevel != 0 && missile._mimfnum != 1 && missile._mirange != 0) {
+		if (missile._miVar2 == 0)
+			missile._mlid = AddLight(missile.position.tile, 1);
+		ChangeLight(missile._mlid, missile.position.tile, expLight[missile._miVar2]);
+		missile._miVar2++;
 	}
-	if (Missiles[i]._mirange == 0) {
-		Missiles[i]._miDelFlag = true;
-		AddUnLight(Missiles[i]._mlid);
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+		AddUnLight(missile._mlid);
 	}
 	PutMissile(i);
 }
