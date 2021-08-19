@@ -260,6 +260,16 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_GOLEM, 2);
 	SetSpellLevelCheat(SPL_FLARE, 1);
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
+	SetSpellLevelCheat(SPL_FLAME, 1);
+	SetSpellLevelCheat(SPL_TELEPORT, 1);
+	SetSpellLevelCheat(SPL_LIGHTWALL, 1);
+	SetSpellLevelCheat(SPL_REFLECT, 1);
+	SetSpellLevelCheat(SPL_FIRERING, 1);
+	SetSpellLevelCheat(SPL_SEARCH, 1);
+	SetSpellLevelCheat(SPL_BERSERK, 1);
+	SetSpellLevelCheat(SPL_APOCA, 1);
+	SetSpellLevelCheat(SPL_IMMOLAT, 1);
+	SetSpellLevelCheat(SPL_WARP, 1);
 }
 
 void PrintDebugPlayer(bool bNextPlayer)
