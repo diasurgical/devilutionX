@@ -106,7 +106,6 @@ bool visiondebug = false;
 int questdebug = -1;
 bool debug_mode_key_w = false;
 bool debug_mode_key_inverted_v = false;
-bool debug_mode_dollar_sign = false;
 bool debug_mode_key_i = false;
 int debug_mode_key_j = 0;
 #endif
@@ -881,8 +880,7 @@ void RunGameLoop(interface_mode uMsg)
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
-	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
-	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
+	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
@@ -945,8 +943,6 @@ void DiabloParseFlags(int argc, char **argv)
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = true;
-		} else if (strcasecmp("-$", argv[i]) == 0) {
-			debug_mode_dollar_sign = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
 		} else if (strcasecmp("-j", argv[i]) == 0) {

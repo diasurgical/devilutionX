@@ -9,6 +9,9 @@
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
@@ -919,13 +922,14 @@ bool PlrHitMonst(int pnum, int m)
 	if (CheckMonsterHit(monster, &ret)) {
 		return ret;
 	}
+
+	if (hit >= hper) {
 #ifdef _DEBUG
-	if (hit >= hper && !debug_mode_key_inverted_v && !debug_mode_dollar_sign)
-		return false;
-#else
-	if (hit >= hper)
-		return false;
+		if (!DebugGodMode)
 #endif
+			return false;
+	}
+
 	if ((player._pIFlags & ISPL_FIREDAM) != 0 && (player._pIFlags & ISPL_LIGHTDAM) != 0) {
 		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
@@ -1054,7 +1058,7 @@ bool PlrHitMonst(int pnum, int m)
 		monster._mFlags |= MFLAG_NOHEAL;
 	}
 #ifdef _DEBUG
-	if (debug_mode_dollar_sign || debug_mode_key_inverted_v) {
+	if (DebugGodMode) {
 		monster._mhitpoints = 0; /* double check */
 	}
 #endif
@@ -2719,7 +2723,7 @@ void InitPlayer(int pnum, bool firstTime)
 		player.pManaShield = false;
 	}
 
-	if (player.plrlevel == currlevel || leveldebug) {
+	if (player.plrlevel == currlevel) {
 
 		SetPlrAnims(player);
 
@@ -2781,12 +2785,6 @@ void InitPlayer(int pnum, bool firstTime)
 	}
 
 #ifdef _DEBUG
-	if (debug_mode_dollar_sign && firstTime) {
-		player._pMemSpells |= 1 << (SPL_TELEPORT - 1);
-		if (myPlayer._pSplLvl[SPL_TELEPORT] == 0) {
-			myPlayer._pSplLvl[SPL_TELEPORT] = 1;
-		}
-	}
 	if (debug_mode_key_inverted_v && firstTime) {
 		player._pMemSpells = SPL_INVALID;
 	}
