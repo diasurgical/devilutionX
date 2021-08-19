@@ -20,6 +20,7 @@ namespace devilution {
 
 std::optional<CelSprite> pSquareCel;
 bool DebugGodMode = false;
+bool DebugVision = false;
 
 namespace {
 
@@ -197,6 +198,14 @@ std::string DebugCmdGodMode(const std::string_view parameter)
 	return "You are mortal, beware of the darkness.";
 }
 
+std::string DebugCmdVision(const std::string_view parameter)
+{
+	DebugVision = !DebugVision;
+	if (DebugVision)
+		return "You see as i do.";
+	return "My path is set.";
+}
+
 std::string DebugCmdLevelUp(const std::string_view parameter)
 {
 	int levels = std::max(1, atoi(parameter.data()));
@@ -265,8 +274,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 
 void LoadDebugGFX()
 {
-	if (visiondebug)
-		pSquareCel = LoadCel("Data\\Square.CEL", 64);
+	pSquareCel = LoadCel("Data\\Square.CEL", 64);
 }
 
 void FreeDebugGFX()

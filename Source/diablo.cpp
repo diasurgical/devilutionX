@@ -101,7 +101,6 @@ bool gbForceWindowed = false;
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
 int debugmonsttypes = 0;
-bool visiondebug = false;
 int questdebug = -1;
 bool debug_mode_key_inverted_v = false;
 bool debug_mode_key_i = false;
@@ -858,7 +857,6 @@ void RunGameLoop(interface_mode uMsg)
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
-	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
@@ -929,8 +927,6 @@ void DiabloParseFlags(int argc, char **argv)
 			questdebug = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-r", argv[i]) == 0) {
 			setseed = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-v", argv[i]) == 0) {
-			visiondebug = true;
 #endif
 		} else {
 			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
