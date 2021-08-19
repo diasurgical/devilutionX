@@ -268,6 +268,6 @@ void MI_ResurrectBeam(int i);
 void MI_Rportal(int i);
 void ProcessMissiles();
 void missiles_process_charge();
-void ClearMissileSpot(int mi);
+void ClearMissileSpot(Point &missileTile);
 
 } // namespace devilution

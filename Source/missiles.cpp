@@ -4666,9 +4666,8 @@ void missiles_process_charge()
 	}
 }
 
-void ClearMissileSpot(int mi)
+void ClearMissileSpot(Point &missileTile)
 {
-	auto &missileTile = Missiles[mi].position.tile;
 	dFlags[missileTile.x][missileTile.y] &= ~BFLAG_MISSILE;
 	dMissile[missileTile.x][missileTile.y] = 0;
 }

@@ -1690,7 +1690,7 @@ DWORD OnEndShield(TCmd *pCmd, int pnum)
 			int mi = ActiveMissiles[i];
 			auto &missile = Missiles[mi];
 			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
-				ClearMissileSpot(mi);
+				ClearMissileSpot(missile.position.tile);
 				DeleteMissile(mi, i);
 			}
 		}
@@ -1774,8 +1774,9 @@ DWORD OnReflect(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
 		for (int i = 0; i < ActiveMissileCount; i++) {
 			int mx = ActiveMissiles[i];
-			if (Missiles[mx]._mitype == MIS_REFLECT && Missiles[mx]._misource == pnum) {
-				ClearMissileSpot(mx);
+			auto &missile = Missiles[mx];
+			if (missile._mitype == MIS_REFLECT && missile._misource == pnum) {
+				ClearMissileSpot(missile.position.tile);
 				DeleteMissile(mx, i);
 			}
 		}

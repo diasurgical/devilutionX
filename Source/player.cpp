@@ -3217,15 +3217,16 @@ void RemovePlrMissiles(int pnum)
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int am = ActiveMissiles[i];
-		if (Missiles[am]._mitype == MIS_STONE && Missiles[am]._misource == pnum) {
-			Monsters[Missiles[am]._miVar2]._mmode = (MON_MODE)Missiles[am]._miVar1;
+		auto &missile = Missiles[am];
+		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
+			Monsters[missile._miVar2]._mmode = (MON_MODE)missile._miVar1;
 		}
-		if (Missiles[am]._mitype == MIS_MANASHIELD && Missiles[am]._misource == pnum) {
-			ClearMissileSpot(am);
+		if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
+			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
-		if (Missiles[am]._mitype == MIS_ETHEREALIZE && Missiles[am]._misource == pnum) {
-			ClearMissileSpot(am);
+		if (missile._mitype == MIS_ETHEREALIZE && missile._misource == pnum) {
+			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
 	}
