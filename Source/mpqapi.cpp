@@ -146,10 +146,8 @@ private:
 			if (errorMessage == nullptr)
 				errorMessage = "";
 			LogError(LogCategory::System, fmtWithError.c_str(), args..., errorMessage);
-#ifdef _DEBUG
 		} else {
 			LogVerbose(LogCategory::System, fmt, args...);
-#endif
 		}
 		return !s_->fail();
 	}
@@ -179,9 +177,7 @@ struct Archive {
 	bool Open(const char *path)
 	{
 		Close();
-#ifdef _DEBUG
-		Log("Opening {}", path);
-#endif
+		LogVerbose("Opening {}", path);
 		exists = FileExists(path);
 		std::ios::openmode mode = std::ios::in | std::ios::out | std::ios::binary;
 		if (exists) {
@@ -189,9 +185,7 @@ struct Archive {
 				Log(R"(GetFileSize("{}") failed with "{}")", path, std::strerror(errno));
 				return false;
 			}
-#ifdef _DEBUG
-			Log("GetFileSize(\"{}\") = {}", path, size);
-#endif
+			LogVerbose("GetFileSize(\"{}\") = {}", path, size);
 		} else {
 			mode |= std::ios::trunc;
 		}
@@ -209,18 +203,14 @@ struct Archive {
 	{
 		if (!stream.IsOpen())
 			return true;
-#ifdef _DEBUG
-		Log("Closing {}", name);
-#endif
+		LogVerbose("Closing {}", name);
 
 		bool result = true;
 		if (modified && !(stream.Seekp(0, std::ios::beg) && WriteHeaderAndTables()))
 			result = false;
 		stream.Close();
 		if (modified && result && size != 0) {
-#ifdef _DEBUG
-			Log("ResizeFile(\"{}\", {})", name, size);
-#endif
+			LogVerbose("ResizeFile(\"{}\", {})", name, size);
 			result = ResizeFile(name.c_str(), size);
 		}
 		name.clear();
