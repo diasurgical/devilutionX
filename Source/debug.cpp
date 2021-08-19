@@ -211,7 +211,8 @@ std::string DebugCmdVision(const std::string_view parameter)
 {
 	DebugVision = !DebugVision;
 	if (DebugVision)
-		return "You see as i do.";
+		return "You see as I do.";
+
 	return "My path is set.";
 }
 
