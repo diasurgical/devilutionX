@@ -1174,8 +1174,9 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 
 void SetMissDir(int mi, int dir)
 {
-	Missiles[mi]._mimfnum = dir;
-	SetMissAnim(mi, Missiles[mi]._miAnimType);
+	auto &missile = Missiles[mi];
+	missile._mimfnum = dir;
+	SetMissAnim(mi, missile._miAnimType);
 }
 
 void InitMissileGFX()
