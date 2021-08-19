@@ -1869,9 +1869,8 @@ void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 	missile._mirange = 256;
 }
 
-void UpdateVileMissPos(int mi, Point dst)
+void UpdateVileMissPos(MissileStruct &missile, Point dst)
 {
-	auto &missile = Missiles[mi];
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			int yy = j + dst.y;
@@ -1915,19 +1914,20 @@ void AddRndTeleport(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy,
 		}
 	} while (nSolidTable[pn] || dObject[r1][r2] != 0 || dMonster[r1][r2] != 0);
 
-	Missiles[mi]._mirange = 2;
-	Missiles[mi]._miVar1 = 0;
+	auto &missile = Missiles[mi];
+	missile._mirange = 2;
+	missile._miVar1 = 0;
 	if (!setlevel || setlvlnum != SL_VILEBETRAYER) {
-		Missiles[mi].position.tile = { r1, r2 };
+		missile.position.tile = { r1, r2 };
 		if (mienemy == TARGET_MONSTERS)
 			UseMana(id, SPL_RNDTELEPORT);
 	} else {
 		int oi = dObject[dst.x][dst.y] - 1;
 		// BUGFIX: should only run magic circle check if dObject[dx][dy] is non-zero.
 		if (Objects[oi]._otype == OBJ_MCIRCLE1 || Objects[oi]._otype == OBJ_MCIRCLE2) {
-			Missiles[mi].position.tile = dst;
+			missile.position.tile = dst;
 			if (!PosOkPlayer(Players[MyPlayerId], dst))
-				UpdateVileMissPos(mi, dst);
+				UpdateVileMissPos(missile, dst);
 		}
 	}
 }
