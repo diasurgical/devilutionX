@@ -7,6 +7,9 @@
 
 #include "control.h"
 #include "cursor.h"
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 #include "engine/point.hpp"
 #include "engine/random.hpp"
 #include "gamemenu.h"
@@ -171,7 +174,7 @@ void UseMana(int id, spell_id sn)
 		break;
 	case RSPLTYPE_SPELL:
 #ifdef _DEBUG
-		if (debug_mode_key_inverted_v)
+		if (DebugGodMode)
 			break;
 #endif
 		ma = GetManaAmount(myPlayer, sn);
@@ -199,7 +202,7 @@ void EnsureValidReadiedSpell(PlayerStruct &player)
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly)
 {
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v)
+	if (DebugGodMode)
 		return SpellCheckResult::Success;
 #endif
 
