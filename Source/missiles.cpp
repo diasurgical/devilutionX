@@ -607,21 +607,22 @@ void CheckMissileCol(int i, int mindam, int maxdam, bool shift, Point position, 
 
 void SetMissAnim(int mi, int animtype)
 {
-	int dir = Missiles[mi]._mimfnum;
+	auto &missile = Missiles[mi];
+	int dir = missile._mimfnum;
 
 	if (animtype > MFILE_NONE) {
 		animtype = MFILE_NONE;
 	}
 
-	Missiles[mi]._miAnimType = animtype;
-	Missiles[mi]._miAnimFlags = MissileSpriteData[animtype].flags;
-	Missiles[mi]._miAnimData = MissileSpriteData[animtype].animData[dir].get();
-	Missiles[mi]._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
-	Missiles[mi]._miAnimLen = MissileSpriteData[animtype].animLen[dir];
-	Missiles[mi]._miAnimWidth = MissileSpriteData[animtype].animWidth;
-	Missiles[mi]._miAnimWidth2 = MissileSpriteData[animtype].animWidth2;
-	Missiles[mi]._miAnimCnt = 0;
-	Missiles[mi]._miAnimFrame = 1;
+	missile._miAnimType = animtype;
+	missile._miAnimFlags = MissileSpriteData[animtype].flags;
+	missile._miAnimData = MissileSpriteData[animtype].animData[dir].get();
+	missile._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
+	missile._miAnimLen = MissileSpriteData[animtype].animLen[dir];
+	missile._miAnimWidth = MissileSpriteData[animtype].animWidth;
+	missile._miAnimWidth2 = MissileSpriteData[animtype].animWidth2;
+	missile._miAnimCnt = 0;
+	missile._miAnimFrame = 1;
 }
 
 bool MissilesFoundTarget(int mi, Point *position, int rad)
