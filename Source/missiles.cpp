@@ -1425,8 +1425,8 @@ void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, i
 
 void AddJester(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
-	int spell = MIS_FIREBOLT;
 	auto &missile = Missiles[mi];
+	int spell = MIS_FIREBOLT;
 	switch (GenerateRnd(10)) {
 	case 0:
 	case 1:
@@ -1598,6 +1598,7 @@ void AddSpecArrow(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t mienem
 
 void AddWarp(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
 {
+	auto &missile = Missiles[mi];
 	int minDistanceSq = std::numeric_limits<int>::max();
 	if (id >= 0) {
 		src = Players[id].position.tile;
@@ -1621,7 +1622,6 @@ void AddWarp(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienemy, in
 			}
 		}
 	}
-	auto &missile = Missiles[mi];
 	missile._mirange = 2;
 	missile._miVar1 = 0;
 	missile.position.tile = tile;
