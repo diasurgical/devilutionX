@@ -118,13 +118,35 @@ std::string DebugCmdWarpToLevel(const std::string_view parameter)
 	auto &myPlayer = Players[MyPlayerId];
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
+		return fmt::format("Level {} is not known. Do you want to write a mod?", level);
 	if (!setlevel && myPlayer.plrlevel == level)
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
 
 	setlevel = false;
 	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
 	return fmt::format("Welcome to level {}.", level);
+}
+
+std::string DebugCmdLoadMap(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	auto level = atoi(parameter.data());
+	if (level < 1)
+		return fmt::format("Map id must be 1 or higher", level);
+	if (setlevel && myPlayer.plrlevel == level)
+		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+
+	for (auto &quest : Quests) {
+		if (level != quest._qslvl)
+			continue;
+
+		setlevel = false;
+		setlvltype = quest._qlvltype;
+		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
+		return fmt::format("Welcome to {}.", QuestLevelNames[level]);
+	}
+
+	return fmt::format("Level {} is not known. Do you want to write a mod?", level);
 }
 
 std::string DebugCmdResetLevel(const std::string_view parameter)
@@ -175,6 +197,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
+	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
 	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
 };

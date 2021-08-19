@@ -101,7 +101,6 @@ void diablo_color_cyc_logic();
 
 extern Keymapper keymapper;
 extern bool gbForceWindowed;
-extern bool leveldebug;
 #ifdef _DEBUG
 extern bool monstdebug;
 extern _monster_id DebugMonsters[10];
