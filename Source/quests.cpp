@@ -318,10 +318,6 @@ void InitQuests()
 		// Quests are set from the seed used to generate level 16.
 		InitialiseQuestPools(glSeedTbl[15], Quests);
 	}
-#ifdef _DEBUG
-	if (questdebug != -1)
-		Quests[questdebug]._qactive = QUEST_ACTIVE;
-#endif
 
 	if (gbIsSpawn) {
 		for (auto &quest : Quests) {
