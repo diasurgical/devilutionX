@@ -4975,10 +4975,10 @@ void TalktoMonster(MonsterStruct &monster)
 
 void SpawnGolum(int i, Point position, int mi)
 {
+	auto &missile = Missiles[mi];
 	assert(i >= 0 && i < MAX_PLRS);
 	auto &player = Players[i];
 	auto &golem = Monsters[i];
-	auto &missile = Missiles[mi];
 
 	dMonster[position.x][position.y] = i + 1;
 	golem.position.tile = position;
