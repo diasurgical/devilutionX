@@ -16,6 +16,7 @@
 #include "setmaps.h"
 #include "spells.h"
 #include "utils/language.h"
+#include "quests.h"
 
 namespace devilution {
 
@@ -214,6 +215,24 @@ std::string DebugCmdVision(const std::string_view parameter)
 	return "My path is set.";
 }
 
+std::string DebugCmdQuest(const std::string_view parameter)
+{
+	if (parameter.empty())
+		return "You must provide an id";
+
+	int questId = atoi(parameter.data());
+
+	if (questId >= MAXQUESTS)
+		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+
+	if (IsNoneOf(Quests[questId]._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+		return fmt::format("{} was already given.", QuestData[questId]._qlstr);
+
+	Quests[questId]._qactive = QUEST_ACTIVE;
+
+	return fmt::format("{} enabled.", QuestData[questId]._qlstr);
+}
+
 std::string DebugCmdLevelUp(const std::string_view parameter)
 {
 	int levels = std::max(1, atoi(parameter.data()));
@@ -271,6 +290,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
 	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
+	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },

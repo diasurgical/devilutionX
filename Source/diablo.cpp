@@ -101,7 +101,6 @@ bool gbForceWindowed = false;
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
 int debugmonsttypes = 0;
-int questdebug = -1;
 bool debug_mode_key_inverted_v = false;
 bool debug_mode_key_i = false;
 #endif
@@ -852,7 +851,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
@@ -913,8 +911,6 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-q", argv[i]) == 0) {
-			questdebug = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-r", argv[i]) == 0) {
 			setseed = SDL_atoi(argv[++i]);
 #endif
