@@ -1753,20 +1753,25 @@ DWORD OnRemoveShield(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*pCmd);
 }
 
-DWORD OnEndShield(TCmd *pCmd, int pnum)
+DWORD EndEffect(TCmd *pCmd, int pnum, missile_id type)
 {
 	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
 		for (int i = 0; i < ActiveMissileCount; i++) {
 			int mi = ActiveMissiles[i];
 			auto &missile = Missiles[mi];
-			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
-				ClearMissileSpot(missile.position.tile);
+			if (missile._mitype == type && missile._misource == pnum) {
+				ClearMissileSpot(missile);
 				DeleteMissile(mi, i);
 			}
 		}
 	}
 
 	return sizeof(*pCmd);
+}
+
+DWORD OnEndShield(TCmd *pCmd, int pnum)
+{
+	return EndEffect(pCmd, pnum, MIS_MANASHIELD);
 }
 
 DWORD OnSetReflect(TCmd *pCmd, PlayerStruct &player)
@@ -1788,18 +1793,7 @@ DWORD OnRemoveReflect(TCmd *pCmd, PlayerStruct &player)
 
 DWORD OnEndReflect(TCmd *pCmd, int pnum)
 {
-	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mi = ActiveMissiles[i];
-			auto &missile = Missiles[mi];
-			if (missile._mitype == MIS_REFLECT && missile._misource == pnum) {
-				ClearMissileSpot(missile.position.tile);
-				DeleteMissile(mi, i);
-			}
-		}
-	}
-
-	return sizeof(*pCmd);
+	return EndEffect(pCmd, pnum, MIS_REFLECT);
 }
 
 DWORD OnNakrul(TCmd *pCmd)
