@@ -56,10 +56,10 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
 
     if(sodium_USE_STATIC_LIBS)
       if(sodium_PKG_STATIC_LIBRARIES)
-	# Create a temporary list to manipulate the list of libraries we found
-	set(sodium_PKG_STATIC_LIBRARIES_TMP "")
+        # Create a temporary list to manipulate the list of libraries we found
+        set(sodium_PKG_STATIC_LIBRARIES_TMP "")
 
-	# Mangle the library names into the format we need
+        # Mangle the library names into the format we need
         foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
           if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
             list(APPEND sodium_PKG_STATIC_LIBRARIES_TMP "lib${_libname}.a")
@@ -67,8 +67,8 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
         endforeach()
 
         list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES_TMP)
-	# Replace the list with our processed one
-	set(sodium_PKG_STATIC_LIBRARIES ${sodium_PKG_STATIC_LIBRARIES_TMP})
+        # Replace the list with our processed one
+        set(sodium_PKG_STATIC_LIBRARIES ${sodium_PKG_STATIC_LIBRARIES_TMP})
       else()
         # if pkgconfig for libsodium doesn't provide
         # static lib info, then override PKG_STATIC here..
