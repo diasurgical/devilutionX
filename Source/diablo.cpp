@@ -104,7 +104,6 @@ int debugmonsttypes = 0;
 int questdebug = -1;
 bool debug_mode_key_inverted_v = false;
 bool debug_mode_key_i = false;
-int debug_mode_key_j = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
@@ -858,7 +857,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
 	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
@@ -918,8 +916,6 @@ void DiabloParseFlags(int argc, char **argv)
 			debug_mode_key_inverted_v = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
-		} else if (strcasecmp("-j", argv[i]) == 0) {
-			debug_mode_key_j = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
