@@ -2961,7 +2961,7 @@ int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int
 	ActiveMissiles[ActiveMissileCount] = mi;
 	ActiveMissileCount++;
 
-	memset(&Missiles[mi], 0, sizeof(*Missiles));
+	memset(&missile, 0, sizeof(missile));
 
 	missile._mitype = mitype;
 	missile._micaster = micaster;
