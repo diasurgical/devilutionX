@@ -242,44 +242,19 @@ std::string DebugCmdLevelUp(const std::string_view parameter)
 	return "New experience leads to new insights.";
 }
 
-std::string DebugCmdGetAllSpells(const std::string_view parameter)
-{
-	SetSpellLevelCheat(SPL_FIREBOLT, 8);
-	SetSpellLevelCheat(SPL_CBOLT, 11);
-	SetSpellLevelCheat(SPL_HBOLT, 10);
-	SetSpellLevelCheat(SPL_HEAL, 7);
-	SetSpellLevelCheat(SPL_HEALOTHER, 5);
-	SetSpellLevelCheat(SPL_LIGHTNING, 9);
-	SetSpellLevelCheat(SPL_FIREWALL, 5);
-	SetSpellLevelCheat(SPL_TELEKINESIS, 3);
-	SetSpellLevelCheat(SPL_TOWN, 3);
-	SetSpellLevelCheat(SPL_FLASH, 3);
-	SetSpellLevelCheat(SPL_RNDTELEPORT, 2);
-	SetSpellLevelCheat(SPL_MANASHIELD, 2);
-	SetSpellLevelCheat(SPL_WAVE, 4);
-	SetSpellLevelCheat(SPL_FIREBALL, 3);
-	SetSpellLevelCheat(SPL_STONE, 1);
-	SetSpellLevelCheat(SPL_CHAIN, 1);
-	SetSpellLevelCheat(SPL_GUARDIAN, 4);
-	SetSpellLevelCheat(SPL_ELEMENT, 3);
-	SetSpellLevelCheat(SPL_NOVA, 1);
-	SetSpellLevelCheat(SPL_GOLEM, 2);
-	SetSpellLevelCheat(SPL_FLARE, 1);
-	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
-
-	return "Magic is no mystery for me.";
-}
-
-std::string DebugCmdMaxSpellLevel(const std::string_view parameter)
+std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
+	int level = std::max(0, atoi(parameter.data()));
 	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel((spell_id)i) != -1) {
 			myPlayer._pMemSpells |= GetSpellBitmask(i);
-			myPlayer._pSplLvl[i] = 10;
+			myPlayer._pSplLvl[i] = level;
 		}
 	}
+	if (level == 0)
+		myPlayer._pMemSpells = 0;
 
 	return "Knowledge is power.";
 }
@@ -288,8 +263,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
-	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
-	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
+	{ "set spells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
