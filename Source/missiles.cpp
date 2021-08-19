@@ -1618,7 +1618,7 @@ void AddLightningWall(int mi, Point src, Point dst, int /*midir*/, int8_t /*mien
 	UpdateMissileVelocity(missile, src, dst, 16);
 	missile._midam = dam;
 	missile._miAnimFrame = GenerateRnd(8) + 1;
-	missile._mirange = 255 * (Missiles[mi]._mispllvl + 1);
+	missile._mirange = 255 * (missile._mispllvl + 1);
 	if (id < 0) {
 		missile._miVar1 = src.x;
 		missile._miVar2 = src.y;
