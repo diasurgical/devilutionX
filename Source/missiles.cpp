@@ -171,11 +171,10 @@ void UpdateMissilePos(MissileStruct &missile)
 	ChangeLightOffset(missile._mlid, { lx - (dx * 8), ly - (dy * 8) });
 }
 
-void MoveMissilePos(int i)
+void MoveMissilePos(MissileStruct &missile)
 {
 	int dx;
 	int dy;
-	auto &missile = Missiles[i];
 
 	switch (missile._mimfnum) {
 	case DIR_NW:
@@ -4134,7 +4133,7 @@ void MI_Rhino(int i)
 	dMonster[newPos.x][newPos.y] = -(monst + 1);
 	if (monster._uniqtype != 0)
 		ChangeLightXY(missile._mlid, newPos);
-	MoveMissilePos(i);
+	MoveMissilePos(missile);
 	PutMissile(i);
 }
 
