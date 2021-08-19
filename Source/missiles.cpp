@@ -1868,19 +1868,20 @@ void AddArrow(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, i
 
 void UpdateVileMissPos(int mi, Point dst)
 {
+	auto &missile = Missiles[mi];
 	for (int k = 1; k < 50; k++) {
 		for (int j = -k; j <= k; j++) {
 			int yy = j + dst.y;
 			for (int i = -k; i <= k; i++) {
 				int xx = i + dst.x;
 				if (PosOkPlayer(Players[MyPlayerId], { xx, yy })) {
-					Missiles[mi].position.tile = { xx, yy };
+					missile.position.tile = { xx, yy };
 					return;
 				}
 			}
 		}
 	}
-	Missiles[mi].position.tile = dst;
+	missile.position.tile = dst;
 }
 
 void AddRndTeleport(int mi, Point src, Point dst, int /*midir*/, int8_t mienemy, int id, int /*dam*/)
