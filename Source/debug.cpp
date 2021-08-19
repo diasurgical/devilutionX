@@ -18,6 +18,7 @@
 namespace devilution {
 
 std::optional<CelSprite> pSquareCel;
+bool DebugGodMode = false;
 
 namespace {
 
@@ -137,8 +138,8 @@ std::string DebugCmdResetLevel(const std::string_view parameter)
 
 std::string DebugCmdGodMode(const std::string_view parameter)
 {
-	debug_mode_key_inverted_v = !debug_mode_key_inverted_v;
-	if (debug_mode_key_inverted_v)
+	DebugGodMode = !DebugGodMode;
+	if (DebugGodMode)
 		return "A god descended.";
 	return "You are mortal, beware of the darkness.";
 }
