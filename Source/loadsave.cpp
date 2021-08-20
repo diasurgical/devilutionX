@@ -2126,7 +2126,7 @@ void LoadLevel()
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 				dDead[i][j] = file.NextLE<int8_t>();
 		}
-		SetDead();
+		SyncUniqDead();
 	}
 
 	ActiveMonsterCount = file.NextBE<int32_t>();

@@ -27,6 +27,6 @@ extern int8_t stonendx;
 
 void InitDead();
 void AddDead(Point tilePosition, int8_t dv, Direction ddir);
-void SetDead();
+void SyncUniqDead();
 
 } // namespace devilution
