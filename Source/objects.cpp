@@ -2362,7 +2362,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 	if (Objects[i]._oTrapFlag && Objects[i]._otype >= OBJ_TCHEST1 && Objects[i]._otype <= OBJ_TCHEST3) {
 		auto &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
-		int mtype;
+		missile_id mtype;
 		switch (Objects[i]._oVar4) {
 		case 0:
 			mtype = MIS_ARROW;
@@ -4879,7 +4879,7 @@ void Obj_Trap(int i)
 	}
 	if (!deltaload) {
 		Direction dir = GetDirection(Objects[i].position, target);
-		AddMissile(Objects[i].position, target, dir, Objects[i]._oVar3, TARGET_PLAYERS, -1, 0, 0);
+		AddMissile(Objects[i].position, target, dir, static_cast<missile_id>(Objects[i]._oVar3), TARGET_PLAYERS, -1, 0, 0);
 		PlaySfxLoc(IS_TRAP, Objects[oti].position);
 	}
 	Objects[oti]._oTrapFlag = false;
