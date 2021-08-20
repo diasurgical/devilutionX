@@ -1786,18 +1786,20 @@ int InvPutItem(PlayerStruct &player, Point position)
 		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
 			Displacement relativePosition = position - player.position.tile;
 			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.deltaX, relativePosition.deltaY);
-			Quests[Q_FARMER]._qactive = QUEST_DONE;
+			auto &quest = Quests[Q_FARMER];
+			quest._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
-				NetSendCmdQuest(true, Q_FARMER);
+				NetSendCmdQuest(true, quest);
 				return -1;
 			}
 			return -1;
 		}
 		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
 			NetSendCmd(false, CMD_OPENCRYPT);
-			Quests[Q_GRAVE]._qactive = QUEST_DONE;
+			auto &quest = Quests[Q_GRAVE];
+			quest._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {
-				NetSendCmdQuest(true, Q_GRAVE);
+				NetSendCmdQuest(true, quest);
 			}
 			return -1;
 		}

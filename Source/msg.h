@@ -198,7 +198,7 @@ struct TCmdGolem {
 
 struct TCmdQuest {
 	_cmd_id bCmd;
-	uint8_t q;
+	int8_t q;
 	quest_state qstate;
 	uint8_t qlog;
 	uint8_t qvar1;
@@ -431,7 +431,7 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1);
 void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
-void NetSendCmdQuest(bool bHiPri, BYTE q);
+void NetSendCmdQuest(bool bHiPri, const QuestStruct &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
 void NetSendCmdChItem(bool bHiPri, BYTE bLoc);

@@ -1061,9 +1061,10 @@ void StartEating(MonsterStruct &monster)
 void DiabloDeath(MonsterStruct &diablo, bool sendmsg)
 {
 	PlaySFX(USFX_DIABLOD);
-	Quests[Q_DIABLO]._qactive = QUEST_DONE;
+	auto &quest = Quests[Q_DIABLO];
+	quest._qactive = QUEST_DONE;
 	if (sendmsg)
-		NetSendCmdQuest(true, Q_DIABLO);
+		NetSendCmdQuest(true, quest);
 	sgbSaveSoundOn = gbSoundOn;
 	gbProcessPlayers = false;
 	for (int j = 0; j < ActiveMonsterCount; j++) {
