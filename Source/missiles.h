@@ -22,7 +22,7 @@ constexpr Point GolemHoldingCell = Point { 1, 0 };
 
 struct ChainStruct {
 	int idx;
-	int _mitype;
+	missile_id _mitype;
 	int _mirange;
 };
 
@@ -88,7 +88,8 @@ enum Direction16 {
 };
 
 struct MissileStruct {
-	int _mitype; // Type of projectile (missile_id)
+	/** Type of projectile */
+	missile_id _mitype;
 	MissilePosition position;
 	int _mimfnum; // The direction of the missile (direction enum)
 	int _mispllvl;
@@ -136,8 +137,8 @@ void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int playerId, spell_id sn);
 Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int mi, int i);
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift);
-bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked);
+bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
+bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 void SetMissDir(MissileStruct &missile, int dir);
 void InitMissileGFX();
 void FreeMissiles();
@@ -216,7 +217,7 @@ void AddTelekinesis(int mi, Point src, Point dst, int midir, int8_t mienemy, int
 void AddBoneSpirit(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
 void AddRportal(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
 void AddDiabApoca(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, int dam);
-int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl);
+int AddMissile(Point src, Point dst, int midir, missile_id mitype, int8_t micaster, int id, int midam, int spllvl);
 void MI_Golem(int mi);
 void MI_Manashield(int i);
 void MI_LArrow(int i);

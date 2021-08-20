@@ -211,7 +211,7 @@ void MoveMissilePos(MissileStruct &missile)
 	}
 }
 
-bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool shift)
+bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
 	auto &monster = Monsters[m];
 
@@ -334,7 +334,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	return true;
 }
 
-bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, int mtype, bool shift, bool *blocked)
+bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id mtype, bool shift, bool *blocked)
 {
 	if (sgGameInitInfo.bFriendlyFire == 0 && gbFriendlyMode)
 		return false;
@@ -963,7 +963,7 @@ void DeleteMissile(int mi, int i)
 		ActiveMissiles[i] = ActiveMissiles[ActiveMissileCount];
 }
 
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
+bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift)
 {
 	auto &monster = Monsters[m];
 
@@ -1040,7 +1040,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 	return true;
 }
 
-bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
+bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
 {
 	*blocked = false;
 
@@ -1256,7 +1256,7 @@ void InitMissiles()
 	numchains = 0;
 	for (auto &link : chain) {
 		link.idx = -1;
-		link._mitype = 0;
+		link._mitype = MIS_ARROW;
 		link._mirange = 0;
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
@@ -1425,7 +1425,7 @@ void AddHorkSpawn(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, i
 void AddJester(int mi, Point src, Point dst, int midir, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	auto &missile = Missiles[mi];
-	int spell = MIS_FIREBOLT;
+	missile_id spell = MIS_FIREBOLT;
 	switch (GenerateRnd(10)) {
 	case 0:
 	case 1:
@@ -1784,7 +1784,7 @@ void AddSearch(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t miene
 		int mx = ActiveMissiles[i];
 		if (mx != mi) {
 			MissileStruct *mis = &Missiles[mx];
-			if (mis->_miVar1 == id && mis->_mitype == 85) {
+			if (mis->_miVar1 == id && mis->_mitype == MIS_SEARCH) {
 				int r1 = missile._mirange;
 				int r2 = mis->_mirange;
 				if (r2 < INT_MAX - r1)
@@ -2934,7 +2934,7 @@ void AddDiabApoca(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t mienem
 
 namespace {
 
-bool CanAddEffect(int playerId, int type)
+bool CanAddEffect(int playerId, missile_id type)
 {
 	if (currlevel != Players[playerId].plrlevel)
 		return false;
@@ -2951,7 +2951,7 @@ bool CanAddEffect(int playerId, int type)
 
 } // namespace
 
-int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int id, int midam, int spllvl)
+int AddMissile(Point src, Point dst, int midir, missile_id mitype, int8_t micaster, int id, int midam, int spllvl)
 {
 	if (ActiveMissileCount >= MAXMISSILES - 1)
 		return -1;
@@ -3180,6 +3180,8 @@ void MI_Firebolt(int i)
 				case MIS_BONESPIRIT:
 					d = 0;
 					break;
+				default:
+					break;
 				}
 			} else {
 				auto &monster = Monsters[p];
@@ -3227,6 +3229,8 @@ void MI_Firebolt(int i)
 				break;
 			case MIS_BONEDEMON:
 				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_EXBL3, missile._micaster, missile._misource, 0, 0);
+				break;
+			default:
 				break;
 			}
 			if (missile._mlid != NO_LIGHT)
@@ -3382,7 +3386,7 @@ void MI_Rune(int i)
 		}
 		missile._miDelFlag = true;
 		AddUnLight(missile._mlid);
-		AddMissile({ mx, my }, { mx, my }, dir, missile._miVar1, TARGET_BOTH, missile._misource, missile._midam, missile._mispllvl);
+		AddMissile({ mx, my }, { mx, my }, dir, static_cast<missile_id>(missile._miVar1), TARGET_BOTH, missile._misource, missile._midam, missile._mispllvl);
 	}
 	PutMissile(i);
 }
@@ -3612,7 +3616,7 @@ void MI_SpecArrow(int i)
 	Point src = missile.position.tile;
 	Point dst = { missile._miVar1, missile._miVar2 };
 	int spllvl = missile._miVar3;
-	int mitype = 0;
+	missile_id mitype = MIS_ARROW;
 	Direction dir = DIR_S;
 	mienemy_type micaster = TARGET_PLAYERS;
 	if (id != -1) {

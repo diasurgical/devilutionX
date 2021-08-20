@@ -639,7 +639,7 @@ void LoadMissile(LoadHelper *file, int i)
 {
 	MissileStruct *pMissile = &Missiles[i];
 
-	pMissile->_mitype = file->NextLE<int32_t>();
+	pMissile->_mitype = static_cast<missile_id>(file->NextLE<int32_t>());
 	pMissile->position.tile.x = file->NextLE<int32_t>();
 	pMissile->position.tile.y = file->NextLE<int32_t>();
 	pMissile->position.offset.deltaX = file->NextLE<int32_t>();
