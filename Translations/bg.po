@@ -448,12 +448,12 @@ msgstr "Изберете трудност"
 #: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204 Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:327 Source/diablo.cpp:1568
 #, fuzzy
 msgid "Normal"
-msgstr "Нормално"
+msgstr "Нормалнa"
 
 #: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:208 Source/diablo.cpp:1569
 #, fuzzy
 msgid "Nightmare"
-msgstr "Кошмарно"
+msgstr "Кошмарнa"
 
 #: Source/DiabloUI/selgame.cpp:159 Source/DiabloUI/selgame.cpp:212 Source/diablo.cpp:1570
 #, fuzzy
@@ -4083,11 +4083,11 @@ msgstr "+200% щети срещу демони"
 
 #: Source/items.cpp:4005
 msgid "All Resistance equals 0"
-msgstr "Всичките устойчивости се равняват на 0"
+msgstr "Всички устойчивости са 0"
 
 #: Source/items.cpp:4008
 msgid "hit monster doesn't heal"
-msgstr "удареният враг не може да се лекува"
+msgstr "поразен враг не може да се лекува"
 
 #: Source/items.cpp:4012
 #, no-c-format
@@ -4246,7 +4246,7 @@ msgstr "Друга способност (NW)"
 
 #: Source/items.cpp:4160 Source/items.cpp:4207
 msgid "damage: {:d}  Indestructible"
-msgstr "щети: {:d}  Неразрушим"
+msgstr "щети: {:d}  Неразрушими"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4162 Source/items.cpp:4209
@@ -4424,7 +4424,7 @@ msgstr "Сатир Господар"
 
 #: Source/monstdat.cpp:53 Source/monstdat.cpp:61
 msgid "Flesh Clan"
-msgstr "Плътен Клан"
+msgstr "Плътски Клан"
 
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
 msgid "Stone Clan"
@@ -5178,7 +5178,7 @@ msgstr "Мрачешип"
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:572
 msgid "Doomlock"
-msgstr "Обреключ"
+msgstr "Гибелобречен"
 
 #: Source/monster.cpp:3591
 msgid "Animal"
@@ -7226,7 +7226,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak (Hostile)
 #: Source/textdat.cpp:303
 msgid "This too good for you. Very Powerful! You want - you take!"
-msgstr "Това твърде добро за теб. Много мощен! Ти искаш - ти получаваш!"
+msgstr "Това твърде добро за теб. Много мощен! Ти иска - ти получава!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (annoyed / Hostile)
 #: Source/textdat.cpp:305
