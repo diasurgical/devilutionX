@@ -3224,11 +3224,11 @@ void RemovePlrMissiles(int pnum)
 			DeleteMissile(am, i);
 		}
 		if (Missiles[am]._mitype == MIS_REFLECT && Missiles[am]._misource == pnum) {
-			ClearMissileSpot(am);
+			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
 		if (Missiles[am]._mitype == MIS_ETHEREALIZE && Missiles[am]._misource == pnum) {
-			ClearMissileSpot(am);
+			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
 	}
