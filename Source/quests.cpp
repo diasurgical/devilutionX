@@ -337,40 +337,41 @@ void CheckQuests()
 	if (gbIsSpawn)
 		return;
 
-	if (Quests[Q_BETRAYER].IsAvailable() && gbIsMultiplayer && Quests[Q_BETRAYER]._qvar1 == 2) {
+	auto &quest = Quests[Q_BETRAYER];
+	if (quest.IsAvailable() && gbIsMultiplayer && quest._qvar1 == 2) {
 		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
-		Quests[Q_BETRAYER]._qvar1 = 3;
-		NetSendCmdQuest(true, Q_BETRAYER);
+		quest._qvar1 = 3;
+		NetSendCmdQuest(true, quest);
 	}
 
 	if (gbIsMultiplayer) {
 		return;
 	}
 
-	if (currlevel == Quests[Q_BETRAYER]._qlevel
+	if (currlevel == quest._qlevel
 	    && !setlevel
-	    && Quests[Q_BETRAYER]._qvar1 >= 2
-	    && (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE || Quests[Q_BETRAYER]._qactive == QUEST_DONE)
-	    && (Quests[Q_BETRAYER]._qvar2 == 0 || Quests[Q_BETRAYER]._qvar2 == 2)) {
-		Quests[Q_BETRAYER].position.x = 2 * Quests[Q_BETRAYER].position.x + 16;
-		Quests[Q_BETRAYER].position.y = 2 * Quests[Q_BETRAYER].position.y + 16;
-		int rportx = Quests[Q_BETRAYER].position.x;
-		int rporty = Quests[Q_BETRAYER].position.y;
+	    && quest._qvar1 >= 2
+	    && (quest._qactive == QUEST_ACTIVE || quest._qactive == QUEST_DONE)
+	    && (quest._qvar2 == 0 || quest._qvar2 == 2)) {
+		quest.position.x = 2 * quest.position.x + 16;
+		quest.position.y = 2 * quest.position.y + 16;
+		int rportx = quest.position.x;
+		int rporty = quest.position.y;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
-		Quests[Q_BETRAYER]._qvar2 = 1;
-		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
-			Quests[Q_BETRAYER]._qvar1 = 3;
+		quest._qvar2 = 1;
+		if (quest._qactive == QUEST_ACTIVE) {
+			quest._qvar1 = 3;
 		}
 	}
 
-	if (Quests[Q_BETRAYER]._qactive == QUEST_DONE
+	if (quest._qactive == QUEST_DONE
 	    && setlevel
 	    && setlvlnum == SL_VILEBETRAYER
-	    && Quests[Q_BETRAYER]._qvar2 == 4) {
+	    && quest._qvar2 == 4) {
 		int rportx = 35;
 		int rporty = 32;
 		AddMissile({ rportx, rporty }, { rportx, rporty }, 0, MIS_RPORTAL, TARGET_MONSTERS, MyPlayerId, 0, 0);
-		Quests[Q_BETRAYER]._qvar2 = 3;
+		quest._qvar2 = 3;
 	}
 
 	if (setlevel) {
@@ -437,16 +438,18 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (monster.MType->mtype == MT_SKING) {
-		Quests[Q_SKELKING]._qactive = QUEST_DONE;
+		auto &quest = Quests[Q_SKELKING];
+		quest._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::RestWellLeoricIllFindYourSon, 30);
 		if (sendmsg)
-			NetSendCmdQuest(true, Q_SKELKING);
+			NetSendCmdQuest(true, quest);
 
 	} else if (monster.MType->mtype == MT_CLEAVER) {
-		Quests[Q_BUTCHER]._qactive = QUEST_DONE;
+		auto &quest = Quests[Q_BUTCHER];
+		quest._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::TheSpiritsOfTheDeadAreNowAvenged, 30);
 		if (sendmsg)
-			NetSendCmdQuest(true, Q_BUTCHER);
+			NetSendCmdQuest(true, quest);
 	} else if (monster._uniqtype - 1 == UMT_GARBUD) { //"Gharbad the Weak"
 		Quests[Q_GARBUD]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::ImNotImpressed, 30);
@@ -454,9 +457,11 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 		Quests[Q_ZHAR]._qactive = QUEST_DONE;
 		myPlayer.Say(HeroSpeech::ImSorryDidIBreakYourConcentration, 30);
 	} else if (monster._uniqtype - 1 == UMT_LAZARUS && gbIsMultiplayer) { //"Arch-Bishop Lazarus"
-		Quests[Q_BETRAYER]._qactive = QUEST_DONE;
-		Quests[Q_BETRAYER]._qvar1 = 7;
-		Quests[Q_DIABLO]._qactive = QUEST_ACTIVE;
+		auto &betrayerQuest = Quests[Q_BETRAYER];
+		auto &diabloQuest = Quests[Q_DIABLO];
+		betrayerQuest._qactive = QUEST_DONE;
+		betrayerQuest._qvar1 = 7;
+		diabloQuest._qactive = QUEST_ACTIVE;
 
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) {
@@ -469,8 +474,8 @@ void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
 		}
 		myPlayer.Say(HeroSpeech::YourMadnessEndsHereBetrayer, 30);
 		if (sendmsg) {
-			NetSendCmdQuest(true, Q_BETRAYER);
-			NetSendCmdQuest(true, Q_DIABLO);
+			NetSendCmdQuest(true, betrayerQuest);
+			NetSendCmdQuest(true, diabloQuest);
 		}
 	} else if (monster._uniqtype - 1 == UMT_LAZARUS && !gbIsMultiplayer) { //"Arch-Bishop Lazarus"
 		Quests[Q_BETRAYER]._qactive = QUEST_DONE;
@@ -589,39 +594,52 @@ void ResyncMPQuests()
 	if (gbIsSpawn)
 		return;
 
-	if (Quests[Q_SKELKING]._qactive == QUEST_INIT
-	    && currlevel >= Quests[Q_SKELKING]._qlevel - 1
-	    && currlevel <= Quests[Q_SKELKING]._qlevel + 1) {
-		Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_SKELKING);
+	auto &kingQuest = Quests[Q_SKELKING];
+	if (kingQuest._qactive == QUEST_INIT
+	    && currlevel >= kingQuest._qlevel - 1
+	    && currlevel <= kingQuest._qlevel + 1) {
+		kingQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, kingQuest);
 	}
-	if (Quests[Q_BUTCHER]._qactive == QUEST_INIT
-	    && currlevel >= Quests[Q_BUTCHER]._qlevel - 1
-	    && currlevel <= Quests[Q_BUTCHER]._qlevel + 1) {
-		Quests[Q_BUTCHER]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_BUTCHER);
+
+	auto &butcherQuest = Quests[Q_BUTCHER];
+	if (butcherQuest._qactive == QUEST_INIT
+	    && currlevel >= butcherQuest._qlevel - 1
+	    && currlevel <= butcherQuest._qlevel + 1) {
+		butcherQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, butcherQuest);
 	}
-	if (Quests[Q_BETRAYER]._qactive == QUEST_INIT && currlevel == Quests[Q_BETRAYER]._qlevel - 1) {
-		Quests[Q_BETRAYER]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_BETRAYER);
+
+	auto &betrayerQuest = Quests[Q_BETRAYER];
+	if (betrayerQuest._qactive == QUEST_INIT && currlevel == betrayerQuest._qlevel - 1) {
+		betrayerQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, betrayerQuest);
 	}
-	if (Quests[Q_BETRAYER].IsAvailable())
+	if (betrayerQuest.IsAvailable())
 		AddObject(OBJ_ALTBOY, { 2 * setpc_x + 20, 2 * setpc_y + 22 });
-	if (Quests[Q_GRAVE]._qactive == QUEST_INIT && currlevel == Quests[Q_GRAVE]._qlevel - 1) {
-		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_GRAVE);
+
+	auto &cryptQuest = Quests[Q_GRAVE];
+	if (cryptQuest._qactive == QUEST_INIT && currlevel == cryptQuest._qlevel - 1) {
+		cryptQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, cryptQuest);
 	}
-	if (Quests[Q_DEFILER]._qactive == QUEST_INIT && currlevel == Quests[Q_DEFILER]._qlevel - 1) {
-		Quests[Q_DEFILER]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_DEFILER);
+
+	auto &defilerQuest = Quests[Q_DEFILER];
+	if (defilerQuest._qactive == QUEST_INIT && currlevel == defilerQuest._qlevel - 1) {
+		defilerQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, defilerQuest);
 	}
-	if (Quests[Q_NAKRUL]._qactive == QUEST_INIT && currlevel == Quests[Q_NAKRUL]._qlevel - 1) {
-		Quests[Q_NAKRUL]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_NAKRUL);
+
+	auto &nakrulQuest = Quests[Q_NAKRUL];
+	if (nakrulQuest._qactive == QUEST_INIT && currlevel == nakrulQuest._qlevel - 1) {
+		nakrulQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, nakrulQuest);
 	}
-	if (Quests[Q_JERSEY]._qactive == QUEST_INIT && currlevel == Quests[Q_JERSEY]._qlevel - 1) {
-		Quests[Q_JERSEY]._qactive = QUEST_ACTIVE;
-		NetSendCmdQuest(true, Q_JERSEY);
+
+	auto &cowQuest = Quests[Q_JERSEY];
+	if (cowQuest._qactive == QUEST_INIT && currlevel == cowQuest._qlevel - 1) {
+		cowQuest._qactive = QUEST_ACTIVE;
+		NetSendCmdQuest(true, cowQuest);
 	}
 }
 
