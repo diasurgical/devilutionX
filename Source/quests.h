@@ -45,17 +45,16 @@ enum quest_state : uint8_t {
 };
 
 struct QuestStruct {
-	uint8_t _qlevel;
-	uint8_t _qtype;
+	quest_id _qidx;
 	quest_state _qactive;
-	dungeon_type _qlvltype;
+	uint8_t _qlevel;
 	Point position;
+	dungeon_type _qlvltype;
 	_setlevels _qslvl;
-	uint8_t _qidx;
+	bool _qlog;
 	_speech_id _qmsg;
 	uint8_t _qvar1;
 	uint8_t _qvar2;
-	bool _qlog;
 
 	bool IsAvailable();
 };
@@ -64,7 +63,6 @@ struct QuestDataStruct {
 	uint8_t _qdlvl;
 	int8_t _qdmultlvl;
 	dungeon_type _qlvlt;
-	uint8_t _qdtype;
 	uint8_t _qdrnd;
 	_setlevels _qslvl;
 	bool isSinglePlayerOnly;
