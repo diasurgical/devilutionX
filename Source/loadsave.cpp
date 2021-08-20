@@ -741,13 +741,13 @@ void LoadQuest(LoadHelper *file, int i)
 	QuestStruct *pQuest = &Quests[i];
 
 	pQuest->_qlevel = file->NextLE<uint8_t>();
-	pQuest->_qtype = file->NextLE<uint8_t>();
+	file->Skip<uint8_t>(); // _qtype, identical to _qidx
 	pQuest->_qactive = static_cast<quest_state>(file->NextLE<uint8_t>());
 	pQuest->_qlvltype = static_cast<dungeon_type>(file->NextLE<uint8_t>());
 	pQuest->position.x = file->NextLE<int32_t>();
 	pQuest->position.y = file->NextLE<int32_t>();
 	pQuest->_qslvl = static_cast<_setlevels>(file->NextLE<uint8_t>());
-	pQuest->_qidx = file->NextLE<uint8_t>();
+	pQuest->_qidx = static_cast<quest_id>(file->NextLE<uint8_t>());
 	if (gbIsHellfireSaveGame) {
 		file->Skip(2); // Alignment
 		pQuest->_qmsg = static_cast<_speech_id>(file->NextLE<int32_t>());
@@ -1384,7 +1384,7 @@ void SaveQuest(SaveHelper *file, int i)
 	QuestStruct *pQuest = &Quests[i];
 
 	file->WriteLE<uint8_t>(pQuest->_qlevel);
-	file->WriteLE<uint8_t>(pQuest->_qtype);
+	file->WriteLE<uint8_t>(pQuest->_qidx); // _qtype for compatability, used in DRLG_CheckQuests
 	file->WriteLE<uint8_t>(pQuest->_qactive);
 	file->WriteLE<uint8_t>(pQuest->_qlvltype);
 	file->WriteLE<int32_t>(pQuest->position.x);

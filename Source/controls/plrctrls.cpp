@@ -373,7 +373,7 @@ void FindActor()
 
 int pcursmissile;
 int pcurstrig;
-int pcursquest;
+quest_id pcursquest;
 
 void FindTrigger()
 {
@@ -1308,7 +1308,7 @@ void plrctrls_after_check_curs_move()
 		pcursobj = -1;
 		pcursmissile = -1;
 		pcurstrig = -1;
-		pcursquest = -1;
+		pcursquest = Q_INVALID;
 		cursmx = -1;
 		cursmy = -1;
 		if (Players[MyPlayerId]._pInvincible) {
@@ -1527,7 +1527,7 @@ void PerformSecondaryAction()
 		} else if (pcurstrig != -1) {
 			MakePlrPath(myPlayer, trigs[pcurstrig].position, true);
 			myPlayer.destAction = ACTION_WALK;
-		} else if (pcursquest != -1) {
+		} else if (pcursquest != Q_INVALID) {
 			MakePlrPath(myPlayer, Quests[pcursquest].position, true);
 			myPlayer.destAction = ACTION_WALK;
 		}
