@@ -76,7 +76,7 @@ void AddDead(Point tilePosition, int8_t dv, Direction ddir)
 	dDead[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
 }
 
-void SetDead()
+void SyncUniqDead()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
