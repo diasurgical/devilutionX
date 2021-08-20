@@ -738,28 +738,28 @@ void LoadPremium(LoadHelper *file, int i)
 
 void LoadQuest(LoadHelper *file, int i)
 {
-	QuestStruct *pQuest = &Quests[i];
+	auto &quest = Quests[i];
 
-	pQuest->_qlevel = file->NextLE<uint8_t>();
-	pQuest->_qtype = file->NextLE<uint8_t>();
-	pQuest->_qactive = static_cast<quest_state>(file->NextLE<uint8_t>());
-	pQuest->_qlvltype = static_cast<dungeon_type>(file->NextLE<uint8_t>());
-	pQuest->position.x = file->NextLE<int32_t>();
-	pQuest->position.y = file->NextLE<int32_t>();
-	pQuest->_qslvl = static_cast<_setlevels>(file->NextLE<uint8_t>());
-	pQuest->_qidx = file->NextLE<uint8_t>();
+	quest._qlevel = file->NextLE<uint8_t>();
+	file->Skip<uint8_t>(); // _qtype, identical to _qidx
+	quest._qactive = static_cast<quest_state>(file->NextLE<uint8_t>());
+	quest._qlvltype = static_cast<dungeon_type>(file->NextLE<uint8_t>());
+	quest.position.x = file->NextLE<int32_t>();
+	quest.position.y = file->NextLE<int32_t>();
+	quest._qslvl = static_cast<_setlevels>(file->NextLE<uint8_t>());
+	quest._qidx = static_cast<quest_id>(file->NextLE<uint8_t>());
 	if (gbIsHellfireSaveGame) {
 		file->Skip(2); // Alignment
-		pQuest->_qmsg = static_cast<_speech_id>(file->NextLE<int32_t>());
+		quest._qmsg = static_cast<_speech_id>(file->NextLE<int32_t>());
 	} else {
-		pQuest->_qmsg = static_cast<_speech_id>(file->NextLE<uint8_t>());
+		quest._qmsg = static_cast<_speech_id>(file->NextLE<uint8_t>());
 	}
-	pQuest->_qvar1 = file->NextLE<uint8_t>();
-	pQuest->_qvar2 = file->NextLE<uint8_t>();
+	quest._qvar1 = file->NextLE<uint8_t>();
+	quest._qvar2 = file->NextLE<uint8_t>();
 	file->Skip(2); // Alignment
 	if (!gbIsHellfireSaveGame)
 		file->Skip(1); // Alignment
-	pQuest->_qlog = file->NextBool32();
+	quest._qlog = file->NextBool32();
 
 	ReturnLvlX = file->NextBE<int32_t>();
 	ReturnLvlY = file->NextBE<int32_t>();
@@ -1382,28 +1382,28 @@ void SavePremium(SaveHelper *file, int i)
 
 void SaveQuest(SaveHelper *file, int i)
 {
-	QuestStruct *pQuest = &Quests[i];
+	auto &quest = Quests[i];
 
-	file->WriteLE<uint8_t>(pQuest->_qlevel);
-	file->WriteLE<uint8_t>(pQuest->_qtype);
-	file->WriteLE<uint8_t>(pQuest->_qactive);
-	file->WriteLE<uint8_t>(pQuest->_qlvltype);
-	file->WriteLE<int32_t>(pQuest->position.x);
-	file->WriteLE<int32_t>(pQuest->position.y);
-	file->WriteLE<uint8_t>(pQuest->_qslvl);
-	file->WriteLE<uint8_t>(pQuest->_qidx);
+	file->WriteLE<uint8_t>(quest._qlevel);
+	file->WriteLE<uint8_t>(quest._qidx); // _qtype for compatability, used in DRLG_CheckQuests
+	file->WriteLE<uint8_t>(quest._qactive);
+	file->WriteLE<uint8_t>(quest._qlvltype);
+	file->WriteLE<int32_t>(quest.position.x);
+	file->WriteLE<int32_t>(quest.position.y);
+	file->WriteLE<uint8_t>(quest._qslvl);
+	file->WriteLE<uint8_t>(quest._qidx);
 	if (gbIsHellfire) {
 		file->Skip(2); // Alignment
-		file->WriteLE<int32_t>(pQuest->_qmsg);
+		file->WriteLE<int32_t>(quest._qmsg);
 	} else {
-		file->WriteLE<uint8_t>(pQuest->_qmsg);
+		file->WriteLE<uint8_t>(quest._qmsg);
 	}
-	file->WriteLE<uint8_t>(pQuest->_qvar1);
-	file->WriteLE<uint8_t>(pQuest->_qvar2);
+	file->WriteLE<uint8_t>(quest._qvar1);
+	file->WriteLE<uint8_t>(quest._qvar2);
 	file->Skip(2); // Alignment
 	if (!gbIsHellfire)
 		file->Skip(1); // Alignment
-	file->WriteLE<uint32_t>(pQuest->_qlog ? 1 : 0);
+	file->WriteLE<uint32_t>(quest._qlog ? 1 : 0);
 
 	file->WriteBE<int32_t>(ReturnLvlX);
 	file->WriteBE<int32_t>(ReturnLvlY);

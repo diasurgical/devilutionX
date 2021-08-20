@@ -1760,7 +1760,7 @@ DWORD OnEndShield(TCmd *pCmd, int pnum)
 			int mi = ActiveMissiles[i];
 			auto &missile = Missiles[mi];
 			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
-				ClearMissileSpot(mi);
+				ClearMissileSpot(missile.position.tile);
 				DeleteMissile(mi, i);
 			}
 		}
@@ -1793,7 +1793,7 @@ DWORD OnEndReflect(TCmd *pCmd, int pnum)
 			int mi = ActiveMissiles[i];
 			auto &missile = Missiles[mi];
 			if (missile._mitype == MIS_REFLECT && missile._misource == pnum) {
-				ClearMissileSpot(mi);
+				ClearMissileSpot(missile.position.tile);
 				DeleteMissile(mi, i);
 			}
 		}
@@ -2313,15 +2313,15 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdQuest(bool bHiPri, BYTE q)
+void NetSendCmdQuest(bool bHiPri, const QuestStruct &quest)
 {
 	TCmdQuest cmd;
-
-	cmd.q = q;
 	cmd.bCmd = CMD_SYNCQUEST;
-	cmd.qstate = Quests[q]._qactive;
-	cmd.qlog = Quests[q]._qlog ? 1 : 0;
-	cmd.qvar1 = Quests[q]._qvar1;
+	cmd.q = quest._qidx,
+	cmd.qstate = quest._qactive;
+	cmd.qlog = quest._qlog ? 1 : 0;
+	cmd.qvar1 = quest._qvar1;
+
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else

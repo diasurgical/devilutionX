@@ -225,11 +225,12 @@ std::string DebugCmdQuest(const std::string_view parameter)
 
 	if (questId >= MAXQUESTS)
 		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+	auto &quest = Quests[questId];
 
-	if (IsNoneOf(Quests[questId]._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 		return fmt::format("{} was already given.", QuestData[questId]._qlstr);
 
-	Quests[questId]._qactive = QUEST_ACTIVE;
+	quest._qactive = QUEST_ACTIVE;
 
 	return fmt::format("{} enabled.", QuestData[questId]._qlstr);
 }
@@ -343,7 +344,8 @@ void PrintDebugQuest()
 {
 	char dstr[128];
 
-	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, Quests[DebugQuestId]._qactive, Quests[DebugQuestId]._qvar1);
+	auto &quest = Quests[DebugQuestId];
+	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, quest._qactive, quest._qvar1);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 
 	DebugQuestId++;
@@ -381,7 +383,7 @@ void NextDebugMonster()
 
 bool CheckDebugTextCommand(const std::string_view text)
 {
-	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0; });
+	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (debugCmdIterator == DebugCmdList.end())
 		return false;
 
