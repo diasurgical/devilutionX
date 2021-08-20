@@ -3143,8 +3143,9 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 	if (totalDamage > 0) {
 		for (int i = 0; i < ActiveMissileCount; i++) {
 			int ma = ActiveMissiles[i];
-			if (Missiles[ma]._mitype == MIS_MANASHIELD && Missiles[ma]._misource == pnum && !Missiles[ma]._miDelFlag) {
-				if (Missiles[ma]._mispllvl > 0) {
+			auto &missile = Missiles[ma];
+			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum && !missile._miDelFlag) {
+				if (missile._mispllvl > 0) {
 					totalDamage += totalDamage / -3;
 				}
 
@@ -3155,7 +3156,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 					totalDamage = 0;
 				} else {
 					totalDamage -= player._pMana;
-					if (Missiles[ma]._mispllvl > 0) {
+					if (missile._mispllvl > 0) {
 						totalDamage += totalDamage / 2;
 					}
 					player._pMana = 0;
@@ -3224,11 +3225,11 @@ void RemovePlrMissiles(int pnum)
 			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
-		if (Missiles[am]._mitype == MIS_REFLECT && Missiles[am]._misource == pnum) {
+		if (missile._mitype == MIS_REFLECT && missile._misource == pnum) {
 			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
-		if (Missiles[am]._mitype == MIS_ETHEREALIZE && Missiles[am]._misource == pnum) {
+		if (missile._mitype == MIS_ETHEREALIZE && missile._misource == pnum) {
 			ClearMissileSpot(missile.position.tile);
 			DeleteMissile(am, i);
 		}
