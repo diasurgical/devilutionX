@@ -2088,11 +2088,12 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 
 	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
 
-	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
-
 #ifdef _DEBUG
-	CheckDebugTextCommand(sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+	if (CheckDebugTextCommand(sgOptions.Chat.szHotKeyMsgs[dwMsg]))
+		return;
 #endif
+
+	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
 }
 
 } // namespace devilution

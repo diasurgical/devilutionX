@@ -824,7 +824,7 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 		negMon = dMonster[sx][sy - 1];
 
 #ifdef _DEBUG
-	if (visiondebug && (bFlag & BFLAG_LIT) != 0) {
+	if (DebugVision && (bFlag & BFLAG_LIT) != 0) {
 		CelClippedDrawTo(out, { dx, dy }, *pSquareCel, 1);
 	}
 #endif

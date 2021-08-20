@@ -14,13 +14,11 @@
 namespace devilution {
 
 extern std::optional<CelSprite> pSquareCel;
+extern bool DebugGodMode;
+extern bool DebugVision;
 
 void FreeDebugGFX();
 void LoadDebugGFX();
-void GiveGoldCheat();
-void TakeGoldCheat();
-void MaxSpellsCheat();
-void SetAllSpellsCheat();
 void PrintDebugPlayer(bool bNextPlayer);
 void PrintDebugQuest();
 void GetDebugMonster();

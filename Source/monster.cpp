@@ -1442,7 +1442,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 
 	int hper = GenerateRnd(100);
 #ifdef _DEBUG
-	if (debug_mode_dollar_sign || debug_mode_key_inverted_v)
+	if (DebugGodMode)
 		hper = 1000;
 #endif
 	int ac = player.GetArmor();
@@ -3831,10 +3831,8 @@ void monster_some_crypt()
 void InitMonsters()
 {
 	if (!setlevel) {
-		AddMonster(GolemHoldingCell, DIR_S, 0, false);
-		AddMonster(GolemHoldingCell, DIR_S, 0, false);
-		AddMonster(GolemHoldingCell, DIR_S, 0, false);
-		AddMonster(GolemHoldingCell, DIR_S, 0, false);
+		for (int i = 0; i < MAX_PLRS; i++)
+			AddMonster(GolemHoldingCell, DIR_S, 0, false);
 	}
 
 	if (!gbIsSpawn && !setlevel && currlevel == 16)
@@ -3897,10 +3895,9 @@ void InitMonsters()
 void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
-	AddMonster(GolemHoldingCell, DIR_S, 0, false);
-	AddMonster(GolemHoldingCell, DIR_S, 0, false);
-	AddMonster(GolemHoldingCell, DIR_S, 0, false);
-	AddMonster(GolemHoldingCell, DIR_S, 0, false);
+	for (int i = 0; i < MAX_PLRS; i++)
+		AddMonster(GolemHoldingCell, DIR_S, 0, false);
+
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqMonst[UMT_LAZARUS].mtype, PLACE_UNIQUE);
 		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);

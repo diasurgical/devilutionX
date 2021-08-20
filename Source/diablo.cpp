@@ -97,18 +97,12 @@ Keymapper keymapper;
 std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
-bool leveldebug = false;
 #ifdef _DEBUG
 bool monstdebug = false;
 _monster_id DebugMonsters[10];
 int debugmonsttypes = 0;
-bool visiondebug = false;
-int questdebug = -1;
-bool debug_mode_key_w = false;
 bool debug_mode_key_inverted_v = false;
-bool debug_mode_dollar_sign = false;
 bool debug_mode_key_i = false;
-int debug_mode_key_j = 0;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
@@ -606,21 +600,6 @@ void PressChar(char vkey)
 			arrowdebug++;
 		}
 		return;
-	case ':':
-		if (currlevel == 0 && debug_mode_key_w) {
-			SetAllSpellsCheat();
-		}
-		return;
-	case '[':
-		if (currlevel == 0 && debug_mode_key_w) {
-			TakeGoldCheat();
-		}
-		return;
-	case ']':
-		if (currlevel == 0 && debug_mode_key_w) {
-			MaxSpellsCheat();
-		}
-		return;
 	case 'a':
 		if (debug_mode_key_inverted_v) {
 			spelldata[SPL_TELEPORT].sTownSpell = true;
@@ -633,12 +612,6 @@ void PressChar(char vkey)
 		return;
 	case 'd':
 		PrintDebugPlayer(false);
-		return;
-	case 'L':
-	case 'l':
-		if (debug_mode_key_inverted_v) {
-			ToggleLighting();
-		}
 		return;
 	case 'M':
 		NextDebugMonster();
@@ -663,11 +636,6 @@ void PressChar(char vkey)
 			NetSendCmdString(1 << MyPlayerId, tempstr);
 			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursmx, cursmy, dungeon[cursmx][cursmy]);
 			NetSendCmdString(1 << MyPlayerId, tempstr);
-		}
-		return;
-	case '|':
-		if (currlevel == 0 && debug_mode_key_w) {
-			GiveGoldCheat();
 		}
 		return;
 #endif
@@ -880,17 +848,10 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
-	printInConsole("    %-20s %-30s\n", "-w", "Enable cheats");
-	printInConsole("    %-20s %-30s\n", "-$", "Enable god mode");
-	printInConsole("    %-20s %-30s\n", "-^", "Enable god mode and debug tools");
-	printInConsole("    %-20s %-30s\n", "-v", "Highlight visibility");
+	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	printInConsole("    %-20s %-30s\n", "-j <##>", "Mausoleum warps to given level");
-	printInConsole("    %-20s %-30s\n", "-l <##> <##>", "Start in level as type");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	printInConsole("    %-20s %-30s\n", "-q <#>", "Force a certain quest");
 	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
-	printInConsole("    %-20s %-30s\n", "-t <##>", "Set current quest level");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
@@ -945,33 +906,13 @@ void DiabloParseFlags(int argc, char **argv)
 #ifdef _DEBUG
 		} else if (strcasecmp("-^", argv[i]) == 0) {
 			debug_mode_key_inverted_v = true;
-		} else if (strcasecmp("-$", argv[i]) == 0) {
-			debug_mode_dollar_sign = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
-		} else if (strcasecmp("-j", argv[i]) == 0) {
-			debug_mode_key_j = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-l", argv[i]) == 0) {
-			setlevel = false;
-			leveldebug = true;
-			leveltype = (dungeon_type)SDL_atoi(argv[++i]);
-			currlevel = SDL_atoi(argv[++i]);
-			Players[0].plrlevel = currlevel;
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-q", argv[i]) == 0) {
-			questdebug = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("-r", argv[i]) == 0) {
 			setseed = SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-t", argv[i]) == 0) {
-			leveldebug = true;
-			setlevel = true;
-			setlvlnum = (_setlevels)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-v", argv[i]) == 0) {
-			visiondebug = true;
-		} else if (strcasecmp("-w", argv[i]) == 0) {
-			debug_mode_key_w = true;
 #endif
 		} else {
 			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
@@ -1584,19 +1525,6 @@ void InitKeymapActions()
 	    DVL_VK_INVALID,
 	    [] { gamemenu_quit_game(false); },
 	});
-#ifdef _DEBUG
-	keymapper.AddAction({
-	    "CheatExperience",
-	    DVL_VK_INVALID,
-	    [] {
-		    if (debug_mode_key_inverted_v || debug_mode_key_w) {
-			    NetSendCmd(true, CMD_CHEAT_EXPERIENCE);
-			    return;
-		    }
-	    },
-	    [&]() { return !IsPlayerDead(); },
-	});
-#endif
 	keymapper.AddAction({
 	    "StopHero",
 	    DVL_VK_INVALID,

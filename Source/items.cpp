@@ -3115,14 +3115,9 @@ void CreatePlrItems(int playerId)
 		SetPlrHandItem(&player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
 
-#ifdef _DEBUG
-		if (!debug_mode_key_w)
-#endif
-		{
-			SetPlrHandItem(&player.HoldItem, IDI_WARRCLUB);
-			GetPlrHandSeed(&player.HoldItem);
-			AutoPlaceItemInInventory(player, player.HoldItem, true);
-		}
+		SetPlrHandItem(&player.HoldItem, IDI_WARRCLUB);
+		GetPlrHandSeed(&player.HoldItem);
+		AutoPlaceItemInInventory(player, player.HoldItem, true);
 
 		SetPlrHandItem(&player.SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[0]);
@@ -3189,26 +3184,11 @@ void CreatePlrItems(int playerId)
 	SetPlrHandItem(&player.HoldItem, IDI_GOLD);
 	GetPlrHandSeed(&player.HoldItem);
 
-#ifdef _DEBUG
-	if (!debug_mode_key_w) {
-#endif
-		player.HoldItem._ivalue = 100;
-		player.HoldItem._iCurs = ICURS_GOLD_SMALL;
-		player._pGold = player.HoldItem._ivalue;
-		player.InvList[player._pNumInv++] = player.HoldItem;
-		player.InvGrid[30] = player._pNumInv;
-#ifdef _DEBUG
-	} else {
-		player.HoldItem._ivalue = GOLD_MAX_LIMIT;
-		player.HoldItem._iCurs = ICURS_GOLD_LARGE;
-		player._pGold = player.HoldItem._ivalue * 40;
-		for (auto &cell : player.InvGrid) {
-			GetPlrHandSeed(&player.HoldItem);
-			player.InvList[player._pNumInv++] = player.HoldItem;
-			cell = player._pNumInv;
-		}
-	}
-#endif
+	player.HoldItem._ivalue = 100;
+	player.HoldItem._iCurs = ICURS_GOLD_SMALL;
+	player._pGold = player.HoldItem._ivalue;
+	player.InvList[player._pNumInv++] = player.HoldItem;
+	player.InvGrid[30] = player._pNumInv;
 
 	CalcPlrItemVals(playerId, false);
 }

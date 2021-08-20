@@ -10,6 +10,9 @@
 #include "control.h"
 #include "cursor.h"
 #include "dead.h"
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
@@ -265,13 +268,12 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, int t, bool 
 	if (CheckMonsterHit(monster, &ret))
 		return ret;
 
+	if (hit >= hper) {
 #ifdef _DEBUG
-	if (hit >= hper && !debug_mode_key_inverted_v && !debug_mode_dollar_sign)
-		return false;
-#else
-	if (hit >= hper)
-		return false;
+		if (!DebugGodMode)
 #endif
+			return false;
+	}
 
 	int dam;
 	if (t == MIS_BONESPIRIT) {
@@ -948,6 +950,11 @@ void DeleteMissile(int mi, int i)
 		if (src == MyPlayerId)
 			NetSendCmd(true, CMD_REMSHIELD);
 		Players[src].pManaShield = false;
+	} else if (missile._mitype == MIS_REFLECT) {
+		int src = missile._misource;
+		if (src == MyPlayerId)
+			NetSendCmd(true, CMD_REMREFLECT);
+		Players[src].wReflections = 0;
 	}
 
 	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = mi;
@@ -993,44 +1000,44 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, bool shift)
 	if (CheckMonsterHit(monster, &ret)) {
 		return ret;
 	}
+	if (hit >= hper && monster._mmode != MM_STONE) {
 #ifdef _DEBUG
-	if (hit < hper || debug_mode_dollar_sign || debug_mode_key_inverted_v || monster._mmode == MM_STONE) {
-#else
-	if (hit < hper || monster._mmode == MM_STONE) {
+		if (!DebugGodMode)
 #endif
-		int dam = mindam + GenerateRnd(maxdam - mindam + 1);
-		if (!shift)
-			dam <<= 6;
-		if (resist)
-			monster._mhitpoints -= dam / 4;
-		else
-			monster._mhitpoints -= dam;
-#ifdef _DEBUG
-		if (debug_mode_dollar_sign || debug_mode_key_inverted_v)
-			monster._mhitpoints = 0;
-#endif
-		if (monster._mhitpoints >> 6 <= 0) {
-			if (monster._mmode == MM_STONE) {
-				M_StartKill(m, -1);
-				monster.Petrify();
-			} else {
-				M_StartKill(m, -1);
-			}
-		} else {
-			if (resist) {
-				PlayEffect(monster, 1);
-			} else if (monster._mmode == MM_STONE) {
-				if (m > MAX_PLRS - 1)
-					M_StartHit(m, -1, dam);
-				monster.Petrify();
-			} else {
-				if (m > MAX_PLRS - 1)
-					M_StartHit(m, -1, dam);
-			}
-		}
-		return true;
+			return false;
 	}
-	return false;
+
+	int dam = mindam + GenerateRnd(maxdam - mindam + 1);
+	if (!shift)
+		dam <<= 6;
+	if (resist)
+		monster._mhitpoints -= dam / 4;
+	else
+		monster._mhitpoints -= dam;
+#ifdef _DEBUG
+	if (DebugGodMode)
+		monster._mhitpoints = 0;
+#endif
+	if (monster._mhitpoints >> 6 <= 0) {
+		if (monster._mmode == MM_STONE) {
+			M_StartKill(m, -1);
+			monster.Petrify();
+		} else {
+			M_StartKill(m, -1);
+		}
+	} else {
+		if (resist) {
+			PlayEffect(monster, 1);
+		} else if (monster._mmode == MM_STONE) {
+			if (m > MAX_PLRS - 1)
+				M_StartHit(m, -1, dam);
+			monster.Petrify();
+		} else {
+			if (m > MAX_PLRS - 1)
+				M_StartHit(m, -1, dam);
+		}
+	}
+	return true;
 }
 
 bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, int mtype, bool shift, int earflag, bool *blocked)
@@ -1053,7 +1060,7 @@ bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, 
 
 	int hit = GenerateRnd(100);
 #ifdef _DEBUG
-	if (debug_mode_dollar_sign || debug_mode_key_inverted_v)
+	if (DebugGodMode)
 		hit = 1000;
 #endif
 	int hper = 40;
@@ -1257,7 +1264,6 @@ void InitMissiles()
 			dFlags[i][j] &= ~BFLAG_MISSILE;
 		}
 	}
-	myPlayer.wReflections = 0;
 }
 
 void AddHiveExplosion(int mi, Point /*src*/, Point /*dst*/, int midir, int8_t mienemy, int id, int dam)
@@ -1344,12 +1350,10 @@ void AddReflection(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /
 {
 	auto &missile = Missiles[mi];
 	if (id >= 0) {
-		int lvl = 2;
-		if (missile._mispllvl != 0)
-			lvl = missile._mispllvl;
-
 		auto &player = Players[id];
-		player.wReflections += lvl * player._pLevel;
+		player.wReflections += (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
+		if (id == MyPlayerId)
+			NetSendCmdParam1(true, CMD_SETREFLECT, player.wReflections);
 
 		UseMana(id, SPL_REFLECT);
 	}
@@ -2948,6 +2952,21 @@ int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int
 		}
 	}
 
+	if (mitype == MIS_REFLECT) {
+		auto &player = Players[id];
+		if (player.wReflections) {
+			if (currlevel != player.plrlevel)
+				return -1;
+
+			for (int i = 0; i < ActiveMissileCount; i++) {
+				int mi = ActiveMissiles[i];
+				auto &missile = Missiles[mi];
+				if (missile._mitype == MIS_REFLECT && missile._misource == id)
+					return -1;
+			}
+		}
+	}
+
 	int mi = AvailableMissiles[0];
 	auto &missile = Missiles[mi];
 
@@ -3468,14 +3487,15 @@ void MI_LightningArrow(int i)
 void MI_Reflect(int i)
 {
 	auto &missile = Missiles[i];
-	int src = missile._misource;
-	auto &player = Players[src];
-
-	if (src != MyPlayerId && currlevel != player.plrlevel)
-		missile._miDelFlag = true;
-	if (player.wReflections <= 0) {
-		missile._miDelFlag = true;
-		NetSendCmd(true, CMD_REFLECT);
+	int id = missile._misource;
+	if (id != MyPlayerId) {
+		if (currlevel != Players[id].plrlevel)
+			missile._miDelFlag = true;
+	} else {
+		if (Players[id].wReflections <= 0 || !Players[id].plractive) {
+			missile._miDelFlag = true;
+			NetSendCmd(true, CMD_ENDREFLECT);
+		}
 	}
 	PutMissile(i);
 }

@@ -12,12 +12,17 @@
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "inv.h"
+#include "lighting.h"
+#include "setmaps.h"
 #include "spells.h"
 #include "utils/language.h"
+#include "quests.h"
 
 namespace devilution {
 
 std::optional<CelSprite> pSquareCel;
+bool DebugGodMode = false;
+bool DebugVision = false;
 
 namespace {
 
@@ -101,13 +106,41 @@ std::string DebugCmdHelp(const std::string_view parameter)
 
 std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 {
-	GiveGoldCheat();
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (int8_t &itemId : myPlayer.InvGrid) {
+		if (itemId != 0)
+			continue;
+
+		int ni = myPlayer._pNumInv++;
+		SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
+		GetPlrHandSeed(&myPlayer.InvList[ni]);
+		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
+		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
+		myPlayer._pGold += GOLD_MAX_LIMIT;
+		itemId = myPlayer._pNumInv;
+	}
+
 	return "You are now rich! If only this was as easy in real life...";
 }
 
 std::string DebugCmdTakeGoldCheat(const std::string_view parameter)
 {
-	TakeGoldCheat();
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto itemId : myPlayer.InvGrid) {
+		itemId -= 1;
+
+		if (itemId < 0)
+			continue;
+		if (myPlayer.InvList[itemId]._itype != ITYPE_GOLD)
+			continue;
+
+		myPlayer.RemoveInvItem(itemId);
+	}
+
+	myPlayer._pGold = 0;
+
 	return "You are poor...";
 }
 
@@ -116,11 +149,35 @@ std::string DebugCmdWarpToLevel(const std::string_view parameter)
 	auto &myPlayer = Players[MyPlayerId];
 	auto level = atoi(parameter.data());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
-		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
-	if (myPlayer.plrlevel == level)
+		return fmt::format("Level {} is not known. Do you want to write a mod?", level);
+	if (!setlevel && myPlayer.plrlevel == level)
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+
+	setlevel = false;
 	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
 	return fmt::format("Welcome to level {}.", level);
+}
+
+std::string DebugCmdLoadMap(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	auto level = atoi(parameter.data());
+	if (level < 1)
+		return fmt::format("Map id must be 1 or higher", level);
+	if (setlevel && myPlayer.plrlevel == level)
+		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+
+	for (auto &quest : Quests) {
+		if (level != quest._qslvl)
+			continue;
+
+		setlevel = false;
+		setlvltype = quest._qlvltype;
+		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
+		return fmt::format("Welcome to {}.", QuestLevelNames[level]);
+	}
+
+	return fmt::format("Level {} is not known. Do you want to write a mod?", level);
 }
 
 std::string DebugCmdResetLevel(const std::string_view parameter)
@@ -137,10 +194,44 @@ std::string DebugCmdResetLevel(const std::string_view parameter)
 
 std::string DebugCmdGodMode(const std::string_view parameter)
 {
-	debug_mode_key_inverted_v = !debug_mode_key_inverted_v;
-	if (debug_mode_key_inverted_v)
+	DebugGodMode = !DebugGodMode;
+	if (DebugGodMode)
 		return "A god descended.";
 	return "You are mortal, beware of the darkness.";
+}
+
+std::string DebugCmdLighting(const std::string_view parameter)
+{
+	ToggleLighting();
+
+	return "All raindrops are the same.";
+}
+
+std::string DebugCmdVision(const std::string_view parameter)
+{
+	DebugVision = !DebugVision;
+	if (DebugVision)
+		return "You see as I do.";
+
+	return "My path is set.";
+}
+
+std::string DebugCmdQuest(const std::string_view parameter)
+{
+	if (parameter.empty())
+		return "You must provide an id";
+
+	int questId = atoi(parameter.data());
+
+	if (questId >= MAXQUESTS)
+		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+
+	if (IsNoneOf(Quests[questId]._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+		return fmt::format("{} was already given.", QuestData[questId]._qlstr);
+
+	Quests[questId]._qactive = QUEST_ACTIVE;
+
+	return fmt::format("{} enabled.", QuestData[questId]._qlstr);
 }
 
 std::string DebugCmdLevelUp(const std::string_view parameter)
@@ -152,91 +243,6 @@ std::string DebugCmdLevelUp(const std::string_view parameter)
 }
 
 std::string DebugCmdGetAllSpells(const std::string_view parameter)
-{
-	SetAllSpellsCheat();
-	return "Magic is no mystery for me.";
-}
-
-std::string DebugCmdMaxSpellLevel(const std::string_view parameter)
-{
-	MaxSpellsCheat();
-	return "Knowledge is power.";
-}
-
-std::vector<DebugCmdItem> DebugCmdList = {
-	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
-	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
-	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
-	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
-	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
-	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
-	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
-	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
-	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
-};
-
-} // namespace
-
-void LoadDebugGFX()
-{
-	if (visiondebug)
-		pSquareCel = LoadCel("Data\\Square.CEL", 64);
-}
-
-void FreeDebugGFX()
-{
-	pSquareCel = std::nullopt;
-}
-
-void GiveGoldCheat()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int8_t &itemId : myPlayer.InvGrid) {
-		if (itemId != 0)
-			continue;
-
-		int ni = myPlayer._pNumInv++;
-		SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
-		GetPlrHandSeed(&myPlayer.InvList[ni]);
-		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
-		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;
-		myPlayer._pGold += GOLD_MAX_LIMIT;
-		itemId = myPlayer._pNumInv;
-	}
-}
-
-void TakeGoldCheat()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (auto itemId : myPlayer.InvGrid) {
-		itemId -= 1;
-
-		if (itemId < 0)
-			continue;
-		if (myPlayer.InvList[itemId]._itype != ITYPE_GOLD)
-			continue;
-
-		myPlayer.RemoveInvItem(itemId);
-	}
-
-	myPlayer._pGold = 0;
-}
-
-void MaxSpellsCheat()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
-		if (GetSpellBookLevel((spell_id)i) != -1) {
-			myPlayer._pMemSpells |= GetSpellBitmask(i);
-			myPlayer._pSplLvl[i] = 10;
-		}
-	}
-}
-
-void SetAllSpellsCheat()
 {
 	SetSpellLevelCheat(SPL_FIREBOLT, 8);
 	SetSpellLevelCheat(SPL_CBOLT, 11);
@@ -260,6 +266,50 @@ void SetAllSpellsCheat()
 	SetSpellLevelCheat(SPL_GOLEM, 2);
 	SetSpellLevelCheat(SPL_FLARE, 1);
 	SetSpellLevelCheat(SPL_BONESPIRIT, 1);
+
+	return "Magic is no mystery for me.";
+}
+
+std::string DebugCmdMaxSpellLevel(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
+		if (GetSpellBookLevel((spell_id)i) != -1) {
+			myPlayer._pMemSpells |= GetSpellBitmask(i);
+			myPlayer._pSplLvl[i] = 10;
+		}
+	}
+
+	return "Knowledge is power.";
+}
+
+std::vector<DebugCmdItem> DebugCmdList = {
+	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
+	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
+	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
+	{ "give spells", "Add all spells to player.", "", &DebugCmdGetAllSpells },
+	{ "give spells 10", "Set spell level to 10 for all spells.", "", &DebugCmdMaxSpellLevel },
+	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
+	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
+	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
+	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
+	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
+	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
+	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
+	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
+};
+
+} // namespace
+
+void LoadDebugGFX()
+{
+	pSquareCel = LoadCel("Data\\Square.CEL", 64);
+}
+
+void FreeDebugGFX()
+{
+	pSquareCel = std::nullopt;
 }
 
 void PrintDebugPlayer(bool bNextPlayer)

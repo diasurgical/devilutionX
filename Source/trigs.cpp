@@ -109,10 +109,6 @@ void InitTownTriggers()
 		trigs[numtrigs].position = { 49, 21 };
 		trigs[numtrigs]._tmsg = WM_DIABTOWNWARP;
 		trigs[numtrigs]._tlvl = 5;
-#ifdef _DEBUG
-		if (debug_mode_key_j != 0)
-			trigs[numtrigs]._tlvl = debug_mode_key_j;
-#endif
 		numtrigs++;
 	}
 	if (IsWarpOpen(DTYPE_CAVES)) {

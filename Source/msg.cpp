@@ -1683,22 +1683,6 @@ DWORD OnSyncQuest(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnEndShield(TCmd *pCmd, int pnum)
-{
-	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mi = ActiveMissiles[i];
-			auto &missile = Missiles[mi];
-			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
-				ClearMissileSpot(missile.position.tile);
-				DeleteMissile(mi, i);
-			}
-		}
-	}
-
-	return sizeof(*pCmd);
-}
-
 DWORD OnCheatExperience(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
@@ -1769,15 +1753,48 @@ DWORD OnRemoveShield(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*pCmd);
 }
 
-DWORD OnReflect(TCmd *pCmd, int pnum)
+DWORD OnEndShield(TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
 		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mx = ActiveMissiles[i];
-			auto &missile = Missiles[mx];
+			int mi = ActiveMissiles[i];
+			auto &missile = Missiles[mi];
+			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
+				ClearMissileSpot(mi);
+				DeleteMissile(mi, i);
+			}
+		}
+	}
+
+	return sizeof(*pCmd);
+}
+
+DWORD OnSetReflect(TCmd *pCmd, PlayerStruct &player)
+{
+	auto *p = (TCmdParam1 *)pCmd;
+	if (gbBufferMsgs != 1)
+		player.wReflections = p->wParam1;
+
+	return sizeof(*p);
+}
+
+DWORD OnRemoveReflect(TCmd *pCmd, PlayerStruct &player)
+{
+	if (gbBufferMsgs != 1)
+		player.wReflections = 0;
+
+	return sizeof(*pCmd);
+}
+
+DWORD OnEndReflect(TCmd *pCmd, int pnum)
+{
+	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
+		for (int i = 0; i < ActiveMissileCount; i++) {
+			int mi = ActiveMissiles[i];
+			auto &missile = Missiles[mi];
 			if (missile._mitype == MIS_REFLECT && missile._misource == pnum) {
-				ClearMissileSpot(missile.position.tile);
-				DeleteMissile(mx, i);
+				ClearMissileSpot(mi);
+				DeleteMissile(mi, i);
 			}
 		}
 	}
@@ -2663,8 +2680,6 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return OnString(pCmd, pnum);
 	case CMD_SYNCQUEST:
 		return OnSyncQuest(pCmd, pnum);
-	case CMD_ENDSHIELD:
-		return OnEndShield(pCmd, pnum);
 	case CMD_CHEAT_EXPERIENCE:
 		return OnCheatExperience(pCmd, pnum);
 	case CMD_CHEAT_SPELL_LEVEL:
@@ -2675,8 +2690,14 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return OnSetShield(pCmd, player);
 	case CMD_REMSHIELD:
 		return OnRemoveShield(pCmd, player);
-	case CMD_REFLECT:
-		return OnReflect(pCmd, pnum);
+	case CMD_ENDSHIELD:
+		return OnEndShield(pCmd, pnum);
+	case CMD_SETREFLECT:
+		return OnSetReflect(pCmd, player);
+	case CMD_REMREFLECT:
+		return OnRemoveReflect(pCmd, player);
+	case CMD_ENDREFLECT:
+		return OnEndReflect(pCmd, pnum);
 	case CMD_NAKRUL:
 		return OnNakrul(pCmd);
 	case CMD_OPENHIVE:
