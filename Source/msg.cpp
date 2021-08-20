@@ -1760,7 +1760,7 @@ DWORD OnEndShield(TCmd *pCmd, int pnum)
 			int mi = ActiveMissiles[i];
 			auto &missile = Missiles[mi];
 			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
-				ClearMissileSpot(mi);
+				ClearMissileSpot(missile.position.tile);
 				DeleteMissile(mi, i);
 			}
 		}
@@ -1793,7 +1793,7 @@ DWORD OnEndReflect(TCmd *pCmd, int pnum)
 			int mi = ActiveMissiles[i];
 			auto &missile = Missiles[mi];
 			if (missile._mitype == MIS_REFLECT && missile._misource == pnum) {
-				ClearMissileSpot(mi);
+				ClearMissileSpot(missile.position.tile);
 				DeleteMissile(mi, i);
 			}
 		}
