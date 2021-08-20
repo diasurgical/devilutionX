@@ -2721,6 +2721,7 @@ void InitPlayer(int pnum, bool firstTime)
 		player._pSpell = player._pRSpell;
 		player._pSplType = player._pRSplType;
 		player.pManaShield = false;
+		player.wReflections = 0;
 	}
 
 	if (player.plrlevel == currlevel) {
