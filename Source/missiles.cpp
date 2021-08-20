@@ -951,6 +951,11 @@ void DeleteMissile(int mi, int i)
 		if (src == MyPlayerId)
 			NetSendCmd(true, CMD_REMSHIELD);
 		Players[src].pManaShield = false;
+	} else if (missile._mitype == MIS_REFLECT) {
+		int src = missile._misource;
+		if (src == MyPlayerId)
+			NetSendCmd(true, CMD_REMREFLECT);
+		Players[src].wReflections = 0;
 	}
 
 	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = mi;
@@ -1260,7 +1265,6 @@ void InitMissiles()
 			dFlags[i][j] &= ~BFLAG_MISSILE;
 		}
 	}
-	myPlayer.wReflections = 0;
 }
 
 void AddHiveExplosion(int mi, Point /*src*/, Point /*dst*/, int midir, int8_t mienemy, int id, int dam)
@@ -1347,12 +1351,10 @@ void AddReflection(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /
 {
 	auto &missile = Missiles[mi];
 	if (id >= 0) {
-		int lvl = 2;
-		if (missile._mispllvl != 0)
-			lvl = missile._mispllvl;
-
 		auto &player = Players[id];
-		player.wReflections += lvl * player._pLevel;
+		player.wReflections += (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
+		if (id == MyPlayerId)
+			NetSendCmdParam1(true, CMD_SETREFLECT, player.wReflections);
 
 		UseMana(id, SPL_REFLECT);
 	}
@@ -2951,6 +2953,21 @@ int AddMissile(Point src, Point dst, int midir, int mitype, int8_t micaster, int
 		}
 	}
 
+	if (mitype == MIS_REFLECT) {
+		auto &player = Players[id];
+		if (player.wReflections) {
+			if (currlevel != player.plrlevel)
+				return -1;
+
+			for (int i = 0; i < ActiveMissileCount; i++) {
+				int mi = ActiveMissiles[i];
+				auto &missile = Missiles[mi];
+				if (missile._mitype == MIS_REFLECT && missile._misource == id)
+					return -1;
+			}
+		}
+	}
+
 	int mi = AvailableMissiles[0];
 	auto &missile = Missiles[mi];
 
@@ -3471,14 +3488,15 @@ void MI_LightningArrow(int i)
 void MI_Reflect(int i)
 {
 	auto &missile = Missiles[i];
-	int src = missile._misource;
-	auto &player = Players[src];
-
-	if (src != MyPlayerId && currlevel != player.plrlevel)
-		missile._miDelFlag = true;
-	if (player.wReflections <= 0) {
-		missile._miDelFlag = true;
-		NetSendCmd(true, CMD_REFLECT);
+	int id = missile._misource;
+	if (id != MyPlayerId) {
+		if (currlevel != Players[id].plrlevel)
+			missile._miDelFlag = true;
+	} else {
+		if (Players[id].wReflections <= 0 || !Players[id].plractive) {
+			missile._miDelFlag = true;
+			NetSendCmd(true, CMD_ENDREFLECT);
+		}
 	}
 	PutMissile(i);
 }
