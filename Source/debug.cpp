@@ -244,8 +244,6 @@ std::string DebugCmdLevelUp(const std::string_view parameter)
 
 std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
 {
-	auto &myPlayer = Players[MyPlayerId];
-
 	int level = std::max(0, atoi(parameter.data()));
 	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel((spell_id)i) != -1) {
@@ -253,7 +251,7 @@ std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
 		}
 	}
 	if (level == 0)
-		myPlayer._pMemSpells = 0;
+		Players[MyPlayerId]._pMemSpells = 0;
 
 	return "Knowledge is power.";
 }
