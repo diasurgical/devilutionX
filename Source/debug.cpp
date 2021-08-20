@@ -249,8 +249,7 @@ std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
 	int level = std::max(0, atoi(parameter.data()));
 	for (int i = SPL_FIREBOLT; i < MAX_SPELLS; i++) {
 		if (GetSpellBookLevel((spell_id)i) != -1) {
-			myPlayer._pMemSpells |= GetSpellBitmask(i);
-			myPlayer._pSplLvl[i] = level;
+			SetSpellLevelCheat((spell_id)i, level);
 		}
 	}
 	if (level == 0)
