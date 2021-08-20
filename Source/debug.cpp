@@ -383,7 +383,7 @@ void NextDebugMonster()
 
 bool CheckDebugTextCommand(const std::string_view text)
 {
-	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0; });
+	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
 	if (debugCmdIterator == DebugCmdList.end())
 		return false;
 
