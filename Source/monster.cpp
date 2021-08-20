@@ -2013,10 +2013,10 @@ bool IsTileSafe(const MonsterStruct &monster, Point position)
 	bool fire = false;
 	bool lightning = false;
 	if (mi > 0) {
-		auto &missile = Missiles[mi - 1];
-		if (missile._mitype == MIS_FIREWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
+		auto &missile = Missiles[mi - 1]; // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
+		if (missile._mitype == MIS_FIREWALL) { 
 			fire = true;
-		} else if (missile._mitype == MIS_LIGHTWALL) { // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
+		} else if (missile._mitype == MIS_LIGHTWALL) {
 			lightning = true;
 		}
 	} else {
