@@ -865,8 +865,9 @@ void RemoveEmptyLevelItems()
 {
 	for (int i = ActiveItemCount; i > 0; i--) {
 		int ii = ActiveItems[i];
-		if (Items[ii].isEmpty()) {
-			dItem[Items[ii].position.x][Items[ii].position.y] = 0;
+		auto &item = Items[ii];
+		if (item.isEmpty()) {
+			dItem[item.position.x][item.position.y] = 0;
 			DeleteItem(ii, i);
 		}
 	}
