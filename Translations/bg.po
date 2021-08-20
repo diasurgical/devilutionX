@@ -670,7 +670,7 @@ msgstr "Жизненост:"
 #: Source/DiabloUI/selhero.cpp:495
 #, fuzzy
 msgid "Savegame:"
-msgstr "Запис игра"
+msgstr "Запис игра:"
 
 #: Source/DiabloUI/selhero.cpp:507
 msgid "Select Hero"
@@ -4708,7 +4708,7 @@ msgstr "Голем"
 
 #: Source/monstdat.cpp:129
 msgid "The Dark Lord"
-msgstr "Тъмния Повелител"
+msgstr "Диабло"
 
 #: Source/monstdat.cpp:130
 msgid "The Arch-Litch Malignus"
@@ -8058,7 +8058,7 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
 msgid "Cloudy and cooler today.  Casting the nets of necromancy across the void landed two new subspecies of flying horror; a good day's work.  Must remember to order some more bat guano and black candles from Adria; I'm running a bit low."
-msgstr "Днес е облачно и хладно. Докато спусках мрежите на некромантството из бездната, хванах два нови видя на летящ ужас. Денят мина добре. Дано не забравя да заръчам още гуано и черни свещи на Адрия, защото ми остана малко."
+msgstr "Днес е облачно и хладно. Докато спусках мрежите на некромантството из бездната, хванах два нови видя на летящ ужас. Денят мина добре. Дано не забравя да заръчам още гуано и черни свещи на Адрия, защото ми остават малко."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
