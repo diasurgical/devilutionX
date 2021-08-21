@@ -950,11 +950,6 @@ void DeleteMissile(int mi, int i)
 		if (src == MyPlayerId)
 			NetSendCmd(true, CMD_REMSHIELD);
 		Players[src].pManaShield = false;
-	} else if (missile._mitype == MIS_REFLECT) {
-		int src = missile._misource;
-		if (src == MyPlayerId)
-			NetSendCmd(true, CMD_REMREFLECT);
-		Players[src].wReflections = 0;
 	}
 
 	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = mi;
@@ -1349,17 +1344,20 @@ void AddStoneRune(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*
 void AddReflection(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
 {
 	auto &missile = Missiles[mi];
-	if (id >= 0) {
-		auto &player = Players[id];
-		player.wReflections += (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
-		if (id == MyPlayerId)
-			NetSendCmdParam1(true, CMD_SETREFLECT, player.wReflections);
+	missile._miDelFlag = true;
 
-		UseMana(id, SPL_REFLECT);
-	}
+	if (id < 0)
+		return;
 
-	missile._mirange = 0;
-	missile._miDelFlag = false;
+	auto &player = Players[id];
+	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
+	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
+		add = 0;
+	player.wReflections += add;
+	if (id == MyPlayerId)
+		NetSendCmdParam1(true, CMD_SETREFLECT, player.wReflections);
+
+	UseMana(id, SPL_REFLECT);
 }
 
 void AddBerserk(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/, int id, int /*dam*/)
@@ -3481,22 +3479,6 @@ void MI_LightningArrow(int i)
 	if (missile._mirange == 0 || mx <= 0 || my <= 0 || mx >= MAXDUNX || my > MAXDUNY) { // BUGFIX my >= MAXDUNY
 		missile._miDelFlag = true;
 	}
-}
-
-void MI_Reflect(int i)
-{
-	auto &missile = Missiles[i];
-	int id = missile._misource;
-	if (id != MyPlayerId) {
-		if (currlevel != Players[id].plrlevel)
-			missile._miDelFlag = true;
-	} else {
-		if (Players[id].wReflections <= 0 || !Players[id].plractive) {
-			missile._miDelFlag = true;
-			NetSendCmd(true, CMD_ENDREFLECT);
-		}
-	}
-	PutMissile(i);
 }
 
 void MI_FireRing(int i)

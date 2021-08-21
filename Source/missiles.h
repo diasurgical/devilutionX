@@ -232,7 +232,6 @@ void MI_Rune(int i);
 void MI_LightningWall(int i);
 void MI_HiveExplode(int i);
 void MI_LightningArrow(int i);
-void MI_Reflect(int i);
 void MI_FireRing(int i);
 void MI_Search(int i);
 void MI_LightningWallC(int i);
