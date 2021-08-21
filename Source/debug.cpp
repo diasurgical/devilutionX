@@ -278,6 +278,18 @@ std::string DebugCmdQuest(const std::string_view parameter)
 	if (parameter.empty())
 		return "You must provide an id";
 
+	if (parameter.compare("all") == 0) {
+		for (auto &quest : Quests) {
+			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+				continue;
+
+			quest._qactive = QUEST_ACTIVE;
+			quest._qlog = true;
+		}
+
+		return "Happy questing";
+	}
+
 	int questId = atoi(parameter.data());
 
 	if (questId >= MAXQUESTS)
@@ -288,6 +300,7 @@ std::string DebugCmdQuest(const std::string_view parameter)
 		return fmt::format("{} was already given.", QuestData[questId]._qlstr);
 
 	quest._qactive = QUEST_ACTIVE;
+	quest._qlog = true;
 
 	return fmt::format("{} enabled.", QuestData[questId]._qlstr);
 }
