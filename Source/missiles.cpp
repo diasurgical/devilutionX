@@ -1521,7 +1521,7 @@ void AddStealPotions(int mi, Point src, Point /*dst*/, int /*midir*/, int8_t /*m
 					}
 				}
 				if (ii != -1) {
-					SetPlrHandItem(&player.HoldItem, ii);
+					SetPlrHandItem(player.HoldItem, ii);
 					GetPlrHandSeed(&player.HoldItem);
 					player.HoldItem._iStatFlag = true;
 					player.SpdList[si] = player.HoldItem;
