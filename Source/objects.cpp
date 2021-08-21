@@ -3151,7 +3151,7 @@ bool OperateShrineSpiritual(int pnum)
 			gridItem = player._pNumInv;
 			player.InvList[t]._ivalue = r;
 			player._pGold += r;
-			SetPlrHandGoldCurs(&player.InvList[t]);
+			SetPlrHandGoldCurs(player.InvList[t]);
 		}
 	}
 

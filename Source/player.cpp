@@ -626,7 +626,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 			item._ivalue -= amount;
 			SetPlrHandItem(player.HoldItem, IDI_GOLD);
 			GetGoldSeed(pnum, &player.HoldItem);
-			SetPlrHandGoldCurs(&player.HoldItem);
+			SetPlrHandGoldCurs(player.HoldItem);
 			player.HoldItem._ivalue = amount;
 			DeadItem(player, &player.HoldItem, { 0, 0 });
 			return 0;
@@ -636,7 +636,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 		player.RemoveInvItem(i);
 		SetPlrHandItem(player.HoldItem, IDI_GOLD);
 		GetGoldSeed(pnum, &player.HoldItem);
-		SetPlrHandGoldCurs(&player.HoldItem);
+		SetPlrHandGoldCurs(player.HoldItem);
 		player.HoldItem._ivalue = item._ivalue;
 		DeadItem(player, &player.HoldItem, { 0, 0 });
 		i = -1;
@@ -3125,7 +3125,7 @@ void StripTopGold(int pnum)
 				SetPlrHandItem(player.HoldItem, 0);
 				GetGoldSeed(pnum, &player.HoldItem);
 				player.HoldItem._ivalue = val;
-				SetPlrHandGoldCurs(&player.HoldItem);
+				SetPlrHandGoldCurs(player.HoldItem);
 				if (!GoldAutoPlace(player))
 					DeadItem(player, &player.HoldItem, { 0, 0 });
 			}

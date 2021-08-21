@@ -3099,9 +3099,9 @@ int GetGoldCursor(int value)
  * @brief Update the gold cursor on the given gold item
  * @param h The item to update
  */
-void SetPlrHandGoldCurs(ItemStruct *h)
+void SetPlrHandGoldCurs(ItemStruct &h)
 {
-	h->_iCurs = GetGoldCursor(h->_ivalue);
+	h._iCurs = GetGoldCursor(h._ivalue);
 }
 
 void CreatePlrItems(int playerId)
@@ -3335,7 +3335,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 		rndv += rndv / 8;
 
 	item._ivalue = std::min(rndv, GOLD_MAX_LIMIT);
-	SetPlrHandGoldCurs(&item);
+	SetPlrHandGoldCurs(item);
 }
 
 void SetupItem(int i)
@@ -3495,7 +3495,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 		item._iSeed = iseed;
 		item._iCreateInfo = icreateinfo;
 		item._ivalue = ivalue;
-		SetPlrHandGoldCurs(&item);
+		SetPlrHandGoldCurs(item);
 		gbIsHellfire = tmpIsHellfire;
 		return;
 	}

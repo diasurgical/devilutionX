@@ -512,7 +512,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 
 void ControlSetGoldCurs(PlayerStruct &player)
 {
-	SetPlrHandGoldCurs(&player.HoldItem);
+	SetPlrHandGoldCurs(player.HoldItem);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
@@ -578,7 +578,7 @@ void RemoveGold(int pnum, int goldIndex)
 	int gi = goldIndex - INVITEM_INV_FIRST;
 	player.InvList[gi]._ivalue -= dropGoldValue;
 	if (player.InvList[gi]._ivalue > 0)
-		SetPlrHandGoldCurs(&player.InvList[gi]);
+		SetPlrHandGoldCurs(player.InvList[gi]);
 	else
 		player.RemoveInvItem(gi);
 	SetPlrHandItem(player.HoldItem, IDI_GOLD);

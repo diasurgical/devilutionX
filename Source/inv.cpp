@@ -610,7 +610,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				if (ig <= MaxGold) {
 					player.InvList[invIndex]._ivalue = ig;
 					player._pGold += player.HoldItem._ivalue;
-					SetPlrHandGoldCurs(&player.InvList[invIndex]);
+					SetPlrHandGoldCurs(player.InvList[invIndex]);
 				} else {
 					ig = MaxGold - gt;
 					player._pGold += ig;
@@ -627,7 +627,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				player._pNumInv++;
 				player.InvGrid[ii] = player._pNumInv;
 				player._pGold += player.HoldItem._ivalue;
-				SetPlrHandGoldCurs(&player.InvList[invIndex]);
+				SetPlrHandGoldCurs(player.InvList[invIndex]);
 			}
 		} else {
 			if (it == 0) {
@@ -1466,7 +1466,7 @@ bool GoldAutoPlace(PlayerStruct &player)
 		player.InvList[i]._ivalue += player.HoldItem._ivalue;
 		if (player.InvList[i]._ivalue > MaxGold) {
 			player.HoldItem._ivalue = player.InvList[i]._ivalue - MaxGold;
-			SetPlrHandGoldCurs(&player.HoldItem);
+			SetPlrHandGoldCurs(player.HoldItem);
 			player.InvList[i]._ivalue = MaxGold;
 			if (gbIsHellfire)
 				GetPlrHandSeed(&player.HoldItem);
@@ -1475,7 +1475,7 @@ bool GoldAutoPlace(PlayerStruct &player)
 			done = true;
 		}
 
-		SetPlrHandGoldCurs(&player.InvList[i]);
+		SetPlrHandGoldCurs(player.InvList[i]);
 		player._pGold = CalculateGold(player);
 	}
 
@@ -1646,7 +1646,7 @@ void AutoGetItem(int pnum, ItemStruct *item, int ii)
 		done = GoldAutoPlace(player);
 		if (!done) {
 			item->_ivalue = player.HoldItem._ivalue;
-			SetPlrHandGoldCurs(item);
+			SetPlrHandGoldCurs(*item);
 		}
 	} else {
 		done = AutoEquipEnabled(player, player.HoldItem) && AutoEquip(pnum, player.HoldItem);

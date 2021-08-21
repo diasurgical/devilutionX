@@ -1474,7 +1474,7 @@ void PlaceStoreGold(int v)
 			myPlayer._pNumInv++;
 			gridNum = myPlayer._pNumInv;
 			myPlayer.InvList[ii]._ivalue = v;
-			SetPlrHandGoldCurs(&myPlayer.InvList[ii]);
+			SetPlrHandGoldCurs(myPlayer.InvList[ii]);
 			return;
 		}
 	}
@@ -1513,7 +1513,7 @@ void StoreSellItem()
 				cost -= MaxGold - item._ivalue;
 				item._ivalue = MaxGold;
 			}
-			SetPlrHandGoldCurs(&myPlayer.InvList[i]);
+			SetPlrHandGoldCurs(myPlayer.InvList[i]);
 		}
 	}
 	if (cost > 0) {
@@ -2140,7 +2140,7 @@ int TakeGold(PlayerStruct &player, int cost, bool skipMaxPiles)
 
 		if (cost < item._ivalue) {
 			item._ivalue -= cost;
-			SetPlrHandGoldCurs(&player.InvList[i]);
+			SetPlrHandGoldCurs(player.InvList[i]);
 			return 0;
 		}
 
