@@ -16,6 +16,7 @@
 #include "lighting.h"
 #include "setmaps.h"
 #include "spells.h"
+#include "towners.h"
 #include "utils/language.h"
 #include "quests.h"
 
@@ -182,6 +183,60 @@ std::string DebugCmdLoadMap(const std::string_view parameter)
 	return fmt::format("Level {} is not known. Do you want to write a mod?", level);
 }
 
+std::unordered_map<std::string_view, _talker_id> TownerShortNameToTownerId = {
+	{ "griswold", _talker_id::TOWN_SMITH },
+	{ "pepin", _talker_id::TOWN_HEALER },
+	{ "ogden", _talker_id::TOWN_TAVERN },
+	{ "cain", _talker_id::TOWN_STORY },
+	{ "farnham", _talker_id::TOWN_DRUNK },
+	{ "adria", _talker_id::TOWN_WITCH },
+	{ "gillian", _talker_id::TOWN_BMAID },
+	{ "wirt", _talker_id ::TOWN_PEGBOY },
+	{ "lester", _talker_id ::TOWN_FARMER },
+	{ "girl", _talker_id ::TOWN_GIRL },
+	{ "nut", _talker_id::TOWN_COWFARM },
+};
+
+std::string DebugCmdVisitTowner(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (setlevel || myPlayer.plrlevel != 0)
+		return "What kind of friends do you have in dungeons?";
+
+	if (parameter.empty()) {
+		std::string ret;
+		ret = "Who? ";
+		for (auto &entry : TownerShortNameToTownerId) {
+			ret.append(" ");
+			ret.append(entry.first);
+		}
+		return ret;
+	}
+
+	auto it = TownerShortNameToTownerId.find(parameter);
+	if (it == TownerShortNameToTownerId.end())
+		return fmt::format("{} is unknown. Perhaps he is a ninja?", parameter);
+
+	for (auto &towner : Towners) {
+		if (towner._ttype != it->second)
+			continue;
+
+		CastSpell(
+		    MyPlayerId,
+		    SPL_TELEPORT,
+		    myPlayer.position.tile.x,
+		    myPlayer.position.tile.y,
+		    towner.position.x,
+		    towner.position.y,
+		    1);
+
+		return fmt::format("Say hello to {} from me.", parameter);
+	}
+
+	return fmt::format("Couldn't find {}.", parameter);
+}
+
 std::string DebugCmdResetLevel(const std::string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
@@ -291,6 +346,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
+	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
 	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
 	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
