@@ -337,6 +337,13 @@ std::string DebugCmdGenerateItem(const std::string_view parameter)
 	return DebugSpawnItem(parameter.data(), false);
 }
 
+std::string DebugCmdExit(const std::string_view parameter)
+{
+	gbRunGame = false;
+	gbRunGameResult = false;
+	return "See you again my Lord.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -354,6 +361,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
 	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
+	{ "exit", "Exits the game.", "", &DebugCmdExit },
 };
 
 } // namespace
