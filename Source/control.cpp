@@ -444,14 +444,14 @@ int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, Char
 	return std::min(remainingStatPoints, pointsToReachCap);
 }
 
-int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
+int DrawDurIcon4Item(const Surface &out, ItemStruct &pItem, int x, int c)
 {
-	if (pItem->isEmpty())
+	if (pItem.isEmpty())
 		return x;
-	if (pItem->_iDurability > 5)
+	if (pItem._iDurability > 5)
 		return x;
 	if (c == 0) {
-		switch (pItem->_itype) {
+		switch (pItem._itype) {
 		case ITYPE_SWORD:
 			c = 2;
 			break;
@@ -472,7 +472,7 @@ int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 			break;
 		}
 	}
-	if (pItem->_iDurability > 2)
+	if (pItem._iDurability > 2)
 		c += 8;
 	CelDrawTo(out, { x, -17 + PANEL_Y }, *pDurIcons, c);
 	return x - 32 - 8;
@@ -581,7 +581,7 @@ void RemoveGold(int pnum, int goldIndex)
 		SetPlrHandGoldCurs(&player.InvList[gi]);
 	else
 		player.RemoveInvItem(gi);
-	SetPlrHandItem(&player.HoldItem, IDI_GOLD);
+	SetPlrHandItem(player.HoldItem, IDI_GOLD);
 	GetGoldSeed(pnum, &player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;
@@ -1729,10 +1729,10 @@ void DrawDurIcon(const Surface &out)
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
-	x = DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HEAD], x, 4);
-	x = DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_CHEST], x, 3);
-	x = DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
-	DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 4);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
 void RedBack(const Surface &out)
