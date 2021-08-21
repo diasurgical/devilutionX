@@ -253,8 +253,8 @@ void CheckCursMove()
 			sx += GetScreenWidth() / 4;
 		}
 	}
-	if (sy > PANEL_TOP - 1 && MousePosition.x >= PANEL_LEFT && MousePosition.x < PANEL_LEFT + PANEL_WIDTH && track_isscrolling()) {
-		sy = PANEL_TOP - 1;
+	if (sy > GetMainPanel().position.y - 1 && MousePosition.x >= GetMainPanel().position.x && MousePosition.x < GetMainPanel().position.x + PANEL_WIDTH && track_isscrolling()) {
+		sy = GetMainPanel().position.y - 1;
 	}
 
 	if (!zoomflag) {
@@ -380,21 +380,21 @@ void CheckCursMove()
 		cursPosition = { mx, my };
 		return;
 	}
-	if (MainPanel.Contains(MousePosition)) {
+	if (GetMainPanel().Contains(MousePosition)) {
 		CheckPanelInfo();
 		return;
 	}
 	if (DoomFlag) {
 		return;
 	}
-	if (invflag && RightPanel.Contains(MousePosition)) {
+	if (invflag && GetRightPanel().Contains(MousePosition)) {
 		pcursinvitem = CheckInvHLight();
 		return;
 	}
-	if (sbookflag && RightPanel.Contains(MousePosition)) {
+	if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 		return;
 	}
-	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) {
+	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) {
 		return;
 	}
 

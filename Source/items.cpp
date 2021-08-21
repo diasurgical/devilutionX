@@ -2030,7 +2030,7 @@ void PrintItemOil(char iDidx)
 void DrawUniqueInfoWindow(const Surface &out)
 {
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 1);
-	DrawHalfTransparentRectTo(out, RightPanel.position.x - SPANEL_WIDTH + 27, RightPanel.position.y + 28, 265, 297);
+	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SPANEL_WIDTH + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
 void PrintItemMisc(Item &item)
@@ -4091,8 +4091,8 @@ void PrintItemPower(char plidx, Item *x)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	const Point position { RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y };
-	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(position)) {
+	const Point position { GetLeftPanel().position.x - SPANEL_WIDTH, GetLeftPanel().position.y };
+	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(position)) {
 		return;
 	}
 

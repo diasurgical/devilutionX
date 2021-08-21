@@ -3441,12 +3441,12 @@ void CheckPlrSpell(bool isShiftHeld)
 		if (pcurs != CURSOR_HAND)
 			return;
 
-		if (MainPanel.Contains(MousePosition)) // inside main panel
+		if (GetMainPanel().Contains(MousePosition)) // inside main panel
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && RightPanel.Contains(MousePosition))  // inside right panel
+		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY

@@ -749,7 +749,7 @@ void CheckTrigForce()
 {
 	trigflag = false;
 
-	if (!sgbControllerActive && MousePosition.y > PANEL_TOP - 1) {
+	if (!sgbControllerActive && MousePosition.y > GetMainPanel().position.y - 1) {
 		return;
 	}
 

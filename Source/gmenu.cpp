@@ -307,7 +307,7 @@ bool gmenu_left_mouse(bool isDown)
 	if (sgpCurrentMenu == nullptr) {
 		return false;
 	}
-	if (MousePosition.y >= MainPanel.position.y) {
+	if (MousePosition.y >= GetMainPanel().position.y) {
 		return false;
 	}
 	if (MousePosition.y - (117 + GetUIOffsetY()) < 0) {
