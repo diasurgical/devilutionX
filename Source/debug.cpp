@@ -81,7 +81,7 @@ std::string DebugCmdHelp(const std::string_view parameter)
 		int lenCurrentLine = ret.length();
 		bool first = true;
 		for (const auto &dbgCmd : DebugCmdList) {
-			if ((dbgCmd.text.length() + lenCurrentLine + 2) > MAX_SEND_STR_LEN) {
+			if ((dbgCmd.text.length() + lenCurrentLine + 3) > MAX_SEND_STR_LEN) {
 				ret.append("\n");
 				lenCurrentLine = dbgCmd.text.length();
 			} else {
@@ -89,7 +89,7 @@ std::string DebugCmdHelp(const std::string_view parameter)
 					first = false;
 				else
 					ret.append(" - ");
-				lenCurrentLine += (dbgCmd.text.length() + 2);
+				lenCurrentLine += (dbgCmd.text.length() + 3);
 			}
 			ret.append(dbgCmd.text);
 		}
