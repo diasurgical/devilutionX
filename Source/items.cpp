@@ -1746,28 +1746,28 @@ void ItemDoppel()
 		idoppely = 16;
 }
 
-void RepairItem(ItemStruct *i, int lvl)
+void RepairItem(ItemStruct &item, int lvl)
 {
-	if (i->_iDurability == i->_iMaxDur) {
+	if (item._iDurability == item._iMaxDur) {
 		return;
 	}
 
-	if (i->_iMaxDur <= 0) {
-		i->_itype = ITYPE_NONE;
+	if (item._iMaxDur <= 0) {
+		item._itype = ITYPE_NONE;
 		return;
 	}
 
 	int rep = 0;
 	do {
 		rep += lvl + GenerateRnd(lvl);
-		i->_iMaxDur -= std::max(i->_iMaxDur / (lvl + 9), 1);
-		if (i->_iMaxDur == 0) {
-			i->_itype = ITYPE_NONE;
+		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
+		if (item._iMaxDur == 0) {
+			item._itype = ITYPE_NONE;
 			return;
 		}
-	} while (rep + i->_iDurability < i->_iMaxDur);
+	} while (rep + item._iDurability < item._iMaxDur);
 
-	i->_iDurability = std::min<int>(i->_iDurability + rep, i->_iMaxDur);
+	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
 }
 
 void RechargeItem(ItemStruct *i, int r)
@@ -3810,7 +3810,7 @@ void DoRepair(int pnum, int cii)
 		pi = &player.InvBody[cii];
 	}
 
-	RepairItem(pi, player._pLevel);
+	RepairItem(*pi, player._pLevel);
 	CalcPlrInv(pnum, true);
 
 	if (pnum == MyPlayerId)
