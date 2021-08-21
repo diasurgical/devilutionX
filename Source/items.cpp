@@ -581,9 +581,9 @@ void CalcPlrBookVals(PlayerStruct &player)
 	}
 }
 
-void SetPlrHandSeed(ItemStruct *h, int iseed)
+void SetPlrHandSeed(ItemStruct &item, int iseed)
 {
-	h->_iSeed = iseed;
+	item._iSeed = iseed;
 }
 
 bool GetItemSpace(Point position, int8_t inum)
@@ -3502,7 +3502,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 
 	if (icreateinfo == 0) {
 		SetPlrHandItem(item, idx);
-		SetPlrHandSeed(&item, iseed);
+		SetPlrHandSeed(item, iseed);
 		gbIsHellfire = tmpIsHellfire;
 		return;
 	}
