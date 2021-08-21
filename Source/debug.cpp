@@ -120,6 +120,7 @@ std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 		myPlayer._pGold += GOLD_MAX_LIMIT;
 		itemId = myPlayer._pNumInv;
 	}
+	CalcPlrInv(MyPlayerId, true);
 
 	return "You are now rich! If only this was as easy in real life...";
 }
