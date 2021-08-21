@@ -48,9 +48,10 @@ void AutoGoldPickup(int pnum)
 		Point tile = Players[pnum].position.tile + pathDir;
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
-			if (Items[itemIndex]._itype == ITYPE_GOLD) {
+			auto &item = Items[itemIndex];
+			if (item._itype == ITYPE_GOLD) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-				Items[itemIndex]._iRequest = true;
+				item._iRequest = true;
 				PlaySFX(IS_IGRAB);
 			}
 		}
