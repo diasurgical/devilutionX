@@ -3225,7 +3225,7 @@ void RemovePlrMissiles(int pnum)
 		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
 			Monsters[missile._miVar2]._mmode = (MON_MODE)missile._miVar1;
 		}
-		if (IsAnyOf(missile._mitype, MIS_MANASHIELD) && missile._misource == pnum) {
+		if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
 			ClearMissileSpot(missile);
 			DeleteMissile(am, i);
 		}
