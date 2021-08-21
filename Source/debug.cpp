@@ -6,10 +6,11 @@
 
 #ifdef _DEBUG
 
+#include "debug.h"
+
+#include "automap.h"
 #include "control.h"
 #include "cursor.h"
-#include "debug.h"
-#include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
 #include "inv.h"
@@ -209,6 +210,13 @@ std::string DebugCmdLighting(const std::string_view parameter)
 	return "All raindrops are the same.";
 }
 
+std::string DebugCmdMap(const std::string_view parameter)
+{
+	std::fill(&AutomapView[0][0], &AutomapView[DMAXX - 1][DMAXX - 1], true);
+
+	return "The way is made clear when viewed from above";
+}
+
 std::string DebugCmdVision(const std::string_view parameter)
 {
 	DebugVision = !DebugVision;
@@ -302,6 +310,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "set spells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
+	{ "give map", "Reveal the map.", "", &DebugCmdMap },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
