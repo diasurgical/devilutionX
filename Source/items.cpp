@@ -496,15 +496,15 @@ void CalcSelfItems(PlayerStruct &player)
 	} while (changeflag);
 }
 
-bool ItemMinStats(const PlayerStruct &player, ItemStruct *x)
+bool ItemMinStats(const PlayerStruct &player, ItemStruct &x)
 {
-	if (player._pMagic < x->_iMinMag)
+	if (player._pMagic < x._iMinMag)
 		return false;
 
-	if (player._pStrength < x->_iMinStr)
+	if (player._pStrength < x._iMinStr)
 		return false;
 
-	if (player._pDexterity < x->_iMinDex)
+	if (player._pDexterity < x._iMinDex)
 		return false;
 
 	return true;
@@ -514,12 +514,12 @@ void CalcPlrItemMin(PlayerStruct &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto &item = player.InvList[i];
-		item._iStatFlag = ItemMinStats(player, &item);
+		item._iStatFlag = ItemMinStats(player, item);
 	}
 
 	for (auto &item : player.SpdList) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = ItemMinStats(player, &item);
+			item._iStatFlag = ItemMinStats(player, item);
 		}
 	}
 }
@@ -576,7 +576,7 @@ void CalcPlrBookVals(PlayerStruct &player)
 					spellLevel = 0;
 				}
 			}
-			player.InvList[i]._iStatFlag = ItemMinStats(player, &player.InvList[i]);
+			player.InvList[i]._iStatFlag = ItemMinStats(player, player.InvList[i]);
 		}
 	}
 }
