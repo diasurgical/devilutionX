@@ -68,6 +68,9 @@ void FreeTownerGFX();
 void ProcessTowners();
 void TalkToTowner(PlayerStruct &player, int t);
 
+#ifdef _DEBUG
+bool DebugTalkToTowner(std::string targetName);
+#endif
 extern _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS];
 
 } // namespace devilution

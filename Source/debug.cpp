@@ -16,6 +16,7 @@
 #include "lighting.h"
 #include "setmaps.h"
 #include "spells.h"
+#include "towners.h"
 #include "utils/language.h"
 #include "quests.h"
 
@@ -282,6 +283,14 @@ std::string DebugCmdGenerateItem(const std::string_view parameter)
 	return DebugSpawnItem(parameter.data(), false);
 }
 
+std::string DebugCmdTalkToTowner(const std::string_view parameter)
+{
+	if (DebugTalkToTowner(parameter.data())) {
+		return "Hello from the other side.";
+	}
+	return "NPC not found.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -298,6 +307,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
 	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
+	{ "visit", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner},
 };
 
 } // namespace
