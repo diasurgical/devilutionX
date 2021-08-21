@@ -4886,6 +4886,63 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 	}
 }
 
+#ifdef _DEBUG
+std::string DebugSpawnItem(std::string itemName, bool unique)
+{
+	if (ActiveItemCount >= MAXITEMS)
+		return "No space to generate the item!";
+
+	bool onlygood = true;
+
+	int ii = AllocateItem();
+	Point pos = Players[MyPlayerId].position.tile;
+	GetSuperItemSpace(pos, ii);
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	MonsterStruct fake_m;
+	fake_m.MData = &MonsterData[0];
+	fake_m._uniqtype = 0;
+	for (int i = 0;; i++) {
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() > 3000)
+			return "Item not found in 3 seconds!";
+
+		if (i > 10000)
+			return "Item not found in 10000 tries!";
+
+		fake_m.mLevel = GenerateRnd(40) + 1;
+		int idx = RndItem(fake_m);
+		if (idx > 0) {
+			idx--;
+			onlygood = false;
+		} else
+			continue;
+
+		int uper = (unique ? 15 : 1);
+
+		Point bkp = Items[ii].position;
+		memset(&Items[ii], 0, sizeof(ItemStruct));
+		Items[ii].position = bkp;
+		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
+		SetupAllItems(ii, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
+
+		std::string tmp(Items[ii]._iIName);
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (tmp.find(itemName) != std::string::npos)
+			break;
+
+		if (unique)
+			if (Items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
+				continue;
+	}
+
+	Items[ii]._iIdentified = true;
+	NetSendCmdDItem(false, ii);
+	return "Item generated successfully.";
+}
+#endif
+
 void ItemStruct::SetNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
