@@ -540,15 +540,15 @@ void WitchBookLevel(int ii)
 	}
 }
 
-bool StoreStatOk(ItemStruct *h)
+bool StoreStatOk(ItemStruct &item)
 {
 	const auto &myPlayer = Players[MyPlayerId];
 
-	if (myPlayer._pStrength < h->_iMinStr)
+	if (myPlayer._pStrength < item._iMinStr)
 		return false;
-	if (myPlayer._pMagic < h->_iMinMag)
+	if (myPlayer._pMagic < item._iMinMag)
 		return false;
-	if (myPlayer._pDexterity < h->_iMinDex)
+	if (myPlayer._pDexterity < item._iMinDex)
 		return false;
 
 	return true;
@@ -559,7 +559,7 @@ void CalcPlrBookVals(PlayerStruct &player)
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
 			WitchBookLevel(i);
-			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
+			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
 		}
 	}
 
@@ -2295,7 +2295,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 	premiumitems[i] = Items[0];
 	premiumitems[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumitems[i]._iIdentified = true;
-	premiumitems[i]._iStatFlag = StoreStatOk(&premiumitems[i]);
+	premiumitems[i]._iStatFlag = StoreStatOk(premiumitems[i]);
 	Items[0] = tempItem;
 }
 
@@ -2468,25 +2468,25 @@ void RecalcStoreStats()
 {
 	for (auto &item : smithitem) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = StoreStatOk(&item);
+			item._iStatFlag = StoreStatOk(item);
 		}
 	}
 	for (auto &item : premiumitems) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = StoreStatOk(&item);
+			item._iStatFlag = StoreStatOk(item);
 		}
 	}
 	for (int i = 0; i < 20; i++) {
 		if (!witchitem[i].isEmpty()) {
-			witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
+			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
 		}
 	}
 	for (auto &item : healitem) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = StoreStatOk(&item);
+			item._iStatFlag = StoreStatOk(item);
 		}
 	}
-	boyitem._iStatFlag = StoreStatOk(&boyitem);
+	boyitem._iStatFlag = StoreStatOk(boyitem);
 }
 
 void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
@@ -4481,7 +4481,7 @@ void SpawnSmith(int lvl)
 		smithitem[i] = Items[0];
 		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
 		smithitem[i]._iIdentified = true;
-		smithitem[i]._iStatFlag = StoreStatOk(&smithitem[i]);
+		smithitem[i]._iStatFlag = StoreStatOk(smithitem[i]);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ITYPE_NONE;
@@ -4568,7 +4568,7 @@ void SpawnWitch(int lvl)
 			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
 			witchitem[j]._iIdentified = true;
 			WitchBookLevel(j);
-			witchitem[j]._iStatFlag = StoreStatOk(&witchitem[j]);
+			witchitem[j]._iStatFlag = StoreStatOk(witchitem[j]);
 			j++;
 			bCnt++;
 		}
@@ -4594,7 +4594,7 @@ void SpawnWitch(int lvl)
 		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
 		witchitem[i]._iIdentified = true;
 		WitchBookLevel(i);
-		witchitem[i]._iStatFlag = StoreStatOk(&witchitem[i]);
+		witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
 	}
 
 	for (int i = iCnt; i < WITCH_ITEMS; i++)
@@ -4715,7 +4715,7 @@ void SpawnBoy(int lvl)
 	boyitem = Items[0];
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
-	boyitem._iStatFlag = StoreStatOk(&boyitem);
+	boyitem._iStatFlag = StoreStatOk(boyitem);
 	boylevel = lvl / 2;
 }
 
@@ -4758,7 +4758,7 @@ void SpawnHealer(int lvl)
 		healitem[i] = Items[0];
 		healitem[i]._iCreateInfo = lvl | CF_HEALER;
 		healitem[i]._iIdentified = true;
-		healitem[i]._iStatFlag = StoreStatOk(&healitem[i]);
+		healitem[i]._iStatFlag = StoreStatOk(healitem[i]);
 	}
 	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ITYPE_NONE;
