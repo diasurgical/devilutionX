@@ -6,6 +6,7 @@
 
 #ifdef _DEBUG
 
+#include "control.h"
 #include "cursor.h"
 #include "debug.h"
 #include "engine/cel_sprite.hpp"
@@ -258,6 +259,19 @@ std::string DebugCmdSetSpellsLevel(const std::string_view parameter)
 	return "Knowledge is power.";
 }
 
+std::string DebugCmdRefillHealthMana(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer._pMana = myPlayer._pMaxMana;
+	myPlayer._pManaBase = myPlayer._pMaxManaBase;
+	myPlayer._pHitPoints = myPlayer._pMaxHP;
+	myPlayer._pHPBase = myPlayer._pMaxHPBase;
+	drawhpflag = true;
+	drawmanaflag = true;
+
+	return "Ready for more.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -271,6 +285,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
 	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
 	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
+	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
 };
 
 } // namespace
