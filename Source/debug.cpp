@@ -344,6 +344,28 @@ std::string DebugCmdExit(const std::string_view parameter)
 	return "See you again my Lord.";
 }
 
+std::string DebugCmdArrow(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
+	myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
+
+	if (parameter == "normal") {
+		// we removed the parameter at the top
+	} else if (parameter == "fire") {
+		myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
+	} else if (parameter == "lightning") {
+		myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
+	} else if (parameter == "explosion") {
+		myPlayer._pIFlags |= (ISPL_FIRE_ARROWS | ISPL_LIGHT_ARROWS);
+	} else {
+		return "Unknown is sometimes similar to nothing (unkown effect).";
+	}
+
+	return "I can shoot any arrow.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -362,6 +384,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
+	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 };
 
 } // namespace

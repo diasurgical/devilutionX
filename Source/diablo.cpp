@@ -140,9 +140,6 @@ bool forceSpawn;
 bool forceDiablo;
 int sgnTimeoutCurs;
 bool gbShowIntro = true;
-#ifdef _DEBUG
-int arrowdebug = 0;
-#endif
 /** To know if these things have been done when we get to the diablo_deinit() function */
 bool was_archives_init = false;
 /** To know if surfaces have been initialized or not */
@@ -580,26 +577,6 @@ void PressChar(char vkey)
 		}
 		return;
 #ifdef _DEBUG
-	case ')':
-	case '0':
-		if (debug_mode_key_inverted_v) {
-			if (arrowdebug > 2) {
-				arrowdebug = 0;
-			}
-			auto &myPlayer = Players[MyPlayerId];
-			if (arrowdebug == 0) {
-				myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
-				myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
-			}
-			if (arrowdebug == 1) {
-				myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
-			}
-			if (arrowdebug == 2) {
-				myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
-			}
-			arrowdebug++;
-		}
-		return;
 	case 'a':
 		if (debug_mode_key_inverted_v) {
 			spelldata[SPL_TELEPORT].sTownSpell = true;
