@@ -271,6 +271,16 @@ std::string DebugCmdRefillHealthMana(const std::string_view parameter)
 	return "Ready for more.";
 }
 
+std::string DebugCmdGenerateUniqueItem(const std::string_view parameter)
+{
+	return DebugSpawnItem(parameter.data(), true);
+}
+
+std::string DebugCmdGenerateItem(const std::string_view parameter)
+{
+	return DebugSpawnItem(parameter.data(), false);
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -285,6 +295,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
 	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
 	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
+	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
+	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
 };
 
 } // namespace
