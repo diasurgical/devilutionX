@@ -4874,6 +4874,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	bool onlygood = true;
 
 	int ii = AllocateItem();
+	auto &item = Items[ii];
 	Point pos = Players[MyPlayerId].position.tile;
 	GetSuperItemSpace(pos, ii);
 	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
@@ -4900,23 +4901,23 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 		int uper = (unique ? 15 : 1);
 
-		Point bkp = Items[ii].position;
-		memset(&Items[ii], 0, sizeof(ItemStruct));
-		Items[ii].position = bkp;
+		Point bkp = item.position;
+		memset(&item, 0, sizeof(ItemStruct));
+		item.position = bkp;
 		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
-		SetupAllItems(ii, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
 
-		std::string tmp(Items[ii]._iIName);
+		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
 
 		if (unique)
-			if (Items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
+			if (item._iMagical != ITEM_QUALITY_UNIQUE)
 				continue;
 	}
 
-	Items[ii]._iIdentified = true;
+	item._iIdentified = true;
 	NetSendCmdDItem(false, ii);
 	return "Item generated successfully.";
 }
