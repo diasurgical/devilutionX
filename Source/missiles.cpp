@@ -149,11 +149,6 @@ void PutMissile(int8_t i)
 
 	dFlags[position.x][position.y] |= BFLAG_MISSILE;
 
-	if (dMissile[position.x][position.y] == 0)
-		dMissile[position.x][position.y] = i + 1;
-	else
-		dMissile[position.x][position.y] = -1;
-
 	if (missile._miPreFlag)
 		MissilePreFlag = true;
 }
@@ -638,7 +633,7 @@ bool MissilesFoundTarget(MissileStruct &missile, Point *position, int rad)
 				continue;
 
 			int dp = dPiece[tx][ty];
-			if (nSolidTable[dp] || dObject[tx][ty] != 0 || dMissile[tx][ty] != 0)
+			if (nSolidTable[dp] || dObject[tx][ty] != 0 || (dFlags[i][j] & BFLAG_MISSILE) != 0)
 				continue;
 
 			missile.position.tile = { tx, ty };
@@ -2179,7 +2174,7 @@ void AddTown(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/
 				ty = dst.y + CrawlTable[ck];
 				if (InDungeonBounds({ tx, ty })) {
 					int dp = dPiece[tx][ty];
-					if (dMissile[tx][ty] == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[tx][ty] == 0 && dPlayer[tx][ty] == 0) {
+					if ((dFlags[i][j] & BFLAG_MISSILE) == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[tx][ty] == 0 && dPlayer[tx][ty] == 0) {
 						if (!CheckIfTrig({ tx, ty })) {
 							missile.position.tile = { tx, ty };
 							missile.position.start = { tx, ty };
@@ -2292,7 +2287,7 @@ void AddGuardian(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/
 			k = dPiece[tx][ty];
 			if (InDungeonBounds({ tx, ty })) {
 				if (LineClearMissile(src, { tx, ty })) {
-					if (dMonster[tx][ty] == 0 && !nSolidTable[k] && !nMissileTable[k] && dObject[tx][ty] == 0 && dMissile[tx][ty] == 0) {
+					if (dMonster[tx][ty] == 0 && !nSolidTable[k] && !nMissileTable[k] && dObject[tx][ty] == 0 && (dFlags[i][j] & BFLAG_MISSILE) == 0) {
 						missile.position.tile = { tx, ty };
 						missile.position.start = { tx, ty };
 						missile._miDelFlag = false;
@@ -4611,7 +4606,6 @@ void ProcessMissiles()
 		auto &missile = Missiles[ActiveMissiles[i]];
 		const auto &position = missile.position.tile;
 		dFlags[position.x][position.y] &= ~BFLAG_MISSILE;
-		dMissile[position.x][position.y] = 0;
 		if (!InDungeonBounds(position))
 			missile._miDelFlag = true;
 	}
@@ -4666,11 +4660,17 @@ void missiles_process_charge()
 	}
 }
 
+void RedoMissileFlags()
+{
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		PutMissile(ActiveMissiles[i]);
+	}
+}
+
 void ClearMissileSpot(const MissileStruct &missile)
 {
 	const Point tile = missile.position.tile;
 	dFlags[tile.x][tile.y] &= ~BFLAG_MISSILE;
-	dMissile[tile.x][tile.y] = 0;
 }
 
 } // namespace devilution

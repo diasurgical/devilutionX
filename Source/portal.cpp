@@ -47,21 +47,19 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 
 void AddWarpMissile(int i, int x, int y)
 {
-	int mi;
-
 	MissileData[MIS_TOWN].mlSFX = SFX_NONE;
-	dMissile[x][y] = 0;
-	mi = AddMissile({ 0, 0 }, { x, y }, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 
-	if (mi != -1) {
-		auto &missile = Missiles[mi];
-		SetMissDir(missile, 1);
+	int mi = AddMissile({ 0, 0 }, { x, y }, 0, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	if (mi == -1)
+		return;
 
-		if (currlevel != 0)
-			missile._mlid = AddLight(missile.position.tile, 15);
+	auto &missile = Missiles[mi];
+	SetMissDir(missile, 1);
 
-		MissileData[MIS_TOWN].mlSFX = LS_SENTINEL;
-	}
+	if (currlevel != 0)
+		missile._mlid = AddLight(missile.position.tile, 15);
+
+	MissileData[MIS_TOWN].mlSFX = LS_SENTINEL;
 }
 
 void SyncPortals()
@@ -118,7 +116,6 @@ void RemovePortalMissile(int id)
 		auto &missile = Missiles[mi];
 		if (missile._mitype == MIS_TOWN && missile._misource == id) {
 			dFlags[missile.position.tile.x][missile.position.tile.y] &= ~BFLAG_MISSILE;
-			dMissile[missile.position.tile.x][missile.position.tile.y] = 0;
 
 			if (Portals[id].level != 0)
 				AddUnLight(missile._mlid);

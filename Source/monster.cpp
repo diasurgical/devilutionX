@@ -2005,33 +2005,24 @@ bool RandomWalk2(int i, Direction md)
  */
 bool IsTileSafe(const MonsterStruct &monster, Point position)
 {
-	int8_t mi = dMissile[position.x][position.y];
-	if (mi == 0) {
+	if ((dFlags[position.x][position.y] & BFLAG_MISSILE) == 0) {
 		return true;
 	}
 
 	bool fire = false;
 	bool lightning = false;
-	if (mi > 0) {
-		auto &missile = Missiles[mi - 1]; // BUGFIX: Change 'mi' to 'mi - 1' (fixed)
-		if (missile._mitype == MIS_FIREWALL) {
-			fire = true;
-		} else if (missile._mitype == MIS_LIGHTWALL) {
-			lightning = true;
-		}
-	} else {
-		for (int j = 0; j < ActiveMissileCount; j++) {
-			mi = ActiveMissiles[j];
-			auto &missile = Missiles[mi];
-			if (missile.position.tile == position) {
-				if (missile._mitype == MIS_FIREWALL) {
-					fire = true;
-					break;
-				}
-				if (missile._mitype == MIS_LIGHTWALL) {
-					lightning = true;
-					break;
-				}
+
+	for (int j = 0; j < ActiveMissileCount; j++) {
+		uint8_t mi = ActiveMissiles[j];
+		auto &missile = Missiles[mi];
+		if (missile.position.tile == position) {
+			if (missile._mitype == MIS_FIREWALL) {
+				fire = true;
+				break;
+			}
+			if (missile._mitype == MIS_LIGHTWALL) {
+				lightning = true;
+				break;
 			}
 		}
 	}
