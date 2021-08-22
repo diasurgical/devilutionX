@@ -69,10 +69,9 @@ enum diablo_message : uint8_t {
 	EMSG_SHRINE_MURPHYS,
 };
 
-extern uint32_t msgdelay;
-
 void InitDiabloMsg(diablo_message e);
 bool IsDiabloMsgAvailable();
+void CancelCurrentDiabloMsg();
 void ClrDiabloMsg();
 void DrawDiabloMsg(const Surface &out);
 
