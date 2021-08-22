@@ -441,7 +441,7 @@ void RespawnItem(ItemStruct *item, bool FlipFlag);
 void DeleteItem(int ii, int i);
 void ProcessItems();
 void FreeItemGFX();
-void GetItemFrm(int i);
+void GetItemFrm(ItemStruct &item);
 void GetItemStr(int i);
 void CheckIdentify(int pnum, int cii);
 void DoRepair(int pnum, int cii);

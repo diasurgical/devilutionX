@@ -3753,9 +3753,8 @@ void FreeItemGFX()
 	}
 }
 
-void GetItemFrm(int i)
+void GetItemFrm(ItemStruct &item)
 {
-	auto &item = Items[i];
 	item.AnimInfo.pCelSprite = &*itemanims[ItemCAnimTbl[item._iCurs]];
 }
 

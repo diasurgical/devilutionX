@@ -728,7 +728,7 @@ void LoadObject(LoadHelper *file, int i)
 void LoadItem(LoadHelper *file, int i)
 {
 	LoadItemData(file, &Items[i]);
-	GetItemFrm(i);
+	GetItemFrm(Items[i]);
 }
 
 void LoadPremium(LoadHelper *file, int i)
