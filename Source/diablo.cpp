@@ -577,13 +577,6 @@ void PressChar(char vkey)
 		}
 		return;
 #ifdef _DEBUG
-	case 'a':
-		if (debug_mode_key_inverted_v) {
-			spelldata[SPL_TELEPORT].sTownSpell = true;
-			auto &myPlayer = Players[MyPlayerId];
-			myPlayer._pSplLvl[myPlayer._pSpell]++;
-		}
-		return;
 	case 'D':
 		PrintDebugPlayer(true);
 		return;
