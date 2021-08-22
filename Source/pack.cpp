@@ -179,7 +179,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		    SDL_SwapLE32(is->dwBuff));
 	} else {
 		memset(&item, 0, sizeof(item));
-		RecreateItem(MAXITEMS, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
+		RecreateItem(item, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
 		item._iMagical = static_cast<item_quality>(is->bId >> 1);
 		item._iIdentified = (is->bId & 1) != 0;
 		item._iDurability = is->bDur;

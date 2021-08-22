@@ -3474,9 +3474,8 @@ void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool se
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
-	auto &item = Items[ii];
 	bool tmpIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
 

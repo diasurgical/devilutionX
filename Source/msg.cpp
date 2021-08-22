@@ -2121,7 +2121,7 @@ void DeltaLoadLevel()
 				    sgLevels[currlevel].item[i].dwBuff);
 			} else {
 				RecreateItem(
-				    ii,
+				    item,
 				    sgLevels[currlevel].item[i].wIndx,
 				    sgLevels[currlevel].item[i].wCI,
 				    sgLevels[currlevel].item[i].dwSeed,

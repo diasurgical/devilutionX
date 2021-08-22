@@ -1521,12 +1521,13 @@ bool GoldAutoPlaceInInventorySlot(PlayerStruct &player, int slotIndex)
 
 void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
-	memset(&Items[MAXITEMS], 0, sizeof(*Items));
-	RecreateItem(MAXITEMS, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	auto &item = Items[MAXITEMS];
+	memset(&item, 0, sizeof(item));
+	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	auto &player = Players[pnum];
 
-	player.HoldItem = Items[MAXITEMS];
+	player.HoldItem = item;
 
 	if (bId) {
 		player.HoldItem._iIdentified = true;
@@ -1840,7 +1841,7 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	if (idx == IDI_EAR) {
 		RecreateEar(item, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
+		RecreateItem(item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (id != 0)
 			item._iIdentified = true;
 		item._iDurability = dur;
