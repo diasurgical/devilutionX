@@ -804,6 +804,29 @@ _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS] = {
 	// clang-format on
 };
 
+bool IsTownerPresent(_talker_id npc)
+{
+	switch (npc) {
+	case TOWN_DEADGUY:
+		if (Quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || Quests[Q_BUTCHER]._qactive == QUEST_DONE)
+			return false;
+		break;
+	case TOWN_FARMER:
+		if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
+			return false;
+		break;
+	case TOWN_COWFARM:
+		if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
+			return false;
+		break;
+	case TOWN_GIRL:
+		if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
+			return false;
+		break;
+	}
+	return true;
+}
+
 void InitTowners()
 {
 	assert(CowCels == nullptr);
@@ -812,26 +835,8 @@ void InitTowners()
 
 	int i = 0;
 	for (const auto &townerInit : TownerInitList) {
-		switch (townerInit.type) {
-		case TOWN_DEADGUY:
-			if (Quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || Quests[Q_BUTCHER]._qactive == QUEST_DONE)
-				continue;
-			break;
-		case TOWN_FARMER:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
-				continue;
-			break;
-		case TOWN_COWFARM:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
-				continue;
-			break;
-		case TOWN_GIRL:
-			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
-				continue;
-			break;
-		default:
-			break;
-		}
+		if (!IsTownerPresent(townerInit.type))
+			continue;
 
 		InitTownerInfo(i, townerInit);
 		i++;
@@ -898,9 +903,8 @@ bool DebugTalkToTowner(std::string targetName)
 	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
 	auto &myPlayer = Players[MyPlayerId];
 	for (auto &towner : TownerInitList) {
-		// prevent going into hellfire territory without hellfire
-		if (towner.type == TOWN_COWFARM && !gbIsHellfire)
-			return false;
+		if (!IsTownerPresent(towner.type))
+			continue;
 		// cows have an init function that differs from the rest and isn't compatible with this code, skip them :(
 		if (towner.type == TOWN_COW)
 			continue;
