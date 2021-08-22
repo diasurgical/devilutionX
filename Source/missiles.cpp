@@ -2805,8 +2805,6 @@ void AddFlamec(int mi, Point src, Point dst, int midir, int8_t mienemy, int id, 
 
 void AddCbolt(int mi, Point src, Point dst, int midir, int8_t micaster, int id, int /*dam*/)
 {
-	assert(mi >= 0 && mi < MAXMISSILES);
-
 	auto &missile = Missiles[mi];
 	missile._mirnd = GenerateRnd(15) + 1;
 	missile._midam = (micaster == 0) ? (GenerateRnd(Players[id]._pMagic / 4) + 1) : 15;
