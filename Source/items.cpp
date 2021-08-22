@@ -1625,9 +1625,8 @@ void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool de
 		DeltaAddItem(ii);
 }
 
-void SetupAllUseful(int ii, int iseed, int lvl)
+void SetupAllUseful(ItemStruct &item, int iseed, int lvl)
 {
-	auto &item = Items[ii];
 	int idx;
 
 	item._iSeed = iseed;
@@ -3453,10 +3452,11 @@ void CreateRndUseful(Point position, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
+	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
 	int curlv = ItemsGetCurrlevel();
 
-	SetupAllUseful(ii, AdvanceRndSeed(), curlv);
+	SetupAllUseful(item, AdvanceRndSeed(), curlv);
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
 }
@@ -3505,7 +3505,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 		}
 
 		if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
-			SetupAllUseful(ii, iseed, icreateinfo & CF_LEVEL);
+			SetupAllUseful(item, iseed, icreateinfo & CF_LEVEL);
 			gbIsHellfire = tmpIsHellfire;
 			return;
 		}
