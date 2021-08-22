@@ -268,6 +268,7 @@ void MI_ResurrectBeam(int i);
 void MI_Rportal(int i);
 void ProcessMissiles();
 void missiles_process_charge();
+void RedoMissileFlags();
 void ClearMissileSpot(const MissileStruct &missile);
 
 } // namespace devilution

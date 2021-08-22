@@ -1817,10 +1817,7 @@ void LoadGame(bool firstflag)
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				AutomapView[i][j] = file.NextBool8();
 		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dMissile[i][j] = file.NextLE<int8_t>();
-		}
+		file.Skip(MAXDUNX * MAXDUNY); // dMissile
 	}
 
 	numpremium = file.NextBE<int32_t>();
@@ -1842,6 +1839,7 @@ void LoadGame(bool firstflag)
 	RedoPlayerVision();
 	ProcessVisionList();
 	missiles_process_charge();
+	RedoMissileFlags();
 	NewCursor(CURSOR_HAND);
 	gbProcessPlayers = true;
 
@@ -2006,8 +2004,8 @@ void SaveGameData()
 				file.WriteLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dMissile[i][j]);
+			for (int i = 0; i < MAXDUNX; i++)                                       // NOLINT(modernize-loop-convert)
+				file.WriteLE<int8_t>((dFlags[i][j] & BFLAG_MISSILE) != 0 ? -1 : 0); // For backwards compatability
 		}
 	}
 
@@ -2102,10 +2100,6 @@ void SaveLevel()
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				file.WriteLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
 		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dMissile[i][j]);
-		}
 	}
 
 	if (!setlevel)
@@ -2188,10 +2182,6 @@ void LoadLevel()
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
 				AutomapView[i][j] = file.NextBool8();
 		}
-		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dMissile[i][j] = 0;           /// BUGFIX: supposed to load saved missiles with "file.NextLE<int8_t>()"?
-		}
 	}
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
@@ -2201,6 +2191,7 @@ void LoadLevel()
 	if (!gbSkipSync) {
 		AutomapZoomReset();
 		ResyncQuests();
+		RedoMissileFlags();
 		SyncPortals();
 		UpdateLighting = true;
 	}
