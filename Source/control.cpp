@@ -1368,7 +1368,7 @@ void DrawInfoBox(const Surface &out)
 		}
 	} else {
 		if (pcursitem != -1)
-			GetItemStr(pcursitem);
+			GetItemStr(Items[pcursitem]);
 		else if (pcursobj != -1)
 			GetObjectStr(pcursobj);
 		if (pcursmonst != -1) {

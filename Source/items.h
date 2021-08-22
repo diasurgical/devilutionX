@@ -442,7 +442,7 @@ void DeleteItem(int ii, int i);
 void ProcessItems();
 void FreeItemGFX();
 void GetItemFrm(ItemStruct &item);
-void GetItemStr(int i);
+void GetItemStr(ItemStruct &item);
 void CheckIdentify(int pnum, int cii);
 void DoRepair(int pnum, int cii);
 void DoRecharge(int pnum, int cii);

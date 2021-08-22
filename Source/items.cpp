@@ -3758,9 +3758,8 @@ void GetItemFrm(ItemStruct &item)
 	item.AnimInfo.pCelSprite = &*itemanims[ItemCAnimTbl[item._iCurs]];
 }
 
-void GetItemStr(int i)
+void GetItemStr(ItemStruct &item)
 {
-	auto &item = Items[i];
 	if (item._itype != ITYPE_GOLD) {
 		if (item._iIdentified)
 			strcpy(infostr, item._iIName);
