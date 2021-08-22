@@ -656,9 +656,8 @@ void GetSuperItemSpace(Point position, int8_t inum)
 	}
 }
 
-void CalcItemValue(int i)
+void CalcItemValue(ItemStruct &item)
 {
-	auto &item = Items[i];
 	int v = item._iVMult1 + item._iVMult2;
 	if (v > 0) {
 		v *= item._ivalue;
@@ -1188,7 +1187,7 @@ void GetStaffPower(int i, int lvl, int bs, bool onlygood)
 		if (item._iMagical == ITEM_QUALITY_NORMAL)
 			strcpy(item._iName, item._iIName);
 	}
-	CalcItemValue(i);
+	CalcItemValue(item);
 }
 
 void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
@@ -1276,7 +1275,7 @@ void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool only
 		}
 	}
 	if (preidx != -1 || sufidx != -1)
-		CalcItemValue(i);
+		CalcItemValue(item);
 }
 
 void GetStaffSpell(int i, int lvl, bool onlygood)
