@@ -366,6 +366,14 @@ std::string DebugCmdArrow(const std::string_view parameter)
 	return "I can shoot any arrow.";
 }
 
+std::string DebugCmdTalkToTowner(const std::string_view parameter)
+{
+	if (DebugTalkToTowner(parameter.data())) {
+		return "Hello from the other side.";
+	}
+	return "NPC not found.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -383,6 +391,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
 	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
+	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 };

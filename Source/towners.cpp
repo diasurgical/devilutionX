@@ -891,4 +891,25 @@ void TalkToTowner(PlayerStruct &player, int t)
 	towner.talk(player, towner);
 }
 
+#ifdef _DEBUG
+bool DebugTalkToTowner(std::string targetName)
+{
+	SetupTownStores();
+	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
+	auto &myPlayer = Players[MyPlayerId];
+	for (auto &towner : TownerInitList) {
+		TownerStruct fakeTowner;
+		towner.init(fakeTowner, towner);
+		fakeTowner.position = myPlayer.position.tile;
+		std::string npcName(fakeTowner.name);
+		std::transform(npcName.begin(), npcName.end(), npcName.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (npcName.find(targetName) != std::string::npos) {
+			towner.talk(myPlayer, fakeTowner);
+			return true;
+		}
+	}
+	return false;
+}
+#endif
+
 } // namespace devilution
