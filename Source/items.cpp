@@ -670,9 +670,8 @@ void CalcItemValue(int i)
 	item._iIvalue = std::max(v, 1);
 }
 
-void GetBookSpell(int i, int lvl)
+void GetBookSpell(ItemStruct &item, int lvl)
 {
-	auto &item = Items[i];
 	int rv;
 
 	if (lvl == 0)
@@ -3310,7 +3309,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 	item._iSufPower = IPL_INVALID;
 
 	if (item._iMiscId == IMISC_BOOK)
-		GetBookSpell(i, lvl);
+		GetBookSpell(item, lvl);
 
 	if (gbIsHellfire && item._iMiscId == IMISC_OILOF)
 		GetOilType(i, lvl);
