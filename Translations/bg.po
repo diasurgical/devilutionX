@@ -954,11 +954,11 @@ msgstr "Клавишна комбинация за заклинания {:s}"
 
 #: Source/control.cpp:1153
 msgid "Player friendly"
-msgstr "Режим приятелски играч"
+msgstr "Приятелска игра"
 
 #: Source/control.cpp:1155
 msgid "Player attack"
-msgstr "Режим атакуващ играч"
+msgstr "Враждебна игра"
 
 #: Source/control.cpp:1158
 #, fuzzy
