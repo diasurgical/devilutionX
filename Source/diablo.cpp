@@ -533,7 +533,7 @@ void PressKey(int vkey)
 			stream_stop();
 		}
 		AutomapActive = false;
-		msgdelay = 0;
+		CancelCurrentDiabloMsg();
 		gamemenu_off();
 		doom_close();
 	}
@@ -1228,7 +1228,7 @@ void HelpKeyPressed()
 		}
 		QuestLogIsOpen = false;
 		AutomapActive = false;
-		msgdelay = 0;
+		CancelCurrentDiabloMsg();
 		gamemenu_off();
 		DisplayHelp();
 		doom_close();
@@ -1737,7 +1737,7 @@ bool PressEscKey()
 	}
 
 	if (IsDiabloMsgAvailable()) {
-		msgdelay = 0;
+		CancelCurrentDiabloMsg();
 		rv = true;
 	}
 
