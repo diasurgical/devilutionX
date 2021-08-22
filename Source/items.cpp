@@ -1357,9 +1357,8 @@ void GetOilType(ItemStruct &item, int maxLvl)
 	item._iIvalue = OilValues[t];
 }
 
-void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells)
+void GetItemBonus(ItemStruct &item, int minlvl, int maxlvl, bool onlygood, bool allowspells)
 {
-	auto &item = Items[i];
 	if (minlvl > 25)
 		minlvl = 25;
 
@@ -1594,7 +1593,7 @@ void SetupAllItems(ItemStruct &item, int idx, int iseed, int lvl, int uper, bool
 		if (iblvl != -1) {
 			_unique_items uid = CheckUnique(item, iblvl, uper, recreate);
 			if (uid == UITEM_INVALID) {
-				GetItemBonus(ii, iblvl / 2, iblvl, onlygood, true);
+				GetItemBonus(item, iblvl / 2, iblvl, onlygood, true);
 			} else {
 				GetUniqueItem(item, uid);
 			}
@@ -2231,7 +2230,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		SetRndSeed(Items[0]._iSeed);
 		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
 		GetItemAttrs(Items[0], itemType, plvl);
-		GetItemBonus(0, plvl / 2, plvl, true, !gbIsHellfire);
+		GetItemBonus(Items[0], plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
 			if (Items[0]._iIvalue > 140000) {
@@ -2380,7 +2379,7 @@ void RecreatePremiumItem(int ii, int plvl, int iseed)
 	SetRndSeed(iseed);
 	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 	GetItemAttrs(item, itype, plvl);
-	GetItemBonus(ii, plvl / 2, plvl, true, !gbIsHellfire);
+	GetItemBonus(item, plvl / 2, plvl, true, !gbIsHellfire);
 
 	item._iSeed = iseed;
 	item._iCreateInfo = plvl | CF_SMITHPREMIUM;
@@ -2393,7 +2392,7 @@ void RecreateBoyItem(int ii, int lvl, int iseed)
 	SetRndSeed(iseed);
 	int itype = RndBoyItem(lvl) - 1;
 	GetItemAttrs(item, itype, lvl);
-	GetItemBonus(ii, lvl, 2 * lvl, true, true);
+	GetItemBonus(item, lvl, 2 * lvl, true, true);
 
 	item._iSeed = iseed;
 	item._iCreateInfo = lvl | CF_BOY;
@@ -2419,7 +2418,7 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 		if (iblvl == -1 && item._iMiscId == IMISC_STAFF)
 			iblvl = 2 * lvl;
 		if (iblvl != -1)
-			GetItemBonus(ii, iblvl / 2, iblvl, true, true);
+			GetItemBonus(item, iblvl / 2, iblvl, true, true);
 	}
 
 	item._iSeed = iseed;
@@ -4577,7 +4576,7 @@ void SpawnWitch(int lvl)
 			if (maxlvl == -1 && Items[0]._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(0, maxlvl / 2, maxlvl, true, true);
+				GetItemBonus(Items[0], maxlvl / 2, maxlvl, true, true);
 		} while (Items[0]._iIvalue > maxValue);
 		witchitem[i] = Items[0];
 		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
@@ -4617,7 +4616,7 @@ void SpawnBoy(int lvl)
 		SetRndSeed(Items[0]._iSeed);
 		int itype = RndBoyItem(lvl) - 1;
 		GetItemAttrs(Items[0], itype, lvl);
-		GetItemBonus(0, lvl, 2 * lvl, true, true);
+		GetItemBonus(Items[0], lvl, 2 * lvl, true, true);
 
 		if (!gbIsHellfire) {
 			if (Items[0]._iIvalue > 90000) {
