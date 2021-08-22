@@ -1189,9 +1189,8 @@ void GetStaffPower(ItemStruct &item, int lvl, int bs, bool onlygood)
 	CalcItemValue(item);
 }
 
-void GetItemPower(int i, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
+void GetItemPower(ItemStruct &item, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
-	auto &item = Items[i];
 	int l[256];
 	char istr[128];
 	goodorevil goe;
@@ -1281,7 +1280,7 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 {
 	auto &item = Items[i];
 	if (!gbIsHellfire && GenerateRnd(4) == 0) {
-		GetItemPower(i, lvl / 2, lvl, PLT_STAFF, onlygood);
+		GetItemPower(item, lvl / 2, lvl, PLT_STAFF, onlygood);
 		return;
 	}
 
@@ -1368,29 +1367,29 @@ void GetItemBonus(int i, int minlvl, int maxlvl, bool onlygood, bool allowspells
 	case ITYPE_SWORD:
 	case ITYPE_AXE:
 	case ITYPE_MACE:
-		GetItemPower(i, minlvl, maxlvl, PLT_WEAP, onlygood);
+		GetItemPower(item, minlvl, maxlvl, PLT_WEAP, onlygood);
 		break;
 	case ITYPE_BOW:
-		GetItemPower(i, minlvl, maxlvl, PLT_BOW, onlygood);
+		GetItemPower(item, minlvl, maxlvl, PLT_BOW, onlygood);
 		break;
 	case ITYPE_SHIELD:
-		GetItemPower(i, minlvl, maxlvl, PLT_SHLD, onlygood);
+		GetItemPower(item, minlvl, maxlvl, PLT_SHLD, onlygood);
 		break;
 	case ITYPE_LARMOR:
 	case ITYPE_HELM:
 	case ITYPE_MARMOR:
 	case ITYPE_HARMOR:
-		GetItemPower(i, minlvl, maxlvl, PLT_ARMO, onlygood);
+		GetItemPower(item, minlvl, maxlvl, PLT_ARMO, onlygood);
 		break;
 	case ITYPE_STAFF:
 		if (allowspells)
 			GetStaffSpell(i, maxlvl, onlygood);
 		else
-			GetItemPower(i, minlvl, maxlvl, PLT_STAFF, onlygood);
+			GetItemPower(item, minlvl, maxlvl, PLT_STAFF, onlygood);
 		break;
 	case ITYPE_RING:
 	case ITYPE_AMULET:
-		GetItemPower(i, minlvl, maxlvl, PLT_MISC, onlygood);
+		GetItemPower(item, minlvl, maxlvl, PLT_MISC, onlygood);
 		break;
 	case ITYPE_NONE:
 	case ITYPE_MISC:
