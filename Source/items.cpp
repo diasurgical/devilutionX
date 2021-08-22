@@ -1557,9 +1557,8 @@ void ItemRndDur(int ii)
 		item._iDurability = GenerateRnd(item._iMaxDur / 2) + (item._iMaxDur / 4) + 1;
 }
 
-void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
+void SetupAllItems(ItemStruct &item, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
-	auto &item = Items[ii];
 	int iblvl;
 
 	item._iSeed = iseed;
@@ -1619,10 +1618,11 @@ void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool de
 		return;
 
 	int ii = AllocateItem();
+	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
 	int curlv = ItemsGetCurrlevel();
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
+	SetupAllItems(item, idx, AdvanceRndSeed(), 2 * curlv, 1, onlygood, false, delta);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -2496,7 +2496,7 @@ void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bo
 
 	while (true) {
 		memset(&item, 0, sizeof(item));
-		SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
+		SetupAllItems(item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		if (item._iCurs == icurs)
 			break;
 
@@ -3432,6 +3432,7 @@ void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
 		return;
 
 	int ii = AllocateItem();
+	auto &item = Items[ii];
 	GetSuperItemSpace(position, ii);
 	int uper = monster._uniqtype != 0 ? 15 : 1;
 
@@ -3439,7 +3440,7 @@ void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
 
-	SetupAllItems(ii, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
+	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
 		NetSendCmdDItem(false, ii);
@@ -3528,7 +3529,7 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 	bool recreate = (icreateinfo & CF_UNIQUE) != 0;
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
-	SetupAllItems(ii, idx, iseed, level, uper, onlygood, recreate, pregen);
+	SetupAllItems(item, idx, iseed, level, uper, onlygood, recreate, pregen);
 	gbIsHellfire = tmpIsHellfire;
 }
 
@@ -4796,7 +4797,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 
 	while (true) {
 		memset(&item, 0, sizeof(*Items));
-		SetupAllItems(ii, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
+		SetupAllItems(item, idx, AdvanceRndSeed(), 2 * lvl, 1, true, false, delta);
 		if (item._iMiscId == IMISC_BOOK && item._iSpell == ispell)
 			break;
 	}
