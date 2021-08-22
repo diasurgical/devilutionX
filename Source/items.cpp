@@ -3493,7 +3493,7 @@ void RecreateItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed, in
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
 		if ((icreateinfo & CF_TOWN) != 0) {
-			RecreateTownItem(ii, idx, icreateinfo, iseed);
+			RecreateTownItem(item, idx, icreateinfo, iseed);
 			gbIsHellfire = tmpIsHellfire;
 			return;
 		}
