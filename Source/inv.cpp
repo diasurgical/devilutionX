@@ -1833,29 +1833,30 @@ int SyncPutItem(PlayerStruct &player, Point position, int idx, uint16_t icreatei
 	assert(CanPut(position));
 
 	int ii = AllocateItem();
+	auto &item = Items[ii];
 
 	dItem[position.x][position.y] = ii + 1;
 
 	if (idx == IDI_EAR) {
-		RecreateEar(ii, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
+		RecreateEar(item, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
 		RecreateItem(ii, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
 		if (id != 0)
-			Items[ii]._iIdentified = true;
-		Items[ii]._iDurability = dur;
-		Items[ii]._iMaxDur = mdur;
-		Items[ii]._iCharges = ch;
-		Items[ii]._iMaxCharges = mch;
-		Items[ii]._iPLToHit = toHit;
-		Items[ii]._iMaxDam = maxDam;
-		Items[ii]._iMinStr = minStr;
-		Items[ii]._iMinMag = minMag;
-		Items[ii]._iMinDex = minDex;
-		Items[ii]._iAC = ac;
-		Items[ii].dwBuff = ibuff;
+			item._iIdentified = true;
+		item._iDurability = dur;
+		item._iMaxDur = mdur;
+		item._iCharges = ch;
+		item._iMaxCharges = mch;
+		item._iPLToHit = toHit;
+		item._iMaxDam = maxDam;
+		item._iMinStr = minStr;
+		item._iMinMag = minMag;
+		item._iMinDex = minDex;
+		item._iAC = ac;
+		item.dwBuff = ibuff;
 	}
 
-	Items[ii].position = position;
+	item.position = position;
 	RespawnItem(&Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {

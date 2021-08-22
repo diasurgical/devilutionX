@@ -3532,9 +3532,8 @@ void RecreateItem(int ii, int idx, uint16_t icreateinfo, int iseed, int ivalue, 
 	gbIsHellfire = tmpIsHellfire;
 }
 
-void RecreateEar(int ii, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
+void RecreateEar(ItemStruct &item, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
-	auto &item = Items[ii];
 	SetPlrHandItem(item, IDI_EAR);
 	tempstr[0] = static_cast<char>((ic >> 8) & 0x7F);
 	tempstr[1] = static_cast<char>(ic & 0x7F);
