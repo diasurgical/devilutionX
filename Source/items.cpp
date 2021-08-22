@@ -1786,17 +1786,17 @@ void RechargeItem(ItemStruct &item, int r)
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
 }
 
-bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
+bool ApplyOilToItem(ItemStruct &item, PlayerStruct &player)
 {
 	int r;
 
-	if (x->_iClass == ICLASS_MISC) {
+	if (item._iClass == ICLASS_MISC) {
 		return false;
 	}
-	if (x->_iClass == ICLASS_GOLD) {
+	if (item._iClass == ICLASS_GOLD) {
 		return false;
 	}
-	if (x->_iClass == ICLASS_QUEST) {
+	if (item._iClass == ICLASS_QUEST) {
 		return false;
 	}
 
@@ -1804,21 +1804,21 @@ bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 	case IMISC_OILACC:
 	case IMISC_OILMAST:
 	case IMISC_OILSHARP:
-		if (x->_iClass == ICLASS_ARMOR) {
+		if (item._iClass == ICLASS_ARMOR) {
 			return false;
 		}
 		break;
 	case IMISC_OILDEATH:
-		if (x->_iClass == ICLASS_ARMOR) {
+		if (item._iClass == ICLASS_ARMOR) {
 			return false;
 		}
-		if (x->_itype == ITYPE_BOW) {
+		if (item._itype == ITYPE_BOW) {
 			return false;
 		}
 		break;
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
-		if (x->_iClass == ICLASS_WEAPON) {
+		if (item._iClass == ICLASS_WEAPON) {
 			return false;
 		}
 		break;
@@ -1828,65 +1828,65 @@ bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
 
 	switch (player._pOilType) {
 	case IMISC_OILACC:
-		if (x->_iPLToHit < 50) {
-			x->_iPLToHit += GenerateRnd(2) + 1;
+		if (item._iPLToHit < 50) {
+			item._iPLToHit += GenerateRnd(2) + 1;
 		}
 		break;
 	case IMISC_OILMAST:
-		if (x->_iPLToHit < 100) {
-			x->_iPLToHit += GenerateRnd(3) + 3;
+		if (item._iPLToHit < 100) {
+			item._iPLToHit += GenerateRnd(3) + 3;
 		}
 		break;
 	case IMISC_OILSHARP:
-		if (x->_iMaxDam - x->_iMinDam < 30) {
-			x->_iMaxDam = x->_iMaxDam + 1;
+		if (item._iMaxDam - item._iMinDam < 30) {
+			item._iMaxDam = item._iMaxDam + 1;
 		}
 		break;
 	case IMISC_OILDEATH:
-		if (x->_iMaxDam - x->_iMinDam < 30) {
-			x->_iMinDam = x->_iMinDam + 1;
-			x->_iMaxDam = x->_iMaxDam + 2;
+		if (item._iMaxDam - item._iMinDam < 30) {
+			item._iMinDam = item._iMinDam + 1;
+			item._iMaxDam = item._iMaxDam + 2;
 		}
 		break;
 	case IMISC_OILSKILL:
 		r = GenerateRnd(6) + 5;
-		x->_iMinStr = std::max(0, x->_iMinStr - r);
-		x->_iMinMag = std::max(0, x->_iMinMag - r);
-		x->_iMinDex = std::max(0, x->_iMinDex - r);
+		item._iMinStr = std::max(0, item._iMinStr - r);
+		item._iMinMag = std::max(0, item._iMinMag - r);
+		item._iMinDex = std::max(0, item._iMinDex - r);
 		break;
 	case IMISC_OILBSMTH:
-		if (x->_iMaxDur == 255)
+		if (item._iMaxDur == 255)
 			return true;
-		if (x->_iDurability < x->_iMaxDur) {
-			x->_iDurability = (x->_iMaxDur + 4) / 5 + x->_iDurability;
-			x->_iDurability = std::min<int>(x->_iDurability, x->_iMaxDur);
+		if (item._iDurability < item._iMaxDur) {
+			item._iDurability = (item._iMaxDur + 4) / 5 + item._iDurability;
+			item._iDurability = std::min<int>(item._iDurability, item._iMaxDur);
 		} else {
-			if (x->_iMaxDur >= 100) {
+			if (item._iMaxDur >= 100) {
 				return true;
 			}
-			x->_iMaxDur++;
-			x->_iDurability = x->_iMaxDur;
+			item._iMaxDur++;
+			item._iDurability = item._iMaxDur;
 		}
 		break;
 	case IMISC_OILFORT:
-		if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur < 200) {
+		if (item._iMaxDur != DUR_INDESTRUCTIBLE && item._iMaxDur < 200) {
 			r = GenerateRnd(41) + 10;
-			x->_iMaxDur += r;
-			x->_iDurability += r;
+			item._iMaxDur += r;
+			item._iDurability += r;
 		}
 		break;
 	case IMISC_OILPERM:
-		x->_iDurability = 255;
-		x->_iMaxDur = 255;
+		item._iDurability = 255;
+		item._iMaxDur = 255;
 		break;
 	case IMISC_OILHARD:
-		if (x->_iAC < 60) {
-			x->_iAC += GenerateRnd(2) + 1;
+		if (item._iAC < 60) {
+			item._iAC += GenerateRnd(2) + 1;
 		}
 		break;
 	case IMISC_OILIMP:
-		if (x->_iAC < 120) {
-			x->_iAC += GenerateRnd(3) + 3;
+		if (item._iAC < 120) {
+			item._iAC += GenerateRnd(3) + 3;
 		}
 		break;
 	default:
@@ -3843,7 +3843,7 @@ void DoOil(int pnum, int cii)
 	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
 		return;
 	auto &player = Players[pnum];
-	if (!ApplyOilToItem(&player.InvBody[cii], player))
+	if (!ApplyOilToItem(player.InvBody[cii], player))
 		return;
 	CalcPlrInv(pnum, true);
 	if (pnum == MyPlayerId) {
