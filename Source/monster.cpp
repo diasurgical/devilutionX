@@ -2009,28 +2009,21 @@ bool IsTileSafe(const MonsterStruct &monster, Point position)
 		return true;
 	}
 
-	bool fire = false;
-	bool lightning = false;
+	bool fearsFire = (monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO;
+	bool fearsLightning = (monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO;
 
 	for (int j = 0; j < ActiveMissileCount; j++) {
 		uint8_t mi = ActiveMissiles[j];
 		auto &missile = Missiles[mi];
 		if (missile.position.tile == position) {
-			if (missile._mitype == MIS_FIREWALL) {
-				fire = true;
-				break;
+			if (fearsFire && missile._mitype == MIS_FIREWALL) {
+				return false;
 			}
-			if (missile._mitype == MIS_LIGHTWALL) {
-				lightning = true;
-				break;
+			if (fearsLightning && missile._mitype == MIS_LIGHTWALL) {
+				return false;
 			}
 		}
 	}
-
-	if (fire && ((monster.mMagicRes & IMMUNE_FIRE) == 0 || monster.MType->mtype == MT_DIABLO))
-		return false;
-	if (lightning && ((monster.mMagicRes & IMMUNE_LIGHTNING) == 0 || monster.MType->mtype == MT_DIABLO))
-		return false;
 
 	return true;
 }
