@@ -164,7 +164,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		id->_itype = ITYPE_NONE;
 		return;
 	}
-	
+
 	if (idx == IDI_EAR) {
 		RecreateEar(
 		    item,
