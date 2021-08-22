@@ -939,7 +939,7 @@ void CheckNaKrulNotes(PlayerStruct &player)
 	int itemNum = ActiveItems[0];
 	ItemStruct tmp = Items[itemNum];
 	memset(&Items[itemNum], 0, sizeof(*Items));
-	GetItemAttrs(itemNum, IDI_FULLNOTE, 16);
+	GetItemAttrs(Items[itemNum], IDI_FULLNOTE, 16);
 	SetupItem(Items[itemNum]);
 	player.HoldItem = Items[itemNum];
 	Items[itemNum] = tmp;

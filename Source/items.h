@@ -420,7 +420,7 @@ void CreatePlrItems(int playerId);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
-void GetItemAttrs(int i, int idata, int lvl);
+void GetItemAttrs(ItemStruct &item, int idata, int lvl);
 void SetupItem(ItemStruct &item);
 int RndItem(const MonsterStruct &monster);
 void SpawnUnique(_unique_items uid, Point position);
