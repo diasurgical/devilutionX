@@ -14,12 +14,12 @@
 namespace devilution {
 
 uint32_t msgdelay;
-diablo_message msgflag;
 
 namespace {
 
 diablo_message msgtable[MAX_SEND_STR_LEN];
 uint8_t msgcnt;
+diablo_message msgflag;
 
 } // namespace
 
@@ -97,6 +97,11 @@ void InitDiabloMsg(diablo_message e)
 
 	msgflag = msgtable[0];
 	msgdelay = SDL_GetTicks();
+}
+
+bool IsDiabloMsgAvailable()
+{
+	return msgflag != EMSG_NONE;
 }
 
 void ClrDiabloMsg()

@@ -1230,7 +1230,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	if (HelpFlag) {
 		DrawHelp(out);
 	}
-	if (msgflag != EMSG_NONE) {
+	if (IsDiabloMsgAvailable()) {
 		DrawDiabloMsg(out);
 	}
 	if (MyPlayerIsDead) {

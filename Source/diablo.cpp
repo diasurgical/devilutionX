@@ -1736,7 +1736,7 @@ bool PressEscKey()
 		rv = true;
 	}
 
-	if (msgflag != EMSG_NONE) {
+	if (IsDiabloMsgAvailable()) {
 		msgdelay = 0;
 		rv = true;
 	}
