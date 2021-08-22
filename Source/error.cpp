@@ -3,6 +3,9 @@
  *
  * Implementation of in-game message functions.
  */
+
+#include <deque>
+
 #include "error.h"
 
 #include "control.h"
@@ -15,9 +18,7 @@ namespace devilution {
 
 namespace {
 
-diablo_message msgtable[MAX_SEND_STR_LEN];
-uint8_t msgcnt;
-diablo_message msgflag;
+std::deque<std::string> DiabloMessages;
 uint32_t msgdelay;
 
 } // namespace
@@ -83,24 +84,21 @@ const char *const MsgStrings[] = {
 
 void InitDiabloMsg(diablo_message e)
 {
-	if (msgcnt >= sizeof(msgtable))
+	std::string msg = _(MsgStrings[e]);
+
+	if (DiabloMessages.size() >= MAX_SEND_STR_LEN)
 		return;
 
-	for (int i = 0; i < msgcnt; i++) {
-		if (msgtable[i] == e)
-			return;
-	}
+	if (std::find(DiabloMessages.begin(), DiabloMessages.end(), msg) != DiabloMessages.end())
+		return;
 
-	msgtable[msgcnt] = e; // BUGFIX: missing out-of-bounds check (fixed)
-	msgcnt++;
-
-	msgflag = msgtable[0];
+	DiabloMessages.push_back(msg);
 	msgdelay = SDL_GetTicks();
 }
 
 bool IsDiabloMsgAvailable()
 {
-	return msgflag != EMSG_NONE;
+	return !DiabloMessages.empty();
 }
 
 void CancelCurrentDiabloMsg()
@@ -110,11 +108,7 @@ void CancelCurrentDiabloMsg()
 
 void ClrDiabloMsg()
 {
-	for (auto &msg : msgtable)
-		msg = EMSG_NONE;
-
-	msgflag = EMSG_NONE;
-	msgcnt = 0;
+	DiabloMessages.clear();
 }
 
 #define DIALOG_Y ((gnScreenHeight - PANEL_HEIGHT) / 2 - 18)
@@ -141,18 +135,15 @@ void DrawDiabloMsg(const Surface &out)
 
 	DrawHalfTransparentRectTo(out, PANEL_X + 104, DIALOG_Y - 8, 432, 54);
 
-	strcpy(tempstr, _(MsgStrings[msgflag]));
-	DrawString(out, tempstr, { { PANEL_X + 101, DIALOG_Y + 24 }, { 442, 0 } }, UiFlags::AlignCenter);
+	auto message = DiabloMessages.front();
+	DrawString(out, message, { { PANEL_X + 101, DIALOG_Y + 24 }, { 442, 0 } }, UiFlags::AlignCenter);
 
 	if (msgdelay > 0 && msgdelay <= SDL_GetTicks() - 3500) {
 		msgdelay = 0;
 	}
 	if (msgdelay == 0) {
-		msgcnt--;
-		if (msgcnt == 0) {
-			msgflag = EMSG_NONE;
-		} else {
-			msgflag = msgtable[msgcnt];
+		DiabloMessages.pop_front();
+		if (!DiabloMessages.empty()) {
 			msgdelay = SDL_GetTicks();
 		}
 	}
