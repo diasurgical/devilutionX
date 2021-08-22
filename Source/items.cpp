@@ -1276,9 +1276,8 @@ void GetItemPower(ItemStruct &item, int minlvl, int maxlvl, affix_item_type flgs
 		CalcItemValue(item);
 }
 
-void GetStaffSpell(int i, int lvl, bool onlygood)
+void GetStaffSpell(ItemStruct &item, int lvl, bool onlygood)
 {
-	auto &item = Items[i];
 	if (!gbIsHellfire && GenerateRnd(4) == 0) {
 		GetItemPower(item, lvl / 2, lvl, PLT_STAFF, onlygood);
 		return;
@@ -1382,7 +1381,7 @@ void GetItemBonus(ItemStruct &item, int minlvl, int maxlvl, bool onlygood, bool 
 		break;
 	case ITYPE_STAFF:
 		if (allowspells)
-			GetStaffSpell(i, maxlvl, onlygood);
+			GetStaffSpell(item, maxlvl, onlygood);
 		else
 			GetItemPower(item, minlvl, maxlvl, PLT_STAFF, onlygood);
 		break;
