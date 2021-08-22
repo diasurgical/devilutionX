@@ -1398,8 +1398,8 @@ void GetItemBonus(ItemStruct &item, int minlvl, int maxlvl, bool onlygood, bool 
 
 int RndUItem(MonsterStruct *monster)
 {
-	if (monster != nullptr && (monster->MData->mTreasure & 0x8000) != 0 && !gbIsMultiplayer)
-		return -((monster->MData->mTreasure & 0xFFF) + 1);
+	if (monster != nullptr && (monster->MData->mTreasure & T_UNIQ) != 0 && !gbIsMultiplayer)
+		return -((monster->MData->mTreasure & T_MASK) + 1);
 
 	int ril[512];
 
@@ -3336,10 +3336,10 @@ void SetupItem(ItemStruct &item)
 
 int RndItem(const MonsterStruct &monster)
 {
-	if ((monster.MData->mTreasure & 0x8000) != 0)
-		return -((monster.MData->mTreasure & 0xFFF) + 1);
+	if ((monster.MData->mTreasure & T_UNIQ) != 0)
+		return -((monster.MData->mTreasure & T_MASK) + 1);
 
-	if ((monster.MData->mTreasure & 0x4000) != 0)
+	if ((monster.MData->mTreasure & T_NODROP) != 0)
 		return 0;
 
 	if (GenerateRnd(100) > 40)
@@ -3399,7 +3399,7 @@ void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
 	int idx;
 	bool onlygood = true;
 
-	if (monster._uniqtype != 0 || ((monster.MData->mTreasure & 0x8000) != 0 && gbIsMultiplayer)) {
+	if (monster._uniqtype != 0 || ((monster.MData->mTreasure & T_UNIQ) != 0 && gbIsMultiplayer)) {
 		idx = RndUItem(&monster);
 		if (idx < 0) {
 			SpawnUnique((_unique_items) - (idx + 1), position);
@@ -4870,6 +4870,63 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 		}
 	}
 }
+
+#ifdef _DEBUG
+std::string DebugSpawnItem(std::string itemName, bool unique)
+{
+	if (ActiveItemCount >= MAXITEMS)
+		return "No space to generate the item!";
+
+	bool onlygood = true;
+
+	int ii = AllocateItem();
+	Point pos = Players[MyPlayerId].position.tile;
+	GetSuperItemSpace(pos, ii);
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	MonsterStruct fake_m;
+	fake_m.MData = &MonsterData[0];
+	fake_m._uniqtype = 0;
+	for (int i = 0;; i++) {
+		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+		if (std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() > 3000)
+			return "Item not found in 3 seconds!";
+
+		if (i > 10000)
+			return "Item not found in 10000 tries!";
+
+		fake_m.mLevel = GenerateRnd(40) + 1;
+		int idx = RndItem(fake_m);
+		if (idx > 0) {
+			idx--;
+			onlygood = false;
+		} else
+			continue;
+
+		int uper = (unique ? 15 : 1);
+
+		Point bkp = Items[ii].position;
+		memset(&Items[ii], 0, sizeof(ItemStruct));
+		Items[ii].position = bkp;
+		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
+		SetupAllItems(ii, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
+
+		std::string tmp(Items[ii]._iIName);
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (tmp.find(itemName) != std::string::npos)
+			break;
+
+		if (unique)
+			if (Items[ii]._iMagical != ITEM_QUALITY_UNIQUE)
+				continue;
+	}
+
+	Items[ii]._iIdentified = true;
+	NetSendCmdDItem(false, ii);
+	return "Item generated successfully.";
+}
+#endif
 
 void ItemStruct::SetNewAnimation(bool showAnimation)
 {

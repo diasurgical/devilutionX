@@ -467,6 +467,9 @@ bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
 
+#ifdef _DEBUG
+std::string DebugSpawnItem(std::string itemName, bool unique);
+#endif
 /* data */
 
 extern int MaxGold;

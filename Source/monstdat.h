@@ -74,6 +74,14 @@ enum monster_resistance : uint8_t {
 	// clang-format on
 };
 
+enum monster_treasure : uint16_t {
+	// clang-format off
+	T_MASK    = 0xFFF,
+	T_NODROP = 0x4000, // monster doesn't drop any loot
+	T_UNIQ    = 0x8000, // use combined with unique item's ID - for example butcher's cleaver = T_UNIQ+UITEM_CLEAVE
+	// clang-format on
+};
+
 struct MonsterDataStruct {
 	const char *mName;
 	const char *GraphicType;
@@ -109,8 +117,9 @@ struct MonsterDataStruct {
 	uint8_t mMagicRes;
 	/** Using monster_resistance as bitflags */
 	uint8_t mMagicRes2;
-	int8_t mSelFlag;    // TODO Create enum
-	uint16_t mTreasure; // TODO Create enum
+	int8_t mSelFlag; // TODO Create enum
+	/** Using monster_treasure */
+	uint16_t mTreasure;
 	uint16_t mExp;
 };
 

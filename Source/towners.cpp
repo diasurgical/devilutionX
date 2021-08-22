@@ -653,7 +653,9 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 		SpawnUnique(UITEM_BOVINE, cowFarmer.position + DIR_SE);
 		InitQTextMsg(TEXT_JERSEY8);
 		quest._qactive = QUEST_DONE;
+		auto curFrame = cowFarmer._tAnimFrame;
 		LoadTownerAnimations(cowFarmer, "Towners\\Farmer\\mfrmrn2.CEL", 15, DIR_SW, 3);
+		cowFarmer._tAnimFrame = std::min(curFrame, cowFarmer._tAnimLen);
 		return;
 	}
 
@@ -734,7 +736,9 @@ void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
 		CreateAmulet(girl.position, 13, false, true);
 		quest._qlog = false;
 		quest._qactive = QUEST_DONE;
+		auto curFrame = girl._tAnimFrame;
 		LoadTownerAnimations(girl, "Towners\\Girl\\Girls1.CEL", 20, DIR_S, 6);
+		girl._tAnimFrame = std::min(curFrame, girl._tAnimLen);
 		if (gbIsMultiplayer)
 			NetSendCmdQuest(true, quest);
 		return;
@@ -804,6 +808,29 @@ _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS] = {
 	// clang-format on
 };
 
+bool IsTownerPresent(_talker_id npc)
+{
+	switch (npc) {
+	case TOWN_DEADGUY:
+		if (Quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || Quests[Q_BUTCHER]._qactive == QUEST_DONE)
+			return false;
+		break;
+	case TOWN_FARMER:
+		if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
+			return false;
+		break;
+	case TOWN_COWFARM:
+		if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
+			return false;
+		break;
+	case TOWN_GIRL:
+		if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
+			return false;
+		break;
+	}
+	return true;
+}
+
 void InitTowners()
 {
 	assert(CowCels == nullptr);
@@ -812,26 +839,8 @@ void InitTowners()
 
 	int i = 0;
 	for (const auto &townerInit : TownerInitList) {
-		switch (townerInit.type) {
-		case TOWN_DEADGUY:
-			if (Quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || Quests[Q_BUTCHER]._qactive == QUEST_DONE)
-				continue;
-			break;
-		case TOWN_FARMER:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
-				continue;
-			break;
-		case TOWN_COWFARM:
-			if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
-				continue;
-			break;
-		case TOWN_GIRL:
-			if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
-				continue;
-			break;
-		default:
-			break;
-		}
+		if (!IsTownerPresent(townerInit.type))
+			continue;
 
 		InitTownerInfo(i, townerInit);
 		i++;
@@ -890,5 +899,31 @@ void TalkToTowner(PlayerStruct &player, int t)
 
 	towner.talk(player, towner);
 }
+
+#ifdef _DEBUG
+bool DebugTalkToTowner(std::string targetName)
+{
+	SetupTownStores();
+	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
+	auto &myPlayer = Players[MyPlayerId];
+	for (auto &towner : TownerInitList) {
+		if (!IsTownerPresent(towner.type))
+			continue;
+		// cows have an init function that differs from the rest and isn't compatible with this code, skip them :(
+		if (towner.type == TOWN_COW)
+			continue;
+		TownerStruct fakeTowner;
+		towner.init(fakeTowner, towner);
+		fakeTowner.position = myPlayer.position.tile;
+		std::string npcName(fakeTowner.name);
+		std::transform(npcName.begin(), npcName.end(), npcName.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (npcName.find(targetName) != std::string::npos) {
+			towner.talk(myPlayer, fakeTowner);
+			return true;
+		}
+	}
+	return false;
+}
+#endif
 
 } // namespace devilution

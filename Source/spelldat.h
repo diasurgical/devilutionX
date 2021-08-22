@@ -217,6 +217,6 @@ struct SpellData {
 	int sStaffCost;
 };
 
-extern SpellData spelldata[];
+extern const SpellData spelldata[];
 
 } // namespace devilution

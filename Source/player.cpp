@@ -664,8 +664,13 @@ void DropHalfPlayersGold(int pnum)
 void InitLevelChange(int pnum)
 {
 	auto &player = Players[pnum];
+	auto &myPlayer = Players[MyPlayerId];
 
 	RemovePlrMissiles(pnum);
+	player.wReflections = 0;
+	// share info about your reflect charges when another player joins the level
+	if (pnum != MyPlayerId)
+		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.wReflections);
 	if (pnum == MyPlayerId && qtextflag) {
 		qtextflag = false;
 		stream_stop();
@@ -674,7 +679,6 @@ void InitLevelChange(int pnum)
 	RemovePlrFromMap(pnum);
 	SetPlayerOld(player);
 	if (pnum == MyPlayerId) {
-		auto &myPlayer = Players[MyPlayerId];
 		dPlayer[myPlayer.position.tile.x][myPlayer.position.tile.y] = MyPlayerId + 1;
 	} else {
 		player._pLvlVisited[player.plrlevel] = true;
@@ -3221,7 +3225,7 @@ void RemovePlrMissiles(int pnum)
 		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
 			Monsters[missile._miVar2]._mmode = (MON_MODE)missile._miVar1;
 		}
-		if (IsAnyOf(missile._mitype, MIS_MANASHIELD, MIS_REFLECT) && missile._misource == pnum) {
+		if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
 			ClearMissileSpot(missile);
 			DeleteMissile(am, i);
 		}
