@@ -424,7 +424,7 @@ void AddInitItems()
 			GetItemAttrs(ii, IDI_MANA, curlv);
 
 		item._iCreateInfo = curlv | CF_PREGEN;
-		SetupItem(ii);
+		SetupItem(item);
 		item.AnimInfo.CurrentFrame = item.AnimInfo.NumberOfFrames;
 		item._iAnimFlag = false;
 		item._iSelFlag = 1;
@@ -1610,7 +1610,7 @@ void SetupAllItems(int ii, int idx, int iseed, int lvl, int uper, bool onlygood,
 			GetUniqueItem(item, (_unique_items)iseed); // uid is stored in iseed for uniques
 		}
 	}
-	SetupItem(ii);
+	SetupItem(item);
 }
 
 void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool delta)
@@ -1675,7 +1675,7 @@ void SetupAllUseful(int ii, int iseed, int lvl)
 
 	GetItemAttrs(ii, idx, lvl);
 	item._iCreateInfo = lvl | CF_USEFUL;
-	SetupItem(ii);
+	SetupItem(item);
 }
 
 uint8_t Char2int(uint8_t input)
@@ -1716,7 +1716,7 @@ void SpawnRock()
 	dItem[Objects[oi].position.x][Objects[oi].position.y] = ii + 1;
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(ii, IDI_ROCK, curlv);
-	SetupItem(ii);
+	SetupItem(item);
 	item._iSelFlag = 2;
 	item._iPostDraw = true;
 	item.AnimInfo.CurrentFrame = 11;
@@ -3334,9 +3334,8 @@ void GetItemAttrs(int i, int idata, int lvl)
 	SetPlrHandGoldCurs(item);
 }
 
-void SetupItem(int i)
+void SetupItem(ItemStruct &item)
 {
-	auto &item = Items[i];
 	item.SetNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
 	item._iIdentified = false;
 }
@@ -3398,7 +3397,7 @@ void SpawnUnique(_unique_items uid, Point position)
 
 	GetItemAttrs(ii, idx, curlv);
 	GetUniqueItem(item, uid);
-	SetupItem(ii);
+	SetupItem(item);
 }
 
 void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
@@ -3650,7 +3649,7 @@ void SpawnQuestItem(int itemid, Point position, int randarea, int selflag)
 	int curlv = ItemsGetCurrlevel();
 	GetItemAttrs(ii, itemid, curlv);
 
-	SetupItem(ii);
+	SetupItem(item);
 	item._iSeed = AdvanceRndSeed();
 	SetRndSeed(item._iSeed);
 	item._iPostDraw = true;

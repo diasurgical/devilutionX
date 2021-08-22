@@ -421,7 +421,7 @@ bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
 void GetItemAttrs(int i, int idata, int lvl);
-void SetupItem(int i);
+void SetupItem(ItemStruct &item);
 int RndItem(const MonsterStruct &monster);
 void SpawnUnique(_unique_items uid, Point position);
 void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg);
