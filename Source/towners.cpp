@@ -898,6 +898,12 @@ bool DebugTalkToTowner(std::string targetName)
 	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
 	auto &myPlayer = Players[MyPlayerId];
 	for (auto &towner : TownerInitList) {
+		// prevent going into hellfire territory without hellfire
+		if (towner.type == TOWN_COWFARM && !gbIsHellfire)
+			return false;
+		// cows have an init function that differs from the rest and isn't compatible with this code, skip them :(
+		if (towner.type == TOWN_COW)
+			continue;
 		TownerStruct fakeTowner;
 		towner.init(fakeTowner, towner);
 		fakeTowner.position = myPlayer.position.tile;
