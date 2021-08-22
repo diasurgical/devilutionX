@@ -1774,7 +1774,7 @@ void AddSearch(int mi, Point /*src*/, Point /*dst*/, int /*midir*/, int8_t miene
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
-		if (mx != mi) {
+		if (&Missiles[mx] != &missile) {
 			MissileStruct *mis = &Missiles[mx];
 			if (mis->_miVar1 == id && mis->_mitype == MIS_SEARCH) {
 				int r1 = missile._mirange;
@@ -2195,7 +2195,7 @@ void AddTown(int mi, Point /*src*/, Point dst, int /*midir*/, int8_t /*mienemy*/
 	missile._miVar2 = 0;
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
-		if (Missiles[mx]._mitype == MIS_TOWN && mx != mi && Missiles[mx]._misource == id)
+		if (Missiles[mx]._mitype == MIS_TOWN && (&Missiles[mx] != &missile) && Missiles[mx]._misource == id)
 			Missiles[mx]._mirange = 0;
 	}
 	PutMissile(missile);
@@ -2488,7 +2488,7 @@ void AddGolem(int mi, Point src, Point dst, int /*midir*/, int8_t /*mienemy*/, i
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
 		if (Missiles[mx]._mitype == MIS_GOLEM) {
-			if (mx != mi && Missiles[mx]._misource == id) {
+			if ((&Missiles[mx] != &missile) && Missiles[mx]._misource == id) {
 				missile._miDelFlag = true;
 				return;
 			}
