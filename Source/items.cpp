@@ -1549,9 +1549,8 @@ void GetUniqueItem(ItemStruct &item, _unique_items uid)
 	item._iCreateInfo |= CF_UNIQUE;
 }
 
-void ItemRndDur(int ii)
+void ItemRndDur(ItemStruct &item)
 {
-	auto &item = Items[ii];
 	if (item._iDurability > 0 && item._iDurability != DUR_INDESTRUCTIBLE)
 		item._iDurability = GenerateRnd(item._iMaxDur / 2) + (item._iMaxDur / 4) + 1;
 }
@@ -1602,7 +1601,7 @@ void SetupAllItems(ItemStruct &item, int idx, int iseed, int lvl, int uper, bool
 			}
 		}
 		if (item._iMagical != ITEM_QUALITY_UNIQUE)
-			ItemRndDur(ii);
+			ItemRndDur(item);
 	} else {
 		if (item._iLoc != ILOC_UNEQUIPABLE) {
 			GetUniqueItem(item, (_unique_items)iseed); // uid is stored in iseed for uniques
