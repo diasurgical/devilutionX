@@ -1146,9 +1146,8 @@ void SaveItemAffix(ItemStruct &item, const PLStruct &affix)
 	}
 }
 
-void GetStaffPower(int i, int lvl, int bs, bool onlygood)
+void GetStaffPower(ItemStruct &item, int lvl, int bs, bool onlygood)
 {
-	auto &item = Items[i];
 	int preidx = -1;
 	if (GenerateRnd(10) == 0 || onlygood) {
 		int nl = 0;
@@ -1329,7 +1328,7 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	int v = item._iCharges * spelldata[bs].sStaffCost / 5;
 	item._ivalue += v;
 	item._iIvalue += v;
-	GetStaffPower(i, lvl, bs, onlygood);
+	GetStaffPower(item, lvl, bs, onlygood);
 }
 
 void GetOilType(int i, int maxLvl)
