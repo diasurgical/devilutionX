@@ -1494,9 +1494,8 @@ int RndTypeItems(int itype, int imid, int lvl)
 	return ril[GenerateRnd(ri)];
 }
 
-_unique_items CheckUnique(int i, int lvl, int uper, bool recreate)
+_unique_items CheckUnique(ItemStruct &item, int lvl, int uper, bool recreate)
 {
-	auto &item = Items[i];
 	std::bitset<128> uok = {};
 
 	if (GenerateRnd(100) > uper)
@@ -1595,7 +1594,7 @@ void SetupAllItems(ItemStruct &item, int idx, int iseed, int lvl, int uper, bool
 		if (uper == 15)
 			iblvl = lvl + 4;
 		if (iblvl != -1) {
-			_unique_items uid = CheckUnique(ii, iblvl, uper, recreate);
+			_unique_items uid = CheckUnique(item, iblvl, uper, recreate);
 			if (uid == UITEM_INVALID) {
 				GetItemBonus(ii, iblvl / 2, iblvl, onlygood, true);
 			} else {
