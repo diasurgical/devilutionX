@@ -1770,20 +1770,20 @@ void RepairItem(ItemStruct &item, int lvl)
 	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
 }
 
-void RechargeItem(ItemStruct *i, int r)
+void RechargeItem(ItemStruct &item, int r)
 {
-	if (i->_iCharges == i->_iMaxCharges)
+	if (item._iCharges == item._iMaxCharges)
 		return;
 
 	do {
-		i->_iMaxCharges--;
-		if (i->_iMaxCharges == 0) {
+		item._iMaxCharges--;
+		if (item._iMaxCharges == 0) {
 			return;
 		}
-		i->_iCharges += r;
-	} while (i->_iCharges < i->_iMaxCharges);
+		item._iCharges += r;
+	} while (item._iCharges < item._iMaxCharges);
 
-	i->_iCharges = std::min(i->_iCharges, i->_iMaxCharges);
+	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
 }
 
 bool ApplyOilToItem(ItemStruct *x, PlayerStruct &player)
@@ -3830,7 +3830,7 @@ void DoRecharge(int pnum, int cii)
 	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
 		int r = GetSpellBookLevel(pi->_iSpell);
 		r = GenerateRnd(player._pLevel / r) + 1;
-		RechargeItem(pi, r);
+		RechargeItem(*pi, r);
 		CalcPlrInv(pnum, true);
 	}
 
