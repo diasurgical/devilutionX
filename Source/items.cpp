@@ -2052,50 +2052,50 @@ void DrawUniqueInfoDevider(const Surface &out, int y)
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
 }
 
-void PrintItemMisc(ItemStruct *x)
+void PrintItemMisc(ItemStruct &item)
 {
-	if (x->_iMiscId == IMISC_SCROLL) {
+	if (item._iMiscId == IMISC_SCROLL) {
 		strcpy(tempstr, _("Right-click to read"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId == IMISC_SCROLLT) {
+	if (item._iMiscId == IMISC_SCROLLT) {
 		strcpy(tempstr, _("Right-click to read, then"));
 		AddPanelString(tempstr);
 		strcpy(tempstr, _("left-click to target"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId >= IMISC_USEFIRST && x->_iMiscId <= IMISC_USELAST) {
-		PrintItemOil(x->_iMiscId);
+	if (item._iMiscId >= IMISC_USEFIRST && item._iMiscId <= IMISC_USELAST) {
+		PrintItemOil(item._iMiscId);
 		strcpy(tempstr, _("Right-click to use"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId > IMISC_OILFIRST && x->_iMiscId < IMISC_OILLAST) {
-		PrintItemOil(x->_iMiscId);
+	if (item._iMiscId > IMISC_OILFIRST && item._iMiscId < IMISC_OILLAST) {
+		PrintItemOil(item._iMiscId);
 		strcpy(tempstr, _("Right click to use"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId > IMISC_RUNEFIRST && x->_iMiscId < IMISC_RUNELAST) {
-		PrintItemOil(x->_iMiscId);
+	if (item._iMiscId > IMISC_RUNEFIRST && item._iMiscId < IMISC_RUNELAST) {
+		PrintItemOil(item._iMiscId);
 		strcpy(tempstr, _("Right click to use"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId == IMISC_BOOK) {
+	if (item._iMiscId == IMISC_BOOK) {
 		strcpy(tempstr, _("Right-click to read"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId == IMISC_NOTE) {
+	if (item._iMiscId == IMISC_NOTE) {
 		strcpy(tempstr, _("Right click to read"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId == IMISC_MAPOFDOOM) {
+	if (item._iMiscId == IMISC_MAPOFDOOM) {
 		strcpy(tempstr, _("Right-click to view"));
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId == IMISC_EAR) {
-		strcpy(tempstr, fmt::format(_("Level: {:d}"), x->_ivalue).c_str());
+	if (item._iMiscId == IMISC_EAR) {
+		strcpy(tempstr, fmt::format(_("Level: {:d}"), item._ivalue).c_str());
 		AddPanelString(tempstr);
 	}
-	if (x->_iMiscId == IMISC_AURIC) {
+	if (item._iMiscId == IMISC_AURIC) {
 		strcpy(tempstr, _("Doubles gold capacity"));
 		AddPanelString(tempstr);
 	}
@@ -2103,7 +2103,7 @@ void PrintItemMisc(ItemStruct *x)
 
 void PrintItemInfo(ItemStruct *x)
 {
-	PrintItemMisc(x);
+	PrintItemMisc(*x);
 	uint8_t str = x->_iMinStr;
 	uint8_t dex = x->_iMinDex;
 	uint8_t mag = x->_iMinMag;
