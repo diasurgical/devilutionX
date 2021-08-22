@@ -1331,9 +1331,8 @@ void GetStaffSpell(int i, int lvl, bool onlygood)
 	GetStaffPower(item, lvl, bs, onlygood);
 }
 
-void GetOilType(int i, int maxLvl)
+void GetOilType(ItemStruct &item, int maxLvl)
 {
-	auto &item = Items[i];
 	int cnt = 2;
 	int8_t rnd[32] = { 5, 6 };
 
@@ -3310,7 +3309,7 @@ void GetItemAttrs(int i, int idata, int lvl)
 		GetBookSpell(item, lvl);
 
 	if (gbIsHellfire && item._iMiscId == IMISC_OILOF)
-		GetOilType(i, lvl);
+		GetOilType(item, lvl);
 
 	if (item._itype != ITYPE_GOLD)
 		return;
