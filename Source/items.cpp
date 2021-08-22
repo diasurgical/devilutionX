@@ -2359,9 +2359,8 @@ int RndHealerItem(int lvl)
 	return RndVendorItem<HealerItemOk>(0, lvl);
 }
 
-void RecreateSmithItem(int ii, int lvl, int iseed)
+void RecreateSmithItem(ItemStruct &item, int lvl, int iseed)
 {
-	auto &item = Items[ii];
 	SetRndSeed(iseed);
 	int itype = RndSmithItem(lvl) - 1;
 	GetItemAttrs(item, itype, lvl);
@@ -2371,9 +2370,8 @@ void RecreateSmithItem(int ii, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreatePremiumItem(int ii, int plvl, int iseed)
+void RecreatePremiumItem(ItemStruct &item, int plvl, int iseed)
 {
-	auto &item = Items[ii];
 	SetRndSeed(iseed);
 	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
 	GetItemAttrs(item, itype, plvl);
@@ -2384,9 +2382,8 @@ void RecreatePremiumItem(int ii, int plvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateBoyItem(int ii, int lvl, int iseed)
+void RecreateBoyItem(ItemStruct &item, int lvl, int iseed)
 {
-	auto &item = Items[ii];
 	SetRndSeed(iseed);
 	int itype = RndBoyItem(lvl) - 1;
 	GetItemAttrs(item, itype, lvl);
@@ -2397,9 +2394,8 @@ void RecreateBoyItem(int ii, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
+void RecreateWitchItem(ItemStruct &item, int idx, int lvl, int iseed)
 {
-	auto &item = Items[ii];
 	if (idx == IDI_MANA || idx == IDI_FULLMANA || idx == IDI_PORTAL) {
 		GetItemAttrs(item, idx, lvl);
 	} else if (gbIsHellfire && idx >= 114 && idx <= 117) {
@@ -2424,9 +2420,8 @@ void RecreateWitchItem(int ii, int idx, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
+void RecreateHealerItem(ItemStruct &item, int idx, int lvl, int iseed)
 {
-	auto &item = Items[ii];
 	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
 		GetItemAttrs(item, idx, lvl);
 	} else {
@@ -2440,18 +2435,18 @@ void RecreateHealerItem(int ii, int idx, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateTownItem(int ii, int idx, uint16_t icreateinfo, int iseed)
+void RecreateTownItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed)
 {
 	if ((icreateinfo & CF_SMITH) != 0)
-		RecreateSmithItem(ii, icreateinfo & CF_LEVEL, iseed);
+		RecreateSmithItem(item, icreateinfo & CF_LEVEL, iseed);
 	else if ((icreateinfo & CF_SMITHPREMIUM) != 0)
-		RecreatePremiumItem(ii, icreateinfo & CF_LEVEL, iseed);
+		RecreatePremiumItem(item, icreateinfo & CF_LEVEL, iseed);
 	else if ((icreateinfo & CF_BOY) != 0)
-		RecreateBoyItem(ii, icreateinfo & CF_LEVEL, iseed);
+		RecreateBoyItem(item, icreateinfo & CF_LEVEL, iseed);
 	else if ((icreateinfo & CF_WITCH) != 0)
-		RecreateWitchItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+		RecreateWitchItem(item, idx, icreateinfo & CF_LEVEL, iseed);
 	else if ((icreateinfo & CF_HEALER) != 0)
-		RecreateHealerItem(ii, idx, icreateinfo & CF_LEVEL, iseed);
+		RecreateHealerItem(item, idx, icreateinfo & CF_LEVEL, iseed);
 }
 
 void RecalcStoreStats()
