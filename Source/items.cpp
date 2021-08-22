@@ -2101,12 +2101,12 @@ void PrintItemMisc(ItemStruct &item)
 	}
 }
 
-void PrintItemInfo(ItemStruct *x)
+void PrintItemInfo(ItemStruct &item)
 {
-	PrintItemMisc(*x);
-	uint8_t str = x->_iMinStr;
-	uint8_t dex = x->_iMinDex;
-	uint8_t mag = x->_iMinMag;
+	PrintItemMisc(item);
+	uint8_t str = item._iMinStr;
+	uint8_t dex = item._iMinDex;
+	uint8_t mag = item._iMinMag;
 	if (str != 0 || mag != 0 || dex != 0) {
 		strcpy(tempstr, _("Required:"));
 		if (str != 0)
@@ -4209,7 +4209,7 @@ void PrintItemDetails(ItemStruct *x)
 		ShowUniqueItemInfoBox = true;
 		curruitem = *x;
 	}
-	PrintItemInfo(x);
+	PrintItemInfo(*x);
 }
 
 void PrintItemDur(ItemStruct *x)
@@ -4249,7 +4249,7 @@ void PrintItemDur(ItemStruct *x)
 	}
 	if (x->_itype == ITYPE_RING || x->_itype == ITYPE_AMULET)
 		AddPanelString(_("Not Identified"));
-	PrintItemInfo(x);
+	PrintItemInfo(*x);
 }
 
 void UseItem(int p, item_misc_id mid, spell_id spl)
