@@ -82,7 +82,7 @@ std::string DebugCmdHelp(const std::string_view parameter)
 		int lenCurrentLine = ret.length();
 		bool first = true;
 		for (const auto &dbgCmd : DebugCmdList) {
-			if ((dbgCmd.text.length() + lenCurrentLine + 2) > MAX_SEND_STR_LEN) {
+			if ((dbgCmd.text.length() + lenCurrentLine + 3) > MAX_SEND_STR_LEN) {
 				ret.append("\n");
 				lenCurrentLine = dbgCmd.text.length();
 			} else {
@@ -90,7 +90,7 @@ std::string DebugCmdHelp(const std::string_view parameter)
 					first = false;
 				else
 					ret.append(" - ");
-				lenCurrentLine += (dbgCmd.text.length() + 2);
+				lenCurrentLine += (dbgCmd.text.length() + 3);
 			}
 			ret.append(dbgCmd.text);
 		}
@@ -181,6 +181,60 @@ std::string DebugCmdLoadMap(const std::string_view parameter)
 	}
 
 	return fmt::format("Level {} is not known. Do you want to write a mod?", level);
+}
+
+std::unordered_map<std::string_view, _talker_id> TownerShortNameToTownerId = {
+	{ "griswold", _talker_id::TOWN_SMITH },
+	{ "pepin", _talker_id::TOWN_HEALER },
+	{ "ogden", _talker_id::TOWN_TAVERN },
+	{ "cain", _talker_id::TOWN_STORY },
+	{ "farnham", _talker_id::TOWN_DRUNK },
+	{ "adria", _talker_id::TOWN_WITCH },
+	{ "gillian", _talker_id::TOWN_BMAID },
+	{ "wirt", _talker_id ::TOWN_PEGBOY },
+	{ "lester", _talker_id ::TOWN_FARMER },
+	{ "girl", _talker_id ::TOWN_GIRL },
+	{ "nut", _talker_id::TOWN_COWFARM },
+};
+
+std::string DebugCmdVisitTowner(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (setlevel || myPlayer.plrlevel != 0)
+		return "What kind of friends do you have in dungeons?";
+
+	if (parameter.empty()) {
+		std::string ret;
+		ret = "Who? ";
+		for (auto &entry : TownerShortNameToTownerId) {
+			ret.append(" ");
+			ret.append(entry.first);
+		}
+		return ret;
+	}
+
+	auto it = TownerShortNameToTownerId.find(parameter);
+	if (it == TownerShortNameToTownerId.end())
+		return fmt::format("{} is unknown. Perhaps he is a ninja?", parameter);
+
+	for (auto &towner : Towners) {
+		if (towner._ttype != it->second)
+			continue;
+
+		CastSpell(
+		    MyPlayerId,
+		    SPL_TELEPORT,
+		    myPlayer.position.tile.x,
+		    myPlayer.position.tile.y,
+		    towner.position.x,
+		    towner.position.y,
+		    1);
+
+		return fmt::format("Say hello to {} from me.", parameter);
+	}
+
+	return fmt::format("Couldn't find {}.", parameter);
 }
 
 std::string DebugCmdResetLevel(const std::string_view parameter)
@@ -283,6 +337,35 @@ std::string DebugCmdGenerateItem(const std::string_view parameter)
 	return DebugSpawnItem(parameter.data(), false);
 }
 
+std::string DebugCmdExit(const std::string_view parameter)
+{
+	gbRunGame = false;
+	gbRunGameResult = false;
+	return "See you again my Lord.";
+}
+
+std::string DebugCmdArrow(const std::string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	myPlayer._pIFlags &= ~ISPL_FIRE_ARROWS;
+	myPlayer._pIFlags &= ~ISPL_LIGHT_ARROWS;
+
+	if (parameter == "normal") {
+		// we removed the parameter at the top
+	} else if (parameter == "fire") {
+		myPlayer._pIFlags |= ISPL_FIRE_ARROWS;
+	} else if (parameter == "lightning") {
+		myPlayer._pIFlags |= ISPL_LIGHT_ARROWS;
+	} else if (parameter == "explosion") {
+		myPlayer._pIFlags |= (ISPL_FIRE_ARROWS | ISPL_LIGHT_ARROWS);
+	} else {
+		return "Unknown is sometimes similar to nothing (unkown effect).";
+	}
+
+	return "I can shoot any arrow.";
+}
+
 std::string DebugCmdTalkToTowner(const std::string_view parameter)
 {
 	if (DebugTalkToTowner(parameter.data())) {
@@ -300,6 +383,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
+	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
 	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
 	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
@@ -307,7 +391,9 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
 	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
 	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
-	{ "visit", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner},
+	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
+	{ "exit", "Exits the game.", "", &DebugCmdExit },
+	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 };
 
 } // namespace
