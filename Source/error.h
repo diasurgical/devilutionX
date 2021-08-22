@@ -70,9 +70,9 @@ enum diablo_message : uint8_t {
 };
 
 extern uint32_t msgdelay;
-extern diablo_message msgflag;
 
 void InitDiabloMsg(diablo_message e);
+bool IsDiabloMsgAvailable();
 void ClrDiabloMsg();
 void DrawDiabloMsg(const Surface &out);
 
