@@ -158,6 +158,16 @@ std::string DebugCmdWarpToLevel(const std::string_view parameter)
 
 std::string DebugCmdLoadMap(const std::string_view parameter)
 {
+	if (parameter.empty()) {
+		std::string ret = "What mapid do you want to visit?";
+		for (auto &quest : Quests) {
+			if (quest._qslvl <= 0)
+				continue;
+			ret.append(fmt::format(" {} ({})", quest._qslvl, QuestLevelNames[quest._qslvl]));
+		}
+		return ret;
+	}
+
 	auto &myPlayer = Players[MyPlayerId];
 	auto level = atoi(parameter.data());
 	if (level < 1)
