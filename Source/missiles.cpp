@@ -3395,8 +3395,8 @@ void MI_FireRing(int i)
 {
 	auto &missile = Missiles[i];
 	missile._miDelFlag = true;
-	int8_t src = missile._micaster;
-	uint8_t lvl = src > 0 ? Players[src]._pLevel : currlevel;
+	int8_t src = missile._misource;
+	uint8_t lvl = missile._micaster == TARGET_MONSTERS ? Players[src]._pLevel : currlevel;
 	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2) / 2;
 
 	int k = CrawlNum[3];
