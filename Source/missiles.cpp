@@ -2841,6 +2841,7 @@ int AddMissile(Point src, Point dst, int midir, missile_id mitype, mienemy_type 
 	missile._mitype = mitype;
 	missile._micaster = micaster;
 	missile._misource = id;
+	missile._midam = midam;
 	missile._miAnimType = MissileData[mitype].mFileNum;
 	missile._miDrawFlag = MissileData[mitype].mDraw;
 	missile._mispllvl = spllvl;
