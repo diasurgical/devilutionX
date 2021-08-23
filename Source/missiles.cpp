@@ -2679,19 +2679,11 @@ void AddDisarm(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 void AddApoca(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 {
 	missile._miVar1 = 8;
-	missile._miVar2 = missile.position.start.y - missile._miVar1;
-	missile._miVar3 = missile._miVar1 + missile.position.start.y;
-	missile._miVar4 = missile.position.start.x - missile._miVar1;
-	missile._miVar5 = missile._miVar1 + missile.position.start.x;
+	missile._miVar2 = std::max(missile.position.start.y - 8, 1);
+	missile._miVar3 = std::min(missile.position.start.y + 8, MAXDUNY - 1);
+	missile._miVar4 = std::max(missile.position.start.x - 8, 1);
+	missile._miVar5 = std::min(missile.position.start.x + 8, MAXDUNX - 1);
 	missile._miVar6 = missile._miVar4;
-	if (missile._miVar2 <= 0)
-		missile._miVar2 = 1;
-	if (missile._miVar3 >= MAXDUNY)
-		missile._miVar3 = MAXDUNY - 1;
-	if (missile._miVar4 <= 0)
-		missile._miVar4 = 1;
-	if (missile._miVar5 >= MAXDUNX)
-		missile._miVar5 = MAXDUNX - 1;
 	int playerLevel = Players[missile._misource]._pLevel;
 	missile._midam = GenerateRndSum(6, playerLevel) + playerLevel;
 	missile._mirange = 255;
