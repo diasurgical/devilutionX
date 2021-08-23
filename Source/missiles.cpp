@@ -2509,7 +2509,7 @@ void AddGolem(MissileStruct &missile, Point dst, Direction /*midir*/)
 				if (dMonster[tx][ty] != 0 || nSolidTable[dPiece[tx][ty]] || dObject[tx][ty] != 0)
 					continue;
 
-				SpawnGolum(playerId, { tx, ty }, missile);
+				SpawnGolem(playerId, { tx, ty }, missile);
 				return;
 			}
 		}
