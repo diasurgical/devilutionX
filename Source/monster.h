@@ -282,7 +282,7 @@ bool IsGoat(int mt);
 bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
 void TalktoMonster(MonsterStruct &monster);
-void SpawnGolum(int i, Point position, MissileStruct &missile);
+void SpawnGolem(int i, Point position, MissileStruct &missile);
 bool CanTalkToMonst(const MonsterStruct &monster);
 bool CheckMonsterHit(MonsterStruct &monster, bool *ret);
 int encode_enemy(MonsterStruct &monster);
