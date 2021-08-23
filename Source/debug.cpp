@@ -277,8 +277,15 @@ std::string DebugCmdVision(const std::string_view parameter)
 
 std::string DebugCmdQuest(const std::string_view parameter)
 {
-	if (parameter.empty())
-		return "You must provide an id";
+	if (parameter.empty()) {
+		std::string ret = "You must provide an id. This could be: all";
+		for (auto &quest : Quests) {
+			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+				continue;
+			ret.append(fmt::format(", {} ({})", quest._qidx, QuestData[quest._qidx]._qlstr));
+		}
+		return ret;
+	}
 
 	if (parameter.compare("all") == 0) {
 		for (auto &quest : Quests) {
