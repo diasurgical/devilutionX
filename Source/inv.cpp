@@ -987,8 +987,10 @@ void CheckQuestItem(PlayerStruct &player)
 	if (player.HoldItem.IDidx == IDI_MAPOFDOOM) {
 		Quests[Q_GRAVE]._qlog = false;
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
-		Quests[Q_GRAVE]._qvar1 = 1;
-		Players[MyPlayerId].Say(HeroSpeech::UhHuh, 10);
+		if (Quests[Q_GRAVE]._qvar1 != 1) {
+			Players[MyPlayerId].Say(HeroSpeech::UhHuh, 10);
+			Quests[Q_GRAVE]._qvar1 = 1;
+		}
 	}
 
 	CheckNaKrulNotes(player);
