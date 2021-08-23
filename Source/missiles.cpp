@@ -2618,7 +2618,6 @@ void AddBlodboil(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 	}
 
 	UseMana(missile._misource, SPL_BLODBOIL);
-	missile._miVar1 = missile._misource;
 	int tmp = 3 * player._pLevel;
 	tmp <<= 7;
 	player._pSpellFlags |= 2;
@@ -4208,7 +4207,7 @@ void MI_Blodboil(int i)
 		return;
 	}
 
-	int id = missile._miVar1;
+	int id = missile._misource;
 	auto &player = Players[id];
 
 	int hpdif = player._pMaxHP - player._pHitPoints;
