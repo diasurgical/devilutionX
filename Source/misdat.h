@@ -112,7 +112,7 @@ enum class MissileMovementDistrubution {
 struct MissileStruct;
 
 typedef struct MissileData {
-	void (*mAddProc)(MissileStruct &, Point, Point, int, int8_t, int, int);
+	void (*mAddProc)(MissileStruct &, Point, int);
 	void (*mProc)(int);
 	uint8_t mName;
 	bool mDraw;
