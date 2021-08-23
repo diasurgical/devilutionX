@@ -670,7 +670,7 @@ void LoadMissile(LoadHelper *file, int i)
 	pMissile->_miUniqTrans = file->NextLE<uint32_t>();
 	pMissile->_mirange = file->NextLE<int32_t>();
 	pMissile->_misource = file->NextLE<int32_t>();
-	pMissile->_micaster = file->NextLE<int32_t>();
+	pMissile->_micaster = static_cast<mienemy_type>(file->NextLE<int32_t>());
 	pMissile->_midam = file->NextLE<int32_t>();
 	pMissile->_miHitFlag = file->NextBool32();
 	pMissile->_midist = file->NextLE<int32_t>();

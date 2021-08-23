@@ -2772,7 +2772,7 @@ bool OperateShrineMagical(int pnum)
 	    player.position.tile,
 	    player._pdir,
 	    MIS_MANASHIELD,
-	    -1,
+	    TARGET_PLAYERS,
 	    pnum,
 	    0,
 	    2 * leveltype);
@@ -2947,7 +2947,7 @@ bool OperateShrineCryptic(int pnum)
 	    player.position.tile,
 	    player._pdir,
 	    MIS_NOVA,
-	    -1,
+	    TARGET_PLAYERS,
 	    pnum,
 	    0,
 	    2 * leveltype);
@@ -3085,7 +3085,7 @@ bool OperateShrineHoly(int pnum)
 			break;
 	} while (nSolidTable[lv] || dObject[xx][yy] != 0 || dMonster[xx][yy] != 0);
 
-	AddMissile(player.position.tile, { xx, yy }, player._pdir, MIS_RNDTELEPORT, -1, pnum, 0, 2 * leveltype);
+	AddMissile(player.position.tile, { xx, yy }, player._pdir, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
 
 	if (pnum != MyPlayerId)
 		return false;
@@ -3953,7 +3953,7 @@ bool OperateFountains(int pnum, int i)
 		    player.position.tile,
 		    player._pdir,
 		    MIS_INFRA,
-		    -1,
+		    TARGET_PLAYERS,
 		    pnum,
 		    0,
 		    2 * leveltype);

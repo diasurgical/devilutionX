@@ -110,8 +110,7 @@ struct MissileStruct {
 	uint32_t _miUniqTrans;
 	int _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
 	int _misource;
-	/** mienemy_type or player id*/
-	int8_t _micaster;
+	mienemy_type _micaster;
 	int _midam;
 	bool _miHitFlag;
 	int _midist; // Used for arrows to measure distance travelled (increases by 1 each game tick). Higher value is a penalty for accuracy calculation when hitting enemy
@@ -217,7 +216,7 @@ void AddTelekinesis(MissileStruct &missile, Point dst, int midir);
 void AddBoneSpirit(MissileStruct &missile, Point dst, int midir);
 void AddRportal(MissileStruct &missile, Point dst, int midir);
 void AddDiabApoca(MissileStruct &missile, Point dst, int midir);
-int AddMissile(Point src, Point dst, int midir, missile_id mitype, int8_t micaster, int id, int midam, int spllvl);
+int AddMissile(Point src, Point dst, int midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl);
 void MI_Golem(int mi);
 void MI_Manashield(int i);
 void MI_LArrow(int i);
