@@ -3118,7 +3118,7 @@ void MI_Firebolt(int i)
 				AddMissile(missile.position.tile, { i, 0 }, missile._mimfnum, MIS_MISEXP3, missile._micaster, missile._misource, 0, 0);
 				break;
 			case MIS_BONESPIRIT:
-				SetMissDir(missile, DIR_OMNI);
+				SetMissDir(missile, 8);
 				missile._mirange = 7;
 				missile._miDelFlag = false;
 				PutMissile(missile);
@@ -4430,7 +4430,7 @@ void MI_Bonespirit(int i)
 	missile._mirange--;
 	int dam = missile._midam;
 	int id = missile._misource;
-	if (missile._mimfnum == DIR_OMNI) {
+	if (missile._mimfnum == 8) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
 		if (missile._mirange == 0) {
 			missile._miDelFlag = true;
@@ -4464,7 +4464,7 @@ void MI_Bonespirit(int i)
 			ChangeLight(missile._mlid, c, 8);
 		}
 		if (missile._mirange == 0) {
-			SetMissDir(missile, DIR_OMNI);
+			SetMissDir(missile, 8);
 			missile.position.velocity = {};
 			missile._mirange = 7;
 		}

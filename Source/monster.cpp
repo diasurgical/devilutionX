@@ -4197,8 +4197,6 @@ void M_WalkDir(int i, Direction md)
 	case DIR_NW:
 		StartWalk(i, -MWVel[mwi][1], -MWVel[mwi][0], -1, 0, DIR_NW);
 		break;
-	case DIR_OMNI:
-		break;
 	}
 }
 
