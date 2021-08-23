@@ -1287,7 +1287,6 @@ void AddRune(MissileStruct &missile, Point dst, spell_id spellID, missile_id mis
 			UseMana(missile._misource, spellID);
 		if (MissilesFoundTarget(missile, &dst, 10)) {
 			missile._miVar1 = missileID;
-			missile._miDelFlag = false;
 			missile._mlid = AddLight(dst, 8);
 		} else {
 			missile._miDelFlag = true;
@@ -1319,7 +1318,6 @@ void AddImmolationRune(MissileStruct &missile, Point dst, int /*midir*/)
 			UseMana(missile._misource, SPL_RUNEIMMOLAT);
 		if (MissilesFoundTarget(missile, &dst, 10)) {
 			missile._miVar1 = MIS_IMMOLATION;
-			missile._miDelFlag = false;
 			missile._mlid = AddLight(dst, 8);
 		} else {
 			missile._miDelFlag = true;
@@ -1336,7 +1334,6 @@ void AddStoneRune(MissileStruct &missile, Point dst, int /*midir*/)
 			UseMana(missile._misource, SPL_RUNESTONE);
 		if (MissilesFoundTarget(missile, &dst, 10)) {
 			missile._miVar1 = MIS_STONE;
-			missile._miDelFlag = false;
 			missile._mlid = AddLight(dst, 8);
 		} else {
 			missile._miDelFlag = true;
@@ -1645,7 +1642,6 @@ void AddRuneExplosion(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 	}
 	missile._mlid = AddLight(missile.position.start, 8);
 	SetMissDir(missile, 0);
-	missile._miDelFlag = false;
 	missile._mirange = missile._miAnimLen - 1;
 }
 
@@ -1731,15 +1727,12 @@ void AddRing(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 	missile._miVar1 = missile.position.start.x;
 	missile._miVar2 = missile.position.start.y;
 	missile._miDelFlag = false;
-	missile.limitReached = false;
 	missile._mirange = 7;
 }
 
 void AddSearch(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 {
-	missile._miDelFlag = false;
 	missile._miVar1 = missile._misource;
-	missile.limitReached = false;
 	AutoMapShowItems = true;
 	int lvl = 2;
 	if (missile._misource > -1)
@@ -2138,11 +2131,9 @@ void AddTown(MissileStruct &missile, Point dst, int /*midir*/)
 	} else {
 		missile.position.tile = { tx, ty };
 		missile.position.start = { tx, ty };
-		missile._miDelFlag = false;
 	}
 	missile._mirange = 100;
 	missile._miVar1 = missile._mirange - missile._miAnimLen;
-	missile._miVar2 = 0;
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
 		if (Missiles[mx]._mitype == MIS_TOWN && (&Missiles[mx] != &missile) && Missiles[mx]._misource == missile._misource)
@@ -2213,8 +2204,6 @@ void AddFiremove(MissileStruct &missile, Point dst, int /*midir*/)
 	missile._midam = GenerateRnd(10) + Players[missile._misource]._pLevel + 1;
 	UpdateMissileVelocity(missile, dst, 16);
 	missile._mirange = 255;
-	missile._miVar1 = 0;
-	missile._miVar2 = 0;
 	missile.position.tile.x++;
 	missile.position.tile.y++;
 	missile.position.offset.deltaY -= 32;
@@ -2262,7 +2251,6 @@ void AddGuardian(MissileStruct &missile, Point dst, int /*midir*/)
 			missile._mirange = 30;
 
 		missile._miVar1 = missile._mirange - missile._miAnimLen;
-		missile._miVar2 = 0;
 		missile._miVar3 = 1;
 	}
 }
@@ -2424,7 +2412,6 @@ void AddStone(MissileStruct &missile, Point dst, int /*midir*/)
 
 void AddGolem(MissileStruct &missile, Point dst, int /*midir*/)
 {
-	missile._miDelFlag = false;
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
 		if (Missiles[mx]._mitype == MIS_GOLEM) {
@@ -2448,7 +2435,6 @@ void AddBoom(MissileStruct &missile, Point dst, int /*midir*/)
 	missile.position.tile = dst;
 	missile.position.start = dst;
 	missile._mirange = missile._miAnimLen;
-	missile._miVar1 = 0;
 }
 
 void AddHeal(MissileStruct &missile, Point /*dst*/, int /*midir*/)
@@ -2502,7 +2488,6 @@ void AddElement(MissileStruct &missile, Point dst, int midir)
 	missile._mirange = 256;
 	missile._miVar1 = missile.position.start.x;
 	missile._miVar2 = missile.position.start.y;
-	missile._miVar3 = 0;
 	missile._miVar4 = dst.x;
 	missile._miVar5 = dst.y;
 	missile._mlid = AddLight(missile.position.start, 8);
@@ -2554,8 +2539,6 @@ void AddFirewallC(MissileStruct &missile, Point dst, int midir)
 	}
 
 	if (!missile._miDelFlag) {
-		missile._miVar7 = 0;
-		missile.limitReached = false;
 		missile._miVar3 = left[left[midir]];
 		missile._miVar4 = right[right[midir]];
 		missile._mirange = 7;
@@ -2576,8 +2559,6 @@ void AddWave(MissileStruct &missile, Point dst, int /*midir*/)
 {
 	missile._miVar1 = dst.x;
 	missile._miVar2 = dst.y;
-	missile._miVar3 = 0;
-	missile._miVar4 = 0;
 	missile._mirange = 1;
 	missile._miAnimFrame = 4;
 	UseMana(missile._misource, SPL_WAVE);
@@ -2680,7 +2661,6 @@ void AddApoca(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 	int playerLevel = Players[missile._misource]._pLevel;
 	missile._midam = GenerateRndSum(6, playerLevel) + playerLevel;
 	missile._mirange = 255;
-	missile._miDelFlag = false;
 	UseMana(missile._misource, SPL_APOCA);
 }
 
@@ -2712,7 +2692,6 @@ void AddFlamec(MissileStruct &missile, Point dst, int midir)
 	}
 	missile._miVar1 = missile.position.start.x;
 	missile._miVar2 = missile.position.start.y;
-	missile._miVar3 = 0;
 	missile._mirange = 256;
 }
 
@@ -2730,7 +2709,6 @@ void AddCbolt(MissileStruct &missile, Point dst, int midir)
 	UpdateMissileVelocity(missile, dst, 8);
 	missile._miVar1 = 5;
 	missile._miVar2 = midir;
-	missile._miVar3 = 0;
 	missile._mirange = 256;
 }
 
@@ -2785,13 +2763,11 @@ void AddBoneSpirit(MissileStruct &missile, Point dst, int midir)
 	if (missile.position.start == dst) {
 		dst += static_cast<Direction>(midir);
 	}
-	missile._midam = 0;
 	UpdateMissileVelocity(missile, dst, 16);
 	SetMissDir(missile, GetDirection(missile.position.start, dst));
 	missile._mirange = 256;
 	missile._miVar1 = missile.position.start.x;
 	missile._miVar2 = missile.position.start.y;
-	missile._miVar3 = 0;
 	missile._miVar4 = dst.x;
 	missile._miVar5 = dst.y;
 	missile._mlid = AddLight(missile.position.start, 8);
@@ -2805,7 +2781,6 @@ void AddRportal(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 {
 	missile._mirange = 100;
 	missile._miVar1 = 100 - missile._miAnimLen;
-	missile._miVar2 = 0;
 	PutMissile(missile);
 }
 
