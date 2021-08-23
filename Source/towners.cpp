@@ -812,23 +812,16 @@ bool IsTownerPresent(_talker_id npc)
 {
 	switch (npc) {
 	case TOWN_DEADGUY:
-		if (Quests[Q_BUTCHER]._qactive == QUEST_NOTAVAIL || Quests[Q_BUTCHER]._qactive == QUEST_DONE)
-			return false;
-		break;
+		return Quests[Q_BUTCHER]._qactive != QUEST_NOTAVAIL && Quests[Q_BUTCHER]._qactive != QUEST_DONE;
 	case TOWN_FARMER:
-		if (!gbIsHellfire || sgGameInitInfo.bCowQuest != 0 || Quests[Q_FARMER]._qactive == QUEST_HIVE_DONE)
-			return false;
-		break;
+		return gbIsHellfire && sgGameInitInfo.bCowQuest == 0 && Quests[Q_FARMER]._qactive != QUEST_HIVE_DONE;
 	case TOWN_COWFARM:
-		if (!gbIsHellfire || sgGameInitInfo.bCowQuest == 0)
-			return false;
-		break;
+		return gbIsHellfire && sgGameInitInfo.bCowQuest != 0;
 	case TOWN_GIRL:
-		if (!gbIsHellfire || sgGameInitInfo.bTheoQuest == 0 || !Players->_pLvlVisited[17] || Quests[Q_GIRL]._qactive == QUEST_DONE)
-			return false;
-		break;
+		return gbIsHellfire && sgGameInitInfo.bTheoQuest != 0 && Players->_pLvlVisited[17] && Quests[Q_GIRL]._qactive != QUEST_DONE;
+	default:
+		return true;
 	}
-	return true;
 }
 
 void InitTowners()
