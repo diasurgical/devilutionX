@@ -13,6 +13,7 @@
 #include "cursor.h"
 #include "engine/load_cel.hpp"
 #include "engine/point.hpp"
+#include "error.h"
 #include "inv.h"
 #include "lighting.h"
 #include "setmaps.h"
@@ -80,19 +81,12 @@ std::string DebugCmdHelp(const std::string_view parameter)
 {
 	if (parameter.empty()) {
 		std::string ret = "Available Debug Commands: ";
-		int lenCurrentLine = ret.length();
 		bool first = true;
 		for (const auto &dbgCmd : DebugCmdList) {
-			if ((dbgCmd.text.length() + lenCurrentLine + 3) > MAX_SEND_STR_LEN) {
-				ret.append("\n");
-				lenCurrentLine = dbgCmd.text.length();
-			} else {
-				if (first)
-					first = false;
-				else
-					ret.append(" - ");
-				lenCurrentLine += (dbgCmd.text.length() + 3);
-			}
+			if (first)
+				first = false;
+			else
+				ret.append(" - ");
 			ret.append(dbgCmd.text);
 		}
 		return ret;
@@ -509,19 +503,7 @@ bool CheckDebugTextCommand(const std::string_view text)
 	if (text.length() > (dbgCmd.text.length() + 1))
 		parameter = text.substr(dbgCmd.text.length() + 1);
 	const auto result = dbgCmd.actionProc(parameter);
-
-	const std::string delim = "\n";
-	auto start = 0U;
-	auto end = result.find(delim);
-	while (end != std::string::npos) {
-		const auto line = result.substr(start, end - start);
-		NetSendCmdString(1 << MyPlayerId, line.c_str());
-		start = end + delim.length();
-		end = result.find(delim, start);
-	}
-	if (start != result.length())
-		NetSendCmdString(1 << MyPlayerId, result.substr(start).c_str());
-
+	InitDiabloMsg(result);
 	return true;
 }
 

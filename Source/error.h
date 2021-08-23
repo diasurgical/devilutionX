@@ -6,6 +6,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include "engine.h"
 
@@ -70,6 +71,7 @@ enum diablo_message : uint8_t {
 };
 
 void InitDiabloMsg(diablo_message e);
+void InitDiabloMsg(std::string msg);
 bool IsDiabloMsgAvailable();
 void CancelCurrentDiabloMsg();
 void ClrDiabloMsg();
