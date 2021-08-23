@@ -674,9 +674,8 @@ bool GuardianTryFireAt(MissileStruct &missile, Point target)
 	return true;
 }
 
-void FireballUpdate(int i, Displacement offset, bool alwaysDelete)
+void FireballUpdate(MissileStruct &missile, Displacement offset, bool alwaysDelete)
 {
-	auto &missile = Missiles[i];
 	missile._mirange--;
 
 	int id = missile._misource;
@@ -3221,7 +3220,7 @@ void MI_Firewall(int i)
 void MI_Fireball(int i)
 {
 	auto &missile = Missiles[i];
-	FireballUpdate(i, missile.position.velocity, false);
+	FireballUpdate(missile, missile.position.velocity, false);
 }
 
 void MI_HorkSpawn(int mi)
