@@ -1355,9 +1355,6 @@ void AddReflection(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 
 	auto &player = Players[missile._misource];
 
-	if (player.wReflections > 0 && !CanAddEffect(player, MIS_REFLECT))
-		return;
-
 	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
 	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
 		add = 0;
