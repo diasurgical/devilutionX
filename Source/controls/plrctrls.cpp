@@ -1013,9 +1013,9 @@ void SpellBookMove(AxisDirection dir)
 
 const Direction FaceDir[3][3] = {
 	// NONE      UP      DOWN
-	{ DIR_OMNI, DIR_N, DIR_S }, // NONE
-	{ DIR_W, DIR_NW, DIR_SW },  // LEFT
-	{ DIR_E, DIR_NE, DIR_SE },  // RIGHT
+	{ DIR_S, DIR_N, DIR_S },   // NONE
+	{ DIR_W, DIR_NW, DIR_SW }, // LEFT
+	{ DIR_E, DIR_NE, DIR_SE }, // RIGHT
 };
 
 /**

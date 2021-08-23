@@ -13,7 +13,6 @@ enum Direction : std::uint8_t {
 	DIR_NE,
 	DIR_E,
 	DIR_SE,
-	DIR_OMNI,
 };
 
 } // namespace devilution

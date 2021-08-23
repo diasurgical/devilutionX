@@ -363,8 +363,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 		DrawHorizontalLine(out, { point.x - (AmLine8 + 1), point.y }, AmLine8 + 1, playerColor);
 		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 	} break;
-	case DIR_S:
-	case DIR_OMNI: {
+	case DIR_S: {
 		const Point point { base.x, base.y + AmLine16 };
 		DrawVerticalLine(out, { point.x, point.y - AmLine16 }, AmLine16, playerColor);
 		DrawMapLineSteepSW(out, { point.x + AmLine4, point.y - 2 * AmLine4 }, AmLine4, playerColor);
