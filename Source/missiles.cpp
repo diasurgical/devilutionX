@@ -747,6 +747,21 @@ bool GrowWall(int playerId, Point position, Point target, missile_id type, int s
 	return true;
 }
 
+bool CanAddEffect(const PlayerStruct &player, missile_id type)
+{
+	if (currlevel != player.plrlevel)
+		return false;
+
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mi = ActiveMissiles[i];
+		auto &missile = Missiles[mi];
+		if (missile._mitype == type && &Players[missile._misource] == &player)
+			return false;
+	}
+
+	return true;
+}
+
 } // namespace
 
 void GetDamageAmt(int i, int *mind, int *maxd)
@@ -1339,6 +1354,10 @@ void AddReflection(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 		return;
 
 	auto &player = Players[missile._misource];
+
+	if (player.wReflections > 0 && !CanAddEffect(player, MIS_REFLECT))
+		return;
+
 	int add = (missile._mispllvl != 0 ? missile._mispllvl : 2) * player._pLevel;
 	if (player.wReflections + add >= std::numeric_limits<uint16_t>::max())
 		add = 0;
@@ -2204,6 +2223,12 @@ void AddFlash2(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 void AddManashield(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 {
 	auto &player = Players[missile._misource];
+
+	if (player.pManaShield && !CanAddEffect(player, MIS_MANASHIELD)) {
+		missile._miDelFlag = true;
+		return;
+	}
+
 	missile._mirange = 48 * player._pLevel;
 	if (missile._micaster == TARGET_MONSTERS)
 		UseMana(missile._misource, SPL_MANASHIELD);
@@ -2775,7 +2800,7 @@ void AddResurrect(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 void AddResurrectBeam(MissileStruct &missile, Point dst, int /*midir*/)
 {
 	missile.position.tile = dst;
-	missile.position.start = missile.position.tile;
+	missile.position.start = dst;
 	missile.position.velocity = { 0, 0 };
 	missile._mirange = MissileSpriteData[MFILE_RESSUR1].animLen[0];
 }
@@ -2832,34 +2857,9 @@ void AddDiabApoca(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 	missile._miDelFlag = true;
 }
 
-namespace {
-
-bool CanAddEffect(int playerId, missile_id type)
-{
-	if (currlevel != Players[playerId].plrlevel)
-		return false;
-
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mi = ActiveMissiles[i];
-		auto &missile = Missiles[mi];
-		if (missile._mitype == type && missile._misource == playerId)
-			return false;
-	}
-
-	return true;
-}
-
-} // namespace
-
 int AddMissile(Point src, Point dst, int midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl)
 {
 	if (ActiveMissileCount >= MAXMISSILES - 1)
-		return -1;
-
-	if (mitype == MIS_MANASHIELD && Players[id].pManaShield && !CanAddEffect(id, mitype))
-		return -1;
-
-	if (mitype == MIS_REFLECT && Players[id].wReflections > 0 && !CanAddEffect(id, mitype))
 		return -1;
 
 	int mi = AvailableMissiles[0];
