@@ -9,6 +9,7 @@
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/language.h"
+#include "utils/ttf_wrap.h"
 
 namespace devilution {
 namespace {
@@ -17,8 +18,8 @@ Art progressArt;
 Art ArtPopupSm;
 Art ArtProgBG;
 Art ProgFil;
-SDL_Surface *msgSurface;
-SDL_Surface *msgShadow;
+SDLSurfaceUniquePtr msgSurface;
+SDLSurfaceUniquePtr msgShadow;
 std::vector<std::unique_ptr<UiItemBase>> vecProgress;
 bool endMenu;
 
@@ -40,8 +41,8 @@ void ProgressLoad(const char *msg)
 		SDL_Color color = { 243, 243, 243, 0 };
 		SDL_Color black = { 0, 0, 0, 0 };
 
-		msgSurface = TTF_RenderText_Solid(font, msg, color);
-		msgShadow = TTF_RenderText_Solid(font, msg, black);
+		msgSurface = TTFWrap::RenderText_Solid(font, msg, color);
+		msgShadow = TTFWrap::RenderText_Solid(font, msg, black);
 	}
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 	vecProgress.push_back(std::make_unique<UiButton>(&SmlButton, _("Cancel"), &DialogActionCancel, rect3));
@@ -54,9 +55,7 @@ void ProgressFree()
 	ArtProgBG.Unload();
 	ProgFil.Unload();
 	UnloadSmlButtonArt();
-	SDL_FreeSurface(msgSurface);
 	msgSurface = nullptr;
-	SDL_FreeSurface(msgShadow);
 	msgShadow = nullptr;
 	UnloadTtfFont();
 }
@@ -83,10 +82,10 @@ void ProgressRender(BYTE progress)
 			static_cast<Uint16>(msgSurface->w),
 			static_cast<Uint16>(msgSurface->h)
 		};
-		Blit(msgShadow, nullptr, &dscRect);
+		Blit(msgShadow.get(), nullptr, &dscRect);
 		dscRect.x -= 1;
 		dscRect.y -= 1;
-		Blit(msgSurface, nullptr, &dscRect);
+		Blit(msgSurface.get(), nullptr, &dscRect);
 	}
 }
 
