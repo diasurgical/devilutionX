@@ -1425,6 +1425,24 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 	}
 }
 
+void CheckReflect(int mon, int pnum, int dam)
+{
+	auto &monster = Monsters[mon];
+	auto &player = Players[pnum];
+
+	player.wReflections--;
+	if (player.wReflections <= 0)
+		NetSendCmdParam1(true, CMD_SETREFLECT, 0);
+	//reflects 20-30% damage
+	int mdam = dam * (GenerateRnd(10) + 20L) / 100;
+	monster._mhitpoints -= mdam;
+	dam = std::max(dam - mdam, 0);
+	if (monster._mhitpoints >> 6 <= 0)
+		M_StartKill(mon, pnum);
+	else
+		M_StartHit(mon, pnum, mdam);
+}
+
 void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
@@ -1474,16 +1492,9 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
 		StartPlrBlock(pnum, dir);
 		if (pnum == MyPlayerId && player.wReflections > 0) {
-			player.wReflections--;
 			int dam = GenerateRnd((maxDam - minDam + 1) << 6) + (minDam << 6);
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
-			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
-			monster._mhitpoints -= mdam;
-			dam = std::max(dam - mdam, 0);
-			if (monster._mhitpoints >> 6 <= 0)
-				M_StartKill(i, pnum);
-			else
-				M_StartHit(i, pnum, mdam);
+			CheckReflect(i, pnum, dam);
 		}
 		return;
 	}
@@ -1517,16 +1528,8 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	int dam = (minDam << 6) + GenerateRnd((maxDam - minDam + 1) << 6);
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (pnum == MyPlayerId) {
-		if (player.wReflections > 0) {
-			player.wReflections--;
-			int mdam = dam * (GenerateRnd(10) + 20L) / 100;
-			monster._mhitpoints -= mdam;
-			dam = std::max(dam - mdam, 0);
-			if (monster._mhitpoints >> 6 <= 0)
-				M_StartKill(i, pnum);
-			else
-				M_StartHit(i, pnum, mdam);
-		}
+		if (player.wReflections > 0)
+			CheckReflect(i, pnum, dam);
 		ApplyPlrDamage(pnum, 0, 0, dam);
 	}
 	if ((player._pIFlags & ISPL_THORNS) != 0) {
