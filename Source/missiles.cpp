@@ -1921,7 +1921,7 @@ void AddFirebolt(MissileStruct &missile, Point dst, int midir)
 		dst += static_cast<Direction>(midir);
 	}
 	int sp = 26;
-	if (missile._micaster == 0) {
+	if (missile._micaster == TARGET_MONSTERS) {
 		sp = 16;
 		if (missile._misource != -1) {
 			sp += std::min(missile._mispllvl * 2, 47);
@@ -2078,7 +2078,7 @@ void AddLightning(MissileStruct &missile, Point dst, int midir)
 
 void AddMisexp(MissileStruct &missile, Point dst, int /*midir*/)
 {
-	if (missile._micaster != 0 && missile._misource >= 0) {
+	if (missile._micaster != TARGET_MONSTERS && missile._misource >= 0) {
 		switch (Monsters[missile._misource].MType->mtype) {
 		case MT_SUCCUBUS:
 			SetMissAnim(missile, MFILE_FLAREEXP);
@@ -2735,7 +2735,7 @@ void AddFlamec(MissileStruct &missile, Point dst, int midir)
 void AddCbolt(MissileStruct &missile, Point dst, int midir)
 {
 	missile._mirnd = GenerateRnd(15) + 1;
-	missile._midam = (missile._micaster == 0) ? (GenerateRnd(Players[missile._misource]._pMagic / 4) + 1) : 15;
+	missile._midam = (missile._micaster == TARGET_MONSTERS) ? (GenerateRnd(Players[missile._misource]._pMagic / 4) + 1) : 15;
 
 	if (missile.position.start == dst) {
 		dst += static_cast<Direction>(midir);
@@ -2860,7 +2860,7 @@ bool CanAddEffect(int playerId, missile_id type)
 
 } // namespace
 
-int AddMissile(Point src, Point dst, int midir, missile_id mitype, int8_t micaster, int id, int midam, int spllvl)
+int AddMissile(Point src, Point dst, int midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl)
 {
 	if (ActiveMissileCount >= MAXMISSILES - 1)
 		return -1;
