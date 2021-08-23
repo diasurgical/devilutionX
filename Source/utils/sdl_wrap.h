@@ -32,6 +32,15 @@ inline SDLSurfaceUniquePtr CreateRGBSurfaceWithFormat(Uint32 flags, int width, i
 	return ret;
 }
 
+inline SDLSurfaceUniquePtr CreateRGBSurfaceWithFormatFrom(void *pixels, int width, int height, int depth, int pitch, Uint32 format)
+{
+	SDLSurfaceUniquePtr ret { SDL_CreateRGBSurfaceWithFormatFrom(pixels, width, height, depth, pitch, format) };
+	if (ret == nullptr)
+		ErrSdl();
+
+	return ret;
+}
+
 } //namespace SDLWrap
 
 } //namespace devilution
