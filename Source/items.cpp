@@ -3005,7 +3005,7 @@ void CalcPlrInv(int playerId, bool loadgfx)
 		CalcPlrBookVals(player);
 		player.CalcScrolls();
 		CalcPlrStaff(player);
-		if (playerId == MyPlayerId && currlevel == 0)
+		if (currlevel == 0)
 			RecalcStoreStats();
 	}
 }
