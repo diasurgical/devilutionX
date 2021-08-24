@@ -679,30 +679,30 @@ void DrawItem(const Surface &out, int x, int y, int sx, int sy, bool pre)
 	if (bItem <= 0)
 		return;
 
-	auto &pItem = Items[bItem - 1];
-	if (pItem._iPostDraw == pre)
+	auto &item = Items[bItem - 1];
+	if (item._iPostDraw == pre)
 		return;
 
-	const auto *cel = pItem.AnimInfo.pCelSprite;
+	const auto *cel = item.AnimInfo.pCelSprite;
 	if (cel == nullptr) {
-		Log("Draw Item \"{}\" 1: NULL CelSprite", pItem._iIName);
+		Log("Draw Item \"{}\" 1: NULL CelSprite", item._iIName);
 		return;
 	}
 
-	int nCel = pItem.AnimInfo.GetFrameToUseForRendering();
+	int nCel = item.AnimInfo.GetFrameToUseForRendering();
 	int frames = SDL_SwapLE32(*(DWORD *)cel->Data());
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", pItem._iIName, nCel, frames, pItem._itype);
+		Log("Draw \"{}\" Item 1: frame {} of {}, item type=={}", item._iIName, nCel, frames, item._itype);
 		return;
 	}
 
 	int px = sx - CalculateWidth2(cel->Width());
 	const Point position { px, sy };
 	if (bItem - 1 == pcursitem || AutoMapShowItems) {
-		CelBlitOutlineTo(out, GetOutlineColor(pItem, false), position, *cel, nCel);
+		CelBlitOutlineTo(out, GetOutlineColor(item, false), position, *cel, nCel);
 	}
 	CelClippedDrawLightTo(out, position, *cel, nCel);
-	if (pItem.AnimInfo.CurrentFrame == pItem.AnimInfo.NumberOfFrames || pItem._iCurs == ICURS_MAGIC_ROCK)
+	if (item.AnimInfo.CurrentFrame == item.AnimInfo.NumberOfFrames || item._iCurs == ICURS_MAGIC_ROCK)
 		AddItemToLabelQueue(bItem - 1, px, sy);
 }
 
