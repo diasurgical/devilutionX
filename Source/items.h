@@ -411,7 +411,7 @@ void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(int p, bool Loadgfx);
 void CalcPlrInv(int p, bool Loadgfx);
-void SetPlrHandItem(ItemStruct &h, int itemData);
+void SetPlrHandItem(ItemStruct &item, int itemData);
 void GetPlrHandSeed(ItemStruct *h);
 void GetGoldSeed(int pnum, ItemStruct *h);
 int GetGoldCursor(int value);
