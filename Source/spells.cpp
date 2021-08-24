@@ -264,7 +264,7 @@ void DoResurrect(int pnum, uint16_t rid)
 
 	auto &target = Players[rid];
 
-	AddMissile(target.position.tile, target.position.tile, 0, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
+	AddMissile(target.position.tile, target.position.tile, DIR_S, MIS_RESURRECTBEAM, TARGET_MONSTERS, pnum, 0, 0);
 
 	if (target._pHitPoints != 0)
 		return;

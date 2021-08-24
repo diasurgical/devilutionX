@@ -1218,9 +1218,9 @@ bool DoAttack(int pnum)
 
 		if ((player._pIFlags & ISPL_FIREDAM) == 0 || (player._pIFlags & ISPL_LIGHTDAM) == 0) {
 			if ((player._pIFlags & ISPL_FIREDAM) != 0) {
-				AddMissile({ dx, dy }, { 1, 0 }, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile({ dx, dy }, { 1, 0 }, DIR_S, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			} else if ((player._pIFlags & ISPL_LIGHTDAM) != 0) {
-				AddMissile({ dx, dy }, { 2, 0 }, 0, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile({ dx, dy }, { 2, 0 }, DIR_S, MIS_WEAPEXP, TARGET_MONSTERS, pnum, 0, 0);
 			}
 		}
 

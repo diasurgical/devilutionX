@@ -1233,7 +1233,7 @@ void StartMonsterDeath(int i, int pnum, bool sendmsg)
 	CheckQuestKill(monster, sendmsg);
 	M_FallenFear(monster.position.tile);
 	if ((monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID) || monster.MType->mtype == MT_SPIDLORD)
-		AddMissile(monster.position.tile, { 0, 0 }, 0, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, DIR_S, MIS_ACIDPUD, TARGET_PLAYERS, i, monster._mint + 1, 0);
 }
 
 void StartDeathFromMonster(int i, int mid)
@@ -1278,7 +1278,7 @@ void StartDeathFromMonster(int i, int mid)
 	CheckQuestKill(monster, true);
 	M_FallenFear(monster.position.tile);
 	if (monster.MType->mtype >= MT_NACID && monster.MType->mtype <= MT_XACID)
-		AddMissile(monster.position.tile, { 0, 0 }, 0, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster._mint + 1, 0);
+		AddMissile(monster.position.tile, { 0, 0 }, DIR_S, MIS_ACIDPUD, TARGET_PLAYERS, mid, monster._mint + 1, 0);
 
 	if (gbIsHellfire)
 		M_StartStand(killer, killer._mdir);
