@@ -2779,7 +2779,7 @@ void BatAi(int i)
 		monster._mgoal = MGOAL_RETREAT;
 		monster._mgoalvar1 = 0;
 		if (monster.MType->mtype == MT_FAMILIAR) {
-			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, -1, MIS_LIGHTNING, TARGET_PLAYERS, i, GenerateRnd(10) + 1, 0);
+			AddMissile(monster.enemyPosition, { monster.enemyPosition.x + 1, 0 }, DIR_S, MIS_LIGHTNING, TARGET_PLAYERS, i, GenerateRnd(10) + 1, 0);
 		}
 	}
 
