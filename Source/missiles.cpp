@@ -3839,7 +3839,7 @@ void MI_Rhino(MissileStruct &missile)
 	UpdateMissilePos(missile);
 	Point newPos = missile.position.tile;
 	if (!IsTileAvailable(monster, newPos) || (monster._mAi == AI_SNAKE && !IsTileAvailable(monster, newPosSnake))) {
-		MissToMonst(i, prevPos);
+		MissToMonst(missile, prevPos);
 		missile._miDelFlag = true;
 		return;
 	}
