@@ -2995,43 +2995,43 @@ void CalcPlrInv(int playerId, bool loadgfx)
 	}
 }
 
-void SetPlrHandItem(ItemStruct &h, int itemData)
+void SetPlrHandItem(ItemStruct &item, int itemData)
 {
 	auto &pAllItem = AllItemsList[itemData];
 
 	// zero-initialize struct
-	memset(&h, 0, sizeof(h));
+	memset(&item, 0, sizeof(item));
 
-	h._itype = pAllItem.itype;
-	h._iCurs = pAllItem.iCurs;
-	strcpy(h._iName, _(pAllItem.iName));
-	strcpy(h._iIName, _(pAllItem.iName));
-	h._iLoc = pAllItem.iLoc;
-	h._iClass = pAllItem.iClass;
-	h._iMinDam = pAllItem.iMinDam;
-	h._iMaxDam = pAllItem.iMaxDam;
-	h._iAC = pAllItem.iMinAC;
-	h._iMiscId = pAllItem.iMiscId;
-	h._iSpell = pAllItem.iSpell;
+	item._itype = pAllItem.itype;
+	item._iCurs = pAllItem.iCurs;
+	strcpy(item._iName, _(pAllItem.iName));
+	strcpy(item._iIName, _(pAllItem.iName));
+	item._iLoc = pAllItem.iLoc;
+	item._iClass = pAllItem.iClass;
+	item._iMinDam = pAllItem.iMinDam;
+	item._iMaxDam = pAllItem.iMaxDam;
+	item._iAC = pAllItem.iMinAC;
+	item._iMiscId = pAllItem.iMiscId;
+	item._iSpell = pAllItem.iSpell;
 
 	if (pAllItem.iMiscId == IMISC_STAFF) {
-		h._iCharges = gbIsHellfire ? 18 : 40;
+		item._iCharges = gbIsHellfire ? 18 : 40;
 	}
 
-	h._iMaxCharges = h._iCharges;
-	h._iDurability = pAllItem.iDurability;
-	h._iMaxDur = pAllItem.iDurability;
-	h._iMinStr = pAllItem.iMinStr;
-	h._iMinMag = pAllItem.iMinMag;
-	h._iMinDex = pAllItem.iMinDex;
-	h._ivalue = pAllItem.iValue;
-	h._iIvalue = pAllItem.iValue;
-	h._iPrePower = IPL_INVALID;
-	h._iSufPower = IPL_INVALID;
-	h._iMagical = ITEM_QUALITY_NORMAL;
-	h.IDidx = static_cast<_item_indexes>(itemData);
+	item._iMaxCharges = item._iCharges;
+	item._iDurability = pAllItem.iDurability;
+	item._iMaxDur = pAllItem.iDurability;
+	item._iMinStr = pAllItem.iMinStr;
+	item._iMinMag = pAllItem.iMinMag;
+	item._iMinDex = pAllItem.iMinDex;
+	item._ivalue = pAllItem.iValue;
+	item._iIvalue = pAllItem.iValue;
+	item._iPrePower = IPL_INVALID;
+	item._iSufPower = IPL_INVALID;
+	item._iMagical = ITEM_QUALITY_NORMAL;
+	item.IDidx = static_cast<_item_indexes>(itemData);
 	if (gbIsHellfire)
-		h.dwBuff |= CF_HELLFIRE;
+		item.dwBuff |= CF_HELLFIRE;
 }
 
 void GetPlrHandSeed(ItemStruct *h)
