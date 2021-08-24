@@ -15,8 +15,7 @@
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
-#include "utils/sdl_ptrs.h"
-#include "utils/sdl_wrap.h"
+#include "utils/ttf_wrap.h"
 
 namespace devilution {
 
@@ -55,28 +54,18 @@ struct CachedLine {
 	unsigned int paletteVersion;
 };
 
-SDL_Surface *RenderText(const char *text, SDL_Color color)
-{
-	if (text[0] == '\0')
-		return nullptr;
-	SDL_Surface *result = TTF_RenderText_Solid(font, text, color);
-	if (result == nullptr)
-		Log("{}", TTF_GetError());
-	return result;
-}
-
 CachedLine PrepareLine(std::size_t index)
 {
 	const char *contents = _(Text[index]);
 	while (contents[0] == '\t')
 		++contents;
 
-	const SDL_Color shadowColor = { 0, 0, 0, 0 };
-	SDLSurfaceUniquePtr text { RenderText(contents, shadowColor) };
-
 	// Precompose shadow and text:
 	SDLSurfaceUniquePtr surface;
-	if (text != nullptr) {
+	if (contents[0] != '\0') {
+		const SDL_Color shadowColor = { 0, 0, 0, 0 };
+		SDLSurfaceUniquePtr text = TTFWrap::RenderText_Solid(font, contents, shadowColor);
+
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
 		surface = SDLWrap::CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8);
 		const SDL_Color maskColor = { 0, 255, 0, 0 }; // Any color different from both shadow and text
