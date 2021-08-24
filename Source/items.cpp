@@ -3084,9 +3084,9 @@ int GetGoldCursor(int value)
  * @brief Update the gold cursor on the given gold item
  * @param h The item to update
  */
-void SetPlrHandGoldCurs(ItemStruct &h)
+void SetPlrHandGoldCurs(ItemStruct &gold)
 {
-	h._iCurs = GetGoldCursor(h._ivalue);
+	gold._iCurs = GetGoldCursor(gold._ivalue);
 }
 
 void CreatePlrItems(int playerId)
