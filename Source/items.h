@@ -415,7 +415,7 @@ void SetPlrHandItem(ItemStruct &h, int idata);
 void GetPlrHandSeed(ItemStruct *h);
 void GetGoldSeed(int pnum, ItemStruct *h);
 int GetGoldCursor(int value);
-void SetPlrHandGoldCurs(ItemStruct &h);
+void SetPlrHandGoldCurs(ItemStruct &gold);
 void CreatePlrItems(int playerId);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
