@@ -1514,15 +1514,15 @@ _unique_items CheckUnique(ItemStruct &item, int lvl, int uper, bool recreate)
 		return UITEM_INVALID;
 
 	AdvanceRndSeed();
-	uint8_t idata = 0;
+	uint8_t itemData = 0;
 	while (numu > 0) {
-		if (uok[idata])
+		if (uok[itemData])
 			numu--;
 		if (numu > 0)
-			idata = (idata + 1) % 128;
+			itemData = (itemData + 1) % 128;
 	}
 
-	return (_unique_items)idata;
+	return (_unique_items)itemData;
 }
 
 void GetUniqueItem(ItemStruct &item, _unique_items uid)
@@ -2995,9 +2995,9 @@ void CalcPlrInv(int playerId, bool loadgfx)
 	}
 }
 
-void SetPlrHandItem(ItemStruct &h, int idata)
+void SetPlrHandItem(ItemStruct &h, int itemData)
 {
-	auto &pAllItem = AllItemsList[idata];
+	auto &pAllItem = AllItemsList[itemData];
 
 	// zero-initialize struct
 	memset(&h, 0, sizeof(h));
@@ -3029,7 +3029,7 @@ void SetPlrHandItem(ItemStruct &h, int idata)
 	h._iPrePower = IPL_INVALID;
 	h._iSufPower = IPL_INVALID;
 	h._iMagical = ITEM_QUALITY_NORMAL;
-	h.IDidx = static_cast<_item_indexes>(idata);
+	h.IDidx = static_cast<_item_indexes>(itemData);
 	if (gbIsHellfire)
 		h.dwBuff |= CF_HELLFIRE;
 }
@@ -3265,29 +3265,29 @@ Point GetSuperItemLoc(Point position)
 	return { 0, 0 }; // TODO handle no space for dropping items
 }
 
-void GetItemAttrs(ItemStruct &item, int idata, int lvl)
+void GetItemAttrs(ItemStruct &item, int itemData, int lvl)
 {
-	item._itype = AllItemsList[idata].itype;
-	item._iCurs = AllItemsList[idata].iCurs;
-	strcpy(item._iName, _(AllItemsList[idata].iName));
-	strcpy(item._iIName, _(AllItemsList[idata].iName));
-	item._iLoc = AllItemsList[idata].iLoc;
-	item._iClass = AllItemsList[idata].iClass;
-	item._iMinDam = AllItemsList[idata].iMinDam;
-	item._iMaxDam = AllItemsList[idata].iMaxDam;
-	item._iAC = AllItemsList[idata].iMinAC + GenerateRnd(AllItemsList[idata].iMaxAC - AllItemsList[idata].iMinAC + 1);
-	item._iFlags = AllItemsList[idata].iFlags;
-	item._iMiscId = AllItemsList[idata].iMiscId;
-	item._iSpell = AllItemsList[idata].iSpell;
+	item._itype = AllItemsList[itemData].itype;
+	item._iCurs = AllItemsList[itemData].iCurs;
+	strcpy(item._iName, _(AllItemsList[itemData].iName));
+	strcpy(item._iIName, _(AllItemsList[itemData].iName));
+	item._iLoc = AllItemsList[itemData].iLoc;
+	item._iClass = AllItemsList[itemData].iClass;
+	item._iMinDam = AllItemsList[itemData].iMinDam;
+	item._iMaxDam = AllItemsList[itemData].iMaxDam;
+	item._iAC = AllItemsList[itemData].iMinAC + GenerateRnd(AllItemsList[itemData].iMaxAC - AllItemsList[itemData].iMinAC + 1);
+	item._iFlags = AllItemsList[itemData].iFlags;
+	item._iMiscId = AllItemsList[itemData].iMiscId;
+	item._iSpell = AllItemsList[itemData].iSpell;
 	item._iMagical = ITEM_QUALITY_NORMAL;
-	item._ivalue = AllItemsList[idata].iValue;
-	item._iIvalue = AllItemsList[idata].iValue;
-	item._iDurability = AllItemsList[idata].iDurability;
-	item._iMaxDur = AllItemsList[idata].iDurability;
-	item._iMinStr = AllItemsList[idata].iMinStr;
-	item._iMinMag = AllItemsList[idata].iMinMag;
-	item._iMinDex = AllItemsList[idata].iMinDex;
-	item.IDidx = static_cast<_item_indexes>(idata);
+	item._ivalue = AllItemsList[itemData].iValue;
+	item._iIvalue = AllItemsList[itemData].iValue;
+	item._iDurability = AllItemsList[itemData].iDurability;
+	item._iMaxDur = AllItemsList[itemData].iDurability;
+	item._iMinStr = AllItemsList[itemData].iMinStr;
+	item._iMinMag = AllItemsList[itemData].iMinMag;
+	item._iMinDex = AllItemsList[itemData].iMinDex;
+	item.IDidx = static_cast<_item_indexes>(itemData);
 	if (gbIsHellfire)
 		item.dwBuff |= CF_HELLFIRE;
 	item._iPrePower = IPL_INVALID;
@@ -4456,8 +4456,8 @@ void SpawnSmith(int lvl)
 			memset(&Items[0], 0, sizeof(*Items));
 			Items[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(Items[0]._iSeed);
-			int idata = RndSmithItem(lvl) - 1;
-			GetItemAttrs(Items[0], idata, lvl);
+			int itemData = RndSmithItem(lvl) - 1;
+			GetItemAttrs(Items[0], itemData, lvl);
 		} while (Items[0]._iIvalue > maxValue);
 		smithitem[i] = Items[0];
 		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
@@ -4561,8 +4561,8 @@ void SpawnWitch(int lvl)
 			memset(&Items[0], 0, sizeof(*Items));
 			Items[0]._iSeed = AdvanceRndSeed();
 			SetRndSeed(Items[0]._iSeed);
-			int idata = RndWitchItem(lvl) - 1;
-			GetItemAttrs(Items[0], idata, lvl);
+			int itemData = RndWitchItem(lvl) - 1;
+			GetItemAttrs(Items[0], itemData, lvl);
 			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
