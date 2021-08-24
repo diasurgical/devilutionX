@@ -133,7 +133,7 @@ ItemGetRecordStruct itemrecord[MAXITEMS];
 
 bool itemhold[3][3];
 
-/** gnNumGetRecords specifies the number of active item get records. */
+/** Specifies the number of active item get records. */
 int gnNumGetRecords;
 
 int OilLevels[] = { 1, 10, 1, 10, 4, 1, 5, 17, 1, 10 };
