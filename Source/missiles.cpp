@@ -665,8 +665,9 @@ bool GuardianTryFireAt(MissileStruct &missile, Point target)
 		return false;
 
 	Direction dir = GetDirection(position, target);
-	missile._miVar3 = AvailableMissiles[0];
+	missile._miVar4 = -(AvailableMissiles[0] + 1);
 	AddMissile(position, target, dir, MIS_FIREBOLT, TARGET_MONSTERS, missile._misource, missile._midam, GetSpellLevel(missile._misource, SPL_FIREBOLT));
+	missile._miVar4 = 0;
 	SetMissDir(missile, 2);
 	missile._miVar2 = 3;
 
@@ -745,6 +746,48 @@ bool GrowWall(int playerId, Point position, Point target, missile_id type, int s
 
 	AddMissile(position, position, Players[playerId]._pdir, type, TARGET_BOTH, playerId, damage, spellLevel);
 	return true;
+}
+
+
+/**
+ * @brief Find parent missile (uses _miVar4)
+ *
+ * @return id of parent missile or -1
+ */
+int FindParent(MissileStruct &missile)
+{
+	for (int i = 0; i < ActiveMissileCount; i++) {
+		int mx = ActiveMissiles[i];
+		auto &parent = Missiles[mx];
+		if (parent._misource != missile._misource)
+			continue;
+		int childId = -(parent._miVar4 + 1);
+		if (childId < 0 || childId >= MAXMISSILES)
+			continue;
+		if (&Missiles[childId] != &missile)
+			continue;
+
+		return mx;
+	}
+
+	return -1;
+}
+
+/**
+ * @brief Sync missile position with parent missile, by searching for self reference in all mssiles
+ *
+ * @todo It's unclear if this is actually neede is mostly dead code
+ */
+void SyncPositionWithParent(MissileStruct &missile)
+{
+	int mx = FindParent(missile);
+	if (mx == -1)
+		return;
+
+	auto &parent = Missiles[mx];
+
+	missile.position.offset = parent.position.offset;
+	missile.position.traveled = parent.position.traveled;
 }
 
 } // namespace
@@ -1895,14 +1938,8 @@ void AddFirebolt(MissileStruct &missile, Point dst, int midir)
 			sp += std::min(missile._mispllvl * 2, 47);
 		}
 
-		int i;
-		for (i = 0; i < ActiveMissileCount; i++) {
-			int mx = ActiveMissiles[i];
-			auto &guardian = Missiles[mx];
-			if (guardian._mitype == MIS_GUARDIAN && guardian._misource == missile._misource && guardian._miVar3 >= 0 && guardian._miVar3 < MAXMISSILES && &Missiles[guardian._miVar3] == &missile)
-				break;
-		}
-		if (i == ActiveMissileCount)
+		int mx = FindParent(missile);
+		if (mx == -1 || Missiles[mx]._mitype != MIS_GUARDIAN)
 			UseMana(missile._misource, SPL_FIREBOLT);
 	}
 	UpdateMissileVelocity(missile, dst, sp);
@@ -2025,14 +2062,13 @@ void AddLightctrl(MissileStruct &missile, Point dst, int /*midir*/)
 void AddLightning(MissileStruct &missile, Point dst, int midir)
 {
 	missile.position.start = dst;
-	if (midir >= 0) {
-		missile.position.offset = Missiles[midir].position.offset;
-		missile.position.traveled = Missiles[midir].position.traveled;
-	}
+
+	SyncPositionWithParent(missile);
+
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 
-	if (midir < 0 || missile._micaster == TARGET_PLAYERS || missile._misource == -1) {
-		if (midir < 0 || missile._misource == -1)
+	if (missile._micaster == TARGET_PLAYERS || missile._misource == -1) {
+		if (missile._misource == -1 || Monsters[missile._misource].MType->mtype == MT_FAMILIAR)
 			missile._mirange = 8;
 		else
 			missile._mirange = 10;
@@ -2649,8 +2685,9 @@ void AddFlame(MissileStruct &missile, Point dst, int midir)
 {
 	missile._miVar2 = 5 * missile._midam;
 	missile.position.start = dst;
-	missile.position.offset = Missiles[midir].position.offset;
-	missile.position.traveled = Missiles[midir].position.traveled;
+
+	SyncPositionWithParent(missile);
+
 	missile._mirange = missile._miVar2 + 20;
 	missile._mlid = AddLight(missile.position.start, 1);
 	if (missile._micaster == TARGET_MONSTERS) {
@@ -3252,41 +3289,31 @@ void MI_LightningArrow(int i)
 	}
 
 	if (!nMissileTable[pn]) {
-		if ((mx != missile._miVar1 || my != missile._miVar2) && mx > 0 && my > 0 && mx < MAXDUNX && my < MAXDUNY) {
-			if (missile._misource != -1) {
-				if (missile._micaster == TARGET_PLAYERS
-				    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
-					AddMissile(
-					    missile.position.tile,
-					    missile.position.start,
-					    i,
-					    MIS_LIGHTNING2,
-					    missile._micaster,
-					    missile._misource,
-					    missile._midam,
-					    missile._mispllvl);
-				} else {
-					AddMissile(
-					    missile.position.tile,
-					    missile.position.start,
-					    i,
-					    MIS_LIGHTNING,
-					    missile._micaster,
-					    missile._misource,
-					    missile._midam,
-					    missile._mispllvl);
-				}
+		if ((mx != missile._miVar1 || my != missile._miVar2) && InDungeonBounds({ mx, my })) {
+			missile._miVar4 = -(AvailableMissiles[0] + 1);
+			if (missile._misource != -1 && missile._micaster == TARGET_PLAYERS
+			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+				AddMissile(
+				    missile.position.tile,
+				    missile.position.start,
+				    DIR_S,
+				    MIS_LIGHTNING2,
+				    missile._micaster,
+				    missile._misource,
+				    missile._midam,
+				    missile._mispllvl);
 			} else {
 				AddMissile(
 				    missile.position.tile,
 				    missile.position.start,
-				    i,
+				    DIR_S,
 				    MIS_LIGHTNING,
 				    missile._micaster,
 				    missile._misource,
 				    missile._midam,
 				    missile._mispllvl);
 			}
+			missile._miVar4 = 0;
 			missile._miVar1 = missile.position.tile.x;
 			missile._miVar2 = missile.position.tile.y;
 		}
@@ -3484,40 +3511,30 @@ void MI_Lightctrl(int i)
 	if (!nMissileTable[pn]
 	    && Point { mx, my } != Point { missile._miVar1, missile._miVar2 }
 	    && InDungeonBounds({ mx, my })) {
-		if (id != -1) {
-			if (missile._micaster == TARGET_PLAYERS
-			    && IsAnyOf(Monsters[id].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
-				AddMissile(
-				    missile.position.tile,
-				    missile.position.start,
-				    i,
-				    MIS_LIGHTNING2,
-				    missile._micaster,
-				    id,
-				    dam,
-				    missile._mispllvl);
-			} else {
-				AddMissile(
-				    missile.position.tile,
-				    missile.position.start,
-				    i,
-				    MIS_LIGHTNING,
-				    missile._micaster,
-				    id,
-				    dam,
-				    missile._mispllvl);
-			}
+		missile._miVar4 = -(AvailableMissiles[0] + 1);
+		if (id != -1 && missile._micaster == TARGET_PLAYERS
+		    && IsAnyOf(Monsters[id].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+			AddMissile(
+			    missile.position.tile,
+			    missile.position.start,
+			    DIR_S,
+			    MIS_LIGHTNING2,
+			    missile._micaster,
+			    id,
+			    dam,
+			    missile._mispllvl);
 		} else {
 			AddMissile(
 			    missile.position.tile,
 			    missile.position.start,
-			    i,
+			    DIR_S,
 			    MIS_LIGHTNING,
 			    missile._micaster,
 			    id,
 			    dam,
 			    missile._mispllvl);
 		}
+		missile._miVar4 = 0;
 		missile._miVar1 = missile.position.tile.x;
 		missile._miVar2 = missile.position.tile.y;
 	}
@@ -4152,15 +4169,17 @@ void MI_Flamec(int i)
 	if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
 		int id = dPiece[missile.position.tile.x][missile.position.tile.y];
 		if (!nMissileTable[id]) {
+			missile._miVar4 = -(AvailableMissiles[0] + 1);
 			AddMissile(
 			    missile.position.tile,
 			    missile.position.start,
-			    i,
+			    DIR_S,
 			    MIS_FLAME,
 			    missile._micaster,
 			    src,
 			    missile._miVar3,
 			    missile._mispllvl);
+			missile._miVar4 = 0;
 		} else {
 			missile._mirange = 0;
 		}
