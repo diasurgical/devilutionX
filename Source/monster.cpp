@@ -1488,28 +1488,15 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		return;
 	}
 	if (monster.MType->mtype == MT_YZOMBIE && pnum == MyPlayerId) {
-		int currentMissileId = -1;
-		for (int j = 0; j < ActiveMissileCount; j++) {
-			int mi = ActiveMissiles[j];
-			auto &missile = Missiles[mi];
-			if (missile._mitype != MIS_MANASHIELD)
-				continue;
-			if (missile._misource == pnum)
-				currentMissileId = mi;
-		}
 		if (player._pMaxHP > 64) {
 			if (player._pMaxHPBase > 64) {
 				player._pMaxHP -= 64;
 				if (player._pHitPoints > player._pMaxHP) {
 					player._pHitPoints = player._pMaxHP;
-					if (currentMissileId >= 0)
-						Missiles[currentMissileId]._miVar1 = player._pHitPoints;
 				}
 				player._pMaxHPBase -= 64;
 				if (player._pHPBase > player._pMaxHPBase) {
 					player._pHPBase = player._pMaxHPBase;
-					if (currentMissileId >= 0)
-						Missiles[currentMissileId]._miVar2 = player._pHPBase;
 				}
 			}
 		}

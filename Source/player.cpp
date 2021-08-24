@@ -667,7 +667,11 @@ void InitLevelChange(int pnum)
 	auto &myPlayer = Players[MyPlayerId];
 
 	RemovePlrMissiles(pnum);
+	player.pManaShield = false;
 	player.wReflections = 0;
+	// share info about your manashield when another player joins the level
+	if (pnum != MyPlayerId && myPlayer.pManaShield)
+		NetSendCmd(true, CMD_SETSHIELD);
 	// share info about your reflect charges when another player joins the level
 	if (pnum != MyPlayerId)
 		NetSendCmdParam1(true, CMD_SETREFLECT, myPlayer.wReflections);
@@ -3144,31 +3148,25 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 	auto &player = Players[pnum];
 
 	int totalDamage = (dam << 6) + frac;
-	if (totalDamage > 0) {
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int ma = ActiveMissiles[i];
-			auto &missile = Missiles[ma];
-			if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum && !missile._miDelFlag) {
-				if (missile._mispllvl > 0) {
-					totalDamage += totalDamage / -3;
-				}
-
-				drawmanaflag = true;
-				if (player._pMana >= totalDamage) {
-					player._pMana -= totalDamage;
-					player._pManaBase -= totalDamage;
-					totalDamage = 0;
-				} else {
-					totalDamage -= player._pMana;
-					if (missile._mispllvl > 0) {
-						totalDamage += totalDamage / 2;
-					}
-					player._pMana = 0;
-					player._pManaBase = player._pMaxManaBase - player._pMaxMana;
-				}
-
-				break;
+	if (totalDamage > 0 && player.pManaShield) {
+		int manaShieldLevel = player._pSplLvl[SPL_MANASHIELD];
+		if (manaShieldLevel > 0) {
+			totalDamage += totalDamage / -3;
+		}
+		if (pnum == MyPlayerId)
+			drawmanaflag = true;
+		if (player._pMana >= totalDamage) {
+			player._pMana -= totalDamage;
+			player._pManaBase -= totalDamage;
+			totalDamage = 0;
+		} else {
+			totalDamage -= player._pMana;
+			if (manaShieldLevel > 0) {
+				totalDamage += totalDamage / 2;
 			}
+			player._pMana = 0;
+			player._pManaBase = player._pMaxManaBase - player._pMaxMana;
+			NetSendCmd(true, CMD_REMSHIELD);
 		}
 	}
 
@@ -3224,10 +3222,6 @@ void RemovePlrMissiles(int pnum)
 		auto &missile = Missiles[am];
 		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
 			Monsters[missile._miVar2]._mmode = (MON_MODE)missile._miVar1;
-		}
-		if (missile._mitype == MIS_MANASHIELD && missile._misource == pnum) {
-			ClearMissileSpot(missile);
-			DeleteMissile(am, i);
 		}
 	}
 }
