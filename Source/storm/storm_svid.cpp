@@ -210,11 +210,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
-		if (texture == nullptr) {
-			ErrSdl();
-		}
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
 		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
 			ErrSdl();
 		}
@@ -378,11 +374,7 @@ void SVidPlayEnd()
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		SDL_DestroyTexture(texture);
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
-		if (texture == nullptr) {
-			ErrSdl();
-		}
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 		if (renderer != nullptr && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}

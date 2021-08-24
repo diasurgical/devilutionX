@@ -41,6 +41,41 @@ inline SDLSurfaceUniquePtr CreateRGBSurfaceWithFormatFrom(void *pixels, int widt
 	return ret;
 }
 
+#ifndef USE_SDL1
+inline SDLSurfaceUniquePtr ConvertSurface(SDL_Surface *src, const SDL_PixelFormat *fmt, Uint32 flags)
+#else
+inline SDLSurfaceUniquePtr ConvertSurface(SDL_Surface *src, SDL_PixelFormat *fmt, Uint32 flags)
+#endif
+{
+	SDLSurfaceUniquePtr ret { SDL_ConvertSurface(src, fmt, flags) };
+	if (ret == nullptr)
+		ErrSdl();
+
+	return ret;
+}
+
+#ifndef USE_SDL1
+inline SDLSurfaceUniquePtr ConvertSurfaceFormat(SDL_Surface *src, Uint32 pixel_format, Uint32 flags)
+{
+	SDLSurfaceUniquePtr ret { SDL_ConvertSurfaceFormat(src, pixel_format, flags) };
+	if (ret == nullptr)
+		ErrSdl();
+
+	return ret;
+}
+#endif
+
+#ifndef USE_SDL1
+inline SDLTextureUniquePtr CreateTexture(SDL_Renderer *renderer, Uint32 format, int access, int w, int h)
+{
+	SDLTextureUniquePtr ret { SDL_CreateTexture(renderer, format, access, w, h) };
+	if (ret == nullptr)
+		ErrSdl();
+
+	return ret;
+}
+#endif
+
 } //namespace SDLWrap
 
 } //namespace devilution

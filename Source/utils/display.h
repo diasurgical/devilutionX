@@ -18,7 +18,9 @@ namespace devilution {
 extern int refreshDelay; // Screen refresh rate in nanoseconds
 extern SDL_Window *window;
 extern SDL_Renderer *renderer;
-extern SDL_Texture *texture;
+#ifndef USE_SDL1
+extern SDLTextureUniquePtr texture;
+#endif
 
 extern SDL_Palette *Palette;
 extern SDL_Surface *pal_surface;
