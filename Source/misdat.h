@@ -113,7 +113,7 @@ struct MissileStruct;
 
 typedef struct MissileData {
 	void (*mAddProc)(MissileStruct &, Point, Direction);
-	void (*mProc)(int);
+	void (*mProc)(MissileStruct &);
 	uint8_t mName;
 	bool mDraw;
 	uint8_t mType;
