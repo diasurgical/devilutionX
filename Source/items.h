@@ -466,6 +466,7 @@ void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool 
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
+void initItemGetRecords();
 
 #ifdef _DEBUG
 std::string DebugSpawnItem(std::string itemName, bool unique);
