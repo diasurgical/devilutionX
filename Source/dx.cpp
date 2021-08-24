@@ -23,7 +23,9 @@ namespace devilution {
 
 int refreshDelay;
 SDL_Renderer *renderer;
-SDL_Texture *texture;
+#ifndef USE_SDL1
+SDLTextureUniquePtr texture;
+#endif
 
 /** Currently active palette */
 SDL_Palette *Palette;
@@ -101,7 +103,7 @@ void CreatePrimarySurface()
 		int height = 0;
 		SDL_RenderGetLogicalSize(renderer, &width, &height);
 		Uint32 format;
-		if (SDL_QueryTexture(texture, &format, nullptr, nullptr, nullptr) < 0)
+		if (SDL_QueryTexture(texture.get(), &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
 		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	}
@@ -207,7 +209,7 @@ void dx_cleanup()
 	SDL_FreePalette(Palette);
 	SDL_FreeSurface(renderer_texture_surface);
 #ifndef USE_SDL1
-	SDL_DestroyTexture(texture);
+	texture = nullptr;
 	SDL_DestroyRenderer(renderer);
 #endif
 	SDL_DestroyWindow(ghMainWnd);
@@ -315,7 +317,7 @@ void RenderPresent()
 
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
-		if (SDL_UpdateTexture(texture, nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
 			ErrSdl();
 		}
 
@@ -327,7 +329,7 @@ void RenderPresent()
 		if (SDL_RenderClear(renderer) <= -1) {
 			ErrSdl();
 		}
-		if (SDL_RenderCopy(renderer, texture, nullptr, nullptr) <= -1) {
+		if (SDL_RenderCopy(renderer, texture.get(), nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}
 		SDL_RenderPresent(renderer);

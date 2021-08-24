@@ -230,10 +230,7 @@ bool SpawnWindow(const char *lpWindowName)
 			ErrSdl();
 		}
 
-		texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
-		if (texture == nullptr) {
-			ErrSdl();
-		}
+		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
 
 		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
 			ErrSdl();

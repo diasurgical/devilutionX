@@ -33,6 +33,17 @@ struct SDLCursorDeleter {
 using SDLCursorUniquePtr = std::unique_ptr<SDL_Cursor, SDLCursorDeleter>;
 #endif
 
+#ifndef USE_SDL1
+struct SDLTextureDeleter {
+	void operator()(SDL_Texture *texture) const
+	{
+		SDL_DestroyTexture(texture);
+	}
+};
+
+using SDLTextureUniquePtr = std::unique_ptr<SDL_Texture, SDLTextureDeleter>;
+#endif
+
 /**
  * @brief Deletes the object using `SDL_free`.
  */
