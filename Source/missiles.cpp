@@ -2831,30 +2831,30 @@ int AddMissile(Point src, Point dst, int midir, missile_id mitype, mienemy_type 
 
 	memset(&missile, 0, sizeof(missile));
 
+	auto &missileData = MissileData[mitype];
+
 	missile._mitype = mitype;
 	missile._micaster = micaster;
 	missile._misource = id;
 	missile._midam = midam;
-	missile._miAnimType = MissileData[mitype].mFileNum;
-	missile._miDrawFlag = MissileData[mitype].mDraw;
 	missile._mispllvl = spllvl;
-	missile._mimfnum = midir;
+	missile.position.tile = src;
+	missile.position.start = src;
+	missile._miAnimAdd = 1;
+	missile._miAnimType = missileData.mFileNum;
+	missile._miDrawFlag = missileData.mDraw;
+	missile._mlid = NO_LIGHT;
 
 	if (missile._miAnimType == MFILE_NONE || MissileSpriteData[missile._miAnimType].animFAmt < 8)
 		SetMissDir(missile, 0);
 	else
 		SetMissDir(missile, midir);
 
-	missile.position.tile = src;
-	missile.position.start = src;
-	missile._miAnimAdd = 1;
-	missile._mlid = NO_LIGHT;
-
-	if (MissileData[mitype].mlSFX != -1) {
-		PlaySfxLoc(MissileData[mitype].mlSFX, missile.position.start);
+	if (missileData.mlSFX != SFX_NONE) {
+		PlaySfxLoc(missileData.mlSFX, missile.position.start);
 	}
 
-	MissileData[mitype].mAddProc(missile, dst, midir);
+	missileData.mAddProc(missile, dst, midir);
 
 	return mi;
 }
