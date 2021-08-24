@@ -275,7 +275,7 @@ void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void PlayEffect(MonsterStruct &monster, int mode);
-void MissToMonst(int i, Point position);
+void MissToMonst(MissileStruct &missile, Point position);
 bool IsTileAvailable(const MonsterStruct &monster, Point position);
 bool IsSkel(int mt);
 bool IsGoat(int mt);

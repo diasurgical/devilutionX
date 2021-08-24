@@ -4769,19 +4769,16 @@ void PlayEffect(MonsterStruct &monster, int mode)
 #endif
 }
 
-void MissToMonst(int i, Point position)
+void MissToMonst(MissileStruct &missile, Point position)
 {
-	assert(i >= 0 && i < MAXMISSILES);
-
-	MissileStruct *miss = &Missiles[i];
-	int m = miss->_misource;
+	int m = missile._misource;
 
 	assert(m >= 0 && m < MAXMONSTERS);
 	auto &monster = Monsters[m];
 
-	Point oldPosition = miss->position.tile;
+	Point oldPosition = missile.position.tile;
 	dMonster[position.x][position.y] = m + 1;
-	monster._mdir = static_cast<Direction>(miss->_mimfnum);
+	monster._mdir = static_cast<Direction>(missile._mimfnum);
 	monster.position.tile = position;
 	M_StartStand(monster, monster._mdir);
 	if (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN) {
