@@ -127,8 +127,13 @@ enum class PlayerArmorGraphic : uint8_t {
 	// clang-format on
 };
 ItemStruct curruitem;
+
+/** Holds item get records, tracking items being recently looted. This is in an effort to prevent items being picked up more than once. */
 ItemGetRecordStruct itemrecord[MAXITEMS];
+
 bool itemhold[3][3];
+
+/** gnNumGetRecords specifies the number of active item get records. */
 int gnNumGetRecords;
 
 int OilLevels[] = { 1, 10, 1, 10, 4, 1, 5, 17, 1, 10 };
@@ -2628,6 +2633,9 @@ void InitItems()
 	}
 
 	ShowUniqueItemInfoBox = false;
+
+	// BUGFIX: item get records not reset when resetting items (fixed).
+	initItemGetRecords();
 }
 
 void CalcPlrItemVals(int playerId, bool loadgfx)
@@ -4962,6 +4970,15 @@ void ItemStruct::SetNewAnimation(bool showAnimation)
 		_iAnimFlag = false;
 		_iSelFlag = 1;
 	}
+}
+
+/**
+ * @brief Resets item get records.
+ */
+void initItemGetRecords()
+{
+	memset(itemrecord, 0, sizeof(itemrecord));
+	gnNumGetRecords = 0;
 }
 
 } // namespace devilution
