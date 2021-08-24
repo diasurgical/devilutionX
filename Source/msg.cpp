@@ -1753,34 +1753,11 @@ DWORD OnRemoveShield(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*pCmd);
 }
 
-DWORD EndEffect(TCmd *pCmd, int pnum, missile_id type)
-{
-	if (gbBufferMsgs != 1 && pnum != MyPlayerId && currlevel == Players[pnum].plrlevel) {
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mi = ActiveMissiles[i];
-			auto &missile = Missiles[mi];
-			if (missile._mitype == type && missile._misource == pnum) {
-				ClearMissileSpot(missile);
-				DeleteMissile(mi, i);
-			}
-		}
-	}
-
-	return sizeof(*pCmd);
-}
-
-DWORD OnEndShield(TCmd *pCmd, int pnum)
-{
-	return EndEffect(pCmd, pnum, MIS_MANASHIELD);
-}
-
 DWORD OnSetReflect(TCmd *pCmd, PlayerStruct &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
-	if (gbBufferMsgs != 1) {
-		if (currlevel == player.plrlevel)
-			player.wReflections = p->wParam1;
-	}
+	if (gbBufferMsgs != 1)
+		player.wReflections = p->wParam1;
 
 	return sizeof(*p);
 }
@@ -2673,8 +2650,6 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return OnSetShield(pCmd, player);
 	case CMD_REMSHIELD:
 		return OnRemoveShield(pCmd, player);
-	case CMD_ENDSHIELD:
-		return OnEndShield(pCmd, pnum);
 	case CMD_SETREFLECT:
 		return OnSetReflect(pCmd, player);
 	case CMD_NAKRUL:

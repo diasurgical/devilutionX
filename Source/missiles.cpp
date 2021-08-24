@@ -747,21 +747,6 @@ bool GrowWall(int playerId, Point position, Point target, missile_id type, int s
 	return true;
 }
 
-bool CanAddEffect(const PlayerStruct &player, missile_id type)
-{
-	if (currlevel != player.plrlevel)
-		return false;
-
-	for (int i = 0; i < ActiveMissileCount; i++) {
-		int mi = ActiveMissiles[i];
-		auto &missile = Missiles[mi];
-		if (missile._mitype == type && &Players[missile._misource] == &player)
-			return false;
-	}
-
-	return true;
-}
-
 } // namespace
 
 void GetDamageAmt(int i, int *mind, int *maxd)
@@ -954,13 +939,6 @@ Direction16 GetDirection16(Point p1, Point p2)
 void DeleteMissile(int mi, int i)
 {
 	auto &missile = Missiles[mi];
-	if (missile._mitype == MIS_MANASHIELD) {
-		int src = missile._misource;
-		if (src == MyPlayerId)
-			NetSendCmd(true, CMD_REMSHIELD);
-		Players[src].pManaShield = false;
-	}
-
 	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = mi;
 	ActiveMissileCount--;
 	if (ActiveMissileCount > 0 && i != ActiveMissileCount)
@@ -2184,19 +2162,22 @@ void AddFlash2(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 
 void AddManashield(MissileStruct &missile, Point /*dst*/, int /*midir*/)
 {
+	missile._miDelFlag = true;
+
+	if (missile._misource < 0)
+		return;
+
 	auto &player = Players[missile._misource];
 
-	if (player.pManaShield && !CanAddEffect(player, MIS_MANASHIELD)) {
-		missile._miDelFlag = true;
+	if (player.pManaShield)
 		return;
-	}
 
-	missile._mirange = 48 * player._pLevel;
-	if (missile._micaster == TARGET_MONSTERS)
-		UseMana(missile._misource, SPL_MANASHIELD);
+	player.pManaShield = true;
 	if (missile._misource == MyPlayerId)
 		NetSendCmd(true, CMD_SETSHIELD);
-	player.pManaShield = true;
+
+	if (missile._micaster == TARGET_MONSTERS)
+		UseMana(missile._misource, SPL_MANASHIELD);
 }
 
 void AddFiremove(MissileStruct &missile, Point dst, int /*midir*/)
@@ -3642,25 +3623,6 @@ void MI_Flash2(int i)
 	PutMissile(missile);
 }
 
-void MI_Manashield(int i)
-{
-	auto &missile = Missiles[i];
-	int id = missile._misource;
-	if (id != MyPlayerId) {
-		if (currlevel != Players[id].plrlevel)
-			missile._miDelFlag = true;
-	} else {
-		if (Players[id]._pMana <= 0 || !Players[id].plractive)
-			missile._mirange = 0;
-
-		if (missile._mirange == 0) {
-			missile._miDelFlag = true;
-			NetSendCmd(true, CMD_ENDSHIELD);
-		}
-	}
-	PutMissile(missile);
-}
-
 void MI_Firemove(int i)
 {
 	auto &missile = Missiles[i];
@@ -4440,6 +4402,15 @@ static void DeleteMissiles()
 	}
 }
 
+void ProcessManaShield()
+{
+	auto &myPlayer = Players[MyPlayerId];
+	if (myPlayer.pManaShield && myPlayer._pMana <= 0) {
+		myPlayer.pManaShield = false;
+		NetSendCmd(true, CMD_REMSHIELD);
+	}
+}
+
 void ProcessMissiles()
 {
 	for (int i = 0; i < ActiveMissileCount; i++) {
@@ -4473,6 +4444,7 @@ void ProcessMissiles()
 			missile._miAnimFrame = missile._miAnimLen;
 	}
 
+	ProcessManaShield();
 	DeleteMissiles();
 }
 

@@ -1838,6 +1838,14 @@ void LoadGame(bool firstflag)
 
 	RedoPlayerVision();
 	ProcessVisionList();
+	// convert stray manashield missiles into pManaShield flag
+	for (auto &missile : Missiles) {
+		if (missile._mitype == MIS_MANASHIELD && missile._miDelFlag == false) {
+			Players[missile._misource].pManaShield = true;
+			missile._miDelFlag = true;
+		}
+	}
+
 	missiles_process_charge();
 	RedoMissileFlags();
 	NewCursor(CURSOR_HAND);
