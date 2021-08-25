@@ -276,17 +276,9 @@ void CheckCursMove()
 
 	if (CanPanelsCoverView()) {
 		if (chrflag || QuestLogIsOpen) {
-			if (sx >= gnScreenWidth / 2) { /// BUGFIX: (sx >= gnScreenWidth / 2) (fixed)
-				sx -= gnScreenWidth / 4;
-			} else {
-				sx = 0;
-			}
+			sx -= gnScreenWidth / 4;
 		} else if (invflag || sbookflag) {
-			if (sx <= gnScreenWidth / 2) {
-				sx += gnScreenWidth / 4;
-			} else {
-				sx = 0;
-			}
+			sx += gnScreenWidth / 4;
 		}
 	}
 	if (sy > PANEL_TOP - 1 && MousePosition.x >= PANEL_LEFT && MousePosition.x < PANEL_LEFT + PANEL_WIDTH && track_isscrolling()) {
