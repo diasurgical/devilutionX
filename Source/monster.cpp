@@ -4744,12 +4744,12 @@ void PrintUniqueHistory()
 
 void PlayEffect(MonsterStruct &monster, int mode)
 {
-#ifndef NOSOUND
 	if (Players[MyPlayerId].pLvlLoad != 0) {
 		return;
 	}
 
 	int sndIdx = GenerateRnd(2);
+#ifndef NOSOUND
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
