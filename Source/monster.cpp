@@ -4942,9 +4942,8 @@ void TalktoMonster(MonsterStruct &monster)
 	}
 }
 
-void SpawnGolum(int i, Point position, int mi)
+void SpawnGolum(int i, Point position, MissileStruct &missile)
 {
-	auto &missile = Missiles[mi];
 	assert(i >= 0 && i < MAX_PLRS);
 	auto &player = Players[i];
 	auto &golem = Monsters[i];

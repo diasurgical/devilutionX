@@ -25,6 +25,8 @@
 
 namespace devilution {
 
+struct MissileStruct;
+
 #define MAXMONSTERS 200
 #define MAX_LVLMTYPES 24
 
@@ -280,7 +282,7 @@ bool IsGoat(int mt);
 bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
 void TalktoMonster(MonsterStruct &monster);
-void SpawnGolum(int i, Point position, int mi);
+void SpawnGolum(int i, Point position, MissileStruct &missile);
 bool CanTalkToMonst(const MonsterStruct &monster);
 bool CheckMonsterHit(MonsterStruct &monster, bool *ret);
 int encode_enemy(MonsterStruct &monster);
