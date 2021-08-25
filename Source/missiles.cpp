@@ -2429,22 +2429,45 @@ void AddStone(MissileStruct &missile, Point dst, Direction /*midir*/)
 
 void AddGolem(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
+	missile._miDelFlag = true;
+
+	int playerId = missile._misource;
+
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
 		if (Missiles[mx]._mitype == MIS_GOLEM) {
-			if ((&Missiles[mx] != &missile) && Missiles[mx]._misource == missile._misource) {
-				missile._miDelFlag = true;
+			if ((&Missiles[mx] != &missile) && Missiles[mx]._misource == playerId) {
 				return;
 			}
 		}
 	}
-	missile._miVar1 = missile.position.start.x;
-	missile._miVar2 = missile.position.start.y;
-	missile._miVar4 = dst.x;
-	missile._miVar5 = dst.y;
-	if (Monsters[missile._misource].position.tile != GolemHoldingCell && missile._misource == MyPlayerId)
-		M_StartKill(missile._misource, missile._misource);
-	UseMana(missile._misource, SPL_GOLEM);
+	if (Monsters[playerId].position.tile != GolemHoldingCell && playerId == MyPlayerId)
+		M_StartKill(playerId, playerId);
+
+	UseMana(playerId, SPL_GOLEM);
+
+	if (Monsters[playerId].position.tile == GolemHoldingCell) {
+		for (int i = 0; i < 6; i++) {
+			int k = CrawlNum[i];
+			int ck = k + 2;
+			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
+				int tx = dst.x + CrawlTable[ck - 1];
+				int ty = dst.y + CrawlTable[ck];
+
+				if (!InDungeonBounds({ tx, ty }))
+					continue;
+
+				if (!LineClearMissile(missile.position.start, { tx, ty }))
+					continue;
+
+				if (dMonster[tx][ty] != 0 || nSolidTable[dPiece[tx][ty]] || dObject[tx][ty] != 0)
+					continue;
+
+				SpawnGolum(playerId, { tx, ty }, missile);
+				return;
+			}
+		}
+	}
 }
 
 void AddBoom(MissileStruct &missile, Point dst, Direction /*midir*/)
@@ -2857,37 +2880,6 @@ int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy
 	missileData.mAddProc(missile, dst, midir);
 
 	return mi;
-}
-
-void MI_Golem(int mi)
-{
-	auto &missile = Missiles[mi];
-	int src = missile._misource;
-	if (Monsters[src].position.tile == GolemHoldingCell) {
-		for (int i = 0; i < 6; i++) {
-			int k = CrawlNum[i];
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				const int8_t *ct = &CrawlTable[ck];
-				int tx = missile._miVar4 + *(ct - 1);
-				int ty = missile._miVar5 + *ct;
-
-				if (!InDungeonBounds({ tx, ty }))
-					continue;
-
-				if (!LineClearMissile({ missile._miVar1, missile._miVar2 }, { tx, ty }))
-					continue;
-
-				if (dMonster[tx][ty] != 0 || nSolidTable[dPiece[tx][ty]] || dObject[tx][ty] != 0)
-					continue;
-
-				SpawnGolum(src, { tx, ty }, mi);
-				i = 6;
-				break;
-			}
-		}
-	}
-	missile._miDelFlag = true;
 }
 
 void MI_LArrow(int i)
