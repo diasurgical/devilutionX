@@ -15,6 +15,7 @@
 #include "cursor.h"
 #include "engine.h"
 #include "utils/display.h"
+#include "utils/sdl_bilinear_scale.hpp"
 #include "utils/sdl_wrap.h"
 
 namespace devilution {
@@ -61,6 +62,11 @@ Point GetHotpointPosition(const SDL_Surface &surface, HotpointPosition position)
 	app_fatal("Unhandled enum value");
 }
 
+bool ShouldUseBilinearScaling()
+{
+	return sgOptions.Graphics.szScaleQuality[0] != '0';
+}
+
 bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 {
 	SDLCursorUniquePtr newCursor;
@@ -75,7 +81,11 @@ bool SetHardwareCursor(SDL_Surface *surface, HotpointPosition hotpointPosition)
 		SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_ARGB8888, 0) };
 
 		SDLSurfaceUniquePtr scaledSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, scaledSize.width, scaledSize.height, 32, SDL_PIXELFORMAT_ARGB8888);
-		SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
+		if (ShouldUseBilinearScaling()) {
+			BilinearScale32(converted.get(), scaledSurface.get());
+		} else {
+			SDL_BlitScaled(converted.get(), nullptr, scaledSurface.get(), nullptr);
+		}
 		const Point hotpoint = GetHotpointPosition(*scaledSurface, hotpointPosition);
 		newCursor = SDLCursorUniquePtr { SDL_CreateColorCursor(scaledSurface.get(), hotpoint.x, hotpoint.y) };
 	}
