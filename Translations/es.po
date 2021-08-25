@@ -137,13 +137,11 @@ msgstr "Ingeniero de Grabación"
 msgid "Manual Design & Layout"
 msgstr "Diseño y Maquetación Manual"
 
-# o "del Manual"?
 #: Source/DiabloUI/credits_lines.cpp:108
 #, fuzzy
 msgid "Manual Artwork"
 msgstr "Arte Manual"
 
-# no se si traducir las palabras técnicas
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
 msgstr "Director Provisional de Control de Calidad (Lead Tester)"
@@ -152,7 +150,7 @@ msgstr "Director Provisional de Control de Calidad (Lead Tester)"
 #: Source/DiabloUI/credits_lines.cpp:115
 #, fuzzy
 msgid "QA Assault Team (Testers)"
-msgstr "Equipo de Control de Calidad (Testers)"
+msgstr "Escuadrón de Asalto de Control de Calidad (Testers)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
@@ -180,11 +178,10 @@ msgstr "Atención al cliente"
 msgid "Sales"
 msgstr "Ventas"
 
-# no se que es esto
+# https://english.stackexchange.com/questions/550254/does-anyone-have-know-the-etymology-of-dunsel
 #: Source/DiabloUI/credits_lines.cpp:142
-#, fuzzy
 msgid "Dunsel"
-msgstr "Dunsel"
+msgstr "Inútil"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
@@ -669,14 +666,12 @@ msgstr "Nuevo Juego"
 msgid "Single Player Characters"
 msgstr "Personajes de Un Jugador"
 
-# No se si traducir el titulo del juego
 #: Source/DiabloUI/selhero.cpp:261
-#, fuzzy
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"The Rogue and Sorcerer solo están disponibles en la versión comercial "
+"El Ladrón y el Hechicero solo están disponibles en la versión comercial "
 "completa de Diablo. Visite https://www.gog.com/game/diablo para comprar."
 
 #: Source/DiabloUI/selhero.cpp:273 Source/DiabloUI/selhero.cpp:276
@@ -870,11 +865,9 @@ msgstr "juego: "
 msgid "password: "
 msgstr "contraseña: "
 
-# Nest tiene varios significados
 #: Source/automap.cpp:413
-#, fuzzy
 msgid "Level: Nest {:d}"
-msgstr "Nivel: Nido {:d}"
+msgstr "Nivel: Guarida {:d}"
 
 #: Source/automap.cpp:415
 msgid "Level: Crypt {:d}"
@@ -968,11 +961,9 @@ msgstr[1] "{:d} Cargas"
 msgid "Spell Hotkey {:s}"
 msgstr "Tecla de acceso rápido de Hechizo {:s}"
 
-# A que se refiere?
 #: Source/control.cpp:1079
-#, fuzzy
 msgid "Player friendly"
-msgstr "Amigable para el jugador"
+msgstr "Amigable"
 
 #: Source/control.cpp:1081
 msgid "Player attack"
@@ -1053,8 +1044,8 @@ msgstr "Maná: {:d} Dañ: 1/3 tgt pd"
 #: Source/control.cpp:1763
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Tiene {:d} pieza de oro. ¿Cuanto quiere eliminar?"
-msgstr[1] "Tiene {:d} piezas de oro. ¿Cuantas quiere eliminar?"
+msgstr[0] "Tiene {:d} moneda de oro. ¿Cuanto quiere eliminar?"
+msgstr[1] "Tiene {:d} monedas de oro. ¿Cuantas quiere eliminar?"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Menu"
@@ -1181,8 +1172,9 @@ msgstr "Habilitar el registro detallado"
 # no se a que se refiere
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:870
+#, fuzzy
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Forzar el modo de generación incluso si se encuentra diabdat.mpq"
+msgstr "Forzar el modo spawn incluso si se encuentra diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:871
@@ -1203,7 +1195,7 @@ msgstr "Forzar el modo diablo incluso si se encuentra hellfire.mpq"
 #: Source/diablo.cpp:873
 #, fuzzy
 msgid "Use alternate nest palette"
-msgstr "Usar paleta de nido alternativa"
+msgstr "Usar paleta alternativa"
 
 #: Source/diablo.cpp:888
 msgid ""
@@ -1312,12 +1304,10 @@ msgstr "Algunos se debilitan a medida que uno se hace más fuerte"
 msgid "New strength is forged through destruction"
 msgstr "Nueva fuerza se forja a través de la destrucción"
 
-# o "se defienden"?
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:42
-#, fuzzy
 msgid "Those who defend seldom attack"
-msgstr "Los que defienden raras veces atacan"
+msgstr "Aquellos que defienden raras veces atacan"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:43
@@ -1756,7 +1746,6 @@ msgstr ""
 msgid "$Skills & Spells:"
 msgstr "$Habilidades y Hechizos:"
 
-# No me queda claro como traducir "through staffs "
 #: Source/help.cpp:73
 #, fuzzy
 msgid ""
@@ -1775,9 +1764,8 @@ msgstr ""
 
 # No se como traducir "Speedbook"
 #: Source/help.cpp:79
-#, fuzzy
 msgid "$Using the Speedbook for Spells"
-msgstr "$Uso del Speedbook para hechizos"
+msgstr "$Uso del Speedbook para Hechizos"
 
 # No se como traducir "Speedbook"
 #: Source/help.cpp:80
@@ -1806,14 +1794,13 @@ msgstr "$Configurar Teclas de acceso Rápido de Hechizos"
 
 # 'speedbook' ?
 #: Source/help.cpp:87
-#, fuzzy
 msgid ""
 "You can assign up to four Hotkeys for skills, spells or scrolls.  Start by "
 "opening the 'speedbook' as described in the section above. Press the F5, F6, "
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
-"Puede asignar hasta cuatro teclas de acceso rápido para habilidades, "
-"hechizos o pergaminos.  Empiece por abrir el 'speedbook' como se describe en "
+"Puede asignar hasta cuatro teclas de Acceso Rápido para habilidades, "
+"hechizos o pergaminos. Empiece por abrir el 'speedbook' como se describe en "
 "la sección anterior. Presione las teclas F5, F6, F7 o F8 después de resaltar "
 "el hechizo que desea asignar."
 
@@ -1991,17 +1978,14 @@ msgstr "Poción de Sanación Completa"
 msgid "Potion of Full Mana"
 msgstr "Poción de Maná Completo"
 
-# Es correcto?
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:404
-#, fuzzy
 msgid "Griswold's Edge"
-msgstr "Afueras de Griswold"
+msgstr "Hoja de Griswold"
 
-# es correcto?
+# https://diablo.fandom.com/wiki/Bovine_Plate
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
-#, fuzzy
 msgid "Bovine Plate"
-msgstr "Plato Bovino"
+msgstr "Armadura de Bovino"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
@@ -2066,9 +2050,7 @@ msgstr "Traje Marrón"
 msgid "Grey Suit"
 msgstr "Traje Gris"
 
-# es correcto?
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
-#, fuzzy
 msgid "Cap"
 msgstr "Gorra"
 
@@ -2076,33 +2058,25 @@ msgstr "Gorra"
 msgid "Skull Cap"
 msgstr "Gorro de Calavera"
 
-# No estoy seguro.
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
-#, fuzzy
 msgid "Helm"
-msgstr "Timón"
+msgstr "Yelmo"
 
-# No estoy seguro
 #: Source/itemdat.cpp:67
-#, fuzzy
 msgid "Full Helm"
-msgstr "Timón completo"
+msgstr "Yelmo Completo"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
 msgstr "Corona"
 
-# No estoy seguro
 #: Source/itemdat.cpp:69
-#, fuzzy
 msgid "Great Helm"
-msgstr "Gran Timón"
+msgstr "Gran Yelmo"
 
-# o Cabo?
 #: Source/itemdat.cpp:70
-#, fuzzy
 msgid "Cape"
-msgstr "Capa"
+msgstr "Capucha"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
@@ -2137,13 +2111,9 @@ msgstr "Armadura de Cuero Duro"
 msgid "Studded Leather Armor"
 msgstr "Armadura de Cuero con Tachuelas"
 
-# Ver equivalente Armadura:
-# Ring Mail
-#  — A fabric of rings, larger than those used in chain mail, attached to and enhancing a leather armor.
 #: Source/itemdat.cpp:78
-#, fuzzy
 msgid "Ring Mail"
-msgstr "Anillo de Protección"
+msgstr "Coraza de Anillos"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:79 Source/itemdat.cpp:80
 #: Source/itemdat.cpp:82
@@ -2154,62 +2124,49 @@ msgstr "Correo"
 # Chain Mail
 #   (aka Chain Maille) — Metal rings woven to create a flexible protective “fabric.”
 #: Source/itemdat.cpp:79
-#, fuzzy
 msgid "Chain Mail"
-msgstr "Cadena de Protección"
+msgstr "Cota de Malla"
 
 # Ver traducción de Armadura en español:
 # Scale armour (or scale mail) is an early form of armour consisting of many individual small armour scales (plates) of various shapes attached to each other and to a backing of cloth or leather in overlapping rows.[1] Scale armour was worn by warriors of many different cultures as well as their horses. The material used to make the scales varied and included bronze, iron, steel, rawhide, leather, cuir bouilli, seeds, horn, or pangolin scales. The variations are primarily the result of material availability.
 #: Source/itemdat.cpp:80
-#, fuzzy
 msgid "Scale Mail"
-msgstr "Armadura de Placas"
+msgstr "Armadura de Escamas"
 
-# Ver Armadura en español. Quizas "Peto"?
 #: Source/itemdat.cpp:81
-#, fuzzy
 msgid "Breast Plate"
-msgstr "Placa de Pecho"
+msgstr "Peto"
 
-# o "peto"?
+# o "busto?"
+# https://en.wikipedia.org/wiki/Plate_armour
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:83 Source/itemdat.cpp:84
 #: Source/itemdat.cpp:85 Source/itemdat.cpp:86
-#, fuzzy
 msgid "Plate"
-msgstr "Placa"
+msgstr "Armadura de Placa"
 
 # ver quivalente Armadura en español:
 # Splint mail/splinted mail
 # While a few complete suits of armour have been found made from splints of wood, leather, or bone, the Victorian neologism "splinted mail" usually refers to the limb protections of crusader knights. Depictions typically show it on the limbs of a person wearing mail, scale armour, a coat of plates or other plate harness.
 # Knights in effigy are depicted with leg protection of a matrix of disks with a diameter equal to the splints. This style appears to depict sabatons and splints on greaves, or may represent padded armour underneath splints, or the rivets on brigandine.
 #: Source/itemdat.cpp:82
-#, fuzzy
 msgid "Splint Mail"
-msgstr "Armadura (traducir tipo)"
+msgstr "Coraza Laminar"
 
-# Ver Armadura en español:
 #: Source/itemdat.cpp:83
-#, fuzzy
 msgid "Plate Mail"
 msgstr "Armadura de Placas"
 
-# Ver armadura en español
 #: Source/itemdat.cpp:84
-#, fuzzy
 msgid "Field Plate"
-msgstr "Placa de campo"
+msgstr "Coraza de Campo"
 
-# Ver armadura en español
 #: Source/itemdat.cpp:85
-#, fuzzy
 msgid "Gothic Plate"
-msgstr "Placa Gótica"
+msgstr "Armadura Gótica"
 
-# Ver armadura en español
 #: Source/itemdat.cpp:86
-#, fuzzy
 msgid "Full Plate Mail"
-msgstr "Armadura de placa completa"
+msgstr "Armadura Entera de Placas"
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
@@ -2224,11 +2181,10 @@ msgstr "Escudo Pequeño"
 msgid "Large Shield"
 msgstr "Escudo Grande"
 
-# no se si es la traducción correcta
+# https://es.wikipedia.org/wiki/Escudo_de_l%C3%A1grima
 #: Source/itemdat.cpp:90
-#, fuzzy
 msgid "Kite Shield"
-msgstr "Escudo Pequeño"
+msgstr "Escudo de Lágrima"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
@@ -2351,11 +2307,10 @@ msgstr "Pergamino de Apocalipsis"
 msgid "Book of "
 msgstr "Libro de "
 
-# no se qué tipo de espada es
+# https://es.wikipedia.org/wiki/Bracamarte
 #: Source/itemdat.cpp:136
-#, fuzzy
 msgid "Falchion"
-msgstr "Espada"
+msgstr "Bracamarte"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
@@ -2365,11 +2320,11 @@ msgstr "Cimitarra"
 msgid "Claymore"
 msgstr "Casa antigua"
 
-# no se que tipo de hoja o espada es
+# Hoja de corte, no se si especificarlo
 #: Source/itemdat.cpp:139
 #, fuzzy
 msgid "Blade"
-msgstr "Espada"
+msgstr "Hoja"
 
 #: Source/itemdat.cpp:140
 msgid "Sabre"
@@ -2444,10 +2399,9 @@ msgstr "Mazo de Puas"
 msgid "Flail"
 msgstr "Mayal"
 
-# no se la traducción
 #: Source/itemdat.cpp:158
 msgid "Maul"
-msgstr "(Maul)"
+msgstr "Mazo"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
@@ -2498,7 +2452,6 @@ msgstr "Vara Compuesta"
 
 # Un cuarteto, también el personal corto o simplemente el personal es un arma tradicional del poste europeo y una técnica de la lucha del palillo, especialmente como en el uso en Inglaterra durante el período temprano moderno. El término es generalmente aceptado para referirse a un eje de madera de 6 a 9 pies de largo, a veces con una punta de metal, férula o espiga en uno o ambos extremos. El término "personal corto" compara esto con el "personal largo" basado en el lucio con una longitud de más de 11 a 12 pies.
 #: Source/itemdat.cpp:170
-#, fuzzy
 msgid "Quarter Staff"
 msgstr "Cuarteto"
 
@@ -2539,11 +2492,9 @@ msgstr "Gran Runa de Relámpago"
 msgid "Rune of Stone"
 msgstr "Runa de Piedra"
 
-# no estoy seguro de la traducción
 #: Source/itemdat.cpp:182
-#, fuzzy
 msgid "Short Staff of Charged Bolt"
-msgstr "Vara Corta de Rayo Cargado"
+msgstr "Vara Corta de la Centella"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
@@ -2582,11 +2533,9 @@ msgstr "Mithril"
 msgid "Meteoric"
 msgstr "Meteórico"
 
-# Debería usarse un sinónimo?
 #: Source/itemdat.cpp:202 Source/objects.cpp:102
-#, fuzzy
 msgid "Weird"
-msgstr "Extraño"
+msgstr "Raro"
 
 #: Source/itemdat.cpp:203
 msgid "Strange"
@@ -3148,9 +3097,7 @@ msgstr "la oscuridad"
 msgid "the night"
 msgstr "la noche"
 
-# o "liviano"? falta contexto
 #: Source/itemdat.cpp:354
-#, fuzzy
 msgid "light"
 msgstr "luz"
 
@@ -3166,9 +3113,7 @@ msgstr "llama"
 msgid "fire"
 msgstr "fuego"
 
-# falta contexto
 #: Source/itemdat.cpp:358
-#, fuzzy
 msgid "burning"
 msgstr "ardiente"
 
@@ -3188,9 +3133,7 @@ msgstr "trueno"
 msgid "many"
 msgstr "muchos"
 
-# falta contexto
 #: Source/itemdat.cpp:363
-#, fuzzy
 msgid "plenty"
 msgstr "mucho"
 
@@ -3238,11 +3181,9 @@ msgstr "pinchando"
 msgid "bashing"
 msgstr "paliza"
 
-# tiene más significados. falta contexto
 #: Source/itemdat.cpp:375
-#, fuzzy
 msgid "readiness"
-msgstr "preparación"
+msgstr "presteza"
 
 #: Source/itemdat.cpp:376
 msgid "swiftness"
@@ -3290,11 +3231,11 @@ msgstr "riesgo"
 msgid "The Butcher's Cleaver"
 msgstr "La Cuchilla del Carnicero"
 
-# No se a que se refiere
+# Rift tiene varios significados
 #: Source/itemdat.cpp:406
 #, fuzzy
 msgid "The Rift Bow"
-msgstr "El Arco de la Grieta"
+msgstr "El Arco de la Desaveniencia"
 
 # sustantivo
 # 1
@@ -3327,11 +3268,9 @@ msgstr "El Arco de Roble negro"
 msgid "Flamedart"
 msgstr "Dardo de Fuego"
 
-# no se que es esto
 #: Source/itemdat.cpp:413
-#, fuzzy
 msgid "Fleshstinger"
-msgstr "Fleshstinger"
+msgstr "Aguijoneador de Carne"
 
 #: Source/itemdat.cpp:414
 msgid "Windforce"
@@ -3341,11 +3280,9 @@ msgstr "Fuerza del Viento"
 msgid "Eaglehorn"
 msgstr "Cuerno de Águila"
 
-# no se que es esto
 #: Source/itemdat.cpp:416
-#, fuzzy
 msgid "Gonnagal's Dirk"
-msgstr "Dirk de Gonnagal"
+msgstr "Puñal de Gonnagal"
 
 #: Source/itemdat.cpp:417
 msgid "The Defender"
@@ -3361,7 +3298,6 @@ msgstr "Navaja Negra"
 
 # "Jorobada" sería más actual. Se refiere a una fase lunar
 #: Source/itemdat.cpp:420
-#, fuzzy
 msgid "Gibbous Moon"
 msgstr "Luna Gibosa"
 
@@ -3433,11 +3369,9 @@ msgstr "Hacha Malvada"
 msgid "Stonecleaver"
 msgstr "Cuchilla de Piedra"
 
-# Hatched es un hacha pequeña de mano. Podria ser destral o hachuela
 #: Source/itemdat.cpp:438
-#, fuzzy
 msgid "Aguinara's Hatchet"
-msgstr "Hacha de Aguinara"
+msgstr "Destral de Aguinara"
 
 #: Source/itemdat.cpp:439
 msgid "Hellslayer"
@@ -3527,27 +3461,22 @@ msgstr "Vara de Onan"
 msgid "Helm of Sprits"
 msgstr "Yelmo de Espíritus"
 
-# o "para Pensar"?
 #: Source/itemdat.cpp:460
-#, fuzzy
 msgid "Thinking Cap"
-msgstr "Gorra de Pensamiento"
+msgstr "Gorra del Pensamiento"
 
-# se refiere a un Señor Feudal
 #: Source/itemdat.cpp:461
-#, fuzzy
 msgid "OverLord's Helm"
-msgstr "Yelmo del Señor"
+msgstr "Yelmo del Señor Supremo"
 
 #: Source/itemdat.cpp:462
 msgid "Fool's Crest"
 msgstr "Cresta del Tonto"
 
-# no se que es
+# https://es.wikipedia.org/wiki/El_ocaso_de_los_dioses
 #: Source/itemdat.cpp:463
-#, fuzzy
 msgid "Gotterdamerung"
-msgstr "Gotterdammerung"
+msgstr "El Ocaso de los Dioses"
 
 #: Source/itemdat.cpp:464
 msgid "Royal Circlet"
@@ -3571,19 +3500,13 @@ msgstr "La Capa Arcoíris"
 msgid "Leather of Aut"
 msgstr "Cuero de Aut"
 
-# pañoleta
-# chal
-# mantón
 #: Source/itemdat.cpp:469
-#, fuzzy
 msgid "Wisdom's Wrap"
-msgstr "Envoltura de la Sabiduría"
+msgstr "Manto de la Sabiduría"
 
-# ver armadura en español
 #: Source/itemdat.cpp:470
-#, fuzzy
 msgid "Sparking Mail"
-msgstr "Armadura de Placas"
+msgstr "Coraza Brillante"
 
 #: Source/itemdat.cpp:471
 msgid "Scavenger Carapace"
@@ -3593,17 +3516,17 @@ msgstr "Caparazón de Carroñero"
 msgid "Nightscape"
 msgstr "Paisaje Nocturno"
 
-# puede ser una parte de armadura. falta contexto
+# no estoy seguro
 #: Source/itemdat.cpp:473
 #, fuzzy
 msgid "Naj's Light Plate"
-msgstr "Placa de luz de Naj"
+msgstr "Armadura Liviana de Naj"
 
 # no estoy seguro.
 #: Source/itemdat.cpp:474
 #, fuzzy
 msgid "Demonspike Coat"
-msgstr "Abrigo de Pico Demoníaco"
+msgstr "Manto de Demonspike"
 
 #: Source/itemdat.cpp:475
 msgid "The Deflector"
@@ -3693,11 +3616,10 @@ msgstr "Antorcha"
 msgid "Armor of Gloom"
 msgstr "Armadura de Penumbra"
 
-# no se que es esto
+# Parece ser Alemán
 #: Source/itemdat.cpp:497
-#, fuzzy
 msgid "Blitzen"
-msgstr "Blitzen"
+msgstr "Rayo"
 
 #: Source/itemdat.cpp:498
 msgid "Thunderclap"
@@ -3711,10 +3633,9 @@ msgstr "Shirotachi"
 msgid "Eater of Souls"
 msgstr "Devorador de Almas"
 
-# no estoy seguro
 #: Source/itemdat.cpp:501
 msgid "Diamondedge"
-msgstr "Borde de Diamante"
+msgstr "Filo Diamantado"
 
 #: Source/itemdat.cpp:502
 msgid "Bone Chain Armor"
@@ -3781,9 +3702,7 @@ msgstr "probabilidad de acertar"
 msgid "greatly increases a"
 msgstr "aumenta enormemente un"
 
-# o "la posibilidad"
 #: Source/items.cpp:1896
-#, fuzzy
 msgid "weapon's chance to hit"
 msgstr "posibilidad de que el arma golpee"
 
@@ -3805,11 +3724,9 @@ msgstr "daño potencial - no arcos"
 msgid "reduces attributes needed"
 msgstr "reduce los atributos necesarios"
 
-# o "para usar"
 #: Source/items.cpp:1914
-#, fuzzy
 msgid "to use armor or weapons"
-msgstr "usar armaduras o armas"
+msgstr "para usar armaduras o armas"
 
 # o "una". Aqui seguramente se requiera cambios en el programa
 #: Source/items.cpp:1918
@@ -4166,7 +4083,6 @@ msgstr "el atacante recibe 1-3 daños"
 msgid "user loses all mana"
 msgstr "el usuario pierde todo el maná"
 
-# o "curarlo"?
 #: Source/items.cpp:3994
 #, fuzzy
 msgid "you can't heal"
@@ -4180,7 +4096,7 @@ msgstr "absorbe la mitad del daño de la trampa"
 #: Source/items.cpp:4000
 #, fuzzy
 msgid "knocks target back"
-msgstr "golpea al objetivo hacia atrás"
+msgstr "rechaza el objetivo"
 
 #: Source/items.cpp:4003
 #, no-c-format
@@ -4301,11 +4217,11 @@ msgstr "daño por relámpago: {:d}"
 msgid "lightning damage: {:d}-{:d}"
 msgstr "daño por relámpago: {:d}-{:d}"
 
-# a que se refiere "bolt"?
+# no estoy seguro
 #: Source/items.cpp:4087
 #, fuzzy
 msgid "charged bolts on hits"
-msgstr "pernos cargados en los golpes"
+msgstr "Centellas al golpe"
 
 #: Source/items.cpp:4096
 msgid "occasional triple damage"
@@ -4661,9 +4577,7 @@ msgstr "envejecido"
 msgid "Red Death"
 msgstr "Muerte Roja"
 
-# no se que es Litch
 #: Source/monstdat.cpp:89
-#, fuzzy
 msgid "Litch Demon"
 msgstr "Demonio Litch"
 
@@ -4707,7 +4621,7 @@ msgstr "Remolino"
 #: Source/monstdat.cpp:99
 #, fuzzy
 msgid "Devil Kin Brute"
-msgstr "Diablo Kin Bruto"
+msgstr "Bruto Estirpe del Diablo"
 
 #: Source/monstdat.cpp:100
 msgid "Winged-Demon"
@@ -4861,7 +4775,6 @@ msgstr "Felltwin"
 msgid "Hork Spawn"
 msgstr "Engendro de Hork"
 
-# no estoy seguro
 #: Source/monstdat.cpp:137
 #, fuzzy
 msgid "Venomtail"
@@ -4907,10 +4820,9 @@ msgstr "Rata de Tumba"
 msgid "Firebat"
 msgstr "Murciélago de Fuego"
 
-# no estoy seguro
 #: Source/monstdat.cpp:147
 msgid "Skullwing"
-msgstr "Ala de Calavera"
+msgstr "Calavera Alada"
 
 #: Source/monstdat.cpp:148
 #, fuzzy
@@ -4937,7 +4849,7 @@ msgstr "Archi Lich"
 #: Source/monstdat.cpp:153
 #, fuzzy
 msgid "Biclops"
-msgstr "Biclops"
+msgstr "Biclope"
 
 #: Source/monstdat.cpp:154
 msgid "Flesh Thing"
@@ -4984,11 +4896,11 @@ msgstr "El Profanador"
 msgid "Bonehead Keenaxe"
 msgstr "Hacha Afilada de Cabeza de Hueso"
 
-# no entiendo que es esto
+# no se si traducir "Bladeskin", es un nombre
 #: Source/monstdat.cpp:486
 #, fuzzy
 msgid "Bladeskin the Slasher"
-msgstr "El Asesino Piel de Cuchilla"
+msgstr "Bladeskin el Descuartizador"
 
 #: Source/monstdat.cpp:487
 msgid "Soulpus"
@@ -5014,7 +4926,7 @@ msgstr "Gutshank el Veloz"
 #: Source/monstdat.cpp:492
 #, fuzzy
 msgid "Brokenhead Bangshield"
-msgstr "Escudo de Cabeza Rota"
+msgstr "Brokenhead Bangshield"
 
 #: Source/monstdat.cpp:494
 msgid "Rotcarnage"
@@ -5030,20 +4942,20 @@ msgstr "Vigota"
 
 # "Madeye" es un nombre?
 #: Source/monstdat.cpp:497
+#, fuzzy
 msgid "Madeye the Dead"
 msgstr "Madeye el Muerto"
 
-# o "Fuego de Calavera"?
+# Es un nombre?
 #: Source/monstdat.cpp:499
 #, fuzzy
 msgid "Skullfire"
 msgstr "Calavera de Fuego"
 
-# no se que es esto
+# es un nombre?
 #: Source/monstdat.cpp:500
-#, fuzzy
 msgid "Warpskull"
-msgstr "Cráneo de Deformación"
+msgstr "Warpskull"
 
 #: Source/monstdat.cpp:501
 msgid "Goretongue"
@@ -5071,11 +4983,9 @@ msgstr "Cuervo de la Ira"
 msgid "Spineeater"
 msgstr "Comedor de Columna"
 
-# podría ser "Pirómano"?
 #: Source/monstdat.cpp:506
-#, fuzzy
 msgid "Blackash the Burning"
-msgstr "Blackash el Quemador"
+msgstr "Blackash el Quemado"
 
 #: Source/monstdat.cpp:507
 msgid "Shadowcrow"
@@ -5121,7 +5031,7 @@ msgstr "Bloodgutter"
 #: Source/monstdat.cpp:516
 #, fuzzy
 msgid "Deathshade Fleshmaul"
-msgstr "Deatnshade Fleshmaul"
+msgstr "Deathshade Fleshmaul"
 
 #: Source/monstdat.cpp:517
 msgid "Warmaggot the Mad"
@@ -5247,7 +5157,9 @@ msgstr "Lengua Negra"
 msgid "Viletouch"
 msgstr "Toque Vil"
 
+# o "Vivora Llamenate"?
 #: Source/monstdat.cpp:547
+#, fuzzy
 msgid "Viperflame"
 msgstr "Llama de Víbora"
 
@@ -5443,11 +5355,9 @@ msgstr "El jugador ' {:s}' acaba de salir del juego"
 msgid "Player '{:s}' killed Diablo and left the game!"
 msgstr "¡El jugador ' {:s}' mató a Diablo y abandonó el juego!"
 
-# "se desconectó"?
 #: Source/multi.cpp:202
-#, fuzzy
 msgid "Player '{:s}' dropped due to timeout"
-msgstr "El jugador ' {:s}' cayó debido al tiempo de espera"
+msgstr "El jugador ' {:s}' desconectado debido al tiempo de espera"
 
 #: Source/multi.cpp:826
 msgid "Player '{:s}' (level {:d}) is already in the game"
@@ -5530,11 +5440,11 @@ msgstr "Siniestro"
 msgid "Quiet"
 msgstr "Tranquilo"
 
-# o "apartado"?
+# o "apartado/aislado"?
 #: Source/objects.cpp:121
 #, fuzzy
 msgid "Secluded"
-msgstr "Aislado"
+msgstr "Secreto"
 
 #: Source/objects.cpp:122
 msgid "Ornate"
@@ -5794,9 +5704,7 @@ msgstr "Fuente de las Lágrimas"
 msgid "Steel Tome"
 msgstr "Tomo de Acero"
 
-# o "de la sangre" ?
 #: Source/objects.cpp:5531
-#, fuzzy
 msgid "Pedestal of Blood"
 msgstr "Pedestal de Sangre"
 
@@ -5927,11 +5835,10 @@ msgstr "La Cámara de Hueso"
 msgid "Archbishop Lazarus"
 msgstr "Arzobispo Lázaro"
 
-# o de tumbas?
+# o  "graves"?
 #: Source/quests.cpp:58
-#, fuzzy
 msgid "Grave Matters"
-msgstr "Asuntos Graves"
+msgstr "Asuntos de Tumbas"
 
 #: Source/quests.cpp:59
 msgid "Farmer's Orchard"
@@ -6001,11 +5908,9 @@ msgstr "Cámara de Hueso"
 msgid "Archbishop Lazarus' Lair"
 msgstr "Guarida del Arzobispo Lázaro"
 
-# no estoy seguro
 #: Source/spelldat.cpp:16
-#, fuzzy
 msgid "Firebolt"
-msgstr "Cerrojo de Fuego"
+msgstr "Descarga de Fuego"
 
 #: Source/spelldat.cpp:17
 msgid "Healing"
@@ -6051,11 +5956,9 @@ msgstr "Cadena de Relámpagos"
 msgid "Flame Wave"
 msgstr "Ola de Llamas"
 
-# o "de la condenación" ?
 #: Source/spelldat.cpp:31
-#, fuzzy
 msgid "Doom Serpents"
-msgstr "Serpientes Condenadas"
+msgstr "Serpientes de la Condenación"
 
 #: Source/spelldat.cpp:32
 msgid "Blood Ritual"
@@ -6085,7 +5988,7 @@ msgstr "Apocalipsis"
 #: Source/spelldat.cpp:40
 #, fuzzy
 msgid "Etherealize"
-msgstr "Etherealizar"
+msgstr "Etherealiza"
 
 #: Source/spelldat.cpp:41
 msgid "Item Repair"
@@ -6384,11 +6287,10 @@ msgstr "Decir adiós"
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr "Tengo este artículo a la venta:             Tu oro: {:d}"
 
-# o "dejar" ?
+# o "salir" ?
 #: Source/stores.cpp:981
-#, fuzzy
 msgid "Leave"
-msgstr "Salir"
+msgstr "Dejar"
 
 #: Source/stores.cpp:1003
 msgid "Healer's home"
@@ -6663,7 +6565,6 @@ msgstr ""
 # no se como traducir exactamente "I cannot understand for the very life of me"
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
-#, fuzzy
 msgid ""
 "Master, I have a strange experience to relate. I know that you have a great "
 "knowledge of those monstrosities that inhabit the labyrinth, and this is "
@@ -6676,7 +6577,7 @@ msgid ""
 msgstr ""
 "Maestro, tengo una experiencia extraña que contarle. Sé que tiene un gran "
 "conocimiento de esas monstruosidades que habitan el laberinto, y esto es "
-"algo que no puedo entender por mi vida ... Me desperté durante la noche por "
+"algo que no puedo entender, por mi vida ... Me desperté durante la noche por "
 "un sonido de rascado justo afuera de mi taberna. Cuando miré desde mi "
 "habitación, vi las formas de pequeñas criaturas parecidas a demonios en el "
 "patio de la posada. Poco tiempo después, se fueron corriendo, no sin antes "
@@ -7916,8 +7817,7 @@ msgid ""
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
 "Nunca he tratado con este Señor de la Guerra del que hablas, pero parece que "
-"está pasando por muchas espadas. No me importaría abastecer a sus "
-"ejércitos ..."
+"necesite muchas espadas. No me importaría abastecer a sus ejércitos ..."
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
@@ -8131,12 +8031,11 @@ msgstr ""
 # no estoy seguro de "MEAN black mushroom"
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
-#, fuzzy
 msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
-"Ogden mezcla un BESTIAL hongo negro, pero me enfermaré si bebo eso. Escucha, "
+"Ogden mezcla un INFAME hongo negro, pero me enfermaré si bebo eso. Escucha, "
 "escucha ... aquí está el secreto: ¡La moderación es la clave!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
@@ -8299,6 +8198,7 @@ msgstr ""
 # narrador creo que se refiere al Bardo
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
+#, fuzzy
 msgid ""
 "The best person to ask about that sort of thing would be our storyteller. \n"
 " \n"
@@ -8454,9 +8354,9 @@ msgid ""
 msgstr ""
 "Griswold: un hombre de gran acción y gran coraje. Apuesto a que nunca te "
 "contó de la vez que entró en el Laberinto para salvar a Wirt, ¿verdad? Él "
-"conoce su parte justa de los peligros que se encuentran allí, pero, de "
-"nuevo, tu también. Es un hábil artesano, y si dice poder ayudarlo de alguna "
-"manera, puede contar con su honestidad y habilidad."
+"conocía los peligros que se encuentran allí, pero, de nuevo, tu también. Es "
+"un hábil artesano, y si dice poder ayudarlo de alguna manera, puede contar "
+"con su honestidad y habilidad."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:315
@@ -8961,6 +8861,7 @@ msgstr ""
 "necesita. Si supiera lo más mínimo sobre cómo aprovechar la magia como ella "
 "lo hizo, podría hacer algunas cosas realmente increíbles."
 
+# gammer
 # in British English
 # (ˈɡæmə )
 # sustantivo
@@ -8968,7 +8869,6 @@ msgstr ""
 # a dialect word for an old woman: now chiefly humorous or contemptuous
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
-#, fuzzy
 msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
@@ -9075,7 +8975,6 @@ msgstr ""
 # " he knows he knows" parece ser un error del original
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
-#, fuzzy
 msgid ""
 "Cain isn't what he says he is. Sure, sure, he talks a good story... some of "
 "'em are real scary or funny... but I think he knows more than he knows he "
@@ -10050,6 +9949,7 @@ msgstr ""
 # "Year of Drawing Shadows" no estoy seguro de esta traduccion
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
+#, fuzzy
 msgid ""
 "And in the year of the Golden Light, it was so decreed that a great "
 "Cathedral be raised.  The cornerstone of this holy place was to be carved "
@@ -10070,9 +9970,9 @@ msgstr ""
 "translúcida Antyrael, llamada así por el Ángel que compartía su poder con "
 "los Horadrim.\n"
 " \n"
-"En el Año que Atrae Sombras, el suelo tembló y la Catedral se hizo añicos y "
-"cayó. Cuando comenzó la construcción de catacumbas y castillos y el hombre "
-"se enfrentó a los estragos de la Guerra del Pecado, las ruinas fueron "
+"En el Año designado a las Sombras, el suelo tembló y la Catedral se hizo "
+"añicos y cayó. Cuando comenzó la construcción de catacumbas y castillos y el "
+"hombre se enfrentó a los estragos de la Guerra del Pecado, las ruinas fueron "
 "escarbadas en busca de sus piedras. Y así fue como la piedra angular "
 "desapareció de los ojos del hombre.\n"
 " \n"
@@ -10277,7 +10177,7 @@ msgstr ""
 "cosas que han crecido demasiado. No puedes perderte, mi casa está justo al "
 "sur de la bifurcación del río ... ya sabes ... la del huerto descuidado."
 
-# "landed" no queda claro el significado
+# no estoy seguro
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
 #, fuzzy
@@ -10287,8 +10187,8 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
-"Hoy nublado y fresco. Lanzar las redes de la nigromancia a través del vacío "
-"aterrizó dos nuevas subespecies de terror volador; un buen día de trabajo. "
+"Hoy nublado y fresco. Lanzando las redes de la nigromancia en el vacío "
+"caerán dos nuevas subespecies de terror volador; un buen día de trabajo. "
 "Debes recordar pedir más guano de murciélago y velas negras de Adria; Me "
 "estoy quedando un poco bajo."
 
@@ -10412,11 +10312,11 @@ msgstr "Griswold el Herrero"
 msgid "Ogden the Tavern owner"
 msgstr "Ogden el propietario de la Taberna"
 
-# no estoy seguro
+# o "vecino"?
 #: Source/towners.cpp:120
 #, fuzzy
 msgid "Wounded Townsman"
-msgstr "Pueblo Herido"
+msgstr "Ciudadano Herido"
 
 #: Source/towners.cpp:142
 msgid "Adria the Witch"
