@@ -789,6 +789,51 @@ void SyncPositionWithParent(MissileStruct &missile)
 	missile.position.traveled = parent.position.traveled;
 }
 
+void SpawnLightning(MissileStruct &missile, int dam)
+{
+	missile._mirange--;
+	missile.position.traveled += missile.position.velocity;
+	UpdateMissilePos(missile);
+
+	Point position = missile.position.tile;
+	assert(InDungeonBounds(position));
+	int pn = dPiece[position.x][position.y];
+	assert(pn >= 0 && pn <= MAXTILES);
+
+	if (missile._misource != -1 || position != missile.position.start) {
+		if (nMissileTable[pn]) {
+			missile._mirange = 0;
+		}
+	}
+
+	if (!nMissileTable[pn]) {
+		if (position != Point { missile._miVar1, missile._miVar2 } && InDungeonBounds(position)) {
+			missile._miVar4 = -(AvailableMissiles[0] + 1);
+			missile_id type = MIS_LIGHTNING;
+			if (missile._misource != -1 && missile._micaster == TARGET_PLAYERS
+			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+				type = MIS_LIGHTNING2;
+			}
+			AddMissile(
+			    position,
+			    missile.position.start,
+			    DIR_S,
+			    type,
+			    missile._micaster,
+			    missile._misource,
+			    dam,
+			    missile._mispllvl);
+			missile._miVar4 = 0;
+			missile._miVar1 = position.x;
+			missile._miVar2 = position.y;
+		}
+	}
+
+	if (missile._mirange == 0) {
+		missile._miDelFlag = true;
+	}
+}
+
 } // namespace
 
 void GetDamageAmt(int i, int *mind, int *maxd)
@@ -3266,59 +3311,8 @@ void MI_HiveExplode(int i)
 void MI_LightningArrow(int i)
 {
 	auto &missile = Missiles[i];
-	missile._mirange--;
-	missile.position.traveled += missile.position.velocity;
-	UpdateMissilePos(missile);
 
-	int mx = missile.position.tile.x;
-	int my = missile.position.tile.y;
-	assert(mx >= 0 && mx < MAXDUNX);
-	assert(my >= 0 && my < MAXDUNY);
-	int pn = dPiece[mx][my];
-	assert(pn >= 0 && pn <= MAXTILES);
-
-	if (missile._misource == -1) {
-		if ((mx != missile.position.start.x || my != missile.position.start.y) && nMissileTable[pn]) {
-			missile._mirange = 0;
-		}
-	} else if (nMissileTable[pn]) {
-		missile._mirange = 0;
-	}
-
-	if (!nMissileTable[pn]) {
-		if ((mx != missile._miVar1 || my != missile._miVar2) && InDungeonBounds({ mx, my })) {
-			missile._miVar4 = -(AvailableMissiles[0] + 1);
-			if (missile._misource != -1 && missile._micaster == TARGET_PLAYERS
-			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
-				AddMissile(
-				    missile.position.tile,
-				    missile.position.start,
-				    DIR_S,
-				    MIS_LIGHTNING2,
-				    missile._micaster,
-				    missile._misource,
-				    missile._midam,
-				    missile._mispllvl);
-			} else {
-				AddMissile(
-				    missile.position.tile,
-				    missile.position.start,
-				    DIR_S,
-				    MIS_LIGHTNING,
-				    missile._micaster,
-				    missile._misource,
-				    missile._midam,
-				    missile._mispllvl);
-			}
-			missile._miVar4 = 0;
-			missile._miVar1 = missile.position.tile.x;
-			missile._miVar2 = missile.position.tile.y;
-		}
-	}
-
-	if (missile._mirange == 0 || mx <= 0 || my <= 0 || mx >= MAXDUNX || my > MAXDUNY) { // BUGFIX my >= MAXDUNY
-		missile._miDelFlag = true;
-	}
+	SpawnLightning(missile, missile._midam);
 }
 
 void MI_FireRing(int i)
@@ -3475,70 +3469,18 @@ void MI_Lightctrl(int i)
 {
 	assert(i >= 0 && i < MAXMISSILES);
 	auto &missile = Missiles[i];
-	missile._mirange--;
 
 	int dam;
-	int id = missile._misource;
-	if (id != -1) {
-		if (missile._micaster == TARGET_MONSTERS) {
-			dam = (GenerateRnd(2) + GenerateRnd(Players[id]._pLevel) + 2) << 6;
-		} else {
-			auto &monster = Monsters[id];
-			dam = 2 * (monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1));
-		}
-	} else {
+	if (missile._misource == -1) {
 		dam = GenerateRnd(currlevel) + 2 * currlevel;
+	} else if (missile._micaster == TARGET_MONSTERS) {
+		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource]._pLevel) + 2) << 6;
+	} else {
+		auto &monster = Monsters[missile._misource];
+		dam = 2 * (monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1));
 	}
 
-	missile.position.traveled += missile.position.velocity;
-	UpdateMissilePos(missile);
-
-	int mx = missile.position.tile.x;
-	int my = missile.position.tile.y;
-	assert(mx >= 0 && mx < MAXDUNX);
-	assert(my >= 0 && my < MAXDUNY);
-	int pn = dPiece[mx][my];
-	assert(pn >= 0 && pn <= MAXTILES);
-
-	if (id != -1 || Point { mx, my } != missile.position.start) {
-		if (nMissileTable[pn]) {
-			missile._mirange = 0;
-		}
-	}
-	if (!nMissileTable[pn]
-	    && Point { mx, my } != Point { missile._miVar1, missile._miVar2 }
-	    && InDungeonBounds({ mx, my })) {
-		missile._miVar4 = -(AvailableMissiles[0] + 1);
-		if (id != -1 && missile._micaster == TARGET_PLAYERS
-		    && IsAnyOf(Monsters[id].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
-			AddMissile(
-			    missile.position.tile,
-			    missile.position.start,
-			    DIR_S,
-			    MIS_LIGHTNING2,
-			    missile._micaster,
-			    id,
-			    dam,
-			    missile._mispllvl);
-		} else {
-			AddMissile(
-			    missile.position.tile,
-			    missile.position.start,
-			    DIR_S,
-			    MIS_LIGHTNING,
-			    missile._micaster,
-			    id,
-			    dam,
-			    missile._mispllvl);
-		}
-		missile._miVar4 = 0;
-		missile._miVar1 = missile.position.tile.x;
-		missile._miVar2 = missile.position.tile.y;
-	}
-	assert(mx != 0 && my != 0);
-	if (missile._mirange == 0) {
-		missile._miDelFlag = true;
-	}
+	SpawnLightning(missile, dam);
 }
 
 void MI_Lightning(int i)
