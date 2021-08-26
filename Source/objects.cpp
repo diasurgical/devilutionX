@@ -2678,8 +2678,7 @@ bool OperateShrineGloomy(int pnum)
 	auto &player = Players[pnum];
 
 	// Increment armor class by 2 and decrements max damage by 1.
-	auto incArmorClass2DecMaxDamage1 = [](ItemStruct &item)
-	{
+	InventoryForEachItem(player, [](ItemStruct &item) {
 		switch (item._itype) {
 		case ITYPE_SWORD:
 		case ITYPE_AXE:
@@ -2700,8 +2699,7 @@ bool OperateShrineGloomy(int pnum)
 		default:
 			break;
 		}
-	};
-	InventoryForEachItem(player, incArmorClass2DecMaxDamage1);
+	});
 
 	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
 
