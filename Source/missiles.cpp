@@ -674,66 +674,6 @@ bool GuardianTryFireAt(MissileStruct &missile, Point target)
 	return true;
 }
 
-void FireballUpdate(MissileStruct &missile, Displacement offset, bool alwaysDelete)
-{
-	missile._mirange--;
-
-	int id = missile._misource;
-	Point p = (missile._micaster == TARGET_MONSTERS) ? Players[id].position.tile : Monsters[id].position.tile;
-
-	if (missile._miAnimType == MFILE_BIGEXP) {
-		if (missile._mirange == 0) {
-			missile._miDelFlag = true;
-			AddUnLight(missile._mlid);
-		}
-	} else {
-		int dam = missile._midam;
-		missile.position.traveled += offset;
-		UpdateMissilePos(missile);
-		if (missile.position.tile != missile.position.start)
-			CheckMissileCol(missile, dam, dam, false, missile.position.tile, false);
-		if (missile._mirange == 0) {
-			Point m = missile.position.tile;
-			ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
-
-			constexpr Displacement Pattern[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
-			for (auto shift : Pattern) {
-				if (!CheckBlock(p, m + shift))
-					CheckMissileCol(missile, dam, dam, false, m + shift, true);
-			}
-
-			if (!TransList[dTransVal[m.x][m.y]]
-			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
-				missile.position.tile.x++;
-				missile.position.tile.y++;
-				missile.position.offset.deltaY -= 32;
-			}
-			if (missile.position.velocity.deltaY > 0
-			    && ((TransList[dTransVal[m.x + 1][m.y]] && nSolidTable[dPiece[m.x + 1][m.y]])
-			        || (TransList[dTransVal[m.x - 1][m.y]] && nSolidTable[dPiece[m.x - 1][m.y]]))) {
-				missile.position.offset.deltaY -= 32;
-			}
-			if (missile.position.velocity.deltaX > 0
-			    && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]])
-			        || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]]))) {
-				missile.position.offset.deltaX -= 32;
-			}
-			missile._mimfnum = 0;
-			SetMissAnim(missile, MFILE_BIGEXP);
-			missile._mirange = missile._miAnimLen - 1;
-			missile.position.velocity = {};
-		} else if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
-			missile._miVar1 = missile.position.tile.x;
-			missile._miVar2 = missile.position.tile.y;
-			ChangeLight(missile._mlid, missile.position.tile, 8);
-		}
-		if (alwaysDelete)
-			missile._miDelFlag = true;
-	}
-
-	PutMissile(missile);
-}
-
 bool GrowWall(int playerId, Point position, Point target, missile_id type, int spellLevel, int damage)
 {
 	int dp = dPiece[position.x][position.y];
@@ -3212,7 +3152,60 @@ void MI_Firewall(MissileStruct &missile)
 
 void MI_Fireball(MissileStruct &missile)
 {
-	FireballUpdate(missile, missile.position.velocity, false);
+	missile._mirange--;
+
+	int id = missile._misource;
+	Point p = (missile._micaster == TARGET_MONSTERS) ? Players[id].position.tile : Monsters[id].position.tile;
+
+	if (missile._miAnimType == MFILE_BIGEXP) {
+		if (missile._mirange == 0) {
+			missile._miDelFlag = true;
+			AddUnLight(missile._mlid);
+		}
+	} else {
+		int dam = missile._midam;
+		missile.position.traveled += missile.position.velocity;
+		UpdateMissilePos(missile);
+		if (missile.position.tile != missile.position.start)
+			CheckMissileCol(missile, dam, dam, false, missile.position.tile, false);
+		if (missile._mirange == 0) {
+			Point m = missile.position.tile;
+			ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame);
+
+			constexpr Displacement Pattern[] = { { 0, 0 }, { 0, 1 }, { 0, -1 }, { 1, 0 }, { 1, -1 }, { 1, 1 }, { -1, 0 }, { -1, 1 }, { -1, -1 } };
+			for (auto shift : Pattern) {
+				if (!CheckBlock(p, m + shift))
+					CheckMissileCol(missile, dam, dam, false, m + shift, true);
+			}
+
+			if (!TransList[dTransVal[m.x][m.y]]
+			    || (missile.position.velocity.deltaX < 0 && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]]) || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]])))) {
+				missile.position.tile.x++;
+				missile.position.tile.y++;
+				missile.position.offset.deltaY -= 32;
+			}
+			if (missile.position.velocity.deltaY > 0
+			    && ((TransList[dTransVal[m.x + 1][m.y]] && nSolidTable[dPiece[m.x + 1][m.y]])
+			        || (TransList[dTransVal[m.x - 1][m.y]] && nSolidTable[dPiece[m.x - 1][m.y]]))) {
+				missile.position.offset.deltaY -= 32;
+			}
+			if (missile.position.velocity.deltaX > 0
+			    && ((TransList[dTransVal[m.x][m.y + 1]] && nSolidTable[dPiece[m.x][m.y + 1]])
+			        || (TransList[dTransVal[m.x][m.y - 1]] && nSolidTable[dPiece[m.x][m.y - 1]]))) {
+				missile.position.offset.deltaX -= 32;
+			}
+			missile._mimfnum = 0;
+			SetMissAnim(missile, MFILE_BIGEXP);
+			missile._mirange = missile._miAnimLen - 1;
+			missile.position.velocity = {};
+		} else if (missile.position.tile.x != missile._miVar1 || missile.position.tile.y != missile._miVar2) {
+			missile._miVar1 = missile.position.tile.x;
+			missile._miVar2 = missile.position.tile.y;
+			ChangeLight(missile._mlid, missile.position.tile, 8);
+		}
+	}
+
+	PutMissile(missile);
 }
 
 void MI_HorkSpawn(MissileStruct &missile)
