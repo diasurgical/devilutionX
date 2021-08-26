@@ -2170,7 +2170,7 @@ bool DropItemBeforeTrig()
 }
 
 /**
- * @brief ForEachItem invokes f for each non-empty item of the given player; covering equipped, inventory and belt items.
+ * @brief Invokes f for each non-empty item of the given player; covering equipped, inventory and belt items.
  * @param player Player with equipped, inventory and belt items.
  * @param f Function to invoke on each non-empty item of the player.
  */
