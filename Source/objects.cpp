@@ -5564,7 +5564,8 @@ void AddNakrulLeaver()
 // the max damage by 1 of the given item.
 //
 // Used by Gloomy shrine.
-void incArmorClass2DecMaxDamage1(ItemStruct &item) {
+void incArmorClass2DecMaxDamage1(ItemStruct &item)
+{
 	switch (item._itype) {
 	case ITYPE_SWORD:
 	case ITYPE_AXE:
