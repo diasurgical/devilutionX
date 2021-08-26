@@ -1588,21 +1588,17 @@ bool MonaterRangedAttack(int i)
 	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum) {
-		if (monster._mVar1 != -1) {
+		const auto &missileType = static_cast<missile_id>(monster._mVar1);
+		if (missileType != MIS_NULL) {
 			int multimissiles = 1;
-			if (monster._mVar1 == MIS_CBOLT)
+			if (missileType == MIS_CBOLT)
 				multimissiles = 3;
 			for (int mi = 0; mi < multimissiles; mi++) {
-				Point sourcePosition = monster.position.tile;
-				if (gbIsHellfire) {
-					sourcePosition += monster._mdir;
-				}
-
 				AddMissile(
-				    sourcePosition,
+				    monster.position.tile,
 				    monster.enemyPosition,
 				    monster._mdir,
-				    static_cast<missile_id>(monster._mVar1),
+				    missileType,
 				    TARGET_PLAYERS,
 				    i,
 				    monster._mVar2,
@@ -1628,13 +1624,8 @@ bool MonsterRangedSpecialAttack(int i)
 	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum2 && monster.AnimInfo.TickCounterOfCurrentFrame == 0) {
-		Point sourcePosition = monster.position.tile;
-		if (gbIsHellfire) {
-			sourcePosition += monster._mdir;
-		}
-
 		AddMissile(
-		    sourcePosition,
+		    monster.position.tile,
 		    monster.enemyPosition,
 		    monster._mdir,
 		    static_cast<missile_id>(monster._mVar1),
