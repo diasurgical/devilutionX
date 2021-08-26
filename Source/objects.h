@@ -10,7 +10,6 @@
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "itemdat.h"
-#include "items.h"
 #include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
