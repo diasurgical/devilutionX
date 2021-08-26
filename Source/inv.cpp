@@ -2177,8 +2177,7 @@ bool DropItemBeforeTrig()
 void ForEachItem(PlayerStruct &player, ItemFunc f)
 {
 	// Equipped items.
-	for (int i = 0; i < NUM_INVLOC; i++) {
-		auto &item = player.InvBody[i];
+	for (auto &item : player.InvBody) {
 		if (!item.isEmpty()) {
 			f(item);
 		}
