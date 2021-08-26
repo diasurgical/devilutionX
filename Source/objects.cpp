@@ -2677,6 +2677,30 @@ bool OperateShrineGloomy(int pnum)
 
 	auto &player = Players[pnum];
 
+	// Increment armor class by 2 and decrements max damage by 1.
+	auto incArmorClass2DecMaxDamage1 = [](ItemStruct &item)
+	{
+		switch (item._itype) {
+		case ITYPE_SWORD:
+		case ITYPE_AXE:
+		case ITYPE_BOW:
+		case ITYPE_MACE:
+		case ITYPE_STAFF:
+			item._iMaxDam--;
+			if (item._iMaxDam < item._iMinDam)
+				item._iMaxDam = item._iMinDam;
+			break;
+		case ITYPE_SHIELD:
+		case ITYPE_HELM:
+		case ITYPE_LARMOR:
+		case ITYPE_MARMOR:
+		case ITYPE_HARMOR:
+			item._iAC += 2;
+			break;
+		default:
+			break;
+		}
+	};
 	InventoryForEachItem(player, incArmorClass2DecMaxDamage1);
 
 	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
@@ -5558,34 +5582,6 @@ void AddNakrulLeaver()
 		}
 	}
 	AddObject(OBJ_LEVER, { UberRow + 3, UberCol - 1 });
-}
-
-/**
- * @brief Increments the armor class by 2 and decrements the max damage by 1 of the given item. Used by Gloomy shrine.
- * @param item Item for which to increment armor class and decrement max damage.
- */
-void incArmorClass2DecMaxDamage1(ItemStruct &item)
-{
-	switch (item._itype) {
-	case ITYPE_SWORD:
-	case ITYPE_AXE:
-	case ITYPE_BOW:
-	case ITYPE_MACE:
-	case ITYPE_STAFF:
-		item._iMaxDam--;
-		if (item._iMaxDam < item._iMinDam)
-			item._iMaxDam = item._iMinDam;
-		break;
-	case ITYPE_SHIELD:
-	case ITYPE_HELM:
-	case ITYPE_LARMOR:
-	case ITYPE_MARMOR:
-	case ITYPE_HARMOR:
-		item._iAC += 2;
-		break;
-	default:
-		break;
-	}
 }
 
 } // namespace devilution

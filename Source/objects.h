@@ -182,6 +182,5 @@ void AddNakrulLeaver();
  */
 bool OperateNakrulBook(int s);
 bool objectIsDisabled(int i);
-void incArmorClass2DecMaxDamage1(ItemStruct &item);
 
 } // namespace devilution
