@@ -5560,10 +5560,10 @@ void AddNakrulLeaver()
 	AddObject(OBJ_LEVER, { UberRow + 3, UberCol - 1 });
 }
 
-// incArmorClass2DecMaxDamage1 increments the armor class by 2 and decrements
-// the max damage by 1 of the given item.
-//
-// Used by Gloomy shrine.
+/**
+ * @brief Increments the armor class by 2 and decrements the max damage by 1 of the given item. Used by Gloomy shrine.
+ * @param item Item for which to increment armor class and decrement max damage.
+ */
 void incArmorClass2DecMaxDamage1(ItemStruct &item)
 {
 	switch (item._itype) {
