@@ -2082,10 +2082,11 @@ void DeltaLoadLevel()
 		}
 		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {
 			int ii = AllocateItem();
+			auto &item = Items[ii];
 
 			if (sgLevels[currlevel].item[i].wIndx == IDI_EAR) {
 				RecreateEar(
-				    ii,
+				    item,
 				    sgLevels[currlevel].item[i].wCI,
 				    sgLevels[currlevel].item[i].dwSeed,
 				    sgLevels[currlevel].item[i].bId,
@@ -2097,30 +2098,30 @@ void DeltaLoadLevel()
 				    sgLevels[currlevel].item[i].dwBuff);
 			} else {
 				RecreateItem(
-				    ii,
+				    item,
 				    sgLevels[currlevel].item[i].wIndx,
 				    sgLevels[currlevel].item[i].wCI,
 				    sgLevels[currlevel].item[i].dwSeed,
 				    sgLevels[currlevel].item[i].wValue,
 				    (sgLevels[currlevel].item[i].dwBuff & CF_HELLFIRE) != 0);
 				if (sgLevels[currlevel].item[i].bId != 0)
-					Items[ii]._iIdentified = true;
-				Items[ii]._iDurability = sgLevels[currlevel].item[i].bDur;
-				Items[ii]._iMaxDur = sgLevels[currlevel].item[i].bMDur;
-				Items[ii]._iCharges = sgLevels[currlevel].item[i].bCh;
-				Items[ii]._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
-				Items[ii]._iPLToHit = sgLevels[currlevel].item[i].wToHit;
-				Items[ii]._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
-				Items[ii]._iMinStr = sgLevels[currlevel].item[i].bMinStr;
-				Items[ii]._iMinMag = sgLevels[currlevel].item[i].bMinMag;
-				Items[ii]._iMinDex = sgLevels[currlevel].item[i].bMinDex;
-				Items[ii]._iAC = sgLevels[currlevel].item[i].bAC;
-				Items[ii].dwBuff = sgLevels[currlevel].item[i].dwBuff;
+					item._iIdentified = true;
+				item._iDurability = sgLevels[currlevel].item[i].bDur;
+				item._iMaxDur = sgLevels[currlevel].item[i].bMDur;
+				item._iCharges = sgLevels[currlevel].item[i].bCh;
+				item._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
+				item._iPLToHit = sgLevels[currlevel].item[i].wToHit;
+				item._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
+				item._iMinStr = sgLevels[currlevel].item[i].bMinStr;
+				item._iMinMag = sgLevels[currlevel].item[i].bMinMag;
+				item._iMinDex = sgLevels[currlevel].item[i].bMinDex;
+				item._iAC = sgLevels[currlevel].item[i].bAC;
+				item.dwBuff = sgLevels[currlevel].item[i].dwBuff;
 			}
 			int x = sgLevels[currlevel].item[i].x;
 			int y = sgLevels[currlevel].item[i].y;
-			Items[ii].position = GetItemPosition({ x, y });
-			dItem[Items[ii].position.x][Items[ii].position.y] = ii + 1;
+			item.position = GetItemPosition({ x, y });
+			dItem[item.position.x][item.position.y] = ii + 1;
 			RespawnItem(&Items[ii], false);
 		}
 	}

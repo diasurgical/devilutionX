@@ -1516,7 +1516,7 @@ void AddStealPotions(MissileStruct &missile, Point /*dst*/, Direction /*midir*/)
 					}
 				}
 				if (ii != -1) {
-					SetPlrHandItem(&player.HoldItem, ii);
+					SetPlrHandItem(player.HoldItem, ii);
 					GetPlrHandSeed(&player.HoldItem);
 					player.HoldItem._iStatFlag = true;
 					player.SpdList[si] = player.HoldItem;

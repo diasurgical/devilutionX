@@ -146,6 +146,7 @@ void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashie
  */
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 {
+	auto &item = Items[MAXITEMS];
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(is->idx));
 	if (idx == IDI_NONE) {
 		id->_itype = ITYPE_NONE;
@@ -166,7 +167,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 
 	if (idx == IDI_EAR) {
 		RecreateEar(
-		    MAXITEMS,
+		    item,
 		    SDL_SwapLE16(is->iCreateInfo),
 		    SDL_SwapLE32(is->iSeed),
 		    is->bId,
@@ -177,23 +178,23 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 		    SDL_SwapLE16(is->wValue),
 		    SDL_SwapLE32(is->dwBuff));
 	} else {
-		memset(&Items[MAXITEMS], 0, sizeof(*Items));
-		RecreateItem(MAXITEMS, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
-		Items[MAXITEMS]._iMagical = static_cast<item_quality>(is->bId >> 1);
-		Items[MAXITEMS]._iIdentified = (is->bId & 1) != 0;
-		Items[MAXITEMS]._iDurability = is->bDur;
-		Items[MAXITEMS]._iMaxDur = is->bMDur;
-		Items[MAXITEMS]._iCharges = is->bCh;
-		Items[MAXITEMS]._iMaxCharges = is->bMCh;
+		memset(&item, 0, sizeof(item));
+		RecreateItem(item, idx, SDL_SwapLE16(is->iCreateInfo), SDL_SwapLE32(is->iSeed), SDL_SwapLE16(is->wValue), isHellfire);
+		item._iMagical = static_cast<item_quality>(is->bId >> 1);
+		item._iIdentified = (is->bId & 1) != 0;
+		item._iDurability = is->bDur;
+		item._iMaxDur = is->bMDur;
+		item._iCharges = is->bCh;
+		item._iMaxCharges = is->bMCh;
 
-		RemoveInvalidItem(&Items[MAXITEMS]);
+		RemoveInvalidItem(&item);
 
 		if (isHellfire)
-			Items[MAXITEMS].dwBuff |= CF_HELLFIRE;
+			item.dwBuff |= CF_HELLFIRE;
 		else
-			Items[MAXITEMS].dwBuff &= ~CF_HELLFIRE;
+			item.dwBuff &= ~CF_HELLFIRE;
 	}
-	*id = Items[MAXITEMS];
+	*id = item;
 }
 
 void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)

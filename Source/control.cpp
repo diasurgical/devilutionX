@@ -444,14 +444,14 @@ int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, Char
 	return std::min(remainingStatPoints, pointsToReachCap);
 }
 
-int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
+int DrawDurIcon4Item(const Surface &out, ItemStruct &pItem, int x, int c)
 {
-	if (pItem->isEmpty())
+	if (pItem.isEmpty())
 		return x;
-	if (pItem->_iDurability > 5)
+	if (pItem._iDurability > 5)
 		return x;
 	if (c == 0) {
-		switch (pItem->_itype) {
+		switch (pItem._itype) {
 		case ITYPE_SWORD:
 			c = 2;
 			break;
@@ -472,7 +472,7 @@ int DrawDurIcon4Item(const Surface &out, ItemStruct *pItem, int x, int c)
 			break;
 		}
 	}
-	if (pItem->_iDurability > 2)
+	if (pItem._iDurability > 2)
 		c += 8;
 	CelDrawTo(out, { x, -17 + PANEL_Y }, *pDurIcons, c);
 	return x - 32 - 8;
@@ -512,7 +512,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 
 void ControlSetGoldCurs(PlayerStruct &player)
 {
-	SetPlrHandGoldCurs(&player.HoldItem);
+	SetPlrHandGoldCurs(player.HoldItem);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
@@ -578,10 +578,10 @@ void RemoveGold(int pnum, int goldIndex)
 	int gi = goldIndex - INVITEM_INV_FIRST;
 	player.InvList[gi]._ivalue -= dropGoldValue;
 	if (player.InvList[gi]._ivalue > 0)
-		SetPlrHandGoldCurs(&player.InvList[gi]);
+		SetPlrHandGoldCurs(player.InvList[gi]);
 	else
 		player.RemoveInvItem(gi);
-	SetPlrHandItem(&player.HoldItem, IDI_GOLD);
+	SetPlrHandItem(player.HoldItem, IDI_GOLD);
 	GetGoldSeed(pnum, &player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;
@@ -1368,7 +1368,7 @@ void DrawInfoBox(const Surface &out)
 		}
 	} else {
 		if (pcursitem != -1)
-			GetItemStr(pcursitem);
+			GetItemStr(Items[pcursitem]);
 		else if (pcursobj != -1)
 			GetObjectStr(pcursobj);
 		if (pcursmonst != -1) {
@@ -1729,10 +1729,10 @@ void DrawDurIcon(const Surface &out)
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
-	x = DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HEAD], x, 4);
-	x = DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_CHEST], x, 3);
-	x = DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
-	DrawDurIcon4Item(out, &myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 4);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
 void RedBack(const Surface &out)

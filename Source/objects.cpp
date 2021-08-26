@@ -2977,14 +2977,14 @@ bool OperateShrineEldritch(int pnum)
 		if (player.InvList[j]._itype == ITYPE_MISC) {
 			if (player.InvList[j]._iMiscId == IMISC_HEAL
 			    || player.InvList[j]._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(&player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
+				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 				GetPlrHandSeed(&player.HoldItem);
 				player.HoldItem._iStatFlag = true;
 				player.InvList[j] = player.HoldItem;
 			}
 			if (player.InvList[j]._iMiscId == IMISC_FULLHEAL
 			    || player.InvList[j]._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(&player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
+				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 				GetPlrHandSeed(&player.HoldItem);
 				player.HoldItem._iStatFlag = true;
 				player.InvList[j] = player.HoldItem;
@@ -2995,14 +2995,14 @@ bool OperateShrineEldritch(int pnum)
 		if (item._itype == ITYPE_MISC) {
 			if (item._iMiscId == IMISC_HEAL
 			    || item._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(&player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
+				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
 				GetPlrHandSeed(&player.HoldItem);
 				player.HoldItem._iStatFlag = true;
 				item = player.HoldItem;
 			}
 			if (item._iMiscId == IMISC_FULLHEAL
 			    || item._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(&player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
+				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
 				GetPlrHandSeed(&player.HoldItem);
 				player.HoldItem._iStatFlag = true;
 				item = player.HoldItem;
@@ -3151,7 +3151,7 @@ bool OperateShrineSpiritual(int pnum)
 			gridItem = player._pNumInv;
 			player.InvList[t]._ivalue = r;
 			player._pGold += r;
-			SetPlrHandGoldCurs(&player.InvList[t]);
+			SetPlrHandGoldCurs(player.InvList[t]);
 		}
 	}
 

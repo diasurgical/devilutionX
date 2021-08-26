@@ -116,7 +116,7 @@ std::string DebugCmdGiveGoldCheat(const std::string_view parameter)
 			continue;
 
 		int ni = myPlayer._pNumInv++;
-		SetPlrHandItem(&myPlayer.InvList[ni], IDI_GOLD);
+		SetPlrHandItem(myPlayer.InvList[ni], IDI_GOLD);
 		GetPlrHandSeed(&myPlayer.InvList[ni]);
 		myPlayer.InvList[ni]._ivalue = GOLD_MAX_LIMIT;
 		myPlayer.InvList[ni]._iCurs = ICURS_GOLD_LARGE;

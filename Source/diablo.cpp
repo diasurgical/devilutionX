@@ -1238,13 +1238,14 @@ void HelpKeyPressed()
 #ifdef _DEBUG
 void ItemInfoKeyPressed()
 {
+	auto &item = Items[pcursitem];
 	if (pcursitem != -1) {
 		sprintf(
 		    tempstr,
 		    "IDX = %i  :  Seed = %i  :  CF = %i",
-		    Items[pcursitem].IDidx,
-		    Items[pcursitem]._iSeed,
-		    Items[pcursitem]._iCreateInfo);
+		    item.IDidx,
+		    item._iSeed,
+		    item._iCreateInfo);
 		NetSendCmdString(1 << MyPlayerId, tempstr);
 	}
 	sprintf(tempstr, "Numitems : %i", ActiveItemCount);
