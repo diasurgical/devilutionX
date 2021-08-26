@@ -10,6 +10,7 @@
 #include "engine/point.hpp"
 #include "engine/rectangle.hpp"
 #include "itemdat.h"
+#include "items.h"
 #include "monster.h"
 #include "objdat.h"
 #include "textdat.h"
@@ -181,5 +182,6 @@ void AddNakrulLeaver();
  */
 bool OperateNakrulBook(int s);
 bool objectIsDisabled(int i);
+void incArmorClass2DecMaxDamage1(ItemStruct &item);
 
 } // namespace devilution

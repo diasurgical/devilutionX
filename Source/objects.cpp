@@ -16,6 +16,7 @@
 #include "engine/random.hpp"
 #include "error.h"
 #include "init.h"
+#include "inv.h"
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -2676,51 +2677,7 @@ bool OperateShrineGloomy(int pnum)
 
 	auto &player = Players[pnum];
 
-	if (!player.InvBody[INVLOC_HEAD].isEmpty())
-		player.InvBody[INVLOC_HEAD]._iAC += 2;
-	if (!player.InvBody[INVLOC_CHEST].isEmpty())
-		player.InvBody[INVLOC_CHEST]._iAC += 2;
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD) {
-			player.InvBody[INVLOC_HAND_LEFT]._iAC += 2;
-		} else {
-			player.InvBody[INVLOC_HAND_LEFT]._iMaxDam--;
-			if (player.InvBody[INVLOC_HAND_LEFT]._iMaxDam < player.InvBody[INVLOC_HAND_LEFT]._iMinDam)
-				player.InvBody[INVLOC_HAND_LEFT]._iMaxDam = player.InvBody[INVLOC_HAND_LEFT]._iMinDam;
-		}
-	}
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD) {
-			player.InvBody[INVLOC_HAND_RIGHT]._iAC += 2;
-		} else {
-			player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam--;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam < player.InvBody[INVLOC_HAND_RIGHT]._iMinDam)
-				player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam = player.InvBody[INVLOC_HAND_RIGHT]._iMinDam;
-		}
-	}
-
-	for (int j = 0; j < player._pNumInv; j++) {
-		switch (player.InvList[j]._itype) {
-		case ITYPE_SWORD:
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_STAFF:
-			player.InvList[j]._iMaxDam--;
-			if (player.InvList[j]._iMaxDam < player.InvList[j]._iMinDam)
-				player.InvList[j]._iMaxDam = player.InvList[j]._iMinDam;
-			break;
-		case ITYPE_SHIELD:
-		case ITYPE_HELM:
-		case ITYPE_LARMOR:
-		case ITYPE_MARMOR:
-		case ITYPE_HARMOR:
-			player.InvList[j]._iAC += 2;
-			break;
-		default:
-			break;
-		}
-	}
+	ForEachItem(player, incArmorClass2DecMaxDamage1);
 
 	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
 
@@ -5601,6 +5558,33 @@ void AddNakrulLeaver()
 		}
 	}
 	AddObject(OBJ_LEVER, { UberRow + 3, UberCol - 1 });
+}
+
+// incArmorClass2DecMaxDamage1 increments the armor class by 2 and decrements
+// the max damage by 1 of the given item.
+//
+// Used by Gloomy shrine.
+void incArmorClass2DecMaxDamage1(ItemStruct &item) {
+	switch (item._itype) {
+	case ITYPE_SWORD:
+	case ITYPE_AXE:
+	case ITYPE_BOW:
+	case ITYPE_MACE:
+	case ITYPE_STAFF:
+		item._iMaxDam--;
+		if (item._iMaxDam < item._iMinDam)
+			item._iMaxDam = item._iMinDam;
+		break;
+	case ITYPE_SHIELD:
+	case ITYPE_HELM:
+	case ITYPE_LARMOR:
+	case ITYPE_MARMOR:
+	case ITYPE_HARMOR:
+		item._iAC += 2;
+		break;
+	default:
+		break;
+	}
 }
 
 } // namespace devilution

@@ -2169,4 +2169,33 @@ bool DropItemBeforeTrig()
 	return true;
 }
 
+/**
+ * @brief ForEachItem invokes f for each non-empty item of the given player; covering equipped, inventory and belt items.
+ * @param player Player with equipped, inventory and belt items.
+ * @param f Function to invoke on each non-empty item of the player.
+ */
+void ForEachItem(PlayerStruct &player, ItemFunc f) {
+	// Equipped items.
+	for (int i = 0; i < NUM_INVLOC; i++) {
+		auto &item = player.InvBody[i];
+		if (!item.isEmpty()) {
+			f(item);
+		}
+	}
+	// Inventory items.
+	for (int i = 0; i < player._pNumInv; i++) {
+		auto &item = player.InvList[i];
+		if (!item.isEmpty()) {
+			f(item);
+		}
+	}
+	// Belt items.
+	for (int i = 0; i < MAXBELTITEMS; i++) {
+		auto &item = player.SpdList[i];
+		if (!item.isEmpty()) {
+			f(item);
+		}
+	}
+}
+
 } // namespace devilution
