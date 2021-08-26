@@ -2677,7 +2677,7 @@ bool OperateShrineGloomy(int pnum)
 
 	auto &player = Players[pnum];
 
-	ForEachItem(player, incArmorClass2DecMaxDamage1);
+	InventoryForEachItem(player, incArmorClass2DecMaxDamage1);
 
 	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
 
