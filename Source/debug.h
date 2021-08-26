@@ -6,6 +6,7 @@
 #pragma once
 
 #include <string_view>
+#include <unordered_map>
 
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
@@ -17,6 +18,9 @@ namespace devilution {
 extern std::optional<CelSprite> pSquareCel;
 extern bool DebugGodMode;
 extern bool DebugVision;
+extern bool DebugCoords;
+extern bool DebugGrid;
+extern std::unordered_map<int, Point> DebugCoordsMap;
 
 void FreeDebugGFX();
 void LoadDebugGFX();

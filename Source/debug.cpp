@@ -27,6 +27,9 @@ namespace devilution {
 std::optional<CelSprite> pSquareCel;
 bool DebugGodMode = false;
 bool DebugVision = false;
+bool DebugCoords = false;
+bool DebugGrid = false;
+std::unordered_map<int, Point> DebugCoordsMap;
 
 namespace {
 
@@ -406,6 +409,24 @@ std::string DebugCmdTalkToTowner(const std::string_view parameter)
 	return "NPC not found.";
 }
 
+std::string DebugCmdShowCoords(const std::string_view parameter)
+{
+	DebugCoords = !DebugCoords;
+	if (DebugCoords)
+		return "I love math.";
+
+	return "I hate math.";
+}
+
+std::string DebugCmdShowGrid(const std::string_view parameter)
+{
+	DebugGrid = !DebugGrid;
+	if (DebugGrid)
+		return "A basket full of rectangles and mushrooms.";
+
+	return "Back to boring.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -427,6 +448,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
+	{ "coords", "Toggles showing tile coords.", "", &DebugCmdShowCoords },
+	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 };
 
 } // namespace
