@@ -2191,8 +2191,7 @@ void ForEachItem(PlayerStruct &player, ItemFunc f)
 		}
 	}
 	// Belt items.
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		auto &item = player.SpdList[i];
+	for (auto &item : player.SpdList) {
 		if (!item.isEmpty()) {
 			f(item);
 		}
