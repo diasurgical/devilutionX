@@ -4379,10 +4379,4 @@ void RedoMissileFlags()
 	}
 }
 
-void ClearMissileSpot(const MissileStruct &missile)
-{
-	const Point tile = missile.position.tile;
-	dFlags[tile.x][tile.y] &= ~BFLAG_MISSILE;
-}
-
 } // namespace devilution
