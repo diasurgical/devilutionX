@@ -37,13 +37,8 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Replay Intro"), MAINMENU_REPLAY_INTRO));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
-	if (gbIsHellfire) {
-		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Credits"), MAINMENU_SHOW_CREDITS));
-		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Exit Hellfire"), MAINMENU_EXIT_DIABLO));
-	} else {
-		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
-		vecMenuItems.push_back(std::make_unique<UiListItem>(_("Exit Diablo"), MAINMENU_EXIT_DIABLO));
-	}
+	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
+	vecMenuItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Exit Hellfire") : _("Exit Diablo"), MAINMENU_EXIT_DIABLO));
 
 	if (!gbSpawned || gbIsHellfire) {
 		if (gbIsHellfire)
