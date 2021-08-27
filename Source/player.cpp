@@ -3221,7 +3221,7 @@ void RemovePlrMissiles(int pnum)
 		int am = ActiveMissiles[i];
 		auto &missile = Missiles[am];
 		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
-			Monsters[missile._miVar2]._mmode = (MON_MODE)missile._miVar1;
+			Monsters[missile.var2]._mmode = (MON_MODE)missile.var1;
 		}
 	}
 }
