@@ -86,7 +86,7 @@ extern const Point InvRect[73];
 /**
  * @brief Function type which performs an operation on the given item.
  */
-typedef void (*ItemFunc)(ItemStruct &item);
+using ItemFunc = void (*)(ItemStruct &);
 
 void FreeInvGFX();
 void InitInv();
