@@ -676,13 +676,13 @@ void LoadMissile(LoadHelper *file, int i)
 	pMissile->_midist = file->NextLE<int32_t>();
 	pMissile->_mlid = file->NextLE<int32_t>();
 	pMissile->_mirnd = file->NextLE<int32_t>();
-	pMissile->_miVar1 = file->NextLE<int32_t>();
-	pMissile->_miVar2 = file->NextLE<int32_t>();
-	pMissile->_miVar3 = file->NextLE<int32_t>();
-	pMissile->_miVar4 = file->NextLE<int32_t>();
-	pMissile->_miVar5 = file->NextLE<int32_t>();
-	pMissile->_miVar6 = file->NextLE<int32_t>();
-	pMissile->_miVar7 = file->NextLE<int32_t>();
+	pMissile->var1 = file->NextLE<int32_t>();
+	pMissile->var2 = file->NextLE<int32_t>();
+	pMissile->var3 = file->NextLE<int32_t>();
+	pMissile->var4 = file->NextLE<int32_t>();
+	pMissile->var5 = file->NextLE<int32_t>();
+	pMissile->var6 = file->NextLE<int32_t>();
+	pMissile->var7 = file->NextLE<int32_t>();
 	pMissile->limitReached = file->NextBool32();
 }
 
@@ -1326,13 +1326,13 @@ void SaveMissile(SaveHelper *file, int i)
 	file->WriteLE<int32_t>(pMissile->_midist);
 	file->WriteLE<int32_t>(pMissile->_mlid);
 	file->WriteLE<int32_t>(pMissile->_mirnd);
-	file->WriteLE<int32_t>(pMissile->_miVar1);
-	file->WriteLE<int32_t>(pMissile->_miVar2);
-	file->WriteLE<int32_t>(pMissile->_miVar3);
-	file->WriteLE<int32_t>(pMissile->_miVar4);
-	file->WriteLE<int32_t>(pMissile->_miVar5);
-	file->WriteLE<int32_t>(pMissile->_miVar6);
-	file->WriteLE<int32_t>(pMissile->_miVar7);
+	file->WriteLE<int32_t>(pMissile->var1);
+	file->WriteLE<int32_t>(pMissile->var2);
+	file->WriteLE<int32_t>(pMissile->var3);
+	file->WriteLE<int32_t>(pMissile->var4);
+	file->WriteLE<int32_t>(pMissile->var5);
+	file->WriteLE<int32_t>(pMissile->var6);
+	file->WriteLE<int32_t>(pMissile->var7);
 	file->WriteLE<uint32_t>(pMissile->limitReached ? 1 : 0);
 }
 

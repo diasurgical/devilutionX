@@ -116,13 +116,13 @@ struct MissileStruct {
 	int _midist; // Used for arrows to measure distance travelled (increases by 1 each game tick). Higher value is a penalty for accuracy calculation when hitting enemy
 	int _mlid;
 	int _mirnd;
-	int _miVar1;
-	int _miVar2;
-	int _miVar3;
-	int _miVar4;
-	int _miVar5;
-	int _miVar6;
-	int _miVar7;
+	int var1;
+	int var2;
+	int var3;
+	int var4;
+	int var5;
+	int var6;
+	int var7;
 	bool limitReached;
 };
 
