@@ -83,6 +83,11 @@ extern bool invflag;
 extern bool drawsbarflag;
 extern const Point InvRect[73];
 
+/**
+ * @brief Function type which performs an operation on the given item.
+ */
+using ItemFunc = void (*)(ItemStruct &);
+
 void FreeInvGFX();
 void InitInv();
 
@@ -121,6 +126,7 @@ bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(PlayerStruct &player);
 bool DropItemBeforeTrig();
+void ForEachInventoryItem(PlayerStruct &player, ItemFunc f);
 
 /* data */
 
