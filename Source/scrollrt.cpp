@@ -316,31 +316,31 @@ void DrawCursor(const Surface &out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface &out, const MissileStruct *m, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface &out, const MissileStruct &missile, int sx, int sy, bool pre)
 {
-	if (m->_miPreFlag != pre || !m->_miDrawFlag)
+	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
 
-	if (m->_miAnimData == nullptr) {
-		Log("Draw Missile 2 type {}: NULL Cel Buffer", m->_mitype);
+	if (missile._miAnimData == nullptr) {
+		Log("Draw Missile 2 type {}: NULL Cel Buffer", missile._mitype);
 		return;
 	}
-	int nCel = m->_miAnimFrame;
-	const auto *frameTable = reinterpret_cast<const uint32_t *>(m->_miAnimData);
+	int nCel = missile._miAnimFrame;
+	const auto *frameTable = reinterpret_cast<const uint32_t *>(missile._miAnimData);
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
+		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
 		return;
 	}
-	int mx = sx + m->position.offsetForRendering.deltaX - m->_miAnimWidth2;
-	int my = sy + m->position.offsetForRendering.deltaY;
-	CelSprite cel { m->_miAnimData, m->_miAnimWidth };
-	if (m->_miUniqTrans != 0)
-		Cl2DrawLightTbl(out, mx, my, cel, m->_miAnimFrame, m->_miUniqTrans + 3);
-	else if (m->_miLightFlag)
-		Cl2DrawLight(out, mx, my, cel, m->_miAnimFrame);
+	int mx = sx + missile.position.offsetForRendering.deltaX - missile._miAnimWidth2;
+	int my = sy + missile.position.offsetForRendering.deltaY;
+	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
+	if (missile._miUniqTrans != 0)
+		Cl2DrawLightTbl(out, mx, my, cel, missile._miAnimFrame, missile._miUniqTrans + 3);
+	else if (missile._miLightFlag)
+		Cl2DrawLight(out, mx, my, cel, missile._miAnimFrame);
 	else
-		Cl2Draw(out, mx, my, cel, m->_miAnimFrame);
+		Cl2Draw(out, mx, my, cel, missile._miAnimFrame);
 }
 
 /**
@@ -356,7 +356,7 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
 {
 	const auto range = MissilesAtRenderingTile.equal_range(Point { x, y });
 	for (auto it = range.first; it != range.second; it++) {
-		DrawMissilePrivate(out, it->second, sx, sy, pre);
+		DrawMissilePrivate(out, *it->second, sx, sy, pre);
 	}
 }
 

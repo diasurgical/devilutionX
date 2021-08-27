@@ -1750,12 +1750,12 @@ void AddSearch(MissileStruct &missile, Point /*dst*/, Direction /*midir*/)
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
 		if (&Missiles[mx] != &missile) {
-			MissileStruct *mis = &Missiles[mx];
-			if (mis->var1 == missile._misource && mis->_mitype == MIS_SEARCH) {
+			auto &other = Missiles[mx];
+			if (other.var1 == missile._misource && other._mitype == MIS_SEARCH) {
 				int r1 = missile._mirange;
-				int r2 = mis->_mirange;
+				int r2 = other._mirange;
 				if (r2 < INT_MAX - r1)
-					mis->_mirange = r1 + r2;
+					other._mirange = r1 + r2;
 				missile._miDelFlag = true;
 				break;
 			}
@@ -2093,10 +2093,11 @@ void AddMisexp(MissileStruct &missile, Point /*dst*/, Direction /*midir*/)
 
 	int mx = FindParent(missile);
 	assert(mx != -1); // AddMisexp will always be called with a parent associated to the missile.
-	missile.position.tile = Missiles[mx].position.tile;
-	missile.position.start = Missiles[mx].position.start;
-	missile.position.offset = Missiles[mx].position.offset;
-	missile.position.traveled = Missiles[mx].position.traveled;
+	auto &parent = Missiles[mx];
+	missile.position.tile = parent.position.tile;
+	missile.position.start = parent.position.start;
+	missile.position.offset = parent.position.offset;
+	missile.position.traveled = parent.position.traveled;
 	missile._mirange = missile._miAnimLen;
 }
 
@@ -2147,8 +2148,9 @@ void AddTown(MissileStruct &missile, Point dst, Direction /*midir*/)
 	missile.var1 = missile._mirange - missile._miAnimLen;
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
-		if (Missiles[mx]._mitype == MIS_TOWN && (&Missiles[mx] != &missile) && Missiles[mx]._misource == missile._misource)
-			Missiles[mx]._mirange = 0;
+		auto &other = Missiles[mx];
+		if (other._mitype == MIS_TOWN && (&other != &missile) && other._misource == missile._misource)
+			other._mirange = 0;
 	}
 	PutMissile(missile);
 	if (missile._misource == MyPlayerId && !missile._miDelFlag && currlevel != 0) {
@@ -2452,8 +2454,9 @@ void AddGolem(MissileStruct &missile, Point dst, Direction /*midir*/)
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		int mx = ActiveMissiles[i];
-		if (Missiles[mx]._mitype == MIS_GOLEM) {
-			if ((&Missiles[mx] != &missile) && Missiles[mx]._misource == playerId) {
+		auto &other = Missiles[mx];
+		if (other._mitype == MIS_GOLEM) {
+			if ((&other != &missile) && other._misource == playerId) {
 				return;
 			}
 		}
