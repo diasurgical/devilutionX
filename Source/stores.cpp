@@ -2214,8 +2214,6 @@ void InitStores()
 
 void SetupTownStores()
 {
-	SetRndSeed(glSeedTbl[currlevel] * SDL_GetTicks());
-
 	auto &myPlayer = Players[MyPlayerId];
 
 	int l = myPlayer._pLevel / 2;
