@@ -19,6 +19,7 @@ extern std::optional<CelSprite> pSquareCel;
 extern bool DebugGodMode;
 extern bool DebugVision;
 extern bool DebugCoords;
+extern bool DebugCursorCoords;
 extern bool DebugGrid;
 extern std::unordered_map<int, Point> DebugCoordsMap;
 

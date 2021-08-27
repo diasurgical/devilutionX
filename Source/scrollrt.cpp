@@ -1198,7 +1198,7 @@ void DrawView(const Surface &out, int startX, int startY)
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 #ifdef _DEBUG
-	if (DebugCoords || DebugGrid) {
+	if (DebugCoords || DebugGrid || DebugCursorCoords) {
 		for (auto m : DebugCoordsMap) {
 			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
 			Point pixelCoords = m.second;
@@ -1210,7 +1210,7 @@ void DrawView(const Surface &out, int startX, int startY)
 				ver *= 2;
 			}
 			Point center = pixelCoords + hor + ver;
-			if (DebugCoords) {
+			if (DebugCoords || (DebugCursorCoords && dunCoords == Point { cursmx, cursmy })) {
 				char coordstr[10];
 				sprintf(coordstr, "%d:%d", dunCoords.x, dunCoords.y);
 				int textWidth = GetLineWidth(coordstr);

@@ -28,6 +28,7 @@ std::optional<CelSprite> pSquareCel;
 bool DebugGodMode = false;
 bool DebugVision = false;
 bool DebugCoords = false;
+bool DebugCursorCoords = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 
@@ -427,6 +428,15 @@ std::string DebugCmdShowGrid(const std::string_view parameter)
 	return "Back to boring.";
 }
 
+std::string DebugCmdShowCursorCoords(const std::string_view parameter)
+{
+	DebugCursorCoords = !DebugCursorCoords;
+	if (DebugCursorCoords)
+		return "I am the master of coords and cursors!";
+
+	return "Cursor will never forget that.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -449,6 +459,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
 	{ "coords", "Toggles showing tile coords.", "", &DebugCmdShowCoords },
+	{ "cursorcoords", "Toggles showing cursor coords.", "", &DebugCmdShowCursorCoords },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 };
 
