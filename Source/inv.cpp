@@ -2174,7 +2174,7 @@ bool DropItemBeforeTrig()
  * @param player Player with equipped, inventory and belt items.
  * @param f Function to invoke on each non-empty item of the player.
  */
-void InventoryForEachItem(PlayerStruct &player, ItemFunc f)
+void ForEachInventoryItem(PlayerStruct &player, ItemFunc f)
 {
 	// Equipped items.
 	for (auto &item : player.InvBody) {

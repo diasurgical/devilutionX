@@ -126,7 +126,7 @@ bool UseInvItem(int pnum, int cii);
 void DoTelekinesis();
 int CalculateGold(PlayerStruct &player);
 bool DropItemBeforeTrig();
-void InventoryForEachItem(PlayerStruct &player, ItemFunc f);
+void ForEachInventoryItem(PlayerStruct &player, ItemFunc f);
 
 /* data */
 

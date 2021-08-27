@@ -2678,7 +2678,7 @@ bool OperateShrineGloomy(int pnum)
 	auto &player = Players[pnum];
 
 	// Increment armor class by 2 and decrements max damage by 1.
-	InventoryForEachItem(player, [](ItemStruct &item) {
+	ForEachInventoryItem(player, [](ItemStruct &item) {
 		switch (item._itype) {
 		case ITYPE_SWORD:
 		case ITYPE_AXE:
