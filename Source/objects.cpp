@@ -2685,7 +2685,9 @@ bool OperateShrineGloomy(int pnum)
 		case ITYPE_BOW:
 		case ITYPE_MACE:
 		case ITYPE_STAFF:
-			item._iMaxDam = std::max(item._iMaxDam - 1, item._iMinDam);
+			item._iMaxDam--;
+			if (item._iMaxDam < item._iMinDam)
+				item._iMaxDam = item._iMinDam;
 			break;
 		case ITYPE_SHIELD:
 		case ITYPE_HELM:
