@@ -15,6 +15,7 @@
 #include "player.h"
 #include "quests.h"
 #include "setmaps.h"
+#include "engine/size.hpp"
 
 namespace devilution {
 
@@ -41,1497 +42,1504 @@ const ShadowStruct SPATSL2[2] = { { 6, 3, 0, 3, 48, 0, 50 }, { 9, 3, 0, 3, 48, 0
 const BYTE BTYPESL2[161] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 17, 18, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 0, 3, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 const BYTE BSTYPESL2[161] = { 0, 1, 2, 3, 0, 0, 6, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 6, 6, 6, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 2, 2, 2, 0, 0, 0, 1, 1, 1, 1, 6, 2, 2, 2, 0, 3, 3, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 2, 2, 3, 3, 3, 3, 1, 1, 3, 3, 2, 2, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
+struct Miniset {
+	Size size;
+	/* these are indexed as [y][x] */
+	unsigned char search[4][5];
+	unsigned char replace[4][5];
+};
+
 /** Miniset: Arch vertical. */
-const BYTE VARCH1[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 7,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH1 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 7 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH2[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 8,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH2 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 8 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH3[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 6,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH3 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 6 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH4[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 9,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH4 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 9 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH5[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 14,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH5 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 14 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH6[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 13,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH6 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 13 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH7[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 16,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH7 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 16 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH8[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 1,
-	3, 4,
-	0, 15,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH8 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 1 },
+	    { 3, 4 },
+	    { 0, 15 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH9[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 8,
-	3, 4,
-	0, 7,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH9 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 7 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH10[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 8,
-	3, 4,
-	0, 8,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH10 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 8 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH11[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 8,
-	3, 4,
-	0, 6,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH11 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 6 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH12[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 8,
-	3, 4,
-	0, 9,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH12 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 9 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH13[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  8,
-	3,  4,
-	0, 14,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH13 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 14 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH14[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  8,
-	3,  4,
-	0, 13,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH14 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 13 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH15[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  8,
-	3,  4,
-	0, 16,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH15 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 16 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - corner. */
-const BYTE VARCH16[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  8,
-	3,  4,
-	0, 15,
-
-	48,  0, // replace
-	51, 42,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH16 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 15 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH17[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2, 7, // search
-	3, 4,
-	0, 7,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH17 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 7 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH18[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2, 7, // search
-	3, 4,
-	0, 8,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH18 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 8 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH19[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2, 7, // search
-	3, 4,
-	0, 6,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH19 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 6 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH20[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2, 7, // search
-	3, 4,
-	0, 9,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH20 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 9 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH21[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2,  7, // search
-	3,  4,
-	0, 14,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH21 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 14 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH22[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2,  7, // search
-	3,  4,
-	0, 13,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH22 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 13 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH23[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2,  7, // search
-	3,  4,
-	0, 16,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH23 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 16 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - open wall. */
-const BYTE VARCH24[] = {
-	// clang-format off
-	2, 3, // width, height
-
-	2,  7, // search
-	3,  4,
-	0, 15,
-
-	141, 39, // replace
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH24 {
+	{ 2, 3 },
+	{
+	    { 2, 7 },
+	    { 3, 4 },
+	    { 0, 15 },
+	},
+	{
+	    { 141, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH25[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 4,
-	3, 1,
-	0, 7,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH25 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 7 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH26[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 4,
-	3, 1,
-	0, 8,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH26 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 8 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH27[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 4,
-	3, 1,
-	0, 6,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH27 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 6 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH28[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3, 0, // search
-	3, 4,
-	3, 1,
-	0, 9,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH28 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 9 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH29[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  4,
-	3,  1,
-	0, 14,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH29 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 14 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH30[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  4,
-	3,  1,
-	0, 13,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH30 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 13 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH31[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  4,
-	3,  1,
-	0, 16,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH31 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 16 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical. */
-const BYTE VARCH32[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	3,  0, // search
-	3,  4,
-	3,  1,
-	0, 15,
-
-	48,  0, // replace
-	51, 39,
-	47, 44,
-	 0,  0,
-	// clang-format on
+const Miniset VARCH32 {
+	{ 2, 4 },
+	{
+	    { 3, 0 },
+	    { 3, 4 },
+	    { 3, 1 },
+	    { 0, 15 },
+	},
+	{
+	    { 48, 0 },
+	    { 51, 39 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH33[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2, 0, // search
-	3, 8,
-	3, 4,
-	0, 7,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH33 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 7 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH34[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2, 0, // search
-	3, 8,
-	3, 4,
-	0, 8,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH34 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 8 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH35[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2, 0, // search
-	3, 8,
-	3, 4,
-	0, 6,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH35 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 6 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH36[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2, 0, // search
-	3, 8,
-	3, 4,
-	0, 9,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH36 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 9 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH37[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2,  0, // search
-	3,  8,
-	3,  4,
-	0, 14,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH37 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 14 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH38[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2,  0, // search
-	3,  8,
-	3,  4,
-	0, 13,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH38 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 13 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH39[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2,  0, // search
-	3,  8,
-	3,  4,
-	0, 16,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH39 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 16 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch vertical - room west entrance. */
-const BYTE VARCH40[] = {
-	// clang-format off
-	2, 4, // width, height
-
-	2,  0, // search
-	3,  8,
-	3,  4,
-	0, 15,
-
-	142,  0, // replace
-	 51, 42,
-	 47, 44,
-	  0,  0,
-	// clang-format on
+const Miniset VARCH40 {
+	{ 2, 4 },
+	{
+	    { 2, 0 },
+	    { 3, 8 },
+	    { 3, 4 },
+	    { 0, 15 },
+	},
+	{
+	    { 142, 0 },
+	    { 51, 42 },
+	    { 47, 44 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH1[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	2, 5, 9,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH1 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 9 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH2[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	2, 5, 6,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH2 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 6 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH3[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	2, 5, 8,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH3 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 8 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH4[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	2, 5, 7,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH4 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 7 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH5[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	2, 5, 15,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH5 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 15 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH6[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	2, 5, 16,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH6 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 16 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH7[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	2, 5, 13,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH7 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 13 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH8[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	2, 5, 14,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH8 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 2, 5, 14 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH9[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	8, 5, 9,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH9 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 9 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH10[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	8, 5, 6,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH10 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 6 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH11[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	8, 5, 8,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH11 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 8 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH12[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	8, 5, 7,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH12 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 7 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH13[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	8, 5, 15,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH13 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 15 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH14[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	8, 5, 16,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH14 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 16 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH15[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	8, 5, 13,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH15 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 13 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - north corner. */
-const BYTE HARCH16[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	8, 5, 14,
-
-	49, 46, 0, // replace
-	43, 45, 0,
-	// clang-format on
+const Miniset HARCH16 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 8, 5, 14 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH17[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 9,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH17 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 9 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH18[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 6,
-
-	140, 46, 0, // Replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH18 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 6 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH19[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 8,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH19 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 8 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH20[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 7,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH20 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 7 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH21[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 15,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH21 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 15 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH22[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 16,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH22 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 16 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH23[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 13,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH23 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 13 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - wall. */
-const BYTE HARCH24[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	8, 5, 14,
-
-	140, 46, 0, // replace
-	 43, 45, 0,
-	// clang-format on
+const Miniset HARCH24 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 8, 5, 14 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 43, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH25[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	5, 2, 9,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH25 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 9 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH26[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	5, 2, 6,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH26 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 6 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH27[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	5, 2, 8,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH27 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 8 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH28[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3, 0, // search
-	5, 2, 7,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH28 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 7 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH29[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	5, 2, 15,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH29 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 15 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH30[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	5, 2, 16,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH30 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 16 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH31[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	5, 2, 13,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH31 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 13 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal. */
-const BYTE HARCH32[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	3, 3,  0, // search
-	5, 2, 14,
-
-	49, 46, 0, // replace
-	40, 45, 0,
-	// clang-format on
+const Miniset HARCH32 {
+	{ 3, 2 },
+	{
+	    { 3, 3, 0 },
+	    { 5, 2, 14 },
+	},
+	{
+	    { 49, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH33[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	9, 5, 9,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH33 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 9 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH34[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	9, 5, 6,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH34 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 6 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH35[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	9, 5, 8,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH35 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 8 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH36[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	9, 5, 7,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH36 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 7 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH37[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3, 0, // search
-	9, 5, 15,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH37 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 15 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH38[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3,  0, // search
-	9, 5, 16,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH38 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 16 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH39[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3,  0, // search
-	9, 5, 13,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH39 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 13 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Arch horizontal - west corner. */
-const BYTE HARCH40[] = {
-	// clang-format off
-	3, 2, // width, height
-
-	1, 3,  0, // search
-	9, 5, 14,
-
-	140, 46, 0, // replace
-	 40, 45, 0,
-	// clang-format on
+const Miniset HARCH40 {
+	{ 3, 2 },
+	{
+	    { 1, 3, 0 },
+	    { 9, 5, 14 },
+	},
+	{
+	    { 140, 46, 0 },
+	    { 40, 45, 0 },
+	}
 };
 /** Miniset: Stairs up. */
-const BYTE USTAIRS[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	3, 3, 3, 3, // search
-	3, 3, 3, 3,
-	3, 3, 3, 3,
-	3, 3, 3, 3,
-
-	0,  0,  0, 0, // replace
-	0, 72, 77, 0,
-	0, 76,  0, 0,
-	0,  0,  0, 0,
-	// clang-format on
+const Miniset USTAIRS {
+	{ 4, 4 },
+	{
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 72, 77, 0 },
+	    { 0, 76, 0, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stairs down. */
-const BYTE DSTAIRS[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	3, 3, 3, 3, // search
-	3, 3, 3, 3,
-	3, 3, 3, 3,
-	3, 3, 3, 3,
-
-	0,  0,  0, 0, // replace
-	0, 48, 71, 0,
-	0, 50, 78, 0,
-	0,  0,  0, 0,
-	// clang-format on
+const Miniset DSTAIRS {
+	{ 4, 4 },
+	{
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 48, 71, 0 },
+	    { 0, 50, 78, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Stairs to town. */
-const BYTE WARPSTAIRS[] = {
-	// clang-format off
-	4, 4, // width, height
-
-	3, 3, 3, 3, // search
-	3, 3, 3, 3,
-	3, 3, 3, 3,
-	3, 3, 3, 3,
-
-	0,   0,   0, 0, // replace
-	0, 158, 160, 0,
-	0, 159,   0, 0,
-	0,   0,   0, 0,
-	// clang-format on
+const Miniset WARPSTAIRS {
+	{ 4, 4 },
+	{
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	    { 3, 3, 3, 3 },
+	},
+	{
+	    { 0, 0, 0, 0 },
+	    { 0, 158, 160, 0 },
+	    { 0, 159, 0, 0 },
+	    { 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Crumbled south pillar. */
-const BYTE CRUSHCOL[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3, 1, 3, // search
-	2, 6, 3,
-	3, 3, 3,
-
-	0,  0, 0, // replace
-	0, 83, 0,
-	0,  0, 0,
-	// clang-format on
+const Miniset CRUSHCOL {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 2, 6, 3 },
+	    { 3, 3, 3 },
+	},
+	{
+	    { 0, 0, 0 },
+	    { 0, 83, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Vertical oil spill. */
-const BYTE BIG1[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	3, 3, // search
-	3, 3,
-
-	113, 0, // replace
-	112, 0,
-	// clang-format on
+const Miniset BIG1 {
+	{ 2, 2 },
+	{
+	    { 3, 3 },
+	    { 3, 3 },
+	},
+	{
+	    { 113, 0 },
+	    { 112, 0 },
+	}
 };
 /** Miniset: Horizontal oil spill. */
-const BYTE BIG2[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	3, 3, // search
-	3, 3,
-
-	114, 115, // replace
-	  0,   0,
-	// clang-format on
+const Miniset BIG2 {
+	{ 2, 2 },
+	{
+	    { 3, 3 },
+	    { 3, 3 },
+	},
+	{
+	    { 114, 115 },
+	    { 0, 0 },
+	}
 };
 /** Miniset: Horizontal platform. */
-const BYTE BIG3[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	1, // search
-	1,
-
-	117, // replace
-	116,
-	// clang-format on
+const Miniset BIG3 {
+	{ 1, 2 },
+	{
+	    { 1 },
+	    { 1 },
+	},
+	{
+	    { 117 },
+	    { 116 },
+	}
 };
 /** Miniset: Vertical platform. */
-const BYTE BIG4[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	2, 2, // search
-
-	118, 119, // replace
-	// clang-format on
+const Miniset BIG4 {
+	{ 2, 1 },
+	{
+	    { 2, 2 },
+	},
+	{
+	    { 118, 119 },
+	}
 };
 /** Miniset: Large oil spill. */
-const BYTE BIG5[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	3, 3, // search
-	3, 3,
-
-	120, 122, // replace
-	121, 123,
-	// clang-format on
+const Miniset BIG5 {
+	{ 2, 2 },
+	{
+	    { 3, 3 },
+	    { 3, 3 },
+	},
+	{
+	    { 120, 122 },
+	    { 121, 123 },
+	}
 };
 /** Miniset: Vertical wall with debris. */
-const BYTE BIG6[] = {
-	// clang-format off
-	1, 2, // width, height
-
-	1, // search
-	1,
-
-	125, // replace
-	124,
-	// clang-format on
+const Miniset BIG6 {
+	{ 1, 2 },
+	{
+	    { 1 },
+	    { 1 },
+	},
+	{
+	    { 125 },
+	    { 124 },
+	}
 };
 /** Miniset: Horizontal wall with debris. */
-const BYTE BIG7[] = {
-	// clang-format off
-	2, 1, // width, height
-
-	2, 2, // search
-
-	126, 127, // replace
-	// clang-format on
+const Miniset BIG7 {
+	{ 2, 1 },
+	{
+	    { 2, 2 },
+	},
+	{
+	    { 126, 127 },
+	}
 };
 /** Miniset: Rock pile. */
-const BYTE BIG8[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	3, 3, // search
-	3, 3,
-
-	128, 130, // replace
-	129, 131,
-	// clang-format on
+const Miniset BIG8 {
+	{ 2, 2 },
+	{
+	    { 3, 3 },
+	    { 3, 3 },
+	},
+	{
+	    { 128, 130 },
+	    { 129, 131 },
+	}
 };
 /** Miniset: Vertical wall collapsed. */
-const BYTE BIG9[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	1, 3, // search
-	1, 3,
-
-	133, 135, // replace
-	132, 134,
-	// clang-format on
+const Miniset BIG9 {
+	{ 2, 2 },
+	{
+	    { 1, 3 },
+	    { 1, 3 },
+	},
+	{
+	    { 133, 135 },
+	    { 132, 134 },
+	}
 };
 /** Miniset: Horizontal wall collapsed. */
-const BYTE BIG10[] = {
-	// clang-format off
-	2, 2, // width, height
-
-	2, 2, // search
-	3, 3,
-
-	136, 137, // replace
-	  3,   3,
-	// clang-format on
+const Miniset BIG10 {
+	{ 2, 2 },
+	{
+	    { 2, 2 },
+	    { 3, 3 },
+	},
+	{
+	    { 136, 137 },
+	    { 3, 3 },
+	}
 };
 /** Miniset: Crumbled vertical wall 1. */
-const BYTE RUINS1[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	1, // search
-
-	80, // replace
-	// clang-format on
+const Miniset RUINS1 {
+	{ 1, 1 },
+	{
+	    { 1 },
+	},
+	{
+	    { 80 },
+	}
 };
 /** Miniset: Crumbled vertical wall 2. */
-const BYTE RUINS2[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	1, // search
-
-	81, // replace
-	// clang-format on
+const Miniset RUINS2 {
+	{ 1, 1 },
+	{
+	    { 1 },
+	},
+	{
+	    { 81 },
+	}
 };
 /** Miniset: Crumbled vertical wall 3. */
-const BYTE RUINS3[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	1, // search
-
-	82, // replace
-	// clang-format on
+const Miniset RUINS3 {
+	{ 1, 1 },
+	{
+	    { 1 },
+	},
+	{
+	    { 82 },
+	}
 };
 /** Miniset: Crumbled horizontal wall 1. */
-const BYTE RUINS4[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	2, // search
-
-	84, // replace
-	// clang-format on
+const Miniset RUINS4 {
+	{ 1, 1 },
+	{
+	    { 2 },
+	},
+	{
+	    { 84 },
+	}
 };
 /** Miniset: Crumbled horizontal wall 2. */
-const BYTE RUINS5[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	2, // search
-
-	85, // replace
-	// clang-format on
+const Miniset RUINS5 {
+	{ 1, 1 },
+	{
+	    { 2 },
+	},
+	{
+	    { 85 },
+	}
 };
 /** Miniset: Crumbled horizontal wall 3. */
-const BYTE RUINS6[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	2, // search
-
-	86, // replace
-	// clang-format on
+const Miniset RUINS6 {
+	{ 1, 1 },
+	{
+	    { 2 },
+	},
+	{
+	    { 86 },
+	}
 };
 /** Miniset: Crumbled north pillar. */
-const BYTE RUINS7[] = {
-	// clang-format off
-	1, 1, // width, height
-
-	8, // search
-
-	87, // replace
-	// clang-format on
+const Miniset RUINS7 {
+	{ 1, 1 },
+	{
+	    { 8 },
+	},
+	{
+	    { 87 },
+	}
 };
 /** Miniset: Bloody gib 1. */
-const BYTE PANCREAS1[] = {
-	// clang-format off
-	5, 3, // width, height
-
-	3, 3, 3, 3, 3, // search
-	3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3,
-
-	0, 0,   0, 0, 0, // replace
-	0, 0, 108, 0, 0,
-	0, 0,   0, 0, 0,
-	// clang-format on
+const Miniset PANCREAS1 {
+	{ 5, 3 },
+	{
+	    { 3, 3, 3, 3, 3 },
+	    { 3, 3, 3, 3, 3 },
+	    { 3, 3, 3, 3, 3 },
+	},
+	{
+	    { 0, 0, 0, 0, 0 },
+	    { 0, 0, 108, 0, 0 },
+	    { 0, 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Bloody gib 2. */
-const BYTE PANCREAS2[] = {
-	// clang-format off
-	5, 3, // width, height
-
-	3, 3, 3, 3, 3, // search
-	3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3,
-
-	0, 0,   0, 0, 0, // replace
-	0, 0, 110, 0, 0,
-	0, 0,   0, 0, 0,
-	// clang-format on
+const Miniset PANCREAS2 {
+	{ 5, 3 },
+	{
+	    { 3, 3, 3, 3, 3 },
+	    { 3, 3, 3, 3, 3 },
+	    { 3, 3, 3, 3, 3 },
+	},
+	{
+	    { 0, 0, 0, 0, 0 },
+	    { 0, 0, 110, 0, 0 },
+	    { 0, 0, 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 1. */
-const BYTE CTRDOOR1[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3, 1, 3,  // search
-	0, 4, 0,
-	0, 9, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR1 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 9, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 2. */
-const BYTE CTRDOOR2[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3, 1, 3, // search
-	0, 4, 0,
-	0, 8, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR2 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 8, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 3. */
-const BYTE CTRDOOR3[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3, 1, 3, // search
-	0, 4, 0,
-	0, 6, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR3 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 6, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 4. */
-const BYTE CTRDOOR4[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3, 1, 3, // search
-	0, 4, 0,
-	0, 7, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR4 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 7, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 5. */
-const BYTE CTRDOOR5[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3,  1, 3, // search
-	0,  4, 0,
-	0, 15, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR5 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 15, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 6. */
-const BYTE CTRDOOR6[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3,  1, 3, // search
-	0,  4, 0,
-	0, 13, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR6 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 13, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 7. */
-const BYTE CTRDOOR7[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3,  1, 3, // search
-	0,  4, 0,
-	0, 16, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR7 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 16, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 /** Miniset: Move vertical doors away from west pillar 8. */
-const BYTE CTRDOOR8[] = {
-	// clang-format off
-	3, 3, // width, height
-
-	3,  1, 3, // search
-	0,  4, 0,
-	0, 14, 0,
-
-	0, 4, 0, // replace
-	0, 1, 0,
-	0, 0, 0,
-	// clang-format on
+const Miniset CTRDOOR8 {
+	{ 3, 3 },
+	{
+	    { 3, 1, 3 },
+	    { 0, 4, 0 },
+	    { 0, 14, 0 },
+	},
+	{
+	    { 0, 4, 0 },
+	    { 0, 1, 0 },
+	    { 0, 0, 0 },
+	}
 };
 
 int Patterns[100][10] = {
@@ -1644,10 +1652,10 @@ void ApplyShadowsPatterns()
 	}
 }
 
-bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview)
+bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bool setview)
 {
-	int sw = miniset[0];
-	int sh = miniset[1];
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
 
 	int numt = 1;
 	if (tmax - tmin != 0) {
@@ -1677,15 +1685,13 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 				sy = GenerateRnd(DMAXY - sh);
 				abort = false;
 			}
-			int ii = 2;
 
 			for (int yy = 0; yy < sh && abort; yy++) {
 				for (int xx = 0; xx < sw && abort; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii])
+					if (miniset.search[yy][xx] != 0 && dungeon[xx + sx][yy + sy] != miniset.search[yy][xx])
 						abort = false;
 					if (dflags[xx + sx][yy + sy] != 0)
 						abort = false;
-					ii++;
 				}
 			}
 
@@ -1703,14 +1709,12 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 		if (bailcnt >= 200) {
 			return false;
 		}
-		int ii = sw * sh + 2;
 
 		for (int yy = 0; yy < sh; yy++) {
 			for (int xx = 0; xx < sw; xx++) {
-				if (miniset[ii] != 0) {
-					dungeon[xx + sx][yy + sy] = miniset[ii];
+				if (miniset.replace[yy][xx] != 0) {
+					dungeon[xx + sx][yy + sy] = miniset.replace[yy][xx];
 				}
-				ii++;
 			}
 		}
 	}
@@ -1722,47 +1726,41 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 	return true;
 }
 
-void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
+void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 {
-	int sw = miniset[0];
-	int sh = miniset[1];
+	int sw = miniset.size.width;
+	int sh = miniset.size.height;
 
 	for (int sy = 0; sy < DMAXY - sh; sy++) {
 		for (int sx = 0; sx < DMAXX - sw; sx++) {
 			bool found = true;
-			int ii = 2;
 			if (sx >= nSx1 && sx <= nSx2 && sy >= nSy1 && sy <= nSy2) {
 				found = false;
 			}
 			for (int yy = 0; yy < sh && found; yy++) {
 				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
+					if (miniset.search[yy][xx] != 0 && dungeon[xx + sx][yy + sy] != miniset.search[yy][xx]) {
 						found = false;
 					}
 					if (dflags[xx + sx][yy + sy] != 0) {
 						found = false;
 					}
-					ii++;
 				}
 			}
-			int kk = sw * sh + 2;
 			if (found) {
 				for (int yy = std::max(sy - sh, 0); yy < std::min(sy + 2 * sh, DMAXY) && found; yy++) {
 					for (int xx = std::max(sx - sw, 0); xx < std::min(sx + 2 * sw, DMAXX); xx++) {
 						// BUGFIX: yy and xx can go out of bounds (fixed)
-						if (dungeon[xx][yy] == miniset[kk]) {
+						if (dungeon[xx][yy] == miniset.replace[0][0])
 							found = false;
-						}
 					}
 				}
 			}
 			if (found && GenerateRnd(100) < rndper) {
 				for (int yy = 0; yy < sh; yy++) {
 					for (int xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
+						if (miniset.replace[yy][xx] != 0)
+							dungeon[xx + sx][yy + sy] = miniset.replace[yy][xx];
 					}
 				}
 			}
