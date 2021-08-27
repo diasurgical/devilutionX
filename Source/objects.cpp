@@ -1474,7 +1474,7 @@ void UpdateCircle(int i)
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 			Quests[Q_BETRAYER]._qvar1 = 4;
-		AddMissile(myPlayer.position.tile, { 35, 46 }, myPlayer._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, DIR_S, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -2207,7 +2207,7 @@ void OperateBook(int pnum, int i)
 			}
 			if (doAddMissile) {
 				Objects[dObject[35][36] - 1]._oVar5++;
-				AddMissile(player.position.tile, { dx, dy }, player._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(player.position.tile, { dx, dy }, DIR_S, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
 				missileAdded = true;
 				doAddMissile = false;
 			}

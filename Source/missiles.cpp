@@ -1873,15 +1873,11 @@ void AddRndTeleport(MissileStruct &missile, Point dst, Direction /*midir*/)
 
 	auto &player = Players[missile._misource];
 
-	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		int oi = dObject[dst.x][dst.y] - 1;
-		// BUGFIX: should only run magic circle check if dObject[dx][dy] is non-zero.
-		if (Objects[oi]._otype == OBJ_MCIRCLE1 || Objects[oi]._otype == OBJ_MCIRCLE2) {
-			missile.position.tile = dst;
-			if (!PosOkPlayer(player, dst))
-				UpdateVileMissPos(missile, dst);
-			return;
-		}
+	if (missile._micaster == TARGET_BOTH) {
+		missile.position.tile = dst;
+		if (!PosOkPlayer(player, dst))
+			UpdateVileMissPos(missile, dst);
+		return;
 	}
 
 	std::array<Point, 13 * 13 - 7 * 7> targets;
