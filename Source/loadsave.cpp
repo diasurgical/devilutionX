@@ -637,53 +637,53 @@ void LoadMonster(LoadHelper *file, MonsterStruct &monster)
 
 void LoadMissile(LoadHelper *file, int i)
 {
-	MissileStruct *pMissile = &Missiles[i];
+	auto &missile = Missiles[i];
 
-	pMissile->_mitype = static_cast<missile_id>(file->NextLE<int32_t>());
-	pMissile->position.tile.x = file->NextLE<int32_t>();
-	pMissile->position.tile.y = file->NextLE<int32_t>();
-	pMissile->position.offset.deltaX = file->NextLE<int32_t>();
-	pMissile->position.offset.deltaY = file->NextLE<int32_t>();
-	pMissile->position.velocity.deltaX = file->NextLE<int32_t>();
-	pMissile->position.velocity.deltaY = file->NextLE<int32_t>();
-	pMissile->position.start.x = file->NextLE<int32_t>();
-	pMissile->position.start.y = file->NextLE<int32_t>();
-	pMissile->position.traveled.deltaX = file->NextLE<int32_t>();
-	pMissile->position.traveled.deltaY = file->NextLE<int32_t>();
-	pMissile->_mimfnum = file->NextLE<int32_t>();
-	pMissile->_mispllvl = file->NextLE<int32_t>();
-	pMissile->_miDelFlag = file->NextBool32();
-	pMissile->_miAnimType = file->NextLE<uint8_t>();
+	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
+	missile.position.tile.x = file->NextLE<int32_t>();
+	missile.position.tile.y = file->NextLE<int32_t>();
+	missile.position.offset.deltaX = file->NextLE<int32_t>();
+	missile.position.offset.deltaY = file->NextLE<int32_t>();
+	missile.position.velocity.deltaX = file->NextLE<int32_t>();
+	missile.position.velocity.deltaY = file->NextLE<int32_t>();
+	missile.position.start.x = file->NextLE<int32_t>();
+	missile.position.start.y = file->NextLE<int32_t>();
+	missile.position.traveled.deltaX = file->NextLE<int32_t>();
+	missile.position.traveled.deltaY = file->NextLE<int32_t>();
+	missile._mimfnum = file->NextLE<int32_t>();
+	missile._mispllvl = file->NextLE<int32_t>();
+	missile._miDelFlag = file->NextBool32();
+	missile._miAnimType = file->NextLE<uint8_t>();
 	file->Skip(3); // Alignment
-	pMissile->_miAnimFlags = static_cast<MissileDataFlags>(file->NextLE<int32_t>());
+	missile._miAnimFlags = static_cast<MissileDataFlags>(file->NextLE<int32_t>());
 	file->Skip(4); // Skip pointer _miAnimData
-	pMissile->_miAnimDelay = file->NextLE<int32_t>();
-	pMissile->_miAnimLen = file->NextLE<int32_t>();
-	pMissile->_miAnimWidth = file->NextLE<int32_t>();
-	pMissile->_miAnimWidth2 = file->NextLE<int32_t>();
-	pMissile->_miAnimCnt = file->NextLE<int32_t>();
-	pMissile->_miAnimAdd = file->NextLE<int32_t>();
-	pMissile->_miAnimFrame = file->NextLE<int32_t>();
-	pMissile->_miDrawFlag = file->NextBool32();
-	pMissile->_miLightFlag = file->NextBool32();
-	pMissile->_miPreFlag = file->NextBool32();
-	pMissile->_miUniqTrans = file->NextLE<uint32_t>();
-	pMissile->_mirange = file->NextLE<int32_t>();
-	pMissile->_misource = file->NextLE<int32_t>();
-	pMissile->_micaster = static_cast<mienemy_type>(file->NextLE<int32_t>());
-	pMissile->_midam = file->NextLE<int32_t>();
-	pMissile->_miHitFlag = file->NextBool32();
-	pMissile->_midist = file->NextLE<int32_t>();
-	pMissile->_mlid = file->NextLE<int32_t>();
-	pMissile->_mirnd = file->NextLE<int32_t>();
-	pMissile->var1 = file->NextLE<int32_t>();
-	pMissile->var2 = file->NextLE<int32_t>();
-	pMissile->var3 = file->NextLE<int32_t>();
-	pMissile->var4 = file->NextLE<int32_t>();
-	pMissile->var5 = file->NextLE<int32_t>();
-	pMissile->var6 = file->NextLE<int32_t>();
-	pMissile->var7 = file->NextLE<int32_t>();
-	pMissile->limitReached = file->NextBool32();
+	missile._miAnimDelay = file->NextLE<int32_t>();
+	missile._miAnimLen = file->NextLE<int32_t>();
+	missile._miAnimWidth = file->NextLE<int32_t>();
+	missile._miAnimWidth2 = file->NextLE<int32_t>();
+	missile._miAnimCnt = file->NextLE<int32_t>();
+	missile._miAnimAdd = file->NextLE<int32_t>();
+	missile._miAnimFrame = file->NextLE<int32_t>();
+	missile._miDrawFlag = file->NextBool32();
+	missile._miLightFlag = file->NextBool32();
+	missile._miPreFlag = file->NextBool32();
+	missile._miUniqTrans = file->NextLE<uint32_t>();
+	missile._mirange = file->NextLE<int32_t>();
+	missile._misource = file->NextLE<int32_t>();
+	missile._micaster = static_cast<mienemy_type>(file->NextLE<int32_t>());
+	missile._midam = file->NextLE<int32_t>();
+	missile._miHitFlag = file->NextBool32();
+	missile._midist = file->NextLE<int32_t>();
+	missile._mlid = file->NextLE<int32_t>();
+	missile._mirnd = file->NextLE<int32_t>();
+	missile.var1 = file->NextLE<int32_t>();
+	missile.var2 = file->NextLE<int32_t>();
+	missile.var3 = file->NextLE<int32_t>();
+	missile.var4 = file->NextLE<int32_t>();
+	missile.var5 = file->NextLE<int32_t>();
+	missile.var6 = file->NextLE<int32_t>();
+	missile.var7 = file->NextLE<int32_t>();
+	missile.limitReached = file->NextBool32();
 }
 
 void LoadObject(LoadHelper *file, int i)
@@ -1287,53 +1287,53 @@ void SaveMonster(SaveHelper *file, MonsterStruct &monster)
 
 void SaveMissile(SaveHelper *file, int i)
 {
-	MissileStruct *pMissile = &Missiles[i];
+	auto &missile = Missiles[i];
 
-	file->WriteLE<int32_t>(pMissile->_mitype);
-	file->WriteLE<int32_t>(pMissile->position.tile.x);
-	file->WriteLE<int32_t>(pMissile->position.tile.y);
-	file->WriteLE<int32_t>(pMissile->position.offset.deltaX);
-	file->WriteLE<int32_t>(pMissile->position.offset.deltaY);
-	file->WriteLE<int32_t>(pMissile->position.velocity.deltaX);
-	file->WriteLE<int32_t>(pMissile->position.velocity.deltaY);
-	file->WriteLE<int32_t>(pMissile->position.start.x);
-	file->WriteLE<int32_t>(pMissile->position.start.y);
-	file->WriteLE<int32_t>(pMissile->position.traveled.deltaX);
-	file->WriteLE<int32_t>(pMissile->position.traveled.deltaY);
-	file->WriteLE<int32_t>(pMissile->_mimfnum);
-	file->WriteLE<int32_t>(pMissile->_mispllvl);
-	file->WriteLE<uint32_t>(pMissile->_miDelFlag ? 1 : 0);
-	file->WriteLE<uint8_t>(pMissile->_miAnimType);
+	file->WriteLE<int32_t>(missile._mitype);
+	file->WriteLE<int32_t>(missile.position.tile.x);
+	file->WriteLE<int32_t>(missile.position.tile.y);
+	file->WriteLE<int32_t>(missile.position.offset.deltaX);
+	file->WriteLE<int32_t>(missile.position.offset.deltaY);
+	file->WriteLE<int32_t>(missile.position.velocity.deltaX);
+	file->WriteLE<int32_t>(missile.position.velocity.deltaY);
+	file->WriteLE<int32_t>(missile.position.start.x);
+	file->WriteLE<int32_t>(missile.position.start.y);
+	file->WriteLE<int32_t>(missile.position.traveled.deltaX);
+	file->WriteLE<int32_t>(missile.position.traveled.deltaY);
+	file->WriteLE<int32_t>(missile._mimfnum);
+	file->WriteLE<int32_t>(missile._mispllvl);
+	file->WriteLE<uint32_t>(missile._miDelFlag ? 1 : 0);
+	file->WriteLE<uint8_t>(missile._miAnimType);
 	file->Skip(3); // Alignment
-	file->WriteLE<int32_t>(static_cast<int32_t>(pMissile->_miAnimFlags));
+	file->WriteLE<int32_t>(static_cast<int32_t>(missile._miAnimFlags));
 	file->Skip(4); // Skip pointer _miAnimData
-	file->WriteLE<int32_t>(pMissile->_miAnimDelay);
-	file->WriteLE<int32_t>(pMissile->_miAnimLen);
-	file->WriteLE<int32_t>(pMissile->_miAnimWidth);
-	file->WriteLE<int32_t>(pMissile->_miAnimWidth2);
-	file->WriteLE<int32_t>(pMissile->_miAnimCnt);
-	file->WriteLE<int32_t>(pMissile->_miAnimAdd);
-	file->WriteLE<int32_t>(pMissile->_miAnimFrame);
-	file->WriteLE<uint32_t>(pMissile->_miDrawFlag ? 1 : 0);
-	file->WriteLE<uint32_t>(pMissile->_miLightFlag ? 1 : 0);
-	file->WriteLE<uint32_t>(pMissile->_miPreFlag ? 1 : 0);
-	file->WriteLE<uint32_t>(pMissile->_miUniqTrans);
-	file->WriteLE<int32_t>(pMissile->_mirange);
-	file->WriteLE<int32_t>(pMissile->_misource);
-	file->WriteLE<int32_t>(pMissile->_micaster);
-	file->WriteLE<int32_t>(pMissile->_midam);
-	file->WriteLE<uint32_t>(pMissile->_miHitFlag ? 1 : 0);
-	file->WriteLE<int32_t>(pMissile->_midist);
-	file->WriteLE<int32_t>(pMissile->_mlid);
-	file->WriteLE<int32_t>(pMissile->_mirnd);
-	file->WriteLE<int32_t>(pMissile->var1);
-	file->WriteLE<int32_t>(pMissile->var2);
-	file->WriteLE<int32_t>(pMissile->var3);
-	file->WriteLE<int32_t>(pMissile->var4);
-	file->WriteLE<int32_t>(pMissile->var5);
-	file->WriteLE<int32_t>(pMissile->var6);
-	file->WriteLE<int32_t>(pMissile->var7);
-	file->WriteLE<uint32_t>(pMissile->limitReached ? 1 : 0);
+	file->WriteLE<int32_t>(missile._miAnimDelay);
+	file->WriteLE<int32_t>(missile._miAnimLen);
+	file->WriteLE<int32_t>(missile._miAnimWidth);
+	file->WriteLE<int32_t>(missile._miAnimWidth2);
+	file->WriteLE<int32_t>(missile._miAnimCnt);
+	file->WriteLE<int32_t>(missile._miAnimAdd);
+	file->WriteLE<int32_t>(missile._miAnimFrame);
+	file->WriteLE<uint32_t>(missile._miDrawFlag ? 1 : 0);
+	file->WriteLE<uint32_t>(missile._miLightFlag ? 1 : 0);
+	file->WriteLE<uint32_t>(missile._miPreFlag ? 1 : 0);
+	file->WriteLE<uint32_t>(missile._miUniqTrans);
+	file->WriteLE<int32_t>(missile._mirange);
+	file->WriteLE<int32_t>(missile._misource);
+	file->WriteLE<int32_t>(missile._micaster);
+	file->WriteLE<int32_t>(missile._midam);
+	file->WriteLE<uint32_t>(missile._miHitFlag ? 1 : 0);
+	file->WriteLE<int32_t>(missile._midist);
+	file->WriteLE<int32_t>(missile._mlid);
+	file->WriteLE<int32_t>(missile._mirnd);
+	file->WriteLE<int32_t>(missile.var1);
+	file->WriteLE<int32_t>(missile.var2);
+	file->WriteLE<int32_t>(missile.var3);
+	file->WriteLE<int32_t>(missile.var4);
+	file->WriteLE<int32_t>(missile.var5);
+	file->WriteLE<int32_t>(missile.var6);
+	file->WriteLE<int32_t>(missile.var7);
+	file->WriteLE<uint32_t>(missile.limitReached ? 1 : 0);
 }
 
 void SaveObject(SaveHelper *file, int i)
