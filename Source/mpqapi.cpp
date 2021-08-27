@@ -6,7 +6,6 @@
 #include "mpqapi.h"
 
 #include <cerrno>
-#include <cinttypes>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -92,7 +91,7 @@ public:
 	bool Open(const char *path, std::ios::openmode mode)
 	{
 		s_ = CreateFileStream(path, mode);
-		return CheckError("new std::fstream(\"%s\", %s)", path, OpenModeToString(mode).c_str());
+		return CheckError("new std::fstream(\"{}\", {})", path, OpenModeToString(mode).c_str());
 	}
 
 	void Close()
@@ -108,31 +107,31 @@ public:
 	bool Seekp(std::streampos pos)
 	{
 		s_->seekp(pos);
-		return CheckError("seekp(%" PRIuMAX ")", static_cast<std::uintmax_t>(pos));
+		return CheckError("seekp({})", pos);
 	}
 
 	bool Seekp(std::streamoff pos, std::ios::seekdir dir)
 	{
 		s_->seekp(pos, dir);
-		return CheckError("seekp(%" PRIdMAX ", %s)", static_cast<std::intmax_t>(pos), DirToString(dir));
+		return CheckError("seekp({}, {})", pos, DirToString(dir));
 	}
 
 	bool Tellp(std::streampos *result)
 	{
 		*result = s_->tellp();
-		return CheckError("tellp() = %" PRIuMAX, static_cast<std::uintmax_t>(*result));
+		return CheckError("tellp() = {}", *result);
 	}
 
 	bool Write(const char *data, std::streamsize size)
 	{
 		s_->write(data, size);
-		return CheckError("write(data, %" PRIuMAX ")", static_cast<std::uintmax_t>(size));
+		return CheckError("write(data, {})", size);
 	}
 
 	bool Read(char *out, std::streamsize size)
 	{
 		s_->read(out, size);
-		return CheckError("read(out, %" PRIuMAX ")", static_cast<std::uintmax_t>(size));
+		return CheckError("read(out, {})", size);
 	}
 
 private:
