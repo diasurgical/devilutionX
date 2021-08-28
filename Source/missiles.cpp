@@ -1830,12 +1830,12 @@ void AddRndTeleport(MissileStruct &missile, Point dst, Direction /*midir*/)
 		return;
 	}
 
-	std::array<Point, 13 * 13 - 7 * 7> targets;
+	std::array<Point, 4 * 9> targets;
 
 	int count = 0;
 	for (int y = -6; y <= 6; y++) {
 		for (int x = -6; x <= 6; x++) {
-			if (x >= -3 && x <= 3 && y >= -3 && y <= 3)
+			if ((x >= -3 && x <= 3) || (y >= -3 && y <= 3))
 				continue; // Skip center
 
 			Point target = missile.position.start + Displacement { x, y };
