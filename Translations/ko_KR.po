@@ -50,11 +50,11 @@ msgstr "배틀넷 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr ""
+msgstr "직렬 통신 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr ""
+msgstr "인스톨러 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
@@ -66,19 +66,19 @@ msgstr "아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr ""
+msgstr "테크니컬 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr ""
+msgstr "시네마틱 아트 디렉터들"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr ""
+msgstr "3D 시네마틱 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr ""
+msgstr "시네마틱 테크니컬 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
@@ -119,11 +119,11 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr ""
+msgstr "음성 편집"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr ""
+msgstr "성우들"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
@@ -179,7 +179,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "대중 홍보"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
@@ -195,19 +195,19 @@ msgstr "미국 세일즈"
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr ""
+msgstr "생산"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr ""
+msgstr "법률 및 비즈니스"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr ""
+msgstr "특별히 감사한"
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
-msgstr ""
+msgstr "감사한 사람들"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
@@ -223,11 +223,11 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "소프트웨어 공학"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "아트 디렉터"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
@@ -243,7 +243,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "품질 보증 리드"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
@@ -283,7 +283,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr ""
+msgstr "메인 테스터들"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
@@ -1639,7 +1639,7 @@ msgstr ""
 
 #: Source/help.cpp:48
 msgid "$Combat:"
-msgstr ""
+msgstr "$전투"
 
 #: Source/help.cpp:49
 msgid ""
@@ -1649,7 +1649,7 @@ msgstr ""
 
 #: Source/help.cpp:52
 msgid "$Auto-map:"
-msgstr ""
+msgstr "$오토맵:"
 
 #: Source/help.cpp:53
 msgid ""
@@ -1673,7 +1673,7 @@ msgstr ""
 
 #: Source/help.cpp:65
 msgid "$Gold"
-msgstr ""
+msgstr "$금화"
 
 #: Source/help.cpp:66
 msgid ""
@@ -1772,19 +1772,19 @@ msgstr "금화"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr ""
+msgstr "숏 소드"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
-msgstr ""
+msgstr "둥근 방패"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
-msgstr ""
+msgstr "막대기"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
-msgstr ""
+msgstr "짧은 활"
 
 #: Source/itemdat.cpp:21
 msgid "Short Staff of Mana"
@@ -1792,7 +1792,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
-msgstr ""
+msgstr "고기칼"
 
 #: Source/itemdat.cpp:23 Source/itemdat.cpp:397
 msgid "The Undead Crown"
@@ -1908,7 +1908,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:75
 msgid "Blacksmith Oil"
-msgstr ""
+msgstr "대장장이의 윤활유"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
@@ -1919,11 +1919,11 @@ msgstr ""
 #: Source/itemdat.cpp:142 Source/itemdat.cpp:143 Source/itemdat.cpp:144
 #: Source/itemdat.cpp:145
 msgid "Sword"
-msgstr ""
+msgstr "소드"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:134
 msgid "Dagger"
-msgstr ""
+msgstr "단검"
 
 #: Source/itemdat.cpp:55
 msgid "Rune Bomb"
