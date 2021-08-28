@@ -3049,22 +3049,7 @@ bool OperateShrineHoly(int pnum)
 	if (deltaload)
 		return false;
 
-	auto &player = Players[pnum];
-
-	int j = 0;
-	int xx;
-	int yy;
-	uint32_t lv;
-	do {
-		xx = GenerateRnd(MAXDUNX);
-		yy = GenerateRnd(MAXDUNY);
-		lv = dPiece[xx][yy];
-		j++;
-		if (j > MAXDUNX * MAXDUNY)
-			break;
-	} while (nSolidTable[lv] || dObject[xx][yy] != 0 || dMonster[xx][yy] != 0);
-
-	AddMissile(player.position.tile, { xx, yy }, player._pdir, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
+	AddMissile(Players[pnum].position.tile, { 0, 0 }, DIR_S, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
 
 	if (pnum != MyPlayerId)
 		return false;

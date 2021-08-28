@@ -1869,46 +1869,47 @@ void UpdateVileMissPos(MissileStruct &missile, Point dst)
 
 void AddRndTeleport(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
-	int pn;
-	int r1;
-	int r2;
-
-	int nTries = 0;
-	do {
-		nTries++;
-		if (nTries > 500) {
-			r1 = 0;
-			r2 = 0;
-			break; //BUGFIX: warps player to 0/0 in hellfire, change to return or use 1.09's version of the code
-		}
-		r1 = GenerateRnd(3) + 4;
-		r2 = GenerateRnd(3) + 4;
-		if (GenerateRnd(2) == 1)
-			r1 = -r1;
-		if (GenerateRnd(2) == 1)
-			r2 = -r2;
-
-		r1 += missile.position.start.x;
-		r2 += missile.position.start.y;
-		if (r1 < MAXDUNX && r1 >= 0 && r2 < MAXDUNY && r2 >= 0) { ///BUGFIX: < MAXDUNX / < MAXDUNY (fixed)
-			pn = dPiece[r1][r2];
-		}
-	} while (nSolidTable[pn] || dObject[r1][r2] != 0 || dMonster[r1][r2] != 0);
-
 	missile._mirange = 2;
-	if (!setlevel || setlvlnum != SL_VILEBETRAYER) {
-		missile.position.tile = { r1, r2 };
-		if (missile._micaster == TARGET_MONSTERS)
-			UseMana(missile._misource, SPL_RNDTELEPORT);
-	} else {
+
+	auto &player = Players[missile._misource];
+
+	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		int oi = dObject[dst.x][dst.y] - 1;
 		// BUGFIX: should only run magic circle check if dObject[dx][dy] is non-zero.
 		if (Objects[oi]._otype == OBJ_MCIRCLE1 || Objects[oi]._otype == OBJ_MCIRCLE2) {
 			missile.position.tile = dst;
-			if (!PosOkPlayer(Players[MyPlayerId], dst))
+			if (!PosOkPlayer(player, dst))
 				UpdateVileMissPos(missile, dst);
+			return;
 		}
 	}
+
+	std::array<Point, 13 * 13 - 7 * 7> targets;
+
+	int count = 0;
+	for (int y = -6; y <= 6; y++) {
+		for (int x = -6; x <= 6; x++) {
+			if (x >= -3 && x <= 3 && y >= -3 && y <= 3)
+				continue; // Skip center
+
+			Point target = missile.position.start + Displacement { x, y };
+			if (!PosOkPlayer(player, target))
+				continue;
+
+			targets[count] = target;
+			count++;
+		}
+	}
+
+	if (count == 0) {
+		missile._miDelFlag = true;
+		return;
+	}
+
+	missile.position.tile = targets[std::max<int32_t>(GenerateRnd(count), 0)];
+
+	if (missile._micaster == TARGET_MONSTERS)
+		UseMana(missile._misource, SPL_RNDTELEPORT);
 }
 
 void AddFirebolt(MissileStruct &missile, Point dst, Direction midir)
