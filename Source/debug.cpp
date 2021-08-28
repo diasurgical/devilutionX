@@ -27,6 +27,10 @@ namespace devilution {
 std::optional<CelSprite> pSquareCel;
 bool DebugGodMode = false;
 bool DebugVision = false;
+bool DebugCoords = false;
+bool DebugCursorCoords = false;
+bool DebugGrid = false;
+std::unordered_map<int, Point> DebugCoordsMap;
 
 namespace {
 
@@ -406,11 +410,38 @@ std::string DebugCmdTalkToTowner(const std::string_view parameter)
 	return "NPC not found.";
 }
 
+std::string DebugCmdShowCoords(const std::string_view parameter)
+{
+	DebugCoords = !DebugCoords;
+	if (DebugCoords)
+		return "I love math.";
+
+	return "I hate math.";
+}
+
+std::string DebugCmdShowGrid(const std::string_view parameter)
+{
+	DebugGrid = !DebugGrid;
+	if (DebugGrid)
+		return "A basket full of rectangles and mushrooms.";
+
+	return "Back to boring.";
+}
+
+std::string DebugCmdShowCursorCoords(const std::string_view parameter)
+{
+	DebugCursorCoords = !DebugCursorCoords;
+	if (DebugCursorCoords)
+		return "I am the master of coords and cursors!";
+
+	return "Cursor will never forget that.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
-	{ "set spells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
+	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "give map", "Reveal the map.", "", &DebugCmdMap },
@@ -418,15 +449,18 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
 	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
-	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
-	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
+	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },
+	{ "r_drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
 	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
-	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
-	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
-	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
+	{ "fill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
+	{ "dropu", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
+	{ "drop", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
+	{ "coords", "Toggles showing tile coords.", "", &DebugCmdShowCoords },
+	{ "cursorcoords", "Toggles showing cursor coords.", "", &DebugCmdShowCursorCoords },
+	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 };
 
 } // namespace

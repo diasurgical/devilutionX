@@ -827,6 +827,7 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 	if (DebugVision && (bFlag & BFLAG_LIT) != 0) {
 		CelClippedDrawTo(out, { dx, dy }, *pSquareCel, 1);
 	}
+	DebugCoordsMap[sx + sy * MAXDUNX] = { dx, dy };
 #endif
 
 	if (MissilePreFlag) {
@@ -1189,10 +1190,57 @@ void DrawGame(const Surface &fullOut, int x, int y)
  */
 void DrawView(const Surface &out, int startX, int startY)
 {
+#ifdef _DEBUG
+	DebugCoordsMap.clear();
+#endif
 	DrawGame(out, startX, startY);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
+#ifdef _DEBUG
+	if (DebugCoords || DebugGrid || DebugCursorCoords) {
+		for (auto m : DebugCoordsMap) {
+			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
+			Point pixelCoords = m.second;
+			Displacement ver = { 0, -TILE_HEIGHT / 2 };
+			Displacement hor = { TILE_WIDTH / 2, 0 };
+			if (!zoomflag) {
+				pixelCoords *= 2;
+				hor *= 2;
+				ver *= 2;
+			}
+			Point center = pixelCoords + hor + ver;
+			if (DebugCoords || (DebugCursorCoords && dunCoords == Point { cursmx, cursmy })) {
+				char coordstr[10];
+				sprintf(coordstr, "%d:%d", dunCoords.x, dunCoords.y);
+				int textWidth = GetLineWidth(coordstr);
+				int textHeight = 12;
+				Point position = center + Displacement { -textWidth / 2, textHeight / 2 };
+				DrawString(out, coordstr, { position, { textWidth, textHeight } }, UiFlags::ColorRed);
+			}
+			if (DebugGrid) {
+				auto DrawLine = [&out](Point from, Point to, uint8_t col) {
+					int dx = to.x - from.x;
+					int dy = to.y - from.y;
+					int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+					float ix = dx / (float)steps;
+					float iy = dy / (float)steps;
+					float sx = from.x;
+					float sy = from.y;
+
+					for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
+						out.SetPixel({ (int)sx, (int)sy }, col);
+				};
+
+				uint8_t col = PAL16_BEIGE;
+				DrawLine(center - hor, center - ver, col);
+				DrawLine(center + hor, center - ver, col);
+				DrawLine(center - hor, center + ver, col);
+				DrawLine(center + hor, center + ver, col);
+			}
+		}
+	}
+#endif
 	DrawMonsterHealthBar(out);
 	DrawItemNameLabels(out);
 
