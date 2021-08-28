@@ -2553,14 +2553,12 @@ void CreatePlayer(int playerId, HeroClass c)
 
 int CalcStatDiff(PlayerStruct &player)
 {
-	return player.GetMaximumAttributeValue(CharacterAttribute::Strength)
-	    - player._pBaseStr
-	    + player.GetMaximumAttributeValue(CharacterAttribute::Magic)
-	    - player._pBaseMag
-	    + player.GetMaximumAttributeValue(CharacterAttribute::Dexterity)
-	    - player._pBaseDex
-	    + player.GetMaximumAttributeValue(CharacterAttribute::Vitality)
-	    - player._pBaseVit;
+	int diff = 0;
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		diff += player.GetMaximumAttributeValue(attribute);
+		diff -= player.GetBaseAttributeValue(attribute);
+	}
+	return diff;
 }
 
 void NextPlrLevel(int pnum)
