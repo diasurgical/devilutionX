@@ -1859,25 +1859,21 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthWest;
 		if (currlevel < 17) {
-			if (door._oVar2 != 50) {
-				ObjSetMicro(door.position + Direction::NorthWest, door._oVar2);
-			} else {
-				if (dPiece[door.position.x - 1][door.position.y] == 396)
-					ObjSetMicro(door.position + Direction::NorthWest, 411);
-				else
-					ObjSetMicro(door.position + Direction::NorthWest, 50);
-			}
+			if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
+				ObjSetMicro(openPosition, 411);
+			else
+				ObjSetMicro(openPosition, door._oVar2);
 		} else {
-			if (door._oVar2 != 86) {
-				ObjSetMicro(door.position + Direction::NorthWest, door._oVar2);
-			} else {
-				if (dPiece[door.position.x - 1][door.position.y] == 210)
-					ObjSetMicro(door.position + Direction::NorthWest, 232);
-				else
-					ObjSetMicro(door.position + Direction::NorthWest, 86);
-			}
+			if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
+				ObjSetMicro(openPosition, 232);
+			else
+				ObjSetMicro(openPosition, door._oVar2);
 		}
+
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
@@ -1940,25 +1936,21 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 		door._oVar4 = 0;
 		door._oSelFlag = 3;
 		ObjSetMicro(door.position, door._oVar1);
+
+		// Restore the normal tile where the open door used to be
+		auto openPosition = door.position + Direction::NorthEast;
 		if (currlevel < 17) {
-			if (door._oVar2 != 50) {
-				ObjSetMicro(door.position + Direction::NorthEast, door._oVar2);
-			} else {
-				if (dPiece[door.position.x][door.position.y - 1] == 396)
-					ObjSetMicro(door.position + Direction::NorthEast, 412);
-				else
-					ObjSetMicro(door.position + Direction::NorthEast, 50);
-			}
+			if (door._oVar2 == 50 && dPiece[openPosition.x][openPosition.y] == 396)
+				ObjSetMicro(openPosition, 412);
+			else
+				ObjSetMicro(openPosition, door._oVar2);
 		} else {
-			if (door._oVar2 != 86) {
-				ObjSetMicro(door.position + Direction::NorthEast, door._oVar2);
-			} else {
-				if (dPiece[door.position.x][door.position.y - 1] == 210)
-					ObjSetMicro(door.position + Direction::NorthEast, 234);
-				else
-					ObjSetMicro(door.position + Direction::NorthEast, 86);
-			}
+			if (door._oVar2 == 86 && dPiece[openPosition.x][openPosition.y] == 210)
+				ObjSetMicro(openPosition, 234);
+			else
+				ObjSetMicro(openPosition, door._oVar2);
 		}
+
 		dSpecial[door.position.x][door.position.y] = 0;
 		door._oAnimFrame -= 2;
 		door._oPreFlag = false;
