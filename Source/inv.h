@@ -97,16 +97,64 @@ void InitInv();
 void DrawInv(const Surface &out);
 
 void DrawInvBelt(const Surface &out);
+
+/**
+ * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.
+ * @param player The player to check.
+ * @param item The item to check.
+ * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
+ */
 bool AutoEquipEnabled(const Player &player, const Item &item);
+
+/**
+ * @brief Automatically attempts to equip the specified item in the most appropriate location in the player's body.
+ * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
+ * @param playerId The player number whose inventory will be checked for compatibility with the item.
+ * @param item The item to equip.
+ * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
+ * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
+ * @return 'True' if the item was equipped and 'False' otherwise.
+ */
 bool AutoEquip(int playerId, const Item &item, bool persistItem = true);
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory.
+ * If 'persistItem' is 'True', the item is also placed in the inventory.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
+ * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
+ */
 bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem = false);
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's inventory slot.
+ * If 'persistItem' is 'True', the item is also placed in the inventory slot.
+ * @param slotIndex The 0-based index of the slot to put the item on.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
+ * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
+ */
 bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem);
+
+/**
+ * @brief Checks whether the given item can be placed on the specified player's belt. Returns 'True' when the item can be placed
+ * on belt slots and the player has at least one empty slot in his belt.
+ * If 'persistItem' is 'True', the item is also placed in the belt.
+ * @param player The player on whose belt will be checked.
+ * @param item The item to be checked.
+ * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
+ * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
+ */
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false);
 bool GoldAutoPlace(Player &player);
 bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex);
 void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(Player &player, BYTE iv);
 void CheckInvItem(bool isShiftHeld = false);
+
+/**
+ * Check for interactions with belt
+ */
 void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(Player &player);
 void InvGetItem(int pnum, Item *item, int ii);
