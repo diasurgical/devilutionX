@@ -628,7 +628,7 @@ void AddRune(MissileStruct &missile, Point dst, missile_id missileID)
 				missile.position.tile = target;
 				missile.var1 = missileID;
 				missile._mlid = AddLight(target, 8);
-				return:
+				return;
 			}
 		}
 	}
