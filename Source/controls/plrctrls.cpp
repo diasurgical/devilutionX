@@ -1024,32 +1024,11 @@ const Direction FaceDir[3][3] = {
  */
 bool IsPathBlocked(Point position, Direction dir)
 {
-	Direction d1;
-	Direction d2;
+	if (IsNoneOf(dir, Direction::North, Direction::East, Direction::South, Direction::West))
+		return false; // Steps along a major axis don't need to check corners
 
-	switch (dir) {
-	case Direction::North:
-		d1 = Direction::NorthWest;
-		d2 = Direction::NorthEast;
-		break;
-	case Direction::East:
-		d1 = Direction::NorthEast;
-		d2 = Direction::SouthEast;
-		break;
-	case Direction::South:
-		d1 = Direction::SouthEast;
-		d2 = Direction::SouthWest;
-		break;
-	case Direction::West:
-		d1 = Direction::SouthWest;
-		d2 = Direction::NorthWest;
-		break;
-	default:
-		return false;
-	}
-
-	auto leftStep { position + d1 };
-	auto rightStep { position + d2 };
+	auto leftStep { position + Left(dir) };
+	auto rightStep { position + Right(dir) };
 
 	if (IsTileNotSolid(leftStep) && IsTileNotSolid(rightStep))
 		return false;
