@@ -1446,12 +1446,14 @@ DWORD OnChangePlayerItems(TCmd *pCmd, int pnum)
 	auto *p = (TCmdChItem *)pCmd;
 	auto bodyLocation = static_cast<inv_body_loc>(p->bLoc);
 
+	auto &player = Players[pnum];
+
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (pnum != MyPlayerId)
-		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
+		CheckInvSwap(player, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
 
-	Players[pnum].ReadySpellFromEquipment(bodyLocation);
+	player.ReadySpellFromEquipment(bodyLocation);
 
 	return sizeof(*p);
 }
@@ -1463,7 +1465,7 @@ DWORD OnDeletePlayerItems(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (pnum != MyPlayerId)
-		inv_update_rem_item(pnum, p->bLoc);
+		inv_update_rem_item(Players[pnum], p->bLoc);
 
 	return sizeof(*p);
 }
@@ -1616,7 +1618,7 @@ DWORD OnSetStrength(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrStr(pnum, p->wParam1);
+		SetPlrStr(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1628,7 +1630,7 @@ DWORD OnSetDexterity(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrDex(pnum, p->wParam1);
+		SetPlrDex(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1640,7 +1642,7 @@ DWORD OnSetMagic(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrMag(pnum, p->wParam1);
+		SetPlrMag(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1652,7 +1654,7 @@ DWORD OnSetVitality(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrVit(pnum, p->wParam1);
+		SetPlrVit(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }

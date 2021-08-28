@@ -197,10 +197,8 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 	*id = item;
 }
 
-void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
+void UnPackPlayer(const PkPlayerStruct *pPack, PlayerStruct &player, bool netSync)
 {
-	auto &player = Players[pnum];
-
 	player.position.tile = { pPack->px, pPack->py };
 	player.position.future = { pPack->px, pPack->py };
 	player.plrlevel = pPack->plrlevel;
@@ -208,7 +206,7 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 	player.destAction = ACTION_NONE;
 	strcpy(player._pName, pPack->pName);
 	player._pClass = (HeroClass)pPack->pClass;
-	InitPlayer(pnum, true);
+	InitPlayer(player, true);
 	player._pBaseStr = pPack->pBaseStr;
 	player._pStrength = pPack->pBaseStr;
 	player._pBaseMag = pPack->pBaseMag;
@@ -261,12 +259,12 @@ void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync)
 		UnPackItem(&packedItem, &player.SpdList[i], isHellfire);
 	}
 
-	if (pnum == MyPlayerId) {
+	if (&player == &Players[MyPlayerId]) {
 		for (int i = 0; i < 20; i++)
 			witchitem[i]._itype = ITYPE_NONE;
 	}
 
-	CalcPlrInv(pnum, false);
+	CalcPlrInv(player, false);
 	player.wReflections = SDL_SwapLE16(pPack->wReflections);
 	player.pTownWarps = 0;
 	player.pDungMsgs = 0;

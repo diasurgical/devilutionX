@@ -1604,9 +1604,11 @@ bool TryIconCurs()
 		return true;
 	}
 
+	auto &myPlayer = Players[MyPlayerId];
+
 	if (pcurs == CURSOR_IDENTIFY) {
 		if (pcursinvitem != -1)
-			CheckIdentify(MyPlayerId, pcursinvitem);
+			CheckIdentify(myPlayer, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
@@ -1614,7 +1616,7 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_REPAIR) {
 		if (pcursinvitem != -1)
-			DoRepair(MyPlayerId, pcursinvitem);
+			DoRepair(myPlayer, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
@@ -1622,7 +1624,7 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_RECHARGE) {
 		if (pcursinvitem != -1)
-			DoRecharge(MyPlayerId, pcursinvitem);
+			DoRecharge(myPlayer, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
@@ -1630,14 +1632,13 @@ bool TryIconCurs()
 
 	if (pcurs == CURSOR_OIL) {
 		if (pcursinvitem != -1)
-			DoOil(MyPlayerId, pcursinvitem);
+			DoOil(myPlayer, pcursinvitem);
 		else
 			NewCursor(CURSOR_HAND);
 		return true;
 	}
 
 	if (pcurs == CURSOR_TELEPORT) {
-		auto &myPlayer = Players[MyPlayerId];
 		if (pcursmonst != -1)
 			NetSendCmdParam3(true, CMD_TSPELLID, pcursmonst, myPlayer._pTSpell, GetSpellLevel(MyPlayerId, myPlayer._pTSpell));
 		else if (pcursplr != -1)
@@ -1874,12 +1875,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 		IncProgress();
 
-		for (int i = 0; i < MAX_PLRS; i++) {
-			auto &player = Players[i];
+		for (auto &player : Players) {
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
-					InitPlayer(i, firstflag);
+					InitPlayer(player, firstflag);
 			}
 		}
 
@@ -1969,12 +1969,11 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			GetPortalLvlPos();
 		IncProgress();
 
-		for (int i = 0; i < MAX_PLRS; i++) {
-			auto &player = Players[i];
+		for (auto &player : Players) {
 			if (player.plractive && currlevel == player.plrlevel) {
 				InitPlayerGFX(player);
 				if (lvldir != ENTRY_LOAD)
-					InitPlayer(i, firstflag);
+					InitPlayer(player, firstflag);
 			}
 		}
 		IncProgress();

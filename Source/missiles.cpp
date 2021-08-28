@@ -1227,7 +1227,7 @@ void InitMissiles()
 			if (missile._mitype == MIS_INFRA) {
 				int src = missile._misource;
 				if (src == MyPlayerId)
-					CalcPlrItemVals(MyPlayerId, true);
+					CalcPlrItemVals(myPlayer, true);
 			}
 		}
 	}
@@ -1241,7 +1241,7 @@ void InitMissiles()
 			if (missile._mitype == MIS_BLODBOIL) {
 				if (missile._misource == MyPlayerId) {
 					int missingHP = myPlayer._pMaxHP - myPlayer._pHitPoints;
-					CalcPlrItemVals(MyPlayerId, true);
+					CalcPlrItemVals(myPlayer, true);
 					ApplyPlrDamage(MyPlayerId, 0, 1, missingHP + missile.var2);
 				}
 			}
@@ -1506,7 +1506,7 @@ void AddManaTrap(MissileStruct &missile, Point /*dst*/, Direction /*midir*/)
 
 			player._pMana = 0;
 			player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
-			CalcPlrInv(pid, false);
+			CalcPlrInv(player, false);
 			drawmanaflag = true;
 			PlaySfxLoc(TSFX_COW7, target);
 		}
@@ -2620,7 +2620,7 @@ void AddBlodboil(MissileStruct &missile, Point /*dst*/, Direction /*midir*/)
 	missile.var2 = tmp;
 	int lvl = player._pLevel * 2;
 	missile._mirange = lvl + 10 * missile._mispllvl + 245;
-	CalcPlrItemVals(missile._misource, true);
+	CalcPlrItemVals(player, true);
 	force_redraw = 255;
 	player.Say(HeroSpeech::Aaaaargh);
 }
@@ -3882,11 +3882,12 @@ void MI_FirewallC(MissileStruct &missile)
 
 void MI_Infra(MissileStruct &missile)
 {
+	auto &player = Players[missile._misource];
 	missile._mirange--;
-	Players[missile._misource]._pInfraFlag = true;
+	player._pInfraFlag = true;
 	if (missile._mirange == 0) {
 		missile._miDelFlag = true;
-		CalcPlrItemVals(missile._misource, true);
+		CalcPlrItemVals(player, true);
 	}
 }
 
@@ -4015,7 +4016,7 @@ void MI_Blodboil(MissileStruct &missile)
 		hpdif += missile.var2;
 	}
 
-	CalcPlrItemVals(id, true);
+	CalcPlrItemVals(player, true);
 	ApplyPlrDamage(id, 0, 1, hpdif);
 	force_redraw = 255;
 	player.Say(HeroSpeech::HeavyBreathing);

@@ -300,12 +300,12 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
 				auto &player = Players[0];
-				UnPackPlayer(&pkplr, 0, false);
+				UnPackPlayer(&pkplr, player, false);
 
 				CloseArchive(&archive);
 				LoadHeroItems(player);
 				RemoveEmptyInventory(player);
-				CalcPlrInv(0, false);
+				CalcPlrInv(player, false);
 
 				Game2UiPlayer(player, &uihero, hasSaveGame);
 				uiAddHeroInfo(&uihero);
@@ -375,7 +375,7 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 	return true;
 }
 
-void pfile_read_player_from_save(uint32_t saveNum, int playerId)
+void pfile_read_player_from_save(uint32_t saveNum, PlayerStruct &player)
 {
 	HANDLE archive;
 	PkPlayerStruct pkplr;
@@ -392,13 +392,11 @@ void pfile_read_player_from_save(uint32_t saveNum, int playerId)
 
 	CloseArchive(&archive);
 
-	auto &player = Players[playerId];
-
-	UnPackPlayer(&pkplr, playerId, false);
+	UnPackPlayer(&pkplr, player, false);
 
 	LoadHeroItems(player);
 	RemoveEmptyInventory(player);
-	CalcPlrInv(playerId, false);
+	CalcPlrInv(player, false);
 }
 
 bool LevelFileExists()

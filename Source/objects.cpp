@@ -3710,7 +3710,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		break;
 	}
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(Players[pnum], true);
 	force_redraw = 255;
 
 	if (pnum == MyPlayerId)
