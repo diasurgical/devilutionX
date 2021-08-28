@@ -134,6 +134,7 @@ void FreeControlPan();
  */
 void DrawInfoBox(const Surface &out);
 void DrawChr(const Surface &out);
+void DrawPcxChr(const Surface &out);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
 void DrawLevelUpIcon(const Surface &out);

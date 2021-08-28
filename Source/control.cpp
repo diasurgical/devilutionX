@@ -10,6 +10,8 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/art.h"
+#include "DiabloUI/art_draw.h"
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "controls/keymapper.hpp"
@@ -1402,6 +1404,64 @@ void DrawInfoBox(const Surface &out)
 	}
 	if (infostr[0] != '\0' || pnumlines != 0)
 		PrintInfo(out);
+}
+
+void DrawThingy(const Surface &out, Point pos, int len)
+{
+	Art leftz, middlez, rightz;
+		LoadArt("debugart\\boxleftend.pcx", &leftz);
+		LoadArt("debugart\\boxmiddle.pcx", &middlez);
+		LoadArt("debugart\\boxrightend.pcx", &rightz);
+	DrawArt(out, pos.x, pos.y, &leftz);
+	pos.x += leftz.w();
+	DrawArt(out, pos.x, pos.y, &middlez, 0, len);
+	pos.x += len;
+	DrawArt(out, pos.x, pos.y, &rightz);
+
+	leftz.Unload();
+	middlez.Unload();
+	rightz.Unload();
+}
+
+void DrawPcxChr(const Surface &out)
+{
+	Art background;
+	LoadArt("debugart\\charbg.pcx", &background);
+	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
+	DrawArt(out, pos.x, pos.y, &background);
+	DrawThingy(out, { pos.x + 13, pos.y + 14 }, 134); //name
+
+	DrawThingy(out, { pos.x + 57, pos.y + 52 }, 45); // level
+
+	DrawThingy(out, { pos.x + 88, pos.y + 138 }, 33); //str base
+	DrawThingy(out, { pos.x + 88, pos.y + 166 }, 33); // magic base
+	DrawThingy(out, { pos.x + 88, pos.y + 194 }, 33); //dex base
+	DrawThingy(out, { pos.x + 88, pos.y + 222 }, 33); //vita base
+	DrawThingy(out, { pos.x + 88, pos.y + 250 }, 33); //points to distribute
+	DrawThingy(out, { pos.x + 88, pos.y + 287 }, 33); //curr life
+	DrawThingy(out, { pos.x + 88, pos.y + 315 }, 33); //curr mana
+
+	DrawThingy(out, { pos.x + 135, pos.y + 138 }, 33); // str curr
+	DrawThingy(out, { pos.x + 135, pos.y + 166 }, 33); // magic curr
+	DrawThingy(out, { pos.x + 135, pos.y + 194 }, 33); // dex curr
+	DrawThingy(out, { pos.x + 135, pos.y + 222 }, 33); // vita curr
+	DrawThingy(out, { pos.x + 135, pos.y + 287 }, 33); //max life
+	DrawThingy(out, { pos.x + 135, pos.y + 315 }, 33);  //max mana
+
+	DrawThingy(out, { pos.x + 161, pos.y + 14 }, 134); // class
+
+	DrawThingy(out, { pos.x + 208, pos.y + 52 }, 87);  // exp
+	DrawThingy(out, { pos.x + 208, pos.y + 80 }, 87);  // next level
+	DrawThingy(out, { pos.x + 208, pos.y + 129 }, 87); // gold
+
+	DrawThingy(out, { pos.x + 250, pos.y + 166 }, 45); // armor
+	DrawThingy(out, { pos.x + 250, pos.y + 194 }, 45); // to hit
+	DrawThingy(out, { pos.x + 250, pos.y + 222 }, 45); // damage
+	DrawThingy(out, { pos.x + 250, pos.y + 259 }, 45); // resist magic
+	DrawThingy(out, { pos.x + 250, pos.y + 287 }, 45); // resist fire
+	DrawThingy(out, { pos.x + 250, pos.y + 315 }, 45); // resist lightning
+
+	background.Unload();
 }
 
 void DrawChr(const Surface &out)

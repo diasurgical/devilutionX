@@ -1458,6 +1458,9 @@ void InitKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
+			#ifdef _DEBUG
+		    DebugChar = !DebugChar;
+			#endif
 		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
 		                                   "{:s}, version = {:s}, mode = {:s}"),
 		                       gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty])

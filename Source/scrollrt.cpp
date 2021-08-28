@@ -1207,7 +1207,15 @@ void DrawView(const Surface &out, int startX, int startY)
 	DrawDurIcon(out);
 
 	if (chrflag) {
+#ifdef _DEBUG
+		if (DebugChar) {
+			DrawPcxChr(out);
+		} else {
+			DrawChr(out);
+		}
+	#else
 		DrawChr(out);
+#endif
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
 	}
