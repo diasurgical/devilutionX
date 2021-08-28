@@ -347,9 +347,6 @@ void gmenu_enable(TMenuItem *pMenuItem, bool enable)
 		pMenuItem->dwFlags &= ~GMENU_ENABLED;
 }
 
-/**
- * @brief Set the TMenuItem slider position based on the given value
- */
 void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 {
 	assert(pItem);
@@ -358,9 +355,6 @@ void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value)
 	pItem->dwFlags |= ((max - min - 1) / 2 + (value - min) * nSteps) / (max - min);
 }
 
-/**
- * @brief Get the current value for the slider
- */
 int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 {
 	uint16_t step = pItem->dwFlags & 0xFFF;
@@ -368,9 +362,6 @@ int gmenu_slider_get(TMenuItem *pItem, int min, int max)
 	return min + (step * (max - min) + (steps - 1) / 2) / steps;
 }
 
-/**
- * @brief Set the number of steps for the slider
- */
 void gmenu_slider_steps(TMenuItem *pItem, int steps)
 {
 	pItem->dwFlags &= 0xFF000FFF;

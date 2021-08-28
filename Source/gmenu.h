@@ -32,8 +32,20 @@ bool gmenu_presskeys(int vkey);
 bool gmenu_on_mouse_move();
 bool gmenu_left_mouse(bool isDown);
 void gmenu_enable(TMenuItem *pMenuItem, bool enable);
+
+/**
+ * @brief Set the TMenuItem slider position based on the given value
+ */
 void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value);
+
+/**
+ * @brief Get the current value for the slider
+ */
 int gmenu_slider_get(TMenuItem *pItem, int min, int max);
+
+/**
+ * @brief Set the number of steps for the slider
+ */
 void gmenu_slider_steps(TMenuItem *pItem, int steps);
 
 } // namespace devilution
