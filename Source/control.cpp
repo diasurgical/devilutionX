@@ -1643,27 +1643,8 @@ void CheckChrBtns()
 		return;
 
 	for (auto attribute : enum_values<CharacterAttribute>()) {
-		int max = myPlayer.GetMaximumAttributeValue(attribute);
-		switch (attribute) {
-		case CharacterAttribute::Strength:
-			if (myPlayer._pBaseStr >= max)
-				continue;
-			break;
-		case CharacterAttribute::Magic:
-			if (myPlayer._pBaseMag >= max)
-				continue;
-			break;
-		case CharacterAttribute::Dexterity:
-			if (myPlayer._pBaseDex >= max)
-				continue;
-			break;
-		case CharacterAttribute::Vitality:
-			if (myPlayer._pBaseVit >= max)
-				continue;
-			break;
-		default:
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
 			continue;
-		}
 		auto buttonId = static_cast<size_t>(attribute);
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
