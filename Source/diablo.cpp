@@ -2059,9 +2059,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	pcursplr = -1;
 }
 
-/**
- * @param bStartup Process additional ticks before returning
- */
 void game_loop(bool bStartup)
 {
 	uint16_t wait = bStartup ? sgGameInitInfo.nTickRate * 3 : 3;
