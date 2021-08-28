@@ -133,6 +133,12 @@ enum class LeaderRelation : uint8_t {
 struct AnimStruct {
 	std::unique_ptr<byte[]> CMem;
 	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
+
+	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	{
+		return CelSpritesForDirections[static_cast<size_t>(direction)];
+	}
+
 	int Frames;
 	int Rate;
 };
@@ -220,7 +226,7 @@ struct Monster { // note: missing field _mAFNum
 	*/
 	void ActivateAnimation(MonsterGraphic graphic, Direction direction)
 	{
-		auto &celSprite = this->MType->GetAnimData(graphic).CelSpritesForDirections[static_cast<size_t>(direction)];
+		auto &celSprite = this->MType->GetAnimData(graphic).GetCelSpritesForDirection(direction);
 		this->AnimInfo.pCelSprite = celSprite ? &*celSprite : nullptr;
 	}
 

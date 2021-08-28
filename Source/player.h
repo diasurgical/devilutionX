@@ -159,6 +159,11 @@ struct PlayerAnimationData {
 	 *        Is referenced from CelSprite in CelSpritesForDirections
 	 */
 	std::unique_ptr<byte[]> RawData;
+
+	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	{
+		return CelSpritesForDirections[static_cast<size_t>(direction)];
+	}
 };
 
 struct Player {
