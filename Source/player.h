@@ -429,7 +429,6 @@ struct PlayerStruct {
 
 	/**
 	 * @brief Return player's ranged to hit value
-	 * @param pierceArmor - indicate if player's armor piercing should be included - true vs monsters, false vs players
 	 */
 	int GetRangedToHit() const
 	{
