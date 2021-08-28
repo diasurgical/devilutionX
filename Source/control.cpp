@@ -1035,10 +1035,6 @@ void DrawCtrlBtns(const Surface &out)
 	}
 }
 
-/**
- * Draws the "Speed Book": the rows of known spells for quick-setting a spell that
- * show up when you click the spell slot at the control panel.
- */
 void DoSpeedBook()
 {
 	spselflag = true;
@@ -1093,9 +1089,6 @@ void DoSpeedBook()
 	SetCursorPos(x, y);
 }
 
-/**
- * Checks if the mouse cursor is within any of the panel buttons and flag it if so.
- */
 void DoPanBtn()
 {
 	for (int i = 0; i < PanelButtonIndex; i++) {
@@ -1154,10 +1147,6 @@ void DoAutoMap()
 	}
 }
 
-/**
- * Checks the mouse cursor position within the control panel and sets information
- * strings if needed.
- */
 void CheckPanelInfo()
 {
 	panelflag = false;
@@ -1246,10 +1235,6 @@ void CheckPanelInfo()
 	}
 }
 
-/**
- * Check if the mouse is within a control panel button that's flagged.
- * Takes apropiate action if so.
- */
 void CheckBtnUp()
 {
 	bool gamemenuOff = true;
