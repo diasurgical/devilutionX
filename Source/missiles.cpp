@@ -610,28 +610,30 @@ void SetMissAnim(MissileStruct &missile, int animtype)
 	missile._miAnimFrame = 1;
 }
 
-bool MissilesFoundTarget(MissileStruct &missile, Point *position, int rad)
+void AddRune(MissileStruct &missile, Point dst, missile_id missileID)
 {
-	rad = std::min(rad, 19);
-	for (int i = 0; i < rad; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			int tx = position->x + CrawlTable[ck - 1];
-			int ty = position->y + CrawlTable[ck];
-			if (!InDungeonBounds({ tx, ty }))
-				continue;
+	if (LineClearMissile(missile.position.start, dst)) {
+		for (int i = 0; i < 10; i++) {
+			int k = CrawlNum[i];
+			int ck = k + 2;
+			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
+				Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+				if (!InDungeonBounds(target))
+					continue;
 
-			int dp = dPiece[tx][ty];
-			if (nSolidTable[dp] || dObject[tx][ty] != 0 || (dFlags[i][j] & BFLAG_MISSILE) != 0)
-				continue;
+				int dp = dPiece[target.x][target.y];
+				if (nSolidTable[dp] || dObject[target.x][target.y] != 0 || (dFlags[i][j] & BFLAG_MISSILE) != 0)
+					continue;
 
-			missile.position.tile = { tx, ty };
-			*position = { tx, ty };
-			return true;
+				missile.position.tile = target;
+				missile.var1 = missileID;
+				missile._mlid = AddLight(target, 8);
+				return:
+			}
 		}
 	}
-	return false;
+
+	missile._miDelFlag = true;
 }
 
 bool CheckIfTrig(Point position)
@@ -1274,67 +1276,29 @@ void AddHiveExplosion(MissileStruct &missile, Point /*dst*/, Direction midir)
 	missile._miDelFlag = true;
 }
 
-void AddRune(MissileStruct &missile, Point dst, spell_id spellID, missile_id missileID)
-{
-	if (LineClearMissile(missile.position.start, dst)) {
-		if (missile._misource >= 0)
-			UseMana(missile._misource, spellID);
-		if (MissilesFoundTarget(missile, &dst, 10)) {
-			missile.var1 = missileID;
-			missile._mlid = AddLight(dst, 8);
-		} else {
-			missile._miDelFlag = true;
-		}
-	} else {
-		missile._miDelFlag = true;
-	}
-}
-
 void AddFireRune(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
-	AddRune(missile, dst, SPL_RUNEFIRE, MIS_HIVEEXP);
+	AddRune(missile, dst, MIS_HIVEEXP);
 }
 
 void AddLightningRune(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
-	AddRune(missile, dst, SPL_RUNELIGHT, MIS_LIGHTBALL);
+	AddRune(missile, dst, MIS_LIGHTBALL);
 }
 
 void AddGreatLightningRune(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
-	AddRune(missile, dst, SPL_RUNENOVA, MIS_NOVA);
+	AddRune(missile, dst, MIS_NOVA);
 }
 
 void AddImmolationRune(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
-	if (LineClearMissile(missile.position.start, dst)) {
-		if (missile._misource >= 0)
-			UseMana(missile._misource, SPL_RUNEIMMOLAT);
-		if (MissilesFoundTarget(missile, &dst, 10)) {
-			missile.var1 = MIS_IMMOLATION;
-			missile._mlid = AddLight(dst, 8);
-		} else {
-			missile._miDelFlag = true;
-		}
-	} else {
-		missile._miDelFlag = true;
-	}
+	AddRune(missile, dst, MIS_IMMOLATION);
 }
 
 void AddStoneRune(MissileStruct &missile, Point dst, Direction /*midir*/)
 {
-	if (LineClearMissile(missile.position.start, dst)) {
-		if (missile._misource >= 0)
-			UseMana(missile._misource, SPL_RUNESTONE);
-		if (MissilesFoundTarget(missile, &dst, 10)) {
-			missile.var1 = MIS_STONE;
-			missile._mlid = AddLight(dst, 8);
-		} else {
-			missile._miDelFlag = true;
-		}
-	} else {
-		missile._miDelFlag = true;
-	}
+	AddRune(missile, dst, MIS_STONE);
 }
 
 void AddReflection(MissileStruct &missile, Point /*dst*/, Direction /*midir*/)
@@ -3343,23 +3307,22 @@ void MI_FireRing(MissileStruct &missile)
 	int k = CrawlNum[3];
 	int ck = k + 2;
 	for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-		int tx = missile.var1 + CrawlTable[ck - 1];
-		int ty = missile.var2 + CrawlTable[ck];
-		if (!InDungeonBounds({ tx, ty }))
+		Point target { missile.var1 + CrawlTable[ck - 1], missile.var2 + CrawlTable[ck] };
+		if (!InDungeonBounds(target))
 			continue;
-		int dp = dPiece[tx][ty];
+		int dp = dPiece[target.x][target.y];
 		if (nSolidTable[dp])
 			continue;
-		if (dObject[tx][ty] != 0)
+		if (dObject[target.x][target.y] != 0)
 			continue;
-		if (!LineClearMissile(missile.position.tile, { tx, ty }))
+		if (!LineClearMissile(missile.position.tile, target))
 			continue;
 		if (nMissileTable[dp] || missile.limitReached) {
 			missile.limitReached = true;
 			continue;
 		}
 
-		AddMissile({ tx, ty }, { tx, ty }, DIR_S, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
+		AddMissile(target, target, DIR_S, MIS_FIREWALL, TARGET_BOTH, src, dmg, missile._mispllvl);
 	}
 }
 
