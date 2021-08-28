@@ -12,4 +12,4 @@ namespace devilution {
  */
 void CaptureScreen();
 
-}
+} // namespace devilution
