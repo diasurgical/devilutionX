@@ -339,7 +339,7 @@ TEST(Writehero, pfile_write_hero)
 	pfile_ui_save_create(&info);
 	PkPlayerStruct pks;
 	PackPlayerTest(&pks);
-	UnPackPlayer(&pks, MyPlayerId, true);
+	UnPackPlayer(&pks, Players[MyPlayerId], true);
 	AssertPlayer(Players[0]);
 	pfile_write_hero();
 

@@ -625,7 +625,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 		if (amount < item._ivalue) {
 			item._ivalue -= amount;
 			SetPlrHandItem(player.HoldItem, IDI_GOLD);
-			GetGoldSeed(pnum, &player.HoldItem);
+			SetGoldSeed(player, player.HoldItem);
 			SetPlrHandGoldCurs(player.HoldItem);
 			player.HoldItem._ivalue = amount;
 			DeadItem(player, &player.HoldItem, { 0, 0 });
@@ -635,7 +635,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 		amount -= item._ivalue;
 		player.RemoveInvItem(i);
 		SetPlrHandItem(player.HoldItem, IDI_GOLD);
-		GetGoldSeed(pnum, &player.HoldItem);
+		SetGoldSeed(player, player.HoldItem);
 		SetPlrHandGoldCurs(player.HoldItem);
 		player.HoldItem._ivalue = item._ivalue;
 		DeadItem(player, &player.HoldItem, { 0, 0 });
@@ -768,19 +768,17 @@ bool DoWalk(int pnum, int variant)
 	return false;
 }
 
-bool WeaponDecay(int pnum, int ii)
+bool WeaponDecay(PlayerStruct &player, int ii)
 {
-	auto &player = Players[pnum];
-
 	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
 			NetSendCmdDelItem(true, ii);
 			player.InvBody[ii]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
-		CalcPlrInv(pnum, true);
+		CalcPlrInv(player, true);
 	}
 	return false;
 }
@@ -791,19 +789,19 @@ bool DamageWeapon(int pnum, int durrnd)
 		return false;
 	}
 
-	if (WeaponDecay(pnum, INVLOC_HAND_LEFT))
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("WeaponDur: illegal player %i", pnum);
+	}
+	auto &player = Players[pnum];
+
+	if (WeaponDecay(player, INVLOC_HAND_LEFT))
 		return true;
-	if (WeaponDecay(pnum, INVLOC_HAND_RIGHT))
+	if (WeaponDecay(player, INVLOC_HAND_RIGHT))
 		return true;
 
 	if (GenerateRnd(durrnd) != 0) {
 		return false;
 	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("WeaponDur: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
@@ -814,7 +812,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -828,7 +826,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -842,7 +840,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -856,7 +854,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -1362,7 +1360,7 @@ void ShieldDur(int pnum)
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 		}
 	}
 
@@ -1372,7 +1370,7 @@ void ShieldDur(int pnum)
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 				player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-				CalcPlrInv(pnum, true);
+				CalcPlrInv(player, true);
 			}
 		}
 	}
@@ -1444,7 +1442,7 @@ void DamageArmor(int pnum)
 		NetSendCmdDelItem(true, INVLOC_HEAD);
 	}
 	pi->_itype = ITYPE_NONE;
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 }
 
 bool DoSpell(int pnum)
@@ -2571,7 +2569,7 @@ void NextPlrLevel(int pnum)
 	player._pLevel++;
 	player._pMaxLvl++;
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 
 	if (CalcStatDiff(player) < 5) {
 		player._pStatPts = CalcStatDiff(player);
@@ -2618,7 +2616,7 @@ void NextPlrLevel(int pnum)
 	if (sgbControllerActive)
 		FocusOnCharInfo();
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 }
 
 void AddPlrExperience(int pnum, int lvl, int exp)
@@ -2692,18 +2690,14 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 }
 
-void InitPlayer(int pnum, bool firstTime)
+void InitPlayer(PlayerStruct &player, bool firstTime)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitPlayer: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (firstTime) {
 		player._pRSplType = RSPLTYPE_INVALID;
 		player._pRSpell = SPL_INVALID;
-		if (pnum == MyPlayerId)
+		if (&player == &myPlayer)
 			LoadHotkeys();
 		player._pSBkSpell = SPL_INVALID;
 		player._pSpell = player._pRSpell;
@@ -2734,7 +2728,7 @@ void InitPlayer(int pnum, bool firstTime)
 
 		player._pdir = DIR_S;
 
-		if (pnum == MyPlayerId) {
+		if (&player == &myPlayer) {
 			if (!firstTime || currlevel != 0) {
 				player.position.tile = { ViewX, ViewY };
 			}
@@ -2750,13 +2744,13 @@ void InitPlayer(int pnum, bool firstTime)
 		player.walkpath[0] = WALK_NONE;
 		player.destAction = ACTION_NONE;
 
-		if (pnum == MyPlayerId) {
+		if (&player == &myPlayer) {
 			player._plid = AddLight(player.position.tile, player._pLightRad);
 			ChangeLightXY(myPlayer._plid, myPlayer.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
 		}
-		player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == MyPlayerId);
+		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == &myPlayer);
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
@@ -2782,7 +2776,7 @@ void InitPlayer(int pnum, bool firstTime)
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 	player._pInvincible = false;
 
-	if (pnum == MyPlayerId) {
+	if (&player == &myPlayer) {
 		deathdelay = 0;
 		MyPlayerIsDead = false;
 		ScrollInfo.offset = { 0, 0 };
@@ -3026,14 +3020,14 @@ StartPlayerKill(int pnum, int earflag)
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
-	SetPlayerHitPoints(pnum, 0);
+	SetPlayerHitPoints(player, 0);
 	player.deathFrame = 1;
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
 			item._itype = ITYPE_NONE;
 		}
-		CalcPlrInv(pnum, false);
+		CalcPlrInv(player, false);
 	}
 
 	if (player.plrlevel == currlevel) {
@@ -3087,22 +3081,17 @@ StartPlayerKill(int pnum, int earflag)
 							DeadItem(player, &item, Displacement::fromDirection(pdd));
 						}
 
-						CalcPlrInv(pnum, false);
+						CalcPlrInv(player, false);
 					}
 				}
 			}
 		}
 	}
-	SetPlayerHitPoints(pnum, 0);
+	SetPlayerHitPoints(player, 0);
 }
 
-void StripTopGold(int pnum)
+void StripTopGold(PlayerStruct &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StripTopGold: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	ItemStruct tmpItem = player.HoldItem;
 
 	for (int i = 0; i < player._pNumInv; i++) {
@@ -3111,7 +3100,7 @@ void StripTopGold(int pnum)
 				int val = player.InvList[i]._ivalue - MaxGold;
 				player.InvList[i]._ivalue = MaxGold;
 				SetPlrHandItem(player.HoldItem, 0);
-				GetGoldSeed(pnum, &player.HoldItem);
+				SetGoldSeed(player, player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(player.HoldItem);
 				if (!GoldAutoPlace(player))
@@ -3162,7 +3151,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 	}
 	int minHitPoints = minHP << 6;
 	if (player._pHitPoints < minHitPoints) {
-		SetPlayerHitPoints(pnum, minHitPoints);
+		SetPlayerHitPoints(player, minHitPoints);
 	}
 	if (player._pHitPoints >> 6 <= 0) {
 		SyncPlrKill(pnum, earflag);
@@ -3174,11 +3163,11 @@ void SyncPlrKill(int pnum, int earflag)
 	auto &player = Players[pnum];
 
 	if (player._pHitPoints <= 0 && currlevel == 0) {
-		SetPlayerHitPoints(pnum, 64);
+		SetPlayerHitPoints(player, 64);
 		return;
 	}
 
-	SetPlayerHitPoints(pnum, 0);
+	SetPlayerHitPoints(player, 0);
 	StartPlayerKill(pnum, earflag);
 }
 
@@ -3261,12 +3250,12 @@ void RestartTownLvl(int pnum)
 	player.plrlevel = 0;
 	player._pInvincible = false;
 
-	SetPlayerHitPoints(pnum, 64);
+	SetPlayerHitPoints(player, 64);
 
 	player._pMana = 0;
 	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
 
-	CalcPlrInv(pnum, false);
+	CalcPlrInv(player, false);
 
 	if (pnum == MyPlayerId) {
 		player._pmode = PM_NEWLVL;
@@ -3701,7 +3690,7 @@ void ModifyPlrStr(int p, int l)
 	player._pStrength += l;
 	player._pBaseStr += l;
 
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETSTR, player._pBaseStr);
@@ -3737,7 +3726,7 @@ void ModifyPlrMag(int p, int l)
 		player._pMana += ms;
 	}
 
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETMAG, player._pBaseMag);
@@ -3758,7 +3747,7 @@ void ModifyPlrDex(int p, int l)
 
 	player._pDexterity += l;
 	player._pBaseDex += l;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETDEX, player._pBaseDex);
@@ -3790,51 +3779,34 @@ void ModifyPlrVit(int p, int l)
 	player._pHitPoints += ms;
 	player._pMaxHP += ms;
 
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETVIT, player._pBaseVit);
 	}
 }
 
-void SetPlayerHitPoints(int pnum, int val)
+void SetPlayerHitPoints(PlayerStruct &player, int val)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SetPlayerHitPoints: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player._pHitPoints = val;
 	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
 
-	if (pnum == MyPlayerId) {
+	if (&player == &Players[MyPlayerId]) {
 		drawhpflag = true;
 	}
 }
 
-void SetPlrStr(int p, int v)
+void SetPlrStr(PlayerStruct &player, int v)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrStr: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseStr = v;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void SetPlrMag(int p, int v)
+void SetPlrMag(PlayerStruct &player, int v)
 {
-	int m;
-
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrMag: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseMag = v;
 
-	m = v << 6;
+	int m = v << 6;
 	if (player._pClass == HeroClass::Sorcerer) {
 		m *= 2;
 	} else if (player._pClass == HeroClass::Bard) {
@@ -3843,39 +3815,27 @@ void SetPlrMag(int p, int v)
 
 	player._pMaxManaBase = m;
 	player._pMaxMana = m;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void SetPlrDex(int p, int v)
+void SetPlrDex(PlayerStruct &player, int v)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrDex: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseDex = v;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void SetPlrVit(int p, int v)
+void SetPlrVit(PlayerStruct &player, int v)
 {
-	int hp;
-
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrVit: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseVit = v;
 
-	hp = v << 6;
+	int hp = v << 6;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 		hp *= 2;
 	}
 
 	player._pHPBase = hp;
 	player._pMaxHPBase = hp;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
 void InitDungMsgs(PlayerStruct &player)

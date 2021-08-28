@@ -1302,7 +1302,8 @@ void SmithEnter()
  */
 void SmithBuyItem()
 {
-	auto &item = Players[MyPlayerId].HoldItem;
+	auto &myPlayer = Players[MyPlayerId];
+	auto &item = myPlayer.HoldItem;
 
 	TakePlrsMoney(item._iIvalue);
 	if (item._iMagical == ITEM_QUALITY_NORMAL)
@@ -1317,7 +1318,7 @@ void SmithBuyItem()
 		}
 		smithitem[idx]._itype = ITYPE_NONE;
 	}
-	CalcPlrInv(MyPlayerId, true);
+	CalcPlrInv(myPlayer, true);
 }
 
 void SmitBuyEnter()
@@ -1469,7 +1470,7 @@ void PlaceStoreGold(int v)
 	for (auto &gridNum : myPlayer.InvGrid) {
 		if (gridNum == 0) {
 			int ii = myPlayer._pNumInv;
-			GetGoldSeed(MyPlayerId, &golditem);
+			SetGoldSeed(myPlayer, golditem);
 			myPlayer.InvList[ii] = golditem;
 			myPlayer._pNumInv++;
 			gridNum = myPlayer._pNumInv;
@@ -1649,7 +1650,7 @@ void WitchBuyItem()
 		}
 	}
 
-	CalcPlrInv(MyPlayerId, true);
+	CalcPlrInv(myPlayer, true);
 }
 
 void WitchBuyEnter()
@@ -1723,7 +1724,7 @@ void WitchRechargeItem()
 	else
 		myPlayer.InvList[i]._iCharges = myPlayer.InvList[i]._iMaxCharges;
 
-	CalcPlrInv(MyPlayerId, true);
+	CalcPlrInv(myPlayer, true);
 }
 
 void WitchRechargeEnter()
@@ -1778,11 +1779,12 @@ void BoyEnter()
 
 void BoyBuyItem()
 {
-	TakePlrsMoney(Players[MyPlayerId].HoldItem._iIvalue);
+	auto &myPlayer = Players[MyPlayerId];
+	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
 	StoreAutoPlace();
 	boyitem._itype = ITYPE_NONE;
 	stextshold = STORE_BOY;
-	CalcPlrInv(MyPlayerId, true);
+	CalcPlrInv(myPlayer, true);
 	stextlhold = 12;
 }
 
@@ -1791,7 +1793,8 @@ void BoyBuyItem()
  */
 void HealerBuyItem()
 {
-	auto &item = Players[MyPlayerId].HoldItem;
+	auto &myPlayer = Players[MyPlayerId];
+	auto &item = myPlayer.HoldItem;
 
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (!gbIsMultiplayer) {
@@ -1823,7 +1826,7 @@ void HealerBuyItem()
 		}
 		healitem[idx]._itype = ITYPE_NONE;
 	}
-	CalcPlrInv(MyPlayerId, true);
+	CalcPlrInv(myPlayer, true);
 }
 
 void BoyBuyEnter()
@@ -1892,7 +1895,7 @@ void StorytellerIdentifyItem()
 	}
 	myPlayer.HoldItem._iIdentified = true;
 	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	CalcPlrInv(MyPlayerId, true);
+	CalcPlrInv(myPlayer, true);
 }
 
 void ConfirmEnter()

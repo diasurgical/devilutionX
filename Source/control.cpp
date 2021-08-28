@@ -571,10 +571,8 @@ void ControlUpDown(int v)
 	}
 }
 
-void RemoveGold(int pnum, int goldIndex)
+void RemoveGold(PlayerStruct &player, int goldIndex)
 {
-	auto &player = Players[pnum];
-
 	int gi = goldIndex - INVITEM_INV_FIRST;
 	player.InvList[gi]._ivalue -= dropGoldValue;
 	if (player.InvList[gi]._ivalue > 0)
@@ -582,7 +580,7 @@ void RemoveGold(int pnum, int goldIndex)
 	else
 		player.RemoveInvItem(gi);
 	SetPlrHandItem(player.HoldItem, IDI_GOLD);
-	GetGoldSeed(pnum, &player.HoldItem);
+	SetGoldSeed(player, player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;
 	ControlSetGoldCurs(player);
@@ -1864,19 +1862,20 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 void control_drop_gold(char vkey)
 {
-	char input[6];
+	auto &myPlayer = Players[MyPlayerId];
 
-	if (Players[MyPlayerId]._pHitPoints >> 6 <= 0) {
+	if (myPlayer._pHitPoints >> 6 <= 0) {
 		dropGoldFlag = false;
 		dropGoldValue = 0;
 		return;
 	}
 
+	char input[6];
 	memset(input, 0, sizeof(input));
 	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
-			RemoveGold(MyPlayerId, initialDropGoldIndex);
+			RemoveGold(myPlayer, initialDropGoldIndex);
 		dropGoldFlag = false;
 	} else if (vkey == DVL_VK_ESCAPE) {
 		dropGoldFlag = false;

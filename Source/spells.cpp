@@ -285,13 +285,13 @@ void DoResurrect(int pnum, uint16_t rid)
 	if (target._pMaxHPBase < (10 << 6)) {
 		hp = target._pMaxHPBase;
 	}
-	SetPlayerHitPoints(rid, hp);
+	SetPlayerHitPoints(target, hp);
 
 	target._pHPBase = target._pHitPoints + (target._pMaxHPBase - target._pMaxHP); // CODEFIX: does the same stuff as SetPlayerHitPoints above, can be removed
 	target._pMana = 0;
 	target._pManaBase = target._pMana + (target._pMaxManaBase - target._pMaxMana);
 
-	CalcPlrInv(rid, true);
+	CalcPlrInv(target, true);
 
 	if (target.plrlevel == currlevel) {
 		StartStand(rid, target._pdir);

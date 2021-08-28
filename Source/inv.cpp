@@ -340,7 +340,7 @@ bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, 
 		}
 
 		NetSendCmdChItem(false, bodyLocation);
-		CalcPlrInv(playerId, true);
+		CalcPlrInv(player, true);
 	}
 
 	return true;
@@ -672,7 +672,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	case ILOC_INVALID:
 		break;
 	}
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 	if (pnum == MyPlayerId) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
 			SetCursorPos(MousePosition.x + (cursW / 2), MousePosition.y + (cursH / 2));
@@ -865,7 +865,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 			player._pGold = CalculateGold(player);
 		}
 
-		CalcPlrInv(pnum, true);
+		CalcPlrInv(player, true);
 		CheckItemStats(player);
 
 		if (pnum == MyPlayerId) {
@@ -1521,13 +1521,11 @@ bool GoldAutoPlaceInInventorySlot(PlayerStruct &player, int slotIndex)
 	return true;
 }
 
-void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(PlayerStruct &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	auto &item = Items[MAXITEMS];
 	memset(&item, 0, sizeof(item));
 	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	auto &player = Players[pnum];
 
 	player.HoldItem = item;
 
@@ -1545,18 +1543,16 @@ void CheckInvSwap(int pnum, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId
 		}
 	}
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 }
 
-void inv_update_rem_item(int pnum, BYTE iv)
+void inv_update_rem_item(PlayerStruct &player, BYTE iv)
 {
-	auto &player = Players[pnum];
-
 	if (iv < NUM_INVLOC) {
 		player.InvBody[iv]._itype = ITYPE_NONE;
 	}
 
-	CalcPlrInv(pnum, player._pmode != PM_DEATH);
+	CalcPlrInv(player, player._pmode != PM_DEATH);
 }
 
 void CheckInvItem(bool isShiftHeld)

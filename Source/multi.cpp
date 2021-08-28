@@ -454,7 +454,7 @@ bool InitMulti(GameData *gameData)
 	MyPlayerId = playerId;
 	gbIsMultiplayer = true;
 
-	pfile_read_player_from_save(gSaveNumber, MyPlayerId);
+	pfile_read_player_from_save(gSaveNumber, Players[MyPlayerId]);
 
 	return true;
 }
@@ -802,7 +802,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	PlayerLeftMsg(pnum, false);
-	UnPackPlayer(&netplr[pnum], pnum, true);
+	UnPackPlayer(&netplr[pnum], player, true);
 
 	if (!recv) {
 		return;
