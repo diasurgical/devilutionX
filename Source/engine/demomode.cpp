@@ -173,19 +173,21 @@ bool GetRunGameLoop(bool &drawGame, bool &processInput)
 	demoMsg dmsg = Demo_Message_Queue.front();
 	if (dmsg.type == DemoMsgType::Message)
 		app_fatal("Unexpected Message");
-	// disable additonal rendering to speedup replay
-	drawGame = dmsg.type == DemoMsgType::GameTick;
-	if (!Timedemo) {
+	if (Timedemo) {
+		// disable additonal rendering to speedup replay
+		drawGame = dmsg.type == DemoMsgType::GameTick;
+	} else {
 		int currentTickCount = SDL_GetTicks();
 		int ticksElapsed = currentTickCount - DemoModeLastTick;
 		bool tickDue = ticksElapsed >= gnTickDelay;
+		drawGame = false;
 		if (tickDue) {
 			if (dmsg.type == DemoMsgType::GameTick) {
 				DemoModeLastTick = currentTickCount;
 			}
 		} else {
 			float progressToNextGameTick = clamp((float)ticksElapsed / (float)gnTickDelay, 0.F, 1.F);
-			if (dmsg.progressToNextGameTick > progressToNextGameTick) {
+			if (dmsg.type == DemoMsgType::GameTick || dmsg.progressToNextGameTick > progressToNextGameTick) {
 				// we are ahead of the replay => add a additional rendering for smoothness
 				gfProgressToNextGameTick = progressToNextGameTick;
 				processInput = false;
