@@ -40,6 +40,12 @@ int DebugPlayerId;
 int DebugQuestId;
 int DebugMonsterId;
 
+// Used for debugging level generation
+uint32_t glMid1Seed[NUMLEVELS];
+uint32_t glMid2Seed[NUMLEVELS];
+uint32_t glMid3Seed[NUMLEVELS];
+uint32_t glEndSeed[NUMLEVELS];
+
 void SetSpellLevelCheat(spell_id spl, int spllvl)
 {
 	auto &myPlayer = Players[MyPlayerId];
@@ -450,6 +456,11 @@ std::string DebugCmdShowCursorCoords(const std::string_view parameter)
 	return "Cursor will never forget that.";
 }
 
+std::string DebugCmdLevelSeed(const std::string_view parameter)
+{
+	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -474,6 +485,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "coords", "Toggles showing tile coords.", "", &DebugCmdShowCoords },
 	{ "cursorcoords", "Toggles showing cursor coords.", "", &DebugCmdShowCursorCoords },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
+	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
 };
 
 } // namespace
@@ -554,6 +566,14 @@ void NextDebugMonster()
 
 	sprintf(dstr, "Current debug monster = %i", DebugMonsterId);
 	NetSendCmdString(1 << MyPlayerId, dstr);
+}
+
+void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)
+{
+	glMid1Seed[currlevel] = mid1Seed;
+	glMid2Seed[currlevel] = mid2Seed;
+	glMid3Seed[currlevel] = mid3Seed;
+	glEndSeed[currlevel] = endSeed;
 }
 
 bool CheckDebugTextCommand(const std::string_view text)
