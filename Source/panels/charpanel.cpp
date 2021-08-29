@@ -31,7 +31,11 @@ struct panelEntry {
 	std::string label;
 	Displacement position;
 	int length;
-	Displacement labelOffset;                      // label's offset (end of the label vs the beginning of the stat box)
+	Displacement labelOffset; // label's offset (end of the label vs the beginning of the stat box)
+	int labelLength;          // max label's length - used for line wrapping
+	int labelSpacing;
+	int statSpacing;
+	bool centered;
 	std::function<colorAndText()> statDisplayFunc; // function responsible for displaying stat
 };
 
@@ -94,57 +98,75 @@ std::pair<int, int> GetDamage()
 	return { mindam, maxdam };
 }
 
+colorAndText GetResistInfo(int8_t resist)
+{
+	UiFlags color = UiFlags::ColorBlue;
+	if (resist == 0)
+		color = UiFlags::ColorSilver;
+	else if (resist < 0)
+		color = UiFlags::ColorRed;
+	else if (resist >= MAXRESIST)
+		color = UiFlags::ColorGold;
+
+	return {
+		color, (resist >= MAXRESIST ? _("MAX") : fmt::format("{:d}%", resist))
+	};
+}
+
 panelEntry panelEntries[] = {
-	{ "", { 13, 14 }, 134, { 0, 0 },
+	{ "", { 13, 14 }, 134, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { UiFlags::ColorSilver, myPlayer._pName }; } },
-	{ "level", { 57, 52 }, 45, { 0, 0 },
+	{ "level", { 57, 52 }, 45, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { UiFlags::ColorSilver, fmt::format("{:d}", myPlayer._pLevel) }; } },
 
-	{ "base", { 88, 118 }, 33, { 39, 0 },
+	{ "base", { 88, 118 }, 33, { 39, 0 }, 0, 0, 0, false,
 	    nullptr },
-	{ "now", { 135, 118 }, 33, { 39, 0 },
+	{ "now", { 135, 118 }, 33, { 39, 0 }, 0, 0, 0, false,
 	    nullptr },
 
-	{ "strength", { 88, 138 }, 33, { 0, 0 },
+	{ "strength", { 88, 138 }, 33, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetBaseStatColor(CharacterAttribute::Strength), fmt::format("{:d}", myPlayer._pBaseStr) }; } },
-	{ "magic", { 88, 166 }, 33, { 0, 0 },
+	{ "magic", { 88, 166 }, 33, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetBaseStatColor(CharacterAttribute::Magic), fmt::format("{:d}", myPlayer._pBaseMag) }; } },
-	{ "dexterity", { 88, 194 }, 33, { 0, 0 },
+	{ "dexterity", { 88, 194 }, 33, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetBaseStatColor(CharacterAttribute::Dexterity), fmt::format("{:d}", myPlayer._pBaseDex) }; } },
-	{ "vitality", { 88, 222 }, 33, { 0, 0 },
+	{ "vitality", { 88, 222 }, 33, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetBaseStatColor(CharacterAttribute::Vitality), fmt::format("{:d}", myPlayer._pBaseVit) }; } },
 
-	{ "", { 135, 138 }, 33, { 0, 0 },
+	{ "", { 135, 138 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetCurrentStatColor(CharacterAttribute::Strength), fmt::format("{:d}", myPlayer._pStrength) }; } },
-	{ "", { 135, 166 }, 33, { 0, 0 },
+	{ "", { 135, 166 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetCurrentStatColor(CharacterAttribute::Magic), fmt::format("{:d}", myPlayer._pMagic) }; } },
-	{ "", { 135, 194 }, 33, { 0, 0 },
+	{ "", { 135, 194 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetCurrentStatColor(CharacterAttribute::Dexterity), fmt::format("{:d}", myPlayer._pDexterity) }; } },
-	{ "", { 135, 222 }, 33, { 0, 0 },
+	{ "", { 135, 222 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetCurrentStatColor(CharacterAttribute::Vitality), fmt::format("{:d}", myPlayer._pVitality) }; } },
 
-	//{ "points to distribute", { 88, 250 }, 33, { 0, 0 },
-	//    []() { return colorAndText { GetCurrentStatColor(CharacterAttribute::Vitality), fmt::format("{:d}", myPlayer._pVitality) }; } },
+	{ "points to distribute", { 88, 250 }, 33, { -3, -10 }, 120, 0, 1, false,
+	    []() {
+	        myPlayer._pStatPts = std::min(CalcStatDiff(myPlayer), myPlayer._pStatPts);
+	        return colorAndText { UiFlags::ColorSilver, (myPlayer._pStatPts > 0 ? fmt::format("{:d}", myPlayer._pStatPts) : "") };
+	    } },
 
-	{ "life", { 88, 287 }, 33, { -5, 0 },
+	{ "life", { 88, 287 }, 33, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { (myPlayer._pMaxHP > myPlayer._pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorSilver), fmt::format("{:d}", myPlayer._pMaxHP >> 6) }; } },
 
-	{ "", { 135, 287 }, 33, { 0, 0 },
+	{ "", { 135, 287 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { (myPlayer._pHitPoints != myPlayer._pMaxHP ? UiFlags::ColorRed : UiFlags::ColorSilver), fmt::format("{:d}", myPlayer._pHitPoints >> 6) }; } },
 
-	{ "mana", { 88, 315 }, 33, { -5, 0 },
+	{ "mana", { 88, 315 }, 33, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { (myPlayer._pMaxMana > myPlayer._pMaxManaBase ? UiFlags::ColorBlue : UiFlags::ColorSilver), fmt::format("{:d}", myPlayer._pMaxMana >> 6) }; } },
 
-	{ "", { 135, 315 }, 33, { 0, 0 },
+	{ "", { 135, 315 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { (myPlayer._pMana != myPlayer._pMaxMana ? UiFlags::ColorRed : UiFlags::ColorSilver), fmt::format("{:d}", myPlayer._pMana >> 6) }; } },
 
-	{ "", { 161, 14 }, 134, { 0, 0 },
+	{ "", { 161, 14 }, 134, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { UiFlags::ColorSilver, _(ClassStrTbl[static_cast<std::size_t>(myPlayer._pClass)]) }; } },
 
-	{ "experience", { 208, 52 }, 87, { 0, 0 },
+	{ "experience", { 208, 52 }, 87, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { UiFlags::ColorSilver, fmt::format("{:d}", myPlayer._pExperience) }; } },
 
-	{ "next level", { 208, 80 }, 87, { 0, 0 },
+	{ "next level", { 208, 80 }, 87, { -3, 0 }, 0, 0, 1, false,
 	    []() {
 	        if (myPlayer._pLevel == MAXCHARLEVEL - 1) {
 		        return colorAndText { UiFlags::ColorGold, _("None") };
@@ -153,34 +175,36 @@ panelEntry panelEntries[] = {
 	        }
 	    } },
 
-	{ "centered:gold", { 208, 129 }, 87, { 0, -20 },
+	{ "gold", { 208, 129 }, 87, { 0, -20 }, 0, 0, 1, true,
 	    []() { return colorAndText { UiFlags::ColorSilver, fmt::format("{:d}", myPlayer._pGold) }; } },
 
-	{ "armor class", { 250, 166 }, 45, { 0, 0 },
+	{ "armor class", { 250, 166 }, 45, { -3, -5 }, 55, 0, 1, false,
 	    []() { return colorAndText { GetValueColor(myPlayer._pIBonusAC), fmt::format("{:d}", myPlayer.GetArmor()) }; } },
 
-	{ "to hit", { 250, 194 }, 45, { 0, 0 },
+	{ "to hit", { 250, 194 }, 45, { -3, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetValueColor(myPlayer._pIBonusToHit), fmt::format("{:d}%", (myPlayer.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW ? myPlayer.GetRangedToHit() : myPlayer.GetMeleeToHit())) }; } },
 
-	{ "damage", { 250, 222 }, 45, { 0, 0 },
+	{ "damage", { 250, 222 }, 45, { -3, 0 }, 0, 0, 0, false,
 	    []() {
 	        std::pair<int, int> dmg = GetDamage();
 	        return colorAndText { GetValueColor(myPlayer._pIBonusDam), fmt::format("{:d}-{:d}", dmg.first, dmg.second) };
 	    } },
-	/*
-	DrawThingy(out, { pos.x + 250, pos.y + 166 }, 45); // armor
-	DrawThingy(out, { pos.x + 250, pos.y + 194 }, 45); // to hit
-	DrawThingy(out, { pos.x + 250, pos.y + 222 }, 45); // damage
-	DrawThingy(out, { pos.x + 250, pos.y + 259 }, 45); // resist magic
-	DrawThingy(out, { pos.x + 250, pos.y + 287 }, 45); // resist fire
-	DrawThingy(out, { pos.x + 250, pos.y + 315 }, 45); // resist lightning
-		*/
+
+	{ "resist magic", { 250, 259 }, 45, { -3, -5 }, 46, 1, 1, false,
+	    []() { return GetResistInfo(myPlayer._pMagResist); } },
+
+	{ "resist fire", { 250, 287 }, 45, { -3, -5 }, 46, 1, 1, false,
+	    []() { return GetResistInfo(myPlayer._pFireResist); } },
+
+	{ "resist lightning", { 250, 315 }, 45, { -3, -5 }, 76, 0, 1, false,
+	    []() { return GetResistInfo(myPlayer._pLghtResist); } },
+
 };
 
 Art PanelParts[3];
 Art PanelFull;
 
-void DrawThingy(const Surface &out, Point pos, int len)
+void DrawPanelField(const Surface &out, Point pos, int len)
 {
 	DrawArt(out, pos.x, pos.y, &PanelParts[0]);
 	pos.x += PanelParts[0].w();
@@ -194,27 +218,26 @@ void DrawShadowString(const Surface &out, Point pos, panelEntry &entry)
 	if (entry.label == "")
 		return;
 
-	bool centered = false;
-	std::string text = entry.label;
-	int width = GetLineWidth(text);
-	if (text.find("centered:") != std::string::npos) {
-		centered = true;
-		text = text.substr(9);
+	std::string text_tmp = entry.label;
+	char buffer[32];
+	int spacing = entry.labelSpacing;
+	strcpy(buffer, text_tmp.c_str());
+	if (entry.labelLength > 0)
+		WordWrapGameString(buffer, entry.labelLength, GameFontSmall, spacing);
+	std::string text(buffer);
+	int width = GetLineWidth(text, GameFontSmall, spacing);
+	if (entry.centered)
 		width = entry.length;
-	}
-
-	if (!centered)
+	else
 		pos.x -= width;
 	Point finalPos = { pos + entry.position + Displacement { 0, 17 } + entry.labelOffset };
 	UiFlags style = UiFlags::AlignRight;
-	if (centered) {
+	if (entry.centered) {
 		style = UiFlags::AlignCenter;
 		finalPos += Displacement { 7, 0 }; // left border
 	}
-
-	DrawString(out, text, { finalPos + Displacement { -2, 2 }, { width, 12 } }, style | UiFlags::ColorBlack);
-	DrawString(out, text, { finalPos + Displacement { -1, 2 }, { width, 12 } }, style | UiFlags::ColorBlack);
-	DrawString(out, text, { finalPos, { width, 12 } }, style | UiFlags::ColorSilver);
+	DrawString(out, text, { finalPos + Displacement { -2, 2 }, { width, 0 } }, style | UiFlags::ColorBlack, spacing, 10);
+	DrawString(out, text, { finalPos, { width, 0 } }, style | UiFlags::ColorSilver, spacing, 10);
 }
 
 void LoadCharPanel()
@@ -229,44 +252,11 @@ void LoadCharPanel()
 
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
-			DrawThingy(out, pos + entry.position, entry.length);
+			DrawPanelField(out, pos + entry.position, entry.length);
 		}
 		DrawShadowString(out, pos, entry);
 	}
 
-	//DrawThingy(out, { pos.x + 13, pos.y + 14 }, 134); //name
-
-	//DrawThingy(out, { pos.x + 57, pos.y + 52 }, 45); // level
-	//DrawShadowText(out, "LEVEL", { pos.x + 54, pos.y + 69 });
-	/*
-	DrawThingy(out, { pos.x + 88, pos.y + 138 }, 33); //str base
-	DrawThingy(out, { pos.x + 88, pos.y + 166 }, 33); // magic base
-	DrawThingy(out, { pos.x + 88, pos.y + 194 }, 33); //dex base
-	DrawThingy(out, { pos.x + 88, pos.y + 222 }, 33); //vita base
-	DrawThingy(out, { pos.x + 88, pos.y + 250 }, 33); //points to distribute
-	DrawThingy(out, { pos.x + 88, pos.y + 287 }, 33); //curr life
-	DrawThingy(out, { pos.x + 88, pos.y + 315 }, 33); //curr mana
-
-	DrawThingy(out, { pos.x + 135, pos.y + 138 }, 33); // str curr
-	DrawThingy(out, { pos.x + 135, pos.y + 166 }, 33); // magic curr
-	DrawThingy(out, { pos.x + 135, pos.y + 194 }, 33); // dex curr
-	DrawThingy(out, { pos.x + 135, pos.y + 222 }, 33); // vita curr
-	DrawThingy(out, { pos.x + 135, pos.y + 287 }, 33); //max life
-	DrawThingy(out, { pos.x + 135, pos.y + 315 }, 33); //max mana
-
-	DrawThingy(out, { pos.x + 161, pos.y + 14 }, 134); // class
-
-	DrawThingy(out, { pos.x + 208, pos.y + 52 }, 87);  // exp
-	DrawThingy(out, { pos.x + 208, pos.y + 80 }, 87);  // next level
-	DrawThingy(out, { pos.x + 208, pos.y + 129 }, 87); // gold
-
-	DrawThingy(out, { pos.x + 250, pos.y + 166 }, 45); // armor
-	DrawThingy(out, { pos.x + 250, pos.y + 194 }, 45); // to hit
-	DrawThingy(out, { pos.x + 250, pos.y + 222 }, 45); // damage
-	DrawThingy(out, { pos.x + 250, pos.y + 259 }, 45); // resist magic
-	DrawThingy(out, { pos.x + 250, pos.y + 287 }, 45); // resist fire
-	DrawThingy(out, { pos.x + 250, pos.y + 315 }, 45); // resist lightning
-	*/
 	for (auto &gfx : PanelParts) {
 		gfx.Unload();
 	}
@@ -285,7 +275,7 @@ void DrawPcxChr(const Surface &out)
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
 			colorAndText tmp = entry.statDisplayFunc();
-			DrawString(out, tmp.text.c_str(), { pos + entry.position + Displacement { 7, 17 }, { entry.length, 12 } }, UiFlags::AlignCenter | tmp.color);
+			DrawString(out, tmp.text.c_str(), { pos + entry.position + Displacement { 7, 17 }, { entry.length, 12 } }, UiFlags::AlignCenter | tmp.color, entry.statSpacing);
 		}
 	}
 }
