@@ -268,7 +268,7 @@ std::string DebugCmdResetLevel(const std::string_view parameter)
 	myPlayer._pLvlVisited[level] = false;
 
 	if (std::getline(paramsStream, singleParameter, ' ')) {
-		auto seed = atoi(singleParameter.c_str());
+		uint32_t seed = static_cast<uint32_t>(std::stoul(singleParameter));
 		glSeedTbl[level] = seed;
 	}
 
