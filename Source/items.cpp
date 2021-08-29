@@ -3084,10 +3084,6 @@ int GetGoldCursor(int value)
 	return ICURS_GOLD_MEDIUM;
 }
 
-/**
- * @brief Update the gold cursor on the given gold item
- * @param h The item to update
- */
 void SetPlrHandGoldCurs(Item &gold)
 {
 	gold._iCurs = GetGoldCursor(gold._ivalue);
@@ -4947,9 +4943,6 @@ void Item::SetNewAnimation(bool showAnimation)
 	}
 }
 
-/**
- * @brief Resets item get records.
- */
 void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));

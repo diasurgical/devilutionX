@@ -415,11 +415,17 @@ void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
 void SetPlrHandItem(Item &item, int itemData);
 void GetPlrHandSeed(Item *h);
+
 /**
  * @brief Set a new unique seed value on the given item
  */
 void SetGoldSeed(Player &player, Item &gold);
 int GetGoldCursor(int value);
+
+/**
+ * @brief Update the gold cursor on the given gold item
+ * @param h The item to update
+ */
 void SetPlrHandGoldCurs(Item &gold);
 void CreatePlrItems(int playerId);
 bool ItemSpaceOk(Point position);
@@ -471,6 +477,10 @@ void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool 
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
+
+/**
+ * @brief Resets item get records.
+ */
 void initItemGetRecords();
 
 #ifdef _DEBUG
