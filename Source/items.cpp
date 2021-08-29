@@ -3047,11 +3047,6 @@ void GetPlrHandSeed(ItemStruct *h)
 	h->_iSeed = AdvanceRndSeed();
 }
 
-/**
- * @brief Set a new unique seed value on the given item
- * @param pnum Player id
- * @param h Item to update
- */
 void GetGoldSeed(int pnum, ItemStruct *h)
 {
 	int s = 0;
@@ -3088,10 +3083,6 @@ int GetGoldCursor(int value)
 	return ICURS_GOLD_MEDIUM;
 }
 
-/**
- * @brief Update the gold cursor on the given gold item
- * @param h The item to update
- */
 void SetPlrHandGoldCurs(ItemStruct &gold)
 {
 	gold._iCurs = GetGoldCursor(gold._ivalue);
@@ -4952,9 +4943,6 @@ void ItemStruct::SetNewAnimation(bool showAnimation)
 	}
 }
 
-/**
- * @brief Resets item get records.
- */
 void initItemGetRecords()
 {
 	memset(itemrecord, 0, sizeof(itemrecord));
