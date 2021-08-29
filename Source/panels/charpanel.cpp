@@ -133,7 +133,7 @@ panelEntry panelEntries[] = {
 	{ "", { 135, 222 }, 33, { 0, 0 }, 0, 0, 1, false,
 	    []() { return colorAndText { GetCurrentStatColor(CharacterAttribute::Vitality), fmt::format("{:d}", myPlayer._pVitality) }; } },
 
-	{ "points to distribute", { 88, 250 }, 33, { -3, -10 }, 120, 0, 1, false,
+	{ "points to distribute", { 88, 250 }, 33, { -3, -5 }, 120, 0, 1, false,
 	    []() {
 	        myPlayer._pStatPts = std::min(CalcStatDiff(myPlayer), myPlayer._pStatPts);
 	        return colorAndText { UiFlags::ColorRed, (myPlayer._pStatPts > 0 ? fmt::format("{:d}", myPlayer._pStatPts) : "") };
