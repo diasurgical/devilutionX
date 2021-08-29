@@ -13,6 +13,18 @@
 
 namespace devilution {
 
+std::optional<CelSprite> pChrButtons;
+
+/** Map of hero class names */
+const char *const ClassStrTbl[] = {
+	N_("Warrior"),
+	N_("Rogue"),
+	N_("Sorcerer"),
+	N_("Monk"),
+	N_("Bard"),
+	N_("Barbarian"),
+};
+
 struct colorAndText {
 	UiFlags color;
 	std::string text;

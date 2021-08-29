@@ -53,9 +53,6 @@ extern Rectangle MainPanel;
 extern Rectangle LeftPanel;
 extern Rectangle RightPanel;
 
-extern std::optional<CelSprite> pChrButtons;
-extern const char *const ClassStrTbl[];
-
 /**
  * @brief Check if the UI can cover the game area entierly
  */

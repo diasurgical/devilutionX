@@ -25,6 +25,7 @@
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
+#include "panels/charpanel.hpp"
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
@@ -78,18 +79,6 @@ Rectangle ChrBtnsRect[4] = {
 	{ { 137, 166 }, { 41, 22 } },
 	{ { 137, 195 }, { 41, 22 } },
 	{ { 137, 223 }, { 41, 22 } }
-};
-
-std::optional<CelSprite> pChrButtons;
-
-/** Map of hero class names */
-const char *const ClassStrTbl[] = {
-	N_("Warrior"),
-	N_("Rogue"),
-	N_("Sorcerer"),
-	N_("Monk"),
-	N_("Bard"),
-	N_("Barbarian"),
 };
 
 namespace {
