@@ -250,13 +250,13 @@ void DrawShadowString(const Surface &out, Point pos, panelEntry &entry)
 
 void LoadCharPanel()
 {
-	LoadArt("debugart\\charbg.pcx", &PanelFull);
-	LoadArt("debugart\\boxleftend26.pcx", &PanelParts[0]);
-	LoadArt("debugart\\boxmiddle26.pcx", &PanelParts[1]);
-	LoadArt("debugart\\boxrightend26.pcx", &PanelParts[2]);
-	LoadArt("debugart\\boxleftend27.pcx", &PanelParts[3]);
-	LoadArt("debugart\\boxmiddle27.pcx", &PanelParts[4]);
-	LoadArt("debugart\\boxrightend27.pcx", &PanelParts[5]);
+	LoadArt("data\\charbg.pcx", &PanelFull);
+	LoadArt("data\\boxleftend26.pcx", &PanelParts[0]);
+	LoadArt("data\\boxmiddle26.pcx", &PanelParts[1]);
+	LoadArt("data\\boxrightend26.pcx", &PanelParts[2]);
+	LoadArt("data\\boxleftend27.pcx", &PanelParts[3]);
+	LoadArt("data\\boxmiddle27.pcx", &PanelParts[4]);
+	LoadArt("data\\boxrightend27.pcx", &PanelParts[5]);
 
 	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
 	const Surface out(PanelFull.surface.get());
