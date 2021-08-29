@@ -8,11 +8,12 @@
 #include <string>
 #include <vector>
 
+#include <find_steam_game.h>
+
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
 #include "pfile.h"
 #include "storm/storm.h"
-#include "utils/find_steam_game.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"

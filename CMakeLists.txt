@@ -290,6 +290,7 @@ add_library(smacker STATIC
   3rdParty/libsmacker/smacker.c)
 target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
+add_subdirectory(3rdParty/find_steam_game)
 add_subdirectory(3rdParty/simpleini)
 
 add_library(StormLib STATIC
@@ -643,6 +644,7 @@ target_link_libraries(libdevilutionx PUBLIC
   PKWare
   StormLib
   smacker
+  find_steam_game
   simpleini)
 
 if(NOT NONET)
