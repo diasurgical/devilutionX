@@ -128,12 +128,6 @@ namespace {
 
 char gszVersionNumber[64] = "internal version unknown";
 
-// Used for debugging level generation
-uint32_t glEndSeed[NUMLEVELS];
-uint32_t glMid1Seed[NUMLEVELS];
-uint32_t glMid2Seed[NUMLEVELS];
-uint32_t glMid3Seed[NUMLEVELS];
-
 bool gbGameLoopStartup;
 bool forceSpawn;
 bool forceDiablo;
@@ -587,15 +581,6 @@ void PressChar(char vkey)
 		return;
 	case 'm':
 		GetDebugMonster();
-		return;
-	case 'R':
-	case 'r':
-		sprintf(tempstr, "seed = %i", glSeedTbl[currlevel]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		sprintf(tempstr, "Mid1 = %i : Mid2 = %i : Mid3 = %i", glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		sprintf(tempstr, "End = %i", glEndSeed[currlevel]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
 		return;
 	case 'T':
 	case 't':
@@ -1893,19 +1878,21 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
-				glMid1Seed[currlevel] = GetLCGEngineState();
+				uint32_t mid1Seed = GetLCGEngineState();
 				InitMonsters();
-				glMid2Seed[currlevel] = GetLCGEngineState();
+				uint32_t mid2Seed = GetLCGEngineState();
 				IncProgress();
 				InitObjects();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
-				glMid3Seed[currlevel] = GetLCGEngineState();
+				uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
 				InitDead();
-				glEndSeed[currlevel] = GetLCGEngineState();
+#if _DEBUG
+				SetDebugLevelSeedInfos(mid1Seed, mid2Seed, mid3Seed, GetLCGEngineState());
+#endif
 
 				if (gbIsMultiplayer)
 					DeltaLoadLevel();
