@@ -587,6 +587,7 @@ bool CheckDebugTextCommand(const std::string_view text)
 	if (text.length() > (dbgCmd.text.length() + 1))
 		parameter = text.substr(dbgCmd.text.length() + 1);
 	const auto result = dbgCmd.actionProc(parameter);
+	Log("DebugCmd: {} Result: {}", text, result);
 	InitDiabloMsg(result);
 	return true;
 }
