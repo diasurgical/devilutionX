@@ -135,7 +135,6 @@ uint32_t glMid2Seed[NUMLEVELS];
 uint32_t glMid3Seed[NUMLEVELS];
 
 bool gbGameLoopStartup;
-int setseed;
 bool forceSpawn;
 bool forceDiablo;
 int sgnTimeoutCurs;
@@ -821,7 +820,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
@@ -881,8 +879,6 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-r", argv[i]) == 0) {
-			setseed = SDL_atoi(argv[++i]);
 #endif
 		} else {
 			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
@@ -1807,9 +1803,6 @@ void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
-	if (setseed != 0)
-		glSeedTbl[currlevel] = setseed;
-
 	music_stop();
 	if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 		NewCursor(CURSOR_HAND);

@@ -6,6 +6,8 @@
 
 #ifdef _DEBUG
 
+#include <sstream>
+
 #include "debug.h"
 
 #include "automap.h"
@@ -249,10 +251,21 @@ std::string DebugCmdVisitTowner(const std::string_view parameter)
 std::string DebugCmdResetLevel(const std::string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
-	auto level = atoi(parameter.data());
+
+	std::stringstream paramsStream(parameter.data());
+	std::string singleParameter;
+	if (!std::getline(paramsStream, singleParameter, ' '))
+		return "What level do you want to visit?";
+	auto level = atoi(singleParameter.c_str());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
 	myPlayer._pLvlVisited[level] = false;
+
+	if (std::getline(paramsStream, singleParameter, ' ')) {
+		auto seed = atoi(singleParameter.c_str());
+		glSeedTbl[level] = seed;
+	}
+
 	if (myPlayer.plrlevel == level)
 		return fmt::format("Level {} can't be cleaned, cause you still occupy it!", level);
 	return fmt::format("Level {} was restored and looks fabulous.", level);
@@ -448,7 +461,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
-	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
+	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
 	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },
 	{ "r_drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
 	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
