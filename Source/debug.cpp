@@ -456,7 +456,7 @@ std::string DebugCmdShowCursorCoords(const string_view parameter)
 	return "Cursor will never forget that.";
 }
 
-std::string DebugCmdLevelSeed(const std::string_view parameter)
+std::string DebugCmdLevelSeed(const string_view parameter)
 {
 	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
 }
