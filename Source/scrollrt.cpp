@@ -1256,7 +1256,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	DrawDurIcon(out);
 
 	if (chrflag) {
-		DrawPcxChr(out);
+		DrawChr(out);
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
 	}

@@ -9,6 +9,6 @@ namespace devilution {
 extern std::optional<CelSprite> pChrButtons;
 extern const char *const ClassStrTbl[];
 
-void DrawPcxChr(const Surface &);
+void DrawChr(const Surface &);
 
 } // namespace devilution
