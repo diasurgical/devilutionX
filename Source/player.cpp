@@ -2091,6 +2091,22 @@ int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 	}
 }
 
+int PlayerStruct::GetCurrentAttributeValue(CharacterAttribute attribute) const
+{
+	switch (attribute) {
+	case CharacterAttribute::Dexterity:
+		return this->_pDexterity;
+	case CharacterAttribute::Magic:
+		return this->_pMagic;
+	case CharacterAttribute::Strength:
+		return this->_pStrength;
+	case CharacterAttribute::Vitality:
+		return this->_pVitality;
+	default:
+		app_fatal("Unsupported attribute");
+	}
+}
+
 int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
 	static const int MaxStats[enum_size<HeroClass>::value][enum_size<CharacterAttribute>::value] = {
