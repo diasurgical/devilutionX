@@ -103,6 +103,7 @@ _monster_id DebugMonsters[10];
 int debugmonsttypes = 0;
 bool debug_mode_key_inverted_v = false;
 bool debug_mode_key_i = false;
+std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
 /** Specifies whether players are in non-PvP mode. */
 bool gbFriendlyMode = true;
@@ -719,6 +720,16 @@ void RunGameLoop(interface_mode uMsg)
 #endif
 
 	while (gbRunGame) {
+
+#ifdef _DEBUG
+		if (!gbGameLoopStartup && !DebugCmdsFromCommandLine.empty()) {
+			for (auto &cmd : DebugCmdsFromCommandLine) {
+				CheckDebugTextCommand(cmd);
+			}
+			DebugCmdsFromCommandLine.clear();
+		}
+#endif
+
 		while (FetchMessage(&msg)) {
 			if (msg.message == DVL_WM_QUIT) {
 				gbRunGameResult = false;
@@ -805,6 +816,7 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
+	printInConsole("    %-20s %-30s\n", "+<internal command>", "Pass commands to the engine");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
@@ -812,6 +824,10 @@ void RunGameLoop(interface_mode uMsg)
 
 void DiabloParseFlags(int argc, char **argv)
 {
+#ifdef _DEBUG
+	int argumentIndexOfLastCommandPart = -1;
+	std::string currentCommand;
+#endif
 	bool timedemo = false;
 	int demoNumber = -1;
 	int recordNumber = -1;
@@ -864,12 +880,26 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
+		} else if (argv[i][0] == '+') {
+			if (!currentCommand.empty())
+				DebugCmdsFromCommandLine.push_back(currentCommand);
+			argumentIndexOfLastCommandPart = i;
+			currentCommand = &(argv[i][1]);
+		} else if (argv[i][0] != '-' && (argumentIndexOfLastCommandPart + 1) == i) {
+			currentCommand.append(" ");
+			currentCommand.append(argv[i]);
+			argumentIndexOfLastCommandPart = i;
 #endif
 		} else {
 			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
 			PrintHelpAndExit();
 		}
 	}
+
+#ifdef _DEBUG
+	if (!currentCommand.empty())
+		DebugCmdsFromCommandLine.push_back(currentCommand);
+#endif
 
 	if (demoNumber != -1)
 		demo::InitPlayBack(demoNumber, timedemo);
