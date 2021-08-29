@@ -644,7 +644,6 @@ target_link_libraries(libdevilutionx PUBLIC
   PKWare
   StormLib
   smacker
-  find_steam_game
   simpleini)
 
 if(WIN32)
