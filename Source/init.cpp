@@ -8,7 +8,9 @@
 #include <string>
 #include <vector>
 
+#if defined(_WIN64) || defined(_WIN32)
 #include <find_steam_game.h>
+#endif
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
@@ -145,17 +147,18 @@ void init_archives()
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
+#if defined(__linux__) && !defined(__ANDROID__)
+	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
+#elif defined(__3DS__)
+	paths.emplace_back("romfs:/");
+#elif defined(_WIN64) || defined(_WIN32)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");
 	if (strlen(gogpath) > 0) {
 		paths.emplace_back(std::string(gogpath) + "/");
 		paths.emplace_back(std::string(gogpath) + "/hellfire/");
 	}
-#if defined(__linux__) && !defined(__ANDROID__)
-	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
-	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#elif defined(__3DS__)
-	paths.emplace_back("romfs:/");
 #endif
 
 	paths.emplace_back(""); // PWD

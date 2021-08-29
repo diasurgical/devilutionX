@@ -647,6 +647,10 @@ target_link_libraries(libdevilutionx PUBLIC
   find_steam_game
   simpleini)
 
+if(WIN32)
+  target_link_libraries(libdevilutionx PUBLIC find_steam_game)
+endif()
+
 if(NOT NONET)
   if(NOT DISABLE_TCP)
     target_link_libraries(libdevilutionx PUBLIC asio)
