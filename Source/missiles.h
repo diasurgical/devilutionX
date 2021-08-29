@@ -57,34 +57,39 @@ struct MissilePosition {
 	}
 };
 
-/*
- *      W  sW  SW   Sw  S
- *              ^
- *     nW       |       Se
- *              |
- *     NW ------+-----> SE
- *              |
- *     Nw       |       sE
- *              |
- *      N  Ne  NE   nE  E
+/**
+ * Represent a more fine-grained direction than the 8 value Direction enum.
+ *
+ * This is used when rendering projectiles like arrows which have additional sprites for "half-winds" on a 16-point compass.
+ * The sprite sheets are typically 0-indexed and use the following layout (relative to the screen projection)
+ *
+ *      W  WSW   SW  SSW  S
+ *               ^
+ *     WNW       |       SSE
+ *               |
+ *     NW -------+------> SE
+ *               |
+ *     NNW       |       ESE
+ *               |
+ *      N  NNE   NE  ENE  E
  */
-enum Direction16 {
-	DIR16_S,
-	DIR16_Sw,
-	DIR16_SW,
-	DIR16_sW,
-	DIR16_W,
-	DIR16_nW,
-	DIR16_NW,
-	DIR16_Nw,
-	DIR16_N,
-	DIR16_Ne,
-	DIR16_NE,
-	DIR16_nE,
-	DIR16_E,
-	DIR16_sE,
-	DIR16_SE,
-	DIR16_Se,
+enum class Direction16 {
+	South,
+	South_SouthWest,
+	SouthWest,
+	West_SouthWest,
+	West,
+	West_NorthWest,
+	NorthWest,
+	North_NorthWest,
+	North,
+	North_NorthEast,
+	NorthEast,
+	East_NorthEast,
+	East,
+	East_SouthEast,
+	SouthEast,
+	South_SouthEast,
 };
 
 struct Missile {
@@ -144,18 +149,28 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**
- * @brief Sets the missile sprite to represent the direction of travel
+ * @brief Sets the missile sprite to the given sheet frame
  * @param missile this object
- * @param dir Sprite frame representing the desired facing
+ * @param dir Sprite frame, typically representing a direction but there are some exceptions (arrows being 1 indexed, directionless spells)
 */
 void SetMissDir(Missile &missile, int dir);
 
 /**
- * @brief Overload to convert a Direction value to the appropriate sprite frame
+ * @brief Sets the sprite for this missile so it matches the given Direction
  * @param missile this object
  * @param dir Desired facing
 */
 inline void SetMissDir(Missile &missile, Direction dir)
+{
+	SetMissDir(missile, static_cast<int>(dir));
+}
+
+/**
+ * @brief Sets the sprite for this missile so it matches the given Direction16
+ * @param missile this object
+ * @param dir Desired facing at a 22.8125 degree resolution
+*/
+inline void SetMissDir(Missile &missile, Direction16 dir)
 {
 	SetMissDir(missile, static_cast<int>(dir));
 }
