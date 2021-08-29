@@ -23,7 +23,7 @@
 #include "quests.h"
 
 namespace devilution {
-bool DebugChar = false;
+
 std::optional<CelSprite> pSquareCel;
 bool DebugGodMode = false;
 bool DebugVision = false;
