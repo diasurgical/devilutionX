@@ -109,7 +109,7 @@ Monster *FindClosest(Point source, int rad)
 
 constexpr Direction16 Direction16Flip(Direction16 x, Direction16 pivot)
 {
-	unsigned ret = (2 * pivot + 16 - x) % 16;
+	std::underlying_type_t<Direction16> ret = (2 * static_cast<std::underlying_type_t<Direction16>>(pivot) + 16 - static_cast<std::underlying_type_t<Direction16>>(x)) % 16;
 
 	return static_cast<Direction16>(ret);
 }
@@ -1023,22 +1023,22 @@ Direction16 GetDirection16(Point p1, Point p2)
 		flipMedian = true;
 	}
 
-	Direction16 ret = DIR16_S;
+	Direction16 ret = Direction16::South;
 	if (3 * absolute.deltaX <= (absolute.deltaY * 2)) { // mx/my <= 2/3, approximation of tan(33.75)
 		if (5 * absolute.deltaX < absolute.deltaY)      // mx/my < 0.2, approximation of tan(11.25)
-			ret = DIR16_SW;
+			ret = Direction16::SouthWest;
 		else
-			ret = DIR16_Sw;
+			ret = Direction16::South_SouthWest;
 	}
 
-	Direction16 medianPivot = DIR16_S;
+	Direction16 medianPivot = Direction16::South;
 	if (flipY) {
-		ret = Direction16Flip(ret, DIR16_SW);
-		medianPivot = Direction16Flip(medianPivot, DIR16_SW);
+		ret = Direction16Flip(ret, Direction16::SouthWest);
+		medianPivot = Direction16Flip(medianPivot, Direction16::SouthWest);
 	}
 	if (flipX) {
-		ret = Direction16Flip(ret, DIR16_SE);
-		medianPivot = Direction16Flip(medianPivot, DIR16_SE);
+		ret = Direction16Flip(ret, Direction16::SouthEast);
+		medianPivot = Direction16Flip(medianPivot, Direction16::SouthEast);
 	}
 	if (flipMedian)
 		ret = Direction16Flip(ret, medianPivot);
@@ -1853,7 +1853,7 @@ void AddArrow(Missile &missile, Point dst, Direction midir)
 		}
 	}
 	UpdateMissileVelocity(missile, dst, av);
-	missile._miAnimFrame = GetDirection16(missile.position.start, dst) + 1;
+	missile._miAnimFrame = static_cast<int>(GetDirection16(missile.position.start, dst)) + 1;
 	missile._mirange = 256;
 }
 
