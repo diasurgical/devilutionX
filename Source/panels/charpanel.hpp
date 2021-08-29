@@ -3,6 +3,6 @@
 
 namespace devilution {
 
-void DrawPcxChr(const Surface);
+void DrawPcxChr(const Surface &);
 
 } // namespace devilution

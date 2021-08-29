@@ -13,6 +13,7 @@
 #include "engine/render/cl2_render.hpp"
 #include "engine/render/dun_render.hpp"
 #include "engine/render/text_render.hpp"
+#include "panels/charpanel.hpp"
 #include "error.h"
 #include "gmenu.h"
 #include "help.h"
@@ -1207,15 +1208,7 @@ void DrawView(const Surface &out, int startX, int startY)
 	DrawDurIcon(out);
 
 	if (chrflag) {
-#ifdef _DEBUG
-		if (DebugChar) {
-			DrawPcxChr(out);
-		} else {
-			DrawChr(out);
-		}
-	#else
-		DrawChr(out);
-#endif
+		DrawPcxChr(out);
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
 	}
