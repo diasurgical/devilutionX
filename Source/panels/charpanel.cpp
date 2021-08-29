@@ -7,20 +7,11 @@
 #include "DiabloUI/art_draw.h"
 
 #include "control.h"
+#include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "utils/language.h"
 
 namespace devilution {
-
-/** Map of hero class names */
-const char *const ClassStrTbl[] = {
-	N_("Warrior"),
-	N_("Rogue"),
-	N_("Sorcerer"),
-	N_("Monk"),
-	N_("Bard"),
-	N_("Barbarian"),
-};
 
 struct colorAndText {
 	UiFlags color;
@@ -145,7 +136,7 @@ panelEntry panelEntries[] = {
 	{ "points to distribute", { 88, 250 }, 33, { -3, -10 }, 120, 0, 1, false,
 	    []() {
 	        myPlayer._pStatPts = std::min(CalcStatDiff(myPlayer), myPlayer._pStatPts);
-	        return colorAndText { UiFlags::ColorSilver, (myPlayer._pStatPts > 0 ? fmt::format("{:d}", myPlayer._pStatPts) : "") };
+	        return colorAndText { UiFlags::ColorRed, (myPlayer._pStatPts > 0 ? fmt::format("{:d}", myPlayer._pStatPts) : "") };
 	    } },
 
 	{ "life", { 88, 287 }, 33, { -3, 0 }, 0, 0, 1, false,
@@ -264,6 +255,20 @@ void LoadCharPanel()
 
 bool CharPanelLoaded = false;
 
+void DrawStatButtons(const Surface &out)
+{
+	if (myPlayer._pStatPts > 0) {
+		if (myPlayer._pBaseStr < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Strength))
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 159 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Strength)] ? 3 : 2);
+		if (myPlayer._pBaseMag < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Magic))
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 187 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Magic)] ? 5 : 4);
+		if (myPlayer._pBaseDex < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Dexterity))
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 216 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Dexterity)] ? 7 : 6);
+		if (myPlayer._pBaseVit < myPlayer.GetMaximumAttributeValue(CharacterAttribute::Vitality))
+			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 244 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8);
+	}
+}
+
 void DrawPcxChr(const Surface &out)
 {
 	if (!CharPanelLoaded) {
@@ -278,6 +283,7 @@ void DrawPcxChr(const Surface &out)
 			DrawString(out, tmp.text.c_str(), { pos + entry.position + Displacement { 7, 17 }, { entry.length, 12 } }, UiFlags::AlignCenter | tmp.color, entry.statSpacing);
 		}
 	}
+	DrawStatButtons(out);
 }
 
 } // namespace devilution

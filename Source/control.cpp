@@ -80,6 +80,18 @@ Rectangle ChrBtnsRect[4] = {
 	{ { 137, 223 }, { 41, 22 } }
 };
 
+std::optional<CelSprite> pChrButtons;
+
+/** Map of hero class names */
+const char *const ClassStrTbl[] = {
+	N_("Warrior"),
+	N_("Rogue"),
+	N_("Sorcerer"),
+	N_("Monk"),
+	N_("Bard"),
+	N_("Barbarian"),
+};
+
 namespace {
 
 std::optional<OwnedSurface> pBtmBuff;
@@ -87,7 +99,6 @@ std::optional<OwnedSurface> pLifeBuff;
 std::optional<OwnedSurface> pManaBuff;
 std::optional<CelSprite> talkButtons;
 std::optional<CelSprite> pDurIcons;
-std::optional<CelSprite> pChrButtons;
 std::optional<CelSprite> multiButtons;
 std::optional<CelSprite> pPanelButtons;
 std::optional<CelSprite> pChrPanel;
@@ -108,16 +119,6 @@ int sgbPlrTalkTbl;
 bool WhisperList[MAX_PLRS];
 char panelstr[4][64];
 uint8_t SplTransTbl[256];
-
-/** Map of hero class names */
-const char *const ClassStrTbl[] = {
-	N_("Warrior"),
-	N_("Rogue"),
-	N_("Sorcerer"),
-	N_("Monk"),
-	N_("Bard"),
-	N_("Barbarian"),
-};
 
 /**
  * Line start position for info box text when displaying 1, 2, 3, 4 and 5 lines respectivly
