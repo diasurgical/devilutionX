@@ -317,31 +317,31 @@ void DrawCursor(const Surface &out)
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface &out, const MissileStruct *m, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface &out, const MissileStruct &missile, int sx, int sy, bool pre)
 {
-	if (m->_miPreFlag != pre || !m->_miDrawFlag)
+	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
 
-	if (m->_miAnimData == nullptr) {
-		Log("Draw Missile 2 type {}: NULL Cel Buffer", m->_mitype);
+	if (missile._miAnimData == nullptr) {
+		Log("Draw Missile 2 type {}: NULL Cel Buffer", missile._mitype);
 		return;
 	}
-	int nCel = m->_miAnimFrame;
-	const auto *frameTable = reinterpret_cast<const uint32_t *>(m->_miAnimData);
+	int nCel = missile._miAnimFrame;
+	const auto *frameTable = reinterpret_cast<const uint32_t *>(missile._miAnimData);
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, m->_mitype);
+		Log("Draw Missile 2: frame {} of {}, missile type=={}", nCel, frames, missile._mitype);
 		return;
 	}
-	int mx = sx + m->position.offsetForRendering.deltaX - m->_miAnimWidth2;
-	int my = sy + m->position.offsetForRendering.deltaY;
-	CelSprite cel { m->_miAnimData, m->_miAnimWidth };
-	if (m->_miUniqTrans != 0)
-		Cl2DrawLightTbl(out, mx, my, cel, m->_miAnimFrame, m->_miUniqTrans + 3);
-	else if (m->_miLightFlag)
-		Cl2DrawLight(out, mx, my, cel, m->_miAnimFrame);
+	int mx = sx + missile.position.offsetForRendering.deltaX - missile._miAnimWidth2;
+	int my = sy + missile.position.offsetForRendering.deltaY;
+	CelSprite cel { missile._miAnimData, missile._miAnimWidth };
+	if (missile._miUniqTrans != 0)
+		Cl2DrawLightTbl(out, mx, my, cel, missile._miAnimFrame, missile._miUniqTrans + 3);
+	else if (missile._miLightFlag)
+		Cl2DrawLight(out, mx, my, cel, missile._miAnimFrame);
 	else
-		Cl2Draw(out, mx, my, cel, m->_miAnimFrame);
+		Cl2Draw(out, mx, my, cel, missile._miAnimFrame);
 }
 
 /**
@@ -357,7 +357,7 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
 {
 	const auto range = MissilesAtRenderingTile.equal_range(Point { x, y });
 	for (auto it = range.first; it != range.second; it++) {
-		DrawMissilePrivate(out, it->second, sx, sy, pre);
+		DrawMissilePrivate(out, *it->second, sx, sy, pre);
 	}
 }
 
@@ -828,6 +828,7 @@ void DrawDungeon(const Surface &out, int sx, int sy, int dx, int dy)
 	if (DebugVision && (bFlag & BFLAG_LIT) != 0) {
 		CelClippedDrawTo(out, { dx, dy }, *pSquareCel, 1);
 	}
+	DebugCoordsMap[sx + sy * MAXDUNX] = { dx, dy };
 #endif
 
 	if (MissilePreFlag) {
@@ -1190,10 +1191,57 @@ void DrawGame(const Surface &fullOut, int x, int y)
  */
 void DrawView(const Surface &out, int startX, int startY)
 {
+#ifdef _DEBUG
+	DebugCoordsMap.clear();
+#endif
 	DrawGame(out, startX, startY);
 	if (AutomapActive) {
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
+#ifdef _DEBUG
+	if (DebugCoords || DebugGrid || DebugCursorCoords) {
+		for (auto m : DebugCoordsMap) {
+			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
+			Point pixelCoords = m.second;
+			Displacement ver = { 0, -TILE_HEIGHT / 2 };
+			Displacement hor = { TILE_WIDTH / 2, 0 };
+			if (!zoomflag) {
+				pixelCoords *= 2;
+				hor *= 2;
+				ver *= 2;
+			}
+			Point center = pixelCoords + hor + ver;
+			if (DebugCoords || (DebugCursorCoords && dunCoords == Point { cursmx, cursmy })) {
+				char coordstr[10];
+				sprintf(coordstr, "%d:%d", dunCoords.x, dunCoords.y);
+				int textWidth = GetLineWidth(coordstr);
+				int textHeight = 12;
+				Point position = center + Displacement { -textWidth / 2, textHeight / 2 };
+				DrawString(out, coordstr, { position, { textWidth, textHeight } }, UiFlags::ColorRed);
+			}
+			if (DebugGrid) {
+				auto DrawLine = [&out](Point from, Point to, uint8_t col) {
+					int dx = to.x - from.x;
+					int dy = to.y - from.y;
+					int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+					float ix = dx / (float)steps;
+					float iy = dy / (float)steps;
+					float sx = from.x;
+					float sy = from.y;
+
+					for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
+						out.SetPixel({ (int)sx, (int)sy }, col);
+				};
+
+				uint8_t col = PAL16_BEIGE;
+				DrawLine(center - hor, center - ver, col);
+				DrawLine(center + hor, center - ver, col);
+				DrawLine(center - hor, center + ver, col);
+				DrawLine(center + hor, center + ver, col);
+			}
+		}
+	}
+#endif
 	DrawMonsterHealthBar(out);
 	DrawItemNameLabels(out);
 

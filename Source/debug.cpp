@@ -6,6 +6,8 @@
 
 #ifdef _DEBUG
 
+#include <sstream>
+
 #include "debug.h"
 
 #include "automap.h"
@@ -27,12 +29,22 @@ namespace devilution {
 std::optional<CelSprite> pSquareCel;
 bool DebugGodMode = false;
 bool DebugVision = false;
+bool DebugCoords = false;
+bool DebugCursorCoords = false;
+bool DebugGrid = false;
+std::unordered_map<int, Point> DebugCoordsMap;
 
 namespace {
 
 int DebugPlayerId;
 int DebugQuestId;
 int DebugMonsterId;
+
+// Used for debugging level generation
+uint32_t glMid1Seed[NUMLEVELS];
+uint32_t glMid2Seed[NUMLEVELS];
+uint32_t glMid3Seed[NUMLEVELS];
+uint32_t glEndSeed[NUMLEVELS];
 
 void SetSpellLevelCheat(spell_id spl, int spllvl)
 {
@@ -245,10 +257,21 @@ std::string DebugCmdVisitTowner(const std::string_view parameter)
 std::string DebugCmdResetLevel(const std::string_view parameter)
 {
 	auto &myPlayer = Players[MyPlayerId];
-	auto level = atoi(parameter.data());
+
+	std::stringstream paramsStream(parameter.data());
+	std::string singleParameter;
+	if (!std::getline(paramsStream, singleParameter, ' '))
+		return "What level do you want to visit?";
+	auto level = atoi(singleParameter.c_str());
 	if (level < 0 || level > (gbIsHellfire ? 24 : 16))
 		return fmt::format("Level {} is not known. Do you want to write an extension mod?", level);
 	myPlayer._pLvlVisited[level] = false;
+
+	if (std::getline(paramsStream, singleParameter, ' ')) {
+		uint32_t seed = static_cast<uint32_t>(std::stoul(singleParameter));
+		glSeedTbl[level] = seed;
+	}
+
 	if (myPlayer.plrlevel == level)
 		return fmt::format("Level {} can't be cleaned, cause you still occupy it!", level);
 	return fmt::format("Level {} was restored and looks fabulous.", level);
@@ -406,27 +429,63 @@ std::string DebugCmdTalkToTowner(const std::string_view parameter)
 	return "NPC not found.";
 }
 
+std::string DebugCmdShowCoords(const std::string_view parameter)
+{
+	DebugCoords = !DebugCoords;
+	if (DebugCoords)
+		return "I love math.";
+
+	return "I hate math.";
+}
+
+std::string DebugCmdShowGrid(const std::string_view parameter)
+{
+	DebugGrid = !DebugGrid;
+	if (DebugGrid)
+		return "A basket full of rectangles and mushrooms.";
+
+	return "Back to boring.";
+}
+
+std::string DebugCmdShowCursorCoords(const std::string_view parameter)
+{
+	DebugCursorCoords = !DebugCursorCoords;
+	if (DebugCursorCoords)
+		return "I am the master of coords and cursors!";
+
+	return "Cursor will never forget that.";
+}
+
+std::string DebugCmdLevelSeed(const std::string_view parameter)
+{
+	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
 	{ "give xp", "Levels the player up (min 1 level or {levels}).", "({levels})", &DebugCmdLevelUp },
-	{ "set spells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
+	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
 	{ "give map", "Reveal the map.", "", &DebugCmdMap },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
-	{ "restart", "Resets specified {level}.", "{level}", &DebugCmdResetLevel },
-	{ "god", "Togggles godmode.", "", &DebugCmdGodMode },
-	{ "r_drawvision", "Togggles vision debug rendering.", "", &DebugCmdVision },
+	{ "restart", "Resets specified {level}.", "{level} ({seed})", &DebugCmdResetLevel },
+	{ "god", "Toggles godmode.", "", &DebugCmdGodMode },
+	{ "r_drawvision", "Toggles vision debug rendering.", "", &DebugCmdVision },
 	{ "r_fullbright", "Toggles whether light shading is in effect.", "", &DebugCmdLighting },
-	{ "refill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
-	{ "dropunique", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
-	{ "dropitem", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
+	{ "fill", "Refills health and mana.", "", &DebugCmdRefillHealthMana },
+	{ "dropu", "Attempts to generate unique item {name}.", "{name}", &DebugCmdGenerateUniqueItem },
+	{ "drop", "Attempts to generate item {name}.", "{name}", &DebugCmdGenerateItem },
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
+	{ "coords", "Toggles showing tile coords.", "", &DebugCmdShowCoords },
+	{ "cursorcoords", "Toggles showing cursor coords.", "", &DebugCmdShowCursorCoords },
+	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
+	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
 };
 
 } // namespace
@@ -509,6 +568,14 @@ void NextDebugMonster()
 	NetSendCmdString(1 << MyPlayerId, dstr);
 }
 
+void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed)
+{
+	glMid1Seed[currlevel] = mid1Seed;
+	glMid2Seed[currlevel] = mid2Seed;
+	glMid3Seed[currlevel] = mid3Seed;
+	glEndSeed[currlevel] = endSeed;
+}
+
 bool CheckDebugTextCommand(const std::string_view text)
 {
 	auto debugCmdIterator = std::find_if(DebugCmdList.begin(), DebugCmdList.end(), [&](const DebugCmdItem &elem) { return text.find(elem.text) == 0 && (text.length() == elem.text.length() || text[elem.text.length()] == ' '); });
@@ -520,6 +587,7 @@ bool CheckDebugTextCommand(const std::string_view text)
 	if (text.length() > (dbgCmd.text.length() + 1))
 		parameter = text.substr(dbgCmd.text.length() + 1);
 	const auto result = dbgCmd.actionProc(parameter);
+	Log("DebugCmd: {} Result: {}", text, result);
 	InitDiabloMsg(result);
 	return true;
 }

@@ -493,6 +493,7 @@ if(NINTENDO_SWITCH)
     Source/platform/switch/keyboard.cpp
     Source/platform/switch/docking.cpp
     Source/platform/switch/random.cpp
+    Source/platform/switch/asio/pause.c
     Source/platform/switch/asio/net/if.c
     Source/platform/switch/asio/sys/signal.c)
 endif()

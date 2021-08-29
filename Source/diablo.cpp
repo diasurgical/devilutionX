@@ -128,14 +128,7 @@ namespace {
 
 char gszVersionNumber[64] = "internal version unknown";
 
-// Used for debugging level generation
-uint32_t glEndSeed[NUMLEVELS];
-uint32_t glMid1Seed[NUMLEVELS];
-uint32_t glMid2Seed[NUMLEVELS];
-uint32_t glMid3Seed[NUMLEVELS];
-
 bool gbGameLoopStartup;
-int setseed;
 bool forceSpawn;
 bool forceDiablo;
 int sgnTimeoutCurs;
@@ -589,15 +582,6 @@ void PressChar(char vkey)
 	case 'm':
 		GetDebugMonster();
 		return;
-	case 'R':
-	case 'r':
-		sprintf(tempstr, "seed = %i", glSeedTbl[currlevel]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		sprintf(tempstr, "Mid1 = %i : Mid2 = %i : Mid3 = %i", glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		sprintf(tempstr, "End = %i", glEndSeed[currlevel]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		return;
 	case 'T':
 	case 't':
 		if (debug_mode_key_inverted_v) {
@@ -821,7 +805,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
-	printInConsole("    %-20s %-30s\n", "-r <##########>", "Set map seed");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
 	diablo_quit(0);
@@ -881,8 +864,6 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (strcasecmp("-m", argv[i]) == 0) {
 			monstdebug = true;
 			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
-		} else if (strcasecmp("-r", argv[i]) == 0) {
-			setseed = SDL_atoi(argv[++i]);
 #endif
 		} else {
 			printInConsole("%s", fmt::format(_("unrecognized option '{:s}'\n"), argv[i]).c_str());
@@ -1807,9 +1788,6 @@ void DisableInputWndProc(uint32_t uMsg, int32_t /*wParam*/, int32_t lParam)
 
 void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 {
-	if (setseed != 0)
-		glSeedTbl[currlevel] = setseed;
-
 	music_stop();
 	if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 		NewCursor(CURSOR_HAND);
@@ -1900,19 +1878,21 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
-				glMid1Seed[currlevel] = GetLCGEngineState();
+				uint32_t mid1Seed = GetLCGEngineState();
 				InitMonsters();
-				glMid2Seed[currlevel] = GetLCGEngineState();
+				uint32_t mid2Seed = GetLCGEngineState();
 				IncProgress();
 				InitObjects();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
-				glMid3Seed[currlevel] = GetLCGEngineState();
+				uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
 				InitDead();
-				glEndSeed[currlevel] = GetLCGEngineState();
+#if _DEBUG
+				SetDebugLevelSeedInfos(mid1Seed, mid2Seed, mid3Seed, GetLCGEngineState());
+#endif
 
 				if (gbIsMultiplayer)
 					DeltaLoadLevel();

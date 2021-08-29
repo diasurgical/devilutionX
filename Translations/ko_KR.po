@@ -18,96 +18,96 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
+msgstr "게임 디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr ""
+msgstr "시니어 디자이너"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr ""
+msgstr "추가 디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr ""
+msgstr "리드 개발자"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr ""
+msgstr "시니어 개발자들"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
-msgstr ""
+msgstr "프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr ""
+msgstr "특별 게스트 프로그래머들"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
-msgstr ""
+msgstr "배틀넷 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr ""
+msgstr "직렬 통신 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr ""
+msgstr "인스톨러 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr ""
+msgstr "아트 디렉터들"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr ""
+msgstr "아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr ""
+msgstr "테크니컬 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr ""
+msgstr "시네마틱 아트 디렉터들"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr ""
+msgstr "3D 시네마틱 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr ""
+msgstr "시네마틱 테크니컬 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr ""
+msgstr "책임 프로듀서"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
-msgstr ""
+msgstr "프로듀서"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr ""
+msgstr "협력 프로듀서"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr ""
+msgstr "디아블로 스트라이크 팀"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:70
 msgid "Music"
-msgstr ""
+msgstr "음악"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr ""
+msgstr "음악 디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr ""
+msgstr "시네마틱 음악과 음향"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
@@ -119,15 +119,15 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr ""
+msgstr "음성 편집"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr ""
+msgstr "성우들"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr ""
+msgstr "오디오 엔지니어"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
@@ -163,11 +163,11 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
-msgstr ""
+msgstr "고객지원"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
-msgstr ""
+msgstr "세일즈"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
@@ -179,35 +179,35 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "대중 홍보"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr ""
+msgstr "마케팅"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr ""
+msgstr "국제 세일즈"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
-msgstr ""
+msgstr "미국 세일즈"
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr ""
+msgstr "생산"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr ""
+msgstr "법률 및 비즈니스"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr ""
+msgstr "특별히 감사한"
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
-msgstr ""
+msgstr "감사한 사람들"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
@@ -223,19 +223,19 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "소프트웨어 공학"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "아트 디렉터"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "아티스트들"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
-msgstr ""
+msgstr "디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
@@ -243,15 +243,15 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "품질 보증 리드"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "테스터들"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr ""
+msgstr "메뉴얼"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
@@ -283,11 +283,11 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr ""
+msgstr "메인 테스터들"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr ""
+msgstr "추가 테스터들"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
@@ -1636,10 +1636,12 @@ msgid ""
 "If you hold the mouse button down while moving, the character will continue "
 "to move in that direction."
 msgstr ""
+"캐릭터가 움직이는 동안 마우스 버튼을 누르고 있으면, 계속 그 방향으로 이동합니"
+"다."
 
 #: Source/help.cpp:48
 msgid "$Combat:"
-msgstr ""
+msgstr "$전투:"
 
 #: Source/help.cpp:49
 msgid ""
@@ -1649,7 +1651,7 @@ msgstr ""
 
 #: Source/help.cpp:52
 msgid "$Auto-map:"
-msgstr ""
+msgstr "$오토맵:"
 
 #: Source/help.cpp:53
 msgid ""
@@ -1673,7 +1675,7 @@ msgstr ""
 
 #: Source/help.cpp:65
 msgid "$Gold"
-msgstr ""
+msgstr "$금화"
 
 #: Source/help.cpp:66
 msgid ""
@@ -1772,19 +1774,19 @@ msgstr "금화"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr ""
+msgstr "숏 소드"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
-msgstr ""
+msgstr "둥근 방패"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
-msgstr ""
+msgstr "막대기"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
-msgstr ""
+msgstr "짧은 활"
 
 #: Source/itemdat.cpp:21
 msgid "Short Staff of Mana"
@@ -1792,7 +1794,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
-msgstr ""
+msgstr "고기칼"
 
 #: Source/itemdat.cpp:23 Source/itemdat.cpp:397
 msgid "The Undead Crown"
@@ -1908,7 +1910,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:75
 msgid "Blacksmith Oil"
-msgstr ""
+msgstr "대장장이의 윤활유"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
@@ -1919,11 +1921,11 @@ msgstr ""
 #: Source/itemdat.cpp:142 Source/itemdat.cpp:143 Source/itemdat.cpp:144
 #: Source/itemdat.cpp:145
 msgid "Sword"
-msgstr ""
+msgstr "소드"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:134
 msgid "Dagger"
-msgstr ""
+msgstr "단검"
 
 #: Source/itemdat.cpp:55
 msgid "Rune Bomb"
@@ -1931,7 +1933,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
-msgstr ""
+msgstr "테오도르"
 
 #: Source/itemdat.cpp:57
 msgid "Auric Amulet"
@@ -1939,39 +1941,39 @@ msgstr ""
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
-msgstr ""
+msgstr "찢어진 노트 1"
 
 #: Source/itemdat.cpp:59
 msgid "Torn Note 2"
-msgstr ""
+msgstr "찢어진 노트 2"
 
 #: Source/itemdat.cpp:60
 msgid "Torn Note 3"
-msgstr ""
+msgstr "찢어진 노트 3"
 
 #: Source/itemdat.cpp:61
 msgid "Reconstructed Note"
-msgstr ""
+msgstr "재구성된 노트"
 
 #: Source/itemdat.cpp:62
 msgid "Brown Suit"
-msgstr ""
+msgstr "갈색 슈트"
 
 #: Source/itemdat.cpp:63
 msgid "Grey Suit"
-msgstr ""
+msgstr "회색 슈트"
 
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
 msgid "Cap"
-msgstr ""
+msgstr "모자"
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
-msgstr ""
+msgstr "해골 모자"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
 msgid "Helm"
-msgstr ""
+msgstr "투구"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
@@ -1979,7 +1981,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
-msgstr ""
+msgstr "왕관"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
@@ -1999,7 +2001,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:73
 msgid "Robe"
-msgstr ""
+msgstr "로브"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
@@ -2071,27 +2073,27 @@ msgstr ""
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
 msgid "Shield"
-msgstr ""
+msgstr "방패"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
-msgstr ""
+msgstr "작은 방패"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr ""
+msgstr "큰 방패"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
-msgstr ""
+msgstr "카이트 방패"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
-msgstr ""
+msgstr "타워 방패"
 
 #: Source/itemdat.cpp:92
 msgid "Gothic Shield"
-msgstr ""
+msgstr "고딕 방패"
 
 #: Source/itemdat.cpp:97
 msgid "Potion of Rejuvenation"
@@ -2208,27 +2210,27 @@ msgstr ""
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
-msgstr ""
+msgstr "펄션"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
-msgstr ""
+msgstr "시미터"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr ""
+msgstr "클레이모어"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
-msgstr ""
+msgstr "블레이드"
 
 #: Source/itemdat.cpp:140
 msgid "Sabre"
-msgstr ""
+msgstr "세이버"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr ""
+msgstr "긴 소드"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
@@ -2236,11 +2238,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr ""
+msgstr "바스타드 소드"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr ""
+msgstr "투핸디드 소드"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
@@ -2248,16 +2250,16 @@ msgstr ""
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr ""
+msgstr "작은 도끼"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
 msgid "Axe"
-msgstr ""
+msgstr "도끼"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr ""
+msgstr "큰 도끼"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
@@ -2273,19 +2275,19 @@ msgstr ""
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
-msgstr ""
+msgstr "메이스"
 
 #: Source/itemdat.cpp:153
 msgid "Morning Star"
-msgstr ""
+msgstr "모닝 스타"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr ""
+msgstr "워 해머"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
-msgstr ""
+msgstr "해머"
 
 #: Source/itemdat.cpp:155
 msgid "Spiked Club"
@@ -2303,15 +2305,15 @@ msgstr ""
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
 #: Source/itemdat.cpp:165 Source/itemdat.cpp:166
 msgid "Bow"
-msgstr ""
+msgstr "보우"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr ""
+msgstr "헌터 보우"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr ""
+msgstr "롱 보우"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
@@ -2356,7 +2358,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
-msgstr ""
+msgstr "반지"
 
 #: Source/itemdat.cpp:175 Source/itemdat.cpp:176
 msgid "Amulet"
@@ -5442,7 +5444,7 @@ msgstr ""
 
 #: Source/objects.cpp:5500
 msgid "Barrel"
-msgstr ""
+msgstr "배럴통"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5504
@@ -5632,7 +5634,7 @@ msgstr "농부의 과수원"
 
 #: Source/quests.cpp:61
 msgid "Little Girl"
-msgstr ""
+msgstr "작은 여자아이"
 
 #: Source/quests.cpp:62
 msgid "Wandering Trader"
@@ -5655,7 +5657,7 @@ msgstr "레오릭 왕의 무덤"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:82 Source/setmaps.cpp:79
 msgid "Maze"
-msgstr ""
+msgstr "미로"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:83
@@ -5874,11 +5876,11 @@ msgstr ""
 
 #: Source/stores.cpp:169
 msgid "Damage: {:d}-{:d}  "
-msgstr ""
+msgstr "공격력: {:d}-{:d}  "
 
 #: Source/stores.cpp:171
 msgid "Armor: {:d}  "
-msgstr ""
+msgstr "방어력: {:d}  "
 
 #: Source/stores.cpp:173
 msgid "Dur: {:d}/{:d},  "
@@ -5886,7 +5888,7 @@ msgstr ""
 
 #: Source/stores.cpp:176
 msgid "Indestructible,  "
-msgstr ""
+msgstr "불멸의, "
 
 #: Source/stores.cpp:184
 msgid "No required attributes"
@@ -9593,19 +9595,19 @@ msgstr ""
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
 #: Source/textdat.cpp:651 Source/textdat.cpp:654
 msgid "In Spiritu Sanctum."
-msgstr ""
+msgstr "인 스피리투 생텀."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:643 Source/textdat.cpp:646 Source/textdat.cpp:649
 #: Source/textdat.cpp:652 Source/textdat.cpp:655
 msgid "Praedictum Otium."
-msgstr ""
+msgstr "프래딕툼 오티움."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:644 Source/textdat.cpp:647 Source/textdat.cpp:650
 #: Source/textdat.cpp:653 Source/textdat.cpp:656
 msgid "Efficio Obitus Ut Inimicus."
-msgstr ""
+msgstr "에피시오 오비투스 웃 이니미쿠스."
 
 #: Source/towners.cpp:96
 msgid "Griswold the Blacksmith"
@@ -9645,7 +9647,7 @@ msgstr "농부 레스터"
 
 #: Source/towners.cpp:277
 msgid "Complete Nut"
-msgstr "완벽한 너트"
+msgstr "완벽하게 미친사람"
 
 #: Source/towners.cpp:304
 msgid "Slain Townsman"

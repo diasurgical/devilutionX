@@ -17,6 +17,7 @@
 #include "error.h"
 #include "init.h"
 #include "inv.h"
+#include "inv_iterators.hpp"
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -1474,7 +1475,7 @@ void UpdateCircle(int i)
 		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
 		if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE && Quests[Q_BETRAYER]._qvar1 <= 4) // BUGFIX stepping on the circle again will break the quest state (fixed)
 			Quests[Q_BETRAYER]._qvar1 = 4;
-		AddMissile(myPlayer.position.tile, { 35, 46 }, myPlayer._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, MyPlayerId, 0, 0);
+		AddMissile(myPlayer.position.tile, { 35, 46 }, DIR_S, MIS_RNDTELEPORT, TARGET_BOTH, MyPlayerId, 0, 0);
 		LastMouseButtonAction = MouseActionType::None;
 		sgbMouseDown = CLICK_NONE;
 		ClrPlrPath(myPlayer);
@@ -2207,7 +2208,7 @@ void OperateBook(int pnum, int i)
 			}
 			if (doAddMissile) {
 				Objects[dObject[35][36] - 1]._oVar5++;
-				AddMissile(player.position.tile, { dx, dy }, player._pdir, MIS_RNDTELEPORT, TARGET_MONSTERS, pnum, 0, 0);
+				AddMissile(player.position.tile, { dx, dy }, DIR_S, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
 				missileAdded = true;
 				doAddMissile = false;
 			}
@@ -2678,7 +2679,7 @@ bool OperateShrineGloomy(int pnum)
 	auto &player = Players[pnum];
 
 	// Increment armor class by 2 and decrements max damage by 1.
-	ForEachInventoryItem(player, [](ItemStruct &item) {
+	for (ItemStruct &item : PlayerItemsRange(player)) {
 		switch (item._itype) {
 		case ITYPE_SWORD:
 		case ITYPE_AXE:
@@ -2699,7 +2700,7 @@ bool OperateShrineGloomy(int pnum)
 		default:
 			break;
 		}
-	});
+	}
 
 	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
 
@@ -3049,22 +3050,7 @@ bool OperateShrineHoly(int pnum)
 	if (deltaload)
 		return false;
 
-	auto &player = Players[pnum];
-
-	int j = 0;
-	int xx;
-	int yy;
-	uint32_t lv;
-	do {
-		xx = GenerateRnd(MAXDUNX);
-		yy = GenerateRnd(MAXDUNY);
-		lv = dPiece[xx][yy];
-		j++;
-		if (j > MAXDUNX * MAXDUNY)
-			break;
-	} while (nSolidTable[lv] || dObject[xx][yy] != 0 || dMonster[xx][yy] != 0);
-
-	AddMissile(player.position.tile, { xx, yy }, player._pdir, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
+	AddMissile(Players[pnum].position.tile, { 0, 0 }, DIR_S, MIS_RNDTELEPORT, TARGET_PLAYERS, pnum, 0, 2 * leveltype);
 
 	if (pnum != MyPlayerId)
 		return false;

@@ -147,6 +147,9 @@ void OverrideOptions()
 	sgOptions.Graphics.nWidth = DemoGraphicsWidth;
 	sgOptions.Graphics.nHeight = DemoGraphicsHeight;
 	sgOptions.Graphics.bFitToScreen = false;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	sgOptions.Graphics.bHardwareCursor = false;
+#endif
 	if (Timedemo) {
 		sgOptions.Graphics.bVSync = false;
 		sgOptions.Graphics.bFPSLimit = false;
