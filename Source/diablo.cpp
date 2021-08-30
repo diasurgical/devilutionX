@@ -1508,6 +1508,16 @@ void InitKeymapActions()
 	    [] { Players[MyPlayerId].Stop(); },
 	    [&]() { return !IsPlayerDead(); },
 	});
+#ifdef _DEBUG
+	keymapper.AddAction({
+	    "DebugToggle",
+	    'X',
+	    [] {
+		    DebugToggle = !DebugToggle;
+	    },
+	    [&]() { return true; },
+	});
+#endif
 }
 
 void LoadGameFonts()

@@ -29,6 +29,7 @@
 namespace devilution {
 
 std::optional<CelSprite> pSquareCel;
+bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;
 bool DebugCoords = false;
