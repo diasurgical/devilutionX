@@ -423,7 +423,7 @@ enum item_misc_id : int8_t {
 	IMISC_INVALID = -1,
 };
 
-struct ItemDataStruct {
+struct ItemData {
 	enum item_drop_rate iRnd;
 	enum item_class iClass;
 	enum item_equip_type iLoc;
@@ -592,7 +592,7 @@ struct UItemStruct {
 	ItemPower powers[6];
 };
 
-extern ItemDataStruct AllItemsList[];
+extern ItemData AllItemsList[];
 extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
 extern const UItemStruct UniqueItemList[];
