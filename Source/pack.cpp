@@ -74,7 +74,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 	}
 }
 
-void PackPlayer(PkPlayerStruct *pPack, const Player &player, bool manashield)
+void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 {
 	memset(pPack, 0, sizeof(*pPack));
 	pPack->destAction = player.destAction;
@@ -197,7 +197,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 	*id = item;
 }
 
-void UnPackPlayer(const PkPlayerStruct *pPack, Player &player, bool netSync)
+void UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 {
 	player.position.tile = { pPack->px, pPack->py };
 	player.position.future = { pPack->px, pPack->py };
