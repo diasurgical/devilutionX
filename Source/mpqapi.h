@@ -12,7 +12,7 @@
 namespace devilution {
 
 struct _FILEHEADER {
-	int signature;
+	uint32_t signature;
 	int headersize;
 	uint32_t filesize;
 	uint16_t version;
