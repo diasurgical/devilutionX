@@ -43,7 +43,7 @@ struct PanelEntry {
 	 * Toggles whether the box should be using the 27px version or 26px.
 	 * Must be set to true for stat boxes or they don't line up with the "spend stat" button
 	 */
-	bool high;                                     
+	bool high;
 	std::function<ColorAndText()> statDisplayFunc; // function responsible for displaying stat
 };
 
