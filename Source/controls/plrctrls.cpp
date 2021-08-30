@@ -585,7 +585,7 @@ Size GetItemSizeOnSlot(int slot, char &itemInvId)
 				iv = -ii;
 			}
 
-			ItemStruct &item = myPlayer.InvList[iv - 1];
+			Item &item = myPlayer.InvList[iv - 1];
 			if (!item.isEmpty()) {
 				auto size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
 				size.width /= InventorySlotSizeInPixels.width;
@@ -1467,7 +1467,7 @@ void PerformSpellAction()
 
 void CtrlUseInvItem()
 {
-	ItemStruct *item;
+	Item *item;
 
 	if (pcursinvitem == -1)
 		return;

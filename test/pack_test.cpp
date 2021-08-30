@@ -86,7 +86,7 @@ typedef struct TestItemStruct {
 	int IDidx;
 } TestItemStruct;
 
-static void CompareItems(const ItemStruct *item1, const TestItemStruct *item2)
+static void CompareItems(const Item *item1, const TestItemStruct *item2)
 {
 	ASSERT_STREQ(item1->_iIName, item2->_iIName);
 	EXPECT_EQ(item1->_itype, item2->_itype);
@@ -328,7 +328,7 @@ const TestItemStruct DiabloItems[] = {
 
 TEST(pack, UnPackItem_diablo)
 {
-	ItemStruct id;
+	Item id;
 	PkItemStruct is;
 
 	gbIsHellfire = false;
@@ -356,7 +356,7 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	ItemStruct id;
+	Item id;
 	UnPackItem(&pkItemBug, &id, false);
 	ASSERT_STREQ(id._iIName, "Veil of Steel");
 	ASSERT_EQ(id._itype, ITYPE_HELM);
@@ -399,7 +399,7 @@ const TestItemStruct SpawnItems[] = {
 
 TEST(pack, UnPackItem_spawn)
 {
-	ItemStruct id;
+	Item id;
 	PkItemStruct is;
 
 	gbIsHellfire = false;
@@ -443,7 +443,7 @@ const TestItemStruct DiabloMPItems[] = {
 
 TEST(pack, UnPackItem_diablo_multiplayer)
 {
-	ItemStruct id;
+	Item id;
 	PkItemStruct is;
 
 	gbIsHellfire = false;
@@ -652,7 +652,7 @@ const TestItemStruct HellfireItems[] = {
 
 TEST(pack, UnPackItem_hellfire)
 {
-	ItemStruct id;
+	Item id;
 	PkItemStruct is;
 
 	gbIsHellfire = true;
@@ -675,7 +675,7 @@ TEST(pack, UnPackItem_hellfire)
 TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 {
 	PkItemStruct is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
-	ItemStruct id;
+	Item id;
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
@@ -689,7 +689,7 @@ TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 TEST(pack, UnPackItem_empty)
 {
 	PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
-	ItemStruct id;
+	Item id;
 
 	UnPackItem(&is, &id, false);
 
@@ -699,7 +699,7 @@ TEST(pack, UnPackItem_empty)
 TEST(pack, PackItem_empty)
 {
 	PkItemStruct is;
-	ItemStruct id;
+	Item id;
 
 	id._itype = ITYPE_NONE;
 
@@ -710,7 +710,7 @@ TEST(pack, PackItem_empty)
 
 static void compareGold(const PkItemStruct *is, int iCurs)
 {
-	ItemStruct id;
+	Item id;
 	UnPackItem(is, &id, false);
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
@@ -744,7 +744,7 @@ TEST(pack, UnPackItem_gold_large)
 TEST(pack, UnPackItem_ear)
 {
 	PkItemStruct is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
-	ItemStruct id;
+	Item id;
 
 	UnPackItem(&is, &id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
