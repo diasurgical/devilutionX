@@ -8,7 +8,7 @@ namespace {
 
 TEST(Stores, AddStoreHoldRepair_magic)
 {
-	ItemStruct *item;
+	Item *item;
 
 	item = &storehold[0];
 
@@ -41,7 +41,7 @@ TEST(Stores, AddStoreHoldRepair_magic)
 
 TEST(Stores, AddStoreHoldRepair_normal)
 {
-	ItemStruct *item;
+	Item *item;
 
 	item = &storehold[0];
 

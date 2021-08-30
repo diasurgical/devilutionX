@@ -81,7 +81,7 @@ struct PlayerPack {
 
 void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
 void UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
-void PackItem(PkItemStruct *id, const ItemStruct *is);
-void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
+void PackItem(PkItemStruct *id, const Item *is);
+void UnPackItem(const PkItemStruct *is, Item *id, bool isHellfire);
 
 } // namespace devilution

@@ -171,7 +171,7 @@ enum icreateinfo_flag2 {
 // All item animation frames have this width.
 constexpr int ItemAnimWidth = 96;
 
-struct ItemStruct {
+struct Item {
 	/** Randomly generated identifier */
 	int32_t _iSeed;
 	uint16_t _iCreateInfo;
@@ -393,12 +393,12 @@ struct ItemGetRecordStruct {
 struct CornerStoneStruct {
 	Point position;
 	bool activated;
-	ItemStruct item;
+	Item item;
 };
 
 struct Player;
 
-extern ItemStruct Items[MAXITEMS + 1];
+extern Item Items[MAXITEMS + 1];
 extern int ActiveItems[MAXITEMS];
 extern int ActiveItemCount;
 extern int AvailableItems[MAXITEMS];
@@ -406,35 +406,35 @@ extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
 
-BYTE GetOutlineColor(const ItemStruct &item, bool checkReq);
+BYTE GetOutlineColor(const Item &item, bool checkReq);
 bool IsItemAvailable(int i);
 bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
-void SetPlrHandItem(ItemStruct &item, int itemData);
-void GetPlrHandSeed(ItemStruct *h);
+void SetPlrHandItem(Item &item, int itemData);
+void GetPlrHandSeed(Item *h);
 /**
  * @brief Set a new unique seed value on the given item
  */
-void SetGoldSeed(Player &player, ItemStruct &gold);
+void SetGoldSeed(Player &player, Item &gold);
 int GetGoldCursor(int value);
-void SetPlrHandGoldCurs(ItemStruct &gold);
+void SetPlrHandGoldCurs(Item &gold);
 void CreatePlrItems(int playerId);
 bool ItemSpaceOk(Point position);
 int AllocateItem();
 Point GetSuperItemLoc(Point position);
-void GetItemAttrs(ItemStruct &item, int itemData, int lvl);
-void SetupItem(ItemStruct &item);
+void GetItemAttrs(Item &item, int itemData, int lvl);
+void SetupItem(Item &item);
 int RndItem(const MonsterStruct &monster);
 void SpawnUnique(_unique_items uid, Point position);
 void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
-void RecreateItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
-void RecreateEar(ItemStruct &item, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
+void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
+void RecreateEar(Item &item, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
 void SpawnQuestItem(int itemid, Point position, int randarea, int selflag);
@@ -442,20 +442,20 @@ void SpawnRewardItem(int itemid, Point position);
 void SpawnMapOfDoom(Point position);
 void SpawnRuneBomb(Point position);
 void SpawnTheodore(Point position);
-void RespawnItem(ItemStruct *item, bool FlipFlag);
+void RespawnItem(Item *item, bool FlipFlag);
 void DeleteItem(int ii, int i);
 void ProcessItems();
 void FreeItemGFX();
-void GetItemFrm(ItemStruct &item);
-void GetItemStr(ItemStruct &item);
+void GetItemFrm(Item &item);
+void GetItemStr(Item &item);
 void CheckIdentify(Player &player, int cii);
 void DoRepair(Player &player, int cii);
 void DoRecharge(Player &player, int cii);
 void DoOil(Player &player, int cii);
-void PrintItemPower(char plidx, ItemStruct *x);
+void PrintItemPower(char plidx, Item *x);
 void DrawUniqueInfo(const Surface &out);
-void PrintItemDetails(ItemStruct *x);
-void PrintItemDur(ItemStruct *x);
+void PrintItemDetails(Item *x);
+void PrintItemDur(Item *x);
 void UseItem(int p, item_misc_id Mid, spell_id spl);
 void SpawnSmith(int lvl);
 void SpawnPremium(int pnum);

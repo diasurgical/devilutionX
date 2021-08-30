@@ -69,32 +69,32 @@ extern int storenumh;
 /** Map of inventory items being presented in the store */
 extern char storehidx[48];
 /** Copies of the players items as presented in the store */
-extern ItemStruct storehold[48];
+extern Item storehold[48];
 
 /** Temporary item used to generate gold piles by various function */
-extern ItemStruct golditem;
+extern Item golditem;
 
 /** Items sold by Griswold */
-extern ItemStruct smithitem[SMITH_ITEMS];
+extern Item smithitem[SMITH_ITEMS];
 /** Number of premium items for sale by Griswold */
 extern int numpremium;
 /** Base level of current premium items sold by Griswold */
 extern int premiumlevel;
 /** Premium items sold by Griswold */
-extern ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
+extern Item premiumitems[SMITH_PREMIUM_ITEMS];
 
 /** Items sold by Pepin */
-extern ItemStruct healitem[20];
+extern Item healitem[20];
 
 /** Items sold by Adria */
-extern ItemStruct witchitem[WITCH_ITEMS];
+extern Item witchitem[WITCH_ITEMS];
 
 /** Current level of the item sold by Wirt */
 extern int boylevel;
 /** Current item sold by Wirt */
-extern ItemStruct boyitem;
+extern Item boyitem;
 
-void AddStoreHoldRepair(ItemStruct *itm, int8_t i);
+void AddStoreHoldRepair(Item *itm, int8_t i);
 void InitStores();
 void SetupTownStores();
 void FreeStoreMem();

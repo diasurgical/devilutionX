@@ -444,7 +444,7 @@ int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterA
 	return std::min(remainingStatPoints, pointsToReachCap);
 }
 
-int DrawDurIcon4Item(const Surface &out, ItemStruct &pItem, int x, int c)
+int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 {
 	if (pItem.isEmpty())
 		return x;

@@ -236,7 +236,7 @@ struct TCmdPItem {
 	uint16_t wCI;
 	/**
 	 * Item identifier
-	 * @see ItemStruct::_iSeed
+	 * @see Item::_iSeed
 	 */
 	int32_t dwSeed;
 	uint8_t bId;

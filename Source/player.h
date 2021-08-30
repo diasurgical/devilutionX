@@ -258,12 +258,12 @@ struct Player {
 	int _pHFrames;
 	int _pDFrames;
 	int _pBFrames;
-	ItemStruct InvBody[NUM_INVLOC];
-	ItemStruct InvList[NUM_INV_GRID_ELEM];
+	Item InvBody[NUM_INVLOC];
+	Item InvList[NUM_INV_GRID_ELEM];
 	int _pNumInv;
 	int8_t InvGrid[NUM_INV_GRID_ELEM];
-	ItemStruct SpdList[MAXBELTITEMS];
-	ItemStruct HoldItem;
+	Item SpdList[MAXBELTITEMS];
+	Item HoldItem;
 	int _pIMinDam;
 	int _pIMaxDam;
 	int _pIAC;
@@ -322,9 +322,9 @@ struct Player {
 	 * matching items were found.
 	 */
 	template <typename TPredicate>
-	const ItemStruct *GetMostValuableItem(const TPredicate &itemPredicate) const
+	const Item *GetMostValuableItem(const TPredicate &itemPredicate) const
 	{
-		const auto getMostValuableItem = [&itemPredicate](const ItemStruct *begin, const ItemStruct *end, const ItemStruct *mostValuableItem = nullptr) {
+		const auto getMostValuableItem = [&itemPredicate](const Item *begin, const Item *end, const Item *mostValuableItem = nullptr) {
 			for (const auto *item = begin; item < end; item++) {
 				if (item->isEmpty() || !itemPredicate(*item)) {
 					continue;
@@ -338,7 +338,7 @@ struct Player {
 			return mostValuableItem;
 		};
 
-		const ItemStruct *mostValuableItem = getMostValuableItem(SpdList, SpdList + MAXBELTITEMS);
+		const Item *mostValuableItem = getMostValuableItem(SpdList, SpdList + MAXBELTITEMS);
 		mostValuableItem = getMostValuableItem(InvBody, InvBody + inv_body_loc::NUM_INVLOC, mostValuableItem);
 		mostValuableItem = getMostValuableItem(InvList, InvList + _pNumInv, mostValuableItem);
 

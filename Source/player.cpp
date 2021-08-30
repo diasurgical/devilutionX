@@ -568,7 +568,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	player._pVar4 = GetSpellLevel(pnum, player._pSpell);
 }
 
-void RespawnDeadItem(ItemStruct *itm, Point target)
+void RespawnDeadItem(Item *itm, Point target)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
@@ -584,7 +584,7 @@ void RespawnDeadItem(ItemStruct *itm, Point target)
 	itm->_itype = ITYPE_NONE;
 }
 
-void DeadItem(Player &player, ItemStruct *itm, Displacement direction)
+void DeadItem(Player &player, Item *itm, Displacement direction)
 {
 	if (itm->isEmpty())
 		return;
@@ -1399,7 +1399,7 @@ bool DoBlock(int pnum)
 void DamageArmor(int pnum)
 {
 	int a;
-	ItemStruct *pi;
+	Item *pi;
 
 	if (pnum != MyPlayerId) {
 		return;
@@ -1540,7 +1540,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	MonsterStruct *monster;
 	Player *target;
 	ObjectStruct *object;
-	ItemStruct *item;
+	Item *item;
 
 	int targetId = player.destParam1;
 
@@ -3049,7 +3049,7 @@ StartPlayerKill(int pnum, int earflag)
 				DropHalfPlayersGold(pnum);
 				if (earflag != -1) {
 					if (earflag != 0) {
-						ItemStruct ear;
+						Item ear;
 						SetPlrHandItem(ear, IDI_EAR);
 						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
 						switch (player._pClass) {
@@ -3092,7 +3092,7 @@ StartPlayerKill(int pnum, int earflag)
 
 void StripTopGold(Player &player)
 {
-	ItemStruct tmpItem = player.HoldItem;
+	Item tmpItem = player.HoldItem;
 
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (player.InvList[i]._itype == ITYPE_GOLD) {

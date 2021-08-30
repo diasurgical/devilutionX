@@ -20,13 +20,13 @@ public:
 	public:
 		using iterator_category = std::forward_iterator_tag;
 		using difference_type = void;
-		using value_type = ItemStruct;
+		using value_type = Item;
 		using pointer = value_type *;
 		using reference = value_type &;
 
 		Iterator() = default;
 
-		Iterator(ItemStruct *items, std::size_t count, std::size_t index)
+		Iterator(Item *items, std::size_t count, std::size_t index)
 		    : items_(items)
 		    , count_(count)
 		    , index_(index)
@@ -81,12 +81,12 @@ public:
 			}
 		}
 
-		ItemStruct *items_ = nullptr;
+		Item *items_ = nullptr;
 		std::size_t count_ = 0;
 		std::size_t index_ = 0;
 	};
 
-	ItemsContainerRange(ItemStruct *items, std::size_t count)
+	ItemsContainerRange(Item *items, std::size_t count)
 	    : items_(items)
 	    , count_(count)
 	{
@@ -103,7 +103,7 @@ public:
 	}
 
 private:
-	ItemStruct *items_;
+	Item *items_;
 	std::size_t count_;
 };
 
@@ -116,7 +116,7 @@ public:
 	public:
 		using iterator_category = std::forward_iterator_tag;
 		using difference_type = void;
-		using value_type = ItemStruct;
+		using value_type = Item;
 		using pointer = value_type *;
 		using reference = value_type &;
 
