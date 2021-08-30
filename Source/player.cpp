@@ -33,7 +33,7 @@
 namespace devilution {
 
 int MyPlayerId;
-PlayerStruct Players[MAX_PLRS];
+Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 int deathdelay;
 
@@ -219,7 +219,7 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
-void PmChangeLightOff(PlayerStruct &player)
+void PmChangeLightOff(Player &player)
 {
 	if (player._plid == NO_LIGHT)
 		return;
@@ -304,7 +304,7 @@ constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format on
 } };
 
-void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
+void ScrollViewPort(const Player &player, _scroll_direction dir)
 {
 	ScrollInfo.tile.x = player.position.tile.x - ViewX;
 	ScrollInfo.tile.y = player.position.tile.y - ViewY;
@@ -322,7 +322,7 @@ void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
 	}
 }
 
-bool PlrDirOK(const PlayerStruct &player, Direction dir)
+bool PlrDirOK(const Player &player, Direction dir)
 {
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
@@ -368,7 +368,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	player._pdir = dir;
 }
 
-void StartWalkAnimation(PlayerStruct &player, Direction dir, bool pmWillBeCalled)
+void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 {
 	int skippedFrames = -2;
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
@@ -405,7 +405,7 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 	}
 }
 
-void ClearStateVariables(PlayerStruct &player)
+void ClearStateVariables(Player &player)
 {
 	player.position.temp = { 0, 0 };
 	player.tempDirection = DIR_S;
@@ -584,7 +584,7 @@ void RespawnDeadItem(ItemStruct *itm, Point target)
 	itm->_itype = ITYPE_NONE;
 }
 
-void DeadItem(PlayerStruct &player, ItemStruct *itm, Displacement direction)
+void DeadItem(Player &player, ItemStruct *itm, Displacement direction)
 {
 	if (itm->isEmpty())
 		return;
@@ -768,7 +768,7 @@ bool DoWalk(int pnum, int variant)
 	return false;
 }
 
-bool WeaponDecay(PlayerStruct &player, int ii)
+bool WeaponDecay(Player &player, int ii)
 {
 	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
@@ -1538,7 +1538,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int y = 0;
 
 	MonsterStruct *monster;
-	PlayerStruct *target;
+	Player *target;
 	ObjectStruct *object;
 	ItemStruct *item;
 
@@ -1944,7 +1944,7 @@ void ValidatePlayer()
 	myPlayer._pMemSpells &= msk;
 }
 
-void CheckCheatStats(PlayerStruct &player)
+void CheckCheatStats(Player &player)
 {
 	if (player._pStrength > 750) {
 		player._pStrength = 750;
@@ -1973,7 +1973,7 @@ void CheckCheatStats(PlayerStruct &player)
 
 } // namespace
 
-void PlayerStruct::CalcScrolls()
+void Player::CalcScrolls()
 {
 	_pScrlSpells = 0;
 	for (int i = 0; i < _pNumInv; i++) {
@@ -1992,7 +1992,7 @@ void PlayerStruct::CalcScrolls()
 	EnsureValidReadiedSpell(*this);
 }
 
-bool PlayerStruct::HasItem(int item, int *idx) const
+bool Player::HasItem(int item, int *idx) const
 {
 	for (int i = 0; i < _pNumInv; i++) {
 		if (InvList[i].IDidx == item) {
@@ -2005,7 +2005,7 @@ bool PlayerStruct::HasItem(int item, int *idx) const
 	return false;
 }
 
-void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
+void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
 	iv++;
 
@@ -2037,7 +2037,7 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
-bool PlayerStruct::TryRemoveInvItemById(int item)
+bool Player::TryRemoveInvItemById(int item)
 {
 	int idx;
 	if (HasItem(item, &idx)) {
@@ -2047,7 +2047,7 @@ bool PlayerStruct::TryRemoveInvItemById(int item)
 	return false;
 }
 
-void PlayerStruct::RemoveSpdBarItem(int iv)
+void Player::RemoveSpdBarItem(int iv)
 {
 	SpdList[iv]._itype = ITYPE_NONE;
 
@@ -2055,7 +2055,7 @@ void PlayerStruct::RemoveSpdBarItem(int iv)
 	force_redraw = 255;
 }
 
-int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
+int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
@@ -2071,7 +2071,7 @@ int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 	}
 }
 
-int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
+int Player::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
 	static const int MaxStats[enum_size<HeroClass>::value][enum_size<CharacterAttribute>::value] = {
 		// clang-format off
@@ -2087,7 +2087,7 @@ int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 	return MaxStats[static_cast<std::size_t>(_pClass)][static_cast<std::size_t>(attribute)];
 }
 
-Point PlayerStruct::GetTargetPosition() const
+Point Player::GetTargetPosition() const
 {
 	// clang-format off
 	constexpr int DirectionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
@@ -2105,14 +2105,14 @@ Point PlayerStruct::GetTargetPosition() const
 	return target;
 }
 
-void PlayerStruct::Say(HeroSpeech speechId) const
+void Player::Say(HeroSpeech speechId) const
 {
 	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
 	PlaySfxLoc(soundEffect, position.tile);
 }
 
-void PlayerStruct::SaySpecific(HeroSpeech speechId) const
+void Player::SaySpecific(HeroSpeech speechId) const
 {
 	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
@@ -2122,31 +2122,31 @@ void PlayerStruct::SaySpecific(HeroSpeech speechId) const
 	PlaySfxLoc(soundEffect, position.tile, false);
 }
 
-void PlayerStruct::Say(HeroSpeech speechId, int delay) const
+void Player::Say(HeroSpeech speechId, int delay) const
 {
 	sfxdelay = delay;
 	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 }
 
-void PlayerStruct::Stop()
+void Player::Stop()
 {
 	ClrPlrPath(*this);
 	destAction = ACTION_NONE;
 }
 
-bool PlayerStruct::IsWalking() const
+bool Player::IsWalking() const
 {
 	return IsAnyOf(_pmode, PM_WALK, PM_WALK2, PM_WALK3);
 }
 
-void PlayerStruct::Reset()
+void Player::Reset()
 {
-	// Create empty default initialized PlayerStruct on heap to avoid excessive stack usage
-	auto emptyPlayer = std::make_unique<PlayerStruct>();
+	// Create empty default initialized Player on heap to avoid excessive stack usage
+	auto emptyPlayer = std::make_unique<Player>();
 	*this = std::move(*emptyPlayer);
 }
 
-void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
+void LoadPlrGFX(Player &player, player_graphic graphic)
 {
 	char prefix[16];
 	char pszName[256];
@@ -2247,7 +2247,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
-void InitPlayerGFX(PlayerStruct &player)
+void InitPlayerGFX(Player &player)
 {
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
@@ -2263,7 +2263,7 @@ void InitPlayerGFX(PlayerStruct &player)
 	}
 }
 
-void ResetPlayerGFX(PlayerStruct &player)
+void ResetPlayerGFX(Player &player)
 {
 	player.AnimInfo.pCelSprite = nullptr;
 	for (auto &animData : player.AnimationData) {
@@ -2273,7 +2273,7 @@ void ResetPlayerGFX(PlayerStruct &player)
 	}
 }
 
-void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if (player.AnimationData[static_cast<size_t>(graphic)].RawData == nullptr)
 		LoadPlrGFX(player, graphic);
@@ -2287,7 +2287,7 @@ void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int
 	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
 }
 
-void SetPlrAnims(PlayerStruct &player)
+void SetPlrAnims(Player &player)
 {
 	HeroClass pc = player._pClass;
 
@@ -2549,7 +2549,7 @@ void CreatePlayer(int playerId, HeroClass c)
 	SetRndSeed(0);
 }
 
-int CalcStatDiff(PlayerStruct &player)
+int CalcStatDiff(Player &player)
 {
 	int diff = 0;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
@@ -2690,7 +2690,7 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 }
 
-void InitPlayer(PlayerStruct &player, bool firstTime)
+void InitPlayer(Player &player, bool firstTime)
 {
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -2820,7 +2820,7 @@ void PlrDoTrans(Point position)
 	}
 }
 
-void SetPlayerOld(PlayerStruct &player)
+void SetPlayerOld(Player &player)
 {
 	player.position.old = player.position.tile;
 }
@@ -3090,7 +3090,7 @@ StartPlayerKill(int pnum, int earflag)
 	SetPlayerHitPoints(player, 0);
 }
 
-void StripTopGold(PlayerStruct &player)
+void StripTopGold(Player &player)
 {
 	ItemStruct tmpItem = player.HoldItem;
 
@@ -3381,7 +3381,7 @@ void ProcessPlayers()
 	}
 }
 
-void ClrPlrPath(PlayerStruct &player)
+void ClrPlrPath(Player &player)
 {
 	memset(player.walkpath, WALK_NONE, sizeof(player.walkpath));
 }
@@ -3389,12 +3389,12 @@ void ClrPlrPath(PlayerStruct &player)
 /**
  * @brief Determines if the target position is clear for the given player to stand on.
  *
- * This requires an ID instead of a PlayerStruct& to compare with the dPlayer lookup table values.
+ * This requires an ID instead of a Player& to compare with the dPlayer lookup table values.
  *
  * @param position Dungeon tile coordinates.
  * @return False if something (other than the player themselves) is blocking the tile.
  */
-bool PosOkPlayer(const PlayerStruct &player, Point position)
+bool PosOkPlayer(const Player &player, Point position)
 {
 	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
 		return false;
@@ -3424,7 +3424,7 @@ bool PosOkPlayer(const PlayerStruct &player, Point position)
 	return true;
 }
 
-void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace)
+void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 {
 	if (player.position.future == targetPosition) {
 		return;
@@ -3442,7 +3442,7 @@ void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace)
 	player.walkpath[path] = WALK_NONE;
 }
 
-void CalcPlrStaff(PlayerStruct &player)
+void CalcPlrStaff(Player &player)
 {
 	player._pISpells = 0;
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
@@ -3654,7 +3654,7 @@ void SyncInitPlr(int pnum)
 	SyncInitPlrPos(pnum);
 }
 
-void CheckStats(PlayerStruct &player)
+void CheckStats(Player &player)
 {
 	for (auto attribute : enum_values<CharacterAttribute>()) {
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
@@ -3786,7 +3786,7 @@ void ModifyPlrVit(int p, int l)
 	}
 }
 
-void SetPlayerHitPoints(PlayerStruct &player, int val)
+void SetPlayerHitPoints(Player &player, int val)
 {
 	player._pHitPoints = val;
 	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
@@ -3796,13 +3796,13 @@ void SetPlayerHitPoints(PlayerStruct &player, int val)
 	}
 }
 
-void SetPlrStr(PlayerStruct &player, int v)
+void SetPlrStr(Player &player, int v)
 {
 	player._pBaseStr = v;
 	CalcPlrInv(player, true);
 }
 
-void SetPlrMag(PlayerStruct &player, int v)
+void SetPlrMag(Player &player, int v)
 {
 	player._pBaseMag = v;
 
@@ -3818,13 +3818,13 @@ void SetPlrMag(PlayerStruct &player, int v)
 	CalcPlrInv(player, true);
 }
 
-void SetPlrDex(PlayerStruct &player, int v)
+void SetPlrDex(Player &player, int v)
 {
 	player._pBaseDex = v;
 	CalcPlrInv(player, true);
 }
 
-void SetPlrVit(PlayerStruct &player, int v)
+void SetPlrVit(Player &player, int v)
 {
 	player._pBaseVit = v;
 
@@ -3838,7 +3838,7 @@ void SetPlrVit(PlayerStruct &player, int v)
 	CalcPlrInv(player, true);
 }
 
-void InitDungMsgs(PlayerStruct &player)
+void InitDungMsgs(Player &player)
 {
 	player.pDungMsgs = 0;
 	player.pDungMsgs2 = 0;

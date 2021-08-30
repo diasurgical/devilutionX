@@ -79,8 +79,8 @@ struct PkPlayerStruct {
 };
 #pragma pack(pop)
 
-void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashield);
-void UnPackPlayer(const PkPlayerStruct *pPack, PlayerStruct &player, bool netSync);
+void PackPlayer(PkPlayerStruct *pPack, const Player &player, bool manashield);
+void UnPackPlayer(const PkPlayerStruct *pPack, Player &player, bool netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 

@@ -179,7 +179,7 @@ public:
  */
 class EquippedPlayerItemsRange {
 public:
-	explicit EquippedPlayerItemsRange(PlayerStruct &player)
+	explicit EquippedPlayerItemsRange(Player &player)
 	    : player_(&player)
 	{
 	}
@@ -200,7 +200,7 @@ private:
 		return sizeof(player_->InvBody) / sizeof(player_->InvBody[0]);
 	}
 
-	PlayerStruct *player_;
+	Player *player_;
 };
 
 /**
@@ -208,7 +208,7 @@ private:
  */
 class InventoryPlayerItemsRange {
 public:
-	explicit InventoryPlayerItemsRange(PlayerStruct &player)
+	explicit InventoryPlayerItemsRange(Player &player)
 	    : player_(&player)
 	{
 	}
@@ -229,7 +229,7 @@ private:
 		return static_cast<std::size_t>(player_->_pNumInv);
 	}
 
-	PlayerStruct *player_;
+	Player *player_;
 };
 
 /**
@@ -237,7 +237,7 @@ private:
  */
 class BeltPlayerItemsRange {
 public:
-	explicit BeltPlayerItemsRange(PlayerStruct &player)
+	explicit BeltPlayerItemsRange(Player &player)
 	    : player_(&player)
 	{
 	}
@@ -258,7 +258,7 @@ private:
 		return sizeof(player_->SpdList) / sizeof(player_->SpdList[0]);
 	}
 
-	PlayerStruct *player_;
+	Player *player_;
 };
 
 /**
@@ -266,7 +266,7 @@ private:
  */
 class PlayerItemsRange {
 public:
-	explicit PlayerItemsRange(PlayerStruct &player)
+	explicit PlayerItemsRange(Player &player)
 	    : player_(&player)
 	{
 	}
@@ -291,7 +291,7 @@ public:
 	}
 
 private:
-	PlayerStruct *player_;
+	Player *player_;
 };
 
 } // namespace devilution

@@ -27,7 +27,7 @@ namespace {
  * @param player The player whose readied spell is to be checked.
  * @return 'true' when the readied spell is currently valid, and 'false' otherwise.
  */
-bool IsReadiedSpellValid(const PlayerStruct &player)
+bool IsReadiedSpellValid(const Player &player)
 {
 	switch (player._pRSplType) {
 	case RSPLTYPE_SKILL:
@@ -51,7 +51,7 @@ bool IsReadiedSpellValid(const PlayerStruct &player)
  * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
  * @param player The player whose readied spell is to be cleared.
  */
-void ClearReadiedSpell(PlayerStruct &player)
+void ClearReadiedSpell(Player &player)
 {
 	if (player._pRSpell != SPL_INVALID) {
 		player._pRSpell = SPL_INVALID;
@@ -109,7 +109,7 @@ void PlacePlayer(int pnum)
 
 } // namespace
 
-int GetManaAmount(PlayerStruct &player, spell_id sn)
+int GetManaAmount(Player &player, spell_id sn)
 {
 	int ma; // mana amount
 
@@ -192,7 +192,7 @@ void UseMana(int id, spell_id sn)
  * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
  * @param player The player whose readied spell is to be checked.
  */
-void EnsureValidReadiedSpell(PlayerStruct &player)
+void EnsureValidReadiedSpell(Player &player)
 {
 	if (!IsReadiedSpellValid(player)) {
 		ClearReadiedSpell(player);

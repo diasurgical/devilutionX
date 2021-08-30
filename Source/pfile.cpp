@@ -189,7 +189,7 @@ void CloseArchive(HANDLE *hsArchive)
 	*hsArchive = nullptr;
 }
 
-void Game2UiPlayer(const PlayerStruct &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
+void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
 	strncpy(heroinfo->name, player._pName, sizeof(heroinfo->name) - 1);
 	heroinfo->name[sizeof(heroinfo->name) - 1] = '\0';
@@ -375,7 +375,7 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 	return true;
 }
 
-void pfile_read_player_from_save(uint32_t saveNum, PlayerStruct &player)
+void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 {
 	HANDLE archive;
 	PkPlayerStruct pkplr;

@@ -214,7 +214,7 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	pPack->_pNumInv = 2;
 }
 
-static void AssertPlayer(PlayerStruct &player)
+static void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(Count8(player._pSplLvl, 64), 23);
 	ASSERT_EQ(Count8(player.InvGrid, NUM_INV_GRID_ELEM), 9);

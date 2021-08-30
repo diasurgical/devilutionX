@@ -31,7 +31,7 @@ struct TownerInit {
 	Point position;
 	Direction dir;
 	void (*init)(TownerStruct &towner, const TownerInit &initData);
-	void (*talk)(PlayerStruct &player, TownerStruct &towner);
+	void (*talk)(Player &player, TownerStruct &towner);
 };
 
 void NewTownerAnim(TownerStruct &towner, byte *pAnim, uint8_t numFrames, int delay)
@@ -290,7 +290,7 @@ void TownerTalk(_speech_id message)
 	InitQTextMsg(message);
 }
 
-void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
+void TalkToBarOwner(Player &player, TownerStruct &barOwner)
 {
 	if (!player._pLvlVisited[0]) {
 		InitQTextMsg(TEXT_INTRO);
@@ -349,7 +349,7 @@ void TalkToBarOwner(PlayerStruct &player, TownerStruct &barOwner)
 	StartStore(STORE_TAVERN);
 }
 
-void TalkToDeadguy(PlayerStruct &player, TownerStruct & /*deadguy*/)
+void TalkToDeadguy(Player &player, TownerStruct & /*deadguy*/)
 {
 	auto &quest = Quests[Q_BUTCHER];
 	if (quest._qactive == QUEST_DONE)
@@ -368,7 +368,7 @@ void TalkToDeadguy(PlayerStruct &player, TownerStruct & /*deadguy*/)
 	NetSendCmdQuest(true, quest);
 }
 
-void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
+void TalkToBlackSmith(Player &player, TownerStruct &blackSmith)
 {
 	if (Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (player._pLvlVisited[4] && Quests[Q_ROCK]._qactive != QUEST_DONE) {
@@ -415,7 +415,7 @@ void TalkToBlackSmith(PlayerStruct &player, TownerStruct &blackSmith)
 	StartStore(STORE_SMITH);
 }
 
-void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
+void TalkToWitch(Player &player, TownerStruct & /*witch*/)
 {
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_FUNGALTM)) {
@@ -461,7 +461,7 @@ void TalkToWitch(PlayerStruct &player, TownerStruct & /*witch*/)
 	StartStore(STORE_WITCH);
 }
 
-void TalkToBarmaid(PlayerStruct &player, TownerStruct & /*barmaid*/)
+void TalkToBarmaid(Player &player, TownerStruct & /*barmaid*/)
 {
 	if (!player._pLvlVisited[21] && player.HasItem(IDI_MAPOFDOOM)) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
@@ -475,13 +475,13 @@ void TalkToBarmaid(PlayerStruct &player, TownerStruct & /*barmaid*/)
 	StartStore(STORE_BARMAID);
 }
 
-void TalkToDrunk(PlayerStruct & /*player*/, TownerStruct & /*drunk*/)
+void TalkToDrunk(Player & /*player*/, TownerStruct & /*drunk*/)
 {
 	TownerTalk(TEXT_FARNHAM1);
 	StartStore(STORE_DRUNK);
 }
 
-void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
+void TalkToHealer(Player &player, TownerStruct &healer)
 {
 	if (Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
 		if ((player._pLvlVisited[1] || player._pLvlVisited[5]) && Quests[Q_PWATER]._qactive == QUEST_INIT) {
@@ -512,13 +512,13 @@ void TalkToHealer(PlayerStruct &player, TownerStruct &healer)
 	StartStore(STORE_HEALER);
 }
 
-void TalkToBoy(PlayerStruct & /*player*/, TownerStruct & /*boy*/)
+void TalkToBoy(Player & /*player*/, TownerStruct & /*boy*/)
 {
 	TownerTalk(TEXT_WIRT1);
 	StartStore(STORE_BOY);
 }
 
-void TalkToStoryteller(PlayerStruct &player, TownerStruct & /*storyteller*/)
+void TalkToStoryteller(Player &player, TownerStruct & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
 	if (!gbIsMultiplayer) {
@@ -553,7 +553,7 @@ void TalkToStoryteller(PlayerStruct &player, TownerStruct & /*storyteller*/)
 	StartStore(STORE_STORY);
 }
 
-void TalkToCow(PlayerStruct &player, TownerStruct &cow)
+void TalkToCow(Player &player, TownerStruct &cow)
 {
 	if (CowPlaying != SFX_NONE && effect_is_playing(CowPlaying))
 		return;
@@ -583,7 +583,7 @@ void TalkToCow(PlayerStruct &player, TownerStruct &cow)
 	PlaySfxLoc(CowPlaying, cow.position);
 }
 
-void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
+void TalkToFarmer(Player &player, TownerStruct &farmer)
 {
 	auto &quest = Quests[Q_FARMER];
 	switch (quest._qactive) {
@@ -640,7 +640,7 @@ void TalkToFarmer(PlayerStruct &player, TownerStruct &farmer)
 	}
 }
 
-void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
+void TalkToCowFarmer(Player &player, TownerStruct &cowFarmer)
 {
 	if (player.TryRemoveInvItemById(IDI_GREYSUIT)) {
 		InitQTextMsg(TEXT_JERSEY7);
@@ -727,7 +727,7 @@ void TalkToCowFarmer(PlayerStruct &player, TownerStruct &cowFarmer)
 	}
 }
 
-void TalkToGirl(PlayerStruct &player, TownerStruct &girl)
+void TalkToGirl(Player &player, TownerStruct &girl)
 {
 	auto &quest = Quests[Q_GIRL];
 
@@ -879,7 +879,7 @@ void ProcessTowners()
 	}
 }
 
-void TalkToTowner(PlayerStruct &player, int t)
+void TalkToTowner(Player &player, int t)
 {
 	auto &towner = Towners[t];
 

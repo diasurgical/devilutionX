@@ -459,7 +459,7 @@ void SpawnNote()
 	SpawnQuestItem(id, position, 0, 1);
 }
 
-void CalcSelfItems(PlayerStruct &player)
+void CalcSelfItems(Player &player)
 {
 	int sa = 0;
 	int ma = 0;
@@ -503,7 +503,7 @@ void CalcSelfItems(PlayerStruct &player)
 	} while (changeflag);
 }
 
-bool ItemMinStats(const PlayerStruct &player, ItemStruct &x)
+bool ItemMinStats(const Player &player, ItemStruct &x)
 {
 	if (player._pMagic < x._iMinMag)
 		return false;
@@ -517,7 +517,7 @@ bool ItemMinStats(const PlayerStruct &player, ItemStruct &x)
 	return true;
 }
 
-void CalcPlrItemMin(PlayerStruct &player)
+void CalcPlrItemMin(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto &item = player.InvList[i];
@@ -561,7 +561,7 @@ bool StoreStatOk(ItemStruct &item)
 	return true;
 }
 
-void CalcPlrBookVals(PlayerStruct &player)
+void CalcPlrBookVals(Player &player)
 {
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
@@ -1783,7 +1783,7 @@ void RechargeItem(ItemStruct &item, int r)
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
 }
 
-bool ApplyOilToItem(ItemStruct &item, PlayerStruct &player)
+bool ApplyOilToItem(ItemStruct &item, Player &player)
 {
 	int r;
 
@@ -2625,7 +2625,7 @@ void InitItems()
 	initItemGetRecords();
 }
 
-void CalcPlrItemVals(PlayerStruct &player, bool loadgfx)
+void CalcPlrItemVals(Player &player, bool loadgfx)
 {
 	int mind = 0; // min damage
 	int maxd = 0; // max damage
@@ -2986,7 +2986,7 @@ void CalcPlrItemVals(PlayerStruct &player, bool loadgfx)
 	drawhpflag = true;
 }
 
-void CalcPlrInv(PlayerStruct &player, bool loadgfx)
+void CalcPlrInv(Player &player, bool loadgfx)
 {
 	CalcPlrItemMin(player);
 	CalcSelfItems(player);
@@ -3045,7 +3045,7 @@ void GetPlrHandSeed(ItemStruct *h)
 	h->_iSeed = AdvanceRndSeed();
 }
 
-void SetGoldSeed(PlayerStruct &player, ItemStruct &gold)
+void SetGoldSeed(Player &player, ItemStruct &gold)
 {
 	int s = 0;
 
@@ -3762,7 +3762,7 @@ void GetItemStr(ItemStruct &item)
 	}
 }
 
-void CheckIdentify(PlayerStruct &player, int cii)
+void CheckIdentify(Player &player, int cii)
 {
 	ItemStruct *pi;
 
@@ -3778,7 +3778,7 @@ void CheckIdentify(PlayerStruct &player, int cii)
 		NewCursor(CURSOR_HAND);
 }
 
-void DoRepair(PlayerStruct &player, int cii)
+void DoRepair(Player &player, int cii)
 {
 	ItemStruct *pi;
 
@@ -3797,7 +3797,7 @@ void DoRepair(PlayerStruct &player, int cii)
 		NewCursor(CURSOR_HAND);
 }
 
-void DoRecharge(PlayerStruct &player, int cii)
+void DoRecharge(Player &player, int cii)
 {
 	ItemStruct *pi;
 
@@ -3817,7 +3817,7 @@ void DoRecharge(PlayerStruct &player, int cii)
 		NewCursor(CURSOR_HAND);
 }
 
-void DoOil(PlayerStruct &player, int cii)
+void DoOil(Player &player, int cii)
 {
 	ItemStruct *pi;
 	if (cii >= NUM_INVLOC) {
