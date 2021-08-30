@@ -35,7 +35,7 @@ void VerifyGoldSeeds(Player &player)
 
 } // namespace
 
-void PackItem(PkItemStruct *id, const Item *is)
+void PackItem(ItemPack *id, const Item *is)
 {
 	memset(id, 0, sizeof(*id));
 	if (is->isEmpty()) {
@@ -137,14 +137,14 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 }
 
 /**
- * Expand a PkItemStruct in to a Item
+ * Expand a ItemPack in to a Item
  *
  * Note: last slot of item[MAXITEMS+1] used as temporary buffer
  * find real name reference below, possibly [sizeof(item[])/sizeof(Item)]
  * @param is The source packed item
  * @param id The distination item
  */
-void UnPackItem(const PkItemStruct *is, Item *id, bool isHellfire)
+void UnPackItem(const ItemPack *is, Item *id, bool isHellfire)
 {
 	auto &item = Items[MAXITEMS];
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(is->idx));

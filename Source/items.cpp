@@ -3557,10 +3557,10 @@ void CornerstoneSave()
 	if (!CornerStone.activated)
 		return;
 	if (!CornerStone.item.isEmpty()) {
-		PkItemStruct id;
+		ItemPack id;
 		PackItem(&id, &CornerStone.item);
 		const auto *buffer = reinterpret_cast<char *>(&id);
-		for (size_t i = 0; i < sizeof(PkItemStruct); i++) {
+		for (size_t i = 0; i < sizeof(ItemPack); i++) {
 			sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
 		}
 	} else {
@@ -3570,7 +3570,7 @@ void CornerstoneSave()
 
 void CornerstoneLoad(Point position)
 {
-	PkItemStruct pkSItem;
+	ItemPack pkSItem;
 
 	if (CornerStone.activated || position.x == 0 || position.y == 0) {
 		return;
@@ -3589,10 +3589,10 @@ void CornerstoneLoad(Point position)
 		dItem[position.x][position.y] = 0;
 	}
 
-	if (strlen(sgOptions.Hellfire.szItem) < sizeof(PkItemStruct) * 2)
+	if (strlen(sgOptions.Hellfire.szItem) < sizeof(ItemPack) * 2)
 		return;
 
-	Hex2bin(sgOptions.Hellfire.szItem, sizeof(PkItemStruct), reinterpret_cast<uint8_t *>(&pkSItem));
+	Hex2bin(sgOptions.Hellfire.szItem, sizeof(ItemPack), reinterpret_cast<uint8_t *>(&pkSItem));
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];

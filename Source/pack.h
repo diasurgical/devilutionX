@@ -14,7 +14,7 @@
 namespace devilution {
 
 #pragma pack(push, 1)
-struct PkItemStruct {
+struct ItemPack {
 	uint32_t iSeed;
 	uint16_t iCreateInfo;
 	uint16_t idx;
@@ -54,11 +54,11 @@ struct PlayerPack {
 	int32_t pMaxManaBase;
 	int8_t pSplLvl[37]; // Should be MAX_SPELLS but set to 37 to make save games compatible
 	uint64_t pMemSpells;
-	PkItemStruct InvBody[NUM_INVLOC];
-	PkItemStruct InvList[NUM_INV_GRID_ELEM];
+	ItemPack InvBody[NUM_INVLOC];
+	ItemPack InvList[NUM_INV_GRID_ELEM];
 	int8_t InvGrid[NUM_INV_GRID_ELEM];
 	uint8_t _pNumInv;
-	PkItemStruct SpdList[MAXBELTITEMS];
+	ItemPack SpdList[MAXBELTITEMS];
 	int8_t pTownWarps;
 	int8_t pDungMsgs;
 	int8_t pLvlLoad;
@@ -81,7 +81,7 @@ struct PlayerPack {
 
 void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
 void UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
-void PackItem(PkItemStruct *id, const Item *is);
-void UnPackItem(const PkItemStruct *is, Item *id, bool isHellfire);
+void PackItem(ItemPack *id, const Item *is);
+void UnPackItem(const ItemPack *is, Item *id, bool isHellfire);
 
 } // namespace devilution
