@@ -39,8 +39,11 @@ struct PanelEntry {
 	int labelSpacing;
 	int statSpacing;
 	bool centered;
-	// must be set to true for stat boxes or they don't line up with the "spend stat" button
-	bool high;                                     // if the box should be using the 27px version or 26px
+	/**
+	 * Toggles whether the box should be using the 27px version or 26px.
+	 * Must be set to true for stat boxes or they don't line up with the "spend stat" button
+	 */
+	bool high;                                     
 	std::function<ColorAndText()> statDisplayFunc; // function responsible for displaying stat
 };
 
