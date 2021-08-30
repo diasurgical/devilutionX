@@ -86,15 +86,11 @@ int lineSpacing;
 int act2finSpacing;
 
 /**
- * Specifies a delta in X-coordinates from the quest entrance for
+ * Specifies a displacement from the quest entrance for
  * which the hover text of the cursor will be visible.
  */
-char questxoff[7] = { 0, -1, 0, -1, -2, -1, -2 };
-/**
- * Specifies a delta in Y-coordinates from the quest entrance for
- * which the hover text of the cursor will be visible.
- */
-char questyoff[7] = { 0, 0, -1, -1, -1, -2, -2 };
+Displacement questEntranceOffsets[7] = { { 0, 0 }, { -1, 0 }, { 0, -1 }, { -1, -1 }, { -2, -1 }, { -1, -2 }, { -2, -2 } };
+
 const char *const QuestTriggerNames[5] = {
 	N_(/* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
 	N_(/* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
@@ -456,7 +452,7 @@ bool ForceQuests()
 			int ql = quest._qslvl - 1;
 
 			for (int j = 0; j < 7; j++) {
-				if (quest.position + Displacement { questxoff[j], questyoff[j] } == cursPosition) {
+				if (quest.position + questEntranceOffsets[j] == cursPosition) {
 					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
 					cursPosition = quest.position;
 					return true;
