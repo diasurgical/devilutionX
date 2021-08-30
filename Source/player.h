@@ -161,10 +161,10 @@ struct PlayerAnimationData {
 	std::unique_ptr<byte[]> RawData;
 };
 
-struct PlayerStruct {
-	PlayerStruct() = default;
-	PlayerStruct(PlayerStruct &&) noexcept = default;
-	PlayerStruct &operator=(PlayerStruct &&) noexcept = default;
+struct Player {
+	Player() = default;
+	Player(Player &&) noexcept = default;
+	Player &operator=(Player &&) noexcept = default;
 
 	PLR_MODE _pmode;
 	int8_t walkpath[MAX_PATH_LENGTH];
@@ -392,7 +392,7 @@ struct PlayerStruct {
 	bool IsWalking() const;
 
 	/**
-	 * @brief Resets all Data of the current PlayerStruct
+	 * @brief Resets all Data of the current Player
 	 */
 	void Reset();
 
@@ -569,13 +569,13 @@ struct PlayerStruct {
 };
 
 extern int MyPlayerId;
-extern PlayerStruct Players[MAX_PLRS];
+extern Player Players[MAX_PLRS];
 extern bool MyPlayerIsDead;
 extern int BlockBonuses[enum_size<HeroClass>::value];
 
-void LoadPlrGFX(PlayerStruct &player, player_graphic graphic);
-void InitPlayerGFX(PlayerStruct &player);
-void ResetPlayerGFX(PlayerStruct &player);
+void LoadPlrGFX(Player &player, player_graphic graphic);
+void InitPlayerGFX(Player &player);
+void ResetPlayerGFX(Player &player);
 
 /**
  * @brief Sets the new Player Animation with all relevant information for rendering
@@ -587,21 +587,21 @@ void ResetPlayerGFX(PlayerStruct &player);
  * @param numSkippedFrames Number of Frames that will be skipped (for example with modifier "faster attack")
  * @param distributeFramesBeforeFrame Distribute the numSkippedFrames only before this frame
  */
-void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
-void SetPlrAnims(PlayerStruct &player);
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags = AnimationDistributionFlags::None, int numSkippedFrames = 0, int distributeFramesBeforeFrame = 0);
+void SetPlrAnims(Player &player);
 void CreatePlayer(int playerId, HeroClass c);
-int CalcStatDiff(PlayerStruct &player);
+int CalcStatDiff(Player &player);
 #ifdef _DEBUG
 void NextPlrLevel(int pnum);
 #endif
 void AddPlrExperience(int pnum, int lvl, int exp);
 void AddPlrMonstExper(int lvl, int exp, char pmask);
 void ApplyPlrDamage(int pnum, int dam, int minHP = 0, int frac = 0, int earflag = 0);
-void InitPlayer(PlayerStruct &player, bool FirstTime);
+void InitPlayer(Player &player, bool FirstTime);
 void InitMultiView();
 void PlrClrTrans(Point position);
 void PlrDoTrans(Point position);
-void SetPlayerOld(PlayerStruct &player);
+void SetPlayerOld(Player &player);
 void FixPlayerLocation(int pnum, Direction bDir);
 void StartStand(int pnum, Direction dir);
 void StartPlrBlock(int pnum, Direction dir);
@@ -609,32 +609,32 @@ void FixPlrWalkTags(int pnum);
 void RemovePlrFromMap(int pnum);
 void StartPlrHit(int pnum, int dam, bool forcehit);
 void StartPlayerKill(int pnum, int earflag);
-void StripTopGold(PlayerStruct &player);
+void StripTopGold(Player &player);
 void SyncPlrKill(int pnum, int earflag);
 void RemovePlrMissiles(int pnum);
 void StartNewLvl(int pnum, interface_mode fom, int lvl);
 void RestartTownLvl(int pnum);
 void StartWarpLvl(int pnum, int pidx);
 void ProcessPlayers();
-void ClrPlrPath(PlayerStruct &player);
-bool PosOkPlayer(const PlayerStruct &player, Point position);
-void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace);
-void CalcPlrStaff(PlayerStruct &player);
+void ClrPlrPath(Player &player);
+bool PosOkPlayer(const Player &player, Point position);
+void MakePlrPath(Player &player, Point targetPosition, bool endspace);
+void CalcPlrStaff(Player &player);
 void CheckPlrSpell();
 void SyncPlrAnim(int pnum);
 void SyncInitPlrPos(int pnum);
 void SyncInitPlr(int pnum);
-void CheckStats(PlayerStruct &player);
+void CheckStats(Player &player);
 void ModifyPlrStr(int p, int l);
 void ModifyPlrMag(int p, int l);
 void ModifyPlrDex(int p, int l);
 void ModifyPlrVit(int p, int l);
-void SetPlayerHitPoints(PlayerStruct &player, int val);
-void SetPlrStr(PlayerStruct &player, int v);
-void SetPlrMag(PlayerStruct &player, int v);
-void SetPlrDex(PlayerStruct &player, int v);
-void SetPlrVit(PlayerStruct &player, int v);
-void InitDungMsgs(PlayerStruct &player);
+void SetPlayerHitPoints(Player &player, int val);
+void SetPlrStr(Player &player, int v);
+void SetPlrMag(Player &player, int v);
+void SetPlrDex(Player &player, int v);
+void SetPlrVit(Player &player, int v);
+void InitDungMsgs(Player &player);
 void PlayDungMsgs();
 
 /* data */

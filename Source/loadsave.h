@@ -19,15 +19,15 @@ _item_indexes RemapItemIdxFromSpawn(_item_indexes i);
 _item_indexes RemapItemIdxToSpawn(_item_indexes i);
 bool IsHeaderValid(uint32_t magicNumber);
 void LoadHotkeys();
-void LoadHeroItems(PlayerStruct &player);
+void LoadHeroItems(Player &player);
 /**
  * @brief Remove invalid inventory items from the inventory grid
  * @param pnum The id of the player
  */
-void RemoveEmptyInventory(PlayerStruct &player);
+void RemoveEmptyInventory(Player &player);
 void LoadGame(bool firstflag);
 void SaveHotkeys();
-void SaveHeroItems(PlayerStruct &player);
+void SaveHeroItems(Player &player);
 void SaveGameData();
 void SaveGame();
 void SaveLevel();

@@ -16,10 +16,10 @@ enum class SpellCheckResult : uint8_t {
 	Fail_Busy,
 };
 
-int GetManaAmount(PlayerStruct &player, spell_id sn);
+int GetManaAmount(Player &player, spell_id sn);
 void UseMana(int id, spell_id sn);
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
-void EnsureValidReadiedSpell(PlayerStruct &player);
+void EnsureValidReadiedSpell(Player &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
 void DoResurrect(int pnum, uint16_t rid);
 void DoHealOther(int pnum, uint16_t rid);

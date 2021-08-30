@@ -15,7 +15,7 @@ namespace devilution {
 
 namespace {
 
-void VerifyGoldSeeds(PlayerStruct &player)
+void VerifyGoldSeeds(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (player.InvList[i].IDidx != IDI_GOLD)
@@ -74,7 +74,7 @@ void PackItem(PkItemStruct *id, const ItemStruct *is)
 	}
 }
 
-void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashield)
+void PackPlayer(PkPlayerStruct *pPack, const Player &player, bool manashield)
 {
 	memset(pPack, 0, sizeof(*pPack));
 	pPack->destAction = player.destAction;
@@ -197,7 +197,7 @@ void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire)
 	*id = item;
 }
 
-void UnPackPlayer(const PkPlayerStruct *pPack, PlayerStruct &player, bool netSync)
+void UnPackPlayer(const PkPlayerStruct *pPack, Player &player, bool netSync)
 {
 	player.position.tile = { pPack->px, pPack->py };
 	player.position.future = { pPack->px, pPack->py };

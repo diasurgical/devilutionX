@@ -437,7 +437,7 @@ void PrintInfo(const Surface &out)
 	}
 }
 
-int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, CharacterAttribute attribute)
+int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
 {
 	int pointsToReachCap = player.GetMaximumAttributeValue(attribute) - player.GetBaseAttributeValue(attribute);
 
@@ -510,7 +510,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 	return st;
 }
 
-void ControlSetGoldCurs(PlayerStruct &player)
+void ControlSetGoldCurs(Player &player)
 {
 	SetPlrHandGoldCurs(player.HoldItem);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -571,7 +571,7 @@ void ControlUpDown(int v)
 	}
 }
 
-void RemoveGold(PlayerStruct &player, int goldIndex)
+void RemoveGold(Player &player, int goldIndex)
 {
 	int gi = goldIndex - INVITEM_INV_FIRST;
 	player.InvList[gi]._ivalue -= dropGoldValue;

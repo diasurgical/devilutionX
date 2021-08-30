@@ -2134,7 +2134,7 @@ void DrunkEnter()
 	}
 }
 
-int TakeGold(PlayerStruct &player, int cost, bool skipMaxPiles)
+int TakeGold(Player &player, int cost, bool skipMaxPiles)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto &item = player.InvList[i];

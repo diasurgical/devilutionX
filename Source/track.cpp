@@ -16,7 +16,7 @@ namespace devilution {
 
 namespace {
 
-void RepeatWalk(PlayerStruct &player)
+void RepeatWalk(Player &player)
 {
 	if (cursmx < 0 || cursmx >= MAXDUNX - 1 || cursmy < 0 || cursmy >= MAXDUNY - 1)
 		return;

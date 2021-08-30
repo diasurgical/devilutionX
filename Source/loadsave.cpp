@@ -304,7 +304,7 @@ void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
 	}
 }
 
-void LoadPlayer(LoadHelper *file, PlayerStruct &player)
+void LoadPlayer(LoadHelper *file, Player &player)
 {
 	player._pmode = static_cast<PLR_MODE>(file->NextLE<int32_t>());
 
@@ -969,7 +969,7 @@ void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
 	}
 }
 
-void SavePlayer(SaveHelper *file, PlayerStruct &player)
+void SavePlayer(SaveHelper *file, Player &player)
 {
 	file->WriteLE<int32_t>(player._pmode);
 	for (int8_t step : player.walkpath)
@@ -1619,7 +1619,7 @@ void SaveHotkeys()
 	file.WriteLE<uint8_t>(myPlayer._pRSplType);
 }
 
-void LoadHeroItems(PlayerStruct &player)
+void LoadHeroItems(Player &player)
 {
 	LoadHelper file("heroitems");
 	if (!file.IsValid())
@@ -1634,7 +1634,7 @@ void LoadHeroItems(PlayerStruct &player)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void RemoveEmptyInventory(PlayerStruct &player)
+void RemoveEmptyInventory(Player &player)
 {
 	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
 		int8_t idx = player.InvGrid[i - 1];
@@ -1853,7 +1853,7 @@ void LoadGame(bool firstflag)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void SaveHeroItems(PlayerStruct &player)
+void SaveHeroItems(Player &player)
 {
 	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
 	SaveHelper file("heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
