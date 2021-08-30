@@ -8,12 +8,9 @@
 #include "effects.h"
 #include "engine/demomode.h"
 #include "hwcursor.hpp"
+#include "sound.h"
 #include "storm/storm_svid.h"
 #include "utils/display.h"
-
-#ifndef NOSOUND
-#include "sound.h"
-#endif
 
 namespace devilution {
 
@@ -34,11 +31,9 @@ void play_movie(const char *pszMovie, bool userCanClose)
 
 	movie_playing = true;
 
-#ifndef NOSOUND
 	sound_disable_music(true);
 	stream_stop();
 	effects_play_sound("Sfx\\Misc\\blank.wav");
-#endif
 
 	if (IsHardwareCursorEnabled()) {
 		SetHardwareCursorVisible(false);
@@ -66,9 +61,7 @@ void play_movie(const char *pszMovie, bool userCanClose)
 		SVidPlayEnd();
 	}
 
-#ifndef NOSOUND
 	sound_disable_music(false);
-#endif
 
 	movie_playing = false;
 

@@ -4749,7 +4749,6 @@ void PlayEffect(MonsterStruct &monster, int mode)
 	}
 
 	int sndIdx = GenerateRnd(2);
-#ifndef NOSOUND
 	if (!gbSndInited || !gbSoundOn || gbBufferMsgs != 0) {
 		return;
 	}
@@ -4766,7 +4765,6 @@ void PlayEffect(MonsterStruct &monster, int mode)
 		return;
 
 	snd_play_snd(snd, lVolume, lPan);
-#endif
 }
 
 void MissToMonst(int i, Point position)
