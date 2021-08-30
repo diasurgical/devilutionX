@@ -10,7 +10,7 @@
 namespace devilution {
 
 /** Contains the data related to each item ID. */
-ItemDataStruct AllItemsList[] = {
+ItemData AllItemsList[] = {
 	// clang-format off
 //_item_indexes        iRnd,          iClass,        iLoc,             iCurs,                             itype,        iItemId,            iName,                             iSName,     iMinMLvl, iDurability, iMinDam, iMaxDam, iMinAC, iMaxAC, iMinStr, iMinMag, iMinDex, iFlags,            iMiscId,         iSpell,          iUsable, iValue
 /*IDI_GOLD       */ {  IDROP_REGULAR, ICLASS_GOLD,   ILOC_UNEQUIPABLE, ICURS_GOLD,                        ITYPE_GOLD,   UITYPE_NONE,        N_("Gold"),                        nullptr,           1,           0,       0,       0,      0,      0,       0,       0,       0, ISPL_NONE,         IMISC_NONE,      SPL_NULL,        true,         0 },
