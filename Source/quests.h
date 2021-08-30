@@ -44,7 +44,7 @@ enum quest_state : uint8_t {
 	QUEST_INVALID = 0xFF,
 };
 
-struct QuestStruct {
+struct Quest {
 	quest_id _qidx;
 	quest_state _qactive;
 	uint8_t _qlevel;
@@ -73,7 +73,7 @@ struct QuestDataStruct {
 
 extern bool QuestLogIsOpen;
 extern std::optional<CelSprite> pQLogCel;
-extern QuestStruct Quests[MAXQUESTS];
+extern Quest Quests[MAXQUESTS];
 extern int ReturnLvlX;
 extern int ReturnLvlY;
 extern dungeon_type ReturnLevelType;
@@ -86,7 +86,7 @@ void InitQuests();
  * @param seed The seed used to control which quests are deactivated
  * @param quests The available quest list, this function will make some of them inactive by the time it returns
 */
-void InitialiseQuestPools(uint32_t seed, QuestStruct quests[]);
+void InitialiseQuestPools(uint32_t seed, Quest quests[]);
 void CheckQuests();
 bool ForceQuests();
 void CheckQuestKill(const Monster &monster, bool sendmsg);
