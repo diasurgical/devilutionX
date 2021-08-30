@@ -1025,7 +1025,6 @@ Direction16 GetDirection16(Point p1, Point p2)
 
 void DeleteMissile(int mi, int i)
 {
-	auto &missile = Missiles[mi];
 	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = mi;
 	ActiveMissileCount--;
 	if (ActiveMissileCount > 0 && i != ActiveMissileCount)
