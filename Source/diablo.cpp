@@ -53,6 +53,7 @@
 #include "qol/itemlabels.h"
 #include "restrict.h"
 #include "setmaps.h"
+#include "sound.h"
 #include "stores.h"
 #include "storm/storm.h"
 #include "themes.h"
@@ -64,9 +65,6 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 
-#ifndef NOSOUND
-#include "sound.h"
-#endif
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 #include <gperftools/heap-profiler.h>
 #endif
@@ -963,10 +961,8 @@ void DiabloInit()
 
 	DiabloInitScreen();
 
-#ifndef NOSOUND
 	snd_init();
 	was_snd_init = true;
-#endif
 
 	ui_sound_init();
 
@@ -1001,9 +997,7 @@ void DiabloDeinit()
 		SaveOptions();
 	if (was_snd_init)
 		effects_cleanup_sfx();
-#ifndef NOSOUND
 	snd_deinit();
-#endif
 	if (was_ui_init)
 		UiDestroy();
 	if (was_archives_init)
@@ -1700,9 +1694,7 @@ void diablo_focus_pause()
 		LastMouseButtonAction = MouseActionType::None;
 	}
 
-#ifndef NOSOUND
 	music_mute();
-#endif
 
 	MinimizePaused = true;
 }
@@ -1717,9 +1709,7 @@ void diablo_focus_unpause()
 		PauseMode = 0;
 	}
 
-#ifndef NOSOUND
 	music_unmute();
-#endif
 
 	MinimizePaused = false;
 }
@@ -2049,9 +2039,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		music_start(leveltype);
 
 	if (MinimizePaused) {
-#ifndef NOSOUND
 		music_mute();
-#endif
 	}
 
 	while (!IncProgress())

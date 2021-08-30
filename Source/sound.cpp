@@ -184,13 +184,11 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 	return snd;
 }
 
-#ifndef NOSOUND
 TSnd::~TSnd()
 {
 	DSB.Stop();
 	DSB.Release();
 }
-#endif
 
 void snd_init()
 {
