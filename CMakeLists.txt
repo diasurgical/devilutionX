@@ -290,7 +290,10 @@ add_library(smacker STATIC
   3rdParty/libsmacker/smacker.c)
 target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
+if(WIN32)
 add_subdirectory(3rdParty/find_steam_game)
+endif()
+
 add_subdirectory(3rdParty/simpleini)
 
 add_library(StormLib STATIC
