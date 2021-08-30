@@ -314,16 +314,6 @@ bool CanEquip(Player &player, const Item &item, inv_body_loc bodyLocation)
 	}
 }
 
-/**
- * @brief Automatically attempts to equip the specified item in a specific location in the player's body.
- * @note On success, this will broadcast an equipment_change event to let other players know about the equipment change.
- * @param playerId The player number whose inventory will be checked for compatibility with the item.
- * @param item The item to equip.
- * @param bodyLocation The location in the inventory where the item should be equipped.
- * @param persistItem Indicates whether or not the item should be persisted in the player's body. Pass 'False' to check
- * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
- * @return 'True' if the item was equipped and 'False' otherwise.
- */
 bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool persistItem)
 {
 	auto &player = Players[playerId];
