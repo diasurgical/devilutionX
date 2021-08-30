@@ -91,7 +91,7 @@ void CelDrawLightRedTo(const Surface &out, Point position, const CelSprite &cel,
  * @param cel CEL sprite
  * @param frame CEL frame number
  */
-void CelDrawItem(const ItemStruct &item, const Surface &out, Point position, const CelSprite &cel, int frame);
+void CelDrawItem(const Item &item, const Surface &out, Point position, const CelSprite &cel, int frame);
 
 /**
  * @brief Blit a solid colder shape one pixel larger than the given sprite shape, to the target buffer at the given coordianates

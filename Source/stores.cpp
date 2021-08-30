@@ -22,7 +22,7 @@
 
 namespace devilution {
 
-ItemStruct golditem;
+Item golditem;
 
 std::optional<CelSprite> pSTextBoxCels;
 std::optional<CelSprite> pSTextSlidCels;
@@ -31,19 +31,19 @@ talk_id stextflag;
 
 int storenumh;
 char storehidx[48];
-ItemStruct storehold[48];
+Item storehold[48];
 
-ItemStruct smithitem[SMITH_ITEMS];
+Item smithitem[SMITH_ITEMS];
 int numpremium;
 int premiumlevel;
-ItemStruct premiumitems[SMITH_PREMIUM_ITEMS];
+Item premiumitems[SMITH_PREMIUM_ITEMS];
 
-ItemStruct healitem[20];
+Item healitem[20];
 
-ItemStruct witchitem[WITCH_ITEMS];
+Item witchitem[WITCH_ITEMS];
 
 int boylevel;
-ItemStruct boyitem;
+Item boyitem;
 
 namespace {
 
@@ -160,7 +160,7 @@ void AddSText(int x, int y, const char *str, UiFlags flags, bool sel)
 	stext[y]._ssel = sel;
 }
 
-void PrintStoreItem(ItemStruct *x, int l, UiFlags flags)
+void PrintStoreItem(Item *x, int l, UiFlags flags)
 {
 	char sstr[128];
 
@@ -364,7 +364,7 @@ bool StartSmithPremiumBuy()
 
 bool SmithSellOk(int i)
 {
-	ItemStruct *pI;
+	Item *pI;
 
 	if (i >= 0) {
 		pI = &Players[MyPlayerId].InvList[i];
@@ -668,7 +668,7 @@ void StartWitchBuy()
 
 bool WitchSellOk(int i)
 {
-	ItemStruct *pI;
+	Item *pI;
 
 	bool rv = false;
 
@@ -782,7 +782,7 @@ bool WitchRechargeOk(int i)
 	return false;
 }
 
-void AddStoreHoldRecharge(ItemStruct itm, int8_t i)
+void AddStoreHoldRecharge(Item itm, int8_t i)
 {
 	storehold[storenumh] = itm;
 	storehold[storenumh]._ivalue += spelldata[itm._iSpell].sStaffCost;
@@ -1057,7 +1057,7 @@ void StartStoryteller()
 	AddSLine(5);
 }
 
-bool IdItemOk(ItemStruct *i)
+bool IdItemOk(Item *i)
 {
 	if (i->isEmpty()) {
 		return false;
@@ -1068,7 +1068,7 @@ bool IdItemOk(ItemStruct *i)
 	return !i->_iIdentified;
 }
 
-void AddStoreHoldId(ItemStruct itm, int8_t i)
+void AddStoreHoldId(Item itm, int8_t i)
 {
 	storehold[storenumh] = itm;
 	storehold[storenumh]._ivalue = 100;
@@ -2174,9 +2174,9 @@ void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, U
 
 } // namespace
 
-void AddStoreHoldRepair(ItemStruct *itm, int8_t i)
+void AddStoreHoldRepair(Item *itm, int8_t i)
 {
-	ItemStruct *item;
+	Item *item;
 	int v;
 
 	item = &storehold[storenumh];

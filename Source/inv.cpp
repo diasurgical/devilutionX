@@ -181,7 +181,7 @@ void AddItemToInvGrid(Player &player, int invGridIndex, int invListIndex, Size i
  * @param item The item whose size is to be determined.
  * @return The size, in inventory cells, of the item.
  */
-Size GetInventorySize(const ItemStruct &item)
+Size GetInventorySize(const Item &item)
 {
 	int itemSizeIndex = item._iCurs + CURSOR_FIRSTITEM;
 	auto size = GetInvItemSize(itemSizeIndex);
@@ -194,7 +194,7 @@ Size GetInventorySize(const ItemStruct &item)
  * @param item The item to be checked.
  * @return 'True' in case the item can fit a belt slot and 'False' otherwise.
  */
-bool FitsInBeltSlot(const ItemStruct &item)
+bool FitsInBeltSlot(const Item &item)
 {
 	return GetInventorySize(item) == Size { 1, 1 };
 }
@@ -205,7 +205,7 @@ bool FitsInBeltSlot(const ItemStruct &item)
  * @param item The item to be checked.
  * @return 'True' in case the item can be placed on the belt and 'False' otherwise.
  */
-bool CanBePlacedOnBelt(const ItemStruct &item)
+bool CanBePlacedOnBelt(const Item &item)
 {
 	return FitsInBeltSlot(item)
 	    && item._itype != ITYPE_GOLD
@@ -219,27 +219,27 @@ bool CanBePlacedOnBelt(const ItemStruct &item)
  * @param item The item to check.
  * @return 'True' in case the item could be equipped in a player, and 'False' otherwise.
  */
-bool CanEquip(const ItemStruct &item)
+bool CanEquip(const Item &item)
 {
 	return item.isEquipment()
 	    && item._iStatFlag;
 }
 
 /**
- * @brief A specialized version of 'CanEquip(int, ItemStruct&, int)' that specifically checks whether the item can be equipped
+ * @brief A specialized version of 'CanEquip(int, Item&, int)' that specifically checks whether the item can be equipped
  * in one/both of the player's hands.
  * @param player The player whose inventory will be checked for compatibility with the item.
  * @param item The item to check.
  * @return 'True' if the player can currently equip the item in either one of his hands (i.e. the required hands are empty and
  * allow the item), and 'False' otherwise.
  */
-bool CanWield(Player &player, const ItemStruct &item)
+bool CanWield(Player &player, const Item &item)
 {
 	if (!CanEquip(item) || (item._iLoc != ILOC_ONEHAND && item._iLoc != ILOC_TWOHAND))
 		return false;
 
-	ItemStruct &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
-	ItemStruct &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 
 	if (leftHandItem.isEmpty() && rightHandItem.isEmpty()) {
 		return true;
@@ -249,7 +249,7 @@ bool CanWield(Player &player, const ItemStruct &item)
 		return false;
 	}
 
-	ItemStruct &occupiedHand = !leftHandItem.isEmpty() ? leftHandItem : rightHandItem;
+	Item &occupiedHand = !leftHandItem.isEmpty() ? leftHandItem : rightHandItem;
 
 	// Barbarian can wield two handed swords and maces in one hand, so we allow equiping any sword/mace as long as his occupied
 	// hand has a shield (i.e. no dual wielding allowed)
@@ -285,7 +285,7 @@ bool CanWield(Player &player, const ItemStruct &item)
  * @return 'True' if the player can currently equip the item in the specified body location (i.e. the body location is empty and
  * allows the item), and 'False' otherwise.
  */
-bool CanEquip(Player &player, const ItemStruct &item, inv_body_loc bodyLocation)
+bool CanEquip(Player &player, const Item &item, inv_body_loc bodyLocation)
 {
 	if (!CanEquip(item) || player._pmode > PM_WALK3 || !player.InvBody[bodyLocation].isEmpty()) {
 		return false;
@@ -324,7 +324,7 @@ bool CanEquip(Player &player, const ItemStruct &item, inv_body_loc bodyLocation)
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, bool persistItem)
+bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool persistItem)
 {
 	auto &player = Players[playerId];
 
@@ -346,7 +346,7 @@ bool AutoEquip(int playerId, const ItemStruct &item, inv_body_loc bodyLocation, 
 	return true;
 }
 
-int SwapItem(ItemStruct *a, ItemStruct *b)
+int SwapItem(Item *a, Item *b)
 {
 	std::swap(*a, *b);
 
@@ -564,7 +564,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		break;
 	case ILOC_TWOHAND:
 		if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && !player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
-			ItemStruct tempitem = player.HoldItem;
+			Item tempitem = player.HoldItem;
 			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
 				player.HoldItem = player.InvBody[INVLOC_HAND_RIGHT];
 			else
@@ -719,14 +719,14 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		return;
 	}
 
-	ItemStruct &holdItem = player.HoldItem;
+	Item &holdItem = player.HoldItem;
 	holdItem._itype = ITYPE_NONE;
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
 	bool automaticallyUnequip = false;
 
-	ItemStruct &headItem = player.InvBody[INVLOC_HEAD];
+	Item &headItem = player.InvBody[INVLOC_HEAD];
 	if (r >= SLOTXY_HEAD_FIRST && r <= SLOTXY_HEAD_LAST && !headItem.isEmpty()) {
 		holdItem = headItem;
 		if (automaticMove) {
@@ -740,7 +740,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 	}
 
-	ItemStruct &leftRingItem = player.InvBody[INVLOC_RING_LEFT];
+	Item &leftRingItem = player.InvBody[INVLOC_RING_LEFT];
 	if (r == SLOTXY_RING_LEFT && !leftRingItem.isEmpty()) {
 		holdItem = leftRingItem;
 		if (automaticMove) {
@@ -754,7 +754,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 	}
 
-	ItemStruct &rightRingItem = player.InvBody[INVLOC_RING_RIGHT];
+	Item &rightRingItem = player.InvBody[INVLOC_RING_RIGHT];
 	if (r == SLOTXY_RING_RIGHT && !rightRingItem.isEmpty()) {
 		holdItem = rightRingItem;
 		if (automaticMove) {
@@ -768,7 +768,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 	}
 
-	ItemStruct &amuletItem = player.InvBody[INVLOC_AMULET];
+	Item &amuletItem = player.InvBody[INVLOC_AMULET];
 	if (r == SLOTXY_AMULET && !amuletItem.isEmpty()) {
 		holdItem = amuletItem;
 		if (automaticMove) {
@@ -782,7 +782,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 	}
 
-	ItemStruct &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
+	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
 	if (r >= SLOTXY_HAND_LEFT_FIRST && r <= SLOTXY_HAND_LEFT_LAST && !leftHandItem.isEmpty()) {
 		holdItem = leftHandItem;
 		if (automaticMove) {
@@ -796,7 +796,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 	}
 
-	ItemStruct &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
+	Item &rightHandItem = player.InvBody[INVLOC_HAND_RIGHT];
 	if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST && !rightHandItem.isEmpty()) {
 		holdItem = rightHandItem;
 		if (automaticMove) {
@@ -810,7 +810,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 		}
 	}
 
-	ItemStruct &chestItem = player.InvBody[INVLOC_CHEST];
+	Item &chestItem = player.InvBody[INVLOC_CHEST];
 	if (r >= SLOTXY_CHEST_FIRST && r <= SLOTXY_CHEST_LAST && !chestItem.isEmpty()) {
 		holdItem = chestItem;
 		if (automaticMove) {
@@ -846,7 +846,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 	}
 
 	if (r >= SLOTXY_BELT_FIRST) {
-		ItemStruct &beltItem = player.SpdList[r - SLOTXY_BELT_FIRST];
+		Item &beltItem = player.SpdList[r - SLOTXY_BELT_FIRST];
 		if (!beltItem.isEmpty()) {
 			holdItem = beltItem;
 			if (automaticMove) {
@@ -937,7 +937,7 @@ void CheckNaKrulNotes(Player &player)
 	}
 
 	int itemNum = ActiveItems[0];
-	ItemStruct tmp = Items[itemNum];
+	Item tmp = Items[itemNum];
 	memset(&Items[itemNum], 0, sizeof(*Items));
 	GetItemAttrs(Items[itemNum], IDI_FULLNOTE, 16);
 	SetupItem(Items[itemNum]);
@@ -996,7 +996,7 @@ void CheckQuestItem(Player &player)
 	CheckNaKrulNotes(player);
 }
 
-void CleanupItems(ItemStruct *item, int ii)
+void CleanupItems(Item *item, int ii)
 {
 	dItem[item->position.x][item->position.y] = 0;
 
@@ -1059,7 +1059,7 @@ bool PutItem(Player &player, Point &position)
 	return false;
 }
 
-bool CanUseStaff(ItemStruct &staff, spell_id spell)
+bool CanUseStaff(Item &staff, spell_id spell)
 {
 	return !staff.isEmpty()
 	    && (staff._iMiscId == IMISC_STAFF || staff._iMiscId == IMISC_UNIQUE)
@@ -1272,7 +1272,7 @@ void DrawInvBelt(const Surface &out)
  * @param persistItem Pass 'True' to actually place the item in the belt. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's belt and 'False' otherwise.
  */
-bool AutoPlaceItemInBelt(Player &player, const ItemStruct &item, bool persistItem)
+bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem)
 {
 	if (!CanBePlacedOnBelt(item)) {
 		return false;
@@ -1302,7 +1302,7 @@ bool AutoPlaceItemInBelt(Player &player, const ItemStruct &item, bool persistIte
  * whether the player can equip the item but you don't want the item to actually be equipped. 'True' by default.
  * @return 'True' if the item was equipped and 'False' otherwise.
  */
-bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem)
+bool AutoEquip(int playerId, const Item &item, bool persistItem)
 {
 	if (!CanEquip(item)) {
 		return false;
@@ -1323,7 +1323,7 @@ bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem)
  * @param item The item to check.
  * @return 'True' if auto-equipping behavior is enabled for the player and item and 'False' otherwise.
  */
-bool AutoEquipEnabled(const Player &player, const ItemStruct &item)
+bool AutoEquipEnabled(const Player &player, const Item &item)
 {
 	if (item.isWeapon()) {
 		// Monk can use unarmed attack as an encouraged option, thus we do not automatically equip weapons on him so as to not
@@ -1357,7 +1357,7 @@ bool AutoEquipEnabled(const Player &player, const ItemStruct &item)
  * @param persistItem Pass 'True' to actually place the item in the inventory. The default is 'False'.
  * @return 'True' in case the item can be placed on the player's inventory and 'False' otherwise.
  */
-bool AutoPlaceItemInInventory(Player &player, const ItemStruct &item, bool persistItem)
+bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem)
 {
 	Size itemSize = GetInventorySize(item);
 
@@ -1425,7 +1425,7 @@ bool AutoPlaceItemInInventory(Player &player, const ItemStruct &item, bool persi
  * @param persistItem Pass 'True' to actually place the item in the inventory slot. The default is 'False'.
  * @return 'True' in case the item can be placed on the specified player's inventory slot and 'False' otherwise.
  */
-bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const ItemStruct &item, bool persistItem)
+bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem)
 {
 	int yy = (slotIndex > 0) ? (10 * (slotIndex / 10)) : 0;
 
@@ -1577,7 +1577,7 @@ void CheckInvScrn(bool isShiftHeld)
 
 void CheckItemStats(Player &player)
 {
-	ItemStruct &item = player.HoldItem;
+	Item &item = player.HoldItem;
 
 	item._iStatFlag = false;
 
@@ -1588,7 +1588,7 @@ void CheckItemStats(Player &player)
 	}
 }
 
-void InvGetItem(int pnum, ItemStruct *item, int ii)
+void InvGetItem(int pnum, Item *item, int ii)
 {
 	if (dropGoldFlag) {
 		dropGoldFlag = false;
@@ -1617,7 +1617,7 @@ void InvGetItem(int pnum, ItemStruct *item, int ii)
 		NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
 }
 
-void AutoGetItem(int pnum, ItemStruct *item, int ii)
+void AutoGetItem(int pnum, Item *item, int ii)
 {
 	bool done;
 
@@ -1891,7 +1891,7 @@ int8_t CheckInvHLight()
 
 	int8_t rv = -1;
 	InfoColor = UiFlags::ColorSilver;
-	ItemStruct *pi = nullptr;
+	Item *pi = nullptr;
 	auto &myPlayer = Players[MyPlayerId];
 
 	ClearPanel();
@@ -2033,7 +2033,7 @@ bool UseStaff()
 bool UseInvItem(int pnum, int cii)
 {
 	int c;
-	ItemStruct *item;
+	Item *item;
 
 	auto &player = Players[pnum];
 

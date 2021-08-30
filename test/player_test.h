@@ -10,7 +10,7 @@
 
 using namespace devilution;
 
-static int CountItems(ItemStruct *items, int n)
+static int CountItems(Item *items, int n)
 {
 	int count = n;
 	for (int i = 0; i < n; i++)

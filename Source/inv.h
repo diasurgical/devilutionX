@@ -86,7 +86,7 @@ extern const Point InvRect[73];
 /**
  * @brief Function type which performs an operation on the given item.
  */
-using ItemFunc = void (*)(ItemStruct &);
+using ItemFunc = void (*)(Item &);
 
 void FreeInvGFX();
 void InitInv();
@@ -97,11 +97,11 @@ void InitInv();
 void DrawInv(const Surface &out);
 
 void DrawInvBelt(const Surface &out);
-bool AutoEquipEnabled(const Player &player, const ItemStruct &item);
-bool AutoEquip(int playerId, const ItemStruct &item, bool persistItem = true);
-bool AutoPlaceItemInInventory(Player &player, const ItemStruct &item, bool persistItem = false);
-bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const ItemStruct &item, bool persistItem);
-bool AutoPlaceItemInBelt(Player &player, const ItemStruct &item, bool persistItem = false);
+bool AutoEquipEnabled(const Player &player, const Item &item);
+bool AutoEquip(int playerId, const Item &item, bool persistItem = true);
+bool AutoPlaceItemInInventory(Player &player, const Item &item, bool persistItem = false);
+bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &item, bool persistItem);
+bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false);
 bool GoldAutoPlace(Player &player);
 bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex);
 void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
@@ -109,8 +109,8 @@ void inv_update_rem_item(Player &player, BYTE iv);
 void CheckInvItem(bool isShiftHeld = false);
 void CheckInvScrn(bool isShiftHeld);
 void CheckItemStats(Player &player);
-void InvGetItem(int pnum, ItemStruct *item, int ii);
-void AutoGetItem(int pnum, ItemStruct *item, int ii);
+void InvGetItem(int pnum, Item *item, int ii);
+void AutoGetItem(int pnum, Item *item, int ii);
 int FindGetItem(int idx, uint16_t ci, int iseed);
 void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
 bool CanPut(Point position);

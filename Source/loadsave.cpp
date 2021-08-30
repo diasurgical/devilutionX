@@ -207,7 +207,7 @@ public:
 	}
 };
 
-void LoadItemData(LoadHelper *file, ItemStruct *pItem)
+void LoadItemData(LoadHelper *file, Item *pItem)
 {
 	pItem->_iSeed = file->NextLE<int32_t>();
 	pItem->_iCreateInfo = file->NextLE<uint16_t>();
@@ -297,7 +297,7 @@ void LoadItemData(LoadHelper *file, ItemStruct *pItem)
 	RemoveInvalidItem(pItem);
 }
 
-void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
+void LoadItems(LoadHelper *file, const int n, Item *pItem)
 {
 	for (int i = 0; i < n; i++) {
 		LoadItemData(file, &pItem[i]);
@@ -843,9 +843,9 @@ void ConvertLevels()
 	leveltype = tmpLeveltype;
 }
 
-void LoadMatchingItems(LoadHelper *file, const int n, ItemStruct *pItem)
+void LoadMatchingItems(LoadHelper *file, const int n, Item *pItem)
 {
-	ItemStruct tempItem;
+	Item tempItem;
 
 	for (int i = 0; i < n; i++) {
 		LoadItemData(file, &tempItem);
@@ -869,7 +869,7 @@ void RemoveEmptyLevelItems()
 	}
 }
 
-void SaveItem(SaveHelper *file, ItemStruct *pItem)
+void SaveItem(SaveHelper *file, Item *pItem)
 {
 	auto idx = pItem->IDidx;
 	if (!gbIsHellfire)
@@ -962,7 +962,7 @@ void SaveItem(SaveHelper *file, ItemStruct *pItem)
 		file->WriteLE<uint32_t>(pItem->_iDamAcFlags);
 }
 
-void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
+void SaveItems(SaveHelper *file, Item *pItem, const int n)
 {
 	for (int i = 0; i < n; i++) {
 		SaveItem(file, &pItem[i]);
@@ -1438,7 +1438,7 @@ const int HellfireItemSaveSize = 372;
 
 } // namespace
 
-void RemoveInvalidItem(ItemStruct *pItem)
+void RemoveInvalidItem(Item *pItem)
 {
 	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
 

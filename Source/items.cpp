@@ -33,7 +33,7 @@
 namespace devilution {
 
 /** Contains the items on ground in the current game. */
-ItemStruct Items[MAXITEMS + 1];
+Item Items[MAXITEMS + 1];
 int ActiveItems[MAXITEMS];
 int ActiveItemCount;
 int AvailableItems[MAXITEMS];
@@ -128,7 +128,7 @@ enum class PlayerArmorGraphic : uint8_t {
 	// clang-format on
 };
 
-ItemStruct curruitem;
+Item curruitem;
 
 /** Holds item get records, tracking items being recently looted. This is in an effort to prevent items being picked up more than once. */
 ItemGetRecordStruct itemrecord[MAXITEMS];
@@ -503,7 +503,7 @@ void CalcSelfItems(Player &player)
 	} while (changeflag);
 }
 
-bool ItemMinStats(const Player &player, ItemStruct &x)
+bool ItemMinStats(const Player &player, Item &x)
 {
 	if (player._pMagic < x._iMinMag)
 		return false;
@@ -547,7 +547,7 @@ void WitchBookLevel(int ii)
 	}
 }
 
-bool StoreStatOk(ItemStruct &item)
+bool StoreStatOk(Item &item)
 {
 	const auto &myPlayer = Players[MyPlayerId];
 
@@ -588,7 +588,7 @@ void CalcPlrBookVals(Player &player)
 	}
 }
 
-void SetPlrHandSeed(ItemStruct &item, int iseed)
+void SetPlrHandSeed(Item &item, int iseed)
 {
 	item._iSeed = iseed;
 }
@@ -663,7 +663,7 @@ void GetSuperItemSpace(Point position, int8_t inum)
 	}
 }
 
-void CalcItemValue(ItemStruct &item)
+void CalcItemValue(Item &item)
 {
 	int v = item._iVMult1 + item._iVMult2;
 	if (v > 0) {
@@ -676,7 +676,7 @@ void CalcItemValue(ItemStruct &item)
 	item._iIvalue = std::max(v, 1);
 }
 
-void GetBookSpell(ItemStruct &item, int lvl)
+void GetBookSpell(Item &item, int lvl)
 {
 	int rv;
 
@@ -759,7 +759,7 @@ int CalculateToHitBonus(int level)
 	}
 }
 
-int SaveItemPower(ItemStruct &item, const ItemPower &power)
+int SaveItemPower(Item &item, const ItemPower &power)
 {
 	int r = RndPL(power.param1, power.param2);
 
@@ -1130,7 +1130,7 @@ int PLVal(int pv, int p1, int p2, int minv, int maxv)
 	return minv + (maxv - minv) * (100 * (pv - p1) / (p2 - p1)) / 100;
 }
 
-void SaveItemAffix(ItemStruct &item, const PLStruct &affix)
+void SaveItemAffix(Item &item, const PLStruct &affix)
 {
 	auto power = affix.power;
 
@@ -1153,7 +1153,7 @@ void SaveItemAffix(ItemStruct &item, const PLStruct &affix)
 	}
 }
 
-void GetStaffPower(ItemStruct &item, int lvl, int bs, bool onlygood)
+void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 {
 	int preidx = -1;
 	if (GenerateRnd(10) == 0 || onlygood) {
@@ -1196,7 +1196,7 @@ void GetStaffPower(ItemStruct &item, int lvl, int bs, bool onlygood)
 	CalcItemValue(item);
 }
 
-void GetItemPower(ItemStruct &item, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
+void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
 	int l[256];
 	char istr[128];
@@ -1283,7 +1283,7 @@ void GetItemPower(ItemStruct &item, int minlvl, int maxlvl, affix_item_type flgs
 		CalcItemValue(item);
 }
 
-void GetStaffSpell(ItemStruct &item, int lvl, bool onlygood)
+void GetStaffSpell(Item &item, int lvl, bool onlygood)
 {
 	if (!gbIsHellfire && GenerateRnd(4) == 0) {
 		GetItemPower(item, lvl / 2, lvl, PLT_STAFF, onlygood);
@@ -1336,7 +1336,7 @@ void GetStaffSpell(ItemStruct &item, int lvl, bool onlygood)
 	GetStaffPower(item, lvl, bs, onlygood);
 }
 
-void GetOilType(ItemStruct &item, int maxLvl)
+void GetOilType(Item &item, int maxLvl)
 {
 	int cnt = 2;
 	int8_t rnd[32] = { 5, 6 };
@@ -1363,7 +1363,7 @@ void GetOilType(ItemStruct &item, int maxLvl)
 	item._iIvalue = OilValues[t];
 }
 
-void GetItemBonus(ItemStruct &item, int minlvl, int maxlvl, bool onlygood, bool allowspells)
+void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allowspells)
 {
 	if (minlvl > 25)
 		minlvl = 25;
@@ -1498,7 +1498,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 	return ril[GenerateRnd(ri)];
 }
 
-_unique_items CheckUnique(ItemStruct &item, int lvl, int uper, bool recreate)
+_unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 {
 	std::bitset<128> uok = {};
 
@@ -1532,7 +1532,7 @@ _unique_items CheckUnique(ItemStruct &item, int lvl, int uper, bool recreate)
 	return (_unique_items)itemData;
 }
 
-void GetUniqueItem(ItemStruct &item, _unique_items uid)
+void GetUniqueItem(Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
@@ -1553,13 +1553,13 @@ void GetUniqueItem(ItemStruct &item, _unique_items uid)
 	item._iCreateInfo |= CF_UNIQUE;
 }
 
-void ItemRndDur(ItemStruct &item)
+void ItemRndDur(Item &item)
 {
 	if (item._iDurability > 0 && item._iDurability != DUR_INDESTRUCTIBLE)
 		item._iDurability = GenerateRnd(item._iMaxDur / 2) + (item._iMaxDur / 4) + 1;
 }
 
-void SetupAllItems(ItemStruct &item, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
+void SetupAllItems(Item &item, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
 	int iblvl;
 
@@ -1632,7 +1632,7 @@ void SetupBaseItem(Point position, int idx, bool onlygood, bool sendmsg, bool de
 		DeltaAddItem(ii);
 }
 
-void SetupAllUseful(ItemStruct &item, int iseed, int lvl)
+void SetupAllUseful(Item &item, int iseed, int lvl)
 {
 	int idx;
 
@@ -1732,7 +1732,7 @@ void ItemDoppel()
 
 	for (int idoppelx = 16; idoppelx < 96; idoppelx++) {
 		if (dItem[idoppelx][idoppely] != 0) {
-			ItemStruct *i = &Items[dItem[idoppelx][idoppely] - 1];
+			Item *i = &Items[dItem[idoppelx][idoppely] - 1];
 			if (i->position.x != idoppelx || i->position.y != idoppely)
 				dItem[idoppelx][idoppely] = 0;
 		}
@@ -1743,7 +1743,7 @@ void ItemDoppel()
 		idoppely = 16;
 }
 
-void RepairItem(ItemStruct &item, int lvl)
+void RepairItem(Item &item, int lvl)
 {
 	if (item._iDurability == item._iMaxDur) {
 		return;
@@ -1767,7 +1767,7 @@ void RepairItem(ItemStruct &item, int lvl)
 	item._iDurability = std::min<int>(item._iDurability + rep, item._iMaxDur);
 }
 
-void RechargeItem(ItemStruct &item, int r)
+void RechargeItem(Item &item, int r)
 {
 	if (item._iCharges == item._iMaxCharges)
 		return;
@@ -1783,7 +1783,7 @@ void RechargeItem(ItemStruct &item, int r)
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
 }
 
-bool ApplyOilToItem(ItemStruct &item, Player &player)
+bool ApplyOilToItem(Item &item, Player &player)
 {
 	int r;
 
@@ -2049,7 +2049,7 @@ void DrawUniqueInfoDevider(const Surface &out, int y)
 		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
 }
 
-void PrintItemMisc(ItemStruct &item)
+void PrintItemMisc(Item &item)
 {
 	if (item._iMiscId == IMISC_SCROLL) {
 		strcpy(tempstr, _("Right-click to read"));
@@ -2098,7 +2098,7 @@ void PrintItemMisc(ItemStruct &item)
 	}
 }
 
-void PrintItemInfo(ItemStruct &item)
+void PrintItemInfo(Item &item)
 {
 	PrintItemMisc(item);
 	uint8_t str = item._iMinStr;
@@ -2170,13 +2170,13 @@ int RndSmithItem(int lvl)
 	return RndVendorItem<SmithItemOk, true>(0, lvl);
 }
 
-void SortVendor(ItemStruct *itemList)
+void SortVendor(Item *itemList)
 {
 	int count = 1;
 	while (!itemList[count].isEmpty())
 		count++;
 
-	auto cmp = [](const ItemStruct &a, const ItemStruct &b) {
+	auto cmp = [](const Item &a, const Item &b) {
 		return a.IDidx < b.IDidx;
 	};
 
@@ -2213,7 +2213,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 {
 	int itemValue = 0;
 	bool keepGoing = false;
-	ItemStruct tempItem = Items[0];
+	Item tempItem = Items[0];
 
 	auto &player = Players[playerId];
 
@@ -2250,7 +2250,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
 			const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
-			    [](const ItemStruct &item) {
+			    [](const Item &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
 				        || item._itype == ITYPE_HARMOR;
@@ -2269,7 +2269,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
 			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-			    [](const ItemStruct &item) { return item._itype == Items[0]._itype; });
+			    [](const Item &item) { return item._itype == Items[0]._itype; });
 
 			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
@@ -2366,7 +2366,7 @@ int RndHealerItem(int lvl)
 	return RndVendorItem<HealerItemOk>(0, lvl);
 }
 
-void RecreateSmithItem(ItemStruct &item, int lvl, int iseed)
+void RecreateSmithItem(Item &item, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
 	int itype = RndSmithItem(lvl) - 1;
@@ -2377,7 +2377,7 @@ void RecreateSmithItem(ItemStruct &item, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreatePremiumItem(ItemStruct &item, int plvl, int iseed)
+void RecreatePremiumItem(Item &item, int plvl, int iseed)
 {
 	SetRndSeed(iseed);
 	int itype = RndPremiumItem(plvl / 4, plvl) - 1;
@@ -2389,7 +2389,7 @@ void RecreatePremiumItem(ItemStruct &item, int plvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateBoyItem(ItemStruct &item, int lvl, int iseed)
+void RecreateBoyItem(Item &item, int lvl, int iseed)
 {
 	SetRndSeed(iseed);
 	int itype = RndBoyItem(lvl) - 1;
@@ -2401,7 +2401,7 @@ void RecreateBoyItem(ItemStruct &item, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateWitchItem(ItemStruct &item, int idx, int lvl, int iseed)
+void RecreateWitchItem(Item &item, int idx, int lvl, int iseed)
 {
 	if (idx == IDI_MANA || idx == IDI_FULLMANA || idx == IDI_PORTAL) {
 		GetItemAttrs(item, idx, lvl);
@@ -2427,7 +2427,7 @@ void RecreateWitchItem(ItemStruct &item, int idx, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateHealerItem(ItemStruct &item, int idx, int lvl, int iseed)
+void RecreateHealerItem(Item &item, int idx, int lvl, int iseed)
 {
 	if (idx == IDI_HEAL || idx == IDI_FULLHEAL || idx == IDI_RESURRECT) {
 		GetItemAttrs(item, idx, lvl);
@@ -2442,7 +2442,7 @@ void RecreateHealerItem(ItemStruct &item, int idx, int lvl, int iseed)
 	item._iIdentified = true;
 }
 
-void RecreateTownItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed)
+void RecreateTownItem(Item &item, int idx, uint16_t icreateinfo, int iseed)
 {
 	if ((icreateinfo & CF_SMITH) != 0)
 		RecreateSmithItem(item, icreateinfo & CF_LEVEL, iseed);
@@ -2549,7 +2549,7 @@ bool IsItemAvailable(int i)
 	        sgOptions.Gameplay.bTestBard && (i == IDI_BARDSWORD || i == IDI_BARDDAGGER));
 }
 
-BYTE GetOutlineColor(const ItemStruct &item, bool checkReq)
+BYTE GetOutlineColor(const Item &item, bool checkReq)
 {
 	if (checkReq && !item._iStatFlag)
 		return ICOL_RED;
@@ -3001,7 +3001,7 @@ void CalcPlrInv(Player &player, bool loadgfx)
 	}
 }
 
-void SetPlrHandItem(ItemStruct &item, int itemData)
+void SetPlrHandItem(Item &item, int itemData)
 {
 	auto &pAllItem = AllItemsList[itemData];
 
@@ -3040,12 +3040,12 @@ void SetPlrHandItem(ItemStruct &item, int itemData)
 		item.dwBuff |= CF_HELLFIRE;
 }
 
-void GetPlrHandSeed(ItemStruct *h)
+void GetPlrHandSeed(Item *h)
 {
 	h->_iSeed = AdvanceRndSeed();
 }
 
-void SetGoldSeed(Player &player, ItemStruct &gold)
+void SetGoldSeed(Player &player, Item &gold)
 {
 	int s = 0;
 
@@ -3085,7 +3085,7 @@ int GetGoldCursor(int value)
  * @brief Update the gold cursor on the given gold item
  * @param h The item to update
  */
-void SetPlrHandGoldCurs(ItemStruct &gold)
+void SetPlrHandGoldCurs(Item &gold)
 {
 	gold._iCurs = GetGoldCursor(gold._ivalue);
 }
@@ -3266,7 +3266,7 @@ Point GetSuperItemLoc(Point position)
 	return { 0, 0 }; // TODO handle no space for dropping items
 }
 
-void GetItemAttrs(ItemStruct &item, int itemData, int lvl)
+void GetItemAttrs(Item &item, int itemData, int lvl)
 {
 	item._itype = AllItemsList[itemData].itype;
 	item._iCurs = AllItemsList[itemData].iCurs;
@@ -3323,7 +3323,7 @@ void GetItemAttrs(ItemStruct &item, int itemData, int lvl)
 	SetPlrHandGoldCurs(item);
 }
 
-void SetupItem(ItemStruct &item)
+void SetupItem(Item &item)
 {
 	item.SetNewAnimation(Players[MyPlayerId].pLvlLoad == 0);
 	item._iIdentified = false;
@@ -3470,7 +3470,7 @@ void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool se
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
 {
 	bool tmpIsHellfire = gbIsHellfire;
 	gbIsHellfire = isHellfire;
@@ -3522,7 +3522,7 @@ void RecreateItem(ItemStruct &item, int idx, uint16_t icreateinfo, int iseed, in
 	gbIsHellfire = tmpIsHellfire;
 }
 
-void RecreateEar(ItemStruct &item, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
+void RecreateEar(Item &item, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
 	SetPlrHandItem(item, IDI_EAR);
 	tempstr[0] = static_cast<char>((ic >> 8) & 0x7F);
@@ -3682,7 +3682,7 @@ void SpawnTheodore(Point position)
 	SpawnRewardItem(IDI_THEODORE, position);
 }
 
-void RespawnItem(ItemStruct *item, bool flipFlag)
+void RespawnItem(Item *item, bool flipFlag)
 {
 	int it = ItemCAnimTbl[item->_iCurs];
 	item->SetNewAnimation(flipFlag);
@@ -3742,12 +3742,12 @@ void FreeItemGFX()
 	}
 }
 
-void GetItemFrm(ItemStruct &item)
+void GetItemFrm(Item &item)
 {
 	item.AnimInfo.pCelSprite = &*itemanims[ItemCAnimTbl[item._iCurs]];
 }
 
-void GetItemStr(ItemStruct &item)
+void GetItemStr(Item &item)
 {
 	if (item._itype != ITYPE_GOLD) {
 		if (item._iIdentified)
@@ -3764,7 +3764,7 @@ void GetItemStr(ItemStruct &item)
 
 void CheckIdentify(Player &player, int cii)
 {
-	ItemStruct *pi;
+	Item *pi;
 
 	if (cii >= NUM_INVLOC)
 		pi = &player.InvList[cii - NUM_INVLOC];
@@ -3780,7 +3780,7 @@ void CheckIdentify(Player &player, int cii)
 
 void DoRepair(Player &player, int cii)
 {
-	ItemStruct *pi;
+	Item *pi;
 
 	PlaySfxLoc(IS_REPAIR, player.position.tile);
 
@@ -3799,7 +3799,7 @@ void DoRepair(Player &player, int cii)
 
 void DoRecharge(Player &player, int cii)
 {
-	ItemStruct *pi;
+	Item *pi;
 
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
@@ -3819,7 +3819,7 @@ void DoRecharge(Player &player, int cii)
 
 void DoOil(Player &player, int cii)
 {
-	ItemStruct *pi;
+	Item *pi;
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
@@ -3832,7 +3832,7 @@ void DoOil(Player &player, int cii)
 		NewCursor(CURSOR_HAND);
 }
 
-void PrintItemPower(char plidx, ItemStruct *x)
+void PrintItemPower(char plidx, Item *x)
 {
 	switch (plidx) {
 	case IPL_TOHIT:
@@ -4146,7 +4146,7 @@ void DrawUniqueInfo(const Surface &out)
 	}
 }
 
-void PrintItemDetails(ItemStruct *x)
+void PrintItemDetails(Item *x)
 {
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
@@ -4193,7 +4193,7 @@ void PrintItemDetails(ItemStruct *x)
 	PrintItemInfo(*x);
 }
 
-void PrintItemDur(ItemStruct *x)
+void PrintItemDur(Item *x)
 {
 	if (x->_iClass == ICLASS_WEAPON) {
 		if (x->_iMinDam == x->_iMaxDam) {
@@ -4440,7 +4440,7 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	ItemStruct holditem;
+	Item holditem;
 	holditem = Items[0];
 
 	int maxValue = 140000;
@@ -4628,7 +4628,7 @@ void SpawnBoy(int lvl)
 		case ITYPE_MARMOR:
 		case ITYPE_HARMOR: {
 			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
-			    [](const ItemStruct &item) {
+			    [](const Item &item) {
 				    return item._itype == ITYPE_LARMOR
 				        || item._itype == ITYPE_MARMOR
 				        || item._itype == ITYPE_HARMOR;
@@ -4647,7 +4647,7 @@ void SpawnBoy(int lvl)
 		case ITYPE_RING:
 		case ITYPE_AMULET: {
 			const auto *const mostValuablePlayerItem = myPlayer.GetMostValuableItem(
-			    [itemType](const ItemStruct &item) { return item._itype == itemType; });
+			    [itemType](const Item &item) { return item._itype == itemType; });
 
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
@@ -4902,7 +4902,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		int uper = (unique ? 15 : 1);
 
 		Point bkp = item.position;
-		memset(&item, 0, sizeof(ItemStruct));
+		memset(&item, 0, sizeof(Item));
 		item.position = bkp;
 		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
 		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
@@ -4923,7 +4923,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 }
 #endif
 
-void ItemStruct::SetNewAnimation(bool showAnimation)
+void Item::SetNewAnimation(bool showAnimation)
 {
 	int it = ItemCAnimTbl[_iCurs];
 	int numberOfFrames = ItemAnimLs[it];
