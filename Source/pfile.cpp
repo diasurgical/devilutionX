@@ -139,7 +139,7 @@ std::unique_ptr<byte[]> ReadArchive(HANDLE archive, const char *pszName, size_t 
 	return buf;
 }
 
-bool ReadHero(HANDLE archive, PkPlayerStruct *pPack)
+bool ReadHero(HANDLE archive, PlayerPack *pPack)
 {
 	size_t read;
 
@@ -156,7 +156,7 @@ bool ReadHero(HANDLE archive, PkPlayerStruct *pPack)
 	return ret;
 }
 
-void EncodeHero(const PkPlayerStruct *pack)
+void EncodeHero(const PlayerPack *pack)
 {
 	size_t packedLen = codec_get_encoded_len(sizeof(*pack));
 	std::unique_ptr<byte[]> packed { new byte[packedLen] };
@@ -272,7 +272,7 @@ void pfile_write_hero(bool writeGameData, bool clearTables)
 		SaveGameData();
 		RenameTempToPerm();
 	}
-	PkPlayerStruct pkplr;
+	PlayerPack pkplr;
 	auto &myPlayer = Players[MyPlayerId];
 
 	PackPlayer(&pkplr, myPlayer, !gbIsMultiplayer);
@@ -290,7 +290,7 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 	for (uint32_t i = 0; i < MAX_CHARACTERS; i++) {
 		HANDLE archive = OpenSaveArchive(i);
 		if (archive != nullptr) {
-			PkPlayerStruct pkplr;
+			PlayerPack pkplr;
 			if (ReadHero(archive, &pkplr)) {
 				_uiheroinfo uihero;
 				uihero.saveNumber = i;
@@ -337,7 +337,7 @@ uint32_t pfile_ui_get_first_unused_save_num()
 
 bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 {
-	PkPlayerStruct pkplr;
+	PlayerPack pkplr;
 
 	uint32_t saveNum = heroinfo->saveNumber;
 	if (saveNum >= MAX_CHARACTERS)
@@ -378,7 +378,7 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 {
 	HANDLE archive;
-	PkPlayerStruct pkplr;
+	PlayerPack pkplr;
 
 	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
