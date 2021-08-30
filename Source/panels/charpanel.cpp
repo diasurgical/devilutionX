@@ -81,6 +81,11 @@ UiFlags GetMaxManaColor()
 	return MyPlayer->_pMaxMana > MyPlayer->_pMaxManaBase ? UiFlags::ColorBlue : UiFlags::ColorSilver;
 }
 
+UiFlags GetMaxHealthColor()
+{
+	return MyPlayer->_pMaxHP > MyPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorSilver;
+}
+
 std::pair<int, int> GetDamage()
 {
 	int mindam = MyPlayer->_pIMinDam;
@@ -159,10 +164,10 @@ PanelEntry panelEntries[] = {
 	    } },
 
 	{ N_("Life"), { 88, 287 }, 33, { -3, 0 }, 0, 0, 1, false, false,
-	    []() { return ColorAndText { (MyPlayer->_pMaxHP > MyPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorSilver), fmt::format("{:d}", MyPlayer->_pMaxHP >> 6) }; } },
+	    []() { return ColorAndText { GetMaxHealthColor(), fmt::format("{:d}", MyPlayer->_pMaxHP >> 6) }; } },
 
 	{ "", { 135, 287 }, 33, { 0, 0 }, 0, 0, 1, false, false,
-	    []() { return ColorAndText { (MyPlayer->_pHitPoints != MyPlayer->_pMaxHP ? UiFlags::ColorRed : UiFlags::ColorSilver), fmt::format("{:d}", MyPlayer->_pHitPoints >> 6) }; } },
+	    []() { return ColorAndText { (MyPlayer->_pHitPoints != MyPlayer->_pMaxHP ? UiFlags::ColorRed : GetMaxHealthColor()), fmt::format("{:d}", MyPlayer->_pHitPoints >> 6) }; } },
 
 	{ N_("Mana"), { 88, 315 }, 33, { -3, 0 }, 0, 0, 1, false, false,
 	    []() { return ColorAndText { GetMaxManaColor(), fmt::format("{:d}", MyPlayer->_pMaxMana >> 6) }; } },
