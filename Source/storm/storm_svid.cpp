@@ -111,7 +111,7 @@ void TrySetVideoModeToSVidForSDL1()
 #endif
 
 #ifndef NOSOUND
-bool HaveAudio()
+bool HasAudio()
 {
 	return SVidAudioStream && SVidAudioStream->isPlaying();
 }
@@ -280,7 +280,7 @@ bool SVidPlayContinue()
 	}
 
 #ifndef NOSOUND
-	if (HaveAudio()) {
+	if (HasAudio()) {
 		const auto len = smk_get_audio_size(SVidSMK, 0);
 		const unsigned char *buf = smk_get_audio(SVidSMK, 0);
 		if (SVidAudioDepth == 16) {
@@ -360,7 +360,7 @@ bool SVidPlayContinue()
 void SVidPlayEnd()
 {
 #ifndef NOSOUND
-	if (HaveAudio()) {
+	if (HasAudio()) {
 		SVidAudioStream = std::nullopt;
 		SVidAudioDecoder = nullptr;
 	}
