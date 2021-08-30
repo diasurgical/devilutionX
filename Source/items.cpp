@@ -24,6 +24,7 @@
 #include "lighting.h"
 #include "missiles.h"
 #include "options.h"
+#include "player.h"
 #include "stores.h"
 #include "utils/language.h"
 #include "utils/math.h"
@@ -126,6 +127,7 @@ enum class PlayerArmorGraphic : uint8_t {
 	Heavy  = 1 << 5,
 	// clang-format on
 };
+
 ItemStruct curruitem;
 
 /** Holds item get records, tracking items being recently looted. This is in an effort to prevent items being picked up more than once. */
@@ -457,7 +459,7 @@ void SpawnNote()
 	SpawnQuestItem(id, position, 0, 1);
 }
 
-void CalcSelfItems(PlayerStruct &player)
+void CalcSelfItems(Player &player)
 {
 	int sa = 0;
 	int ma = 0;
@@ -501,7 +503,7 @@ void CalcSelfItems(PlayerStruct &player)
 	} while (changeflag);
 }
 
-bool ItemMinStats(const PlayerStruct &player, ItemStruct &x)
+bool ItemMinStats(const Player &player, ItemStruct &x)
 {
 	if (player._pMagic < x._iMinMag)
 		return false;
@@ -515,7 +517,7 @@ bool ItemMinStats(const PlayerStruct &player, ItemStruct &x)
 	return true;
 }
 
-void CalcPlrItemMin(PlayerStruct &player)
+void CalcPlrItemMin(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto &item = player.InvList[i];
@@ -559,7 +561,7 @@ bool StoreStatOk(ItemStruct &item)
 	return true;
 }
 
-void CalcPlrBookVals(PlayerStruct &player)
+void CalcPlrBookVals(Player &player)
 {
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
@@ -1781,7 +1783,7 @@ void RechargeItem(ItemStruct &item, int r)
 	item._iCharges = std::min(item._iCharges, item._iMaxCharges);
 }
 
-bool ApplyOilToItem(ItemStruct &item, PlayerStruct &player)
+bool ApplyOilToItem(ItemStruct &item, Player &player)
 {
 	int r;
 
@@ -2623,10 +2625,8 @@ void InitItems()
 	initItemGetRecords();
 }
 
-void CalcPlrItemVals(int playerId, bool loadgfx)
+void CalcPlrItemVals(Player &player, bool loadgfx)
 {
-	auto &player = Players[playerId];
-
 	int mind = 0; // min damage
 	int maxd = 0; // max damage
 	int tac = 0;  // accuracy
@@ -2754,7 +2754,7 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 
 	lrad = clamp(lrad, 2, 15);
 
-	if (player._pLightRad != lrad && playerId == MyPlayerId) {
+	if (player._pLightRad != lrad && &player == &Players[MyPlayerId]) {
 		ChangeLightRadius(player._plid, lrad);
 		ChangeVisionRadius(player._pvid, lrad);
 		player._pLightRad = lrad;
@@ -2863,8 +2863,8 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	player._pMaxHP = ihp + player._pMaxHPBase;
 	player._pHitPoints = std::min(ihp + player._pHPBase, player._pMaxHP);
 
-	if (playerId == MyPlayerId && (player._pHitPoints >> 6) <= 0) {
-		SetPlayerHitPoints(playerId, 0);
+	if (&player == &Players[MyPlayerId] && (player._pHitPoints >> 6) <= 0) {
+		SetPlayerHitPoints(player, 0);
 	}
 
 	player._pMaxMana = imana + player._pMaxManaBase;
@@ -2977,7 +2977,7 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 		MaxGold = GOLD_MAX_LIMIT;
 
 		if (half != MaxGold)
-			StripTopGold(playerId);
+			StripTopGold(player);
 	} else {
 		MaxGold = GOLD_MAX_LIMIT * 2;
 	}
@@ -2986,15 +2986,13 @@ void CalcPlrItemVals(int playerId, bool loadgfx)
 	drawhpflag = true;
 }
 
-void CalcPlrInv(int playerId, bool loadgfx)
+void CalcPlrInv(Player &player, bool loadgfx)
 {
-	auto &player = Players[playerId];
-
 	CalcPlrItemMin(player);
 	CalcSelfItems(player);
-	CalcPlrItemVals(playerId, loadgfx);
+	CalcPlrItemVals(player, loadgfx);
 	CalcPlrItemMin(player);
-	if (playerId == MyPlayerId) {
+	if (&player == &Players[MyPlayerId]) {
 		CalcPlrBookVals(player);
 		player.CalcScrolls();
 		CalcPlrStaff(player);
@@ -3047,12 +3045,7 @@ void GetPlrHandSeed(ItemStruct *h)
 	h->_iSeed = AdvanceRndSeed();
 }
 
-/**
- * @brief Set a new unique seed value on the given item
- * @param pnum Player id
- * @param h Item to update
- */
-void GetGoldSeed(int pnum, ItemStruct *h)
+void SetGoldSeed(Player &player, ItemStruct &gold)
 {
 	int s = 0;
 
@@ -3066,15 +3059,15 @@ void GetGoldSeed(int pnum, ItemStruct *h)
 			if (item._iSeed == s)
 				doneflag = false;
 		}
-		if (pnum == MyPlayerId) {
-			for (int i = 0; i < Players[pnum]._pNumInv; i++) {
-				if (Players[pnum].InvList[i]._iSeed == s)
+		if (&player == &Players[MyPlayerId]) {
+			for (int i = 0; i < player._pNumInv; i++) {
+				if (player.InvList[i]._iSeed == s)
 					doneflag = false;
 			}
 		}
 	} while (!doneflag);
 
-	h->_iSeed = s;
+	gold._iSeed = s;
 }
 
 int GetGoldCursor(int value)
@@ -3202,7 +3195,7 @@ void CreatePlrItems(int playerId)
 	player.InvList[player._pNumInv++] = player.HoldItem;
 	player.InvGrid[30] = player._pNumInv;
 
-	CalcPlrItemVals(playerId, false);
+	CalcPlrItemVals(player, false);
 }
 
 bool ItemSpaceOk(Point position)
@@ -3769,27 +3762,25 @@ void GetItemStr(ItemStruct &item)
 	}
 }
 
-void CheckIdentify(int pnum, int cii)
+void CheckIdentify(Player &player, int cii)
 {
 	ItemStruct *pi;
 
 	if (cii >= NUM_INVLOC)
-		pi = &Players[pnum].InvList[cii - NUM_INVLOC];
+		pi = &player.InvList[cii - NUM_INVLOC];
 	else
-		pi = &Players[pnum].InvBody[cii];
+		pi = &player.InvBody[cii];
 
 	pi->_iIdentified = true;
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 
-	if (pnum == MyPlayerId)
+	if (&player == &Players[MyPlayerId])
 		NewCursor(CURSOR_HAND);
 }
 
-void DoRepair(int pnum, int cii)
+void DoRepair(Player &player, int cii)
 {
 	ItemStruct *pi;
-
-	auto &player = Players[pnum];
 
 	PlaySfxLoc(IS_REPAIR, player.position.tile);
 
@@ -3800,17 +3791,16 @@ void DoRepair(int pnum, int cii)
 	}
 
 	RepairItem(*pi, player._pLevel);
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 
-	if (pnum == MyPlayerId)
+	if (&player == &Players[MyPlayerId])
 		NewCursor(CURSOR_HAND);
 }
 
-void DoRecharge(int pnum, int cii)
+void DoRecharge(Player &player, int cii)
 {
 	ItemStruct *pi;
 
-	auto &player = Players[pnum];
 	if (cii >= NUM_INVLOC) {
 		pi = &player.InvList[cii - NUM_INVLOC];
 	} else {
@@ -3820,24 +3810,26 @@ void DoRecharge(int pnum, int cii)
 		int r = GetSpellBookLevel(pi->_iSpell);
 		r = GenerateRnd(player._pLevel / r) + 1;
 		RechargeItem(*pi, r);
-		CalcPlrInv(pnum, true);
+		CalcPlrInv(player, true);
 	}
 
-	if (pnum == MyPlayerId)
+	if (&player == &Players[MyPlayerId])
 		NewCursor(CURSOR_HAND);
 }
 
-void DoOil(int pnum, int cii)
+void DoOil(Player &player, int cii)
 {
-	if (cii < NUM_INVLOC && cii != INVLOC_HEAD && (cii <= INVLOC_AMULET || cii > INVLOC_CHEST))
-		return;
-	auto &player = Players[pnum];
-	if (!ApplyOilToItem(player.InvBody[cii], player))
-		return;
-	CalcPlrInv(pnum, true);
-	if (pnum == MyPlayerId) {
-		NewCursor(CURSOR_HAND);
+	ItemStruct *pi;
+	if (cii >= NUM_INVLOC) {
+		pi = &player.InvList[cii - NUM_INVLOC];
+	} else {
+		pi = &player.InvBody[cii];
 	}
+	if (!ApplyOilToItem(*pi, player))
+		return;
+	CalcPlrInv(player, true);
+	if (&player == &Players[MyPlayerId])
+		NewCursor(CURSOR_HAND);
 }
 
 void PrintItemPower(char plidx, ItemStruct *x)
@@ -4348,10 +4340,10 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player._pSplType = RSPLTYPE_INVALID;
 			player._pSplFrom = 3;
 			player.destAction = ACTION_SPELL;
-			player.destParam1 = cursmx;
-			player.destParam2 = cursmy;
+			player.destParam1 = cursPosition.x;
+			player.destParam2 = cursPosition.y;
 			if (p == MyPlayerId && spl == SPL_NOVA)
-				NetSendCmdLoc(MyPlayerId, true, CMD_NOVA, { cursmx, cursmy });
+				NetSendCmdLoc(MyPlayerId, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_SCROLLT:
@@ -4365,8 +4357,8 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player._pSplType = RSPLTYPE_INVALID;
 			player._pSplFrom = 3;
 			player.destAction = ACTION_SPELL;
-			player.destParam1 = cursmx;
-			player.destParam2 = cursmy;
+			player.destParam1 = cursPosition.x;
+			player.destParam2 = cursPosition.y;
 		}
 		break;
 	case IMISC_BOOK:

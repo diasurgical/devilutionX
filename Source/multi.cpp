@@ -32,7 +32,7 @@ bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
-PkPlayerStruct netplr[MAX_PLRS];
+PlayerPack netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
 bool gbShouldValidatePackage;
@@ -315,11 +315,11 @@ void ProcessTmsgs()
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
 {
-	static_assert(alignof(PkPlayerStruct) == 1, "Fix pkplr alignment");
-	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PkPlayerStruct)] };
+	static_assert(alignof(PlayerPack) == 1, "Fix pkplr alignment");
+	std::unique_ptr<byte[]> pkplr { new byte[sizeof(PlayerPack)] };
 
-	PackPlayer(reinterpret_cast<PkPlayerStruct *>(pkplr.get()), Players[MyPlayerId], true);
-	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PkPlayerStruct));
+	PackPlayer(reinterpret_cast<PlayerPack *>(pkplr.get()), Players[MyPlayerId], true);
+	dthread_send_delta(pnum, cmd, std::move(pkplr), sizeof(PlayerPack));
 }
 
 dungeon_type InitLevelType(int l)
@@ -454,7 +454,7 @@ bool InitMulti(GameData *gameData)
 	MyPlayerId = playerId;
 	gbIsMultiplayer = true;
 
-	pfile_read_player_from_save(gSaveNumber, MyPlayerId);
+	pfile_read_player_from_save(gSaveNumber, Players[MyPlayerId]);
 
 	return true;
 }
@@ -802,7 +802,7 @@ void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
 
 	sgwPackPlrOffsetTbl[pnum] = 0;
 	PlayerLeftMsg(pnum, false);
-	UnPackPlayer(&netplr[pnum], pnum, true);
+	UnPackPlayer(&netplr[pnum], player, true);
 
 	if (!recv) {
 		return;

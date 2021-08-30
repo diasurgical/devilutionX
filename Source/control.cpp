@@ -428,7 +428,7 @@ void PrintInfo(const Surface &out)
 	}
 }
 
-int CapStatPointsToAdd(int remainingStatPoints, const PlayerStruct &player, CharacterAttribute attribute)
+int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
 {
 	int pointsToReachCap = player.GetMaximumAttributeValue(attribute) - player.GetBaseAttributeValue(attribute);
 
@@ -501,7 +501,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 	return st;
 }
 
-void ControlSetGoldCurs(PlayerStruct &player)
+void ControlSetGoldCurs(Player &player)
 {
 	SetPlrHandGoldCurs(player.HoldItem);
 	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -562,10 +562,8 @@ void ControlUpDown(int v)
 	}
 }
 
-void RemoveGold(int pnum, int goldIndex)
+void RemoveGold(Player &player, int goldIndex)
 {
-	auto &player = Players[pnum];
-
 	int gi = goldIndex - INVITEM_INV_FIRST;
 	player.InvList[gi]._ivalue -= dropGoldValue;
 	if (player.InvList[gi]._ivalue > 0)
@@ -573,7 +571,7 @@ void RemoveGold(int pnum, int goldIndex)
 	else
 		player.RemoveInvItem(gi);
 	SetPlrHandItem(player.HoldItem, IDI_GOLD);
-	GetGoldSeed(pnum, &player.HoldItem);
+	SetGoldSeed(player, player.HoldItem);
 	player.HoldItem._ivalue = dropGoldValue;
 	player.HoldItem._iStatFlag = true;
 	ControlSetGoldCurs(player);
@@ -1081,7 +1079,7 @@ void DoSpeedBook()
 		}
 	}
 
-	SetCursorPos(x, y);
+	SetCursorPos({ x, y });
 }
 
 /**
@@ -1427,27 +1425,8 @@ void CheckChrBtns()
 		return;
 
 	for (auto attribute : enum_values<CharacterAttribute>()) {
-		int max = myPlayer.GetMaximumAttributeValue(attribute);
-		switch (attribute) {
-		case CharacterAttribute::Strength:
-			if (myPlayer._pBaseStr >= max)
-				continue;
-			break;
-		case CharacterAttribute::Magic:
-			if (myPlayer._pBaseMag >= max)
-				continue;
-			break;
-		case CharacterAttribute::Dexterity:
-			if (myPlayer._pBaseDex >= max)
-				continue;
-			break;
-		case CharacterAttribute::Vitality:
-			if (myPlayer._pBaseVit >= max)
-				continue;
-			break;
-		default:
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
 			continue;
-		}
 		auto buttonId = static_cast<size_t>(attribute);
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
@@ -1667,19 +1646,20 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 void control_drop_gold(char vkey)
 {
-	char input[6];
+	auto &myPlayer = Players[MyPlayerId];
 
-	if (Players[MyPlayerId]._pHitPoints >> 6 <= 0) {
+	if (myPlayer._pHitPoints >> 6 <= 0) {
 		dropGoldFlag = false;
 		dropGoldValue = 0;
 		return;
 	}
 
+	char input[6];
 	memset(input, 0, sizeof(input));
 	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
-			RemoveGold(MyPlayerId, initialDropGoldIndex);
+			RemoveGold(myPlayer, initialDropGoldIndex);
 		dropGoldFlag = false;
 	} else if (vkey == DVL_VK_ESCAPE) {
 		dropGoldFlag = false;

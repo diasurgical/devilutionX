@@ -304,10 +304,8 @@ void LoadItems(LoadHelper *file, const int n, ItemStruct *pItem)
 	}
 }
 
-void LoadPlayer(LoadHelper *file, int p)
+void LoadPlayer(LoadHelper *file, Player &player)
 {
-	auto &player = Players[p];
-
 	player._pmode = static_cast<PLR_MODE>(file->NextLE<int32_t>());
 
 	for (int8_t &step : player.walkpath) {
@@ -516,7 +514,7 @@ void LoadPlayer(LoadHelper *file, int p)
 	player.pDifficulty = static_cast<_difficulty>(file->NextLE<uint32_t>());
 	player.pDamAcFlags = file->NextLE<uint32_t>();
 	file->Skip(20); // Available bytes
-	CalcPlrItemVals(p, false);
+	CalcPlrItemVals(player, false);
 
 	// Omit pointer _pNData
 	// Omit pointer _pWData
@@ -635,10 +633,8 @@ void LoadMonster(LoadHelper *file, MonsterStruct &monster)
 	SyncMonsterAnim(monster);
 }
 
-void LoadMissile(LoadHelper *file, int i)
+void LoadMissile(LoadHelper *file, MissileStruct &missile)
 {
-	auto &missile = Missiles[i];
-
 	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
 	missile.position.tile.x = file->NextLE<int32_t>();
 	missile.position.tile.y = file->NextLE<int32_t>();
@@ -973,10 +969,8 @@ void SaveItems(SaveHelper *file, ItemStruct *pItem, const int n)
 	}
 }
 
-void SavePlayer(SaveHelper *file, int p)
+void SavePlayer(SaveHelper *file, Player &player)
 {
-	auto &player = Players[p];
-
 	file->WriteLE<int32_t>(player._pmode);
 	for (int8_t step : player.walkpath)
 		file->WriteLE<int8_t>(step);
@@ -1285,10 +1279,8 @@ void SaveMonster(SaveHelper *file, MonsterStruct &monster)
 	// Omit pointer MData;
 }
 
-void SaveMissile(SaveHelper *file, int i)
+void SaveMissile(SaveHelper *file, MissileStruct &missile)
 {
-	auto &missile = Missiles[i];
-
 	file->WriteLE<int32_t>(missile._mitype);
 	file->WriteLE<int32_t>(missile.position.tile.x);
 	file->WriteLE<int32_t>(missile.position.tile.y);
@@ -1627,7 +1619,7 @@ void SaveHotkeys()
 	file.WriteLE<uint8_t>(myPlayer._pRSplType);
 }
 
-void LoadHeroItems(PlayerStruct &player)
+void LoadHeroItems(Player &player)
 {
 	LoadHelper file("heroitems");
 	if (!file.IsValid())
@@ -1642,7 +1634,7 @@ void LoadHeroItems(PlayerStruct &player)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void RemoveEmptyInventory(PlayerStruct &player)
+void RemoveEmptyInventory(Player &player)
 {
 	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
 		int8_t idx = player.InvGrid[i - 1];
@@ -1702,9 +1694,11 @@ void LoadGame(bool firstflag)
 		file.Skip(4); // Skip loading gnLevelTypeTbl
 	}
 
-	LoadPlayer(&file, MyPlayerId);
+	auto &myPlayer = Players[MyPlayerId];
 
-	sgGameInitInfo.nDifficulty = Players[MyPlayerId].pDifficulty;
+	LoadPlayer(&file, myPlayer);
+
+	sgGameInitInfo.nDifficulty = myPlayer.pDifficulty;
 	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
 		sgGameInitInfo.nDifficulty = DIFF_NORMAL;
 
@@ -1715,7 +1709,7 @@ void LoadGame(bool firstflag)
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
 		ConvertLevels();
-		RemoveEmptyInventory(Players[MyPlayerId]);
+		RemoveEmptyInventory(myPlayer);
 	}
 
 	LoadGameLevel(firstflag, ENTRY_LOAD);
@@ -1742,7 +1736,7 @@ void LoadGame(bool firstflag)
 		for (int &missileId : AvailableMissiles)
 			missileId = file.NextLE<int8_t>();
 		for (int i = 0; i < ActiveMissileCount; i++)
-			LoadMissile(&file, ActiveMissiles[i]);
+			LoadMissile(&file, Missiles[ActiveMissiles[i]]);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)
@@ -1859,7 +1853,7 @@ void LoadGame(bool firstflag)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
-void SaveHeroItems(PlayerStruct &player)
+void SaveHeroItems(Player &player)
 {
 	size_t itemCount = NUM_INVLOC + NUM_INV_GRID_ELEM + MAXBELTITEMS;
 	SaveHelper file("heroitems", itemCount * (gbIsHellfire ? HellfireItemSaveSize : DiabloItemSaveSize) + sizeof(uint8_t));
@@ -1918,8 +1912,9 @@ void SaveGameData()
 		file.WriteBE<int32_t>(gnLevelTypeTbl[i]);
 	}
 
-	Players[MyPlayerId].pDifficulty = sgGameInitInfo.nDifficulty;
-	SavePlayer(&file, MyPlayerId);
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer.pDifficulty = sgGameInitInfo.nDifficulty;
+	SavePlayer(&file, myPlayer);
 
 	for (int i = 0; i < giNumberQuests; i++)
 		SaveQuest(&file, i);
@@ -1938,7 +1933,7 @@ void SaveGameData()
 		for (int missileId : AvailableMissiles)
 			file.WriteLE<int8_t>(missileId);
 		for (int i = 0; i < ActiveMissileCount; i++)
-			SaveMissile(&file, ActiveMissiles[i]);
+			SaveMissile(&file, Missiles[ActiveMissiles[i]]);
 		for (int objectId : ActiveObjects)
 			file.WriteLE<int8_t>(objectId);
 		for (int objectId : AvailableObjects)
@@ -2037,7 +2032,9 @@ void SaveLevel()
 {
 	PFileScopedArchiveWriter scopedWriter;
 
-	DoUnVision(Players[MyPlayerId].position.tile, Players[MyPlayerId]._pLightRad); // fix for vision staying on the level
+	auto &myPlayer = Players[MyPlayerId];
+
+	DoUnVision(myPlayer.position.tile, myPlayer._pLightRad); // fix for vision staying on the level
 
 	if (currlevel == 0)
 		glSeedTbl[0] = AdvanceRndSeed();
@@ -2111,9 +2108,9 @@ void SaveLevel()
 	}
 
 	if (!setlevel)
-		Players[MyPlayerId]._pLvlVisited[currlevel] = true;
+		myPlayer._pLvlVisited[currlevel] = true;
 	else
-		Players[MyPlayerId]._pSLvlVisited[setlvlnum] = true;
+		myPlayer._pSLvlVisited[setlvlnum] = true;
 }
 
 void LoadLevel()

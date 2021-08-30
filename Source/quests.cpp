@@ -441,14 +441,11 @@ bool ForceQuests()
 	for (auto &quest : Quests) {
 		if (quest._qidx != Q_BETRAYER && currlevel == quest._qlevel && quest._qslvl != 0) {
 			int ql = quest._qslvl - 1;
-			int qx = quest.position.x;
-			int qy = quest.position.y;
 
 			for (int j = 0; j < 7; j++) {
-				if (qx + questxoff[j] == cursmx && qy + questyoff[j] == cursmy) {
+				if (quest.position + Displacement { questxoff[j], questyoff[j] } == cursPosition) {
 					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
-					cursmx = qx;
-					cursmy = qy;
+					cursPosition = quest.position;
 					return true;
 				}
 			}

@@ -396,6 +396,8 @@ struct CornerStoneStruct {
 	ItemStruct item;
 };
 
+struct Player;
+
 extern ItemStruct Items[MAXITEMS + 1];
 extern int ActiveItems[MAXITEMS];
 extern int ActiveItemCount;
@@ -409,11 +411,14 @@ bool IsItemAvailable(int i);
 bool IsUniqueAvailable(int i);
 void InitItemGFX();
 void InitItems();
-void CalcPlrItemVals(int p, bool Loadgfx);
-void CalcPlrInv(int p, bool Loadgfx);
+void CalcPlrItemVals(Player &player, bool Loadgfx);
+void CalcPlrInv(Player &player, bool Loadgfx);
 void SetPlrHandItem(ItemStruct &item, int itemData);
 void GetPlrHandSeed(ItemStruct *h);
-void GetGoldSeed(int pnum, ItemStruct *h);
+/**
+ * @brief Set a new unique seed value on the given item
+ */
+void SetGoldSeed(Player &player, ItemStruct &gold);
 int GetGoldCursor(int value);
 void SetPlrHandGoldCurs(ItemStruct &gold);
 void CreatePlrItems(int playerId);
@@ -443,10 +448,10 @@ void ProcessItems();
 void FreeItemGFX();
 void GetItemFrm(ItemStruct &item);
 void GetItemStr(ItemStruct &item);
-void CheckIdentify(int pnum, int cii);
-void DoRepair(int pnum, int cii);
-void DoRecharge(int pnum, int cii);
-void DoOil(int pnum, int cii);
+void CheckIdentify(Player &player, int cii);
+void DoRepair(Player &player, int cii);
+void DoRecharge(Player &player, int cii);
+void DoOil(Player &player, int cii);
 void PrintItemPower(char plidx, ItemStruct *x);
 void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(ItemStruct *x);

@@ -44,7 +44,7 @@ struct PanelEntry {
 	std::function<ColorAndText()> statDisplayFunc; // function responsible for displaying stat
 };
 
-PlayerStruct *MyPlayer = &Players[MyPlayerId];
+Player *MyPlayer = &Players[MyPlayerId];
 
 UiFlags GetBaseStatColor(CharacterAttribute attr)
 {
@@ -216,20 +216,20 @@ Art PanelFull;
 
 void DrawPanelFieldLow(const Surface &out, Point pos, int len)
 {
-	DrawArt(out, pos.x, pos.y, &PanelParts[0]);
+	DrawArt(out, pos, &PanelParts[0]);
 	pos.x += PanelParts[0].w();
-	DrawArt(out, pos.x, pos.y, &PanelParts[1], 0, len);
+	DrawArt(out, pos, &PanelParts[1], 0, len);
 	pos.x += len;
-	DrawArt(out, pos.x, pos.y, &PanelParts[2]);
+	DrawArt(out, pos, &PanelParts[2]);
 }
 
 void DrawPanelFieldHigh(const Surface &out, Point pos, int len)
 {
-	DrawArt(out, pos.x, pos.y, &PanelParts[3]);
+	DrawArt(out, pos, &PanelParts[3]);
 	pos.x += PanelParts[3].w();
-	DrawArt(out, pos.x, pos.y, &PanelParts[4], 0, len);
+	DrawArt(out, pos, &PanelParts[4], 0, len);
 	pos.x += len;
-	DrawArt(out, pos.x, pos.y, &PanelParts[5]);
+	DrawArt(out, pos, &PanelParts[5]);
 }
 
 void DrawShadowString(const Surface &out, Point pos, PanelEntry &entry)
@@ -311,7 +311,7 @@ void DrawChr(const Surface &out)
 		CharPanelLoaded = true;
 	}
 	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
-	DrawArt(out, pos.x, pos.y, &PanelFull);
+	DrawArt(out, pos, &PanelFull);
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
 			ColorAndText tmp = entry.statDisplayFunc();

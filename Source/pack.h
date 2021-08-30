@@ -27,7 +27,7 @@ struct PkItemStruct {
 	int32_t dwBuff;
 };
 
-struct PkPlayerStruct {
+struct PlayerPack {
 	uint32_t dwLowDateTime;
 	uint32_t dwHighDateTime;
 	int8_t destAction;
@@ -79,8 +79,8 @@ struct PkPlayerStruct {
 };
 #pragma pack(pop)
 
-void PackPlayer(PkPlayerStruct *pPack, const PlayerStruct &player, bool manashield);
-void UnPackPlayer(const PkPlayerStruct *pPack, int pnum, bool netSync);
+void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
+void UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
 void PackItem(PkItemStruct *id, const ItemStruct *is);
 void UnPackItem(const PkItemStruct *is, ItemStruct *id, bool isHellfire);
 
