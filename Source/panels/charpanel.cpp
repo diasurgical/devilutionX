@@ -34,7 +34,7 @@ struct StyledText {
 
 struct PanelEntry {
 	std::string label;
-	Displacement position;
+	Point position;
 	int length;
 	Displacement labelOffset; // label's offset (end of the label vs the beginning of the stat box)
 	int labelLength;          // max label's length - used for line wrapping
@@ -228,7 +228,7 @@ void DrawPanelFieldHigh(const Surface &out, Point pos, int len)
 	DrawArt(out, pos, &PanelParts[5]);
 }
 
-void DrawShadowString(const Surface &out, Point pos, PanelEntry &entry)
+void DrawShadowString(const Surface &out, const PanelEntry &entry)
 {
 	if (entry.label == "")
 		return;
@@ -241,12 +241,12 @@ void DrawShadowString(const Surface &out, Point pos, PanelEntry &entry)
 		WordWrapGameString(buffer, entry.labelLength, GameFontSmall, spacing);
 	std::string text(buffer);
 	int width = GetLineWidth(text, GameFontSmall, spacing);
+	Point finalPos = { entry.position + Displacement { 0, 17 } + entry.labelOffset };
 	if (entry.centered)
 		width = entry.length;
 	else
-		pos.x -= width;
+		finalPos.x -= width;
 
-	Point finalPos = { pos + entry.position + Displacement { 0, 17 } + entry.labelOffset };
 	UiFlags style = UiFlags::AlignRight;
 	if (entry.centered) {
 		style = UiFlags::AlignCenter;
@@ -266,17 +266,16 @@ void LoadCharPanel()
 	LoadArt("data\\boxmiddle27.pcx", &PanelParts[4]);
 	LoadArt("data\\boxrightend27.pcx", &PanelParts[5]);
 
-	Point pos = GetPanelPosition(UiPanels::Character, { 0, 0 });
 	const Surface out(PanelFull.surface.get());
 
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
 			if (entry.high)
-				DrawPanelFieldHigh(out, pos + entry.position, entry.length);
+				DrawPanelFieldHigh(out, entry.position, entry.length);
 			else
-				DrawPanelFieldLow(out, pos + entry.position, entry.length);
+				DrawPanelFieldLow(out, entry.position, entry.length);
 		}
-		DrawShadowString(out, pos, entry);
+		DrawShadowString(out, entry);
 	}
 
 	for (auto &gfx : PanelParts) {
@@ -313,10 +312,10 @@ void DrawChr(const Surface &out)
 	for (auto &entry : panelEntries) {
 		if (entry.statDisplayFunc != nullptr) {
 			StyledText tmp = entry.statDisplayFunc();
-			Displacement displacement = Displacement { 7, 17 };
+			Displacement displacement = Displacement { pos.x + 7, pos.y + 17 };
 			if (entry.high)
 				displacement += { 0, 1 };
-			DrawString(out, tmp.text.c_str(), { pos + entry.position + displacement, { entry.length, 12 } }, UiFlags::AlignCenter | tmp.style, entry.statSpacing);
+			DrawString(out, tmp.text.c_str(), { entry.position + displacement, { entry.length, 0 } }, UiFlags::AlignCenter | tmp.style, entry.statSpacing);
 		}
 	}
 	DrawStatButtons(out);
