@@ -85,12 +85,6 @@ int topY;
 int lineSpacing;
 int act2finSpacing;
 
-/**
- * Specifies a displacement from the quest entrance for
- * which the hover text of the cursor will be visible.
- */
-Displacement questEntranceOffsets[7] = { { 0, 0 }, { -1, 0 }, { 0, -1 }, { -1, -1 }, { -2, -1 }, { -1, -2 }, { -2, -2 } };
-
 const char *const QuestTriggerNames[5] = {
 	N_(/* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
 	N_(/* TRANSLATORS: Quest Map*/ "The Chamber of Bone"),
@@ -451,12 +445,10 @@ bool ForceQuests()
 		if (quest._qidx != Q_BETRAYER && currlevel == quest._qlevel && quest._qslvl != 0) {
 			int ql = quest._qslvl - 1;
 
-			for (int j = 0; j < 7; j++) {
-				if (quest.position + questEntranceOffsets[j] == cursPosition) {
-					strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
-					cursPosition = quest.position;
-					return true;
-				}
+			if (quest.EntranceBoundaryContains(cursPosition)) {
+				strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
+				cursPosition = quest.position;
+				return true;
 			}
 		}
 	}
@@ -887,6 +879,16 @@ bool Quest::IsAvailable()
 		return false;
 
 	return true;
+}
+
+bool Quest::EntranceBoundaryContains(Point position) const
+{
+	constexpr Displacement questEntranceOffsets[7] = { { 0, 0 }, { -1, 0 }, { 0, -1 }, { -1, -1 }, { -2, -1 }, { -1, -2 }, { -2, -2 } };
+
+	return std::any_of(
+	    std::begin(questEntranceOffsets),
+	    std::end(questEntranceOffsets),
+	    [&](auto offset) { return this->position + offset == position; });
 }
 
 } // namespace devilution
