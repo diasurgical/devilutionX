@@ -17,7 +17,7 @@ struct HellfireOptions {
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
 	/** @brief Cornerstone of the world item. */
-	char szItem[sizeof(PkItemStruct) * 2 + 1];
+	char szItem[sizeof(ItemPack) * 2 + 1];
 };
 
 struct AudioOptions {

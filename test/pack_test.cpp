@@ -5,9 +5,9 @@
 
 using namespace devilution;
 
-static void ComparePackedItems(const PkItemStruct *item1, const PkItemStruct *item2)
+static void ComparePackedItems(const ItemPack *item1, const ItemPack *item2)
 {
-	// `PkItemStruct` is packed, so we copy the unaligned values out before comparing them.
+	// `ItemPack` is packed, so we copy the unaligned values out before comparing them.
 	// This avoids the following UBSAN error such as this one:
 	// runtime error: load of misaligned address for type 'const unsigned int', which requires 4 byte alignment
 	{
@@ -132,7 +132,7 @@ static void CompareItems(const Item *item1, const TestItemStruct *item2)
 	EXPECT_EQ(item1->IDidx, item2->IDidx);
 }
 
-const PkItemStruct PackedDiabloItems[] = {
+const ItemPack PackedDiabloItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 2082213289,       0x119,  53,   3,   60,    60,   0,    0,      0,      0 }, // Amber Helm of harmony
@@ -329,7 +329,7 @@ const TestItemStruct DiabloItems[] = {
 TEST(pack, UnPackItem_diablo)
 {
 	Item id;
-	PkItemStruct is;
+	ItemPack is;
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
@@ -349,8 +349,8 @@ TEST(pack, UnPackItem_diablo)
 
 TEST(pack, UnPackItem_diablo_unique_bug)
 {
-	PkItemStruct pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
-	PkItemStruct pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
+	ItemPack pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
+	ItemPack pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
@@ -376,12 +376,12 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	ASSERT_EQ(id._iUid, 6);
 	ASSERT_EQ(id.IDidx, IDI_STEELVEIL);
 
-	PkItemStruct is;
+	ItemPack is;
 	PackItem(&is, &id);
 	ComparePackedItems(&is, &pkItem);
 }
 
-const PkItemStruct PackedSpawnItems[] = {
+const ItemPack PackedSpawnItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 2060036013,         257, 131,   0,   11,    25,  50,   50,      0,      0 }, // Staff of Firebolt
@@ -400,7 +400,7 @@ const TestItemStruct SpawnItems[] = {
 TEST(pack, UnPackItem_spawn)
 {
 	Item id;
-	PkItemStruct is;
+	ItemPack is;
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
@@ -418,7 +418,7 @@ TEST(pack, UnPackItem_spawn)
 	}
 }
 
-const PkItemStruct PackedDiabloMPItems[] = {
+const ItemPack PackedDiabloMPItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{  309674341,         193, 109,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
@@ -444,7 +444,7 @@ const TestItemStruct DiabloMPItems[] = {
 TEST(pack, UnPackItem_diablo_multiplayer)
 {
 	Item id;
-	PkItemStruct is;
+	ItemPack is;
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
@@ -462,7 +462,7 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 	}
 }
 
-const PkItemStruct PackedHellfireItems[] = {
+const ItemPack PackedHellfireItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
 	{ 1717442367,         266, 156,   3,    0,     0,   0,    0,      0,      0 }, // Ring of stability
@@ -653,7 +653,7 @@ const TestItemStruct HellfireItems[] = {
 TEST(pack, UnPackItem_hellfire)
 {
 	Item id;
-	PkItemStruct is;
+	ItemPack is;
 
 	gbIsHellfire = true;
 	gbIsMultiplayer = false;
@@ -674,7 +674,7 @@ TEST(pack, UnPackItem_hellfire)
 
 TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 {
-	PkItemStruct is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
+	ItemPack is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
 	Item id;
 
 	gbIsHellfire = false;
@@ -688,7 +688,7 @@ TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 
 TEST(pack, UnPackItem_empty)
 {
-	PkItemStruct is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
+	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	Item id;
 
 	UnPackItem(&is, &id, false);
@@ -698,7 +698,7 @@ TEST(pack, UnPackItem_empty)
 
 TEST(pack, PackItem_empty)
 {
-	PkItemStruct is;
+	ItemPack is;
 	Item id;
 
 	id._itype = ITYPE_NONE;
@@ -708,7 +708,7 @@ TEST(pack, PackItem_empty)
 	ASSERT_EQ(is.idx, 0xFFFF);
 }
 
-static void compareGold(const PkItemStruct *is, int iCurs)
+static void compareGold(const ItemPack *is, int iCurs)
 {
 	Item id;
 	UnPackItem(is, &id, false);
@@ -718,39 +718,39 @@ static void compareGold(const PkItemStruct *is, int iCurs)
 	ASSERT_EQ(id._itype, ITYPE_GOLD);
 	ASSERT_EQ(id._iClass, ICLASS_GOLD);
 
-	PkItemStruct is2;
+	ItemPack is2;
 	PackItem(&is2, &id);
 	ComparePackedItems(is, &is2);
 }
 
 TEST(pack, UnPackItem_gold_small)
 {
-	PkItemStruct is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
+	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1000, 0 };
 	compareGold(&is, ICURS_GOLD_SMALL);
 }
 
 TEST(pack, UnPackItem_gold_medium)
 {
-	PkItemStruct is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
+	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 1001, 0 };
 	compareGold(&is, ICURS_GOLD_MEDIUM);
 }
 
 TEST(pack, UnPackItem_gold_large)
 {
-	PkItemStruct is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
+	ItemPack is = { 0, 0, IDI_GOLD, 0, 0, 0, 0, 0, 2500, 0 };
 	compareGold(&is, ICURS_GOLD_LARGE);
 }
 
 TEST(pack, UnPackItem_ear)
 {
-	PkItemStruct is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
+	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	Item id;
 
 	UnPackItem(&is, &id, false);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
 
-	PkItemStruct is2;
+	ItemPack is2;
 	PackItem(&is2, &id);
 	ComparePackedItems(&is, &is2);
 }
