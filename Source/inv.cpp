@@ -1320,59 +1320,59 @@ bool AutoPlaceItemInInventory(Player &player, const ItemStruct &item, bool persi
 {
 	Size itemSize = GetInventorySize(item);
 
-		for (int i = 30; i <= 39; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+	for (int i = 30; i <= 39; i++) {
+		if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+			return true;
+	}
+	for (int x = 9; x >= 0; x--) {
+		for (int y = 2; y >= 0; y--) {
+			if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
 				return true;
 		}
-		for (int x = 9; x >= 0; x--) {
-			for (int y = 2; y >= 0; y--) {
-				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-					return true;
-			}
-		}
-		return false;
 	}
+	return false;
+}
 
-	if (itemSize.height == 2) {
-		for (int x = 10 - itemSize.width; x >= 0; x -= itemSize.width) {
+if (itemSize.height == 2) {
+	for (int x = 10 - itemSize.width; x >= 0; x -= itemSize.width) {
+		for (int y = 0; y < 3; y++) {
+			if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
+				return true;
+		}
+	}
+	if (itemSize.width == 2) {
+		for (int x = 7; x >= 0; x -= 2) {
 			for (int y = 0; y < 3; y++) {
 				if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
 					return true;
 			}
 		}
-		if (itemSize.width == 2) {
-			for (int x = 7; x >= 0; x -= 2) {
-				for (int y = 0; y < 3; y++) {
-					if (AutoPlaceItemInInventorySlot(player, 10 * y + x, item, persistItem))
-						return true;
-				}
-			}
-		}
-		return false;
+	}
+	return false;
+}
+
+if (itemSize == Size { 1, 3 }) {
+	for (int i = 0; i < 20; i++) {
+		if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+			return true;
+	}
+	return false;
+}
+
+if (itemSize == Size { 2, 3 }) {
+	for (int i = 0; i < 9; i++) {
+		if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+			return true;
 	}
 
-	if (itemSize == Size { 1, 3 }) {
-		for (int i = 0; i < 20; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		return false;
+	for (int i = 10; i < 19; i++) {
+		if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
+			return true;
 	}
+	return false;
+}
 
-	if (itemSize == Size { 2, 3 }) {
-		for (int i = 0; i < 9; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-
-		for (int i = 10; i < 19; i++) {
-			if (AutoPlaceItemInInventorySlot(player, i, item, persistItem))
-				return true;
-		}
-		return false;
-	}
-
-	app_fatal("Unknown item size: %ix%i", itemSize.width, itemSize.height);
+app_fatal("Unknown item size: %ix%i", itemSize.width, itemSize.height);
 }
 
 bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const ItemStruct &item, bool persistItem)
