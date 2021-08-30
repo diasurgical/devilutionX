@@ -9,6 +9,8 @@
 #include <cstring>
 #include <ctime>
 
+#include "engine/point.hpp"
+
 namespace devilution {
 
 #ifndef MAX_PATH
@@ -35,7 +37,7 @@ struct tagMSG {
 // Everything else
 //
 
-void SetCursorPos(int X, int Y);
+void SetCursorPos(Point position);
 void FocusOnCharInfo();
 
 bool GetAsyncKeyState(int vKey);

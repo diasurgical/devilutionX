@@ -609,7 +609,7 @@ DWORD OnSyncData(TCmd *pCmd, int pnum)
 	return sync_update(pnum, (const byte *)pCmd);
 }
 
-DWORD OnWalk(TCmd *pCmd, PlayerStruct &player)
+DWORD OnWalk(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -670,7 +670,7 @@ DWORD OnAddVitality(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnGotoGetItem(TCmd *pCmd, PlayerStruct &player)
+DWORD OnGotoGetItem(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -683,7 +683,7 @@ DWORD OnGotoGetItem(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnRequestGetItem(TCmd *pCmd, PlayerStruct &player)
+DWORD OnRequestGetItem(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -737,7 +737,7 @@ DWORD OnGetItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnGotoAutoGetItem(TCmd *pCmd, PlayerStruct &player)
+DWORD OnGotoAutoGetItem(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -750,7 +750,7 @@ DWORD OnGotoAutoGetItem(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnRequestAutoGetItem(TCmd *pCmd, PlayerStruct &player)
+DWORD OnRequestAutoGetItem(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -888,7 +888,7 @@ DWORD OnRespawnItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAttackTile(TCmd *pCmd, PlayerStruct &player)
+DWORD OnAttackTile(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -902,7 +902,7 @@ DWORD OnAttackTile(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnStandingAttackTile(TCmd *pCmd, PlayerStruct &player)
+DWORD OnStandingAttackTile(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -916,7 +916,7 @@ DWORD OnStandingAttackTile(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnRangedAttackTile(TCmd *pCmd, PlayerStruct &player)
+DWORD OnRangedAttackTile(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -930,7 +930,7 @@ DWORD OnRangedAttackTile(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellWall(TCmd *pCmd, PlayerStruct &player)
+DWORD OnSpellWall(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam3 *)pCmd;
 
@@ -954,7 +954,7 @@ DWORD OnSpellWall(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellTile(TCmd *pCmd, PlayerStruct &player)
+DWORD OnSpellTile(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam2 *)pCmd;
 
@@ -977,7 +977,7 @@ DWORD OnSpellTile(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnTargetSpellTile(TCmd *pCmd, PlayerStruct &player)
+DWORD OnTargetSpellTile(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam2 *)pCmd;
 
@@ -1000,7 +1000,7 @@ DWORD OnTargetSpellTile(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnOperateObjectTile(TCmd *pCmd, PlayerStruct &player)
+DWORD OnOperateObjectTile(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1013,7 +1013,7 @@ DWORD OnOperateObjectTile(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnDisarm(TCmd *pCmd, PlayerStruct &player)
+DWORD OnDisarm(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1026,7 +1026,7 @@ DWORD OnDisarm(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnOperateObjectTelekinesis(TCmd *pCmd, PlayerStruct &player)
+DWORD OnOperateObjectTelekinesis(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1038,7 +1038,7 @@ DWORD OnOperateObjectTelekinesis(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnAttackMonster(TCmd *pCmd, PlayerStruct &player)
+DWORD OnAttackMonster(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1053,7 +1053,7 @@ DWORD OnAttackMonster(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnAttackPlayer(TCmd *pCmd, PlayerStruct &player)
+DWORD OnAttackPlayer(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1066,7 +1066,7 @@ DWORD OnAttackPlayer(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnRangedAttackMonster(TCmd *pCmd, PlayerStruct &player)
+DWORD OnRangedAttackMonster(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1079,7 +1079,7 @@ DWORD OnRangedAttackMonster(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnRangedAttackPlayer(TCmd *pCmd, PlayerStruct &player)
+DWORD OnRangedAttackPlayer(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1092,7 +1092,7 @@ DWORD OnRangedAttackPlayer(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellMonster(TCmd *pCmd, PlayerStruct &player)
+DWORD OnSpellMonster(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam3 *)pCmd;
 
@@ -1114,7 +1114,7 @@ DWORD OnSpellMonster(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellPlayer(TCmd *pCmd, PlayerStruct &player)
+DWORD OnSpellPlayer(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam3 *)pCmd;
 
@@ -1136,7 +1136,7 @@ DWORD OnSpellPlayer(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnTargetSpellMonster(TCmd *pCmd, PlayerStruct &player)
+DWORD OnTargetSpellMonster(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam3 *)pCmd;
 
@@ -1158,7 +1158,7 @@ DWORD OnTargetSpellMonster(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*p);
 }
 
-DWORD OnTargetSpellPlayer(TCmd *pCmd, PlayerStruct &player)
+DWORD OnTargetSpellPlayer(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam3 *)pCmd;
 
@@ -1216,7 +1216,7 @@ DWORD OnHealOther(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnTalkXY(TCmd *pCmd, PlayerStruct &player)
+DWORD OnTalkXY(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1348,7 +1348,7 @@ DWORD OnPlayerDeath(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnPlayerDamage(TCmd *pCmd, PlayerStruct &player)
+DWORD OnPlayerDamage(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdDamage *)pCmd;
 
@@ -1446,12 +1446,14 @@ DWORD OnChangePlayerItems(TCmd *pCmd, int pnum)
 	auto *p = (TCmdChItem *)pCmd;
 	auto bodyLocation = static_cast<inv_body_loc>(p->bLoc);
 
+	auto &player = Players[pnum];
+
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (pnum != MyPlayerId)
-		CheckInvSwap(pnum, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
+		CheckInvSwap(player, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
 
-	Players[pnum].ReadySpellFromEquipment(bodyLocation);
+	player.ReadySpellFromEquipment(bodyLocation);
 
 	return sizeof(*p);
 }
@@ -1463,7 +1465,7 @@ DWORD OnDeletePlayerItems(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (pnum != MyPlayerId)
-		inv_update_rem_item(pnum, p->bLoc);
+		inv_update_rem_item(Players[pnum], p->bLoc);
 
 	return sizeof(*p);
 }
@@ -1616,7 +1618,7 @@ DWORD OnSetStrength(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrStr(pnum, p->wParam1);
+		SetPlrStr(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1628,7 +1630,7 @@ DWORD OnSetDexterity(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrDex(pnum, p->wParam1);
+		SetPlrDex(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1640,7 +1642,7 @@ DWORD OnSetMagic(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrMag(pnum, p->wParam1);
+		SetPlrMag(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1652,7 +1654,7 @@ DWORD OnSetVitality(TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1)
 		SendPacket(pnum, p, sizeof(*p));
 	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrVit(pnum, p->wParam1);
+		SetPlrVit(Players[pnum], p->wParam1);
 
 	return sizeof(*p);
 }
@@ -1737,7 +1739,7 @@ DWORD OnNova(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSetShield(TCmd *pCmd, PlayerStruct &player)
+DWORD OnSetShield(TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs != 1)
 		player.pManaShield = true;
@@ -1745,7 +1747,7 @@ DWORD OnSetShield(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*pCmd);
 }
 
-DWORD OnRemoveShield(TCmd *pCmd, PlayerStruct &player)
+DWORD OnRemoveShield(TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs != 1)
 		player.pManaShield = false;
@@ -1753,7 +1755,7 @@ DWORD OnRemoveShield(TCmd *pCmd, PlayerStruct &player)
 	return sizeof(*pCmd);
 }
 
-DWORD OnSetReflect(TCmd *pCmd, PlayerStruct &player)
+DWORD OnSetReflect(TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 	if (gbBufferMsgs != 1)

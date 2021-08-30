@@ -1636,10 +1636,12 @@ msgid ""
 "If you hold the mouse button down while moving, the character will continue "
 "to move in that direction."
 msgstr ""
+"캐릭터가 움직이는 동안 마우스 버튼을 누르고 있으면, 계속 그 방향으로 이동합니"
+"다."
 
 #: Source/help.cpp:48
 msgid "$Combat:"
-msgstr "$전투"
+msgstr "$전투:"
 
 #: Source/help.cpp:49
 msgid ""
@@ -1931,7 +1933,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
-msgstr ""
+msgstr "테오도르"
 
 #: Source/itemdat.cpp:57
 msgid "Auric Amulet"
@@ -1939,39 +1941,39 @@ msgstr ""
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
-msgstr ""
+msgstr "찢어진 노트 1"
 
 #: Source/itemdat.cpp:59
 msgid "Torn Note 2"
-msgstr ""
+msgstr "찢어진 노트 2"
 
 #: Source/itemdat.cpp:60
 msgid "Torn Note 3"
-msgstr ""
+msgstr "찢어진 노트 3"
 
 #: Source/itemdat.cpp:61
 msgid "Reconstructed Note"
-msgstr ""
+msgstr "재구성된 노트"
 
 #: Source/itemdat.cpp:62
 msgid "Brown Suit"
-msgstr ""
+msgstr "갈색 슈트"
 
 #: Source/itemdat.cpp:63
 msgid "Grey Suit"
-msgstr ""
+msgstr "회색 슈트"
 
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
 msgid "Cap"
-msgstr ""
+msgstr "모자"
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
-msgstr ""
+msgstr "해골 모자"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
 msgid "Helm"
-msgstr ""
+msgstr "투구"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
@@ -1979,7 +1981,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
-msgstr ""
+msgstr "왕관"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
@@ -1999,7 +2001,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:73
 msgid "Robe"
-msgstr ""
+msgstr "로브"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
@@ -2071,27 +2073,27 @@ msgstr ""
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
 msgid "Shield"
-msgstr ""
+msgstr "방패"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
-msgstr ""
+msgstr "작은 방패"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr ""
+msgstr "큰 방패"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
-msgstr ""
+msgstr "카이트 방패"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
-msgstr ""
+msgstr "타워 방패"
 
 #: Source/itemdat.cpp:92
 msgid "Gothic Shield"
-msgstr ""
+msgstr "고딕 방패"
 
 #: Source/itemdat.cpp:97
 msgid "Potion of Rejuvenation"
@@ -2208,27 +2210,27 @@ msgstr ""
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
-msgstr ""
+msgstr "펄션"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
-msgstr ""
+msgstr "시미터"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr ""
+msgstr "클레이모어"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
-msgstr ""
+msgstr "블레이드"
 
 #: Source/itemdat.cpp:140
 msgid "Sabre"
-msgstr ""
+msgstr "세이버"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr ""
+msgstr "긴 소드"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
@@ -2236,11 +2238,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr ""
+msgstr "바스타드 소드"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr ""
+msgstr "투핸디드 소드"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
@@ -2248,16 +2250,16 @@ msgstr ""
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr ""
+msgstr "작은 도끼"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
 msgid "Axe"
-msgstr ""
+msgstr "도끼"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr ""
+msgstr "큰 도끼"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
@@ -2273,19 +2275,19 @@ msgstr ""
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
-msgstr ""
+msgstr "메이스"
 
 #: Source/itemdat.cpp:153
 msgid "Morning Star"
-msgstr ""
+msgstr "모닝 스타"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr ""
+msgstr "워 해머"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
-msgstr ""
+msgstr "해머"
 
 #: Source/itemdat.cpp:155
 msgid "Spiked Club"
@@ -2303,15 +2305,15 @@ msgstr ""
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
 #: Source/itemdat.cpp:165 Source/itemdat.cpp:166
 msgid "Bow"
-msgstr ""
+msgstr "보우"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr ""
+msgstr "헌터 보우"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr ""
+msgstr "롱 보우"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
@@ -2356,7 +2358,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
-msgstr ""
+msgstr "반지"
 
 #: Source/itemdat.cpp:175 Source/itemdat.cpp:176
 msgid "Amulet"
@@ -5442,7 +5444,7 @@ msgstr ""
 
 #: Source/objects.cpp:5500
 msgid "Barrel"
-msgstr ""
+msgstr "배럴통"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5504
@@ -5632,7 +5634,7 @@ msgstr "농부의 과수원"
 
 #: Source/quests.cpp:61
 msgid "Little Girl"
-msgstr ""
+msgstr "작은 여자아이"
 
 #: Source/quests.cpp:62
 msgid "Wandering Trader"
@@ -5655,7 +5657,7 @@ msgstr "레오릭 왕의 무덤"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:82 Source/setmaps.cpp:79
 msgid "Maze"
-msgstr ""
+msgstr "미로"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:83
@@ -5874,11 +5876,11 @@ msgstr ""
 
 #: Source/stores.cpp:169
 msgid "Damage: {:d}-{:d}  "
-msgstr ""
+msgstr "공격력: {:d}-{:d}  "
 
 #: Source/stores.cpp:171
 msgid "Armor: {:d}  "
-msgstr ""
+msgstr "방어력: {:d}  "
 
 #: Source/stores.cpp:173
 msgid "Dur: {:d}/{:d},  "
@@ -5886,7 +5888,7 @@ msgstr ""
 
 #: Source/stores.cpp:176
 msgid "Indestructible,  "
-msgstr ""
+msgstr "불멸의, "
 
 #: Source/stores.cpp:184
 msgid "No required attributes"
@@ -9593,19 +9595,19 @@ msgstr ""
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
 #: Source/textdat.cpp:651 Source/textdat.cpp:654
 msgid "In Spiritu Sanctum."
-msgstr ""
+msgstr "인 스피리투 생텀."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:643 Source/textdat.cpp:646 Source/textdat.cpp:649
 #: Source/textdat.cpp:652 Source/textdat.cpp:655
 msgid "Praedictum Otium."
-msgstr ""
+msgstr "프래딕툼 오티움."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:644 Source/textdat.cpp:647 Source/textdat.cpp:650
 #: Source/textdat.cpp:653 Source/textdat.cpp:656
 msgid "Efficio Obitus Ut Inimicus."
-msgstr ""
+msgstr "에피시오 오비투스 웃 이니미쿠스."
 
 #: Source/towners.cpp:96
 msgid "Griswold the Blacksmith"

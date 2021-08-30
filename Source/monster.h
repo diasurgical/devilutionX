@@ -16,12 +16,9 @@
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"
 #include "monstdat.h"
+#include "sound.h"
 #include "spelldat.h"
 #include "textdat.h"
-
-#ifndef NOSOUND
-#include "sound.h"
-#endif
 
 namespace devilution {
 
@@ -152,9 +149,7 @@ struct CMonster {
 	{
 		return Anims[static_cast<int>(graphic)];
 	}
-#ifndef NOSOUND
 	std::unique_ptr<TSnd> Snds[4][2];
-#endif
 	uint16_t mMinHP;
 	uint16_t mMaxHP;
 	uint8_t mAFNum;

@@ -151,8 +151,7 @@ void DrawItemNameLabels(const Surface &out)
 		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y - Height + MarginY && MousePosition.y < label.pos.y + MarginY) {
 			if (!gmenu_is_active() && PauseMode == 0 && !MyPlayerIsDead && IsMouseOverGameArea()) {
 				isLabelHighlighted = true;
-				cursmx = item.position.x;
-				cursmy = item.position.y;
+				cursPosition = item.position;
 				pcursitem = label.id;
 			}
 		}

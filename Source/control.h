@@ -102,7 +102,7 @@ void DrawManaFlaskLower(const Surface &out);
  *
  * This is used to ensure that DrawFlask routines display an accurate representation of the players health/mana
  *
- * @see PlayerStruct::UpdateHitPointPercentage() and PlayerStruct::UpdateManaPercentage()
+ * @see Player::UpdateHitPointPercentage() and Player::UpdateManaPercentage()
  */
 void control_update_life_mana();
 

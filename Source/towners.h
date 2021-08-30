@@ -57,7 +57,7 @@ struct TownerStruct {
 	/** Specifies the animation frame sequence. */
 	const uint8_t *animOrder; // unowned
 	std::size_t animOrderSize;
-	void (*talk)(PlayerStruct &player, TownerStruct &towner);
+	void (*talk)(Player &player, TownerStruct &towner);
 	_talker_id _ttype;
 };
 
@@ -66,7 +66,7 @@ extern TownerStruct Towners[NUM_TOWNERS];
 void InitTowners();
 void FreeTownerGFX();
 void ProcessTowners();
-void TalkToTowner(PlayerStruct &player, int t);
+void TalkToTowner(Player &player, int t);
 
 #ifdef _DEBUG
 bool DebugTalkToTowner(std::string targetName);

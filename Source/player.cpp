@@ -33,7 +33,7 @@
 namespace devilution {
 
 int MyPlayerId;
-PlayerStruct Players[MAX_PLRS];
+Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 int deathdelay;
 
@@ -219,7 +219,7 @@ const char *const ClassPathTbl[] = {
 	"Warrior",
 };
 
-void PmChangeLightOff(PlayerStruct &player)
+void PmChangeLightOff(Player &player)
 {
 	if (player._plid == NO_LIGHT)
 		return;
@@ -304,7 +304,7 @@ constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format on
 } };
 
-void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
+void ScrollViewPort(const Player &player, _scroll_direction dir)
 {
 	ScrollInfo.tile.x = player.position.tile.x - ViewX;
 	ScrollInfo.tile.y = player.position.tile.y - ViewY;
@@ -322,7 +322,7 @@ void ScrollViewPort(const PlayerStruct &player, _scroll_direction dir)
 	}
 }
 
-bool PlrDirOK(const PlayerStruct &player, Direction dir)
+bool PlrDirOK(const Player &player, Direction dir)
 {
 	Point position = player.position.tile;
 	Point futurePosition = position + dir;
@@ -368,7 +368,7 @@ void HandleWalkMode(int pnum, Displacement vel, Direction dir)
 	player._pdir = dir;
 }
 
-void StartWalkAnimation(PlayerStruct &player, Direction dir, bool pmWillBeCalled)
+void StartWalkAnimation(Player &player, Direction dir, bool pmWillBeCalled)
 {
 	int skippedFrames = -2;
 	if (currlevel == 0 && sgGameInitInfo.bRunInTown != 0)
@@ -405,7 +405,7 @@ void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<
 	}
 }
 
-void ClearStateVariables(PlayerStruct &player)
+void ClearStateVariables(Player &player)
 {
 	player.position.temp = { 0, 0 };
 	player.tempDirection = DIR_S;
@@ -584,7 +584,7 @@ void RespawnDeadItem(ItemStruct *itm, Point target)
 	itm->_itype = ITYPE_NONE;
 }
 
-void DeadItem(PlayerStruct &player, ItemStruct *itm, Displacement direction)
+void DeadItem(Player &player, ItemStruct *itm, Displacement direction)
 {
 	if (itm->isEmpty())
 		return;
@@ -625,7 +625,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 		if (amount < item._ivalue) {
 			item._ivalue -= amount;
 			SetPlrHandItem(player.HoldItem, IDI_GOLD);
-			GetGoldSeed(pnum, &player.HoldItem);
+			SetGoldSeed(player, player.HoldItem);
 			SetPlrHandGoldCurs(player.HoldItem);
 			player.HoldItem._ivalue = amount;
 			DeadItem(player, &player.HoldItem, { 0, 0 });
@@ -635,7 +635,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 		amount -= item._ivalue;
 		player.RemoveInvItem(i);
 		SetPlrHandItem(player.HoldItem, IDI_GOLD);
-		GetGoldSeed(pnum, &player.HoldItem);
+		SetGoldSeed(player, player.HoldItem);
 		SetPlrHandGoldCurs(player.HoldItem);
 		player.HoldItem._ivalue = item._ivalue;
 		DeadItem(player, &player.HoldItem, { 0, 0 });
@@ -768,19 +768,17 @@ bool DoWalk(int pnum, int variant)
 	return false;
 }
 
-bool WeaponDecay(int pnum, int ii)
+bool WeaponDecay(Player &player, int ii)
 {
-	auto &player = Players[pnum];
-
 	if (!player.InvBody[ii].isEmpty() && player.InvBody[ii]._iClass == ICLASS_WEAPON && (player.InvBody[ii]._iDamAcFlags & ISPLHF_DECAY) != 0) {
 		player.InvBody[ii]._iPLDam -= 5;
 		if (player.InvBody[ii]._iPLDam <= -100) {
 			NetSendCmdDelItem(true, ii);
 			player.InvBody[ii]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
-		CalcPlrInv(pnum, true);
+		CalcPlrInv(player, true);
 	}
 	return false;
 }
@@ -791,19 +789,19 @@ bool DamageWeapon(int pnum, int durrnd)
 		return false;
 	}
 
-	if (WeaponDecay(pnum, INVLOC_HAND_LEFT))
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("WeaponDur: illegal player %i", pnum);
+	}
+	auto &player = Players[pnum];
+
+	if (WeaponDecay(player, INVLOC_HAND_LEFT))
 		return true;
-	if (WeaponDecay(pnum, INVLOC_HAND_RIGHT))
+	if (WeaponDecay(player, INVLOC_HAND_RIGHT))
 		return true;
 
 	if (GenerateRnd(durrnd) != 0) {
 		return false;
 	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("WeaponDur: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
@@ -814,7 +812,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability <= 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -828,7 +826,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -842,7 +840,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -856,7 +854,7 @@ bool DamageWeapon(int pnum, int durrnd)
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 			return true;
 		}
 	}
@@ -1362,7 +1360,7 @@ void ShieldDur(int pnum)
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == 0) {
 			NetSendCmdDelItem(true, INVLOC_HAND_LEFT);
 			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
-			CalcPlrInv(pnum, true);
+			CalcPlrInv(player, true);
 		}
 	}
 
@@ -1372,7 +1370,7 @@ void ShieldDur(int pnum)
 			if (player.InvBody[INVLOC_HAND_RIGHT]._iDurability == 0) {
 				NetSendCmdDelItem(true, INVLOC_HAND_RIGHT);
 				player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
-				CalcPlrInv(pnum, true);
+				CalcPlrInv(player, true);
 			}
 		}
 	}
@@ -1444,7 +1442,7 @@ void DamageArmor(int pnum)
 		NetSendCmdDelItem(true, INVLOC_HEAD);
 	}
 	pi->_itype = ITYPE_NONE;
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 }
 
 bool DoSpell(int pnum)
@@ -1540,7 +1538,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int y = 0;
 
 	MonsterStruct *monster;
-	PlayerStruct *target;
+	Player *target;
 	ObjectStruct *object;
 	ItemStruct *item;
 
@@ -1946,7 +1944,7 @@ void ValidatePlayer()
 	myPlayer._pMemSpells &= msk;
 }
 
-void CheckCheatStats(PlayerStruct &player)
+void CheckCheatStats(Player &player)
 {
 	if (player._pStrength > 750) {
 		player._pStrength = 750;
@@ -1975,7 +1973,7 @@ void CheckCheatStats(PlayerStruct &player)
 
 } // namespace
 
-void PlayerStruct::CalcScrolls()
+void Player::CalcScrolls()
 {
 	_pScrlSpells = 0;
 	for (int i = 0; i < _pNumInv; i++) {
@@ -1994,7 +1992,7 @@ void PlayerStruct::CalcScrolls()
 	EnsureValidReadiedSpell(*this);
 }
 
-bool PlayerStruct::HasItem(int item, int *idx) const
+bool Player::HasItem(int item, int *idx) const
 {
 	for (int i = 0; i < _pNumInv; i++) {
 		if (InvList[i].IDidx == item) {
@@ -2007,7 +2005,7 @@ bool PlayerStruct::HasItem(int item, int *idx) const
 	return false;
 }
 
-void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
+void Player::RemoveInvItem(int iv, bool calcScrolls)
 {
 	iv++;
 
@@ -2039,7 +2037,7 @@ void PlayerStruct::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
-bool PlayerStruct::TryRemoveInvItemById(int item)
+bool Player::TryRemoveInvItemById(int item)
 {
 	int idx;
 	if (HasItem(item, &idx)) {
@@ -2049,7 +2047,7 @@ bool PlayerStruct::TryRemoveInvItemById(int item)
 	return false;
 }
 
-void PlayerStruct::RemoveSpdBarItem(int iv)
+void Player::RemoveSpdBarItem(int iv)
 {
 	SpdList[iv]._itype = ITYPE_NONE;
 
@@ -2057,7 +2055,7 @@ void PlayerStruct::RemoveSpdBarItem(int iv)
 	force_redraw = 255;
 }
 
-int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
+int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 {
 	switch (attribute) {
 	case CharacterAttribute::Dexterity:
@@ -2073,7 +2071,7 @@ int PlayerStruct::GetBaseAttributeValue(CharacterAttribute attribute) const
 	}
 }
 
-int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
+int Player::GetMaximumAttributeValue(CharacterAttribute attribute) const
 {
 	static const int MaxStats[enum_size<HeroClass>::value][enum_size<CharacterAttribute>::value] = {
 		// clang-format off
@@ -2089,7 +2087,7 @@ int PlayerStruct::GetMaximumAttributeValue(CharacterAttribute attribute) const
 	return MaxStats[static_cast<std::size_t>(_pClass)][static_cast<std::size_t>(attribute)];
 }
 
-Point PlayerStruct::GetTargetPosition() const
+Point Player::GetTargetPosition() const
 {
 	// clang-format off
 	constexpr int DirectionOffsetX[8] = {  0,-1, 1, 0,-1, 1, 1,-1 };
@@ -2107,14 +2105,14 @@ Point PlayerStruct::GetTargetPosition() const
 	return target;
 }
 
-void PlayerStruct::Say(HeroSpeech speechId) const
+void Player::Say(HeroSpeech speechId) const
 {
 	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
 	PlaySfxLoc(soundEffect, position.tile);
 }
 
-void PlayerStruct::SaySpecific(HeroSpeech speechId) const
+void Player::SaySpecific(HeroSpeech speechId) const
 {
 	_sfx_id soundEffect = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 
@@ -2124,31 +2122,31 @@ void PlayerStruct::SaySpecific(HeroSpeech speechId) const
 	PlaySfxLoc(soundEffect, position.tile, false);
 }
 
-void PlayerStruct::Say(HeroSpeech speechId, int delay) const
+void Player::Say(HeroSpeech speechId, int delay) const
 {
 	sfxdelay = delay;
 	sfxdnum = herosounds[static_cast<size_t>(_pClass)][static_cast<size_t>(speechId)];
 }
 
-void PlayerStruct::Stop()
+void Player::Stop()
 {
 	ClrPlrPath(*this);
 	destAction = ACTION_NONE;
 }
 
-bool PlayerStruct::IsWalking() const
+bool Player::IsWalking() const
 {
 	return IsAnyOf(_pmode, PM_WALK, PM_WALK2, PM_WALK3);
 }
 
-void PlayerStruct::Reset()
+void Player::Reset()
 {
-	// Create empty default initialized PlayerStruct on heap to avoid excessive stack usage
-	auto emptyPlayer = std::make_unique<PlayerStruct>();
+	// Create empty default initialized Player on heap to avoid excessive stack usage
+	auto emptyPlayer = std::make_unique<Player>();
 	*this = std::move(*emptyPlayer);
 }
 
-void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
+void LoadPlrGFX(Player &player, player_graphic graphic)
 {
 	char prefix[16];
 	char pszName[256];
@@ -2249,7 +2247,7 @@ void LoadPlrGFX(PlayerStruct &player, player_graphic graphic)
 	SetPlayerGPtrs(pszName, animationData.RawData, animationData.CelSpritesForDirections, animationWidth);
 }
 
-void InitPlayerGFX(PlayerStruct &player)
+void InitPlayerGFX(Player &player)
 {
 	if (player._pHitPoints >> 6 == 0) {
 		player._pgfxnum = 0;
@@ -2265,7 +2263,7 @@ void InitPlayerGFX(PlayerStruct &player)
 	}
 }
 
-void ResetPlayerGFX(PlayerStruct &player)
+void ResetPlayerGFX(Player &player)
 {
 	player.AnimInfo.pCelSprite = nullptr;
 	for (auto &animData : player.AnimationData) {
@@ -2275,7 +2273,7 @@ void ResetPlayerGFX(PlayerStruct &player)
 	}
 }
 
-void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
+void NewPlrAnim(Player &player, player_graphic graphic, Direction dir, int numberOfFrames, int delayLen, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
 {
 	if (player.AnimationData[static_cast<size_t>(graphic)].RawData == nullptr)
 		LoadPlrGFX(player, graphic);
@@ -2289,7 +2287,7 @@ void NewPlrAnim(PlayerStruct &player, player_graphic graphic, Direction dir, int
 	player.AnimInfo.SetNewAnimation(pCelSprite, numberOfFrames, delayLen, flags, numSkippedFrames, distributeFramesBeforeFrame);
 }
 
-void SetPlrAnims(PlayerStruct &player)
+void SetPlrAnims(Player &player)
 {
 	HeroClass pc = player._pClass;
 
@@ -2551,16 +2549,14 @@ void CreatePlayer(int playerId, HeroClass c)
 	SetRndSeed(0);
 }
 
-int CalcStatDiff(PlayerStruct &player)
+int CalcStatDiff(Player &player)
 {
-	return player.GetMaximumAttributeValue(CharacterAttribute::Strength)
-	    - player._pBaseStr
-	    + player.GetMaximumAttributeValue(CharacterAttribute::Magic)
-	    - player._pBaseMag
-	    + player.GetMaximumAttributeValue(CharacterAttribute::Dexterity)
-	    - player._pBaseDex
-	    + player.GetMaximumAttributeValue(CharacterAttribute::Vitality)
-	    - player._pBaseVit;
+	int diff = 0;
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		diff += player.GetMaximumAttributeValue(attribute);
+		diff -= player.GetBaseAttributeValue(attribute);
+	}
+	return diff;
 }
 
 void NextPlrLevel(int pnum)
@@ -2573,7 +2569,7 @@ void NextPlrLevel(int pnum)
 	player._pLevel++;
 	player._pMaxLvl++;
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 
 	if (CalcStatDiff(player) < 5) {
 		player._pStatPts = CalcStatDiff(player);
@@ -2620,7 +2616,7 @@ void NextPlrLevel(int pnum)
 	if (sgbControllerActive)
 		FocusOnCharInfo();
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(player, true);
 }
 
 void AddPlrExperience(int pnum, int lvl, int exp)
@@ -2694,18 +2690,14 @@ void AddPlrMonstExper(int lvl, int exp, char pmask)
 	}
 }
 
-void InitPlayer(int pnum, bool firstTime)
+void InitPlayer(Player &player, bool firstTime)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("InitPlayer: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (firstTime) {
 		player._pRSplType = RSPLTYPE_INVALID;
 		player._pRSpell = SPL_INVALID;
-		if (pnum == MyPlayerId)
+		if (&player == &myPlayer)
 			LoadHotkeys();
 		player._pSBkSpell = SPL_INVALID;
 		player._pSpell = player._pRSpell;
@@ -2736,7 +2728,7 @@ void InitPlayer(int pnum, bool firstTime)
 
 		player._pdir = DIR_S;
 
-		if (pnum == MyPlayerId) {
+		if (&player == &myPlayer) {
 			if (!firstTime || currlevel != 0) {
 				player.position.tile = { ViewX, ViewY };
 			}
@@ -2752,13 +2744,13 @@ void InitPlayer(int pnum, bool firstTime)
 		player.walkpath[0] = WALK_NONE;
 		player.destAction = ACTION_NONE;
 
-		if (pnum == MyPlayerId) {
+		if (&player == &myPlayer) {
 			player._plid = AddLight(player.position.tile, player._pLightRad);
 			ChangeLightXY(myPlayer._plid, myPlayer.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
 		}
-		player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == MyPlayerId);
+		player._pvid = AddVision(player.position.tile, player._pLightRad, &player == &myPlayer);
 	}
 
 	if (player._pClass == HeroClass::Warrior) {
@@ -2784,7 +2776,7 @@ void InitPlayer(int pnum, bool firstTime)
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 	player._pInvincible = false;
 
-	if (pnum == MyPlayerId) {
+	if (&player == &myPlayer) {
 		deathdelay = 0;
 		MyPlayerIsDead = false;
 		ScrollInfo.offset = { 0, 0 };
@@ -2828,7 +2820,7 @@ void PlrDoTrans(Point position)
 	}
 }
 
-void SetPlayerOld(PlayerStruct &player)
+void SetPlayerOld(Player &player)
 {
 	player.position.old = player.position.tile;
 }
@@ -3028,14 +3020,14 @@ StartPlayerKill(int pnum, int earflag)
 	player._pBlockFlag = false;
 	player._pmode = PM_DEATH;
 	player._pInvincible = true;
-	SetPlayerHitPoints(pnum, 0);
+	SetPlayerHitPoints(player, 0);
 	player.deathFrame = 1;
 
 	if (pnum != MyPlayerId && earflag == 0 && !diablolevel) {
 		for (auto &item : player.InvBody) {
 			item._itype = ITYPE_NONE;
 		}
-		CalcPlrInv(pnum, false);
+		CalcPlrInv(player, false);
 	}
 
 	if (player.plrlevel == currlevel) {
@@ -3089,22 +3081,17 @@ StartPlayerKill(int pnum, int earflag)
 							DeadItem(player, &item, Displacement::fromDirection(pdd));
 						}
 
-						CalcPlrInv(pnum, false);
+						CalcPlrInv(player, false);
 					}
 				}
 			}
 		}
 	}
-	SetPlayerHitPoints(pnum, 0);
+	SetPlayerHitPoints(player, 0);
 }
 
-void StripTopGold(int pnum)
+void StripTopGold(Player &player)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("StripTopGold: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	ItemStruct tmpItem = player.HoldItem;
 
 	for (int i = 0; i < player._pNumInv; i++) {
@@ -3113,7 +3100,7 @@ void StripTopGold(int pnum)
 				int val = player.InvList[i]._ivalue - MaxGold;
 				player.InvList[i]._ivalue = MaxGold;
 				SetPlrHandItem(player.HoldItem, 0);
-				GetGoldSeed(pnum, &player.HoldItem);
+				SetGoldSeed(player, player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(player.HoldItem);
 				if (!GoldAutoPlace(player))
@@ -3164,7 +3151,7 @@ void ApplyPlrDamage(int pnum, int dam, int minHP /*= 0*/, int frac /*= 0*/, int 
 	}
 	int minHitPoints = minHP << 6;
 	if (player._pHitPoints < minHitPoints) {
-		SetPlayerHitPoints(pnum, minHitPoints);
+		SetPlayerHitPoints(player, minHitPoints);
 	}
 	if (player._pHitPoints >> 6 <= 0) {
 		SyncPlrKill(pnum, earflag);
@@ -3176,11 +3163,11 @@ void SyncPlrKill(int pnum, int earflag)
 	auto &player = Players[pnum];
 
 	if (player._pHitPoints <= 0 && currlevel == 0) {
-		SetPlayerHitPoints(pnum, 64);
+		SetPlayerHitPoints(player, 64);
 		return;
 	}
 
-	SetPlayerHitPoints(pnum, 0);
+	SetPlayerHitPoints(player, 0);
 	StartPlayerKill(pnum, earflag);
 }
 
@@ -3263,12 +3250,12 @@ void RestartTownLvl(int pnum)
 	player.plrlevel = 0;
 	player._pInvincible = false;
 
-	SetPlayerHitPoints(pnum, 64);
+	SetPlayerHitPoints(player, 64);
 
 	player._pMana = 0;
 	player._pManaBase = player._pMana - (player._pMaxMana - player._pMaxManaBase);
 
-	CalcPlrInv(pnum, false);
+	CalcPlrInv(player, false);
 
 	if (pnum == MyPlayerId) {
 		player._pmode = PM_NEWLVL;
@@ -3394,7 +3381,7 @@ void ProcessPlayers()
 	}
 }
 
-void ClrPlrPath(PlayerStruct &player)
+void ClrPlrPath(Player &player)
 {
 	memset(player.walkpath, WALK_NONE, sizeof(player.walkpath));
 }
@@ -3402,12 +3389,12 @@ void ClrPlrPath(PlayerStruct &player)
 /**
  * @brief Determines if the target position is clear for the given player to stand on.
  *
- * This requires an ID instead of a PlayerStruct& to compare with the dPlayer lookup table values.
+ * This requires an ID instead of a Player& to compare with the dPlayer lookup table values.
  *
  * @param position Dungeon tile coordinates.
  * @return False if something (other than the player themselves) is blocking the tile.
  */
-bool PosOkPlayer(const PlayerStruct &player, Point position)
+bool PosOkPlayer(const Player &player, Point position)
 {
 	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
 		return false;
@@ -3437,7 +3424,7 @@ bool PosOkPlayer(const PlayerStruct &player, Point position)
 	return true;
 }
 
-void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace)
+void MakePlrPath(Player &player, Point targetPosition, bool endspace)
 {
 	if (player.position.future == targetPosition) {
 		return;
@@ -3455,7 +3442,7 @@ void MakePlrPath(PlayerStruct &player, Point targetPosition, bool endspace)
 	player.walkpath[path] = WALK_NONE;
 }
 
-void CalcPlrStaff(PlayerStruct &player)
+void CalcPlrStaff(Player &player)
 {
 	player._pISpells = 0;
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
@@ -3542,9 +3529,9 @@ void CheckPlrSpell()
 
 	if (myPlayer._pRSpell == SPL_FIREWALL || myPlayer._pRSpell == SPL_LIGHTWALL) {
 		LastMouseButtonAction = MouseActionType::Spell;
-		Direction sd = GetDirection(myPlayer.position.tile, { cursmx, cursmy });
+		Direction sd = GetDirection(myPlayer.position.tile, cursPosition);
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam3(true, CMD_SPELLXYD, { cursmx, cursmy }, myPlayer._pRSpell, sd, sl);
+		NetSendCmdLocParam3(true, CMD_SPELLXYD, cursPosition, myPlayer._pRSpell, sd, sl);
 	} else if (pcursmonst != -1) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
@@ -3556,7 +3543,7 @@ void CheckPlrSpell()
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam2(true, CMD_SPELLXY, { cursmx, cursmy }, myPlayer._pRSpell, sl);
+		NetSendCmdLocParam2(true, CMD_SPELLXY, cursPosition, myPlayer._pRSpell, sl);
 	}
 }
 
@@ -3667,7 +3654,7 @@ void SyncInitPlr(int pnum)
 	SyncInitPlrPos(pnum);
 }
 
-void CheckStats(PlayerStruct &player)
+void CheckStats(Player &player)
 {
 	for (auto attribute : enum_values<CharacterAttribute>()) {
 		int maxStatPoint = player.GetMaximumAttributeValue(attribute);
@@ -3703,7 +3690,7 @@ void ModifyPlrStr(int p, int l)
 	player._pStrength += l;
 	player._pBaseStr += l;
 
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETSTR, player._pBaseStr);
@@ -3739,7 +3726,7 @@ void ModifyPlrMag(int p, int l)
 		player._pMana += ms;
 	}
 
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETMAG, player._pBaseMag);
@@ -3760,7 +3747,7 @@ void ModifyPlrDex(int p, int l)
 
 	player._pDexterity += l;
 	player._pBaseDex += l;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETDEX, player._pBaseDex);
@@ -3792,51 +3779,34 @@ void ModifyPlrVit(int p, int l)
 	player._pHitPoints += ms;
 	player._pMaxHP += ms;
 
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 
 	if (p == MyPlayerId) {
 		NetSendCmdParam1(false, CMD_SETVIT, player._pBaseVit);
 	}
 }
 
-void SetPlayerHitPoints(int pnum, int val)
+void SetPlayerHitPoints(Player &player, int val)
 {
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("SetPlayerHitPoints: illegal player %i", pnum);
-	}
-	auto &player = Players[pnum];
-
 	player._pHitPoints = val;
 	player._pHPBase = val + player._pMaxHPBase - player._pMaxHP;
 
-	if (pnum == MyPlayerId) {
+	if (&player == &Players[MyPlayerId]) {
 		drawhpflag = true;
 	}
 }
 
-void SetPlrStr(int p, int v)
+void SetPlrStr(Player &player, int v)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrStr: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseStr = v;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void SetPlrMag(int p, int v)
+void SetPlrMag(Player &player, int v)
 {
-	int m;
-
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrMag: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseMag = v;
 
-	m = v << 6;
+	int m = v << 6;
 	if (player._pClass == HeroClass::Sorcerer) {
 		m *= 2;
 	} else if (player._pClass == HeroClass::Bard) {
@@ -3845,42 +3815,30 @@ void SetPlrMag(int p, int v)
 
 	player._pMaxManaBase = m;
 	player._pMaxMana = m;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void SetPlrDex(int p, int v)
+void SetPlrDex(Player &player, int v)
 {
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrDex: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseDex = v;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void SetPlrVit(int p, int v)
+void SetPlrVit(Player &player, int v)
 {
-	int hp;
-
-	if ((DWORD)p >= MAX_PLRS) {
-		app_fatal("SetPlrVit: illegal player %i", p);
-	}
-	auto &player = Players[p];
-
 	player._pBaseVit = v;
 
-	hp = v << 6;
+	int hp = v << 6;
 	if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Barbarian) {
 		hp *= 2;
 	}
 
 	player._pHPBase = hp;
 	player._pMaxHPBase = hp;
-	CalcPlrInv(p, true);
+	CalcPlrInv(player, true);
 }
 
-void InitDungMsgs(PlayerStruct &player)
+void InitDungMsgs(Player &player)
 {
 	player.pDungMsgs = 0;
 	player.pDungMsgs2 = 0;

@@ -5,13 +5,13 @@
  */
 #pragma once
 
-#include <string_view>
 #include <unordered_map>
 
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -29,6 +29,7 @@ void PrintDebugPlayer(bool bNextPlayer);
 void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
-bool CheckDebugTextCommand(const std::string_view text);
+void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed);
+bool CheckDebugTextCommand(const string_view text);
 
 } // namespace devilution

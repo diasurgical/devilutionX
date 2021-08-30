@@ -17,6 +17,7 @@
 #include "error.h"
 #include "init.h"
 #include "inv.h"
+#include "inv_iterators.hpp"
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -2678,7 +2679,7 @@ bool OperateShrineGloomy(int pnum)
 	auto &player = Players[pnum];
 
 	// Increment armor class by 2 and decrements max damage by 1.
-	ForEachInventoryItem(player, [](ItemStruct &item) {
+	for (ItemStruct &item : PlayerItemsRange(player)) {
 		switch (item._itype) {
 		case ITYPE_SWORD:
 		case ITYPE_AXE:
@@ -2699,7 +2700,7 @@ bool OperateShrineGloomy(int pnum)
 		default:
 			break;
 		}
-	});
+	}
 
 	InitDiabloMsg(EMSG_SHRINE_GLOOMY);
 
@@ -3710,7 +3711,7 @@ void OperateShrine(int pnum, int i, _sfx_id sType)
 		break;
 	}
 
-	CalcPlrInv(pnum, true);
+	CalcPlrInv(Players[pnum], true);
 	force_redraw = 255;
 
 	if (pnum == MyPlayerId)

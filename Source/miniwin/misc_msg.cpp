@@ -41,13 +41,13 @@ static std::deque<tagMSG> message_queue;
 bool mouseWarping = false;
 Point mousePositionWarping;
 
-void SetCursorPos(int x, int y)
+void SetCursorPos(Point position)
 {
-	mousePositionWarping = { x, y };
+	mousePositionWarping = position;
 	mouseWarping = true;
-	LogicalToOutput(&x, &y);
+	LogicalToOutput(&position.x, &position.y);
 	if (!demo::IsRunning())
-		SDL_WarpMouseInWindow(ghMainWnd, x, y);
+		SDL_WarpMouseInWindow(ghMainWnd, position.x, position.y);
 }
 
 // Moves the mouse to the first attribute "+" button.
@@ -61,31 +61,14 @@ void FocusOnCharInfo()
 	// Find the first incrementable stat.
 	int stat = -1;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
-		int max = myPlayer.GetMaximumAttributeValue(attribute);
-		switch (attribute) {
-		case CharacterAttribute::Strength:
-			if (myPlayer._pBaseStr >= max)
-				continue;
-			break;
-		case CharacterAttribute::Magic:
-			if (myPlayer._pBaseMag >= max)
-				continue;
-			break;
-		case CharacterAttribute::Dexterity:
-			if (myPlayer._pBaseDex >= max)
-				continue;
-			break;
-		case CharacterAttribute::Vitality:
-			if (myPlayer._pBaseVit >= max)
-				continue;
-			break;
-		}
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
+			continue;
 		stat = static_cast<int>(attribute);
 	}
 	if (stat == -1)
 		return;
-	const Rectangle &rect = ChrBtnsRect[stat];
-	SetCursorPos(rect.position.x + (rect.size.width / 2), rect.position.y + (rect.size.height / 2));
+
+	SetCursorPos(ChrBtnsRect[stat].Center());
 }
 
 static int TranslateSdlKey(SDL_Keysym key)

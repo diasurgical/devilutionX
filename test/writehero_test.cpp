@@ -130,7 +130,7 @@ static void PackItemFullRejuv(PkItemStruct *id, int i)
 	id->bMCh = 0;
 }
 
-static int PrepareInvSlot(PkPlayerStruct *pPack, int pos, int size, int start = 0)
+static int PrepareInvSlot(PlayerPack *pPack, int pos, int size, int start = 0)
 {
 	static char ret = 0;
 	if (start)
@@ -160,7 +160,7 @@ static int PrepareInvSlot(PkPlayerStruct *pPack, int pos, int size, int start = 
 	return ret - 1;
 }
 
-static void PackPlayerTest(PkPlayerStruct *pPack)
+static void PackPlayerTest(PlayerPack *pPack)
 {
 	memset(pPack, 0, 0x4F2);
 	pPack->destAction = -1;
@@ -214,7 +214,7 @@ static void PackPlayerTest(PkPlayerStruct *pPack)
 	pPack->_pNumInv = 2;
 }
 
-static void AssertPlayer(PlayerStruct &player)
+static void AssertPlayer(Player &player)
 {
 	ASSERT_EQ(Count8(player._pSplLvl, 64), 23);
 	ASSERT_EQ(Count8(player.InvGrid, NUM_INV_GRID_ELEM), 9);
@@ -337,9 +337,9 @@ TEST(Writehero, pfile_write_hero)
 	strcpy(info.name, "TestPlayer");
 	info.heroclass = HeroClass::Rogue;
 	pfile_ui_save_create(&info);
-	PkPlayerStruct pks;
+	PlayerPack pks;
 	PackPlayerTest(&pks);
-	UnPackPlayer(&pks, MyPlayerId, true);
+	UnPackPlayer(&pks, Players[MyPlayerId], true);
 	AssertPlayer(Players[0]);
 	pfile_write_hero();
 
