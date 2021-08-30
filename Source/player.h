@@ -353,6 +353,13 @@ struct Player {
 	int GetBaseAttributeValue(CharacterAttribute attribute) const;
 
 	/**
+	 * @brief Gets the current value of the player's specified attribute.
+	 * @param attribute The attribute to retrieve the current value for
+	 * @return The current value for the requested attribute.
+	 */
+	int GetCurrentAttributeValue(CharacterAttribute attribute) const;
+
+	/**
 	 * @brief Gets the maximum value of the player's specified attribute.
 	 * @param attribute The attribute to retrieve the maximum value for
 	 * @return The maximum value for the requested attribute.

@@ -22,6 +22,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "options.h"
+#include "player.h"
 #include "qol/autopickup.h"
 #include "spells.h"
 #include "stores.h"
@@ -2066,6 +2067,22 @@ int Player::GetBaseAttributeValue(CharacterAttribute attribute) const
 		return this->_pBaseStr;
 	case CharacterAttribute::Vitality:
 		return this->_pBaseVit;
+	default:
+		app_fatal("Unsupported attribute");
+	}
+}
+
+int Player::GetCurrentAttributeValue(CharacterAttribute attribute) const
+{
+	switch (attribute) {
+	case CharacterAttribute::Dexterity:
+		return this->_pDexterity;
+	case CharacterAttribute::Magic:
+		return this->_pMagic;
+	case CharacterAttribute::Strength:
+		return this->_pStrength;
+	case CharacterAttribute::Vitality:
+		return this->_pVitality;
 	default:
 		app_fatal("Unsupported attribute");
 	}

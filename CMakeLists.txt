@@ -445,6 +445,7 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/text_draw.cpp
   Source/DiabloUI/title.cpp
   Source/DiabloUI/ttf_render_wrapped.cpp
+  Source/panels/charpanel.cpp
   Source/dvlnet/abstract_net.cpp
   Source/dvlnet/base.cpp
   Source/dvlnet/cdwrap.cpp
