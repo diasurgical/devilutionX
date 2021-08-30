@@ -29,7 +29,7 @@ namespace devilution {
 bool QuestLogIsOpen;
 std::optional<CelSprite> pQLogCel;
 /** Contains the quests of the current game. */
-QuestStruct Quests[MAXQUESTS];
+Quest Quests[MAXQUESTS];
 int ReturnLvlX;
 int ReturnLvlY;
 dungeon_type ReturnLevelType;
@@ -346,7 +346,7 @@ void InitQuests()
 		Quests[Q_BETRAYER]._qvar1 = 2;
 }
 
-void InitialiseQuestPools(uint32_t seed, QuestStruct quests[])
+void InitialiseQuestPools(uint32_t seed, Quest quests[])
 {
 	SetRndSeed(seed);
 	if (GenerateRnd(2) != 0)
@@ -871,7 +871,7 @@ void SetMultiQuest(int q, quest_state s, bool log, int v1)
 	}
 }
 
-bool QuestStruct::IsAvailable()
+bool Quest::IsAvailable()
 {
 	if (setlevel)
 		return false;
