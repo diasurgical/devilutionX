@@ -25,6 +25,8 @@ const char *const ClassStrTbl[] = {
 	N_("Barbarian"),
 };
 
+namespace {
+
 struct ColorAndText {
 	UiFlags color;
 	std::string text;
@@ -311,6 +313,8 @@ void DrawStatButtons(const Surface &out)
 			CelDrawTo(out, GetPanelPosition(UiPanels::Character, { 137, 244 }), *pChrButtons, chrbtn[static_cast<size_t>(CharacterAttribute::Vitality)] ? 9 : 8);
 	}
 }
+
+} // namespace
 
 void DrawChr(const Surface &out)
 {
