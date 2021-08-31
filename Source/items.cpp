@@ -3412,9 +3412,11 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster._uniqtype != 0 ? 15 : 1;
 
-	int8_t mLevel = monster.MData->mLevel;
+	int8_t mLevel = monster.mLevel;
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
+	if (mLevel > CF_LEVEL)
+		mLevel = CF_LEVEL;
 	item.dwBuff |= CF_NEW_UNIQ;
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
