@@ -497,7 +497,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	if (uniqueData.mlevel != 0) {
 		monster.mLevel = 2 * uniqueData.mlevel;
 	} else {
-		monster.mLevel += 5;
+		monster.mLevel = monster.MData->mLevel + 5;
 	}
 
 	monster.mExp *= 2;
