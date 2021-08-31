@@ -62,7 +62,7 @@ enum : uint8_t {
 	UMT_NAKRUL,
 };
 
-enum MON_MODE : uint8_t {
+enum class MonsterMode : uint8_t {
 	MM_STAND,
 	/** Movement towards N, NW, or NE */
 	MM_WALK,
@@ -159,7 +159,7 @@ struct CMonster {
 
 struct MonsterStruct { // note: missing field _mAFNum
 	int _mMTidx;
-	MON_MODE _mmode;
+	MonsterMode _mmode;
 	monster_goal _mgoal;
 	int _mgoalvar1;
 	int _mgoalvar2;
@@ -220,7 +220,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	void CheckStandAnimationIsLoaded(Direction mdir);
 
 	/**
-	 * @brief Sets _mmode to MM_STONE
+	 * @brief Sets _mmode to MonsterMode::MM_STONE
 	 */
 	void Petrify();
 

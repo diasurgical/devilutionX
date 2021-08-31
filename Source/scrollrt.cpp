@@ -356,60 +356,60 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 		return;
 	}
 
-	constexpr auto getMonsterModeDisplayName = [](MON_MODE monsterMode) {
+	constexpr auto getMonsterModeDisplayName = [](MonsterMode monsterMode) {
 		switch (monsterMode) {
-		case MM_STAND:
+		case MonsterMode::MM_STAND:
 			return "standing";
 
-		case MM_WALK:
+		case MonsterMode::MM_WALK:
 			return "walking (1)";
 
-		case MM_WALK2:
+		case MonsterMode::MM_WALK2:
 			return "walking (2)";
 
-		case MM_WALK3:
+		case MonsterMode::MM_WALK3:
 			return "walking (3)";
 
-		case MM_ATTACK:
+		case MonsterMode::MM_ATTACK:
 			return "attacking";
 
-		case MM_GOTHIT:
+		case MonsterMode::MM_GOTHIT:
 			return "getting hit";
 
-		case MM_DEATH:
+		case MonsterMode::MM_DEATH:
 			return "dying";
 
-		case MM_SATTACK:
+		case MonsterMode::MM_SATTACK:
 			return "attacking (special)";
 
-		case MM_FADEIN:
+		case MonsterMode::MM_FADEIN:
 			return "fading in";
 
-		case MM_FADEOUT:
+		case MonsterMode::MM_FADEOUT:
 			return "fading out";
 
-		case MM_RATTACK:
+		case MonsterMode::MM_RATTACK:
 			return "attacking (ranged)";
 
-		case MM_SPSTAND:
+		case MonsterMode::MM_SPSTAND:
 			return "standing (special)";
 
-		case MM_RSPATTACK:
+		case MonsterMode::MM_RSPATTACK:
 			return "attacking (special ranged)";
 
-		case MM_DELAY:
+		case MonsterMode::MM_DELAY:
 			return "delaying";
 
-		case MM_CHARGE:
+		case MonsterMode::MM_CHARGE:
 			return "charging";
 
-		case MM_STONE:
+		case MonsterMode::MM_STONE:
 			return "stoned";
 
-		case MM_HEAL:
+		case MonsterMode::MM_HEAL:
 			return "healing";
 
-		case MM_TALK:
+		case MonsterMode::MM_TALK:
 			return "talking";
 
 		default:
@@ -422,7 +422,7 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
-		if (monster._mmode <= 17)
+		if (static_cast<int>(monster._mmode) <= 17)
 			szMode = getMonsterModeDisplayName(monster._mmode);
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
@@ -443,7 +443,7 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 	int trans = 0;
 	if (monster._uniqtype != 0)
 		trans = monster._uniqtrans + 4;
-	if (monster._mmode == MM_STONE)
+	if (monster._mmode == MonsterMode::MM_STONE)
 		trans = 2;
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
