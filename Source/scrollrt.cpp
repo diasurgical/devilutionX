@@ -349,7 +349,7 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
  * @param my Output buffer coordinate
  * @param m Id of monster
  */
-void DrawMonster(const Surface &out, int x, int y, int mx, int my, const MonsterStruct &monster)
+void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster &monster)
 {
 	if (monster.AnimInfo.pCelSprite == nullptr) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);

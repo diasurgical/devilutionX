@@ -59,7 +59,7 @@ void DrawMonsterHealthBar(const Surface &out)
 	if (pcursmonst == -1)
 		return;
 
-	const MonsterStruct &monster = Monsters[pcursmonst];
+	const Monster &monster = Monsters[pcursmonst];
 
 	const int width = healthBox.w();
 	const int height = healthBox.h();

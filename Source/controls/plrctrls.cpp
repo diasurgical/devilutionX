@@ -185,7 +185,7 @@ bool HasRangedSpell()
 	    && !spelldata[spl].sTownSpell;
 }
 
-bool CanTargetMonster(const MonsterStruct &monster)
+bool CanTargetMonster(const Monster &monster)
 {
 	if ((monster._mFlags & (MFLAG_HIDDEN | MFLAG_GOLEM)) != 0)
 		return false;

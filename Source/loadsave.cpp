@@ -530,7 +530,7 @@ void LoadPlayer(LoadHelper *file, Player &player)
 
 bool gbSkipSync = false;
 
-void LoadMonster(LoadHelper *file, MonsterStruct &monster)
+void LoadMonster(LoadHelper *file, Monster &monster)
 {
 	monster._mMTidx = file->NextLE<int32_t>();
 	monster._mmode = static_cast<MonsterMode>(file->NextLE<int32_t>());
@@ -1189,7 +1189,7 @@ void SavePlayer(SaveHelper *file, Player &player)
 	// Omit pointer pReserved
 }
 
-void SaveMonster(SaveHelper *file, MonsterStruct &monster)
+void SaveMonster(SaveHelper *file, Monster &monster)
 {
 	file->WriteLE<int32_t>(monster._mMTidx);
 	file->WriteLE<int32_t>(static_cast<int>(monster._mmode));
