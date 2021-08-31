@@ -62,7 +62,7 @@ enum : uint8_t {
 	UMT_NAKRUL,
 };
 
-enum class MonsterMode : uint8_t {
+enum class MonsterMode {
 	MM_STAND,
 	/** Movement towards N, NW, or NE */
 	MM_WALK,
