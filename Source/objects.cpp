@@ -3758,14 +3758,14 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
-		if (zhar._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
+		if (zhar._mmode == MonsterMode::MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 		    && zhar._uniqtype - 1 == UMT_ZHAR
 		    && zhar._msquelch == UINT8_MAX
 		    && zhar._mhitpoints > 0) {
 			zhar.mtalkmsg = TEXT_ZHAR2;
 			M_StartStand(zhar, zhar._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
 			zhar._mgoal = MGOAL_ATTACK2;
-			zhar._mmode = MM_TALK;
+			zhar._mmode = MonsterMode::MM_TALK;
 		}
 	}
 	if (pnum == MyPlayerId)
