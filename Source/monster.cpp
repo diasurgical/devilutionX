@@ -2170,7 +2170,7 @@ void AiAvoidance(int i, bool special)
 	if (monster._mgoal == MGOAL_NORMAL) {
 		if (abs(mx) >= 2 || abs(my) >= 2) {
 			if ((monster._mVar2 > 20 && v < 2 * monster._mint + 28)
-			    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3)
+			    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3)
 			        && monster._mVar2 == 0
 			        && v < 2 * monster._mint + 78)) {
 				RandomWalk(i, md);
@@ -2277,7 +2277,7 @@ void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, 
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 1000 * (monster._mint + 5)
-			    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3) && monster._mVar2 == 0 && v < 1000 * (monster._mint + 8))) {
+			    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3) && monster._mVar2 == 0 && v < 1000 * (monster._mint + 8))) {
 				RandomWalk(i, md);
 			}
 		} else if (v < 1000 * (monster._mint + 6)) {
@@ -2341,7 +2341,7 @@ void OverlordAi(int i)
 	int v = GenerateRnd(100);
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if ((monster._mVar2 > 20 && v < 4 * monster._mint + 20)
-		    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3)
+		    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3)
 		        && monster._mVar2 == 0
 		        && v < 4 * monster._mint + 70)) {
 			RandomWalk(i, md);
@@ -2405,7 +2405,7 @@ void SkeletonBowAi(int i)
 
 	if (abs(mx) < 4 && abs(my) < 4) {
 		if ((monster._mVar2 > 20 && v < 2 * monster._mint + 13)
-		    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3)
+		    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3)
 		        && monster._mVar2 == 0
 		        && v < 2 * monster._mint + 63)) {
 			walking = DumbWalk(i, opposite[md]);
@@ -2561,7 +2561,7 @@ void RhinoAi(int i)
 			if (dist >= 2) {
 				v = GenerateRnd(100);
 				if (v >= 2 * monster._mint + 33
-				    && ((monster._mVar1 != MM_WALK && monster._mVar1 != MM_WALK2 && monster._mVar1 != MM_WALK3)
+				    && (IsNoneOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3)
 				        || monster._mVar2 != 0
 				        || v >= 2 * monster._mint + 83)) {
 					AiDelay(monster, GenerateRnd(10) + 10);
@@ -2705,7 +2705,7 @@ void LeoricAi(int i)
 			if (dist >= 2) {
 				v = GenerateRnd(100);
 				if (v >= monster._mint + 25
-				    && ((monster._mVar1 != MM_WALK && monster._mVar1 != MM_WALK2 && monster._mVar1 != MM_WALK3) || monster._mVar2 != 0 || (v >= monster._mint + 75))) {
+				    && (IsNoneOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3) || monster._mVar2 != 0 || (v >= monster._mint + 75))) {
 					AiDelay(monster, GenerateRnd(10) + 10);
 				} else {
 					RandomWalk(i, md);
@@ -2760,7 +2760,7 @@ void BatAi(int i)
 		}
 	} else if (abs(xd) >= 2 || abs(yd) >= 2) {
 		if ((monster._mVar2 > 20 && v < monster._mint + 13)
-		    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3)
+		    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3)
 		        && monster._mVar2 == 0
 		        && v < monster._mint + 63)) {
 			RandomWalk(i, md);
@@ -2890,7 +2890,7 @@ void SneakAi(int i)
 			StartFadeout(monster, md, true);
 		} else {
 			if (monster._mgoal == MGOAL_RETREAT
-			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster._mVar2 > 20 && v < 4 * monster._mint + 14) || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3) && monster._mVar2 == 0 && v < 4 * monster._mint + 64)))) {
+			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster._mVar2 > 20 && v < 4 * monster._mint + 14) || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3) && monster._mVar2 == 0 && v < 4 * monster._mint + 64)))) {
 				monster._mgoalvar1++;
 				RandomWalk(i, md);
 			}
@@ -3060,8 +3060,7 @@ void SnakeAi(int i)
 			AiDelay(monster, 15 - monster._mint + GenerateRnd(10));
 		}
 	} else {
-		if (monster._mVar1 == MM_DELAY
-		    || monster._mVar1 == MM_CHARGE
+		if (IsAnyOf(monster._mVar1, MM_DELAY, MM_CHARGE)
 		    || (GenerateRnd(100) < monster._mint + 20)) {
 			StartAttack(monster);
 		} else
@@ -3219,7 +3218,7 @@ void MegaAi(int i)
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monster._mint + 25)
-			    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3)
+			    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3)
 			        && monster._mVar2 == 0
 			        && v < 2 * (5 * monster._mint + 40))) {
 				RandomWalk(i, md);
@@ -3443,7 +3442,7 @@ void HorkDemonAi(int i)
 		} else {
 			v = GenerateRnd(100);
 			if (v < 2 * monster._mint + 33
-			    || ((monster._mVar1 == MM_WALK || monster._mVar1 == MM_WALK2 || monster._mVar1 == MM_WALK3) && monster._mVar2 == 0 && v < 2 * monster._mint + 83)) {
+			    || (IsAnyOf(monster._mVar1, MM_WALK, MM_WALK2, MM_WALK3) && monster._mVar2 == 0 && v < 2 * monster._mint + 83)) {
 				RandomWalk(i, md);
 			} else {
 				AiDelay(monster, GenerateRnd(10) + 10);
