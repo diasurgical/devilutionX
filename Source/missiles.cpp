@@ -209,7 +209,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	}
 	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT)
 		return false;
-	if (monster._mmode == MonsterMode::MM_CHARGE)
+	if (monster._mmode == MonsterMode::Charge)
 		return false;
 
 	uint8_t mor = monster.mMagicRes;
@@ -246,7 +246,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	hper = clamp(hper, 5, 95);
 
-	if (monster._mmode == MonsterMode::MM_STONE)
+	if (monster._mmode == MonsterMode::Petrified)
 		hit = 0;
 
 	bool ret = false;
@@ -289,7 +289,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		monster._mFlags |= MFLAG_NOHEAL;
 
 	if (monster._mhitpoints >> 6 <= 0) {
-		if (monster._mmode == MonsterMode::MM_STONE) {
+		if (monster._mmode == MonsterMode::Petrified) {
 			M_StartKill(m, pnum);
 			monster.Petrify();
 		} else {
@@ -298,7 +298,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	} else {
 		if (resist) {
 			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::MM_STONE) {
+		} else if (monster._mmode == MonsterMode::Petrified) {
 			if (m > MAX_PLRS - 1)
 				M_StartHit(m, pnum, dam);
 			monster.Petrify();
@@ -446,7 +446,7 @@ void CheckMissileCol(MissileStruct &missile, int mindam, int maxdam, bool shift,
 				}
 			} else if (mid < 0) {
 				mid = -(mid + 1);
-				if (Monsters[mid]._mmode == MonsterMode::MM_STONE
+				if (Monsters[mid]._mmode == MonsterMode::Petrified
 				    && MonsterMHit(
 				        missile._misource,
 				        mid,
@@ -975,7 +975,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	}
 	if (monster.MType->mtype == MT_ILLWEAV && monster._mgoal == MGOAL_RETREAT)
 		return false;
-	if (monster._mmode == MonsterMode::MM_CHARGE)
+	if (monster._mmode == MonsterMode::Charge)
 		return false;
 
 	missile_resistance mir = MissileData[t].mResist;
@@ -999,7 +999,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	if (CheckMonsterHit(monster, &ret)) {
 		return ret;
 	}
-	if (hit >= hper && monster._mmode != MonsterMode::MM_STONE) {
+	if (hit >= hper && monster._mmode != MonsterMode::Petrified) {
 #ifdef _DEBUG
 		if (!DebugGodMode)
 #endif
@@ -1018,7 +1018,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 		monster._mhitpoints = 0;
 #endif
 	if (monster._mhitpoints >> 6 <= 0) {
-		if (monster._mmode == MonsterMode::MM_STONE) {
+		if (monster._mmode == MonsterMode::Petrified) {
 			M_StartKill(m, -1);
 			monster.Petrify();
 		} else {
@@ -1027,7 +1027,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	} else {
 		if (resist) {
 			PlayEffect(monster, 1);
-		} else if (monster._mmode == MonsterMode::MM_STONE) {
+		} else if (monster._mmode == MonsterMode::Petrified) {
 			if (m > MAX_PLRS - 1)
 				M_StartHit(m, -1, dam);
 			monster.Petrify();
@@ -1342,13 +1342,13 @@ void AddBerserk(MissileStruct &missile, Point dst, Direction /*midir*/)
 
 			if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
 				continue;
-			if (monster._mmode == MonsterMode::MM_FADEIN || monster._mmode == MonsterMode::MM_FADEOUT)
+			if (monster._mmode == MonsterMode::FadeIn || monster._mmode == MonsterMode::FadeOut)
 				continue;
 			if ((monster.mMagicRes & IMMUNE_MAGIC) != 0)
 				continue;
 			if ((monster.mMagicRes & RESIST_MAGIC) != 0 && ((monster.mMagicRes & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
 				continue;
-			if (monster._mmode == MonsterMode::MM_CHARGE)
+			if (monster._mmode == MonsterMode::Charge)
 				continue;
 
 			i = 6;
@@ -2365,7 +2365,7 @@ void AddStone(MissileStruct &missile, Point dst, Direction /*midir*/)
 			if (IsAnyOf(monster.MType->mtype, MT_GOLEM, MT_DIABLO, MT_NAKRUL))
 				continue;
 
-			if (IsAnyOf(monster._mmode, MonsterMode::MM_FADEIN, MonsterMode::MM_FADEOUT, MonsterMode::MM_CHARGE))
+			if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 				continue;
 
 			found = true;
@@ -3777,7 +3777,7 @@ void MI_Stone(MissileStruct &missile)
 		SetMissAnim(missile, MFILE_SHATTER1);
 		missile._mirange = 11;
 	}
-	if (monster._mmode != MonsterMode::MM_STONE) {
+	if (monster._mmode != MonsterMode::Petrified) {
 		missile._miDelFlag = true;
 		return;
 	}
@@ -3811,7 +3811,7 @@ void MI_Rhino(MissileStruct &missile)
 {
 	int monst = missile._misource;
 	auto &monster = Monsters[monst];
-	if (monster._mmode != MonsterMode::MM_CHARGE) {
+	if (monster._mmode != MonsterMode::Charge) {
 		missile._miDelFlag = true;
 		return;
 	}

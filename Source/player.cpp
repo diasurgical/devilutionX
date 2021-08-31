@@ -882,7 +882,7 @@ bool PlrHitMonst(int pnum, int m)
 		return false;
 	}
 
-	if (monster._mmode == MonsterMode::MM_CHARGE) {
+	if (monster._mmode == MonsterMode::Charge) {
 		return false;
 	}
 
@@ -900,7 +900,7 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	int hit = GenerateRnd(100);
-	if (monster._mmode == MonsterMode::MM_STONE) {
+	if (monster._mmode == MonsterMode::Petrified) {
 		hit = 0;
 	}
 
@@ -1052,14 +1052,14 @@ bool PlrHitMonst(int pnum, int m)
 	}
 #endif
 	if ((monster._mhitpoints >> 6) <= 0) {
-		if (monster._mmode == MonsterMode::MM_STONE) {
+		if (monster._mmode == MonsterMode::Petrified) {
 			M_StartKill(m, pnum);
 			monster.Petrify();
 		} else {
 			M_StartKill(m, pnum);
 		}
 	} else {
-		if (monster._mmode == MonsterMode::MM_STONE) {
+		if (monster._mmode == MonsterMode::Petrified) {
 			M_StartHit(m, pnum, dam);
 			monster.Petrify();
 		} else {
