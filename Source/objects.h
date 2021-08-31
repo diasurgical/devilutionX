@@ -154,7 +154,7 @@ void AddObject(_object_id objType, Point objPos);
 void Obj_Trap(int i);
 void ProcessObjects();
 void RedoPlayerVision();
-void MonstCheckDoors(MonsterStruct &monster);
+void MonstCheckDoors(Monster &monster);
 void ObjChangeMap(int x1, int y1, int x2, int y2);
 void ObjChangeMapResync(int x1, int y1, int x2, int y2);
 void TryDisarm(int pnum, int i);

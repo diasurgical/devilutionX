@@ -88,7 +88,7 @@ inline bool InDungeonBounds(Point position)
 	return position.x > 0 && position.x < MAXDUNX && position.y > 0 && position.y < MAXDUNY;
 }
 
-MonsterStruct *FindClosest(Point source, int rad)
+Monster *FindClosest(Point source, int rad)
 {
 	if (rad > 19)
 		rad = 19;
@@ -1039,7 +1039,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	return true;
 }
 
-bool PlayerMHit(int pnum, MonsterStruct *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
+bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked)
 {
 	*blocked = false;
 
@@ -2237,7 +2237,7 @@ void AddChain(MissileStruct &missile, Point dst, Direction /*midir*/)
 }
 
 namespace {
-void InitMissileAnimationFromMonster(MissileStruct &mis, Direction midir, const MonsterStruct &mon, MonsterGraphic graphic)
+void InitMissileAnimationFromMonster(MissileStruct &mis, Direction midir, const Monster &mon, MonsterGraphic graphic)
 {
 	const AnimStruct &anim = mon.MType->GetAnimData(graphic);
 	mis._mimfnum = midir;

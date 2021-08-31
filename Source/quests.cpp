@@ -455,7 +455,7 @@ bool ForceQuests()
 	return false;
 }
 
-void CheckQuestKill(const MonsterStruct &monster, bool sendmsg)
+void CheckQuestKill(const Monster &monster, bool sendmsg)
 {
 	if (gbIsSpawn)
 		return;

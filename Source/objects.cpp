@@ -4944,7 +4944,7 @@ void RedoPlayerVision()
 	}
 }
 
-void MonstCheckDoors(MonsterStruct &monster)
+void MonstCheckDoors(Monster &monster)
 {
 	int mx = monster.position.tile.x;
 	int my = monster.position.tile.y;

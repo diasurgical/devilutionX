@@ -1538,7 +1538,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int x = 0;
 	int y = 0;
 
-	MonsterStruct *monster;
+	Monster *monster;
 	Player *target;
 	ObjectStruct *object;
 	Item *item;
