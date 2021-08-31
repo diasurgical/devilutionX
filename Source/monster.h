@@ -63,27 +63,27 @@ enum : uint8_t {
 };
 
 enum class MonsterMode {
-	MM_STAND,
+	Stand,
 	/** Movement towards N, NW, or NE */
-	MM_WALK,
+	MoveNorthwards,
 	/** Movement towards S, SW, or SE */
-	MM_WALK2,
+	MoveSouthwards,
 	/** Movement towards W or E */
-	MM_WALK3,
-	MM_ATTACK,
-	MM_GOTHIT,
-	MM_DEATH,
-	MM_SATTACK,
-	MM_FADEIN,
-	MM_FADEOUT,
-	MM_RATTACK,
-	MM_SPSTAND,
-	MM_RSPATTACK,
-	MM_DELAY,
-	MM_CHARGE,
-	MM_STONE,
-	MM_HEAL,
-	MM_TALK,
+	MoveSideways,
+	MeleeAttack,
+	HitRecovery,
+	Death,
+	SpecialMeleeAttack,
+	FadeIn,
+	FadeOut,
+	RangedAttack,
+	SpecialStand,
+	SpecialRangedAttack,
+	Delay,
+	Charge,
+	Petrified,
+	Heal,
+	Talk,
 };
 
 enum class MonsterGraphic {
@@ -220,7 +220,7 @@ struct MonsterStruct { // note: missing field _mAFNum
 	void CheckStandAnimationIsLoaded(Direction mdir);
 
 	/**
-	 * @brief Sets _mmode to MonsterMode::MM_STONE
+	 * @brief Sets _mmode to MonsterMode::Petrified
 	 */
 	void Petrify();
 

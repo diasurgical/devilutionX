@@ -358,58 +358,58 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 
 	constexpr auto getMonsterModeDisplayName = [](MonsterMode monsterMode) {
 		switch (monsterMode) {
-		case MonsterMode::MM_STAND:
+		case MonsterMode::Stand:
 			return "standing";
 
-		case MonsterMode::MM_WALK:
-			return "walking (1)";
+		case MonsterMode::MoveNorthwards:
+			return "moving (northwards)";
 
-		case MonsterMode::MM_WALK2:
-			return "walking (2)";
+		case MonsterMode::MoveSouthwards:
+			return "moving (southwards)";
 
-		case MonsterMode::MM_WALK3:
-			return "walking (3)";
+		case MonsterMode::MoveSideways:
+			return "moving (sideways)";
 
-		case MonsterMode::MM_ATTACK:
-			return "attacking";
+		case MonsterMode::MeleeAttack:
+			return "attacking (melee)";
 
-		case MonsterMode::MM_GOTHIT:
+		case MonsterMode::HitRecovery:
 			return "getting hit";
 
-		case MonsterMode::MM_DEATH:
+		case MonsterMode::Death:
 			return "dying";
 
-		case MonsterMode::MM_SATTACK:
-			return "attacking (special)";
+		case MonsterMode::SpecialMeleeAttack:
+			return "attacking (special melee)";
 
-		case MonsterMode::MM_FADEIN:
+		case MonsterMode::FadeIn:
 			return "fading in";
 
-		case MonsterMode::MM_FADEOUT:
+		case MonsterMode::FadeOut:
 			return "fading out";
 
-		case MonsterMode::MM_RATTACK:
+		case MonsterMode::RangedAttack:
 			return "attacking (ranged)";
 
-		case MonsterMode::MM_SPSTAND:
+		case MonsterMode::SpecialStand:
 			return "standing (special)";
 
-		case MonsterMode::MM_RSPATTACK:
+		case MonsterMode::SpecialRangedAttack:
 			return "attacking (special ranged)";
 
-		case MonsterMode::MM_DELAY:
+		case MonsterMode::Delay:
 			return "delaying";
 
-		case MonsterMode::MM_CHARGE:
+		case MonsterMode::Charge:
 			return "charging";
 
-		case MonsterMode::MM_STONE:
-			return "stoned";
+		case MonsterMode::Petrified:
+			return "petrified";
 
-		case MonsterMode::MM_HEAL:
+		case MonsterMode::Heal:
 			return "healing";
 
-		case MonsterMode::MM_TALK:
+		case MonsterMode::Talk:
 			return "talking";
 
 		default:
@@ -443,7 +443,7 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 	int trans = 0;
 	if (monster._uniqtype != 0)
 		trans = monster._uniqtrans + 4;
-	if (monster._mmode == MonsterMode::MM_STONE)
+	if (monster._mmode == MonsterMode::Petrified)
 		trans = 2;
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
