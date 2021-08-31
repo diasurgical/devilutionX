@@ -1,6 +1,7 @@
 #include "engine/random.hpp"
 
 #include "utils/stdcompat/abs.hpp"
+#include "utils/stdcompat/algorithm.hpp"
 
 namespace devilution {
 
@@ -45,6 +46,11 @@ int32_t GenerateRnd(int32_t v)
 	if (v < 0xFFFF)
 		return (AdvanceRndSeed() >> 16) % v;
 	return AdvanceRndSeed() % v;
+}
+
+int32_t GenerateNonNegativeRnd(int32_t v)
+{
+	return std::max<int32_t>(GenerateRnd(v), 0);
 }
 
 } // namespace devilution

@@ -394,6 +394,8 @@ int ItemsGetCurrlevel()
 
 bool ItemPlace(Point position)
 {
+	if (!InDungeonBounds(position))
+		return false;
 	if (dMonster[position.x][position.y] != 0)
 		return false;
 	if (dPlayer[position.x][position.y] != 0)
@@ -1121,10 +1123,13 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 			}
 		}
 		if (nl != 0) {
-			preidx = l[GenerateRnd(nl)];
-			item._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemAffix(item, ItemPrefixes[preidx]);
-			item._iPrePower = ItemPrefixes[preidx].power.type;
+			int lookupIndex = GenerateRnd(nl);
+			if (lookupIndex >= 0) {
+				preidx = l[lookupIndex];
+				item._iMagical = ITEM_QUALITY_MAGIC;
+				SaveItemAffix(item, ItemPrefixes[preidx]);
+				item._iPrePower = ItemPrefixes[preidx].power.type;
+			}
 		}
 	}
 
@@ -1209,11 +1214,14 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 			}
 		}
 		if (nt != 0) {
-			preidx = l[GenerateRnd(nt)];
-			item._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemAffix(item, ItemPrefixes[preidx]);
-			item._iPrePower = ItemPrefixes[preidx].power.type;
-			goe = ItemPrefixes[preidx].PLGOE;
+			int lookupIndex = GenerateRnd(nt);
+			if (lookupIndex >= 0) {
+				preidx = l[lookupIndex];
+				item._iMagical = ITEM_QUALITY_MAGIC;
+				SaveItemAffix(item, ItemPrefixes[preidx]);
+				item._iPrePower = ItemPrefixes[preidx].power.type;
+				goe = ItemPrefixes[preidx].PLGOE;
+			}
 		}
 	}
 	if (post != 0) {
@@ -1228,10 +1236,13 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, AffixItemType flgs, bool o
 			}
 		}
 		if (nl != 0) {
-			sufidx = l[GenerateRnd(nl)];
-			item._iMagical = ITEM_QUALITY_MAGIC;
-			SaveItemAffix(item, ItemSuffixes[sufidx]);
-			item._iSufPower = ItemSuffixes[sufidx].power.type;
+			int lookupIndex = GenerateRnd(nl);
+			if (lookupIndex >= 0) {
+				sufidx = l[lookupIndex];
+				item._iMagical = ITEM_QUALITY_MAGIC;
+				SaveItemAffix(item, ItemSuffixes[sufidx]);
+				item._iSufPower = ItemSuffixes[sufidx].power.type;
+			}
 		}
 	}
 
@@ -1307,13 +1318,16 @@ void GetOilType(Item &item, int maxLvl)
 		}
 	}
 
-	int8_t t = rnd[GenerateRnd(cnt)];
+	int lookupIndex = GenerateRnd(cnt);
+	if (lookupIndex >= 0) {
+		int8_t t = rnd[lookupIndex];
 
-	CopyUtf8(item._iName, _(OilNames[t]), sizeof(item._iName));
-	CopyUtf8(item._iIName, _(OilNames[t]), sizeof(item._iIName));
-	item._iMiscId = OilMagic[t];
-	item._ivalue = OilValues[t];
-	item._iIvalue = OilValues[t];
+		CopyUtf8(item._iName, _(OilNames[t]), sizeof(item._iName));
+		CopyUtf8(item._iIName, _(OilNames[t]), sizeof(item._iIName));
+		item._iMiscId = OilMagic[t];
+		item._ivalue = OilValues[t];
+		item._iIvalue = OilValues[t];
+	}
 }
 
 void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allowspells)
@@ -1395,7 +1409,7 @@ int RndUItem(Monster *monster)
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[GenerateNonNegativeRnd(ri)];
 }
 
 int RndAllItems()
@@ -1421,7 +1435,7 @@ int RndAllItems()
 			ri--;
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[GenerateNonNegativeRnd(ri)];
 }
 
 int RndTypeItems(ItemType itemType, int imid, int lvl)
@@ -1448,7 +1462,7 @@ int RndTypeItems(ItemType itemType, int imid, int lvl)
 		}
 	}
 
-	return ril[GenerateRnd(ri)];
+	return ril[GenerateNonNegativeRnd(ri)];
 }
 
 _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
@@ -1941,7 +1955,7 @@ int RndVendorItem(int minlvl, int maxlvl)
 			break;
 	}
 
-	return ril[GenerateRnd(ri)] + 1;
+	return ril[GenerateNonNegativeRnd(ri)] + 1;
 }
 
 int RndSmithItem(int lvl)
@@ -3068,7 +3082,7 @@ int RndItem(const Monster &monster)
 			ri--;
 	}
 
-	int r = GenerateRnd(ri);
+	int r = GenerateNonNegativeRnd(ri);
 	return ril[r] + 1;
 }
 
