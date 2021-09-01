@@ -445,9 +445,6 @@ void InitThemes()
 	}
 }
 
-/**
- * @brief HoldThemeRooms marks theme rooms as populated.
- */
 void HoldThemeRooms()
 {
 	if (currlevel == 16)
@@ -964,9 +961,6 @@ void UpdateL4Trans()
 	}
 }
 
-/**
- * CreateThemeRooms adds thematic elements to rooms.
- */
 void CreateThemeRooms()
 {
 	if (currlevel == 16) {

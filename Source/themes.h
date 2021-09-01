@@ -24,7 +24,15 @@ extern int zharlib;
 extern ThemeStruct themes[MAXTHEMES];
 
 void InitThemes();
+
+/**
+ * @brief HoldThemeRooms marks theme rooms as populated.
+ */
 void HoldThemeRooms();
+
+/**
+ * CreateThemeRooms adds thematic elements to rooms.
+ */
 void CreateThemeRooms();
 
 } // namespace devilution
