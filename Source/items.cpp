@@ -4874,8 +4874,6 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	const int max_time = 3000;
 	const int max_iter = 1000000;
 
-	bool onlygood = true;
-
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	Point pos = Players[MyPlayerId].position.tile;
@@ -4901,17 +4899,14 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		int idx = RndItem(fake_m);
 		if (idx > 0) {
 			idx--;
-			onlygood = false;
 		} else
 			continue;
-
-		int uper = (unique ? 15 : 1);
 
 		Point bkp = item.position;
 		memset(&item, 0, sizeof(Item));
 		item.position = bkp;
 		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 15 : 1), false, false, false);
 
 		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
