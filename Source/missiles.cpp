@@ -1342,7 +1342,7 @@ void AddBerserk(MissileStruct &missile, Point dst, Direction /*midir*/)
 
 			if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
 				continue;
-			if (monster._mmode == MonsterMode::FadeIn || monster._mmode == MonsterMode::FadeOut)
+			if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut))
 				continue;
 			if ((monster.mMagicRes & IMMUNE_MAGIC) != 0)
 				continue;

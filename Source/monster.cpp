@@ -4187,9 +4187,7 @@ void GolumAi(int i)
 		return;
 	}
 
-	if (golem._mmode == MonsterMode::Death
-	    || golem._mmode == MonsterMode::SpecialStand
-	    || golem.IsWalking()) {
+	if (IsAnyOf(golem._mmode, MonsterMode::Death, MonsterMode::SpecialStand) || golem.IsWalking()) {
 		return;
 	}
 
@@ -5006,7 +5004,7 @@ void decode_enemy(MonsterStruct &monster, int enemy)
 
 void MonsterStruct::CheckStandAnimationIsLoaded(Direction mdir)
 {
-	if (_mmode == MonsterMode::Stand || _mmode == MonsterMode::Talk) {
+	if (IsAnyOf(_mmode, MonsterMode::Stand, MonsterMode::Talk)) {
 		_mdir = mdir;
 		AnimInfo.pCelSprite = &*MType->GetAnimData(MonsterGraphic::Stand).CelSpritesForDirections[mdir];
 	}
