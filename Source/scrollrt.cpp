@@ -421,13 +421,10 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster.AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		const char *szMode = "unknown action";
-		if (static_cast<int>(monster._mmode) <= 17)
-			szMode = getMonsterModeDisplayName(monster._mmode);
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.mName,
-		    szMode,
+		    getMonsterModeDisplayName(monster._mmode),
 		    monster._mdir,
 		    nCel,
 		    frames);
