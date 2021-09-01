@@ -167,7 +167,7 @@ void SyncMonster(int pnum, const TSyncMonster *p)
 	if (monster.position.future.x == p->_mx && monster.position.future.y == p->_my) {
 		return;
 	}
-	if (monster._mmode == MonsterMode::Charge || monster._mmode == MonsterMode::Petrified) {
+	if (IsAnyOf(monster._mmode, MonsterMode::Charge, MonsterMode::Petrified)) {
 		return;
 	}
 
