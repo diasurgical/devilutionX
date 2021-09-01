@@ -354,10 +354,19 @@ void InitialiseQuestPools(uint32_t seed, QuestStruct quests[])
 	else
 		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
-	quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	// using int and not size_t here to detect negative values from GenerateRnd
+	int randomIndex = GenerateRnd(sizeof(QuestGroup1) / sizeof(*QuestGroup1));
+	if (randomIndex >= 0)
+		quests[QuestGroup1[randomIndex]]._qactive = QUEST_NOTAVAIL;
+	randomIndex = GenerateRnd(sizeof(QuestGroup2) / sizeof(*QuestGroup2));
+	if (randomIndex >= 0)
+		quests[QuestGroup2[randomIndex]]._qactive = QUEST_NOTAVAIL;
+	randomIndex = GenerateRnd(sizeof(QuestGroup3) / sizeof(*QuestGroup3));
+	if (randomIndex >= 0)
+		quests[QuestGroup3[randomIndex]]._qactive = QUEST_NOTAVAIL;
+	randomIndex = GenerateRnd(sizeof(QuestGroup4) / sizeof(*QuestGroup4));
+	if (randomIndex >= 0) // always true, QuestGroup4 has two members
+		quests[QuestGroup4[randomIndex]]._qactive = QUEST_NOTAVAIL;
 }
 
 void CheckQuests()
