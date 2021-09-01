@@ -193,6 +193,8 @@ std::string DebugCmdLoadMap(const string_view parameter)
 
 		setlevel = false;
 		setlvltype = quest._qlvltype;
+		currlevel = quest._qlevel;
+		myPlayer.plrlevel = quest._qlevel;
 		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
 		return fmt::format("Welcome to {}.", QuestLevelNames[level]);
 	}
