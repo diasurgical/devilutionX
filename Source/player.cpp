@@ -158,7 +158,7 @@ struct DirectionSettings {
 	Displacement tileAdd;
 	Displacement offset;
 	Displacement map;
-	_scroll_direction scrollDir;
+	ScrollDirection scrollDir;
 	PLR_MODE walkMode;
 	void (*walkModeHandler)(int, const DirectionSettings &);
 };
@@ -295,29 +295,29 @@ _sfx_id herosounds[enum_size<HeroClass>::value][enum_size<HeroSpeech>::value] = 
 
 constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 	// clang-format off
-	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, SDIR_S,  PM_WALK2, WalkDownwards },
-	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, SDIR_SW, PM_WALK2, WalkDownwards },
-	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, SDIR_W,  PM_WALK3, WalkSides     },
-	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, SDIR_NW, PM_WALK,  WalkUpwards   },
-	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, SDIR_N,  PM_WALK,  WalkUpwards   },
-	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, SDIR_NE, PM_WALK,  WalkUpwards   },
-	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, SDIR_E,  PM_WALK3, WalkSides     },
-	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, SDIR_SE, PM_WALK2, WalkDownwards }
+	{ Direction::South,     {  1,  1 }, {   0, -32 }, { 0, 0 }, ScrollDirection::South,     PM_WALK2, WalkDownwards },
+	{ Direction::SouthWest, {  0,  1 }, {  32, -16 }, { 0, 0 }, ScrollDirection::SouthWest, PM_WALK2, WalkDownwards },
+	{ Direction::West,      { -1,  1 }, {  32, -16 }, { 0, 1 }, ScrollDirection::West,      PM_WALK3, WalkSides     },
+	{ Direction::NorthWest, { -1,  0 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthWest, PM_WALK,  WalkUpwards   },
+	{ Direction::North,     { -1, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::North,     PM_WALK,  WalkUpwards   },
+	{ Direction::NorthEast, {  0, -1 }, {   0,   0 }, { 0, 0 }, ScrollDirection::NorthEast, PM_WALK,  WalkUpwards   },
+	{ Direction::East,      {  1, -1 }, { -32, -16 }, { 1, 0 }, ScrollDirection::East,      PM_WALK3, WalkSides     },
+	{ Direction::SouthEast, {  1,  0 }, { -32, -16 }, { 0, 0 }, ScrollDirection::SouthEast, PM_WALK2, WalkDownwards }
 	// clang-format on
 } };
 
-void ScrollViewPort(const Player &player, _scroll_direction dir)
+void ScrollViewPort(const Player &player, ScrollDirection dir)
 {
 	ScrollInfo.tile = Point { 0, 0 } + (player.position.tile - ViewPosition);
 
 	if (zoomflag) {
 		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
-			ScrollInfo._sdir = SDIR_NONE;
+			ScrollInfo._sdir = ScrollDirection::None;
 		} else {
 			ScrollInfo._sdir = dir;
 		}
 	} else if (abs(ScrollInfo.tile.x) >= 2 || abs(ScrollInfo.tile.y) >= 2) {
-		ScrollInfo._sdir = SDIR_NONE;
+		ScrollInfo._sdir = ScrollDirection::None;
 	} else {
 		ScrollInfo._sdir = dir;
 	}
@@ -429,7 +429,7 @@ void StartWalkStand(int pnum)
 
 	if (pnum == MyPlayerId) {
 		ScrollInfo.offset = { 0, 0 };
-		ScrollInfo._sdir = SDIR_NONE;
+		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
 	}
 }
@@ -455,7 +455,7 @@ void ChangeOffset(int pnum)
 	px -= player.position.offset2.deltaX >> 8;
 	py -= player.position.offset2.deltaY >> 8;
 
-	if (pnum == MyPlayerId && ScrollInfo._sdir != SDIR_NONE) {
+	if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
 		ScrollInfo.offset += { px, py };
 	}
 
@@ -743,7 +743,7 @@ bool DoWalk(int pnum, int variant)
 		}
 
 		//Update the "camera" tile position
-		if (pnum == MyPlayerId && ScrollInfo._sdir != SDIR_NONE) {
+		if (pnum == MyPlayerId && ScrollInfo._sdir != ScrollDirection::None) {
 			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
 
@@ -2793,7 +2793,7 @@ void InitPlayer(Player &player, bool firstTime)
 		deathdelay = 0;
 		MyPlayerIsDead = false;
 		ScrollInfo.offset = { 0, 0 };
-		ScrollInfo._sdir = SDIR_NONE;
+		ScrollInfo._sdir = ScrollDirection::None;
 	}
 }
 
@@ -2849,7 +2849,7 @@ void FixPlayerLocation(int pnum, Direction bDir)
 	player._pdir = bDir;
 	if (pnum == MyPlayerId) {
 		ScrollInfo.offset = { 0, 0 };
-		ScrollInfo._sdir = SDIR_NONE;
+		ScrollInfo._sdir = ScrollDirection::None;
 		ViewPosition = player.position.tile;
 	}
 	ChangeLightXY(player._plid, player.position.tile);

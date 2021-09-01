@@ -290,7 +290,7 @@ void CheckCursMove()
 	int fy = myPlayer.position.offset2.deltaY / 256;
 	fx -= (myPlayer.position.offset2.deltaX + myPlayer.position.velocity.deltaX) / 256;
 	fy -= (myPlayer.position.offset2.deltaY + myPlayer.position.velocity.deltaY) / 256;
-	if (ScrollInfo._sdir != SDIR_NONE) {
+	if (ScrollInfo._sdir != ScrollDirection::None) {
 		sx -= fx;
 		sy -= fy;
 	}
