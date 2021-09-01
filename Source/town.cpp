@@ -1,8 +1,8 @@
 /**
- * @file town.h
- *
- * Implementation of functionality for rendering the town, towners and calling other render routines.
- */
+* @file town.h
+*
+* Implementation of functionality for rendering the town, towners and calling other render routines.
+*/
 #include "town.h"
 
 #include "drlg_l1.h"
