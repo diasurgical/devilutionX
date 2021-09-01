@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <bitset>
 #ifdef _DEBUG
-#include <chrono>
+#include <random>
 #endif
 #include <climits>
 #include <cstdint>
@@ -4865,10 +4865,14 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 }
 
 #ifdef _DEBUG
+std::mt19937 BetterRng;
 std::string DebugSpawnItem(std::string itemName, bool unique)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return "No space to generate the item!";
+
+	const int max_time = 3000;
+	const int max_iter = 1000000;
 
 	bool onlygood = true;
 
@@ -4878,19 +4882,22 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	GetSuperItemSpace(pos, ii);
 	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 
-	std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
+	uint32_t begin = SDL_GetTicks();
 	MonsterStruct fake_m;
 	fake_m.MData = &MonsterData[0];
 	fake_m._uniqtype = 0;
-	for (int i = 0;; i++) {
-		std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-		if (std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() > 3000)
-			return "Item not found in 3 seconds!";
+	int i = 0;
+	for (;; i++) {
+		// using a better rng here to seed the item to prevent getting stuck repeating same values using old one
+		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
+		SetRndSeed(dist(BetterRng));
+		if (SDL_GetTicks() - begin > max_time)
+			return fmt::format("Item not found in {:d} seconds!", max_time / 1000);
 
-		if (i > 10000)
-			return "Item not found in 10000 tries!";
+		if (i > max_iter)
+			return fmt::format("Item not found in {:d} tries!", max_iter);
 
-		fake_m.mLevel = GenerateRnd(40) + 1;
+		fake_m.mLevel = dist(BetterRng) % CF_LEVEL + 1;
 		int idx = RndItem(fake_m);
 		if (idx > 0) {
 			idx--;
@@ -4918,7 +4925,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 	item._iIdentified = true;
 	NetSendCmdDItem(false, ii);
-	return "Item generated successfully.";
+	return fmt::format("Item generated successfully - iterations: {:d}", i);
 }
 #endif
 
