@@ -3,7 +3,6 @@
  *
  * Implementation of functionality for rendering the town, towners and calling other render routines.
  */
-
 #include "town.h"
 
 #include "drlg_l1.h"
@@ -149,7 +148,7 @@ void TownCloseGrave()
 	SetDungeonMicros();
 }
 
-/** 
+/**
 * @brief Initialize all of the levels data
 */	
 void DrlgTPass3()
