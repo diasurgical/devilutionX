@@ -1,8 +1,8 @@
 /**
-* @file town.h
-*
-* Interface of functionality for rendering the town, towners and calling other render routines.
-*/
+ * @file town.h
+ *
+ * Interface of functionality for rendering the town, towners and calling other render routines.
+ */
 
 #pragma once
 
@@ -12,19 +12,19 @@
 namespace devilution {
 
 /**
-* @brief Update the map to show the open hive
-*/
+ * @brief Update the map to show the open hive
+ */
 void TownOpenHive();
 
 /** 
-* @brief Update the map to show the open grave
-*/
+ * @brief Update the map to show the open grave
+ */
 void TownOpenGrave();
 
 /**
-* @brief Initialize town level
-* @param entry Method of entry
-*/
+ * @brief Initialize town level
+ * @param entry Method of entry
+ */
 void CreateTown(lvl_entry entry);
 
 } // namespace devilution
