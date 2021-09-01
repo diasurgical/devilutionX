@@ -4189,7 +4189,7 @@ void GolumAi(int i)
 
 	if (golem._mmode == MM_DEATH
 	    || golem._mmode == MM_SPSTAND
-	    || (golem._mmode >= MM_WALK && golem._mmode <= MM_WALK3)) {
+	    || golem.IsWalking()) {
 		return;
 	}
 
