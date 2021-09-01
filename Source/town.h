@@ -3,7 +3,6 @@
  *
  * Interface of functionality for rendering the town, towners and calling other render routines.
  */
-
 #pragma once
 
 #include "gendung.h"
