@@ -163,7 +163,6 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	if (!setlevel && myPlayer.plrlevel == level)
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
 
-	setlevel = false;
 	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
 	return fmt::format("Welcome to level {}.", level);
 }
