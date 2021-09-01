@@ -200,9 +200,6 @@ void DrlgTPass3()
 
 } // namespace
 
-/**
- * @brief Update the map to show the open hive
- */
 void TownOpenHive()
 {
 	dPiece[78][60] = 0x48a;
@@ -254,9 +251,6 @@ void TownOpenHive()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Update the map to show the open grave
- */
 void TownOpenGrave()
 {
 	dPiece[36][21] = 0x533;
@@ -272,10 +266,6 @@ void TownOpenGrave()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Initialize town level
- * @param entry Methode of entry
- */
 void CreateTown(lvl_entry entry)
 {
 	dminx = 10;
