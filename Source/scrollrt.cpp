@@ -207,27 +207,6 @@ int frameend;
 int framerate;
 int framestart;
 
-const char *const MonsterModeNames[] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking",
-	"getting hit",
-	"dying",
-	"attacking (special)",
-	"fading in",
-	"fading out",
-	"attacking (ranged)",
-	"standing (special)",
-	"attacking (special ranged)",
-	"delaying",
-	"charging",
-	"stoned",
-	"healing",
-	"talking"
-};
-
 const char *const PlayerModeNames[] = {
 	"standing",
 	"walking (1)",
@@ -377,13 +356,74 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 		return;
 	}
 
+	constexpr auto getMonsterModeDisplayName = [](MON_MODE monsterMode) {
+		switch (monsterMode) {
+		case MM_STAND:
+			return "standing";
+
+		case MM_WALK:
+			return "walking (1)";
+
+		case MM_WALK2:
+			return "walking (2)";
+
+		case MM_WALK3:
+			return "walking (3)";
+
+		case MM_ATTACK:
+			return "attacking";
+
+		case MM_GOTHIT:
+			return "getting hit";
+
+		case MM_DEATH:
+			return "dying";
+
+		case MM_SATTACK:
+			return "attacking (special)";
+
+		case MM_FADEIN:
+			return "fading in";
+
+		case MM_FADEOUT:
+			return "fading out";
+
+		case MM_RATTACK:
+			return "attacking (ranged)";
+
+		case MM_SPSTAND:
+			return "standing (special)";
+
+		case MM_RSPATTACK:
+			return "attacking (special ranged)";
+
+		case MM_DELAY:
+			return "delaying";
+
+		case MM_CHARGE:
+			return "charging";
+
+		case MM_STONE:
+			return "stoned";
+
+		case MM_HEAL:
+			return "healing";
+
+		case MM_TALK:
+			return "talking";
+
+		default:
+			app_fatal("Invalid monster mode.");
+		}
+	};
+
 	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
 	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster.AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
 		const char *szMode = "unknown action";
 		if (monster._mmode <= 17)
-			szMode = MonsterModeNames[monster._mmode];
+			szMode = getMonsterModeDisplayName(monster._mmode);
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.mName,
