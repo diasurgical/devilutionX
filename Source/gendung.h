@@ -90,7 +90,7 @@ struct ScrollStruct {
 	/** @brief Pixel offset of camera. */
 	Displacement offset;
 	/** @brief Move direction of camera. */
-	_scroll_direction _sdir;
+	ScrollDirection _sdir;
 };
 
 struct THEME_LOC {

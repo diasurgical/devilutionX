@@ -1135,46 +1135,46 @@ void DrawGame(const Surface &fullOut, Point position)
 
 	// Draw areas moving in and out of the screen
 	switch (ScrollInfo._sdir) {
-	case SDIR_N:
+	case ScrollDirection::North:
 		sy -= TILE_HEIGHT;
 		position += Direction::North;
 		rows += 2;
 		break;
-	case SDIR_NE:
+	case ScrollDirection::NorthEast:
 		sy -= TILE_HEIGHT;
 		position += Direction::North;
 		columns++;
 		rows += 2;
 		break;
-	case SDIR_E:
+	case ScrollDirection::East:
 		columns++;
 		break;
-	case SDIR_SE:
+	case ScrollDirection::SouthEast:
 		columns++;
 		rows++;
 		break;
-	case SDIR_S:
+	case ScrollDirection::South:
 		rows += 2;
 		break;
-	case SDIR_SW:
+	case ScrollDirection::SouthWest:
 		sx -= TILE_WIDTH;
 		position += Direction::West;
 		columns++;
 		rows++;
 		break;
-	case SDIR_W:
+	case ScrollDirection::West:
 		sx -= TILE_WIDTH;
 		position += Direction::West;
 		columns++;
 		break;
-	case SDIR_NW:
+	case ScrollDirection::NorthWest:
 		sx -= TILE_WIDTH / 2;
 		sy -= TILE_HEIGHT / 2;
 		position += Direction::NorthWest;
 		columns++;
 		rows++;
 		break;
-	case SDIR_NONE:
+	case ScrollDirection::None:
 		break;
 	}
 
@@ -1627,7 +1627,7 @@ void ScrollView()
 	}
 
 	if (scroll)
-		ScrollInfo._sdir = SDIR_NONE;
+		ScrollInfo._sdir = ScrollDirection::None;
 }
 #endif
 

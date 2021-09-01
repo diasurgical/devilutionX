@@ -912,7 +912,7 @@ void DiabloInitScreen()
 		SetCursorPos(MousePosition);
 	ScrollInfo.tile = { 0, 0 };
 	ScrollInfo.offset = { 0, 0 };
-	ScrollInfo._sdir = SDIR_NONE;
+	ScrollInfo._sdir = ScrollDirection::None;
 
 	ClrDiabloMsg();
 }

@@ -13,16 +13,16 @@
 
 namespace devilution {
 
-enum _scroll_direction : uint8_t {
-	SDIR_NONE,
-	SDIR_N,
-	SDIR_NE,
-	SDIR_E,
-	SDIR_SE,
-	SDIR_S,
-	SDIR_SW,
-	SDIR_W,
-	SDIR_NW,
+enum class ScrollDirection : uint8_t {
+	None,
+	North,
+	NorthEast,
+	East,
+	SouthEast,
+	South,
+	SouthWest,
+	West,
+	NorthWest,
 };
 
 // Defined in SourceX/controls/plctrls.cpp
