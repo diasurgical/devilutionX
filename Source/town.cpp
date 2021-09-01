@@ -16,7 +16,6 @@
 namespace devilution {
 
 namespace {
-
 /** 
  * @brief Load level data into dPiece
  * @param path Path of dun file
@@ -75,7 +74,6 @@ void FillTile(int xx, int yy, int t)
 	dPiece[xx + 0][yy + 1] = SDL_SwapLE16(mega.micro3) + 1;
 	dPiece[xx + 1][yy + 1] = SDL_SwapLE16(mega.micro4) + 1;
 }
-
 /** 
  * @brief Update the map to show the closed hive
  */
@@ -129,7 +127,6 @@ void TownCloseHive()
 	dPiece[84][64] = 0x118;
 	SetDungeonMicros();
 }
-
 /** 
  * @brief Update the map to show the closed grave
  */
@@ -147,7 +144,6 @@ void TownCloseGrave()
 	dPiece[34][21] = 0x53c;
 	SetDungeonMicros();
 }
-
 /**
  * @brief Initialize all of the levels data
  */	
