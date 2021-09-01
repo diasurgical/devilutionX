@@ -22,7 +22,7 @@ void TownOpenGrave();
 
 /**
 * @brief Initialize town level
-* @param entry Methode of entry
+* @param entry Method of entry
 */
 void CreateTown(lvl_entry entry);
 
