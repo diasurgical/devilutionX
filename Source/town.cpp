@@ -17,12 +17,6 @@ namespace devilution {
 
 namespace {
 
-/**
- * @brief Load level data into dPiece
- * @param path Path of dun file
- * @param xi upper left destination
- * @param yy upper left destination
- */
 void FillSector(const char *path, int xi, int yy)
 {
 	auto dunData = LoadFileInMem<uint16_t>(path);
@@ -59,13 +53,6 @@ void FillSector(const char *path, int xi, int yy)
 	}
 }
 
-/**
- * @brief Load a tile in to dPiece
- * @param megas Map from mega tiles to macro tiles
- * @param xx upper left destination
- * @param yy upper left destination
- * @param t tile id
- */
 void FillTile(int xx, int yy, int t)
 {
 	MegaTile mega = pMegaTiles[t - 1];
@@ -76,9 +63,6 @@ void FillTile(int xx, int yy, int t)
 	dPiece[xx + 1][yy + 1] = SDL_SwapLE16(mega.micro4) + 1;
 }
 
-/**
- * @brief Update the map to show the closed hive
- */
 void TownCloseHive()
 {
 	dPiece[78][60] = 0x48a;
@@ -130,9 +114,6 @@ void TownCloseHive()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Update the map to show the closed grave
- */
 void TownCloseGrave()
 {
 	dPiece[36][21] = 0x52b;
@@ -148,9 +129,6 @@ void TownCloseGrave()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Initialize all of the levels data
- */
 void DrlgTPass3()
 {
 	for (int yy = 0; yy < MAXDUNY; yy += 2) {
@@ -200,9 +178,6 @@ void DrlgTPass3()
 
 } // namespace
 
-/**
- * @brief Update the map to show the open hive
- */
 void TownOpenHive()
 {
 	dPiece[78][60] = 0x48a;
@@ -254,9 +229,6 @@ void TownOpenHive()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Update the map to show the open grave
- */
 void TownOpenGrave()
 {
 	dPiece[36][21] = 0x533;
@@ -272,10 +244,6 @@ void TownOpenGrave()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Initialize town level
- * @param entry Methode of entry
- */
 void CreateTown(lvl_entry entry)
 {
 	dminx = 10;
