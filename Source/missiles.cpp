@@ -1689,10 +1689,9 @@ void AddRing(Missile &missile, Point /*dst*/, Direction /*midir*/)
 
 void AddSearch(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
-	missile.var1 = missile._misource;
 	AutoMapShowItems = true;
 	int lvl = 2;
-	if (missile._misource > -1)
+	if (missile._misource >= 0)
 		lvl = Players[missile._misource]._pLevel * 2;
 	missile._mirange = lvl + 10 * missile._mispllvl + 245;
 	if (missile._micaster == TARGET_MONSTERS)
@@ -1702,7 +1701,7 @@ void AddSearch(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		int mx = ActiveMissiles[i];
 		if (&Missiles[mx] != &missile) {
 			auto &other = Missiles[mx];
-			if (other.var1 == missile._misource && other._mitype == MIS_SEARCH) {
+			if (other._misource == missile._misource && other._mitype == MIS_SEARCH) {
 				int r1 = missile._mirange;
 				int r2 = other._mirange;
 				if (r2 < INT_MAX - r1)
@@ -3332,7 +3331,7 @@ void MI_Search(Missile &missile)
 		return;
 
 	missile._miDelFlag = true;
-	PlaySfxLoc(IS_CAST7, Players[missile.var1].position.tile);
+	PlaySfxLoc(IS_CAST7, Players[missile._misource].position.tile);
 	AutoMapShowItems = false;
 }
 
