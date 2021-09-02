@@ -177,7 +177,7 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	if (!setlevel && myPlayer.plrlevel == level)
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
 
-	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
+	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
 	return fmt::format("Welcome to level {}.", level);
 }
 
@@ -204,7 +204,7 @@ std::string DebugCmdLoadMap(const string_view parameter)
 		if (level != quest._qslvl)
 			continue;
 
-		StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, quest._qlevel);
+		StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
 		ProcessMessages();
 
 		setlvltype = quest._qlvltype;
