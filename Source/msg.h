@@ -453,7 +453,7 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-void NetSendMissileSync();
+void NetSendMissileSync(int pnum);
 uint32_t ParseCmd(int pnum, TCmd *pCmd);
 
 } // namespace devilution

@@ -2526,8 +2526,10 @@ void delta_close_portal(int pnum)
 	sgbDeltaChanged = true;
 }
 
-void NetSendMissileSync()
+void NetSendMissileSync(int pnum)
 {
+	if (pnum == MyPlayerId || Players[MyPlayerId].plrlevel != Players[pnum].plrlevel)
+		return;
 	TCmdMissileCountSync cmdCount;
 	cmdCount.bCmd = CMD_SYNCMISSILESCOUNT;
 	cmdCount.count = ActiveMissileCount;

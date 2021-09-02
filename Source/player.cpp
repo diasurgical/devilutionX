@@ -670,9 +670,6 @@ void InitLevelChange(int pnum)
 	RemovePlrMissiles(pnum);
 	player.pManaShield = false;
 	player.wReflections = 0;
-	// share info about your missiles when another player joins the level
-	if (pnum != MyPlayerId)
-		NetSendMissileSync();
 	// share info about your manashield when another player joins the level
 	if (pnum != MyPlayerId && myPlayer.pManaShield)
 		NetSendCmd(true, CMD_SETSHIELD);
@@ -3249,6 +3246,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 		app_fatal("StartNewLvl");
 	}
 
+	NetSendMissileSync(pnum);
 	if (pnum == MyPlayerId) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
@@ -3277,6 +3275,8 @@ void RestartTownLvl(int pnum)
 
 	CalcPlrInv(player, false);
 
+	NetSendMissileSync(pnum);
+
 	if (pnum == MyPlayerId) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
@@ -3298,6 +3298,7 @@ void StartWarpLvl(int pnum, int pidx)
 		}
 	}
 
+	NetSendMissileSync(pnum);
 	if (pnum == MyPlayerId) {
 		SetCurrentPortal(pidx);
 		player._pmode = PM_NEWLVL;
