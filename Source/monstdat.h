@@ -56,9 +56,9 @@ enum _mai_id : int8_t {
 };
 
 enum class MonsterClass {
-	MC_UNDEAD,
-	MC_DEMON,
-	MC_ANIMAL,
+	Undead,
+	Demon,
+	Animal,
 };
 
 enum monster_resistance : uint8_t {
