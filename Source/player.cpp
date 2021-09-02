@@ -945,21 +945,21 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	switch (monster.MData->mMonstClass) {
-	case MC_UNDEAD:
+	case MonsterClass::MC_UNDEAD:
 		if (phanditype == ITYPE_SWORD) {
 			dam -= dam / 2;
 		} else if (phanditype == ITYPE_MACE) {
 			dam += dam / 2;
 		}
 		break;
-	case MC_ANIMAL:
+	case MonsterClass::MC_ANIMAL:
 		if (phanditype == ITYPE_MACE) {
 			dam -= dam / 2;
 		} else if (phanditype == ITYPE_SWORD) {
 			dam += dam / 2;
 		}
 		break;
-	case MC_DEMON:
+	case MonsterClass::MC_DEMON:
 		if ((player._pIFlags & ISPL_3XDAMVDEM) != 0) {
 			dam *= 3;
 		}

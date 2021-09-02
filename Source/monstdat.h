@@ -55,7 +55,7 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
-enum MonsterClass : uint8_t {
+enum class MonsterClass : uint8_t {
 	MC_UNDEAD,
 	MC_DEMON,
 	MC_ANIMAL,
