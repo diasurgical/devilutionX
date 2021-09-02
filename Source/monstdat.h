@@ -82,7 +82,7 @@ enum monster_treasure : uint16_t {
 	// clang-format on
 };
 
-struct MonsterDataStruct {
+struct MonsterData {
 	const char *mName;
 	const char *GraphicType;
 	const char *sndfile;
@@ -312,7 +312,7 @@ struct UniqMonstStruct {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterDataStruct MonstersData[];
+extern const MonsterData MonstersData[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];
