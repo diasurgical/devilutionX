@@ -55,7 +55,7 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
-enum _mc_id : uint8_t {
+enum MonsterClass : uint8_t {
 	MC_UNDEAD,
 	MC_DEMON,
 	MC_ANIMAL,
@@ -112,7 +112,7 @@ struct MonsterData {
 	uint8_t mMinDamage2;
 	uint8_t mMaxDamage2;
 	uint8_t mArmorClass;
-	_mc_id mMonstClass;
+	MonsterClass mMonstClass;
 	/** Using monster_resistance as bitflags */
 	uint8_t mMagicRes;
 	/** Using monster_resistance as bitflags */
