@@ -154,7 +154,7 @@ struct CMonster {
 	uint16_t mMaxHP;
 	uint8_t mAFNum;
 	int8_t mdeadval;
-	const MonsterDataStruct *MData;
+	const MonsterData *MData;
 };
 
 struct Monster { // note: missing field _mAFNum
@@ -211,7 +211,7 @@ struct Monster { // note: missing field _mAFNum
 	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
 	CMonster *MType;
-	const MonsterDataStruct *MData;
+	const MonsterData *MData;
 
 	/**
 	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).

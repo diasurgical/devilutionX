@@ -3478,7 +3478,7 @@ void BoneDemonAi(int i)
 	AiRangedAvoidance(i, MIS_BONEDEMON, true, 4, 0);
 }
 
-const char *GetMonsterTypeText(const MonsterDataStruct &monsterData)
+const char *GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
 	case MC_ANIMAL:
