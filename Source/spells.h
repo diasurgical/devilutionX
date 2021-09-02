@@ -19,8 +19,21 @@ enum class SpellCheckResult : uint8_t {
 int GetManaAmount(Player &player, spell_id sn);
 void UseMana(int id, spell_id sn);
 SpellCheckResult CheckSpell(int id, spell_id sn, spell_type st, bool manaonly);
+
+/**
+ * @brief Ensures the player's current readied spell is a valid selection for the character. If the current selection is
+ * incompatible with the player's items and spell (for example, if the player does not currently have access to the spell),
+ * the selection is cleared.
+ * @note Will force a UI redraw in case the values actually change, so that the new spell reflects on the bottom panel.
+ * @param player The player whose readied spell is to be checked.
+ */
 void EnsureValidReadiedSpell(Player &player);
 void CastSpell(int id, int spl, int sx, int sy, int dx, int dy, int spllvl);
+
+/**
+ * @param pnum player index
+ * @param rid target player index
+ */
 void DoResurrect(int pnum, uint16_t rid);
 void DoHealOther(int pnum, uint16_t rid);
 int GetSpellBookLevel(spell_id s);
