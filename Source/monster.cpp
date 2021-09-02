@@ -1465,9 +1465,9 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		hper = 1000;
 #endif
 	int ac = player.GetArmor();
-	if ((player.pDamAcFlags & ISPLHF_ACDEMON) != 0 && monster.MData->mMonstClass == MonsterClass::MC_DEMON)
+	if ((player.pDamAcFlags & ISPLHF_ACDEMON) != 0 && monster.MData->mMonstClass == MonsterClass::Demon)
 		ac += 40;
-	if ((player.pDamAcFlags & ISPLHF_ACUNDEAD) != 0 && monster.MData->mMonstClass == MonsterClass::MC_UNDEAD)
+	if ((player.pDamAcFlags & ISPLHF_ACUNDEAD) != 0 && monster.MData->mMonstClass == MonsterClass::Undead)
 		ac += 20;
 	hit += 2 * (monster.mLevel - player._pLevel)
 	    + 30
@@ -3481,11 +3481,11 @@ void BoneDemonAi(int i)
 const char *GetMonsterTypeText(const MonsterData &monsterData)
 {
 	switch (monsterData.mMonstClass) {
-	case MonsterClass::MC_ANIMAL:
+	case MonsterClass::Animal:
 		return _("Animal");
-	case MonsterClass::MC_DEMON:
+	case MonsterClass::Demon:
 		return _("Demon");
-	case MonsterClass::MC_UNDEAD:
+	case MonsterClass::Undead:
 		return _("Undead");
 	}
 
