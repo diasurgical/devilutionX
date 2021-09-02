@@ -684,7 +684,7 @@ void LoadMissile(LoadHelper *file, MissileStruct &missile)
 
 void LoadObject(LoadHelper *file, int i)
 {
-	ObjectStruct *pObject = &Objects[i];
+	Object *pObject = &Objects[i];
 
 	pObject->_otype = static_cast<_object_id>(file->NextLE<int32_t>());
 	pObject->position.x = file->NextLE<int32_t>();
@@ -1330,7 +1330,7 @@ void SaveMissile(SaveHelper *file, MissileStruct &missile)
 
 void SaveObject(SaveHelper *file, int i)
 {
-	ObjectStruct *pObject = &Objects[i];
+	Object *pObject = &Objects[i];
 
 	file->WriteLE<int32_t>(pObject->_otype);
 	file->WriteLE<int32_t>(pObject->position.x);
