@@ -369,7 +369,9 @@ void InitialiseQuestPools(uint32_t seed, QuestStruct quests[])
 		quests[QuestGroup3[randomIndex]]._qactive = QUEST_NOTAVAIL;
 
 	randomIndex = GenerateRnd(sizeof(QuestGroup4) / sizeof(*QuestGroup4));
-	if (randomIndex >= 0) // always true, QuestGroup4 has two members
+
+	// always true, QuestGroup4 has two members
+	if (randomIndex >= 0)
 		quests[QuestGroup4[randomIndex]]._qactive = QUEST_NOTAVAIL;
 }
 
