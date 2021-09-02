@@ -83,15 +83,15 @@ void DrawMonsterHealthBar(const Surface &out)
 		DrawArt(out, position + Displacement { border + 1, border + 1 }, &health, 0, barProgress, height - (border * 2) - 2);
 	}
 
-	constexpr auto getBorderColor = [](_mc_id monsterClass) {
+	constexpr auto getBorderColor = [](MonsterClass monsterClass) {
 		switch (monsterClass) {
-		case MC_UNDEAD:
+		case MonsterClass::MC_UNDEAD:
 			return 248;
 
-		case MC_DEMON:
+		case MonsterClass::MC_DEMON:
 			return 232;
 
-		case MC_ANIMAL:
+		case MonsterClass::MC_ANIMAL:
 			return 150;
 
 		default:
