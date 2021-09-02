@@ -1406,7 +1406,7 @@ void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allows
 	}
 }
 
-int RndUItem(MonsterStruct *monster)
+int RndUItem(Monster *monster)
 {
 	if (monster != nullptr && (monster->MData->mTreasure & T_UNIQ) != 0 && !gbIsMultiplayer)
 		return -((monster->MData->mTreasure & T_MASK) + 1);
@@ -3328,7 +3328,7 @@ void SetupItem(Item &item)
 	item._iIdentified = false;
 }
 
-int RndItem(const MonsterStruct &monster)
+int RndItem(const Monster &monster)
 {
 	if ((monster.MData->mTreasure & T_UNIQ) != 0)
 		return -((monster.MData->mTreasure & T_MASK) + 1);
@@ -3388,7 +3388,7 @@ void SpawnUnique(_unique_items uid, Point position)
 	SetupItem(item);
 }
 
-void SpawnItem(MonsterStruct &monster, Point position, bool sendmsg)
+void SpawnItem(Monster &monster, Point position, bool sendmsg)
 {
 	int idx;
 	bool onlygood = true;
@@ -4883,7 +4883,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 
 	uint32_t begin = SDL_GetTicks();
-	MonsterStruct fake_m;
+	Monster fake_m;
 	fake_m.MData = &MonsterData[0];
 	fake_m._uniqtype = 0;
 	int i = 0;

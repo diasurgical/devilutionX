@@ -530,10 +530,10 @@ void LoadPlayer(LoadHelper *file, Player &player)
 
 bool gbSkipSync = false;
 
-void LoadMonster(LoadHelper *file, MonsterStruct &monster)
+void LoadMonster(LoadHelper *file, Monster &monster)
 {
 	monster._mMTidx = file->NextLE<int32_t>();
-	monster._mmode = static_cast<MON_MODE>(file->NextLE<int32_t>());
+	monster._mmode = static_cast<MonsterMode>(file->NextLE<int32_t>());
 	monster._mgoal = static_cast<monster_goal>(file->NextLE<uint8_t>());
 	file->Skip(3); // Alignment
 	monster._mgoalvar1 = file->NextLE<int32_t>();
@@ -633,7 +633,7 @@ void LoadMonster(LoadHelper *file, MonsterStruct &monster)
 	SyncMonsterAnim(monster);
 }
 
-void LoadMissile(LoadHelper *file, MissileStruct &missile)
+void LoadMissile(LoadHelper *file, Missile &missile)
 {
 	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
 	missile.position.tile.x = file->NextLE<int32_t>();
@@ -684,7 +684,7 @@ void LoadMissile(LoadHelper *file, MissileStruct &missile)
 
 void LoadObject(LoadHelper *file, int i)
 {
-	ObjectStruct *pObject = &Objects[i];
+	Object *pObject = &Objects[i];
 
 	pObject->_otype = static_cast<_object_id>(file->NextLE<int32_t>());
 	pObject->position.x = file->NextLE<int32_t>();
@@ -1189,10 +1189,10 @@ void SavePlayer(SaveHelper *file, Player &player)
 	// Omit pointer pReserved
 }
 
-void SaveMonster(SaveHelper *file, MonsterStruct &monster)
+void SaveMonster(SaveHelper *file, Monster &monster)
 {
 	file->WriteLE<int32_t>(monster._mMTidx);
-	file->WriteLE<int32_t>(monster._mmode);
+	file->WriteLE<int32_t>(static_cast<int>(monster._mmode));
 	file->WriteLE<uint8_t>(monster._mgoal);
 	file->Skip(3); // Alignment
 	file->WriteLE<int32_t>(monster._mgoalvar1);
@@ -1279,7 +1279,7 @@ void SaveMonster(SaveHelper *file, MonsterStruct &monster)
 	// Omit pointer MData;
 }
 
-void SaveMissile(SaveHelper *file, MissileStruct &missile)
+void SaveMissile(SaveHelper *file, Missile &missile)
 {
 	file->WriteLE<int32_t>(missile._mitype);
 	file->WriteLE<int32_t>(missile.position.tile.x);
@@ -1330,7 +1330,7 @@ void SaveMissile(SaveHelper *file, MissileStruct &missile)
 
 void SaveObject(SaveHelper *file, int i)
 {
-	ObjectStruct *pObject = &Objects[i];
+	Object *pObject = &Objects[i];
 
 	file->WriteLE<int32_t>(pObject->_otype);
 	file->WriteLE<int32_t>(pObject->position.x);

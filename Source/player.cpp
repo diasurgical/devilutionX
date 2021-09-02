@@ -882,7 +882,7 @@ bool PlrHitMonst(int pnum, int m)
 		return false;
 	}
 
-	if (monster._mmode == MM_CHARGE) {
+	if (monster._mmode == MonsterMode::Charge) {
 		return false;
 	}
 
@@ -900,7 +900,7 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	int hit = GenerateRnd(100);
-	if (monster._mmode == MM_STONE) {
+	if (monster._mmode == MonsterMode::Petrified) {
 		hit = 0;
 	}
 
@@ -1052,14 +1052,14 @@ bool PlrHitMonst(int pnum, int m)
 	}
 #endif
 	if ((monster._mhitpoints >> 6) <= 0) {
-		if (monster._mmode == MM_STONE) {
+		if (monster._mmode == MonsterMode::Petrified) {
 			M_StartKill(m, pnum);
 			monster.Petrify();
 		} else {
 			M_StartKill(m, pnum);
 		}
 	} else {
-		if (monster._mmode == MM_STONE) {
+		if (monster._mmode == MonsterMode::Petrified) {
 			M_StartHit(m, pnum, dam);
 			monster.Petrify();
 		} else {
@@ -1538,9 +1538,9 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 	int x = 0;
 	int y = 0;
 
-	MonsterStruct *monster;
+	Monster *monster;
 	Player *target;
-	ObjectStruct *object;
+	Object *object;
 	Item *item;
 
 	int targetId = player.destParam1;
@@ -3207,7 +3207,7 @@ void RemovePlrMissiles(int pnum)
 		int am = ActiveMissiles[i];
 		auto &missile = Missiles[am];
 		if (missile._mitype == MIS_STONE && missile._misource == pnum) {
-			Monsters[missile.var2]._mmode = (MON_MODE)missile.var1;
+			Monsters[missile.var2]._mmode = static_cast<MonsterMode>(missile.var1);
 		}
 	}
 }

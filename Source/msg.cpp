@@ -2276,7 +2276,7 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-void NetSendCmdQuest(bool bHiPri, const QuestStruct &quest)
+void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 {
 	TCmdQuest cmd;
 	cmd.bCmd = CMD_SYNCQUEST;

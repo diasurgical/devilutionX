@@ -33,7 +33,7 @@
 
 namespace devilution {
 
-ObjectStruct Objects[MAXOBJECTS];
+Object Objects[MAXOBJECTS];
 int AvailableObjects[MAXOBJECTS];
 int ActiveObjects[MAXOBJECTS];
 int ActiveObjectCount;
@@ -1811,7 +1811,7 @@ inline bool IsDoorClear(const Point &doorPosition)
 
 void OperateL1RDoor(int pnum, int oi, bool sendflag)
 {
-	ObjectStruct &door = Objects[oi];
+	Object &door = Objects[oi];
 
 	if (door._oVar4 == 2) {
 		if (!deltaload)
@@ -1889,7 +1889,7 @@ void OperateL1RDoor(int pnum, int oi, bool sendflag)
 
 void OperateL1LDoor(int pnum, int oi, bool sendflag)
 {
-	ObjectStruct &door = Objects[oi];
+	Object &door = Objects[oi];
 
 	if (door._oVar4 == 2) {
 		if (!deltaload)
@@ -1970,7 +1970,7 @@ void OperateL1LDoor(int pnum, int oi, bool sendflag)
 
 void OperateL2RDoor(int pnum, int oi, bool sendflag)
 {
-	ObjectStruct &door = Objects[oi];
+	Object &door = Objects[oi];
 
 	if (door._oVar4 == 2) {
 		if (!deltaload)
@@ -2013,7 +2013,7 @@ void OperateL2RDoor(int pnum, int oi, bool sendflag)
 
 void OperateL2LDoor(int pnum, int oi, bool sendflag)
 {
-	ObjectStruct &door = Objects[oi];
+	Object &door = Objects[oi];
 
 	if (door._oVar4 == 2) {
 		if (!deltaload)
@@ -2056,7 +2056,7 @@ void OperateL2LDoor(int pnum, int oi, bool sendflag)
 
 void OperateL3RDoor(int pnum, int oi, bool sendflag)
 {
-	ObjectStruct &door = Objects[oi];
+	Object &door = Objects[oi];
 
 	if (door._oVar4 == 2) {
 		if (!deltaload)
@@ -2097,7 +2097,7 @@ void OperateL3RDoor(int pnum, int oi, bool sendflag)
 
 void OperateL3LDoor(int pnum, int oi, bool sendflag)
 {
-	ObjectStruct &door = Objects[oi];
+	Object &door = Objects[oi];
 
 	if (door._oVar4 == 2) {
 		if (!deltaload)
@@ -3758,14 +3758,14 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
-		if (zhar._mmode == MM_STAND // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
+		if (zhar._mmode == MonsterMode::Stand // prevents playing the "angry" message for the second time if zhar got aggroed by losing vision and talking again
 		    && zhar._uniqtype - 1 == UMT_ZHAR
 		    && zhar._msquelch == UINT8_MAX
 		    && zhar._mhitpoints > 0) {
 			zhar.mtalkmsg = TEXT_ZHAR2;
 			M_StartStand(zhar, zhar._mdir); // BUGFIX: first parameter in call to M_StartStand should be MAX_PLRS, not 0. (fixed)
 			zhar._mgoal = MGOAL_ATTACK2;
-			zhar._mmode = MM_TALK;
+			zhar._mmode = MonsterMode::Talk;
 		}
 	}
 	if (pnum == MyPlayerId)
@@ -4147,7 +4147,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 	return true;
 }
 
-void BreakCrux(ObjectStruct &crux)
+void BreakCrux(Object &crux)
 {
 	crux._oAnimFlag = 1;
 	crux._oAnimFrame = 1;
@@ -4242,13 +4242,13 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, i);
 }
 
-void SyncCrux(const ObjectStruct &crux)
+void SyncCrux(const Object &crux)
 {
 	if (AreAllCruxesOfTypeBroken(crux._oVar8))
 		ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void SyncLever(const ObjectStruct &lever)
+void SyncLever(const Object &lever)
 {
 	if (lever._oSelFlag != 0)
 		return;
@@ -4256,7 +4256,7 @@ void SyncLever(const ObjectStruct &lever)
 	ObjChangeMap(lever._oVar1, lever._oVar2, lever._oVar3, lever._oVar4);
 }
 
-void SyncQSTLever(const ObjectStruct &qstLever)
+void SyncQSTLever(const Object &qstLever)
 {
 	if (qstLever._oAnimFrame == qstLever._oVar6) {
 		ObjChangeMapResync(qstLever._oVar1, qstLever._oVar2, qstLever._oVar3, qstLever._oVar4);
@@ -4269,7 +4269,7 @@ void SyncQSTLever(const ObjectStruct &qstLever)
 	}
 }
 
-void SyncPedestal(const ObjectStruct &pedestal, Point origin, int width)
+void SyncPedestal(const Object &pedestal, Point origin, int width)
 {
 	if (pedestal._oVar6 == 1)
 		ObjChangeMapResync(origin.x, origin.y + 3, origin.x + 2, origin.y + 7);
@@ -4283,7 +4283,7 @@ void SyncPedestal(const ObjectStruct &pedestal, Point origin, int width)
 	}
 }
 
-void SyncL1Doors(ObjectStruct &door)
+void SyncL1Doors(Object &door)
 {
 	if (door._oVar4 == 0) {
 		door._oMissFlag = false;
@@ -4322,7 +4322,7 @@ void SyncL1Doors(ObjectStruct &door)
 	}
 }
 
-void SyncL2Doors(ObjectStruct &door)
+void SyncL2Doors(Object &door)
 {
 	door._oMissFlag = door._oVar4 != 0;
 	door._oSelFlag = 2;
@@ -4342,7 +4342,7 @@ void SyncL2Doors(ObjectStruct &door)
 	}
 }
 
-void SyncL3Doors(ObjectStruct &door)
+void SyncL3Doors(Object &door)
 {
 	door._oMissFlag = true;
 	door._oSelFlag = 2;
@@ -4944,7 +4944,7 @@ void RedoPlayerVision()
 	}
 }
 
-void MonstCheckDoors(MonsterStruct &monster)
+void MonstCheckDoors(Monster &monster)
 {
 	int mx = monster.position.tile.x;
 	int my = monster.position.tile.y;
@@ -5321,7 +5321,7 @@ void SyncBreakObj(int pnum, int oi)
 		BreakBarrel(pnum, oi, 0, true, false);
 }
 
-void SyncObjectAnim(ObjectStruct &object)
+void SyncObjectAnim(Object &object)
 {
 	object_graphic_id index = AllObjects[object._otype].ofindex;
 

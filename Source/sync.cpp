@@ -167,12 +167,12 @@ void SyncMonster(int pnum, const TSyncMonster *p)
 	if (monster.position.future.x == p->_mx && monster.position.future.y == p->_my) {
 		return;
 	}
-	if (monster._mmode == MM_CHARGE || monster._mmode == MM_STONE) {
+	if (IsAnyOf(monster._mmode, MonsterMode::Charge, MonsterMode::Petrified)) {
 		return;
 	}
 
 	if (monster.position.tile.WalkingDistance({ p->_mx, p->_my }) <= 2) {
-		if (monster._mmode < MM_WALK || monster._mmode > MM_WALK3) {
+		if (!monster.IsWalking()) {
 			Direction md = GetDirection(monster.position.tile, { p->_mx, p->_my });
 			if (DirOK(ndx, md)) {
 				M_ClearSquares(ndx);

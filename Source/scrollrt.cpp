@@ -86,7 +86,7 @@ struct PointHash {
 /**
  * @brief Contains all Missile at rendering position
  */
-std::unordered_multimap<Point, MissileStruct *, PointHash> MissilesAtRenderingTile;
+std::unordered_multimap<Point, Missile *, PointHash> MissilesAtRenderingTile;
 
 /**
  * @brief Could the missile (at the next game tick) collide? This method is a simplified version of CheckMissileCol (for example without random).
@@ -112,7 +112,7 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 	return nMissileTable[dPiece[tile.x][tile.y]];
 }
 
-void UpdateMissileRendererData(MissileStruct &m)
+void UpdateMissileRendererData(Missile &m)
 {
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
@@ -179,7 +179,7 @@ void UpdateMissilesRendererData()
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		assert(ActiveMissiles[i] < MAXMISSILES);
-		MissileStruct &m = Missiles[ActiveMissiles[i]];
+		Missile &m = Missiles[ActiveMissiles[i]];
 		UpdateMissileRendererData(m);
 		MissilesAtRenderingTile.insert(std::make_pair(m.position.tileForRendering, &m));
 	}
@@ -206,27 +206,6 @@ bool frameflag;
 int frameend;
 int framerate;
 int framestart;
-
-const char *const MonsterModeNames[] = {
-	"standing",
-	"walking (1)",
-	"walking (2)",
-	"walking (3)",
-	"attacking",
-	"getting hit",
-	"dying",
-	"attacking (special)",
-	"fading in",
-	"fading out",
-	"attacking (ranged)",
-	"standing (special)",
-	"attacking (special ranged)",
-	"delaying",
-	"charging",
-	"stoned",
-	"healing",
-	"talking"
-};
 
 const char *const PlayerModeNames[] = {
 	"standing",
@@ -312,12 +291,12 @@ void DrawCursor(const Surface &out)
 /**
  * @brief Render a missile sprite
  * @param out Output buffer
- * @param m Pointer to MissileStruct struct
+ * @param m Pointer to Missile struct
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface &out, const MissileStruct &missile, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface &out, const Missile &missile, int sx, int sy, bool pre)
 {
 	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
@@ -370,24 +349,82 @@ void DrawMissile(const Surface &out, int x, int y, int sx, int sy, bool pre)
  * @param my Output buffer coordinate
  * @param m Id of monster
  */
-void DrawMonster(const Surface &out, int x, int y, int mx, int my, const MonsterStruct &monster)
+void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster &monster)
 {
 	if (monster.AnimInfo.pCelSprite == nullptr) {
 		Log("Draw Monster \"{}\": NULL Cel Buffer", monster.mName);
 		return;
 	}
 
+	constexpr auto getMonsterModeDisplayName = [](MonsterMode monsterMode) {
+		switch (monsterMode) {
+		case MonsterMode::Stand:
+			return "standing";
+
+		case MonsterMode::MoveNorthwards:
+			return "moving (northwards)";
+
+		case MonsterMode::MoveSouthwards:
+			return "moving (southwards)";
+
+		case MonsterMode::MoveSideways:
+			return "moving (sideways)";
+
+		case MonsterMode::MeleeAttack:
+			return "attacking (melee)";
+
+		case MonsterMode::HitRecovery:
+			return "getting hit";
+
+		case MonsterMode::Death:
+			return "dying";
+
+		case MonsterMode::SpecialMeleeAttack:
+			return "attacking (special melee)";
+
+		case MonsterMode::FadeIn:
+			return "fading in";
+
+		case MonsterMode::FadeOut:
+			return "fading out";
+
+		case MonsterMode::RangedAttack:
+			return "attacking (ranged)";
+
+		case MonsterMode::SpecialStand:
+			return "standing (special)";
+
+		case MonsterMode::SpecialRangedAttack:
+			return "attacking (special ranged)";
+
+		case MonsterMode::Delay:
+			return "delaying";
+
+		case MonsterMode::Charge:
+			return "charging";
+
+		case MonsterMode::Petrified:
+			return "petrified";
+
+		case MonsterMode::Heal:
+			return "healing";
+
+		case MonsterMode::Talk:
+			return "talking";
+
+		default:
+			app_fatal("Invalid monster mode.");
+		}
+	};
+
 	int nCel = monster.AnimInfo.GetFrameToUseForRendering();
 	const auto *frameTable = reinterpret_cast<const uint32_t *>(monster.AnimInfo.pCelSprite->Data());
 	int frames = SDL_SwapLE32(frameTable[0]);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		const char *szMode = "unknown action";
-		if (monster._mmode <= 17)
-			szMode = MonsterModeNames[monster._mmode];
 		Log(
 		    "Draw Monster \"{}\" {}: facing {}, frame {} of {}",
 		    monster.mName,
-		    szMode,
+		    getMonsterModeDisplayName(monster._mmode),
 		    monster._mdir,
 		    nCel,
 		    frames);
@@ -403,7 +440,7 @@ void DrawMonster(const Surface &out, int x, int y, int mx, int my, const Monster
 	int trans = 0;
 	if (monster._uniqtype != 0)
 		trans = monster._uniqtrans + 4;
-	if (monster._mmode == MM_STONE)
+	if (monster._mmode == MonsterMode::Petrified)
 		trans = 2;
 	if (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)
 		trans = 1;
