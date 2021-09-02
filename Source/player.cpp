@@ -670,6 +670,9 @@ void InitLevelChange(int pnum)
 	RemovePlrMissiles(pnum);
 	player.pManaShield = false;
 	player.wReflections = 0;
+	// share info about your missiles when another player joins the level
+	if (pnum != MyPlayerId)
+		NetSendMissileSync();
 	// share info about your manashield when another player joins the level
 	if (pnum != MyPlayerId && myPlayer.pManaShield)
 		NetSendCmd(true, CMD_SETSHIELD);

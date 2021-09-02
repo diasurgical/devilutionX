@@ -132,6 +132,7 @@ extern int ActiveMissiles[MAXMISSILES];
 extern int ActiveMissileCount;
 extern bool MissilePreFlag;
 
+void SetMissAnim(Missile &missile, int animtype);
 void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int playerId, spell_id sn);
 Direction16 GetDirection16(Point p1, Point p2);
