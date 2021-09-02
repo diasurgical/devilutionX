@@ -1540,7 +1540,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 
 	Monster *monster;
 	Player *target;
-	ObjectStruct *object;
+	Object *object;
 	Item *item;
 
 	int targetId = player.destParam1;

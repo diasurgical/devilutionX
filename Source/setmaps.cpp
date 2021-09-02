@@ -137,7 +137,7 @@ void SetmapTransparancy(const char *path)
 
 } // namespace
 
-ObjectStruct &ObjectAtPosition(Point position)
+Object &ObjectAtPosition(Point position)
 {
 	for (int i = 0; i < ActiveObjectCount; i++) {
 		int oi = ActiveObjects[i];

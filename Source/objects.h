@@ -18,7 +18,7 @@ namespace devilution {
 
 #define MAXOBJECTS 127
 
-struct ObjectStruct {
+struct Object {
 	_object_id _otype;
 	Point position;
 	bool _oLight;
@@ -132,7 +132,7 @@ struct ObjectStruct {
 	}
 };
 
-extern ObjectStruct Objects[MAXOBJECTS];
+extern Object Objects[MAXOBJECTS];
 extern int AvailableObjects[MAXOBJECTS];
 extern int ActiveObjects[MAXOBJECTS];
 extern int ActiveObjectCount;
@@ -163,7 +163,7 @@ void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
-void SyncObjectAnim(ObjectStruct &object);
+void SyncObjectAnim(Object &object);
 void GetObjectStr(int i);
 void OperateNakrulLever();
 void SyncNakrulRoom();

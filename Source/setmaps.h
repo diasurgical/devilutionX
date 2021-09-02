@@ -17,7 +17,7 @@ namespace devilution {
  * @param position The map coordinate to test
  * @return A reference to the object
  */
-ObjectStruct &ObjectAtPosition(Point position);
+Object &ObjectAtPosition(Point position);
 void LoadSetMap();
 
 /* rdata */
