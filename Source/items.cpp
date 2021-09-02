@@ -4884,7 +4884,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
-	fake_m.MData = &MonsterData[0];
+	fake_m.MData = &MonstersData[0];
 	fake_m._uniqtype = 0;
 	int i = 0;
 	for (;; i++) {

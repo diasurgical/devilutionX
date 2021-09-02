@@ -312,7 +312,7 @@ struct UniqMonstStruct {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterDataStruct MonsterData[];
+extern const MonsterDataStruct MonstersData[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
 extern const UniqMonstStruct UniqMonst[];
