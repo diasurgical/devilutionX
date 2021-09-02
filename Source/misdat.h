@@ -109,11 +109,11 @@ enum class MissileMovementDistrubution {
 	Unblockable,
 };
 
-struct MissileStruct;
+struct Missile;
 
 typedef struct MissileData {
-	void (*mAddProc)(MissileStruct &, Point, Direction);
-	void (*mProc)(MissileStruct &);
+	void (*mAddProc)(Missile &, Point, Direction);
+	void (*mProc)(Missile &);
 	uint8_t mName;
 	bool mDraw;
 	uint8_t mType;

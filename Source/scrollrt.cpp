@@ -86,7 +86,7 @@ struct PointHash {
 /**
  * @brief Contains all Missile at rendering position
  */
-std::unordered_multimap<Point, MissileStruct *, PointHash> MissilesAtRenderingTile;
+std::unordered_multimap<Point, Missile *, PointHash> MissilesAtRenderingTile;
 
 /**
  * @brief Could the missile (at the next game tick) collide? This method is a simplified version of CheckMissileCol (for example without random).
@@ -112,7 +112,7 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 	return nMissileTable[dPiece[tile.x][tile.y]];
 }
 
-void UpdateMissileRendererData(MissileStruct &m)
+void UpdateMissileRendererData(Missile &m)
 {
 	m.position.tileForRendering = m.position.tile;
 	m.position.offsetForRendering = m.position.offset;
@@ -179,7 +179,7 @@ void UpdateMissilesRendererData()
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		assert(ActiveMissiles[i] < MAXMISSILES);
-		MissileStruct &m = Missiles[ActiveMissiles[i]];
+		Missile &m = Missiles[ActiveMissiles[i]];
 		UpdateMissileRendererData(m);
 		MissilesAtRenderingTile.insert(std::make_pair(m.position.tileForRendering, &m));
 	}
@@ -291,12 +291,12 @@ void DrawCursor(const Surface &out)
 /**
  * @brief Render a missile sprite
  * @param out Output buffer
- * @param m Pointer to MissileStruct struct
+ * @param m Pointer to Missile struct
  * @param sx Output buffer coordinate
  * @param sy Output buffer coordinate
  * @param pre Is the sprite in the background
  */
-void DrawMissilePrivate(const Surface &out, const MissileStruct &missile, int sx, int sy, bool pre)
+void DrawMissilePrivate(const Surface &out, const Missile &missile, int sx, int sy, bool pre)
 {
 	if (missile._miPreFlag != pre || !missile._miDrawFlag)
 		return;
