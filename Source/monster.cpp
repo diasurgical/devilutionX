@@ -618,7 +618,7 @@ int AddMonsterType(_monster_id type, placeflag placeflag)
 		i = LevelMonsterTypeCount;
 		LevelMonsterTypeCount++;
 		LevelMonsterTypes[i].mtype = type;
-		monstimgtot += MonsterData[type].mImage;
+		monstimgtot += MonstersData[type].mImage;
 		InitMonsterGFX(i);
 		InitMonsterSND(i);
 	}
@@ -3628,8 +3628,8 @@ void GetLevelMTypes()
 			nt = 0;
 			for (int i = MT_WSKELAX; i <= MT_WSKELAX + numskeltypes; i++) {
 				if (IsSkel(i)) {
-					minl = 15 * MonsterData[i].mMinDLvl / 30 + 1;
-					maxl = 15 * MonsterData[i].mMaxDLvl / 30 + 1;
+					minl = 15 * MonstersData[i].mMinDLvl / 30 + 1;
+					maxl = 15 * MonstersData[i].mMaxDLvl / 30 + 1;
 
 					if (currlevel >= minl && currlevel <= maxl) {
 						if ((MonstAvailTbl[i] & mamask) != 0) {
@@ -3643,8 +3643,8 @@ void GetLevelMTypes()
 
 		nt = 0;
 		for (int i = MT_NZOMBIE; i < NUM_MTYPES; i++) {
-			minl = 15 * MonsterData[i].mMinDLvl / 30 + 1;
-			maxl = 15 * MonsterData[i].mMaxDLvl / 30 + 1;
+			minl = 15 * MonstersData[i].mMinDLvl / 30 + 1;
+			maxl = 15 * MonstersData[i].mMaxDLvl / 30 + 1;
 
 			if (currlevel >= minl && currlevel <= maxl) {
 				if ((MonstAvailTbl[i] & mamask) != 0) {
@@ -3663,7 +3663,7 @@ void GetLevelMTypes()
 
 			while (nt > 0 && LevelMonsterTypeCount < MAX_LVLMTYPES && monstimgtot < 4000) {
 				for (int i = 0; i < nt;) {
-					if (MonsterData[typelist[i]].mImage > 4000 - monstimgtot) {
+					if (MonstersData[typelist[i]].mImage > 4000 - monstimgtot) {
 						typelist[i] = typelist[--nt];
 						continue;
 					}
@@ -3689,14 +3689,14 @@ void GetLevelMTypes()
 void InitMonsterGFX(int monst)
 {
 	int mtype = LevelMonsterTypes[monst].mtype;
-	int width = MonsterData[mtype].width;
+	int width = MonstersData[mtype].width;
 
 	for (int anim = 0; anim < 6; anim++) {
-		int frames = MonsterData[mtype].Frames[anim];
+		int frames = MonstersData[mtype].Frames[anim];
 
-		if ((animletter[anim] != 's' || MonsterData[mtype].has_special) && frames > 0) {
+		if ((animletter[anim] != 's' || MonstersData[mtype].has_special) && frames > 0) {
 			char strBuff[256];
-			sprintf(strBuff, MonsterData[mtype].GraphicType, animletter[anim]);
+			sprintf(strBuff, MonstersData[mtype].GraphicType, animletter[anim]);
 
 			byte *celBuf;
 			{
@@ -3718,19 +3718,19 @@ void InitMonsterGFX(int monst)
 		}
 
 		LevelMonsterTypes[monst].Anims[anim].Frames = frames;
-		LevelMonsterTypes[monst].Anims[anim].Rate = MonsterData[mtype].Rate[anim];
+		LevelMonsterTypes[monst].Anims[anim].Rate = MonstersData[mtype].Rate[anim];
 	}
 
-	LevelMonsterTypes[monst].mMinHP = MonsterData[mtype].mMinHP;
-	LevelMonsterTypes[monst].mMaxHP = MonsterData[mtype].mMaxHP;
+	LevelMonsterTypes[monst].mMinHP = MonstersData[mtype].mMinHP;
+	LevelMonsterTypes[monst].mMaxHP = MonstersData[mtype].mMaxHP;
 	if (!gbIsHellfire && mtype == MT_DIABLO) {
 		LevelMonsterTypes[monst].mMinHP -= 2000;
 		LevelMonsterTypes[monst].mMaxHP -= 2000;
 	}
-	LevelMonsterTypes[monst].mAFNum = MonsterData[mtype].mAFNum;
-	LevelMonsterTypes[monst].MData = &MonsterData[mtype];
+	LevelMonsterTypes[monst].mAFNum = MonstersData[mtype].mAFNum;
+	LevelMonsterTypes[monst].MData = &MonstersData[mtype];
 
-	if (MonsterData[mtype].has_trans) {
+	if (MonstersData[mtype].has_trans) {
 		InitMonsterTRN(LevelMonsterTypes[monst]);
 	}
 
@@ -4394,7 +4394,7 @@ void FreeMonsters()
 	for (int i = 0; i < LevelMonsterTypeCount; i++) {
 		int mtype = LevelMonsterTypes[i].mtype;
 		for (int j = 0; j < 6; j++) {
-			if (animletter[j] != 's' || MonsterData[mtype].has_special) {
+			if (animletter[j] != 's' || MonstersData[mtype].has_special) {
 				LevelMonsterTypes[i].Anims[j].CMem = nullptr;
 			}
 		}
@@ -4632,15 +4632,15 @@ void M_FallenFear(Point position)
 void PrintMonstHistory(int mt)
 {
 	if (sgOptions.Gameplay.bShowMonsterType) {
-		strcpy(tempstr, fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(MonsterData[mt]), MonsterKillCounts[mt]).c_str());
+		strcpy(tempstr, fmt::format(_("Type: {:s}  Kills: {:d}"), GetMonsterTypeText(MonstersData[mt]), MonsterKillCounts[mt]).c_str());
 	} else {
 		strcpy(tempstr, fmt::format(_("Total kills: {:d}"), MonsterKillCounts[mt]).c_str());
 	}
 
 	AddPanelString(tempstr);
 	if (MonsterKillCounts[mt] >= 30) {
-		int minHP = MonsterData[mt].mMinHP;
-		int maxHP = MonsterData[mt].mMaxHP;
+		int minHP = MonstersData[mt].mMinHP;
+		int maxHP = MonstersData[mt].mMaxHP;
 		if (!gbIsHellfire && mt == MT_DIABLO) {
 			minHP -= 2000;
 			maxHP -= 2000;
@@ -4671,7 +4671,7 @@ void PrintMonstHistory(int mt)
 		AddPanelString(tempstr);
 	}
 	if (MonsterKillCounts[mt] >= 15) {
-		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonsterData[mt].mMagicRes : MonsterData[mt].mMagicRes2;
+		int res = (sgGameInitInfo.nDifficulty != DIFF_HELL) ? MonstersData[mt].mMagicRes : MonstersData[mt].mMagicRes2;
 		if ((res & (RESIST_MAGIC | RESIST_FIRE | RESIST_LIGHTNING | IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) == 0) {
 			strcpy(tempstr, _("No magic resistance"));
 			AddPanelString(tempstr);
