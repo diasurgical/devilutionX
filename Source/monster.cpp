@@ -4755,7 +4755,7 @@ void PlayEffect(Monster &monster, int mode)
 	snd_play_snd(snd, lVolume, lPan);
 }
 
-void MissToMonst(MissileStruct &missile, Point position)
+void MissToMonst(Missile &missile, Point position)
 {
 	int m = missile._misource;
 
@@ -4925,7 +4925,7 @@ void TalktoMonster(Monster &monster)
 	}
 }
 
-void SpawnGolem(int i, Point position, MissileStruct &missile)
+void SpawnGolem(int i, Point position, Missile &missile)
 {
 	assert(i >= 0 && i < MAX_PLRS);
 	auto &player = Players[i];

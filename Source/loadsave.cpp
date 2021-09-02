@@ -633,7 +633,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	SyncMonsterAnim(monster);
 }
 
-void LoadMissile(LoadHelper *file, MissileStruct &missile)
+void LoadMissile(LoadHelper *file, Missile &missile)
 {
 	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
 	missile.position.tile.x = file->NextLE<int32_t>();
@@ -1279,7 +1279,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	// Omit pointer MData;
 }
 
-void SaveMissile(SaveHelper *file, MissileStruct &missile)
+void SaveMissile(SaveHelper *file, Missile &missile)
 {
 	file->WriteLE<int32_t>(missile._mitype);
 	file->WriteLE<int32_t>(missile.position.tile.x);
