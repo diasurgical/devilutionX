@@ -476,7 +476,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
-					else if (dir > mAnimFAmt)
+					else if (dir >= mAnimFAmt)
 						dir = 0;
 
 					SetMissDir(missile, dir);
@@ -511,7 +511,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
-					else if (dir > mAnimFAmt)
+					else if (dir >= mAnimFAmt)
 						dir = 0;
 
 					SetMissDir(missile, dir);
@@ -560,7 +560,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
 					if (dir < 0)
 						dir = mAnimFAmt - 1;
-					else if (dir > mAnimFAmt)
+					else if (dir >= mAnimFAmt)
 						dir = 0;
 
 					SetMissDir(missile, dir);
