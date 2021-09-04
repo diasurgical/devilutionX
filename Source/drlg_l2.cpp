@@ -48,6 +48,19 @@ struct Miniset {
 	unsigned char search[4][5];
 	unsigned char replace[4][5];
 
+	bool matches(Point position) const
+	{
+		for (int yy = 0; yy < size.height; yy++) {
+			for (int xx = 0; xx < size.width; xx++) {
+				if (search[yy][xx] != 0 && dungeon[xx + position.x][yy + position.y] != search[yy][xx])
+					return false;
+				if (dflags[xx + position.x][yy + position.y] != 0)
+					return false;
+			}
+		}
+		return true;
+	}
+
 	void place(Point position) const
 	{
 		for (int y = 0; y < size.height; y++) {
@@ -1696,14 +1709,8 @@ bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bo
 				abort = false;
 			}
 
-			for (int yy = 0; yy < sh && abort; yy++) {
-				for (int xx = 0; xx < sw && abort; xx++) {
-					if (miniset.search[yy][xx] != 0 && dungeon[xx + sx][yy + sy] != miniset.search[yy][xx])
-						abort = false;
-					if (dflags[xx + sx][yy + sy] != 0)
-						abort = false;
-				}
-			}
+			if (abort)
+				abort = miniset.matches({ sx, sy });
 
 			if (!abort) {
 				sx++;
@@ -1741,16 +1748,8 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 			if (sx >= nSx1 && sx <= nSx2 && sy >= nSy1 && sy <= nSy2) {
 				found = false;
 			}
-			for (int yy = 0; yy < sh && found; yy++) {
-				for (int xx = 0; xx < sw && found; xx++) {
-					if (miniset.search[yy][xx] != 0 && dungeon[xx + sx][yy + sy] != miniset.search[yy][xx]) {
-						found = false;
-					}
-					if (dflags[xx + sx][yy + sy] != 0) {
-						found = false;
-					}
-				}
-			}
+			if (found)
+				found = miniset.matches({ sx, sy });
 			if (found) {
 				for (int yy = std::max(sy - sh, 0); yy < std::min(sy + 2 * sh, DMAXY) && found; yy++) {
 					for (int xx = std::max(sx - sw, 0); xx < std::min(sx + 2 * sw, DMAXX); xx++) {
