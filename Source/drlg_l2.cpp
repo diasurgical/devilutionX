@@ -47,6 +47,16 @@ struct Miniset {
 	/* these are indexed as [y][x] */
 	unsigned char search[4][5];
 	unsigned char replace[4][5];
+
+	void place(Point position) const
+	{
+		for (int y = 0; y < size.height; y++) {
+			for (int x = 0; x < size.width; x++) {
+				if (replace[y][x] != 0)
+					dungeon[x + position.x][y + position.y] = replace[y][x];
+			}
+		}
+	}
 };
 
 /** Miniset: Arch vertical. */
@@ -1710,13 +1720,7 @@ bool PlaceMiniSet(const Miniset &miniset, int tmin, int tmax, int cx, int cy, bo
 			return false;
 		}
 
-		for (int yy = 0; yy < sh; yy++) {
-			for (int xx = 0; xx < sw; xx++) {
-				if (miniset.replace[yy][xx] != 0) {
-					dungeon[xx + sx][yy + sy] = miniset.replace[yy][xx];
-				}
-			}
-		}
+		miniset.place({ sx, sy });
 	}
 
 	if (setview) {
@@ -1757,14 +1761,8 @@ void PlaceMiniSetRandom(const Miniset &miniset, int rndper)
 					}
 				}
 			}
-			if (found && GenerateRnd(100) < rndper) {
-				for (int yy = 0; yy < sh; yy++) {
-					for (int xx = 0; xx < sw; xx++) {
-						if (miniset.replace[yy][xx] != 0)
-							dungeon[xx + sx][yy + sy] = miniset.replace[yy][xx];
-					}
-				}
-			}
+			if (found && GenerateRnd(100) < rndper)
+				miniset.place({ sx, sy });
 		}
 	}
 }
