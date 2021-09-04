@@ -158,4 +158,7 @@ struct MissileFileData {
 extern MissileDataStruct MissileData[];
 extern MissileFileData MissileSpriteData[];
 
+void InitMissileGFX(bool loadHellfireGraphics = false);
+void FreeMissileGFX();
+
 } // namespace devilution

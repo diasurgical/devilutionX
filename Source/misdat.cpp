@@ -248,4 +248,22 @@ void MissileFileData::LoadGFX()
 	}
 }
 
+void InitMissileGFX(bool loadHellfireGraphics)
+{
+	for (size_t mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
+		if (!loadHellfireGraphics && mi > MFILE_SCBSEXPD)
+			break;
+		if (MissileSpriteData[mi].flags == MissileDataFlags::MonsterOwned)
+			continue;
+		MissileSpriteData[mi].LoadGFX();
+	}
+}
+
+void FreeMissileGFX()
+{
+	for (auto &missileData : MissileSpriteData) {
+		missileData.FreeGFX();
+	}
+}
+
 } // namespace devilution
