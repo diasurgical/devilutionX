@@ -1076,7 +1076,7 @@ void LoadAllGFX()
 	IncProgress();
 	InitObjectGFX();
 	IncProgress();
-	InitMissileGFX();
+	InitMissileGFX(gbIsHellfire);
 	IncProgress();
 }
 
@@ -1520,8 +1520,8 @@ void FreeGameMem()
 	pLevelPieces = nullptr;
 	pSpecialCels = std::nullopt;
 
-	FreeMissiles();
 	FreeMonsters();
+	FreeMissileGFX();
 	FreeObjectGFX();
 	FreeMonsterSnd();
 	FreeTownerGFX();
@@ -1859,7 +1859,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		} else {
 			IncProgress();
 			IncProgress();
-			InitMissileGFX();
+			InitMissileGFX(gbIsHellfire);
 			IncProgress();
 			IncProgress();
 		}
@@ -1958,7 +1958,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitMonsters();
 		IncProgress();
-		InitMissileGFX();
+		InitMissileGFX(gbIsHellfire);
 		IncProgress();
 		InitCorpses();
 		IncProgress();

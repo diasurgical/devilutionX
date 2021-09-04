@@ -4399,8 +4399,6 @@ void FreeMonsters()
 			}
 		}
 	}
-
-	FreeMissiles2();
 }
 
 bool DirOK(int i, Direction mdir)
