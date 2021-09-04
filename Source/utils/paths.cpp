@@ -5,6 +5,7 @@
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/sdl_ptrs.h"
 
 #ifdef USE_SDL1
 #include "utils/sdl2_to_1_2_backports.h"
@@ -48,10 +49,9 @@ void AddTrailingSlash(std::string &path)
 
 std::string FromSDL(char *s)
 {
+	SDLUniquePtr<char> pinned(s);
 	std::string result = (s != nullptr ? s : "");
-	if (s != nullptr) {
-		SDL_free(s);
-	} else {
+	if (s == nullptr) {
 		Log("{}", SDL_GetError());
 		SDL_ClearError();
 	}

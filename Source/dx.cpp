@@ -297,12 +297,9 @@ void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
 
 	// A surface with a non-output pixel format but without a color key needs scaling.
 	// We can convert the format and then call BlitScaled.
-	SDL_Surface *converted = SDL_ConvertSurface(src, dst->format, 0);
-	if (SDL_BlitScaled(converted, srcRect, dst, dstRect) < 0) {
-		SDL_FreeSurface(converted);
+	SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurface(src, dst->format, 0);
+	if (SDL_BlitScaled(converted.get(), srcRect, dst, dstRect) < 0)
 		ErrSdl();
-	}
-	SDL_FreeSurface(converted);
 #endif
 }
 
