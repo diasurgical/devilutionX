@@ -120,7 +120,7 @@ void RemovePortalMissile(int id)
 			if (Portals[id].level != 0)
 				AddUnLight(missile._mlid);
 
-			DeleteMissile(mi, i);
+			DeleteMissile(i);
 		}
 	}
 }

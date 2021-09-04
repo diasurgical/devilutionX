@@ -954,9 +954,9 @@ Direction16 GetDirection16(Point p1, Point p2)
 	return ret;
 }
 
-void DeleteMissile(int mi, int i)
+void DeleteMissile(int i)
 {
-	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = mi;
+	AvailableMissiles[MAXMISSILES - ActiveMissileCount] = ActiveMissiles[i];
 	ActiveMissileCount--;
 	if (ActiveMissileCount > 0 && i != ActiveMissileCount)
 		ActiveMissiles[i] = ActiveMissiles[ActiveMissileCount];
@@ -4277,7 +4277,7 @@ static void DeleteMissiles()
 {
 	for (int i = 0; i < ActiveMissileCount;) {
 		if (Missiles[ActiveMissiles[i]]._miDelFlag) {
-			DeleteMissile(ActiveMissiles[i], i);
+			DeleteMissile(i);
 		} else {
 			i++;
 		}
