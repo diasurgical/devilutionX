@@ -187,7 +187,7 @@ void UnPackItem(const ItemPack *is, Item *id, bool isHellfire)
 		item._iCharges = is->bCh;
 		item._iMaxCharges = is->bMCh;
 
-		RemoveInvalidItem(&item);
+		RemoveInvalidItem(item);
 
 		if (isHellfire)
 			item.dwBuff |= CF_HELLFIRE;
