@@ -30,7 +30,7 @@
 
 namespace devilution {
 
-extern SDL_Surface *renderer_texture_surface; /** defined in dx.cpp */
+extern SDLSurfaceUniquePtr RendererTextureSurface; /** defined in dx.cpp */
 
 Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
@@ -260,7 +260,7 @@ SDL_Surface *GetOutputSurface()
 	return SDL_GetVideoSurface();
 #else
 	if (renderer != nullptr)
-		return renderer_texture_surface;
+		return RendererTextureSurface.get();
 	return SDL_GetWindowSurface(ghMainWnd);
 #endif
 }
