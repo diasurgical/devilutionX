@@ -207,313 +207,309 @@ public:
 	}
 };
 
-void LoadItemData(LoadHelper *file, Item *pItem)
+void LoadItemData(LoadHelper &file, Item &item)
 {
-	pItem->_iSeed = file->NextLE<int32_t>();
-	pItem->_iCreateInfo = file->NextLE<uint16_t>();
-	file->Skip(2); // Alignment
-	pItem->_itype = static_cast<item_type>(file->NextLE<uint32_t>());
-	pItem->position.x = file->NextLE<int32_t>();
-	pItem->position.y = file->NextLE<int32_t>();
-	pItem->_iAnimFlag = file->NextBool32();
-	file->Skip(4); // Skip pointer _iAnimData
-	pItem->AnimInfo = {};
-	pItem->AnimInfo.NumberOfFrames = file->NextLE<int32_t>();
-	pItem->AnimInfo.CurrentFrame = file->NextLE<int32_t>();
-	file->Skip(8); // Skip _iAnimWidth and _iAnimWidth2
-	file->Skip(4); // Unused since 1.02
-	pItem->_iSelFlag = file->NextLE<uint8_t>();
-	file->Skip(3); // Alignment
-	pItem->_iPostDraw = file->NextBool32();
-	pItem->_iIdentified = file->NextBool32();
-	pItem->_iMagical = static_cast<item_quality>(file->NextLE<int8_t>());
-	file->NextBytes(pItem->_iName, 64);
-	file->NextBytes(pItem->_iIName, 64);
-	pItem->_iLoc = static_cast<item_equip_type>(file->NextLE<int8_t>());
-	pItem->_iClass = static_cast<item_class>(file->NextLE<uint8_t>());
-	file->Skip(1); // Alignment
-	pItem->_iCurs = file->NextLE<int32_t>();
-	pItem->_ivalue = file->NextLE<int32_t>();
-	pItem->_iIvalue = file->NextLE<int32_t>();
-	pItem->_iMinDam = file->NextLE<int32_t>();
-	pItem->_iMaxDam = file->NextLE<int32_t>();
-	pItem->_iAC = file->NextLE<int32_t>();
-	pItem->_iFlags = file->NextLE<uint32_t>();
-	pItem->_iMiscId = static_cast<item_misc_id>(file->NextLE<int32_t>());
-	pItem->_iSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	pItem->_iCharges = file->NextLE<int32_t>();
-	pItem->_iMaxCharges = file->NextLE<int32_t>();
-	pItem->_iDurability = file->NextLE<int32_t>();
-	pItem->_iMaxDur = file->NextLE<int32_t>();
-	pItem->_iPLDam = file->NextLE<int32_t>();
-	pItem->_iPLToHit = file->NextLE<int32_t>();
-	pItem->_iPLAC = file->NextLE<int32_t>();
-	pItem->_iPLStr = file->NextLE<int32_t>();
-	pItem->_iPLMag = file->NextLE<int32_t>();
-	pItem->_iPLDex = file->NextLE<int32_t>();
-	pItem->_iPLVit = file->NextLE<int32_t>();
-	pItem->_iPLFR = file->NextLE<int32_t>();
-	pItem->_iPLLR = file->NextLE<int32_t>();
-	pItem->_iPLMR = file->NextLE<int32_t>();
-	pItem->_iPLMana = file->NextLE<int32_t>();
-	pItem->_iPLHP = file->NextLE<int32_t>();
-	pItem->_iPLDamMod = file->NextLE<int32_t>();
-	pItem->_iPLGetHit = file->NextLE<int32_t>();
-	pItem->_iPLLight = file->NextLE<int32_t>();
-	pItem->_iSplLvlAdd = file->NextLE<int8_t>();
-	pItem->_iRequest = file->NextBool8();
-	file->Skip(2); // Alignment
-	pItem->_iUid = file->NextLE<int32_t>();
-	pItem->_iFMinDam = file->NextLE<int32_t>();
-	pItem->_iFMaxDam = file->NextLE<int32_t>();
-	pItem->_iLMinDam = file->NextLE<int32_t>();
-	pItem->_iLMaxDam = file->NextLE<int32_t>();
-	pItem->_iPLEnAc = file->NextLE<int32_t>();
-	pItem->_iPrePower = static_cast<item_effect_type>(file->NextLE<int8_t>());
-	pItem->_iSufPower = static_cast<item_effect_type>(file->NextLE<int8_t>());
-	file->Skip(2); // Alignment
-	pItem->_iVAdd1 = file->NextLE<int32_t>();
-	pItem->_iVMult1 = file->NextLE<int32_t>();
-	pItem->_iVAdd2 = file->NextLE<int32_t>();
-	pItem->_iVMult2 = file->NextLE<int32_t>();
-	pItem->_iMinStr = file->NextLE<int8_t>();
-	pItem->_iMinMag = file->NextLE<uint8_t>();
-	pItem->_iMinDex = file->NextLE<int8_t>();
-	file->Skip(1); // Alignment
-	pItem->_iStatFlag = file->NextBool32();
-	pItem->IDidx = static_cast<_item_indexes>(file->NextLE<int32_t>());
+	item._iSeed = file.NextLE<int32_t>();
+	item._iCreateInfo = file.NextLE<uint16_t>();
+	file.Skip(2); // Alignment
+	item._itype = static_cast<item_type>(file.NextLE<uint32_t>());
+	item.position.x = file.NextLE<int32_t>();
+	item.position.y = file.NextLE<int32_t>();
+	item._iAnimFlag = file.NextBool32();
+	file.Skip(4); // Skip pointer _iAnimData
+	item.AnimInfo = {};
+	item.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
+	item.AnimInfo.CurrentFrame = file.NextLE<int32_t>();
+	file.Skip(8); // Skip _iAnimWidth and _iAnimWidth2
+	file.Skip(4); // Unused since 1.02
+	item._iSelFlag = file.NextLE<uint8_t>();
+	file.Skip(3); // Alignment
+	item._iPostDraw = file.NextBool32();
+	item._iIdentified = file.NextBool32();
+	item._iMagical = static_cast<item_quality>(file.NextLE<int8_t>());
+	file.NextBytes(item._iName, 64);
+	file.NextBytes(item._iIName, 64);
+	item._iLoc = static_cast<item_equip_type>(file.NextLE<int8_t>());
+	item._iClass = static_cast<item_class>(file.NextLE<uint8_t>());
+	file.Skip(1); // Alignment
+	item._iCurs = file.NextLE<int32_t>();
+	item._ivalue = file.NextLE<int32_t>();
+	item._iIvalue = file.NextLE<int32_t>();
+	item._iMinDam = file.NextLE<int32_t>();
+	item._iMaxDam = file.NextLE<int32_t>();
+	item._iAC = file.NextLE<int32_t>();
+	item._iFlags = file.NextLE<uint32_t>();
+	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
+	item._iSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	item._iCharges = file.NextLE<int32_t>();
+	item._iMaxCharges = file.NextLE<int32_t>();
+	item._iDurability = file.NextLE<int32_t>();
+	item._iMaxDur = file.NextLE<int32_t>();
+	item._iPLDam = file.NextLE<int32_t>();
+	item._iPLToHit = file.NextLE<int32_t>();
+	item._iPLAC = file.NextLE<int32_t>();
+	item._iPLStr = file.NextLE<int32_t>();
+	item._iPLMag = file.NextLE<int32_t>();
+	item._iPLDex = file.NextLE<int32_t>();
+	item._iPLVit = file.NextLE<int32_t>();
+	item._iPLFR = file.NextLE<int32_t>();
+	item._iPLLR = file.NextLE<int32_t>();
+	item._iPLMR = file.NextLE<int32_t>();
+	item._iPLMana = file.NextLE<int32_t>();
+	item._iPLHP = file.NextLE<int32_t>();
+	item._iPLDamMod = file.NextLE<int32_t>();
+	item._iPLGetHit = file.NextLE<int32_t>();
+	item._iPLLight = file.NextLE<int32_t>();
+	item._iSplLvlAdd = file.NextLE<int8_t>();
+	item._iRequest = file.NextBool8();
+	file.Skip(2); // Alignment
+	item._iUid = file.NextLE<int32_t>();
+	item._iFMinDam = file.NextLE<int32_t>();
+	item._iFMaxDam = file.NextLE<int32_t>();
+	item._iLMinDam = file.NextLE<int32_t>();
+	item._iLMaxDam = file.NextLE<int32_t>();
+	item._iPLEnAc = file.NextLE<int32_t>();
+	item._iPrePower = static_cast<item_effect_type>(file.NextLE<int8_t>());
+	item._iSufPower = static_cast<item_effect_type>(file.NextLE<int8_t>());
+	file.Skip(2); // Alignment
+	item._iVAdd1 = file.NextLE<int32_t>();
+	item._iVMult1 = file.NextLE<int32_t>();
+	item._iVAdd2 = file.NextLE<int32_t>();
+	item._iVMult2 = file.NextLE<int32_t>();
+	item._iMinStr = file.NextLE<int8_t>();
+	item._iMinMag = file.NextLE<uint8_t>();
+	item._iMinDex = file.NextLE<int8_t>();
+	file.Skip(1); // Alignment
+	item._iStatFlag = file.NextBool32();
+	item.IDidx = static_cast<_item_indexes>(file.NextLE<int32_t>());
 	if (gbIsSpawn) {
-		pItem->IDidx = RemapItemIdxFromSpawn(pItem->IDidx);
+		item.IDidx = RemapItemIdxFromSpawn(item.IDidx);
 	}
 	if (!gbIsHellfireSaveGame) {
-		pItem->IDidx = RemapItemIdxFromDiablo(pItem->IDidx);
+		item.IDidx = RemapItemIdxFromDiablo(item.IDidx);
 	}
-	pItem->dwBuff = file->NextLE<uint32_t>();
+	item.dwBuff = file.NextLE<uint32_t>();
 	if (gbIsHellfireSaveGame)
-		pItem->_iDamAcFlags = file->NextLE<uint32_t>();
+		item._iDamAcFlags = file.NextLE<uint32_t>();
 	else
-		pItem->_iDamAcFlags = 0;
+		item._iDamAcFlags = 0;
 
-	RemoveInvalidItem(pItem);
+	RemoveInvalidItem(item);
 }
 
-void LoadItems(LoadHelper *file, const int n, Item *pItem)
+void LoadPlayer(LoadHelper &file, Player &player)
 {
-	for (int i = 0; i < n; i++) {
-		LoadItemData(file, &pItem[i]);
-	}
-}
-
-void LoadPlayer(LoadHelper *file, Player &player)
-{
-	player._pmode = static_cast<PLR_MODE>(file->NextLE<int32_t>());
+	player._pmode = static_cast<PLR_MODE>(file.NextLE<int32_t>());
 
 	for (int8_t &step : player.walkpath) {
-		step = file->NextLE<int8_t>();
+		step = file.NextLE<int8_t>();
 	}
-	player.plractive = file->NextBool8();
-	file->Skip(2); // Alignment
-	player.destAction = static_cast<action_id>(file->NextLE<int32_t>());
-	player.destParam1 = file->NextLE<int32_t>();
-	player.destParam2 = file->NextLE<int32_t>();
-	player.destParam3 = static_cast<Direction>(file->NextLE<int32_t>());
-	player.destParam4 = file->NextLE<int32_t>();
-	player.plrlevel = file->NextLE<int32_t>();
-	player.position.tile.x = file->NextLE<int32_t>();
-	player.position.tile.y = file->NextLE<int32_t>();
-	player.position.future.x = file->NextLE<int32_t>();
-	player.position.future.y = file->NextLE<int32_t>();
-	file->Skip(8); // Skip _ptargx and _ptargy
-	player.position.last.x = file->NextLE<int32_t>();
-	player.position.last.y = file->NextLE<int32_t>();
-	player.position.old.x = file->NextLE<int32_t>();
-	player.position.old.y = file->NextLE<int32_t>();
-	player.position.offset.deltaX = file->NextLE<int32_t>();
-	player.position.offset.deltaY = file->NextLE<int32_t>();
-	player.position.velocity.deltaX = file->NextLE<int32_t>();
-	player.position.velocity.deltaY = file->NextLE<int32_t>();
-	player._pdir = static_cast<Direction>(file->NextLE<int32_t>());
-	file->Skip(4); // Unused
-	player._pgfxnum = file->NextLE<int32_t>();
-	file->Skip(4); // Skip pointer pData
+	player.plractive = file.NextBool8();
+	file.Skip(2); // Alignment
+	player.destAction = static_cast<action_id>(file.NextLE<int32_t>());
+	player.destParam1 = file.NextLE<int32_t>();
+	player.destParam2 = file.NextLE<int32_t>();
+	player.destParam3 = static_cast<Direction>(file.NextLE<int32_t>());
+	player.destParam4 = file.NextLE<int32_t>();
+	player.plrlevel = file.NextLE<int32_t>();
+	player.position.tile.x = file.NextLE<int32_t>();
+	player.position.tile.y = file.NextLE<int32_t>();
+	player.position.future.x = file.NextLE<int32_t>();
+	player.position.future.y = file.NextLE<int32_t>();
+	file.Skip(8); // Skip _ptargx and _ptargy
+	player.position.last.x = file.NextLE<int32_t>();
+	player.position.last.y = file.NextLE<int32_t>();
+	player.position.old.x = file.NextLE<int32_t>();
+	player.position.old.y = file.NextLE<int32_t>();
+	player.position.offset.deltaX = file.NextLE<int32_t>();
+	player.position.offset.deltaY = file.NextLE<int32_t>();
+	player.position.velocity.deltaX = file.NextLE<int32_t>();
+	player.position.velocity.deltaY = file.NextLE<int32_t>();
+	player._pdir = static_cast<Direction>(file.NextLE<int32_t>());
+	file.Skip(4); // Unused
+	player._pgfxnum = file.NextLE<int32_t>();
+	file.Skip(4); // Skip pointer pData
 	player.AnimInfo = {};
-	player.AnimInfo.TicksPerFrame = file->NextLE<int32_t>() + 1;
-	player.AnimInfo.TickCounterOfCurrentFrame = file->NextLE<int32_t>();
-	player.AnimInfo.NumberOfFrames = file->NextLE<int32_t>();
-	player.AnimInfo.CurrentFrame = file->NextLE<int32_t>();
-	file->Skip(4); // Skip _pAnimWidth
-	file->Skip(4); // Skip _pAnimWidth2
-	file->Skip(4); // Skip _peflag
-	player._plid = file->NextLE<int32_t>();
-	player._pvid = file->NextLE<int32_t>();
+	player.AnimInfo.TicksPerFrame = file.NextLE<int32_t>() + 1;
+	player.AnimInfo.TickCounterOfCurrentFrame = file.NextLE<int32_t>();
+	player.AnimInfo.NumberOfFrames = file.NextLE<int32_t>();
+	player.AnimInfo.CurrentFrame = file.NextLE<int32_t>();
+	file.Skip(4); // Skip _pAnimWidth
+	file.Skip(4); // Skip _pAnimWidth2
+	file.Skip(4); // Skip _peflag
+	player._plid = file.NextLE<int32_t>();
+	player._pvid = file.NextLE<int32_t>();
 
-	player._pSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	player._pSplType = static_cast<spell_type>(file->NextLE<int8_t>());
-	player._pSplFrom = file->NextLE<int8_t>();
-	file->Skip(2); // Alignment
-	player._pTSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	file->Skip<int8_t>(); // Skip _pTSplType
-	file->Skip(3);        // Alignment
-	player._pRSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	player._pRSplType = static_cast<spell_type>(file->NextLE<int8_t>());
-	file->Skip(3); // Alignment
-	player._pSBkSpell = static_cast<spell_id>(file->NextLE<int32_t>());
-	file->Skip<int8_t>(); // Skip _pSBkSplType
+	player._pSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	player._pSplType = static_cast<spell_type>(file.NextLE<int8_t>());
+	player._pSplFrom = file.NextLE<int8_t>();
+	file.Skip(2); // Alignment
+	player._pTSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	file.Skip<int8_t>(); // Skip _pTSplType
+	file.Skip(3);        // Alignment
+	player._pRSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	player._pRSplType = static_cast<spell_type>(file.NextLE<int8_t>());
+	file.Skip(3); // Alignment
+	player._pSBkSpell = static_cast<spell_id>(file.NextLE<int32_t>());
+	file.Skip<int8_t>(); // Skip _pSBkSplType
 	for (int8_t &spellLevel : player._pSplLvl)
-		spellLevel = file->NextLE<int8_t>();
-	file->Skip(7); // Alignment
-	player._pMemSpells = file->NextLE<uint64_t>();
-	player._pAblSpells = file->NextLE<uint64_t>();
-	player._pScrlSpells = file->NextLE<uint64_t>();
-	player._pSpellFlags = file->NextLE<uint8_t>();
-	file->Skip(3); // Alignment
+		spellLevel = file.NextLE<int8_t>();
+	file.Skip(7); // Alignment
+	player._pMemSpells = file.NextLE<uint64_t>();
+	player._pAblSpells = file.NextLE<uint64_t>();
+	player._pScrlSpells = file.NextLE<uint64_t>();
+	player._pSpellFlags = file.NextLE<uint8_t>();
+	file.Skip(3); // Alignment
 	for (auto &spell : player._pSplHotKey)
-		spell = static_cast<spell_id>(file->NextLE<int32_t>());
+		spell = static_cast<spell_id>(file.NextLE<int32_t>());
 	for (auto &spellType : player._pSplTHotKey)
-		spellType = static_cast<spell_type>(file->NextLE<int8_t>());
+		spellType = static_cast<spell_type>(file.NextLE<int8_t>());
 
-	file->Skip<int32_t>(); // Skip _pwtype
-	player._pBlockFlag = file->NextBool8();
-	player._pInvincible = file->NextBool8();
-	player._pLightRad = file->NextLE<int8_t>();
-	player._pLvlChanging = file->NextBool8();
+	file.Skip<int32_t>(); // Skip _pwtype
+	player._pBlockFlag = file.NextBool8();
+	player._pInvincible = file.NextBool8();
+	player._pLightRad = file.NextLE<int8_t>();
+	player._pLvlChanging = file.NextBool8();
 
-	file->NextBytes(player._pName, PLR_NAME_LEN);
-	player._pClass = static_cast<HeroClass>(file->NextLE<int8_t>());
-	file->Skip(3); // Alignment
-	player._pStrength = file->NextLE<int32_t>();
-	player._pBaseStr = file->NextLE<int32_t>();
-	player._pMagic = file->NextLE<int32_t>();
-	player._pBaseMag = file->NextLE<int32_t>();
-	player._pDexterity = file->NextLE<int32_t>();
-	player._pBaseDex = file->NextLE<int32_t>();
-	player._pVitality = file->NextLE<int32_t>();
-	player._pBaseVit = file->NextLE<int32_t>();
-	player._pStatPts = file->NextLE<int32_t>();
-	player._pDamageMod = file->NextLE<int32_t>();
-	player._pBaseToBlk = file->NextLE<int32_t>();
+	file.NextBytes(player._pName, PLR_NAME_LEN);
+	player._pClass = static_cast<HeroClass>(file.NextLE<int8_t>());
+	file.Skip(3); // Alignment
+	player._pStrength = file.NextLE<int32_t>();
+	player._pBaseStr = file.NextLE<int32_t>();
+	player._pMagic = file.NextLE<int32_t>();
+	player._pBaseMag = file.NextLE<int32_t>();
+	player._pDexterity = file.NextLE<int32_t>();
+	player._pBaseDex = file.NextLE<int32_t>();
+	player._pVitality = file.NextLE<int32_t>();
+	player._pBaseVit = file.NextLE<int32_t>();
+	player._pStatPts = file.NextLE<int32_t>();
+	player._pDamageMod = file.NextLE<int32_t>();
+	player._pBaseToBlk = file.NextLE<int32_t>();
 	if (player._pBaseToBlk == 0)
 		player._pBaseToBlk = BlockBonuses[static_cast<std::size_t>(player._pClass)];
-	player._pHPBase = file->NextLE<int32_t>();
-	player._pMaxHPBase = file->NextLE<int32_t>();
-	player._pHitPoints = file->NextLE<int32_t>();
-	player._pMaxHP = file->NextLE<int32_t>();
-	file->Skip(sizeof(int32_t)); // Skip _pHPPer - always derived from hp and maxHP.
-	player._pManaBase = file->NextLE<int32_t>();
-	player._pMaxManaBase = file->NextLE<int32_t>();
-	player._pMana = file->NextLE<int32_t>();
-	player._pMaxMana = file->NextLE<int32_t>();
-	file->Skip(sizeof(int32_t)); // Skip _pManaPer - always derived from mana and maxMana
-	player._pLevel = file->NextLE<int8_t>();
-	player._pMaxLvl = file->NextLE<int8_t>();
-	file->Skip(2); // Alignment
-	player._pExperience = file->NextLE<uint32_t>();
-	file->Skip<uint32_t>();                        // Skip _pMaxExp - unused
-	player._pNextExper = file->NextLE<uint32_t>(); // This can be calculated based on pLevel (which in turn could be calculated based on pExperience)
-	player._pArmorClass = file->NextLE<int8_t>();
-	player._pMagResist = file->NextLE<int8_t>();
-	player._pFireResist = file->NextLE<int8_t>();
-	player._pLghtResist = file->NextLE<int8_t>();
-	player._pGold = file->NextLE<int32_t>();
+	player._pHPBase = file.NextLE<int32_t>();
+	player._pMaxHPBase = file.NextLE<int32_t>();
+	player._pHitPoints = file.NextLE<int32_t>();
+	player._pMaxHP = file.NextLE<int32_t>();
+	file.Skip(sizeof(int32_t)); // Skip _pHPPer - always derived from hp and maxHP.
+	player._pManaBase = file.NextLE<int32_t>();
+	player._pMaxManaBase = file.NextLE<int32_t>();
+	player._pMana = file.NextLE<int32_t>();
+	player._pMaxMana = file.NextLE<int32_t>();
+	file.Skip(sizeof(int32_t)); // Skip _pManaPer - always derived from mana and maxMana
+	player._pLevel = file.NextLE<int8_t>();
+	player._pMaxLvl = file.NextLE<int8_t>();
+	file.Skip(2); // Alignment
+	player._pExperience = file.NextLE<uint32_t>();
+	file.Skip<uint32_t>();                        // Skip _pMaxExp - unused
+	player._pNextExper = file.NextLE<uint32_t>(); // This can be calculated based on pLevel (which in turn could be calculated based on pExperience)
+	player._pArmorClass = file.NextLE<int8_t>();
+	player._pMagResist = file.NextLE<int8_t>();
+	player._pFireResist = file.NextLE<int8_t>();
+	player._pLghtResist = file.NextLE<int8_t>();
+	player._pGold = file.NextLE<int32_t>();
 
-	player._pInfraFlag = file->NextBool32();
-	player.position.temp.x = file->NextLE<int32_t>();
-	player.position.temp.y = file->NextLE<int32_t>();
-	player.tempDirection = static_cast<Direction>(file->NextLE<int32_t>());
-	player._pVar4 = file->NextLE<int32_t>();
-	player._pVar5 = file->NextLE<int32_t>();
-	player.position.offset2.deltaX = file->NextLE<int32_t>();
-	player.position.offset2.deltaY = file->NextLE<int32_t>();
-	file->Skip(4); // Skip actionFrame
+	player._pInfraFlag = file.NextBool32();
+	player.position.temp.x = file.NextLE<int32_t>();
+	player.position.temp.y = file.NextLE<int32_t>();
+	player.tempDirection = static_cast<Direction>(file.NextLE<int32_t>());
+	player._pVar4 = file.NextLE<int32_t>();
+	player._pVar5 = file.NextLE<int32_t>();
+	player.position.offset2.deltaX = file.NextLE<int32_t>();
+	player.position.offset2.deltaY = file.NextLE<int32_t>();
+	file.Skip(4); // Skip actionFrame
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		player._pLvlVisited[i] = file->NextBool8();
+		player._pLvlVisited[i] = file.NextBool8();
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
-		player._pSLvlVisited[i] = file->NextBool8();
+		player._pSLvlVisited[i] = file.NextBool8();
 
-	file->Skip(2);     // Alignment
-	file->Skip(4);     // skip _pGFXLoad
-	file->Skip(4 * 8); // Skip pointers _pNAnim
-	player._pNFrames = file->NextLE<int32_t>();
-	file->Skip(4);     // skip _pNWidth
-	file->Skip(4 * 8); // Skip pointers _pWAnim
-	player._pWFrames = file->NextLE<int32_t>();
-	file->Skip(4);     // skip _pWWidth
-	file->Skip(4 * 8); // Skip pointers _pAAnim
-	player._pAFrames = file->NextLE<int32_t>();
-	file->Skip(4); // skip _pAWidth
-	player._pAFNum = file->NextLE<int32_t>();
-	file->Skip(4 * 8); // Skip pointers _pLAnim
-	file->Skip(4 * 8); // Skip pointers _pFAnim
-	file->Skip(4 * 8); // Skip pointers _pTAnim
-	player._pSFrames = file->NextLE<int32_t>();
-	file->Skip(4); // skip _pSWidth
-	player._pSFNum = file->NextLE<int32_t>();
-	file->Skip(4 * 8); // Skip pointers _pHAnim
-	player._pHFrames = file->NextLE<int32_t>();
-	file->Skip(4);     // skip _pHWidth
-	file->Skip(4 * 8); // Skip pointers _pDAnim
-	player._pDFrames = file->NextLE<int32_t>();
-	file->Skip(4);     // skip _pDWidth
-	file->Skip(4 * 8); // Skip pointers _pBAnim
-	player._pBFrames = file->NextLE<int32_t>();
-	file->Skip(4); // skip _pBWidth
+	file.Skip(2);     // Alignment
+	file.Skip(4);     // skip _pGFXLoad
+	file.Skip(4 * 8); // Skip pointers _pNAnim
+	player._pNFrames = file.NextLE<int32_t>();
+	file.Skip(4);     // skip _pNWidth
+	file.Skip(4 * 8); // Skip pointers _pWAnim
+	player._pWFrames = file.NextLE<int32_t>();
+	file.Skip(4);     // skip _pWWidth
+	file.Skip(4 * 8); // Skip pointers _pAAnim
+	player._pAFrames = file.NextLE<int32_t>();
+	file.Skip(4); // skip _pAWidth
+	player._pAFNum = file.NextLE<int32_t>();
+	file.Skip(4 * 8); // Skip pointers _pLAnim
+	file.Skip(4 * 8); // Skip pointers _pFAnim
+	file.Skip(4 * 8); // Skip pointers _pTAnim
+	player._pSFrames = file.NextLE<int32_t>();
+	file.Skip(4); // skip _pSWidth
+	player._pSFNum = file.NextLE<int32_t>();
+	file.Skip(4 * 8); // Skip pointers _pHAnim
+	player._pHFrames = file.NextLE<int32_t>();
+	file.Skip(4);     // skip _pHWidth
+	file.Skip(4 * 8); // Skip pointers _pDAnim
+	player._pDFrames = file.NextLE<int32_t>();
+	file.Skip(4);     // skip _pDWidth
+	file.Skip(4 * 8); // Skip pointers _pBAnim
+	player._pBFrames = file.NextLE<int32_t>();
+	file.Skip(4); // skip _pBWidth
 
-	LoadItems(file, NUM_INVLOC, player.InvBody);
-	LoadItems(file, NUM_INV_GRID_ELEM, player.InvList);
-	player._pNumInv = file->NextLE<int32_t>();
+	for (Item &item : player.InvBody)
+		LoadItemData(file, item);
+	for (Item &item : player.InvList)
+		LoadItemData(file, item);
+	player._pNumInv = file.NextLE<int32_t>();
 	for (int8_t &cell : player.InvGrid)
-		cell = file->NextLE<int8_t>();
-	LoadItems(file, MAXBELTITEMS, player.SpdList);
-	LoadItemData(file, &player.HoldItem);
+		cell = file.NextLE<int8_t>();
+	for (Item &item : player.SpdList)
+		LoadItemData(file, item);
+	LoadItemData(file, player.HoldItem);
 
-	player._pIMinDam = file->NextLE<int32_t>();
-	player._pIMaxDam = file->NextLE<int32_t>();
-	player._pIAC = file->NextLE<int32_t>();
-	player._pIBonusDam = file->NextLE<int32_t>();
-	player._pIBonusToHit = file->NextLE<int32_t>();
-	player._pIBonusAC = file->NextLE<int32_t>();
-	player._pIBonusDamMod = file->NextLE<int32_t>();
-	file->Skip(4); // Alignment
+	player._pIMinDam = file.NextLE<int32_t>();
+	player._pIMaxDam = file.NextLE<int32_t>();
+	player._pIAC = file.NextLE<int32_t>();
+	player._pIBonusDam = file.NextLE<int32_t>();
+	player._pIBonusToHit = file.NextLE<int32_t>();
+	player._pIBonusAC = file.NextLE<int32_t>();
+	player._pIBonusDamMod = file.NextLE<int32_t>();
+	file.Skip(4); // Alignment
 
-	player._pISpells = file->NextLE<uint64_t>();
-	player._pIFlags = file->NextLE<int32_t>();
-	player._pIGetHit = file->NextLE<int32_t>();
-	player._pISplLvlAdd = file->NextLE<int8_t>();
-	file->Skip(1); // Unused
-	file->Skip(2); // Alignment
-	player._pISplDur = file->NextLE<int32_t>();
-	player._pIEnAc = file->NextLE<int32_t>();
-	player._pIFMinDam = file->NextLE<int32_t>();
-	player._pIFMaxDam = file->NextLE<int32_t>();
-	player._pILMinDam = file->NextLE<int32_t>();
-	player._pILMaxDam = file->NextLE<int32_t>();
-	player._pOilType = static_cast<item_misc_id>(file->NextLE<int32_t>());
-	player.pTownWarps = file->NextLE<uint8_t>();
-	player.pDungMsgs = file->NextLE<uint8_t>();
-	player.pLvlLoad = file->NextLE<uint8_t>();
+	player._pISpells = file.NextLE<uint64_t>();
+	player._pIFlags = file.NextLE<int32_t>();
+	player._pIGetHit = file.NextLE<int32_t>();
+	player._pISplLvlAdd = file.NextLE<int8_t>();
+	file.Skip(1); // Unused
+	file.Skip(2); // Alignment
+	player._pISplDur = file.NextLE<int32_t>();
+	player._pIEnAc = file.NextLE<int32_t>();
+	player._pIFMinDam = file.NextLE<int32_t>();
+	player._pIFMaxDam = file.NextLE<int32_t>();
+	player._pILMinDam = file.NextLE<int32_t>();
+	player._pILMaxDam = file.NextLE<int32_t>();
+	player._pOilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
+	player.pTownWarps = file.NextLE<uint8_t>();
+	player.pDungMsgs = file.NextLE<uint8_t>();
+	player.pLvlLoad = file.NextLE<uint8_t>();
 
 	if (gbIsHellfireSaveGame) {
-		player.pDungMsgs2 = file->NextLE<uint8_t>();
+		player.pDungMsgs2 = file.NextLE<uint8_t>();
 		player.pBattleNet = false;
 	} else {
 		player.pDungMsgs2 = 0;
-		player.pBattleNet = file->NextBool8();
+		player.pBattleNet = file.NextBool8();
 	}
-	player.pManaShield = file->NextBool8();
+	player.pManaShield = file.NextBool8();
 	if (gbIsHellfireSaveGame) {
-		player.pOriginalCathedral = file->NextBool8();
+		player.pOriginalCathedral = file.NextBool8();
 	} else {
-		file->Skip(1);
+		file.Skip(1);
 		player.pOriginalCathedral = true;
 	}
-	file->Skip(2); // Available bytes
-	player.wReflections = file->NextLE<uint16_t>();
-	file->Skip(14); // Available bytes
+	file.Skip(2); // Available bytes
+	player.wReflections = file.NextLE<uint16_t>();
+	file.Skip(14); // Available bytes
 
-	player.pDiabloKillLevel = file->NextLE<uint32_t>();
-	player.pDifficulty = static_cast<_difficulty>(file->NextLE<uint32_t>());
-	player.pDamAcFlags = file->NextLE<uint32_t>();
-	file->Skip(20); // Available bytes
+	player.pDiabloKillLevel = file.NextLE<uint32_t>();
+	player.pDifficulty = static_cast<_difficulty>(file.NextLE<uint32_t>());
+	player.pDamAcFlags = file.NextLE<uint32_t>();
+	file.Skip(20); // Available bytes
 	CalcPlrItemVals(player, false);
 
 	// Omit pointer _pNData
@@ -719,15 +715,15 @@ void LoadObject(LoadHelper &file, Object &object)
 	object._oVar8 = file.NextLE<int32_t>();
 }
 
-void LoadItem(LoadHelper *file, int i)
+void LoadItem(LoadHelper &file, Item &item)
 {
-	LoadItemData(file, &Items[i]);
-	GetItemFrm(Items[i]);
+	LoadItemData(file, item);
+	GetItemFrm(item);
 }
 
-void LoadPremium(LoadHelper *file, int i)
+void LoadPremium(LoadHelper &file, int i)
 {
-	LoadItemData(file, &premiumitems[i]);
+	LoadItemData(file, premiumitems[i]);
 }
 
 void LoadQuest(LoadHelper *file, int i)
@@ -841,12 +837,12 @@ void ConvertLevels()
 	leveltype = tmpLeveltype;
 }
 
-void LoadMatchingItems(LoadHelper *file, const int n, Item *pItem)
+void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
 {
 	Item tempItem;
 
 	for (int i = 0; i < n; i++) {
-		LoadItemData(file, &tempItem);
+		LoadItemData(file, tempItem);
 		if (pItem[i].isEmpty() || tempItem.isEmpty())
 			continue;
 		if (pItem[i]._iSeed != tempItem._iSeed)
@@ -1434,20 +1430,20 @@ const int HellfireItemSaveSize = 372;
 
 } // namespace
 
-void RemoveInvalidItem(Item *pItem)
+void RemoveInvalidItem(Item &item)
 {
-	bool isInvalid = !IsItemAvailable(pItem->IDidx) || !IsUniqueAvailable(pItem->_iUid);
+	bool isInvalid = !IsItemAvailable(item.IDidx) || !IsUniqueAvailable(item._iUid);
 
 	if (!gbIsHellfire) {
-		isInvalid = isInvalid || (pItem->_itype == ITYPE_STAFF && GetSpellStaffLevel(pItem->_iSpell) == -1);
-		isInvalid = isInvalid || (pItem->_iMiscId == IMISC_BOOK && GetSpellBookLevel(pItem->_iSpell) == -1);
-		isInvalid = isInvalid || pItem->_iDamAcFlags != 0;
-		isInvalid = isInvalid || pItem->_iPrePower > IDI_LASTDIABLO;
-		isInvalid = isInvalid || pItem->_iSufPower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || (item._itype == ITYPE_STAFF && GetSpellStaffLevel(item._iSpell) == -1);
+		isInvalid = isInvalid || (item._iMiscId == IMISC_BOOK && GetSpellBookLevel(item._iSpell) == -1);
+		isInvalid = isInvalid || item._iDamAcFlags != 0;
+		isInvalid = isInvalid || item._iPrePower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || item._iSufPower > IDI_LASTDIABLO;
 	}
 
 	if (isInvalid) {
-		pItem->_itype = ITYPE_NONE;
+		item._itype = ITYPE_NONE;
 	}
 }
 
@@ -1623,9 +1619,9 @@ void LoadHeroItems(Player &player)
 
 	gbIsHellfireSaveGame = file.NextBool8();
 
-	LoadMatchingItems(&file, NUM_INVLOC, player.InvBody);
-	LoadMatchingItems(&file, NUM_INV_GRID_ELEM, player.InvList);
-	LoadMatchingItems(&file, MAXBELTITEMS, player.SpdList);
+	LoadMatchingItems(file, NUM_INVLOC, player.InvBody);
+	LoadMatchingItems(file, NUM_INV_GRID_ELEM, player.InvList);
+	LoadMatchingItems(file, MAXBELTITEMS, player.SpdList);
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
@@ -1692,7 +1688,7 @@ void LoadGame(bool firstflag)
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	LoadPlayer(&file, myPlayer);
+	LoadPlayer(file, myPlayer);
 
 	sgGameInitInfo.nDifficulty = myPlayer.pDifficulty;
 	if (sgGameInitInfo.nDifficulty < DIFF_NORMAL || sgGameInitInfo.nDifficulty > DIFF_HELL)
@@ -1761,7 +1757,7 @@ void LoadGame(bool firstflag)
 	for (int &itemId : AvailableItems)
 		itemId = file.NextLE<int8_t>();
 	for (int i = 0; i < ActiveItemCount; i++)
-		LoadItem(&file, ActiveItems[i]);
+		LoadItem(file, Items[ActiveItems[i]]);
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
 
@@ -1814,7 +1810,7 @@ void LoadGame(bool firstflag)
 	premiumlevel = file.NextBE<int32_t>();
 
 	for (int i = 0; i < giNumberOfSmithPremiumItems; i++)
-		LoadPremium(&file, i);
+		LoadPremium(file, i);
 	if (gbIsHellfire && !gbIsHellfireSaveGame)
 		SpawnPremium(MyPlayerId);
 
@@ -2151,7 +2147,7 @@ void LoadLevel()
 	for (int &itemId : AvailableItems)
 		itemId = file.NextLE<int8_t>();
 	for (int i = 0; i < ActiveItemCount; i++)
-		LoadItem(&file, ActiveItems[i]);
+		LoadItem(file, Items[ActiveItems[i]]);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
