@@ -32,7 +32,7 @@ SDLPaletteUniquePtr Palette;
 unsigned int pal_surface_palette_version = 0;
 
 /** 24-bit renderer texture surface */
-SDL_Surface *renderer_texture_surface = nullptr;
+SDLSurfaceUniquePtr RendererTextureSurface;
 
 /** 8-bit surface that we render to */
 SDL_Surface *pal_surface;
@@ -105,7 +105,7 @@ void CreatePrimarySurface()
 		Uint32 format;
 		if (SDL_QueryTexture(texture.get(), &format, nullptr, nullptr, nullptr) < 0)
 			ErrSdl();
-		renderer_texture_surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
+		RendererTextureSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	}
 #endif
 	if (GetOutputSurface() == nullptr) {
@@ -207,7 +207,7 @@ void dx_cleanup()
 	SDL_FreeSurface(pal_surface);
 	pal_surface = nullptr;
 	Palette = nullptr;
-	SDL_FreeSurface(renderer_texture_surface);
+	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
 	texture = nullptr;
 	SDL_DestroyRenderer(renderer);
