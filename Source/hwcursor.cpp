@@ -112,7 +112,7 @@ bool SetHardwareCursorFromSprite(int pcurs)
 		return false;
 
 	OwnedSurface out { size };
-	SDL_SetSurfacePalette(out.surface, Palette);
+	SDL_SetSurfacePalette(out.surface, Palette.get());
 
 	// Transparent color must not be used in the sprite itself.
 	// Colors 1-127 are outside of the UI palette so are safe to use.

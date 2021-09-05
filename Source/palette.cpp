@@ -163,7 +163,7 @@ void CycleColorsReverse(int from, int to)
 void palette_update(int first, int ncolor)
 {
 	assert(Palette);
-	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette, system_palette, first, ncolor) < 0) {
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette.get(), system_palette, first, ncolor) < 0) {
 		ErrSdl();
 	}
 	pal_surface_palette_version++;
