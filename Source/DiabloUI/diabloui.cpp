@@ -635,7 +635,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	BlackPalette();
 
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
-	if (DiabloUiSurface() == pal_surface)
+	if (DiabloUiSurface() == PalSurface)
 		BltFast(nullptr, nullptr);
 	RenderPresent();
 }
@@ -672,7 +672,7 @@ void UiFadeIn()
 			SetFadeLevel(fadeValue);
 	}
 
-	if (DiabloUiSurface() == pal_surface)
+	if (DiabloUiSurface() == PalSurface)
 		BltFast(nullptr, nullptr);
 	RenderPresent();
 }

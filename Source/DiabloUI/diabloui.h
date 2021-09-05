@@ -86,7 +86,7 @@ inline SDL_Surface *DiabloUiSurface()
 	// to an off-screen surface first to avoid flickering / tearing.
 	if ((output_surface->flags & SDL_HWSURFACE) != 0
 	    && (output_surface->flags & SDL_DOUBLEBUF) == 0) {
-		return pal_surface;
+		return PalSurface;
 	}
 #endif
 

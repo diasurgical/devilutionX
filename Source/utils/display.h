@@ -23,7 +23,7 @@ extern SDLTextureUniquePtr texture;
 #endif
 
 extern SDLPaletteUniquePtr Palette;
-extern SDL_Surface *pal_surface;
+extern SDL_Surface *PalSurface;
 extern unsigned int pal_surface_palette_version;
 
 #ifdef USE_SDL1

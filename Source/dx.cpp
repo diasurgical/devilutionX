@@ -35,9 +35,12 @@ unsigned int pal_surface_palette_version = 0;
 SDLSurfaceUniquePtr RendererTextureSurface;
 
 /** 8-bit surface that we render to */
-SDL_Surface *pal_surface;
+SDL_Surface *PalSurface;
+namespace {
+SDLSurfaceUniquePtr PinnedPalSurface;
+} // namespace
 
-/** Whether we render directly to the screen surface, i.e. `pal_surface == GetOutputSurface()` */
+/** Whether we render directly to the screen surface, i.e. `PalSurface == GetOutputSurface()` */
 bool RenderDirectlyToOutputSurface;
 
 namespace {
@@ -68,26 +71,24 @@ void CreateBackBuffer()
 {
 	if (CanRenderDirectlyToOutputSurface()) {
 		Log("{}", "Will render directly to the SDL output surface");
-		pal_surface = GetOutputSurface();
+		PalSurface = GetOutputSurface();
 		RenderDirectlyToOutputSurface = true;
 	} else {
-		pal_surface = SDL_CreateRGBSurfaceWithFormat(
+		PinnedPalSurface = SDLWrap::CreateRGBSurfaceWithFormat(
 		    /*flags=*/0,
 		    /*width=*/gnScreenWidth,
 		    /*height=*/gnScreenHeight,
 		    /*depth=*/8,
 		    SDL_PIXELFORMAT_INDEX8);
-		if (pal_surface == nullptr) {
-			ErrSdl();
-		}
+		PalSurface = PinnedPalSurface.get();
 	}
 
 #ifndef USE_SDL1
-	// In SDL2, `pal_surface` points to the global `palette`.
-	if (SDL_SetSurfacePalette(pal_surface, Palette.get()) < 0)
+	// In SDL2, `PalSurface` points to the global `palette`.
+	if (SDL_SetSurfacePalette(PalSurface, Palette.get()) < 0)
 		ErrSdl();
 #else
-	// In SDL1, `pal_surface` owns its palette and we must update it every
+	// In SDL1, `PalSurface` owns its palette and we must update it every
 	// time the global `palette` is changed. No need to do anything here as
 	// the global `palette` doesn't have any colors set yet.
 #endif
@@ -189,7 +190,7 @@ Surface GlobalBackBuffer()
 		return Surface();
 	}
 
-	return Surface(pal_surface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
+	return Surface(PalSurface, SDL_Rect { 0, 0, gnScreenWidth, gnScreenHeight });
 }
 
 void dx_cleanup()
@@ -202,10 +203,10 @@ void dx_cleanup()
 	sgdwLockCount = 0;
 	MemCrit.unlock();
 
-	if (pal_surface == nullptr)
+	if (PalSurface == nullptr)
 		return;
-	SDL_FreeSurface(pal_surface);
-	pal_surface = nullptr;
+	PalSurface = nullptr;
+	PinnedPalSurface = nullptr;
 	Palette = nullptr;
 	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
@@ -247,7 +248,7 @@ void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect)
 {
 	if (RenderDirectlyToOutputSurface)
 		return;
-	Blit(pal_surface, srcRect, dstRect);
+	Blit(PalSurface, srcRect, dstRect);
 }
 
 void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect)
@@ -342,7 +343,7 @@ void RenderPresent()
 		ErrSdl();
 	}
 	if (RenderDirectlyToOutputSurface)
-		pal_surface = GetOutputSurface();
+		PalSurface = GetOutputSurface();
 	LimitFrameRate();
 #endif
 }
