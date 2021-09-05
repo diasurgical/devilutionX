@@ -1552,14 +1552,14 @@ void CalcViewportGeometry()
 	tileRows++; // Cover lower edge saw tooth, right edge accounted for in scrollrt_draw()
 }
 
-extern SDL_Surface *pal_surface;
+extern SDL_Surface *PalSurface;
 
 void ClearScreenBuffer()
 {
 	lock_buf(3);
 
-	assert(pal_surface != nullptr);
-	SDL_FillRect(pal_surface, nullptr, 0);
+	assert(PalSurface != nullptr);
+	SDL_FillRect(PalSurface, nullptr, 0);
 
 	unlock_buf(3);
 }

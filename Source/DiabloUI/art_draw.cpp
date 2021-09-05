@@ -16,7 +16,7 @@ void UpdatePalette(Art *art, const SDL_Surface *output)
 		return;
 
 	if (output == nullptr || output->format->BitsPerPixel != 8)
-		output = pal_surface;
+		output = PalSurface;
 
 	if (SDLC_SetSurfaceColors(art->surface.get(), output->format->palette) <= -1)
 		ErrSdl();

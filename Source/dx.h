@@ -9,7 +9,7 @@
 
 namespace devilution {
 
-/** Whether we render directly to the screen surface, i.e. `pal_surface == GetOutputSurface()` */
+/** Whether we render directly to the screen surface, i.e. `PalSurface == GetOutputSurface()` */
 extern bool RenderDirectlyToOutputSurface;
 
 Surface GlobalBackBuffer();
