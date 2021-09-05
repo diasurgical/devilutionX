@@ -76,6 +76,15 @@ inline SDLTextureUniquePtr CreateTexture(SDL_Renderer *renderer, Uint32 format, 
 }
 #endif
 
+inline SDLPaletteUniquePtr AllocPalette(int ncolors)
+{
+	SDLPaletteUniquePtr ret { SDL_AllocPalette(ncolors) };
+	if (ret == nullptr)
+		ErrSdl();
+
+	return ret;
+}
+
 } //namespace SDLWrap
 
 } //namespace devilution

@@ -7,6 +7,11 @@
 #include <type_traits>
 
 #include <SDL.h>
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#else
+#include "utils/sdl2_backports.h"
+#endif
 
 namespace devilution {
 
@@ -43,6 +48,15 @@ struct SDLTextureDeleter {
 
 using SDLTextureUniquePtr = std::unique_ptr<SDL_Texture, SDLTextureDeleter>;
 #endif
+
+struct SDLPaletteDeleter {
+	void operator()(SDL_Palette *palette) const
+	{
+		SDL_FreePalette(palette);
+	}
+};
+
+using SDLPaletteUniquePtr = std::unique_ptr<SDL_Palette, SDLPaletteDeleter>;
 
 /**
  * @brief Deletes the object using `SDL_free`.
