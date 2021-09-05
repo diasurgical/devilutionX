@@ -39,7 +39,7 @@ double SVidFrameLength;
 bool SVidLoop;
 smk SVidSMK;
 SDL_Color SVidPreviousPalette[256];
-SDL_Palette *SVidPalette;
+SDLPaletteUniquePtr SVidPalette;
 SDLSurfaceUniquePtr SVidSurface;
 
 #ifndef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
@@ -229,11 +229,8 @@ bool SVidPlayBegin(const char *filename, int flags)
 	    SVidWidth,
 	    SDL_PIXELFORMAT_INDEX8);
 
-	SVidPalette = SDL_AllocPalette(256);
-	if (SVidPalette == nullptr) {
-		ErrSdl();
-	}
-	if (SDLC_SetSurfaceColors(SVidSurface.get(), SVidPalette) <= -1) {
+	SVidPalette = SDLWrap::AllocPalette(256);
+	if (SDLC_SetSurfaceColors(SVidSurface.get(), SVidPalette.get()) <= -1) {
 		ErrSdl();
 	}
 
@@ -262,7 +259,7 @@ bool SVidPlayContinue()
 		}
 		memcpy(logical_palette, orig_palette, sizeof(logical_palette));
 
-		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface.get(), SVidPalette, colors, 0, 256) <= -1) {
+		if (SDLC_SetSurfaceAndPaletteColors(SVidSurface.get(), SVidPalette.get(), colors, 0, 256) <= -1) {
 			Log("{}", SDL_GetError());
 			return false;
 		}
@@ -366,9 +363,7 @@ void SVidPlayEnd()
 	SVidBuffer = nullptr;
 #endif
 
-	SDL_FreePalette(SVidPalette);
 	SVidPalette = nullptr;
-
 	SVidSurface = nullptr;
 
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
