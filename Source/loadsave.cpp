@@ -682,43 +682,41 @@ void LoadMissile(LoadHelper *file, Missile &missile)
 	missile.limitReached = file->NextBool32();
 }
 
-void LoadObject(LoadHelper *file, int i)
+void LoadObject(LoadHelper &file, Object &object)
 {
-	Object *pObject = &Objects[i];
+	object._otype = static_cast<_object_id>(file.NextLE<int32_t>());
+	object.position.x = file.NextLE<int32_t>();
+	object.position.y = file.NextLE<int32_t>();
+	object._oLight = file.NextBool32();
+	object._oAnimFlag = file.NextLE<uint32_t>();
+	file.Skip(4); // Skip pointer _oAnimData
+	object._oAnimDelay = file.NextLE<int32_t>();
+	object._oAnimCnt = file.NextLE<int32_t>();
+	object._oAnimLen = file.NextLE<uint32_t>();
+	object._oAnimFrame = file.NextLE<uint32_t>();
+	object._oAnimWidth = file.NextLE<int32_t>();
+	file.Skip(4); // Skip _oAnimWidth2
+	object._oDelFlag = file.NextBool32();
+	object._oBreak = file.NextLE<int8_t>();
+	file.Skip(3); // Alignment
+	object._oSolidFlag = file.NextBool32();
+	object._oMissFlag = file.NextBool32();
 
-	pObject->_otype = static_cast<_object_id>(file->NextLE<int32_t>());
-	pObject->position.x = file->NextLE<int32_t>();
-	pObject->position.y = file->NextLE<int32_t>();
-	pObject->_oLight = file->NextBool32();
-	pObject->_oAnimFlag = file->NextLE<uint32_t>();
-	file->Skip(4); // Skip pointer _oAnimData
-	pObject->_oAnimDelay = file->NextLE<int32_t>();
-	pObject->_oAnimCnt = file->NextLE<int32_t>();
-	pObject->_oAnimLen = file->NextLE<uint32_t>();
-	pObject->_oAnimFrame = file->NextLE<uint32_t>();
-	pObject->_oAnimWidth = file->NextLE<int32_t>();
-	file->Skip(4); // Skip _oAnimWidth2
-	pObject->_oDelFlag = file->NextBool32();
-	pObject->_oBreak = file->NextLE<int8_t>();
-	file->Skip(3); // Alignment
-	pObject->_oSolidFlag = file->NextBool32();
-	pObject->_oMissFlag = file->NextBool32();
-
-	pObject->_oSelFlag = file->NextLE<int8_t>();
-	file->Skip(3); // Alignment
-	pObject->_oPreFlag = file->NextBool32();
-	pObject->_oTrapFlag = file->NextBool32();
-	pObject->_oDoorFlag = file->NextBool32();
-	pObject->_olid = file->NextLE<int32_t>();
-	pObject->_oRndSeed = file->NextLE<uint32_t>();
-	pObject->_oVar1 = file->NextLE<int32_t>();
-	pObject->_oVar2 = file->NextLE<int32_t>();
-	pObject->_oVar3 = file->NextLE<int32_t>();
-	pObject->_oVar4 = file->NextLE<int32_t>();
-	pObject->_oVar5 = file->NextLE<int32_t>();
-	pObject->_oVar6 = file->NextLE<uint32_t>();
-	pObject->bookMessage = static_cast<_speech_id>(file->NextLE<int32_t>());
-	pObject->_oVar8 = file->NextLE<int32_t>();
+	object._oSelFlag = file.NextLE<int8_t>();
+	file.Skip(3); // Alignment
+	object._oPreFlag = file.NextBool32();
+	object._oTrapFlag = file.NextBool32();
+	object._oDoorFlag = file.NextBool32();
+	object._olid = file.NextLE<int32_t>();
+	object._oRndSeed = file.NextLE<uint32_t>();
+	object._oVar1 = file.NextLE<int32_t>();
+	object._oVar2 = file.NextLE<int32_t>();
+	object._oVar3 = file.NextLE<int32_t>();
+	object._oVar4 = file.NextLE<int32_t>();
+	object._oVar5 = file.NextLE<int32_t>();
+	object._oVar6 = file.NextLE<uint32_t>();
+	object.bookMessage = static_cast<_speech_id>(file.NextLE<int32_t>());
+	object._oVar8 = file.NextLE<int32_t>();
 }
 
 void LoadItem(LoadHelper *file, int i)
@@ -1328,43 +1326,41 @@ void SaveMissile(SaveHelper *file, Missile &missile)
 	file->WriteLE<uint32_t>(missile.limitReached ? 1 : 0);
 }
 
-void SaveObject(SaveHelper *file, int i)
+void SaveObject(SaveHelper &file, const Object &object)
 {
-	Object *pObject = &Objects[i];
+	file.WriteLE<int32_t>(object._otype);
+	file.WriteLE<int32_t>(object.position.x);
+	file.WriteLE<int32_t>(object.position.y);
+	file.WriteLE<uint32_t>(object._oLight ? 1 : 0);
+	file.WriteLE<uint32_t>(object._oAnimFlag);
+	file.Skip(4); // Skip pointer _oAnimData
+	file.WriteLE<int32_t>(object._oAnimDelay);
+	file.WriteLE<int32_t>(object._oAnimCnt);
+	file.WriteLE<uint32_t>(object._oAnimLen);
+	file.WriteLE<uint32_t>(object._oAnimFrame);
+	file.WriteLE<int32_t>(object._oAnimWidth);
+	file.WriteLE<int32_t>(CalculateWidth2(object._oAnimWidth)); // Write _oAnimWidth2 for vanilla compatibility
+	file.WriteLE<uint32_t>(object._oDelFlag ? 1 : 0);
+	file.WriteLE<int8_t>(object._oBreak);
+	file.Skip(3); // Alignment
+	file.WriteLE<uint32_t>(object._oSolidFlag ? 1 : 0);
+	file.WriteLE<uint32_t>(object._oMissFlag ? 1 : 0);
 
-	file->WriteLE<int32_t>(pObject->_otype);
-	file->WriteLE<int32_t>(pObject->position.x);
-	file->WriteLE<int32_t>(pObject->position.y);
-	file->WriteLE<uint32_t>(pObject->_oLight ? 1 : 0);
-	file->WriteLE<uint32_t>(pObject->_oAnimFlag);
-	file->Skip(4); // Skip pointer _oAnimData
-	file->WriteLE<int32_t>(pObject->_oAnimDelay);
-	file->WriteLE<int32_t>(pObject->_oAnimCnt);
-	file->WriteLE<uint32_t>(pObject->_oAnimLen);
-	file->WriteLE<uint32_t>(pObject->_oAnimFrame);
-	file->WriteLE<int32_t>(pObject->_oAnimWidth);
-	file->WriteLE<int32_t>(CalculateWidth2(pObject->_oAnimWidth)); // Write _oAnimWidth2 for vanilla compatibility
-	file->WriteLE<uint32_t>(pObject->_oDelFlag ? 1 : 0);
-	file->WriteLE<int8_t>(pObject->_oBreak);
-	file->Skip(3); // Alignment
-	file->WriteLE<uint32_t>(pObject->_oSolidFlag ? 1 : 0);
-	file->WriteLE<uint32_t>(pObject->_oMissFlag ? 1 : 0);
-
-	file->WriteLE<int8_t>(pObject->_oSelFlag);
-	file->Skip(3); // Alignment
-	file->WriteLE<uint32_t>(pObject->_oPreFlag ? 1 : 0);
-	file->WriteLE<uint32_t>(pObject->_oTrapFlag ? 1 : 0);
-	file->WriteLE<uint32_t>(pObject->_oDoorFlag ? 1 : 0);
-	file->WriteLE<int32_t>(pObject->_olid);
-	file->WriteLE<uint32_t>(pObject->_oRndSeed);
-	file->WriteLE<int32_t>(pObject->_oVar1);
-	file->WriteLE<int32_t>(pObject->_oVar2);
-	file->WriteLE<int32_t>(pObject->_oVar3);
-	file->WriteLE<int32_t>(pObject->_oVar4);
-	file->WriteLE<int32_t>(pObject->_oVar5);
-	file->WriteLE<uint32_t>(pObject->_oVar6);
-	file->WriteLE<int32_t>(pObject->bookMessage);
-	file->WriteLE<int32_t>(pObject->_oVar8);
+	file.WriteLE<int8_t>(object._oSelFlag);
+	file.Skip(3); // Alignment
+	file.WriteLE<uint32_t>(object._oPreFlag ? 1 : 0);
+	file.WriteLE<uint32_t>(object._oTrapFlag ? 1 : 0);
+	file.WriteLE<uint32_t>(object._oDoorFlag ? 1 : 0);
+	file.WriteLE<int32_t>(object._olid);
+	file.WriteLE<uint32_t>(object._oRndSeed);
+	file.WriteLE<int32_t>(object._oVar1);
+	file.WriteLE<int32_t>(object._oVar2);
+	file.WriteLE<int32_t>(object._oVar3);
+	file.WriteLE<int32_t>(object._oVar4);
+	file.WriteLE<int32_t>(object._oVar5);
+	file.WriteLE<uint32_t>(object._oVar6);
+	file.WriteLE<int32_t>(object.bookMessage);
+	file.WriteLE<int32_t>(object._oVar8);
 }
 
 void SavePremium(SaveHelper *file, int i)
@@ -1741,7 +1737,7 @@ void LoadGame(bool firstflag)
 		for (int &objectId : AvailableObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int i = 0; i < ActiveObjectCount; i++)
-			LoadObject(&file, ActiveObjects[i]);
+			LoadObject(file, Objects[ActiveObjects[i]]);
 		for (int i = 0; i < ActiveObjectCount; i++)
 			SyncObjectAnim(Objects[ActiveObjects[i]]);
 
@@ -1938,7 +1934,7 @@ void SaveGameData()
 		for (int objectId : AvailableObjects)
 			file.WriteLE<int8_t>(objectId);
 		for (int i = 0; i < ActiveObjectCount; i++)
-			SaveObject(&file, ActiveObjects[i]);
+			SaveObject(file, Objects[ActiveObjects[i]]);
 
 		file.WriteBE<int32_t>(ActiveLightCount);
 
@@ -2063,7 +2059,7 @@ void SaveLevel()
 		for (int objectId : AvailableObjects)
 			file.WriteLE<int8_t>(objectId);
 		for (int i = 0; i < ActiveObjectCount; i++)
-			SaveObject(&file, ActiveObjects[i]);
+			SaveObject(file, Objects[ActiveObjects[i]]);
 	}
 
 	for (int itemId : ActiveItems)
@@ -2142,7 +2138,7 @@ void LoadLevel()
 		for (int &objectId : AvailableObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int i = 0; i < ActiveObjectCount; i++)
-			LoadObject(&file, ActiveObjects[i]);
+			LoadObject(file, Objects[ActiveObjects[i]]);
 		if (!gbSkipSync) {
 			for (int i = 0; i < ActiveObjectCount; i++)
 				SyncObjectAnim(Objects[ActiveObjects[i]]);
