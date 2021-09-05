@@ -326,9 +326,9 @@ bool SVidPlayContinue()
 			// The source surface is always 8-bit, and the output surface is never 8-bit in this branch.
 			// We must convert to the output format before calling SDL_BlitScaled.
 #ifdef USE_SDL1
-			SDLSurfaceUniquePtr converted { SDL_ConvertSurface(SVidSurface.get(), ghMainWnd->format, 0) };
+			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurface(SVidSurface.get(), ghMainWnd->format, 0);
 #else
-			SDLSurfaceUniquePtr converted { SDL_ConvertSurfaceFormat(SVidSurface.get(), wndFormat, 0) };
+			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurfaceFormat(SVidSurface.get(), wndFormat, 0);
 #endif
 			if (SDL_BlitScaled(converted.get(), nullptr, outputSurface, &outputRect) <= -1) {
 				Log("{}", SDL_GetError());
