@@ -109,9 +109,6 @@ void CreatePrimarySurface()
 		RendererTextureSurface = SDLWrap::CreateRGBSurfaceWithFormat(0, width, height, SDL_BITSPERPIXEL(format), format);
 	}
 #endif
-	if (GetOutputSurface() == nullptr) {
-		ErrSdl();
-	}
 }
 
 void LockBufPriv()
@@ -203,8 +200,6 @@ void dx_cleanup()
 	sgdwLockCount = 0;
 	MemCrit.unlock();
 
-	if (PalSurface == nullptr)
-		return;
 	PalSurface = nullptr;
 	PinnedPalSurface = nullptr;
 	Palette = nullptr;

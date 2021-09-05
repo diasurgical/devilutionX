@@ -257,11 +257,17 @@ bool SpawnWindow(const char *lpWindowName)
 SDL_Surface *GetOutputSurface()
 {
 #ifdef USE_SDL1
-	return SDL_GetVideoSurface();
+	SDL_Surface *ret = SDL_GetVideoSurface();
+	if (ret == nullptr)
+		ErrSdl();
+	return ret;
 #else
 	if (renderer != nullptr)
 		return RendererTextureSurface.get();
-	return SDL_GetWindowSurface(ghMainWnd);
+	SDL_Surface *ret = SDL_GetWindowSurface(ghMainWnd);
+	if (ret == nullptr)
+		ErrSdl();
+	return ret;
 #endif
 }
 
