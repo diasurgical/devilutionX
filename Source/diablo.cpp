@@ -1909,7 +1909,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				IncProgress();
 				uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
-				InitDead();
+				InitCorpses();
 #if _DEBUG
 				SetDebugLevelSeedInfos(mid1Seed, mid2Seed, mid3Seed, GetLCGEngineState());
 #endif
@@ -1923,7 +1923,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				HoldThemeRooms();
 				InitMonsters();
 				InitMissiles();
-				InitDead();
+				InitCorpses();
 				IncProgress();
 				LoadLevel();
 				IncProgress();
@@ -1960,7 +1960,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitMissileGFX();
 		IncProgress();
-		InitDead();
+		InitCorpses();
 		IncProgress();
 		FillSolidBlockTbls();
 		IncProgress();

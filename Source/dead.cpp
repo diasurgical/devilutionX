@@ -27,7 +27,7 @@ void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 }
 } // namespace
 
-void InitDead()
+void InitCorpses()
 {
 	int8_t mtypes[MAXMONSTERS] = {};
 

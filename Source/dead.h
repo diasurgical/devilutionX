@@ -25,7 +25,7 @@ struct Corpse {
 extern Corpse Corpses[MaxCorpses];
 extern int8_t stonendx;
 
-void InitDead();
+void InitCorpses();
 void AddDead(Point tilePosition, int8_t dv, Direction ddir);
 void SyncUniqDead();
 
