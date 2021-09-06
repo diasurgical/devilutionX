@@ -2044,9 +2044,9 @@ void DeltaLoadLevel()
 				if (monster._mAi != AI_DIABLO) {
 					if (monster._uniqtype == 0) {
 						assert(monster.MType != nullptr);
-						AddDead(monster.position.tile, monster.MType->mdeadval, monster._mdir);
+						AddCorpse(monster.position.tile, monster.MType->mdeadval, monster._mdir);
 					} else {
-						AddDead(monster.position.tile, monster._udeadval, monster._mdir);
+						AddCorpse(monster.position.tile, monster._udeadval, monster._mdir);
 					}
 				}
 				monster._mDelFlag = true;

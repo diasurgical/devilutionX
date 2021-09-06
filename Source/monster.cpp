@@ -1822,9 +1822,9 @@ bool MonsterDeath(int i)
 			PrepDoEnding();
 	} else if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames) {
 		if (monster._uniqtype == 0)
-			AddDead(monster.position.tile, monster.MType->mdeadval, monster._mdir);
+			AddCorpse(monster.position.tile, monster.MType->mdeadval, monster._mdir);
 		else
-			AddDead(monster.position.tile, monster._udeadval, monster._mdir);
+			AddCorpse(monster.position.tile, monster._udeadval, monster._mdir);
 
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 		monster._mDelFlag = true;
@@ -2439,7 +2439,7 @@ void ScavengerAi(int i)
 	}
 	if (monster._mgoal == MGOAL_HEALING && monster._mgoalvar3 != 0) {
 		monster._mgoalvar3--;
-		if (dDead[monster.position.tile.x][monster.position.tile.y] != 0) {
+		if (dCorpse[monster.position.tile.x][monster.position.tile.y] != 0) {
 			StartEating(monster);
 			if ((monster._mFlags & MFLAG_NOHEAL) == 0) {
 				if (gbIsHellfire) {
@@ -2448,7 +2448,7 @@ void ScavengerAi(int i)
 					if (monster._mhitpoints > monster._mmaxhp)
 						monster._mhitpoints = monster._mmaxhp;
 					if (monster._mgoalvar3 <= 0 || monster._mhitpoints == monster._mmaxhp)
-						dDead[monster.position.tile.x][monster.position.tile.y] = 0;
+						dCorpse[monster.position.tile.x][monster.position.tile.y] = 0;
 				} else {
 					monster._mhitpoints += 64;
 				}
@@ -2472,7 +2472,7 @@ void ScavengerAi(int i)
 							// BUGFIX: incorrect check of offset against limits of the dungeon
 							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 								continue;
-							done = dDead[monster.position.tile.x + x][monster.position.tile.y + y] != 0
+							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
 							    && IsLineNotSolid(
 							        monster.position.tile,
 							        monster.position.tile + Displacement { x, y });
@@ -2486,7 +2486,7 @@ void ScavengerAi(int i)
 							// BUGFIX: incorrect check of offset against limits of the dungeon
 							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
 								continue;
-							done = dDead[monster.position.tile.x + x][monster.position.tile.y + y] != 0
+							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
 							    && IsLineNotSolid(
 							        monster.position.tile,
 							        monster.position.tile + Displacement { x, y });

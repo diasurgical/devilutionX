@@ -208,7 +208,7 @@ extern int16_t dMonster[MAXDUNX][MAXDUNY];
  * dDead[x][y] & 0x1F - index of dead
  * dDead[x][y] >> 0x5 - direction
  */
-extern int8_t dDead[MAXDUNX][MAXDUNY];
+extern int8_t dCorpse[MAXDUNX][MAXDUNY];
 /** Contains the object numbers (objects array indices) of the map. */
 extern char dObject[MAXDUNX][MAXDUNY];
 /** Contains the item numbers (items array indices) of the map. */

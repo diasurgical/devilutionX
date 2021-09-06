@@ -829,7 +829,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	DrawCell(out, tilePosition, targetBufferPosition);
 
 	int8_t bFlag = dFlags[tilePosition.x][tilePosition.y];
-	int8_t bDead = dDead[tilePosition.x][tilePosition.y];
+	int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
 	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
 	int negMon = 0;
@@ -849,7 +849,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
 		do {
-			DeadStruct *pDeadGuy = &Dead[(bDead & 0x1F) - 1];
+			Corpse *pDeadGuy = &Corpses[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = targetBufferPosition.x - CalculateWidth2(pDeadGuy->width);
 			const byte *pCelBuff = pDeadGuy->data[dd];

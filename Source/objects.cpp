@@ -1503,7 +1503,7 @@ void UpdateDoor(int i)
 	int dy = Objects[i].position.y;
 	bool dok = dMonster[dx][dy] == 0;
 	dok = dok && dItem[dx][dy] == 0;
-	dok = dok && dDead[dx][dy] == 0;
+	dok = dok && dCorpse[dx][dy] == 0;
 	dok = dok && dPlayer[dx][dy] == 0;
 	Objects[i]._oSelFlag = 2;
 	Objects[i]._oVar4 = dok ? 1 : 2;
@@ -1804,7 +1804,7 @@ void DoorSet(Point position, bool isLeftDoor)
  */
 inline bool IsDoorClear(const Point &doorPosition)
 {
-	return dDead[doorPosition.x][doorPosition.y] == 0
+	return dCorpse[doorPosition.x][doorPosition.y] == 0
 	    && dMonster[doorPosition.x][doorPosition.y] == 0
 	    && dItem[doorPosition.x][doorPosition.y] == 0;
 }

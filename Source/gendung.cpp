@@ -52,7 +52,7 @@ char dPreLight[MAXDUNX][MAXDUNY];
 int8_t dFlags[MAXDUNX][MAXDUNY];
 int8_t dPlayer[MAXDUNX][MAXDUNY];
 int16_t dMonster[MAXDUNX][MAXDUNY];
-int8_t dDead[MAXDUNX][MAXDUNY];
+int8_t dCorpse[MAXDUNX][MAXDUNY];
 char dObject[MAXDUNX][MAXDUNY];
 int8_t dItem[MAXDUNX][MAXDUNY];
 char dSpecial[MAXDUNX][MAXDUNY];
@@ -561,7 +561,7 @@ void DRLG_Init_Globals()
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dPlayer, 0, sizeof(dPlayer));
 	memset(dMonster, 0, sizeof(dMonster));
-	memset(dDead, 0, sizeof(dDead));
+	memset(dCorpse, 0, sizeof(dCorpse));
 	memset(dObject, 0, sizeof(dObject));
 	memset(dItem, 0, sizeof(dItem));
 	memset(dSpecial, 0, sizeof(dSpecial));
