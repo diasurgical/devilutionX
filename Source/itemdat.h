@@ -595,6 +595,6 @@ struct UItemStruct {
 extern ItemData AllItemsList[];
 extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
-extern const UItemStruct UniqueItemList[];
+extern const UItemStruct UniqueItems[];
 
 } // namespace devilution
