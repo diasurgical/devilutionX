@@ -764,7 +764,7 @@ void LoadQuest(LoadHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-void LoadLighting(LoadHelper *file, LightStruct *pLight)
+void LoadLighting(LoadHelper *file, Light *pLight)
 {
 	pLight->position.tile.x = file->NextLE<int32_t>();
 	pLight->position.tile.y = file->NextLE<int32_t>();
@@ -1404,7 +1404,7 @@ void SaveQuest(SaveHelper *file, int i)
 	file->Skip(sizeof(int32_t)); // Skip DoomQuestState
 }
 
-void SaveLighting(SaveHelper *file, LightStruct *pLight)
+void SaveLighting(SaveHelper *file, Light *pLight)
 {
 	file->WriteLE<int32_t>(pLight->position.tile.x);
 	file->WriteLE<int32_t>(pLight->position.tile.y);
