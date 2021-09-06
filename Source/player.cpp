@@ -3090,7 +3090,7 @@ StartPlayerKill(int pnum, int earflag)
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = left[pdd];
-							DeadItem(player, &item, Displacement::fromDirection(pdd));
+							DeadItem(player, &item, Displacement(pdd));
 						}
 
 						CalcPlrInv(player, false);

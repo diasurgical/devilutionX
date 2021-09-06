@@ -947,7 +947,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 			targetBufferPosition.x += TILE_WIDTH;
 		}
 		// Return to start of row
-		tilePosition += Displacement::fromDirection(DIR_W) * columns;
+		tilePosition += Displacement(DIR_W) * columns;
 		targetBufferPosition.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
@@ -1003,7 +1003,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 			targetBufferPosition.x += TILE_WIDTH;
 		}
 		// Return to start of row
-		tilePosition += Displacement::fromDirection(DIR_W) * columns;
+		tilePosition += Displacement(DIR_W) * columns;
 		targetBufferPosition.x -= columns * TILE_WIDTH;
 
 		// Jump to next row
@@ -1109,12 +1109,12 @@ void DrawGame(const Surface &fullOut, Point position)
 	if (CanPanelsCoverView()) {
 		if (zoomflag) {
 			if (chrflag || QuestLogIsOpen) {
-				position += Displacement::fromDirection(DIR_E) * 2;
+				position += Displacement(DIR_E) * 2;
 				columns -= 4;
 				sx += SPANEL_WIDTH - TILE_WIDTH / 2;
 			}
 			if (invflag || sbookflag) {
-				position += Displacement::fromDirection(DIR_E) * 2;
+				position += Displacement(DIR_E) * 2;
 				columns -= 4;
 				sx += -TILE_WIDTH / 2;
 			}
@@ -1530,8 +1530,8 @@ void CalcViewportGeometry()
 	int lrow = tileRows - RowsCoveredByPanel();
 
 	// Center player tile on screen
-	tileShift += Displacement::fromDirection(DIR_W) * (tileColums / 2);
-	tileShift += Displacement::fromDirection(DIR_N) * (lrow / 2);
+	tileShift += Displacement(DIR_W) * (tileColums / 2);
+	tileShift += Displacement(DIR_N) * (lrow / 2);
 
 	tileRows *= 2;
 
@@ -1545,7 +1545,7 @@ void CalcViewportGeometry()
 		}
 	} else if ((tileColums & 1) != 0 && (lrow & 1) != 0) {
 		// Offset tile to vertically align the player when both rows and colums are odd
-		tileShift += Displacement::fromDirection(DIR_N);
+		tileShift += Displacement(DIR_N);
 		tileRows++;
 		tileOffset.deltaY -= TILE_HEIGHT / 2;
 	}
