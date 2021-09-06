@@ -155,7 +155,7 @@ struct MissileFileData {
 	}
 };
 
-extern MissileDataStruct MissileData[];
+extern MissileDataStruct MissilesData[];
 extern MissileFileData MissileSpriteData[];
 
 } // namespace devilution

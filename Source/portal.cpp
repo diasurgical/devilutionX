@@ -47,7 +47,7 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 
 void AddWarpMissile(int i, int x, int y)
 {
-	MissileData[MIS_TOWN].mlSFX = SFX_NONE;
+	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
 
 	int mi = AddMissile({ 0, 0 }, { x, y }, DIR_S, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 	if (mi == -1)
@@ -59,7 +59,7 @@ void AddWarpMissile(int i, int x, int y)
 	if (currlevel != 0)
 		missile._mlid = AddLight(missile.position.tile, 15);
 
-	MissileData[MIS_TOWN].mlSFX = LS_SENTINEL;
+	MissilesData[MIS_TOWN].mlSFX = LS_SENTINEL;
 }
 
 void SyncPortals()

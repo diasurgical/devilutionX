@@ -12,7 +12,7 @@
 namespace devilution {
 
 /** Data related to each missile ID. */
-MissileDataStruct MissileData[] = {
+MissileDataStruct MissilesData[] = {
 	// clang-format off
 	// mAddProc,                   mProc,              mName,             mDraw, mType, mResist,        mFileNum,        miSFX,       mlSFX,       MovementDistribution;
 	{  &AddArrow,                  &MI_Arrow,          MIS_ARROW,         true,      0, MISR_NONE,      MFILE_ARROWS,    SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Blockable   },
