@@ -763,7 +763,7 @@ void TalkToGirl(Player &player, Towner &girl)
 	}
 }
 
-const TownerInit TownerInitList[] = {
+const TownerInit TownersData[] = {
 	// clang-format off
 	// type         position    dir     init           talk
 	{ TOWN_SMITH,   { 62, 63 }, DIR_SW, InitSmith,     TalkToBlackSmith  },
@@ -831,11 +831,11 @@ void InitTowners()
 	CowCels = LoadFileInMem("Towners\\Animals\\Cow.CEL");
 
 	int i = 0;
-	for (const auto &townerInit : TownerInitList) {
-		if (!IsTownerPresent(townerInit.type))
+	for (const auto &townerData : TownersData) {
+		if (!IsTownerPresent(townerData.type))
 			continue;
 
-		InitTownerInfo(i, townerInit);
+		InitTownerInfo(i, townerData);
 		i++;
 	}
 }
@@ -899,19 +899,19 @@ bool DebugTalkToTowner(std::string targetName)
 	SetupTownStores();
 	std::transform(targetName.begin(), targetName.end(), targetName.begin(), [](unsigned char c) { return std::tolower(c); });
 	auto &myPlayer = Players[MyPlayerId];
-	for (auto &towner : TownerInitList) {
-		if (!IsTownerPresent(towner.type))
+	for (auto &townerData : TownersData) {
+		if (!IsTownerPresent(townerData.type))
 			continue;
 		// cows have an init function that differs from the rest and isn't compatible with this code, skip them :(
-		if (towner.type == TOWN_COW)
+		if (townerData.type == TOWN_COW)
 			continue;
 		Towner fakeTowner;
-		towner.init(fakeTowner, towner);
+		townerData.init(fakeTowner, townerData);
 		fakeTowner.position = myPlayer.position.tile;
 		std::string npcName(fakeTowner.name);
 		std::transform(npcName.begin(), npcName.end(), npcName.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (npcName.find(targetName) != std::string::npos) {
-			towner.talk(myPlayer, fakeTowner);
+			townerData.talk(myPlayer, fakeTowner);
 			return true;
 		}
 	}
