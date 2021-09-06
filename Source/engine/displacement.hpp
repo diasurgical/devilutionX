@@ -103,6 +103,7 @@ struct Displacement {
 		return { abs(a.deltaX), abs(a.deltaY) };
 	}
 
+private:
 	static constexpr Displacement fromDirection(Direction direction)
 	{
 		switch (direction) {
