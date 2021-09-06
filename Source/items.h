@@ -175,7 +175,7 @@ struct Item {
 	/** Randomly generated identifier */
 	int32_t _iSeed;
 	uint16_t _iCreateInfo;
-	enum item_type _itype;
+	enum ItemType _itype;
 	Point position;
 	bool _iAnimFlag;
 	/*

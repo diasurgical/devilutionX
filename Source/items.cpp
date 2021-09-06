@@ -2898,7 +2898,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			player._pBlockFlag = true;
 	}
 
-	item_type weaponItemType = item_type::ITYPE_NONE;
+	ItemType weaponItemType = ItemType::ITYPE_NONE;
 	bool holdsShield = false;
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
