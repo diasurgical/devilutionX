@@ -14,10 +14,10 @@
 
 namespace devilution {
 
-LightStruct VisionList[MAXVISION];
+Light VisionList[MAXVISION];
 int VisionCount;
 int VisionId;
-LightStruct Lights[MAXLIGHTS];
+Light Lights[MAXLIGHTS];
 uint8_t ActiveLights[MAXLIGHTS];
 int ActiveLightCount;
 char LightsMax;
