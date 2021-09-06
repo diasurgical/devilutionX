@@ -35,7 +35,7 @@ struct Point {
 
 	constexpr Point &operator+=(Direction direction)
 	{
-		return (*this) += Displacement::fromDirection(direction);
+		return (*this) += Displacement(direction);
 	}
 
 	constexpr Point &operator-=(const Displacement &displacement)
