@@ -583,7 +583,7 @@ struct PLStruct {
 	int multVal;
 };
 
-struct UItemStruct {
+struct UniqueItem {
 	const char *UIName;
 	enum unique_base_item UIItemId;
 	int8_t UIMinLvl;
@@ -595,6 +595,6 @@ struct UItemStruct {
 extern ItemData AllItemsList[];
 extern const PLStruct ItemPrefixes[];
 extern const PLStruct ItemSuffixes[];
-extern const UItemStruct UniqueItemList[];
+extern const UniqueItem UniqueItems[];
 
 } // namespace devilution

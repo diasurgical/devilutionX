@@ -1509,11 +1509,11 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 		return UITEM_INVALID;
 
 	int numu = 0;
-	for (int j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
+	for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
 		if (!IsUniqueAvailable(j))
 			break;
-		if (UniqueItemList[j].UIItemId == AllItemsList[item.IDidx].iItemId
-		    && lvl >= UniqueItemList[j].UIMinLvl
+		if (UniqueItems[j].UIItemId == AllItemsList[item.IDidx].iItemId
+		    && lvl >= UniqueItems[j].UIMinLvl
 		    && (recreate || !UniqueItemFlags[j] || gbIsMultiplayer)) {
 			uok[j] = true;
 			numu++;
@@ -1539,14 +1539,14 @@ void GetUniqueItem(Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (const auto &power : UniqueItemList[uid].powers) {
+	for (const auto &power : UniqueItems[uid].powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		SaveItemPower(item, power);
 	}
 
-	strcpy(item._iIName, _(UniqueItemList[uid].UIName));
-	item._iIvalue = UniqueItemList[uid].UIValue;
+	strcpy(item._iIName, _(UniqueItems[uid].UIName));
+	item._iIvalue = UniqueItems[uid].UIValue;
 
 	if (item._iMiscId == IMISC_UNIQUE)
 		item._iSeed = uid;
@@ -3380,7 +3380,7 @@ void SpawnUnique(_unique_items uid, Point position)
 	int curlv = ItemsGetCurrlevel();
 
 	int idx = 0;
-	while (AllItemsList[idx].iItemId != UniqueItemList[uid].UIItemId)
+	while (AllItemsList[idx].iItemId != UniqueItems[uid].UIItemId)
 		idx++;
 
 	GetItemAttrs(item, idx, curlv);
@@ -4129,7 +4129,7 @@ void DrawUniqueInfo(const Surface &out)
 	DrawUniqueInfoWindow(GlobalBackBuffer());
 
 	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 2 * 12 }, { 257, 0 } };
-	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
+	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 
 	DrawUniqueInfoDevider(out, 5);
