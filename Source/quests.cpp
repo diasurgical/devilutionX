@@ -35,7 +35,7 @@ dungeon_type ReturnLevelType;
 int ReturnLevel;
 
 /** Contains the data related to each quest_id. */
-QuestDataStruct QuestsData[] = {
+QuestData QuestsData[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          bookOrder,   _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
 	{       5,          -1, DTYPE_NONE,          5,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
