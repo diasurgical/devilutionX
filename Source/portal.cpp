@@ -14,7 +14,7 @@
 namespace devilution {
 
 /** In-game state of portals. */
-PortalStruct Portals[MAXPORTAL];
+Portal Portals[MAXPORTAL];
 
 namespace {
 
