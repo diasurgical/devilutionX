@@ -4129,7 +4129,7 @@ void DrawUniqueInfo(const Surface &out)
 	DrawUniqueInfoWindow(GlobalBackBuffer());
 
 	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 2 * 12 }, { 257, 0 } };
-	const UItemStruct &uitem = UniqueItems[curruitem._iUid];
+	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 
 	DrawUniqueInfoDevider(out, 5);

@@ -389,7 +389,7 @@ const PLStruct ItemSuffixes[] = {
 };
 
 /** Contains the data related to each unique item ID. */
-const UItemStruct UniqueItems[] = {
+const UniqueItem UniqueItems[] = {
 	// clang-format off
 	// UIName,                        UIItemId,     UIMinLvl, UINumPL, UIValue,   ItemPower[0],                          ItemPower[1],                          ItemPower[2],                          ItemPower[3],                          ItemPower[4],                          ItemPower[5]
 	// TRANSLATORS: Unique Item section
