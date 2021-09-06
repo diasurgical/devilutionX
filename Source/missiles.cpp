@@ -1898,29 +1898,23 @@ void AddMagmaball(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddTeleport(Missile &missile, Point dst, Direction /*midir*/)
 {
-	missile._miDelFlag = true;
-
 	for (int i = 0; i < 6; i++) {
 		int k = CrawlNum[i];
 		int ck = k + 2;
 		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
 			Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!InDungeonBounds(target) || IsTileSolid(target))
+			if (!PosOkPlayer(Players[missile._misource], target))
 				continue;
-			if (dMonster[target.x][target.y] == 0 && dObject[target.x][target.y] == 0 && dPlayer[target.x][target.y] == 0) {
-				missile.position.tile = target;
-				missile.position.start = target;
-				missile._miDelFlag = false;
-				i = 6;
-				break;
-			}
+
+			missile.position.tile = target;
+			missile.position.start = target;
+			UseMana(missile._misource, SPL_TELEPORT);
+			missile._mirange = 2;
+			return;
 		}
 	}
 
-	if (!missile._miDelFlag) {
-		UseMana(missile._misource, SPL_TELEPORT);
-		missile._mirange = 2;
-	}
+	missile._miDelFlag = true;
 }
 
 void AddLightball(Missile &missile, Point dst, Direction /*midir*/)
