@@ -1616,10 +1616,6 @@ void AddFireNova(Missile &missile, Point dst, Direction midir)
 	UpdateMissileVelocity(missile, dst, sp);
 	SetMissDir(missile, GetDirection16(missile.position.start, dst));
 	missile._mirange = 256;
-	missile.var1 = missile.position.start.x;
-	missile.var2 = missile.position.start.y;
-	missile.var4 = missile.position.start.x;
-	missile.var5 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
 }
 
@@ -1741,7 +1737,7 @@ void AddLArrow(Missile &missile, Point dst, Direction midir)
 		auto &player = Players[missile._misource];
 		if (player._pClass == HeroClass::Rogue)
 			av += (player._pLevel) / 4;
-		else if (player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
+		else if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Bard))
 			av += (player._pLevel) / 8;
 
 		if (gbIsHellfire) {
@@ -1754,7 +1750,7 @@ void AddLArrow(Missile &missile, Point dst, Direction midir)
 			if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
 				av += 8;
 		} else {
-			if (player._pClass == HeroClass::Rogue || player._pClass == HeroClass::Warrior || player._pClass == HeroClass::Bard)
+			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
 				av -= 1;
 		}
 	}
@@ -1928,13 +1924,9 @@ void AddLightball(Missile &missile, Point dst, Direction /*midir*/)
 	UpdateMissileVelocity(missile, dst, 16);
 	missile._miAnimFrame = GenerateRnd(8) + 1;
 	missile._mirange = 255;
-	if (missile._misource < 0) {
-		missile.var1 = missile.position.start.x;
-		missile.var2 = missile.position.start.y;
-	} else {
-		missile.var1 = Players[missile._misource].position.tile.x;
-		missile.var2 = Players[missile._misource].position.tile.y;
-	}
+	const Point position { missile._misource < 0 ? missile.position.start : Players[missile._misource].position.tile };
+	missile.var1 = position.x;
+	missile.var2 = position.y;
 }
 
 void AddFirewall(Missile &missile, Point dst, Direction /*midir*/)
@@ -1980,8 +1972,6 @@ void AddFireball(Missile &missile, Point dst, Direction midir)
 	missile._mirange = 256;
 	missile.var1 = missile.position.start.x;
 	missile.var2 = missile.position.start.y;
-	missile.var4 = missile.position.start.x;
-	missile.var5 = missile.position.start.y;
 	missile._mlid = AddLight(missile.position.start, 8);
 }
 
