@@ -4180,7 +4180,7 @@ void M_WalkDir(int i, Direction md)
 
 void GolumAi(int i)
 {
-	assert(i >= 0 && i < MAXMONSTERS);
+	assert(i >= 0 && i < MAX_PLRS);
 	auto &golem = Monsters[i];
 
 	if (golem.position.tile.x == 1 && golem.position.tile.y == 0) {
