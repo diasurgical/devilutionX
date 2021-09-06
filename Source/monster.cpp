@@ -1729,7 +1729,7 @@ bool MonsterTalk(Monster &monster)
 {
 	M_StartStand(monster, monster._mdir);
 	monster._mgoal = MGOAL_TALKING;
-	if (effect_is_playing(Texts[monster.mtalkmsg].sfxnr))
+	if (effect_is_playing(Speeches[monster.mtalkmsg].sfxnr))
 		return false;
 	InitQTextMsg(monster.mtalkmsg);
 	if (monster._uniqtype - 1 == UMT_GARBUD) {

@@ -422,12 +422,12 @@ enum _speech_id : int16_t {
 	TEXT_NONE = -1,
 };
 
-struct TextDataStruct {
+struct Speech {
 	const char *txtstr;
 	bool scrlltxt;
 	_sfx_id sfxnr;
 };
 
-extern const TextDataStruct Texts[];
+extern const Speech Speeches[];
 
 } // namespace devilution
