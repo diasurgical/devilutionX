@@ -1121,7 +1121,7 @@ int SaveItemPower(Item &item, const ItemPower &power)
 
 bool StringInPanel(const char *str)
 {
-	return GetLineWidth(str, GameFont12, 0) < 125;
+	return GetLineWidth(str, GameFont12, 2) < 254;
 }
 
 int PLVal(int pv, int p1, int p2, int minv, int maxv)
