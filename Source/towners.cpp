@@ -26,11 +26,11 @@ Displacement CowOffsets[8] = { { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -
 /** Specifies the active sound effect ID for interacting with cows. */
 _sfx_id CowPlaying = SFX_NONE;
 
-struct TownerInit {
+struct TownerData {
 	_talker_id type;
 	Point position;
 	Direction dir;
-	void (*init)(Towner &towner, const TownerInit &initData);
+	void (*init)(Towner &towner, const TownerData &townerData);
 	void (*talk)(Player &player, Towner &towner);
 };
 
@@ -43,18 +43,18 @@ void NewTownerAnim(Towner &towner, byte *pAnim, uint8_t numFrames, int delay)
 	towner._tAnimDelay = delay;
 }
 
-void InitTownerInfo(int i, const TownerInit &initData)
+void InitTownerInfo(int i, const TownerData &townerData)
 {
 	auto &towner = Towners[i];
 
-	towner._ttype = initData.type;
-	towner.position = initData.position;
-	towner.talk = initData.talk;
+	towner._ttype = townerData.type;
+	towner.position = townerData.position;
+	towner.talk = townerData.talk;
 	towner.seed = AdvanceRndSeed(); // TODO: Narrowing conversion, tSeed might need to be uint16_t
 
 	dMonster[towner.position.x][towner.position.y] = i + 1;
 
-	initData.init(towner, initData);
+	townerData.init(towner, townerData);
 }
 
 void LoadTownerAnimations(Towner &towner, const char *path, int frames, Direction dir, int delay)
@@ -69,7 +69,7 @@ void LoadTownerAnimations(Towner &towner, const char *path, int frames, Directio
 /**
  * @brief Load Griswold into the game
  */
-void InitSmith(Towner &towner, const TownerInit &initData)
+void InitSmith(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -85,11 +85,11 @@ void InitSmith(Towner &towner, const TownerInit &initData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Smith\\SmithN.CEL", 16, initData.dir, 3);
+	LoadTownerAnimations(towner, "Towners\\Smith\\SmithN.CEL", 16, townerData.dir, 3);
 	towner.name = _("Griswold the Blacksmith");
 }
 
-void InitBarOwner(Towner &towner, const TownerInit &initData)
+void InitBarOwner(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -107,20 +107,20 @@ void InitBarOwner(Towner &towner, const TownerInit &initData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\TwnF\\TwnFN.CEL", 16, initData.dir, 3);
+	LoadTownerAnimations(towner, "Towners\\TwnF\\TwnFN.CEL", 16, townerData.dir, 3);
 	towner.name = _("Ogden the Tavern owner");
 }
 
-void InitTownDead(Towner &towner, const TownerInit &initData)
+void InitTownDead(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\Butch\\Deadguy.CEL", 8, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\Butch\\Deadguy.CEL", 8, townerData.dir, 6);
 	towner.name = _("Wounded Townsman");
 }
 
-void InitWitch(Towner &towner, const TownerInit &initData)
+void InitWitch(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -138,29 +138,29 @@ void InitWitch(Towner &towner, const TownerInit &initData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\TownWmn1\\Witch.CEL", 19, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\TownWmn1\\Witch.CEL", 19, townerData.dir, 6);
 	towner.name = _("Adria the Witch");
 }
 
-void InitBarmaid(Towner &towner, const TownerInit &initData)
+void InitBarmaid(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\TownWmn1\\WmnN.CEL", 18, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\TownWmn1\\WmnN.CEL", 18, townerData.dir, 6);
 	towner.name = _("Gillian the Barmaid");
 }
 
-void InitBoy(Towner &towner, const TownerInit &initData)
+void InitBoy(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\TownBoy\\PegKid1.CEL", 20, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\TownBoy\\PegKid1.CEL", 20, townerData.dir, 6);
 	towner.name = _("Wirt the Peg-legged boy");
 }
 
-void InitHealer(Towner &towner, const TownerInit &initData)
+void InitHealer(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -178,11 +178,11 @@ void InitHealer(Towner &towner, const TownerInit &initData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Healer\\Healer.CEL", 20, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\Healer\\Healer.CEL", 20, townerData.dir, 6);
 	towner.name = _("Pepin the Healer");
 }
 
-void InitTeller(Towner &towner, const TownerInit &initData)
+void InitTeller(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -195,11 +195,11 @@ void InitTeller(Towner &towner, const TownerInit &initData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Strytell\\Strytell.CEL", 25, initData.dir, 3);
+	LoadTownerAnimations(towner, "Towners\\Strytell\\Strytell.CEL", 25, townerData.dir, 3);
 	towner.name = _("Cain the Elder");
 }
 
-void InitDrunk(Towner &towner, const TownerInit &initData)
+void InitDrunk(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -211,11 +211,11 @@ void InitDrunk(Towner &towner, const TownerInit &initData)
 	};
 	towner.animOrder = AnimOrder;
 	towner.animOrderSize = sizeof(AnimOrder);
-	LoadTownerAnimations(towner, "Towners\\Drunk\\TwnDrunk.CEL", 18, initData.dir, 3);
+	LoadTownerAnimations(towner, "Towners\\Drunk\\TwnDrunk.CEL", 18, townerData.dir, 3);
 	towner.name = _("Farnham the Drunk");
 }
 
-void InitCows(Towner &towner, const TownerInit &initData)
+void InitCows(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 128;
 	towner.animOrder = nullptr;
@@ -223,12 +223,12 @@ void InitCows(Towner &towner, const TownerInit &initData)
 	for (int i = 0; i < 8; i++) {
 		towner._tNAnim[i] = CelGetFrame(CowCels.get(), i);
 	}
-	NewTownerAnim(towner, towner._tNAnim[initData.dir], 12, 3);
+	NewTownerAnim(towner, towner._tNAnim[townerData.dir], 12, 3);
 	towner._tAnimFrame = GenerateRnd(11) + 1;
 	towner.name = _("Cow");
 
-	const Point position = initData.position;
-	const Point offset = position + CowOffsets[initData.dir];
+	const Point position = townerData.position;
+	const Point offset = position + CowOffsets[townerData.dir];
 	int index = -dMonster[position.x][position.y];
 	if (dMonster[position.x][offset.y] == 0)
 		dMonster[position.x][offset.y] = index;
@@ -238,16 +238,16 @@ void InitCows(Towner &towner, const TownerInit &initData)
 		dMonster[offset.x][offset.y] = index;
 }
 
-void InitFarmer(Towner &towner, const TownerInit &initData)
+void InitFarmer(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\Farmer\\Farmrn2.CEL", 15, initData.dir, 3);
+	LoadTownerAnimations(towner, "Towners\\Farmer\\Farmrn2.CEL", 15, townerData.dir, 3);
 	towner.name = _("Lester the farmer");
 }
 
-void InitCowFarmer(Towner &towner, const TownerInit &initData)
+void InitCowFarmer(Towner &towner, const TownerData &townerData)
 {
 	const char *celPath = "Towners\\Farmer\\cfrmrn2.CEL";
 	if (Quests[Q_JERSEY]._qactive == QUEST_DONE) {
@@ -256,16 +256,16 @@ void InitCowFarmer(Towner &towner, const TownerInit &initData)
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, celPath, 15, initData.dir, 3);
+	LoadTownerAnimations(towner, celPath, 15, townerData.dir, 3);
 	towner.name = _("Complete Nut");
 }
 
-void InitGirl(Towner &towner, const TownerInit &initData)
+void InitGirl(Towner &towner, const TownerData &townerData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
-	LoadTownerAnimations(towner, "Towners\\Girl\\Girlw1.CEL", 20, initData.dir, 6);
+	LoadTownerAnimations(towner, "Towners\\Girl\\Girlw1.CEL", 20, townerData.dir, 6);
 	towner.name = "Celia";
 }
 
@@ -763,7 +763,7 @@ void TalkToGirl(Player &player, Towner &girl)
 	}
 }
 
-const TownerInit TownersData[] = {
+const TownerData TownersData[] = {
 	// clang-format off
 	// type         position    dir     init           talk
 	{ TOWN_SMITH,   { 62, 63 }, DIR_SW, InitSmith,     TalkToBlackSmith  },
