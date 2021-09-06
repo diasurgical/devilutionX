@@ -222,7 +222,7 @@ enum item_cursor_graphic : uint8_t {
 	// clang-format on
 };
 
-enum item_type : int8_t {
+enum ItemType : int8_t {
 	ITYPE_MISC,
 	ITYPE_SWORD,
 	ITYPE_AXE,
@@ -428,7 +428,7 @@ struct ItemData {
 	enum item_class iClass;
 	enum item_equip_type iLoc;
 	enum item_cursor_graphic iCurs;
-	enum item_type itype;
+	enum ItemType itype;
 	enum unique_base_item iItemId;
 	const char *iName;
 	const char *iSName;

@@ -212,7 +212,7 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iSeed = file.NextLE<int32_t>();
 	item._iCreateInfo = file.NextLE<uint16_t>();
 	file.Skip(2); // Alignment
-	item._itype = static_cast<item_type>(file.NextLE<uint32_t>());
+	item._itype = static_cast<ItemType>(file.NextLE<uint32_t>());
 	item.position.x = file.NextLE<int32_t>();
 	item.position.y = file.NextLE<int32_t>();
 	item._iAnimFlag = file.NextBool32();
