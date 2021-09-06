@@ -26,6 +26,11 @@ struct Displacement {
 	{
 	}
 
+	explicit constexpr Displacement(Direction direction)
+	    : Displacement(fromDirection(direction))
+	{
+	}
+
 	constexpr bool operator==(const Displacement &other) const
 	{
 		return deltaX == other.deltaX && deltaY == other.deltaY;
