@@ -22,7 +22,7 @@ struct DeadStruct {
 	uint8_t translationPaletteIndex;
 };
 
-extern DeadStruct Dead[MaxCorpses];
+extern DeadStruct Corpses[MaxCorpses];
 extern int8_t stonendx;
 
 void InitDead();

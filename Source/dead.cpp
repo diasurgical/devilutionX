@@ -12,7 +12,7 @@
 
 namespace devilution {
 
-DeadStruct Dead[MaxCorpses];
+DeadStruct Corpses[MaxCorpses];
 int8_t stonendx;
 
 namespace {
@@ -37,8 +37,8 @@ void InitDead()
 		if (mtypes[LevelMonsterTypes[i].mtype] != 0)
 			continue;
 
-		InitDeadAnimationFromMonster(Dead[nd], LevelMonsterTypes[i]);
-		Dead[nd].translationPaletteIndex = 0;
+		InitDeadAnimationFromMonster(Corpses[nd], LevelMonsterTypes[i]);
+		Corpses[nd].translationPaletteIndex = 0;
 		nd++;
 
 		LevelMonsterTypes[i].mdeadval = nd;
@@ -47,12 +47,12 @@ void InitDead()
 
 	nd++; // Unused blood spatter
 
-	for (auto &dead : Dead[nd].data)
-		dead = MissileSpriteData[MFILE_SHATTER1].animData[0].get();
+	for (auto &corpse : Corpses[nd].data)
+		corpse = MissileSpriteData[MFILE_SHATTER1].animData[0].get();
 
-	Dead[nd].frame = 12;
-	Dead[nd].width = 128;
-	Dead[nd].translationPaletteIndex = 0;
+	Corpses[nd].frame = 12;
+	Corpses[nd].width = 128;
+	Corpses[nd].translationPaletteIndex = 0;
 	nd++;
 
 	stonendx = nd;
@@ -60,8 +60,8 @@ void InitDead()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		auto &monster = Monsters[ActiveMonsters[i]];
 		if (monster._uniqtype != 0) {
-			InitDeadAnimationFromMonster(Dead[nd], *monster.MType);
-			Dead[nd].translationPaletteIndex = monster._uniqtrans + 4;
+			InitDeadAnimationFromMonster(Corpses[nd], *monster.MType);
+			Corpses[nd].translationPaletteIndex = monster._uniqtrans + 4;
 			nd++;
 
 			monster._udeadval = nd;

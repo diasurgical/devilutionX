@@ -6,13 +6,13 @@
 
 using namespace devilution;
 
-TEST(Dead, AddDead)
+TEST(Corpses, AddDead)
 {
 	AddDead({ 21, 48 }, 8, DIR_W);
 	EXPECT_EQ(dDead[21][48], 8 + (DIR_W << 5));
 }
 
-TEST(Dead, AddDead_OOB)
+TEST(Corpses, AddDead_OOB)
 {
 	AddDead({ 21, 48 }, MaxCorpses + 1, DIR_W);
 	EXPECT_EQ(dDead[21][48], 0 + (DIR_W << 5));

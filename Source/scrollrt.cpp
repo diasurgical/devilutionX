@@ -849,7 +849,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	if (LightTableIndex < LightsMax && bDead != 0) {
 		do {
-			DeadStruct *pDeadGuy = &Dead[(bDead & 0x1F) - 1];
+			DeadStruct *pDeadGuy = &Corpses[(bDead & 0x1F) - 1];
 			auto dd = static_cast<Direction>((bDead >> 5) & 7);
 			int px = targetBufferPosition.x - CalculateWidth2(pDeadGuy->width);
 			const byte *pCelBuff = pDeadGuy->data[dd];
