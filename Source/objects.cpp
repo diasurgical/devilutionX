@@ -3966,7 +3966,7 @@ bool OperateFountains(int pnum, int i)
 
 void OperateWeaponRack(int pnum, int i, bool sendmsg)
 {
-	int weaponType;
+	ItemType weaponType { ItemType::ITYPE_NONE };
 
 	if (Objects[i]._oSelFlag == 0)
 		return;

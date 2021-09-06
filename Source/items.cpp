@@ -1474,7 +1474,7 @@ int RndAllItems()
 	return ril[GenerateRnd(ri)];
 }
 
-int RndTypeItems(int itype, int imid, int lvl)
+int RndTypeItems(ItemType itemType, int imid, int lvl)
 {
 	int ril[512];
 
@@ -1488,7 +1488,7 @@ int RndTypeItems(int itype, int imid, int lvl)
 			okflag = false;
 		if (lvl * 2 < AllItemsList[i].iMinMLvl)
 			okflag = false;
-		if (AllItemsList[i].itype != itype)
+		if (AllItemsList[i].itype != itemType)
 			okflag = false;
 		if (imid != -1 && AllItemsList[i].iMiscId != imid)
 			okflag = false;
@@ -2484,14 +2484,14 @@ void RecalcStoreStats()
 	boyitem._iStatFlag = StoreStatOk(boyitem);
 }
 
-void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bool sendmsg, bool delta)
+void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int icurs, bool sendmsg, bool delta)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
 	int ii = AllocateItem();
 	auto &item = Items[ii];
-	int idx = RndTypeItems(imisc, imid, lvl);
+	int idx = RndTypeItems(itemType, imid, lvl);
 
 	while (true) {
 		memset(&item, 0, sizeof(item));
@@ -2499,7 +2499,7 @@ void CreateMagicItem(Point position, int lvl, int imisc, int imid, int icurs, bo
 		if (item._iCurs == icurs)
 			break;
 
-		idx = RndTypeItems(imisc, imid, lvl);
+		idx = RndTypeItems(itemType, imid, lvl);
 	}
 	GetSuperItemSpace(position, ii);
 
@@ -3458,13 +3458,13 @@ void CreateRndUseful(Point position, bool sendmsg)
 		NetSendCmdDItem(false, ii);
 }
 
-void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta)
+void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta)
 {
 	int idx;
 
 	int curlv = ItemsGetCurrlevel();
-	if (itype != ITYPE_GOLD)
-		idx = RndTypeItems(itype, imisc, curlv);
+	if (itemType != ITYPE_GOLD)
+		idx = RndTypeItems(itemType, imisc, curlv);
 	else
 		idx = IDI_GOLD;
 
@@ -4798,10 +4798,10 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 		DeltaAddItem(ii);
 }
 
-void CreateMagicArmor(Point position, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta)
 {
 	int lvl = ItemsGetCurrlevel();
-	CreateMagicItem(position, lvl, imisc, IMISC_NONE, icurs, sendmsg, delta);
+	CreateMagicItem(position, lvl, itemType, IMISC_NONE, icurs, sendmsg, delta);
 }
 
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
@@ -4809,15 +4809,15 @@ void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
 	CreateMagicItem(position, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
-void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool delta)
+void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta)
 {
 	int imid = IMISC_NONE;
-	if (imisc == ITYPE_STAFF)
+	if (itemType == ITYPE_STAFF)
 		imid = IMISC_STAFF;
 
 	int curlv = ItemsGetCurrlevel();
 
-	CreateMagicItem(position, curlv, imisc, imid, icurs, sendmsg, delta);
+	CreateMagicItem(position, curlv, itemType, imid, icurs, sendmsg, delta);
 }
 
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex)
