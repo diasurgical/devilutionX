@@ -35,7 +35,7 @@ dungeon_type ReturnLevelType;
 int ReturnLevel;
 
 /** Contains the data related to each quest_id. */
-QuestDataStruct QuestData[] = {
+QuestDataStruct QuestsData[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          bookOrder,   _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
 	{       5,          -1, DTYPE_NONE,          5,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
@@ -301,7 +301,7 @@ void InitQuests()
 	int q = 0;
 	for (auto &quest : Quests) {
 		quest._qidx = static_cast<quest_id>(q);
-		auto &questData = QuestData[q];
+		auto &questData = QuestsData[q];
 		q++;
 
 		quest._qactive = QUEST_NOTAVAIL;
@@ -751,7 +751,7 @@ void DrawQuestLog(const Surface &out)
 		if (i == firstFinishedEntry) {
 			y += act2finSpacing;
 		}
-		PrintQLString(out, x, y, _(QuestData[qlist[i]]._qlstr), i == selectedEntry, i >= firstFinishedEntry);
+		PrintQLString(out, x, y, _(QuestsData[qlist[i]]._qlstr), i == selectedEntry, i >= firstFinishedEntry);
 		y += lineSpacing;
 	}
 }
@@ -760,7 +760,7 @@ void StartQuestlog()
 {
 
 	auto sortQuestIdx = [](int a, int b) {
-		return QuestData[a].questBookOrder < QuestData[b].questBookOrder;
+		return QuestsData[a].questBookOrder < QuestsData[b].questBookOrder;
 	};
 
 	qlistCnt = 0;
@@ -873,7 +873,7 @@ bool Quest::IsAvailable()
 		return false;
 	if (_qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && QuestData[_qidx].isSinglePlayerOnly)
+	if (gbIsMultiplayer && QuestsData[_qidx].isSinglePlayerOnly)
 		return false;
 
 	return true;

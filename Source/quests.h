@@ -105,6 +105,6 @@ void QuestlogESC();
 void SetMultiQuest(int q, quest_state s, bool log, int v1);
 
 /* rdata */
-extern QuestDataStruct QuestData[];
+extern QuestDataStruct QuestsData[];
 
 } // namespace devilution

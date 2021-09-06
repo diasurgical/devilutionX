@@ -331,7 +331,7 @@ std::string DebugCmdQuest(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			ret.append(fmt::format(", {} ({})", quest._qidx, QuestData[quest._qidx]._qlstr));
+			ret.append(fmt::format(", {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
 		}
 		return ret;
 	}
@@ -355,12 +355,12 @@ std::string DebugCmdQuest(const string_view parameter)
 	auto &quest = Quests[questId];
 
 	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-		return fmt::format("{} was already given.", QuestData[questId]._qlstr);
+		return fmt::format("{} was already given.", QuestsData[questId]._qlstr);
 
 	quest._qactive = QUEST_ACTIVE;
 	quest._qlog = true;
 
-	return fmt::format("{} enabled.", QuestData[questId]._qlstr);
+	return fmt::format("{} enabled.", QuestsData[questId]._qlstr);
 }
 
 std::string DebugCmdLevelUp(const string_view parameter)
