@@ -235,7 +235,7 @@ bool CanEquip(const Item &item)
  */
 bool CanWield(Player &player, const Item &item)
 {
-	if (!CanEquip(item) || (item._iLoc != ILOC_ONEHAND && item._iLoc != ILOC_TWOHAND))
+	if (!CanEquip(item) || IsNoneOf(item._iLoc, ILOC_ONEHAND, ILOC_TWOHAND))
 		return false;
 
 	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
@@ -254,7 +254,7 @@ bool CanWield(Player &player, const Item &item)
 	// Barbarian can wield two handed swords and maces in one hand, so we allow equiping any sword/mace as long as his occupied
 	// hand has a shield (i.e. no dual wielding allowed)
 	if (player._pClass == HeroClass::Barbarian) {
-		if (occupiedHand._itype == ITYPE_SHIELD && (item._itype == ITYPE_SWORD || item._itype == ITYPE_MACE))
+		if (occupiedHand._itype == ITYPE_SHIELD && IsAnyOf(item._itype, ITYPE_SWORD, ITYPE_MACE))
 			return true;
 	}
 
@@ -262,10 +262,10 @@ bool CanWield(Player &player, const Item &item)
 	// slot is another one-handed weapon.
 	if (player._pClass == HeroClass::Bard) {
 		bool occupiedHandIsOneHandedSwordOrMace = occupiedHand._iLoc == ILOC_ONEHAND
-		    && (occupiedHand._itype == ITYPE_SWORD || occupiedHand._itype == ITYPE_MACE);
+		    && IsAnyOf(occupiedHand._itype, ITYPE_SWORD, ITYPE_MACE);
 
 		bool weaponToEquipIsOneHandedSwordOrMace = item._iLoc == ILOC_ONEHAND
-		    && (item._itype == ITYPE_SWORD || item._itype == ITYPE_MACE);
+		    && IsAnyOf(item._itype, ITYPE_SWORD, ITYPE_MACE);
 
 		if (occupiedHandIsOneHandedSwordOrMace && weaponToEquipIsOneHandedSwordOrMace) {
 			return true;
@@ -397,7 +397,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 	if (il == ILOC_ONEHAND && player.HoldItem._iLoc == ILOC_TWOHAND) {
 		if (player._pClass == HeroClass::Barbarian
-		    && (player.HoldItem._itype == ITYPE_SWORD || player.HoldItem._itype == ITYPE_MACE))
+		    && IsAnyOf(player.HoldItem._itype, ITYPE_SWORD, ITYPE_MACE))
 			il = ILOC_ONEHAND;
 		else
 			il = ILOC_TWOHAND;
@@ -460,7 +460,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
-	if (il != ILOC_UNEQUIPABLE && il != ILOC_BELT && !player.HoldItem._iStatFlag) {
+	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.HoldItem._iStatFlag) {
 		done = false;
 		player.Say(HeroSpeech::ICantUseThisYet);
 	}
@@ -908,7 +908,7 @@ void CheckNaKrulNotes(Player &player)
 	int idx = player.HoldItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
-	if (idx != IDI_NOTE1 && idx != IDI_NOTE2 && idx != IDI_NOTE3) {
+	if (IsNoneOf(idx, IDI_NOTE1, IDI_NOTE2, IDI_NOTE3)) {
 		return;
 	}
 
@@ -1052,7 +1052,7 @@ bool PutItem(Player &player, Point &position)
 bool CanUseStaff(Item &staff, spell_id spell)
 {
 	return !staff.isEmpty()
-	    && (staff._iMiscId == IMISC_STAFF || staff._iMiscId == IMISC_UNIQUE)
+	    && IsAnyOf(staff._iMiscId, IMISC_STAFF, IMISC_UNIQUE)
 	    && staff._iSpell == spell
 	    && staff._iCharges > 0;
 }
@@ -1163,8 +1163,7 @@ void DrawInv(const Surface &out)
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
 					if (myPlayer._pClass != HeroClass::Barbarian
-					    || (myPlayer.InvBody[slot]._itype != ITYPE_SWORD
-					        && myPlayer.InvBody[slot]._itype != ITYPE_MACE)) {
+					    || IsNoneOf(myPlayer.InvBody[slot]._itype, ITYPE_SWORD, ITYPE_MACE)) {
 						InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						LightTableIndex = 0;
 						cel_transparency_active = true;
@@ -1861,7 +1860,7 @@ int8_t CheckInvHLight()
 	} else if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
 		pi = &myPlayer.InvBody[INVLOC_HAND_LEFT];
 		if (pi->isEmpty() || pi->_iLoc != ILOC_TWOHAND
-		    || (myPlayer._pClass == HeroClass::Barbarian && (myPlayer.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || myPlayer.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
+		    || (myPlayer._pClass == HeroClass::Barbarian && IsAnyOf(myPlayer.InvBody[INVLOC_HAND_LEFT]._itype, ITYPE_SWORD, ITYPE_MACE))) {
 			rv = INVLOC_HAND_RIGHT;
 			pi = &myPlayer.InvBody[rv];
 		} else {
@@ -1910,7 +1909,7 @@ void RemoveScroll(Player &player)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (!player.InvList[i].isEmpty()
-		    && (player.InvList[i]._iMiscId == IMISC_SCROLL || player.InvList[i]._iMiscId == IMISC_SCROLLT)
+		    && IsAnyOf(player.InvList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
 		    && player.InvList[i]._iSpell == player._pSpell) {
 			player.RemoveInvItem(i);
 			player.CalcScrolls();
@@ -1919,7 +1918,7 @@ void RemoveScroll(Player &player)
 	}
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (!player.SpdList[i].isEmpty()
-		    && (player.SpdList[i]._iMiscId == IMISC_SCROLL || player.SpdList[i]._iMiscId == IMISC_SCROLLT)
+		    && IsAnyOf(player.SpdList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
 		    && player.SpdList[i]._iSpell == player._pSpell) {
 			player.RemoveSpdBarItem(i);
 			player.CalcScrolls();
@@ -1940,14 +1939,14 @@ bool UseScroll()
 
 	for (int i = 0; i < myPlayer._pNumInv; i++) {
 		if (!myPlayer.InvList[i].isEmpty()
-		    && (myPlayer.InvList[i]._iMiscId == IMISC_SCROLL || myPlayer.InvList[i]._iMiscId == IMISC_SCROLLT)
+		    && IsAnyOf(myPlayer.InvList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
 		    && myPlayer.InvList[i]._iSpell == myPlayer._pRSpell) {
 			return true;
 		}
 	}
 	for (auto &item : myPlayer.SpdList) {
 		if (!item.isEmpty()
-		    && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)
+		    && IsAnyOf(item._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
 		    && item._iSpell == myPlayer._pRSpell) {
 			return true;
 		}
