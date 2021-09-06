@@ -428,6 +428,6 @@ struct TextData {
 	_sfx_id sfxnr;
 };
 
-extern const TextData Texts[];
+extern const TextData Speeches[];
 
 } // namespace devilution

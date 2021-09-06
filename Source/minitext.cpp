@@ -146,14 +146,14 @@ void InitQuestText()
  */
 void InitQTextMsg(_speech_id m)
 {
-	if (Texts[m].scrlltxt) {
+	if (Speeches[m].scrlltxt) {
 		QuestLogIsOpen = false;
-		LoadText(_(Texts[m].txtstr));
+		LoadText(_(Speeches[m].txtstr));
 		qtextflag = true;
-		qtextSpd = CalculateTextSpeed(Texts[m].sfxnr);
+		qtextSpd = CalculateTextSpeed(Speeches[m].sfxnr);
 		ScrollStart = SDL_GetTicks();
 	}
-	PlaySFX(Texts[m].sfxnr);
+	PlaySFX(Speeches[m].sfxnr);
 }
 
 void DrawQTextBack(const Surface &out)
