@@ -151,7 +151,7 @@ const _object_id ObjTypeConv[] = {
 };
 
 /** Contains the data related to each object ID. */
-const ObjDataStruct AllObjects[] = {
+const ObjectData AllObjects[] = {
 	// clang-format off
 	// oload, ofindex,   ominlvl, omaxlvl, olvltype,        otheme,                  oquest,     oAnimFlag, oAnimDelay, oAnimLen, oAnimWidth, oSolidFlag, oMissFlag, oLightFlag, oBreak, oSelFlag, oTrapFlag
 	{      1, OFILE_L1BRAZ,    1,       4, DTYPE_CATHEDRAL, THEME_NONE,              Q_INVALID,          1,          1,       26,         64, true,       true,      false,           0,        0, false     },
