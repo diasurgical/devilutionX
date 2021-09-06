@@ -12,18 +12,18 @@
 
 namespace devilution {
 
-DeadStruct Corpses[MaxCorpses];
+Corpse Corpses[MaxCorpses];
 int8_t stonendx;
 
 namespace {
-void InitDeadAnimationFromMonster(DeadStruct &dead, const CMonster &mon)
+void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 {
 	int i = 0;
 	const auto &animData = mon.GetAnimData(MonsterGraphic::Death);
 	for (const auto &celSprite : animData.CelSpritesForDirections)
-		dead.data[i++] = celSprite->Data();
-	dead.frame = animData.Frames;
-	dead.width = animData.CelSpritesForDirections[0]->Width();
+		corpse.data[i++] = celSprite->Data();
+	corpse.frame = animData.Frames;
+	corpse.width = animData.CelSpritesForDirections[0]->Width();
 }
 } // namespace
 
