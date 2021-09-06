@@ -35,7 +35,7 @@ enum _talker_id : uint8_t {
 	NUM_TOWNER_TYPES,
 };
 
-struct TownerStruct {
+struct Towner {
 	byte *_tNAnim[8];
 	std::unique_ptr<byte[]> data;
 	byte *_tAnimData;
@@ -57,11 +57,11 @@ struct TownerStruct {
 	/** Specifies the animation frame sequence. */
 	const uint8_t *animOrder; // unowned
 	std::size_t animOrderSize;
-	void (*talk)(Player &player, TownerStruct &towner);
+	void (*talk)(Player &player, Towner &towner);
 	_talker_id _ttype;
 };
 
-extern TownerStruct Towners[NUM_TOWNERS];
+extern Towner Towners[NUM_TOWNERS];
 
 void InitTowners();
 void FreeTownerGFX();

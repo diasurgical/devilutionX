@@ -30,11 +30,11 @@ struct TownerInit {
 	_talker_id type;
 	Point position;
 	Direction dir;
-	void (*init)(TownerStruct &towner, const TownerInit &initData);
-	void (*talk)(Player &player, TownerStruct &towner);
+	void (*init)(Towner &towner, const TownerInit &initData);
+	void (*talk)(Player &player, Towner &towner);
 };
 
-void NewTownerAnim(TownerStruct &towner, byte *pAnim, uint8_t numFrames, int delay)
+void NewTownerAnim(Towner &towner, byte *pAnim, uint8_t numFrames, int delay)
 {
 	towner._tAnimData = pAnim;
 	towner._tAnimLen = numFrames;
@@ -57,7 +57,7 @@ void InitTownerInfo(int i, const TownerInit &initData)
 	initData.init(towner, initData);
 }
 
-void LoadTownerAnimations(TownerStruct &towner, const char *path, int frames, Direction dir, int delay)
+void LoadTownerAnimations(Towner &towner, const char *path, int frames, Direction dir, int delay)
 {
 	towner.data = LoadFileInMem(path);
 	for (auto &animation : towner._tNAnim) {
@@ -69,7 +69,7 @@ void LoadTownerAnimations(TownerStruct &towner, const char *path, int frames, Di
 /**
  * @brief Load Griswold into the game
  */
-void InitSmith(TownerStruct &towner, const TownerInit &initData)
+void InitSmith(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -89,7 +89,7 @@ void InitSmith(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Griswold the Blacksmith");
 }
 
-void InitBarOwner(TownerStruct &towner, const TownerInit &initData)
+void InitBarOwner(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -111,7 +111,7 @@ void InitBarOwner(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Ogden the Tavern owner");
 }
 
-void InitTownDead(TownerStruct &towner, const TownerInit &initData)
+void InitTownDead(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
@@ -120,7 +120,7 @@ void InitTownDead(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Wounded Townsman");
 }
 
-void InitWitch(TownerStruct &towner, const TownerInit &initData)
+void InitWitch(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -142,7 +142,7 @@ void InitWitch(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Adria the Witch");
 }
 
-void InitBarmaid(TownerStruct &towner, const TownerInit &initData)
+void InitBarmaid(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
@@ -151,7 +151,7 @@ void InitBarmaid(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Gillian the Barmaid");
 }
 
-void InitBoy(TownerStruct &towner, const TownerInit &initData)
+void InitBoy(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
@@ -160,7 +160,7 @@ void InitBoy(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Wirt the Peg-legged boy");
 }
 
-void InitHealer(TownerStruct &towner, const TownerInit &initData)
+void InitHealer(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -182,7 +182,7 @@ void InitHealer(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Pepin the Healer");
 }
 
-void InitTeller(TownerStruct &towner, const TownerInit &initData)
+void InitTeller(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -199,7 +199,7 @@ void InitTeller(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Cain the Elder");
 }
 
-void InitDrunk(TownerStruct &towner, const TownerInit &initData)
+void InitDrunk(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	static const uint8_t AnimOrder[] = {
@@ -215,7 +215,7 @@ void InitDrunk(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Farnham the Drunk");
 }
 
-void InitCows(TownerStruct &towner, const TownerInit &initData)
+void InitCows(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 128;
 	towner.animOrder = nullptr;
@@ -238,7 +238,7 @@ void InitCows(TownerStruct &towner, const TownerInit &initData)
 		dMonster[offset.x][offset.y] = index;
 }
 
-void InitFarmer(TownerStruct &towner, const TownerInit &initData)
+void InitFarmer(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
@@ -247,7 +247,7 @@ void InitFarmer(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Lester the farmer");
 }
 
-void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
+void InitCowFarmer(Towner &towner, const TownerInit &initData)
 {
 	const char *celPath = "Towners\\Farmer\\cfrmrn2.CEL";
 	if (Quests[Q_JERSEY]._qactive == QUEST_DONE) {
@@ -260,7 +260,7 @@ void InitCowFarmer(TownerStruct &towner, const TownerInit &initData)
 	towner.name = _("Complete Nut");
 }
 
-void InitGirl(TownerStruct &towner, const TownerInit &initData)
+void InitGirl(Towner &towner, const TownerInit &initData)
 {
 	towner._tAnimWidth = 96;
 	towner.animOrder = nullptr;
@@ -269,7 +269,7 @@ void InitGirl(TownerStruct &towner, const TownerInit &initData)
 	towner.name = "Celia";
 }
 
-void TownDead(TownerStruct &towner)
+void TownDead(Towner &towner)
 {
 	if (qtextflag) {
 		if (Quests[Q_BUTCHER]._qvar1 == 1)
@@ -290,7 +290,7 @@ void TownerTalk(_speech_id message)
 	InitQTextMsg(message);
 }
 
-void TalkToBarOwner(Player &player, TownerStruct &barOwner)
+void TalkToBarOwner(Player &player, Towner &barOwner)
 {
 	if (!player._pLvlVisited[0]) {
 		InitQTextMsg(TEXT_INTRO);
@@ -349,7 +349,7 @@ void TalkToBarOwner(Player &player, TownerStruct &barOwner)
 	StartStore(STORE_TAVERN);
 }
 
-void TalkToDeadguy(Player &player, TownerStruct & /*deadguy*/)
+void TalkToDeadguy(Player &player, Towner & /*deadguy*/)
 {
 	auto &quest = Quests[Q_BUTCHER];
 	if (quest._qactive == QUEST_DONE)
@@ -368,7 +368,7 @@ void TalkToDeadguy(Player &player, TownerStruct & /*deadguy*/)
 	NetSendCmdQuest(true, quest);
 }
 
-void TalkToBlackSmith(Player &player, TownerStruct &blackSmith)
+void TalkToBlackSmith(Player &player, Towner &blackSmith)
 {
 	if (Quests[Q_ROCK]._qactive != QUEST_NOTAVAIL) {
 		if (player._pLvlVisited[4] && Quests[Q_ROCK]._qactive != QUEST_DONE) {
@@ -415,7 +415,7 @@ void TalkToBlackSmith(Player &player, TownerStruct &blackSmith)
 	StartStore(STORE_SMITH);
 }
 
-void TalkToWitch(Player &player, TownerStruct & /*witch*/)
+void TalkToWitch(Player &player, Towner & /*witch*/)
 {
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_NOTAVAIL) {
 		if (Quests[Q_MUSHROOM]._qactive == QUEST_INIT && player.TryRemoveInvItemById(IDI_FUNGALTM)) {
@@ -461,7 +461,7 @@ void TalkToWitch(Player &player, TownerStruct & /*witch*/)
 	StartStore(STORE_WITCH);
 }
 
-void TalkToBarmaid(Player &player, TownerStruct & /*barmaid*/)
+void TalkToBarmaid(Player &player, Towner & /*barmaid*/)
 {
 	if (!player._pLvlVisited[21] && player.HasItem(IDI_MAPOFDOOM)) {
 		Quests[Q_GRAVE]._qactive = QUEST_ACTIVE;
@@ -475,13 +475,13 @@ void TalkToBarmaid(Player &player, TownerStruct & /*barmaid*/)
 	StartStore(STORE_BARMAID);
 }
 
-void TalkToDrunk(Player & /*player*/, TownerStruct & /*drunk*/)
+void TalkToDrunk(Player & /*player*/, Towner & /*drunk*/)
 {
 	TownerTalk(TEXT_FARNHAM1);
 	StartStore(STORE_DRUNK);
 }
 
-void TalkToHealer(Player &player, TownerStruct &healer)
+void TalkToHealer(Player &player, Towner &healer)
 {
 	if (Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
 		if ((player._pLvlVisited[1] || player._pLvlVisited[5]) && Quests[Q_PWATER]._qactive == QUEST_INIT) {
@@ -512,13 +512,13 @@ void TalkToHealer(Player &player, TownerStruct &healer)
 	StartStore(STORE_HEALER);
 }
 
-void TalkToBoy(Player & /*player*/, TownerStruct & /*boy*/)
+void TalkToBoy(Player & /*player*/, Towner & /*boy*/)
 {
 	TownerTalk(TEXT_WIRT1);
 	StartStore(STORE_BOY);
 }
 
-void TalkToStoryteller(Player &player, TownerStruct & /*storyteller*/)
+void TalkToStoryteller(Player &player, Towner & /*storyteller*/)
 {
 	auto &betrayerQuest = Quests[Q_BETRAYER];
 	if (!gbIsMultiplayer) {
@@ -553,7 +553,7 @@ void TalkToStoryteller(Player &player, TownerStruct & /*storyteller*/)
 	StartStore(STORE_STORY);
 }
 
-void TalkToCow(Player &player, TownerStruct &cow)
+void TalkToCow(Player &player, Towner &cow)
 {
 	if (CowPlaying != SFX_NONE && effect_is_playing(CowPlaying))
 		return;
@@ -583,7 +583,7 @@ void TalkToCow(Player &player, TownerStruct &cow)
 	PlaySfxLoc(CowPlaying, cow.position);
 }
 
-void TalkToFarmer(Player &player, TownerStruct &farmer)
+void TalkToFarmer(Player &player, Towner &farmer)
 {
 	auto &quest = Quests[Q_FARMER];
 	switch (quest._qactive) {
@@ -640,7 +640,7 @@ void TalkToFarmer(Player &player, TownerStruct &farmer)
 	}
 }
 
-void TalkToCowFarmer(Player &player, TownerStruct &cowFarmer)
+void TalkToCowFarmer(Player &player, Towner &cowFarmer)
 {
 	if (player.TryRemoveInvItemById(IDI_GREYSUIT)) {
 		InitQTextMsg(TEXT_JERSEY7);
@@ -727,7 +727,7 @@ void TalkToCowFarmer(Player &player, TownerStruct &cowFarmer)
 	}
 }
 
-void TalkToGirl(Player &player, TownerStruct &girl)
+void TalkToGirl(Player &player, Towner &girl)
 {
 	auto &quest = Quests[Q_GIRL];
 
@@ -786,7 +786,7 @@ const TownerInit TownerInitList[] = {
 
 } // namespace
 
-TownerStruct Towners[NUM_TOWNERS];
+Towner Towners[NUM_TOWNERS];
 
 /** Contains the data related to quest gossip for each towner ID. */
 _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS] = {
@@ -905,7 +905,7 @@ bool DebugTalkToTowner(std::string targetName)
 		// cows have an init function that differs from the rest and isn't compatible with this code, skip them :(
 		if (towner.type == TOWN_COW)
 			continue;
-		TownerStruct fakeTowner;
+		Towner fakeTowner;
 		towner.init(fakeTowner, towner);
 		fakeTowner.position = myPlayer.position.tile;
 		std::string npcName(fakeTowner.name);
