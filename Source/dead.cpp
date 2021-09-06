@@ -12,7 +12,7 @@
 
 namespace devilution {
 
-DeadStruct Dead[MaxDead];
+DeadStruct Dead[MaxCorpses];
 int8_t stonendx;
 
 namespace {
@@ -68,7 +68,7 @@ void InitDead()
 		}
 	}
 
-	assert(static_cast<unsigned>(nd) <= MaxDead);
+	assert(static_cast<unsigned>(nd) <= MaxCorpses);
 }
 
 void AddDead(Point tilePosition, int8_t dv, Direction ddir)

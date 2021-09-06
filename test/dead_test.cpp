@@ -14,6 +14,6 @@ TEST(Dead, AddDead)
 
 TEST(Dead, AddDead_OOB)
 {
-	AddDead({ 21, 48 }, MaxDead + 1, DIR_W);
+	AddDead({ 21, 48 }, MaxCorpses + 1, DIR_W);
 	EXPECT_EQ(dDead[21][48], 0 + (DIR_W << 5));
 }

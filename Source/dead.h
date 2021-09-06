@@ -13,7 +13,7 @@
 
 namespace devilution {
 
-static constexpr unsigned MaxDead = 31;
+static constexpr unsigned MaxCorpses = 31;
 
 struct DeadStruct {
 	std::array<const byte *, 8> data;
@@ -22,7 +22,7 @@ struct DeadStruct {
 	uint8_t translationPaletteIndex;
 };
 
-extern DeadStruct Dead[MaxDead];
+extern DeadStruct Dead[MaxCorpses];
 extern int8_t stonendx;
 
 void InitDead();
