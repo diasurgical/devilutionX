@@ -290,7 +290,7 @@ enum class UniqueMonsterPack {
 	Leashed,
 };
 
-struct UniqMonstStruct {
+struct UniqueMonsterData {
 	_monster_id mtype;
 	const char *mName;
 	const char *mTrnName;
@@ -315,6 +315,6 @@ struct UniqMonstStruct {
 extern const MonsterData MonstersData[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
-extern const UniqMonstStruct UniqueMonstersData[];
+extern const UniqueMonsterData UniqueMonstersData[];
 
 } // namespace devilution
