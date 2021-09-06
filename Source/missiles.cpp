@@ -213,7 +213,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 		return false;
 
 	uint8_t mor = monster.mMagicRes;
-	missile_resistance mir = MissileData[t].mResist;
+	missile_resistance mir = MissilesData[t].mResist;
 
 	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
 	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
@@ -233,7 +233,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 	int hper = 0;
 	if (pnum != -1) {
 		const auto &player = Players[pnum];
-		if (MissileData[t].mType == 0) {
+		if (MissilesData[t].mType == 0) {
 			hper = player.GetRangedPiercingToHit();
 			hper -= player.CalculateArmorPierce(monster.mArmorClass, false);
 			hper -= (dist * dist) / 2;
@@ -269,7 +269,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 
 	const auto &player = Players[pnum];
 
-	if (MissileData[t].mType == 0) {
+	if (MissilesData[t].mType == 0) {
 		dam = player._pIBonusDamMod + dam * player._pIBonusDam / 100 + dam;
 		if (player._pClass == HeroClass::Rogue)
 			dam += player._pDamageMod;
@@ -303,7 +303,7 @@ bool MonsterMHit(int pnum, int m, int mindam, int maxdam, int dist, missile_id t
 				M_StartHit(m, pnum, dam);
 			monster.Petrify();
 		} else {
-			if (MissileData[t].mType == 0 && (player._pIFlags & ISPL_KNOCKBACK) != 0) {
+			if (MissilesData[t].mType == 0 && (player._pIFlags & ISPL_KNOCKBACK) != 0) {
 				M_GetKnockback(m);
 			}
 			if (m > MAX_PLRS - 1)
@@ -337,12 +337,12 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		return false;
 	}
 
-	if ((target._pSpellFlags & 1) != 0 && MissileData[mtype].mType == 0) {
+	if ((target._pSpellFlags & 1) != 0 && MissilesData[mtype].mType == 0) {
 		return false;
 	}
 
 	int8_t resper;
-	switch (MissileData[mtype].mResist) {
+	switch (MissilesData[mtype].mResist) {
 	case MISR_FIRE:
 		resper = target._pFireResist;
 		break;
@@ -361,7 +361,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 	int hper = GenerateRnd(100);
 
 	int hit;
-	if (MissileData[mtype].mType == 0) {
+	if (MissilesData[mtype].mType == 0) {
 		hit = player.GetRangedToHit()
 		    - (dist * dist / 2)
 		    - target.GetArmor();
@@ -390,12 +390,12 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		dam = target._pHitPoints / 3;
 	} else {
 		dam = mindam + GenerateRnd(maxdam - mindam + 1);
-		if (MissileData[mtype].mType == 0)
+		if (MissilesData[mtype].mType == 0)
 			dam += player._pIBonusDamMod + player._pDamageMod + dam * player._pIBonusDam / 100;
 		if (!shift)
 			dam <<= 6;
 	}
-	if (MissileData[mtype].mType != 0)
+	if (MissilesData[mtype].mType != 0)
 		dam /= 2;
 	if (resper > 0) {
 		dam -= (dam * resper) / 100;
@@ -586,8 +586,8 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			missile._mirange = 0;
 		missile._miHitFlag = false;
 	}
-	if (missile._mirange == 0 && MissileData[missile._mitype].miSFX != -1)
-		PlaySfxLoc(MissileData[missile._mitype].miSFX, missile.position.tile);
+	if (missile._mirange == 0 && MissilesData[missile._mitype].miSFX != -1)
+		PlaySfxLoc(MissilesData[missile._mitype].miSFX, missile.position.tile);
 }
 
 void SetMissAnim(Missile &missile, int animtype)
@@ -978,7 +978,7 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 	if (monster._mmode == MonsterMode::Charge)
 		return false;
 
-	missile_resistance mir = MissileData[t].mResist;
+	missile_resistance mir = MissilesData[t].mResist;
 	int mor = monster.mMagicRes;
 	if (((mor & IMMUNE_MAGIC) != 0 && mir == MISR_MAGIC)
 	    || ((mor & IMMUNE_FIRE) != 0 && mir == MISR_FIRE)
@@ -1053,7 +1053,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		return false;
 	}
 
-	if ((player._pSpellFlags & 1) != 0 && MissileData[mtype].mType == 0) {
+	if ((player._pSpellFlags & 1) != 0 && MissilesData[mtype].mType == 0) {
 		return false;
 	}
 
@@ -1063,7 +1063,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 		hit = 1000;
 #endif
 	int hper = 40;
-	if (MissileData[mtype].mType == 0) {
+	if (MissilesData[mtype].mType == 0) {
 		int tac = player.GetArmor();
 		if (monster != nullptr) {
 			hper = monster->mHit
@@ -1102,7 +1102,7 @@ bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missil
 	blkper = clamp(blkper, 0, 100);
 
 	int8_t resper;
-	switch (MissileData[mtype].mResist) {
+	switch (MissilesData[mtype].mResist) {
 	case MISR_FIRE:
 		resper = player._pFireResist;
 		break;
@@ -2838,7 +2838,7 @@ int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy
 
 	memset(&missile, 0, sizeof(missile));
 
-	auto &missileData = MissileData[mitype];
+	auto &missileData = MissilesData[mitype];
 
 	missile._mitype = mitype;
 	missile._micaster = micaster;
@@ -2872,7 +2872,7 @@ void MI_LArrow(Missile &missile)
 	int p = missile._misource;
 	if (missile._miAnimType == MFILE_MINILTNG || missile._miAnimType == MFILE_MAGBLOS) {
 		ChangeLight(missile._mlid, missile.position.tile, missile._miAnimFrame + 5);
-		missile_resistance rst = MissileData[missile._mitype].mResist;
+		missile_resistance rst = MissilesData[missile._mitype].mResist;
 		if (missile._mitype == MIS_LARROW) {
 			int mind;
 			int maxd;
@@ -2883,7 +2883,7 @@ void MI_LArrow(Missile &missile)
 				mind = GenerateRnd(10) + 1 + currlevel;
 				maxd = GenerateRnd(10) + 1 + currlevel * 2;
 			}
-			MissileData[MIS_LARROW].mResist = MISR_LIGHTNING;
+			MissilesData[MIS_LARROW].mResist = MISR_LIGHTNING;
 			CheckMissileCol(missile, mind, maxd, false, missile.position.tile, true);
 		}
 		if (missile._mitype == MIS_FARROW) {
@@ -2896,10 +2896,10 @@ void MI_LArrow(Missile &missile)
 				mind = GenerateRnd(10) + 1 + currlevel;
 				maxd = GenerateRnd(10) + 1 + currlevel * 2;
 			}
-			MissileData[MIS_FARROW].mResist = MISR_FIRE;
+			MissilesData[MIS_FARROW].mResist = MISR_FIRE;
 			CheckMissileCol(missile, mind, maxd, false, missile.position.tile, true);
 		}
-		MissileData[missile._mitype].mResist = rst;
+		MissilesData[missile._mitype].mResist = rst;
 	} else {
 		missile._midist++;
 		missile.position.traveled += missile.position.velocity;
@@ -2921,10 +2921,10 @@ void MI_LArrow(Missile &missile)
 		}
 
 		if (missile.position.tile != missile.position.start) {
-			missile_resistance rst = MissileData[missile._mitype].mResist;
-			MissileData[missile._mitype].mResist = MISR_NONE;
+			missile_resistance rst = MissilesData[missile._mitype].mResist;
+			MissilesData[missile._mitype].mResist = MISR_NONE;
 			CheckMissileCol(missile, mind, maxd, false, missile.position.tile, false);
-			MissileData[missile._mitype].mResist = rst;
+			MissilesData[missile._mitype].mResist = rst;
 		}
 		if (missile._mirange == 0) {
 			missile._mimfnum = 0;
@@ -3680,11 +3680,11 @@ void MI_Weapexp(Missile &missile)
 	if (missile.var2 == 1) {
 		mind = Players[id]._pIFMinDam;
 		maxd = Players[id]._pIFMaxDam;
-		MissileData[missile._mitype].mResist = MISR_FIRE;
+		MissilesData[missile._mitype].mResist = MISR_FIRE;
 	} else {
 		mind = Players[id]._pILMinDam;
 		maxd = Players[id]._pILMaxDam;
-		MissileData[missile._mitype].mResist = MISR_LIGHTNING;
+		MissilesData[missile._mitype].mResist = MISR_LIGHTNING;
 	}
 	CheckMissileCol(missile, mind, maxd, false, missile.position.tile, false);
 	if (missile.var1 == 0) {
@@ -4323,8 +4323,8 @@ void ProcessMissiles()
 
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		auto &missile = Missiles[ActiveMissiles[i]];
-		if (MissileData[missile._mitype].mProc != nullptr)
-			MissileData[missile._mitype].mProc(missile);
+		if (MissilesData[missile._mitype].mProc != nullptr)
+			MissilesData[missile._mitype].mProc(missile);
 		if (missile._miAnimFlags == MissileDataFlags::NotAnimated)
 			continue;
 
