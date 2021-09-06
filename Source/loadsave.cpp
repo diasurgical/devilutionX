@@ -360,8 +360,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player._pScrlSpells = file.NextLE<uint64_t>();
 	player._pSpellFlags = file.NextLE<uint8_t>();
 	file.Skip(3); // Alignment
+
 	for (auto &spell : player._pSplHotKey)
 		spell = static_cast<spell_id>(file.NextLE<int32_t>());
+
 	for (auto &spellType : player._pSplTHotKey)
 		spellType = static_cast<spell_type>(file.NextLE<int8_t>());
 
@@ -418,8 +420,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.offset2.deltaX = file.NextLE<int32_t>();
 	player.position.offset2.deltaY = file.NextLE<int32_t>();
 	file.Skip(4); // Skip actionFrame
+
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		player._pLvlVisited[i] = file.NextBool8();
+
 	for (uint8_t i = 0; i < giNumberOfLevels; i++)
 		player._pSLvlVisited[i] = file.NextBool8();
 
@@ -453,13 +457,18 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 	for (Item &item : player.InvBody)
 		LoadItemData(file, item);
+
 	for (Item &item : player.InvList)
 		LoadItemData(file, item);
+
 	player._pNumInv = file.NextLE<int32_t>();
+
 	for (int8_t &cell : player.InvGrid)
 		cell = file.NextLE<int8_t>();
+
 	for (Item &item : player.SpdList)
 		LoadItemData(file, item);
+
 	LoadItemData(file, player.HoldItem);
 
 	player._pIMinDam = file.NextLE<int32_t>();
@@ -1016,16 +1025,20 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(3); // Alignment
 	file.WriteLE<int32_t>(player._pSBkSpell);
 	file.Skip<int8_t>(); // Skip _pSBkSplType
+
 	for (int8_t spellLevel : player._pSplLvl)
 		file.WriteLE<int8_t>(spellLevel);
+
 	file.Skip(7); // Alignment
 	file.WriteLE<uint64_t>(player._pMemSpells);
 	file.WriteLE<uint64_t>(player._pAblSpells);
 	file.WriteLE<uint64_t>(player._pScrlSpells);
 	file.WriteLE<uint8_t>(player._pSpellFlags);
 	file.Skip(3); // Alignment
+
 	for (auto &spellId : player._pSplHotKey)
 		file.WriteLE<int32_t>(spellId);
+
 	for (auto &spellType : player._pSplTHotKey)
 		file.WriteLE<int8_t>(spellType);
 
@@ -1117,13 +1130,18 @@ void SavePlayer(SaveHelper &file, const Player &player)
 
 	for (const Item &item : player.InvBody)
 		SaveItem(file, item);
+
 	for (const Item &item : player.InvList)
 		SaveItem(file, item);
+
 	file.WriteLE<int32_t>(player._pNumInv);
+
 	for (int8_t cell : player.InvGrid)
 		file.WriteLE<int8_t>(cell);
+
 	for (const Item &item : player.SpdList)
 		SaveItem(file, item);
+
 	SaveItem(file, player.HoldItem);
 
 	file.WriteLE<int32_t>(player._pIMinDam);
