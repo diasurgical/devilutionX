@@ -3786,7 +3786,7 @@ void MI_Stone(Missile &missile)
 			monster._mmode = static_cast<MonsterMode>(missile.var1);
 			monster.AnimInfo.IsPetrified = false;
 		} else {
-			AddDead(monster.position.tile, stonendx, monster._mdir);
+			AddCorpse(monster.position.tile, stonendx, monster._mdir);
 		}
 	}
 	if (missile._miAnimType == MFILE_SHATTER1)

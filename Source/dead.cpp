@@ -71,7 +71,7 @@ void InitCorpses()
 	assert(static_cast<unsigned>(nd) <= MaxCorpses);
 }
 
-void AddDead(Point tilePosition, int8_t dv, Direction ddir)
+void AddCorpse(Point tilePosition, int8_t dv, Direction ddir)
 {
 	dDead[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
 }

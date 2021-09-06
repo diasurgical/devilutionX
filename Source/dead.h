@@ -26,7 +26,7 @@ extern Corpse Corpses[MaxCorpses];
 extern int8_t stonendx;
 
 void InitCorpses();
-void AddDead(Point tilePosition, int8_t dv, Direction ddir);
+void AddCorpse(Point tilePosition, int8_t dv, Direction ddir);
 void SyncUniqDead();
 
 } // namespace devilution

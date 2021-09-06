@@ -1822,9 +1822,9 @@ bool MonsterDeath(int i)
 			PrepDoEnding();
 	} else if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames) {
 		if (monster._uniqtype == 0)
-			AddDead(monster.position.tile, monster.MType->mdeadval, monster._mdir);
+			AddCorpse(monster.position.tile, monster.MType->mdeadval, monster._mdir);
 		else
-			AddDead(monster.position.tile, monster._udeadval, monster._mdir);
+			AddCorpse(monster.position.tile, monster._udeadval, monster._mdir);
 
 		dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 		monster._mDelFlag = true;
