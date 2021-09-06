@@ -1792,7 +1792,7 @@ void LoadGame(bool firstflag)
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dDead[i][j] = file.NextLE<int8_t>();
+				dCorpse[i][j] = file.NextLE<int8_t>();
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -1987,7 +1987,7 @@ void SaveGameData()
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dDead[i][j]);
+				file.WriteLE<int8_t>(dCorpse[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2045,7 +2045,7 @@ void SaveLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(dDead[i][j]);
+				file.WriteLE<int8_t>(dCorpse[i][j]);
 		}
 	}
 
@@ -2123,7 +2123,7 @@ void LoadLevel()
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-				dDead[i][j] = file.NextLE<int8_t>();
+				dCorpse[i][j] = file.NextLE<int8_t>();
 		}
 		SyncUniqDead();
 	}

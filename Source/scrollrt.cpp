@@ -829,7 +829,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	DrawCell(out, tilePosition, targetBufferPosition);
 
 	int8_t bFlag = dFlags[tilePosition.x][tilePosition.y];
-	int8_t bDead = dDead[tilePosition.x][tilePosition.y];
+	int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
 	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
 	int negMon = 0;

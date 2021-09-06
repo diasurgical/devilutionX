@@ -9,11 +9,11 @@ using namespace devilution;
 TEST(Corpses, AddCorpse)
 {
 	AddCorpse({ 21, 48 }, 8, DIR_W);
-	EXPECT_EQ(dDead[21][48], 8 + (DIR_W << 5));
+	EXPECT_EQ(dCorpse[21][48], 8 + (DIR_W << 5));
 }
 
 TEST(Corpses, AddCorpse_OOB)
 {
 	AddCorpse({ 21, 48 }, MaxCorpses + 1, DIR_W);
-	EXPECT_EQ(dDead[21][48], 0 + (DIR_W << 5));
+	EXPECT_EQ(dCorpse[21][48], 0 + (DIR_W << 5));
 }

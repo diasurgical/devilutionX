@@ -73,7 +73,7 @@ void InitCorpses()
 
 void AddCorpse(Point tilePosition, int8_t dv, Direction ddir)
 {
-	dDead[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
+	dCorpse[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (ddir << 5);
 }
 
 void SyncUniqDead()
@@ -84,7 +84,7 @@ void SyncUniqDead()
 			continue;
 		for (int dx = 0; dx < MAXDUNX; dx++) {
 			for (int dy = 0; dy < MAXDUNY; dy++) {
-				if ((dDead[dx][dy] & 0x1F) == monster._udeadval)
+				if ((dCorpse[dx][dy] & 0x1F) == monster._udeadval)
 					ChangeLightXY(monster.mlid, { dx, dy });
 			}
 		}
