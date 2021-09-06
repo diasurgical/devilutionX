@@ -1689,7 +1689,8 @@ void AddRing(Missile &missile, Point /*dst*/, Direction /*midir*/)
 
 void AddSearch(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
-	AutoMapShowItems = true;
+	if (missile._misource == MyPlayerId)
+		AutoMapShowItems = true;
 	int lvl = 2;
 	if (missile._misource >= 0)
 		lvl = Players[missile._misource]._pLevel * 2;
@@ -3332,7 +3333,8 @@ void MI_Search(Missile &missile)
 
 	missile._miDelFlag = true;
 	PlaySfxLoc(IS_CAST7, Players[missile._misource].position.tile);
-	AutoMapShowItems = false;
+	if (missile._misource == MyPlayerId)
+		AutoMapShowItems = false;
 }
 
 void MI_LightningWallC(Missile &missile)
