@@ -385,7 +385,7 @@ void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int lea
 void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 {
 	auto &monster = Monsters[ActiveMonsterCount];
-	const auto &uniqueData = UniqMonst[uniqindex];
+	const auto &uniqueMonsterData = UniqueMonstersData[uniqindex];
 
 	if ((uniquetrans + 19) * 256 >= LIGHTSIZE) {
 		return;
@@ -393,7 +393,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	int uniqtype;
 	for (uniqtype = 0; uniqtype < LevelMonsterTypeCount; uniqtype++) {
-		if (LevelMonsterTypes[uniqtype].mtype == uniqueData.mtype) {
+		if (LevelMonsterTypes[uniqtype].mtype == uniqueMonsterData.mtype) {
 			break;
 		}
 	}
@@ -494,28 +494,28 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	PlaceMonster(ActiveMonsterCount, uniqtype, xp, yp);
 	monster._uniqtype = uniqindex + 1;
 
-	if (uniqueData.mlevel != 0) {
-		monster.mLevel = 2 * uniqueData.mlevel;
+	if (uniqueMonsterData.mlevel != 0) {
+		monster.mLevel = 2 * uniqueMonsterData.mlevel;
 	} else {
 		monster.mLevel = monster.MData->mLevel + 5;
 	}
 
 	monster.mExp *= 2;
-	monster.mName = _(uniqueData.mName);
-	monster._mmaxhp = uniqueData.mmaxhp << 6;
+	monster.mName = _(uniqueMonsterData.mName);
+	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
 		monster._mmaxhp = std::max(monster._mmaxhp / 2, 64);
 
 	monster._mhitpoints = monster._mmaxhp;
-	monster._mAi = uniqueData.mAi;
-	monster._mint = uniqueData.mint;
-	monster.mMinDamage = uniqueData.mMinDamage;
-	monster.mMaxDamage = uniqueData.mMaxDamage;
-	monster.mMinDamage2 = uniqueData.mMinDamage;
-	monster.mMaxDamage2 = uniqueData.mMaxDamage;
-	monster.mMagicRes = uniqueData.mMagicRes;
-	monster.mtalkmsg = uniqueData.mtalkmsg;
+	monster._mAi = uniqueMonsterData.mAi;
+	monster._mint = uniqueMonsterData.mint;
+	monster.mMinDamage = uniqueMonsterData.mMinDamage;
+	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
+	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
+	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
+	monster.mMagicRes = uniqueMonsterData.mMagicRes;
+	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
 		monster.mlid = NO_LIGHT; // BUGFIX monsters initial light id should be -1 (fixed)
 	else
@@ -562,14 +562,14 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	char filestr[64];
-	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueData.mTrnName);
+	sprintf(filestr, "Monsters\\Monsters\\%s.TRN", uniqueMonsterData.mTrnName);
 	LoadFileInMem(filestr, &LightTables[256 * (uniquetrans + 19)], 256);
 
 	monster._uniqtrans = uniquetrans++;
 
-	if (uniqueData.customHitpoints != 0) {
-		monster.mHit = uniqueData.customHitpoints;
-		monster.mHit2 = uniqueData.customHitpoints;
+	if (uniqueMonsterData.customHitpoints != 0) {
+		monster.mHit = uniqueMonsterData.customHitpoints;
+		monster.mHit2 = uniqueMonsterData.customHitpoints;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mHit += NIGHTMARE_TO_HIT_BONUS;
@@ -579,8 +579,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 			monster.mHit2 += HELL_TO_HIT_BONUS;
 		}
 	}
-	if (uniqueData.customArmorClass != 0) {
-		monster.mArmorClass = uniqueData.customArmorClass;
+	if (uniqueMonsterData.customArmorClass != 0) {
+		monster.mArmorClass = uniqueMonsterData.customArmorClass;
 
 		if (sgGameInitInfo.nDifficulty == DIFF_NIGHTMARE) {
 			monster.mArmorClass += NIGHTMARE_AC_BONUS;
@@ -591,8 +591,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 
 	ActiveMonsterCount++;
 
-	if (uniqueData.monsterPack != UniqueMonsterPack::None) {
-		PlaceGroup(miniontype, bosspacksize, uniqueData.monsterPack, ActiveMonsterCount - 1);
+	if (uniqueMonsterData.monsterPack != UniqueMonsterPack::None) {
+		PlaceGroup(miniontype, bosspacksize, uniqueMonsterData.monsterPack, ActiveMonsterCount - 1);
 	}
 
 	if (monster._mAi != AI_GARG) {
@@ -660,13 +660,13 @@ void ClrAllMonsters()
 
 void PlaceUniqueMonsters()
 {
-	for (int u = 0; UniqMonst[u].mtype != -1; u++) {
-		if (UniqMonst[u].mlevel != currlevel)
+	for (int u = 0; UniqueMonstersData[u].mtype != -1; u++) {
+		if (UniqueMonstersData[u].mlevel != currlevel)
 			continue;
 		bool done = false;
 		int mt;
 		for (mt = 0; mt < LevelMonsterTypeCount; mt++) {
-			done = (LevelMonsterTypes[mt].mtype == UniqMonst[u].mtype);
+			done = (LevelMonsterTypes[mt].mtype == UniqueMonstersData[u].mtype);
 			if (done)
 				break;
 		}
@@ -725,18 +725,18 @@ void PlaceQuestMonsters()
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
 			SetMapMonsters(dunData.get(), Point { setpc_x, setpc_y } * 2);
-			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_SCATTER);
+			AddMonsterType(UniqueMonstersData[UMT_WARLORD].mtype, PLACE_SCATTER);
 		}
 		if (Quests[Q_VEIL].IsAvailable()) {
-			AddMonsterType(UniqMonst[UMT_LACHDAN].mtype, PLACE_SCATTER);
+			AddMonsterType(UniqueMonstersData[UMT_LACHDAN].mtype, PLACE_SCATTER);
 		}
 		if (Quests[Q_ZHAR].IsAvailable() && zharlib == -1) {
 			Quests[Q_ZHAR]._qactive = QUEST_NOTAVAIL;
 		}
 
 		if (currlevel == Quests[Q_BETRAYER]._qlevel && gbIsMultiplayer) {
-			AddMonsterType(UniqMonst[UMT_LAZARUS].mtype, PLACE_UNIQUE);
-			AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_RED_VEX].mtype, PLACE_UNIQUE);
 			PlaceUniqueMonst(UMT_LAZARUS, 0, 0);
 			PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 			PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
@@ -748,7 +748,7 @@ void PlaceQuestMonsters()
 			UberDiabloMonsterIndex = -1;
 			int i1;
 			for (i1 = 0; i1 < LevelMonsterTypeCount; i1++) {
-				if (LevelMonsterTypes[i1].mtype == UniqMonst[UMT_NAKRUL].mtype)
+				if (LevelMonsterTypes[i1].mtype == UniqueMonstersData[UMT_NAKRUL].mtype)
 					break;
 			}
 
@@ -3611,15 +3611,15 @@ void GetLevelMTypes()
 		if (Quests[Q_BUTCHER].IsAvailable())
 			AddMonsterType(MT_CLEAVER, PLACE_SPECIAL);
 		if (Quests[Q_GARBUD].IsAvailable())
-			AddMonsterType(UniqMonst[UMT_GARBUD].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_GARBUD].mtype, PLACE_UNIQUE);
 		if (Quests[Q_ZHAR].IsAvailable())
-			AddMonsterType(UniqMonst[UMT_ZHAR].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_ZHAR].mtype, PLACE_UNIQUE);
 		if (Quests[Q_LTBANNER].IsAvailable())
-			AddMonsterType(UniqMonst[UMT_SNOTSPIL].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_SNOTSPIL].mtype, PLACE_UNIQUE);
 		if (Quests[Q_VEIL].IsAvailable())
-			AddMonsterType(UniqMonst[UMT_LACHDAN].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_LACHDAN].mtype, PLACE_UNIQUE);
 		if (Quests[Q_WARLORD].IsAvailable())
-			AddMonsterType(UniqMonst[UMT_WARLORD].mtype, PLACE_UNIQUE);
+			AddMonsterType(UniqueMonstersData[UMT_WARLORD].mtype, PLACE_UNIQUE);
 
 		if (gbIsMultiplayer && currlevel == Quests[Q_SKELKING]._qlevel) {
 
@@ -3863,9 +3863,9 @@ void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 		AddMonster(GolemHoldingCell, DIR_S, 0, false);
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		AddMonsterType(UniqMonst[UMT_LAZARUS].mtype, PLACE_UNIQUE);
-		AddMonsterType(UniqMonst[UMT_RED_VEX].mtype, PLACE_UNIQUE);
-		AddMonsterType(UniqMonst[UMT_BLACKJADE].mtype, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonstersData[UMT_RED_VEX].mtype, PLACE_UNIQUE);
+		AddMonsterType(UniqueMonstersData[UMT_BLACKJADE].mtype, PLACE_UNIQUE);
 		PlaceUniqueMonst(UMT_LAZARUS, 0, 0);
 		PlaceUniqueMonst(UMT_RED_VEX, 0, 0);
 		PlaceUniqueMonst(UMT_BLACKJADE, 0, 0);
@@ -4426,7 +4426,7 @@ bool DirOK(int i, Direction mdir)
 	if (monster.leaderRelation == LeaderRelation::Leashed) {
 		return futurePosition.WalkingDistance(Monsters[monster.leader].position.future) < 4;
 	}
-	if (monster._uniqtype == 0 || UniqMonst[monster._uniqtype - 1].monsterPack != UniqueMonsterPack::Leashed)
+	if (monster._uniqtype == 0 || UniqueMonstersData[monster._uniqtype - 1].monsterPack != UniqueMonsterPack::Leashed)
 		return true;
 	int mcount = 0;
 	for (int x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
@@ -4537,7 +4537,7 @@ void SyncMonsterAnim(Monster &monster)
 	monster.MType = &LevelMonsterTypes[monster._mMTidx];
 	monster.MData = LevelMonsterTypes[monster._mMTidx].MData;
 	if (monster._uniqtype != 0)
-		monster.mName = _(UniqMonst[monster._uniqtype - 1].mName);
+		monster.mName = _(UniqueMonstersData[monster._uniqtype - 1].mName);
 	else
 		monster.mName = _(monster.MData->mName);
 	int mdir = monster._mdir;

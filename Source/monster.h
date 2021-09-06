@@ -45,7 +45,7 @@ enum monster_flag : uint16_t {
 	// clang-format on
 };
 
-/** this enum contains indexes from UniqMonst array for special unique monsters (usually quest related) */
+/** this enum contains indexes from UniqueMonstersData array for special unique monsters (usually quest related) */
 enum : uint8_t {
 	UMT_GARBUD,
 	UMT_SKELKING,

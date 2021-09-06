@@ -466,7 +466,7 @@ const char MonstAvailTbl[] = {
 	MAT_NEVER,  // Na-Krul
 };
 /** Contains the data related to each unique monster ID. */
-const UniqMonstStruct UniqMonst[] = {
+const UniqueMonsterData UniqueMonstersData[] = {
 	// clang-format off
 	// mtype,       mName,                          mTrnName,    mlevel, mmaxhp, mAi,      mint, mMinDamage, mMaxDamage, mMagicRes,                                                    monsterPack, customHitpoints, customArmorClass, mtalkmsg
 	// TRANSLATORS: Unique Monster Block start
