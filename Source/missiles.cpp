@@ -1523,7 +1523,7 @@ void AddWarp(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		TriggerStruct *trg = &trigs[i];
 		if (trg->_tmsg == WM_DIABTWARPUP || trg->_tmsg == WM_DIABPREVLVL || trg->_tmsg == WM_DIABNEXTLVL || trg->_tmsg == WM_DIABRTNLVL) {
 			Point candidate = trg->position;
-			if ((leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CATACOMBS) && (trg->_tmsg == WM_DIABNEXTLVL || trg->_tmsg == WM_DIABPREVLVL || trg->_tmsg == WM_DIABRTNLVL)) {
+			if ((leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CRYPT) && (trg->_tmsg == WM_DIABNEXTLVL || trg->_tmsg == WM_DIABPREVLVL || trg->_tmsg == WM_DIABRTNLVL)) {
 				candidate += Displacement { 0, 1 };
 			} else {
 				candidate += Displacement { 1, 0 };

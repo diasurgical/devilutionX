@@ -152,7 +152,7 @@ bool TFit_Obj5(int t)
 
 bool TFit_SkelRoom(int t)
 {
-	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS && leveltype != DTYPE_CRYPT) {
 		return false;
 	}
 
@@ -219,7 +219,7 @@ bool CheckThemeReqs(theme_id t)
 	case THEME_SHRINE:
 	case THEME_SKELROOM:
 	case THEME_LIBRARY:
-		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
+		if (leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL || leveltype == DTYPE_NEST) {
 			return false;
 		}
 		break;
@@ -234,7 +234,7 @@ bool CheckThemeReqs(theme_id t)
 		}
 		break;
 	case THEME_ARMORSTAND:
-		if (leveltype == DTYPE_CATHEDRAL) {
+		if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
 			return false;
 		}
 		break;
@@ -254,7 +254,7 @@ bool CheckThemeReqs(theme_id t)
 		}
 		break;
 	case THEME_WEAPONRACK:
-		if (leveltype == DTYPE_CATHEDRAL) {
+		if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
 			return false;
 		}
 		break;
@@ -405,7 +405,7 @@ void InitThemes()
 	if (currlevel == 16)
 		return;
 
-	if (leveltype == DTYPE_CATHEDRAL) {
+	if (leveltype == DTYPE_CATHEDRAL || leveltype == DTYPE_CRYPT) {
 		for (size_t i = 0; i < 256 && numthemes < MAXTHEMES; i++) {
 			if (CheckThemeRoom(i)) {
 				themes[numthemes].ttval = i;
@@ -418,7 +418,7 @@ void InitThemes()
 			}
 		}
 	}
-	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL) {
+	if (leveltype == DTYPE_CATACOMBS || leveltype == DTYPE_CAVES || leveltype == DTYPE_HELL || leveltype == DTYPE_NEST) {
 		for (int i = 0; i < themeCount; i++)
 			themes[i].ttype = THEME_NONE;
 		if (Quests[Q_ZHAR].IsAvailable()) {
@@ -450,7 +450,7 @@ void HoldThemeRooms()
 	if (currlevel == 16)
 		return;
 
-	if (leveltype != DTYPE_CATHEDRAL) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) {
 		DRLG_HoldThemeRooms();
 		return;
 	}
@@ -675,7 +675,7 @@ void Theme_Treasure(int t)
 				}
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
 					int i = ItemNoFlippy();
-					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL) {
+					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) {
 						Items[i]._ivalue /= 2;
 					}
 				}

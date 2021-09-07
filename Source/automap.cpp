@@ -499,14 +499,14 @@ std::unique_ptr<AutomapTile[]> LoadAutomapData(size_t &tileCount)
 {
 	switch (leveltype) {
 	case DTYPE_CATHEDRAL:
-		if (currlevel < 21)
-			return LoadFileInMem<AutomapTile>("Levels\\L1Data\\L1.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("Levels\\L1Data\\L1.AMP", &tileCount);
+	case DTYPE_CRYPT:
 		return LoadFileInMem<AutomapTile>("NLevels\\L5Data\\L5.AMP", &tileCount);
 	case DTYPE_CATACOMBS:
 		return LoadFileInMem<AutomapTile>("Levels\\L2Data\\L2.AMP", &tileCount);
 	case DTYPE_CAVES:
-		if (currlevel < 17)
-			return LoadFileInMem<AutomapTile>("Levels\\L3Data\\L3.AMP", &tileCount);
+		return LoadFileInMem<AutomapTile>("Levels\\L3Data\\L3.AMP", &tileCount);
+	case DTYPE_NEST:
 		return LoadFileInMem<AutomapTile>("NLevels\\L6Data\\L6.AMP", &tileCount);
 	case DTYPE_HELL:
 		return LoadFileInMem<AutomapTile>("Levels\\L4Data\\L4.AMP", &tileCount);

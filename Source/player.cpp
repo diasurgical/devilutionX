@@ -2819,7 +2819,7 @@ void PlrClrTrans(Point position)
 
 void PlrDoTrans(Point position)
 {
-	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS) {
+	if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CATACOMBS && leveltype != DTYPE_CRYPT) {
 		TransList[1] = true;
 		return;
 	}

@@ -299,7 +299,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
-	return leveltype != DTYPE_CATHEDRAL || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
+	return (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT) || dPiece[xp][yp] <= 126 || dPiece[xp][yp] >= 144;
 }
 
 bool CanPlaceWallTrap(int xp, int yp)
@@ -536,6 +536,19 @@ void AddCryptObjects(int x1, int y1, int x2, int y2)
 }
 
 void AddL3Objs(int x1, int y1, int x2, int y2)
+{
+	for (int j = y1; j < y2; j++) {
+		for (int i = x1; i < x2; i++) {
+			int pn = dPiece[i][j];
+			if (pn == 531)
+				AddObject(OBJ_L3LDOOR, { i, j });
+			if (pn == 534)
+				AddObject(OBJ_L3RDOOR, { i, j });
+		}
+	}
+}
+
+void AddL6Objs(int x1, int y1, int x2, int y2)
 {
 	for (int j = y1; j < y2; j++) {
 		for (int i = x1; i < x2; i++) {
@@ -4487,10 +4500,17 @@ void InitObjects()
 			if (Quests[Q_LTBANNER].IsAvailable())
 				AddObject(OBJ_SIGNCHEST, { 2 * setpc_x + 26, 2 * setpc_y + 19 });
 			InitRndLocBigObj(10, 15, OBJ_SARC);
+			AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+			InitRndBarrels();
 			if (currlevel >= 21)
 				AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
 			else
 				AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
+			InitRndBarrels();
+		}
+		if (leveltype == DTYPE_CRYPT) {
+			InitRndLocBigObj(10, 15, OBJ_SARC);
+			AddCryptObjects(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
 		if (leveltype == DTYPE_CATACOMBS) {
@@ -4558,6 +4578,10 @@ void InitObjects()
 			AddL3Objs(0, 0, MAXDUNX, MAXDUNY);
 			InitRndBarrels();
 		}
+		if (leveltype == DTYPE_NEST) {
+			AddL6Objs(0, 0, MAXDUNX, MAXDUNY);
+			InitRndBarrels();
+		}
 		if (leveltype == DTYPE_HELL) {
 			if (Quests[Q_WARLORD].IsAvailable()) {
 				_speech_id spId;
@@ -4595,7 +4619,7 @@ void InitObjects()
 		InitRndLocObj(1, 5, OBJ_CHEST3);
 		if (leveltype != DTYPE_HELL)
 			AddObjTraps();
-		if (leveltype > DTYPE_CATHEDRAL)
+		if (leveltype != DTYPE_CATHEDRAL && leveltype != DTYPE_CRYPT)
 			AddChestTraps();
 		ApplyObjectLighting = false;
 	}
@@ -4995,7 +5019,7 @@ void ObjChangeMap(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
+	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 		AddL1Objs(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
@@ -5013,7 +5037,7 @@ void ObjChangeMapResync(int x1, int y1, int x2, int y2)
 			dungeon[i][j] = pdungeon[i][j];
 		}
 	}
-	if (leveltype == DTYPE_CATHEDRAL && currlevel < 17) {
+	if (leveltype == DTYPE_CATHEDRAL) {
 		ObjL1Special(2 * x1 + 16, 2 * y1 + 16, 2 * x2 + 17, 2 * y2 + 17);
 	}
 	if (leveltype == DTYPE_CATACOMBS) {
