@@ -58,6 +58,14 @@ struct AnyOfHelper {
 		    [&](auto... vals) { return ((lhs == vals) || ...); },
 		    rhs.values);
 	}
+
+	template <typename T>
+	[[nodiscard]] friend constexpr bool operator!=(T lhs, AnyOfHelper const &rhs) noexcept
+	{
+		return std::apply(
+		    [&](auto... vals) { return ((lhs != vals) && ...); },
+		    rhs.values);
+	}
 };
 
 } // namespace
@@ -66,10 +74,15 @@ struct AnyOfHelper {
  * @brief Wraps a series of constant values for allowing multiple comparisons with a single target using the form
  * 
  * 'if (x == AnyOf(a, b, c))'
+ * or
+ * 'if (x != AnyOf(a, b, c))'
  * 
  * as a shorthand for
  * 
  * 'if (x == a || x == b || x == c)'
+ * and
+ * 'if (x != a && x != b && x != c)'
+ * respectively.
  *
  * Based on the implementation shared here:
  * https://stackoverflow.com/a/60131309/1946412
