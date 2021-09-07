@@ -141,7 +141,7 @@ void UnPackItem(const ItemPack *is, Item *id, bool isHellfire)
 	auto &item = Items[MAXITEMS];
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(is->idx));
 	if (idx == IDI_NONE) {
-		id->_itype = ITYPE_NONE;
+		id->_itype = ItemType::None;
 		return;
 	}
 
@@ -153,7 +153,7 @@ void UnPackItem(const ItemPack *is, Item *id, bool isHellfire)
 	}
 
 	if (!IsItemAvailable(idx)) {
-		id->_itype = ITYPE_NONE;
+		id->_itype = ItemType::None;
 		return;
 	}
 
@@ -253,7 +253,7 @@ void UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 
 	if (&player == &Players[MyPlayerId]) {
 		for (int i = 0; i < 20; i++)
-			witchitem[i]._itype = ITYPE_NONE;
+			witchitem[i]._itype = ItemType::None;
 	}
 
 	CalcPlrInv(player, false);

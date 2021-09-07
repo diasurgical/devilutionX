@@ -1492,7 +1492,7 @@ void AddStealPotions(Missile &missile, Point /*dst*/, Direction /*midir*/)
 			bool hasPlayedSFX = false;
 			for (int si = 0; si < MAXBELTITEMS; si++) {
 				int ii = -1;
-				if (player.SpdList[si]._itype == ITYPE_MISC) {
+				if (player.SpdList[si]._itype == ItemType::Misc) {
 					if (GenerateRnd(2) == 0)
 						continue;
 					switch (player.SpdList[si]._iMiscId) {

@@ -2451,17 +2451,17 @@ void OperateSlainHero(int pnum, int i)
 	auto &player = Players[pnum];
 
 	if (player._pClass == HeroClass::Warrior) {
-		CreateMagicArmor(Objects[i].position, ITYPE_HARMOR, ICURS_BREAST_PLATE, false, true);
+		CreateMagicArmor(Objects[i].position, ItemType::HeavyArmor, ICURS_BREAST_PLATE, false, true);
 	} else if (player._pClass == HeroClass::Rogue) {
-		CreateMagicWeapon(Objects[i].position, ITYPE_BOW, ICURS_LONG_WAR_BOW, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Bow, ICURS_LONG_WAR_BOW, false, true);
 	} else if (player._pClass == HeroClass::Sorcerer) {
 		CreateSpellBook(Objects[i].position, SPL_LIGHTNING, false, true);
 	} else if (player._pClass == HeroClass::Monk) {
-		CreateMagicWeapon(Objects[i].position, ITYPE_STAFF, ICURS_WAR_STAFF, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Staff, ICURS_WAR_STAFF, false, true);
 	} else if (player._pClass == HeroClass::Bard) {
-		CreateMagicWeapon(Objects[i].position, ITYPE_SWORD, ICURS_BASTARD_SWORD, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Sword, ICURS_BASTARD_SWORD, false, true);
 	} else if (player._pClass == HeroClass::Barbarian) {
-		CreateMagicWeapon(Objects[i].position, ITYPE_AXE, ICURS_BATTLE_AXE, false, true);
+		CreateMagicWeapon(Objects[i].position, ItemType::Axe, ICURS_BATTLE_AXE, false, true);
 	}
 	Players[MyPlayerId].Say(HeroSpeech::RestInPeaceMyFriend);
 	if (pnum == MyPlayerId)
@@ -2673,20 +2673,20 @@ bool OperateShrineGloomy(int pnum)
 	// Increment armor class by 2 and decrements max damage by 1.
 	for (Item &item : PlayerItemsRange(player)) {
 		switch (item._itype) {
-		case ITYPE_SWORD:
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_STAFF:
+		case ItemType::Sword:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Staff:
 			item._iMaxDam--;
 			if (item._iMaxDam < item._iMinDam)
 				item._iMaxDam = item._iMinDam;
 			break;
-		case ITYPE_SHIELD:
-		case ITYPE_HELM:
-		case ITYPE_LARMOR:
-		case ITYPE_MARMOR:
-		case ITYPE_HARMOR:
+		case ItemType::Shield:
+		case ItemType::Helm:
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
+		case ItemType::HeavyArmor:
 			item._iAC += 2;
 			break;
 		default:
@@ -2708,18 +2708,18 @@ bool OperateShrineWeird(int pnum)
 
 	auto &player = Players[pnum];
 
-	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_SHIELD)
+	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
 		player.InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
-	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_SHIELD)
+	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
 		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
 
 	for (int j = 0; j < player._pNumInv; j++) {
 		switch (player.InvList[j]._itype) {
-		case ITYPE_SWORD:
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_STAFF:
+		case ItemType::Sword:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Staff:
 			player.InvList[j]._iMaxDam++;
 			break;
 		default:
@@ -2767,15 +2767,15 @@ bool OperateShrineStone(int pnum)
 	auto &player = Players[pnum];
 
 	for (auto &item : player.InvBody) {
-		if (item._itype == ITYPE_STAFF)
+		if (item._itype == ItemType::Staff)
 			item._iCharges = item._iMaxCharges;
 	}
 	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._itype == ITYPE_STAFF)
+		if (player.InvList[j]._itype == ItemType::Staff)
 			player.InvList[j]._iCharges = player.InvList[j]._iMaxCharges;
 	}
 	for (auto &item : player.SpdList) {
-		if (item._itype == ITYPE_STAFF)
+		if (item._itype == ItemType::Staff)
 			item._iCharges = item._iMaxCharges; // belt items don't have charges?
 	}
 
@@ -2946,7 +2946,7 @@ bool OperateShrineEldritch(int pnum)
 	auto &player = Players[pnum];
 
 	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._itype == ITYPE_MISC) {
+		if (player.InvList[j]._itype == ItemType::Misc) {
 			if (player.InvList[j]._iMiscId == IMISC_HEAL
 			    || player.InvList[j]._iMiscId == IMISC_MANA) {
 				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
@@ -2964,7 +2964,7 @@ bool OperateShrineEldritch(int pnum)
 		}
 	}
 	for (auto &item : player.SpdList) {
-		if (item._itype == ITYPE_MISC) {
+		if (item._itype == ItemType::Misc) {
 			if (item._iMiscId == IMISC_HEAL
 			    || item._iMiscId == IMISC_MANA) {
 				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
@@ -3020,11 +3020,11 @@ bool OperateShrineDivine(int pnum, Point spawnPosition)
 	auto &player = Players[pnum];
 
 	if (currlevel < 4) {
-		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLMANA, false, true);
-		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLHEAL, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLMANA, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLHEAL, false, true);
 	} else {
-		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
-		CreateTypeItem(spawnPosition, false, ITYPE_MISC, IMISC_FULLREJUV, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, true);
+		CreateTypeItem(spawnPosition, false, ItemType::Misc, IMISC_FULLREJUV, false, true);
 	}
 
 	player._pMana = player._pMaxMana;
@@ -3725,9 +3725,9 @@ void OperateSkelBook(int pnum, int i, bool sendmsg)
 	}
 	SetRndSeed(Objects[i]._oRndSeed);
 	if (GenerateRnd(5) != 0)
-		CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_SCROLL, sendmsg, false);
+		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_SCROLL, sendmsg, false);
 	else
-		CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
+		CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendmsg, false);
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
@@ -3746,7 +3746,7 @@ void OperateBookCase(int pnum, int i, bool sendmsg)
 		return;
 	}
 	SetRndSeed(Objects[i]._oRndSeed);
-	CreateTypeItem(Objects[i].position, false, ITYPE_MISC, IMISC_BOOK, sendmsg, false);
+	CreateTypeItem(Objects[i].position, false, ItemType::Misc, IMISC_BOOK, sendmsg, false);
 
 	if (Quests[Q_ZHAR].IsAvailable()) {
 		auto &zhar = Monsters[MAX_PLRS];
@@ -3792,15 +3792,15 @@ void OperateArmorStand(int pnum, int i, bool sendmsg)
 	SetRndSeed(Objects[i]._oRndSeed);
 	bool uniqueRnd = (GenerateRnd(2) != 0);
 	if (currlevel <= 5) {
-		CreateTypeItem(Objects[i].position, true, ITYPE_LARMOR, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, true, ItemType::LightArmor, IMISC_NONE, sendmsg, false);
 	} else if (currlevel >= 6 && currlevel <= 9) {
-		CreateTypeItem(Objects[i].position, uniqueRnd, ITYPE_MARMOR, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, uniqueRnd, ItemType::MediumArmor, IMISC_NONE, sendmsg, false);
 	} else if (currlevel >= 10 && currlevel <= 12) {
-		CreateTypeItem(Objects[i].position, false, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, false, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
 	} else if (currlevel >= 13 && currlevel <= 16) {
-		CreateTypeItem(Objects[i].position, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
 	} else if (currlevel >= 17) {
-		CreateTypeItem(Objects[i].position, true, ITYPE_HARMOR, IMISC_NONE, sendmsg, false);
+		CreateTypeItem(Objects[i].position, true, ItemType::HeavyArmor, IMISC_NONE, sendmsg, false);
 	}
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
@@ -3970,7 +3970,7 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 		return;
 	SetRndSeed(Objects[i]._oRndSeed);
 
-	ItemType weaponType { PickRandomlyAmong({ ITYPE_SWORD, ITYPE_AXE, ITYPE_BOW, ITYPE_MACE }) };
+	ItemType weaponType { PickRandomlyAmong({ ItemType::Sword, ItemType::Axe, ItemType::Bow, ItemType::Mace }) };
 
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame++;
