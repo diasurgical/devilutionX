@@ -3859,8 +3859,9 @@ void InitMonsters()
 void SetMapMonsters(const uint16_t *dunData, Point startPosition)
 {
 	AddMonsterType(MT_GOLEM, PLACE_SPECIAL);
-	for (int i = 0; i < MAX_PLRS; i++)
-		AddMonster(GolemHoldingCell, DIR_S, 0, false);
+	if (setlevel)
+		for (int i = 0; i < MAX_PLRS; i++)
+			AddMonster(GolemHoldingCell, DIR_S, 0, false);
 
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
 		AddMonsterType(UniqueMonstersData[UMT_LAZARUS].mtype, PLACE_UNIQUE);
