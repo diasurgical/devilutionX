@@ -3966,26 +3966,11 @@ bool OperateFountains(int pnum, int i)
 
 void OperateWeaponRack(int pnum, int i, bool sendmsg)
 {
-	ItemType weaponType { ItemType::ITYPE_NONE };
-
 	if (Objects[i]._oSelFlag == 0)
 		return;
 	SetRndSeed(Objects[i]._oRndSeed);
 
-	switch (GenerateRnd(4) + ITYPE_SWORD) {
-	case ITYPE_SWORD:
-		weaponType = ITYPE_SWORD;
-		break;
-	case ITYPE_AXE:
-		weaponType = ITYPE_AXE;
-		break;
-	case ITYPE_BOW:
-		weaponType = ITYPE_BOW;
-		break;
-	case ITYPE_MACE:
-		weaponType = ITYPE_MACE;
-		break;
-	}
+	ItemType weaponType { PickRandomlyAmong({ ITYPE_SWORD, ITYPE_AXE, ITYPE_BOW, ITYPE_MACE }) };
 
 	Objects[i]._oSelFlag = 0;
 	Objects[i]._oAnimFrame++;
