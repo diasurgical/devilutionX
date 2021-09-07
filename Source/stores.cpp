@@ -201,7 +201,7 @@ void PrintStoreItem(Item *x, int l, UiFlags flags)
 	} else {
 		strcat(sstr, _("Indestructible,  "));
 	}
-	if (x->_itype == ITYPE_MISC)
+	if (x->_itype == ItemType::Misc)
 		sstr[0] = '\0';
 	int8_t str = x->_iMinStr;
 	uint8_t mag = x->_iMinMag;
@@ -379,11 +379,11 @@ bool SmithSellOk(int i)
 	if (pI->_iMiscId > IMISC_OILFIRST && pI->_iMiscId < IMISC_OILLAST)
 		return true;
 
-	if (pI->_itype == ITYPE_MISC)
+	if (pI->_itype == ItemType::Misc)
 		return false;
-	if (pI->_itype == ITYPE_GOLD)
+	if (pI->_itype == ItemType::Gold)
 		return false;
-	if (pI->_itype == ITYPE_STAFF && (!gbIsHellfire || pI->_iSpell != SPL_NULL))
+	if (pI->_itype == ItemType::Staff && (!gbIsHellfire || pI->_iSpell != SPL_NULL))
 		return false;
 	if (pI->_iClass == ICLASS_QUEST)
 		return false;
@@ -428,7 +428,7 @@ void StartSmithSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -502,9 +502,9 @@ bool SmithRepairOk(int i)
 
 	if (myPlayer.InvList[i].isEmpty())
 		return false;
-	if (myPlayer.InvList[i]._itype == ITYPE_MISC)
+	if (myPlayer.InvList[i]._itype == ItemType::Misc)
 		return false;
-	if (myPlayer.InvList[i]._itype == ITYPE_GOLD)
+	if (myPlayer.InvList[i]._itype == ItemType::Gold)
 		return false;
 	if (myPlayer.InvList[i]._iDurability == myPlayer.InvList[i]._iMaxDur)
 		return false;
@@ -519,7 +519,7 @@ void StartSmithRepair()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -678,13 +678,13 @@ bool WitchSellOk(int i)
 	else
 		pI = &Players[MyPlayerId].SpdList[-(i + 1)];
 
-	if (pI->_itype == ITYPE_MISC)
+	if (pI->_itype == ItemType::Misc)
 		rv = true;
 	if (pI->_iMiscId > 29 && pI->_iMiscId < 41)
 		rv = false;
 	if (pI->_iClass == ICLASS_QUEST)
 		rv = false;
-	if (pI->_itype == ITYPE_STAFF && (!gbIsHellfire || pI->_iSpell != SPL_NULL))
+	if (pI->_itype == ItemType::Staff && (!gbIsHellfire || pI->_iSpell != SPL_NULL))
 		rv = true;
 	if (pI->IDidx >= IDI_FIRSTQUEST && pI->IDidx <= IDI_LASTQUEST)
 		rv = false;
@@ -700,7 +700,7 @@ void StartWitchSell()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
@@ -772,7 +772,7 @@ bool WitchRechargeOk(int i)
 {
 	const auto &item = Players[MyPlayerId].InvList[i];
 
-	if (item._itype == ITYPE_STAFF && item._iCharges != item._iMaxCharges) {
+	if (item._itype == ItemType::Staff && item._iCharges != item._iMaxCharges) {
 		return true;
 	}
 
@@ -800,13 +800,13 @@ void StartWitchRecharge()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	const auto &myPlayer = Players[MyPlayerId];
 	const auto &leftHand = myPlayer.InvBody[INVLOC_HAND_LEFT];
 
-	if ((leftHand._itype == ITYPE_STAFF || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
+	if ((leftHand._itype == ItemType::Staff || leftHand._iMiscId == IMISC_UNIQUE) && leftHand._iCharges != leftHand._iMaxCharges) {
 		rechargeok = true;
 		AddStoreHoldRecharge(leftHand, -1);
 	}
@@ -1085,7 +1085,7 @@ void StartStorytellerIdentify()
 	storenumh = 0;
 
 	for (auto &item : storehold) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
@@ -1312,12 +1312,12 @@ void SmithBuyItem()
 	StoreAutoPlace();
 	int idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == SMITH_ITEMS - 1) {
-		smithitem[SMITH_ITEMS - 1]._itype = ITYPE_NONE;
+		smithitem[SMITH_ITEMS - 1]._itype = ItemType::None;
 	} else {
 		for (; !smithitem[idx + 1].isEmpty(); idx++) {
 			smithitem[idx] = smithitem[idx + 1];
 		}
-		smithitem[idx]._itype = ITYPE_NONE;
+		smithitem[idx]._itype = ItemType::None;
 	}
 	CalcPlrInv(myPlayer, true);
 }
@@ -1377,7 +1377,7 @@ void SmithBuyPItem()
 		}
 	}
 
-	premiumitems[xx]._itype = ITYPE_NONE;
+	premiumitems[xx]._itype = ItemType::None;
 	numpremium--;
 	SpawnPremium(MyPlayerId);
 }
@@ -1445,7 +1445,7 @@ bool StoreGoldFit(int idx)
 
 	for (int i = 0; i < myPlayer._pNumInv; i++) {
 		const auto &item = myPlayer.InvList[i];
-		if (item._itype == ITYPE_GOLD && item._ivalue != MaxGold) {
+		if (item._itype == ItemType::Gold && item._ivalue != MaxGold) {
 			if (cost + item._ivalue <= MaxGold)
 				cost = 0;
 			else
@@ -1507,7 +1507,7 @@ void StoreSellItem()
 	myPlayer._pGold += cost;
 	for (int i = 0; i < myPlayer._pNumInv && cost > 0; i++) {
 		auto &item = myPlayer.InvList[i];
-		if (item._itype == ITYPE_GOLD && item._ivalue != MaxGold) {
+		if (item._itype == ItemType::Gold && item._ivalue != MaxGold) {
 			if (cost + item._ivalue <= MaxGold) {
 				item._ivalue += cost;
 				cost = 0;
@@ -1642,12 +1642,12 @@ void WitchBuyItem()
 
 	if (idx >= 3) {
 		if (idx == WITCH_ITEMS - 1) {
-			witchitem[WITCH_ITEMS - 1]._itype = ITYPE_NONE;
+			witchitem[WITCH_ITEMS - 1]._itype = ItemType::None;
 		} else {
 			for (; !witchitem[idx + 1].isEmpty(); idx++) {
 				witchitem[idx] = witchitem[idx + 1];
 			}
-			witchitem[idx]._itype = ITYPE_NONE;
+			witchitem[idx]._itype = ItemType::None;
 		}
 	}
 
@@ -1783,7 +1783,7 @@ void BoyBuyItem()
 	auto &myPlayer = Players[MyPlayerId];
 	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
 	StoreAutoPlace();
-	boyitem._itype = ITYPE_NONE;
+	boyitem._itype = ItemType::None;
 	stextshold = STORE_BOY;
 	CalcPlrInv(myPlayer, true);
 	stextlhold = 12;
@@ -1820,12 +1820,12 @@ void HealerBuyItem()
 	}
 	idx = stextvhold + ((stextlhold - stextup) / 4);
 	if (idx == 19) {
-		healitem[19]._itype = ITYPE_NONE;
+		healitem[19]._itype = ItemType::None;
 	} else {
 		for (; !healitem[idx + 1].isEmpty(); idx++) {
 			healitem[idx] = healitem[idx + 1];
 		}
-		healitem[idx]._itype = ITYPE_NONE;
+		healitem[idx]._itype = ItemType::None;
 	}
 	CalcPlrInv(myPlayer, true);
 }
@@ -2139,7 +2139,7 @@ int TakeGold(Player &player, int cost, bool skipMaxPiles)
 {
 	for (int i = 0; i < player._pNumInv; i++) {
 		auto &item = player.InvList[i];
-		if (item._itype != ITYPE_GOLD || (skipMaxPiles && item._ivalue == MaxGold))
+		if (item._itype != ItemType::Gold || (skipMaxPiles && item._ivalue == MaxGold))
 			continue;
 
 		if (cost < item._ivalue) {
@@ -2211,9 +2211,9 @@ void InitStores()
 	premiumlevel = 1;
 
 	for (auto &premiumitem : premiumitems)
-		premiumitem._itype = ITYPE_NONE;
+		premiumitem._itype = ItemType::None;
 
-	boyitem._itype = ITYPE_NONE;
+	boyitem._itype = ItemType::None;
 	boylevel = 0;
 }
 

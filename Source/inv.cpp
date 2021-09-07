@@ -208,7 +208,7 @@ bool FitsInBeltSlot(const Item &item)
 bool CanBePlacedOnBelt(const Item &item)
 {
 	return FitsInBeltSlot(item)
-	    && item._itype != ITYPE_GOLD
+	    && item._itype != ItemType::Gold
 	    && item._iStatFlag
 	    && AllItemsList[item.IDidx].iUsable;
 }
@@ -254,7 +254,7 @@ bool CanWield(Player &player, const Item &item)
 	// Barbarian can wield two handed swords and maces in one hand, so we allow equiping any sword/mace as long as his occupied
 	// hand has a shield (i.e. no dual wielding allowed)
 	if (player._pClass == HeroClass::Barbarian) {
-		if (occupiedHand._itype == ITYPE_SHIELD && IsAnyOf(item._itype, ITYPE_SWORD, ITYPE_MACE))
+		if (occupiedHand._itype == ItemType::Shield && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace))
 			return true;
 	}
 
@@ -262,10 +262,10 @@ bool CanWield(Player &player, const Item &item)
 	// slot is another one-handed weapon.
 	if (player._pClass == HeroClass::Bard) {
 		bool occupiedHandIsOneHandedSwordOrMace = occupiedHand._iLoc == ILOC_ONEHAND
-		    && IsAnyOf(occupiedHand._itype, ITYPE_SWORD, ITYPE_MACE);
+		    && IsAnyOf(occupiedHand._itype, ItemType::Sword, ItemType::Mace);
 
 		bool weaponToEquipIsOneHandedSwordOrMace = item._iLoc == ILOC_ONEHAND
-		    && IsAnyOf(item._itype, ITYPE_SWORD, ITYPE_MACE);
+		    && IsAnyOf(item._itype, ItemType::Sword, ItemType::Mace);
 
 		if (occupiedHandIsOneHandedSwordOrMace && weaponToEquipIsOneHandedSwordOrMace) {
 			return true;
@@ -397,7 +397,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 
 	if (il == ILOC_ONEHAND && player.HoldItem._iLoc == ILOC_TWOHAND) {
 		if (player._pClass == HeroClass::Barbarian
-		    && IsAnyOf(player.HoldItem._itype, ITYPE_SWORD, ITYPE_MACE))
+		    && IsAnyOf(player.HoldItem._itype, ItemType::Sword, ItemType::Mace))
 			il = ILOC_ONEHAND;
 		else
 			il = ILOC_TWOHAND;
@@ -410,7 +410,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				done = false;
 			if (!player.HoldItem._iStatFlag)
 				done = false;
-			if (player.HoldItem._itype == ITYPE_GOLD)
+			if (player.HoldItem._itype == ItemType::Gold)
 				done = false;
 		}
 	}
@@ -419,11 +419,11 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (il == ILOC_UNEQUIPABLE) {
 		done = true;
 		int ii = r - SLOTXY_INV_FIRST;
-		if (player.HoldItem._itype == ITYPE_GOLD) {
+		if (player.HoldItem._itype == ItemType::Gold) {
 			if (player.InvGrid[ii] != 0) {
 				int8_t iv = player.InvGrid[ii];
 				if (iv > 0) {
-					if (player.InvList[iv - 1]._itype != ITYPE_GOLD) {
+					if (player.InvList[iv - 1]._itype != ItemType::Gold) {
 						it = iv;
 					}
 				} else {
@@ -525,7 +525,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		}
 		if (player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.InvBody[INVLOC_HAND_LEFT]._iLoc != ILOC_TWOHAND)
-			    || (player._pClass == HeroClass::Barbarian && (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE))) {
+			    || (player._pClass == HeroClass::Barbarian && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace))) {
 				if ((player.InvBody[INVLOC_HAND_LEFT].isEmpty() || player.InvBody[INVLOC_HAND_LEFT]._iClass != player.HoldItem._iClass)
 				    || (player._pClass == HeroClass::Bard && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON && player.HoldItem._iClass == ICLASS_WEAPON)) {
 					NetSendCmdChItem(false, INVLOC_HAND_RIGHT);
@@ -555,7 +555,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	case ILOC_TWOHAND:
 		if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && !player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
 			Item tempitem = player.HoldItem;
-			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
+			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
 				player.HoldItem = player.InvBody[INVLOC_HAND_RIGHT];
 			else
 				player.HoldItem = player.InvBody[INVLOC_HAND_LEFT];
@@ -572,10 +572,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			if (!done2h)
 				return;
 
-			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
-				player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
+			if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
+				player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
 			else
-				player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
+				player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 		}
 
 		NetSendCmdDelItem(false, INVLOC_HAND_RIGHT);
@@ -591,7 +591,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 		}
 		break;
 	case ILOC_UNEQUIPABLE:
-		if (player.HoldItem._itype == ITYPE_GOLD && it == 0) {
+		if (player.HoldItem._itype == ItemType::Gold && it == 0) {
 			int ii = r - SLOTXY_INV_FIRST;
 			if (player.InvGrid[ii] > 0) {
 				int invIndex = player.InvGrid[ii] - 1;
@@ -626,10 +626,10 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 				it = player._pNumInv;
 			} else {
 				int invIndex = it - 1;
-				if (player.HoldItem._itype == ITYPE_GOLD)
+				if (player.HoldItem._itype == ItemType::Gold)
 					player._pGold += player.HoldItem._ivalue;
 				cn = SwapItem(&player.InvList[invIndex], &player.HoldItem);
-				if (player.HoldItem._itype == ITYPE_GOLD)
+				if (player.HoldItem._itype == ItemType::Gold)
 					player._pGold = CalculateGold(player);
 				for (auto &itemId : player.InvGrid) {
 					if (itemId == it)
@@ -653,7 +653,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			player.SpdList[ii] = player.HoldItem;
 		} else {
 			cn = SwapItem(&player.SpdList[ii], &player.HoldItem);
-			if (player.HoldItem._itype == ITYPE_GOLD)
+			if (player.HoldItem._itype == ItemType::Gold)
 				player._pGold = CalculateGold(player);
 		}
 		drawsbarflag = true;
@@ -710,7 +710,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 	}
 
 	Item &holdItem = player.HoldItem;
-	holdItem._itype = ITYPE_NONE;
+	holdItem._itype = ItemType::None;
 
 	bool automaticallyMoved = false;
 	bool automaticallyEquipped = false;
@@ -726,7 +726,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_HEAD);
-			headItem._itype = ITYPE_NONE;
+			headItem._itype = ItemType::None;
 		}
 	}
 
@@ -740,7 +740,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_RING_LEFT);
-			leftRingItem._itype = ITYPE_NONE;
+			leftRingItem._itype = ItemType::None;
 		}
 	}
 
@@ -754,7 +754,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_RING_RIGHT);
-			rightRingItem._itype = ITYPE_NONE;
+			rightRingItem._itype = ItemType::None;
 		}
 	}
 
@@ -768,7 +768,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_AMULET);
-			amuletItem._itype = ITYPE_NONE;
+			amuletItem._itype = ItemType::None;
 		}
 	}
 
@@ -782,7 +782,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_HAND_LEFT);
-			leftHandItem._itype = ITYPE_NONE;
+			leftHandItem._itype = ItemType::None;
 		}
 	}
 
@@ -796,7 +796,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_HAND_RIGHT);
-			rightHandItem._itype = ITYPE_NONE;
+			rightHandItem._itype = ItemType::None;
 		}
 	}
 
@@ -810,7 +810,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 
 		if (!automaticMove || automaticallyMoved) {
 			NetSendCmdDelItem(false, INVLOC_CHEST);
-			chestItem._itype = ITYPE_NONE;
+			chestItem._itype = ItemType::None;
 		}
 	}
 
@@ -844,14 +844,14 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 			}
 
 			if (!automaticMove || automaticallyMoved) {
-				beltItem._itype = ITYPE_NONE;
+				beltItem._itype = ItemType::None;
 				drawsbarflag = true;
 			}
 		}
 	}
 
 	if (!holdItem.isEmpty()) {
-		if (holdItem._itype == ITYPE_GOLD) {
+		if (holdItem._itype == ItemType::Gold) {
 			player._pGold = CalculateGold(player);
 		}
 
@@ -874,7 +874,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 					}
 				}
 
-				holdItem._itype = ITYPE_NONE;
+				holdItem._itype = ItemType::None;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
 				if (!IsHardwareCursor()) {
@@ -991,7 +991,7 @@ void CleanupItems(Item *item, int ii)
 	dItem[item->position.x][item->position.y] = 0;
 
 	if (currlevel == 21 && item->position == CornerStone.position) {
-		CornerStone.item._itype = ITYPE_NONE;
+		CornerStone.item._itype = ItemType::None;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
 		CornerStone.item._iAnimFlag = false;
@@ -1163,7 +1163,7 @@ void DrawInv(const Surface &out)
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
 					if (myPlayer._pClass != HeroClass::Barbarian
-					    || IsNoneOf(myPlayer.InvBody[slot]._itype, ITYPE_SWORD, ITYPE_MACE)) {
+					    || IsNoneOf(myPlayer.InvBody[slot]._itype, ItemType::Sword, ItemType::Mace)) {
 						InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						LightTableIndex = 0;
 						cel_transparency_active = true;
@@ -1245,7 +1245,7 @@ void DrawInvBelt(const Surface &out)
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
 		    && myPlayer.SpdList[i]._iStatFlag
-		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
+		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
 			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
 			DrawString(out, tempstr, { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorSilver | UiFlags::AlignRight);
 		}
@@ -1410,7 +1410,7 @@ bool GoldAutoPlace(Player &player)
 	bool done = false;
 
 	for (int i = 0; i < player._pNumInv && !done; i++) {
-		if (player.InvList[i]._itype != ITYPE_GOLD)
+		if (player.InvList[i]._itype != ItemType::Gold)
 			continue;
 		if (player.InvList[i]._ivalue >= MaxGold)
 			continue;
@@ -1487,9 +1487,9 @@ void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bo
 		player.InvBody[bLoc] = player.HoldItem;
 
 		if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ITYPE_NONE;
+			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
 		} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ITYPE_NONE;
+			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 		}
 	}
 
@@ -1499,7 +1499,7 @@ void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bo
 void inv_update_rem_item(Player &player, BYTE iv)
 {
 	if (iv < NUM_INVLOC) {
-		player.InvBody[iv]._itype = ITYPE_NONE;
+		player.InvBody[iv]._itype = ItemType::None;
 	}
 
 	CalcPlrInv(player, player._pmode != PM_DEATH);
@@ -1556,7 +1556,7 @@ void InvGetItem(int pnum, Item *item, int ii)
 	CheckBookLevel(player);
 	CheckItemStats(player);
 	bool cursorUpdated = false;
-	if (player.HoldItem._itype == ITYPE_GOLD && GoldAutoPlace(player))
+	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player))
 		cursorUpdated = true;
 	CleanupItems(item, ii);
 	pcursitem = -1;
@@ -1588,7 +1588,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	CheckBookLevel(player);
 	CheckItemStats(player);
 	SetICursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
-	if (player.HoldItem._itype == ITYPE_GOLD) {
+	if (player.HoldItem._itype == ItemType::Gold) {
 		done = GoldAutoPlace(player);
 		if (!done) {
 			item->_ivalue = player.HoldItem._ivalue;
@@ -1615,7 +1615,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	player.HoldItem = *item;
 	RespawnItem(item, true);
 	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position);
-	player.HoldItem._itype = ITYPE_NONE;
+	player.HoldItem._itype = ItemType::None;
 }
 
 int FindGetItem(int idx, uint16_t ci, int iseed)
@@ -1860,7 +1860,7 @@ int8_t CheckInvHLight()
 	} else if (r >= SLOTXY_HAND_RIGHT_FIRST && r <= SLOTXY_HAND_RIGHT_LAST) {
 		pi = &myPlayer.InvBody[INVLOC_HAND_LEFT];
 		if (pi->isEmpty() || pi->_iLoc != ILOC_TWOHAND
-		    || (myPlayer._pClass == HeroClass::Barbarian && IsAnyOf(myPlayer.InvBody[INVLOC_HAND_LEFT]._itype, ITYPE_SWORD, ITYPE_MACE))) {
+		    || (myPlayer._pClass == HeroClass::Barbarian && IsAnyOf(myPlayer.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Sword, ItemType::Mace))) {
 			rv = INVLOC_HAND_RIGHT;
 			pi = &myPlayer.InvBody[rv];
 		} else {
@@ -1888,7 +1888,7 @@ int8_t CheckInvHLight()
 	if (pi->isEmpty())
 		return -1;
 
-	if (pi->_itype == ITYPE_GOLD) {
+	if (pi->_itype == ItemType::Gold) {
 		int nGold = pi->_ivalue;
 		strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 	} else {
@@ -2024,7 +2024,7 @@ bool UseInvItem(int pnum, int cii)
 		return true;
 	}
 
-	if (item->_iMiscId == IMISC_NONE && item->_itype == ITYPE_GOLD) {
+	if (item->_iMiscId == IMISC_NONE && item->_itype == ItemType::Gold) {
 		StartGoldDrop();
 		return true;
 	}
@@ -2094,7 +2094,7 @@ int CalculateGold(Player &player)
 	int gold = 0;
 
 	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i]._itype == ITYPE_GOLD)
+		if (player.InvList[i]._itype == ItemType::Gold)
 			gold += player.InvList[i]._ivalue;
 	}
 

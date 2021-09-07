@@ -574,7 +574,7 @@ void CalcPlrBookVals(Player &player)
 	}
 
 	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i]._itype == ITYPE_MISC && player.InvList[i]._iMiscId == IMISC_BOOK) {
+		if (player.InvList[i]._itype == ItemType::Misc && player.InvList[i]._iMiscId == IMISC_BOOK) {
 			player.InvList[i]._iMinMag = spelldata[player.InvList[i]._iSpell].sMinInt;
 			int8_t spellLevel = player._pSplLvl[player.InvList[i]._iSpell];
 
@@ -1372,36 +1372,36 @@ void GetItemBonus(Item &item, int minlvl, int maxlvl, bool onlygood, bool allows
 		minlvl = 25;
 
 	switch (item._itype) {
-	case ITYPE_SWORD:
-	case ITYPE_AXE:
-	case ITYPE_MACE:
+	case ItemType::Sword:
+	case ItemType::Axe:
+	case ItemType::Mace:
 		GetItemPower(item, minlvl, maxlvl, PLT_WEAP, onlygood);
 		break;
-	case ITYPE_BOW:
+	case ItemType::Bow:
 		GetItemPower(item, minlvl, maxlvl, PLT_BOW, onlygood);
 		break;
-	case ITYPE_SHIELD:
+	case ItemType::Shield:
 		GetItemPower(item, minlvl, maxlvl, PLT_SHLD, onlygood);
 		break;
-	case ITYPE_LARMOR:
-	case ITYPE_HELM:
-	case ITYPE_MARMOR:
-	case ITYPE_HARMOR:
+	case ItemType::LightArmor:
+	case ItemType::Helm:
+	case ItemType::MediumArmor:
+	case ItemType::HeavyArmor:
 		GetItemPower(item, minlvl, maxlvl, PLT_ARMO, onlygood);
 		break;
-	case ITYPE_STAFF:
+	case ItemType::Staff:
 		if (allowspells)
 			GetStaffSpell(item, maxlvl, onlygood);
 		else
 			GetItemPower(item, minlvl, maxlvl, PLT_STAFF, onlygood);
 		break;
-	case ITYPE_RING:
-	case ITYPE_AMULET:
+	case ItemType::Ring:
+	case ItemType::Amulet:
 		GetItemPower(item, minlvl, maxlvl, PLT_MISC, onlygood);
 		break;
-	case ITYPE_NONE:
-	case ITYPE_MISC:
-	case ITYPE_GOLD:
+	case ItemType::None:
+	case ItemType::Misc:
+	case ItemType::Gold:
 		break;
 	}
 }
@@ -1429,9 +1429,9 @@ int RndUItem(Monster *monster)
 			if (2 * curlv < AllItemsList[i].iMinMLvl)
 				okflag = false;
 		}
-		if (AllItemsList[i].itype == ITYPE_MISC)
+		if (AllItemsList[i].itype == ItemType::Misc)
 			okflag = false;
-		if (AllItemsList[i].itype == ITYPE_GOLD)
+		if (AllItemsList[i].itype == ItemType::Gold)
 			okflag = false;
 		if (AllItemsList[i].iMiscId == IMISC_BOOK)
 			okflag = true;
@@ -1753,7 +1753,7 @@ void RepairItem(Item &item, int lvl)
 	}
 
 	if (item._iMaxDur <= 0) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 		return;
 	}
 
@@ -1762,7 +1762,7 @@ void RepairItem(Item &item, int lvl)
 		rep += lvl + GenerateRnd(lvl);
 		item._iMaxDur -= std::max(item._iMaxDur / (lvl + 9), 1);
 		if (item._iMaxDur == 0) {
-			item._itype = ITYPE_NONE;
+			item._itype = ItemType::None;
 			return;
 		}
 	} while (rep + item._iDurability < item._iMaxDur);
@@ -1812,7 +1812,7 @@ bool ApplyOilToItem(Item &item, Player &player)
 		if (item._iClass == ICLASS_ARMOR) {
 			return false;
 		}
-		if (item._itype == ITYPE_BOW) {
+		if (item._itype == ItemType::Bow) {
 			return false;
 		}
 		break;
@@ -2121,15 +2121,15 @@ void PrintItemInfo(Item &item)
 
 bool SmithItemOk(int i)
 {
-	if (AllItemsList[i].itype == ITYPE_MISC)
+	if (AllItemsList[i].itype == ItemType::Misc)
 		return false;
-	if (AllItemsList[i].itype == ITYPE_GOLD)
+	if (AllItemsList[i].itype == ItemType::Gold)
 		return false;
-	if (AllItemsList[i].itype == ITYPE_STAFF && (!gbIsHellfire || AllItemsList[i].iSpell != SPL_NULL))
+	if (AllItemsList[i].itype == ItemType::Staff && (!gbIsHellfire || AllItemsList[i].iSpell != SPL_NULL))
 		return false;
-	if (AllItemsList[i].itype == ITYPE_RING)
+	if (AllItemsList[i].itype == ItemType::Ring)
 		return false;
-	if (AllItemsList[i].itype == ITYPE_AMULET)
+	if (AllItemsList[i].itype == ItemType::Amulet)
 		return false;
 
 	return true;
@@ -2188,19 +2188,19 @@ void SortVendor(Item *itemList)
 
 bool PremiumItemOk(int i)
 {
-	if (AllItemsList[i].itype == ITYPE_MISC)
+	if (AllItemsList[i].itype == ItemType::Misc)
 		return false;
-	if (AllItemsList[i].itype == ITYPE_GOLD)
+	if (AllItemsList[i].itype == ItemType::Gold)
 		return false;
-	if (!gbIsHellfire && AllItemsList[i].itype == ITYPE_STAFF)
+	if (!gbIsHellfire && AllItemsList[i].itype == ItemType::Staff)
 		return false;
 
 	if (gbIsMultiplayer) {
 		if (AllItemsList[i].iMiscId == IMISC_OILOF)
 			return false;
-		if (AllItemsList[i].itype == ITYPE_RING)
+		if (AllItemsList[i].itype == ItemType::Ring)
 			return false;
-		if (AllItemsList[i].itype == ITYPE_AMULET)
+		if (AllItemsList[i].itype == ItemType::Amulet)
 			return false;
 	}
 
@@ -2249,26 +2249,26 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		}
 
 		switch (Items[0]._itype) {
-		case ITYPE_LARMOR:
-		case ITYPE_MARMOR:
-		case ITYPE_HARMOR: {
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
+		case ItemType::HeavyArmor: {
 			const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
 			    [](const Item &item) {
-				    return IsAnyOf(item._itype, ITYPE_LARMOR, ITYPE_MARMOR, ITYPE_HARMOR);
+				    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
 			    });
 
 			itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 			break;
 		}
-		case ITYPE_SHIELD:
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_SWORD:
-		case ITYPE_HELM:
-		case ITYPE_STAFF:
-		case ITYPE_RING:
-		case ITYPE_AMULET: {
+		case ItemType::Shield:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Sword:
+		case ItemType::Helm:
+		case ItemType::Staff:
+		case ItemType::Ring:
+		case ItemType::Amulet: {
 			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
 			    [](const Item &item) { return item._itype == Items[0]._itype; });
 
@@ -2299,7 +2299,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 
 bool WitchItemOk(int i)
 {
-	if (IsNoneOf(AllItemsList[i].itype, ITYPE_MISC, ITYPE_STAFF))
+	if (IsNoneOf(AllItemsList[i].itype, ItemType::Misc, ItemType::Staff))
 		return false;
 	if (AllItemsList[i].iMiscId == IMISC_MANA)
 		return false;
@@ -2333,7 +2333,7 @@ int RndBoyItem(int lvl)
 
 bool HealerItemOk(int i)
 {
-	if (AllItemsList[i].itype != ITYPE_MISC)
+	if (AllItemsList[i].itype != ItemType::Misc)
 		return false;
 
 	if (AllItemsList[i].iMiscId == IMISC_SCROLL)
@@ -2554,7 +2554,7 @@ BYTE GetOutlineColor(const Item &item, bool checkReq)
 {
 	if (checkReq && !item._iStatFlag)
 		return ICOL_RED;
-	if (item._itype == ITYPE_GOLD)
+	if (item._itype == ItemType::Gold)
 		return ICOL_YELLOW;
 	if (item._iMagical == ITEM_QUALITY_MAGIC)
 		return ICOL_BLUE;
@@ -2591,7 +2591,7 @@ void InitItems()
 
 	for (int i = 0; i < MAXITEMS; i++) {
 		auto &item = Items[i];
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
 		item._iSelFlag = 0;
@@ -2717,11 +2717,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		mind = 1;
 		maxd = 1;
 
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			maxd = 3;
 		}
 
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 			maxd = 3;
 		}
 
@@ -2769,8 +2769,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	if (player._pClass == HeroClass::Rogue) {
 		player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 200;
 	} else if (player._pClass == HeroClass::Monk) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype != ITYPE_STAFF) {
-			if (player.InvBody[INVLOC_HAND_RIGHT]._itype != ITYPE_STAFF && (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() || !player.InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Staff) {
+			if (player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Staff && (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() || !player.InvBody[INVLOC_HAND_RIGHT].isEmpty())) {
 				player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 300;
 			} else {
 				player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
@@ -2779,31 +2779,31 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
 		}
 	} else if (player._pClass == HeroClass::Bard) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SWORD || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SWORD)
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Sword || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Sword)
 			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 150;
-		else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
+		else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
 			player._pDamageMod = player._pLevel * (player._pStrength + player._pDexterity) / 250;
 		} else {
 			player._pDamageMod = player._pLevel * player._pStrength / 100;
 		}
 	} else if (player._pClass == HeroClass::Barbarian) {
 
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_AXE || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_AXE) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Axe || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Axe) {
 			player._pDamageMod = player._pLevel * player._pStrength / 75;
-		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_MACE || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_MACE) {
+		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Mace || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Mace) {
 			player._pDamageMod = player._pLevel * player._pStrength / 75;
-		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_BOW) {
+		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Bow) {
 			player._pDamageMod = player._pLevel * player._pStrength / 300;
 		} else {
 			player._pDamageMod = player._pLevel * player._pStrength / 100;
 		}
 
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD || player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD) {
-			if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD)
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield) {
+			if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
-			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD)
+			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
-		} else if (IsNoneOf(player.InvBody[INVLOC_HAND_LEFT]._itype, ITYPE_STAFF, ITYPE_BOW) && IsNoneOf(player.InvBody[INVLOC_HAND_RIGHT]._itype, ITYPE_STAFF, ITYPE_BOW)) {
+		} else if (IsNoneOf(player.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Staff, ItemType::Bow) && IsNoneOf(player.InvBody[INVLOC_HAND_RIGHT]._itype, ItemType::Staff, ItemType::Bow)) {
 			player._pDamageMod += player._pLevel * player._pVitality / 100;
 		}
 		player._pIAC += player._pLevel / 4;
@@ -2880,11 +2880,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 
 	player._pBlockFlag = false;
 	if (player._pClass == HeroClass::Monk) {
-		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_STAFF && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+		if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ISPL_FASTBLOCK;
 		}
-		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_STAFF && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+		if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 			player._pBlockFlag = true;
 			player._pIFlags |= ISPL_FASTBLOCK;
 		}
@@ -2896,7 +2896,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 			player._pBlockFlag = true;
 	}
 
-	ItemType weaponItemType = ItemType::ITYPE_NONE;
+	ItemType weaponItemType = ItemType::None;
 	bool holdsShield = false;
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty()
 	    && player.InvBody[INVLOC_HAND_LEFT]._iClass == ICLASS_WEAPON
@@ -2910,30 +2910,30 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		weaponItemType = player.InvBody[INVLOC_HAND_RIGHT]._itype;
 	}
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
+	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_LEFT]._iStatFlag) {
 		player._pBlockFlag = true;
 		holdsShield = true;
 	}
-	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ITYPE_SHIELD && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
+	if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield && player.InvBody[INVLOC_HAND_RIGHT]._iStatFlag) {
 		player._pBlockFlag = true;
 		holdsShield = true;
 	}
 
 	PlayerWeaponGraphic animWeaponId = holdsShield ? PlayerWeaponGraphic::UnarmedShield : PlayerWeaponGraphic::Unarmed;
 	switch (weaponItemType) {
-	case ITYPE_SWORD:
+	case ItemType::Sword:
 		animWeaponId = holdsShield ? PlayerWeaponGraphic::SwordShield : PlayerWeaponGraphic::Sword;
 		break;
-	case ITYPE_AXE:
+	case ItemType::Axe:
 		animWeaponId = PlayerWeaponGraphic::Axe;
 		break;
-	case ITYPE_BOW:
+	case ItemType::Bow:
 		animWeaponId = PlayerWeaponGraphic::Bow;
 		break;
-	case ITYPE_MACE:
+	case ItemType::Mace:
 		animWeaponId = holdsShield ? PlayerWeaponGraphic::MaceShield : PlayerWeaponGraphic::Mace;
 		break;
-	case ITYPE_STAFF:
+	case ItemType::Staff:
 		animWeaponId = PlayerWeaponGraphic::Staff;
 		break;
 	default:
@@ -2941,11 +2941,11 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	}
 
 	PlayerArmorGraphic animArmorId = PlayerArmorGraphic::Light;
-	if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_HARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
+	if (player.InvBody[INVLOC_CHEST]._itype == ItemType::HeavyArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk && player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 			player._pIAC += player._pLevel / 2;
 		animArmorId = PlayerArmorGraphic::Heavy;
-	} else if (player.InvBody[INVLOC_CHEST]._itype == ITYPE_MARMOR && player.InvBody[INVLOC_CHEST]._iStatFlag) {
+	} else if (player.InvBody[INVLOC_CHEST]._itype == ItemType::MediumArmor && player.InvBody[INVLOC_CHEST]._iStatFlag) {
 		if (player._pClass == HeroClass::Monk) {
 			if (player.InvBody[INVLOC_CHEST]._iMagical == ITEM_QUALITY_UNIQUE)
 				player._pIAC += player._pLevel * 2;
@@ -3092,7 +3092,7 @@ void CreatePlrItems(int playerId)
 	auto &player = Players[playerId];
 
 	for (auto &item : player.InvBody) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	// converting this to a for loop creates a `rep stosd` instruction,
@@ -3100,13 +3100,13 @@ void CreatePlrItems(int playerId)
 	memset(&player.InvGrid, 0, sizeof(player.InvGrid));
 
 	for (auto &item : player.InvList) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	player._pNumInv = 0;
 
 	for (auto &item : player.SpdList) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 
 	switch (player._pClass) {
@@ -3297,7 +3297,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 	if (gbIsHellfire && item._iMiscId == IMISC_OILOF)
 		GetOilType(item, lvl);
 
-	if (item._itype != ITYPE_GOLD)
+	if (item._itype != ItemType::Gold)
 		return;
 
 	int rndv;
@@ -3461,7 +3461,7 @@ void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc,
 	int idx;
 
 	int curlv = ItemsGetCurrlevel();
-	if (itemType != ITYPE_GOLD)
+	if (itemType != ItemType::Gold)
 		idx = RndTypeItems(itemType, imisc, curlv);
 	else
 		idx = IDI_GOLD;
@@ -3572,7 +3572,7 @@ void CornerstoneLoad(Point position)
 		return;
 	}
 
-	CornerStone.item._itype = ITYPE_NONE;
+	CornerStone.item._itype = ItemType::None;
 	CornerStone.activated = true;
 	if (dItem[position.x][position.y] != 0) {
 		int ii = dItem[position.x][position.y] - 1;
@@ -3748,7 +3748,7 @@ void GetItemFrm(Item &item)
 
 void GetItemStr(Item &item)
 {
-	if (item._itype != ITYPE_GOLD) {
+	if (item._itype != ItemType::Gold) {
 		if (item._iIdentified)
 			strcpy(infostr, item._iIName);
 		else
@@ -3805,7 +3805,7 @@ void DoRecharge(Player &player, int cii)
 	} else {
 		pi = &player.InvBody[cii];
 	}
-	if (pi->_itype == ITYPE_STAFF && pi->_iSpell != SPL_NULL) {
+	if (pi->_itype == ItemType::Staff && pi->_iSpell != SPL_NULL) {
 		int r = GetSpellBookLevel(pi->_iSpell);
 		r = GenerateRnd(player._pLevel / r) + 1;
 		RechargeItem(*pi, r);
@@ -4227,7 +4227,7 @@ void PrintItemDur(Item *x)
 			AddPanelString(tempstr);
 		}
 	}
-	if (IsAnyOf(x->_itype, ITYPE_RING, ITYPE_AMULET))
+	if (IsAnyOf(x->_itype, ItemType::Ring, ItemType::Amulet))
 		AddPanelString(_("Not Identified"));
 	PrintItemInfo(*x);
 }
@@ -4464,7 +4464,7 @@ void SpawnSmith(int lvl)
 		smithitem[i]._iStatFlag = StoreStatOk(smithitem[i]);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
-		smithitem[i]._itype = ITYPE_NONE;
+		smithitem[i]._itype = ItemType::None;
 
 	SortVendor(smithitem + PinnedItemCount);
 	Items[0] = holditem;
@@ -4578,7 +4578,7 @@ void SpawnWitch(int lvl)
 	}
 
 	for (int i = iCnt; i < WITCH_ITEMS; i++)
-		witchitem[i]._itype = ITYPE_NONE;
+		witchitem[i]._itype = ItemType::None;
 
 	SortVendor(witchitem + PinnedItemCount);
 }
@@ -4620,29 +4620,29 @@ void SpawnBoy(int lvl)
 
 		ivalue = 0;
 
-		int itemType = Items[0]._itype;
+		ItemType itemType = Items[0]._itype;
 
 		switch (itemType) {
-		case ITYPE_LARMOR:
-		case ITYPE_MARMOR:
-		case ITYPE_HARMOR: {
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
+		case ItemType::HeavyArmor: {
 			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
 			    [](const Item &item) {
-				    return IsAnyOf(item._itype, ITYPE_LARMOR, ITYPE_MARMOR, ITYPE_HARMOR);
+				    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
 			    });
 
 			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
 			break;
 		}
-		case ITYPE_SHIELD:
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_SWORD:
-		case ITYPE_HELM:
-		case ITYPE_STAFF:
-		case ITYPE_RING:
-		case ITYPE_AMULET: {
+		case ItemType::Shield:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Sword:
+		case ItemType::Helm:
+		case ItemType::Staff:
+		case ItemType::Ring:
+		case ItemType::Amulet: {
 			const auto *const mostValuablePlayerItem = myPlayer.GetMostValuableItem(
 			    [itemType](const Item &item) { return item._itype == itemType; });
 
@@ -4657,27 +4657,27 @@ void SpawnBoy(int lvl)
 		if (count < 200) {
 			switch (pc) {
 			case HeroClass::Warrior:
-				if (IsAnyOf(itemType, ITYPE_BOW, ITYPE_STAFF))
+				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Rogue:
-				if (IsAnyOf(itemType, ITYPE_SWORD, ITYPE_STAFF, ITYPE_AXE, ITYPE_MACE, ITYPE_SHIELD))
+				if (IsAnyOf(itemType, ItemType::Sword, ItemType::Staff, ItemType::Axe, ItemType::Mace, ItemType::Shield))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Sorcerer:
-				if (IsAnyOf(itemType, ITYPE_STAFF, ITYPE_AXE, ITYPE_BOW, ITYPE_MACE))
+				if (IsAnyOf(itemType, ItemType::Staff, ItemType::Axe, ItemType::Bow, ItemType::Mace))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Monk:
-				if (IsAnyOf(itemType, ITYPE_BOW, ITYPE_MARMOR, ITYPE_SHIELD, ITYPE_MACE))
+				if (IsAnyOf(itemType, ItemType::Bow, ItemType::MediumArmor, ItemType::Shield, ItemType::Mace))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Bard:
-				if (IsAnyOf(itemType, ITYPE_AXE, ITYPE_MACE, ITYPE_STAFF))
+				if (IsAnyOf(itemType, ItemType::Axe, ItemType::Mace, ItemType::Staff))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Barbarian:
-				if (IsAnyOf(itemType, ITYPE_BOW, ITYPE_STAFF))
+				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
 					ivalue = INT_MAX;
 				break;
 			}
@@ -4739,7 +4739,7 @@ void SpawnHealer(int lvl)
 		healitem[i]._iStatFlag = StoreStatOk(healitem[i]);
 	}
 	for (int i = nsi; i < 20; i++) {
-		healitem[i]._itype = ITYPE_NONE;
+		healitem[i]._itype = ItemType::None;
 	}
 	SortVendor(healitem + PinnedItemCount);
 }
@@ -4773,7 +4773,7 @@ void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta)
 		}
 	}
 
-	int idx = RndTypeItems(ITYPE_MISC, IMISC_BOOK, lvl);
+	int idx = RndTypeItems(ItemType::Misc, IMISC_BOOK, lvl);
 	if (ActiveItemCount >= MAXITEMS)
 		return;
 
@@ -4802,13 +4802,13 @@ void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg
 
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta)
 {
-	CreateMagicItem(position, lvl, ITYPE_AMULET, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
+	CreateMagicItem(position, lvl, ItemType::Amulet, IMISC_AMULET, ICURS_AMULET, sendmsg, delta);
 }
 
 void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta)
 {
 	int imid = IMISC_NONE;
-	if (itemType == ITYPE_STAFF)
+	if (itemType == ItemType::Staff)
 		imid = IMISC_STAFF;
 
 	int curlv = ItemsGetCurrlevel();

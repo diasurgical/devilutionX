@@ -549,7 +549,7 @@ struct Player {
 	void ReadySpellFromEquipment(inv_body_loc bodyLocation)
 	{
 		auto &item = InvBody[bodyLocation];
-		if (item._itype == ITYPE_STAFF && item._iSpell != SPL_NULL && item._iCharges > 0) {
+		if (item._itype == ItemType::Staff && item._iSpell != SPL_NULL && item._iCharges > 0) {
 			_pRSpell = item._iSpell;
 			_pRSplType = RSPLTYPE_CHARGES;
 			force_redraw = 255;

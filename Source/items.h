@@ -248,7 +248,7 @@ struct Item {
 	 */
 	bool isEmpty() const
 	{
-		return this->_itype == ITYPE_NONE;
+		return this->_itype == ItemType::None;
 	}
 
 	/**
@@ -286,11 +286,11 @@ struct Item {
 		}
 
 		switch (this->_itype) {
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_STAFF:
-		case ITYPE_SWORD:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Staff:
+		case ItemType::Sword:
 			return true;
 
 		default:
@@ -309,9 +309,9 @@ struct Item {
 		}
 
 		switch (this->_itype) {
-		case ITYPE_HARMOR:
-		case ITYPE_LARMOR:
-		case ITYPE_MARMOR:
+		case ItemType::HeavyArmor:
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
 			return true;
 
 		default:
@@ -325,7 +325,7 @@ struct Item {
 	 */
 	bool isHelm() const
 	{
-		return !this->isEmpty() && this->_itype == ITYPE_HELM;
+		return !this->isEmpty() && this->_itype == ItemType::Helm;
 	}
 
 	/**
@@ -334,7 +334,7 @@ struct Item {
 	 */
 	bool isShield() const
 	{
-		return !this->isEmpty() && this->_itype == ITYPE_SHIELD;
+		return !this->isEmpty() && this->_itype == ItemType::Shield;
 	}
 
 	/**
@@ -348,8 +348,8 @@ struct Item {
 		}
 
 		switch (this->_itype) {
-		case ITYPE_AMULET:
-		case ITYPE_RING:
+		case ItemType::Amulet:
+		case ItemType::Ring:
 			return true;
 
 		default:

@@ -222,22 +222,22 @@ enum item_cursor_graphic : uint8_t {
 	// clang-format on
 };
 
-enum ItemType : int8_t {
-	ITYPE_MISC,
-	ITYPE_SWORD,
-	ITYPE_AXE,
-	ITYPE_BOW,
-	ITYPE_MACE,
-	ITYPE_SHIELD,
-	ITYPE_LARMOR,
-	ITYPE_HELM,
-	ITYPE_MARMOR,
-	ITYPE_HARMOR,
-	ITYPE_STAFF,
-	ITYPE_GOLD,
-	ITYPE_RING,
-	ITYPE_AMULET,
-	ITYPE_NONE = -1,
+enum class ItemType : int8_t {
+	Misc,
+	Sword,
+	Axe,
+	Bow,
+	Mace,
+	Shield,
+	LightArmor,
+	Helm,
+	MediumArmor,
+	HeavyArmor,
+	Staff,
+	Gold,
+	Ring,
+	Amulet,
+	None = -1,
 };
 
 enum unique_base_item : int8_t {

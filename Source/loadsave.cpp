@@ -880,16 +880,16 @@ void SaveItem(SaveHelper &file, const Item &item)
 		idx = RemapItemIdxToDiablo(idx);
 	if (gbIsSpawn)
 		idx = RemapItemIdxToSpawn(idx);
-	int iType = item._itype;
+	ItemType iType = item._itype;
 	if (idx == -1) {
 		idx = _item_indexes::IDI_GOLD;
-		iType = ITYPE_NONE;
+		iType = ItemType::None;
 	}
 
 	file.WriteLE<int32_t>(item._iSeed);
 	file.WriteLE<int16_t>(item._iCreateInfo);
 	file.Skip(2); // Alignment
-	file.WriteLE<int32_t>(iType);
+	file.WriteLE<int32_t>(static_cast<int32_t>(iType));
 	file.WriteLE<int32_t>(item.position.x);
 	file.WriteLE<int32_t>(item.position.y);
 	file.WriteLE<uint32_t>(item._iAnimFlag ? 1 : 0);
@@ -1445,7 +1445,7 @@ void RemoveInvalidItem(Item &item)
 	bool isInvalid = !IsItemAvailable(item.IDidx) || !IsUniqueAvailable(item._iUid);
 
 	if (!gbIsHellfire) {
-		isInvalid = isInvalid || (item._itype == ITYPE_STAFF && GetSpellStaffLevel(item._iSpell) == -1);
+		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || (item._iMiscId == IMISC_BOOK && GetSpellBookLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || item._iDamAcFlags != 0;
 		isInvalid = isInvalid || item._iPrePower > IDI_LASTDIABLO;
@@ -1453,7 +1453,7 @@ void RemoveInvalidItem(Item &item)
 	}
 
 	if (isInvalid) {
-		item._itype = ITYPE_NONE;
+		item._itype = ItemType::None;
 	}
 }
 
