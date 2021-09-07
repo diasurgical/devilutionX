@@ -16,6 +16,7 @@
 #include "dead.h"
 #include "drlg_l1.h"
 #include "drlg_l4.h"
+#include "drlg_l5.h"
 #include "engine/cel_header.hpp"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"

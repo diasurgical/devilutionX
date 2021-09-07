@@ -25,6 +25,8 @@
 #include "drlg_l2.h"
 #include "drlg_l3.h"
 #include "drlg_l4.h"
+#include "drlg_l5.h"
+#include "drlg_l6.h"
 #include "dx.h"
 #include "encrypt.h"
 #include "engine/cel_sprite.hpp"
@@ -1092,14 +1094,16 @@ void CreateLevel(lvl_entry lvldir)
 		LoadRndLvlPal(DTYPE_TOWN);
 		break;
 	case DTYPE_CATHEDRAL:
-		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
+		CreateL1Dungeon(glSeedTbl[currlevel], lvldir);
 		InitL1Triggers();
 		Freeupstairs();
-		if (currlevel < 21) {
-			LoadRndLvlPal(DTYPE_CATHEDRAL);
-		} else {
-			LoadRndLvlPal(DTYPE_CRYPT);
-		}
+		LoadRndLvlPal(DTYPE_CATHEDRAL);
+		break;
+	case DTYPE_CRYPT:
+		CreateL5Dungeon(glSeedTbl[currlevel], lvldir);
+		InitL5Triggers();
+		Freeupstairs();
+		LoadRndLvlPal(DTYPE_CRYPT);
 		break;
 	case DTYPE_CATACOMBS:
 		CreateL2Dungeon(glSeedTbl[currlevel], lvldir);
@@ -1116,6 +1120,12 @@ void CreateLevel(lvl_entry lvldir)
 		} else {
 			LoadRndLvlPal(DTYPE_NEST);
 		}
+		break;
+	case DTYPE_NEST:
+		CreateL6Dungeon(glSeedTbl[currlevel], lvldir);
+		InitL6Triggers();
+		Freeupstairs();
+		LoadRndLvlPal(DTYPE_NEST);
 		break;
 	case DTYPE_HELL:
 		CreateL4Dungeon(glSeedTbl[currlevel], lvldir);

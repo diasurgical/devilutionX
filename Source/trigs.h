@@ -31,6 +31,8 @@ void InitL1Triggers();
 void InitL2Triggers();
 void InitL3Triggers();
 void InitL4Triggers();
+void InitL5Triggers();
+void InitL6Triggers();
 void InitSKingTriggers();
 void InitSChambTriggers();
 void InitPWaterTriggers();

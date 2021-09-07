@@ -182,6 +182,32 @@ void InitL1Triggers()
 	trigflag = false;
 }
 
+void InitL5Triggers()
+{
+	numtrigs = 0;
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			if (dPiece[i][j] == 184) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
+				trigs[numtrigs]._tlvl = 0;
+				numtrigs++;
+			}
+			if (dPiece[i][j] == 158) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+				numtrigs++;
+			}
+			if (dPiece[i][j] == 126) {
+				trigs[numtrigs].position = { i, j };
+				trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+				numtrigs++;
+			}
+		}
+	}
+	trigflag = false;
+}
+
 void InitL2Triggers()
 {
 	numtrigs = 0;
@@ -211,6 +237,58 @@ void InitL2Triggers()
 }
 
 void InitL3Triggers()
+{
+	if (currlevel < 17) {
+		numtrigs = 0;
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) {
+				if (dPiece[i][j] == 171) {
+					trigs[numtrigs].position = { i, j };
+					trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+					numtrigs++;
+				}
+
+				if (dPiece[i][j] == 168) {
+					trigs[numtrigs].position = { i, j };
+					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+					numtrigs++;
+				}
+
+				if (dPiece[i][j] == 549) {
+					trigs[numtrigs].position = { i, j };
+					trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
+					numtrigs++;
+				}
+			}
+		}
+	} else {
+		numtrigs = 0;
+		for (int j = 0; j < MAXDUNY; j++) {
+			for (int i = 0; i < MAXDUNX; i++) {
+				if (dPiece[i][j] == 66) {
+					trigs[numtrigs].position = { i, j };
+					trigs[numtrigs]._tmsg = WM_DIABPREVLVL;
+					numtrigs++;
+				}
+
+				if (dPiece[i][j] == 63) {
+					trigs[numtrigs].position = { i, j };
+					trigs[numtrigs]._tmsg = WM_DIABNEXTLVL;
+					numtrigs++;
+				}
+
+				if (dPiece[i][j] == 80) {
+					trigs[numtrigs].position = { i, j };
+					trigs[numtrigs]._tmsg = WM_DIABTWARPUP;
+					numtrigs++;
+				}
+			}
+		}
+	}
+	trigflag = false;
+}
+
+void InitL6Triggers()
 {
 	if (currlevel < 17) {
 		numtrigs = 0;

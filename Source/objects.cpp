@@ -12,6 +12,7 @@
 #include "cursor.h"
 #include "drlg_l1.h"
 #include "drlg_l4.h"
+#include "drlg_l5.h"
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "error.h"
