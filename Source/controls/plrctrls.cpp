@@ -1024,7 +1024,7 @@ const Direction FaceDir[3][3] = {
  */
 bool IsPathBlocked(Point position, Direction dir)
 {
-	if (IsNoneOf(dir, Direction::North, Direction::East, Direction::South, Direction::West))
+	if (dir != AnyOf(Direction::North, Direction::East, Direction::South, Direction::West))
 		return false; // Steps along a major axis don't need to check corners
 
 	auto leftStep { position + Left(dir) };

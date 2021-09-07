@@ -2290,7 +2290,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 
 bool WitchItemOk(int i)
 {
-	if (IsNoneOf(AllItemsList[i].itype, ItemType::Misc, ItemType::Staff))
+	if (AllItemsList[i].itype != AnyOf(ItemType::Misc, ItemType::Staff))
 		return false;
 	if (AllItemsList[i].iMiscId == IMISC_MANA)
 		return false;
@@ -2794,7 +2794,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				player._pIAC -= player.InvBody[INVLOC_HAND_LEFT]._iAC / 2;
 			else if (player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Shield)
 				player._pIAC -= player.InvBody[INVLOC_HAND_RIGHT]._iAC / 2;
-		} else if (IsNoneOf(player.InvBody[INVLOC_HAND_LEFT]._itype, ItemType::Staff, ItemType::Bow) && IsNoneOf(player.InvBody[INVLOC_HAND_RIGHT]._itype, ItemType::Staff, ItemType::Bow)) {
+		} else if (player.InvBody[INVLOC_HAND_LEFT]._itype != AnyOf(ItemType::Staff, ItemType::Bow) && player.InvBody[INVLOC_HAND_RIGHT]._itype != AnyOf(ItemType::Staff, ItemType::Bow)) {
 			player._pDamageMod += player._pLevel * player._pVitality / 100;
 		}
 		player._pIAC += player._pLevel / 4;

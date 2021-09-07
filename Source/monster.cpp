@@ -2549,7 +2549,7 @@ void RhinoAi(int i)
 			if (dist >= 2) {
 				v = GenerateRnd(100);
 				if (v >= 2 * monster._mint + 33
-				    && (IsNoneOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+				    && (static_cast<MonsterMode>(monster._mVar1) != AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 				        || monster._mVar2 != 0
 				        || v >= 2 * monster._mint + 83)) {
 					AiDelay(monster, GenerateRnd(10) + 10);
@@ -2693,7 +2693,7 @@ void LeoricAi(int i)
 			if (dist >= 2) {
 				v = GenerateRnd(100);
 				if (v >= monster._mint + 25
-				    && (IsNoneOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) || monster._mVar2 != 0 || (v >= monster._mint + 75))) {
+				    && (static_cast<MonsterMode>(monster._mVar1) != AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) || monster._mVar2 != 0 || (v >= monster._mint + 75))) {
 					AiDelay(monster, GenerateRnd(10) + 10);
 				} else {
 					RandomWalk(i, md);

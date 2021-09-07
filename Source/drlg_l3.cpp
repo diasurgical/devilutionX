@@ -1864,7 +1864,7 @@ void FenceDoorFix()
 				}
 			}
 			if (dungeon[i][j] == 146) {
-				if (IsNoneOf(dungeon[i + 1][j], 130, 132, 133, 134, 136, 138, 140) && IsNoneOf(dungeon[i - 1][j], 130, 132, 133, 134, 136, 138, 140)) {
+				if (dungeon[i + 1][j] != AnyOf(130, 132, 133, 134, 136, 138, 140) && dungeon[i - 1][j] != AnyOf(130, 132, 133, 134, 136, 138, 140)) {
 					dungeon[i][j] = 7;
 					continue;
 				}
@@ -1877,7 +1877,7 @@ void FenceDoorFix()
 				}
 			}
 			if (dungeon[i][j] == 147) {
-				if (IsNoneOf(dungeon[i][j + 1], 131, 132, 133, 135, 137, 138, 139) && IsNoneOf(dungeon[i][j - 1], 131, 132, 133, 135, 137, 138, 139)) {
+				if (dungeon[i][j + 1] != AnyOf(131, 132, 133, 135, 137, 138, 139) && dungeon[i][j - 1] != AnyOf(131, 132, 133, 135, 137, 138, 139)) {
 					dungeon[i][j] = 7;
 					continue;
 				}

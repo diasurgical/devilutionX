@@ -155,7 +155,7 @@ void ApplyShadowsPatterns()
 {
 	for (int y = 1; y < DMAXY; y++) {
 		for (int x = 1; x < DMAXY; x++) {
-			if (IsNoneOf(dungeon[x][y], 3, 4, 8, 15)) {
+			if (dungeon[x][y] != AnyOf(3, 4, 8, 15)) {
 				continue;
 			}
 			if (dungeon[x - 1][y] == 6) {

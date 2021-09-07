@@ -235,7 +235,7 @@ bool CanEquip(const Item &item)
  */
 bool CanWield(Player &player, const Item &item)
 {
-	if (!CanEquip(item) || IsNoneOf(item._iLoc, ILOC_ONEHAND, ILOC_TWOHAND))
+	if (!CanEquip(item) || item._iLoc != AnyOf(ILOC_ONEHAND, ILOC_TWOHAND))
 		return false;
 
 	Item &leftHandItem = player.InvBody[INVLOC_HAND_LEFT];
@@ -460,7 +460,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
-	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.HoldItem._iStatFlag) {
+	if (il != AnyOf(ILOC_UNEQUIPABLE, ILOC_BELT) && !player.HoldItem._iStatFlag) {
 		done = false;
 		player.Say(HeroSpeech::ICantUseThisYet);
 	}
@@ -908,7 +908,7 @@ void CheckNaKrulNotes(Player &player)
 	int idx = player.HoldItem.IDidx;
 	_item_indexes notes[] = { IDI_NOTE1, IDI_NOTE2, IDI_NOTE3 };
 
-	if (IsNoneOf(idx, IDI_NOTE1, IDI_NOTE2, IDI_NOTE3)) {
+	if (idx != AnyOf(IDI_NOTE1, IDI_NOTE2, IDI_NOTE3)) {
 		return;
 	}
 
@@ -1163,7 +1163,7 @@ void DrawInv(const Surface &out)
 			if (slot == INVLOC_HAND_LEFT) {
 				if (myPlayer.InvBody[slot]._iLoc == ILOC_TWOHAND) {
 					if (myPlayer._pClass != HeroClass::Barbarian
-					    || IsNoneOf(myPlayer.InvBody[slot]._itype, ItemType::Sword, ItemType::Mace)) {
+					    || myPlayer.InvBody[slot]._itype != AnyOf(ItemType::Sword, ItemType::Mace)) {
 						InvDrawSlotBack(out, GetPanelPosition(UiPanels::Inventory, slotPos[INVLOC_HAND_RIGHT]), { slotSize[INVLOC_HAND_RIGHT].width * InventorySlotSizeInPixels.width, slotSize[INVLOC_HAND_RIGHT].height * InventorySlotSizeInPixels.height });
 						LightTableIndex = 0;
 						cel_transparency_active = true;

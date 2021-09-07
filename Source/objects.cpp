@@ -4119,7 +4119,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		const auto &testObject = Objects[ActiveObjects[j]];
-		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+		if (testObject._otype != AnyOf(OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
 			continue; // Not a Crux object, keep searching
 		if (cruxType != testObject._oVar8 || testObject._oBreak == -1)
 			continue; // Found either a different crux or a previously broken crux, keep searching

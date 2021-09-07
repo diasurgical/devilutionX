@@ -347,7 +347,7 @@ std::string DebugCmdQuest(const string_view parameter)
 	if (parameter.empty()) {
 		std::string ret = "You must provide an id. This could be: all";
 		for (auto &quest : Quests) {
-			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+			if (quest._qactive != AnyOf(QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
 			ret.append(fmt::format(", {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
 		}
@@ -356,7 +356,7 @@ std::string DebugCmdQuest(const string_view parameter)
 
 	if (parameter.compare("all") == 0) {
 		for (auto &quest : Quests) {
-			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+			if (quest._qactive != AnyOf(QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
 
 			quest._qactive = QUEST_ACTIVE;
@@ -372,7 +372,7 @@ std::string DebugCmdQuest(const string_view parameter)
 		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
 	auto &quest = Quests[questId];
 
-	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+	if (quest._qactive != AnyOf(QUEST_NOTAVAIL, QUEST_INIT))
 		return fmt::format("{} was already given.", QuestsData[questId]._qlstr);
 
 	quest._qactive = QUEST_ACTIVE;
@@ -654,7 +654,7 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 	if (parameter.empty()) {
 		std::string ret = "You must provide an id. This could be:";
 		for (auto &quest : Quests) {
-			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+			if (quest._qactive != AnyOf(QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
 			ret.append(fmt::format(" {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
 		}
