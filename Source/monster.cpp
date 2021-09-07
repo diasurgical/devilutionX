@@ -809,7 +809,7 @@ void StartMonsterGotHit(int monsterId)
 
 bool IsRanged(Monster &monster)
 {
-	return IsAnyOf(monster._mAi, AI_SKELBOW, AI_GOATBOW, AI_SUCC, AI_LAZHELP);
+	return monster._mAi == AnyOf(AI_SKELBOW, AI_GOATBOW, AI_SUCC, AI_LAZHELP);
 }
 
 void UpdateEnemy(Monster &monster)
@@ -2158,7 +2158,7 @@ void AiAvoidance(int i, bool special)
 	if (monster._mgoal == MGOAL_NORMAL) {
 		if (abs(mx) >= 2 || abs(my) >= 2) {
 			if ((monster._mVar2 > 20 && v < 2 * monster._mint + 28)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+			    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 			        && monster._mVar2 == 0
 			        && v < 2 * monster._mint + 78)) {
 				RandomWalk(i, md);
@@ -2265,7 +2265,7 @@ void AiRangedAvoidance(int i, missile_id missileType, bool checkdoors, int dam, 
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 1000 * (monster._mint + 5)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster._mVar2 == 0 && v < 1000 * (monster._mint + 8))) {
+			    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster._mVar2 == 0 && v < 1000 * (monster._mint + 8))) {
 				RandomWalk(i, md);
 			}
 		} else if (v < 1000 * (monster._mint + 6)) {
@@ -2329,7 +2329,7 @@ void OverlordAi(int i)
 	int v = GenerateRnd(100);
 	if (abs(mx) >= 2 || abs(my) >= 2) {
 		if ((monster._mVar2 > 20 && v < 4 * monster._mint + 20)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 		        && monster._mVar2 == 0
 		        && v < 4 * monster._mint + 70)) {
 			RandomWalk(i, md);
@@ -2393,7 +2393,7 @@ void SkeletonBowAi(int i)
 
 	if (abs(mx) < 4 && abs(my) < 4) {
 		if ((monster._mVar2 > 20 && v < 2 * monster._mint + 13)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 		        && monster._mVar2 == 0
 		        && v < 2 * monster._mint + 63)) {
 			walking = DumbWalk(i, Opposite(md));
@@ -2748,7 +2748,7 @@ void BatAi(int i)
 		}
 	} else if (abs(xd) >= 2 || abs(yd) >= 2) {
 		if ((monster._mVar2 > 20 && v < monster._mint + 13)
-		    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+		    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 		        && monster._mVar2 == 0
 		        && v < monster._mint + 63)) {
 			RandomWalk(i, md);
@@ -2878,7 +2878,7 @@ void SneakAi(int i)
 			StartFadeout(monster, md, true);
 		} else {
 			if (monster._mgoal == MGOAL_RETREAT
-			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster._mVar2 > 20 && v < 4 * monster._mint + 14) || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster._mVar2 == 0 && v < 4 * monster._mint + 64)))) {
+			    || ((abs(mx) >= 2 || abs(my) >= 2) && ((monster._mVar2 > 20 && v < 4 * monster._mint + 14) || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster._mVar2 == 0 && v < 4 * monster._mint + 64)))) {
 				monster._mgoalvar1++;
 				RandomWalk(i, md);
 			}
@@ -3049,7 +3049,7 @@ void SnakeAi(int i)
 			AiDelay(monster, 15 - monster._mint + GenerateRnd(10));
 		}
 	} else {
-		if (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::Delay, MonsterMode::Charge)
+		if (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::Delay, MonsterMode::Charge)
 		    || (GenerateRnd(100) < monster._mint + 20)) {
 			StartAttack(monster);
 		} else
@@ -3207,7 +3207,7 @@ void MegaAi(int i)
 		} else if (dist >= 2) {
 			v = GenerateRnd(100);
 			if (v < 2 * (5 * monster._mint + 25)
-			    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
+			    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways)
 			        && monster._mVar2 == 0
 			        && v < 2 * (5 * monster._mint + 40))) {
 				RandomWalk(i, md);
@@ -3431,7 +3431,7 @@ void HorkDemonAi(int i)
 		} else {
 			v = GenerateRnd(100);
 			if (v < 2 * monster._mint + 33
-			    || (IsAnyOf(static_cast<MonsterMode>(monster._mVar1), MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster._mVar2 == 0 && v < 2 * monster._mint + 83)) {
+			    || (static_cast<MonsterMode>(monster._mVar1) == AnyOf(MonsterMode::MoveNorthwards, MonsterMode::MoveSouthwards, MonsterMode::MoveSideways) && monster._mVar2 == 0 && v < 2 * monster._mint + 83)) {
 				RandomWalk(i, md);
 			} else {
 				AiDelay(monster, GenerateRnd(10) + 10);
@@ -3912,7 +3912,7 @@ void AddDoppelganger(Monster &monster)
 
 bool M_Talker(const Monster &monster)
 {
-	return IsAnyOf(monster._mAi, AI_LAZARUS, AI_WARLORD, AI_GARBUD, AI_ZHAR, AI_SNOTSPIL, AI_LACHDAN, AI_LAZHELP);
+	return monster._mAi == AnyOf(AI_LAZARUS, AI_WARLORD, AI_GARBUD, AI_ZHAR, AI_SNOTSPIL, AI_LACHDAN, AI_LAZHELP);
 }
 
 void M_StartStand(Monster &monster, Direction md)
@@ -4163,7 +4163,7 @@ void GolumAi(int i)
 		return;
 	}
 
-	if (IsAnyOf(golem._mmode, MonsterMode::Death, MonsterMode::SpecialStand) || golem.IsWalking()) {
+	if (golem._mmode == AnyOf(MonsterMode::Death, MonsterMode::SpecialStand) || golem.IsWalking()) {
 		return;
 	}
 
@@ -4930,7 +4930,7 @@ void SpawnGolem(int i, Point position, Missile &missile)
 
 bool CanTalkToMonst(const Monster &monster)
 {
-	return IsAnyOf(monster._mgoal, MGOAL_INQUIRING, MGOAL_TALKING);
+	return monster._mgoal == AnyOf(MGOAL_INQUIRING, MGOAL_TALKING);
 }
 
 bool CheckMonsterHit(Monster &monster, bool *ret)
@@ -4976,7 +4976,7 @@ void decode_enemy(Monster &monster, int enemy)
 
 void Monster::CheckStandAnimationIsLoaded(Direction mdir)
 {
-	if (IsAnyOf(_mmode, MonsterMode::Stand, MonsterMode::Talk)) {
+	if (_mmode == AnyOf(MonsterMode::Stand, MonsterMode::Talk)) {
 		_mdir = mdir;
 		ChangeAnimationData(MonsterGraphic::Stand);
 	}

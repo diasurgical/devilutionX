@@ -87,7 +87,7 @@ bool IsWarpOpen(dungeon_type type)
 			return true;
 		if (type == DTYPE_HELL && myPlayer._pLevel >= 20)
 			return true;
-		if (type == DTYPE_NEST && IsAnyOf(Quests[Q_FARMER]._qactive, QUEST_DONE, QUEST_HIVE_DONE))
+		if (type == DTYPE_NEST && Quests[Q_FARMER]._qactive == AnyOf(QUEST_DONE, QUEST_HIVE_DONE))
 			return true;
 		if (type == DTYPE_CRYPT && Quests[Q_GRAVE]._qactive == QUEST_DONE)
 			return true;
@@ -833,13 +833,13 @@ void CheckTriggers()
 					abortflag = EMSG_REQUIRES_LVL_8;
 				}
 
-				if (IsAnyOf(trigs[i]._tlvl, 9, 17) && myPlayer._pLevel < 13) {
+				if (trigs[i]._tlvl == AnyOf(9, 17) && myPlayer._pLevel < 13) {
 					abort = true;
 					position.x += 1;
 					abortflag = EMSG_REQUIRES_LVL_13;
 				}
 
-				if (IsAnyOf(trigs[i]._tlvl, 13, 21) && myPlayer._pLevel < 17) {
+				if (trigs[i]._tlvl == AnyOf(13, 21) && myPlayer._pLevel < 17) {
 					abort = true;
 					position.y += 1;
 					abortflag = EMSG_REQUIRES_LVL_17;

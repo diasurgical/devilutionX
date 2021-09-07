@@ -1792,9 +1792,9 @@ void InitDungeonPieces()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			int8_t pc;
-			if (IsAnyOf(dPiece[i][j], 541, 178, 551)) {
+			if (dPiece[i][j] == AnyOf(541, 178, 551)) {
 				pc = 5;
-			} else if (IsAnyOf(dPiece[i][j], 542, 553)) {
+			} else if (dPiece[i][j] == AnyOf(542, 553)) {
 				pc = 6;
 			} else {
 				continue;
@@ -1892,7 +1892,7 @@ void CreateDoorType(int nX, int nY)
 	if (predungeon[nX][nY + 1] == 68) {
 		return;
 	}
-	if (IsAnyOf(predungeon[nX][nY], 65, 66, 67, 69)) {
+	if (predungeon[nX][nY] == AnyOf(65, 66, 67, 69)) {
 		return;
 	}
 
@@ -2720,7 +2720,7 @@ bool CreateDungeon()
 
 	for (int j = 0; j < DMAXY; j++) {     /// BUGFIX: change '<=' to '<' (fixed)
 		for (int i = 0; i < DMAXX; i++) { /// BUGFIX: change '<=' to '<' (fixed)
-			if (IsAnyOf(predungeon[i][j], 65, 66, 67, 69)) {
+			if (predungeon[i][j] == AnyOf(65, 66, 67, 69)) {
 				predungeon[i][j] = 35;
 			}
 			if (predungeon[i][j] == 44) {

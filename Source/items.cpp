@@ -2245,7 +2245,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		case ItemType::HeavyArmor: {
 			const auto *const mostValuablePlayerArmor = player.GetMostValuableItem(
 			    [](const Item &item) {
-				    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
+				    return item._itype == AnyOf(ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
 			    });
 
 			itemValue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
@@ -2395,7 +2395,7 @@ void RecreateBoyItem(Item &item, int lvl, int iseed)
 
 void RecreateWitchItem(Item &item, int idx, int lvl, int iseed)
 {
-	if (IsAnyOf(idx, IDI_MANA, IDI_FULLMANA, IDI_PORTAL)) {
+	if (idx == AnyOf(IDI_MANA, IDI_FULLMANA, IDI_PORTAL)) {
 		GetItemAttrs(item, idx, lvl);
 	} else if (gbIsHellfire && idx >= 114 && idx <= 117) {
 		SetRndSeed(iseed);
@@ -2421,7 +2421,7 @@ void RecreateWitchItem(Item &item, int idx, int lvl, int iseed)
 
 void RecreateHealerItem(Item &item, int idx, int lvl, int iseed)
 {
-	if (IsAnyOf(idx, IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT)) {
+	if (idx == AnyOf(IDI_HEAL, IDI_FULLHEAL, IDI_RESURRECT)) {
 		GetItemAttrs(item, idx, lvl);
 	} else {
 		SetRndSeed(iseed);
@@ -2519,7 +2519,7 @@ bool IsItemAvailable(int i)
 	if (gbIsSpawn) {
 		if (i >= 62 && i <= 71)
 			return false; // Medium and heavy armors
-		if (IsAnyOf(i, 105, 107, 108, 110, 111, 113))
+		if (i == AnyOf(105, 107, 108, 110, 111, 113))
 			return false; // Unavailable scrolls
 	}
 
@@ -2538,7 +2538,7 @@ bool IsItemAvailable(int i)
 	    || (
 	        // Bard items are technically Hellfire-exclusive
 	        // but are just normal items with adjusted stats.
-	        sgOptions.Gameplay.bTestBard && IsAnyOf(i, IDI_BARDSWORD, IDI_BARDDAGGER));
+	        sgOptions.Gameplay.bTestBard && i == AnyOf(IDI_BARDSWORD, IDI_BARDDAGGER));
 }
 
 BYTE GetOutlineColor(const Item &item, bool checkReq)
@@ -2837,7 +2837,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	} else if (player._pClass == HeroClass::Barbarian) {
 		vadd += vadd;
 		vadd += (vadd / 4);
-	} else if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard)) {
+	} else if (player._pClass == AnyOf(HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard)) {
 		vadd += vadd / 2;
 	}
 	ihp += (vadd << 6); // BUGFIX: blood boil can cause negative shifts here (see line 757)
@@ -2845,7 +2845,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	if (player._pClass == HeroClass::Sorcerer) {
 		madd *= 2;
 	}
-	if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk)) {
+	if (player._pClass == AnyOf(HeroClass::Rogue, HeroClass::Monk)) {
 		madd += madd / 2;
 	} else if (player._pClass == HeroClass::Bard) {
 		madd += (madd / 4) + (madd / 2);
@@ -4220,7 +4220,7 @@ void PrintItemDur(Item *x)
 			AddPanelString(tempstr);
 		}
 	}
-	if (IsAnyOf(x->_itype, ItemType::Ring, ItemType::Amulet))
+	if (x->_itype == AnyOf(ItemType::Ring, ItemType::Amulet))
 		AddPanelString(_("Not Identified"));
 	PrintItemInfo(*x);
 }
@@ -4234,9 +4234,9 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_FOOD: {
 		int j = player._pMaxHP >> 8;
 		int l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Barbarian))
+		if (player._pClass == AnyOf(HeroClass::Warrior, HeroClass::Barbarian))
 			l *= 2;
-		if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		if (player._pClass == AnyOf(HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 			l += l / 2;
 		player._pHitPoints = std::min(player._pHitPoints + l, player._pMaxHP);
 		player._pHPBase = std::min(player._pHPBase + l, player._pMaxHPBase);
@@ -4252,7 +4252,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		int l = ((j / 2) + GenerateRnd(j)) << 6;
 		if (player._pClass == HeroClass::Sorcerer)
 			l *= 2;
-		if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
+		if (player._pClass == AnyOf(HeroClass::Rogue, HeroClass::Monk, HeroClass::Bard))
 			l += l / 2;
 		if ((player._pIFlags & ISPL_NOMANA) == 0) {
 			player._pMana = std::min(player._pMana + l, player._pMaxMana);
@@ -4292,7 +4292,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_REJUV: {
 		int j = player._pMaxHP >> 8;
 		int l = ((j / 2) + GenerateRnd(j)) << 6;
-		if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Barbarian))
+		if (player._pClass == AnyOf(HeroClass::Warrior, HeroClass::Barbarian))
 			l *= 2;
 		if (player._pClass == HeroClass::Rogue)
 			l += l / 2;
@@ -4621,7 +4621,7 @@ void SpawnBoy(int lvl)
 		case ItemType::HeavyArmor: {
 			const auto *const mostValuablePlayerArmor = myPlayer.GetMostValuableItem(
 			    [](const Item &item) {
-				    return IsAnyOf(item._itype, ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
+				    return item._itype == AnyOf(ItemType::LightArmor, ItemType::MediumArmor, ItemType::HeavyArmor);
 			    });
 
 			ivalue = mostValuablePlayerArmor == nullptr ? 0 : mostValuablePlayerArmor->_iIvalue;
@@ -4650,27 +4650,27 @@ void SpawnBoy(int lvl)
 		if (count < 200) {
 			switch (pc) {
 			case HeroClass::Warrior:
-				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
+				if (itemType == AnyOf(ItemType::Bow, ItemType::Staff))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Rogue:
-				if (IsAnyOf(itemType, ItemType::Sword, ItemType::Staff, ItemType::Axe, ItemType::Mace, ItemType::Shield))
+				if (itemType == AnyOf(ItemType::Sword, ItemType::Staff, ItemType::Axe, ItemType::Mace, ItemType::Shield))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Sorcerer:
-				if (IsAnyOf(itemType, ItemType::Staff, ItemType::Axe, ItemType::Bow, ItemType::Mace))
+				if (itemType == AnyOf(ItemType::Staff, ItemType::Axe, ItemType::Bow, ItemType::Mace))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Monk:
-				if (IsAnyOf(itemType, ItemType::Bow, ItemType::MediumArmor, ItemType::Shield, ItemType::Mace))
+				if (itemType == AnyOf(ItemType::Bow, ItemType::MediumArmor, ItemType::Shield, ItemType::Mace))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Bard:
-				if (IsAnyOf(itemType, ItemType::Axe, ItemType::Mace, ItemType::Staff))
+				if (itemType == AnyOf(ItemType::Axe, ItemType::Mace, ItemType::Staff))
 					ivalue = INT_MAX;
 				break;
 			case HeroClass::Barbarian:
-				if (IsAnyOf(itemType, ItemType::Bow, ItemType::Staff))
+				if (itemType == AnyOf(ItemType::Bow, ItemType::Staff))
 					ivalue = INT_MAX;
 				break;
 			}

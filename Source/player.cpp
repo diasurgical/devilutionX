@@ -2149,7 +2149,7 @@ void Player::Stop()
 
 bool Player::IsWalking() const
 {
-	return IsAnyOf(_pmode, PM_WALK, PM_WALK2, PM_WALK3);
+	return _pmode == AnyOf(PM_WALK, PM_WALK2, PM_WALK3);
 }
 
 void Player::Reset()

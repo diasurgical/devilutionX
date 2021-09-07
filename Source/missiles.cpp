@@ -833,7 +833,7 @@ void SpawnLightning(Missile &missile, int dam)
 			missile.var4 = -(AvailableMissiles[0] + 1);
 			missile_id type = MIS_LIGHTNING;
 			if (missile._misource != -1 && missile._micaster == TARGET_PLAYERS
-			    && IsAnyOf(Monsters[missile._misource].MType->mtype, MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
+			    && Monsters[missile._misource].MType->mtype == AnyOf(MT_STORM, MT_RSTORM, MT_STORML, MT_MAEL)) {
 				type = MIS_LIGHTNING2;
 			}
 			AddMissile(
@@ -1383,7 +1383,7 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 
 			if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
 				continue;
-			if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut))
+			if (monster._mmode == AnyOf(MonsterMode::FadeIn, MonsterMode::FadeOut))
 				continue;
 			if ((monster.mMagicRes & IMMUNE_MAGIC) != 0)
 				continue;
@@ -1627,7 +1627,7 @@ void AddLightningWall(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddRuneExplosion(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
-	if (IsAnyOf(missile._micaster, TARGET_MONSTERS, TARGET_BOTH)) {
+	if (missile._micaster == AnyOf(TARGET_MONSTERS, TARGET_BOTH)) {
 		int dmg = 2 * (Players[missile._misource]._pLevel + GenerateRndSum(10, 2)) + 4;
 		dmg = ScaleSpellEffect(dmg, missile._mispllvl);
 
@@ -1776,7 +1776,7 @@ void AddLArrow(Missile &missile, Point dst, Direction midir)
 		auto &player = Players[missile._misource];
 		if (player._pClass == HeroClass::Rogue)
 			av += (player._pLevel) / 4;
-		else if (IsAnyOf(player._pClass, HeroClass::Warrior, HeroClass::Bard))
+		else if (player._pClass == AnyOf(HeroClass::Warrior, HeroClass::Bard))
 			av += (player._pLevel) / 8;
 
 		if (gbIsHellfire) {
@@ -1789,7 +1789,7 @@ void AddLArrow(Missile &missile, Point dst, Direction midir)
 			if ((player._pIFlags & ISPL_FASTESTATTACK) != 0)
 				av += 8;
 		} else {
-			if (IsAnyOf(player._pClass, HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
+			if (player._pClass == AnyOf(HeroClass::Rogue, HeroClass::Warrior, HeroClass::Bard))
 				av -= 1;
 		}
 	}
@@ -2351,10 +2351,10 @@ void AddStone(Missile &missile, Point dst, Direction /*midir*/)
 			mid = abs(mid) - 1;
 			auto &monster = Monsters[mid];
 
-			if (IsAnyOf(monster.MType->mtype, MT_GOLEM, MT_DIABLO, MT_NAKRUL))
+			if (monster.MType->mtype == AnyOf(MT_GOLEM, MT_DIABLO, MT_NAKRUL))
 				continue;
 
-			if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
+			if (monster._mmode == AnyOf(MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
 				continue;
 
 			found = true;

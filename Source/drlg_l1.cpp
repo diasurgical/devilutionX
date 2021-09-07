@@ -736,21 +736,21 @@ void ApplyShadowsPatterns()
 		for (int x = 1; x < DMAXX; x++) {
 			if (dungeon[x - 1][y] == 139 && L5dflags[x - 1][y] == 0) {
 				uint8_t tnv3 = 139;
-				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
+				if (dungeon[x][y] == AnyOf(29, 32, 35, 37, 38, 39)) {
 					tnv3 = 141;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
 			if (dungeon[x - 1][y] == 149 && L5dflags[x - 1][y] == 0) {
 				uint8_t tnv3 = 149;
-				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
+				if (dungeon[x][y] == AnyOf(29, 32, 35, 37, 38, 39)) {
 					tnv3 = 153;
 				}
 				dungeon[x - 1][y] = tnv3;
 			}
 			if (dungeon[x - 1][y] == 148 && L5dflags[x - 1][y] == 0) {
 				uint8_t tnv3 = 148;
-				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
+				if (dungeon[x][y] == AnyOf(29, 32, 35, 37, 38, 39)) {
 					tnv3 = 154;
 				}
 				dungeon[x - 1][y] = tnv3;
@@ -966,9 +966,9 @@ void InitDungeonPieces()
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
 			int8_t pc;
-			if (IsAnyOf(dPiece[i][j], 12, 71, 321, 211, 341, 418)) {
+			if (dPiece[i][j] == AnyOf(12, 71, 321, 211, 341, 418)) {
 				pc = 1;
-			} else if (IsAnyOf(dPiece[i][j], 11, 249, 325, 344, 331, 421)) {
+			} else if (dPiece[i][j] == AnyOf(11, 249, 325, 344, 331, 421)) {
 				pc = 2;
 			} else if (dPiece[i][j] == 253) {
 				pc = 3;

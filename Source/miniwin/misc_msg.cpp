@@ -301,7 +301,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 	if (!movie_playing) {
 		// SDL generates mouse events from touch-based inputs to provide basic
 		// touchscreeen support for apps that don't explicitly handle touch events
-		if (IsAnyOf(e.type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP) && e.button.which == SDL_TOUCH_MOUSEID)
+		if (e.type == AnyOf(SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP) && e.button.which == SDL_TOUCH_MOUSEID)
 			return true;
 		if (e.type == SDL_MOUSEMOTION && e.motion.which == SDL_TOUCH_MOUSEID)
 			return true;
