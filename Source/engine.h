@@ -95,30 +95,6 @@ template <typename... Args>
 	return AnyOfHelper(std::forward<Args>(values)...);
 }
 
-template <typename V, typename X>
-bool IsAnyOf(const V &v, X x)
-{
-	return v == x;
-}
-
-template <typename V, typename X, typename... Xs>
-bool IsAnyOf(const V &v, X x, Xs... xs)
-{
-	return IsAnyOf(v, x) || IsAnyOf(v, xs...);
-}
-
-template <typename V, typename X>
-bool IsNoneOf(const V &v, X x)
-{
-	return v != x;
-}
-
-template <typename V, typename X, typename... Xs>
-bool IsNoneOf(const V &v, X x, Xs... xs)
-{
-	return IsNoneOf(v, x) && IsNoneOf(v, xs...);
-}
-
 /**
  * @brief Draw a horizontal line segment in the target buffer (left to right)
  * @param out Target buffer
