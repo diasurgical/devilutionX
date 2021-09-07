@@ -9,6 +9,7 @@
 
 #include "engine/point.hpp"
 #include "items.h"
+#include "missiles.h"
 #include "monster.h"
 #include "objects.h"
 #include "portal.h"
@@ -124,6 +125,8 @@ enum _cmd_id : uint8_t {
 	CMD_NAKRUL,
 	CMD_OPENHIVE,
 	CMD_OPENCRYPT,
+	CMD_SYNCMISSILES,
+	CMD_SYNCMISSILESCOUNT,
 	FAKE_CMD_SETID,
 	FAKE_CMD_DROPID,
 	NUM_CMDS,
@@ -163,6 +166,18 @@ struct TCmdLocParam3 {
 	uint16_t wParam1;
 	uint16_t wParam2;
 	uint16_t wParam3;
+};
+
+struct TCmdMissileCountSync {
+	_cmd_id bCmd;
+	int count;
+};
+
+struct TCmdMissileSync {
+	_cmd_id bCmd;
+	int activeindex;
+	int missileindex;
+	Missile missile;
 };
 
 struct TCmdParam1 {
@@ -438,6 +453,7 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
+void NetSendMissileSync(int pnum);
 uint32_t ParseCmd(int pnum, TCmd *pCmd);
 
 } // namespace devilution

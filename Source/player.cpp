@@ -3241,6 +3241,7 @@ StartNewLvl(int pnum, interface_mode fom, int lvl)
 		app_fatal("StartNewLvl");
 	}
 
+	NetSendMissileSync(pnum);
 	if (pnum == MyPlayerId) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
@@ -3269,6 +3270,8 @@ void RestartTownLvl(int pnum)
 
 	CalcPlrInv(player, false);
 
+	NetSendMissileSync(pnum);
+
 	if (pnum == MyPlayerId) {
 		player._pmode = PM_NEWLVL;
 		player._pInvincible = true;
@@ -3290,6 +3293,7 @@ void StartWarpLvl(int pnum, int pidx)
 		}
 	}
 
+	NetSendMissileSync(pnum);
 	if (pnum == MyPlayerId) {
 		SetCurrentPortal(pidx);
 		player._pmode = PM_NEWLVL;

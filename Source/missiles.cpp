@@ -31,6 +31,25 @@ Missile Missiles[MAXMISSILES];
 int ActiveMissileCount;
 bool MissilePreFlag;
 
+void SetMissAnim(Missile &missile, int animtype)
+{
+	int dir = missile._mimfnum;
+
+	if (animtype > MFILE_NONE) {
+		animtype = MFILE_NONE;
+	}
+
+	missile._miAnimType = animtype;
+	missile._miAnimFlags = MissileSpriteData[animtype].flags;
+	missile._miAnimData = MissileSpriteData[animtype].animData[dir].get();
+	missile._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
+	missile._miAnimLen = MissileSpriteData[animtype].animLen[dir];
+	missile._miAnimWidth = MissileSpriteData[animtype].animWidth;
+	missile._miAnimWidth2 = MissileSpriteData[animtype].animWidth2;
+	missile._miAnimCnt = 0;
+	missile._miAnimFrame = 1;
+}
+
 namespace {
 
 ChainStruct chain[MAXMISSILES];
@@ -588,25 +607,6 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 	}
 	if (missile._mirange == 0 && MissilesData[missile._mitype].miSFX != -1)
 		PlaySfxLoc(MissilesData[missile._mitype].miSFX, missile.position.tile);
-}
-
-void SetMissAnim(Missile &missile, int animtype)
-{
-	int dir = missile._mimfnum;
-
-	if (animtype > MFILE_NONE) {
-		animtype = MFILE_NONE;
-	}
-
-	missile._miAnimType = animtype;
-	missile._miAnimFlags = MissileSpriteData[animtype].flags;
-	missile._miAnimData = MissileSpriteData[animtype].animData[dir].get();
-	missile._miAnimDelay = MissileSpriteData[animtype].animDelay[dir];
-	missile._miAnimLen = MissileSpriteData[animtype].animLen[dir];
-	missile._miAnimWidth = MissileSpriteData[animtype].animWidth;
-	missile._miAnimWidth2 = MissileSpriteData[animtype].animWidth2;
-	missile._miAnimCnt = 0;
-	missile._miAnimFrame = 1;
 }
 
 void AddRune(Missile &missile, Point dst, missile_id missileID)

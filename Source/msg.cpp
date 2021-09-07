@@ -1797,6 +1797,31 @@ DWORD OnOpenCrypt(TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
+DWORD OnSyncMissiles(TCmd *pCmd, int pnum)
+{
+	auto *p = (TCmdMissileSync *)pCmd;
+
+	if (gbBufferMsgs != 1) {
+		int mi = p->missileindex;
+		ActiveMissiles[p->activeindex] = mi;
+		memcpy(&Missiles[mi], &p->missile, sizeof(Missile));
+		SetMissAnim(Missiles[mi], Missiles[mi]._miAnimType);
+		SDL_Log(" %dRECEIVED SYNC MISSILE: %d %d", pnum,  p->activeindex, mi);
+	}
+	return sizeof(*p);
+}
+
+DWORD OnSyncMissilesCount(TCmd *pCmd, int pnum)
+{
+	auto *p = (TCmdMissileCountSync *)pCmd;
+	if (gbBufferMsgs != 1) {
+		ActiveMissileCount = p->count;
+		SDL_Log("%d RECEIVED SYNC MISSILE COUNT: %d", pnum, p->count);
+	}
+
+	return sizeof(*p);
+}
+
 } // namespace
 
 void msg_send_drop_pkt(int pnum, int reason)
@@ -2501,6 +2526,29 @@ void delta_close_portal(int pnum)
 	sgbDeltaChanged = true;
 }
 
+void NetSendMissileSync(int pnum)
+{
+	if (pnum == MyPlayerId || Players[MyPlayerId].plrlevel != Players[pnum].plrlevel)
+		return;
+	TCmdMissileCountSync cmdCount;
+	cmdCount.bCmd = CMD_SYNCMISSILESCOUNT;
+	cmdCount.count = ActiveMissileCount;
+	NetSendHiPri(MyPlayerId, (byte *)&cmdCount, sizeof(cmdCount));
+
+	for (int i = 0; i < ActiveMissileCount; i++)
+	{
+		TCmdMissileSync cmd;
+		cmd.bCmd = CMD_SYNCMISSILES;
+
+		int mi = ActiveMissiles[i];
+		cmd.activeindex = i;
+		cmd.missileindex = mi;
+		memcpy(&cmd.missile, &Missiles[mi], sizeof(Missile));
+
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	}
+}
+
 DWORD ParseCmd(int pnum, TCmd *pCmd)
 {
 	sbLastCmd = pCmd->bCmd;
@@ -2661,6 +2709,10 @@ DWORD ParseCmd(int pnum, TCmd *pCmd)
 		return OnOpenHive(pCmd, pnum);
 	case CMD_OPENCRYPT:
 		return OnOpenCrypt(pCmd);
+	case CMD_SYNCMISSILES:
+		return OnSyncMissiles(pCmd, pnum);
+	case CMD_SYNCMISSILESCOUNT:
+		return OnSyncMissilesCount(pCmd, pnum);
 	default:
 		break;
 	}
