@@ -40,6 +40,48 @@
 
 namespace devilution {
 
+namespace {
+
+template <typename... Args>
+struct AnyOfHelper {
+	std::tuple<Args...> values;
+
+	constexpr AnyOfHelper(Args... values)
+	    : values(std::move(values)...)
+	{
+	}
+
+	template <typename T>
+	[[nodiscard]] friend constexpr bool operator==(T lhs, AnyOfHelper const &rhs) noexcept
+	{
+		return std::apply(
+		    [&](auto... vals) { return ((lhs == vals) || ...); },
+		    rhs.values);
+	}
+};
+
+} // namespace
+
+/**
+ * @brief Wraps a series of constant values for allowing multiple comparisons with a single target using the form
+ * 
+ * 'if (x == AnyOf(a, b, c))'
+ * 
+ * as a shorthand for
+ * 
+ * 'if (x == a || x == b || x == c)'
+ *
+ * Based on the implementation shared here:
+ * https://stackoverflow.com/a/60131309/1946412
+ * 
+ * @param values The values which will be used to compare to a target value.
+ */
+template <typename... Args>
+[[nodiscard]] constexpr auto AnyOf(Args &&...values)
+{
+	return AnyOfHelper(std::forward<Args>(values)...);
+}
+
 template <typename V, typename X>
 bool IsAnyOf(const V &v, X x)
 {
