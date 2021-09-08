@@ -186,6 +186,14 @@ constexpr std::size_t HashEntrySize = INDEX_ENTRIES * sizeof(HashEntry);
 constexpr std::ios::off_type MpqBlockEntryOffset = sizeof(FileHeader);
 constexpr std::ios::off_type MpqHashEntryOffset = MpqBlockEntryOffset + BlockEntrySize;
 
+struct TableCache {
+	std::string name;
+	std::vector<HashEntry> hashTbl;
+	std::vector<BlockEntry> blockTbl;
+};
+
+TableCache Cache;
+
 struct Archive {
 	FStreamWrapper stream;
 	std::string name;
@@ -239,11 +247,16 @@ struct Archive {
 			LogDebug("ResizeFile(\"{}\", {})", name, size);
 			result = ResizeFile(name.c_str(), size);
 		}
-		name.clear();
-		if (clearTables) {
-			hashTbl = {};
-			blockTbl = {};
+		if (!clearTables) {
+			Cache.name = std::move(name);
+			Cache.hashTbl = std::move(hashTbl);
+			Cache.blockTbl = std::move(blockTbl);
+		} else {
+			Cache.name.clear();
 		}
+		name.clear();
+		hashTbl = {};
+		blockTbl = {};
 		return result;
 	}
 
@@ -638,7 +651,12 @@ bool OpenMPQ(const char *pszArchive)
 	if (!cur_archive.Open(pszArchive)) {
 		return false;
 	}
-	if (cur_archive.blockTbl.empty() || cur_archive.hashTbl.empty()) {
+	if (Cache.name == cur_archive.name) {
+		cur_archive.hashTbl = std::move(Cache.hashTbl);
+		cur_archive.blockTbl = std::move(Cache.blockTbl);
+		Cache = {};
+	} else {
+		Cache = {};
 		if (!cur_archive.exists) {
 			InitDefaultMpqHeader(&cur_archive, &fhdr);
 		} else if (!ReadMPQHeader(&cur_archive, &fhdr)) {
