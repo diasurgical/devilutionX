@@ -377,13 +377,13 @@ void AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 			if (block->offset + block->sizealloc == blockOffset) {
 				blockOffset = block->offset;
 				blockSize += block->sizealloc;
-				memset(block, 0, sizeof(BlockEntry));
+				*block = {};
 				AllocBlock(blockOffset, blockSize);
 				return;
 			}
 			if (blockOffset + blockSize == block->offset) {
 				blockSize += block->sizealloc;
-				memset(block, 0, sizeof(BlockEntry));
+				*block = {};
 				AllocBlock(blockOffset, blockSize);
 				return;
 			}
@@ -407,23 +407,23 @@ void AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 {
 	for (int i = 0; i < INDEX_ENTRIES; i++) {
-		BlockEntry *pBlockTbl = &cur_archive.blockTbl[i];
-		if (pBlockTbl->offset == 0)
+		BlockEntry *block = &cur_archive.blockTbl[i];
+		if (block->offset == 0)
 			continue;
-		if (pBlockTbl->flags != 0)
+		if (block->flags != 0)
 			continue;
-		if (pBlockTbl->sizefile != 0)
+		if (block->sizefile != 0)
 			continue;
-		if (pBlockTbl->sizealloc < size)
+		if (block->sizealloc < size)
 			continue;
 
-		int result = pBlockTbl->offset;
+		int result = block->offset;
 		*blockSize = size;
-		pBlockTbl->offset += size;
-		pBlockTbl->sizealloc -= size;
+		block->offset += size;
+		block->sizealloc -= size;
 
-		if (pBlockTbl->sizealloc == 0)
-			memset(pBlockTbl, 0, sizeof(*pBlockTbl));
+		if (block->sizealloc == 0)
+			*block = {};
 
 		return result;
 	}
@@ -583,7 +583,7 @@ void mpqapi_remove_hash_entry(const char *pszName)
 	pHashTbl->block = -2;
 	int blockOffset = blockEntry->offset;
 	int blockSize = blockEntry->sizealloc;
-	memset(blockEntry, 0, sizeof(*blockEntry));
+	*blockEntry = {};
 	AllocBlock(blockOffset, blockSize);
 	cur_archive.modified = true;
 }
