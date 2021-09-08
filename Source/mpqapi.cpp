@@ -12,6 +12,7 @@
 #include <fstream>
 #include <memory>
 #include <type_traits>
+#include <vector>
 
 #include "appfat.h"
 #include "encrypt.h"
@@ -196,8 +197,8 @@ struct Archive {
 	std::streampos stream_begin;
 #endif
 
-	HashEntry *sgpHashTbl;
-	BlockEntry *sgpBlockTbl;
+	std::vector<HashEntry> hashTbl;
+	std::vector<BlockEntry> blockTbl;
 
 	bool Open(const char *path)
 	{
@@ -240,10 +241,8 @@ struct Archive {
 		}
 		name.clear();
 		if (clearTables) {
-			delete[] sgpHashTbl;
-			sgpHashTbl = nullptr;
-			delete[] sgpBlockTbl;
-			sgpBlockTbl = nullptr;
+			hashTbl = {};
+			blockTbl = {};
 		}
 		return result;
 	}
@@ -279,17 +278,17 @@ private:
 
 	bool WriteBlockTable()
 	{
-		Encrypt((DWORD *)sgpBlockTbl, BlockEntrySize, Hash("(block table)", 3));
-		const bool success = stream.Write(reinterpret_cast<const char *>(sgpBlockTbl), BlockEntrySize);
-		Decrypt((DWORD *)sgpBlockTbl, BlockEntrySize, Hash("(block table)", 3));
+		Encrypt((DWORD *)blockTbl.data(), BlockEntrySize, Hash("(block table)", 3));
+		const bool success = stream.Write(reinterpret_cast<const char *>(blockTbl.data()), BlockEntrySize);
+		Decrypt((DWORD *)blockTbl.data(), BlockEntrySize, Hash("(block table)", 3));
 		return success;
 	}
 
 	bool WriteHashTable()
 	{
-		Encrypt((DWORD *)sgpHashTbl, HashEntrySize, Hash("(hash table)", 3));
-		const bool success = stream.Write(reinterpret_cast<const char *>(sgpHashTbl), HashEntrySize);
-		Decrypt((DWORD *)sgpHashTbl, HashEntrySize, Hash("(hash table)", 3));
+		Encrypt((DWORD *)hashTbl.data(), HashEntrySize, Hash("(hash table)", 3));
+		const bool success = stream.Write(reinterpret_cast<const char *>(hashTbl.data()), HashEntrySize);
+		Decrypt((DWORD *)hashTbl.data(), HashEntrySize, Hash("(hash table)", 3));
 		return success;
 	}
 };
@@ -349,9 +348,8 @@ bool ReadMPQHeader(Archive *archive, FileHeader *hdr)
 
 BlockEntry *NewBlock(int *blockIndex)
 {
-	BlockEntry *blockEntry = cur_archive.sgpBlockTbl;
-
-	for (int i = 0; i < INDEX_ENTRIES; i++, blockEntry++) {
+	for (int i = 0; i < INDEX_ENTRIES; i++) {
+		BlockEntry *blockEntry = &cur_archive.blockTbl[i];
 		if (blockEntry->offset != 0)
 			continue;
 		if (blockEntry->sizealloc != 0)
@@ -372,11 +370,8 @@ BlockEntry *NewBlock(int *blockIndex)
 
 void AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 {
-	BlockEntry *block;
-	int i;
-
-	block = cur_archive.sgpBlockTbl;
-	i = INDEX_ENTRIES;
+	BlockEntry *block = &cur_archive.blockTbl[0];
+	int i = INDEX_ENTRIES;
 	while (i-- != 0) {
 		if (block->offset != 0 && block->flags == 0 && block->sizefile == 0) {
 			if (block->offset + block->sizealloc == blockOffset) {
@@ -411,10 +406,8 @@ void AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 
 int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 {
-	int result;
-
-	BlockEntry *pBlockTbl = cur_archive.sgpBlockTbl;
-	for (int i = 0; i < INDEX_ENTRIES; i++, pBlockTbl++) {
+	for (int i = 0; i < INDEX_ENTRIES; i++) {
+		BlockEntry *pBlockTbl = &cur_archive.blockTbl[i];
 		if (pBlockTbl->offset == 0)
 			continue;
 		if (pBlockTbl->flags != 0)
@@ -424,7 +417,7 @@ int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 		if (pBlockTbl->sizealloc < size)
 			continue;
 
-		result = pBlockTbl->offset;
+		int result = pBlockTbl->offset;
 		*blockSize = size;
 		pBlockTbl->offset += size;
 		pBlockTbl->sizealloc -= size;
@@ -436,7 +429,7 @@ int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 	}
 
 	*blockSize = size;
-	result = cur_archive.size;
+	int result = cur_archive.size;
 	cur_archive.size += size;
 	return result;
 }
@@ -444,14 +437,14 @@ int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 int GetHashIndex(int index, uint32_t hashA, uint32_t hashB)
 {
 	int i = INDEX_ENTRIES;
-	for (int idx = index & 0x7FF; cur_archive.sgpHashTbl[idx].block != -1; idx = (idx + 1) & 0x7FF) {
+	for (int idx = index & 0x7FF; cur_archive.hashTbl[idx].block != -1; idx = (idx + 1) & 0x7FF) {
 		if (i-- == 0)
 			break;
-		if (cur_archive.sgpHashTbl[idx].hashcheck[0] != hashA)
+		if (cur_archive.hashTbl[idx].hashcheck[0] != hashA)
 			continue;
-		if (cur_archive.sgpHashTbl[idx].hashcheck[1] != hashB)
+		if (cur_archive.hashTbl[idx].hashcheck[1] != hashB)
 			continue;
-		if (cur_archive.sgpHashTbl[idx].block == -2)
+		if (cur_archive.hashTbl[idx].block == -2)
 			continue;
 
 		return idx;
@@ -476,7 +469,7 @@ BlockEntry *AddFile(const char *pszName, BlockEntry *pBlk, int blockIndex)
 
 	bool hasSpace = false;
 	for (int i = 0; i < INDEX_ENTRIES; i++) {
-		if (cur_archive.sgpHashTbl[hIdx].block == -1 || cur_archive.sgpHashTbl[hIdx].block == -2) {
+		if (cur_archive.hashTbl[hIdx].block == -1 || cur_archive.hashTbl[hIdx].block == -2) {
 			hasSpace = true;
 			break;
 		}
@@ -488,10 +481,10 @@ BlockEntry *AddFile(const char *pszName, BlockEntry *pBlk, int blockIndex)
 	if (pBlk == nullptr)
 		pBlk = NewBlock(&blockIndex);
 
-	cur_archive.sgpHashTbl[hIdx].hashcheck[0] = h2;
-	cur_archive.sgpHashTbl[hIdx].hashcheck[1] = h3;
-	cur_archive.sgpHashTbl[hIdx].lcid = 0;
-	cur_archive.sgpHashTbl[hIdx].block = blockIndex;
+	cur_archive.hashTbl[hIdx].hashcheck[0] = h2;
+	cur_archive.hashTbl[hIdx].hashcheck[1] = h3;
+	cur_archive.hashTbl[hIdx].lcid = 0;
+	cur_archive.hashTbl[hIdx].block = blockIndex;
 
 	return pBlk;
 }
@@ -585,8 +578,8 @@ void mpqapi_remove_hash_entry(const char *pszName)
 		return;
 	}
 
-	HashEntry *pHashTbl = &cur_archive.sgpHashTbl[hIdx];
-	BlockEntry *blockEntry = &cur_archive.sgpBlockTbl[pHashTbl->block];
+	HashEntry *pHashTbl = &cur_archive.hashTbl[hIdx];
+	BlockEntry *blockEntry = &cur_archive.blockTbl[pHashTbl->block];
 	pHashTbl->block = -2;
 	int blockOffset = blockEntry->offset;
 	int blockSize = blockEntry->sizealloc;
@@ -625,9 +618,9 @@ void mpqapi_rename(char *pszOld, char *pszNew)
 		return;
 	}
 
-	HashEntry *hashEntry = &cur_archive.sgpHashTbl[index];
+	HashEntry *hashEntry = &cur_archive.hashTbl[index];
 	int block = hashEntry->block;
-	BlockEntry *blockEntry = &cur_archive.sgpBlockTbl[block];
+	BlockEntry *blockEntry = &cur_archive.blockTbl[block];
 	hashEntry->block = -2;
 	AddFile(pszNew, blockEntry, block);
 	cur_archive.modified = true;
@@ -645,25 +638,25 @@ bool OpenMPQ(const char *pszArchive)
 	if (!cur_archive.Open(pszArchive)) {
 		return false;
 	}
-	if (cur_archive.sgpBlockTbl == nullptr || cur_archive.sgpHashTbl == nullptr) {
+	if (cur_archive.blockTbl.empty() || cur_archive.hashTbl.empty()) {
 		if (!cur_archive.exists) {
 			InitDefaultMpqHeader(&cur_archive, &fhdr);
 		} else if (!ReadMPQHeader(&cur_archive, &fhdr)) {
 			goto on_error;
 		}
-		cur_archive.sgpBlockTbl = new BlockEntry[INDEX_ENTRIES];
+		cur_archive.blockTbl.resize(INDEX_ENTRIES);
 		if (fhdr.blockcount > 0) {
-			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.sgpBlockTbl), BlockEntrySize))
+			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.blockTbl.data()), BlockEntrySize))
 				goto on_error;
 			uint32_t key = Hash("(block table)", 3);
-			Decrypt((DWORD *)cur_archive.sgpBlockTbl, BlockEntrySize, key);
+			Decrypt((DWORD *)cur_archive.blockTbl.data(), BlockEntrySize, key);
 		}
-		cur_archive.sgpHashTbl = new HashEntry[INDEX_ENTRIES];
+		cur_archive.hashTbl.resize(INDEX_ENTRIES);
 		if (fhdr.hashcount > 0) {
-			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.sgpHashTbl), HashEntrySize))
+			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.hashTbl.data()), HashEntrySize))
 				goto on_error;
 			uint32_t key = Hash("(hash table)", 3);
-			Decrypt((DWORD *)cur_archive.sgpHashTbl, HashEntrySize, key);
+			Decrypt((DWORD *)cur_archive.hashTbl.data(), HashEntrySize, key);
 		}
 
 #ifndef CAN_SEEKP_BEYOND_EOF
