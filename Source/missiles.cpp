@@ -588,10 +588,76 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		PlaySfxLoc(MissilesData[missile._mitype].miSFX, missile.position.tile);
 }
 
+/**
+ * @brief Could the missile collide with solid objects? (like walls or closed doors)
+ */
+bool CouldMissileCollideWithSolidObject(Point tile)
+{
+	int oid = dObject[tile.x][tile.y];
+	if (oid != 0) {
+		oid = abs(oid) - 1;
+		if (!Objects[oid]._oMissFlag)
+			return true;
+	}
+	return nMissileTable[dPiece[tile.x][tile.y]];
+}
+
 void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, bool ignoreStart, bool ifCollidesDontMoveToHitTile)
 {
+	Point prevTile = missile.position.tile;
 	missile.position.traveled += missile.position.velocity;
 	UpdateMissilePos(missile);
+
+	int possibleVisitTiles;
+	if (missile.position.velocity.deltaX == 0 || missile.position.velocity.deltaY == 0)
+		possibleVisitTiles = prevTile.WalkingDistance(missile.position.tile);
+	else
+		possibleVisitTiles = prevTile.ManhattanDistance(missile.position.tile);
+
+	// Did the missile skipped a tile?
+	if (possibleVisitTiles > 1) {
+		// Implementation note: If someone knows the correct math to calculate this without this step for step increase loop, I would really appreciate it.
+		auto incVelocity = missile.position.velocity * (0.01f / (float)(possibleVisitTiles - 1));
+		auto traveled = missile.position.traveled - missile.position.velocity;
+		do {
+			traveled += incVelocity;
+
+			// calculate in-between tile
+			int mx = traveled.deltaX >> 16;
+			int my = traveled.deltaY >> 16;
+			int dx = (mx + 2 * my) / 64;
+			int dy = (2 * my - mx) / 64;
+
+			auto tile = missile.position.start + Displacement { dx, dy };
+
+			// we are at the orginal calculated position => resume with normal logic
+			if (tile == missile.position.tile)
+				break;
+
+			// don't call CheckMissileCol more then once for a tile
+			if (prevTile == tile)
+				continue;
+			prevTile = tile;
+
+			CheckMissileCol(missile, mindam, maxdam, false, tile, false);
+
+			// Did missile hit anything?
+			if (missile._mirange != 0)
+				continue;
+
+			if ((missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistrubution::Blockable) || CouldMissileCollideWithSolidObject(tile)) {
+				missile.position.traveled = traveled;
+				if (ifCollidesDontMoveToHitTile && missile._mirange == 0) {
+					missile.position.traveled -= incVelocity;
+					UpdateMissilePos(missile);
+					missile.position.StopMissile();
+				} else {
+					UpdateMissilePos(missile);
+				}
+				return;
+			}
+		} while (true);
+	}
 	if (ignoreStart && missile.position.start == missile.position.tile)
 		return;
 	CheckMissileCol(missile, mindam, maxdam, false, missile.position.tile, false);
