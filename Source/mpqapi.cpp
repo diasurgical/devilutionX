@@ -46,16 +46,16 @@ struct FileHeader {
 };
 
 struct HashEntry {
-	uint32_t hashcheck[2];
-	uint32_t lcid;
-	int32_t block;
+	uint32_t hashcheck[2] = { UINT32_MAX, UINT32_MAX };
+	uint32_t lcid = UINT32_MAX;
+	int32_t block = -1;
 };
 
 struct BlockEntry {
-	uint32_t offset;
-	uint32_t sizealloc;
-	uint32_t sizefile;
-	uint32_t flags;
+	uint32_t offset = 0;
+	uint32_t sizealloc = 0;
+	uint32_t sizefile = 0;
+	uint32_t flags = 0;
 };
 
 // Validates that a Type is of a particular size and that its alignment is <= the size of the type.
@@ -651,16 +651,14 @@ bool OpenMPQ(const char *pszArchive)
 		} else if (!ReadMPQHeader(&cur_archive, &fhdr)) {
 			goto on_error;
 		}
-		cur_archive.sgpBlockTbl = new BlockEntry[BlockEntrySize / sizeof(BlockEntry)];
-		std::memset(cur_archive.sgpBlockTbl, 0, BlockEntrySize);
+		cur_archive.sgpBlockTbl = new BlockEntry[INDEX_ENTRIES];
 		if (fhdr.blockcount > 0) {
 			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.sgpBlockTbl), BlockEntrySize))
 				goto on_error;
 			uint32_t key = Hash("(block table)", 3);
 			Decrypt((DWORD *)cur_archive.sgpBlockTbl, BlockEntrySize, key);
 		}
-		cur_archive.sgpHashTbl = new HashEntry[HashEntrySize / sizeof(HashEntry)];
-		std::memset(cur_archive.sgpHashTbl, 255, HashEntrySize);
+		cur_archive.sgpHashTbl = new HashEntry[INDEX_ENTRIES];
 		if (fhdr.hashcount > 0) {
 			if (!cur_archive.stream.Read(reinterpret_cast<char *>(cur_archive.sgpHashTbl), HashEntrySize))
 				goto on_error;
