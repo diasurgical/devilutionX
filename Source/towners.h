@@ -59,11 +59,6 @@ struct Towner {
 	std::size_t animOrderSize;
 	void (*talk)(Player &player, Towner &towner);
 	_talker_id _ttype;
-
-	byte *GetAnimationPointer(Direction direction)
-	{
-		return this->_tNAnim[static_cast<size_t>(direction)];
-	}
 };
 
 extern Towner Towners[NUM_TOWNERS];
