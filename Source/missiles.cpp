@@ -165,33 +165,37 @@ void UpdateMissilePos(Missile &missile)
 	ChangeLightOffset(missile._mlid, { lx - (dx * 8), ly - (dy * 8) });
 }
 
+/**
+ * @brief Dodgy hack used to correct the position for charging monsters.
+ *
+ * If the monster represented by this missile is *not* facing north in some way it gets shifted to the south.
+ * This appears to compensate for some visual oddity or invalid calculation earlier in the MI_Rhino logic.
+ * @param missile MissileStruct representing a charging monster.
+ */
 void MoveMissilePos(Missile &missile)
 {
-	Displacement offset;
+	Direction moveDirection;
 
-	switch (missile._mimfnum) {
-	case Direction::NorthWest:
-	case Direction::North:
-	case Direction::NorthEast:
-		offset = { 0, 0 };
-		break;
+	switch (static_cast<Direction>(missile._mimfnum)) {
 	case Direction::East:
-		offset = { 1, 0 };
+		moveDirection = Direction::SouthEast;
 		break;
 	case Direction::West:
-		offset = { 0, 1 };
+		moveDirection = Direction::SouthWest;
 		break;
 	case Direction::South:
 	case Direction::SouthWest:
 	case Direction::SouthEast:
-		offset = { 1, 1 };
+		moveDirection = Direction::South;
 		break;
+	default:
+		return;
 	}
 
-	if (IsTileAvailable(Monsters[missile._misource], missile.position.tile + offset)) {
-		missile.position.tile += offset;
-		missile.position.offset.deltaX += (offset.deltaY * 32) - (offset.deltaX * 32);
-		missile.position.offset.deltaY -= (offset.deltaY * 16) + (offset.deltaX * 16);
+	auto target = missile.position.tile + moveDirection;
+	if (IsTileAvailable(Monsters[missile._misource], target)) {
+		missile.position.tile = target;
+		missile.position.offset += Displacement(moveDirection).WorldToScreen();
 	}
 }
 
