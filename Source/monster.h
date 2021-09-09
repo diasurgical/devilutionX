@@ -224,19 +224,26 @@ struct Monster { // note: missing field _mAFNum
 	 * @param graphic Animation sequence of interest
 	 * @param direction Desired direction the monster should be visually facing
 	*/
-	void ActivateAnimation(MonsterGraphic graphic, Direction direction)
+	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
 	{
-		auto &celSprite = this->MType->GetAnimData(graphic).GetCelSpritesForDirection(direction);
-		this->AnimInfo.pCelSprite = celSprite ? &*celSprite : nullptr;
+		auto &animationData = this->MType->GetAnimData(graphic);
+		auto &celSprite = animationData.GetCelSpritesForDirection(direction);
+
+		if (celSprite) {
+			// Passing the Frames and Rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
+			this->AnimInfo.ChangeAnimationData(&*celSprite, animationData.Frames, animationData.Rate);
+		}
+		// This function is called during level load for some monsters without animations, in those cases AnimInfo is default initialised
+		// with zero/nullptr values for all the properties ChangeAnimationData would otherwise set.
 	}
 
 	/**
 	 * @brief Sets the current cell sprite to match the desired animation sequence using the direction the monster is currently facing
 	 * @param graphic Animation sequence of interest
 	*/
-	void ActivateAnimationForCurrentDirection(MonsterGraphic graphic)
+	void ChangeAnimationData(MonsterGraphic graphic)
 	{
-		this->ActivateAnimation(graphic, this->_mdir);
+		this->ChangeAnimationData(graphic, this->_mdir);
 	}
 
 	/**
