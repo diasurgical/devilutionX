@@ -174,7 +174,6 @@ void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOf
 		TickModifier = 0.0F;
 	}
 	this->pCelSprite = celSprite;
-	TicksPerFrame = ticksPerFrame;
 }
 
 void AnimationInfo::ProcessAnimation(bool reverseAnimation /*= false*/, bool dontProgressAnimation /*= false*/)

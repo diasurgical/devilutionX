@@ -163,11 +163,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.MData = monster.MType->MData;
 	monster.mName = _(monster.MData->mName);
 	monster.AnimInfo = {};
-	monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Stand);
-	const auto &animData = monster.MType->GetAnimData(MonsterGraphic::Stand);
-	monster.AnimInfo.TicksPerFrame = animData.Rate;
+	monster.ChangeAnimationData(MonsterGraphic::Stand);
 	monster.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster.AnimInfo.TicksPerFrame - 1);
-	monster.AnimInfo.NumberOfFrames = animData.Frames;
 	monster.AnimInfo.CurrentFrame = GenerateRnd(monster.AnimInfo.NumberOfFrames - 1) + 1;
 
 	monster.mLevel = monster.MData->mLevel;
@@ -210,7 +207,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mtalkmsg = TEXT_NONE;
 
 	if (monster._mAi == AI_GARG) {
-		monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Special);
+		monster.ChangeAnimationData(MonsterGraphic::Special);
 		monster.AnimInfo.CurrentFrame = 1;
 		monster._mFlags |= MFLAG_ALLOW_SPECIAL;
 		monster._mmode = MonsterMode::SpecialMeleeAttack;
@@ -351,7 +348,7 @@ void PlaceGroup(int mtype, int num, UniqueMonsterPack uniqueMonsterPack, int lea
 				}
 
 				if (minion._mAi != AI_GARG) {
-					minion.ActivateAnimationForCurrentDirection(MonsterGraphic::Stand);
+					minion.ChangeAnimationData(MonsterGraphic::Stand);
 					minion.AnimInfo.CurrentFrame = GenerateRnd(minion.AnimInfo.NumberOfFrames - 1) + 1;
 					minion._mFlags &= ~MFLAG_ALLOW_SPECIAL;
 					minion._mmode = MonsterMode::Stand;
@@ -586,7 +583,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	if (monster._mAi != AI_GARG) {
-		monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Stand);
+		monster.ChangeAnimationData(MonsterGraphic::Stand);
 		monster.AnimInfo.CurrentFrame = GenerateRnd(monster.AnimInfo.NumberOfFrames - 1) + 1;
 		monster._mFlags &= ~MFLAG_ALLOW_SPECIAL;
 		monster._mmode = MonsterMode::Stand;
@@ -1303,7 +1300,7 @@ void StartFadeout(Monster &monster, Direction md, bool backwards)
 
 void StartHeal(Monster &monster)
 {
-	monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Special);
+	monster.ChangeAnimationData(MonsterGraphic::Special);
 	monster.AnimInfo.CurrentFrame = monster.MType->GetAnimData(MonsterGraphic::Special).Frames;
 	monster._mFlags |= MFLAG_LOCK_ANIMATION;
 	monster._mmode = MonsterMode::Heal;
@@ -1322,9 +1319,9 @@ void SyncLightPosition(Monster &monster)
 bool MonsterIdle(Monster &monster)
 {
 	if (monster.MType->mtype == MT_GOLEM)
-		monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Walk);
+		monster.ChangeAnimationData(MonsterGraphic::Walk);
 	else
-		monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Stand);
+		monster.ChangeAnimationData(MonsterGraphic::Stand);
 
 	if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames)
 		UpdateEnemy(monster);
@@ -1841,7 +1838,7 @@ bool MonsterSpecialStand(Monster &monster)
 
 bool MonsterDelay(Monster &monster)
 {
-	monster.ActivateAnimation(MonsterGraphic::Stand, GetMonsterDirection(monster));
+	monster.ChangeAnimationData(MonsterGraphic::Stand, GetMonsterDirection(monster));
 	if (monster._mAi == AI_LAZARUS) {
 		if (monster._mVar2 > 8 || monster._mVar2 < 0)
 			monster._mVar2 = 8;
@@ -2890,7 +2887,7 @@ void SneakAi(int i)
 	}
 	if (monster._mmode == MonsterMode::Stand) {
 		if (abs(mx) >= 2 || abs(my) >= 2 || v >= 4 * monster._mint + 10)
-			monster.ActivateAnimationForCurrentDirection(MonsterGraphic::Stand);
+			monster.ChangeAnimationData(MonsterGraphic::Stand);
 		else
 			StartAttack(monster);
 	}
@@ -4566,15 +4563,13 @@ void SyncMonsterAnim(Monster &monster)
 	case MonsterMode::Charge:
 		graphic = MonsterGraphic::Attack;
 		monster.AnimInfo.CurrentFrame = 1;
-		monster.AnimInfo.NumberOfFrames = monster.MType->GetAnimData(MonsterGraphic::Attack).Frames;
 		break;
 	default:
 		monster.AnimInfo.CurrentFrame = 1;
-		monster.AnimInfo.NumberOfFrames = monster.MType->GetAnimData(MonsterGraphic::Stand).Frames;
 		break;
 	}
 
-	monster.ActivateAnimationForCurrentDirection(graphic);
+	monster.ChangeAnimationData(graphic);
 }
 
 void M_FallenFear(Point position)
@@ -4994,7 +4989,7 @@ void Monster::CheckStandAnimationIsLoaded(Direction mdir)
 {
 	if (IsAnyOf(_mmode, MonsterMode::Stand, MonsterMode::Talk)) {
 		_mdir = mdir;
-		ActivateAnimationForCurrentDirection(MonsterGraphic::Stand);
+		ChangeAnimationData(MonsterGraphic::Stand);
 	}
 }
 
