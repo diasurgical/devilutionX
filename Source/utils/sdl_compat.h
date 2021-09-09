@@ -38,8 +38,9 @@ inline const Uint8 *SDLC_GetKeyState()
 inline int SDLC_SetColorKey(SDL_Surface *surface, Uint32 key)
 {
 #ifdef USE_SDL1
-	return SDL_SetColorKey(surface, SDL_SRCCOLORKEY, key);
+	return SDL_SetColorKey(surface, SDL_SRCCOLORKEY | SDL_RLEACCEL, key);
 #else
+	SDL_SetSurfaceRLE(surface, 1);
 	return SDL_SetColorKey(surface, SDL_TRUE, key);
 #endif
 }
