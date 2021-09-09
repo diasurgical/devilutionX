@@ -124,6 +124,10 @@ struct Missile {
 	int var6;
 	int var7;
 	bool limitReached;
+	/**
+      * @brief For moving missiles lastCollisionTargetHash contains the last entity (player or monster) that was checked in CheckMissileCol (needed to avoid multiple hits for a entity at the same tile).
+      */
+	int16_t lastCollisionTargetHash;
 };
 
 extern Missile Missiles[MAXMISSILES];

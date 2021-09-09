@@ -685,6 +685,7 @@ void LoadMissile(LoadHelper *file, Missile &missile)
 	missile.var6 = file->NextLE<int32_t>();
 	missile.var7 = file->NextLE<int32_t>();
 	missile.limitReached = file->NextBool32();
+	missile.lastCollisionTargetHash = 0;
 }
 
 void LoadObject(LoadHelper &file, Object &object)
