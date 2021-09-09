@@ -479,16 +479,79 @@ std::string DebugCmdLevelSeed(const string_view parameter)
 	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
 }
 
-std::string DebugSpawnMonster(const string_view parameter, int count)
+bool is_number(const std::string &s)
 {
-	if (ActiveMonsterCount >= MAXMONSTERS)
-		return "Too many monsters!";
+	return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
+}
 
-	std::string name(parameter.data());
-	if (name == "")
-		return "Give monster name!";
+std::string DebugCmdSpawnMonster(const string_view parameter)
+{
+	if (currlevel == 0)
+		return "Do you want to kill the towners?!?";
+
+	std::stringstream paramsStream(parameter.data());
+	std::string name;
+	int count = 1;
+	if (std::getline(paramsStream, name, ' ')) {
+		count = atoi(name.c_str());
+		if (count > 0)
+			name.clear();
+		else
+			count = 1;
+		std::getline(paramsStream, name, ' ');
+	}
+
+	std::string singleWord;
+	while (std::getline(paramsStream, singleWord, ' ')) {
+		name.append(" ");
+		name.append(singleWord);
+	}
 
 	std::transform(name.begin(), name.end(), name.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	int mtype = -1;
+	for (int i = 0; i < 138; i++) {
+		auto mondata = MonstersData[i];
+		std::string monsterName(mondata.mName);
+		std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (monsterName.find(name) == std::string::npos)
+			continue;
+		mtype = i;
+		break;
+	}
+
+	if (mtype == -1) {
+		for (int i = 0; i < 100; i++) {
+			auto mondata = UniqueMonstersData[i];
+			std::string monsterName(mondata.mName);
+			std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
+			if (monsterName.find(name) == std::string::npos)
+				continue;
+			mtype = mondata.mtype;
+			break;
+		}
+	}
+
+	if (mtype == -1)
+		return "Monster not found!";
+
+	int id = MAX_LVLMTYPES - 1;
+	bool found = false;
+
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+		if (LevelMonsterTypes[i].mtype == mtype) {
+			id = i;
+			found = true;
+			break;
+		}
+	}
+
+	if (!found) {
+		LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
+		InitMonsterGFX(id);
+		LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
+		LevelMonsterTypes[id].mdeadval = 1;
+	}
 
 	auto &myPlayer = Players[MyPlayerId];
 
@@ -500,74 +563,20 @@ std::string DebugSpawnMonster(const string_view parameter, int count)
 		return true;
 	};
 
-	int counter = 0;
+	int spawnedMonster = 0;
 
 	for (auto dir : left) {
 		Point pos = myPlayer.position.tile + dir;
 		if (!isTileOk(pos))
 			continue;
 
-		int mtype = -1;
-		for (int i = 0; i < 138; i++) {
-			auto mondata = MonstersData[i];
-			std::string monsterName(mondata.mName);
-			std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
-			if (monsterName.find(name) == std::string::npos)
-				continue;
-			mtype = i;
-			break;
-		}
-
-		if (mtype == -1) {
-			for (int i = 0; i < 100; i++) {
-				auto mondata = UniqueMonstersData[i];
-				std::string monsterName(mondata.mName);
-				std::transform(monsterName.begin(), monsterName.end(), monsterName.begin(), [](unsigned char c) { return std::tolower(c); });
-				if (monsterName.find(name) == std::string::npos)
-					continue;
-				mtype = mondata.mtype;
-				break;
-			}
-		}
-
-		if (mtype == -1)
-			return "Monster not found!";
-
-		int id = MAX_LVLMTYPES - 1;
-		bool found = false;
-
-		for (int i = 0; i < LevelMonsterTypeCount; i++) {
-			if (LevelMonsterTypes[i].mtype == mtype) {
-				id = i;
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			LevelMonsterTypes[id].mtype = static_cast<_monster_id>(mtype);
-			InitMonsterGFX(id);
-			LevelMonsterTypes[id].mPlaceFlags |= PLACE_SCATTER;
-			LevelMonsterTypes[id].mdeadval = 1;
-		}
-
 		AddMonster(pos, dir, id, true);
-
-		if (++counter >= count)
+		spawnedMonster += 1;
+		if (spawnedMonster >= count)
 			break;
 	}
 
 	return "Tickle tickle, here comes my pickle.";
-}
-
-std::string DebugCmdSpawnMonsterSingle(const string_view parameter)
-{
-	return DebugSpawnMonster(parameter, 1);
-}
-
-std::string DebugCmdSpawnMonsterMany(const string_view parameter)
-{
-	return DebugSpawnMonster(parameter, 8);
 }
 
 std::vector<DebugCmdItem> DebugCmdList = {
@@ -595,8 +604,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "cursorcoords", "Toggles showing cursor coords.", "", &DebugCmdShowCursorCoords },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
-	{ "mon", "Spawns monster {name}.", "{name}", &DebugCmdSpawnMonsterSingle },
-	{ "mmon", "Spawns up to 8 monsters {name}.", "{name}", &DebugCmdSpawnMonsterMany },
+	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
 };
 
 } // namespace
