@@ -1372,6 +1372,8 @@ bool MonsterWalk(int i, MonsterMode variant)
 			dFlags[monster.position.temp.x][monster.position.temp.y] &= ~BFLAG_MONSTLR;
 			dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 			break;
+		default:
+			break;
 		}
 		if (monster.mlid != NO_LIGHT)
 			ChangeLightXY(monster.mlid, monster.position.tile);
@@ -3489,7 +3491,7 @@ const char *GetMonsterTypeText(const MonsterData &monsterData)
 		return _("Undead");
 	}
 
-	app_fatal("Unknown mMonstClass %i", monsterData.mMonstClass);
+	app_fatal("Unknown mMonstClass %i", static_cast<int>(monsterData.mMonstClass));
 }
 
 void ActivateSpawn(int i, Point position, Direction dir)

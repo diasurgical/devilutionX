@@ -68,7 +68,7 @@ void PrintDebugMonster(int m)
 	NetSendCmdString(1 << MyPlayerId, dstr);
 	sprintf(dstr, "Enemy = %i, HP = %i", monster._menemy, monster._mhitpoints);
 	NetSendCmdString(1 << MyPlayerId, dstr);
-	sprintf(dstr, "Mode = %i, Var1 = %i", monster._mmode, monster._mVar1);
+	sprintf(dstr, "Mode = %i, Var1 = %i", static_cast<int>(monster._mmode), monster._mVar1);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 
 	bool bActive = false;
@@ -195,7 +195,6 @@ std::string DebugCmdLoadMap(const string_view parameter)
 		return ret;
 	}
 
-	auto &myPlayer = Players[MyPlayerId];
 	auto level = atoi(parameter.data());
 	if (level < 1)
 		return fmt::format("Map id must be 1 or higher", level);
@@ -477,11 +476,6 @@ std::string DebugCmdShowCursorCoords(const string_view parameter)
 std::string DebugCmdLevelSeed(const string_view parameter)
 {
 	return fmt::format("Seedinfo for level {}\nseed: {}\nMid1: {}\nMid2: {}\nMid3: {}\nEnd: {}", currlevel, glSeedTbl[currlevel], glMid1Seed[currlevel], glMid2Seed[currlevel], glMid3Seed[currlevel], glEndSeed[currlevel]);
-}
-
-bool is_number(const std::string &s)
-{
-	return !s.empty() && std::find_if(s.begin(), s.end(), [](unsigned char c) { return !std::isdigit(c); }) == s.end();
 }
 
 std::string DebugCmdSpawnMonster(const string_view parameter)

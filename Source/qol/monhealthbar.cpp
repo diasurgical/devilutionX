@@ -95,7 +95,7 @@ void DrawMonsterHealthBar(const Surface &out)
 			return 150;
 
 		default:
-			app_fatal("Invalid monster class '%i'.", monsterClass);
+			app_fatal("Invalid monster class '%i'.", static_cast<int>(monsterClass));
 		}
 	};
 
@@ -109,7 +109,6 @@ void DrawMonsterHealthBar(const Surface &out)
 		UnsafeDrawVerticalLine(out, { position.x + width - border - 1, position.y + border + 1 }, borderHeight, borderColor);
 	}
 
-	int barLabelY = position.y;
 	UiFlags style = UiFlags::AlignCenter | UiFlags::VerticalCenter;
 	DrawString(out, monster.mName, { position + Displacement { -1, 1 }, width, height }, style | UiFlags::ColorBlack);
 	if (monster._uniqtype != 0)
