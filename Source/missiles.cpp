@@ -614,6 +614,15 @@ void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, boo
 	else
 		possibleVisitTiles = prevTile.ManhattanDistance(missile.position.tile);
 
+	int16_t tileTargetHash = dMonster[missile.position.tile.x][missile.position.tile.y] ^ dPlayer[missile.position.tile.x][missile.position.tile.y];
+
+	if (possibleVisitTiles == 0) {
+		// missile didn't change the tile... check that we perform CheckMissileCol only once for any monster/player to avoid multiple hits for slow missiles
+		if (missile.lastCollisionTargetHash == tileTargetHash)
+			return;
+	}
+	// remember what target CheckMissileCol was checked against
+	missile.lastCollisionTargetHash = tileTargetHash;
 	// Did the missile skipped a tile?
 	if (possibleVisitTiles > 1) {
 		// Implementation note: If someone knows the correct math to calculate this without this step for step increase loop, I would really appreciate it.
@@ -2883,6 +2892,7 @@ int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy
 	missile._miAnimType = missileData.mFileNum;
 	missile._miDrawFlag = missileData.mDraw;
 	missile._mlid = NO_LIGHT;
+	missile.lastCollisionTargetHash = 0;
 
 	if (missile._miAnimType == MFILE_NONE || MissileSpriteData[missile._miAnimType].animFAmt < 8)
 		SetMissDir(missile, 0);
