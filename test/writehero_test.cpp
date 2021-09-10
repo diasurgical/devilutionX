@@ -333,6 +333,8 @@ TEST(Writehero, pfile_write_hero)
 	leveltype = DTYPE_TOWN;
 
 	MyPlayerId = 0;
+	MyPlayer = &Players[MyPlayerId];
+
 	_uiheroinfo info {};
 	strcpy(info.name, "TestPlayer");
 	info.heroclass = HeroClass::Rogue;

@@ -7,6 +7,7 @@
 #include "DiabloUI/art_draw.h"
 
 #include "control.h"
+#include "player.h"
 #include "utils/display.h"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
@@ -40,8 +41,6 @@ struct PanelEntry {
 	int labelLength;                                       // max label's length - used for line wrapping
 	std::function<StyledText()> statDisplayFunc = nullptr; // function responsible for displaying stat
 };
-
-Player *MyPlayer = &Players[MyPlayerId];
 
 UiFlags GetBaseStatColor(CharacterAttribute attr)
 {

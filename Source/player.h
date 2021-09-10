@@ -576,6 +576,7 @@ struct Player {
 };
 
 extern int MyPlayerId;
+extern Player *MyPlayer;
 extern Player Players[MAX_PLRS];
 extern bool MyPlayerIsDead;
 extern int BlockBonuses[enum_size<HeroClass>::value];
