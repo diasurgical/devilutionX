@@ -101,8 +101,7 @@ void PlacePlayer(int pnum)
 		dPlayer[newPosition.x][newPosition.y] = pnum + 1;
 
 		if (pnum == MyPlayerId) {
-			ViewX = newPosition.x;
-			ViewY = newPosition.y;
+			ViewPosition = newPosition;
 		}
 	}
 }

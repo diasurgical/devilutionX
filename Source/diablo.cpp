@@ -1076,7 +1076,7 @@ void LoadAllGFX()
 	IncProgress();
 	InitObjectGFX();
 	IncProgress();
-	InitMissileGFX();
+	InitMissileGFX(gbIsHellfire);
 	IncProgress();
 }
 
@@ -1138,7 +1138,7 @@ void UpdateMonsterLights()
 				continue;
 			}
 
-			LightStruct *lid = &Lights[monster.mlid];
+			Light *lid = &Lights[monster.mlid];
 			if (monster.position.tile != lid->position.tile) {
 				ChangeLightXY(monster.mlid, monster.position.tile);
 			}
@@ -1520,8 +1520,8 @@ void FreeGameMem()
 	pLevelPieces = nullptr;
 	pSpecialCels = std::nullopt;
 
-	FreeMissiles();
 	FreeMonsters();
+	FreeMissileGFX();
 	FreeObjectGFX();
 	FreeMonsterSnd();
 	FreeTownerGFX();
@@ -1859,7 +1859,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		} else {
 			IncProgress();
 			IncProgress();
-			InitMissileGFX();
+			InitMissileGFX(gbIsHellfire);
 			IncProgress();
 			IncProgress();
 		}
@@ -1909,7 +1909,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				IncProgress();
 				uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
-				InitDead();
+				InitCorpses();
 #if _DEBUG
 				SetDebugLevelSeedInfos(mid1Seed, mid2Seed, mid3Seed, GetLCGEngineState());
 #endif
@@ -1923,7 +1923,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				HoldThemeRooms();
 				InitMonsters();
 				InitMissiles();
-				InitDead();
+				InitCorpses();
 				IncProgress();
 				LoadLevel();
 				IncProgress();
@@ -1958,9 +1958,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitMonsters();
 		IncProgress();
-		InitMissileGFX();
+		InitMissileGFX(gbIsHellfire);
 		IncProgress();
-		InitDead();
+		InitCorpses();
 		IncProgress();
 		FillSolidBlockTbls();
 		IncProgress();

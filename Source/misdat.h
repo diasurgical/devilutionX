@@ -111,7 +111,7 @@ enum class MissileMovementDistrubution {
 
 struct Missile;
 
-typedef struct MissileData {
+struct MissileData {
 	void (*mAddProc)(Missile &, Point, Direction);
 	void (*mProc)(Missile &);
 	uint8_t mName;
@@ -122,7 +122,7 @@ typedef struct MissileData {
 	_sfx_id mlSFX;
 	_sfx_id miSFX;
 	MissileMovementDistrubution MovementDistribution;
-} MissileDataStruct;
+};
 
 enum class MissileDataFlags {
 	// clang-format off
@@ -155,7 +155,10 @@ struct MissileFileData {
 	}
 };
 
-extern MissileDataStruct MissileData[];
+extern MissileData MissilesData[];
 extern MissileFileData MissileSpriteData[];
+
+void InitMissileGFX(bool loadHellfireGraphics = false);
+void FreeMissileGFX();
 
 } // namespace devilution

@@ -80,6 +80,20 @@ void PrintDebugMonster(int m)
 	NetSendCmdString(1 << MyPlayerId, dstr);
 }
 
+void ProcessMessages()
+{
+	tagMSG msg;
+	while (FetchMessage(&msg)) {
+		if (msg.message == DVL_WM_QUIT) {
+			gbRunGameResult = false;
+			gbRunGame = false;
+			break;
+		}
+		TranslateMessage(&msg);
+		PushMessage(&msg);
+	}
+}
+
 struct DebugCmdItem {
 	const string_view text;
 	const string_view description;
@@ -163,8 +177,7 @@ std::string DebugCmdWarpToLevel(const string_view parameter)
 	if (!setlevel && myPlayer.plrlevel == level)
 		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
 
-	setlevel = false;
-	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTWARPUP, level);
+	StartNewLvl(MyPlayerId, (level != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, level);
 	return fmt::format("Welcome to level {}.", level);
 }
 
@@ -184,22 +197,23 @@ std::string DebugCmdLoadMap(const string_view parameter)
 	auto level = atoi(parameter.data());
 	if (level < 1)
 		return fmt::format("Map id must be 1 or higher", level);
-	if (setlevel && myPlayer.plrlevel == level)
-		return fmt::format("I did nothing but fulfilled your wish. You are already at level {}.", level);
+	if (setlevel && setlvlnum == level)
+		return fmt::format("I did nothing but fulfilled your wish. You are already at mapid {}.", level);
 
 	for (auto &quest : Quests) {
 		if (level != quest._qslvl)
 			continue;
 
-		setlevel = false;
+		StartNewLvl(MyPlayerId, (quest._qlevel != 21) ? interface_mode::WM_DIABNEXTLVL : interface_mode::WM_DIABTOWNWARP, quest._qlevel);
+		ProcessMessages();
+
 		setlvltype = quest._qlvltype;
-		currlevel = quest._qlevel;
-		myPlayer.plrlevel = quest._qlevel;
 		StartNewLvl(MyPlayerId, WM_DIABSETLVL, level);
+
 		return fmt::format("Welcome to {}.", QuestLevelNames[level]);
 	}
 
-	return fmt::format("Level {} is not known. Do you want to write a mod?", level);
+	return fmt::format("Mapid {} is not known. Do you want to write a mod?", level);
 }
 
 std::unordered_map<string_view, _talker_id> TownerShortNameToTownerId = {
@@ -317,7 +331,7 @@ std::string DebugCmdQuest(const string_view parameter)
 		for (auto &quest : Quests) {
 			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
 				continue;
-			ret.append(fmt::format(", {} ({})", quest._qidx, QuestData[quest._qidx]._qlstr));
+			ret.append(fmt::format(", {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
 		}
 		return ret;
 	}
@@ -341,12 +355,12 @@ std::string DebugCmdQuest(const string_view parameter)
 	auto &quest = Quests[questId];
 
 	if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
-		return fmt::format("{} was already given.", QuestData[questId]._qlstr);
+		return fmt::format("{} was already given.", QuestsData[questId]._qlstr);
 
 	quest._qactive = QUEST_ACTIVE;
 	quest._qlog = true;
 
-	return fmt::format("{} enabled.", QuestData[questId]._qlstr);
+	return fmt::format("{} enabled.", QuestsData[questId]._qlstr);
 }
 
 std::string DebugCmdLevelUp(const string_view parameter)

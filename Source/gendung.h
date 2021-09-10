@@ -165,14 +165,10 @@ extern std::array<bool, MAXTILES + 1> nTransTable;
  */
 extern std::array<bool, MAXTILES + 1> nMissileTable;
 extern std::array<bool, MAXTILES + 1> nTrapTable;
-/** Specifies the minimum X-coordinate of the map. */
-extern int dminx;
-/** Specifies the minimum Y-coordinate of the map. */
-extern int dminy;
-/** Specifies the maximum X-coordinate of the map. */
-extern int dmaxx;
-/** Specifies the maximum Y-coordinate of the map. */
-extern int dmaxy;
+/** Specifies the minimum X,Y-coordinates of the map. */
+extern Point dminPosition;
+/** Specifies the maximum X,Y-coordinates of the map. */
+extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
@@ -182,10 +178,8 @@ extern bool setlevel;
 extern _setlevels setlvlnum;
 /** Specifies the player viewpoint X-coordinate of the map. */
 extern dungeon_type setlvltype;
-/** Specifies the player viewpoint X-coordinate of the map. */
-extern int ViewX;
-/** Specifies the player viewpoint Y-coordinate of the map. */
-extern int ViewY;
+/** Specifies the player viewpoint X,Y-coordinates of the map. */
+extern Point ViewPosition;
 extern ScrollStruct ScrollInfo;
 extern int MicroTileLen;
 extern char TransVal;
@@ -214,7 +208,7 @@ extern int16_t dMonster[MAXDUNX][MAXDUNY];
  * dDead[x][y] & 0x1F - index of dead
  * dDead[x][y] >> 0x5 - direction
  */
-extern int8_t dDead[MAXDUNX][MAXDUNY];
+extern int8_t dCorpse[MAXDUNX][MAXDUNY];
 /** Contains the object numbers (objects array indices) of the map. */
 extern char dObject[MAXDUNX][MAXDUNY];
 /** Contains the item numbers (items array indices) of the map. */

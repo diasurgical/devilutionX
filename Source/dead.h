@@ -13,20 +13,20 @@
 
 namespace devilution {
 
-static constexpr unsigned MaxDead = 31;
+static constexpr unsigned MaxCorpses = 31;
 
-struct DeadStruct {
+struct Corpse {
 	std::array<const byte *, 8> data;
 	int frame;
 	int width;
 	uint8_t translationPaletteIndex;
 };
 
-extern DeadStruct Dead[MaxDead];
+extern Corpse Corpses[MaxCorpses];
 extern int8_t stonendx;
 
-void InitDead();
-void AddDead(Point tilePosition, int8_t dv, Direction ddir);
+void InitCorpses();
+void AddCorpse(Point tilePosition, int8_t dv, Direction ddir);
 void SyncUniqDead();
 
 } // namespace devilution

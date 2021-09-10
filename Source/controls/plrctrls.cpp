@@ -1405,7 +1405,7 @@ void UpdateSpellTarget()
 
 	int range = myPlayer._pRSpell == SPL_TELEPORT ? 4 : 1;
 
-	cursPosition = myPlayer.position.future + Displacement::fromDirection(myPlayer._pdir) * range;
+	cursPosition = myPlayer.position.future + Displacement(myPlayer._pdir) * range;
 }
 
 /**

@@ -223,7 +223,7 @@ enum quest_id : int8_t {
 	Q_INVALID = -1,
 };
 
-struct ObjDataStruct {
+struct ObjectData {
 	int oload; // Todo create enum
 	object_graphic_id ofindex;
 	int8_t ominlvl;
@@ -244,7 +244,7 @@ struct ObjDataStruct {
 };
 
 extern const _object_id ObjTypeConv[];
-extern const ObjDataStruct AllObjects[];
+extern const ObjectData AllObjects[];
 extern const char *const ObjMasterLoadList[];
 extern const char *ObjCryptLoadList[];
 extern const char *ObjHiveLoadList[];

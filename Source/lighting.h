@@ -26,7 +26,7 @@ struct LightPosition {
 	Point old;
 };
 
-struct LightStruct {
+struct Light {
 	LightPosition position;
 	int _lradius;
 	int _lid;
@@ -36,10 +36,10 @@ struct LightStruct {
 	bool _lflags;
 };
 
-extern LightStruct VisionList[MAXVISION];
+extern Light VisionList[MAXVISION];
 extern int VisionCount;
 extern int VisionId;
-extern LightStruct Lights[MAXLIGHTS];
+extern Light Lights[MAXLIGHTS];
 extern uint8_t ActiveLights[MAXLIGHTS];
 extern int ActiveLightCount;
 extern char LightsMax;

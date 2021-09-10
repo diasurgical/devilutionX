@@ -225,7 +225,7 @@ void PmChangeLightOff(Player &player)
 	if (player._plid == NO_LIGHT)
 		return;
 
-	const LightStruct *l = &Lights[player._plid];
+	const Light *l = &Lights[player._plid];
 	int x = 2 * player.position.offset.deltaY + player.position.offset.deltaX;
 	int y = 2 * player.position.offset.deltaY - player.position.offset.deltaX;
 
@@ -307,8 +307,7 @@ constexpr std::array<const DirectionSettings, 8> WalkSettings { {
 
 void ScrollViewPort(const Player &player, _scroll_direction dir)
 {
-	ScrollInfo.tile.x = player.position.tile.x - ViewX;
-	ScrollInfo.tile.y = player.position.tile.y - ViewY;
+	ScrollInfo.tile = Point { 0, 0 } + (player.position.tile - ViewPosition);
 
 	if (zoomflag) {
 		if (abs(ScrollInfo.tile.x) >= 3 || abs(ScrollInfo.tile.y) >= 3) {
@@ -430,8 +429,7 @@ void StartWalkStand(int pnum)
 	if (pnum == MyPlayerId) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
-		ViewX = player.position.tile.x;
-		ViewY = player.position.tile.y;
+		ViewPosition = player.position.tile;
 	}
 }
 
@@ -745,8 +743,7 @@ bool DoWalk(int pnum, int variant)
 
 		//Update the "camera" tile position
 		if (pnum == MyPlayerId && ScrollInfo._sdir != SDIR_NONE) {
-			ViewX = player.position.tile.x - ScrollInfo.tile.x;
-			ViewY = player.position.tile.y - ScrollInfo.tile.y;
+			ViewPosition = Point { 0, 0 } + (player.position.tile - ScrollInfo.tile);
 		}
 
 		if (player.walkpath[0] != WALK_NONE) {
@@ -945,21 +942,21 @@ bool PlrHitMonst(int pnum, int m)
 	}
 
 	switch (monster.MData->mMonstClass) {
-	case MC_UNDEAD:
+	case MonsterClass::Undead:
 		if (phanditype == ITYPE_SWORD) {
 			dam -= dam / 2;
 		} else if (phanditype == ITYPE_MACE) {
 			dam += dam / 2;
 		}
 		break;
-	case MC_ANIMAL:
+	case MonsterClass::Animal:
 		if (phanditype == ITYPE_MACE) {
 			dam -= dam / 2;
 		} else if (phanditype == ITYPE_SWORD) {
 			dam += dam / 2;
 		}
 		break;
-	case MC_DEMON:
+	case MonsterClass::Demon:
 		if ((player._pIFlags & ISPL_3XDAMVDEM) != 0) {
 			dam *= 3;
 		}
@@ -2747,7 +2744,7 @@ void InitPlayer(Player &player, bool firstTime)
 
 		if (&player == &myPlayer) {
 			if (!firstTime || currlevel != 0) {
-				player.position.tile = { ViewX, ViewY };
+				player.position.tile = ViewPosition;
 			}
 		} else {
 			unsigned i;
@@ -2808,8 +2805,7 @@ void InitMultiView()
 	}
 	auto &myPlayer = Players[MyPlayerId];
 
-	ViewX = myPlayer.position.tile.x;
-	ViewY = myPlayer.position.tile.y;
+	ViewPosition = myPlayer.position.tile;
 }
 
 void PlrClrTrans(Point position)
@@ -2855,8 +2851,7 @@ void FixPlayerLocation(int pnum, Direction bDir)
 	if (pnum == MyPlayerId) {
 		ScrollInfo.offset = { 0, 0 };
 		ScrollInfo._sdir = SDIR_NONE;
-		ViewX = player.position.tile.x;
-		ViewY = player.position.tile.y;
+		ViewPosition = player.position.tile;
 	}
 	ChangeLightXY(player._plid, player.position.tile);
 	ChangeVisionXY(player._pvid, player.position.tile);
@@ -3095,7 +3090,7 @@ StartPlayerKill(int pnum, int earflag)
 						Direction pdd = player._pdir;
 						for (auto &item : player.InvBody) {
 							pdd = left[pdd];
-							DeadItem(player, &item, Displacement::fromDirection(pdd));
+							DeadItem(player, &item, Displacement(pdd));
 						}
 
 						CalcPlrInv(player, false);
@@ -3194,7 +3189,7 @@ void RemovePlrMissiles(int pnum)
 		auto &golem = Monsters[MyPlayerId];
 		if (golem.position.tile.x != 1 || golem.position.tile.y != 0) {
 			M_StartKill(MyPlayerId, MyPlayerId);
-			AddDead(golem.position.tile, golem.MType->mdeadval, golem._mdir);
+			AddCorpse(golem.position.tile, golem.MType->mdeadval, golem._mdir);
 			int mx = golem.position.tile.x;
 			int my = golem.position.tile.y;
 			dMonster[mx][my] = 0;
@@ -3655,8 +3650,7 @@ void SyncInitPlrPos(int pnum)
 
 	if (pnum == MyPlayerId) {
 		player.position.future = position;
-		ViewX = position.x;
-		ViewY = position.y;
+		ViewPosition = position;
 	}
 }
 

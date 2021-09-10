@@ -1509,11 +1509,11 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 		return UITEM_INVALID;
 
 	int numu = 0;
-	for (int j = 0; UniqueItemList[j].UIItemId != UITYPE_INVALID; j++) {
+	for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
 		if (!IsUniqueAvailable(j))
 			break;
-		if (UniqueItemList[j].UIItemId == AllItemsList[item.IDidx].iItemId
-		    && lvl >= UniqueItemList[j].UIMinLvl
+		if (UniqueItems[j].UIItemId == AllItemsList[item.IDidx].iItemId
+		    && lvl >= UniqueItems[j].UIMinLvl
 		    && (recreate || !UniqueItemFlags[j] || gbIsMultiplayer)) {
 			uok[j] = true;
 			numu++;
@@ -1539,14 +1539,14 @@ void GetUniqueItem(Item &item, _unique_items uid)
 {
 	UniqueItemFlags[uid] = true;
 
-	for (const auto &power : UniqueItemList[uid].powers) {
+	for (const auto &power : UniqueItems[uid].powers) {
 		if (power.type == IPL_INVALID)
 			break;
 		SaveItemPower(item, power);
 	}
 
-	strcpy(item._iIName, _(UniqueItemList[uid].UIName));
-	item._iIvalue = UniqueItemList[uid].UIValue;
+	strcpy(item._iIName, _(UniqueItems[uid].UIName));
+	item._iIvalue = UniqueItems[uid].UIValue;
 
 	if (item._iMiscId == IMISC_UNIQUE)
 		item._iSeed = uid;
@@ -3380,7 +3380,7 @@ void SpawnUnique(_unique_items uid, Point position)
 	int curlv = ItemsGetCurrlevel();
 
 	int idx = 0;
-	while (AllItemsList[idx].iItemId != UniqueItemList[uid].UIItemId)
+	while (AllItemsList[idx].iItemId != UniqueItems[uid].UIItemId)
 		idx++;
 
 	GetItemAttrs(item, idx, curlv);
@@ -3424,9 +3424,11 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster._uniqtype != 0 ? 15 : 1;
 
-	int8_t mLevel = monster.MData->mLevel;
+	int8_t mLevel = monster.mLevel;
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
+	if (mLevel > CF_LEVEL)
+		mLevel = CF_LEVEL;
 
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
@@ -4129,7 +4131,7 @@ void DrawUniqueInfo(const Surface &out)
 	DrawUniqueInfoWindow(GlobalBackBuffer());
 
 	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 2 * 12 }, { 257, 0 } };
-	const UItemStruct &uitem = UniqueItemList[curruitem._iUid];
+	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 
 	DrawUniqueInfoDevider(out, 5);
@@ -4874,8 +4876,6 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	const int max_time = 3000;
 	const int max_iter = 1000000;
 
-	bool onlygood = true;
-
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	Point pos = Players[MyPlayerId].position.tile;
@@ -4884,7 +4884,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
-	fake_m.MData = &MonsterData[0];
+	fake_m.MData = &MonstersData[0];
 	fake_m._uniqtype = 0;
 	int i = 0;
 	for (;; i++) {
@@ -4901,17 +4901,14 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		int idx = RndItem(fake_m);
 		if (idx > 0) {
 			idx--;
-			onlygood = false;
 		} else
 			continue;
-
-		int uper = (unique ? 15 : 1);
 
 		Point bkp = item.position;
 		memset(&item, 0, sizeof(Item));
 		item.position = bkp;
 		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, uper, onlygood, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 15 : 1), false, false, false);
 
 		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });

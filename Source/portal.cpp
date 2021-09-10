@@ -14,7 +14,7 @@
 namespace devilution {
 
 /** In-game state of portals. */
-PortalStruct Portals[MAXPORTAL];
+Portal Portals[MAXPORTAL];
 
 namespace {
 
@@ -47,7 +47,7 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 
 void AddWarpMissile(int i, int x, int y)
 {
-	MissileData[MIS_TOWN].mlSFX = SFX_NONE;
+	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
 
 	int mi = AddMissile({ 0, 0 }, { x, y }, DIR_S, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 	if (mi == -1)
@@ -59,7 +59,7 @@ void AddWarpMissile(int i, int x, int y)
 	if (currlevel != 0)
 		missile._mlid = AddLight(missile.position.tile, 15);
 
-	MissileData[MIS_TOWN].mlSFX = LS_SENTINEL;
+	MissilesData[MIS_TOWN].mlSFX = LS_SENTINEL;
 }
 
 void SyncPortals()
@@ -120,7 +120,7 @@ void RemovePortalMissile(int id)
 			if (Portals[id].level != 0)
 				AddUnLight(missile._mlid);
 
-			DeleteMissile(mi, i);
+			DeleteMissile(i);
 		}
 	}
 }
@@ -162,15 +162,13 @@ void GetPortalLevel()
 void GetPortalLvlPos()
 {
 	if (currlevel == 0) {
-		ViewX = WarpDropX[portalindex] + 1;
-		ViewY = WarpDropY[portalindex] + 1;
+		ViewPosition = Point { WarpDropX[portalindex], WarpDropY[portalindex] } + Displacement { 1, 1 };
 	} else {
-		ViewX = Portals[portalindex].position.x;
-		ViewY = Portals[portalindex].position.y;
+		ViewPosition = Portals[portalindex].position;
 
 		if (portalindex != MyPlayerId) {
-			ViewX++;
-			ViewY++;
+			ViewPosition.x++;
+			ViewPosition.y++;
 		}
 	}
 }

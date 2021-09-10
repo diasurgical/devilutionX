@@ -55,10 +55,10 @@ enum _mai_id : int8_t {
 	AI_INVALID = -1,
 };
 
-enum _mc_id : uint8_t {
-	MC_UNDEAD,
-	MC_DEMON,
-	MC_ANIMAL,
+enum class MonsterClass : uint8_t {
+	Undead,
+	Demon,
+	Animal,
 };
 
 enum monster_resistance : uint8_t {
@@ -82,7 +82,7 @@ enum monster_treasure : uint16_t {
 	// clang-format on
 };
 
-struct MonsterDataStruct {
+struct MonsterData {
 	const char *mName;
 	const char *GraphicType;
 	const char *sndfile;
@@ -112,7 +112,7 @@ struct MonsterDataStruct {
 	uint8_t mMinDamage2;
 	uint8_t mMaxDamage2;
 	uint8_t mArmorClass;
-	_mc_id mMonstClass;
+	MonsterClass mMonstClass;
 	/** Using monster_resistance as bitflags */
 	uint8_t mMagicRes;
 	/** Using monster_resistance as bitflags */
@@ -290,7 +290,7 @@ enum class UniqueMonsterPack {
 	Leashed,
 };
 
-struct UniqMonstStruct {
+struct UniqueMonsterData {
 	_monster_id mtype;
 	const char *mName;
 	const char *mTrnName;
@@ -312,9 +312,9 @@ struct UniqMonstStruct {
 	_speech_id mtalkmsg;
 };
 
-extern const MonsterDataStruct MonsterData[];
+extern const MonsterData MonstersData[];
 extern const _monster_id MonstConvTbl[];
 extern const char MonstAvailTbl[];
-extern const UniqMonstStruct UniqMonst[];
+extern const UniqueMonsterData UniqueMonstersData[];
 
 } // namespace devilution

@@ -244,8 +244,7 @@ bool PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool 
 		Quests[Q_BETRAYER].position = { sx + 1, sy + 1 };
 	}
 	if (setview) {
-		ViewX = 2 * sx + 21;
-		ViewY = 2 * sy + 22;
+		ViewPosition = Point { 21, 22 } + Displacement { sx, sy } * 2;
 	}
 
 	return true;
@@ -1347,20 +1346,19 @@ void GenerateLevel(lvl_entry entry)
 				if (doneflag && currlevel == 13) {
 					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
-				ViewX++;
+				ViewPosition.x++;
 			} else if (entry == ENTRY_PREV) {
 				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel == 13) {
 					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
-				ViewX = 2 * setpc_x + 22;
-				ViewY = 2 * setpc_y + 22;
+				ViewPosition = Point { 22, 22 } + Displacement { setpc_x, setpc_y } * 2;
 			} else {
 				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel == 13) {
 					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true);
 				}
-				ViewX++;
+				ViewPosition.x++;
 			}
 		} else if (currlevel != 15) {
 			if (entry == ENTRY_MAIN) {
@@ -1371,7 +1369,7 @@ void GenerateLevel(lvl_entry entry)
 				if (doneflag && currlevel == 13) {
 					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
-				ViewX++;
+				ViewPosition.x++;
 			} else if (entry == ENTRY_PREV) {
 				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel != 16) {
@@ -1380,7 +1378,7 @@ void GenerateLevel(lvl_entry entry)
 				if (doneflag && currlevel == 13) {
 					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, false);
 				}
-				ViewY++;
+				ViewPosition.y++;
 			} else {
 				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag && currlevel != 16) {
@@ -1389,7 +1387,7 @@ void GenerateLevel(lvl_entry entry)
 				if (doneflag && currlevel == 13) {
 					doneflag = PlaceMiniSet(L4TWARP, 1, 1, -1, -1, true);
 				}
-				ViewX++;
+				ViewPosition.x++;
 			}
 		} else {
 			if (entry == ENTRY_MAIN) {
@@ -1401,7 +1399,7 @@ void GenerateLevel(lvl_entry entry)
 						doneflag = PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, false);
 					}
 				}
-				ViewX++;
+				ViewPosition.x++;
 			} else {
 				doneflag = PlaceMiniSet(L4USTAIRS, 1, 1, -1, -1, false);
 				if (doneflag) {
@@ -1411,7 +1409,7 @@ void GenerateLevel(lvl_entry entry)
 						doneflag = PlaceMiniSet(L4PENTA2, 1, 1, -1, -1, true);
 					}
 				}
-				ViewY++;
+				ViewPosition.y++;
 			}
 		}
 	} while (!doneflag);
@@ -1470,13 +1468,10 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 {
 	SetRndSeed(rseed);
 
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
+	dminPosition = { 16, 16 };
+	dmaxPosition = { 96, 96 };
 
-	ViewX = 40;
-	ViewY = 40;
+	ViewPosition = { 40, 40 };
 
 	DRLG_InitSetPC();
 	LoadQuestSetPieces();
@@ -1488,10 +1483,8 @@ void CreateL4Dungeon(uint32_t rseed, lvl_entry entry)
 
 void LoadL4Dungeon(const char *path, int vx, int vy)
 {
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
+	dminPosition = { 16, 16 };
+	dmaxPosition = { 96, 96 };
 
 	DRLG_InitTrans();
 	InitDungeonFlags();
@@ -1500,8 +1493,7 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 
 	SetRoom(dunData.get(), 0, 0);
 
-	ViewX = vx;
-	ViewY = vy;
+	ViewPosition = { vx, vy };
 
 	Pass3();
 	DRLG_Init_Globals();
@@ -1512,10 +1504,8 @@ void LoadL4Dungeon(const char *path, int vx, int vy)
 
 void LoadPreL4Dungeon(const char *path)
 {
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
+	dminPosition = { 16, 16 };
+	dmaxPosition = { 96, 96 };
 
 	InitDungeonFlags();
 

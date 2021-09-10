@@ -281,8 +281,8 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 			if (dItem[i][j] == 0)
 				continue;
 
-			int px = i - 2 * AutomapOffset.deltaX - ViewX;
-			int py = j - 2 * AutomapOffset.deltaY - ViewY;
+			int px = i - 2 * AutomapOffset.deltaX - ViewPosition.x;
+			int py = j - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
 			Point screen = {
 				(myPlayerOffset.deltaX * AutoMapScale / 100 / 2) + (px - py) * AmLine16 + gnScreenWidth / 2,
@@ -318,8 +318,8 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 			tile.y++;
 	}
 
-	int px = tile.x - 2 * AutomapOffset.deltaX - ViewX;
-	int py = tile.y - 2 * AutomapOffset.deltaY - ViewY;
+	int px = tile.x - 2 * AutomapOffset.deltaX - ViewPosition.x;
+	int py = tile.y - 2 * AutomapOffset.deltaY - ViewPosition.y;
 
 	Displacement playerOffset = player.position.offset;
 	if (player.IsWalking())
@@ -616,7 +616,7 @@ void DrawAutomap(const Surface &out)
 		return;
 	}
 
-	Automap = { (ViewX - 16) / 2, (ViewY - 16) / 2 };
+	Automap = { (ViewPosition.x - 16) / 2, (ViewPosition.y - 16) / 2 };
 	while (Automap.x + AutomapOffset.deltaX < 0)
 		AutomapOffset.deltaX++;
 	while (Automap.x + AutomapOffset.deltaX >= DMAXX)
@@ -654,11 +654,11 @@ void DrawAutomap(const Surface &out)
 		screen.x -= AmLine64 * (cells / 2) - AmLine32;
 		screen.y -= AmLine32 * (cells / 2) + AmLine16;
 	}
-	if ((ViewX & 1) != 0) {
+	if ((ViewPosition.x & 1) != 0) {
 		screen.x -= AmLine16;
 		screen.y -= AmLine8;
 	}
-	if ((ViewY & 1) != 0) {
+	if ((ViewPosition.y & 1) != 0) {
 		screen.x += AmLine16;
 		screen.y -= AmLine8;
 	}

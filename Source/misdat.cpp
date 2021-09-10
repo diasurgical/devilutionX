@@ -12,7 +12,7 @@
 namespace devilution {
 
 /** Data related to each missile ID. */
-MissileDataStruct MissileData[] = {
+MissileData MissilesData[] = {
 	// clang-format off
 	// mAddProc,                   mProc,              mName,             mDraw, mType, mResist,        mFileNum,        miSFX,       mlSFX,       MovementDistribution;
 	{  &AddArrow,                  &MI_Arrow,          MIS_ARROW,         true,      0, MISR_NONE,      MFILE_ARROWS,    SFX_NONE,    SFX_NONE,    MissileMovementDistrubution::Blockable   },
@@ -245,6 +245,24 @@ void MissileFileData::LoadGFX()
 			sprintf(pszName, "Missiles\\%s%u.CL2", name, i + 1);
 			animData[i] = LoadFileInMem(pszName);
 		}
+	}
+}
+
+void InitMissileGFX(bool loadHellfireGraphics)
+{
+	for (size_t mi = 0; MissileSpriteData[mi].animFAmt != 0; mi++) {
+		if (!loadHellfireGraphics && mi > MFILE_SCBSEXPD)
+			break;
+		if (MissileSpriteData[mi].flags == MissileDataFlags::MonsterOwned)
+			continue;
+		MissileSpriteData[mi].LoadGFX();
+	}
+}
+
+void FreeMissileGFX()
+{
+	for (auto &missileData : MissileSpriteData) {
+		missileData.FreeGFX();
 	}
 }
 

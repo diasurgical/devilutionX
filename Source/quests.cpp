@@ -30,13 +30,12 @@ bool QuestLogIsOpen;
 std::optional<CelSprite> pQLogCel;
 /** Contains the quests of the current game. */
 Quest Quests[MAXQUESTS];
-int ReturnLvlX;
-int ReturnLvlY;
+Point ReturnLvlPosition;
 dungeon_type ReturnLevelType;
 int ReturnLevel;
 
 /** Contains the data related to each quest_id. */
-QuestDataStruct QuestData[] = {
+QuestData QuestsData[] = {
 	// clang-format off
 	// _qdlvl,  _qdmultlvl, _qlvlt,          bookOrder,   _qdrnd, _qslvl,          isSinglePlayerOnly, _qdmsg,        _qlstr
 	{       5,          -1, DTYPE_NONE,          5,      100,    SL_NONE,         true,               TEXT_INFRA5,   N_( /* TRANSLATORS: Quest Name Block */ "The Magic Rock")           },
@@ -302,7 +301,7 @@ void InitQuests()
 	int q = 0;
 	for (auto &quest : Quests) {
 		quest._qidx = static_cast<quest_id>(q);
-		auto &questData = QuestData[q];
+		auto &questData = QuestsData[q];
 		q++;
 
 		quest._qactive = QUEST_NOTAVAIL;
@@ -354,10 +353,25 @@ void InitialiseQuestPools(uint32_t seed, Quest quests[])
 	else
 		quests[Q_SKELKING]._qactive = QUEST_NOTAVAIL;
 
-	quests[QuestGroup1[GenerateRnd(sizeof(QuestGroup1) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup2[GenerateRnd(sizeof(QuestGroup2) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup3[GenerateRnd(sizeof(QuestGroup3) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
-	quests[QuestGroup4[GenerateRnd(sizeof(QuestGroup4) / sizeof(int))]]._qactive = QUEST_NOTAVAIL;
+	// using int and not size_t here to detect negative values from GenerateRnd
+	int randomIndex = GenerateRnd(sizeof(QuestGroup1) / sizeof(*QuestGroup1));
+
+	if (randomIndex >= 0)
+		quests[QuestGroup1[randomIndex]]._qactive = QUEST_NOTAVAIL;
+
+	randomIndex = GenerateRnd(sizeof(QuestGroup2) / sizeof(*QuestGroup2));
+	if (randomIndex >= 0)
+		quests[QuestGroup2[randomIndex]]._qactive = QUEST_NOTAVAIL;
+
+	randomIndex = GenerateRnd(sizeof(QuestGroup3) / sizeof(*QuestGroup3));
+	if (randomIndex >= 0)
+		quests[QuestGroup3[randomIndex]]._qactive = QUEST_NOTAVAIL;
+
+	randomIndex = GenerateRnd(sizeof(QuestGroup4) / sizeof(*QuestGroup4));
+
+	// always true, QuestGroup4 has two members
+	if (randomIndex >= 0)
+		quests[QuestGroup4[randomIndex]]._qactive = QUEST_NOTAVAIL;
 }
 
 void CheckQuests()
@@ -553,28 +567,24 @@ void SetReturnLvlPos()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		ReturnLvlX = Quests[Q_SKELKING].position.x + 1;
-		ReturnLvlY = Quests[Q_SKELKING].position.y;
+		ReturnLvlPosition = Quests[Q_SKELKING].position + DIR_SE;
 		ReturnLevel = Quests[Q_SKELKING]._qlevel;
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_BONECHAMB:
-		ReturnLvlX = Quests[Q_SCHAMB].position.x + 1;
-		ReturnLvlY = Quests[Q_SCHAMB].position.y;
+		ReturnLvlPosition = Quests[Q_SCHAMB].position + DIR_SE;
 		ReturnLevel = Quests[Q_SCHAMB]._qlevel;
 		ReturnLevelType = DTYPE_CATACOMBS;
 		break;
 	case SL_MAZE:
 		break;
 	case SL_POISONWATER:
-		ReturnLvlX = Quests[Q_PWATER].position.x;
-		ReturnLvlY = Quests[Q_PWATER].position.y + 1;
+		ReturnLvlPosition = Quests[Q_PWATER].position + DIR_SW;
 		ReturnLevel = Quests[Q_PWATER]._qlevel;
 		ReturnLevelType = DTYPE_CATHEDRAL;
 		break;
 	case SL_VILEBETRAYER:
-		ReturnLvlX = Quests[Q_BETRAYER].position.x + 1;
-		ReturnLvlY = Quests[Q_BETRAYER].position.y - 1;
+		ReturnLvlPosition = Quests[Q_BETRAYER].position + DIR_E;
 		ReturnLevel = Quests[Q_BETRAYER]._qlevel;
 		ReturnLevelType = DTYPE_HELL;
 		break;
@@ -587,8 +597,7 @@ void GetReturnLvlPos()
 {
 	if (Quests[Q_BETRAYER]._qactive == QUEST_DONE)
 		Quests[Q_BETRAYER]._qvar2 = 2;
-	ViewX = ReturnLvlX;
-	ViewY = ReturnLvlY;
+	ViewPosition = ReturnLvlPosition;
 	currlevel = ReturnLevel;
 	leveltype = ReturnLevelType;
 }
@@ -757,7 +766,7 @@ void DrawQuestLog(const Surface &out)
 		if (i == firstFinishedEntry) {
 			y += act2finSpacing;
 		}
-		PrintQLString(out, x, y, _(QuestData[qlist[i]]._qlstr), i == selectedEntry, i >= firstFinishedEntry);
+		PrintQLString(out, x, y, _(QuestsData[qlist[i]]._qlstr), i == selectedEntry, i >= firstFinishedEntry);
 		y += lineSpacing;
 	}
 }
@@ -766,7 +775,7 @@ void StartQuestlog()
 {
 
 	auto sortQuestIdx = [](int a, int b) {
-		return QuestData[a].questBookOrder < QuestData[b].questBookOrder;
+		return QuestsData[a].questBookOrder < QuestsData[b].questBookOrder;
 	};
 
 	qlistCnt = 0;
@@ -879,7 +888,7 @@ bool Quest::IsAvailable()
 		return false;
 	if (_qactive == QUEST_NOTAVAIL)
 		return false;
-	if (gbIsMultiplayer && QuestData[_qidx].isSinglePlayerOnly)
+	if (gbIsMultiplayer && QuestsData[_qidx].isSinglePlayerOnly)
 		return false;
 
 	return true;

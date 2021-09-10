@@ -1223,7 +1223,7 @@ void StartTalk()
 
 	for (auto &quest : Quests) {
 		if (quest._qactive == QUEST_ACTIVE && QuestDialogTable[talker][quest._qidx] != TEXT_NONE && quest._qlog) {
-			AddSText(0, sn, _(QuestData[quest._qidx]._qlstr), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
+			AddSText(0, sn, _(QuestsData[quest._qidx]._qlstr), UiFlags::ColorSilver | UiFlags::AlignCenter, true);
 			sn += la;
 		}
 	}
