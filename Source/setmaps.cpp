@@ -147,9 +147,6 @@ Object &ObjectAtPosition(Point position)
 	app_fatal("ObjectAtPosition: Active object not found at (%i,%i)", position.x, position.y);
 }
 
-/**
- * @brief Load a quest map, the given map is specified via the global setlvlnum
- */
 void LoadSetMap()
 {
 	switch (setlvlnum) {
