@@ -2377,7 +2377,7 @@ void AddGolem(Missile &missile, Point dst, Direction /*midir*/)
 				if (!LineClearMissile(missile.position.start, target))
 					continue;
 
-				if (dMonster[target.x][target.y] != 0 || nSolidTable[dPiece[target.x][target.y]] || dObject[target.x][target.y] != 0)
+				if (dMonster[target.x][target.y] != 0 || nSolidTable[dPiece[target.x][target.y]] || dObject[target.x][target.y] != 0 || dPlayer[target.x][target.y] != 0)
 					continue;
 
 				SpawnGolem(playerId, target, missile);
