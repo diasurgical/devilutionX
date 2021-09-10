@@ -111,7 +111,7 @@ void WordWrapString(char *text, size_t width, GameFontTables size, int spacing)
 		}
 
 		size_t j; // Backtrack to the previous space
-		for (j = i; j >= lineStart; j--) {
+		for (j = i; j > lineStart; j--) {
 			if (text[j] == ' ') {
 				break;
 			}
