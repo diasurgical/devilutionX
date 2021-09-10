@@ -1419,30 +1419,18 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 	return offset;
 }
 
-/**
- * @brief Clear cursor state
- */
 void ClearCursor() // CODE_FIX: this was supposed to be in cursor.cpp
 {
 	sgdwCursWdt = 0;
 	sgdwCursWdtOld = 0;
 }
 
-/**
- * @brief Shifting the view area along the logical grid
- *        Note: this won't allow you to shift between even and odd rows
- * @param horizontal Shift the screen left or right
- * @param vertical Shift the screen up or down
- */
 void ShiftGrid(int *x, int *y, int horizontal, int vertical)
 {
 	*x += vertical + horizontal;
 	*y += vertical - horizontal;
 }
 
-/**
- * @brief Gets the number of rows covered by the main panel
- */
 int RowsCoveredByPanel()
 {
 	if (gnScreenWidth <= PANEL_WIDTH) {
@@ -1457,11 +1445,6 @@ int RowsCoveredByPanel()
 	return rows;
 }
 
-/**
- * @brief Calculate the offset needed for centering tiles in view area
- * @param offsetX Offset in pixels
- * @param offsetY Offset in pixels
- */
 void CalcTileOffset(int *offsetX, int *offsetY)
 {
 	int x;
@@ -1484,11 +1467,6 @@ void CalcTileOffset(int *offsetX, int *offsetY)
 	*offsetY = y;
 }
 
-/**
- * @brief Calculate the needed diamond tile to cover the view area
- * @param columns Tiles needed per row
- * @param rows Both even and odd rows
- */
 void TilesInView(int *rcolumns, int *rrows)
 {
 	int columns = gnScreenWidth / TILE_WIDTH;
@@ -1562,9 +1540,6 @@ void CalcViewportGeometry()
 
 extern SDL_Surface *pal_surface;
 
-/**
- * @brief Render the whole screen black
- */
 void ClearScreenBuffer()
 {
 	lock_buf(3);
@@ -1576,9 +1551,6 @@ void ClearScreenBuffer()
 }
 
 #ifdef _DEBUG
-/**
- * @brief Scroll the screen when mouse is close to the edge
- */
 void ScrollView()
 {
 	bool scroll;
@@ -1658,18 +1630,12 @@ void ScrollView()
 }
 #endif
 
-/**
- * @brief Initialize the FPS meter
- */
 void EnableFrameCount()
 {
 	frameflag = !frameflag;
 	framestart = SDL_GetTicks();
 }
 
-/**
- * @brief Redraw screen
- */
 void scrollrt_draw_game_screen()
 {
 	int hgt = 0;
@@ -1698,9 +1664,6 @@ void scrollrt_draw_game_screen()
 	}
 }
 
-/**
- * @brief Render the game
- */
 void DrawAndBlit()
 {
 	if (!gbRunGame) {
