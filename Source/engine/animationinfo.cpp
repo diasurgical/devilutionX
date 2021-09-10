@@ -166,7 +166,11 @@ void AnimationInfo::ChangeAnimationData(const CelSprite *celSprite, int numberOf
 {
 	if (numberOfFrames != NumberOfFrames || ticksPerFrame != TicksPerFrame) {
 		// Ensure that the CurrentFrame is still valid and that we disable ADL cause the calculcated values (for example TickModifier) could be wrong
-		CurrentFrame = clamp(CurrentFrame, 1, numberOfFrames);
+		if (numberOfFrames >= 1)
+			CurrentFrame = clamp(CurrentFrame, 1, numberOfFrames);
+		else
+			CurrentFrame = 0;
+
 		NumberOfFrames = numberOfFrames;
 		TicksPerFrame = ticksPerFrame;
 		TicksSinceSequenceStarted = 0;
