@@ -1551,7 +1551,6 @@ void ClearScreenBuffer()
 }
 
 #ifdef _DEBUG
-
 void ScrollView()
 {
 	bool scroll;
