@@ -34,6 +34,7 @@
 namespace devilution {
 
 int MyPlayerId;
+Player *MyPlayer;
 Player Players[MAX_PLRS];
 bool MyPlayerIsDead;
 int deathdelay;
