@@ -12,6 +12,7 @@
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
+#include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "storm/storm.h"
@@ -21,6 +22,7 @@
 #include "utils/sdl_wrap.h"
 #include "utils/stubs.h"
 #include "utils/utf8.h"
+#include "utils/language.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -541,7 +543,15 @@ void UnloadUiGFX()
 void UiInitialize()
 {
 	LoadUiGFX();
-	LoadArtFonts();
+
+	LoadFont(GameFont12, ColorSilver, "fonts\\grayui.trn");
+	LoadFont(GameFont12, ColorGold, "fonts\\goldui.trn");
+	LoadFont(GameFont24, ColorSilver, "fonts\\grayui.trn");
+	LoadFont(GameFont24, ColorGold, "fonts\\goldui.trn");
+	LoadFont(GameFont30, ColorSilver, "fonts\\grayui.trn");
+	LoadFont(GameFont30, ColorGold, "fonts\\goldui.trn");
+	LoadFont(GameFont42, ColorGold, "fonts\\goldui.trn");
+
 	if (ArtCursor.surface != nullptr) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {
 			ErrSdl();
@@ -552,7 +562,7 @@ void UiInitialize()
 void UiDestroy()
 {
 	UnloadTtfFont();
-	UnloadArtFonts();
+	UnloadFonts();
 	UnloadUiGFX();
 }
 
@@ -726,7 +736,10 @@ void Render(UiText *uiText)
 
 void Render(const UiArtText *uiArtText)
 {
-	DrawArtStr(uiArtText->text(), uiArtText->m_rect, uiArtText->m_iFlags);
+	Rectangle rect { { uiArtText->m_rect.x, uiArtText->m_rect.y }, { uiArtText->m_rect.w, uiArtText->m_rect.h } };
+
+	const Surface &out = Surface(DiabloUiSurface());
+	DrawString(out, uiArtText->text(), rect, uiArtText->m_iFlags, uiArtText->spacing(), uiArtText->lineHeight());
 }
 
 void Render(const UiImage *uiImage)
@@ -745,17 +758,24 @@ void Render(const UiImage *uiImage)
 
 void Render(const UiArtTextButton *uiButton)
 {
-	DrawArtStr(uiButton->m_text, uiButton->m_rect, uiButton->m_iFlags);
+	Rectangle rect { { uiButton->m_rect.x, uiButton->m_rect.y }, { uiButton->m_rect.w, uiButton->m_rect.h } };
+
+	const Surface &out = Surface(DiabloUiSurface());
+	DrawString(out, uiButton->m_text, rect, uiButton->m_iFlags);
 }
 
 void Render(const UiList *uiList)
 {
+	const Surface &out = Surface(DiabloUiSurface());
+
 	for (std::size_t i = 0; i < uiList->m_vecItems.size(); ++i) {
 		SDL_Rect rect = uiList->itemRect(i);
 		const UiListItem *item = uiList->GetItem(i);
 		if (i + (ListOffset == nullptr ? 0 : *ListOffset) == SelectedItem)
 			DrawSelector(rect);
-		DrawArtStr(item->m_text, rect, uiList->m_iFlags);
+
+		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
+		DrawString(out, item->m_text, rectangle, uiList->m_iFlags, uiList->spacing());
 	}
 }
 
@@ -794,11 +814,11 @@ void Render(const UiScrollbar *uiSb)
 void Render(const UiEdit *uiEdit)
 {
 	DrawSelector(uiEdit->m_rect);
-	SDL_Rect rect = uiEdit->m_rect;
-	rect.x += 43;
-	rect.y += 1;
-	rect.w -= 86;
-	DrawArtStr(uiEdit->m_value, rect, uiEdit->m_iFlags, /*drawTextCursor=*/true);
+
+	Rectangle rect { { uiEdit->m_rect.x + 43, uiEdit->m_rect.y + 1 }, { uiEdit->m_rect.w - 86, uiEdit->m_rect.h } };
+
+	const Surface &out = Surface(DiabloUiSurface());
+	DrawString(out, uiEdit->m_value, rect, uiEdit->m_iFlags | UiFlags::TextCursor);
 }
 
 void RenderItem(UiItemBase *item)

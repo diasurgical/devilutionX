@@ -1006,6 +1006,7 @@ void DiabloDeinit()
 		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
 	if (was_fonts_init)
 		FontsCleanup();
+	UnloadFonts();
 	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) != 0)
 		SDL_Quit();
 }
@@ -1509,6 +1510,18 @@ void InitKeymapActions()
 	});
 }
 
+void LoadGameFonts()
+{
+	LoadFont(GameFont12, ColorSilver, "fonts\\white.trn");
+	LoadFont(GameFont12, ColorGold, "fonts\\whitegold.trn");
+	LoadFont(GameFont12, ColorRed, "fonts\\red.trn");
+	LoadFont(GameFont12, ColorBlue, "fonts\\blue.trn");
+	LoadFont(GameFont12, ColorBlack, "fonts\\black.trn");
+	LoadFont(GameFont30, ColorGold);
+	LoadFont(GameFont46, ColorGold);
+	LoadFont(GameFont46, ColorBlack, "fonts\\black.trn");
+}
+
 } // namespace
 
 void FreeGameMem()
@@ -1542,6 +1555,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 		// Save 2.8 MiB of RAM by freeing all main menu resources
 		// before starting the game.
 		UiDestroy();
+		LoadGameFonts();
 
 		gbSelectProvider = false;
 
@@ -1557,6 +1571,7 @@ bool StartGame(bool bNewGame, bool bSinglePlayer)
 		}
 		RunGameLoop(uMsg);
 		NetClose();
+		UnloadFonts();
 
 		// If the player left the game into the main menu,
 		// initialize main menu resources.
@@ -1825,7 +1840,6 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		InitStores();
 		InitAutomapOnce();
 		InitHelp();
-		InitText();
 	}
 
 	SetRndSeed(glSeedTbl[currlevel]);

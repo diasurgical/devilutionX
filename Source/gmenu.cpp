@@ -96,7 +96,7 @@ int GmenuGetLineWidth(TMenuItem *pItem)
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0)
 		return 490;
 
-	return GetLineWidth(_(pItem->pszStr), GameFontBig, 2);
+	return GetLineWidth(_(pItem->pszStr), GameFont46, 2);
 }
 
 void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
@@ -104,20 +104,20 @@ void GmenuDrawMenuItem(const Surface &out, TMenuItem *pItem, int y)
 	int w = GmenuGetLineWidth(pItem);
 	if ((pItem->dwFlags & GMENU_SLIDER) != 0) {
 		int x = 16 + w / 2;
-		CelDrawTo(out, { x + PANEL_LEFT, y - 10 }, *optbar_cel, 1);
+		CelDrawTo(out, { x + PANEL_LEFT, y + 40 }, *optbar_cel, 1);
 		uint16_t step = pItem->dwFlags & 0xFFF;
 		uint16_t steps = std::max<uint16_t>((pItem->dwFlags & 0xFFF000) >> 12, 2);
 		uint16_t pos = step * 256 / steps;
-		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y - 12, pos + 13, 28);
-		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y - 12 }, *option_cel, 1);
+		GmenuClearBuffer(out, x + 2 + PANEL_LEFT, y + 38, pos + 13, 28);
+		CelDrawTo(out, { x + 2 + pos + PANEL_LEFT, y + 38 }, *option_cel, 1);
 	}
 
 	int x = (gnScreenWidth - w) / 2;
-	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::ColorSilver : UiFlags::ColorBlack;
-	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::FontHuge, 2);
+	UiFlags style = (pItem->dwFlags & GMENU_ENABLED) != 0 ? UiFlags::ColorGold : UiFlags::ColorBlack;
+	DrawString(out, _(pItem->pszStr), Point { x, y }, style | UiFlags::FontSize46, 2);
 	if (pItem == sgpCurrItem) {
-		CelDrawTo(out, { x - 54, y + 1 }, *PentSpin_cel, PentSpn2Spin());
-		CelDrawTo(out, { x + 4 + w, y + 1 }, *PentSpin_cel, PentSpn2Spin());
+		CelDrawTo(out, { x - 54, y + 51 }, *PentSpin_cel, PentSpn2Spin());
+		CelDrawTo(out, { x + 4 + w, y + 51 }, *PentSpin_cel, PentSpn2Spin());
 	}
 }
 
@@ -163,7 +163,7 @@ void gmenu_draw_pause(const Surface &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		LightTableIndex = 0;
-		DrawString(out, _("Pause"), Point { 0, PANEL_TOP / 2 }, UiFlags::FontHuge | UiFlags::AlignCenter, 2);
+		DrawString(out, _("Pause"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize46 | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
 	}
 }
 
@@ -233,7 +233,7 @@ void gmenu_draw(const Surface &out)
 			}
 		}
 		CelDrawTo(out, { (gnScreenWidth - sgpLogo->Width()) / 2, 102 + UI_OFFSET_Y }, *sgpLogo, LogoAnim_frame);
-		int y = 160 + UI_OFFSET_Y;
+		int y = 110 + UI_OFFSET_Y;
 		TMenuItem *i = sgpCurrentMenu;
 		if (sgpCurrentMenu->fnMenu != nullptr) {
 			while (i->fnMenu != nullptr) {

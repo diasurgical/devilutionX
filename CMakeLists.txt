@@ -441,7 +441,6 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/selok.cpp
   Source/DiabloUI/selyesno.cpp
   Source/DiabloUI/support_lines.cpp
-  Source/DiabloUI/text.cpp
   Source/DiabloUI/text_draw.cpp
   Source/DiabloUI/title.cpp
   Source/DiabloUI/ttf_render_wrapped.cpp

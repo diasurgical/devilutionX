@@ -1121,7 +1121,7 @@ int SaveItemPower(Item &item, const ItemPower &power)
 
 bool StringInPanel(const char *str)
 {
-	return GetLineWidth(str, GameFontSmall, 0) < 125;
+	return GetLineWidth(str, GameFont12, 0) < 125;
 }
 
 int PLVal(int pv, int p1, int p2, int minv, int maxv)
@@ -4130,7 +4130,7 @@ void DrawUniqueInfo(const Surface &out)
 
 	DrawUniqueInfoWindow(GlobalBackBuffer());
 
-	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 2 * 12 }, { 257, 0 } };
+	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 12 }, { 257, 0 } };
 	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 

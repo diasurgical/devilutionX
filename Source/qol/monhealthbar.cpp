@@ -109,14 +109,16 @@ void DrawMonsterHealthBar(const Surface &out)
 		UnsafeDrawVerticalLine(out, { position.x + width - border - 1, position.y + border + 1 }, borderHeight, borderColor);
 	}
 
-	int barLabelY = position.y + 10 + (height - 11) / 2;
-	DrawString(out, monster.mName, { position.x - 1, barLabelY + 1, width, height }, UiFlags::AlignCenter | UiFlags::ColorBlack);
-	UiFlags style = UiFlags::ColorSilver;
+	int barLabelY = position.y;
+	UiFlags style = UiFlags::AlignCenter | UiFlags::VerticalCenter;
+	DrawString(out, monster.mName, { position + Displacement { -1, 1 }, width, height }, style | UiFlags::ColorBlack);
 	if (monster._uniqtype != 0)
-		style = UiFlags::ColorGold;
+		style |= UiFlags::ColorGold;
 	else if (monster.leader != 0)
-		style = UiFlags::ColorBlue;
-	DrawString(out, monster.mName, { position.x, barLabelY, width, height }, UiFlags::AlignCenter | style);
+		style |= UiFlags::ColorBlue;
+	else
+		style |= UiFlags::ColorSilver;
+	DrawString(out, monster.mName, { position, width, height }, style);
 
 	if (monster._uniqtype != 0 || MonsterKillCounts[monster.MType->mtype] >= 15) {
 		monster_resistance immunes[] = { IMMUNE_MAGIC, IMMUNE_FIRE, IMMUNE_LIGHTNING };

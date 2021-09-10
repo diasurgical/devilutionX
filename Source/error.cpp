@@ -35,7 +35,7 @@ void InitNextLines()
 	char tempstr[1536]; // Longest test is about 768 chars * 2 for unicode
 	strcpy(tempstr, message.data());
 
-	WordWrapGameString(tempstr, LineWidth, GameFontSmall, 1);
+	WordWrapString(tempstr, LineWidth, GameFont12, 1);
 	const string_view paragraphs = tempstr;
 
 	size_t previous = 0;
@@ -172,7 +172,7 @@ void DrawDiabloMsg(const Surface &out)
 	auto message = DiabloMessages.front();
 	int lineNumber = 0;
 	for (auto &line : TextLines) {
-		DrawString(out, line.c_str(), { { PANEL_X + 109, dialogStartY + 24 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
+		DrawString(out, line.c_str(), { { PANEL_X + 109, dialogStartY + 12 + lineNumber * LineHeight }, { LineWidth, LineHeight } }, UiFlags::AlignCenter, 1, LineHeight);
 		lineNumber += 1;
 	}
 

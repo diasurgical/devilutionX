@@ -1206,21 +1206,15 @@ void DrawView(const Surface &out, Point startPosition)
 		for (auto m : DebugCoordsMap) {
 			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
 			Point pixelCoords = m.second;
-			Displacement ver = { 0, -TILE_HEIGHT / 2 };
-			Displacement hor = { TILE_WIDTH / 2, 0 };
-			if (!zoomflag) {
+			if (!zoomflag)
 				pixelCoords *= 2;
-				hor *= 2;
-				ver *= 2;
-			}
-			Point center = pixelCoords + hor + ver;
 			if (DebugCoords || (DebugCursorCoords && dunCoords == cursPosition)) {
 				char coordstr[10];
 				sprintf(coordstr, "%d:%d", dunCoords.x, dunCoords.y);
-				int textWidth = GetLineWidth(coordstr);
-				int textHeight = 12;
-				Point position = center + Displacement { -textWidth / 2, textHeight / 2 };
-				DrawString(out, coordstr, { position, { textWidth, textHeight } }, UiFlags::ColorRed);
+				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
+				if (!zoomflag)
+					tileSize *= 2;
+				DrawString(out, coordstr, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
 			}
 			if (DebugGrid) {
 				auto DrawLine = [&out](Point from, Point to, uint8_t col) {
@@ -1236,11 +1230,19 @@ void DrawView(const Surface &out, Point startPosition)
 						out.SetPixel({ (int)sx, (int)sy }, col);
 				};
 
+				Displacement hor = { TILE_WIDTH / 2, 0 };
+				Displacement ver = { 0, TILE_HEIGHT / 2 };
+				if (!zoomflag) {
+					hor *= 2;
+					ver *= 2;
+				}
+				Point center = pixelCoords + hor - ver;
+
 				uint8_t col = PAL16_BEIGE;
-				DrawLine(center - hor, center - ver, col);
-				DrawLine(center + hor, center - ver, col);
 				DrawLine(center - hor, center + ver, col);
 				DrawLine(center + hor, center + ver, col);
+				DrawLine(center - hor, center - ver, col);
+				DrawLine(center + hor, center - ver, col);
 			}
 		}
 	}
@@ -1321,7 +1323,7 @@ void DrawFPS(const Surface &out)
 		frameend = 0;
 	}
 	snprintf(string, 12, "%i FPS", framerate);
-	DrawString(out, string, Point { 8, 65 }, UiFlags::ColorRed);
+	DrawString(out, string, Point { 8, 53 }, UiFlags::ColorRed);
 }
 
 /**

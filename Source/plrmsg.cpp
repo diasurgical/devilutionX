@@ -31,7 +31,7 @@ void PrintChatMessage(const Surface &out, int x, int y, int width, char *text, U
 		if (text[i] == '\n')
 			text[i] = ' ';
 	}
-	WordWrapGameString(text, width);
+	WordWrapString(text, width);
 	DrawString(out, text, { { x, y }, { width, 0 } }, style, 1, 10);
 }
 
@@ -109,7 +109,7 @@ void InitPlrMsg()
 void DrawPlrMsg(const Surface &out)
 {
 	DWORD x = 10;
-	DWORD y = 70;
+	DWORD y = 58;
 	DWORD width = gnScreenWidth - 20;
 	_plrmsg *pMsg;
 

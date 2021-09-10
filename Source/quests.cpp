@@ -276,14 +276,13 @@ int QuestLogMouseToEntry()
 void PrintQLString(const Surface &out, int x, int y, const char *str, bool marked, bool disabled = false)
 {
 	int width = GetLineWidth(str);
-	int sx = x + std::max((257 - width) / 2, 0);
-	int sy = y + lineHeight; //seems that DrawString y is the text base line -> so add a lines height
+	x += std::max((257 - width) / 2, 0);
 	if (marked) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { sx - 20, sy + 1 }), *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { x - 20, y + 13 }), *pSPentSpn2Cels, PentSpn2Spin());
 	}
-	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { sx, sy }), { 257, 0 } }, disabled ? UiFlags::ColorGold : UiFlags::ColorSilver);
+	DrawString(out, str, { GetPanelPosition(UiPanels::Quest, { x, y }), { 257, 0 } }, disabled ? UiFlags::ColorGold : UiFlags::ColorSilver);
 	if (marked) {
-		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { sx + width + 7, sy + 1 }), *pSPentSpn2Cels, PentSpn2Spin());
+		CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { x + width + 7, y + 13 }), *pSPentSpn2Cels, PentSpn2Spin());
 	}
 }
 

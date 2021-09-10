@@ -88,7 +88,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 		y *= 2;
 	}
 	x -= nameWidth / 2;
-	labelQueue.push_back(ItemLabel { id, nameWidth, { x, y }, textOnGround });
+	labelQueue.push_back(ItemLabel { id, nameWidth, { x, y - Height }, textOnGround });
 }
 
 bool IsMouseOverGameArea()
@@ -148,7 +148,7 @@ void DrawItemNameLabels(const Surface &out)
 	for (const ItemLabel &label : labelQueue) {
 		Item &item = Items[label.id];
 
-		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y - Height + MarginY && MousePosition.y < label.pos.y + MarginY) {
+		if (MousePosition.x >= label.pos.x && MousePosition.x < label.pos.x + label.width && MousePosition.y >= label.pos.y + MarginY && MousePosition.y < label.pos.y + MarginY + Height) {
 			if (!gmenu_is_active() && PauseMode == 0 && !MyPlayerIsDead && IsMouseOverGameArea()) {
 				isLabelHighlighted = true;
 				cursPosition = item.position;
@@ -156,9 +156,9 @@ void DrawItemNameLabels(const Surface &out)
 			}
 		}
 		if (pcursitem == label.id)
-			FillRect(out, label.pos.x, label.pos.y - Height + MarginY, label.width, Height, PAL8_BLUE + 6);
+			FillRect(out, label.pos.x, label.pos.y + MarginY, label.width, Height, PAL8_BLUE + 6);
 		else
-			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y - Height + MarginY, label.width, Height);
+			DrawHalfTransparentRectTo(out, label.pos.x, label.pos.y + MarginY, label.width, Height);
 		DrawString(out, label.text, { { label.pos.x + MarginX, label.pos.y }, { label.width, Height } }, item.getTextColor());
 	}
 	labelQueue.clear();
