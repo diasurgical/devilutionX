@@ -1248,7 +1248,7 @@ void DrawInvBelt(const Surface &out)
 		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
 			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
-			DrawString(out, tempstr, { position, InventorySlotSizeInPixels }, UiFlags::ColorSilver | UiFlags::AlignRight);
+			DrawString(out, tempstr, { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorSilver | UiFlags::AlignRight);
 		}
 	}
 }

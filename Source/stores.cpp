@@ -24,6 +24,7 @@ namespace devilution {
 
 Item golditem;
 
+std::optional<CelSprite> pSPentSpn2Cels;
 std::optional<CelSprite> pSTextBoxCels;
 std::optional<CelSprite> pSTextSlidCels;
 
@@ -2163,13 +2164,13 @@ void DrawSelector(const Surface &out, const Rectangle &rect, const char *text, U
 	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x1 += (rect.size.width - lineWidth) / 2;
 
-	CelDrawTo(out, { x1, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x1, rect.position.y + 13 }, *pSPentSpn2Cels, PentSpn2Spin());
 
 	int x2 = rect.position.x + rect.size.width + 5;
 	if (HasAnyOf(flags, UiFlags::AlignCenter))
 		x2 = rect.position.x + (rect.size.width - lineWidth) / 2 + lineWidth + 5;
 
-	CelDrawTo(out, { x2, rect.position.y + 1 }, *pSPentSpn2Cels, PentSpn2Spin());
+	CelDrawTo(out, { x2, rect.position.y + 13 }, *pSPentSpn2Cels, PentSpn2Spin());
 }
 
 } // namespace
@@ -2199,6 +2200,7 @@ void AddStoreHoldRepair(Item *itm, int8_t i)
 
 void InitStores()
 {
+	pSPentSpn2Cels = LoadCel("Data\\PentSpn2.CEL", 12);
 	pSTextBoxCels = LoadCel("Data\\TextBox2.CEL", 271);
 	pSTextSlidCels = LoadCel("Data\\TextSlid.CEL", 12);
 	ClearSText(0, STORE_LINES);
@@ -2250,7 +2252,7 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 		sx += 320;
 	}
 
-	int sy = UI_OFFSET_Y + 44 + line * 12 + stext[line]._syoff;
+	int sy = UI_OFFSET_Y + 32 + line * 12 + stext[line]._syoff;
 
 	int width = stextsize ? 575 : 255;
 	if (stextscrl && line >= 4 && line <= 20) {

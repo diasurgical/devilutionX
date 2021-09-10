@@ -5,6 +5,8 @@
 
 namespace devilution {
 
+void UpdatePalette(Art *art, const SDL_Surface *output = nullptr);
+
 void DrawArt(Point screenPosition, Art *art, int nFrame = 0, Uint16 srcW = 0, Uint16 srcH = 0);
 
 void DrawArt(const Surface &out, Point screenPosition, Art *art, int nFrame = 0, Uint16 srcW = 0, Uint16 srcH = 0);

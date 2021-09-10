@@ -106,7 +106,7 @@ void InitHelp()
 	for (const auto *text : HelpText) {
 		strcpy(tempString, _(text));
 
-		WordWrapGameString(tempString, 577);
+		WordWrapString(tempString, 577);
 		const string_view paragraph = tempString;
 
 		size_t previous = 0;
@@ -137,8 +137,8 @@ void DrawHelp(const Surface &out)
 	const int sx = PANEL_X + 32;
 	const int sy = UI_OFFSET_Y + 51;
 
-	for (int i = 7; i < 22; i++) {
-		const char *line = HelpTextLines[i - 7 + SkipLines].c_str();
+	for (int i = 6; i < 21; i++) {
+		const char *line = HelpTextLines[i - 6 + SkipLines].c_str();
 		if (line[0] == '\0') {
 			continue;
 		}

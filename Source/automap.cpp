@@ -461,7 +461,7 @@ AutomapTile GetAutomapTypeView(Point map)
 void DrawAutomapText(const Surface &out)
 {
 	char desc[256];
-	Point linePosition { 8, 20 };
+	Point linePosition { 8, 8 };
 
 	if (gbIsMultiplayer) {
 		if (strcasecmp("0.0.0.0", szPlayerName) != 0) {

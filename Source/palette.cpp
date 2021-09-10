@@ -160,10 +160,10 @@ void CycleColorsReverse(int from, int to)
 
 } // namespace
 
-void palette_update()
+void palette_update(int first, int ncolor)
 {
 	assert(Palette);
-	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette, system_palette, 0, 256) < 0) {
+	if (SDLC_SetSurfaceAndPaletteColors(pal_surface, Palette, system_palette, first, ncolor) < 0) {
 		ErrSdl();
 	}
 	pal_surface_palette_version++;
@@ -345,7 +345,7 @@ void PaletteFadeOut(int fr)
 void palette_update_caves()
 {
 	CycleColors(1, 31);
-	palette_update();
+	palette_update(1, 31);
 }
 
 void palette_update_crypt()
@@ -361,7 +361,7 @@ void palette_update_crypt()
 	}
 	if (glowDelay > 0) {
 		CycleColorsReverse(16, 31);
-		palette_update();
+		palette_update(1, 31);
 		glowDelay++;
 	} else {
 		glowDelay = 1;
@@ -381,7 +381,7 @@ void palette_update_hive()
 	}
 	if (bubbleDelay == 2) {
 		CycleColorsReverse(9, 15);
-		palette_update();
+		palette_update(1, 31);
 		bubbleDelay = 0;
 	} else {
 		bubbleDelay++;
@@ -393,7 +393,7 @@ void palette_update_quest_palette(int n)
 	int i = 32 - n;
 	logical_palette[i] = orig_palette[i];
 	ApplyGamma(system_palette, logical_palette, 32);
-	palette_update();
+	palette_update(0, 31);
 	if (sgOptions.Graphics.bBlendedTransparancy) {
 		// Update blended transparency, but only for the color that was updated
 		for (int j = 0; j < 256; j++) {

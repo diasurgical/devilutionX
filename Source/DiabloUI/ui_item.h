@@ -25,21 +25,30 @@ enum class UiType {
 enum class UiFlags {
 	// clang-format off
 	None              = 0,
-	FontSmall         = 1 << 0,
-	FontMedium        = 1 << 1,
-	FontBig           = 1 << 2,
-	FontHuge          = 1 << 3,
-	AlignCenter       = 1 << 4,
-	AlignRight        = 1 << 5,
-	VerticalCenter    = 1 << 6,
-	ColorSilver       = 1 << 7,
-	ColorGold         = 1 << 8,
-	ColorRed          = 1 << 9,
-	ColorBlue         = 1 << 10,
-	ColorBlack        = 1 << 11,
-	ElementDisabled   = 1 << 12,
-	ElementHidden     = 1 << 13,
-	KerningFitSpacing = 1 << 14,
+
+	FontSize12        = 1 << 0,
+	FontSize24        = 1 << 1,
+	FontSize30        = 1 << 2,
+	FontSize42        = 1 << 3,
+	FontSize46        = 1 << 4,
+
+	ColorSilver       = 1 << 5,
+	ColorGold         = 1 << 6,
+	ColorRed          = 1 << 7,
+	ColorBlue         = 1 << 8,
+	ColorBlack        = 1 << 9,
+
+	AlignCenter       = 1 << 10,
+	AlignRight        = 1 << 11,
+	VerticalCenter    = 1 << 12,
+
+	KerningFitSpacing = 1 << 13,
+
+	ElementDisabled   = 1 << 14,
+	ElementHidden     = 1 << 15,
+
+	PentaCursor       = 1 << 16,
+	TextCursor        = 1 << 17,
 	// clang-format on
 };
 
@@ -153,9 +162,11 @@ public:
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
 	 */
-	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiArtText(const char *text, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
 	    , m_text(text)
+	    , m_spacing(spacing)
+	    , m_lineHeight(lineHeight)
 	{
 	}
 
@@ -165,9 +176,11 @@ public:
 	 * @param rect screen region defining the area to draw the text
 	 * @param flags UiFlags controlling color/alignment/size
 	 */
-	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None)
+	UiArtText(const char **ptext, SDL_Rect rect, UiFlags flags = UiFlags::None, int spacing = 1, int lineHeight = -1)
 	    : UiItemBase(UiType::ArtText, rect, flags)
 	    , m_ptext(ptext)
+	    , m_spacing(spacing)
+	    , m_lineHeight(lineHeight)
 	{
 	}
 
@@ -178,11 +191,23 @@ public:
 		return *m_ptext;
 	}
 
+	int spacing() const
+	{
+		return m_spacing;
+	}
+
+	int lineHeight() const
+	{
+		return m_lineHeight;
+	}
+
 	~UiArtText() {};
 
 private:
 	const char *m_text = nullptr;
 	const char **m_ptext = nullptr;
+	int m_spacing = 1;
+	int m_lineHeight = -1;
 };
 
 //=============================================================================
@@ -280,7 +305,6 @@ public:
 	enum FrameKey : uint8_t {
 		DEFAULT,
 		PRESSED,
-		DISABLED
 	};
 
 	//private:
@@ -315,12 +339,13 @@ typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;
 
 class UiList : public UiItemBase {
 public:
-	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None)
+	UiList(const vUiListItem &vItems, Sint16 x, Sint16 y, Uint16 item_width, Uint16 item_height, UiFlags flags = UiFlags::None, int spacing = 1)
 	    : UiItemBase(UiType::List, { x, y, item_width, static_cast<Uint16>(item_height * vItems.size()) }, flags)
 	    , m_x(x)
 	    , m_y(y)
 	    , m_width(item_width)
 	    , m_height(item_height)
+	    , m_spacing(spacing)
 	{
 		for (auto &item : vItems)
 			m_vecItems.push_back(item.get());
@@ -352,9 +377,15 @@ public:
 		return m_vecItems[i];
 	}
 
+	int spacing() const
+	{
+		return m_spacing;
+	}
+
 	//private:
 	Sint16 m_x, m_y;
 	Uint16 m_width, m_height;
 	std::vector<UiListItem *> m_vecItems;
+	int m_spacing;
 };
 } // namespace devilution
