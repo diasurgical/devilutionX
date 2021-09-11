@@ -10,10 +10,6 @@
 
 namespace devilution {
 
-/**
- * @brief Check that we have write access to the game install folder
-
- */
 void ReadOnlyTest()
 {
 	const std::string path = paths::PrefPath() + "Diablo1ReadOnlyTest.foo";
