@@ -7,6 +7,9 @@
 
 namespace devilution {
 
+/**
+ * @brief Check that we have write access to the game install folder
+ */
 void ReadOnlyTest();
 
-}
+} // namespace devilution
