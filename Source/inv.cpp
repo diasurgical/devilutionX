@@ -1960,7 +1960,7 @@ void UseStaffCharge(Player &player)
 {
 	auto &staff = player.InvBody[INVLOC_HAND_LEFT];
 
-	if (!CanUseStaff(staff, player._pRSpell))
+	if (!CanUseStaff(staff, player._pSpell))
 		return;
 
 	staff._iCharges--;
