@@ -7,8 +7,6 @@ using namespace devilution;
 
 TEST(Lighting, CrawlTables)
 {
-	int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
-
 	bool added[40][40];
 	memset(added, 0, sizeof(added));
 

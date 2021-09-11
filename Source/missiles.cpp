@@ -36,8 +36,6 @@ namespace {
 ChainStruct chain[MAXMISSILES];
 int numchains;
 
-const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
-
 int AddClassHealingBonus(int hp, HeroClass heroClass)
 {
 	switch (heroClass) {

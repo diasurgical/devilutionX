@@ -414,6 +414,8 @@ const int8_t CrawlTable[2749] = {
 	// clang-format on
 };
 
+const int CrawlNum[19] = { 0, 3, 12, 45, 94, 159, 240, 337, 450, 579, 724, 885, 1062, 1255, 1464, 1689, 1930, 2187, 2460 };
+
 /*
  * X- Y-coordinate offsets of lighting visions.
  * The last entry-pair is only for alignment.
