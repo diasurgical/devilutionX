@@ -731,12 +731,11 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
  * @brief Check if and how a monster should be rendered
  * @param out Output buffer
  * @param tilePosition dPiece coordinates
- * @param oy dPiece Y offset
  * @param targetBufferPosition Output buffer coordinates
  */
-void DrawMonsterHelper(const Surface &out, Point tilePosition, int oy, Point targetBufferPosition)
+void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	int mi = dMonster[tilePosition.x][tilePosition.y + oy];
+	int mi = dMonster[tilePosition.x][tilePosition.y];
 	mi = mi > 0 ? mi - 1 : -(mi + 1);
 
 	if (leveltype == DTYPE_TOWN) {
@@ -834,10 +833,6 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
 	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
-	int negMon = 0;
-	if (tilePosition.y > 0) // check for OOB
-		negMon = dMonster[tilePosition.x][tilePosition.y - 1];
-
 #ifdef _DEBUG
 	if (DebugVision && (bFlag & BFLAG_LIT) != 0) {
 		CelClippedDrawTo(out, targetBufferPosition, *pSquareCel, 1);
@@ -871,14 +866,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 	DrawObject(out, tilePosition, targetBufferPosition, true);
 	DrawItem(out, tilePosition, targetBufferPosition, true);
-	if ((bFlag & BFLAG_PLAYERLR) != 0) {
-		int syy = tilePosition.y - 1;
-		assert(syy >= 0 && syy < MAXDUNY);
-		DrawPlayerHelper(out, { tilePosition.x, syy }, targetBufferPosition);
-	}
-	if ((bFlag & BFLAG_MONSTLR) != 0 && negMon < 0) {
-		DrawMonsterHelper(out, tilePosition, -1, targetBufferPosition);
-	}
+
 	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
@@ -886,7 +874,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 		DrawPlayerHelper(out, tilePosition, targetBufferPosition);
 	}
 	if (dMonster[tilePosition.x][tilePosition.y] > 0) {
-		DrawMonsterHelper(out, tilePosition, 0, targetBufferPosition);
+		DrawMonsterHelper(out, tilePosition, targetBufferPosition);
 	}
 	DrawMissile(out, tilePosition, targetBufferPosition, false);
 	DrawObject(out, tilePosition, targetBufferPosition, false);
@@ -1407,7 +1395,7 @@ Displacement GetOffsetForWalking(const AnimationInfo &animationInfo, const Direc
 {
 	// clang-format off
 	//                                           South,        SouthWest,    West,         NorthWest,    North,        NorthEast,     East,         SouthEast,
-	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  32, -16 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -32, -16 }, { -32, -16 } };
+	constexpr Displacement StartOffset[8]    = { {   0, -32 }, {  32, -16 }, {  64,   0 }, {   0,   0 }, {   0,   0 }, {  0,    0 },  { -64,   0 }, { -32, -16 } };
 	constexpr Displacement MovingOffset[8]   = { {   0,  32 }, { -32,  16 }, { -64,   0 }, { -32, -16 }, {   0, -32 }, {  32, -16 },  {  64,   0 }, {  32,  16 } };
 	// clang-format on
 

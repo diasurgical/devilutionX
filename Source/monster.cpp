@@ -973,7 +973,7 @@ void StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yad
 		ChangeLightXY(monster.mlid, { x, y });
 
 	dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
-	dMonster[fx][fy] = -(i + 1);
+	dMonster[fx][fy] = i + 1;
 	monster.position.temp = { x, y };
 	dFlags[x][y] |= BFLAG_MONSTLR;
 	monster.position.old = monster.position.tile;
@@ -1357,6 +1357,7 @@ bool MonsterWalk(int i, MonsterMode variant)
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 			monster.position.tile = { monster._mVar1, monster._mVar2 };
 			dFlags[monster.position.temp.x][monster.position.temp.y] &= ~BFLAG_MONSTLR;
+			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
 			dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 			break;
 		default:

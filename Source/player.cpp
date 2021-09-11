@@ -269,7 +269,7 @@ void WalkSides(int pnum, const DirectionSettings &walkParams)
 	Point const nextPosition = player.position.tile + walkParams.map;
 
 	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
-	dPlayer[player.position.future.x][player.position.future.y] = -(pnum + 1);
+	dPlayer[player.position.future.x][player.position.future.y] = pnum + 1;
 	player._pVar4 = nextPosition.x;
 	player._pVar5 = nextPosition.y;
 	dFlags[nextPosition.x][nextPosition.y] |= BFLAG_PLAYERLR;
@@ -732,6 +732,7 @@ bool DoWalk(int pnum, int variant)
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
 			dFlags[player._pVar4][player._pVar5] &= ~BFLAG_PLAYERLR;
 			player.position.tile = player.position.temp;
+			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 			break;
 		}
