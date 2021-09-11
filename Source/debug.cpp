@@ -62,7 +62,7 @@ void PrintDebugMonster(int m)
 
 	auto &monster = Monsters[m];
 
-	sprintf(dstr, "Monster %i = %s", m, _(monster.mName));
+	sprintf(dstr, "Monster %i = %s", m, monster.mName);
 	NetSendCmdString(1 << MyPlayerId, dstr);
 	sprintf(dstr, "X = %i, Y = %i", monster.position.tile.x, monster.position.tile.y);
 	NetSendCmdString(1 << MyPlayerId, dstr);
