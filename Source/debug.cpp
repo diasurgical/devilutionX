@@ -555,28 +555,27 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	auto isTileOk = [](Point position) {
-		if (dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
-			return false;
-		if (!IsTileWalkable(position))
-			return false;
-		return true;
-	};
-
 	int spawnedMonster = 0;
 
-	for (auto dir : left) {
-		Point pos = myPlayer.position.tile + dir;
-		if (!isTileOk(pos))
-			continue;
+	for (int k : CrawlNum) {
+		int ck = k + 2;
+		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
+			Point pos = myPlayer.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+			if (dPlayer[pos.x][pos.y] != 0 || dMonster[pos.x][pos.y] != 0)
+				continue;
+			if (!IsTileWalkable(pos))
+				continue;
 
-		AddMonster(pos, dir, id, true);
-		spawnedMonster += 1;
-		if (spawnedMonster >= count)
-			break;
+			if (AddMonster(pos, myPlayer._pdir, id, true) < 0)
+				return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
+			spawnedMonster += 1;
+
+			if (spawnedMonster >= count)
+				return "Let the fighting begin!";
+		}
 	}
 
-	return "Tickle tickle, here comes my pickle.";
+	return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
 }
 
 std::vector<DebugCmdItem> DebugCmdList = {
