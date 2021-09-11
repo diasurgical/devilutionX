@@ -198,7 +198,7 @@ TEST(Inv, RemoveScroll_inventory)
 
 	// Put a firebolt scroll into the inventory
 	Players[MyPlayerId]._pNumInv = 1;
-	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(SPL_FIREBOLT);
+	Players[MyPlayerId]._pSpell = static_cast<spell_id>(SPL_FIREBOLT);
 	Players[MyPlayerId].InvList[0]._itype = ITYPE_MISC;
 	Players[MyPlayerId].InvList[0]._iMiscId = IMISC_SCROLL;
 	Players[MyPlayerId].InvList[0]._iSpell = SPL_FIREBOLT;

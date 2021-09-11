@@ -1911,7 +1911,7 @@ void RemoveScroll(Player &player)
 	for (int i = 0; i < player._pNumInv; i++) {
 		if (!player.InvList[i].isEmpty()
 		    && (player.InvList[i]._iMiscId == IMISC_SCROLL || player.InvList[i]._iMiscId == IMISC_SCROLLT)
-		    && player.InvList[i]._iSpell == player._pRSpell) {
+		    && player.InvList[i]._iSpell == player._pSpell) {
 			player.RemoveInvItem(i);
 			player.CalcScrolls();
 			return;
