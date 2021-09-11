@@ -74,6 +74,7 @@ void lighting_color_cycling();
 /* rdata */
 
 extern const int8_t CrawlTable[2749];
+extern const int CrawlNum[19];
 extern const uint8_t VisionCrawlTable[23][30];
 
 } // namespace devilution
