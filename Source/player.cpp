@@ -3554,7 +3554,7 @@ void CheckPlrSpell()
 	} else {
 		LastMouseButtonAction = MouseActionType::Spell;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdLocParam2(true, CMD_SPELLXY, cursPosition, myPlayer._pRSpell, sl);
+		NetSendCmdLocParam3(true, CMD_SPELLXY, cursPosition, myPlayer._pRSpell, myPlayer._pRSplType, sl);
 	}
 }
 
