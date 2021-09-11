@@ -102,6 +102,7 @@ void InitCutscene(interface_mode uMsg)
 
 	switch (PickCutscene(uMsg)) {
 	case CutStart:
+		LoadArt("Gendata\\cutstartw.pcx", &ArtCutsceneWidescreen);
 		celPath = "Gendata\\Cutstart.cel";
 		palPath = "Gendata\\Cutstart.pal";
 		progress_id = 1;
