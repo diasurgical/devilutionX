@@ -932,19 +932,20 @@ DWORD OnRangedAttackTile(TCmd *pCmd, Player &player)
 
 DWORD OnSpellWall(TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam3 *)pCmd;
+	auto *p = (TCmdLocParam4 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spellType = static_cast<spell_type>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(player);
 			player.destAction = ACTION_SPELLWALL;
 			player.destParam1 = p->x;
 			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam2);
-			player.destParam4 = p->wParam3;
+			player.destParam3 = static_cast<Direction>(p->wParam3);
+			player.destParam4 = p->wParam4;
 			player._pSpell = spell;
-			player._pSplType = player._pRSplType;
+			player._pSplType = spellType;
 			player._pSplFrom = 0;
 		} else {
 			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
