@@ -2238,6 +2238,23 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
+void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
+{
+	TCmdLocParam4 cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.x = position.x;
+	cmd.y = position.y;
+	cmd.wParam1 = wParam1;
+	cmd.wParam2 = wParam2;
+	cmd.wParam3 = wParam3;
+	cmd.wParam4 = wParam4;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 {
 	TCmdParam1 cmd;
