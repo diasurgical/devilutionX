@@ -1212,15 +1212,21 @@ void DrawView(const Surface &out, Point startPosition)
 				pixelCoords *= 2;
 			if (DebugCoords || (DebugCursorCoords && dunCoords == cursPosition) || debugInfo) {
 				char buffer[10];
+				bool drawText = true;
 				if (!debugInfo)
 					sprintf(buffer, "%d:%d", dunCoords.x, dunCoords.y);
-				else
-					sprintf(buffer, "%d", DebugGetTileData(dunCoords));
+				else {
+					int value = DebugGetTileData(dunCoords);
+					sprintf(buffer, "%d", value);
+					if (value == 0)
+						drawText = false;
+				}
 
 				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
 				if (!zoomflag)
 					tileSize *= 2;
-				DrawString(out, buffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
+				if (drawText)
+					DrawString(out, buffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
 			}
 			if (DebugGrid) {
 				auto DrawLine = [&out](Point from, Point to, uint8_t col) {

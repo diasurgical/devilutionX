@@ -577,9 +577,6 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 std::string DebugCmdShowTileData(const string_view parameter)
 {
 	std::string paramList[] = {
-		"dungeon",
-		"pdungeon",
-		"dflags",
 		"dPiece",
 		"dTransVal",
 		"dLight",
@@ -598,13 +595,13 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		return "Tile data cleared!";
 	} else if (parameter == "") {
 		std::string list = "clear";
-		for (int i = 0; i < 14; i++) {
+		for (int i = 0; i < 11; i++) {
 			list += " / " + paramList[i];
 		}
 		return list;
 	}
 	bool found = false;
-	for (int i = 0; i < 14; i++) {
+	for (int i = 0; i < 11; i++) {
 		if (parameter == paramList[i]) {
 			found = true;
 			DebugInfoFlag = static_cast<DebugInfoFlags>(1 << i);
@@ -753,12 +750,6 @@ bool CheckDebugTextCommand(const string_view text)
 int DebugGetTileData(Point dungeonCoords)
 {
 	switch (DebugInfoFlag) {
-	case DebugInfoFlags::dungeon:
-		return dungeon[dungeonCoords.x][dungeonCoords.y];
-	case DebugInfoFlags::pdungeon:
-		return pdungeon[dungeonCoords.x][dungeonCoords.y];
-	case DebugInfoFlags::dflags:
-		return dflags[dungeonCoords.x][dungeonCoords.y];
 	case DebugInfoFlags::dPiece:
 		return dPiece[dungeonCoords.x][dungeonCoords.y];
 	case DebugInfoFlags::dTransVal:
