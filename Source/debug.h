@@ -18,20 +18,17 @@ namespace devilution {
 enum class DebugInfoFlags : uint16_t {
 	// clang-format off
 	empty     = 0,
-	dungeon   = 1 << 0,
-	pdungeon  = 1 << 1,
-	dflags    = 1 << 2,
-	dPiece    = 1 << 3,
-	dTransVal = 1 << 4,
-	dLight    = 1 << 5,
-	dPreLight = 1 << 6,
-	dFlags    = 1 << 7,
-	dPlayer   = 1 << 8,
-	dMonster  = 1 << 9,
-	dCorpse   = 1 << 10,
-	dObject   = 1 << 11,
-	dItem     = 1 << 12,
-	dSpecial  = 1 << 13,
+	dPiece    = 1 << 0,
+	dTransVal = 1 << 1,
+	dLight    = 1 << 2,
+	dPreLight = 1 << 3,
+	dFlags    = 1 << 4,
+	dPlayer   = 1 << 5,
+	dMonster  = 1 << 6,
+	dCorpse   = 1 << 7,
+	dObject   = 1 << 8,
+	dItem     = 1 << 9,
+	dSpecial  = 1 << 10,
 	// clang-format on
 };
 
