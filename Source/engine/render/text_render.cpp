@@ -171,6 +171,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	else if (HasAnyOf(flags, UiFlags::AlignRight))
 		characterPosition.x += rect.size.width - lineWidth;
 
+	int rightMargin = rect.position.x + rect.size.width;
 	int bottomMargin = rect.size.height != 0 ? rect.position.y + rect.size.height : out.h();
 
 	if (lineHeight == -1)
@@ -195,7 +196,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	uint32_t i = 0;
 	for (; i < text.length(); i++) {
 		uint8_t frame = text[i] & 0xFF;
-		if (text[i] == '\n') {
+		if (text[i] == '\n' || characterPosition.x > rightMargin) {
 			if (characterPosition.y + lineHeight >= bottomMargin)
 				break;
 			characterPosition.y += lineHeight;
