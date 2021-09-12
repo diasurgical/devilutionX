@@ -57,12 +57,6 @@ struct Quest {
 	uint8_t _qvar2;
 
 	bool IsAvailable();
-
-	/**
-	 * @brief Gets a value indicating whether the provided position is in the entrance boundary of the quest.
-	 * @param position The position to check against this quest's entrance boundary.
-	 */
-	bool EntranceBoundaryContains(Point position) const;
 };
 
 struct QuestData {
