@@ -136,14 +136,6 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 		pPack->pManaShield = 0;
 }
 
-/**
- * Expand a ItemPack in to a Item
- *
- * Note: last slot of item[MAXITEMS+1] used as temporary buffer
- * find real name reference below, possibly [sizeof(item[])/sizeof(Item)]
- * @param is The source packed item
- * @param id The distination item
- */
 void UnPackItem(const ItemPack *is, Item *id, bool isHellfire)
 {
 	auto &item = Items[MAXITEMS];
