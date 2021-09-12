@@ -345,7 +345,7 @@ void PaletteFadeOut(int fr)
 void palette_update_caves()
 {
 	CycleColors(1, 31);
-	palette_update(1, 31);
+	palette_update(0, 31);
 }
 
 void palette_update_crypt()
@@ -361,7 +361,7 @@ void palette_update_crypt()
 	}
 	if (glowDelay > 0) {
 		CycleColorsReverse(16, 31);
-		palette_update(1, 31);
+		palette_update(0, 31);
 		glowDelay++;
 	} else {
 		glowDelay = 1;
@@ -381,7 +381,7 @@ void palette_update_hive()
 	}
 	if (bubbleDelay == 2) {
 		CycleColorsReverse(9, 15);
-		palette_update(1, 31);
+		palette_update(0, 15);
 		bubbleDelay = 0;
 	} else {
 		bubbleDelay++;
