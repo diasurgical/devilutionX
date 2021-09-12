@@ -2295,6 +2295,21 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
+void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
+{
+	TCmdParam4 cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.wParam1 = wParam1;
+	cmd.wParam2 = wParam2;
+	cmd.wParam3 = wParam3;
+	cmd.wParam4 = wParam4;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
 void NetSendCmdQuest(bool bHiPri, const Quest &quest)
 {
 	TCmdQuest cmd;

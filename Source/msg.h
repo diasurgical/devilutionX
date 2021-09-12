@@ -193,6 +193,14 @@ struct TCmdParam3 {
 	uint16_t wParam3;
 };
 
+struct TCmdParam4 {
+	_cmd_id bCmd;
+	uint16_t wParam1;
+	uint16_t wParam2;
+	uint16_t wParam3;
+	uint16_t wParam4;
+};
+
 struct TCmdGolem {
 	_cmd_id bCmd;
 	uint8_t _mx;
@@ -439,6 +447,7 @@ void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1);
 void NetSendCmdParam2(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2);
 void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3);
+void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4);
 void NetSendCmdQuest(bool bHiPri, const Quest &quest);
 void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii);
 void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position);
