@@ -445,7 +445,7 @@ bool ForceQuests()
 		if (quest._qidx != Q_BETRAYER && currlevel == quest._qlevel && quest._qslvl != 0) {
 			int ql = quest._qslvl - 1;
 
-			if (quest.EntranceBoundaryContains(cursPosition)) {
+			if (EntranceBoundaryContains(quest.position, cursPosition)) {
 				strcpy(infostr, fmt::format(_(/* TRANSLATORS: Used for Quest Portals. {:s} is a Map Name */ "To {:s}"), _(QuestTriggerNames[ql])).c_str());
 				cursPosition = quest.position;
 				return true;
@@ -879,16 +879,6 @@ bool Quest::IsAvailable()
 		return false;
 
 	return true;
-}
-
-bool Quest::EntranceBoundaryContains(Point position) const
-{
-	constexpr Displacement questEntranceOffsets[7] = { { 0, 0 }, { -1, 0 }, { 0, -1 }, { -1, -1 }, { -2, -1 }, { -1, -2 }, { -2, -2 } };
-
-	return std::any_of(
-	    std::begin(questEntranceOffsets),
-	    std::end(questEntranceOffsets),
-	    [&](auto offset) { return this->position + offset == position; });
 }
 
 } // namespace devilution

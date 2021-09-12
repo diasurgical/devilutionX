@@ -205,13 +205,7 @@ void CheckTown()
 		int mx = ActiveMissiles[i];
 		auto &missile = Missiles[mx];
 		if (missile._mitype == MIS_TOWN) {
-			if ((cursPosition == (missile.position.tile + Displacement { -1, 0 })
-			        || (cursPosition == (missile.position.tile + Displacement { 0, -1 })
-			            || (cursPosition == (missile.position.tile + Displacement { -1, -1 }))
-			            || (cursPosition == (missile.position.tile + Displacement { -2, -1 }))
-			            || (cursPosition == (missile.position.tile + Displacement { -2, -2 }))
-			            || (cursPosition == (missile.position.tile + Displacement { -1, -2 }))
-			            || (cursPosition == missile.position.tile)))) {
+			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Town Portal"));
@@ -229,13 +223,7 @@ void CheckRportal()
 		int mx = ActiveMissiles[i];
 		auto &missile = Missiles[mx];
 		if (missile._mitype == MIS_RPORTAL) {
-			if ((cursPosition == (missile.position.tile + Displacement { -1, 0 }))
-			    || (cursPosition == (missile.position.tile + Displacement { 0, -1 }))
-			    || (cursPosition == (missile.position.tile + Displacement { -1, -1 }))
-			    || (cursPosition == (missile.position.tile + Displacement { -2, -1 }))
-			    || (cursPosition == (missile.position.tile + Displacement { -2, -2 }))
-			    || (cursPosition == (missile.position.tile + Displacement { -1, -2 }))
-			    || (cursPosition == missile.position.tile)) {
+			if (EntranceBoundaryContains(missile.position.tile, cursPosition)) {
 				trigflag = true;
 				ClearPanel();
 				strcpy(infostr, _("Portal to"));
