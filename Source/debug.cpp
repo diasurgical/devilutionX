@@ -36,6 +36,7 @@ bool DebugCoords = false;
 bool DebugCursorCoords = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
+DebugInfoFlags DebugInfoFlag;
 
 namespace {
 
@@ -573,6 +574,49 @@ std::string DebugCmdSpawnMonster(const string_view parameter)
 	return fmt::format("I could only summon {} Monsters. The rest strike for shorter working hours.", spawnedMonster);
 }
 
+std::string DebugCmdShowTileData(const string_view parameter)
+{
+	std::string paramList[] = {
+		"dungeon",
+		"pdungeon",
+		"dflags",
+		"dPiece",
+		"dTransVal",
+		"dLight",
+		"dPreLight",
+		"dFlags",
+		"dPlayer",
+		"dMonster",
+		"dCorpse",
+		"dObject",
+		"dItem",
+		"dSpecial"
+	};
+
+	if (parameter == "clear") {
+		DebugInfoFlag = DebugInfoFlags::empty;
+		return "Tile data cleared!";
+	} else if (parameter == "") {
+		std::string list = "clear";
+		for (int i = 0; i < 14; i++) {
+			list += " / " + paramList[i];
+		}
+		return list;
+	}
+	bool found = false;
+	for (int i = 0; i < 14; i++) {
+		if (parameter == paramList[i]) {
+			found = true;
+			DebugInfoFlag = static_cast<DebugInfoFlags>(1 << i);
+			break;
+		}
+	}
+	if (!found)
+		return "Invalid name. Check names using tiledata command.";
+
+	return "Special powers activated.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -599,6 +643,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
 	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
+	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
 };
 
 } // namespace
@@ -703,6 +748,39 @@ bool CheckDebugTextCommand(const string_view text)
 	Log("DebugCmd: {} Result: {}", text, result);
 	InitDiabloMsg(result);
 	return true;
+}
+
+int DebugGetTileData(Point dungeonCoords)
+{
+	switch (DebugInfoFlag) {
+	case DebugInfoFlags::dungeon:
+		return dungeon[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::pdungeon:
+		return pdungeon[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dflags:
+		return dflags[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dPiece:
+		return dPiece[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dTransVal:
+		return dTransVal[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dLight:
+		return dLight[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dPreLight:
+		return dPreLight[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dFlags:
+		return dFlags[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dPlayer:
+		return dPlayer[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dMonster:
+		return dMonster[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dCorpse:
+		return dCorpse[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dItem:
+		return dItem[dungeonCoords.x][dungeonCoords.y];
+	case DebugInfoFlags::dSpecial:
+		return dSpecial[dungeonCoords.x][dungeonCoords.y];
+	}
+	return 0;
 }
 
 } // namespace devilution
