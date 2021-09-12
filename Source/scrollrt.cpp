@@ -1201,19 +1201,26 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawAutomap(out.subregionY(0, gnViewportHeight));
 	}
 #ifdef _DEBUG
-	if (DebugCoords || DebugGrid || DebugCursorCoords) {
+	bool debugInfo = DebugInfoFlag != DebugInfoFlags::empty;
+	if (DebugCoords || DebugGrid || DebugCursorCoords || debugInfo) {
+		// force redrawing or debug stuff stays on panel on 640x480 resolution
+		force_redraw = 255;
 		for (auto m : DebugCoordsMap) {
 			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
 			Point pixelCoords = m.second;
 			if (!zoomflag)
 				pixelCoords *= 2;
-			if (DebugCoords || (DebugCursorCoords && dunCoords == cursPosition)) {
-				char coordstr[10];
-				sprintf(coordstr, "%d:%d", dunCoords.x, dunCoords.y);
+			if (DebugCoords || (DebugCursorCoords && dunCoords == cursPosition) || debugInfo) {
+				char buffer[10];
+				if (!debugInfo)
+					sprintf(buffer, "%d:%d", dunCoords.x, dunCoords.y);
+				else
+					sprintf(buffer, "%d", DebugGetTileData(dunCoords));
+
 				Size tileSize = { TILE_WIDTH, TILE_HEIGHT };
 				if (!zoomflag)
 					tileSize *= 2;
-				DrawString(out, coordstr, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
+				DrawString(out, buffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
 			}
 			if (DebugGrid) {
 				auto DrawLine = [&out](Point from, Point to, uint8_t col) {
