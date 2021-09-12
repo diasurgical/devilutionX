@@ -3546,7 +3546,7 @@ void CheckPlrSpell()
 	} else if (pcursmonst != -1) {
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
-		NetSendCmdParam3(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, sl);
+		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, myPlayer._pRSplType, sl);
 	} else if (pcursplr != -1) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);

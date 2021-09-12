@@ -1096,17 +1096,18 @@ DWORD OnRangedAttackPlayer(TCmd *pCmd, Player &player)
 
 DWORD OnSpellMonster(TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam4 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spellType = static_cast<spell_type>(p->wParam3);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(player);
 			player.destAction = ACTION_SPELLMON;
 			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
+			player.destParam2 = p->wParam4;
 			player._pSpell = spell;
-			player._pSplType = player._pRSplType;
+			player._pSplType = spellType;
 			player._pSplFrom = 0;
 		} else {
 			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
