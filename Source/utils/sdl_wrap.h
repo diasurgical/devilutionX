@@ -60,7 +60,7 @@ inline SDLTextureUniquePtr CreateTexture(SDL_Renderer *renderer, Uint32 format, 
 }
 #endif
 
-inline SDLPaletteUniquePtr AllocPalette(int ncolors)
+inline SDLPaletteUniquePtr AllocPalette(int ncolors = 256)
 {
 	return SDLPaletteUniquePtr { NonNull(SDL_AllocPalette(ncolors)) };
 }

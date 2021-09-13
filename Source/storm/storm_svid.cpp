@@ -229,7 +229,7 @@ bool SVidPlayBegin(const char *filename, int flags)
 	    SVidWidth,
 	    SDL_PIXELFORMAT_INDEX8);
 
-	SVidPalette = SDLWrap::AllocPalette(256);
+	SVidPalette = SDLWrap::AllocPalette();
 	if (SDLC_SetSurfaceColors(SVidSurface.get(), SVidPalette.get()) <= -1) {
 		ErrSdl();
 	}
