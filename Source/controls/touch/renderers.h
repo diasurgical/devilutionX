@@ -13,8 +13,6 @@ class VirtualDirectionPadRenderer {
 public:
 	VirtualDirectionPadRenderer(VirtualDirectionPad *virtualDirectionPad)
 	    : virtualDirectionPad(virtualDirectionPad)
-	    , padSurface(nullptr)
-	    , knobSurface(nullptr)
 	{
 	}
 
@@ -33,20 +31,6 @@ class VirtualPadButtonRenderer {
 public:
 	VirtualPadButtonRenderer(VirtualPadButton *virtualPadButton)
 	    : virtualPadButton(virtualPadButton)
-	    , attackSurface(nullptr)
-	    , pressedAttackSurface(nullptr)
-	    , talkSurface(nullptr)
-	    , pressedTalkSurface(nullptr)
-	    , itemSurface(nullptr)
-	    , pressedItemSurface(nullptr)
-	    , objectSurface(nullptr)
-	    , pressedObjectSurface(nullptr)
-	    , castSurface(nullptr)
-	    , pressedCastSurface(nullptr)
-	    , cancelSurface(nullptr)
-	    , pressedCancelSurface(nullptr)
-	    , blankSurface(nullptr)
-	    , pressedBlankSurface(nullptr)
 	{
 	}
 
