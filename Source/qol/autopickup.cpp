@@ -23,7 +23,7 @@ bool HasRoomForGold()
 
 		// Main item cell. Potentially a gold pile so check it.
 		auto item = Players[MyPlayerId].InvList[idx - 1];
-		if (item._itype == ITYPE_GOLD && item._ivalue < MaxGold)
+		if (item._itype == ItemType::Gold && item._ivalue < MaxGold)
 			return true;
 	}
 
@@ -49,7 +49,7 @@ void AutoGoldPickup(int pnum)
 		if (dItem[tile.x][tile.y] != 0) {
 			int itemIndex = dItem[tile.x][tile.y] - 1;
 			auto &item = Items[itemIndex];
-			if (item._itype == ITYPE_GOLD) {
+			if (item._itype == ItemType::Gold) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
 				PlaySFX(IS_IGRAB);

@@ -7,7 +7,9 @@
  */
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
+#include <initializer_list>
 
 namespace devilution {
 
@@ -56,5 +58,19 @@ int32_t AdvanceRndSeed();
  * @return A random number in the range [0, v) or rarely a negative value in (-v, -1]
  */
 int32_t GenerateRnd(int32_t v);
+
+/**
+ * @brief Picks one of the elements in the list randomly.
+ *
+ * @param values The values to pick from
+ * @return A random value from the 'values' list.
+ */
+template <typename T>
+const T PickRandomlyAmong(const std::initializer_list<T> &values)
+{
+	const auto index { std::max<int32_t>(GenerateRnd(values.size()), 0) };
+
+	return *(values.begin() + index);
+}
 
 } // namespace devilution

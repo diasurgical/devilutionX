@@ -1478,7 +1478,7 @@ void InitKeymapActions()
 		    '1' + i,
 		    [i] {
 			    auto &myPlayer = Players[MyPlayerId];
-			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ITYPE_GOLD) {
+			    if (!myPlayer.SpdList[i].isEmpty() && myPlayer.SpdList[i]._itype != ItemType::Gold) {
 				    UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 			    }
 		    },

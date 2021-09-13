@@ -12,7 +12,7 @@ void set_up_scroll(Item &item, spell_id spell)
 	pcurs = CURSOR_HAND;
 	leveltype = DTYPE_CATACOMBS;
 	Players[MyPlayerId]._pRSpell = static_cast<spell_id>(spell);
-	item._itype = ITYPE_MISC;
+	item._itype = ItemType::Misc;
 	item._iMiscId = IMISC_SCROLL;
 	item._iSpell = spell;
 }
@@ -47,7 +47,7 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 {
 	// Empty the belt to prevent using a scroll from the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i]._itype = ITYPE_NONE;
+		Players[MyPlayerId].SpdList[i]._itype = ItemType::None;
 	}
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
@@ -67,7 +67,7 @@ TEST(Inv, UseScroll_from_inventory_invalid_conditions)
 	EXPECT_FALSE(UseScroll());
 
 	set_up_scroll(Players[MyPlayerId].InvList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].InvList[2]._itype = ITYPE_NONE;
+	Players[MyPlayerId].InvList[2]._itype = ItemType::None;
 	EXPECT_FALSE(UseScroll());
 }
 
@@ -94,7 +94,7 @@ TEST(Inv, UseScroll_from_belt_invalid_conditions)
 	EXPECT_FALSE(UseScroll());
 
 	set_up_scroll(Players[MyPlayerId].SpdList[2], SPL_FIREBOLT);
-	Players[MyPlayerId].SpdList[2]._itype = ITYPE_NONE;
+	Players[MyPlayerId].SpdList[2]._itype = ItemType::None;
 	EXPECT_FALSE(UseScroll());
 }
 
@@ -103,10 +103,10 @@ TEST(Inv, CalculateGold)
 {
 	Players[MyPlayerId]._pNumInv = 10;
 	// Set up 4 slots of gold in the inventory
-	Players[MyPlayerId].InvList[1]._itype = ITYPE_GOLD;
-	Players[MyPlayerId].InvList[5]._itype = ITYPE_GOLD;
-	Players[MyPlayerId].InvList[2]._itype = ITYPE_GOLD;
-	Players[MyPlayerId].InvList[3]._itype = ITYPE_GOLD;
+	Players[MyPlayerId].InvList[1]._itype = ItemType::Gold;
+	Players[MyPlayerId].InvList[5]._itype = ItemType::Gold;
+	Players[MyPlayerId].InvList[2]._itype = ItemType::Gold;
+	Players[MyPlayerId].InvList[3]._itype = ItemType::Gold;
 	// Set the gold amount to arbitrary values
 	Players[MyPlayerId].InvList[1]._ivalue = 100;
 	Players[MyPlayerId].InvList[5]._ivalue = 200;
@@ -124,11 +124,11 @@ TEST(Inv, GoldAutoPlace)
 
 	// Put gold into the inventory:
 	// | 1000 | ... | ...
-	Players[MyPlayerId].InvList[0]._itype = ITYPE_GOLD;
+	Players[MyPlayerId].InvList[0]._itype = ItemType::Gold;
 	Players[MyPlayerId].InvList[0]._ivalue = 1000;
 	Players[MyPlayerId]._pNumInv = 1;
 	// Put (max gold - 100) gold, which is 4900, into the player's hand
-	Players[MyPlayerId].HoldItem._itype = ITYPE_GOLD;
+	Players[MyPlayerId].HoldItem._itype = ItemType::Gold;
 	Players[MyPlayerId].HoldItem._ivalue = GOLD_MAX_LIMIT - 100;
 
 	GoldAutoPlace(Players[MyPlayerId]);
@@ -147,7 +147,7 @@ TEST(Inv, RemoveInvItem)
 	Players[MyPlayerId]._pNumInv = 1;
 	Players[MyPlayerId].InvGrid[0] = 1;
 	Players[MyPlayerId].InvGrid[1] = -1;
-	Players[MyPlayerId].InvList[0]._itype = ITYPE_MISC;
+	Players[MyPlayerId].InvList[0]._itype = ItemType::Misc;
 
 	Players[MyPlayerId].RemoveInvItem(0);
 	EXPECT_EQ(Players[MyPlayerId].InvGrid[0], 0);
@@ -164,16 +164,16 @@ TEST(Inv, RemoveInvItem_other_item)
 	Players[MyPlayerId]._pNumInv = 2;
 	Players[MyPlayerId].InvGrid[0] = 1;
 	Players[MyPlayerId].InvGrid[1] = -1;
-	Players[MyPlayerId].InvList[0]._itype = ITYPE_MISC;
+	Players[MyPlayerId].InvList[0]._itype = ItemType::Misc;
 
 	Players[MyPlayerId].InvGrid[2] = 2;
-	Players[MyPlayerId].InvList[1]._itype = ITYPE_RING;
+	Players[MyPlayerId].InvList[1]._itype = ItemType::Ring;
 
 	Players[MyPlayerId].RemoveInvItem(0);
 	EXPECT_EQ(Players[MyPlayerId].InvGrid[0], 0);
 	EXPECT_EQ(Players[MyPlayerId].InvGrid[1], 0);
 	EXPECT_EQ(Players[MyPlayerId].InvGrid[2], 1);
-	EXPECT_EQ(Players[MyPlayerId].InvList[0]._itype, ITYPE_RING);
+	EXPECT_EQ(Players[MyPlayerId].InvList[0]._itype, ItemType::Ring);
 	EXPECT_EQ(Players[MyPlayerId]._pNumInv, 1);
 }
 
@@ -182,13 +182,13 @@ TEST(Inv, RemoveSpdBarItem)
 {
 	// Clear the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i]._itype = ITYPE_NONE;
+		Players[MyPlayerId].SpdList[i]._itype = ItemType::None;
 	}
 	// Put an item in the belt: | x | x | item | x | x | x | x | x |
-	Players[MyPlayerId].SpdList[3]._itype = ITYPE_MISC;
+	Players[MyPlayerId].SpdList[3]._itype = ItemType::Misc;
 
 	Players[MyPlayerId].RemoveSpdBarItem(3);
-	EXPECT_EQ(Players[MyPlayerId].SpdList[3]._itype, ITYPE_NONE);
+	EXPECT_EQ(Players[MyPlayerId].SpdList[3]._itype, ItemType::None);
 }
 
 // Test removing a scroll from the inventory
@@ -199,7 +199,7 @@ TEST(Inv, RemoveScroll_inventory)
 	// Put a firebolt scroll into the inventory
 	Players[MyPlayerId]._pNumInv = 1;
 	Players[MyPlayerId]._pSpell = static_cast<spell_id>(SPL_FIREBOLT);
-	Players[MyPlayerId].InvList[0]._itype = ITYPE_MISC;
+	Players[MyPlayerId].InvList[0]._itype = ItemType::Misc;
 	Players[MyPlayerId].InvList[0]._iMiscId = IMISC_SCROLL;
 	Players[MyPlayerId].InvList[0]._iSpell = SPL_FIREBOLT;
 
@@ -213,14 +213,14 @@ TEST(Inv, RemoveScroll_belt)
 {
 	// Clear the belt
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		Players[MyPlayerId].SpdList[i]._itype = ITYPE_NONE;
+		Players[MyPlayerId].SpdList[i]._itype = ItemType::None;
 	}
 	// Put a firebolt scroll into the belt
 	Players[MyPlayerId]._pSpell = static_cast<spell_id>(SPL_FIREBOLT);
-	Players[MyPlayerId].SpdList[3]._itype = ITYPE_MISC;
+	Players[MyPlayerId].SpdList[3]._itype = ItemType::Misc;
 	Players[MyPlayerId].SpdList[3]._iMiscId = IMISC_SCROLL;
 	Players[MyPlayerId].SpdList[3]._iSpell = SPL_FIREBOLT;
 
 	RemoveScroll(Players[MyPlayerId]);
-	EXPECT_EQ(Players[MyPlayerId].SpdList[3]._itype, ITYPE_NONE);
+	EXPECT_EQ(Players[MyPlayerId].SpdList[3]._itype, ItemType::None);
 }

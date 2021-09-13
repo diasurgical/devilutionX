@@ -161,7 +161,7 @@ std::string DebugCmdTakeGoldCheat(const string_view parameter)
 
 		if (itemId < 0)
 			continue;
-		if (myPlayer.InvList[itemId]._itype != ITYPE_GOLD)
+		if (myPlayer.InvList[itemId]._itype != ItemType::Gold)
 			continue;
 
 		myPlayer.RemoveInvItem(itemId);

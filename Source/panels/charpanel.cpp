@@ -85,7 +85,7 @@ UiFlags GetMaxHealthColor()
 std::pair<int, int> GetDamage()
 {
 	int damageMod = MyPlayer->_pIBonusDamMod;
-	if (MyPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW && MyPlayer->_pClass != HeroClass::Rogue) {
+	if (MyPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow && MyPlayer->_pClass != HeroClass::Rogue) {
 		damageMod += MyPlayer->_pDamageMod / 2;
 	} else {
 		damageMod += MyPlayer->_pDamageMod;
@@ -158,7 +158,7 @@ PanelEntry panelEntries[] = {
 	{ N_("Armor class"), { 253, 163 }, 57, 67,
 	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusAC), fmt::format("{:d}", MyPlayer->GetArmor()) }; } },
 	{ N_("To hit"), { 253, 191 }, 57, 67,
-	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusToHit), fmt::format("{:d}%", (MyPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW ? MyPlayer->GetRangedToHit() : MyPlayer->GetMeleeToHit())) }; } },
+	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusToHit), fmt::format("{:d}%", (MyPlayer->InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Bow ? MyPlayer->GetRangedToHit() : MyPlayer->GetMeleeToHit())) }; } },
 	{ N_("Damage"), { 253, 219 }, 57, 67,
 	    []() {
 	        std::pair<int, int> dmg = GetDamage();

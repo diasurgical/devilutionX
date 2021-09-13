@@ -66,7 +66,7 @@ void AddItemToLabelQueue(int id, int x, int y)
 	Item &item = Items[id];
 
 	const char *textOnGround;
-	if (item._itype == ITYPE_GOLD) {
+	if (item._itype == ItemType::Gold) {
 		std::sprintf(tempstr, _("%i gold"), item._ivalue);
 		textOnGround = tempstr;
 	} else {

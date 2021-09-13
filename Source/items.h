@@ -175,7 +175,7 @@ struct Item {
 	/** Randomly generated identifier */
 	int32_t _iSeed;
 	uint16_t _iCreateInfo;
-	enum item_type _itype;
+	enum ItemType _itype;
 	Point position;
 	bool _iAnimFlag;
 	/*
@@ -248,7 +248,7 @@ struct Item {
 	 */
 	bool isEmpty() const
 	{
-		return this->_itype == ITYPE_NONE;
+		return this->_itype == ItemType::None;
 	}
 
 	/**
@@ -286,11 +286,11 @@ struct Item {
 		}
 
 		switch (this->_itype) {
-		case ITYPE_AXE:
-		case ITYPE_BOW:
-		case ITYPE_MACE:
-		case ITYPE_STAFF:
-		case ITYPE_SWORD:
+		case ItemType::Axe:
+		case ItemType::Bow:
+		case ItemType::Mace:
+		case ItemType::Staff:
+		case ItemType::Sword:
 			return true;
 
 		default:
@@ -309,9 +309,9 @@ struct Item {
 		}
 
 		switch (this->_itype) {
-		case ITYPE_HARMOR:
-		case ITYPE_LARMOR:
-		case ITYPE_MARMOR:
+		case ItemType::HeavyArmor:
+		case ItemType::LightArmor:
+		case ItemType::MediumArmor:
 			return true;
 
 		default:
@@ -325,7 +325,7 @@ struct Item {
 	 */
 	bool isHelm() const
 	{
-		return !this->isEmpty() && this->_itype == ITYPE_HELM;
+		return !this->isEmpty() && this->_itype == ItemType::Helm;
 	}
 
 	/**
@@ -334,7 +334,7 @@ struct Item {
 	 */
 	bool isShield() const
 	{
-		return !this->isEmpty() && this->_itype == ITYPE_SHIELD;
+		return !this->isEmpty() && this->_itype == ItemType::Shield;
 	}
 
 	/**
@@ -348,8 +348,8 @@ struct Item {
 		}
 
 		switch (this->_itype) {
-		case ITYPE_AMULET:
-		case ITYPE_RING:
+		case ItemType::Amulet:
+		case ItemType::Ring:
 			return true;
 
 		default:
@@ -438,7 +438,7 @@ void SpawnUnique(_unique_items uid, Point position);
 void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
-void CreateTypeItem(Point position, bool onlygood, int itype, int imisc, bool sendmsg, bool delta);
+void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta);
 void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
 void RecreateEar(Item &item, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void CornerstoneSave();
@@ -471,9 +471,9 @@ void SpawnHealer(int lvl);
 void SpawnStoreGold();
 int ItemNoFlippy();
 void CreateSpellBook(Point position, spell_id ispell, bool sendmsg, bool delta);
-void CreateMagicArmor(Point position, int imisc, int icurs, bool sendmsg, bool delta);
+void CreateMagicArmor(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
 void CreateAmulet(Point position, int lvl, bool sendmsg, bool delta);
-void CreateMagicWeapon(Point position, int imisc, int icurs, bool sendmsg, bool delta);
+void CreateMagicWeapon(Point position, ItemType itemType, int icurs, bool sendmsg, bool delta);
 bool GetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void SetItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);

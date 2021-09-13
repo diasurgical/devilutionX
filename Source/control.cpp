@@ -429,19 +429,19 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 		return x;
 	if (c == 0) {
 		switch (pItem._itype) {
-		case ITYPE_SWORD:
+		case ItemType::Sword:
 			c = 2;
 			break;
-		case ITYPE_AXE:
+		case ItemType::Axe:
 			c = 6;
 			break;
-		case ITYPE_BOW:
+		case ItemType::Bow:
 			c = 7;
 			break;
-		case ITYPE_MACE:
+		case ItemType::Mace:
 			c = 5;
 			break;
-		case ITYPE_STAFF:
+		case ItemType::Staff:
 			c = 8;
 			break;
 		default:
@@ -1314,7 +1314,7 @@ void DrawInfoBox(const Surface &out)
 		InfoColor = UiFlags::ColorSilver;
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
 		auto &myPlayer = Players[MyPlayerId];
-		if (myPlayer.HoldItem._itype == ITYPE_GOLD) {
+		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
 			strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
 		} else if (!myPlayer.HoldItem._iStatFlag) {

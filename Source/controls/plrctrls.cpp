@@ -686,7 +686,7 @@ void InvMove(AxisDirection dir)
 			} else if (Slot > SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 				Slot -= 1;
 				mousePos = BeltGetSlotCoord(Slot);
-			} else if (myPlayer.HoldItem._itype == ITYPE_RING) {
+			} else if (myPlayer.HoldItem._itype == ItemType::Ring) {
 				Slot = SLOTXY_RING_LEFT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_LEFT);
 			} else if (myPlayer.HoldItem.isWeapon() || myPlayer.HoldItem.isShield()) {
@@ -736,7 +736,7 @@ void InvMove(AxisDirection dir)
 			} else if (Slot >= SLOTXY_BELT_FIRST && Slot < SLOTXY_BELT_LAST) {
 				Slot += 1;
 				mousePos = BeltGetSlotCoord(Slot);
-			} else if (myPlayer.HoldItem._itype == ITYPE_RING) {
+			} else if (myPlayer.HoldItem._itype == ItemType::Ring) {
 				Slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_RIGHT);
 			} else if (myPlayer.HoldItem.isWeapon() || myPlayer.HoldItem.isShield()) {
@@ -781,7 +781,7 @@ void InvMove(AxisDirection dir)
 				Slot -= INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(Slot);
 			} else if (Slot >= SLOTXY_INV_FIRST) {
-				if (myPlayer.HoldItem._itype == ITYPE_RING) {
+				if (myPlayer.HoldItem._itype == ItemType::Ring) {
 					if (Slot >= SLOTXY_INV_ROW1_FIRST && Slot <= SLOTXY_INV_ROW1_FIRST + (INV_ROW_SLOT_SIZE / 2) - 1) {
 						Slot = SLOTXY_RING_LEFT;
 						mousePos = InvGetEquipSlotCoord(INVLOC_RING_LEFT);
@@ -801,7 +801,7 @@ void InvMove(AxisDirection dir)
 				} else if (myPlayer.HoldItem.isArmor()) {
 					Slot = SLOTXY_CHEST_FIRST;
 					mousePos = InvGetEquipSlotCoord(INVLOC_CHEST);
-				} else if (myPlayer.HoldItem._itype == ITYPE_AMULET) {
+				} else if (myPlayer.HoldItem._itype == ItemType::Amulet) {
 					Slot = SLOTXY_AMULET;
 					mousePos = InvGetEquipSlotCoord(INVLOC_AMULET);
 				}
@@ -847,7 +847,7 @@ void InvMove(AxisDirection dir)
 			} else if (Slot <= (SLOTXY_INV_ROW4_LAST - (icursSize28.height * INV_ROW_SLOT_SIZE))) {
 				Slot += INV_ROW_SLOT_SIZE;
 				mousePos = InvGetSlotCoord(Slot);
-			} else if (Slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ITYPE_MISC && icursSize28 == Size { 1, 1 }) { // forcing only 1x1 misc items
+			} else if (Slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ItemType::Misc && icursSize28 == Size { 1, 1 }) { // forcing only 1x1 misc items
 				Slot += INV_ROW_SLOT_SIZE;
 				if (Slot > SLOTXY_BELT_LAST)
 					Slot = SLOTXY_BELT_LAST;
@@ -1319,7 +1319,7 @@ void UseBeltItem(int type)
 		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
 		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
 		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
-			if (myPlayer.SpdList[i]._itype > -1) {
+			if (!myPlayer.SpdList[i].isEmpty()) {
 				UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
 				break;
 			}
