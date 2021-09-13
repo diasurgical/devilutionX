@@ -243,7 +243,7 @@ struct Player {
 	/** Player's direction when ending movement. Also used for casting direction of SPL_FIREWALL. */
 	Direction tempDirection;
 	/** Used for spell level */
-	int _pVar4;
+	int spellLevel;
 	/** Used for stalling the appearance of the options screen after dying in singleplayer */
 	int deathFrame;
 	bool _pLvlVisited[NUMLEVELS];

@@ -407,7 +407,7 @@ void ClearStateVariables(Player &player)
 {
 	player.position.temp = { 0, 0 };
 	player.tempDirection = Direction::South;
-	player._pVar4 = 0;
+	player.spellLevel = 0;
 	player.position.offset2 = { 0, 0 };
 	player.deathFrame = 0;
 }
@@ -561,7 +561,7 @@ void StartSpell(int pnum, Direction d, int cx, int cy)
 	SetPlayerOld(player);
 
 	player.position.temp = { cx, cy };
-	player._pVar4 = GetSpellLevel(pnum, player._pSpell);
+	player.spellLevel = GetSpellLevel(pnum, player._pSpell);
 }
 
 void RespawnDeadItem(Item *itm, Point target)
@@ -1456,7 +1456,7 @@ bool DoSpell(int pnum)
 		    player.position.tile.y,
 		    player.position.temp.x,
 		    player.position.temp.y,
-		    player._pVar4);
+		    player.spellLevel);
 
 		if (player._pSplFrom == 0) {
 			EnsureValidReadiedSpell(player);
@@ -1701,22 +1701,22 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
-			player._pVar4 = static_cast<int>(player.destParam3);
+			player.spellLevel = static_cast<int>(player.destParam3);
 			break;
 		case ACTION_SPELLWALL:
 			StartSpell(pnum, player.destParam3, player.destParam1, player.destParam2);
 			player.tempDirection = player.destParam3;
-			player._pVar4 = player.destParam4;
+			player.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLMON:
 			d = GetDirection(player.position.tile, monster->position.future);
 			StartSpell(pnum, d, monster->position.future.x, monster->position.future.y);
-			player._pVar4 = player.destParam2;
+			player.spellLevel = player.destParam2;
 			break;
 		case ACTION_SPELLPLR:
 			d = GetDirection(player.position.tile, target->position.future);
 			StartSpell(pnum, d, target->position.future.x, target->position.future.y);
-			player._pVar4 = player.destParam2;
+			player.spellLevel = player.destParam2;
 			break;
 		case ACTION_OPERATE:
 			x = abs(player.position.tile.x - object->position.x);

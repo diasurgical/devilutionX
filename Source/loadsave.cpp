@@ -415,7 +415,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.position.temp.x = file.NextLE<int32_t>();
 	player.position.temp.y = file.NextLE<int32_t>();
 	player.tempDirection = static_cast<Direction>(file.NextLE<int32_t>());
-	player._pVar4 = file.NextLE<int32_t>();
+	player.spellLevel = file.NextLE<int32_t>();
 	file.Skip(4); // skip _pVar5, was used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking
 	player.position.offset2.deltaX = file.NextLE<int32_t>();
 	player.position.offset2.deltaY = file.NextLE<int32_t>();
@@ -1090,7 +1090,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.position.temp.x);
 	file.WriteLE<int32_t>(player.position.temp.y);
 	file.WriteLE<int32_t>(static_cast<int32_t>(player.tempDirection));
-	file.WriteLE<int32_t>(player._pVar4);
+	file.WriteLE<int32_t>(player.spellLevel);
 	file.Skip<int32_t>(); // skip _pVar5, was used for storing position of a tile which should have its BFLAG_PLAYERLR flag removed after walking
 	file.WriteLE<int32_t>(player.position.offset2.deltaX);
 	file.WriteLE<int32_t>(player.position.offset2.deltaY);
