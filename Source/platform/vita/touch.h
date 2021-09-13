@@ -1,11 +1,14 @@
 #pragma once
 
+#ifdef __vita__
+
 #include <SDL.h>
 
 namespace devilution {
 
-#ifndef USE_SDL1
 void handle_touch(SDL_Event *event, int currentMouseX, int currentMouseY);
-#endif
+void finish_simulated_mouse_clicks(int currentMouseX, int currentMouseY);
 
 } // namespace devilution
+
+#endif

@@ -65,6 +65,10 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 
+#ifdef __vita__
+#include "platform/vita/touch.h"
+#endif
+
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 #include <gperftools/heap-profiler.h>
 #endif
@@ -118,7 +122,6 @@ MouseActionType LastMouseButtonAction = MouseActionType::None;
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
-extern void finish_simulated_mouse_clicks(int currentMouseX, int currentMouseY);
 extern void plrctrls_after_check_curs_move();
 extern void plrctrls_every_frame();
 extern void plrctrls_after_game_logic();
@@ -192,7 +195,7 @@ bool ProcessInput()
 	}
 
 	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE) {
-#ifndef USE_SDL1
+#ifdef __vita__
 		finish_simulated_mouse_clicks(MousePosition.x, MousePosition.y);
 #endif
 		CheckCursMove();

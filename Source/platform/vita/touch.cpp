@@ -1,4 +1,3 @@
-#ifndef USE_SDL1
 #include <cmath>
 
 #include "options.h"
@@ -29,10 +28,8 @@ static void InitTouch();
 static void PreprocessEvents(SDL_Event *event);
 static void PreprocessFingerDown(SDL_Event *event);
 static void PreprocessFingerUp(SDL_Event *event);
-#ifdef __vita__
 static void preprocess_back_finger_down(SDL_Event *event);
 static void preprocess_back_finger_up(SDL_Event *event);
-#endif
 static void PreprocessFingerMotion(SDL_Event *event);
 static void SetMouseButtonEvent(SDL_Event *event, uint32_t type, uint8_t button, int32_t x, int32_t y);
 static void SetMouseMotionEvent(SDL_Event *event, int32_t x, int32_t y, int32_t xrel, int32_t yrel);
@@ -109,7 +106,6 @@ static void PreprocessEvents(SDL_Event *event)
 	// front (0) or back (1) panel
 	SDL_TouchID port = event->tfinger.touchId;
 	if (port != 0) {
-#ifdef __vita__
 		if (devilution::sgOptions.Controller.bRearTouch) {
 			switch (event->type) {
 			case SDL_FINGERDOWN:
@@ -120,7 +116,6 @@ static void PreprocessEvents(SDL_Event *event)
 				break;
 			}
 		}
-#endif
 		return;
 	}
 
@@ -177,7 +172,7 @@ static void PreprocessFingerDown(SDL_Event *event)
 		break;
 	}
 }
-#ifdef __vita__
+
 static void preprocess_back_finger_down(SDL_Event *event)
 {
 	// front (0) or back (1) panel
@@ -215,7 +210,6 @@ static void preprocess_back_finger_up(SDL_Event *event)
 		event->caxis.axis = SDL_CONTROLLER_AXIS_TRIGGERRIGHT;
 	}
 }
-#endif
 
 static void PreprocessFingerUp(SDL_Event *event)
 {
@@ -487,4 +481,3 @@ static void SetMouseMotionEvent(SDL_Event *event, int32_t x, int32_t y, int32_t 
 	event->motion.xrel = xrel;
 	event->motion.yrel = yrel;
 }
-#endif

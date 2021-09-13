@@ -396,7 +396,6 @@ set(libdevilutionx_SRCS
   Source/controls/menu_controls.cpp
   Source/controls/modifier_hints.cpp
   Source/controls/plrctrls.cpp
-  Source/controls/touch.cpp
   Source/controls/keymapper.cpp
   Source/engine/animationinfo.cpp
   Source/engine/demomode.cpp
@@ -501,7 +500,8 @@ endif()
 
 if(VITA)
   list(APPEND libdevilutionx_SRCS
-    Source/platform/vita/keyboard.cpp)
+    Source/platform/vita/keyboard.cpp
+    Source/platform/vita/touch.cpp)
 endif()
 
 if(NINTENDO_3DS)
