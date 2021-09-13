@@ -69,7 +69,7 @@ CSimpleIni &GetIni()
 		auto path = GetIniPath();
 		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
 		ini.SetSpaces(false);
-		if (stream != nullptr)
+		if (stream)
 			ini.LoadData(*stream);
 		isIniLoaded = true;
 	}
