@@ -419,24 +419,23 @@ void AllocBlock(uint32_t blockOffset, uint32_t blockSize)
 
 int FindFreeBlock(uint32_t size, uint32_t *blockSize)
 {
-	for (int i = 0; i < INDEX_ENTRIES; i++) {
-		BlockEntry *block = &cur_archive.blockTbl[i];
-		if (block->offset == 0)
+	for (BlockEntry &block : cur_archive.blockTbl) {
+		if (block.offset == 0)
 			continue;
-		if (block->flags != 0)
+		if (block.flags != 0)
 			continue;
-		if (block->sizefile != 0)
+		if (block.sizefile != 0)
 			continue;
-		if (block->sizealloc < size)
+		if (block.sizealloc < size)
 			continue;
 
-		int result = block->offset;
+		int result = block.offset;
 		*blockSize = size;
-		block->offset += size;
-		block->sizealloc -= size;
+		block.offset += size;
+		block.sizealloc -= size;
 
-		if (block->sizealloc == 0)
-			*block = {};
+		if (block.sizealloc == 0)
+			block = {};
 
 		return result;
 	}
