@@ -201,8 +201,13 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 				break;
 			characterPosition.y += lineHeight;
 
-			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing)))
-				lineWidth = GetLineWidth(&text[i + 1], size, spacing, &charactersInLine);
+			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing))) {
+				int nextLineIndex = text[i] == '\n' ? i + 1 : i;
+				if (nextLineIndex < text.length())
+					lineWidth = GetLineWidth(&text[nextLineIndex], size, spacing, &charactersInLine);
+				else
+					lineWidth = 0;
+			}
 
 			if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
 				spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
