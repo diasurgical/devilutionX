@@ -270,9 +270,6 @@ void WalkSides(int pnum, const DirectionSettings &walkParams)
 
 	dPlayer[player.position.tile.x][player.position.tile.y] = -(pnum + 1);
 	dPlayer[player.position.future.x][player.position.future.y] = pnum + 1;
-	player._pVar4 = nextPosition.x;
-	player._pVar5 = nextPosition.y;
-	dFlags[nextPosition.x][nextPosition.y] |= BFLAG_PLAYERLR;
 
 	if (leveltype != DTYPE_TOWN) {
 		ChangeLightXY(player._plid, nextPosition);
@@ -332,11 +329,11 @@ bool PlrDirOK(const Player &player, Direction dir)
 	}
 
 	if (dir == Direction::East) {
-		return !IsTileSolid(position + Direction::SouthEast) && (dFlags[position.x + 1][position.y] & BFLAG_PLAYERLR) == 0;
+		return !IsTileSolid(position + Direction::SouthEast);
 	}
 
 	if (dir == Direction::West) {
-		return !IsTileSolid(position + Direction::SouthWest) && (dFlags[position.x][position.y + 1] & BFLAG_PLAYERLR) == 0;
+		return !IsTileSolid(position + Direction::SouthWest);
 	}
 
 	return true;
@@ -411,7 +408,6 @@ void ClearStateVariables(Player &player)
 	player.position.temp = { 0, 0 };
 	player.tempDirection = Direction::South;
 	player._pVar4 = 0;
-	player._pVar5 = 0;
 	player.position.offset2 = { 0, 0 };
 	player.deathFrame = 0;
 }
@@ -730,7 +726,6 @@ bool DoWalk(int pnum, int variant)
 			break;
 		case PM_WALK3:
 			dPlayer[player.position.tile.x][player.position.tile.y] = 0;
-			dFlags[player._pVar4][player._pVar5] &= ~BFLAG_PLAYERLR;
 			player.position.tile = player.position.temp;
 			// dPlayer is set here for backwards comparability, without it the player would be invisible if loaded from a vanilla save.
 			dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
@@ -2921,27 +2916,12 @@ void FixPlrWalkTags(int pnum)
 			}
 		}
 	}
-
-	if (dx >= 0 && dx < MAXDUNX - 1 && dy >= 0 && dy < MAXDUNY - 1) {
-		dFlags[dx + 1][dy] &= ~BFLAG_PLAYERLR;
-		dFlags[dx][dy + 1] &= ~BFLAG_PLAYERLR;
-	}
 }
 
 void RemovePlrFromMap(int pnum)
 {
 	int pp = pnum + 1;
 	int pn = -(pnum + 1);
-
-	for (int y = 1; y < MAXDUNY; y++) {
-		for (int x = 1; x < MAXDUNX; x++) {
-			if (dPlayer[x][y - 1] == pn || dPlayer[x - 1][y] == pn) {
-				if ((dFlags[x][y] & BFLAG_PLAYERLR) != 0) {
-					dFlags[x][y] &= ~BFLAG_PLAYERLR;
-				}
-			}
-		}
-	}
 
 	for (int y = 0; y < MAXDUNY; y++) {
 		for (int x = 0; x < MAXDUNX; x++) // NOLINT(modernize-loop-convert)
