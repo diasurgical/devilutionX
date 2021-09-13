@@ -172,7 +172,14 @@ void SetIniValue(const char *sectionName, const char *keyName, const char *value
 extern Options sgOptions;
 extern bool sbWasOptionsLoaded;
 
+/**
+ * @brief Save game configurations to ini file
+ */
 void SaveOptions();
+
+/**
+ * @brief Load game configurations from ini file
+ */
 void LoadOptions();
 
 } // namespace devilution

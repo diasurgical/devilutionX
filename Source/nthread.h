@@ -25,6 +25,11 @@ void nthread_set_turn_upper_bit();
 void nthread_start(bool setTurnUpperBit);
 void nthread_cleanup();
 void nthread_ignore_mutex(bool bStart);
+
+/**
+ * @brief Checks if it's time for the logic to advance
+ * @return True if the engine should tick
+ */
 bool nthread_has_500ms_passed();
 /**
  * @brief Calculates the progress in time to the next game tick

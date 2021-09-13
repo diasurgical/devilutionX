@@ -4800,9 +4800,6 @@ void MissToMonst(Missile &missile, Point position)
 	}
 }
 
-/**
- * @brief Check that the given tile is available to the monster
- */
 bool IsTileAvailable(const Monster &monster, Point position)
 {
 	if (!IsTileAvailable(position))

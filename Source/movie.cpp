@@ -19,11 +19,6 @@ bool movie_playing;
 /** Should the movie play in a loop. */
 bool loop_movie;
 
-/**
- * @brief Start playback of a given video.
- * @param pszMovie The file name of the video
- * @param user_can_close Set to false to make the video unskippable.
- */
 void play_movie(const char *pszMovie, bool userCanClose)
 {
 	if (demo::IsRunning())
@@ -69,10 +64,6 @@ void play_movie(const char *pszMovie, bool userCanClose)
 	OutputToLogical(&MousePosition.x, &MousePosition.y);
 }
 
-/**
- * @brief Fade to black and play a video
- * @param pszMovie file path of movie
- */
 void PlayInGameMovie(const char *pszMovie)
 {
 	PaletteFadeOut(8);

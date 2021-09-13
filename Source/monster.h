@@ -300,6 +300,10 @@ void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
 void PlayEffect(Monster &monster, int mode);
 void MissToMonst(Missile &missile, Point position);
+
+/**
+ * @brief Check that the given tile is available to the monster
+ */
 bool IsTileAvailable(const Monster &monster, Point position);
 bool IsSkel(int mt);
 bool IsGoat(int mt);
