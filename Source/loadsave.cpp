@@ -1772,7 +1772,7 @@ void LoadGame(bool firstflag)
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dFlags[i][j] = file.NextLE<int8_t>() & ~BFLAG_PLAYERLR;
+			dFlags[i][j] = file.NextLE<int8_t>() & ~(BFLAG_PLAYERLR | BFLAG_MONSTLR);
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
@@ -2159,7 +2159,7 @@ void LoadLevel()
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dFlags[i][j] = file.NextLE<int8_t>() & ~BFLAG_PLAYERLR;
+			dFlags[i][j] = file.NextLE<int8_t>() & ~(BFLAG_PLAYERLR | BFLAG_MONSTLR);
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
