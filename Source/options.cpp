@@ -206,9 +206,6 @@ bool GetIniValue(const char *sectionName, const char *keyName, char *string, int
 Options sgOptions;
 bool sbWasOptionsLoaded = false;
 
-/**
- * @brief Load game configurations from ini file
- */
 void LoadOptions()
 {
 	sgOptions.Diablo.bIntro = GetIniBool("Diablo", "Intro", true);
@@ -359,9 +356,6 @@ void LoadOptions()
 	sbWasOptionsLoaded = true;
 }
 
-/**
- * @brief Save game configurations to ini file
- */
 void SaveOptions()
 {
 	SetIniValue("Diablo", "Intro", sgOptions.Diablo.bIntro);
