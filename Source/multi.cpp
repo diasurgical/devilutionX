@@ -540,9 +540,6 @@ void multi_net_ping()
 	sglTimeoutStart = SDL_GetTicks();
 }
 
-/**
- * @return Always true for singleplayer
- */
 bool multi_handle_delta()
 {
 	if (gbGameDestroyed) {
