@@ -932,19 +932,20 @@ DWORD OnRangedAttackTile(TCmd *pCmd, Player &player)
 
 DWORD OnSpellWall(TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam3 *)pCmd;
+	auto *p = (TCmdLocParam4 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spellType = static_cast<spell_type>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(player);
 			player.destAction = ACTION_SPELLWALL;
 			player.destParam1 = p->x;
 			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam2);
-			player.destParam4 = p->wParam3;
+			player.destParam3 = static_cast<Direction>(p->wParam3);
+			player.destParam4 = p->wParam4;
 			player._pSpell = spell;
-			player._pSplType = player._pRSplType;
+			player._pSplType = spellType;
 			player._pSplFrom = 0;
 		} else {
 			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
@@ -956,18 +957,19 @@ DWORD OnSpellWall(TCmd *pCmd, Player &player)
 
 DWORD OnSpellTile(TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam2 *)pCmd;
+	auto *p = (TCmdLocParam3 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam1);
+		auto spellType = static_cast<spell_type>(p->wParam2);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(player);
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = p->x;
 			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam2);
+			player.destParam3 = static_cast<Direction>(p->wParam3);
 			player._pSpell = spell;
-			player._pSplType = player._pRSplType;
+			player._pSplType = spellType;
 			player._pSplFrom = 0;
 		} else {
 			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
@@ -1094,17 +1096,18 @@ DWORD OnRangedAttackPlayer(TCmd *pCmd, Player &player)
 
 DWORD OnSpellMonster(TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam4 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spellType = static_cast<spell_type>(p->wParam3);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(player);
 			player.destAction = ACTION_SPELLMON;
 			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
+			player.destParam2 = p->wParam4;
 			player._pSpell = spell;
-			player._pSplType = player._pRSplType;
+			player._pSplType = spellType;
 			player._pSplFrom = 0;
 		} else {
 			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
@@ -1116,17 +1119,18 @@ DWORD OnSpellMonster(TCmd *pCmd, Player &player)
 
 DWORD OnSpellPlayer(TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	auto *p = (TCmdParam4 *)pCmd;
 
 	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
 		auto spell = static_cast<spell_id>(p->wParam2);
+		auto spellType = static_cast<spell_type>(p->wParam3);
 		if (currlevel != 0 || spelldata[spell].sTownSpell) {
 			ClrPlrPath(player);
 			player.destAction = ACTION_SPELLPLR;
 			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
+			player.destParam2 = p->wParam4;
 			player._pSpell = spell;
-			player._pSplType = player._pRSplType;
+			player._pSplType = spellType;
 			player._pSplFrom = 0;
 		} else {
 			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
@@ -2237,6 +2241,23 @@ void NetSendCmdLocParam3(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wPa
 		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
+void NetSendCmdLocParam4(bool bHiPri, _cmd_id bCmd, Point position, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
+{
+	TCmdLocParam4 cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.x = position.x;
+	cmd.y = position.y;
+	cmd.wParam1 = wParam1;
+	cmd.wParam2 = wParam2;
+	cmd.wParam3 = wParam3;
+	cmd.wParam4 = wParam4;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
 void NetSendCmdParam1(bool bHiPri, _cmd_id bCmd, uint16_t wParam1)
 {
 	TCmdParam1 cmd;
@@ -2270,6 +2291,21 @@ void NetSendCmdParam3(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wPar
 	cmd.wParam1 = wParam1;
 	cmd.wParam2 = wParam2;
 	cmd.wParam3 = wParam3;
+	if (bHiPri)
+		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+	else
+		NetSendLoPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
+}
+
+void NetSendCmdParam4(bool bHiPri, _cmd_id bCmd, uint16_t wParam1, uint16_t wParam2, uint16_t wParam3, uint16_t wParam4)
+{
+	TCmdParam4 cmd;
+
+	cmd.bCmd = bCmd;
+	cmd.wParam1 = wParam1;
+	cmd.wParam2 = wParam2;
+	cmd.wParam3 = wParam3;
+	cmd.wParam4 = wParam4;
 	if (bHiPri)
 		NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 	else
