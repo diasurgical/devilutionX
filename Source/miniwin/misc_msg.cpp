@@ -9,7 +9,6 @@
 #include "controls/game_controls.h"
 #include "controls/plrctrls.h"
 #include "controls/remap_keyboard.h"
-#include "controls/touch.h"
 #include "cursor.h"
 #include "engine/demomode.h"
 #include "engine/rectangle.hpp"
@@ -23,6 +22,10 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
+
+#ifdef __vita__
+#include "platform/vita/touch.h"
+#endif
 
 #ifdef __SWITCH__
 #include "platform/switch/docking.h"
@@ -311,7 +314,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
-#ifndef USE_SDL1
+#ifdef __vita__
 	handle_touch(&e, MousePosition.x, MousePosition.y);
 #endif
 
@@ -434,7 +437,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			break;
 		}
 		return true;
-#ifndef USE_SDL1
+#ifdef __vita__
 	}
 	if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
 #else
