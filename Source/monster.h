@@ -302,7 +302,6 @@ void PlayEffect(Monster &monster, int mode);
 void MissToMonst(Missile &missile, Point position);
 
 /**
- * @brief Check that the given tile is not currently blocked
  * @brief Check that the given tile is available to the monster
  */
 bool IsTileAvailable(const Monster &monster, Point position);
