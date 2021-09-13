@@ -233,7 +233,7 @@ struct Archive {
 		return true;
 	}
 
-	bool Close(bool clearTables = true)
+	bool Close()
 	{
 		if (!stream.IsOpen())
 			return true;
@@ -247,16 +247,11 @@ struct Archive {
 			LogDebug("ResizeFile(\"{}\", {})", name, size);
 			result = ResizeFile(name.c_str(), size);
 		}
-		if (!clearTables) {
-			Cache.name = std::move(name);
-			Cache.hashTbl = std::move(hashTbl);
-			Cache.blockTbl = std::move(blockTbl);
-		} else {
-			Cache.name.clear();
-		}
-		name.clear();
-		hashTbl = {};
-		blockTbl = {};
+
+		Cache.name = std::move(name);
+		Cache.hashTbl = std::move(hashTbl);
+		Cache.blockTbl = std::move(blockTbl);
+
 		return result;
 	}
 
@@ -692,13 +687,17 @@ bool OpenMPQ(const char *pszArchive)
 	}
 	return true;
 on_error:
-	cur_archive.Close(/*clearTables=*/true);
+	cur_archive.Close();
+	Cache = {};
 	return false;
 }
 
 bool mpqapi_flush_and_close(bool bFree)
 {
-	return cur_archive.Close(/*clearTables=*/bFree);
+	bool ret = cur_archive.Close();
+	if (bFree)
+		Cache = {};
+	return ret;
 }
 
 } // namespace devilution
