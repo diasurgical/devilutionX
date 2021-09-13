@@ -1998,6 +1998,9 @@ bool IsTileSafe(const Monster &monster, Point position)
 	return true;
 }
 
+/**
+ * @brief Check that the given tile is not currently blocked
+ */
 bool IsTileAvailable(Point position)
 {
 	if (dPlayer[position.x][position.y] != 0 || dMonster[position.x][position.y] != 0)
