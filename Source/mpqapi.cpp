@@ -96,12 +96,12 @@ public:
 
 	void Close()
 	{
-		s_ = nullptr;
+		s_ = std::nullopt;
 	}
 
 	[[nodiscard]] bool IsOpen() const
 	{
-		return s_ != nullptr;
+		return s_ != std::nullopt;
 	}
 
 	bool Seekp(std::streampos pos)
@@ -151,7 +151,7 @@ private:
 		return !s_->fail();
 	}
 
-	std::unique_ptr<std::fstream> s_;
+	std::optional<std::fstream> s_;
 };
 
 constexpr std::size_t BlockEntrySize = INDEX_ENTRIES * sizeof(_BLOCKENTRY);

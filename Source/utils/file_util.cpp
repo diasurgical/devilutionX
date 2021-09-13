@@ -164,17 +164,17 @@ void RemoveFile(const char *lpFileName)
 #endif
 }
 
-std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
+std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
 {
 #if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
-		return nullptr;
+		return {};
 	}
-	return std::make_unique<std::fstream>(pathUtf16.get(), mode);
+	return { std::fstream(pathUtf16.get(), mode) };
 #else
-	return std::make_unique<std::fstream>(path, mode);
+	return { std::fstream(path, mode) };
 #endif
 }
 

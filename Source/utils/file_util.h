@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "utils/stdcompat/string_view.hpp"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 
@@ -14,7 +15,7 @@ bool FileExistsAndIsWriteable(const char *path);
 bool GetFileSize(const char *path, std::uintmax_t *size);
 bool ResizeFile(const char *path, std::uintmax_t size);
 void RemoveFile(const char *lpFileName);
-std::unique_ptr<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode);
+std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode);
 FILE *FOpen(const char *path, const char *mode);
 
 #if defined(_WIN64) || defined(_WIN32)
