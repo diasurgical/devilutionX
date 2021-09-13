@@ -975,7 +975,6 @@ void StartWalk3(int i, int xvel, int yvel, int xoff, int yoff, int xadd, int yad
 	dMonster[monster.position.tile.x][monster.position.tile.y] = -(i + 1);
 	dMonster[fx][fy] = i + 1;
 	monster.position.temp = { x, y };
-	dFlags[x][y] |= BFLAG_MONSTLR;
 	monster.position.old = monster.position.tile;
 	monster.position.future = { fx, fy };
 	monster.position.offset = { xoff, yoff };
@@ -1356,7 +1355,6 @@ bool MonsterWalk(int i, MonsterMode variant)
 		case MonsterMode::MoveSideways:
 			dMonster[monster.position.tile.x][monster.position.tile.y] = 0;
 			monster.position.tile = { monster._mVar1, monster._mVar2 };
-			dFlags[monster.position.temp.x][monster.position.temp.y] &= ~BFLAG_MONSTLR;
 			// dMonster is set here for backwards comparability, without it the monster would be invisible if loaded from a vanilla save.
 			dMonster[monster.position.tile.x][monster.position.tile.y] = i + 1;
 			break;
@@ -3959,11 +3957,6 @@ void M_ClearSquares(int i)
 			}
 		}
 	}
-
-	if (mx + 1 < MAXDUNX)
-		dFlags[mx + 1][my] &= ~BFLAG_MONSTLR;
-	if (my + 1 < MAXDUNY)
-		dFlags[mx][my + 1] &= ~BFLAG_MONSTLR;
 }
 
 void M_GetKnockback(int i)
@@ -4402,10 +4395,10 @@ bool DirOK(int i, Direction mdir)
 	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !IsTileAvailable(monster, futurePosition))
 		return false;
 	if (mdir == Direction::East) {
-		if (IsTileSolid(position + Direction::SouthEast) || (dFlags[position.x + 1][position.y] & BFLAG_MONSTLR) != 0)
+		if (IsTileSolid(position + Direction::SouthEast))
 			return false;
 	} else if (mdir == Direction::West) {
-		if (IsTileSolid(position + Direction::SouthWest) || (dFlags[position.x][position.y + 1] & BFLAG_MONSTLR) != 0)
+		if (IsTileSolid(position + Direction::SouthWest))
 			return false;
 	} else if (mdir == Direction::North) {
 		if (IsTileSolid(position + Direction::NorthEast) || IsTileSolid(position + Direction::NorthWest))
@@ -4440,7 +4433,7 @@ bool DirOK(int i, Direction mdir)
 
 bool PosOkMissile(Point position)
 {
-	return !nMissileTable[dPiece[position.x][position.y]] && (dFlags[position.x][position.y] & BFLAG_MONSTLR) == 0;
+	return !nMissileTable[dPiece[position.x][position.y]];
 }
 
 bool LineClearMissile(Point startPoint, Point endPoint)
