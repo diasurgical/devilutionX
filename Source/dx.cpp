@@ -236,7 +236,7 @@ void dx_reinit()
 
 void InitPalette()
 {
-	Palette = SDLWrap::AllocPalette(256);
+	Palette = SDLWrap::AllocPalette();
 }
 
 void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect)
