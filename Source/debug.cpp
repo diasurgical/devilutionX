@@ -37,26 +37,24 @@ std::unordered_map<int, Point> DebugCoordsMap;
 
 namespace {
 
-enum class DebugInfoFlags : uint16_t {
-	// clang-format off
-	empty     = 0,
-	dPiece    = 1 << 0,
-	dTransVal = 1 << 1,
-	dLight    = 1 << 2,
-	dPreLight = 1 << 3,
-	dFlags    = 1 << 4,
-	dPlayer   = 1 << 5,
-	dMonster  = 1 << 6,
-	dCorpse   = 1 << 7,
-	dObject   = 1 << 8,
-	dItem     = 1 << 9,
-	dSpecial  = 1 << 10,
-	// clang-format on
+enum class DebugGridTextItem : uint16_t {
+	None,
+	dPiece,
+	dTransVal,
+	dLight,
+	dPreLight,
+	dFlags,
+	dPlayer,
+	dMonster,
+	dCorpse,
+	dObject,
+	dItem,
+	dSpecial,
+	coords,
+	cursorcoords,
 };
 
-bool DebugCoords = false;
-bool DebugCursorCoords = false;
-DebugInfoFlags DebugInfoFlag;
+DebugGridTextItem SelectedDebugGridTextItem;
 
 int DebugPlayerId;
 int DebugQuestId;
@@ -466,15 +464,6 @@ std::string DebugCmdTalkToTowner(const string_view parameter)
 	return "NPC not found.";
 }
 
-std::string DebugCmdShowCoords(const string_view parameter)
-{
-	DebugCoords = !DebugCoords;
-	if (DebugCoords)
-		return "I love math.";
-
-	return "I hate math.";
-}
-
 std::string DebugCmdShowGrid(const string_view parameter)
 {
 	DebugGrid = !DebugGrid;
@@ -482,15 +471,6 @@ std::string DebugCmdShowGrid(const string_view parameter)
 		return "A basket full of rectangles and mushrooms.";
 
 	return "Back to boring.";
-}
-
-std::string DebugCmdShowCursorCoords(const string_view parameter)
-{
-	DebugCursorCoords = !DebugCursorCoords;
-	if (DebugCursorCoords)
-		return "I am the master of coords and cursors!";
-
-	return "Cursor will never forget that.";
 }
 
 std::string DebugCmdLevelSeed(const string_view parameter)
@@ -605,26 +585,35 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"dCorpse",
 		"dObject",
 		"dItem",
-		"dSpecial"
+		"dSpecial",
+		"coords",
+		"cursorcoords",
 	};
 
 	if (parameter == "clear") {
-		DebugInfoFlag = DebugInfoFlags::empty;
+		SelectedDebugGridTextItem = DebugGridTextItem::None;
 		return "Tile data cleared!";
 	} else if (parameter == "") {
 		std::string list = "clear";
-		for (int i = 0; i < 11; i++) {
-			list += " / " + paramList[i];
+		for (const auto &param : paramList) {
+			list += " / " + param;
 		}
 		return list;
 	}
 	bool found = false;
-	for (int i = 0; i < 11; i++) {
-		if (parameter == paramList[i]) {
-			found = true;
-			DebugInfoFlag = static_cast<DebugInfoFlags>(1 << i);
-			break;
+	int index = 0;
+	for (const auto &param : paramList) {
+		index++;
+		if (parameter != param)
+			continue;
+		found = true;
+		auto newGridText = static_cast<DebugGridTextItem>(index);
+		if (newGridText == SelectedDebugGridTextItem) {
+			SelectedDebugGridTextItem = DebugGridTextItem::None;
+			return "Tile data toggled... now you see nothing.";
 		}
+		SelectedDebugGridTextItem = newGridText;
+		break;
 	}
 	if (!found)
 		return "Invalid name. Check names using tiledata command.";
@@ -653,8 +642,6 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "talkto", "Interacts with a NPC whose name contains {name}.", "{name}", &DebugCmdTalkToTowner },
 	{ "exit", "Exits the game.", "", &DebugCmdExit },
 	{ "arrow", "Changes arrow effect (normal, fire, lightning, explosion).", "{effect}", &DebugCmdArrow },
-	{ "coords", "Toggles showing tile coords.", "", &DebugCmdShowCoords },
-	{ "cursorcoords", "Toggles showing cursor coords.", "", &DebugCmdShowCursorCoords },
 	{ "grid", "Toggles showing grid.", "", &DebugCmdShowGrid },
 	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
 	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
@@ -767,51 +754,49 @@ bool CheckDebugTextCommand(const string_view text)
 
 bool IsDebugGridTextNeeded()
 {
-	return DebugCoords || DebugGrid || DebugCursorCoords || DebugInfoFlag != DebugInfoFlags::empty;
+	return SelectedDebugGridTextItem != DebugGridTextItem::None;
 }
 
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 {
-	if (DebugCoords) {
+	int info = 0;
+	switch (SelectedDebugGridTextItem) {
+	case DebugGridTextItem::coords:
 		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
 		return true;
-	}
-	if (DebugCursorCoords) {
+	case DebugGridTextItem::cursorcoords:
 		if (dungeonCoords != cursPosition)
 			return false;
 		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
 		return true;
-	}
-	int info = 0;
-	switch (DebugInfoFlag) {
-	case DebugInfoFlags::dPiece:
+	case DebugGridTextItem::dPiece:
 		info = dPiece[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dTransVal:
+	case DebugGridTextItem::dTransVal:
 		info = dTransVal[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dLight:
+	case DebugGridTextItem::dLight:
 		info = dLight[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dPreLight:
+	case DebugGridTextItem::dPreLight:
 		info = dPreLight[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dFlags:
+	case DebugGridTextItem::dFlags:
 		info = dFlags[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dPlayer:
+	case DebugGridTextItem::dPlayer:
 		info = dPlayer[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dMonster:
+	case DebugGridTextItem::dMonster:
 		info = dMonster[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dCorpse:
+	case DebugGridTextItem::dCorpse:
 		info = dCorpse[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dItem:
+	case DebugGridTextItem::dItem:
 		info = dItem[dungeonCoords.x][dungeonCoords.y];
 		break;
-	case DebugInfoFlags::dSpecial:
+	case DebugGridTextItem::dSpecial:
 		info = dSpecial[dungeonCoords.x][dungeonCoords.y];
 		break;
 	}
