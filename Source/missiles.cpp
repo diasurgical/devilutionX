@@ -712,7 +712,7 @@ void AddRune(Missile &missile, Point dst, missile_id missileID)
 					continue;
 
 				int dp = dPiece[target.x][target.y];
-				if (nSolidTable[dp] || dObject[target.x][target.y] != 0 || (dFlags[i][j] & BFLAG_MISSILE) != 0)
+				if (nSolidTable[dp] || dObject[target.x][target.y] != 0 || (dFlags[target.x][target.y] & BFLAG_MISSILE) != 0)
 					continue;
 
 				missile.position.tile = target;
@@ -2087,7 +2087,7 @@ void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 					continue;
 
 				int dp = dPiece[target.x][target.y];
-				if ((dFlags[i][j] & BFLAG_MISSILE) == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && dPlayer[target.x][target.y] == 0) {
+				if ((dFlags[target.x][target.y] & BFLAG_MISSILE) == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && dPlayer[target.x][target.y] == 0) {
 					if (!CheckIfTrig(target)) {
 						missile.position.tile = target;
 						missile.position.start = target;
@@ -2201,7 +2201,7 @@ void AddGuardian(Missile &missile, Point dst, Direction /*midir*/)
 
 			if (LineClearMissile(missile.position.start, target)) {
 				int dp = dPiece[target.x][target.y];
-				if (dMonster[target.x][target.y] == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && (dFlags[i][j] & BFLAG_MISSILE) == 0) {
+				if (dMonster[target.x][target.y] == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && (dFlags[target.x][target.y] & BFLAG_MISSILE) == 0) {
 					missile.position.tile = target;
 					missile.position.start = target;
 					missile._miDelFlag = false;
