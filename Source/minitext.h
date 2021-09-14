@@ -12,8 +12,20 @@ namespace devilution {
 
 extern bool qtextflag;
 
+/**
+ * @brief Free the resouces used by the quest dialog window
+ */
 void FreeQuestText();
+
+/**
+ * @brief Load the resouces used by the quest dialog window, and initialize it's state
+ */
 void InitQuestText();
+
+/**
+ * @brief Start the given naration
+ * @param m Index of narration from the Texts table
+ */
 void InitQTextMsg(_speech_id m);
 
 /**
