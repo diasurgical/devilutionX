@@ -143,6 +143,26 @@ extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
 int GetSpellLevel(int playerId, spell_id sn);
+
+/**
+ * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
+ *
+ *      W  sW  SW   Sw  S
+ *              ^
+ *     nW       |       Se
+ *              |
+ *     NW ------+-----> SE
+ *              |
+ *     Nw       |       sE
+ *              |
+ *      N  Ne  NE   nE  E
+ *
+ * @param x1 the x coordinate of p1
+ * @param y1 the y coordinate of p1
+ * @param x2 the x coordinate of p2
+ * @param y2 the y coordinate of p2
+ * @return the direction of the p1->p2 vector
+ */
 Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int i);
 bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
@@ -184,6 +204,10 @@ void AddImmolationRune(Missile &missile, Point dst, Direction midir);
 void AddStoneRune(Missile &missile, Point dst, Direction midir);
 void AddReflection(Missile &missile, Point dst, Direction midir);
 void AddBerserk(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Direction to place the spawn
+ */
 void AddHorkSpawn(Missile &missile, Point dst, Direction midir);
 void AddJester(Missile &missile, Point dst, Direction midir);
 void AddStealPotions(Missile &missile, Point dst, Direction midir);
@@ -207,31 +231,93 @@ void AddMagmaball(Missile &missile, Point dst, Direction midir);
 void AddTeleport(Missile &missile, Point dst, Direction midir);
 void AddLightball(Missile &missile, Point dst, Direction midir);
 void AddFirewall(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ * var4: X coordinate of the missile-light
+ * var5: Y coordinate of the missile-light
+ */
 void AddFireball(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile
+ * var2: Y coordinate of the missile
+ */
 void AddLightctrl(Missile &missile, Point dst, Direction midir);
 void AddLightning(Missile &missile, Point dst, Direction midir);
 void AddMisexp(Missile &missile, Point dst, Direction midir);
 void AddWeapexp(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Animation
+ */
 void AddTown(Missile &missile, Point dst, Direction midir);
 void AddFlash(Missile &missile, Point dst, Direction midir);
 void AddFlash2(Missile &missile, Point dst, Direction midir);
 void AddManashield(Missile &missile, Point dst, Direction midir);
 void AddFiremove(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Animation
+ * var3: Light strength
+ */
 void AddGuardian(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the destination
+ * var2: Y coordinate of the destination
+ */
 void AddChain(Missile &missile, Point dst, Direction midir);
 void AddRhino(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ */
 void AddFlare(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ */
 void AddAcid(Missile &missile, Point dst, Direction midir);
 void AddAcidpud(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: mmode of the monster
+ * var2: mnum of the monster
+ */
 void AddStone(Missile &missile, Point dst, Direction midir);
 void AddGolem(Missile &missile, Point dst, Direction midir);
 void AddBoom(Missile &missile, Point dst, Direction midir);
 void AddHeal(Missile &missile, Point dst, Direction midir);
 void AddHealOther(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ * var4: X coordinate of the destination
+ * var5: Y coordinate of the destination
+ */
 void AddElement(Missile &missile, Point dst, Direction midir);
 void AddIdentify(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the first wave
+ * var2: Y coordinate of the first wave
+ * var3: Direction of the first wave
+ * var4: Direction of the second wave
+ * var5: X coordinate of the second wave
+ * var6: Y coordinate of the second wave
+ */
 void AddFirewallC(Missile &missile, Point dst, Direction midir);
 void AddInfra(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the destination
+ * var2: Y coordinate of the destination
+ */
 void AddWave(Missile &missile, Point dst, Direction midir);
 void AddNova(Missile &missile, Point dst, Direction midir);
 void AddBlodboil(Missile &missile, Point dst, Direction midir);
@@ -241,6 +327,11 @@ void AddDisarm(Missile &missile, Point dst, Direction midir);
 void AddApoca(Missile &missile, Point dst, Direction midir);
 void AddFlame(Missile &missile, Point dst, Direction midir);
 void AddFlamec(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Light strength
+ * var2: Base direction
+ */
 void AddCbolt(Missile &missile, Point dst, Direction midir);
 void AddHbolt(Missile &missile, Point dst, Direction midir);
 void AddResurrect(Missile &missile, Point dst, Direction midir);

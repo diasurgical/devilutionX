@@ -990,25 +990,6 @@ int GetSpellLevel(int playerId, spell_id sn)
 	return std::max(player._pISplLvlAdd + player._pSplLvl[sn], 0);
 }
 
-/**
- * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
- *
- *      W  sW  SW   Sw  S
- *              ^
- *     nW       |       Se
- *              |
- *     NW ------+-----> SE
- *              |
- *     Nw       |       sE
- *              |
- *      N  Ne  NE   nE  E
- *
- * @param x1 the x coordinate of p1
- * @param y1 the y coordinate of p1
- * @param x2 the x coordinate of p2
- * @param y2 the y coordinate of p2
- * @return the direction of the p1->p2 vector
- */
 Direction16 GetDirection16(Point p1, Point p2)
 {
 	Displacement offset = p2 - p1;
@@ -1426,9 +1407,6 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 	}
 }
 
-/**
- * var1: Direction to place the spawn
- */
 void AddHorkSpawn(Missile &missile, Point dst, Direction midir)
 {
 	UpdateMissileVelocity(missile, dst, 8);
@@ -2002,12 +1980,6 @@ void AddFirewall(Missile &missile, Point dst, Direction /*midir*/)
 	missile.var1 = missile._mirange - missile._miAnimLen;
 }
 
-/**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
- * var4: X coordinate of the missile-light
- * var5: Y coordinate of the missile-light
- */
 void AddFireball(Missile &missile, Point dst, Direction midir)
 {
 	if (missile.position.start == dst) {
@@ -2030,10 +2002,6 @@ void AddFireball(Missile &missile, Point dst, Direction midir)
 	missile._mlid = AddLight(missile.position.start, 8);
 }
 
-/**
- * var1: X coordinate of the missile
- * var2: Y coordinate of the missile
- */
 void AddLightctrl(Missile &missile, Point dst, Direction /*midir*/)
 {
 	if (missile._midam == 0 && missile._micaster == TARGET_MONSTERS)
@@ -2105,9 +2073,6 @@ void AddWeapexp(Missile &missile, Point dst, Direction /*midir*/)
 	missile._mirange = missile._miAnimLen - 1;
 }
 
-/**
- * var1: Animation
- */
 void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 {
 	Point target = dst;
@@ -2218,10 +2183,6 @@ void AddFiremove(Missile &missile, Point dst, Direction /*midir*/)
 	missile.position.offset.deltaY -= 32;
 }
 
-/**
- * var1: Animation
- * var3: Light strength
- */
 void AddGuardian(Missile &missile, Point dst, Direction /*midir*/)
 {
 	auto &player = Players[missile._misource];
@@ -2268,10 +2229,6 @@ void AddGuardian(Missile &missile, Point dst, Direction /*midir*/)
 	}
 }
 
-/**
- * var1: X coordinate of the destination
- * var2: Y coordinate of the destination
- */
 void AddChain(Missile &missile, Point dst, Direction /*midir*/)
 {
 	missile.var1 = dst.x;
@@ -2323,10 +2280,6 @@ void AddRhino(Missile &missile, Point dst, Direction midir)
 	PutMissile(missile);
 }
 
-/**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
- */
 void AddFlare(Missile &missile, Point dst, Direction midir)
 {
 	if (missile.position.start == dst) {
@@ -2357,10 +2310,6 @@ void AddFlare(Missile &missile, Point dst, Direction midir)
 	}
 }
 
-/**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
- */
 void AddAcid(Missile &missile, Point dst, Direction /*midir*/)
 {
 	UpdateMissileVelocity(missile, dst, 16);
@@ -2383,10 +2332,6 @@ void AddAcidpud(Missile &missile, Point /*dst*/, Direction /*midir*/)
 	missile._miPreFlag = true;
 }
 
-/**
- * var1: mmode of the monster
- * var2: mnum of the monster
- */
 void AddStone(Missile &missile, Point dst, Direction /*midir*/)
 {
 	Point target;
@@ -2522,12 +2467,6 @@ void AddHealOther(Missile &missile, Point /*dst*/, Direction /*midir*/)
 	}
 }
 
-/**
- * var1: X coordinate of the missile-light
- * var2: Y coordinate of the missile-light
- * var4: X coordinate of the destination
- * var5: Y coordinate of the destination
- */
 void AddElement(Missile &missile, Point dst, Direction midir)
 {
 	if (missile.position.start == dst) {
@@ -2566,14 +2505,6 @@ void AddIdentify(Missile &missile, Point /*dst*/, Direction /*midir*/)
 	}
 }
 
-/**
- * var1: X coordinate of the first wave
- * var2: Y coordinate of the first wave
- * var3: Direction of the first wave
- * var4: Direction of the second wave
- * var5: X coordinate of the second wave
- * var6: Y coordinate of the second wave
- */
 void AddFirewallC(Missile &missile, Point dst, Direction midir)
 {
 	missile._miDelFlag = true;
@@ -2616,10 +2547,6 @@ void AddInfra(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		UseMana(missile._misource, SPL_INFRA);
 }
 
-/**
- * var1: X coordinate of the destination
- * var2: Y coordinate of the destination
- */
 void AddWave(Missile &missile, Point dst, Direction /*midir*/)
 {
 	missile.var1 = dst.x;
@@ -2761,10 +2688,6 @@ void AddFlamec(Missile &missile, Point dst, Direction midir)
 	missile._mirange = 256;
 }
 
-/**
- * var1: Light strength
- * var2: Base direction
- */
 void AddCbolt(Missile &missile, Point dst, Direction midir)
 {
 	missile._mirnd = GenerateRnd(15) + 1;
