@@ -1646,10 +1646,6 @@ void RemoveEmptyInventory(Player &player)
 	}
 }
 
-/**
- * @brief Load game state
- * @param firstflag Can be set to false if we are simply reloading the current game
- */
 void LoadGame(bool firstflag)
 {
 	FreeGameMem();
