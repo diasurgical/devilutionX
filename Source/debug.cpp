@@ -32,13 +32,31 @@ std::optional<CelSprite> pSquareCel;
 bool DebugToggle = false;
 bool DebugGodMode = false;
 bool DebugVision = false;
-bool DebugCoords = false;
-bool DebugCursorCoords = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
-DebugInfoFlags DebugInfoFlag;
 
 namespace {
+
+enum class DebugInfoFlags : uint16_t {
+	// clang-format off
+	empty     = 0,
+	dPiece    = 1 << 0,
+	dTransVal = 1 << 1,
+	dLight    = 1 << 2,
+	dPreLight = 1 << 3,
+	dFlags    = 1 << 4,
+	dPlayer   = 1 << 5,
+	dMonster  = 1 << 6,
+	dCorpse   = 1 << 7,
+	dObject   = 1 << 8,
+	dItem     = 1 << 9,
+	dSpecial  = 1 << 10,
+	// clang-format on
+};
+
+bool DebugCoords = false;
+bool DebugCursorCoords = false;
+DebugInfoFlags DebugInfoFlag;
 
 int DebugPlayerId;
 int DebugQuestId;
@@ -747,31 +765,60 @@ bool CheckDebugTextCommand(const string_view text)
 	return true;
 }
 
-int DebugGetTileData(Point dungeonCoords)
+bool IsDebugGridTextNeeded()
 {
+	return DebugCoords || DebugGrid || DebugCursorCoords || DebugInfoFlag != DebugInfoFlags::empty;
+}
+
+bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
+{
+	if (DebugCoords) {
+		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		return true;
+	}
+	if (DebugCursorCoords) {
+		if (dungeonCoords != cursPosition)
+			return false;
+		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
+		return true;
+	}
+	int info = 0;
 	switch (DebugInfoFlag) {
 	case DebugInfoFlags::dPiece:
-		return dPiece[dungeonCoords.x][dungeonCoords.y];
+		info = dPiece[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dTransVal:
-		return dTransVal[dungeonCoords.x][dungeonCoords.y];
+		info = dTransVal[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dLight:
-		return dLight[dungeonCoords.x][dungeonCoords.y];
+		info = dLight[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dPreLight:
-		return dPreLight[dungeonCoords.x][dungeonCoords.y];
+		info = dPreLight[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dFlags:
-		return dFlags[dungeonCoords.x][dungeonCoords.y];
+		info = dFlags[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dPlayer:
-		return dPlayer[dungeonCoords.x][dungeonCoords.y];
+		info = dPlayer[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dMonster:
-		return dMonster[dungeonCoords.x][dungeonCoords.y];
+		info = dMonster[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dCorpse:
-		return dCorpse[dungeonCoords.x][dungeonCoords.y];
+		info = dCorpse[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dItem:
-		return dItem[dungeonCoords.x][dungeonCoords.y];
+		info = dItem[dungeonCoords.x][dungeonCoords.y];
+		break;
 	case DebugInfoFlags::dSpecial:
-		return dSpecial[dungeonCoords.x][dungeonCoords.y];
+		info = dSpecial[dungeonCoords.x][dungeonCoords.y];
+		break;
 	}
-	return 0;
+	if (info == 0)
+		return false;
+	sprintf(debugGridTextBuffer, "%d", info);
+	return true;
 }
 
 } // namespace devilution
