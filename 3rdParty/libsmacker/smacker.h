@@ -96,6 +96,9 @@ char smk_next(smk object);
 /** seek to first keyframe before/at N in an smk */
 char smk_seek_keyframe(smk object, unsigned long frame);
 
+/** was the pallet updated this frame */
+unsigned char smk_palette_updated(smk s);
+
 #ifdef __cplusplus
 }
 #endif
