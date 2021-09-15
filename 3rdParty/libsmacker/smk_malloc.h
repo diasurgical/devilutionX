@@ -12,6 +12,8 @@
 #ifndef SMK_MALLOC_H
 #define SMK_MALLOC_H
 
+/* assert */
+#include <assert.h>
 /* calloc */
 #include <stdlib.h>
 /* fprintf */
@@ -22,33 +24,14 @@
 #include <string.h>
 
 /**
-	Verbose assert:
-		branches to an error block if pointer is null
-*/
-#define smk_assert(p) \
-{ \
-	if (!p) \
-	{ \
-		fprintf(stderr, "libsmacker::smk_assert(" #p "): ERROR: NULL POINTER at line %lu, file %s\n", (unsigned long)__LINE__, __FILE__); \
-		goto error; \
-	} \
-}
-
-/**
 	Safe free: attempts to prevent double-free by setting pointer to NULL.
 		Optionally warns on attempts to free a NULL pointer.
 */
 #define smk_free(p) \
 { \
-	if (p) \
-	{ \
-		free(p); \
-		p = NULL; \
-	} \
-/*	else \
-	{ \
-		fprintf(stderr, "libsmacker::smk_free(" #p ") - Warning: attempt to free NULL pointer (file: %s, line: %lu)\n", __FILE__, (unsigned long)__LINE__); \
-	} */ \
+	assert (p); \
+	free(p); \
+	p = NULL; \
 }
 
 /**
@@ -60,11 +43,7 @@
 */
 #define smk_malloc(p, x) \
 { \
-/*	if (p) \
-	{ \
-		fprintf(stderr, "libsmacker::smk_malloc(" #p ", %lu) - Warning: freeing non-NULL pointer before calloc (file: %s, line: %lu)\n", (unsigned long) (x), __FILE__, (unsigned long)__LINE__); \
-		free(p); \
-	} */ \
+	assert (p == NULL); \
 	p = calloc(1, x); \
 	if (!p) \
 	{ \

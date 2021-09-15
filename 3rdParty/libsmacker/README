@@ -1,10 +1,10 @@
 libsmacker
 A C library for decoding .smk Smacker Video files
 
-version 1.1.1
-2020-01-05
+version 1.2.0
+2021-06-02
 
-(c) Greg Kennedy 2013-2020
+(c) Greg Kennedy 2013-2021
 http://libsmacker.sourceforge.net
 ----
 
@@ -32,6 +32,10 @@ Though the libraries are "bulletproofed" the sample apps are not: be cautious if
 ---
 Changelog
 ---
+1.2.0
+* Major refactor of data structures for performance
+* Merge all files into a single unified .c source file
+* Support audio-only .smk files
 1.1.1
 * Re-license under LGPL 2.1
 1.1

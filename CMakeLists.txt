@@ -285,8 +285,6 @@ if(NOT NOSOUND)
 endif()
 
 add_library(smacker STATIC
-  3rdParty/libsmacker/smk_bitstream.c
-  3rdParty/libsmacker/smk_hufftree.c
   3rdParty/libsmacker/smacker.c)
 target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
