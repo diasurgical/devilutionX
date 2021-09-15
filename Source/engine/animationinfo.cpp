@@ -19,7 +19,7 @@ int AnimationInfo::GetFrameToUseForRendering() const
 	// or
 	// - if we load from a savegame where the new variables are not stored (we don't want to break savegame compatiblity because of smoother rendering of one animation)
 	if (RelevantFramesForDistributing <= 0)
-		return CurrentFrame;
+		return std::max(1, CurrentFrame);
 
 	if (CurrentFrame > RelevantFramesForDistributing)
 		return CurrentFrame;
@@ -62,9 +62,9 @@ float AnimationInfo::GetAnimationProgress() const
 	if (RelevantFramesForDistributing <= 0) {
 		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		float ticksPerFrame = TicksPerFrame + 1.F;
-		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + CurrentFrame + (TickCounterOfCurrentFrame / ticksPerFrame);
-		float fAnimationFraction = totalTicksForCurrentAnimationSequence / (NumberOfFrames * ticksPerFrame);
+		int passedTicks = ((CurrentFrame - 1) * TicksPerFrame) + TickCounterOfCurrentFrame;
+		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)passedTicks;
+		float fAnimationFraction = totalTicksForCurrentAnimationSequence / (float)(NumberOfFrames * TicksPerFrame);
 		return fAnimationFraction;
 	}
 
