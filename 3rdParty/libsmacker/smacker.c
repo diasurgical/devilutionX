@@ -1795,3 +1795,8 @@ char smk_seek_keyframe(smk s, unsigned long f)
 
 	return 0;
 }
+
+unsigned char smk_palette_updated(smk s)
+{
+	return s->frame_type[s->cur_frame] & 0x01;
+}
