@@ -101,9 +101,6 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
 #ifdef _DEBUG
-bool monstdebug = false;
-_monster_id DebugMonsters[10];
-int debugmonsttypes = 0;
 bool debug_mode_key_inverted_v = false;
 bool debug_mode_key_i = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
@@ -817,7 +814,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("\nDebug options:\n");
 	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
-	printInConsole("    %-20s %-30s\n", "-m <##>", "Add debug monster, up to 10 allowed");
 	printInConsole("    %-20s %-30s\n", "+<internal command>", "Pass commands to the engine");
 #endif
 	printInConsole("%s", _("\nReport bugs at https://github.com/diasurgical/devilutionX/\n"));
@@ -879,9 +875,6 @@ void DiabloParseFlags(int argc, char **argv)
 			debug_mode_key_inverted_v = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
-		} else if (strcasecmp("-m", argv[i]) == 0) {
-			monstdebug = true;
-			DebugMonsters[debugmonsttypes++] = (_monster_id)SDL_atoi(argv[++i]);
 		} else if (argv[i][0] == '+') {
 			if (!currentCommand.empty())
 				DebugCmdsFromCommandLine.push_back(currentCommand);

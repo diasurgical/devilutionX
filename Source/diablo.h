@@ -106,9 +106,6 @@ void diablo_color_cyc_logic();
 extern Keymapper keymapper;
 extern bool gbForceWindowed;
 #ifdef _DEBUG
-extern bool monstdebug;
-extern _monster_id DebugMonsters[10];
-extern int debugmonsttypes;
 extern bool debug_mode_key_inverted_v;
 extern bool debug_mode_key_i;
 #endif
