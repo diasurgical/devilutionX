@@ -544,8 +544,8 @@ void UiInitialize()
 {
 	LoadUiGFX();
 
-	LoadFont(GameFont12, ColorSilver, "fonts\\grayui.trn");
-	LoadFont(GameFont12, ColorGold, "fonts\\goldui.trn");
+	LoadFont(GameFont12, ColorSilver, "fonts\\grayuis.trn");
+	LoadFont(GameFont12, ColorGold, "fonts\\golduis.trn");
 	LoadFont(GameFont24, ColorSilver, "fonts\\grayui.trn");
 	LoadFont(GameFont24, ColorGold, "fonts\\goldui.trn");
 	LoadFont(GameFont30, ColorSilver, "fonts\\grayui.trn");
