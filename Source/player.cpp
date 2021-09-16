@@ -2776,12 +2776,6 @@ void InitPlayer(Player &player, bool firstTime)
 		player._pAblSpells = GetSpellBitmask(SPL_BLODBOIL);
 	}
 
-#ifdef _DEBUG
-	if (debug_mode_key_inverted_v && firstTime) {
-		player._pMemSpells = SPL_INVALID;
-	}
-#endif
-
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 	player._pInvincible = false;
 

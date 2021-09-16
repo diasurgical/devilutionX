@@ -34,6 +34,7 @@ bool DebugGodMode = false;
 bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
+bool DebugScrollViewEnabled = false;
 
 namespace {
 
@@ -621,6 +622,15 @@ std::string DebugCmdShowTileData(const string_view parameter)
 	return "Special powers activated.";
 }
 
+std::string DebugCmdScrollView(const string_view parameter)
+{
+	DebugScrollViewEnabled = !DebugScrollViewEnabled;
+	if (DebugScrollViewEnabled)
+		return "You can see as far as an eagle.";
+	InitMultiView();
+	return "If you want to see the world, you need to explore it yourself.";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -646,6 +656,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "seedinfo", "Show seed infos for current level.", "", &DebugCmdLevelSeed },
 	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
+	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
 };
 
 } // namespace

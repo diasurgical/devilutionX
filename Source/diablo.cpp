@@ -101,7 +101,6 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
 #ifdef _DEBUG
-bool debug_mode_key_inverted_v = false;
 bool debug_mode_key_i = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
@@ -584,13 +583,11 @@ void PressChar(char vkey)
 		return;
 	case 'T':
 	case 't':
-		if (debug_mode_key_inverted_v) {
-			auto &myPlayer = Players[MyPlayerId];
-			sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
-			NetSendCmdString(1 << MyPlayerId, tempstr);
-			sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursPosition.x, cursPosition.y, dungeon[cursPosition.x][cursPosition.y]);
-			NetSendCmdString(1 << MyPlayerId, tempstr);
-		}
+		auto &myPlayer = Players[MyPlayerId];
+		sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
+		NetSendCmdString(1 << MyPlayerId, tempstr);
+		sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursPosition.x, cursPosition.y, dungeon[cursPosition.x][cursPosition.y]);
+		NetSendCmdString(1 << MyPlayerId, tempstr);
 		return;
 #endif
 	}
@@ -812,7 +809,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
-	printInConsole("    %-20s %-30s\n", "-^", "Enable debug tools");
 	printInConsole("    %-20s %-30s\n", "-i", "Ignore network timeout");
 	printInConsole("    %-20s %-30s\n", "+<internal command>", "Pass commands to the engine");
 #endif
@@ -871,8 +867,6 @@ void DiabloParseFlags(int argc, char **argv)
 		} else if (strcasecmp("--verbose", argv[i]) == 0) {
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 #ifdef _DEBUG
-		} else if (strcasecmp("-^", argv[i]) == 0) {
-			debug_mode_key_inverted_v = true;
 		} else if (strcasecmp("-i", argv[i]) == 0) {
 			debug_mode_key_i = true;
 		} else if (argv[i][0] == '+') {
@@ -1201,7 +1195,7 @@ void GameLogic()
 	gGameLogicStep = GameLogicStep::None;
 
 #ifdef _DEBUG
-	if (debug_mode_key_inverted_v && GetAsyncKeyState(DVL_VK_SHIFT)) {
+	if (DebugScrollViewEnabled && GetAsyncKeyState(DVL_VK_SHIFT)) {
 		ScrollView();
 	}
 #endif
