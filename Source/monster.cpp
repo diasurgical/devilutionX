@@ -4524,6 +4524,13 @@ bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point 
 void SyncMonsterAnim(Monster &monster)
 {
 	monster.MType = &LevelMonsterTypes[monster._mMTidx];
+#ifdef _DEBUG
+	// fix for saves with debug monsters having type originally not on the level
+	if (LevelMonsterTypes[monster._mMTidx].MData == nullptr) {
+		InitMonsterGFX(monster._mMTidx);
+		LevelMonsterTypes[monster._mMTidx].mdeadval = 1;
+	}
+#endif
 	monster.MData = LevelMonsterTypes[monster._mMTidx].MData;
 	if (monster._uniqtype != 0)
 		monster.mName = _(UniqueMonstersData[monster._uniqtype - 1].mName);
