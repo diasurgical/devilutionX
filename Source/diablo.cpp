@@ -1236,24 +1236,6 @@ void HelpKeyPressed()
 	}
 }
 
-#ifdef _DEBUG
-void ItemInfoKeyPressed()
-{
-	auto &item = Items[pcursitem];
-	if (pcursitem != -1) {
-		sprintf(
-		    tempstr,
-		    "IDX = %i  :  Seed = %i  :  CF = %i",
-		    item.IDidx,
-		    item._iSeed,
-		    item._iCreateInfo);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-	}
-	sprintf(tempstr, "Numitems : %i", ActiveItemCount);
-	NetSendCmdString(1 << MyPlayerId, tempstr);
-}
-#endif
-
 void InventoryKeyPressed()
 {
 	if (stextflag != STORE_NONE)
@@ -1364,12 +1346,6 @@ void InitKeymapActions()
 	    [&]() { return !IsPlayerDead(); },
 	});
 #ifdef _DEBUG
-	keymapper.AddAction({
-	    "ItemInfo",
-	    DVL_VK_INVALID,
-	    ItemInfoKeyPressed,
-	    [&]() { return !IsPlayerDead(); },
-	});
 	keymapper.AddAction({
 	    "QuestDebug",
 	    DVL_VK_INVALID,
