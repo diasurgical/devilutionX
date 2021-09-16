@@ -57,7 +57,6 @@ enum class DebugGridTextItem : uint16_t {
 
 DebugGridTextItem SelectedDebugGridTextItem;
 
-int DebugPlayerId;
 int DebugMonsterId;
 
 // Used for debugging level generation
@@ -670,6 +669,24 @@ std::string DebugCmdQuestInfo(const string_view parameter)
 	return fmt::format("\nQuest: {}\nActive: {} Var1: {} Var2: {}", QuestsData[quest._qidx]._qlstr, quest._qactive, quest._qvar1, quest._qvar2);
 }
 
+std::string DebugCmdPlayerInfo(const string_view parameter)
+{
+	int playerId = atoi(parameter.data());
+	if (playerId < 0 || playerId >= MAX_PLRS)
+		return "My friend, we need a valid playerId.";
+	auto &player = Players[playerId];
+	if (!player.plractive)
+		return "Player is not active";
+
+	const Point target = player.GetTargetPosition();
+	return fmt::format("Plr {} is {}\nLvl: {} Changing: {}\nTile.x: {} Tile.y: {} Target.x: {} Target.y: {}\nMode: {} destAction: {} walkpath[0]: {}\nInvincible:{} HitPoints:{}",
+	    playerId, player._pName,
+	    player.plrlevel, player._pLvlChanging,
+	    player.position.tile.x, player.position.tile.y, target.x, target.y,
+	    player._pmode, player.destAction, player.walkpath[0],
+	    player._pInvincible ? 1 : 0, player._pHitPoints);
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -698,6 +715,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
+	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
 };
 
 } // namespace
@@ -710,33 +728,6 @@ void LoadDebugGFX()
 void FreeDebugGFX()
 {
 	pSquareCel = std::nullopt;
-}
-
-void PrintDebugPlayer(bool bNextPlayer)
-{
-	char dstr[128];
-
-	if (bNextPlayer)
-		DebugPlayerId = ((BYTE)DebugPlayerId + 1) & 3;
-
-	auto &player = Players[DebugPlayerId];
-
-	sprintf(dstr, "Plr %i : Active = %i", DebugPlayerId, player.plractive ? 1 : 0);
-	NetSendCmdString(1 << MyPlayerId, dstr);
-
-	if (player.plractive) {
-		sprintf(dstr, "  Plr %i is %s", DebugPlayerId, player._pName);
-		NetSendCmdString(1 << MyPlayerId, dstr);
-		sprintf(dstr, "  Lvl = %i : Change = %i", player.plrlevel, player._pLvlChanging ? 1 : 0);
-		NetSendCmdString(1 << MyPlayerId, dstr);
-		const Point target = player.GetTargetPosition();
-		sprintf(dstr, "  x = %i, y = %i : tx = %i, ty = %i", player.position.tile.x, player.position.tile.y, target.x, target.y);
-		NetSendCmdString(1 << MyPlayerId, dstr);
-		sprintf(dstr, "  mode = %i : daction = %i : walk[0] = %i", player._pmode, player.destAction, player.walkpath[0]);
-		NetSendCmdString(1 << MyPlayerId, dstr);
-		sprintf(dstr, "  inv = %i : hp = %i", player._pInvincible ? 1 : 0, player._pHitPoints);
-		NetSendCmdString(1 << MyPlayerId, dstr);
-	}
 }
 
 void GetDebugMonster()

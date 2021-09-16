@@ -569,12 +569,6 @@ void PressChar(char vkey)
 		}
 		return;
 #ifdef _DEBUG
-	case 'D':
-		PrintDebugPlayer(true);
-		return;
-	case 'd':
-		PrintDebugPlayer(false);
-		return;
 	case 'M':
 		NextDebugMonster();
 		return;
