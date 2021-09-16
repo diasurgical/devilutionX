@@ -21,6 +21,7 @@ extern bool DebugGodMode;
 extern bool DebugVision;
 extern bool DebugGrid;
 extern std::unordered_map<int, Point> DebugCoordsMap;
+extern bool DebugScrollViewEnabled;
 
 void FreeDebugGFX();
 void LoadDebugGFX();
