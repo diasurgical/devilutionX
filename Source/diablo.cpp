@@ -101,7 +101,7 @@ std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 bool gbForceWindowed = false;
 #ifdef _DEBUG
-bool debug_mode_key_i = false;
+bool DebugDisableNetworkTimeout = false;
 std::vector<std::string> DebugCmdsFromCommandLine;
 #endif
 /** Specifies whether players are in non-PvP mode. */
@@ -868,7 +868,7 @@ void DiabloParseFlags(int argc, char **argv)
 			SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 #ifdef _DEBUG
 		} else if (strcasecmp("-i", argv[i]) == 0) {
-			debug_mode_key_i = true;
+			DebugDisableNetworkTimeout = true;
 		} else if (argv[i][0] == '+') {
 			if (!currentCommand.empty())
 				DebugCmdsFromCommandLine.push_back(currentCommand);
