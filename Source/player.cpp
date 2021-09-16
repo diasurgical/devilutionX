@@ -3611,6 +3611,8 @@ void SyncPlrAnim(int pnum)
 	}
 
 	player.AnimInfo.pCelSprite = &*player.AnimationData[static_cast<size_t>(graphic)].CelSpritesForDirections[static_cast<size_t>(player._pdir)];
+	// Ensure ScrollInfo is initialized correctly
+	ScrollViewPort(player, WalkSettings[static_cast<size_t>(player._pdir)].scrollDir);
 }
 
 void SyncInitPlrPos(int pnum)
