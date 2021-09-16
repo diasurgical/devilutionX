@@ -58,7 +58,6 @@ enum class DebugGridTextItem : uint16_t {
 DebugGridTextItem SelectedDebugGridTextItem;
 
 int DebugPlayerId;
-int DebugQuestId;
 int DebugMonsterId;
 
 // Used for debugging level generation
@@ -651,6 +650,26 @@ std::string DebugCmdItemInfo(const string_view parameter)
 	return fmt::format("Numitems: {}", ActiveItemCount);
 }
 
+std::string DebugCmdQuestInfo(const string_view parameter)
+{
+	if (parameter.empty()) {
+		std::string ret = "You must provide an id. This could be:";
+		for (auto &quest : Quests) {
+			if (IsNoneOf(quest._qactive, QUEST_NOTAVAIL, QUEST_INIT))
+				continue;
+			ret.append(fmt::format(" {} ({})", quest._qidx, QuestsData[quest._qidx]._qlstr));
+		}
+		return ret;
+	}
+
+	int questId = atoi(parameter.data());
+
+	if (questId >= MAXQUESTS)
+		return fmt::format("Quest {} is not known. Do you want to write a mod?", questId);
+	auto &quest = Quests[questId];
+	return fmt::format("\nQuest: {}\nActive: {} Var1: {} Var2: {}", QuestsData[quest._qidx]._qlstr, quest._qactive, quest._qvar1, quest._qvar2);
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -678,6 +697,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
 	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
+	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 };
 
 } // namespace
@@ -717,19 +737,6 @@ void PrintDebugPlayer(bool bNextPlayer)
 		sprintf(dstr, "  inv = %i : hp = %i", player._pInvincible ? 1 : 0, player._pHitPoints);
 		NetSendCmdString(1 << MyPlayerId, dstr);
 	}
-}
-
-void PrintDebugQuest()
-{
-	char dstr[128];
-
-	auto &quest = Quests[DebugQuestId];
-	sprintf(dstr, "Quest %i :  Active = %i, Var1 = %i", DebugQuestId, quest._qactive, quest._qvar1);
-	NetSendCmdString(1 << MyPlayerId, dstr);
-
-	DebugQuestId++;
-	if (DebugQuestId == MAXQUESTS)
-		DebugQuestId = 0;
 }
 
 void GetDebugMonster()
