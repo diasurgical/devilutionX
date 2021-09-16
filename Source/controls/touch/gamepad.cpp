@@ -53,7 +53,6 @@ void InitializeVirtualGamepad()
 	int padButtonSize = round(1.1 * screenPixels / 10);
 	int padButtonSpacing = inputMargin / 3;
 
-#ifndef USE_SDL1
 	float hdpi;
 	float vdpi;
 	int displayIndex = SDL_GetWindowDisplayIndex(ghMainWnd);
@@ -70,7 +69,6 @@ void InitializeVirtualGamepad()
 		padButtonSize = round(0.3 * dpi);
 		padButtonSpacing = round(0.1 * dpi);
 	}
-#endif
 
 	int padButtonAreaWidth = round(std::sqrt(2) * (padButtonSize + padButtonSpacing));
 
