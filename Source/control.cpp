@@ -933,9 +933,7 @@ void InitControlPan()
 	panelflag = false;
 	lvlbtndown = false;
 	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
-	for (bool &panbtn : PanelButtons)
-		panbtn = false;
-	panbtndown = false;
+	ClearPanBtn();
 	if (!IsChatAvailable())
 		PanelButtonIndex = 6;
 	else
@@ -1067,8 +1065,8 @@ void DoSpeedBook()
 
 void ClearPanBtn()
 {
-	for (int i = 0; i < PanelButtonIndex; i++)
-		PanelButtons[i] = false;
+	for (bool &panelButton : PanelButtons)
+		panelButton = false;
 	drawbtnflag = true;
 	panbtndown = false;
 }
