@@ -581,14 +581,6 @@ void PressChar(char vkey)
 	case 'm':
 		GetDebugMonster();
 		return;
-	case 'T':
-	case 't':
-		auto &myPlayer = Players[MyPlayerId];
-		sprintf(tempstr, "PX = %i  PY = %i", myPlayer.position.tile.x, myPlayer.position.tile.y);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		sprintf(tempstr, "CX = %i  CY = %i  DP = %i", cursPosition.x, cursPosition.y, dungeon[cursPosition.x][cursPosition.y]);
-		NetSendCmdString(1 << MyPlayerId, tempstr);
-		return;
 #endif
 	}
 }
