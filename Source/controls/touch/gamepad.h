@@ -52,8 +52,6 @@ struct VirtualGamepad {
 	VirtualGamepad()
 	{
 	}
-
-	bool IsControllerButtonPressed(ControllerButton button) const;
 };
 
 void InitializeVirtualGamepad();
