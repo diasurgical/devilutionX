@@ -3643,29 +3643,20 @@ void GetLevelMTypes()
 			}
 		}
 
-#ifdef _DEBUG
-		if (monstdebug) {
-			for (int i = 0; i < debugmonsttypes; i++)
-				AddMonsterType(DebugMonsters[i], PLACE_SCATTER);
-		} else
-#endif
-		{
-
-			while (nt > 0 && LevelMonsterTypeCount < MAX_LVLMTYPES && monstimgtot < 4000) {
-				for (int i = 0; i < nt;) {
-					if (MonstersData[typelist[i]].mImage > 4000 - monstimgtot) {
-						typelist[i] = typelist[--nt];
-						continue;
-					}
-
-					i++;
-				}
-
-				if (nt != 0) {
-					int i = GenerateRnd(nt);
-					AddMonsterType(typelist[i], PLACE_SCATTER);
+		while (nt > 0 && LevelMonsterTypeCount < MAX_LVLMTYPES && monstimgtot < 4000) {
+			for (int i = 0; i < nt;) {
+				if (MonstersData[typelist[i]].mImage > 4000 - monstimgtot) {
 					typelist[i] = typelist[--nt];
+					continue;
 				}
+
+				i++;
+			}
+
+			if (nt != 0) {
+				int i = GenerateRnd(nt);
+				AddMonsterType(typelist[i], PLACE_SCATTER);
+				typelist[i] = typelist[--nt];
 			}
 		}
 
