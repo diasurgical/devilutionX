@@ -420,7 +420,6 @@ set(libdevilutionx_SRCS
   Source/engine/animationinfo.cpp
   Source/engine/demomode.cpp
   Source/engine/load_cel.cpp
-  Source/engine/load_file.cpp
   Source/engine/random.cpp
   Source/engine/render/automap_render.cpp
   Source/engine/render/cel_render.cpp

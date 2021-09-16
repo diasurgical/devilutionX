@@ -398,12 +398,14 @@ void StartWalk(int pnum, Displacement vel, Direction dir, bool pmWillBeCalled)
 void SetPlayerGPtrs(const char *path, std::unique_ptr<byte[]> &data, std::array<std::optional<CelSprite>, 8> &anim, int width)
 {
 	data = nullptr;
+#ifndef RUN_TESTS
 	data = LoadFileInMem(path);
 
 	for (int i = 0; i < 8; i++) {
 		byte *pCelStart = CelGetFrame(data.get(), i);
 		anim[i].emplace(pCelStart, width);
 	}
+#endif
 }
 
 void ClearStateVariables(Player &player)
