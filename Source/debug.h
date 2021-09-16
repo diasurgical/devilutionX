@@ -26,7 +26,6 @@ extern bool DebugScrollViewEnabled;
 void FreeDebugGFX();
 void LoadDebugGFX();
 void PrintDebugPlayer(bool bNextPlayer);
-void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
 void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed);

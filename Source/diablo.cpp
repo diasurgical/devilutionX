@@ -1367,14 +1367,6 @@ void InitKeymapActions()
 	    HelpKeyPressed,
 	    [&]() { return !IsPlayerDead(); },
 	});
-#ifdef _DEBUG
-	keymapper.AddAction({
-	    "QuestDebug",
-	    DVL_VK_INVALID,
-	    PrintDebugQuest,
-	    [&]() { return !IsPlayerDead(); },
-	});
-#endif
 	for (int i = 0; i < 4; ++i) {
 		quickSpellActionIndexes[i] = keymapper.AddAction({
 		    std::string("QuickSpell") + std::to_string(i + 1),
