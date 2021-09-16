@@ -631,6 +631,26 @@ std::string DebugCmdScrollView(const string_view parameter)
 	return "If you want to see the world, you need to explore it yourself.";
 }
 
+std::string DebugCmdItemInfo(const string_view parameter)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	Item *pItem = nullptr;
+	if (pcurs >= CURSOR_FIRSTITEM) {
+		pItem = &myPlayer.HoldItem;
+	} else if (pcursinvitem != -1) {
+		if (pcursinvitem <= INVITEM_INV_LAST)
+			pItem = &myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST];
+		else
+			pItem = &myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST];
+	} else if (pcursitem != -1) {
+		pItem = &Items[pcursitem];
+	}
+	if (pItem != nullptr) {
+		return fmt::format("Name: {}\nIDidx: {}\nSeed: {}\nCreateInfo: {}", pItem->_iIName, pItem->IDidx, pItem->_iSeed, pItem->_iCreateInfo);
+	}
+	return fmt::format("Numitems: {}", ActiveItemCount);
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -657,6 +677,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "spawn", "Spawns monster {name}.", "({count}) {name}", &DebugCmdSpawnMonster },
 	{ "tiledata", "Toggles showing tile data {name} (leave name empty to see a list).", "{name}", &DebugCmdShowTileData },
 	{ "scrollview", "Toggles scroll view feature (with shift+mouse).", "", &DebugCmdScrollView },
+	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
 };
 
 } // namespace
