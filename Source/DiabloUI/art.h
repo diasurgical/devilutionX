@@ -36,12 +36,6 @@ struct Art {
 	{
 		surface = nullptr;
 	}
-
-	~Art()
-	{
-		if (surface != nullptr)
-			Unload();
-	}
 };
 
 void LoadArt(const char *pszFile, Art *art, int frames = 1, SDL_Color *pPalette = nullptr, const std::array<uint8_t, 256> *colorMapping = nullptr);
