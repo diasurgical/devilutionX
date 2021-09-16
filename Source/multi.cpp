@@ -240,7 +240,7 @@ void BeginTimeout()
 		return;
 	}
 #ifdef _DEBUG
-	if (debug_mode_key_i) {
+	if (DebugDisableNetworkTimeout) {
 		return;
 	}
 #endif
