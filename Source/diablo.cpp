@@ -1137,6 +1137,28 @@ void CreateLevel(lvl_entry lvldir)
 	}
 }
 
+void UnstuckChargers()
+{
+	if (gbIsMultiplayer) {
+		for (auto &player : Players) {
+			if (!player.plractive)
+				continue;
+			if (player._pLvlChanging)
+				continue;
+			if (player.plrlevel != MyPlayer->plrlevel)
+				continue;
+			if (&player == MyPlayer)
+				continue;
+			return;
+		}
+	}
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		auto &monster = Monsters[ActiveMonsters[i]];
+		if (monster._mmode == MonsterMode::Charge)
+			monster._mmode = MonsterMode::Stand;
+	}
+}
+
 void UpdateMonsterLights()
 {
 	for (int i = 0; i < ActiveMonsterCount; i++) {
@@ -2051,6 +2073,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	}
 	IncProgress();
 	UpdateMonsterLights();
+	UnstuckChargers();
 	if (leveltype != DTYPE_TOWN) {
 		ProcessLightList();
 		ProcessVisionList();
