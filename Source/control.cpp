@@ -10,6 +10,8 @@
 
 #include <fmt/format.h>
 
+#include "DiabloUI/art.h"
+#include "DiabloUI/art_draw.h"
 #include "DiabloUI/diabloui.h"
 #include "automap.h"
 #include "controls/keymapper.hpp"
@@ -26,6 +28,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "panels/charpanel.hpp"
+#include "panels/mainpanel.hpp"
 #include "qol/xpbar.h"
 #include "stores.h"
 #include "towners.h"
@@ -70,6 +73,7 @@ bool spselflag;
 Rectangle MainPanel;
 Rectangle LeftPanel;
 Rectangle RightPanel;
+std::optional<OwnedSurface> pBtmBuff;
 
 extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
@@ -81,9 +85,22 @@ Rectangle ChrBtnsRect[4] = {
 	{ { 137, 223 }, { 41, 22 } }
 };
 
+/** Positions of panel buttons. */
+SDL_Rect PanBtnPos[8] = {
+	// clang-format off
+	{   9,   9, 71, 19 }, // char button
+	{   9,  35, 71, 19 }, // quests button
+	{   9,  75, 71, 19 }, // map button
+	{   9, 101, 71, 19 }, // menu button
+	{ 560,   9, 71, 19 }, // inv button
+	{ 560,  35, 71, 19 }, // spells button
+	{  87,  91, 33, 32 }, // chat button
+	{ 527,  91, 33, 32 }, // friendly fire button
+	// clang-format on
+};
+
 namespace {
 
-std::optional<OwnedSurface> pBtmBuff;
 std::optional<OwnedSurface> pLifeBuff;
 std::optional<OwnedSurface> pManaBuff;
 std::optional<CelSprite> talkButtons;
@@ -175,19 +192,6 @@ enum panel_button_id {
 	PanelButtonFriendly,
 };
 
-/** Positions of panel buttons. */
-SDL_Rect PanBtnPos[8] = {
-	// clang-format off
-	{   9,   9, 71, 19 }, // char button
-	{   9,  35, 71, 19 }, // quests button
-	{   9,  75, 71, 19 }, // map button
-	{   9, 101, 71, 19 }, // menu button
-	{ 560,   9, 71, 19 }, // inv button
-	{ 560,  35, 71, 19 }, // spells button
-	{  87,  91, 33, 32 }, // chat button
-	{ 527,  91, 33, 32 }, // friendly fire button
-	// clang-format on
-};
 /** Maps from panel_button_id to hotkey name. */
 const char *const PanBtnHotKey[8] = { "'c'", "'q'", N_("Tab"), N_("Esc"), "'i'", "'b'", N_("Enter"), nullptr };
 /** Maps from panel_button_id to panel button description. */
@@ -311,7 +315,7 @@ void PrintSBookHotkey(const Surface &out, Point position, const std::string &tex
 	// Draw a drop shadow below and to the left of the text
 	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
 	// Then draw the text over the top
-	DrawString(out, text, position, UiFlags::ColorSilver);
+	DrawString(out, text, position, UiFlags::ColorWhite);
 }
 
 /**
@@ -457,7 +461,7 @@ int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
 
 void PrintSBookStr(const Surface &out, Point position, const char *text)
 {
-	DrawString(out, text, { GetPanelPosition(UiPanels::Spell, { SPLICONLENGTH + position.x, position.y }), { 222, 0 } }, UiFlags::ColorSilver);
+	DrawString(out, text, { GetPanelPosition(UiPanels::Spell, { SPLICONLENGTH + position.x, position.y }), { 222, 0 } }, UiFlags::ColorWhite);
 }
 
 spell_type GetSBookTrans(spell_id ii, bool townok)
@@ -643,6 +647,8 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 	return false;
 }
 
+} // namespace
+
 bool IsChatAvailable()
 {
 #ifdef _DEBUG
@@ -651,8 +657,6 @@ bool IsChatAvailable()
 	return gbIsMultiplayer;
 #endif
 }
-
-} // namespace
 
 void DrawSpell(const Surface &out)
 {
@@ -930,6 +934,7 @@ void InitControlPan()
 		for (bool &talkButtonDown : TalkButtonsDown)
 			talkButtonDown = false;
 	}
+	LoadMainPanel();
 	panelflag = false;
 	lvlbtndown = false;
 	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
@@ -995,10 +1000,13 @@ void DrawCtrlPan(const Surface &out)
 void DrawCtrlBtns(const Surface &out)
 {
 	for (int i = 0; i < 6; i++) {
-		if (!PanelButtons[i])
+		if (!PanelButtons[i]) {
 			DrawPanelBox(out, { PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20 }, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
-		else
-			CelDrawTo(out, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 }, *pPanelButtons, i + 1);
+		} else {
+			Point position { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 };
+			CelDrawTo(out, position, *pPanelButtons, i + 1);
+			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
+		}
 	}
 	if (PanelButtonIndex == 8) {
 		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 2 : 1);
@@ -1149,13 +1157,13 @@ void CheckPanelInfo()
 				strcpy(tempstr, fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])).c_str());
 				AddPanelString(tempstr);
 			}
-			InfoColor = UiFlags::ColorSilver;
+			InfoColor = UiFlags::ColorWhite;
 			panelflag = true;
 		}
 	}
 	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
 		strcpy(infostr, _("Select current spell button"));
-		InfoColor = UiFlags::ColorSilver;
+		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
 		strcpy(tempstr, _("Hotkey: 's'"));
 		AddPanelString(tempstr);
@@ -1305,6 +1313,7 @@ void FreeControlPan()
 	pSBkBtnCel = std::nullopt;
 	pSBkIconCels = std::nullopt;
 	pGBoxBuff = std::nullopt;
+	FreeMainPanel();
 	FreeCharPanel();
 }
 
@@ -1313,11 +1322,11 @@ void DrawInfoBox(const Surface &out)
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
-		InfoColor = UiFlags::ColorSilver;
+		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
 	if (spselflag || trigflag) {
-		InfoColor = UiFlags::ColorSilver;
+		InfoColor = UiFlags::ColorWhite;
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
 		auto &myPlayer = Players[MyPlayerId];
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
@@ -1341,11 +1350,11 @@ void DrawInfoBox(const Surface &out)
 		if (pcursmonst != -1) {
 			const auto &monster = Monsters[pcursmonst];
 			if (leveltype != DTYPE_TOWN) {
-				InfoColor = UiFlags::ColorSilver;
+				InfoColor = UiFlags::ColorWhite;
 				strcpy(infostr, monster.mName);
 				ClearPanel();
 				if (monster._uniqtype != 0) {
-					InfoColor = UiFlags::ColorGold;
+					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {
 					PrintMonstHistory(monster.MType->mtype);
@@ -1357,7 +1366,7 @@ void DrawInfoBox(const Surface &out)
 			}
 		}
 		if (pcursplr != -1) {
-			InfoColor = UiFlags::ColorGold;
+			InfoColor = UiFlags::ColorWhitegold;
 			auto &target = Players[pcursplr];
 			strcpy(infostr, target._pName);
 			ClearPanel();
@@ -1390,7 +1399,7 @@ void DrawLevelUpIcon(const Surface &out)
 {
 	if (stextflag == STORE_NONE) {
 		int nCel = lvlbtndown ? 3 : 2;
-		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorSilver | UiFlags::AlignCenter);
+		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
 		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
 	}
 }
@@ -1610,7 +1619,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, tempstr, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorGold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, tempstr, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {
@@ -1619,7 +1628,7 @@ void DrawGoldSplit(const Surface &out, int amount)
 	}
 	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
 	// use the Point form of DrawString.
-	DrawString(out, tempstr, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorSilver | UiFlags::PentaCursor);
+	DrawString(out, tempstr, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
 void control_drop_gold(char vkey)
@@ -1678,7 +1687,7 @@ void DrawTalkPan(const Surface &out)
 	int x = PANEL_LEFT + 200;
 	int y = PANEL_Y + 10;
 
-	int idx = DrawString(out, msg, { { x, y }, { 250, 27 } }, UiFlags::ColorSilver | UiFlags::PentaCursor, 1, 13);
+	int idx = DrawString(out, msg, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
 	msg[idx] = '\0';
 
 	x += 46;
@@ -1690,16 +1699,18 @@ void DrawTalkPan(const Surface &out)
 		UiFlags color = UiFlags::ColorRed;
 		const Point talkPanPosition { 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y };
 		if (WhisperList[i]) {
-			color = UiFlags::ColorGold;
+			color = UiFlags::ColorWhitegold;
 			if (TalkButtonsDown[talkBtn]) {
 				int nCel = talkBtn != 0 ? 4 : 3;
 				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
+				DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, 2);
 			}
 		} else {
 			int nCel = talkBtn != 0 ? 2 : 1;
 			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
 			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
+			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
 		}
 		auto &player = Players[i];
 		if (player.plractive) {

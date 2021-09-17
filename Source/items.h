@@ -363,9 +363,9 @@ struct Item {
 		case ITEM_QUALITY_MAGIC:
 			return UiFlags::ColorBlue;
 		case ITEM_QUALITY_UNIQUE:
-			return UiFlags::ColorGold;
+			return UiFlags::ColorWhitegold;
 		default:
-			return UiFlags::ColorSilver;
+			return UiFlags::ColorWhite;
 		}
 	}
 

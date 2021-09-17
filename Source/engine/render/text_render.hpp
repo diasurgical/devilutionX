@@ -27,16 +27,27 @@ enum GameFontTables : uint8_t {
 };
 
 enum text_color : uint8_t {
-	ColorSilver,
+	ColorUiGold,
+	ColorUiSilver,
+	ColorUiGoldDark,
+	ColorUiSilverDark,
+
 	ColorGold,
+	ColorBlack,
+
+	ColorWhite,
+	ColorWhitegold,
 	ColorRed,
 	ColorBlue,
-	ColorBlack,
+
+	ColorButtonface,
+	ColorButtonpushed,
 };
 
 extern std::optional<CelSprite> pSPentSpn2Cels;
 
-void LoadFont(GameFontTables size, text_color color, const char *translationFile = nullptr);
+void LoadFont(GameFontTables size, text_color color);
+void UnloadFont(GameFontTables size, text_color color);
 
 /**
  * @brief Calculate pixel width of first line of text, respecting kerning

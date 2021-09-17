@@ -44,15 +44,15 @@ struct PanelEntry {
 
 UiFlags GetBaseStatColor(CharacterAttribute attr)
 {
-	UiFlags style = UiFlags::ColorSilver;
+	UiFlags style = UiFlags::ColorWhite;
 	if (MyPlayer->GetBaseAttributeValue(attr) == MyPlayer->GetMaximumAttributeValue(attr))
-		style = UiFlags::ColorGold;
+		style = UiFlags::ColorWhitegold;
 	return style;
 }
 
 UiFlags GetCurrentStatColor(CharacterAttribute attr)
 {
-	UiFlags style = UiFlags::ColorSilver;
+	UiFlags style = UiFlags::ColorWhite;
 	int current = MyPlayer->GetCurrentAttributeValue(attr);
 	int base = MyPlayer->GetBaseAttributeValue(attr);
 	if (current > base)
@@ -64,7 +64,7 @@ UiFlags GetCurrentStatColor(CharacterAttribute attr)
 
 UiFlags GetValueColor(int value, bool flip = false)
 {
-	UiFlags style = UiFlags::ColorSilver;
+	UiFlags style = UiFlags::ColorWhite;
 	if (value > 0)
 		style = (flip ? UiFlags::ColorRed : UiFlags::ColorBlue);
 	if (value < 0)
@@ -74,12 +74,12 @@ UiFlags GetValueColor(int value, bool flip = false)
 
 UiFlags GetMaxManaColor()
 {
-	return MyPlayer->_pMaxMana > MyPlayer->_pMaxManaBase ? UiFlags::ColorBlue : UiFlags::ColorSilver;
+	return MyPlayer->_pMaxMana > MyPlayer->_pMaxManaBase ? UiFlags::ColorBlue : UiFlags::ColorWhite;
 }
 
 UiFlags GetMaxHealthColor()
 {
-	return MyPlayer->_pMaxHP > MyPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorSilver;
+	return MyPlayer->_pMaxHP > MyPlayer->_pMaxHPBase ? UiFlags::ColorBlue : UiFlags::ColorWhite;
 }
 
 std::pair<int, int> GetDamage()
@@ -99,11 +99,11 @@ StyledText GetResistInfo(int8_t resist)
 {
 	UiFlags style = UiFlags::ColorBlue;
 	if (resist == 0)
-		style = UiFlags::ColorSilver;
+		style = UiFlags::ColorWhite;
 	else if (resist < 0)
 		style = UiFlags::ColorRed;
 	else if (resist >= MAXRESIST)
-		style = UiFlags::ColorGold;
+		style = UiFlags::ColorWhitegold;
 
 	return {
 		style, (resist >= MAXRESIST ? _("MAX") : fmt::format("{:d}%", resist))
@@ -112,20 +112,20 @@ StyledText GetResistInfo(int8_t resist)
 
 PanelEntry panelEntries[] = {
 	{ "", { 9, 14 }, 150, 0,
-	    []() { return StyledText { UiFlags::ColorSilver, MyPlayer->_pName }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, MyPlayer->_pName }; } },
 	{ "", { 161, 14 }, 149, 0,
-	    []() { return StyledText { UiFlags::ColorSilver, _(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)]) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, _(ClassStrTbl[static_cast<std::size_t>(MyPlayer->_pClass)]) }; } },
 
 	{ N_("Level"), { 57, 52 }, 57, 45,
-	    []() { return StyledText { UiFlags::ColorSilver, fmt::format("{:d}", MyPlayer->_pLevel) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pLevel) }; } },
 	{ N_("Experience"), { 211, 52 }, 99, 91,
-	    []() { return StyledText { UiFlags::ColorSilver, fmt::format("{:d}", MyPlayer->_pExperience) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pExperience) }; } },
 	{ N_("Next level"), { 211, 80 }, 99, 198,
 	    []() {
 	        if (MyPlayer->_pLevel == MAXCHARLEVEL - 1) {
-		        return StyledText { UiFlags::ColorGold, _("None") };
+		        return StyledText { UiFlags::ColorWhitegold, _("None") };
 	        } else {
-		        return StyledText { UiFlags::ColorSilver, fmt::format("{:d}", MyPlayer->_pNextExper) };
+		        return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pNextExper) };
 	        }
 	    } },
 
@@ -153,7 +153,7 @@ PanelEntry panelEntries[] = {
 
 	{ N_("Gold"), { 211, 107 }, 0, 98 },
 	{ "", { 211, 127 }, 99, 0,
-	    []() { return StyledText { UiFlags::ColorSilver, fmt::format("{:d}", MyPlayer->_pGold) }; } },
+	    []() { return StyledText { UiFlags::ColorWhite, fmt::format("{:d}", MyPlayer->_pGold) }; } },
 
 	{ N_("Armor class"), { 253, 163 }, 57, 67,
 	    []() { return StyledText { GetValueColor(MyPlayer->_pIBonusAC), fmt::format("{:d}", MyPlayer->GetArmor()) }; } },
@@ -222,7 +222,7 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 	}
 
 	DrawString(out, text, { labelPosition + Displacement { -2, 2 }, { entry.labelLength, 20 } }, style | UiFlags::ColorBlack, spacing, 10);
-	DrawString(out, text, { labelPosition, { entry.labelLength, 20 } }, style | UiFlags::ColorSilver, spacing, 10);
+	DrawString(out, text, { labelPosition, { entry.labelLength, 20 } }, style | UiFlags::ColorWhite, spacing, 10);
 }
 
 void DrawStatButtons(const Surface &out)

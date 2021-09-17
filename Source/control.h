@@ -52,7 +52,10 @@ extern bool spselflag;
 extern Rectangle MainPanel;
 extern Rectangle LeftPanel;
 extern Rectangle RightPanel;
+extern std::optional<OwnedSurface> pBtmBuff;
+extern SDL_Rect PanBtnPos[8];
 
+bool IsChatAvailable();
 /**
  * @brief Check if the UI can cover the game area entierly
  */
