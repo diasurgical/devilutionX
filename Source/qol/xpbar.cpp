@@ -67,7 +67,7 @@ void FreeXPBar()
 
 void DrawXPBar(const Surface &out)
 {
-	if (!sgOptions.Gameplay.bExperienceBar)
+	if (!sgOptions.Gameplay.bExperienceBar || talkflag)
 		return;
 
 	const auto &player = Players[MyPlayerId];
