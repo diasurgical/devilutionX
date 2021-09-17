@@ -206,7 +206,8 @@ void dx_cleanup()
 	RendererTextureSurface = nullptr;
 #ifndef USE_SDL1
 	texture = nullptr;
-	SDL_DestroyRenderer(renderer);
+	if (sgOptions.Graphics.bUpscale)
+		SDL_DestroyRenderer(renderer);
 #endif
 	SDL_DestroyWindow(ghMainWnd);
 }
