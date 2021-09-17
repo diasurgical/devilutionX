@@ -4141,7 +4141,7 @@ void DrawUniqueInfo(const Surface &out)
 			break;
 		rect.position.y += 2 * 12;
 		PrintItemPower(power.type, &curruitem);
-		DrawString(out, tempstr, rect, UiFlags::ColorSilver | UiFlags::AlignCenter);
+		DrawString(out, tempstr, rect, UiFlags::ColorWhite | UiFlags::AlignCenter);
 	}
 }
 

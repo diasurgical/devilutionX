@@ -163,7 +163,7 @@ void gmenu_draw_pause(const Surface &out)
 		RedBack(out);
 	if (sgpCurrentMenu == nullptr) {
 		LightTableIndex = 0;
-		DrawString(out, _("Pause"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize46 | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
+		DrawString(out, _("Pause"), { { 0, 0 }, { gnScreenWidth, PANEL_TOP } }, UiFlags::FontSize46 | UiFlags::ColorGold | UiFlags::AlignCenter | UiFlags::VerticalCenter, 2);
 	}
 }
 

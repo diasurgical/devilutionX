@@ -544,13 +544,13 @@ void UiInitialize()
 {
 	LoadUiGFX();
 
-	LoadFont(GameFont12, ColorSilver, "fonts\\grayuis.trn");
-	LoadFont(GameFont12, ColorGold, "fonts\\golduis.trn");
-	LoadFont(GameFont24, ColorSilver, "fonts\\grayui.trn");
-	LoadFont(GameFont24, ColorGold, "fonts\\goldui.trn");
-	LoadFont(GameFont30, ColorSilver, "fonts\\grayui.trn");
-	LoadFont(GameFont30, ColorGold, "fonts\\goldui.trn");
-	LoadFont(GameFont42, ColorGold, "fonts\\goldui.trn");
+	LoadFont(GameFont12, ColorUiSilverDark);
+	LoadFont(GameFont12, ColorUiGoldDark);
+	LoadFont(GameFont24, ColorUiSilver);
+	LoadFont(GameFont24, ColorUiGold);
+	LoadFont(GameFont30, ColorUiSilver);
+	LoadFont(GameFont30, ColorUiGold);
+	LoadFont(GameFont42, ColorUiGold);
 
 	if (ArtCursor.surface != nullptr) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {

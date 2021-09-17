@@ -32,18 +32,78 @@ std::array<int, 5> FontSizes = { 12, 24, 30, 42, 46 };
 std::array<int, 5> LineHeights = { 12, 26, 38, 42, 50 };
 std::array<int, 5> BaseLineOffset = { -3, -2, -3, -6, -7 };
 
+std::array<const char *, 12> ColorTranlations = {
+	"fonts\\goldui.trn",
+	"fonts\\grayui.trn",
+	"fonts\\golduis.trn",
+	"fonts\\grayuis.trn",
+
+	nullptr,
+	"fonts\\black.trn",
+
+	"fonts\\white.trn",
+	"fonts\\whitegold.trn",
+	"fonts\\red.trn",
+	"fonts\\blue.trn",
+
+	"fonts\\buttonface.trn",
+	"fonts\\buttonpushed.trn",
+};
+
+GameFontTables GetSizeFromFlags(UiFlags flags)
+{
+	if (HasAnyOf(flags, UiFlags::FontSize24))
+		return GameFont24;
+	else if (HasAnyOf(flags, UiFlags::FontSize30))
+		return GameFont30;
+	else if (HasAnyOf(flags, UiFlags::FontSize42))
+		return GameFont42;
+	else if (HasAnyOf(flags, UiFlags::FontSize46))
+		return GameFont46;
+
+	return GameFont12;
+}
+
+text_color GetColorFromFlags(UiFlags flags)
+{
+	if (HasAnyOf(flags, UiFlags::ColorWhite))
+		return ColorWhite;
+	else if (HasAnyOf(flags, UiFlags::ColorBlue))
+		return ColorBlue;
+	else if (HasAnyOf(flags, UiFlags::ColorRed))
+		return ColorRed;
+	else if (HasAnyOf(flags, UiFlags::ColorBlack))
+		return ColorBlack;
+	else if (HasAnyOf(flags, UiFlags::ColorGold))
+		return ColorGold;
+	else if (HasAnyOf(flags, UiFlags::ColorUiGold))
+		return ColorUiGold;
+	else if (HasAnyOf(flags, UiFlags::ColorUiSilver))
+		return ColorUiSilver;
+	else if (HasAnyOf(flags, UiFlags::ColorUiGoldDark))
+		return ColorUiGoldDark;
+	else if (HasAnyOf(flags, UiFlags::ColorUiSilverDark))
+		return ColorUiSilverDark;
+	else if (HasAnyOf(flags, UiFlags::ColorButtonface))
+		return ColorButtonface;
+	else if (HasAnyOf(flags, UiFlags::ColorButtonpushed))
+		return ColorButtonpushed;
+
+	return ColorWhitegold;
+}
+
 } // namespace
 
-void LoadFont(GameFontTables size, text_color color, const char *translationFile)
+void LoadFont(GameFontTables size, text_color color)
 {
 	auto font = std::make_unique<Art>();
 
 	char path[32];
 	sprintf(path, "fonts\\%i-00.pcx", FontSizes[size]);
 
-	if (translationFile != nullptr) {
+	if (ColorTranlations[color] != nullptr) {
 		std::array<uint8_t, 256> colorMapping;
-		LoadFileInMem(translationFile, colorMapping);
+		LoadFileInMem(ColorTranlations[color], colorMapping);
 		LoadMaskedArt(path, font.get(), 256, 1, &colorMapping);
 	} else {
 		LoadMaskedArt(path, font.get(), 256, 1);
@@ -54,6 +114,19 @@ void LoadFont(GameFontTables size, text_color color, const char *translationFile
 
 	sprintf(path, "fonts\\%i-00.bin", FontSizes[size]);
 	LoadFileInMem(path, FontKerns[size]);
+}
+
+void UnloadFont(GameFontTables size, text_color color)
+{
+	uint32_t fontId = (color << 24) | (size << 16);
+
+	for (auto font = Fonts.begin(); font != Fonts.end();) {
+		if ((font->first & 0xFFFF0000) == fontId) {
+			Fonts.erase(font++);
+		} else {
+			font++;
+		}
+	}
 }
 
 void UnloadFonts()
@@ -136,25 +209,8 @@ void WordWrapString(char *text, size_t width, GameFontTables size, int spacing)
  */
 uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect, UiFlags flags, int spacing, int lineHeight)
 {
-	GameFontTables size = GameFont12;
-	if (HasAnyOf(flags, UiFlags::FontSize24))
-		size = GameFont24;
-	else if (HasAnyOf(flags, UiFlags::FontSize30))
-		size = GameFont30;
-	else if (HasAnyOf(flags, UiFlags::FontSize42))
-		size = GameFont42;
-	else if (HasAnyOf(flags, UiFlags::FontSize46))
-		size = GameFont46;
-
-	text_color color = ColorGold;
-	if (HasAnyOf(flags, UiFlags::ColorSilver))
-		color = ColorSilver;
-	else if (HasAnyOf(flags, UiFlags::ColorBlue))
-		color = ColorBlue;
-	else if (HasAnyOf(flags, UiFlags::ColorRed))
-		color = ColorRed;
-	else if (HasAnyOf(flags, UiFlags::ColorBlack))
-		color = ColorBlack;
+	GameFontTables size = GetSizeFromFlags(flags);
+	text_color color = GetColorFromFlags(flags);
 
 	int charactersInLine = 0;
 	int lineWidth = 0;
@@ -222,6 +278,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 		if (text[i] != '\n')
 			characterPosition.x += FontKerns[size][frame] + spacing;
 	}
+
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {

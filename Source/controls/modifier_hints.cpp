@@ -95,7 +95,7 @@ bool IsLeftActive(const CircleMenuHint &hint)
 
 UiFlags CircleMenuHintTextColor(bool active)
 {
-	return active ? UiFlags::ColorBlue : UiFlags::ColorGold;
+	return active ? UiFlags::ColorBlue : UiFlags::ColorWhitegold;
 }
 
 /**

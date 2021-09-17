@@ -24,31 +24,38 @@ enum class UiType {
 
 enum class UiFlags {
 	// clang-format off
-	None              = 0,
+	None               = 0,
 
-	FontSize12        = 1 << 0,
-	FontSize24        = 1 << 1,
-	FontSize30        = 1 << 2,
-	FontSize42        = 1 << 3,
-	FontSize46        = 1 << 4,
+	FontSize12         = 1 << 0,
+	FontSize24         = 1 << 1,
+	FontSize30         = 1 << 2,
+	FontSize42         = 1 << 3,
+	FontSize46         = 1 << 4,
 
-	ColorSilver       = 1 << 5,
-	ColorGold         = 1 << 6,
-	ColorRed          = 1 << 7,
-	ColorBlue         = 1 << 8,
-	ColorBlack        = 1 << 9,
+	ColorUiGold        = 1 << 5,
+	ColorUiSilver      = 1 << 6,
+	ColorUiGoldDark    = 1 << 7,
+	ColorUiSilverDark  = 1 << 8,
+	ColorGold          = 1 << 9,
+	ColorBlack         = 1 << 10,
+	ColorWhite         = 1 << 11,
+	ColorWhitegold     = 1 << 12,
+	ColorRed           = 1 << 13,
+	ColorBlue          = 1 << 14,
+	ColorButtonface    = 1 << 15,
+	ColorButtonpushed  = 1 << 16,
 
-	AlignCenter       = 1 << 10,
-	AlignRight        = 1 << 11,
-	VerticalCenter    = 1 << 12,
+	AlignCenter        = 1 << 17,
+	AlignRight         = 1 << 18,
+	VerticalCenter     = 1 << 19,
 
-	KerningFitSpacing = 1 << 13,
+	KerningFitSpacing  = 1 << 20,
 
-	ElementDisabled   = 1 << 14,
-	ElementHidden     = 1 << 15,
+	ElementDisabled    = 1 << 21,
+	ElementHidden      = 1 << 22,
 
-	PentaCursor       = 1 << 16,
-	TextCursor        = 1 << 17,
+	PentaCursor        = 1 << 23,
+	TextCursor         = 1 << 24,
 	// clang-format on
 };
 

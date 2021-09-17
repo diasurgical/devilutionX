@@ -1552,14 +1552,14 @@ void InitKeymapActions()
 
 void LoadGameFonts()
 {
-	LoadFont(GameFont12, ColorSilver, "fonts\\white.trn");
-	LoadFont(GameFont12, ColorGold, "fonts\\whitegold.trn");
-	LoadFont(GameFont12, ColorRed, "fonts\\red.trn");
-	LoadFont(GameFont12, ColorBlue, "fonts\\blue.trn");
-	LoadFont(GameFont12, ColorBlack, "fonts\\black.trn");
+	LoadFont(GameFont12, ColorWhite);
+	LoadFont(GameFont12, ColorWhitegold);
+	LoadFont(GameFont12, ColorRed);
+	LoadFont(GameFont12, ColorBlue);
+	LoadFont(GameFont12, ColorBlack);
 	LoadFont(GameFont30, ColorGold);
 	LoadFont(GameFont46, ColorGold);
-	LoadFont(GameFont46, ColorBlack, "fonts\\black.trn");
+	LoadFont(GameFont46, ColorBlack);
 }
 
 } // namespace

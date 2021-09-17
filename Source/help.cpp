@@ -130,7 +130,7 @@ void DrawHelp(const Surface &out)
 		title = gbIsSpawn ? _("Shareware Hellfire Help") : _("Hellfire Help");
 	else
 		title = gbIsSpawn ? _("Shareware Diablo Help") : _("Diablo Help");
-	PrintSString(out, 0, 2, title, UiFlags::ColorGold | UiFlags::AlignCenter);
+	PrintSString(out, 0, 2, title, UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 
 	DrawSLine(out, 5);
 
@@ -144,7 +144,7 @@ void DrawHelp(const Surface &out)
 		}
 
 		int offset = 0;
-		UiFlags style = UiFlags::ColorSilver;
+		UiFlags style = UiFlags::ColorWhite;
 		if (line[0] == '$') {
 			offset = 1;
 			style = UiFlags::ColorRed;
@@ -153,7 +153,7 @@ void DrawHelp(const Surface &out)
 		DrawString(out, &line[offset], { { sx, sy + i * 12 }, { 577, 12 } }, style);
 	}
 
-	PrintSString(out, 0, 23, _("Press ESC to end or the arrow keys to scroll."), UiFlags::ColorGold | UiFlags::AlignCenter);
+	PrintSString(out, 0, 23, _("Press ESC to end or the arrow keys to scroll."), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 }
 
 void DisplayHelp()
