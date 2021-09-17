@@ -1140,14 +1140,14 @@ void CreateLevel(lvl_entry lvldir)
 void UnstuckChargers()
 {
 	if (gbIsMultiplayer) {
-		for (int i = 0; i < MAX_PLRS; i++) {
-			if (!Players[i].plractive)
+		for (auto &player : Players) {
+			if (!player.plractive)
 				continue;
-			if (Players[i]._pLvlChanging)
+			if (player._pLvlChanging)
 				continue;
-			if (Players[i].plrlevel != MyPlayer->plrlevel)
+			if (player.plrlevel != MyPlayer->plrlevel)
 				continue;
-			if (i == MyPlayerId)
+			if (&player == MyPlayer)
 				continue;
 			return;
 		}
