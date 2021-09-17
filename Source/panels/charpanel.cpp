@@ -279,8 +279,7 @@ void DrawChr(const Surface &out)
 			    out,
 			    tmp.text.c_str(),
 			    { entry.position + Displacement { pos.x, pos.y }, { entry.length, 27 } },
-			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style,
-			    1);
+			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style);
 		}
 	}
 	DrawStatButtons(out);
