@@ -24,6 +24,7 @@
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "init.h"
+#include "inv_iterators.hpp"
 #include "lighting.h"
 #include "missiles.h"
 #include "options.h"
@@ -522,15 +523,8 @@ bool ItemMinStats(const Player &player, Item &x)
 
 void CalcPlrItemMin(Player &player)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
-		auto &item = player.InvList[i];
+	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
 		item._iStatFlag = ItemMinStats(player, item);
-	}
-
-	for (auto &item : player.SpdList) {
-		if (!item.isEmpty()) {
-			item._iStatFlag = ItemMinStats(player, item);
-		}
 	}
 }
 

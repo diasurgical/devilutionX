@@ -17,6 +17,7 @@
 #include "engine/random.hpp"
 #include "gamemenu.h"
 #include "init.h"
+#include "inv_iterators.hpp"
 #include "lighting.h"
 #include "loadsave.h"
 #include "minitext.h"
@@ -1973,17 +1974,9 @@ void CheckCheatStats(Player &player)
 void Player::CalcScrolls()
 {
 	_pScrlSpells = 0;
-	for (int i = 0; i < _pNumInv; i++) {
-		if (!InvList[i].isEmpty() && (InvList[i]._iMiscId == IMISC_SCROLL || InvList[i]._iMiscId == IMISC_SCROLLT)) {
-			if (InvList[i]._iStatFlag)
-				_pScrlSpells |= GetSpellBitmask(InvList[i]._iSpell);
-		}
-	}
-
-	for (auto &item : SpdList) {
-		if (!item.isEmpty() && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)) {
-			if (item._iStatFlag)
-				_pScrlSpells |= GetSpellBitmask(item._iSpell);
+	for (Item &item : InventoryAndBeltPlayerItemsRange { *this }) {
+		if (item.IsScroll() && item._iStatFlag) {
+			_pScrlSpells |= GetSpellBitmask(item._iSpell);
 		}
 	}
 	EnsureValidReadiedSpell(*this);

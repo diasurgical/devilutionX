@@ -1458,7 +1458,7 @@ void CtrlUseInvItem()
 	else
 		item = &myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST];
 
-	if ((item->_iMiscId == IMISC_SCROLLT || item->_iMiscId == IMISC_SCROLL) && spelldata[item->_iSpell].sTargeted) {
+	if (item->IsScroll() && spelldata[item->_iSpell].sTargeted) {
 		return;
 	}
 

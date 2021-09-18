@@ -15,6 +15,7 @@
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
 #include "hwcursor.hpp"
+#include "inv_iterators.hpp"
 #include "minitext.h"
 #include "options.h"
 #include "plrmsg.h"
@@ -1932,27 +1933,16 @@ bool UseScroll()
 	if (pcurs != CURSOR_HAND)
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	Player &myPlayer = Players[MyPlayerId];
+	const spell_id spellId = myPlayer._pRSpell;
 
-	if (leveltype == DTYPE_TOWN && !spelldata[myPlayer._pRSpell].sTownSpell)
+	if (leveltype == DTYPE_TOWN && !spelldata[spellId].sTownSpell)
 		return false;
 
-	for (int i = 0; i < myPlayer._pNumInv; i++) {
-		if (!myPlayer.InvList[i].isEmpty()
-		    && IsAnyOf(myPlayer.InvList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
-		    && myPlayer.InvList[i]._iSpell == myPlayer._pRSpell) {
-			return true;
-		}
-	}
-	for (auto &item : myPlayer.SpdList) {
-		if (!item.isEmpty()
-		    && IsAnyOf(item._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
-		    && item._iSpell == myPlayer._pRSpell) {
-			return true;
-		}
-	}
-
-	return false;
+	const InventoryAndBeltPlayerItemsRange items { myPlayer };
+	return std::any_of(items.begin(), items.end(), [spellId](const Item &item) {
+		return item.IsScrollOf(spellId);
+	});
 }
 
 void UseStaffCharge(Player &player)
@@ -2034,11 +2024,7 @@ bool UseInvItem(int pnum, int cii)
 		dropGoldValue = 0;
 	}
 
-	if (item->_iMiscId == IMISC_SCROLL && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {
-		return true;
-	}
-
-	if (item->_iMiscId == IMISC_SCROLLT && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {
+	if (item->IsScroll() && currlevel == 0 && !spelldata[item->_iSpell].sTownSpell) {
 		return true;
 	}
 
