@@ -357,6 +357,16 @@ struct Item {
 		}
 	}
 
+	[[nodiscard]] bool IsScroll() const
+	{
+		return _iMiscId == IMISC_SCROLL || _iMiscId == IMISC_SCROLLT;
+	}
+
+	[[nodiscard]] bool IsScrollOf(spell_id spellId) const
+	{
+		return IsScroll() && _iSpell == spellId;
+	}
+
 	UiFlags getTextColor() const
 	{
 		switch (_iMagical) {

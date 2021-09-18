@@ -5,6 +5,7 @@
  */
 #include "control.h"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 
@@ -24,6 +25,7 @@
 #include "gamemenu.h"
 #include "init.h"
 #include "inv.h"
+#include "inv_iterators.hpp"
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"
@@ -688,6 +690,7 @@ void DrawSpellList(const Surface &out)
 	auto &myPlayer = Players[MyPlayerId];
 
 	for (auto &spellListItem : GetSpellListItems()) {
+		const spell_id spellId = spellListItem.id;
 		spell_type transType = spellListItem.type;
 		int spellLevel = 0;
 		const SpellData &spellDataItem = spelldata[static_cast<size_t>(spellListItem.id)];
@@ -701,7 +704,7 @@ void DrawSpellList(const Surface &out)
 		}
 
 		SetSpellTrans(transType);
-		DrawSpellCel(out, spellListItem.location, *pSpellCels, SpellITbl[static_cast<size_t>(spellListItem.id)]);
+		DrawSpellCel(out, spellListItem.location, *pSpellCels, SpellITbl[static_cast<size_t>(spellId)]);
 
 		if (!spellListItem.isSelected)
 			continue;
@@ -714,7 +717,7 @@ void DrawSpellList(const Surface &out)
 		case RSPLTYPE_SPELL:
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 4);
 			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
-			if (spellListItem.id == SPL_HBOLT) {
+			if (spellId == SPL_HBOLT) {
 				strcpy(tempstr, _("Damages undead only"));
 				AddPanelString(tempstr);
 			}
@@ -727,23 +730,11 @@ void DrawSpellList(const Surface &out)
 		case RSPLTYPE_SCROLL: {
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 1);
 			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
-			int v = 0;
-			for (int t = 0; t < myPlayer._pNumInv; t++) {
-				if (!myPlayer.InvList[t].isEmpty()
-				    && (myPlayer.InvList[t]._iMiscId == IMISC_SCROLL || myPlayer.InvList[t]._iMiscId == IMISC_SCROLLT)
-				    && myPlayer.InvList[t]._iSpell == spellListItem.id) {
-					v++;
-				}
-			}
-			for (auto &item : myPlayer.SpdList) {
-				if (!item.isEmpty()
-				    && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)
-				    && item._iSpell == spellListItem.id) {
-					v++;
-				}
-			}
-			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", v), v).c_str());
-			AddPanelString(tempstr);
+			const InventoryAndBeltPlayerItemsRange items { myPlayer };
+			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+				return item.IsScrollOf(spellId);
+			});
+			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
 		} break;
 		case RSPLTYPE_CHARGES: {
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 2);
@@ -756,7 +747,7 @@ void DrawSpellList(const Surface &out)
 			break;
 		}
 		for (int t = 0; t < 4; t++) {
-			if (myPlayer._pSplHotKey[t] == spellListItem.id && myPlayer._pSplTHotKey[t] == spellListItem.type) {
+			if (myPlayer._pSplHotKey[t] == spellId && myPlayer._pSplTHotKey[t] == spellListItem.type) {
 				auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
 				PrintSBookHotkey(out, spellListItem.location, hotkeyName);
 				strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
@@ -1168,17 +1159,17 @@ void CheckPanelInfo()
 		strcpy(tempstr, _("Hotkey: 's'"));
 		AddPanelString(tempstr);
 		auto &myPlayer = Players[MyPlayerId];
-		spell_id v = myPlayer._pRSpell;
-		if (v != SPL_INVALID) {
+		const spell_id spellId = myPlayer._pRSpell;
+		if (spellId != SPL_INVALID) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[v].sSkillText)).c_str());
+				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)).c_str());
 				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_SPELL: {
-				strcpy(tempstr, fmt::format(_("{:s} Spell"), pgettext("spell", spelldata[v].sNameText)).c_str());
+				strcpy(tempstr, fmt::format(_("{:s} Spell"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
 				AddPanelString(tempstr);
-				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[v], 0);
+				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellId], 0);
 				if (c == 0)
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
@@ -1186,28 +1177,17 @@ void CheckPanelInfo()
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_SCROLL: {
-				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[v].sNameText)).c_str());
+				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
 				AddPanelString(tempstr);
-				int s = 0;
-				for (int i = 0; i < myPlayer._pNumInv; i++) {
-					if (!myPlayer.InvList[i].isEmpty()
-					    && (myPlayer.InvList[i]._iMiscId == IMISC_SCROLL || myPlayer.InvList[i]._iMiscId == IMISC_SCROLLT)
-					    && myPlayer.InvList[i]._iSpell == v) {
-						s++;
-					}
-				}
-				for (auto &item : myPlayer.SpdList) {
-					if (!item.isEmpty()
-					    && (item._iMiscId == IMISC_SCROLL || item._iMiscId == IMISC_SCROLLT)
-					    && item._iSpell == v) {
-						s++;
-					}
-				}
-				strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", s), s).c_str());
+				const InventoryAndBeltPlayerItemsRange items { myPlayer };
+				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+					return item.IsScrollOf(spellId);
+				});
+				strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_CHARGES:
-				strcpy(tempstr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[v].sNameText)).c_str());
+				strcpy(tempstr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
 				AddPanelString(tempstr);
 				strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges).c_str());
 				AddPanelString(tempstr);

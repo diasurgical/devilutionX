@@ -19,7 +19,7 @@ public:
 	class Iterator {
 	public:
 		using iterator_category = std::forward_iterator_tag;
-		using difference_type = void;
+		using difference_type = int;
 		using value_type = Item;
 		using pointer = value_type *;
 		using reference = value_type &;
@@ -115,7 +115,7 @@ public:
 	class Iterator {
 	public:
 		using iterator_category = std::forward_iterator_tag;
-		using difference_type = void;
+		using difference_type = int;
 		using value_type = Item;
 		using pointer = value_type *;
 		using reference = value_type &;
@@ -262,6 +262,36 @@ private:
 };
 
 /**
+ * @brief A range over non-equipped player items in the following order: Inventory, Belt.
+ */
+class InventoryAndBeltPlayerItemsRange {
+public:
+	explicit InventoryAndBeltPlayerItemsRange(Player &player)
+	    : player_(&player)
+	{
+	}
+
+	[[nodiscard]] ItemsContainerListRange::Iterator begin() const // NOLINT(readability-identifier-naming)
+	{
+		return ItemsContainerListRange::Iterator({
+		    InventoryPlayerItemsRange(*player_).begin(),
+		    BeltPlayerItemsRange(*player_).begin(),
+		});
+	}
+
+	[[nodiscard]] ItemsContainerListRange::Iterator end() const // NOLINT(readability-identifier-naming)
+	{
+		return ItemsContainerListRange::Iterator({
+		    InventoryPlayerItemsRange(*player_).end(),
+		    BeltPlayerItemsRange(*player_).end(),
+		});
+	}
+
+private:
+	Player *player_;
+};
+
+/**
  * @brief A range over non-empty player items in the following order: Equipped, Inventory, Belt.
  */
 class PlayerItemsRange {
@@ -282,12 +312,11 @@ public:
 
 	[[nodiscard]] ItemsContainerListRange::Iterator end() const // NOLINT(readability-identifier-naming)
 	{
-		auto result = ItemsContainerListRange::Iterator({
+		return ItemsContainerListRange::Iterator({
 		    EquippedPlayerItemsRange(*player_).end(),
 		    InventoryPlayerItemsRange(*player_).end(),
 		    BeltPlayerItemsRange(*player_).end(),
 		});
-		return result;
 	}
 
 private:
