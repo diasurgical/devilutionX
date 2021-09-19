@@ -19,10 +19,10 @@ Art PanelButton;
 Art PanelButtonGrime;
 Art PanelButtonDownGrime;
 
-void DrawButtonText(const Surface &out, const char *text, Rectangle placment, UiFlags style, int spacing = 1)
+void DrawButtonText(const Surface &out, const char *text, Rectangle placement, UiFlags style, int spacing = 1)
 {
-	DrawString(out, text, { placment.position + Displacement { 0, 1 }, placment.size }, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, spacing);
-	DrawString(out, text, placment, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, spacing);
+	DrawString(out, text, { placement.position + Displacement { 0, 1 }, placement.size }, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | UiFlags::ColorBlack, spacing);
+	DrawString(out, text, placement, UiFlags::AlignCenter | UiFlags::KerningFitSpacing | style, spacing);
 }
 
 void DrawButtonOnPanel(Point position, const char *text, int frame)
