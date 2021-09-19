@@ -23,6 +23,7 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
+#include "utils/utf8.h"
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
@@ -532,8 +533,15 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return FalseAvail("SDL_KEYMAPCHANGED", 0);
 #endif
 	case SDL_TEXTEDITING:
+		if (gbRunGame)
+			break;
 		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
 	case SDL_TEXTINPUT:
+		if (gbRunGame) {
+			std::string output = utf8_to_latin1(e.text.text);
+			control_new_text(output);
+			break;
+		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);
 	case SDL_WINDOWEVENT:
 		switch (e.window.event) {

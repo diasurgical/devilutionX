@@ -177,6 +177,7 @@ void control_release_talk_btn();
 void control_type_message();
 void control_reset_talk();
 bool control_talk_last_key(char vkey);
+void control_new_text(string_view text);
 bool control_presskeys(int vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
 

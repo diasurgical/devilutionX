@@ -1772,6 +1772,10 @@ void control_type_message()
 		return;
 
 	talkflag = true;
+	int x = PANEL_LEFT + 200;
+	int y = PANEL_Y + 22;
+	SDL_Rect rect = { x, y, 250, 39 };
+	SDL_SetTextInputRect(&rect);
 	TalkMessage[0] = '\0';
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
@@ -1779,11 +1783,13 @@ void control_type_message()
 	sgbPlrTalkTbl = PANEL_HEIGHT + 16;
 	force_redraw = 255;
 	TalkSaveIndex = NextTalkSave;
+	SDL_StartTextInput();
 }
 
 void control_reset_talk()
 {
 	talkflag = false;
+	SDL_StopTextInput();
 	sgbPlrTalkTbl = 0;
 	force_redraw = 255;
 }
@@ -1796,6 +1802,7 @@ bool control_talk_last_key(char vkey)
 	if (!talkflag)
 		return false;
 
+#ifdef USE_SDL1
 	if (vkey >= 0 && vkey < DVL_VK_SPACE)
 		return false;
 
@@ -1804,7 +1811,20 @@ bool control_talk_last_key(char vkey)
 		TalkMessage[result] = vkey;
 		TalkMessage[result + 1] = '\0';
 	}
+#endif
+
 	return true;
+}
+
+void control_new_text(string_view text)
+{
+	if (!IsChatAvailable())
+		return;
+
+	if (!talkflag)
+		return;
+
+	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
 }
 
 bool control_presskeys(int vkey)
