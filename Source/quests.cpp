@@ -839,7 +839,7 @@ void QuestlogDown()
 void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
-	if (qlistCnt != 0 && selectedEntry < firstFinishedEntry)
+	if (qlistCnt != 0 && selectedEntry >= 0 && selectedEntry < firstFinishedEntry)
 		InitQTextMsg(Quests[qlist[selectedEntry]]._qmsg);
 	QuestLogIsOpen = false;
 }
