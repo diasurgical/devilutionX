@@ -4236,6 +4236,9 @@ void SyncLever(const Object &lever)
 	if (lever._oSelFlag != 0)
 		return;
 
+	if (currlevel == 16 && !AreAllLeversActivated(lever._oVar8))
+		return;
+
 	ObjChangeMap(lever._oVar1, lever._oVar2, lever._oVar3, lever._oVar4);
 }
 
