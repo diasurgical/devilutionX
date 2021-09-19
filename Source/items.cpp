@@ -2043,15 +2043,6 @@ void DrawUniqueInfoWindow(const Surface &out)
 	DrawHalfTransparentRectTo(out, RightPanel.position.x - SPANEL_WIDTH + 27, RightPanel.position.y + 28, 265, 297);
 }
 
-void DrawUniqueInfoDevider(const Surface &out, int y)
-{
-	BYTE *src = out.at(26 + RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y + 25);
-	BYTE *dst = out.at(26 + RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y + y * 12 + 38);
-
-	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
-		memcpy(dst, src, 267); // BUGFIX: should be 267 (fixed)
-}
-
 void PrintItemMisc(Item &item)
 {
 	if (item._iMiscId == IMISC_SCROLL) {
@@ -4122,17 +4113,19 @@ void PrintItemPower(char plidx, Item *x)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains({ RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y })) {
+	const Point position { RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y };
+	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(position)) {
 		return;
 	}
 
-	DrawUniqueInfoWindow(GlobalBackBuffer());
+	DrawUniqueInfoWindow(out);
 
-	Rectangle rect { { 32 + RightPanel.position.x - SPANEL_WIDTH, 44 + RightPanel.position.y + 12 }, { 257, 0 } };
+	Rectangle rect { position + Displacement { 32, 56 }, { 257, 0 } };
 	const UniqueItem &uitem = UniqueItems[curruitem._iUid];
 	DrawString(out, _(uitem.UIName), rect, UiFlags::AlignCenter);
 
-	DrawUniqueInfoDevider(out, 5);
+	const Rectangle dividerLineRect { position + Displacement { 26, 25 }, { 267, 3 } };
+	out.BlitFrom(out, MakeSdlRect(dividerLineRect), dividerLineRect.position + Displacement { 0, 5 * 12 + 13 });
 
 	rect.position.y += (10 - uitem.UINumPL) * 12;
 	assert(uitem.UINumPL <= sizeof(uitem.powers) / sizeof(*uitem.powers));
