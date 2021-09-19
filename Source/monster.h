@@ -7,6 +7,7 @@
 
 #include <cstdint>
 #include <array>
+#include <functional>
 
 #include "engine.h"
 #include "engine/actor_position.hpp"
