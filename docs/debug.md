@@ -5,7 +5,7 @@ If you compile the game in debug, you have multiple debug features available.
 ## Debug commands
 
 In-game you have the possibility to use the chat to trigger debug commands.
-This is currently a replacment for a console.
+This is currently a replacement for a console.
 
 | Command | Description |
 | ------- | ----------- |

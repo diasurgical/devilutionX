@@ -376,7 +376,7 @@ struct Player {
 
 	/**
 	 * @brief Says a speech line.
-	 * @todo BUGFIX Prevent more then one speech to be played at a time (reject new requests).
+	 * @todo BUGFIX Prevent more than one speech to be played at a time (reject new requests).
 	 */
 	void Say(HeroSpeech speechId) const;
 	/**

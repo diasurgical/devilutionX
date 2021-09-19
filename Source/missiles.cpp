@@ -647,7 +647,7 @@ void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, boo
 			if (tile == missile.position.tile)
 				break;
 
-			// don't call CheckMissileCol more then once for a tile
+			// don't call CheckMissileCol more than once for a tile
 			if (prevTile == tile)
 				continue;
 			prevTile = tile;

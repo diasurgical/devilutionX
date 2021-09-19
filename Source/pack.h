@@ -89,7 +89,7 @@ void PackItem(ItemPack *id, const Item *is);
  * Note: last slot of item[MAXITEMS+1] used as temporary buffer
  * find real name reference below, possibly [sizeof(item[])/sizeof(Item)]
  * @param is The source packed item
- * @param id The distination item
+ * @param id The destination item
  */
 void UnPackItem(const ItemPack *is, Item *id, bool isHellfire);
 
