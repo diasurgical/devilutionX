@@ -2138,27 +2138,33 @@ void OperateL1Door(int pnum, int i, bool sendflag)
 		OperateL1RDoor(pnum, i, sendflag);
 }
 
+bool AreAllLeversActivated(int leverId)
+{
+	for (int j = 0; j < ActiveObjectCount; j++) {
+		int oi = ActiveObjects[j];
+		if (Objects[oi]._otype == OBJ_SWITCHSKL
+		    && Objects[oi]._oVar8 == leverId
+		    && Objects[oi]._oSelFlag != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void OperateLever(int pnum, int i)
 {
-	if (Objects[i]._oSelFlag == 0) {
+	Object &object = Objects[i];
+	if (object._oSelFlag == 0) {
 		return;
 	}
 
 	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame++;
+		PlaySfxLoc(IS_LEVER, object.position);
+	object._oSelFlag = 0;
+	object._oAnimFrame++;
 	bool mapflag = true;
-	if (currlevel == 16) {
-		for (int j = 0; j < ActiveObjectCount; j++) {
-			int oi = ActiveObjects[j];
-			if (Objects[oi]._otype == OBJ_SWITCHSKL
-			    && Objects[i]._oVar8 == Objects[oi]._oVar8
-			    && Objects[oi]._oSelFlag != 0) {
-				mapflag = false;
-			}
-		}
-	}
+	if (currlevel == 16 && !AreAllLeversActivated(object._oVar8))
+		mapflag = false;
 	if (currlevel == 24) {
 		OperateNakrulLever();
 		IsUberLeverActivated = true;
@@ -2166,7 +2172,7 @@ void OperateLever(int pnum, int i)
 		Quests[Q_NAKRUL]._qactive = QUEST_DONE;
 	}
 	if (mapflag)
-		ObjChangeMap(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
+		ObjChangeMap(object._oVar1, object._oVar2, object._oVar3, object._oVar4);
 	if (pnum == MyPlayerId)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
