@@ -1376,7 +1376,7 @@ bool MonsterWalk(int i, MonsterMode variant)
 	return isAnimationEnd;
 }
 
-void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
+void MonsterAttackMonster(int i, int mid, int hper, Damage damage)
 {
 	assert(mid >= 0 && mid < MAXMONSTERS);
 	auto &monster = Monsters[mid];
@@ -1388,7 +1388,7 @@ void MonsterAttackMonster(int i, int mid, int hper, int mind, int maxd)
 			hit = 0;
 		bool unused;
 		if (!CheckMonsterHit(monster, &unused) && hit < hper) {
-			int dam = (mind + GenerateRnd(maxd - mind + 1)) << 6;
+			int dam = damage.GetValue() << 6;
 			monster._mhitpoints -= dam;
 			if (monster._mhitpoints >> 6 <= 0) {
 				if (monster._mmode == MonsterMode::Petrified) {
@@ -1435,7 +1435,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, Damage damage)
 	auto &player = Players[pnum];
 
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
-		MonsterAttackMonster(i, pnum, hit, damage.minValue, damage.maxValue);
+		MonsterAttackMonster(i, pnum, hit, damage);
 		return;
 	}
 	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || (player._pSpellFlags & 1) != 0)
@@ -4772,7 +4772,7 @@ void MissToMonst(Missile &missile, Point position)
 
 	if (dMonster[oldPosition.x][oldPosition.y] > 0) {
 		if (monster.MType->mtype != MT_GLOOM && (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN)) {
-			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mDamage2.minValue, monster.mDamage2.maxValue);
+			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mDamage2);
 			if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
 				Point newPosition = oldPosition + monster._mdir;
 				if (IsTileAvailable(Monsters[dMonster[oldPosition.x][oldPosition.y] - 1], newPosition)) {
