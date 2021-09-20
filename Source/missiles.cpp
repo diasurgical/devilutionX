@@ -1389,8 +1389,7 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 			i = 6;
 			auto slvl = GetSpellLevel(missile._misource, SPL_BERSERK);
 			monster._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
-			monster.mMinDamage = (GenerateRnd(10) + 120) * monster.mMinDamage / 100 + slvl;
-			monster.mMaxDamage = (GenerateRnd(10) + 120) * monster.mMaxDamage / 100 + slvl;
+			monster.mDamage = { (GenerateRnd(10) + 120) * monster.mDamage.minValue / 100 + slvl, (GenerateRnd(10) + 120) * monster.mDamage.maxValue / 100 + slvl };
 			monster.mMinDamage2 = (GenerateRnd(10) + 120) * monster.mMinDamage2 / 100 + slvl;
 			monster.mMaxDamage2 = (GenerateRnd(10) + 120) * monster.mMaxDamage2 / 100 + slvl;
 			int r = (currlevel < 17 || currlevel > 20) ? 3 : 9;
@@ -2664,7 +2663,7 @@ void AddFlame(Missile &missile, Point dst, Direction /*midir*/)
 		missile._midam = 8 * i + 16 + ((8 * i + 16) / 2);
 	} else {
 		auto &monster = Monsters[missile._misource];
-		missile._midam = monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1);
+		missile._midam = monster.mDamage.GetValue();
 	}
 }
 
@@ -2861,7 +2860,7 @@ void MI_LArrow(Missile &missile)
 			if (missile._micaster == TARGET_MONSTERS) {
 				damage = Players[p]._pIDamage;
 			} else {
-				damage = { Monsters[p].mMinDamage, Monsters[p].mMaxDamage };
+				damage = Monsters[p].mDamage;
 			}
 		} else {
 			damage = { GenerateRnd(10) + 1 + currlevel, GenerateRnd(10) + 1 + currlevel * 2 };
@@ -2906,7 +2905,7 @@ void MI_Arrow(Missile &missile)
 		if (missile._micaster == TARGET_MONSTERS) {
 			damage = Players[p]._pIDamage;
 		} else {
-			damage = { Monsters[p].mMinDamage, Monsters[p].mMaxDamage };
+			damage = Monsters[p].mDamage;
 		}
 	} else {
 		damage = { currlevel, 2 * currlevel };
@@ -2942,7 +2941,7 @@ void MI_Firebolt(Missile &missile)
 				}
 			} else {
 				auto &monster = Monsters[p];
-				d = monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1);
+				d = monster.mDamage.GetValue();
 			}
 		} else {
 			d = currlevel + GenerateRnd(2 * currlevel);
@@ -3374,7 +3373,7 @@ void MI_Lightctrl(Missile &missile)
 		dam = (GenerateRnd(2) + GenerateRnd(Players[missile._misource]._pLevel) + 2) << 6;
 	} else {
 		auto &monster = Monsters[missile._misource];
-		dam = 2 * (monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1));
+		dam = 2 * monster.mDamage.GetValue();
 	}
 
 	SpawnLightning(missile, dam);

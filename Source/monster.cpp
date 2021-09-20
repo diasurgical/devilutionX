@@ -194,8 +194,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mWhoHit = 0;
 	monster.mExp = monster.MData->mExp;
 	monster.mHit = monster.MData->mHit;
-	monster.mMinDamage = monster.MData->mMinDamage;
-	monster.mMaxDamage = monster.MData->mMaxDamage;
+	monster.mDamage = { monster.MData->mMinDamage, monster.MData->mMaxDamage };
 	monster.mHit2 = monster.MData->mHit2;
 	monster.mMinDamage2 = monster.MData->mMinDamage2;
 	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
@@ -223,8 +222,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mLevel += 15;
 		monster.mExp = 2 * (monster.mExp + 1000);
 		monster.mHit += NIGHTMARE_TO_HIT_BONUS;
-		monster.mMinDamage = 2 * (monster.mMinDamage + 2);
-		monster.mMaxDamage = 2 * (monster.mMaxDamage + 2);
+		monster.mDamage += { 2 };
+		monster.mDamage *= 2;
 		monster.mHit2 += NIGHTMARE_TO_HIT_BONUS;
 		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
 		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
@@ -239,8 +238,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mLevel += 30;
 		monster.mExp = 4 * (monster.mExp + 1000);
 		monster.mHit += HELL_TO_HIT_BONUS;
-		monster.mMinDamage = 4 * monster.mMinDamage + 6;
-		monster.mMaxDamage = 4 * monster.mMaxDamage + 6;
+		monster.mDamage *= 4;
+		monster.mDamage += { 6 };
 		monster.mHit2 += HELL_TO_HIT_BONUS;
 		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
@@ -497,8 +496,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = uniqueMonsterData.mAi;
 	monster._mint = uniqueMonsterData.mint;
-	monster.mMinDamage = uniqueMonsterData.mMinDamage;
-	monster.mMaxDamage = uniqueMonsterData.mMaxDamage;
+	monster.mDamage = { uniqueMonsterData.mMinDamage, uniqueMonsterData.mMaxDamage };
 	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
 	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
 	monster.mMagicRes = uniqueMonsterData.mMagicRes;
@@ -529,8 +527,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		monster.mLevel += 15;
 		monster._mhitpoints = monster._mmaxhp;
 		monster.mExp = 2 * (monster.mExp + 1000);
-		monster.mMinDamage = 2 * (monster.mMinDamage + 2);
-		monster.mMaxDamage = 2 * (monster.mMaxDamage + 2);
+		monster.mDamage += { 2 };
+		monster.mDamage *= 2;
 		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
 		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
@@ -542,8 +540,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		monster.mLevel += 30;
 		monster._mhitpoints = monster._mmaxhp;
 		monster.mExp = 4 * (monster.mExp + 1000);
-		monster.mMinDamage = 4 * monster.mMinDamage + 6;
-		monster.mMaxDamage = 4 * monster.mMaxDamage + 6;
+		monster.mDamage *= 4;
+		monster.mDamage += { 6 };
 		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
 		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
 	}
@@ -1546,16 +1544,16 @@ bool MonsterAttack(int i)
 	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit, monster.mMinDamage, monster.mMaxDamage);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit, monster.mDamage.minValue, monster.mDamage.maxValue);
 		if (monster._mAi != AI_SNAKE)
 			PlayEffect(monster, 0);
 	}
 	if (monster.MType->mtype >= MT_NMAGMA && monster.MType->mtype <= MT_WMAGMA && monster.AnimInfo.CurrentFrame == 9) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit + 10, monster.mMinDamage - 2, monster.mMaxDamage - 2);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit + 10, monster.mDamage.minValue - 2, monster.mDamage.maxValue - 2);
 		PlayEffect(monster, 0);
 	}
 	if (monster.MType->mtype >= MT_STORM && monster.MType->mtype <= MT_MAEL && monster.AnimInfo.CurrentFrame == 13) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit - 20, monster.mMinDamage + 4, monster.mMaxDamage + 4);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit - 20, monster.mDamage.minValue + 4, monster.mDamage.maxValue + 4);
 		PlayEffect(monster, 0);
 	}
 	if (monster._mAi == AI_SNAKE && monster.AnimInfo.CurrentFrame == 1)
@@ -3099,7 +3097,7 @@ void CounselorAi(int i)
 		if (abs(mx) >= 2 || abs(my) >= 2) {
 			if (v < 5 * (monster._mint + 10) && LineClearMissile(monster.position.tile, { fx, fy })) {
 				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
-				StartRangedAttack(monster, MissileTypes[monster._mint], monster.mMinDamage + GenerateRnd(monster.mMaxDamage - monster.mMinDamage + 1));
+				StartRangedAttack(monster, MissileTypes[monster._mint], monster.mDamage.GetValue());
 			} else if (GenerateRnd(100) < 30) {
 				monster._mgoal = MGOAL_MOVE;
 				monster._mgoalvar1 = 0;
@@ -4912,8 +4910,7 @@ void SpawnGolem(int i, Point position, Missile &missile)
 	golem._mhitpoints = golem._mmaxhp;
 	golem.mArmorClass = 25;
 	golem.mHit = 5 * (missile._mispllvl + 8) + 2 * player._pLevel;
-	golem.mMinDamage = 2 * (missile._mispllvl + 4);
-	golem.mMaxDamage = 2 * (missile._mispllvl + 8);
+	golem.mDamage = (Damage { 4, 8 } + Damage { missile._mispllvl }) * 2;
 	golem._mFlags |= MFLAG_GOLEM;
 	StartSpecialStand(golem, Direction::South);
 	UpdateEnemy(golem);
