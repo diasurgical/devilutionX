@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-09-20 04:32+0200\n"
+"POT-Creation-Date: 2021-09-21 03:39+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -10,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -158,6 +158,7 @@ msgstr "QA Артилерийска поддръжка (допълнителни
 msgid "QA Counterintelligence"
 msgstr "QA Контраразузнаване"
 
+#. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
 msgstr "Орден на мрежови информационни услуги"
@@ -2288,7 +2289,7 @@ msgstr "Голяма брадва"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr "Топор"
+msgstr "Широка брадва"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
@@ -2324,7 +2325,7 @@ msgstr "Млатило"
 
 #: Source/itemdat.cpp:158
 msgid "Maul"
-msgstr "Грамаден чук"
+msgstr "Млат"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
@@ -2737,7 +2738,7 @@ msgstr "Пламени"
 
 #: Source/itemdat.cpp:274
 msgid "Lightning"
-msgstr "Мълния"
+msgstr "Светкавични"
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"
@@ -2871,7 +2872,7 @@ msgstr "Дислексията"
 
 #: Source/itemdat.cpp:317
 msgid "magic"
-msgstr "Магия"
+msgstr "Магията"
 
 #: Source/itemdat.cpp:318
 msgid "the mind"
@@ -4075,7 +4076,7 @@ msgstr "променена издръжливост"
 
 #: Source/items.cpp:4043
 msgid "Faster attack swing"
-msgstr "По-бърз удар с замах"
+msgstr "по-бърз удар с замах"
 
 #: Source/items.cpp:4046
 msgid "one handed sword"
@@ -4227,161 +4228,114 @@ msgstr "Невъзможно да се покаже главно меню"
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
 #: Source/monstdat.cpp:20
-#, fuzzy
-#| msgid "Zombie"
 msgctxt "monster"
 msgid "Zombie"
 msgstr "Зомби"
 
 #: Source/monstdat.cpp:21
-#, fuzzy
-#| msgid "Ghoul"
 msgctxt "monster"
 msgid "Ghoul"
 msgstr "Таласъм"
 
 #: Source/monstdat.cpp:22
-#, fuzzy
-#| msgid "Rotting Carcass"
 msgctxt "monster"
 msgid "Rotting Carcass"
 msgstr "Гниещ Труп"
 
 #: Source/monstdat.cpp:23
-#, fuzzy
-#| msgid "Black Death"
 msgctxt "monster"
 msgid "Black Death"
-msgstr "Черна гъба"
+msgstr "Черна Смърт"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
-#, fuzzy
-#| msgid "Fallen One"
 msgctxt "monster"
 msgid "Fallen One"
-msgstr "меч за една ръка"
+msgstr "Изпаднал"
 
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
-#, fuzzy
-#| msgid "Carver"
 msgctxt "monster"
 msgid "Carver"
 msgstr "Дълбач"
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
-#, fuzzy
-#| msgid "Devil Kin"
 msgctxt "monster"
 msgid "Devil Kin"
 msgstr "Дяволска Челяд"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
-#, fuzzy
-#| msgid "Dark One"
 msgctxt "monster"
 msgid "Dark One"
-msgstr "Тъмнината"
+msgstr "Очернен"
 
 #: Source/monstdat.cpp:28 Source/monstdat.cpp:40
-#, fuzzy
-#| msgid "Skeleton"
 msgctxt "monster"
 msgid "Skeleton"
-msgstr "Леговището на Краля на скелетите"
+msgstr "Скелет"
 
 #: Source/monstdat.cpp:29
-#, fuzzy
-#| msgid "Corpse Axe"
 msgctxt "monster"
 msgid "Corpse Axe"
-msgstr "Секира"
+msgstr "Корпус Брадвен"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
-#, fuzzy
-#| msgid "Burning Dead"
 msgctxt "monster"
 msgid "Burning Dead"
-msgstr "Горенето"
+msgstr "Горящ Мъртвец"
 
 #: Source/monstdat.cpp:31 Source/monstdat.cpp:43
-#, fuzzy
-#| msgid "Horror"
 msgctxt "monster"
 msgid "Horror"
-msgstr ""
-"Няма го? Изпрати ли го обратно във владенията на Хадес, откъдето се е "
-"пръкнало? Е? Само не ми казвай, че го загуби! Тези неща струват скъпо, дано "
-"разбираш. Трябва да го намериш и да гръмнеш този ужас извън града ни."
+msgstr "Кошмар"
 
 #: Source/monstdat.cpp:36
-#, fuzzy
-#| msgid "Scavenger"
 msgctxt "monster"
 msgid "Scavenger"
-msgstr "Мършоядска коруба"
+msgstr "Лешояд"
 
 #: Source/monstdat.cpp:37
-#, fuzzy
-#| msgid "Plague Eater"
 msgctxt "monster"
 msgid "Plague Eater"
-msgstr "Поглъщач на Души"
+msgstr "Чумояд"
 
 #: Source/monstdat.cpp:38
-#, fuzzy
-#| msgid "Shadow Beast"
 msgctxt "monster"
 msgid "Shadow Beast"
 msgstr "Звяр от Сенките"
 
 #: Source/monstdat.cpp:39
-#, fuzzy
-#| msgid "Bone Gasher"
 msgctxt "monster"
 msgid "Bone Gasher"
-msgstr "Костна ризница"
+msgstr "Костоглозгач"
 
 #: Source/monstdat.cpp:41
-#, fuzzy
-#| msgid "Corpse Bow"
 msgctxt "monster"
 msgid "Corpse Bow"
-msgstr "Къс лък"
+msgstr "Корпус Лъков"
 
 #: Source/monstdat.cpp:44
-#, fuzzy
-#| msgid "Skeleton Captain"
 msgctxt "monster"
 msgid "Skeleton Captain"
-msgstr "Разпнат Скелет"
+msgstr "Скелет Капитан"
 
 #: Source/monstdat.cpp:45
-#, fuzzy
-#| msgid "Corpse Captain"
 msgctxt "monster"
 msgid "Corpse Captain"
 msgstr "Корпус Капитан"
 
 #: Source/monstdat.cpp:46
-#, fuzzy
-#| msgid "Burning Dead Captain"
 msgctxt "monster"
 msgid "Burning Dead Captain"
-msgstr "Лък на мъртвите"
+msgstr "Горящ Мъртвец Капитан"
 
 #: Source/monstdat.cpp:47
-#, fuzzy
-#| msgid "Horror Captain"
 msgctxt "monster"
 msgid "Horror Captain"
 msgstr "Кошмар Капитан"
 
 #: Source/monstdat.cpp:48
-#, fuzzy
-#| msgid "Invisible Lord"
 msgctxt "monster"
 msgid "Invisible Lord"
-msgstr "Господарски"
+msgstr "Невидим Повелител"
 
 #: Source/monstdat.cpp:49
 msgctxt "monster"
@@ -4389,138 +4343,89 @@ msgid "Hidden"
 msgstr "Прикрит"
 
 #: Source/monstdat.cpp:50
-#, fuzzy
-#| msgid "Stalker"
 msgctxt "monster"
 msgid "Stalker"
 msgstr "Следящ от Сенките"
 
 #: Source/monstdat.cpp:51
-#, fuzzy
-#| msgid "Unseen"
 msgctxt "monster"
 msgid "Unseen"
-msgstr ""
-"Рецитираш интересна рима, написана в стил, който ми напомня за други "
-"произведения. Нека сега помисля - как точно беше?\n"
-"\n"
-"...Тъмнината забулва Скритите. Очи блестят незабелязани, и само звуците от "
-"стържене на остри нокти измъчват онези бедни души, които са останали незрящи "
-"за цяла вечност. Затворът за тези прокълнати е наречен Залите на слепите..."
+msgstr "Незабелязан"
 
 #: Source/monstdat.cpp:52
-#, fuzzy
-#| msgid "Illusion Weaver"
 msgctxt "monster"
 msgid "Illusion Weaver"
 msgstr "Предач на Илюзии"
 
 #: Source/monstdat.cpp:53
-#, fuzzy
-#| msgid "Satyr Lord"
 msgctxt "monster"
 msgid "Satyr Lord"
-msgstr "Господарски"
+msgstr "Сатир Господар"
 
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
-#, fuzzy
-#| msgid "Flesh Clan"
 msgctxt "monster"
 msgid "Flesh Clan"
-msgstr "Откъсната плът от души"
+msgstr "Плътски Клан"
 
 #: Source/monstdat.cpp:55 Source/monstdat.cpp:63
-#, fuzzy
-#| msgid "Stone Clan"
 msgctxt "monster"
 msgid "Stone Clan"
-msgstr "Каменено"
+msgstr "Каменен Клан"
 
 #: Source/monstdat.cpp:56 Source/monstdat.cpp:64
-#, fuzzy
-#| msgid "Fire Clan"
 msgctxt "monster"
 msgid "Fire Clan"
-msgstr "Огън "
+msgstr "Огнен Клан"
 
 #: Source/monstdat.cpp:57 Source/monstdat.cpp:65
-#, fuzzy
-#| msgid "Night Clan"
 msgctxt "monster"
 msgid "Night Clan"
-msgstr "Нощта"
+msgstr "Нощен Клан"
 
 #: Source/monstdat.cpp:58
-#, fuzzy
-#| msgid "Fiend"
 msgctxt "monster"
 msgid "Fiend"
-msgstr ""
-"В името на Светлината, познавам този свиреп демон. Много носеха белезите на "
-"яростта му по телата си, когато малцината оцелели от атаката, водена от "
-"Лазар, изпълзяха от катедралата. Не знам какво е използвал, за да разфасова "
-"жертвите си, но не може да е било от този свят. Рани, гноясали от зараза, "
-"дори на ми се сториха почти непосилни за лечение. Пази се, ако възнамеряваш "
-"да се изправиш пред този злодей..."
+msgstr "Злосторник"
 
 #: Source/monstdat.cpp:59
-#, fuzzy
-#| msgid "Blink"
 msgctxt "monster"
 msgid "Blink"
 msgstr "Моментален"
 
 #: Source/monstdat.cpp:60
-#, fuzzy
-#| msgid "Gloom"
 msgctxt "monster"
 msgid "Gloom"
-msgstr "Мрачна Броня"
+msgstr "Мрачник"
 
 #: Source/monstdat.cpp:61
-#, fuzzy
-#| msgid "Familiar"
 msgctxt "monster"
 msgid "Familiar"
-msgstr ""
-"Това изглежда някак познато. Спомням си, че четох нещо много подобно на този "
-"стих, докато проучвах историята на демоничните страдания. В него се говореше "
-"за място на голямо зло, което... Чакай, няма да ходиш там, нали?"
+msgstr "Познайник"
 
 #: Source/monstdat.cpp:66
-#, fuzzy
-#| msgid "Acid Beast"
 msgctxt "monster"
 msgid "Acid Beast"
 msgstr "Киселинен Звяр"
 
 #: Source/monstdat.cpp:67
-#, fuzzy
-#| msgid "Poison Spitter"
 msgctxt "monster"
 msgid "Poison Spitter"
 msgstr "Отровохрачещ"
 
 #: Source/monstdat.cpp:68
-#, fuzzy
-#| msgid "Pit Beast"
 msgctxt "monster"
 msgid "Pit Beast"
-msgstr "Ямата"
+msgstr "Ямен Звяр"
 
 #: Source/monstdat.cpp:69
-#, fuzzy
-#| msgid "Lava Maw"
 msgctxt "monster"
 msgid "Lava Maw"
 msgstr "Магмена Паст"
 
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:474
-#, fuzzy
-#| msgid "Skeleton King"
 msgctxt "monster"
 msgid "Skeleton King"
-msgstr "Леговището на Краля на скелетите"
+msgstr "Кралят Скелет"
 
 #: Source/monstdat.cpp:71 Source/monstdat.cpp:482
 msgctxt "monster"
@@ -4528,623 +4433,442 @@ msgid "The Butcher"
 msgstr "Касапина"
 
 #: Source/monstdat.cpp:72
-#, fuzzy
-#| msgid "Overlord"
 msgctxt "monster"
 msgid "Overlord"
-msgstr "Надзирателски шлем"
+msgstr "Надзирател"
 
 #: Source/monstdat.cpp:73
-#, fuzzy
-#| msgid "Mud Man"
 msgctxt "monster"
 msgid "Mud Man"
 msgstr "Кален човек"
 
 #: Source/monstdat.cpp:74
-#, fuzzy
-#| msgid "Toad Demon"
 msgctxt "monster"
 msgid "Toad Demon"
-msgstr "Демон"
+msgstr "Крастав демон"
 
 #: Source/monstdat.cpp:75
-#, fuzzy
-#| msgid "Flayed One"
 msgctxt "monster"
 msgid "Flayed One"
-msgstr "меч за една ръка"
+msgstr "Кожодер"
 
 #: Source/monstdat.cpp:76
-#, fuzzy
-#| msgid "Wyrm"
 msgctxt "monster"
 msgid "Wyrm"
-msgstr "Змейски"
+msgstr "Змей"
 
 #: Source/monstdat.cpp:77
-#, fuzzy
-#| msgid "Cave Slug"
 msgctxt "monster"
 msgid "Cave Slug"
 msgstr "Пещерен плужек"
 
 #: Source/monstdat.cpp:78
-#, fuzzy
-#| msgid "Devil Wyrm"
 msgctxt "monster"
 msgid "Devil Wyrm"
-msgstr "Змейски"
+msgstr "Дяволски змей"
 
 #: Source/monstdat.cpp:79
-#, fuzzy
-#| msgid "Devourer"
 msgctxt "monster"
 msgid "Devourer"
 msgstr "Поглъщащ"
 
 #: Source/monstdat.cpp:80
-#, fuzzy
-#| msgid "Magma Demon"
 msgctxt "monster"
 msgid "Magma Demon"
-msgstr "Пръстен от Магма"
+msgstr "Магмен Демон"
 
 #: Source/monstdat.cpp:81
 msgctxt "monster"
 msgid "Blood Stone"
-msgstr "Кръвен камък"
+msgstr "Кръвен Kамък"
 
 #: Source/monstdat.cpp:82
-#, fuzzy
-#| msgid "Hell Stone"
 msgctxt "monster"
 msgid "Hell Stone"
-msgstr "Ад на земята"
+msgstr "Адски Камък"
 
 #: Source/monstdat.cpp:83
-#, fuzzy
-#| msgid "Lava Lord"
 msgctxt "monster"
 msgid "Lava Lord"
-msgstr "Господарски"
+msgstr "Господар на Лавата"
 
 #: Source/monstdat.cpp:84
-#, fuzzy
-#| msgid "Horned Demon"
 msgctxt "monster"
 msgid "Horned Demon"
-msgstr "Демон"
+msgstr "Рогат Демон"
 
 #: Source/monstdat.cpp:85
-#, fuzzy
-#| msgid "Mud Runner"
 msgctxt "monster"
 msgid "Mud Runner"
 msgstr "Кален Бегач"
 
 #: Source/monstdat.cpp:86
-#, fuzzy
-#| msgid "Frost Charger"
 msgctxt "monster"
 msgid "Frost Charger"
 msgstr "Връхлитащ мраз"
 
 #: Source/monstdat.cpp:87
-#, fuzzy
-#| msgid "Obsidian Lord"
 msgctxt "monster"
 msgid "Obsidian Lord"
-msgstr "Обсидиани "
+msgstr "Обсидианов Повелител"
 
 #: Source/monstdat.cpp:88
-#, fuzzy
-#| msgid "oldboned"
 msgctxt "monster"
 msgid "oldboned"
 msgstr "Старокостен"
 
 #: Source/monstdat.cpp:89
-#, fuzzy
-#| msgid "Red Death"
 msgctxt "monster"
 msgid "Red Death"
-msgstr "Червени"
+msgstr "Червена Смърт"
 
 #: Source/monstdat.cpp:90
-#, fuzzy
-#| msgid "Litch Demon"
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Демон"
+msgstr "Лич Демон"
 
 #: Source/monstdat.cpp:91
-#, fuzzy
-#| msgid "Undead Balrog"
 msgctxt "monster"
 msgid "Undead Balrog"
-msgstr "Немъртъв"
+msgstr "Немъртъв Барлог"
 
 #: Source/monstdat.cpp:92
-#, fuzzy
-#| msgid "Incinerator"
 msgctxt "monster"
 msgid "Incinerator"
 msgstr "Изгарящ"
 
 #: Source/monstdat.cpp:93
-#, fuzzy
-#| msgid "Flame Lord"
 msgctxt "monster"
 msgid "Flame Lord"
-msgstr "Пламъка"
+msgstr "Огнен Господар"
 
 #: Source/monstdat.cpp:94
-#, fuzzy
-#| msgid "Doom Fire"
 msgctxt "monster"
 msgid "Doom Fire"
-msgstr "Огън "
+msgstr "Обречен Пламък"
 
 #: Source/monstdat.cpp:95
-#, fuzzy
-#| msgid "Hell Burner"
 msgctxt "monster"
 msgid "Hell Burner"
-msgstr "Надолу към ада"
+msgstr "Адски Горяч"
 
 #: Source/monstdat.cpp:96
-#, fuzzy
-#| msgid "Red Storm"
 msgctxt "monster"
 msgid "Red Storm"
-msgstr "Бурешпил"
+msgstr "Червена Буря"
 
 #: Source/monstdat.cpp:97
-#, fuzzy
-#| msgid "Storm Rider"
 msgctxt "monster"
 msgid "Storm Rider"
-msgstr "Бурешпил"
+msgstr "Буреносен Водач"
 
 #: Source/monstdat.cpp:98
-#, fuzzy
-#| msgid "Storm Lord"
 msgctxt "monster"
 msgid "Storm Lord"
-msgstr "Бурешпил"
+msgstr "Господар на Бурите"
 
 #: Source/monstdat.cpp:99
-#, fuzzy
-#| msgid "Maelstrom"
 msgctxt "monster"
 msgid "Maelstrom"
 msgstr "Маелстрьом"
 
 #: Source/monstdat.cpp:100
-#, fuzzy
-#| msgid "Devil Kin Brute"
 msgctxt "monster"
 msgid "Devil Kin Brute"
 msgstr "Дяволска Челяд Здравеняк"
 
 #: Source/monstdat.cpp:101
-#, fuzzy
-#| msgid "Winged-Demon"
 msgctxt "monster"
 msgid "Winged-Demon"
-msgstr "Демон"
+msgstr "Крилат Демон"
 
 #: Source/monstdat.cpp:102
-#, fuzzy
-#| msgid "Gargoyle"
 msgctxt "monster"
 msgid "Gargoyle"
 msgstr "Гаргойл"
 
 #: Source/monstdat.cpp:103
-#, fuzzy
-#| msgid "Blood Claw"
 msgctxt "monster"
 msgid "Blood Claw"
-msgstr "Кръвта"
+msgstr "Кървав нокът"
 
 #: Source/monstdat.cpp:104
-#, fuzzy
-#| msgid "Death Wing"
 msgctxt "monster"
 msgid "Death Wing"
-msgstr "Масло на Смъртта"
+msgstr "Смъртоносно Крило"
 
 #: Source/monstdat.cpp:105
-#, fuzzy
-#| msgid "Slayer"
 msgctxt "monster"
 msgid "Slayer"
 msgstr "Унищожител"
 
 #: Source/monstdat.cpp:106
-#, fuzzy
-#| msgid "Guardian"
 msgctxt "monster"
 msgid "Guardian"
-msgstr "Свитък за Пазител"
+msgstr "Пазител"
 
 #: Source/monstdat.cpp:107
-#, fuzzy
-#| msgid "Vortex Lord"
 msgctxt "monster"
 msgid "Vortex Lord"
-msgstr "Господарски"
+msgstr "Господар на Вихъра"
 
 #: Source/monstdat.cpp:108
-#, fuzzy
-#| msgid "Balrog"
 msgctxt "monster"
 msgid "Balrog"
 msgstr "Балрог"
 
 #: Source/monstdat.cpp:109
-#, fuzzy
-#| msgid "Cave Viper"
 msgctxt "monster"
 msgid "Cave Viper"
 msgstr "Пещерна Усойница"
 
 #: Source/monstdat.cpp:110
-#, fuzzy
-#| msgid "Fire Drake"
 msgctxt "monster"
 msgid "Fire Drake"
-msgstr "Ламски"
+msgstr "Огнена Ламя"
 
 #: Source/monstdat.cpp:111
-#, fuzzy
-#| msgid "Gold Viper"
 msgctxt "monster"
 msgid "Gold Viper"
-msgstr "$Злато:"
+msgstr "Златна Усойница"
 
 #: Source/monstdat.cpp:112
-#, fuzzy
-#| msgid "Azure Drake"
 msgctxt "monster"
 msgid "Azure Drake"
-msgstr "Лазурни"
+msgstr "Лазурена Ламя"
 
 #: Source/monstdat.cpp:113
-#, fuzzy
-#| msgid "Black Knight"
 msgctxt "monster"
 msgid "Black Knight"
-msgstr "Рицарски"
+msgstr "Черен Рицар"
 
 #: Source/monstdat.cpp:114
-#, fuzzy
-#| msgid "Doom Guard"
 msgctxt "monster"
 msgid "Doom Guard"
 msgstr "Пазител на Обречените"
 
 #: Source/monstdat.cpp:115
-#, fuzzy
-#| msgid "Steel Lord"
 msgctxt "monster"
 msgid "Steel Lord"
-msgstr "Господарски"
+msgstr "Стоманен Повелител"
 
 #: Source/monstdat.cpp:116
-#, fuzzy
-#| msgid "Blood Knight"
 msgctxt "monster"
 msgid "Blood Knight"
-msgstr "Рицарски"
+msgstr "Кървав Рицар"
 
 #: Source/monstdat.cpp:117
-#, fuzzy
-#| msgid "The Shredded"
 msgctxt "monster"
 msgid "The Shredded"
 msgstr "Раздробеният"
 
 #: Source/monstdat.cpp:118
-#, fuzzy
-#| msgid "Hollow One"
 msgctxt "monster"
 msgid "Hollow One"
-msgstr "меч за една ръка"
+msgstr "Празнодушен"
 
 #: Source/monstdat.cpp:119
-#, fuzzy
-#| msgid "Pain Master"
 msgctxt "monster"
 msgid "Pain Master"
-msgstr "Болката"
+msgstr "Господар на Болката"
 
 #: Source/monstdat.cpp:120
-#, fuzzy
-#| msgid "Reality Weaver"
 msgctxt "monster"
 msgid "Reality Weaver"
-msgstr "Предач на реалности"
+msgstr "Предач на Rеалности"
 
 #: Source/monstdat.cpp:121
-#, fuzzy
-#| msgid "Succubus"
 msgctxt "monster"
 msgid "Succubus"
 msgstr "Сукуби"
 
 #: Source/monstdat.cpp:122
-#, fuzzy
-#| msgid "Snow Witch"
 msgctxt "monster"
 msgid "Snow Witch"
-msgstr "Колибата на Вещицата"
+msgstr "Ледена Вещица"
 
 #: Source/monstdat.cpp:123
-#, fuzzy
-#| msgid "Hell Spawn"
 msgctxt "monster"
 msgid "Hell Spawn"
-msgstr "Ад на земята"
+msgstr "Адска Отродия"
 
 #: Source/monstdat.cpp:124
-#, fuzzy
-#| msgid "Soul Burner"
 msgctxt "monster"
 msgid "Soul Burner"
 msgstr "Душеизпепеляваща"
 
 #: Source/monstdat.cpp:125
-#, fuzzy
-#| msgid "Counselor"
 msgctxt "monster"
 msgid "Counselor"
 msgstr "Съветник"
 
 #: Source/monstdat.cpp:126
-#, fuzzy
-#| msgid "Magistrate"
 msgctxt "monster"
 msgid "Magistrate"
-msgstr "Магистър"
+msgstr "Магистрат"
 
 #: Source/monstdat.cpp:127
-#, fuzzy
-#| msgid "Cabalist"
 msgctxt "monster"
 msgid "Cabalist"
 msgstr "Кабалист"
 
 #: Source/monstdat.cpp:128
-#, fuzzy
-#| msgid "Advocate"
 msgctxt "monster"
 msgid "Advocate"
 msgstr "Адвокат"
 
 #: Source/monstdat.cpp:129
-#, fuzzy
-#| msgid "Golem"
 msgctxt "monster"
 msgid "Golem"
-msgstr "Свитък за Голем"
+msgstr "Голем"
 
 #: Source/monstdat.cpp:130
-#, fuzzy
-#| msgid "The Dark Lord"
 msgctxt "monster"
 msgid "The Dark Lord"
-msgstr ""
-"Значи легендата за Картата е истина. Дори аз никога не съм вярвал дотолкова "
-"в това! Предполагам, че е време да ти кажа истината кой съм, приятелю. "
-"Виждаш ли, не съм това, което изглеждам на пръв поглед...\n"
-"\n"
-"Истинското ми име е Декард Кайн Старейшината и съм последният потомък на "
-"древно Братство, което се е посветило на опазването и съхраняването на "
-"тайните на едно вечно зло. Зло, което очевидно вече е освободено... \n"
-" \n"
-"Тъмнината срещу което се изправяш, е мрачния Господар на Ужаса, познат на "
-"смъртните като Диабло. Именно той е бил затворен в Лабиринта преди много "
-"векове. Картата, която държиш сега, е създадена преди стотици години, за да "
-"отбележи времето, когато Диабло ще се издигне отново от затвора си. Когато "
-"двете звезди на картата съвпаднат, Диабло ще бъде на върха на своята мощ. "
-"Той ще бъде почти непобедим...\n"
-" \n"
-"Сега си в надпревара с времето, приятелю! Намери Диабло и го унищожи, преди "
-"звездите да съвпаднат, защото може би никога повече няма да имаме възможност "
-"да отървем света от злото му!"
+msgstr "Диабло"
 
 #: Source/monstdat.cpp:131
-#, fuzzy
-#| msgid "The Arch-Litch Malignus"
 msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr "Архангелски"
+msgstr "Архи-немъртвия Малигнус"
 
 #: Source/monstdat.cpp:132
-#, fuzzy
-#| msgid "Hellboar"
 msgctxt "monster"
 msgid "Hellboar"
 msgstr "Адски глиган"
 
 #: Source/monstdat.cpp:133
-#, fuzzy
-#| msgid "Stinger"
 msgctxt "monster"
 msgid "Stinger"
 msgstr "Убодливец"
 
 #: Source/monstdat.cpp:134
-#, fuzzy
-#| msgid "Psychorb"
 msgctxt "monster"
 msgid "Psychorb"
 msgstr "Психорба"
 
 #: Source/monstdat.cpp:135
-#, fuzzy
-#| msgid "Arachnon"
 msgctxt "monster"
 msgid "Arachnon"
 msgstr "Арахнон"
 
 #: Source/monstdat.cpp:136
-#, fuzzy
-#| msgid "Felltwin"
 msgctxt "monster"
 msgid "Felltwin"
 msgstr "Изпаднал близнак"
 
 #: Source/monstdat.cpp:137
-#, fuzzy
-#| msgid "Hork Spawn"
 msgctxt "monster"
 msgid "Hork Spawn"
 msgstr "Отрок на Хорк"
 
 #: Source/monstdat.cpp:138
-#, fuzzy
-#| msgid "Venomtail"
 msgctxt "monster"
 msgid "Venomtail"
 msgstr "Отровопашка"
 
 #: Source/monstdat.cpp:139
-#, fuzzy
-#| msgid "Necromorb"
 msgctxt "monster"
 msgid "Necromorb"
 msgstr "Некроморб"
 
 #: Source/monstdat.cpp:140
-#, fuzzy
-#| msgid "Spider Lord"
 msgctxt "monster"
 msgid "Spider Lord"
-msgstr "Паешки"
+msgstr "Паяк Властелин"
 
 #: Source/monstdat.cpp:141
-#, fuzzy
-#| msgid "Lashworm"
 msgctxt "monster"
 msgid "Lashworm"
 msgstr "Шибачервей"
 
 #: Source/monstdat.cpp:142
-#, fuzzy
-#| msgid "Torchant"
 msgctxt "monster"
 msgid "Torchant"
 msgstr "Факлоплюец"
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
-#, fuzzy
-#| msgid "Hork Demon"
 msgctxt "monster"
 msgid "Hork Demon"
-msgstr "Демон"
+msgstr "Демона Хорк"
 
 #: Source/monstdat.cpp:144
-#, fuzzy
-#| msgid "Hell Bug"
 msgctxt "monster"
 msgid "Hell Bug"
-msgstr "Ад на земята"
+msgstr "Адско насекомо"
 
 #: Source/monstdat.cpp:145
-#, fuzzy
-#| msgid "Gravedigger"
 msgctxt "monster"
 msgid "Gravedigger"
 msgstr "Гробар"
 
 #: Source/monstdat.cpp:146
-#, fuzzy
-#| msgid "Tomb Rat"
 msgctxt "monster"
 msgid "Tomb Rat"
-msgstr "Гробницата на Крал Леорик"
+msgstr "Гробен плъх"
 
 #: Source/monstdat.cpp:147
-#, fuzzy
-#| msgid "Firebat"
 msgctxt "monster"
 msgid "Firebat"
 msgstr "Огнен прилеп"
 
 #: Source/monstdat.cpp:148
-#, fuzzy
-#| msgid "Skullwing"
 msgctxt "monster"
 msgid "Skullwing"
 msgstr "Черепокрил"
 
 #: Source/monstdat.cpp:149
-#, fuzzy
-#| msgid "Lich"
 msgctxt "monster"
 msgid "Lich"
 msgstr "Лич"
 
 #: Source/monstdat.cpp:150
-#, fuzzy
-#| msgid "Crypt Demon"
 msgctxt "monster"
 msgid "Crypt Demon"
-msgstr "Надолу към гробницата"
+msgstr "Демон от Криптата"
 
 #: Source/monstdat.cpp:151
-#, fuzzy
-#| msgid "Hellbat"
 msgctxt "monster"
 msgid "Hellbat"
 msgstr "Адски прилеп"
 
 #: Source/monstdat.cpp:152
-#, fuzzy
-#| msgid "Bone Demon"
 msgctxt "monster"
 msgid "Bone Demon"
-msgstr "Залата на Костите"
+msgstr "Костен демон"
 
 #: Source/monstdat.cpp:153
-#, fuzzy
-#| msgid "Arch Lich"
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr "Архангелски"
+msgstr "Архи-лич"
 
 #: Source/monstdat.cpp:154
-#, fuzzy
-#| msgid "Biclops"
 msgctxt "monster"
 msgid "Biclops"
 msgstr "Биклоп"
 
 #: Source/monstdat.cpp:155
-#, fuzzy
-#| msgid "Flesh Thing"
 msgctxt "monster"
 msgid "Flesh Thing"
-msgstr "Откъсната плът от души"
+msgstr "Плътноядец"
 
 #: Source/monstdat.cpp:156
-#, fuzzy
-#| msgid "Reaper"
 msgctxt "monster"
 msgid "Reaper"
 msgstr "Жътвар"
 
+#. TRANSLATORS: Monster Block end
+#. MT_NAKRUL
+#: Source/monstdat.cpp:158 Source/monstdat.cpp:485
+msgctxt "monster"
+msgid "Na-Krul"
+msgstr ""
+
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
-#, fuzzy
-#| msgid "Gharbad the Weak"
 msgctxt "monster"
 msgid "Gharbad the Weak"
-msgstr "Гарбад Хилавия"
+msgstr "Хилавия Гарбад"
 
 #: Source/monstdat.cpp:475
 msgctxt "monster"
@@ -5152,32 +4876,29 @@ msgid "Zhar the Mad"
 msgstr "Лудият Жар"
 
 #: Source/monstdat.cpp:476
-#, fuzzy
-#| msgid "Snotspill"
 msgctxt "monster"
 msgid "Snotspill"
 msgstr "Сополивия"
 
 #: Source/monstdat.cpp:477
-#, fuzzy
-#| msgid "Arch-Bishop Lazarus"
 msgctxt "monster"
 msgid "Arch-Bishop Lazarus"
-msgstr "Архангелски"
+msgstr "Архиепископ Лазар"
 
 #: Source/monstdat.cpp:478
-#, fuzzy
-#| msgid "Red Vex"
 msgctxt "monster"
 msgid "Red Vex"
-msgstr "Червени"
+msgstr "Червената Векс"
 
 #: Source/monstdat.cpp:479
-#, fuzzy
-#| msgid "Black Jade"
 msgctxt "monster"
 msgid "Black Jade"
-msgstr "Нефритени"
+msgstr "Черната Джейд"
+
+#: Source/monstdat.cpp:480
+msgctxt "monster"
+msgid "Lachdanan"
+msgstr ""
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -5190,583 +4911,439 @@ msgid "The Defiler"
 msgstr "Осквернителят"
 
 #: Source/monstdat.cpp:486
-#, fuzzy
-#| msgid "Bonehead Keenaxe"
 msgctxt "monster"
 msgid "Bonehead Keenaxe"
 msgstr "Кокалоглав Секирострастен"
 
 #: Source/monstdat.cpp:487
-#, fuzzy
-#| msgid "Bladeskin the Slasher"
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
 msgstr "Срязващия Острокож"
 
 #: Source/monstdat.cpp:488
-#, fuzzy
-#| msgid "Soulpus"
 msgctxt "monster"
 msgid "Soulpus"
 msgstr "Душегной"
 
 #: Source/monstdat.cpp:489
-#, fuzzy
-#| msgid "Pukerat the Unclean"
 msgctxt "monster"
 msgid "Pukerat the Unclean"
 msgstr "Нечистливия Бълвоплъх"
 
 #: Source/monstdat.cpp:490
-#, fuzzy
-#| msgid "Boneripper"
 msgctxt "monster"
 msgid "Boneripper"
 msgstr "Костотрошача"
 
 #: Source/monstdat.cpp:491
-#, fuzzy
-#| msgid "Rotfeast the Hungry"
 msgctxt "monster"
 msgid "Rotfeast the Hungry"
 msgstr "Гладния Гнилопир"
 
 #: Source/monstdat.cpp:492
-#, fuzzy
-#| msgid "Gutshank the Quick"
 msgctxt "monster"
 msgid "Gutshank the Quick"
-msgstr "ускорен замах"
+msgstr "Пъргавия Чреволеш"
 
 #: Source/monstdat.cpp:493
-#, fuzzy
-#| msgid "Brokenhead Bangshield"
 msgctxt "monster"
 msgid "Brokenhead Bangshield"
 msgstr "Чупеглав Хлопащит"
 
+#: Source/monstdat.cpp:494
+msgctxt "monster"
+msgid "Bongo"
+msgstr ""
+
 #: Source/monstdat.cpp:495
-#, fuzzy
-#| msgid "Rotcarnage"
 msgctxt "monster"
 msgid "Rotcarnage"
 msgstr "Кланегнил"
 
 #: Source/monstdat.cpp:496
-#, fuzzy
-#| msgid "Shadowbite"
 msgctxt "monster"
 msgid "Shadowbite"
 msgstr "Сенкохапливия"
 
 #: Source/monstdat.cpp:497
-#, fuzzy
-#| msgid "Deadeye"
 msgctxt "monster"
 msgid "Deadeye"
 msgstr "Мъртвоко"
 
 #: Source/monstdat.cpp:498
-#, fuzzy
-#| msgid "Madeye the Dead"
 msgctxt "monster"
 msgid "Madeye the Dead"
-msgstr "Лък на мъртвите"
+msgstr "Мъртвия Лудоок"
+
+#: Source/monstdat.cpp:499
+msgctxt "monster"
+msgid "El Chupacabras"
+msgstr ""
 
 #: Source/monstdat.cpp:500
-#, fuzzy
-#| msgid "Skullfire"
 msgctxt "monster"
 msgid "Skullfire"
 msgstr "Черепогън"
 
 #: Source/monstdat.cpp:501
-#, fuzzy
-#| msgid "Warpskull"
 msgctxt "monster"
 msgid "Warpskull"
 msgstr "Кривочереп"
 
 #: Source/monstdat.cpp:502
-#, fuzzy
-#| msgid "Goretongue"
 msgctxt "monster"
 msgid "Goretongue"
 msgstr "Кръвоезик"
 
 #: Source/monstdat.cpp:503
-#, fuzzy
-#| msgid "Pulsecrawler"
 msgctxt "monster"
 msgid "Pulsecrawler"
 msgstr "Пулсолазещия"
 
 #: Source/monstdat.cpp:504
-#, fuzzy
-#| msgid "Moonbender"
 msgctxt "monster"
 msgid "Moonbender"
 msgstr "Луногърчещ"
 
 #: Source/monstdat.cpp:505
-#, fuzzy
-#| msgid "Wrathraven"
 msgctxt "monster"
 msgid "Wrathraven"
 msgstr "Гнявогарван"
 
 #: Source/monstdat.cpp:506
-#, fuzzy
-#| msgid "Spineeater"
 msgctxt "monster"
 msgid "Spineeater"
 msgstr "Шипояд"
 
 #: Source/monstdat.cpp:507
-#, fuzzy
-#| msgid "Blackash the Burning"
 msgctxt "monster"
 msgid "Blackash the Burning"
-msgstr "Горенето"
+msgstr "Горящия Чернопепел"
 
 #: Source/monstdat.cpp:508
-#, fuzzy
-#| msgid "Shadowcrow"
 msgctxt "monster"
 msgid "Shadowcrow"
 msgstr "Сянкогарван"
 
 #: Source/monstdat.cpp:509
-#, fuzzy
-#| msgid "Blightstone the Weak"
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr "Гарбад Хилавия"
+msgstr "Слабия Болнокамен"
 
 #: Source/monstdat.cpp:510
-#, fuzzy
-#| msgid "Bilefroth the Pit Master"
 msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr "Повелителски"
+msgstr "Жлъчепян Началника на Ямата"
 
 #: Source/monstdat.cpp:511
-#, fuzzy
-#| msgid "Bloodskin Darkbow"
 msgctxt "monster"
 msgid "Bloodskin Darkbow"
 msgstr "Кръвокож Тъмнолък"
 
 #: Source/monstdat.cpp:512
-#, fuzzy
-#| msgid "Foulwing"
 msgctxt "monster"
 msgid "Foulwing"
 msgstr "Долнокрил"
 
 #: Source/monstdat.cpp:513
-#, fuzzy
-#| msgid "Shadowdrinker"
 msgctxt "monster"
 msgid "Shadowdrinker"
 msgstr "Сянкопиеца"
 
 #: Source/monstdat.cpp:514
-#, fuzzy
-#| msgid "Hazeshifter"
 msgctxt "monster"
 msgid "Hazeshifter"
 msgstr "Омараменящия"
 
 #: Source/monstdat.cpp:515
-#, fuzzy
-#| msgid "Deathspit"
 msgctxt "monster"
 msgid "Deathspit"
 msgstr "Смъртоплюй"
 
 #: Source/monstdat.cpp:516
-#, fuzzy
-#| msgid "Bloodgutter"
 msgctxt "monster"
 msgid "Bloodgutter"
 msgstr "Кръвопорещия"
 
 #: Source/monstdat.cpp:517
-#, fuzzy
-#| msgid "Deathshade Fleshmaul"
 msgctxt "monster"
 msgid "Deathshade Fleshmaul"
 msgstr "Смъртосян Плъточук"
 
 #: Source/monstdat.cpp:518
-#, fuzzy
-#| msgid "Warmaggot the Mad"
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "Лудият Жар"
+msgstr "Лудият Войночервей"
 
 #: Source/monstdat.cpp:519
-#, fuzzy
-#| msgid "Glasskull the Jagged"
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr "Назъбени"
+msgstr "Нащърбения Стъклочереп"
 
 #: Source/monstdat.cpp:520
-#, fuzzy
-#| msgid "Blightfire"
 msgctxt "monster"
 msgid "Blightfire"
 msgstr "Болестогън"
 
 #: Source/monstdat.cpp:521
-#, fuzzy
-#| msgid "Nightwing the Cold"
 msgctxt "monster"
 msgid "Nightwing the Cold"
 msgstr "Студения Нощокрил"
 
 #: Source/monstdat.cpp:522
-#, fuzzy
-#| msgid "Gorestone"
 msgctxt "monster"
 msgid "Gorestone"
 msgstr "Съсирекамък"
 
 #: Source/monstdat.cpp:523
-#, fuzzy
-#| msgid "Bronzefist Firestone"
 msgctxt "monster"
 msgid "Bronzefist Firestone"
 msgstr "Бронзюмрук Огнекамък"
 
 #: Source/monstdat.cpp:524
-#, fuzzy
-#| msgid "Wrathfire the Doomed"
 msgctxt "monster"
 msgid "Wrathfire the Doomed"
 msgstr "Гнявоплам Обречения"
 
 #: Source/monstdat.cpp:525
-#, fuzzy
-#| msgid "Firewound the Grim"
 msgctxt "monster"
 msgid "Firewound the Grim"
 msgstr "Огнерана Безжалостния"
 
 #: Source/monstdat.cpp:526
-#, fuzzy
-#| msgid "Baron Sludge"
 msgctxt "monster"
 msgid "Baron Sludge"
 msgstr "Барон Шлам"
 
 #: Source/monstdat.cpp:527
-#, fuzzy
-#| msgid "Blighthorn Steelmace"
 msgctxt "monster"
 msgid "Blighthorn Steelmace"
 msgstr "Отровошип Стоманобух"
 
 #: Source/monstdat.cpp:528
-#, fuzzy
-#| msgid "Chaoshowler"
 msgctxt "monster"
 msgid "Chaoshowler"
 msgstr "Хаосовиещия"
 
 #: Source/monstdat.cpp:529
-#, fuzzy
-#| msgid "Doomgrin the Rotting"
 msgctxt "monster"
 msgid "Doomgrin the Rotting"
 msgstr "Орисхил Гниещия"
 
 #: Source/monstdat.cpp:530
-#, fuzzy
-#| msgid "Madburner"
 msgctxt "monster"
 msgid "Madburner"
 msgstr "Лудогорящия"
 
 #: Source/monstdat.cpp:531
-#, fuzzy
-#| msgid "Bonesaw the Litch"
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr "Трион за кости"
+msgstr "Лича Косторез"
 
 #: Source/monstdat.cpp:532
-#, fuzzy
-#| msgid "Breakspine"
 msgctxt "monster"
 msgid "Breakspine"
 msgstr "Чупигръбнак"
 
 #: Source/monstdat.cpp:533
-#, fuzzy
-#| msgid "Devilskull Sharpbone"
 msgctxt "monster"
 msgid "Devilskull Sharpbone"
 msgstr "Дявочереп Острококал"
 
 #: Source/monstdat.cpp:534
-#, fuzzy
-#| msgid "Brokenstorm"
 msgctxt "monster"
 msgid "Brokenstorm"
 msgstr "Разбибуря"
 
 #: Source/monstdat.cpp:535
-#, fuzzy
-#| msgid "Stormbane"
 msgctxt "monster"
 msgid "Stormbane"
 msgstr "Бурегибел"
 
 #: Source/monstdat.cpp:536
-#, fuzzy
-#| msgid "Oozedrool"
 msgctxt "monster"
 msgid "Oozedrool"
 msgstr "Капелига"
 
 #: Source/monstdat.cpp:537
-#, fuzzy
-#| msgid "Goldblight of the Flame"
 msgctxt "monster"
 msgid "Goldblight of the Flame"
-msgstr "Пламъка"
+msgstr "Заразлато от Пламъка"
 
 #: Source/monstdat.cpp:538
-#, fuzzy
-#| msgid "Blackstorm"
 msgctxt "monster"
 msgid "Blackstorm"
 msgstr "Чернобур"
 
 #: Source/monstdat.cpp:539
-#, fuzzy
-#| msgid "Plaguewrath"
 msgctxt "monster"
 msgid "Plaguewrath"
 msgstr "Чумоярост"
 
 #: Source/monstdat.cpp:540
-#, fuzzy
-#| msgid "The Flayer"
 msgctxt "monster"
 msgid "The Flayer"
 msgstr "Бичуващия"
 
 #: Source/monstdat.cpp:541
-#, fuzzy
-#| msgid "Bluehorn"
 msgctxt "monster"
 msgid "Bluehorn"
 msgstr "Синерог"
 
 #: Source/monstdat.cpp:542
-#, fuzzy
-#| msgid "Warpfire Hellspawn"
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
 msgstr "Кривогън Пъклочадие"
 
 #: Source/monstdat.cpp:543
-#, fuzzy
-#| msgid "Fangspeir"
 msgctxt "monster"
 msgid "Fangspeir"
 msgstr "Зъбекопие"
 
 #: Source/monstdat.cpp:544
-#, fuzzy
-#| msgid "Festerskull"
 msgctxt "monster"
 msgid "Festerskull"
 msgstr "Гноечереп"
 
 #: Source/monstdat.cpp:545
-#, fuzzy
-#| msgid "Lionskull the Bent"
 msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr "Изкривени"
+msgstr "Лъвочереп Привития"
 
 #: Source/monstdat.cpp:546
-#, fuzzy
-#| msgid "Blacktongue"
 msgctxt "monster"
 msgid "Blacktongue"
 msgstr "Черноезик"
 
 #: Source/monstdat.cpp:547
-#, fuzzy
-#| msgid "Viletouch"
 msgctxt "monster"
 msgid "Viletouch"
 msgstr "Гнуседопир"
 
 #: Source/monstdat.cpp:548
-#, fuzzy
-#| msgid "Viperflame"
 msgctxt "monster"
 msgid "Viperflame"
 msgstr "Усойнопламък"
 
 #: Source/monstdat.cpp:549
-#, fuzzy
-#| msgid "Fangskin"
 msgctxt "monster"
 msgid "Fangskin"
 msgstr "Зъбекож"
 
 #: Source/monstdat.cpp:550
-#, fuzzy
-#| msgid "Witchfire the Unholy"
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr "Нечестивия олтар"
+msgstr "Вещогън Нечестивия"
 
 #: Source/monstdat.cpp:551
-#, fuzzy
-#| msgid "Blackskull"
 msgctxt "monster"
 msgid "Blackskull"
 msgstr "Черночереп"
 
 #: Source/monstdat.cpp:552
-#, fuzzy
-#| msgid "Soulslash"
 msgctxt "monster"
 msgid "Soulslash"
 msgstr "Душерез"
 
 #: Source/monstdat.cpp:553
-#, fuzzy
-#| msgid "Windspawn"
 msgctxt "monster"
 msgid "Windspawn"
 msgstr "Ветрочеляд"
 
 #: Source/monstdat.cpp:554
-#, fuzzy
-#| msgid "Lord of the Pit"
 msgctxt "monster"
 msgid "Lord of the Pit"
-msgstr "Ямата"
+msgstr "Господаря на Ямата"
 
 #: Source/monstdat.cpp:555
-#, fuzzy
-#| msgid "Rustweaver"
 msgctxt "monster"
 msgid "Rustweaver"
 msgstr "Ръждоплет"
 
 #: Source/monstdat.cpp:556
-#, fuzzy
-#| msgid "Howlingire the Shade"
 msgctxt "monster"
 msgid "Howlingire the Shade"
 msgstr "Гнявой Сянката"
 
 #: Source/monstdat.cpp:557
-#, fuzzy
-#| msgid "Doomcloud"
 msgctxt "monster"
 msgid "Doomcloud"
 msgstr "Обреченоблак"
 
 #: Source/monstdat.cpp:558
-#, fuzzy
-#| msgid "Bloodmoon Soulfire"
 msgctxt "monster"
 msgid "Bloodmoon Soulfire"
 msgstr "Кърволуна Душеогнена"
 
 #: Source/monstdat.cpp:559
-#, fuzzy
-#| msgid "Witchmoon"
 msgctxt "monster"
 msgid "Witchmoon"
 msgstr "Вещолуна"
 
 #: Source/monstdat.cpp:560
-#, fuzzy
-#| msgid "Gorefeast"
 msgctxt "monster"
 msgid "Gorefeast"
 msgstr "Съсирепир"
 
 #: Source/monstdat.cpp:561
-#, fuzzy
-#| msgid "Graywar the Slayer"
 msgctxt "monster"
 msgid "Graywar the Slayer"
 msgstr "Сивойна Палача"
 
 #: Source/monstdat.cpp:562
-#, fuzzy
-#| msgid "Dreadjudge"
 msgctxt "monster"
 msgid "Dreadjudge"
 msgstr "Страхосъдия"
 
 #: Source/monstdat.cpp:563
-#, fuzzy
-#| msgid "Stareye the Witch"
 msgctxt "monster"
 msgid "Stareye the Witch"
-msgstr "Вещицата Адрия"
+msgstr "Звездноока Вещицата"
 
 #: Source/monstdat.cpp:564
-#, fuzzy
-#| msgid "Steelskull the Hunter"
 msgctxt "monster"
 msgid "Steelskull the Hunter"
-msgstr "Смъртоносен Ловец"
+msgstr "Стоманочереп Ловецът"
 
 #: Source/monstdat.cpp:565
-#, fuzzy
-#| msgid "Sir Gorash"
 msgctxt "monster"
 msgid "Sir Gorash"
 msgstr "Сър Гораш"
 
 #: Source/monstdat.cpp:566
-#, fuzzy
-#| msgid "The Vizier"
 msgctxt "monster"
 msgid "The Vizier"
 msgstr "Визирът"
 
-#: Source/monstdat.cpp:568
+#: Source/monstdat.cpp:567
 #, fuzzy
-#| msgid "Bloodlust"
+#| msgid "Sapphire"
+msgctxt "monster"
+msgid "Zamphir"
+msgstr "Сапфирени"
+
+#: Source/monstdat.cpp:568
 msgctxt "monster"
 msgid "Bloodlust"
 msgstr "Кръвожажда"
 
+#: Source/monstdat.cpp:569
+msgctxt "monster"
+msgid "Webwidow"
+msgstr ""
+
 #: Source/monstdat.cpp:570
-#, fuzzy
-#| msgid "Fleshdancer"
 msgctxt "monster"
 msgid "Fleshdancer"
 msgstr "Плътотанц"
 
 #: Source/monstdat.cpp:571
-#, fuzzy
-#| msgid "Grimspike"
 msgctxt "monster"
 msgid "Grimspike"
 msgstr "Мрачешип"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:573
-#, fuzzy
-#| msgid "Doomlock"
 msgctxt "monster"
 msgid "Doomlock"
 msgstr "Гибелобречен"
@@ -5833,15 +5410,15 @@ msgstr "Няма имунитети"
 
 #: Source/monster.cpp:4695
 msgid "Some Magic Resistances"
-msgstr "Накакви Магически Устойчивости"
+msgstr "Някакви Магически Устойчивости"
 
 #: Source/monster.cpp:4700
 msgid "Some Magic Immunities"
-msgstr "Накакви Магически Имунитети"
+msgstr "Някакви Магически Имунитети"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
-msgstr "Опит за изпускане на предмет от пода?"
+msgstr "Опит за хвърляне на предмет от пода?"
 
 #: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
 #: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
@@ -6246,22 +5823,16 @@ msgid "MAX"
 msgstr "МАКС"
 
 #: Source/panels/charpanel.cpp:119
-#, fuzzy
-#| msgid "Level:"
 msgid "Level"
-msgstr "Ниво:"
+msgstr "Ниво"
 
 #: Source/panels/charpanel.cpp:121
-#, fuzzy
-#| msgid "Experience: "
 msgid "Experience"
-msgstr "Опит: "
+msgstr "Опит"
 
 #: Source/panels/charpanel.cpp:123
-#, fuzzy
-#| msgid "Next Level: "
 msgid "Next level"
-msgstr "Следващо ниво: "
+msgstr "Следващо ниво"
 
 #: Source/panels/charpanel.cpp:126
 msgid "None"
@@ -6269,131 +5840,97 @@ msgstr "Няма"
 
 #: Source/panels/charpanel.cpp:132
 msgid "Base"
-msgstr ""
+msgstr "База"
 
 #: Source/panels/charpanel.cpp:133
-#, fuzzy
-#| msgid "No"
 msgid "Now"
-msgstr "Каквото е било отворено, сега е затворено"
+msgstr "Сега"
 
 #: Source/panels/charpanel.cpp:134
-#, fuzzy
-#| msgid "Strength:"
 msgid "Strength"
-msgstr "Силата"
+msgstr "Сила"
 
 #: Source/panels/charpanel.cpp:138
-#, fuzzy
-#| msgid "Magic:"
 msgid "Magic"
 msgstr "Магия"
 
 #: Source/panels/charpanel.cpp:142
-#, fuzzy
-#| msgid "Dexterity:"
 msgid "Dexterity"
-msgstr "Сръчността"
+msgstr "Сръчност"
 
 #: Source/panels/charpanel.cpp:145
-#, fuzzy
-#| msgid "Vitality:"
 msgid "Vitality"
-msgstr "Бодростта"
+msgstr "Жизненост"
 
 #: Source/panels/charpanel.cpp:148
-#, fuzzy
 msgid "Points to distribute"
-msgstr "Точки живот: {:d}-{:d}"
+msgstr "Точки за разпределяне"
 
 #: Source/panels/charpanel.cpp:158
-#, fuzzy
-#| msgid "armor class: {:d}"
 msgid "Armor class"
-msgstr "клас на броня: {:d}"
+msgstr "Клас броня"
 
 #: Source/panels/charpanel.cpp:160
-#, fuzzy
 msgid "To hit"
-msgstr "Точки живот {:d} от {:d}"
+msgstr "Шанс удар"
 
 #: Source/panels/charpanel.cpp:162
-#, fuzzy
 msgid "Damage"
-msgstr "потенциала за щети - изкл. лъкове"
+msgstr "Щети"
 
 #: Source/panels/charpanel.cpp:168
-#, fuzzy
 msgid "Life"
-msgstr "Живота"
+msgstr "Живот"
 
 #: Source/panels/charpanel.cpp:172
 msgid "Mana"
 msgstr "Мана"
 
 #: Source/panels/charpanel.cpp:177
-#, fuzzy
-#| msgid "Resist Magic: {:+d}%"
 msgid "Resist magic"
-msgstr "Устойчивост Магия: {:+d}%"
+msgstr "Устойчивост магия"
 
 #: Source/panels/charpanel.cpp:179
-#, fuzzy
-#| msgid "Resists: "
 msgid "Resist fire"
-msgstr "Устойчивост Огън: {:+d}%"
+msgstr "Устойчивост огън"
 
 #: Source/panels/charpanel.cpp:181
-#, fuzzy
-#| msgid "Resist Lightning: {:+d}%"
 msgid "Resist lightning"
-msgstr "Устойчивост Мълния: {:+d}%"
+msgstr "Устойчивост мълния"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
 #: Source/panels/mainpanel.cpp:111
-#, fuzzy
-#| msgid "Voices"
 msgid "voice"
-msgstr "Гласова продукция, режисура и кастинг"
+msgstr "глас"
 
 #: Source/panels/mainpanel.cpp:87
-#, fuzzy
 msgid "char"
-msgstr "Перс"
+msgstr "герой"
 
 #: Source/panels/mainpanel.cpp:88
-#, fuzzy
-#| msgid "Quests"
 msgid "quests"
-msgstr "Задачи"
+msgstr "задачи"
 
 #: Source/panels/mainpanel.cpp:89
-#, fuzzy
-#| msgid "Map"
 msgid "map"
-msgstr "Карта"
+msgstr "карта"
 
 #: Source/panels/mainpanel.cpp:90
-#, fuzzy
 msgid "menu"
-msgstr "Меню"
+msgstr "меню"
 
 #: Source/panels/mainpanel.cpp:91
-#, fuzzy
-#| msgid "Inv"
 msgid "inv"
-msgstr "Инв"
+msgstr "инв"
 
 #: Source/panels/mainpanel.cpp:92
-#, fuzzy
-#| msgid "Spells"
 msgid "spells"
-msgstr "Закл"
+msgstr "закл"
 
 #: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
 msgid "mute"
-msgstr ""
+msgstr "ням"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
@@ -6578,18 +6115,14 @@ msgid "Archbishop Lazarus' Lair"
 msgstr "Убежището на Архиепископ Лазар"
 
 #: Source/spelldat.cpp:16
-#, fuzzy
-#| msgid "Firebolt"
 msgctxt "spell"
 msgid "Firebolt"
 msgstr "Огнен лъч"
 
 #: Source/spelldat.cpp:17
-#, fuzzy
-#| msgid "Healing"
 msgctxt "spell"
 msgid "Healing"
-msgstr "Отвара за Пълно лечение"
+msgstr "Лекуване"
 
 #: Source/spelldat.cpp:18
 msgctxt "spell"
@@ -6597,25 +6130,19 @@ msgid "Lightning"
 msgstr "Мълния"
 
 #: Source/spelldat.cpp:19
-#, fuzzy
-#| msgid "Flash"
 msgctxt "spell"
 msgid "Flash"
-msgstr "Свитък за Светкавица"
+msgstr "Светкавица"
 
 #: Source/spelldat.cpp:20
-#, fuzzy
-#| msgid "Identify"
 msgctxt "spell"
 msgid "Identify"
-msgstr "Разпознаване на предмет"
+msgstr "Разпознаване"
 
 #: Source/spelldat.cpp:21
-#, fuzzy
-#| msgid "Fire Wall"
 msgctxt "spell"
 msgid "Fire Wall"
-msgstr "Свитък за Огнена стена"
+msgstr "Огнена стена"
 
 #: Source/spelldat.cpp:22
 msgctxt "spell"
@@ -6623,85 +6150,61 @@ msgid "Town Portal"
 msgstr "Градски портал"
 
 #: Source/spelldat.cpp:23
-#, fuzzy
-#| msgid "Stone Curse"
 msgctxt "spell"
 msgid "Stone Curse"
-msgstr "Свитък за Каменно проклятие"
+msgstr "Каменно прооклятие"
 
 #: Source/spelldat.cpp:24
-#, fuzzy
-#| msgid "Infravision"
 msgctxt "spell"
 msgid "Infravision"
-msgstr "гледай с инфразрение"
+msgstr "Инфразрение"
 
 #: Source/spelldat.cpp:25
-#, fuzzy
-#| msgid "Phasing"
 msgctxt "spell"
 msgid "Phasing"
-msgstr "Свитък за Произволно положение"
+msgstr "Произволно положение"
 
 #: Source/spelldat.cpp:26
-#, fuzzy
-#| msgid "Mana Shield"
 msgctxt "spell"
 msgid "Mana Shield"
-msgstr "Свитък за Щит от мана"
+msgstr "Щит от мана"
 
 #: Source/spelldat.cpp:27
-#, fuzzy
-#| msgid "Fireball"
 msgctxt "spell"
 msgid "Fireball"
-msgstr "щети огненo кълбо {:d}"
+msgstr "Огнена топка"
 
 #: Source/spelldat.cpp:28
-#, fuzzy
-#| msgid "Guardian"
 msgctxt "spell"
 msgid "Guardian"
-msgstr "Свитък за Пазител"
+msgstr "Пазител"
 
 #: Source/spelldat.cpp:29
-#, fuzzy
-#| msgid "Chain Lightning"
 msgctxt "spell"
 msgid "Chain Lightning"
-msgstr "Свитък за Верижна мълния"
+msgstr "Верижна мълния"
 
 #: Source/spelldat.cpp:30
-#, fuzzy
-#| msgid "Flame Wave"
 msgctxt "spell"
 msgid "Flame Wave"
-msgstr "Свитък за Огнена вълна"
+msgstr "Огнена вълна"
 
 #: Source/spelldat.cpp:31
-#, fuzzy
-#| msgid "Doom Serpents"
 msgctxt "spell"
 msgid "Doom Serpents"
 msgstr "Гибелни Змии"
 
 #: Source/spelldat.cpp:32
-#, fuzzy
-#| msgid "Blood Ritual"
 msgctxt "spell"
 msgid "Blood Ritual"
-msgstr "Кръвта"
+msgstr "Кървав ритуал"
 
 #: Source/spelldat.cpp:33
-#, fuzzy
-#| msgid "Nova"
 msgctxt "spell"
 msgid "Nova"
-msgstr "Свитък за Нова"
+msgstr "Нова"
 
 #: Source/spelldat.cpp:34
-#, fuzzy
-#| msgid "Invisibility"
 msgctxt "spell"
 msgid "Invisibility"
 msgstr "Невидимост"
@@ -6712,133 +6215,84 @@ msgid "Inferno"
 msgstr "Инферно"
 
 #: Source/spelldat.cpp:36
-#, fuzzy
-#| msgid "Golem"
 msgctxt "spell"
 msgid "Golem"
-msgstr "Свитък за Голем"
+msgstr "Голем"
 
 #: Source/spelldat.cpp:37
-#, fuzzy
-#| msgid "Rage"
 msgctxt "spell"
 msgid "Rage"
-msgstr ""
-"Градът се нуждае от вашата помощ, драги господарю! Преди няколко месеца, "
-"Принц Албрихт, синът на Крал Леорик, бе отвлечен. Побеснял, Кралят реши да "
-"обърне всеки камък, за да намери своята рожба. Но с всеки изминал ден, "
-"Леорик сякаш изпадаше във все по-дълбока лудост. Обвиняваше невинните жители "
-"за изчезването на сина си, като ги осъждаше на ужасяваща екзекуция. По-малко "
-"от половината от нас успяха да се спасят от неговото безумие.\n"
-"\n"
-"Неговите рицарите и свещениците се опитаха да го усмирят, но той се обърна "
-"срещу тях. За жалост, те бяха принудени на цареубийство. С последния си дъх, "
-"Кралят отправи жестоко проклятие към бившите си слуги, кълнейки, се че те ще "
-"му служат вечно в мрака.\n"
-"\n"
-"Точно тогава, събитията придобиха още по-мрачен изглед, какъвто не съм и "
-"предполагал! Някогашният ни Крал се надигна от своя вечен сън и в момента "
-"ръководи легион от немъртви чудовища в Лабиринта. Тялото му лежи заровено в "
-"гробница, цели три нива под Катедралата. Умолявам те, драги господарю, върни "
-"душата му в покой, като унищожиш прокълнатата му същност..."
+msgstr "Ярост"
 
 #: Source/spelldat.cpp:38
-#, fuzzy
-#| msgid "Teleport"
 msgctxt "spell"
 msgid "Teleport"
-msgstr "Свитък за Телепортация"
+msgstr "Телепортиране"
 
 #: Source/spelldat.cpp:39
-#, fuzzy
-#| msgid "Apocalypse"
 msgctxt "spell"
 msgid "Apocalypse"
-msgstr "Свитък за Апокалипсис"
+msgstr "Апокалипсис"
 
 #: Source/spelldat.cpp:40
-#, fuzzy
-#| msgid "Etherealize"
 msgctxt "spell"
 msgid "Etherealize"
 msgstr "Ефирализация"
 
 #: Source/spelldat.cpp:41
-#, fuzzy
-#| msgid "Item Repair"
 msgctxt "spell"
 msgid "Item Repair"
-msgstr "Поправите предмети"
+msgstr "Поправяне на предмет"
 
 #: Source/spelldat.cpp:42
-#, fuzzy
-#| msgid "Staff Recharge"
 msgctxt "spell"
 msgid "Staff Recharge"
-msgstr "Презаредите жезли"
+msgstr "Презареждане на жезъл"
 
 #: Source/spelldat.cpp:43
-#, fuzzy
-#| msgid "Trap Disarm"
 msgctxt "spell"
 msgid "Trap Disarm"
-msgstr "залага огнена клопка"
+msgstr "Обезвреждане на клопка"
 
 #: Source/spelldat.cpp:44
-#, fuzzy
-#| msgid "Elemental"
 msgctxt "spell"
 msgid "Elemental"
 msgstr "Стихия"
 
 #: Source/spelldat.cpp:45
-#, fuzzy
-#| msgid "Charged Bolt"
 msgctxt "spell"
 msgid "Charged Bolt"
-msgstr "Къс жезъл за Светкавична искра"
+msgstr "Мълниен заряд"
 
 #: Source/spelldat.cpp:46
-#, fuzzy
-#| msgid "Holy Bolt"
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr "Къс жезъл за Светкавична искра"
+msgstr "Свещено кълбо"
 
 #: Source/spelldat.cpp:47
-#, fuzzy
-#| msgid "Resurrect"
 msgctxt "spell"
 msgid "Resurrect"
-msgstr "Свитък за Възкресение"
+msgstr "Възкресяване"
 
 #: Source/spelldat.cpp:48
-#, fuzzy
-#| msgid "Telekinesis"
 msgctxt "spell"
 msgid "Telekinesis"
 msgstr "Телекинеза"
 
 #: Source/spelldat.cpp:49
-#, fuzzy
-#| msgid "Heal Other"
 msgctxt "spell"
 msgid "Heal Other"
-msgstr "смъртоносно изцеление"
+msgstr "Лекувай приятел"
 
 #: Source/spelldat.cpp:50
-#, fuzzy
-#| msgid "Blood Star"
 msgctxt "spell"
 msgid "Blood Star"
-msgstr "Кръвта"
+msgstr "Кървава звезда"
 
 #: Source/spelldat.cpp:51
-#, fuzzy
-#| msgid "Bone Spirit"
 msgctxt "spell"
 msgid "Bone Spirit"
-msgstr "Костна ризница"
+msgstr "Костен дух"
 
 #: Source/spelldat.cpp:52
 msgctxt "spell"
@@ -6846,86 +6300,49 @@ msgid "Mana"
 msgstr "Мана"
 
 #: Source/spelldat.cpp:53
-#, fuzzy
-#| msgid "the Magi"
 msgctxt "spell"
 msgid "the Magi"
-msgstr ""
-"Бъди бдителен и обследвай истините, които лежат тук, защото те са последното "
-"наследство на Хорадрим. Преди приблизително три столетия, стана известно, че "
-"тайнствените Трите Върховни Злини на Горящия ад, са дошли в нашия свят. В "
-"продължение на десетилетия, Тримата братя опустошат земите на изток, докато "
-"човечеството е оставено да тъне в разруха. Нашият орден, Хорадрим, бе "
-"основан от група магьосници, с цел да открие и залови Трите Върховни Злини "
-"веднъж и завинаги.\n"
-"\n"
-"Първите Хорадрим запечатаха двама от тях в могъщи артефакти, наречени Камъни "
-"на душата и ги заровиха дълбоко под самотните източни пясъци. Третото зло "
-"успява да избяга от плен и поема на запад, преследван от множество Хорадрим. "
-"Трето и последно зло - наричано още Диабло, Господарят на Ужаса, в "
-"последствие бива заловен и запечатан в Камък на душата и заровен в този "
-"Лабиринт.\n"
-"\n"
-"Знай, че този Камък не трябва да бъде откриван от тези, които не са "
-"посветени на ордена. Бидейки освободен, Диабло ще опита да се всели в тяло, "
-"което лесно може да бъде контролирано, тъй като ще е много отслабен, "
-"например това на старец или на дете."
+msgstr "на Магьосника"
 
 #: Source/spelldat.cpp:54
-#, fuzzy
-#| msgid "the Jester"
 msgctxt "spell"
 msgid "the Jester"
-msgstr "Шегаджийски"
+msgstr "на Шута"
 
 #: Source/spelldat.cpp:55
-#, fuzzy
-#| msgid "Lightning Wall"
 msgctxt "spell"
 msgid "Lightning Wall"
-msgstr "Мълния"
+msgstr "Светкавична стена"
 
 #: Source/spelldat.cpp:56
-#, fuzzy
-#| msgid "Immolation"
 msgctxt "spell"
 msgid "Immolation"
 msgstr "Изгарящ погром"
 
 #: Source/spelldat.cpp:57
-#, fuzzy
-#| msgid "Warp"
 msgctxt "spell"
 msgid "Warp"
 msgstr "Пространствен скок"
 
 #: Source/spelldat.cpp:58
-#, fuzzy
-#| msgid "Reflect"
 msgctxt "spell"
 msgid "Reflect"
 msgstr "Отражение"
 
 #: Source/spelldat.cpp:59
-#, fuzzy
-#| msgid "Berserk"
 msgctxt "spell"
 msgid "Berserk"
 msgstr "Обезумялост"
 
 #: Source/spelldat.cpp:60
-#, fuzzy
-#| msgid "Ring of Fire"
 msgctxt "spell"
 msgid "Ring of Fire"
-msgstr "Пръстен"
+msgstr "Пръстен на Огъня"
 
 #: Source/spelldat.cpp:61
-#, fuzzy
-#| msgid "Search"
 msgctxt "spell"
 msgid "Search"
-msgstr "Усещам душа, в търсене на отговори..."
+msgstr "Търси"
 
 #: Source/spelldat.cpp:62
 msgctxt "spell"
@@ -6933,25 +6350,19 @@ msgid "Rune of Fire"
 msgstr "Руна за Огън"
 
 #: Source/spelldat.cpp:63
-#, fuzzy
-#| msgid "Rune of Light"
 msgctxt "spell"
 msgid "Rune of Light"
-msgstr "Светлината"
+msgstr "Руна на Светлината"
 
 #: Source/spelldat.cpp:64
-#, fuzzy
-#| msgid "Rune of Nova"
 msgctxt "spell"
 msgid "Rune of Nova"
-msgstr "Руна"
+msgstr "Руна на Нова"
 
 #: Source/spelldat.cpp:65
-#, fuzzy
-#| msgid "Rune of Immolation"
 msgctxt "spell"
 msgid "Rune of Immolation"
-msgstr "Рунична бомба"
+msgstr "Руна на Изгарящ погром"
 
 #: Source/spelldat.cpp:66
 msgctxt "spell"
@@ -11103,7 +10514,7 @@ msgstr "Вещицата Адрия"
 
 #: Source/towners.cpp:148
 msgid "Gillian the Barmaid"
-msgstr "Барманката Джилиън"
+msgstr "Гостилничарката Джилиън"
 
 #: Source/towners.cpp:179
 msgid "Pepin the Healer"
@@ -11111,7 +10522,7 @@ msgstr "Лечителя Пепин"
 
 #: Source/towners.cpp:196
 msgid "Cain the Elder"
-msgstr "Мъдреца Кайн"
+msgstr "Старейшината Кайн"
 
 #: Source/towners.cpp:225
 msgid "Cow"
@@ -11125,33 +10536,37 @@ msgstr "Фермера Лестър"
 msgid "Complete Nut"
 msgstr "Пълен Откачалник"
 
+#: Source/towners.cpp:266
+msgid "Celia"
+msgstr ""
+
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
 msgstr "Поваления жител"
 
 #: Source/trigs.cpp:341
 msgid "Down to dungeon"
-msgstr "Надолу към подземието"
+msgstr "Надолу към Подземието"
 
 #: Source/trigs.cpp:352
 msgid "Down to catacombs"
-msgstr "Надолу към катакомбите"
+msgstr "Надолу към Катакомбите"
 
 #: Source/trigs.cpp:362
 msgid "Down to caves"
-msgstr "Надолу към пещерите"
+msgstr "Надолу към Пещерите"
 
 #: Source/trigs.cpp:372
 msgid "Down to hell"
-msgstr "Надолу към ада"
+msgstr "Надолу към Ада"
 
 #: Source/trigs.cpp:384
 msgid "Down to Hive"
-msgstr "Надолу към свърталището"
+msgstr "Надолу към Свърталището"
 
 #: Source/trigs.cpp:396
 msgid "Down to Crypt"
-msgstr "Надолу към гробницата"
+msgstr "Надолу към Гробницата"
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
 #: Source/trigs.cpp:630
@@ -11161,7 +10576,7 @@ msgstr "Нагоре към ниво {:d}"
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
 #: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
 msgid "Up to town"
-msgstr "Нагоре към града"
+msgstr "Нагоре към Града"
 
 #: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
 #: Source/trigs.cpp:577 Source/trigs.cpp:642
@@ -11187,3 +10602,12 @@ msgstr "Надолу към Диабло"
 #: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
 msgid "Back to Level {:d}"
 msgstr "Нагоре към Ниво {:d}"
+
+#~ msgid "Credits"
+#~ msgstr "Създатели"
+
+#~ msgid "Quest Log"
+#~ msgstr "Списък със задачи"
+
+#~ msgid "Close Quest Log"
+#~ msgstr "Затвори списък със задачи"
