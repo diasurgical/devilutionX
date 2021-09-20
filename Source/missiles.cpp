@@ -1390,8 +1390,7 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 			auto slvl = GetSpellLevel(missile._misource, SPL_BERSERK);
 			monster._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
 			monster.mDamage = { (GenerateRnd(10) + 120) * monster.mDamage.minValue / 100 + slvl, (GenerateRnd(10) + 120) * monster.mDamage.maxValue / 100 + slvl };
-			monster.mMinDamage2 = (GenerateRnd(10) + 120) * monster.mMinDamage2 / 100 + slvl;
-			monster.mMaxDamage2 = (GenerateRnd(10) + 120) * monster.mMaxDamage2 / 100 + slvl;
+			monster.mDamage2 = { (GenerateRnd(10) + 120) * monster.mDamage2.minValue / 100 + slvl, (GenerateRnd(10) + 120) * monster.mDamage2.maxValue / 100 + slvl };
 			int r = (currlevel < 17 || currlevel > 20) ? 3 : 9;
 			monster.mlid = AddLight(monster.position.tile, r);
 			UseMana(missile._misource, SPL_BERSERK);

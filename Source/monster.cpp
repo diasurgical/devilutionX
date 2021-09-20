@@ -196,8 +196,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mHit = monster.MData->mHit;
 	monster.mDamage = { monster.MData->mMinDamage, monster.MData->mMaxDamage };
 	monster.mHit2 = monster.MData->mHit2;
-	monster.mMinDamage2 = monster.MData->mMinDamage2;
-	monster.mMaxDamage2 = monster.MData->mMaxDamage2;
+	monster.mDamage2 = { monster.MData->mMinDamage2, monster.MData->mMaxDamage2 };
 	monster.mArmorClass = monster.MData->mArmorClass;
 	monster.mMagicRes = monster.MData->mMagicRes;
 	monster.leader = 0;
@@ -225,8 +224,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mDamage += { 2 };
 		monster.mDamage *= 2;
 		monster.mHit2 += NIGHTMARE_TO_HIT_BONUS;
-		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
-		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
+		monster.mDamage2 += { 2 };
+		monster.mDamage2 *= 2;
 		monster.mArmorClass += NIGHTMARE_AC_BONUS;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster._mmaxhp = 4 * monster._mmaxhp;
@@ -241,8 +240,8 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 		monster.mDamage *= 4;
 		monster.mDamage += { 6 };
 		monster.mHit2 += HELL_TO_HIT_BONUS;
-		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
-		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
+		monster.mDamage2 *= 4;
+		monster.mDamage2 += { 6 };
 		monster.mArmorClass += HELL_AC_BONUS;
 		monster.mMagicRes = monster.MData->mMagicRes2;
 	}
@@ -497,8 +496,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	monster._mAi = uniqueMonsterData.mAi;
 	monster._mint = uniqueMonsterData.mint;
 	monster.mDamage = { uniqueMonsterData.mMinDamage, uniqueMonsterData.mMaxDamage };
-	monster.mMinDamage2 = uniqueMonsterData.mMinDamage;
-	monster.mMaxDamage2 = uniqueMonsterData.mMaxDamage;
+	monster.mDamage2 = { uniqueMonsterData.mMinDamage, uniqueMonsterData.mMaxDamage };
 	monster.mMagicRes = uniqueMonsterData.mMagicRes;
 	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
@@ -529,8 +527,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		monster.mExp = 2 * (monster.mExp + 1000);
 		monster.mDamage += { 2 };
 		monster.mDamage *= 2;
-		monster.mMinDamage2 = 2 * (monster.mMinDamage2 + 2);
-		monster.mMaxDamage2 = 2 * (monster.mMaxDamage2 + 2);
+		monster.mDamage2 += { 2 };
+		monster.mDamage2 *= 2;
 	} else if (sgGameInitInfo.nDifficulty == DIFF_HELL) {
 		monster._mmaxhp = 4 * monster._mmaxhp;
 		if (gbIsHellfire)
@@ -542,8 +540,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		monster.mExp = 4 * (monster.mExp + 1000);
 		monster.mDamage *= 4;
 		monster.mDamage += { 6 };
-		monster.mMinDamage2 = 4 * monster.mMinDamage2 + 6;
-		monster.mMaxDamage2 = 4 * monster.mMaxDamage2 + 6;
+		monster.mDamage2 *= 4;
+		monster.mDamage2 += { 6 };
 	}
 
 	char filestr[64];
@@ -1646,7 +1644,7 @@ bool MonsterSpecialAttack(int i)
 	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum2)
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit2, monster.mMinDamage2, monster.mMaxDamage2);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit2, monster.mDamage2.minValue, monster.mDamage2.maxValue);
 
 	if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames) {
 		M_StartStand(monster, monster._mdir);
@@ -4753,7 +4751,7 @@ void MissToMonst(Missile &missile, Point position)
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
 		if (dPlayer[oldPosition.x][oldPosition.y] > 0) {
 			if (monster.MType->mtype != MT_GLOOM && (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN)) {
-				MonsterAttackPlayer(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
+				MonsterAttackPlayer(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, monster.mDamage2.minValue, monster.mDamage2.maxValue);
 				if (pnum == dPlayer[oldPosition.x][oldPosition.y] - 1 && (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE)) {
 					auto &player = Players[pnum];
 					if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
@@ -4774,7 +4772,7 @@ void MissToMonst(Missile &missile, Point position)
 
 	if (dMonster[oldPosition.x][oldPosition.y] > 0) {
 		if (monster.MType->mtype != MT_GLOOM && (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN)) {
-			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mMinDamage2, monster.mMaxDamage2);
+			MonsterAttackMonster(m, dMonster[oldPosition.x][oldPosition.y] - 1, 500, monster.mDamage2.minValue, monster.mDamage2.maxValue);
 			if (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE) {
 				Point newPosition = oldPosition + monster._mdir;
 				if (IsTileAvailable(Monsters[dMonster[oldPosition.x][oldPosition.y] - 1], newPosition)) {

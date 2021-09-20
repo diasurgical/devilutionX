@@ -628,8 +628,11 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.mDamage = { minDamage, maxDamage };
 
 	file->Skip(1); // Skip mHit2 as it's already initialized
-	monster.mMinDamage2 = file->NextLE<uint8_t>();
-	monster.mMaxDamage2 = file->NextLE<uint8_t>();
+
+	auto minDamage2 = file->NextLE<uint8_t>();
+	auto maxDamage2 = file->NextLE<uint8_t>();
+	monster.mDamage2 = { minDamage2, maxDamage2 };
+
 	monster.mArmorClass = file->NextLE<uint8_t>();
 	file->Skip(1); // Alignment
 	monster.mMagicRes = file->NextLE<uint16_t>();
@@ -1287,8 +1290,8 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.mDamage.minValue);
 	file->WriteLE<uint8_t>(monster.mDamage.maxValue);
 	file->WriteLE<uint8_t>(std::min<uint16_t>(monster.mHit2, std::numeric_limits<uint8_t>::max())); // For backwards compatibility
-	file->WriteLE<uint8_t>(monster.mMinDamage2);
-	file->WriteLE<uint8_t>(monster.mMaxDamage2);
+	file->WriteLE<uint8_t>(monster.mDamage2.minValue);
+	file->WriteLE<uint8_t>(monster.mDamage2.maxValue);
 	file->WriteLE<uint8_t>(monster.mArmorClass);
 	file->Skip(1); // Alignment
 	file->WriteLE<uint16_t>(monster.mMagicRes);
