@@ -282,8 +282,7 @@ struct Player {
 	int8_t _pISplLvlAdd;
 	int _pISplDur;
 	int _pIEnAc;
-	int _pIFMinDam;
-	int _pIFMaxDam;
+	Damage _pIFDamage;
 	int _pILMinDam;
 	int _pILMaxDam;
 	item_misc_id _pOilType;

@@ -489,8 +489,10 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	file.Skip(2); // Alignment
 	player._pISplDur = file.NextLE<int32_t>();
 	player._pIEnAc = file.NextLE<int32_t>();
-	player._pIFMinDam = file.NextLE<int32_t>();
-	player._pIFMaxDam = file.NextLE<int32_t>();
+
+	auto minFireDamage = file.NextLE<int32_t>();
+	auto maxFireDamage = file.NextLE<int32_t>();
+	player._pIFDamage = { minFireDamage, maxFireDamage };
 	player._pILMinDam = file.NextLE<int32_t>();
 	player._pILMaxDam = file.NextLE<int32_t>();
 	player._pOilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
@@ -1164,8 +1166,8 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.Skip(2);         // Alignment
 	file.WriteLE<int32_t>(player._pISplDur);
 	file.WriteLE<int32_t>(player._pIEnAc);
-	file.WriteLE<int32_t>(player._pIFMinDam);
-	file.WriteLE<int32_t>(player._pIFMaxDam);
+	file.WriteLE<int32_t>(player._pIFDamage.minValue);
+	file.WriteLE<int32_t>(player._pIFDamage.maxValue);
 	file.WriteLE<int32_t>(player._pILMinDam);
 	file.WriteLE<int32_t>(player._pILMaxDam);
 	file.WriteLE<int32_t>(player._pOilType);
