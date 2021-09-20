@@ -26,17 +26,6 @@ make -j$(nproc)
 ```
 </details>
 
-<details><summary>macOS</summary>
-
-Make sure you have [Homebrew](https://brew.sh/) installed, then run:
-
-```
-brew bundle install
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(sysctl -n hw.physicalcpu)
-```
-</details>
 <details><summary>FreeBSD</summary>
 
 ### Installing dependencies

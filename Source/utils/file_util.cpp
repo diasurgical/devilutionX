@@ -23,7 +23,7 @@
 #include "utils/log.hpp"
 #endif
 
-#if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE)
 #include <sys/stat.h>
 #include <unistd.h>
 #endif
@@ -62,7 +62,7 @@ bool FileExists(const char *path)
 		return false;
 	}
 	return true;
-#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__))
+#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE))
 	return ::access(path, F_OK) == 0;
 #else
 	SDL_RWops *file = SDL_RWFromFile(path, "r+b");
@@ -82,7 +82,7 @@ bool FileExistsAndIsWriteable(const char *path)
 		return false;
 	}
 	return ::GetFileAttributesW(&pathUtf16[0]) != INVALID_FILE_ATTRIBUTES && (::GetFileAttributesW(&pathUtf16[0]) & FILE_ATTRIBUTE_READONLY) == 0;
-#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE)
 	return ::access(path, W_OK) == 0;
 #endif
 }
@@ -133,7 +133,7 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 	}
 	::CloseHandle(file);
 	return true;
-#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)
+#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE)
 	return ::truncate(path, static_cast<off_t>(size)) == 0;
 #else
 	static_assert(false, "truncate not implemented for the current platform");

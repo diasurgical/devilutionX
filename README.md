@@ -53,7 +53,6 @@ If you want to help test the latest state of the next version you can fetch the 
 [![Linux_x86](https://github.com/diasurgical/devilutionX/actions/workflows/Linux_x86.yml/badge.svg)](https://github.com/diasurgical/devilutionX/actions/workflows/Linux_x86.yml?query=branch%3Amaster)
 [![Linux_x86_64](https://github.com/diasurgical/devilutionX/actions/workflows/Linux_x86_64.yml/badge.svg)](https://github.com/diasurgical/devilutionX/actions/workflows/Linux_x86_64.yml?query=branch%3Amaster)
 [![Linux_x86_64_SDL1](https://github.com/diasurgical/devilutionX/actions/workflows/Linux_x86_64_SDL1.yml/badge.svg)](https://github.com/diasurgical/devilutionX/actions/workflows/Linux_x86_64_SDL1.yml?query=branch%3Amaster)
-[![MacOSX](https://github.com/diasurgical/devilutionX/actions/workflows/MacOSX.yml/badge.svg)](https://github.com/diasurgical/devilutionX/actions/workflows/MacOSX.yml?query=branch%3Amaster)
 [![Windows_x64](https://github.com/diasurgical/devilutionX/actions/workflows/Windows_x64.yml/badge.svg)](https://github.com/diasurgical/devilutionX/actions/workflows/Windows_x64.yml?query=branch%3Amaster)
 [![Windows_x86](https://github.com/diasurgical/devilutionX/actions/workflows/Windows_x86.yml/badge.svg)](https://github.com/diasurgical/devilutionX/actions/workflows/Windows_x86.yml?query=branch%3Amaster)
 

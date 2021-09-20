@@ -499,10 +499,8 @@ endif()
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 add_executable(${BIN_TARGET}
   WIN32
-  MACOSX_BUNDLE
   Source/main.cpp
   Source/devilutionx.exe.manifest
-  Packaging/macOS/AppIcon.icns
   Packaging/resources/CharisSILB.ttf
   Packaging/windows/devilutionx.rc)
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
@@ -530,7 +528,7 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 ")
 
 if(RUN_TESTS)
-  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
+  add_executable(devilutionx-tests WIN32 ${devilutionxtest_SRCS})
   include(CTest)
   include(GoogleTest)
   find_package(GTest REQUIRED)
@@ -738,7 +736,7 @@ if(WIN32)
   endif()
 endif()
 
-if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+if(NOT WIN32 AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
 endif()
@@ -773,34 +771,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(libdevilutionx PUBLIC "/W3")
   target_compile_definitions(libdevilutionx PUBLIC _CRT_SECURE_NO_WARNINGS)
   target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
-endif()
-
-if(APPLE)
-  set_source_files_properties("./Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set_source_files_properties("./Packaging/resources/CharisSILB.ttf" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
-  set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
-  set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
-  set(MACOSX_BUNDLE_INFO_STRING ${PROJECT_VERSION})
-  set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
-  set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
-  set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
-
-  install (TARGETS ${BIN_TARGET} DESTINATION ./)
-
-  if(DIST)
-      install(CODE "
-        include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
-        "
-        COMPONENT Runtime)
-  endif()
-
-  set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
-  set(CPACK On)
 endif()
 
 if(CPACK)
@@ -909,12 +879,6 @@ if(CPACK)
     if(DPKG)
       list(APPEND CPACK_GENERATOR "DEB")
     endif()
-
-  elseif(APPLE)
-    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
-    set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK "ON")
-    set(CPACK_STRIP_FILES TRUE)
-    set(CPACK_GENERATOR "DragNDrop")
   endif()
 
   set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})

@@ -44,13 +44,6 @@ sudo apt install devilutionx
 
 </details>
 
-<details><summary>MacOS X</summary>
-
-- Copy the MPQ files to the folder containing the DevilutionX application, or to the data folder. The data folder path may differ, but will normally be `~/Library/Application Support/diasurgical/devilution`
-- Double-click `devilutionx`
-
-</details>
-
 <details><summary>ClockworkPi GameShell</summary>
 
 - Copy the `__init__.py` to a newly created folder under /home/cpi/apps/Menu and run it from the menu. The folder then symbolizes the devilutionX icon.

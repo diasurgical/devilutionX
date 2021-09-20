@@ -1,6 +1,6 @@
 include(FetchContent_MakeAvailableExcludeFromAll)
 
-if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+if(NOT WIN32 AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
   # Defining _POSIX_C_SOURCE should be enough for the compiler not to define  __STRICT_ANSI__
