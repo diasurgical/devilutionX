@@ -235,8 +235,11 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iCurs = file.NextLE<int32_t>();
 	item._ivalue = file.NextLE<int32_t>();
 	item._iIvalue = file.NextLE<int32_t>();
-	item._iMinDam = file.NextLE<int32_t>();
-	item._iMaxDam = file.NextLE<int32_t>();
+
+	auto minDamage = file.NextLE<int32_t>();
+	auto maxDamage = file.NextLE<int32_t>();
+	item._iDamage = { minDamage, maxDamage };
+
 	item._iAC = file.NextLE<int32_t>();
 	item._iFlags = file.NextLE<uint32_t>();
 	item._iMiscId = static_cast<item_misc_id>(file.NextLE<int32_t>());
@@ -920,8 +923,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iCurs);
 	file.WriteLE<int32_t>(item._ivalue);
 	file.WriteLE<int32_t>(item._iIvalue);
-	file.WriteLE<int32_t>(item._iMinDam);
-	file.WriteLE<int32_t>(item._iMaxDam);
+	file.WriteLE<int32_t>(item._iDamage.minValue);
+	file.WriteLE<int32_t>(item._iDamage.maxValue);
 	file.WriteLE<int32_t>(item._iAC);
 	file.WriteLE<uint32_t>(item._iFlags);
 	file.WriteLE<int32_t>(item._iMiscId);
