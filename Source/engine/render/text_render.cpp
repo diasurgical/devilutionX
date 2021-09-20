@@ -20,14 +20,14 @@
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
+#include "utils/utf8.h"
 
 namespace devilution {
 
 namespace {
 
-std::unordered_map<uint32_t, std::unique_ptr<Art>> Fonts;
-
-std::array<std::array<uint8_t, 256>, 5> FontKerns;
+std::unordered_map<uint32_t, Art> Fonts;
+std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 5> FontSizes = { 12, 24, 30, 42, 46 };
 std::array<int, 5> LineHeights = { 12, 26, 38, 42, 50 };
 std::array<int, 5> BaseLineOffset = { -3, -2, -3, -6, -7 };
@@ -92,37 +92,59 @@ text_color GetColorFromFlags(UiFlags flags)
 	return ColorWhitegold;
 }
 
-} // namespace
-
-void LoadFont(GameFontTables size, text_color color)
+std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 {
-	auto font = std::make_unique<Art>();
+	uint32_t fontId = (size << 16) | row;
+
+	auto hotKerning = FontKerns.find(fontId);
+	if (hotKerning != FontKerns.end()) {
+		return &hotKerning->second;
+	}
 
 	char path[32];
-	sprintf(path, "fonts\\%i-00.pcx", FontSizes[size]);
+	sprintf(path, "fonts\\%i-%02d.bin", FontSizes[size], row);
+
+	auto *kerning = &FontKerns[fontId];
+
+	LoadFileInMem(path, kerning);
+
+	return kerning;
+}
+
+Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
+{
+	uint32_t fontId = (color << 24) | (size << 16) | row;
+
+	auto hotFont = Fonts.find(fontId);
+	if (hotFont != Fonts.end()) {
+		return &hotFont->second;
+	}
+
+	char path[32];
+	sprintf(path, "fonts\\%i-%02d.pcx", FontSizes[size], row);
+
+	auto *font = &Fonts[fontId];
 
 	if (ColorTranlations[color] != nullptr) {
 		std::array<uint8_t, 256> colorMapping;
 		LoadFileInMem(ColorTranlations[color], colorMapping);
-		LoadMaskedArt(path, font.get(), 256, 1, &colorMapping);
+		LoadMaskedArt(path, font, 256, 1, &colorMapping);
 	} else {
-		LoadMaskedArt(path, font.get(), 256, 1);
+		LoadMaskedArt(path, font, 256, 1);
 	}
 
-	uint32_t fontId = (color << 24) | (size << 16);
-	Fonts.insert(make_pair(fontId, move(font)));
-
-	sprintf(path, "fonts\\%i-00.bin", FontSizes[size]);
-	LoadFileInMem(path, FontKerns[size]);
+	return font;
 }
 
-void UnloadFont(GameFontTables size, text_color color)
+} // namespace
+
+void UnloadFonts(GameFontTables size, text_color color)
 {
-	uint32_t fontId = (color << 24) | (size << 16);
+	uint32_t fontStyle = (color << 24) | (size << 16);
 
 	for (auto font = Fonts.begin(); font != Fonts.end();) {
-		if ((font->first & 0xFFFF0000) == fontId) {
-			Fonts.erase(font++);
+		if ((font->first & 0xFFFF0000) == fontStyle) {
+			font = Fonts.erase(font);
 		} else {
 			font++;
 		}
@@ -132,19 +154,41 @@ void UnloadFont(GameFontTables size, text_color color)
 void UnloadFonts()
 {
 	Fonts.clear();
+	FontKerns.clear();
 }
 
 int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charactersInLine)
 {
 	int lineWidth = 0;
 
+	std::string textBuffer(text);
+	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
+	const char *textData = textBuffer.data();
+
 	size_t i = 0;
-	for (; i < text.length(); i++) {
-		if (text[i] == '\n')
+	uint32_t currentUnicodeRow = 0;
+	std::array<uint8_t, 256> *kerning = nullptr;
+	uint32_t next;
+	int error;
+	for (; *textData != '\0'; i++) {
+		textData = utf8_decode(textData, &next, &error);
+		if (error)
+			next = '?';
+
+		if (next == '\n')
 			break;
 
-		uint8_t frame = text[i] & 0xFF;
-		lineWidth += FontKerns[size][frame] + spacing;
+		uint8_t frame = next & 0xFF;
+		uint32_t unicodeRow = next >> 8;
+		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
+			kerning = LoadFontKerning(size, unicodeRow);
+			if (kerning == nullptr) {
+				continue;
+			}
+			currentUnicodeRow = unicodeRow;
+		}
+		lineWidth += (*kerning)[frame] + spacing;
+		i++;
 	}
 
 	if (charactersInLine != nullptr)
@@ -166,40 +210,56 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 
 void WordWrapString(char *text, size_t width, GameFontTables size, int spacing)
 {
-	const size_t textLength = strlen(text);
-	size_t lineStart = 0;
+	int lastKnownSpaceAt = -1;
 	size_t lineWidth = 0;
-	for (unsigned i = 0; i < textLength; i++) {
-		if (text[i] == '\n') { // Existing line break, scan next line
-			lineStart = i + 1;
+
+	std::string textBuffer(text);
+	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
+	const char *textData = textBuffer.data();
+
+	uint32_t currentUnicodeRow = 0;
+	std::array<uint8_t, 256> *kerning = nullptr;
+	uint32_t next;
+	int error;
+	while (*textData != '\0') {
+		textData = utf8_decode(textData, &next, &error);
+		if (error)
+			next = '?';
+
+		if (next == '\n') { // Existing line break, scan next line
+			lastKnownSpaceAt = -1;
 			lineWidth = 0;
 			continue;
 		}
 
-		uint8_t frame = text[i] & 0xFF;
-		lineWidth += FontKerns[size][frame] + spacing;
+		uint8_t frame = next & 0xFF;
+		uint32_t unicodeRow = next >> 8;
+		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
+			kerning = LoadFontKerning(size, unicodeRow);
+			if (kerning == nullptr) {
+				continue;
+			}
+			currentUnicodeRow = unicodeRow;
+		}
+		lineWidth += (*kerning)[frame] + spacing;
+
+		if (next == ' ') {
+			lastKnownSpaceAt = textData - textBuffer.data() - 1;
+			continue;
+		}
 
 		if (lineWidth - spacing <= width) {
-			continue; // String is still within the limit, continue to the next line
+			continue; // String is still within the limit, continue to the next symbol
 		}
 
-		size_t j; // Backtrack to the previous space
-		for (j = i; j > lineStart; j--) {
-			if (text[j] == ' ') {
-				break;
-			}
-		}
-
-		if (j == lineStart) { // Single word longer than width
-			if (i == textLength)
-				break;
-			j = i;
+		if (lastKnownSpaceAt == -1) { // Single word longer than width
+			continue;
 		}
 
 		// Break line and continue to next line
-		i = j;
-		text[i] = '\n';
-		lineStart = i + 1;
+		text[lastKnownSpaceAt] = '\n';
+		textData = &textBuffer.data()[lastKnownSpaceAt + 1];
+		lastKnownSpaceAt = -1;
 		lineWidth = 0;
 	}
 }
@@ -240,52 +300,62 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 	characterPosition.y += BaseLineOffset[size];
 
-	uint32_t fontId = (color << 24) | (size << 16);
-	auto font = Fonts.find(fontId);
-	if (font == Fonts.end()) {
-		Log("Font: size {} and color {} not loaded ", size, color);
-		return 0;
-	}
+	Art *font = nullptr;
+	std::array<uint8_t, 256> *kerning = nullptr;
 
-	const auto &activeFont = font->second;
+	std::string textBuffer(text);
+	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
+	const char *textData = textBuffer.data();
+	const char *previousPosition = textData;
 
-	uint32_t i = 0;
-	for (; i < text.length(); i++) {
-		uint8_t frame = text[i] & 0xFF;
-		if (text[i] == '\n' || characterPosition.x > rightMargin) {
+	uint32_t next;
+	uint32_t currentUnicodeRow = 0;
+	int error;
+	for (; *textData != '\0'; previousPosition = textData) {
+		textData = utf8_decode(textData, &next, &error);
+		if (error)
+			next = '?';
+
+		uint32_t unicodeRow = next >> 8;
+		if (unicodeRow != currentUnicodeRow || font == nullptr) {
+			kerning = LoadFontKerning(size, unicodeRow);
+			font = LoadFont(size, color, unicodeRow);
+			currentUnicodeRow = unicodeRow;
+		}
+
+		uint8_t frame = next & 0xFF;
+		if (next == '\n' || characterPosition.x > rightMargin) {
 			if (characterPosition.y + lineHeight >= bottomMargin)
 				break;
+			characterPosition.x = rect.position.x;
 			characterPosition.y += lineHeight;
 
-			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing))) {
-				std::size_t nextLineIndex = text[i] == '\n' ? i + 1 : i;
-				if (nextLineIndex < text.length())
-					lineWidth = GetLineWidth(&text[nextLineIndex], size, spacing, &charactersInLine);
-				else
-					lineWidth = 0;
+			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
+				lineWidth = (*kerning)[frame];
+				if (*textData != '\0')
+					lineWidth += spacing + GetLineWidth(textData, size, spacing);
 			}
 
-			if (HasAnyOf(flags, UiFlags::KerningFitSpacing))
-				spacing = AdjustSpacingToFitHorizontally(lineWidth, maxSpacing, charactersInLine, rect.size.width);
-
-			characterPosition.x = rect.position.x;
 			if (HasAnyOf(flags, UiFlags::AlignCenter))
 				characterPosition.x += (rect.size.width - lineWidth) / 2;
 			else if (HasAnyOf(flags, UiFlags::AlignRight))
 				characterPosition.x += rect.size.width - lineWidth;
+
+			if (next == '\n')
+				continue;
 		}
-		DrawArt(out, characterPosition, activeFont.get(), frame);
-		if (text[i] != '\n')
-			characterPosition.x += FontKerns[size][frame] + spacing;
+
+		DrawArt(out, characterPosition, font, frame);
+		characterPosition.x += (*kerning)[frame] + spacing;
 	}
 
 	if (HasAnyOf(flags, UiFlags::PentaCursor)) {
 		CelDrawTo(out, characterPosition + Displacement { 0, lineHeight - BaseLineOffset[size] }, *pSPentSpn2Cels, PentSpn2Spin());
 	} else if (HasAnyOf(flags, UiFlags::TextCursor) && GetAnimationFrame(2, 500) != 0) {
-		DrawArt(out, characterPosition, activeFont.get(), '|');
+		DrawArt(out, characterPosition, LoadFont(size, color, 0), '|');
 	}
 
-	return i;
+	return previousPosition - textBuffer.data();
 }
 
 uint8_t PentSpn2Spin()

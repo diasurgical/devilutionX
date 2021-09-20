@@ -21,7 +21,6 @@
 #include "utils/sdl_compat.h"
 #include "utils/sdl_wrap.h"
 #include "utils/stubs.h"
-#include "utils/utf8.h"
 #include "utils/language.h"
 
 #ifdef __SWITCH__
@@ -226,15 +225,13 @@ void UiFocusPageDown()
 
 void SelheroCatToName(char *inBuf, char *outBuf, int cnt)
 {
-	std::string output = utf8_to_latin1(inBuf);
-	strncat(outBuf, output.c_str(), cnt - strlen(outBuf));
+	strncat(outBuf, inBuf, cnt - strlen(outBuf));
 }
 
 #ifdef __vita__
 void selhero_SetName(char *in_buf, char *out_buf, int cnt)
 {
-	std::string output = utf8_to_latin1(in_buf);
-	strncpy(out_buf, output.c_str(), cnt);
+	strncpy(out_buf, in_buf, cnt);
 }
 #endif
 
@@ -543,14 +540,6 @@ void UnloadUiGFX()
 void UiInitialize()
 {
 	LoadUiGFX();
-
-	LoadFont(GameFont12, ColorUiSilverDark);
-	LoadFont(GameFont12, ColorUiGoldDark);
-	LoadFont(GameFont24, ColorUiSilver);
-	LoadFont(GameFont24, ColorUiGold);
-	LoadFont(GameFont30, ColorUiSilver);
-	LoadFont(GameFont30, ColorUiGold);
-	LoadFont(GameFont42, ColorUiGold);
 
 	if (ArtCursor.surface != nullptr) {
 		if (SDL_ShowCursor(SDL_DISABLE) <= -1) {

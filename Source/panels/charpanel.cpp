@@ -203,7 +203,7 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		return;
 
 	std::string text_tmp = _(entry.label.c_str());
-	char buffer[32];
+	char buffer[64];
 	int spacing = 0;
 	strcpy(buffer, text_tmp.c_str());
 	if (entry.labelLength > 0)

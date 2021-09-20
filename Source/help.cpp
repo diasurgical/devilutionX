@@ -101,7 +101,7 @@ std::vector<std::string> HelpTextLines;
 void InitHelp()
 {
 	HelpFlag = false;
-	char tempString[512];
+	char tempString[1024];
 
 	for (const auto *text : HelpText) {
 		strcpy(tempString, _(text));
