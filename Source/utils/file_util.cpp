@@ -11,7 +11,6 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#if defined(_WIN64) || defined(_WIN32)
 #include <memory>
 
 // Suppress definitions of `min` and `max` macros by <windows.h>:
@@ -21,16 +20,9 @@
 #include <shlwapi.h>
 
 #include "utils/log.hpp"
-#endif
-
-#if _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE)
-#include <sys/stat.h>
-#include <unistd.h>
-#endif
 
 namespace devilution {
 
-#if defined(_WIN64) || defined(_WIN32)
 std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 {
 	constexpr std::uint32_t flags = MB_ERR_INVALID_CHARS;
@@ -43,11 +35,9 @@ std::unique_ptr<wchar_t[]> ToWideChar(string_view path)
 	utf16[utf16Size] = L'\0';
 	return utf16;
 }
-#endif
 
 bool FileExists(const char *path)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
@@ -62,34 +52,20 @@ bool FileExists(const char *path)
 		return false;
 	}
 	return true;
-#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE))
-	return ::access(path, F_OK) == 0;
-#else
-	SDL_RWops *file = SDL_RWFromFile(path, "r+b");
-	if (file == NULL)
-		return false;
-	SDL_RWclose(file);
-	return true;
-#endif
 }
 
 bool FileExistsAndIsWriteable(const char *path)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return false;
 	}
 	return ::GetFileAttributesW(&pathUtf16[0]) != INVALID_FILE_ATTRIBUTES && (::GetFileAttributesW(&pathUtf16[0]) & FILE_ATTRIBUTE_READONLY) == 0;
-#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE)
-	return ::access(path, W_OK) == 0;
-#endif
 }
 
 bool GetFileSize(const char *path, std::uintmax_t *size)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
@@ -102,18 +78,10 @@ bool GetFileSize(const char *path, std::uintmax_t *size)
 	// C4293 in msvc when shifting a 32 bit type by 32 bits.
 	*size = static_cast<std::uintmax_t>(attr.nFileSizeHigh) << (sizeof(attr.nFileSizeHigh) * 8) | attr.nFileSizeLow;
 	return true;
-#else
-	struct ::stat statResult;
-	if (::stat(path, &statResult) == -1)
-		return false;
-	*size = static_cast<uintmax_t>(statResult.st_size);
-	return true;
-#endif
 }
 
 bool ResizeFile(const char *path, std::uintmax_t size)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	LARGE_INTEGER lisize;
 	lisize.QuadPart = static_cast<LONGLONG>(size);
 	if (lisize.QuadPart < 0) {
@@ -133,54 +101,30 @@ bool ResizeFile(const char *path, std::uintmax_t size)
 	}
 	::CloseHandle(file);
 	return true;
-#elif _POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE)
-	return ::truncate(path, static_cast<off_t>(size)) == 0;
-#else
-	static_assert(false, "truncate not implemented for the current platform");
-#endif
 }
 
 void RemoveFile(const char *lpFileName)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(lpFileName);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return;
 	}
 	::DeleteFileW(&pathUtf16[0]);
-#else
-	std::string name = lpFileName;
-	std::replace(name.begin(), name.end(), '\\', '/');
-	FILE *f = fopen(name.c_str(), "r+");
-	if (f != nullptr) {
-		fclose(f);
-		remove(name.c_str());
-		f = nullptr;
-		Log("Removed file: {}", name);
-	} else {
-		Log("Failed to remove file: {}", name);
-	}
-#endif
 }
 
 std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
 		return {};
 	}
 	return { std::fstream(pathUtf16.get(), mode) };
-#else
-	return { std::fstream(path, mode) };
-#endif
 }
 
 FILE *FOpen(const char *path, const char *mode)
 {
-#if defined(_WIN64) || defined(_WIN32)
 	const auto pathUtf16 = ToWideChar(path);
 	if (pathUtf16 == nullptr) {
 		LogError("UTF-8 -> UTF-16 conversion error code {}", ::GetLastError());
@@ -192,9 +136,6 @@ FILE *FOpen(const char *path, const char *mode)
 		return nullptr;
 	}
 	return ::_wfopen(&pathUtf16[0], &modeUtf16[0]);
-#else
-	return std::fopen(path, mode);
-#endif
 }
 
 } // namespace devilution

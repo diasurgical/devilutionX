@@ -1,6 +1,5 @@
 #include "./console.h"
 
-#if defined(_WIN64) || defined(_WIN32)
 #include <cstddef>
 #include <cstdio>
 
@@ -56,23 +55,3 @@ void printInConsoleV(const char *fmt, va_list ap)
 }
 
 } // namespace devilution
-#else
-#include <cstdio>
-
-namespace devilution {
-
-void printInConsole(const char *fmt, ...)
-{
-	std::va_list ap;
-	va_start(ap, fmt);
-	std::vfprintf(stderr, fmt, ap);
-	va_end(ap);
-}
-
-void printInConsoleV(const char *fmt, std::va_list ap)
-{
-	std::vfprintf(stderr, fmt, ap);
-}
-
-} // namespace devilution
-#endif

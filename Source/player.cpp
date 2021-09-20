@@ -2974,9 +2974,6 @@ void StartPlrHit(int pnum, int dam, bool forcehit)
 	SetPlayerOld(player);
 }
 
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
 void
 StartPlayerKill(int pnum, int earflag)
 {
@@ -3183,9 +3180,6 @@ void RemovePlrMissiles(int pnum)
 	}
 }
 
-#if defined(__clang__) || defined(__GNUC__)
-__attribute__((no_sanitize("shift-base")))
-#endif
 void
 StartNewLvl(int pnum, interface_mode fom, int lvl)
 {

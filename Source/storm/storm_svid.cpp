@@ -17,7 +17,6 @@
 #include "options.h"
 #include "palette.h"
 #include "storm/storm.h"
-#include "storm/storm_file_wrapper.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"

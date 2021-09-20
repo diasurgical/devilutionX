@@ -18,8 +18,6 @@ void RemoveFile(const char *lpFileName);
 std::optional<std::fstream> CreateFileStream(const char *path, std::ios::openmode mode);
 FILE *FOpen(const char *path, const char *mode);
 
-#if defined(_WIN64) || defined(_WIN32)
 std::unique_ptr<wchar_t[]> ToWideChar(string_view path);
-#endif
 
 } // namespace devilution

@@ -160,7 +160,6 @@ bool SFileEnableDirectAccess(bool enable)
 	return true;
 }
 
-#if defined(_WIN64) || defined(_WIN32)
 bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq)
 {
 	const auto szMpqNameUtf16 = ToWideChar(szMpqName);
@@ -170,6 +169,5 @@ bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HA
 	}
 	return SFileOpenArchive(szMpqNameUtf16.get(), dwPriority, dwFlags, phMpq);
 }
-#endif
 
 } // namespace devilution
