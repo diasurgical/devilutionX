@@ -24,10 +24,6 @@
 #include "utils/utf8.h"
 #include "utils/language.h"
 
-#ifdef __SWITCH__
-// for virtual keyboard on Switch
-#include "platform/switch/keyboard.h"
-#endif
 #ifdef __vita__
 // for virtual keyboard on Vita
 #include "platform/vita/keyboard.h"
@@ -99,18 +95,13 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	if (fnFocus != nullptr)
 		fnFocus(0);
 
-#ifndef __SWITCH__
-	SDL_StopTextInput(); // input is enabled by default
-#endif
 	textInputActive = false;
 	for (const auto &item : items) {
 		if (item->m_type == UiType::Edit) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
-#ifdef __SWITCH__
-			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
-#elif defined(__vita__)
+#if defined(__vita__)
 			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #elif defined(__3DS__)
 			ctr_vkbdInput(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
@@ -419,9 +410,7 @@ void UiFocusNavigationSelect()
 		if (strlen(UiTextInput) == 0) {
 			return;
 		}
-#ifndef __SWITCH__
-		SDL_StopTextInput();
-#endif
+
 		UiTextInput = nullptr;
 		UiTextInputLen = 0;
 	}
@@ -433,9 +422,6 @@ void UiFocusNavigationEsc()
 {
 	UiPlaySelectSound();
 	if (textInputActive) {
-#ifndef __SWITCH__
-		SDL_StopTextInput();
-#endif
 		UiTextInput = nullptr;
 		UiTextInputLen = 0;
 	}

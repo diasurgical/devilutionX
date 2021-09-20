@@ -1,8 +1,4 @@
 #include <SDL.h>
-#ifdef __SWITCH__
-#include "platform/switch/network.h"
-#include "platform/switch/random.hpp"
-#endif
 #ifdef __3DS__
 #include "platform/ctr/system.h"
 #endif
@@ -21,10 +17,6 @@ extern "C" const char *__asan_default_options() // NOLINT(bugprone-reserved-iden
 
 int main(int argc, char **argv)
 {
-#ifdef __SWITCH__
-	switch_enable_network();
-	randombytes_switchrandom_init();
-#endif
 #ifdef __3DS__
 	ctr_sys_init();
 #endif

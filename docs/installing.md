@@ -51,14 +51,6 @@ sudo apt install devilutionx
 
 </details>
 
-<details><summary>Nintendo Switch</summary>
-
-- Copy `devilutionx.nro` and `CharisSILB.ttf` in into `/switch/devilutionx`
-- Copy the MPQ files to `/switch/devilutionx`.
-- Launch `devilutionx.nro` by holding R the installed game. Do not use the album to launch, if you use the album, the homebrew will only have a small amount of memory available, and the touch keyboard won't work. This is true for all homebrew, not just DevilutionX.
-
-</details>
-
 <details><summary>New Nintendo 3DS</summary>
 
 ### .3dsx installation

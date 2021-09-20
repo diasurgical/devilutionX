@@ -429,10 +429,6 @@ DerivedData/
 # Don't accidently commit the diabdat.mpq
 *.mpq
 
-### Nintendo Switch ###
-exefs/main
-/out/isenseconfig/CPI-Debug
-
 /docs/html/
 
 # MPQ files

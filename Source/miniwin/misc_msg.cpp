@@ -28,11 +28,6 @@
 #include "platform/vita/touch.h"
 #endif
 
-#ifdef __SWITCH__
-#include "platform/switch/docking.h"
-#include <switch.h>
-#endif
-
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.
@@ -291,10 +286,6 @@ bool BlurInventory()
 
 bool FetchMessage_Real(tagMSG *lpMsg)
 {
-#ifdef __SWITCH__
-	HandleDocking();
-#endif
-
 	if (!message_queue.empty()) {
 		*lpMsg = message_queue.front();
 		message_queue.pop_front();

@@ -31,15 +31,6 @@ jobs:
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
-  switch:
-    docker:
-      - image: devkitpro/devkita64:latest
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
-      - run: cmake --build build -j 2
-      - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest
@@ -86,7 +77,6 @@ workflows:
     jobs:
       - linux_x86_64
       - linux_x86_64_test
-      - switch
       - 3ds
       - amigaos-m68k
       - vita

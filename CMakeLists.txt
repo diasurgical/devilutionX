@@ -136,11 +136,6 @@ if(GPERF)
   endif()
 endif()
 
-if(NINTENDO_SWITCH)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
-  include(switch_defs)
-endif()
-
 if(VITA)
   # Work around a missing setting in the toolchain file.
   # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
@@ -281,8 +276,6 @@ if(NOT NONET AND NOT DISABLE_TCP)
         ASIO_HAS_UNISTD_H=ON)
 
       target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
-  elseif(NINTENDO_SWITCH)
-    include(asio_defs)
   endif()
 endif()
 
@@ -505,17 +498,6 @@ if (VIRTUAL_GAMEPAD)
 endif()
 
 set(BIN_TARGET devilutionx)
-
-if(NINTENDO_SWITCH)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/switch/network.cpp
-    Source/platform/switch/keyboard.cpp
-    Source/platform/switch/docking.cpp
-    Source/platform/switch/random.cpp
-    Source/platform/switch/asio/pause.c
-    Source/platform/switch/asio/net/if.c
-    Source/platform/switch/asio/sys/signal.c)
-endif()
 
 if(VITA)
   list(APPEND libdevilutionx_SRCS
@@ -900,27 +882,6 @@ if(APPLE)
 
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK On)
-endif()
-
-if(NINTENDO_SWITCH)
-
-  target_link_libraries(libdevilutionx PUBLIC
-        freetype
-        bz2
-        z
-  )
-
-  nx_generate_nacp (${BIN_TARGET}.nacp
-    NAME    "DevilutionX"
-    AUTHOR  "Devilution Team"
-    VERSION "${PROJECT_VERSION}"
-  )
-
-  nx_create_nro(${BIN_TARGET}
-    NACP ${BIN_TARGET}.nacp
-    ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
-  )
-
 endif()
 
 if(VITA)

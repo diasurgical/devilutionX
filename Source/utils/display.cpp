@@ -164,10 +164,6 @@ bool SpawnWindow(const char *lpWindowName)
 	// On SDL 1, there are no ADDED/REMOVED events.
 	// Always try to initialize the first joystick.
 	Joystick::Add(0);
-#ifdef __SWITCH__
-	// TODO: There is a bug in SDL2 on Switch where it does not report controllers on startup (Jan 1, 2020)
-	GameController::Add(0);
-#endif
 #endif
 
 	int width = sgOptions.Graphics.nWidth;
