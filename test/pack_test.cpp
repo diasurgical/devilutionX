@@ -120,8 +120,8 @@ static void CompareItems(const Item *item1, const TestItemStruct *item2)
 	EXPECT_EQ(item1->_iPLLight, item2->_iPLLight);
 	EXPECT_EQ(item1->_iSplLvlAdd, item2->_iSplLvlAdd);
 	EXPECT_EQ(item1->_iUid, item2->_iUid);
-	EXPECT_EQ(item1->_iFMinDam, item2->_iFMinDam);
-	EXPECT_EQ(item1->_iFMaxDam, item2->_iFMaxDam);
+	EXPECT_EQ(item1->_iFDamage.minValue, item2->_iFMinDam);
+	EXPECT_EQ(item1->_iFDamage.maxValue, item2->_iFMaxDam);
 	EXPECT_EQ(item1->_iLMinDam, item2->_iLMinDam);
 	EXPECT_EQ(item1->_iLMaxDam, item2->_iLMaxDam);
 	EXPECT_EQ(item1->_iPrePower, item2->_iPrePower);

@@ -267,8 +267,11 @@ void LoadItemData(LoadHelper &file, Item &item)
 	item._iRequest = file.NextBool8();
 	file.Skip(2); // Alignment
 	item._iUid = file.NextLE<int32_t>();
-	item._iFMinDam = file.NextLE<int32_t>();
-	item._iFMaxDam = file.NextLE<int32_t>();
+
+	auto minFireDamage = file.NextLE<int32_t>();
+	auto maxFireDamage = file.NextLE<int32_t>();
+	item._iFDamage = { minFireDamage, maxFireDamage };
+
 	item._iLMinDam = file.NextLE<int32_t>();
 	item._iLMaxDam = file.NextLE<int32_t>();
 	item._iPLEnAc = file.NextLE<int32_t>();
@@ -952,8 +955,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int8_t>(item._iRequest ? 1 : 0);
 	file.Skip(2); // Alignment
 	file.WriteLE<int32_t>(item._iUid);
-	file.WriteLE<int32_t>(item._iFMinDam);
-	file.WriteLE<int32_t>(item._iFMaxDam);
+	file.WriteLE<int32_t>(item._iFDamage.minValue);
+	file.WriteLE<int32_t>(item._iFDamage.maxValue);
 	file.WriteLE<int32_t>(item._iLMinDam);
 	file.WriteLE<int32_t>(item._iLMaxDam);
 	file.WriteLE<int32_t>(item._iPLEnAc);

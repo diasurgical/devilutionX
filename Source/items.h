@@ -223,8 +223,7 @@ struct Item {
 	bool _iRequest;
 	/** Unique item ID, used as an index into UniqueItemList */
 	int _iUid;
-	int16_t _iFMinDam;
-	int16_t _iFMaxDam;
+	Damage _iFDamage;
 	int16_t _iLMinDam;
 	int16_t _iLMaxDam;
 	int16_t _iPLEnAc;
