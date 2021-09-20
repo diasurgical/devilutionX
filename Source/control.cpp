@@ -709,11 +709,11 @@ void DrawSpellList(const Surface &out)
 		switch (spellListItem.type) {
 		case RSPLTYPE_SKILL:
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 3);
-			strcpy(infostr, fmt::format(_("{:s} Skill"), _(spellDataItem.sSkillText)).c_str());
+			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
 			break;
 		case RSPLTYPE_SPELL:
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 4);
-			strcpy(infostr, fmt::format(_("{:s} Spell"), _(spellDataItem.sNameText)).c_str());
+			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			if (spellListItem.id == SPL_HBOLT) {
 				strcpy(tempstr, _("Damages undead only"));
 				AddPanelString(tempstr);
@@ -726,7 +726,7 @@ void DrawSpellList(const Surface &out)
 			break;
 		case RSPLTYPE_SCROLL: {
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 1);
-			strcpy(infostr, fmt::format(_("Scroll of {:s}"), _(spellDataItem.sNameText)).c_str());
+			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int v = 0;
 			for (int t = 0; t < myPlayer._pNumInv; t++) {
 				if (!myPlayer.InvList[t].isEmpty()
@@ -747,7 +747,7 @@ void DrawSpellList(const Surface &out)
 		} break;
 		case RSPLTYPE_CHARGES: {
 			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 2);
-			strcpy(infostr, fmt::format(_("Staff of {:s}"), _(spellDataItem.sNameText)).c_str());
+			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
 			AddPanelString(tempstr);
@@ -1172,11 +1172,11 @@ void CheckPanelInfo()
 		if (v != SPL_INVALID) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, fmt::format(_("{:s} Skill"), _(spelldata[v].sSkillText)).c_str());
+				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[v].sSkillText)).c_str());
 				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_SPELL: {
-				strcpy(tempstr, fmt::format(_("{:s} Spell"), _(spelldata[v].sNameText)).c_str());
+				strcpy(tempstr, fmt::format(_("{:s} Spell"), pgettext("spell", spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
 				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[v], 0);
 				if (c == 0)
@@ -1186,7 +1186,7 @@ void CheckPanelInfo()
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_SCROLL: {
-				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), _(spelldata[v].sNameText)).c_str());
+				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
 				int s = 0;
 				for (int i = 0; i < myPlayer._pNumInv; i++) {
@@ -1207,7 +1207,7 @@ void CheckPanelInfo()
 				AddPanelString(tempstr);
 			} break;
 			case RSPLTYPE_CHARGES:
-				strcpy(tempstr, fmt::format(_("Staff of {:s}"), _(spelldata[v].sNameText)).c_str());
+				strcpy(tempstr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[v].sNameText)).c_str());
 				AddPanelString(tempstr);
 				strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges).c_str());
 				AddPanelString(tempstr);
@@ -1526,7 +1526,7 @@ void DrawSpellBook(const Surface &out)
 				SetSpellTrans(RSPLTYPE_SKILL);
 				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
-			PrintSBookStr(out, { 10, yp - 23 }, _(spelldata[sn].sNameText));
+			PrintSBookStr(out, { 10, yp - 23 }, pgettext("spell", spelldata[sn].sNameText));
 			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, _("Skill"));

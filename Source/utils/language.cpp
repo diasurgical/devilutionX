@@ -201,6 +201,22 @@ bool ReadEntry(SDL_RWops *rw, MoEntry *e, std::vector<char> &result)
 
 } // namespace
 
+const std::string &LanguageParticularTranslate(const char *context, const char *message)
+{
+	constexpr const char *glue = "\004";
+
+	std::string key = context;
+	key += glue;
+	key += message;
+
+	auto it = translation[0].find(key);
+	if (it == translation[0].end()) {
+		it = translation[0].insert({ key, utf8_to_latin1(message) }).first;
+	}
+
+	return it->second;
+}
+
 const std::string &LanguagePluralTranslate(const char *singular, const char *plural, int count)
 {
 	int n = GetLocalPluralId(count);
@@ -215,6 +231,7 @@ const std::string &LanguagePluralTranslate(const char *singular, const char *plu
 
 	return it->second;
 }
+
 const std::string &LanguageTranslate(const char *key)
 {
 	auto it = translation[0].find(key);

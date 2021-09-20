@@ -713,8 +713,8 @@ void GetBookSpell(Item &item, int lvl)
 		if (s == maxSpells)
 			s = 1;
 	}
-	strcat(item._iName, _(spelldata[bs].sNameText));
-	strcat(item._iIName, _(spelldata[bs].sNameText));
+	strcat(item._iName, pgettext("spell", spelldata[bs].sNameText));
+	strcat(item._iIName, pgettext("spell", spelldata[bs].sNameText));
 	item._iSpell = bs;
 	item._iMinMag = spelldata[bs].sMinInt;
 	item._ivalue += spelldata[bs].sBookCost;
@@ -1191,7 +1191,7 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 			sprintf(istr, "%s %s", _(ItemPrefixes[preidx].PLName), item._iIName);
 			strcpy(item._iIName, istr);
 		}
-		strcpy(istr, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale */ "{:s} of {:s}"), item._iIName, _(spelldata[bs].sNameText)).c_str());
+		strcpy(istr, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale */ "{:s} of {:s}"), item._iIName, pgettext("spell", spelldata[bs].sNameText)).c_str());
 		strcpy(item._iIName, istr);
 		if (item._iMagical == ITEM_QUALITY_NORMAL)
 			strcpy(item._iName, item._iIName);
@@ -1321,8 +1321,8 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 
 	char istr[68];
 	if (!StringInPanel(istr))
-		strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, _(spelldata[bs].sNameText)).c_str());
-	strcpy(istr, fmt::format(_("Staff of {:s}"), _(spelldata[bs].sNameText)).c_str());
+		strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str());
+	strcpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str());
 	strcpy(item._iName, istr);
 	strcpy(item._iIName, istr);
 
@@ -3885,7 +3885,7 @@ void PrintItemPower(char plidx, Item *x)
 		strcpy(tempstr, _("Extra charges"));
 		break;
 	case IPL_SPELL:
-		strcpy(tempstr, fmt::format(ngettext("{:d} {:s} charge", "{:d} {:s} charges", x->_iMaxCharges), x->_iMaxCharges, _(spelldata[x->_iSpell].sNameText)).c_str());
+		strcpy(tempstr, fmt::format(ngettext("{:d} {:s} charge", "{:d} {:s} charges", x->_iMaxCharges), x->_iMaxCharges, pgettext("spell", spelldata[x->_iSpell].sNameText)).c_str());
 		break;
 	case IPL_FIREDAM:
 		if (x->_iFMinDam == x->_iFMaxDam)
