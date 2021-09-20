@@ -57,6 +57,13 @@ struct Damage {
 		return *this;
 	}
 
+	constexpr Damage operator*=(const int factor)
+	{
+		minValue *= factor;
+		maxValue *= factor;
+		return *this;
+	}
+
 	constexpr Damage operator/=(const int factor)
 	{
 		minValue /= factor;
@@ -73,6 +80,12 @@ struct Damage {
 	constexpr friend Damage operator-(Damage damage, Damage anotherDamage)
 	{
 		damage -= anotherDamage;
+		return damage;
+	}
+
+	constexpr friend Damage operator*(Damage damage, const int factor)
+	{
+		damage *= factor;
 		return damage;
 	}
 
