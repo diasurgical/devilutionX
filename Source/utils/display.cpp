@@ -1,9 +1,5 @@
 #include "utils/display.h"
 
-#ifdef __3DS__
-#include "platform/ctr/display.hpp"
-#endif
-
 #include "DiabloUI/diabloui.h"
 #include "control.h"
 #include "controls/controller.h"
@@ -50,10 +46,6 @@ void SetVideoModeToPrimary(bool fullscreen, int width, int height)
 	int flags = SDL1_VIDEO_MODE_FLAGS | SDL_HWPALETTE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
-#ifdef __3DS__
-	flags &= ~SDL_FULLSCREEN;
-	flags |= Get3DSScalingFlag(sgOptions.Graphics.bFitToScreen, width, height);
-#endif
 	SetVideoMode(width, height, SDL1_VIDEO_MODE_BPP, flags);
 	if (OutputRequiresScaling())
 		Log("Using software scaling");

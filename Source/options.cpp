@@ -8,10 +8,6 @@
 #include <fstream>
 #include <locale>
 
-#ifdef __3DS__
-#include "platform/ctr/locale.hpp"
-#endif
-
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -263,11 +259,7 @@ void LoadOptions()
 	sgOptions.Controller.bDpadHotkeys = GetIniBool("Controller", "Dpad Hotkeys", false);
 	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07F);
 
-#if defined(__3DS__)
-	std::string locale = n3ds::GetLocale();
-#else
 	std::string locale = std::locale("").name().substr(0, 5);
-#endif
 
 	LogVerbose("Prefered locale: {}", locale);
 	if (!HasTranslation(locale)) {

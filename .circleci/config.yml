@@ -31,23 +31,6 @@ jobs:
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
-  3ds:
-    docker:
-      - image: devkitpro/devkitarm:latest
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: apt-get update -y
-      - run: apt-get install -y ffmpeg gettext
-      - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
-      - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
-      - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
-      - run: unzip -j "makerom_016_ctrtool.zip" "Ubuntu/makerom" -d "/opt/devkitpro/tools/bin"
-      - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
-      - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake
-      - run: cmake --build build -j 2
-      - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
-      - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
     docker:
       - image: amigadev/crosstools:m68k-amigaos
@@ -65,5 +48,4 @@ workflows:
     jobs:
       - linux_x86_64
       - linux_x86_64_test
-      - 3ds
       - amigaos-m68k

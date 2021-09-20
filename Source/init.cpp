@@ -145,8 +145,6 @@ void init_archives()
 #if defined(__linux__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#elif defined(__3DS__)
-	paths.emplace_back("romfs:/");
 #elif defined(_WIN64) || defined(_WIN32)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");

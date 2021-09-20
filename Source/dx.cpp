@@ -15,10 +15,6 @@
 #include "utils/sdl_mutex.h"
 #include "utils/sdl_wrap.h"
 
-#ifdef __3DS__
-#include <3ds.h>
-#endif
-
 namespace devilution {
 
 int refreshDelay;

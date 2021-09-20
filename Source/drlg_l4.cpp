@@ -1184,15 +1184,6 @@ void LoadDiabQuads(bool preflag)
 	}
 }
 
-#if defined(__3DS__)
-#pragma GCC push_options
-#pragma GCC optimize("O0")
-#endif
-
-#if defined(__3DS__)
-#pragma GCC pop_options
-#endif
-
 bool IsDURightWall(char d)
 {
 	if (d == 25) {

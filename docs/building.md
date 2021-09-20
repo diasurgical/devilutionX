@@ -158,39 +158,6 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 7. Use build/debug etc. commands inside Visual Studio Solution like with any normal Visual Studio project.
 </details>
 
-<details><summary>Nintendo 3DS</summary>
-
-### Installing dependencies
-
-https://devkitpro.org/wiki/Getting_Started
-
-
-- Install (dkp-)pacman: https://devkitpro.org/wiki/devkitPro_pacman
-
-- Install required packages with (dkp-)pacman:
-```
-sudo (dkp-)pacman -S \
-		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype 3ds-libpng \
-		3ds-cmake 3ds-pkg-config picasso 3dslink
-```
-- Download or compile [bannertool](https://github.com/Steveice10/bannertool/releases) and [makerom](https://github.com/jakcron/Project_CTR/releases)
-  - Copy binaries to: `/opt/devkitpro/tools/bin/`
-
-### Compiling
-_If you are compiling using MSYS2, you will need to run `export MSYS2_ARG_CONV_EXCL=-D` before compiling.
-Otherwise, MSYS will sanitize file paths in compiler flags which will likely lead to errors in the build._
-
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
-```
-The output files will be generated in the build folder.
-
-[Nintendo 3DS manual](/docs/manual/platforms/n3ds.md)
-</details>
-
 <details><summary>Haiku</summary>
 
 ### Installing dependencies on 32 bit Haiku

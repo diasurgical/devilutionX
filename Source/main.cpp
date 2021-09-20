@@ -1,7 +1,4 @@
 #include <SDL.h>
-#ifdef __3DS__
-#include "platform/ctr/system.h"
-#endif
 #ifdef GPERF_HEAP_MAIN
 #include <gperftools/heap-profiler.h>
 #endif
@@ -17,9 +14,6 @@ extern "C" const char *__asan_default_options() // NOLINT(bugprone-reserved-iden
 
 int main(int argc, char **argv)
 {
-#ifdef __3DS__
-	ctr_sys_init();
-#endif
 #ifdef GPERF_HEAP_MAIN
 	HeapProfilerStart("main");
 #endif

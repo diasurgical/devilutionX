@@ -174,11 +174,6 @@ if(AMIGA)
   include(amiga_defs)
 endif()
 
-if(NINTENDO_3DS)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
-  include(n3ds_defs)
-endif()
-
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -190,9 +185,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-if(NOT NINTENDO_3DS)
-  find_package(Threads REQUIRED)
-endif()
+find_package(Threads REQUIRED)
 
 if(NOT NONET)
   if(DEVILUTIONX_SYSTEM_LIBSODIUM)
@@ -221,9 +214,6 @@ if(DEVILUTIONX_SYSTEM_LIBPNG)
     message("-- Found png ${PNG_VERSION_STRING}")
   else()
     message("-- Suitable system png package not found, will use png from source")
-  endif()
-  if(NOT TARGET PNG::PNG AND TARGET 3ds::png)
-    add_library(PNG::PNG ALIAS 3ds::png)
   endif()
 endif()
 if(NOT PNG_FOUND)
@@ -261,13 +251,6 @@ endif()
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
-  if(NINTENDO_3DS)
-      target_compile_definitions(asio INTERFACE
-        ASIO_DISABLE_THREADS=ON
-        ASIO_HAS_UNISTD_H=ON)
-
-      target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
-  endif()
 endif()
 
 add_subdirectory(3rdParty/SDL_image)
@@ -490,21 +473,6 @@ endif()
 
 set(BIN_TARGET devilutionx)
 
-if(NINTENDO_3DS)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/ctr/system.cpp
-    Source/platform/ctr/keyboard.cpp
-    Source/platform/ctr/display.cpp
-    Source/platform/ctr/messagebox.cpp
-    Source/platform/ctr/random.cpp
-    Source/platform/ctr/sockets.cpp
-    Source/platform/ctr/locale.cpp
-    Source/platform/ctr/asio/net/if.c
-    Source/platform/ctr/asio/sys/socket.c
-    Source/platform/ctr/asio/sys/uio.c)
-  set(BIN_TARGET ${BIN_TARGET}.elf)
-endif()
-
 if(RUN_TESTS)
   set(devilutionxtest_SRCS
     test/appfat_test.cpp
@@ -606,10 +574,8 @@ target_include_directories(libdevilutionx PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC
-  Threads::Threads)
-endif()
+target_link_libraries(libdevilutionx PUBLIC
+Threads::Threads)
 
 target_link_libraries(libdevilutionx PUBLIC
   PKWare
@@ -767,11 +733,6 @@ if(AMIGA)
   endif()
 endif()
 
-if(NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
-endif()
-
 target_compile_definitions(libdevilutionx PUBLIC ${def_list})
 
 if (GPERF)
@@ -853,50 +814,6 @@ if(APPLE)
 
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK On)
-endif()
-
-if(NINTENDO_3DS)
-  set(APP_TITLE       "DevilutionX")
-  set(APP_DESCRIPTION "DevilutionX port for 3DS")
-  set(APP_AUTHOR      "Diasurgical Team")
-  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
-  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
-  set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
-  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  list(APPEND APP_ROMFS_FILES
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq
-    ${devilutionx_TRANSLATIONS})
-  set(APP_VERSION ${PROJECT_VERSION})
-
-  find_program(FFMPEG ffmpeg)
-  if(FFMPEG)
-    add_custom_command(OUTPUT ${APP_AUDIO}
-      COMMAND ${FFMPEG} -y -ss 3.3 -t 3 -i "${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav" -af "afade=t=in:st=0:d=0.1,afade=t=out:st=2.9:d=0.1" ${APP_AUDIO}
-      DEPENDS ${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav
-      VERBATIM)
-  else()
-    add_custom_command(OUTPUT ${APP_AUDIO}
-      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav ${APP_AUDIO}
-      DEPENDS ${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav
-      VERBATIM)
-  endif()
-
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS romfs_directory)
-
-  include(Tools3DS)
-  add_3dsx_target(${BIN_TARGET})
-  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-
-  get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
-  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
-  add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
 if(CPACK)

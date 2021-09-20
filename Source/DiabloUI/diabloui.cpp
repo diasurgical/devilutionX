@@ -24,11 +24,6 @@
 #include "utils/utf8.h"
 #include "utils/language.h"
 
-#ifdef __3DS__
-// for virtual keyboard on 3DS
-#include "platform/ctr/keyboard.h"
-#endif
-
 namespace devilution {
 
 std::size_t SelectedItemMax;
@@ -97,11 +92,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
-#if defined(__3DS__)
-			ctr_vkbdInput(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
-#else
 			SDL_StartTextInput();
-#endif
 			UiTextInput = pItemUIEdit->m_value;
 			UiTextInputLen = pItemUIEdit->m_max_length;
 		}
@@ -682,12 +673,6 @@ void UiPollAndRender()
 	// Must happen after the very first UiFadeIn, which sets the cursor.
 	if (IsHardwareCursor())
 		SetHardwareCursorVisible(!sgbControllerActive);
-
-#ifdef __3DS__
-	// Keyboard blocks until input is finished
-	// so defer until after render and fade-in
-	ctr_vkbdFlush();
-#endif
 }
 
 namespace {
