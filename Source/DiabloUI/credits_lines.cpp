@@ -127,7 +127,7 @@ const char *const CreditLines[] = {
 	N_("QA Counterintelligence"),
 	"	Alan Dabiri, Jesse McReynolds, Walter Takata",
 	"",
-	N_("Order of Network Information Services"),
+	N_(/* TRANSLATORS: A group of people */ "Order of Network Information Services"),
 	"	Robert Bridenbecker, Jason \"Brother Shaggy\" Schmit,",
 	"	Jamie \"Brother Gug\" Steigerwald, Richard Seis ",
 	"",

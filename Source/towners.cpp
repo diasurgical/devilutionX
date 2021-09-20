@@ -263,7 +263,7 @@ void InitGirl(Towner &towner, const TownerData &townerData)
 	towner.animOrder = nullptr;
 	towner.animOrderSize = 0;
 	LoadTownerAnimations(towner, "Towners\\Girl\\Girlw1.CEL", 20, 6);
-	towner.name = "Celia";
+	towner.name = _("Celia");
 }
 
 void TownDead(Towner &towner)
