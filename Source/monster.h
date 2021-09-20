@@ -207,8 +207,7 @@ struct Monster { // note: missing field _mAFNum
 	uint16_t mHit;
 	Damage mDamage;
 	uint16_t mHit2;
-	uint8_t mMinDamage2;
-	uint8_t mMaxDamage2;
+	Damage mDamage2;
 	uint8_t mArmorClass;
 	uint16_t mMagicRes;
 	_speech_id mtalkmsg;
