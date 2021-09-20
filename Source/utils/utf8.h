@@ -24,8 +24,7 @@
  * occurs, this pointer will be a guess that depends on the particular
  * error, but it will always advance at least one byte.
  */
-inline const unsigned char *
-utf8_decode(const unsigned char *buf, uint32_t *c, int *e)
+inline const char *utf8_decode(const char *buf, uint32_t *c, int *e)
 {
 	static const char lengths[] = {
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -36,7 +35,7 @@ utf8_decode(const unsigned char *buf, uint32_t *c, int *e)
 	static const int shiftc[] = { 0, 18, 12, 6, 0 };
 	static const int shifte[] = { 0, 6, 4, 2, 0 };
 
-	const unsigned char *s = buf;
+	auto s = reinterpret_cast<const unsigned char *>(buf);
 	int len = lengths[s[0] >> 3];
 
 	/* Compute the pointer to the next character early so that the next
@@ -64,23 +63,5 @@ utf8_decode(const unsigned char *buf, uint32_t *c, int *e)
 	*e ^= 0x2a; // top two bits of each tail byte correct?
 	*e >>= shifte[len];
 
-	return next;
-}
-
-inline std::string utf8_to_latin1(const char *in)
-{
-	std::string instr(in);
-	instr.resize(instr.size() + 4);
-	const unsigned char *buf = reinterpret_cast<const unsigned char *>(instr.data());
-	std::string ret;
-	uint32_t next;
-	int error;
-	while (*buf) {
-		buf = utf8_decode(buf, &next, &error);
-		if (!error && next <= 255)
-			ret.push_back(static_cast<char>(next));
-		else
-			ret.push_back('?');
-	}
-	return ret;
+	return reinterpret_cast<const char *>(next);
 }

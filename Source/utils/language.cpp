@@ -8,7 +8,6 @@
 #include "options.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
-#include "utils/utf8.h"
 
 using namespace devilution;
 #define MO_MAGIC 0x950412de
@@ -64,8 +63,6 @@ char *StrTrimRight(char *s)
 	}
 	return s;
 }
-
-bool IsUTF8 = true;
 
 // English, Danish, Spanish, Italian, Swedish
 int PluralForms = 2;
@@ -176,9 +173,10 @@ void ParseMetadata(char *ptr)
 		val = StrTrimRight(val);
 		meta[key] = val;
 
-		// Match "Content-Type: text/plain; charset=UTF-8"
 		if ((strcmp("Content-Type", key) == 0) && ((delim = strstr(val, "=")) != nullptr)) {
-			IsUTF8 = (strcasecmp(delim + 1, "utf-8") == 0);
+			if (strcasecmp(delim + 1, "utf-8") != 0) {
+				Log("Translation is now UTF-8 encoded!");
+			}
 			continue;
 		}
 
@@ -211,7 +209,7 @@ const std::string &LanguageParticularTranslate(const char *context, const char *
 
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
-		it = translation[0].insert({ key, utf8_to_latin1(message) }).first;
+		it = translation[0].insert({ key, message }).first;
 	}
 
 	return it->second;
@@ -224,9 +222,9 @@ const std::string &LanguagePluralTranslate(const char *singular, const char *plu
 	auto it = translation[n].find(singular);
 	if (it == translation[n].end()) {
 		if (count != 1)
-			it = translation[1].insert({ singular, utf8_to_latin1(plural) }).first;
+			it = translation[1].insert({ singular, plural }).first;
 		else
-			it = translation[0].insert({ singular, utf8_to_latin1(singular) }).first;
+			it = translation[0].insert({ singular, singular }).first;
 	}
 
 	return it->second;
@@ -236,7 +234,7 @@ const std::string &LanguageTranslate(const char *key)
 {
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
-		it = translation[0].insert({ key, utf8_to_latin1(key) }).first;
+		it = translation[0].insert({ key, key }).first;
 	}
 
 	return it->second;
@@ -327,7 +325,7 @@ void LanguageInitialize()
 			size_t offset = 0;
 			for (int j = 0; j < PluralForms; j++) {
 				const char *text = value.data() + offset;
-				translation[j].emplace(key.data(), IsUTF8 ? utf8_to_latin1(text) : text);
+				translation[j].emplace(key.data(), text);
 
 				if (dst[i].length <= offset + strlen(value.data()))
 					break;

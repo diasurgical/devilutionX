@@ -538,8 +538,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
 	case SDL_TEXTINPUT:
 		if (gbRunGame) {
-			std::string output = utf8_to_latin1(e.text.text);
-			control_new_text(output);
+			control_new_text(e.text.text);
 			break;
 		}
 		return FalseAvail("SDL_TEXTINPUT", e.text.windowID);

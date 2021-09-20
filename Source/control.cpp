@@ -1662,13 +1662,13 @@ void DrawTalkPan(const Surface &out)
 		DrawPanelBox(out, { 180, sgbPlrTalkTbl + i + 70, i + 284, 1 }, { PANEL_X + 180, i + PANEL_Y + 54 });
 	}
 	DrawPanelBox(out, { 170, sgbPlrTalkTbl + 80, 310, 55 }, { PANEL_X + 170, PANEL_Y + 64 });
-	char *msg = TalkMessage;
 
 	int x = PANEL_LEFT + 200;
 	int y = PANEL_Y + 10;
 
-	int idx = DrawString(out, msg, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
-	msg[idx] = '\0';
+	int idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
+	if (idx < sizeof(TalkMessage))
+		TalkMessage[idx] = '\0';
 
 	x += 46;
 	int talkBtn = 0;

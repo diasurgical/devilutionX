@@ -81,9 +81,6 @@ void LoadMainPanel()
 	if (SDLC_SetSurfaceColors(pBtmBuff->surface, PalSurface->format->palette) <= -1)
 		ErrSdl();
 
-	LoadFont(GameFont12, ColorButtonface);
-	LoadFont(GameFont12, ColorButtonpushed);
-
 	RenderMainButton(0, _("char"), 0);
 	RenderMainButton(1, _("quests"), 1);
 	RenderMainButton(2, _("map"), 1);
@@ -111,8 +108,8 @@ void LoadMainPanel()
 		DrawButtonText(talkSurface, _("voice"), { { 0, 33 }, { TalkButton.w(), 0 } }, UiFlags::ColorButtonpushed);
 	}
 
-	UnloadFont(GameFont12, ColorButtonface);
-	UnloadFont(GameFont12, ColorButtonpushed);
+	UnloadFonts(GameFont12, ColorButtonface);
+	UnloadFonts(GameFont12, ColorButtonpushed);
 
 	PanelButton.Unload();
 	PanelButtonGrime.Unload();
