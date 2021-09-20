@@ -2737,7 +2737,7 @@ msgstr "Пламени"
 
 #: Source/itemdat.cpp:274
 msgid "Lightning"
-msgstr "Мълния"
+msgstr "Светкавични"
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"
