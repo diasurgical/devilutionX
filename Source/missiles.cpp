@@ -2846,7 +2846,7 @@ void MI_LArrow(Missile &missile)
 		}
 		if (missile._mitype == MIS_FARROW) {
 			const auto damage = p != -1
-			    ? Damage { Players[p]._pIFMinDam, Players[p]._pIFMaxDam }
+			    ? Players[p]._pIFDamage
 			    : Damage { GenerateRnd(10) + 1 + currlevel, GenerateRnd(10) + 1 + currlevel * 2 };
 
 			MissilesData[MIS_FARROW].mResist = MISR_FIRE;
@@ -3599,7 +3599,7 @@ void MI_Weapexp(Missile &missile)
 	int id = missile._misource;
 	Damage damage { 0 };
 	if (missile.var2 == 1) {
-		damage = { Players[id]._pIFMinDam, Players[id]._pIFMaxDam };
+		damage = Players[id]._pIFDamage;
 		MissilesData[missile._mitype].mResist = MISR_FIRE;
 	} else {
 		damage = { Players[id]._pILMinDam, Players[id]._pILMaxDam };
