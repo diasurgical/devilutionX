@@ -2838,7 +2838,7 @@ void MI_LArrow(Missile &missile)
 		missile_resistance rst = MissilesData[missile._mitype].mResist;
 		if (missile._mitype == MIS_LARROW) {
 			const auto damage = p != -1
-			    ? Damage { Players[p]._pILMinDam, Players[p]._pILMaxDam }
+			    ? Players[p]._pILDamage
 			    : Damage { GenerateRnd(10) + 1 + currlevel, GenerateRnd(10) + 1 + currlevel * 2 };
 
 			MissilesData[MIS_LARROW].mResist = MISR_LIGHTNING;
@@ -3338,7 +3338,7 @@ void MI_SpecArrow(Missile &missile)
 		dir = player._pdir;
 		micaster = TARGET_MONSTERS;
 
-		switch (player._pILMinDam) {
+		switch (player._pILDamage.minValue) {
 		case 0:
 			mitype = MIS_FIRENOVA;
 			break;
@@ -3602,7 +3602,7 @@ void MI_Weapexp(Missile &missile)
 		damage = Players[id]._pIFDamage;
 		MissilesData[missile._mitype].mResist = MISR_FIRE;
 	} else {
-		damage = { Players[id]._pILMinDam, Players[id]._pILMaxDam };
+		damage = Players[id]._pILDamage;
 		MissilesData[missile._mitype].mResist = MISR_LIGHTNING;
 	}
 	CheckMissileCol(missile, damage, false, missile.position.tile, false);

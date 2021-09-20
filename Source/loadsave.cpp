@@ -493,8 +493,11 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	auto minFireDamage = file.NextLE<int32_t>();
 	auto maxFireDamage = file.NextLE<int32_t>();
 	player._pIFDamage = { minFireDamage, maxFireDamage };
-	player._pILMinDam = file.NextLE<int32_t>();
-	player._pILMaxDam = file.NextLE<int32_t>();
+
+	auto minLightningDamage = file.NextLE<int32_t>();
+	auto maxLightningDamage = file.NextLE<int32_t>();
+	player._pILDamage = { minLightningDamage, maxLightningDamage };
+
 	player._pOilType = static_cast<item_misc_id>(file.NextLE<int32_t>());
 	player.pTownWarps = file.NextLE<uint8_t>();
 	player.pDungMsgs = file.NextLE<uint8_t>();
@@ -1168,8 +1171,8 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player._pIEnAc);
 	file.WriteLE<int32_t>(player._pIFDamage.minValue);
 	file.WriteLE<int32_t>(player._pIFDamage.maxValue);
-	file.WriteLE<int32_t>(player._pILMinDam);
-	file.WriteLE<int32_t>(player._pILMaxDam);
+	file.WriteLE<int32_t>(player._pILDamage.minValue);
+	file.WriteLE<int32_t>(player._pILDamage.maxValue);
 	file.WriteLE<int32_t>(player._pOilType);
 	file.WriteLE<uint8_t>(player.pTownWarps);
 	file.WriteLE<uint8_t>(player.pDungMsgs);
