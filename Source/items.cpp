@@ -2733,8 +2733,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 		vadd -= 2 * player._pLevel;
 	}
 
-	player._pIMinDam = mind;
-	player._pIMaxDam = maxd;
+	player._pIDamage = { mind, maxd };
 	player._pIAC = tac;
 	player._pIBonusDam = bdam;
 	player._pIBonusToHit = btohit;
