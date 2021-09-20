@@ -191,18 +191,6 @@ The output files will be generated in the build folder.
 [Nintendo 3DS manual](/docs/manual/platforms/n3ds.md)
 </details>
 
-<details><summary>PlayStation Vita</summary>
-
-### Compiling
-```
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-make
-```
-[PlayStation Vita manual](/docs/manual/platforms/vita.md)
-</details>
-
-
 <details><summary>Haiku</summary>
 
 ### Installing dependencies on 32 bit Haiku

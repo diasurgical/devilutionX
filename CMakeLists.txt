@@ -136,15 +136,6 @@ if(GPERF)
   endif()
 endif()
 
-if(VITA)
-  # Work around a missing setting in the toolchain file.
-  # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
-  set(PKG_CONFIG_EXECUTABLE "$ENV{VITASDK}/bin/arm-vita-eabi-pkg-config")
-
-  include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-  include(vita_defs)
-endif()
-
 set(TARGET_PLATFORM host CACHE STRING "Target platform")
 set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
 if(TARGET_PLATFORM STREQUAL "retrofw")
@@ -248,7 +239,7 @@ else()
   if(TARGET SDL2::SDL2)
     set(SDL2_MAIN SDL2::SDL2main)
   elseif(TARGET SDL2::SDL2-static)
-    # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
+    # On some distros, only the SDL2::SDL2-static target is available.
     # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
     if(CMAKE_VERSION VERSION_LESS "3.18")
       # Aliasing local targets is not supported on CMake < 3.18, so make it global.
@@ -499,12 +490,6 @@ endif()
 
 set(BIN_TARGET devilutionx)
 
-if(VITA)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/vita/keyboard.cpp
-    Source/platform/vita/touch.cpp)
-endif()
-
 if(NINTENDO_3DS)
   list(APPEND libdevilutionx_SRCS
     Source/platform/ctr/system.cpp
@@ -614,10 +599,6 @@ if (Gettext_FOUND)
   foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
     list(APPEND devilutionx_TRANSLATIONS ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
-
-    if(VITA)
-      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "${lang}.gmo")
-    endif()
   endforeach(lang)
 endif()
 
@@ -786,16 +767,6 @@ if(AMIGA)
   endif()
 endif()
 
-if (VITA)
-  target_link_libraries(libdevilutionx PUBLIC
-        ScePower_stub
-        SceAppUtil_stub
-        freetype
-        z
-  )
-  target_compile_definitions(libdevilutionx PUBLIC VITA)
-endif()
-
 if(NINTENDO_3DS)
   target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2)
   target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
@@ -807,7 +778,7 @@ if (GPERF)
   target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU)
   target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -882,28 +853,6 @@ if(APPLE)
 
   set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
   set(CPACK On)
-endif()
-
-if(VITA)
-  set(VITA_APP_NAME "devilutionX")
-  set(VITA_TITLEID  "DVLX00001")
-  set(VITA_VERSION  "01.00")
-  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
-  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
-  vita_create_self(devilutionx.self devilutionx UNSAFE)
-  vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
-    VERSION ${VITA_VERSION}
-    NAME ${VITA_APP_NAME}
-    FILE Packaging/vita/sce_sys/icon0.png sce_sys/icon0.png
-    FILE Packaging/vita/sce_sys/pic0.png sce_sys/pic0.png
-    FILE Packaging/vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-    FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-    FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
-    FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
-    FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
-    ${VITA_TRANSLATIONS_LIST}
-  )
 endif()
 
 if(NINTENDO_3DS)

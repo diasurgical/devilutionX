@@ -8,11 +8,6 @@
 #include <fstream>
 #include <locale>
 
-#ifdef __vita__
-#include <psp2/apputil.h>
-#include <psp2/system_param.h>
-#endif
-
 #ifdef __3DS__
 #include "platform/ctr/locale.hpp"
 #endif
@@ -214,11 +209,7 @@ void LoadOptions()
 
 	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-#ifndef __vita__
 	sgOptions.Graphics.bFullscreen = GetIniBool("Graphics", "Fullscreen", true);
-#else
-	sgOptions.Graphics.bFullscreen = true;
-#endif
 #if !defined(USE_SDL1)
 	sgOptions.Graphics.bUpscale = GetIniBool("Graphics", "Upscale", true);
 #else
@@ -271,45 +262,8 @@ void LoadOptions()
 	sgOptions.Controller.bSwapShoulderButtonMode = GetIniBool("Controller", "Swap Shoulder Button Mode", false);
 	sgOptions.Controller.bDpadHotkeys = GetIniBool("Controller", "Dpad Hotkeys", false);
 	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07F);
-#ifdef __vita__
-	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
-#endif
 
-#if defined(__vita__)
-	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	const char *vita_locales[] = {
-		"ja_JP",
-		"en_US",
-		"fr_FR",
-		"es_ES",
-		"de_DE",
-		"it_IT",
-		"nl_NL",
-		"pt_PT",
-		"ru_RU",
-		"ko_KR",
-		"zh_TW",
-		"zh_CN",
-		"fi_FI",
-		"sv_SE",
-		"da_DK",
-		"no_NO",
-		"pl_PL",
-		"pt_BR",
-		"en_GB",
-		"tr_TR",
-	};
-	SceAppUtilInitParam initParam;
-	SceAppUtilBootParam bootParam;
-	memset(&initParam, 0, sizeof(SceAppUtilInitParam));
-	memset(&bootParam, 0, sizeof(SceAppUtilBootParam));
-	sceAppUtilInit(&initParam, &bootParam);
-	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
-	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
-		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	std::string locale = std::string(vita_locales[language]);
-	sceAppUtilShutdown();
-#elif defined(__3DS__)
+#if defined(__3DS__)
 	std::string locale = n3ds::GetLocale();
 #else
 	std::string locale = std::locale("").name().substr(0, 5);
@@ -351,9 +305,7 @@ void SaveOptions()
 	SetIniValue("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
 	SetIniValue("Graphics", "Width", sgOptions.Graphics.nWidth);
 	SetIniValue("Graphics", "Height", sgOptions.Graphics.nHeight);
-#ifndef __vita__
 	SetIniValue("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
-#endif
 #if !defined(USE_SDL1)
 	SetIniValue("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
 #endif
@@ -404,9 +356,6 @@ void SaveOptions()
 	SetIniValue("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
 	SetIniValue("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
 	SetIniValue("Controller", "deadzone", sgOptions.Controller.fDeadzone);
-#ifdef __vita__
-	SetIniValue("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
-#endif
 
 	SetIniValue("Language", "Code", sgOptions.Language.szCode);
 

@@ -72,13 +72,6 @@ sudo apt install devilutionx
 
 </details>
 
-<details><summary>Playstation Vita</summary>
-
- - Install devilutionx.vpk
- - Copy the MPQ files to `ux0:/data/diasurgical/devilution/`.
-
-</details>
-
 <details><summary>ClockworkPi GameShell</summary>
 
 - Copy the `__init__.py` to a newly created folder under /home/cpi/apps/Menu and run it from the menu. The folder then symbolizes the devilutionX icon.

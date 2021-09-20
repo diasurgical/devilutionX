@@ -1,9 +1,5 @@
 #include "utils/display.h"
 
-#ifdef __vita__
-#include <psp2/power.h>
-#endif
-
 #ifdef __3DS__
 #include "platform/ctr/display.hpp"
 #endif
@@ -124,14 +120,6 @@ void CalculatePreferdWindowSize(int &width, int &height)
 
 bool SpawnWindow(const char *lpWindowName)
 {
-#ifdef __vita__
-	scePowerSetArmClockFrequency(444);
-#endif
-
-#if SDL_VERSION_ATLEAST(2, 0, 6) && defined(__vita__)
-	SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
-#endif
-
 #ifdef _WIN32
 	// The default WASAPI backend causes distortions
 	// https://github.com/diasurgical/devilutionX/issues/1434

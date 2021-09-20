@@ -58,18 +58,6 @@ jobs:
       - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
       - run: cd build && make -j2
       - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
-  vita:
-    docker:
-      - image: vitasdk/vitasdk:latest
-    working_directory: ~/repo
-    steps:
-      - checkout
-      # Work around https://github.com/vitasdk/vdpm/issues/69
-      - run: mkdir -p /usr/local && ln -sf /home/user/vitasdk /usr/local/vitasdk
-      - run: apk --no-cache add git cmake ninja bash pkgconfig
-      - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
-      - run: cmake --build build -j 2
-      - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
 
 workflows:
   version: 2
@@ -79,4 +67,3 @@ workflows:
       - linux_x86_64_test
       - 3ds
       - amigaos-m68k
-      - vita

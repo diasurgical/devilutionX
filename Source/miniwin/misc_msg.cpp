@@ -24,10 +24,6 @@
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
 
-#ifdef __vita__
-#include "platform/vita/touch.h"
-#endif
-
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.
@@ -306,7 +302,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
-#if !defined(USE_SDL1) && !defined(__vita__)
+#if !defined(USE_SDL1)
 	if (!movie_playing) {
 		// SDL generates mouse events from touch-based inputs to provide basic
 		// touchscreeen support for apps that don't explicitly handle touch events
@@ -321,10 +317,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
 	HandleTouchEvent(e);
-#endif
-
-#ifdef __vita__
-	handle_touch(&e, MousePosition.x, MousePosition.y);
 #endif
 
 #ifdef USE_SDL1
@@ -446,12 +438,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			break;
 		}
 		return true;
-#ifdef __vita__
-	}
-	if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
-#else
 	} else if (e.type < SDL_JOYAXISMOTION) {
-#endif
 		if (!mouseWarping || e.type != SDL_MOUSEMOTION)
 			sgbControllerActive = false;
 		if (mouseWarping && e.type == SDL_MOUSEMOTION)

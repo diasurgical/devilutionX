@@ -24,10 +24,6 @@
 #include "utils/utf8.h"
 #include "utils/language.h"
 
-#ifdef __vita__
-// for virtual keyboard on Vita
-#include "platform/vita/keyboard.h"
-#endif
 #ifdef __3DS__
 // for virtual keyboard on 3DS
 #include "platform/ctr/keyboard.h"
@@ -101,9 +97,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
-#if defined(__vita__)
-			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
-#elif defined(__3DS__)
+#if defined(__3DS__)
 			ctr_vkbdInput(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
 #else
 			SDL_StartTextInput();
@@ -221,14 +215,6 @@ void SelheroCatToName(char *inBuf, char *outBuf, int cnt)
 	strncat(outBuf, output.c_str(), cnt - strlen(outBuf));
 }
 
-#ifdef __vita__
-void selhero_SetName(char *in_buf, char *out_buf, int cnt)
-{
-	std::string output = utf8_to_latin1(in_buf);
-	strncpy(out_buf, output.c_str(), cnt);
-}
-#endif
-
 bool HandleMenuAction(MenuAction menuAction)
 {
 	switch (menuAction) {
@@ -344,11 +330,7 @@ void UiFocusNavigation(SDL_Event *event)
 #ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
-#ifdef __vita__
-				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
-#else
 				SelheroCatToName(event->text.text, UiTextInput, UiTextInputLen);
-#endif
 			}
 			return;
 #endif

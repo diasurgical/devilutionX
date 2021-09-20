@@ -21,11 +21,6 @@
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
 
-#ifdef __vita__
-// increase default allowed heap size on Vita
-int _newlib_heap_size_user = 100 * 1024 * 1024;
-#endif
-
 namespace devilution {
 
 /** True if the game is the current active window */
