@@ -47,7 +47,7 @@ endif()
 
 ########################################################################
 # UNIX
-if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
+if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic")
     # import pkg-config
     find_package(PkgConfig QUIET)
     if (PKG_CONFIG_FOUND)

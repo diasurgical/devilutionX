@@ -31,16 +31,6 @@ jobs:
       - run: bash <(curl -s https://codecov.io/bash)
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
-  amigaos-m68k:
-    docker:
-      - image: amigadev/crosstools:m68k-amigaos
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: Packaging/amiga/prep.sh
-      - run: PKG_CONFIG_PATH=/opt/m68k-amigaos/lib/pkgconfig/:/opt/m68k-amigaos/share/pkgconfig/ cmake -S. -Bbuild -DM68K_CPU=68040 -DM68K_FPU=hard -DM68K_COMMON="-s -ffast-math -O3 -noixemul -D__BIG_ENDIAN__ -D__AMIGA__ -fpermissive" ..
-      - run: cd build && make -j2
-      - store_artifacts: {path: ./build/devilutionx, destination: devilutionx_m68k}
 
 workflows:
   version: 2
@@ -48,4 +38,3 @@ workflows:
     jobs:
       - linux_x86_64
       - linux_x86_64_test
-      - amigaos-m68k

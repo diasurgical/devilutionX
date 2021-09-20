@@ -23,12 +23,7 @@
 namespace devilution {
 
 #define INDEX_ENTRIES 2048
-
-// Amiga cannot Seekp beyond EOF.
-// See https://github.com/bebbo/libnix/issues/30
-#ifndef __AMIGA__
 #define CAN_SEEKP_BEYOND_EOF
-#endif
 
 namespace {
 

@@ -170,10 +170,6 @@ if(HAIKU)
   set(UBSAN OFF)
 endif()
 
-if(AMIGA)
-  include(amiga_defs)
-endif()
-
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -722,15 +718,6 @@ target_link_libraries(libdevilutionx PUBLIC SDL_image)
 
 if(NOT NOSOUND)
   target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
-endif()
-
-if(AMIGA)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${FREETYPE_LIBRARY}
-    ${ZLIB_LIBRARY})
-  if(NOT WARPOS)
-    target_link_libraries(libdevilutionx PUBLIC -ldebug)
-  endif()
 endif()
 
 target_compile_definitions(libdevilutionx PUBLIC ${def_list})
