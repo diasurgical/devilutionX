@@ -2862,8 +2862,7 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 	player._pMana = std::min(imana + player._pManaBase, player._pMaxMana);
 
 	player._pIFDamage = { fmin, fmax };
-	player._pILMinDam = lmin;
-	player._pILMaxDam = lmax;
+	player._pILDamage = { lmin, lmax };
 
 	player._pInfraFlag = (iflgs & ISPL_INFRAVISION) != 0;
 
