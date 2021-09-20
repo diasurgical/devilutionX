@@ -173,49 +173,6 @@ cmake --build . -j $(nproc)
 ```
 </details>
 
-<details><summary>OpenDingux / RetroFW</summary>
-
-DevilutionX uses buildroot to build packages for OpenDingux and RetroFW.
-
-The build script does the following:
-
-1. Downloads and configures the buildroot if necessary.
-2. Builds the executable (using CMake).
-3. Packages the executable and all related resources into an `.ipk` or `.opk` package.
-
-The buildroot uses ~2.5 GiB of disk space and can take 20 minutes to build.
-
-For OpenDingux builds `mksquashfs` needs to be installed.
-
-To build, run the following command
-
-~~~ bash
-Packaging/OpenDingux/build.sh <platform>
-~~~
-
-Replace `<platform>` with one of: `retrofw`, `rg350`, or `gkd350h`.
-
-This prepares and uses the buildroot at `$HOME/buildroot-$PLATFORM-devilutionx`.
-
-End-user manuals are available here:
-
-* [RetroFW manual](docs/manual/platforms/retrofw.md)
-* [RG-350 manual](docs/manual/platforms/rg350.md)
-* [GKD350h manual](docs/manual/platforms/gkd350h.md)
-
-</details>
-
-<details><summary>Clockwork PI GameShell</summary>
-
-You can either call
-~~~ bash
-Packaging/cpi-gamesh/build.sh
-~~~
-to install dependencies and build the code.
-
-Or you create a new directory under `/home/cpi/apps/Menu` and copy [the file](Packaging/cpi-gamesh/__init__.py) there. After restarting the UI, you can download and compile the game directly from the device itself. See [the readme](Packaging/cpi-gamesh/readme.md) for more details.
-</details>
-
 <details><summary><b>CMake build options</b></summary>
 
 ### General
