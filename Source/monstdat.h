@@ -297,8 +297,7 @@ struct UniqueMonsterData {
 	uint16_t mmaxhp;
 	_mai_id mAi;
 	uint8_t mint;
-	uint8_t mMinDamage;
-	uint8_t mMaxDamage;
+	Damage mDamage;
 	/** Using monster_resistance as bitflags */
 	uint16_t mMagicRes;
 	/**

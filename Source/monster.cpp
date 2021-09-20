@@ -495,8 +495,8 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	monster._mhitpoints = monster._mmaxhp;
 	monster._mAi = uniqueMonsterData.mAi;
 	monster._mint = uniqueMonsterData.mint;
-	monster.mDamage = { uniqueMonsterData.mMinDamage, uniqueMonsterData.mMaxDamage };
-	monster.mDamage2 = { uniqueMonsterData.mMinDamage, uniqueMonsterData.mMaxDamage };
+	monster.mDamage = uniqueMonsterData.mDamage;
+	monster.mDamage2 = uniqueMonsterData.mDamage;
 	monster.mMagicRes = uniqueMonsterData.mMagicRes;
 	monster.mtalkmsg = uniqueMonsterData.mtalkmsg;
 	if (uniqindex == UMT_HORKDMN)
@@ -1427,7 +1427,7 @@ void CheckReflect(int mon, int pnum, int dam)
 		M_StartHit(mon, pnum, mdam);
 }
 
-void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
+void MonsterAttackPlayer(int i, int pnum, int hit, Damage damage)
 {
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
@@ -1435,7 +1435,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	auto &player = Players[pnum];
 
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
-		MonsterAttackMonster(i, pnum, hit, minDam, maxDam);
+		MonsterAttackMonster(i, pnum, hit, damage.minValue, damage.maxValue);
 		return;
 	}
 	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || (player._pSpellFlags & 1) != 0)
@@ -1476,7 +1476,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 		Direction dir = GetDirection(player.position.tile, monster.position.tile);
 		StartPlrBlock(pnum, dir);
 		if (pnum == MyPlayerId && player.wReflections > 0) {
-			int dam = GenerateRnd((maxDam - minDam + 1) << 6) + (minDam << 6);
+			int dam = damage.GetValue() << 6;
 			dam = std::max(dam + (player._pIGetHit << 6), 64);
 			CheckReflect(i, pnum, dam);
 		}
@@ -1496,7 +1496,7 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 			}
 		}
 	}
-	int dam = (minDam << 6) + GenerateRnd((maxDam - minDam + 1) << 6);
+	int dam = damage.GetValue() << 6;
 	dam = std::max(dam + (player._pIGetHit << 6), 64);
 	if (pnum == MyPlayerId) {
 		if (player.wReflections > 0)
@@ -1542,16 +1542,16 @@ bool MonsterAttack(int i)
 	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit, monster.mDamage.minValue, monster.mDamage.maxValue);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit, monster.mDamage);
 		if (monster._mAi != AI_SNAKE)
 			PlayEffect(monster, 0);
 	}
 	if (monster.MType->mtype >= MT_NMAGMA && monster.MType->mtype <= MT_WMAGMA && monster.AnimInfo.CurrentFrame == 9) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit + 10, monster.mDamage.minValue - 2, monster.mDamage.maxValue - 2);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit + 10, monster.mDamage - Damage { 2 });
 		PlayEffect(monster, 0);
 	}
 	if (monster.MType->mtype >= MT_STORM && monster.MType->mtype <= MT_MAEL && monster.AnimInfo.CurrentFrame == 13) {
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit - 20, monster.mDamage.minValue + 4, monster.mDamage.maxValue + 4);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit - 20, monster.mDamage + Damage { 4 });
 		PlayEffect(monster, 0);
 	}
 	if (monster._mAi == AI_SNAKE && monster.AnimInfo.CurrentFrame == 1)
@@ -1644,7 +1644,7 @@ bool MonsterSpecialAttack(int i)
 	assert(monster.MData != nullptr);
 
 	if (monster.AnimInfo.CurrentFrame == monster.MData->mAFNum2)
-		MonsterAttackPlayer(i, monster._menemy, monster.mHit2, monster.mDamage2.minValue, monster.mDamage2.maxValue);
+		MonsterAttackPlayer(i, monster._menemy, monster.mHit2, monster.mDamage2);
 
 	if (monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames) {
 		M_StartStand(monster, monster._mdir);
@@ -4751,7 +4751,7 @@ void MissToMonst(Missile &missile, Point position)
 		int pnum = dPlayer[oldPosition.x][oldPosition.y] - 1;
 		if (dPlayer[oldPosition.x][oldPosition.y] > 0) {
 			if (monster.MType->mtype != MT_GLOOM && (monster.MType->mtype < MT_INCIN || monster.MType->mtype > MT_HELLBURN)) {
-				MonsterAttackPlayer(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, monster.mDamage2.minValue, monster.mDamage2.maxValue);
+				MonsterAttackPlayer(m, dPlayer[oldPosition.x][oldPosition.y] - 1, 500, monster.mDamage2);
 				if (pnum == dPlayer[oldPosition.x][oldPosition.y] - 1 && (monster.MType->mtype < MT_NSNAKE || monster.MType->mtype > MT_GSNAKE)) {
 					auto &player = Players[pnum];
 					if (player._pmode != PM_GOTHIT && player._pmode != PM_DEATH)
