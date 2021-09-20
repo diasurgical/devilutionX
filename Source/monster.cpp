@@ -161,7 +161,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster._mmode = MonsterMode::Stand;
 	monster.MType = &LevelMonsterTypes[mtype];
 	monster.MData = monster.MType->MData;
-	monster.mName = _(monster.MData->mName);
+	monster.mName = pgettext("monster", monster.MData->mName);
 	monster.AnimInfo = {};
 	monster.ChangeAnimationData(MonsterGraphic::Stand);
 	monster.AnimInfo.TickCounterOfCurrentFrame = GenerateRnd(monster.AnimInfo.TicksPerFrame - 1);
@@ -488,7 +488,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 	}
 
 	monster.mExp *= 2;
-	monster.mName = _(uniqueMonsterData.mName);
+	monster.mName = pgettext("monster", uniqueMonsterData.mName);
 	monster._mmaxhp = uniqueMonsterData.mmaxhp << 6;
 
 	if (!gbIsMultiplayer)
@@ -4518,9 +4518,9 @@ void SyncMonsterAnim(Monster &monster)
 #endif
 	monster.MData = LevelMonsterTypes[monster._mMTidx].MData;
 	if (monster._uniqtype != 0)
-		monster.mName = _(UniqueMonstersData[monster._uniqtype - 1].mName);
+		monster.mName = pgettext("monster", UniqueMonstersData[monster._uniqtype - 1].mName);
 	else
-		monster.mName = _(monster.MData->mName);
+		monster.mName = pgettext("monster", monster.MData->mName);
 
 	MonsterGraphic graphic = MonsterGraphic::Stand;
 
