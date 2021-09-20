@@ -919,9 +919,7 @@ bool PlrHitMonst(int pnum, int m)
 		int midam = player._pIFMinDam + GenerateRnd(player._pIFMaxDam - player._pIFMinDam);
 		AddMissile(player.position.tile, player.position.temp, player._pdir, MIS_SPECARROW, TARGET_MONSTERS, pnum, midam, 0);
 	}
-	int mind = player._pIMinDam;
-	int maxd = player._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = player._pIDamage.GetValue();
 	dam += dam * player._pIBonusDam / 100;
 	dam += player._pIBonusDamMod;
 	int dam2 = dam << 6;
@@ -1112,9 +1110,7 @@ bool PlrHitPlr(int pnum, int8_t p)
 		return true;
 	}
 
-	int mind = attacker._pIMinDam;
-	int maxd = attacker._pIMaxDam;
-	int dam = GenerateRnd(maxd - mind + 1) + mind;
+	int dam = attacker._pIDamage.GetValue();
 	dam += (dam * attacker._pIBonusDam) / 100;
 	dam += attacker._pIBonusDamMod + attacker._pDamageMod;
 

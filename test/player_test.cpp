@@ -153,8 +153,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pLghtResist, 0);
 	ASSERT_EQ(CountBool(player._pLvlVisited, NUMLEVELS), 0);
 	ASSERT_EQ(CountBool(player._pSLvlVisited, NUMLEVELS), 0);
-	ASSERT_EQ(player._pIMinDam, 1);
-	ASSERT_EQ(player._pIMaxDam, 1);
+	ASSERT_EQ(player._pIDamage, Damage { 1 });
 	ASSERT_EQ(player._pIAC, 0);
 	ASSERT_EQ(player._pIBonusDam, 0);
 	ASSERT_EQ(player._pIBonusToHit, 0);

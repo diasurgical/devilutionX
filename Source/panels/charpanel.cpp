@@ -90,8 +90,8 @@ std::pair<int, int> GetDamage()
 	} else {
 		damageMod += MyPlayer->_pDamageMod;
 	}
-	int mindam = MyPlayer->_pIMinDam + MyPlayer->_pIBonusDam * MyPlayer->_pIMinDam / 100 + damageMod;
-	int maxdam = MyPlayer->_pIMaxDam + MyPlayer->_pIBonusDam * MyPlayer->_pIMaxDam / 100 + damageMod;
+	int mindam = MyPlayer->_pIDamage.minValue + MyPlayer->_pIBonusDam * MyPlayer->_pIDamage.minValue / 100 + damageMod;
+	int maxdam = MyPlayer->_pIDamage.maxValue + MyPlayer->_pIBonusDam * MyPlayer->_pIDamage.maxValue / 100 + damageMod;
 	return { mindam, maxdam };
 }
 

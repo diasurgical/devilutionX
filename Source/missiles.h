@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "damage.hpp"
 #include "miniwin/miniwin.h"
 #include "engine.h"
 #include "engine/point.hpp"
@@ -165,8 +166,8 @@ int GetSpellLevel(int playerId, spell_id sn);
  */
 Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int i);
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
+bool MonsterTrapHit(int m, Damage damage, int dist, missile_id t, bool shift);
+bool PlayerMHit(int pnum, Monster *monster, int dist, Damage damage, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**
  * @brief Sets the missile sprite to the given sheet frame
