@@ -21,9 +21,14 @@ struct Damage {
 	{
 	}
 
+	[[nodiscard]] bool IsFixed() const
+	{
+		return minValue == maxValue;
+	}
+
 	int GetValue() const
 	{
-		return minValue == maxValue
+		return IsFixed()
 		    ? minValue
 		    : minValue + GenerateRnd(maxValue - minValue + 1);
 	}
