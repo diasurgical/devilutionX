@@ -19,11 +19,7 @@ extern "C" const char *__asan_default_options() // NOLINT(bugprone-reserved-iden
 }
 #endif
 
-#ifdef __ANDROID__
-int SDL_main(int argc, char **argv)
-#else
 int main(int argc, char **argv)
-#endif
 {
 #ifdef __SWITCH__
 	switch_enable_network();

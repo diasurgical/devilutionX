@@ -23,7 +23,7 @@ void LoadTtfFont()
 	}
 
 	std::string ttfFontPath = paths::TtfPath() + paths::TtfName();
-#if defined(__linux__) && !defined(__ANDROID__)
+#if defined(__linux__)
 	if (!FileExists(ttfFontPath.c_str())) {
 		ttfFontPath = "/usr/share/fonts/truetype/" + paths::TtfName();
 	}

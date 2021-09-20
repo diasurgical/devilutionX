@@ -98,17 +98,6 @@ SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 
 SDL_RWops *SFileOpenRw(const char *filename)
 {
-#ifdef __ANDROID__
-	std::string relativePath = filename;
-	for (std::size_t i = 0; i < relativePath.size(); ++i) {
-		if (relativePath[i] == '\\')
-			relativePath[i] = '/';
-	}
-	SDL_RWops *rwops = SDL_RWFromFile(relativePath.c_str(), "rb");
-	if (rwops != nullptr)
-		return rwops;
-#endif
-
 	HANDLE handle;
 	if (SFileOpenFile(filename, &handle))
 		return SFileRw_FromStormHandle(handle);

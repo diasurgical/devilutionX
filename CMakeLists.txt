@@ -193,11 +193,6 @@ if(NINTENDO_3DS)
   include(n3ds_defs)
 endif()
 
-if(ANDROID)
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
-  include(android_defs)
-endif()
-
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -249,10 +244,7 @@ if(NOT PNG_FOUND)
   add_subdirectory(3rdParty/libpng)
 endif()
 
-if(ANDROID)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
-elseif(USE_SDL1)
+if(USE_SDL1)
   find_package(SDL REQUIRED)
   find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
@@ -574,18 +566,14 @@ if(RUN_TESTS)
 endif()
 
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-if (ANDROID)
-  add_library(${BIN_TARGET} SHARED Source/main.cpp)
-else()
-  add_executable(${BIN_TARGET}
-    WIN32
-    MACOSX_BUNDLE
-    Source/main.cpp
-    Source/devilutionx.exe.manifest
-    Packaging/macOS/AppIcon.icns
-    Packaging/resources/CharisSILB.ttf
-    Packaging/windows/devilutionx.rc)
-endif()
+add_executable(${BIN_TARGET}
+  WIN32
+  MACOSX_BUNDLE
+  Source/main.cpp
+  Source/devilutionx.exe.manifest
+  Packaging/macOS/AppIcon.icns
+  Packaging/resources/CharisSILB.ttf
+  Packaging/windows/devilutionx.rc)
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
@@ -649,14 +637,6 @@ if (Gettext_FOUND)
       list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "${lang}.gmo")
     endif()
   endforeach(lang)
-
-  if(ANDROID)
-    add_custom_target(copy_translations ALL
-      COMMAND ${CMAKE_COMMAND} -E copy ${devilutionx_TRANSLATIONS} ${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets
-      DEPENDS ${devilutionx_TRANSLATIONS})
-
-    add_dependencies(${BIN_TARGET} copy_translations)
-  endif()
 endif()
 
 target_include_directories(libdevilutionx PUBLIC

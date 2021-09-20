@@ -62,7 +62,7 @@ bool FileExists(const char *path)
 		return false;
 	}
 	return true;
-#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__)) && !defined(__ANDROID__)
+#elif (_POSIX_C_SOURCE >= 200112L || defined(_BSD_SOURCE) || defined(__APPLE__))
 	return ::access(path, F_OK) == 0;
 #else
 	SDL_RWops *file = SDL_RWFromFile(path, "r+b");

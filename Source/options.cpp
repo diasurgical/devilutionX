@@ -8,11 +8,6 @@
 #include <fstream>
 #include <locale>
 
-#ifdef __ANDROID__
-#include "SDL.h"
-#include <jni.h>
-#endif
-
 #ifdef __vita__
 #include <psp2/apputil.h>
 #include <psp2/system_param.h>
@@ -170,14 +165,9 @@ void SaveIni()
 #if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorDefault()
 {
-#ifdef __ANDROID__
-	// See https://github.com/diasurgical/devilutionX/issues/2502
-	return false;
-#else
 	SDL_version v;
 	SDL_GetVersion(&v);
 	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
-#endif
 }
 #endif
 
@@ -285,19 +275,7 @@ void LoadOptions()
 	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
 #endif
 
-#ifdef __ANDROID__
-	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
-	jobject activity = (jobject)SDL_AndroidGetActivity();
-	jclass clazz(env->GetObjectClass(activity));
-	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
-	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
-	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
-	std::string locale = cLocale;
-	env->ReleaseStringUTFChars(jLocale, cLocale);
-	env->DeleteLocalRef(jLocale);
-	env->DeleteLocalRef(activity);
-	env->DeleteLocalRef(clazz);
-#elif defined(__vita__)
+#if defined(__vita__)
 	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
 	const char *vita_locales[] = {
 		"ja_JP",

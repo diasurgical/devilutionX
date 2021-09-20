@@ -147,7 +147,7 @@ void init_archives()
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
-#if defined(__linux__) && !defined(__ANDROID__)
+#if defined(__linux__)
 	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
 	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
 #elif defined(__3DS__)
