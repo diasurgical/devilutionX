@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-09-20 02:52+0200\n"
+"POT-Creation-Date: 2021-09-20 04:33+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -18,8 +18,9 @@ msgstr ""
 "X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
+#, fuzzy
 msgid "Game Design"
-msgstr ""
+msgstr "Stwórz grę"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -95,20 +96,24 @@ msgstr ""
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
+#, fuzzy
 msgid "Diablo Strike Team"
-msgstr ""
+msgstr "Staw czoła Diablo"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
+#, fuzzy
 msgid "Music"
-msgstr ""
+msgstr "Muzyka Wyłączona"
 
 #: Source/DiabloUI/credits_lines.cpp:80
+#, fuzzy
 msgid "Sound Design"
-msgstr ""
+msgstr "Dźwięk Wyłączony"
 
 #: Source/DiabloUI/credits_lines.cpp:83
+#, fuzzy
 msgid "Cinematic Music & Sound"
-msgstr ""
+msgstr "Muzyka Wyłączona"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
@@ -163,8 +168,9 @@ msgid "Order of Network Information Services"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:134
+#, fuzzy
 msgid "Customer Support"
-msgstr ""
+msgstr "Wsparcie"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
@@ -207,12 +213,23 @@ msgid "Special Thanks To"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:171
+#, fuzzy
 msgid "Thanks To"
 msgstr ""
+"Masz go!  Jest bezpieczny!  Dziękuję ci!  Och Teosiu, czy te paskudne robale "
+"cię wystraszyły?  Co to?  Blee!  Coś przyczepiło ci się do futerka!  Fuj!  "
+"Chodź Teosiu, wracamy do domu!  A tobie jeszcze raz dziękuję!"
 
 #: Source/DiabloUI/credits_lines.cpp:200
+#, fuzzy
 msgid "In memory of"
 msgstr ""
+"Domu nie tworzą gliniane ściany i dach pokryty strzechą.  \n"
+"Karczmarz Ogden spełnia więcej potrzeb tutejszych mieszkańców, niż są tego "
+"świadomi.  Zapewnia schronienie Gillian i jej babci, podtrzymuje na duchu "
+"Farnhama i przypomina wszystkim o czasach świetności Tristram.  Jego gospoda "
+"i dostępne tam proste przyjemności są dla wielu ludzi przebłyskiem dawnych i "
+"spokojnych czasów.  Te wspomnienia rozbudzają w nich nadzieję na twój sukces."
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
@@ -243,8 +260,9 @@ msgid "Sound Design, SFX & Audio Engineering"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:238
+#, fuzzy
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "jakości"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
@@ -259,12 +277,17 @@ msgid "\tAdditional Work"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:257
+#, fuzzy
 msgid "Quest Text Writing"
-msgstr ""
+msgstr "Q: Wyświetla dziennik zadań"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
+#, fuzzy
 msgid "Thanks to"
 msgstr ""
+"Masz go!  Jest bezpieczny!  Dziękuję ci!  Och Teosiu, czy te paskudne robale "
+"cię wystraszyły?  Co to?  Blee!  Coś przyczepiło ci się do futerka!  Fuj!  "
+"Chodź Teosiu, wracamy do domu!  A tobie jeszcze raz dziękuję!"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
@@ -275,16 +298,18 @@ msgid "\t\t\tSierra On-Line Inc. Northwest"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:272
+#, fuzzy
 msgid "Quality Assurance Manager"
-msgstr ""
+msgstr "jakości"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:278
+#, fuzzy
 msgid "Main Testers"
-msgstr ""
+msgstr "Esc:   Wyświetl menu główne"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
@@ -303,8 +328,9 @@ msgid "Associate Product Manager"
 msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:301
+#, fuzzy
 msgid "The Ring of One Thousand"
-msgstr ""
+msgstr "Pierścień Prawdy"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -317,8 +343,9 @@ msgstr ""
 #: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
 #: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:525
 #: Source/DiabloUI/selok.cpp:68
+#, fuzzy
 msgid "OK"
-msgstr ""
+msgstr "Słuchaj, jestem krową, kapujesz?"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -372,20 +399,24 @@ msgstr ""
 
 #: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:434
 #: Source/DiabloUI/selgame.cpp:452
+#, fuzzy
 msgid "Multi Player Game"
-msgstr ""
+msgstr "Nowa Postać - Gra Sieciowa"
 
 #: Source/DiabloUI/selconn.cpp:53
+#, fuzzy
 msgid "Requirements:"
-msgstr ""
+msgstr "Nie spełniono wymagań"
 
 #: Source/DiabloUI/selconn.cpp:59
+#, fuzzy
 msgid "no gateway needed"
-msgstr ""
+msgstr "zmniejsza wymagane atrybuty"
 
 #: Source/DiabloUI/selconn.cpp:65
+#, fuzzy
 msgid "Select Connection"
-msgstr ""
+msgstr "Poziom trudności"
 
 #: Source/DiabloUI/selconn.cpp:68
 msgid "Change Gateway"
@@ -461,12 +492,14 @@ msgid "Hell"
 msgstr "Piekło"
 
 #: Source/DiabloUI/selgame.cpp:172
+#, fuzzy
 msgid "Join TCP Games"
-msgstr ""
+msgstr "Dołącz do gry"
 
 #: Source/DiabloUI/selgame.cpp:175 Source/DiabloUI/selgame.cpp:178
+#, fuzzy
 msgid "Enter address"
-msgstr ""
+msgstr "Wpisz hasło"
 
 #: Source/DiabloUI/selgame.cpp:204
 msgid ""
@@ -513,26 +546,33 @@ msgstr ""
 "Piekło w trybie sieciowym."
 
 #: Source/DiabloUI/selgame.cpp:304
+#, fuzzy
 msgid "Select Game Speed"
-msgstr ""
+msgstr "gra: "
 
 #: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:330
+#, fuzzy
 msgid "Fast"
-msgstr ""
+msgstr "szybko wznawia atak"
 
 #: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:334
+#, fuzzy
 msgid "Faster"
-msgstr ""
+msgstr "szybsze wznowienie ataku"
 
 #: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:338
+#, fuzzy
 msgid "Fastest"
-msgstr ""
+msgstr "najszybsze wznowienie ataku"
 
 #: Source/DiabloUI/selgame.cpp:327
+#, fuzzy
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
+"Normalny\n"
+"Poziom dla postaci, która pierwszy raz chce się zmierzyć z Diablo."
 
 #: Source/DiabloUI/selgame.cpp:331
 msgid ""
@@ -609,8 +649,9 @@ msgid "New Single Player Hero"
 msgstr "Nowa Postać - Gra Jednoosobowa"
 
 #: Source/DiabloUI/selhero.cpp:202
+#, fuzzy
 msgid "Save File Exists"
-msgstr ""
+msgstr "Brak miejsca do zapisu"
 
 #: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:38
 msgid "Load Game"
@@ -713,8 +754,9 @@ msgid "Follow the links to visit the discussion boards associated with Diablo."
 msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:10
+#, fuzzy
 msgid "and the Hellfire expansion."
-msgstr ""
+msgstr "Wyjdź z hellfire"
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
@@ -819,16 +861,19 @@ msgid "Level: {:d}"
 msgstr "Poziom: {:d}"
 
 #: Source/control.cpp:196
+#, fuzzy
 msgid "Tab"
-msgstr ""
+msgstr "Tab:   Wyświetl mapę"
 
 #: Source/control.cpp:196
+#, fuzzy
 msgid "Esc"
-msgstr ""
+msgstr "ESC - wyjście, Strzałki - przewijanie"
 
 #: Source/control.cpp:196
+#, fuzzy
 msgid "Enter"
-msgstr ""
+msgstr "Wpisz nazwę"
 
 #: Source/control.cpp:199
 msgid "Character Information"
@@ -886,7 +931,7 @@ msgstr "Zwój: {:s}"
 #, fuzzy
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
-msgstr[0] "Zwoje: {:d}"
+msgstr[0] "Zwój: {:s}"
 msgstr[1] "Zwoje: {:d}"
 msgstr[2] "Zwoje: {:d}"
 
@@ -898,7 +943,7 @@ msgstr "Kostur: {:s}"
 #, fuzzy
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
-msgstr[0] "Ładunki: {:d}"
+msgstr[0] "Punkty Życia {:d} / {:d}"
 msgstr[1] "Ładunki: {:d}"
 msgstr[2] "Ładunki: {:d}"
 
@@ -930,7 +975,7 @@ msgstr "Klawisz: 's'"
 #, fuzzy
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} złota"
+msgstr[0] "$Złota"
 msgstr[1] "{:d} złota"
 msgstr[2] "{:d} złota"
 
@@ -958,7 +1003,7 @@ msgstr "Umiejętność"
 #, fuzzy
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] "Kostur ({:d} ładunek)"
+msgstr[0] "Kostur: {:s}"
 msgstr[1] "Kostur ({:d} ładunki)"
 msgstr[2] "Kostur ({:d} ładunków)"
 
@@ -1010,7 +1055,7 @@ msgstr "Czary"
 msgid "Quests"
 msgstr "Zadania"
 
-#: Source/cursor.cpp:211 Source/spelldat.cpp:22
+#: Source/cursor.cpp:211
 msgid "Town Portal"
 msgstr "Miejski Portal"
 
@@ -1043,23 +1088,27 @@ msgid "Here's something for you."
 msgstr ""
 
 #: Source/diablo.cpp:114
+#, fuzzy
 msgid "Now you DIE!"
-msgstr ""
+msgstr "Co raz było otwarte, znów jest zamknięte."
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:777
+#, fuzzy
 msgid "Options:\n"
-msgstr ""
+msgstr "Opcje"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:778
+#, fuzzy
 msgid "Print this message and exit"
-msgstr ""
+msgstr "Wyjdź z hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:779
+#, fuzzy
 msgid "Print the version and exit"
-msgstr ""
+msgstr "Wyjdź z hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:780
@@ -1128,10 +1177,11 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:793
+#, fuzzy
 msgid ""
 "\n"
 "Hellfire options:\n"
-msgstr ""
+msgstr "Opcje"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:794
@@ -1150,24 +1200,28 @@ msgid ""
 msgstr ""
 
 #: Source/diablo.cpp:869
+#, fuzzy
 msgid "unrecognized option '{:s}'\n"
-msgstr ""
+msgstr "Umiejętność: {:s}"
 
 #: Source/diablo.cpp:900
+#, fuzzy
 msgid "version {:s}"
-msgstr ""
+msgstr "{:s} {:s}"
 
 #: Source/diablo.cpp:1206
 msgid "-- Network timeout --"
 msgstr ""
 
 #: Source/diablo.cpp:1207
+#, fuzzy
 msgid "-- Waiting for players --"
-msgstr ""
+msgstr "Liczba graczy: {:d}"
 
 #: Source/diablo.cpp:1226
+#, fuzzy
 msgid "No help available"
-msgstr ""
+msgstr "Pomoc Hellfire"
 
 #: Source/diablo.cpp:1227
 msgid "while in stores"
@@ -1183,8 +1237,9 @@ msgid "loopback"
 msgstr ""
 
 #: Source/dvlnet/tcp_client.cpp:68
+#, fuzzy
 msgid "Unable to connect"
-msgstr ""
+msgstr "Nie udało się stworzyć postaci."
 
 #: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
@@ -1195,16 +1250,18 @@ msgid "No automap available in town"
 msgstr "Mapa niedostępna w mieście"
 
 #: Source/error.cpp:59
+#, fuzzy
 msgid "No multiplayer functions in demo"
-msgstr ""
+msgstr "Brak pauzy w rozgrywce sieciowej"
 
 #: Source/error.cpp:60
 msgid "Direct Sound Creation Failed"
 msgstr ""
 
 #: Source/error.cpp:61
+#, fuzzy
 msgid "Not available in shareware version"
-msgstr ""
+msgstr "Mapa niedostępna w mieście"
 
 #: Source/error.cpp:62
 msgid "Not enough space to save"
@@ -1219,8 +1276,9 @@ msgid "Copying to a hard disk is recommended"
 msgstr ""
 
 #: Source/error.cpp:65
+#, fuzzy
 msgid "Multiplayer sync problem"
-msgstr ""
+msgstr "Brak pauzy w rozgrywce sieciowej"
 
 #: Source/error.cpp:66
 msgid "No pause in multiplayer"
@@ -1624,8 +1682,9 @@ msgstr ""
 "powiększanie i oddalanie. Klawiszami strzałek można ją również przemieszczać."
 
 #: Source/help.cpp:61
+#, fuzzy
 msgid "$Picking up Objects:"
-msgstr ""
+msgstr "Nowy Poziom"
 
 #: Source/help.cpp:62
 msgid ""
@@ -1711,16 +1770,18 @@ msgstr ""
 "jeszcze skuteczniejsze."
 
 #: Source/help.cpp:130
+#, fuzzy
 msgid "Shareware Hellfire Help"
-msgstr ""
+msgstr "Pomoc Hellfire"
 
 #: Source/help.cpp:130
 msgid "Hellfire Help"
 msgstr "Pomoc Hellfire"
 
 #: Source/help.cpp:132
+#, fuzzy
 msgid "Shareware Diablo Help"
-msgstr ""
+msgstr "Pomoc Diablo"
 
 #: Source/help.cpp:132
 msgid "Diablo Help"
@@ -1741,8 +1802,9 @@ msgid ""
 msgstr ""
 
 #: Source/init.cpp:224
+#, fuzzy
 msgid "Unable to create main window"
-msgstr ""
+msgstr "Nie udało się stworzyć postaci."
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:154
 msgid "Gold"
@@ -1828,7 +1890,7 @@ msgstr "Atlas Grzybów"
 msgid "Spectral Elixir"
 msgstr "Widmowy Eliksir"
 
-#: Source/itemdat.cpp:37 Source/monstdat.cpp:81
+#: Source/itemdat.cpp:37
 msgid "Blood Stone"
 msgstr "Kamień Krwi"
 
@@ -1984,7 +2046,7 @@ msgid "Quilted Armor"
 msgstr "Pikowana Zbroja"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5450
+#: Source/itemdat.cpp:77 Source/objects.cpp:5459
 msgid "Armor"
 msgstr "Zbroja"
 
@@ -2340,7 +2402,7 @@ msgstr "Pierścień"
 msgid "Amulet"
 msgstr "Amulet"
 
-#: Source/itemdat.cpp:177 Source/spelldat.cpp:62
+#: Source/itemdat.cpp:177
 msgid "Rune of Fire"
 msgstr "Runa Ognia"
 
@@ -2361,7 +2423,7 @@ msgstr "Większa Runa Ognia"
 msgid "Greater Rune of Lightning"
 msgstr "Większa Runa Błyskawic"
 
-#: Source/itemdat.cpp:181 Source/spelldat.cpp:66
+#: Source/itemdat.cpp:181
 msgid "Rune of Stone"
 msgstr "Runa Kamienia"
 
@@ -2686,7 +2748,7 @@ msgstr "Dorodny"
 msgid "Flaming"
 msgstr "Płonący"
 
-#: Source/itemdat.cpp:274 Source/spelldat.cpp:18
+#: Source/itemdat.cpp:274
 msgid "Lightning"
 msgstr "Piorunowy"
 
@@ -3190,7 +3252,7 @@ msgstr "Miecz Światłości"
 msgid "The Falcon's Talon"
 msgstr "Szpon Sokoła"
 
-#: Source/itemdat.cpp:428 Source/spelldat.cpp:35
+#: Source/itemdat.cpp:428
 msgid "Inferno"
 msgstr "Inferno"
 
@@ -3623,12 +3685,14 @@ msgid "sets petrification trap"
 msgstr "ustawia pułapkę Petryfikacji"
 
 #: Source/items.cpp:1977
+#, fuzzy
 msgid "restore all life"
-msgstr ""
+msgstr "przywraca życie"
 
 #: Source/items.cpp:1981
+#, fuzzy
 msgid "restore some life"
-msgstr ""
+msgstr "przywraca życie"
 
 #: Source/items.cpp:1985
 msgid "recover life"
@@ -3639,12 +3703,14 @@ msgid "deadly heal"
 msgstr "śmiertelne leczenie"
 
 #: Source/items.cpp:1993
+#, fuzzy
 msgid "restore some mana"
-msgstr ""
+msgstr "Mikstura Many"
 
 #: Source/items.cpp:1997
+#, fuzzy
 msgid "restore all mana"
-msgstr ""
+msgstr "gracz traci całą manę"
 
 #: Source/items.cpp:2001
 msgid "increase strength"
@@ -3679,8 +3745,9 @@ msgid "restore some life and mana"
 msgstr ""
 
 #: Source/items.cpp:2034
+#, fuzzy
 msgid "restore all life and mana"
-msgstr ""
+msgstr "gracz traci całą manę"
 
 #: Source/items.cpp:2049 Source/items.cpp:2074
 msgid "Right-click to read"
@@ -3797,7 +3864,7 @@ msgstr "Odporność - każda 75% MAX"
 #, fuzzy
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "poziom czaru: +{:d}"
+msgstr[0] "Gniazdo - Poziom {:d}"
 msgstr[1] "poziom czarów: +{:d}"
 msgstr[2] "poziom czarów: +{:d}"
 
@@ -3805,7 +3872,7 @@ msgstr[2] "poziom czarów: +{:d}"
 #, fuzzy
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] "poziom czaru: -{:d}"
+msgstr[0] "Gniazdo - Poziom {:d}"
 msgstr[1] "poziom czarów: -{:d}"
 msgstr[2] "poziom czarów: -{:d}"
 
@@ -3821,7 +3888,7 @@ msgstr "Dodatkowe ładunki"
 #, fuzzy
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
-msgstr[0] "Ładunek: {:d} {:s}"
+msgstr[0] "{:s}, Poziom: {:d}"
 msgstr[1] "Ładunki: {:d} {:s}"
 msgstr[2] "Ładunki: {:d} {:s}"
 
@@ -4016,7 +4083,7 @@ msgstr "szybki unik"
 #, fuzzy
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] "+{:d} pkt. obrażeń"
+msgstr[0] "celność: {:+d}%, obrażenia: {:+d}%"
 msgstr[1] "+{:d} pkt. obrażeń"
 msgstr[2] "+{:d} pkt. obrażeń"
 
@@ -4128,8 +4195,9 @@ msgstr "obr: {:d}-{:d}  Niezniszczalność"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4153 Source/items.cpp:4200
+#, fuzzy
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "obr: {:d}  Wyt: {:d}/{:d}"
 
 #: Source/items.cpp:4159 Source/items.cpp:4212
 #, fuzzy
@@ -4144,13 +4212,15 @@ msgstr "obrona: {:d}  Wyt: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
 #: Source/items.cpp:4166
+#, fuzzy
 msgid "dam: {:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "Wyt: {:d}/{:d},  "
 
 #. TRANSLATORS: dam: is damage Dur: is durability
 #: Source/items.cpp:4168
+#, fuzzy
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr ""
+msgstr "obr: {:d}  Wyt: {:d}/{:d}"
 
 #: Source/items.cpp:4169 Source/items.cpp:4204 Source/items.cpp:4219
 #: Source/stores.cpp:184
@@ -4170,886 +4240,1573 @@ msgid "Unable to open save file archive"
 msgstr ""
 
 #: Source/loadsave.cpp:1659
+#, fuzzy
 msgid "Invalid save file"
-msgstr ""
+msgstr "Brak miejsca do zapisu"
 
 #: Source/loadsave.cpp:1688
+#, fuzzy
 msgid "Player is on a Hellfire only level"
-msgstr ""
+msgstr "Gracz '{:s}' (poziom {:d}) jest już w grze"
 
 #: Source/loadsave.cpp:1885
+#, fuzzy
 msgid "Invalid game state"
-msgstr ""
+msgstr "Stwórz grę"
 
 #: Source/menu.cpp:136
+#, fuzzy
 msgid "Unable to display mainmenu"
-msgstr ""
+msgstr "Esc:   Wyświetl menu główne"
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
 #: Source/monstdat.cpp:20
+#, fuzzy
+#| msgid "Zombie"
+msgctxt "monster"
 msgid "Zombie"
 msgstr "Zombie"
 
 #: Source/monstdat.cpp:21
+#, fuzzy
+#| msgid "Ghoul"
+msgctxt "monster"
 msgid "Ghoul"
 msgstr "Ghul"
 
 #: Source/monstdat.cpp:22
+#, fuzzy
+#| msgid "Rotting Carcass"
+msgctxt "monster"
 msgid "Rotting Carcass"
 msgstr "Gnijące Truchło"
 
 #: Source/monstdat.cpp:23
+#, fuzzy
+#| msgid "Black Death"
+msgctxt "monster"
 msgid "Black Death"
-msgstr "Czarna Śmierć"
+msgstr "Czarny Grzyb"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
+#, fuzzy
+#| msgid "Fallen One"
+msgctxt "monster"
 msgid "Fallen One"
-msgstr "Upadły"
+msgstr "miecz jednoręczny"
 
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
+#, fuzzy
+#| msgid "Carver"
+msgctxt "monster"
 msgid "Carver"
 msgstr "Podrzynacz"
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
+#, fuzzy
+#| msgid "Devil Kin"
+msgctxt "monster"
 msgid "Devil Kin"
 msgstr "Diablik"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
+#, fuzzy
+#| msgid "Dark One"
+msgctxt "monster"
 msgid "Dark One"
-msgstr "Mroczny"
+msgstr "mroku"
 
 #: Source/monstdat.cpp:28 Source/monstdat.cpp:40
+#, fuzzy
+#| msgid "Skeleton"
+msgctxt "monster"
 msgid "Skeleton"
-msgstr "Szkielet"
+msgstr "Siedziba Króla Szkieletów"
 
 #: Source/monstdat.cpp:29
+#, fuzzy
+#| msgid "Corpse Axe"
+msgctxt "monster"
 msgid "Corpse Axe"
-msgstr "Trupi Topornik"
+msgstr "Ręczny Topór"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
+#, fuzzy
+#| msgid "Burning Dead"
+msgctxt "monster"
 msgid "Burning Dead"
-msgstr "Płonący Trup"
+msgstr "spopielenia"
 
 #: Source/monstdat.cpp:31 Source/monstdat.cpp:43
+#, fuzzy
+#| msgid "Horror"
+msgctxt "monster"
 msgid "Horror"
-msgstr "Kościej"
+msgstr ""
+"Już po wszystkim?  Czy to coś wróciło już do ciemnych otchłani Hadesu, z "
+"których przyszło?  Co?!  No nie mów mi, że gdzieś ci się zgubił ładunek!  To "
+"nie była tania rzecz.  Musisz go teraz znaleźć.  Inaczej \n"
+"nie pozbędziesz się tego paskudztwa \n"
+"z naszego miasta."
 
 #: Source/monstdat.cpp:36
+#, fuzzy
+#| msgid "Scavenger"
+msgctxt "monster"
 msgid "Scavenger"
-msgstr "Ścierwojad"
+msgstr "Pancerz Ścierwojada"
 
 #: Source/monstdat.cpp:37
+#, fuzzy
+#| msgid "Plague Eater"
+msgctxt "monster"
 msgid "Plague Eater"
-msgstr "Pożeracz Zarazy"
+msgstr "Pożeracz Dusz"
 
 #: Source/monstdat.cpp:38
+#, fuzzy
+#| msgid "Shadow Beast"
+msgctxt "monster"
 msgid "Shadow Beast"
 msgstr "Bestia Cienia"
 
 #: Source/monstdat.cpp:39
+#, fuzzy
+#| msgid "Bone Gasher"
+msgctxt "monster"
 msgid "Bone Gasher"
-msgstr "Miażdżyciel Kości"
+msgstr "Kościana Kolczuga"
 
 #: Source/monstdat.cpp:41
+#, fuzzy
+#| msgid "Corpse Bow"
+msgctxt "monster"
 msgid "Corpse Bow"
-msgstr "Trupi Łucznik"
+msgstr "Krótki Łuk"
 
 #: Source/monstdat.cpp:44
+#, fuzzy
+#| msgid "Skeleton Captain"
+msgctxt "monster"
 msgid "Skeleton Captain"
-msgstr "Kapitan Szkieletów"
+msgstr "Ukrzyżowany Szkielet"
 
 #: Source/monstdat.cpp:45
+#, fuzzy
+#| msgid "Corpse Captain"
+msgctxt "monster"
 msgid "Corpse Captain"
 msgstr "Kapitan Zwłok"
 
 #: Source/monstdat.cpp:46
+#, fuzzy
+#| msgid "Burning Dead Captain"
+msgctxt "monster"
 msgid "Burning Dead Captain"
-msgstr "Kapitan Płonących Trupów"
+msgstr "Śmiercionośny Łuk"
 
 #: Source/monstdat.cpp:47
+#, fuzzy
+#| msgid "Horror Captain"
+msgctxt "monster"
 msgid "Horror Captain"
 msgstr "Kapitan Kościejów"
 
 #: Source/monstdat.cpp:48
+#, fuzzy
+#| msgid "Invisible Lord"
+msgctxt "monster"
 msgid "Invisible Lord"
-msgstr "Niewidzialny Władca"
+msgstr "Lordowski"
 
-#: Source/monstdat.cpp:49 Source/objects.cpp:102
+#: Source/monstdat.cpp:49
+msgctxt "monster"
 msgid "Hidden"
 msgstr "Ukryty"
 
 #: Source/monstdat.cpp:50
+#, fuzzy
+#| msgid "Stalker"
+msgctxt "monster"
 msgid "Stalker"
 msgstr "Prześladowca"
 
 #: Source/monstdat.cpp:51
+#, fuzzy
+#| msgid "Unseen"
+msgctxt "monster"
 msgid "Unseen"
-msgstr "Niewidoczny"
+msgstr ""
+"Recytujesz bardzo ciekawy wiersz, napisany w stylu, który przypomina mi "
+"jeden utwór.  Poczekaj chwilę - jak on brzmiał?\n"
+" \n"
+"... Ciemność otaczająca ukrytych.  Błysk oczu niewidoczny, słyszalny jedynie "
+"dźwięk ostrych szponów dręczących biedne dusze, które oślepiono \n"
+"na wieczność.  \n"
+" \n"
+"Więzienie dla potępionych zwane... Salami ślepców..."
 
 #: Source/monstdat.cpp:52
+#, fuzzy
+#| msgid "Illusion Weaver"
+msgctxt "monster"
 msgid "Illusion Weaver"
 msgstr "Tkacz Iluzji"
 
 #: Source/monstdat.cpp:53
+#, fuzzy
+#| msgid "Satyr Lord"
+msgctxt "monster"
 msgid "Satyr Lord"
-msgstr "Władca Satyrów"
+msgstr "Lordowski"
 
 #: Source/monstdat.cpp:54 Source/monstdat.cpp:62
+#, fuzzy
+#| msgid "Flesh Clan"
+msgctxt "monster"
 msgid "Flesh Clan"
-msgstr "Klan Rozpruwaczy"
+msgstr "Strzępek Duszy"
 
 #: Source/monstdat.cpp:55 Source/monstdat.cpp:63
+#, fuzzy
+#| msgid "Stone Clan"
+msgctxt "monster"
 msgid "Stone Clan"
-msgstr "Klan Kamienia"
+msgstr "Kamienna"
 
 #: Source/monstdat.cpp:56 Source/monstdat.cpp:64
+#, fuzzy
+#| msgid "Fire Clan"
+msgctxt "monster"
 msgid "Fire Clan"
-msgstr "Klan Ognia"
+msgstr "Ogień "
 
 #: Source/monstdat.cpp:57 Source/monstdat.cpp:65
+#, fuzzy
+#| msgid "Night Clan"
+msgctxt "monster"
 msgid "Night Clan"
-msgstr "Klan Nocy"
+msgstr "zmierzchu"
 
 #: Source/monstdat.cpp:58
+#, fuzzy
+#| msgid "Fiend"
+msgctxt "monster"
 msgid "Fiend"
-msgstr "Bies"
+msgstr ""
+"Na światłość, słyszałem o tym podłym demonie.  Wielu ze śmiałków, którzy "
+"przeżyli wyprawę do katedry, nosiło znamiona jego straszliwego gniewu.  \n"
+"Nie mam pojęcia czego używa do ćwiartowania swych ofiar, ale... \n"
+"to nie może być broń z tego świata.  Zostawia ropiejące rany, których nawet "
+"ja nie jestem w stanie wyleczyć.  Miej się \n"
+"na baczności, jeżeli staniesz z nim \n"
+"do walki..."
 
 #: Source/monstdat.cpp:59
+#, fuzzy
+#| msgid "Blink"
+msgctxt "monster"
 msgid "Blink"
 msgstr "Migon"
 
 #: Source/monstdat.cpp:60
+#, fuzzy
+#| msgid "Gloom"
+msgctxt "monster"
 msgid "Gloom"
-msgstr "Ponurzec"
+msgstr "Zbroja Posępności"
 
 #: Source/monstdat.cpp:61
+#, fuzzy
+#| msgid "Familiar"
+msgctxt "monster"
 msgid "Familiar"
-msgstr "Chowaniec"
+msgstr ""
+"Brzmi znajomo.  Jeśli mnie pamięć nie myli, to natknąłem się na podobny "
+"tekst podczas zapoznawania się z historiami chorób powodowanych przez "
+"demony.  Opisywano tam straszne miejsce, które... czekaj - chyba nie "
+"zamierzasz tam iść, co?"
 
 #: Source/monstdat.cpp:66
+#, fuzzy
+#| msgid "Acid Beast"
+msgctxt "monster"
 msgid "Acid Beast"
 msgstr "Żrąca Bestia"
 
 #: Source/monstdat.cpp:67
+#, fuzzy
+#| msgid "Poison Spitter"
+msgctxt "monster"
 msgid "Poison Spitter"
 msgstr "Trujopluj"
 
 #: Source/monstdat.cpp:68
+#, fuzzy
+#| msgid "Pit Beast"
+msgctxt "monster"
 msgid "Pit Beast"
-msgstr "Wżerobestia"
+msgstr "otchłani"
 
 #: Source/monstdat.cpp:69
+#, fuzzy
+#| msgid "Lava Maw"
+msgctxt "monster"
 msgid "Lava Maw"
 msgstr "Ogniopaszczy"
 
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:474
+#, fuzzy
+#| msgid "Skeleton King"
+msgctxt "monster"
 msgid "Skeleton King"
-msgstr "Król Szkieletów"
+msgstr "Siedziba Króla Szkieletów"
 
-#: Source/monstdat.cpp:71 Source/monstdat.cpp:482 Source/quests.cpp:47
+#: Source/monstdat.cpp:71 Source/monstdat.cpp:482
+msgctxt "monster"
 msgid "The Butcher"
 msgstr "Rzeźnik"
 
 #: Source/monstdat.cpp:72
+#, fuzzy
+#| msgid "Overlord"
+msgctxt "monster"
 msgid "Overlord"
-msgstr "Nadzorca"
+msgstr "Hełm Nadzorcy"
 
 #: Source/monstdat.cpp:73
+#, fuzzy
+#| msgid "Mud Man"
+msgctxt "monster"
 msgid "Mud Man"
 msgstr "Błotoczłek"
 
 #: Source/monstdat.cpp:74
+#, fuzzy
+#| msgid "Toad Demon"
+msgctxt "monster"
 msgid "Toad Demon"
-msgstr "Ropuszy Demon"
+msgstr "Łuska Demona"
 
 #: Source/monstdat.cpp:75
+#, fuzzy
+#| msgid "Flayed One"
+msgctxt "monster"
 msgid "Flayed One"
-msgstr "Obdzieracz Skór"
+msgstr "miecz jednoręczny"
 
 #: Source/monstdat.cpp:76
+#, fuzzy
+#| msgid "Wyrm"
+msgctxt "monster"
 msgid "Wyrm"
-msgstr "Żmijowiec"
+msgstr "Żmijowy"
 
 #: Source/monstdat.cpp:77
+#, fuzzy
+#| msgid "Cave Slug"
+msgctxt "monster"
 msgid "Cave Slug"
 msgstr "Podziemny Czerw"
 
 #: Source/monstdat.cpp:78
+#, fuzzy
+#| msgid "Devil Wyrm"
+msgctxt "monster"
 msgid "Devil Wyrm"
-msgstr "Diabelski Żmijowiec"
+msgstr "Żmijowy"
 
 #: Source/monstdat.cpp:79
+#, fuzzy
+#| msgid "Devourer"
+msgctxt "monster"
 msgid "Devourer"
 msgstr "Pożeracz"
 
 #: Source/monstdat.cpp:80
+#, fuzzy
+#| msgid "Magma Demon"
+msgctxt "monster"
 msgid "Magma Demon"
-msgstr "Demon Magmy"
+msgstr "Pierścień Magmy"
+
+#: Source/monstdat.cpp:81
+msgctxt "monster"
+msgid "Blood Stone"
+msgstr "Kamień Krwi"
 
 #: Source/monstdat.cpp:82
+#, fuzzy
+#| msgid "Hell Stone"
+msgctxt "monster"
 msgid "Hell Stone"
-msgstr "Piekielny Kamień"
+msgstr "Piekło"
 
 #: Source/monstdat.cpp:83
+#, fuzzy
+#| msgid "Lava Lord"
+msgctxt "monster"
 msgid "Lava Lord"
-msgstr "Władca Lawy"
+msgstr "Lordowski"
 
 #: Source/monstdat.cpp:84
+#, fuzzy
+#| msgid "Horned Demon"
+msgctxt "monster"
 msgid "Horned Demon"
-msgstr "Rogaty Demon"
+msgstr "Łuska Demona"
 
 #: Source/monstdat.cpp:85
+#, fuzzy
+#| msgid "Mud Runner"
+msgctxt "monster"
 msgid "Mud Runner"
 msgstr "Błotowiec"
 
 #: Source/monstdat.cpp:86
+#, fuzzy
+#| msgid "Frost Charger"
+msgctxt "monster"
 msgid "Frost Charger"
 msgstr "Mroźny Szarżownik"
 
 #: Source/monstdat.cpp:87
+#, fuzzy
+#| msgid "Obsidian Lord"
+msgctxt "monster"
 msgid "Obsidian Lord"
-msgstr "Obsydianowy Władca"
+msgstr "Magmowy"
 
 #: Source/monstdat.cpp:88
+msgctxt "monster"
 msgid "oldboned"
 msgstr ""
 
 #: Source/monstdat.cpp:89
+#, fuzzy
+#| msgid "Red Death"
+msgctxt "monster"
 msgid "Red Death"
-msgstr "Czerwona Zaraza"
+msgstr "Czerwony"
 
 #: Source/monstdat.cpp:90
+#, fuzzy
+#| msgid "Litch Demon"
+msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Diabelski Mag"
+msgstr "Łuska Demona"
 
 #: Source/monstdat.cpp:91
+#, fuzzy
+#| msgid "Undead Balrog"
+msgctxt "monster"
 msgid "Undead Balrog"
-msgstr "Nieumarły Balrog"
+msgstr "Rani tylko nieumarłych"
 
 #: Source/monstdat.cpp:92
+#, fuzzy
+#| msgid "Incinerator"
+msgctxt "monster"
 msgid "Incinerator"
 msgstr "Kremator"
 
 #: Source/monstdat.cpp:93
+#, fuzzy
+#| msgid "Flame Lord"
+msgctxt "monster"
 msgid "Flame Lord"
-msgstr "Arcymistrz Płomieni"
+msgstr "płomienia"
 
 #: Source/monstdat.cpp:94
+#, fuzzy
+#| msgid "Doom Fire"
+msgctxt "monster"
 msgid "Doom Fire"
-msgstr "Płonąca Zagłada"
+msgstr "Ogień "
 
 #: Source/monstdat.cpp:95
+#, fuzzy
+#| msgid "Hell Burner"
+msgctxt "monster"
 msgid "Hell Burner"
-msgstr "Piekielny Pomiot"
+msgstr "Zejdź do piekła"
 
 #: Source/monstdat.cpp:96
+#, fuzzy
+#| msgid "Red Storm"
+msgctxt "monster"
 msgid "Red Storm"
-msgstr "Czerwony Burzowiec"
+msgstr "Szturmowa Iglica"
 
 #: Source/monstdat.cpp:97
+#, fuzzy
+#| msgid "Storm Rider"
+msgctxt "monster"
 msgid "Storm Rider"
-msgstr "Burzowy Jeździec"
+msgstr "Szturmowa Iglica"
 
 #: Source/monstdat.cpp:98
+#, fuzzy
+#| msgid "Storm Lord"
+msgctxt "monster"
 msgid "Storm Lord"
-msgstr "Władca Burz"
+msgstr "Szturmowa Iglica"
 
 #: Source/monstdat.cpp:99
+#, fuzzy
+#| msgid "Maelstrom"
+msgctxt "monster"
 msgid "Maelstrom"
 msgstr "Cyklon"
 
 #: Source/monstdat.cpp:100
+#, fuzzy
+#| msgid "Devil Kin Brute"
+msgctxt "monster"
 msgid "Devil Kin Brute"
 msgstr "Oprych Diablików"
 
 #: Source/monstdat.cpp:101
+#, fuzzy
+#| msgid "Winged-Demon"
+msgctxt "monster"
 msgid "Winged-Demon"
-msgstr "Skrzydlaty Demon"
+msgstr "Łuska Demona"
 
 #: Source/monstdat.cpp:102
+#, fuzzy
+#| msgid "Gargoyle"
+msgctxt "monster"
 msgid "Gargoyle"
 msgstr "Gargulec"
 
 #: Source/monstdat.cpp:103
+#, fuzzy
+#| msgid "Blood Claw"
+msgctxt "monster"
 msgid "Blood Claw"
-msgstr "Krwawoszpony"
+msgstr "krwi"
 
 #: Source/monstdat.cpp:104
+#, fuzzy
+#| msgid "Death Wing"
+msgctxt "monster"
 msgid "Death Wing"
-msgstr "Śmiercioskrzydły"
+msgstr "Olej Śmierci"
 
 #: Source/monstdat.cpp:105
+#, fuzzy
+#| msgid "Slayer"
+msgctxt "monster"
 msgid "Slayer"
 msgstr "Pogromca"
 
-#: Source/monstdat.cpp:106 Source/spelldat.cpp:28
+#: Source/monstdat.cpp:106
+#, fuzzy
+#| msgid "Guardian"
+msgctxt "monster"
 msgid "Guardian"
-msgstr "Strażnik"
+msgstr "Zwój Strażnika"
 
 #: Source/monstdat.cpp:107
+#, fuzzy
+#| msgid "Vortex Lord"
+msgctxt "monster"
 msgid "Vortex Lord"
-msgstr "Władca Wiru"
+msgstr "Lordowski"
 
 #: Source/monstdat.cpp:108
+#, fuzzy
+#| msgid "Balrog"
+msgctxt "monster"
 msgid "Balrog"
 msgstr "Balrog"
 
 #: Source/monstdat.cpp:109
+#, fuzzy
+#| msgid "Cave Viper"
+msgctxt "monster"
 msgid "Cave Viper"
 msgstr "Jaskiniowy Żmij"
 
 #: Source/monstdat.cpp:110
+#, fuzzy
+#| msgid "Fire Drake"
+msgctxt "monster"
 msgid "Fire Drake"
-msgstr "Ognisty Jaszczur"
+msgstr "Sokoli"
 
 #: Source/monstdat.cpp:111
+#, fuzzy
+#| msgid "Gold Viper"
+msgctxt "monster"
 msgid "Gold Viper"
-msgstr "Złoty Żmij"
+msgstr "%i złota"
 
 #: Source/monstdat.cpp:112
+#, fuzzy
+#| msgid "Azure Drake"
+msgctxt "monster"
 msgid "Azure Drake"
-msgstr "Lazurowy Jaszczur"
+msgstr "Lazurowy"
 
 #: Source/monstdat.cpp:113
+#, fuzzy
+#| msgid "Black Knight"
+msgctxt "monster"
 msgid "Black Knight"
-msgstr "Czarny Rycerz"
+msgstr "Rycerski"
 
 #: Source/monstdat.cpp:114
+#, fuzzy
+#| msgid "Doom Guard"
+msgctxt "monster"
 msgid "Doom Guard"
 msgstr "Strażnik Zagłady"
 
 #: Source/monstdat.cpp:115
+#, fuzzy
+#| msgid "Steel Lord"
+msgctxt "monster"
 msgid "Steel Lord"
-msgstr "Stalowy Władca"
+msgstr "Lordowski"
 
 #: Source/monstdat.cpp:116
+#, fuzzy
+#| msgid "Blood Knight"
+msgctxt "monster"
 msgid "Blood Knight"
-msgstr "Rycerz Krwi"
+msgstr "Rycerski"
 
 #: Source/monstdat.cpp:117
+#, fuzzy
+#| msgid "The Shredded"
+msgctxt "monster"
 msgid "The Shredded"
 msgstr "Związany"
 
 #: Source/monstdat.cpp:118
+#, fuzzy
+#| msgid "Hollow One"
+msgctxt "monster"
 msgid "Hollow One"
-msgstr "Pusta Istota"
+msgstr "miecz jednoręczny"
 
 #: Source/monstdat.cpp:119
+#, fuzzy
+#| msgid "Pain Master"
+msgctxt "monster"
 msgid "Pain Master"
-msgstr "Mistrz Bólu"
+msgstr "udręki"
 
 #: Source/monstdat.cpp:120
+#, fuzzy
+#| msgid "Reality Weaver"
+msgctxt "monster"
 msgid "Reality Weaver"
 msgstr "Tkacz Rzeczywistości"
 
 #: Source/monstdat.cpp:121
+#, fuzzy
+#| msgid "Succubus"
+msgctxt "monster"
 msgid "Succubus"
 msgstr "Sukkub"
 
 #: Source/monstdat.cpp:122
+#, fuzzy
+#| msgid "Snow Witch"
+msgctxt "monster"
 msgid "Snow Witch"
-msgstr "Śnieżna Wiedźma"
+msgstr "w Chacie Adrii"
 
 #: Source/monstdat.cpp:123
+#, fuzzy
+#| msgid "Hell Spawn"
+msgctxt "monster"
 msgid "Hell Spawn"
-msgstr "Córa Piekieł"
+msgstr "Zejdź do piekła"
 
 #: Source/monstdat.cpp:124
+#, fuzzy
+#| msgid "Soul Burner"
+msgctxt "monster"
 msgid "Soul Burner"
 msgstr "Wypalaczka Dusz"
 
 #: Source/monstdat.cpp:125
+#, fuzzy
+#| msgid "Counselor"
+msgctxt "monster"
 msgid "Counselor"
 msgstr "Kanclerz"
 
 #: Source/monstdat.cpp:126
+#, fuzzy
+#| msgid "Magistrate"
+msgctxt "monster"
 msgid "Magistrate"
 msgstr "Mediator"
 
 #: Source/monstdat.cpp:127
+#, fuzzy
+#| msgid "Cabalist"
+msgctxt "monster"
 msgid "Cabalist"
 msgstr "Kabalista"
 
 #: Source/monstdat.cpp:128
+#, fuzzy
+#| msgid "Advocate"
+msgctxt "monster"
 msgid "Advocate"
 msgstr "Adwokat"
 
-#: Source/monstdat.cpp:129 Source/spelldat.cpp:36
+#: Source/monstdat.cpp:129
+#, fuzzy
+#| msgid "Golem"
+msgctxt "monster"
 msgid "Golem"
-msgstr "Golem"
+msgstr "Zwój Golema"
 
 #: Source/monstdat.cpp:130
+#, fuzzy
+#| msgid "The Dark Lord"
+msgctxt "monster"
 msgid "The Dark Lord"
-msgstr "Mroczny Władca"
+msgstr ""
+"To naprawdę ponura historia. Lazarus bez wątpienia spłonie w piekle za ten "
+"potworny czyn. \n"
+" \n"
+"Jednakże chłopiec, którego opisujesz, \n"
+"nie jest naszym księciem. \n"
+" \n"
+"Albrecht nadal może być \n"
+"w niebezpieczeństwie. A ten wielki symbol, \n"
+"o którym mówisz, musi być portalem \n"
+"do samego serca Labiryntu. \n"
+" \n"
+"Posłuchaj uważnie - zło z którym teraz się spotkasz, to mroczny Pan Grozy. "
+"śmiertelnicy nazywają go Diablo. \n"
+" \n"
+"To właśnie jego uwięziono wewnątrz Labiryntu wiele wieków temu. Obawiam się, "
+"że znowu zacznie siać grozę w krainie śmiertelników. \n"
+" \n"
+"Musisz przejść przez portal i zniszczyć Diablo, nim będzie za pó/no!"
 
 #: Source/monstdat.cpp:131
+#, fuzzy
+#| msgid "The Arch-Litch Malignus"
+msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr "Arcy-Licz Złośliwy"
+msgstr "Archanielski"
 
 #: Source/monstdat.cpp:132
+#, fuzzy
+#| msgid "Hellboar"
+msgctxt "monster"
 msgid "Hellboar"
 msgstr "Piekielny Dzik"
 
 #: Source/monstdat.cpp:133
+#, fuzzy
+#| msgid "Stinger"
+msgctxt "monster"
 msgid "Stinger"
 msgstr "Kąsacz"
 
 #: Source/monstdat.cpp:134
+#, fuzzy
+#| msgid "Psychorb"
+msgctxt "monster"
 msgid "Psychorb"
 msgstr "Wizjoner"
 
 #: Source/monstdat.cpp:135
+#, fuzzy
+#| msgid "Arachnon"
+msgctxt "monster"
 msgid "Arachnon"
 msgstr "Pajęczysko"
 
 #: Source/monstdat.cpp:136
+#, fuzzy
+#| msgid "Felltwin"
+msgctxt "monster"
 msgid "Felltwin"
 msgstr "Wtórnie Upadły"
 
 #: Source/monstdat.cpp:137
+#, fuzzy
+#| msgid "Hork Spawn"
+msgctxt "monster"
 msgid "Hork Spawn"
 msgstr "Gniazdo Przeżartuchów"
 
 #: Source/monstdat.cpp:138
+#, fuzzy
+#| msgid "Venomtail"
+msgctxt "monster"
 msgid "Venomtail"
 msgstr "Ogon Jadu"
 
 #: Source/monstdat.cpp:139
+#, fuzzy
+#| msgid "Necromorb"
+msgctxt "monster"
 msgid "Necromorb"
 msgstr "Oko Nekromanty"
 
 #: Source/monstdat.cpp:140
+#, fuzzy
+#| msgid "Spider Lord"
+msgctxt "monster"
 msgid "Spider Lord"
-msgstr "Pajęczy Władca"
+msgstr "Pajęczy"
 
 #: Source/monstdat.cpp:141
+#, fuzzy
+#| msgid "Lashworm"
+msgctxt "monster"
 msgid "Lashworm"
 msgstr "Okaleczony Robak"
 
 #: Source/monstdat.cpp:142
+#, fuzzy
+#| msgid "Torchant"
+msgctxt "monster"
 msgid "Torchant"
 msgstr "Zapaleniec"
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
+#, fuzzy
+#| msgid "Hork Demon"
+msgctxt "monster"
 msgid "Hork Demon"
-msgstr "Przeżartuch"
+msgstr "Łuska Demona"
 
 #: Source/monstdat.cpp:144
+#, fuzzy
+#| msgid "Hell Bug"
+msgctxt "monster"
 msgid "Hell Bug"
-msgstr "Piekielny Robak"
+msgstr "Piekło"
 
 #: Source/monstdat.cpp:145
+#, fuzzy
+#| msgid "Gravedigger"
+msgctxt "monster"
 msgid "Gravedigger"
 msgstr "Grabarz"
 
 #: Source/monstdat.cpp:146
+#, fuzzy
+#| msgid "Tomb Rat"
+msgctxt "monster"
 msgid "Tomb Rat"
-msgstr "Grobowy Szczur"
+msgstr "Grobowiec Króla Leoryka"
 
 #: Source/monstdat.cpp:147
+#, fuzzy
+#| msgid "Firebat"
+msgctxt "monster"
 msgid "Firebat"
 msgstr "Ognisty Nietoperz"
 
 #: Source/monstdat.cpp:148
+#, fuzzy
+#| msgid "Skullwing"
+msgctxt "monster"
 msgid "Skullwing"
 msgstr "Ognisty Nietoperz"
 
 #: Source/monstdat.cpp:149
+#, fuzzy
+#| msgid "Lich"
+msgctxt "monster"
 msgid "Lich"
 msgstr "Lisz"
 
 #: Source/monstdat.cpp:150
+#, fuzzy
+#| msgid "Crypt Demon"
+msgctxt "monster"
 msgid "Crypt Demon"
-msgstr "Demon Krypty"
+msgstr "Zejdź do Krypty"
 
 #: Source/monstdat.cpp:151
+#, fuzzy
+#| msgid "Hellbat"
+msgctxt "monster"
 msgid "Hellbat"
 msgstr "Piekielny Nietoperz"
 
 #: Source/monstdat.cpp:152
+#, fuzzy
+#| msgid "Bone Demon"
+msgctxt "monster"
 msgid "Bone Demon"
-msgstr "Kościany Demon"
+msgstr "Kościana Kolczuga"
 
 #: Source/monstdat.cpp:153
+#, fuzzy
+#| msgid "Arch Lich"
+msgctxt "monster"
 msgid "Arch Lich"
-msgstr "Arcylisz"
+msgstr "Archanielski"
 
 #: Source/monstdat.cpp:154
+#, fuzzy
+#| msgid "Biclops"
+msgctxt "monster"
 msgid "Biclops"
 msgstr "Dwugłowiec"
 
 #: Source/monstdat.cpp:155
+#, fuzzy
+#| msgid "Flesh Thing"
+msgctxt "monster"
 msgid "Flesh Thing"
-msgstr "Padliniec"
+msgstr "Strzępek Duszy"
 
 #: Source/monstdat.cpp:156
+#, fuzzy
+#| msgid "Reaper"
+msgctxt "monster"
 msgid "Reaper"
 msgstr "Żniwiarz"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
+#, fuzzy
+#| msgid "Gharbad the Weak"
+msgctxt "monster"
 msgid "Gharbad the Weak"
 msgstr "Garbad Słaby"
 
-#: Source/monstdat.cpp:475 Source/quests.cpp:44
+#: Source/monstdat.cpp:475
+msgctxt "monster"
 msgid "Zhar the Mad"
 msgstr "Zhar Szalony"
 
 #: Source/monstdat.cpp:476
+#, fuzzy
+#| msgid "Snotspill"
+msgctxt "monster"
 msgid "Snotspill"
 msgstr "Śluzoglut"
 
 #: Source/monstdat.cpp:477
+#, fuzzy
+#| msgid "Arch-Bishop Lazarus"
+msgctxt "monster"
 msgid "Arch-Bishop Lazarus"
-msgstr "Arcybiskup Lazarus"
+msgstr "Archanielski"
 
 #: Source/monstdat.cpp:478
+#, fuzzy
+#| msgid "Red Vex"
+msgctxt "monster"
 msgid "Red Vex"
-msgstr "Czerwona Dręczycielka"
+msgstr "Czerwony"
 
 #: Source/monstdat.cpp:479
+#, fuzzy
+#| msgid "Black Jade"
+msgctxt "monster"
 msgid "Black Jade"
-msgstr "Nefrytoczerń"
+msgstr "Agatowy"
 
-#: Source/monstdat.cpp:481 Source/quests.cpp:52
+#: Source/monstdat.cpp:481
+msgctxt "monster"
 msgid "Warlord of Blood"
 msgstr "Marszałek Krwi"
 
-#: Source/monstdat.cpp:484 Source/quests.cpp:61
+#: Source/monstdat.cpp:484
+msgctxt "monster"
 msgid "The Defiler"
 msgstr "Profanator"
 
 #: Source/monstdat.cpp:486
+#, fuzzy
+#| msgid "Bonehead Keenaxe"
+msgctxt "monster"
 msgid "Bonehead Keenaxe"
 msgstr "Bezmózgi Topornik"
 
 #: Source/monstdat.cpp:487
+#, fuzzy
+#| msgid "Bladeskin the Slasher"
+msgctxt "monster"
 msgid "Bladeskin the Slasher"
 msgstr "Twardoskóry Zabójca"
 
 #: Source/monstdat.cpp:488
+#, fuzzy
+#| msgid "Soulpus"
+msgctxt "monster"
 msgid "Soulpus"
 msgstr "Ropiejąca Dusza"
 
 #: Source/monstdat.cpp:489
+#, fuzzy
+#| msgid "Pukerat the Unclean"
+msgctxt "monster"
 msgid "Pukerat the Unclean"
 msgstr "Plugawy Szujożerca"
 
 #: Source/monstdat.cpp:490
+#, fuzzy
+#| msgid "Boneripper"
+msgctxt "monster"
 msgid "Boneripper"
 msgstr "Kościorwij"
 
 #: Source/monstdat.cpp:491
+#, fuzzy
+#| msgid "Rotfeast the Hungry"
+msgctxt "monster"
 msgid "Rotfeast the Hungry"
 msgstr "Pleśniożer"
 
 #: Source/monstdat.cpp:492
+#, fuzzy
+#| msgid "Gutshank the Quick"
+msgctxt "monster"
 msgid "Gutshank the Quick"
-msgstr "Zwinny Patroszyciel"
+msgstr "prędki atak"
 
 #: Source/monstdat.cpp:493
+#, fuzzy
+#| msgid "Brokenhead Bangshield"
+msgctxt "monster"
 msgid "Brokenhead Bangshield"
 msgstr "Czaszkołup Tarczownik"
 
 #: Source/monstdat.cpp:495
+#, fuzzy
+#| msgid "Rotcarnage"
+msgctxt "monster"
 msgid "Rotcarnage"
 msgstr "Rzezimieszek"
 
 #: Source/monstdat.cpp:496
+#, fuzzy
+#| msgid "Shadowbite"
+msgctxt "monster"
 msgid "Shadowbite"
 msgstr "Kąsacz Cieni"
 
 #: Source/monstdat.cpp:497
+#, fuzzy
+#| msgid "Deadeye"
+msgctxt "monster"
 msgid "Deadeye"
 msgstr "Martwooki"
 
 #: Source/monstdat.cpp:498
+#, fuzzy
+#| msgid "Madeye the Dead"
+msgctxt "monster"
 msgid "Madeye the Dead"
-msgstr "Trup Szalonooki"
+msgstr "Śmiercionośny Łuk"
 
 #: Source/monstdat.cpp:500
+#, fuzzy
+#| msgid "Skullfire"
+msgctxt "monster"
 msgid "Skullfire"
 msgstr "Ognistogłowy"
 
 #: Source/monstdat.cpp:501
+#, fuzzy
+#| msgid "Warpskull"
+msgctxt "monster"
 msgid "Warpskull"
 msgstr "Wypaczona Czaszka"
 
 #: Source/monstdat.cpp:502
+#, fuzzy
+#| msgid "Goretongue"
+msgctxt "monster"
 msgid "Goretongue"
 msgstr "Krwiopijca"
 
 #: Source/monstdat.cpp:503
+#, fuzzy
+#| msgid "Pulsecrawler"
+msgctxt "monster"
 msgid "Pulsecrawler"
 msgstr "Rozdrażniony Pełzacz"
 
 #: Source/monstdat.cpp:504
+#, fuzzy
+#| msgid "Moonbender"
+msgctxt "monster"
 msgid "Moonbender"
 msgstr "Zaklinacz Księżyca"
 
 #: Source/monstdat.cpp:505
+#, fuzzy
+#| msgid "Wrathraven"
+msgctxt "monster"
 msgid "Wrathraven"
 msgstr "Kruk Gniewu"
 
 #: Source/monstdat.cpp:506
+#, fuzzy
+#| msgid "Spineeater"
+msgctxt "monster"
 msgid "Spineeater"
 msgstr "Kręgojad"
 
 #: Source/monstdat.cpp:507
+#, fuzzy
+#| msgid "Blackash the Burning"
+msgctxt "monster"
 msgid "Blackash the Burning"
-msgstr "Spopielacz"
+msgstr "spopielenia"
 
 #: Source/monstdat.cpp:508
+#, fuzzy
+#| msgid "Shadowcrow"
+msgctxt "monster"
 msgid "Shadowcrow"
 msgstr "Cieniowron"
 
 #: Source/monstdat.cpp:509
+#, fuzzy
+#| msgid "Blightstone the Weak"
+msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr "Osłabiony Niszczyciel"
+msgstr "Garbad Słaby"
 
 #: Source/monstdat.cpp:510
+#, fuzzy
+#| msgid "Bilefroth the Pit Master"
+msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr "Rządca Czeluści"
+msgstr "Wyborny"
 
 #: Source/monstdat.cpp:511
+#, fuzzy
+#| msgid "Bloodskin Darkbow"
+msgctxt "monster"
 msgid "Bloodskin Darkbow"
 msgstr "Krwawoskóry Łucznik"
 
 #: Source/monstdat.cpp:512
+#, fuzzy
+#| msgid "Foulwing"
+msgctxt "monster"
 msgid "Foulwing"
 msgstr "Plugawoskrzydły"
 
 #: Source/monstdat.cpp:513
+#, fuzzy
+#| msgid "Shadowdrinker"
+msgctxt "monster"
 msgid "Shadowdrinker"
 msgstr "Spijacz Cieni"
 
 #: Source/monstdat.cpp:514
+#, fuzzy
+#| msgid "Hazeshifter"
+msgctxt "monster"
 msgid "Hazeshifter"
 msgstr "Dręczyciel"
 
 #: Source/monstdat.cpp:515
+#, fuzzy
+#| msgid "Deathspit"
+msgctxt "monster"
 msgid "Deathspit"
 msgstr "Śmierciopluj"
 
 #: Source/monstdat.cpp:516
+#, fuzzy
+#| msgid "Bloodgutter"
+msgctxt "monster"
 msgid "Bloodgutter"
 msgstr "Krwiopijca"
 
 #: Source/monstdat.cpp:517
+#, fuzzy
+#| msgid "Deathshade Fleshmaul"
+msgctxt "monster"
 msgid "Deathshade Fleshmaul"
 msgstr "Cień Rozpruwacza"
 
 #: Source/monstdat.cpp:518
+#, fuzzy
+#| msgid "Warmaggot the Mad"
+msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "Wojenny Czerw"
+msgstr "Zhar Szalony"
 
 #: Source/monstdat.cpp:519
+#, fuzzy
+#| msgid "Glasskull the Jagged"
+msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr "Kościany Okruch"
+msgstr "Pęknięty"
 
 #: Source/monstdat.cpp:520
+#, fuzzy
+#| msgid "Blightfire"
+msgctxt "monster"
 msgid "Blightfire"
 msgstr "Płomień Zniszczenia"
 
 #: Source/monstdat.cpp:521
+#, fuzzy
+#| msgid "Nightwing the Cold"
+msgctxt "monster"
 msgid "Nightwing the Cold"
 msgstr "Mroźny Nocoskrzydły"
 
 #: Source/monstdat.cpp:522
+#, fuzzy
+#| msgid "Gorestone"
+msgctxt "monster"
 msgid "Gorestone"
 msgstr "Rzezikamień"
 
 #: Source/monstdat.cpp:523
+#, fuzzy
+#| msgid "Bronzefist Firestone"
+msgctxt "monster"
 msgid "Bronzefist Firestone"
 msgstr "Ognisty Pięściarz"
 
 #: Source/monstdat.cpp:524
+#, fuzzy
+#| msgid "Wrathfire the Doomed"
+msgctxt "monster"
 msgid "Wrathfire the Doomed"
 msgstr "Zgładzony Furiat"
 
 #: Source/monstdat.cpp:525
+#, fuzzy
+#| msgid "Firewound the Grim"
+msgctxt "monster"
 msgid "Firewound the Grim"
 msgstr "Poparzony Pustelnik"
 
 #: Source/monstdat.cpp:526
+#, fuzzy
+#| msgid "Baron Sludge"
+msgctxt "monster"
 msgid "Baron Sludge"
 msgstr "Błotnisty Magnat"
 
 #: Source/monstdat.cpp:527
+#, fuzzy
+#| msgid "Blighthorn Steelmace"
+msgctxt "monster"
 msgid "Blighthorn Steelmace"
 msgstr "Cień Zniszczenia"
 
 #: Source/monstdat.cpp:528
+#, fuzzy
+#| msgid "Chaoshowler"
+msgctxt "monster"
 msgid "Chaoshowler"
 msgstr "Skowytnik"
 
 #: Source/monstdat.cpp:529
+#, fuzzy
+#| msgid "Doomgrin the Rotting"
+msgctxt "monster"
 msgid "Doomgrin the Rotting"
 msgstr "Gnijący Chichot"
 
 #: Source/monstdat.cpp:530
+#, fuzzy
+#| msgid "Madburner"
+msgctxt "monster"
 msgid "Madburner"
 msgstr "Wściekły Podpalacz"
 
 #: Source/monstdat.cpp:531
+#, fuzzy
+#| msgid "Adria the Witch"
+msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr ""
+msgstr "Przecinacz Kości"
 
 #: Source/monstdat.cpp:532
+#, fuzzy
+#| msgid "Breakspine"
+msgctxt "monster"
 msgid "Breakspine"
 msgstr "Łamikark"
 
 #: Source/monstdat.cpp:533
+#, fuzzy
+#| msgid "Devilskull Sharpbone"
+msgctxt "monster"
 msgid "Devilskull Sharpbone"
 msgstr "Pożeracz Kości"
 
 #: Source/monstdat.cpp:534
+#, fuzzy
+#| msgid "Brokenstorm"
+msgctxt "monster"
 msgid "Brokenstorm"
 msgstr "Burzowiec"
 
 #: Source/monstdat.cpp:535
+#, fuzzy
+#| msgid "Stormbane"
+msgctxt "monster"
 msgid "Stormbane"
 msgstr "Szturmująca Zguba"
 
 #: Source/monstdat.cpp:536
+#, fuzzy
+#| msgid "Oozedrool"
+msgctxt "monster"
 msgid "Oozedrool"
 msgstr "Szlamożer"
 
 #: Source/monstdat.cpp:537
+#, fuzzy
+#| msgid "Goldblight of the Flame"
+msgctxt "monster"
 msgid "Goldblight of the Flame"
-msgstr "Płomienny Złotognij"
+msgstr "płomienia"
 
 #: Source/monstdat.cpp:538
+#, fuzzy
+#| msgid "Blackstorm"
+msgctxt "monster"
 msgid "Blackstorm"
 msgstr "Czarny Sztorm"
 
 #: Source/monstdat.cpp:539
+#, fuzzy
+#| msgid "Plaguewrath"
+msgctxt "monster"
 msgid "Plaguewrath"
 msgstr "Plagoupiór"
 
 #: Source/monstdat.cpp:540
+#, fuzzy
+#| msgid "The Flayer"
+msgctxt "monster"
 msgid "The Flayer"
 msgstr "Obdzieracz"
 
 #: Source/monstdat.cpp:541
+#, fuzzy
+#| msgid "Bluehorn"
+msgctxt "monster"
 msgid "Bluehorn"
 msgstr "Błękitnorogi"
 
 #: Source/monstdat.cpp:542
+#, fuzzy
+#| msgid "Warpfire Hellspawn"
+msgctxt "monster"
 msgid "Warpfire Hellspawn"
 msgstr "Piekielne Plugastwo"
 
 #: Source/monstdat.cpp:543
+#, fuzzy
+#| msgid "Fangspeir"
+msgctxt "monster"
 msgid "Fangspeir"
 msgstr "Ostrokieł"
 
 #: Source/monstdat.cpp:544
+#, fuzzy
+#| msgid "Festerskull"
+msgctxt "monster"
 msgid "Festerskull"
 msgstr "Pęknięta Czaszka"
 
 #: Source/monstdat.cpp:545
+#, fuzzy
+#| msgid "Lionskull the Bent"
+msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr "Krętacz Lwia Czaszka"
+msgstr "Wygięty"
 
 #: Source/monstdat.cpp:546
+#, fuzzy
+#| msgid "Blacktongue"
+msgctxt "monster"
 msgid "Blacktongue"
 msgstr "Czarny Jęzorak"
 
 #: Source/monstdat.cpp:547
+#, fuzzy
+#| msgid "Viletouch"
+msgctxt "monster"
 msgid "Viletouch"
 msgstr "Plugawion"
 
 #: Source/monstdat.cpp:548
+#, fuzzy
+#| msgid "Viperflame"
+msgctxt "monster"
 msgid "Viperflame"
 msgstr "Ogniożmij"
 
 #: Source/monstdat.cpp:549
+#, fuzzy
+#| msgid "Fangskin"
+msgctxt "monster"
 msgid "Fangskin"
 msgstr "Zęboskóry"
 
 #: Source/monstdat.cpp:550
+#, fuzzy
+#| msgid "Witchfire the Unholy"
+msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr "Wiedźma Profanacji"
+msgstr "Przeklęty Ołtarz"
 
 #: Source/monstdat.cpp:551
+#, fuzzy
+#| msgid "Blackskull"
+msgctxt "monster"
 msgid "Blackskull"
 msgstr "Czarnokostny"
 
 #: Source/monstdat.cpp:552
+#, fuzzy
+#| msgid "Soulslash"
+msgctxt "monster"
 msgid "Soulslash"
 msgstr "Rozpruwacz Dusz"
 
 #: Source/monstdat.cpp:553
+#, fuzzy
+#| msgid "Windspawn"
+msgctxt "monster"
 msgid "Windspawn"
 msgstr "Porywisty Niegodziwiec"
 
 #: Source/monstdat.cpp:554
+#, fuzzy
+#| msgid "Lord of the Pit"
+msgctxt "monster"
 msgid "Lord of the Pit"
-msgstr "Pan Czeluści"
+msgstr "otchłani"
 
 #: Source/monstdat.cpp:555
+#, fuzzy
+#| msgid "Rustweaver"
+msgctxt "monster"
 msgid "Rustweaver"
 msgstr "Tkacz Rdzy"
 
 #: Source/monstdat.cpp:556
+#, fuzzy
+#| msgid "Howlingire the Shade"
+msgctxt "monster"
 msgid "Howlingire the Shade"
 msgstr "Wyjący Cień"
 
 #: Source/monstdat.cpp:557
+#, fuzzy
+#| msgid "Doomcloud"
+msgctxt "monster"
 msgid "Doomcloud"
 msgstr "Powiew Zagłady"
 
 #: Source/monstdat.cpp:558
+#, fuzzy
+#| msgid "Bloodmoon Soulfire"
+msgctxt "monster"
 msgid "Bloodmoon Soulfire"
 msgstr "Księżycowa Dusza"
 
 #: Source/monstdat.cpp:559
+#, fuzzy
+#| msgid "Witchmoon"
+msgctxt "monster"
 msgid "Witchmoon"
 msgstr "Księżycowa Wiedźma"
 
 #: Source/monstdat.cpp:560
+#, fuzzy
+#| msgid "Gorefeast"
+msgctxt "monster"
 msgid "Gorefeast"
 msgstr "Żywiciel Krwi"
 
 #: Source/monstdat.cpp:561
+#, fuzzy
+#| msgid "Graywar the Slayer"
+msgctxt "monster"
 msgid "Graywar the Slayer"
 msgstr "Pogromiciel"
 
 #: Source/monstdat.cpp:562
+#, fuzzy
+#| msgid "Dreadjudge"
+msgctxt "monster"
 msgid "Dreadjudge"
 msgstr "Sędzia Grozy"
 
 #: Source/monstdat.cpp:563
+#, fuzzy
+#| msgid "Stareye the Witch"
+msgctxt "monster"
 msgid "Stareye the Witch"
-msgstr "Gwiezdnooka Wiedźma"
+msgstr "Wiedźma Adria"
 
 #: Source/monstdat.cpp:564
+#, fuzzy
+#| msgid "Steelskull the Hunter"
+msgctxt "monster"
 msgid "Steelskull the Hunter"
-msgstr "Łowca Głów"
+msgstr "Mroczny Łowca"
 
 #: Source/monstdat.cpp:565
+#, fuzzy
+#| msgid "Sir Gorash"
+msgctxt "monster"
 msgid "Sir Gorash"
 msgstr "Generał Gorasz"
 
 #: Source/monstdat.cpp:566
+#, fuzzy
+#| msgid "The Vizier"
+msgctxt "monster"
 msgid "The Vizier"
 msgstr "Wezyr"
 
 #: Source/monstdat.cpp:568
+#, fuzzy
+#| msgid "Bloodlust"
+msgctxt "monster"
 msgid "Bloodlust"
 msgstr "Żądna Krwi"
 
 #: Source/monstdat.cpp:570
+#, fuzzy
+#| msgid "Fleshdancer"
+msgctxt "monster"
 msgid "Fleshdancer"
 msgstr "Pożeracz Zwłok"
 
 #: Source/monstdat.cpp:571
+#, fuzzy
+#| msgid "Grimspike"
+msgctxt "monster"
 msgid "Grimspike"
 msgstr "Ostrze Grozy"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:573
+#, fuzzy
+#| msgid "Doomlock"
+msgctxt "monster"
 msgid "Doomlock"
 msgstr "Zaklęta Śmierć"
 
@@ -5058,16 +5815,19 @@ msgid "Animal"
 msgstr ""
 
 #: Source/monster.cpp:3476
+#, fuzzy
 msgid "Demon"
-msgstr ""
+msgstr "Łuska Demona"
 
 #: Source/monster.cpp:3478
+#, fuzzy
 msgid "Undead"
-msgstr ""
+msgstr "Rani tylko nieumarłych"
 
 #: Source/monster.cpp:4610
+#, fuzzy
 msgid "Type: {:s}  Kills: {:d}"
-msgstr ""
+msgstr "Suma zabitych: {:d}"
 
 #: Source/monster.cpp:4612
 msgid "Total kills: {:d}"
@@ -5102,8 +5862,9 @@ msgid "Immune: "
 msgstr "Niewrażliwość na: "
 
 #: Source/monster.cpp:4684
+#, fuzzy
 msgid "Type: {:s}"
-msgstr ""
+msgstr "{:s} {:s}"
 
 #: Source/monster.cpp:4690 Source/monster.cpp:4697
 msgid "No resistances"
@@ -5135,12 +5896,14 @@ msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Gracz '{:s}' (poziom {:d}) dołączył do gry"
 
 #: Source/msg.cpp:1826
+#, fuzzy
 msgid "Waiting for game data..."
-msgstr ""
+msgstr "Stwórz grę"
 
 #: Source/msg.cpp:1834
+#, fuzzy
 msgid "The game ended"
-msgstr ""
+msgstr "Stwórz grę"
 
 #: Source/msg.cpp:1840
 msgid "Unable to get level data"
@@ -5166,6 +5929,10 @@ msgstr "Gracz '{:s}' (poziom {:d}) jest już w grze"
 #: Source/objects.cpp:101
 msgid "Mysterious"
 msgstr "Tajemnicza"
+
+#: Source/objects.cpp:102
+msgid "Hidden"
+msgstr "Ukryty"
 
 #: Source/objects.cpp:103
 msgid "Gloomy"
@@ -5364,160 +6131,162 @@ msgstr "Dziennik: Zakończenie"
 msgid "A Spellbook"
 msgstr "Księga Zaklęć"
 
-#: Source/objects.cpp:5356
+#: Source/objects.cpp:5365
 msgid "Crucified Skeleton"
 msgstr "Ukrzyżowany Szkielet"
 
-#: Source/objects.cpp:5360
+#: Source/objects.cpp:5369
 msgid "Lever"
 msgstr "Dźwignia"
 
-#: Source/objects.cpp:5369
+#: Source/objects.cpp:5378
 msgid "Open Door"
 msgstr "Otwarte Drzwi"
 
-#: Source/objects.cpp:5371
+#: Source/objects.cpp:5380
 msgid "Closed Door"
 msgstr "Zamknięte Drzwi"
 
-#: Source/objects.cpp:5373
+#: Source/objects.cpp:5382
 msgid "Blocked Door"
 msgstr "Zablokowane Drzwi"
 
-#: Source/objects.cpp:5378
+#: Source/objects.cpp:5387
 msgid "Ancient Tome"
 msgstr "Starożytna Księga"
 
-#: Source/objects.cpp:5380
+#: Source/objects.cpp:5389
 msgid "Book of Vileness"
 msgstr "Księga Obłudy"
 
-#: Source/objects.cpp:5385
+#: Source/objects.cpp:5394
 msgid "Skull Lever"
 msgstr "Kościana dźwignia"
 
-#: Source/objects.cpp:5388
+#: Source/objects.cpp:5397
 msgid "Mythical Book"
 msgstr "Mityczna Księga"
 
-#: Source/objects.cpp:5392
+#: Source/objects.cpp:5401
 msgid "Small Chest"
 msgstr "Mała Skrzynia"
 
-#: Source/objects.cpp:5396
+#: Source/objects.cpp:5405
 msgid "Chest"
 msgstr "Skrzynia"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5410
 msgid "Large Chest"
 msgstr "Duża Skrzynia"
 
-#: Source/objects.cpp:5404
+#: Source/objects.cpp:5413
 msgid "Sarcophagus"
 msgstr "Sarkofag"
 
-#: Source/objects.cpp:5407
+#: Source/objects.cpp:5416
 msgid "Bookshelf"
 msgstr "Regał"
 
-#: Source/objects.cpp:5411
+#: Source/objects.cpp:5420
 msgid "Bookcase"
 msgstr "Biblioteczka"
 
-#: Source/objects.cpp:5416
+#: Source/objects.cpp:5425
 msgid "Pod"
 msgstr "Kokon"
 
-#: Source/objects.cpp:5418
+#: Source/objects.cpp:5427
 msgid "Urn"
 msgstr "Urna"
 
-#: Source/objects.cpp:5420
+#: Source/objects.cpp:5429
 msgid "Barrel"
 msgstr "Beczka"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5424
+#: Source/objects.cpp:5433
 msgid "{:s} Shrine"
 msgstr "{:s} Kapliczka"
 
-#: Source/objects.cpp:5428
+#: Source/objects.cpp:5437
 msgid "Skeleton Tome"
 msgstr "Kościana Księga"
 
-#: Source/objects.cpp:5431
+#: Source/objects.cpp:5440
 msgid "Library Book"
 msgstr "Księga Biblioteczna"
 
-#: Source/objects.cpp:5434
+#: Source/objects.cpp:5443
 msgid "Blood Fountain"
 msgstr "Fontanna Krwi"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5446
 msgid "Decapitated Body"
 msgstr "Okaleczone Ciało"
 
-#: Source/objects.cpp:5440
+#: Source/objects.cpp:5449
 msgid "Book of the Blind"
 msgstr "Księga Ślepców"
 
-#: Source/objects.cpp:5443
+#: Source/objects.cpp:5452
 msgid "Book of Blood"
 msgstr "Księga Krwi"
 
-#: Source/objects.cpp:5446
+#: Source/objects.cpp:5455
 msgid "Purifying Spring"
 msgstr "Źródło Oczyszczenia"
 
-#: Source/objects.cpp:5453 Source/objects.cpp:5477
+#: Source/objects.cpp:5462 Source/objects.cpp:5486
 msgid "Weapon Rack"
 msgstr "Stojak na Broń"
 
-#: Source/objects.cpp:5456
+#: Source/objects.cpp:5465
 msgid "Goat Shrine"
 msgstr "Koźla Kapliczka"
 
-#: Source/objects.cpp:5459
+#: Source/objects.cpp:5468
 msgid "Cauldron"
 msgstr "Kocioł"
 
-#: Source/objects.cpp:5462
+#: Source/objects.cpp:5471
 msgid "Murky Pool"
 msgstr "Mętna Sadzawka"
 
-#: Source/objects.cpp:5465
+#: Source/objects.cpp:5474
 msgid "Fountain of Tears"
 msgstr "Fontanna Łez"
 
-#: Source/objects.cpp:5468
+#: Source/objects.cpp:5477
 msgid "Steel Tome"
 msgstr "Żelazna Księga"
 
-#: Source/objects.cpp:5471
+#: Source/objects.cpp:5480
 msgid "Pedestal of Blood"
 msgstr "Piedestał Krwi"
 
-#: Source/objects.cpp:5480
+#: Source/objects.cpp:5489
 msgid "Mushroom Patch"
 msgstr "Skupisko grzybów"
 
-#: Source/objects.cpp:5483
+#: Source/objects.cpp:5492
 msgid "Vile Stand"
 msgstr "Stojak Nikczemnego"
 
-#: Source/objects.cpp:5486
+#: Source/objects.cpp:5495
 msgid "Slain Hero"
 msgstr "Zabity Bohater"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5493
+#: Source/objects.cpp:5502
+#, fuzzy
 msgid "Trapped {:s}"
-msgstr ""
+msgstr "{:s} {:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5499
+#: Source/objects.cpp:5508
+#, fuzzy
 msgid "{:s} (disabled)"
-msgstr ""
+msgstr "Muzyka Wyłączona"
 
 #: Source/panels/charpanel.cpp:109
 msgid "MAX"
@@ -5583,7 +6352,7 @@ msgstr "Obrażenia"
 msgid "Life"
 msgstr "Życie"
 
-#: Source/panels/charpanel.cpp:172 Source/spelldat.cpp:52
+#: Source/panels/charpanel.cpp:172
 msgid "Mana"
 msgstr "Mana"
 
@@ -5601,8 +6370,16 @@ msgstr "Odporność na Błyskawice"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
 #: Source/panels/mainpanel.cpp:111
+#, fuzzy
 msgid "voice"
 msgstr ""
+"Uwięziony potwór jest tak rozwścieczony, że przez jego wycie nie mogę zaznać "
+"niezbędnego mi teraz snu.  \n"
+" \n"
+"Przeklina mnie za zesłanie go do Otchłani.  \n"
+" \n"
+"Jego słowa wypełniają moje serce strachem, lecz ani na chwilę nie potrafię "
+"zagłuszyć tego dźwięku."
 
 #: Source/panels/mainpanel.cpp:87
 msgid "char"
@@ -5638,12 +6415,14 @@ msgid "Failed to open player archive for writing."
 msgstr ""
 
 #: Source/pfile.cpp:385
+#, fuzzy
 msgid "Unable to open archive"
-msgstr ""
+msgstr "Nie udało się stworzyć postaci."
 
 #: Source/pfile.cpp:387
+#, fuzzy
 msgid "Unable to load character"
-msgstr ""
+msgstr "Nie udało się stworzyć postaci."
 
 #: Source/pfile.cpp:410 Source/pfile.cpp:430
 msgid "Unable to read to save file archive"
@@ -5655,8 +6434,9 @@ msgstr ""
 
 #. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:89
+#, fuzzy
 msgid "{:s} (lvl {:d}): {:s}"
-msgstr ""
+msgstr "{:s} {:s}"
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
@@ -5705,6 +6485,14 @@ msgstr "Magiczny Kamień"
 msgid "Gharbad The Weak"
 msgstr "Garbad Słaby"
 
+#: Source/quests.cpp:44
+msgid "Zhar the Mad"
+msgstr "Zhar Szalony"
+
+#: Source/quests.cpp:47
+msgid "The Butcher"
+msgstr "Rzeźnik"
+
 #: Source/quests.cpp:48
 msgid "Ogden's Sign"
 msgstr "Szyld Ogdena"
@@ -5716,6 +6504,10 @@ msgstr "Sale Ślepców"
 #: Source/quests.cpp:50
 msgid "Valor"
 msgstr "Odwaga"
+
+#: Source/quests.cpp:52
+msgid "Warlord of Blood"
+msgstr "Marszałek Krwi"
 
 #: Source/quests.cpp:53
 msgid "The Curse of King Leoric"
@@ -5750,6 +6542,10 @@ msgstr "Mała Dziewczynka"
 msgid "Wandering Trader"
 msgstr "Wędrujący Handlarz"
 
+#: Source/quests.cpp:61
+msgid "The Defiler"
+msgstr "Profanator"
+
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
 msgstr "Fundament Świata"
@@ -5781,8 +6577,9 @@ msgstr "Przeklęty Ołtarz"
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:449
+#, fuzzy
 msgid "To {:s}"
-msgstr ""
+msgstr "Umiejętność: {:s}"
 
 #: Source/setmaps.cpp:24
 msgid "Skeleton King's Lair"
@@ -5797,176 +6594,396 @@ msgid "Archbishop Lazarus' Lair"
 msgstr "Siedziba Arcybiskupa Lazarusa"
 
 #: Source/spelldat.cpp:16
+#, fuzzy
+#| msgid "Firebolt"
+msgctxt "spell"
 msgid "Firebolt"
 msgstr "Ognisty Pocisk"
 
 #: Source/spelldat.cpp:17
+#, fuzzy
+#| msgid "Healing"
+msgctxt "spell"
 msgid "Healing"
-msgstr "Uzdrowienie"
+msgstr "Mikstura Pełnego Leczenia"
+
+#: Source/spelldat.cpp:18
+msgctxt "spell"
+msgid "Lightning"
+msgstr "Piorunowy"
 
 #: Source/spelldat.cpp:19
+#, fuzzy
+#| msgid "Flash"
+msgctxt "spell"
 msgid "Flash"
-msgstr "Rozbłysk"
+msgstr "Zwój Rozbłysku"
 
 #: Source/spelldat.cpp:20
+#, fuzzy
+#| msgid "Identify"
+msgctxt "spell"
 msgid "Identify"
 msgstr "Identyfikacja"
 
 #: Source/spelldat.cpp:21
+#, fuzzy
+#| msgid "Fire Wall"
+msgctxt "spell"
 msgid "Fire Wall"
-msgstr "Ściana Ognia"
+msgstr "Zwój Ściany Ognia"
+
+#: Source/spelldat.cpp:22
+msgctxt "spell"
+msgid "Town Portal"
+msgstr "Miejski Portal"
 
 #: Source/spelldat.cpp:23
+#, fuzzy
+#| msgid "Stone Curse"
+msgctxt "spell"
 msgid "Stone Curse"
-msgstr "Petryfikacja"
+msgstr "Zwój Petryfikacji"
 
 #: Source/spelldat.cpp:24
+#, fuzzy
+#| msgid "Infravision"
+msgctxt "spell"
 msgid "Infravision"
-msgstr "Infrawizja"
+msgstr "widzenie z infrawizją"
 
 #: Source/spelldat.cpp:25
+#, fuzzy
+#| msgid "Phasing"
+msgctxt "spell"
 msgid "Phasing"
-msgstr "Przenikanie"
+msgstr "Zwój Przenikania"
 
 #: Source/spelldat.cpp:26
+#, fuzzy
+#| msgid "Mana Shield"
+msgctxt "spell"
 msgid "Mana Shield"
-msgstr "Tarcza Many"
+msgstr "Zwój Tarczy Many"
 
 #: Source/spelldat.cpp:27
+#, fuzzy
+#| msgid "Fireball"
+msgctxt "spell"
 msgid "Fireball"
-msgstr "Ognista Kula"
+msgstr "obr. ognistej kuli {:d}"
+
+#: Source/spelldat.cpp:28
+#, fuzzy
+#| msgid "Guardian"
+msgctxt "spell"
+msgid "Guardian"
+msgstr "Zwój Strażnika"
 
 #: Source/spelldat.cpp:29
+#, fuzzy
+#| msgid "Chain Lightning"
+msgctxt "spell"
 msgid "Chain Lightning"
-msgstr "Eksplozja Błyskawic"
+msgstr "Zwój Eksplozji Błyskawic"
 
 #: Source/spelldat.cpp:30
+#, fuzzy
+#| msgid "Flame Wave"
+msgctxt "spell"
 msgid "Flame Wave"
-msgstr "Fala Płomieni"
+msgstr "Zwój Fali Płomieni"
 
 #: Source/spelldat.cpp:31
+#, fuzzy
+#| msgid "Doom Serpents"
+msgctxt "spell"
 msgid "Doom Serpents"
 msgstr "Hydry"
 
 #: Source/spelldat.cpp:32
+#, fuzzy
+#| msgid "Blood Ritual"
+msgctxt "spell"
 msgid "Blood Ritual"
-msgstr "Krwawy Rytuał"
+msgstr "Kamień Krwi"
 
 #: Source/spelldat.cpp:33
+#, fuzzy
+#| msgid "Nova"
+msgctxt "spell"
 msgid "Nova"
-msgstr "Nova"
+msgstr "Zwój Novy"
 
 #: Source/spelldat.cpp:34
+#, fuzzy
+#| msgid "Invisibility"
+msgctxt "spell"
 msgid "Invisibility"
 msgstr "Niewidzialność"
 
+#: Source/spelldat.cpp:35
+msgctxt "spell"
+msgid "Inferno"
+msgstr "Inferno"
+
+#: Source/spelldat.cpp:36
+#, fuzzy
+#| msgid "Golem"
+msgctxt "spell"
+msgid "Golem"
+msgstr "Zwój Golema"
+
 #: Source/spelldat.cpp:37
+#, fuzzy
+#| msgid "Rage"
+msgctxt "spell"
 msgid "Rage"
-msgstr "Furia"
+msgstr ""
+"Wioska potrzebuje twojej pomocy!  Kilka miesięcy temu porwano syna króla "
+"Leoryka, księcia Albrechta. Nasz władca wpadł w szał i przeczesał całą "
+"wioskę \n"
+"w poszukiwaniu zaginionego dziecka. \n"
+"Z każdym kolejnym dniem, Leoryk coraz głębiej popadał w obłęd. Doszukiwał "
+"się winy u niewinnych mieszczan, których kazał potem brutalnie stracić. "
+"Mniej niż połowa z nas przeżyła jego furię...\n"
+" \n"
+"Królewscy rycerze i kapłani próbowali \n"
+"go uspokoić. Wtedy Król zwrócił się przeciwko nim. \n"
+" \n"
+"Nie mając innego wyjścia, byli zmuszeni go zabić. Wraz ze swoim ostatnim "
+"tchnieniem, Leoryk nałożył straszliwą klątwę na swą byłą świtę. Poprzysiągł, "
+"że będą służyć mu w ciemnościach, na wieczność...\n"
+" \n"
+"W tym momencie sprawy przybrały gorszy obrót, niż sobie wyobrażałem!  Nasz "
+"były król obudził się z wiecznego snu i przewodzi teraz legionami "
+"nieumarłych sług w labiryncie. Jego ciało zostało pochowane w komnacie, trzy "
+"poziomy pod katedrą. Błagam, zniszcz jego przeklętą formę i pozwól mu "
+"spocząć w pokoju..."
 
 #: Source/spelldat.cpp:38
+#, fuzzy
+#| msgid "Teleport"
+msgctxt "spell"
 msgid "Teleport"
-msgstr "Teleportacja"
+msgstr "Zwój Teleportacji"
 
 #: Source/spelldat.cpp:39
+#, fuzzy
+#| msgid "Apocalypse"
+msgctxt "spell"
 msgid "Apocalypse"
-msgstr "Apokalipsa"
+msgstr "Zwój Apokalipsy"
 
 #: Source/spelldat.cpp:40
+#, fuzzy
+#| msgid "Etherealize"
+msgctxt "spell"
 msgid "Etherealize"
 msgstr "Znieczulenie"
 
 #: Source/spelldat.cpp:41
+#, fuzzy
+#| msgid "Item Repair"
+msgctxt "spell"
 msgid "Item Repair"
-msgstr "Naprawa przedmiotów"
+msgstr "Naprawa"
 
 #: Source/spelldat.cpp:42
+#, fuzzy
+#| msgid "Staff Recharge"
+msgctxt "spell"
 msgid "Staff Recharge"
-msgstr "Naładowanie Kostura"
+msgstr "Naładowanie kosturów"
 
 #: Source/spelldat.cpp:43
+#, fuzzy
+#| msgid "Trap Disarm"
+msgctxt "spell"
 msgid "Trap Disarm"
-msgstr "Rozbrajanie Pułapek"
+msgstr "ustawia ognistą pułapkę"
 
 #: Source/spelldat.cpp:44
+#, fuzzy
+#| msgid "Elemental"
+msgctxt "spell"
 msgid "Elemental"
 msgstr "Żywiołak"
 
 #: Source/spelldat.cpp:45
+#, fuzzy
+#| msgid "Charged Bolt"
+msgctxt "spell"
 msgid "Charged Bolt"
-msgstr "Wiązka Błyskawic"
+msgstr "Kostur Wiązki Błyskawic"
 
 #: Source/spelldat.cpp:46
+#, fuzzy
+#| msgid "Holy Bolt"
+msgctxt "spell"
 msgid "Holy Bolt"
-msgstr "Święty Pocisk"
+msgstr "Kostur Wiązki Błyskawic"
 
 #: Source/spelldat.cpp:47
+#, fuzzy
+#| msgid "Resurrect"
+msgctxt "spell"
 msgid "Resurrect"
-msgstr "Wskrzeszenie"
+msgstr "Zwój Wskrzeszenia"
 
 #: Source/spelldat.cpp:48
+#, fuzzy
+#| msgid "Telekinesis"
+msgctxt "spell"
 msgid "Telekinesis"
 msgstr "Telekineza"
 
 #: Source/spelldat.cpp:49
+#, fuzzy
+#| msgid "Heal Other"
+msgctxt "spell"
 msgid "Heal Other"
-msgstr "Uzdrowienie Innych"
+msgstr "śmiertelne leczenie"
 
 #: Source/spelldat.cpp:50
+#, fuzzy
+#| msgid "Blood Star"
+msgctxt "spell"
 msgid "Blood Star"
-msgstr "Krwawa Gwiazda"
+msgstr "krwi"
 
 #: Source/spelldat.cpp:51
+#, fuzzy
+#| msgid "Bone Spirit"
+msgctxt "spell"
 msgid "Bone Spirit"
-msgstr "Kościane Widmo"
+msgstr "Kościana Kolczuga"
+
+#: Source/spelldat.cpp:52
+msgctxt "spell"
+msgid "Mana"
+msgstr "Mana"
 
 #: Source/spelldat.cpp:53
+#, fuzzy
+#| msgid "the Magi"
+msgctxt "spell"
 msgid "the Magi"
-msgstr "mądrości"
+msgstr ""
+"Daj świadectwo prawdom tu zapisanym, gdyż są one ostatnim dziedzictwem "
+"horadrimów.\n"
+" \n"
+"Około trzystu lat temu, dowiedzieliśmy się, że nasz świat nawiedziła Mroczna "
+"Trójca z Płonących Piekieł.\n"
+" \n"
+"Trzej bracia zapanowali na dekady nad ziemiami Wschodu, a miejscowa ludność "
+"żyła tam w panicznym strachu.  \n"
+" \n"
+"Nasz zakon - horadrimowie - został stworzony przez tajemną grupę magów, by "
+"odnaleźć i raz na zawsze pojmać Trójcę Zła.\n"
+" \n"
+"Dawni Horadrimowie schwytali dwóch \n"
+"z Trójcy za pomocą potężnych artefaktów znanych jako Kamienie Dusz\n"
+"i zakopali je głęboko pod piaskami wschodnich pustkowi.\n"
+" \n"
+"Trzeci Zły zdołał uciec na zachód.  Wtedy podążył za nim nasz zakon.  \n"
+" \n"
+"Trzeci Zły - znany jako Diablo, Pan Grozy - został ostatecznie schwytany, a "
+"jego esencja została umieszczona w Kamieniu Dusz i ukryta w tym Labiryncie.\n"
+" \n"
+"Strzeż się, Kamień Dusz musi być trzymany z dala od niepowołanych.  \n"
+" \n"
+"Gdyby Diablo zdołał się z niego wydostać, próbowałby przejąć ciało, którym "
+"mógłby z łatwością zawładnąć.  \n"
+" \n"
+"Najlepszym celem dla osłabionego demona byłoby dziecko lub starzec."
 
 #: Source/spelldat.cpp:54
+#, fuzzy
+#| msgid "the Jester"
+msgctxt "spell"
 msgid "the Jester"
-msgstr "Ironii"
+msgstr "Błazeński"
 
 #: Source/spelldat.cpp:55
+#, fuzzy
+#| msgid "Lightning Wall"
+msgctxt "spell"
 msgid "Lightning Wall"
-msgstr "Ściana Błyskawic"
+msgstr "Piorunowy"
 
 #: Source/spelldat.cpp:56
+#, fuzzy
+#| msgid "Immolation"
+msgctxt "spell"
 msgid "Immolation"
 msgstr "Podpalenie"
 
 #: Source/spelldat.cpp:57
+#, fuzzy
+#| msgid "Warp"
+msgctxt "spell"
 msgid "Warp"
 msgstr "Przejście"
 
 #: Source/spelldat.cpp:58
+#, fuzzy
+#| msgid "Reflect"
+msgctxt "spell"
 msgid "Reflect"
 msgstr "Odbicie"
 
 #: Source/spelldat.cpp:59
+#, fuzzy
+#| msgid "Berserk"
+msgctxt "spell"
 msgid "Berserk"
 msgstr "Szał Bojowy"
 
 #: Source/spelldat.cpp:60
+#, fuzzy
+#| msgid "Ring of Fire"
+msgctxt "spell"
 msgid "Ring of Fire"
-msgstr "Pierścień Ognia"
+msgstr "Pierścień"
 
 #: Source/spelldat.cpp:61
+#, fuzzy
+#| msgid "Search"
+msgctxt "spell"
 msgid "Search"
-msgstr "Przeszukiwanie"
+msgstr "Wyczuwam duszę szukającą odpowiedzi..."
+
+#: Source/spelldat.cpp:62
+msgctxt "spell"
+msgid "Rune of Fire"
+msgstr "Runa Ognia"
 
 #: Source/spelldat.cpp:63
+#, fuzzy
+#| msgid "Rune of Light"
+msgctxt "spell"
 msgid "Rune of Light"
-msgstr "Runa Światła"
+msgstr "blasku"
 
 #: Source/spelldat.cpp:64
+#, fuzzy
+#| msgid "Rune of Nova"
+msgctxt "spell"
 msgid "Rune of Nova"
-msgstr "Runa Novy"
+msgstr "Runa"
 
 #: Source/spelldat.cpp:65
+#, fuzzy
+#| msgid "Rune of Immolation"
+msgctxt "spell"
 msgid "Rune of Immolation"
-msgstr "Runa Podpalenia"
+msgstr "Magiczna Bomba"
+
+#: Source/spelldat.cpp:66
+msgctxt "spell"
+msgid "Rune of Stone"
+msgstr "Runa Kamienia"
 
 #: Source/stores.cpp:179 Source/stores.cpp:186
 msgid ",  "
@@ -5989,8 +7006,9 @@ msgid "Indestructible,  "
 msgstr "Niezniszczalność,  "
 
 #: Source/stores.cpp:210
+#, fuzzy
 msgid "No required attributes"
-msgstr ""
+msgstr "Wymagania:"
 
 #: Source/stores.cpp:243 Source/stores.cpp:995 Source/stores.cpp:1239
 msgid "Welcome to the"
@@ -6214,16 +7232,17 @@ msgstr "Akceptuj"
 #: Source/stores.cpp:1196
 #, fuzzy
 msgid "Talk to {:s}"
-msgstr "Rozmowa"
+msgstr "{:s} {:s}"
 
 #: Source/stores.cpp:1200
 #, fuzzy
 msgid "Talking to {:s}"
-msgstr "Rozmowa"
+msgstr "{:s} {:s}"
 
 #: Source/stores.cpp:1202
+#, fuzzy
 msgid "is not available"
-msgstr ""
+msgstr "Mapa niedostępna w mieście"
 
 #: Source/stores.cpp:1203
 msgid "in the shareware"
