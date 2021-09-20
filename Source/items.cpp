@@ -2987,7 +2987,7 @@ void SetPlrHandItem(Item &item, int itemData)
 	strcpy(item._iIName, _(pAllItem.iName));
 	item._iLoc = pAllItem.iLoc;
 	item._iClass = pAllItem.iClass;
-	item._iDamage = { pAllItem.iMinDam, pAllItem.iMaxDam };
+	item._iDamage = pAllItem.iDamage;
 	item._iAC = pAllItem.iMinAC;
 	item._iMiscId = pAllItem.iMiscId;
 	item._iSpell = pAllItem.iSpell;
@@ -3242,7 +3242,7 @@ void GetItemAttrs(Item &item, int itemData, int lvl)
 	strcpy(item._iIName, _(AllItemsList[itemData].iName));
 	item._iLoc = AllItemsList[itemData].iLoc;
 	item._iClass = AllItemsList[itemData].iClass;
-	item._iDamage = { AllItemsList[itemData].iMinDam, AllItemsList[itemData].iMaxDam };
+	item._iDamage = AllItemsList[itemData].iDamage;
 	item._iAC = AllItemsList[itemData].iMinAC + GenerateRnd(AllItemsList[itemData].iMaxAC - AllItemsList[itemData].iMinAC + 1);
 	item._iFlags = AllItemsList[itemData].iFlags;
 	item._iMiscId = AllItemsList[itemData].iMiscId;

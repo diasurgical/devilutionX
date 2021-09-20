@@ -7,6 +7,7 @@
 
 #include <cstdint>
 
+#include "damage.hpp"
 #include "objdat.h"
 #include "spelldat.h"
 
@@ -434,8 +435,7 @@ struct ItemData {
 	const char *iSName;
 	uint8_t iMinMLvl;
 	uint8_t iDurability;
-	uint8_t iMinDam;
-	uint8_t iMaxDam;
+	Damage iDamage;
 	uint8_t iMinAC;
 	uint8_t iMaxAC;
 	uint8_t iMinStr;
