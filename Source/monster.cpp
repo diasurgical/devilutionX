@@ -993,13 +993,13 @@ void StartAttack(Monster &monster)
 	monster.position.old = monster.position.tile;
 }
 
-void StartRangedAttack(Monster &monster, missile_id missileType, int dam)
+void StartRangedAttack(Monster &monster, missile_id missileType, Damage dam)
 {
 	Direction md = GetMonsterDirection(monster);
 	NewMonsterAnim(monster, MonsterGraphic::Attack, md, AnimationDistributionFlags::ProcessAnimationPending);
 	monster._mmode = MonsterMode::RangedAttack;
 	monster._mVar1 = missileType;
-	monster._mVar2 = dam;
+	monster._mVar2 = dam.GetValue();
 	monster.position.offset = { 0, 0 };
 	monster.position.future = monster.position.tile;
 	monster.position.old = monster.position.tile;
@@ -2200,7 +2200,7 @@ void AiRanged(int i, missile_id missileType, bool special)
 				if (special)
 					StartRangedSpecialAttack(monster, missileType, 4);
 				else
-					StartRangedAttack(monster, missileType, 4);
+					StartRangedAttack(monster, missileType, { 4 });
 			} else {
 				monster.CheckStandAnimationIsLoaded(md);
 			}
@@ -2399,7 +2399,7 @@ void SkeletonBowAi(int i)
 	if (!walking) {
 		if (GenerateRnd(100) < 2 * monster._mint + 3) {
 			if (LineClearMissile(monster.position.tile, monster.enemyPosition))
-				StartRangedAttack(monster, MIS_ARROW, 4);
+				StartRangedAttack(monster, MIS_ARROW, { 4 });
 		}
 	}
 
@@ -3095,7 +3095,7 @@ void CounselorAi(int i)
 		if (abs(mx) >= 2 || abs(my) >= 2) {
 			if (v < 5 * (monster._mint + 10) && LineClearMissile(monster.position.tile, { fx, fy })) {
 				constexpr missile_id MissileTypes[4] = { MIS_FIREBOLT, MIS_CBOLT, MIS_LIGHTCTRL, MIS_FIREBALL };
-				StartRangedAttack(monster, MissileTypes[monster._mint], monster.mDamage.GetValue());
+				StartRangedAttack(monster, MissileTypes[monster._mint], monster.mDamage);
 			} else if (GenerateRnd(100) < 30) {
 				monster._mgoal = MGOAL_MOVE;
 				monster._mgoalvar1 = 0;
@@ -3110,7 +3110,7 @@ void CounselorAi(int i)
 				StartFadeout(monster, md, false);
 			} else if (static_cast<MonsterMode>(monster._mVar1) == MonsterMode::Delay
 			    || GenerateRnd(100) < 2 * monster._mint + 20) {
-				StartRangedAttack(monster, MIS_NULL, 0);
+				StartRangedAttack(monster, MIS_NULL, { 0 });
 				AddMissile(monster.position.tile, { 0, 0 }, monster._mdir, MIS_FLASH, TARGET_PLAYERS, i, 4, 0);
 				AddMissile(monster.position.tile, { 0, 0 }, monster._mdir, MIS_FLASH2, TARGET_PLAYERS, i, 4, 0);
 			} else
