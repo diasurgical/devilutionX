@@ -196,7 +196,7 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 	monster.mHit = monster.MData->mHit;
 	monster.mDamage = monster.MData->mDamage;
 	monster.mHit2 = monster.MData->mHit2;
-	monster.mDamage2 = { monster.MData->mMinDamage2, monster.MData->mMaxDamage2 };
+	monster.mDamage2 = monster.MData->mDamage2;
 	monster.mArmorClass = monster.MData->mArmorClass;
 	monster.mMagicRes = monster.MData->mMagicRes;
 	monster.leader = 0;
