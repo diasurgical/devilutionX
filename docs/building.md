@@ -147,32 +147,6 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 7. Use build/debug etc. commands inside Visual Studio Solution like with any normal Visual Studio project.
 </details>
 
-<details><summary>Haiku</summary>
-
-### Installing dependencies on 32 bit Haiku
-```
-pkgman install cmake_x86 devel:libsdl2_x86 devel:libsdl2_ttf_x86 devel:libsodium_x86 devel:libpng_x86
-```
-### Installing dependencies on 64 bit Haiku
-```
-pkgman install cmake devel:libsdl2 devel:libsdl2_ttf devel:libsodium devel:libpng
-```
-### Compiling on 32 bit Haiku
-```
-cd build
-setarch x86 #Switch to secondary compiler toolchain (GCC8+)
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(nproc)
-```
-### Compiling on 64 bit Haiku
-No setarch required, as there is no secondary toolchain on x86_64, and the primary is GCC8+
-```
-cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j $(nproc)
-```
-</details>
-
 <details><summary><b>CMake build options</b></summary>
 
 ### General

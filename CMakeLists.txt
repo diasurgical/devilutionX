@@ -153,11 +153,6 @@ if(WIN32)
   set(DIST ON)
 endif()
 
-if(HAIKU)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-endif()
-
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -712,7 +707,7 @@ if (GPERF)
   target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF)
   target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -727,10 +722,6 @@ endif()
 if(NOT WIN32 AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
-endif()
-
-if(HAIKU)
-  target_link_libraries(libdevilutionx PUBLIC network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
