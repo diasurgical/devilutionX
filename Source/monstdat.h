@@ -109,8 +109,7 @@ struct MonsterData {
 	Damage mDamage;
 	uint8_t mHit2;
 	uint8_t mAFNum2;
-	uint8_t mMinDamage2;
-	uint8_t mMaxDamage2;
+	Damage mDamage2;
 	uint8_t mArmorClass;
 	MonsterClass mMonstClass;
 	/** Using monster_resistance as bitflags */
