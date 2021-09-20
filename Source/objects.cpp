@@ -2683,9 +2683,8 @@ bool OperateShrineGloomy(int pnum)
 		case ItemType::Bow:
 		case ItemType::Mace:
 		case ItemType::Staff:
-			item._iMaxDam--;
-			if (item._iMaxDam < item._iMinDam)
-				item._iMaxDam = item._iMinDam;
+			if (!item._iDamage.IsFixed())
+				item._iDamage -= { 0, 1 };
 			break;
 		case ItemType::Shield:
 		case ItemType::Helm:
@@ -2714,9 +2713,9 @@ bool OperateShrineWeird(int pnum)
 	auto &player = Players[pnum];
 
 	if (!player.InvBody[INVLOC_HAND_LEFT].isEmpty() && player.InvBody[INVLOC_HAND_LEFT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_LEFT]._iMaxDam++;
+		player.InvBody[INVLOC_HAND_LEFT]._iDamage += { 0, 1 };
 	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
-		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
+		player.InvBody[INVLOC_HAND_RIGHT]._iDamage += { 0, 1 };
 
 	for (int j = 0; j < player._pNumInv; j++) {
 		switch (player.InvList[j]._itype) {
@@ -2725,7 +2724,7 @@ bool OperateShrineWeird(int pnum)
 		case ItemType::Bow:
 		case ItemType::Mace:
 		case ItemType::Staff:
-			player.InvList[j]._iMaxDam++;
+			player.InvList[j]._iDamage += { 0, 1 };
 			break;
 		default:
 			break;

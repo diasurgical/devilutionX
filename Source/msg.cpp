@@ -1977,7 +1977,7 @@ void DeltaAddItem(int ii)
 		pD->bMCh = Items[ii]._iMaxCharges;
 		pD->wValue = Items[ii]._ivalue;
 		pD->wToHit = Items[ii]._iPLToHit;
-		pD->wMaxDam = Items[ii]._iMaxDam;
+		pD->wMaxDam = Items[ii]._iDamage.maxValue;
 		pD->bMinStr = Items[ii]._iMinStr;
 		pD->bMinMag = Items[ii]._iMinMag;
 		pD->bMinDex = Items[ii]._iMinDex;
@@ -2117,7 +2117,7 @@ void DeltaLoadLevel()
 				item._iCharges = sgLevels[currlevel].item[i].bCh;
 				item._iMaxCharges = sgLevels[currlevel].item[i].bMCh;
 				item._iPLToHit = sgLevels[currlevel].item[i].wToHit;
-				item._iMaxDam = sgLevels[currlevel].item[i].wMaxDam;
+				item._iDamage.maxValue = sgLevels[currlevel].item[i].wMaxDam;
 				item._iMinStr = sgLevels[currlevel].item[i].bMinStr;
 				item._iMinMag = sgLevels[currlevel].item[i].bMinMag;
 				item._iMinDex = sgLevels[currlevel].item[i].bMinDex;
@@ -2361,7 +2361,7 @@ void NetSendCmdGItem(bool bHiPri, _cmd_id bCmd, BYTE mast, BYTE pnum, BYTE ii)
 		cmd.bMCh = Items[ii]._iMaxCharges;
 		cmd.wValue = Items[ii]._ivalue;
 		cmd.wToHit = Items[ii]._iPLToHit;
-		cmd.wMaxDam = Items[ii]._iMaxDam;
+		cmd.wMaxDam = Items[ii]._iDamage.maxValue;
 		cmd.bMinStr = Items[ii]._iMinStr;
 		cmd.bMinMag = Items[ii]._iMinMag;
 		cmd.bMinDex = Items[ii]._iMinDex;
@@ -2405,7 +2405,7 @@ void NetSendCmdPItem(bool bHiPri, _cmd_id bCmd, Point position)
 		cmd.bMCh = myPlayer.HoldItem._iMaxCharges;
 		cmd.wValue = myPlayer.HoldItem._ivalue;
 		cmd.wToHit = myPlayer.HoldItem._iPLToHit;
-		cmd.wMaxDam = myPlayer.HoldItem._iMaxDam;
+		cmd.wMaxDam = myPlayer.HoldItem._iDamage.maxValue;
 		cmd.bMinStr = myPlayer.HoldItem._iMinStr;
 		cmd.bMinMag = myPlayer.HoldItem._iMinMag;
 		cmd.bMinDex = myPlayer.HoldItem._iMinDex;
@@ -2480,7 +2480,7 @@ void NetSendCmdDItem(bool bHiPri, int ii)
 		cmd.bMCh = Items[ii]._iMaxCharges;
 		cmd.wValue = Items[ii]._ivalue;
 		cmd.wToHit = Items[ii]._iPLToHit;
-		cmd.wMaxDam = Items[ii]._iMaxDam;
+		cmd.wMaxDam = Items[ii]._iDamage.maxValue;
 		cmd.bMinStr = Items[ii]._iMinStr;
 		cmd.bMinMag = Items[ii]._iMinMag;
 		cmd.bMinDex = Items[ii]._iMinDex;

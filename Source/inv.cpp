@@ -1794,7 +1794,7 @@ int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, i
 		item._iCharges = ch;
 		item._iMaxCharges = mch;
 		item._iPLToHit = toHit;
-		item._iMaxDam = maxDam;
+		item._iDamage.maxValue = maxDam;
 		item._iMinStr = minStr;
 		item._iMinMag = minMag;
 		item._iMinDex = minDex;

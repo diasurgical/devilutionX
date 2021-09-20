@@ -192,7 +192,7 @@ void PrintStoreItem(Item *x, int l, UiFlags flags)
 	}
 	sstr[0] = '\0';
 	if (x->_iClass == ICLASS_WEAPON)
-		strcpy(sstr, fmt::format(_("Damage: {:d}-{:d}  "), x->_iMinDam, x->_iMaxDam).c_str());
+		strcpy(sstr, fmt::format(_("Damage: {:d}-{:d}  "), x->_iDamage.minValue, x->_iDamage.maxValue).c_str());
 	if (x->_iClass == ICLASS_ARMOR)
 		strcpy(sstr, fmt::format(_("Armor: {:d}  "), x->_iAC).c_str());
 	if (x->_iMaxDur != DUR_INDESTRUCTIBLE && x->_iMaxDur != 0) {
