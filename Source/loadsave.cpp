@@ -272,8 +272,10 @@ void LoadItemData(LoadHelper &file, Item &item)
 	auto maxFireDamage = file.NextLE<int32_t>();
 	item._iFDamage = { minFireDamage, maxFireDamage };
 
-	item._iLMinDam = file.NextLE<int32_t>();
-	item._iLMaxDam = file.NextLE<int32_t>();
+	auto minLightningDamage = file.NextLE<int32_t>();
+	auto maxLightningDamage = file.NextLE<int32_t>();
+	item._iLDamage = { minLightningDamage, maxLightningDamage };
+
 	item._iPLEnAc = file.NextLE<int32_t>();
 	item._iPrePower = static_cast<item_effect_type>(file.NextLE<int8_t>());
 	item._iSufPower = static_cast<item_effect_type>(file.NextLE<int8_t>());
@@ -957,8 +959,8 @@ void SaveItem(SaveHelper &file, const Item &item)
 	file.WriteLE<int32_t>(item._iUid);
 	file.WriteLE<int32_t>(item._iFDamage.minValue);
 	file.WriteLE<int32_t>(item._iFDamage.maxValue);
-	file.WriteLE<int32_t>(item._iLMinDam);
-	file.WriteLE<int32_t>(item._iLMaxDam);
+	file.WriteLE<int32_t>(item._iLDamage.minValue);
+	file.WriteLE<int32_t>(item._iLDamage.maxValue);
 	file.WriteLE<int32_t>(item._iPLEnAc);
 	file.WriteLE<int8_t>(item._iPrePower);
 	file.WriteLE<int8_t>(item._iSufPower);

@@ -224,8 +224,7 @@ struct Item {
 	/** Unique item ID, used as an index into UniqueItemList */
 	int _iUid;
 	Damage _iFDamage;
-	int16_t _iLMinDam;
-	int16_t _iLMaxDam;
+	Damage _iLDamage;
 	int16_t _iPLEnAc;
 	enum item_effect_type _iPrePower;
 	enum item_effect_type _iSufPower;

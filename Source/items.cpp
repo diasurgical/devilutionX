@@ -833,14 +833,12 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iFlags |= ISPL_FIREDAM;
 		item._iFlags &= ~ISPL_LIGHTDAM;
 		item._iFDamage = { power.param1, power.param2 };
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iLDamage = { 0 };
 		break;
 	case IPL_LIGHTDAM:
 		item._iFlags |= ISPL_LIGHTDAM;
 		item._iFlags &= ~ISPL_FIREDAM;
-		item._iLMinDam = power.param1;
-		item._iLMaxDam = power.param2;
+		item._iLDamage = { power.param1, power.param2 };
 		item._iFDamage = { 0 };
 		break;
 	case IPL_STR:
@@ -929,21 +927,18 @@ int SaveItemPower(Item &item, const ItemPower &power)
 		item._iFlags |= ISPL_FIRE_ARROWS;
 		item._iFlags &= ~ISPL_LIGHT_ARROWS;
 		item._iFDamage = { power.param1, power.param2 };
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iLDamage = { 0 };
 		break;
 	case IPL_LIGHT_ARROWS:
 		item._iFlags |= ISPL_LIGHT_ARROWS;
 		item._iFlags &= ~ISPL_FIRE_ARROWS;
-		item._iLMinDam = power.param1;
-		item._iLMaxDam = power.param2;
+		item._iLDamage = { power.param1, power.param2 };
 		item._iFDamage = { 0 };
 		break;
 	case IPL_FIREBALL:
 		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
 		item._iFDamage = { power.param1, power.param2 };
-		item._iLMinDam = 0;
-		item._iLMaxDam = 0;
+		item._iLDamage = { 0 };
 		break;
 	case IPL_THORNS:
 		item._iFlags |= ISPL_THORNS;
@@ -1048,14 +1043,12 @@ int SaveItemPower(Item &item, const ItemPower &power)
 	case IPL_ADDACLIFE:
 		item._iFlags |= (ISPL_LIGHT_ARROWS | ISPL_FIRE_ARROWS);
 		item._iFDamage = { power.param1, power.param2 };
-		item._iLMinDam = 1;
-		item._iLMaxDam = 0;
+		item._iLDamage = { 1, 0 };
 		break;
 	case IPL_ADDMANAAC:
 		item._iFlags |= (ISPL_LIGHTDAM | ISPL_FIREDAM);
 		item._iFDamage = { power.param1, power.param2 };
-		item._iLMinDam = 2;
-		item._iLMaxDam = 0;
+		item._iLDamage = { 2, 0 };
 		break;
 	case IPL_FIRERESCLVL:
 		item._iPLFR = 30 - Players[MyPlayerId]._pLevel;
@@ -2689,8 +2682,8 @@ void CalcPlrItemVals(Player &player, bool loadgfx)
 				enac += item._iPLEnAc;
 				fmin += item._iFDamage.minValue;
 				fmax += item._iFDamage.maxValue;
-				lmin += item._iLMinDam;
-				lmax += item._iLMaxDam;
+				lmin += item._iLDamage.minValue;
+				lmax += item._iLDamage.maxValue;
 			}
 		}
 	}
@@ -3880,10 +3873,10 @@ void PrintItemPower(char plidx, Item *x)
 			strcpy(tempstr, fmt::format(_("Fire hit damage: {:d}-{:d}"), x->_iFDamage.minValue, x->_iFDamage.maxValue).c_str());
 		break;
 	case IPL_LIGHTDAM:
-		if (x->_iLMinDam == x->_iLMaxDam)
-			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}"), x->_iLMinDam).c_str());
+		if (x->_iLDamage.IsFixed())
+			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}"), x->_iLDamage.minValue).c_str());
 		else
-			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("Lightning hit damage: {:d}-{:d}"), x->_iLDamage.minValue, x->_iLDamage.maxValue).c_str());
 		break;
 	case IPL_STR:
 	case IPL_STR_CURSE:
@@ -3942,10 +3935,10 @@ void PrintItemPower(char plidx, Item *x)
 			strcpy(tempstr, fmt::format(_("fire arrows damage: {:d}-{:d}"), x->_iFDamage.minValue, x->_iFDamage.maxValue).c_str());
 		break;
 	case IPL_LIGHT_ARROWS:
-		if (x->_iLMinDam == x->_iLMaxDam)
-			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}"), x->_iLMinDam).c_str());
+		if (x->_iLDamage.IsFixed())
+			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}"), x->_iLDamage.minValue).c_str());
 		else
-			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}-{:d}"), x->_iLMinDam, x->_iLMaxDam).c_str());
+			strcpy(tempstr, fmt::format(_("lightning arrows damage {:d}-{:d}"), x->_iLDamage.minValue, x->_iLDamage.maxValue).c_str());
 		break;
 	case IPL_FIREBALL:
 		if (x->_iFDamage.IsFixed())
