@@ -7,11 +7,6 @@
 #include <type_traits>
 
 #include <SDL.h>
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#else
-#include "utils/sdl2_backports.h"
-#endif
 
 namespace devilution {
 
@@ -27,7 +22,6 @@ struct SDLSurfaceDeleter {
 
 using SDLSurfaceUniquePtr = std::unique_ptr<SDL_Surface, SDLSurfaceDeleter>;
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 struct SDLCursorDeleter {
 	void operator()(SDL_Cursor *cursor) const
 	{
@@ -36,9 +30,7 @@ struct SDLCursorDeleter {
 };
 
 using SDLCursorUniquePtr = std::unique_ptr<SDL_Cursor, SDLCursorDeleter>;
-#endif
 
-#ifndef USE_SDL1
 struct SDLTextureDeleter {
 	void operator()(SDL_Texture *texture) const
 	{
@@ -47,7 +39,6 @@ struct SDLTextureDeleter {
 };
 
 using SDLTextureUniquePtr = std::unique_ptr<SDL_Texture, SDLTextureDeleter>;
-#endif
 
 struct SDLPaletteDeleter {
 	void operator()(SDL_Palette *palette) const

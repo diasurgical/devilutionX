@@ -3,12 +3,6 @@
 #include <SDL.h>
 #include <atomic>
 
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#else
-#include "utils/sdl2_backports.h"
-#endif
-
 #include <ZeroTierSockets.h>
 #include <cstdlib>
 

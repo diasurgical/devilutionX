@@ -923,7 +923,7 @@ void DiabloInit()
 		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 	InitializeVirtualGamepad();
 #endif
 

@@ -2,8 +2,6 @@
 
 #include <cstdint>
 
-#include <SDL_version.h>
-
 #include "pack.h"
 
 namespace devilution {
@@ -63,14 +61,12 @@ struct GraphicsOptions {
 	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
 	bool bColorCycling;
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	/** @brief Use a hardware cursor (SDL2 only). */
 	bool bHardwareCursor;
 	/** @brief Use a hardware cursor for items. */
 	bool bHardwareCursorForItems;
 	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
 	int nHardwareCursorMaxSize;
-#endif
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
 	/** @brief Show FPS, even without the -f command line flag. */

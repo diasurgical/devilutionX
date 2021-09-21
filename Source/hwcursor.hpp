@@ -3,8 +3,6 @@
  *
  * Hardware cursor (SDL2 only).
  */
-#include <SDL_version.h>
-
 #include "options.h"
 
 namespace devilution {
@@ -12,11 +10,7 @@ namespace devilution {
 // Whether the hardware cursor is enabled in settings.
 inline bool IsHardwareCursorEnabled()
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	return sgOptions.Graphics.bHardwareCursor;
-#else
-	return false;
-#endif
 }
 
 /**
@@ -24,11 +18,7 @@ inline bool IsHardwareCursorEnabled()
  */
 inline bool SetHardwareCursorVisible(bool visible)
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	return SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE) == 1;
-#else
-	return false;
-#endif
 }
 
 enum class CursorType {

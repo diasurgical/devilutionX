@@ -25,7 +25,6 @@ option(PIE "Generate position-independent code" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
-option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
 option(NOSOUND "Disable sound support" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
@@ -199,34 +198,28 @@ if(NOT PNG_FOUND)
   add_subdirectory(3rdParty/libpng)
 endif()
 
-if(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
-else()
-  find_package(SDL2 REQUIRED)
-  if(TARGET SDL2::SDL2)
-    set(SDL2_MAIN SDL2::SDL2main)
-  elseif(TARGET SDL2::SDL2-static)
-    # On some distros, only the SDL2::SDL2-static target is available.
-    # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
-    if(CMAKE_VERSION VERSION_LESS "3.18")
-      # Aliasing local targets is not supported on CMake < 3.18, so make it global.
-      set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
-    endif()
-    add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
-    set(SDL2_MAIN SDL2::SDL2main)
-  else()
-    # Assume an older Debian derivate that comes with an sdl2-config.cmake
-    # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
-    add_library(SDL2_lib INTERFACE)
-    target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
-    target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
-    # Can't define an INTERFACE target with ::, so alias instead
-    add_library(SDL2::SDL2 ALIAS SDL2_lib)
+find_package(SDL2 REQUIRED)
+if(TARGET SDL2::SDL2)
+  set(SDL2_MAIN SDL2::SDL2main)
+elseif(TARGET SDL2::SDL2-static)
+  # On some distros, only the SDL2::SDL2-static target is available.
+  # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
+  if(CMAKE_VERSION VERSION_LESS "3.18")
+    # Aliasing local targets is not supported on CMake < 3.18, so make it global.
+    set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
   endif()
-  find_package(SDL2_ttf REQUIRED)
+  add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
+  set(SDL2_MAIN SDL2::SDL2main)
+else()
+  # Assume an older Debian derivate that comes with an sdl2-config.cmake
+  # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
+  add_library(SDL2_lib INTERFACE)
+  target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
+  target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
+  # Can't define an INTERFACE target with ::, so alias instead
+  add_library(SDL2::SDL2 ALIAS SDL2_lib)
 endif()
+find_package(SDL2_ttf REQUIRED)
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
@@ -412,10 +405,6 @@ set(libdevilutionx_SRCS
   Source/storm/storm_sdl_rw.cpp
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
-
-if(USE_SDL1)
-  list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
-endif()
 
 if(NOSOUND)
   list(APPEND libdevilutionx_SRCS
@@ -614,10 +603,6 @@ foreach(
   MO_LANG_DIR
   TTF_FONT_DIR
   TTF_FONT_NAME
-  SDL1_VIDEO_MODE_BPP
-  SDL1_VIDEO_MODE_FLAGS
-  SDL1_FORCE_SVID_VIDEO_MODE
-  SDL1_FORCE_DIRECT_RENDER
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
@@ -684,17 +669,11 @@ else()
   target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
-if(USE_SDL1)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${SDL_TTF_LIBRARY}
-    ${SDL_LIBRARY})
-  target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
-else()
-  target_link_libraries(libdevilutionx PUBLIC
-    SDL2::SDL2
-    ${SDL2_MAIN}
-    SDL2::SDL2_ttf)
-endif()
+target_link_libraries(libdevilutionx PUBLIC
+  SDL2::SDL2
+  ${SDL2_MAIN}
+  SDL2::SDL2_ttf)
+
 target_link_libraries(libdevilutionx PUBLIC SDL_image)
 
 if(NOT NOSOUND)
@@ -840,11 +819,7 @@ if(CPACK)
 
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
-    if(USE_SDL1)
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libsdl-ttf2.0-0")
-    else()
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-ttf-2.0-0")
-    endif()
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
     # -G RPM

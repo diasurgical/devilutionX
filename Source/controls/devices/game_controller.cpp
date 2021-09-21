@@ -1,7 +1,5 @@
 #include "controls/devices/game_controller.h"
 
-#ifndef USE_SDL1
-
 #include <cstddef>
 
 #include "controls/controller_motion.h"
@@ -224,4 +222,3 @@ bool GameController::IsPressedOnAnyController(ControllerButton button)
 }
 
 } // namespace devilution
-#endif

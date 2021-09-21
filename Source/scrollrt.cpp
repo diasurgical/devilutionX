@@ -1326,7 +1326,6 @@ void DrawFPS(const Surface &out)
  */
 void DoBlitScreen(Sint16 dwX, Sint16 dwY, Uint16 dwWdt, Uint16 dwHgt)
 {
-	// In SDL1 SDL_Rect x and y are Sint16. Cast explicitly to avoid a compiler warning.
 	using CoordType = decltype(SDL_Rect {}.x);
 	SDL_Rect srcRect {
 		static_cast<CoordType>(dwX),
@@ -1725,7 +1724,7 @@ void DrawAndBlit()
 
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 	SDL_Surface *sdlOutputSurface = GetOutputSurface();
 	Surface outputSurface(sdlOutputSurface);
 	DrawVirtualGamepad(outputSurface);

@@ -4,10 +4,6 @@
 
 #include <SDL.h>
 
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
-
 namespace devilution {
 
 // Re-maps a keyboard key as per the REMAP_KEYBOARD_KEYS define.

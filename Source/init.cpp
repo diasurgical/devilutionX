@@ -209,9 +209,7 @@ void init_create_window()
 		app_fatal("%s", _("Unable to create main window"));
 	dx_init();
 	gbActive = true;
-#ifndef USE_SDL1
 	SDL_DisableScreenSaver();
-#endif
 }
 
 void MainWndProc(uint32_t msg)

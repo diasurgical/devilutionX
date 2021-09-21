@@ -49,7 +49,6 @@ Make sure to install the `C++ CMake tools for Windows` component for Visual Stud
 ### General
 - `-DCMAKE_BUILD_TYPE=Release` changed build type to release and optimize for distribution.
 - `-DNONET=ON` disable network support, this also removes the need for the ASIO and Sodium.
-- `-DUSE_SDL1=ON` build for SDL v1 instead of v2, not all features are supported under SDL v1, notably upscaling.
 - `-DCMAKE_TOOLCHAIN_FILE=../CMake/32bit.cmake` generate 32bit builds on 64bit platforms.
 
 ### Debug builds

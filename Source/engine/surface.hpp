@@ -5,13 +5,8 @@
 
 #include <SDL_version.h>
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 #include <SDL_rect.h>
 #include <SDL_surface.h>
-#else
-#include <SDL_video.h>
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
 
 #include "engine/point.hpp"
 #include "utils/sdl_geometry.h"

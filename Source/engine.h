@@ -28,10 +28,6 @@
 
 #include <SDL.h>
 
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
-
 #include "appfat.h"
 #include "engine/point.hpp"
 #include "engine/size.hpp"

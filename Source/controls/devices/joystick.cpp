@@ -260,16 +260,13 @@ void Joystick::Add(int deviceIndex)
 		SDL_ClearError();
 		return;
 	}
-#ifndef USE_SDL1
 	result.instance_id_ = SDL_JoystickInstanceID(result.sdl_joystick_);
-#endif
 	joysticks_.push_back(result);
 	sgbControllerActive = true;
 }
 
 void Joystick::Remove(SDL_JoystickID instanceId)
 {
-#ifndef USE_SDL1
 	Log("Removing joystick (instance id: {})", instanceId);
 	for (std::size_t i = 0; i < joysticks_.size(); ++i) {
 		const Joystick &joystick = joysticks_[i];
@@ -280,7 +277,6 @@ void Joystick::Remove(SDL_JoystickID instanceId)
 		return;
 	}
 	Log("Joystick not found with instance id: {}", instanceId);
-#endif
 }
 
 const std::vector<Joystick> &Joystick::All()
@@ -300,7 +296,6 @@ Joystick *Joystick::Get(SDL_JoystickID instanceId)
 Joystick *Joystick::Get(const SDL_Event &event)
 {
 	switch (event.type) {
-#ifndef USE_SDL1
 	case SDL_JOYAXISMOTION:
 		return Get(event.jaxis.which);
 	case SDL_JOYBALLMOTION:
@@ -312,16 +307,6 @@ Joystick *Joystick::Get(const SDL_Event &event)
 		return Get(event.jbutton.which);
 	default:
 		return nullptr;
-#else
-	case SDL_JOYAXISMOTION:
-	case SDL_JOYBALLMOTION:
-	case SDL_JOYHATMOTION:
-	case SDL_JOYBUTTONDOWN:
-	case SDL_JOYBUTTONUP:
-		return joysticks_.empty() ? NULL : &joysticks_[0];
-	default:
-		return NULL;
-#endif
 	}
 }
 

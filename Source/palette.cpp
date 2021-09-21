@@ -206,9 +206,7 @@ void LoadPalette(const char *pszFileName, bool blend /*= true*/)
 		orig_palette[i].r = palData[i].r;
 		orig_palette[i].g = palData[i].g;
 		orig_palette[i].b = palData[i].b;
-#ifndef USE_SDL1
 		orig_palette[i].a = SDL_ALPHA_OPAQUE;
-#endif
 	}
 
 	if (blend && sgOptions.Graphics.bBlendedTransparancy) {

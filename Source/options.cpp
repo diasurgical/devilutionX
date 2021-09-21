@@ -153,14 +153,10 @@ void SaveIni()
 	IniChanged = false;
 }
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorDefault()
 {
-	SDL_version v;
-	SDL_GetVersion(&v);
-	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
+	return true;
 }
-#endif
 
 } // namespace
 
@@ -206,11 +202,7 @@ void LoadOptions()
 	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
 	sgOptions.Graphics.bFullscreen = GetIniBool("Graphics", "Fullscreen", true);
-#if !defined(USE_SDL1)
 	sgOptions.Graphics.bUpscale = GetIniBool("Graphics", "Upscale", true);
-#else
-	sgOptions.Graphics.bUpscale = false;
-#endif
 	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
 	GetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
@@ -218,11 +210,9 @@ void LoadOptions()
 	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = GetIniBool("Graphics", "Color Cycling", true);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
 	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
 	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
-#endif
 	sgOptions.Graphics.bFPSLimit = GetIniBool("Graphics", "FPS Limiter", true);
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
@@ -298,9 +288,7 @@ void SaveOptions()
 	SetIniValue("Graphics", "Width", sgOptions.Graphics.nWidth);
 	SetIniValue("Graphics", "Height", sgOptions.Graphics.nHeight);
 	SetIniValue("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
-#if !defined(USE_SDL1)
 	SetIniValue("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
-#endif
 	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	SetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
@@ -308,11 +296,9 @@ void SaveOptions()
 	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	SetIniValue("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
 	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
 	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
-#endif
 	SetIniValue("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 

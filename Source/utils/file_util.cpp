@@ -7,10 +7,6 @@
 
 #include "utils/log.hpp"
 
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
-
 #include <memory>
 
 // Suppress definitions of `min` and `max` macros by <windows.h>:

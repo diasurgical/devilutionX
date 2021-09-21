@@ -98,7 +98,7 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 {
 	const bool inGameMenu = InGameMenu();
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 	if (event.type == SDL_FINGERDOWN) {
 		if (VirtualGamepadState.primaryActionButton.isHeld && VirtualGamepadState.primaryActionButton.didStateChange) {
 			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
@@ -358,7 +358,6 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 		return true;
 	}
 
-#ifndef USE_SDL1
 	// Ignore unhandled joystick events where a GameController is open for this joystick.
 	// This is because SDL sends both game controller and joystick events in this case.
 	const Joystick *const joystick = Joystick::Get(event);
@@ -368,7 +367,6 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 	if (event.type == SDL_CONTROLLERAXISMOTION) {
 		return true; // Ignore releasing the trigger buttons
 	}
-#endif
 
 	return false;
 }

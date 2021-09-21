@@ -1,13 +1,9 @@
 #pragma once
-// Joystick mappings for SDL1 and additional buttons on SDL2.
+// Joystick mappings
 
 #include <vector>
 
 #include <SDL.h>
-
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
 
 #include "controls/controller_buttons.h"
 #include "controls/controller.h"
