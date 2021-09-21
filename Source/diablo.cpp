@@ -20,6 +20,7 @@
 #include "DiabloUI/diabloui.h"
 #include "controls/keymapper.hpp"
 #include "controls/touch/gamepad.h"
+#include "controls/touch/renderers.h"
 #include "diablo.h"
 #include "doom.h"
 #include "drlg_l1.h"
@@ -1055,6 +1056,9 @@ void LoadLvlGFX()
 void LoadAllGFX()
 {
 	IncProgress();
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+	InitVirtualGamepadGFX();
+#endif
 	IncProgress();
 	InitObjectGFX();
 	IncProgress();
@@ -1519,6 +1523,9 @@ void FreeGameMem()
 	FreeObjectGFX();
 	FreeMonsterSnd();
 	FreeTownerGFX();
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+	FreeVirtualGamepadGFX();
+#endif
 }
 
 bool StartGame(bool bNewGame, bool bSinglePlayer)
@@ -1853,6 +1860,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			LoadAllGFX();
 		} else {
 			IncProgress();
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+			InitVirtualGamepadGFX();
+#endif
 			IncProgress();
 			InitMissileGFX(gbIsHellfire);
 			IncProgress();
