@@ -1725,12 +1725,6 @@ void DrawAndBlit()
 
 	DrawMain(hgt, ddsdesc, drawhpflag, drawmanaflag, drawsbarflag, drawbtnflag);
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
-	SDL_Surface *sdlOutputSurface = GetOutputSurface();
-	Surface outputSurface(sdlOutputSurface);
-	DrawVirtualGamepad(outputSurface);
-#endif
-
 	RenderPresent();
 
 	drawhpflag = false;

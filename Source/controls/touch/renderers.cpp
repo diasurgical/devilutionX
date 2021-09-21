@@ -5,6 +5,7 @@
 #include "doom.h"
 #include "engine.h"
 #include "gendung.h"
+#include "init.h"
 #include "inv.h"
 #include "minitext.h"
 #include "stores.h"
@@ -53,48 +54,85 @@ VirtualGamepadButtonType GetBlankButtonType(bool isPressed)
 
 } // namespace
 
-void DrawVirtualGamepad(const Surface &out)
+void RenderVirtualGamepad(SDL_Renderer *renderer)
 {
-	Renderer.Render(out);
+	RenderFunction renderFunction = [&](Art &art, SDL_Rect *src, SDL_Rect *dst) {
+		if (art.texture == nullptr)
+			return;
+
+		if (SDL_RenderCopy(renderer, art.texture.get(), src, dst) <= -1)
+			ErrSdl();
+	};
+
+	Renderer.Render(renderFunction);
 }
 
-void VirtualGamepadRenderer::LoadArt()
+void RenderVirtualGamepad(SDL_Surface *surface)
 {
-	directionPadRenderer.LoadArt();
+	RenderFunction renderFunction = [&](Art &art, SDL_Rect *src, SDL_Rect *dst) {
+		if (art.surface == nullptr)
+			return;
+
+		if (SDL_BlitScaled(art.surface.get(), src, surface, dst) <= -1)
+			ErrSdl();
+	};
+
+	Renderer.Render(renderFunction);
+}
+
+void VirtualGamepadRenderer::LoadArt(SDL_Renderer *renderer)
+{
+	directionPadRenderer.LoadArt(renderer);
 
 	const int Frames = 14;
 	buttonArt.surface.reset(LoadPNG("ui_art\\button.png"));
+	if (buttonArt.surface == nullptr)
+		return;
+
 	buttonArt.logical_width = buttonArt.surface->w;
 	buttonArt.frame_height = buttonArt.surface->h / Frames;
 	buttonArt.frames = Frames;
+
+	if (renderer != nullptr) {
+		buttonArt.texture.reset(SDL_CreateTextureFromSurface(renderer, buttonArt.surface.get()));
+		buttonArt.surface = nullptr;
+	}
 }
 
-void VirtualDirectionPadRenderer::LoadArt()
+void VirtualDirectionPadRenderer::LoadArt(SDL_Renderer *renderer)
 {
-	padSurface.reset(LoadPNG("ui_art\\directions.png"));
-	knobSurface.reset(LoadPNG("ui_art\\directions2.png"));
+	padArt.surface.reset(LoadPNG("ui_art\\directions.png"));
+	knobArt.surface.reset(LoadPNG("ui_art\\directions2.png"));
+
+	if (renderer != nullptr) {
+		padArt.texture.reset(SDL_CreateTextureFromSurface(renderer, padArt.surface.get()));
+		padArt.surface = nullptr;
+
+		knobArt.texture.reset(SDL_CreateTextureFromSurface(renderer, knobArt.surface.get()));
+		knobArt.surface = nullptr;
+	}
 }
 
-void VirtualGamepadRenderer::Render(const Surface &out)
+void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 {
-	directionPadRenderer.Render(out);
-	primaryActionButtonRenderer.Render(out);
-	secondaryActionButtonRenderer.Render(out);
-	spellActionButtonRenderer.Render(out);
-	cancelButtonRenderer.Render(out);
-}
-
-void VirtualDirectionPadRenderer::Render(const Surface &out)
-{
-	RenderPad(out);
-	RenderKnob(out);
-}
-
-void VirtualDirectionPadRenderer::RenderPad(const Surface &out)
-{
-	if (padSurface == nullptr)
+	if (CurrentProc == DisableInputWndProc)
 		return;
 
+	directionPadRenderer.Render(renderFunction);
+	primaryActionButtonRenderer.Render(renderFunction, buttonArt);
+	secondaryActionButtonRenderer.Render(renderFunction, buttonArt);
+	spellActionButtonRenderer.Render(renderFunction, buttonArt);
+	cancelButtonRenderer.Render(renderFunction, buttonArt);
+}
+
+void VirtualDirectionPadRenderer::Render(RenderFunction renderFunction)
+{
+	RenderPad(renderFunction);
+	RenderKnob(renderFunction);
+}
+
+void VirtualDirectionPadRenderer::RenderPad(RenderFunction renderFunction)
+{
 	auto center = virtualDirectionPad->area.position;
 	auto radius = virtualDirectionPad->area.radius;
 	int diameter = 2 * radius;
@@ -104,14 +142,11 @@ void VirtualDirectionPadRenderer::RenderPad(const Surface &out)
 	int width = diameter;
 	int height = diameter;
 	SDL_Rect rect { x, y, width, height };
-	SDL_BlitScaled(padSurface.get(), nullptr, out.surface, &rect);
+	renderFunction(padArt, nullptr, &rect);
 }
 
-void VirtualDirectionPadRenderer::RenderKnob(const Surface &out)
+void VirtualDirectionPadRenderer::RenderKnob(RenderFunction renderFunction)
 {
-	if (knobSurface == nullptr)
-		return;
-
 	auto center = virtualDirectionPad->position;
 	auto radius = virtualDirectionPad->area.radius / 3;
 	int diameter = 2 * radius;
@@ -121,17 +156,14 @@ void VirtualDirectionPadRenderer::RenderKnob(const Surface &out)
 	int width = diameter;
 	int height = diameter;
 	SDL_Rect rect { x, y, width, height };
-	SDL_BlitScaled(knobSurface.get(), nullptr, out.surface, &rect);
+	renderFunction(knobArt, nullptr, &rect);
 }
 
-void VirtualPadButtonRenderer::Render(const Surface &out)
+void VirtualPadButtonRenderer::Render(RenderFunction renderFunction, Art &buttonArt)
 {
-	if (buttonArt->surface == nullptr)
-		return;
-
 	VirtualGamepadButtonType buttonType = GetButtonType();
 	int frame = buttonType;
-	int offset = buttonArt->h() * frame;
+	int offset = buttonArt.h() * frame;
 
 	auto center = virtualPadButton->area.position;
 	auto radius = virtualPadButton->area.radius;
@@ -142,9 +174,9 @@ void VirtualPadButtonRenderer::Render(const Surface &out)
 	int width = diameter;
 	int height = diameter;
 
-	SDL_Rect src { 0, offset, buttonArt->w(), buttonArt->h() };
+	SDL_Rect src { 0, offset, buttonArt.w(), buttonArt.h() };
 	SDL_Rect dst { x, y, width, height };
-	SDL_BlitScaled(buttonArt->surface.get(), &src, out.surface, &dst);
+	renderFunction(buttonArt, &src, &dst);
 }
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()
@@ -214,18 +246,18 @@ VirtualGamepadButtonType CancelButtonRenderer::GetButtonType()
 void VirtualGamepadRenderer::UnloadArt()
 {
 	directionPadRenderer.UnloadArt();
-	buttonArt.surface = nullptr;
+	buttonArt.Unload();
 }
 
 void VirtualDirectionPadRenderer::UnloadArt()
 {
-	padSurface = nullptr;
-	knobSurface = nullptr;
+	padArt.Unload();
+	knobArt.Unload();
 }
 
-void InitVirtualGamepadGFX()
+void InitVirtualGamepadGFX(SDL_Renderer *renderer)
 {
-	Renderer.LoadArt();
+	Renderer.LoadArt(renderer);
 }
 
 void FreeVirtualGamepadGFX()

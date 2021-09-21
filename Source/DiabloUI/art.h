@@ -13,6 +13,10 @@ struct Art {
 	int frame_height;
 	unsigned int palette_version;
 
+#ifndef USE_SDL1
+	SDLTextureUniquePtr texture;
+#endif
+
 	Art()
 	{
 		surface = nullptr;
@@ -20,6 +24,10 @@ struct Art {
 		logical_width = 0;
 		frame_height = 0; // logical frame height (before scaling)
 		palette_version = 0;
+
+#ifndef USE_SDL1
+		texture = nullptr;
+#endif
 	}
 
 	int w() const
@@ -35,6 +43,10 @@ struct Art {
 	void Unload()
 	{
 		surface = nullptr;
+
+#ifndef USE_SDL1
+		texture = nullptr;
+#endif
 	}
 };
 
