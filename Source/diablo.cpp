@@ -1057,7 +1057,7 @@ void LoadAllGFX()
 {
 	IncProgress();
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
-	InitVirtualGamepadGFX();
+	InitVirtualGamepadGFX(renderer);
 #endif
 	IncProgress();
 	InitObjectGFX();
@@ -1861,7 +1861,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		} else {
 			IncProgress();
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
-			InitVirtualGamepadGFX();
+			InitVirtualGamepadGFX(renderer);
 #endif
 			IncProgress();
 			InitMissileGFX(gbIsHellfire);

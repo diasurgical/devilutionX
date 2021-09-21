@@ -7,6 +7,7 @@
 
 #include <SDL.h>
 
+#include "controls/touch/renderers.h"
 #include "engine.h"
 #include "options.h"
 #include "storm/storm.h"
@@ -323,12 +324,18 @@ void RenderPresent()
 		if (SDL_RenderCopy(renderer, texture.get(), nullptr, nullptr) <= -1) {
 			ErrSdl();
 		}
+#ifdef VIRTUAL_GAMEPAD
+		RenderVirtualGamepad(renderer);
+#endif
 		SDL_RenderPresent(renderer);
 
 		if (!sgOptions.Graphics.bVSync) {
 			LimitFrameRate();
 		}
 	} else {
+#ifdef VIRTUAL_GAMEPAD
+		RenderVirtualGamepad(surface);
+#endif
 		if (SDL_UpdateWindowSurface(ghMainWnd) <= -1) {
 			ErrSdl();
 		}
