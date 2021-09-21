@@ -140,10 +140,6 @@ void UnPackItem(const ItemPack *is, Item *id, bool isHellfire)
 {
 	auto &item = Items[MAXITEMS];
 	auto idx = static_cast<_item_indexes>(SDL_SwapLE16(is->idx));
-	if (idx == IDI_NONE) {
-		id->_itype = ItemType::None;
-		return;
-	}
 
 	if (gbIsSpawn) {
 		idx = RemapItemIdxFromSpawn(idx);
