@@ -64,7 +64,7 @@ CachedLine PrepareLine(std::size_t index)
 	SDLSurfaceUniquePtr surface;
 	if (contents[0] != '\0') {
 		const SDL_Color shadowColor = { 0, 0, 0, 0 };
-		SDLSurfaceUniquePtr text = TTFWrap::RenderText_Solid(font, contents, shadowColor);
+		SDLSurfaceUniquePtr text = TTFWrap::RenderUTF8_Solid(font, contents, shadowColor);
 
 		// Set up the target surface to have 3 colors: mask, text, and shadow.
 		surface = SDLWrap::CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8);
