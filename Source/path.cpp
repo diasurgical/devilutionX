@@ -384,11 +384,4 @@ bool path_solid_pieces(Point startPosition, Point destinationPosition)
 	return rv;
 }
 
-#ifdef RUN_TESTS
-int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition)
-{
-	return GetHeuristicCost(startPosition, destinationPosition);
-}
-#endif
-
 } // namespace devilution

@@ -3879,11 +3879,4 @@ void PlayDungMsgs()
 	}
 }
 
-#ifdef RUN_TESTS
-bool TestPlayerDoGotHit(int pnum)
-{
-	return DoGotHit(pnum);
-}
-#endif
-
 } // namespace devilution

@@ -27,8 +27,6 @@ option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(NONET "Disable network support" OFF)
 option(NOSOUND "Disable sound support" OFF)
-option(RUN_TESTS "Build and run tests" OFF)
-option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
 
 if(NOT NONET)
   option(DISABLE_TCP "Disable TCP multiplayer option" OFF)
@@ -441,33 +439,6 @@ endif()
 
 set(BIN_TARGET devilutionx)
 
-if(RUN_TESTS)
-  set(devilutionxtest_SRCS
-    test/appfat_test.cpp
-    test/automap_test.cpp
-    test/control_test.cpp
-    test/cursor_test.cpp
-    test/codec_test.cpp
-    test/dead_test.cpp
-    test/diablo_test.cpp
-    test/drlg_l1_test.cpp
-    test/effects_test.cpp
-    test/file_util_test.cpp
-    test/inv_test.cpp
-    test/lighting_test.cpp
-    test/main.cpp
-    test/missiles_test.cpp
-    test/pack_test.cpp
-    test/path_test.cpp
-    test/player_test.cpp
-    test/quests_test.cpp
-    test/random_test.cpp
-    test/scrollrt_test.cpp
-    test/stores_test.cpp
-    test/writehero_test.cpp
-    test/animationinfo_test.cpp)
-endif()
-
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 add_executable(${BIN_TARGET}
   WIN32
@@ -498,31 +469,6 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 #define PROJECT_VERSION_MINOR ${PROJECT_VERSION_MINOR}
 #define PROJECT_VERSION_PATCH ${PROJECT_VERSION_PATCH}
 ")
-
-if(RUN_TESTS)
-  add_executable(devilutionx-tests WIN32 ${devilutionxtest_SRCS})
-  include(CTest)
-  include(GoogleTest)
-  find_package(GTest REQUIRED)
-  add_definitions(-DRUN_TESTS)
-  target_include_directories(devilutionx-tests PRIVATE ${GTEST_INCLUDE_DIRS})
-  target_link_libraries(devilutionx-tests PRIVATE libdevilutionx)
-  target_link_libraries(devilutionx-tests PRIVATE ${GTEST_LIBRARIES})
-  target_include_directories(devilutionx-tests PRIVATE 3rdParty/PicoSHA2)
-  if(ENABLE_CODECOVERAGE)
-    if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-      message(WARNING "Codecoverage not supported with MSVC")
-    else()
-      target_compile_options(devilutionx-tests PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(libdevilutionx PRIVATE -fprofile-arcs -ftest-coverage)
-      target_compile_options(${BIN_TARGET} PRIVATE -fprofile-arcs -ftest-coverage)
-      target_link_options(devilutionx-tests PRIVATE -fprofile-arcs)
-      target_link_options(libdevilutionx PRIVATE -fprofile-arcs)
-      target_link_options(${BIN_TARGET} PRIVATE -fprofile-arcs)
-    endif()
-  endif()
-  gtest_add_tests(devilutionx-tests "" AUTO)
-endif()
 
 if(GPERF)
   find_package(Gperftools REQUIRED)
