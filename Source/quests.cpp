@@ -69,21 +69,22 @@ namespace {
 
 int WaterDone;
 
-/** Indices of quests to display in quest log window. `fistfinishedEntry` are active quests the rest are completed */
-quest_id qlist[MAXQUESTS];
-/** Overall number of qlist entries */
-int qlistCnt;
+/** Indices of quests to display in quest log window. `FirstFinishedQuest` are active quests the rest are completed */
+quest_id EncounteredQuests[MAXQUESTS];
+/** Overall number of EncounteredQuests entries */
+int EncounteredQuestCount;
 /** First (nonselectable) finished quest in list */
-int firstFinishedEntry;
+int FirstFinishedQuest;
 /** Currently selected quest list item */
-int selectedEntry;
+int SelectedQuest;
 
-constexpr Rectangle panelInnerRect { { 32, 26 }, { 280, 300 } };
-constexpr int lineHeight = 12;
-constexpr int maxSpacing = lineHeight * 2;
-int topY;
-int lineSpacing;
-int act2finSpacing;
+constexpr Rectangle InnerPanel { { 32, 26 }, { 280, 300 } };
+constexpr int LineHeight = 12;
+constexpr int MaxSpacing = LineHeight * 2;
+int ListYOffset;
+int LineSpacing;
+/** The number of pixels to move finished quest, to seperate them from the active ones */
+int FinishedQuestOffset;
 
 const char *const QuestTriggerNames[5] = {
 	N_(/* TRANSLATORS: Quest Map*/ "King Leoric's Tomb"),
@@ -249,14 +250,14 @@ void DrawBlood(int x, int y)
 
 int QuestLogMouseToEntry()
 {
-	Rectangle innerArea = panelInnerRect;
+	Rectangle innerArea = InnerPanel;
 	innerArea.position += Displacement(LeftPanel.position.x, LeftPanel.position.y);
-	if (!innerArea.Contains(MousePosition) || (qlistCnt == 0))
+	if (!innerArea.Contains(MousePosition) || (EncounteredQuestCount == 0))
 		return -1;
 	int y = MousePosition.y - innerArea.position.y;
-	for (int i = 0; i < firstFinishedEntry; i++) {
-		if ((y >= topY + i * lineSpacing)
-		    && (y < topY + i * lineSpacing + lineHeight)) {
+	for (int i = 0; i < FirstFinishedQuest; i++) {
+		if ((y >= ListYOffset + i * LineSpacing)
+		    && (y < ListYOffset + i * LineSpacing + LineHeight)) {
 			return i;
 		}
 	}
@@ -744,17 +745,17 @@ void DrawQuestLog(const Surface &out)
 {
 	int l = QuestLogMouseToEntry();
 	if (l >= 0) {
-		selectedEntry = l;
+		SelectedQuest = l;
 	}
-	const auto x = panelInnerRect.position.x;
+	const auto x = InnerPanel.position.x;
 	CelDrawTo(out, GetPanelPosition(UiPanels::Quest, { 0, 351 }), *pQLogCel, 1);
-	int y = panelInnerRect.position.y + topY;
-	for (int i = 0; i < qlistCnt; i++) {
-		if (i == firstFinishedEntry) {
-			y += act2finSpacing;
+	int y = InnerPanel.position.y + ListYOffset;
+	for (int i = 0; i < EncounteredQuestCount; i++) {
+		if (i == FirstFinishedQuest) {
+			y += FinishedQuestOffset;
 		}
-		PrintQLString(out, x, y, _(QuestsData[qlist[i]]._qlstr), i == selectedEntry, i >= firstFinishedEntry);
-		y += lineSpacing;
+		PrintQLString(out, x, y, _(QuestsData[EncounteredQuests[i]]._qlstr), i == SelectedQuest, i >= FirstFinishedQuest);
+		y += LineSpacing;
 	}
 }
 
@@ -765,59 +766,59 @@ void StartQuestlog()
 		return QuestsData[a].questBookOrder < QuestsData[b].questBookOrder;
 	};
 
-	qlistCnt = 0;
+	EncounteredQuestCount = 0;
 	for (auto &quest : Quests) {
 		if (quest._qactive == QUEST_ACTIVE && quest._qlog) {
-			qlist[qlistCnt] = quest._qidx;
-			qlistCnt++;
+			EncounteredQuests[EncounteredQuestCount] = quest._qidx;
+			EncounteredQuestCount++;
 		}
 	}
-	firstFinishedEntry = qlistCnt;
+	FirstFinishedQuest = EncounteredQuestCount;
 	for (auto &quest : Quests) {
 		if (quest._qactive == QUEST_DONE || quest._qactive == QUEST_HIVE_DONE) {
-			qlist[qlistCnt] = quest._qidx;
-			qlistCnt++;
+			EncounteredQuests[EncounteredQuestCount] = quest._qidx;
+			EncounteredQuestCount++;
 		}
 	}
 
-	std::sort(&qlist[0], &qlist[firstFinishedEntry], sortQuestIdx);
-	std::sort(&qlist[firstFinishedEntry], &qlist[qlistCnt], sortQuestIdx);
+	std::sort(&EncounteredQuests[0], &EncounteredQuests[FirstFinishedQuest], sortQuestIdx);
+	std::sort(&EncounteredQuests[FirstFinishedQuest], &EncounteredQuests[EncounteredQuestCount], sortQuestIdx);
 
-	bool twoBlocks = firstFinishedEntry != 0 && firstFinishedEntry < qlistCnt;
+	bool twoBlocks = FirstFinishedQuest != 0 && FirstFinishedQuest < EncounteredQuestCount;
 
-	topY = 0;
-	act2finSpacing = !twoBlocks ? 0 : lineHeight / 2;
+	ListYOffset = 0;
+	FinishedQuestOffset = !twoBlocks ? 0 : LineHeight / 2;
 
-	int overallMinHeight = qlistCnt * lineHeight + act2finSpacing;
-	int space = panelInnerRect.size.height;
+	int overallMinHeight = EncounteredQuestCount * LineHeight + FinishedQuestOffset;
+	int space = InnerPanel.size.height;
 
-	if (qlistCnt > 0) {
+	if (EncounteredQuestCount > 0) {
 		int additionalSpace = space - overallMinHeight;
-		int addLineSpacing = additionalSpace / qlistCnt;
-		addLineSpacing = std::min(maxSpacing - lineHeight, addLineSpacing);
-		lineSpacing = lineHeight + addLineSpacing;
+		int addLineSpacing = additionalSpace / EncounteredQuestCount;
+		addLineSpacing = std::min(MaxSpacing - LineHeight, addLineSpacing);
+		LineSpacing = LineHeight + addLineSpacing;
 		if (twoBlocks) {
-			int additionalSepSpace = additionalSpace - (addLineSpacing * qlistCnt);
-			additionalSepSpace = std::min(lineHeight, additionalSepSpace);
-			act2finSpacing = std::max(4, additionalSepSpace);
+			int additionalSepSpace = additionalSpace - (addLineSpacing * EncounteredQuestCount);
+			additionalSepSpace = std::min(LineHeight, additionalSepSpace);
+			FinishedQuestOffset = std::max(4, additionalSepSpace);
 		}
 
-		int overallHeight = qlistCnt * lineSpacing + act2finSpacing;
-		topY += (space - overallHeight) / 2;
+		int overallHeight = EncounteredQuestCount * LineSpacing + FinishedQuestOffset;
+		ListYOffset += (space - overallHeight) / 2;
 	}
 
-	selectedEntry = firstFinishedEntry == 0 ? -1 : 0;
+	SelectedQuest = FirstFinishedQuest == 0 ? -1 : 0;
 	QuestLogIsOpen = true;
 }
 
 void QuestlogUp()
 {
-	if (firstFinishedEntry == 0) {
-		selectedEntry = -1;
+	if (FirstFinishedQuest == 0) {
+		SelectedQuest = -1;
 	} else {
-		selectedEntry--;
-		if (selectedEntry < 0) {
-			selectedEntry = firstFinishedEntry - 1;
+		SelectedQuest--;
+		if (SelectedQuest < 0) {
+			SelectedQuest = FirstFinishedQuest - 1;
 		}
 		PlaySFX(IS_TITLEMOV);
 	}
@@ -825,12 +826,12 @@ void QuestlogUp()
 
 void QuestlogDown()
 {
-	if (firstFinishedEntry == 0) {
-		selectedEntry = -1;
+	if (FirstFinishedQuest == 0) {
+		SelectedQuest = -1;
 	} else {
-		selectedEntry++;
-		if (selectedEntry == firstFinishedEntry) {
-			selectedEntry = 0;
+		SelectedQuest++;
+		if (SelectedQuest == FirstFinishedQuest) {
+			SelectedQuest = 0;
 		}
 		PlaySFX(IS_TITLEMOV);
 	}
@@ -839,8 +840,8 @@ void QuestlogDown()
 void QuestlogEnter()
 {
 	PlaySFX(IS_TITLSLCT);
-	if (qlistCnt != 0 && selectedEntry >= 0 && selectedEntry < firstFinishedEntry)
-		InitQTextMsg(Quests[qlist[selectedEntry]]._qmsg);
+	if (EncounteredQuestCount != 0 && SelectedQuest >= 0 && SelectedQuest < FirstFinishedQuest)
+		InitQTextMsg(Quests[EncounteredQuests[SelectedQuest]]._qmsg);
 	QuestLogIsOpen = false;
 }
 
