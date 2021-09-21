@@ -13,7 +13,7 @@
 namespace devilution {
 
 /** @todo add missing values and apply */
-enum _item_indexes : int16_t {
+enum _item_indexes : int16_t { // TODO defines all indexes in AllItemsList
 	IDI_GOLD,
 	IDI_WARRIOR,
 	IDI_WARRSHLD,
@@ -64,6 +64,9 @@ enum _item_indexes : int16_t {
 	IDI_FULLNOTE,
 	IDI_BROWNSUIT,
 	IDI_GREYSUIT,
+	IDI_SORCERER_DIABLO = 166,
+
+	IDI_LAST = IDI_SORCERER_DIABLO,
 	IDI_NONE = -1,
 };
 

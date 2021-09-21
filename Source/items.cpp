@@ -2516,6 +2516,9 @@ void NextItemRecord(int i)
 
 bool IsItemAvailable(int i)
 {
+	if (i < 0 || i > IDI_LAST)
+		return false;
+
 	if (gbIsSpawn) {
 		if (i >= 62 && i <= 71)
 			return false; // Medium and heavy armors
