@@ -10,16 +10,6 @@
 			"intelliSenseMode": "windows-msvc-x64"
 		},
 		{
-			"name": "x64-Debug-UnitTests",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"inheritEnvironments": [ "msvc_x64" ],
-			"intelliSenseMode": "windows-msvc-x64",
-			"cmakeCommandArgs": "-DRUN_TESTS=ON"
-		},
-		{
 			"name": "x64-Release",
 			"generator": "Ninja",
 			"configurationType": "Release",
@@ -37,16 +27,6 @@
 			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
 			"inheritEnvironments": [ "msvc_x86" ],
 			"intelliSenseMode": "windows-msvc-x86"
-		},
-		{
-			"name": "x86-Debug-UnitTests",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"inheritEnvironments": [ "msvc_x86" ],
-			"intelliSenseMode": "windows-msvc-x86",
-			"cmakeCommandArgs": "-DRUN_TESTS=ON"
 		},
 		{
 			"name": "x86-Release",

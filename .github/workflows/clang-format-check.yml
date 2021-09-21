@@ -10,7 +10,6 @@ jobs:
       matrix:
         path:
           - 'Source'
-          - 'test'
     steps:
     - uses: actions/checkout@v2
     - name: Run clang-format style check for C/C++ programs.

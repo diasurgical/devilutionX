@@ -1,9 +1,6 @@
 #pragma once
 
 #include <cmath>
-#ifdef RUN_TESTS
-#include <ostream>
-#endif
 
 #include "engine/direction.hpp"
 #include "engine/displacement.hpp"
@@ -152,19 +149,6 @@ struct Point {
 
 		return std::max<int>(offset.deltaX, offset.deltaY);
 	}
-
-#ifdef RUN_TESTS
-	/**
-	 * @brief Format points nicely in test failure messages
-	 * @param stream output stream, expected to have overloads for int and char*
-	 * @param point Object to display
-	 * @return the stream, to allow chaining
-	*/
-	friend std::ostream &operator<<(std::ostream &stream, const Point &point)
-	{
-		return stream << "(x: " << point.x << ", y: " << point.y << ")";
-	}
-#endif
 };
 
 } // namespace devilution

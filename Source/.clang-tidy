@@ -52,7 +52,7 @@ Checks: >
   -modernize-concat-nested-namespaces,
   -modernize-avoid-bind
 
-HeaderFilterRegex: "^(Source|test)\\.h$"
+HeaderFilterRegex: "^(Source)\\.h$"
 
 CheckOptions:
   - { key: readability-identifier-naming.NamespaceCase,           value: lower_case }
