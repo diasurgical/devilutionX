@@ -16,7 +16,7 @@ sudo apt-get install cmake g++ libsdl2-ttf-dev libsodium-dev libpng-dev
 ```
 ### Installing dependencies on Fedora
 ```
-sudo dnf install cmake glibc-devel SDL2-devel SDL2_ttf-devel libsodium-devel libpng-devel libasan libubsan
+sudo dnf install cmake gcc-c++ glibc-devel SDL2-devel SDL2_ttf-devel libsodium-devel libpng-devel libasan libubsan
 ```
 ### Compiling
 ```
