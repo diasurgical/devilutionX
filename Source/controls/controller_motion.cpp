@@ -129,13 +129,12 @@ void ScaleJoysticks()
 // Updates motion state for mouse and joystick sticks.
 bool ProcessControllerMotion(const SDL_Event &event, ControllerButtonEvent ctrlEvent)
 {
-#ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
 	if (controller != nullptr && devilution::GameController::ProcessAxisMotion(event)) {
 		ScaleJoysticks();
 		return true;
 	}
-#endif
+
 	Joystick *const joystick = Joystick::Get(event);
 	if (joystick != nullptr && devilution::Joystick::ProcessAxisMotion(event)) {
 		ScaleJoysticks();
@@ -160,7 +159,7 @@ AxisDirection GetLeftStickOrDpadDirection(bool allowDpad)
 	bool isLeftPressed = stickX <= -0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT));
 	bool isRightPressed = stickX >= 0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT));
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 	isUpPressed |= VirtualGamepadState.directionPad.isUpPressed;
 	isDownPressed |= VirtualGamepadState.directionPad.isDownPressed;
 	isLeftPressed |= VirtualGamepadState.directionPad.isLeftPressed;

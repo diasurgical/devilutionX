@@ -1,5 +1,3 @@
-#ifndef USE_SDL1
-
 #include "controls/touch/event_handlers.h"
 
 #include "control.h"
@@ -255,5 +253,3 @@ bool VirtualPadButtonEventHandler::HandleFingerMotion(const SDL_TouchFingerEvent
 }
 
 } // namespace devilution
-
-#endif

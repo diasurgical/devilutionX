@@ -4,10 +4,6 @@
 #include <fmt/core.h>
 #include <fmt/ranges.h>
 
-#ifdef USE_SDL1
-#include "sdl2_to_1_2_backports.h"
-#endif
-
 namespace devilution {
 
 // Local definition to fix compilation issue due to header conflict.

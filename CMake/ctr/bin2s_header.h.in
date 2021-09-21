@@ -1,3 +1,0 @@
-extern const u8 @__BIN_FILE_NAME@_end[];
-extern const u8 @__BIN_FILE_NAME@[];
-extern const u32 @__BIN_FILE_NAME@_size;

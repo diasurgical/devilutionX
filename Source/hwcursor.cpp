@@ -3,11 +3,9 @@
 #include <cstdint>
 #include <tuple>
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 #include <SDL_mouse.h>
 #include <SDL_render.h>
 #include <SDL_surface.h>
-#endif
 
 #include "DiabloUI/diabloui.h"
 
@@ -22,7 +20,6 @@ namespace devilution {
 namespace {
 CursorInfo CurrentCursorInfo;
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 SDLCursorUniquePtr CurrentCursor;
 
 enum class HotpointPosition {
@@ -124,7 +121,6 @@ bool SetHardwareCursorFromSprite(int pcurs)
 	const bool result = SetHardwareCursor(out.surface, isItem ? HotpointPosition::Center : HotpointPosition::TopLeft);
 	return result;
 }
-#endif
 
 } // namespace
 
@@ -135,7 +131,6 @@ CursorInfo GetCurrentCursorInfo()
 
 void SetHardwareCursor(CursorInfo cursorInfo)
 {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	CurrentCursorInfo = cursorInfo;
 	switch (cursorInfo.type()) {
 	case CursorType::Game:
@@ -156,7 +151,6 @@ void SetHardwareCursor(CursorInfo cursorInfo)
 	}
 	if (!CurrentCursorInfo.Enabled())
 		SetHardwareCursorVisible(false);
-#endif
 }
 
 } // namespace devilution

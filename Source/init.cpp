@@ -5,12 +5,9 @@
  */
 #include <SDL.h>
 #include <config.h>
+#include <find_steam_game.h>
 #include <string>
 #include <vector>
-
-#if defined(_WIN64) || defined(_WIN32)
-#include <find_steam_game.h>
-#endif
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
@@ -20,11 +17,6 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
-
-#ifdef __vita__
-// increase default allowed heap size on Vita
-int _newlib_heap_size_user = 100 * 1024 * 1024;
-#endif
 
 namespace devilution {
 
@@ -147,19 +139,12 @@ void init_archives()
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
-#if defined(__linux__) && !defined(__ANDROID__)
-	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
-	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
-#elif defined(__3DS__)
-	paths.emplace_back("romfs:/");
-#elif defined(_WIN64) || defined(_WIN32)
 	char gogpath[_FSG_PATH_MAX];
 	fsg_get_gog_game_path(gogpath, "1412601690");
 	if (strlen(gogpath) > 0) {
 		paths.emplace_back(std::string(gogpath) + "/");
 		paths.emplace_back(std::string(gogpath) + "/hellfire/");
 	}
-#endif
 
 	paths.emplace_back(""); // PWD
 
@@ -224,9 +209,7 @@ void init_create_window()
 		app_fatal("%s", _("Unable to create main window"));
 	dx_init();
 	gbActive = true;
-#ifndef USE_SDL1
 	SDL_DisableScreenSaver();
-#endif
 }
 
 void MainWndProc(uint32_t msg)

@@ -76,9 +76,6 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 			out->r = *dataPtr++;
 			out->g = *dataPtr++;
 			out->b = *dataPtr++;
-#ifndef USE_SDL1
-			out->a = SDL_ALPHA_OPAQUE;
-#endif
 			++out;
 		}
 	}

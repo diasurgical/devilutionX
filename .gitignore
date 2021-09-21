@@ -3,9 +3,6 @@
 *.asm
 *.idb
 
-# macOS
-.DS_Store
-
 # CodeLite
 .CodeLite
 *.project
@@ -345,9 +342,6 @@ paket-files/
 __pycache__/
 *.pyc
 
-# macOS
-.DS_Store
-
 # Cake - Uncomment if you are using it
 # tools/**
 # !tools/packages.config
@@ -428,10 +422,6 @@ DerivedData/
 
 # Don't accidently commit the diabdat.mpq
 *.mpq
-
-### Nintendo Switch ###
-exefs/main
-/out/isenseconfig/CPI-Debug
 
 /docs/html/
 

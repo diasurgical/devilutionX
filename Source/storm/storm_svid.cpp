@@ -17,7 +17,6 @@
 #include "options.h"
 #include "palette.h"
 #include "storm/storm.h"
-#include "storm/storm_file_wrapper.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -50,65 +49,6 @@ bool IsLandscapeFit(unsigned long srcW, unsigned long srcH, unsigned long dstW, 
 {
 	return srcW * dstH > dstW * srcH;
 }
-
-#ifdef USE_SDL1
-// Whether we've changed the video mode temporarily for SVid.
-// If true, we must restore it once the video has finished playing.
-bool IsSVidVideoMode = false;
-
-// Set the video mode close to the SVid resolution while preserving aspect ratio.
-void TrySetVideoModeToSVidForSDL1()
-{
-	const SDL_Surface *display = SDL_GetVideoSurface();
-	IsSVidVideoMode = (display->flags & (SDL_FULLSCREEN | SDL_NOFRAME)) != 0;
-	if (!IsSVidVideoMode)
-		return;
-
-	int w;
-	int h;
-	if (IsLandscapeFit(SVidWidth, SVidHeight, display->w, display->h)) {
-		w = SVidWidth;
-		h = SVidWidth * display->h / display->w;
-	} else {
-		w = SVidHeight * display->w / display->h;
-		h = SVidHeight;
-	}
-
-#ifdef SDL1_FORCE_SVID_VIDEO_MODE
-	const bool video_mode_ok = true;
-#else
-	const bool video_mode_ok = SDL_VideoModeOK(
-	    w, h, /*bpp=*/display->format->BitsPerPixel, display->flags);
-#endif
-
-	if (!video_mode_ok) {
-		IsSVidVideoMode = false;
-
-		// Get available fullscreen/hardware modes
-		SDL_Rect **modes = SDL_ListModes(nullptr, display->flags);
-
-		// Check is there are any modes available.
-		if (modes == reinterpret_cast<SDL_Rect **>(0)
-		    || modes == reinterpret_cast<SDL_Rect **>(-1)) {
-			return;
-		}
-
-		// Search for a usable video mode
-		bool found = false;
-		for (int i = 0; modes[i]; i++) {
-			if (modes[i]->w == w || modes[i]->h == h) {
-				found = true;
-				break;
-			}
-		}
-		if (!found)
-			return;
-		IsSVidVideoMode = true;
-	}
-
-	SetVideoMode(w, h, display->format->BitsPerPixel, display->flags);
-}
-#endif
 
 #ifndef NOSOUND
 bool HasAudio()
@@ -208,16 +148,12 @@ bool SVidPlayBegin(const char *filename, int flags)
 	smk_first(SVidSMK); // Decode first frame
 
 	smk_info_video(SVidSMK, &SVidWidth, &SVidHeight, nullptr);
-#ifndef USE_SDL1
 	if (renderer != nullptr) {
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, SVidWidth, SVidHeight);
 		if (SDL_RenderSetLogicalSize(renderer, SVidWidth, SVidHeight) <= -1) {
 			ErrSdl();
 		}
 	}
-#else
-	TrySetVideoModeToSVidForSDL1();
-#endif
 	std::memcpy(SVidPreviousPalette, orig_palette, sizeof(SVidPreviousPalette));
 
 	// Copy frame to buffer
@@ -249,9 +185,7 @@ bool SVidPlayContinue()
 			colors[i].r = paletteData[i * 3 + 0];
 			colors[i].g = paletteData[i * 3 + 1];
 			colors[i].b = paletteData[i * 3 + 2];
-#ifndef USE_SDL1
 			colors[i].a = SDL_ALPHA_OPAQUE;
-#endif
 
 			orig_palette[i].r = paletteData[i * 3 + 0];
 			orig_palette[i].g = paletteData[i * 3 + 1];
@@ -285,22 +219,16 @@ bool SVidPlayContinue()
 		return SVidLoadNextFrame(); // Skip video if the system is to slow
 	}
 
-#ifndef USE_SDL1
 	if (renderer != nullptr) {
 		if (SDL_BlitSurface(SVidSurface.get(), nullptr, GetOutputSurface(), nullptr) <= -1) {
 			Log("{}", SDL_GetError());
 			return false;
 		}
 	} else
-#endif
 	{
 		SDL_Surface *outputSurface = GetOutputSurface();
-#ifdef USE_SDL1
-		const bool isIndexedOutputFormat = SDLBackport_IsPixelFormatIndexed(outputSurface->format);
-#else
 		const Uint32 wndFormat = SDL_GetWindowPixelFormat(ghMainWnd);
 		const bool isIndexedOutputFormat = SDL_ISPIXELFORMAT_INDEXED(wndFormat);
-#endif
 		SDL_Rect outputRect;
 		if (isIndexedOutputFormat) {
 			// Cannot scale if the output format is indexed (8-bit palette).
@@ -325,11 +253,7 @@ bool SVidPlayContinue()
 		} else {
 			// The source surface is always 8-bit, and the output surface is never 8-bit in this branch.
 			// We must convert to the output format before calling SDL_BlitScaled.
-#ifdef USE_SDL1
-			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurface(SVidSurface.get(), ghMainWnd->format, 0);
-#else
 			SDLSurfaceUniquePtr converted = SDLWrap::ConvertSurfaceFormat(SVidSurface.get(), wndFormat, 0);
-#endif
 			if (SDL_BlitScaled(converted.get(), nullptr, outputSurface, &outputRect) <= -1) {
 				Log("{}", SDL_GetError());
 				return false;
@@ -367,19 +291,12 @@ void SVidPlayEnd()
 	SVidSurface = nullptr;
 
 	memcpy(orig_palette, SVidPreviousPalette, sizeof(orig_palette));
-#ifndef USE_SDL1
 	if (renderer != nullptr) {
 		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
 		if (renderer != nullptr && SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
 			ErrSdl();
 		}
 	}
-#else
-	if (IsSVidVideoMode) {
-		SetVideoModeToPrimary(IsFullScreen(), gnScreenWidth, gnScreenHeight);
-		IsSVidVideoMode = false;
-	}
-#endif
 }
 
 } // namespace devilution

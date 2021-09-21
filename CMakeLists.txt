@@ -25,7 +25,6 @@ option(PIE "Generate position-independent code" OFF)
 option(DIST "Dynamically link only glibc and SDL2" OFF)
 option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
-option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
 option(NOSOUND "Disable sound support" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
@@ -136,32 +135,6 @@ if(GPERF)
   endif()
 endif()
 
-if(NINTENDO_SWITCH)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/switch")
-  include(switch_defs)
-endif()
-
-if(VITA)
-  # Work around a missing setting in the toolchain file.
-  # Fix sent upstream: https://github.com/vitasdk/vita-toolchain/pull/182
-  set(PKG_CONFIG_EXECUTABLE "$ENV{VITASDK}/bin/arm-vita-eabi-pkg-config")
-
-  include("$ENV{VITASDK}/share/vita.cmake" REQUIRED)
-  include(vita_defs)
-endif()
-
-set(TARGET_PLATFORM host CACHE STRING "Target platform")
-set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS host retrofw rg350 gkd350h cpigamesh)
-if(TARGET_PLATFORM STREQUAL "retrofw")
-  include(retrofw_defs)
-elseif(TARGET_PLATFORM STREQUAL "rg350")
-  include(rg350_defs)
-elseif(TARGET_PLATFORM STREQUAL "gkd350h")
-  include(gkd350h_defs)
-elseif(TARGET_PLATFORM STREQUAL "cpigamesh")
-  include(cpigamesh_defs)
-endif()
-
 if(${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD|NetBSD|OpenBSD|DragonFly")
   if(${CMAKE_SYSTEM_NAME} MATCHES "NetBSD")
     add_definitions(-D_NETBSD_SOURCE)
@@ -179,25 +152,6 @@ if(WIN32)
   set(DIST ON)
 endif()
 
-if(HAIKU)
-  set(ASAN OFF)
-  set(UBSAN OFF)
-endif()
-
-if(AMIGA)
-  include(amiga_defs)
-endif()
-
-if(NINTENDO_3DS)
-  list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr")
-  include(n3ds_defs)
-endif()
-
-if(ANDROID)
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/android-project/CMake")
-  include(android_defs)
-endif()
-
 if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
@@ -209,9 +163,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # for clang-tidy
 set(CMAKE_THREAD_PREFER_PTHREAD ON)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-if(NOT NINTENDO_3DS)
-  find_package(Threads REQUIRED)
-endif()
+find_package(Threads REQUIRED)
 
 if(NOT NONET)
   if(DEVILUTIONX_SYSTEM_LIBSODIUM)
@@ -241,57 +193,36 @@ if(DEVILUTIONX_SYSTEM_LIBPNG)
   else()
     message("-- Suitable system png package not found, will use png from source")
   endif()
-  if(NOT TARGET PNG::PNG AND TARGET 3ds::png)
-    add_library(PNG::PNG ALIAS 3ds::png)
-  endif()
 endif()
 if(NOT PNG_FOUND)
   add_subdirectory(3rdParty/libpng)
 endif()
 
-if(ANDROID)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
-elseif(USE_SDL1)
-  find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
-  include_directories(${SDL_INCLUDE_DIR})
-else()
-  find_package(SDL2 REQUIRED)
-  if(TARGET SDL2::SDL2)
-    set(SDL2_MAIN SDL2::SDL2main)
-  elseif(TARGET SDL2::SDL2-static)
-    # On some distros, such as vitasdk, only the SDL2::SDL2-static target is available.
-    # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
-    if(CMAKE_VERSION VERSION_LESS "3.18")
-      # Aliasing local targets is not supported on CMake < 3.18, so make it global.
-      set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
-    endif()
-    add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
-    set(SDL2_MAIN SDL2::SDL2main)
-  else()
-    # Assume an older Debian derivate that comes with an sdl2-config.cmake
-    # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
-    add_library(SDL2_lib INTERFACE)
-    target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
-    target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
-    # Can't define an INTERFACE target with ::, so alias instead
-    add_library(SDL2::SDL2 ALIAS SDL2_lib)
+find_package(SDL2 REQUIRED)
+if(TARGET SDL2::SDL2)
+  set(SDL2_MAIN SDL2::SDL2main)
+elseif(TARGET SDL2::SDL2-static)
+  # On some distros, only the SDL2::SDL2-static target is available.
+  # Alias to SDL2::SDL2 because some finder scripts may refer to SDL2::SDL2.
+  if(CMAKE_VERSION VERSION_LESS "3.18")
+    # Aliasing local targets is not supported on CMake < 3.18, so make it global.
+    set_target_properties(SDL2::SDL2-static PROPERTIES IMPORTED_GLOBAL TRUE)
   endif()
-  find_package(SDL2_ttf REQUIRED)
+  add_library(SDL2::SDL2 ALIAS SDL2::SDL2-static)
+  set(SDL2_MAIN SDL2::SDL2main)
+else()
+  # Assume an older Debian derivate that comes with an sdl2-config.cmake
+  # that only defines `SDL2_LIBRARIES` (as -lSDL2) and `SDL2_INCLUDE_DIRS`.
+  add_library(SDL2_lib INTERFACE)
+  target_link_libraries(SDL2_lib INTERFACE ${SDL2_LIBRARIES})
+  target_include_directories(SDL2_lib INTERFACE ${SDL2_INCLUDE_DIRS})
+  # Can't define an INTERFACE target with ::, so alias instead
+  add_library(SDL2::SDL2 ALIAS SDL2_lib)
 endif()
+find_package(SDL2_ttf REQUIRED)
 
 if(NOT NONET AND NOT DISABLE_TCP)
   add_subdirectory(3rdParty/asio)
-  if(NINTENDO_3DS)
-      target_compile_definitions(asio INTERFACE
-        ASIO_DISABLE_THREADS=ON
-        ASIO_HAS_UNISTD_H=ON)
-
-      target_include_directories(asio BEFORE INTERFACE CMake/ctr/asio/include)
-  elseif(NINTENDO_SWITCH)
-    include(asio_defs)
-  endif()
 endif()
 
 add_subdirectory(3rdParty/SDL_image)
@@ -469,15 +400,11 @@ set(libdevilutionx_SRCS
   Source/dvlnet/loopback.cpp
   Source/dvlnet/packet.cpp
   Source/storm/storm.cpp
-  Source/storm/storm_file_wrapper.cpp
+  
   Source/storm/storm_net.cpp
   Source/storm/storm_sdl_rw.cpp
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
-
-if(USE_SDL1)
-  list(APPEND libdevilutionx_SRCS Source/utils/sdl2_to_1_2_backports.cpp)
-endif()
 
 if(NOSOUND)
   list(APPEND libdevilutionx_SRCS
@@ -514,38 +441,6 @@ endif()
 
 set(BIN_TARGET devilutionx)
 
-if(NINTENDO_SWITCH)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/switch/network.cpp
-    Source/platform/switch/keyboard.cpp
-    Source/platform/switch/docking.cpp
-    Source/platform/switch/random.cpp
-    Source/platform/switch/asio/pause.c
-    Source/platform/switch/asio/net/if.c
-    Source/platform/switch/asio/sys/signal.c)
-endif()
-
-if(VITA)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/vita/keyboard.cpp
-    Source/platform/vita/touch.cpp)
-endif()
-
-if(NINTENDO_3DS)
-  list(APPEND libdevilutionx_SRCS
-    Source/platform/ctr/system.cpp
-    Source/platform/ctr/keyboard.cpp
-    Source/platform/ctr/display.cpp
-    Source/platform/ctr/messagebox.cpp
-    Source/platform/ctr/random.cpp
-    Source/platform/ctr/sockets.cpp
-    Source/platform/ctr/locale.cpp
-    Source/platform/ctr/asio/net/if.c
-    Source/platform/ctr/asio/sys/socket.c
-    Source/platform/ctr/asio/sys/uio.c)
-  set(BIN_TARGET ${BIN_TARGET}.elf)
-endif()
-
 if(RUN_TESTS)
   set(devilutionxtest_SRCS
     test/appfat_test.cpp
@@ -574,18 +469,12 @@ if(RUN_TESTS)
 endif()
 
 add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
-if (ANDROID)
-  add_library(${BIN_TARGET} SHARED Source/main.cpp)
-else()
-  add_executable(${BIN_TARGET}
-    WIN32
-    MACOSX_BUNDLE
-    Source/main.cpp
-    Source/devilutionx.exe.manifest
-    Packaging/macOS/AppIcon.icns
-    Packaging/resources/CharisSILB.ttf
-    Packaging/windows/devilutionx.rc)
-endif()
+add_executable(${BIN_TARGET}
+  WIN32
+  Source/main.cpp
+  Source/devilutionx.exe.manifest
+  Packaging/resources/CharisSILB.ttf
+  Packaging/windows/devilutionx.rc)
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
 # Copy the font and devilutionx.mpq to the build directory to it works from the build directory
@@ -611,7 +500,7 @@ file(GENERATE OUTPUT ${CONFIG_PATH} CONTENT
 ")
 
 if(RUN_TESTS)
-  add_executable(devilutionx-tests WIN32 MACOSX_BUNDLE ${devilutionxtest_SRCS})
+  add_executable(devilutionx-tests WIN32 ${devilutionxtest_SRCS})
   include(CTest)
   include(GoogleTest)
   find_package(GTest REQUIRED)
@@ -644,29 +533,15 @@ if (Gettext_FOUND)
   foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
     list(APPEND devilutionx_TRANSLATIONS ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
-
-    if(VITA)
-      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "${lang}.gmo")
-    endif()
   endforeach(lang)
-
-  if(ANDROID)
-    add_custom_target(copy_translations ALL
-      COMMAND ${CMAKE_COMMAND} -E copy ${devilutionx_TRANSLATIONS} ${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets
-      DEPENDS ${devilutionx_TRANSLATIONS})
-
-    add_dependencies(${BIN_TARGET} copy_translations)
-  endif()
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
   Source
   ${CMAKE_CURRENT_BINARY_DIR})
 
-if(NOT NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC
-  Threads::Threads)
-endif()
+target_link_libraries(libdevilutionx PUBLIC
+Threads::Threads)
 
 target_link_libraries(libdevilutionx PUBLIC
   PKWare
@@ -728,10 +603,6 @@ foreach(
   MO_LANG_DIR
   TTF_FONT_DIR
   TTF_FONT_NAME
-  SDL1_VIDEO_MODE_BPP
-  SDL1_VIDEO_MODE_FLAGS
-  SDL1_FORCE_SVID_VIDEO_MODE
-  SDL1_FORCE_DIRECT_RENDER
   HAS_KBCTRL
   KBCTRL_BUTTON_DPAD_LEFT
   KBCTRL_BUTTON_DPAD_RIGHT
@@ -798,45 +669,15 @@ else()
   target_link_libraries(libdevilutionx PUBLIC "$<${ASAN_GENEX}:-fsanitize=address;-fsanitize-recover=address>")
 endif()
 
-if(USE_SDL1)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${SDL_TTF_LIBRARY}
-    ${SDL_LIBRARY})
-  target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
-else()
-  target_link_libraries(libdevilutionx PUBLIC
-    SDL2::SDL2
-    ${SDL2_MAIN}
-    SDL2::SDL2_ttf)
-endif()
+target_link_libraries(libdevilutionx PUBLIC
+  SDL2::SDL2
+  ${SDL2_MAIN}
+  SDL2::SDL2_ttf)
+
 target_link_libraries(libdevilutionx PUBLIC SDL_image)
 
 if(NOT NOSOUND)
   target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)
-endif()
-
-if(AMIGA)
-  target_link_libraries(libdevilutionx PUBLIC
-    ${FREETYPE_LIBRARY}
-    ${ZLIB_LIBRARY})
-  if(NOT WARPOS)
-    target_link_libraries(libdevilutionx PUBLIC -ldebug)
-  endif()
-endif()
-
-if (VITA)
-  target_link_libraries(libdevilutionx PUBLIC
-        ScePower_stub
-        SceAppUtil_stub
-        freetype
-        z
-  )
-  target_compile_definitions(libdevilutionx PUBLIC VITA)
-endif()
-
-if(NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
 target_compile_definitions(libdevilutionx PUBLIC ${def_list})
@@ -845,7 +686,7 @@ if (GPERF)
   target_link_libraries(libdevilutionx PUBLIC ${GPERFTOOLS_LIBRARIES})
 endif()
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF AND NOT HAIKU AND NOT VITA)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU" AND NOT GPERF)
   target_link_libraries(libdevilutionx PUBLIC "$<$<NOT:$<CONFIG:Debug>>:-static-libgcc;-static-libstdc++>")
 endif()
 
@@ -857,13 +698,9 @@ if(WIN32)
   endif()
 endif()
 
-if(NOT WIN32 AND NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
+if(NOT WIN32 AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL FreeBSD)
   # Enable POSIX extensions such as `readlink` and `ftruncate`.
   add_definitions(-D_POSIX_C_SOURCE=200809L)
-endif()
-
-if(HAIKU)
-  target_link_libraries(libdevilutionx PUBLIC network)
 endif()
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -892,121 +729,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_compile_options(libdevilutionx PUBLIC "/W3")
   target_compile_definitions(libdevilutionx PUBLIC _CRT_SECURE_NO_WARNINGS)
   target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
-endif()
-
-if(APPLE)
-  set_source_files_properties("./Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set_source_files_properties("./Packaging/resources/CharisSILB.ttf" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
-  set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
-  set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
-  set(MACOSX_BUNDLE_INFO_STRING ${PROJECT_VERSION})
-  set(MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION})
-  set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION})
-  set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
-  set(CMAKE_OSX_DEPLOYMENT_TARGET "10.12.0")
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_ICON_FILE "AppIcon")
-  set_target_properties(${BIN_TARGET} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/macOS/Info.plist")
-
-  install (TARGETS ${BIN_TARGET} DESTINATION ./)
-
-  if(DIST)
-      install(CODE "
-        include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${MACOSX_BUNDLE_BUNDLE_NAME}.app \"\" \"\")
-        "
-        COMPONENT Runtime)
-  endif()
-
-  set(MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION}")
-  set(CPACK On)
-endif()
-
-if(NINTENDO_SWITCH)
-
-  target_link_libraries(libdevilutionx PUBLIC
-        freetype
-        bz2
-        z
-  )
-
-  nx_generate_nacp (${BIN_TARGET}.nacp
-    NAME    "DevilutionX"
-    AUTHOR  "Devilution Team"
-    VERSION "${PROJECT_VERSION}"
-  )
-
-  nx_create_nro(${BIN_TARGET}
-    NACP ${BIN_TARGET}.nacp
-    ICON "${PROJECT_SOURCE_DIR}/Packaging/switch/icon.jpg"
-  )
-
-endif()
-
-if(VITA)
-  set(VITA_APP_NAME "devilutionX")
-  set(VITA_TITLEID  "DVLX00001")
-  set(VITA_VERSION  "01.00")
-  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
-  set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
-  vita_create_self(devilutionx.self devilutionx UNSAFE)
-  vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
-    VERSION ${VITA_VERSION}
-    NAME ${VITA_APP_NAME}
-    FILE Packaging/vita/sce_sys/icon0.png sce_sys/icon0.png
-    FILE Packaging/vita/sce_sys/pic0.png sce_sys/pic0.png
-    FILE Packaging/vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-    FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-    FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
-    FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
-    FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
-    ${VITA_TRANSLATIONS_LIST}
-  )
-endif()
-
-if(NINTENDO_3DS)
-  set(APP_TITLE       "DevilutionX")
-  set(APP_DESCRIPTION "DevilutionX port for 3DS")
-  set(APP_AUTHOR      "Diasurgical Team")
-  set(APP_ICON        "${PROJECT_SOURCE_DIR}/Packaging/ctr/icon.png")
-  set(APP_BANNER      "${PROJECT_SOURCE_DIR}/Packaging/ctr/banner.png")
-  set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
-  set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
-  set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  list(APPEND APP_ROMFS_FILES
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq
-    ${devilutionx_TRANSLATIONS})
-  set(APP_VERSION ${PROJECT_VERSION})
-
-  find_program(FFMPEG ffmpeg)
-  if(FFMPEG)
-    add_custom_command(OUTPUT ${APP_AUDIO}
-      COMMAND ${FFMPEG} -y -ss 3.3 -t 3 -i "${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav" -af "afade=t=in:st=0:d=0.1,afade=t=out:st=2.9:d=0.1" ${APP_AUDIO}
-      DEPENDS ${PROJECT_SOURCE_DIR}/Packaging/resources/shareware-startup.wav
-      VERBATIM)
-  else()
-    add_custom_command(OUTPUT ${APP_AUDIO}
-      COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav ${APP_AUDIO}
-      DEPENDS ${PROJECT_SOURCE_DIR}/Packaging/ctr/audio_silent.wav
-      VERBATIM)
-  endif()
-
-  add_custom_target(romfs_directory
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${APP_ROMFS})
-
-  add_custom_target(romfs_files
-    COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS romfs_directory)
-
-  include(Tools3DS)
-  add_3dsx_target(${BIN_TARGET})
-  add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
-
-  get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
-  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
-  add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
 if(CPACK)
@@ -1097,11 +819,7 @@ if(CPACK)
 
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
-    if(USE_SDL1)
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libsdl-ttf2.0-0")
-    else()
     set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-ttf-2.0-0")
-    endif()
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
     # -G RPM
@@ -1115,12 +833,6 @@ if(CPACK)
     if(DPKG)
       list(APPEND CPACK_GENERATOR "DEB")
     endif()
-
-  elseif(APPLE)
-    set(CPACK_PACKAGE_FILE_NAME "devilutionx")
-    set(CPACK_DMG_DISABLE_APPLICATIONS_SYMLINK "ON")
-    set(CPACK_STRIP_FILES TRUE)
-    set(CPACK_GENERATOR "DragNDrop")
   endif()
 
   set(CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})

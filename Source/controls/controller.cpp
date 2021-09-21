@@ -12,9 +12,7 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 {
 	ControllerButtonEvent result { ControllerButton_NONE, false };
 	switch (event.type) {
-#ifndef USE_SDL1
 	case SDL_CONTROLLERBUTTONUP:
-#endif
 	case SDL_JOYBUTTONUP:
 	case SDL_KEYUP:
 		result.up = true;
@@ -27,14 +25,12 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 	if (result.button != ControllerButton_NONE)
 		return result;
 #endif
-#ifndef USE_SDL1
 	GameController *const controller = GameController::Get(event);
 	if (controller != nullptr) {
 		result.button = controller->ToControllerButton(event);
 		if (result.button != ControllerButton_NONE)
 			return result;
 	}
-#endif
 
 	const Joystick *joystick = Joystick::Get(event);
 	if (joystick != nullptr)
@@ -45,10 +41,8 @@ ControllerButtonEvent ToControllerButtonEvent(const SDL_Event &event)
 
 bool IsControllerButtonPressed(ControllerButton button)
 {
-#ifndef USE_SDL1
 	if (GameController::IsPressedOnAnyController(button))
 		return true;
-#endif
 #if HAS_KBCTRL == 1
 	if (IsKbCtrlButtonPressed(button))
 		return true;
@@ -58,7 +52,6 @@ bool IsControllerButtonPressed(ControllerButton button)
 
 bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
 {
-#ifndef USE_SDL1
 	switch (event.type) {
 	case SDL_CONTROLLERDEVICEADDED:
 		GameController::Add(event.cdevice.which);
@@ -76,9 +69,6 @@ bool HandleControllerAddedOrRemovedEvent(const SDL_Event &event)
 		return false;
 	}
 	return true;
-#else
-	return false;
-#endif
 }
 
 } // namespace devilution

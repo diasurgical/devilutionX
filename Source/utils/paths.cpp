@@ -7,10 +7,6 @@
 #include "utils/stdcompat/optional.hpp"
 #include "utils/sdl_ptrs.h"
 
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
-
 #ifndef TTF_FONT_DIR
 #define TTF_FONT_DIR ""
 #endif

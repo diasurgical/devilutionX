@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 
 #include "controls/touch/gamepad.h"
 #include "engine/surface.hpp"

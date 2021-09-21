@@ -22,7 +22,7 @@ Low-level gamepad handling is abstracted and 3 implementations are provided:
 Example keyboard-as-controller build flags:
 
 ```bash
-cmake .. -DUSE_SDL1=ON -DHAS_KBCTRL=1 -DPREFILL_PLAYER_NAME=ON \
+cmake .. -DHAS_KBCTRL=1 -DPREFILL_PLAYER_NAME=ON \
 -DKBCTRL_BUTTON_DPAD_LEFT=SDLK_LEFT \
 -DKBCTRL_BUTTON_DPAD_RIGHT=SDLK_RIGHT \
 -DKBCTRL_BUTTON_DPAD_UP=SDLK_UP \

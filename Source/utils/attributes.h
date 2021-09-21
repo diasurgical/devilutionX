@@ -11,7 +11,7 @@
 #define DVL_HAVE_ATTRIBUTE(x) 0
 #endif
 
-#if DVL_HAVE_ATTRIBUTE(format) || (defined(__GNUC__) && !defined(__clang__))
+#if DVL_HAVE_ATTRIBUTE(format) && !defined(__clang__)
 #define DVL_PRINTF_ATTRIBUTE(fmtargnum, firstarg) \
 	__attribute__((__format__(__printf__, fmtargnum, firstarg)))
 #else

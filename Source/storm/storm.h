@@ -87,7 +87,7 @@ struct _SNETEVENT {
 #define LEAVE_ENDING 0x40000004
 #define LEAVE_DROP 0x40000006
 
-#if defined(__GNUC__) || defined(__cplusplus)
+#if defined(__cplusplus)
 extern "C" {
 #endif
 
@@ -188,11 +188,7 @@ bool SNetSendTurn(char *data, unsigned int databytes);
 bool SFileOpenFile(const char *filename, HANDLE *phFile);
 
 // Functions implemented in StormLib
-#if defined(_WIN64) || defined(_WIN32)
 bool WINAPI SFileOpenArchive(const wchar_t *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
-#else
-bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
-#endif
 bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
 bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh);
@@ -255,14 +251,12 @@ bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);
 void SNetGetProviderCaps(struct _SNETCAPS *);
 bool SFileEnableDirectAccess(bool enable);
 
-#if defined(__GNUC__) || defined(__cplusplus)
+#if defined(__cplusplus)
 }
 
 // Additions to Storm API:
-#if defined(_WIN64) || defined(_WIN32)
 // On Windows, handles wchar conversion and calls the wchar version of SFileOpenArchive.
 bool SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFlags, HANDLE *phMpq);
-#endif
 
 // Locks ReadFile and CloseFile under a mutex.
 // See https://github.com/ladislav-zezula/StormLib/issues/175

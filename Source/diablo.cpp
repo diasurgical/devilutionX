@@ -66,10 +66,6 @@
 #include "utils/language.h"
 #include "utils/paths.h"
 
-#ifdef __vita__
-#include "platform/vita/touch.h"
-#endif
-
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 #include <gperftools/heap-profiler.h>
 #endif
@@ -192,9 +188,6 @@ bool ProcessInput()
 	}
 
 	if (!gmenu_is_active() && sgnTimeoutCurs == CURSOR_NONE) {
-#ifdef __vita__
-		finish_simulated_mouse_clicks(MousePosition.x, MousePosition.y);
-#endif
 		CheckCursMove();
 		plrctrls_after_check_curs_move();
 		RepeatMouseAction();
@@ -930,7 +923,7 @@ void DiabloInit()
 		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 	InitializeVirtualGamepad();
 #endif
 

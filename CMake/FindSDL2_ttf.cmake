@@ -78,29 +78,6 @@ find_library(SDL2_ttf_LIBRARY
 	PATH_SUFFIXES lib SDL2 ${SDL2_ttf_LIB_PATH_SUFFIX})
 
 set(_sdl2_framework FALSE)
-# Some special-casing if we've found/been given a framework.
-# Handles whether we're given the library inside the framework or the framework itself.
-if(APPLE AND "${SDL2_ttf_LIBRARY}" MATCHES "(/[^/]+)*.framework(/.*)?$")
-	set(_sdl2_framework TRUE)
-	set(SDL2_ttf_FRAMEWORK "${SDL2_ttf_LIBRARY}")
-	# Move up in the directory tree as required to get the framework directory.
-	while("${SDL2_ttf_FRAMEWORK}" MATCHES "(/[^/]+)*.framework(/.*)$" AND NOT "${SDL2_ttf_FRAMEWORK}" MATCHES "(/[^/]+)*.framework$")
-		get_filename_component(SDL2_ttf_FRAMEWORK "${SDL2_ttf_FRAMEWORK}" DIRECTORY)
-	endwhile()
-	if("${SDL2_ttf_FRAMEWORK}" MATCHES "(/[^/]+)*.framework$")
-		set(SDL2_ttf_FRAMEWORK_NAME ${CMAKE_MATCH_1})
-		# If we found a framework, do a search for the header ahead of time that will be more likely to get the framework header.
-		find_path(SDL2_ttf_INCLUDE_DIR
-			NAMES
-			SDL_ttf.h 
-			HINTS
-			"${SDL2_ttf_FRAMEWORK}/Headers/")
-	else()
-		# For some reason we couldn't get the framework directory itself.
-		# Shouldn't happen, but might if something is weird.
-		unset(SDL2_ttf_FRAMEWORK)
-	endif()
-endif()
 
 find_path(SDL2_ttf_INCLUDE_DIR
 	NAMES

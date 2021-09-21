@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 
 #include <SDL.h>
 

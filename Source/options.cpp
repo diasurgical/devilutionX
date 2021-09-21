@@ -8,20 +8,6 @@
 #include <fstream>
 #include <locale>
 
-#ifdef __ANDROID__
-#include "SDL.h"
-#include <jni.h>
-#endif
-
-#ifdef __vita__
-#include <psp2/apputil.h>
-#include <psp2/system_param.h>
-#endif
-
-#ifdef __3DS__
-#include "platform/ctr/locale.hpp"
-#endif
-
 #define SI_SUPPORT_IOSTREAMS
 #include <SimpleIni.h>
 
@@ -167,19 +153,10 @@ void SaveIni()
 	IniChanged = false;
 }
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 bool HardwareCursorDefault()
 {
-#ifdef __ANDROID__
-	// See https://github.com/diasurgical/devilutionX/issues/2502
-	return false;
-#else
-	SDL_version v;
-	SDL_GetVersion(&v);
-	return SDL_VERSIONNUM(v.major, v.minor, v.patch) >= SDL_VERSIONNUM(2, 0, 12);
-#endif
+	return true;
 }
-#endif
 
 } // namespace
 
@@ -224,16 +201,8 @@ void LoadOptions()
 
 	sgOptions.Graphics.nWidth = GetIniInt("Graphics", "Width", DEFAULT_WIDTH);
 	sgOptions.Graphics.nHeight = GetIniInt("Graphics", "Height", DEFAULT_HEIGHT);
-#ifndef __vita__
 	sgOptions.Graphics.bFullscreen = GetIniBool("Graphics", "Fullscreen", true);
-#else
-	sgOptions.Graphics.bFullscreen = true;
-#endif
-#if !defined(USE_SDL1)
 	sgOptions.Graphics.bUpscale = GetIniBool("Graphics", "Upscale", true);
-#else
-	sgOptions.Graphics.bUpscale = false;
-#endif
 	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
 	GetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
@@ -241,11 +210,9 @@ void LoadOptions()
 	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
 	sgOptions.Graphics.nGammaCorrection = GetIniInt("Graphics", "Gamma Correction", 100);
 	sgOptions.Graphics.bColorCycling = GetIniBool("Graphics", "Color Cycling", true);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	sgOptions.Graphics.bHardwareCursor = GetIniBool("Graphics", "Hardware Cursor", HardwareCursorDefault());
 	sgOptions.Graphics.bHardwareCursorForItems = GetIniBool("Graphics", "Hardware Cursor For Items", false);
 	sgOptions.Graphics.nHardwareCursorMaxSize = GetIniInt("Graphics", "Hardware Cursor Maximum Size", 128);
-#endif
 	sgOptions.Graphics.bFPSLimit = GetIniBool("Graphics", "FPS Limiter", true);
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
@@ -281,61 +248,8 @@ void LoadOptions()
 	sgOptions.Controller.bSwapShoulderButtonMode = GetIniBool("Controller", "Swap Shoulder Button Mode", false);
 	sgOptions.Controller.bDpadHotkeys = GetIniBool("Controller", "Dpad Hotkeys", false);
 	sgOptions.Controller.fDeadzone = GetIniFloat("Controller", "deadzone", 0.07F);
-#ifdef __vita__
-	sgOptions.Controller.bRearTouch = GetIniBool("Controller", "Enable Rear Touchpad", true);
-#endif
 
-#ifdef __ANDROID__
-	JNIEnv *env = (JNIEnv *)SDL_AndroidGetJNIEnv();
-	jobject activity = (jobject)SDL_AndroidGetActivity();
-	jclass clazz(env->GetObjectClass(activity));
-	jmethodID method_id = env->GetMethodID(clazz, "getLocale", "()Ljava/lang/String;");
-	jstring jLocale = (jstring)env->CallObjectMethod(activity, method_id);
-	const char *cLocale = env->GetStringUTFChars(jLocale, nullptr);
-	std::string locale = cLocale;
-	env->ReleaseStringUTFChars(jLocale, cLocale);
-	env->DeleteLocalRef(jLocale);
-	env->DeleteLocalRef(activity);
-	env->DeleteLocalRef(clazz);
-#elif defined(__vita__)
-	int32_t language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	const char *vita_locales[] = {
-		"ja_JP",
-		"en_US",
-		"fr_FR",
-		"es_ES",
-		"de_DE",
-		"it_IT",
-		"nl_NL",
-		"pt_PT",
-		"ru_RU",
-		"ko_KR",
-		"zh_TW",
-		"zh_CN",
-		"fi_FI",
-		"sv_SE",
-		"da_DK",
-		"no_NO",
-		"pl_PL",
-		"pt_BR",
-		"en_GB",
-		"tr_TR",
-	};
-	SceAppUtilInitParam initParam;
-	SceAppUtilBootParam bootParam;
-	memset(&initParam, 0, sizeof(SceAppUtilInitParam));
-	memset(&bootParam, 0, sizeof(SceAppUtilBootParam));
-	sceAppUtilInit(&initParam, &bootParam);
-	sceAppUtilSystemParamGetInt(SCE_SYSTEM_PARAM_ID_LANG, &language);
-	if (language < 0 || language > SCE_SYSTEM_PARAM_LANG_TURKISH)
-		language = SCE_SYSTEM_PARAM_LANG_ENGLISH_US; // default to english
-	std::string locale = std::string(vita_locales[language]);
-	sceAppUtilShutdown();
-#elif defined(__3DS__)
-	std::string locale = n3ds::GetLocale();
-#else
 	std::string locale = std::locale("").name().substr(0, 5);
-#endif
 
 	LogVerbose("Prefered locale: {}", locale);
 	if (!HasTranslation(locale)) {
@@ -373,12 +287,8 @@ void SaveOptions()
 	SetIniValue("Audio", "Resampling Quality", sgOptions.Audio.nResamplingQuality);
 	SetIniValue("Graphics", "Width", sgOptions.Graphics.nWidth);
 	SetIniValue("Graphics", "Height", sgOptions.Graphics.nHeight);
-#ifndef __vita__
 	SetIniValue("Graphics", "Fullscreen", sgOptions.Graphics.bFullscreen);
-#endif
-#if !defined(USE_SDL1)
 	SetIniValue("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
-#endif
 	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
 	SetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
@@ -386,11 +296,9 @@ void SaveOptions()
 	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
 	SetIniValue("Graphics", "Gamma Correction", sgOptions.Graphics.nGammaCorrection);
 	SetIniValue("Graphics", "Color Cycling", sgOptions.Graphics.bColorCycling);
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	SetIniValue("Graphics", "Hardware Cursor", sgOptions.Graphics.bHardwareCursor);
 	SetIniValue("Graphics", "Hardware Cursor For Items", sgOptions.Graphics.bHardwareCursorForItems);
 	SetIniValue("Graphics", "Hardware Cursor Maximum Size", sgOptions.Graphics.nHardwareCursorMaxSize);
-#endif
 	SetIniValue("Graphics", "FPS Limiter", sgOptions.Graphics.bFPSLimit);
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
@@ -426,9 +334,6 @@ void SaveOptions()
 	SetIniValue("Controller", "Swap Shoulder Button Mode", sgOptions.Controller.bSwapShoulderButtonMode);
 	SetIniValue("Controller", "Dpad Hotkeys", sgOptions.Controller.bDpadHotkeys);
 	SetIniValue("Controller", "deadzone", sgOptions.Controller.fDeadzone);
-#ifdef __vita__
-	SetIniValue("Controller", "Enable Rear Touchpad", sgOptions.Controller.bRearTouch);
-#endif
 
 	SetIniValue("Language", "Code", sgOptions.Language.szCode);
 

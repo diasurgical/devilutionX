@@ -24,15 +24,6 @@
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
 
-#ifdef __vita__
-#include "platform/vita/touch.h"
-#endif
-
-#ifdef __SWITCH__
-#include "platform/switch/docking.h"
-#include <switch.h>
-#endif
-
 /** @file
  * *
  * Windows message handling and keyboard event conversion for SDL.
@@ -202,20 +193,16 @@ static int TranslateSdlKey(SDL_Keysym key)
 		return DVL_VK_NUMPAD8;
 	case SDLK_KP_9:
 		return DVL_VK_NUMPAD9;
-#ifndef USE_SDL1
 	case SDLK_KP_000:
 	case SDLK_KP_00:
-#endif
 	case SDLK_KP_0:
 		return DVL_VK_NUMPAD0;
 	case SDLK_KP_PERIOD:
 		return DVL_VK_DECIMAL;
 	case SDLK_MENU:
 		return DVL_VK_MENU;
-#ifndef USE_SDL1
 	case SDLK_KP_COMMA:
 		return DVL_VK_OEM_COMMA;
-#endif
 	case SDLK_LCTRL:
 		return DVL_VK_LCONTROL;
 	case SDLK_LSHIFT:
@@ -291,10 +278,6 @@ bool BlurInventory()
 
 bool FetchMessage_Real(tagMSG *lpMsg)
 {
-#ifdef __SWITCH__
-	HandleDocking();
-#endif
-
 	if (!message_queue.empty()) {
 		*lpMsg = message_queue.front();
 		message_queue.pop_front();
@@ -315,7 +298,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		return true;
 	}
 
-#if !defined(USE_SDL1) && !defined(__vita__)
 	if (!movie_playing) {
 		// SDL generates mouse events from touch-based inputs to provide basic
 		// touchscreeen support for apps that don't explicitly handle touch events
@@ -326,22 +308,9 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		if (e.type == SDL_MOUSEWHEEL && e.wheel.which == SDL_TOUCH_MOUSEID)
 			return true;
 	}
-#endif
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#if defined(VIRTUAL_GAMEPAD)
 	HandleTouchEvent(e);
-#endif
-
-#ifdef __vita__
-	handle_touch(&e, MousePosition.x, MousePosition.y);
-#endif
-
-#ifdef USE_SDL1
-	if (e.type == SDL_MOUSEMOTION) {
-		OutputToLogical(&e.motion.x, &e.motion.y);
-	} else if (e.type == SDL_MOUSEBUTTONDOWN || e.type == SDL_MOUSEBUTTONUP) {
-		OutputToLogical(&e.button.x, &e.button.y);
-	}
 #endif
 
 	if ((e.type == SDL_KEYUP || e.type == SDL_KEYDOWN) && e.key.keysym.sym == SDLK_UNKNOWN) {
@@ -455,12 +424,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			break;
 		}
 		return true;
-#ifdef __vita__
-	}
-	if (e.type < SDL_JOYAXISMOTION || (e.type >= SDL_FINGERDOWN && e.type < SDL_DOLLARGESTURE)) {
-#else
 	} else if (e.type < SDL_JOYAXISMOTION) {
-#endif
 		if (!mouseWarping || e.type != SDL_MOUSEMOTION)
 			sgbControllerActive = false;
 		if (mouseWarping && e.type == SDL_MOUSEMOTION)
@@ -510,7 +474,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			lpMsg->wParam = KeystateForMouse(0);
 		}
 	} break;
-#ifndef USE_SDL1
 	case SDL_MOUSEWHEEL:
 		lpMsg->message = DVL_WM_KEYDOWN;
 		if (e.wheel.y > 0) {
@@ -523,14 +486,12 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			lpMsg->wParam = DVL_VK_RIGHT;
 		}
 		break;
-#if SDL_VERSION_ATLEAST(2, 0, 4)
 	case SDL_AUDIODEVICEADDED:
 		return FalseAvail("SDL_AUDIODEVICEADDED", e.adevice.which);
 	case SDL_AUDIODEVICEREMOVED:
 		return FalseAvail("SDL_AUDIODEVICEREMOVED", e.adevice.which);
 	case SDL_KEYMAPCHANGED:
 		return FalseAvail("SDL_KEYMAPCHANGED", 0);
-#endif
 	case SDL_TEXTEDITING:
 		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
 	case SDL_TEXTINPUT:
@@ -558,9 +519,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		case SDL_WINDOWEVENT_MINIMIZED:
 		case SDL_WINDOWEVENT_MAXIMIZED:
 		case SDL_WINDOWEVENT_RESTORED:
-#if SDL_VERSION_ATLEAST(2, 0, 5)
 		case SDL_WINDOWEVENT_TAKE_FOCUS:
-#endif
 			break;
 		case SDL_WINDOWEVENT_ENTER:
 			// Bug in SDL, SDL_WarpMouseInWindow doesn't emit SDL_MOUSEMOTION
@@ -587,7 +546,6 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 
 		break;
-#endif
 	default:
 		return FalseAvail("unknown", e.type);
 	}

@@ -457,9 +457,7 @@ inline int CountLeadingZeros(std::uint32_t mask)
 	static_assert(
 	    sizeof(std::uint32_t) == sizeof(uint32_t),
 	    "CountLeadingZeros: std::uint32_t must be 32bits");
-#if defined(__GNUC__) || defined(__clang__)
-	return __builtin_clz(mask);
-#else
+
 	// Count the number of leading zeros using binary search.
 	int n = 0;
 	if ((mask & 0xFFFF0000) == 0)
@@ -473,7 +471,6 @@ inline int CountLeadingZeros(std::uint32_t mask)
 	if ((mask & 0x80000000) == 0)
 		n += 1;
 	return n;
-#endif
 }
 
 template <typename F>

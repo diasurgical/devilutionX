@@ -2,9 +2,6 @@
 
 #include <memory>
 #include <SDL.h>
-#ifdef USE_SDL1
-#include "utils/sdl2_to_1_2_backports.h"
-#endif
 #include "appfat.h"
 
 namespace devilution {
@@ -24,11 +21,7 @@ class SdlThread final {
 
 public:
 	SdlThread(int(SDLCALL *handler)(void *), void *data)
-#ifdef USE_SDL1
-	    : thread(SDL_CreateThread(handler, data), ThreadDeleter)
-#else
 	    : thread(SDL_CreateThread(handler, nullptr, data), ThreadDeleter)
-#endif
 	{
 		if (thread == nullptr)
 			ErrSdl();

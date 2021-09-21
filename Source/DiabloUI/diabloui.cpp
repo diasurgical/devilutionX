@@ -24,19 +24,6 @@
 #include "utils/utf8.h"
 #include "utils/language.h"
 
-#ifdef __SWITCH__
-// for virtual keyboard on Switch
-#include "platform/switch/keyboard.h"
-#endif
-#ifdef __vita__
-// for virtual keyboard on Vita
-#include "platform/vita/keyboard.h"
-#endif
-#ifdef __3DS__
-// for virtual keyboard on 3DS
-#include "platform/ctr/keyboard.h"
-#endif
-
 namespace devilution {
 
 std::size_t SelectedItemMax;
@@ -99,24 +86,13 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	if (fnFocus != nullptr)
 		fnFocus(0);
 
-#ifndef __SWITCH__
-	SDL_StopTextInput(); // input is enabled by default
-#endif
 	textInputActive = false;
 	for (const auto &item : items) {
 		if (item->m_type == UiType::Edit) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
-#ifdef __SWITCH__
-			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
-#elif defined(__vita__)
-			vita_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
-#elif defined(__3DS__)
-			ctr_vkbdInput(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_value, pItemUIEdit->m_max_length);
-#else
 			SDL_StartTextInput();
-#endif
 			UiTextInput = pItemUIEdit->m_value;
 			UiTextInputLen = pItemUIEdit->m_max_length;
 		}
@@ -230,14 +206,6 @@ void SelheroCatToName(char *inBuf, char *outBuf, int cnt)
 	strncat(outBuf, output.c_str(), cnt - strlen(outBuf));
 }
 
-#ifdef __vita__
-void selhero_SetName(char *in_buf, char *out_buf, int cnt)
-{
-	std::string output = utf8_to_latin1(in_buf);
-	strncpy(out_buf, output.c_str(), cnt);
-}
-#endif
-
 bool HandleMenuAction(MenuAction menuAction)
 {
 	switch (menuAction) {
@@ -277,20 +245,16 @@ void UiFocusNavigation(SDL_Event *event)
 	case SDL_KEYUP:
 	case SDL_MOUSEBUTTONUP:
 	case SDL_MOUSEMOTION:
-#ifndef USE_SDL1
 	case SDL_MOUSEWHEEL:
-#endif
 	case SDL_JOYBUTTONUP:
 	case SDL_JOYAXISMOTION:
 	case SDL_JOYBALLMOTION:
 	case SDL_JOYHATMOTION:
-#ifndef USE_SDL1
 	case SDL_FINGERUP:
 	case SDL_FINGERMOTION:
 	case SDL_CONTROLLERBUTTONUP:
 	case SDL_CONTROLLERAXISMOTION:
 	case SDL_WINDOWEVENT:
-#endif
 	case SDL_SYSWMEVENT:
 		mainmenu_restart_repintro();
 		break;
@@ -299,7 +263,6 @@ void UiFocusNavigation(SDL_Event *event)
 	if (HandleMenuAction(GetMenuAction(*event)))
 		return;
 
-#ifndef USE_SDL1
 	if (event->type == SDL_MOUSEWHEEL) {
 		if (event->wheel.y > 0) {
 			UiFocusUp();
@@ -308,13 +271,11 @@ void UiFocusNavigation(SDL_Event *event)
 		}
 		return;
 	}
-#endif
 
 	if (textInputActive) {
 		switch (event->type) {
 		case SDL_KEYDOWN: {
 			switch (event->key.keysym.sym) {
-#ifndef USE_SDL1
 			case SDLK_v:
 				if ((SDL_GetModState() & KMOD_CTRL) != 0) {
 					char *clipboard = SDL_GetClipboardText();
@@ -325,7 +286,6 @@ void UiFocusNavigation(SDL_Event *event)
 					}
 				}
 				return;
-#endif
 			case SDLK_BACKSPACE:
 			case SDLK_LEFT: {
 				int nameLen = strlen(UiTextInput);
@@ -337,30 +297,13 @@ void UiFocusNavigation(SDL_Event *event)
 			default:
 				break;
 			}
-#ifdef USE_SDL1
-			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
-				Uint16 unicode = event->key.keysym.unicode;
-				if (unicode && (unicode & 0xFF80) == 0) {
-					char utf8[SDL_TEXTINPUTEVENT_TEXT_SIZE];
-					utf8[0] = (char)unicode;
-					utf8[1] = '\0';
-					SelheroCatToName(utf8, UiTextInput, UiTextInputLen);
-				}
-			}
-#endif
 			break;
 		}
-#ifndef USE_SDL1
 		case SDL_TEXTINPUT:
 			if (textInputActive) {
-#ifdef __vita__
-				selhero_SetName(event->text.text, UiTextInput, UiTextInputLen);
-#else
 				SelheroCatToName(event->text.text, UiTextInput, UiTextInputLen);
-#endif
 			}
 			return;
-#endif
 		default:
 			break;
 		}
@@ -375,9 +318,6 @@ void UiFocusNavigation(SDL_Event *event)
 void UiHandleEvents(SDL_Event *event)
 {
 	if (event->type == SDL_MOUSEMOTION) {
-#ifdef USE_SDL1
-		OutputToLogical(&event->motion.x, &event->motion.y);
-#endif
 		MousePosition = { event->motion.x, event->motion.y };
 		return;
 	}
@@ -393,7 +333,6 @@ void UiHandleEvents(SDL_Event *event)
 	if (event->type == SDL_QUIT)
 		diablo_quit(0);
 
-#ifndef USE_SDL1
 	HandleControllerAddedOrRemovedEvent(*event);
 
 	if (event->type == SDL_WINDOWEVENT) {
@@ -409,7 +348,6 @@ void UiHandleEvents(SDL_Event *event)
 			music_unmute();
 		}
 	}
-#endif
 }
 
 void UiFocusNavigationSelect()
@@ -419,9 +357,7 @@ void UiFocusNavigationSelect()
 		if (strlen(UiTextInput) == 0) {
 			return;
 		}
-#ifndef __SWITCH__
-		SDL_StopTextInput();
-#endif
+
 		UiTextInput = nullptr;
 		UiTextInputLen = 0;
 	}
@@ -433,9 +369,6 @@ void UiFocusNavigationEsc()
 {
 	UiPlaySelectSound();
 	if (textInputActive) {
-#ifndef __SWITCH__
-		SDL_StopTextInput();
-#endif
 		UiTextInput = nullptr;
 		UiTextInputLen = 0;
 	}
@@ -625,10 +558,8 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	fadeValue = 0;
 
 	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 		SDL_SetSurfacePalette(ArtCursor.surface.get(), Palette.get());
 		SDL_SetColorKey(ArtCursor.surface.get(), 1, 0);
-#endif
 		SetHardwareCursor(CursorInfo::UserInterfaceCursor());
 	}
 
@@ -714,12 +645,6 @@ void UiPollAndRender()
 	// Must happen after the very first UiFadeIn, which sets the cursor.
 	if (IsHardwareCursor())
 		SetHardwareCursorVisible(!sgbControllerActive);
-
-#ifdef __3DS__
-	// Keyboard blocks until input is finished
-	// so defer until after render and fade-in
-	ctr_vkbdFlush();
-#endif
 }
 
 namespace {
@@ -861,10 +786,6 @@ bool HandleMouseEventArtTextButton(const SDL_Event &event, const UiArtTextButton
 	return true;
 }
 
-#ifdef USE_SDL1
-Uint32 dbClickTimer;
-#endif
-
 bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 {
 	if (event.type != SDL_MOUSEBUTTONDOWN || event.button.button != SDL_BUTTON_LEFT)
@@ -875,18 +796,9 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
 		UiFocus(index);
-#ifdef USE_SDL1
-		dbClickTimer = SDL_GetTicks();
-	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
-#else
 	} else if (gfnListFocus == nullptr || event.button.clicks >= 2) {
-#endif
 		SelectedItem = index;
 		UiFocusNavigationSelect();
-#ifdef USE_SDL1
-	} else {
-		dbClickTimer = SDL_GetTicks();
-#endif
 	}
 
 	return true;
@@ -973,11 +885,6 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<UiItemBase *> &items)
 		return false;
 	}
 
-	// In SDL2 mouse events already use logical coordinates.
-#ifdef USE_SDL1
-	OutputToLogical(&event->button.x, &event->button.y);
-#endif
-
 	bool handled = false;
 	for (const auto &item : items) {
 		if (HandleMouseEvent(*event, item)) {
@@ -1002,11 +909,6 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 	if (items.empty()) {
 		return false;
 	}
-
-	// In SDL2 mouse events already use logical coordinates.
-#ifdef USE_SDL1
-	OutputToLogical(&event->button.x, &event->button.y);
-#endif
 
 	bool handled = false;
 	for (const auto &item : items) {

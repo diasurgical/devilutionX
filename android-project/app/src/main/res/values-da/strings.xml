@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<string name="app_name">DevilutionX</string>
-	<string name="download_spawn">Download Shareware Data</string>
-	<string name="game_data_retry">Tjek igen</string>
-	<string name="title_activity_data">Spil data</string>
-</resources>

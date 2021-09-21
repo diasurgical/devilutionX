@@ -3,7 +3,6 @@
 #include <memory>
 
 #include <SDL_mutex.h>
-#include <SDL_version.h>
 
 #include "appfat.h"
 
@@ -39,7 +38,6 @@ public:
 			ErrSdl();
 	}
 
-#if SDL_VERSION_ATLEAST(2, 0, 0)
 	bool try_lock() noexcept // NOLINT(readability-identifier-naming)
 	{
 		int err = SDL_TryLockMutex(mutex_);
@@ -47,7 +45,6 @@ public:
 			ErrSdl();
 		return err == 0;
 	}
-#endif
 
 	void unlock() noexcept // NOLINT(readability-identifier-naming)
 	{
