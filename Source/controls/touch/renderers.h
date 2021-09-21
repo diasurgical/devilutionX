@@ -9,6 +9,23 @@
 
 namespace devilution {
 
+enum VirtualGamepadButtonType {
+	GAMEPAD_ATTACK,
+	GAMEPAD_ATTACKDOWN,
+	GAMEPAD_TALK,
+	GAMEPAD_TALKDOWN,
+	GAMEPAD_ITEM,
+	GAMEPAD_ITEMDOWN,
+	GAMEPAD_OBJECT,
+	GAMEPAD_OBJECTDOWN,
+	GAMEPAD_CASTSPELL,
+	GAMEPAD_CASTSPELLDOWN,
+	GAMEPAD_BACK,
+	GAMEPAD_BACKDOWN,
+	GAMEPAD_BLANK,
+	GAMEPAD_BLANKDOWN,
+};
+
 class VirtualDirectionPadRenderer {
 public:
 	VirtualDirectionPadRenderer(VirtualDirectionPad *virtualDirectionPad)
@@ -16,7 +33,9 @@ public:
 	{
 	}
 
+	void LoadArt();
 	void Render(const Surface &out);
+	void UnloadArt();
 
 private:
 	VirtualDirectionPad *virtualDirectionPad;
@@ -29,8 +48,9 @@ private:
 
 class VirtualPadButtonRenderer {
 public:
-	VirtualPadButtonRenderer(VirtualPadButton *virtualPadButton)
+	VirtualPadButtonRenderer(VirtualPadButton *virtualPadButton, Art *buttonArt)
 	    : virtualPadButton(virtualPadButton)
+	    , buttonArt(buttonArt)
 	{
 	}
 
@@ -39,91 +59,73 @@ public:
 protected:
 	VirtualPadButton *virtualPadButton;
 
-	virtual SDL_Surface *GetButtonSurface() = 0;
-	SDL_Surface *GetAttackSurface();
-	SDL_Surface *GetTalkSurface();
-	SDL_Surface *GetItemSurface();
-	SDL_Surface *GetObjectSurface();
-	SDL_Surface *GetCastSurface();
-	SDL_Surface *GetCancelSurface();
-	SDL_Surface *GetBlankSurface();
+	virtual VirtualGamepadButtonType GetButtonType() = 0;
 
 private:
-	SDLSurfaceUniquePtr attackSurface;
-	SDLSurfaceUniquePtr pressedAttackSurface;
-	SDLSurfaceUniquePtr talkSurface;
-	SDLSurfaceUniquePtr pressedTalkSurface;
-	SDLSurfaceUniquePtr itemSurface;
-	SDLSurfaceUniquePtr pressedItemSurface;
-	SDLSurfaceUniquePtr objectSurface;
-	SDLSurfaceUniquePtr pressedObjectSurface;
-	SDLSurfaceUniquePtr castSurface;
-	SDLSurfaceUniquePtr pressedCastSurface;
-	SDLSurfaceUniquePtr cancelSurface;
-	SDLSurfaceUniquePtr pressedCancelSurface;
-	SDLSurfaceUniquePtr blankSurface;
-	SDLSurfaceUniquePtr pressedBlankSurface;
+	Art *buttonArt;
 };
 
 class PrimaryActionButtonRenderer : public VirtualPadButtonRenderer {
 public:
-	PrimaryActionButtonRenderer(VirtualPadButton *primaryActionButton)
-	    : VirtualPadButtonRenderer(primaryActionButton)
+	PrimaryActionButtonRenderer(VirtualPadButton *primaryActionButton, Art *buttonArt)
+	    : VirtualPadButtonRenderer(primaryActionButton, buttonArt)
 	{
 	}
 
 private:
-	SDL_Surface *GetButtonSurface();
-	SDL_Surface *GetTownButtonSurface();
-	SDL_Surface *GetDungeonButtonSurface();
-	SDL_Surface *GetInventoryButtonSurface();
+	VirtualGamepadButtonType GetButtonType();
+	VirtualGamepadButtonType GetTownButtonType();
+	VirtualGamepadButtonType GetDungeonButtonType();
+	VirtualGamepadButtonType GetInventoryButtonType();
 };
 
 class SecondaryActionButtonRenderer : public VirtualPadButtonRenderer {
 public:
-	SecondaryActionButtonRenderer(VirtualPadButton *secondaryActionButton)
-	    : VirtualPadButtonRenderer(secondaryActionButton)
+	SecondaryActionButtonRenderer(VirtualPadButton *secondaryActionButton, Art *buttonArt)
+	    : VirtualPadButtonRenderer(secondaryActionButton, buttonArt)
 	{
 	}
 
 private:
-	SDL_Surface *GetButtonSurface();
+	VirtualGamepadButtonType GetButtonType();
 };
 
 class SpellActionButtonRenderer : public VirtualPadButtonRenderer {
 public:
-	SpellActionButtonRenderer(VirtualPadButton *spellActionButton)
-	    : VirtualPadButtonRenderer(spellActionButton)
+	SpellActionButtonRenderer(VirtualPadButton *spellActionButton, Art *buttonArt)
+	    : VirtualPadButtonRenderer(spellActionButton, buttonArt)
 	{
 	}
 
 private:
-	SDL_Surface *GetButtonSurface();
+	VirtualGamepadButtonType GetButtonType();
 };
 
 class CancelButtonRenderer : public VirtualPadButtonRenderer {
 public:
-	CancelButtonRenderer(VirtualPadButton *cancelButton)
-	    : VirtualPadButtonRenderer(cancelButton)
+	CancelButtonRenderer(VirtualPadButton *cancelButton, Art *buttonArt)
+	    : VirtualPadButtonRenderer(cancelButton, buttonArt)
 	{
 	}
 
 private:
-	SDL_Surface *GetButtonSurface();
+	VirtualGamepadButtonType GetButtonType();
 };
 
 class VirtualGamepadRenderer {
 public:
 	VirtualGamepadRenderer(VirtualGamepad *virtualGamepad)
 	    : directionPadRenderer(&virtualGamepad->directionPad)
-	    , primaryActionButtonRenderer(&virtualGamepad->primaryActionButton)
-	    , secondaryActionButtonRenderer(&virtualGamepad->secondaryActionButton)
-	    , spellActionButtonRenderer(&virtualGamepad->spellActionButton)
-	    , cancelButtonRenderer(&virtualGamepad->cancelButton)
+	    , primaryActionButtonRenderer(&virtualGamepad->primaryActionButton, &buttonArt)
+	    , secondaryActionButtonRenderer(&virtualGamepad->secondaryActionButton, &buttonArt)
+	    , spellActionButtonRenderer(&virtualGamepad->spellActionButton, &buttonArt)
+	    , cancelButtonRenderer(&virtualGamepad->cancelButton, &buttonArt)
 	{
 	}
 
+	void LoadArt();
 	void Render(const Surface &out);
+	void UnloadArt();
 
 private:
 	VirtualDirectionPadRenderer directionPadRenderer;
@@ -131,9 +133,13 @@ private:
 	SecondaryActionButtonRenderer secondaryActionButtonRenderer;
 	SpellActionButtonRenderer spellActionButtonRenderer;
 	CancelButtonRenderer cancelButtonRenderer;
+	Art buttonArt;
 };
 
 void DrawVirtualGamepad(const Surface &out);
+
+void InitVirtualGamepadGFX();
+void FreeVirtualGamepadGFX();
 
 } // namespace devilution
 

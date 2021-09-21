@@ -16,11 +16,63 @@ namespace {
 
 VirtualGamepadRenderer Renderer(&VirtualGamepadState);
 
+VirtualGamepadButtonType GetAttackButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_ATTACKDOWN : GAMEPAD_ATTACK;
+}
+
+VirtualGamepadButtonType GetTalkButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_TALKDOWN : GAMEPAD_TALK;
+}
+
+VirtualGamepadButtonType GetItemButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_ITEMDOWN : GAMEPAD_ITEM;
+}
+
+VirtualGamepadButtonType GetObjectButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_OBJECTDOWN : GAMEPAD_OBJECT;
+}
+
+VirtualGamepadButtonType GetCastButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_CASTSPELLDOWN : GAMEPAD_CASTSPELL;
+}
+
+VirtualGamepadButtonType GetCancelButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_BACKDOWN : GAMEPAD_BACK;
+}
+
+VirtualGamepadButtonType GetBlankButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_BLANKDOWN : GAMEPAD_BLANK;
+}
+
 } // namespace
 
 void DrawVirtualGamepad(const Surface &out)
 {
 	Renderer.Render(out);
+}
+
+void VirtualGamepadRenderer::LoadArt()
+{
+	directionPadRenderer.LoadArt();
+
+	const int Frames = 14;
+	buttonArt.surface.reset(LoadPNG("ui_art\\button.png"));
+	buttonArt.logical_width = buttonArt.surface->w;
+	buttonArt.frame_height = buttonArt.surface->h / Frames;
+	buttonArt.frames = Frames;
+}
+
+void VirtualDirectionPadRenderer::LoadArt()
+{
+	padSurface.reset(LoadPNG("ui_art\\directions.png"));
+	knobSurface.reset(LoadPNG("ui_art\\directions2.png"));
 }
 
 void VirtualGamepadRenderer::Render(const Surface &out)
@@ -41,7 +93,7 @@ void VirtualDirectionPadRenderer::Render(const Surface &out)
 void VirtualDirectionPadRenderer::RenderPad(const Surface &out)
 {
 	if (padSurface == nullptr)
-		padSurface.reset(LoadPNG("ui_art\\directions.png"));
+		return;
 
 	auto center = virtualDirectionPad->area.position;
 	auto radius = virtualDirectionPad->area.radius;
@@ -58,7 +110,7 @@ void VirtualDirectionPadRenderer::RenderPad(const Surface &out)
 void VirtualDirectionPadRenderer::RenderKnob(const Surface &out)
 {
 	if (knobSurface == nullptr)
-		knobSurface.reset(LoadPNG("ui_art\\directions2.png"));
+		return;
 
 	auto center = virtualDirectionPad->position;
 	auto radius = virtualDirectionPad->area.radius / 3;
@@ -74,6 +126,13 @@ void VirtualDirectionPadRenderer::RenderKnob(const Surface &out)
 
 void VirtualPadButtonRenderer::Render(const Surface &out)
 {
+	if (buttonArt->surface == nullptr)
+		return;
+
+	VirtualGamepadButtonType buttonType = GetButtonType();
+	int frame = buttonType;
+	int offset = buttonArt->h() * frame;
+
 	auto center = virtualPadButton->area.position;
 	auto radius = virtualPadButton->area.radius;
 	int diameter = 2 * radius;
@@ -83,136 +142,95 @@ void VirtualPadButtonRenderer::Render(const Surface &out)
 	int width = diameter;
 	int height = diameter;
 
-	SDL_Surface *surface = GetButtonSurface();
-	SDL_Rect rect { x, y, width, height };
-	SDL_BlitScaled(surface, nullptr, out.surface, &rect);
+	SDL_Rect src { 0, offset, buttonArt->w(), buttonArt->h() };
+	SDL_Rect dst { x, y, width, height };
+	SDL_BlitScaled(buttonArt->surface.get(), &src, out.surface, &dst);
 }
 
-SDL_Surface *VirtualPadButtonRenderer::GetAttackSurface()
-{
-	if (attackSurface == nullptr)
-		attackSurface.reset(LoadPNG("ui_art\\attack.png"));
-	if (pressedAttackSurface == nullptr)
-		pressedAttackSurface.reset(LoadPNG("ui_art\\attackp.png"));
-	return virtualPadButton->isHeld ? pressedAttackSurface.get() : attackSurface.get();
-}
-
-SDL_Surface *VirtualPadButtonRenderer::GetTalkSurface()
-{
-	if (talkSurface == nullptr)
-		talkSurface.reset(LoadPNG("ui_art\\talk.png"));
-	if (pressedTalkSurface == nullptr)
-		pressedTalkSurface.reset(LoadPNG("ui_art\\talkp.png"));
-	return virtualPadButton->isHeld ? pressedTalkSurface.get() : talkSurface.get();
-}
-
-SDL_Surface *VirtualPadButtonRenderer::GetItemSurface()
-{
-	if (itemSurface == nullptr)
-		itemSurface.reset(LoadPNG("ui_art\\pickitem.png"));
-	if (pressedItemSurface == nullptr)
-		pressedItemSurface.reset(LoadPNG("ui_art\\pickitemp.png"));
-	return virtualPadButton->isHeld ? pressedItemSurface.get() : itemSurface.get();
-}
-
-SDL_Surface *VirtualPadButtonRenderer::GetObjectSurface()
-{
-	if (objectSurface == nullptr)
-		objectSurface.reset(LoadPNG("ui_art\\object.png"));
-	if (pressedObjectSurface == nullptr)
-		pressedObjectSurface.reset(LoadPNG("ui_art\\objectp.png"));
-	return virtualPadButton->isHeld ? pressedObjectSurface.get() : objectSurface.get();
-}
-
-SDL_Surface *VirtualPadButtonRenderer::GetCastSurface()
-{
-	if (castSurface == nullptr)
-		castSurface.reset(LoadPNG("ui_art\\castspell.png"));
-	if (pressedCastSurface == nullptr)
-		pressedCastSurface.reset(LoadPNG("ui_art\\castspellp.png"));
-	return virtualPadButton->isHeld ? pressedCastSurface.get() : castSurface.get();
-}
-
-SDL_Surface *VirtualPadButtonRenderer::GetCancelSurface()
-{
-	if (cancelSurface == nullptr)
-		cancelSurface.reset(LoadPNG("ui_art\\back.png"));
-	if (pressedCancelSurface == nullptr)
-		pressedCancelSurface.reset(LoadPNG("ui_art\\backp.png"));
-	return virtualPadButton->isHeld ? pressedCancelSurface.get() : cancelSurface.get();
-}
-
-SDL_Surface *VirtualPadButtonRenderer::GetBlankSurface()
-{
-	if (blankSurface == nullptr)
-		blankSurface.reset(LoadPNG("ui_art\\noaction.png"));
-	if (pressedBlankSurface == nullptr)
-		pressedBlankSurface.reset(LoadPNG("ui_art\\noactionp.png"));
-	return virtualPadButton->isHeld ? pressedBlankSurface.get() : blankSurface.get();
-}
-
-SDL_Surface *PrimaryActionButtonRenderer::GetButtonSurface()
+VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()
 {
 	// NEED: Confirm surface
 	if (qtextflag)
-		return GetTalkSurface();
+		return GetTalkButtonType(virtualPadButton->isHeld);
 	if (invflag)
-		return GetInventoryButtonSurface();
+		return GetInventoryButtonType();
 	if (leveltype == DTYPE_TOWN)
-		return GetTownButtonSurface();
-	return GetDungeonButtonSurface();
+		return GetTownButtonType();
+	return GetDungeonButtonType();
 }
 
-SDL_Surface *PrimaryActionButtonRenderer::GetTownButtonSurface()
+VirtualGamepadButtonType PrimaryActionButtonRenderer::GetTownButtonType()
 {
 	if (stextflag != STORE_NONE || pcursmonst != -1)
-		return GetTalkSurface();
-	return GetBlankSurface();
+		return GetTalkButtonType(virtualPadButton->isHeld);
+	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
-SDL_Surface *PrimaryActionButtonRenderer::GetDungeonButtonSurface()
+VirtualGamepadButtonType PrimaryActionButtonRenderer::GetDungeonButtonType()
 {
 	if (pcursmonst != -1) {
 		const auto &monster = Monsters[pcursmonst];
 		if (M_Talker(monster) || monster.mtalkmsg != TEXT_NONE)
-			return GetTalkSurface();
+			return GetTalkButtonType(virtualPadButton->isHeld);
 	}
-	return GetAttackSurface();
+	return GetAttackButtonType(virtualPadButton->isHeld);
 }
 
-SDL_Surface *PrimaryActionButtonRenderer::GetInventoryButtonSurface()
+VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 {
 	if (pcursinvitem != -1 || pcurs > CURSOR_HAND)
-		return GetItemSurface();
-	return GetBlankSurface();
+		return GetItemButtonType(virtualPadButton->isHeld);
+	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
-SDL_Surface *SecondaryActionButtonRenderer::GetButtonSurface()
+VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
 	// NEED: Stairs surface
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
-		return GetBlankSurface();
+		return GetBlankButtonType(virtualPadButton->isHeld);
 	if (pcursobj != -1)
-		return GetObjectSurface();
+		return GetObjectButtonType(virtualPadButton->isHeld);
 	if (pcursitem != -1)
-		return GetItemSurface();
-	return GetBlankSurface();
+		return GetItemButtonType(virtualPadButton->isHeld);
+	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
-SDL_Surface *SpellActionButtonRenderer::GetButtonSurface()
+VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 {
 	if (!InGameMenu() && !QuestLogIsOpen && !sbookflag)
-		return GetCastSurface();
-	return GetBlankSurface();
+		return GetCastButtonType(virtualPadButton->isHeld);
+	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
-SDL_Surface *CancelButtonRenderer::GetButtonSurface()
+VirtualGamepadButtonType CancelButtonRenderer::GetButtonType()
 {
 	if (InGameMenu())
-		return GetCancelSurface();
+		return GetCancelButtonType(virtualPadButton->isHeld);
 	if (DoomFlag || invflag || sbookflag || QuestLogIsOpen || chrflag)
-		return GetCancelSurface();
-	return GetBlankSurface();
+		return GetCancelButtonType(virtualPadButton->isHeld);
+	return GetBlankButtonType(virtualPadButton->isHeld);
+}
+
+void VirtualGamepadRenderer::UnloadArt()
+{
+	directionPadRenderer.UnloadArt();
+	buttonArt.surface = nullptr;
+}
+
+void VirtualDirectionPadRenderer::UnloadArt()
+{
+	padSurface = nullptr;
+	knobSurface = nullptr;
+}
+
+void InitVirtualGamepadGFX()
+{
+	Renderer.LoadArt();
+}
+
+void FreeVirtualGamepadGFX()
+{
+	Renderer.UnloadArt();
 }
 
 } // namespace devilution
