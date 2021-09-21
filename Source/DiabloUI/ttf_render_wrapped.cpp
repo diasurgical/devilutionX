@@ -106,7 +106,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 	}
 
 	if (strLines.empty())
-		return TTFWrap::RenderText_Solid(font, text, fg);
+		return TTFWrap::RenderUTF8_Solid(font, text, fg);
 
 	/* Create the target surface */
 	auto textbuf = SDLWrap::CreateRGBSurface(SDL_SWSURFACE, (strLines.size() > 1) ? wrapLength : width, height * strLines.size() + (lineSpace * (strLines.size() - 1)), 8, 0, 0, 0, 0);
@@ -129,7 +129,7 @@ SDLSurfaceUniquePtr RenderUTF8_Solid_Wrapped(TTF_Font *font, const char *text, S
 			dest.y += lineskip;
 			continue;
 		}
-		SDLSurfaceUniquePtr tmp = TTFWrap::RenderText_Solid(font, text, fg);
+		SDLSurfaceUniquePtr tmp = TTFWrap::RenderUTF8_Solid(font, text, fg);
 
 		dest.w = static_cast<Uint16>(tmp->w);
 		dest.h = static_cast<Uint16>(tmp->h);

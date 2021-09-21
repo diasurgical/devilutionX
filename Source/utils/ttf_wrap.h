@@ -15,9 +15,9 @@ namespace devilution {
 
 namespace TTFWrap {
 
-inline SDLSurfaceUniquePtr RenderText_Solid(TTF_Font *font, const char *text, SDL_Color fg)
+inline SDLSurfaceUniquePtr RenderUTF8_Solid(TTF_Font *font, const char *text, SDL_Color fg)
 {
-	SDLSurfaceUniquePtr ret { TTF_RenderText_Solid(font, text, fg) };
+	SDLSurfaceUniquePtr ret { TTF_RenderUTF8_Solid(font, text, fg) };
 	if (ret == nullptr)
 		ErrTtf();
 
