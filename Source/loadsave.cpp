@@ -1448,8 +1448,8 @@ void RemoveInvalidItem(Item &item)
 		isInvalid = isInvalid || (item._itype == ItemType::Staff && GetSpellStaffLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || (item._iMiscId == IMISC_BOOK && GetSpellBookLevel(item._iSpell) == -1);
 		isInvalid = isInvalid || item._iDamAcFlags != 0;
-		isInvalid = isInvalid || item._iPrePower > IDI_LASTDIABLO;
-		isInvalid = isInvalid || item._iSufPower > IDI_LASTDIABLO;
+		isInvalid = isInvalid || item._iPrePower > IPL_LASTDIABLO;
+		isInvalid = isInvalid || item._iSufPower > IPL_LASTDIABLO;
 	}
 
 	if (isInvalid) {
