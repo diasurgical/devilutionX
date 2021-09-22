@@ -211,7 +211,7 @@ msgstr "Remerciements à"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
-msgstr "À la mémoire de "
+msgstr "À la mémoire de"
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
@@ -267,7 +267,7 @@ msgstr "Remerciements à"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr "Remerciements particuliers à Blizzard Entertainment"
+msgstr "\t\t\tRemerciements particuliers à Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
@@ -307,7 +307,7 @@ msgstr "L'Anneau des Mille"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr "\tAucune âme n'a été vendue dans la fabrication de ce jeu"
+msgstr "\tAucune âme n'a été vendue dans la fabrication de ce jeu."
 
 #: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
 #: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
@@ -750,7 +750,7 @@ msgstr "signalés à cette adresse: https://github.com/diasurgical/devilutionX"
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
 msgstr ""
-"Merci de bien vouloir inclure le numéro de version ainsi que le système"
+"Merci de bien vouloir inclure le numéro de version ainsi que le système,"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
@@ -1584,7 +1584,7 @@ msgstr "G: Augmenter la luminosité"
 
 #: Source/help.cpp:38
 msgid "Z: Zoom Game Screen"
-msgstr "Z: Zoom "
+msgstr "Z: Zoom"
 
 #: Source/help.cpp:39
 msgid "+ / -: Zoom Automap"
@@ -3573,7 +3573,7 @@ msgstr "dommage potentiel"
 
 #: Source/items.cpp:1920
 msgid "greatly increases a weapon's"
-msgstr "augmente beaucoup les "
+msgstr "augmente beaucoup les"
 
 #: Source/items.cpp:1922
 msgid "damage potential - not bows"
@@ -3611,7 +3611,7 @@ msgstr "rend un objet indestructible"
 
 #: Source/items.cpp:1948
 msgid "increases the armor class"
-msgstr "Augmente la classe d'une armure"
+msgstr "augmente la classe d'une armure"
 
 #: Source/items.cpp:1950
 msgid "of armor and shields"
@@ -3619,7 +3619,7 @@ msgstr "d'armure et de bouclier"
 
 #: Source/items.cpp:1954
 msgid "greatly increases the armor"
-msgstr "Augmente beaucoup l'armure"
+msgstr "augmente beaucoup l'armure"
 
 #: Source/items.cpp:1956
 msgid "class of armor and shields"
@@ -3627,15 +3627,15 @@ msgstr "classe d'armure et de bouclier"
 
 #: Source/items.cpp:1960 Source/items.cpp:1969
 msgid "sets fire trap"
-msgstr "Pose un piège à feu"
+msgstr "pose un piège à feu"
 
 #: Source/items.cpp:1965
 msgid "sets lightning trap"
-msgstr "Pose un piège à foudre"
+msgstr "pose un piège à foudre"
 
 #: Source/items.cpp:1973
 msgid "sets petrification trap"
-msgstr "Pose un piège de pétrification"
+msgstr "pose un piège de pétrification"
 
 #: Source/items.cpp:1977
 msgid "restore all life"
@@ -3811,7 +3811,7 @@ msgstr "Résistance à tout: 75% MAX"
 #: Source/items.cpp:3878
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "Les sorts sont augmentés de {:d} niveau"
+msgstr[0] "les sorts sont augmentés de {:d} niveau"
 msgstr[1] "les sorts sont augmentés de {:d} niveaux"
 
 #: Source/items.cpp:3880
@@ -5647,7 +5647,7 @@ msgstr ""
 
 #: Source/objects.cpp:118
 msgid "Spiritual"
-msgstr "Spirituelle "
+msgstr "Spirituelle"
 
 #: Source/objects.cpp:119
 msgid "Spooky"
@@ -6101,7 +6101,7 @@ msgstr "Impossible d'ouvrir l'archive"
 
 #: Source/pfile.cpp:387
 msgid "Unable to load character"
-msgstr "Impossible de charger le personnage."
+msgstr "Impossible de charger le personnage"
 
 #: Source/pfile.cpp:410 Source/pfile.cpp:430
 msgid "Unable to read to save file archive"
@@ -6148,11 +6148,11 @@ msgstr "Level Maximum"
 
 #: Source/qol/xpbar.cpp:147
 msgid "Next Level: "
-msgstr "Prochain Niveau:"
+msgstr "Prochain Niveau: "
 
 #: Source/qol/xpbar.cpp:151
 msgid " to Level {:d}"
-msgstr "vers le Niveau: {:d}"
+msgstr " vers le Niveau: {:d}"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:41
@@ -6273,7 +6273,7 @@ msgstr "L'Antre de l’Archevêque Lazarus"
 #: Source/spelldat.cpp:16
 msgctxt "spell"
 msgid "Firebolt"
-msgstr "Feu "
+msgstr "Feu"
 
 #: Source/spelldat.cpp:17
 msgctxt "spell"
