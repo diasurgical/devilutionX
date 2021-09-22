@@ -2565,14 +2565,12 @@ void InitItemGFX()
 
 void InitItems()
 {
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_GOLD, 1);
-	golditem = Items[0];
+	golditem = {};
+	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 	ActiveItemCount = 0;
 
-	for (int i = 0; i < MAXITEMS; i++) {
-		auto &item = Items[i];
+	for (auto &item : Items) {
 		item._itype = ItemType::None;
 		item.position = { 0, 0 };
 		item._iAnimFlag = false;
