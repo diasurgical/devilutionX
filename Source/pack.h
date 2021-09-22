@@ -86,11 +86,9 @@ void PackItem(ItemPack *id, const Item *is);
 /**
  * Expand an ItemPack into an Item
  *
- * Note: last slot of item[MAXITEMS+1] used as temporary buffer
- * find real name reference below, possibly [sizeof(item[])/sizeof(Item)]
- * @param is The source packed item
- * @param id The destination item
+ * @param packedItem The source packed item
+ * @param item The destination item
  */
-void UnPackItem(const ItemPack *is, Item *id, bool isHellfire);
+void UnPackItem(const ItemPack &packedItem, Item &item, bool isHellfire);
 
 } // namespace devilution
