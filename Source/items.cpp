@@ -4730,9 +4730,8 @@ void SpawnHealer(int lvl)
 
 void SpawnStoreGold()
 {
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_GOLD, 1);
-	golditem = Items[0];
+	golditem = {};
+	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 }
 
