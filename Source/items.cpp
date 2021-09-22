@@ -314,38 +314,6 @@ _sfx_id ItemDropSnds[] = {
 	IS_FLARM,
 	IS_FLARM,
 };
-/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
-int premiumlvladd[] = {
-	// clang-format off
-	-1,
-	-1,
-	 0,
-	 0,
-	 1,
-	 2,
-	// clang-format on
-};
-/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
-int premiumLvlAddHellfire[] = {
-	// clang-format off
-	-1,
-	-1,
-	-1,
-	 0,
-	 0,
-	 0,
-	 0,
-	 1,
-	 1,
-	 1,
-	 1,
-	 2,
-	 2,
-	 3,
-	 3,
-	// clang-format on
-};
-
 bool IsPrefixValidForItemType(int i, AffixItemType flgs)
 {
 	AffixItemType itemTypes = ItemPrefixes[i].PLIType;
@@ -4074,35 +4042,76 @@ void SpawnSmith(int lvl)
 
 void SpawnPremium(int pnum)
 {
-	int8_t lvl = Players[pnum]._pLevel;
-	int maxItems = gbIsHellfire ? SMITH_PREMIUM_ITEMS : 6;
-	if (numpremium < maxItems) {
-		for (int i = 0; i < maxItems; i++) {
-			if (premiumitems[i].isEmpty()) {
-				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(premiumitems[i], plvl, pnum);
+	/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
+	constexpr std::array<int, 15> premiumlvladd = {
+		-1,
+		-1,
+		0,
+		0,
+		1,
+		2,
+	};
+
+	/** Maps from Griswold premium item number to a quality level delta as added to the base quality level. */
+	constexpr std::array<int, 15> premiumLvlAddHellfire = {
+		-1,
+		-1,
+		-1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		1,
+		1,
+		1,
+		2,
+		2,
+		3,
+		3,
+	};
+
+	auto premiumItem = premiumitems.begin();
+	const auto premiumEnd = gbIsHellfire ? premiumitems.end() : premiumitems.begin() + 6;
+
+	auto itemLevelOffset = gbIsHellfire ? premiumLvlAddHellfire.begin() : premiumlvladd.begin();
+
+	const int8_t lvl = Players[pnum]._pLevel;
+	const int8_t itemsDiscardedPerLevelUp = (gbIsHellfire ? 4 : 2);
+
+	const int8_t maxItems = std::distance(premiumItem, premiumEnd);
+
+	const int8_t itemsToDiscard = std::min((lvl - premiumlevel) * itemsDiscardedPerLevelUp, static_cast<int>(maxItems));
+	auto nextReusableItem = premiumItem + itemsToDiscard;
+
+	while (premiumItem != premiumEnd) {
+		const int16_t targetLevel = clamp(lvl + *itemLevelOffset, 1, 30);
+
+		while (nextReusableItem != premiumEnd) {
+			if (!nextReusableItem->isEmpty() && (nextReusableItem->_iCreateInfo & CF_LEVEL) >= targetLevel) {
+				break;
 			}
+
+			nextReusableItem++;
 		}
-		numpremium = maxItems;
-	}
-	while (premiumlevel < lvl) {
-		premiumlevel++;
-		if (gbIsHellfire) {
-			// Discard first 3 items and shift next 10
-			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
-			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
-			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
+
+		if (nextReusableItem != premiumEnd && (nextReusableItem->_iCreateInfo & CF_LEVEL) == targetLevel) {
+			if (nextReusableItem != premiumItem) {
+				// Found an item that matches the target level, so bring it up to the current position
+				*premiumItem = nextReusableItem->pop();
+			} // else the current item is still usable, so just go to the next position without rerolling or moving anything.
+			nextReusableItem++;
 		} else {
-			// Discard first 2 items and shift next 3
-			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
-			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
+			// Either no items are suitable or they're too high a level to be useful at this position, need to roll a new item.
+			SpawnOnePremium(*premiumItem, targetLevel, pnum);
 		}
+
+		premiumItem++;
+		itemLevelOffset++;
 	}
+
+	premiumlevel = lvl;
+	numpremium = maxItems;
 }
 
 void SpawnWitch(int lvl)

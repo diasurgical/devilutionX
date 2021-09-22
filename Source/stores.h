@@ -81,10 +81,10 @@ extern DVL_API_FOR_TEST Item storehold[48];
 extern Item smithitem[SMITH_ITEMS];
 /** Number of premium items for sale by Griswold */
 extern int numpremium;
-/** Base level of current premium items sold by Griswold */
-extern int premiumlevel;
+/** Character level used when Griswold last refreshed his premium item stock */
+extern int8_t premiumlevel;
 /** Premium items sold by Griswold */
-extern Item premiumitems[SMITH_PREMIUM_ITEMS];
+extern std::array<Item, SMITH_PREMIUM_ITEMS> premiumitems;
 
 /** Items sold by Pepin */
 extern Item healitem[20];
