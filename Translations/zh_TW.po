@@ -3184,7 +3184,7 @@ msgid "The Defender"
 msgstr "防守者"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr "鷹頭獅爪"
 
 #: Source/itemdat.cpp:419

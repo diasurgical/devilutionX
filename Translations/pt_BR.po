@@ -3206,7 +3206,7 @@ msgid "The Defender"
 msgstr "O defensor"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr "Garra de grifo"
 
 #: Source/itemdat.cpp:419
