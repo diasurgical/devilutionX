@@ -3471,7 +3471,7 @@ msgid "Rod of Onan"
 msgstr "Vara de Onan"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Sprits"
+msgid "Helm of Spirits"
 msgstr "Yelmo de Espíritus"
 
 #: Source/itemdat.cpp:460

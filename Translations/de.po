@@ -3362,7 +3362,7 @@ msgid "Rod of Onan"
 msgstr "Onans Stab"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Sprits"
+msgid "Helm of Spirits"
 msgstr "Helm der Geister"
 
 #: Source/itemdat.cpp:460

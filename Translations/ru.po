@@ -3374,7 +3374,7 @@ msgid "Rod of Onan"
 msgstr "Жезл Онана"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Sprits"
+msgid "Helm of Spirits"
 msgstr "Шлем духов"
 
 #: Source/itemdat.cpp:460
