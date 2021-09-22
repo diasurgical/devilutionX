@@ -4589,15 +4589,15 @@ void SpawnBoy(int lvl)
 		return;
 	do {
 		keepgoing = false;
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		boyitem = {};
+		boyitem._iSeed = AdvanceRndSeed();
+		SetRndSeed(boyitem._iSeed);
 		int itype = RndBoyItem(lvl) - 1;
-		GetItemAttrs(Items[0], itype, lvl);
-		GetItemBonus(Items[0], lvl, 2 * lvl, true, true);
+		GetItemAttrs(boyitem, itype, lvl);
+		GetItemBonus(boyitem, lvl, 2 * lvl, true, true);
 
 		if (!gbIsHellfire) {
-			if (Items[0]._iIvalue > 90000) {
+			if (boyitem._iIvalue > 90000) {
 				keepgoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
@@ -4606,7 +4606,7 @@ void SpawnBoy(int lvl)
 
 		ivalue = 0;
 
-		ItemType itemType = Items[0]._itype;
+		ItemType itemType = boyitem._itype;
 
 		switch (itemType) {
 		case ItemType::LightArmor:
@@ -4672,13 +4672,12 @@ void SpawnBoy(int lvl)
 		}
 	} while (keepgoing
 	    || ((
-	            Items[0]._iIvalue > 200000
-	            || Items[0]._iMinStr > strength
-	            || Items[0]._iMinMag > magic
-	            || Items[0]._iMinDex > dexterity
-	            || Items[0]._iIvalue < ivalue)
+	            boyitem._iIvalue > 200000
+	            || boyitem._iMinStr > strength
+	            || boyitem._iMinMag > magic
+	            || boyitem._iMinDex > dexterity
+	            || boyitem._iIvalue < ivalue)
 	        && count < 250));
-	boyitem = Items[0];
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
 	boyitem._iStatFlag = StoreStatOk(boyitem);
