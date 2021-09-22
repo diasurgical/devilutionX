@@ -34,7 +34,7 @@ Item storehold[48];
 Item smithitem[SMITH_ITEMS];
 int numpremium;
 int premiumlevel;
-Item premiumitems[SMITH_PREMIUM_ITEMS];
+std::array<Item, SMITH_PREMIUM_ITEMS> premiumitems;
 
 Item healitem[20];
 
