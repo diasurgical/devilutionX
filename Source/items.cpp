@@ -529,17 +529,17 @@ void CalcPlrItemMin(Player &player)
 	}
 }
 
-void WitchBookLevel(int ii)
+void WitchBookLevel(Item &bookItem)
 {
-	if (witchitem[ii]._iMiscId != IMISC_BOOK)
+	if (bookItem._iMiscId != IMISC_BOOK)
 		return;
-	witchitem[ii]._iMinMag = spelldata[witchitem[ii]._iSpell].sMinInt;
-	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[witchitem[ii]._iSpell];
+	bookItem._iMinMag = spelldata[bookItem._iSpell].sMinInt;
+	int8_t spellLevel = Players[MyPlayerId]._pSplLvl[bookItem._iSpell];
 	while (spellLevel > 0) {
-		witchitem[ii]._iMinMag += 20 * witchitem[ii]._iMinMag / 100;
+		bookItem._iMinMag += 20 * bookItem._iMinMag / 100;
 		spellLevel--;
-		if (witchitem[ii]._iMinMag + 20 * witchitem[ii]._iMinMag / 100 > 255) {
-			witchitem[ii]._iMinMag = 255;
+		if (bookItem._iMinMag + 20 * bookItem._iMinMag / 100 > 255) {
+			bookItem._iMinMag = 255;
 			spellLevel = 0;
 		}
 	}
@@ -563,7 +563,7 @@ void CalcPlrBookVals(Player &player)
 {
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
-			WitchBookLevel(i);
+			WitchBookLevel(witchitem[i]);
 			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
 		}
 	}
@@ -4497,19 +4497,16 @@ void SpawnWitch(int lvl)
 
 	int j = PinnedItemCount;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_MANA, 1);
-	witchitem[0] = Items[0];
+	witchitem[0] = {};
+	GetItemAttrs(witchitem[0], IDI_MANA, 1);
 	witchitem[0]._iCreateInfo = lvl;
 	witchitem[0]._iStatFlag = true;
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_FULLMANA, 1);
-	witchitem[1] = Items[0];
+	witchitem[1] = {};
+	GetItemAttrs(witchitem[1], IDI_FULLMANA, 1);
 	witchitem[1]._iCreateInfo = lvl;
 	witchitem[1]._iStatFlag = true;
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_PORTAL, 1);
-	witchitem[2] = Items[0];
+	witchitem[2] = {};
+	GetItemAttrs(witchitem[2], IDI_PORTAL, 1);
 	witchitem[2]._iCreateInfo = lvl;
 	witchitem[2]._iStatFlag = true;
 
@@ -4526,17 +4523,18 @@ void SpawnWitch(int lvl)
 			if (lvl < AllItemsList[i].iMinMLvl)
 				continue;
 
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			auto &bookItem = witchitem[j];
+
+			bookItem = {};
+			bookItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(bookItem._iSeed);
 			AdvanceRndSeed();
 
-			GetItemAttrs(Items[0], i, lvl);
-			witchitem[j] = Items[0];
-			witchitem[j]._iCreateInfo = lvl | CF_WITCH;
-			witchitem[j]._iIdentified = true;
-			WitchBookLevel(j);
-			witchitem[j]._iStatFlag = StoreStatOk(witchitem[j]);
+			GetItemAttrs(bookItem, i, lvl);
+			bookItem._iCreateInfo = lvl | CF_WITCH;
+			bookItem._iIdentified = true;
+			WitchBookLevel(bookItem);
+			bookItem._iStatFlag = StoreStatOk(bookItem);
 			j++;
 			bCnt++;
 		}
@@ -4544,25 +4542,25 @@ void SpawnWitch(int lvl)
 	int iCnt = GenerateRnd(WITCH_ITEMS - reservedItems) + 10;
 
 	for (int i = j; i < iCnt; i++) {
+		auto &newItem = witchitem[i];
 		do {
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			newItem = {};
+			newItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(newItem._iSeed);
 			int itemData = RndWitchItem(lvl) - 1;
-			GetItemAttrs(Items[0], itemData, lvl);
+			GetItemAttrs(newItem, itemData, lvl);
 			int maxlvl = -1;
 			if (GenerateRnd(100) <= 5)
 				maxlvl = 2 * lvl;
-			if (maxlvl == -1 && Items[0]._iMiscId == IMISC_STAFF)
+			if (maxlvl == -1 && newItem._iMiscId == IMISC_STAFF)
 				maxlvl = 2 * lvl;
 			if (maxlvl != -1)
-				GetItemBonus(Items[0], maxlvl / 2, maxlvl, true, true);
-		} while (Items[0]._iIvalue > maxValue);
-		witchitem[i] = Items[0];
-		witchitem[i]._iCreateInfo = lvl | CF_WITCH;
-		witchitem[i]._iIdentified = true;
-		WitchBookLevel(i);
-		witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
+				GetItemBonus(newItem, maxlvl / 2, maxlvl, true, true);
+		} while (newItem._iIvalue > maxValue);
+		newItem._iCreateInfo = lvl | CF_WITCH;
+		newItem._iIdentified = true;
+		WitchBookLevel(newItem);
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 
 	for (int i = iCnt; i < WITCH_ITEMS; i++)
