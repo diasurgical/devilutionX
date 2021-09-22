@@ -4863,7 +4863,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	const int max_time = 3000;
 	const int max_iter = 1000000;
 
-		std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 	UniqueItem uniqueItem;
 	bool foundUnique = false;
 	int uniqBaseLevel = 0;
@@ -4898,6 +4898,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	fake_m._uniqtype = 0;
 
 	if (unique) {
+		fake_m.mLevel = std::max<int>(uniqBaseLevel, uniqueItem.UIMinLvl);
 		for (int j = 0; AllItemsList[j].iLoc != ILOC_INVALID; j++) {
 			if (!IsItemAvailable(j))
 				continue;
@@ -4905,7 +4906,6 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 				uniqBaseLevel = AllItemsList[j].iMinMLvl;
 		}
 	}
-
 
 	int i = 0;
 	for (;; i++) {
@@ -4920,8 +4920,6 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 		if (!unique)
 			fake_m.mLevel = dist(BetterRng) % CF_LEVEL + 1;
-		else
-			fake_m.mLevel = std::max<int>(uniqBaseLevel , uniqueItem.UIMinLvl);
 
 		int idx = RndItem(fake_m);
 		if (idx > 1) {
