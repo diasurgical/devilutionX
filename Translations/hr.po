@@ -3350,7 +3350,7 @@ msgid "The Defender"
 msgstr ""
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr ""
 
 #: Source/itemdat.cpp:419

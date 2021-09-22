@@ -3213,7 +3213,7 @@ msgid "The Defender"
 msgstr "Obrońca"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr "Pazur Gryfa"
 
 #: Source/itemdat.cpp:419

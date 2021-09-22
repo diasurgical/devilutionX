@@ -3494,7 +3494,7 @@ msgstr ""
 "그렇게 흉폭한 상대와 싸우게 된다면 빛이 당신을 이끌어 보호하길 기원할게요."
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr ""
 
 #: Source/itemdat.cpp:419

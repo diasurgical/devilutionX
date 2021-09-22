@@ -3209,7 +3209,7 @@ msgid "The Defender"
 msgstr "Защитник"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr "Коготь грифона"
 
 #: Source/itemdat.cpp:419

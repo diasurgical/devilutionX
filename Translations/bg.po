@@ -3201,7 +3201,7 @@ msgid "The Defender"
 msgstr "Закрилникът"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr "Грифонски нокът"
 
 #: Source/itemdat.cpp:419
