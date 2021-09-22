@@ -4690,22 +4690,19 @@ void SpawnHealer(int lvl)
 
 	int srnd;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_HEAL, 1);
-	healitem[0] = Items[0];
+	healitem[0] = {};
+	GetItemAttrs(healitem[0], IDI_HEAL, 1);
 	healitem[0]._iCreateInfo = lvl;
 	healitem[0]._iStatFlag = true;
 
-	memset(&Items[0], 0, sizeof(*Items));
-	GetItemAttrs(Items[0], IDI_FULLHEAL, 1);
-	healitem[1] = Items[0];
+	healitem[1] = {};
+	GetItemAttrs(healitem[1], IDI_FULLHEAL, 1);
 	healitem[1]._iCreateInfo = lvl;
 	healitem[1]._iStatFlag = true;
 
 	if (gbIsMultiplayer) {
-		memset(&Items[0], 0, sizeof(*Items));
-		GetItemAttrs(Items[0], IDI_RESURRECT, 1);
-		healitem[2] = Items[0];
+		healitem[2] = {};
+		GetItemAttrs(healitem[2], IDI_RESURRECT, 1);
 		healitem[2]._iCreateInfo = lvl;
 		healitem[2]._iStatFlag = true;
 
@@ -4715,15 +4712,15 @@ void SpawnHealer(int lvl)
 	}
 	int nsi = GenerateRnd(gbIsHellfire ? 10 : 8) + 10;
 	for (int i = srnd; i < nsi; i++) {
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		auto &newItem = healitem[i];
+		newItem = {};
+		newItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(newItem._iSeed);
 		int itype = RndHealerItem(lvl) - 1;
-		GetItemAttrs(Items[0], itype, lvl);
-		healitem[i] = Items[0];
-		healitem[i]._iCreateInfo = lvl | CF_HEALER;
-		healitem[i]._iIdentified = true;
-		healitem[i]._iStatFlag = StoreStatOk(healitem[i]);
+		GetItemAttrs(newItem, itype, lvl);
+		newItem._iCreateInfo = lvl | CF_HEALER;
+		newItem._iIdentified = true;
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 	for (int i = nsi; i < 20; i++) {
 		healitem[i]._itype = ItemType::None;
