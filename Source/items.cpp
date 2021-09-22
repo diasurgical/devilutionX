@@ -2195,9 +2195,9 @@ int RndPremiumItem(int minlvl, int maxlvl)
 
 void SpawnOnePremium(int i, int plvl, int playerId)
 {
+	Item &premiumItem = premiumitems[i];
 	int itemValue = 0;
 	bool keepGoing = false;
-	Item tempItem = Items[0];
 
 	auto &player = Players[playerId];
 
@@ -2214,22 +2214,22 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 
 	do {
 		keepGoing = false;
-		memset(&Items[0], 0, sizeof(*Items));
-		Items[0]._iSeed = AdvanceRndSeed();
-		SetRndSeed(Items[0]._iSeed);
+		premiumItem = {};
+		premiumItem._iSeed = AdvanceRndSeed();
+		SetRndSeed(premiumItem._iSeed);
 		int itemType = RndPremiumItem(plvl / 4, plvl) - 1;
-		GetItemAttrs(Items[0], itemType, plvl);
-		GetItemBonus(Items[0], plvl / 2, plvl, true, !gbIsHellfire);
+		GetItemAttrs(premiumItem, itemType, plvl);
+		GetItemBonus(premiumItem, plvl / 2, plvl, true, !gbIsHellfire);
 
 		if (!gbIsHellfire) {
-			if (Items[0]._iIvalue > 140000) {
+			if (premiumItem._iIvalue > 140000) {
 				keepGoing = true; // prevent breaking the do/while loop too early by failing hellfire's condition in while
 				continue;
 			}
 			break;
 		}
 
-		switch (Items[0]._itype) {
+		switch (premiumItem._itype) {
 		case ItemType::LightArmor:
 		case ItemType::MediumArmor:
 		case ItemType::HeavyArmor: {
@@ -2251,7 +2251,7 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		case ItemType::Ring:
 		case ItemType::Amulet: {
 			const auto *const mostValuablePlayerItem = player.GetMostValuableItem(
-			    [](const Item &item) { return item._itype == Items[0]._itype; });
+			    [filterType = premiumItem._itype](const Item &item) { return item._itype == filterType; });
 
 			itemValue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
@@ -2265,17 +2265,15 @@ void SpawnOnePremium(int i, int plvl, int playerId)
 		count++;
 	} while (keepGoing
 	    || ((
-	            Items[0]._iIvalue > 200000
-	            || Items[0]._iMinStr > strength
-	            || Items[0]._iMinMag > magic
-	            || Items[0]._iMinDex > dexterity
-	            || Items[0]._iIvalue < itemValue)
+	            premiumItem._iIvalue > 200000
+	            || premiumItem._iMinStr > strength
+	            || premiumItem._iMinMag > magic
+	            || premiumItem._iMinDex > dexterity
+	            || premiumItem._iIvalue < itemValue)
 	        && count < 150));
-	premiumitems[i] = Items[0];
-	premiumitems[i]._iCreateInfo = plvl | CF_SMITHPREMIUM;
-	premiumitems[i]._iIdentified = true;
-	premiumitems[i]._iStatFlag = StoreStatOk(premiumitems[i]);
-	Items[0] = tempItem;
+	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
+	premiumItem._iIdentified = true;
+	premiumItem._iStatFlag = StoreStatOk(premiumItem);
 }
 
 bool WitchItemOk(int i)
