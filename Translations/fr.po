@@ -3329,7 +3329,7 @@ msgid "Rod of Onan"
 msgstr "Bâtonnet d'Onan"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Sprits"
+msgid "Helm of Spirits"
 msgstr "Heaume des Esprits"
 
 #: Source/itemdat.cpp:460
