@@ -4861,7 +4861,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		return "No space to generate the item!";
 
 	const int max_time = 3000;
-	const int max_iter = 10000000;
+	const int max_iter = 1000000;
 
 		std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 	UniqueItem uniqueItem;
@@ -4929,7 +4929,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		} else
 			continue;
 
-		if (unique && uniqueItem.UIItemId != AllItemsList[idx].iItemId)
+		if (unique && uniqueItem.UIItemId != AllItemsList[idx].iItemId && i < max_iter)
 			continue;
 
 		Point bkp = item.position;
@@ -4938,7 +4938,7 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		for (auto &flag : UniqueItemFlags)
 			flag = true;
 		UniqueItemFlags[uniqueIndex] = false;
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 1 : 1), false, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 15 : 1), false, false, false);
 
 		if (unique)
 			if (item._iMagical != ITEM_QUALITY_UNIQUE)
