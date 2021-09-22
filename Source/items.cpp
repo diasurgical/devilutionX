@@ -4863,13 +4863,11 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	const int max_time = 3000;
 	const int max_iter = 10000000;
 
-	int ii = AllocateItem();
-	auto &item = Items[ii];
-	Point pos = Players[MyPlayerId].position.tile;
-	GetSuperItemSpace(pos, ii);
-	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
-	UniqueItem uniq;
+		std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+	UniqueItem uniqueItem;
 	bool foundUnique = false;
+	int uniqBaseLevel = 0;
+	int uniqueIndex = 0;
 	if (unique) {
 		for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
 			if (!IsUniqueAvailable(j))
@@ -4879,30 +4877,32 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 			std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 			if (tmp.find(itemName) != std::string::npos) {
 				itemName = tmp;
-				uniq = UniqueItems[j];
-				SDL_Log("UNIQ INDEX: %d", j);
+				uniqueItem = UniqueItems[j];
+				uniqueIndex = j;
 				foundUnique = true;
 				break;
 			}
 		}
 	}
 	if (unique && !foundUnique)
-	    return "No unique found!";
+		return "No unique found!";
+
+	int ii = AllocateItem();
+	auto &item = Items[ii];
+	Point pos = Players[MyPlayerId].position.tile;
+	GetSuperItemSpace(pos, ii);
 
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
 	fake_m.MData = &MonstersData[0];
 	fake_m._uniqtype = 0;
-	int uniq_base_level = 0;
 
 	if (unique) {
 		for (int j = 0; AllItemsList[j].iLoc != ILOC_INVALID; j++) {
 			if (!IsItemAvailable(j))
 				continue;
-			if (AllItemsList[j].iItemId == uniq.UIItemId) {
-				uniq_base_level = AllItemsList[j].iMinMLvl;
-				//SDL_Log("MATCHED ITEM TYPE: %s %s  LVL : %d  ULVL:%d, OUTLVL %d", AllItemsList[j].iName, AllItemsList[j].iSName, AllItemsList[j].iMinMLvl, uniq.UIMinLvl, fake_m.mLevel);
-			}
+			if (AllItemsList[j].iItemId == uniqueItem.UIItemId)
+				uniqBaseLevel = AllItemsList[j].iMinMLvl;
 		}
 	}
 
@@ -4921,24 +4921,24 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		if (!unique)
 			fake_m.mLevel = dist(BetterRng) % CF_LEVEL + 1;
 		else
-			fake_m.mLevel = uniq_base_level;
+			fake_m.mLevel = std::max<int>(uniqBaseLevel , uniqueItem.UIMinLvl);
 
 		int idx = RndItem(fake_m);
-		if (idx > 0) {
+		if (idx > 1) {
 			idx--;
 		} else
 			continue;
 
-		if (unique && uniq.UIItemId != AllItemsList[idx].iItemId)
+		if (unique && uniqueItem.UIItemId != AllItemsList[idx].iItemId)
 			continue;
-
-		if (unique)
-			fake_m.mLevel = uniq.UIMinLvl;
 
 		Point bkp = item.position;
 		memset(&item, 0, sizeof(Item));
 		item.position = bkp;
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 15 : 1), false, true, false);
+		for (auto &flag : UniqueItemFlags)
+			flag = true;
+		UniqueItemFlags[uniqueIndex] = false;
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 1 : 1), false, false, false);
 
 		if (unique)
 			if (item._iMagical != ITEM_QUALITY_UNIQUE)
@@ -4949,10 +4949,8 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		if (tmp.find(itemName) != std::string::npos)
 			break;
 
-		if (unique) {
-			return "You chose an item that can't be generated - it would need other items to drop first";
-		}
-
+		if (unique)
+			return "You chose an item that can't be generated - some uniques don't drop in multiplayer!";
 	}
 
 	item._iIdentified = true;
