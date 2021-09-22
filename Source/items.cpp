@@ -4893,14 +4893,15 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	Monster fake_m;
 	fake_m.MData = &MonstersData[0];
 	fake_m._uniqtype = 0;
+	int uniq_base_level = 0;
 
 	if (unique) {
 		for (int j = 0; AllItemsList[j].iLoc != ILOC_INVALID; j++) {
 			if (!IsItemAvailable(j))
 				continue;
 			if (AllItemsList[j].iItemId == uniq.UIItemId) {
-				fake_m.mLevel = std::max<int8_t>(AllItemsList[j].iMinMLvl, uniq.UIMinLvl - 4);
-				SDL_Log("MATCHED ITEM TYPE: %s %s  LVL : %d  ULVL:%d, OUTLVL %d", AllItemsList[j].iName, AllItemsList[j].iSName, AllItemsList[j].iMinMLvl, uniq.UIMinLvl, fake_m.mLevel);
+				uniq_base_level = AllItemsList[j].iMinMLvl;
+				//SDL_Log("MATCHED ITEM TYPE: %s %s  LVL : %d  ULVL:%d, OUTLVL %d", AllItemsList[j].iName, AllItemsList[j].iSName, AllItemsList[j].iMinMLvl, uniq.UIMinLvl, fake_m.mLevel);
 			}
 		}
 	}
@@ -4919,6 +4920,8 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 		if (!unique)
 			fake_m.mLevel = dist(BetterRng) % CF_LEVEL + 1;
+		else
+			fake_m.mLevel = uniq_base_level;
 
 		int idx = RndItem(fake_m);
 		if (idx > 0) {
@@ -4928,6 +4931,9 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 
 		if (unique && uniq.UIItemId != AllItemsList[idx].iItemId)
 			continue;
+
+		if (unique)
+			fake_m.mLevel = uniq.UIMinLvl;
 
 		Point bkp = item.position;
 		memset(&item, 0, sizeof(Item));
@@ -4942,6 +4948,11 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
+
+		if (unique) {
+			return "You chose an item that can't be generated - it would need other items to drop first";
+		}
+
 	}
 
 	item._iIdentified = true;
