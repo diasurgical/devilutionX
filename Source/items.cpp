@@ -4933,11 +4933,14 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		Point bkp = item.position;
 		memset(&item, 0, sizeof(Item));
 		item.position = bkp;
-		for (auto &flag : UniqueItemFlags)
-			flag = true;
-		UniqueItemFlags[uniqueIndex] = false;
+		if (unique) {
+			for (auto &flag : UniqueItemFlags)
+				flag = true;
+			UniqueItemFlags[uniqueIndex] = false;
+		}
 		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 15 : 1), false, false, false);
-
+		for (auto &flag : UniqueItemFlags)
+			flag = false;
 		if (unique)
 			if (item._iMagical != ITEM_QUALITY_UNIQUE)
 				continue;
