@@ -492,7 +492,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			}
 		};
 		inv_body_loc slot = iLocToInvLoc(il);
-		NetSendCmdChItem(false, il);
+		NetSendCmdChItem(false, slot);
 		if (player.InvBody[slot].isEmpty())
 			player.InvBody[slot] = player.HoldItem;
 		else
