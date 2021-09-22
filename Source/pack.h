@@ -81,10 +81,17 @@ struct PlayerPack {
 
 void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
 bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
-void PackItem(ItemPack *id, const Item *is);
 
 /**
- * Expand an ItemPack into an Item
+ * @brief Save the attributes needed to recreate this item into an ItemPack struct
+ *
+ * @param packedItem 
+ * @param item 
+*/
+void PackItem(ItemPack &packedItem, const Item &item);
+
+/**
+ * Expand a ItemPack in to a Item
  *
  * @param packedItem The source packed item
  * @param item The destination item

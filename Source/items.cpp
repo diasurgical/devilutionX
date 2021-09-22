@@ -3518,7 +3518,7 @@ void CornerstoneSave()
 		return;
 	if (!CornerStone.item.isEmpty()) {
 		ItemPack id;
-		PackItem(&id, &CornerStone.item);
+		PackItem(id, CornerStone.item);
 		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
 			snprintf(&sgOptions.Hellfire.szItem[i * 2], 3, "%02hhX", buffer[i]);

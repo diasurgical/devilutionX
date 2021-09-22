@@ -35,41 +35,41 @@ void VerifyGoldSeeds(Player &player)
 
 } // namespace
 
-void PackItem(ItemPack *id, const Item *is)
+void PackItem(ItemPack &packedItem, const Item &item)
 {
-	memset(id, 0, sizeof(*id));
-	if (is->isEmpty()) {
-		id->idx = 0xFFFF;
+	packedItem = {};
+	if (item.isEmpty()) {
+		packedItem.idx = 0xFFFF;
 	} else {
-		auto idx = is->IDidx;
+		auto idx = item.IDidx;
 		if (!gbIsHellfire) {
 			idx = RemapItemIdxToDiablo(idx);
 		}
 		if (gbIsSpawn) {
 			idx = RemapItemIdxToSpawn(idx);
 		}
-		id->idx = SDL_SwapLE16(idx);
-		if (is->IDidx == IDI_EAR) {
-			id->iCreateInfo = is->_iName[8] | (is->_iName[7] << 8);
-			id->iSeed = LoadBE32(&is->_iName[9]);
-			id->bId = is->_iName[13];
-			id->bDur = is->_iName[14];
-			id->bMDur = is->_iName[15];
-			id->bCh = is->_iName[16];
-			id->bMCh = is->_iName[17];
-			id->wValue = SDL_SwapLE16(is->_ivalue | (is->_iName[18] << 8) | ((is->_iCurs - ICURS_EAR_SORCERER) << 6));
-			id->dwBuff = LoadBE32(&is->_iName[19]);
+		packedItem.idx = SDL_SwapLE16(idx);
+		if (item.IDidx == IDI_EAR) {
+			packedItem.iCreateInfo = item._iName[8] | (item._iName[7] << 8);
+			packedItem.iSeed = LoadBE32(&item._iName[9]);
+			packedItem.bId = item._iName[13];
+			packedItem.bDur = item._iName[14];
+			packedItem.bMDur = item._iName[15];
+			packedItem.bCh = item._iName[16];
+			packedItem.bMCh = item._iName[17];
+			packedItem.wValue = SDL_SwapLE16(item._ivalue | (item._iName[18] << 8) | ((item._iCurs - ICURS_EAR_SORCERER) << 6));
+			packedItem.dwBuff = LoadBE32(&item._iName[19]);
 		} else {
-			id->iSeed = SDL_SwapLE32(is->_iSeed);
-			id->iCreateInfo = SDL_SwapLE16(is->_iCreateInfo);
-			id->bId = (is->_iMagical << 1) | (is->_iIdentified ? 1 : 0);
-			id->bDur = is->_iDurability;
-			id->bMDur = is->_iMaxDur;
-			id->bCh = is->_iCharges;
-			id->bMCh = is->_iMaxCharges;
-			if (is->IDidx == IDI_GOLD)
-				id->wValue = SDL_SwapLE16(is->_ivalue);
-			id->dwBuff = is->dwBuff;
+			packedItem.iSeed = SDL_SwapLE32(item._iSeed);
+			packedItem.iCreateInfo = SDL_SwapLE16(item._iCreateInfo);
+			packedItem.bId = (item._iMagical << 1) | (item._iIdentified ? 1 : 0);
+			packedItem.bDur = item._iDurability;
+			packedItem.bMDur = item._iMaxDur;
+			packedItem.bCh = item._iCharges;
+			packedItem.bMCh = item._iMaxCharges;
+			if (item.IDidx == IDI_GOLD)
+				packedItem.wValue = SDL_SwapLE16(item._ivalue);
+			packedItem.dwBuff = item.dwBuff;
 		}
 	}
 }
@@ -109,19 +109,19 @@ void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield)
 		pPack->pSplLvl2[i - 37] = player._pSplLvl[i];
 
 	for (int i = 0; i < NUM_INVLOC; i++) {
-		PackItem(&pPack->InvBody[i], &player.InvBody[i]);
+		PackItem(pPack->InvBody[i], player.InvBody[i]);
 	}
 
 	pPack->_pNumInv = player._pNumInv;
 	for (int i = 0; i < pPack->_pNumInv; i++) {
-		PackItem(&pPack->InvList[i], &player.InvList[i]);
+		PackItem(pPack->InvList[i], player.InvList[i]);
 	}
 
 	for (int i = 0; i < NUM_INV_GRID_ELEM; i++)
 		pPack->InvGrid[i] = player.InvGrid[i];
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		PackItem(&pPack->SpdList[i], &player.SpdList[i]);
+		PackItem(pPack->SpdList[i], player.SpdList[i]);
 	}
 
 	pPack->wReflections = SDL_SwapLE16(player.wReflections);
