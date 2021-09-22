@@ -1568,11 +1568,8 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 
 void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
-	auto &item = Items[MAXITEMS];
-	memset(&item, 0, sizeof(item));
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
-
-	player.HoldItem = item;
+	player.HoldItem = {};
+	RecreateItem(player.HoldItem, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
 
 	if (bId) {
 		player.HoldItem._iIdentified = true;
