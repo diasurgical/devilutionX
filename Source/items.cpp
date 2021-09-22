@@ -4645,6 +4645,8 @@ void SpawnBoy(int lvl)
 			ivalue = mostValuablePlayerItem == nullptr ? 0 : mostValuablePlayerItem->_iIvalue;
 			break;
 		}
+		default:
+			app_fatal("Invalid item spawn");
 		}
 		ivalue = ivalue * 4 / 5; // avoids forced int > float > int conversion
 

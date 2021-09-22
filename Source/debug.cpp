@@ -829,6 +829,11 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 	case DebugGridTextItem::dSpecial:
 		info = dSpecial[dungeonCoords.x][dungeonCoords.y];
 		break;
+	case DebugGridTextItem::dObject:
+		info = dObject[dungeonCoords.x][dungeonCoords.y];
+		break;
+	case DebugGridTextItem::None:
+		return false;
 	}
 	if (info == 0)
 		return false;
