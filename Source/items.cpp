@@ -2193,9 +2193,8 @@ int RndPremiumItem(int minlvl, int maxlvl)
 	return RndVendorItem<PremiumItemOk>(minlvl, maxlvl);
 }
 
-void SpawnOnePremium(int i, int plvl, int playerId)
+void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 {
-	Item &premiumItem = premiumitems[i];
 	int itemValue = 0;
 	bool keepGoing = false;
 
@@ -4467,7 +4466,7 @@ void SpawnPremium(int pnum)
 		for (int i = 0; i < maxItems; i++) {
 			if (premiumitems[i].isEmpty()) {
 				int plvl = premiumlevel + (gbIsHellfire ? premiumLvlAddHellfire[i] : premiumlvladd[i]);
-				SpawnOnePremium(i, plvl, pnum);
+				SpawnOnePremium(premiumitems[i], plvl, pnum);
 			}
 		}
 		numpremium = maxItems;
@@ -4477,17 +4476,17 @@ void SpawnPremium(int pnum)
 		if (gbIsHellfire) {
 			// Discard first 3 items and shift next 10
 			std::move(&premiumitems[3], &premiumitems[12] + 1, &premiumitems[0]);
-			SpawnOnePremium(10, premiumlevel + premiumLvlAddHellfire[10], pnum);
+			SpawnOnePremium(premiumitems[10], premiumlevel + premiumLvlAddHellfire[10], pnum);
 			premiumitems[11] = premiumitems[13];
-			SpawnOnePremium(12, premiumlevel + premiumLvlAddHellfire[12], pnum);
+			SpawnOnePremium(premiumitems[12], premiumlevel + premiumLvlAddHellfire[12], pnum);
 			premiumitems[13] = premiumitems[14];
-			SpawnOnePremium(14, premiumlevel + premiumLvlAddHellfire[14], pnum);
+			SpawnOnePremium(premiumitems[14], premiumlevel + premiumLvlAddHellfire[14], pnum);
 		} else {
 			// Discard first 2 items and shift next 3
 			std::move(&premiumitems[2], &premiumitems[4] + 1, &premiumitems[0]);
-			SpawnOnePremium(3, premiumlevel + premiumlvladd[3], pnum);
+			SpawnOnePremium(premiumitems[3], premiumlevel + premiumlvladd[3], pnum);
 			premiumitems[4] = premiumitems[5];
-			SpawnOnePremium(5, premiumlevel + premiumlvladd[5], pnum);
+			SpawnOnePremium(premiumitems[5], premiumlevel + premiumlvladd[5], pnum);
 		}
 	}
 }
