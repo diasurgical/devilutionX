@@ -4430,9 +4430,6 @@ void SpawnSmith(int lvl)
 {
 	constexpr int PinnedItemCount = 0;
 
-	Item holditem;
-	holditem = Items[0];
-
 	int maxValue = 140000;
 	int maxItems = 20;
 	if (gbIsHellfire) {
@@ -4442,23 +4439,24 @@ void SpawnSmith(int lvl)
 
 	int iCnt = GenerateRnd(maxItems - 10) + 10;
 	for (int i = 0; i < iCnt; i++) {
+		Item &newItem = smithitem[i];
+
 		do {
-			memset(&Items[0], 0, sizeof(*Items));
-			Items[0]._iSeed = AdvanceRndSeed();
-			SetRndSeed(Items[0]._iSeed);
+			newItem = {};
+			newItem._iSeed = AdvanceRndSeed();
+			SetRndSeed(newItem._iSeed);
 			int itemData = RndSmithItem(lvl) - 1;
-			GetItemAttrs(Items[0], itemData, lvl);
-		} while (Items[0]._iIvalue > maxValue);
-		smithitem[i] = Items[0];
-		smithitem[i]._iCreateInfo = lvl | CF_SMITH;
-		smithitem[i]._iIdentified = true;
-		smithitem[i]._iStatFlag = StoreStatOk(smithitem[i]);
+			GetItemAttrs(newItem, itemData, lvl);
+		} while (newItem._iIvalue > maxValue);
+
+		newItem._iCreateInfo = lvl | CF_SMITH;
+		newItem._iIdentified = true;
+		newItem._iStatFlag = StoreStatOk(newItem);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ItemType::None;
 
 	SortVendor(smithitem + PinnedItemCount);
-	Items[0] = holditem;
 }
 
 void SpawnPremium(int pnum)
