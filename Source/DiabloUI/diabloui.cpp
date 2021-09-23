@@ -2,6 +2,11 @@
 
 #include <algorithm>
 #include <string>
+#ifdef USE_SDL1
+#include <codecvt>
+#include <locale>
+#include <cassert>
+#endif
 
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
@@ -223,13 +228,13 @@ void UiFocusPageDown()
 	}
 }
 
-void SelheroCatToName(char *inBuf, char *outBuf, int cnt)
+void SelheroCatToName(const char *inBuf, char *outBuf, int cnt)
 {
 	strncat(outBuf, inBuf, cnt - strlen(outBuf));
 }
 
 #ifdef __vita__
-void selhero_SetName(char *in_buf, char *out_buf, int cnt)
+void selhero_SetName(const char *in_buf, char *out_buf, int cnt)
 {
 	strncpy(out_buf, in_buf, cnt);
 }
@@ -337,12 +342,9 @@ void UiFocusNavigation(SDL_Event *event)
 #ifdef USE_SDL1
 			if ((event->key.keysym.mod & KMOD_CTRL) == 0) {
 				Uint16 unicode = event->key.keysym.unicode;
-				if (unicode && (unicode & 0xFF80) == 0) {
-					char utf8[SDL_TEXTINPUTEVENT_TEXT_SIZE];
-					utf8[0] = (char)unicode;
-					utf8[1] = '\0';
-					SelheroCatToName(utf8, UiTextInput, UiTextInputLen);
-				}
+				std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
+				std::string utf8 = convert.to_bytes(unicode);
+				SelheroCatToName(utf8.c_str(), UiTextInput, UiTextInputLen);
 			}
 #endif
 			break;

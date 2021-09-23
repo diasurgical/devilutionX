@@ -2,6 +2,11 @@
 #include <cstdint>
 #include <deque>
 #include <string>
+#ifdef USE_SDL1
+#include <codecvt>
+#include <locale>
+#include <cassert>
+#endif
 
 #include "control.h"
 #include "controls/controller.h"
@@ -474,6 +479,16 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		break;
 	case SDL_KEYDOWN:
 	case SDL_KEYUP: {
+#ifdef USE_SDL1
+		if (gbRunGame && IsTalkActive()) {
+			Uint16 unicode = e.key.keysym.unicode;
+			if (unicode >= ' ') {
+				std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> convert;
+				std::string utf8 = convert.to_bytes(unicode);
+				control_new_text(utf8);
+			}
+		}
+#endif
 		int key = TranslateSdlKey(e.key.keysym);
 		if (key == -1)
 			return FalseAvail(e.type == SDL_KEYDOWN ? "SDL_KEYDOWN" : "SDL_KEYUP", e.key.keysym.sym);
@@ -537,7 +552,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			break;
 		return FalseAvail("SDL_TEXTEDITING", e.edit.length);
 	case SDL_TEXTINPUT:
-		if (gbRunGame) {
+		if (gbRunGame && IsTalkActive()) {
 			control_new_text(e.text.text);
 			break;
 		}
