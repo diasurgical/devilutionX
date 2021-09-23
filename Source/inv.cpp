@@ -1101,7 +1101,7 @@ void CleanupItems(int ii)
 	int i = 0;
 	while (i < ActiveItemCount) {
 		if (ActiveItems[i] == ii) {
-			DeleteItem(ActiveItems[i], i);
+			DeleteItem(i);
 			i = 0;
 			continue;
 		}

@@ -3567,7 +3567,7 @@ void CornerstoneLoad(Point position)
 		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < ActiveItemCount; i++) {
 			if (ActiveItems[i] == ii) {
-				DeleteItem(ActiveItems[i], i);
+				DeleteItem(i);
 				break;
 			}
 		}
@@ -3686,14 +3686,15 @@ void RespawnItem(Item *item, bool flipFlag)
 		item->_iSelFlag = 1;
 }
 
-void DeleteItem(int ii, int i)
+void DeleteItem(int i)
 {
-	AvailableItems[MAXITEMS - ActiveItemCount] = ii;
+	if (pcursitem == ActiveItems[i]) // Unselect item if player has it highlighted
+		pcursitem = -1;
+
+	AvailableItems[MAXITEMS - ActiveItemCount] = ActiveItems[i];
 	ActiveItemCount--;
 	if (ActiveItemCount > 0 && i != ActiveItemCount)
 		ActiveItems[i] = ActiveItems[ActiveItemCount];
-	if (pcursitem == ii) // Unselect item if player has it highlighted
-		pcursitem = -1;
 }
 
 void ProcessItems()
