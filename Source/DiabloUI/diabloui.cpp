@@ -27,6 +27,7 @@
 #include "utils/sdl_wrap.h"
 #include "utils/stubs.h"
 #include "utils/language.h"
+#include "utils/utf8.h"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch
@@ -330,10 +331,7 @@ void UiFocusNavigation(SDL_Event *event)
 #endif
 			case SDLK_BACKSPACE:
 			case SDLK_LEFT: {
-				int nameLen = strlen(UiTextInput);
-				if (nameLen > 0) {
-					UiTextInput[nameLen - 1] = '\0';
-				}
+				UiTextInput[FindLastUtf8Symbols(UiTextInput)] = '\0';
 				return;
 			}
 			default:
