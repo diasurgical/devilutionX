@@ -3567,7 +3567,7 @@ void CornerstoneLoad(Point position)
 		int ii = dItem[position.x][position.y] - 1;
 		for (int i = 0; i < ActiveItemCount; i++) {
 			if (ActiveItems[i] == ii) {
-				DeleteItem(ii, i);
+				DeleteItem(ActiveItems[i], i);
 				break;
 			}
 		}
