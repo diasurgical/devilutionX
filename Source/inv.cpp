@@ -1084,11 +1084,12 @@ void OpenCrypt()
 		NetSendCmdQuest(true, quest);
 }
 
-void CleanupItems(Item *item, int ii)
+void CleanupItems(int ii)
 {
-	dItem[item->position.x][item->position.y] = 0;
+	auto &item = Items[ii];
+	dItem[item.position.x][item.position.y] = 0;
 
-	if (currlevel == 21 && item->position == CornerStone.position) {
+	if (currlevel == 21 && item.position == CornerStone.position) {
 		CornerStone.item._itype = ItemType::None;
 		CornerStone.item._iSelFlag = 0;
 		CornerStone.item.position = { 0, 0 };
@@ -1627,14 +1628,15 @@ void CheckItemStats(Player &player)
 	}
 }
 
-void InvGetItem(int pnum, Item *item, int ii)
+void InvGetItem(int pnum, int ii)
 {
+	auto &item = Items[ii];
 	if (dropGoldFlag) {
 		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
-	if (dItem[item->position.x][item->position.y] == 0)
+	if (dItem[item.position.x][item.position.y] == 0)
 		return;
 
 	auto &player = Players[pnum];
@@ -1642,15 +1644,15 @@ void InvGetItem(int pnum, Item *item, int ii)
 	if (MyPlayerId == pnum && pcurs >= CURSOR_FIRSTITEM)
 		NetSendCmdPItem(true, CMD_SYNCPUTITEM, player.position.tile);
 
-	item->_iCreateInfo &= ~CF_PREGEN;
-	player.HoldItem = *item;
+	item._iCreateInfo &= ~CF_PREGEN;
+	player.HoldItem = item;
 	CheckQuestItem(player);
 	CheckBookLevel(player);
 	CheckItemStats(player);
 	bool cursorUpdated = false;
 	if (player.HoldItem._itype == ItemType::Gold && GoldAutoPlace(player))
 		cursorUpdated = true;
-	CleanupItems(item, ii);
+	CleanupItems(ii);
 	pcursitem = -1;
 	if (!cursorUpdated)
 		NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
@@ -1706,7 +1708,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 			PlaySFX(IS_IGRAB);
 		}
 
-		CleanupItems(&Items[ii], ii);
+		CleanupItems(ii);
 		return;
 	}
 
@@ -1742,25 +1744,30 @@ int FindGetItem(int idx, uint16_t ci, int iseed)
 
 void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 {
-	int ii;
+	// Check what the local client has at the target position
+	int ii = dItem[position.x][position.y] - 1;
 
-	if (dItem[position.x][position.y] != 0) {
-		ii = dItem[position.x][position.y] - 1;
-		if (Items[ii].IDidx == idx
-		    && Items[ii]._iSeed == iseed
-		    && Items[ii]._iCreateInfo == ci) {
-			FindGetItem(idx, ci, iseed);
-		} else {
-			ii = FindGetItem(idx, ci, iseed);
+	if (ii >= 0 && ii < MAXITEMS) {
+		// If there was an item there, check that it's the same item as the remote player has
+		if (Items[ii].IDidx != idx
+		    || Items[ii]._iSeed != iseed
+		    || Items[ii]._iCreateInfo != ci) {
+			// Key attributes don't match so we must've desynced, ignore this index and try find a matching item via lookup
+			ii = -1;
 		}
-	} else {
+	}
+
+	if (ii == -1) {
+		// Either there's no item at the expected position or it doesn't match what is being picked up, so look for an item that matches the key attributes
 		ii = FindGetItem(idx, ci, iseed);
 	}
 
-	if (ii == -1)
+	if (ii == -1) {
+		// Still can't find the expected item, assume it was collected earlier and this caused the desync
 		return;
+	}
 
-	CleanupItems(&Items[ii], ii);
+	CleanupItems(ii);
 }
 
 bool CanPut(Point position)

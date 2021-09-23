@@ -159,7 +159,7 @@ void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
  */
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
 void CheckItemStats(Player &player);
-void InvGetItem(int pnum, Item *item, int ii);
+void InvGetItem(int pnum, int ii);
 void AutoGetItem(int pnum, Item *item, int ii);
 int FindGetItem(int idx, uint16_t ci, int iseed);
 void SyncGetItem(Point position, int idx, uint16_t ci, int iseed);
