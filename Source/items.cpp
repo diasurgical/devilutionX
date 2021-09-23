@@ -42,13 +42,6 @@ namespace devilution {
 Item Items[MAXITEMS + 1];
 uint8_t ActiveItems[MAXITEMS];
 uint8_t ActiveItemCount;
-/**
- * @brief Contains indexes of empty spaces in Items.
- *
- * This array effectively duplicates ActiveItems due to differences in implementation to other fixed buffers.
- * Eventually this can be removed and Items can be treated the same as how Missiles are tracked
- */
-uint8_t AvailableItems[MAXITEMS];
 bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
@@ -2599,7 +2592,6 @@ void InitItems()
 
 	for (uint8_t i = 0; i < MAXITEMS; i++) {
 		ActiveItems[i] = i;
-		AvailableItems[i] = i;
 	}
 
 	if (!setlevel) {
@@ -3237,12 +3229,12 @@ bool ItemSpaceOk(Point position)
 
 int AllocateItem()
 {
-	int inum = AvailableItems[0];
-	AvailableItems[0] = AvailableItems[MAXITEMS - ActiveItemCount - 1];
-	ActiveItems[ActiveItemCount] = inum;
+	assert(ActiveItemCount < MAXITEMS);
+
+	int inum = ActiveItems[ActiveItemCount];
 	ActiveItemCount++;
 
-	memset(&Items[inum], 0, sizeof(*Items));
+	Items[inum] = {};
 
 	return inum;
 }
@@ -3688,13 +3680,18 @@ void RespawnItem(Item *item, bool flipFlag)
 
 void DeleteItem(int i)
 {
+	if (ActiveItemCount > 0)
+		ActiveItemCount--;
+
+	assert(i >= 0 && i < MAXITEMS && ActiveItemCount < MAXITEMS);
+
 	if (pcursitem == ActiveItems[i]) // Unselect item if player has it highlighted
 		pcursitem = -1;
 
-	AvailableItems[MAXITEMS - ActiveItemCount] = ActiveItems[i];
-	ActiveItemCount--;
-	if (ActiveItemCount > 0 && i != ActiveItemCount)
-		ActiveItems[i] = ActiveItems[ActiveItemCount];
+	if (i < ActiveItemCount) {
+		// If the deleted item was not already at the end of the active list, swap the indexes around to make the next item allocation simpler.
+		std::swap(ActiveItems[i], ActiveItems[ActiveItemCount]);
+	}
 }
 
 void ProcessItems()
