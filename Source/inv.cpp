@@ -1721,37 +1721,26 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	player.HoldItem._itype = ItemType::None;
 }
 
-int FindGetItem(int idx, uint16_t ci, int iseed)
+int FindGetItem(int32_t iseed, _item_indexes idx, uint16_t createInfo)
 {
-	if (ActiveItemCount <= 0)
-		return -1;
-
-	int ii;
-	int i = 0;
-	while (true) {
-		ii = ActiveItems[i];
-		if (Items[ii].IDidx == idx && Items[ii]._iSeed == iseed && Items[ii]._iCreateInfo == ci)
-			break;
-
-		i++;
-
-		if (i >= ActiveItemCount)
-			return -1;
+	for (uint8_t i = 0; i < ActiveItemCount; i++) {
+		auto &item = Items[ActiveItems[i]];
+		if (item.KeyAttributesMatch(iseed, idx, createInfo)) {
+			return i;
+		}
 	}
 
-	return ii;
+	return -1;
 }
 
-void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
+void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci)
 {
 	// Check what the local client has at the target position
 	int ii = dItem[position.x][position.y] - 1;
 
 	if (ii >= 0 && ii < MAXITEMS) {
 		// If there was an item there, check that it's the same item as the remote player has
-		if (Items[ii].IDidx != idx
-		    || Items[ii]._iSeed != iseed
-		    || Items[ii]._iCreateInfo != ci) {
+		if (Items[ii].KeyAttributesMatch(iseed, idx, ci)) {
 			// Key attributes don't match so we must've desynced, ignore this index and try find a matching item via lookup
 			ii = -1;
 		}
@@ -1759,7 +1748,12 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 
 	if (ii == -1) {
 		// Either there's no item at the expected position or it doesn't match what is being picked up, so look for an item that matches the key attributes
-		ii = FindGetItem(idx, ci, iseed);
+		ii = FindGetItem(iseed, idx, ci);
+
+		if (ii != -1) {
+			// Translate to Items index for CleanupItems, FindGetItem returns an ActiveItems index
+			ii = ActiveItems[ii];
+		}
 	}
 
 	if (ii == -1) {
