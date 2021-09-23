@@ -537,7 +537,7 @@ void PressKey(int vkey)
  */
 void PressChar(char vkey)
 {
-	if (gmenu_is_active() || control_talk_last_key(vkey) || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
+	if (gmenu_is_active() || IsTalkActive() || sgnTimeoutCurs != CURSOR_NONE || MyPlayerIsDead) {
 		return;
 	}
 	if (vkey == 'p' || vkey == 'P') {

@@ -1774,36 +1774,19 @@ void control_reset_talk()
 	force_redraw = 255;
 }
 
-bool control_talk_last_key(char vkey)
+bool IsTalkActive()
 {
 	if (!IsChatAvailable())
 		return false;
 
 	if (!talkflag)
 		return false;
-
-#ifdef USE_SDL1
-	if (vkey >= 0 && vkey < DVL_VK_SPACE)
-		return false;
-
-	std::size_t result = strlen(TalkMessage);
-	if (result < 78) {
-		TalkMessage[result] = vkey;
-		TalkMessage[result + 1] = '\0';
-	}
-#endif
 
 	return true;
 }
 
 void control_new_text(string_view text)
 {
-	if (!IsChatAvailable())
-		return;
-
-	if (!talkflag)
-		return;
-
 	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
 }
 
