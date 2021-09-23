@@ -258,7 +258,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 			characterPosition.y += lineHeight;
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight | UiFlags::KerningFitSpacing))) {
-				int nextLineIndex = text[i] == '\n' ? i + 1 : i;
+				std::size_t nextLineIndex = text[i] == '\n' ? i + 1 : i;
 				if (nextLineIndex < text.length())
 					lineWidth = GetLineWidth(&text[nextLineIndex], size, spacing, &charactersInLine);
 				else

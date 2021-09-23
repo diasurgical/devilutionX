@@ -2943,7 +2943,7 @@ void MI_Arrow(Missile &missile)
 
 void MI_Firebolt(Missile &missile)
 {
-	int d;
+	int d = 0;
 
 	missile._mirange--;
 	if (missile._mitype != MIS_BONESPIRIT || missile._mimfnum != 8) {
