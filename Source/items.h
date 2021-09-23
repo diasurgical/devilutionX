@@ -494,7 +494,8 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex);
 void initItemGetRecords();
 
 #ifdef _DEBUG
-std::string DebugSpawnItem(std::string itemName, bool unique);
+std::string DebugSpawnItem(std::string itemName);
+std::string DebugSpawnUniqueItem(std::string itemName);
 #endif
 /* data */
 
