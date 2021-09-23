@@ -904,9 +904,8 @@ std::unordered_map<uint8_t, uint8_t> LoadDroppedItems(LoadHelper &file)
 		if (i < ActiveItemCount)
 			LoadItem(file, Items[i]);
 
-		// Initialise the ActiveItems and AvailableItems arrays so the existing logic for dropping items can stay unchanged
+		// Initialise ActiveItems to reflect the order the items were loaded from the file
 		ActiveItems[i] = i;
-		AvailableItems[i] = (i + ActiveItemCount) % MAXITEMS;
 	}
 
 	return itemIndexes;
