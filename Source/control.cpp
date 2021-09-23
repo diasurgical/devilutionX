@@ -38,6 +38,7 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/utf8.h"
 #include "options.h"
 
 #ifdef _DEBUG
@@ -1802,9 +1803,7 @@ bool control_presskeys(int vkey)
 	} else if (vkey == DVL_VK_RETURN) {
 		ControlPressEnter();
 	} else if (vkey == DVL_VK_BACK) {
-		std::size_t len = strlen(TalkMessage);
-		if (len > 0)
-			TalkMessage[len - 1] = '\0';
+		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
 	} else if (vkey == DVL_VK_DOWN) {
 		ControlUpDown(1);
 	} else if (vkey == DVL_VK_UP) {

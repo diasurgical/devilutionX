@@ -65,3 +65,21 @@ inline const char *utf8_decode(const char *buf, uint32_t *c, int *e)
 
 	return reinterpret_cast<const char *>(next);
 }
+
+inline int FindLastUtf8Symbols(const char *text)
+{
+	std::string textBuffer(text);
+	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
+	const char *textData = textBuffer.data();
+	const char *previousPosition = textData;
+
+	uint32_t next;
+	int error;
+	for (; *textData != '\0'; previousPosition = textData) {
+		textData = utf8_decode(textData, &next, &error);
+		if (*textData == '\0')
+			return previousPosition - textBuffer.data();
+	}
+
+	return 0;
+}
