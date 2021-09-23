@@ -900,7 +900,7 @@ std::unordered_map<uint8_t, uint8_t> LoadDroppedItems(LoadHelper &file)
 	}
 	file.Skip(MAXITEMS * 2 - static_cast<size_t>(ActiveItemCount)); // Skip loading the rest of ActiveItems and AvailableItems, the indices are initialised below based on the number of active items
 
-	for (int i = 0; i < MAXITEMS; i++) {
+	for (uint8_t i = 0; i < MAXITEMS; i++) {
 		if (i < ActiveItemCount)
 			LoadItem(file, Items[i]);
 
@@ -1512,13 +1512,13 @@ void SavePortal(SaveHelper *file, int i)
 std::unordered_map<uint8_t, uint8_t> SaveDroppedItems(SaveHelper &file)
 {
 	// Vanilla Diablo/Hellfire initialise the ActiveItems and AvailableItems arrays based on saved data, so write valid values for compatibility
-	for (int i = 0; i < MAXITEMS; i++)
-		file.WriteLE<int8_t>(i); // Strictly speaking everything from ActiveItemCount onwards is unused but no harm writing non-zero values here.
-	for (int i = 0; i < MAXITEMS; i++)
-		file.WriteLE<int8_t>((i + ActiveItemCount) % MAXITEMS);
+	for (uint8_t i = 0; i < MAXITEMS; i++)
+		file.WriteLE<uint8_t>(i); // Strictly speaking everything from ActiveItemCount onwards is unused but no harm writing non-zero values here.
+	for (uint8_t i = 0; i < MAXITEMS; i++)
+		file.WriteLE<uint8_t>((i + ActiveItemCount) % MAXITEMS);
 
 	std::unordered_map<uint8_t, uint8_t> itemIndexes = { { 0, 0 } };
-	for (int i = 0; i < ActiveItemCount; i++) {
+	for (uint8_t i = 0; i < ActiveItemCount; i++) {
 		itemIndexes[ActiveItems[i] + 1] = i + 1;
 		SaveItem(file, Items[ActiveItems[i]]);
 	}
@@ -1534,7 +1534,7 @@ void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			file.WriteLE<int8_t>(itemIndexes.at(dItem[i][j]));
+			file.WriteLE<uint8_t>(itemIndexes.at(dItem[i][j]));
 	}
 }
 

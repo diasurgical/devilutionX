@@ -414,9 +414,9 @@ struct CornerStoneStruct {
 struct Player;
 
 extern Item Items[MAXITEMS + 1];
-extern int ActiveItems[MAXITEMS];
-extern int ActiveItemCount;
-extern int AvailableItems[MAXITEMS];
+extern uint8_t ActiveItems[MAXITEMS];
+extern uint8_t ActiveItemCount;
+extern uint8_t AvailableItems[MAXITEMS];
 extern bool ShowUniqueItemInfoBox;
 extern CornerStoneStruct CornerStone;
 extern bool UniqueItemFlags[128];
