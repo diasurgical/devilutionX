@@ -1517,7 +1517,11 @@ _unique_items CheckUnique(Item &item, int lvl, int uper, bool recreate)
 	if (numu == 0)
 		return UITEM_INVALID;
 
-	AdvanceRndSeed();
+	// two algorithms to keep old items compatible
+	if ((item.dwBuff & CF_NEW_UNIQ) != 0)
+		numu = GenerateRnd(numu) + 1;
+	else
+		AdvanceRndSeed();
 	uint8_t itemData = 0;
 	while (numu > 0) {
 		if (uok[itemData])
@@ -3411,7 +3415,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	int8_t mLevel = monster.MData->mLevel;
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
-
+	item.dwBuff |= CF_NEW_UNIQ;
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
 	if (sendmsg)
@@ -4965,6 +4969,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		for (auto &flag : UniqueItemFlags)
 			flag = true;
 		UniqueItemFlags[uniqueIndex] = false;
+		item.dwBuff |= CF_NEW_UNIQ;
 		SetupAllItems(item, uniqueBaseIndex, AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
 		for (auto &flag : UniqueItemFlags)
 			flag = false;
@@ -4976,7 +4981,6 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
-		return "Impossible to generate!";
 	}
 
 	item._iIdentified = true;
