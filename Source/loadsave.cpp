@@ -928,11 +928,10 @@ void LoadDroppedItemLocations(LoadHelper &file, const std::unordered_map<uint8_t
 void RemoveEmptyLevelItems()
 {
 	for (int i = ActiveItemCount; i > 0; i--) {
-		int ii = ActiveItems[i];
-		auto &item = Items[ii];
+		auto &item = Items[ActiveItems[i]];
 		if (item.isEmpty()) {
 			dItem[item.position.x][item.position.y] = 0;
-			DeleteItem(ii, i);
+			DeleteItem(ActiveItems[i], i);
 		}
 	}
 }
