@@ -1503,6 +1503,41 @@ void SavePortal(SaveHelper *file, int i)
 	file->WriteLE<uint32_t>(pPortal->setlvl ? 1 : 0);
 }
 
+/**
+ * @brief Saves items on the current dungeon floor
+ * @param file interface to the save file
+ * @return a map converting from runtime item indexes to the relative position in the save file, used by SaveDroppedItemLocations
+ * @see SaveDroppedItemLocations
+*/
+std::unordered_map<uint8_t, uint8_t> SaveDroppedItems(SaveHelper &file)
+{
+	// Vanilla Diablo/Hellfire initialise the ActiveItems and AvailableItems arrays based on saved data, so write valid values for compatibility
+	for (int i = 0; i < MAXITEMS; i++)
+		file.WriteLE<int8_t>(i); // Strictly speaking everything from ActiveItemCount onwards is unused but no harm writing non-zero values here.
+	for (int i = 0; i < MAXITEMS; i++)
+		file.WriteLE<int8_t>((i + ActiveItemCount) % MAXITEMS);
+
+	std::unordered_map<uint8_t, uint8_t> itemIndexes = { { 0, 0 } };
+	for (int i = 0; i < ActiveItemCount; i++) {
+		itemIndexes[ActiveItems[i] + 1] = i + 1;
+		SaveItem(file, Items[ActiveItems[i]]);
+	}
+	return itemIndexes;
+}
+
+/**
+ * @brief Saves the position of dropped items (in dItem)
+ * @param file interface to the save file
+ * @param indexMap a map converting from runtime item indexes to the relative position in the save file
+*/
+void SaveDroppedItemLocations(SaveHelper &file, const std::unordered_map<uint8_t, uint8_t> &itemIndexes)
+{
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+			file.WriteLE<int8_t>(itemIndexes.at(dItem[i][j]));
+	}
+}
+
 const int DiabloItemSaveSize = 368;
 const int HellfireItemSaveSize = 372;
 
@@ -2016,12 +2051,8 @@ void SaveGameData()
 			SaveLighting(&file, &VisionList[i]);
 	}
 
-	for (int itemId : ActiveItems)
-		file.WriteLE<int8_t>(itemId);
-	for (int itemId : AvailableItems)
-		file.WriteLE<int8_t>(itemId);
-	for (int i = 0; i < ActiveItemCount; i++)
-		SaveItem(file, Items[ActiveItems[i]]);
+	auto itemIndexes = SaveDroppedItems(file);
+
 	for (bool uniqueItemFlag : UniqueItemFlags)
 		file.WriteLE<uint8_t>(uniqueItemFlag ? 1 : 0);
 
@@ -2037,10 +2068,8 @@ void SaveGameData()
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.WriteLE<int8_t>(dPlayer[i][j]);
 	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			file.WriteLE<int8_t>(dItem[i][j]);
-	}
+
+	SaveDroppedItemLocations(file, itemIndexes);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2128,22 +2157,13 @@ void SaveLevel()
 			SaveObject(file, Objects[ActiveObjects[i]]);
 	}
 
-	for (int itemId : ActiveItems)
-		file.WriteLE<int8_t>(itemId);
-	for (int itemId : AvailableItems)
-		file.WriteLE<int8_t>(itemId);
-
-	for (int i = 0; i < ActiveItemCount; i++)
-		SaveItem(file, Items[ActiveItems[i]]);
+	auto itemIndexes = SaveDroppedItems(file);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			file.WriteLE<uint8_t>(static_cast<uint8_t>(dFlags[i][j] & DungeonFlag::SavedFlags));
 	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			file.WriteLE<int8_t>(dItem[i][j]);
-	}
+	SaveDroppedItemLocations(file, itemIndexes);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
