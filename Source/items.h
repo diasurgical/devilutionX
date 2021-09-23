@@ -464,7 +464,7 @@ void SpawnMapOfDoom(Point position);
 void SpawnRuneBomb(Point position);
 void SpawnTheodore(Point position);
 void RespawnItem(Item *item, bool FlipFlag);
-void DeleteItem(int ii, int i);
+void DeleteItem(int i);
 void ProcessItems();
 void FreeItemGFX();
 void GetItemFrm(Item &item);

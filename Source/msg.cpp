@@ -2235,7 +2235,7 @@ void DeltaLoadLevel()
 				const auto &position = Items[ActiveItems[activeItemIndex]].position;
 				if (dItem[position.x][position.y] == ActiveItems[activeItemIndex] + 1)
 					dItem[position.x][position.y] = 0;
-				DeleteItem(ActiveItems[activeItemIndex], activeItemIndex);
+				DeleteItem(activeItemIndex);
 			}
 		}
 		if (sgLevels[currlevel].item[i].bCmd == CMD_ACK_PLRINFO) {

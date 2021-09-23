@@ -931,7 +931,7 @@ void RemoveEmptyLevelItems()
 		auto &item = Items[ActiveItems[i]];
 		if (item.isEmpty()) {
 			dItem[item.position.x][item.position.y] = 0;
-			DeleteItem(ActiveItems[i], i);
+			DeleteItem(i);
 		}
 	}
 }
