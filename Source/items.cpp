@@ -40,15 +40,15 @@ namespace devilution {
 
 /** Contains the items on ground in the current game. */
 Item Items[MAXITEMS + 1];
-int ActiveItems[MAXITEMS];
-int ActiveItemCount;
+uint8_t ActiveItems[MAXITEMS];
+uint8_t ActiveItemCount;
 /**
  * @brief Contains indexes of empty spaces in Items.
  *
  * This array effectively duplicates ActiveItems due to differences in implementation to other fixed buffers.
  * Eventually this can be removed and Items can be treated the same as how Missiles are tracked
  */
-int AvailableItems[MAXITEMS];
+uint8_t AvailableItems[MAXITEMS];
 bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
@@ -2597,9 +2597,9 @@ void InitItems()
 		item._iPostDraw = false;
 	}
 
-	for (int i = 0; i < MAXITEMS; i++) {
+	for (uint8_t i = 0; i < MAXITEMS; i++) {
+		ActiveItems[i] = i;
 		AvailableItems[i] = i;
-		ActiveItems[i] = 0;
 	}
 
 	if (!setlevel) {
