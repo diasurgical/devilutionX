@@ -724,7 +724,7 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 				if (message.bPnum != MyPlayerId)
 					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
 				else
-					InvGetItem(MyPlayerId, &Items[ii], ii);
+					InvGetItem(MyPlayerId, ii);
 				SetItemRecord(message.dwSeed, message.wCI, message.wIndx);
 			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, message.bPnum, message)) {
 				NetSendCmdExtra(message);
@@ -751,9 +751,9 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 						auto &player = Players[MyPlayerId];
 						ii = SyncPutItem(player, player.position.tile, message.wIndx, message.wCI, message.dwSeed, message.bId, message.bDur, message.bMDur, message.bCh, message.bMCh, message.wValue, message.dwBuff, message.wToHit, message.wMaxDam, message.bMinStr, message.bMinMag, message.bMinDex, message.bAC);
 						if (ii != -1)
-							InvGetItem(MyPlayerId, &Items[ii], ii);
+							InvGetItem(MyPlayerId, ii);
 					} else {
-						InvGetItem(MyPlayerId, &Items[ii], ii);
+						InvGetItem(MyPlayerId, ii);
 					}
 				} else {
 					SyncGetItem(position, message.wIndx, message.wCI, message.dwSeed);
