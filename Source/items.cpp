@@ -42,6 +42,12 @@ namespace devilution {
 Item Items[MAXITEMS + 1];
 int ActiveItems[MAXITEMS];
 int ActiveItemCount;
+/**
+ * @brief Contains indexes of empty spaces in Items.
+ *
+ * This array effectively duplicates ActiveItems due to differences in implementation to other fixed buffers.
+ * Eventually this can be removed and Items can be treated the same as how Missiles are tracked
+ */
 int AvailableItems[MAXITEMS];
 bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;

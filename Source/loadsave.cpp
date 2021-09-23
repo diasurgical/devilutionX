@@ -885,6 +885,46 @@ void LoadMatchingItems(LoadHelper &file, const int n, Item *pItem)
 	}
 }
 
+/**
+ * @brief Loads items on the current dungeon floor
+ * @param file interface to the save file
+ * @return a map converting from item indexes as recorded in the save file to the appropriate Items array index, used by LoadDroppedItemLocations
+ * @see LoadDroppedItemLocations
+*/
+std::unordered_map<uint8_t, uint8_t> LoadDroppedItems(LoadHelper &file)
+{
+	std::unordered_map<uint8_t, uint8_t> itemIndexes = { { 0, 0 } };
+	for (uint8_t i = 0; i < ActiveItemCount; i++) {
+		// Load the current item indexes to remap dItem values as needed.
+		itemIndexes[file.NextLE<uint8_t>() + 1] = i + 1; // adding 1 as dItem values use 0 for no item, and index + 1 for the actual item ID
+	}
+	file.Skip(MAXITEMS * 2 - static_cast<size_t>(ActiveItemCount)); // Skip loading the rest of ActiveItems and AvailableItems, the indices are initialised below based on the number of active items
+
+	for (int i = 0; i < MAXITEMS; i++) {
+		if (i < ActiveItemCount)
+			LoadItem(file, Items[i]);
+
+		// Initialise the ActiveItems and AvailableItems arrays so the existing logic for dropping items can stay unchanged
+		ActiveItems[i] = i;
+		AvailableItems[i] = (i + ActiveItemCount) % MAXITEMS;
+	}
+
+	return itemIndexes;
+}
+
+/**
+ * @brief Helper to initialise dItem based on runtime item indexes
+ * @param file interface to the save file
+ * @param indexMap a map converting from save file item indexes to the appropriate Items array index
+*/
+void LoadDroppedItemLocations(LoadHelper &file, const std::unordered_map<uint8_t, uint8_t> &indexMap)
+{
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
+			dItem[i][j] = indexMap.at(file.NextLE<uint8_t>());
+	}
+}
+
 void RemoveEmptyLevelItems()
 {
 	for (int i = ActiveItemCount; i > 0; i--) {
@@ -1788,12 +1828,8 @@ void LoadGame(bool firstflag)
 			LoadLighting(&file, &VisionList[i]);
 	}
 
-	for (int &itemId : ActiveItems)
-		itemId = file.NextLE<int8_t>();
-	for (int &itemId : AvailableItems)
-		itemId = file.NextLE<int8_t>();
-	for (int i = 0; i < ActiveItemCount; i++)
-		LoadItem(file, Items[ActiveItems[i]]);
+	auto itemIndexes = LoadDroppedItems(file);
+
 	for (bool &uniqueItemFlag : UniqueItemFlags)
 		uniqueItemFlag = file.NextBool8();
 
@@ -1809,10 +1845,8 @@ void LoadGame(bool firstflag)
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dPlayer[i][j] = file.NextLE<int8_t>();
 	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dItem[i][j] = file.NextLE<int8_t>();
-	}
+
+	LoadDroppedItemLocations(file, itemIndexes);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
@@ -2177,21 +2211,14 @@ void LoadLevel()
 		}
 	}
 
-	for (int &itemId : ActiveItems)
-		itemId = file.NextLE<int8_t>();
-	for (int &itemId : AvailableItems)
-		itemId = file.NextLE<int8_t>();
-	for (int i = 0; i < ActiveItemCount; i++)
-		LoadItem(file, Items[ActiveItems[i]]);
+	auto itemIndexes = LoadDroppedItems(file);
 
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
 			dFlags[i][j] = static_cast<DungeonFlag>(file.NextLE<uint8_t>()) & DungeonFlag::LoadedFlags;
 	}
-	for (int j = 0; j < MAXDUNY; j++) {
-		for (int i = 0; i < MAXDUNX; i++) // NOLINT(modernize-loop-convert)
-			dItem[i][j] = file.NextLE<int8_t>();
-	}
+
+	LoadDroppedItemLocations(file, itemIndexes);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
