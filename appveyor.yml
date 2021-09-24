@@ -3,14 +3,13 @@ version: 1.0.{build}
 pull_requests:
   do_not_increment_build_number: true
 image: Visual Studio 2019
-cache: c:\tools\vcpkg\installed\
+cache: '%LOCALAPPDATA%\vcpkg\archives'
 
 install:
   - cd C:\Tools\vcpkg
   - git pull
   - .\bootstrap-vcpkg.bat
   - cd %APPVEYOR_BUILD_FOLDER%
-  - vcpkg install --recurse fmt:x64-windows sdl2:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows libpng:x64-windows
 
 before_build:
   - cmake -G "Visual Studio 16 2019" -A x64 -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
