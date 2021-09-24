@@ -6292,22 +6292,16 @@ msgid "MAX"
 msgstr "МАКС"
 
 #: Source/panels/charpanel.cpp:119
-#, fuzzy
-#| msgid "Level:"
 msgid "Level"
-msgstr "Уровень:"
+msgstr "Уровень"
 
 #: Source/panels/charpanel.cpp:121
-#, fuzzy
-#| msgid "Experience: "
 msgid "Experience"
-msgstr "Опыт: "
+msgstr "Опыт"
 
 #: Source/panels/charpanel.cpp:123
-#, fuzzy
-#| msgid "Next Level: "
 msgid "Next level"
-msgstr "Следующий Уровень: "
+msgstr "Следующий Уровень"
 
 #: Source/panels/charpanel.cpp:126
 msgid "None"
@@ -6315,131 +6309,97 @@ msgstr "Нет"
 
 #: Source/panels/charpanel.cpp:132
 msgid "Base"
-msgstr ""
+msgstr "Базовый"
 
 #: Source/panels/charpanel.cpp:133
-#, fuzzy
-#| msgid "No"
 msgid "Now"
-msgstr "Что было раньше открыто, теперь закрыто"
+msgstr "Текущий"
 
 #: Source/panels/charpanel.cpp:134
-#, fuzzy
-#| msgid "Strength:"
 msgid "Strength"
-msgstr "силы"
+msgstr "Сила"
 
 #: Source/panels/charpanel.cpp:138
-#, fuzzy
-#| msgid "Magic:"
 msgid "Magic"
-msgstr "магии"
+msgstr "Магия"
 
 #: Source/panels/charpanel.cpp:142
-#, fuzzy
-#| msgid "Dexterity:"
 msgid "Dexterity"
-msgstr "ловкости"
+msgstr "Ловкость"
 
 #: Source/panels/charpanel.cpp:145
-#, fuzzy
-#| msgid "Vitality:"
 msgid "Vitality"
-msgstr "живучести"
+msgstr "Живучесть"
 
 #: Source/panels/charpanel.cpp:148
-#, fuzzy
 msgid "Points to distribute"
-msgstr "Здоровье: {:d}-{:d}"
+msgstr "Очков осталось"
 
 #: Source/panels/charpanel.cpp:158
-#, fuzzy
-#| msgid "armor class: {:d}"
 msgid "Armor class"
-msgstr "класс брони: {:d}"
+msgstr "Класс брони"
 
 #: Source/panels/charpanel.cpp:160
-#, fuzzy
 msgid "To hit"
-msgstr "Здоровье {:d} из {:d}"
+msgstr "Шанс попадания"
 
 #: Source/panels/charpanel.cpp:162
-#, fuzzy
 msgid "Damage"
-msgstr "потенциал урона - не луки"
+msgstr "Урон"
 
 #: Source/panels/charpanel.cpp:168
-#, fuzzy
 msgid "Life"
-msgstr "жизни"
+msgstr "Здоровье"
 
 #: Source/panels/charpanel.cpp:172
 msgid "Mana"
 msgstr "Мана"
 
 #: Source/panels/charpanel.cpp:177
-#, fuzzy
-#| msgid "Resist Magic: {:+d}%"
 msgid "Resist magic"
-msgstr "Сопротивление магии:  {:d}%"
+msgstr "Сопротив магии"
 
 #: Source/panels/charpanel.cpp:179
-#, fuzzy
-#| msgid "Resists: "
 msgid "Resist fire"
-msgstr "Сопротивление огню: {:d}%"
+msgstr "Сопротив огню"
 
 #: Source/panels/charpanel.cpp:181
-#, fuzzy
-#| msgid "Resist Lightning: {:+d}%"
 msgid "Resist lightning"
-msgstr "Сопротивление молнии:  {:d}%"
+msgstr "Сопротив молнии"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
-#, fuzzy
-#| msgid "Voices"
 msgid "voice"
-msgstr "Подбор актёров озвучивания и директоры озвучивания"
+msgstr "чат"
 
 #: Source/panels/mainpanel.cpp:84
-#, fuzzy
 msgid "char"
-msgstr "Перс"
+msgstr "перс"
 
 #: Source/panels/mainpanel.cpp:85
-#, fuzzy
-#| msgid "Quests"
 msgid "quests"
-msgstr "Квесты"
+msgstr "квесты"
 
 #: Source/panels/mainpanel.cpp:86
-#, fuzzy
-#| msgid "Map"
 msgid "map"
-msgstr "Карта"
+msgstr "карта"
 
 #: Source/panels/mainpanel.cpp:87
-#, fuzzy
 msgid "menu"
-msgstr "Меню"
+msgstr "меню"
 
 #: Source/panels/mainpanel.cpp:88
-#, fuzzy
-#| msgid "Inv"
 msgid "inv"
-msgstr "Инвен"
+msgstr "инвен"
 
 #: Source/panels/mainpanel.cpp:89
-#, fuzzy
-#| msgid "Spells"
 msgid "spells"
-msgstr "Магия"
+msgstr "заклин"
 
 #: Source/panels/mainpanel.cpp:101 Source/panels/mainpanel.cpp:103
 #: Source/panels/mainpanel.cpp:105
 msgid "mute"
-msgstr ""
+msgstr "блок"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
