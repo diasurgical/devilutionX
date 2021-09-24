@@ -3075,11 +3075,11 @@ void StripTopGold(Player &player)
 {
 	Item tmpItem = player.HoldItem;
 
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i]._itype == ItemType::Gold) {
-			if (player.InvList[i]._ivalue > MaxGold) {
-				int val = player.InvList[i]._ivalue - MaxGold;
-				player.InvList[i]._ivalue = MaxGold;
+	for (Item &item : InventoryPlayerItemsRange { player }) {
+		if (item._itype == ItemType::Gold) {
+			if (item._ivalue > MaxGold) {
+				int val = item._ivalue - MaxGold;
+				item._ivalue = MaxGold;
 				SetPlrHandItem(player.HoldItem, 0);
 				SetGoldSeed(player, player.HoldItem);
 				player.HoldItem._ivalue = val;

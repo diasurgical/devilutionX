@@ -567,20 +567,20 @@ void CalcPlrBookVals(Player &player)
 		}
 	}
 
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (player.InvList[i]._itype == ItemType::Misc && player.InvList[i]._iMiscId == IMISC_BOOK) {
-			player.InvList[i]._iMinMag = spelldata[player.InvList[i]._iSpell].sMinInt;
-			int8_t spellLevel = player._pSplLvl[player.InvList[i]._iSpell];
+	for (Item &item : InventoryPlayerItemsRange { player }) {
+		if (item._itype == ItemType::Misc && item._iMiscId == IMISC_BOOK) {
+			item._iMinMag = spelldata[item._iSpell].sMinInt;
+			int8_t spellLevel = player._pSplLvl[item._iSpell];
 
 			while (spellLevel != 0) {
-				player.InvList[i]._iMinMag += 20 * player.InvList[i]._iMinMag / 100;
+				item._iMinMag += 20 * item._iMinMag / 100;
 				spellLevel--;
-				if (player.InvList[i]._iMinMag + 20 * player.InvList[i]._iMinMag / 100 > 255) {
-					player.InvList[i]._iMinMag = 255;
+				if (item._iMinMag + 20 * item._iMinMag / 100 > 255) {
+					item._iMinMag = 255;
 					spellLevel = 0;
 				}
 			}
-			player.InvList[i]._iStatFlag = ItemMinStats(player, player.InvList[i]);
+			item._iStatFlag = ItemMinStats(player, item);
 		}
 	}
 }
