@@ -1719,7 +1719,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 		player.Say(HeroSpeech::ICantCarryAnymore);
 	}
 	player.HoldItem = *item;
-	RespawnItem(item, true);
+	RespawnItem(*item, true);
 	NetSendCmdPItem(true, CMD_RESPAWNITEM, item->position, player.HoldItem);
 	player.HoldItem._itype = ItemType::None;
 }
@@ -1843,7 +1843,7 @@ int InvPutItem(Player &player, Point position)
 	dItem[position.x][position.y] = ii + 1;
 	Items[ii] = player.HoldItem;
 	Items[ii].position = position;
-	RespawnItem(&Items[ii], true);
+	RespawnItem(Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = Items[ii];
@@ -1900,7 +1900,7 @@ int SyncDropItem(Point position, int idx, uint16_t icreateinfo, int iseed, int i
 	}
 
 	item.position = position;
-	RespawnItem(&Items[ii], true);
+	RespawnItem(Items[ii], true);
 
 	if (currlevel == 21 && position == CornerStone.position) {
 		CornerStone.item = Items[ii];

@@ -549,7 +549,7 @@ void RespawnDeadItem(Item *itm, Point target)
 
 	Items[ii] = *itm;
 	Items[ii].position = target;
-	RespawnItem(&Items[ii], true);
+	RespawnItem(Items[ii], true);
 
 	itm->_itype = ItemType::None;
 }

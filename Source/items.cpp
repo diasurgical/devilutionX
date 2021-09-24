@@ -3482,7 +3482,7 @@ void CornerstoneLoad(Point position)
 
 	UnPackItem(pkSItem, item, (pkSItem.dwBuff & CF_HELLFIRE) != 0);
 	item.position = position;
-	RespawnItem(&item, false);
+	RespawnItem(item, false);
 	CornerStone.item = item;
 }
 
@@ -3570,20 +3570,20 @@ void SpawnTheodore(Point position)
 	SpawnRewardItem(IDI_THEODORE, position);
 }
 
-void RespawnItem(Item *item, bool flipFlag)
+void RespawnItem(Item &item, bool flipFlag)
 {
-	int it = ItemCAnimTbl[item->_iCurs];
-	item->SetNewAnimation(flipFlag);
-	item->_iRequest = false;
+	int it = ItemCAnimTbl[item._iCurs];
+	item.SetNewAnimation(flipFlag);
+	item._iRequest = false;
 
-	if (item->_iCurs == ICURS_MAGIC_ROCK) {
-		item->_iSelFlag = 1;
-		PlaySfxLoc(ItemDropSnds[it], item->position);
+	if (item._iCurs == ICURS_MAGIC_ROCK) {
+		item._iSelFlag = 1;
+		PlaySfxLoc(ItemDropSnds[it], item.position);
 	}
-	if (item->_iCurs == ICURS_TAVERN_SIGN)
-		item->_iSelFlag = 1;
-	if (item->_iCurs == ICURS_ANVIL_OF_FURY)
-		item->_iSelFlag = 1;
+	if (item._iCurs == ICURS_TAVERN_SIGN)
+		item._iSelFlag = 1;
+	if (item._iCurs == ICURS_ANVIL_OF_FURY)
+		item._iSelFlag = 1;
 }
 
 void DeleteItem(int i)
