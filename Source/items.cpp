@@ -4968,7 +4968,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		for (auto &flag : UniqueItemFlags)
 			flag = true;
 		UniqueItemFlags[uniqueIndex] = false;
-		SetupAllItems(item, uniqueBaseIndex, AdvanceRndSeed(), uniqueItem.UIMinLvl - 4, 15, false, true, false);
+		SetupAllItems(item, uniqueBaseIndex, AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
 		for (auto &flag : UniqueItemFlags)
 			flag = false;
 
@@ -4979,6 +4979,7 @@ std::string DebugSpawnUniqueItem(std::string itemName)
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
+		return "Impossible to generate!";
 	}
 
 	item._iIdentified = true;
