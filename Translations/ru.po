@@ -6194,18 +6194,14 @@ msgid "Archbishop Lazarus' Lair"
 msgstr "Логово архиепископа Лазаря"
 
 #: Source/spelldat.cpp:16
-#, fuzzy
-#| msgid "Firebolt"
 msgctxt "spell"
 msgid "Firebolt"
-msgstr "Огненный болт"
+msgstr "Огненная Стрела"
 
 #: Source/spelldat.cpp:17
-#, fuzzy
-#| msgid "Healing"
 msgctxt "spell"
 msgid "Healing"
-msgstr "Зелье Полного Исцеления"
+msgstr "Исцеление"
 
 #: Source/spelldat.cpp:18
 msgctxt "spell"
@@ -6213,25 +6209,19 @@ msgid "Lightning"
 msgstr "Светящийся"
 
 #: Source/spelldat.cpp:19
-#, fuzzy
-#| msgid "Flash"
 msgctxt "spell"
 msgid "Flash"
-msgstr "Свиток вспышки"
+msgstr "Вспышка"
 
 #: Source/spelldat.cpp:20
-#, fuzzy
-#| msgid "Identify"
 msgctxt "spell"
 msgid "Identify"
-msgstr "Идентифицировать предмет"
+msgstr "Идентификация"
 
 #: Source/spelldat.cpp:21
-#, fuzzy
-#| msgid "Fire Wall"
 msgctxt "spell"
 msgid "Fire Wall"
-msgstr "Свиток стены огня"
+msgstr "Стена Огня"
 
 #: Source/spelldat.cpp:22
 msgctxt "spell"
@@ -6239,85 +6229,61 @@ msgid "Town Portal"
 msgstr "Городской портал"
 
 #: Source/spelldat.cpp:23
-#, fuzzy
-#| msgid "Stone Curse"
 msgctxt "spell"
 msgid "Stone Curse"
-msgstr "Свиток каменного проклятия"
+msgstr "Окаменение"
 
 #: Source/spelldat.cpp:24
-#, fuzzy
-#| msgid "Infravision"
 msgctxt "spell"
 msgid "Infravision"
-msgstr "видит инфразрением"
+msgstr "Инфразрение"
 
 #: Source/spelldat.cpp:25
-#, fuzzy
-#| msgid "Phasing"
 msgctxt "spell"
 msgid "Phasing"
-msgstr "Свиток перемещения"
+msgstr "Перемещение"
 
 #: Source/spelldat.cpp:26
-#, fuzzy
-#| msgid "Mana Shield"
 msgctxt "spell"
 msgid "Mana Shield"
-msgstr "Свиток щита маны"
+msgstr "Щит маны"
 
 #: Source/spelldat.cpp:27
-#, fuzzy
-#| msgid "Fireball"
 msgctxt "spell"
 msgid "Fireball"
-msgstr "урон фаерболов : {:d}"
+msgstr "Огненный Шар"
 
 #: Source/spelldat.cpp:28
-#, fuzzy
-#| msgid "Guardian"
 msgctxt "spell"
 msgid "Guardian"
-msgstr "Свиток защитника"
+msgstr "Хранитель"
 
 #: Source/spelldat.cpp:29
-#, fuzzy
-#| msgid "Chain Lightning"
 msgctxt "spell"
 msgid "Chain Lightning"
-msgstr "Свиток цепной молнии"
+msgstr "Цепная Молния"
 
 #: Source/spelldat.cpp:30
-#, fuzzy
-#| msgid "Flame Wave"
 msgctxt "spell"
 msgid "Flame Wave"
-msgstr "Свиток волны огня"
+msgstr "Волна Огня"
 
 #: Source/spelldat.cpp:31
-#, fuzzy
-#| msgid "Doom Serpents"
 msgctxt "spell"
 msgid "Doom Serpents"
-msgstr "Роковые змеи"
+msgstr "Роковые Змеи"
 
 #: Source/spelldat.cpp:32
-#, fuzzy
-#| msgid "Blood Ritual"
 msgctxt "spell"
 msgid "Blood Ritual"
-msgstr "Кровавый Камень"
+msgstr "Кровавый Ритуал"
 
 #: Source/spelldat.cpp:33
-#, fuzzy
-#| msgid "Nova"
 msgctxt "spell"
 msgid "Nova"
-msgstr "Свиток новы"
+msgstr "Нова"
 
 #: Source/spelldat.cpp:34
-#, fuzzy
-#| msgid "Invisibility"
 msgctxt "spell"
 msgid "Invisibility"
 msgstr "Невидимость"
@@ -6328,133 +6294,84 @@ msgid "Inferno"
 msgstr "Преисподня"
 
 #: Source/spelldat.cpp:36
-#, fuzzy
-#| msgid "Golem"
 msgctxt "spell"
 msgid "Golem"
-msgstr "Свиток голема"
+msgstr "Голем"
 
 #: Source/spelldat.cpp:37
-#, fuzzy
-#| msgid "Rage"
 msgctxt "spell"
 msgid "Rage"
-msgstr ""
-"Деревня нуждается в вашей помощи, господин! Несколько месяцев назад был "
-"похищен сын короля Леорика, принц Альбрехт. Король пришёл в ярость и "
-"поставил на уши всю деревню ища своего пропавшего ребёнка. С каждым днём "
-"Леорик казалось, всё больше и больше погружался в безумие. Он пытался "
-"обвинить в исчезновении мальчика ни в чем не повинных горожан и казнить их. "
-"Больше половины из нас не пережили это безумие...\n"
-" \n"
-"Рыцари и жрецы короля пытались успокоить его, но он был не в состоянии их "
-"понять, и к сожалению они были вынуждены убить его. Со своим последним "
-"вздохом король наложил страшное проклятие на своих бывших соратников. Он "
-"поклялся, что они будут служить ему во тьме вечно...\n"
-" \n"
-"А вот тут дела принимают более мрачный поворот, чем я рассчитывал! Наш "
-"бывший король воскрес из своего вечного сна и теперь командует легионом "
-"нежити в Лабиринте. Его тело было похоронено в гробнице тремя уровнями ниже "
-"под собором. Пожалуйста господин, упокой его грязную душу, уничтожив его, "
-"теперь уже проклятую, форму..."
+msgstr "Ярость"
 
 #: Source/spelldat.cpp:38
-#, fuzzy
-#| msgid "Teleport"
 msgctxt "spell"
 msgid "Teleport"
-msgstr "Свиток телепорта"
+msgstr "Телепорт"
 
 #: Source/spelldat.cpp:39
-#, fuzzy
-#| msgid "Apocalypse"
 msgctxt "spell"
 msgid "Apocalypse"
-msgstr "Свиток апокалипсиса"
+msgstr "Апокалипсис"
 
 #: Source/spelldat.cpp:40
-#, fuzzy
-#| msgid "Etherealize"
 msgctxt "spell"
 msgid "Etherealize"
 msgstr "Эфиризация"
 
 #: Source/spelldat.cpp:41
-#, fuzzy
-#| msgid "Item Repair"
 msgctxt "spell"
 msgid "Item Repair"
-msgstr "Починить предметы"
+msgstr "Ремонт Предмета"
 
 #: Source/spelldat.cpp:42
-#, fuzzy
-#| msgid "Staff Recharge"
 msgctxt "spell"
 msgid "Staff Recharge"
-msgstr "Зарядить посохи"
+msgstr "Перезарядка Посоха"
 
 #: Source/spelldat.cpp:43
-#, fuzzy
-#| msgid "Trap Disarm"
 msgctxt "spell"
 msgid "Trap Disarm"
-msgstr "устанавливает ловушку"
+msgstr "Обезвредить Ловушку"
 
 #: Source/spelldat.cpp:44
-#, fuzzy
-#| msgid "Elemental"
 msgctxt "spell"
 msgid "Elemental"
 msgstr "Элементаль"
 
 #: Source/spelldat.cpp:45
-#, fuzzy
-#| msgid "Charged Bolt"
 msgctxt "spell"
 msgid "Charged Bolt"
-msgstr "Короткий посох заряженной стрелы"
+msgstr "Заряженная Стрела"
 
 #: Source/spelldat.cpp:46
-#, fuzzy
-#| msgid "Holy Bolt"
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr "Короткий посох заряженной стрелы"
+msgstr "Святая Стрела"
 
 #: Source/spelldat.cpp:47
-#, fuzzy
-#| msgid "Resurrect"
 msgctxt "spell"
 msgid "Resurrect"
-msgstr "Свиток Воскрешения"
+msgstr "Воскрешение"
 
 #: Source/spelldat.cpp:48
-#, fuzzy
-#| msgid "Telekinesis"
 msgctxt "spell"
 msgid "Telekinesis"
 msgstr "Телекинез"
 
 #: Source/spelldat.cpp:49
-#, fuzzy
-#| msgid "Heal Other"
 msgctxt "spell"
 msgid "Heal Other"
-msgstr "смертельное исцеление"
+msgstr "Лечение Другого"
 
 #: Source/spelldat.cpp:50
-#, fuzzy
-#| msgid "Blood Star"
 msgctxt "spell"
 msgid "Blood Star"
-msgstr "крови"
+msgstr "Кровавая Звезда"
 
 #: Source/spelldat.cpp:51
-#, fuzzy
-#| msgid "Bone Spirit"
 msgctxt "spell"
 msgid "Bone Spirit"
-msgstr "Костяная броня"
+msgstr "Костяной Дух"
 
 #: Source/spelldat.cpp:52
 msgctxt "spell"
@@ -6463,7 +6380,6 @@ msgstr "Мана"
 
 #: Source/spelldat.cpp:53
 #, fuzzy
-#| msgid "the Magi"
 msgctxt "spell"
 msgid "the Magi"
 msgstr ""
@@ -6493,53 +6409,39 @@ msgid "the Jester"
 msgstr "Шутовской"
 
 #: Source/spelldat.cpp:55
-#, fuzzy
-#| msgid "Lightning Wall"
 msgctxt "spell"
 msgid "Lightning Wall"
-msgstr "Светящийся"
+msgstr "Стена Молний"
 
 #: Source/spelldat.cpp:56
-#, fuzzy
-#| msgid "Immolation"
 msgctxt "spell"
 msgid "Immolation"
 msgstr "Жертвоприношение"
 
 #: Source/spelldat.cpp:57
-#, fuzzy
-#| msgid "Warp"
 msgctxt "spell"
 msgid "Warp"
 msgstr "Искривление"
 
 #: Source/spelldat.cpp:58
-#, fuzzy
-#| msgid "Reflect"
 msgctxt "spell"
 msgid "Reflect"
 msgstr "Отражение"
 
 #: Source/spelldat.cpp:59
-#, fuzzy
-#| msgid "Berserk"
 msgctxt "spell"
 msgid "Berserk"
 msgstr "Берсерк"
 
 #: Source/spelldat.cpp:60
-#, fuzzy
-#| msgid "Ring of Fire"
 msgctxt "spell"
 msgid "Ring of Fire"
-msgstr "Кольцо"
+msgstr "Кольцо Огня"
 
 #: Source/spelldat.cpp:61
-#, fuzzy
-#| msgid "Search"
 msgctxt "spell"
 msgid "Search"
-msgstr "Я чувствую душу которая ищет ответы ..."
+msgstr "Поиск"
 
 #: Source/spelldat.cpp:62
 msgctxt "spell"
@@ -6547,25 +6449,19 @@ msgid "Rune of Fire"
 msgstr "Руна Огня"
 
 #: Source/spelldat.cpp:63
-#, fuzzy
-#| msgid "Rune of Light"
 msgctxt "spell"
 msgid "Rune of Light"
-msgstr "света"
+msgstr "Руна Света"
 
 #: Source/spelldat.cpp:64
-#, fuzzy
-#| msgid "Rune of Nova"
 msgctxt "spell"
 msgid "Rune of Nova"
-msgstr "Руна"
+msgstr "Руна Новы"
 
 #: Source/spelldat.cpp:65
-#, fuzzy
-#| msgid "Rune of Immolation"
 msgctxt "spell"
 msgid "Rune of Immolation"
-msgstr "Рунная Бомба"
+msgstr "Руна Жертвоприношения"
 
 #: Source/spelldat.cpp:66
 msgctxt "spell"
