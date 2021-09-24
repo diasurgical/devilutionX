@@ -1558,7 +1558,7 @@ void ItemRndDur(Item &item)
 
 void SetupAllItems(Item &item, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
-	int iblvl;
+	int iblvl = -1;
 
 	item._iSeed = iseed;
 	SetRndSeed(iseed);
@@ -1576,7 +1576,6 @@ void SetupAllItems(Item &item, int idx, int iseed, int lvl, int uper, bool onlyg
 		item._iCreateInfo |= CF_UPER1;
 
 	if (item._iMiscId != IMISC_UNIQUE) {
-		iblvl = -1;
 		if (GenerateRnd(100) <= 10 || GenerateRnd(100) <= lvl) {
 			iblvl = lvl;
 		}
@@ -4856,7 +4855,7 @@ void PutItemRecord(int nSeed, uint16_t wCI, int nIndex)
 
 #ifdef _DEBUG
 std::mt19937 BetterRng;
-std::string DebugSpawnItem(std::string itemName, bool unique)
+std::string DebugSpawnItem(std::string itemName)
 {
 	if (ActiveItemCount >= MAXITEMS)
 		return "No space to generate the item!";
@@ -4864,16 +4863,18 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 	const int max_time = 3000;
 	const int max_iter = 1000000;
 
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+
 	int ii = AllocateItem();
 	auto &item = Items[ii];
 	Point pos = Players[MyPlayerId].position.tile;
 	GetSuperItemSpace(pos, ii);
-	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
 
 	uint32_t begin = SDL_GetTicks();
 	Monster fake_m;
 	fake_m.MData = &MonstersData[0];
 	fake_m._uniqtype = 0;
+
 	int i = 0;
 	for (;; i++) {
 		// using a better rng here to seed the item to prevent getting stuck repeating same values using old one
@@ -4886,8 +4887,9 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 			return fmt::format("Item not found in {:d} tries!", max_iter);
 
 		fake_m.mLevel = dist(BetterRng) % CF_LEVEL + 1;
+
 		int idx = RndItem(fake_m);
-		if (idx > 0) {
+		if (idx > 1) {
 			idx--;
 		} else
 			continue;
@@ -4895,17 +4897,89 @@ std::string DebugSpawnItem(std::string itemName, bool unique)
 		Point bkp = item.position;
 		memset(&item, 0, sizeof(Item));
 		item.position = bkp;
-		memset(UniqueItemFlags, 0, sizeof(UniqueItemFlags));
-		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, (unique ? 15 : 1), false, false, false);
+		SetupAllItems(item, idx, AdvanceRndSeed(), fake_m.mLevel, 1, false, false, false);
 
 		std::string tmp(item._iIName);
 		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
 		if (tmp.find(itemName) != std::string::npos)
 			break;
+	}
 
-		if (unique)
-			if (item._iMagical != ITEM_QUALITY_UNIQUE)
-				continue;
+	item._iIdentified = true;
+	NetSendCmdDItem(false, ii);
+	return fmt::format("Item generated successfully - iterations: {:d}", i);
+}
+
+std::string DebugSpawnUniqueItem(std::string itemName)
+{
+	if (ActiveItemCount >= MAXITEMS)
+		return "No space to generate the item!";
+
+	const int max_time = 3000;
+	const int max_iter = 1000000;
+
+	std::transform(itemName.begin(), itemName.end(), itemName.begin(), [](unsigned char c) { return std::tolower(c); });
+	UniqueItem uniqueItem;
+	bool foundUnique = false;
+	int uniqueBaseIndex = 0;
+	int uniqueIndex = 0;
+	for (int j = 0; UniqueItems[j].UIItemId != UITYPE_INVALID; j++) {
+		if (!IsUniqueAvailable(j))
+			break;
+
+		std::string tmp(UniqueItems[j].UIName);
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (tmp.find(itemName) != std::string::npos) {
+			itemName = tmp;
+			uniqueItem = UniqueItems[j];
+			uniqueIndex = j;
+			foundUnique = true;
+			break;
+		}
+	}
+	if (!foundUnique)
+		return "No unique found!";
+
+	for (int j = 0; AllItemsList[j].iLoc != ILOC_INVALID; j++) {
+		if (!IsItemAvailable(j))
+			continue;
+		if (AllItemsList[j].iItemId == uniqueItem.UIItemId)
+			uniqueBaseIndex = j;
+	}
+
+	int ii = AllocateItem();
+	auto &item = Items[ii];
+	Point pos = Players[MyPlayerId].position.tile;
+	GetSuperItemSpace(pos, ii);
+
+	int i = 0;
+	for (uint32_t begin = SDL_GetTicks();; i++) {
+		if (SDL_GetTicks() - begin > max_time)
+			return fmt::format("Item not found in {:d} seconds!", max_time / 1000);
+
+		if (i > max_iter)
+			return fmt::format("Item not found in {:d} tries!", max_iter);
+
+		Point bkp = item.position;
+		memset(&item, 0, sizeof(Item));
+		item.position = bkp;
+		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
+		SetRndSeed(dist(BetterRng));
+		for (auto &flag : UniqueItemFlags)
+			flag = true;
+		UniqueItemFlags[uniqueIndex] = false;
+		SetupAllItems(item, uniqueBaseIndex, AdvanceRndSeed(), uniqueItem.UIMinLvl, 1, false, false, false);
+		for (auto &flag : UniqueItemFlags)
+			flag = false;
+
+		if (item._iMagical != ITEM_QUALITY_UNIQUE)
+			continue;
+
+		std::string tmp(item._iIName);
+		std::transform(tmp.begin(), tmp.end(), tmp.begin(), [](unsigned char c) { return std::tolower(c); });
+		if (tmp.find(itemName) != std::string::npos)
+			break;
+		return "Impossible to generate!";
 	}
 
 	item._iIdentified = true;

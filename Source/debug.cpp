@@ -418,12 +418,12 @@ std::string DebugCmdRefillHealthMana(const string_view parameter)
 
 std::string DebugCmdGenerateUniqueItem(const string_view parameter)
 {
-	return DebugSpawnItem(parameter.data(), true);
+	return DebugSpawnUniqueItem(parameter.data());
 }
 
 std::string DebugCmdGenerateItem(const string_view parameter)
 {
-	return DebugSpawnItem(parameter.data(), false);
+	return DebugSpawnItem(parameter.data());
 }
 
 std::string DebugCmdExit(const string_view parameter)
