@@ -537,11 +537,6 @@ void CalcPlrBookVals(Player &player)
 	}
 }
 
-void SetPlrHandSeed(Item &item, int iseed)
-{
-	item._iSeed = iseed;
-}
-
 bool GetItemSpace(Point position, int8_t inum)
 {
 	int xx = 0;
@@ -2913,7 +2908,7 @@ void CalcPlrInv(Player &player, bool loadgfx)
 	}
 }
 
-void SetPlrHandItem(Item &item, int itemData)
+void InitializeItem(Item &item, int itemData)
 {
 	auto &pAllItem = AllItemsList[itemData];
 
@@ -3022,79 +3017,79 @@ void CreatePlrItems(int playerId)
 
 	switch (player._pClass) {
 	case HeroClass::Warrior:
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
+		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
 
-		SetPlrHandItem(player.HoldItem, IDI_WARRCLUB);
+		InitializeItem(player.HoldItem, IDI_WARRCLUB);
 		GetPlrHandSeed(&player.HoldItem);
 		AutoPlaceItemInInventory(player, player.HoldItem, true);
 
-		SetPlrHandItem(player.SpdList[0], IDI_HEAL);
+		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(player.SpdList[1], IDI_HEAL);
+		InitializeItem(player.SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Rogue:
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(player.SpdList[0], IDI_HEAL);
+		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(player.SpdList[1], IDI_HEAL);
+		InitializeItem(player.SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Sorcerer:
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
+		InitializeItem(player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
 		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(player.SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
+		InitializeItem(player.SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 
 	case HeroClass::Monk:
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
-		SetPlrHandItem(player.SpdList[0], IDI_HEAL);
+		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(player.SpdList[1], IDI_HEAL);
+		InitializeItem(player.SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Bard:
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
+		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
-		SetPlrHandItem(player.SpdList[0], IDI_HEAL);
+		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(player.SpdList[1], IDI_HEAL);
+		InitializeItem(player.SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	case HeroClass::Barbarian:
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
+		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
 
-		SetPlrHandItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
+		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
 		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
-		SetPlrHandItem(player.SpdList[0], IDI_HEAL);
+		InitializeItem(player.SpdList[0], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[0]);
 
-		SetPlrHandItem(player.SpdList[1], IDI_HEAL);
+		InitializeItem(player.SpdList[1], IDI_HEAL);
 		GetPlrHandSeed(&player.SpdList[1]);
 		break;
 	}
 
-	SetPlrHandItem(player.HoldItem, IDI_GOLD);
+	InitializeItem(player.HoldItem, IDI_GOLD);
 	GetPlrHandSeed(&player.HoldItem);
 
 	player.HoldItem._ivalue = 100;
@@ -3364,7 +3359,7 @@ void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ival
 	gbIsHellfire = isHellfire;
 
 	if (idx == IDI_GOLD) {
-		SetPlrHandItem(item, IDI_GOLD);
+		InitializeItem(item, IDI_GOLD);
 		item._iSeed = iseed;
 		item._iCreateInfo = icreateinfo;
 		item._ivalue = ivalue;
@@ -3374,8 +3369,8 @@ void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ival
 	}
 
 	if (icreateinfo == 0) {
-		SetPlrHandItem(item, idx);
-		SetPlrHandSeed(item, iseed);
+		InitializeItem(item, idx);
+		item._iSeed = iseed;
 		gbIsHellfire = tmpIsHellfire;
 		return;
 	}
@@ -3412,7 +3407,7 @@ void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ival
 
 void RecreateEar(Item &item, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
 {
-	SetPlrHandItem(item, IDI_EAR);
+	InitializeItem(item, IDI_EAR);
 	tempstr[0] = static_cast<char>((ic >> 8) & 0x7F);
 	tempstr[1] = static_cast<char>(ic & 0x7F);
 	tempstr[2] = static_cast<char>((iseed >> 24) & 0x7F);

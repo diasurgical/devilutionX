@@ -594,7 +594,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 
 		if (amount < item._ivalue) {
 			item._ivalue -= amount;
-			SetPlrHandItem(player.HoldItem, IDI_GOLD);
+			InitializeItem(player.HoldItem, IDI_GOLD);
 			SetGoldSeed(player, player.HoldItem);
 			SetPlrHandGoldCurs(player.HoldItem);
 			player.HoldItem._ivalue = amount;
@@ -604,7 +604,7 @@ int DropGold(int pnum, int amount, bool skipFullStacks)
 
 		amount -= item._ivalue;
 		player.RemoveInvItem(i);
-		SetPlrHandItem(player.HoldItem, IDI_GOLD);
+		InitializeItem(player.HoldItem, IDI_GOLD);
 		SetGoldSeed(player, player.HoldItem);
 		SetPlrHandGoldCurs(player.HoldItem);
 		player.HoldItem._ivalue = item._ivalue;
@@ -3165,7 +3165,7 @@ StartPlayerKill(int pnum, int earflag)
 				if (earflag != -1) {
 					if (earflag != 0) {
 						Item ear;
-						SetPlrHandItem(ear, IDI_EAR);
+						InitializeItem(ear, IDI_EAR);
 						strcpy(ear._iName, fmt::format(_("Ear of {:s}"), player._pName).c_str());
 						switch (player._pClass) {
 						case HeroClass::Sorcerer:
@@ -3214,7 +3214,7 @@ void StripTopGold(Player &player)
 			if (item._ivalue > MaxGold) {
 				int val = item._ivalue - MaxGold;
 				item._ivalue = MaxGold;
-				SetPlrHandItem(player.HoldItem, 0);
+				InitializeItem(player.HoldItem, 0);
 				SetGoldSeed(player, player.HoldItem);
 				player.HoldItem._ivalue = val;
 				SetPlrHandGoldCurs(player.HoldItem);

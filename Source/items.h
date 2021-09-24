@@ -430,7 +430,7 @@ void InitItemGFX();
 void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
-void SetPlrHandItem(Item &item, int itemData);
+void InitializeItem(Item &item, int itemData);
 void GetPlrHandSeed(Item *h);
 
 /**
