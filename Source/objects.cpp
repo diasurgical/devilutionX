@@ -2725,14 +2725,14 @@ bool OperateShrineWeird(int pnum)
 	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
 		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
 
-	for (int j = 0; j < player._pNumInv; j++) {
-		switch (player.InvList[j]._itype) {
+	for (Item &item : InventoryPlayerItemsRange { player }) {
+		switch (item._itype) {
 		case ItemType::Sword:
 		case ItemType::Axe:
 		case ItemType::Bow:
 		case ItemType::Mace:
 		case ItemType::Staff:
-			player.InvList[j]._iMaxDam++;
+			item._iMaxDam++;
 			break;
 		default:
 			break;
@@ -2776,17 +2776,7 @@ bool OperateShrineStone(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
-
-	for (auto &item : player.InvBody) {
-		if (item._itype == ItemType::Staff)
-			item._iCharges = item._iMaxCharges;
-	}
-	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._itype == ItemType::Staff)
-			player.InvList[j]._iCharges = player.InvList[j]._iMaxCharges;
-	}
-	for (auto &item : player.SpdList) {
+	for (Item &item : PlayerItemsRange { Players[pnum] }) {
 		if (item._itype == ItemType::Staff)
 			item._iCharges = item._iMaxCharges; // belt items don't have charges?
 	}
@@ -2803,14 +2793,9 @@ bool OperateShrineReligious(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
-
-	for (auto &item : player.InvBody)
-		item._iDurability = item._iMaxDur;
-	for (int j = 0; j < player._pNumInv; j++)
-		player.InvList[j]._iDurability = player.InvList[j]._iMaxDur;
-	for (auto &item : player.SpdList)
+	for (Item &item : PlayerItemsRange { Players[pnum] }) {
 		item._iDurability = item._iMaxDur; // belt items don't have durability?
+	}
 
 	InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
 
@@ -2957,25 +2942,7 @@ bool OperateShrineEldritch(int pnum)
 
 	auto &player = Players[pnum];
 
-	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._itype == ItemType::Misc) {
-			if (player.InvList[j]._iMiscId == IMISC_HEAL
-			    || player.InvList[j]._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
-				GetPlrHandSeed(&player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				player.InvList[j] = player.HoldItem;
-			}
-			if (player.InvList[j]._iMiscId == IMISC_FULLHEAL
-			    || player.InvList[j]._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
-				GetPlrHandSeed(&player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				player.InvList[j] = player.HoldItem;
-			}
-		}
-	}
-	for (auto &item : player.SpdList) {
+	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
 		if (item._itype == ItemType::Misc) {
 			if (item._iMiscId == IMISC_HEAL
 			    || item._iMiscId == IMISC_MANA) {
@@ -3264,19 +3231,10 @@ bool OperateShrineGlimmering(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
-
-	for (auto &item : player.InvBody) {
-		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified)
-			item._iIdentified = true;
-	}
-	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._iMagical != ITEM_QUALITY_NORMAL && !player.InvList[j]._iIdentified)
-			player.InvList[j]._iIdentified = true;
-	}
-	for (auto &item : player.SpdList) {
-		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified)
+	for (Item &item : PlayerItemsRange { Players[pnum] }) {
+		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified) {
 			item._iIdentified = true; // belt items can't be magical?
+		}
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);

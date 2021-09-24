@@ -2006,21 +2006,23 @@ int8_t CheckInvHLight()
 
 void RemoveScroll(Player &player)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (!player.InvList[i].isEmpty()
-		    && IsAnyOf(player.InvList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
-		    && player.InvList[i]._iSpell == player._pSpell) {
-			player.RemoveInvItem(i);
-			player.CalcScrolls();
+	const spell_id spellId = player._pSpell;
+	const auto isCurrentSpell = [spellId](const Item &item) {
+		return item.IsScrollOf(spellId);
+	};
+	{
+		const InventoryPlayerItemsRange items { player };
+		const auto scrollIt = std::find_if(items.begin(), items.end(), isCurrentSpell);
+		if (scrollIt != items.end()) {
+			player.RemoveInvItem(static_cast<int>(scrollIt.Index()));
 			return;
 		}
 	}
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (!player.SpdList[i].isEmpty()
-		    && IsAnyOf(player.SpdList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
-		    && player.SpdList[i]._iSpell == player._pSpell) {
-			player.RemoveSpdBarItem(i);
-			player.CalcScrolls();
+	{
+		const BeltPlayerItemsRange items { player };
+		const auto scrollIt = std::find_if(items.begin(), items.end(), isCurrentSpell);
+		if (scrollIt != items.end()) {
+			player.RemoveSpdBarItem(static_cast<int>(scrollIt.Index()));
 			return;
 		}
 	}
