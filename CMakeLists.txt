@@ -43,6 +43,11 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
+# The gettext[tools] package takes a very long time to install
+if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake$")
+  option(USE_GETTEXT_FROM_VCPKG "Add vcpkg dependency for gettext[tools] for compiling translations" OFF)
+endif()
+
 RELEASE_OPTION(CPACK "Configure CPack")
 
 
@@ -58,6 +63,13 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "")
   set(DIST ON)
   set(CPACK ON)
+endif()
+
+if(USE_GETTEXT_FROM_VCPKG)
+  list(APPEND VCPKG_MANIFEST_FEATURES "translations")
+endif()
+if(RUN_TESTS)
+  list(APPEND VCPKG_MANIFEST_FEATURES "tests")
 endif()
 
 if(NOT NOSOUND)
@@ -639,6 +651,10 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
+if(USE_GETTEXT_FROM_VCPKG)
+  # vcpkg doesn't add its own tools directory to the search path
+  list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
+endif()
 find_package(Gettext)
 if (Gettext_FOUND)
   foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)

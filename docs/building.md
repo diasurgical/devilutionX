@@ -124,22 +124,8 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 ### Installing dependencies
 Make sure to install the `C++ CMake tools for Windows` component for Visual Studio.
 
-1. Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
-
-   Don't forget to perform _user-wide integration_ step for additional convenience.
-2. Install required dependencies by executing the following command (via cmd or powershell):
-
-   For the 64-bit version of the dependencies please run this command:
-
-   ```
-   vcpkg install fmt:x64-windows sdl2:x64-windows sdl2-ttf:x64-windows libsodium:x64-windows libpng:x64-windows gtest:x64-windows
-   ```
-
-   For the 32-bit version of the dependencies please run this command:
-
-   ```
-   vcpkg install fmt:x86-windows sdl2:x86-windows sdl2-ttf:x86-windows libsodium:x86-windows libpng:x86-windows gtest:x86-windows
-   ```
+Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
+Don't forget to perform _user-wide integration_ step for additional convenience.
 
 ### Compiling
 
