@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-09-20 04:33+0200\n"
-"PO-Revision-Date: 2021-09-20 04:33+0200\n"
+"PO-Revision-Date: 2021-09-24 00:25-0300\n"
 "Last-Translator: Altieres Lima da Silva <altieres.lima@gmail.com>\n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -135,7 +135,7 @@ msgstr "Design e Layout do Manual"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
-msgstr "Arte manual"
+msgstr "Arte do Manual"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
@@ -157,15 +157,15 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
-msgstr "Contrainteligência do controle de qualidade"
+msgstr "Contrainteligência do Controle de Qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
-msgstr "Ordem dos serviços de informações de rede"
+msgstr "Ordem dos Serviços de Informações de Rede"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
-msgstr "Suporte ao cliente"
+msgstr "Suporte ao Cliente"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
@@ -177,11 +177,11 @@ msgstr "Dunsel"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr "Vocal de apoio do senhor Dabiri"
+msgstr "Vocalistas de Apoio do Senhor Dabiri"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr "Relações públicas"
+msgstr "Relações Públicas"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
@@ -189,7 +189,7 @@ msgstr "Marketing"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr "Vendas internacionais"
+msgstr "Vendas Internacionais"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
@@ -201,7 +201,7 @@ msgstr "Produção"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr "Jurídico e negócios"
+msgstr "Jurídico & Negócios"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
@@ -221,15 +221,15 @@ msgstr "Agradecimentos muito especiais a"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr "Gerente geral"
+msgstr "Gerente Geral"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr "Engenharia de software"
+msgstr "Engenharia de Software"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr "Diretores de arte"
+msgstr "Diretores de Arte"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
@@ -241,11 +241,11 @@ msgstr "Projeto"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr "Projeto de som, efeitos sonoros  e engenharia de áudio"
+msgstr "Projeto de Som, Efeitos Sonoros & Engenharia de Áudio"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr "Líder do controle de qualidade"
+msgstr "Líder do Controle de Qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
@@ -257,11 +257,11 @@ msgstr "Manual"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr "\tArte adicional"
+msgstr "\tArte Adicional"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr "Escritor dos textos das missões"
+msgstr "Escritor dos Textos das Missões"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
@@ -269,7 +269,7 @@ msgstr "Agradecimentos a"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr "\t\t\tAgradecimentos especiais à Blizzard Entertainment"
+msgstr "\t\t\tAgradecimentos Especiais à Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
@@ -277,35 +277,35 @@ msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr "Gerente do controle de qualidade"
+msgstr "Gerente do Controle de Qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr "Líder de teste do controle de qualidade"
+msgstr "Líder de Teste do Controle de Qualidade"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr "Testadores principais"
+msgstr "Testadores Principais"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr "Testadores adicionais"
+msgstr "Testadores Adicionais"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr "Gerente de marketing de produto"
+msgstr "Gerente de Marketing de Produto"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr "Gerente de relações públicas"
+msgstr "Gerente de Relações Públicas"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr "Gerente de produto associado"
+msgstr "Gerente de Produto Associado"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr "O anel dos mil"
+msgstr "O Anel dos Mil"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -323,7 +323,7 @@ msgstr "OK"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
-msgstr "Um jogador"
+msgstr "Um Jogador"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
@@ -339,7 +339,7 @@ msgstr "Suporte"
 
 #: Source/DiabloUI/mainmenu.cpp:40
 msgid "Show Credits"
-msgstr "Exibir créditos"
+msgstr "Exibir Créditos"
 
 #: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Hellfire"
@@ -449,7 +449,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:154
 msgid "Select Difficulty"
-msgstr "Selecionar Dificuldade"
+msgstr "Dificuldade"
 
 #: Source/DiabloUI/selgame.cpp:156 Source/DiabloUI/selgame.cpp:203
 #: Source/DiabloUI/selgame.cpp:306 Source/DiabloUI/selgame.cpp:326
@@ -696,7 +696,7 @@ msgstr "Jogo Salvo:"
 
 #: Source/DiabloUI/selhero.cpp:508
 msgid "Select Hero"
-msgstr "Selecione um herói"
+msgstr "Selecione um Herói"
 
 #: Source/DiabloUI/selhero.cpp:528
 msgid "Delete"
@@ -1052,7 +1052,7 @@ msgstr "Portal para"
 
 #: Source/cursor.cpp:231
 msgid "The Unholy Altar"
-msgstr "O altar profano"
+msgstr "O Altar Profano"
 
 #: Source/cursor.cpp:233
 msgid "level 15"
@@ -1141,20 +1141,18 @@ msgstr "Forçar o modo spawn mesmo se diabdat.mpq for encontrado"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:790
-#, fuzzy
 msgid "Record a demo file"
-msgstr "Jogo Salvo Existente"
+msgstr "Grava um arquivo de demonstração"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-#, fuzzy
 msgid "Play a demo file"
-msgstr "Jogue sozinho sem exposição na rede."
+msgstr "Toca um arquivo de demonstração"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:792
 msgid "Disable all frame limiting during demo playback"
-msgstr ""
+msgstr "Desabilita todos os limites de frame durante a demonstração"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:793
@@ -1173,7 +1171,7 @@ msgstr "Forçar o modo Diablo mesmo que o arquivo hellfire.mpq seja encontrado"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Use alternate nest palette"
-msgstr "Usar paleta alternativa do ninho"
+msgstr "Usa paleta alternativa no enxame"
 
 #: Source/diablo.cpp:801
 msgid ""
@@ -2249,7 +2247,7 @@ msgstr "Cimitarra"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr "Espadão"
+msgstr "Espada Escocesa"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
@@ -2261,27 +2259,27 @@ msgstr "Sabre"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr "Espada longa"
+msgstr "Espada Longa"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
-msgstr "Espada larga"
+msgstr "Espada Larga"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr "Espada bastarda"
+msgstr "Espada Bastarda"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr "Espada de duas mãos"
+msgstr "Espada de Duas Mãos"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr "Espada montante"
+msgstr "Espada Montante"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr "Machado pequeno"
+msgstr "Machado Pequeno"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
@@ -2290,15 +2288,15 @@ msgstr "Machado"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr "Machado grande"
+msgstr "Machado Grande"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr "Machado largo"
+msgstr "Machado Largo"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
-msgstr "Machado de batalha"
+msgstr "Machado de Batalha"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
@@ -2310,11 +2308,11 @@ msgstr "Maça"
 
 #: Source/itemdat.cpp:153
 msgid "Morning Star"
-msgstr "Estrela da manhã"
+msgstr "Chicote de Roldão"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr "Martelo de guerra"
+msgstr "Martelo de Guerra"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
@@ -2322,7 +2320,7 @@ msgstr "Martelo"
 
 #: Source/itemdat.cpp:155
 msgid "Spiked Club"
-msgstr "Clava com espetos"
+msgstr "Clava Cravada"
 
 #: Source/itemdat.cpp:157
 msgid "Flail"
@@ -2340,31 +2338,31 @@ msgstr "Arco"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr "Arco de caçador"
+msgstr "Arco de Caçador"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr "Arco longo"
+msgstr "Arco Longo"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
-msgstr "Arco composto"
+msgstr "Arco Composto"
 
 #: Source/itemdat.cpp:163
 msgid "Short Battle Bow"
-msgstr "Arco de batalha curto"
+msgstr "Arco de Batalha Curto"
 
 #: Source/itemdat.cpp:164
 msgid "Long Battle Bow"
-msgstr "Arco de batalha longo"
+msgstr "Arco de Batalha Longo"
 
 #: Source/itemdat.cpp:165
 msgid "Short War Bow"
-msgstr "Arco de guerra curto"
+msgstr "Arco de Guerra Curto"
 
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
-msgstr "Arco de guerra longo"
+msgstr "Arco de Guerra Longo"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170 Source/itemdat.cpp:171
@@ -2397,7 +2395,7 @@ msgstr "Amuleto"
 
 #: Source/itemdat.cpp:177
 msgid "Rune of Fire"
-msgstr "Runa de fogo"
+msgstr "Runa de Fogo"
 
 #: Source/itemdat.cpp:177 Source/itemdat.cpp:178 Source/itemdat.cpp:179
 #: Source/itemdat.cpp:180 Source/itemdat.cpp:181
@@ -2406,23 +2404,23 @@ msgstr "Runa"
 
 #: Source/itemdat.cpp:178
 msgid "Rune of Lightning"
-msgstr "Runa de relâmpago"
+msgstr "Runa de Relâmpago"
 
 #: Source/itemdat.cpp:179
 msgid "Greater Rune of Fire"
-msgstr "Grande runa de fogo"
+msgstr "Grande Runa de Fogo"
 
 #: Source/itemdat.cpp:180
 msgid "Greater Rune of Lightning"
-msgstr "Grande runa de relâmpago"
+msgstr "Grande Runa de Relâmpago"
 
 #: Source/itemdat.cpp:181
 msgid "Rune of Stone"
-msgstr "Runa de pedra"
+msgstr "Runa de Pedra"
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
-msgstr "Cajado curto de raio carregado"
+msgstr "Cajado Curto de Raio Carregado"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
@@ -2747,7 +2745,7 @@ msgstr "relampejante"
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"
-msgstr "Do Bobo"
+msgstr "do Bobo"
 
 #: Source/itemdat.cpp:276
 msgid "Crystalline"
@@ -2756,7 +2754,7 @@ msgstr "Cristalino"
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:278
 msgid "Doppelganger's"
-msgstr "Do Impostor"
+msgstr "do Impostor"
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
@@ -3206,7 +3204,7 @@ msgid "The Defender"
 msgstr "O defensor"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphon's Claw"
+msgid "Gryphons Claw"
 msgstr "Garra de grifo"
 
 #: Source/itemdat.cpp:419
@@ -3370,7 +3368,7 @@ msgid "Rod of Onan"
 msgstr "Vara de Onan"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Spirits"
+msgid "Helm of Sprits"
 msgstr "Elmo dos espíritos"
 
 #: Source/itemdat.cpp:460
@@ -4055,7 +4053,7 @@ msgstr "rec. mais rápido de ataque"
 
 #: Source/items.cpp:4025
 msgid "fastest hit recovery"
-msgstr "rec. muito rápido de atq."
+msgstr "rec. muito rápida de atq."
 
 #: Source/items.cpp:4028
 msgid "fast block"
@@ -4254,22 +4252,16 @@ msgid "Rotting Carcass"
 msgstr "Carcaça Apodrecida"
 
 #: Source/monstdat.cpp:23
-#, fuzzy
-#| msgid "Black Death"
 msgctxt "monster"
 msgid "Black Death"
-msgstr "Cogumelo negro"
+msgstr "Morte Negra"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
-#, fuzzy
-#| msgid "Fallen One"
 msgctxt "monster"
 msgid "Fallen One"
-msgstr "espada de uma mão"
+msgstr "Caído"
 
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
-#, fuzzy
-#| msgid "Carver"
 msgctxt "monster"
 msgid "Carver"
 msgstr "Talhador"
@@ -4282,57 +4274,39 @@ msgid "Devil Kin"
 msgstr "Cria do Diabo"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
-#, fuzzy
-#| msgid "Dark One"
 msgctxt "monster"
 msgid "Dark One"
-msgstr "do escuro"
+msgstr "Sombrio"
 
 #: Source/monstdat.cpp:28 Source/monstdat.cpp:40
-#, fuzzy
-#| msgid "Skeleton"
 msgctxt "monster"
 msgid "Skeleton"
-msgstr "Covil do Rei Esqueleto"
+msgstr "Esqueleto"
 
 #: Source/monstdat.cpp:29
-#, fuzzy
-#| msgid "Corpse Axe"
 msgctxt "monster"
 msgid "Corpse Axe"
-msgstr "Machado pequeno"
+msgstr "Cadáver de Machado"
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
-#, fuzzy
-#| msgid "Burning Dead"
 msgctxt "monster"
 msgid "Burning Dead"
-msgstr "calcinante"
+msgstr "Morto Calcinante"
 
 #: Source/monstdat.cpp:31 Source/monstdat.cpp:43
-#, fuzzy
-#| msgid "Horror"
 msgctxt "monster"
 msgid "Horror"
-msgstr ""
-"A coisa se foi? Enviou ela de volta aos recantos escuros de Hades de onde "
-"veio? Você o quê? Oh, não me diga que você a perdeu! Essas coisas não são "
-"baratas, você sabe? Você tem que encontrá-la e depois tirar esse horror da "
-"nossa cidade."
+msgstr "Horror"
 
 #: Source/monstdat.cpp:36
-#, fuzzy
-#| msgid "Scavenger"
 msgctxt "monster"
 msgid "Scavenger"
-msgstr "Carapaça do Vorazgo"
+msgstr "Escavador"
 
 #: Source/monstdat.cpp:37
-#, fuzzy
-#| msgid "Plague Eater"
 msgctxt "monster"
 msgid "Plague Eater"
-msgstr "Devorador de almas"
+msgstr "Devorador de Almas"
 
 #: Source/monstdat.cpp:38
 #, fuzzy
@@ -4356,11 +4330,9 @@ msgid "Corpse Bow"
 msgstr "Arco curto"
 
 #: Source/monstdat.cpp:44
-#, fuzzy
-#| msgid "Skeleton Captain"
 msgctxt "monster"
 msgid "Skeleton Captain"
-msgstr "Esqueleto crucificado"
+msgstr "Esqueleto Capitão"
 
 #: Source/monstdat.cpp:45
 #, fuzzy
@@ -5332,11 +5304,9 @@ msgid "Spineeater"
 msgstr "Come-Espinhas"
 
 #: Source/monstdat.cpp:507
-#, fuzzy
-#| msgid "Blackash the Burning"
 msgctxt "monster"
 msgid "Blackash the Burning"
-msgstr "calcinante"
+msgstr "Blackash, o Calcinante"
 
 #: Source/monstdat.cpp:508
 #, fuzzy
@@ -5353,11 +5323,9 @@ msgid "Blightstone the Weak"
 msgstr "Gharbad, o Fraco"
 
 #: Source/monstdat.cpp:510
-#, fuzzy
-#| msgid "Bilefroth the Pit Master"
 msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr "de mestre"
+msgstr "Bilefroth, o Mestre do Poço"
 
 #: Source/monstdat.cpp:511
 #, fuzzy
@@ -5416,11 +5384,9 @@ msgid "Warmaggot the Mad"
 msgstr "Zhar, o Louco"
 
 #: Source/monstdat.cpp:519
-#, fuzzy
-#| msgid "Glasskull the Jagged"
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr "serrilhado(a)"
+msgstr "Crânio de Vidro, o Serrilhado"
 
 #: Source/monstdat.cpp:520
 #, fuzzy
@@ -5500,11 +5466,9 @@ msgid "Madburner"
 msgstr "Queimador Louco"
 
 #: Source/monstdat.cpp:531
-#, fuzzy
-#| msgid "Bonesaw the Litch"
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr "A serra de osso"
+msgstr "Serra Osso, o Litch"
 
 #: Source/monstdat.cpp:532
 #, fuzzy
@@ -5542,11 +5506,9 @@ msgid "Oozedrool"
 msgstr "Babujador"
 
 #: Source/monstdat.cpp:537
-#, fuzzy
-#| msgid "Goldblight of the Flame"
 msgctxt "monster"
 msgid "Goldblight of the Flame"
-msgstr "da chama"
+msgstr "Pragáurea da Chama"
 
 #: Source/monstdat.cpp:538
 #, fuzzy
@@ -5598,11 +5560,9 @@ msgid "Festerskull"
 msgstr "Pesticrânio"
 
 #: Source/monstdat.cpp:545
-#, fuzzy
-#| msgid "Lionskull the Bent"
 msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr "envergado(a)"
+msgstr "CrânioLeão, o Curvado"
 
 #: Source/monstdat.cpp:546
 #, fuzzy
@@ -5633,11 +5593,9 @@ msgid "Fangskin"
 msgstr "Presiderme"
 
 #: Source/monstdat.cpp:550
-#, fuzzy
-#| msgid "Witchfire the Unholy"
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr "O altar profano"
+msgstr "Witchfire, o Pecaminoso"
 
 #: Source/monstdat.cpp:551
 #, fuzzy
@@ -5661,11 +5619,9 @@ msgid "Windspawn"
 msgstr "Ventoso"
 
 #: Source/monstdat.cpp:554
-#, fuzzy
-#| msgid "Lord of the Pit"
 msgctxt "monster"
 msgid "Lord of the Pit"
-msgstr "do poço"
+msgstr "Senhor do Poço"
 
 #: Source/monstdat.cpp:555
 #, fuzzy
@@ -5842,15 +5798,15 @@ msgstr "Sem imunidades"
 
 #: Source/monster.cpp:4695
 msgid "Some Magic Resistances"
-msgstr "Algumas resistências a magia"
+msgstr "Algumas Resistências à Magia"
 
 #: Source/monster.cpp:4700
 msgid "Some Magic Immunities"
-msgstr "Algumas imunidades a magia"
+msgstr "Algumas Imunidades à Magia"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
-msgstr "Está tentando jogar um item do chão?"
+msgstr "Gostaria de jogar um item do chão?"
 
 #: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
 #: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
@@ -6255,22 +6211,16 @@ msgid "MAX"
 msgstr "MÁX"
 
 #: Source/panels/charpanel.cpp:119
-#, fuzzy
-#| msgid "Level:"
 msgid "Level"
-msgstr "Nível:"
+msgstr "Nível"
 
 #: Source/panels/charpanel.cpp:121
-#, fuzzy
-#| msgid "Experience: "
 msgid "Experience"
-msgstr "Experiência: "
+msgstr "experiência"
 
 #: Source/panels/charpanel.cpp:123
-#, fuzzy
-#| msgid "Next Level: "
 msgid "Next level"
-msgstr "Próximo nível: "
+msgstr "próximo nível"
 
 #: Source/panels/charpanel.cpp:126
 msgid "None"
@@ -6278,131 +6228,97 @@ msgstr "Nenhum"
 
 #: Source/panels/charpanel.cpp:132
 msgid "Base"
-msgstr ""
+msgstr "base"
 
 #: Source/panels/charpanel.cpp:133
-#, fuzzy
-#| msgid "No"
 msgid "Now"
-msgstr "O que antes estava aberto, agora está fechado"
+msgstr "atual"
 
 #: Source/panels/charpanel.cpp:134
-#, fuzzy
-#| msgid "Strength:"
 msgid "Strength"
-msgstr "da força"
+msgstr "força"
 
 #: Source/panels/charpanel.cpp:138
-#, fuzzy
-#| msgid "Magic:"
 msgid "Magic"
-msgstr "da magia"
+msgstr "magia"
 
 #: Source/panels/charpanel.cpp:142
-#, fuzzy
-#| msgid "Dexterity:"
 msgid "Dexterity"
-msgstr "da destreza"
+msgstr "destreza"
 
 #: Source/panels/charpanel.cpp:145
-#, fuzzy
-#| msgid "Vitality:"
 msgid "Vitality"
-msgstr "da vitalidade"
+msgstr "vitalidade"
 
 #: Source/panels/charpanel.cpp:148
-#, fuzzy
 msgid "Points to distribute"
-msgstr "Pontos de vida: {:d}-{:d}"
+msgstr "pontos a distribuir"
 
 #: Source/panels/charpanel.cpp:158
-#, fuzzy
-#| msgid "armor class: {:d}"
 msgid "Armor class"
-msgstr "classe de armadura: {:d}"
+msgstr "armadura"
 
 #: Source/panels/charpanel.cpp:160
-#, fuzzy
 msgid "To hit"
-msgstr "Pontos de vida {:d} de {:d}"
+msgstr "chance de acerto"
 
 #: Source/panels/charpanel.cpp:162
-#, fuzzy
 msgid "Damage"
-msgstr "potencial de dano - não arcos"
+msgstr "dano"
 
 #: Source/panels/charpanel.cpp:168
-#, fuzzy
 msgid "Life"
-msgstr "da vida"
+msgstr "vida"
 
 #: Source/panels/charpanel.cpp:172
 msgid "Mana"
-msgstr "Mana"
+msgstr "mana"
 
 #: Source/panels/charpanel.cpp:177
-#, fuzzy
-#| msgid "Resist Magic: {:+d}%"
 msgid "Resist magic"
-msgstr "Resistência à magia: {:+d}%"
+msgstr "resist. à magia"
 
 #: Source/panels/charpanel.cpp:179
-#, fuzzy
-#| msgid "Resists: "
 msgid "Resist fire"
-msgstr "Resistência a fogo: {:+d}%"
+msgstr "resist. a fogo"
 
 #: Source/panels/charpanel.cpp:181
-#, fuzzy
-#| msgid "Resist Lightning: {:+d}%"
 msgid "Resist lightning"
-msgstr "Resistência a raios: {:+d}%"
+msgstr "resist. a raios"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
 #: Source/panels/mainpanel.cpp:111
-#, fuzzy
-#| msgid "Voices"
 msgid "voice"
-msgstr "Produção de Voz, Direção e Elenco"
+msgstr "voz"
 
 #: Source/panels/mainpanel.cpp:87
-#, fuzzy
 msgid "char"
-msgstr "Person."
+msgstr "person."
 
 #: Source/panels/mainpanel.cpp:88
-#, fuzzy
-#| msgid "Quests"
 msgid "quests"
-msgstr "Missões"
+msgstr "missões"
 
 #: Source/panels/mainpanel.cpp:89
-#, fuzzy
-#| msgid "Map"
 msgid "map"
-msgstr "Mapa"
+msgstr "mapa"
 
 #: Source/panels/mainpanel.cpp:90
-#, fuzzy
 msgid "menu"
-msgstr "Menu"
+msgstr "menu"
 
 #: Source/panels/mainpanel.cpp:91
-#, fuzzy
-#| msgid "Inv"
 msgid "inv"
-msgstr "Invent."
+msgstr "invent."
 
 #: Source/panels/mainpanel.cpp:92
-#, fuzzy
-#| msgid "Spells"
 msgid "spells"
-msgstr "Feitiços"
+msgstr "feitiços"
 
 #: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
 msgid "mute"
-msgstr ""
+msgstr "mudo"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
@@ -6581,37 +6497,31 @@ msgstr "Covil do Rei Esqueleto"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
-msgstr "Câmara de ossos"
+msgstr "Câmara de Ossos"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
 msgstr "Covil do Arcebispo Lázarus"
 
 #: Source/spelldat.cpp:16
-#, fuzzy
-#| msgid "Firebolt"
 msgctxt "spell"
 msgid "Firebolt"
-msgstr "Raio de fogo"
+msgstr "Raio de Fogo"
 
 #: Source/spelldat.cpp:17
-#, fuzzy
-#| msgid "Healing"
 msgctxt "spell"
 msgid "Healing"
-msgstr "Poção de cura completa"
+msgstr "Cura"
 
 #: Source/spelldat.cpp:18
 msgctxt "spell"
 msgid "Lightning"
-msgstr "relampejante"
+msgstr "Relâmpago"
 
 #: Source/spelldat.cpp:19
-#, fuzzy
-#| msgid "Flash"
 msgctxt "spell"
 msgid "Flash"
-msgstr "Pergaminho de lampejo"
+msgstr "Lampejo"
 
 #: Source/spelldat.cpp:20
 #, fuzzy
@@ -6621,11 +6531,9 @@ msgid "Identify"
 msgstr "Identificar um item"
 
 #: Source/spelldat.cpp:21
-#, fuzzy
-#| msgid "Fire Wall"
 msgctxt "spell"
 msgid "Fire Wall"
-msgstr "Pergaminho de parede de fogo"
+msgstr "Parede de Fogo"
 
 #: Source/spelldat.cpp:22
 msgctxt "spell"
@@ -6633,81 +6541,59 @@ msgid "Town Portal"
 msgstr "Portal da cidade"
 
 #: Source/spelldat.cpp:23
-#, fuzzy
-#| msgid "Stone Curse"
 msgctxt "spell"
 msgid "Stone Curse"
-msgstr "Pergaminho de maldição de pedra"
+msgstr "Petrificar"
 
 #: Source/spelldat.cpp:24
-#, fuzzy
-#| msgid "Infravision"
 msgctxt "spell"
 msgid "Infravision"
-msgstr "enxerga com infravisão"
+msgstr "Infravisão"
 
 #: Source/spelldat.cpp:25
-#, fuzzy
-#| msgid "Phasing"
 msgctxt "spell"
 msgid "Phasing"
-msgstr "Pergaminho de fasear"
+msgstr "Fasear"
 
 #: Source/spelldat.cpp:26
-#, fuzzy
-#| msgid "Mana Shield"
 msgctxt "spell"
 msgid "Mana Shield"
-msgstr "Pergaminho de escudo de mana"
+msgstr "Escudo de Mana"
 
 #: Source/spelldat.cpp:27
-#, fuzzy
-#| msgid "Fireball"
 msgctxt "spell"
 msgid "Fireball"
-msgstr "dano das bolas de fogo: {:d}"
+msgstr "Bola de Fogo"
 
 #: Source/spelldat.cpp:28
-#, fuzzy
-#| msgid "Guardian"
 msgctxt "spell"
 msgid "Guardian"
-msgstr "Pergaminho de guardião"
+msgstr "Guardiã"
 
 #: Source/spelldat.cpp:29
-#, fuzzy
-#| msgid "Chain Lightning"
 msgctxt "spell"
 msgid "Chain Lightning"
-msgstr "Pergaminho de relâmp. encadeado"
+msgstr "Relâmpago encadeado"
 
 #: Source/spelldat.cpp:30
-#, fuzzy
-#| msgid "Flame Wave"
 msgctxt "spell"
 msgid "Flame Wave"
-msgstr "Pergaminho de onda de chamas"
+msgstr "Onda de Chamas"
 
 #: Source/spelldat.cpp:31
-#, fuzzy
-#| msgid "Doom Serpents"
 msgctxt "spell"
 msgid "Doom Serpents"
-msgstr "Serpentes da ruína"
+msgstr "Serpentes da Ruína"
 
 #: Source/spelldat.cpp:32
-#, fuzzy
-#| msgid "Blood Ritual"
 msgctxt "spell"
 msgid "Blood Ritual"
-msgstr "Pedra sanguínea"
+msgstr "Ritual Sanguíneo"
 
 #: Source/spelldat.cpp:33
-#, fuzzy
-#| msgid "Nova"
 msgctxt "spell"
 msgid "Nova"
-msgstr "Pergaminho de nova"
+msgstr "Nova"
 
 #: Source/spelldat.cpp:34
 #, fuzzy
@@ -6722,50 +6608,24 @@ msgid "Inferno"
 msgstr "Inferno"
 
 #: Source/spelldat.cpp:36
-#, fuzzy
-#| msgid "Golem"
 msgctxt "spell"
 msgid "Golem"
-msgstr "Pergaminho de golem"
+msgstr "Golem"
 
 #: Source/spelldat.cpp:37
-#, fuzzy
-#| msgid "Rage"
 msgctxt "spell"
 msgid "Rage"
-msgstr ""
-"A vila precisa de sua ajuda, bom(a) mestre(a)! Há alguns meses o filho do "
-"Rei Leoric, o Príncipe Albrecht, foi sequestrado. O Rei entrou em fúria e "
-"vasculhou a vila por seu filho desaparecido. A cada dia que se passava, "
-"Leoric parecia decair mais fundo na loucura. Ele buscou culpar aldeões "
-"inocentes pelo desaparecimento do garoto e ordenou que fossem brutalmente "
-"executados. Menos da metade de nós sobrevivemos à insanidade dele...\n"
-" \n"
-"Os Cavaleiros e Sacerdotes do Rei tentaram pacificá-lo, mas ele se voltou "
-"contra eles e, infelizmente, foram forçados a matá-lo. Com seu último "
-"suspiro, o Rei invocou uma terrível maldição sobre seus antigos seguidores. "
-"Fez um voto de que eles o serviriam nas trevas para sempre...\n"
-" \n"
-"É aqui que as coisas tomam um rumo mais sombrio do que eu pensava ser "
-"possível! Nosso antigo Rei se levantou de seu sono eterno e agora comanda "
-"uma legião de seguidores mortos-vivos dentro do Labirinto. Seu corpo foi "
-"enterrado em uma tumba três andares abaixo da Catedral. Por favor, bom(a) "
-"mestre(a), coloque a alma dele em paz ao destruir a sua forma amaldiçoada de "
-"agora..."
+msgstr "Fúria"
 
 #: Source/spelldat.cpp:38
-#, fuzzy
-#| msgid "Teleport"
 msgctxt "spell"
 msgid "Teleport"
-msgstr "Pergaminho de teletransporte"
+msgstr "Teletransporte"
 
 #: Source/spelldat.cpp:39
-#, fuzzy
-#| msgid "Apocalypse"
 msgctxt "spell"
 msgid "Apocalypse"
-msgstr "Pergaminho de apocalipse"
+msgstr "Apocalipse"
 
 #: Source/spelldat.cpp:40
 #, fuzzy
@@ -6775,25 +6635,19 @@ msgid "Etherealize"
 msgstr "Eterealizar"
 
 #: Source/spelldat.cpp:41
-#, fuzzy
-#| msgid "Item Repair"
 msgctxt "spell"
 msgid "Item Repair"
-msgstr "Reparar itens"
+msgstr "Reparar Itens"
 
 #: Source/spelldat.cpp:42
-#, fuzzy
-#| msgid "Staff Recharge"
 msgctxt "spell"
 msgid "Staff Recharge"
-msgstr "Recarregar cajados"
+msgstr "Recarregar Cajados"
 
 #: Source/spelldat.cpp:43
-#, fuzzy
-#| msgid "Trap Disarm"
 msgctxt "spell"
 msgid "Trap Disarm"
-msgstr "coloca armadilha de fogo"
+msgstr "Desarmar Armadilha"
 
 #: Source/spelldat.cpp:44
 #, fuzzy
@@ -6803,25 +6657,19 @@ msgid "Elemental"
 msgstr "Elemental"
 
 #: Source/spelldat.cpp:45
-#, fuzzy
-#| msgid "Charged Bolt"
 msgctxt "spell"
 msgid "Charged Bolt"
-msgstr "Cajado curto de raio carregado"
+msgstr "Raio Carregado"
 
 #: Source/spelldat.cpp:46
-#, fuzzy
-#| msgid "Holy Bolt"
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr "Cajado curto de raio carregado"
+msgstr "Raio Sagrado"
 
 #: Source/spelldat.cpp:47
-#, fuzzy
-#| msgid "Resurrect"
 msgctxt "spell"
 msgid "Resurrect"
-msgstr "Pergaminho de ressuscitar"
+msgstr "Ressurreição"
 
 #: Source/spelldat.cpp:48
 #, fuzzy
@@ -6831,25 +6679,19 @@ msgid "Telekinesis"
 msgstr "Telecinese"
 
 #: Source/spelldat.cpp:49
-#, fuzzy
-#| msgid "Heal Other"
 msgctxt "spell"
 msgid "Heal Other"
-msgstr "cura mortalmente"
+msgstr "Curar Outro"
 
 #: Source/spelldat.cpp:50
-#, fuzzy
-#| msgid "Blood Star"
 msgctxt "spell"
 msgid "Blood Star"
-msgstr "do sangue"
+msgstr "Estrela de Sangue"
 
 #: Source/spelldat.cpp:51
-#, fuzzy
-#| msgid "Bone Spirit"
 msgctxt "spell"
 msgid "Bone Spirit"
-msgstr "Armadura de cadeias de ossos"
+msgstr "Espírito de Ossos"
 
 #: Source/spelldat.cpp:52
 msgctxt "spell"
@@ -6857,44 +6699,19 @@ msgid "Mana"
 msgstr "Mana"
 
 #: Source/spelldat.cpp:53
-#, fuzzy
-#| msgid "the Magi"
 msgctxt "spell"
 msgid "the Magi"
-msgstr ""
-"Prestai atenção e testemunhai as verdades que jazem aqui dentro, pois são o "
-"último legado dos Horadrim. Há quase trezentos anos, foi sabido que os Três "
-"Males Primordiais do Inferno Ardente misteriosamente vieram ao nosso mundo. "
-"Os Três Irmãos assolaram as terra do leste por décadas, enquanto a "
-"humanidade tremia em seu rastro. Nossa Ordem - os Horadrim - foi fundada por "
-"um grupo de magos secretos para caçar e capturar os Três Males de uma vez "
-"por todas.\n"
-" \n"
-"Os Horadrim originais capturaram os Três dentro de poderosos artefatos "
-"conhecidos como Pedras da Alma e as enterraram fundo abaixo das areias "
-"orientais. O terceiro Mal escapou à captura e fugiu para o oeste, com muitos "
-"dos Horadrim perseguindo-lhe. O Terceiro Mal - conhecido como Diablo, o "
-"Senhor do Terror - foi eventualmente capturado, sua essência posta em uma "
-"Pedra da Alma e enterrada dentro deste Labirinto.\n"
-" \n"
-"Estejas em aviso que a Pedra da Alma deve ser protegida da descoberta por "
-"aqueles que não forem da fé. Se Diablo for liberado, ele buscaria um corpo "
-"que pudesse facilmente controlar, uma vez que estaria muito fraco - talvez o "
-"de um velho ou o de uma criança."
+msgstr "de Magi"
 
 #: Source/spelldat.cpp:54
-#, fuzzy
-#| msgid "the Jester"
 msgctxt "spell"
 msgid "the Jester"
-msgstr "Do Bobo"
+msgstr "do Bobo"
 
 #: Source/spelldat.cpp:55
-#, fuzzy
-#| msgid "Lightning Wall"
 msgctxt "spell"
 msgid "Lightning Wall"
-msgstr "relampejante"
+msgstr "Parede relampejante"
 
 #: Source/spelldat.cpp:56
 #, fuzzy
@@ -6925,18 +6742,14 @@ msgid "Berserk"
 msgstr "Berserk"
 
 #: Source/spelldat.cpp:60
-#, fuzzy
-#| msgid "Ring of Fire"
 msgctxt "spell"
 msgid "Ring of Fire"
-msgstr "Anel"
+msgstr "Anel de Fogo"
 
 #: Source/spelldat.cpp:61
-#, fuzzy
-#| msgid "Search"
 msgctxt "spell"
 msgid "Search"
-msgstr "Eu sinto uma alma sedenta por respostas..."
+msgstr "Procurar"
 
 #: Source/spelldat.cpp:62
 msgctxt "spell"
@@ -6944,30 +6757,24 @@ msgid "Rune of Fire"
 msgstr "Runa de fogo"
 
 #: Source/spelldat.cpp:63
-#, fuzzy
-#| msgid "Rune of Light"
 msgctxt "spell"
 msgid "Rune of Light"
-msgstr "da luz"
+msgstr "Runa da Luz"
 
 #: Source/spelldat.cpp:64
-#, fuzzy
-#| msgid "Rune of Nova"
 msgctxt "spell"
 msgid "Rune of Nova"
-msgstr "Runa"
+msgstr "Runa de Nova"
 
 #: Source/spelldat.cpp:65
-#, fuzzy
-#| msgid "Rune of Immolation"
 msgctxt "spell"
 msgid "Rune of Immolation"
-msgstr "Runa explosiva"
+msgstr "Runa Explosiva"
 
 #: Source/spelldat.cpp:66
 msgctxt "spell"
 msgid "Rune of Stone"
-msgstr "Runa de pedra"
+msgstr "Runa de Pedra"
 
 #: Source/stores.cpp:179 Source/stores.cpp:186
 msgid ",  "
@@ -9625,7 +9432,7 @@ msgstr ""
 " \n"
 "Eu sei que tanto Pepin como Ogden sentem simpatia por ele, mas eu fico muito "
 "frustrada ao vê-lo deslizar mais e mais para um torpor confuso a cada noite "
-"que passa.\""
+"que passa."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -10797,8 +10604,8 @@ msgid ""
 msgstr ""
 "Estas terras serão contaminadas, e nossa ninhada invadirá os campos que os "
 "homens chamam de lar.  Nossos tentáculos envolverão este mundo, e nós "
-"faremosum banquete com a carne de seus habitantes.  O homem se tornará nosso "
-"bem e sustento."
+"faremos um banquete com a carne de seus habitantes.  O homem se tornará "
+"nosso bem e sustento."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
