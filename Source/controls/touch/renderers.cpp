@@ -1,6 +1,7 @@
 #include "control.h"
 #include "controls/touch/renderers.h"
 #include "cursor.h"
+#include "diablo.h"
 #include "doom.h"
 #include "engine.h"
 #include "engine/render/cel_render.hpp"
@@ -127,6 +128,9 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 
 void RenderVirtualGamepad(SDL_Renderer *renderer)
 {
+	if (!gbRunGame)
+		return;
+
 	RenderFunction renderFunction = [&](Art &art, SDL_Rect *src, SDL_Rect *dst) {
 		if (art.texture == nullptr)
 			return;
@@ -140,6 +144,9 @@ void RenderVirtualGamepad(SDL_Renderer *renderer)
 
 void RenderVirtualGamepad(SDL_Surface *surface)
 {
+	if (!gbRunGame)
+		return;
+
 	RenderFunction renderFunction = [&](Art &art, SDL_Rect *src, SDL_Rect *dst) {
 		if (art.surface == nullptr)
 			return;
