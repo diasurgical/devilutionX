@@ -102,6 +102,16 @@ void InitializeVirtualGamepad()
 	cancelButton.area.position.x = (padButtonLeft + padButtonRight) / 2;
 	cancelButton.area.position.y = padButtonBottom;
 	cancelButton.area.radius = padButtonSize / 2;
+
+	VirtualPadButton &healthButton = VirtualGamepadState.healthButton;
+	healthButton.area.position.x = padButtonRight - padButtonSize - padButtonSpacing;
+	healthButton.area.position.y = padButtonTop - padButtonSize - padButtonSpacing;
+	healthButton.area.radius = padButtonSize / 2;
+
+	VirtualPadButton &manaButton = VirtualGamepadState.manaButton;
+	manaButton.area.position.x = padButtonRight;
+	manaButton.area.position.y = padButtonTop - padButtonSize - padButtonSpacing;
+	manaButton.area.radius = padButtonSize / 2;
 }
 
 void VirtualDirectionPad::UpdatePosition(Point touchCoordinates)

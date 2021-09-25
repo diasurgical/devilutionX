@@ -126,6 +126,16 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 				*action = GameActionSendKey { DVL_VK_SPACE, false };
 			return true;
 		}
+		if (VirtualGamepadState.healthButton.isHeld && VirtualGamepadState.healthButton.didStateChange) {
+			if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
+				*action = GameAction(GameActionType_USE_HEALTH_POTION);
+			return true;
+		}
+		if (VirtualGamepadState.manaButton.isHeld && VirtualGamepadState.manaButton.didStateChange) {
+			if (!QuestLogIsOpen && !sbookflag && stextflag == STORE_NONE)
+				*action = GameAction(GameActionType_USE_MANA_POTION);
+			return true;
+		}
 	}
 #endif
 

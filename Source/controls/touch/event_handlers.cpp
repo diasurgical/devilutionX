@@ -125,6 +125,12 @@ bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)
 	if (cancelButtonEventHandler.Handle(event))
 		return true;
 
+	if (healthButtonEventHandler.Handle(event))
+		return true;
+
+	if (manaButtonEventHandler.Handle(event))
+		return true;
+
 	return false;
 }
 
