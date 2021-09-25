@@ -3,7 +3,7 @@
 	<string name="app_name" translatable="false">DevilutionX</string>
 	<!-- Strings used for fragments for navigation -->
 
-	<string name="guide_full_installation">Um die Vollversion spielen zu können, musst du die Datei "DIABDAT.MPQ" des Originalspiels in das Verzeichnis Android/data/org.diasurgical.devilutionx/files kopieren.<br/>\n<br/>\n Wenn du das Originalspiel nicht besitzt kannst du ees bei <a href="https://www.gog.com/game/diablo">GOG.com</a> kaufen.</string>
+	<string name="guide_full_installation">Um die Vollversion spielen zu können, musst du die Datei "DIABDAT.MPQ" des Originalspiels in das Verzeichnis Android/data/org.diasurgical.devilutionx/files kopieren.<br/>\n<br/>\nWenn du das Originalspiel nicht besitzt kannst du ees bei <a href="https://www.gog.com/game/diablo">GOG.com</a> kaufen.</string>
 	<string name="guide_shareware">Alternativ kannst du die Spawn-Version (Demo-Version?) herunterladen um den Demo-Teil von Diablo zu spielen.</string>
 	<string name="faq_link">Weitere Details in der <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Installationsanleitung</a>.</string>
 	<string name="game_data_retry">Erneut versuchen</string>
