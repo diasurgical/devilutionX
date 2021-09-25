@@ -1951,6 +1951,9 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitMonsters();
 		IncProgress();
+#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+		InitVirtualGamepadGFX(renderer);
+#endif
 		InitMissileGFX(gbIsHellfire);
 		IncProgress();
 		InitCorpses();
