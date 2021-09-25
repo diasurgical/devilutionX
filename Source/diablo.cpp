@@ -1433,16 +1433,17 @@ void InitKeymapActions()
 	    "GameInfo",
 	    'V',
 	    [] {
-		    char pszStr[120];
+		    char pszStr[MAX_SEND_STR_LEN];
 		    const char *difficulties[3] = {
 			    _("Normal"),
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    strcpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
-		                                   "{:s}, version = {:s}, mode = {:s}"),
-		                       gszProductName, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty])
-		                       .c_str());
+		    strncpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
+		                                    "{:s}, version = {:s}, mode = {:s}"),
+		                        PROJECT_NAME, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty])
+		                        .c_str(),
+		        MAX_SEND_STR_LEN - 1);
 		    NetSendCmdString(1 << MyPlayerId, pszStr);
 	    },
 	    [&]() { return !IsPlayerDead(); },
