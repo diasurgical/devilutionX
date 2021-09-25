@@ -1507,7 +1507,7 @@ void DrawSpellBook(const Surface &out)
 				SetSpellTrans(RSPLTYPE_SKILL);
 				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
-			PrintSBookStr(out, { 10, yp - 23 }, pgettext("spell", spelldata[sn].sNameText));
+			int textOffset = 7;
 			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, _("Skill"));
@@ -1517,19 +1517,21 @@ void DrawSpellBook(const Surface &out)
 				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
 			} break;
 			default: {
+				textOffset = 0;
 				int mana = GetManaAmount(myPlayer, sn) >> 6;
-				int min;
-				int max;
-				GetDamageAmt(sn, &min, &max);
-				if (min != -1) {
-					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: {:d} - {:d}"), mana, min, max).c_str());
+				if (sn != SPL_BONESPIRIT) {
+					int min;
+					int max;
+					GetDamageAmt(sn, &min, &max);
+					if (min != -1) {
+						strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: {:d} - {:d}"), mana, min, max).c_str());
+					} else {
+						strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}   Dam: n/a"), mana).c_str());
+					}
 				} else {
-					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}   Dam: n/a"), mana).c_str());
-				}
-				if (sn == SPL_BONESPIRIT) {
 					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: 1/3 tgt hp"), mana).c_str());
 				}
-				PrintSBookStr(out, { 10, yp - 1 }, tempstr);
+				PrintSBookStr(out, { 10, yp }, tempstr);
 				int lvl = std::max(myPlayer._pSplLvl[sn] + myPlayer._pISplLvlAdd, 0);
 				if (lvl == 0) {
 					strcpy(tempstr, _("Spell Level 0 - Unusable"));
@@ -1538,7 +1540,8 @@ void DrawSpellBook(const Surface &out)
 				}
 			} break;
 			}
-			PrintSBookStr(out, { 10, yp - 12 }, tempstr);
+			PrintSBookStr(out, { 10, yp + textOffset - 26 }, pgettext("spell", spelldata[sn].sNameText));
+			PrintSBookStr(out, { 10, yp + textOffset - 13 }, tempstr);
 		}
 		yp += 43;
 	}
