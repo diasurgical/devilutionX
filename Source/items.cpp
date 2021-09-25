@@ -3089,14 +3089,15 @@ void CreatePlrItems(int playerId)
 		break;
 	}
 
-	InitializeItem(player.HoldItem, IDI_GOLD);
-	GenerateNewSeed(player.HoldItem);
-
-	player.HoldItem._ivalue = 100;
-	player.HoldItem._iCurs = ICURS_GOLD_SMALL;
-	player._pGold = player.HoldItem._ivalue;
-	player.InvList[player._pNumInv++] = player.HoldItem;
+	auto &startingGold = player.InvList[player._pNumInv];
+	player._pNumInv++;
 	player.InvGrid[30] = player._pNumInv;
+
+	InitializeItem(startingGold, IDI_GOLD);
+	GenerateNewSeed(startingGold);
+	startingGold._ivalue = 100;
+	startingGold._iCurs = ICURS_GOLD_SMALL;
+	player._pGold = startingGold._ivalue;
 
 	CalcPlrItemVals(player, false);
 }
