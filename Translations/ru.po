@@ -406,7 +406,7 @@ msgstr "Все клиенты должны иметь доступ в интер
 
 #: Source/DiabloUI/selconn.cpp:109
 msgid "Play by yourself with no network exposure."
-msgstr "Играть с собой без подключения к интернету."
+msgstr "Играть одному без подключения к интернету."
 
 #: Source/DiabloUI/selconn.cpp:114
 msgid "Players Supported: {:d}"
@@ -643,7 +643,7 @@ msgstr "Новая игра"
 
 #: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
 msgid "Single Player Characters"
-msgstr "Персонажы для одиночной игры"
+msgstr "Персонажи для одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:262
 msgid ""
