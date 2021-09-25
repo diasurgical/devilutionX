@@ -359,7 +359,7 @@ void LeftMouseUp(int wParam)
 		ReleaseStoreBtn();
 }
 
-void RightMouseDown()
+void RightMouseDown(bool isShiftHeld)
 {
 	LastMouseButtonAction = MouseActionType::None;
 
@@ -382,7 +382,7 @@ void RightMouseDown()
 	    && (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))) {
 		if (pcurs == CURSOR_HAND) {
 			if (pcursinvitem == -1 || !UseInvItem(MyPlayerId, pcursinvitem))
-				CheckPlrSpell();
+				CheckPlrSpell(isShiftHeld);
 		} else if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			NewCursor(CURSOR_HAND);
 		}
@@ -631,7 +631,7 @@ void GameEventHandler(uint32_t uMsg, int32_t wParam, int32_t lParam)
 		GetMousePos(lParam);
 		if (sgbMouseDown == CLICK_NONE) {
 			sgbMouseDown = CLICK_RIGHT;
-			RightMouseDown();
+			RightMouseDown((wParam & DVL_MK_SHIFT) != 0);
 		}
 		return;
 	case DVL_WM_RBUTTONUP:
