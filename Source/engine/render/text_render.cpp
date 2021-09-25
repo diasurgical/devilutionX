@@ -102,7 +102,7 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	}
 
 	char path[32];
-	sprintf(path, "fonts\\%i-%02d.bin", FontSizes[size], row);
+	sprintf(path, "fonts\\%i-%02x.bin", FontSizes[size], row);
 
 	auto *kerning = &FontKerns[fontId];
 
@@ -121,7 +121,7 @@ Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
 	}
 
 	char path[32];
-	sprintf(path, "fonts\\%i-%02d.pcx", FontSizes[size], row);
+	sprintf(path, "fonts\\%i-%02x.pcx", FontSizes[size], row);
 
 	auto *font = &Fonts[fontId];
 
