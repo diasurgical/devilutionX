@@ -80,7 +80,7 @@ msgstr "Художники 3D-роликов"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr "Технические художники роликов"
+msgstr "Технический художник роликов"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
@@ -630,7 +630,7 @@ msgstr "Новый герой для одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:202
 msgid "Save File Exists"
-msgstr "Файл сохранения уже существует"
+msgstr "Есть файл сохранения"
 
 #: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:38
 msgid "Load Game"
@@ -841,11 +841,11 @@ msgstr "пароль: "
 
 #: Source/automap.cpp:487
 msgid "Level: Nest {:d}"
-msgstr "Уровень: Nest {:d}"
+msgstr "Уровень: Гнездо {:d}"
 
 #: Source/automap.cpp:489
 msgid "Level: Crypt {:d}"
-msgstr "Уровень: Crypt {:d}"
+msgstr "Уровень: Склеп {:d}"
 
 #: Source/automap.cpp:491 Source/items.cpp:2080
 msgid "Level: {:d}"
@@ -913,7 +913,7 @@ msgstr "Уровень заклинания {:d}"
 
 #: Source/control.cpp:733 Source/control.cpp:1181
 msgid "Scroll of {:s}"
-msgstr "Свиток о {:s}"
+msgstr "Свиток {:s}"
 
 #: Source/control.cpp:738 Source/control.cpp:1187
 msgid "{:d} Scroll"
@@ -1906,7 +1906,7 @@ msgstr "Зелье Маны"
 # Заменить везде идентификацию на опознание/распознание?
 #: Source/itemdat.cpp:42 Source/itemdat.cpp:110
 msgid "Scroll of Identify"
-msgstr "Свиток идентификации"
+msgstr "Свиток Идентификации"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
@@ -3074,7 +3074,7 @@ msgstr "шипов"
 # коррупции - слишком в духе уголовного кодекса
 #: Source/itemdat.cpp:365
 msgid "corruption"
-msgstr "развращения"
+msgstr "разложения"
 
 #: Source/itemdat.cpp:366
 msgid "thieves"
@@ -4542,11 +4542,9 @@ msgstr "Красная Смерть"
 # https://www.wikiwand.com/ru/Licht_(%D1%86%D0%B8%D0%BA%D0%BB_%D0%BE%D0%BF%D0%B5%D1%80)
 # https://translate.google.com/?sl=en&tl=ru&text=Licht&op=translate
 #: Source/monstdat.cpp:90
-#, fuzzy
-#| msgid "Litch Demon"
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Демон"
+msgstr "Демон света"
 
 #: Source/monstdat.cpp:91
 msgctxt "monster"
@@ -4576,7 +4574,7 @@ msgstr "Адский Сжигатель"
 #: Source/monstdat.cpp:96
 msgctxt "monster"
 msgid "Red Storm"
-msgstr "Красный Шторм"
+msgstr "Красная Буря"
 
 #: Source/monstdat.cpp:97
 msgctxt "monster"
@@ -4586,7 +4584,7 @@ msgstr "Штормовой Всадник"
 #: Source/monstdat.cpp:98
 msgctxt "monster"
 msgid "Storm Lord"
-msgstr "Лорд Шторма"
+msgstr "Повелитель Бури"
 
 #: Source/monstdat.cpp:99
 msgctxt "monster"
@@ -4791,8 +4789,6 @@ msgid "Venomtail"
 msgstr "Скорпион"
 
 #: Source/monstdat.cpp:139
-#, fuzzy
-#| msgid "Necromorb"
 msgctxt "monster"
 msgid "Necromorb"
 msgstr "Некроморб"
@@ -4969,11 +4965,9 @@ msgid "Rotfeast the Hungry"
 msgstr "Гнилоед Голодный"
 
 #: Source/monstdat.cpp:492
-#, fuzzy
-#| msgid "Gutshank the Quick"
 msgctxt "monster"
 msgid "Gutshank the Quick"
-msgstr "скорая атака"
+msgstr "Гуцханк Быстрый"
 
 #: Source/monstdat.cpp:493
 msgctxt "monster"
@@ -4983,7 +4977,7 @@ msgstr "Пусточереп Крепкощит"
 #: Source/monstdat.cpp:494
 msgctxt "monster"
 msgid "Bongo"
-msgstr ""
+msgstr "Бонго"
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
@@ -5008,7 +5002,7 @@ msgstr "Бесоглаз Мертвец"
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr ""
+msgstr "Чупакабры"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5056,18 +5050,14 @@ msgid "Shadowcrow"
 msgstr "Крикун Тьмы"
 
 #: Source/monstdat.cpp:509
-#, fuzzy
-#| msgid "Blightstone the Weak"
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr "Гарбад слабак"
+msgstr "Гнилостень слабак"
 
 #: Source/monstdat.cpp:510
-#, fuzzy
-#| msgid "Bilefroth the Pit Master"
 msgctxt "monster"
 msgid "Bilefroth the Pit Master"
-msgstr "Мастерский"
+msgstr "Желчелей Распорядитель"
 
 #: Source/monstdat.cpp:511
 msgctxt "monster"
@@ -5106,22 +5096,16 @@ msgid "Deathshade Fleshmaul"
 msgstr "Смертоносный Свежеватель"
 
 #: Source/monstdat.cpp:518
-#, fuzzy
-#| msgid "Warmaggot the Mad"
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "Зар Безумец"
+msgstr "Военоличинка безумец"
 
 #: Source/monstdat.cpp:519
-#, fuzzy
-#| msgid "Glasskull the Jagged"
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr "Зубчатый"
+msgstr "Зубастый стеклочереп"
 
 #: Source/monstdat.cpp:520
-#, fuzzy
-#| msgid "Blightfire"
 msgctxt "monster"
 msgid "Blightfire"
 msgstr "Отравленный огонь"
@@ -5174,43 +5158,31 @@ msgid "Doomgrin the Rotting"
 msgstr "Судьбоскал Гниющий"
 
 #: Source/monstdat.cpp:530
-#, fuzzy
-#| msgid "Madburner"
 msgctxt "monster"
 msgid "Madburner"
 msgstr "Безумный сжигатель"
 
 #: Source/monstdat.cpp:531
-#, fuzzy
-#| msgid "Bonesaw the Litch"
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr "Костепил"
+msgstr "Пилокост Лич"
 
 #: Source/monstdat.cpp:532
-#, fuzzy
-#| msgid "Breakspine"
 msgctxt "monster"
 msgid "Breakspine"
-msgstr "Костехруст"
+msgstr "Спинолом"
 
 #: Source/monstdat.cpp:533
-#, fuzzy
-#| msgid "Devilskull Sharpbone"
 msgctxt "monster"
 msgid "Devilskull Sharpbone"
 msgstr "Череподьявол Острокост"
 
 #: Source/monstdat.cpp:534
-#, fuzzy
-#| msgid "Brokenstorm"
 msgctxt "monster"
 msgid "Brokenstorm"
 msgstr "Бурелом"
 
 #: Source/monstdat.cpp:535
-#, fuzzy
-#| msgid "Stormbane"
 msgctxt "monster"
 msgid "Stormbane"
 msgstr "Гиблешторм"
@@ -5221,11 +5193,9 @@ msgid "Oozedrool"
 msgstr "Слюнослиз"
 
 #: Source/monstdat.cpp:537
-#, fuzzy
-#| msgid "Goldblight of the Flame"
 msgctxt "monster"
 msgid "Goldblight of the Flame"
-msgstr "пламени"
+msgstr "Златомор Пламенный"
 
 #: Source/monstdat.cpp:538
 msgctxt "monster"
@@ -5248,8 +5218,6 @@ msgid "Bluehorn"
 msgstr "Синерог"
 
 #: Source/monstdat.cpp:542
-#, fuzzy
-#| msgid "Warpfire Hellspawn"
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
 msgstr "Отродье искажённого огня"
@@ -5265,11 +5233,9 @@ msgid "Festerskull"
 msgstr "Гноечереп"
 
 #: Source/monstdat.cpp:545
-#, fuzzy
-#| msgid "Lionskull the Bent"
 msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr "Согнутый"
+msgstr "Львочереп"
 
 #: Source/monstdat.cpp:546
 msgctxt "monster"
@@ -5277,32 +5243,24 @@ msgid "Blacktongue"
 msgstr "Чернояз"
 
 #: Source/monstdat.cpp:547
-#, fuzzy
-#| msgid "Viletouch"
 msgctxt "monster"
 msgid "Viletouch"
 msgstr "Гнилотрог"
 
 #: Source/monstdat.cpp:548
-#, fuzzy
-#| msgid "Viperflame"
 msgctxt "monster"
 msgid "Viperflame"
 msgstr "Пламений"
 
 #: Source/monstdat.cpp:549
-#, fuzzy
-#| msgid "Fangskin"
 msgctxt "monster"
 msgid "Fangskin"
 msgstr "Клыкошкур"
 
 #: Source/monstdat.cpp:550
-#, fuzzy
-#| msgid "Witchfire the Unholy"
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr "Нечестивый Алтарь"
+msgstr "Огневедьм Нечестивый"
 
 #: Source/monstdat.cpp:551
 msgctxt "monster"
@@ -5320,11 +5278,9 @@ msgid "Windspawn"
 msgstr "Ветрородье"
 
 #: Source/monstdat.cpp:554
-#, fuzzy
-#| msgid "Lord of the Pit"
 msgctxt "monster"
 msgid "Lord of the Pit"
-msgstr "ямы"
+msgstr "Повелитель Ада"
 
 #: Source/monstdat.cpp:555
 msgctxt "monster"
@@ -5332,22 +5288,16 @@ msgid "Rustweaver"
 msgstr "Ржавокрут"
 
 #: Source/monstdat.cpp:556
-#, fuzzy
-#| msgid "Howlingire the Shade"
 msgctxt "monster"
 msgid "Howlingire the Shade"
 msgstr "Ревущая Тень"
 
 #: Source/monstdat.cpp:557
-#, fuzzy
-#| msgid "Doomcloud"
 msgctxt "monster"
 msgid "Doomcloud"
 msgstr "Судьбокров"
 
 #: Source/monstdat.cpp:558
-#, fuzzy
-#| msgid "Bloodmoon Soulfire"
 msgctxt "monster"
 msgid "Bloodmoon Soulfire"
 msgstr "Кровелун Огнедуш"
@@ -5405,7 +5355,7 @@ msgstr "Кровожадина"
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Вдовопут"
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -6379,34 +6329,14 @@ msgid "Mana"
 msgstr "Мана"
 
 #: Source/spelldat.cpp:53
-#, fuzzy
 msgctxt "spell"
 msgid "the Magi"
-msgstr ""
-"Будьте внимательны и изучайте истины, которые здесь лежат, поскольку они - "
-"последнее из наследия Хорадримов. Почти триста лет назад стало известно, что "
-"Три Главных Зла Пылающей Преисподни таинственным образом пришли в наш мир. "
-"Три брата десятилетиями опустошали земли востока, в то время как "
-"человечество трепетало перед ними. Наш Орден - Хорадримов - был основан "
-"группой скрытных магов, чтобы раз и навсегда выследить и схватить Три Зла.\n"
-" \n"
-"Первоначальные Хорадримы поймали два из Трёх зол внутри могущественных "
-"артефактов, известных как Камни Душ, и похоронили их глубоко под пустынными "
-"восточными песками. Третье Зло избежало плена и скрылось на западе, "
-"преследуемое многими из Хорадримов. Третье Зло, известное как Диабло, "
-"Повелитель Ужаса, в конце концов было схвачено, его сущность была помещена в "
-"Камень Души и похоронена в этом Лабиринте.\n"
-" \n"
-"Имейте в виду, что камень души не должен быть обнаружен неверующими. Если бы "
-"Диабло был освобождён, он бы стал искать тело, которым легко управлять, "
-"поскольку он был бы очень слаб - возможно, тело старика или ребёнка."
+msgstr "Маги"
 
 #: Source/spelldat.cpp:54
-#, fuzzy
-#| msgid "the Jester"
 msgctxt "spell"
 msgid "the Jester"
-msgstr "Шутовской"
+msgstr "Шут"
 
 #: Source/spelldat.cpp:55
 msgctxt "spell"
@@ -7751,8 +7681,8 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
-" Лахданан мертв. Все это знают, и ты не сможешь меня обмануть, заставив "
-"думать иначе. С мертвыми разговаривать нельзя. Я знаю!"
+" Лахданан мёртв. Все это знают, и ты не сможешь меня обмануть, заставив "
+"думать иначе. С мёртвыми разговаривать нельзя. Я знаю!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -7814,7 +7744,7 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
 msgstr ""
-"Вы не нашли Золотой эликсир. Боюсь, что я обречен на вечность. Но "
+"Вы не нашли Золотой эликсир. Боюсь, что я обречён на вечность. Но "
 "пожалуйста, не прекращайте его поиски..."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
@@ -9927,12 +9857,12 @@ msgid ""
 "beneath the sands of the east. Once my Lord releases his Brothers, the Sin "
 "War will once again know the fury of the Three."
 msgstr ""
-"Слава и одобрение Диабло - Повелителя Ужаса и Вождя Трёх. Мой Повелитель "
+"Слава и одобрение Диабло - Повелителю Ужаса и Вождя Трёх. Мой Повелитель "
 "рассказал мне о двух своих братьях, Мефисто и Баале, которые были изгнаны в "
 "этот мир давным-давно. Мой Повелитель желает выжидать и использовать свою "
 "грозную силу, чтобы освободить своих пленённых братьев из их гробниц под "
 "песками востока. Как только мой Господь освободит своих Братьев, Война "
-"Грехов снова познает ярость Трех."
+"Грехов снова познает ярость Трёх."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
@@ -9957,6 +9887,7 @@ msgstr ""
 "Теперь я жду зова Диабло и молюсь, чтобы я был вознагражден, когда он, "
 "наконец, появится как Господь этого мира."
 
+# Обращение должно быть нейтральным по полу.
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
 msgid ""
@@ -9972,7 +9903,7 @@ msgid ""
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
 "Слава богу, вы вернулись!\n"
-"С тех пор, как ты здесь жил мой друг, многое изменилось. Все было мирно, "
+"С тех пор, как вы здесь жили мой друг, многое изменилось. Все было мирно, "
 "пока не пришли тёмные всадники и не разрушили нашу деревню. Многие были "
 "зарублены там, где стояли, а те кто взяли в руки оружие, были убиты или "
 "уведены, чтобы стать рабами - или того хуже. Церковь на окраине города была "
@@ -10644,7 +10575,7 @@ msgstr "Полный псих"
 
 #: Source/towners.cpp:266
 msgid "Celia"
-msgstr ""
+msgstr "Селия"
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
