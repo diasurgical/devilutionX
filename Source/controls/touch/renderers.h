@@ -2,6 +2,7 @@
 
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
 
+#include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "engine/surface.hpp"
 #include "utils/png.h"
@@ -24,6 +25,16 @@ enum VirtualGamepadButtonType {
 	GAMEPAD_BACKDOWN,
 	GAMEPAD_BLANK,
 	GAMEPAD_BLANKDOWN,
+};
+
+enum VirtualGamepadPotionType {
+	GAMEPAD_HEALING,
+	GAMEPAD_MANA,
+	GAMEPAD_REJUVENATION,
+	GAMEPAD_FULL_HEALING,
+	GAMEPAD_FULL_MANA,
+	GAMEPAD_FULL_REJUVENATION,
+	GAMEPAD_SCROLL_OF_HEALING,
 };
 
 typedef std::function<void(Art &art, SDL_Rect *src, SDL_Rect *dst)> RenderFunction;
@@ -110,6 +121,23 @@ private:
 	VirtualGamepadButtonType GetButtonType();
 };
 
+class PotionButtonRenderer : public VirtualPadButtonRenderer {
+public:
+	PotionButtonRenderer(VirtualPadButton *potionButton, belt_item_type potionType)
+	    : VirtualPadButtonRenderer(potionButton)
+	    , potionType(potionType)
+	{
+	}
+
+	void RenderPotion(RenderFunction renderFunction, Art &potionArt);
+
+private:
+	belt_item_type potionType;
+
+	VirtualGamepadButtonType GetButtonType();
+	VirtualGamepadPotionType GetPotionType();
+};
+
 class VirtualGamepadRenderer {
 public:
 	VirtualGamepadRenderer(VirtualGamepad *virtualGamepad)
@@ -118,6 +146,8 @@ public:
 	    , secondaryActionButtonRenderer(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonRenderer(&virtualGamepad->spellActionButton)
 	    , cancelButtonRenderer(&virtualGamepad->cancelButton)
+	    , healthButtonRenderer(&virtualGamepad->healthButton, BLT_HEALING)
+	    , manaButtonRenderer(&virtualGamepad->manaButton, BLT_MANA)
 	{
 	}
 
@@ -127,11 +157,17 @@ public:
 
 private:
 	VirtualDirectionPadRenderer directionPadRenderer;
+
 	PrimaryActionButtonRenderer primaryActionButtonRenderer;
 	SecondaryActionButtonRenderer secondaryActionButtonRenderer;
 	SpellActionButtonRenderer spellActionButtonRenderer;
 	CancelButtonRenderer cancelButtonRenderer;
+
+	PotionButtonRenderer healthButtonRenderer;
+	PotionButtonRenderer manaButtonRenderer;
+
 	Art buttonArt;
+	Art potionArt;
 };
 
 void InitVirtualGamepadGFX(SDL_Renderer *renderer);

@@ -44,10 +44,14 @@ struct VirtualPadButton {
 
 struct VirtualGamepad {
 	VirtualDirectionPad directionPad;
+
 	VirtualPadButton primaryActionButton;
 	VirtualPadButton secondaryActionButton;
 	VirtualPadButton spellActionButton;
 	VirtualPadButton cancelButton;
+
+	VirtualPadButton healthButton;
+	VirtualPadButton manaButton;
 
 	VirtualGamepad()
 	{

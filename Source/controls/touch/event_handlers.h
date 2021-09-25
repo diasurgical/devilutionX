@@ -58,6 +58,8 @@ public:
 	    , secondaryActionButtonEventHandler(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonEventHandler(&virtualGamepad->spellActionButton)
 	    , cancelButtonEventHandler(&virtualGamepad->cancelButton)
+	    , healthButtonEventHandler(&virtualGamepad->healthButton)
+	    , manaButtonEventHandler(&virtualGamepad->manaButton)
 	{
 	}
 
@@ -65,10 +67,14 @@ public:
 
 private:
 	VirtualDirectionPadEventHandler directionPadEventHandler;
+
 	VirtualPadButtonEventHandler primaryActionButtonEventHandler;
 	VirtualPadButtonEventHandler secondaryActionButtonEventHandler;
 	VirtualPadButtonEventHandler spellActionButtonEventHandler;
 	VirtualPadButtonEventHandler cancelButtonEventHandler;
+
+	VirtualPadButtonEventHandler healthButtonEventHandler;
+	VirtualPadButtonEventHandler manaButtonEventHandler;
 };
 
 void HandleTouchEvent(const SDL_Event &event);
