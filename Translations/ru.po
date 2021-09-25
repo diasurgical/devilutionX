@@ -97,7 +97,7 @@ msgstr "Помощник продюсера"
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr "Ударная команда"
+msgstr "Ударная команда Diablo"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
@@ -364,7 +364,7 @@ msgstr ""
 #: Source/DiabloUI/selhero.cpp:188 Source/DiabloUI/selhero.cpp:213
 #: Source/DiabloUI/selhero.cpp:283 Source/DiabloUI/selhero.cpp:533
 msgid "Cancel"
-msgstr "Отменить"
+msgstr "Отмена"
 
 #: Source/DiabloUI/selconn.cpp:38 Source/DiabloUI/selgame.cpp:77
 #: Source/DiabloUI/selgame.cpp:372
@@ -378,7 +378,7 @@ msgstr "Петля"
 #: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:434
 #: Source/DiabloUI/selgame.cpp:452
 msgid "Multi Player Game"
-msgstr "Многопользовательсякая игра"
+msgstr "Мультиплеер Игра"
 
 #: Source/DiabloUI/selconn.cpp:53
 msgid "Requirements:"
@@ -390,11 +390,11 @@ msgstr "gateway не нужен"
 
 #: Source/DiabloUI/selconn.cpp:65
 msgid "Select Connection"
-msgstr "Выбрать подключение"
+msgstr "Выбрать Подключение"
 
 #: Source/DiabloUI/selconn.cpp:68
 msgid "Change Gateway"
-msgstr "Сменить gateway"
+msgstr "Сменить Gateway"
 
 #: Source/DiabloUI/selconn.cpp:101
 msgid "All computers must be connected to a TCP-compatible network."
@@ -406,7 +406,7 @@ msgstr "Все клиенты должны иметь доступ в интер
 
 #: Source/DiabloUI/selconn.cpp:109
 msgid "Play by yourself with no network exposure."
-msgstr "Играть в одиночной игре без подключения к интернету."
+msgstr "Играть с собой без подключения к интернету."
 
 #: Source/DiabloUI/selconn.cpp:114
 msgid "Players Supported: {:d}"
@@ -622,7 +622,7 @@ msgstr "Варвар"
 
 #: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
 msgid "New Multi Player Hero"
-msgstr "Новый герой для многопользовательской игры"
+msgstr "Новый герой для мультиплеер игры"
 
 #: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
 msgid "New Single Player Hero"
@@ -643,7 +643,7 @@ msgstr "Новая игра"
 
 #: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
 msgid "Single Player Characters"
-msgstr "Персонаж для одиночной игры"
+msgstr "Персонажы для одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:262
 msgid ""
@@ -752,7 +752,7 @@ msgstr "по адресу https://github.com/diasurgical/devilutionX"
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
-msgstr "Чтобы мы смогли вам помочь, прикрепите так же номер версии,"
+msgstr "Чтобы мы смогли вам помочь, прикрепите номер версии,"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
@@ -1068,7 +1068,7 @@ msgstr "Следуй за мной."
 
 #: Source/diablo.cpp:114
 msgid "Here's something for you."
-msgstr "Тут кое-что для тебя."
+msgstr "Вот кое-что для тебя."
 
 #: Source/diablo.cpp:115
 msgid "Now you DIE!"
@@ -1279,7 +1279,7 @@ msgstr "Новая сила куётся разрушением"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:71
 msgid "Those who defend seldom attack"
-msgstr "Те, кто защищается, редко атакуют"
+msgstr "Те, кто защищаются, редко атакуют"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:72
@@ -4544,7 +4544,7 @@ msgstr "Красная Смерть"
 #: Source/monstdat.cpp:90
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Демон света"
+msgstr "Демон Cвета"
 
 #: Source/monstdat.cpp:91
 msgctxt "monster"
@@ -5052,7 +5052,7 @@ msgstr "Крикун Тьмы"
 #: Source/monstdat.cpp:509
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr "Гнилостень слабак"
+msgstr "Гнилостень Cлабак"
 
 #: Source/monstdat.cpp:510
 msgctxt "monster"
@@ -5098,17 +5098,17 @@ msgstr "Смертоносный Свежеватель"
 #: Source/monstdat.cpp:518
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "Военоличинка безумец"
+msgstr "Военоличинка Безумец"
 
 #: Source/monstdat.cpp:519
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr "Зубастый стеклочереп"
+msgstr "Зубастый Стеклочереп"
 
 #: Source/monstdat.cpp:520
 msgctxt "monster"
 msgid "Blightfire"
-msgstr "Отравленный огонь"
+msgstr "Отравленный Огонь"
 
 #: Source/monstdat.cpp:521
 msgctxt "monster"
@@ -5160,7 +5160,7 @@ msgstr "Судьбоскал Гниющий"
 #: Source/monstdat.cpp:530
 msgctxt "monster"
 msgid "Madburner"
-msgstr "Безумный сжигатель"
+msgstr "Безумный Сжигатель"
 
 #: Source/monstdat.cpp:531
 msgctxt "monster"
@@ -5220,7 +5220,7 @@ msgstr "Синерог"
 #: Source/monstdat.cpp:542
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
-msgstr "Отродье искажённого огня"
+msgstr "Отродье Искажённого Огня"
 
 #: Source/monstdat.cpp:543
 msgctxt "monster"
