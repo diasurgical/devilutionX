@@ -431,7 +431,7 @@ void InitItems();
 void CalcPlrItemVals(Player &player, bool Loadgfx);
 void CalcPlrInv(Player &player, bool Loadgfx);
 void InitializeItem(Item &item, int itemData);
-void GetPlrHandSeed(Item *h);
+void GenerateNewSeed(Item &h);
 
 /**
  * @brief Set a new unique seed value on the given item

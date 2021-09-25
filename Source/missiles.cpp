@@ -1421,7 +1421,7 @@ void AddStealPotions(Missile &missile, const AddMissileParameter & /*parameter*/
 				}
 				if (ii != -1) {
 					InitializeItem(player.HoldItem, ii);
-					GetPlrHandSeed(&player.HoldItem);
+					GenerateNewSeed(player.HoldItem);
 					player.HoldItem._iStatFlag = true;
 					player.SpdList[si] = player.HoldItem;
 				}

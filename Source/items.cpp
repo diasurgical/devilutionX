@@ -2947,9 +2947,9 @@ void InitializeItem(Item &item, int itemData)
 		item.dwBuff |= CF_HELLFIRE;
 }
 
-void GetPlrHandSeed(Item *h)
+void GenerateNewSeed(Item &item)
 {
-	h->_iSeed = AdvanceRndSeed();
+	item._iSeed = AdvanceRndSeed();
 }
 
 void SetGoldSeed(Player &player, Item &gold)
@@ -3018,79 +3018,79 @@ void CreatePlrItems(int playerId)
 	switch (player._pClass) {
 	case HeroClass::Warrior:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_WARRIOR);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
 
 		InitializeItem(player.HoldItem, IDI_WARRCLUB);
-		GetPlrHandSeed(&player.HoldItem);
+		GenerateNewSeed(player.HoldItem);
 		AutoPlaceItemInInventory(player, player.HoldItem, true);
 
 		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[0]);
+		GenerateNewSeed(player.SpdList[0]);
 
 		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[1]);
+		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Rogue:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_ROGUE);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[0]);
+		GenerateNewSeed(player.SpdList[0]);
 
 		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[1]);
+		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Sorcerer:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], gbIsHellfire ? IDI_SORCERER : 166);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.SpdList[0], gbIsHellfire ? IDI_HEAL : IDI_MANA);
-		GetPlrHandSeed(&player.SpdList[0]);
+		GenerateNewSeed(player.SpdList[0]);
 
 		InitializeItem(player.SpdList[1], gbIsHellfire ? IDI_HEAL : IDI_MANA);
-		GetPlrHandSeed(&player.SpdList[1]);
+		GenerateNewSeed(player.SpdList[1]);
 		break;
 
 	case HeroClass::Monk:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_SHORTSTAFF);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[0]);
+		GenerateNewSeed(player.SpdList[0]);
 
 		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[1]);
+		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Bard:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], IDI_BARDSWORD);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_BARDDAGGER);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
 		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[0]);
+		GenerateNewSeed(player.SpdList[0]);
 
 		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[1]);
+		GenerateNewSeed(player.SpdList[1]);
 		break;
 	case HeroClass::Barbarian:
 		InitializeItem(player.InvBody[INVLOC_HAND_LEFT], 139); // TODO: add more enums to items
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_LEFT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_LEFT]);
 
 		InitializeItem(player.InvBody[INVLOC_HAND_RIGHT], IDI_WARRSHLD);
-		GetPlrHandSeed(&player.InvBody[INVLOC_HAND_RIGHT]);
+		GenerateNewSeed(player.InvBody[INVLOC_HAND_RIGHT]);
 		InitializeItem(player.SpdList[0], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[0]);
+		GenerateNewSeed(player.SpdList[0]);
 
 		InitializeItem(player.SpdList[1], IDI_HEAL);
-		GetPlrHandSeed(&player.SpdList[1]);
+		GenerateNewSeed(player.SpdList[1]);
 		break;
 	}
 
 	InitializeItem(player.HoldItem, IDI_GOLD);
-	GetPlrHandSeed(&player.HoldItem);
+	GenerateNewSeed(player.HoldItem);
 
 	player.HoldItem._ivalue = 100;
 	player.HoldItem._iCurs = ICURS_GOLD_SMALL;

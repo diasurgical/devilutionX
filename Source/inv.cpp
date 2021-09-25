@@ -1529,7 +1529,7 @@ bool GoldAutoPlace(Player &player)
 			SetPlrHandGoldCurs(player.HoldItem);
 			player.InvList[i]._ivalue = MaxGold;
 			if (gbIsHellfire)
-				GetPlrHandSeed(&player.HoldItem);
+				GenerateNewSeed(player.HoldItem);
 		} else {
 			player.HoldItem._ivalue = 0;
 			done = true;
@@ -1561,13 +1561,13 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 	player.InvList[ii] = player.HoldItem;
 	player._pNumInv++;
 	player.InvGrid[slotIndex] = player._pNumInv;
-	GetPlrHandSeed(&player.InvList[ii]);
+	GenerateNewSeed(player.InvList[ii]);
 
 	int gold = player.HoldItem._ivalue;
 	if (gold > MaxGold) {
 		gold -= MaxGold;
 		player.HoldItem._ivalue = gold;
-		GetPlrHandSeed(&player.HoldItem);
+		GenerateNewSeed(player.HoldItem);
 		player.InvList[ii]._ivalue = MaxGold;
 		return false;
 	}

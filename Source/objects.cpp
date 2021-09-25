@@ -2954,14 +2954,14 @@ bool OperateShrineEldritch(int pnum)
 			if (item._iMiscId == IMISC_HEAL
 			    || item._iMiscId == IMISC_MANA) {
 				InitializeItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
-				GetPlrHandSeed(&player.HoldItem);
+				GenerateNewSeed(player.HoldItem);
 				player.HoldItem._iStatFlag = true;
 				item = player.HoldItem;
 			}
 			if (item._iMiscId == IMISC_FULLHEAL
 			    || item._iMiscId == IMISC_FULLMANA) {
 				InitializeItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
-				GetPlrHandSeed(&player.HoldItem);
+				GenerateNewSeed(player.HoldItem);
 				player.HoldItem._iStatFlag = true;
 				item = player.HoldItem;
 			}
