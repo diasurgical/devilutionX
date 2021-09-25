@@ -75,7 +75,7 @@ void SetSpellLevelCheat(spell_id spl, int spllvl)
 
 void PrintDebugMonster(int m)
 {
-	char dstr[128];
+	char dstr[MAX_SEND_STR_LEN];
 
 	auto &monster = Monsters[m];
 
@@ -748,7 +748,7 @@ void GetDebugMonster()
 
 void NextDebugMonster()
 {
-	char dstr[128];
+	char dstr[MAX_SEND_STR_LEN];
 
 	DebugMonsterId++;
 	if (DebugMonsterId == MAXMONSTERS)
