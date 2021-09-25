@@ -1558,8 +1558,6 @@ void ItemRndDur(Item &item)
 
 void SetupAllItems(Item &item, int idx, int iseed, int lvl, int uper, bool onlygood, bool recreate, bool pregen)
 {
-	int iblvl = -1;
-
 	item._iSeed = iseed;
 	SetRndSeed(iseed);
 	GetItemAttrs(item, idx, lvl / 2);
@@ -1576,6 +1574,7 @@ void SetupAllItems(Item &item, int idx, int iseed, int lvl, int uper, bool onlyg
 		item._iCreateInfo |= CF_UPER1;
 
 	if (item._iMiscId != IMISC_UNIQUE) {
+		int iblvl = -1;
 		if (GenerateRnd(100) <= 10 || GenerateRnd(100) <= lvl) {
 			iblvl = lvl;
 		}
