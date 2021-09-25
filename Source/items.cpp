@@ -40,10 +40,10 @@
 
 namespace devilution {
 
-/** Contains the items on ground in the current game. */
 Item Items[MAXITEMS + 1];
 uint8_t ActiveItems[MAXITEMS];
 uint8_t ActiveItemCount;
+int8_t dItem[MAXDUNX][MAXDUNY];
 bool ShowUniqueItemInfoBox;
 CornerStoneStruct CornerStone;
 bool UniqueItemFlags[128];
@@ -2501,6 +2501,7 @@ void InitItems()
 	GetItemAttrs(golditem, IDI_GOLD, 1);
 	golditem._iStatFlag = true;
 	ActiveItemCount = 0;
+	memset(dItem, 0, sizeof(dItem));
 
 	for (auto &item : Items) {
 		item._itype = ItemType::None;

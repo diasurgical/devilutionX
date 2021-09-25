@@ -224,8 +224,6 @@ extern int16_t dMonster[MAXDUNX][MAXDUNY];
 extern DVL_API_FOR_TEST int8_t dCorpse[MAXDUNX][MAXDUNY];
 /** Contains the object numbers (objects array indices) of the map. */
 extern DVL_API_FOR_TEST int8_t dObject[MAXDUNX][MAXDUNY];
-/** Contains the item numbers (items array indices) of the map. */
-extern int8_t dItem[MAXDUNX][MAXDUNY];
 /**
  * Contains the arch frame numbers of the map from the special tileset
  * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
