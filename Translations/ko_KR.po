@@ -111,11 +111,11 @@ msgstr "시네마틱 음악과 음향"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr ""
+msgstr "비디오 프로덕션, 디렉션 & 캐스팅"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr ""
+msgstr "스크립트 및 스토리"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
@@ -130,14 +130,12 @@ msgid "Recording Engineer"
 msgstr "오디오 엔지니어"
 
 #: Source/DiabloUI/credits_lines.cpp:104
-#, fuzzy
 msgid "Manual Design & Layout"
-msgstr "디자인"
+msgstr "메뉴얼 디자인 & 레이아웃"
 
 #: Source/DiabloUI/credits_lines.cpp:108
-#, fuzzy
 msgid "Manual Artwork"
-msgstr "아트워크"
+msgstr "메뉴얼 아트워크"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
@@ -177,7 +175,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr ""
+msgstr "Dabiri 씨의 코러스들"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
@@ -229,7 +227,7 @@ msgstr "특별히 감사한"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr ""
+msgstr "제너럴 매니저"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
@@ -249,7 +247,7 @@ msgstr "디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "사운드 디자인, SFX & 오디오 공학"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
@@ -264,9 +262,8 @@ msgid "Manual"
 msgstr "메뉴얼"
 
 #: Source/DiabloUI/credits_lines.cpp:255
-#, fuzzy
 msgid "\tAdditional Work"
-msgstr "추가 디자인"
+msgstr "\t추가 작업"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 #, fuzzy
@@ -285,17 +282,15 @@ msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr ""
+msgstr "\t\t\t시에라 온라인 주식회사. 노스웨스트"
 
 #: Source/DiabloUI/credits_lines.cpp:272
-#, fuzzy
 msgid "Quality Assurance Manager"
-msgstr "품질 보증 리드"
+msgstr "품질 보증 매니저"
 
 #: Source/DiabloUI/credits_lines.cpp:275
-#, fuzzy
 msgid "Quality Assurance Lead Tester"
-msgstr "품질 보증 리드"
+msgstr "품질 보증 리드 테스터"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
@@ -306,24 +301,20 @@ msgid "Additional Testers"
 msgstr "추가 테스터들"
 
 #: Source/DiabloUI/credits_lines.cpp:286
-#, fuzzy
 msgid "Product Marketing Manager"
-msgstr "마케팅"
+msgstr "제품 마케팅 매니저"
 
 #: Source/DiabloUI/credits_lines.cpp:289
-#, fuzzy
 msgid "Public Relations Manager"
-msgstr "대중 홍보"
+msgstr "대중 홍보 매니저"
 
 #: Source/DiabloUI/credits_lines.cpp:292
-#, fuzzy
 msgid "Associate Product Manager"
-msgstr "협력 프로듀서"
+msgstr "제품 부 매니저"
 
 #: Source/DiabloUI/credits_lines.cpp:301
-#, fuzzy
 msgid "The Ring of One Thousand"
-msgstr "진실의 반지"
+msgstr "천의 반지"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -697,10 +688,8 @@ msgid "Vitality:"
 msgstr "생명력:"
 
 #: Source/DiabloUI/selhero.cpp:496
-#, fuzzy
-#| msgid "Save Game"
 msgid "Savegame:"
-msgstr "게임 저장하기"
+msgstr "게임 저장하기:"
 
 #: Source/DiabloUI/selhero.cpp:508
 msgid "Select Hero"
@@ -1150,14 +1139,13 @@ msgstr "기존 저장 파일 존재"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-#, fuzzy
 msgid "Play a demo file"
-msgstr "네트워크 공개 없이 혼자서 즐깁니다."
+msgstr "데모 파일 플레이"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:792
 msgid "Disable all frame limiting during demo playback"
-msgstr ""
+msgstr "데모 플레이 프레임 제한 해제"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:793
@@ -1661,9 +1649,8 @@ msgid ""
 msgstr ""
 
 #: Source/help.cpp:61
-#, fuzzy
 msgid "$Picking up Objects:"
-msgstr "레벨업"
+msgstr "$물건을 줍는다:"
 
 #: Source/help.cpp:62
 msgid ""
@@ -1685,9 +1672,8 @@ msgid ""
 msgstr ""
 
 #: Source/help.cpp:72
-#, fuzzy
 msgid "$Skills & Spells:"
-msgstr "주문"
+msgstr "$스킬과 스펠:"
 
 #: Source/help.cpp:73
 msgid ""
@@ -1792,9 +1778,8 @@ msgid "Short Bow"
 msgstr "짧은 활"
 
 #: Source/itemdat.cpp:21
-#, fuzzy
 msgid "Short Staff of Mana"
-msgstr "{:s} 지팡이"
+msgstr "짧은 마나의 지팡이"
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
@@ -1918,9 +1903,8 @@ msgid "Blacksmith Oil"
 msgstr "대장장이의 윤활유"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
-#, fuzzy
 msgid "Short Staff"
-msgstr "{:s} 지팡이"
+msgstr "짧은 지팡이"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:135 Source/itemdat.cpp:136
 #: Source/itemdat.cpp:137 Source/itemdat.cpp:138 Source/itemdat.cpp:141
@@ -1935,7 +1919,7 @@ msgstr "단검"
 
 #: Source/itemdat.cpp:55
 msgid "Rune Bomb"
-msgstr ""
+msgstr "룬 폭탄"
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
@@ -2282,9 +2266,8 @@ msgid "Long Sword"
 msgstr "긴 소드"
 
 #: Source/itemdat.cpp:142
-#, fuzzy
 msgid "Broad Sword"
-msgstr "숏 소드"
+msgstr "브로드 소드"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
@@ -2295,9 +2278,8 @@ msgid "Two-Handed Sword"
 msgstr "투핸디드 소드"
 
 #: Source/itemdat.cpp:145
-#, fuzzy
 msgid "Great Sword"
-msgstr "숏 소드"
+msgstr "그레이트 소드"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
@@ -2426,9 +2408,8 @@ msgid "Ring"
 msgstr "반지"
 
 #: Source/itemdat.cpp:175 Source/itemdat.cpp:176
-#, fuzzy
 msgid "Amulet"
-msgstr "눈동자 목걸이"
+msgstr "목걸이"
 
 #: Source/itemdat.cpp:177
 msgid "Rune of Fire"
@@ -2500,12 +2481,8 @@ msgid "Platinum"
 msgstr ""
 
 #: Source/itemdat.cpp:200
-#, fuzzy
 msgid "Mithril"
-msgstr ""
-"레오릭 왕을 받드는 기사단을 위해 무기와 갑옷을 정말 많이 만들었지. 왕에겐 거"
-"대한 최고급 미스릴 양손 검과 투구를 헌상한 적도 있어. 그 양반 죽은 게 아직도 "
-"믿기지 않지만 사악한 기운에 사로잡힌 게 틀림없다고!"
+msgstr "미스릴"
 
 #: Source/itemdat.cpp:201
 msgid "Meteoric"
@@ -2534,9 +2511,8 @@ msgid "Bent"
 msgstr ""
 
 #: Source/itemdat.cpp:206
-#, fuzzy
 msgid "Weak"
-msgstr "약골 가바드"
+msgstr "약한"
 
 #: Source/itemdat.cpp:207
 msgid "Jagged"
@@ -2551,12 +2527,8 @@ msgstr ""
 "가. 빛의 가호가 있기를 빌지."
 
 #: Source/itemdat.cpp:209
-#, fuzzy
 msgid "Heavy"
-msgstr ""
-"도끼? 그래, 좋은 무기라 어떤 적과 맞서도 부족함이 없지. 허공을 가르기만 해도 "
-"바닥에 널부러져 있을 악마 놈 대가리가 눈앞에 선하군. 잽싸게 휘두르는 건 무리"
-"지만 파괴력은 발군이니 염두에 두도록 해!"
+msgstr "무거운"
 
 #: Source/itemdat.cpp:210
 #, fuzzy
@@ -2594,9 +2566,8 @@ msgid "Dull"
 msgstr ""
 
 #: Source/itemdat.cpp:218
-#, fuzzy
 msgid "Sharp"
-msgstr "정의의 검은 빠르고 날카롭다"
+msgstr "날카로운"
 
 #: Source/itemdat.cpp:219 Source/itemdat.cpp:229
 #, fuzzy
@@ -2617,38 +2588,24 @@ msgid "Soldier's"
 msgstr ""
 
 #: Source/itemdat.cpp:222
-#, fuzzy
 msgid "Lord's"
-msgstr ""
-"어둠의 추방자이자 생존자인 공포의 군주 디아블로를 찬양할지어다. 나의 주군이시"
-"자 주인께서는 기나긴 잠에서 깨어나 인간에게 알려지지 않은 비밀을 내게 말씀해 "
-"주셨다. 바로 천국과 업화로 불타는 지옥과의 영원한 전쟁에 관한 것이다. 그리고 "
-"인간 세상에 분쟁을 초래한 그 힘을 계시하시니, 이 세상과 세상에 존재하는 모든 "
-"것에 말미된 그 싸움을 죄악의 전쟁이라 명명하셨다."
+msgstr "군주의"
 
 #: Source/itemdat.cpp:223
 msgid "Knight's"
 msgstr ""
 
 #: Source/itemdat.cpp:224
-#, fuzzy
 msgid "Master's"
-msgstr ""
-"산 것의 온기가 내 무덤에 들어왔다. 필멸자여, 영원토록 나의 주인을 섬길 준비"
-"나 하거라!"
+msgstr "마스터의"
 
 #: Source/itemdat.cpp:225
-#, fuzzy
 msgid "Champion's"
-msgstr ""
-"매우 빠른 속도\n"
-"던전에 있는 대부분의 괴물들이 그 어느 때보다 재빨리 당신을 찾아낼 것입니다. "
-"숙련된 챔피언만이 이 속도에서 행운을 시험할 수 있습니다."
+msgstr "챔피언의"
 
 #: Source/itemdat.cpp:226
-#, fuzzy
 msgid "King's"
-msgstr "레오릭 왕의 저주"
+msgstr "왕의"
 
 #: Source/itemdat.cpp:227
 msgid "Vulnerable"
@@ -2681,9 +2638,8 @@ msgid "Glorious"
 msgstr ""
 
 #: Source/itemdat.cpp:234
-#, fuzzy
 msgid "Blessed"
-msgstr "자비로운 동반자에게 축복받았다!"
+msgstr "축복받은"
 
 #: Source/itemdat.cpp:235
 msgid "Saintly"
@@ -2700,23 +2656,8 @@ msgstr ""
 "는 날, 죄악의 전쟁에는 다시 한번 삼 형제의 분노가 서릴지어다."
 
 #: Source/itemdat.cpp:237 Source/objects.cpp:116
-#, fuzzy
 msgid "Holy"
-msgstr ""
-"피의 관문과 불의 전당은 신비의 기원이 되는 기념비적인 건축물이라네. 자네가 책"
-"을 어디서 읽었는지는 모르겠네만 틀림없이 위대한 힘이 깃든 장소일 것이야.\n"
-"\n"
-"전설에 따르면 흑요석으로 만든 대좌의 표면은 뼈로 드리워져 있으며 펄펄 끓는 피"
-"가 고여 있다고 하지. 또한 전설에는 고대의 보물을 지키는 관문을 여는 혈석에 대"
-"해서도 언급되어 있네... \n"
-"\n"
-"이 보물에 대해서는 여러 억측이 무성하지만 옛 영웅 아르케인이 비밀의 장소에 안"
-"치한 성스러운 용맹의 갑옷이라 일컬어진다네. 아르케인은 죄악의 전쟁 전세를 뒤"
-"집은 최초의 인간으로 어둠의 군단을 불타는 지옥으로 되돌려 보냈지. \n"
-"\n"
-"아르케인은 죽기 직전, 갑옷을 비밀 장소에 감추었고 성스러운 갑옷이 필요한 시기"
-"가 다시 오면 용맹의 갑옷을 입으러 영웅이 나타난다고 했는데, 자네가 그 영웅일"
-"지도 모르겠구만..."
+msgstr "성스러운"
 
 #: Source/itemdat.cpp:238
 msgid "Godly"
@@ -2761,7 +2702,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:247
 msgid "Cobalt"
-msgstr ""
+msgstr "코발트"
 
 #: Source/itemdat.cpp:248
 msgid "Sapphire"
@@ -2777,11 +2718,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:251
 msgid "Ivory"
-msgstr ""
+msgstr "아이보리"
 
 #: Source/itemdat.cpp:252
 msgid "Crystal"
-msgstr ""
+msgstr "크리스탈"
 
 #: Source/itemdat.cpp:253
 msgid "Diamond"
@@ -2789,7 +2730,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:254
 msgid "Topaz"
-msgstr ""
+msgstr "토파즈"
 
 #: Source/itemdat.cpp:255
 msgid "Amber"
@@ -2800,23 +2741,8 @@ msgid "Jade"
 msgstr ""
 
 #: Source/itemdat.cpp:257
-#, fuzzy
 msgid "Obsidian"
-msgstr ""
-"피의 관문과 불의 전당은 신비의 기원이 되는 기념비적인 건축물이라네. 자네가 책"
-"을 어디서 읽었는지는 모르겠네만 틀림없이 위대한 힘이 깃든 장소일 것이야.\n"
-"\n"
-"전설에 따르면 흑요석으로 만든 대좌의 표면은 뼈로 드리워져 있으며 펄펄 끓는 피"
-"가 고여 있다고 하지. 또한 전설에는 고대의 보물을 지키는 관문을 여는 혈석에 대"
-"해서도 언급되어 있네... \n"
-"\n"
-"이 보물에 대해서는 여러 억측이 무성하지만 옛 영웅 아르케인이 비밀의 장소에 안"
-"치한 성스러운 용맹의 갑옷이라 일컬어진다네. 아르케인은 죄악의 전쟁 전세를 뒤"
-"집은 최초의 인간으로 어둠의 군단을 불타는 지옥으로 되돌려 보냈지. \n"
-"\n"
-"아르케인은 죽기 직전, 갑옷을 비밀 장소에 감추었고 성스러운 갑옷이 필요한 시기"
-"가 다시 오면 용맹의 갑옷을 입으러 영웅이 나타난다고 했는데, 자네가 그 영웅일"
-"지도 모르겠구만..."
+msgstr "흑요석"
 
 #: Source/itemdat.cpp:258
 msgid "Emerald"
@@ -2852,7 +2778,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:266
 msgid "Dragon's"
-msgstr ""
+msgstr "드래곤의"
 
 #: Source/itemdat.cpp:267
 msgid "Wyrm's"
@@ -2864,7 +2790,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:269
 msgid "Angel's"
-msgstr ""
+msgstr "천사의"
 
 #: Source/itemdat.cpp:270
 msgid "Arch-Angel's"
