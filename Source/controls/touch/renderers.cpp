@@ -253,8 +253,11 @@ void VirtualPadButtonRenderer::Render(RenderFunction renderFunction, Art &button
 
 void PotionButtonRenderer::RenderPotion(RenderFunction renderFunction, Art &potionArt)
 {
-	VirtualGamepadPotionType potionType = GetPotionType();
-	int frame = potionType;
+	std::optional<VirtualGamepadPotionType> potionType = GetPotionType();
+	if (potionType == std::nullopt)
+		return;
+
+	int frame = *potionType;
 	int offset = potionArt.h() * frame;
 
 	auto center = virtualPadButton->area.position;
@@ -271,7 +274,7 @@ void PotionButtonRenderer::RenderPotion(RenderFunction renderFunction, Art &poti
 	renderFunction(potionArt, &src, &dst);
 }
 
-VirtualGamepadPotionType PotionButtonRenderer::GetPotionType()
+std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 {
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		auto &myPlayer = Players[MyPlayerId];
@@ -302,6 +305,8 @@ VirtualGamepadPotionType PotionButtonRenderer::GetPotionType()
 		if (id == IMISC_FULLREJUV)
 			return GAMEPAD_FULL_REJUVENATION;
 	}
+
+	return std::nullopt;
 }
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()

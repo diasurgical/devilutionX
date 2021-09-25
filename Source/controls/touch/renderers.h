@@ -135,7 +135,7 @@ private:
 	belt_item_type potionType;
 
 	VirtualGamepadButtonType GetButtonType();
-	VirtualGamepadPotionType GetPotionType();
+	std::optional<VirtualGamepadPotionType> GetPotionType();
 };
 
 class VirtualGamepadRenderer {
