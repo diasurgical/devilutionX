@@ -385,7 +385,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			UseBeltItem(BLT_MANA, MyPlayerId);
 			break;
 		case GameActionType_PRIMARY_ACTION:
-			PerformPrimaryAction();
+			PerformPrimaryAction(MyPlayerId);
 			break;
 		case GameActionType_SECONDARY_ACTION:
 			PerformSecondaryAction();

@@ -1327,7 +1327,7 @@ void UseBeltItem(int type, int playerId)
 	}
 }
 
-void PerformPrimaryAction()
+void PerformPrimaryAction(int playerId)
 {
 	if (invflag) { // inventory is open
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
@@ -1340,23 +1340,23 @@ void PerformPrimaryAction()
 	}
 
 	if (spselflag) {
-		SetSpell(MyPlayerId);
+		SetSpell(playerId);
 		return;
 	}
 
-	if (chrflag && !chrbtnactive && Players[MyPlayerId]._pStatPts > 0) {
-		CheckChrBtns(MyPlayerId);
+	if (chrflag && !chrbtnactive && Players[playerId]._pStatPts > 0) {
+		CheckChrBtns(playerId);
 		for (int i = 0; i < 4; i++) {
 			if (ChrBtnsRect[i].Contains(MousePosition)) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
-				ReleaseChrBtns(false, MyPlayerId);
+				ReleaseChrBtns(false, playerId);
 			}
 		}
 		return;
 	}
 
-	Interact(MyPlayerId);
+	Interact(playerId);
 }
 
 bool SpellHasActorTarget()
