@@ -1246,7 +1246,7 @@ void DrawView(const Surface &out, Point startPosition)
 	if (invflag) {
 		DrawInv(out);
 	} else if (sbookflag) {
-		DrawSpellBook(out);
+		DrawSpellBook(out, MyPlayerId);
 	}
 
 	DrawDurIcon(out, MyPlayerId);

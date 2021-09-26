@@ -167,7 +167,7 @@ void CheckChrBtns(int playerId);
 void ReleaseChrBtns(bool addAllStatPoints, int playerId);
 void DrawDurIcon(const Surface &out, int playerId);
 void RedBack(const Surface &out);
-void DrawSpellBook(const Surface &out);
+void DrawSpellBook(const Surface &out, int playerId);
 void CheckSBook();
 void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(char vkey);

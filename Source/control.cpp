@@ -1479,7 +1479,7 @@ void RedBack(const Surface &out)
 	}
 }
 
-void DrawSpellBook(const Surface &out)
+void DrawSpellBook(const Surface &out, int playerId)
 {
 	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), *pSpellBkCel, 1);
 	if (gbIsHellfire && sbooktab < 5) {
@@ -1492,14 +1492,14 @@ void DrawSpellBook(const Surface &out)
 		}
 		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab + 1);
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 	uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 
 	int yp = 43;
 	for (int i = 1; i < 8; i++) {
 		spell_id sn = SpellPages[sbooktab][i - 1];
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
-			spell_type st = GetSBookTrans(sn, true, MyPlayerId);
+			spell_type st = GetSBookTrans(sn, true, playerId);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + 12 });
 			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
@@ -1508,7 +1508,7 @@ void DrawSpellBook(const Surface &out)
 				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
 			int textOffset = 7;
-			switch (GetSBookTrans(sn, false, MyPlayerId)) {
+			switch (GetSBookTrans(sn, false, playerId)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, _("Skill"));
 				break;
