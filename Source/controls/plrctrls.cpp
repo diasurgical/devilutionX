@@ -113,10 +113,10 @@ int GetDistanceRanged(Point destination, int playerId)
  * could be accomplished by looping over the values in the Direction enum and making use of
  * Point math instead of nested loops from [-1, 1].
  */
-void FindItemOrObject()
+void FindItemOrObject(int playerId)
 {
-	int mx = Players[MyPlayerId].position.future.x;
-	int my = Players[MyPlayerId].position.future.y;
+	int mx = Players[playerId].position.future.x;
+	int my = Players[playerId].position.future.y;
 	int rotations = 5;
 
 	// As the player can not stand on the edge of the map this is safe from OOB
@@ -129,10 +129,10 @@ void FindItemOrObject()
 			if (item.isEmpty()
 			    || item._iSelFlag == 0)
 				continue;
-			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, MyPlayerId);
+			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, playerId);
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1, MyPlayerId) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1, playerId) == 0)
 				continue;
 			rotations = newRotations;
 			pcursitem = i;
@@ -152,10 +152,10 @@ void FindItemOrObject()
 				continue;
 			if (xx == 0 && yy == 0 && Objects[o]._oDoorFlag)
 				continue; // Ignore doorway so we don't get stuck behind barrels
-			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, MyPlayerId);
+			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, playerId);
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1, MyPlayerId) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1, playerId) == 0)
 				continue;
 			rotations = newRotations;
 			pcursobj = o;
@@ -1293,7 +1293,7 @@ void plrctrls_after_check_curs_move()
 			*infostr = '\0';
 			ClearPanel();
 			FindActor();
-			FindItemOrObject();
+			FindItemOrObject(MyPlayerId);
 			FindTrigger();
 		}
 	}
