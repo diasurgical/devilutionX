@@ -579,7 +579,7 @@ struct SpellListItem {
 	bool isSelected;
 };
 
-std::vector<SpellListItem> GetSpellListItems()
+std::vector<SpellListItem> GetSpellListItems(int playerId)
 {
 	std::vector<SpellListItem> spellListItems;
 
@@ -589,7 +589,7 @@ std::vector<SpellListItem> GetSpellListItems()
 	int y = PANEL_Y - 17;
 
 	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
 			mask = myPlayer._pAblSpells;
@@ -637,7 +637,7 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 	pSplType = spell_type::RSPLTYPE_INVALID;
 	auto &myPlayer = Players[MyPlayerId];
 
-	for (auto &spellListItem : GetSpellListItems()) {
+	for (auto &spellListItem : GetSpellListItems(MyPlayerId)) {
 		if (spellListItem.isSelected) {
 			pSpell = spellListItem.id;
 			pSplType = spellListItem.type;
@@ -690,7 +690,7 @@ void DrawSpellList(const Surface &out)
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	for (auto &spellListItem : GetSpellListItems()) {
+	for (auto &spellListItem : GetSpellListItems(MyPlayerId)) {
 		const spell_id spellId = spellListItem.id;
 		spell_type transType = spellListItem.type;
 		int spellLevel = 0;
