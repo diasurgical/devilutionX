@@ -147,7 +147,7 @@ void DoAutoMap();
  * Checks the mouse cursor position within the control panel and sets information
  * strings if needed.
  */
-void CheckPanelInfo();
+void CheckPanelInfo(int playerId);
 
 /**
  * Check if the mouse is within a control panel button that's flagged.

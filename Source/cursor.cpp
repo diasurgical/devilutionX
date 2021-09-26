@@ -378,7 +378,7 @@ void CheckCursMove()
 		return;
 	}
 	if (MainPanel.Contains(MousePosition)) {
-		CheckPanelInfo();
+		CheckPanelInfo(MyPlayerId);
 		return;
 	}
 	if (DoomFlag) {

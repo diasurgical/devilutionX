@@ -1129,7 +1129,7 @@ void DoAutoMap()
 	}
 }
 
-void CheckPanelInfo()
+void CheckPanelInfo(int playerId)
 {
 	panelflag = false;
 	ClearPanel();
@@ -1159,7 +1159,7 @@ void CheckPanelInfo()
 		panelflag = true;
 		strcpy(tempstr, _("Hotkey: 's'"));
 		AddPanelString(tempstr);
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		const spell_id spellId = myPlayer._pRSpell;
 		if (spellId != SPL_INVALID) {
 			switch (myPlayer._pRSplType) {
