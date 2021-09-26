@@ -661,16 +661,16 @@ bool IsChatAvailable()
 #endif
 }
 
-void DrawSpell(const Surface &out)
+void DrawSpell(const Surface &out, int playerId)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 	spell_id spl = myPlayer._pRSpell;
 	spell_type st = myPlayer._pRSplType;
 
 	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
 	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
 		int tlvl = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spl];
-		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
+		if (CheckSpell(playerId, spl, st, true) != SpellCheckResult::Success)
 			st = RSPLTYPE_INVALID;
 		if (tlvl <= 0)
 			st = RSPLTYPE_INVALID;

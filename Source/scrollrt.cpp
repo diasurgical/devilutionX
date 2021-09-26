@@ -1699,7 +1699,7 @@ void DrawAndBlit()
 	if (drawmanaflag) {
 		DrawManaFlaskLower(out);
 
-		DrawSpell(out);
+		DrawSpell(out, MyPlayerId);
 	}
 	if (drawbtnflag) {
 		DrawCtrlBtns(out);
