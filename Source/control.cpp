@@ -870,10 +870,10 @@ void DrawLifeFlaskUpper(const Surface &out, int playerId)
 	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[playerId]._pHPPer);
 }
 
-void DrawManaFlaskUpper(const Surface &out)
+void DrawManaFlaskUpper(const Surface &out, int playerId)
 {
 	constexpr int ManaFlaskUpperOffset = 475;
-	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[playerId]._pManaPer);
 }
 
 void DrawLifeFlaskLower(const Surface &out, int playerId)

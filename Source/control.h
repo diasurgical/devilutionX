@@ -93,7 +93,7 @@ void DrawLifeFlaskLower(const Surface &out, int playerId);
  * The empty flask cel is drawn from the top of the flask to the fill level (there is always a 2 pixel "air gap") and
  * the filled flask cel is drawn from that level to the top of the control panel if required.
  */
-void DrawManaFlaskUpper(const Surface &out);
+void DrawManaFlaskUpper(const Surface &out, int playerId);
 
 /**
  * Controls the drawing of the area of the mana flask within the control panel.

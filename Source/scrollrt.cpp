@@ -1291,7 +1291,7 @@ void DrawView(const Surface &out, Point startPosition)
 	DrawInfoBox(out, MyPlayerId);
 	control_update_life_mana(MyPlayerId); // Update life/mana totals before rendering any portion of the flask.
 	DrawLifeFlaskUpper(out, MyPlayerId);
-	DrawManaFlaskUpper(out);
+	DrawManaFlaskUpper(out, MyPlayerId);
 }
 
 /**
