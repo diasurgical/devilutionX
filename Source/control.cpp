@@ -888,10 +888,10 @@ void DrawManaFlaskLower(const Surface &out, int playerId)
 	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, Players[playerId]._pManaPer);
 }
 
-void control_update_life_mana()
+void control_update_life_mana(int playerId)
 {
-	Players[MyPlayerId].UpdateManaPercentage();
-	Players[MyPlayerId].UpdateHitPointPercentage();
+	Players[playerId].UpdateManaPercentage();
+	Players[playerId].UpdateHitPointPercentage();
 }
 
 void InitControlPan()

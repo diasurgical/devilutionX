@@ -107,7 +107,7 @@ void DrawManaFlaskLower(const Surface &out, int playerId);
  *
  * @see Player::UpdateHitPointPercentage() and Player::UpdateManaPercentage()
  */
-void control_update_life_mana();
+void control_update_life_mana(int playerId);
 
 /**
  * @brief draws the current right mouse button spell.
