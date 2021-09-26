@@ -1366,7 +1366,7 @@ void InitKeymapActions()
 				    SetSpeedSpell(i, MyPlayerId);
 				    return;
 			    }
-			    ToggleSpell(i);
+			    ToggleSpell(i, MyPlayerId);
 		    },
 		    [&]() { return !IsPlayerDead(); },
 		});

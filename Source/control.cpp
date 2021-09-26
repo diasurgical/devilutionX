@@ -794,11 +794,11 @@ void SetSpeedSpell(int slot, int playerId)
 	myPlayer._pSplTHotKey[slot] = pSplType;
 }
 
-void ToggleSpell(int slot)
+void ToggleSpell(int slot, int playerId)
 {
 	uint64_t spells;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (myPlayer._pSplHotKey[slot] == SPL_INVALID) {
 		return;
