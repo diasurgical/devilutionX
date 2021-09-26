@@ -34,6 +34,11 @@ public:
 		return instance_id_;
 	}
 
+	int playerId() const
+	{
+		return playerId_;
+	}
+
 private:
 	static int ToSdlJoyButton(ControllerButton button);
 
@@ -41,6 +46,7 @@ private:
 
 	SDL_Joystick *sdl_joystick_ = NULL;
 	SDL_JoystickID instance_id_ = -1;
+	int playerId_ = -1;
 };
 
 } // namespace devilution
