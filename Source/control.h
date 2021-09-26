@@ -86,7 +86,7 @@ void DrawLifeFlaskUpper(const Surface &out);
  * First sets the fill amount then draws the empty flask cel portion then the filled
  * flask portion.
  */
-void DrawLifeFlaskLower(const Surface &out);
+void DrawLifeFlaskLower(const Surface &out, int playerId);
 
 /**
  * Draws the top dome of the mana flask (that part that protrudes out of the control panel).

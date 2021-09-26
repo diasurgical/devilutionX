@@ -1694,7 +1694,7 @@ void DrawAndBlit()
 		DrawCtrlPan(out);
 	}
 	if (drawhpflag) {
-		DrawLifeFlaskLower(out);
+		DrawLifeFlaskLower(out, MyPlayerId);
 	}
 	if (drawmanaflag) {
 		DrawManaFlaskLower(out, MyPlayerId);
