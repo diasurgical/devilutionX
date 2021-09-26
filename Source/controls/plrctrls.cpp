@@ -1345,7 +1345,7 @@ void PerformPrimaryAction()
 	}
 
 	if (chrflag && !chrbtnactive && Players[MyPlayerId]._pStatPts > 0) {
-		CheckChrBtns();
+		CheckChrBtns(MyPlayerId);
 		for (int i = 0; i < 4; i++) {
 			if (ChrBtnsRect[i].Contains(MousePosition)) {
 				chrbtn[i] = true;

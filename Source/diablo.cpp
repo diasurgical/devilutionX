@@ -317,7 +317,7 @@ void LeftMouseDown(int wParam)
 				qtextflag = false;
 				stream_stop();
 			} else if (chrflag && LeftPanel.Contains(MousePosition)) {
-				CheckChrBtns();
+				CheckChrBtns(MyPlayerId);
 			} else if (invflag && RightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld);

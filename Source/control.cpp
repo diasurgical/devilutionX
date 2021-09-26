@@ -1385,9 +1385,9 @@ void DrawLevelUpIcon(const Surface &out)
 	}
 }
 
-void CheckChrBtns()
+void CheckChrBtns(int playerId)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (chrbtnactive || myPlayer._pStatPts == 0)
 		return;

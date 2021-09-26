@@ -163,7 +163,7 @@ void DrawInfoBox(const Surface &out, int playerId);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
 void DrawLevelUpIcon(const Surface &out);
-void CheckChrBtns();
+void CheckChrBtns(int playerId);
 void ReleaseChrBtns(bool addAllStatPoints);
 void DrawDurIcon(const Surface &out);
 void RedBack(const Surface &out);
