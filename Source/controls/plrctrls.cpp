@@ -52,9 +52,9 @@ int Slot = SLOTXY_INV_FIRST;
  * @param destination Tile coordinates
  * @return -1 == down
  */
-int GetRotaryDistance(Point destination)
+int GetRotaryDistance(Point destination, int playerId)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (myPlayer.position.future == destination)
 		return -1;
@@ -129,7 +129,7 @@ void FindItemOrObject()
 			if (item.isEmpty()
 			    || item._iSelFlag == 0)
 				continue;
-			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
+			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, MyPlayerId);
 			if (rotations < newRotations)
 				continue;
 			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
@@ -152,7 +152,7 @@ void FindItemOrObject()
 				continue;
 			if (xx == 0 && yy == 0 && Objects[o]._oDoorFlag)
 				continue; // Ignore doorway so we don't get stuck behind barrels
-			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
+			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, MyPlayerId);
 			if (rotations < newRotations)
 				continue;
 			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
@@ -218,8 +218,8 @@ void FindRangedTarget()
 		const bool newCanTalk = CanTalkToMonst(monster);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(monster.position.future);
-		const int newRotations = GetRotaryDistance(monster.position.future);
+		const int newDdistance = GetDistanceRanged(monster.position.future, MyPlayerId);
+		const int newRotations = GetRotaryDistance(monster.position.future, MyPlayerId);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -281,7 +281,7 @@ void FindMeleeTarget()
 						const bool newCanTalk = CanTalkToMonst(monster);
 						if (pcursmonst != -1 && !canTalk && newCanTalk)
 							continue;
-						const int newRotations = GetRotaryDistance({ dx, dy });
+						const int newRotations = GetRotaryDistance({ dx, dy }, MyPlayerId);
 						if (pcursmonst != -1 && canTalk == newCanTalk && rotations < newRotations)
 							continue;
 						rotations = newRotations;
@@ -349,7 +349,7 @@ void CheckPlayerNearby()
 
 		if (pcursplr != -1 && distance < newDdistance)
 			continue;
-		const int newRotations = GetRotaryDistance(player.position.future);
+		const int newRotations = GetRotaryDistance(player.position.future, MyPlayerId);
 		if (pcursplr != -1 && distance == newDdistance && rotations < newRotations)
 			continue;
 
@@ -391,7 +391,7 @@ void FindTrigger()
 				continue;
 			if (pcursmissile != -1 && distance < newDistance)
 				continue;
-			const int newRotations = GetRotaryDistance(missile.position.tile);
+			const int newRotations = GetRotaryDistance(missile.position.tile, MyPlayerId);
 			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
 			cursPosition = missile.position.tile;
