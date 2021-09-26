@@ -1697,7 +1697,7 @@ void DrawAndBlit()
 		DrawLifeFlaskLower(out);
 	}
 	if (drawmanaflag) {
-		DrawManaFlaskLower(out);
+		DrawManaFlaskLower(out, MyPlayerId);
 
 		DrawSpell(out, MyPlayerId);
 	}

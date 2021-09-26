@@ -98,7 +98,7 @@ void DrawManaFlaskUpper(const Surface &out);
 /**
  * Controls the drawing of the area of the mana flask within the control panel.
  */
-void DrawManaFlaskLower(const Surface &out);
+void DrawManaFlaskLower(const Surface &out, int playerId);
 
 /**
  * @brief calls on the active player object to update HP/Mana percentage variables
