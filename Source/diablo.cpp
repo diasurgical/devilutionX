@@ -2011,7 +2011,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	IncProgress();
 
 	if (firstflag) {
-		InitControlPan();
+		InitControlPan(MyPlayerId);
 	}
 	IncProgress();
 	UpdateMonsterLights();

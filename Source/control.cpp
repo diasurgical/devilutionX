@@ -894,7 +894,7 @@ void control_update_life_mana(int playerId)
 	Players[playerId].UpdateHitPointPercentage();
 }
 
-void InitControlPan()
+void InitControlPan(int playerId)
 {
 	pBtmBuff.emplace(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (IsChatAvailable() ? 2 : 1));
 	pManaBuff.emplace(88, 88);
@@ -958,7 +958,7 @@ void InitControlPan()
 	sbooktab = 0;
 	sbookflag = false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (myPlayer._pClass == HeroClass::Warrior) {
 		SpellPages[0][0] = SPL_REPAIR;

@@ -115,7 +115,7 @@ void control_update_life_mana(int playerId);
  */
 void DrawSpell(const Surface &out, int playerId);
 
-void InitControlPan();
+void InitControlPan(int playerId);
 void DrawCtrlPan(const Surface &out, int playerId);
 
 /**
