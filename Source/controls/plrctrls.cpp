@@ -450,14 +450,14 @@ void Interact(int playerId)
 	}
 }
 
-void AttrIncBtnSnap(AxisDirection dir)
+void AttrIncBtnSnap(AxisDirection dir, int playerId)
 {
 	static AxisDirectionRepeater repeater;
 	dir = repeater.Get(dir);
 	if (dir.y == AxisDirectionY_NONE)
 		return;
 
-	if (chrbtnactive && Players[MyPlayerId]._pStatPts <= 0)
+	if (chrbtnactive && Players[playerId]._pStatPts <= 0)
 		return;
 
 	// first, find our cursor location
@@ -642,7 +642,7 @@ void ResetInvCursorPosition(int playerId)
  * If mouse coords are at SLOTXY_CHEST_LAST, consider this center of equipment
  * small inventory squares are 29x29 (roughly)
  */
-void InvMove(AxisDirection dir)
+void InvMove(AxisDirection dir, int playerId)
 {
 	static AxisDirectionRepeater repeater(/*min_interval_ms=*/150);
 	dir = repeater.Get(dir);
@@ -650,7 +650,7 @@ void InvMove(AxisDirection dir)
 		return;
 
 	char itemInvId;
-	auto itemSize = GetItemSizeOnSlot(Slot, itemInvId, MyPlayerId);
+	auto itemSize = GetItemSizeOnSlot(Slot, itemInvId, playerId);
 
 	Point mousePos = MousePosition;
 
@@ -671,7 +671,7 @@ void InvMove(AxisDirection dir)
 		Slot = SLOTXY_BELT_LAST;
 
 	const int initialSlot = Slot;
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
@@ -893,7 +893,7 @@ void InvMove(AxisDirection dir)
 
 	// get item under new slot if navigating on the inventory
 	if (!isHoldingItem && Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-		itemSize = GetItemSizeOnSlot(Slot, itemInvId, MyPlayerId);
+		itemSize = GetItemSizeOnSlot(Slot, itemInvId, playerId);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
@@ -946,14 +946,14 @@ bool HSExists(Point target)
 	return false;
 }
 
-void HotSpellMove(AxisDirection dir)
+void HotSpellMove(AxisDirection dir, int playerId)
 {
 	static AxisDirectionRepeater repeater;
 	dir = repeater.Get(dir);
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
 
-	int spbslot = Players[MyPlayerId]._pRSpell;
+	int spbslot = Players[playerId]._pRSpell;
 	for (int r = 0; r < speedspellcount; r++) {
 		if (MousePosition.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
 		    && MousePosition.x < speedspellscoords[r].x + SPLICONLENGTH / 2
@@ -991,7 +991,7 @@ void HotSpellMove(AxisDirection dir)
 	}
 }
 
-void SpellBookMove(AxisDirection dir)
+void SpellBookMove(AxisDirection dir, int playerId)
 {
 	static AxisDirectionRepeater repeater;
 	dir = repeater.Get(dir);
@@ -1060,7 +1060,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
 }
 
-void QuestLogMove(AxisDirection moveDir)
+void QuestLogMove(AxisDirection moveDir, int playerId)
 {
 	static AxisDirectionRepeater repeater;
 	moveDir = repeater.Get(moveDir);
@@ -1070,7 +1070,7 @@ void QuestLogMove(AxisDirection moveDir)
 		QuestlogDown();
 }
 
-void StoreMove(AxisDirection moveDir)
+void StoreMove(AxisDirection moveDir, int playerId)
 {
 	static AxisDirectionRepeater repeater;
 	moveDir = repeater.Get(moveDir);
@@ -1080,7 +1080,7 @@ void StoreMove(AxisDirection moveDir)
 		StoreDown();
 }
 
-using HandleLeftStickOrDPadFn = void (*)(devilution::AxisDirection);
+using HandleLeftStickOrDPadFn = void (*)(devilution::AxisDirection, int);
 
 HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler(int playerId)
 {
