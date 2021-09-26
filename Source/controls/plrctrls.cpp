@@ -359,15 +359,15 @@ void CheckPlayerNearby(int playerId)
 	}
 }
 
-void FindActor()
+void FindActor(int playerId)
 {
 	if (leveltype != DTYPE_TOWN)
-		CheckMonstersNearby(MyPlayerId);
+		CheckMonstersNearby(playerId);
 	else
-		CheckTownersNearby(MyPlayerId);
+		CheckTownersNearby(playerId);
 
 	if (gbIsMultiplayer)
-		CheckPlayerNearby(MyPlayerId);
+		CheckPlayerNearby(playerId);
 }
 
 int pcursmissile;
@@ -1292,7 +1292,7 @@ void plrctrls_after_check_curs_move()
 		if (!invflag) {
 			*infostr = '\0';
 			ClearPanel();
-			FindActor();
+			FindActor(MyPlayerId);
 			FindItemOrObject(MyPlayerId);
 			FindTrigger();
 		}
