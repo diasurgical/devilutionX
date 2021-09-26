@@ -552,7 +552,7 @@ void PressChar(char vkey)
 		return;
 	}
 	if (dropGoldFlag) {
-		control_drop_gold(vkey);
+		control_drop_gold(vkey, MyPlayerId);
 		return;
 	}
 
@@ -1741,7 +1741,7 @@ bool PressEscKey()
 	}
 
 	if (dropGoldFlag) {
-		control_drop_gold(DVL_VK_ESCAPE);
+		control_drop_gold(DVL_VK_ESCAPE, MyPlayerId);
 		rv = true;
 	}
 

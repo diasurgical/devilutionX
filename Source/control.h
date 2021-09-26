@@ -170,7 +170,7 @@ void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out, int playerId);
 void CheckSBook(int playerId);
 void DrawGoldSplit(const Surface &out, int amount);
-void control_drop_gold(char vkey);
+void control_drop_gold(char vkey, int playerId);
 void DrawTalkPan(const Surface &out, int playerId);
 bool control_check_talk_btn();
 void control_release_talk_btn();

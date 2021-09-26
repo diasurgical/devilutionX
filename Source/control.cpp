@@ -1615,9 +1615,9 @@ void DrawGoldSplit(const Surface &out, int amount)
 	DrawString(out, tempstr, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
-void control_drop_gold(char vkey)
+void control_drop_gold(char vkey, int playerId)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
 		dropGoldFlag = false;
