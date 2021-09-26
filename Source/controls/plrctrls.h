@@ -34,7 +34,7 @@ bool IsAutomapActive();
 // Whether the mouse cursor is being moved with the controller.
 bool IsMovingMouseCursorWithController();
 
-void UseBeltItem(int type);
+void UseBeltItem(int type, int playerId);
 
 // Talk to towners, click on inv items, attack, etc.
 void PerformPrimaryAction();

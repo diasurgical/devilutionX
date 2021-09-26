@@ -379,10 +379,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		case GameActionType_NONE:
 			break;
 		case GameActionType_USE_HEALTH_POTION:
-			UseBeltItem(BLT_HEALING);
+			UseBeltItem(BLT_HEALING, MyPlayerId);
 			break;
 		case GameActionType_USE_MANA_POTION:
-			UseBeltItem(BLT_MANA);
+			UseBeltItem(BLT_MANA, MyPlayerId);
 			break;
 		case GameActionType_PRIMARY_ACTION:
 			PerformPrimaryAction();

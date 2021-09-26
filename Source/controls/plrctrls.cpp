@@ -1310,17 +1310,17 @@ void plrctrls_after_game_logic(int playerId)
 	Movement(playerId);
 }
 
-void UseBeltItem(int type)
+void UseBeltItem(int type, int playerId)
 {
 	for (int i = 0; i < MAXBELTITEMS; i++) {
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		const int id = AllItemsList[myPlayer.SpdList[i].IDidx].iMiscId;
 		const int spellId = AllItemsList[myPlayer.SpdList[i].IDidx].iSpell;
 		if ((type == BLT_HEALING && (id == IMISC_HEAL || id == IMISC_FULLHEAL || (id == IMISC_SCROLL && spellId == SPL_HEAL)))
 		    || (type == BLT_MANA && (id == IMISC_MANA || id == IMISC_FULLMANA))
 		    || id == IMISC_REJUV || id == IMISC_FULLREJUV) {
 			if (!myPlayer.SpdList[i].isEmpty()) {
-				UseInvItem(MyPlayerId, INVITEM_BELT_FIRST + i);
+				UseInvItem(playerId, INVITEM_BELT_FIRST + i);
 				break;
 			}
 		}
