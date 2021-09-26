@@ -338,7 +338,7 @@ void LeftMouseDown(int wParam)
 	} else {
 		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
 			CheckInvScrn(isShiftHeld);
-		DoPanBtn();
+		DoPanBtn(MyPlayerId);
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
 	}

@@ -1071,7 +1071,7 @@ void ClearPanBtn()
 	panbtndown = false;
 }
 
-void DoPanBtn()
+void DoPanBtn(int playerId)
 {
 	for (int i = 0; i < PanelButtonIndex; i++) {
 		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
@@ -1086,13 +1086,13 @@ void DoPanBtn()
 	}
 	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
-			auto &myPlayer = Players[MyPlayerId];
+			auto &myPlayer = Players[playerId];
 			myPlayer._pRSpell = SPL_INVALID;
 			myPlayer._pRSplType = RSPLTYPE_INVALID;
 			force_redraw = 255;
 			return;
 		}
-		DoSpeedBook(MyPlayerId);
+		DoSpeedBook(playerId);
 		gamemenu_off();
 	}
 }

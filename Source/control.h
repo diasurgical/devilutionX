@@ -138,7 +138,7 @@ void ClearPanBtn();
 /**
  * Checks if the mouse cursor is within any of the panel buttons and flag it if so.
  */
-void DoPanBtn();
+void DoPanBtn(int playerId);
 
 void control_check_btn_press();
 void DoAutoMap();
