@@ -1305,9 +1305,9 @@ void plrctrls_every_frame(int playerId)
 	HandleRightStickMotion();
 }
 
-void plrctrls_after_game_logic()
+void plrctrls_after_game_logic(int playerId)
 {
-	Movement(MyPlayerId);
+	Movement(playerId);
 }
 
 void UseBeltItem(int type)

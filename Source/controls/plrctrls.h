@@ -16,7 +16,7 @@ void plrctrls_every_frame(int playerId);
 
 // Run after every game logic iteration.
 // Handles player movement.
-void plrctrls_after_game_logic();
+void plrctrls_after_game_logic(int playerId);
 
 // Runs at the end of CheckCursMove()
 // Handles item, object, and monster auto-aim.

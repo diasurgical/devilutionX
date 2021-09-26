@@ -122,7 +122,7 @@ MouseActionType LastMouseButtonAction = MouseActionType::None;
 // Defined in SourceX/controls/plctrls.cpp.
 extern void plrctrls_after_check_curs_move(int playerId);
 extern void plrctrls_every_frame(int playerId);
-extern void plrctrls_after_game_logic();
+extern void plrctrls_after_game_logic(int playerId);
 
 namespace {
 
@@ -1197,7 +1197,7 @@ void GameLogic()
 	force_redraw |= 1;
 	pfile_update(false);
 
-	plrctrls_after_game_logic();
+	plrctrls_after_game_logic(MyPlayerId);
 }
 
 void TimeoutCursor(bool bTimeout)
