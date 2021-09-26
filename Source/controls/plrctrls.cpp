@@ -164,10 +164,10 @@ void FindItemOrObject(int playerId)
 	}
 }
 
-void CheckTownersNearby()
+void CheckTownersNearby(int playerId)
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(Towners[i].position, 2, MyPlayerId);
+		int distance = GetDistance(Towners[i].position, 2, playerId);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -364,7 +364,7 @@ void FindActor()
 	if (leveltype != DTYPE_TOWN)
 		CheckMonstersNearby();
 	else
-		CheckTownersNearby();
+		CheckTownersNearby(MyPlayerId);
 
 	if (gbIsMultiplayer)
 		CheckPlayerNearby();
