@@ -1082,12 +1082,12 @@ void StoreMove(AxisDirection moveDir)
 
 using HandleLeftStickOrDPadFn = void (*)(devilution::AxisDirection);
 
-HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
+HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler(int playerId)
 {
 	if (invflag) {
 		return &InvMove;
 	}
-	if (chrflag && Players[MyPlayerId]._pStatPts > 0) {
+	if (chrflag && Players[playerId]._pStatPts > 0) {
 		return &AttrIncBtnSnap;
 	}
 	if (spselflag) {
@@ -1107,7 +1107,7 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler()
 
 void ProcessLeftStickOrDPadGameUI()
 {
-	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler();
+	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler(MyPlayerId);
 	if (handler != nullptr)
 		handler(GetLeftStickOrDpadDirection(true));
 }
@@ -1124,7 +1124,7 @@ void Movement(int playerId)
 		sgbControllerActive = true;
 	}
 
-	if (GetLeftStickOrDPadGameUIHandler() == nullptr) {
+	if (GetLeftStickOrDPadGameUIHandler(playerId) == nullptr) {
 		WalkInDir(playerId, moveDir);
 	}
 }
