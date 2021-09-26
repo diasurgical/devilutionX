@@ -396,7 +396,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		case GameActionType_TOGGLE_QUICK_SPELL_MENU:
 			if (!invflag || BlurInventory()) {
 				if (!spselflag)
-					DoSpeedBook();
+					DoSpeedBook(MyPlayerId);
 				else
 					spselflag = false;
 				chrflag = false;

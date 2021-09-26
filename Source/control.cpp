@@ -1009,7 +1009,7 @@ void DrawCtrlBtns(const Surface &out)
 	}
 }
 
-void DoSpeedBook()
+void DoSpeedBook(int playerId)
 {
 	spselflag = true;
 	int xo = PANEL_X + 12 + SPLICONLENGTH * 10;
@@ -1017,7 +1017,7 @@ void DoSpeedBook()
 	int x = xo + SPLICONLENGTH / 2;
 	int y = yo - SPLICONLENGTH / 2;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (myPlayer._pRSpell != SPL_INVALID) {
 		for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
@@ -1092,7 +1092,7 @@ void DoPanBtn()
 			force_redraw = 255;
 			return;
 		}
-		DoSpeedBook();
+		DoSpeedBook(MyPlayerId);
 		gamemenu_off();
 	}
 }

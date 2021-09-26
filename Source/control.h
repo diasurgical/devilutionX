@@ -128,7 +128,7 @@ void DrawCtrlBtns(const Surface &out);
  * Draws the "Speed Book": the rows of known spells for quick-setting a spell that
  * show up when you click the spell slot at the control panel.
  */
-void DoSpeedBook();
+void DoSpeedBook(int playerId);
 
 /**
  * Clears panel button flags.

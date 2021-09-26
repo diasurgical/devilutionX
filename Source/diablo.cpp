@@ -1318,7 +1318,7 @@ void DisplaySpellsKeyPressed()
 	invflag = false;
 	sbookflag = false;
 	if (!spselflag) {
-		DoSpeedBook();
+		DoSpeedBook(MyPlayerId);
 	} else {
 		spselflag = false;
 	}
