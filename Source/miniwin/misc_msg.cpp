@@ -433,7 +433,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 				invflag = true;
 				if (pcurs == CURSOR_DISARM)
 					NewCursor(CURSOR_HAND);
-				FocusOnInventory();
+				FocusOnInventory(MyPlayerId);
 			}
 			break;
 		case GameActionType_TOGGLE_SPELL_BOOK:

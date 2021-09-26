@@ -2487,7 +2487,7 @@ void AddElement(Missile &missile, Point dst, Direction midir)
 	UseMana(missile._misource, SPL_ELEMENT);
 }
 
-extern void FocusOnInventory();
+extern void FocusOnInventory(int playerId);
 
 void AddIdentify(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
@@ -2499,7 +2499,7 @@ void AddIdentify(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		if (!invflag) {
 			invflag = true;
 			if (sgbControllerActive)
-				FocusOnInventory();
+				FocusOnInventory(MyPlayerId);
 		}
 		NewCursor(CURSOR_IDENTIFY);
 	}
@@ -2605,7 +2605,7 @@ void AddRepair(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		if (!invflag) {
 			invflag = true;
 			if (sgbControllerActive)
-				FocusOnInventory();
+				FocusOnInventory(MyPlayerId);
 		}
 		NewCursor(CURSOR_REPAIR);
 	}
@@ -2621,7 +2621,7 @@ void AddRecharge(Missile &missile, Point /*dst*/, Direction /*midir*/)
 		if (!invflag) {
 			invflag = true;
 			if (sgbControllerActive)
-				FocusOnInventory();
+				FocusOnInventory(MyPlayerId);
 		}
 		NewCursor(CURSOR_RECHARGE);
 	}

@@ -1264,10 +1264,10 @@ void HandleRightStickMotion()
 /**
  * @brief Moves the mouse to the first inventory slot.
  */
-void FocusOnInventory()
+void FocusOnInventory(int playerId)
 {
 	Slot = SLOTXY_INV_FIRST;
-	ResetInvCursorPosition(MyPlayerId);
+	ResetInvCursorPosition(playerId);
 }
 
 void plrctrls_after_check_curs_move()
