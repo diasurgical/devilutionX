@@ -1636,6 +1636,8 @@ msgid ""
 "Holding down the shift key and then left-clicking allows the character to "
 "attack without moving."
 msgstr ""
+"Shift 키를 누른 상태에서 마우스 좌클릭은 캐릭터가 움직이지 않은 상태에서 공격"
+"을 가능하게 해줍니다."
 
 #: Source/help.cpp:55
 msgid "$Auto-map:"
@@ -1722,6 +1724,8 @@ msgid ""
 "Reading more than one book increases your knowledge of that spell, allowing "
 "you to cast the spell more effectively."
 msgstr ""
+"같은 종류의 책을 한권 이상 읽는것은 해당 스펠에 대한 지식을 늘려줘서 스펠 캐"
+"스팅을 더 효과적으로 하게해줍니다."
 
 #: Source/help.cpp:130
 msgid "Shareware Hellfire Help"
@@ -1741,17 +1745,19 @@ msgstr "디아블로 도움말"
 
 #: Source/help.cpp:156
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr ""
+msgstr "ESC를 눌러서 끝내시거나 화살표 키를 이용해서 스크롤해주세요."
 
 #: Source/init.cpp:214
 msgid "Some Hellfire MPQs are missing"
-msgstr ""
+msgstr "헬파이어 관련된 모든 MPQ 파일들이 존재하지 않습니다"
 
 #: Source/init.cpp:214
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
+"헬파이어 관련 모든 MPQ 파일들을 찾을수 없습니다.\n"
+"hf*.mpq 파일들을 모두 복사해주세요."
 
 #: Source/init.cpp:224
 msgid "Unable to create main window"
@@ -2418,7 +2424,7 @@ msgstr ""
 #: Source/itemdat.cpp:177 Source/itemdat.cpp:178 Source/itemdat.cpp:179
 #: Source/itemdat.cpp:180 Source/itemdat.cpp:181
 msgid "Rune"
-msgstr ""
+msgstr "룬"
 
 #: Source/itemdat.cpp:178
 msgid "Rune of Lightning"
@@ -2444,41 +2450,31 @@ msgstr ""
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
 msgid "Tin"
-msgstr ""
+msgstr "주석"
 
 #: Source/itemdat.cpp:193
 msgid "Brass"
-msgstr ""
+msgstr "놋쇠"
 
 #: Source/itemdat.cpp:194
 msgid "Bronze"
-msgstr ""
+msgstr "청동"
 
 #: Source/itemdat.cpp:195
-#, fuzzy
 msgid "Iron"
-msgstr ""
-"강철밖에 모르는 자에겐 강철이야말로 최강의 마법인 셈이죠. 본인은 자각 못 하지"
-"만 대장장이 그리스월드는 정말로 마술사 그 이상이에요. 불과 금속을 융합시키는 "
-"그의 능력은 견줄 자가 없죠."
+msgstr "철"
 
 #: Source/itemdat.cpp:196
-#, fuzzy
 msgid "Steel"
-msgstr "강철의 힘은 시간으로도 막을 수 없다"
+msgstr "강철"
 
 #: Source/itemdat.cpp:197
-#, fuzzy
 msgid "Silver"
-msgstr ""
-"어디 보자고. 그래, 그래... 역시 생각했던 대로야. 잠깐만 기다려 봐...\n"
-"\n"
-"자, 여기. 아버지가 주신 은반지를 이 돌에 박아 넣었더니 딱이군. 유용하게 쓰이"
-"길 바라."
+msgstr "은"
 
 #: Source/itemdat.cpp:199
 msgid "Platinum"
-msgstr ""
+msgstr "백금"
 
 #: Source/itemdat.cpp:200
 msgid "Mithril"
@@ -2493,22 +2489,16 @@ msgid "Weird"
 msgstr ""
 
 #: Source/itemdat.cpp:203
-#, fuzzy
 msgid "Strange"
-msgstr ""
-"선생님, 이상한 일을 겪었습니다. 저는 도무지 짐작도 못 하겠습니다. 미궁에 사"
-"는 괴물에 대해 잘 아시죠? 밤에 삐걱거리는 소리가 가게 밖에서 들려서 잠을 깼는"
-"데, 밖을 보니 가게 앞에 마귀처럼 보이는 것들이 있더군요. 순식간에 제 여관 간"
-"판을 훔쳐서 도망갔습니다. 왜 마귀들이 제 가족에게는 손대지 않고 간판만 훔쳐"
-"서 달아났는지 모르겠습니다... 정말 이상하지 않습니까?"
+msgstr "이상한"
 
 #: Source/itemdat.cpp:204
 msgid "Useless"
-msgstr ""
+msgstr "쓸모없는"
 
 #: Source/itemdat.cpp:205
 msgid "Bent"
-msgstr ""
+msgstr "구부러진"
 
 #: Source/itemdat.cpp:206
 msgid "Weak"
@@ -2516,7 +2506,7 @@ msgstr "약한"
 
 #: Source/itemdat.cpp:207
 msgid "Jagged"
-msgstr ""
+msgstr "들쭉날쭉한"
 
 #: Source/itemdat.cpp:208
 #, fuzzy
@@ -2563,7 +2553,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:217
 msgid "Dull"
-msgstr ""
+msgstr "뭉특한"
 
 #: Source/itemdat.cpp:218
 msgid "Sharp"
@@ -2579,13 +2569,12 @@ msgstr ""
 "아이를 지켜줄 거라 믿네."
 
 #: Source/itemdat.cpp:220
-#, fuzzy
 msgid "Warrior's"
-msgstr "전사"
+msgstr "전사의"
 
 #: Source/itemdat.cpp:221
 msgid "Soldier's"
-msgstr ""
+msgstr "병사의"
 
 #: Source/itemdat.cpp:222
 msgid "Lord's"
@@ -2593,7 +2582,7 @@ msgstr "군주의"
 
 #: Source/itemdat.cpp:223
 msgid "Knight's"
-msgstr ""
+msgstr "기사의"
 
 #: Source/itemdat.cpp:224
 msgid "Master's"
@@ -2682,7 +2671,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:243
 msgid "Ruby"
-msgstr ""
+msgstr "루비"
 
 #: Source/itemdat.cpp:244
 #, fuzzy
@@ -2706,7 +2695,7 @@ msgstr "코발트"
 
 #: Source/itemdat.cpp:248
 msgid "Sapphire"
-msgstr ""
+msgstr "사파이어"
 
 #: Source/itemdat.cpp:249
 msgid "White"
@@ -2714,7 +2703,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:250
 msgid "Pearl"
-msgstr ""
+msgstr "진주"
 
 #: Source/itemdat.cpp:251
 msgid "Ivory"
@@ -2726,7 +2715,7 @@ msgstr "크리스탈"
 
 #: Source/itemdat.cpp:253
 msgid "Diamond"
-msgstr ""
+msgstr "다이아몬드"
 
 #: Source/itemdat.cpp:254
 msgid "Topaz"
@@ -2734,11 +2723,11 @@ msgstr "토파즈"
 
 #: Source/itemdat.cpp:255
 msgid "Amber"
-msgstr ""
+msgstr "호박석"
 
 #: Source/itemdat.cpp:256
 msgid "Jade"
-msgstr ""
+msgstr "옥"
 
 #: Source/itemdat.cpp:257
 msgid "Obsidian"
@@ -2746,35 +2735,35 @@ msgstr "흑요석"
 
 #: Source/itemdat.cpp:258
 msgid "Emerald"
-msgstr ""
+msgstr "에메랄드"
 
 #: Source/itemdat.cpp:259
 msgid "Hyena's"
-msgstr ""
+msgstr "하이에나의"
 
 #: Source/itemdat.cpp:260
 msgid "Frog's"
-msgstr ""
+msgstr "개구리의"
 
 #: Source/itemdat.cpp:261
 msgid "Spider's"
-msgstr ""
+msgstr "거미의"
 
 #: Source/itemdat.cpp:262
 msgid "Raven's"
-msgstr ""
+msgstr "까마귀의"
 
 #: Source/itemdat.cpp:263
 msgid "Snake's"
-msgstr ""
+msgstr "뱀의"
 
 #: Source/itemdat.cpp:264
 msgid "Serpent's"
-msgstr ""
+msgstr "큰 뱀의"
 
 #: Source/itemdat.cpp:265
 msgid "Drake's"
-msgstr ""
+msgstr "드레이크의"
 
 #: Source/itemdat.cpp:266
 msgid "Dragon's"
@@ -2782,11 +2771,11 @@ msgstr "드래곤의"
 
 #: Source/itemdat.cpp:267
 msgid "Wyrm's"
-msgstr ""
+msgstr "고룡의"
 
 #: Source/itemdat.cpp:268
 msgid "Hydra's"
-msgstr ""
+msgstr "히드라의"
 
 #: Source/itemdat.cpp:269
 msgid "Angel's"
@@ -2794,7 +2783,7 @@ msgstr "천사의"
 
 #: Source/itemdat.cpp:270
 msgid "Arch-Angel's"
-msgstr ""
+msgstr "대천사의"
 
 #: Source/itemdat.cpp:271
 msgid "Plentiful"
@@ -2814,7 +2803,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"
-msgstr ""
+msgstr "광대의"
 
 #: Source/itemdat.cpp:276
 msgid "Crystalline"
@@ -2861,7 +2850,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:295
 msgid "tears"
-msgstr ""
+msgstr "눈물"
 
 #: Source/itemdat.cpp:296
 #, fuzzy
@@ -3096,11 +3085,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:338
 msgid "the fox"
-msgstr ""
+msgstr "여우"
 
 #: Source/itemdat.cpp:339
 msgid "the jaguar"
-msgstr ""
+msgstr "재규어"
 
 #: Source/itemdat.cpp:340
 msgid "the eagle"
@@ -3108,19 +3097,19 @@ msgstr ""
 
 #: Source/itemdat.cpp:341
 msgid "the wolf"
-msgstr ""
+msgstr "늑대"
 
 #: Source/itemdat.cpp:342
 msgid "the tiger"
-msgstr ""
+msgstr "호랑이"
 
 #: Source/itemdat.cpp:343
 msgid "the lion"
-msgstr ""
+msgstr "사자"
 
 #: Source/itemdat.cpp:344
 msgid "the mammoth"
-msgstr ""
+msgstr "맘모스"
 
 #: Source/itemdat.cpp:345
 msgid "the whale"
@@ -3250,7 +3239,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:366
 msgid "thieves"
-msgstr ""
+msgstr "도둑들"
 
 #: Source/itemdat.cpp:367
 #, fuzzy
@@ -3733,9 +3722,8 @@ msgid "Karik's Ring"
 msgstr "진실의 반지"
 
 #: Source/itemdat.cpp:490
-#, fuzzy
 msgid "Ring of Magma"
-msgstr "진실의 반지"
+msgstr "마그마 반지"
 
 #: Source/itemdat.cpp:491
 #, fuzzy
@@ -3976,39 +3964,32 @@ msgid "restore all mana"
 msgstr "마나: {:d}   피해: 사용불가"
 
 #: Source/items.cpp:2001
-#, fuzzy
 msgid "increase strength"
-msgstr "G: 화면 밝기 증가"
+msgstr "힘 증가"
 
 #: Source/items.cpp:2005
-#, fuzzy
 msgid "increase magic"
-msgstr "G: 화면 밝기 증가"
+msgstr "마법 증가"
 
 #: Source/items.cpp:2009
-#, fuzzy
 msgid "increase dexterity"
-msgstr "민첩:"
+msgstr "민첩 증가"
 
 #: Source/items.cpp:2013
-#, fuzzy
 msgid "increase vitality"
-msgstr "생명력:"
+msgstr "생명 증가"
 
 #: Source/items.cpp:2018
-#, fuzzy
 msgid "decrease strength"
-msgstr "힘:"
+msgstr "힘 감소"
 
 #: Source/items.cpp:2022
-#, fuzzy
 msgid "decrease dexterity"
-msgstr "민첩:"
+msgstr "민첩 감소"
 
 #: Source/items.cpp:2026
-#, fuzzy
 msgid "decrease vitality"
-msgstr "생명력:"
+msgstr "생명 감소"
 
 #: Source/items.cpp:2030
 msgid "restore some life and mana"
@@ -4543,9 +4524,8 @@ msgid "Charges: {:d}/{:d}"
 msgstr "지팡이 ({:d}회 충전)"
 
 #: Source/items.cpp:4181
-#, fuzzy
 msgid "unique item"
-msgstr "이 물품은:"
+msgstr "유니크 아이템"
 
 #: Source/items.cpp:4208 Source/items.cpp:4217 Source/items.cpp:4224
 msgid "Not Identified"
