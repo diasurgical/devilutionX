@@ -1249,7 +1249,7 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawSpellBook(out);
 	}
 
-	DrawDurIcon(out);
+	DrawDurIcon(out, MyPlayerId);
 
 	if (chrflag) {
 		DrawChr(out);

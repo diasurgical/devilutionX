@@ -165,7 +165,7 @@ void ReleaseLvlBtn();
 void DrawLevelUpIcon(const Surface &out);
 void CheckChrBtns(int playerId);
 void ReleaseChrBtns(bool addAllStatPoints, int playerId);
-void DrawDurIcon(const Surface &out);
+void DrawDurIcon(const Surface &out, int playerId);
 void RedBack(const Surface &out);
 void DrawSpellBook(const Surface &out);
 void CheckSBook();
