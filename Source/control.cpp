@@ -467,9 +467,9 @@ void PrintSBookStr(const Surface &out, Point position, const char *text)
 	DrawString(out, text, { GetPanelPosition(UiPanels::Spell, { SPLICONLENGTH + position.x, position.y }), { 222, 0 } }, UiFlags::ColorWhite);
 }
 
-spell_type GetSBookTrans(spell_id ii, bool townok)
+spell_type GetSBookTrans(spell_id ii, bool townok, int playerId)
 {
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 	if ((myPlayer._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
 		return RSPLTYPE_SKILL;
 	spell_type st = RSPLTYPE_SPELL;
@@ -480,7 +480,7 @@ spell_type GetSBookTrans(spell_id ii, bool townok)
 		st = RSPLTYPE_SKILL;
 	}
 	if (st == RSPLTYPE_SPELL) {
-		if (CheckSpell(MyPlayerId, ii, st, true) != SpellCheckResult::Success) {
+		if (CheckSpell(playerId, ii, st, true) != SpellCheckResult::Success) {
 			st = RSPLTYPE_INVALID;
 		}
 		if ((char)(myPlayer._pSplLvl[ii] + myPlayer._pISplLvlAdd) <= 0) {
@@ -1499,7 +1499,7 @@ void DrawSpellBook(const Surface &out)
 	for (int i = 1; i < 8; i++) {
 		spell_id sn = SpellPages[sbooktab][i - 1];
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
-			spell_type st = GetSBookTrans(sn, true);
+			spell_type st = GetSBookTrans(sn, true, MyPlayerId);
 			SetSpellTrans(st);
 			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + 12 });
 			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
@@ -1508,7 +1508,7 @@ void DrawSpellBook(const Surface &out)
 				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
 			int textOffset = 7;
-			switch (GetSBookTrans(sn, false)) {
+			switch (GetSBookTrans(sn, false, MyPlayerId)) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, _("Skill"));
 				break;
