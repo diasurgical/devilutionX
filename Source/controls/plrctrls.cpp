@@ -84,14 +84,14 @@ int GetMinDistance(Point position, int playerId)
  * @param maxDistance the max number of steps to search
  * @return number of steps, or 0 if not reachable
  */
-int GetDistance(Point destination, int maxDistance)
+int GetDistance(Point destination, int maxDistance, int playerId)
 {
-	if (GetMinDistance(destination, MyPlayerId) > maxDistance) {
+	if (GetMinDistance(destination, playerId) > maxDistance) {
 		return 0;
 	}
 
 	int8_t walkpath[MAX_PATH_LENGTH];
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 	int steps = FindPath([&myPlayer](Point position) { return PosOkPlayer(myPlayer, position); }, myPlayer.position.future, destination, walkpath);
 	if (steps > maxDistance)
 		return 0;
@@ -132,7 +132,7 @@ void FindItemOrObject()
 			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, MyPlayerId);
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1, MyPlayerId) == 0)
 				continue;
 			rotations = newRotations;
 			pcursitem = i;
@@ -155,7 +155,7 @@ void FindItemOrObject()
 			int newRotations = GetRotaryDistance({ mx + xx, my + yy }, MyPlayerId);
 			if (rotations < newRotations)
 				continue;
-			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
+			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1, MyPlayerId) == 0)
 				continue;
 			rotations = newRotations;
 			pcursobj = o;
@@ -167,7 +167,7 @@ void FindItemOrObject()
 void CheckTownersNearby()
 {
 	for (int i = 0; i < 16; i++) {
-		int distance = GetDistance(Towners[i].position, 2);
+		int distance = GetDistance(Towners[i].position, 2, MyPlayerId);
 		if (distance == 0)
 			continue;
 		pcursmonst = i;
@@ -342,7 +342,7 @@ void CheckPlayerNearby()
 		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SPL_HEALOTHER) {
 			newDdistance = GetDistanceRanged(player.position.future);
 		} else {
-			newDdistance = GetDistance(player.position.future, distance);
+			newDdistance = GetDistance(player.position.future, distance, MyPlayerId);
 			if (newDdistance == 0)
 				continue;
 		}
@@ -386,7 +386,7 @@ void FindTrigger()
 		int mi = ActiveMissiles[i];
 		auto &missile = Missiles[mi];
 		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
-			const int newDistance = GetDistance(missile.position.tile, 2);
+			const int newDistance = GetDistance(missile.position.tile, 2, MyPlayerId);
 			if (newDistance == 0)
 				continue;
 			if (pcursmissile != -1 && distance < newDistance)
@@ -407,7 +407,7 @@ void FindTrigger()
 			int ty = trigs[i].position.y;
 			if (trigs[i]._tlvl == 13)
 				ty -= 1;
-			const int newDistance = GetDistance({ tx, ty }, 2);
+			const int newDistance = GetDistance({ tx, ty }, 2, MyPlayerId);
 			if (newDistance == 0)
 				continue;
 			cursPosition = { tx, ty };
@@ -418,7 +418,7 @@ void FindTrigger()
 			for (auto &quest : Quests) {
 				if (quest._qidx == Q_BETRAYER || currlevel != quest._qlevel || quest._qslvl == 0)
 					continue;
-				const int newDistance = GetDistance(quest.position, 2);
+				const int newDistance = GetDistance(quest.position, 2, MyPlayerId);
 				if (newDistance == 0)
 					continue;
 				cursPosition = quest.position;
