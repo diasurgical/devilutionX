@@ -603,19 +603,19 @@ Size GetItemSizeOnSlot(int slot, char &itemInvId, int playerId)
 /**
  * Reset cursor position based on the current slot.
  */
-void ResetInvCursorPosition()
+void ResetInvCursorPosition(int playerId)
 {
 	Point mousePos {};
 	if (Slot < SLOTXY_INV_FIRST) {
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
 	} else if (Slot < SLOTXY_BELT_FIRST) {
 		char itemInvId;
-		auto itemSize = GetItemSizeOnSlot(Slot, itemInvId, MyPlayerId);
+		auto itemSize = GetItemSizeOnSlot(Slot, itemInvId, playerId);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
 			for (int s = 0; s < SLOTXY_INV_LAST - SLOTXY_INV_FIRST; ++s) {
-				if (Players[MyPlayerId].InvGrid[s] == -itemInvId) {
+				if (Players[playerId].InvGrid[s] == -itemInvId) {
 					Slot = SLOTXY_INV_FIRST + s;
 					break;
 				}
@@ -1267,7 +1267,7 @@ void HandleRightStickMotion()
 void FocusOnInventory()
 {
 	Slot = SLOTXY_INV_FIRST;
-	ResetInvCursorPosition();
+	ResetInvCursorPosition(MyPlayerId);
 }
 
 void plrctrls_after_check_curs_move()
@@ -1417,7 +1417,7 @@ void PerformSpellAction()
 			NewCursor(CURSOR_HAND);
 		} else {
 			CheckInvItem(true);
-			ResetInvCursorPosition();
+			ResetInvCursorPosition(MyPlayerId);
 		}
 		return;
 	}
@@ -1464,7 +1464,7 @@ void CtrlUseInvItem()
 
 	if (item->isEquipment()) {
 		CheckInvItem(true); // auto-equip if it's an equipment
-		ResetInvCursorPosition();
+		ResetInvCursorPosition(MyPlayerId);
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
 	}
