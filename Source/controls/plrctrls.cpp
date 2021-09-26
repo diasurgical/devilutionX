@@ -1350,7 +1350,7 @@ void PerformPrimaryAction()
 			if (ChrBtnsRect[i].Contains(MousePosition)) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
-				ReleaseChrBtns(false);
+				ReleaseChrBtns(false, MyPlayerId);
 			}
 		}
 		return;

@@ -352,7 +352,7 @@ void LeftMouseUp(int wParam)
 	if (panbtndown)
 		CheckBtnUp();
 	if (chrbtnactive)
-		ReleaseChrBtns(isShiftHeld);
+		ReleaseChrBtns(isShiftHeld, MyPlayerId);
 	if (lvlbtndown)
 		ReleaseLvlBtn();
 	if (stextflag != STORE_NONE)

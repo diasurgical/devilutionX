@@ -1405,7 +1405,7 @@ void CheckChrBtns(int playerId)
 	}
 }
 
-void ReleaseChrBtns(bool addAllStatPoints)
+void ReleaseChrBtns(bool addAllStatPoints, int playerId)
 {
 	chrbtnactive = false;
 	for (auto attribute : enum_values<CharacterAttribute>()) {
@@ -1417,7 +1417,7 @@ void ReleaseChrBtns(bool addAllStatPoints)
 		Rectangle button = ChrBtnsRect[buttonId];
 		button.position = GetPanelPosition(UiPanels::Character, button.position);
 		if (button.Contains(MousePosition)) {
-			auto &myPlayer = Players[MyPlayerId];
+			auto &myPlayer = Players[playerId];
 			int statPointsToAdd = 1;
 			if (addAllStatPoints)
 				statPointsToAdd = CapStatPointsToAdd(myPlayer._pStatPts, myPlayer, attribute);
