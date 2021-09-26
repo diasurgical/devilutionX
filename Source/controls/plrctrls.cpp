@@ -32,7 +32,7 @@ int speedspellcount = 0;
 /**
  * Native game menu, controlled by simulating a keyboard.
  */
-bool InGameMenu()
+bool InGameMenu(int playerId)
 {
 	return stextflag != STORE_NONE
 	    || HelpFlag
@@ -40,7 +40,7 @@ bool InGameMenu()
 	    || qtextflag
 	    || gmenu_is_active()
 	    || PauseMode == 2
-	    || Players[MyPlayerId]._pInvincible;
+	    || Players[playerId]._pInvincible;
 }
 
 namespace {
@@ -1114,7 +1114,7 @@ void ProcessLeftStickOrDPadGameUI(int playerId)
 
 void Movement(int playerId)
 {
-	if (InGameMenu()
+	if (InGameMenu(playerId)
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_START)
 	    || IsControllerButtonPressed(ControllerButton_BUTTON_BACK))
 		return;
@@ -1406,7 +1406,7 @@ bool TryDropItem(int playerId)
 
 void PerformSpellAction(int playerId)
 {
-	if (InGameMenu() || QuestLogIsOpen || sbookflag)
+	if (InGameMenu(playerId) || QuestLogIsOpen || sbookflag)
 		return;
 
 	if (invflag) {

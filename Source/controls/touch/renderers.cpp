@@ -348,7 +348,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
 	// NEED: Stairs surface
-	if (InGameMenu() || QuestLogIsOpen || sbookflag)
+	if (InGameMenu(MyPlayerId) || QuestLogIsOpen || sbookflag)
 		return GetBlankButtonType(virtualPadButton->isHeld);
 	if (pcursobj != -1)
 		return GetObjectButtonType(virtualPadButton->isHeld);
@@ -359,14 +359,14 @@ VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 {
-	if (!InGameMenu() && !QuestLogIsOpen && !sbookflag)
+	if (!InGameMenu(MyPlayerId) && !QuestLogIsOpen && !sbookflag)
 		return GetCastButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
 VirtualGamepadButtonType CancelButtonRenderer::GetButtonType()
 {
-	if (InGameMenu())
+	if (InGameMenu(MyPlayerId))
 		return GetCancelButtonType(virtualPadButton->isHeld);
 	if (DoomFlag || invflag || sbookflag || QuestLogIsOpen || chrflag)
 		return GetCancelButtonType(virtualPadButton->isHeld);

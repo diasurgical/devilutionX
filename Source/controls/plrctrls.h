@@ -26,7 +26,7 @@ void plrctrls_after_check_curs_move(int playerId);
 void HandleRightStickMotion();
 
 // Whether we're in a dialog menu that the game handles natively with keyboard controls.
-bool InGameMenu();
+bool InGameMenu(int playerId);
 
 // Whether the automap is being displayed.
 bool IsAutomapActive();

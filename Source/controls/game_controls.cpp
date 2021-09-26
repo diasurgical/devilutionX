@@ -51,7 +51,7 @@ uint32_t TranslateControllerButtonToKey(ControllerButton controllerButton)
 
 bool HandleStartAndSelect(const ControllerButtonEvent &ctrlEvent, GameAction *action)
 {
-	const bool inGameMenu = InGameMenu();
+	const bool inGameMenu = InGameMenu(MyPlayerId);
 
 	const bool startIsDown = IsControllerButtonPressed(ControllerButton_BUTTON_START);
 	const bool selectIsDown = IsControllerButtonPressed(ControllerButton_BUTTON_BACK);
@@ -96,7 +96,7 @@ bool HandleStartAndSelect(const ControllerButtonEvent &ctrlEvent, GameAction *ac
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action)
 {
-	const bool inGameMenu = InGameMenu();
+	const bool inGameMenu = InGameMenu(MyPlayerId);
 
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
 	if (event.type == SDL_FINGERDOWN) {
