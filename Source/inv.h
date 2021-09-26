@@ -96,7 +96,7 @@ void InitInv();
  */
 void DrawInv(const Surface &out);
 
-void DrawInvBelt(const Surface &out);
+void DrawInvBelt(const Surface &out, int playerId);
 
 /**
  * @brief Checks whether or not auto-equipping behavior is enabled for the given player and item.

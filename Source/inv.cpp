@@ -1214,7 +1214,7 @@ void DrawInv(const Surface &out)
 	}
 }
 
-void DrawInvBelt(const Surface &out)
+void DrawInvBelt(const Surface &out, int playerId)
 {
 	if (talkflag) {
 		return;
@@ -1222,7 +1222,7 @@ void DrawInvBelt(const Surface &out)
 
 	DrawPanelBox(out, { 205, 21, 232, 28 }, { PANEL_X + 205, PANEL_Y + 5 });
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	for (int i = 0; i < MAXBELTITEMS; i++) {
 		if (myPlayer.SpdList[i].isEmpty()) {

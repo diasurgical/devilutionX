@@ -1705,7 +1705,7 @@ void DrawAndBlit()
 		DrawCtrlBtns(out);
 	}
 	if (drawsbarflag) {
-		DrawInvBelt(out);
+		DrawInvBelt(out, MyPlayerId);
 	}
 	if (talkflag) {
 		DrawTalkPan(out);
