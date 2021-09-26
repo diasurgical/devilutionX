@@ -391,7 +391,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			PerformSecondaryAction();
 			break;
 		case GameActionType_CAST_SPELL:
-			PerformSpellAction();
+			PerformSpellAction(MyPlayerId);
 			break;
 		case GameActionType_TOGGLE_QUICK_SPELL_MENU:
 			if (!invflag || BlurInventory()) {

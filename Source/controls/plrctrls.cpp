@@ -1404,35 +1404,35 @@ bool TryDropItem(int playerId)
 	return pcurs == CURSOR_HAND;
 }
 
-void PerformSpellAction()
+void PerformSpellAction(int playerId)
 {
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return;
 
 	if (invflag) {
 		if (pcurs >= CURSOR_FIRSTITEM)
-			TryDropItem(MyPlayerId);
+			TryDropItem(playerId);
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
 			CheckInvItem(true);
-			ResetInvCursorPosition(MyPlayerId);
+			ResetInvCursorPosition(playerId);
 		}
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(MyPlayerId))
+	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(playerId))
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
 
 	if (spselflag) {
-		SetSpell(MyPlayerId);
+		SetSpell(playerId);
 		return;
 	}
 
-	const auto &myPlayer = Players[MyPlayerId];
+	const auto &myPlayer = Players[playerId];
 	int spl = myPlayer._pRSpell;
 	if ((pcursplr == -1 && (spl == SPL_RESURRECT || spl == SPL_HEALOTHER))
 	    || (pcursobj == -1 && spl == SPL_DISARM)) {
@@ -1440,7 +1440,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	UpdateSpellTarget(MyPlayerId);
+	UpdateSpellTarget(playerId);
 	CheckPlrSpell();
 }
 

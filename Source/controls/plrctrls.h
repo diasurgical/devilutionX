@@ -43,7 +43,7 @@ void PerformPrimaryAction(int playerId);
 void PerformSecondaryAction();
 bool TryDropItem(int playerId);
 void FocusOnInventory(int playerId);
-void PerformSpellAction();
+void PerformSpellAction(int playerId);
 void StoreSpellCoords(int playerId);
 
 extern int speedspellcount;
