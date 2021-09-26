@@ -73,9 +73,9 @@ int GetRotaryDistance(Point destination, int playerId)
  * @brief Get the best case walking steps to coordinates
  * @param Position Tile coordinates
  */
-int GetMinDistance(Point position)
+int GetMinDistance(Point position, int playerId)
 {
-	return Players[MyPlayerId].position.future.WalkingDistance(position);
+	return Players[playerId].position.future.WalkingDistance(position);
 }
 
 /**
@@ -86,7 +86,7 @@ int GetMinDistance(Point position)
  */
 int GetDistance(Point destination, int maxDistance)
 {
-	if (GetMinDistance(destination) > maxDistance) {
+	if (GetMinDistance(destination, MyPlayerId) > maxDistance) {
 		return 0;
 	}
 
