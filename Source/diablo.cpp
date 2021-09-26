@@ -322,7 +322,7 @@ void LeftMouseDown(int wParam)
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld);
 			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
-				CheckSBook();
+				CheckSBook(MyPlayerId);
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
 				if (TryInvPut()) {
 					NetSendCmdPItem(true, CMD_PUTITEM, cursPosition);
