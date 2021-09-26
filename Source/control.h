@@ -159,7 +159,7 @@ void FreeControlPan();
 /**
  * Sets a string to be drawn in the info box and then draws it.
  */
-void DrawInfoBox(const Surface &out);
+void DrawInfoBox(const Surface &out, int playerId);
 void CheckLvlBtn();
 void ReleaseLvlBtn();
 void DrawLevelUpIcon(const Surface &out);
