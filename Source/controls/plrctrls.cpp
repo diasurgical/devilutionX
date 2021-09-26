@@ -1340,7 +1340,7 @@ void PerformPrimaryAction()
 	}
 
 	if (spselflag) {
-		SetSpell();
+		SetSpell(MyPlayerId);
 		return;
 	}
 
@@ -1428,7 +1428,7 @@ void PerformSpellAction()
 		NewCursor(CURSOR_HAND);
 
 	if (spselflag) {
-		SetSpell();
+		SetSpell(MyPlayerId);
 		return;
 	}
 

@@ -57,7 +57,7 @@ bool HandleSpeedbookInteraction(const SDL_Event &event)
 	if (!spselflag)
 		return false;
 	if (event.type == SDL_FINGERUP)
-		SetSpell();
+		SetSpell(MyPlayerId);
 	return true;
 }
 

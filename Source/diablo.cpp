@@ -298,7 +298,7 @@ void LeftMouseDown(int wParam)
 	}
 
 	if (spselflag) {
-		SetSpell();
+		SetSpell(MyPlayerId);
 		return;
 	}
 
@@ -374,7 +374,7 @@ void RightMouseDown()
 	if (stextflag != STORE_NONE)
 		return;
 	if (spselflag) {
-		SetSpell();
+		SetSpell(MyPlayerId);
 		return;
 	}
 	if ((!sbookflag || !RightPanel.Contains(MousePosition))

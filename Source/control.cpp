@@ -758,7 +758,7 @@ void DrawSpellList(const Surface &out)
 	}
 }
 
-void SetSpell()
+void SetSpell(int playerId)
 {
 	spell_id pSpell;
 	spell_type pSplType;
@@ -770,7 +770,7 @@ void SetSpell()
 
 	ClearPanel();
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 	myPlayer._pRSpell = pSpell;
 	myPlayer._pRSplType = pSplType;
 
