@@ -1245,7 +1245,6 @@ void DrawInvBelt(const Surface &out)
 		CelDrawItem(myPlayer.SpdList[i], out, position, cel, celFrame);
 
 		if (AllItemsList[myPlayer.SpdList[i].IDidx].iUsable
-		    && myPlayer.SpdList[i]._iStatFlag
 		    && myPlayer.SpdList[i]._itype != ItemType::Gold) {
 			snprintf(tempstr, sizeof(tempstr) / sizeof(*tempstr), "%i", i + 1);
 			DrawString(out, tempstr, { position - Displacement { 0, 12 }, InventorySlotSizeInPixels }, UiFlags::ColorWhite | UiFlags::AlignRight);
