@@ -233,7 +233,7 @@ void FindRangedTarget(int playerId)
 	}
 }
 
-void FindMeleeTarget()
+void FindMeleeTarget(int playerId)
 {
 	bool visited[MAXDUNX][MAXDUNY] = { {} };
 	int maxSteps = 25; // Max steps for FindPath is 25
@@ -246,7 +246,7 @@ void FindMeleeTarget()
 	};
 	std::list<SearchNode> queue;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	{
 		const int startX = myPlayer.position.future.x;
@@ -281,7 +281,7 @@ void FindMeleeTarget()
 						const bool newCanTalk = CanTalkToMonst(monster);
 						if (pcursmonst != -1 && !canTalk && newCanTalk)
 							continue;
-						const int newRotations = GetRotaryDistance({ dx, dy }, MyPlayerId);
+						const int newRotations = GetRotaryDistance({ dx, dy }, playerId);
 						if (pcursmonst != -1 && canTalk == newCanTalk && rotations < newRotations)
 							continue;
 						rotations = newRotations;
@@ -310,7 +310,7 @@ void CheckMonstersNearby()
 		return;
 	}
 
-	FindMeleeTarget();
+	FindMeleeTarget(MyPlayerId);
 }
 
 void CheckPlayerNearby()
