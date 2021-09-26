@@ -568,6 +568,7 @@ if(RUN_TESTS)
     test/dead_test.cpp
     test/diablo_test.cpp
     test/drlg_l1_test.cpp
+    test/dynamic_array_test.cpp
     test/effects_test.cpp
     test/file_util_test.cpp
     test/inv_test.cpp
