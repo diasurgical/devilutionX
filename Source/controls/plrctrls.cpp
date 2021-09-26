@@ -103,9 +103,9 @@ int GetDistance(Point destination, int maxDistance, int playerId)
  * @brief Get distance to coordinate
  * @param destination Tile coordinates
  */
-int GetDistanceRanged(Point destination)
+int GetDistanceRanged(Point destination, int playerId)
 {
-	return Players[MyPlayerId].position.future.ExactDistance(destination);
+	return Players[playerId].position.future.ExactDistance(destination);
 }
 
 /**
@@ -340,7 +340,7 @@ void CheckPlayerNearby()
 			continue;
 
 		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SPL_HEALOTHER) {
-			newDdistance = GetDistanceRanged(player.position.future);
+			newDdistance = GetDistanceRanged(player.position.future, MyPlayerId);
 		} else {
 			newDdistance = GetDistance(player.position.future, distance, MyPlayerId);
 			if (newDdistance == 0)
