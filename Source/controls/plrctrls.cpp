@@ -1444,14 +1444,14 @@ void PerformSpellAction(int playerId)
 	CheckPlrSpell();
 }
 
-void CtrlUseInvItem()
+void CtrlUseInvItem(int playerId)
 {
 	Item *item;
 
 	if (pcursinvitem == -1)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	if (pcursinvitem <= INVITEM_INV_LAST)
 		item = &myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST];
@@ -1464,16 +1464,16 @@ void CtrlUseInvItem()
 
 	if (item->isEquipment()) {
 		CheckInvItem(true); // auto-equip if it's an equipment
-		ResetInvCursorPosition(MyPlayerId);
+		ResetInvCursorPosition(playerId);
 	} else {
-		UseInvItem(MyPlayerId, pcursinvitem);
+		UseInvItem(playerId, pcursinvitem);
 	}
 }
 
 void PerformSecondaryAction()
 {
 	if (invflag) {
-		CtrlUseInvItem();
+		CtrlUseInvItem(MyPlayerId);
 		return;
 	}
 
