@@ -1109,7 +1109,7 @@ void ProcessLeftStickOrDPadGameUI(int playerId)
 {
 	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler(playerId);
 	if (handler != nullptr)
-		handler(GetLeftStickOrDpadDirection(true));
+		handler(GetLeftStickOrDpadDirection(true), playerId);
 }
 
 void Movement(int playerId)
