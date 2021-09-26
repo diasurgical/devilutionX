@@ -174,9 +174,9 @@ void CheckTownersNearby(int playerId)
 	}
 }
 
-bool HasRangedSpell()
+bool HasRangedSpell(int playerId)
 {
-	int spl = Players[MyPlayerId]._pRSpell;
+	int spl = Players[playerId]._pRSpell;
 
 	return spl != SPL_INVALID
 	    && spl != SPL_TOWN
@@ -305,7 +305,7 @@ void FindMeleeTarget()
 
 void CheckMonstersNearby()
 {
-	if (Players[MyPlayerId].UsesRangedWeapon() || HasRangedSpell()) {
+	if (Players[MyPlayerId].UsesRangedWeapon() || HasRangedSpell(MyPlayerId)) {
 		FindRangedTarget();
 		return;
 	}
@@ -339,7 +339,7 @@ void CheckPlayerNearby()
 		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
-		if (myPlayer.UsesRangedWeapon() || HasRangedSpell() || spl == SPL_HEALOTHER) {
+		if (myPlayer.UsesRangedWeapon() || HasRangedSpell(MyPlayerId) || spl == SPL_HEALOTHER) {
 			newDdistance = GetDistanceRanged(player.position.future, MyPlayerId);
 		} else {
 			newDdistance = GetDistance(player.position.future, distance, MyPlayerId);
