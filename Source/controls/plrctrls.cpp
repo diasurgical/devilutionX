@@ -1372,15 +1372,15 @@ bool SpellHasActorTarget(int playerId)
 	return pcursplr != -1 || pcursmonst != -1;
 }
 
-void UpdateSpellTarget()
+void UpdateSpellTarget(int playerId)
 {
-	if (SpellHasActorTarget(MyPlayerId))
+	if (SpellHasActorTarget(playerId))
 		return;
 
 	pcursplr = -1;
 	pcursmonst = -1;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	int range = myPlayer._pRSpell == SPL_TELEPORT ? 4 : 1;
 
@@ -1440,7 +1440,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	UpdateSpellTarget();
+	UpdateSpellTarget(MyPlayerId);
 	CheckPlrSpell();
 }
 
