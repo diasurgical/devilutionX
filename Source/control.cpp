@@ -864,10 +864,10 @@ void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 	out.BlitFrom(*pBtmBuff, srcRect, targetPosition);
 }
 
-void DrawLifeFlaskUpper(const Surface &out)
+void DrawLifeFlaskUpper(const Surface &out, int playerId)
 {
 	constexpr int LifeFlaskUpperOffset = 109;
-	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
+	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[playerId]._pHPPer);
 }
 
 void DrawManaFlaskUpper(const Surface &out)

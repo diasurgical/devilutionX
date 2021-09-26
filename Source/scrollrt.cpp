@@ -1290,7 +1290,7 @@ void DrawView(const Surface &out, Point startPosition)
 	doom_draw(out);
 	DrawInfoBox(out, MyPlayerId);
 	control_update_life_mana(MyPlayerId); // Update life/mana totals before rendering any portion of the flask.
-	DrawLifeFlaskUpper(out);
+	DrawLifeFlaskUpper(out, MyPlayerId);
 	DrawManaFlaskUpper(out);
 }
 

@@ -79,7 +79,7 @@ Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
  * The empty flask cel is drawn from the top of the flask to the fill level (there is always a 2 pixel "air gap") and
  * the filled flask cel is drawn from that level to the top of the control panel if required.
  */
-void DrawLifeFlaskUpper(const Surface &out);
+void DrawLifeFlaskUpper(const Surface &out, int playerId);
 
 /**
  * Controls the drawing of the area of the life flask within the control panel.
