@@ -1728,7 +1728,7 @@ bool control_check_talk_btn()
 	return true;
 }
 
-void control_release_talk_btn()
+void control_release_talk_btn(int playerId)
 {
 	if (!talkflag)
 		return;
@@ -1743,7 +1743,7 @@ void control_release_talk_btn()
 
 	int p = 0;
 	for (; p < MAX_PLRS && off != -1; p++) {
-		if (p != MyPlayerId)
+		if (p != playerId)
 			off--;
 	}
 	if (p <= MAX_PLRS)

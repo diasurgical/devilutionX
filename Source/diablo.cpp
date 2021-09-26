@@ -347,7 +347,7 @@ void LeftMouseDown(int wParam)
 void LeftMouseUp(int wParam)
 {
 	gmenu_left_mouse(false);
-	control_release_talk_btn();
+	control_release_talk_btn(MyPlayerId);
 	bool isShiftHeld = (wParam & (DVL_MK_SHIFT | DVL_MK_LBUTTON)) != 0;
 	if (panbtndown)
 		CheckBtnUp();
