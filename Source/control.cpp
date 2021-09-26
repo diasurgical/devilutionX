@@ -683,14 +683,14 @@ void DrawSpell(const Surface &out, int playerId)
 	DrawSpellCel(out, position, *pSpellCels, nCel);
 }
 
-void DrawSpellList(const Surface &out)
+void DrawSpellList(const Surface &out, int playerId)
 {
 	infostr[0] = '\0';
 	ClearPanel();
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
-	for (auto &spellListItem : GetSpellListItems(MyPlayerId)) {
+	for (auto &spellListItem : GetSpellListItems(playerId)) {
 		const spell_id spellId = spellListItem.id;
 		spell_type transType = spellListItem.type;
 		int spellLevel = 0;

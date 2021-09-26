@@ -1267,7 +1267,7 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawQText(out);
 	}
 	if (spselflag) {
-		DrawSpellList(out);
+		DrawSpellList(out, MyPlayerId);
 	}
 	if (dropGoldFlag) {
 		DrawGoldSplit(out, dropGoldValue);

@@ -64,7 +64,7 @@ inline bool CanPanelsCoverView()
 	return gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
 
-void DrawSpellList(const Surface &out);
+void DrawSpellList(const Surface &out, int playerId);
 void SetSpell(int playerId);
 void SetSpeedSpell(int slot, int playerId);
 void ToggleSpell(int slot, int playerId);
