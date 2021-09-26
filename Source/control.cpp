@@ -631,13 +631,13 @@ std::vector<SpellListItem> GetSpellListItems(int playerId)
 	return spellListItems;
 }
 
-bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
+bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType, int playerId)
 {
 	pSpell = spell_id::SPL_INVALID;
 	pSplType = spell_type::RSPLTYPE_INVALID;
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
-	for (auto &spellListItem : GetSpellListItems(MyPlayerId)) {
+	for (auto &spellListItem : GetSpellListItems(playerId)) {
 		if (spellListItem.isSelected) {
 			pSpell = spellListItem.id;
 			pSplType = spellListItem.type;
@@ -764,7 +764,7 @@ void SetSpell(int playerId)
 	spell_type pSplType;
 
 	spselflag = false;
-	if (!GetSpellListSelection(pSpell, pSplType)) {
+	if (!GetSpellListSelection(pSpell, pSplType, playerId)) {
 		return;
 	}
 
@@ -782,7 +782,7 @@ void SetSpeedSpell(int slot, int playerId)
 	spell_id pSpell;
 	spell_type pSplType;
 
-	if (!GetSpellListSelection(pSpell, pSplType)) {
+	if (!GetSpellListSelection(pSpell, pSplType, playerId)) {
 		return;
 	}
 	auto &myPlayer = Players[playerId];
