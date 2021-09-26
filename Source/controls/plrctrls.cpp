@@ -202,7 +202,7 @@ bool CanTargetMonster(const Monster &monster)
 	return true;
 }
 
-void FindRangedTarget()
+void FindRangedTarget(int playerId)
 {
 	int rotations = 0;
 	int distance = 0;
@@ -218,8 +218,8 @@ void FindRangedTarget()
 		const bool newCanTalk = CanTalkToMonst(monster);
 		if (pcursmonst != -1 && !canTalk && newCanTalk)
 			continue;
-		const int newDdistance = GetDistanceRanged(monster.position.future, MyPlayerId);
-		const int newRotations = GetRotaryDistance(monster.position.future, MyPlayerId);
+		const int newDdistance = GetDistanceRanged(monster.position.future, playerId);
+		const int newRotations = GetRotaryDistance(monster.position.future, playerId);
 		if (pcursmonst != -1 && canTalk == newCanTalk) {
 			if (distance < newDdistance)
 				continue;
@@ -306,7 +306,7 @@ void FindMeleeTarget()
 void CheckMonstersNearby()
 {
 	if (Players[MyPlayerId].UsesRangedWeapon() || HasRangedSpell(MyPlayerId)) {
-		FindRangedTarget();
+		FindRangedTarget(MyPlayerId);
 		return;
 	}
 
