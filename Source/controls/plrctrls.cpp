@@ -303,14 +303,14 @@ void FindMeleeTarget(int playerId)
 	}
 }
 
-void CheckMonstersNearby()
+void CheckMonstersNearby(int playerId)
 {
-	if (Players[MyPlayerId].UsesRangedWeapon() || HasRangedSpell(MyPlayerId)) {
-		FindRangedTarget(MyPlayerId);
+	if (Players[playerId].UsesRangedWeapon() || HasRangedSpell(playerId)) {
+		FindRangedTarget(playerId);
 		return;
 	}
 
-	FindMeleeTarget(MyPlayerId);
+	FindMeleeTarget(playerId);
 }
 
 void CheckPlayerNearby()
@@ -362,7 +362,7 @@ void CheckPlayerNearby()
 void FindActor()
 {
 	if (leveltype != DTYPE_TOWN)
-		CheckMonstersNearby();
+		CheckMonstersNearby(MyPlayerId);
 	else
 		CheckTownersNearby(MyPlayerId);
 
