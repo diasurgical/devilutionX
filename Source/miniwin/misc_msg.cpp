@@ -280,7 +280,7 @@ bool FalseAvail(const char *name, int value)
 bool BlurInventory()
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
-		if (!TryDropItem()) {
+		if (!TryDropItem(MyPlayerId)) {
 			Players[MyPlayerId].Say(HeroSpeech::WhereWouldIPutThis);
 			return false;
 		}

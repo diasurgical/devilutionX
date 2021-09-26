@@ -1390,9 +1390,9 @@ void UpdateSpellTarget(int playerId)
 /**
  * @brief Try dropping item in all 9 possible places
  */
-bool TryDropItem()
+bool TryDropItem(int playerId)
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	const auto &myPlayer = Players[playerId];
 
 	cursPosition = myPlayer.position.future + Direction::SouthEast;
 	if (!DropItemBeforeTrig()) {
@@ -1411,7 +1411,7 @@ void PerformSpellAction()
 
 	if (invflag) {
 		if (pcurs >= CURSOR_FIRSTITEM)
-			TryDropItem();
+			TryDropItem(MyPlayerId);
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
@@ -1422,7 +1422,7 @@ void PerformSpellAction()
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(MyPlayerId))
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -1477,7 +1477,7 @@ void PerformSecondaryAction()
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem())
+	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(MyPlayerId))
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
