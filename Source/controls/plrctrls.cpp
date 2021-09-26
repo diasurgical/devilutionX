@@ -374,7 +374,7 @@ int pcursmissile;
 int pcurstrig;
 quest_id pcursquest;
 
-void FindTrigger()
+void FindTrigger(int playerId)
 {
 	int rotations = 0;
 	int distance = 0;
@@ -386,12 +386,12 @@ void FindTrigger()
 		int mi = ActiveMissiles[i];
 		auto &missile = Missiles[mi];
 		if (missile._mitype == MIS_TOWN || missile._mitype == MIS_RPORTAL) {
-			const int newDistance = GetDistance(missile.position.tile, 2, MyPlayerId);
+			const int newDistance = GetDistance(missile.position.tile, 2, playerId);
 			if (newDistance == 0)
 				continue;
 			if (pcursmissile != -1 && distance < newDistance)
 				continue;
-			const int newRotations = GetRotaryDistance(missile.position.tile, MyPlayerId);
+			const int newRotations = GetRotaryDistance(missile.position.tile, playerId);
 			if (pcursmissile != -1 && distance == newDistance && rotations < newRotations)
 				continue;
 			cursPosition = missile.position.tile;
@@ -407,7 +407,7 @@ void FindTrigger()
 			int ty = trigs[i].position.y;
 			if (trigs[i]._tlvl == 13)
 				ty -= 1;
-			const int newDistance = GetDistance({ tx, ty }, 2, MyPlayerId);
+			const int newDistance = GetDistance({ tx, ty }, 2, playerId);
 			if (newDistance == 0)
 				continue;
 			cursPosition = { tx, ty };
@@ -418,7 +418,7 @@ void FindTrigger()
 			for (auto &quest : Quests) {
 				if (quest._qidx == Q_BETRAYER || currlevel != quest._qlevel || quest._qslvl == 0)
 					continue;
-				const int newDistance = GetDistance(quest.position, 2, MyPlayerId);
+				const int newDistance = GetDistance(quest.position, 2, playerId);
 				if (newDistance == 0)
 					continue;
 				cursPosition = quest.position;
@@ -435,18 +435,18 @@ void FindTrigger()
 	CheckRportal();
 }
 
-void Interact()
+void Interact(int playerId)
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
 		NetSendCmdLocParam1(true, CMD_TALKXY, Towners[pcursmonst].position, pcursmonst);
 	} else if (pcursmonst != -1) {
-		if (!Players[MyPlayerId].UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
+		if (!Players[playerId].UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
 	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
-		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		NetSendCmdParam1(true, Players[playerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 	}
 }
 
@@ -1294,7 +1294,7 @@ void plrctrls_after_check_curs_move()
 			ClearPanel();
 			FindActor(MyPlayerId);
 			FindItemOrObject(MyPlayerId);
-			FindTrigger();
+			FindTrigger(MyPlayerId);
 		}
 	}
 }
@@ -1356,7 +1356,7 @@ void PerformPrimaryAction()
 		return;
 	}
 
-	Interact();
+	Interact(MyPlayerId);
 }
 
 bool SpellHasActorTarget()
