@@ -44,7 +44,7 @@ void PerformSecondaryAction();
 bool TryDropItem();
 void FocusOnInventory();
 void PerformSpellAction();
-void StoreSpellCoords();
+void StoreSpellCoords(int playerId);
 
 extern int speedspellcount;
 

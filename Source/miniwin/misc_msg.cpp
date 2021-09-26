@@ -402,7 +402,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 				chrflag = false;
 				QuestLogIsOpen = false;
 				sbookflag = false;
-				StoreSpellCoords();
+				StoreSpellCoords(MyPlayerId);
 			}
 			break;
 		case GameActionType_TOGGLE_CHARACTER_INFO:

@@ -1166,7 +1166,7 @@ struct RightStickAccumulator {
 
 } // namespace
 
-void StoreSpellCoords()
+void StoreSpellCoords(int playerId)
 {
 	const int startX = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
 	const int endX = startX + SPLICONLENGTH * 10;
@@ -1176,7 +1176,7 @@ void StoreSpellCoords()
 	int yo = endY;
 	for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
 		std::uint64_t spells;
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		switch (i) {
 		case RSPLTYPE_SKILL:
 			spells = myPlayer._pAblSpells;
