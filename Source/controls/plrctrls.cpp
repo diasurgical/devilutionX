@@ -1299,9 +1299,9 @@ void plrctrls_after_check_curs_move(int playerId)
 	}
 }
 
-void plrctrls_every_frame()
+void plrctrls_every_frame(int playerId)
 {
-	ProcessLeftStickOrDPadGameUI(MyPlayerId);
+	ProcessLeftStickOrDPadGameUI(playerId);
 	HandleRightStickMotion();
 }
 

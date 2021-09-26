@@ -12,7 +12,7 @@ typedef enum belt_item_type : uint8_t {
 
 // Runs every frame.
 // Handles menu movement.
-void plrctrls_every_frame();
+void plrctrls_every_frame(int playerId);
 
 // Run after every game logic iteration.
 // Handles player movement.
