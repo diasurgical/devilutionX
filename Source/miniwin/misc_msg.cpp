@@ -388,7 +388,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			PerformPrimaryAction(MyPlayerId);
 			break;
 		case GameActionType_SECONDARY_ACTION:
-			PerformSecondaryAction();
+			PerformSecondaryAction(MyPlayerId);
 			break;
 		case GameActionType_CAST_SPELL:
 			PerformSpellAction(MyPlayerId);

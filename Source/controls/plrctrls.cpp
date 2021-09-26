@@ -1470,14 +1470,14 @@ void CtrlUseInvItem(int playerId)
 	}
 }
 
-void PerformSecondaryAction()
+void PerformSecondaryAction(int playerId)
 {
 	if (invflag) {
-		CtrlUseInvItem(MyPlayerId);
+		CtrlUseInvItem(playerId);
 		return;
 	}
 
-	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(MyPlayerId))
+	if (pcurs >= CURSOR_FIRSTITEM && !TryDropItem(playerId))
 		return;
 	if (pcurs > CURSOR_HAND)
 		NewCursor(CURSOR_HAND);
@@ -1487,7 +1487,7 @@ void PerformSecondaryAction()
 	} else if (pcursobj != -1) {
 		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
 	} else {
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		if (pcursmissile != -1) {
 			MakePlrPath(myPlayer, Missiles[pcursmissile].position.tile, true);
 			myPlayer.destAction = ACTION_WALK;

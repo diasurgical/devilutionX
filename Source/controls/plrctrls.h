@@ -40,7 +40,7 @@ void UseBeltItem(int type, int playerId);
 void PerformPrimaryAction(int playerId);
 
 // Open chests, doors, pickup items.
-void PerformSecondaryAction();
+void PerformSecondaryAction(int playerId);
 bool TryDropItem(int playerId);
 void FocusOnInventory(int playerId);
 void PerformSpellAction(int playerId);
