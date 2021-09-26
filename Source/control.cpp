@@ -983,10 +983,10 @@ void InitControlPan()
 	CalculatePanelAreas();
 }
 
-void DrawCtrlPan(const Surface &out)
+void DrawCtrlPan(const Surface &out, int playerId)
 {
 	DrawPanelBox(out, { 0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT }, { PANEL_X, PANEL_Y });
-	DrawInfoBox(out);
+	DrawInfoBox(out, playerId);
 }
 
 void DrawCtrlBtns(const Surface &out)
@@ -1298,7 +1298,7 @@ void FreeControlPan()
 	FreeCharPanel();
 }
 
-void DrawInfoBox(const Surface &out)
+void DrawInfoBox(const Surface &out, int playerId)
 {
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
@@ -1309,7 +1309,7 @@ void DrawInfoBox(const Surface &out)
 	if (spselflag || trigflag) {
 		InfoColor = UiFlags::ColorWhite;
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		if (myPlayer.HoldItem._itype == ItemType::Gold) {
 			int nGold = myPlayer.HoldItem._ivalue;
 			strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());

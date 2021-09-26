@@ -116,7 +116,7 @@ void control_update_life_mana();
 void DrawSpell(const Surface &out, int playerId);
 
 void InitControlPan();
-void DrawCtrlPan(const Surface &out);
+void DrawCtrlPan(const Surface &out, int playerId);
 
 /**
  * Draws the control panel buttons in their current state. If the button is in the default

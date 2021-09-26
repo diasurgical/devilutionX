@@ -1691,7 +1691,7 @@ void DrawAndBlit()
 
 	DrawView(out, ViewPosition);
 	if (ctrlPan) {
-		DrawCtrlPan(out);
+		DrawCtrlPan(out, MyPlayerId);
 	}
 	if (drawhpflag) {
 		DrawLifeFlaskLower(out, MyPlayerId);
