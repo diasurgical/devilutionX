@@ -1105,9 +1105,9 @@ HandleLeftStickOrDPadFn GetLeftStickOrDPadGameUIHandler(int playerId)
 	return nullptr;
 }
 
-void ProcessLeftStickOrDPadGameUI()
+void ProcessLeftStickOrDPadGameUI(int playerId)
 {
-	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler(MyPlayerId);
+	HandleLeftStickOrDPadFn handler = GetLeftStickOrDPadGameUIHandler(playerId);
 	if (handler != nullptr)
 		handler(GetLeftStickOrDpadDirection(true));
 }
@@ -1301,7 +1301,7 @@ void plrctrls_after_check_curs_move()
 
 void plrctrls_every_frame()
 {
-	ProcessLeftStickOrDPadGameUI();
+	ProcessLeftStickOrDPadGameUI(MyPlayerId);
 	HandleRightStickMotion();
 }
 
