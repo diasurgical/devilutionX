@@ -313,7 +313,7 @@ void CheckMonstersNearby(int playerId)
 	FindMeleeTarget(playerId);
 }
 
-void CheckPlayerNearby()
+void CheckPlayerNearby(int playerId)
 {
 	int newDdistance;
 	int rotations = 0;
@@ -322,14 +322,14 @@ void CheckPlayerNearby()
 	if (pcursmonst != -1)
 		return;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	int spl = myPlayer._pRSpell;
 	if (gbFriendlyMode && spl != SPL_RESURRECT && spl != SPL_HEALOTHER)
 		return;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
-		if (i == MyPlayerId)
+		if (i == playerId)
 			continue;
 		const auto &player = Players[i];
 		const int mx = player.position.future.x;
@@ -339,17 +339,17 @@ void CheckPlayerNearby()
 		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 
-		if (myPlayer.UsesRangedWeapon() || HasRangedSpell(MyPlayerId) || spl == SPL_HEALOTHER) {
-			newDdistance = GetDistanceRanged(player.position.future, MyPlayerId);
+		if (myPlayer.UsesRangedWeapon() || HasRangedSpell(playerId) || spl == SPL_HEALOTHER) {
+			newDdistance = GetDistanceRanged(player.position.future, playerId);
 		} else {
-			newDdistance = GetDistance(player.position.future, distance, MyPlayerId);
+			newDdistance = GetDistance(player.position.future, distance, playerId);
 			if (newDdistance == 0)
 				continue;
 		}
 
 		if (pcursplr != -1 && distance < newDdistance)
 			continue;
-		const int newRotations = GetRotaryDistance(player.position.future, MyPlayerId);
+		const int newRotations = GetRotaryDistance(player.position.future, playerId);
 		if (pcursplr != -1 && distance == newDdistance && rotations < newRotations)
 			continue;
 
@@ -367,7 +367,7 @@ void FindActor()
 		CheckTownersNearby(MyPlayerId);
 
 	if (gbIsMultiplayer)
-		CheckPlayerNearby();
+		CheckPlayerNearby(MyPlayerId);
 }
 
 int pcursmissile;
