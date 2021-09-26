@@ -573,11 +573,11 @@ Point BeltGetSlotCoord(int slot)
 /**
  * Get item size (grid size) on the slot specified. Returns 1x1 if none exists.
  */
-Size GetItemSizeOnSlot(int slot, char &itemInvId)
+Size GetItemSizeOnSlot(int slot, char &itemInvId, int playerId)
 {
 	if (slot >= SLOTXY_INV_FIRST && slot <= SLOTXY_INV_LAST) {
 		int ig = slot - SLOTXY_INV_FIRST;
-		auto &myPlayer = Players[MyPlayerId];
+		auto &myPlayer = Players[playerId];
 		int8_t ii = myPlayer.InvGrid[ig];
 		if (ii != 0) {
 			int8_t iv = ii;
@@ -610,7 +610,7 @@ void ResetInvCursorPosition()
 		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
 	} else if (Slot < SLOTXY_BELT_FIRST) {
 		char itemInvId;
-		auto itemSize = GetItemSizeOnSlot(Slot, itemInvId);
+		auto itemSize = GetItemSizeOnSlot(Slot, itemInvId, MyPlayerId);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
@@ -650,7 +650,7 @@ void InvMove(AxisDirection dir)
 		return;
 
 	char itemInvId;
-	auto itemSize = GetItemSizeOnSlot(Slot, itemInvId);
+	auto itemSize = GetItemSizeOnSlot(Slot, itemInvId, MyPlayerId);
 
 	Point mousePos = MousePosition;
 
@@ -893,7 +893,7 @@ void InvMove(AxisDirection dir)
 
 	// get item under new slot if navigating on the inventory
 	if (!isHoldingItem && Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-		itemSize = GetItemSizeOnSlot(Slot, itemInvId);
+		itemSize = GetItemSizeOnSlot(Slot, itemInvId, MyPlayerId);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
 		if (itemInvId < 0) {
