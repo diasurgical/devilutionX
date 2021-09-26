@@ -20,7 +20,7 @@ void plrctrls_after_game_logic();
 
 // Runs at the end of CheckCursMove()
 // Handles item, object, and monster auto-aim.
-void plrctrls_after_check_curs_move();
+void plrctrls_after_check_curs_move(int playerId);
 
 // Moves the map if active, the cursor otherwise.
 void HandleRightStickMotion();

@@ -120,7 +120,7 @@ MouseActionType LastMouseButtonAction = MouseActionType::None;
 
 // Controller support: Actions to run after updating the cursor state.
 // Defined in SourceX/controls/plctrls.cpp.
-extern void plrctrls_after_check_curs_move();
+extern void plrctrls_after_check_curs_move(int playerId);
 extern void plrctrls_every_frame();
 extern void plrctrls_after_game_logic();
 
@@ -197,7 +197,7 @@ bool ProcessInput()
 		finish_simulated_mouse_clicks(MousePosition.x, MousePosition.y);
 #endif
 		CheckCursMove();
-		plrctrls_after_check_curs_move();
+		plrctrls_after_check_curs_move(MyPlayerId);
 		RepeatMouseAction();
 	}
 

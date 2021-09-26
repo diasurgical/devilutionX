@@ -1270,7 +1270,7 @@ void FocusOnInventory(int playerId)
 	ResetInvCursorPosition(playerId);
 }
 
-void plrctrls_after_check_curs_move()
+void plrctrls_after_check_curs_move(int playerId)
 {
 	// check for monsters first, then items, then towners.
 	if (sgbControllerActive) {
@@ -1283,7 +1283,7 @@ void plrctrls_after_check_curs_move()
 		pcurstrig = -1;
 		pcursquest = Q_INVALID;
 		cursPosition = { -1, -1 };
-		if (Players[MyPlayerId]._pInvincible) {
+		if (Players[playerId]._pInvincible) {
 			return;
 		}
 		if (DoomFlag) {
@@ -1292,9 +1292,9 @@ void plrctrls_after_check_curs_move()
 		if (!invflag) {
 			*infostr = '\0';
 			ClearPanel();
-			FindActor(MyPlayerId);
-			FindItemOrObject(MyPlayerId);
-			FindTrigger(MyPlayerId);
+			FindActor(playerId);
+			FindItemOrObject(playerId);
+			FindTrigger(playerId);
 		}
 	}
 }
