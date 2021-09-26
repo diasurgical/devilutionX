@@ -1359,9 +1359,9 @@ void PerformPrimaryAction(int playerId)
 	Interact(playerId);
 }
 
-bool SpellHasActorTarget()
+bool SpellHasActorTarget(int playerId)
 {
-	int spl = Players[MyPlayerId]._pRSpell;
+	int spl = Players[playerId]._pRSpell;
 	if (spl == SPL_TOWN || spl == SPL_TELEPORT)
 		return false;
 
@@ -1374,7 +1374,7 @@ bool SpellHasActorTarget()
 
 void UpdateSpellTarget()
 {
-	if (SpellHasActorTarget())
+	if (SpellHasActorTarget(MyPlayerId))
 		return;
 
 	pcursplr = -1;
