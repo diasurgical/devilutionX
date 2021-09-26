@@ -75,6 +75,12 @@ public class DataActivity extends Activity {
 	 * Start downloading the shareware
 	 */
 	public void sendDownloadRequest(View view) {
+		File spawnFile = new File(externalDir + "/spawn.mpq-temp");
+		if (spawnFile.exists() && spawnFile.renameTo(new File(externalDir + "/spawn.mpq"))) {
+			startGame();
+			return;
+		}
+
 		String url = "https://github.com/d07RiV/diabloweb/raw/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq";
 		String fileName = "spawn.mpq";
 
