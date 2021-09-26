@@ -1708,7 +1708,7 @@ void DrawAndBlit()
 		DrawInvBelt(out, MyPlayerId);
 	}
 	if (talkflag) {
-		DrawTalkPan(out);
+		DrawTalkPan(out, MyPlayerId);
 		hgt = gnScreenHeight;
 	}
 	DrawXPBar(out);

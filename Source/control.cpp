@@ -1650,7 +1650,7 @@ void control_drop_gold(char vkey)
 	}
 }
 
-void DrawTalkPan(const Surface &out)
+void DrawTalkPan(const Surface &out, int playerId)
 {
 	if (!talkflag)
 		return;
@@ -1677,7 +1677,7 @@ void DrawTalkPan(const Surface &out)
 	x += 46;
 	int talkBtn = 0;
 	for (int i = 0; i < 4; i++) {
-		if (i == MyPlayerId)
+		if (i == playerId)
 			continue;
 
 		UiFlags color = UiFlags::ColorRed;

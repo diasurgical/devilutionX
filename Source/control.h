@@ -171,7 +171,7 @@ void DrawSpellBook(const Surface &out);
 void CheckSBook();
 void DrawGoldSplit(const Surface &out, int amount);
 void control_drop_gold(char vkey);
-void DrawTalkPan(const Surface &out);
+void DrawTalkPan(const Surface &out, int playerId);
 bool control_check_talk_btn();
 void control_release_talk_btn();
 void control_type_message();
