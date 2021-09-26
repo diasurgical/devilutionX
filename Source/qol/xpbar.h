@@ -12,7 +12,7 @@ struct Surface;
 void InitXPBar();
 void FreeXPBar();
 
-void DrawXPBar(const Surface &out);
+void DrawXPBar(const Surface &out, int playerId);
 bool CheckXPBarInfo();
 
 } // namespace devilution

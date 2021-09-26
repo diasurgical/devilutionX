@@ -65,12 +65,12 @@ void FreeXPBar()
 	xpbarArt.Unload();
 }
 
-void DrawXPBar(const Surface &out)
+void DrawXPBar(const Surface &out, int playerId)
 {
 	if (!sgOptions.Gameplay.bExperienceBar || talkflag)
 		return;
 
-	const auto &player = Players[MyPlayerId];
+	const auto &player = Players[playerId];
 
 	const Point back = { PANEL_LEFT + PANEL_WIDTH / 2 - 155, PANEL_TOP + PANEL_HEIGHT - 11 };
 	const Point position = back + Displacement { 3, 2 };

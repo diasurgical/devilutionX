@@ -1711,7 +1711,7 @@ void DrawAndBlit()
 		DrawTalkPan(out, MyPlayerId);
 		hgt = gnScreenHeight;
 	}
-	DrawXPBar(out);
+	DrawXPBar(out, MyPlayerId);
 
 	if (IsHardwareCursor()) {
 		SetHardwareCursorVisible(ShouldShowCursor());
