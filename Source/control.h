@@ -66,7 +66,7 @@ inline bool CanPanelsCoverView()
 
 void DrawSpellList(const Surface &out);
 void SetSpell(int playerId);
-void SetSpeedSpell(int slot);
+void SetSpeedSpell(int slot, int playerId);
 void ToggleSpell(int slot);
 
 void AddPanelString(const char *str);

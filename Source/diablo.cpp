@@ -1363,7 +1363,7 @@ void InitKeymapActions()
 		    DVL_VK_F5 + i,
 		    [i]() {
 			    if (spselflag) {
-				    SetSpeedSpell(i);
+				    SetSpeedSpell(i, MyPlayerId);
 				    return;
 			    }
 			    ToggleSpell(i);

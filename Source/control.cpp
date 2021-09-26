@@ -777,7 +777,7 @@ void SetSpell(int playerId)
 	force_redraw = 255;
 }
 
-void SetSpeedSpell(int slot)
+void SetSpeedSpell(int slot, int playerId)
 {
 	spell_id pSpell;
 	spell_type pSplType;
@@ -785,7 +785,7 @@ void SetSpeedSpell(int slot)
 	if (!GetSpellListSelection(pSpell, pSplType)) {
 		return;
 	}
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 	for (int i = 0; i < 4; ++i) {
 		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
 			myPlayer._pSplHotKey[i] = SPL_INVALID;
