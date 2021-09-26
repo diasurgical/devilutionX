@@ -1022,7 +1022,7 @@ const Direction FaceDir[3][3] = {
  *
  *  @return true if step is blocked
  */
-bool IsPathBlocked(Point position, Direction dir)
+bool IsPathBlocked(Point position, Direction dir, int playerId)
 {
 	if (IsNoneOf(dir, Direction::North, Direction::East, Direction::South, Direction::West))
 		return false; // Steps along a major axis don't need to check corners
@@ -1033,7 +1033,7 @@ bool IsPathBlocked(Point position, Direction dir)
 	if (IsTileNotSolid(leftStep) && IsTileNotSolid(rightStep))
 		return false;
 
-	auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[playerId];
 
 	return !PosOkPlayer(myPlayer, leftStep) && !PosOkPlayer(myPlayer, rightStep);
 }
@@ -1054,7 +1054,7 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (!player.IsWalking() && player.CanChangeAction())
 		player._pdir = pdir;
 
-	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
+	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir, playerId))
 		return; // Don't start backtrack around obstacles
 
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
