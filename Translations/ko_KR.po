@@ -1996,7 +1996,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:72
 msgid "Cloak"
-msgstr ""
+msgstr "망토"
 
 #: Source/itemdat.cpp:73
 msgid "Robe"
