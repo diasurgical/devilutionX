@@ -332,9 +332,12 @@ void CheckCursMove()
 	// While holding the button down we should retain target (but potentially lose it if it dies, goes out of view, etc)
 	if (sgbMouseDown != CLICK_NONE && IsNoneOf(LastMouseButtonAction, MouseActionType::None, MouseActionType::Attack, MouseActionType::Spell)) {
 		if (pcursmonst != -1) {
-			if (Monsters[pcursmonst]._mDelFlag || Monsters[pcursmonst]._mhitpoints >> 6 <= 0
-			    || ((dFlags[Monsters[pcursmonst].position.tile.x][Monsters[pcursmonst].position.tile.y] & BFLAG_VISIBLE) == 0))
+			const auto &monster = Monsters[pcursmonst];
+			if (monster._mDelFlag || monster._mhitpoints >> 6 <= 0
+			    || (monster._mFlags & MFLAG_HIDDEN) != 0
+			    || ((dFlags[monster.position.tile.x][monster.position.tile.y] & BFLAG_VISIBLE) == 0)) {
 				pcursmonst = -1;
+			}
 		} else if (pcursobj != -1) {
 			if (Objects[pcursobj]._oSelFlag < 1)
 				pcursobj = -1;
