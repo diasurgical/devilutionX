@@ -2529,27 +2529,27 @@ msgstr ""
 
 #: Source/itemdat.cpp:211
 msgid "Brutal"
-msgstr ""
+msgstr "잔인한"
 
 #: Source/itemdat.cpp:212
 msgid "Massive"
-msgstr ""
+msgstr "거대한"
 
 #: Source/itemdat.cpp:213
 msgid "Savage"
-msgstr ""
+msgstr "야만인"
 
 #: Source/itemdat.cpp:214
 msgid "Ruthless"
-msgstr ""
+msgstr "인정사정없는"
 
 #: Source/itemdat.cpp:215
 msgid "Merciless"
-msgstr ""
+msgstr "무자비한"
 
 #: Source/itemdat.cpp:216
 msgid "Clumsy"
-msgstr ""
+msgstr "어설픈"
 
 #: Source/itemdat.cpp:217
 msgid "Dull"
@@ -2598,11 +2598,11 @@ msgstr "왕의"
 
 #: Source/itemdat.cpp:227
 msgid "Vulnerable"
-msgstr ""
+msgstr "유약한 "
 
 #: Source/itemdat.cpp:228
 msgid "Rusted"
-msgstr ""
+msgstr "녹이 슨"
 
 #: Source/itemdat.cpp:230
 #, fuzzy
@@ -2620,11 +2620,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:232
 msgid "Valiant"
-msgstr ""
+msgstr "훌륭한"
 
 #: Source/itemdat.cpp:233
 msgid "Glorious"
-msgstr ""
+msgstr "거룩한"
 
 #: Source/itemdat.cpp:234
 msgid "Blessed"
@@ -2632,7 +2632,7 @@ msgstr "축복받은"
 
 #: Source/itemdat.cpp:235
 msgid "Saintly"
-msgstr ""
+msgstr "성스러운"
 
 #: Source/itemdat.cpp:236
 #, fuzzy
@@ -2650,7 +2650,7 @@ msgstr "성스러운"
 
 #: Source/itemdat.cpp:238
 msgid "Godly"
-msgstr ""
+msgstr "경건한"
 
 #: Source/itemdat.cpp:239
 #, fuzzy
