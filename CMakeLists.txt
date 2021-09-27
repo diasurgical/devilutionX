@@ -600,10 +600,6 @@ else()
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
-# Copy the font and devilutionx.mpq to the build directory to it works from the build directory
-file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-
 # Use file GENERATE instead of configure_file because configure_file
 # does not support generator expressions.
 get_property(is_multi_config GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
@@ -674,6 +670,102 @@ if (Gettext_FOUND)
     add_dependencies(${BIN_TARGET} copy_translations)
   endif()
 endif()
+
+set(devilutionx_assets
+  data/boxleftend.pcx
+  data/boxmiddle.pcx
+  data/boxrightend.pcx
+  data/charbg.pcx
+  data/dirtybuc.pcx
+  data/dirtybucp.pcx
+  data/healthbox.pcx
+  data/health.pcx
+  data/panel8buc.pcx
+  data/panel8bucp.pcx
+  data/resistance.pcx
+  data/talkbutton.pcx
+  data/xpbar.pcx
+  fonts/12-00.bin
+  fonts/12-00.pcx
+  fonts/12-01.bin
+  fonts/12-01.pcx
+  fonts/12-02.bin
+  fonts/12-02.pcx
+  fonts/12-03.bin
+  fonts/12-03.pcx
+  fonts/12-04.bin
+  fonts/12-04.pcx
+  fonts/24-00.bin
+  fonts/24-00.pcx
+  fonts/24-01.bin
+  fonts/24-01.pcx
+  fonts/24-02.bin
+  fonts/24-02.pcx
+  fonts/24-03.bin
+  fonts/24-03.pcx
+  fonts/24-04.bin
+  fonts/24-04.pcx
+  fonts/30-00.bin
+  fonts/30-00.pcx
+  fonts/30-01.bin
+  fonts/30-01.pcx
+  fonts/30-02.bin
+  fonts/30-02.pcx
+  fonts/30-03.bin
+  fonts/30-03.pcx
+  fonts/30-04.bin
+  fonts/30-04.pcx
+  fonts/42-00.bin
+  fonts/42-00.pcx
+  fonts/42-01.bin
+  fonts/42-01.pcx
+  fonts/42-02.bin
+  fonts/42-02.pcx
+  fonts/42-03.bin
+  fonts/42-03.pcx
+  fonts/42-04.bin
+  fonts/42-04.pcx
+  fonts/46-00.bin
+  fonts/46-00.pcx
+  fonts/46-01.bin
+  fonts/46-01.pcx
+  fonts/46-02.bin
+  fonts/46-02.pcx
+  fonts/46-03.bin
+  fonts/46-03.pcx
+  fonts/46-04.bin
+  fonts/46-04.pcx
+  fonts/black.trn
+  fonts/blue.trn
+  fonts/buttonface.trn
+  fonts/buttonpushed.trn
+  fonts/golduis.trn
+  fonts/goldui.trn
+  fonts/grayuis.trn
+  fonts/grayui.trn
+  fonts/red.trn
+  fonts/whitegold.trn
+  fonts/white.trn
+  gendata/cutportlw.pcx
+  gendata/cutportrw.pcx
+  gendata/cutstartw.pcx
+  ui_art/creditsw.pcx
+  ui_art/hf_titlew.pcx
+  ui_art/mainmenuw.pcx
+  ui_art/supportw.pcx)
+
+find_program(SMPQ smpq)
+if(SMPQ)
+  file(REMOVE "Packaging/resources/devilutionx.mpq")
+  execute_process(
+    WORKING_DIRECTORY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets"
+    COMMAND ${SMPQ} -M 1 -C PKWARE -c "../devilutionx.mpq" ${devilutionx_assets})
+  # Copy devilutionx.mpq to the build directory so the game can run from the build directory
+  file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+endif()
+
+# Copy CharisSILB.ttf to the build directory so the game can run from the build directory
+file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 target_include_directories(libdevilutionx PUBLIC
   Source
