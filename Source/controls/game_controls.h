@@ -71,9 +71,14 @@ struct GameAction {
 
 bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
 
+bool GetStandardGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
+
+bool GetSimplifiedGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, GameAction *action);
+
 AxisDirection GetMoveDirection();
 
 extern bool start_modifier_active;
 extern bool select_modifier_active;
+extern bool left_shoulder_modifier_active;
 
 } // namespace devilution

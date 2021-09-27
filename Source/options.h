@@ -127,6 +127,8 @@ struct ControllerOptions {
 	bool bDpadHotkeys;
 	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
 	bool bSwapShoulderButtonMode;
+	/** @brief Use scheme for gamepad with few buttons */
+	bool bSimplifiedScheme;
 	/** @brief Configure gamepad joysticks deadzone */
 	float fDeadzone;
 #ifdef __vita__

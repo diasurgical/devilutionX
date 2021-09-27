@@ -77,6 +77,10 @@ extern bool gbBarbarian;
  * @brief Don't show Messageboxes or other user-interaction. Needed for UnitTests.
  */
 extern bool gbQuietMode;
+/**
+ * @brief Lock player position (simulates shift key)
+ */
+extern bool gbLockPlayerPosition;
 extern clicktype sgbMouseDown;
 extern uint16_t gnTickDelay;
 extern char gszProductName[64];

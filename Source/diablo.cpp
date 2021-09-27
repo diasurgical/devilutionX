@@ -94,6 +94,7 @@ bool gbNestArt;
 bool gbBard;
 bool gbBarbarian;
 bool gbQuietMode = false;
+bool gbLockPlayerPosition = false;
 clicktype sgbMouseDown;
 uint16_t gnTickDelay = 50;
 char gszProductName[64] = "DevilutionX vUnknown";
@@ -307,7 +308,7 @@ void LeftMouseDown(int wParam)
 		return;
 	}
 
-	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
+	bool isShiftHeld = gbLockPlayerPosition || ((wParam & DVL_MK_SHIFT) != 0);
 
 	if (!MainPanel.Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {

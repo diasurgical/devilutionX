@@ -1057,7 +1057,17 @@ void WalkInDir(int playerId, AxisDirection dir)
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
 		return; // Don't start backtrack around obstacles
 
-	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
+	// If shift is held or player is in town, walk. Attack, otherwise.
+	if (!gbLockPlayerPosition || player.plrlevel == 0) {
+		NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
+	} else {
+		bool rangedAttack = player.UsesRangedWeapon();
+		if (!rangedAttack) {
+			NetSendCmdLoc(playerId, true, CMD_ATTACKXY, delta);
+		} else {
+			NetSendCmdLoc(playerId, true, CMD_RATTACKXY, delta);
+		}
+	}
 }
 
 void QuestLogMove(AxisDirection moveDir)
