@@ -3077,11 +3077,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:336
 msgid "the vulture"
-msgstr ""
+msgstr "대머리독수리"
 
 #: Source/itemdat.cpp:337
 msgid "the jackal"
-msgstr ""
+msgstr "자칼"
 
 #: Source/itemdat.cpp:338
 msgid "the fox"
@@ -3093,7 +3093,7 @@ msgstr "재규어"
 
 #: Source/itemdat.cpp:340
 msgid "the eagle"
-msgstr ""
+msgstr "독수리"
 
 #: Source/itemdat.cpp:341
 msgid "the wolf"
@@ -3113,7 +3113,7 @@ msgstr "맘모스"
 
 #: Source/itemdat.cpp:345
 msgid "the whale"
-msgstr ""
+msgstr "고래"
 
 #: Source/itemdat.cpp:346
 msgid "fragility"
@@ -3210,11 +3210,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:360
 msgid "lightning"
-msgstr ""
+msgstr "번개"
 
 #: Source/itemdat.cpp:361
 msgid "thunder"
-msgstr ""
+msgstr "천둥"
 
 #: Source/itemdat.cpp:362
 #, fuzzy
