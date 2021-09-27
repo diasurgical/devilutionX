@@ -1988,7 +1988,7 @@ msgstr "투구"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
-msgstr ""
+msgstr "짧은 망토 (곶)"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
