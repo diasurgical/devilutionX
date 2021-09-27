@@ -18,5 +18,5 @@ file(
   COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
   DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
 
-file(GLOB VirtualGamepadArt "${DevilutionX_SOURCE_DIR}/Packaging/resources/ui_art/*")
+file(GLOB VirtualGamepadArt "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/ui_art/*")
 file(COPY ${VirtualGamepadArt} DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets/ui_art")
