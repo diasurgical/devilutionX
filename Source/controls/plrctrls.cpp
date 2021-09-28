@@ -1416,7 +1416,7 @@ void PerformSpellAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			CheckInvItem(true);
+			CheckInvItem(true, false);
 			ResetInvCursorPosition();
 		}
 		return;
@@ -1463,7 +1463,7 @@ void CtrlUseInvItem()
 	}
 
 	if (item->isEquipment()) {
-		CheckInvItem(true); // auto-equip if it's an equipment
+		CheckInvItem(true, false); // auto-equip if it's an equipment
 		ResetInvCursorPosition();
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);

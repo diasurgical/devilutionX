@@ -21,6 +21,7 @@
 #include "plrmsg.h"
 #include "stores.h"
 #include "towners.h"
+#include "controls/plrctrls.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -671,7 +672,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 }
 
-void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
+void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
 {
 	auto &player = Players[pnum];
 
@@ -884,6 +885,10 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				}
 			}
 		}
+	}
+
+	if (dropItem) {
+		TryDropItem();
 	}
 }
 
@@ -1505,20 +1510,20 @@ void inv_update_rem_item(Player &player, BYTE iv)
 	CalcPlrInv(player, player._pmode != PM_DEATH);
 }
 
-void CheckInvItem(bool isShiftHeld)
+void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(MyPlayerId, MousePosition);
 	} else {
-		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld);
+		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld, isCtrlHeld);
 	}
 }
 
-void CheckInvScrn(bool isShiftHeld)
+void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
 	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
-		CheckInvItem(isShiftHeld);
+		CheckInvItem(isShiftHeld, isCtrlHeld);
 	}
 }
 
