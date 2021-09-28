@@ -742,11 +742,11 @@ void DrawSpellList(const Surface &out)
 
 		switch (spellListItem.type) {
 		case RSPLTYPE_SKILL:
-			PrintSBookSpellType(out, spellListItem.location, N_("Skill"), PAL16_YELLOW + 1);
+			PrintSBookSpellType(out, spellListItem.location, _("Skill"), PAL16_YELLOW + 1);
 			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
 			break;
 		case RSPLTYPE_SPELL:
-			PrintSBookSpellType(out, spellListItem.location, N_("Spell"), PAL16_BLUE + 5);
+			PrintSBookSpellType(out, spellListItem.location, _("Spell"), PAL16_BLUE + 5);
 			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			if (spellId == SPL_HBOLT) {
 				strcpy(tempstr, _("Damages undead only"));
@@ -759,7 +759,7 @@ void DrawSpellList(const Surface &out)
 			AddPanelString(tempstr);
 			break;
 		case RSPLTYPE_SCROLL: {
-			PrintSBookSpellType(out, spellListItem.location, N_("Scroll"), PAL16_RED + 3);
+			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), PAL16_RED + 3);
 			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
@@ -768,7 +768,7 @@ void DrawSpellList(const Surface &out)
 			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
 		} break;
 		case RSPLTYPE_CHARGES: {
-			PrintSBookSpellType(out, spellListItem.location, N_( "Staff"), PAL16_ORANGE + 4);
+			PrintSBookSpellType(out, spellListItem.location, _( "Staff"), PAL16_ORANGE + 4);
 			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
