@@ -437,8 +437,10 @@ bool GetSimplifiedGameAction(const SDL_Event &event, ControllerButtonEvent ctrlE
 				}
 				return true;
 			case ControllerButton_BUTTON_DPAD_DOWN:
-				*action = GameActionSendKey { DVL_VK_TAB, ctrlEvent.up };
-				start_modifier_active = false;
+				if (!ctrlEvent.up) {
+					*action = GameActionSendKey{DVL_VK_TAB, ctrlEvent.up};
+					start_modifier_active = false;
+				}
 				return true;
 			case ControllerButton_BUTTON_DPAD_LEFT:
 				if (!ctrlEvent.up) {
@@ -449,9 +451,9 @@ bool GetSimplifiedGameAction(const SDL_Event &event, ControllerButtonEvent ctrlE
 			case ControllerButton_BUTTON_Y: // Top button
 #ifdef __3DS__
 				if (!ctrlEvent.up) {
-			zoomflag = !zoomflag;
-			CalcViewportGeometry();
-		}
+					zoomflag = !zoomflag;
+					CalcViewportGeometry();
+				}
 #else
 				// Not mapped. Reserved for future use.
 #endif
