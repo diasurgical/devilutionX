@@ -150,12 +150,12 @@ bool GoldAutoPlace(Player &player);
 bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex);
 void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
 void inv_update_rem_item(Player &player, BYTE iv);
-void CheckInvItem(bool isShiftHeld = false);
+void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 
 /**
  * Check for interactions with belt
  */
-void CheckInvScrn(bool isShiftHeld);
+void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld);
 void CheckItemStats(Player &player);
 void InvGetItem(int pnum, Item *item, int ii);
 void AutoGetItem(int pnum, Item *item, int ii);

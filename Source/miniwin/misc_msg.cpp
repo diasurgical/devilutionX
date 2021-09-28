@@ -261,6 +261,7 @@ int32_t PositionForMouse(int16_t x, int16_t y)
 int32_t KeystateForMouse(int32_t ret)
 {
 	ret |= (SDL_GetModState() & KMOD_SHIFT) != 0 ? DVL_MK_SHIFT : 0;
+	ret |= (SDL_GetModState() & KMOD_CTRL) != 0 ? DVL_MK_CTRL : 0;
 	// XXX: other DVL_MK_* codes not implemented
 	return ret;
 }

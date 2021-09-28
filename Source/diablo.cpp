@@ -308,6 +308,7 @@ void LeftMouseDown(int wParam)
 	}
 
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
+	bool isCtrlHeld = (wParam & DVL_MK_CTRL) != 0;
 
 	if (!MainPanel.Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
@@ -320,7 +321,7 @@ void LeftMouseDown(int wParam)
 				CheckChrBtns();
 			} else if (invflag && RightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
-					CheckInvItem(isShiftHeld);
+					CheckInvItem(isShiftHeld, isCtrlHeld);
 			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
@@ -337,7 +338,7 @@ void LeftMouseDown(int wParam)
 		}
 	} else {
 		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
-			CheckInvScrn(isShiftHeld);
+			CheckInvScrn(isShiftHeld, isCtrlHeld);
 		DoPanBtn();
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
