@@ -3180,7 +3180,7 @@ msgstr "Смертоносный Охотник"
 
 #: Source/itemdat.cpp:410
 msgid "Bow of the Dead"
-msgstr "Лук Смерти"
+msgstr "Лук Мёртвых"
 
 #: Source/itemdat.cpp:411
 msgid "The Blackoak Bow"
