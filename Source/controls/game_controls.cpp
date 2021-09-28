@@ -455,7 +455,10 @@ bool GetSimplifiedGameAction(const SDL_Event &event, ControllerButtonEvent ctrlE
 					CalcViewportGeometry();
 				}
 #else
-				// Not mapped. Reserved for future use.
+				if (!ctrlEvent.up) {
+					*action = GameAction(GameActionType_TOGGLE_QUICK_SPELL_MENU);
+					start_modifier_active = false;
+				}
 #endif
 				return true;
 			case ControllerButton_BUTTON_B: // Right button
