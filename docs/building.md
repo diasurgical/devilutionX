@@ -122,7 +122,8 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 <details><summary>Windows via Visual Studio</summary>
 
 ### Installing dependencies
-Make sure to install the `C++ CMake tools for Windows` component for Visual Studio.
+Make sure to install the `C++ CMake tools for Windows` and `Windows SDK` component for Visual Studio.
+*Note: `Windows SDK` component should match your Windows build version.*
 
 Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
 Don't forget to perform _user-wide integration_ step for additional convenience.
