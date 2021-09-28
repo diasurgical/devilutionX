@@ -431,7 +431,7 @@ void DeltaExportData(int pnum);
 void delta_init();
 void delta_kill_monster(int mi, Point position, BYTE bLevel);
 void delta_monster_hp(int mi, int hp, BYTE bLevel);
-void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel);
+void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
 bool delta_portal_inited(int i);
 bool delta_quest_inited(int i);
 void DeltaAddItem(int ii);

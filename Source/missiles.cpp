@@ -81,11 +81,6 @@ bool CheckBlock(Point from, Point to)
 	return false;
 }
 
-inline bool InDungeonBounds(Point position)
-{
-	return position.x > 0 && position.x < MAXDUNX && position.y > 0 && position.y < MAXDUNY;
-}
-
 Monster *FindClosest(Point source, int rad)
 {
 	if (rad > 19)

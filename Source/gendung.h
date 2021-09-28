@@ -222,6 +222,7 @@ extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
+bool InDungeonBounds(Point position);
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();
