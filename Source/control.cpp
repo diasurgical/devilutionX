@@ -310,6 +310,36 @@ void SetSpellTrans(spell_type t)
 	}
 }
 
+void PrintSBookSpellType(const Surface &out, Point position, const std::string &text, uint8_t rectColorIndex)
+{
+	Point rect {position};
+	rect += Displacement { 0, -SPLICONLENGTH + 1};
+
+	// Top
+	DrawHorizontalLine(out, rect, SPLICONLENGTH, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement {0, 1}, SPLICONLENGTH, rectColorIndex);
+
+	// Bottom
+	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH}, SPLICONLENGTH + 1, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH - 1}, SPLICONLENGTH, rectColorIndex);
+
+	// Left Side
+	DrawVerticalLine(out, rect, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement {1, 0}, SPLICONLENGTH, rectColorIndex);
+
+	// Right Side
+	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH, 0}, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH - 1, 0}, SPLICONLENGTH, rectColorIndex);
+
+	// Align the spell type text with bottom of spell icon
+	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, -14 };
+
+	// Draw a drop shadow below and to the left of the text
+	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
+	// Then draw the text over the top
+	DrawString(out, text, position, UiFlags::ColorWhite);
+}
+
 void PrintSBookHotkey(const Surface &out, Point position, const std::string &text)
 {
 	// Align the hot key text with the top-right corner of the spell icon
@@ -712,11 +742,11 @@ void DrawSpellList(const Surface &out)
 
 		switch (spellListItem.type) {
 		case RSPLTYPE_SKILL:
-			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 3);
+			PrintSBookSpellType(out, spellListItem.location, N_("Skill"), PAL16_YELLOW + 1);
 			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
 			break;
 		case RSPLTYPE_SPELL:
-			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 4);
+			PrintSBookSpellType(out, spellListItem.location, N_("Spell"), PAL16_BLUE + 5);
 			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			if (spellId == SPL_HBOLT) {
 				strcpy(tempstr, _("Damages undead only"));
@@ -729,7 +759,7 @@ void DrawSpellList(const Surface &out)
 			AddPanelString(tempstr);
 			break;
 		case RSPLTYPE_SCROLL: {
-			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 1);
+			PrintSBookSpellType(out, spellListItem.location, N_("Scroll"), PAL16_RED + 3);
 			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
@@ -738,7 +768,7 @@ void DrawSpellList(const Surface &out)
 			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
 		} break;
 		case RSPLTYPE_CHARGES: {
-			DrawSpellCel(out, spellListItem.location, *pSpellCels, SPLICONLAST + 2);
+			PrintSBookSpellType(out, spellListItem.location, N_( "Staff"), PAL16_ORANGE + 4);
 			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
