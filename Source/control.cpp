@@ -1670,7 +1670,7 @@ void DrawTalkPan(const Surface &out)
 	int x = PANEL_LEFT + 200;
 	int y = PANEL_Y + 10;
 
-	int idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
+	uint32_t idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
 	if (idx < sizeof(TalkMessage))
 		TalkMessage[idx] = '\0';
 
