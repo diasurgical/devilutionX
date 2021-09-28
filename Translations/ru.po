@@ -643,7 +643,7 @@ msgstr "Новая игра"
 
 #: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
 msgid "Single Player Characters"
-msgstr "Персонажи для одиночной игры"
+msgstr "Персонажи одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:262
 msgid ""
@@ -663,7 +663,7 @@ msgid ""
 "words.\n"
 msgstr ""
 "Неправильное имя. Имя не должно содержать пробелы, специальные символы или "
-"специальные слова.\n"
+"ключевые слова.\n"
 
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:313
@@ -1807,11 +1807,11 @@ msgstr "Короткий меч"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
-msgstr "Баклер"
+msgstr "Круглый Щит"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
-msgstr "Клуб"
+msgstr "Дубина"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
@@ -2913,7 +2913,7 @@ msgstr "живучести"
 # Change at will
 #: Source/itemdat.cpp:325
 msgid "zest"
-msgstr "цедры"
+msgstr "жара"
 
 #: Source/itemdat.cpp:326
 msgid "vim"
@@ -3160,7 +3160,7 @@ msgstr "опасности"
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:396
 msgid "The Butcher's Cleaver"
-msgstr "Тесак мясника"
+msgstr "Тесак Мясника"
 
 #: Source/itemdat.cpp:406
 msgid "The Rift Bow"
@@ -3172,35 +3172,35 @@ msgstr "Игольщик"
 
 #: Source/itemdat.cpp:408
 msgid "The Celestial Bow"
-msgstr "Небесный лук"
+msgstr "Небесный Лук"
 
 #: Source/itemdat.cpp:409
 msgid "Deadly Hunter"
-msgstr "Смертоносный охотник"
+msgstr "Смертоносный Охотник"
 
 #: Source/itemdat.cpp:410
 msgid "Bow of the Dead"
-msgstr "Лук смерти"
+msgstr "Лук Смерти"
 
 #: Source/itemdat.cpp:411
 msgid "The Blackoak Bow"
-msgstr "Лук из чёрного дуба"
+msgstr "Лук из Чёрного Дуба"
 
 #: Source/itemdat.cpp:412
 msgid "Flamedart"
-msgstr "Пламенный дротик"
+msgstr "Пламенный Дротик"
 
 #: Source/itemdat.cpp:413
 msgid "Fleshstinger"
-msgstr "Жало плоти"
+msgstr "Жало Плоти"
 
 #: Source/itemdat.cpp:414
 msgid "Windforce"
-msgstr "Сила ветра"
+msgstr "Сила Ветра"
 
 #: Source/itemdat.cpp:415
 msgid "Eaglehorn"
-msgstr "Орлиный рог"
+msgstr "Орлиный Рог"
 
 #: Source/itemdat.cpp:416
 msgid "Gonnagal's Dirk"
@@ -3212,23 +3212,23 @@ msgstr "Защитник"
 
 #: Source/itemdat.cpp:418
 msgid "Gryphon's Claw"
-msgstr "Коготь грифона"
+msgstr "Коготь Грифона"
 
 #: Source/itemdat.cpp:419
 msgid "Black Razor"
-msgstr "Чёрная бритва"
+msgstr "Чёрная Бритва"
 
 #: Source/itemdat.cpp:420
 msgid "Gibbous Moon"
-msgstr "Лучезарная луна"
+msgstr "Лучезарная Луна"
 
 #: Source/itemdat.cpp:421
 msgid "Ice Shank"
-msgstr "Ледяной хвостовик"
+msgstr "Ледяной Хвостовик"
 
 #: Source/itemdat.cpp:422
 msgid "The Executioner's Blade"
-msgstr "Клинок палача"
+msgstr "Клинок Палача"
 
 #: Source/itemdat.cpp:423
 msgid "The Bonesaw"
@@ -3236,19 +3236,19 @@ msgstr "Костепил"
 
 #: Source/itemdat.cpp:424
 msgid "Shadowhawk"
-msgstr "Теневой ястреб"
+msgstr "Теневой Ястреб"
 
 #: Source/itemdat.cpp:425
 msgid "Wizardspike"
-msgstr "Волшебный шип"
+msgstr "Волшебный Шип"
 
 #: Source/itemdat.cpp:426
 msgid "Lightsabre"
-msgstr "Световой меч"
+msgstr "Световой Меч"
 
 #: Source/itemdat.cpp:427
 msgid "The Falcon's Talon"
-msgstr "Коготь сокола"
+msgstr "Коготь Сокола"
 
 #: Source/itemdat.cpp:428
 msgid "Inferno"
@@ -3256,7 +3256,7 @@ msgstr "Преисподня"
 
 #: Source/itemdat.cpp:429
 msgid "Doombringer"
-msgstr "Несущий гибель"
+msgstr "Несущий Гибель"
 
 #: Source/itemdat.cpp:430
 msgid "The Grizzly"
@@ -3272,7 +3272,7 @@ msgstr "Увечитель"
 
 #: Source/itemdat.cpp:433
 msgid "Sharp Beak"
-msgstr "Острый клюв"
+msgstr "Острый Клюв"
 
 #: Source/itemdat.cpp:434
 msgid "BloodSlayer"
@@ -3280,15 +3280,15 @@ msgstr "Кровоубийца"
 
 #: Source/itemdat.cpp:435
 msgid "The Celestial Axe"
-msgstr "Небесный топор"
+msgstr "Небесный Топор"
 
 #: Source/itemdat.cpp:436
 msgid "Wicked Axe"
-msgstr "Злой топор"
+msgstr "Злой Топор"
 
 #: Source/itemdat.cpp:437
 msgid "Stonecleaver"
-msgstr "Каменный тесак"
+msgstr "Каменный Тесак"
 
 #: Source/itemdat.cpp:438
 msgid "Aguinara's Hatchet"
@@ -3296,7 +3296,7 @@ msgstr "Топор Агуинары"
 
 #: Source/itemdat.cpp:439
 msgid "Hellslayer"
-msgstr "Адский убийца"
+msgstr "Адский Убийца"
 
 #: Source/itemdat.cpp:440
 msgid "Messerschmidt's Reaver"
@@ -3304,7 +3304,7 @@ msgstr "Разоритель Мессершмидта"
 
 #: Source/itemdat.cpp:441
 msgid "Crackrust"
-msgstr "Трещины ржавчины"
+msgstr "Трещины Ржавчины"
 
 #: Source/itemdat.cpp:442
 msgid "Hammer of Jholm"
@@ -3324,7 +3324,7 @@ msgstr "Звезда Баранара"
 
 #: Source/itemdat.cpp:446
 msgid "Gnarled Root"
-msgstr "Корявый корень"
+msgstr "Корявый Корень"
 
 #: Source/itemdat.cpp:447
 msgid "The Cranium Basher"
@@ -3336,11 +3336,11 @@ msgstr "Молот Шефера"
 
 #: Source/itemdat.cpp:449
 msgid "Dreamflange"
-msgstr "Кромка грез"
+msgstr "Кромка Грез"
 
 #: Source/itemdat.cpp:450
 msgid "Staff of Shadows"
-msgstr "Посох теней"
+msgstr "Посох Теней"
 
 #: Source/itemdat.cpp:451
 msgid "Immolator"
@@ -3348,16 +3348,16 @@ msgstr "Поджигатель"
 
 #: Source/itemdat.cpp:452
 msgid "Storm Spire"
-msgstr "Острие бури"
+msgstr "Острие Бури"
 
 # Попробуйте перевести лучше
 #: Source/itemdat.cpp:453
 msgid "Gleamsong"
-msgstr "Мерцающая песнь"
+msgstr "Мерцающая Песнь"
 
 #: Source/itemdat.cpp:454
 msgid "Thundercall"
-msgstr "Громовой вызов"
+msgstr "Громовой Вызов"
 
 #: Source/itemdat.cpp:455
 msgid "The Protector"
@@ -3369,7 +3369,7 @@ msgstr "Головоломка Наджа"
 
 #: Source/itemdat.cpp:457
 msgid "Mindcry"
-msgstr "Крик разума"
+msgstr "Крик Разума"
 
 #: Source/itemdat.cpp:458
 msgid "Rod of Onan"
@@ -3377,11 +3377,11 @@ msgstr "Жезл Онана"
 
 #: Source/itemdat.cpp:459
 msgid "Helm of Spirits"
-msgstr "Шлем духов"
+msgstr "Шлем Духов"
 
 #: Source/itemdat.cpp:460
 msgid "Thinking Cap"
-msgstr "Шапка размышлений"
+msgstr "Шапка Размышлений"
 
 #: Source/itemdat.cpp:461
 msgid "OverLord's Helm"
@@ -3393,51 +3393,51 @@ msgstr "Гребень дурака"
 
 #: Source/itemdat.cpp:463
 msgid "Gotterdamerung"
-msgstr "Гибель богов"
+msgstr "Гибель Богов"
 
 #: Source/itemdat.cpp:464
 msgid "Royal Circlet"
-msgstr "Королевский венец"
+msgstr "Королевский Венец"
 
 #: Source/itemdat.cpp:465
 msgid "Torn Flesh of Souls"
-msgstr "Разорванная плоть душ"
+msgstr "Разорванная Плоть Душ"
 
 #: Source/itemdat.cpp:466
 msgid "The Gladiator's Bane"
-msgstr "Проклятие гладиатора"
+msgstr "Проклятие Гладиатора"
 
 #: Source/itemdat.cpp:467
 msgid "The Rainbow Cloak"
-msgstr "Плащ радуги"
+msgstr "Плащ Радуги"
 
 #: Source/itemdat.cpp:468
 msgid "Leather of Aut"
-msgstr "Кожа аута"
+msgstr "Кожа Аута"
 
 #: Source/itemdat.cpp:469
 msgid "Wisdom's Wrap"
-msgstr "Накидка мудрости"
+msgstr "Накидка Мудрости"
 
 #: Source/itemdat.cpp:470
 msgid "Sparking Mail"
-msgstr "Сверкающая кольчуга"
+msgstr "Сверкающая Кольчуга"
 
 #: Source/itemdat.cpp:471
 msgid "Scavenger Carapace"
-msgstr "Панцирь мусорщика"
+msgstr "Панцирь Мусорщика"
 
 #: Source/itemdat.cpp:472
 msgid "Nightscape"
-msgstr "Ночной пейзаж"
+msgstr "Ночной Пейзаж"
 
 #: Source/itemdat.cpp:473
 msgid "Naj's Light Plate"
-msgstr "Лёгкая пластина Наджа"
+msgstr "Лёгкая Пластина Наджа"
 
 #: Source/itemdat.cpp:474
 msgid "Demonspike Coat"
-msgstr "Пальто из демонической шипа"
+msgstr "Покров Демонских Шипов"
 
 #: Source/itemdat.cpp:475
 msgid "The Deflector"
@@ -3445,7 +3445,7 @@ msgstr "Отражатель"
 
 #: Source/itemdat.cpp:476
 msgid "Split Skull Shield"
-msgstr "Щит из расколотого черепа"
+msgstr "Щит из Расколотого Черепа"
 
 #: Source/itemdat.cpp:477
 msgid "Dragon's Breach"
@@ -3473,23 +3473,23 @@ msgstr "Кольцо Регхи"
 
 #: Source/itemdat.cpp:483
 msgid "The Bleeder"
-msgstr "Кровотечение"
+msgstr "Проливатель Крови"
 
 #: Source/itemdat.cpp:484
 msgid "Constricting Ring"
-msgstr "Сужающее кольцо"
+msgstr "Сужающее Кольцо"
 
 #: Source/itemdat.cpp:485
 msgid "Ring of Engagement"
-msgstr "Обручальное кольцо"
+msgstr "Обручальное Кольцо"
 
 #: Source/itemdat.cpp:486
 msgid "Giant's Knuckle"
-msgstr "Кастет гиганта"
+msgstr "Кастет Гиганта"
 
 #: Source/itemdat.cpp:487
 msgid "Mercurial Ring"
-msgstr "Ртутное кольцо"
+msgstr "Ртутное Кольцо"
 
 #: Source/itemdat.cpp:488
 msgid "Xorine's Ring"
@@ -3501,23 +3501,23 @@ msgstr "Кольцо Карика"
 
 #: Source/itemdat.cpp:490
 msgid "Ring of Magma"
-msgstr "Кольцо магмы"
+msgstr "Кольцо Магмы"
 
 #: Source/itemdat.cpp:491
 msgid "Ring of the Mystics"
-msgstr "Кольцо мистики"
+msgstr "Кольцо Мистики"
 
 #: Source/itemdat.cpp:492
 msgid "Ring of Thunder"
-msgstr "Кольцо грома"
+msgstr "Кольцо Грома"
 
 #: Source/itemdat.cpp:493
 msgid "Amulet of Warding"
-msgstr "Защитный амулет"
+msgstr "Защитный Амулет"
 
 #: Source/itemdat.cpp:494
 msgid "Gnat Sting"
-msgstr "Жало комара"
+msgstr "Жало Комара"
 
 #: Source/itemdat.cpp:495
 msgid "Flambeau"
@@ -3525,7 +3525,7 @@ msgstr "Факел"
 
 #: Source/itemdat.cpp:496
 msgid "Armor of Gloom"
-msgstr "Доспех мрака"
+msgstr "Доспех Мрака"
 
 #: Source/itemdat.cpp:497
 msgid "Blitzen"
@@ -3533,7 +3533,7 @@ msgstr "Блитцен"
 
 #: Source/itemdat.cpp:498
 msgid "Thunderclap"
-msgstr "Удар грома"
+msgstr "Удар Грома"
 
 #: Source/itemdat.cpp:499
 msgid "Shirotachi"
@@ -3541,56 +3541,56 @@ msgstr "Широтачи"
 
 #: Source/itemdat.cpp:500
 msgid "Eater of Souls"
-msgstr "Пожиратель душ"
+msgstr "Пожиратель Душ"
 
 #: Source/itemdat.cpp:501
 msgid "Diamondedge"
-msgstr "Кромка алмаза"
+msgstr "Кромка Алмаза"
 
 #: Source/itemdat.cpp:502
 msgid "Bone Chain Armor"
-msgstr "Костяная броня"
+msgstr "Костяная Броня"
 
 #: Source/itemdat.cpp:503
 msgid "Demon Plate Armor"
-msgstr "Демонический доспех"
+msgstr "Демонический Доспех"
 
 #: Source/itemdat.cpp:504
 msgid "Acolyte's Amulet"
-msgstr "Амулет приспешника"
+msgstr "Амулет Приспешника"
 
 #. TRANSLATORS: Unique Item section end.
 #: Source/itemdat.cpp:506
 msgid "Gladiator's Ring"
-msgstr "Кольцо гладиатора"
+msgstr "Кольцо Гладиатора"
 
 #: Source/items.cpp:161
 msgid "Oil of Mastery"
-msgstr "Масло мастерства"
+msgstr "Масло Мастерства"
 
 #: Source/items.cpp:163
 msgid "Oil of Death"
-msgstr "Масло смерти"
+msgstr "Масло Смерти"
 
 #: Source/items.cpp:164
 msgid "Oil of Skill"
-msgstr "Масло умения"
+msgstr "Масло Умения"
 
 #: Source/items.cpp:166
 msgid "Oil of Fortitude"
-msgstr "Масло стойкости"
+msgstr "Масло Стойкости"
 
 #: Source/items.cpp:167
 msgid "Oil of Permanence"
-msgstr "Масло постоянства"
+msgstr "Масло Постоянства"
 
 #: Source/items.cpp:168
 msgid "Oil of Hardening"
-msgstr "Масло закалки"
+msgstr "Масло Закалки"
 
 #: Source/items.cpp:169
 msgid "Oil of Imperviousness"
-msgstr "Масло непроницаемости"
+msgstr "Масло Непроницаемости"
 
 #. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1188 Source/items.cpp:1256 Source/items.cpp:1275
