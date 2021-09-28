@@ -365,8 +365,8 @@ void DeltaSyncGolem(TCmdGolem *pG, int pnum, BYTE bLevel)
 
 	sgbDeltaChanged = true;
 	DMonsterStr *pD = &sgLevels[bLevel].monster[pnum];
-	pD->_mx = pG->_mx;
-	pD->_my = pG->_my;
+	pD->_mx = pG->x;
+	pD->_my = pG->y;
 	pD->_mactive = UINT8_MAX;
 	pD->_menemy = pG->_menemy;
 	pD->_mdir = pG->_mdir;
@@ -1309,7 +1309,7 @@ DWORD OnAwakeGolem(TCmd *pCmd, int pnum)
 			}
 		}
 		if (addGolem)
-			AddMissile(Players[pnum].position.tile, { p->_mx, p->_my }, p->_mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
+			AddMissile(Players[pnum].position.tile, { p->x, p->y }, p->_mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
 	}
 
 	return sizeof(*p);
@@ -2174,8 +2174,8 @@ void NetSendCmdGolem(BYTE mx, BYTE my, Direction dir, BYTE menemy, int hp, BYTE 
 	TCmdGolem cmd;
 
 	cmd.bCmd = CMD_AWAKEGOLEM;
-	cmd._mx = mx;
-	cmd._my = my;
+	cmd.x = mx;
+	cmd.y = my;
 	cmd._mdir = dir;
 	cmd._menemy = menemy;
 	cmd._mhitpoints = hp;

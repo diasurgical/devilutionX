@@ -135,98 +135,62 @@ struct TCmd {
 	_cmd_id bCmd;
 };
 
-struct TCmdLoc {
-	_cmd_id bCmd;
+struct TCmdLoc : TCmd {
 	uint8_t x;
 	uint8_t y;
 };
 
-struct TCmdLocParam1 {
-	_cmd_id bCmd;
-	uint8_t x;
-	uint8_t y;
+struct TCmdLocParam1 : TCmdLoc {
 	uint16_t wParam1;
 };
 
-struct TCmdLocParam2 {
-	_cmd_id bCmd;
-	uint8_t x;
-	uint8_t y;
-	uint16_t wParam1;
+struct TCmdLocParam2 : TCmdLocParam1 {
 	uint16_t wParam2;
 };
 
-struct TCmdLocParam3 {
-	_cmd_id bCmd;
-	uint8_t x;
-	uint8_t y;
-	uint16_t wParam1;
-	uint16_t wParam2;
+struct TCmdLocParam3 : TCmdLocParam2 {
 	uint16_t wParam3;
 };
 
-struct TCmdLocParam4 {
-	_cmd_id bCmd;
-	uint8_t x;
-	uint8_t y;
-	uint16_t wParam1;
-	uint16_t wParam2;
-	uint16_t wParam3;
+struct TCmdLocParam4 : TCmdLocParam3 {
 	uint16_t wParam4;
 };
 
-struct TCmdParam1 {
-	_cmd_id bCmd;
+struct TCmdParam1 : TCmd {
 	uint16_t wParam1;
 };
 
-struct TCmdParam2 {
-	_cmd_id bCmd;
-	uint16_t wParam1;
+struct TCmdParam2 : TCmdParam1 {
 	uint16_t wParam2;
 };
 
-struct TCmdParam3 {
-	_cmd_id bCmd;
-	uint16_t wParam1;
-	uint16_t wParam2;
+struct TCmdParam3 : TCmdParam2 {
 	uint16_t wParam3;
 };
 
-struct TCmdParam4 {
-	_cmd_id bCmd;
-	uint16_t wParam1;
-	uint16_t wParam2;
-	uint16_t wParam3;
+struct TCmdParam4 : TCmdParam3 {
 	uint16_t wParam4;
 };
 
-struct TCmdGolem {
-	_cmd_id bCmd;
-	uint8_t _mx;
-	uint8_t _my;
+struct TCmdGolem : TCmdLoc {
 	Direction _mdir;
 	int8_t _menemy;
 	int32_t _mhitpoints;
 	uint8_t _currlevel;
 };
 
-struct TCmdQuest {
-	_cmd_id bCmd;
+struct TCmdQuest : TCmd {
 	int8_t q;
 	quest_state qstate;
 	uint8_t qlog;
 	uint8_t qvar1;
 };
 
-struct TCmdGItem {
-	_cmd_id bCmd;
+struct TCmdGItem : TCmdLoc {
 	uint8_t bMaster;
 	uint8_t bPnum;
 	uint8_t bCursitem;
 	uint8_t bLevel;
-	uint8_t x;
-	uint8_t y;
 	uint16_t wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
@@ -246,10 +210,7 @@ struct TCmdGItem {
 	int16_t bAC;
 };
 
-struct TCmdPItem {
-	_cmd_id bCmd;
-	uint8_t x;
-	uint8_t y;
+struct TCmdPItem : TCmdLoc {
 	uint16_t wIndx;
 	uint16_t wCI;
 	/**
@@ -272,9 +233,11 @@ struct TCmdPItem {
 	int16_t bAC;
 };
 
-struct TCmdChItem {
-	_cmd_id bCmd;
+struct TCmdPlayerItem : TCmd {
 	uint8_t bLoc;
+};
+
+struct TCmdChItem : TCmdPlayerItem {
 	uint16_t wIndx;
 	uint16_t wCI;
 	int32_t dwSeed;
@@ -282,47 +245,39 @@ struct TCmdChItem {
 	uint32_t dwBuff;
 };
 
-struct TCmdDelItem {
-	_cmd_id bCmd;
-	uint8_t bLoc;
+struct TCmdDelItem : TCmdPlayerItem {
 };
 
-struct TCmdDamage {
-	_cmd_id bCmd;
+struct TCmdPlr : TCmd {
 	uint8_t bPlr;
+};
+
+struct TCmdDamage : TCmdPlr {
 	uint32_t dwDam;
 };
 
-struct TCmdMonDamage {
-	_cmd_id bCmd;
+struct TCmdMonDamage : TCmd {
 	uint16_t wMon;
 	uint32_t dwDam;
 };
 
-struct TCmdPlrInfoHdr {
-	_cmd_id bCmd;
+struct TCmdPlrInfoHdr : TCmd {
 	uint16_t wOffset;
 	uint16_t wBytes;
 };
 
-struct TCmdString {
-	_cmd_id bCmd;
+struct TCmdString : TCmd {
 	char str[MAX_SEND_STR_LEN];
 };
 
-struct TFakeCmdPlr {
-	_cmd_id bCmd;
-	uint8_t bPlr;
+struct TFakeCmdPlr : TCmdPlr {
 };
 
-struct TFakeDropPlr {
-	_cmd_id bCmd;
-	uint8_t bPlr;
+struct TFakeDropPlr : TCmdPlr {
 	uint32_t dwReason;
 };
 
-struct TSyncHeader {
-	_cmd_id bCmd;
+struct TSyncHeader : TCmd {
 	uint8_t bLevel;
 	uint16_t wLen;
 	uint8_t bItemI;
@@ -381,8 +336,7 @@ struct DMonsterStr {
 	int32_t _mhitpoints;
 };
 
-struct DObjectStr {
-	_cmd_id bCmd;
+struct DObjectStr : TCmd {
 };
 
 struct DLevel {
