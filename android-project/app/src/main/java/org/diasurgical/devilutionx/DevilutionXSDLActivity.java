@@ -110,7 +110,11 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		if (!file.exists() || !file.canRead()) {
 			return;
 		}
+
 		File newPath = new File(externalDir + "/" + file.getName());
+		if (file.getName().equals("spawn.mpq"))
+			newPath = new File(externalDir + "/" + file.getName() + "-temp");
+
 		if (newPath.exists()) {
 			if (file.canWrite()) {
 				//noinspection ResultOfMethodCallIgnored

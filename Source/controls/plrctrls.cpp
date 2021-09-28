@@ -1441,7 +1441,7 @@ void PerformSpellAction()
 	}
 
 	UpdateSpellTarget();
-	CheckPlrSpell();
+	CheckPlrSpell(false);
 }
 
 void CtrlUseInvItem()
