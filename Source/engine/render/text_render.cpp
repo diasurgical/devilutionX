@@ -28,15 +28,18 @@ namespace {
 
 std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
-std::array<int, 5> FontSizes = { 12, 24, 30, 42, 46 };
-std::array<int, 5> LineHeights = { 12, 26, 38, 42, 50 };
-std::array<int, 5> BaseLineOffset = { -3, -2, -3, -6, -7 };
+std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
+std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
+std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
-std::array<const char *, 12> ColorTranlations = {
+std::array<const char *, 14> ColorTranlations = {
 	"fonts\\goldui.trn",
 	"fonts\\grayui.trn",
 	"fonts\\golduis.trn",
 	"fonts\\grayuis.trn",
+
+	nullptr,
+	"fonts\\yellowdialog.trn",
 
 	nullptr,
 	"fonts\\black.trn",
@@ -60,6 +63,8 @@ GameFontTables GetSizeFromFlags(UiFlags flags)
 		return GameFont42;
 	else if (HasAnyOf(flags, UiFlags::FontSize46))
 		return GameFont46;
+	else if (HasAnyOf(flags, UiFlags::FontSizeDialog))
+		return FontSizeDialog;
 
 	return GameFont12;
 }
@@ -84,6 +89,10 @@ text_color GetColorFromFlags(UiFlags flags)
 		return ColorUiGoldDark;
 	else if (HasAnyOf(flags, UiFlags::ColorUiSilverDark))
 		return ColorUiSilverDark;
+	else if (HasAnyOf(flags, UiFlags::ColorDialogWhite))
+		return ColorDialogWhite;
+	else if (HasAnyOf(flags, UiFlags::ColorDialogYellow))
+		return ColorDialogYellow;
 	else if (HasAnyOf(flags, UiFlags::ColorButtonface))
 		return ColorButtonface;
 	else if (HasAnyOf(flags, UiFlags::ColorButtonpushed))

@@ -3,11 +3,9 @@
     "version-string": "1.2.1",
     "dependencies": [
         "fmt",
-        "freetype",
         "libpng",
         "libsodium",
-        "sdl2",
-        "sdl2-ttf"
+        "sdl2"
     ],
     "features": {
         "translations": {

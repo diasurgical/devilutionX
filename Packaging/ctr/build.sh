@@ -27,7 +27,7 @@ build() {
 install_deps() {
 	"$DEVKITPRO/pacman/bin/pacman" -S --needed --noconfirm --quiet \
 		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
-		libctru citro3d 3ds-sdl 3ds-sdl_ttf 3ds-freetype
+		libctru citro3d 3ds-sdl
 }
 
 prepare_devkitpro() {

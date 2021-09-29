@@ -10,7 +10,7 @@ For a full list of changes see our changelog: https://github.com/diasurgical/dev
 
 # How To Install:
  - Extract the files in the archive.
- - Install libsdl2 libsdl2-mixer libsdl2-ttf
+ - Install libsdl2
  - Copy DIABDAT.MPQ from the CD or GOG-installation (or extract it from the GoG installer) to the DevilutionX folder.
 	- To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
  - Run ./devilutionx

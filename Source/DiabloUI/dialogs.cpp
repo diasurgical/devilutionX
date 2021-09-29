@@ -5,7 +5,6 @@
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
 #include "DiabloUI/errorart.h"
-#include "DiabloUI/fonts.h"
 #include "control.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
@@ -20,7 +19,6 @@ namespace devilution {
 namespace {
 
 Art dialogArt;
-bool fontWasLoaded;
 
 bool dialogEnd;
 
@@ -157,6 +155,7 @@ void LoadFallbackPalette()
 	};
 	// clang-format on
 	ApplyGamma(logical_palette, FallbackPalette, 256);
+	BlackPalette();
 }
 
 void Init(const char *text, const char *caption, bool error, bool renderBehind)
@@ -166,7 +165,7 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 200), (Sint16)(UI_OFFSET_Y + 211), 240, 80 };
-		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::AlignCenter));
+		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 265), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect3));
@@ -174,48 +173,42 @@ void Init(const char *text, const char *caption, bool error, bool renderBehind)
 		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 127), (Sint16)(UI_OFFSET_Y + 100), 385, 280 };
 		vecOkDialog.push_back(std::make_unique<UiImage>(&dialogArt, rect1));
 
-		SDL_Color color = { 255, 255, 0, 0 };
 		SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 147), (Sint16)(UI_OFFSET_Y + 110), 345, 20 };
-		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::AlignCenter, color));
+		vecOkDialog.push_back(std::make_unique<UiText>(text, rect2, UiFlags::AlignCenter | UiFlags::ColorDialogYellow));
 
 		SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 147), (Sint16)(UI_OFFSET_Y + 141), 345, 190 };
-		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect3, UiFlags::AlignCenter));
+		vecOkDialog.push_back(std::make_unique<UiText>(caption, rect3, UiFlags::AlignCenter | UiFlags::ColorDialogWhite));
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 335), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 		vecOkDialog.push_back(std::make_unique<UiButton>(&SmlButton, _("OK"), &DialogActionOK, rect4));
 	}
 
 	if (!renderBehind) {
+		ArtBackground.Unload();
 		LoadBackgroundArt("ui_art\\black.pcx");
 		if (ArtBackground.surface == nullptr) {
 			LoadFallbackPalette();
+			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
+				Log("{}", SDL_GetError());
 		}
 	}
-	SetFadeLevel(256);
+
 	if (caption == nullptr) {
 		LoadMaskedArt(error ? "ui_art\\srpopup.pcx" : "ui_art\\spopup.pcx", &dialogArt);
+	} else if (error) {
+		LoadArt(&dialogArt, PopupData, 385, 280);
 	} else {
-		if (error) {
-			LoadArt(&dialogArt, PopupData, 385, 280);
-		} else {
-			LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
-		}
+		LoadMaskedArt("ui_art\\lpopup.pcx", &dialogArt);
 	}
 	LoadSmlButtonArt();
-
-	fontWasLoaded = font != nullptr;
-	if (!fontWasLoaded)
-		LoadTtfFont();
 }
 
 void Deinit()
 {
 	dialogArt.Unload();
 	UnloadSmlButtonArt();
-	if (!fontWasLoaded)
-		UnloadTtfFont();
-
 	vecOkDialog.clear();
+	ArtBackground.Unload();
 }
 
 void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std::vector<std::unique_ptr<UiItemBase>> &renderBehind)
@@ -244,12 +237,14 @@ void DialogLoop(const std::vector<std::unique_ptr<UiItemBase>> &items, const std
 		}
 
 		if (renderBehind.empty()) {
-			SDL_FillRect(DiabloUiSurface(), nullptr, 0);
+			SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 		} else {
 			UiRenderItems(renderBehind);
 		}
 		UiRenderItems(items);
-		DrawMouse();
+		if (ArtBackground.surface != nullptr) {
+			DrawMouse();
+		}
 		UiFadeIn();
 	} while (!dialogEnd);
 }
@@ -260,28 +255,32 @@ void UiOkDialog(const char *text, const char *caption, bool error, const std::ve
 {
 	static bool inDialog = false;
 
+	if (caption != nullptr) {
+		LogError("{}\n{}", text, caption);
+	} else {
+		LogError("{}", text);
+	}
+
 	if (!gbActive || inDialog) {
-		if (!IsHardwareCursor()) {
-			if (SDL_ShowCursor(SDL_ENABLE) <= -1) {
-				Log("{}", SDL_GetError());
-			}
-		}
 		if (!gbQuietMode) {
+			if (SDL_ShowCursor(SDL_ENABLE) <= -1)
+				Log("{}", SDL_GetError());
 			if (SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, text, caption, nullptr) <= -1) {
 				Log("{}", SDL_GetError());
 			}
 		}
-		Log("{}", text);
-		Log("{}", caption);
 		return;
 	}
 
+	if (IsHardwareCursor()) {
+		if (SDL_ShowCursor(SDL_ENABLE) <= -1)
+			Log("{}", SDL_GetError());
+	}
+
 	inDialog = true;
+	SDL_SetClipRect(DiabloUiSurface(), nullptr);
 	Init(text, caption, error, !renderBehind.empty());
-	if (font != nullptr)
-		DialogLoop(vecOkDialog, renderBehind);
-	else
-		UiOkDialog(text, caption, error, renderBehind);
+	DialogLoop(vecOkDialog, renderBehind);
 	Deinit();
 	inDialog = false;
 }

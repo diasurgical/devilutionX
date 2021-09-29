@@ -12,12 +12,9 @@ set(PREFILL_PLAYER_NAME ON)
 #3DS libraries
 list(APPEND CMAKE_MODULE_PATH "${DevilutionX_SOURCE_DIR}/CMake/ctr/modules")
 find_package(CITRO3D REQUIRED)
-find_package(FREETYPE REQUIRED)
-find_package(BZIP2 REQUIRED)
 
 #additional compilation definitions
 add_definitions(-D__3DS__)
-set(TTF_FONT_DIR \"romfs:/\")
 set(MO_LANG_DIR \"romfs:/\")
 
 #SDL video mode parameters

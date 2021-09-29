@@ -263,10 +263,8 @@ endif()
 
 if(ANDROID)
   add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2)
-  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/android-project/3rdParty/SDL2_ttf)
 elseif(USE_SDL1)
   find_package(SDL REQUIRED)
-  find_package(SDL_ttf REQUIRED)
   include_directories(${SDL_INCLUDE_DIR})
 else()
   find_package(SDL2 REQUIRED)
@@ -290,7 +288,6 @@ else()
     # Can't define an INTERFACE target with ::, so alias instead
     add_library(SDL2::SDL2 ALIAS SDL2_lib)
   endif()
-  find_package(SDL2_ttf REQUIRED)
 endif()
 
 if(NOT NONET AND NOT DISABLE_TCP)
@@ -459,7 +456,6 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/diabloui.cpp
   Source/DiabloUI/dialogs.cpp
   Source/DiabloUI/errorart.cpp
-  Source/DiabloUI/fonts.cpp
   Source/DiabloUI/mainmenu.cpp
   Source/DiabloUI/progress.cpp
   Source/DiabloUI/scrollbar.cpp
@@ -469,9 +465,7 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/selok.cpp
   Source/DiabloUI/selyesno.cpp
   Source/DiabloUI/support_lines.cpp
-  Source/DiabloUI/text_draw.cpp
   Source/DiabloUI/title.cpp
-  Source/DiabloUI/ttf_render_wrapped.cpp
   Source/panels/charpanel.cpp
   Source/panels/mainpanel.cpp
   Source/dvlnet/abstract_net.cpp
@@ -595,7 +589,6 @@ else()
     Source/main.cpp
     Source/devilutionx.exe.manifest
     Packaging/macOS/AppIcon.icns
-    Packaging/resources/CharisSILB.ttf
     Packaging/windows/devilutionx.rc)
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
@@ -695,6 +688,18 @@ set(devilutionx_assets
   fonts/12-03.pcx
   fonts/12-04.bin
   fonts/12-04.pcx
+  fonts/22-00.bin
+  fonts/22-00.pcx
+  fonts/22-01.bin
+  fonts/22-01.pcx
+  fonts/22-02.bin
+  fonts/22-02.pcx
+  fonts/22-03.bin
+  fonts/22-03.pcx
+  fonts/22-04.bin
+  fonts/22-04.pcx
+  fonts/22-05.bin
+  fonts/22-05.pcx
   fonts/24-00.bin
   fonts/24-00.pcx
   fonts/24-01.bin
@@ -746,6 +751,7 @@ set(devilutionx_assets
   fonts/red.trn
   fonts/whitegold.trn
   fonts/white.trn
+  fonts/yellowdialog.trn
   gendata/cutportlw.pcx
   gendata/cutportrw.pcx
   gendata/cutstartw.pcx
@@ -763,9 +769,6 @@ if(SMPQ)
   # Copy devilutionx.mpq to the build directory so the game can run from the build directory
   file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 endif()
-
-# Copy CharisSILB.ttf to the build directory so the game can run from the build directory
-file(COPY "Packaging/resources/CharisSILB.ttf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
 target_include_directories(libdevilutionx PUBLIC
   Source
@@ -834,8 +837,6 @@ foreach(
   DEFAULT_AUDIO_BUFFER_SIZE
   DEFAULT_AUDIO_RESAMPLING_QUALITY
   MO_LANG_DIR
-  TTF_FONT_DIR
-  TTF_FONT_NAME
   SDL1_VIDEO_MODE_BPP
   SDL1_VIDEO_MODE_FLAGS
   SDL1_FORCE_SVID_VIDEO_MODE
@@ -908,14 +909,12 @@ endif()
 
 if(USE_SDL1)
   target_link_libraries(libdevilutionx PUBLIC
-    ${SDL_TTF_LIBRARY}
     ${SDL_LIBRARY})
   target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
 else()
   target_link_libraries(libdevilutionx PUBLIC
     SDL2::SDL2
-    ${SDL2_MAIN}
-    SDL2::SDL2_ttf)
+    ${SDL2_MAIN})
 endif()
 target_link_libraries(libdevilutionx PUBLIC SDL_image)
 
@@ -925,7 +924,6 @@ endif()
 
 if(AMIGA)
   target_link_libraries(libdevilutionx PUBLIC
-    ${FREETYPE_LIBRARY}
     ${ZLIB_LIBRARY})
   if(NOT WARPOS)
     target_link_libraries(libdevilutionx PUBLIC -ldebug)
@@ -936,14 +934,11 @@ if (VITA)
   target_link_libraries(libdevilutionx PUBLIC
         ScePower_stub
         SceAppUtil_stub
-        freetype
-        z
   )
   target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
 
 if(NINTENDO_3DS)
-  target_link_libraries(libdevilutionx PUBLIC 3ds::freetype 3ds::bzip2)
   target_link_libraries(libdevilutionx PUBLIC 3ds::citro3d 3ds::ctrulib)
 endif()
 
@@ -1004,7 +999,6 @@ endif()
 
 if(APPLE)
   set_source_files_properties("./Packaging/macOS/AppIcon.icns" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set_source_files_properties("./Packaging/resources/CharisSILB.ttf" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(MACOSX_BUNDLE_GUI_IDENTIFIER com.diasurgical.devilutionx)
   set(MACOSX_BUNDLE_COPYRIGHT Unlicense)
   set(MACOSX_BUNDLE_BUNDLE_NAME devilutionx)
@@ -1031,13 +1025,6 @@ if(APPLE)
 endif()
 
 if(NINTENDO_SWITCH)
-
-  target_link_libraries(libdevilutionx PUBLIC
-        freetype
-        bz2
-        z
-  )
-
   nx_generate_nacp (${BIN_TARGET}.nacp
     NAME    "DevilutionX"
     AUTHOR  "Devilution Team"
@@ -1067,7 +1054,6 @@ if(VITA)
     FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
     FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
     FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    FILE Packaging/resources/CharisSILB.ttf CharisSILB.ttf
     FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
     ${VITA_TRANSLATIONS_LIST}
   )
@@ -1083,7 +1069,6 @@ if(NINTENDO_3DS)
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   list(APPEND APP_ROMFS_FILES
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf
     ${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq
     ${devilutionx_TRANSLATIONS})
   set(APP_VERSION ${PROJECT_VERSION})
@@ -1142,9 +1127,6 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-      DESTINATION "."
-    )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
       DESTINATION "."
     )
@@ -1199,16 +1181,13 @@ if(CPACK)
       DESTINATION "share/icons/hicolor/512x512/apps"
       RENAME "${project_name}-hellfire.png"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-      DESTINATION "share/fonts/truetype"
-    )
 
     # -G DEB
     set(CPACK_PACKAGE_CONTACT "anders@jenbo.dk")
     if(USE_SDL1)
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian, libsdl-ttf2.0-0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl1.2debian")
     else()
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0, libsdl2-ttf-2.0-0")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libsdl2-2.0-0")
     endif()
     set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 

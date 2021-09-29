@@ -1,7 +1,6 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/diabloui.h"
-#include "DiabloUI/fonts.h"
 #include "control.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
@@ -9,7 +8,6 @@
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/language.h"
-#include "utils/ttf_wrap.h"
 
 namespace devilution {
 namespace {
@@ -18,8 +16,6 @@ Art progressArt;
 Art ArtPopupSm;
 Art ArtProgBG;
 Art ProgFil;
-SDLSurfaceUniquePtr msgSurface;
-SDLSurfaceUniquePtr msgShadow;
 std::vector<std::unique_ptr<UiItemBase>> vecProgress;
 bool endMenu;
 
@@ -35,15 +31,7 @@ void ProgressLoad(const char *msg)
 	LoadArt("ui_art\\prog_bg.pcx", &ArtProgBG);
 	LoadArt("ui_art\\prog_fil.pcx", &ProgFil);
 	LoadSmlButtonArt();
-	LoadTtfFont();
 
-	if (font != nullptr) {
-		SDL_Color color = { 243, 243, 243, 0 };
-		SDL_Color black = { 0, 0, 0, 0 };
-
-		msgSurface = TTFWrap::RenderUTF8_Solid(font, msg, color);
-		msgShadow = TTFWrap::RenderUTF8_Solid(font, msg, black);
-	}
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 265), (Sint16)(UI_OFFSET_Y + 267), SML_BUTTON_WIDTH, SML_BUTTON_HEIGHT };
 	vecProgress.push_back(std::make_unique<UiButton>(&SmlButton, _("Cancel"), &DialogActionCancel, rect3));
 }
@@ -55,9 +43,6 @@ void ProgressFree()
 	ArtProgBG.Unload();
 	ProgFil.Unload();
 	UnloadSmlButtonArt();
-	msgSurface = nullptr;
-	msgShadow = nullptr;
-	UnloadTtfFont();
 }
 
 void ProgressRender(BYTE progress)
@@ -73,19 +58,6 @@ void ProgressRender(BYTE progress)
 		DrawArt({ GetCenterOffset(227), position.y + 52 }, &ProgFil, 0, 227 * progress / 100);
 	}
 	DrawArt({ GetCenterOffset(110), position.y + 99 }, &SmlButton, 2, 110);
-
-	if (msgSurface != nullptr) {
-		SDL_Rect dscRect = {
-			static_cast<Sint16>(position.x + 50 + 1),
-			static_cast<Sint16>(position.y + 8 + 1),
-			static_cast<Uint16>(msgSurface->w),
-			static_cast<Uint16>(msgSurface->h)
-		};
-		Blit(msgShadow.get(), nullptr, &dscRect);
-		dscRect.x -= 1;
-		dscRect.y -= 1;
-		Blit(msgSurface.get(), nullptr, &dscRect);
-	}
 }
 
 } // namespace
