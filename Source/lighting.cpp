@@ -645,13 +645,12 @@ void DoUnVision(Point position, int nRadius)
 	}
 }
 
-void DoVision(Point position, int nRadius, bool doautomap, bool visible)
+void DoVision(Point position, int nRadius, MapExplorationType doautomap, bool visible)
 {
-
 	if (InDungeonBounds(position)) {
-		if (doautomap) {
+		if (doautomap != MAP_EXP_NONE) {
 			if (dFlags[position.x][position.y] != 0) {
-				SetAutomapView(position);
+				SetAutomapView(position, doautomap);
 			}
 			dFlags[position.x][position.y] |= BFLAG_EXPLORED;
 		}
@@ -712,9 +711,9 @@ void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 					        && !nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]])
 					    || (InDungeonBounds({ x2adj + nCrawlX, y2adj + nCrawlY })
 					        && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
-						if (doautomap) {
+						if (doautomap != MAP_EXP_NONE) {
 							if (dFlags[nCrawlX][nCrawlY] != 0) {
-								SetAutomapView({ nCrawlX, nCrawlY });
+								SetAutomapView({ nCrawlX, nCrawlY }, doautomap);
 							}
 							dFlags[nCrawlX][nCrawlY] |= BFLAG_EXPLORED;
 						}
@@ -1172,7 +1171,7 @@ void ProcessVisionList()
 		DoVision(
 		    vision.position.tile,
 		    vision._lradius,
-		    vision._lflags,
+		    vision._lflags ? MAP_EXP_SELF : MAP_EXP_OTHERS,
 		    vision._lflags);
 	}
 	bool delflag;

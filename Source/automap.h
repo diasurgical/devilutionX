@@ -14,10 +14,23 @@
 
 namespace devilution {
 
+enum MapExplorationType : uint8_t {
+	/** unexplored map tile */
+	MAP_EXP_NONE,
+	/** map tile explored in vanilla - compatibility reasons */
+	MAP_EXP_OLD,
+	/** map explored by a shrine */
+	MAP_EXP_SHRINE,
+	/** map tile explored by someone else in multiplayer */
+	MAP_EXP_OTHERS,
+	/** map tile explored by current player */
+	MAP_EXP_SELF,
+};
+
 /** Specifies whether the automap is enabled. */
 extern bool AutomapActive;
 /** Tracks the explored areas of the map. */
-extern bool AutomapView[DMAXX][DMAXY];
+extern uint8_t AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
 extern int AutoMapScale;
 extern Displacement AutomapOffset;
@@ -78,9 +91,14 @@ void AutomapZoomOut();
 void DrawAutomap(const Surface &out);
 
 /**
+ * @brief Updates automap explorer at point if value is higher than existing.
+ */
+void UpdateAutomapExplorer(Point map, MapExplorationType explorer);
+
+/**
  * @brief Marks the given coordinate as within view on the automap.
  */
-void SetAutomapView(Point tile);
+void SetAutomapView(Point tile, MapExplorationType explorer);
 
 /**
  * @brief Resets the zoom level of the automap.

@@ -1073,7 +1073,7 @@ void DiabloDeath(Monster &diablo, bool sendmsg)
 		dMonster[monster.position.tile.x][monster.position.tile.y] = k + 1;
 	}
 	AddLight(diablo.position.tile, 8);
-	DoVision(diablo.position.tile, 8, false, true);
+	DoVision(diablo.position.tile, 8, MAP_EXP_NONE, true);
 	int dist = diablo.position.tile.WalkingDistance(ViewPosition);
 	if (dist > 20)
 		dist = 20;
@@ -3809,7 +3809,7 @@ void InitMonsters()
 	for (int i = 0; i < nt; i++) {
 		for (int s = -2; s < 2; s++) {
 			for (int t = -2; t < 2; t++)
-				DoVision(trigs[i].position + Displacement { s, t }, 15, false, false);
+				DoVision(trigs[i].position + Displacement { s, t }, 15, MAP_EXP_NONE, false);
 		}
 	}
 	if (!gbIsSpawn)

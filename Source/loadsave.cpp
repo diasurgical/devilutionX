@@ -1832,7 +1832,7 @@ void LoadGame(bool firstflag)
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
-				AutomapView[i][j] = file.NextBool8();
+				AutomapView[i][j] = file.NextLE<uint8_t>();
 		}
 		file.Skip(MAXDUNX * MAXDUNY); // dMissile
 	}
@@ -2026,7 +2026,7 @@ void SaveGameData()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
+				file.WriteLE<uint8_t>(AutomapView[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
 			for (int i = 0; i < MAXDUNX; i++)                                       // NOLINT(modernize-loop-convert)
@@ -2125,7 +2125,7 @@ void SaveLevel()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
-				file.WriteLE<uint8_t>(AutomapView[i][j] ? 1 : 0);
+				file.WriteLE<uint8_t>(AutomapView[i][j]);
 		}
 	}
 
@@ -2206,8 +2206,10 @@ void LoadLevel()
 				dPreLight[i][j] = file.NextLE<int8_t>();
 		}
 		for (int j = 0; j < DMAXY; j++) {
-			for (int i = 0; i < DMAXX; i++) // NOLINT(modernize-loop-convert)
-				AutomapView[i][j] = file.NextBool8();
+			for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
+				uint8_t automapView = file.NextLE<uint8_t>();
+				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
+			}
 		}
 	}
 

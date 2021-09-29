@@ -7,6 +7,7 @@
 
 #include <array>
 
+#include "automap.h"
 #include "engine.h"
 #include "engine/point.hpp"
 #include "miniwin/miniwin.h"
@@ -49,7 +50,7 @@ extern bool UpdateLighting;
 
 void DoLighting(Point position, int nRadius, int Lnum);
 void DoUnVision(Point position, int nRadius);
-void DoVision(Point position, int nRadius, bool doautomap, bool visible);
+void DoVision(Point position, int nRadius, MapExplorationType doautomap, bool visible);
 void MakeLightTable();
 #ifdef _DEBUG
 void ToggleLighting();

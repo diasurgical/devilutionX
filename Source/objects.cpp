@@ -3212,7 +3212,9 @@ bool OperateShrineSecluded(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	std::fill(&AutomapView[0][0], &AutomapView[DMAXX - 1][DMAXX - 1], true);
+	for (int x = 0; x < DMAXX; x++)
+		for (int y = 0; y < DMAXY; y++)
+			UpdateAutomapExplorer({ x, y }, MAP_EXP_SHRINE);
 
 	InitDiabloMsg(EMSG_SHRINE_SECLUDED);
 
