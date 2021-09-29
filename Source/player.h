@@ -299,6 +299,13 @@ struct Player {
 
 	void CalcScrolls();
 
+	bool CanUseItem(const Item &item) const
+	{
+		return _pStrength >= item._iMinStr
+		    && _pMagic >= item._iMinMag
+		    && _pDexterity >= item._iMinDex;
+	}
+
 	bool HasItem(int item, int *idx = nullptr) const;
 
 	/**
