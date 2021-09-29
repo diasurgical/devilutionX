@@ -320,7 +320,7 @@ void PrintSBookSpellType(const Surface &out, Point position, const std::string &
 	DrawHorizontalLine(out, rect + Displacement {0, 1}, SPLICONLENGTH, rectColorIndex);
 
 	// Bottom
-	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH}, SPLICONLENGTH + 1, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH - 2}, SPLICONLENGTH, rectColorIndex);
 	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH - 1}, SPLICONLENGTH, rectColorIndex);
 
 	// Left Side
@@ -328,7 +328,7 @@ void PrintSBookSpellType(const Surface &out, Point position, const std::string &
 	DrawVerticalLine(out, rect + Displacement {1, 0}, SPLICONLENGTH, rectColorIndex);
 
 	// Right Side
-	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH, 0}, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH - 2, 0}, SPLICONLENGTH, rectColorIndex);
 	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH - 1, 0}, SPLICONLENGTH, rectColorIndex);
 
 	// Align the spell type text with bottom of spell icon
