@@ -312,30 +312,32 @@ void SetSpellTrans(spell_type t)
 
 void PrintSBookSpellType(const Surface &out, Point position, const std::string &text, uint8_t rectColorIndex)
 {
-	Point rect {position};
-	rect += Displacement { 0, -SPLICONLENGTH + 1};
+	Point rect { position };
+	rect += Displacement { 0, -SPLICONLENGTH + 1 };
 
 	// Top
 	DrawHorizontalLine(out, rect, SPLICONLENGTH, rectColorIndex);
-	DrawHorizontalLine(out, rect + Displacement {0, 1}, SPLICONLENGTH, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement { 0, 1 }, SPLICONLENGTH, rectColorIndex);
 
 	// Bottom
-	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH - 2}, SPLICONLENGTH, rectColorIndex);
-	DrawHorizontalLine(out, rect + Displacement {0, SPLICONLENGTH - 1}, SPLICONLENGTH, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement { 0, SPLICONLENGTH - 2 }, SPLICONLENGTH, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement { 0, SPLICONLENGTH - 1 }, SPLICONLENGTH, rectColorIndex);
 
 	// Left Side
 	DrawVerticalLine(out, rect, SPLICONLENGTH, rectColorIndex);
-	DrawVerticalLine(out, rect + Displacement {1, 0}, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement { 1, 0 }, SPLICONLENGTH, rectColorIndex);
 
 	// Right Side
-	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH - 2, 0}, SPLICONLENGTH, rectColorIndex);
-	DrawVerticalLine(out, rect + Displacement {SPLICONLENGTH - 1, 0}, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 2, 0 }, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 1, 0 }, SPLICONLENGTH, rectColorIndex);
 
 	// Align the spell type text with bottom of spell icon
-	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, -14 };
+	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, -15 };
 
 	// Draw a drop shadow below and to the left of the text
 	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
+	DrawString(out, text, position + Displacement { -1, -1 }, UiFlags::ColorBlack);
+	DrawString(out, text, position + Displacement { 1, -1 }, UiFlags::ColorBlack);
 	// Then draw the text over the top
 	DrawString(out, text, position, UiFlags::ColorWhite);
 }
@@ -780,7 +782,7 @@ void DrawSpellList(const Surface &out)
 			if (myPlayer.plrlevel != 0) {
 				spellColor = PAL16_ORANGE + 5;
 			}
-			PrintSBookSpellType(out, spellListItem.location, _( "Staff"), spellColor);
+			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
 			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
