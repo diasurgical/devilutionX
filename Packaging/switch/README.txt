@@ -1,7 +1,7 @@
 # Nintendo Switch Port of DevilutionX (Diablo)
 
 # How To Install:
- - Put `devilutionx.nro` and `CharisSILB.ttf` in into `/switch/devilutionx`
+ - Put `devilutionx.nro` in into `/switch/devilutionx`
  - Copy diabdat.mpq from your CD (or GoG install folder) to `/switch/devilutionx`.
  - To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
  - Launch `devilutionx.nro`. (Do not use album to launch; see the note below.)

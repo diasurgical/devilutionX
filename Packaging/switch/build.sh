@@ -26,10 +26,9 @@ build() {
 
 install_deps() {
 	"$DEVKITPRO/pacman/bin/pacman" -S --needed --noconfirm --quiet \
-		switch-freetype switch-mesa switch-glad switch-glm switch-libpng \
-		switch-sdl2 switch-sdl2_ttf switch-libvorbis switch-libmikmod \
-		switch-libsodium libnx devkitA64 devkitA64 general-tools \
-		switch-tools devkitpro-pkgbuild-helpers
+		switch-mesa switch-glad switch-glm switch-libpng \
+		switch-sdl2 switch-libsodium libnx devkitA64 devkitA64 \
+		general-tools switch-tools devkitpro-pkgbuild-helpers
 }
 
 prepare_devkitpro() {

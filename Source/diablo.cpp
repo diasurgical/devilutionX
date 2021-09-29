@@ -781,8 +781,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-dir", _("Specify the location of the .ttf font"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-name", _("Specify the name of a custom .ttf font"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
@@ -833,10 +831,6 @@ void DiabloParseFlags(int argc, char **argv)
 			paths::SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
 			paths::SetLangPath(argv[++i]);
-		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
-			paths::SetTtfPath(argv[++i]);
-		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
-			paths::SetTtfName(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
@@ -986,8 +980,6 @@ void DiabloDeinit()
 		init_cleanup();
 	if (was_window_init)
 		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
-	if (was_fonts_init)
-		FontsCleanup();
 	UnloadFonts();
 	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) != 0)
 		SDL_Quit();

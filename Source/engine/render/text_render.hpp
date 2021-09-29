@@ -24,6 +24,7 @@ enum GameFontTables : uint8_t {
 	GameFont30,
 	GameFont42,
 	GameFont46,
+	FontSizeDialog,
 };
 
 enum text_color : uint8_t {
@@ -31,6 +32,9 @@ enum text_color : uint8_t {
 	ColorUiSilver,
 	ColorUiGoldDark,
 	ColorUiSilverDark,
+
+	ColorDialogWhite,
+	ColorDialogYellow,
 
 	ColorGold,
 	ColorBlack,

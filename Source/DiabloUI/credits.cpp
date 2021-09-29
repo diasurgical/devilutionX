@@ -6,16 +6,15 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/credits_lines.h"
 #include "DiabloUI/diabloui.h"
-#include "DiabloUI/fonts.h"
 #include "DiabloUI/support_lines.h"
 #include "control.h"
 #include "controls/menu_controls.h"
+#include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "utils/display.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
-#include "utils/ttf_wrap.h"
 
 namespace devilution {
 
@@ -34,72 +33,11 @@ std::size_t textLines;
 // a line is leaving the screen while another one is entering.
 #define MAX_VISIBLE_LINES ((VIEWPORT.h - 1) / LINE_H + 2)
 
-struct CachedLine {
-
-	CachedLine()
-	{
-		mIndex = 0;
-		paletteVersion = pal_surface_palette_version;
-	}
-
-	CachedLine(std::size_t index, SDLSurfaceUniquePtr surface)
-	{
-		mIndex = index;
-		mSurface = std::move(surface);
-		paletteVersion = pal_surface_palette_version;
-	}
-
-	std::size_t mIndex;
-	SDLSurfaceUniquePtr mSurface;
-	unsigned int paletteVersion;
-};
-
-CachedLine PrepareLine(std::size_t index)
-{
-	const char *contents = _(Text[index]);
-	while (contents[0] == '\t')
-		++contents;
-
-	// Precompose shadow and text:
-	SDLSurfaceUniquePtr surface;
-	if (contents[0] != '\0') {
-		const SDL_Color shadowColor = { 0, 0, 0, 0 };
-		SDLSurfaceUniquePtr text = TTFWrap::RenderUTF8_Solid(font, contents, shadowColor);
-
-		// Set up the target surface to have 3 colors: mask, text, and shadow.
-		surface = SDLWrap::CreateRGBSurfaceWithFormat(0, text->w + ShadowOffsetX, text->h + ShadowOffsetY, 8, SDL_PIXELFORMAT_INDEX8);
-		const SDL_Color maskColor = { 0, 255, 0, 0 }; // Any color different from both shadow and text
-		const SDL_Color &textColor = Palette->colors[224];
-		SDL_Color colors[3] = { maskColor, textColor, shadowColor };
-		if (SDLC_SetSurfaceColors(surface.get(), colors, 0, 3) <= -1)
-			Log("{}", SDL_GetError());
-		SDLC_SetColorKey(surface.get(), 0);
-
-		// Blit the shadow first:
-		SDL_Rect shadowRect = { ShadowOffsetX, ShadowOffsetY, 0, 0 };
-		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), &shadowRect) <= -1)
-			ErrSdl();
-
-		// Change the text surface color and blit again:
-		SDL_Color textColors[2] = { maskColor, textColor };
-		if (SDLC_SetSurfaceColors(text.get(), textColors, 0, 2) <= -1)
-			ErrSdl();
-		SDLC_SetColorKey(text.get(), 0);
-
-		if (SDL_BlitSurface(text.get(), nullptr, surface.get(), nullptr) <= -1)
-			ErrSdl();
-
-		surface = ScaleSurfaceToOutput(std::move(surface));
-	}
-	return CachedLine(index, std::move(surface));
-}
-
 class CreditsRenderer {
 
 public:
 	CreditsRenderer()
 	{
-		LoadTtfFont();
 		ticks_begin_ = SDL_GetTicks();
 		prev_offset_y_ = 0;
 		finished_ = false;
@@ -109,8 +47,6 @@ public:
 	{
 		ArtBackgroundWidescreen.Unload();
 		ArtBackground.Unload();
-		UnloadTtfFont();
-		lines_.clear();
 	}
 
 	void Render();
@@ -121,7 +57,6 @@ public:
 	}
 
 private:
-	std::vector<CachedLine> lines_;
 	bool finished_;
 	Uint32 ticks_begin_;
 	int prev_offset_y_;
@@ -137,8 +72,6 @@ void CreditsRenderer::Render()
 	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
 	DrawArt({ PANEL_LEFT - 320, UI_OFFSET_Y }, &ArtBackgroundWidescreen);
 	DrawArt({ PANEL_LEFT, UI_OFFSET_Y }, &ArtBackground);
-	if (font == nullptr)
-		return;
 
 	const std::size_t linesBegin = std::max(offsetY / LINE_H, 0);
 	const std::size_t linesEnd = std::min(linesBegin + MAX_VISIBLE_LINES, textLines);
@@ -149,9 +82,6 @@ void CreditsRenderer::Render()
 		return;
 	}
 
-	while (linesEnd > lines_.size())
-		lines_.push_back(PrepareLine(lines_.size()));
-
 	SDL_Rect viewport = VIEWPORT;
 	viewport.x += PANEL_LEFT;
 	viewport.y += UI_OFFSET_Y;
@@ -161,26 +91,19 @@ void CreditsRenderer::Render()
 	// We use unscaled coordinates for calculation throughout.
 	Sint16 destY = UI_OFFSET_Y + VIEWPORT.y - (offsetY - linesBegin * LINE_H);
 	for (std::size_t i = linesBegin; i < linesEnd; ++i, destY += LINE_H) {
-		CachedLine &line = lines_[i];
-		if (line.mSurface == nullptr)
-			continue;
-
-		// Still fading in: the cached line was drawn with a different fade level.
-		if (line.paletteVersion != pal_surface_palette_version) {
-			line = PrepareLine(line.mIndex);
-		}
-
 		Sint16 destX = PANEL_LEFT + VIEWPORT.x + 31;
 		int j = 0;
-		while (Text[line.mIndex][j++] == '\t')
+		while (Text[i][j] == '\t') {
 			destX += 40;
+			j++;
+		}
 
-		SDL_Rect dstRect = { destX, destY, 0, 0 };
+		SDL_Rect dstRect { destX, destY, 0, 0 };
 		ScaleOutputRect(&dstRect);
-		dstRect.w = line.mSurface->w;
-		dstRect.h = line.mSurface->h;
-		if (SDL_BlitSurface(line.mSurface.get(), nullptr, DiabloUiSurface(), &dstRect) < 0)
-			ErrSdl();
+		if (Text[i][j] != '\0') {
+			const Surface &out = Surface(DiabloUiSurface());
+			DrawString(out, _(Text[i]), Point { dstRect.x, dstRect.y }, UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite, 0);
+		}
 	}
 	SDL_SetClipRect(DiabloUiSurface(), nullptr);
 }

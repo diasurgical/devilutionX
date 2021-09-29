@@ -67,7 +67,6 @@ extern bool gbLoadGame;
 extern bool cineflag;
 extern int force_redraw;
 /* These are defined in fonts.h */
-extern bool was_fonts_init;
 extern void FontsCleanup();
 extern int PauseMode;
 extern bool gbNestArt;

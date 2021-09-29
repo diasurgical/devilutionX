@@ -11,14 +11,6 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#ifndef TTF_FONT_DIR
-#define TTF_FONT_DIR ""
-#endif
-
-#ifndef TTF_FONT_NAME
-#define TTF_FONT_NAME "CharisSILB.ttf"
-#endif
-
 #ifndef MO_LANG_DIR
 #define MO_LANG_DIR ""
 #endif
@@ -33,8 +25,6 @@ std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
 std::optional<std::string> langPath;
-std::optional<std::string> ttfPath;
-std::optional<std::string> ttfName;
 
 void AddTrailingSlash(std::string &path)
 {
@@ -97,20 +87,6 @@ const std::string &LangPath()
 	return *langPath;
 }
 
-const std::string &TtfPath()
-{
-	if (!ttfPath)
-		ttfPath.emplace(TTF_FONT_DIR);
-	return *ttfPath;
-}
-
-const std::string &TtfName()
-{
-	if (!ttfName)
-		ttfName.emplace(TTF_FONT_NAME);
-	return *ttfName;
-}
-
 void SetBasePath(const std::string &path)
 {
 	basePath = path;
@@ -133,17 +109,6 @@ void SetLangPath(const std::string &path)
 {
 	langPath = path;
 	AddTrailingSlash(*langPath);
-}
-
-void SetTtfPath(const std::string &path)
-{
-	ttfPath = path;
-	AddTrailingSlash(*ttfPath);
-}
-
-void SetTtfName(const std::string &name)
-{
-	ttfName = name;
 }
 
 } // namespace paths
