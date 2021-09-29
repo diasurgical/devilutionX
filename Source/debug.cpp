@@ -333,11 +333,23 @@ std::string DebugCmdLighting(const string_view parameter)
 	return "All raindrops are the same.";
 }
 
-std::string DebugCmdMap(const string_view parameter)
+std::string DebugCmdMapReveal(const string_view parameter)
 {
-	std::fill(&AutomapView[0][0], &AutomapView[DMAXX - 1][DMAXX - 1], true);
+	for (int x = 0; x < DMAXX; x++)
+		for (int y = 0; y < DMAXY; y++)
+			UpdateAutomapExplorer({ x, y }, MAP_EXP_SHRINE);
 
 	return "The way is made clear when viewed from above";
+}
+
+std::string DebugCmdMapHide(const string_view parameter)
+{
+	for (int x = 0; x < DMAXX; x++)
+		for (int y = 0; y < DMAXY; y++)
+			if (AutomapView[x][y] == MAP_EXP_SHRINE)
+				AutomapView[x][y] = MAP_EXP_NONE;
+
+	return "The way is made unclear when viewed from below";
 }
 
 std::string DebugCmdVision(const string_view parameter)
@@ -708,7 +720,8 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "setspells", "Set spell level to {level} for all spells.", "{level}", &DebugCmdSetSpellsLevel },
 	{ "take gold", "Removes all gold from inventory.", "", &DebugCmdTakeGoldCheat },
 	{ "give quest", "Enable a given quest.", "({id})", &DebugCmdQuest },
-	{ "give map", "Reveal the map.", "", &DebugCmdMap },
+	{ "give map", "Reveal the map.", "", &DebugCmdMapReveal },
+	{ "take map", "Hide the map.", "", &DebugCmdMapHide },
 	{ "changelevel", "Moves to specifided {level} (use 0 for town).", "{level}", &DebugCmdWarpToLevel },
 	{ "map", "Load a quest level {level}.", "{level}", &DebugCmdLoadMap },
 	{ "visit", "Visit a towner.", "{towner}", &DebugCmdVisitTowner },
