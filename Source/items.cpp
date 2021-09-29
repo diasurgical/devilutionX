@@ -510,24 +510,10 @@ void CalcSelfItems(Player &player)
 	} while (changeflag);
 }
 
-bool ItemMinStats(const Player &player, Item &x)
-{
-	if (player._pMagic < x._iMinMag)
-		return false;
-
-	if (player._pStrength < x._iMinStr)
-		return false;
-
-	if (player._pDexterity < x._iMinDex)
-		return false;
-
-	return true;
-}
-
 void CalcPlrItemMin(Player &player)
 {
 	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
-		item._iStatFlag = ItemMinStats(player, item);
+		item._iStatFlag = player.CanUseItem(item);
 	}
 }
 
@@ -583,7 +569,7 @@ void CalcPlrBookVals(Player &player)
 					spellLevel = 0;
 				}
 			}
-			item._iStatFlag = ItemMinStats(player, item);
+			item._iStatFlag = player.CanUseItem(item);
 		}
 	}
 }
