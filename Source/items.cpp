@@ -533,26 +533,12 @@ void WitchBookLevel(Item &bookItem)
 	}
 }
 
-bool StoreStatOk(Item &item)
-{
-	const auto &myPlayer = Players[MyPlayerId];
-
-	if (myPlayer._pStrength < item._iMinStr)
-		return false;
-	if (myPlayer._pMagic < item._iMinMag)
-		return false;
-	if (myPlayer._pDexterity < item._iMinDex)
-		return false;
-
-	return true;
-}
-
 void CalcPlrBookVals(Player &player)
 {
 	if (currlevel == 0) {
 		for (int i = 1; !witchitem[i].isEmpty(); i++) {
 			WitchBookLevel(witchitem[i]);
-			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
+			witchitem[i]._iStatFlag = MyPlayer->CanUseItem(witchitem[i]);
 		}
 	}
 
@@ -2267,7 +2253,7 @@ void SpawnOnePremium(Item &premiumItem, int plvl, int playerId)
 	        && count < 150));
 	premiumItem._iCreateInfo = plvl | CF_SMITHPREMIUM;
 	premiumItem._iIdentified = true;
-	premiumItem._iStatFlag = StoreStatOk(premiumItem);
+	premiumItem._iStatFlag = MyPlayer->CanUseItem(premiumItem);
 }
 
 bool WitchItemOk(int i)
@@ -2432,27 +2418,31 @@ void RecreateTownItem(Item &item, int idx, uint16_t icreateinfo, int iseed)
 
 void RecalcStoreStats()
 {
+	// This function gets called when browsing the saved games list, the global MyPlayer pointer is nullptr at this point
+	// since we're not actually in a game yet. Previous code just blindly used Players[MyPlayerId] (where MyPlayerId = 0)
+	// so we do the same.
+	const auto &myPlayer = Players[MyPlayerId];
 	for (auto &item : smithitem) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = StoreStatOk(item);
+			item._iStatFlag = myPlayer.CanUseItem(item);
 		}
 	}
 	for (auto &item : premiumitems) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = StoreStatOk(item);
+			item._iStatFlag = myPlayer.CanUseItem(item);
 		}
 	}
 	for (int i = 0; i < 20; i++) {
 		if (!witchitem[i].isEmpty()) {
-			witchitem[i]._iStatFlag = StoreStatOk(witchitem[i]);
+			witchitem[i]._iStatFlag = myPlayer.CanUseItem(witchitem[i]);
 		}
 	}
 	for (auto &item : healitem) {
 		if (!item.isEmpty()) {
-			item._iStatFlag = StoreStatOk(item);
+			item._iStatFlag = myPlayer.CanUseItem(item);
 		}
 	}
-	boyitem._iStatFlag = StoreStatOk(boyitem);
+	boyitem._iStatFlag = myPlayer.CanUseItem(boyitem);
 }
 
 void CreateMagicItem(Point position, int lvl, ItemType itemType, int imid, int icurs, bool sendmsg, bool delta)
@@ -4456,7 +4446,7 @@ void SpawnSmith(int lvl)
 
 		newItem._iCreateInfo = lvl | CF_SMITH;
 		newItem._iIdentified = true;
-		newItem._iStatFlag = StoreStatOk(newItem);
+		newItem._iStatFlag = MyPlayer->CanUseItem(newItem);
 	}
 	for (int i = iCnt; i < SMITH_ITEMS; i++)
 		smithitem[i]._itype = ItemType::None;
@@ -4532,7 +4522,7 @@ void SpawnWitch(int lvl)
 					item._iCreateInfo = lvl | CF_WITCH;
 					item._iIdentified = true;
 					WitchBookLevel(item);
-					item._iStatFlag = StoreStatOk(item);
+					item._iStatFlag = MyPlayer->CanUseItem(item);
 					bookCount++;
 					continue;
 				}
@@ -4562,7 +4552,7 @@ void SpawnWitch(int lvl)
 		item._iCreateInfo = lvl | CF_WITCH;
 		item._iIdentified = true;
 		WitchBookLevel(item);
-		item._iStatFlag = StoreStatOk(item);
+		item._iStatFlag = MyPlayer->CanUseItem(item);
 	}
 
 	SortVendor(witchitem + PinnedItemCount);
@@ -4679,7 +4669,7 @@ void SpawnBoy(int lvl)
 	        && count < 250));
 	boyitem._iCreateInfo = lvl | CF_BOY;
 	boyitem._iIdentified = true;
-	boyitem._iStatFlag = StoreStatOk(boyitem);
+	boyitem._iStatFlag = MyPlayer->CanUseItem(boyitem);
 	boylevel = lvl / 2;
 }
 
@@ -4712,7 +4702,7 @@ void SpawnHealer(int lvl)
 		GetItemAttrs(item, itype, lvl);
 		item._iCreateInfo = lvl | CF_HEALER;
 		item._iIdentified = true;
-		item._iStatFlag = StoreStatOk(item);
+		item._iStatFlag = MyPlayer->CanUseItem(item);
 	}
 
 	SortVendor(healitem + PinnedItemCount);
