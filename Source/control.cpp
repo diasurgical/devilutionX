@@ -740,13 +740,19 @@ void DrawSpellList(const Surface &out)
 		if (!spellListItem.isSelected)
 			continue;
 
+		uint8_t spellColor = PAL16_GRAY + 5;
+
 		switch (spellListItem.type) {
 		case RSPLTYPE_SKILL:
-			PrintSBookSpellType(out, spellListItem.location, _("Skill"), PAL16_YELLOW - 46);
+			spellColor = PAL16_YELLOW - 46;
+			PrintSBookSpellType(out, spellListItem.location, _("Skill"), spellColor);
 			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
 			break;
 		case RSPLTYPE_SPELL:
-			PrintSBookSpellType(out, spellListItem.location, _("Spell"), PAL16_BLUE + 5);
+			if (myPlayer.plrlevel != 0) {
+				spellColor = PAL16_BLUE + 5;
+			}
+			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
 			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			if (spellId == SPL_HBOLT) {
 				strcpy(tempstr, _("Damages undead only"));
@@ -759,7 +765,10 @@ void DrawSpellList(const Surface &out)
 			AddPanelString(tempstr);
 			break;
 		case RSPLTYPE_SCROLL: {
-			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), PAL16_RED - 59);
+			if (myPlayer.plrlevel != 0) {
+				spellColor = PAL16_RED - 59;
+			}
+			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
 			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			const InventoryAndBeltPlayerItemsRange items { myPlayer };
 			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
@@ -768,7 +777,10 @@ void DrawSpellList(const Surface &out)
 			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
 		} break;
 		case RSPLTYPE_CHARGES: {
-			PrintSBookSpellType(out, spellListItem.location, _( "Staff"), PAL16_ORANGE + 5);
+			if (myPlayer.plrlevel != 0) {
+				spellColor = PAL16_ORANGE + 5;
+			}
+			PrintSBookSpellType(out, spellListItem.location, _( "Staff"), spellColor);
 			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
 			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
 			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
