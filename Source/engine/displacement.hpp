@@ -106,8 +106,8 @@ struct Displacement {
 	/**
 	 * @brief Returns a new Displacement object in screen coordinates.
 	 *
-	 * Transforming from world space to screen space involves a rotation of -135° and scaling to fit within a 64x32 pixel tile (since Diablo uses isometric projection)
-	 * 32 and 16 are used as the x/y scaling factors being half the relevant max dimension, the rotation matrix is [[-, +], [-, -]] as sin(-135°) = cos(-135°) = ~-0.7.
+	 * Transforming from world space to screen space involves a rotation of -135Â° and scaling to fit within a 64x32 pixel tile (since Diablo uses isometric projection)
+	 * 32 and 16 are used as the x/y scaling factors being half the relevant max dimension, the rotation matrix is [[-, +], [-, -]] as sin(-135Â°) = cos(-135Â°) = ~-0.7.
 	 *
 	 * [-32,  32] [dx] = [-32dx +  32dy] = [  32dy - 32dx ] = [ 32(dy - dx)]
 	 * [-16, -16] [dy] = [-16dx + -16dy] = [-(16dy + 16dx)] = [-16(dy + dx)]
