@@ -363,7 +363,7 @@ public:
 		return tmp;
 	}
 
-	int indexAt(Sint16 y) const
+	[[nodiscard]] size_t indexAt(Sint16 y) const
 	{
 		ASSERT(y >= m_rect.y);
 		const size_t index = (y - m_rect.y) / m_height;
