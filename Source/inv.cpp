@@ -879,7 +879,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 				holdItem._itype = ItemType::None;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				if (!IsHardwareCursor()) {
+				if (!IsHardwareCursor() && !dropItem) {
 					// For a hardware cursor, we set the "hot point" to the center of the item instead.
 					SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 				}

@@ -1405,6 +1405,10 @@ bool TryDropItem()
 		DropItemBeforeTrig();
 	}
 
+	if (pcurs != CURSOR_HAND) {
+		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
+	}
+
 	return pcurs == CURSOR_HAND;
 }
 
