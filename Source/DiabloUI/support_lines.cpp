@@ -17,7 +17,7 @@ const char *const SupportLines[] = {
 	"",
 	N_("Disclaimer:"),
 	N_("  DevilutionX is not supported or maintained by Blizzard Entertainment,"),
-	N_("  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"),
+	N_("  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"),
 	N_("  or certified the quality or compatibility of DevilutionX. All inquiries"),
 	N_("  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"),
 	N_("  Entertainment or GOG.com."),

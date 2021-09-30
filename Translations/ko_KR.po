@@ -765,7 +765,7 @@ msgstr ""
 "  DevilutionX는 Blizzard Entertainment에서 지원받거나 운영되지 않습니다,"
 
 #: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
+msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
 msgstr ""
 "  GOG.com 또한 마찬가지입니다. Blizzard Entertainment와 GOG.com은 DevilutionX"
 "의 품질"
