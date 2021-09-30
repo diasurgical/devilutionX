@@ -3631,6 +3631,8 @@ void SyncInitPlr(int pnum)
 
 	SetPlrAnims(player);
 	SyncInitPlrPos(pnum);
+	if (pnum != MyPlayerId)
+		player._plid = NO_LIGHT;
 }
 
 void CheckStats(Player &player)

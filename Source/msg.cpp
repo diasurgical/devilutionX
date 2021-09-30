@@ -1546,7 +1546,6 @@ DWORD OnPlayerJoinLevel(TCmd *pCmd, int pnum)
 			}
 
 			player._pvid = AddVision(player.position.tile, player._pLightRad, pnum == MyPlayerId);
-			player._plid = NO_LIGHT;
 		}
 	}
 
