@@ -77,7 +77,7 @@ void FreePackets()
 
 void PrePacket()
 {
-	uint8_t playerId = -1;
+	uint8_t playerId = std::numeric_limits<uint8_t>::max();
 	for (TMegaPkt &pkt : MegaPktList) {
 		byte *data = pkt.data;
 		size_t spaceLeft = sizeof(pkt.data);
@@ -100,7 +100,17 @@ void PrePacket()
 				continue;
 			}
 
-			uint32_t pktSize = ParseCmd(playerId, (TCmd *)data);
+			if (playerId >= MAX_PLRS) {
+				Log("Missing source of network message");
+				return;
+			}
+
+			uint32_t size = ParseCmd(playerId, (TCmd *)data);
+			if (size == 0) {
+				Log("Discarding bad network message");
+				return;
+			}
+			uint32_t pktSize = size;
 			data += pktSize;
 			spaceLeft -= pktSize;
 		}
@@ -602,11 +612,6 @@ void NetSendCmdExtra(TCmdGItem *p)
 	cmd.dwTime = 0;
 	cmd.bCmd = CMD_ITEMEXTRA;
 	NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
-}
-
-DWORD OnSyncData(TCmd *pCmd, int pnum)
-{
-	return sync_update(pnum, (const byte *)pCmd);
 }
 
 DWORD OnWalk(TCmd *pCmd, Player &player)
@@ -1912,23 +1917,22 @@ void delta_monster_hp(int mi, int hp, BYTE bLevel)
 		pD->_mhitpoints = hp;
 }
 
-void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel)
+void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 {
 	if (!gbIsMultiplayer)
 		return;
 
-	assert(pSync != nullptr);
-	assert(bLevel < NUMLEVELS);
+	assert(level < NUMLEVELS);
 	sgbDeltaChanged = true;
 
-	DMonsterStr *pD = &sgLevels[bLevel].monster[pSync->_mndx];
-	if (pD->_mhitpoints == 0)
+	DMonsterStr &monster = sgLevels[level].monster[monsterSync._mndx];
+	if (monster._mhitpoints == 0)
 		return;
 
-	pD->_mx = pSync->_mx;
-	pD->_my = pSync->_my;
-	pD->_mactive = UINT8_MAX;
-	pD->_menemy = pSync->_menemy;
+	monster._mx = monsterSync._mx;
+	monster._my = monsterSync._my;
+	monster._mactive = UINT8_MAX;
+	monster._menemy = monsterSync._menemy;
 }
 
 bool delta_portal_inited(int i)
@@ -2536,7 +2540,7 @@ void delta_close_portal(int pnum)
 	sgbDeltaChanged = true;
 }
 
-DWORD ParseCmd(int pnum, TCmd *pCmd)
+uint32_t ParseCmd(int pnum, TCmd *pCmd)
 {
 	sbLastCmd = pCmd->bCmd;
 	if (sgwPackPlrOffsetTbl[pnum] != 0 && sbLastCmd != CMD_ACK_PLRINFO && sbLastCmd != CMD_SEND_PLRINFO)

@@ -4960,17 +4960,17 @@ int encode_enemy(Monster &monster)
 	return monster._menemy;
 }
 
-void decode_enemy(Monster &monster, int enemy)
+void decode_enemy(Monster &monster, int enemyId)
 {
-	if (enemy < MAX_PLRS) {
+	if (enemyId < MAX_PLRS) {
 		monster._mFlags &= ~MFLAG_TARGETS_MONSTER;
-		monster._menemy = enemy;
-		monster.enemyPosition = Players[enemy].position.future;
+		monster._menemy = enemyId;
+		monster.enemyPosition = Players[enemyId].position.future;
 	} else {
 		monster._mFlags |= MFLAG_TARGETS_MONSTER;
-		enemy -= MAX_PLRS;
-		monster._menemy = enemy;
-		monster.enemyPosition = Monsters[enemy].position.future;
+		enemyId -= MAX_PLRS;
+		monster._menemy = enemyId;
+		monster.enemyPosition = Monsters[enemyId].position.future;
 	}
 }
 
