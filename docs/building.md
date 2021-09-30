@@ -128,6 +128,9 @@ Make sure to install the `C++ CMake tools for Windows` and `Windows SDK` compone
 Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
 Don't forget to perform _user-wide integration_ step for additional convenience.
 
+In order to build devilutionx.mpq, install smpq from https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe.
+The location of this tool will need to be [added to the system's PATH environment variable](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14)).
+
 ### Compiling
 
 * **Through Open->CMake in Visual Studio**
