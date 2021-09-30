@@ -106,8 +106,7 @@ void InitHelp()
 	for (const auto *text : HelpText) {
 		strcpy(tempString, _(text));
 
-		WordWrapString(tempString, 577);
-		const string_view paragraph = tempString;
+		const std::string paragraph = WordWrapString(tempString, 577);
 
 		size_t previous = 0;
 		while (true) {

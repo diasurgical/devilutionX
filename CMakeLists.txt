@@ -992,9 +992,8 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  target_compile_options(libdevilutionx PUBLIC "/W3")
+  target_compile_options(libdevilutionx PUBLIC "/W3" "/Zc:__cplusplus" "/utf-8")
   target_compile_definitions(libdevilutionx PUBLIC _CRT_SECURE_NO_WARNINGS)
-  target_compile_options(libdevilutionx PUBLIC "/Zc:__cplusplus")
 endif()
 
 if(APPLE)

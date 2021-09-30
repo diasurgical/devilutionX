@@ -170,14 +170,16 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 {
 	int lineWidth = 0;
 
-	std::string textBuffer(text);
-	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
+	std::string textBuffer;
+	textBuffer.reserve(textBuffer.size() + 3); // Buffer must be padded before calling utf8_decode()
+	textBuffer.append(text.data(), text.size());
+	textBuffer.resize(textBuffer.size() + 3);
 	const char *textData = textBuffer.data();
 
 	size_t i = 0;
 	uint32_t currentUnicodeRow = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
-	uint32_t next;
+	char32_t next;
 	int error;
 	for (; *textData != '\0'; i++) {
 		textData = utf8_decode(textData, &next, &error);
@@ -217,27 +219,37 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 	return maxSpacing - spacingRedux;
 }
 
-void WordWrapString(char *text, size_t width, GameFontTables size, int spacing)
+std::string WordWrapString(string_view text, size_t width, GameFontTables size, int spacing)
 {
-	int lastKnownSpaceAt = -1;
-	size_t lineWidth = 0;
+	int lastBreakablePos = -1;
+	int lastBreakableLen;
+	char32_t lastBreakableCodePoint;
 
-	std::string textBuffer(text);
-	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
-	const char *textData = textBuffer.data();
+	std::string input;
+	std::string output;
+	input.reserve(input.size() + 3); // Buffer must be padded before calling utf8_decode()
+	input.append(text.data(), text.size());
+	input.resize(input.size() + 3);
+	output.reserve(text.size());
+	const char *begin = input.data();
+	const char *cur = begin;
 
+	const char *processedEnd = cur;
 	uint32_t currentUnicodeRow = 0;
+	size_t lineWidth = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
-	uint32_t next;
+	char32_t next;
 	int error;
-	while (*textData != '\0') {
-		textData = utf8_decode(textData, &next, &error);
-		if (error)
-			next = '?';
+	while (*cur != '\0') {
+		cur = utf8_decode(cur, &next, &error);
+		if (error != 0)
+			next = U'?';
 
-		if (next == '\n') { // Existing line break, scan next line
-			lastKnownSpaceAt = -1;
+		if (next == U'\n') { // Existing line break, scan next line
+			lastBreakablePos = -1;
 			lineWidth = 0;
+			output.append(processedEnd, cur);
+			processedEnd = cur;
 			continue;
 		}
 
@@ -252,8 +264,16 @@ void WordWrapString(char *text, size_t width, GameFontTables size, int spacing)
 		}
 		lineWidth += (*kerning)[frame] + spacing;
 
-		if (next == ' ') {
-			lastKnownSpaceAt = textData - textBuffer.data() - 1;
+		if (IsAnyOf(next, U' ', U',', U'.', U'?', U'!')) {
+			lastBreakablePos = static_cast<int>(cur - begin - 1);
+			lastBreakableLen = 1;
+			lastBreakableCodePoint = next;
+			continue;
+		}
+		if (IsAnyOf(next, U'　', U'、', U'。', U'？', U'！')) {
+			lastBreakablePos = static_cast<int>(cur - begin - 3);
+			lastBreakableLen = 3;
+			lastBreakableCodePoint = next;
 			continue;
 		}
 
@@ -261,16 +281,24 @@ void WordWrapString(char *text, size_t width, GameFontTables size, int spacing)
 			continue; // String is still within the limit, continue to the next symbol
 		}
 
-		if (lastKnownSpaceAt == -1) { // Single word longer than width
+		if (lastBreakablePos == -1) { // Single word longer than width
 			continue;
 		}
 
 		// Break line and continue to next line
-		text[lastKnownSpaceAt] = '\n';
-		textData = &textBuffer.data()[lastKnownSpaceAt + 1];
-		lastKnownSpaceAt = -1;
+		const char *end = &input[lastBreakablePos];
+		if (!IsAnyOf(lastBreakableCodePoint, U' ', U'　')) {
+			end += lastBreakableLen;
+		}
+		output.append(processedEnd, end);
+		output += '\n';
+		cur = &input[lastBreakablePos + lastBreakableLen];
+		processedEnd = cur;
+		lastBreakablePos = -1;
 		lineWidth = 0;
 	}
+	output.append(processedEnd, cur);
+	return output;
 }
 
 /**
@@ -317,7 +345,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	const char *textData = textBuffer.data();
 	const char *previousPosition = textData;
 
-	uint32_t next;
+	char32_t next;
 	uint32_t currentUnicodeRow = 0;
 	int error;
 	for (; *textData != '\0'; previousPosition = textData) {
