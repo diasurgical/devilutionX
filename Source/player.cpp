@@ -860,15 +860,18 @@ bool DamageWeapon(int pnum, int durrnd)
 	return false;
 }
 
-bool PlrHitMonst(int pnum, int m)
+bool PlrHitMonst(int pnum, int m, bool adjacentDamage = false)
 {
 	int hper = 0;
-	bool adjacentDamage = false;
 
 	if ((DWORD)m >= MAXMONSTERS) {
 		app_fatal("PlrHitMonst: illegal monster %i", m);
 	}
 	auto &monster = Monsters[m];
+
+	if ((DWORD)pnum >= MAX_PLRS) {
+		app_fatal("PlrHitMonst: illegal player %i", pnum);
+	}
 	auto &player = Players[pnum];
 
 	if ((monster._mhitpoints >> 6) <= 0) {
@@ -883,17 +886,11 @@ bool PlrHitMonst(int pnum, int m)
 		return false;
 	}
 
-	if (pnum < 0) {
-		adjacentDamage = true;
-		pnum = -pnum;
+	if (adjacentDamage) {
 		if (player._pLevel > 20)
 			hper -= 30;
 		else
 			hper -= (35 - player._pLevel) * 2;
-	}
-
-	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("PlrHitMonst: illegal player %i", pnum);
 	}
 
 	int hit = GenerateRnd(100);
@@ -1237,7 +1234,7 @@ bool DoAttack(int pnum)
 				int m = abs(dMonster[position.x][position.y]) - 1;
 				auto &monster = Monsters[m];
 				if (!CanTalkToMonst(monster) && monster.position.old == position) {
-					if (PlrHitMonst(-pnum, m))
+					if (PlrHitMonst(pnum, m, true))
 						didhit = true;
 				}
 			}
@@ -1246,7 +1243,7 @@ bool DoAttack(int pnum)
 				int m = abs(dMonster[position.x][position.y]) - 1;
 				auto &monster = Monsters[m];
 				if (!CanTalkToMonst(monster) && monster.position.old == position) {
-					if (PlrHitMonst(-pnum, m))
+					if (PlrHitMonst(pnum, m, true))
 						didhit = true;
 				}
 			}
