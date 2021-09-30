@@ -1642,12 +1642,12 @@ void DrawGoldSplit(const Surface &out, int amount)
 	tempstr[BufferSize - 1] = '\0';
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
-	WordWrapString(tempstr, 200);
+	const std::string wrapped = WordWrapString(tempstr, 200);
 
 	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
 	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
 	//  for the text entered by the player.
-	DrawString(out, tempstr, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
 
 	tempstr[0] = '\0';
 	if (amount > 0) {

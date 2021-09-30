@@ -24,7 +24,7 @@
  * occurs, this pointer will be a guess that depends on the particular
  * error, but it will always advance at least one byte.
  */
-inline const char *utf8_decode(const char *buf, uint32_t *c, int *e)
+inline const char *utf8_decode(const char *buf, char32_t *c, int *e)
 {
 	static const char lengths[] = {
 		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -47,10 +47,10 @@ inline const char *utf8_decode(const char *buf, uint32_t *c, int *e)
 	/* Assume a four-byte character and load four bytes. Unused bits are
      * shifted out.
      */
-	*c = (uint32_t)(s[0] & masks[len]) << 18;
-	*c |= (uint32_t)(s[1] & 0x3f) << 12;
-	*c |= (uint32_t)(s[2] & 0x3f) << 6;
-	*c |= (uint32_t)(s[3] & 0x3f) << 0;
+	*c = static_cast<char32_t>((s[0] & masks[len]) << 18);
+	*c |= static_cast<char32_t>((s[1] & 0x3f) << 12);
+	*c |= static_cast<char32_t>((s[2] & 0x3f) << 6);
+	*c |= static_cast<char32_t>((s[3] & 0x3f) << 0);
 	*c >>= shiftc[len];
 
 	/* Accumulate the various error conditions. */
@@ -73,7 +73,7 @@ inline int FindLastUtf8Symbols(const char *text)
 	const char *textData = textBuffer.data();
 	const char *previousPosition = textData;
 
-	uint32_t next;
+	char32_t next;
 	int error;
 	for (; *textData != '\0'; previousPosition = textData) {
 		textData = utf8_decode(textData, &next, &error);

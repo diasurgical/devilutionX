@@ -109,7 +109,8 @@ void selgame_GameSelection_Focus(int value)
 		strncpy(selgame_Description, _("Enter an IP or a hostname and join a game already in progress at that address."), sizeof(selgame_Description) - 1);
 		break;
 	}
-	WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
+	const std::string wrapped = WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
+	strncpy(selgame_Description, wrapped.data(), sizeof(selgame_Description) - 1);
 }
 
 /**
@@ -212,7 +213,8 @@ void selgame_Diff_Focus(int value)
 		strncpy(selgame_Description, _("Hell Difficulty\nThe most powerful of the underworld's creatures lurk at the gateway into Hell. Only the most experienced characters should venture in this realm."), sizeof(selgame_Description) - 1);
 		break;
 	}
-	WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
+	const std::string wrapped = WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
+	strncpy(selgame_Description, wrapped.data(), sizeof(selgame_Description) - 1);
 }
 
 bool IsDifficultyAllowed(int value)
@@ -339,7 +341,8 @@ void selgame_Speed_Focus(int value)
 		strncpy(selgame_Description, _("Fastest Speed\nThe minions of the underworld will rush to attack without hesitation. Only a true speed demon should enter at this pace."), sizeof(selgame_Description) - 1);
 		break;
 	}
-	WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
+	const std::string wrapped = WordWrapString(selgame_Description, DESCRIPTION_WIDTH);
+	strncpy(selgame_Description, wrapped.data(), sizeof(selgame_Description) - 1);
 }
 
 void selgame_Speed_Esc()

@@ -112,7 +112,8 @@ void SelconnFocus(int value)
 	}
 
 	strncpy(selconn_MaxPlayers, fmt::format(_("Players Supported: {:d}"), players).c_str(), sizeof(selconn_MaxPlayers));
-	WordWrapString(selconn_Description, DESCRIPTION_WIDTH);
+	const std::string wrapped = WordWrapString(selconn_Description, DESCRIPTION_WIDTH);
+	strncpy(selconn_Description, wrapped.data(), sizeof(selconn_Description) - 1);
 }
 
 void SelconnSelect(int value)

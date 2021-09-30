@@ -31,8 +31,7 @@ void PrintChatMessage(const Surface &out, int x, int y, int width, char *text, U
 		if (text[i] == '\n')
 			text[i] = ' ';
 	}
-	WordWrapString(text, width);
-	DrawString(out, text, { { x, y }, { width, 0 } }, style, 1, 10);
+	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, 10);
 }
 
 } // namespace
