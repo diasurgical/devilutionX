@@ -25,7 +25,6 @@ static constexpr uint64_t ZtNetwork = 0xaf78bf943649eb12;
 
 static std::atomic_bool zt_network_ready(false);
 static std::atomic_bool zt_node_online(false);
-static std::atomic_bool zt_started(false);
 static std::atomic_bool zt_joined(false);
 
 static void Callback(struct zts_callback_msg *msg)
@@ -55,18 +54,10 @@ bool zerotier_network_ready()
 	return zt_network_ready && zt_node_online;
 }
 
-void zerotier_network_stop()
-{
-	zts_stop();
-}
-
 void zerotier_network_start()
 {
-	if (zt_started)
-		return;
 	std::string ztpath = paths::PrefPath() + "zerotier";
 	zts_start(ztpath.c_str(), (void (*)(void *))Callback, 0);
-	std::atexit(zerotier_network_stop);
 }
 
 } // namespace net
