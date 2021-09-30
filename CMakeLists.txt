@@ -762,12 +762,12 @@ set(devilutionx_assets
 
 find_program(SMPQ smpq)
 if(SMPQ)
-  file(REMOVE "Packaging/resources/devilutionx.mpq")
-  execute_process(
+  add_custom_target(build_mpq ALL
     WORKING_DIRECTORY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets"
-    COMMAND ${SMPQ} -M 1 -C PKWARE -c "../devilutionx.mpq" ${devilutionx_assets})
-  # Copy devilutionx.mpq to the build directory so the game can run from the build directory
-  file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+    COMMAND ${CMAKE_COMMAND} -E remove -f "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq"
+    COMMAND ${SMPQ} -M 1 -C PKWARE -c "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq" ${devilutionx_assets}
+    BYPRODUCTS "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq")
+  add_dependencies(${BIN_TARGET} build_mpq)
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
@@ -1053,7 +1053,7 @@ if(VITA)
     FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
     FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
     FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
+    FILE ${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq
     ${VITA_TRANSLATIONS_LIST}
   )
 endif()
@@ -1068,7 +1068,7 @@ if(NINTENDO_3DS)
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   list(APPEND APP_ROMFS_FILES
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq
+    ${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq
     ${devilutionx_TRANSLATIONS})
   set(APP_VERSION ${PROJECT_VERSION})
 
@@ -1126,7 +1126,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq"
       DESTINATION "."
     )
 
@@ -1169,7 +1169,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq"
       DESTINATION "share/diasurgical/${project_name}"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/icon.png"
