@@ -168,7 +168,7 @@ int WaitForTurns()
 	return 100 * sgbDeltaChunks / MAX_CHUNKS;
 }
 
-byte *DeltaExportItem(byte *dst, TCmdPItem *src)
+byte *DeltaExportItem(byte *dst, const TCmdPItem *src)
 {
 	for (int i = 0; i < MAXITEMS; i++, src++) {
 		if (src->bCmd == CMD_INVALID) {
@@ -182,34 +182,35 @@ byte *DeltaExportItem(byte *dst, TCmdPItem *src)
 	return dst;
 }
 
-byte *DeltaImportItem(byte *src, TCmdPItem *dst)
+size_t DeltaImportItem(const byte *src, TCmdPItem *dst)
 {
+	size_t size = 0;
 	for (int i = 0; i < MAXITEMS; i++, dst++) {
-		if (*src == byte { 0xFF }) {
+		if (src[size] == byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(TCmdPItem));
-			src++;
+			size++;
 		} else {
-			memcpy(dst, src, sizeof(TCmdPItem));
-			src += sizeof(TCmdPItem);
+			memcpy(dst, &src[size], sizeof(TCmdPItem));
+			size += sizeof(TCmdPItem);
 		}
 	}
 
-	return src;
+	return size;
 }
 
-byte *DeltaExportObject(byte *dst, DObjectStr *src)
+byte *DeltaExportObject(byte *dst, const DObjectStr *src)
 {
 	memcpy(dst, src, sizeof(DObjectStr) * MAXOBJECTS);
 	return dst + sizeof(DObjectStr) * MAXOBJECTS;
 }
 
-byte *DeltaImportObject(byte *src, DObjectStr *dst)
+size_t DeltaImportObject(const byte *src, DObjectStr *dst)
 {
 	memcpy(dst, src, sizeof(DObjectStr) * MAXOBJECTS);
-	return src + sizeof(DObjectStr) * MAXOBJECTS;
+	return sizeof(DObjectStr) * MAXOBJECTS;
 }
 
-byte *DeltaExportMonster(byte *dst, DMonsterStr *src)
+byte *DeltaExportMonster(byte *dst, const DMonsterStr *src)
 {
 	for (int i = 0; i < MAXMONSTERS; i++, src++) {
 		if (src->_mx == 0xFF) {
@@ -223,19 +224,18 @@ byte *DeltaExportMonster(byte *dst, DMonsterStr *src)
 	return dst;
 }
 
-byte *DeltaImportMonster(byte *src, DMonsterStr *dst)
+void DeltaImportMonster(const byte *src, DMonsterStr *dst)
 {
+	size_t size = 0;
 	for (int i = 0; i < MAXMONSTERS; i++, dst++) {
-		if (*src == byte { 0xFF }) {
+		if (src[size] == byte { 0xFF }) {
 			memset(dst, 0xFF, sizeof(DMonsterStr));
-			src++;
+			size++;
 		} else {
-			memcpy(dst, src, sizeof(DMonsterStr));
-			src += sizeof(DMonsterStr);
+			memcpy(dst, &src[size], sizeof(DMonsterStr));
+			size += sizeof(DMonsterStr);
 		}
 	}
-
-	return src;
 }
 
 byte *DeltaExportJunk(byte *dst)
@@ -264,7 +264,7 @@ byte *DeltaExportJunk(byte *dst)
 	return dst;
 }
 
-void DeltaImportJunk(byte *src)
+void DeltaImportJunk(const byte *src)
 {
 	for (int i = 0; i < MAXPORTAL; i++) {
 		if (*src == byte { 0xFF }) {
@@ -317,8 +317,8 @@ void DeltaImportData(BYTE cmd, DWORD recvOffset)
 		DeltaImportJunk(src);
 	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_24) {
 		BYTE i = cmd - CMD_DLEVEL_0;
-		src = DeltaImportItem(src, sgLevels[i].item);
-		src = DeltaImportObject(src, sgLevels[i].object);
+		src += DeltaImportItem(src, sgLevels[i].item);
+		src += DeltaImportObject(src, sgLevels[i].object);
 		DeltaImportMonster(src, sgLevels[i].monster);
 	} else {
 		app_fatal("Unkown network message type: %i", cmd);
@@ -328,7 +328,7 @@ void DeltaImportData(BYTE cmd, DWORD recvOffset)
 	sgbDeltaChanged = true;
 }
 
-DWORD OnLevelData(int pnum, TCmd *pCmd)
+DWORD OnLevelData(int pnum, const TCmd *pCmd)
 {
 	auto *p = (TCmdPlrInfoHdr *)pCmd;
 
@@ -368,7 +368,7 @@ DWORD OnLevelData(int pnum, TCmd *pCmd)
 	return p->wBytes + sizeof(*p);
 }
 
-void DeltaSyncGolem(TCmdGolem *pG, int pnum, BYTE bLevel)
+void DeltaSyncGolem(const TCmdGolem *pG, int pnum, BYTE bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -418,7 +418,7 @@ void DeltaSyncObject(int oi, _cmd_id bCmd, BYTE bLevel)
 	sgLevels[bLevel].object[oi].bCmd = bCmd;
 }
 
-bool DeltaGetItem(TCmdGItem *pI, BYTE bLevel)
+bool DeltaGetItem(const TCmdGItem *pI, BYTE bLevel)
 {
 	if (!gbIsMultiplayer)
 		return true;
@@ -477,7 +477,7 @@ bool DeltaGetItem(TCmdGItem *pI, BYTE bLevel)
 	return true;
 }
 
-void DeltaPutItem(TCmdPItem *pI, int x, int y, BYTE bLevel)
+void DeltaPutItem(const TCmdPItem *pI, int x, int y, BYTE bLevel)
 {
 	if (!gbIsMultiplayer)
 		return;
@@ -559,7 +559,7 @@ void PlayerMessageFormat(const char *pszFmt, ...)
 	va_end(va);
 }
 
-void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
+void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, const TCmdGItem *p)
 {
 	TCmdGItem cmd;
 
@@ -584,7 +584,7 @@ void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem
 	multi_msg_add((byte *)&cmd.bCmd, sizeof(cmd));
 }
 
-bool NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
+bool NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, const TCmdGItem *p)
 {
 	TCmdGItem cmd;
 
@@ -604,7 +604,7 @@ bool NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, TCmdGItem *p)
 	return true;
 }
 
-void NetSendCmdExtra(TCmdGItem *p)
+void NetSendCmdExtra(const TCmdGItem *p)
 {
 	TCmdGItem cmd;
 
@@ -614,7 +614,7 @@ void NetSendCmdExtra(TCmdGItem *p)
 	NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
 }
 
-DWORD OnWalk(TCmd *pCmd, Player &player)
+DWORD OnWalk(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -627,7 +627,7 @@ DWORD OnWalk(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnAddStrength(TCmd *pCmd, int pnum)
+DWORD OnAddStrength(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -639,7 +639,7 @@ DWORD OnAddStrength(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAddMagic(TCmd *pCmd, int pnum)
+DWORD OnAddMagic(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -651,7 +651,7 @@ DWORD OnAddMagic(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAddDexterity(TCmd *pCmd, int pnum)
+DWORD OnAddDexterity(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -663,7 +663,7 @@ DWORD OnAddDexterity(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAddVitality(TCmd *pCmd, int pnum)
+DWORD OnAddVitality(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -675,7 +675,7 @@ DWORD OnAddVitality(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnGotoGetItem(TCmd *pCmd, Player &player)
+DWORD OnGotoGetItem(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -688,7 +688,7 @@ DWORD OnGotoGetItem(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnRequestGetItem(TCmd *pCmd, Player &player)
+DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -711,7 +711,7 @@ DWORD OnRequestGetItem(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnGetItem(TCmd *pCmd, int pnum)
+DWORD OnGetItem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -742,7 +742,7 @@ DWORD OnGetItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnGotoAutoGetItem(TCmd *pCmd, Player &player)
+DWORD OnGotoAutoGetItem(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -755,7 +755,7 @@ DWORD OnGotoAutoGetItem(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnRequestAutoGetItem(TCmd *pCmd, Player &player)
+DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -778,7 +778,7 @@ DWORD OnRequestAutoGetItem(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnAutoGetItem(TCmd *pCmd, int pnum)
+DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -809,7 +809,7 @@ DWORD OnAutoGetItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnItemExtra(TCmd *pCmd, int pnum)
+DWORD OnItemExtra(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdGItem *)pCmd;
 
@@ -824,7 +824,7 @@ DWORD OnItemExtra(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnPutItem(TCmd *pCmd, int pnum)
+DWORD OnPutItem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdPItem *)pCmd;
 
@@ -851,7 +851,7 @@ DWORD OnPutItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSyncPutItem(TCmd *pCmd, int pnum)
+DWORD OnSyncPutItem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdPItem *)pCmd;
 
@@ -874,7 +874,7 @@ DWORD OnSyncPutItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnRespawnItem(TCmd *pCmd, int pnum)
+DWORD OnRespawnItem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdPItem *)pCmd;
 
@@ -893,7 +893,7 @@ DWORD OnRespawnItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAttackTile(TCmd *pCmd, Player &player)
+DWORD OnAttackTile(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -907,7 +907,7 @@ DWORD OnAttackTile(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnStandingAttackTile(TCmd *pCmd, Player &player)
+DWORD OnStandingAttackTile(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -921,7 +921,7 @@ DWORD OnStandingAttackTile(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnRangedAttackTile(TCmd *pCmd, Player &player)
+DWORD OnRangedAttackTile(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -935,7 +935,7 @@ DWORD OnRangedAttackTile(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellWall(TCmd *pCmd, Player &player)
+DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam4 *)pCmd;
 
@@ -960,7 +960,7 @@ DWORD OnSpellWall(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellTile(TCmd *pCmd, Player &player)
+DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam3 *)pCmd;
 
@@ -984,7 +984,7 @@ DWORD OnSpellTile(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnTargetSpellTile(TCmd *pCmd, Player &player)
+DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam2 *)pCmd;
 
@@ -1007,7 +1007,7 @@ DWORD OnTargetSpellTile(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnOperateObjectTile(TCmd *pCmd, Player &player)
+DWORD OnOperateObjectTile(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1020,7 +1020,7 @@ DWORD OnOperateObjectTile(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnDisarm(TCmd *pCmd, Player &player)
+DWORD OnDisarm(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1033,7 +1033,7 @@ DWORD OnDisarm(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnOperateObjectTelekinesis(TCmd *pCmd, Player &player)
+DWORD OnOperateObjectTelekinesis(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1045,7 +1045,7 @@ DWORD OnOperateObjectTelekinesis(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnAttackMonster(TCmd *pCmd, Player &player)
+DWORD OnAttackMonster(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1060,7 +1060,7 @@ DWORD OnAttackMonster(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnAttackPlayer(TCmd *pCmd, Player &player)
+DWORD OnAttackPlayer(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1073,7 +1073,7 @@ DWORD OnAttackPlayer(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnRangedAttackMonster(TCmd *pCmd, Player &player)
+DWORD OnRangedAttackMonster(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1086,7 +1086,7 @@ DWORD OnRangedAttackMonster(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnRangedAttackPlayer(TCmd *pCmd, Player &player)
+DWORD OnRangedAttackPlayer(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1099,7 +1099,7 @@ DWORD OnRangedAttackPlayer(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellMonster(TCmd *pCmd, Player &player)
+DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam4 *)pCmd;
 
@@ -1122,7 +1122,7 @@ DWORD OnSpellMonster(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnSpellPlayer(TCmd *pCmd, Player &player)
+DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam4 *)pCmd;
 
@@ -1145,7 +1145,7 @@ DWORD OnSpellPlayer(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnTargetSpellMonster(TCmd *pCmd, Player &player)
+DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam3 *)pCmd;
 
@@ -1167,7 +1167,7 @@ DWORD OnTargetSpellMonster(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnTargetSpellPlayer(TCmd *pCmd, Player &player)
+DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam3 *)pCmd;
 
@@ -1189,7 +1189,7 @@ DWORD OnTargetSpellPlayer(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnKnockback(TCmd *pCmd, int pnum)
+DWORD OnKnockback(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1201,7 +1201,7 @@ DWORD OnKnockback(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnResurrect(TCmd *pCmd, int pnum)
+DWORD OnResurrect(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1215,7 +1215,7 @@ DWORD OnResurrect(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnHealOther(TCmd *pCmd, int pnum)
+DWORD OnHealOther(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1225,7 +1225,7 @@ DWORD OnHealOther(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnTalkXY(TCmd *pCmd, Player &player)
+DWORD OnTalkXY(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1238,7 +1238,7 @@ DWORD OnTalkXY(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnNewLevel(TCmd *pCmd, int pnum)
+DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam2 *)pCmd;
 
@@ -1250,7 +1250,7 @@ DWORD OnNewLevel(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnWarp(TCmd *pCmd, int pnum)
+DWORD OnWarp(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1263,7 +1263,7 @@ DWORD OnWarp(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnMonstDeath(TCmd *pCmd, int pnum)
+DWORD OnMonstDeath(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1279,7 +1279,7 @@ DWORD OnMonstDeath(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnKillGolem(TCmd *pCmd, int pnum)
+DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1294,7 +1294,7 @@ DWORD OnKillGolem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnAwakeGolem(TCmd *pCmd, int pnum)
+DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdGolem *)pCmd;
 
@@ -1320,7 +1320,7 @@ DWORD OnAwakeGolem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnMonstDamage(TCmd *pCmd, int pnum)
+DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdMonDamage *)pCmd;
 
@@ -1343,7 +1343,7 @@ DWORD OnMonstDamage(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnPlayerDeath(TCmd *pCmd, int pnum)
+DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1357,7 +1357,7 @@ DWORD OnPlayerDeath(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnPlayerDamage(TCmd *pCmd, Player &player)
+DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdDamage *)pCmd;
 
@@ -1370,7 +1370,7 @@ DWORD OnPlayerDamage(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnOpenDoor(TCmd *pCmd, int pnum)
+DWORD OnOpenDoor(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1386,7 +1386,7 @@ DWORD OnOpenDoor(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnCloseDoor(TCmd *pCmd, int pnum)
+DWORD OnCloseDoor(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1402,7 +1402,7 @@ DWORD OnCloseDoor(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnOperateObject(TCmd *pCmd, int pnum)
+DWORD OnOperateObject(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1418,7 +1418,7 @@ DWORD OnOperateObject(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnPlayerOperateObject(TCmd *pCmd, int pnum)
+DWORD OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam2 *)pCmd;
 
@@ -1434,7 +1434,7 @@ DWORD OnPlayerOperateObject(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnBreakObject(TCmd *pCmd, int pnum)
+DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam2 *)pCmd;
 
@@ -1450,7 +1450,7 @@ DWORD OnBreakObject(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnChangePlayerItems(TCmd *pCmd, int pnum)
+DWORD OnChangePlayerItems(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdChItem *)pCmd;
 	auto bodyLocation = static_cast<inv_body_loc>(p->bLoc);
@@ -1467,7 +1467,7 @@ DWORD OnChangePlayerItems(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnDeletePlayerItems(TCmd *pCmd, int pnum)
+DWORD OnDeletePlayerItems(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdDelItem *)pCmd;
 
@@ -1479,7 +1479,7 @@ DWORD OnDeletePlayerItems(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnPlayerLevel(TCmd *pCmd, int pnum)
+DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1491,7 +1491,7 @@ DWORD OnPlayerLevel(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnDropItem(TCmd *pCmd, int pnum)
+DWORD OnDropItem(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdPItem *)pCmd;
 
@@ -1503,7 +1503,7 @@ DWORD OnDropItem(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSendPlayerInfo(TCmd *pCmd, int pnum)
+DWORD OnSendPlayerInfo(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdPlrInfoHdr *)pCmd;
 
@@ -1515,7 +1515,7 @@ DWORD OnSendPlayerInfo(TCmd *pCmd, int pnum)
 	return p->wBytes + sizeof(*p);
 }
 
-DWORD OnPlayerJoinLevel(TCmd *pCmd, int pnum)
+DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam1 *)pCmd;
 
@@ -1557,7 +1557,7 @@ DWORD OnPlayerJoinLevel(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnActivatePortal(TCmd *pCmd, int pnum)
+DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam3 *)pCmd;
 
@@ -1590,7 +1590,7 @@ DWORD OnActivatePortal(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnDeactivatePortal(TCmd *pCmd, int pnum)
+DWORD OnDeactivatePortal(const TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
@@ -1604,7 +1604,7 @@ DWORD OnDeactivatePortal(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-DWORD OnRestartTown(TCmd *pCmd, int pnum)
+DWORD OnRestartTown(const TCmd *pCmd, int pnum)
 {
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
@@ -1619,7 +1619,7 @@ DWORD OnRestartTown(TCmd *pCmd, int pnum)
 	return sizeof(*pCmd);
 }
 
-DWORD OnSetStrength(TCmd *pCmd, int pnum)
+DWORD OnSetStrength(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1631,7 +1631,7 @@ DWORD OnSetStrength(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSetDexterity(TCmd *pCmd, int pnum)
+DWORD OnSetDexterity(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1643,7 +1643,7 @@ DWORD OnSetDexterity(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSetMagic(TCmd *pCmd, int pnum)
+DWORD OnSetMagic(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1655,7 +1655,7 @@ DWORD OnSetMagic(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSetVitality(TCmd *pCmd, int pnum)
+DWORD OnSetVitality(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 
@@ -1667,7 +1667,7 @@ DWORD OnSetVitality(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnString(TCmd *pCmd, int pnum)
+DWORD OnString(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdString *)pCmd;
 
@@ -1678,7 +1678,7 @@ DWORD OnString(TCmd *pCmd, int pnum)
 	return len + 2; // length of string + nul terminator + sizeof(p->bCmd)
 }
 
-DWORD OnSyncQuest(TCmd *pCmd, int pnum)
+DWORD OnSyncQuest(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdQuest *)pCmd;
 
@@ -1693,7 +1693,7 @@ DWORD OnSyncQuest(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnCheatExperience(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
+DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1)
@@ -1709,7 +1709,7 @@ DWORD OnCheatExperience(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 	return sizeof(*pCmd);
 }
 
-DWORD OnCheatSpellLevel(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
+DWORD OnCheatSpellLevel(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 {
 #ifdef _DEBUG
 	if (gbBufferMsgs == 1) {
@@ -1722,12 +1722,12 @@ DWORD OnCheatSpellLevel(TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
 	return sizeof(*pCmd);
 }
 
-DWORD OnDebug(TCmd *pCmd)
+DWORD OnDebug(const TCmd *pCmd)
 {
 	return sizeof(*pCmd);
 }
 
-DWORD OnNova(TCmd *pCmd, int pnum)
+DWORD OnNova(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLoc *)pCmd;
 
@@ -1747,7 +1747,7 @@ DWORD OnNova(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnSetShield(TCmd *pCmd, Player &player)
+DWORD OnSetShield(const TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs != 1)
 		player.pManaShield = true;
@@ -1755,7 +1755,7 @@ DWORD OnSetShield(TCmd *pCmd, Player &player)
 	return sizeof(*pCmd);
 }
 
-DWORD OnRemoveShield(TCmd *pCmd, Player &player)
+DWORD OnRemoveShield(const TCmd *pCmd, Player &player)
 {
 	if (gbBufferMsgs != 1)
 		player.pManaShield = false;
@@ -1763,7 +1763,7 @@ DWORD OnRemoveShield(TCmd *pCmd, Player &player)
 	return sizeof(*pCmd);
 }
 
-DWORD OnSetReflect(TCmd *pCmd, Player &player)
+DWORD OnSetReflect(const TCmd *pCmd, Player &player)
 {
 	auto *p = (TCmdParam1 *)pCmd;
 	if (gbBufferMsgs != 1)
@@ -1772,7 +1772,7 @@ DWORD OnSetReflect(TCmd *pCmd, Player &player)
 	return sizeof(*p);
 }
 
-DWORD OnNakrul(TCmd *pCmd)
+DWORD OnNakrul(const TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		OperateNakrulLever();
@@ -1783,7 +1783,7 @@ DWORD OnNakrul(TCmd *pCmd)
 	return sizeof(*pCmd);
 }
 
-DWORD OnOpenHive(TCmd *pCmd, int pnum)
+DWORD OnOpenHive(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam2 *)pCmd;
 	if (gbBufferMsgs != 1) {
@@ -1794,7 +1794,7 @@ DWORD OnOpenHive(TCmd *pCmd, int pnum)
 	return sizeof(*p);
 }
 
-DWORD OnOpenCrypt(TCmd *pCmd)
+DWORD OnOpenCrypt(const TCmd *pCmd)
 {
 	if (gbBufferMsgs != 1) {
 		TownOpenGrave();
@@ -2540,7 +2540,7 @@ void delta_close_portal(int pnum)
 	sgbDeltaChanged = true;
 }
 
-uint32_t ParseCmd(int pnum, TCmd *pCmd)
+uint32_t ParseCmd(int pnum, const TCmd *pCmd)
 {
 	sbLastCmd = pCmd->bCmd;
 	if (sgwPackPlrOffsetTbl[pnum] != 0 && sbLastCmd != CMD_ACK_PLRINFO && sbLastCmd != CMD_SEND_PLRINFO)

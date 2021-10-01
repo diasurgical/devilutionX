@@ -17,7 +17,7 @@ struct TMsg {
 	std::unique_ptr<byte[]> body;
 	uint8_t len;
 
-	TMsg(uint32_t time, byte *data, uint8_t len)
+	TMsg(uint32_t time, const byte *data, uint8_t len)
 	    : time(time)
 	    , body(new byte[len])
 	    , len(len)
@@ -45,7 +45,7 @@ uint8_t tmsg_get(std::unique_ptr<byte[]> *msg)
 	return len;
 }
 
-void tmsg_add(byte *msg, uint8_t len)
+void tmsg_add(const byte *msg, uint8_t len)
 {
 	uint32_t time = SDL_GetTicks() + gnTickDelay * 10;
 	TimedMsgList.emplace_back(time, msg, len);

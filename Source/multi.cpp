@@ -76,7 +76,7 @@ void BufferInit(TBuffer *pBuf)
 	pBuf->bData[0] = byte { 0 };
 }
 
-void CopyPacket(TBuffer *buf, byte *packet, uint8_t size)
+void CopyPacket(TBuffer *buf, const byte *packet, uint8_t size)
 {
 	if (buf->dwNextWriteOffset + size + 2 > 0x1000) {
 		return;
@@ -130,13 +130,13 @@ void NetReceivePlayerData(TPkt *pkt)
 	pkt->hdr.bdex = myPlayer._pBaseDex;
 }
 
-void SendPacket(int playerId, void *packet, BYTE dwSize)
+void SendPacket(int playerId, const byte *packet, size_t size)
 {
 	TPkt pkt;
 
 	NetReceivePlayerData(&pkt);
-	pkt.hdr.wLen = dwSize + sizeof(pkt.hdr);
-	memcpy(pkt.body, packet, dwSize);
+	pkt.hdr.wLen = size + sizeof(pkt.hdr);
+	memcpy(pkt.body, packet, size);
 	if (!SNetSendMessage(playerId, &pkt.hdr, pkt.hdr.wLen))
 		nthread_terminate_game("SNetSendMessage0");
 }
@@ -292,25 +292,27 @@ void BeginTimeout()
 	}
 }
 
-void HandleAllPackets(int pnum, byte *pData, size_t nSize)
+void HandleAllPackets(int pnum, const byte *data, size_t size)
 {
-	while (nSize != 0) {
-		int nLen = ParseCmd(pnum, (TCmd *)pData);
-		if (nLen == 0) {
+	for (unsigned offset = 0; offset < size;) {
+		int messageSize = ParseCmd(pnum, reinterpret_cast<const TCmd *>(&data[offset]));
+		if (messageSize == 0) {
 			break;
 		}
-		pData += nLen;
-		nSize -= nLen;
+		offset += messageSize;
 	}
 }
 
 void ProcessTmsgs()
 {
-	uint8_t cnt;
-	std::unique_ptr<byte[]> msg;
+	while (true) {
+		std::unique_ptr<byte[]> msg;
+		uint8_t size = tmsg_get(&msg);
+		if (size == 0)
+			break;
 
-	while ((cnt = tmsg_get(&msg)) != 0)
-		HandleAllPackets(MyPlayerId, msg.get(), cnt);
+		HandleAllPackets(MyPlayerId, msg.get(), size);
+	}
 }
 
 void SendPlayerInfo(int pnum, _cmd_id cmd)
@@ -463,49 +465,49 @@ bool InitMulti(GameData *gameData)
 
 } // namespace
 
-void multi_msg_add(byte *pbMsg, BYTE bLen)
+void multi_msg_add(const byte *data, size_t size)
 {
-	if (pbMsg != nullptr && bLen != 0) {
-		tmsg_add(pbMsg, bLen);
+	if (data != nullptr && size != 0) {
+		tmsg_add(data, size);
 	}
 }
 
-void NetSendLoPri(int playerId, byte *pbMsg, BYTE bLen)
+void NetSendLoPri(int playerId, const byte *data, size_t size)
 {
-	if (pbMsg != nullptr && bLen != 0) {
-		CopyPacket(&sgLoPriBuf, pbMsg, bLen);
-		SendPacket(playerId, pbMsg, bLen);
+	if (data != nullptr && size != 0) {
+		CopyPacket(&sgLoPriBuf, data, size);
+		SendPacket(playerId, data, size);
 	}
 }
 
-void NetSendHiPri(int playerId, byte *pbMsg, BYTE bLen)
+void NetSendHiPri(int playerId, const byte *data, size_t size)
 {
-	if (pbMsg != nullptr && bLen != 0) {
-		CopyPacket(&sgHiPriBuf, pbMsg, bLen);
-		SendPacket(playerId, pbMsg, bLen);
+	if (data != nullptr && size != 0) {
+		CopyPacket(&sgHiPriBuf, data, size);
+		SendPacket(playerId, data, size);
 	}
 	if (!gbShouldValidatePackage) {
 		gbShouldValidatePackage = true;
 		TPkt pkt;
 		NetReceivePlayerData(&pkt);
-		size_t size = gdwNormalMsgSize - sizeof(TPktHdr);
-		byte *hipriBody = ReceivePacket(&sgHiPriBuf, pkt.body, &size);
-		byte *lowpriBody = ReceivePacket(&sgLoPriBuf, hipriBody, &size);
-		size = sync_all_monsters(lowpriBody, size);
-		size_t len = gdwNormalMsgSize - size;
+		size_t msgSize = gdwNormalMsgSize - sizeof(TPktHdr);
+		byte *hipriBody = ReceivePacket(&sgHiPriBuf, pkt.body, &msgSize);
+		byte *lowpriBody = ReceivePacket(&sgLoPriBuf, hipriBody, &msgSize);
+		msgSize = sync_all_monsters(lowpriBody, msgSize);
+		size_t len = gdwNormalMsgSize - msgSize;
 		pkt.hdr.wLen = len;
 		if (!SNetSendMessage(-2, &pkt.hdr, len))
 			nthread_terminate_game("SNetSendMessage");
 	}
 }
 
-void multi_send_msg_packet(uint32_t pmask, byte *src, BYTE len)
+void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size)
 {
 	TPkt pkt;
 	NetReceivePlayerData(&pkt);
-	size_t t = len + sizeof(pkt.hdr);
+	size_t t = size + sizeof(pkt.hdr);
 	pkt.hdr.wLen = t;
-	memcpy(pkt.body, src, len);
+	memcpy(pkt.body, data, size);
 	size_t p = 0;
 	for (size_t v = 1; p < MAX_PLRS; p++, v <<= 1) {
 		if ((v & pmask) != 0) {
@@ -630,21 +632,21 @@ void multi_process_network_packets()
 				}
 			}
 		}
-		HandleAllPackets(dwID, (byte *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
+		HandleAllPackets(dwID, (const byte *)(pkt + 1), dwMsgSize - sizeof(TPktHdr));
 	}
 	if (SErrGetLastError() != STORM_ERROR_NO_MESSAGES_WAITING)
 		nthread_terminate_game("SNetReceiveMsg");
 }
 
-void multi_send_zero_packet(int pnum, _cmd_id bCmd, byte *pbSrc, DWORD dwLen)
+void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
 {
 	assert(pnum != MyPlayerId);
-	assert(pbSrc);
-	assert(dwLen <= 0x0ffff);
+	assert(data);
+	assert(size <= 0x0ffff);
 
 	uint32_t dwOffset = 0;
 
-	while (dwLen != 0) {
+	while (size != 0) {
 		TPkt pkt;
 		pkt.hdr.wCheck = LoadBE32("\0\0ip");
 		pkt.hdr.px = 0;
@@ -660,12 +662,12 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, byte *pbSrc, DWORD dwLen)
 		p->bCmd = bCmd;
 		p->wOffset = dwOffset;
 		size_t dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(*p);
-		if (dwLen < dwBody) {
-			dwBody = dwLen;
+		if (size < dwBody) {
+			dwBody = size;
 		}
 		assert(dwBody <= 0x0ffff);
 		p->wBytes = dwBody;
-		memcpy(&pkt.body[sizeof(*p)], pbSrc, p->wBytes);
+		memcpy(&pkt.body[sizeof(*p)], data, p->wBytes);
 		size_t dwMsg = sizeof(pkt.hdr);
 		dwMsg += sizeof(*p);
 		dwMsg += p->wBytes;
@@ -675,8 +677,8 @@ void multi_send_zero_packet(int pnum, _cmd_id bCmd, byte *pbSrc, DWORD dwLen)
 			return;
 		}
 
-		pbSrc += p->wBytes;
-		dwLen -= p->wBytes;
+		data += p->wBytes;
+		size -= p->wBytes;
 		dwOffset += p->wBytes;
 	}
 }
@@ -773,7 +775,7 @@ bool NetInit(bool bSinglePlayer)
 	return true;
 }
 
-void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, bool recv)
+void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
 {
 	const char *szEvent;
 
