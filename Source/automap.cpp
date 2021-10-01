@@ -312,10 +312,6 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK3) {
 		tile = player.position.future;
-		if (player._pdir == Direction::West)
-			tile.x++;
-		else
-			tile.y++;
 	}
 
 	int px = tile.x - 2 * AutomapOffset.deltaX - ViewPosition.x;
