@@ -93,6 +93,7 @@ bool SNetDestroy()
 #ifndef NONET
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
+	dvlnet_inst = nullptr;
 	return true;
 }
 
