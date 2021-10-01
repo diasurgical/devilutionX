@@ -355,9 +355,9 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	} break;
 	case Direction::SouthEast: {
 		const Point point { base.x + AmLine16, base.y + AmLine8 };
+		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 		DrawMapLineSE(out, { point.x - 2 * AmLine8, point.y - AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, { point.x - (AmLine8 + 1), point.y }, AmLine8 + 1, playerColor);
-		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 	} break;
 	case Direction::South: {
 		const Point point { base.x, base.y + AmLine16 };
