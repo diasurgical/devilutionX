@@ -270,7 +270,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 			lastBreakableCodePoint = next;
 			continue;
 		}
-		if (IsAnyOf(next, U'　', U'、', U'。', U'？', U'！')) {
+		if (IsAnyOf(next, U'　', U'，', U'、', U'。', U'？', U'！')) {
 			lastBreakablePos = static_cast<int>(cur - begin - 3);
 			lastBreakableLen = 3;
 			lastBreakableCodePoint = next;
