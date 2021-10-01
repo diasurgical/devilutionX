@@ -330,7 +330,7 @@ msgstr "Mehrspieler"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Replay Intro"
-msgstr "Intro wiederholen"
+msgstr "Intro"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Support"
@@ -379,11 +379,13 @@ msgstr "Mehrspieler-Spiel"
 
 #: Source/DiabloUI/selconn.cpp:53
 msgid "Requirements:"
-msgstr "Anforderungen:"
+msgstr "Beschreibung:"
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "no gateway needed"
-msgstr "Kein Gateway erforderlich"
+msgstr ""
+"Kein Gateway\n"
+"erforderlich"
 
 #: Source/DiabloUI/selconn.cpp:65
 msgid "Select Connection"
@@ -395,7 +397,7 @@ msgstr "Gateway wechseln"
 
 #: Source/DiabloUI/selconn.cpp:101
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr "Alle Computer müssen in einem TCP-kompatiblen Netzwerk verbunden sein."
+msgstr "Verbindung über ein TCP-kompatibles Netzwerk."
 
 #: Source/DiabloUI/selconn.cpp:105
 msgid "All computers must be connected to the internet."
@@ -681,7 +683,7 @@ msgstr "Magie:"
 
 #: Source/DiabloUI/selhero.cpp:485
 msgid "Dexterity:"
-msgstr "Geschicklichkeit:"
+msgstr "Agilität:"
 
 #: Source/DiabloUI/selhero.cpp:490
 msgid "Vitality:"
@@ -725,37 +727,33 @@ msgstr "Nein"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr ""
-"GOG.com unterhält ein Diablo-Forum unter https://www.gog.com/forum/diablo"
+msgstr "GOG.com unterhält ein Diablo-Forum unter"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "Folge den Links zu den Diskussionsforen rund um Diablo."
+msgstr "https://www.gog.com/forum/diablo. Folge dem Link zu den"
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
-msgstr "und der Hellfire-Erweiterung."
+msgstr "Diskussionsforen rund um Diablo und die Hellfire-Erweiterung."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr ""
-"DevilutionX ist ein Projekt von Diasurgical, Probleme und Fehler können unter"
+msgstr "DevilutionX ist ein Projekt von Diasurgical, Probleme und Fehler"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr ""
-"dieser Adresse gemeldet werden: https://github.com/diasurgical/devilutionX"
+msgstr "bitte hier melden: https://github.com/diasurgical/devilutionX"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
-msgstr ""
-"Damit wir auf Dein Anliegen bestmöglich eingehen können, teile uns Deine"
+msgstr "Damit wir Dir helfen können, teile uns bitte Deine Versionsnummer,"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
-msgstr "Versionsnummer, dein Betriebssystem und die Art deines Problems mit."
+msgstr "Dein Betriebssystem und die Art Deines Problems mit."
 
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
@@ -763,30 +761,25 @@ msgstr "Haftungsausschluss:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr "DevilutionX wird weder von Blizzard Entertainment noch von GOG.com"
+msgstr " DevilutionX wird weder von Blizzard Entertainment noch von"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
-msgstr ""
-" unterstützt oder betrieben. Weder Blizzard Entertainment noch GOG.com haben"
+msgstr " GOG.com unterstützt oder betrieben und wurde von diesen"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr ""
-" die Qualität oder die Kompatibilität von DevilutionX getestet oder "
-"bestätigt. Alle Anfragen"
+msgstr " nicht auf Qualität oder Kompatibilität getestet."
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
 "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr ""
-" bezüglich DevilutionX sollten direkt an Diasurgical gerichtet werden, nicht "
-"an Blizzard"
+msgstr " Alle Anfragen bezüglich DevilutionX bitte direkt an Diasurgical"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
-msgstr "  Entertainment oder GOG.com."
+msgstr " richten, nicht an Blizzard Entertainment oder GOG.com."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -897,11 +890,11 @@ msgstr "Nachricht senden"
 
 #: Source/control.cpp:716 Source/control.cpp:1167
 msgid "{:s} Skill"
-msgstr "{:s} Fähigkeit"
+msgstr "{:s}-Fertigkeit"
 
 #: Source/control.cpp:720 Source/control.cpp:1171
 msgid "{:s} Spell"
-msgstr "{:s} Zauber"
+msgstr "{:s}-Zauber"
 
 #: Source/control.cpp:722
 msgid "Damages undead only"
@@ -994,7 +987,7 @@ msgstr[1] "Stab ({:d} Ladungen)"
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1525
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
-msgstr "Mana: {:d}  Schaden: {:d} - {:d}"
+msgstr "Mana: {:d}  Schaden: {:d}-{:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1527
@@ -2148,7 +2141,7 @@ msgstr "Elixir der Magie"
 
 #: Source/itemdat.cpp:105
 msgid "Elixir of Dexterity"
-msgstr "Elixir der Geschicklichkeit"
+msgstr "Elixir der Agilität"
 
 #: Source/itemdat.cpp:106
 msgid "Elixir of Vitality"
@@ -2406,7 +2399,7 @@ msgstr "Große Feuerrune"
 
 #: Source/itemdat.cpp:180
 msgid "Greater Rune of Lightning"
-msgstr "Gruße Blitzrune"
+msgstr "Große Blitzrune"
 
 #: Source/itemdat.cpp:181
 msgid "Rune of Stone"
@@ -2841,7 +2834,7 @@ msgstr "r Atropie"
 
 #: Source/itemdat.cpp:310
 msgid "dexterity"
-msgstr "r Geschicklichkeit"
+msgstr "r Agilität"
 
 #: Source/itemdat.cpp:311
 msgid "skill"
@@ -3560,7 +3553,7 @@ msgstr "Öl des Todes"
 
 #: Source/items.cpp:164
 msgid "Oil of Skill"
-msgstr "Öl der Geschicklichkeit"
+msgstr "Öl der Agilität"
 
 #: Source/items.cpp:166
 msgid "Oil of Fortitude"
@@ -3703,7 +3696,7 @@ msgstr "Erhöht die Magie"
 
 #: Source/items.cpp:2001
 msgid "increase dexterity"
-msgstr "Erhöht die Geschicklichkeit"
+msgstr "Erhöht die Agilität"
 
 #: Source/items.cpp:2005
 msgid "increase vitality"
@@ -3715,7 +3708,7 @@ msgstr "Verringert die Stärke"
 
 #: Source/items.cpp:2014
 msgid "decrease dexterity"
-msgstr "Verringert die Geschicklichkeit"
+msgstr "Verringert die Agilität"
 
 #: Source/items.cpp:2018
 msgid "decrease vitality"
@@ -3723,11 +3716,11 @@ msgstr "Verringert die Vitalität"
 
 #: Source/items.cpp:2022
 msgid "restore some life and mana"
-msgstr "Partielle Lebens- und Manaaufladung"
+msgstr "Lebens- und Manaaufladung"
 
 #: Source/items.cpp:2026
 msgid "restore all life and mana"
-msgstr "Volle Lebens- und Manaaufladung"
+msgstr "Volles Leben und Mana"
 
 #: Source/items.cpp:2041 Source/items.cpp:2066
 msgid "Right-click to read"
@@ -3775,7 +3768,7 @@ msgstr " {:d} Mag"
 
 #: Source/items.cpp:2100 Source/stores.cpp:218
 msgid " {:d} Dex"
-msgstr " {:d} Gesch"
+msgstr " {:d} Agil"
 
 #. TRANSLATORS: {:s} will be a Character Name
 #: Source/items.cpp:3530 Source/player.cpp:3035
@@ -3843,14 +3836,14 @@ msgstr "Resistenz gegen alles: 75% MAX"
 #: Source/items.cpp:3873
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "Erhöht alle Zaubersprüche um {:d} Level"
-msgstr[1] "Erhöht alle Zaubersprüche um {:d} Level"
+msgstr[0] "+ {:d} auf alle Zauberlevel"
+msgstr[1] "+ {:d} auf alle Zauberlevel"
 
 #: Source/items.cpp:3875
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] "Verringert alle Zaubersprüche um {:d} Level"
-msgstr[1] "Verringert alle Zaubersprüche um {:d} Level"
+msgstr[0] "- {:d} auf alle Zauberlevel"
+msgstr[1] "- {:d} auf alle Zauberlevel"
 
 #: Source/items.cpp:3877
 msgid "spell levels unchanged (?)"
@@ -3892,7 +3885,7 @@ msgstr "{:+d} zu Magie"
 
 #: Source/items.cpp:3907
 msgid "{:+d} to dexterity"
-msgstr "{:+d} zu Geschicklichkeit"
+msgstr "{:+d} zu Agilität"
 
 #: Source/items.cpp:3911
 msgid "{:+d} to vitality"
@@ -3908,7 +3901,7 @@ msgstr "{:+d} Schaden von Feinden"
 
 #: Source/items.cpp:3923
 msgid "Hit Points: {:+d}"
-msgstr "Trefferpunkte: {:+d}"
+msgstr "Leben: {:+d}"
 
 #: Source/items.cpp:3927
 msgid "Mana: {:+d}"
@@ -4252,7 +4245,7 @@ msgstr "Gefallener"
 #: Source/monstdat.cpp:25 Source/monstdat.cpp:33
 msgctxt "monster"
 msgid "Carver"
-msgstr "Schlächter"
+msgstr "Kobold"
 
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
 msgctxt "monster"
@@ -5851,7 +5844,7 @@ msgstr "Magie"
 
 #: Source/panels/charpanel.cpp:142
 msgid "Dexterity"
-msgstr "Geschicklichkeit"
+msgstr "Agilität"
 
 #: Source/panels/charpanel.cpp:145
 msgid "Vitality"
@@ -5859,15 +5852,15 @@ msgstr "Vitalität"
 
 #: Source/panels/charpanel.cpp:148
 msgid "Points to distribute"
-msgstr "Statuspunkte übrig"
+msgstr "Punkte"
 
 #: Source/panels/charpanel.cpp:158
 msgid "Armor class"
-msgstr "Rüstungswert"
+msgstr "Rüstung"
 
 #: Source/panels/charpanel.cpp:160
 msgid "To hit"
-msgstr "Trefferchance"
+msgstr "Treffer%"
 
 #: Source/panels/charpanel.cpp:162
 msgid "Damage"
@@ -5883,15 +5876,15 @@ msgstr "Mana"
 
 #: Source/panels/charpanel.cpp:177
 msgid "Resist magic"
-msgstr "Magieresistenz"
+msgstr "Magie-Res."
 
 #: Source/panels/charpanel.cpp:179
 msgid "Resist fire"
-msgstr "Feuerresistenz"
+msgstr "Feuer-Res."
 
 #: Source/panels/charpanel.cpp:181
 msgid "Resist lightning"
-msgstr "Blitzresistenz"
+msgstr "Blitz-Res."
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
