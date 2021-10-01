@@ -332,7 +332,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 		if (chrflag || QuestLogIsOpen)
 			base.x += gnScreenWidth / 4;
 	}
-	base.y -= AmLine8;
+	base.y -= AmLine16;
 
 	switch (player._pdir) {
 	case Direction::North: {
