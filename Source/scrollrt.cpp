@@ -740,13 +740,17 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 
 	if (leveltype == DTYPE_TOWN) {
 		auto &towner = Towners[mi];
+		assert(towner._tAnimData);
 		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, targetBufferPosition.y };
-		if (mi == pcursmonst) {
-			CelBlitOutlineTo(out, 166, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
-		}
-		assert(towner._tAnimData);
+		selectionState = selection_state::SELECTION_INIT;
 		CelClippedDrawTo(out, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
+		if (selectionState == selection_state::SELECTION_DISPLAY) {
+			pcursmonst = mi;
+			CelBlitOutlineTo(out, 166, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
+			CelClippedDrawTo(out, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
+		}
+		selectionState = selection_state::SELECTION_NONE;
 		return;
 	}
 

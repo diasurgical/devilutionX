@@ -8,6 +8,8 @@
 #include <cstdint>
 #include <cstring>
 
+#include "cursor.h"
+#include "dx.h"
 #include "engine/cel_header.hpp"
 #include "engine/render/common_impl.h"
 #include "options.h"
@@ -189,8 +191,39 @@ void RenderCelWithLightTable(const Surface &out, Point position, const byte *src
 	    NullLineEndFn);
 }
 
+void CheckSelection(std::uint8_t *dst, std::size_t w)
+{
+	if (selectionState == selection_state::SELECTION_INIT) {
+		const Surface &buf = GlobalBackBuffer();
+		Point pos = MousePosition;
+		if (!zoomflag) {
+			pos.x /= 2;
+			pos.y /= 2;
+		}
+		auto cursor = buf.at(pos.x, pos.y);
+		if (cursor >= dst && cursor <= (dst + w)) {
+			if (*cursor == 0) {
+				// check for a non black pixel, otherwise assume shadow and cancel selection
+				bool foundColored = false;
+				for (int x = -3; x <= 3; x++) {
+					uint8_t *nearbyPixel = dst + x;
+					if (nearbyPixel >= dst && nearbyPixel <= (dst + w))
+						if (*nearbyPixel != 0) {
+							foundColored = true;
+							break;
+						}
+				}
+				if (!foundColored)
+					return;
+			}
+			selectionState = selection_state::SELECTION_DISPLAY;
+		}
+	}
+}
+
 constexpr auto RenderLineMemcpy = [](std::uint8_t *dst, const std::uint8_t *src, std::size_t w) {
 	std::memcpy(dst, src, w);
+	CheckSelection(dst, w);
 };
 
 template <bool SkipColorIndexZero, bool North, bool West, bool South, bool East>

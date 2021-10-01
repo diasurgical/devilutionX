@@ -15,6 +15,12 @@
 
 namespace devilution {
 
+enum class selection_state : uint8_t {
+	SELECTION_INIT,
+	SELECTION_DISPLAY,
+	SELECTION_NONE,
+};
+
 enum cursor_id : uint8_t {
 	CURSOR_NONE,
 	CURSOR_HAND,
@@ -31,6 +37,7 @@ enum cursor_id : uint8_t {
 	CURSOR_FIRSTITEM,
 };
 
+extern selection_state selectionState;
 extern Size cursSize;
 extern int pcursmonst;
 extern Size icursSize28;

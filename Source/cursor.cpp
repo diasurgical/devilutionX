@@ -101,6 +101,8 @@ const int InvItemHeight2[] = {
 
 } // namespace
 
+/** indicates if next drawn thing should be checked for containing cursor position */
+selection_state selectionState = selection_state::SELECTION_NONE;
 /** Pixel size of the current cursor image */
 Size cursSize;
 /** Current highlighted monster */
@@ -517,23 +519,6 @@ void CheckCursMove()
 		}
 		if (pcursmonst != -1 && (Monsters[pcursmonst]._mFlags & MFLAG_GOLEM) != 0 && (Monsters[pcursmonst]._mFlags & MFLAG_BERSERK) == 0) {
 			pcursmonst = -1;
-		}
-	} else {
-		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] > 0) {
-			pcursmonst = dMonster[mx + 1][my] - 1;
-			cursPosition = Point { mx, my } + Displacement { 1, 0 };
-		}
-		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] > 0) {
-			pcursmonst = dMonster[mx][my + 1] - 1;
-			cursPosition = Point { mx, my } + Displacement { 0, 1 };
-		}
-		if (dMonster[mx][my] > 0) {
-			pcursmonst = dMonster[mx][my] - 1;
-			cursPosition = { mx, my };
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] > 0) {
-			pcursmonst = dMonster[mx + 1][my + 1] - 1;
-			cursPosition = Point { mx, my } + Displacement { 1, 1 };
 		}
 	}
 
