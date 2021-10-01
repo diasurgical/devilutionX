@@ -3186,7 +3186,7 @@ msgid "The Defender"
 msgstr "Obrońca"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphons Claw"
+msgid "Gryphon's Claw"
 msgstr "Pazur Gryfa"
 
 #: Source/itemdat.cpp:419
@@ -3350,7 +3350,7 @@ msgid "Rod of Onan"
 msgstr "Drąg Onana"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Sprits"
+msgid "Helm of Spirits"
 msgstr "Korona Dusz"
 
 #: Source/itemdat.cpp:460
