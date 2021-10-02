@@ -29,6 +29,7 @@
 #include "storm/storm.h"
 #include "sync.h"
 #include "town.h"
+#include "tmsg.h"
 #include "trigs.h"
 #include "utils/language.h"
 
@@ -559,11 +560,11 @@ void PlayerMessageFormat(const char *pszFmt, ...)
 	va_end(va);
 }
 
-void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, const TCmdGItem *p)
+void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &item)
 {
 	TCmdGItem cmd;
 
-	memcpy(&cmd, p, sizeof(cmd));
+	memcpy(&cmd, &item, sizeof(cmd));
 	cmd.bPnum = pnum;
 	cmd.bCmd = bCmd;
 	cmd.bMaster = mast;
@@ -581,14 +582,14 @@ void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, BYTE mast, BYTE pnum, const TCm
 		return;
 	}
 
-	multi_msg_add((byte *)&cmd.bCmd, sizeof(cmd));
+	tmsg_add((byte *)&cmd, sizeof(cmd));
 }
 
-bool NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, const TCmdGItem *p)
+bool NetSendCmdReq2(_cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &item)
 {
 	TCmdGItem cmd;
 
-	memcpy(&cmd, p, sizeof(cmd));
+	memcpy(&cmd, &item, sizeof(cmd));
 	cmd.bCmd = bCmd;
 	cmd.bPnum = pnum;
 	cmd.bMaster = mast;
@@ -599,16 +600,16 @@ bool NetSendCmdReq2(_cmd_id bCmd, BYTE mast, BYTE pnum, const TCmdGItem *p)
 	else if (ticks - cmd.dwTime > 5000)
 		return false;
 
-	multi_msg_add((byte *)&cmd.bCmd, sizeof(cmd));
+	tmsg_add((byte *)&cmd, sizeof(cmd));
 
 	return true;
 }
 
-void NetSendCmdExtra(const TCmdGItem *p)
+void NetSendCmdExtra(const TCmdGItem &item)
 {
 	TCmdGItem cmd;
 
-	memcpy(&cmd, p, sizeof(cmd));
+	memcpy(&cmd, &item, sizeof(cmd));
 	cmd.dwTime = 0;
 	cmd.bCmd = CMD_ITEMEXTRA;
 	NetSendHiPri(MyPlayerId, (byte *)&cmd, sizeof(cmd));
@@ -698,14 +699,14 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 		if (GetItemRecord(p->dwSeed, p->wCI, p->wIndx)) {
 			int ii = FindGetItem(p->wIndx, p->wCI, p->dwSeed);
 			if (ii != -1) {
-				NetSendCmdGItem2(false, CMD_GETITEM, MyPlayerId, p->bPnum, p);
+				NetSendCmdGItem2(false, CMD_GETITEM, MyPlayerId, p->bPnum, *p);
 				if (p->bPnum != MyPlayerId)
 					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 				else
 					InvGetItem(MyPlayerId, &Items[ii], ii);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
-			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, p->bPnum, p)) {
-				NetSendCmdExtra(p);
+			} else if (!NetSendCmdReq2(CMD_REQUESTGITEM, MyPlayerId, p->bPnum, *p)) {
+				NetSendCmdExtra(*p);
 			}
 		}
 	}
@@ -737,7 +738,7 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 				}
 			}
 		} else {
-			NetSendCmdGItem2(true, CMD_GETITEM, p->bMaster, p->bPnum, p);
+			NetSendCmdGItem2(true, CMD_GETITEM, p->bMaster, p->bPnum, *p);
 		}
 	}
 
@@ -765,14 +766,14 @@ DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
 		if (GetItemRecord(p->dwSeed, p->wCI, p->wIndx)) {
 			int ii = FindGetItem(p->wIndx, p->wCI, p->dwSeed);
 			if (ii != -1) {
-				NetSendCmdGItem2(false, CMD_AGETITEM, MyPlayerId, p->bPnum, p);
+				NetSendCmdGItem2(false, CMD_AGETITEM, MyPlayerId, p->bPnum, *p);
 				if (p->bPnum != MyPlayerId)
 					SyncGetItem({ p->x, p->y }, p->wIndx, p->wCI, p->dwSeed);
 				else
 					AutoGetItem(MyPlayerId, &Items[p->bCursitem], p->bCursitem);
 				SetItemRecord(p->dwSeed, p->wCI, p->wIndx);
-			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, p->bPnum, p)) {
-				NetSendCmdExtra(p);
+			} else if (!NetSendCmdReq2(CMD_REQUESTAGITEM, MyPlayerId, p->bPnum, *p)) {
+				NetSendCmdExtra(*p);
 			}
 		}
 	}
@@ -804,7 +805,7 @@ DWORD OnAutoGetItem(const TCmd *pCmd, int pnum)
 				}
 			}
 		} else {
-			NetSendCmdGItem2(true, CMD_AGETITEM, p->bMaster, p->bPnum, p);
+			NetSendCmdGItem2(true, CMD_AGETITEM, p->bMaster, p->bPnum, *p);
 		}
 	}
 

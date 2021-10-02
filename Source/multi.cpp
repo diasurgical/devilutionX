@@ -465,13 +465,6 @@ bool InitMulti(GameData *gameData)
 
 } // namespace
 
-void multi_msg_add(const byte *data, size_t size)
-{
-	if (data != nullptr && size != 0) {
-		tmsg_add(data, size);
-	}
-}
-
 void NetSendLoPri(int playerId, const byte *data, size_t size)
 {
 	if (data != nullptr && size != 0) {
