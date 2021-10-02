@@ -692,7 +692,7 @@ msgstr "Живучесть:"
 
 #: Source/DiabloUI/selhero.cpp:496
 msgid "Savegame:"
-msgstr "Сохранённая игра:"
+msgstr "Сохранение:"
 
 #: Source/DiabloUI/selhero.cpp:508
 msgid "Select Hero"
@@ -6032,7 +6032,7 @@ msgstr "Волшебный Камень"
 
 #: Source/quests.cpp:43
 msgid "Gharbad The Weak"
-msgstr "Гарбад слабак"
+msgstr "Гарбад Слабак"
 
 #: Source/quests.cpp:44
 msgid "Zhar the Mad"
@@ -6064,7 +6064,7 @@ msgstr "Доблесть"
 
 #: Source/quests.cpp:52
 msgid "Warlord of Blood"
-msgstr "Кровавый полководец"
+msgstr "Кровавый Полководец"
 
 #: Source/quests.cpp:53
 msgid "The Curse of King Leoric"
@@ -6072,7 +6072,7 @@ msgstr "Проклятье Короля Леорика"
 
 #: Source/quests.cpp:54 Source/setmaps.cpp:27
 msgid "Poisoned Water Supply"
-msgstr "Отравленные воды"
+msgstr "Отравленный Источник"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:55 Source/quests.cpp:91
@@ -6085,7 +6085,7 @@ msgstr "Архиепископ Лазарь"
 
 #: Source/quests.cpp:57
 msgid "Grave Matters"
-msgstr "Серьёзные вопросы"
+msgstr "Серьёзные Вопросы"
 
 #: Source/quests.cpp:58
 msgid "Farmer's Orchard"
@@ -6097,7 +6097,7 @@ msgstr "Малышка"
 
 #: Source/quests.cpp:60
 msgid "Wandering Trader"
-msgstr "Странствующий торговец"
+msgstr "Странствующий Торговец"
 
 #: Source/quests.cpp:61
 msgid "The Defiler"
@@ -6109,7 +6109,7 @@ msgstr "На-Крул"
 
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
-msgstr "Краеугольный камень мира"
+msgstr "Краеугольный Камень Мира"
 
 # Возможно нужно везде джерси называть свитером/кофтой
 #. TRANSLATORS: Quest Name Block end
@@ -6130,12 +6130,12 @@ msgstr "Лабиринт"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:93
 msgid "A Dark Passage"
-msgstr "Тёмный проход"
+msgstr "Тёмный Проход"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:94
 msgid "Unholy Altar"
-msgstr "Нечестивый алтарь"
+msgstr "Нечестивый Алтарь"
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:450
@@ -6152,7 +6152,7 @@ msgstr "Палата Костей"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
-msgstr "Логово архиепископа Лазаря"
+msgstr "Логово Архиепископа Лазаря"
 
 #: Source/spelldat.cpp:16
 msgctxt "spell"
