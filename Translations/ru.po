@@ -622,11 +622,11 @@ msgstr "Варвар"
 
 #: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
 msgid "New Multi Player Hero"
-msgstr "Новый герой для мультиплеер игры"
+msgstr "Новый герой мультиплеер игры"
 
 #: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
 msgid "New Single Player Hero"
-msgstr "Новый герой для одиночной игры"
+msgstr "Новый герой одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:202
 msgid "Save File Exists"
@@ -704,15 +704,15 @@ msgstr "Удалить"
 
 #: Source/DiabloUI/selhero.cpp:538
 msgid "Multi Player Characters"
-msgstr "Многопользовательские персонажи"
+msgstr "Мультиплеер персонажи"
 
 #: Source/DiabloUI/selhero.cpp:580
 msgid "Delete Multi Player Hero"
-msgstr "Удалить многопользовательского персонажа"
+msgstr "Удалить мультиплеер персонажа"
 
 #: Source/DiabloUI/selhero.cpp:582
 msgid "Delete Single Player Hero"
-msgstr "Удалить персонажа для одиночной игры"
+msgstr "Удалить персонажа одиночной игры"
 
 #: Source/DiabloUI/selhero.cpp:584
 msgid "Are you sure you want to delete the character \"{:s}\"?"
@@ -1212,7 +1212,7 @@ msgstr "{:s}, версия = {:s}, сложность = {:s}"
 
 #: Source/dvlnet/loopback.cpp:111
 msgid "loopback"
-msgstr "петля"
+msgstr "петлевой адрес"
 
 #: Source/dvlnet/tcp_client.cpp:68
 msgid "Unable to connect"
@@ -1228,7 +1228,7 @@ msgstr "Автокарта не доступна в городе"
 
 #: Source/error.cpp:59
 msgid "No multiplayer functions in demo"
-msgstr "Многопользовательские функции не доступны в демо-версии"
+msgstr "Мультиплеер не доступен в демо-версии"
 
 #: Source/error.cpp:60
 msgid "Direct Sound Creation Failed"
@@ -1252,11 +1252,11 @@ msgstr "Рекомендуется копирование на жёсткий д
 
 #: Source/error.cpp:65
 msgid "Multiplayer sync problem"
-msgstr "Проблема синхронизации многопользовательской игры"
+msgstr "Проблема синхронизации мультиплеера"
 
 #: Source/error.cpp:66
 msgid "No pause in multiplayer"
-msgstr "В многопользовательской игре нет паузы"
+msgstr "В мультиплеере нет паузы"
 
 #: Source/error.cpp:67
 msgid "Loading..."
@@ -1815,11 +1815,11 @@ msgstr "Дубина"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
-msgstr "Короткий лук"
+msgstr "Короткий Лук"
 
 #: Source/itemdat.cpp:21
 msgid "Short Staff of Mana"
-msgstr "Короткий посох маны"
+msgstr "Короткий Посох Маны"
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
@@ -2137,11 +2137,11 @@ msgstr "Зелье Полного Омоложения"
 
 #: Source/itemdat.cpp:100 Source/items.cpp:160
 msgid "Oil of Accuracy"
-msgstr "Масло точности"
+msgstr "Масло Точности"
 
 #: Source/itemdat.cpp:101 Source/items.cpp:162
 msgid "Oil of Sharpness"
-msgstr "Масло резкости"
+msgstr "Масло Остроты"
 
 #: Source/itemdat.cpp:102
 msgid "Oil"
@@ -2165,23 +2165,23 @@ msgstr "Эликсир Живучести"
 
 #: Source/itemdat.cpp:107
 msgid "Scroll of Healing"
-msgstr "Свиток исцеления"
+msgstr "Свиток Исцеления"
 
 #: Source/itemdat.cpp:108
 msgid "Scroll of Search"
-msgstr "Свиток поиска"
+msgstr "Свиток Поиска"
 
 #: Source/itemdat.cpp:109
 msgid "Scroll of Lightning"
-msgstr "Свиток молнии"
+msgstr "Свиток Молнии"
 
 #: Source/itemdat.cpp:112
 msgid "Scroll of Fire Wall"
-msgstr "Свиток стены огня"
+msgstr "Свиток Стены Огня"
 
 #: Source/itemdat.cpp:113
 msgid "Scroll of Inferno"
-msgstr "Свиток ада"
+msgstr "Свиток Преисподни"
 
 #: Source/itemdat.cpp:115
 msgid "Scroll of Flash"
@@ -2189,51 +2189,51 @@ msgstr "Свиток вспышки"
 
 #: Source/itemdat.cpp:116
 msgid "Scroll of Infravision"
-msgstr "Свиток инфравидения"
+msgstr "Свиток Инфразрения"
 
 #: Source/itemdat.cpp:117
 msgid "Scroll of Phasing"
-msgstr "Свиток перемещения"
+msgstr "Свиток Перемещения"
 
 #: Source/itemdat.cpp:118
 msgid "Scroll of Mana Shield"
-msgstr "Свиток щита маны"
+msgstr "Свиток Щита Маны"
 
 #: Source/itemdat.cpp:119
 msgid "Scroll of Flame Wave"
-msgstr "Свиток волны огня"
+msgstr "Свиток Волны Огня"
 
 #: Source/itemdat.cpp:120
 msgid "Scroll of Fireball"
-msgstr "Свиток огненного шара"
+msgstr "Свиток Огненного Шара"
 
 #: Source/itemdat.cpp:121
 msgid "Scroll of Stone Curse"
-msgstr "Свиток каменного проклятия"
+msgstr "Свиток Окаменения"
 
 #: Source/itemdat.cpp:122
 msgid "Scroll of Chain Lightning"
-msgstr "Свиток цепной молнии"
+msgstr "Свиток Цепной Молнии"
 
 #: Source/itemdat.cpp:123
 msgid "Scroll of Guardian"
-msgstr "Свиток защитника"
+msgstr "Свиток Защитника"
 
 #: Source/itemdat.cpp:125
 msgid "Scroll of Nova"
-msgstr "Свиток новы"
+msgstr "Свиток Новы"
 
 #: Source/itemdat.cpp:126
 msgid "Scroll of Golem"
-msgstr "Свиток голема"
+msgstr "Свиток Голема"
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
-msgstr "Свиток телепорта"
+msgstr "Свиток Телепорта"
 
 #: Source/itemdat.cpp:129
 msgid "Scroll of Apocalypse"
-msgstr "Свиток апокалипсиса"
+msgstr "Свиток Апокалипсиса"
 
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
@@ -2262,27 +2262,27 @@ msgstr "Сабля"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr "Длинный меч"
+msgstr "Длинный Меч"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
-msgstr "Широкий меч"
+msgstr "Широкий Меч"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr "Полуторный меч"
+msgstr "Полуторный Меч"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr "Двуручный меч"
+msgstr "Двуручный Меч"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr "Большой меч"
+msgstr "Великий Меч"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr "Маленький топор"
+msgstr "Маленький Топор"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
@@ -2291,19 +2291,19 @@ msgstr "Топор"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr "Большой топор"
+msgstr "Большой Топор"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr "Широкий топор"
+msgstr "Широкий Топор"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
-msgstr "Боевой топор"
+msgstr "Боевой Топор"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
-msgstr "Двуручный топор"
+msgstr "Двуручный Топор"
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
@@ -2311,7 +2311,7 @@ msgstr "Булава"
 
 #: Source/itemdat.cpp:153
 msgid "Morning Star"
-msgstr "Утренняя звезда"
+msgstr "Моргенштерн"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
@@ -2341,31 +2341,31 @@ msgstr "Лук"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr "Охотничий лук"
+msgstr "Охотничий Лук"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr "Длинный лук"
+msgstr "Длинный Лук"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
-msgstr "Композитный лук"
+msgstr "Композитный Лук"
 
 #: Source/itemdat.cpp:163
 msgid "Short Battle Bow"
-msgstr "Короткий боевой лук"
+msgstr "Короткий Боевой Лук"
 
 #: Source/itemdat.cpp:164
 msgid "Long Battle Bow"
-msgstr "Длинный боевой лук"
+msgstr "Длинный Боевой Лук"
 
 #: Source/itemdat.cpp:165
 msgid "Short War Bow"
-msgstr "Короткий военный лук"
+msgstr "Короткий Военный Лук"
 
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
-msgstr "Длинный военный лук"
+msgstr "Длинный Военный Лук"
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170 Source/itemdat.cpp:171
@@ -2374,19 +2374,19 @@ msgstr "Посох"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
-msgstr "Длинный посох"
+msgstr "Длинный Посох"
 
 #: Source/itemdat.cpp:169
 msgid "Composite Staff"
-msgstr "Композитный посох"
+msgstr "Композитный Посох"
 
 #: Source/itemdat.cpp:170
 msgid "Quarter Staff"
-msgstr "Короткий посох"
+msgstr "Короткий Посох"
 
 #: Source/itemdat.cpp:171
 msgid "War Staff"
-msgstr "Военный посох"
+msgstr "Военный Посох"
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
@@ -2423,7 +2423,7 @@ msgstr "Руна Камня"
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
-msgstr "Короткий посох заряженной стрелы"
+msgstr "Короткий Посох Заряженной Стрелы"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
@@ -2701,7 +2701,7 @@ msgstr "Вороний"
 
 #: Source/itemdat.cpp:263
 msgid "Snake's"
-msgstr "Змея"
+msgstr "Змеиный"
 
 #: Source/itemdat.cpp:264
 msgid "Serpent's"
@@ -2709,7 +2709,7 @@ msgstr "Гадючий"
 
 #: Source/itemdat.cpp:265
 msgid "Drake's"
-msgstr "Утиный"
+msgstr "Змиевый"
 
 #: Source/itemdat.cpp:266
 msgid "Dragon's"
@@ -2721,7 +2721,7 @@ msgstr "Змеевой"
 
 #: Source/itemdat.cpp:268
 msgid "Hydra's"
-msgstr "Гидра"
+msgstr "Гидры"
 
 #: Source/itemdat.cpp:269
 msgid "Angel's"
