@@ -616,76 +616,78 @@ void NetSendCmdExtra(const TCmdGItem *p)
 
 DWORD OnWalk(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLoc *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position)) {
 		ClrPlrPath(player);
-		MakePlrPath(player, { p->x, p->y }, true);
+		MakePlrPath(player, position, true);
 		player.destAction = ACTION_NONE;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAddStrength(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 256)
-		ModifyPlrStr(pnum, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 256)
+		ModifyPlrStr(pnum, message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAddMagic(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 256)
-		ModifyPlrMag(pnum, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 256)
+		ModifyPlrMag(pnum, message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAddDexterity(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 256)
-		ModifyPlrDex(pnum, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 256)
+		ModifyPlrDex(pnum, message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAddVitality(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 256)
-		ModifyPlrVit(pnum, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 256)
+		ModifyPlrVit(pnum, message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnGotoGetItem(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, { p->x, p->y }, false);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position)) {
+		MakePlrPath(player, position, false);
 		player.destAction = ACTION_PICKUPITEM;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
