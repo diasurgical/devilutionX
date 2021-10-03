@@ -15,6 +15,11 @@
 namespace devilution {
 
 /**
+ * Returns if cursor is within the CEL sprite (ignores shadow)
+ */
+bool IsCursorWithinCel(Point position, const CelSprite &cel, int frame, bool ignoreTransparent = true);
+
+/**
  * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
  * of fully transparent columns in the sprite.
  */

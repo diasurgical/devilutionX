@@ -101,6 +101,8 @@ const int InvItemHeight2[] = {
 
 } // namespace
 
+/** Current highlighted monster - pixel accuracy */
+int pxcursmonst = -1;
 /** Pixel size of the current cursor image */
 Size cursSize;
 /** Current highlighted monster */
@@ -519,22 +521,10 @@ void CheckCursMove()
 			pcursmonst = -1;
 		}
 	} else {
-		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] > 0) {
-			pcursmonst = dMonster[mx + 1][my] - 1;
-			cursPosition = Point { mx, my } + Displacement { 1, 0 };
-		}
-		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] > 0) {
-			pcursmonst = dMonster[mx][my + 1] - 1;
-			cursPosition = Point { mx, my } + Displacement { 0, 1 };
-		}
-		if (dMonster[mx][my] > 0) {
-			pcursmonst = dMonster[mx][my] - 1;
-			cursPosition = { mx, my };
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] > 0) {
-			pcursmonst = dMonster[mx + 1][my + 1] - 1;
-			cursPosition = Point { mx, my } + Displacement { 1, 1 };
-		}
+		pcursmonst = pxcursmonst;
+		if (pxcursmonst != -1)
+			cursPosition = Towners[pxcursmonst].position;
+		pxcursmonst = -1;
 	}
 
 	if (pcursmonst == -1) {

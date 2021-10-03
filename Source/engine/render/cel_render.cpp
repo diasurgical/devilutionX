@@ -692,6 +692,60 @@ void CelBlitOutlineTo(const Surface &out, uint8_t col, Point position, const Cel
 		RenderCelOutline<false>(out, position, src, nDataSize, cel.Width(frame), col);
 }
 
+bool IsCursorWithinCel(Point position, const CelSprite &cel, int frame, bool ignoreTransparent)
+{
+	int nDataSize;
+	const auto *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+
+	Point mousePos = MousePosition;
+	if (!zoomflag) {
+		mousePos.x /= 2;
+		mousePos.y /= 2;
+	}
+
+	const auto *srcEnd = src + nDataSize;
+	std::size_t srcWidth = cel.Width(frame);
+	if (mousePos.x < position.x || mousePos.x > (position.x + srcWidth))
+		return false;
+	for (const auto *srcEnd = src + nDataSize; src < srcEnd && (mousePos.y <= position.y); position.y--) {
+		if (mousePos.y == position.y) {
+			int xCur = 0;
+			std::int_fast16_t remainingWidth = srcWidth;
+			bool isShadow = true;
+			bool leftEdge = true;
+			while (remainingWidth > 0) {
+				const auto val = static_cast<std::uint8_t>(*src++);
+				if (IsCelTransparent(val)) {
+					const int width = GetCelTransparentWidth(val);
+					if (width != srcWidth) {
+						remainingWidth -= width;
+						if (!ignoreTransparent) {
+							int screenX = position.x + xCur;
+							if (!leftEdge && remainingWidth > 0 && mousePos.x >= screenX && mousePos.x <= screenX + width)
+								return true;
+						}
+						xCur += width;
+						leftEdge = false;
+					} else
+						return false;
+				} else {
+					for (int i = 0; i < val; i++, xCur++, remainingWidth--) {
+						const auto pixel = static_cast<std::uint8_t>(*src++);
+						if (pixel != 0)
+							isShadow = false;
+						if (!isShadow && mousePos.x == position.x + xCur)
+							return true;
+					}
+				}
+			}
+			return false;
+		}
+		src = SkipRestOfCelLine(src, static_cast<std::int_fast16_t>(srcWidth));
+	}
+
+	return false;
+}
+
 std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
 {
 	int nDataSize;

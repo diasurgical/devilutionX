@@ -31,6 +31,7 @@ enum cursor_id : uint8_t {
 	CURSOR_FIRSTITEM,
 };
 
+extern int pxcursmonst;
 extern Size cursSize;
 extern int pcursmonst;
 extern Size icursSize28;
