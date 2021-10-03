@@ -59,7 +59,7 @@ int sgnCurrMegaPlayer;
 DLevel sgLevels[NUMLEVELS];
 BYTE sbLastCmd;
 byte sgRecvBuf[sizeof(DLevel) + 1];
-BYTE sgbRecvCmd;
+_cmd_id sgbRecvCmd;
 LocalLevel sgLocals[NUMLEVELS];
 DJunk sgJunk;
 bool sgbDeltaChanged;
@@ -308,7 +308,7 @@ DWORD CompressData(byte *buffer, byte *end)
 	return pkSize + 1;
 }
 
-void DeltaImportData(BYTE cmd, DWORD recvOffset)
+void DeltaImportData(_cmd_id cmd, DWORD recvOffset)
 {
 	if (sgRecvBuf[0] != byte { 0 })
 		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
@@ -317,7 +317,7 @@ void DeltaImportData(BYTE cmd, DWORD recvOffset)
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
 	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_24) {
-		BYTE i = cmd - CMD_DLEVEL_0;
+		uint8_t i = cmd - CMD_DLEVEL_0;
 		src += DeltaImportItem(src, sgLevels[i].item);
 		src += DeltaImportObject(src, sgLevels[i].object);
 		DeltaImportMonster(src, sgLevels[i].monster);
@@ -331,42 +331,43 @@ void DeltaImportData(BYTE cmd, DWORD recvOffset)
 
 DWORD OnLevelData(int pnum, const TCmd *pCmd)
 {
-	auto *p = (TCmdPlrInfoHdr *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 
 	if (gbDeltaSender != pnum) {
-		if (p->bCmd == CMD_DLEVEL_END || (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0)) {
-			gbDeltaSender = pnum;
-			sgbRecvCmd = CMD_DLEVEL_END;
-		} else {
-			return p->wBytes + sizeof(*p);
+		if (message.bCmd != CMD_DLEVEL_END && (message.bCmd != CMD_DLEVEL_0 || message.wOffset != 0)) {
+			return message.wBytes + sizeof(message);
 		}
-	}
-	if (sgbRecvCmd == CMD_DLEVEL_END) {
-		if (p->bCmd == CMD_DLEVEL_END) {
-			sgbDeltaChunks = MAX_CHUNKS - 1;
-			return p->wBytes + sizeof(*p);
-		}
-		if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
-			sgdwRecvOffset = 0;
-			sgbRecvCmd = p->bCmd;
-		} else {
-			return p->wBytes + sizeof(*p);
-		}
-	} else if (sgbRecvCmd != p->bCmd) {
-		DeltaImportData(sgbRecvCmd, sgdwRecvOffset);
-		if (p->bCmd == CMD_DLEVEL_END) {
-			sgbDeltaChunks = MAX_CHUNKS - 1;
-			sgbRecvCmd = CMD_DLEVEL_END;
-			return p->wBytes + sizeof(*p);
-		}
-		sgdwRecvOffset = 0;
-		sgbRecvCmd = p->bCmd;
+
+		gbDeltaSender = pnum;
+		sgbRecvCmd = CMD_DLEVEL_END;
 	}
 
-	assert(p->wOffset == sgdwRecvOffset);
-	memcpy(&sgRecvBuf[p->wOffset], &p[1], p->wBytes);
-	sgdwRecvOffset += p->wBytes;
-	return p->wBytes + sizeof(*p);
+	if (sgbRecvCmd == CMD_DLEVEL_END) {
+		if (message.bCmd == CMD_DLEVEL_END) {
+			sgbDeltaChunks = MAX_CHUNKS - 1;
+			return message.wBytes + sizeof(message);
+		}
+		if (message.bCmd != CMD_DLEVEL_0 || message.wOffset != 0) {
+			return message.wBytes + sizeof(message);
+		}
+
+		sgdwRecvOffset = 0;
+		sgbRecvCmd = message.bCmd;
+	} else if (sgbRecvCmd != message.bCmd) {
+		DeltaImportData(sgbRecvCmd, sgdwRecvOffset);
+		if (message.bCmd == CMD_DLEVEL_END) {
+			sgbDeltaChunks = MAX_CHUNKS - 1;
+			sgbRecvCmd = CMD_DLEVEL_END;
+			return message.wBytes + sizeof(message);
+		}
+		sgdwRecvOffset = 0;
+		sgbRecvCmd = message.bCmd;
+	}
+
+	assert(message.wOffset == sgdwRecvOffset);
+	memcpy(&sgRecvBuf[message.wOffset], &message + sizeof(message), message.wBytes);
+	sgdwRecvOffset += message.wBytes;
+	return message.wBytes + sizeof(message);
 }
 
 void DeltaSyncGolem(const TCmdGolem *pG, int pnum, BYTE bLevel)

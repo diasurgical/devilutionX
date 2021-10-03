@@ -634,45 +634,34 @@ void multi_process_network_packets()
 void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size)
 {
 	assert(pnum != MyPlayerId);
-	assert(data);
+	assert(data != nullptr);
 	assert(size <= 0x0ffff);
 
-	uint32_t dwOffset = 0;
-
-	while (size != 0) {
-		TPkt pkt;
+	for (size_t offset = 0; offset < size;) {
+		TPkt pkt {};
 		pkt.hdr.wCheck = LoadBE32("\0\0ip");
-		pkt.hdr.px = 0;
-		pkt.hdr.py = 0;
-		pkt.hdr.targx = 0;
-		pkt.hdr.targy = 0;
-		pkt.hdr.php = 0;
-		pkt.hdr.pmhp = 0;
-		pkt.hdr.bstr = 0;
-		pkt.hdr.bmag = 0;
-		pkt.hdr.bdex = 0;
-		auto *p = (TCmdPlrInfoHdr *)pkt.body;
-		p->bCmd = bCmd;
-		p->wOffset = dwOffset;
-		size_t dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(*p);
-		if (size < dwBody) {
-			dwBody = size;
-		}
+		auto &message = *reinterpret_cast<TCmdPlrInfoHdr *>(pkt.body);
+		message.bCmd = bCmd;
+		message.wOffset = offset;
+
+		size_t dwBody = gdwLargestMsgSize - sizeof(pkt.hdr) - sizeof(message);
+		dwBody = std::min(dwBody, size - offset);
 		assert(dwBody <= 0x0ffff);
-		p->wBytes = dwBody;
-		memcpy(&pkt.body[sizeof(*p)], data, p->wBytes);
+		message.wBytes = dwBody;
+
+		memcpy(&pkt.body[sizeof(message)], &data[offset], message.wBytes);
+
 		size_t dwMsg = sizeof(pkt.hdr);
-		dwMsg += sizeof(*p);
-		dwMsg += p->wBytes;
+		dwMsg += sizeof(message);
+		dwMsg += message.wBytes;
 		pkt.hdr.wLen = dwMsg;
+
 		if (!SNetSendMessage(pnum, &pkt, dwMsg)) {
 			nthread_terminate_game("SNetSendMessage2");
 			return;
 		}
 
-		data += p->wBytes;
-		size -= p->wBytes;
-		dwOffset += p->wBytes;
+		offset += message.wBytes;
 	}
 }
 
