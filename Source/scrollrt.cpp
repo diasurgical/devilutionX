@@ -624,8 +624,10 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 	}
 
 	CelSprite cel { Objects[bv]._oAnimData, Objects[bv]._oAnimWidth };
-	if (bv == pcursobj)
+	if ((pxcursobj == -1 || pcursobj == bv) && Objects[bv]._oSelFlag > 0 && IsCursorWithinCel(objectPosition, cel, Objects[bv]._oAnimFrame, false)) {
+		pxcursobj = bv;
 		CelBlitOutlineTo(out, 194, objectPosition, cel, Objects[bv]._oAnimFrame);
+	}
 	if (Objects[bv]._oLight) {
 		CelClippedDrawLightTo(out, objectPosition, cel, Objects[bv]._oAnimFrame);
 	} else {

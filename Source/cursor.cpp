@@ -103,6 +103,8 @@ const int InvItemHeight2[] = {
 
 /** Current highlighted monster - pixel accuracy */
 int pxcursmonst = -1;
+/** Current highlighted object - pixel accuracy */
+int pxcursobj = -1;
 /** Pixel size of the current cursor image */
 Size cursSize;
 /** Current highlighted monster */
@@ -580,34 +582,10 @@ void CheckCursMove()
 		}
 	}
 	if (pcursmonst == -1 && pcursplr == -1) {
-		if (!flipflag && mx + 1 < MAXDUNX && dObject[mx + 1][my] != 0) {
-			int8_t bv = dObject[mx + 1][my] > 0 ? dObject[mx + 1][my] - 1 : -(dObject[mx + 1][my] + 1);
-			if (Objects[bv]._oSelFlag >= 2) {
-				cursPosition = Point { mx, my } + Displacement { 1, 0 };
-				pcursobj = bv;
-			}
-		}
-		if (flipflag && my + 1 < MAXDUNY && dObject[mx][my + 1] != 0) {
-			int8_t bv = dObject[mx][my + 1] > 0 ? dObject[mx][my + 1] - 1 : -(dObject[mx][my + 1] + 1);
-			if (Objects[bv]._oSelFlag >= 2) {
-				cursPosition = Point { mx, my } + Displacement { 0, 1 };
-				pcursobj = bv;
-			}
-		}
-		if (dObject[mx][my] != 0) {
-			int8_t bv = dObject[mx][my] > 0 ? dObject[mx][my] - 1 : -(dObject[mx][my] + 1);
-			if (Objects[bv]._oSelFlag == 1 || Objects[bv]._oSelFlag == 3) {
-				cursPosition = { mx, my };
-				pcursobj = bv;
-			}
-		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dObject[mx + 1][my + 1] != 0) {
-			int8_t bv = dObject[mx + 1][my + 1] > 0 ? dObject[mx + 1][my + 1] - 1 : -(dObject[mx + 1][my + 1] + 1);
-			if (Objects[bv]._oSelFlag >= 2) {
-				cursPosition = Point { mx, my } + Displacement { 1, 1 };
-				pcursobj = bv;
-			}
-		}
+		pcursobj = pxcursobj;
+		if (pxcursobj != -1)
+			cursPosition = Objects[pxcursobj].position;
+		pxcursobj = -1;
 	}
 	if (pcursplr == -1 && pcursobj == -1 && pcursmonst == -1) {
 		if (!flipflag && mx + 1 < MAXDUNX && dItem[mx + 1][my] > 0) {
