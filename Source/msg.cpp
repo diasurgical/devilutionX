@@ -545,23 +545,6 @@ void CheckUpdatePlayer(int pnum)
 		pfile_update(true);
 }
 
-void PlayerMessageFormat(const char *pszFmt, ...)
-{
-	static DWORD msgErrTimer;
-	DWORD ticks;
-	char msg[256];
-	va_list va;
-
-	va_start(va, pszFmt);
-	ticks = SDL_GetTicks();
-	if (ticks - msgErrTimer >= 5000) {
-		msgErrTimer = ticks;
-		vsprintf(msg, pszFmt, va);
-		ErrorPlrMsg(msg);
-	}
-	va_end(va);
-}
-
 void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &item)
 {
 	TCmdGItem cmd;
@@ -946,74 +929,108 @@ DWORD OnRangedAttackTile(const TCmd *pCmd, Player &player)
 
 DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam4 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam4 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
-		auto spellType = static_cast<spell_type>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLWALL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam3);
-			player.destParam4 = p->wParam4;
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (!InDungeonBounds(position))
+		return sizeof(message);
+	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam2 > RSPLTYPE_INVALID)
+		return sizeof(message);
+	if (message.wParam3 > static_cast<int>(Direction::SouthEast))
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam1);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLWALL;
+	player.destParam1 = position.x;
+	player.destParam2 = position.y;
+	player.destParam3 = static_cast<Direction>(message.wParam3);
+	player.destParam4 = message.wParam4;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam2);
+	player._pSplFrom = 0;
+
+	return sizeof(message);
 }
 
 DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
-		auto spellType = static_cast<spell_type>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam3);
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (!InDungeonBounds(position))
+		return sizeof(message);
+	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam2 > RSPLTYPE_INVALID)
+		return sizeof(message);
+	if (message.wParam3 > static_cast<int>(Direction::SouthEast))
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam1);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELL;
+	player.destParam1 = position.x;
+	player.destParam2 = position.y;
+	player.destParam3 = static_cast<Direction>(message.wParam3);
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam2);
+
+	return sizeof(message);
 }
 
 DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam2 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam2);
-			player._pSpell = spell;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 2;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (!InDungeonBounds(position))
+		return sizeof(message);
+	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam2 > static_cast<int>(Direction::SouthEast))
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam1);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELL;
+	player.destParam1 = position.x;
+	player.destParam2 = position.y;
+	player.destParam3 = static_cast<Direction>(message.wParam2);
+	player._pSpell = spell;
+	player._pSplType = RSPLTYPE_INVALID;
+	player._pSplFrom = 2;
+
+	return sizeof(message);
 }
 
 DWORD OnOperateObjectTile(const TCmd *pCmd, Player &player)
@@ -1112,92 +1129,128 @@ DWORD OnRangedAttackPlayer(const TCmd *pCmd, Player &player)
 
 DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam4 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam4 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		auto spellType = static_cast<spell_type>(p->wParam3);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLMON;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam4;
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAXMONSTERS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLMON;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam4;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam3);
+	player._pSplFrom = 0;
+
+	return sizeof(message);
 }
 
 DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam4 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam4 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		auto spellType = static_cast<spell_type>(p->wParam3);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLPLR;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam4;
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAX_PLRS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel != 0 || spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLPLR;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam4;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam3);
+	player._pSplFrom = 0;
+
+	return sizeof(message);
 }
 
 DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam3 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLMON;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
-			player._pSpell = spell;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 2;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAXMONSTERS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLMON;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam3;
+	player._pSpell = spell;
+	player._pSplType = RSPLTYPE_INVALID;
+	player._pSplFrom = 2;
+
+	return sizeof(message);
 }
 
 DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam3 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLPLR;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
-			player._pSpell = spell;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 2;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAX_PLRS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLPLR;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam3;
+	player._pSpell = spell;
+	player._pSplType = RSPLTYPE_INVALID;
+	player._pSplFrom = 2;
+
+	return sizeof(message);
 }
 
 DWORD OnKnockback(const TCmd *pCmd, int pnum)

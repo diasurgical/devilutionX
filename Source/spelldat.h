@@ -75,6 +75,8 @@ enum spell_id : int8_t {
 	SPL_RUNENOVA,
 	SPL_RUNEIMMOLAT,
 	SPL_RUNESTONE,
+
+	SPL_LAST = SPL_RUNESTONE,
 	SPL_INVALID = -1,
 };
 
