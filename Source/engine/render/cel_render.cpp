@@ -701,47 +701,22 @@ std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame
 
 	int xBegin = celWidth;
 	int xEnd = 0;
-
-	int transparentRun = 0;
-	int xCur = 0;
-	bool firstTransparentRun = true;
 	while (src < end) {
-		std::int_fast16_t remainingWidth = celWidth;
-		while (remainingWidth > 0) {
+		int xCur = 0;
+		while (xCur < celWidth) {
 			const auto val = static_cast<std::uint8_t>(*src++);
 			if (IsCelTransparent(val)) {
 				const int width = GetCelTransparentWidth(val);
-				transparentRun += width;
 				xCur += width;
-				remainingWidth -= width;
-				if (remainingWidth == 0) {
-					xEnd = std::max(xEnd, celWidth - transparentRun);
-					xCur = 0;
-					firstTransparentRun = true;
-					transparentRun = 0;
-				}
 			} else {
-				if (firstTransparentRun) {
-					xBegin = std::min(xBegin, transparentRun);
-					firstTransparentRun = false;
-					if (xBegin == 0 && xEnd == celWidth) {
-						return { xBegin, xEnd };
-					}
-				}
-				transparentRun = 0;
+				xBegin = std::min(xBegin, xCur);
 				xCur += val;
+				xEnd = std::max(xEnd, xCur);
 				src += val;
-				remainingWidth -= val;
-				if (remainingWidth == 0) {
-					xEnd = celWidth;
-					if (xBegin == 0) {
-						return { xBegin, xEnd };
-					}
-					xCur = 0;
-					firstTransparentRun = true;
-				}
 			}
 		}
+		if (xBegin == 0 && xEnd == celWidth)
+			break;
 	}
 	return { xBegin, xEnd };
 }
