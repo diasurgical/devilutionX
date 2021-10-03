@@ -29,6 +29,7 @@
 #include "storm/storm.h"
 #include "sync.h"
 #include "town.h"
+#include "towners.h"
 #include "tmsg.h"
 #include "trigs.h"
 #include "utils/language.h"
@@ -682,7 +683,7 @@ DWORD OnGotoGetItem(const TCmd *pCmd, Player &player)
 	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
 	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position)) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXITEMS + 1) {
 		MakePlrPath(player, position, false);
 		player.destAction = ACTION_PICKUPITEM;
 		player.destParam1 = message.wParam1;
@@ -747,15 +748,16 @@ DWORD OnGetItem(const TCmd *pCmd, int pnum)
 
 DWORD OnGotoAutoGetItem(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, { p->x, p->y }, false);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXITEMS + 1) {
+		MakePlrPath(player, position, false);
 		player.destAction = ACTION_PICKUPAITEM;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnRequestAutoGetItem(const TCmd *pCmd, Player &player)
@@ -898,44 +900,47 @@ DWORD OnRespawnItem(const TCmd *pCmd, int pnum)
 
 DWORD OnAttackTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLoc *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, { p->x, p->y }, false);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position)) {
+		MakePlrPath(player, position, false);
 		player.destAction = ACTION_ATTACK;
-		player.destParam1 = p->x;
-		player.destParam2 = p->y;
+		player.destParam1 = position.x;
+		player.destParam2 = position.y;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnStandingAttackTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLoc *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position)) {
 		ClrPlrPath(player);
 		player.destAction = ACTION_ATTACK;
-		player.destParam1 = p->x;
-		player.destParam2 = p->y;
+		player.destParam1 = position.x;
+		player.destParam2 = position.y;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnRangedAttackTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLoc *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position)) {
 		ClrPlrPath(player);
 		player.destAction = ACTION_RATTACK;
-		player.destParam1 = p->x;
-		player.destParam2 = p->y;
+		player.destParam1 = position.x;
+		player.destParam2 = position.y;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnSpellWall(const TCmd *pCmd, Player &player)
@@ -1012,94 +1017,96 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 
 DWORD OnOperateObjectTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, { p->x, p->y }, !Objects[p->wParam1]._oSolidFlag && !Objects[p->wParam1]._oDoorFlag);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
+		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
 		player.destAction = ACTION_OPERATE;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnDisarm(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, { p->x, p->y }, !Objects[p->wParam1]._oSolidFlag && !Objects[p->wParam1]._oDoorFlag);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < MAXOBJECTS) {
+		MakePlrPath(player, position, !Objects[message.wParam1]._oSolidFlag && !Objects[message.wParam1]._oDoorFlag);
 		player.destAction = ACTION_DISARM;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnOperateObjectTelekinesis(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && message.wParam1 < MAXOBJECTS) {
 		player.destAction = ACTION_OPERATETK;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAttackMonster(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		Point position = Monsters[p->wParam1].position.future;
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && message.wParam1 < MAXMONSTERS) {
+		Point position = Monsters[message.wParam1].position.future;
 		if (player.position.tile.WalkingDistance(position) > 1)
 			MakePlrPath(player, position, false);
 		player.destAction = ACTION_ATTACKMON;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAttackPlayer(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, Players[p->wParam1].position.future, false);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && message.wParam1 < MAX_PLRS) {
+		MakePlrPath(player, Players[message.wParam1].position.future, false);
 		player.destAction = ACTION_ATTACKPLR;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnRangedAttackMonster(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && message.wParam1 < MAXMONSTERS) {
 		ClrPlrPath(player);
 		player.destAction = ACTION_RATTACKMON;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnRangedAttackPlayer(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && message.wParam1 < MAX_PLRS) {
 		ClrPlrPath(player);
 		player.destAction = ACTION_RATTACKPLR;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
@@ -1194,51 +1201,52 @@ DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 
 DWORD OnKnockback(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel) {
-		M_GetKnockback(p->wParam1);
-		M_StartHit(p->wParam1, pnum, 0);
+	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel && message.wParam1 < MAXMONSTERS) {
+		M_GetKnockback(message.wParam1);
+		M_StartHit(message.wParam1, pnum, 0);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnResurrect(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
-		DoResurrect(pnum, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAX_PLRS) {
+		DoResurrect(pnum, message.wParam1);
 		CheckUpdatePlayer(pnum);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnHealOther(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel)
-		DoHealOther(pnum, p->wParam1);
+	if (gbBufferMsgs != 1 && currlevel == Players[pnum].plrlevel && message.wParam1 < MAX_PLRS)
+		DoHealOther(pnum, message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnTalkXY(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		MakePlrPath(player, { p->x, p->y }, false);
+	if (gbBufferMsgs != 1 && currlevel == player.plrlevel && InDungeonBounds(position) && message.wParam1 < NUM_TOWNERS) {
+		MakePlrPath(player, position, false);
 		player.destAction = ACTION_TALK;
-		player.destParam1 = p->wParam1;
+		player.destParam1 = message.wParam1;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnNewLevel(const TCmd *pCmd, int pnum)
@@ -1255,46 +1263,48 @@ DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 
 DWORD OnWarp(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
-		StartWarpLvl(pnum, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAXPORTAL) {
+		StartWarpLvl(pnum, message.wParam1);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnMonstDeath(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId && p->wParam1 < MAXMONSTERS) {
+		SendPacket(pnum, &message, sizeof(message));
+	else if (pnum != MyPlayerId && InDungeonBounds(position) && message.wParam1 < MAXMONSTERS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			M_SyncStartKill(p->wParam1, { p->x, p->y }, pnum);
-		delta_kill_monster(p->wParam1, { p->x, p->y }, playerLevel);
+			M_SyncStartKill(message.wParam1, position, pnum);
+		delta_kill_monster(message.wParam1, position, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId) {
-		if (currlevel == p->wParam1)
-			M_SyncStartKill(pnum, { p->x, p->y }, pnum);
-		delta_kill_monster(pnum, { p->x, p->y }, p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (pnum != MyPlayerId && InDungeonBounds(position) && message.wParam1 < NUMLEVELS) {
+		if (currlevel == message.wParam1)
+			M_SyncStartKill(pnum, position, pnum);
+		delta_kill_monster(pnum, position, message.wParam1);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
@@ -1348,16 +1358,16 @@ DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
+		SendPacket(pnum, &message, sizeof(message));
 	else if (pnum != MyPlayerId)
-		StartPlayerKill(pnum, p->wParam1);
+		StartPlayerKill(pnum, message.wParam1);
 	else
 		CheckUpdatePlayer(pnum);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
@@ -1375,50 +1385,50 @@ DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 
 DWORD OnOpenDoor(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncOpObject(pnum, CMD_OPENDOOR, p->wParam1);
-		DeltaSyncObject(p->wParam1, CMD_OPENDOOR, playerLevel);
+			SyncOpObject(pnum, CMD_OPENDOOR, message.wParam1);
+		DeltaSyncObject(message.wParam1, CMD_OPENDOOR, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnCloseDoor(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncOpObject(pnum, CMD_CLOSEDOOR, p->wParam1);
-		DeltaSyncObject(p->wParam1, CMD_CLOSEDOOR, playerLevel);
+			SyncOpObject(pnum, CMD_CLOSEDOOR, message.wParam1);
+		DeltaSyncObject(message.wParam1, CMD_CLOSEDOOR, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnOperateObject(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncOpObject(pnum, CMD_OPERATEOBJ, p->wParam1);
-		DeltaSyncObject(p->wParam1, CMD_OPERATEOBJ, playerLevel);
+			SyncOpObject(pnum, CMD_OPERATEOBJ, message.wParam1);
+		DeltaSyncObject(message.wParam1, CMD_OPERATEOBJ, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnPlayerOperateObject(const TCmd *pCmd, int pnum)
@@ -1484,14 +1494,14 @@ DWORD OnDeletePlayerItems(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= MAXCHARLEVEL && pnum != MyPlayerId)
-		Players[pnum]._pLevel = p->wParam1;
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 < MAXCHARLEVEL && pnum != MyPlayerId)
+		Players[pnum]._pLevel = message.wParam1;
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnDropItem(const TCmd *pCmd, int pnum)
@@ -1520,17 +1530,23 @@ DWORD OnSendPlayerInfo(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam1 *>(pCmd);
+	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-		return sizeof(*p);
+		SendPacket(pnum, &message, sizeof(message));
+		return sizeof(message);
+	}
+
+	int playerLevel = message.wParam1;
+	if (playerLevel > (gbIsHellfire ? 24 : 16) || !InDungeonBounds(position)) {
+		return sizeof(message);
 	}
 
 	auto &player = Players[pnum];
 
 	player._pLvlChanging = false;
-	if (player._pName[0] != 0 && !player.plractive) {
+	if (player._pName[0] != '\0' && !player.plractive) {
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
@@ -1538,8 +1554,8 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 	}
 
 	if (player.plractive && MyPlayerId != pnum) {
-		player.position.tile = { p->x, p->y };
-		player.plrlevel = p->wParam1;
+		player.position.tile = position;
+		player.plrlevel = playerLevel;
 		ResetPlayerGFX(player);
 		if (currlevel == player.plrlevel) {
 			SyncInitPlr(pnum);
@@ -1557,7 +1573,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 		}
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
@@ -1624,50 +1640,50 @@ DWORD OnRestartTown(const TCmd *pCmd, int pnum)
 
 DWORD OnSetStrength(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrStr(Players[pnum], p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 750 && pnum != MyPlayerId)
+		SetPlrStr(Players[pnum], message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnSetDexterity(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrDex(Players[pnum], p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 750 && pnum != MyPlayerId)
+		SetPlrDex(Players[pnum], message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnSetMagic(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrMag(Players[pnum], p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 750 && pnum != MyPlayerId)
+		SetPlrMag(Players[pnum], message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnSetVitality(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam1 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (p->wParam1 <= 750 && pnum != MyPlayerId)
-		SetPlrVit(Players[pnum], p->wParam1);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (message.wParam1 <= 750 && pnum != MyPlayerId)
+		SetPlrVit(Players[pnum], message.wParam1);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnString(const TCmd *pCmd, int pnum)
@@ -1732,22 +1748,23 @@ DWORD OnDebug(const TCmd *pCmd)
 
 DWORD OnNova(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLoc *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLoc *>(pCmd);
+	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs != 1) {
 		auto &player = Players[pnum];
-		if (currlevel == player.plrlevel && pnum != MyPlayerId) {
+		if (currlevel == player.plrlevel && pnum != MyPlayerId && InDungeonBounds(position)) {
 			ClrPlrPath(player);
 			player._pSpell = SPL_NOVA;
 			player._pSplType = RSPLTYPE_INVALID;
 			player._pSplFrom = 3;
 			player.destAction = ACTION_SPELL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
+			player.destParam1 = position.x;
+			player.destParam2 = position.y;
 		}
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnSetShield(const TCmd *pCmd, Player &player)
@@ -1768,11 +1785,12 @@ DWORD OnRemoveShield(const TCmd *pCmd, Player &player)
 
 DWORD OnSetReflect(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam1 *)pCmd;
-	if (gbBufferMsgs != 1)
-		player.wReflections = p->wParam1;
+	const auto &message = *reinterpret_cast<const TCmdParam1 *>(pCmd);
 
-	return sizeof(*p);
+	if (gbBufferMsgs != 1)
+		player.wReflections = message.wParam1;
+
+	return sizeof(message);
 }
 
 DWORD OnNakrul(const TCmd *pCmd)
@@ -1789,6 +1807,7 @@ DWORD OnNakrul(const TCmd *pCmd)
 DWORD OnOpenHive(const TCmd *pCmd, int pnum)
 {
 	auto *p = (TCmdLocParam2 *)pCmd;
+
 	if (gbBufferMsgs != 1) {
 		AddMissile({ p->x, p->y }, { p->wParam1, p->wParam2 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
