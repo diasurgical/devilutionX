@@ -2528,13 +2528,11 @@ void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam)
 
 void NetSendCmdString(uint32_t pmask, const char *pszStr)
 {
-	int dwStrLen;
 	TCmdString cmd;
 
-	dwStrLen = strlen(pszStr);
 	cmd.bCmd = CMD_STRING;
 	strcpy(cmd.str, pszStr);
-	multi_send_msg_packet(pmask, (byte *)&cmd.bCmd, dwStrLen + 2);
+	multi_send_msg_packet(pmask, (byte *)&cmd, strlen(pszStr) + 2);
 }
 
 void delta_close_portal(int pnum)
