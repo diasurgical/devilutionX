@@ -17,9 +17,9 @@ Download the latest [DevilutionX release](https://github.com/diasurgical/devilut
 <details><summary>Linux</summary>
 
 - Copy the MPQ files to the folder containing the DevilutionX executable, or to the data folder. The data folder path may differ depending on distro, version, and security settings, but will normally be `~/.local/share/diasurgical/devilution/`
-- Install [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/):
- - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0`
- - Fedora `sudo dnf install SDL2 SDL2_ttf`
+- Install [SDL2](https://www.libsdl.org/download-2.0.php):
+ - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0`
+ - Fedora `sudo dnf install SDL2`
 - Run `./devilutionx`
 
 </details>
@@ -53,7 +53,7 @@ sudo apt install devilutionx
 
 <details><summary>Nintendo Switch</summary>
 
-- Copy `devilutionx.nro` and `CharisSILB.ttf` in into `/switch/devilutionx`
+- Copy `devilutionx.nro` in into `/switch/devilutionx`
 - Copy the MPQ files to `/switch/devilutionx`.
 - Launch `devilutionx.nro` by holding R the installed game. Do not use the album to launch, if you use the album, the homebrew will only have a small amount of memory available, and the touch keyboard won't work. This is true for all homebrew, not just DevilutionX.
 
@@ -72,7 +72,6 @@ sudo apt install devilutionx
 
 - Copy `devilutionx.3dsx` into `sd:/3ds/devilutionx/`.
 - Copy the MPQ files into `sd:/3ds/devilutionx/`.
-- Copy the `CharisSILB.ttf` font file into `sd:/3ds/devilutionx/`.
 - Launch `devilutionx.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
     - *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
@@ -80,7 +79,6 @@ sudo apt install devilutionx
 
 - Copy `devilutionx.cia` to your SD card.
 - Copy the MPQ files to `sd:/3ds/devilutionx/`.
-- Copy the `CharisSILB.ttf` font file into `sd:/3ds/devilutionx/`.
 - Install `devilutionx.cia` with a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
     - `devilutionx.cia` can be removed after being installed.
 - Launch Diablo from your 3DS Homemenu.
