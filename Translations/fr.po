@@ -1006,8 +1006,8 @@ msgstr "Mana: {:d}  Dom: 1/3 tgt hp"
 #: Source/control.cpp:1606
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Vous avez {:d} pièce d'or. Combien voulez-vous en supprimer ?"
+msgstr[1] "Vous avez {:d} pièces d'or. Combien voulez-vous en supprimer ?"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Menu"
@@ -1540,7 +1540,7 @@ msgstr ""
 
 #: Source/help.cpp:27
 msgid "F1:    Open Help Screen"
-msgstr ""
+msgstr "F1:    Ouvrir l'Écran d'Aide"
 
 #: Source/help.cpp:28
 msgid "Esc:   Display Main Menu"
@@ -1548,11 +1548,11 @@ msgstr "Esc: Afficher Menu Principal"
 
 #: Source/help.cpp:29
 msgid "Tab:   Display Auto-map"
-msgstr ""
+msgstr "Tab:   Afficher la Carte"
 
 #: Source/help.cpp:30
 msgid "Space: Hide all info screens"
-msgstr ""
+msgstr "Espace: Masquer tous les Écrans d'informations"
 
 #: Source/help.cpp:31
 msgid "S: Open Speedbook"
@@ -1560,7 +1560,7 @@ msgstr "S: Ouvrir Speedbook"
 
 #: Source/help.cpp:32
 msgid "B: Open Spellbook"
-msgstr "B: Ouvrir le libre des sorts"
+msgstr "B: Ouvrir le livre des sorts"
 
 #: Source/help.cpp:33
 msgid "I: Open Inventory screen"
@@ -1601,21 +1601,27 @@ msgstr ""
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button: Attack without moving"
-msgstr "Shift + Bouton Sourie Gauche: Attaque sans bouger"
+msgstr "Shift + Bouton Souris Gauche: Attaque sans bouger"
 
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
 msgstr ""
+"Shift + Bouton Souris Gauche (dans l'écran du personnage): Assigne tous les "
+"points de stat"
 
 #: Source/help.cpp:44
 msgid ""
 "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip "
 "item"
 msgstr ""
+"Shift + Bouton Souris Gauche (dans l'inventaire): Déplace l'objet vers la "
+"ceinture ou équipe/déséquipe l'objet"
 
 #: Source/help.cpp:45
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
 msgstr ""
+"Shift + Bouton Souris Gauche (sur la ceinture): Déplace l'objet dans "
+"l'inventaire"
 
 #: Source/help.cpp:47
 msgid "$Movement:"
@@ -1626,6 +1632,8 @@ msgid ""
 "If you hold the mouse button down while moving, the character will continue "
 "to move in that direction."
 msgstr ""
+"Si vous maintenez le bouton de la souris enfoncé pendant un déplacement, le "
+"personnage continuera à se déplacer dans cette direction."
 
 #: Source/help.cpp:51
 msgid "$Combat:"
@@ -1636,6 +1644,8 @@ msgid ""
 "Holding down the shift key and then left-clicking allows the character to "
 "attack without moving."
 msgstr ""
+"Maintenir la touche Maj enfoncée puis faire un clic gauche permet au "
+"personnage d'attaquer sans bouger."
 
 #: Source/help.cpp:55
 msgid "$Auto-map:"
@@ -1647,6 +1657,10 @@ msgid ""
 "press 'TAB' on the keyboard. Zooming in and out of the map is done with the "
 "+ and - keys. Scrolling the map uses the arrow keys."
 msgstr ""
+"Pour accéder à la carte, cliquer sur le bouton 'Carte' dans la barre "
+"d'informations ou appuyer sur 'TAB' sur le clavier. Le zoom avant et arrière "
+"sur la carte se fait avec les touches + et -. Utiliser les touches fléchées "
+"pour déplacer la carte."
 
 #: Source/help.cpp:61
 msgid "$Picking up Objects:"
@@ -1660,6 +1674,12 @@ msgid ""
 "box. Items may be used by either pressing the corresponding number or right-"
 "clicking on the item."
 msgstr ""
+"Les objets consommables de petite taille, tels que les potions ou les "
+"parchemins, sont automatiquement placés dans votre 'ceinture' située en haut "
+"de la barre d'interface . Lorsqu'un objet est placé dans la ceinture, un "
+"petit nombre apparaît dans cette case. Les objets peuvent être utilisés en "
+"appuyant sur le numéro correspondant ou en cliquant avec le bouton droit sur "
+"l'objet."
 
 #: Source/help.cpp:68
 msgid "$Gold"
@@ -1670,6 +1690,8 @@ msgid ""
 "You can select a specific amount of gold to drop by right-clicking on a pile "
 "of gold in your inventory."
 msgstr ""
+"Vous pouvez sélectionner une quantité spécifique d'or à déposer en faisant "
+"un clic droit sur une pile d'or dans votre inventaire."
 
 #: Source/help.cpp:72
 msgid "$Skills & Spells:"
@@ -1683,6 +1705,11 @@ msgid ""
 "will ready the spell. A readied spell may be cast by simply right-clicking "
 "in the play area."
 msgstr ""
+"Vous pouvez accéder à votre liste de compétences et de sorts en faisant un "
+"clic gauche sur le bouton 'SORTS' dans la barre d'interface. Les sorts "
+"appris et ceux disponibles via les bâtons sont listés ici. Un clic gauche "
+"sur le sort que vous souhaitez lancer prépare le sort. Un sort préparé peut "
+"être lancé par un simple clic droit dans la zone de jeu."
 
 #: Source/help.cpp:79
 msgid "$Using the Speedbook for Spells"
@@ -1694,12 +1721,18 @@ msgid ""
 "allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
+"Un clic gauche sur le bouton 'sort prêt' ouvrira le 'Speedbook' qui vous "
+"permet de sélectionner une compétence ou un sort pour une utilisation "
+"immédiate. Pour utiliser une compétence ou un sort préparé, faites "
+"simplement un clic droit dans la zone de jeu principale."
 
 #: Source/help.cpp:84
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
 "readied spell"
 msgstr ""
+"Maj + clic gauche sur le bouton 'sélectionner le sort actuel' effacera le "
+"sort préparé"
 
 #: Source/help.cpp:86
 msgid "$Setting Spell Hotkeys"
@@ -1711,6 +1744,11 @@ msgid ""
 "opening the 'speedbook' as described in the section above. Press the F5, F6, "
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
+"Vous pouvez attribuer jusqu'à quatre raccourcis clavier pour les "
+"compétences, les sorts ou les parchemins. Commencez par ouvrir le "
+"'speedbook' comme décrit dans la section ci-dessus. Appuyez sur les touches "
+"F5, F6, F7 ou F8 après avoir mis en surbrillance le sort que vous souhaitez "
+"attribuer."
 
 #: Source/help.cpp:92
 msgid "$Spell Books"
@@ -1721,6 +1759,8 @@ msgid ""
 "Reading more than one book increases your knowledge of that spell, allowing "
 "you to cast the spell more effectively."
 msgstr ""
+"Lire plus d'un livre augmente votre connaissance de ce sort, vous permettant "
+"de lancer le sort plus efficacement."
 
 #: Source/help.cpp:130
 msgid "Shareware Hellfire Help"
@@ -2698,7 +2738,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:273
 msgid "Flaming"
-msgstr ""
+msgstr "Flamboyant"
 
 #: Source/itemdat.cpp:274
 msgid "Lightning"
@@ -5835,7 +5875,7 @@ msgstr ""
 
 #: Source/panels/mainpanel.cpp:87
 msgid "char"
-msgstr "char"
+msgstr "perso"
 
 #: Source/panels/mainpanel.cpp:88
 msgid "quests"
@@ -5843,7 +5883,7 @@ msgstr "quêtes"
 
 #: Source/panels/mainpanel.cpp:89
 msgid "map"
-msgstr "map"
+msgstr "carte"
 
 #: Source/panels/mainpanel.cpp:90
 msgid "menu"
