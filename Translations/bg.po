@@ -19,7 +19,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr "Идея и дизайн на играта"
+msgstr "Дизайн на игри"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
@@ -31,7 +31,7 @@ msgstr "Допълнителен дизайн"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr "Главен програмист"
+msgstr "Водещи програмисти"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
@@ -39,7 +39,7 @@ msgstr "Старши програмисти"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
-msgstr "Програмиране"
+msgstr "Програмирането се извършва от"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
@@ -173,7 +173,7 @@ msgstr "Продажби"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
-msgstr "Dunsel"
+msgstr "Дънсел"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
