@@ -1572,6 +1572,7 @@ void InvGetItem(int pnum, Item *item, int ii)
 void AutoGetItem(int pnum, Item *item, int ii)
 {
 	bool done;
+	auto pickupSound = IS_IGRAB;
 
 	if (pcurs != CURSOR_HAND) {
 		return;
@@ -1601,6 +1602,10 @@ void AutoGetItem(int pnum, Item *item, int ii)
 		}
 	} else {
 		done = AutoEquipEnabled(player, player.HoldItem) && AutoEquip(pnum, player.HoldItem);
+		if (done) {
+			pickupSound = ItemInvSnds[ItemCAnimTbl[item->_iCurs]];
+		}
+
 		if (!done) {
 			done = AutoPlaceItemInBelt(player, player.HoldItem, true);
 		}
@@ -1611,11 +1616,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 
 	if (done) {
 		if (sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
-			if (player.HoldItem._itype == ItemType::Gold) {
-				PlaySFX(IS_IGRAB);
-			} else {
-				PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
-			}
+			PlaySFX(pickupSound);
 		}
 
 		CleanupItems(&Items[ii], ii);
