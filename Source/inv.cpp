@@ -412,7 +412,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 			done = true;
 			if (!AllItemsList[player.HoldItem.IDidx].iUsable)
 				done = false;
-			if (!player.HoldItem._iStatFlag)
+			if (!player.CanUseItem(player.HoldItem))
 				done = false;
 			if (player.HoldItem._itype == ItemType::Gold)
 				done = false;
@@ -464,7 +464,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
-	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.HoldItem._iStatFlag) {
+	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.CanUseItem(player.HoldItem)) {
 		done = false;
 		player.Say(HeroSpeech::ICantUseThisYet);
 	}
@@ -1614,13 +1614,7 @@ void CheckItemStats(Player &player)
 {
 	Item &item = player.HoldItem;
 
-	item._iStatFlag = false;
-
-	if (player._pStrength >= item._iMinStr
-	    && player._pMagic >= item._iMinMag
-	    && player._pDexterity >= item._iMinDex) {
-		item._iStatFlag = true;
-	}
+	item._iStatFlag = player.CanUseItem(item);
 }
 
 void InvGetItem(int pnum, int ii)
@@ -2118,7 +2112,7 @@ bool UseInvItem(int pnum, int cii)
 	if (!AllItemsList[item->IDidx].iUsable)
 		return false;
 
-	if (!item->_iStatFlag) {
+	if (!player.CanUseItem(*item)) {
 		player.Say(HeroSpeech::ICantUseThisYet);
 		return true;
 	}
