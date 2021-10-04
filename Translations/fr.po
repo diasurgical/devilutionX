@@ -30,7 +30,7 @@ msgstr "Design Additionnel"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr "Programmer Principal"
+msgstr "Programmeur Principal"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
@@ -111,27 +111,27 @@ msgstr "Musique & Son Cinématiques"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr ""
+msgstr "Production, Réalisation et Casting des Voix"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr ""
+msgstr "Scénario & Histoire"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr ""
+msgstr "Montage des Voix"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr ""
+msgstr "Voix"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr ""
+msgstr "Ingénieur d'enregistrement"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr ""
+msgstr "Conception et Mise en page du Manuel"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
@@ -179,7 +179,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "Relations Publiques"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
@@ -187,7 +187,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr ""
+msgstr "Ventes Internationales"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
@@ -223,7 +223,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "Ingénieurs Logiciel"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
@@ -231,7 +231,7 @@ msgstr "Directeur Artistique"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "Artistes"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
@@ -239,7 +239,7 @@ msgstr "Conception"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "Conception sonore, Effets Audio et Ingénierie Audio"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
@@ -247,19 +247,19 @@ msgstr "Responsable Assurance Qualité"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "Testeurs"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr ""
+msgstr "Manuel"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr ""
+msgstr "Travaux Additionels"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr ""
+msgstr "Écriture des Textes de Quête"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
@@ -275,7 +275,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr ""
+msgstr "Responsable Assurance Qualité"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
@@ -295,7 +295,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr ""
+msgstr "Responsable des Relations Publiques"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
