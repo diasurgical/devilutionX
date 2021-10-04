@@ -18,323 +18,297 @@ msgstr ""
 "X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
-#, fuzzy
 msgid "Game Design"
-msgstr "Stwórz grę"
+msgstr "Projekt Gry"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr ""
+msgstr "Starsi Projektanci"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr ""
+msgstr "Dodatkowe Projektowanie"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr ""
+msgstr "Główny Programista"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr ""
+msgstr "Starsi Programiści"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
-msgstr ""
+msgstr "Programowanie"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr ""
+msgstr "Programiści - Goście Specjalni"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
-msgstr ""
+msgstr "Programowanie Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr ""
+msgstr "Progamowanie Komunikacji Szeregowej"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr ""
+msgstr "Programowanie Instalatora"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr ""
+msgstr "Dyrektorzy Artystyczni"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr ""
+msgstr "Rysunki"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr ""
+msgstr "Rysunki Techniczne"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr ""
+msgstr "Dyrekorzy Artystyczni Filmów"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr ""
+msgstr "Projekt Filmów 3D"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr ""
+msgstr "Projekt Techniczny Filmów"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr ""
+msgstr "Producent Wykonawczy"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
-msgstr ""
+msgstr "Producent"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr ""
+msgstr "Młodszy Producent"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
-#, fuzzy
 msgid "Diablo Strike Team"
-msgstr "Staw czoła Diablo"
+msgstr "Diablo Strike Team"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
-#, fuzzy
 msgid "Music"
-msgstr "Muzyka Wyłączona"
+msgstr "Muzyka"
 
 #: Source/DiabloUI/credits_lines.cpp:80
-#, fuzzy
 msgid "Sound Design"
-msgstr "Dźwięk Wyłączony"
+msgstr "Dźwięk"
 
 #: Source/DiabloUI/credits_lines.cpp:83
-#, fuzzy
 msgid "Cinematic Music & Sound"
-msgstr "Muzyka Wyłączona"
+msgstr "Muzyka i Dźwięk Filmów"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr ""
+msgstr "Casting, Produkcja oraz Reżyseria Głosu"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr ""
+msgstr "Scenariusz i Fabuła"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr ""
+msgstr "Obróbka Głosu"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr ""
+msgstr "Głosy"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr ""
+msgstr "Inżynier Nagrań"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr ""
+msgstr "Projekt Instrukcji"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
-msgstr ""
+msgstr "Rysunki do Instrukcji"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
-msgstr ""
+msgstr "Tymczasowy Dyrektor ds. Jakości (Główny Tester)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr ""
+msgstr "Ekipa Szturmowa ds. Jakości (Testerzy)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr ""
+msgstr "Drużyna Specjalna ds. Jakości (Testerzy Kompatybilności)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr ""
+msgstr "Wsparcie Artlyleryjne ds. Jakości (Dodatkowi Testerzy)"
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
-msgstr ""
+msgstr "Kontrwywiad ds. Jakości"
 
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
-msgstr ""
+msgstr "Zakon Sieciowych Serwisów Informacyjnych"
 
 #: Source/DiabloUI/credits_lines.cpp:134
-#, fuzzy
 msgid "Customer Support"
 msgstr "Wsparcie"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
-msgstr ""
+msgstr "Sprzedaż"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
-msgstr ""
+msgstr "Dunsel"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr ""
+msgstr "Chórki Pana Dabiriego"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "PR"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr ""
+msgstr "Sprzedaż Międzynarodowa"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
-msgstr ""
+msgstr "Sprzedaż w U.S."
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr ""
+msgstr "Produkcja"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr ""
+msgstr "Działalność Prawna i Biznesowa"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr ""
+msgstr "Specjalne Podziękowania dla"
 
 #: Source/DiabloUI/credits_lines.cpp:171
-#, fuzzy
 msgid "Thanks To"
-msgstr ""
-"Masz go!  Jest bezpieczny!  Dziękuję ci!  Och Teosiu, czy te paskudne robale "
-"cię wystraszyły?  Co to?  Blee!  Coś przyczepiło ci się do futerka!  Fuj!  "
-"Chodź Teosiu, wracamy do domu!  A tobie jeszcze raz dziękuję!"
+msgstr "Podziękowania dla"
 
 #: Source/DiabloUI/credits_lines.cpp:200
-#, fuzzy
 msgid "In memory of"
-msgstr ""
-"Domu nie tworzą gliniane ściany i dach pokryty strzechą.  \n"
-"Karczmarz Ogden spełnia więcej potrzeb tutejszych mieszkańców, niż są tego "
-"świadomi.  Zapewnia schronienie Gillian i jej babci, podtrzymuje na duchu "
-"Farnhama i przypomina wszystkim o czasach świetności Tristram.  Jego gospoda "
-"i dostępne tam proste przyjemności są dla wielu ludzi przebłyskiem dawnych i "
-"spokojnych czasów.  Te wspomnienia rozbudzają w nich nadzieję na twój sukces."
+msgstr "Ku pamięci"
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
-msgstr ""
+msgstr "Bardzo Specjalne Podziękowania dla"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr ""
+msgstr "Główny Menadżer"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "Inżynieria Oprogramowania"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "Dyrektor Artystyczny"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "Artyści"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
-msgstr ""
+msgstr "Projekt"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "Inżynieria Dźwięku i Efekty Dźwiękowe"
 
 #: Source/DiabloUI/credits_lines.cpp:238
-#, fuzzy
 msgid "Quality Assurance Lead"
-msgstr "jakości"
+msgstr "Kierownik ds. Jakości"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "Testerzy"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr ""
+msgstr "Instrukcja"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr ""
+msgstr "\tDodatkowa Praca"
 
 #: Source/DiabloUI/credits_lines.cpp:257
-#, fuzzy
 msgid "Quest Text Writing"
-msgstr "Q: Wyświetla dziennik zadań"
+msgstr "Teksty Zadań"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
-#, fuzzy
 msgid "Thanks to"
-msgstr ""
-"Masz go!  Jest bezpieczny!  Dziękuję ci!  Och Teosiu, czy te paskudne robale "
-"cię wystraszyły?  Co to?  Blee!  Coś przyczepiło ci się do futerka!  Fuj!  "
-"Chodź Teosiu, wracamy do domu!  A tobie jeszcze raz dziękuję!"
+msgstr "Podziękowania dla"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr ""
+msgstr "\t\t\tSpecjalne Podziękowania dla Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr ""
+msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
-#, fuzzy
 msgid "Quality Assurance Manager"
-msgstr "jakości"
+msgstr "Menadżer ds. Jakości"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr ""
+msgstr "Główny Tester Jakości"
 
 #: Source/DiabloUI/credits_lines.cpp:278
-#, fuzzy
 msgid "Main Testers"
-msgstr "Esc:   Wyświetl menu główne"
+msgstr "Testerzy"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr ""
+msgstr "Dodatkowi Testerzy"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr ""
+msgstr "Menadżer Marketingu"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr ""
+msgstr "Menadżer PR"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr ""
+msgstr "Młodszy Menadżer Produktu"
 
 #: Source/DiabloUI/credits_lines.cpp:301
-#, fuzzy
 msgid "The Ring of One Thousand"
-msgstr "Pierścień Prawdy"
+msgstr "Krąg Tysiąca"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr ""
+msgstr "\tŻadne dusze nie zostały zaprzedane podczas tworzenia tej gry."
 
 #: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
 #: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
@@ -343,21 +317,20 @@ msgstr ""
 #: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
 #: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:525
 #: Source/DiabloUI/selok.cpp:68
-#, fuzzy
 msgid "OK"
-msgstr "Słuchaj, jestem krową, kapujesz?"
+msgstr "OK"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
-msgstr "Jeden gracz"
+msgstr "Jeden Gracz"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr "Wielu graczy"
+msgstr "Wielu Graczy"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Replay Intro"
-msgstr "Rprowadzenie"
+msgstr "Wprowadzenie"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Support"
@@ -369,11 +342,11 @@ msgstr "Twórcy"
 
 #: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Hellfire"
-msgstr "Wyjdź z hellfire"
+msgstr "Wyjdź z Hellfire"
 
 #: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Diablo"
-msgstr "Wyjdź z diablo"
+msgstr "Wyjdź z Diablo"
 
 #. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
 #: Source/DiabloUI/mainmenu.cpp:99
@@ -381,6 +354,8 @@ msgid ""
 "The Diablo introduction cinematic is only available in the full retail "
 "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
+"Wprowadzenie do Diablo jest dostępne tylko w pełnej wersji gry. Odwiedź "
+"https://www.gog.com/game/diablo by ją zakupić."
 
 #: Source/DiabloUI/progress.cpp:48 Source/DiabloUI/selconn.cpp:76
 #: Source/DiabloUI/selhero.cpp:188 Source/DiabloUI/selhero.cpp:213
@@ -391,48 +366,44 @@ msgstr "Anuluj"
 #: Source/DiabloUI/selconn.cpp:38 Source/DiabloUI/selgame.cpp:77
 #: Source/DiabloUI/selgame.cpp:372
 msgid "Client-Server (TCP)"
-msgstr ""
+msgstr "Klient-Serwer (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:41
 msgid "Loopback"
-msgstr ""
+msgstr "Loopback"
 
 #: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:434
 #: Source/DiabloUI/selgame.cpp:452
-#, fuzzy
 msgid "Multi Player Game"
-msgstr "Nowa Postać - Gra Sieciowa"
+msgstr "Gra Wieloosobowa"
 
 #: Source/DiabloUI/selconn.cpp:53
-#, fuzzy
 msgid "Requirements:"
-msgstr "Nie spełniono wymagań"
+msgstr "Wymagania:"
 
 #: Source/DiabloUI/selconn.cpp:59
-#, fuzzy
 msgid "no gateway needed"
-msgstr "zmniejsza wymagane atrybuty"
+msgstr "bramka nie jest wymagana"
 
 #: Source/DiabloUI/selconn.cpp:65
-#, fuzzy
 msgid "Select Connection"
-msgstr "Poziom trudności"
+msgstr "Wybierz Połączenie"
 
 #: Source/DiabloUI/selconn.cpp:68
 msgid "Change Gateway"
-msgstr ""
+msgstr "Zmień Bramkę"
 
 #: Source/DiabloUI/selconn.cpp:101
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr ""
+msgstr "Wszystkie komputery muszą być połączone z siecią kompatybilną z TCP."
 
 #: Source/DiabloUI/selconn.cpp:105
 msgid "All computers must be connected to the internet."
-msgstr ""
+msgstr "Wszystkie komputery muszą być połączone z internetem."
 
 #: Source/DiabloUI/selconn.cpp:109
 msgid "Play by yourself with no network exposure."
-msgstr ""
+msgstr "Graj samemu bez łączenia się z internetem."
 
 #: Source/DiabloUI/selconn.cpp:114
 msgid "Players Supported: {:d}"
@@ -469,11 +440,11 @@ msgstr "Stwórz nową grę z wybranym poziomem trudności."
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
-msgstr ""
+msgstr "Podaj IP lub nazwę hosta i dołącz do gry pod tym adresem."
 
 #: Source/DiabloUI/selgame.cpp:154
 msgid "Select Difficulty"
-msgstr "Poziom trudności"
+msgstr "Poziom Trudności"
 
 #: Source/DiabloUI/selgame.cpp:156 Source/DiabloUI/selgame.cpp:203
 #: Source/DiabloUI/selgame.cpp:306 Source/DiabloUI/selgame.cpp:326
@@ -492,14 +463,12 @@ msgid "Hell"
 msgstr "Piekło"
 
 #: Source/DiabloUI/selgame.cpp:172
-#, fuzzy
 msgid "Join TCP Games"
-msgstr "Dołącz do gry"
+msgstr "Dołącz do gry przez TCP"
 
 #: Source/DiabloUI/selgame.cpp:175 Source/DiabloUI/selgame.cpp:178
-#, fuzzy
 msgid "Enter address"
-msgstr "Wpisz hasło"
+msgstr "Wpisz adres"
 
 #: Source/DiabloUI/selgame.cpp:204
 msgid ""
@@ -516,7 +485,7 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Koszmar\n"
-"Mieszkańcy Labiryntu stają się mocniejsi. Są większym wyzwaniem. Poziom "
+"Potwory zamieszkujące Labirynt stają się mocniejsze i stanowią większe wyzwanie. Poziom "
 "trudności zalecany dla doświadczonej postaci."
 
 #: Source/DiabloUI/selgame.cpp:212
@@ -534,7 +503,7 @@ msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr ""
-"Twoja postać musi mieć conajmniej 20 poziom żeby grać na poziomie trudności "
+"Twoja postać musi osiągnąć co najmniej 20 poziom żeby grać na poziomie trudności "
 "Koszmar w trybie sieciowym."
 
 #: Source/DiabloUI/selgame.cpp:229
@@ -542,37 +511,32 @@ msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr ""
-"Twoja postać musi mieć conajmniej 30 poziom żeby grać na poziomie trudności "
+"Twoja postać musi osiągnąć co najmniej 30 poziom żeby grać na poziomie trudności "
 "Piekło w trybie sieciowym."
 
 #: Source/DiabloUI/selgame.cpp:304
-#, fuzzy
 msgid "Select Game Speed"
-msgstr "gra: "
+msgstr "Wybierz Tempo Gry"
 
 #: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:330
-#, fuzzy
 msgid "Fast"
-msgstr "szybko wznawia atak"
+msgstr "Szybkie"
 
 #: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:334
-#, fuzzy
 msgid "Faster"
-msgstr "szybsze wznowienie ataku"
+msgstr "Szybsze"
 
 #: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:338
-#, fuzzy
 msgid "Fastest"
-msgstr "najszybsze wznowienie ataku"
+msgstr "Najszybsze"
 
 #: Source/DiabloUI/selgame.cpp:327
-#, fuzzy
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
-"Normalny\n"
-"Poziom dla postaci, która pierwszy raz chce się zmierzyć z Diablo."
+"Normalne Tempo Gry\n"
+"Dla postaci, która pierwszy raz chce się zmierzyć z Diablo."
 
 #: Source/DiabloUI/selgame.cpp:331
 msgid ""
@@ -580,6 +544,9 @@ msgid ""
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
+"Szybka Gra\n"
+"Potwory zamieszkujące Labirynt stają się szybsze. Są większym wyzwaniem. Prędkość "
+"zalecana dla doświadczonej postaci."
 
 #: Source/DiabloUI/selgame.cpp:335
 msgid ""
@@ -587,6 +554,9 @@ msgid ""
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
+"Szybsza Gra\n"
+"Większość potworów będzie usiłować dorwać cię szybciej niż zwykle. Tylko "
+"doświadczony czempion powinien spróbować swych sił na tej prędkości."
 
 #: Source/DiabloUI/selgame.cpp:339
 msgid ""
@@ -594,19 +564,22 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
+"Najszybsza Gra\n"
+"Sługi piekielne będą nieustannie się za tobą uganiać. Tylko dla prawdziwych "
+"demonów prędkości."
 
 #: Source/DiabloUI/selgame.cpp:381 Source/DiabloUI/selgame.cpp:384
 msgid "Enter Password"
-msgstr "Wpisz hasło"
+msgstr "Wpisz Hasło"
 
 #: Source/DiabloUI/selgame.cpp:407
 msgid "The host is running a different game than you."
-msgstr ""
+msgstr "Host używa innej gry niż ty."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:410
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
-msgstr ""
+msgstr "Twoja wersja {:s} nie pasuje do wersji hosta {:d}.{:d}.{:d}."
 
 #: Source/DiabloUI/selhero.cpp:99
 msgid "New Hero"
@@ -614,7 +587,7 @@ msgstr "Nowa Postać"
 
 #: Source/DiabloUI/selhero.cpp:163
 msgid "Choose Class"
-msgstr "Wybierz klasę"
+msgstr "Wybierz Klasę"
 
 #: Source/DiabloUI/selhero.cpp:167 Source/panels/charpanel.cpp:22
 msgid "Warrior"
@@ -626,7 +599,7 @@ msgstr "Łotrzyca"
 
 #: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
-msgstr "Czarodziej"
+msgstr "Czarownik"
 
 #: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:25
 msgid "Monk"
@@ -634,7 +607,7 @@ msgstr "Mnich"
 
 #: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:26
 msgid "Bard"
-msgstr "Barda"
+msgstr "Bard"
 
 #: Source/DiabloUI/selhero.cpp:177 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
@@ -649,18 +622,17 @@ msgid "New Single Player Hero"
 msgstr "Nowa Postać - Gra Jednoosobowa"
 
 #: Source/DiabloUI/selhero.cpp:202
-#, fuzzy
 msgid "Save File Exists"
-msgstr "Brak miejsca do zapisu"
+msgstr "Znaleziono Plik Zapisu"
 
 #: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:38
 msgid "Load Game"
-msgstr "Wczytaj grę"
+msgstr "Wczytaj Grę"
 
 #: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
-msgstr "Nowa gra"
+msgstr "Nowa Gra"
 
 #: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
 msgid "Single Player Characters"
@@ -671,17 +643,19 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
+"Łotrzyca i Czarownik są dostępni tylko w pełnej wersji gry Diablo. Odwiedź "
+"https://www.gog.com/game/diablo by ją zakupić."
 
 #: Source/DiabloUI/selhero.cpp:274 Source/DiabloUI/selhero.cpp:277
 msgid "Enter Name"
-msgstr "Wpisz nazwę"
+msgstr "Wpisz Imię"
 
 #: Source/DiabloUI/selhero.cpp:306
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr ""
-"Nazwa nie może zawierać spacji, znaków specjalnych i niektórych słów.\n"
+"Niepoprawne imię. Nazwa nie może zawierać spacji, znaków specjalnych i niektórych słów.\n"
 
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:313
@@ -709,9 +683,8 @@ msgid "Vitality:"
 msgstr "Żywotność:"
 
 #: Source/DiabloUI/selhero.cpp:496
-#, fuzzy
 msgid "Savegame:"
-msgstr "Zapisz Grę:"
+msgstr "Zapis Gry:"
 
 #: Source/DiabloUI/selhero.cpp:508
 msgid "Select Hero"
@@ -747,68 +720,72 @@ msgstr "Nie"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr ""
+msgstr "GOG.com zarządza stroną pod adresem https://www.gog.com/forum/diablo"
 
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr ""
+msgstr "Sprawdź linki by odwiedzić centra dyskusji dotyczące Diablo"
 
 #: Source/DiabloUI/support_lines.cpp:10
-#, fuzzy
 msgid "and the Hellfire expansion."
-msgstr "Wyjdź z hellfire"
+msgstr "i dodatku Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
 "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
 msgstr ""
+"DevilutionX jest zarządzane przez Diasurgical, wszelkie problemy należy "
+"przesyłać"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr ""
+msgstr "na adres https://github.com/diasurgical/devilutionX"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
 "To help us better serve you, please be sure to include the version number,"
-msgstr ""
+msgstr "Abyśmy mogli ci lepiej pomóc, pamiętaj o podaniu numeru wersji,"
 
 #: Source/DiabloUI/support_lines.cpp:15
 msgid "operating system, and the nature of the problem."
-msgstr ""
+msgstr "systemu operacyjnego i typu problemu."
 
 #: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
-msgstr ""
+msgstr "Uwaga:"
 
 #: Source/DiabloUI/support_lines.cpp:19
 msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr ""
+msgstr "DevilutionX nie jest wspierane ani przez Blizzard Entertainment"
 
 #: Source/DiabloUI/support_lines.cpp:20
 msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr ""
+msgstr "ani przez GOG.com. Blizzard Entertainment i GOG.com nie testowali"
 
 #: Source/DiabloUI/support_lines.cpp:21
 msgid ""
 "  or certified the quality or compatibility of DevilutionX. All inquiries"
 msgstr ""
+"i nie sprawdzali jakości bądź kompatybilności DevilutionX. Wszelkie pytania"
 
 #: Source/DiabloUI/support_lines.cpp:22
 msgid ""
 "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
 msgstr ""
+"dotyczące DevilutionX powinny być kierowane tylko do Diasurgical, nie do "
+"Blizzard"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
-msgstr ""
+msgstr "  Entertainment lub GOG.com."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr ""
+msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:37
 msgid "Error"
-msgstr ""
+msgstr "Błąd"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
 #: Source/appfat.cpp:101
@@ -817,6 +794,9 @@ msgid ""
 "\n"
 "The error occurred at: {:s} line {:d}"
 msgstr ""
+"{:s}\n"
+"\n"
+"Nastąpił błąd w: {:s} linia {:d}"
 
 #: Source/appfat.cpp:115
 msgid ""
@@ -824,10 +804,13 @@ msgid ""
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
+"Otwarcie pliku diabdat.mpq lub spawn.mpq nie powiodło się\n"
+"\n"
+"Upewnij się, że plik znajduje się w folderze."
 
 #: Source/appfat.cpp:119
 msgid "Data File Error"
-msgstr ""
+msgstr "Błąd Pliku z Danymi"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
 #: Source/appfat.cpp:127
@@ -835,10 +818,12 @@ msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
+"Nie da się zapisać do:\n"
+"{:s}"
 
 #: Source/appfat.cpp:129
 msgid "Read-Only Directory Error"
-msgstr ""
+msgstr "Błąd Folderu Tylko do Odczytu"
 
 #: Source/automap.cpp:468
 msgid "game: "
@@ -861,19 +846,16 @@ msgid "Level: {:d}"
 msgstr "Poziom: {:d}"
 
 #: Source/control.cpp:196
-#, fuzzy
 msgid "Tab"
-msgstr "Tab:   Wyświetl mapę"
+msgstr "Tab"
 
 #: Source/control.cpp:196
-#, fuzzy
 msgid "Esc"
-msgstr "ESC - wyjście, Strzałki - przewijanie"
+msgstr "Esc"
 
 #: Source/control.cpp:196
-#, fuzzy
 msgid "Enter"
-msgstr "Wpisz nazwę"
+msgstr "Enter"
 
 #: Source/control.cpp:199
 msgid "Character Information"
@@ -917,7 +899,7 @@ msgstr "Rani tylko nieumarłych"
 
 #: Source/control.cpp:722 Source/control.cpp:1183 Source/control.cpp:1554
 msgid "Spell Level 0 - Unusable"
-msgstr "Poziom Czaru: 0 - Nie działa"
+msgstr "Poziom Czaru: 0 - Bezużyteczny"
 
 #: Source/control.cpp:724 Source/control.cpp:1185 Source/control.cpp:1556
 msgid "Spell Level {:d}"
@@ -940,10 +922,9 @@ msgid "Staff of {:s}"
 msgstr "Kostur: {:s}"
 
 #: Source/control.cpp:752 Source/control.cpp:1212
-#, fuzzy
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
-msgstr[0] "Punkty Życia {:d} / {:d}"
+msgstr[0] "Ładunek: {:d}"
 msgstr[1] "Ładunki: {:d}"
 msgstr[2] "Ładunki: {:d}"
 
@@ -972,10 +953,9 @@ msgid "Hotkey: 's'"
 msgstr "Klawisz: 's'"
 
 #: Source/control.cpp:1334 Source/inv.cpp:1893 Source/items.cpp:3751
-#, fuzzy
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
-msgstr[0] "$Złota"
+msgstr[0] "{:d} złota"
 msgstr[1] "{:d} złota"
 msgstr[2] "{:d} złota"
 
@@ -1000,10 +980,9 @@ msgid "Skill"
 msgstr "Umiejętność"
 
 #: Source/control.cpp:1536
-#, fuzzy
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] "Kostur: {:s}"
+msgstr[0] "Kostur ({:d} ładunek)"
 msgstr[1] "Kostur ({:d} ładunki)"
 msgstr[2] "Kostur ({:d} ładunków)"
 
@@ -1077,191 +1056,183 @@ msgstr "poziom 15"
 
 #: Source/diablo.cpp:111
 msgid "I need help! Come Here!"
-msgstr ""
+msgstr "Pomocy! Chodź tu!"
 
 #: Source/diablo.cpp:112
 msgid "Follow me."
-msgstr ""
+msgstr "Idź za mną."
 
 #: Source/diablo.cpp:113
 msgid "Here's something for you."
-msgstr ""
+msgstr "Mam coś dla ciebie."
 
 #: Source/diablo.cpp:114
-#, fuzzy
 msgid "Now you DIE!"
-msgstr "Co raz było otwarte, znów jest zamknięte."
+msgstr "Teraz ZGINIESZ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:777
-#, fuzzy
 msgid "Options:\n"
-msgstr "Opcje"
+msgstr "Opcje\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:778
-#, fuzzy
 msgid "Print this message and exit"
-msgstr "Wyjdź z hellfire"
+msgstr "Wyświetl tą wiadomość i wyjdź"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:779
-#, fuzzy
 msgid "Print the version and exit"
-msgstr "Wyjdź z hellfire"
+msgstr "Wyświetl numer wersji i wyjdź"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:780
 msgid "Specify the folder of diabdat.mpq"
-msgstr ""
+msgstr "Określ folder dla diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:781
 msgid "Specify the folder of save files"
-msgstr ""
+msgstr "Określ folder dla plików zapisu"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:782
 msgid "Specify the location of diablo.ini"
-msgstr ""
+msgstr "Określ lokalizację diablo.ini"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:783
 msgid "Specify the location of the .ttf font"
-msgstr ""
+msgstr "Określ lokalizację czcionki .ttf"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:784
 msgid "Specify the name of a custom .ttf font"
-msgstr ""
+msgstr "Określ nazwę dla własnej czcionki .ttf"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:785
 msgid "Skip startup videos"
-msgstr ""
+msgstr "Pomiń loga i wprowadzenie"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:786
 msgid "Display frames per second"
-msgstr ""
+msgstr "Wyświetl ilość klatek na sekundę"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:787
 msgid "Run in windowed mode"
-msgstr ""
+msgstr "Uruchom w oknie"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:788
 msgid "Enable verbose logging"
-msgstr ""
+msgstr "Włącz szczegółowy log"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:789
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr ""
+msgstr "Wymuś tryb wersji spawn nawet przy wykryciu diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:790
 msgid "Record a demo file"
-msgstr ""
+msgstr "Nagraj demo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
 msgid "Play a demo file"
-msgstr ""
+msgstr "Odtwórz plik z nagranym demo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:792
 msgid "Disable all frame limiting during demo playback"
-msgstr ""
+msgstr "Wyłącz limit klatek podczas odtwarzania demo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:793
-#, fuzzy
 msgid ""
 "\n"
 "Hellfire options:\n"
-msgstr "Opcje"
+msgstr ""
+"\n"
+"Opcje Hellfire\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:794
 msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr ""
+msgstr "Wymuś tryb diablo nawet przy wykryciu hellfire.mpq"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Use alternate nest palette"
-msgstr ""
+msgstr "Użyj alternatywnej palety gniazda"
 
 #: Source/diablo.cpp:801
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 msgstr ""
+"\n"
+"Zgłoś błędy na https://github.com/diasurgical/devilutionX/\n"
 
 #: Source/diablo.cpp:869
-#, fuzzy
 msgid "unrecognized option '{:s}'\n"
-msgstr "Umiejętność: {:s}"
+msgstr "nie rozpoznano opcji '{:s}'\n"
 
 #: Source/diablo.cpp:900
-#, fuzzy
 msgid "version {:s}"
-msgstr "{:s} {:s}"
+msgstr "wersja {:s}"
 
 #: Source/diablo.cpp:1206
 msgid "-- Network timeout --"
-msgstr ""
+msgstr "-- Przekroczono limit czasu oczekiwania --"
 
 #: Source/diablo.cpp:1207
-#, fuzzy
 msgid "-- Waiting for players --"
-msgstr "Liczba graczy: {:d}"
+msgstr "-- Oczekiwanie na graczy --"
 
 #: Source/diablo.cpp:1226
-#, fuzzy
 msgid "No help available"
-msgstr "Pomoc Hellfire"
+msgstr "Pomoc niedostępna"
 
 #: Source/diablo.cpp:1227
 msgid "while in stores"
-msgstr ""
+msgstr "podczas przebywania w sklepie"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1439
 msgid "{:s}, version = {:s}, mode = {:s}"
-msgstr ""
+msgstr "{:s}, wersja = {:s}, tryb = {:s}"
 
 #: Source/dvlnet/loopback.cpp:111
 msgid "loopback"
-msgstr ""
+msgstr "loopback"
 
 #: Source/dvlnet/tcp_client.cpp:68
-#, fuzzy
 msgid "Unable to connect"
-msgstr "Nie udało się stworzyć postaci."
+msgstr "Nie udało się połączyć"
 
 #: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
-msgstr ""
+msgstr "błąd: wczytano 0 bajtów z serwera"
 
 #: Source/error.cpp:58
 msgid "No automap available in town"
 msgstr "Mapa niedostępna w mieście"
 
 #: Source/error.cpp:59
-#, fuzzy
 msgid "No multiplayer functions in demo"
-msgstr "Brak pauzy w rozgrywce sieciowej"
+msgstr "Brak funkcji gry sieciowej w demo"
 
 #: Source/error.cpp:60
 msgid "Direct Sound Creation Failed"
-msgstr ""
+msgstr "Błąd Utworzenia Direct Sound"
 
 #: Source/error.cpp:61
-#, fuzzy
 msgid "Not available in shareware version"
-msgstr "Mapa niedostępna w mieście"
+msgstr "Niedostępne w wersji shareware"
 
 #: Source/error.cpp:62
 msgid "Not enough space to save"
@@ -1273,12 +1244,11 @@ msgstr "Brak pauzy w mieście"
 
 #: Source/error.cpp:64
 msgid "Copying to a hard disk is recommended"
-msgstr ""
+msgstr "Zalecane skopiowanie na dysk twardy"
 
 #: Source/error.cpp:65
-#, fuzzy
 msgid "Multiplayer sync problem"
-msgstr "Brak pauzy w rozgrywce sieciowej"
+msgstr "Błąd synchronizacji gry sieciowej"
 
 #: Source/error.cpp:66
 msgid "No pause in multiplayer"
@@ -1295,52 +1265,52 @@ msgstr "Zapisywanie..."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:69
 msgid "Some are weakened as one grows strong"
-msgstr "Przypływ sił również ma swą cenę."
+msgstr "Przypływ sił również ma swą cenę"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:70
 msgid "New strength is forged through destruction"
-msgstr "Przekucie w moc wymaga zniszczenia."
+msgstr "Przekucie w moc wymaga zniszczenia"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:71
 msgid "Those who defend seldom attack"
-msgstr "Atak nie zawsze jest najlepszą obroną."
+msgstr "Atak nie zawsze jest najlepszą obroną"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:72
 msgid "The sword of justice is swift and sharp"
-msgstr "Miecz sprawiedliwości ma jedno ostrze."
+msgstr "Miecz sprawiedliwości jest szybki i ostry"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:73
 msgid "While the spirit is vigilant the body thrives"
-msgstr "Harmonia ducha przynosi ukojenie dla ciała."
+msgstr "Harmonia ducha przynosi ukojenie dla ciała"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:74
 msgid "The powers of mana refocused renews"
-msgstr "Utracona energia powraca."
+msgstr "Utracona energia powraca"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:75
 msgid "Time cannot diminish the power of steel"
-msgstr "Czas nie naruszy najlepszej stali."
+msgstr "Czas nie naruszy najlepszej stali"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:76
 msgid "Magic is not always what it seems to be"
-msgstr "Magia nie zawsze jest tym, na co wygląda."
+msgstr "Magia nie zawsze jest tym, na co wygląda"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:77
 msgid "What once was opened now is closed"
-msgstr "Co raz było otwarte, znów jest zamknięte."
+msgstr "Co raz było otwarte, znów jest zamknięte"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:78
 msgid "Intensity comes at the cost of wisdom"
-msgstr "Żywiołowość zyskana kosztem mądrości."
+msgstr "Żywiołowość zyskana kosztem mądrości"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:79
@@ -1350,42 +1320,42 @@ msgstr "Tajemna moc przynosi zniszczenie."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:80
 msgid "That which cannot be held cannot be harmed"
-msgstr "Błogosławieństwo od grupy lokalizacyjnej!"
+msgstr "To, czego nie można trzymać, nie może być uszkodzone"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:81
 msgid "Crimson and Azure become as the sun"
-msgstr "Szkarłat i lazur błyszczą niczym słońce."
+msgstr "Szkarłat i lazur błyszczą niczym słońce"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:82
 msgid "Knowledge and wisdom at the cost of self"
-msgstr "Nieustannie zdobywasz wiedzę."
+msgstr "Wiedza i mądrość poprzez zatracenie"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:83
 msgid "Drink and be refreshed"
-msgstr "Napij się i poczuj odnowienie."
+msgstr "Napij się i poczuj odnowienie"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:84
 msgid "Wherever you go, there you are"
-msgstr "Pójdź w nieznane."
+msgstr "Gdziekolwiek pójdziesz, tam jesteś"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:85
 msgid "Energy comes at the cost of wisdom"
-msgstr "Energia zyskana kosztem mądrości."
+msgstr "Energia kosztem mądrości"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:86
 msgid "Riches abound when least expected"
-msgstr "Bogactwo przybywa nieoczekiwanie."
+msgstr "Bogactwo przybywa nieoczekiwanie"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:87
 msgid "Where avarice fails, patience gains reward"
-msgstr "Chciwość zawodzi, cierpliwość popłaca."
+msgstr "Gdzie chciwość zawodzi, tam cierpliwość popłaca"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:88
@@ -1395,42 +1365,42 @@ msgstr "Błogosławieństwo od towarzysza!"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:89
 msgid "The hands of men may be guided by fate"
-msgstr "Los jest w twoich rękach."
+msgstr "Los jest w twoich rękach"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:90
 msgid "Strength is bolstered by heavenly faith"
-msgstr "Głęboka wiara zwiększa siłę."
+msgstr "Głęboka wiara zwiększa siłę"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:91
 msgid "The essence of life flows from within"
-msgstr "Istota życia leży we wnętrzu."
+msgstr "Istota życia leży we wnętrzu"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:92
 msgid "The way is made clear when viewed from above"
-msgstr "Droga widziana z góry jest przejrzystsza."
+msgstr "Droga widziana z góry jest przejrzystsza"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:93
 msgid "Salvation comes at the cost of wisdom"
-msgstr "Zbawienie kosztem mądrości."
+msgstr "Zbawienie kosztem mądrości"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:94
 msgid "Mysteries are revealed in the light of reason"
-msgstr "Mądrość znajdziecie jedynie wśród uczonych."
+msgstr "Mądrość znajdziecie jedynie wśród uczonych"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:95
 msgid "Those who are last may yet be first"
-msgstr "Ostatni mogą być jeszcze pierwszymi."
+msgstr "Ostatni mogą być jeszcze pierwszymi"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:96
 msgid "Generosity brings its own rewards"
-msgstr "Hojność zostaje nagrodzona."
+msgstr "Hojność zostaje nagrodzona"
 
 #: Source/error.cpp:97
 msgid "You must be at least level 8 to use this."
@@ -1482,7 +1452,7 @@ msgstr "Energia duchowa została przywrócona."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:107
 msgid "You feel more agile."
-msgstr "Czujesz się zwinniej."
+msgstr "Czujesz przypływ zwinności."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:108
@@ -1518,7 +1488,7 @@ msgstr "Wyjdź z Gry"
 
 #: Source/gamemenu.cpp:49
 msgid "Restart In Town"
-msgstr "Kontynuuj rozgrywkę"
+msgstr "Wznów w Mieście"
 
 #: Source/gamemenu.cpp:59
 msgid "Gamma"
@@ -1634,17 +1604,18 @@ msgstr "Shift + LPM: Atak w miejscu"
 
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
-msgstr ""
+msgstr "Shift + LPM (na panelu postaci): Przydziel wszystkie punkty"
 
 #: Source/help.cpp:44
 msgid ""
 "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip "
 "item"
 msgstr ""
+"Shift + LPM (w ekwipunku): Przenieś na pas lub przygotuj/schowaj przedmiot"
 
 #: Source/help.cpp:45
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr ""
+msgstr "Shift + LPM (na pasie): Przenieś przedmiot do ekwipunku"
 
 #: Source/help.cpp:47
 msgid "$Movement:"
@@ -1659,13 +1630,15 @@ msgstr ""
 
 #: Source/help.cpp:51
 msgid "$Combat:"
-msgstr ""
+msgstr "$Walka:"
 
 #: Source/help.cpp:52
 msgid ""
 "Holding down the shift key and then left-clicking allows the character to "
 "attack without moving."
 msgstr ""
+"Wciśnięcie Shift powoduje, że po kliknięciu postać atakuje bez poruszania "
+"się."
 
 #: Source/help.cpp:55
 msgid "$Auto-map:"
@@ -1682,9 +1655,8 @@ msgstr ""
 "powiększanie i oddalanie. Klawiszami strzałek można ją również przemieszczać."
 
 #: Source/help.cpp:61
-#, fuzzy
 msgid "$Picking up Objects:"
-msgstr "Nowy Poziom"
+msgstr "$Podnoszenie Obiektów:"
 
 #: Source/help.cpp:62
 msgid ""
@@ -1736,12 +1708,14 @@ msgid ""
 "allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
+"Wciśnięcie LPM na 'przygotowany czar' otworzy 'podręczną księgę' pozwalającą "
+"wybrać umiejętność. By ją użyć wciśnij PPM na główne okno rozgrywki."
 
 #: Source/help.cpp:84
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
 "readied spell"
-msgstr ""
+msgstr "Wciśnięcie Shift + LPM na wybrany czar usunie go"
 
 #: Source/help.cpp:86
 msgid "$Setting Spell Hotkeys"
@@ -1770,18 +1744,16 @@ msgstr ""
 "jeszcze skuteczniejsze."
 
 #: Source/help.cpp:130
-#, fuzzy
 msgid "Shareware Hellfire Help"
-msgstr "Pomoc Hellfire"
+msgstr "Pomoc Wersji Shareware Hellfire"
 
 #: Source/help.cpp:130
 msgid "Hellfire Help"
 msgstr "Pomoc Hellfire"
 
 #: Source/help.cpp:132
-#, fuzzy
 msgid "Shareware Diablo Help"
-msgstr "Pomoc Diablo"
+msgstr "Pomoc Wersji Shareware Diablo"
 
 #: Source/help.cpp:132
 msgid "Diablo Help"
@@ -1793,18 +1765,19 @@ msgstr "ESC - wyjście, Strzałki - przewijanie"
 
 #: Source/init.cpp:214
 msgid "Some Hellfire MPQs are missing"
-msgstr ""
+msgstr "Brakuje części plików MPQ do Hellfire"
 
 #: Source/init.cpp:214
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
+"Nie znaleziono wszystkich plików MPQ do Hellfire.\n"
+"Skopiuj wszystkie pliki hf*.mpq do folderu."
 
 #: Source/init.cpp:224
-#, fuzzy
 msgid "Unable to create main window"
-msgstr "Nie udało się stworzyć postaci."
+msgstr "Nie udało się utworzyć głównego okna"
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:154
 msgid "Gold"
@@ -1872,7 +1845,7 @@ msgstr "Złoty Eliksir"
 
 #: Source/itemdat.cpp:32 Source/quests.cpp:51
 msgid "Anvil of Fury"
-msgstr "Kowadło Gniewu"
+msgstr "Kowadło Furii"
 
 #: Source/itemdat.cpp:33 Source/quests.cpp:42
 msgid "Black Mushroom"
@@ -1896,7 +1869,7 @@ msgstr "Kamień Krwi"
 
 #: Source/itemdat.cpp:38
 msgid "Cathedral Map"
-msgstr "Znaleziona Mapa"
+msgstr "Mapa Katedry"
 
 #: Source/itemdat.cpp:39
 msgid "Heart"
@@ -1920,7 +1893,7 @@ msgstr "Zwój Miejskiego Portalu"
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:403
 msgid "Arkaine's Valor"
-msgstr "Odwaga Arkaina"
+msgstr "Męstwo Arkaina"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
@@ -1936,7 +1909,7 @@ msgstr "Ostrze Griswolda"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
 msgid "Bovine Plate"
-msgstr "Byczy Pancerz"
+msgstr "Bydlęcy Pancerz"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
@@ -1967,7 +1940,7 @@ msgstr "Sztylet"
 
 #: Source/itemdat.cpp:55
 msgid "Rune Bomb"
-msgstr "Magiczna Bomba"
+msgstr "Runiczna Bomba"
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
@@ -1979,15 +1952,15 @@ msgstr "Amulet Dobrobytu"
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
-msgstr "Notatka, cz. 1"
+msgstr "Podarta Notatka, cz. 1"
 
 #: Source/itemdat.cpp:59
 msgid "Torn Note 2"
-msgstr "Notatka, cz. 2"
+msgstr "Podarta Notatka, cz. 2"
 
 #: Source/itemdat.cpp:60
 msgid "Torn Note 3"
-msgstr "Notatka, cz. 3"
+msgstr "Podarta Notatka, cz. 3"
 
 #: Source/itemdat.cpp:61
 msgid "Reconstructed Note"
@@ -2031,15 +2004,15 @@ msgstr "Całun"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
-msgstr "Łach"
+msgstr "Łachmany"
 
 #: Source/itemdat.cpp:72
 msgid "Cloak"
-msgstr "Szata"
+msgstr "Płaszcz"
 
 #: Source/itemdat.cpp:73
 msgid "Robe"
-msgstr "Habit"
+msgstr "Szata"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
@@ -2219,7 +2192,7 @@ msgstr "Zwój Petryfikacji"
 
 #: Source/itemdat.cpp:122
 msgid "Scroll of Chain Lightning"
-msgstr "Zwój Eksplozji Błyskawic"
+msgstr "Zwój Seryjnych Błyskawic"
 
 #: Source/itemdat.cpp:123
 msgid "Scroll of Guardian"
@@ -2682,7 +2655,7 @@ msgstr "Agatowy"
 
 #: Source/itemdat.cpp:257
 msgid "Obsidian"
-msgstr "Magmowy"
+msgstr "Obsydianowy"
 
 #: Source/itemdat.cpp:258
 msgid "Emerald"
@@ -2788,7 +2761,7 @@ msgstr "zbrodni"
 
 #: Source/itemdat.cpp:293
 msgid "slaughter"
-msgstr "zatracenia"
+msgstr "rzezi"
 
 #: Source/itemdat.cpp:294
 msgid "pain"
@@ -3658,7 +3631,7 @@ msgstr "czyni rzecz niezniszczalną"
 
 #: Source/items.cpp:1948
 msgid "increases the armor class"
-msgstr "zwiększa klasę"
+msgstr "zwiększa klasę pancerza"
 
 #: Source/items.cpp:1950
 msgid "of armor and shields"
@@ -3666,7 +3639,7 @@ msgstr "tarcz i zbroi"
 
 #: Source/items.cpp:1954
 msgid "greatly increases the armor"
-msgstr "znacznie zwiększa"
+msgstr "znacznie zwiększa pancerz"
 
 #: Source/items.cpp:1956
 msgid "class of armor and shields"
@@ -3685,14 +3658,12 @@ msgid "sets petrification trap"
 msgstr "ustawia pułapkę Petryfikacji"
 
 #: Source/items.cpp:1977
-#, fuzzy
 msgid "restore all life"
-msgstr "przywraca życie"
+msgstr "odnawia całe życie"
 
 #: Source/items.cpp:1981
-#, fuzzy
 msgid "restore some life"
-msgstr "przywraca życie"
+msgstr "odnawia część życia"
 
 #: Source/items.cpp:1985
 msgid "recover life"
@@ -3703,14 +3674,12 @@ msgid "deadly heal"
 msgstr "śmiertelne leczenie"
 
 #: Source/items.cpp:1993
-#, fuzzy
 msgid "restore some mana"
-msgstr "Mikstura Many"
+msgstr "odnawia część many"
 
 #: Source/items.cpp:1997
-#, fuzzy
 msgid "restore all mana"
-msgstr "gracz traci całą manę"
+msgstr "odnawia całą manę"
 
 #: Source/items.cpp:2001
 msgid "increase strength"
@@ -3742,12 +3711,11 @@ msgstr "zmniejsza żywotność"
 
 #: Source/items.cpp:2030
 msgid "restore some life and mana"
-msgstr ""
+msgstr "odnawia część życia i many"
 
 #: Source/items.cpp:2034
-#, fuzzy
 msgid "restore all life and mana"
-msgstr "gracz traci całą manę"
+msgstr "odnawia całe życie i manę"
 
 #: Source/items.cpp:2049 Source/items.cpp:2074
 msgid "Right-click to read"
@@ -3853,18 +3821,18 @@ msgstr "Odporność na Magię 75% MAX"
 
 #: Source/items.cpp:3872
 msgid "Resist All: {:+d}%"
-msgstr "Odporność - każda {:+d}%"
+msgstr "Odporność na wszystko: {:+d}%"
 
 #: Source/items.cpp:3874
 #, no-c-format
 msgid "Resist All: 75% MAX"
-msgstr "Odporność - każda 75% MAX"
+msgstr "Odporność na wszystko 75% MAX"
 
 #: Source/items.cpp:3878
 #, fuzzy
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "Gniazdo - Poziom {:d}"
+msgstr[0] "poziom czarów: +{:d}"
 msgstr[1] "poziom czarów: +{:d}"
 msgstr[2] "poziom czarów: +{:d}"
 
@@ -3872,7 +3840,7 @@ msgstr[2] "poziom czarów: +{:d}"
 #, fuzzy
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] "Gniazdo - Poziom {:d}"
+msgstr[0] "poziom czarów: -{:d}"
 msgstr[1] "poziom czarów: -{:d}"
 msgstr[2] "poziom czarów: -{:d}"
 
@@ -3926,7 +3894,7 @@ msgstr "{:+d} do żywotności"
 
 #: Source/items.cpp:3920
 msgid "{:+d} to all attributes"
-msgstr "{:+d} do każdego atrybutu"
+msgstr "{:+d} do wszystkich atrybutów"
 
 #: Source/items.cpp:3924
 msgid "{:+d} damage from enemies"
@@ -4077,7 +4045,7 @@ msgstr "najszybsze wznowienie ataku"
 
 #: Source/items.cpp:4028
 msgid "fast block"
-msgstr "szybki unik"
+msgstr "szybki blok"
 
 #: Source/items.cpp:4031
 #, fuzzy
@@ -4101,7 +4069,7 @@ msgstr "zmieniona wytrzymałość"
 
 #: Source/items.cpp:4043
 msgid "Faster attack swing"
-msgstr "Szybkie oddanie ataku"
+msgstr "Szybkie wykonanie ataku"
 
 #: Source/items.cpp:4046
 msgid "one handed sword"
@@ -4160,21 +4128,21 @@ msgstr "mała wyt, {:+d}% obrażeń"
 
 #: Source/items.cpp:4097
 msgid "extra AC vs demons"
-msgstr "mniej obrażeń od demonów"
+msgstr "ekstra pancerz przeciwko demonom"
 
 #: Source/items.cpp:4100
 msgid "extra AC vs undead"
-msgstr "mniej obrażeń od nieumarłych"
+msgstr "ekstra pancerz przeciwko nieumarłym"
 
 #: Source/items.cpp:4103
 #, no-c-format
 msgid "50% Mana moved to Health"
-msgstr "50%% Many do Życia"
+msgstr "50% Many przechodzi do Życia"
 
 #: Source/items.cpp:4106
 #, no-c-format
 msgid "40% Health moved to Mana"
-msgstr "40%% Życia do Many"
+msgstr "40% Życia przechodzi do Many"
 
 #: Source/items.cpp:4109
 msgid "Another ability (NW)"
@@ -4237,27 +4205,27 @@ msgstr "Nie zidentyfikowano"
 
 #: Source/loadsave.cpp:1656 Source/loadsave.cpp:2122
 msgid "Unable to open save file archive"
-msgstr ""
+msgstr "Nie można otworzyć pliku zapisu"
 
 #: Source/loadsave.cpp:1659
 #, fuzzy
 msgid "Invalid save file"
-msgstr "Brak miejsca do zapisu"
+msgstr "Nieprawidłowy plik zapisu"
 
 #: Source/loadsave.cpp:1688
 #, fuzzy
 msgid "Player is on a Hellfire only level"
-msgstr "Gracz '{:s}' (poziom {:d}) jest już w grze"
+msgstr "Gracz jest na poziomie z dodatku Hellfire"
 
 #: Source/loadsave.cpp:1885
 #, fuzzy
 msgid "Invalid game state"
-msgstr "Stwórz grę"
+msgstr "Nieprawidłowy stan gry"
 
 #: Source/menu.cpp:136
 #, fuzzy
 msgid "Unable to display mainmenu"
-msgstr "Esc:   Wyświetl menu główne"
+msgstr "Nie można wyświetlić głównego menu"
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
