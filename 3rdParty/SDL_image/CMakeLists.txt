@@ -3,12 +3,12 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 if(USE_SDL1)
   FetchContent_Declare(SDL_image
-    URL https://www.libsdl.org/projects/SDL_image/release/SDL_image-1.2.12.tar.gz
+    URL https://github.com/libsdl-org/SDL_image/archive/refs/tags/release-1.2.12.tar.gz
     URL_HASH MD5=a0f9098ebe5400f0bdc9b62e60797ecb
   )
 else()
   FetchContent_Declare(SDL_image
-    URL https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5.tar.gz
+    URL https://github.com/libsdl-org/SDL_image/archive/refs/tags/release-2.0.5.tar.gz
     URL_HASH MD5=f26f3a153360a8f09ed5220ef7b07aea
   )
 endif()
