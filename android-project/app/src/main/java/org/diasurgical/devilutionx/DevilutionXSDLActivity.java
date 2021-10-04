@@ -191,7 +191,6 @@ public class DevilutionXSDLActivity extends SDLActivity {
 	protected String[] getLibraries() {
 		return new String[]{
 				"SDL2",
-				"SDL2_ttf",
 				"devilutionx"
 		};
 	}
