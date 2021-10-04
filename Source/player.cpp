@@ -1701,7 +1701,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
-			player.spellLevel = static_cast<int>(player.destParam3);
+			player.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLWALL:
 			StartSpell(pnum, player.destParam3, player.destParam1, player.destParam2);
