@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 SDLDEV_VERS=2.0.14
-SDLTTF_VERS=2.0.15
 SODIUM_VERS=1.0.18
 ZLIB_VERS=1.2.11
 
@@ -35,8 +34,6 @@ fi
 
 wget -q https://www.libsdl.org/release/SDL2-devel-${SDLDEV_VERS}-mingw.tar.gz -OSDL2-devel-${SDLDEV_VERS}-mingw.tar.gz
 tar -xzf SDL2-devel-${SDLDEV_VERS}-mingw.tar.gz
-wget -q https://www.libsdl.org/projects/SDL_ttf/release/SDL2_ttf-devel-${SDLTTF_VERS}-mingw.tar.gz -OSDL2_ttf-devel-${SDLTTF_VERS}-mingw.tar.gz
-tar -xzf SDL2_ttf-devel-${SDLTTF_VERS}-mingw.tar.gz
 $SUDO cp -r SDL2*/${MINGW_ARCH}/* ${MINGW_PREFIX}
 
 wget -q https://github.com/jedisct1/libsodium/releases/download/${SODIUM_VERS}-RELEASE/libsodium-${SODIUM_VERS}-mingw.tar.gz -Olibsodium-${SODIUM_VERS}-mingw.tar.gz
