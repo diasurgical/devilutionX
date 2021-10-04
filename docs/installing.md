@@ -17,9 +17,9 @@ Download the latest [DevilutionX release](https://github.com/diasurgical/devilut
 <details><summary>Linux</summary>
 
 - Copy the MPQ files to the folder containing the DevilutionX executable, or to the data folder. The data folder path may differ depending on distro, version, and security settings, but will normally be `~/.local/share/diasurgical/devilution/`
-- Install [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL2_ttf](https://www.libsdl.org/projects/SDL_ttf/):
- - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0 libsdl2-ttf-2.0-0`
- - Fedora `sudo dnf install SDL2 SDL2_ttf`
+- Install [SDL2](https://www.libsdl.org/download-2.0.php):
+ - Ubuntu/Debian/Rasbian `sudo apt install libsdl2-2.0-0`
+ - Fedora `sudo dnf install SDL2`
 - Run `./devilutionx`
 
 </details>
