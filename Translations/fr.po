@@ -873,7 +873,7 @@ msgstr "Journal des quêtes"
 
 #: Source/control.cpp:201
 msgid "Automap"
-msgstr "Automap"
+msgstr "Carte"
 
 #: Source/control.cpp:202
 msgid "Main Menu"
@@ -1220,7 +1220,7 @@ msgstr "erreur: 0 bytes lu du serveur"
 
 #: Source/error.cpp:58
 msgid "No automap available in town"
-msgstr "Pas d'automap en ville"
+msgstr "Pas de carte en ville"
 
 #: Source/error.cpp:59
 msgid "No multiplayer functions in demo"
@@ -1588,7 +1588,7 @@ msgstr "Z: Zoom"
 
 #: Source/help.cpp:39
 msgid "+ / -: Zoom Automap"
-msgstr "+ / -: Zoom Automap"
+msgstr "+ / -: Zoom Carte"
 
 #: Source/help.cpp:40
 msgid "1 - 8: Use Belt item"
@@ -1932,7 +1932,7 @@ msgstr "Plate Bovine"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
-msgstr "Bâton de Lazare"
+msgstr "Bâton de Lazarus"
 
 #: Source/itemdat.cpp:50 Source/itemdat.cpp:111
 msgid "Scroll of Resurrect"
@@ -4880,7 +4880,7 @@ msgstr ""
 #: Source/monstdat.cpp:477
 msgctxt "monster"
 msgid "Arch-Bishop Lazarus"
-msgstr "Archevêque Lazare"
+msgstr "Archevêque Lazarus"
 
 #: Source/monstdat.cpp:478
 msgctxt "monster"
@@ -5802,7 +5802,7 @@ msgstr "Expérience"
 
 #: Source/panels/charpanel.cpp:123
 msgid "Next level"
-msgstr "Prochain niveau: {:d}"
+msgstr "Prochain niveau"
 
 #: Source/panels/charpanel.cpp:126
 msgid "None"
@@ -5976,7 +5976,7 @@ msgstr "Gharbad le Faible"
 
 #: Source/quests.cpp:44
 msgid "Zhar the Mad"
-msgstr ""
+msgstr "Zhar le Fou"
 
 #: Source/quests.cpp:47
 msgid "The Butcher"
@@ -5988,7 +5988,7 @@ msgstr "Panneau d'Ogden"
 
 #: Source/quests.cpp:49
 msgid "Halls of the Blind"
-msgstr ""
+msgstr "Halles des Aveugles"
 
 #: Source/quests.cpp:50
 msgid "Valor"
@@ -5996,7 +5996,7 @@ msgstr "Valeur"
 
 #: Source/quests.cpp:52
 msgid "Warlord of Blood"
-msgstr ""
+msgstr "Seigneur-Guerrier de Sang"
 
 #: Source/quests.cpp:53
 msgid "The Curse of King Leoric"
@@ -6004,7 +6004,7 @@ msgstr "La Malédiction du Roi Leoric"
 
 #: Source/quests.cpp:54 Source/setmaps.cpp:27
 msgid "Poisoned Water Supply"
-msgstr ""
+msgstr "Réserve d'Eau Empoisonnée"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:55 Source/quests.cpp:90
@@ -6013,7 +6013,7 @@ msgstr "La chambre d'os"
 
 #: Source/quests.cpp:56
 msgid "Archbishop Lazarus"
-msgstr "Archevêque Lazare"
+msgstr "Archevêque Lazarus"
 
 #: Source/quests.cpp:57
 msgid "Grave Matters"
@@ -6029,7 +6029,7 @@ msgstr "Petite Fille"
 
 #: Source/quests.cpp:60
 msgid "Wandering Trader"
-msgstr ""
+msgstr "Marchand errant"
 
 #: Source/quests.cpp:61
 msgid "The Defiler"
@@ -6052,7 +6052,7 @@ msgstr "Tombe du Roi Leoric"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:91 Source/setmaps.cpp:26
 msgid "Maze"
-msgstr ""
+msgstr "Dédale"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:92
@@ -6229,17 +6229,17 @@ msgstr "Élémentaire"
 #: Source/spelldat.cpp:45
 msgctxt "spell"
 msgid "Charged Bolt"
-msgstr ""
+msgstr "Éclair Chargé"
 
 #: Source/spelldat.cpp:46
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr ""
+msgstr "Feu Sacré"
 
 #: Source/spelldat.cpp:47
 msgctxt "spell"
 msgid "Resurrect"
-msgstr "Resurection"
+msgstr "Résurrection"
 
 #: Source/spelldat.cpp:48
 msgctxt "spell"
@@ -6641,6 +6641,12 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
+" Ahh, l'histoire du Roi, c'est cela ? Lâ déchéance tragique de Leoric a été "
+"terrible pour ce pays. Le peuple a toujours aimé le Roi. et maintenant ils "
+"en ont une peur mortelle. La question que je n'arrête pas de me poser est de "
+"savoir comment il a pu s'éloigner autant de la Lumière, lui qui a toujours "
+"été le plus pieux de tous. Seules les plus noires puissances des Enfers "
+"peuvent détruire un homme de l'intérieur aussi résolument..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:17
@@ -6663,6 +6669,26 @@ msgid ""
 "levels beneath the Cathedral. Please, good master, put his soul at ease by "
 "destroying his now cursed form..."
 msgstr ""
+"Le village a besoin de votre aide, bon maître ! Il y a quelques mois, le "
+"fils du roi Léoric, le prince Albrecht, a été kidnappé. Le roi se mit en "
+"colère et parcourut le village à la recherche de son enfant disparu. Chaque "
+"jour qui passait, Léoric semblait sombrer plus profondément dans la folie. "
+"Il a cherché à blâmer des villageois innocents pour la disparition du garçon "
+"et les a brutalement exécutés. Moins de la moitié d'entre nous ont survécu à "
+"sa folie...\n"
+" \n"
+"Les chevaliers et les prêtres du roi ont essayé de l'apaiser, mais il s'est "
+"retourné contre eux et, malheureusement, ils ont été contraints de le tuer. "
+"Dans son dernier souffle, le roi lança une terrible malédiction sur ses "
+"anciens partisans. Il a juré qu'ils le serviraient dans les ténèbres pour "
+"toujours...\n"
+" \n"
+"C'est là que les choses prennent une tournure encore plus sombre que je ne "
+"le pensais ! Notre ancien roi est sorti de son sommeil éternel et commande "
+"désormais une légion de serviteurs morts-vivants dans le labyrinthe. Son "
+"corps a été enterré dans une tombe à trois niveaux sous la cathédrale. S'il "
+"vous plaît, bon maître, laisser reposer son âme en détruisant sa forme "
+"désormais maudite..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
@@ -6671,6 +6697,9 @@ msgid ""
 "down there, waiting in the putrid darkness for his chance to destroy this "
 "land..."
 msgstr ""
+"Comme je vous l'ai dit, bon maître, le Roi était enseveli trois niveaux plus "
+"bas. Il est là-bas, attendant dans les ténèbres putrides sa chance de "
+"détruire cette terre..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:21
@@ -6680,6 +6709,10 @@ msgid ""
 "consumes our land, for your victory is a good omen. May Light guide you on "
 "your way, good master."
 msgstr ""
+"La malédiction de notre roi est levée, mais je crains que ce ne soit qu'une "
+"partie d'un plus grand mal à l'œuvre. Cependant, nous pouvons encore être "
+"sauvés des ténèbres qui consument notre terre, car votre victoire est de bon "
+"augure. Que la Lumière vous guide sur votre chemin, bon maître."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:23
@@ -6689,6 +6722,11 @@ msgid ""
 "this kingdom from that day forward, but perhaps if you were to free his "
 "spirit from his earthly prison, the curse would be lifted..."
 msgstr ""
+"La perte de son fils a porté un coup fatal au Roi Leoric. J'ai fait de mon "
+"mieux pour atténuer sa douleur et sa folie, mais elle a fini par prendre le "
+"dessus. Une sombre malédiction pèse sur le royaume depuis ce jour, mais peut-"
+"être que si vous réussissiez à libérer son âme de sa prison terrestre, cette "
+"malédiction serait levée..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:25
@@ -6697,6 +6735,9 @@ msgid ""
 "the kind and just ruler that he was. His death was so sad and seemed very "
 "wrong, somehow."
 msgstr ""
+"Je n'aime pas penser à la mort du roi. J'aime me souvenir de lui pour le bon "
+"et juste dirigeant qu'il était. Sa mort était si triste et semblait très "
+"injuste, d'une manière ou d'une autre."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
@@ -6706,6 +6747,11 @@ msgid ""
 "mithril for him, as well as a field crown to match. I still cannot believe "
 "how he died, but it must have been some sinister force that drove him insane!"
 msgstr ""
+"J'ai fabriqué la plupart des armes et la plupart des armures que le roi "
+"Leoric utilisait pour équiper ses chevaliers. J'ai même fabriqué pour lui "
+"une énorme épée à deux mains du meilleur mithril, ainsi qu'une couronne de "
+"bataille assortie. Je n'arrive toujours pas à croire comment il est mort, "
+"mais ce doit être une force sinistre qui l'a rendu fou !"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
@@ -6713,6 +6759,8 @@ msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING!"
 msgstr ""
+"Je me fiche de cela. Écoutez, aucun squelette ne sera MON roi. Leoric est "
+"roi. Roi, alors vous m'entendez ? VIVE LE ROI !"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:31
@@ -6722,6 +6770,10 @@ msgid ""
 "you do not stop his reign, he will surely march across this land and slay "
 "all who still live here."
 msgstr ""
+"Les morts qui marchent parmi les vivants suivent le roi maudit. Il détient "
+"le pouvoir de lever encore plus de guerriers pour une armée de morts-vivants "
+"toujours plus nombreuse. Si vous n'arrêtez pas son règne, il traversera "
+"sûrement ce pays et tuera tous ceux qui y vivent encore."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:33
@@ -6731,6 +6783,10 @@ msgid ""
 "need something to use against this King of the undead, then I can help you "
 "out..."
 msgstr ""
+"Écoutez, je dirige une affaire ici. Je ne vends pas d'informations, et je me "
+"fiche d'un roi mort depuis plus longtemps que je ne vis. Si vous avez besoin "
+"de quelque chose à utiliser contre ce roi des morts-vivants, alors je peux "
+"vous aider..."
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
 #: Source/textdat.cpp:35
@@ -6738,6 +6794,8 @@ msgid ""
 "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve "
 "my Master for eternity!"
 msgstr ""
+"La chaleur de la vie est entrée dans ma tombe. Préparez-vous, mortel, à "
+"servir mon Maître pour l'éternité !"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
@@ -6748,6 +6806,12 @@ msgid ""
 "led them to believe that it too holds some arcane powers. Hmm, perhaps they "
 "are not all as smart as we had feared..."
 msgstr ""
+"Je vois que ce comportement étrange vous intrigue également. Je suppose que "
+"puisque de nombreux démons craignent la lumière du soleil et croient qu'il "
+"détient un grand pouvoir, il se peut que le soleil levant représenté sur la "
+"pancarte dont vous parlez les ait amenés à croire qu'il détient aussi des "
+"pouvoirs arcaniques. Hum, peut-être qu'ils ne sont pas tous aussi "
+"intelligents qu'on le craignait..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -6761,6 +6825,16 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
+"Maître, j'ai une étrange expérience à raconter. Je sais que vous avez une "
+"grande connaissance de ces monstruosités qui habitent le labyrinthe, et "
+"c'est quelque chose que je ne peux pas comprendre pour la vie même de moi... "
+"J'ai été réveillé pendant la nuit par un bruit de grattement juste à "
+"l'extérieur de ma taverne. Quand j'ai regardé de ma chambre, j'ai vu les "
+"formes de petites créatures ressemblant à des démons dans la cour de "
+"l'auberge. Peu de temps après, ils se sont enfuis, mais pas avant d'avoir "
+"volé la pancarte de mon auberge. Je ne sais pas pourquoi les démons "
+"voleraient ma pancarte mais laisseraient ma famille en paix... c'est "
+"étrange, non ?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -6771,6 +6845,12 @@ msgid ""
 "cap was left in one of the rooms by a magician who stayed here some time "
 "ago. Perhaps it may be of some value to you."
 msgstr ""
+"Oh, vous n'aviez pas à rapporter ma pancarte, mais je suppose que cela "
+"m'épargne la dépense d'en faire une autre. Eh bien, laissez-moi voir, qu'est-"
+"ce que je pourrais vous donner en récompense de l'avoir retrouvé ? Hmmm, "
+"qu'avons-nous ici... ah, oui ! Cette casquette a été laissée dans l'une des "
+"chambres par un magicien qui y a séjourné il y a quelque temps. Peut-être "
+"que cela peut vous être utile."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -6779,6 +6859,9 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
+"Mon Dieu, les démons courant dans le village la nuit, pillant nos maisons - "
+"n'y a-t-il rien de sacré ? J'espère qu'Ogden et Garda vont bien. Je suppose "
+"qu'ils viendraient me voir s'ils étaient blessés..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:45
@@ -6787,6 +6870,9 @@ msgid ""
 "right through the whole thing. Thank the Light that those monsters didn't "
 "attack the inn."
 msgstr ""
+"Mon Dieu! Est-ce là que la pancarte est allée ? Ma grand-mère et moi étions "
+"surement en train de dormir pendant tout ce temps. Je remercie la Lumière "
+"que ces monstres n'aient pas attaqué l'auberge."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:47
@@ -6796,6 +6882,10 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
+"Les démons ont volé la pancarte d'Ogden, dites-vous ? Cela ne ressemble pas "
+"beaucoup aux atrocités dont j'ai entendu parler - ou vu.\n"
+" \n"
+"Les démons se préoccupent de vous arracher le cœur, pas votre pancarte."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:49
@@ -6805,6 +6895,10 @@ msgid ""
 "new sign with some pretty drawing on it. Maybe a nice mug of ale or a piece "
 "of cheese..."
 msgstr ""
+"Vous savez ce que je pense ? Quelqu'un a pris cette pancarte, et en "
+"demanderont beaucoup d'argent. Si j'étais Ogden... et je ne le suis pas, "
+"mais si j'étais... j'achèterais juste une nouvelle pancarte avec un joli "
+"dessin dessus. Peut-être une bonne chope de bière ou un morceau de fromage..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:51
@@ -6813,6 +6907,10 @@ msgid ""
 " \n"
 "Never let their erratic actions confuse you, as that too may be their plan."
 msgstr ""
+"Aucun mortel ne peut vraiment comprendre l'esprit du démon.\n"
+" \n"
+"Ne laissez jamais leurs actions erratiques vous embrouiller, car cela peut "
+"aussi être leur plan."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:53
@@ -6823,6 +6921,11 @@ msgid ""
 "Look, I got over simple sign stealing months ago. You can't turn a profit on "
 "a piece of wood."
 msgstr ""
+"Quoi - est-ce qu'il dit que j'ai pris ça? Je suppose que Griswold est de son "
+"côté aussi.\n"
+" \n"
+"Écoutez, j'ai le simple vol de pancartes il y a des mois. Vous ne pouvez pas "
+"faire de profit sur un morceau de bois."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:55
@@ -6831,16 +6934,20 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
+"Hé - Toi qui tue tout! Donne-moi bannière magique ou nous attaquons! Toi pas "
+"partir vivant! Toi tuer gros laids et rendre magie. Passe le coin et la "
+"porte, trouve les laids. Tu donnes, tu pars!"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else..."
-msgstr ""
+msgstr "Toi tuer laids et récupérer bannière. Ramener à moi, ou sinon..."
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
 msgstr ""
+"Toi donner! Oui bien! En avant, nous fort. Nous tuer tout avec grande magie!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
@@ -6869,6 +6976,30 @@ msgid ""
 "You must hurry and save the prince from the sacrificial blade of this "
 "demented fiend!"
 msgstr ""
+"Cela ne présage rien de bon, car cela confirme mes peurs les plus sombres. "
+"Bien que je me m'interdisait de croire aux anciennes légendes, je ne peux "
+"plus les nier maintenant. Le moment est peut-être venu de révéler qui je "
+"suis.\n"
+" \n"
+"Mon vrai nom est Deckard Cain l'Ancien, et je suis le dernier descendant "
+"d'une ancienne Confrérie qui se consacrait à la sauvegarde des secrets d'un "
+"mal éternel. Un mal qui bien évidemment est désormais libéré.\n"
+" \n"
+"L'archevêque Lazarus, autrefois le conseiller le plus fiable du roi Léoric, "
+"mena un groupe de simples villageois dans le labyrinthe pour retrouver le "
+"fils disparu du roi, Albrecht. Beaucoup de temps s'est écoulé avant qu'ils "
+"ne reviennent, et seuls quelques-uns d'entre eux en ont réchappé vivant.\n"
+" \n"
+"Maudis-moi pour un imbécile ! J'aurais dû soupçonner sa  sombre trahison dès "
+"lors. Ce doit être Lazarus lui-même qui a kidnappé Albrecht et l'a depuis "
+"caché dans le Labyrinthe. Je ne comprends pas pourquoi l'archevêque s'est "
+"tourné vers les ténèbres, ou quel est son intérêt de prendre l'enfant, à "
+"moins qu'il n'entende le sacrifier à ses sombres maîtres !\n"
+" \n"
+"C'est sûrement ce qu'il a prévu ! Les survivants de son 'équipe de "
+"sauvetage' disent que Lazarus a été vu pour la dernière fois en train de "
+"courir dans les entrailles les plus profondes du labyrinthe. Vous devez vous "
+"dépêcher et sauver le prince de la lame sacrificielle de ce vile démon!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:63
@@ -6876,6 +7007,8 @@ msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
 msgstr ""
+"Vous devez vous dépêcher et sauver Albrecht des mains de Lazarus. Le prince "
+"et le peuple de ce royaume comptent sur vous !"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -6891,6 +7024,17 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
+"Votre histoire est assez sombre, mon ami. Lazarus brûlera sûrement en enfer "
+"pour son horrible acte. Le garçon que vous décrivez n'est pas notre prince, "
+"mais je pense qu'Albrecht est peut-être en danger. Le symbole de pouvoir "
+"dont vous parlez doit être un portail au cœur même du labyrinthe.\n"
+" \n"
+"Sachez ceci, mon ami - Le mal contre lequel vous vous dressez est le sombre "
+"Seigneur de la Terreur. Il est connu des mortels hommes sous le nom de "
+"Diablo. C'est lui qui a été emprisonné dans le Labyrinthe il y a plusieurs "
+"siècles et je crains qu'il ne cherche une fois de plus à semer le chaos dans "
+"le royaume des Hommes. Vous devez vous aventurer à travers le portail et "
+"détruire Diablo avant qu'il ne soit trop tard !"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -6900,6 +7044,11 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
+"Lazarus était l'archevêque qui a conduit de nombreux villageois dans le "
+"labyrinthe. J'ai perdu beaucoup de bons amis ce jour-là, et Lazarus n'est "
+"jamais revenu. Je suppose qu'il a été tué avec la plupart des autres. Si "
+"vous voulez bien me faire une faveur, bon maître, s'il vous plaît, ne parlez "
+"pas de ce jour-là à Farnham."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -6909,6 +7058,11 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
+"J'ai été choqué quand j'ai entendu parler de ce que les habitants "
+"prévoyaient de faire cette nuit-là. Je pensais que de tous, Lazarus aurait "
+"eu plus de bon sens que ça. Il était archevêque et semblait toujours se "
+"soucier beaucoup des habitants de Tristram. Il y eut tellement de blessés, "
+"je n'ai pas pu tous les sauver..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -6917,6 +7071,10 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
+"Je me souviens de Lazarus comme étant un homme très gentil et généreux. Il a "
+"parlé aux funérailles de ma mère et a soutenu ma grand-mère et moi-même dans "
+"une période très troublée. Je prie chaque nuit pour que d'une manière ou "
+"d'une autre, il soit toujours en vie et en sécurité."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -6926,6 +7084,11 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
+"J'étais là quand Lazarus nous a conduits dans le labyrinthe. Il a parlé de "
+"châtiment sacré, mais quand nous avons commencé à combattre ces engeances de "
+"l'enfer, il n'a pas même levé sa masse contre eux. Il a juste couru plus "
+"profondément dans les chambres sombres et sans fin remplies de serviteurs "
+"des ténèbres !"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -6934,6 +7097,9 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
+"Ils poignardent, puis mordent, puis ils sont tout autour de vous. Menteur! "
+"MENTEUR! Ils sont tous morts ! Morts! Vous m'entendez? Ils n'arrêtent pas de "
+"tomber et de tomber... leur sang recouvre le sol... tout est sa faute..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:79
@@ -6942,6 +7108,10 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
+"Je ne connaissais pas ce Lazarus dont vous parlez, mais je sens un grand "
+"conflit dans son être. Il représente un grand danger et ne reculera devant "
+"rien pour servir les puissances des ténèbres qui l'ont revendiqué comme un "
+"des leurs."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -6950,6 +7120,9 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
+"Oui, le grand Lazarus, qui était teeellement efficace contre ces monstres là-"
+"bas. Il n'a pas aidé à sauver ma jambe, n'est-ce pas ? Écoutez, je vais vous "
+"donner un conseil gratuit. Demandez à Farnham, il était là."
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -6957,6 +7130,9 @@ msgid ""
 "Abandon your foolish quest. All that awaits you is the wrath of my Master! "
 "You are too late to save the child. Now you will join him in Hell!"
 msgstr ""
+"Abandonnez votre quête insensée. Tout ce qui vous attend, c'est la colère de "
+"mon Maître ! Il est trop tard pour sauver l'enfant. Vous allez maintenant le "
+"rejoindre en Enfer !"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:86
@@ -6967,6 +7143,11 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
+"Hmm, je ne sais pas ce que je peux vraiment vous dire à ce sujet qui vous "
+"sera utile. L'eau qui remplit nos puits provient d'une source souterraine. "
+"J'ai entendu parler d'un tunnel qui mène à un grand lac - peut-être qu'ils "
+"ne font qu'un. Malheureusement, je ne sais pas ce qui pourrait empoisonner "
+"notre approvisionnement en eau."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -6977,6 +7158,12 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
+"J'ai toujours essayé de garder une grande quantité de denrées alimentaires "
+"et de boissons dans notre cave de stockage, mais si toute la ville n'a plus "
+"de source d'eau douce, même nos magasins seront bientôt à sec.\n"
+" \n"
+"S'il vous plaît, faites ce que vous pouvez ou je ne sais pas ce que nous "
+"ferons."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:90
@@ -6987,6 +7174,11 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
+"Je suis content de vous avoir rattrapé à temps ! Nos puits sont devenus "
+"saumâtres et stagnants et certains habitants en sont devenus malades. Nos "
+"réserves d'eau douce s'épuisent rapidement. Je crois qu'il y a un passage "
+"qui mène aux sources qui desservent notre ville. S'il vous plaît, trouvez ce "
+"qui a causé cette calamité, ou nous périrons sûrement tous."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -6996,6 +7188,10 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
+"S'il vous plaît, vous devez vous dépêcher. Chaque heure qui passe nous "
+"rapproche de l'absence d'eau à boire.\n"
+" \n"
+"Nous ne pouvons pas survivre longtemps sans votre aide."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -7005,6 +7201,11 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
+"Qu'est-ce que vous dites - la simple présence des démons avait rendu l'eau "
+"contaminée ? Oh, un mal vraiment grand se cache sous notre ville, mais votre "
+"persévérance et votre courage nous donnent de l'espoir. S'il vous plaît, "
+"prenez cet anneau - peut-être qu'il vous aidera à détruire de si viles "
+"créatures."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
@@ -7012,6 +7213,9 @@ msgid ""
 "My grandmother is very weak, and Garda says that we cannot drink the water "
 "from the wells. Please, can you do something to help us?"
 msgstr ""
+"Ma grand-mère est très faible et Garda dit que nous ne pouvons pas boire "
+"l'eau des puits. S'il vous plaît, pouvez-vous faire quelque chose pour nous "
+"aider?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:98
@@ -7020,6 +7224,9 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
+"Pepin vous a dit la vérité. Nous aurons grand besoin d'eau douce, et "
+"bientôt. J'ai essayé de nettoyer l'un des plus petits puits, mais il pue la "
+"saleté stagnante. Il doit se boucher à la source."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
@@ -7035,6 +7242,11 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
+"Les habitants de Tristram mourront si vous ne pouvez pas restaurer l'eau "
+"douce dans leurs puits.\n"
+" \n"
+"Sachez-le - les démons sont au cœur de cette affaire, mais ils restent "
+"ignorants de ce qu'ils ont engendré."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:103
@@ -7042,6 +7254,9 @@ msgid ""
 "For once, I'm with you. My business runs dry - so to speak - if I have no "
 "market to sell to. You better find out what is going on, and soon!"
 msgstr ""
+"Pour une fois, je suis avec toi. Mon affaire s'épuise - pour ainsi dire - si "
+"je n'ai pas de marché où vendre. Vous feriez mieux de découvrir ce qui se "
+"passe, et vite!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:105
@@ -7053,6 +7268,13 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
+"Un livre qui parle d'une chambre d'ossements humains ? Eh bien, une Chambre "
+"d'Os est mentionnée dans certains écrits archaïques que j'ai étudiés dans "
+"les bibliothèques de l'Orient. Ces tomes en laissaient penser que lorsque "
+"les seigneurs des enfers voulaient protéger de grands trésors, ils créaient "
+"des domaines où ceux qui mourraient en tentant de voler ce trésor seraient à "
+"jamais tenus de le défendre. Une fin tordue, mais étrangement appropriée "
+"non ?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
@@ -7060,6 +7282,8 @@ msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
 msgstr ""
+"J'ai peur de ne rien savoir à ce propos, bon maître. Cain a de nombreux "
+"livres qui pourraient être utiles."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
@@ -7067,6 +7291,8 @@ msgid ""
 "This sounds like a very dangerous place. If you venture there, please take "
 "great care."
 msgstr ""
+"Cela ressemble à un endroit très dangereux. Si vous vous y aventurez, s'il "
+"vous plaît soyez très prudent."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:111
@@ -7074,6 +7300,8 @@ msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
 msgstr ""
+"J'ai peur de n'avoir rien entendu à ce sujet. Peut-être que Cain le Conteur "
+"pourrait être utile."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -7082,6 +7310,9 @@ msgid ""
 "many things, and it would not surprise me if he had some answers to your "
 "question."
 msgstr ""
+"Je ne sais rien de cet endroit, mais vous pouvez essayer de demander à Cain. "
+"Il parle de beaucoup de choses, et cela ne m'étonnerait pas s'il avait des "
+"réponses à votre question."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -7090,6 +7321,10 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
+"D'accord, alors écoutez. Il y a cette chambre de bois, voyez. Et sa femme, "
+"vous savez - elle - dit à l'arbre... parce que vous devez attendre. Alors je "
+"dis que ça pourrait fonctionner contre lui, mais si vous pensez que je vais "
+"PAYER pour ça... tu... euh... ouais."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -7099,6 +7334,10 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
+"Vous deviendrez un serviteur éternel des seigneurs des ténèbres si vous "
+"périssez dans ce domaine maudit.\n"
+" \n"
+"Entrez dans la Chambre des Os à vos risques et périls."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -7107,6 +7346,10 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
+"Un vaste et mystérieux trésor, dites-vous ? Peut-être que je pourrais être "
+"intéressé par faire affaires avec vous... ou mieux encore, n'avez-vous pas "
+"besoin de fournitures rares et chères pour vous aider à traverser cette "
+"épreuve ?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -7117,6 +7360,12 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
+"Il semble que l'archevêque Lazarus ait poussé de nombreux habitants à "
+"s'aventurer dans le labyrinthe pour retrouver le fils disparu du roi. Il a "
+"joué sur leurs peurs et en a fait une foule frénétique. Aucun d'eux n'était "
+"préparé à ce qui se trouvait dans la terre froide... Lazarus les a "
+"abandonnés là-bas - laissés dans les griffes d'horreurs indicibles - pour "
+"mourir."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -7124,6 +7373,8 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
+"Oui, Farnham a marmonné quelque chose à propos d'une brute imposante qui "
+"maniait une arme féroce. Je crois qu'il l'a traité de boucher."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -7135,6 +7386,13 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
+"Par la Lumière, je connais ce vil démon. Nombreux étaient ceux qui portaient "
+"les cicatrices de sa colère sur leur corps lorsque les quelques survivants "
+"de la charge menée par Lazarus ont rampé hors de la cathédrale. Je ne sais "
+"pas avec quoi il découpait ses victimes, mais ça ne pouvait pas être de ce "
+"monde. Cela laissait des plaies purulentes de maladie et même moi je les ais "
+"trouvées presque impossibles à traiter. Méfiez-vous si vous prévoyez de "
+"combattre ce démon..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
@@ -7142,6 +7400,9 @@ msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
 msgstr ""
+"Quand Farnham a dit quelque chose à propos d'un boucher tuant des gens, je "
+"l'ai immédiatement ignoré. Mais puisque vous en avez parlé, c'est peut-être "
+"vrai."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:129
@@ -7153,6 +7414,13 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
+"J'ai vu ce que Farnham appelle le Boucher alors qu'il se frayait un chemin à "
+"travers les corps de mes amis. Il a brandit un couperet aussi gros qu'une "
+"hache, coupant des membres et abattant des hommes courageux là où ils se "
+"tenaient. J'ai été séparé de la mêlée par une foule de petits démons "
+"hurlants et j'ai trouvé d'une manière ou d'une autre l'escalier menant à "
+"l'extérieur. Je n'ai jamais revu cette bête hideuse, mais son visage "
+"ensanglanté me hante encore aujourd'hui."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (*sad face*)
 #: Source/textdat.cpp:131
@@ -7161,6 +7429,9 @@ msgid ""
 "couldn't save them. Trapped in a room with so many bodies... so many "
 "friends... NOOOOOOOOOO!"
 msgstr ""
+"Gros! Gros couperet tuant tous mes amis. Je n'ai pas pu l'arrêter, j'ai dû "
+"m'enfuir, je n'ai pas pu les sauver. Piégé dans une pièce avec tant de "
+"corps... tant d'amis... NAAAAAAAAAAN !"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:133
@@ -7169,6 +7440,9 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
+"Le Boucher est une créature sadique qui aime la torture et la douleur des "
+"autres. Vous avez vu son œuvre dans l'ivrogne Farnham. Sa destruction fera "
+"beaucoup pour assurer la sécurité de ce village."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -7180,6 +7454,12 @@ msgid ""
 "I'll put it bluntly - kill him before he kills you and adds your corpse to "
 "his collection."
 msgstr ""
+"J'en sais plus que vous ne le pensez sur cet horrible démon. Ses petits amis "
+"m'ont attrapé et ont réussi à me prendre ma jambe avant que Griswold ne me "
+"tire hors de ce trou.\n"
+" \n"
+"Je vais le dire crûment - tuez-le avant qu'il ne vous tue et n'ajoute votre "
+"cadavre à sa collection."
 
 #. TRANSLATORS: Quest dialog spoken by Wounded Townsman (Dying)
 #: Source/textdat.cpp:137
@@ -7189,6 +7469,11 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
+"S'il vous plait écoutez moi. L'archevêque Lazarus, il nous a conduits ici "
+"pour retrouver le prince perdu. Le traitre nous a entraînés dans un piège ! "
+"Maintenant, tout le monde est mort... tué par un démon qu'il a appelé le "
+"Boucher. Vengez-nous! Trouvez ce Boucher et tuez-le afin que nos âmes "
+"puissent enfin se reposer..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -7201,6 +7486,13 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
+"Vous récitez une comptine intéressante écrite dans un style qui me rappelle "
+"d'autres œuvres. Laissez-moi réfléchir maintenant - qu'est-ce que c'était ?\n"
+" \n"
+"... Les ténèbres enveloppent le Caché. Des yeux brillants invisibles avec "
+"seulement le son de griffes de rasoir grattant brièvement pour tourmenter "
+"ces pauvres âmes qui ont été rendues aveugles pour l'éternité. La prison "
+"pour ces damnés s'appelle les Salles des Aveugles..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -7210,6 +7502,12 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
+"Je ne me suis jamais intéressé à la poésie. De temps en temps, j'avais des "
+"raisons d'engager des ménestrels quand l'auberge marchait bien, mais cela "
+"semble être si lointain maintenant.\n"
+" \n"
+"Quoi? Oh, oui... euh, eh bien, je suppose que vous pourriez ce que les "
+"autres savent."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -7218,6 +7516,10 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
+"Cela semble familier, d'une certaine manière. Il me semble me souvenir "
+"d'avoir lu quelque chose qui ressemble beaucoup à ce poème en faisant des "
+"recherches sur l'histoire des afflictions démoniaques. Il parlait d'un "
+"endroit très maléfique qui... attendez - vous n'y allez pas, n'est-ce pas ?"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -7226,6 +7528,9 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
+"Si vous avez des questions sur la cécité, vous devriez en parler à Pepin. Je "
+"sais qu'il a donné à ma grand-mère une potion qui a aidé à éclaircir sa "
+"vision, alors peut-être qu'il peut vous aider aussi."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -7234,11 +7539,14 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
+"Je crains de n'avoir ni entendu ni vu un endroit qui corresponde à votre "
+"vive description, mon ami. Peut-être que Cain le Conteur pourrait être utile."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
 msgstr ""
+"Regardez ici... c'est assez drôle, hein ? Comprenez ? Aveugle - regardez ici?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -9320,7 +9628,7 @@ msgstr "Pépin le Guérisseur"
 
 #: Source/towners.cpp:196
 msgid "Cain the Elder"
-msgstr "Caïn l'Ancien"
+msgstr "Cain l'Ancien"
 
 #: Source/towners.cpp:225
 msgid "Cow"
