@@ -1610,6 +1610,14 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (done) {
+		if (sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
+			if (player.HoldItem._itype == ItemType::Gold) {
+				PlaySFX(IS_IGRAB);
+			} else {
+				PlaySFX(ItemInvSnds[ItemCAnimTbl[item->_iCurs]]);
+			}
+		}
+
 		CleanupItems(&Items[ii], ii);
 		return;
 	}

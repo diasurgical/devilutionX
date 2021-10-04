@@ -52,7 +52,6 @@ void AutoGoldPickup(int pnum)
 			if (item._itype == ItemType::Gold) {
 				NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
 				item._iRequest = true;
-				PlaySFX(IS_IGRAB);
 			}
 		}
 	}
