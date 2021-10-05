@@ -371,19 +371,19 @@ DWORD OnLevelData(int pnum, const TCmd *pCmd)
 	return message.wBytes + sizeof(message);
 }
 
-void DeltaSyncGolem(const TCmdGolem *pG, int pnum, BYTE bLevel)
+void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &sgLevels[bLevel].monster[pnum];
-	pD->_mx = pG->_mx;
-	pD->_my = pG->_my;
-	pD->_mactive = UINT8_MAX;
-	pD->_menemy = pG->_menemy;
-	pD->_mdir = pG->_mdir;
-	pD->_mhitpoints = pG->_mhitpoints;
+	DMonsterStr &monster = sgLevels[level].monster[pnum];
+	monster._mx = message._mx;
+	monster._my = message._my;
+	monster._mactive = UINT8_MAX;
+	monster._menemy = message._menemy;
+	monster._mdir = message._mdir;
+	monster._mhitpoints = message._mhitpoints;
 }
 
 void DeltaLeaveSync(BYTE bLevel)
@@ -1305,14 +1305,29 @@ DWORD OnTalkXY(const TCmd *pCmd, Player &player)
 
 DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId)
-		StartNewLvl(pnum, (interface_mode)p->wParam1, p->wParam2);
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (pnum != MyPlayerId) {
+		if (message.wParam1 < WM_FIRST && message.wParam1 > WM_LAST)
+			return sizeof(message);
 
-	return sizeof(*p);
+		auto mode = static_cast<interface_mode>(message.wParam1);
+
+		int levelId = message.wParam2;
+		if (mode == WM_DIABSETLVL) {
+			if (levelId > SL_LAST)
+				return sizeof(message);
+		} else {
+			if (levelId >= NUMLEVELS)
+				return sizeof(message);
+		}
+
+		StartNewLvl(pnum, mode, levelId);
+	}
+
+	return sizeof(message);
 }
 
 DWORD OnWarp(const TCmd *pCmd, int pnum)
@@ -1363,28 +1378,29 @@ DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 
 DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdGolem *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdGolem *>(pCmd);
+	const Point position { message._mx, message._my };
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (currlevel != Players[pnum].plrlevel)
-		DeltaSyncGolem(p, pnum, p->_currlevel);
-	else if (pnum != MyPlayerId) {
-		// check if this player already has an active golem
-		bool addGolem = true;
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mi = ActiveMissiles[i];
-			auto &missile = Missiles[mi];
-			if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
-				addGolem = false;
-				// CODEFIX: break, don't need to check the rest
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (InDungeonBounds(position)) {
+		if (currlevel != Players[pnum].plrlevel) {
+			DeltaSyncGolem(message, pnum, message._currlevel);
+		} else if (pnum != MyPlayerId) {
+			// Check if this player already has an active golem
+			for (int i = 0; i < ActiveMissileCount; i++) {
+				int mi = ActiveMissiles[i];
+				auto &missile = Missiles[mi];
+				if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
+					return sizeof(message);
+				}
 			}
+
+			AddMissile(Players[pnum].position.tile, position, message._mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
 		}
-		if (addGolem)
-			AddMissile(Players[pnum].position.tile, { p->_mx, p->_my }, p->_mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
@@ -1593,7 +1609,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 	}
 
 	int playerLevel = message.wParam1;
-	if (playerLevel > (gbIsHellfire ? 24 : 16) || !InDungeonBounds(position)) {
+	if (playerLevel > NUMLEVELS || !InDungeonBounds(position)) {
 		return sizeof(message);
 	}
 

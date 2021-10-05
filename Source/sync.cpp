@@ -195,7 +195,7 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 	decode_enemy(monster, enemyId);
 }
 
-bool IsEnemyIdValidate(const Monster &monster, int enemyId)
+bool IsEnemyIdValid(const Monster &monster, int enemyId)
 {
 	if (enemyId < 0) {
 		return false;
@@ -233,7 +233,7 @@ bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
 	if (!InDungeonBounds({ monsterSync._mx, monsterSync._my }))
 		return false;
 
-	if (!IsEnemyIdValidate(Monsters[monsterId], monsterSync._menemy))
+	if (!IsEnemyIdValid(Monsters[monsterId], monsterSync._menemy))
 		return false;
 
 	return true;
