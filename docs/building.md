@@ -7,12 +7,19 @@ cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 
 <details><summary>Linux</summary>
 
-Note that ```pkg-config``` is an optional dependency for finding libsodium,
-although we have a fallback if necessary.
+Note that ```pkg-config``` is an optional dependency for finding libsodium, although we have a fallback if necessary.
 
 ### Installing dependencies on Debian and Ubuntu
 ```
 sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev
+```
+### If you want to build the translations (optional)
+```
+sudo apt-get install gettext poedit
+```
+### If you want to build the devilutionX.mpg File (optional)
+```
+sudo apt-get install smpq
 ```
 ### Installing dependencies on Fedora
 ```
