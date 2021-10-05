@@ -707,7 +707,7 @@ void PlaceQuestMonsters()
 		}
 		if (Quests[Q_ANVIL].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x + 2, setpc_y + 2 } * 2);
+			SetMapMonsters(dunData.get(), Point { setpc_x + 1, setpc_y + 1 } * 2);
 		}
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
