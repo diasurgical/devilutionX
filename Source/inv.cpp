@@ -1572,7 +1572,7 @@ void InvGetItem(int pnum, Item *item, int ii)
 void AutoGetItem(int pnum, Item *item, int ii)
 {
 	bool done;
-	auto pickupSound = IS_IGRAB;
+	bool autoEquipped = false;
 
 	if (pcurs != CURSOR_HAND) {
 		return;
@@ -1603,7 +1603,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	} else {
 		done = AutoEquipEnabled(player, player.HoldItem) && AutoEquip(pnum, player.HoldItem);
 		if (done) {
-			pickupSound = ItemInvSnds[ItemCAnimTbl[item->_iCurs]];
+			autoEquipped = true;
 		}
 
 		if (!done) {
@@ -1615,8 +1615,8 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (done) {
-		if (sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
-			PlaySFX(pickupSound);
+		if (!autoEquipped && sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
+			PlaySFX(IS_IGRAB);
 		}
 
 		CleanupItems(&Items[ii], ii);
