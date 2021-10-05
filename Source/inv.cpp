@@ -887,7 +887,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		}
 	}
 
-	if (dropItem && holdItem._itype != ItemType::None) {
+	if (dropItem && !holdItem.isEmpty()) {
 		TryDropItem();
 	}
 }
