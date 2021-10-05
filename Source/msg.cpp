@@ -529,11 +529,11 @@ bool IOwnLevel(int nReqLevel)
 	return i == MyPlayerId;
 }
 
-void DeltaOpenPortal(int pnum, uint8_t x, uint8_t y, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
+void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
 {
 	sgbDeltaChanged = true;
-	sgJunk.portal[pnum].x = x;
-	sgJunk.portal[pnum].y = y;
+	sgJunk.portal[pnum].x = position.x;
+	sgJunk.portal[pnum].y = position.y;
 	sgJunk.portal[pnum].level = bLevel;
 	sgJunk.portal[pnum].ltype = bLType;
 	sgJunk.portal[pnum].setlvl = bSetLvl ? 1 : 0;
@@ -1403,25 +1403,25 @@ DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 
 DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdMonDamage *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdMonDamage *>(pCmd);
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p)); // BUGFIX: change to sizeof(*p) or it still uses TCmdParam2 size for hellfire (fixed)
-	else if (pnum != MyPlayerId) {
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (pnum != MyPlayerId) {
 		int playerLevel = Players[pnum].plrlevel;
-		if (currlevel == playerLevel) {
-			auto &monster = Monsters[p->wMon];
+		if (currlevel == playerLevel && message.wMon < MAXMONSTERS) {
+			auto &monster = Monsters[message.wMon];
 			monster.mWhoHit |= 1 << pnum;
 			if (monster._mhitpoints > 0) {
-				monster._mhitpoints -= p->dwDam;
+				monster._mhitpoints -= message.dwDam;
 				if ((monster._mhitpoints >> 6) < 1)
 					monster._mhitpoints = 1 << 6;
-				delta_monster_hp(p->wMon, monster._mhitpoints, playerLevel);
+				delta_monster_hp(message.wMon, monster._mhitpoints, playerLevel);
 			}
 		}
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
@@ -1440,15 +1440,15 @@ DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdDamage *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
 
-	if (p->bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
-		if (currlevel == player.plrlevel && p->dwDam <= 192000 && Players[MyPlayerId]._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(MyPlayerId, 0, 0, p->dwDam, 1);
+	if (message.bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
+		if (currlevel == player.plrlevel && message.dwDam <= 192000 && Players[MyPlayerId]._pHitPoints >> 6 > 0) {
+			ApplyPlrDamage(MyPlayerId, 0, 0, message.dwDam, 1);
 		}
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnOpenDoor(const TCmd *pCmd, int pnum)
@@ -1501,63 +1501,63 @@ DWORD OnOperateObject(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncOpObject(p->wParam1, CMD_PLROPOBJ, p->wParam2);
-		DeltaSyncObject(p->wParam2, CMD_PLROPOBJ, playerLevel);
+			SyncOpObject(message.wParam1, CMD_PLROPOBJ, message.wParam2);
+		DeltaSyncObject(message.wParam2, CMD_PLROPOBJ, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncBreakObj(p->wParam1, p->wParam2);
-		DeltaSyncObject(p->wParam2, CMD_BREAKOBJ, playerLevel);
+			SyncBreakObj(message.wParam1, message.wParam2);
+		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnChangePlayerItems(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdChItem *)pCmd;
-	auto bodyLocation = static_cast<inv_body_loc>(p->bLoc);
+	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
 
-	auto &player = Players[pnum];
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (pnum != MyPlayerId && message.bLoc < NUM_INVLOC && message.wIndx <= IDI_LAST) {
+		auto &player = Players[pnum];
+		auto bodyLocation = static_cast<inv_body_loc>(message.bLoc);
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId)
-		CheckInvSwap(player, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
+		CheckInvSwap(player, bodyLocation, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
+		player.ReadySpellFromEquipment(bodyLocation);
+	}
 
-	player.ReadySpellFromEquipment(bodyLocation);
-
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnDeletePlayerItems(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdDelItem *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdDelItem *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId)
-		inv_update_rem_item(Players[pnum], p->bLoc);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (pnum != MyPlayerId && message.bLoc < NUM_INVLOC)
+		inv_update_rem_item(Players[pnum], static_cast<inv_body_loc>(message.bLoc));
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
@@ -1646,35 +1646,41 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 
 DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
+	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
-		ActivatePortal(pnum, p->x, p->y, p->wParam1, static_cast<dungeon_type>(p->wParam2), p->wParam3 != 0);
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (InDungeonBounds(position) && message.wParam1 < NUMLEVELS && message.wParam2 <= DTYPE_LAST) {
+		int level = message.wParam1;
+		auto dungeonType = static_cast<dungeon_type>(message.wParam2);
+		bool isSetLevel = message.wParam3 != 0;
+
+		ActivatePortal(pnum, position, level, dungeonType, isSetLevel);
 		if (pnum != MyPlayerId) {
-			if (currlevel == 0)
+			if (currlevel == 0) {
 				AddInTownPortal(pnum);
-			else if (currlevel == Players[pnum].plrlevel) {
+			} else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
 				for (int i = 0; i < ActiveMissileCount; i++) {
 					int mi = ActiveMissiles[i];
 					auto &missile = Missiles[mi];
 					if (missile._mitype == MIS_TOWN && missile._misource == pnum) {
 						addPortal = false;
-						// CODEFIX: break
+						break;
 					}
 				}
-				if (addPortal)
-					AddWarpMissile(pnum, p->x, p->y);
+				if (addPortal) {
+					AddWarpMissile(pnum, position);
+				}
 			} else {
 				RemovePortalMissile(pnum);
 			}
 		}
-		DeltaOpenPortal(pnum, p->x, p->y, p->wParam1, static_cast<dungeon_type>(p->wParam2), p->wParam3 != 0);
+		DeltaOpenPortal(pnum, position, level, dungeonType, isSetLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnDeactivatePortal(const TCmd *pCmd, int pnum)
@@ -1767,17 +1773,17 @@ DWORD OnString(const TCmd *pCmd, int pnum)
 
 DWORD OnSyncQuest(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdQuest *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdQuest *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
+		SendPacket(pnum, &message, sizeof(message));
 	} else {
-		if (pnum != MyPlayerId)
-			SetMultiQuest(p->q, p->qstate, p->qlog != 0, p->qvar1);
+		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
+			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1);
 		sgbDeltaChanged = true;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
@@ -1874,14 +1880,13 @@ DWORD OnNakrul(const TCmd *pCmd)
 
 DWORD OnOpenHive(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam2 *)pCmd;
-
 	if (gbBufferMsgs != 1) {
-		AddMissile({ p->x, p->y }, { p->wParam1, p->wParam2 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
 		InitTownTriggers();
 	}
-	return sizeof(*p);
+
+	return sizeof(*pCmd);
 }
 
 DWORD OnOpenCrypt(const TCmd *pCmd)
