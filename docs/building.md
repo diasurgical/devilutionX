@@ -17,7 +17,7 @@ sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev
 ```
 sudo apt-get install gettext poedit
 ```
-### If you want to build the devilutionX.mpg File (optional)
+### If you want to build the devilutionX.mpq File (optional)
 ```
 sudo apt-get install smpq
 ```
