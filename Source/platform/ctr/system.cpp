@@ -51,7 +51,6 @@ bool ctr_check_dsp()
 {
 	FILE *dsp = fopen("sdmc:/3ds/dspfirm.cdc", "r");
 	if (dsp == NULL) {
-		fclose(dsp);
 		gfxInitDefault();
 		errorConf error;
 		errorInit(&error, ERROR_TEXT, CFG_LANGUAGE_EN);
