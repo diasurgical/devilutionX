@@ -1318,7 +1318,7 @@ void AddFireRune(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddLightningRune(Missile &missile, Point dst, Direction /*midir*/)
 {
-	AddRune(missile, dst, MIS_LIGHTBALL);
+	AddRune(missile, dst, MIS_LIGHTWALL);
 }
 
 void AddGreatLightningRune(Missile &missile, Point dst, Direction /*midir*/)
