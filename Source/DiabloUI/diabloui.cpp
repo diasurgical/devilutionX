@@ -85,9 +85,9 @@ struct ScrollBarState {
 
 } // namespace
 
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)())
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
 {
-	SelectedItem = 0;
+	SelectedItem = selectedItem;
 	SelectedItemMax = std::max(count - 1, 0);
 	ListViewportSize = count;
 	gfnListFocus = fnFocus;
@@ -100,7 +100,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	UiItemsWraps = itemsWraps;
 	ListOffset = nullptr;
 	if (fnFocus != nullptr)
-		fnFocus(0);
+		fnFocus(selectedItem);
 
 #ifndef __SWITCH__
 	SDL_StopTextInput(); // input is enabled by default
