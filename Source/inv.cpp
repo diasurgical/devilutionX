@@ -887,7 +887,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 		}
 	}
 
-	if (dropItem && !holdItem.isEmpty()) {
+	if (dropItem) {
 		TryDropItem();
 	}
 }

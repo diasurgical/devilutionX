@@ -1392,7 +1392,12 @@ void UpdateSpellTarget()
  */
 bool TryDropItem()
 {
-	const auto &myPlayer = Players[MyPlayerId];
+	auto &myPlayer = Players[MyPlayerId];
+
+	Item &holdItem = myPlayer.HoldItem;
+	if (holdItem.isEmpty()) {
+		return false;
+	}
 
 	cursPosition = myPlayer.position.future + Direction::SouthEast;
 	if (!DropItemBeforeTrig()) {
