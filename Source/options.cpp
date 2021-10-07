@@ -209,7 +209,11 @@ bool sbWasOptionsLoaded = false;
 void LoadOptions()
 {
 	sgOptions.Diablo.bIntro = GetIniBool("Diablo", "Intro", true);
+	sgOptions.Diablo.lastSinglePlayerHero = GetIniInt("Diablo", "LastSinglePlayerHero", 0);
+	sgOptions.Diablo.lastMultiplayerHero = GetIniInt("Diablo", "LastMultiplayerHero", 0);
 	sgOptions.Hellfire.bIntro = GetIniBool("Hellfire", "Intro", true);
+	sgOptions.Hellfire.lastSinglePlayerHero = GetIniInt("Hellfire", "LastSinglePlayerHero", 0);
+	sgOptions.Hellfire.lastMultiplayerHero = GetIniInt("Hellfire", "LastMultiplayerHero", 0);
 	GetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
 
 	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
@@ -359,8 +363,12 @@ void LoadOptions()
 void SaveOptions()
 {
 	SetIniValue("Diablo", "Intro", sgOptions.Diablo.bIntro);
+	SetIniValue("Diablo", "LastSinglePlayerHero", sgOptions.Diablo.lastSinglePlayerHero);
+	SetIniValue("Diablo", "LastMultiplayerHero", sgOptions.Diablo.lastMultiplayerHero);
 	SetIniValue("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
+	SetIniValue("Hellfire", "LastSinglePlayerHero", sgOptions.Hellfire.lastSinglePlayerHero);
+	SetIniValue("Hellfire", "LastMultiplayerHero", sgOptions.Hellfire.lastMultiplayerHero);
 
 	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);

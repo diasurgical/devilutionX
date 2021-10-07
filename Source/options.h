@@ -11,6 +11,10 @@ namespace devilution {
 struct DiabloOptions {
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
+	/** @brief Remembers what singleplayer hero/save was last used. */
+	std::uint32_t lastSinglePlayerHero;
+	/** @brief Remembers what multiplayer hero/save was last used. */
+	std::uint32_t lastMultiplayerHero;
 };
 
 struct HellfireOptions {
@@ -18,6 +22,10 @@ struct HellfireOptions {
 	bool bIntro;
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
+	/** @brief Remembers what singleplayer hero/save was last used. */
+	std::uint32_t lastSinglePlayerHero;
+	/** @brief Remembers what multiplayer hero/save was last used. */
+	std::uint32_t lastMultiplayerHero;
 };
 
 struct AudioOptions {

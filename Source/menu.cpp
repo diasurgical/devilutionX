@@ -86,11 +86,14 @@ bool DummyGetHeroInfo(_uiheroinfo * /*pInfo*/)
 
 bool mainmenu_select_hero_dialog(GameData *gameData)
 {
+	uint32_t *pSaveNumberFromOptions = nullptr;
 	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
 	if (demo::IsRunning()) {
 		pfile_ui_set_hero_infos(DummyGetHeroInfo);
 		gbLoadGame = true;
 	} else if (!gbIsMultiplayer) {
+		pSaveNumberFromOptions = gbIsHellfire ? &sgOptions.Hellfire.lastSinglePlayerHero : &sgOptions.Diablo.lastSinglePlayerHero;
+		gSaveNumber = *pSaveNumberFromOptions;
 		UiSelHeroSingDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -102,6 +105,8 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {
+		pSaveNumberFromOptions = gbIsHellfire ? &sgOptions.Hellfire.lastMultiplayerHero : &sgOptions.Diablo.lastMultiplayerHero;
+		gSaveNumber = *pSaveNumberFromOptions;
 		UiSelHeroMultDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -114,6 +119,9 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		SErrSetLastError(1223);
 		return false;
 	}
+
+	if (pSaveNumberFromOptions != nullptr)
+		*pSaveNumberFromOptions = gSaveNumber;
 
 	pfile_read_player_from_save(gSaveNumber, Players[MyPlayerId]);
 
