@@ -1394,6 +1394,10 @@ bool TryDropItem()
 {
 	const auto &myPlayer = Players[MyPlayerId];
 
+	if (myPlayer.HoldItem.isEmpty()) {
+		return false;
+	}
+
 	cursPosition = myPlayer.position.future + Direction::SouthEast;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
