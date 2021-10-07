@@ -1392,10 +1392,9 @@ void UpdateSpellTarget()
  */
 bool TryDropItem()
 {
-	auto &myPlayer = Players[MyPlayerId];
+	const auto &myPlayer = Players[MyPlayerId];
 
-	Item &holdItem = myPlayer.HoldItem;
-	if (holdItem.isEmpty()) {
+	if (myPlayer.HoldItem.isEmpty()) {
 		return false;
 	}
 
