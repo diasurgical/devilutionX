@@ -1661,7 +1661,6 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 		return;
 
 	CleanupItems(&Items[ii], ii);
-	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
 bool CanPut(Point position)
