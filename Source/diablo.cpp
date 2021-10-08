@@ -308,6 +308,7 @@ void LeftMouseDown(int wParam)
 	}
 
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
+	bool isCtrlHeld = (wParam & DVL_MK_CTRL) != 0;
 
 	if (!MainPanel.Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
@@ -320,7 +321,7 @@ void LeftMouseDown(int wParam)
 				CheckChrBtns();
 			} else if (invflag && RightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
-					CheckInvItem(isShiftHeld);
+					CheckInvItem(isShiftHeld, isCtrlHeld);
 			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
@@ -337,7 +338,7 @@ void LeftMouseDown(int wParam)
 		}
 	} else {
 		if (!talkflag && !dropGoldFlag && !gmenu_is_active())
-			CheckInvScrn(isShiftHeld);
+			CheckInvScrn(isShiftHeld, isCtrlHeld);
 		DoPanBtn();
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
 			NewCursor(CURSOR_HAND);
@@ -403,7 +404,7 @@ void ReleaseKey(int vkey)
 		CaptureScreen();
 	if (vkey == DVL_VK_MENU || vkey == DVL_VK_LMENU || vkey == DVL_VK_RMENU)
 		AltPressed(false);
-	if (vkey == DVL_VK_CONTROL || vkey == DVL_VK_LCONTROL || vkey == DVL_VK_RCONTROL)
+	if (vkey == DVL_VK_RCONTROL)
 		ToggleItemLabelHighlight();
 }
 
@@ -781,8 +782,6 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--data-dir", _("Specify the folder of diabdat.mpq"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--save-dir", _("Specify the folder of save files"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--config-dir", _("Specify the location of diablo.ini"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-dir", _("Specify the location of the .ttf font"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--ttf-name", _("Specify the name of a custom .ttf font"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-n", _("Skip startup videos"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
@@ -833,10 +832,6 @@ void DiabloParseFlags(int argc, char **argv)
 			paths::SetConfigPath(argv[++i]);
 		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
 			paths::SetLangPath(argv[++i]);
-		} else if (strcasecmp("--ttf-dir", argv[i]) == 0) {
-			paths::SetTtfPath(argv[++i]);
-		} else if (strcasecmp("--ttf-name", argv[i]) == 0) {
-			paths::SetTtfName(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
@@ -986,8 +981,6 @@ void DiabloDeinit()
 		init_cleanup();
 	if (was_window_init)
 		dx_cleanup(); // Cleanup SDL surfaces stuff, so we have to do it before SDL_Quit().
-	if (was_fonts_init)
-		FontsCleanup();
 	UnloadFonts();
 	if (SDL_WasInit(SDL_INIT_EVERYTHING & ~SDL_INIT_HAPTIC) != 0)
 		SDL_Quit();

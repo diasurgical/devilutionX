@@ -707,7 +707,7 @@ void PlaceQuestMonsters()
 		}
 		if (Quests[Q_ANVIL].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x + 2, setpc_y + 2 } * 2);
+			SetMapMonsters(dunData.get(), Point { setpc_x + 1, setpc_y + 1 } * 2);
 		}
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
@@ -4960,17 +4960,17 @@ int encode_enemy(Monster &monster)
 	return monster._menemy;
 }
 
-void decode_enemy(Monster &monster, int enemy)
+void decode_enemy(Monster &monster, int enemyId)
 {
-	if (enemy < MAX_PLRS) {
+	if (enemyId < MAX_PLRS) {
 		monster._mFlags &= ~MFLAG_TARGETS_MONSTER;
-		monster._menemy = enemy;
-		monster.enemyPosition = Players[enemy].position.future;
+		monster._menemy = enemyId;
+		monster.enemyPosition = Players[enemyId].position.future;
 	} else {
 		monster._mFlags |= MFLAG_TARGETS_MONSTER;
-		enemy -= MAX_PLRS;
-		monster._menemy = enemy;
-		monster.enemyPosition = Monsters[enemy].position.future;
+		enemyId -= MAX_PLRS;
+		monster._menemy = enemyId;
+		monster.enemyPosition = Monsters[enemyId].position.future;
 	}
 }
 

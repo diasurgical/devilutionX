@@ -11,12 +11,5 @@ if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto=full")
 endif()
 
-#additional compilation definitions
-set(TTF_FONT_DIR \"\")
-
-file(
-  COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/CharisSILB.ttf"
-  DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
-
-file(GLOB VirtualGamepadArt "${DevilutionX_SOURCE_DIR}/Packaging/resources/ui_art/*")
+file(GLOB VirtualGamepadArt "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/ui_art/*")
 file(COPY ${VirtualGamepadArt} DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets/ui_art")

@@ -11,9 +11,7 @@
 #include "DiabloUI/art_draw.h"
 #include "DiabloUI/button.h"
 #include "DiabloUI/dialogs.h"
-#include "DiabloUI/fonts.h"
 #include "DiabloUI/scrollbar.h"
-#include "DiabloUI/text_draw.h"
 #include "controls/controller.h"
 #include "controls/menu_controls.h"
 #include "dx.h"
@@ -550,7 +548,6 @@ void UiInitialize()
 
 void UiDestroy()
 {
-	UnloadTtfFont();
 	UnloadFonts();
 	UnloadUiGFX();
 }
@@ -715,12 +712,10 @@ namespace {
 
 void Render(UiText *uiText)
 {
-	DrawTTF(uiText->m_text,
-	    uiText->m_rect,
-	    uiText->m_iFlags,
-	    uiText->m_color,
-	    uiText->m_shadow_color,
-	    uiText->m_render_cache);
+	Rectangle rect { { uiText->m_rect.x, uiText->m_rect.y }, { uiText->m_rect.w, uiText->m_rect.h } };
+
+	const Surface &out = Surface(DiabloUiSurface());
+	DrawString(out, uiText->m_text, rect, uiText->m_iFlags | UiFlags::FontSizeDialog, 0);
 }
 
 void Render(const UiArtText *uiArtText)

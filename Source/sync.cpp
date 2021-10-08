@@ -33,20 +33,20 @@ void SyncOneMonster()
 	}
 }
 
-void SyncMonsterPos(TSyncMonster *p, int ndx)
+void SyncMonsterPos(TSyncMonster &monsterSync, int ndx)
 {
 	auto &monster = Monsters[ndx];
-	p->_mndx = ndx;
-	p->_mx = monster.position.tile.x;
-	p->_my = monster.position.tile.y;
-	p->_menemy = encode_enemy(monster);
-	p->_mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
+	monsterSync._mndx = ndx;
+	monsterSync._mx = monster.position.tile.x;
+	monsterSync._my = monster.position.tile.y;
+	monsterSync._menemy = encode_enemy(monster);
+	monsterSync._mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
 
 	sgnMonsterPriority[ndx] = 0xFFFF;
 	sgwLRU[ndx] = monster._msquelch == 0 ? 0xFFFF : 0xFFFE;
 }
 
-bool SyncMonsterActive(TSyncMonster *p)
+bool SyncMonsterActive(TSyncMonster &monsterSync)
 {
 	int ndx = -1;
 	uint32_t lru = 0xFFFFFFFF;
@@ -63,11 +63,11 @@ bool SyncMonsterActive(TSyncMonster *p)
 		return false;
 	}
 
-	SyncMonsterPos(p, ndx);
+	SyncMonsterPos(monsterSync, ndx);
 	return true;
 }
 
-bool SyncMonsterActive2(TSyncMonster *p)
+bool SyncMonsterActive2(TSyncMonster &monsterSync)
 {
 	int ndx = -1;
 	uint32_t lru = 0xFFFE;
@@ -88,7 +88,7 @@ bool SyncMonsterActive2(TSyncMonster *p)
 		return false;
 	}
 
-	SyncMonsterPos(p, ndx);
+	SyncMonsterPos(monsterSync, ndx);
 	return true;
 }
 
@@ -146,57 +146,102 @@ void SyncPlrInv(TSyncHeader *pHdr)
 	}
 }
 
-void SyncMonster(int pnum, const TSyncMonster *p)
+void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 {
-	int ndx = p->_mndx;
-
-	auto &monster = Monsters[ndx];
-
+	const int monsterId = monsterSync._mndx;
+	Monster &monster = Monsters[monsterId];
 	if (monster._mhitpoints <= 0) {
 		return;
 	}
+
+	const Point position { monsterSync._mx, monsterSync._my };
+	const int enemyId = monsterSync._menemy;
 
 	uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
 	if (delta > 255) {
 		delta = 255;
 	}
 
-	if (delta < p->_mdelta || (delta == p->_mdelta && pnum > MyPlayerId)) {
+	if (delta < monsterSync._mdelta || (delta == monsterSync._mdelta && pnum > MyPlayerId)) {
 		return;
 	}
-	if (monster.position.future.x == p->_mx && monster.position.future.y == p->_my) {
+	if (monster.position.future == position) {
 		return;
 	}
 	if (IsAnyOf(monster._mmode, MonsterMode::Charge, MonsterMode::Petrified)) {
 		return;
 	}
 
-	if (monster.position.tile.WalkingDistance({ p->_mx, p->_my }) <= 2) {
+	if (monster.position.tile.WalkingDistance(position) <= 2) {
 		if (!monster.IsWalking()) {
-			Direction md = GetDirection(monster.position.tile, { p->_mx, p->_my });
-			if (DirOK(ndx, md)) {
-				M_ClearSquares(ndx);
-				dMonster[monster.position.tile.x][monster.position.tile.y] = ndx + 1;
-				M_WalkDir(ndx, md);
+			Direction md = GetDirection(monster.position.tile, position);
+			if (DirOK(monsterId, md)) {
+				M_ClearSquares(monsterId);
+				dMonster[monster.position.tile.x][monster.position.tile.y] = monsterId + 1;
+				M_WalkDir(monsterId, md);
 				monster._msquelch = UINT8_MAX;
 			}
 		}
-	} else if (dMonster[p->_mx][p->_my] == 0) {
-		M_ClearSquares(ndx);
-		dMonster[p->_mx][p->_my] = ndx + 1;
-		monster.position.tile = { p->_mx, p->_my };
-		decode_enemy(monster, p->_menemy);
-		Direction md = GetDirection({ p->_mx, p->_my }, monster.enemyPosition);
+	} else if (dMonster[position.x][position.y] == 0) {
+		M_ClearSquares(monsterId);
+		dMonster[position.x][position.y] = monsterId + 1;
+		monster.position.tile = position;
+		decode_enemy(monster, enemyId);
+		Direction md = GetDirection(position, monster.enemyPosition);
 		M_StartStand(monster, md);
 		monster._msquelch = UINT8_MAX;
 	}
 
-	decode_enemy(monster, p->_menemy);
+	decode_enemy(monster, enemyId);
+}
+
+bool IsEnemyIdValid(const Monster &monster, int enemyId)
+{
+	if (enemyId < 0) {
+		return false;
+	}
+
+	if (enemyId < MAX_PLRS) {
+		return Players[enemyId].plractive;
+	}
+
+	enemyId -= MAX_PLRS;
+	if (enemyId >= MAXMONSTERS) {
+		return false;
+	}
+
+	const Monster &enemy = Monsters[enemyId];
+
+	if (&enemy == &monster) {
+		return false;
+	}
+
+	if (enemy._mhitpoints <= 0) {
+		return false;
+	}
+
+	return true;
+}
+
+bool IsTSyncMonsterValidate(const TSyncMonster &monsterSync)
+{
+	const int monsterId = monsterSync._mndx;
+
+	if (monsterId < 0 || monsterId >= MAXMONSTERS)
+		return false;
+
+	if (!InDungeonBounds({ monsterSync._mx, monsterSync._my }))
+		return false;
+
+	if (!IsEnemyIdValid(Monsters[monsterId], monsterSync._menemy))
+		return false;
+
+	return true;
 }
 
 } // namespace
 
-uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
+uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen)
 {
 	if (ActiveMonsterCount < 1) {
 		return dwMaxLen;
@@ -217,12 +262,13 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 	SyncOneMonster();
 
 	for (int i = 0; i < ActiveMonsterCount && dwMaxLen >= sizeof(TSyncMonster); i++) {
+		auto &monsterSync = *reinterpret_cast<TSyncMonster *>(pbBuf);
 		bool sync = false;
 		if (i < 2) {
-			sync = SyncMonsterActive2((TSyncMonster *)pbBuf);
+			sync = SyncMonsterActive2(monsterSync);
 		}
 		if (!sync) {
-			sync = SyncMonsterActive((TSyncMonster *)pbBuf);
+			sync = SyncMonsterActive(monsterSync);
 		}
 		if (!sync) {
 			break;
@@ -235,37 +281,40 @@ uint32_t sync_all_monsters(const byte *pbBuf, uint32_t dwMaxLen)
 	return dwMaxLen;
 }
 
-uint32_t sync_update(int pnum, const byte *pbBuf)
+uint32_t OnSyncData(const TCmd *pCmd, int pnum)
 {
-	uint16_t wLen;
-
-	auto *pHdr = (TSyncHeader *)pbBuf;
-	pbBuf += sizeof(*pHdr);
-
-	if (pHdr->bCmd != CMD_SYNCDATA) {
-		app_fatal("bad sync command");
-	}
+	const auto &header = *reinterpret_cast<const TSyncHeader *>(pCmd);
 
 	assert(gbBufferMsgs != 2);
 
 	if (gbBufferMsgs == 1) {
-		return pHdr->wLen + sizeof(*pHdr);
+		return header.wLen + sizeof(header);
 	}
 	if (pnum == MyPlayerId) {
-		return pHdr->wLen + sizeof(*pHdr);
+		return header.wLen + sizeof(header);
 	}
 
-	for (wLen = pHdr->wLen; wLen >= sizeof(TSyncMonster); wLen -= sizeof(TSyncMonster)) {
-		if (currlevel == pHdr->bLevel) {
-			SyncMonster(pnum, (TSyncMonster *)pbBuf);
+	assert(header.wLen % sizeof(TSyncMonster) == 0);
+	int monsterCount = header.wLen / sizeof(TSyncMonster);
+
+	uint8_t level = header.bLevel;
+
+	if (level < NUMLEVELS) {
+		const auto *monsterSyncs = reinterpret_cast<const TSyncMonster *>(pCmd + sizeof(header));
+
+		for (int i = 0; i < monsterCount; i++) {
+			if (!IsTSyncMonsterValidate(monsterSyncs[i]))
+				continue;
+
+			if (currlevel == level) {
+				SyncMonster(pnum, monsterSyncs[i]);
+			}
+
+			delta_sync_monster(monsterSyncs[i], level);
 		}
-		delta_sync_monster((TSyncMonster *)pbBuf, pHdr->bLevel);
-		pbBuf += sizeof(TSyncMonster);
 	}
 
-	assert(wLen == 0);
-
-	return pHdr->wLen + sizeof(*pHdr);
+	return header.wLen + sizeof(header);
 }
 
 void sync_init()

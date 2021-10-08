@@ -175,6 +175,9 @@ void init_archives()
 		LogVerbose("MPQ search paths:{}", message);
 	}
 
+	// Load devilutionx.mpq first to get the font file for error messages
+	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+
 	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
 	if (diabdat_mpq == nullptr) {
 		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
@@ -214,8 +217,6 @@ void init_archives()
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
 		app_fatal(nullptr);
 	}
-
-	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
 }
 
 void init_create_window()

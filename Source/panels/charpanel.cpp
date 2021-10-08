@@ -199,16 +199,19 @@ void DrawPanelField(const Surface &out, Point pos, int len)
 
 void DrawShadowString(const Surface &out, const PanelEntry &entry)
 {
-	if (entry.label == "")
+	if (entry.label.empty())
 		return;
 
-	std::string text_tmp = _(entry.label.c_str());
-	char buffer[64];
-	int spacing = 0;
-	strcpy(buffer, text_tmp.c_str());
-	if (entry.labelLength > 0)
-		WordWrapString(buffer, entry.labelLength, GameFont12, spacing);
-	std::string text(buffer);
+	constexpr int Spacing = 0;
+	const std::string &textStr = LanguageTranslate(entry.label.c_str());
+	string_view text;
+	std::string wrapped;
+	if (entry.labelLength > 0) {
+		wrapped = WordWrapString(textStr, entry.labelLength, GameFont12, Spacing);
+		text = wrapped;
+	} else {
+		text = textStr;
+	}
 
 	UiFlags style = UiFlags::VerticalCenter;
 
@@ -221,8 +224,8 @@ void DrawShadowString(const Surface &out, const PanelEntry &entry)
 		labelPosition += Displacement { -entry.labelLength - 3, 0 };
 	}
 
-	DrawString(out, text, { labelPosition + Displacement { -2, 2 }, { entry.labelLength, 20 } }, style | UiFlags::ColorBlack, spacing, 10);
-	DrawString(out, text, { labelPosition, { entry.labelLength, 20 } }, style | UiFlags::ColorWhite, spacing, 10);
+	DrawString(out, text, { labelPosition + Displacement { -2, 2 }, { entry.labelLength, 20 } }, style | UiFlags::ColorBlack, Spacing, 10);
+	DrawString(out, text, { labelPosition, { entry.labelLength, 20 } }, style | UiFlags::ColorWhite, Spacing, 10);
 }
 
 void DrawStatButtons(const Surface &out)

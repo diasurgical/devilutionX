@@ -21,6 +21,7 @@
 #include "plrmsg.h"
 #include "stores.h"
 #include "towners.h"
+#include "controls/plrctrls.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -671,7 +672,7 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	}
 }
 
-void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
+void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
 {
 	auto &player = Players[pnum];
 
@@ -884,6 +885,10 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove)
 				}
 			}
 		}
+	}
+
+	if (dropItem) {
+		TryDropItem();
 	}
 }
 
@@ -1471,7 +1476,7 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 	return true;
 }
 
-void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	auto &item = Items[MAXITEMS];
 	memset(&item, 0, sizeof(item));
@@ -1483,42 +1488,38 @@ void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bo
 		player.HoldItem._iIdentified = true;
 	}
 
-	if (bLoc < NUM_INVLOC) {
-		player.InvBody[bLoc] = player.HoldItem;
+	player.InvBody[bLoc] = player.HoldItem;
 
-		if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
-		} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
-		}
+	if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+		player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+	} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+		player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 	}
 
 	CalcPlrInv(player, true);
 }
 
-void inv_update_rem_item(Player &player, BYTE iv)
+void inv_update_rem_item(Player &player, inv_body_loc iv)
 {
-	if (iv < NUM_INVLOC) {
-		player.InvBody[iv]._itype = ItemType::None;
-	}
+	player.InvBody[iv]._itype = ItemType::None;
 
 	CalcPlrInv(player, player._pmode != PM_DEATH);
 }
 
-void CheckInvItem(bool isShiftHeld)
+void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (pcurs >= CURSOR_FIRSTITEM) {
 		CheckInvPaste(MyPlayerId, MousePosition);
 	} else {
-		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld);
+		CheckInvCut(MyPlayerId, MousePosition, isShiftHeld, isCtrlHeld);
 	}
 }
 
-void CheckInvScrn(bool isShiftHeld)
+void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
 	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
 	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
-		CheckInvItem(isShiftHeld);
+		CheckInvItem(isShiftHeld, isCtrlHeld);
 	}
 }
 
@@ -1660,7 +1661,6 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 		return;
 
 	CleanupItems(&Items[ii], ii);
-	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
 bool CanPut(Point position)
@@ -1730,8 +1730,7 @@ int InvPutItem(Player &player, Point position)
 		int yp = cursPosition.y;
 		int xp = cursPosition.x;
 		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			Displacement relativePosition = position - player.position.tile;
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.deltaX, relativePosition.deltaY);
+			NetSendCmd(false, CMD_OPENHIVE);
 			auto &quest = Quests[Q_FARMER];
 			quest._qactive = QUEST_DONE;
 			if (gbIsMultiplayer) {

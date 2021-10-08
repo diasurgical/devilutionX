@@ -750,7 +750,7 @@ msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
 msgstr "暴雪娛樂不支援或維護DevilutionX，"
 
 #: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
+msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
 msgstr "也不是GOG.com。暴雪娛樂和GOG.com都沒有進行測試"
 
 #: Source/DiabloUI/support_lines.cpp:21

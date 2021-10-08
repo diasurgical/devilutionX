@@ -315,6 +315,6 @@ void SpawnGolem(int i, Point position, Missile &missile);
 bool CanTalkToMonst(const Monster &monster);
 bool CheckMonsterHit(Monster &monster, bool *ret);
 int encode_enemy(Monster &monster);
-void decode_enemy(Monster &monster, int enemy);
+void decode_enemy(Monster &monster, int enemyId);
 
 } // namespace devilution

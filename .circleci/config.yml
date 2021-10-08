@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run: echo deb http://deb.debian.org/debian stretch-backports-sloppy main >> /etc/apt/sources.list.d/debian-backports.list
       - run: apt update -y
-      - run: apt install -y g++ libsdl2-dev libsdl2-ttf-dev git rpm wget
+      - run: apt install -y g++ libsdl2-dev libsdl2-ttf-dev git rpm wget smpq
       - run: apt install -y -t 'stretch-backports*' cmake libsodium-dev libpng-dev
       - run: cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON -DCMAKE_INSTALL_PREFIX=/usr
       - run: cmake --build build -j 2 --target package
@@ -47,7 +47,7 @@ jobs:
     steps:
       - checkout
       - run: sudo apt update -y
-      - run: sudo apt install -y g++ cmake ninja-build
+      - run: sudo apt install -y g++ cmake ninja-build smpq
       - run: cd android-project && ./gradlew assembleDebug
       - store_artifacts: {path: ./android-project/app/build/outputs/apk/debug/app-debug.apk, destination: devilutionx-debug.apk}
   3ds:
@@ -57,7 +57,7 @@ jobs:
     steps:
       - checkout
       - run: apt-get update -y
-      - run: apt-get install -y ffmpeg gettext
+      - run: apt-get install -y ffmpeg gettext smpq
       - run: wget https://github.com/Steveice10/bannertool/releases/download/1.2.0/bannertool.zip
       - run: unzip -j "bannertool.zip" "linux-x86_64/bannertool" -d "/opt/devkitpro/tools/bin"
       - run: wget https://github.com/jakcron/Project_CTR/releases/download/v0.16/makerom_016_ctrtool.zip
@@ -85,7 +85,9 @@ jobs:
       - checkout
       # Work around https://github.com/vitasdk/vdpm/issues/69
       - run: mkdir -p /usr/local && ln -sf /home/user/vitasdk /usr/local/vitasdk
-      - run: apk --no-cache add git cmake ninja bash pkgconfig
+      # curl, zlib-dev, bzip2-dev, and build-base are only needed by build-and-install-smpq.sh
+      - run: apk --no-cache add git cmake ninja bash pkgconfig curl zlib-dev bzip2-dev build-base
+      - run: .circleci/build-and-install-smpq.sh
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}

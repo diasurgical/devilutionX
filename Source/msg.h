@@ -431,7 +431,7 @@ void DeltaExportData(int pnum);
 void delta_init();
 void delta_kill_monster(int mi, Point position, BYTE bLevel);
 void delta_monster_hp(int mi, int hp, BYTE bLevel);
-void delta_sync_monster(const TSyncMonster *pSync, BYTE bLevel);
+void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level);
 bool delta_portal_inited(int i);
 bool delta_quest_inited(int i);
 void DeltaAddItem(int ii);
@@ -458,6 +458,6 @@ void NetSendCmdDamage(bool bHiPri, uint8_t bPlr, uint32_t dwDam);
 void NetSendCmdMonDmg(bool bHiPri, uint16_t wMon, uint32_t dwDam);
 void NetSendCmdString(uint32_t pmask, const char *pszStr);
 void delta_close_portal(int pnum);
-uint32_t ParseCmd(int pnum, TCmd *pCmd);
+uint32_t ParseCmd(int pnum, const TCmd *pCmd);
 
 } // namespace devilution

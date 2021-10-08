@@ -312,10 +312,6 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	Point tile = player.position.tile;
 	if (player._pmode == PM_WALK3) {
 		tile = player.position.future;
-		if (player._pdir == Direction::West)
-			tile.x++;
-		else
-			tile.y++;
 	}
 
 	int px = tile.x - 2 * AutomapOffset.deltaX - ViewPosition.x;
@@ -336,7 +332,7 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 		if (chrflag || QuestLogIsOpen)
 			base.x += gnScreenWidth / 4;
 	}
-	base.y -= AmLine8;
+	base.y -= AmLine16;
 
 	switch (player._pdir) {
 	case Direction::North: {
@@ -359,9 +355,9 @@ void DrawAutomapPlr(const Surface &out, const Displacement &myPlayerOffset, int 
 	} break;
 	case Direction::SouthEast: {
 		const Point point { base.x + AmLine16, base.y + AmLine8 };
+		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 		DrawMapLineSE(out, { point.x - 2 * AmLine8, point.y - AmLine8 }, AmLine8, playerColor);
 		DrawHorizontalLine(out, { point.x - (AmLine8 + 1), point.y }, AmLine8 + 1, playerColor);
-		DrawMapLineSteepNW(out, point, AmLine4, playerColor);
 	} break;
 	case Direction::South: {
 		const Point point { base.x, base.y + AmLine16 };

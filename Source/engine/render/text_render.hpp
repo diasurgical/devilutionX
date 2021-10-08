@@ -24,6 +24,7 @@ enum GameFontTables : uint8_t {
 	GameFont30,
 	GameFont42,
 	GameFont46,
+	FontSizeDialog,
 };
 
 enum text_color : uint8_t {
@@ -31,6 +32,9 @@ enum text_color : uint8_t {
 	ColorUiSilver,
 	ColorUiGoldDark,
 	ColorUiSilverDark,
+
+	ColorDialogWhite,
+	ColorDialogYellow,
 
 	ColorGold,
 	ColorBlack,
@@ -57,7 +61,7 @@ void UnloadFonts(GameFontTables size, text_color color);
  * @return Line width in pixels
  */
 int GetLineWidth(string_view text, GameFontTables size = GameFont12, int spacing = 1, int *charactersInLine = nullptr);
-void WordWrapString(char *text, size_t width, GameFontTables size = GameFont12, int spacing = 1);
+[[nodiscard]] std::string WordWrapString(string_view text, size_t width, GameFontTables size = GameFont12, int spacing = 1);
 
 /**
  * @brief Draws a line of text within a clipping rectangle (positioned relative to the origin of the output buffer).

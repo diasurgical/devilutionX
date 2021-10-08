@@ -8,7 +8,6 @@ Build-Depends:
 	git,
 	g++,
 	gettext,
-	libsdl2-ttf-dev,
 	libsodium-dev
 Standards-Version: 4.3.0
 Homepage: https://github.com/diasurgical/devilutionX
