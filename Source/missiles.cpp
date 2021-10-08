@@ -1318,6 +1318,10 @@ void AddFireRune(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddLightningRune(Missile &missile, Point dst, Direction /*midir*/)
 {
+	int id = missile._misource;
+	int lvl = (id > -1) ? Players[id]._pLevel : 0;
+	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
+	missile._midam = dmg;
 	AddRune(missile, dst, MIS_LIGHTWALL);
 }
 
