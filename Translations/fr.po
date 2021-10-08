@@ -62,7 +62,7 @@ msgstr "Directeur Artistique"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr ""
+msgstr "Illustration"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
@@ -135,31 +135,31 @@ msgstr "Conception et Mise en page du Manuel"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
-msgstr ""
+msgstr "Illustration du Manuel"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
-msgstr ""
+msgstr "Directeur Provisoire d'Assurance-Qualité (Testeur en Chef)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr ""
+msgstr "Équipe de Testeurs Assurance-Qualité (QA)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr ""
+msgstr "Équipe Spéciale Compatibilité de Testeurs Assurance-Qualité (QA)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr ""
+msgstr "Support Additionnel de Testeurs Assurance-Qualité (QA) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
-msgstr ""
+msgstr "Contre-Espionnage Assurance-Qualité (QA)"
 
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
-msgstr ""
+msgstr "Ordre des Services d'informations réseaux"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
@@ -175,7 +175,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr ""
+msgstr "Choristes de Mr. Dabiri"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
@@ -195,11 +195,11 @@ msgstr "Ventes U.S."
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr ""
+msgstr "Fabrication"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr ""
+msgstr "Juridique & Affaires"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
@@ -219,7 +219,7 @@ msgstr "Remerciements Très Spéciaux à"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr ""
+msgstr "Manager Général"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
@@ -255,7 +255,7 @@ msgstr "Manuel"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr "Travaux Additionels"
+msgstr "\tTravaux Additionnels"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
@@ -275,23 +275,23 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr "Responsable Assurance Qualité"
+msgstr "Responsable Assurance-Qualité"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr ""
+msgstr "Testeur en Chef Assurance-Qualité"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr "Testeurs principaux"
+msgstr "Testeurs Principaux"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr "Testeurs supplémentaires"
+msgstr "Testeurs Supplémentaires"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr ""
+msgstr "Responsable Marketing Produit"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
@@ -299,7 +299,7 @@ msgstr "Responsable des Relations Publiques"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr ""
+msgstr "Chef de Produit Associé"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
@@ -1290,7 +1290,7 @@ msgstr "Pendant que l'esprit est vigilant, le corps s'épanouit"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:74
 msgid "The powers of mana refocused renews"
-msgstr ""
+msgstr "Les pouvoirs de la mana recentrés se renouvellent"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:75
@@ -1536,7 +1536,7 @@ msgstr "Pause"
 
 #: Source/help.cpp:26
 msgid "$Keyboard Shortcuts:"
-msgstr ""
+msgstr "$Raccourcis Clavier:"
 
 #: Source/help.cpp:27
 msgid "F1:    Open Help Screen"
@@ -1625,7 +1625,7 @@ msgstr ""
 
 #: Source/help.cpp:47
 msgid "$Movement:"
-msgstr ""
+msgstr "$Mouvement:"
 
 #: Source/help.cpp:48
 msgid ""
@@ -1664,7 +1664,7 @@ msgstr ""
 
 #: Source/help.cpp:61
 msgid "$Picking up Objects:"
-msgstr ""
+msgstr "$Prendre Object:"
 
 #: Source/help.cpp:62
 msgid ""
@@ -2730,11 +2730,11 @@ msgstr "d'Arch-Ange"
 
 #: Source/itemdat.cpp:271
 msgid "Plentiful"
-msgstr ""
+msgstr "Abondant"
 
 #: Source/itemdat.cpp:272
 msgid "Bountiful"
-msgstr ""
+msgstr "Prolifique"
 
 #: Source/itemdat.cpp:273
 msgid "Flaming"
@@ -2750,7 +2750,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:276
 msgid "Crystalline"
-msgstr ""
+msgstr "Cristalline"
 
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:278
@@ -2780,15 +2780,15 @@ msgstr ""
 
 #: Source/itemdat.cpp:293
 msgid "slaughter"
-msgstr ""
+msgstr "massacre"
 
 #: Source/itemdat.cpp:294
 msgid "pain"
-msgstr ""
+msgstr "douleur"
 
 #: Source/itemdat.cpp:295
 msgid "tears"
-msgstr ""
+msgstr "larmes"
 
 #: Source/itemdat.cpp:296
 msgid "health"
@@ -3100,15 +3100,15 @@ msgstr "perçant"
 
 #: Source/itemdat.cpp:373
 msgid "puncturing"
-msgstr ""
+msgstr "perforant"
 
 #: Source/itemdat.cpp:374
 msgid "bashing"
-msgstr ""
+msgstr "tranchant"
 
 #: Source/itemdat.cpp:375
 msgid "readiness"
-msgstr ""
+msgstr "préparation"
 
 #: Source/itemdat.cpp:376
 msgid "swiftness"
@@ -3162,7 +3162,7 @@ msgstr "Arc de le Faille"
 
 #: Source/itemdat.cpp:407
 msgid "The Needler"
-msgstr ""
+msgstr "L'Aiguilleteuse"
 
 #: Source/itemdat.cpp:408
 msgid "The Celestial Bow"
@@ -3182,15 +3182,15 @@ msgstr "Arc de Chêne Noir"
 
 #: Source/itemdat.cpp:412
 msgid "Flamedart"
-msgstr ""
+msgstr "Dard de Flamme"
 
 #: Source/itemdat.cpp:413
 msgid "Fleshstinger"
-msgstr ""
+msgstr "Dard de Chair"
 
 #: Source/itemdat.cpp:414
 msgid "Windforce"
-msgstr ""
+msgstr "Cyclone"
 
 #: Source/itemdat.cpp:415
 msgid "Eaglehorn"
@@ -3198,7 +3198,7 @@ msgstr "Corne d'Aigle"
 
 #: Source/itemdat.cpp:416
 msgid "Gonnagal's Dirk"
-msgstr ""
+msgstr "Poignard de Gonnagal"
 
 #: Source/itemdat.cpp:417
 msgid "The Defender"
@@ -3230,19 +3230,19 @@ msgstr "La Scie à Os"
 
 #: Source/itemdat.cpp:424
 msgid "Shadowhawk"
-msgstr ""
+msgstr "Faucon des Ombres"
 
 #: Source/itemdat.cpp:425
 msgid "Wizardspike"
-msgstr ""
+msgstr "Pointe du Sorcier"
 
 #: Source/itemdat.cpp:426
 msgid "Lightsabre"
-msgstr ""
+msgstr "Sabre-Laser"
 
 #: Source/itemdat.cpp:427
 msgid "The Falcon's Talon"
-msgstr ""
+msgstr "La Serre du Faucon"
 
 #: Source/itemdat.cpp:428
 msgid "Inferno"
@@ -3250,7 +3250,7 @@ msgstr "Enfer"
 
 #: Source/itemdat.cpp:429
 msgid "Doombringer"
-msgstr ""
+msgstr "Porte-Malheur"
 
 #: Source/itemdat.cpp:430
 msgid "The Grizzly"
@@ -3262,7 +3262,7 @@ msgstr "Le Grand-Père"
 
 #: Source/itemdat.cpp:432
 msgid "The Mangler"
-msgstr ""
+msgstr "Le Massacreur"
 
 #: Source/itemdat.cpp:433
 msgid "Sharp Beak"
@@ -3298,7 +3298,7 @@ msgstr "Saccageur de Messerschmidt"
 
 #: Source/itemdat.cpp:441
 msgid "Crackrust"
-msgstr ""
+msgstr "Craqueleure"
 
 #: Source/itemdat.cpp:442
 msgid "Hammer of Jholm"
@@ -3322,7 +3322,7 @@ msgstr "Racine Noueuse"
 
 #: Source/itemdat.cpp:447
 msgid "The Cranium Basher"
-msgstr ""
+msgstr "Le Brise-Crâne"
 
 #: Source/itemdat.cpp:448
 msgid "Schaefer's Hammer"
@@ -3330,7 +3330,7 @@ msgstr "Marteau de Schaefer"
 
 #: Source/itemdat.cpp:449
 msgid "Dreamflange"
-msgstr ""
+msgstr "Bride des Rêves"
 
 #: Source/itemdat.cpp:450
 msgid "Staff of Shadows"
@@ -3346,7 +3346,7 @@ msgstr "Flèche de Tempête"
 
 #: Source/itemdat.cpp:453
 msgid "Gleamsong"
-msgstr ""
+msgstr "Lueur Scintillante"
 
 #: Source/itemdat.cpp:454
 msgid "Thundercall"
@@ -3362,7 +3362,7 @@ msgstr "Le Casse-tête de Naj "
 
 #: Source/itemdat.cpp:457
 msgid "Mindcry"
-msgstr ""
+msgstr "Pleureur d'Esprit"
 
 #: Source/itemdat.cpp:458
 msgid "Rod of Onan"
@@ -3390,7 +3390,7 @@ msgstr ""
 
 #: Source/itemdat.cpp:464
 msgid "Royal Circlet"
-msgstr ""
+msgstr "Diadème Royal"
 
 #: Source/itemdat.cpp:465
 msgid "Torn Flesh of Souls"
@@ -3422,7 +3422,7 @@ msgstr "Carapace de Charognard"
 
 #: Source/itemdat.cpp:472
 msgid "Nightscape"
-msgstr ""
+msgstr "Paysage Nocturne"
 
 #: Source/itemdat.cpp:473
 msgid "Naj's Light Plate"
@@ -3430,7 +3430,7 @@ msgstr "Plate légère de Naj"
 
 #: Source/itemdat.cpp:474
 msgid "Demonspike Coat"
-msgstr ""
+msgstr "Manteau à Pointes de Démon"
 
 #: Source/itemdat.cpp:475
 msgid "The Deflector"
@@ -3458,7 +3458,7 @@ msgstr "Bouclier de Tempête"
 
 #: Source/itemdat.cpp:481
 msgid "Bramble"
-msgstr ""
+msgstr "Roncier"
 
 #: Source/itemdat.cpp:482
 msgid "Ring of Regha"
@@ -3466,7 +3466,7 @@ msgstr "Anneau de Regha"
 
 #: Source/itemdat.cpp:483
 msgid "The Bleeder"
-msgstr ""
+msgstr "Le Saigneur"
 
 #: Source/itemdat.cpp:484
 msgid "Constricting Ring"
@@ -3538,7 +3538,7 @@ msgstr "Mangeur d'Âmes"
 
 #: Source/itemdat.cpp:501
 msgid "Diamondedge"
-msgstr ""
+msgstr "Flanc de Diamant"
 
 #: Source/itemdat.cpp:502
 msgid "Bone Chain Armor"
@@ -3625,12 +3625,12 @@ msgstr "attributs nécessaire réduits"
 
 #: Source/items.cpp:1928
 msgid "to use armor or weapons"
-msgstr ""
+msgstr "pour utiliser des armes ou armures"
 
 #: Source/items.cpp:1932
 #, no-c-format
 msgid "restores 20% of an"
-msgstr ""
+msgstr "restaure 20% de"
 
 #: Source/items.cpp:1934
 msgid "item's durability"
@@ -4135,7 +4135,7 @@ msgstr "Dégâts 0-500% aléatoire"
 #: Source/items.cpp:4091
 #, no-c-format
 msgid "low dur, {:+d}% damage"
-msgstr ""
+msgstr "faible dur, {:+d}% de dégât"
 
 #: Source/items.cpp:4097
 msgid "extra AC vs demons"
@@ -4264,7 +4264,7 @@ msgstr "Découpeur"
 #: Source/monstdat.cpp:26 Source/monstdat.cpp:34
 msgctxt "monster"
 msgid "Devil Kin"
-msgstr ""
+msgstr "Servant du Diable"
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
 msgctxt "monster"
@@ -4474,7 +4474,7 @@ msgstr "Démon Wyrm"
 #: Source/monstdat.cpp:79
 msgctxt "monster"
 msgid "Devourer"
-msgstr ""
+msgstr "Dévoreur"
 
 #: Source/monstdat.cpp:80
 msgctxt "monster"
@@ -4509,7 +4509,7 @@ msgstr "Coureur de Boue"
 #: Source/monstdat.cpp:86
 msgctxt "monster"
 msgid "Frost Charger"
-msgstr ""
+msgstr "Chargeur de givre"
 
 #: Source/monstdat.cpp:87
 msgctxt "monster"
@@ -4519,7 +4519,7 @@ msgstr "Seigneur d'Obsidienne"
 #: Source/monstdat.cpp:88
 msgctxt "monster"
 msgid "oldboned"
-msgstr ""
+msgstr "vieux-os"
 
 #: Source/monstdat.cpp:89
 msgctxt "monster"
@@ -4549,7 +4549,7 @@ msgstr "Seigneur des Flammes"
 #: Source/monstdat.cpp:94
 msgctxt "monster"
 msgid "Doom Fire"
-msgstr ""
+msgstr "Feu de la Fatalité"
 
 #: Source/monstdat.cpp:95
 msgctxt "monster"
@@ -4579,7 +4579,7 @@ msgstr "Maelstrom"
 #: Source/monstdat.cpp:100
 msgctxt "monster"
 msgid "Devil Kin Brute"
-msgstr ""
+msgstr "Brute du Diable"
 
 #: Source/monstdat.cpp:101
 msgctxt "monster"
@@ -4649,7 +4649,7 @@ msgstr "Chevalier Noir"
 #: Source/monstdat.cpp:114
 msgctxt "monster"
 msgid "Doom Guard"
-msgstr ""
+msgstr "Gardien de la Fatalité"
 
 #: Source/monstdat.cpp:115
 msgctxt "monster"
@@ -4669,7 +4669,7 @@ msgstr "Le Déchiqueté"
 #: Source/monstdat.cpp:118
 msgctxt "monster"
 msgid "Hollow One"
-msgstr ""
+msgstr "Ombre"
 
 #: Source/monstdat.cpp:119
 msgctxt "monster"
@@ -4694,32 +4694,32 @@ msgstr "Sorcière des Neiges"
 #: Source/monstdat.cpp:123
 msgctxt "monster"
 msgid "Hell Spawn"
-msgstr ""
+msgstr "Engeance de l'Enfer"
 
 #: Source/monstdat.cpp:124
 msgctxt "monster"
 msgid "Soul Burner"
-msgstr ""
+msgstr "Brûleur d'Âmes"
 
 #: Source/monstdat.cpp:125
 msgctxt "monster"
 msgid "Counselor"
-msgstr ""
+msgstr "Conseiller"
 
 #: Source/monstdat.cpp:126
 msgctxt "monster"
 msgid "Magistrate"
-msgstr ""
+msgstr "Magistrat"
 
 #: Source/monstdat.cpp:127
 msgctxt "monster"
 msgid "Cabalist"
-msgstr ""
+msgstr "Cabaliste"
 
 #: Source/monstdat.cpp:128
 msgctxt "monster"
 msgid "Advocate"
-msgstr ""
+msgstr "Avocat"
 
 #: Source/monstdat.cpp:129
 msgctxt "monster"
@@ -4734,7 +4734,7 @@ msgstr "Le Seigneur des Ténèbres"
 #: Source/monstdat.cpp:131
 msgctxt "monster"
 msgid "The Arch-Litch Malignus"
-msgstr ""
+msgstr "L'Arche-Liche Malignus"
 
 #: Source/monstdat.cpp:132
 msgctxt "monster"
@@ -4744,12 +4744,12 @@ msgstr "Sanglier Infernal"
 #: Source/monstdat.cpp:133
 msgctxt "monster"
 msgid "Stinger"
-msgstr ""
+msgstr "Dard"
 
 #: Source/monstdat.cpp:134
 msgctxt "monster"
 msgid "Psychorb"
-msgstr ""
+msgstr "Psychorbe"
 
 #: Source/monstdat.cpp:135
 msgctxt "monster"
@@ -4759,22 +4759,22 @@ msgstr ""
 #: Source/monstdat.cpp:136
 msgctxt "monster"
 msgid "Felltwin"
-msgstr ""
+msgstr "Frères Déchus"
 
 #: Source/monstdat.cpp:137
 msgctxt "monster"
 msgid "Hork Spawn"
-msgstr ""
+msgstr "Engeance d'Hork"
 
 #: Source/monstdat.cpp:138
 msgctxt "monster"
 msgid "Venomtail"
-msgstr ""
+msgstr "Queue de venin"
 
 #: Source/monstdat.cpp:139
 msgctxt "monster"
 msgid "Necromorb"
-msgstr ""
+msgstr "Nécromorbe"
 
 #: Source/monstdat.cpp:140
 msgctxt "monster"
@@ -4784,7 +4784,7 @@ msgstr "Seigneur Araignée"
 #: Source/monstdat.cpp:141
 msgctxt "monster"
 msgid "Lashworm"
-msgstr ""
+msgstr "Ver Tordu"
 
 #: Source/monstdat.cpp:142
 msgctxt "monster"
@@ -4819,12 +4819,12 @@ msgstr "Chauve-souris de Feu"
 #: Source/monstdat.cpp:148
 msgctxt "monster"
 msgid "Skullwing"
-msgstr ""
+msgstr "Aile de Crâne"
 
 #: Source/monstdat.cpp:149
 msgctxt "monster"
 msgid "Lich"
-msgstr ""
+msgstr "Liche"
 
 #: Source/monstdat.cpp:150
 msgctxt "monster"
@@ -4844,7 +4844,7 @@ msgstr "Démon Osseux"
 #: Source/monstdat.cpp:153
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr ""
+msgstr "Arche-Liche"
 
 #: Source/monstdat.cpp:154
 msgctxt "monster"
@@ -4854,12 +4854,12 @@ msgstr ""
 #: Source/monstdat.cpp:155
 msgctxt "monster"
 msgid "Flesh Thing"
-msgstr ""
+msgstr "Monstre de Chair"
 
 #: Source/monstdat.cpp:156
 msgctxt "monster"
 msgid "Reaper"
-msgstr ""
+msgstr "Faucheur"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
@@ -4870,12 +4870,12 @@ msgstr "Gharbad le Faible"
 #: Source/monstdat.cpp:475
 msgctxt "monster"
 msgid "Zhar the Mad"
-msgstr ""
+msgstr "Zhar le Fou"
 
 #: Source/monstdat.cpp:476
 msgctxt "monster"
 msgid "Snotspill"
-msgstr ""
+msgstr "Déversement de Morve"
 
 #: Source/monstdat.cpp:477
 msgctxt "monster"
@@ -4905,32 +4905,32 @@ msgstr "Le Profanateur"
 #: Source/monstdat.cpp:486
 msgctxt "monster"
 msgid "Bonehead Keenaxe"
-msgstr ""
+msgstr "Crâne-Tête à la Hache-Aiguisé"
 
 #: Source/monstdat.cpp:487
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
-msgstr ""
+msgstr "Lame-Peau le Massacreur"
 
 #: Source/monstdat.cpp:488
 msgctxt "monster"
 msgid "Soulpus"
-msgstr ""
+msgstr "Âme-de-Pus"
 
 #: Source/monstdat.cpp:489
 msgctxt "monster"
 msgid "Pukerat the Unclean"
-msgstr ""
+msgstr "Vomi-de-Rat l'Impur"
 
 #: Source/monstdat.cpp:490
 msgctxt "monster"
 msgid "Boneripper"
-msgstr ""
+msgstr "Éventreur d'Os"
 
 #: Source/monstdat.cpp:491
 msgctxt "monster"
 msgid "Rotfeast the Hungry"
-msgstr ""
+msgstr "Point-Pourrit L'Affamé"
 
 #: Source/monstdat.cpp:492
 msgctxt "monster"
@@ -4940,12 +4940,12 @@ msgstr "Gutshank le Prompte"
 #: Source/monstdat.cpp:493
 msgctxt "monster"
 msgid "Brokenhead Bangshield"
-msgstr ""
+msgstr "Tête-Brisée au Bouclier du Fracas"
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
 msgid "Rotcarnage"
-msgstr ""
+msgstr "Carnage-Pourrit"
 
 #: Source/monstdat.cpp:496
 msgctxt "monster"
@@ -4955,7 +4955,7 @@ msgstr "Morsure de l'Ombre"
 #: Source/monstdat.cpp:497
 msgctxt "monster"
 msgid "Deadeye"
-msgstr ""
+msgstr "Mortoeil"
 
 #: Source/monstdat.cpp:498
 msgctxt "monster"
@@ -4970,32 +4970,32 @@ msgstr "Crane de Feu"
 #: Source/monstdat.cpp:501
 msgctxt "monster"
 msgid "Warpskull"
-msgstr ""
+msgstr "Crâne-de-Chaîne"
 
 #: Source/monstdat.cpp:502
 msgctxt "monster"
 msgid "Goretongue"
-msgstr ""
+msgstr "Langue-Gore"
 
 #: Source/monstdat.cpp:503
 msgctxt "monster"
 msgid "Pulsecrawler"
-msgstr ""
+msgstr "Rampeur Vibrant"
 
 #: Source/monstdat.cpp:504
 msgctxt "monster"
 msgid "Moonbender"
-msgstr ""
+msgstr "Maître de Lune"
 
 #: Source/monstdat.cpp:505
 msgctxt "monster"
 msgid "Wrathraven"
-msgstr ""
+msgstr "Corbeau du Courroux"
 
 #: Source/monstdat.cpp:506
 msgctxt "monster"
 msgid "Spineeater"
-msgstr ""
+msgstr "Mangeur d'Échine"
 
 #: Source/monstdat.cpp:507
 msgctxt "monster"
@@ -5005,7 +5005,7 @@ msgstr "Blackash le Brûlant"
 #: Source/monstdat.cpp:508
 msgctxt "monster"
 msgid "Shadowcrow"
-msgstr ""
+msgstr "Corbeau des Ombres"
 
 #: Source/monstdat.cpp:509
 msgctxt "monster"
@@ -5020,122 +5020,122 @@ msgstr "Bilefroth le maître des fosses"
 #: Source/monstdat.cpp:511
 msgctxt "monster"
 msgid "Bloodskin Darkbow"
-msgstr ""
+msgstr "Peau-de-Sang l'Arc Sombre"
 
 #: Source/monstdat.cpp:512
 msgctxt "monster"
 msgid "Foulwing"
-msgstr ""
+msgstr "Aile-Fétide"
 
 #: Source/monstdat.cpp:513
 msgctxt "monster"
 msgid "Shadowdrinker"
-msgstr ""
+msgstr "Buveur d'Ombre"
 
 #: Source/monstdat.cpp:514
 msgctxt "monster"
 msgid "Hazeshifter"
-msgstr ""
+msgstr "Changeur de brume"
 
 #: Source/monstdat.cpp:515
 msgctxt "monster"
 msgid "Deathspit"
-msgstr ""
+msgstr "Crache-Mort"
 
 #: Source/monstdat.cpp:516
 msgctxt "monster"
 msgid "Bloodgutter"
-msgstr ""
+msgstr "Goutte-de-Sang"
 
 #: Source/monstdat.cpp:517
 msgctxt "monster"
 msgid "Deathshade Fleshmaul"
-msgstr ""
+msgstr "Ombremort Cogne-Chair"
 
 #: Source/monstdat.cpp:518
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr ""
+msgstr "Ver-Guerrier le Fou"
 
 #: Source/monstdat.cpp:519
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr ""
+msgstr "Crâne-de-Verre le Déchiqueté"
 
 #: Source/monstdat.cpp:520
 msgctxt "monster"
 msgid "Blightfire"
-msgstr ""
+msgstr "Feu-Fléau"
 
 #: Source/monstdat.cpp:521
 msgctxt "monster"
 msgid "Nightwing the Cold"
-msgstr ""
+msgstr "Aile-Nocturne le Froid"
 
 #: Source/monstdat.cpp:522
 msgctxt "monster"
 msgid "Gorestone"
-msgstr ""
+msgstr "Pierre-Gore"
 
 #: Source/monstdat.cpp:523
 msgctxt "monster"
 msgid "Bronzefist Firestone"
-msgstr ""
+msgstr "Poing-de-Bronze la Pierre Enflammée"
 
 #: Source/monstdat.cpp:524
 msgctxt "monster"
 msgid "Wrathfire the Doomed"
-msgstr ""
+msgstr "Colère-de-Feu le Condamné"
 
 #: Source/monstdat.cpp:525
 msgctxt "monster"
 msgid "Firewound the Grim"
-msgstr ""
+msgstr "Plaie-de-Feu le Sinistre"
 
 #: Source/monstdat.cpp:526
 msgctxt "monster"
 msgid "Baron Sludge"
-msgstr ""
+msgstr "Baron Boueux"
 
 #: Source/monstdat.cpp:527
 msgctxt "monster"
 msgid "Blighthorn Steelmace"
-msgstr ""
+msgstr "Corne-Brûle Masse d'Acier"
 
 #: Source/monstdat.cpp:528
 msgctxt "monster"
 msgid "Chaoshowler"
-msgstr ""
+msgstr "Hurleur du Chaos"
 
 #: Source/monstdat.cpp:529
 msgctxt "monster"
 msgid "Doomgrin the Rotting"
-msgstr ""
+msgstr "Sourire-Maudit le Pourrisant"
 
 #: Source/monstdat.cpp:530
 msgctxt "monster"
 msgid "Madburner"
-msgstr ""
+msgstr "Brûleur-Fou"
 
 #: Source/monstdat.cpp:531
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr ""
+msgstr "Scie-à-Os la Liche"
 
 #: Source/monstdat.cpp:532
 msgctxt "monster"
 msgid "Breakspine"
-msgstr ""
+msgstr "Brise-Échine"
 
 #: Source/monstdat.cpp:533
 msgctxt "monster"
 msgid "Devilskull Sharpbone"
-msgstr ""
+msgstr "Crâne-Diable aux Os Tranchants"
 
 #: Source/monstdat.cpp:534
 msgctxt "monster"
 msgid "Brokenstorm"
-msgstr ""
+msgstr "Tempête-Brisée"
 
 #: Source/monstdat.cpp:535
 msgctxt "monster"
@@ -5145,12 +5145,12 @@ msgstr "Fléau-Tempête"
 #: Source/monstdat.cpp:536
 msgctxt "monster"
 msgid "Oozedrool"
-msgstr ""
+msgstr "Suintement-Baveux"
 
 #: Source/monstdat.cpp:537
 msgctxt "monster"
 msgid "Goldblight of the Flame"
-msgstr ""
+msgstr "Rouille-Dorée de la Flamme"
 
 #: Source/monstdat.cpp:538
 msgctxt "monster"
@@ -5170,22 +5170,22 @@ msgstr "L'Écorcheur"
 #: Source/monstdat.cpp:541
 msgctxt "monster"
 msgid "Bluehorn"
-msgstr ""
+msgstr "Corne-Bleue"
 
 #: Source/monstdat.cpp:542
 msgctxt "monster"
 msgid "Warpfire Hellspawn"
-msgstr ""
+msgstr "Chaîne-de-Feu l'Engeance infernale"
 
 #: Source/monstdat.cpp:543
 msgctxt "monster"
 msgid "Fangspeir"
-msgstr ""
+msgstr "Flèche-de-Croc"
 
 #: Source/monstdat.cpp:544
 msgctxt "monster"
 msgid "Festerskull"
-msgstr ""
+msgstr "Crâne-Purulent"
 
 #: Source/monstdat.cpp:545
 msgctxt "monster"
@@ -5195,42 +5195,42 @@ msgstr "Crâne de Lion le Courbé"
 #: Source/monstdat.cpp:546
 msgctxt "monster"
 msgid "Blacktongue"
-msgstr ""
+msgstr "Langue-Noire"
 
 #: Source/monstdat.cpp:547
 msgctxt "monster"
 msgid "Viletouch"
-msgstr ""
+msgstr "Frappe-Vil"
 
 #: Source/monstdat.cpp:548
 msgctxt "monster"
 msgid "Viperflame"
-msgstr ""
+msgstr "Viperflamme"
 
 #: Source/monstdat.cpp:549
 msgctxt "monster"
 msgid "Fangskin"
-msgstr ""
+msgstr "Peau de Croc"
 
 #: Source/monstdat.cpp:550
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr ""
+msgstr "Sorcière de Feu Impie"
 
 #: Source/monstdat.cpp:551
 msgctxt "monster"
 msgid "Blackskull"
-msgstr ""
+msgstr "Crâne Noire"
 
 #: Source/monstdat.cpp:552
 msgctxt "monster"
 msgid "Soulslash"
-msgstr ""
+msgstr "Âme Tranchante"
 
 #: Source/monstdat.cpp:553
 msgctxt "monster"
 msgid "Windspawn"
-msgstr ""
+msgstr "Engeance"
 
 #: Source/monstdat.cpp:554
 msgctxt "monster"
@@ -5245,37 +5245,37 @@ msgstr "Tisse-rouille"
 #: Source/monstdat.cpp:556
 msgctxt "monster"
 msgid "Howlingire the Shade"
-msgstr ""
+msgstr "Hurlant l'Ombre"
 
 #: Source/monstdat.cpp:557
 msgctxt "monster"
 msgid "Doomcloud"
-msgstr ""
+msgstr "Nuage Funeste"
 
 #: Source/monstdat.cpp:558
 msgctxt "monster"
 msgid "Bloodmoon Soulfire"
-msgstr ""
+msgstr "Âme de Feu des Lunes de Sang"
 
 #: Source/monstdat.cpp:559
 msgctxt "monster"
 msgid "Witchmoon"
-msgstr ""
+msgstr "Sorcière de Lune"
 
 #: Source/monstdat.cpp:560
 msgctxt "monster"
 msgid "Gorefeast"
-msgstr ""
+msgstr "Gore-Festin"
 
 #: Source/monstdat.cpp:561
 msgctxt "monster"
 msgid "Graywar the Slayer"
-msgstr ""
+msgstr "Grise-Guerre le Tueur"
 
 #: Source/monstdat.cpp:562
 msgctxt "monster"
 msgid "Dreadjudge"
-msgstr ""
+msgstr "Juge de l'Effroi"
 
 #: Source/monstdat.cpp:563
 msgctxt "monster"
@@ -5295,7 +5295,7 @@ msgstr ""
 #: Source/monstdat.cpp:566
 msgctxt "monster"
 msgid "The Vizier"
-msgstr ""
+msgstr "Le Vizir"
 
 #: Source/monstdat.cpp:568
 msgctxt "monster"
@@ -5310,13 +5310,13 @@ msgstr "Danseur de Chair"
 #: Source/monstdat.cpp:571
 msgctxt "monster"
 msgid "Grimspike"
-msgstr ""
+msgstr "Pic Sinistre"
 
 #. TRANSLATORS: Unique Monster Block end
 #: Source/monstdat.cpp:573
 msgctxt "monster"
 msgid "Doomlock"
-msgstr ""
+msgstr "Serrure de la Fatalité"
 
 #: Source/monster.cpp:3474
 msgid "Animal"
@@ -5393,11 +5393,11 @@ msgstr ""
 #: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
 #: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
 msgid "{:s} has cast an illegal spell."
-msgstr ""
+msgstr "{:s} a lancé un sort interdit."
 
 #: Source/msg.cpp:1529 Source/multi.cpp:815
 msgid "Player '{:s}' (level {:d}) just joined the game"
-msgstr ""
+msgstr "Joueur '{:s}' (niveau  {:d}) a rejoint le jeu"
 
 #: Source/msg.cpp:1826
 msgid "Waiting for game data..."
@@ -5409,28 +5409,28 @@ msgstr "Le jeu s'est terminé"
 
 #: Source/msg.cpp:1840
 msgid "Unable to get level data"
-msgstr ""
+msgstr "Impossible d'acquérir les données du niveau"
 
 #: Source/multi.cpp:195
 msgid "Player '{:s}' just left the game"
-msgstr ""
+msgstr "Joueur '{:s}' a quitté le jeu"
 
 #: Source/multi.cpp:198
 msgid "Player '{:s}' killed Diablo and left the game!"
-msgstr ""
+msgstr "Joueur '{:s}' a tué Diablo et quitté le jeu!"
 
 #: Source/multi.cpp:202
 msgid "Player '{:s}' dropped due to timeout"
-msgstr ""
+msgstr "Joueur '{:s}' a été quitté de le jeu (timeout)"
 
 #: Source/multi.cpp:817
 msgid "Player '{:s}' (level {:d}) is already in the game"
-msgstr ""
+msgstr "Joueur '{:s}' (niveau {:d}) est déjà en jeu"
 
 #. TRANSLATORS: Shrine Name Block
 #: Source/objects.cpp:101
 msgid "Mysterious"
-msgstr ""
+msgstr "Mystérieux"
 
 #: Source/objects.cpp:102
 msgid "Hidden"
@@ -5438,11 +5438,11 @@ msgstr "Caché"
 
 #: Source/objects.cpp:103
 msgid "Gloomy"
-msgstr ""
+msgstr "Cafardeux"
 
 #: Source/objects.cpp:105 Source/objects.cpp:112
 msgid "Magical"
-msgstr ""
+msgstr "Magique"
 
 #: Source/objects.cpp:106
 msgid "Stone"
@@ -5450,23 +5450,23 @@ msgstr "Pierre"
 
 #: Source/objects.cpp:107
 msgid "Religious"
-msgstr ""
+msgstr "Religieux"
 
 #: Source/objects.cpp:108
 msgid "Enchanted"
-msgstr ""
+msgstr "Enchanté"
 
 #: Source/objects.cpp:109
 msgid "Thaumaturgic"
-msgstr ""
+msgstr "Thaumaturgique"
 
 #: Source/objects.cpp:110
 msgid "Fascinating"
-msgstr ""
+msgstr "Fascinant"
 
 #: Source/objects.cpp:111
 msgid "Cryptic"
-msgstr ""
+msgstr "Cryptique"
 
 #: Source/objects.cpp:113
 msgid "Eldritch"
@@ -5474,15 +5474,15 @@ msgstr ""
 
 #: Source/objects.cpp:114
 msgid "Eerie"
-msgstr ""
+msgstr "Étrange"
 
 #: Source/objects.cpp:115
 msgid "Divine"
-msgstr ""
+msgstr "Divin"
 
 #: Source/objects.cpp:117
 msgid "Sacred"
-msgstr ""
+msgstr "Sacré"
 
 #: Source/objects.cpp:118
 msgid "Spiritual"
@@ -5490,51 +5490,51 @@ msgstr "Spirituelle"
 
 #: Source/objects.cpp:119
 msgid "Spooky"
-msgstr ""
+msgstr "Sinistre"
 
 #: Source/objects.cpp:120
 msgid "Abandoned"
-msgstr ""
+msgstr "Abandonné"
 
 #: Source/objects.cpp:121
 msgid "Creepy"
-msgstr ""
+msgstr "Terrifiant"
 
 #: Source/objects.cpp:122
 msgid "Quiet"
-msgstr ""
+msgstr "Calme"
 
 #: Source/objects.cpp:123
 msgid "Secluded"
-msgstr ""
+msgstr "Isolé"
 
 #: Source/objects.cpp:124
 msgid "Ornate"
-msgstr ""
+msgstr "Orné"
 
 #: Source/objects.cpp:125
 msgid "Glimmering"
-msgstr ""
+msgstr "Scintillant"
 
 #: Source/objects.cpp:126
 msgid "Tainted"
-msgstr ""
+msgstr "Entaché"
 
 #: Source/objects.cpp:127
 msgid "Oily"
-msgstr ""
+msgstr "Huileux"
 
 #: Source/objects.cpp:128
 msgid "Glowing"
-msgstr ""
+msgstr "Brillant"
 
 #: Source/objects.cpp:129
 msgid "Mendicant's"
-msgstr ""
+msgstr "De Mendiant"
 
 #: Source/objects.cpp:130
 msgid "Sparkling"
-msgstr ""
+msgstr "Pétillant"
 
 #: Source/objects.cpp:131
 msgid "Town"
@@ -5542,11 +5542,11 @@ msgstr "Ville"
 
 #: Source/objects.cpp:132
 msgid "Shimmering"
-msgstr ""
+msgstr "Chatoyant"
 
 #: Source/objects.cpp:133
 msgid "Solar"
-msgstr ""
+msgstr "Solaire"
 
 #. TRANSLATORS: Shrine Name Block end
 #: Source/objects.cpp:135
@@ -5571,7 +5571,7 @@ msgstr "Le Conte des Horadrim"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:268
 msgid "The Dark Exile"
-msgstr ""
+msgstr "Le Sombre Exile"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:269
@@ -5581,17 +5581,17 @@ msgstr "La Guerre du Péché"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:270
 msgid "The Binding of the Three"
-msgstr ""
+msgstr "L'Emprisonnement des Trois"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:271
 msgid "The Realms Beyond"
-msgstr ""
+msgstr "Les Royaumes Au-Delà"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:272
 msgid "Tale of the Three"
-msgstr ""
+msgstr "Conte des Trois"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:273
@@ -5601,22 +5601,22 @@ msgstr "Le Roi Noir"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:274
 msgid "Journal: The Ensorcellment"
-msgstr ""
+msgstr "Journal: L'Ensorcellement"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:275
 msgid "Journal: The Meeting"
-msgstr ""
+msgstr "Journal: La Réunion"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:276
 msgid "Journal: The Tirade"
-msgstr ""
+msgstr "Journal: La Tirade"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:277
 msgid "Journal: His Power Grows"
-msgstr ""
+msgstr "Journal: Ses Pouvoir Grandissent"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:278
@@ -5626,32 +5626,32 @@ msgstr ""
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:279
 msgid "Journal: The End"
-msgstr ""
+msgstr "Journal: La Fin"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:280
 msgid "A Spellbook"
-msgstr ""
+msgstr "Un Livre de Sort"
 
 #: Source/objects.cpp:5365
 msgid "Crucified Skeleton"
-msgstr ""
+msgstr "Squelette Crucifié"
 
 #: Source/objects.cpp:5369
 msgid "Lever"
-msgstr ""
+msgstr "Levier"
 
 #: Source/objects.cpp:5378
 msgid "Open Door"
-msgstr ""
+msgstr "Porte Ouverte"
 
 #: Source/objects.cpp:5380
 msgid "Closed Door"
-msgstr ""
+msgstr "Porte Fermée"
 
 #: Source/objects.cpp:5382
 msgid "Blocked Door"
-msgstr ""
+msgstr "Porte Bloqué"
 
 #: Source/objects.cpp:5387
 msgid "Ancient Tome"
@@ -5663,7 +5663,7 @@ msgstr "Livre de la Bassesse"
 
 #: Source/objects.cpp:5394
 msgid "Skull Lever"
-msgstr ""
+msgstr "Levier-Crâne"
 
 #: Source/objects.cpp:5397
 msgid "Mythical Book"
@@ -5675,7 +5675,7 @@ msgstr "Petit Coffre"
 
 #: Source/objects.cpp:5405
 msgid "Chest"
-msgstr ""
+msgstr "Coffre"
 
 #: Source/objects.cpp:5410
 msgid "Large Chest"
@@ -5683,15 +5683,15 @@ msgstr "Coffre Large"
 
 #: Source/objects.cpp:5413
 msgid "Sarcophagus"
-msgstr ""
+msgstr "Sarcophage"
 
 #: Source/objects.cpp:5416
 msgid "Bookshelf"
-msgstr ""
+msgstr "Étagère à livres"
 
 #: Source/objects.cpp:5420
 msgid "Bookcase"
-msgstr ""
+msgstr "Bibliothèque"
 
 #: Source/objects.cpp:5425
 msgid "Pod"
@@ -5699,11 +5699,11 @@ msgstr ""
 
 #: Source/objects.cpp:5427
 msgid "Urn"
-msgstr ""
+msgstr "Urne"
 
 #: Source/objects.cpp:5429
 msgid "Barrel"
-msgstr ""
+msgstr "Baril"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
 #: Source/objects.cpp:5433
@@ -5712,7 +5712,7 @@ msgstr "{:s} Sanctuaire"
 
 #: Source/objects.cpp:5437
 msgid "Skeleton Tome"
-msgstr ""
+msgstr "Tome du Squelette"
 
 #: Source/objects.cpp:5440
 msgid "Library Book"
@@ -5724,7 +5724,7 @@ msgstr "Fontaine de Sang"
 
 #: Source/objects.cpp:5446
 msgid "Decapitated Body"
-msgstr ""
+msgstr "Corps Décapité"
 
 #: Source/objects.cpp:5449
 msgid "Book of the Blind"
@@ -5736,7 +5736,7 @@ msgstr "Livre de Sang"
 
 #: Source/objects.cpp:5455
 msgid "Purifying Spring"
-msgstr ""
+msgstr "Printemps Purifiant"
 
 #: Source/objects.cpp:5462 Source/objects.cpp:5486
 msgid "Weapon Rack"
@@ -5744,19 +5744,19 @@ msgstr "Râtelier d'Armes"
 
 #: Source/objects.cpp:5465
 msgid "Goat Shrine"
-msgstr ""
+msgstr "Sanctuaire de la Chèvre"
 
 #: Source/objects.cpp:5468
 msgid "Cauldron"
-msgstr ""
+msgstr "Chaudron"
 
 #: Source/objects.cpp:5471
 msgid "Murky Pool"
-msgstr ""
+msgstr "Piscine Trouble"
 
 #: Source/objects.cpp:5474
 msgid "Fountain of Tears"
-msgstr ""
+msgstr "Fontaine des Larmes"
 
 #: Source/objects.cpp:5477
 msgid "Steel Tome"
@@ -5842,7 +5842,7 @@ msgstr "Classe d'armure"
 
 #: Source/panels/charpanel.cpp:160
 msgid "To hit"
-msgstr ""
+msgstr "Pour heurter"
 
 #: Source/panels/charpanel.cpp:162
 msgid "Damage"
@@ -5871,7 +5871,7 @@ msgstr "Résistance à la Foudre"
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
 #: Source/panels/mainpanel.cpp:111
 msgid "voice"
-msgstr ""
+msgstr "voix"
 
 #: Source/panels/mainpanel.cpp:87
 msgid "char"
@@ -5900,11 +5900,11 @@ msgstr "sorts"
 #: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
 msgid "mute"
-msgstr ""
+msgstr "rendre muet"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
-msgstr ""
+msgstr "Échec de l'ouverture de l'archive du joueur (écriture)"
 
 #: Source/pfile.cpp:385
 msgid "Unable to open archive"
@@ -5944,6 +5944,9 @@ msgid ""
 "\n"
 "Make sure devilutionx.mpq is in the game folder and that it is up to date."
 msgstr ""
+"Échec du chargement des ressources de l'interface (UI).\n"
+"\n"
+"Assurez-vous que devilutionx.mpq soit bien dans le dossier du jeu et à jour."
 
 #: Source/qol/xpbar.cpp:125
 msgid "Level {:d}"
@@ -5996,7 +5999,7 @@ msgstr "Valeur"
 
 #: Source/quests.cpp:52
 msgid "Warlord of Blood"
-msgstr "Seigneur-Guerrier de Sang"
+msgstr "Seigneur de Guerre de Sang"
 
 #: Source/quests.cpp:53
 msgid "The Curse of King Leoric"
@@ -6009,7 +6012,7 @@ msgstr "Réserve d'Eau Empoisonnée"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:55 Source/quests.cpp:90
 msgid "The Chamber of Bone"
-msgstr "La chambre d'os"
+msgstr "La Chambre d'Os"
 
 #: Source/quests.cpp:56
 msgid "Archbishop Lazarus"
@@ -6017,7 +6020,7 @@ msgstr "Archevêque Lazarus"
 
 #: Source/quests.cpp:57
 msgid "Grave Matters"
-msgstr ""
+msgstr "Affaires de Tombe"
 
 #: Source/quests.cpp:58
 msgid "Farmer's Orchard"
@@ -6033,11 +6036,11 @@ msgstr "Marchand errant"
 
 #: Source/quests.cpp:61
 msgid "The Defiler"
-msgstr ""
+msgstr "Le Profanateur"
 
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
-msgstr ""
+msgstr "Pierre Angulaire du Monde"
 
 #. TRANSLATORS: Quest Name Block end
 #: Source/quests.cpp:64
@@ -6075,7 +6078,7 @@ msgstr "L'Antre du Roi Squelette"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
-msgstr "Chambre d'os"
+msgstr "Chambre d'Os"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
@@ -6159,7 +6162,7 @@ msgstr "Vague de Flammes"
 #: Source/spelldat.cpp:31
 msgctxt "spell"
 msgid "Doom Serpents"
-msgstr ""
+msgstr "Serpents de la Fatalité"
 
 #: Source/spelldat.cpp:32
 msgctxt "spell"
@@ -6204,7 +6207,7 @@ msgstr "Apocalypse"
 #: Source/spelldat.cpp:40
 msgctxt "spell"
 msgid "Etherealize"
-msgstr ""
+msgstr "Éthéré"
 
 #: Source/spelldat.cpp:41
 msgctxt "spell"
@@ -6269,12 +6272,12 @@ msgstr "Mana"
 #: Source/spelldat.cpp:53
 msgctxt "spell"
 msgid "the Magi"
-msgstr ""
+msgstr "le Mage"
 
 #: Source/spelldat.cpp:54
 msgctxt "spell"
 msgid "the Jester"
-msgstr ""
+msgstr "le Bouffon"
 
 #: Source/spelldat.cpp:55
 msgctxt "spell"
@@ -6289,7 +6292,7 @@ msgstr "Immolation"
 #: Source/spelldat.cpp:57
 msgctxt "spell"
 msgid "Warp"
-msgstr ""
+msgstr "Chaîne"
 
 #: Source/spelldat.cpp:58
 msgctxt "spell"
@@ -7337,7 +7340,7 @@ msgstr ""
 "Vous deviendrez un serviteur éternel des seigneurs des ténèbres si vous "
 "périssez dans ce domaine maudit.\n"
 " \n"
-"Entrez dans la Chambre des Os à vos risques et périls."
+"Entrez dans la Chambre d'Os à vos risques et périls."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -7470,7 +7473,7 @@ msgid ""
 "slay him so that our souls may finally rest..."
 msgstr ""
 "S'il vous plait écoutez moi. L'archevêque Lazarus, il nous a conduits ici "
-"pour retrouver le prince perdu. Le traitre nous a entraînés dans un piège ! "
+"pour retrouver le prince perdu. Le chien nous a entraînés dans un piège ! "
 "Maintenant, tout le monde est mort... tué par un démon qu'il a appelé le "
 "Boucher. Vengez-nous! Trouvez ce Boucher et tuez-le afin que nos âmes "
 "puissent enfin se reposer..."
@@ -7557,6 +7560,11 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
+"C'est un lieu de grande angoisse et de terreur, et sert donc bien son "
+"maître.\n"
+" \n"
+"Avancez prudemment ou vous resterez peut-être beaucoup plus longtemps que "
+"prévu."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -7565,6 +7573,9 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
+"Voyons, m'avez-vous acheté quelque chose ? Non. M'avez-vous donné de "
+"l'argent pour vous en parler ? Non. Allez-vous partir et parler au conteur "
+"qui vit pour ce genre de chose ? Oui."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -7578,6 +7589,14 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
+"Vous prétendez avoir parlé avec Lachdanan ? Ce fut grand héros au cours de "
+"sa vie. Lachdanan était un homme honorable et juste qui a fidèlement servi "
+"son roi pendant des années. Mais bien sûr, vous le savez déjà.\n"
+" \n"
+"De ceux qui ont été pris sous l'emprise de la Malédiction du Roi, Lachdanan "
+"serait le moins susceptible de se soumettre aux ténèbres sans se battre, "
+"donc je suppose que votre histoire pourrait être vraie. Si j'étais à votre "
+"place, mon ami, je trouverais un moyen de le libérer de sa torture."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
@@ -7585,6 +7604,8 @@ msgid ""
 "You speak of a brave warrior long dead! I'll have no such talk of speaking "
 "with departed souls in my inn yard, thank you very much."
 msgstr ""
+"Vous parlez d'un brave guerrier mort depuis longtemps ! Je ne parlerai avec "
+"des âmes décédées dans la cour de mon auberge, merci beaucoup."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:160
@@ -7594,6 +7615,11 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
+"Un élixir doré, dites-vous. Je n'ai jamais concocté une potion de cette "
+"couleur auparavant, donc je ne peux pas vous dire comment cela vous "
+"affecterait si vous essayiez de la boire. En tant que guérisseur, je vous "
+"conseille fortement, si vous trouvez un tel élixir, de faire ce que demande "
+"Lachdanan et de NE PAS essayer de l'utiliser."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
@@ -7601,6 +7627,8 @@ msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
 msgstr ""
+"Je n'ai jamais entendu parler d'un Lachdanan auparavant. Je suis désolé, "
+"mais je ne pense pas pouvoir vous être d'une grande aide."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -7610,6 +7638,10 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
+"Si c'est réellement Lachdanan que vous avez rencontré, alors je vous "
+"conseillerais de l'aider. J'ai eu affaire à lui à plusieurs reprises et je "
+"l'ai trouvé de nature honnête et loyale. La malédiction qui s'est abattu sur "
+"les partisans du roi Leoric a dû être encore plus terrible envers lui."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
@@ -7617,6 +7649,9 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
+" Lachdanan est mort. Tout le monde le sait, et vous ne pouvez pas me tromper "
+"en me faisant penser autrement. Vous ne pouvez pas parler aux morts. Je le "
+"sais!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -7626,6 +7661,11 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
+"Vous aller peut-être rencontrer des personnes piégées dans le Labyrinthe, "
+"comme Lachdanan.\n"
+" \n"
+"Je sens en lui de l'honneur et une grande culpabilité. Aidez-le, et vous "
+"aiderez tout Tristram."
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -7635,6 +7675,11 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
+"Attendez, laissez-moi deviner. Cain fut englouti dans une gigantesque "
+"fissure qui s'ouvrit sous lui. Il a été incinéré dans une boule de feu de "
+"l'enfer, et ne peut plus répondre à vos questions. Oh, ce n'est pas ce qui "
+"s'est passé ? Alors je suppose que vous allez acheter quelque chose ou bien "
+"passer votre chemin."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -7651,6 +7696,19 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
+"S'il vous plaît, ne me tuez pas, écoutez-moi juste. J'étais autrefois "
+"capitaine des chevaliers du roi Leoric, faisant respecter les lois de ce "
+"pays avec justice et honneur. Puis sa sombre malédiction est tombée sur nous "
+"pour le rôle que nous avons joué dans sa mort tragique. Alors que mes "
+"compagnons chevaliers succombaient à leur destin, je me suis enfui de la "
+"chambre funéraire du roi, à la recherche d'un moyen de me libérer de la "
+"malédiction. J'ai échoué...\n"
+" \n"
+"J'ai entendu parler d'un Élixir Doré qui pourrait lever la malédiction et "
+"permettre à mon âme de se reposer, mais je n'ai pas réussi à le trouver. Ma "
+"force décline maintenant, et avec elle mon humanité. S'il vous plaît, aidez-"
+"moi et trouvez l'élixir. Je récompenserai vos efforts - je le jure sur mon "
+"honneur."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
@@ -7658,6 +7716,8 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
 msgstr ""
+"Vous n'avez pas trouvé l'Élixir Doré. Je crains d'être condamné pour "
+"l'éternité. S'il vous plaît, continuez d'essayer..."
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -7668,6 +7728,11 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
+"Vous avez sauvé mon âme de la damnation, et je vous en suis redevable. S'il "
+"y a un jour un moyen de vous rembourser d'outre-tombe, je le trouverai, mais "
+"pour l'instant - prenez mon casque. Dans le voyage que je m'apprête à "
+"entreprendre, je n'en aurais que peu l'utilité. Puisse-t-il vous protéger "
+"contre les puissances obscures ci-dessous. Allez avec la Lumière, mon ami..."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -7681,6 +7746,14 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
+"Griswold parle de l'Enclume de Fureur - un artefact légendaire longtemps "
+"recherché, mais jamais trouvé. Fabriquée à partir des os métalliques issue "
+"d'une fosse de démons Rasoir, l'Enclume de Fureur a été perçu autour des "
+"crânes des cinq mages les plus puissants du monde souterrain. Sculptée de "
+"runes de pouvoir et de chaos, toute arme ou armure forgée sur cette Enclume "
+"sera immergée dans le royaume du Chaos, l'imprégnant de propriétés magiques. "
+"On dit que la nature imprévisible du Chaos rend difficile de savoir quel "
+"sera le résultat de cette forge..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -7688,6 +7761,8 @@ msgid ""
 "Don't you think that Griswold would be a better person to ask about this? "
 "He's quite handy, you know."
 msgstr ""
+"Ne pensez-vous pas que Griswold serait une meilleure personne à qui poser "
+"des questions sur ce sujet ? Il est assez manuel, vous savez."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:182
@@ -7697,6 +7772,9 @@ msgid ""
 "However, in this matter, you would be better served to speak to either "
 "Griswold or Cain."
 msgstr ""
+"Si vous aviez recherché des informations sur le Bâton de Guérison ou le "
+"Calice d'Argent de Purification, j'aurais pu vous aider, mon ami. Cependant, "
+"dans cette affaire, vous feriez mieux de parler à Griswold ou à Cain."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:184
@@ -7706,6 +7784,11 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
+"Quand nous étions jeunes, le père de Griswold avait l'habitude de parler à "
+"certains d'entre nous d'une enclume géante qui servait à fabriquer des armes "
+"puissantes. Il a dit que lorsqu'un marteau était frappé sur cette enclume, "
+"le sol tremblait avec une grande fureur. Chaque fois que la terre bouge, je "
+"me rappelle cette histoire."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -7727,6 +7810,24 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
+"Salutations! C'est toujours un plaisir de voir un de mes meilleurs clients ! "
+"Je sais que vous vous êtes aventuré plus profondément dans le Labyrinthe, et "
+"il y a une histoire qu'on m'a racontée que vous feriez mieux d'écouter...\n"
+" \n"
+"Un des hommes qui est revenu du Labyrinthe m'a parlé d'une enclume mystique "
+"qu'il avait rencontrée lors de son évasion. Sa description m'a rappelé des "
+"légendes que j'avais entendues dans ma jeunesse au sujet d'une Forge de "
+"l'Enfer ardente où de puissantes armes magiques sont fabriquées. La légende "
+"disait qu'au plus profond de la Forge de l'Enfer reposait l'Enclume de "
+"Fureur ! Cette Enclume contenait en elle l'essence même du monde souterrain "
+"démoniaque...\n"
+" \n"
+"On dit que toute arme fabriquée sur l'enclume ardente est dotée d'un grand "
+"pouvoir. Si cette Enclume est bien l'Enclume de Fureur, je pourrais peut-"
+"être vous fabriquer une arme capable de vaincre même le plus sombre des "
+"seigneurs de l'enfer !\n"
+" \n"
+"Trouvez l'Enclume pour moi et je me mettrai au travail !"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -7735,6 +7836,9 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
+"Encore rien, hein ? Eh bien, continuez à chercher. Une arme forgée sur "
+"l'Enclume pourrait être votre meilleur espoir, et je suis sûr que je peux "
+"vous en faire une légendaire."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -7743,6 +7847,10 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
+"J'ai du mal à y croire ! C'est l'Enclume de Fureur - bon travail, mon ami. "
+"Maintenant, nous allons montrer à ces chiens qu'il n'y a pas d'armes en "
+"enfer plus meurtrières que celles fabriquées par les hommes ! Prenez ceci et "
+"que la Lumière vous protège."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -7750,6 +7858,8 @@ msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
 msgstr ""
+"Griswold ne peut pas vendre son enclume. Que ferait-il alors ? Et je serais "
+"aussi en colère si quelqu'un prenait mon enclume !"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:194
@@ -7759,6 +7869,11 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
+"Il existe de nombreux artefacts dans le Labyrinthe qui détiennent des "
+"pouvoirs au-delà de la compréhension des mortels. Certains d'entre eux "
+"détiennent un pouvoir fantastique qui peut être utilisé par la Lumière ou "
+"les Ténèbres. Sécuriser l'Enclume pourrait faire pencher le cours de la "
+"guerre du péché vers la lumière."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -7766,6 +7881,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
+"Si vous deviez trouver cet artefact pour Griswold, cela pourrait mettre un "
+"sérieux frein à mes affaires ici. Awwww, vous ne le trouverez jamais."
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -7788,6 +7905,24 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
+"La Porte du Sang et les Salles du Feu sont des repères d'origine mystique. "
+"Où que se trouve ce livre que vous lisez, c'est sûrement un lieu d'une "
+"grande puissance.\n"
+" \n"
+"Les légendes parlent d'un piédestal qui est sculpté dans de la pierre "
+"d'obsidienne et a une mare de sang bouillant au sommet de sa surface "
+"incrustée d'os. Il y a aussi des allusions aux Pierres de Sang qui ouvriront "
+"une porte qui garde un trésor antique...\n"
+" \n"
+"La nature de ce trésor est entourée de spéculations, mon ami, mais on dit "
+"que l'ancien héros Arkaine a placé l'armure sacrée Valor dans un coffre "
+"secret. Arkaine a été le premier mortel à inverser le cours de la guerre du "
+"péché et à chasser les légions des ténèbres jusqu'aux enfers ardents.\n"
+" \n"
+"Juste avant la mort d'Arkaine, son armure fut cachée dans un coffre-fort "
+"secret. Il est dit que lorsque cette armure sacrée sera à nouveau "
+"nécessaire, un héros se lèvera pour enfiler Valor une fois de plus. Peut-"
+"être êtes-vous ce héros..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -7796,6 +7931,9 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
+"Chaque enfant entend l'histoire du guerrier Arkaine et de son armure "
+"mystique connue sous le nom de Valor. Si vous pouviez trouver son lieu de "
+"repos, vous seriez bien protégé contre le mal dans le Labyrinthe."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -7804,6 +7942,9 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
+"Hmm... cela ressemble à quelque chose dont je devrais me souvenir, mais j'ai "
+"été tellement occupé à apprendre de nouveaux remèdes et à créer de meilleurs "
+"élixirs que j'ai dû oublier. Désolé..."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -7811,6 +7952,9 @@ msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
 msgstr ""
+"L'histoire de l'armure magique appelée Valor est quelque chose dont j'ai "
+"souvent entendu les garçons parler. Vous feriez mieux de demander à l'un des "
+"hommes du village."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -7820,6 +7964,10 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
+"L'armure connue sous le nom de Valor pourrait être ce qui fera pencher la "
+"balance en votre faveur. Je peux vous dire que beaucoup l'ont cherché - moi "
+"y compris. Arkaine l'a bien caché, mon ami, et il faudra plus qu'un peu de "
+"chance pour percer les secrets qui l'ont gardé caché ces nombreuses années."
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
@@ -7834,6 +7982,10 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
+"Si vous trouvez ces Pierres de Sang, utilisez-les avec précaution.\n"
+" \n"
+"Le chemin est semé d'embûches et votre seul espoir réside en votre confiance "
+"en vous-même."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -7843,6 +7995,10 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
+"Vous avez l'intention de trouver l'armure connue sous le nom de Valor ?\n"
+" \n"
+"Personne n'a jamais découvert où Arkaine a caché le truc, et si mes contacts "
+"ne l'ont pas trouvé, je doute sérieusement que vous y arriviez."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -7859,6 +8015,18 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
+"Je ne connais qu'une seule légende qui parle d'un guerrier tel que vous le "
+"décrivez. Son histoire se trouve dans les anciennes chroniques de la Guerre "
+"du Péché...\n"
+" \n"
+"Taché par mille ans de guerre, de sang et de mort, le Seigneur de Guerre de "
+"Sang se dresse sur une montagne de victimes en lambeaux. Sa lame sombre crie "
+"une malédiction noire aux vivants ; une invitation torturée à tous ceux qui "
+"se présenteraient devant cet Exécuteur de l'Enfer.\n"
+" \n"
+"Il est également écrit que même s'il était autrefois un mortel qui a "
+"combattu aux côtés de la Légion des Ténèbres pendant la guerre du péché, il "
+"a perdu son humanité à cause de sa faim insatiable de sang."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -7867,6 +8035,9 @@ msgid ""
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
 msgstr ""
+"Je crains de n'avoir jamais entendu parler d'un guerrier aussi vicieux, bon "
+"maître. J'espère que vous n'aurez pas à le combattre, car il semble "
+"extrêmement dangereux."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
@@ -7874,6 +8045,8 @@ msgid ""
 "Cain would be able to tell you much more about something like this than I "
 "would ever wish to know."
 msgstr ""
+"Cain sera capable de vous en dire beaucoup plus sur ce genre de chose que je "
+"ne souhaiterais jamais en savoir."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:219
@@ -7881,6 +8054,8 @@ msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
 msgstr ""
+"Si vous devez combattre un adversaire aussi féroce, que la Lumière soit "
+"votre guide et votre défenseur. Je vous garderai dans mes pensées."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
@@ -7888,6 +8063,8 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
+"Des légendes sombres et terribles entourent l'unique Seigneur de Guerre de "
+"Sang. Soyez bien préparé, mon ami, car il ne montre ni pitié ni quartier."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -7896,6 +8073,9 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
 msgstr ""
+"Vous devez toujours parler de Sang ? Qu'en est-il des fleurs, du soleil et "
+"de cette jolie fille qui apporte les boissons. Écoutez, mon ami, vous êtes "
+"obsessionnel, vous le savez ça ?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -7904,6 +8084,9 @@ msgid ""
 "years knowing only warfare. I am sorry... I can not see if you will defeat "
 "him."
 msgstr ""
+"Ses prouesses avec une lame sont impressionnantes et il a vécu pendant des "
+"milliers d'années en ne connaissant que la guerre. Je suis désolé... Je "
+"n'arrive pas à voir si vous le vaincrez."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:227
@@ -7911,6 +8094,9 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
+"Je n'ai jamais eu affaire à ce Seigneur de Guerre dont vous parlez, mais il "
+"semble qu'il a besoin de beaucoup d'épées. Ça ne me dérangerait pas de "
+"ravitailler ses armées..."
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
@@ -7918,6 +8104,8 @@ msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied."
 msgstr ""
+"Ma lame chante pour ton sang, mortel, et mes sombres maîtres ne le nieront "
+"pas."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -7928,6 +8116,11 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
+"Griswold parle de la Pierre Céleste qui était destinée à l'enclave située à "
+"l'est. Elle y était emmené pour une étude plus approfondie. Cette pierre "
+"brillait d'une énergie qui accordait en quelque sorte une vision plus grande "
+"qu'un homme normal ne pouvait posséder. Je ne sais pas quels secrets elle "
+"recèle, mon ami, mais trouver cette pierre serait certainement très précieux."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -7937,6 +8130,10 @@ msgid ""
 "sweetbreads that Garda has just finished baking. Shame what happened to "
 "them..."
 msgstr ""
+"La caravane s'est arrêtée ici pour prendre des provisions pour leur voyage "
+"vers l'est. Je leur ai vendu toute une gamme de fruits frais et d'excellents "
+"ris de veau que Garda venait de finir de cuire. Dommage ce qui leur est "
+"arrivé..."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -7945,6 +8142,9 @@ msgid ""
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
 msgstr ""
+"Je ne sais pas ce qu'ils pensaient pouvoir voir avec cette pierre, mais je "
+"dirai ceci. Si des rochers tombent du ciel, vous feriez mieux de faire "
+"attention !"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:237
@@ -7956,6 +8156,12 @@ msgid ""
 "I don't see how you could hope to find anything that they would have been "
 "carrying."
 msgstr ""
+"Eh bien, une caravane de personnes très importantes s'est arrêtée ici, mais "
+"c'était il y a assez longtemps. Ils avaient des accents étranges et "
+"commençaient un long voyage, si je me souviens bien.\n"
+" \n"
+"Je ne vois pas comment vous pourriez espérer trouver quoi que ce soit qu'ils "
+"auraient emporté."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:239
@@ -7968,6 +8174,13 @@ msgid ""
 "found. If you should find it, I believe that I can fashion something useful "
 "from it."
 msgstr ""
+"Restez un instant - j'ai une histoire que vous pourriez trouver "
+"intéressante. Une caravane à destination des royaumes de l'Est est passée "
+"par ici il y a quelque temps. Elle transportait soi-disant un morceau du "
+"ciel qui était tombé sur terre ! La caravane a été prise en embuscade par "
+"des cavaliers masqués juste au nord d'ici le long de la chaussée. J'ai "
+"cherché dans l'épave ce rocher céleste, mais il était introuvable. Si vous "
+"le trouvez, je crois que je peux en faire quelque chose d'utile."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
@@ -7975,6 +8188,8 @@ msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
 msgstr ""
+"J'attends toujours que vous m'apportiez cette pierre venue du ciel. Je sais "
+"que je peux en faire quelque chose de puissant."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -7984,6 +8199,11 @@ msgid ""
 "Ah, Here you are. I arranged pieces of the stone within a silver ring that "
 "my father left me. I hope it serves you well."
 msgstr ""
+"Laisse-moi voir ça - oui... oui, c'est ce que je pensais. Accordez moi un "
+"instant...\n"
+" \n"
+"Ah, voilà. J'ai disposé des morceaux de la pierre dans une bague en argent "
+"que mon père m'a laissée. J'espère qu'elle vous servira bien."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
@@ -7992,6 +8212,9 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
+"J'avais une belle bague; elle était vraiment cher, avec du bleu et du vert "
+"et du rouge et de l'argent. J'me souviens pas de ce qui lui est arrivé, "
+"cependant. Cette bague me manque vraiment..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -8000,6 +8223,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
+"La Pierre Céleste est très puissante, et s'il n'y avait que Griswold qui "
+"vous proposait de la trouver, je l'empêcherais. Il exploiterais ses pouvoirs "
+"et son utilisation sera pour notre bien à tous."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -8008,6 +8234,9 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
+"Si quelqu'un peut faire quelque chose avec ce rocher, Griswold peut le "
+"faire. Il sait ce qu'il fait, et autant j'essaye de lui voler ses clients, "
+"autant je respecte la qualité de son travail."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -8016,6 +8245,10 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
+"La sorcière Adria cherche un champignon noir ? J'en sais autant sur les "
+"champignons noirs que sur les harengs rouges. Peut-être que Pepin le "
+"Guérisseur pourrait vous en dire plus, mais c'est quelque chose que l'on ne "
+"trouve dans aucune de mes histoires ou de mes livres."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -8025,6 +8258,10 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
+"Permettez-moi de dire ceci. Garda et moi ne servirions jamais, JAMAIS de "
+"champignons noirs à nos invités d'honneur. Si Adria veut des champignons "
+"dans son ragoût, c'est son affaire, mais je ne peux pas vous aider à en "
+"trouver. Champignons noirs... dégoûtants !"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:255
@@ -8035,6 +8272,12 @@ msgid ""
 "that its alchemy holds. If you can remove the brain of a demon when you kill "
 "it, I would be grateful if you could bring it to me."
 msgstr ""
+"La sorcière m'a dit que vous cherchiez le cerveau d'un démon pour m'aider à "
+"créer mon élixir. Il devrait être d'une grande valeur pour tous ceux qui "
+"sont blessés par ces bêtes immondes, si seulement je pouvais découvrir les "
+"secrets que je soupçonne que son alchimie détient. Si vous pouviez retirer "
+"le cerveau d'un démon lorsque vous en tuerez, je vous serais reconnaissant "
+"de pouvoir me l'apporter."
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -8043,6 +8286,9 @@ msgid ""
 "without this, but it can't hurt to have this to study. Would you please "
 "carry this to the witch? I believe that she is expecting it."
 msgstr ""
+"Excellent, c'est exactement ce que j'avais en tête. J'ai pu finir l'élixir "
+"sans ça, mais ça ne peut pas faire de mal de l'étudier. Voudriez-vous s'il "
+"vous plaît porter ceci à la sorcière ? Je crois qu'elle l'attend."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:259
@@ -8050,6 +8296,8 @@ msgid ""
 "I think Ogden might have some mushrooms in the storage cellar. Why don't you "
 "ask him?"
 msgstr ""
+"Je pense qu'Ogden pourrait avoir des champignons dans la cave de stockage. "
+"Pourquoi vous ne lui demandez pas ?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:261
@@ -8058,6 +8306,9 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
+"Si Adria n'en a pas, vous pouvez parier que c'est une chose rare. Je ne peux "
+"pas vous offrir plus d'aide, mais cela ressemble à... un énorme champignon "
+"gargantuesque, gonflé et gonflé ! Eh bien, bonne chasse, je suppose."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -8065,6 +8316,8 @@ msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
+"Ogden mélange un champignon noir, mais je tombe malade si je bois ça. "
+"Écoutez, écoutez... voici le secret - la modération est la clé !"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -8073,6 +8326,10 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
+"Qu'avons-nous ici ? Intéressant, cela ressemble à un livre de réactifs. "
+"Gardez les yeux ouverts pour un champignon noir. Il devrait être assez grand "
+"et facile à identifier. Si vous le trouvez, apportez-le-moi, vous voulez "
+"bien ?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -8080,6 +8337,9 @@ msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on."
 msgstr ""
+"C'est d'un gros champignon noir dont j'ai besoin. Maintenant, filez et "
+"récupérez-le-moi afin que je puisse l'utiliser pour une concoction spéciale "
+"sur laquelle je travaille."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:269
@@ -8090,6 +8350,11 @@ msgid ""
 "intends to make an elixir from it. If you help him find what he needs, "
 "please see if you can get a sample of the elixir for me."
 msgstr ""
+"Oui, ce sera parfait pour une infusion que je crée. Soit dit en passant, le "
+"guérisseur cherche un cerveau de démon afin de pouvoir soigner ceux qui ont "
+"été affligés par leur venin empoisonné. Je crois qu'il a l'intention d'en "
+"faire un élixir. Si vous l'aidez à trouver ce dont il a besoin, voyez si "
+"vous pouvez me procurer un échantillon de l'élixir."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:271
@@ -8099,6 +8364,10 @@ msgid ""
 "that grotesque organ that you are holding, and then bring me the elixir. "
 "Simple when you think about it, isn't it?"
 msgstr ""
+"Pourquoi avez-vous amené ça ici ? Je n'ai pas besoin d'un cerveau de démon "
+"pour l'instant. J'ai besoin d'un peu de l'élixir sur lequel travaille le "
+"Guérisseur. Il a besoin de cet organe grotesque que vous tenez, et ensuite "
+"apportez-moi l'élixir. Simple quand on y pense, n'est-ce pas ?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (Quest End)
 #: Source/textdat.cpp:273
@@ -8106,6 +8375,8 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
+"Quoi? Maintenant, vous m'apportez cet élixir du guérisseur ? J'ai pu finir "
+"mon infusion sans elle. Pourquoi ne le garderiez-vous pas simplement..."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:275
@@ -8113,6 +8384,8 @@ msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful?"
 msgstr ""
+"Je n'ai pas de champignons d'aucune taille ou couleur que ce soit à vendre. "
+"Que diriez-vous de quelque chose d'un peu plus utile?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:277
@@ -8137,6 +8410,27 @@ msgid ""
 "before the stars align, for we may never have a chance to rid the world of "
 "his evil again!"
 msgstr ""
+"Ainsi, la légende de la carte est réelle. Même moi, je n'y ai jamais "
+"vraiment cru ! Je suppose qu'il est temps que je vous dise la vérité sur qui "
+"je suis, mon ami. Voyez-vous, je ne suis pas seulement ce dont j'ai "
+"l'air...\n"
+" \n"
+"Mon vrai nom est Deckard Cain l'Ancien, et je suis le dernier descendant "
+"d'une ancienne Confrérie qui se consacrait à la sauvegarde des secrets d'un "
+"mal éternel. Un mal qui bien évidemment est désormais libéré.\n"
+" \n"
+"Le mal contre lequel vous vous battez est le sombre Seigneur de la Terreur - "
+"connu des hommes mortels sous le nom de Diablo. C'est lui qui a été "
+"emprisonné dans le Labyrinthe il y a plusieurs siècles. La carte que vous "
+"détenez maintenant a été créée il y a longtemps pour marquer le moment où "
+"Diablo ressusciterait de son emprisonnement. Lorsque les deux étoiles sur "
+"cette carte s'aligneront, Diablo sera au sommet de sa puissance. Il sera "
+"presque invincible...\n"
+" \n"
+"Vous êtes maintenant dans une course contre la montre, mon ami ! Trouvez "
+"Diablo et détruisez-le avant que les étoiles ne s'alignent, car nous "
+"n'aurons peut-être plus jamais l'occasion de débarrasser le monde de son "
+"mal !"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:279
@@ -8144,6 +8438,8 @@ msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
 msgstr ""
+"Notre temps presse ! Je sens que son pouvoir obscur augmente et vous seul "
+"pouvez l'empêcher d'atteindre sa pleine puissance."
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -8153,6 +8449,11 @@ msgid ""
 "and you will need all your courage and strength to defeat him. May the Light "
 "protect and guide you, my friend. I will help in any way that I am able."
 msgstr ""
+"Je suis sûr que vous avez fait de votre mieux, mais je crains que même votre "
+"force et votre volonté ne soient pas suffisantes. Diablo est maintenant au "
+"sommet de sa puissance terrestre, et vous aurez besoin de tout votre courage "
+"et de votre force pour le vaincre. Que la Lumière vous protège et vous "
+"guide, mon ami. Je vais aider de toutes les manières possibles."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (currently unused)
 #: Source/textdat.cpp:283
@@ -8161,6 +8462,10 @@ msgid ""
 "that I would know anything? It sounds like this is a very serious matter. "
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
+"Si la sorcière ne peut pas vous aider et vous suggère de voir Cain, qu'est-"
+"ce qui vous fait croire que je saurais quelque chose ? On dirait que c'est "
+"une affaire très sérieuse. Vous devriez vous dépêcher et aller voir le "
+"conteur comme le suggère Adria."
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -8171,6 +8476,12 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
+"Je ne peux pas faire grand-chose de l'écriture sur cette carte, mais peut-"
+"être qu'Adria ou Cain pourraient vous aider à déchiffrer à quoi cela fait "
+"référence.\n"
+" \n"
+"Je peux voir que c'est une carte des étoiles dans notre ciel, mais au delà, "
+"cela dépasse mes talents."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
@@ -8180,6 +8491,11 @@ msgid ""
 "Cain is very knowledgeable about ancient writings, and that is easily the "
 "oldest looking piece of paper that I have ever seen."
 msgstr ""
+"La meilleure personne à qui poser des questions sur ce genre de chose est "
+"notre conteur.\n"
+" \n"
+"Cain connaît très bien les écrits anciens, et c'est de loin le plus vieux "
+"morceau de papier que j'aie jamais vu."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold (currently unused)
 #: Source/textdat.cpp:289
@@ -8188,6 +8504,9 @@ msgid ""
 "have no idea how to read this, Cain or Adria may be able to provide the "
 "answers that you seek."
 msgstr ""
+"Je n'ai jamais vu de carte de ce genre auparavant. Où l'avez-vous eu ? Bien "
+"que je n'aie aucune idée de comment lire ceci, Cain ou Adria pourraient être "
+"en mesure de fournir les réponses que vous cherchez."
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
@@ -8195,6 +8514,8 @@ msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
 msgstr ""
+"Écoutez, approchez vous. Je ne sais pas si vous savez ce que je sais, mais "
+"vous avez vraiment quelqu'chose là. C'te carte."
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -8203,6 +8524,10 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller..."
 msgstr ""
+"Oh, j'ai bien peur que cela ne présage rien de bon du tout. Cette carte des "
+"étoiles laisse présager un grand désastre, mais ce n'est pas à moi de "
+"raconter ses secrets. Le moment est venu pour vous d'avoir une conversation "
+"très sérieuse avec le Conteur..."
 
 #. TRANSLATORS: Quest dialog spoken by Wirt (currently unused)
 #: Source/textdat.cpp:295
@@ -8211,12 +8536,17 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
+"J'ai cherché une carte, mais ce n'est certainement pas ça. Vous devriez "
+"montrer ça à Adria - elle peut probablement vous dire ce que c'est. Je dirai "
+"une chose ; cela a l'air vieux, et vieux signifie généralement précieux."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:297
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
 msgstr ""
+"S'il vous plaît, pas de mal. Pas tuer. Restez en vie et prochaine fois, "
+"apporter bien à vous."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -8226,6 +8556,10 @@ msgid ""
 " \n"
 "You take this as proof I keep word..."
 msgstr ""
+"Quelque chose pour vous que moi en train de faire. Encore une fois, pas tuer "
+"Gharbad. Vivre et donner du bien.\n"
+" \n"
+"Prends ça comme preuve que moi tenir parole..."
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:301
@@ -8236,11 +8570,16 @@ msgid ""
 " \n"
 "No pain and promise I keep!"
 msgstr ""
+"Rien encore! Presque fini.\n"
+" \n"
+"Très puissant, très fort. Vis! Vis!\n"
+" \n"
+"Pas douleur et promesse tenir!"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak (Hostile)
 #: Source/textdat.cpp:303
 msgid "This too good for you. Very Powerful! You want - you take!"
-msgstr ""
+msgstr "Trop bien pour toi. Très puissant! Vous voulez - vous prenez !"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (annoyed / Hostile)
 #: Source/textdat.cpp:305
@@ -8248,16 +8587,18 @@ msgid ""
 "What?! Why are you here? All these interruptions are enough to make one "
 "insane. Here, take this and leave me to my work. Trouble me no more!"
 msgstr ""
+"Quoi?! Pourquoi êtes-vous ici? Toutes ces interruptions suffisent à rendre "
+"fou. Tenez, prenez ceci et laissez-moi travailler. Ne me dérangez plus !"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
 #: Source/textdat.cpp:307
 msgid "Arrrrgh! Your curiosity will be the death of you!!!"
-msgstr ""
+msgstr "Arrrrgh ! Votre curiosité sera votre mort !!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen..."
-msgstr ""
+msgstr "Bonjour mon ami. Restez un moment et écoutez..."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:309
@@ -8267,6 +8608,11 @@ msgid ""
 " \n"
 "Read them carefully for they can tell you things that even I cannot."
 msgstr ""
+"Pendant que vous vous aventurez plus profondément dans le Labyrinthe, vous y "
+"trouverez peut-être des livres de grand savoir.\n"
+" \n"
+"Lisez-les attentivement car ils peuvent vous apprendre des choses que même "
+"moi, j'ignore."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:311
@@ -8276,6 +8622,10 @@ msgid ""
 "and questions to which you seek knowledge, seek me out and I will tell you "
 "what I can."
 msgstr ""
+"Je connais de nombreux mythes et légendes qui peuvent contenir des réponses "
+"aux questions qui pourront survenir lors de vos voyages dans le Labyrinthe. "
+"Si vous rencontrez des défis et des questions pour lesquelles vous cherchez "
+"des réponses, venez me voir et je vous dirai ce que je sais."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:313
@@ -8286,6 +8636,12 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill."
 msgstr ""
+"Griswold - un homme plein d'action et d'un grand courage. Je parie qu'il ne "
+"vous a jamais parlé de la fois où il est allé dans le Labyrinthe pour sauver "
+"Wirt, n'est-ce pas ? Il connaît sa juste part des dangers qui s'y trouvent, "
+"mais encore une fois, vous aussi. C'est un artisan compétent, et s'il "
+"prétend pouvoir vous aider de quelque manière que ce soit, vous pouvez "
+"compter sur son honnêteté et son habileté."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:315
@@ -8296,6 +8652,11 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
+"Ogden possède et gère la Taverne et Auberge du Soleil Levant depuis près de "
+"quatre ans maintenant. Il l'a acheté quelques mois seulement avant que tout "
+"ici ne dégénère. Lui et sa femme Garda n'ont pas l'argent pour partir car "
+"ils ont investi tout ce qu'ils avaient pour venir ici. C'est un homme bon "
+"avec un sens profond des responsabilités."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:317
@@ -8306,6 +8667,12 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
+"Pauvre Farnham. Il est un rappel inquiétant de l'assemblée condamnée qui est "
+"entrée dans la cathédrale avec Lazare en ce jour sombre. Il s'est échappé "
+"avec sa vie, mais son courage et une grande partie de sa santé mentale ont "
+"été laissés dans une fosse sombre. Il ne trouve du réconfort qu'au fond de "
+"sa chope de nos jours, mais il y a parfois des morceaux de vérité enfouis "
+"dans ses divagations constantes."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:319
@@ -8316,6 +8683,12 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
+"La sorcière, Adria, est une anomalie ici à Tristram. Elle est arrivée peu de "
+"temps après la profanation de la cathédrale alors que presque tout le monde "
+"fuyait. Elle a fait construire une petite hutte à la périphérie de la ville, "
+"apparemment du jour au lendemain, et a accès à de nombreux artefacts "
+"étranges et mystérieux et à des livres de savoir que même moi, je n'ai "
+"jamais vus auparavant."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:321
@@ -8327,6 +8700,13 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
+"L'histoire de Wirt est effrayante et tragique. Il a été arraché des bras de "
+"sa mère et traîné dans le labyrinthe par les petits démons immondes qui "
+"brandissent des lances malfaisantes. De nombreux autres enfants ont été "
+"emmenés ce jour-là, dont le fils du roi Léoric. Les chevaliers du palais "
+"descendirent, mais ne revinrent jamais. Le forgeron a trouvé le garçon, mais "
+"seulement après que les bêtes immondes aient commencé à le torturer pour "
+"leurs plaisirs sadiques."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:323
@@ -8336,6 +8716,10 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
+"Ah, Pepin. Je le considère comme un véritable ami - peut-être le plus proche "
+"que j'ai ici. Il est parfois un peu confus, mais jamais une âme plus "
+"attentionnée ou prévenante n'a existé. Ses connaissances et ses compétences "
+"sont égalées par peu, et sa porte est toujours ouverte."
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:325
@@ -8346,11 +8730,16 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
+"Gillian est une femme bien. Très appréciée pour sa bonne humeur et son rire "
+"facile, elle tient une place particulière dans mon cœur. Elle reste à la "
+"taverne pour soutenir sa grand-mère âgée qui est trop malade pour voyager. "
+"Je crains parfois pour sa sécurité, mais je sais que n'importe quel homme du "
+"village préférerait mourir plutôt que de la voir blessée."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun!"
-msgstr ""
+msgstr "Salutations, bon maître. Bienvenue à la Taverne du Soleil Levant !"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:329
@@ -8360,6 +8749,11 @@ msgid ""
 "any of them agree on was this old axiom. Perhaps it will help you. You can "
 "cut the flesh, but you must crush the bone."
 msgstr ""
+"De nombreux aventuriers ont honoré les tables de ma taverne, et dix fois "
+"plus d'histoires ont été racontées avec autant de bière. La seule chose sur "
+"laquelle j'ai jamais entendu certains d'entre eux s'entendre était ce vieil "
+"axiome. Peut-être que cela vous aidera. Vous pouvez couper la chair, mais "
+"vous devez écraser l'os."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:331
@@ -8367,6 +8761,9 @@ msgid ""
 "Griswold the blacksmith is extremely knowledgeable about weapons and armor. "
 "If you ever need work done on your gear, he is definitely the man to see."
 msgstr ""
+"Griswold le forgeron est extrêmement bien informé sur les armes et les "
+"armures. Si jamais vous avez besoin de travailler sur votre équipement, il "
+"est certainement l'homme à voir."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:333
@@ -8374,6 +8771,9 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
+"Farnham passe beaucoup trop de temps ici, noyant son chagrin dans de la "
+"bière bon marché. Je le ferais bien partir, mais il a tant souffert pendant "
+"son séjour dans le Labyrinthe."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:335
@@ -8384,6 +8784,12 @@ msgid ""
 "Well, no matter. If you ever have need to trade in items of sorcery, she "
 "maintains a strangely well-stocked hut just across the river."
 msgstr ""
+"Adria est plus sage que son âge ne le laisse penser, mais je dois admettre "
+"qu'elle me fait un peu peur.\n"
+" \n"
+"Eh bien, peu importe. Si jamais vous avez besoin de marchander des objets de "
+"sorcellerie, elle maintient une hutte étrangement bien approvisionnée juste "
+"de l'autre côté de la rivière."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:337
@@ -8391,6 +8797,8 @@ msgid ""
 "If you want to know more about the history of our village, the storyteller "
 "Cain knows quite a bit about the past."
 msgstr ""
+"Si vous voulez en savoir plus sur l'histoire de notre village, le conteur "
+"Cain en sait un peu plus sur le passé."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:339
@@ -8401,6 +8809,12 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
+"Wirt est un vaurien et un petit scélérat. Il avait toujours des ennuis, et "
+"ce qui lui est arrivé n'est pas surprenant .\n"
+" \n"
+"Il est probablement allé faire l'imbécile à un endroit où il n'aurait pas dû "
+"être. Je suis désolé pour le garçon, mais je ne supporte pas ses "
+"fréquentations."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:341
@@ -8409,6 +8823,9 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
+"Pepin est un homme bon - et certainement le plus généreux du village. Il est "
+"toujours attentif aux besoins des autres, mais des problèmes de toutes "
+"sortes semblent le suivre partout où il va..."
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:343
@@ -8419,11 +8836,17 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
+"Gillian, ma Barmaid ? Sans son sens du devoir envers sa grand-mère, elle se "
+"serait enfuie d'ici depuis longtemps.\n"
+" \n"
+"Dieu sait que je l'ai suppliée de partir, lui disant que je veillerais sur "
+"la vieille femme, mais elle est trop gentille et attentionnée pour l'avoir "
+"fait."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr ""
+msgstr "De quels maux souffrez-vous mon ami ?"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
@@ -8433,6 +8856,10 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
+"J'ai fait une découverte très intéressante. Contrairement à nous, les "
+"créatures du Labyrinthe peuvent se soigner sans l'aide de potions ou de "
+"magie. Si vous blessez l'un des monstres, assurez-vous qu'il soit mort ou il "
+"pourrait très bien se régénérer."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
@@ -8442,6 +8869,10 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
+"Avant qu'elle ne soit envahie par, eh bien, tout ce qui se cache en dessous, "
+"la cathédrale était un lieu de grand apprentissage. On y trouve de nombreux "
+"livres. Si vous en trouvez, vous devriez les lire tous, car certains peuvent "
+"détenir des secrets sur le fonctionnement du Labyrinthe."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -8450,6 +8881,9 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
+"Griswold en sait autant sur l'art de la guerre que moi sur l'art de la "
+"guérison. C'est un marchand avisé, mais son travail est sans égal. Oh, je "
+"suppose que c'est peut-être parce qu'il est le seul forgeron qui reste ici."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -8458,6 +8892,10 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
+"Cain est un véritable ami et un vrai sage. Il maintient une vaste "
+"bibliothèque et a une capacité innée à discerner la vraie nature des choses. "
+"Si jamais vous avez des questions, il est la personne à qui vous devriez "
+"vous adresser."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -8465,6 +8903,9 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
+"Même mes compétences ont été incapables de guérir complètement Farnham. Oh, "
+"j'ai pu réparer son corps, mais son esprit et son âme sont au-delà de tout "
+"ce que je peux faire."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
@@ -8475,6 +8916,11 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
+"Bien que j'utilise certaines formes de magie limitées pour créer les potions "
+"et les élixirs que je stocke ici, Adria, elle, est une véritable sorcière. "
+"Elle semble ne jamais dormir et elle a toujours accès à de nombreux tomes et "
+"artefacts mystiques. Je crois que sa hutte est peut-être bien plus que le "
+"taudis qu'elle semble être, mais je n'arrive jamais à y entrer."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -8484,6 +8930,10 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
+"Pauvre Wirt. J'ai fait tout ce qui était possible pour l'enfant, mais je "
+"sais qu'il méprise cette cheville en bois que j'ai été forcée d'attacher à "
+"sa jambe. Ses blessures étaient hideuses. Personne - et surtout un si jeune "
+"enfant - ne devrait avoir à souffrir comme il l'a fait."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -8494,6 +8944,12 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
+"Je ne comprends vraiment pas pourquoi Ogden reste ici à Tristram. Il souffre "
+"d'un léger état nerveux, mais c'est un homme intelligent et industrieux qui "
+"se débrouillerait très bien partout où il irait. Je suppose que c'est peut-"
+"être la peur des nombreux meurtres qui se produisent dans la campagne "
+"environnante, ou peut-être les souhaits de sa femme qui le gardent lui et sa "
+"famille là où ils sont."
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -8504,11 +8960,16 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other."
 msgstr ""
+"La barmaid d'Ogden est une fille adorable. Sa grand-mère est très malade et "
+"souffre de délires.\n"
+" \n"
+"Elle prétend que ce sont des visions, mais je n'ai aucune preuve de cela "
+"d'une manière ou d'une autre."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr ""
+msgstr "Bonjour! Comment puis-je vous servir ?"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
@@ -8516,6 +8977,8 @@ msgid ""
 "My grandmother had a dream that you would come and talk to me. She has "
 "visions, you know and can see into the future."
 msgstr ""
+"Ma grand-mère a rêvé que vous viendriez me parler. Elle a des visions, vous "
+"savez, elle peut voir dans l'avenir."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:367
@@ -8526,6 +8989,12 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
+"La femme aux limites de la ville est une sorcière ! Elle a l'air gentille, "
+"et son nom, Adria, est très agréable à l'oreille, mais j'ai très peur "
+"d'elle.\n"
+" \n"
+"Il faudrait quelqu'un d'assez courageux, comme vous, pour voir ce qu'elle "
+"fait là-bas."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:369
@@ -8535,6 +9004,11 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
+"Notre forgeron est une fierté pour les habitants de Tristram. Non seulement "
+"c'est un maître artisan qui a remporté de nombreux concours au sein de sa "
+"guilde, mais il a également reçu les éloges de notre roi Leoric lui-même - "
+"que son âme repose en paix. Griswold est aussi un grand héros ; demandez "
+"simplement à Cain."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -8542,6 +9016,9 @@ msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
 msgstr ""
+"Cain est le conteur de Tristram depuis aussi longtemps que je me souvienne. "
+"Il en sait tellement et peut vous dire à peu près n'importe quoi sur presque "
+"tout."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -8553,6 +9030,12 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
+"Farnham est un ivrogne qui se remplit le ventre de bière et les oreilles de "
+"tout le monde de bêtises.\n"
+" \n"
+"Je sais que Pepin et Ogden ressentent de la sympathie pour lui, mais je suis "
+"tellement frustré de le voir glisser de plus en plus loin dans une stupeur "
+"confuse chaque nuit."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -8562,6 +9045,11 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
+"Pepin a sauvé la vie de ma grand-mère, et je sais que je ne pourrai jamais "
+"le remercier assez pour cela. Sa capacité à guérir n'importe quelle maladie "
+"est plus puissante que l'épée la plus tranchante et plus mystérieuse que "
+"n'importe quel sort que vous puissiez nommer. Si jamais vous avez besoin de "
+"guérison, Pepin peut vous aider."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -8573,6 +9061,12 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
+"J'ai grandi avec la mère de Wirt, Canace. Bien qu'elle n'ait été que "
+"légèrement blessée lorsque ces créatures hideuses l'ont pris, elle ne s'en "
+"est jamais remise. Je pense qu'elle est morte le cœur brisé. Wirt est devenu "
+"un jeune mesquin, cherchant uniquement à profiter de la sueur des autres. Je "
+"sais qu'il a souffert et qu'il a vu des horreurs que je ne peux même pas "
+"imaginer, mais une partie de cette obscurité plane toujours sur lui."
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -8582,11 +9076,15 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
+"Ogden et sa femme m'ont emmené avec ma grand-mère dans leur maison et m'ont "
+"même laissé gagner quelques pièces d'or en travaillant à l'auberge. Je leur "
+"dois beaucoup et j'espère un jour quitter cet endroit et les aider à "
+"démarrer un grand hôtel dans l'est."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
 msgid "Well, what can I do for ya?"
-msgstr ""
+msgstr "Eh bien, qu'est-ce que j'peux faire pour vous ?"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:382
@@ -8596,6 +9094,10 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
+"Si vous cherchez une bonne arme, laissez-moi vous montrer ceci. Prenez une "
+"arme contondante de base, par exemple une masse. Ça fonctionne comme un "
+"charme contre la plupart de ces horreurs éternelles là-bas, et il n'y a rien "
+"de mieux pour briser de petits squelettes maigres !"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -8605,6 +9107,10 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
+"La hache? Oui, c'est une bonne arme, équilibrée contre n'importe quel "
+"ennemi. Regardez comment elle fend l'air, puis imaginez une belle grosse "
+"tête de démon sur son passage. Gardez à l'esprit, cependant, qu'elle est "
+"lente à manier - mais on parle ici de porter un coup dur !"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -8614,6 +9120,10 @@ msgid ""
 "or pierce on the undead, but against a living, breathing enemy, a sword will "
 "better slice their flesh!"
 msgstr ""
+"Regardez ce tranchant, cet équilibre. Une épée dans de bonnes mains, et "
+"contre le bon ennemi, est le maître de toutes les armes. Sa lame tranchante "
+"trouve peu de choses à tailler ou à percer sur les morts-vivants, mais "
+"contre un ennemi vivant et respirant, une épée tranchera mieux leur chair !"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
@@ -8622,6 +9132,9 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
+"Vos armes et armures montreront les signes de vos luttes contre les "
+"Ténèbres. Si vous me les apportez, avec un peu de travail et une forge "
+"chaude, je peux les remettre en bon état."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -8631,6 +9144,11 @@ msgid ""
 "seems to get whatever she needs. If I knew even the smallest bit about how "
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
+"Alors que je dois pratiquement faire passer en contrebande les métaux et les "
+"outils dont j'ai besoin avec les caravanes qui longent les bords de notre "
+"maudite ville, cette sorcière, Adria, semble toujours obtenir tout ce dont "
+"elle a besoin. Si j'avais ne serait-ce qu'un dixième de ses compétences en "
+"magie, je pourrais faire des choses vraiment incroyables."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
@@ -8638,6 +9156,9 @@ msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
 msgstr ""
+"Gillian est une gentille fille. Dommage que sa grand-mère soit en si "
+"mauvaise santé, sinon je me serais arranger pour les faire sortir toutes les "
+"deux d'ici dans l'une des caravanes marchandes."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -8646,6 +9167,9 @@ msgid ""
 "in life. If I could bend steel as well as he can bend your ear, I could make "
 "a suit of court plate good enough for an Emperor!"
 msgstr ""
+"Parfois, je pense que Cain parle trop, mais je suppose que c'est sa vocation "
+"dans la vie. Si je pouvais plier l'acier aussi bien qu'il peut plier votre "
+"oreille, je pourrais faire une armure de cour assez bonne pour un empereur !"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -8655,6 +9179,12 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
+"J'étais avec Farnham cette nuit-là où Lazare nous a conduits dans le "
+"Labyrinthe. Je n'ai plus jamais revu l'archevêque et je n'aurais peut-être "
+"pas survécu si Farnham n'avait pas été à mes côtés. Je crains que l'attaque "
+"n'ait laissé son âme aussi paralysée que, eh bien, une autre l'a fait pour "
+"ma jambe. Je ne peux pas mener cette bataille pour lui, mais je le ferais si "
+"je le pouvais."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -8663,6 +9193,9 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
+"Un homme bon qui met les besoins des autres avant les siens. Vous ne "
+"trouverez personne à Tristram - ni où que ce soit d'ailleurs - qui parle en "
+"mal du guérisseur."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -8673,6 +9206,11 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
+"Ce garçon va s'attirer de sérieux ennuis... ou je suppose que je devrais le "
+"dire, encore une fois. J'ai essayé de l'intéresser à travailler ici et à "
+"apprendre un métier honnête, mais il préfère les profits élevés du commerce "
+"de marchandises d'origine douteuse. Je ne peux pas lui en vouloir après ce "
+"qui lui est arrivé, mais j'aimerais qu'il fasse au moins attention."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -8685,17 +9223,27 @@ msgid ""
 "starved during that first year when the entire countryside was overrun by "
 "demons."
 msgstr ""
+"L'aubergiste a peu d'affaires et aucun moyen réel de faire des bénéfices. Il "
+"parvient à joindre les deux bouts en fournissant de la nourriture et un "
+"logement à ceux qui dérivent occasionnellement dans le village, mais ils "
+"sont aussi susceptibles de se faufiler dans la nuit que de le payer. S'il "
+"n'y avait pas eu les réserves de céréales et de viandes séchées qu'il "
+"gardait dans sa cave, eh bien, la plupart d'entre nous serions morts de faim "
+"pendant cette première année où toute la campagne était envahie par les "
+"démons."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
 msgid "Can't a fella drink in peace?"
-msgstr ""
+msgstr "Un bon gars ne peut-il pas boire en paix ?"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:405
 msgid ""
 "The gal who brings the drinks? Oh, yeah, what a pretty lady. So nice, too."
 msgstr ""
+"La fille qui apporte les boissons ? Oh, ouais, quelle jolie dame. Tellement "
+"sympa aussi."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:407
@@ -8704,6 +9252,10 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
+"Pourquoi qu'cette vieille fait pas quelqu'chose pour changer. Bien sûr, bien "
+"sûr, elle a des trucs, mais écoutez-moi... elle n'est pas naturelle. Je ne "
+"l'ai jamais vue manger ou boire - et on ne peux pas faire confiance à "
+"quelqu'un qui ne boit pas au moins un peu."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -8712,6 +9264,9 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
+"Cain n'est pas celui qu'il prétend être. Bien sûr, bien sûr, il raconte des "
+"bonnes histoires... certaines d'entre elles sont vraiment effrayantes ou "
+"drôles... mais j'pense qu'il en sait plus qu'il ne sait qu'il sait."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -8719,6 +9274,9 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
+"Griswold ? Bon vieux Griswold. Je l'aime comme un frère ! Nous nous sommes "
+"battus ensemble, vous savez, à l'époque... nous... Lazarus... Lazarus... "
+"Lazarus !!!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -8728,6 +9286,10 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
+"Héhéhé, j'aime bien Pepin. Il essaie vraiment, vous savez. Écoutez, vous "
+"d'vriez vous assurer d'apprendre à le connaître. Un bon gars comme ça avec "
+"des gens qui veulent toujours de l'aide. Hé, j'suppose que ce serait un peu "
+"comme vous, huh héros ? J'étais aussi un héros..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
@@ -8736,6 +9298,10 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
+"Wirt est un gamin avec plus de problèmes que moi, et je sais tout sur les "
+"problèmes. Écoutez, ce gamin fait de bonnes affaires, mais il en a vu, vous "
+"savez ? Perdu une jambe ! Devoir marcher sur un morceau de bois. triste, "
+"triste..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -8744,6 +9310,10 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
+"Ogden est le meilleur homme de la ville. J'pense que sa femme ne m'aime pas "
+"beaucoup, mais tant qu'elle continuera à taper des fûts, je l'aimerai bien. "
+"On dirait que j'ai passé plus de temps avec Ogden qu'la plupart, mais il est "
+"si gentil avec moi..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -8752,6 +9322,9 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
+"Je veux vous dire un truc, parce que j'sais tout sur c'genre de choses. "
+"C'est ma spécialité. C'est la meilleure... eeeee la meilleure ! Cette autre "
+"bière n'est pas bonne depuis qu'ces stupides chiens..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -8760,6 +9333,9 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
+"Personne ne m'é... m'écoute jamais. Quelque part - j'suis pas trop sûr - "
+"mais quelqu'part sous l'église il y a tout un tas d'or. Brillant et "
+"resplendissant et attend juste que quelqu'un l'prenne."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -8769,6 +9345,10 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
+"Je sais que vous avez vos propres idées, et je sais que vous n'allez pas le "
+"croire, mais cette arme que vous avez là - ce n'est tout simplement pas "
+"efficace contre ces grosses brutes ! Oh, je me fiche de ce que dit Griswold, "
+"ils n'arrivent plus à faire le chose comme on savait les faire avant..."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -8777,11 +9357,15 @@ msgid ""
 "and get out of here. That boy out there... He's always got somethin good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
+"Si j'étais vous... et je ne le suis pas... mais si je l'étais, je vendrais "
+"tout ce que vous avez et je partirais d'ici. Ce garçon là-bas... Il a "
+"toujours quelque chose de bonne qualité, mais vous devez lui donner de l'or "
+"ou il ne vous montrera même pas ce qu'il a."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
 msgid "I sense a soul in search of answers..."
-msgstr ""
+msgstr "Je sens une âme en quête de réponses..."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:428
@@ -8790,6 +9374,10 @@ msgid ""
 "words. Should you already have knowledge of the arcane mysteries scribed "
 "within a book, remember - that level of mastery can always increase."
 msgstr ""
+"La sagesse se gagne, elle ne se donne pas. Si vous trouvez un livre de "
+"savoir, dévorez ses mots. Si vous avez déjà une connaissance des mystères "
+"des arcanes décrits dans un livre, rappelez-vous - ce niveau de maîtrise "
+"peut toujours augmenter."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
@@ -8801,6 +9389,13 @@ msgid ""
 "be kept at the ready in your mind. Know also that these scrolls can be read "
 "but once, so use them with care."
 msgstr ""
+"La plus grande puissance est souvent la plus courte. Vous pourrez trouver "
+"d'anciens mots de pouvoir écrits sur des rouleaux de parchemin. La force de "
+"ces parchemins réside dans la capacité de l'apprenti ou de l'adepte à les "
+"lancer avec une capacité égale. Leur faiblesse est qu'ils doivent d'abord "
+"être lus à haute voix et ne peuvent jamais être tenus prêts de votre esprit. "
+"Sachez aussi que ces parchemins ne peuvent être lus qu'une seule fois, alors "
+"utilisez-les avec précaution."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
@@ -8811,6 +9406,12 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
+"Bien que la chaleur du soleil soit démesurée, la simple flamme d'une bougie "
+"est plus dangereuse. Aucune énergie, aussi grande soit-elle, ne peut être "
+"utilisée sans une concentration appropriée. Pour de nombreux sorts, les "
+"bâtons ensorcelés peuvent être chargés d'énergies magiques plusieurs fois. "
+"J'ai la possibilité de restaurer leur puissance - mais sachez que rien ne se "
+"fait sans payer."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -8819,6 +9420,10 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
+"La somme de nos connaissances est dans la somme de son peuple. Si vous "
+"trouvez un livre ou un parchemin que vous ne pouvez pas déchiffrer, "
+"n'hésitez pas à me l'apporter. Si je peux le comprendre, je partagerai ce "
+"que je trouve."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -8827,6 +9432,9 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
+"Pour un homme qui ne connaît que le fer, il n'y a pas de plus grande magie "
+"que l'acier. Le forgeron Griswold est plus un sorcier qu'il ne le pense. Sa "
+"capacité à fusionner le feu et le métal est inégalée dans ce pays."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -8836,6 +9444,10 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
+"La corruption a la force de la tromperie, mais l'innocence détient le "
+"pouvoir de la pureté. La jeune femme Gillian a le cœur pur, plaçant les "
+"besoins de sa matriarche avant les siens. Elle me craint, mais c'est "
+"seulement parce qu'elle ne me comprend pas."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -8845,6 +9457,11 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
+"Un coffre ouvert dans les ténèbres ne contient pas de plus grand trésor que "
+"lorsqu'il est ouvert dans la lumière. Le conteur Cain est une énigme, mais "
+"seulement pour ceux qui ne le regardent pas. Sa connaissance de ce qui se "
+"cache sous la cathédrale est bien plus grande que ce qu'il se permet de "
+"réaliser."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -8854,6 +9471,10 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
+"Plus vous placez votre foi en un homme, et plus elle chutera. Farnham a "
+"perdu son âme, mais pas à cause d'un démon. Elle s'est perdue lorsqu'il a vu "
+"ses concitoyens trahis par l'Archevêque Lazarus. Il a des connaissances à "
+"glaner, mais vous devez séparer les faits de la fantaisie."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -8864,6 +9485,11 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
+"La main, le cœur et l'esprit peuvent faire des miracles lorsqu'ils sont en "
+"parfaite harmonie. Le guérisseur Pepin voit dans le corps d'une manière que "
+"même moi je ne peux pas. Sa capacité à soigner les malades et les blessés "
+"est amplifiée par sa compréhension de la création d'élixirs et de potions. "
+"Il n'y a pas d'allié plus formidable à Tristram."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -8876,6 +9502,14 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
+"Il y a beaucoup de choses sur l'avenir que nous ne pouvons pas voir, mais "
+"quand il arrivera, ce seront les enfants qui l'auront entre les mains. Le "
+"garçon Wirt a une noirceur dans son âme, mais il ne représente aucune menace "
+"pour la ville ou ses habitants. Ses relations secrètes avec les gamins et "
+"les guildes tacites des villes voisines lui permettent d'accéder à de "
+"nombreux objets difficiles à trouver à Tristram. Bien que ses méthodes "
+"puissent être répréhensibles, Wirt peut vous aider dans votre combat contre "
+"les ténèbres envahissantes."
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -8888,6 +9522,14 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
+"Les murs de terre et le couvert de chaume ne créent pas une maison. "
+"L'aubergiste Ogden a plus d'utilité dans cette ville que beaucoup ne le "
+"pensent. Il fournit un abri à Gillian et à sa matriarche, maintient le peu "
+"de vie qu'il reste en Farnham et maintient une partie de ce qu'était "
+"Tristram autrefois pour tous ceux qui restent dans la ville. Sa taverne, et "
+"les plaisirs simples qu'on y trouve encore, donnent un aperçu d'une vie dont "
+"les gens d'ici se souviennent. C'est ce souvenir qui continue de nourrir "
+"leurs espoirs de votre réussite."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
@@ -8902,6 +9544,11 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
+"Tout le monde à Tristram n'a pas une utilité - ou un marché - pour tout ce "
+"que vous trouverez dans le labyrinthe. Même pas moi, aussi difficile à "
+"croire que ce soit.\n"
+" \n"
+"Parfois, vous seul pourrez trouver un but à certaines choses."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
@@ -8909,6 +9556,8 @@ msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
 msgstr ""
+"Ne croyez pas à tout ce que dit l'ivrogne. Trop de bières ont brouillé sa "
+"vision et son bon sens."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -8918,6 +9567,10 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
+"Au cas où vous ne l'auriez pas remarqué, je n'achète rien à Tristram. Je "
+"suis importateur de produits de qualité. Si vous voulez vendre de la "
+"camelote, vous devrez voir Griswold, Pepin ou cette sorcière, Adria. Je suis "
+"sûr qu'ils prendront tout ce que vous pourrez leur apporter..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
@@ -8927,6 +9580,10 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
+"Je suppose que je dois la vie au forgeron - ce qu'il en reste. Bien sûr, "
+"Griswold m'a proposé un apprentissage à la forge, et c'est un type sympa, "
+"mais je n'aurai jamais assez d'argent pour... eh bien, disons simplement que "
+"j'ai des projets précis qui nécessitent une grande quantité d'or."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -8936,6 +9593,11 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
+"Si j'avais quelques années de plus, je la couvrirais de toutes les richesses "
+"que je pourrais rassembler, et laissez-moi vous assurer que je peux mettre "
+"la main sur de très belles choses. Gillian est une belle fille qui devrait "
+"partir de Tristram dès que ce sera sans danger. Hmmm... peut-être que je "
+"l'emmènerai avec moi quand je m'en irai..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -8944,6 +9606,10 @@ msgid ""
 "woman across the river. He keeps telling me about how lucky I am to be "
 "alive, and how my story is foretold in legend. I think he's off his crock."
 msgstr ""
+"Cain en sait trop. Il me fait peur, encore plus que cette femme de l'autre "
+"côté de la rivière. Il n'arrête pas de me dire à quel point j'ai de la "
+"chance d'être en vie et comment mon histoire est prédite dans la légende. Je "
+"pense qu'il est hors de son pot."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:463
@@ -8954,6 +9620,12 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
+"Farnham - voilà un homme qui a de sérieux problèmes, et je sais à quel point "
+"les problèmes peuvent être sérieux. Il faisait trop confiance à l'intégrité "
+"d'un seul homme, et Lazarus l'a conduit dans les griffes de la mort. Oh, je "
+"sais comment c'est là-bas, alors ne commencez pas à me parler de vos plans "
+"pour détruire le mal qui habite ce Labyrinthe. Surveillez simplement vos "
+"jambes..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -8963,6 +9635,11 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
+"Tant que vous n'avez besoin de rattacher quoi que ce soit, vous ne trouverez "
+"pas mieux que le vieux Pepin.\n"
+" \n"
+"Si j'avais eu quelques-unes de ces potions qu'il prépare, j'aurais peut-être "
+"encore ma jambe..."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -8972,6 +9649,11 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
+"Adria me dérange vraiment. Bien sûr, Cain est effrayant dans ce qu'il peut "
+"vous dire sur le passé, mais cette sorcière peut voir dans votre passé. Elle "
+"aussi a toujours un moyen d'obtenir tout ce dont elle a besoin. Adria met la "
+"main sur plus de marchandises que je n'en ai vu passer les portes du Bazaar "
+"du Roi pendant le Haut Festival."
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -8981,6 +9663,10 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
+"Ogden est un imbécile de rester ici. Je pourrais le faire sortir de la ville "
+"pour un prix très raisonnable, mais il insiste pour essayer de s'en sortir "
+"avec cette stupide taverne. Je suppose qu'au moins il donne à Gillian un "
+"endroit où travailler, et sa femme Garda fait une superbe tarte au berger..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -8989,6 +9675,9 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
+"Au-delà du Panthéon des Héros se trouve la Chambre d'Os. La mort éternelle "
+"attend quiconque chercherait à voler les trésors se trouvant dans cette "
+"pièce. Ainsi parle le Seigneur de la Terreur, et c'est ainsi qu'il est écrit."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -8997,10 +9686,13 @@ msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
 msgstr ""
+"... et ainsi, enfermé au-delà de la Porte du Sang et au-delà de la Salle du "
+"Feu, Valor attend que le Héros de la Lumière se réveille..."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
 #: Source/textdat.cpp:529 Source/textdat.cpp:537
+#, fuzzy
 msgid ""
 "I can see what you see not.\n"
 "Vision milky then eyes rot.\n"
@@ -9011,6 +9703,14 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
+"Je peux voir ce que vous ne voyez pas.\n"
+"Vision laiteuse puis les yeux du trépas.\n"
+"Quand tu te tourneras, ils s'en seront allés,\n"
+"Chuchotant leur chanson cachée.\n"
+"Alors tu vois ce qui ne peut pas être,\n"
+"Les ombres se déplacent là où la lumière devrait être.\n"
+"Hors de l'esprit, hors du mal,\n"
+"Jeté dans les Aveugles Salles."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -9020,6 +9720,10 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
+"Les armureries de l'Enfer abritent le Seigneur de Guerre de Sang. Dans son "
+"sillage gisaient les corps mutilés de milliers de personnes. Les anges et "
+"les hommes ont été abattus pour accomplir ses sacrifices sans fin envers les "
+"Ténèbres qui crient pour une chose : du sang."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -9032,6 +9736,14 @@ msgid ""
 "sky. Neither side ever gains sway for long as the forces of Light and "
 "Darkness constantly vie for control over all creation."
 msgstr ""
+"Prenez garde et témoignez des vérités qui se trouvent ici, car elles sont le "
+"dernier héritage des Horadrim. Il y a une guerre qui fait rage encore "
+"aujourd'hui, au-delà des champs que nous connaissons - entre les royaumes "
+"utopiques des Hauts Cieux et les fosses chaotiques des Enfers Brûlants. "
+"Cette guerre est connue sous le nom de Grand Conflit, et elle a fait rage et "
+"a brûlé plus longtemps que n'importe quelle étoile dans le ciel. Aucun des "
+"deux camps n'a d'emprise tant que les forces de la Lumière et des Ténèbres "
+"se disputent constamment le contrôle de toute la création."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:507
@@ -9044,6 +9756,13 @@ msgid ""
 "have even allied themselves with either side, and helped to dictate the "
 "course of the Sin War."
 msgstr ""
+"Prenez garde et témoignez des vérités qui se trouvent ici, car elles sont le "
+"dernier héritage des Horadrim. Lorsque le conflit éternel entre les cieux et "
+"les enfers ardents s'abattit sur le sol des mortels, on l'appela la guerre "
+"du péché. Les anges et les démons marchèrent parmi l'humanité déguisés, "
+"combattant en secret, loin des regards indiscrets des mortels. Certains "
+"mortels audacieux et puissants se sont même alliés à chaque camp et ont "
+"contribué à dicter le cours de la guerre du péché."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:509
@@ -9067,6 +9786,26 @@ msgid ""
 "faith. If Diablo were to be released, he would seek a body that is easily "
 "controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
+"Prenez garde et témoignez des vérités qui se trouvent ici, car elles sont le "
+"dernier héritage des Horadrim. Il y a près de trois cents ans, on sut que "
+"les Trois Démons Primordiaux des Enfers Ardents étaient mystérieusement "
+"arrivés dans notre monde. Les Trois Frères ont ravagé les terres de l'Est "
+"pendant des décennies, tandis que l'humanité tremblait dans leur sillage. "
+"Notre Ordre - les Horadrim - a été fondé par un groupe de mages secrets pour "
+"traquer et capturer les Trois Démons une fois pour toutes.\n"
+" \n"
+"Les Horadrim originels ont capturé deux des Trois dans de puissants "
+"artefacts connus sous le nom de Pierre d'âmes et les ont enterrés "
+"profondément sous les sables désolés de l'Est. Le troisième Mal échappa à la "
+"capture et s'enfuit vers l'ouest avec de nombreux Horadrim à sa poursuite. "
+"Le troisième mal - connu sous le nom de Diablo, le Seigneur de la Terreur - "
+"a finalement été capturé, son essence ayant été placée dans une Pierre d'âme "
+"et enterrée dans ce labyrinthe.\n"
+" \n"
+"Soyez averti que la pierre d'âme ne doit pas être découverte par ceux qui ne "
+"sont pas de la foi. Si Diablo devait être libéré, il chercherait un corps "
+"facilement contrôlable car il serait très faible - peut-être celui d'un "
+"vieil homme ou d'un enfant."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:511
@@ -9079,6 +9818,14 @@ msgid ""
 "the factions of Belial and Azmodan while the forces of the High Heavens "
 "continually battered upon the very Gates of Hell."
 msgstr ""
+"Il y eu une grande révolution au sein des Enfers Ardents connue sous le nom "
+"de Sombre Exile. Les Démons Inférieurs ont renversé les Trois Démons "
+"Primordiaux et ont banni leurs formes spirituelles dans le royaume des "
+"mortels. Les démons Belial (le Seigneur du Mensonge) et Azmodan (le Seigneur "
+"du Péché) se sont battus pour revendiquer la domination de l'Enfer en "
+"l'absence des Trois Frères. Tout l'Enfer s'est polarisé entre les factions "
+"de Belial et d'Azmodan tandis que les forces des Hauts Cieux s'abattaient "
+"continuellement sur les Portes mêmes de l'Enfer."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:513
@@ -9089,6 +9836,12 @@ msgid ""
 "secretive Order of mortal magi named the Horadrim, who quickly became adept "
 "at hunting demons. They also made many dark enemies in the underworlds."
 msgstr ""
+"De nombreux démons se sont rendus dans le royaume des mortels à la recherche "
+"des Trois Frères. Ces démons ont été suivis jusque dans le plan des mortels "
+"par des Anges qui les ont chassés à travers les vastes villes de l'Est. Les "
+"Anges se sont alliés à un Ordre secret de mages mortels nommé les Horadrim, "
+"qui sont rapidement devenus adeptes de la chasse aux démons. Ils se sont "
+"également fait de nombreux et sombres ennemis dans les enfers."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:515
@@ -9107,6 +9860,20 @@ msgid ""
 "He will then arise to free his Brothers and once more fan the flames of the "
 "Sin War..."
 msgstr ""
+"Ainsi les Trois Démon Primordiaux furent bannis sous forme d'esprit dans le "
+"royaume des mortels et après avoir semé le chaos à travers l'Est pendant des "
+"décennies, ils ont été pourchassés par l'Ordre maudit des mortels Horadrim. "
+"Les Horadrim ont utilisé des artefacts appelés Pierres d'âme pour contenir "
+"l'essence de Mephisto, le Seigneur de la Haine et de son frère Baal, le "
+"Seigneur de la Destruction. Le plus jeune frère - Diablo, le Seigneur de la "
+"Terreur - s'est échappé vers l'ouest.\n"
+" \n"
+"Finalement, les Horadrim capturèrent à son tour Diablo dans une pierre d'âme "
+"et l'enterrèrent sous une ancienne Cathédrale oubliée. Là, le Seigneur de la "
+"Terreur dort et attend le moment de sa renaissance. Sachez qu'il cherchera à "
+"posséder un corps jeune et de puissant - un corps innocent et facilement "
+"contrôlable. Il se relèvera alors pour libérer ses frères et attiser une "
+"fois de plus les flammes de la Guerre du Péché..."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
@@ -9118,6 +9885,13 @@ msgid ""
 "that have brought this discord to the realms of man. My lord has named the "
 "battle for this world and all who exist here the Sin War."
 msgstr ""
+"Louanges à Diablo - Seigneur de la Terreur et survivant du Sombre Exile. "
+"Lorsqu'il se réveilla de son long sommeil, mon Seigneur et Maître me parla "
+"de secrets que peu de mortels connaissent. Il me dit que les royaumes des "
+"Cieux et les fosses des Enfers Ardents s'engagèrent dans une guerre "
+"éternelle. Il révéla les pouvoirs qui eurent amené cette discorde dans les "
+"royaumes des Hommes. Mon seigneur a nommé la bataille pour ce monde et tous "
+"ceux qui existent ici la Guerre du Péché."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:519
@@ -9129,6 +9903,13 @@ msgid ""
 "beneath the sands of the east. Once my Lord releases his Brothers, the Sin "
 "War will once again know the fury of the Three."
 msgstr ""
+"Gloire et Approbation pour Diablo - Seigneur de la Terreur et Chef des "
+"Trois. Mon Seigneur m'a parlé de ses deux Frères, Méphisto et Baal, qui ont "
+"été bannis de ce monde il y a longtemps. Mon Seigneur souhaite attendre son "
+"heure et exploiter sa puissance impressionnante afin de libérer ses frères "
+"captifs de leurs tombes sous les sables de l'est. Une fois que mon Seigneur "
+"aura libéré ses frères, la Guerre du Péché connaîtra à nouveau la fureur des "
+"Trois."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
@@ -9143,6 +9924,16 @@ msgid ""
 "Diablo's call and pray that I will be rewarded when he at last emerges as "
 "the Lord of this world."
 msgstr ""
+"Salutation et Sacrifice pour Diablo - Seigneur de la terreur et Destructeur "
+"d'Âmes. Lorsque j'ai réveillé mon Maître de son sommeil, il a tenté de "
+"prendre la forme d'un mortel. Diablo a tenté de prendre le corps du roi "
+"Leoric, mais mon maître était trop faible depuis son emprisonnement. Mon "
+"Seigneur avait besoin d'un ancrage simple et innocent dans ce monde, et a "
+"donc trouvé le garçon Albrecht parfait pour cette tâche. Alors que le bon "
+"roi Leoric était devenu fou à cause de la possession infructueuse de Diablo, "
+"j'ai kidnappé son fils Albrecht et l'ai amené devant mon maître. J'attends "
+"maintenant l'appel de Diablo et prie pour que je sois récompensé quand il "
+"émergera enfin comme le Seigneur de ce monde."
 
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
@@ -9158,6 +9949,18 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
+"Dieu merci, vous êtes de retour !\n"
+"Beaucoup de choses ont changé depuis que vous ne vivez plus ici, mon ami. "
+"Tout était paisible jusqu'à ce que les cavaliers noirs arrivent et "
+"détruisent notre village. Beaucoup ont été abattus sur place, et ceux qui "
+"ont pris les armes ont été tués ou traînés pour devenir des esclaves - ou "
+"pire. L'église à la périphérie de la ville a été profanée et est utilisée "
+"pour de sombres rituels. Les cris qui résonnent dans la nuit sont inhumains, "
+"mais certains de nos habitants pourraient encore survivre. Suivez le chemin "
+"qui se trouve entre ma taverne et la forge pour trouver l'église et sauver "
+"qui vous le pourrez.\n"
+" \n"
+"Je pourrai peut-être vous en dire plus si nous reparlons. Bonne chance."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:525 Source/textdat.cpp:533
@@ -9166,6 +9969,10 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
+"Au-delà du Panthéon des Héros se trouve la Chambre d'Os. La mort éternelle "
+"attend quiconque chercherait à voler les trésors se trouvant dans cette "
+"pièce. Ainsi a parlé le Seigneur de la Terreur, et c'est ainsi qu'il est "
+"écrit."
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -9175,6 +9982,10 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
+"Les armureries de l'Enfer abritent le Seigneur de Guerre de Sang. Dans son "
+"sillage gisaient les corps mutilés de milliers de personnes. Anges et hommes "
+"furent abattus pour accomplir ses sacrifices sans fin envers les ténèbres "
+"qui crient pour une chose : du sang."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -9183,6 +9994,9 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search."
 msgstr ""
+"Continuez votre quête. Trouver un trésor perdu n'est pas facile. Trouver un "
+"trésor caché l'est encore moins. Je vous laisse avec ceci. Ne laissez pas "
+"les sables du temps embrouiller votre recherche."
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
@@ -9192,6 +10006,11 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
+"Un quoi?! C'est de la folie. Il n'y a pas de trésor enterré ici à Tristram. "
+"Laissez moi voir ça!! Ah, regardez ces dessins sont inexacts. Ils ne "
+"correspondent pas du tout à notre ville. Si j'étais vous je garderais mon "
+"esprit tourné vers ce qui se trouve sous la cathédrale et non sur ce qui se "
+"trouve sous notre terre arable."
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
@@ -9199,6 +10018,9 @@ msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
 msgstr ""
+"Je n'ai vraiment pas le temps de discuter d'une carte que vous "
+"rechercheriez. J'ai beaucoup de malades qui ont besoin de mon aide et du "
+"vôtre aussi."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
@@ -9207,6 +10029,9 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him."
 msgstr ""
+"Iswall autrefois fier est piégé profondément sous la surface de ce monde. "
+"Son honneur est dépouillé et son visage a changé. Il est piégé dans un "
+"tourment immortel. Chargé de cacher la chose même qui pourrait le libérer."
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -9215,6 +10040,9 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
+"Je parie que Wirt vous a vu arriver et a voulu vous jouer un tour afin de se "
+"moquer de vous plus tard quand vous auriez courru dans la ville le nez dans "
+"la boue. Si j'étais vous je l'ignorerais."
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
@@ -9224,6 +10052,10 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
+"Il fut un temps où cette ville était un arrêt fréquent pour les voyageurs "
+"venu de partout. Cela a bien changé depuis. Mais les grottes cachées et les "
+"trésors enfouis sont des fantasmes communs à tous les enfants. Wirt se livre "
+"rarement à des jeux d'enfant. C'est peut-être simplement son imagination."
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
@@ -9231,6 +10063,8 @@ msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map."
 msgstr ""
+"Ecoutez. Rapprochez-vous. Je ne sais pas si vous savez ce que je sais, mais "
+"vous avez vraiment quelque chose de valeur là. C'est une carte."
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
@@ -9242,6 +10076,13 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
+"Ma grand-mère me raconte souvent des histoires sur les forces étranges qui "
+"habitent le cimetière aux alentours de l'église. Et cela pourrait bien vous "
+"intéresser d'entendre l'un d'entre elles. Elle a dit que si vous laissez une "
+"offrande appropriée dans le cimetière, entrez dans la cathédrale prier pour "
+"les morts, puis revenez, l'offrande serait alors étrangement différente. Je "
+"ne sais pas s'il s'agit simplement du discours d'une vieille femme malade, "
+"mais tout semble possible de nos jours."
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -9250,6 +10091,9 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
+"Hmmm. Un trésor immense et mystérieux me disez-vous. Mmmm. Me voilà peut-"
+"être intéressé à l'idée de faire affaire avec vous. Ou mieux encore, n'avez-"
+"vous pas besoin de fournitures rares et chères pour surmonter cette épreuve ?"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
@@ -9262,6 +10106,14 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
+"Alors, vous êtes le héros dont tout le monde parle. Peut-être pourriez-vous "
+"aider un pauvre fermier à sortir d'un très mauvaise situation ? Au bord de "
+"mon verger, juste au sud d'ici, il y a une chose horrible qui sort du sol ! "
+"Je ne peux plus accéder à mes récoltes ou à mes bottes de foin, mes pauvres "
+"vaches vont mourrir de faim. La sorcière m'a donné ceci et a dit que cela "
+"ferait exploser cette chose hors de mon champ. Si vous pouviez le détruire, "
+"je vous en serais éternellement reconnaissant. Je le ferais bien moi-même, "
+"mais quelqu'un doit rester ici avec les vaches..."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -9269,6 +10121,9 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
+"Je savais que ça ne pouvait pas être aussi simple que cette sorcière le "
+"disait. C'est un triste monde quand vous ne pouvez même pas faire confiance "
+"à vos voisins."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
@@ -9277,6 +10132,10 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
+"Cette chose est parti ? L'avez-vous renvoyé dans les recoins sombres d'Hadès "
+"qui l'ont engendré ? Vous avez quoi? Oh, ne me dites pas que vous l'avez "
+"perdu ! Ces choses ne sont pas bon marché, vous savez. Vous devez la "
+"trouver, puis faire exploser cette horreur hors de notre village."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -9286,6 +10145,10 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
+"J'ai entendu l'explosion d'ici ! Un grand merci à vous, brave étranger. Avec "
+"toutes ces choses qui sortent de terre, les monstres qui s'emparent de "
+"l'église, et tout le reste... Ce sont des temps difficiles. Je ne suis qu'un "
+"pauvre fermier, mais prenez ceci avec toute ma gratitude."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -9295,6 +10158,10 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
+"Oh, j'ai un grave problème... peut-être que... Non, je ne pourrais pas vous "
+"imposer cela, en plus des autres problèmes. Peut-être qu'après avoir nettoyé "
+"l'église d'une partie de ces créatures, vous pourriez revenir... et "
+"consacrer un peu de temps pour aider un pauvre fermier ?"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
@@ -9309,6 +10176,11 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
+"J'ai perdu Théo ! J'ai perdu mon meilleur ami! On jouait au bord de la "
+"rivière, et Theo a dit qu'il voulait aller voir le gros truc vert. Je lui ai "
+"dit que nous ne devrions pas, mais nous nous sommes faufilés là-bas, et puis "
+"soudain, cette BESTIOLE est sorti ! Nous nous sommes enfuis mais Théo a fait "
+"une chute et la bestiole l'a attrapé et l'a emmené !"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -9316,6 +10188,9 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
+"Est-ce que vous l'avez trouvé ? Vous devez retrouver Theodore, s'il vous "
+"plaît ! Il est encore petit. Il n'est pas capable de s'occuper de lui-même ! "
+"S'il vous plaît!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -9324,6 +10199,10 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
+"Vous l'avez retrouvé ! Vous l'avez retrouvé ! Merci! Oh Theo, ces méchants "
+"insectes t'ont-ils fait peur ? Hey! Pouah! Il y a quelque chose de collé à "
+"ta fourrure ! Mince! Allez, Theo, rentrons à la maison ! Merci encore, "
+"héros !"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
@@ -9331,6 +10210,9 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
 msgstr ""
+"Nous avons dormi longtemps et le temps est venu de nous réveiller. Après "
+"notre long sommeil et nous sommes épris d'une faim insatiable. Bientôt, "
+"maintenant, nous allons nous nourrir..."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
@@ -9338,6 +10220,8 @@ msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
 msgstr ""
+"Vous êtes-vous bien amusé, petit mammifère ? Pathétique. Votre petit monde "
+"n'est en rien un défi."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -9346,6 +10230,10 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
+"Ces terres seront souillées et notre progéniture envahira ces champs que les "
+"hommes appellent leur maison. Nos vrilles envelopperont ce monde, et nous "
+"nous régalerons de la chair de ses habitants. L'homme deviendra notre bien "
+"et notre subsistance."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
@@ -9353,6 +10241,8 @@ msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
 msgstr ""
+"Ah, je peux vous sentir... vous êtes proche ! Proche! Ssss... l'odeur du "
+"sang et de la peur... comme c'est alléchant..."
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -9371,6 +10261,21 @@ msgid ""
 "within all things and beyond all things. Light and unity are the products of "
 "this holy foundation, a unity of purpose and a unity of possession."
 msgstr ""
+"Et durant l'année de la Lumière Dorée, il fut ainsi décrété qu'une grande "
+"Cathédrale serait érigée. La pierre angulaire de ce lieu saint devait être "
+"taillée dans la pierre translucide Antyrael, du nom de l'Ange qui partageait "
+"son pouvoir avec les Horadrim.\n"
+" \n"
+"Durant l'année du Dessin des Ombres, le sol trembla et la cathédrale se "
+"fissura puis tomba. Alors que la construction de catacombes et de châteaux "
+"commençait et que l'homme se dressait contre les ravages de la Guerre du "
+"Péché, les ruines furent récupérées pour leurs pierres. Et c'est ainsi que "
+"la pierre angulaire disparu des yeux de l'homme.\n"
+" \n"
+"La pierre était de ce monde - et de tous les mondes - car la Lumière est à "
+"la fois en toutes choses et au-delà de toutes choses. La lumière et l'unité "
+"sont les produits de ce fondement saint, une unité de but et une unité de "
+"possession."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
@@ -9401,6 +10306,18 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden."
 msgstr ""
+"D'accord, d'accord. Je ne suis pas vraiment une vache. En temps normal, je "
+"ne me promène pas comme ça ; mais, alors que j'étais assis à la maison à "
+"m'occuper de mes propres affaires, d'un coup, ces insectes, vignes, bulbes "
+"et autres trucs ont commencé à sortir du sol... c'était horrible ! Si "
+"seulement j'avais quelque chose de normal à porter, ce ne serait pas si mal. "
+"Hey! Pourriez-vous retourner chez moi et me chercher mon costume ? Le "
+"marron, pas le gris, il est pour les tenues de soirée. Je le ferais moi-"
+"même, mais je ne veux pas que qui que ce soit me voie comme ça. Tenez, "
+"prenez ceci, vous pourriez en avoir besoin... pour tuer ces choses qui ont "
+"tout envahi. Vous ne pouvez pas manquer ma maison, elle est juste au sud de "
+"la fourche de la rivière... vous savez... celle avec le potager envahi par "
+"la végétation."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
@@ -9408,6 +10325,8 @@ msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
 msgstr ""
+"Pourquoi perdez-vous du temps ? Allez chercher mon costume ! Et dépêchez-"
+"vous ! Ce Holstein là-bas n'arrête pas de me faire des clins d'œil !"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
@@ -9415,6 +10334,8 @@ msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
 msgstr ""
+"Hé, vous avez mon costume ? Vite, donnez-le moi ! Vous n'imaginez même pas à "
+"quel point ces oreilles me démangent !"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
@@ -9423,6 +10344,9 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
+"Non Non Non Non! C'est mon costume GRIS ! C'est pour les tenues de soirée ! "
+"Les occasions formelles! Je ne peux pas porter CECI. Mais qui êtes-vous, une "
+"sorte de cinglé ? J'ai besoin du costume MARRON."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -9433,6 +10357,12 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
+"Ahh, c'est BEAUCOUP mieux. Ouf! Enfin un peu de dignité ! Mes bois sont-ils "
+"droits ? Bon. Écoutez, merci beaucoup de m'avoir aidé. Tenez, prenez ceci "
+"comme un cadeau; et, vous savez... un petit conseil de mode... vous pourriez "
+"en utiliser un peu... vous pourriez utiliser un nouveau... vous savez ce que "
+"je veux dire ? Tout ces motifs d'aventurier sont tellement... rétro. Juste "
+"un conseil, hein ? Ciao."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
@@ -9440,6 +10370,8 @@ msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
+"Regardez. Je suis une vache. Et vous, vous êtes un appât à monstre. Allez "
+"acquérir de l'expérience! Nous reparlerons..."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -9447,6 +10379,9 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
+"Cela doit être une tâche vraiment redoutable que je vous ai assignée. S'il y "
+"avait un moyen que je puisse... est-ce qu'un flacon de bon lait frais "
+"aiderait ?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
@@ -9454,6 +10389,8 @@ msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
 msgstr ""
+"Oh, j'aurais besoin de votre aide, mais peut-être après que vous ayez sauvé "
+"les catacombes de la profanation de ces bêtes."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
@@ -9461,6 +10398,9 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
+"J'ai besoin que quelque chose soit fait, mais je ne pouvais pas m'imposer à "
+"un parfait inconnu. Peut-être qu'après certain temps ici, je me sentirais "
+"plus à l'aise à l'idée de demander une faveur."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -9468,6 +10408,9 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
+"Je vois en vous le potentiel de la grandeur. Peut-être qu'un jour alors que "
+"vous accomplissez votre destin, vous pourriez passer et me faire une petite "
+"faveur ?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -9476,12 +10419,17 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
+"Je pense que vous pourriez m'aider, mais peut-être après que vous soyez "
+"devenu un peu plus puissant. Je ne voudrais pas nuire à la seule chance du "
+"village de détruire la menace qui réside dans l'église !"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
 msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
 msgstr ""
+"Moi, je suis une vache autodidacte. Faites quelque chose par vous-même, "
+"et... ensuite nous parlerons."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
@@ -9489,6 +10437,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
+"Je n'ai pas à m'expliquer à chaque touriste qui passe ! N'avez-vous pas des "
+"monstres à tuer ? Peut-être que nous parlerons plus tard. Si vous survivez..."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -9497,6 +10447,10 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
+"Arrête de m'embêter. Je cherche quelqu'un de vraiment héroïque. Et vous ne "
+"l'êtes pas. Je ne peux pas vous faire confiance, vous allez vous faire "
+"dévorer par des monstres d'un jour à l'autre... J'ai besoin d'un héros "
+"expérimenté."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
@@ -9513,6 +10467,18 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden."
 msgstr ""
+"D'accord, je vais être honnête. Je ne voulais pas vous tromper. J'étais "
+"assis à la maison, me sentant de mauvaise humeur, quand les choses se sont "
+"gâtés; toute une vague de monstres est sortie du sol ! C'est vache. Il se "
+"trouve que je portais ce maillot quand je suis sorti en courant, et "
+"maintenant j'ai l'air complètement ridicule. Si seulement j'avais quelque "
+"chose de normal à porter, ce ne serait pas si mal. Hey! Pouvez-vous "
+"retourner chez moi et me chercher mon costume ? Le marron, pas le gris,  il "
+"est pour les tenues de soirée. Je le ferais moi-même, mais je veux ne veux "
+"pas que qui que ce soit me voie comme ça. Tenez, prenez ceci, vous pourriez "
+"en avoir besoin... pour tuer ces choses qui ont tout envahi. Vous ne pouvez "
+"pas manquer ma maison, elle est juste au sud de la fourche de la rivière... "
+"vous savez... celle avec le potager envahi par la végétation."
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
@@ -9522,6 +10488,11 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
+"Nuageux et plus frais aujourd'hui. Jeter les filets de la nécromancie dans "
+"le vide a fait tomber deux nouvelles sous-espèces de ces horreurs volantes; "
+"une bonne journée de travail. Ne pas oublier de commander encore plus de "
+"guano de chauve-souris et de bougies noires à Adria; Je vais commencer à "
+"manquer."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -9530,6 +10501,9 @@ msgid ""
 "creature -- to no avail.  My methods of enslaving lesser demons seem to have "
 "no effect on this fearsome beast."
 msgstr ""
+"J'ai essayé des sorts, des menaces, l'abjuration et le marchandage avec "
+"cette créature immonde - en vain. Mes méthodes pour asservir ces démons "
+"mineurs semblent n'avoir aucun effet sur cette bête redoutable."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
@@ -9539,6 +10513,10 @@ msgid ""
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""
+"Ma maison se voit lentement corrompre par la bassesse de ce prisonnier "
+"indésirable. Les cryptes sont pleines d'ombres qui se déplacent au-delà de "
+"mon champs de vision. J'entend à peine le faible grincement des griffes qui "
+"dansent. Ils cherchent, je pense, ce journal."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
@@ -9548,6 +10526,11 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
+"Dans sa diatribe, la créature a laissé échapper son nom - Na-Krul. J'ai "
+"essayé de faire des recherches sur ce nom, mais ces petits démons ont "
+"malheureusement détruit ma bibliothèque. Na-Krul... Ce nom me remplit d'une "
+"terreur froide. Je préfère ne l'appeler que la Créature plutôt que de "
+"prononcer son vrai nom."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
@@ -9557,6 +10540,10 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice."
 msgstr ""
+"Les hurlements de fureur de la créature piégée m'empêchent de dormir malgré "
+"la fatigue. Il fait rage contre celui qui l'a envoyé dans le Vide, et il "
+"appelle d'ignobles malédictions contre moi pour l'avoir piégé ici. Ses mots "
+"remplissent mon cœur de terreur, et je n'arrive pas à bloquer sa voix."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
@@ -9566,6 +10553,10 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge."
 msgstr ""
+"Il ne me reste plus beaucoup de temps. Je dois écrire les moyens d'affaiblir "
+"le démon, puis cacher ce texte, de peur que ses serviteurs ne trouvent un "
+"moyen d'utiliser mes connaissances pour libérer leur seigneur. J'espère que "
+"quiconque trouvera ce journal cherchera la connaissance."
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -9583,6 +10574,19 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat."
 msgstr ""
+"Celui qui trouve ce parchemin est chargé d'arrêter la créature démoniaque "
+"qui se trouve à l'intérieur de ces murs. Mon temps est écoulé. Aujourd'hui "
+"encore, ses serviteurs infernaux griffent la frêle porte derrière laquelle "
+"je me cache.\n"
+" \n"
+"J'ai entravé le démon avec de la magie des arcanes et je l'ai enfermé dans "
+"de grands murs, mais je crains que cela ne suffise pas.\n"
+" \n"
+"Les sorts trouvés dans mes trois grimoires vous fourniront un accès protégée "
+"vers son domaine, mais seulement s'ils sont lancés dans le bon ordre. Les "
+"leviers à l'entrée lèveront les barrières et libéreront le démon ; ne le "
+"touchez pas ! N'utilisez que ces sorts pour entrer ou j'ai bien peur que son "
+"pouvoir ne soit trop grand pour que vous ne puissiez le vaincre."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
@@ -9624,7 +10628,7 @@ msgstr "Gillian la Serveuse"
 
 #: Source/towners.cpp:179
 msgid "Pepin the Healer"
-msgstr "Pépin le Guérisseur"
+msgstr "Pepin le Guérisseur"
 
 #: Source/towners.cpp:196
 msgid "Cain the Elder"
@@ -9640,7 +10644,7 @@ msgstr "Lester le Fermier"
 
 #: Source/towners.cpp:257
 msgid "Complete Nut"
-msgstr ""
+msgstr "Cinglé"
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
