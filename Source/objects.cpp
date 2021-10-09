@@ -5332,9 +5332,9 @@ void SyncObjectAnim(Object &object)
 	}
 }
 
-void GetObjectStr(int i)
+void GetObjectStr(const Object &object)
 {
-	switch (Objects[i]._otype) {
+	switch (object._otype) {
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
@@ -5350,11 +5350,11 @@ void GetObjectStr(int i)
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (Objects[i]._oVar4 == 1)
+		if (object._oVar4 == 1)
 			strcpy(infostr, _("Open Door"));
-		if (Objects[i]._oVar4 == 0)
+		if (object._oVar4 == 0)
 			strcpy(infostr, _("Closed Door"));
-		if (Objects[i]._oVar4 == 2)
+		if (object._oVar4 == 2)
 			strcpy(infostr, _("Blocked Door"));
 		break;
 	case OBJ_BOOK2L:
@@ -5406,7 +5406,7 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[Objects[i]._oVar1])).c_str());
+		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])).c_str());
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
@@ -5456,7 +5456,7 @@ void GetObjectStr(int i)
 		strcpy(infostr, _("Pedestal of Blood"));
 		break;
 	case OBJ_STORYBOOK:
-		strcpy(infostr, _(StoryBookName[Objects[i]._oVar3]));
+		strcpy(infostr, _(StoryBookName[object._oVar3]));
 		break;
 	case OBJ_WEAPONRACK:
 		strcpy(infostr, _("Weapon Rack"));
@@ -5474,13 +5474,13 @@ void GetObjectStr(int i)
 		break;
 	}
 	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
-		if (Objects[i]._oTrapFlag) {
+		if (object._oTrapFlag) {
 			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
 			strcpy(infostr, tempstr);
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
-	if (Objects[i].IsDisabled()) {
+	if (object.IsDisabled()) {
 		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
 		strcpy(infostr, tempstr);
 		InfoColor = UiFlags::ColorRed;
