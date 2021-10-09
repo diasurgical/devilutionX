@@ -339,7 +339,7 @@ TEST(pack, UnPackItem_diablo)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloItems) / sizeof(*PackedDiabloItems); i++) {
-		UnPackItem(&PackedDiabloItems[i], &id, false);
+		UnPackItem(&PackedDiabloItems[i], &id);
 		CompareItems(&id, &DiabloItems[i]);
 
 		PackItem(&is, &id);
@@ -357,7 +357,7 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 	gbIsSpawn = false;
 
 	Item id;
-	UnPackItem(&pkItemBug, &id, false);
+	UnPackItem(&pkItemBug, &id);
 	ASSERT_STREQ(id._iIName, "Veil of Steel");
 	ASSERT_EQ(id._itype, ItemType::Helm);
 	ASSERT_EQ(id._iClass, ICLASS_ARMOR);
@@ -410,7 +410,7 @@ TEST(pack, UnPackItem_spawn)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedSpawnItems) / sizeof(*PackedSpawnItems); i++) {
-		UnPackItem(&PackedSpawnItems[i], &id, false);
+		UnPackItem(&PackedSpawnItems[i], &id);
 		CompareItems(&id, &SpawnItems[i]);
 
 		PackItem(&is, &id);
@@ -454,7 +454,7 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedDiabloMPItems) / sizeof(*PackedDiabloMPItems); i++) {
-		UnPackItem(&PackedDiabloMPItems[i], &id, false);
+		UnPackItem(&PackedDiabloMPItems[i], &id);
 		CompareItems(&id, &DiabloMPItems[i]);
 
 		PackItem(&is, &id);
@@ -465,94 +465,94 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 const ItemPack PackedHellfireItems[] = {
 	// clang-format off
 	//     iSeed, iCreateInfo, idx, bId, bDur, bMDur, bCh, bMCh, wValue, dwBuff
-	{ 1717442367,         266, 156,   3,    0,     0,   0,    0,      0,      0 }, // Ring of stability
-	{ 1268518156,         338, 157,   3,    0,     0,   0,    0,      0,      0 }, // Ring of precision
-	{  132733863,         283, 157,   3,    0,     0,   0,    0,      0,      0 }, // Obsidian Ring of wizardry
-	{  511953594,         283, 158,   3,    0,     0,   0,    0,      0,      0 }, // Ring of precision
-	{ 1183326923,         346, 160,   3,    0,     0,   0,    0,      0,      0 }, // Amulet of titans
-	{ 1863009736,         280, 160,   3,    0,     0,   0,    0,      0,      0 }, // Gold Amulet
-	{ 1872860650,         734, 135,   5,   75,    75,   0,    0,      0,      0 }, // Messerschmidt's Reaver
-	{ 1584694222,         281, 142,   3,  127,   128,   0,    0,      0,      0 }, // Vicious Maul of structure
-	{  669112929,         280, 119,   0,   15,    24,   0,    0,      0,      0 }, // Short Sword
-	{  303108965,         280, 148,   3,   18,    50,   0,    0,      0,      0 }, // Long Battle Bow of shock
-	{  575830996,         257, 143,   3,   30,    30,   0,    0,      0,      0 }, // Short Bow of magic
-	{ 1488880650,         194, 152,   3,   35,    35,  22,   33,      0,      0 }, // Red Staff of Healing
-	{ 1864450901,         263,  71,   0,    6,    16,   0,    0,      0,      0 }, // Buckler
-	{   28387651,         263,  49,   0,   15,    20,   0,    0,      0,      0 }, // Skull Cap
-	{ 1298183212,         257,  55,   0,    6,     6,   0,    0,      0,      0 }, // Rags
-	{ 1113945523,         260,  58,   0,   30,    30,   0,    0,      0,      0 }, // Quilted Armor
-	{  765757608,         260,  58,   2,   12,    30,   0,    0,      0,      0 }, // Quilted Armor of light
-	{  188812770,         346,  67,   3,   75,    75,   0,    0,      0,      0 }, // Saintly Plate Mail of the stars
-	{  283577043,        2070,  67,   3,   63,    75,   0,    0,      0,      0 }, // Plate Mail of the stars
-	{  123272767,          16,  24,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Healing
-	{  433688373,          16,  29,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Full Healing
-	{ 1213385484,       32770,  25,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Mana
-	{ 1405075219,         280, 110,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Golem
-	{ 1478792102,         259,  92,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Search
-	{ 1569255955,         262,  94,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Identify
-	{ 1291205782,         261,  98,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Town Portal
-	{  811925807,         260,  91,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Healing
-	{ 1275007287,         257, 161,   0,    0,     0,   0,    0,      0,      0 }, // Rune of Fire
-	{  561216242,         278,   0,   0,    0,     0,   0,    0,   1663,      0 }, // Gold
-	{          1,         515,   7,   5,   45,    50,   0,    0,      0,      0 }, // The Undead Crown
-	{          2,         774,   8,   5,    0,     0,   0,    0,      0,      0 }, // Empyrean Band
-	{          4,         769,  11,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Truth
-	{          8,         512,  31,   5,   50,    50,   0,    0,      0,      0 }, // Griswold's Edge
-	{          9,         850,  32,   5,  255,   255,   0,    0,      0,      0 }, // Bovine Plate
-	{  410929431,         258, 114,   0,    0,     0,   0,    0,      0,      0 }, // Book of Healing
-	{  876535546,         258, 114,   0,    0,     0,   0,    0,      0,      0 }, // Book of Charged Bolt
-	{ 1009350361,         258, 114,   0,    0,     0,   0,    0,      0,      0 }, // Book of Firebolt
-	{   41417651,         258,  83,   0,    0,     0,   0,    0,      0,      0 }, // Blacksmith Oil
-	{  132200437,         258,  84,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Accuracy
-	{  385651490,         257,  85,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Sharpness
-	{ 1154514759,         290,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Permanence
-	{ 2020998927,        2066, 131,   3,   23,    32,   0,    0,      0,      0 }, // Doppelganger's Axe
-	{  581541889,        2067, 141,   3,   36,    36,   0,    0,      0,      0 }, // Flail of vampires
-	{ 1069448901,         844, 157,   5,    0,     0,   0,    0,      0,      0 }, // Gladiator's Ring
-	{ 1670063399,        2068, 155,   3,   75,    75,   0,    0,      0,      0 }, // Warrior's War Staff of the moon
-	{  342570085,        4114,  74,   3,  255,   255,   0,    0,      0,      0 }, // Kite Shield of the ages
-	{ 1514523617,        2066, 139,   3,   20,    20,   0,    0,      0,      0 }, // Heavy Spiked Club of puncturing
-	{  701987341,        8208, 114,   1,    0,     0,   0,    0,      0,      0 }, // Book of Lightning
-	{  568338383,         196, 124,   3,   23,    45,   0,    0,      0,      0 }, // Jester's Sabre
-	{ 1308277119,        2056,  72,   3,   24,    24,   0,    0,      0,      0 }, // Small Shield of blocking
-	{          0,         512,   6,   5,   10,    10,   0,    0,      0,      0 }, // The Butcher's Cleaver
-	{ 1621745295,        2057, 121,   3,   28,    28,   0,    0,      0,      0 }, // Scimitar of peril
-	{  492619876,        2054, 132,   3,   12,    12,   0,    0,      0,      0 }, // Crystalline Large Axe
-	{ 1859493982,        2053,  56,   3,   18,    18,   0,    0,      0,      0 }, // Red Cloak
-	{ 1593032051,        2050, 136,   3,   32,    32,   0,    0,      0,      0 }, // Mace of decay
-	{          4,         512,  11,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Truth
-	{ 1500728519,         260,  61,   3,   18,    45,   0,    0,      0,      0 }, // Red Studded Leather Armor of paralysis
-	{  954183925,         261, 144,   3,   26,    40,   0,    0,      0,      0 }, // Bent Hunter's Bow
-	{  438248055,         711, 136,   5,   32,    32,   0,    0,      0,      0 }, // Civerb's Cudgel
-	{ 1133027011,         328, 139,   3,    8,    20,   0,    0,      0,      0 }, // Deadly Spiked Club
-	{  224835143,         732, 144,   5,  255,   255,   0,    0,      0,      0 }, // Gnat Sting
-	{ 1498080548,         796, 138,   5,  255,   255,   0,    0,      0,      0 }, // Thunderclap
-	{ 1218409601,         792, 155,   5,   75,    75,  50,   50,      0,      0 }, // Rod of Onan
-	{ 1228950066,         711, 146,   5,  255,   255,   0,    0,      0,      0 }, // Flambeau
-	{  863852923,         709, 156,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Thunder
-	{   89183927,         716, 159,   5,    0,     0,   0,    0,      0,      0 }, // Acolyte's Amulet
-	{  858625694,         796, 151,   5,   25,    25,  86,   86,      0,      0 }, // The Protector
-	{  127653047,         734,  63,   5,   55,    55,   0,    0,      0,      0 }, // Bone Chain Armor
-	{ 1282740811,         290,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Permanence
-	{ 1403842263,         858,  70,   5,   90,    90,   0,    0,      0,      0 }, // Demon Plate Armor
-	{ 1543909415,         284,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Fortitude
-	{ 1572202402,         769, 157,   5,    0,     0,   0,    0,      0,      0 }, // Ring of Regha
-	{ 1572202657,         257, 156,   5,    0,     0,   0,    0,      0,      0 }, // Bronze Ring of dexterity
-	{ 1642077210,         264,  84,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Accuracy
-	{ 2049461998,         388,  35,   0,    0,     0,   0,    0,      0,      0 }, // Blacksmith Oil
-	{ 2054447852,        2050, 151,   3,   25,    25,   0,    0,      0,      0 }, // Spider's Short Staff of devastation
-	{  257276810,         284,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Hardening
-	{   29449848,         267,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Skill
-	{  296008111,         282,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Mastery
-	{  521895255,         724, 146,   5,  255,   255,   0,    0,      0,      0 }, // Blitzen
-	{  580426378,         279,  86,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Death
-	{  626919077,         264,  85,   0,    0,     0,   0,    0,      0,      0 }, // Oil of Sharpness
-	{  979073763,         267, 119,   3,   13,    13,   0,    0,      0,      0 }, // Crystalline Short Sword of the leech
-	{ 1294354855,        8208, 153,   3,   45,    45,  14,   14,      0,      0 }, // Plentiful Staff of Mana Shield
-	{  695065155,        2078, 155,   3,   75,    75,   0,    0,      0,      0 }, // King's War Staff
-	{ 1100844414,         386,  25,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Mana
-	{ 1944120644,         386,  27,   0,    0,     0,   0,    0,      0,      0 }, // Scroll of Town Portal
-	{  525564945,         385,  25,   0,    0,     0,   0,    0,      0,      0 }, // Potion of Mana
+	{ 1717442367,         266, 156,   3,    0,     0,   0,    0,      0,      1 }, // Ring of stability
+	{ 1268518156,         338, 157,   3,    0,     0,   0,    0,      0,      1 }, // Ring of precision
+	{  132733863,         283, 157,   3,    0,     0,   0,    0,      0,      1 }, // Obsidian Ring of wizardry
+	{  511953594,         283, 158,   3,    0,     0,   0,    0,      0,      1 }, // Ring of precision
+	{ 1183326923,         346, 160,   3,    0,     0,   0,    0,      0,      1 }, // Amulet of titans
+	{ 1863009736,         280, 160,   3,    0,     0,   0,    0,      0,      1 }, // Gold Amulet
+	{ 1872860650,         734, 135,   5,   75,    75,   0,    0,      0,      1 }, // Messerschmidt's Reaver
+	{ 1584694222,         281, 142,   3,  127,   128,   0,    0,      0,      1 }, // Vicious Maul of structure
+	{  669112929,         280, 119,   0,   15,    24,   0,    0,      0,      1 }, // Short Sword
+	{  303108965,         280, 148,   3,   18,    50,   0,    0,      0,      1 }, // Long Battle Bow of shock
+	{  575830996,         257, 143,   3,   30,    30,   0,    0,      0,      1 }, // Short Bow of magic
+	{ 1488880650,         194, 152,   3,   35,    35,  22,   33,      0,      1 }, // Red Staff of Healing
+	{ 1864450901,         263,  71,   0,    6,    16,   0,    0,      0,      1 }, // Buckler
+	{   28387651,         263,  49,   0,   15,    20,   0,    0,      0,      1 }, // Skull Cap
+	{ 1298183212,         257,  55,   0,    6,     6,   0,    0,      0,      1 }, // Rags
+	{ 1113945523,         260,  58,   0,   30,    30,   0,    0,      0,      1 }, // Quilted Armor
+	{  765757608,         260,  58,   2,   12,    30,   0,    0,      0,      1 }, // Quilted Armor of light
+	{  188812770,         346,  67,   3,   75,    75,   0,    0,      0,      1 }, // Saintly Plate Mail of the stars
+	{  283577043,        2070,  67,   3,   63,    75,   0,    0,      0,      1 }, // Plate Mail of the stars
+	{  123272767,          16,  24,   0,    0,     0,   0,    0,      0,      1 }, // Potion of Healing
+	{  433688373,          16,  29,   0,    0,     0,   0,    0,      0,      1 }, // Potion of Full Healing
+	{ 1213385484,       32770,  25,   0,    0,     0,   0,    0,      0,      1 }, // Potion of Mana
+	{ 1405075219,         280, 110,   0,    0,     0,   0,    0,      0,      1 }, // Scroll of Golem
+	{ 1478792102,         259,  92,   0,    0,     0,   0,    0,      0,      1 }, // Scroll of Search
+	{ 1569255955,         262,  94,   0,    0,     0,   0,    0,      0,      1 }, // Scroll of Identify
+	{ 1291205782,         261,  98,   0,    0,     0,   0,    0,      0,      1 }, // Scroll of Town Portal
+	{  811925807,         260,  91,   0,    0,     0,   0,    0,      0,      1 }, // Scroll of Healing
+	{ 1275007287,         257, 161,   0,    0,     0,   0,    0,      0,      1 }, // Rune of Fire
+	{  561216242,         278,   0,   0,    0,     0,   0,    0,   1663,      1 }, // Gold
+	{          1,         515,   7,   5,   45,    50,   0,    0,      0,      1 }, // The Undead Crown
+	{          2,         774,   8,   5,    0,     0,   0,    0,      0,      1 }, // Empyrean Band
+	{          4,         769,  11,   5,    0,     0,   0,    0,      0,      1 }, // Ring of Truth
+	{          8,         512,  31,   5,   50,    50,   0,    0,      0,      1 }, // Griswold's Edge
+	{          9,         850,  32,   5,  255,   255,   0,    0,      0,      1 }, // Bovine Plate
+	{  410929431,         258, 114,   0,    0,     0,   0,    0,      0,      1 }, // Book of Healing
+	{  876535546,         258, 114,   0,    0,     0,   0,    0,      0,      1 }, // Book of Charged Bolt
+	{ 1009350361,         258, 114,   0,    0,     0,   0,    0,      0,      1 }, // Book of Firebolt
+	{   41417651,         258,  83,   0,    0,     0,   0,    0,      0,      1 }, // Blacksmith Oil
+	{  132200437,         258,  84,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Accuracy
+	{  385651490,         257,  85,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Sharpness
+	{ 1154514759,         290,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Permanence
+	{ 2020998927,        2066, 131,   3,   23,    32,   0,    0,      0,      1 }, // Doppelganger's Axe
+	{  581541889,        2067, 141,   3,   36,    36,   0,    0,      0,      1 }, // Flail of vampires
+	{ 1069448901,         844, 157,   5,    0,     0,   0,    0,      0,      1 }, // Gladiator's Ring
+	{ 1670063399,        2068, 155,   3,   75,    75,   0,    0,      0,      1 }, // Warrior's War Staff of the moon
+	{  342570085,        4114,  74,   3,  255,   255,   0,    0,      0,      1 }, // Kite Shield of the ages
+	{ 1514523617,        2066, 139,   3,   20,    20,   0,    0,      0,      1 }, // Heavy Spiked Club of puncturing
+	{  701987341,        8208, 114,   1,    0,     0,   0,    0,      0,      1 }, // Book of Lightning
+	{  568338383,         196, 124,   3,   23,    45,   0,    0,      0,      1 }, // Jester's Sabre
+	{ 1308277119,        2056,  72,   3,   24,    24,   0,    0,      0,      1 }, // Small Shield of blocking
+	{          0,         512,   6,   5,   10,    10,   0,    0,      0,      1 }, // The Butcher's Cleaver
+	{ 1621745295,        2057, 121,   3,   28,    28,   0,    0,      0,      1 }, // Scimitar of peril
+	{  492619876,        2054, 132,   3,   12,    12,   0,    0,      0,      1 }, // Crystalline Large Axe
+	{ 1859493982,        2053,  56,   3,   18,    18,   0,    0,      0,      1 }, // Red Cloak
+	{ 1593032051,        2050, 136,   3,   32,    32,   0,    0,      0,      1 }, // Mace of decay
+	{          4,         512,  11,   5,    0,     0,   0,    0,      0,      1 }, // Ring of Truth
+	{ 1500728519,         260,  61,   3,   18,    45,   0,    0,      0,      1 }, // Red Studded Leather Armor of paralysis
+	{  954183925,         261, 144,   3,   26,    40,   0,    0,      0,      1 }, // Bent Hunter's Bow
+	{  438248055,         711, 136,   5,   32,    32,   0,    0,      0,      1 }, // Civerb's Cudgel
+	{ 1133027011,         328, 139,   3,    8,    20,   0,    0,      0,      1 }, // Deadly Spiked Club
+	{  224835143,         732, 144,   5,  255,   255,   0,    0,      0,      1 }, // Gnat Sting
+	{ 1498080548,         796, 138,   5,  255,   255,   0,    0,      0,      1 }, // Thunderclap
+	{ 1218409601,         792, 155,   5,   75,    75,  50,   50,      0,      1 }, // Rod of Onan
+	{ 1228950066,         711, 146,   5,  255,   255,   0,    0,      0,      1 }, // Flambeau
+	{  863852923,         709, 156,   5,    0,     0,   0,    0,      0,      1 }, // Ring of Thunder
+	{   89183927,         716, 159,   5,    0,     0,   0,    0,      0,      1 }, // Acolyte's Amulet
+	{  858625694,         796, 151,   5,   25,    25,  86,   86,      0,      1 }, // The Protector
+	{  127653047,         734,  63,   5,   55,    55,   0,    0,      0,      1 }, // Bone Chain Armor
+	{ 1282740811,         290,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Permanence
+	{ 1403842263,         858,  70,   5,   90,    90,   0,    0,      0,      1 }, // Demon Plate Armor
+	{ 1543909415,         284,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Fortitude
+	{ 1572202402,         769, 157,   5,    0,     0,   0,    0,      0,      1 }, // Ring of Regha
+	{ 1572202657,         257, 156,   5,    0,     0,   0,    0,      0,      1 }, // Bronze Ring of dexterity
+	{ 1642077210,         264,  84,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Accuracy
+	{ 2049461998,         388,  35,   0,    0,     0,   0,    0,      0,      1 }, // Blacksmith Oil
+	{ 2054447852,        2050, 151,   3,   25,    25,   0,    0,      0,      1 }, // Spider's Short Staff of devastation
+	{  257276810,         284,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Hardening
+	{   29449848,         267,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Skill
+	{  296008111,         282,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Mastery
+	{  521895255,         724, 146,   5,  255,   255,   0,    0,      0,      1 }, // Blitzen
+	{  580426378,         279,  86,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Death
+	{  626919077,         264,  85,   0,    0,     0,   0,    0,      0,      1 }, // Oil of Sharpness
+	{  979073763,         267, 119,   3,   13,    13,   0,    0,      0,      1 }, // Crystalline Short Sword of the leech
+	{ 1294354855,        8208, 153,   3,   45,    45,  14,   14,      0,      1 }, // Plentiful Staff of Mana Shield
+	{  695065155,        2078, 155,   3,   75,    75,   0,    0,      0,      1 }, // King's War Staff
+	{ 1100844414,         386,  25,   0,    0,     0,   0,    0,      0,      1 }, // Potion of Mana
+	{ 1944120644,         386,  27,   0,    0,     0,   0,    0,      0,      1 }, // Scroll of Town Portal
+	{  525564945,         385,  25,   0,    0,     0,   0,    0,      0,      1 }, // Potion of Mana
 	// clang-format on
 };
 
@@ -663,25 +663,24 @@ TEST(pack, UnPackItem_hellfire)
 	Players[MyPlayerId]._pMaxHPBase = 125 << 6;
 
 	for (size_t i = 0; i < sizeof(PackedHellfireItems) / sizeof(*PackedHellfireItems); i++) {
-		UnPackItem(&PackedHellfireItems[i], &id, true);
+		UnPackItem(&PackedHellfireItems[i], &id);
 		CompareItems(&id, &HellfireItems[i]);
 
 		PackItem(&is, &id);
-		is.dwBuff &= ~CF_HELLFIRE;
 		ComparePackedItems(&is, &PackedHellfireItems[i]);
 	}
 }
 
 TEST(pack, UnPackItem_diablo_strip_hellfire_items)
 {
-	ItemPack is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 0 }; // Scroll of Search
+	ItemPack is = { 1478792102, 259, 92, 0, 0, 0, 0, 0, 0, 1 }; // Scroll of Search
 	Item id;
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
 
-	UnPackItem(&is, &id, true);
+	UnPackItem(&is, &id);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -691,7 +690,7 @@ TEST(pack, UnPackItem_empty)
 	ItemPack is = { 0, 0, 0xFFFF, 0, 0, 0, 0, 0, 0, 0 };
 	Item id;
 
-	UnPackItem(&is, &id, false);
+	UnPackItem(&is, &id);
 
 	ASSERT_EQ(id._itype, ItemType::None);
 }
@@ -711,7 +710,7 @@ TEST(pack, PackItem_empty)
 static void compareGold(const ItemPack *is, int iCurs)
 {
 	Item id;
-	UnPackItem(is, &id, false);
+	UnPackItem(is, &id);
 	ASSERT_EQ(id._iCurs, iCurs);
 	ASSERT_EQ(id.IDidx, IDI_GOLD);
 	ASSERT_EQ(id._ivalue, is->wValue);
@@ -746,7 +745,7 @@ TEST(pack, UnPackItem_ear)
 	ItemPack is = { 1633955154, 17509, 23, 111, 103, 117, 101, 68, 19843, 0 };
 	Item id;
 
-	UnPackItem(&is, &id, false);
+	UnPackItem(&is, &id);
 	ASSERT_STREQ(id._iName, "Ear of Dead-RogueDM");
 	ASSERT_EQ(id._ivalue, 3);
 

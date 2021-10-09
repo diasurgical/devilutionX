@@ -3453,10 +3453,10 @@ void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc,
 	SetupBaseItem(position, idx, onlygood, sendmsg, delta);
 }
 
-void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire)
+void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue)
 {
-	bool tmpIsHellfire = gbIsHellfire;
-	gbIsHellfire = isHellfire;
+	bool isHellfireItem = (item.dwBuff & CF_HELLFIRE) != 0;
+	HellfireStateSwitcher emulateHellfireState(isHellfireItem);
 
 	if (idx == IDI_GOLD) {
 		SetPlrHandItem(item, IDI_GOLD);
@@ -3464,27 +3464,23 @@ void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ival
 		item._iCreateInfo = icreateinfo;
 		item._ivalue = ivalue;
 		SetPlrHandGoldCurs(item);
-		gbIsHellfire = tmpIsHellfire;
 		return;
 	}
 
 	if (icreateinfo == 0) {
 		SetPlrHandItem(item, idx);
 		SetPlrHandSeed(item, iseed);
-		gbIsHellfire = tmpIsHellfire;
 		return;
 	}
 
 	if ((icreateinfo & CF_UNIQUE) == 0) {
 		if ((icreateinfo & CF_TOWN) != 0) {
 			RecreateTownItem(item, idx, icreateinfo, iseed);
-			gbIsHellfire = tmpIsHellfire;
 			return;
 		}
 
 		if ((icreateinfo & CF_USEFUL) == CF_USEFUL) {
 			SetupAllUseful(item, iseed, icreateinfo & CF_LEVEL);
-			gbIsHellfire = tmpIsHellfire;
 			return;
 		}
 	}
@@ -3502,7 +3498,6 @@ void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ival
 	bool pregen = (icreateinfo & CF_PREGEN) != 0;
 
 	SetupAllItems(item, idx, iseed, level, uper, onlygood, recreate, pregen);
-	gbIsHellfire = tmpIsHellfire;
 }
 
 void RecreateEar(Item &item, uint16_t ic, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff)
@@ -3579,7 +3574,7 @@ void CornerstoneLoad(Point position)
 
 	dItem[position.x][position.y] = ii + 1;
 
-	UnPackItem(&pkSItem, &item, (pkSItem.dwBuff & CF_HELLFIRE) != 0);
+	UnPackItem(&pkSItem, &item);
 	item.position = position;
 	RespawnItem(&item, false);
 	CornerStone.item = item;

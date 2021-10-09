@@ -91,6 +91,6 @@ void PackItem(ItemPack *id, const Item *is);
  * @param is The source packed item
  * @param id The destination item
  */
-void UnPackItem(const ItemPack *is, Item *id, bool isHellfire);
+void UnPackItem(const ItemPack *is, Item *id);
 
 } // namespace devilution

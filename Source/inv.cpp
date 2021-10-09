@@ -1480,7 +1480,8 @@ void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int 
 {
 	auto &item = Items[MAXITEMS];
 	memset(&item, 0, sizeof(item));
-	RecreateItem(item, idx, wCI, seed, 0, (dwBuff & CF_HELLFIRE) != 0);
+	item.dwBuff = dwBuff;
+	RecreateItem(item, idx, wCI, seed, 0);
 
 	player.HoldItem = item;
 
@@ -1785,7 +1786,8 @@ int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, i
 	if (idx == IDI_EAR) {
 		RecreateEar(item, icreateinfo, iseed, id, dur, mdur, ch, mch, ivalue, ibuff);
 	} else {
-		RecreateItem(item, idx, icreateinfo, iseed, ivalue, (ibuff & CF_HELLFIRE) != 0);
+		item.dwBuff = ibuff;
+		RecreateItem(item, idx, icreateinfo, iseed, ivalue);
 		if (id != 0)
 			item._iIdentified = true;
 		item._iDurability = dur;
@@ -1798,7 +1800,6 @@ int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, i
 		item._iMinMag = minMag;
 		item._iMinDex = minDex;
 		item._iAC = ac;
-		item.dwBuff = ibuff;
 	}
 
 	item.position = position;

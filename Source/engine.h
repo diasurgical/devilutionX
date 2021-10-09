@@ -36,6 +36,7 @@
 #include "engine/point.hpp"
 #include "engine/size.hpp"
 #include "engine/surface.hpp"
+#include "init.h"
 #include "miniwin/miniwin.h"
 #include "utils/stdcompat/cstddef.hpp"
 
@@ -43,6 +44,26 @@
 #define TILE_HEIGHT 32
 
 namespace devilution {
+
+/**
+ * Helper class for temporarily changing the state of gbIsHellfire and restoring original one when going out of scope
+ * Currently used in RecreateItem
+ */
+class HellfireStateSwitcher {
+	bool originalState;
+
+public:
+	HellfireStateSwitcher(bool newState)
+	{
+		originalState = gbIsHellfire;
+		gbIsHellfire = newState;
+	}
+
+	~HellfireStateSwitcher()
+	{
+		gbIsHellfire = originalState;
+	}
+};
 
 template <typename V, typename X>
 bool IsAnyOf(const V &v, X x)

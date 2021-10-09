@@ -449,7 +449,7 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg);
 void CreateRndItem(Point position, bool onlygood, bool sendmsg, bool delta);
 void CreateRndUseful(Point position, bool sendmsg);
 void CreateTypeItem(Point position, bool onlygood, ItemType itemType, int imisc, bool sendmsg, bool delta);
-void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue, bool isHellfire);
+void RecreateItem(Item &item, int idx, uint16_t icreateinfo, int iseed, int ivalue);
 void RecreateEar(Item &item, uint16_t ic, int iseed, int Id, int dur, int mdur, int ch, int mch, int ivalue, int ibuff);
 void CornerstoneSave();
 void CornerstoneLoad(Point position);
