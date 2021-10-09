@@ -32,7 +32,6 @@ bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
-PlayerPack netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
 bool gbShouldValidatePackage;
@@ -759,14 +758,14 @@ bool NetInit(bool bSinglePlayer)
 
 void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
-	const char *szEvent;
+	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
 
 	if (MyPlayerId == pnum) {
 		return;
 	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
 	auto &player = Players[pnum];
-	auto &packedPlayer = netplr[pnum];
+	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
 	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {
 		sgwPackPlrOffsetTbl[pnum] = 0;
@@ -799,6 +798,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	player.plractive = true;
 	gbActivePlayers++;
 
+	const char *szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
 	} else {

@@ -179,7 +179,7 @@ struct Player {
 	int destParam2;
 	Direction destParam3;
 	int destParam4;
-	int plrlevel;
+	uint8_t plrlevel;
 	ActorPosition position;
 	Direction _pdir; // Direction faced by player (direction enum)
 	int _pgfxnum;    // Bitmask indicating what variant of the sprite the player is using. Lower byte define weapon (PlayerWeaponGraphic) and higher values define armour (starting with PlayerArmorGraphic)

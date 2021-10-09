@@ -191,7 +191,7 @@ static void PackPlayerTest(PlayerPack *pPack)
 	for (auto i = 0; i < 7; i++)
 		pPack->InvBody[i].idx = -1;
 	strcpy(pPack->pName, "TestPlayer");
-	pPack->pClass = static_cast<int8_t>(HeroClass::Rogue);
+	pPack->pClass = static_cast<uint8_t>(HeroClass::Rogue);
 	pPack->pBaseStr = 20 + 35;
 	pPack->pBaseMag = 15 + 55;
 	pPack->pBaseDex = 30 + 220;
@@ -286,7 +286,7 @@ static void AssertPlayer(Player &player)
 	ASSERT_EQ(player._pMaxHP, 16640);
 	ASSERT_EQ(player._pMana, 14624);
 	ASSERT_EQ(player._pMaxMana, 14624);
-	ASSERT_EQ(player._pNextExper, 2000);
+	ASSERT_EQ(player._pNextExper, 1583495809);
 	ASSERT_EQ(player._pMagResist, 75);
 	ASSERT_EQ(player._pFireResist, 16);
 	ASSERT_EQ(player._pLghtResist, 75);

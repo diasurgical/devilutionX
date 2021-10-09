@@ -39,7 +39,7 @@ struct PlayerPack {
 	uint8_t targx;
 	uint8_t targy;
 	char pName[PLR_NAME_LEN];
-	int8_t pClass;
+	uint8_t pClass;
 	uint8_t pBaseStr;
 	uint8_t pBaseMag;
 	uint8_t pBaseDex;

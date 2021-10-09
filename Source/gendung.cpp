@@ -35,7 +35,7 @@ std::array<bool, MAXTILES + 1> nTrapTable;
 Point dminPosition;
 Point dmaxPosition;
 dungeon_type leveltype;
-BYTE currlevel;
+uint8_t currlevel;
 bool setlevel;
 _setlevels setlvlnum;
 dungeon_type setlvltype;
