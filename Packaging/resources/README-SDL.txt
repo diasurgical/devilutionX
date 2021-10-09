@@ -9,5 +9,5 @@ The Simple DirectMedia Layer library source code is available from:
 https://www.libsdl.org/
 
 This library is distributed under the terms of the zlib license:
-http://www.zlib.net/zlib_license.html
+https://www.zlib.net/zlib_license.html
 
