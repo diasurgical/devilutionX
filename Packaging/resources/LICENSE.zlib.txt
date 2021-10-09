@@ -1,5 +1,5 @@
 The source code to this library used with SDL_ttf can be found here:
-https://hg.libsdl.org/SDL_image/file/default/external
+https://github.com/libsdl-org/SDL_image/tree/main/external
 ---
 
 Copyright notice:
