@@ -35,8 +35,10 @@ enum inv_item : int8_t {
 	// clang-format on
 };
 
-// identifiers for each of the inventory squares
-// see https://github.com/sanctuary/graphics/blob/master/inventory.png
+/**
+ * identifiers for each of the inventory squares
+ * @see inv.cpp (comment block at InvRect[] initialization)
+ */
 enum inv_xy_slot : uint8_t {
 	// clang-format off
 	SLOTXY_HEAD_FIRST       = 0,
