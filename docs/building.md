@@ -136,7 +136,7 @@ Install vcpkg following the instructions from https://github.com/microsoft/vcpkg
 Don't forget to perform _user-wide integration_ step for additional convenience.
 
 In order to build devilutionx.mpq, install smpq from https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe.
-The location of this tool will need to be [added to the system's PATH environment variable](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14)).
+The location of this tool will need to be [added to the system's PATH environment variable](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/).
 
 ### Compiling
 
