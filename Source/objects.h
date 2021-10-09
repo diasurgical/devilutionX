@@ -169,7 +169,11 @@ void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
 void SyncObjectAnim(Object &object);
-void GetObjectStr(int i);
+/**
+ * @brief Updates the text drawn in the info box to describe the given object
+ * @param object The currently highlighted object
+*/
+void GetObjectStr(const Object &object);
 void OperateNakrulLever();
 void SyncNakrulRoom();
 void AddNakrulLeaver();
