@@ -78,7 +78,7 @@ void LoadFileInMem(const char *path, T *data, std::size_t count)
 template <typename T, std::size_t N>
 void LoadFileInMem(const char *path, std::array<T, N> &data)
 {
-	LoadFileInMem(path, &data, N);
+	LoadFileInMem(path, data.data(), N);
 }
 
 /**
