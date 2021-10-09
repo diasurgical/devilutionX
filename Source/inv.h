@@ -37,7 +37,7 @@ enum inv_item : int8_t {
 
 /**
  * identifiers for each of the inventory squares
- * @see inv.cpp (comment block at InvRect[] initialization)
+ * @see #InvRect
  */
 enum inv_xy_slot : uint8_t {
 	// clang-format off
