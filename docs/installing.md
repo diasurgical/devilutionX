@@ -104,7 +104,7 @@ sudo apt install devilutionx
 
 <details><summary>GKD350h</summary>
 
-- Copy [devilutionx-gkd350h.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-gkd350h.opk) to `/media/data/apps` or `/media/sdcard/apps/`.
+- Copy [devilutionx-gkd350h.opk](https://github.com/diasurgical/devilutionX/releases/download/1.0.1/devilutionx-gkd350h.opk) to `/media/data/apps` or `/media/sdcard/apps/`.
 - Copy the MPQ files to `/usr/local/home/.local/share/diasurgical/devilution/`
 
 </details>
