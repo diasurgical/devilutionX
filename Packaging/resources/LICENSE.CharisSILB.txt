@@ -1,9 +1,9 @@
-This Font Software is Copyright (c) 1997-2009, SIL International (http://scripts.sil.org/)
+This Font Software is Copyright (c) 1997-2009, SIL International (https://scripts.sil.org/)
 with Reserved Font Names "Charis" and "SIL".
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
-http://scripts.sil.org/OFL
+https://scripts.sil.org/OFL
 
 
 -----------------------------------------------------------

@@ -1,8 +1,8 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## DevilutionX 1.2.1
 ### Bugfixes
@@ -436,7 +436,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - An older and more original PSX symbol file is discovered
 
 ### October 1, 2018
-- Compiler version is confirmed to be correct by discovery of the [Rich header](http://bytepointer.com/articles/the_microsoft_rich_header.htm)
+- Compiler version is confirmed to be correct by discovery of the [Rich header](https://bytepointer.com/articles/the_microsoft_rich_header.htm)
 
 ### September 18, 2018
 - Merge nightly back in to devilution

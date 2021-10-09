@@ -74,7 +74,7 @@ P.P.P.S. you can also view our presentation slides here: https://docs.google.com
 
 [3]: https://github.com/diasurgical/devilution/issues/111#issuecomment-426059660
 
-[4]: http://bytepointer.com/articles/the_microsoft_rich_header.htm
+[4]: https://bytepointer.com/articles/the_microsoft_rich_header.htm
 
 [5]: https://github.com/diasurgical/devilution/issues/111
 
