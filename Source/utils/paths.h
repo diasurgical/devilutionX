@@ -6,6 +6,7 @@ namespace devilution {
 
 namespace paths {
 
+const std::string &AppPath();
 const std::string &BasePath();
 const std::string &PrefPath();
 const std::string &ConfigPath();
