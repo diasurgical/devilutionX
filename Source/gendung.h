@@ -86,6 +86,8 @@ enum _difficulty : uint8_t {
 	DIFF_NORMAL,
 	DIFF_NIGHTMARE,
 	DIFF_HELL,
+
+	DIFF_LAST = DIFF_HELL,
 };
 
 struct ScrollStruct {
@@ -176,7 +178,7 @@ extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
-extern BYTE currlevel;
+extern uint8_t currlevel;
 extern bool setlevel;
 /** Specifies the active quest level of the current game. */
 extern _setlevels setlvlnum;

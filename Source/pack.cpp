@@ -193,21 +193,21 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync)
 		return false;
 	}
 
-	int dungeonLevel = pPack->plrlevel;
+	uint8_t dungeonLevel = pPack->plrlevel;
 	if (dungeonLevel >= NUMLEVELS) {
 		return false;
 	}
 
-	if (pPack->pClass > static_cast<int>(HeroClass::LAST)) {
+	if (pPack->pClass >= enum_size<HeroClass>::value) {
 		return false;
 	}
 	auto heroClass = static_cast<HeroClass>(pPack->pClass);
 
-	if (pPack->pLevel >= MAXCHARLEVEL) {
+	if (pPack->pLevel >= MAXCHARLEVEL || pPack->pLevel < 1) {
 		return false;
 	}
-	int difficulty = SDL_SwapLE32(pPack->pDifficulty);
-	if (difficulty > DIFF_HELL) {
+	uint32_t difficulty = SDL_SwapLE32(pPack->pDifficulty);
+	if (difficulty > DIFF_LAST) {
 		return false;
 	}
 

@@ -219,6 +219,9 @@ struct TCmdQuest {
 	uint8_t qvar1;
 };
 
+/**
+ * Represents an item being picked up from the ground
+ */
 struct TCmdGItem {
 	_cmd_id bCmd;
 	uint8_t bMaster;
@@ -246,6 +249,9 @@ struct TCmdGItem {
 	int16_t bAC;
 };
 
+/**
+ * Represents an item being dropped onto the ground
+ */
 struct TCmdPItem {
 	_cmd_id bCmd;
 	uint8_t x;
