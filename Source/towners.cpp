@@ -16,13 +16,6 @@ std::unique_ptr<byte[]> CowCels;
 int CowMsg;
 int CowClicks;
 
-/**
- * Maps from direction to coordinate delta, which is used when
- * placing cows in Tristram. A single cow may require space of up
- * to three tiles when being placed on the map.
- */
-Displacement CowOffsets[8] = { { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, -1 }, { 0, -1 }, { -1, -1 }, { -1, 0 } };
-
 /** Specifies the active sound effect ID for interacting with cows. */
 _sfx_id CowPlaying = SFX_NONE;
 
@@ -225,14 +218,19 @@ void InitCows(Towner &towner, const TownerData &townerData)
 	towner.name = _("Cow");
 
 	const Point position = townerData.position;
-	const Point offset = position + CowOffsets[static_cast<size_t>(townerData.dir)];
-	int index = -dMonster[position.x][position.y];
-	if (dMonster[position.x][offset.y] == 0)
-		dMonster[position.x][offset.y] = index;
-	if (dMonster[offset.x][position.y] == 0)
-		dMonster[offset.x][position.y] = index;
-	if (dMonster[offset.x][offset.y] == 0)
-		dMonster[offset.x][offset.y] = index;
+	int cowId = dMonster[position.x][position.y];
+
+	// Cows are large sprites so take up multiple tiles. Vanilla Diablo/Hellfire allowed the player to stand adjacent
+	//  to a cow facing an ordinal direction (the two top-right cows) which leads to visual clipping. It's easier to
+	//  treat all cows as 4 tile sprites since this works for all facings.
+	// The active tile is always the south tile as this is closest to the camera, we mark the other 3 tiles as occupied
+	//  using -id to match the convention used for moving/large monsters and players.
+	Point offset = position + Direction::NorthWest;
+	dMonster[offset.x][offset.y] = -cowId;
+	offset = position + Direction::NorthEast;
+	dMonster[offset.x][offset.y] = -cowId;
+	offset = position + Direction::North;
+	dMonster[offset.x][offset.y] = -cowId;
 }
 
 void InitFarmer(Towner &towner, const TownerData &townerData)
