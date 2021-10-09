@@ -1534,16 +1534,20 @@ DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 DWORD OnChangePlayerItems(const TCmd *pCmd, int pnum)
 {
 	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
+	auto &player = Players[pnum];
+
+	if (message.bLoc >= NUM_INVLOC)
+		return sizeof(message);
+
+	auto bodyLocation = static_cast<inv_body_loc>(message.bLoc);
 
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
-	} else if (pnum != MyPlayerId && message.bLoc < NUM_INVLOC && message.wIndx <= IDI_LAST) {
-		auto &player = Players[pnum];
-		auto bodyLocation = static_cast<inv_body_loc>(message.bLoc);
-
+	} else if (pnum != MyPlayerId && message.wIndx <= IDI_LAST) {
 		CheckInvSwap(player, bodyLocation, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
-		player.ReadySpellFromEquipment(bodyLocation);
 	}
+
+	player.ReadySpellFromEquipment(bodyLocation);
 
 	return sizeof(message);
 }
