@@ -1590,14 +1590,14 @@ DWORD OnDropItem(const TCmd *pCmd, int pnum)
 
 DWORD OnSendPlayerInfo(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdPlrInfoHdr *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, p->wBytes + sizeof(*p));
+		SendPacket(pnum, &message, message.wBytes + sizeof(message));
 	else
-		recv_plrinfo(pnum, p, p->bCmd == CMD_ACK_PLRINFO);
+		recv_plrinfo(pnum, message, message.bCmd == CMD_ACK_PLRINFO);
 
-	return p->wBytes + sizeof(*p);
+	return message.wBytes + sizeof(message);
 }
 
 DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)

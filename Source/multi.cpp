@@ -757,7 +757,7 @@ bool NetInit(bool bSinglePlayer)
 	return true;
 }
 
-void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
+void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
 	const char *szEvent;
 
@@ -766,10 +766,11 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
 	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
 	auto &player = Players[pnum];
+	auto &packedPlayer = netplr[pnum];
 
-	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {
+	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {
 		sgwPackPlrOffsetTbl[pnum] = 0;
-		if (p->wOffset != 0) {
+		if (header.wOffset != 0) {
 			return;
 		}
 	}
@@ -777,15 +778,18 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
 		SendPlayerInfo(pnum, CMD_ACK_PLRINFO);
 	}
 
-	memcpy((char *)&netplr[pnum] + p->wOffset, &p[1], p->wBytes); /* todo: cast? */
-	sgwPackPlrOffsetTbl[pnum] += p->wBytes;
-	if (sgwPackPlrOffsetTbl[pnum] != sizeof(*netplr)) {
+	memcpy(reinterpret_cast<uint8_t *>(&packedPlayer) + header.wOffset, reinterpret_cast<const uint8_t *>(&header) + sizeof(header), header.wBytes);
+
+	sgwPackPlrOffsetTbl[pnum] += header.wBytes;
+	if (sgwPackPlrOffsetTbl[pnum] != sizeof(packedPlayer)) {
 		return;
 	}
-
 	sgwPackPlrOffsetTbl[pnum] = 0;
+
 	PlayerLeftMsg(pnum, false);
-	UnPackPlayer(&netplr[pnum], player, true);
+	if (!UnPackPlayer(&packedPlayer, player, true)) {
+		return;
+	}
 
 	if (!recv) {
 		return;

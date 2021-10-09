@@ -74,13 +74,13 @@ struct PlayerPack {
 	int16_t wReserved8;  // For future use
 	uint32_t pDiabloKillLevel;
 	uint32_t pDifficulty;
-	int32_t pDamAcFlags;
+	uint32_t pDamAcFlags;
 	int32_t dwReserved[5]; // For future use
 };
 #pragma pack(pop)
 
 void PackPlayer(PlayerPack *pPack, const Player &player, bool manashield);
-void UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
+bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
 void PackItem(ItemPack *id, const Item *is);
 
 /**

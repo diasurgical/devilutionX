@@ -117,6 +117,7 @@ enum class HeroSpeech {
 	LooksLikeItsRustedShut,
 	MaybeTheresAnotherWay,
 	AuughUh,
+
 	LAST = AuughUh
 };
 
