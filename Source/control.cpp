@@ -777,6 +777,7 @@ void DrawSpellList(const Surface &out)
 				return item.IsScrollOf(spellId);
 			});
 			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
+			AddPanelString(tempstr);
 		} break;
 		case RSPLTYPE_CHARGES: {
 			if (myPlayer.plrlevel != 0) {
