@@ -60,7 +60,7 @@ int sgnCurrMegaPlayer;
 DLevel sgLevels[NUMLEVELS];
 BYTE sbLastCmd;
 byte sgRecvBuf[sizeof(DLevel) + 1];
-BYTE sgbRecvCmd;
+_cmd_id sgbRecvCmd;
 LocalLevel sgLocals[NUMLEVELS];
 DJunk sgJunk;
 bool sgbDeltaChanged;
@@ -309,7 +309,7 @@ DWORD CompressData(byte *buffer, byte *end)
 	return pkSize + 1;
 }
 
-void DeltaImportData(BYTE cmd, DWORD recvOffset)
+void DeltaImportData(_cmd_id cmd, DWORD recvOffset)
 {
 	if (sgRecvBuf[0] != byte { 0 })
 		PkwareDecompress(&sgRecvBuf[1], recvOffset, sizeof(sgRecvBuf) - 1);
@@ -318,7 +318,7 @@ void DeltaImportData(BYTE cmd, DWORD recvOffset)
 	if (cmd == CMD_DLEVEL_JUNK) {
 		DeltaImportJunk(src);
 	} else if (cmd >= CMD_DLEVEL_0 && cmd <= CMD_DLEVEL_24) {
-		BYTE i = cmd - CMD_DLEVEL_0;
+		uint8_t i = cmd - CMD_DLEVEL_0;
 		src += DeltaImportItem(src, sgLevels[i].item);
 		src += DeltaImportObject(src, sgLevels[i].object);
 		DeltaImportMonster(src, sgLevels[i].monster);
@@ -332,57 +332,58 @@ void DeltaImportData(BYTE cmd, DWORD recvOffset)
 
 DWORD OnLevelData(int pnum, const TCmd *pCmd)
 {
-	auto *p = (TCmdPlrInfoHdr *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdPlrInfoHdr *>(pCmd);
 
 	if (gbDeltaSender != pnum) {
-		if (p->bCmd == CMD_DLEVEL_END || (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0)) {
-			gbDeltaSender = pnum;
-			sgbRecvCmd = CMD_DLEVEL_END;
-		} else {
-			return p->wBytes + sizeof(*p);
+		if (message.bCmd != CMD_DLEVEL_END && (message.bCmd != CMD_DLEVEL_0 || message.wOffset != 0)) {
+			return message.wBytes + sizeof(message);
 		}
+
+		gbDeltaSender = pnum;
+		sgbRecvCmd = CMD_DLEVEL_END;
 	}
+
 	if (sgbRecvCmd == CMD_DLEVEL_END) {
-		if (p->bCmd == CMD_DLEVEL_END) {
+		if (message.bCmd == CMD_DLEVEL_END) {
 			sgbDeltaChunks = MAX_CHUNKS - 1;
-			return p->wBytes + sizeof(*p);
+			return message.wBytes + sizeof(message);
 		}
-		if (p->bCmd == CMD_DLEVEL_0 && p->wOffset == 0) {
-			sgdwRecvOffset = 0;
-			sgbRecvCmd = p->bCmd;
-		} else {
-			return p->wBytes + sizeof(*p);
+		if (message.bCmd != CMD_DLEVEL_0 || message.wOffset != 0) {
+			return message.wBytes + sizeof(message);
 		}
-	} else if (sgbRecvCmd != p->bCmd) {
+
+		sgdwRecvOffset = 0;
+		sgbRecvCmd = message.bCmd;
+	} else if (sgbRecvCmd != message.bCmd) {
 		DeltaImportData(sgbRecvCmd, sgdwRecvOffset);
-		if (p->bCmd == CMD_DLEVEL_END) {
+		if (message.bCmd == CMD_DLEVEL_END) {
 			sgbDeltaChunks = MAX_CHUNKS - 1;
 			sgbRecvCmd = CMD_DLEVEL_END;
-			return p->wBytes + sizeof(*p);
+			return message.wBytes + sizeof(message);
 		}
 		sgdwRecvOffset = 0;
-		sgbRecvCmd = p->bCmd;
+		sgbRecvCmd = message.bCmd;
 	}
 
-	assert(p->wOffset == sgdwRecvOffset);
-	memcpy(&sgRecvBuf[p->wOffset], &p[1], p->wBytes);
-	sgdwRecvOffset += p->wBytes;
-	return p->wBytes + sizeof(*p);
+	assert(message.wOffset == sgdwRecvOffset);
+	memcpy(&sgRecvBuf[message.wOffset], &message + sizeof(message), message.wBytes);
+	sgdwRecvOffset += message.wBytes;
+	return message.wBytes + sizeof(message);
 }
 
-void DeltaSyncGolem(const TCmdGolem *pG, int pnum, BYTE bLevel)
+void DeltaSyncGolem(const TCmdGolem &message, int pnum, uint8_t level)
 {
 	if (!gbIsMultiplayer)
 		return;
 
 	sgbDeltaChanged = true;
-	DMonsterStr *pD = &sgLevels[bLevel].monster[pnum];
-	pD->_mx = pG->_mx;
-	pD->_my = pG->_my;
-	pD->_mactive = UINT8_MAX;
-	pD->_menemy = pG->_menemy;
-	pD->_mdir = pG->_mdir;
-	pD->_mhitpoints = pG->_mhitpoints;
+	DMonsterStr &monster = sgLevels[level].monster[pnum];
+	monster._mx = message._mx;
+	monster._my = message._my;
+	monster._mactive = UINT8_MAX;
+	monster._menemy = message._menemy;
+	monster._mdir = message._mdir;
+	monster._mhitpoints = message._mhitpoints;
 }
 
 void DeltaLeaveSync(BYTE bLevel)
@@ -528,11 +529,11 @@ bool IOwnLevel(int nReqLevel)
 	return i == MyPlayerId;
 }
 
-void DeltaOpenPortal(int pnum, uint8_t x, uint8_t y, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
+void DeltaOpenPortal(int pnum, Point position, uint8_t bLevel, dungeon_type bLType, bool bSetLvl)
 {
 	sgbDeltaChanged = true;
-	sgJunk.portal[pnum].x = x;
-	sgJunk.portal[pnum].y = y;
+	sgJunk.portal[pnum].x = position.x;
+	sgJunk.portal[pnum].y = position.y;
 	sgJunk.portal[pnum].level = bLevel;
 	sgJunk.portal[pnum].ltype = bLType;
 	sgJunk.portal[pnum].setlvl = bSetLvl ? 1 : 0;
@@ -542,23 +543,6 @@ void CheckUpdatePlayer(int pnum)
 {
 	if (gbIsMultiplayer && pnum == MyPlayerId)
 		pfile_update(true);
-}
-
-void PlayerMessageFormat(const char *pszFmt, ...)
-{
-	static DWORD msgErrTimer;
-	DWORD ticks;
-	char msg[256];
-	va_list va;
-
-	va_start(va, pszFmt);
-	ticks = SDL_GetTicks();
-	if (ticks - msgErrTimer >= 5000) {
-		msgErrTimer = ticks;
-		vsprintf(msg, pszFmt, va);
-		ErrorPlrMsg(msg);
-	}
-	va_end(va);
 }
 
 void NetSendCmdGItem2(bool usonly, _cmd_id bCmd, uint8_t mast, uint8_t pnum, const TCmdGItem &item)
@@ -945,74 +929,106 @@ DWORD OnRangedAttackTile(const TCmd *pCmd, Player &player)
 
 DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam4 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam4 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
-		auto spellType = static_cast<spell_type>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLWALL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam3);
-			player.destParam4 = p->wParam4;
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (!InDungeonBounds(position))
+		return sizeof(message);
+	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam2 > RSPLTYPE_INVALID)
+		return sizeof(message);
+	if (message.wParam3 > static_cast<int>(Direction::SouthEast))
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam1);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLWALL;
+	player.destParam1 = position.x;
+	player.destParam2 = position.y;
+	player.destParam3 = static_cast<Direction>(message.wParam3);
+	player.destParam4 = message.wParam4;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam2);
+	player._pSplFrom = 0;
+
+	return sizeof(message);
 }
 
 DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
-		auto spellType = static_cast<spell_type>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam3);
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (!InDungeonBounds(position))
+		return sizeof(message);
+	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam2 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam1);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELL;
+	player.destParam1 = position.x;
+	player.destParam2 = position.y;
+	player.destParam4 = message.wParam3;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam2);
+
+	return sizeof(message);
 }
 
 DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdLocParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam2 *>(pCmd);
+	const Point position { message.x, message.y };
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam1);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELL;
-			player.destParam1 = p->x;
-			player.destParam2 = p->y;
-			player.destParam3 = static_cast<Direction>(p->wParam2);
-			player._pSpell = spell;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 2;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (!InDungeonBounds(position))
+		return sizeof(message);
+	if (message.wParam1 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam2 > static_cast<int>(Direction::SouthEast))
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam1);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELL;
+	player.destParam1 = position.x;
+	player.destParam2 = position.y;
+	player.destParam3 = static_cast<Direction>(message.wParam2);
+	player._pSpell = spell;
+	player._pSplType = RSPLTYPE_INVALID;
+	player._pSplFrom = 2;
+
+	return sizeof(message);
 }
 
 DWORD OnOperateObjectTile(const TCmd *pCmd, Player &player)
@@ -1111,92 +1127,128 @@ DWORD OnRangedAttackPlayer(const TCmd *pCmd, Player &player)
 
 DWORD OnSpellMonster(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam4 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam4 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		auto spellType = static_cast<spell_type>(p->wParam3);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLMON;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam4;
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAXMONSTERS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLMON;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam4;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam3);
+	player._pSplFrom = 0;
+
+	return sizeof(message);
 }
 
 DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam4 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam4 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		auto spellType = static_cast<spell_type>(p->wParam3);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLPLR;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam4;
-			player._pSpell = spell;
-			player._pSplType = spellType;
-			player._pSplFrom = 0;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAX_PLRS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel != 0 || spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLPLR;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam4;
+	player._pSpell = spell;
+	player._pSplType = static_cast<spell_type>(message.wParam3);
+	player._pSplFrom = 0;
+
+	return sizeof(message);
 }
 
 DWORD OnTargetSpellMonster(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam3 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLMON;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
-			player._pSpell = spell;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 2;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAXMONSTERS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+	if (message.wParam3 > RSPLTYPE_INVALID)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLMON;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam3;
+	player._pSpell = spell;
+	player._pSplType = RSPLTYPE_INVALID;
+	player._pSplFrom = 2;
+
+	return sizeof(message);
 }
 
 DWORD OnTargetSpellPlayer(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam3 *>(pCmd);
 
-	if (gbBufferMsgs != 1 && currlevel == player.plrlevel) {
-		auto spell = static_cast<spell_id>(p->wParam2);
-		if (currlevel != 0 || spelldata[spell].sTownSpell) {
-			ClrPlrPath(player);
-			player.destAction = ACTION_SPELLPLR;
-			player.destParam1 = p->wParam1;
-			player.destParam2 = p->wParam3;
-			player._pSpell = spell;
-			player._pSplType = RSPLTYPE_INVALID;
-			player._pSplFrom = 2;
-		} else {
-			PlayerMessageFormat(fmt::format(_("{:s} has cast an illegal spell."), player._pName).c_str());
-		}
+	if (gbBufferMsgs == 1)
+		return sizeof(message);
+	if (currlevel != player.plrlevel)
+		return sizeof(message);
+	if (message.wParam1 >= MAX_PLRS)
+		return sizeof(message);
+	if (message.wParam2 > SPL_LAST)
+		return sizeof(message);
+
+	auto spell = static_cast<spell_id>(message.wParam2);
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
+		LogError(_("{:s} has cast an illegal spell."), player._pName);
+		return sizeof(message);
 	}
 
-	return sizeof(*p);
+	ClrPlrPath(player);
+	player.destAction = ACTION_SPELLPLR;
+	player.destParam1 = message.wParam1;
+	player.destParam2 = message.wParam3;
+	player._pSpell = spell;
+	player._pSplType = RSPLTYPE_INVALID;
+	player._pSplFrom = 2;
+
+	return sizeof(message);
 }
 
 DWORD OnKnockback(const TCmd *pCmd, int pnum)
@@ -1251,14 +1303,29 @@ DWORD OnTalkXY(const TCmd *pCmd, Player &player)
 
 DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId)
-		StartNewLvl(pnum, (interface_mode)p->wParam1, p->wParam2);
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (pnum != MyPlayerId) {
+		if (message.wParam1 < WM_FIRST && message.wParam1 > WM_LAST)
+			return sizeof(message);
 
-	return sizeof(*p);
+		auto mode = static_cast<interface_mode>(message.wParam1);
+
+		int levelId = message.wParam2;
+		if (mode == WM_DIABSETLVL) {
+			if (levelId > SL_LAST)
+				return sizeof(message);
+		} else {
+			if (levelId >= NUMLEVELS)
+				return sizeof(message);
+		}
+
+		StartNewLvl(pnum, mode, levelId);
+	}
+
+	return sizeof(message);
 }
 
 DWORD OnWarp(const TCmd *pCmd, int pnum)
@@ -1309,51 +1376,52 @@ DWORD OnKillGolem(const TCmd *pCmd, int pnum)
 
 DWORD OnAwakeGolem(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdGolem *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdGolem *>(pCmd);
+	const Point position { message._mx, message._my };
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (currlevel != Players[pnum].plrlevel)
-		DeltaSyncGolem(p, pnum, p->_currlevel);
-	else if (pnum != MyPlayerId) {
-		// check if this player already has an active golem
-		bool addGolem = true;
-		for (int i = 0; i < ActiveMissileCount; i++) {
-			int mi = ActiveMissiles[i];
-			auto &missile = Missiles[mi];
-			if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
-				addGolem = false;
-				// CODEFIX: break, don't need to check the rest
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (InDungeonBounds(position)) {
+		if (currlevel != Players[pnum].plrlevel) {
+			DeltaSyncGolem(message, pnum, message._currlevel);
+		} else if (pnum != MyPlayerId) {
+			// Check if this player already has an active golem
+			for (int i = 0; i < ActiveMissileCount; i++) {
+				int mi = ActiveMissiles[i];
+				auto &missile = Missiles[mi];
+				if (missile._mitype == MIS_GOLEM && missile._misource == pnum) {
+					return sizeof(message);
+				}
 			}
+
+			AddMissile(Players[pnum].position.tile, position, message._mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
 		}
-		if (addGolem)
-			AddMissile(Players[pnum].position.tile, { p->_mx, p->_my }, p->_mdir, MIS_GOLEM, TARGET_MONSTERS, pnum, 0, 1);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnMonstDamage(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdMonDamage *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdMonDamage *>(pCmd);
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p)); // BUGFIX: change to sizeof(*p) or it still uses TCmdParam2 size for hellfire (fixed)
-	else if (pnum != MyPlayerId) {
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (pnum != MyPlayerId) {
 		int playerLevel = Players[pnum].plrlevel;
-		if (currlevel == playerLevel) {
-			auto &monster = Monsters[p->wMon];
+		if (currlevel == playerLevel && message.wMon < MAXMONSTERS) {
+			auto &monster = Monsters[message.wMon];
 			monster.mWhoHit |= 1 << pnum;
 			if (monster._mhitpoints > 0) {
-				monster._mhitpoints -= p->dwDam;
+				monster._mhitpoints -= message.dwDam;
 				if ((monster._mhitpoints >> 6) < 1)
 					monster._mhitpoints = 1 << 6;
-				delta_monster_hp(p->wMon, monster._mhitpoints, playerLevel);
+				delta_monster_hp(message.wMon, monster._mhitpoints, playerLevel);
 			}
 		}
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
@@ -1372,15 +1440,15 @@ DWORD OnPlayerDeath(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 {
-	auto *p = (TCmdDamage *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
 
-	if (p->bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
-		if (currlevel == player.plrlevel && p->dwDam <= 192000 && Players[MyPlayerId]._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(MyPlayerId, 0, 0, p->dwDam, 1);
+	if (message.bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
+		if (currlevel == player.plrlevel && message.dwDam <= 192000 && Players[MyPlayerId]._pHitPoints >> 6 > 0) {
+			ApplyPlrDamage(MyPlayerId, 0, 0, message.dwDam, 1);
 		}
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnOpenDoor(const TCmd *pCmd, int pnum)
@@ -1433,63 +1501,67 @@ DWORD OnOperateObject(const TCmd *pCmd, int pnum)
 
 DWORD OnPlayerOperateObject(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncOpObject(p->wParam1, CMD_PLROPOBJ, p->wParam2);
-		DeltaSyncObject(p->wParam2, CMD_PLROPOBJ, playerLevel);
+			SyncOpObject(message.wParam1, CMD_PLROPOBJ, message.wParam2);
+		DeltaSyncObject(message.wParam2, CMD_PLROPOBJ, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdParam2 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdParam2 *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
 		if (currlevel == playerLevel)
-			SyncBreakObj(p->wParam1, p->wParam2);
-		DeltaSyncObject(p->wParam2, CMD_BREAKOBJ, playerLevel);
+			SyncBreakObj(message.wParam1, message.wParam2);
+		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, playerLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnChangePlayerItems(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdChItem *)pCmd;
-	auto bodyLocation = static_cast<inv_body_loc>(p->bLoc);
-
+	const auto &message = *reinterpret_cast<const TCmdChItem *>(pCmd);
 	auto &player = Players[pnum];
 
-	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId)
-		CheckInvSwap(player, p->bLoc, p->wIndx, p->wCI, p->dwSeed, p->bId != 0, p->dwBuff);
+	if (message.bLoc >= NUM_INVLOC)
+		return sizeof(message);
+
+	auto bodyLocation = static_cast<inv_body_loc>(message.bLoc);
+
+	if (gbBufferMsgs == 1) {
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (pnum != MyPlayerId && message.wIndx <= IDI_LAST) {
+		CheckInvSwap(player, bodyLocation, message.wIndx, message.wCI, message.dwSeed, message.bId != 0, message.dwBuff);
+	}
 
 	player.ReadySpellFromEquipment(bodyLocation);
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnDeletePlayerItems(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdDelItem *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdDelItem *>(pCmd);
 
 	if (gbBufferMsgs == 1)
-		SendPacket(pnum, p, sizeof(*p));
-	else if (pnum != MyPlayerId)
-		inv_update_rem_item(Players[pnum], p->bLoc);
+		SendPacket(pnum, &message, sizeof(message));
+	else if (pnum != MyPlayerId && message.bLoc < NUM_INVLOC)
+		inv_update_rem_item(Players[pnum], static_cast<inv_body_loc>(message.bLoc));
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnPlayerLevel(const TCmd *pCmd, int pnum)
@@ -1539,7 +1611,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 	}
 
 	int playerLevel = message.wParam1;
-	if (playerLevel > (gbIsHellfire ? 24 : 16) || !InDungeonBounds(position)) {
+	if (playerLevel > NUMLEVELS || !InDungeonBounds(position)) {
 		return sizeof(message);
 	}
 
@@ -1578,35 +1650,41 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 
 DWORD OnActivatePortal(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam3 *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdLocParam3 *>(pCmd);
+	const Point position { message.x, message.y };
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
-	} else {
-		ActivatePortal(pnum, p->x, p->y, p->wParam1, static_cast<dungeon_type>(p->wParam2), p->wParam3 != 0);
+		SendPacket(pnum, &message, sizeof(message));
+	} else if (InDungeonBounds(position) && message.wParam1 < NUMLEVELS && message.wParam2 <= DTYPE_LAST) {
+		int level = message.wParam1;
+		auto dungeonType = static_cast<dungeon_type>(message.wParam2);
+		bool isSetLevel = message.wParam3 != 0;
+
+		ActivatePortal(pnum, position, level, dungeonType, isSetLevel);
 		if (pnum != MyPlayerId) {
-			if (currlevel == 0)
+			if (currlevel == 0) {
 				AddInTownPortal(pnum);
-			else if (currlevel == Players[pnum].plrlevel) {
+			} else if (currlevel == Players[pnum].plrlevel) {
 				bool addPortal = true;
 				for (int i = 0; i < ActiveMissileCount; i++) {
 					int mi = ActiveMissiles[i];
 					auto &missile = Missiles[mi];
 					if (missile._mitype == MIS_TOWN && missile._misource == pnum) {
 						addPortal = false;
-						// CODEFIX: break
+						break;
 					}
 				}
-				if (addPortal)
-					AddWarpMissile(pnum, p->x, p->y);
+				if (addPortal) {
+					AddWarpMissile(pnum, position);
+				}
 			} else {
 				RemovePortalMissile(pnum);
 			}
 		}
-		DeltaOpenPortal(pnum, p->x, p->y, p->wParam1, static_cast<dungeon_type>(p->wParam2), p->wParam3 != 0);
+		DeltaOpenPortal(pnum, position, level, dungeonType, isSetLevel);
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnDeactivatePortal(const TCmd *pCmd, int pnum)
@@ -1699,17 +1777,17 @@ DWORD OnString(const TCmd *pCmd, int pnum)
 
 DWORD OnSyncQuest(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdQuest *)pCmd;
+	const auto &message = *reinterpret_cast<const TCmdQuest *>(pCmd);
 
 	if (gbBufferMsgs == 1) {
-		SendPacket(pnum, p, sizeof(*p));
+		SendPacket(pnum, &message, sizeof(message));
 	} else {
-		if (pnum != MyPlayerId)
-			SetMultiQuest(p->q, p->qstate, p->qlog != 0, p->qvar1);
+		if (pnum != MyPlayerId && message.q < MAXQUESTS && message.qstate <= QUEST_HIVE_DONE)
+			SetMultiQuest(message.q, message.qstate, message.qlog != 0, message.qvar1);
 		sgbDeltaChanged = true;
 	}
 
-	return sizeof(*p);
+	return sizeof(message);
 }
 
 DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parameters)
@@ -1806,14 +1884,13 @@ DWORD OnNakrul(const TCmd *pCmd)
 
 DWORD OnOpenHive(const TCmd *pCmd, int pnum)
 {
-	auto *p = (TCmdLocParam2 *)pCmd;
-
 	if (gbBufferMsgs != 1) {
-		AddMissile({ p->x, p->y }, { p->wParam1, p->wParam2 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
+		AddMissile({ 0, 0 }, { 0, 0 }, Direction::South, MIS_HIVEEXP2, TARGET_MONSTERS, pnum, 0, 0);
 		TownOpenHive();
 		InitTownTriggers();
 	}
-	return sizeof(*p);
+
+	return sizeof(*pCmd);
 }
 
 DWORD OnOpenCrypt(const TCmd *pCmd)

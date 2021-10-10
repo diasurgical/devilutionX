@@ -49,3 +49,12 @@ SDL_CreateRGBSurfaceWithFormatFrom(void *pixels,
 	return surface;
 }
 #endif
+
+#if !SDL_VERSION_ATLEAST(2, 0, 14)
+inline SDL_bool
+SDL_GameControllerHasButton(SDL_GameController *gamecontroller, SDL_GameControllerButton button)
+{
+	SDL_GameControllerButtonBind bind = SDL_GameControllerGetBindForButton(gamecontroller, button);
+	return (bind.bindType != SDL_CONTROLLER_BINDTYPE_NONE) ? SDL_TRUE : SDL_FALSE;
+}
+#endif

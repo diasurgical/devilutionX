@@ -217,6 +217,8 @@ void init_archives()
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
 		app_fatal(nullptr);
 	}
+
+	SFileSetAssetsPath(paths::AppPath() + "assets/");
 }
 
 void init_create_window()

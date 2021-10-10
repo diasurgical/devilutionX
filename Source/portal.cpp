@@ -21,10 +21,13 @@ namespace {
 /** Current portal number (a portal array index). */
 int portalindex;
 
-/** X-coordinate of each players portal in town. */
-int WarpDropX[MAXPORTAL] = { 57, 59, 61, 63 };
-/** Y-coordinate of each players portal in town. */
-int WarpDropY[MAXPORTAL] = { 40, 40, 40, 40 };
+/** Coordinate of each players portal in town. */
+Point WarpDrop[MAXPORTAL] = {
+	{ 57, 40 },
+	{ 59, 40 },
+	{ 61, 40 },
+	{ 63, 40 },
+};
 
 } // namespace
 
@@ -45,11 +48,11 @@ void SetPortalStats(int i, bool o, int x, int y, int lvl, dungeon_type lvltype)
 	Portals[i].setlvl = false;
 }
 
-void AddWarpMissile(int i, int x, int y)
+void AddWarpMissile(int i, Point position)
 {
 	MissilesData[MIS_TOWN].mlSFX = SFX_NONE;
 
-	int mi = AddMissile({ 0, 0 }, { x, y }, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
+	int mi = AddMissile({ 0, 0 }, position, Direction::South, MIS_TOWN, TARGET_MONSTERS, i, 0, 0);
 	if (mi == -1)
 		return;
 
@@ -68,31 +71,31 @@ void SyncPortals()
 		if (!Portals[i].open)
 			continue;
 		if (currlevel == 0)
-			AddWarpMissile(i, WarpDropX[i], WarpDropY[i]);
+			AddWarpMissile(i, WarpDrop[i]);
 		else {
 			int lvl = currlevel;
 			if (setlevel)
 				lvl = setlvlnum;
 			if (Portals[i].level == lvl && Portals[i].setlvl == setlevel)
-				AddWarpMissile(i, Portals[i].position.x, Portals[i].position.y);
+				AddWarpMissile(i, Portals[i].position);
 		}
 	}
 }
 
 void AddInTownPortal(int i)
 {
-	AddWarpMissile(i, WarpDropX[i], WarpDropY[i]);
+	AddWarpMissile(i, WarpDrop[i]);
 }
 
-void ActivatePortal(int i, int x, int y, int lvl, dungeon_type lvltype, bool sp)
+void ActivatePortal(int i, Point position, int lvl, dungeon_type dungeonType, bool isSetLevel)
 {
 	Portals[i].open = true;
 
 	if (lvl != 0) {
-		Portals[i].position = { x, y };
+		Portals[i].position = position;
 		Portals[i].level = lvl;
-		Portals[i].ltype = lvltype;
-		Portals[i].setlvl = sp;
+		Portals[i].ltype = dungeonType;
+		Portals[i].setlvl = isSetLevel;
 	}
 }
 
@@ -162,7 +165,7 @@ void GetPortalLevel()
 void GetPortalLvlPos()
 {
 	if (currlevel == 0) {
-		ViewPosition = Point { WarpDropX[portalindex], WarpDropY[portalindex] } + Displacement { 1, 1 };
+		ViewPosition = WarpDrop[portalindex] + Displacement { 1, 1 };
 	} else {
 		ViewPosition = Portals[portalindex].position;
 

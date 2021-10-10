@@ -2,8 +2,8 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 
 include(FetchContent)
 FetchContent_Declare(asio
-    URL https://github.com/diasurgical/asio/archive/b0239654fc40a21663430d926a50bbd6c22bb2e9.zip
-    URL_HASH MD5=005bab46794975df4c7bbc3f33808f0b
+    URL https://github.com/diasurgical/asio/archive/2905afe2564dfdb3444f665ae363106f0acf2871.tar.gz
+    URL_HASH MD5=4c1afc9d591ef85a5542af9731630dd6
 )
 FetchContent_MakeAvailableExcludeFromAll(asio)
 

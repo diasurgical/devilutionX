@@ -768,6 +768,9 @@ if(SMPQ)
     COMMAND ${SMPQ} -M 1 -C PKWARE -c "../devilutionx.mpq" ${devilutionx_assets})
   # Copy devilutionx.mpq to the build directory so the game can run from the build directory
   file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+else()
+  # Copy assets to the build directory so the game can load them from the build directory
+  file(COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/assets")
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
@@ -1217,5 +1220,9 @@ endif()
 
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   add_subdirectory(3rdParty/libzt)
-  target_link_libraries(libdevilutionx PUBLIC zt-static)
+  if(NOT ANDROID)
+    target_link_libraries(libdevilutionx PUBLIC zt-static)
+  else()
+    target_link_libraries(libdevilutionx PUBLIC zt-shared)
+  endif()
 endif()

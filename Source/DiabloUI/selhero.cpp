@@ -16,6 +16,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "utils/language.h"
+#include <menu.h>
 
 namespace devilution {
 
@@ -502,6 +503,7 @@ void selhero_Init()
 void selhero_List_Init()
 {
 	listOffset = 0;
+	size_t selectedItem = 0;
 	vecSelDlgItems.clear();
 
 	SDL_Rect rect1 = { (Sint16)(PANEL_LEFT + 264), (Sint16)(UI_OFFSET_Y + 211), 320, 33 };
@@ -511,6 +513,15 @@ void selhero_List_Init()
 	const size_t numViewportHeroes = std::min(selhero_SaveCount + 1, MaxViewportItems);
 	for (std::size_t i = 0; i < numViewportHeroes; i++) {
 		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>("", -1));
+	}
+	// Adjust list to last selected hero
+	for (size_t i = 0; i < selhero_SaveCount; i++) {
+		if (selhero_heros[i].saveNumber == selhero_heroInfo.saveNumber) {
+			selectedItem = i;
+			if (i > (MaxViewportItems - 1))
+				listOffset = i - (MaxViewportItems - 1);
+			break;
+		}
 	}
 	SelheroUpdateViewportItems();
 
@@ -532,7 +543,7 @@ void selhero_List_Init()
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 489), (Sint16)(UI_OFFSET_Y + 429), 120, 35 };
 	vecSelDlgItems.push_back(std::make_unique<UiArtTextButton>(_("Cancel"), &UiFocusNavigationEsc, rect5, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	UiInitList(selhero_SaveCount + 1, SelheroListFocus, SelheroListSelect, SelheroListEsc, vecSelDlgItems, false, SelheroListDeleteYesNo);
+	UiInitList(selhero_SaveCount + 1, SelheroListFocus, SelheroListSelect, SelheroListEsc, vecSelDlgItems, false, SelheroListDeleteYesNo, selectedItem);
 	UiInitScrollBar(scrollBar, MaxViewportItems, &listOffset);
 	if (selhero_isMultiPlayer) {
 		title = _("Multi Player Characters");
@@ -560,6 +571,14 @@ static void UiSelHeroDialog(
 		selhero_Init();
 
 		if (selhero_SaveCount != 0) {
+			selhero_heroInfo = {};
+			// Search last used save and remember it as selected item
+			for (size_t i = 0; i < selhero_SaveCount; i++) {
+				if (selhero_heros[i].saveNumber == *saveNumber) {
+					memcpy(&selhero_heroInfo, &selhero_heros[i], sizeof(selhero_heroInfo));
+					break;
+				}
+			}
 			selhero_List_Init();
 		} else {
 			SelheroListSelect(selhero_SaveCount);

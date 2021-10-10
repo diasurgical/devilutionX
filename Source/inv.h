@@ -35,8 +35,10 @@ enum inv_item : int8_t {
 	// clang-format on
 };
 
-// identifiers for each of the inventory squares
-// see https://github.com/sanctuary/graphics/blob/master/inventory.png
+/**
+ * identifiers for each of the inventory squares
+ * @see #InvRect
+ */
 enum inv_xy_slot : uint8_t {
 	// clang-format off
 	SLOTXY_HEAD_FIRST       = 0,
@@ -148,8 +150,8 @@ bool AutoPlaceItemInInventorySlot(Player &player, int slotIndex, const Item &ite
 bool AutoPlaceItemInBelt(Player &player, const Item &item, bool persistItem = false);
 bool GoldAutoPlace(Player &player);
 bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex);
-void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
-void inv_update_rem_item(Player &player, BYTE iv);
+void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
+void inv_update_rem_item(Player &player, inv_body_loc iv);
 void CheckInvItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 
 /**

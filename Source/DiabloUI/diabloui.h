@@ -119,7 +119,7 @@ void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = L
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, bool (*fnYesNo)() = NULL, size_t selectedItem = 0);
 void UiInitScrollBar(UiScrollbar *uiSb, std::size_t viewportSize, const std::size_t *currentOffset);
 void UiClearScreen();
 void UiPollAndRender();

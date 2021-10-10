@@ -1314,9 +1314,9 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 	}
 
 	char istr[68];
+	strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str());
 	if (!StringInPanel(istr))
-		strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str());
-	strcpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str());
+		strcpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str());
 	strcpy(item._iName, istr);
 	strcpy(item._iIName, istr);
 
@@ -3408,11 +3408,9 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster._uniqtype != 0 ? 15 : 1;
 
-	int8_t mLevel = monster.mLevel;
+	int8_t mLevel = monster.MData->mLevel;
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
-	if (mLevel > CF_LEVEL)
-		mLevel = CF_LEVEL;
 
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 

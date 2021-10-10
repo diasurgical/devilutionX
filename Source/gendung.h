@@ -32,6 +32,8 @@ enum _setlevels : int8_t {
 	SL_MAZE,
 	SL_POISONWATER,
 	SL_VILEBETRAYER,
+
+	SL_LAST = SL_VILEBETRAYER,
 };
 
 enum dungeon_type : int8_t {
@@ -42,6 +44,8 @@ enum dungeon_type : int8_t {
 	DTYPE_HELL,
 	DTYPE_NEST,
 	DTYPE_CRYPT,
+
+	DTYPE_LAST = DTYPE_CRYPT,
 	DTYPE_NONE = -1,
 };
 

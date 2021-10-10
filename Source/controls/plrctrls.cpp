@@ -1394,11 +1394,19 @@ bool TryDropItem()
 {
 	const auto &myPlayer = Players[MyPlayerId];
 
+	if (myPlayer.HoldItem.isEmpty()) {
+		return false;
+	}
+
 	cursPosition = myPlayer.position.future + Direction::SouthEast;
 	if (!DropItemBeforeTrig()) {
 		// Try to drop on the other side
 		cursPosition = myPlayer.position.future + Direction::SouthWest;
 		DropItemBeforeTrig();
+	}
+
+	if (pcurs != CURSOR_HAND) {
+		myPlayer.Say(HeroSpeech::WhereWouldIPutThis);
 	}
 
 	return pcurs == CURSOR_HAND;

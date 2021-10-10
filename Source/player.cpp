@@ -1701,7 +1701,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
-			player.spellLevel = static_cast<int>(player.destParam3);
+			player.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLWALL:
 			StartSpell(pnum, player.destParam3, player.destParam1, player.destParam2);
@@ -2581,9 +2581,7 @@ void NextPlrLevel(int pnum)
 	player._pNextExper = ExpLvlsTbl[player._pLevel];
 
 	int hp = player._pClass == HeroClass::Sorcerer ? 64 : 128;
-	if (!gbIsMultiplayer) {
-		hp++;
-	}
+
 	player._pMaxHP += hp;
 	player._pHitPoints = player._pMaxHP;
 	player._pMaxHPBase += hp;
@@ -2599,9 +2597,6 @@ void NextPlrLevel(int pnum)
 	else if (player._pClass == HeroClass::Barbarian)
 		mana = 0;
 
-	if (!gbIsMultiplayer) {
-		mana++;
-	}
 	player._pMaxMana += mana;
 	player._pMaxManaBase += mana;
 
