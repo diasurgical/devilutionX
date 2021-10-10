@@ -59,19 +59,20 @@ int AnimationInfo::GetFrameToUseForRendering() const
 
 float AnimationInfo::GetAnimationProgress() const
 {
+	int ticksSinceSequenceStarted = TicksSinceSequenceStarted;
+	float tickModifier = TickModifier;
+
 	if (RelevantFramesForDistributing <= 0) {
-		// This logic is used if animation distrubtion is not active (see GetFrameToUseForRendering).
+		// This logic is used if animation distribution is not active (see GetFrameToUseForRendering).
 		// In this case the variables calculated with animation distribution are not initialized and we have to calculate them on the fly with the given information.
-		int passedTicks = ((CurrentFrame - 1) * TicksPerFrame) + TickCounterOfCurrentFrame;
-		float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + (float)passedTicks;
-		float fAnimationFraction = totalTicksForCurrentAnimationSequence / (float)(NumberOfFrames * TicksPerFrame);
-		return fAnimationFraction;
+		ticksSinceSequenceStarted = ((CurrentFrame - 1) * TicksPerFrame) + TickCounterOfCurrentFrame;
+		tickModifier = 1.f / TicksPerFrame;
 	}
 
-	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + TicksSinceSequenceStarted;
-	float fProgressInAnimationFrames = totalTicksForCurrentAnimationSequence * TickModifier;
-	float fAnimationFraction = fProgressInAnimationFrames / NumberOfFrames;
-	return fAnimationFraction;
+	float totalTicksForCurrentAnimationSequence = GetProgressToNextGameTick() + ticksSinceSequenceStarted;
+	float progressInAnimationFrames = totalTicksForCurrentAnimationSequence * tickModifier;
+	float animationFraction = progressInAnimationFrames / NumberOfFrames;
+	return animationFraction;
 }
 
 void AnimationInfo::SetNewAnimation(const CelSprite *celSprite, int numberOfFrames, int ticksPerFrame, AnimationDistributionFlags flags /*= AnimationDistributionFlags::None*/, int numSkippedFrames /*= 0*/, int distributeFramesBeforeFrame /*= 0*/)
