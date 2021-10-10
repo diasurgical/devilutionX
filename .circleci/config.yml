@@ -83,11 +83,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      # Work around https://github.com/vitasdk/vdpm/issues/69
-      - run: mkdir -p /usr/local && ln -sf /home/user/vitasdk /usr/local/vitasdk
-      # curl, zlib-dev, bzip2-dev, and build-base are only needed by build-and-install-smpq.sh
-      - run: apk --no-cache add git cmake ninja bash pkgconfig curl zlib-dev bzip2-dev build-base
-      - run: .circleci/build-and-install-smpq.sh
+      - run: apk --no-cache add git cmake ninja bash pkgconfig
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
