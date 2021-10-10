@@ -8,6 +8,7 @@
 #include "controls/devices/joystick.h"
 #include "utils/log.hpp"
 #include "utils/sdl_ptrs.h"
+#include "utils/sdl2_backports.h"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -123,7 +124,7 @@ SDL_GameControllerButton GameController::ToSdlGameControllerButton(ControllerBut
 bool GameController::IsPressed(ControllerButton button) const
 {
 	const SDL_GameControllerButton gcButton = ToSdlGameControllerButton(button);
-	return gcButton != SDL_CONTROLLER_BUTTON_INVALID && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
+	return SDL_GameControllerHasButton(sdl_game_controller_, gcButton) && SDL_GameControllerGetButton(sdl_game_controller_, gcButton) != 0;
 }
 
 bool GameController::ProcessAxisMotion(const SDL_Event &event)
