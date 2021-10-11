@@ -366,7 +366,7 @@ DWORD OnLevelData(int pnum, const TCmd *pCmd)
 	}
 
 	assert(message.wOffset == sgdwRecvOffset);
-	memcpy(&sgRecvBuf[message.wOffset], &message + sizeof(message), message.wBytes);
+	memcpy(&sgRecvBuf[message.wOffset], &message + 1, message.wBytes);
 	sgdwRecvOffset += message.wBytes;
 	return message.wBytes + sizeof(message);
 }
