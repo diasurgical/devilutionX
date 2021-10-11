@@ -818,8 +818,7 @@ void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBuffer
  */
 void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	assert(tilePosition.x >= 0 && tilePosition.x < MAXDUNX);
-	assert(tilePosition.y >= 0 && tilePosition.y < MAXDUNY);
+	assert(InDungeonBounds(tilePosition));
 
 	if (dRendered[tilePosition.x][tilePosition.y])
 		return;
@@ -972,7 +971,7 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			if (tilePosition.x >= 0 && tilePosition.x < MAXDUNX && tilePosition.y >= 0 && tilePosition.y < MAXDUNY) {
+			if (InDungeonBounds(tilePosition)) {
 				if (tilePosition.x + 1 < MAXDUNX && tilePosition.y - 1 >= 0 && targetBufferPosition.x + TILE_WIDTH <= gnScreenWidth) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
