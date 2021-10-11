@@ -3500,7 +3500,7 @@ void CheckPlrSpell(bool isShiftHeld)
 		LastMouseButtonAction = MouseActionType::SpellMonsterTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 		NetSendCmdParam4(true, CMD_SPELLID, pcursmonst, myPlayer._pRSpell, myPlayer._pRSplType, sl);
-	} else if (pcursplr != -1 && !isShiftHeld) {
+	} else if (pcursplr != -1 && !isShiftHeld && !gbFriendlyMode) {
 		LastMouseButtonAction = MouseActionType::SpellPlayerTarget;
 		sl = GetSpellLevel(MyPlayerId, myPlayer._pRSpell);
 		NetSendCmdParam4(true, CMD_SPELLPID, pcursplr, myPlayer._pRSpell, myPlayer._pRSplType, sl);
