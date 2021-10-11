@@ -3595,10 +3595,16 @@ void SyncInitPlrPos(int pnum)
 
 	if (!PosOkPlayer(player, position)) {
 		bool posOk = false;
-		for (int range = 1; range < 50 && !posOk; range++) {
+		for (int range = 0; range < 50 && !posOk; range++) {
 			for (int yy = -range; yy <= range && !posOk; yy++) {
 				position.y = yy + player.position.tile.y;
-				for (int xx = -range; xx <= range && !posOk; xx++) {
+
+				// optimization to only check edges of the square
+				// makes sure we don't check same tiles multiple times
+				int step = range * 2;
+				if (yy == -range || yy == range)
+					step = 1;
+				for (int xx = -range; xx <= range && !posOk; xx += step) {
 					position.x = xx + player.position.tile.x;
 					if (PosOkPlayer(player, position) && !PosOkPortal(currlevel, position.x, position.y)) {
 						posOk = true;
