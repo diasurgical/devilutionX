@@ -32,7 +32,7 @@
 
 * Start and Select are swapped in this version because Start + D-Pad controls backlight on the GKD350h.
 * There is nothing to map mouse emulation to in this version because of this but it isn't necessary to play the game. Unfortunately, this also means that you can't move the automap.
-* This version looks uglier than on RG350 because it uses software scaling beacuse the IPU on the GKD350h doesn't work.
+* This version looks uglier than on RG350 because it uses software scaling because the IPU on the GKD350h doesn't work.
 
 Saves are compatible with PC saves from Diablo 1 and DevilutionX.
 
