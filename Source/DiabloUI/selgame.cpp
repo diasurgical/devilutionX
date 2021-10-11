@@ -395,22 +395,22 @@ void selgame_Password_Init(int /*value*/)
 	UiInitList(0, nullptr, selgame_Password_Select, selgame_Password_Esc, vecSelGameDialog);
 }
 
-static bool IsGameCompatible(GameData *data)
+static bool IsGameCompatible(const GameData &data)
 {
-	if (data->versionMajor == PROJECT_VERSION_MAJOR
-	    && data->versionMinor == PROJECT_VERSION_MINOR
-	    && data->versionPatch == PROJECT_VERSION_PATCH
-	    && data->programid == GAME_ID) {
-		return IsDifficultyAllowed(data->nDifficulty);
+	if (data.versionMajor == PROJECT_VERSION_MAJOR
+	    && data.versionMinor == PROJECT_VERSION_MINOR
+	    && data.versionPatch == PROJECT_VERSION_PATCH
+	    && data.programid == GAME_ID) {
+		return IsDifficultyAllowed(data.nDifficulty);
 	}
 
 	selgame_Free();
 
-	if (data->programid != GAME_ID) {
+	if (data.programid != GAME_ID) {
 		UiSelOkDialog(title, _("The host is running a different game than you."), false);
 	} else {
-		char msg[64];
-		strcpy(msg, fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}."), PROJECT_VERSION, PROJECT_VERSION_MAJOR, PROJECT_VERSION_MINOR, PROJECT_VERSION_PATCH).c_str());
+		char msg[128];
+		strcpy(msg, fmt::format(_(/* TRANSLATORS: Error message when somebody tries to join a game running another version. */ "Your version {:s} does not match the host {:d}.{:d}.{:d}."), PROJECT_VERSION, data.versionMajor, data.versionMinor, data.versionPatch).c_str());
 
 		UiSelOkDialog(title, msg, false);
 	}
@@ -425,7 +425,7 @@ void selgame_Password_Select(int /*value*/)
 	if (selgame_selectedGame != 0) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_Ip, selgame_Password, gdwPlayerId)) {
-			if (!IsGameCompatible(m_game_data)) {
+			if (!IsGameCompatible(*m_game_data)) {
 				selgame_GameSelection_Select(1);
 				return;
 			}
