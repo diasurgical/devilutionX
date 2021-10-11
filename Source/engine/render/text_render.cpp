@@ -115,7 +115,14 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 
 	auto *kerning = &FontKerns[fontId];
 
-	LoadFileInMem(path, kerning);
+	HANDLE handle;
+	if (SFileOpenFile(path, &handle)) {
+		SFileReadFileThreadSafe(handle, kerning, 256);
+		SFileCloseFileThreadSafe(handle);
+	} else {
+		LogError("Missing font kerning: {}", path);
+		kerning->fill(FontSizes[size]);
+	}
 
 	return kerning;
 }
@@ -140,6 +147,9 @@ Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
 		LoadMaskedArt(path, font, 256, 1, &colorMapping);
 	} else {
 		LoadMaskedArt(path, font, 256, 1);
+	}
+	if (font->surface == nullptr) {
+		LogError("Missing font: {}", path);
 	}
 
 	return font;
