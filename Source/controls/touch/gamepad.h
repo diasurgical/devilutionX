@@ -2,6 +2,8 @@
 
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
 
+#include <functional>
+
 #include "controls/controller_buttons.h"
 #include "engine/circle.hpp"
 #include "engine/point.hpp"
@@ -33,11 +35,13 @@ struct VirtualPadButton {
 	Circle area;
 	bool isHeld;
 	bool didStateChange;
+	std::function<bool()> isUsable;
 
 	VirtualPadButton()
 	    : area({ { 0, 0 }, 0 })
 	    , isHeld(false)
 	    , didStateChange(false)
+	    , isUsable([]() { return true; })
 	{
 	}
 };

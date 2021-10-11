@@ -233,6 +233,9 @@ void VirtualDirectionPadRenderer::RenderKnob(RenderFunction renderFunction)
 
 void VirtualPadButtonRenderer::Render(RenderFunction renderFunction, Art &buttonArt)
 {
+	if (!virtualPadButton->isUsable())
+		return;
+
 	VirtualGamepadButtonType buttonType = GetButtonType();
 	int frame = buttonType;
 	int offset = buttonArt.h() * frame;
@@ -253,6 +256,9 @@ void VirtualPadButtonRenderer::Render(RenderFunction renderFunction, Art &button
 
 void PotionButtonRenderer::RenderPotion(RenderFunction renderFunction, Art &potionArt)
 {
+	if (!virtualPadButton->isUsable())
+		return;
+
 	std::optional<VirtualGamepadPotionType> potionType = GetPotionType();
 	if (potionType == std::nullopt)
 		return;

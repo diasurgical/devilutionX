@@ -195,6 +195,12 @@ bool VirtualDirectionPadEventHandler::HandleFingerMotion(const SDL_TouchFingerEv
 
 bool VirtualPadButtonEventHandler::Handle(const SDL_Event &event)
 {
+	if (!virtualPadButton->isUsable()) {
+		virtualPadButton->didStateChange = virtualPadButton->isHeld;
+		virtualPadButton->isHeld = false;
+		return false;
+	}
+
 	virtualPadButton->didStateChange = false;
 
 	switch (event.type) {
