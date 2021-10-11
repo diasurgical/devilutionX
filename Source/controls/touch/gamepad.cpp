@@ -1,7 +1,9 @@
 #include <SDL.h>
 
+#include "control.h"
 #include "controls/touch/gamepad.h"
 #include "diablo.h"
+#include "quests.h"
 #include "utils/display.h"
 #include "utils/ui_fwd.h"
 
@@ -104,14 +106,16 @@ void InitializeVirtualGamepad()
 	cancelButton.area.radius = padButtonSize / 2;
 
 	VirtualPadButton &healthButton = VirtualGamepadState.healthButton;
-	healthButton.area.position.x = padButtonRight - padButtonSize - padButtonSpacing;
-	healthButton.area.position.y = padButtonTop - padButtonSize - padButtonSpacing;
+	healthButton.area.position.x = directionPad.area.position.x - (padButtonSize + padButtonSpacing) / 2;
+	healthButton.area.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
 	healthButton.area.radius = padButtonSize / 2;
+	healthButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
 
 	VirtualPadButton &manaButton = VirtualGamepadState.manaButton;
-	manaButton.area.position.x = padButtonRight;
-	manaButton.area.position.y = padButtonTop - padButtonSize - padButtonSpacing;
+	manaButton.area.position.x = directionPad.area.position.x + (padButtonSize + padButtonSpacing) / 2;
+	manaButton.area.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
 	manaButton.area.radius = padButtonSize / 2;
+	manaButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
 }
 
 void VirtualDirectionPad::UpdatePosition(Point touchCoordinates)
