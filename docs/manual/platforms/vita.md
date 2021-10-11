@@ -49,6 +49,6 @@ sdl2_controller_mapping=50535669746120436f6e74726f6c6c65,PSVita Controller,y:b0,
 ```
 
 - **dpad_hotkeys:** dpad works as hotkeys without holding Start button
-- **switch_potions_and_clicks:** L1/R1 works as left/right mouse clicks by debault, and as health/mana potion while holding Select
+- **switch_potions_and_clicks:** L1/R1 works as left/right mouse clicks by default, and as health/mana potion while holding Select
 - **sdl2_controller_mapping:** allows you to remap controls. It uses https://github.com/gabomdq/SDL_GameControllerDB syntax
 - **enable_second_touchscreen:** enable/disable back touch mapping to L2/R2

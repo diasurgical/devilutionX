@@ -19,7 +19,7 @@ Tip: Debug commands are also supported in quick messages. If you need a debug co
 
 | Command | Description |
 | ------- | ----------- |
-| `+` | Executes a debug command when loading the first game. For exampel `+god` or `+changelevel 1 +spawn 4 skeleton`. |
+| `+` | Executes a debug command when loading the first game. For example `+god` or `+changelevel 1 +spawn 4 skeleton`. |
 | `-f` | Display frames per second. |
 | `-i` | Disable network timeout. |
 | `-n` | Disable startup video. |
