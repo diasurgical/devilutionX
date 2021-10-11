@@ -18,6 +18,7 @@
 #include "minitext.h"
 #include "missiles.h"
 #include "stores.h"
+#include "town.h"
 #include "towners.h"
 #include "trigs.h"
 
@@ -1396,6 +1397,28 @@ bool TryDropItem()
 
 	if (myPlayer.HoldItem.isEmpty()) {
 		return false;
+	}
+
+	if (myPlayer.HoldItem.IDidx == IDI_RUNEBOMB) {
+		for (auto dir : PathDirs) {
+			Point position = myPlayer.position.tile + dir;
+			if (OpensHive(position)) {
+				NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 });
+				NewCursor(CURSOR_HAND);
+				return true;
+			}
+		}
+	}
+
+	if (myPlayer.HoldItem.IDidx == IDI_MAPOFDOOM) {
+		for (auto dir : PathDirs) {
+			Point position = myPlayer.position.tile + dir;
+			if (OpensGrave(position)) {
+				NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 });
+				NewCursor(CURSOR_HAND);
+				return true;
+			}
+		}
 	}
 
 	cursPosition = myPlayer.position.future + Direction::SouthEast;
