@@ -394,7 +394,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		int count2 = 0;
 		for (int x = xp - 3; x < xp + 3; x++) {
 			for (int y = yp - 3; y < yp + 3; y++) {
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && CanPlaceMonster(x, y)) {
+				if (InDungeonBounds({ x, y }) && CanPlaceMonster(x, y)) {
 					count2++;
 				}
 			}
@@ -1134,7 +1134,7 @@ void Teleport(int i)
 			if (j != 0 || k != 0) {
 				x = mx + rx * j;
 				y = my + ry * k;
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && x != monster.position.tile.x && y != monster.position.tile.y) {
+				if (InDungeonBounds({ x, y }) && x != monster.position.tile.x && y != monster.position.tile.y) {
 					if (IsTileAvailable(monster, { x, y }))
 						done = true;
 				}
@@ -2614,7 +2614,7 @@ void FallenAi(int i)
 			for (int x = -rad; x <= rad; x++) {
 				int xpos = monster.position.tile.x + x;
 				int ypos = monster.position.tile.y + y;
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
+				if (InDungeonBounds({ x, y })) {
 					int m = dMonster[xpos][ypos];
 					if (m <= 0)
 						continue;
@@ -3941,11 +3941,9 @@ void M_ClearSquares(int i)
 	int m2 = i + 1;
 
 	for (int y = my - 1; y <= my + 1; y++) {
-		if (y >= 0 && y < MAXDUNY) {
-			for (int x = mx - 1; x <= mx + 1; x++) {
-				if (x >= 0 && x < MAXDUNX && (dMonster[x][y] == m1 || dMonster[x][y] == m2))
-					dMonster[x][y] = 0;
-			}
+		for (int x = mx - 1; x <= mx + 1; x++) {
+			if (InDungeonBounds({ x, y }) && (dMonster[x][y] == m1 || dMonster[x][y] == m2))
+				dMonster[x][y] = 0;
 		}
 	}
 }

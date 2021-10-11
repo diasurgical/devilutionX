@@ -2892,7 +2892,7 @@ void FixPlrWalkTags(int pnum)
 	int dy = player.position.old.y;
 	for (int y = dy - 1; y <= dy + 1; y++) {
 		for (int x = dx - 1; x <= dx + 1; x++) {
-			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY && (dPlayer[x][y] == pp || dPlayer[x][y] == pn)) {
+			if (InDungeonBounds({ x, y }) && (dPlayer[x][y] == pp || dPlayer[x][y] == pn)) {
 				dPlayer[x][y] = 0;
 			}
 		}

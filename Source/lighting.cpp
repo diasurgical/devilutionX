@@ -514,7 +514,7 @@ void DoUnLight(int nXPos, int nYPos, int nRadius)
 
 	for (int y = minY; y < maxY; y++) {
 		for (int x = minX; x < maxX; x++) {
-			if (x >= 0 && x < MAXDUNX && y >= 0 && y < MAXDUNY)
+			if (InDungeonBounds({ x, y }))
 				dLight[x][y] = dPreLight[x][y];
 		}
 	}
@@ -564,7 +564,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 		maxY = MAXDUNY - position.y;
 	}
 
-	if (position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY) {
+	if (InDungeonBounds(position)) {
 		if (currlevel < 17) {
 			SetLight(position, 0);
 		} else if (GetLight(position) > lightradius[nRadius][0]) {
@@ -579,7 +579,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				Point temp = position + Displacement { x, y };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+				if (InDungeonBounds(temp))
 					if (v < GetLight(temp))
 						SetLight(temp, v);
 			}
@@ -593,7 +593,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				Point temp = position + Displacement { y, -x };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+				if (InDungeonBounds(temp))
 					if (v < GetLight(temp))
 						SetLight(temp, v);
 			}
@@ -607,7 +607,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				Point temp = position - Displacement { x, y };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+				if (InDungeonBounds(temp))
 					if (v < GetLight(temp))
 						SetLight(temp, v);
 			}
@@ -621,7 +621,7 @@ void DoLighting(Point position, int nRadius, int lnum)
 			if (radiusBlock < 128) {
 				Point temp = position + Displacement { -y, x };
 				int8_t v = lightradius[nRadius][radiusBlock];
-				if (temp.x >= 0 && temp.x < MAXDUNX && temp.y >= 0 && temp.y < MAXDUNY)
+				if (InDungeonBounds(temp))
 					if (v < GetLight(temp))
 						SetLight(temp, v);
 			}
@@ -706,11 +706,11 @@ void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 					}
 					break;
 				}
-				if (nCrawlX >= 0 && nCrawlX < MAXDUNX && nCrawlY >= 0 && nCrawlY < MAXDUNY) {
+				if (InDungeonBounds({ nCrawlX, nCrawlY })) {
 					nBlockerFlag = nBlockTable[dPiece[nCrawlX][nCrawlY]];
-					if ((x1adj + nCrawlX >= 0 && x1adj + nCrawlX < MAXDUNX && y1adj + nCrawlY >= 0 && y1adj + nCrawlY < MAXDUNY
+					if ((InDungeonBounds({ x1adj + nCrawlX, y1adj + nCrawlY })
 					        && !nBlockTable[dPiece[x1adj + nCrawlX][y1adj + nCrawlY]])
-					    || (x2adj + nCrawlX >= 0 && x2adj + nCrawlX < MAXDUNX && y2adj + nCrawlY >= 0 && y2adj + nCrawlY < MAXDUNY
+					    || (InDungeonBounds({ x2adj + nCrawlX, y2adj + nCrawlY })
 					        && !nBlockTable[dPiece[x2adj + nCrawlX][y2adj + nCrawlY]])) {
 						if (doautomap) {
 							if (dFlags[nCrawlX][nCrawlY] != 0) {
