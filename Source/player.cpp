@@ -3585,28 +3585,24 @@ void SyncInitPlrPos(int pnum)
 		return;
 	}
 
-	Point position = {};
-	for (int i = 0; i < 8; i++) {
-		position = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
-		if (PosOkPlayer(player, position)) {
-			break;
+	Point position = [&]() {
+		for (int i = 0; i < 8; i++) {
+			Point position = player.position.tile + Displacement { plrxoff2[i], plryoff2[i] };
+			if (PosOkPlayer(player, position))
+				return position;
 		}
-	}
 
-	if (!PosOkPlayer(player, position)) {
-		bool posOk = false;
-		for (int range = 1; range < 50 && !posOk; range++) {
-			for (int yy = -range; yy <= range && !posOk; yy++) {
-				position.y = yy + player.position.tile.y;
-				for (int xx = -range; xx <= range && !posOk; xx++) {
-					position.x = xx + player.position.tile.x;
-					if (PosOkPlayer(player, position) && !PosOkPortal(currlevel, position.x, position.y)) {
-						posOk = true;
-					}
-				}
+		for (int k : CrawlNum) {
+			int ck = k + 2;
+			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
+				Point position = player.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+				if (PosOkPlayer(player, position) && !PosOkPortal(currlevel, position.x, position.y))
+					return position;
 			}
 		}
-	}
+
+		return Point { 0, 0 };
+	}();
 
 	player.position.tile = position;
 	dPlayer[position.x][position.y] = pnum + 1;
