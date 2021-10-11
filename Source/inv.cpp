@@ -20,6 +20,7 @@
 #include "options.h"
 #include "plrmsg.h"
 #include "stores.h"
+#include "town.h"
 #include "towners.h"
 #include "controls/plrctrls.h"
 #include "utils/language.h"
@@ -1722,32 +1723,27 @@ bool TryInvPut()
 
 int InvPutItem(Player &player, Point position)
 {
-	if (!PutItem(player, position))
-		return -1;
-
-	if (currlevel == 0) {
-		int yp = cursPosition.y;
-		int xp = cursPosition.x;
-		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
+	if (player.plrlevel == 0) {
+		if (player.HoldItem.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
 			NetSendCmd(false, CMD_OPENHIVE);
 			auto &quest = Quests[Q_FARMER];
 			quest._qactive = QUEST_DONE;
-			if (gbIsMultiplayer) {
+			if (gbIsMultiplayer)
 				NetSendCmdQuest(true, quest);
-				return -1;
-			}
 			return -1;
 		}
-		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
+		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && OpensGrave(position)) {
 			NetSendCmd(false, CMD_OPENCRYPT);
 			auto &quest = Quests[Q_GRAVE];
 			quest._qactive = QUEST_DONE;
-			if (gbIsMultiplayer) {
+			if (gbIsMultiplayer)
 				NetSendCmdQuest(true, quest);
-			}
 			return -1;
 		}
 	}
+
+	if (!PutItem(player, position))
+		return -1;
 
 	assert(CanPut(position));
 
@@ -1771,6 +1767,13 @@ int InvPutItem(Player &player, Point position)
 
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
+	if (player.plrlevel == 0) {
+		if (idx == IDI_RUNEBOMB && OpensHive(position))
+			return -1;
+		if (idx == IDI_MAPOFDOOM && OpensGrave(position))
+			return -1;
+	}
+
 	if (!PutItem(player, position))
 		return -1;
 

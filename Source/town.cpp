@@ -200,6 +200,20 @@ void DrlgTPass3()
 
 } // namespace
 
+bool OpensHive(Point position)
+{
+	int yp = position.y;
+	int xp = position.x;
+	return xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64;
+}
+
+bool OpensGrave(Point position)
+{
+	int yp = position.y;
+	int xp = position.x;
+	return xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24;
+}
+
 void TownOpenHive()
 {
 	dPiece[78][60] = 0x48a;
