@@ -1173,7 +1173,7 @@ DWORD OnSpellPlayer(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam2);
-	if (currlevel != 0 || spelldata[spell].sTownSpell) {
+	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
 		LogError(_("{:s} has cast an illegal spell."), player._pName);
 		return sizeof(message);
 	}
