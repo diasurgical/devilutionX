@@ -9,6 +9,6 @@ extern Uint16 gnScreenHeight;
 extern Uint16 gnViewportHeight;
 
 bool SpawnWindow(const char *lpWindowName);
-void UiErrorOkDialog(const char *text, const char *caption, bool error = true);
+void UiErrorOkDialog(const char *caption, const char *text, bool error = true);
 
 } // namespace devilution
