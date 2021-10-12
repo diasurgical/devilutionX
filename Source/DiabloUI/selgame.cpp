@@ -510,7 +510,7 @@ void RefreshGameList()
 			Gamelist.push_back(gamelist[i]);
 		}
 		selgame_GameSelection_Init();
-		lastUpdate = SDL_GetTicks();
+		lastUpdate = currentTime;
 	}
 }
 
