@@ -3540,9 +3540,9 @@ void CornerstoneSave()
 	if (!CornerStone.item.isEmpty()) {
 		ItemPack id;
 		PackItem(&id, &CornerStone.item);
-		const auto *buffer = reinterpret_cast<char *>(&id);
+		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
-			sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
+			snprintf(&sgOptions.Hellfire.szItem[i * 2], 3, "%02hhX", buffer[i]);
 		}
 	} else {
 		sgOptions.Hellfire.szItem[0] = '\0';
