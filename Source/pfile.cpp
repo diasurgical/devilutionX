@@ -301,6 +301,8 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 
 				auto &player = Players[0];
 
+				player = {};
+
 				if (UnPackPlayer(&pkplr, player, false)) {
 					LoadHeroItems(player);
 					RemoveEmptyInventory(player);
@@ -379,6 +381,8 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 {
 	HANDLE archive;
 	PlayerPack pkplr;
+
+	player = {};
 
 	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
