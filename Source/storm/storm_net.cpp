@@ -9,7 +9,6 @@
 #include "dvlnet/abstract_net.h"
 #include "menu.h"
 #include "options.h"
-#include "storm/storm_dvlnet.h"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -217,6 +216,11 @@ bool SNetSetBasePlayer(int /*unused*/)
 void DvlNet_SendInfoRequest()
 {
 	dvlnet_inst->send_info_request();
+}
+
+void DvlNet_ClearGamelist()
+{
+	return dvlnet_inst->clear_gamelist();
 }
 
 std::vector<std::string> DvlNet_GetGamelist()
