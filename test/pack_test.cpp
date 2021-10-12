@@ -2,6 +2,8 @@
 #include <cstdint>
 
 #include "pack.h"
+#include "utils/paths.h"
+#include "storm/storm.h"
 
 using namespace devilution;
 
@@ -331,6 +333,8 @@ TEST(pack, UnPackItem_diablo)
 	Item id;
 	ItemPack is;
 
+	SFileSetAssetsPath(devilution::paths::AppPath() + "assets/");
+
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
 	gbIsSpawn = false;
@@ -351,6 +355,8 @@ TEST(pack, UnPackItem_diablo_unique_bug)
 {
 	ItemPack pkItemBug = { 6, 911, 14, 5, 60, 60, 0, 0, 0, 0 }; // Veil of Steel - with morph bug
 	ItemPack pkItem = { 6, 655, 14, 5, 60, 60, 0, 0, 0, 0 };    // Veil of Steel - fixed
+
+	SFileSetAssetsPath(devilution::paths::AppPath() + "assets/");
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
@@ -402,6 +408,8 @@ TEST(pack, UnPackItem_spawn)
 	Item id;
 	ItemPack is;
 
+	SFileSetAssetsPath(devilution::paths::AppPath() + "assets/");
+
 	gbIsHellfire = false;
 	gbIsMultiplayer = false;
 	gbIsSpawn = true;
@@ -445,6 +453,8 @@ TEST(pack, UnPackItem_diablo_multiplayer)
 {
 	Item id;
 	ItemPack is;
+
+	SFileSetAssetsPath(devilution::paths::AppPath() + "assets/");
 
 	gbIsHellfire = false;
 	gbIsMultiplayer = true;
@@ -654,6 +664,8 @@ TEST(pack, UnPackItem_hellfire)
 {
 	Item id;
 	ItemPack is;
+
+	SFileSetAssetsPath(devilution::paths::AppPath() + "assets/");
 
 	gbIsHellfire = true;
 	gbIsMultiplayer = false;
