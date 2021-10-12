@@ -334,6 +334,7 @@ TEST(Writehero, pfile_write_hero)
 
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
+	*MyPlayer = {};
 
 	_uiheroinfo info {};
 	strcpy(info.name, "TestPlayer");
