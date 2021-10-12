@@ -1865,13 +1865,9 @@ void SaveHeroItems(Player &player)
 		SaveItem(file, item);
 }
 
-// 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
-// final game uses 4-byte magic instead of 3
-#define FILEBUFF ((256 * 1024) + 3)
-
 void SaveGameData()
 {
-	SaveHelper file("game", FILEBUFF);
+	SaveHelper file("game", 320 * 1024);
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
@@ -2041,7 +2037,7 @@ void SaveLevel()
 
 	char szName[MAX_PATH];
 	GetTempLevelNames(szName);
-	SaveHelper file(szName, FILEBUFF);
+	SaveHelper file(szName, 256 * 1024);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {
