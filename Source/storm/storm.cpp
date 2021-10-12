@@ -132,7 +132,7 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 	// As last fallback always search app content folder
 	if (!result && AssetsPath) {
 		std::string path = *AssetsPath + filename;
-		for (std::size_t i = SBasePath->size(); i < path.size(); ++i)
+		for (std::size_t i = AssetsPath->size(); i < path.size(); ++i)
 			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
 		result = SFileOpenFileEx((HANDLE) nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
