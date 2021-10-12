@@ -992,6 +992,24 @@ void CheckQuestItem(Player &player)
 	CheckNaKrulNotes(player);
 }
 
+void OpenHive()
+{
+	NetSendCmd(false, CMD_OPENHIVE);
+	auto &quest = Quests[Q_FARMER];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
+void OpenCrypt()
+{
+	NetSendCmd(false, CMD_OPENCRYPT);
+	auto &quest = Quests[Q_GRAVE];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
 void CleanupItems(Item *item, int ii)
 {
 	dItem[item->position.x][item->position.y] = 0;
@@ -1725,19 +1743,11 @@ int InvPutItem(Player &player, Point position)
 {
 	if (player.plrlevel == 0) {
 		if (player.HoldItem.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
-			NetSendCmd(false, CMD_OPENHIVE);
-			auto &quest = Quests[Q_FARMER];
-			quest._qactive = QUEST_DONE;
-			if (gbIsMultiplayer)
-				NetSendCmdQuest(true, quest);
+			OpenHive();
 			return -1;
 		}
 		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && OpensGrave(position)) {
-			NetSendCmd(false, CMD_OPENCRYPT);
-			auto &quest = Quests[Q_GRAVE];
-			quest._qactive = QUEST_DONE;
-			if (gbIsMultiplayer)
-				NetSendCmdQuest(true, quest);
+			OpenCrypt();
 			return -1;
 		}
 	}
@@ -2004,6 +2014,19 @@ bool UseInvItem(int pnum, int cii)
 		PlaySFX(IS_IBOOK);
 		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
+	}
+
+	if (player.plrlevel == 0) {
+		if (UseItemOpensHive(*item, player.position.tile)) {
+			OpenHive();
+			player.RemoveInvItem(c);
+			return true;
+		}
+		if (UseItemOpensCrypt(*item, player.position.tile)) {
+			OpenCrypt();
+			player.RemoveInvItem(c);
+			return true;
+		}
 	}
 
 	if (!AllItemsList[item->IDidx].iUsable)

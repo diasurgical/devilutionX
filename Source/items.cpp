@@ -30,6 +30,7 @@
 #include "options.h"
 #include "player.h"
 #include "stores.h"
+#include "town.h"
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
@@ -4419,6 +4420,30 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	default:
 		break;
 	}
+}
+
+bool UseItemOpensHive(const Item &item, Point position)
+{
+	if (item.IDidx != IDI_RUNEBOMB)
+		return false;
+	for (auto dir : PathDirs) {
+		Point adjacentPosition = position + dir;
+		if (OpensHive(adjacentPosition))
+			return true;
+	}
+	return false;
+}
+
+bool UseItemOpensCrypt(const Item &item, Point position)
+{
+	if (item.IDidx != IDI_MAPOFDOOM)
+		return false;
+	for (auto dir : PathDirs) {
+		Point adjacentPosition = position + dir;
+		if (OpensGrave(adjacentPosition))
+			return true;
+	}
+	return false;
 }
 
 void SpawnSmith(int lvl)
