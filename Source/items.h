@@ -473,6 +473,8 @@ void DrawUniqueInfo(const Surface &out);
 void PrintItemDetails(Item *x);
 void PrintItemDur(Item *x);
 void UseItem(int p, item_misc_id Mid, spell_id spl);
+bool UseItemOpensHive(const Item &item, Point position);
+bool UseItemOpensCrypt(const Item &item, Point position);
 void SpawnSmith(int lvl);
 void SpawnPremium(int pnum);
 void SpawnWitch(int lvl);

@@ -15,10 +15,10 @@
 #include "gmenu.h"
 #include "help.h"
 #include "inv.h"
+#include "items.h"
 #include "minitext.h"
 #include "missiles.h"
 #include "stores.h"
-#include "town.h"
 #include "towners.h"
 #include "trigs.h"
 
@@ -1399,25 +1399,16 @@ bool TryDropItem()
 		return false;
 	}
 
-	if (myPlayer.HoldItem.IDidx == IDI_RUNEBOMB) {
-		for (auto dir : PathDirs) {
-			Point position = myPlayer.position.tile + dir;
-			if (OpensHive(position)) {
-				NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 });
-				NewCursor(CURSOR_HAND);
-				return true;
-			}
+	if (currlevel == 0) {
+		if (UseItemOpensHive(myPlayer.HoldItem, myPlayer.position.tile)) {
+			NetSendCmdPItem(true, CMD_PUTITEM, { 79, 61 });
+			NewCursor(CURSOR_HAND);
+			return true;
 		}
-	}
-
-	if (myPlayer.HoldItem.IDidx == IDI_MAPOFDOOM) {
-		for (auto dir : PathDirs) {
-			Point position = myPlayer.position.tile + dir;
-			if (OpensGrave(position)) {
-				NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 });
-				NewCursor(CURSOR_HAND);
-				return true;
-			}
+		if (UseItemOpensCrypt(myPlayer.HoldItem, myPlayer.position.tile)) {
+			NetSendCmdPItem(true, CMD_PUTITEM, { 35, 20 });
+			NewCursor(CURSOR_HAND);
+			return true;
 		}
 	}
 
