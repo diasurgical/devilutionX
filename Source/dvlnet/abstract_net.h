@@ -48,6 +48,10 @@ public:
 	{
 	}
 
+	virtual void clear_gamelist()
+	{
+	}
+
 	virtual std::vector<std::string> get_gamelist()
 	{
 		return std::vector<std::string>();

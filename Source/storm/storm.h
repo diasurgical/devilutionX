@@ -8,6 +8,7 @@
 
 #include "appfat.h"
 #include "multi.h"
+#include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
@@ -22,6 +23,8 @@ enum conn_type : uint8_t {
 	SELCONN_TCP,
 	SELCONN_LOOPBACK,
 };
+
+extern const char *ConnectionNames[];
 
 struct PCXHeader {
 	uint8_t Manufacturer;
@@ -288,5 +291,10 @@ inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
 }
 
 #endif
+
+void DvlNet_SendInfoRequest();
+void DvlNet_ClearGamelist();
+std::vector<std::string> DvlNet_GetGamelist();
+void DvlNet_SetPassword(std::string pw);
 
 } // namespace devilution

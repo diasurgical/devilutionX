@@ -37,6 +37,10 @@ public:
 	virtual bool SNetGetTurnsInTransit(uint32_t *turns);
 	virtual void setup_gameinfo(buffer_t info);
 	virtual std::string make_default_gamename();
+	virtual void send_info_request();
+	virtual void clear_gamelist();
+	virtual std::vector<std::string> get_gamelist();
+	virtual void setup_password(std::string pw);
 
 	cdwrap();
 	virtual ~cdwrap() = default;
@@ -159,6 +163,30 @@ template <class T>
 std::string cdwrap<T>::make_default_gamename()
 {
 	return dvlnet_wrap->make_default_gamename();
+}
+
+template <class T>
+void cdwrap<T>::send_info_request()
+{
+	dvlnet_wrap->send_info_request();
+}
+
+template <class T>
+void cdwrap<T>::clear_gamelist()
+{
+	dvlnet_wrap->clear_gamelist();
+}
+
+template <class T>
+std::vector<std::string> cdwrap<T>::get_gamelist()
+{
+	return dvlnet_wrap->get_gamelist();
+}
+
+template <class T>
+void cdwrap<T>::setup_password(std::string pw)
+{
+	return dvlnet_wrap->setup_password(pw);
 }
 
 } // namespace net

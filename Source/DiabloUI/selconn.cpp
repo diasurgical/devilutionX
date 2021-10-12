@@ -8,6 +8,12 @@
 namespace devilution {
 
 int provider;
+const char *ConnectionNames[] {
+	"ZeroTier",
+	N_("Client-Server (TCP)"),
+	N_("Loopback"),
+};
+
 namespace {
 
 char selconn_MaxPlayers[21];
@@ -32,13 +38,13 @@ void SelconnLoad()
 
 #ifndef NONET
 #ifndef DISABLE_ZERO_TIER
-	vecConnItems.push_back(std::make_unique<UiListItem>("Zerotier", SELCONN_ZT));
+	vecConnItems.push_back(std::make_unique<UiListItem>(ConnectionNames[SELCONN_ZT], SELCONN_ZT));
 #endif
 #ifndef DISABLE_TCP
-	vecConnItems.push_back(std::make_unique<UiListItem>(_("Client-Server (TCP)"), SELCONN_TCP));
+	vecConnItems.push_back(std::make_unique<UiListItem>(_(ConnectionNames[SELCONN_TCP]), SELCONN_TCP));
 #endif
 #endif
-	vecConnItems.push_back(std::make_unique<UiListItem>(_("Loopback"), SELCONN_LOOPBACK));
+	vecConnItems.push_back(std::make_unique<UiListItem>(_(ConnectionNames[SELCONN_LOOPBACK]), SELCONN_LOOPBACK));
 
 	UiAddBackground(&vecSelConnDlg);
 	UiAddLogo(&vecSelConnDlg);
