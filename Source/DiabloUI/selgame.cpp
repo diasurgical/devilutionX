@@ -495,13 +495,15 @@ void RefreshGameList()
 	if (selgame_enteringGame)
 		return;
 
-	if (lastRequest == 0 || SDL_GetTicks() - lastRequest > 30000) {
+	uint32_t currentTime = SDL_GetTicks();
+
+	if (lastRequest == 0 || currentTime - lastRequest > 30000) {
 		DvlNet_SendInfoRequest();
-		lastRequest = SDL_GetTicks();
-		lastUpdate = SDL_GetTicks() - 3000; // Give 2 sec for responses, but don't wait 5
+		lastRequest = currentTime;
+		lastUpdate = currentTime - 3000; // Give 2 sec for responses, but don't wait 5
 	}
 
-	if (lastUpdate == 0 || SDL_GetTicks() - lastUpdate > 5000) {
+	if (lastUpdate == 0 || currentTime - lastUpdate > 5000) {
 		std::vector<std::string> gamelist = DvlNet_GetGamelist();
 		Gamelist.clear();
 		for (unsigned i = 0; i < gamelist.size(); i++) {
