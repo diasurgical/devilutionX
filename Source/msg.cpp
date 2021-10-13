@@ -408,6 +408,7 @@ void DeltaLeaveSync(BYTE bLevel)
 		delta._menemy = encode_enemy(monster);
 		delta._mhitpoints = monster._mhitpoints;
 		delta._mactive = monster._msquelch;
+		delta.mWhoHit = monster.mWhoHit;
 	}
 	memcpy(&sgLocals[bLevel].automapsv, AutomapView, sizeof(AutomapView));
 }
@@ -2066,6 +2067,8 @@ void delta_sync_monster(const TSyncMonster &monsterSync, uint8_t level)
 	monster._my = monsterSync._my;
 	monster._mactive = UINT8_MAX;
 	monster._menemy = monsterSync._menemy;
+	monster._mhitpoints = monsterSync._mhitpoints;
+	monster.mWhoHit = monsterSync.mWhoHit;
 }
 
 bool delta_portal_inited(int i)
@@ -2175,8 +2178,10 @@ void DeltaLoadLevel()
 			monster.position.tile = { x, y };
 			monster.position.old = { x, y };
 			monster.position.future = { x, y };
-			if (sgLevels[currlevel].monster[i]._mhitpoints != -1)
+			if (sgLevels[currlevel].monster[i]._mhitpoints != -1) {
 				monster._mhitpoints = sgLevels[currlevel].monster[i]._mhitpoints;
+				monster.mWhoHit = sgLevels[currlevel].monster[i].mWhoHit;
+			}
 			if (sgLevels[currlevel].monster[i]._mhitpoints == 0) {
 				M_ClearSquares(i);
 				if (monster._mAi != AI_DIABLO) {

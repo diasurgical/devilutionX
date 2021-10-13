@@ -41,6 +41,8 @@ void SyncMonsterPos(TSyncMonster &monsterSync, int ndx)
 	monsterSync._my = monster.position.tile.y;
 	monsterSync._menemy = encode_enemy(monster);
 	monsterSync._mdelta = sgnMonsterPriority[ndx] > 255 ? 255 : sgnMonsterPriority[ndx];
+	monsterSync.mWhoHit = monster.mWhoHit;
+	monsterSync._mhitpoints = monster._mhitpoints;
 
 	sgnMonsterPriority[ndx] = 0xFFFF;
 	sgwLRU[ndx] = monster._msquelch == 0 ? 0xFFFF : 0xFFFE;
@@ -193,6 +195,8 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 	}
 
 	decode_enemy(monster, enemyId);
+	monster.mWhoHit = monsterSync.mWhoHit;
+	monster._mhitpoints = monsterSync._mhitpoints;
 }
 
 bool IsEnemyIdValid(const Monster &monster, int enemyId)
