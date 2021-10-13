@@ -1923,7 +1923,8 @@ void GroupUnity(Monster &monster)
 	assert(monster._uniqtype == 0);
 
 	auto &leader = Monsters[monster.leader];
-	if (IsLineNotSolid(monster.position.tile, leader.position.future)) {
+	bool leaderIsStuck = leader._mmode == MonsterMode::Stand && !DirOK(monster.leader, monster._mdir);
+	if (!leaderIsStuck && IsLineNotSolid(monster.position.tile, leader.position.future)) {
 		if (monster.leaderRelation == LeaderRelation::Separated
 		    && monster.position.tile.WalkingDistance(leader.position.future) < 4) {
 			// Reunite the separated monster with the pack
@@ -4368,7 +4369,7 @@ void ProcessMonsters()
 				raflag = MonsterTalk(monster);
 				break;
 			}
-			if (raflag) {
+			if (raflag || monster._mmode == MonsterMode::Stand) {
 				GroupUnity(monster);
 			}
 		} while (raflag);
