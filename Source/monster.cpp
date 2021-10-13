@@ -778,6 +778,11 @@ void LoadDiabMonsts()
 
 void DeleteMonster(int i)
 {
+	auto monster = Monsters[ActiveMonsters[i]];
+	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+		AddUnLight(monster.mlid);
+	}
+
 	ActiveMonsterCount--;
 	std::swap(ActiveMonsters[i], ActiveMonsters[ActiveMonsterCount]); // This ensures alive monsters are before ActiveMonsterCount in the array and any deleted monster after
 }
