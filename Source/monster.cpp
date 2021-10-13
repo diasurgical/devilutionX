@@ -778,7 +778,7 @@ void LoadDiabMonsts()
 
 void DeleteMonster(int i)
 {
-	auto monster = Monsters[ActiveMonsters[i]];
+	const auto &monster = Monsters[ActiveMonsters[i]];
 	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
 		AddUnLight(monster.mlid);
 	}
