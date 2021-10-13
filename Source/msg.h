@@ -357,6 +357,8 @@ struct TSyncMonster {
 	uint8_t _my;
 	uint8_t _menemy;
 	uint8_t _mdelta;
+	int32_t _mhitpoints;
+	int8_t mWhoHit;
 };
 
 struct TPktHdr {
@@ -385,6 +387,7 @@ struct DMonsterStr {
 	uint8_t _menemy;
 	uint8_t _mactive;
 	int32_t _mhitpoints;
+	int8_t mWhoHit;
 };
 
 struct DObjectStr {
