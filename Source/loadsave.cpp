@@ -628,6 +628,11 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.mlid == Players[MyPlayerId]._plid)
 		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
+	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+		int r = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+		monster.mlid = AddLight(monster.position.tile, r);
+	}
+
 	// Omit pointer mName;
 	// Omit pointer MType;
 	// Omit pointer MData;
