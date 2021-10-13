@@ -716,6 +716,7 @@ set(devilutionx_assets
   data/health.pcx
   data/panel8buc.pcx
   data/panel8bucp.pcx
+  data/monstertags.pcx
   data/resistance.pcx
   data/talkbutton.pcx
   data/xpbar.pcx

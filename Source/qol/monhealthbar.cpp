@@ -17,6 +17,7 @@ namespace {
 Art healthBox;
 Art resistance;
 Art health;
+Art playerExpTags;
 
 } // namespace
 
@@ -28,6 +29,7 @@ void InitMonsterHealthBar()
 	LoadMaskedArt("data\\healthbox.pcx", &healthBox, 1, 1);
 	LoadArt("data\\health.pcx", &health);
 	LoadMaskedArt("data\\resistance.pcx", &resistance, 6, 1);
+	LoadMaskedArt("data\\monstertags.pcx", &playerExpTags, 5, 1);
 
 	if ((healthBox.surface == nullptr)
 	    || (health.surface == nullptr)
@@ -133,6 +135,16 @@ void DrawMonsterHealthBar(const Surface &out)
 				resOffset += resistance.w() + 2;
 			}
 		}
+	}
+
+	int tagOffset = 5;
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (1 << i & monster.mWhoHit) {
+			DrawArt(out, position + Displacement { tagOffset, height - 31 }, &playerExpTags, i + 1);
+		} else if (Players[i].plractive) {
+			DrawArt(out, position + Displacement { tagOffset, height - 31 }, &playerExpTags, 0);
+		}
+		tagOffset += playerExpTags.w();
 	}
 }
 
