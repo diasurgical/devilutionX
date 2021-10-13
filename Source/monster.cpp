@@ -1896,6 +1896,22 @@ bool IsLineNotSolid(Point startPoint, Point endPoint)
 	return LineClear(IsTileNotSolid, startPoint, endPoint);
 }
 
+void FollowTheLeader(Monster &monster)
+{
+	if (monster.leader == 0)
+		return;
+
+	if (monster.leaderRelation != LeaderRelation::Leashed)
+		return;
+
+	auto &leader = Monsters[monster.leader];
+	if (monster._msquelch >= leader._msquelch)
+		return;
+
+	monster.position.last = leader.position.tile;
+	monster._msquelch = leader._msquelch - 1;
+}
+
 void GroupUnity(Monster &monster)
 {
 	if (monster.leaderRelation == LeaderRelation::None)
@@ -4246,6 +4262,7 @@ void ProcessMonsters()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int mi = ActiveMonsters[i];
 		auto &monster = Monsters[mi];
+		FollowTheLeader(monster);
 		bool raflag = false;
 		if (gbIsMultiplayer) {
 			SetRndSeed(monster._mAISeed);
