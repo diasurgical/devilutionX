@@ -439,7 +439,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	const auto &cel = *monster.AnimInfo.pCelSprite;
 
-	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0) {
+	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit)) {
 		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, 1);
 		return;
 	}
@@ -509,7 +509,7 @@ void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting
  */
 void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
 {
-	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
+	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit) && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
 
@@ -548,7 +548,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
+	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, 1);
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
@@ -574,12 +574,12 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
  */
 void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	dFlags[tilePosition.x][tilePosition.y] &= ~BFLAG_DEAD_PLAYER;
+	dFlags[tilePosition.x][tilePosition.y] &= ~DungeonFlag::DeadPlayer;
 
 	for (int i = 0; i < MAX_PLRS; i++) {
 		auto &player = Players[i];
 		if (player.plractive && player._pHitPoints == 0 && player.plrlevel == (BYTE)currlevel && player.position.tile == tilePosition) {
-			dFlags[tilePosition.x][tilePosition.y] |= BFLAG_DEAD_PLAYER;
+			dFlags[tilePosition.x][tilePosition.y] |= DungeonFlag::DeadPlayer;
 			const Displacement center { CalculateWidth2(player.AnimInfo.pCelSprite == nullptr ? 96 : player.AnimInfo.pCelSprite->Width()), 0 };
 			const Point playerRenderPosition { targetBufferPosition + player.position.offset - center };
 			DrawPlayer(out, i, tilePosition, playerRenderPosition);
@@ -758,7 +758,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if ((dFlags[tilePosition.x][tilePosition.y] & BFLAG_LIT) == 0 && !Players[MyPlayerId]._pInfraFlag)
+	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit) && !Players[MyPlayerId]._pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -836,12 +836,12 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	DrawCell(out, tilePosition, targetBufferPosition);
 
-	int8_t bFlag = dFlags[tilePosition.x][tilePosition.y];
+	DungeonFlag bFlag = dFlags[tilePosition.x][tilePosition.y];
 	int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
 	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
 #ifdef _DEBUG
-	if (DebugVision && (bFlag & BFLAG_LIT) != 0) {
+	if (DebugVision && HasAnyOf(bFlag, DungeonFlag::Lit)) {
 		CelClippedDrawTo(out, targetBufferPosition, *pSquareCel, 1);
 	}
 	DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;
@@ -874,7 +874,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	DrawObject(out, tilePosition, targetBufferPosition, true);
 	DrawItem(out, tilePosition, targetBufferPosition, true);
 
-	if ((bFlag & BFLAG_DEAD_PLAYER) != 0) {
+	if (HasAnyOf(bFlag, DungeonFlag::DeadPlayer)) {
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
 	if (dPlayer[tilePosition.x][tilePosition.y] > 0) {

@@ -873,7 +873,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = dPreLight[dungeonCoords.x][dungeonCoords.y];
 		break;
 	case DebugGridTextItem::dFlags:
-		info = dFlags[dungeonCoords.x][dungeonCoords.y];
+		info = static_cast<int>(dFlags[dungeonCoords.x][dungeonCoords.y]);
 		break;
 	case DebugGridTextItem::dPlayer:
 		info = dPlayer[dungeonCoords.x][dungeonCoords.y];

@@ -12,6 +12,7 @@
 #include "engine/cel_sprite.hpp"
 #include "engine/point.hpp"
 #include "scrollrt.h"
+#include "utils/enum_traits.h"
 #include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
@@ -69,18 +70,21 @@ enum {
 	// clang-format on
 };
 
-enum {
+enum class DungeonFlag : uint8_t {
 	// clang-format off
-	BFLAG_MISSILE     = 1 << 0,
-	BFLAG_VISIBLE     = 1 << 1,
-	BFLAG_DEAD_PLAYER = 1 << 2,
-	BFLAG_POPULATED   = 1 << 3,
-	BFLAG_MONSTLR     = 1 << 4,
-	BFLAG_PLAYERLR    = 1 << 5,
-	BFLAG_LIT         = 1 << 6,
-	BFLAG_EXPLORED    = 1 << 7,
+	None        = 0, // Only used by lighting/automap
+	Missile     = 1 << 0,
+	Visible     = 1 << 1,
+	DeadPlayer  = 1 << 2,
+	Populated   = 1 << 3,
+	// 1 << 4 and 1 << 5 were used as workarounds for a bug with horizontal movement (relative to the screen) for monsters and players respectively
+	Lit         = 1 << 6,
+	Explored    = 1 << 7,
+	SavedFlags  = (Populated | Lit | Explored), // ~(Missile | Visible | DeadPlayer)
+	LoadedFlags = (Missile | Visible | DeadPlayer | Populated | Lit | Explored)
 	// clang-format on
 };
+use_enum_as_flags(DungeonFlag);
 
 enum _difficulty : uint8_t {
 	DIFF_NORMAL,
@@ -199,7 +203,7 @@ extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 extern int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
-extern int8_t dFlags[MAXDUNX][MAXDUNY];
+extern DungeonFlag dFlags[MAXDUNX][MAXDUNY];
 /** Contains the player numbers (players array indices) of the map. */
 extern int8_t dPlayer[MAXDUNX][MAXDUNY];
 /**

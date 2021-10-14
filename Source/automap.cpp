@@ -567,7 +567,7 @@ void InitAutomap()
 
 	for (auto &column : dFlags)
 		for (auto &dFlag : column)
-			dFlag &= ~BFLAG_EXPLORED;
+			dFlag &= ~DungeonFlag::Explored;
 }
 
 void StartAutomap()

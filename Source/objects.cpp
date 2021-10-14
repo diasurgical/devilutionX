@@ -297,7 +297,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if (HasAnyOf(dFlags[xp][yp], DungeonFlag::Populated))
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -306,7 +306,7 @@ bool RndLocOk(int xp, int yp)
 
 bool CanPlaceWallTrap(int xp, int yp)
 {
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if (HasAnyOf(dFlags[xp][yp], DungeonFlag::Populated))
 		return false;
 
 	return nTrapTable[dPiece[xp][yp]];
@@ -552,7 +552,7 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 
 bool TorchLocOK(int xp, int yp)
 {
-	return (dFlags[xp][yp] & BFLAG_POPULATED) == 0;
+	return HasNoneOf(dFlags[xp][yp], DungeonFlag::Populated);
 }
 
 void AddL2Torches()
