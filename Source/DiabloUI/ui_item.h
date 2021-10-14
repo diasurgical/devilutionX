@@ -67,6 +67,7 @@ enum class UiPanels {
 	Character,
 	Spell,
 	Inventory,
+	Stash
 };
 
 inline UiFlags operator|(UiFlags lhs, UiFlags rhs)

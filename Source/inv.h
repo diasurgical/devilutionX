@@ -177,6 +177,10 @@ void DoTelekinesis();
 int CalculateGold(Player &player);
 bool DropItemBeforeTrig();
 
+//needed for stash
+extern void InvDrawSlotBack(const Surface &out, Point targetPosition, Size size);
+extern int SwapItem(Item *a, Item *b);
+
 /* data */
 
 } // namespace devilution

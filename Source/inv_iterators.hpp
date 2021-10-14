@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "inv.h"
+#include "stash.h"
 #include "items.h"
 #include "player.h"
 

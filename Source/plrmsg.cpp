@@ -10,6 +10,7 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
+#include "stash.h"
 #include "utils/language.h"
 
 namespace devilution {

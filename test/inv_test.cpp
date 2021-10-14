@@ -2,6 +2,7 @@
 
 #include "cursor.h"
 #include "inv.h"
+#include "stash.h"
 #include "player.h"
 
 using namespace devilution;

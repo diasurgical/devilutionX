@@ -14,6 +14,7 @@
 #include "engine/random.hpp"
 #include "gamemenu.h"
 #include "inv.h"
+#include "stash.h"
 #include "missiles.h"
 
 namespace devilution {

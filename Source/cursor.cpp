@@ -15,6 +15,7 @@
 #include "engine/render/cel_render.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
+#include "stash.h"
 #include "missiles.h"
 #include "qol/itemlabels.h"
 #include "towners.h"

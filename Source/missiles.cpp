@@ -18,6 +18,7 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
+#include "stash.h"
 #include "lighting.h"
 #include "monster.h"
 #include "spells.h"

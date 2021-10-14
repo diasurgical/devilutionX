@@ -9,6 +9,7 @@
 
 #include "player.h"
 #include "inv.h"
+#include "stash.h"
 #include "items.h"
 
 namespace devilution {

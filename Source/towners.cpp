@@ -5,6 +5,7 @@
 #include "engine/load_file.hpp"
 #include "engine/random.hpp"
 #include "inv.h"
+#include "stash.h"
 #include "minitext.h"
 #include "stores.h"
 #include "utils/language.h"

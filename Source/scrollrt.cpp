@@ -21,6 +21,7 @@
 #include "hwcursor.hpp"
 #include "init.h"
 #include "inv.h"
+#include "stash.h"
 #include "lighting.h"
 #include "minitext.h"
 #include "missiles.h"

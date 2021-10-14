@@ -8,6 +8,7 @@
 #include "gendung.h"
 #include "init.h"
 #include "inv.h"
+#include "stash.h"
 #include "minitext.h"
 #include "stores.h"
 #include "towners.h"

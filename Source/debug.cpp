@@ -17,6 +17,7 @@
 #include "engine/point.hpp"
 #include "error.h"
 #include "inv.h"
+#include "stash.h"
 #include "lighting.h"
 #include "monstdat.h"
 #include "monster.h"

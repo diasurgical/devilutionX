@@ -21,6 +21,7 @@
 #include "engine/random.hpp"
 #include "init.h"
 #include "inv.h"
+#include "stash.h"
 #include "lighting.h"
 #include "missiles.h"
 #include "mpqapi.h"

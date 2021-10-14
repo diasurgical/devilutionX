@@ -11,6 +11,7 @@
 #include "engine/render/cel_render.hpp"
 #include "gmenu.h"
 #include "inv.h"
+#include "stash.h"
 #include "itemlabels.h"
 #include "utils/language.h"
 

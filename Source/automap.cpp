@@ -11,6 +11,7 @@
 #include "engine/load_file.hpp"
 #include "engine/render/automap_render.hpp"
 #include "inv.h"
+#include "stash.h"
 #include "monster.h"
 #include "palette.h"
 #include "player.h"

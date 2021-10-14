@@ -15,6 +15,7 @@
 #include "gmenu.h"
 #include "help.h"
 #include "inv.h"
+#include "stash.h"
 #include "items.h"
 #include "minitext.h"
 #include "missiles.h"

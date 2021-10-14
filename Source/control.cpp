@@ -25,6 +25,7 @@
 #include "gamemenu.h"
 #include "init.h"
 #include "inv.h"
+#include "stash.h"
 #include "inv_iterators.hpp"
 #include "lighting.h"
 #include "minitext.h"

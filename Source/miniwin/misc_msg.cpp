@@ -20,6 +20,7 @@
 #include "engine/rectangle.hpp"
 #include "hwcursor.hpp"
 #include "inv.h"
+#include "stash.h"
 #include "menu.h"
 #include "miniwin/miniwin.h"
 #include "movie.h"
