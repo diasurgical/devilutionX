@@ -28,7 +28,9 @@ jobs:
       - run: cmake -S. -Bbuild -DRUN_TESTS=ON -DENABLE_CODECOVERAGE=ON
       - run: cmake --build build -j 2
       - run: cmake --build build -j 2 --target test
-      - run: bash <(curl -s https://codecov.io/bash)
+      - run: curl -Os https://uploader.codecov.io/latest/linux/codecov 
+      - run: chmod +x codecov
+      - run: ./codecov
     environment:
       CTEST_OUTPUT_ON_FAILURE: 1
   switch:
