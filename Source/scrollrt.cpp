@@ -1624,7 +1624,7 @@ void ScrollView()
 
 void EnableFrameCount()
 {
-	frameflag = !frameflag;
+	frameflag = true;
 	framestart = SDL_GetTicks();
 }
 
