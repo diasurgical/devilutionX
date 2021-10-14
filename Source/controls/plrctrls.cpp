@@ -655,7 +655,7 @@ void InvMove(AxisDirection dir)
 
 	Point mousePos = MousePosition;
 
-	const bool isHoldingItem = pcurs > 1;
+	const bool isHoldingItem = pcurs >= CURSOR_FIRSTITEM;
 
 	// normalize slots
 	if (Slot < 0)
