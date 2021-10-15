@@ -315,11 +315,6 @@ void FindTransparencyValues(int i, int j, int x, int y, int d, uint8_t floorID)
 
 } // namespace
 
-bool InDungeonBounds(Point position)
-{
-	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
-}
-
 void FillSolidBlockTbls()
 {
 	size_t tileCount;

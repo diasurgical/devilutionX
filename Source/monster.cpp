@@ -1994,7 +1994,7 @@ bool RandomWalk2(int i, Direction md)
  */
 bool IsTileSafe(const Monster &monster, Point position)
 {
-	if (HasNoneOf(dFlags[position.x][position.y], DungeonFlag::Missile)) {
+	if (!TileContainsMissile(position)) {
 		return true;
 	}
 

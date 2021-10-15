@@ -2034,8 +2034,8 @@ void SaveGameData()
 				file.WriteLE<uint8_t>(AutomapView[i][j]);
 		}
 		for (int j = 0; j < MAXDUNY; j++) {
-			for (int i = 0; i < MAXDUNX; i++)                                       // NOLINT(modernize-loop-convert)
-				file.WriteLE<int8_t>(HasAnyOf(dFlags[i][j], DungeonFlag::Missile) ? -1 : 0); // For backwards compatability
+			for (int i = 0; i < MAXDUNX; i++)                                 // NOLINT(modernize-loop-convert)
+				file.WriteLE<int8_t>(TileContainsMissile({ i, j }) ? -1 : 0); // For backwards compatability
 		}
 	}
 

@@ -203,7 +203,9 @@ extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
 extern int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
+/** Holds various information about dungeon tiles, @see DungeonFlag */
 extern DungeonFlag dFlags[MAXDUNX][MAXDUNY];
+
 /** Contains the player numbers (players array indices) of the map. */
 extern int8_t dPlayer[MAXDUNX][MAXDUNY];
 /**
@@ -232,7 +234,16 @@ extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
-bool InDungeonBounds(Point position);
+constexpr bool InDungeonBounds(Point position)
+{
+	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
+}
+
+constexpr bool TileContainsMissile(Point position)
+{
+	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Missile);
+}
+
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();
