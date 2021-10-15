@@ -210,18 +210,10 @@ msgid "Thanks To"
 msgstr "감사한 사람들"
 
 #: Source/DiabloUI/credits_lines.cpp:200
-#, fuzzy
 msgid "In memory of"
 msgstr ""
-"벽과 지붕이 있다고 해서 집이 되는 건 아니죠. 여관 주인 오그덴은 사람들이 생각"
-"하는 것보다 이 마을에서 훨씬 더 많은 역할을 하고 있어요. 질리언과 그 조모에"
-"게 보금자리를 마련해 주고 파넘의 남은 생애를 돌볼 뿐만 아니라 남은 마을 사람"
-"들에게 옛 트리스트럼과의 유대를 이어 주고 있죠. 오그덴의 여관에는 소박한 즐거"
-"움이 여전히 남아 있기에 그리운 옛 기억을 상기시키는 거죠. 그러한 추억이 당신"
-"의 성공을 기원하는 원동력이 되는 거예요."
 
 #: Source/DiabloUI/credits_lines.cpp:206
-#, fuzzy
 msgid "Very Special Thanks to"
 msgstr "특별히 감사한"
 
@@ -266,19 +258,16 @@ msgid "\tAdditional Work"
 msgstr "\t추가 작업"
 
 #: Source/DiabloUI/credits_lines.cpp:257
-#, fuzzy
 msgid "Quest Text Writing"
-msgstr "Q: 퀘스트 기록 열기"
+msgstr "퀘스트 기록"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
-#, fuzzy
 msgid "Thanks to"
 msgstr "감사한 사람들"
 
 #: Source/DiabloUI/credits_lines.cpp:265
-#, fuzzy
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr "Copyright © 1996-2001 Blizzard Entertainment"
+msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
@@ -673,7 +662,7 @@ msgstr "레벨:"
 
 #: Source/DiabloUI/selhero.cpp:475
 msgid "Strength:"
-msgstr "힘:"
+msgstr "체력:"
 
 #: Source/DiabloUI/selhero.cpp:480
 msgid "Magic:"
@@ -1133,9 +1122,8 @@ msgstr "diabdat.mpq 파일이 있어도 spawn 모드로 강제 실행"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:790
-#, fuzzy
 msgid "Record a demo file"
-msgstr "기존 저장 파일 존재"
+msgstr "데모 파일 기록"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
@@ -1689,9 +1677,8 @@ msgid ""
 msgstr ""
 
 #: Source/help.cpp:79
-#, fuzzy
 msgid "$Using the Speedbook for Spells"
-msgstr "S: 속도서 열기"
+msgstr "$속도서 열기"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1902,9 +1889,8 @@ msgid "Staff of Lazarus"
 msgstr "라자루스의 지팡이"
 
 #: Source/itemdat.cpp:50 Source/itemdat.cpp:111
-#, fuzzy
 msgid "Scroll of Resurrect"
-msgstr "감정 두루마리"
+msgstr "부활 두루마리"
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:164
 msgid "Blacksmith Oil"
@@ -1918,6 +1904,7 @@ msgstr "짧은 지팡이"
 #: Source/itemdat.cpp:137 Source/itemdat.cpp:138 Source/itemdat.cpp:141
 #: Source/itemdat.cpp:142 Source/itemdat.cpp:143 Source/itemdat.cpp:144
 #: Source/itemdat.cpp:145
+#, fuzzy
 msgid "Sword"
 msgstr "소드"
 
@@ -1934,9 +1921,8 @@ msgid "Theodore"
 msgstr "테오도르"
 
 #: Source/itemdat.cpp:57
-#, fuzzy
 msgid "Auric Amulet"
-msgstr "눈동자 목걸이"
+msgstr ""
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
@@ -1975,22 +1961,20 @@ msgid "Helm"
 msgstr "투구"
 
 #: Source/itemdat.cpp:67
-#, fuzzy
 msgid "Full Helm"
-msgstr "투구"
+msgstr ""
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
 msgstr "왕관"
 
 #: Source/itemdat.cpp:69
-#, fuzzy
 msgid "Great Helm"
-msgstr "투구"
+msgstr "대형 투구"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
-msgstr "짧은 망토 (곶)"
+msgstr "짧은 망토"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
@@ -2005,35 +1989,29 @@ msgid "Robe"
 msgstr "로브"
 
 #: Source/itemdat.cpp:74
-#, fuzzy
 msgid "Quilted Armor"
-msgstr "방어력: {:d}  "
+msgstr "누빔 갑옷"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
 #: Source/itemdat.cpp:77 Source/objects.cpp:5459
-#, fuzzy
 msgid "Armor"
-msgstr "방어력: {:d}  "
+msgstr "갑옷"
 
 #: Source/itemdat.cpp:75
-#, fuzzy
 msgid "Leather Armor"
-msgstr "방어력: {:d}  "
+msgstr "가죽 갑옷"
 
 #: Source/itemdat.cpp:76
-#, fuzzy
 msgid "Hard Leather Armor"
-msgstr "방어력: {:d}  "
+msgstr "단단한 가죽 갑옷"
 
 #: Source/itemdat.cpp:77
-#, fuzzy
 msgid "Studded Leather Armor"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/itemdat.cpp:78
-#, fuzzy
 msgid "Ring Mail"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:79 Source/itemdat.cpp:80
 #: Source/itemdat.cpp:82
@@ -2054,12 +2032,8 @@ msgstr ""
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:83 Source/itemdat.cpp:84
 #: Source/itemdat.cpp:85 Source/itemdat.cpp:86
-#, fuzzy
 msgid "Plate"
-msgstr ""
-"케인은 때때로 말이 너무 많은 거 아닌가 싶지만 그게 자기 천성이니 어쩔 수 없겠"
-"지. 케인이 형씨 귀를 닫게 만드는 것처럼 내가 강철을 다룰 수 있다면, 황제한테"
-"도 어울릴 왕실 갑옷을 만들 수 있을 텐데 말이야!"
+msgstr "판금"
 
 #: Source/itemdat.cpp:82
 msgid "Splint Mail"
@@ -2074,14 +2048,12 @@ msgid "Field Plate"
 msgstr ""
 
 #: Source/itemdat.cpp:85
-#, fuzzy
 msgid "Gothic Plate"
-msgstr "고딕 방패"
+msgstr ""
 
 #: Source/itemdat.cpp:86
-#, fuzzy
 msgid "Full Plate Mail"
-msgstr "마나 완전 회복 물약"
+msgstr ""
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
@@ -2109,145 +2081,118 @@ msgid "Gothic Shield"
 msgstr "고딕 방패"
 
 #: Source/itemdat.cpp:97
-#, fuzzy
 msgid "Potion of Rejuvenation"
-msgstr "생명력 완전 회복 물약"
-
-#: Source/itemdat.cpp:98
-#, fuzzy
-msgid "Potion of Full Rejuvenation"
-msgstr "생명력 완전 회복 물약"
-
-#: Source/itemdat.cpp:100 Source/items.cpp:159
-#, fuzzy
-msgid "Oil of Accuracy"
-msgstr "대장장이의 윤활유"
-
-#: Source/itemdat.cpp:101 Source/items.cpp:161
-#, fuzzy
-msgid "Oil of Sharpness"
-msgstr "대장장이의 윤활유"
-
-#: Source/itemdat.cpp:102
-#, fuzzy
-msgid "Oil"
-msgstr "대장장이의 윤활유"
-
-#: Source/itemdat.cpp:103
-#, fuzzy
-msgid "Elixir of Strength"
-msgstr "황금 영약"
-
-#: Source/itemdat.cpp:104
-#, fuzzy
-msgid "Elixir of Magic"
-msgstr "황금 영약"
-
-#: Source/itemdat.cpp:105
-#, fuzzy
-msgid "Elixir of Dexterity"
-msgstr "민첩:"
-
-#: Source/itemdat.cpp:106
-#, fuzzy
-msgid "Elixir of Vitality"
-msgstr "생명력:"
-
-#: Source/itemdat.cpp:107
-#, fuzzy
-msgid "Scroll of Healing"
 msgstr "회복 물약"
 
+#: Source/itemdat.cpp:98
+msgid "Potion of Full Rejuvenation"
+msgstr "완전 회복 물약"
+
+#: Source/itemdat.cpp:100 Source/items.cpp:159
+msgid "Oil of Accuracy"
+msgstr ""
+
+#: Source/itemdat.cpp:101 Source/items.cpp:161
+msgid "Oil of Sharpness"
+msgstr ""
+
+#: Source/itemdat.cpp:102
+msgid "Oil"
+msgstr ""
+
+#: Source/itemdat.cpp:103
+msgid "Elixir of Strength"
+msgstr "체력 영약"
+
+#: Source/itemdat.cpp:104
+msgid "Elixir of Magic"
+msgstr "마력 영약"
+
+#: Source/itemdat.cpp:105
+msgid "Elixir of Dexterity"
+msgstr "민첩 영약"
+
+#: Source/itemdat.cpp:106
+msgid "Elixir of Vitality"
+msgstr "생명력 영약"
+
+#: Source/itemdat.cpp:107
+msgid "Scroll of Healing"
+msgstr "회복 두루마리"
+
 #: Source/itemdat.cpp:108
-#, fuzzy
 msgid "Scroll of Search"
-msgstr "{:s} 두루마리"
+msgstr "탐색 두루마리"
 
 #: Source/itemdat.cpp:109
-#, fuzzy
 msgid "Scroll of Lightning"
-msgstr "감정 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:112
-#, fuzzy
 msgid "Scroll of Fire Wall"
-msgstr "마을 차원문 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:113
-#, fuzzy
 msgid "Scroll of Inferno"
-msgstr "감정 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:115
-#, fuzzy
 msgid "Scroll of Flash"
-msgstr "{:s} 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:116
-#, fuzzy
 msgid "Scroll of Infravision"
-msgstr "마을 차원문 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:117
-#, fuzzy
 msgid "Scroll of Phasing"
-msgstr "감정 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:118
-#, fuzzy
 msgid "Scroll of Mana Shield"
-msgstr "작은 방패"
+msgstr ""
 
 #: Source/itemdat.cpp:119
-#, fuzzy
 msgid "Scroll of Flame Wave"
-msgstr "마을 차원문 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:120
-#, fuzzy
 msgid "Scroll of Fireball"
-msgstr "감정 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:121
-#, fuzzy
 msgid "Scroll of Stone Curse"
-msgstr "레오릭 왕의 저주"
+msgstr ""
 
 #: Source/itemdat.cpp:122
-#, fuzzy
 msgid "Scroll of Chain Lightning"
-msgstr "마을 차원문 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:123
-#, fuzzy
 msgid "Scroll of Guardian"
-msgstr "감정 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:125
-#, fuzzy
 msgid "Scroll of Nova"
-msgstr "{:s} 두루마리"
+msgstr ""
 
 #: Source/itemdat.cpp:126
-#, fuzzy
 msgid "Scroll of Golem"
-msgstr "{:s} 두루마리"
+msgstr "골렘 두루마리"
 
 #: Source/itemdat.cpp:128
-#, fuzzy
 msgid "Scroll of Teleport"
-msgstr "감정 두루마리"
+msgstr "순간이동 두루마리"
 
 #: Source/itemdat.cpp:129
-#, fuzzy
 msgid "Scroll of Apocalypse"
-msgstr "마을 차원문 두루마리"
+msgstr ""
 
+# 어순 고려
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
-#, fuzzy
 msgid "Book of "
-msgstr "주문서"
+msgstr "주문서: "
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
@@ -2303,19 +2248,16 @@ msgid "Large Axe"
 msgstr "큰 도끼"
 
 #: Source/itemdat.cpp:149
-#, fuzzy
 msgid "Broad Axe"
-msgstr "작은 도끼"
+msgstr ""
 
 #: Source/itemdat.cpp:150
-#, fuzzy
 msgid "Battle Axe"
-msgstr "작은 도끼"
+msgstr ""
 
 #: Source/itemdat.cpp:151
-#, fuzzy
 msgid "Great Axe"
-msgstr "작은 도끼"
+msgstr ""
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
@@ -2334,9 +2276,8 @@ msgid "Hammer"
 msgstr "해머"
 
 #: Source/itemdat.cpp:155
-#, fuzzy
 msgid "Spiked Club"
-msgstr "막대기"
+msgstr ""
 
 #: Source/itemdat.cpp:157
 msgid "Flail"
@@ -2361,55 +2302,45 @@ msgid "Long Bow"
 msgstr "롱 보우"
 
 #: Source/itemdat.cpp:162
-#, fuzzy
 msgid "Composite Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:163
-#, fuzzy
 msgid "Short Battle Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:164
-#, fuzzy
 msgid "Long Battle Bow"
-msgstr "롱 보우"
+msgstr ""
 
 #: Source/itemdat.cpp:165
-#, fuzzy
 msgid "Short War Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:166
-#, fuzzy
 msgid "Long War Bow"
-msgstr "롱 보우"
+msgstr ""
 
 #: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
 #: Source/itemdat.cpp:170 Source/itemdat.cpp:171
-#, fuzzy
 msgid "Staff"
-msgstr "지팡이 ({:d}회 충전)"
+msgstr ""
 
 #: Source/itemdat.cpp:168
-#, fuzzy
 msgid "Long Staff"
-msgstr "긴 소드"
+msgstr ""
 
 #: Source/itemdat.cpp:169
-#, fuzzy
 msgid "Composite Staff"
-msgstr "라자루스의 지팡이"
+msgstr ""
 
 #: Source/itemdat.cpp:170
-#, fuzzy
 msgid "Quarter Staff"
-msgstr "{:s} 지팡이"
+msgstr ""
 
 #: Source/itemdat.cpp:171
-#, fuzzy
 msgid "War Staff"
-msgstr "워 해머"
+msgstr ""
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
@@ -2441,9 +2372,8 @@ msgid "Greater Rune of Lightning"
 msgstr ""
 
 #: Source/itemdat.cpp:181
-#, fuzzy
 msgid "Rune of Stone"
-msgstr "혈석"
+msgstr "룬석"
 
 #: Source/itemdat.cpp:182
 msgid "Short Staff of Charged Bolt"
@@ -2511,23 +2441,16 @@ msgid "Jagged"
 msgstr "들쭉날쭉한"
 
 #: Source/itemdat.cpp:208
-#, fuzzy
 msgid "Deadly"
 msgstr ""
-"믿기질 않는군! 이게 분노의 모루라니. 정말 잘했어, 형씨. 이제 지옥에 있는 저 "
-"개자식들에게 인간이 만든 무기가 얼마나 무서운지 깨닫게 해줘야겠어! 이걸 가져 "
-"가. 빛의 가호가 있기를 빌지."
 
 #: Source/itemdat.cpp:209
 msgid "Heavy"
 msgstr "무거운"
 
 #: Source/itemdat.cpp:210
-#, fuzzy
 msgid "Vicious"
 msgstr ""
-"그토록 잔인한 전사 얘기는 금시초문입니다. 듣기만 해도 위험해 보이는 그런 녀석"
-"과 싸우게 되는 일이 없길 빌겠습니다."
 
 #: Source/itemdat.cpp:211
 msgid "Brutal"
@@ -2562,13 +2485,8 @@ msgid "Sharp"
 msgstr "날카로운"
 
 #: Source/itemdat.cpp:219 Source/itemdat.cpp:229
-#, fuzzy
 msgid "Fine"
 msgstr ""
-"질리언은 참한 처자라네. 신명난 웃음소리로 많은 이들에게 사랑받지. 나 또한 그"
-"리 여기고 말이야. 몸이 아파 거동이 불편한 할머니를 돌보기 위해 오그덴의 가게"
-"에서 일하고 있지. 종종 질리언의 안전이 염려스럽지만 이 마을 사내놈들 모두 그 "
-"아이를 지켜줄 거라 믿네."
 
 #: Source/itemdat.cpp:220
 msgid "Warrior's"
@@ -2607,18 +2525,12 @@ msgid "Rusted"
 msgstr "녹이 슨"
 
 #: Source/itemdat.cpp:230
-#, fuzzy
 msgid "Strong"
 msgstr ""
-"가져왔나! 그래, 좋다! 이제 가라, 우린 강하다. 센 마법으로 다 죽일 테다!"
 
 #: Source/itemdat.cpp:231
-#, fuzzy
 msgid "Grand"
 msgstr ""
-"오그덴 부부는 저와 할머니를 자신들 집으로 데려가 저에게 가게 일자리까지 마련"
-"해 주셨죠. 신세 진 게 너무 많아서, 언젠가 여기를 떠나 그분들이 동부에서 훌륭"
-"한 호텔을 여는 걸 돕고 싶어요."
 
 #: Source/itemdat.cpp:232
 msgid "Valiant"
@@ -2637,14 +2549,8 @@ msgid "Saintly"
 msgstr "성스러운"
 
 #: Source/itemdat.cpp:236
-#, fuzzy
 msgid "Awesome"
 msgstr ""
-"삼 형제의 선도이자 공포의 군주인 디아블로에게 영광이 있으리라. 나의 주군께서"
-"는 아득한 옛날 이 세상에서 추방된 자신의 형제, 메피스토와 바알에 대해 말씀해 "
-"주셨다. 주군께서는 때가 무르익기를 기다리며 무시무시한 힘을 비축하여 동방의 "
-"사막 밑에 매장된 형제들을 자유롭게 하려 하시니, 주군께서 자신의 형제를 해방하"
-"는 날, 죄악의 전쟁에는 다시 한번 삼 형제의 분노가 서릴지어다."
 
 #: Source/itemdat.cpp:237 Source/objects.cpp:116
 msgid "Holy"
@@ -2655,17 +2561,12 @@ msgid "Godly"
 msgstr "경건한"
 
 #: Source/itemdat.cpp:239
-#, fuzzy
 msgid "Red"
 msgstr ""
-"마녀 아드리아가 검은 버섯을 찾는다고? 검은 버섯이나 훈제 청어 같은 건 잘 모른"
-"다네. 치료사 페핀이라면 조언을 줄 수 있을 테지만, 이건 내가 듣거나 읽은 적이 "
-"없는 거로군."
 
 #: Source/itemdat.cpp:240 Source/itemdat.cpp:241
-#, fuzzy
 msgid "Crimson"
-msgstr "붉은 빛과 푸른 빛은 태양이 된다"
+msgstr ""
 
 #: Source/itemdat.cpp:242
 msgid "Garnet"
@@ -2676,16 +2577,12 @@ msgid "Ruby"
 msgstr "루비"
 
 #: Source/itemdat.cpp:244
-#, fuzzy
 msgid "Blue"
 msgstr ""
-"난 멋진 반지를 갖고 있었어. 파랑에 초록에 빨강에 은빛까지... 정말 비싼 거였"
-"어. 어떻게 됐는지 생각이 안 나는데, 아마 잃어버린 것 같아..."
 
 #: Source/itemdat.cpp:245
-#, fuzzy
 msgid "Azure"
-msgstr "붉은 빛과 푸른 빛은 태양이 된다"
+msgstr ""
 
 #: Source/itemdat.cpp:246
 msgid "Lapis"
@@ -2818,9 +2715,8 @@ msgstr ""
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
-#, fuzzy
 msgid "quality"
-msgstr "  또는 호환성을 테스트하거나 인증하지 않았습니다"
+msgstr ""
 
 #: Source/itemdat.cpp:289
 msgid "maiming"
@@ -2843,23 +2739,16 @@ msgid "slaughter"
 msgstr ""
 
 #: Source/itemdat.cpp:294
-#, fuzzy
 msgid "pain"
 msgstr ""
-"도살자는 타인을 고문하고 고통을 주는 것에서 쾌락을 느끼는 가학적인 괴물이죠. "
-"주정뱅이 파넘을 봤다면 알 수 있을 터. 그 괴물을 쓰러트려야 이 마을의 평안을 "
-"어느 정도 되찾을 수 있을 거예요."
 
 #: Source/itemdat.cpp:295
 msgid "tears"
 msgstr "눈물"
 
 #: Source/itemdat.cpp:296
-#, fuzzy
 msgid "health"
 msgstr ""
-"질리언은 괜찮은 아가씨지. 그 아가씨 할매가 저렇게 아프지만 않았어도 대상들에"
-"게 부탁해 여기를 벗어나게 해주고 싶은데 말이야."
 
 #: Source/itemdat.cpp:297
 msgid "protection"
@@ -2882,31 +2771,20 @@ msgid "frailty"
 msgstr ""
 
 #: Source/itemdat.cpp:302
-#, fuzzy
 msgid "weakness"
 msgstr ""
-"강력한 힘은 대게 단명하는 법이죠.. 고대 힘의 언어가 쓰인 양피지 두루마리를 발"
-"견하는 경우가 있을 거예요. 두루마리의 장점은 숙련자든 초보자든 같은 능력을 발"
-"휘할 수 있다는 거고, 단점은 그 자리에서 소리 내어 읽어야 하기에 미리 기억해 "
-"둘 수 없다는 거죠. 또한 두루마리는 딱 한 번만 읽을 수 있으니 잘 생각해서 사용"
-"해야 해요."
 
 #: Source/itemdat.cpp:303
-#, fuzzy
 msgid "strength"
-msgstr "힘:"
+msgstr "체력"
 
 #: Source/itemdat.cpp:304
-#, fuzzy
 msgid "might"
 msgstr ""
-"시간이 없네! 녀석이 어둠의 힘을 키우고 있는 게 느껴져. 녀석을 저지할 수 있는 "
-"건 자네뿐이야."
 
 #: Source/itemdat.cpp:305
-#, fuzzy
 msgid "power"
-msgstr "신비한 힘이 파멸을 부른다"
+msgstr "힘"
 
 #: Source/itemdat.cpp:306
 msgid "giants"
@@ -2925,12 +2803,10 @@ msgid "atrophy"
 msgstr ""
 
 #: Source/itemdat.cpp:310
-#, fuzzy
 msgid "dexterity"
-msgstr "민첩:"
+msgstr "민첩"
 
 #: Source/itemdat.cpp:311
-#, fuzzy
 msgid "skill"
 msgstr "기술"
 
@@ -2947,41 +2823,28 @@ msgid "perfection"
 msgstr ""
 
 #: Source/itemdat.cpp:315
-#, fuzzy
 msgid "the fool"
 msgstr ""
-"오그덴은 바보예요. 비교적 싼 가격에 이 마을을 벗어나게 해주겠다고 했는데 저 "
-"거지 같은 가게를 계속 운영해야 한다더군요. 뭐, 적어도 질리언은 계속 일할 수 "
-"있는 데다 가르다 아줌마는 끝내주는 셰퍼드 파이를 만들어 주긴 하지만요..."
 
 #: Source/itemdat.cpp:316
 msgid "dyslexia"
 msgstr ""
 
 #: Source/itemdat.cpp:317
-#, fuzzy
 msgid "magic"
-msgstr "마력:"
+msgstr "마력"
 
 #: Source/itemdat.cpp:318
-#, fuzzy
 msgid "the mind"
 msgstr ""
-"그 전쟁군주란 녀석랑 거래는 안 해봤지만 칼을 꽤나 해먹나 보네요. 뭐, 녀석한"
-"테 칼을 팔 생각은 없지만요..."
 
 #: Source/itemdat.cpp:319
 msgid "brilliance"
 msgstr ""
 
 #: Source/itemdat.cpp:320
-#, fuzzy
 msgid "sorcery"
 msgstr ""
-"아드리아는 나이에 비해 무척 똑똑하지만 좀 꺼림직한 게 사실입니다. \n"
-"\n"
-"뭐, 큰 문제는 아니지만요. 마법 물품을 거래하려면 강 건너편에 있는 아드리아의 "
-"오두막에 가 보십시오."
 
 #: Source/itemdat.cpp:321
 msgid "wizardry"
@@ -2992,19 +2855,12 @@ msgid "illness"
 msgstr ""
 
 #: Source/itemdat.cpp:323
-#, fuzzy
 msgid "disease"
 msgstr ""
-"그 사악한 악마는 당연히 알고 있지. 라자루스의 함정에서 살아남은 사람들이 대성"
-"당에서 나왔을 때, 사람들 대부분이 녀석의 분노가 서린 상처를 입고 있었어. 녀석"
-"이 희생자들을 도륙할 때 사용한 게 뭔지는 모르겠지만 이 세상에 존재하는 물건"
-"은 아닐 거야. 상처가 곪아 나조차도 손쓸 수 없었거든. 자네가 그 악마와 싸울 생"
-"각이라면 부디 조심하게."
 
 #: Source/itemdat.cpp:324
-#, fuzzy
 msgid "vitality"
-msgstr "생명력:"
+msgstr "생명력"
 
 #: Source/itemdat.cpp:325
 msgid "zest"
@@ -3019,59 +2875,32 @@ msgid "vigor"
 msgstr ""
 
 #: Source/itemdat.cpp:328
-#, fuzzy
 msgid "life"
 msgstr ""
-"산 것의 온기가 내 무덤에 들어왔다. 필멸자여, 영원토록 나의 주인을 섬길 준비"
-"나 하거라!"
 
 #: Source/itemdat.cpp:329
-#, fuzzy
 msgid "trouble"
 msgstr ""
-"페핀은 정말 좋은 분입니다. 마을에서 가장 인자한 분이기도 하고요. 늘 도움이 필"
-"요한 사람들을 돌보고 있지만 어째 그분이 가는 곳마다 자잘한 말썽이 잇따르는군"
-"요."
 
 #: Source/itemdat.cpp:330
-#, fuzzy
 msgid "the pit"
 msgstr ""
-"딱하지만 파넘을 보고 있자면 그 암흑의 날, 라자루스와 함께 대성당에 들어간 사"
-"람들이 떠올라 마음이 편치 않다네. 파넘은 간신히 살아 돌아왔으나 그만 정신줄"
-"을 놓고 무기력해졌지. 지금이야 술에만 의지하며 횡설수설하지만 개중에는 진실"
-"이 담겨 있는 말도 있을 걸세."
 
 #: Source/itemdat.cpp:331
-#, fuzzy
 msgid "the sky"
 msgstr ""
-"이 지도의 문자는 나도 모르겠지만 아드리아나 케인이라면 해독할 수 있지 않을까 "
-"싶네. 하늘의 별을 그린 지도라는 건 알겠는데 그 이상은 모르겠군."
 
 #: Source/itemdat.cpp:332
 msgid "the moon"
 msgstr ""
 
 #: Source/itemdat.cpp:333
-#, fuzzy
 msgid "the stars"
 msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
-"때문이다. 이상향 천국과 무저갱 업화 지옥 간의 전쟁은 지금도 이 땅에 퍼져 가"
-"고 있다. 저 하늘의 별보다도 오래도록 지속되어 온 이 전쟁은 위대한 투쟁이라 알"
-"려져 있다. 어느 한쪽도 승부를 내지 못한 채, 빛과 어둠의 군세는 숨쉬는 모든 것"
-"을 지배하기 위해 끝없이 겨루고 있다."
 
 #: Source/itemdat.cpp:334
-#, fuzzy
 msgid "the heavens"
 msgstr ""
-"잠깐만 형씨, 재미있는 이야기가 있어. 옛날에 동방의 왕국으로 가던 대상이 여기"
-"를 지나갔는데 지상으로 떨어진 천상의 파편을 싣고 있었다나 봐! 그 대상은 여기 "
-"북쪽 지점에서 망토를 두른 기사들에게 습격을 당했지. 하늘 돌이 남아 있나 싶어 "
-"잔해를 뒤져 봤지만 없어졌더군. 형씨가 그걸 찾아내면 내가 아주 쓸만한 걸로 만"
-"들어 주지."
 
 #: Source/itemdat.cpp:335
 msgid "the zodiac"
@@ -3138,73 +2967,36 @@ msgid "structure"
 msgstr ""
 
 #: Source/itemdat.cpp:351
-#, fuzzy
 msgid "the ages"
 msgstr ""
-"그렇다면 그 지도의 전설이 사실이로군. 여지껏 진짜라고 믿었던 적은 없었지만 말"
-"일세! 내가 누구인지 밝혀야 할 때가 온 것 같구만...\n"
-"\n"
-"내 진짜 이름은 데커드 케인으로 영원한 악의 봉인을 수호하는 고대 결사대의 마지"
-"막 후예라네. 허나 아무래도 악마의 봉인이 풀린 듯하군...\n"
-"\n"
-"자네가 맞설 상대는 공포의 군주라 불리는 악마라네. 사람들에겐 디아블로라고 알"
-"려져 있는 있지. 녀석은 몇 세기 전 미궁에 유폐되었네. 자네가 손에 넣은 그 지도"
-"는 몇 세대 전에 만들어진 것으로 디아블로가 유폐에서 벗어나 다시 일어서는 시기"
-"가 기록되어 있네. 지도에 있는 두 개의 별이 일직선으로 늘어설 때가 바로 디아블"
-"로의 힘이 극에 달할 때이지.\n"
-"\n"
-"일각을 다투는 일이라네! 별이 늘어서기 전에 디아블로를 찾아 쓰러트리게. 놈에게"
-"서 벗어날 기회를 다시는 얻지 못할 수도 있으니 말일세!"
 
 #: Source/itemdat.cpp:352
-#, fuzzy
 msgid "the dark"
-msgstr "어둠의 대추방"
+msgstr ""
 
 #: Source/itemdat.cpp:353
-#, fuzzy
 msgid "the night"
 msgstr ""
-"그날 밤 마을 사람들이 하려는 계획을 듣고 귀를 의심했지. 라자루스가 그 같은 짓"
-"을 저지를 거라고는 생각도 못했는데 말이야. 대주교로서 언제나 트리스트럼 사람"
-"들을 보살펴 주었거든. 부상자도 너무 많아 그들 모두를 구할 수는 없었네..."
 
 #: Source/itemdat.cpp:354
-#, fuzzy
 msgid "light"
 msgstr ""
-"그렇게 흉폭한 상대와 싸우게 된다면 빛이 당신을 이끌어 보호하길 기원할게요."
 
 #: Source/itemdat.cpp:355
 msgid "radiance"
 msgstr ""
 
 #: Source/itemdat.cpp:356
-#, fuzzy
 msgid "flame"
 msgstr ""
-"태양의 그 뜨거움을 가늠할 길은 없지만, 한낱 양초의 불길이 더 위험할 때도 있"
-"는 법이죠. 아무리 강력한 에너지라도 한데 모으지 않으면 소용이 없어요. 지팡이"
-"에 담겼던 많은 주문을 마법 에너지로 다시 충전할 수 있죠. 나에겐 그 힘을 되돌"
-"릴 능력이 있지만 금전적인 대가가 필요해요."
 
 #: Source/itemdat.cpp:357
-#, fuzzy
 msgid "fire"
 msgstr ""
-"강철밖에 모르는 자에겐 강철이야말로 최강의 마법인 셈이죠. 본인은 자각 못 하지"
-"만 대장장이 그리스월드는 정말로 마술사 그 이상이에요. 불과 금속을 융합시키는 "
-"그의 능력은 견줄 자가 없죠."
 
 #: Source/itemdat.cpp:358
-#, fuzzy
 msgid "burning"
 msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
-"때문이다. 이상향 천국과 무저갱 업화 지옥 간의 전쟁은 지금도 이 땅에 퍼져 가"
-"고 있다. 저 하늘의 별보다도 오래도록 지속되어 온 이 전쟁은 위대한 투쟁이라 알"
-"려져 있다. 어느 한쪽도 승부를 내지 못한 채, 빛과 어둠의 군세는 숨쉬는 모든 것"
-"을 지배하기 위해 끝없이 겨루고 있다."
 
 #: Source/itemdat.cpp:359
 msgid "shock"
@@ -3219,9 +3011,8 @@ msgid "thunder"
 msgstr "천둥"
 
 #: Source/itemdat.cpp:362
-#, fuzzy
 msgid "many"
-msgstr "금화 {:d}개를 갖고 있습니다. 몇 개를 버리겠습니까?"
+msgstr ""
 
 #: Source/itemdat.cpp:363
 msgid "plenty"
@@ -3232,34 +3023,16 @@ msgid "thorns"
 msgstr ""
 
 #: Source/itemdat.cpp:365
-#, fuzzy
 msgid "corruption"
 msgstr ""
-"타락에는 기만의 기운이 담겨 있지만 순결에는 맑은 기운이 서려 있어요. 질리언이"
-"라는 젊은 여성은 순수한 마음을 지니고 있어서 자신보다 조모를 먼저 생각하죠. "
-"질리언이 저를 두려워하는 건 그저 저를 이해하지 못하기 때문이에요."
 
 #: Source/itemdat.cpp:366
 msgid "thieves"
 msgstr "도둑들"
 
 #: Source/itemdat.cpp:367
-#, fuzzy
 msgid "the bear"
 msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
-"때문이다. 지금으로부터 약 300 년 전, 지옥의 대악마 셋이 느닷없이 이 땅에 강림"
-"했다. 삼 형제는 수십 년에 걸쳐 동방을 황폐화시켰고 인류는 그들 앞에서 그저 숨"
-"을 죽일 수밖에 없었다. 악마 삼 형제를 저지하기 위해 마법사들은 호라드림이라"
-"는 비밀 조직을 결성하였다.\n"
-"\n"
-"호라드림은 영혼석이라 불리는 강력한 유물로 삼 형제 중 둘을 봉인, 동방의 사막 "
-"깊숙이 매장하였다. 남은 하나는 도주하였고 호라드림의 많은 이들이 그 뒤를 추적"
-"하였다. 공포의 군주 디아블로라고 알려진 그 세 번째 악마도 결국에는 잡혔고 그 "
-"영혼을 영혼석에 거두어 이 미궁에 매장하였다.\n"
-"\n"
-"영혼석이 진실되지 못한 자들에게 발견되는 것을 경계해야 한다. 디아블로가 해방"
-"된다면 쇠약해졌을 것이기에 지배하기 쉬운 노약자의 육신을 갈구할 것이다."
 
 #: Source/itemdat.cpp:368
 msgid "the bat"
@@ -3274,9 +3047,8 @@ msgid "the leech"
 msgstr ""
 
 #: Source/itemdat.cpp:371
-#, fuzzy
 msgid "blood"
-msgstr "혈석"
+msgstr ""
 
 #: Source/itemdat.cpp:372
 msgid "piercing"
@@ -3299,7 +3071,6 @@ msgid "swiftness"
 msgstr ""
 
 #: Source/itemdat.cpp:377
-#, fuzzy
 msgid "speed"
 msgstr "속도"
 
@@ -3308,25 +3079,16 @@ msgid "haste"
 msgstr ""
 
 #: Source/itemdat.cpp:379
-#, fuzzy
 msgid "balance"
 msgstr ""
-"어때? 날이 살아 있고 균형미가 있다고. 검이라는 건 말야, 적격인 사람이 쓰면 최"
-"강의 무기가 되거든. 언데드에겐 날카로운 칼날이 잘 안 먹히지만 상대가 생명체라"
-"면 놈들의 몸뚱이를 간단히 썰어 버릴 수 있지!"
 
 #: Source/itemdat.cpp:380
 msgid "stability"
 msgstr ""
 
 #: Source/itemdat.cpp:381
-#, fuzzy
 msgid "harmony"
 msgstr ""
-"기술과 마음 그리고 정신이 완벽하게 조화를 이룰 때, 기적을 일으킬 수 있는 법이"
-"죠. 치료사 페핀은 몸속을 훤히 꿰뚫어 보지만 저로선 불가능한 일이에요. 환자를 "
-"치료하는 페핀의 능력은 영약과 물약 제조에 대한 이해를 바탕으로 더욱 증대하고 "
-"있죠. 트리스트럼에서 그만큼 든든한 아군은 없을 거예요."
 
 #: Source/itemdat.cpp:382
 msgid "blocking"
@@ -3342,47 +3104,37 @@ msgstr ""
 
 #. TRANSLATORS: Item suffix section end.
 #: Source/itemdat.cpp:386
-#, fuzzy
 msgid "peril"
 msgstr ""
-"그 저주받은 땅에서 죽게 된다면 어둠의 왕의 영원한 종이 될 터.\n"
-"\n"
-"뼈의 방에 들어갈 생각이라면 단단히 각오하도록 하세요."
 
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:396
-#, fuzzy
 msgid "The Butcher's Cleaver"
-msgstr "도살자"
+msgstr ""
 
 #: Source/itemdat.cpp:406
-#, fuzzy
 msgid "The Rift Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:407
 msgid "The Needler"
 msgstr ""
 
 #: Source/itemdat.cpp:408
-#, fuzzy
 msgid "The Celestial Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:409
-#, fuzzy
 msgid "Deadly Hunter"
-msgstr "헌터 보우"
+msgstr ""
 
 #: Source/itemdat.cpp:410
-#, fuzzy
 msgid "Bow of the Dead"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:411
-#, fuzzy
 msgid "The Blackoak Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/itemdat.cpp:412
 msgid "Flamedart"
@@ -3405,19 +3157,16 @@ msgid "Gonnagal's Dirk"
 msgstr ""
 
 #: Source/itemdat.cpp:417
-#, fuzzy
 msgid "The Defender"
 msgstr ""
-"그렇게 흉폭한 상대와 싸우게 된다면 빛이 당신을 이끌어 보호하길 기원할게요."
 
 #: Source/itemdat.cpp:418
 msgid "Gryphon's Claw"
 msgstr ""
 
 #: Source/itemdat.cpp:419
-#, fuzzy
 msgid "Black Razor"
-msgstr "검은 버섯"
+msgstr ""
 
 #: Source/itemdat.cpp:420
 msgid "Gibbous Moon"
@@ -3428,9 +3177,8 @@ msgid "Ice Shank"
 msgstr ""
 
 #: Source/itemdat.cpp:422
-#, fuzzy
 msgid "The Executioner's Blade"
-msgstr "블레이드"
+msgstr ""
 
 #: Source/itemdat.cpp:423
 msgid "The Bonesaw"
@@ -3473,23 +3221,20 @@ msgid "The Mangler"
 msgstr ""
 
 #: Source/itemdat.cpp:433
-#, fuzzy
 msgid "Sharp Beak"
-msgstr "정의의 검은 빠르고 날카롭다"
+msgstr ""
 
 #: Source/itemdat.cpp:434
 msgid "BloodSlayer"
 msgstr ""
 
 #: Source/itemdat.cpp:435
-#, fuzzy
 msgid "The Celestial Axe"
-msgstr "작은 도끼"
+msgstr ""
 
 #: Source/itemdat.cpp:436
-#, fuzzy
 msgid "Wicked Axe"
-msgstr "작은 도끼"
+msgstr ""
 
 #: Source/itemdat.cpp:437
 msgid "Stonecleaver"
@@ -3512,23 +3257,20 @@ msgid "Crackrust"
 msgstr ""
 
 #: Source/itemdat.cpp:442
-#, fuzzy
 msgid "Hammer of Jholm"
-msgstr "워 해머"
+msgstr ""
 
 #: Source/itemdat.cpp:443
 msgid "Civerb's Cudgel"
 msgstr ""
 
 #: Source/itemdat.cpp:444
-#, fuzzy
 msgid "The Celestial Star"
-msgstr "모닝 스타"
+msgstr ""
 
 #: Source/itemdat.cpp:445
-#, fuzzy
 msgid "Baranar's Star"
-msgstr "모닝 스타"
+msgstr ""
 
 #: Source/itemdat.cpp:446
 msgid "Gnarled Root"
@@ -3539,18 +3281,16 @@ msgid "The Cranium Basher"
 msgstr ""
 
 #: Source/itemdat.cpp:448
-#, fuzzy
 msgid "Schaefer's Hammer"
-msgstr "워 해머"
+msgstr ""
 
 #: Source/itemdat.cpp:449
 msgid "Dreamflange"
 msgstr ""
 
 #: Source/itemdat.cpp:450
-#, fuzzy
 msgid "Staff of Shadows"
-msgstr "라자루스의 지팡이"
+msgstr ""
 
 #: Source/itemdat.cpp:451
 msgid "Immolator"
@@ -3585,24 +3325,20 @@ msgid "Rod of Onan"
 msgstr ""
 
 #: Source/itemdat.cpp:459
-#, fuzzy
 msgid "Helm of Spirits"
-msgstr "투구"
+msgstr ""
 
 #: Source/itemdat.cpp:460
-#, fuzzy
 msgid "Thinking Cap"
-msgstr "해골 모자"
+msgstr ""
 
 #: Source/itemdat.cpp:461
-#, fuzzy
 msgid "OverLord's Helm"
-msgstr "투구"
+msgstr ""
 
 #: Source/itemdat.cpp:462
-#, fuzzy
 msgid "Fool's Crest"
-msgstr "할리퀸 관모"
+msgstr ""
 
 #: Source/itemdat.cpp:463
 msgid "Gotterdamerung"
@@ -3613,9 +3349,8 @@ msgid "Royal Circlet"
 msgstr ""
 
 #: Source/itemdat.cpp:465
-#, fuzzy
 msgid "Torn Flesh of Souls"
-msgstr "\t이 게임 제작에 영혼을 팔지는 않았다."
+msgstr ""
 
 #: Source/itemdat.cpp:466
 msgid "The Gladiator's Bane"
@@ -3630,9 +3365,8 @@ msgid "Leather of Aut"
 msgstr ""
 
 #: Source/itemdat.cpp:469
-#, fuzzy
 msgid "Wisdom's Wrap"
-msgstr "원기는 지혜의 희생으로 얻어진다"
+msgstr ""
 
 #: Source/itemdat.cpp:470
 msgid "Sparking Mail"
@@ -3647,9 +3381,8 @@ msgid "Nightscape"
 msgstr ""
 
 #: Source/itemdat.cpp:473
-#, fuzzy
 msgid "Naj's Light Plate"
-msgstr "신비는 이치의 광명 아래 드러난다"
+msgstr ""
 
 #: Source/itemdat.cpp:474
 msgid "Demonspike Coat"
@@ -3660,18 +3393,16 @@ msgid "The Deflector"
 msgstr ""
 
 #: Source/itemdat.cpp:476
-#, fuzzy
 msgid "Split Skull Shield"
-msgstr "해골 모자"
+msgstr ""
 
 #: Source/itemdat.cpp:477
 msgid "Dragon's Breach"
 msgstr ""
 
 #: Source/itemdat.cpp:478
-#, fuzzy
 msgid "Blackoak Shield"
-msgstr "작은 방패"
+msgstr ""
 
 #: Source/itemdat.cpp:479
 msgid "Holy Defender"
@@ -3686,61 +3417,52 @@ msgid "Bramble"
 msgstr ""
 
 #: Source/itemdat.cpp:482
-#, fuzzy
 msgid "Ring of Regha"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:483
 msgid "The Bleeder"
 msgstr ""
 
 #: Source/itemdat.cpp:484
-#, fuzzy
 msgid "Constricting Ring"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:485
-#, fuzzy
 msgid "Ring of Engagement"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:486
 msgid "Giant's Knuckle"
 msgstr ""
 
 #: Source/itemdat.cpp:487
-#, fuzzy
 msgid "Mercurial Ring"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:488
-#, fuzzy
 msgid "Xorine's Ring"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:489
-#, fuzzy
 msgid "Karik's Ring"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:490
 msgid "Ring of Magma"
 msgstr "마그마 반지"
 
 #: Source/itemdat.cpp:491
-#, fuzzy
 msgid "Ring of the Mystics"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:492
-#, fuzzy
 msgid "Ring of Thunder"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/itemdat.cpp:493
-#, fuzzy
 msgid "Amulet of Warding"
-msgstr "눈동자 목걸이"
+msgstr ""
 
 #: Source/itemdat.cpp:494
 msgid "Gnat Sting"
@@ -3751,9 +3473,8 @@ msgid "Flambeau"
 msgstr ""
 
 #: Source/itemdat.cpp:496
-#, fuzzy
 msgid "Armor of Gloom"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/itemdat.cpp:497
 msgid "Blitzen"
@@ -3776,109 +3497,91 @@ msgid "Diamondedge"
 msgstr ""
 
 #: Source/itemdat.cpp:502
-#, fuzzy
 msgid "Bone Chain Armor"
-msgstr "뼈의 방"
+msgstr ""
 
 #: Source/itemdat.cpp:503
-#, fuzzy
 msgid "Demon Plate Armor"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/itemdat.cpp:504
-#, fuzzy
 msgid "Acolyte's Amulet"
-msgstr "눈동자 목걸이"
+msgstr ""
 
 #. TRANSLATORS: Unique Item section end.
 #: Source/itemdat.cpp:506
-#, fuzzy
 msgid "Gladiator's Ring"
-msgstr "진실의 반지"
+msgstr ""
 
 #: Source/items.cpp:160
-#, fuzzy
 msgid "Oil of Mastery"
-msgstr "대장장이의 윤활유"
+msgstr ""
 
 #: Source/items.cpp:162
-#, fuzzy
 msgid "Oil of Death"
-msgstr "대장장이의 윤활유"
+msgstr ""
 
 #: Source/items.cpp:163
-#, fuzzy
 msgid "Oil of Skill"
-msgstr "{:s} 기술"
+msgstr ""
 
 #: Source/items.cpp:165
-#, fuzzy
 msgid "Oil of Fortitude"
-msgstr "대장장이의 윤활유"
+msgstr ""
 
 #: Source/items.cpp:166
-#, fuzzy
 msgid "Oil of Permanence"
-msgstr "대장장이의 윤활유"
+msgstr ""
 
 #: Source/items.cpp:167
-#, fuzzy
 msgid "Oil of Hardening"
-msgstr "대장장이의 윤활유"
+msgstr ""
 
 #: Source/items.cpp:168
-#, fuzzy
 msgid "Oil of Imperviousness"
-msgstr "대장장이의 윤활유"
+msgstr ""
 
 #. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
 #: Source/items.cpp:1194 Source/items.cpp:1262 Source/items.cpp:1281
 #: Source/items.cpp:1324
-#, fuzzy
 msgid "{:s} of {:s}"
-msgstr "{:s}, 버전 = {:s}, 모드 = {:s}"
+msgstr "{:s} 의 {:s}"
 
 #: Source/items.cpp:1902 Source/items.cpp:1914
 msgid "increases a weapon's"
 msgstr ""
 
 #: Source/items.cpp:1904
-#, fuzzy
 msgid "chance to hit"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr ""
 
 #: Source/items.cpp:1908
 msgid "greatly increases a"
 msgstr ""
 
 #: Source/items.cpp:1910
-#, fuzzy
 msgid "weapon's chance to hit"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr ""
 
 #: Source/items.cpp:1916
-#, fuzzy
 msgid "damage potential"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:1920
 msgid "greatly increases a weapon's"
 msgstr ""
 
 #: Source/items.cpp:1922
-#, fuzzy
 msgid "damage potential - not bows"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:1926
-#, fuzzy
 msgid "reduces attributes needed"
-msgstr "게이트웨이 필요 없음"
+msgstr ""
 
 #: Source/items.cpp:1928
-#, fuzzy
 msgid "to use armor or weapons"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/items.cpp:1932
 #, no-c-format
@@ -3886,44 +3589,36 @@ msgid "restores 20% of an"
 msgstr ""
 
 #: Source/items.cpp:1934
-#, fuzzy
 msgid "item's durability"
-msgstr "이 물품은:"
+msgstr ""
 
 #: Source/items.cpp:1938
-#, fuzzy
 msgid "increases an item's"
-msgstr "이 물품은:"
+msgstr ""
 
 #: Source/items.cpp:1940
-#, fuzzy
 msgid "current and max durability"
-msgstr "현재 주문 버튼 선택"
+msgstr ""
 
 #: Source/items.cpp:1944
-#, fuzzy
 msgid "makes an item indestructible"
-msgstr "이 물품은:"
+msgstr ""
 
 #: Source/items.cpp:1948
-#, fuzzy
 msgid "increases the armor class"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/items.cpp:1950
-#, fuzzy
 msgid "of armor and shields"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/items.cpp:1954
-#, fuzzy
 msgid "greatly increases the armor"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/items.cpp:1956
-#, fuzzy
 msgid "class of armor and shields"
-msgstr "방어력: {:d}  "
+msgstr ""
 
 #: Source/items.cpp:1960 Source/items.cpp:1969
 msgid "sets fire trap"
@@ -3938,14 +3633,12 @@ msgid "sets petrification trap"
 msgstr ""
 
 #: Source/items.cpp:1977
-#, fuzzy
 msgid "restore all life"
-msgstr "생명의 본질은 그 내면에서 샘솟는다"
+msgstr ""
 
 #: Source/items.cpp:1981
-#, fuzzy
 msgid "restore some life"
-msgstr "촉감으로 얻는 경험도 있는 법이다."
+msgstr ""
 
 #: Source/items.cpp:1985
 msgid "recover life"
@@ -3956,18 +3649,16 @@ msgid "deadly heal"
 msgstr ""
 
 #: Source/items.cpp:1993
-#, fuzzy
 msgid "restore some mana"
-msgstr "마나: {:d}   피해: 사용불가"
+msgstr "마나 일부 회복"
 
 #: Source/items.cpp:1997
-#, fuzzy
 msgid "restore all mana"
-msgstr "마나: {:d}   피해: 사용불가"
+msgstr "마나 전체 회복"
 
 #: Source/items.cpp:2001
 msgid "increase strength"
-msgstr "힘 증가"
+msgstr "체력 증가"
 
 #: Source/items.cpp:2005
 msgid "increase magic"
@@ -3983,7 +3674,7 @@ msgstr "생명 증가"
 
 #: Source/items.cpp:2018
 msgid "decrease strength"
-msgstr "힘 감소"
+msgstr "체력 감소"
 
 #: Source/items.cpp:2022
 msgid "decrease dexterity"
@@ -3995,14 +3686,13 @@ msgstr "생명 감소"
 
 #: Source/items.cpp:2030
 msgid "restore some life and mana"
-msgstr ""
+msgstr "생명과 마나 일부 회복"
 
 #: Source/items.cpp:2034
 msgid "restore all life and mana"
-msgstr ""
+msgstr "생명과 마나 전부 회복"
 
 #: Source/items.cpp:2049 Source/items.cpp:2074
-#, fuzzy
 msgid "Right-click to read"
 msgstr "우클릭으로 읽기"
 
@@ -4053,44 +3743,39 @@ msgstr " {:d} 민첩"
 
 #. TRANSLATORS: {:s} will be a Character Name
 #: Source/items.cpp:3535 Source/player.cpp:3042
-#, fuzzy
 msgid "Ear of {:s}"
-msgstr "{:s} 기술"
+msgstr ""
 
 #: Source/items.cpp:3830
-#, fuzzy
 msgid "chance to hit: {:+d}%"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr ""
 
 #: Source/items.cpp:3834
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "{:+d}% damage"
-msgstr "공격력: {:d}-{:d}  "
+msgstr "{:+d}% 피해"
 
 #: Source/items.cpp:3838 Source/items.cpp:4094
-#, fuzzy
 msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "공격력: {:d}-{:d}  "
+msgstr "적중 시: {:+d}%, {:+d}% 피해"
 
 #: Source/items.cpp:3842
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "{:+d}% armor"
-msgstr "방어력: {:d}  "
+msgstr "{:+d}% 방어"
 
 #: Source/items.cpp:3846
-#, fuzzy
 msgid "armor class: {:d}"
-msgstr "방어력: {:d}  "
+msgstr "방어 수준: {:d}"
 
 #: Source/items.cpp:3851 Source/items.cpp:4076
-#, fuzzy
 msgid "Resist Fire: {:+d}%"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr "불 저항: {:+d}%"
 
 #: Source/items.cpp:3853
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
-msgstr ""
+msgstr "불 저항: 75% 최대치"
 
 #: Source/items.cpp:3858
 #, fuzzy
@@ -4103,112 +3788,93 @@ msgid "Resist Lightning: 75% MAX"
 msgstr ""
 
 #: Source/items.cpp:3865
-#, fuzzy
 msgid "Resist Magic: {:+d}%"
-msgstr "마석"
+msgstr "마법 저항: {:+d}%"
 
 #: Source/items.cpp:3867
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
-msgstr ""
+msgstr "마법 저항: 75% 최대치"
 
 #: Source/items.cpp:3872
-#, fuzzy
 msgid "Resist All: {:+d}%"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr "전체 저항: {:+d}%"
 
 #: Source/items.cpp:3874
 #, no-c-format
 msgid "Resist All: 75% MAX"
-msgstr ""
+msgstr "전체 저항: 75% 최대치"
 
 #: Source/items.cpp:3878
-#, fuzzy
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
-msgstr[0] "둥지 {:d} 층"
+msgstr[0] ""
 
 #: Source/items.cpp:3880
-#, fuzzy
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
-msgstr[0] "둥지 {:d} 층"
+msgstr[0] ""
 
 #: Source/items.cpp:3882
-#, fuzzy
 msgid "spell levels unchanged (?)"
-msgstr "주문 레벨 0 - 사용 불가"
+msgstr ""
 
 #: Source/items.cpp:3885
-#, fuzzy
 msgid "Extra charges"
-msgstr "{:d}회 충전"
+msgstr ""
 
 #: Source/items.cpp:3888
-#, fuzzy
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
-msgstr[0] "지팡이 ({:d}회 충전)"
+msgstr[0] ""
 
 #: Source/items.cpp:3892
-#, fuzzy
 msgid "Fire hit damage: {:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3894
-#, fuzzy
 msgid "Fire hit damage: {:d}-{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3898
-#, fuzzy
 msgid "Lightning hit damage: {:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3900
-#, fuzzy
 msgid "Lightning hit damage: {:d}-{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3904
-#, fuzzy
 msgid "{:+d} to strength"
-msgstr "힘:"
+msgstr ""
 
 #: Source/items.cpp:3908
-#, fuzzy
 msgid "{:+d} to magic"
-msgstr "마석"
+msgstr ""
 
 #: Source/items.cpp:3912
-#, fuzzy
 msgid "{:+d} to dexterity"
-msgstr "민첩:"
+msgstr ""
 
 #: Source/items.cpp:3916
-#, fuzzy
 msgid "{:+d} to vitality"
-msgstr "생명력:"
+msgstr ""
 
 #: Source/items.cpp:3920
-#, fuzzy
 msgid "{:+d} to all attributes"
-msgstr "요구치 없음"
+msgstr ""
 
 #: Source/items.cpp:3924
-#, fuzzy
 msgid "{:+d} damage from enemies"
-msgstr "공격력: {:d}-{:d}  "
+msgstr "{:+d} 적에게서 받는 피해"
 
 #: Source/items.cpp:3928
-#, fuzzy
 msgid "Hit Points: {:+d}"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr "히트포인트: {:+d}"
 
 #: Source/items.cpp:3932
-#, fuzzy
 msgid "Mana: {:+d}"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr "마나: {:+d}"
 
 #: Source/items.cpp:3935
 msgid "high durability"
@@ -4219,53 +3885,46 @@ msgid "decreased durability"
 msgstr ""
 
 #: Source/items.cpp:3941
-#, fuzzy
 msgid "indestructible"
-msgstr "불멸의, "
+msgstr "불멸의"
 
 #: Source/items.cpp:3944
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "+{:d}% light radius"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr ""
 
 #: Source/items.cpp:3947
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "-{:d}% light radius"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr ""
 
 #: Source/items.cpp:3950
 msgid "multiple arrows per shot"
 msgstr ""
 
 #: Source/items.cpp:3954
-#, fuzzy
 msgid "fire arrows damage: {:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3956
-#, fuzzy
 msgid "fire arrows damage: {:d}-{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3960
-#, fuzzy
 msgid "lightning arrows damage {:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3962
-#, fuzzy
 msgid "lightning arrows damage {:d}-{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3966
-#, fuzzy
 msgid "fireball damage: {:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3968
-#, fuzzy
 msgid "fireball damage: {:d}-{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:3971
 msgid "attacker takes 1-3 damage"
@@ -4276,18 +3935,16 @@ msgid "user loses all mana"
 msgstr ""
 
 #: Source/items.cpp:3977
-#, fuzzy
 msgid "you can't heal"
-msgstr "술 마시게 좀 내버려 두겠어?"
+msgstr "치유할 수 없다"
 
 #: Source/items.cpp:3980
 msgid "absorbs half of trap damage"
 msgstr ""
 
 #: Source/items.cpp:3983
-#, fuzzy
 msgid "knocks target back"
-msgstr "좌클릭으로 지정"
+msgstr ""
 
 #: Source/items.cpp:3986
 #, no-c-format
@@ -4323,120 +3980,102 @@ msgid "hit steals 5% life"
 msgstr ""
 
 #: Source/items.cpp:4007
-#, fuzzy
 msgid "penetrates target's armor"
-msgstr "좌클릭으로 지정"
+msgstr ""
 
 #: Source/items.cpp:4011
-#, fuzzy
 msgid "quick attack"
-msgstr "적대"
+msgstr "민첩한 공격"
 
 #: Source/items.cpp:4013
-#, fuzzy
 msgid "fast attack"
-msgstr "속도: 빠르게"
+msgstr "빠른 공격"
 
 #: Source/items.cpp:4015
-#, fuzzy
 msgid "faster attack"
-msgstr "속도: 아주 빠르게"
+msgstr "아주 빠른 공격"
 
 #: Source/items.cpp:4017
-#, fuzzy
 msgid "fastest attack"
-msgstr "가장 빠르게"
+msgstr "가장 빠른 공격"
 
 #: Source/items.cpp:4021
-#, fuzzy
 msgid "fast hit recovery"
-msgstr "속도: 빠르게"
+msgstr ""
 
 #: Source/items.cpp:4023
-#, fuzzy
 msgid "faster hit recovery"
-msgstr "속도: 아주 빠르게"
+msgstr ""
 
 #: Source/items.cpp:4025
-#, fuzzy
 msgid "fastest hit recovery"
-msgstr "속도: 가장 빠르게"
+msgstr ""
 
 #: Source/items.cpp:4028
-#, fuzzy
 msgid "fast block"
-msgstr "속도: 빠르게"
+msgstr ""
 
 #: Source/items.cpp:4031
-#, fuzzy
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
-msgstr[0] "공격력: {:d}-{:d}  "
+msgstr[0] ""
 
 #: Source/items.cpp:4034
 msgid "fires random speed arrows"
 msgstr ""
 
 #: Source/items.cpp:4037
-#, fuzzy
 msgid "unusual item damage"
-msgstr "물품 감정"
+msgstr ""
 
 #: Source/items.cpp:4040
 msgid "altered durability"
 msgstr ""
 
 #: Source/items.cpp:4043
-#, fuzzy
 msgid "Faster attack swing"
-msgstr "속도: 아주 빠르게"
+msgstr ""
 
 #: Source/items.cpp:4046
-#, fuzzy
 msgid "one handed sword"
-msgstr "투핸디드 소드"
+msgstr ""
 
 #: Source/items.cpp:4049
-#, fuzzy
 msgid "constantly lose hit points"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr ""
 
 #: Source/items.cpp:4052
 msgid "life stealing"
 msgstr ""
 
 #: Source/items.cpp:4055
-#, fuzzy
 msgid "no strength requirement"
-msgstr "힘:"
+msgstr ""
 
 #: Source/items.cpp:4058
 msgid "see with infravision"
 msgstr ""
 
 #: Source/items.cpp:4065
-#, fuzzy
 msgid "lightning damage: {:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:4067
-#, fuzzy
 msgid "lightning damage: {:d}-{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:4070
 msgid "charged bolts on hits"
 msgstr ""
 
 #: Source/items.cpp:4079
-#, fuzzy
 msgid "occasional triple damage"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:4082
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "decaying {:+d}% damage"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:4085
 msgid "2x dmg to monst, 1x to you"
@@ -4448,9 +4087,9 @@ msgid "Random 0 - 500% damage"
 msgstr ""
 
 #: Source/items.cpp:4091
-#, fuzzy, no-c-format
+#, no-c-format
 msgid "low dur, {:+d}% damage"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:4097
 msgid "extra AC vs demons"
@@ -4475,55 +4114,46 @@ msgid "Another ability (NW)"
 msgstr ""
 
 #: Source/items.cpp:4146 Source/items.cpp:4193
-#, fuzzy
 msgid "damage: {:d}  Indestructible"
-msgstr "불멸의, "
+msgstr ""
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4148 Source/items.cpp:4195
-#, fuzzy
 msgid "damage: {:d}  Dur: {:d}/{:d}"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #: Source/items.cpp:4151 Source/items.cpp:4198
-#, fuzzy
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr "공격력: {:d}-{:d}  "
+msgstr ""
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4153 Source/items.cpp:4200
-#, fuzzy
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr ""
 
 #: Source/items.cpp:4159 Source/items.cpp:4212
-#, fuzzy
 msgid "armor: {:d}  Indestructible"
-msgstr "불멸의, "
+msgstr ""
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4161 Source/items.cpp:4214
-#, fuzzy
 msgid "armor: {:d}  Dur: {:d}/{:d}"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr ""
 
 #. TRANSLATORS: dam: is damage Dur: is durability
 #: Source/items.cpp:4166
-#, fuzzy
 msgid "dam: {:d}  Dur: {:d}/{:d}"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr ""
 
 #. TRANSLATORS: dam: is damage Dur: is durability
 #: Source/items.cpp:4168
-#, fuzzy
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "마나: {:d}  피해: {:d} - {:d}"
+msgstr ""
 
 #: Source/items.cpp:4169 Source/items.cpp:4204 Source/items.cpp:4219
 #: Source/stores.cpp:184
-#, fuzzy
 msgid "Charges: {:d}/{:d}"
-msgstr "지팡이 ({:d}회 충전)"
+msgstr ""
 
 #: Source/items.cpp:4181
 msgid "unique item"
@@ -4538,23 +4168,20 @@ msgid "Unable to open save file archive"
 msgstr ""
 
 #: Source/loadsave.cpp:1659
-#, fuzzy
 msgid "Invalid save file"
-msgstr "기존 저장 파일 존재"
+msgstr ""
 
 #: Source/loadsave.cpp:1688
 msgid "Player is on a Hellfire only level"
 msgstr ""
 
 #: Source/loadsave.cpp:1885
-#, fuzzy
 msgid "Invalid game state"
-msgstr "게임 디자인"
+msgstr ""
 
 #: Source/menu.cpp:136
-#, fuzzy
 msgid "Unable to display mainmenu"
-msgstr "초당 프레임 표시"
+msgstr ""
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -4574,6 +4201,7 @@ msgid "Rotting Carcass"
 msgstr "썩은 시체"
 
 #: Source/monstdat.cpp:23
+#, fuzzy
 msgctxt "monster"
 msgid "Black Death"
 msgstr "블랙 데스"
@@ -4594,41 +4222,33 @@ msgid "Devil Kin"
 msgstr ""
 
 #: Source/monstdat.cpp:27 Source/monstdat.cpp:35
-#, fuzzy
-#| msgid "Dark One"
 msgctxt "monster"
 msgid "Dark One"
-msgstr "어둠의 대추방"
+msgstr ""
 
 #: Source/monstdat.cpp:28 Source/monstdat.cpp:40
+#, fuzzy
 msgctxt "monster"
 msgid "Skeleton"
 msgstr "스켈레톤"
 
 #: Source/monstdat.cpp:29
-#, fuzzy
-#| msgid "Corpse Axe"
 msgctxt "monster"
 msgid "Corpse Axe"
-msgstr "작은 도끼"
+msgstr ""
 
 #: Source/monstdat.cpp:30 Source/monstdat.cpp:42
 #, fuzzy
-#| msgid "Burning Dead"
 msgctxt "monster"
 msgid "Burning Dead"
 msgstr "불타는 죽음"
 
 #: Source/monstdat.cpp:31 Source/monstdat.cpp:43
-#, fuzzy
-#| msgid "Error"
 msgctxt "monster"
 msgid "Horror"
-msgstr "오류"
+msgstr ""
 
 #: Source/monstdat.cpp:36
-#, fuzzy
-#| msgid "Scavenger"
 msgctxt "monster"
 msgid "Scavenger"
 msgstr "포식자"
@@ -4644,28 +4264,21 @@ msgid "Shadow Beast"
 msgstr ""
 
 #: Source/monstdat.cpp:39
-#, fuzzy
 msgctxt "monster"
 msgid "Bone Gasher"
-msgstr "뼈의 방"
+msgstr ""
 
 #: Source/monstdat.cpp:41
-#, fuzzy
-#| msgid "Corpse Axe"
 msgctxt "monster"
 msgid "Corpse Bow"
-msgstr "짧은 활"
+msgstr ""
 
 #: Source/monstdat.cpp:44
-#, fuzzy
-#| msgid "Skeleton Captain"
 msgctxt "monster"
 msgid "Skeleton Captain"
-msgstr "못 박힌 해골"
+msgstr ""
 
 #: Source/monstdat.cpp:45
-#, fuzzy
-#| msgid "Corpse Captain"
 msgctxt "monster"
 msgid "Corpse Captain"
 msgstr "시체 대장"
@@ -4678,11 +4291,9 @@ msgid "Burning Dead Captain"
 msgstr "불타는 죽음 대장"
 
 #: Source/monstdat.cpp:47
-#, fuzzy
-#| msgid "Corpse Captain"
 msgctxt "monster"
 msgid "Horror Captain"
-msgstr "시체 대장"
+msgstr ""
 
 #: Source/monstdat.cpp:48
 msgctxt "monster"
@@ -4690,17 +4301,9 @@ msgid "Invisible Lord"
 msgstr ""
 
 #: Source/monstdat.cpp:49
-#, fuzzy
 msgctxt "monster"
 msgid "Hidden"
 msgstr ""
-"그대가 보지 못하는 것을 나는 볼 수 있다.\n"
-"시야는 흐려지고 눈은 썩어든다.\n"
-"뒤돌면 그들은 신비한 노래를 속삭이며 사라질 것이다.\n"
-"그리하면 그대는 불가능한 것을 보게 된다.\n"
-"빛이 있어야 할 곳에 드리우는 그림자.\n"
-"어둠의 밖은 광기의 세계,\n"
-"눈먼 자의 전당에서 절망하리라."
 
 #: Source/monstdat.cpp:50
 msgctxt "monster"
@@ -4708,16 +4311,9 @@ msgid "Stalker"
 msgstr ""
 
 #: Source/monstdat.cpp:51
-#, fuzzy
 msgctxt "monster"
 msgid "Unseen"
 msgstr ""
-"자네가 재미있는 시를 읊는 걸 보니 그와 비슷한 시가 생각나는군. 어디 보자, 어"
-"떤 내용이었더라...\n"
-"\n"
-"...어둠은 숨은자를 가릴지니, 그 눈의 빛남은 보이지 않고, 그저 날카로이 손톱 "
-"할퀴는 소리만이, 영원히 눈먼 가련한 영혼들을 고문한다. 영원한 단죄를 받은 자"
-"들의 감옥, 눈먼 자의 전당이라 하노라..."
 
 #: Source/monstdat.cpp:52
 msgctxt "monster"
@@ -4735,10 +4331,9 @@ msgid "Flesh Clan"
 msgstr ""
 
 #: Source/monstdat.cpp:55 Source/monstdat.cpp:63
-#, fuzzy
 msgctxt "monster"
 msgid "Stone Clan"
-msgstr "혈석"
+msgstr ""
 
 #: Source/monstdat.cpp:56 Source/monstdat.cpp:64
 msgctxt "monster"
@@ -4746,22 +4341,14 @@ msgid "Fire Clan"
 msgstr ""
 
 #: Source/monstdat.cpp:57 Source/monstdat.cpp:65
-#, fuzzy
-#| msgid "Nightmare"
 msgctxt "monster"
 msgid "Night Clan"
-msgstr "악몽"
+msgstr ""
 
 #: Source/monstdat.cpp:58
-#, fuzzy
 msgctxt "monster"
 msgid "Fiend"
 msgstr ""
-"그 사악한 악마는 당연히 알고 있지. 라자루스의 함정에서 살아남은 사람들이 대성"
-"당에서 나왔을 때, 사람들 대부분이 녀석의 분노가 서린 상처를 입고 있었어. 녀석"
-"이 희생자들을 도륙할 때 사용한 게 뭔지는 모르겠지만 이 세상에 존재하는 물건"
-"은 아닐 거야. 상처가 곪아 나조차도 손쓸 수 없었거든. 자네가 그 악마와 싸울 생"
-"각이라면 부디 조심하게."
 
 #: Source/monstdat.cpp:59
 msgctxt "monster"
@@ -4774,13 +4361,9 @@ msgid "Gloom"
 msgstr ""
 
 #: Source/monstdat.cpp:61
-#, fuzzy
 msgctxt "monster"
 msgid "Familiar"
 msgstr ""
-"이걸 어디선가 본 기억이 있어. 악마적 대환에 대한 역사를 조사하고 있었을 때 "
-"그 시와 아주 흡사한 걸 읽은 기억이 나네. 대단히 사악한 장소라고 하던데... 여"
-"보게, 잠깐만. 설마 갈 생각은 아니겠지?"
 
 #: Source/monstdat.cpp:66
 msgctxt "monster"
@@ -4804,41 +4387,39 @@ msgstr ""
 
 #: Source/monstdat.cpp:70 Source/monstdat.cpp:474
 #, fuzzy
-#| msgid "Skeleton King"
 msgctxt "monster"
 msgid "Skeleton King"
-msgstr "해골왕의 본거지"
+msgstr "해골왕"
 
 #: Source/monstdat.cpp:71 Source/monstdat.cpp:482
+#, fuzzy
 msgctxt "monster"
 msgid "The Butcher"
 msgstr "도살자"
 
 #: Source/monstdat.cpp:72
+#, fuzzy
 msgctxt "monster"
 msgid "Overlord"
 msgstr "오버로드"
 
 #: Source/monstdat.cpp:73
 #, fuzzy
-#| msgid "Mud Man"
 msgctxt "monster"
 msgid "Mud Man"
 msgstr "진흙 인간"
 
 #: Source/monstdat.cpp:74
 #, fuzzy
-#| msgid "Demon"
 msgctxt "monster"
 msgid "Toad Demon"
-msgstr "악마"
+msgstr "두꺼비 악마"
 
 #: Source/monstdat.cpp:75
 #, fuzzy
-#| msgid "Fallen One"
 msgctxt "monster"
 msgid "Flayed One"
-msgstr "타락한 자"
+msgstr "피부가 벗겨진 자"
 
 #: Source/monstdat.cpp:76
 msgctxt "monster"
@@ -4861,11 +4442,9 @@ msgid "Devourer"
 msgstr ""
 
 #: Source/monstdat.cpp:80
-#, fuzzy
-#| msgid "Demon"
 msgctxt "monster"
 msgid "Magma Demon"
-msgstr "악마"
+msgstr ""
 
 #: Source/monstdat.cpp:81
 msgctxt "monster"
@@ -4883,10 +4462,9 @@ msgid "Lava Lord"
 msgstr ""
 
 #: Source/monstdat.cpp:84
-#, fuzzy
 msgctxt "monster"
 msgid "Horned Demon"
-msgstr "악마"
+msgstr ""
 
 #: Source/monstdat.cpp:85
 msgctxt "monster"
@@ -4914,18 +4492,14 @@ msgid "Red Death"
 msgstr ""
 
 #: Source/monstdat.cpp:90
-#, fuzzy
-#| msgid "Witchmoon"
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "악마"
+msgstr ""
 
 #: Source/monstdat.cpp:91
-#, fuzzy
-#| msgid "Undead"
 msgctxt "monster"
 msgid "Undead Balrog"
-msgstr "언데드 왕관"
+msgstr ""
 
 #: Source/monstdat.cpp:92
 msgctxt "monster"
@@ -4943,10 +4517,9 @@ msgid "Doom Fire"
 msgstr ""
 
 #: Source/monstdat.cpp:95
-#, fuzzy
 msgctxt "monster"
 msgid "Hell Burner"
-msgstr "지옥으로 내려간다"
+msgstr ""
 
 #: Source/monstdat.cpp:96
 msgctxt "monster"
@@ -4977,18 +4550,17 @@ msgstr ""
 #, fuzzy
 msgctxt "monster"
 msgid "Winged-Demon"
-msgstr "악마"
+msgstr "날개 달린 악마"
 
 #: Source/monstdat.cpp:102
 msgctxt "monster"
 msgid "Gargoyle"
-msgstr ""
+msgstr "가고일"
 
 #: Source/monstdat.cpp:103
-#, fuzzy
 msgctxt "monster"
 msgid "Blood Claw"
-msgstr "혈석"
+msgstr ""
 
 #: Source/monstdat.cpp:104
 msgctxt "monster"
@@ -4996,11 +4568,9 @@ msgid "Death Wing"
 msgstr ""
 
 #: Source/monstdat.cpp:105
-#, fuzzy
-#| msgid "Single Player"
 msgctxt "monster"
 msgid "Slayer"
-msgstr "싱글 플레이어"
+msgstr ""
 
 #: Source/monstdat.cpp:106
 msgctxt "monster"
@@ -5018,11 +4588,9 @@ msgid "Balrog"
 msgstr ""
 
 #: Source/monstdat.cpp:109
-#, fuzzy
-#| msgid "The Vizier"
 msgctxt "monster"
 msgid "Cave Viper"
-msgstr "고관"
+msgstr ""
 
 #: Source/monstdat.cpp:110
 msgctxt "monster"
@@ -5030,24 +4598,19 @@ msgid "Fire Drake"
 msgstr ""
 
 #: Source/monstdat.cpp:111
-#, fuzzy
-#| msgid "Golden Elixir"
 msgctxt "monster"
 msgid "Gold Viper"
-msgstr "$금화"
+msgstr ""
 
 #: Source/monstdat.cpp:112
-#, fuzzy
 msgctxt "monster"
 msgid "Azure Drake"
-msgstr "붉은 빛과 푸른 빛은 태양이 된다"
+msgstr ""
 
 #: Source/monstdat.cpp:113
-#, fuzzy
-#| msgid "The Black King"
 msgctxt "monster"
 msgid "Black Knight"
-msgstr "검은 버섯"
+msgstr ""
 
 #: Source/monstdat.cpp:114
 msgctxt "monster"
@@ -5055,17 +4618,14 @@ msgid "Doom Guard"
 msgstr ""
 
 #: Source/monstdat.cpp:115
-#, fuzzy
 msgctxt "monster"
 msgid "Steel Lord"
-msgstr "강철의 베일"
+msgstr ""
 
 #: Source/monstdat.cpp:116
-#, fuzzy
-#| msgid "Blood Stone"
 msgctxt "monster"
 msgid "Blood Knight"
-msgstr "혈석"
+msgstr ""
 
 #: Source/monstdat.cpp:117
 msgctxt "monster"
@@ -5073,18 +4633,14 @@ msgid "The Shredded"
 msgstr ""
 
 #: Source/monstdat.cpp:118
-#, fuzzy
-#| msgid "Follow me."
 msgctxt "monster"
 msgid "Hollow One"
-msgstr "날 따라와."
+msgstr ""
 
 #: Source/monstdat.cpp:119
-#, fuzzy
-#| msgid "Main Testers"
 msgctxt "monster"
 msgid "Pain Master"
-msgstr "메인 테스터들"
+msgstr ""
 
 #: Source/monstdat.cpp:120
 msgctxt "monster"
@@ -5097,16 +4653,14 @@ msgid "Succubus"
 msgstr ""
 
 #: Source/monstdat.cpp:122
-#, fuzzy
 msgctxt "monster"
 msgid "Snow Witch"
-msgstr "마녀의 오두막"
+msgstr ""
 
 #: Source/monstdat.cpp:123
-#, fuzzy
 msgctxt "monster"
 msgid "Hell Spawn"
-msgstr "지옥으로 내려간다"
+msgstr ""
 
 #: Source/monstdat.cpp:124
 msgctxt "monster"
@@ -5139,25 +4693,9 @@ msgid "Golem"
 msgstr "골렘"
 
 #: Source/monstdat.cpp:130
-#, fuzzy
-#| msgid "The Dark Exile"
 msgctxt "monster"
 msgid "The Dark Lord"
-msgstr ""
-"그렇다면 그 지도의 전설이 사실이로군. 여지껏 진짜라고 믿었던 적은 없었지만 말"
-"일세! 내가 누구인지 밝혀야 할 때가 온 것 같구만...\n"
-"\n"
-"내 진짜 이름은 데커드 케인으로 영원한 악의 봉인을 수호하는 고대 결사대의 마지"
-"막 후예라네. 허나 아무래도 악마의 봉인이 풀린 듯하군...\n"
-"\n"
-"자네가 맞설 상대는 공포의 군주라 불리는 악마라네. 사람들에겐 디아블로라고 알"
-"려져 있는 있지. 녀석은 몇 세기 전 미궁에 유폐되었네. 자네가 손에 넣은 그 지도"
-"는 몇 세대 전에 만들어진 것으로 디아블로가 유폐에서 벗어나 다시 일어서는 시기"
-"가 기록되어 있네. 지도에 있는 두 개의 별이 일직선으로 늘어설 때가 바로 디아블"
-"로의 힘이 극에 달할 때이지.\n"
-"\n"
-"일각을 다투는 일이라네! 별이 늘어서기 전에 디아블로를 찾아 쓰러트리게. 놈에게"
-"서 벗어날 기회를 다시는 얻지 못할 수도 있으니 말일세!"
+msgstr "암흑 제왕"
 
 #: Source/monstdat.cpp:131
 msgctxt "monster"
@@ -5165,18 +4703,14 @@ msgid "The Arch-Litch Malignus"
 msgstr ""
 
 #: Source/monstdat.cpp:132
-#, fuzzy
-#| msgid "Hell"
 msgctxt "monster"
 msgid "Hellboar"
-msgstr "지옥"
+msgstr ""
 
 #: Source/monstdat.cpp:133
-#, fuzzy
-#| msgid "Scavenger"
 msgctxt "monster"
 msgid "Stinger"
-msgstr "포식자"
+msgstr ""
 
 #: Source/monstdat.cpp:134
 msgctxt "monster"
@@ -5224,18 +4758,14 @@ msgid "Torchant"
 msgstr ""
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
-#, fuzzy
-#| msgid "Demon"
 msgctxt "monster"
 msgid "Hork Demon"
-msgstr "악마"
+msgstr ""
 
 #: Source/monstdat.cpp:144
-#, fuzzy
-#| msgid "Hell"
 msgctxt "monster"
 msgid "Hell Bug"
-msgstr "지옥으로 내려간다"
+msgstr ""
 
 #: Source/monstdat.cpp:145
 msgctxt "monster"
@@ -5243,10 +4773,9 @@ msgid "Gravedigger"
 msgstr ""
 
 #: Source/monstdat.cpp:146
-#, fuzzy
 msgctxt "monster"
 msgid "Tomb Rat"
-msgstr "레오릭 왕의 무덤"
+msgstr ""
 
 #: Source/monstdat.cpp:147
 msgctxt "monster"
@@ -5264,25 +4793,19 @@ msgid "Lich"
 msgstr ""
 
 #: Source/monstdat.cpp:150
-#, fuzzy
-#| msgid "Demon"
 msgctxt "monster"
 msgid "Crypt Demon"
-msgstr "지하로 내려간다"
+msgstr ""
 
 #: Source/monstdat.cpp:151
-#, fuzzy
-#| msgid "Hell"
 msgctxt "monster"
 msgid "Hellbat"
-msgstr "지옥"
+msgstr ""
 
 #: Source/monstdat.cpp:152
-#, fuzzy
-#| msgid "Demon"
 msgctxt "monster"
 msgid "Bone Demon"
-msgstr "뼈의 방"
+msgstr ""
 
 #: Source/monstdat.cpp:153
 msgctxt "monster"
@@ -5306,8 +4829,6 @@ msgstr ""
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
-#, fuzzy
-#| msgid "Gharbad the Weak"
 msgctxt "monster"
 msgid "Gharbad the Weak"
 msgstr "약골 가바드"
@@ -5318,18 +4839,14 @@ msgid "Zhar the Mad"
 msgstr "미치광이 자르"
 
 #: Source/monstdat.cpp:476
-#, fuzzy
-#| msgid "Snotspill"
 msgctxt "monster"
 msgid "Snotspill"
 msgstr "코흘리개"
 
 #: Source/monstdat.cpp:477
-#, fuzzy
-#| msgid "Arch-Bishop Lazarus"
 msgctxt "monster"
 msgid "Arch-Bishop Lazarus"
-msgstr "대주교 라자루스의 본거지"
+msgstr "대주교 라자루스"
 
 #: Source/monstdat.cpp:478
 msgctxt "monster"
@@ -5337,26 +4854,19 @@ msgid "Red Vex"
 msgstr ""
 
 #: Source/monstdat.cpp:479
-#, fuzzy
 msgctxt "monster"
 msgid "Black Jade"
-msgstr "검은 버섯"
+msgstr "흑옥"
 
 #: Source/monstdat.cpp:481
-#, fuzzy
 msgctxt "monster"
 msgid "Warlord of Blood"
 msgstr ""
-"지옥의 무기고는 피의 전쟁군주의 장군의 거처이다. 그의 각성으로 기천의 시체가 "
-"줄을 잇는다. 천사와 인간도 피만을 갈구하는 어둠의 존재의 제물로서 잇달아 찢기"
-"어 갔다."
 
 #: Source/monstdat.cpp:484
-#, fuzzy
-#| msgid "The Vizier"
 msgctxt "monster"
 msgid "The Defiler"
-msgstr "고관"
+msgstr ""
 
 #: Source/monstdat.cpp:486
 msgctxt "monster"
@@ -5364,11 +4874,9 @@ msgid "Bonehead Keenaxe"
 msgstr ""
 
 #: Source/monstdat.cpp:487
-#, fuzzy
-#| msgid "Cain the Elder"
 msgctxt "monster"
 msgid "Bladeskin the Slasher"
-msgstr "케인 장로"
+msgstr ""
 
 #: Source/monstdat.cpp:488
 msgctxt "monster"
@@ -5386,11 +4894,9 @@ msgid "Boneripper"
 msgstr ""
 
 #: Source/monstdat.cpp:491
-#, fuzzy
-#| msgid "Steelskull the Hunter"
 msgctxt "monster"
 msgid "Rotfeast the Hungry"
-msgstr "사냥꾼 강철해골"
+msgstr ""
 
 #: Source/monstdat.cpp:492
 msgctxt "monster"
@@ -5423,18 +4929,14 @@ msgid "Madeye the Dead"
 msgstr ""
 
 #: Source/monstdat.cpp:500
-#, fuzzy
-#| msgid "Skull Lever"
 msgctxt "monster"
 msgid "Skullfire"
-msgstr "해골 지렛대"
+msgstr ""
 
 #: Source/monstdat.cpp:501
-#, fuzzy
-#| msgid "Blackskull"
 msgctxt "monster"
 msgid "Warpskull"
-msgstr "검은해골"
+msgstr ""
 
 #: Source/monstdat.cpp:502
 msgctxt "monster"
@@ -5472,11 +4974,9 @@ msgid "Shadowcrow"
 msgstr ""
 
 #: Source/monstdat.cpp:509
-#, fuzzy
-#| msgid "Blighthorn Steelmace"
 msgctxt "monster"
 msgid "Blightstone the Weak"
-msgstr "약골 가바드"
+msgstr ""
 
 #: Source/monstdat.cpp:510
 msgctxt "monster"
@@ -5509,11 +5009,9 @@ msgid "Deathspit"
 msgstr ""
 
 #: Source/monstdat.cpp:516
-#, fuzzy
-#| msgid "Blood Stone"
 msgctxt "monster"
 msgid "Bloodgutter"
-msgstr "혈석"
+msgstr ""
 
 #: Source/monstdat.cpp:517
 msgctxt "monster"
@@ -5521,11 +5019,9 @@ msgid "Deathshade Fleshmaul"
 msgstr ""
 
 #: Source/monstdat.cpp:518
-#, fuzzy
-#| msgid "Zhar the Mad"
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "미치광이 자르"
+msgstr ""
 
 #: Source/monstdat.cpp:519
 msgctxt "monster"
@@ -5533,11 +5029,9 @@ msgid "Glasskull the Jagged"
 msgstr ""
 
 #: Source/monstdat.cpp:520
-#, fuzzy
-#| msgid "Nightmare"
 msgctxt "monster"
 msgid "Blightfire"
-msgstr "악몽"
+msgstr ""
 
 #: Source/monstdat.cpp:521
 msgctxt "monster"
@@ -5565,18 +5059,14 @@ msgid "Firewound the Grim"
 msgstr ""
 
 #: Source/monstdat.cpp:526
-#, fuzzy
-#| msgid "Baron Sludge"
 msgctxt "monster"
 msgid "Baron Sludge"
-msgstr "오물 남작"
+msgstr ""
 
 #: Source/monstdat.cpp:527
-#, fuzzy
-#| msgid "Blighthorn Steelmace"
 msgctxt "monster"
 msgid "Blighthorn Steelmace"
-msgstr "밝은뿔 강철철퇴"
+msgstr ""
 
 #: Source/monstdat.cpp:528
 msgctxt "monster"
@@ -5594,25 +5084,19 @@ msgid "Madburner"
 msgstr ""
 
 #: Source/monstdat.cpp:531
-#, fuzzy
-#| msgid "Adria the Witch"
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr "마녀 아드리아"
+msgstr ""
 
 #: Source/monstdat.cpp:532
-#, fuzzy
-#| msgid "Breakspine"
 msgctxt "monster"
 msgid "Breakspine"
 msgstr "척추파괴자"
 
 #: Source/monstdat.cpp:533
-#, fuzzy
-#| msgid "Devilskull Sharpbone"
 msgctxt "monster"
 msgid "Devilskull Sharpbone"
-msgstr "악마해골"
+msgstr ""
 
 #: Source/monstdat.cpp:534
 #, fuzzy
@@ -5637,11 +5121,9 @@ msgid "Goldblight of the Flame"
 msgstr ""
 
 #: Source/monstdat.cpp:538
-#, fuzzy
-#| msgid "Black Mushroom"
 msgctxt "monster"
 msgid "Blackstorm"
-msgstr "검은 버섯"
+msgstr ""
 
 #: Source/monstdat.cpp:539
 msgctxt "monster"
@@ -5649,11 +5131,9 @@ msgid "Plaguewrath"
 msgstr ""
 
 #: Source/monstdat.cpp:540
-#, fuzzy
-#| msgid "Single Player"
 msgctxt "monster"
 msgid "The Flayer"
-msgstr "싱글 플레이어"
+msgstr ""
 
 #: Source/monstdat.cpp:541
 msgctxt "monster"
@@ -5671,18 +5151,14 @@ msgid "Fangspeir"
 msgstr ""
 
 #: Source/monstdat.cpp:544
-#, fuzzy
-#| msgid "Testers"
 msgctxt "monster"
 msgid "Festerskull"
-msgstr "테스터들"
+msgstr ""
 
 #: Source/monstdat.cpp:545
-#, fuzzy
-#| msgid "Steelskull the Hunter"
 msgctxt "monster"
 msgid "Lionskull the Bent"
-msgstr "사냥꾼 강철해골"
+msgstr ""
 
 #: Source/monstdat.cpp:546
 msgctxt "monster"
@@ -5705,14 +5181,12 @@ msgid "Fangskin"
 msgstr ""
 
 #: Source/monstdat.cpp:550
-#, fuzzy
 msgctxt "monster"
 msgid "Witchfire the Unholy"
-msgstr "불경한 제단"
+msgstr ""
 
 #: Source/monstdat.cpp:551
 #, fuzzy
-#| msgid "Blackskull"
 msgctxt "monster"
 msgid "Blackskull"
 msgstr "검은해골"
@@ -5748,11 +5222,9 @@ msgid "Doomcloud"
 msgstr ""
 
 #: Source/monstdat.cpp:558
-#, fuzzy
-#| msgid "Blood Stone"
 msgctxt "monster"
 msgid "Bloodmoon Soulfire"
-msgstr "혈석"
+msgstr ""
 
 #: Source/monstdat.cpp:559
 #, fuzzy
@@ -5779,39 +5251,29 @@ msgid "Dreadjudge"
 msgstr ""
 
 #: Source/monstdat.cpp:563
-#, fuzzy
-#| msgid "Stareye the Witch"
 msgctxt "monster"
 msgid "Stareye the Witch"
-msgstr "마녀 아드리아"
+msgstr ""
 
 #: Source/monstdat.cpp:564
-#, fuzzy
-#| msgid "Steelskull the Hunter"
 msgctxt "monster"
 msgid "Steelskull the Hunter"
-msgstr "헌터 보우"
+msgstr ""
 
 #: Source/monstdat.cpp:565
-#, fuzzy
-#| msgid "Sir Gorash"
 msgctxt "monster"
 msgid "Sir Gorash"
 msgstr "고라시 경"
 
 #: Source/monstdat.cpp:566
-#, fuzzy
-#| msgid "The Vizier"
 msgctxt "monster"
 msgid "The Vizier"
-msgstr "고관"
+msgstr ""
 
 #: Source/monstdat.cpp:568
-#, fuzzy
-#| msgid "Blood Stone"
 msgctxt "monster"
 msgid "Bloodlust"
-msgstr "혈석"
+msgstr ""
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -5842,41 +5304,32 @@ msgid "Undead"
 msgstr "언데드"
 
 #: Source/monster.cpp:4610
-#, fuzzy
 msgid "Type: {:s}  Kills: {:d}"
-msgstr "오류 발생: {:s} 줄 {:d}"
+msgstr "종류: {:s}  토벌 수: {:d}"
 
 #: Source/monster.cpp:4612
-#, fuzzy
 msgid "Total kills: {:d}"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr "총 토벌 수: {:d}"
 
 #: Source/monster.cpp:4645
-#, fuzzy
 msgid "Hit Points: {:d}-{:d}"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr "히트 포인트: {:d}-{:d}"
 
 #: Source/monster.cpp:4651
-#, fuzzy
 msgid "No magic resistance"
-msgstr "마석"
+msgstr "마법 저항 없음"
 
 #: Source/monster.cpp:4655
 msgid "Resists: "
 msgstr ""
 
 #: Source/monster.cpp:4657 Source/monster.cpp:4668
-#, fuzzy
 msgid "Magic "
-msgstr "마력:"
+msgstr "마력 "
 
 #: Source/monster.cpp:4659 Source/monster.cpp:4670
-#, fuzzy
 msgid "Fire "
 msgstr ""
-"강철밖에 모르는 자에겐 강철이야말로 최강의 마법인 셈이죠. 본인은 자각 못 하지"
-"만 대장장이 그리스월드는 정말로 마술사 그 이상이에요. 불과 금속을 융합시키는 "
-"그의 능력은 견줄 자가 없죠."
 
 #: Source/monster.cpp:4661 Source/monster.cpp:4672
 msgid "Lightning "
@@ -5887,27 +5340,24 @@ msgid "Immune: "
 msgstr ""
 
 #: Source/monster.cpp:4684
-#, fuzzy
 msgid "Type: {:s}"
-msgstr "{:s}로"
+msgstr "종류: {:s}"
 
 #: Source/monster.cpp:4690 Source/monster.cpp:4697
 msgid "No resistances"
-msgstr ""
+msgstr "저항 없음"
 
 #: Source/monster.cpp:4692 Source/monster.cpp:4702
 msgid "No Immunities"
-msgstr ""
+msgstr "면역 없음"
 
 #: Source/monster.cpp:4695
-#, fuzzy
 msgid "Some Magic Resistances"
-msgstr "마석"
+msgstr "일부 마법 저항"
 
 #: Source/monster.cpp:4700
-#, fuzzy
 msgid "Some Magic Immunities"
-msgstr "마석"
+msgstr "일부 마법 면역"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
@@ -5923,14 +5373,12 @@ msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
 #: Source/msg.cpp:1826
-#, fuzzy
 msgid "Waiting for game data..."
-msgstr "-- 플레이어 대기 중 --"
+msgstr "게임 데이터 대기 중..."
 
 #: Source/msg.cpp:1834
-#, fuzzy
 msgid "The game ended"
-msgstr "게임 디자인"
+msgstr "게임 종료되었습니다"
 
 #: Source/msg.cpp:1840
 msgid "Unable to get level data"
@@ -5954,38 +5402,20 @@ msgstr ""
 
 #. TRANSLATORS: Shrine Name Block
 #: Source/objects.cpp:101
-#, fuzzy
 msgid "Mysterious"
 msgstr ""
-"페핀은 제 할머니의 목숨을 구해 주셨죠. 그 은혜를 다 갚을 수 있을런지 모르겠네"
-"요. 병을 다스리는 그분의 힘은 그 어떤 칼보다도 강하며 그 어떤 마법보다도 신비"
-"롭답니다. 혹시 치료가 필요하면 페핀이 도와줄실 거예요."
 
 #: Source/objects.cpp:102
-#, fuzzy
 msgid "Hidden"
 msgstr ""
-"그대가 보지 못하는 것을 나는 볼 수 있다.\n"
-"시야는 흐려지고 눈은 썩어든다.\n"
-"뒤돌면 그들은 신비한 노래를 속삭이며 사라질 것이다.\n"
-"그리하면 그대는 불가능한 것을 보게 된다.\n"
-"빛이 있어야 할 곳에 드리우는 그림자.\n"
-"어둠의 밖은 광기의 세계,\n"
-"눈먼 자의 전당에서 절망하리라."
 
 #: Source/objects.cpp:103
 msgid "Gloomy"
 msgstr ""
 
 #: Source/objects.cpp:105 Source/objects.cpp:112
-#, fuzzy
 msgid "Magical"
 msgstr ""
-"그리스월드가 말한 분노의 모루는 오래도록 찾지 못한 전설의 유물이라네. 분노의 "
-"모루는 악마의 날카로운 금속질 뼈로 만들어졌는데, 황천에서 가장 강력한 다섯 마"
-"법사의 해골 근처에 있다고 하지. 힘과 혼돈의 상징이 새겨져 있어서 그 모루로 만"
-"들어진 무기에는 혼돈의 마력이 깃든다더군. 혼돈의 본질은 예측하기 어려운지라 "
-"그 모루로 제조를 하면 결과가 어떻게 될지는 모른다고 하네..."
 
 #: Source/objects.cpp:106
 msgid "Stone"
@@ -6024,38 +5454,24 @@ msgid "Divine"
 msgstr ""
 
 #: Source/objects.cpp:117
-#, fuzzy
 msgid "Sacred"
 msgstr ""
-"맙소사, 마귀들이 밤에 마을을 약탈하며 돌아다녔다니, 이게 무슨 변인가? 오그덴"
-"과 가르다가 무사해야 할 텐데. 물론 다치기라도 했다면 나한테 왔겠지만 말이"
-"야..."
 
 #: Source/objects.cpp:118
-#, fuzzy
 msgid "Spiritual"
-msgstr "영적 기운이 회복된다."
+msgstr ""
 
 #: Source/objects.cpp:119
 msgid "Spooky"
 msgstr "으스스한 "
 
 #: Source/objects.cpp:120
-#, fuzzy
 msgid "Abandoned"
 msgstr ""
-"대주교 라자루스는 실종된 왕의 아들을 찾기 위해 마을 주민들을 미궁으로 몰아넣"
-"었다네. 사람들의 공포심을 이용해 그들을 흉폭한 폭도로 돌변하게 만들었지. 땅속"
-"에서 무엇이 기다리고 있을지 아는 사람은 아무도 없었지만 말일세... 라자루스는 "
-"사람들을 그곳에 내버려 두었고 형언할 수 없는 공포 속에서 그들은 죽어 갔지."
 
 #: Source/objects.cpp:121
-#, fuzzy
 msgid "Creepy"
 msgstr ""
-"아드리아는 정말 성가셔요. 물론 케인 영감이 해주는 옛날 얘기도 오싹하지만 저 "
-"마녀는 과거를 볼 수 있거든요. 게다가 필요한 건 항상 손에 넣더군요. 아드리아"
-"는 축제 때 열리는 시장에서 본 것보다도 더 많은 상품을 갖고 있더라고요."
 
 #: Source/objects.cpp:122
 msgid "Quiet"
@@ -6074,27 +5490,16 @@ msgid "Glimmering"
 msgstr ""
 
 #: Source/objects.cpp:126
-#, fuzzy
 msgid "Tainted"
 msgstr ""
-"흐음, 내가 어떻게 도움을 줘야 할지 모르겠군. 마을 우물물은 지하 수맥에서 비롯"
-"된다네. 큰 호수로 통하는 터널이 있다는 얘기를 들은 적이 있는데 아마도 그거겠"
-"지. 유감이네만 수원지가 오염된 이유는 모르겠네."
 
 #: Source/objects.cpp:127
 msgid "Oily"
 msgstr "기름진"
 
 #: Source/objects.cpp:128
-#, fuzzy
 msgid "Glowing"
 msgstr ""
-"자네가 재미있는 시를 읊는 걸 보니 그와 비슷한 시가 생각나는군. 어디 보자, 어"
-"떤 내용이었더라...\n"
-"\n"
-"...어둠은 숨은자를 가릴지니, 그 눈의 빛남은 보이지 않고, 그저 날카로이 손톱 "
-"할퀴는 소리만이, 영원히 눈먼 가련한 영혼들을 고문한다. 영원한 단죄를 받은 자"
-"들의 감옥, 눈먼 자의 전당이라 하노라..."
 
 #: Source/objects.cpp:129
 msgid "Mendicant's"
@@ -6123,25 +5528,18 @@ msgstr ""
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:265
-#, fuzzy
 msgid "The Great Conflict"
-msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
-"때문이다. 이상향 천국과 무저갱 업화 지옥 간의 전쟁은 지금도 이 땅에 퍼져 가"
-"고 있다. 저 하늘의 별보다도 오래도록 지속되어 온 이 전쟁은 위대한 투쟁이라 알"
-"려져 있다. 어느 한쪽도 승부를 내지 못한 채, 빛과 어둠의 군세는 숨쉬는 모든 것"
-"을 지배하기 위해 끝없이 겨루고 있다."
+msgstr "위대한 투쟁"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:266
-#, fuzzy
 msgid "The Wages of Sin are War"
-msgstr "죄악의 전쟁"
+msgstr "죄악의 대가는 전쟁이다"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:267
 msgid "The Tale of the Horadrim"
-msgstr ""
+msgstr "호라드림 이야기"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:268
@@ -6233,18 +5631,16 @@ msgid "Ancient Tome"
 msgstr "고대서"
 
 #: Source/objects.cpp:5389
-#, fuzzy
 msgid "Book of Vileness"
-msgstr "주문서"
+msgstr ""
 
 #: Source/objects.cpp:5394
 msgid "Skull Lever"
 msgstr "해골 지렛대"
 
 #: Source/objects.cpp:5397
-#, fuzzy
 msgid "Mythical Book"
-msgstr "주문서"
+msgstr ""
 
 #: Source/objects.cpp:5401
 msgid "Small Chest"
@@ -6260,7 +5656,7 @@ msgstr "큰 궤짝"
 
 #: Source/objects.cpp:5413
 msgid "Sarcophagus"
-msgstr "관"
+msgstr "석관"
 
 #: Source/objects.cpp:5416
 msgid "Bookshelf"
@@ -6276,7 +5672,7 @@ msgstr ""
 
 #: Source/objects.cpp:5427
 msgid "Urn"
-msgstr "납골함"
+msgstr "단지"
 
 #: Source/objects.cpp:5429
 msgid "Barrel"
@@ -6288,33 +5684,28 @@ msgid "{:s} Shrine"
 msgstr "{:s} 신단"
 
 #: Source/objects.cpp:5437
-#, fuzzy
 msgid "Skeleton Tome"
-msgstr "균류학"
+msgstr ""
 
 #: Source/objects.cpp:5440
-#, fuzzy
 msgid "Library Book"
-msgstr "주문서"
+msgstr "도서"
 
 #: Source/objects.cpp:5443
-#, fuzzy
 msgid "Blood Fountain"
-msgstr "혈석"
+msgstr ""
 
 #: Source/objects.cpp:5446
 msgid "Decapitated Body"
 msgstr ""
 
 #: Source/objects.cpp:5449
-#, fuzzy
 msgid "Book of the Blind"
-msgstr "눈먼 자의 전당"
+msgstr ""
 
 #: Source/objects.cpp:5452
-#, fuzzy
 msgid "Book of Blood"
-msgstr "혈석"
+msgstr ""
 
 #: Source/objects.cpp:5455
 msgid "Purifying Spring"
@@ -6325,9 +5716,8 @@ msgid "Weapon Rack"
 msgstr ""
 
 #: Source/objects.cpp:5465
-#, fuzzy
 msgid "Goat Shrine"
-msgstr "{:s} 신단"
+msgstr ""
 
 #: Source/objects.cpp:5468
 msgid "Cauldron"
@@ -6342,40 +5732,34 @@ msgid "Fountain of Tears"
 msgstr ""
 
 #: Source/objects.cpp:5477
-#, fuzzy
 msgid "Steel Tome"
-msgstr "강철의 베일"
+msgstr ""
 
 #: Source/objects.cpp:5480
-#, fuzzy
 msgid "Pedestal of Blood"
-msgstr "혈석"
+msgstr ""
 
 #: Source/objects.cpp:5489
-#, fuzzy
 msgid "Mushroom Patch"
-msgstr "검은 버섯"
+msgstr ""
 
 #: Source/objects.cpp:5492
 msgid "Vile Stand"
 msgstr ""
 
 #: Source/objects.cpp:5495
-#, fuzzy
 msgid "Slain Hero"
-msgstr "살해당한 마을사람"
+msgstr "살해당한 영웅"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:5502
-#, fuzzy
 msgid "Trapped {:s}"
-msgstr "{:s} 기술"
+msgstr ""
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
 #: Source/objects.cpp:5508
-#, fuzzy
 msgid "{:s} (disabled)"
-msgstr "음악 끄기"
+msgstr "{:s} (끄기)"
 
 #: Source/panels/charpanel.cpp:109
 msgid "MAX"
@@ -6390,10 +5774,8 @@ msgid "Experience"
 msgstr "경험치"
 
 #: Source/panels/charpanel.cpp:123
-#, fuzzy
-#| msgid "Next Level: "
 msgid "Next level"
-msgstr "다음 레벨: "
+msgstr "다음 레벨"
 
 #: Source/panels/charpanel.cpp:126
 msgid "None"
@@ -6401,63 +5783,47 @@ msgstr "없음"
 
 #: Source/panels/charpanel.cpp:132
 msgid "Base"
-msgstr ""
+msgstr "기본"
 
 #: Source/panels/charpanel.cpp:133
-#, fuzzy
-#| msgid "No"
 msgid "Now"
-msgstr "열렸던 것이 지금 다시 닫힌다"
+msgstr "현재"
 
 #: Source/panels/charpanel.cpp:134
-#, fuzzy
-#| msgid "Strength:"
 msgid "Strength"
-msgstr "힘:"
+msgstr "체력"
 
 #: Source/panels/charpanel.cpp:138
-#, fuzzy
-#| msgid "Magic:"
 msgid "Magic"
-msgstr "마력:"
+msgstr "마력"
 
 #: Source/panels/charpanel.cpp:142
-#, fuzzy
-#| msgid "Dexterity:"
 msgid "Dexterity"
-msgstr "민첩:"
+msgstr "민첩"
 
 #: Source/panels/charpanel.cpp:145
-#, fuzzy
-#| msgid "Vitality:"
 msgid "Vitality"
-msgstr "생명력:"
+msgstr "생명력"
 
 #: Source/panels/charpanel.cpp:148
-#, fuzzy
 msgid "Points to distribute"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr ""
 
 #: Source/panels/charpanel.cpp:158
-#, fuzzy
 msgid "Armor class"
-msgstr "직업 선택"
+msgstr ""
 
 #: Source/panels/charpanel.cpp:160
-#, fuzzy
 msgid "To hit"
-msgstr "히트 포인트 {:d} / {:d}"
+msgstr ""
 
 #: Source/panels/charpanel.cpp:162
 msgid "Damage"
-msgstr "공격력"
+msgstr "피해"
 
 #: Source/panels/charpanel.cpp:168
-#, fuzzy
 msgid "Life"
-msgstr ""
-"산 것의 온기가 내 무덤에 들어왔다. 필멸자여, 영원토록 나의 주인을 섬길 준비"
-"나 하거라!"
+msgstr "생명"
 
 #: Source/panels/charpanel.cpp:172
 msgid "Mana"
@@ -6477,19 +5843,14 @@ msgstr "전기 저항"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
 #: Source/panels/mainpanel.cpp:111
-#, fuzzy
-#| msgid "Voices"
 msgid "voice"
-msgstr "음성 편집"
+msgstr "음성"
 
 #: Source/panels/mainpanel.cpp:87
-#, fuzzy
 msgid "char"
 msgstr "캐릭터"
 
 #: Source/panels/mainpanel.cpp:88
-#, fuzzy
-#| msgid "Quests"
 msgid "quests"
 msgstr "퀘스트"
 
@@ -6502,8 +5863,6 @@ msgid "menu"
 msgstr "메뉴"
 
 #: Source/panels/mainpanel.cpp:91
-#, fuzzy
-#| msgid "Inv"
 msgid "inv"
 msgstr "소지품"
 
@@ -6514,7 +5873,7 @@ msgstr "주문"
 #: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
 msgid "mute"
-msgstr ""
+msgstr "음소거"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
@@ -6525,23 +5884,21 @@ msgid "Unable to open archive"
 msgstr ""
 
 #: Source/pfile.cpp:387
-#, fuzzy
 msgid "Unable to load character"
-msgstr "캐릭터 생성이 불가능합니다."
+msgstr "캐릭터를 불러올 수 없습니다"
 
 #: Source/pfile.cpp:410 Source/pfile.cpp:430
 msgid "Unable to read to save file archive"
-msgstr ""
+msgstr "저장 파일을 읽을 수 없습니다"
 
 #: Source/pfile.cpp:449
 msgid "Unable to write to save file archive"
-msgstr ""
+msgstr "저장 파일에 기록할 수 없습니다"
 
 #. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:89
-#, fuzzy
 msgid "{:s} (lvl {:d}): {:s}"
-msgstr "{:s}, 레벨: {:d}"
+msgstr "{:s} (레벨 {:d}): {:s}"
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
@@ -6550,9 +5907,9 @@ msgid ",%03d"
 msgstr ""
 
 #: Source/qol/itemlabels.cpp:70
-#, fuzzy, c-format
+#, c-format
 msgid "%i gold"
-msgstr "$금화"
+msgstr "%i 금화"
 
 #: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
 msgid ""
@@ -6562,7 +5919,6 @@ msgid ""
 msgstr ""
 
 #: Source/qol/xpbar.cpp:125
-#, fuzzy
 msgid "Level {:d}"
 msgstr "{:d} 층"
 
@@ -6579,9 +5935,8 @@ msgid "Next Level: "
 msgstr "다음 레벨: "
 
 #: Source/qol/xpbar.cpp:151
-#, fuzzy
 msgid " to Level {:d}"
-msgstr "{:d} 층"
+msgstr " {:d} 층"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:41
@@ -6647,9 +6002,10 @@ msgstr "작은 여자아이"
 
 #: Source/quests.cpp:60
 msgid "Wandering Trader"
-msgstr "방랑하는 상인"
+msgstr "방랑상인"
 
 #: Source/quests.cpp:61
+#, fuzzy
 msgid "The Defiler"
 msgstr "디파일러"
 
@@ -6674,9 +6030,8 @@ msgstr "미로"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:92
-#, fuzzy
 msgid "A Dark Passage"
-msgstr "어둠의 대추방"
+msgstr "암흑 통로"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:93
@@ -6701,6 +6056,7 @@ msgid "Archbishop Lazarus' Lair"
 msgstr "대주교 라자루스의 본거지"
 
 #: Source/spelldat.cpp:16
+#, fuzzy
 msgctxt "spell"
 msgid "Firebolt"
 msgstr "파이어볼트"
@@ -6711,6 +6067,7 @@ msgid "Healing"
 msgstr "치유"
 
 #: Source/spelldat.cpp:18
+#, fuzzy
 msgctxt "spell"
 msgid "Lightning"
 msgstr "라이트닝"
@@ -6726,6 +6083,7 @@ msgid "Identify"
 msgstr "물품 감정"
 
 #: Source/spelldat.cpp:21
+#, fuzzy
 msgctxt "spell"
 msgid "Fire Wall"
 msgstr "파이어 월"
@@ -6736,41 +6094,49 @@ msgid "Town Portal"
 msgstr "마을 차원문"
 
 #: Source/spelldat.cpp:23
+#, fuzzy
 msgctxt "spell"
 msgid "Stone Curse"
 msgstr "스톤 저주"
 
 #: Source/spelldat.cpp:24
+#, fuzzy
 msgctxt "spell"
 msgid "Infravision"
 msgstr "적외선 시각"
 
 #: Source/spelldat.cpp:25
+#, fuzzy
 msgctxt "spell"
 msgid "Phasing"
 msgstr "페이징"
 
 #: Source/spelldat.cpp:26
+#, fuzzy
 msgctxt "spell"
 msgid "Mana Shield"
 msgstr "마나 실드"
 
 #: Source/spelldat.cpp:27
+#, fuzzy
 msgctxt "spell"
 msgid "Fireball"
 msgstr "파이어볼"
 
 #: Source/spelldat.cpp:28
+#, fuzzy
 msgctxt "spell"
 msgid "Guardian"
 msgstr "가디언"
 
 #: Source/spelldat.cpp:29
+#, fuzzy
 msgctxt "spell"
 msgid "Chain Lightning"
 msgstr "체인 라이트닝"
 
 #: Source/spelldat.cpp:30
+#, fuzzy
 msgctxt "spell"
 msgid "Flame Wave"
 msgstr "플레임 웨이브"
@@ -6786,6 +6152,7 @@ msgid "Blood Ritual"
 msgstr "피의 의식"
 
 #: Source/spelldat.cpp:33
+#, fuzzy
 msgctxt "spell"
 msgid "Nova"
 msgstr "노바"
@@ -6796,6 +6163,7 @@ msgid "Invisibility"
 msgstr "투명화"
 
 #: Source/spelldat.cpp:35
+#, fuzzy
 msgctxt "spell"
 msgid "Inferno"
 msgstr "인페르노"
@@ -6816,6 +6184,7 @@ msgid "Teleport"
 msgstr "순간이동"
 
 #: Source/spelldat.cpp:39
+#, fuzzy
 msgctxt "spell"
 msgid "Apocalypse"
 msgstr "아포칼립스"
@@ -6841,16 +6210,19 @@ msgid "Trap Disarm"
 msgstr "함정 해제"
 
 #: Source/spelldat.cpp:44
+#, fuzzy
 msgctxt "spell"
 msgid "Elemental"
 msgstr "엘리멘탈"
 
 #: Source/spelldat.cpp:45
+#, fuzzy
 msgctxt "spell"
 msgid "Charged Bolt"
 msgstr "차지 볼트"
 
 #: Source/spelldat.cpp:46
+#, fuzzy
 msgctxt "spell"
 msgid "Holy Bolt"
 msgstr "홀리 볼트"
@@ -6866,18 +6238,18 @@ msgid "Telekinesis"
 msgstr "염력"
 
 #: Source/spelldat.cpp:49
-#, fuzzy
-#| msgid "Healer's home"
 msgctxt "spell"
 msgid "Heal Other"
-msgstr "치료사의 집"
+msgstr "타인 치료"
 
 #: Source/spelldat.cpp:50
+#, fuzzy
 msgctxt "spell"
 msgid "Blood Star"
 msgstr "블러드 스타"
 
 #: Source/spelldat.cpp:51
+#, fuzzy
 msgctxt "spell"
 msgid "Bone Spirit"
 msgstr "본 스피릿"
@@ -6887,25 +6259,16 @@ msgctxt "spell"
 msgid "Mana"
 msgstr "마나"
 
+# 동방박사
+# 현자
+# 주술사
+# 점성술사 등
+# 상황에 맞는 표현으로 변경 필요
 #: Source/spelldat.cpp:53
 #, fuzzy
-#| msgid "The Magic Rock"
 msgctxt "spell"
 msgid "the Magi"
-msgstr ""
-"유념하라. 그리고 여기 놓인 진실을 증언하라. 그것은 호라드림 최후의 유산이기 "
-"때문이다. 지금으로부터 약 300 년 전, 지옥의 대악마 셋이 느닷없이 이 땅에 강림"
-"했다. 삼 형제는 수십 년에 걸쳐 동방을 황폐화시켰고 인류는 그들 앞에서 그저 숨"
-"을 죽일 수밖에 없었다. 악마 삼 형제를 저지하기 위해 마법사들은 호라드림이라"
-"는 비밀 조직을 결성하였다.\n"
-"\n"
-"호라드림은 영혼석이라 불리는 강력한 유물로 삼 형제 중 둘을 봉인, 동방의 사막 "
-"깊숙이 매장하였다. 남은 하나는 도주하였고 호라드림의 많은 이들이 그 뒤를 추적"
-"하였다. 공포의 군주 디아블로라고 알려진 그 세 번째 악마도 결국에는 잡혔고 그 "
-"영혼을 영혼석에 거두어 이 미궁에 매장하였다.\n"
-"\n"
-"영혼석이 진실되지 못한 자들에게 발견되는 것을 경계해야 한다. 디아블로가 해방"
-"된다면 쇠약해졌을 것이기에 지배하기 쉬운 노약자의 육신을 갈구할 것이다."
+msgstr "마법사"
 
 #: Source/spelldat.cpp:54
 msgctxt "spell"
@@ -6913,11 +6276,13 @@ msgid "the Jester"
 msgstr "광대"
 
 #: Source/spelldat.cpp:55
+#, fuzzy
 msgctxt "spell"
 msgid "Lightning Wall"
 msgstr "라이트닝 월"
 
 #: Source/spelldat.cpp:56
+#, fuzzy
 msgctxt "spell"
 msgid "Immolation"
 msgstr "희생"
@@ -6935,7 +6300,7 @@ msgstr "반사"
 #: Source/spelldat.cpp:59
 msgctxt "spell"
 msgid "Berserk"
-msgstr "광전사화"
+msgstr "광폭화"
 
 #: Source/spelldat.cpp:60
 msgctxt "spell"
@@ -6945,7 +6310,7 @@ msgstr "불의 반지"
 #: Source/spelldat.cpp:61
 msgctxt "spell"
 msgid "Search"
-msgstr "검색"
+msgstr "탐색"
 
 #: Source/spelldat.cpp:62
 msgctxt "spell"
@@ -6958,16 +6323,19 @@ msgid "Rune of Light"
 msgstr "빛의 룬"
 
 #: Source/spelldat.cpp:64
+#, fuzzy
 msgctxt "spell"
 msgid "Rune of Nova"
 msgstr "노바 룬"
 
 #: Source/spelldat.cpp:65
+#, fuzzy
 msgctxt "spell"
 msgid "Rune of Immolation"
 msgstr "희생 룬"
 
 #: Source/spelldat.cpp:66
+#, fuzzy
 msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "스톤 룬"
@@ -6986,7 +6354,7 @@ msgstr "방어력: {:d}  "
 
 #: Source/stores.cpp:199
 msgid "Dur: {:d}/{:d},  "
-msgstr "내구력 {:d} / {:d}"
+msgstr "내구력 {:d}/{:d}"
 
 #: Source/stores.cpp:202
 msgid "Indestructible,  "
@@ -7034,10 +6402,12 @@ msgstr "물품 수리"
 msgid "Leave the shop"
 msgstr "상점을 떠난다"
 
+# 누구 대사인지 확인 필요.
+# 워트 대사로 추정
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr ""
+msgstr "이런 물건들을 구비하고 있죠:             소지금: {:d}"
 
 #: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
 #: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
@@ -7048,34 +6418,34 @@ msgstr ""
 msgid "Back"
 msgstr "이전"
 
+# 누구 대사인지 확인 필요
+# 워트로 추정
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:351
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr ""
+msgstr "이런 특별품들을 구비하고 있죠:     소지금: {:d}"
 
+# 누구 대사인지 확인 필요
+# 워트로 추정
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:474 Source/stores.cpp:746
-#, fuzzy
 msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "감정할 것이 없습니다.             소지금: {:d}"
+msgstr "내가 원하는 물건이 없군요.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:489 Source/stores.cpp:761
-#, fuzzy
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "감정할 물품             소지금: {:d}"
+msgstr "무엇을 판매합니까?             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:564
-#, fuzzy
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "감정할 것이 없습니다.             소지금: {:d}"
+msgstr "수리할 할 것이 없습니다.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:579
-#, fuzzy
 msgid "Repair which item?             Your gold: {:d}"
-msgstr "감정할 물품             소지금: {:d}"
+msgstr "무엇을 수리하겠습니까?             소지금: {:d}"
 
 #: Source/stores.cpp:609
 msgid "Witch's shack"
@@ -7091,7 +6461,7 @@ msgstr "풀품 구매"
 
 #: Source/stores.cpp:614
 msgid "Recharge staves"
-msgstr "지팡이 재충전"
+msgstr "지팡이 충전"
 
 #: Source/stores.cpp:615
 msgid "Leave the shack"
@@ -7099,15 +6469,13 @@ msgstr "오두막을 떠난다"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:827
-#, fuzzy
 msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "감정할 것이 없습니다.             소지금: {:d}"
+msgstr "충전할 것이 없군요.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:842
-#, fuzzy
 msgid "Recharge which item?             Your gold: {:d}"
-msgstr "감정할 물품             소지금: {:d}"
+msgstr "무엇을 충전하겠습니까?             소지금: {:d}"
 
 #: Source/stores.cpp:858
 msgid "You do not have enough gold"
@@ -7131,7 +6499,7 @@ msgstr "이 물품을 구매하겠습니까?"
 
 #: Source/stores.cpp:915
 msgid "Are you sure you want to recharge this item?"
-msgstr "이 물품을 재충전하겠습니까?"
+msgstr "이 물품을 충전하겠습니까?"
 
 #: Source/stores.cpp:919
 msgid "Are you sure you want to sell this item?"
@@ -7161,9 +6529,10 @@ msgstr "금화 50 개만 내세요"
 msgid "just to take a look. "
 msgstr "보고 싶다면 말이죠. "
 
+# 화자 확인 필요
 #: Source/stores.cpp:943
 msgid "What have you got?"
-msgstr "지불한다"
+msgstr "뭘 갖고 있나요?"
 
 #: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
 #: Source/stores.cpp:1255
@@ -7173,7 +6542,7 @@ msgstr "작별한다"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:957
 msgid "I have this item for sale:             Your gold: {:d}"
-msgstr ""
+msgstr "이런 물건을 구비하고 있죠:             소지금: {:d}"
 
 #: Source/stores.cpp:974
 msgid "Leave"
@@ -10342,12 +9711,11 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
-#, fuzzy
 msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map."
 msgstr ""
-"들어 봐. 좀 더 가까이 오라고. 아는진 모르겠지만 여기 정말 좋은 게 있어. 바로 "
+"들어봐. 좀 더 가까이 오라고. 아는진 모르겠지만 여기 정말 좋은 게 있어. 바로 "
 "지도야."
 
 #. TRANSLATORS: Quest text spoken by Gillian
@@ -10363,14 +9731,13 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
-#, fuzzy
 msgid ""
 "Hmmm.  A vast and mysterious treasure you say.  Mmmm.  Maybe I could be "
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
-"신비롭고 막대한 보물이라고 그랬나요? 몫을 좀 나눠 준다면 흥미가 있겠는데... "
-"그보단 고생하는 그쪽한테 딱인 진귀한 물건이 있는데 안 살래요?"
+"흐음. 신비롭고 막대한 보물이라고 그랬나요? 몫을 좀 나눠 준다면 흥미가 있겠는"
+"데... 그보단 고생하는 그쪽한테 딱인 진귀한 물건이 있는데 안 살래요?"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
@@ -10420,7 +9787,7 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr ""
+msgstr "우와아아앙! (훌쩍) 우와아아앙! (훌쩍)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
@@ -10739,9 +10106,10 @@ msgstr "부상당한 마을 주민"
 msgid "Adria the Witch"
 msgstr "마녀 아드리아"
 
+# 여바텐더는 용어의 통일성과 어긋나며 국내에선 뉘앙스가 조금 다르게 받아들여짐.
 #: Source/towners.cpp:148
 msgid "Gillian the Barmaid"
-msgstr "여바텐더 질리언"
+msgstr "여급 질리언"
 
 #: Source/towners.cpp:179
 msgid "Pepin the Healer"
@@ -10761,7 +10129,7 @@ msgstr "농부 레스터"
 
 #: Source/towners.cpp:257
 msgid "Complete Nut"
-msgstr "완벽하게 미친사람"
+msgstr "완전 미친놈"
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
