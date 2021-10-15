@@ -745,7 +745,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		assert(towner._tAnimData);
 		int px = targetBufferPosition.x - CalculateWidth2(towner._tAnimWidth);
 		const Point position { px, targetBufferPosition.y };
-		if ((pxcursmonst == -1 || pcursmonst == mi) && IsCursorWithinCel(position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame)) {
+		if ((pxcursmonst == -1 || pcursmonst == mi) && IsCursorWithinCelBoundingBox(position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame, 25)) {
 			pxcursmonst = mi;
 			CelBlitOutlineTo(out, 166, position, CelSprite(towner._tAnimData, towner._tAnimWidth), towner._tAnimFrame);
 		}

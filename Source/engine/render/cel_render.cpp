@@ -746,7 +746,26 @@ bool IsCursorWithinCel(Point position, const CelSprite &cel, int frame, bool ign
 	return false;
 }
 
-std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame)
+bool IsCursorWithinCelBoundingBox(Point position, const CelSprite &cel, int frame, int xError, int yError)
+{
+	int nDataSize;
+	const auto *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+
+	Point mousePos = MousePosition;
+	if (!zoomflag) {
+		mousePos.x /= 2;
+		mousePos.y /= 2;
+	}
+
+	std::pair<int, int> xBounds = MeasureSolidHorizontalBounds(cel, frame, true);
+	std::pair<int, int> yBounds = MeasureSolidVerticalBounds(cel, frame);
+
+	bool withinX = (mousePos.x + xError >= position.x + xBounds.first) && (mousePos.x - xError <= position.x + xBounds.second);
+	bool withinY = (mousePos.y + yError >= position.y - yBounds.second) && (mousePos.y - yError <= position.y - yBounds.first);
+	return withinX && withinY;
+}
+
+std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame, bool ignoreShadow)
 {
 	int nDataSize;
 	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
@@ -755,49 +774,68 @@ std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame
 
 	int xBegin = celWidth;
 	int xEnd = 0;
-
-	int transparentRun = 0;
-	int xCur = 0;
-	bool firstTransparentRun = true;
 	while (src < end) {
-		std::int_fast16_t remainingWidth = celWidth;
-		while (remainingWidth > 0) {
-			const auto val = static_cast<std::uint8_t>(*src++);
+		int xCur = 0;
+		bool isShadow = true;
+		while (xCur < celWidth) {
+			auto val = static_cast<std::uint8_t>(*src++);
 			if (IsCelTransparent(val)) {
 				const int width = GetCelTransparentWidth(val);
-				transparentRun += width;
 				xCur += width;
-				remainingWidth -= width;
-				if (remainingWidth == 0) {
-					xEnd = std::max(xEnd, celWidth - transparentRun);
-					xCur = 0;
-					firstTransparentRun = true;
-					transparentRun = 0;
-				}
 			} else {
-				if (firstTransparentRun) {
-					xBegin = std::min(xBegin, transparentRun);
-					firstTransparentRun = false;
-					if (xBegin == 0 && xEnd == celWidth) {
-						return { xBegin, xEnd };
+				if (ignoreShadow && isShadow) {
+					while (val > 0) {
+						const auto pixel = static_cast<std::uint8_t>(*src);
+						if (pixel != 0) {
+							isShadow = false;
+							break;
+						}
+						val--;
+						xCur++;
+						src++;
 					}
 				}
-				transparentRun = 0;
+				xBegin = std::min(xBegin, xCur);
 				xCur += val;
+				xEnd = std::max(xEnd, xCur);
 				src += val;
-				remainingWidth -= val;
-				if (remainingWidth == 0) {
-					xEnd = celWidth;
-					if (xBegin == 0) {
-						return { xBegin, xEnd };
-					}
-					xCur = 0;
-					firstTransparentRun = true;
-				}
 			}
+			if (xBegin == 0 && xEnd == celWidth)
+				return { xBegin, xEnd };
 		}
 	}
 	return { xBegin, xEnd };
+}
+
+std::pair<int, int> MeasureSolidVerticalBounds(const CelSprite &cel, int frame)
+{
+	int nDataSize;
+	const byte *src = CelGetFrameClipped(cel.Data(), frame, &nDataSize);
+	const auto *end = &src[nDataSize];
+	const int celWidth = cel.Width(frame);
+
+	int yBegin = 0;
+	int yEnd = 0;
+	int yCur = 0;
+	bool overwriteBegin = true;
+	while (src < end) {
+		const auto val = static_cast<std::uint8_t>(*src);
+		bool fullyTransparent = false;
+		if (IsCelTransparent(val)) {
+			const int width = GetCelTransparentWidth(val);
+			fullyTransparent = (width == celWidth);
+		}
+		if (!fullyTransparent) {
+			if (overwriteBegin) {
+				overwriteBegin = false;
+				yBegin = yCur;
+			}
+			yEnd = yCur;
+		}
+		src = SkipRestOfCelLine(src, static_cast<std::int_fast16_t>(celWidth));
+		yCur++;
+	}
+	return { yBegin, yEnd };
 }
 
 } // namespace devilution

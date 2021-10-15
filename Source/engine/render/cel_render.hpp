@@ -20,10 +20,21 @@ namespace devilution {
 bool IsCursorWithinCel(Point position, const CelSprite &cel, int frame, bool ignoreTransparent = true);
 
 /**
+ * Returns if cursor is within the CEL sprite's bounding box
+ */
+bool IsCursorWithinCelBoundingBox(Point position, const CelSprite &cel, int frame, int xError = 0, int yError = 0);
+
+/**
  * Returns a pair of X coordinates containing the start (inclusive) and end (exclusive)
  * of fully transparent columns in the sprite.
  */
-std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame = 1);
+std::pair<int, int> MeasureSolidHorizontalBounds(const CelSprite &cel, int frame = 1, bool ignoreShadow = false);
+
+/**
+ * Returns a pair of Y coordinates containing the start (inclusive) and end (exclusive)
+ * of fully transparent rows in the sprite.
+ */
+std::pair<int, int> MeasureSolidVerticalBounds(const CelSprite &cel, int frame = 1);
 
 /**
  * @brief Blit CEL sprite to the back buffer at the given coordinates
