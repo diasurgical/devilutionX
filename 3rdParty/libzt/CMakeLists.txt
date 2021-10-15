@@ -3,7 +3,7 @@ include(FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 FetchContent_Declare(libzt
   GIT_REPOSITORY https://github.com/diasurgical/libzt.git
-  GIT_TAG a1acf0119888f645ceae69ecea2b6174ee220da5)
+  GIT_TAG 31f8b05c3462f9d8466aa0a55df0042f13fc1096)
 FetchContent_MakeAvailableExcludeFromAll(libzt)
 
 if(NOT ANDROID)
