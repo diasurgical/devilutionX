@@ -3,6 +3,7 @@
 #include "controls/touch/event_handlers.h"
 
 #include "control.h"
+#include "cursor.h"
 #include "diablo.h"
 #include "engine.h"
 #include "gmenu.h"
@@ -63,6 +64,9 @@ bool HandleSpeedbookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
+	if (pcurs >= CURSOR_FIRSTITEM)
+		return;
+
 	ClearPanBtn();
 
 	if (event.type != SDL_FINGERUP) {
