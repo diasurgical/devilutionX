@@ -361,7 +361,7 @@ bool CheckThemeRoom(int tv)
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dTransVal[i][j] != tv)
 				continue;
-			if (HasAnyOf(dFlags[i][j], DungeonFlag::Populated))
+			if (TileContainsSetPiece({ i, j }))
 				return false;
 
 			tarea++;

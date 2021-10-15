@@ -249,6 +249,11 @@ constexpr bool TileContainsDeadPlayer(Point position)
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::DeadPlayer);
 }
 
+constexpr bool TileContainsSetPiece(Point position)
+{
+	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Populated);
+}
+
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();

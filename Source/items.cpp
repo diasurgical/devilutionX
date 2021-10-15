@@ -396,7 +396,7 @@ bool ItemPlace(Point position)
 		return false;
 	if (dObject[position.x][position.y] != 0)
 		return false;
-	if (HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Populated))
+	if (TileContainsSetPiece(position))
 		return false;
 	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;

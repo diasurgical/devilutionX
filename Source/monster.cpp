@@ -263,7 +263,7 @@ bool CanPlaceMonster(int xp, int yp)
 		return false;
 	}
 
-	if (HasAnyOf(tileFlags, DungeonFlag::Populated)) {
+	if (TileContainsSetPiece({ xp, yp })) {
 		return false;
 	}
 
