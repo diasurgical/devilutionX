@@ -239,19 +239,50 @@ constexpr bool InDungeonBounds(Point position)
 	return position.x >= 0 && position.x < MAXDUNX && position.y >= 0 && position.y < MAXDUNY;
 }
 
+/**
+ * @brief Checks if a given tile contains at least one missile
+ * @param position Coordinates of the dungeon tile to check
+ * @return true if a missile exists at this position
+ */
 constexpr bool TileContainsMissile(Point position)
 {
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Missile);
 }
 
+/**
+ * @brief Checks if a given tile contains a player corpse
+ * @param position Coordinates of the dungeon tile to check
+ * @return true if a dead player exists at this position
+ */
 constexpr bool TileContainsDeadPlayer(Point position)
 {
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::DeadPlayer);
 }
 
+/**
+ * @brief Check if a given tile contains a decorative object (or similar non-pathable set piece)
+ *
+ * This appears to include stairs so that monsters do not spawn or path onto them, but players can path to them to navigate between layers
+ *
+ * @param position Coordinates of the dungeon tile to check
+ * @return true if a set piece was spawned at this position
+ */
 constexpr bool TileContainsSetPiece(Point position)
 {
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Populated);
+}
+
+/**
+ * @brief Checks if any player can currently see this tile
+ *
+ * Currently only used by monster AI routines so basic monsters out of sight can be ignored until they're likely to interact with the player
+ *
+ * @param position Coordinates of the dungeon tile to check
+ * @return true if the tile is within at least one players vision
+ */
+constexpr bool IsTileVisible(Point position)
+{
+	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Visible);
 }
 
 void FillSolidBlockTbls();
