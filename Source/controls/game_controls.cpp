@@ -120,10 +120,16 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 			return true;
 		}
 		if (VirtualGamepadState.cancelButton.isHeld && VirtualGamepadState.cancelButton.didStateChange) {
-			if (inGameMenu || sbookflag)
+			if (inGameMenu || DoomFlag || spselflag)
 				*action = GameActionSendKey { DVL_VK_ESCAPE, false };
-			else if (DoomFlag || invflag || QuestLogIsOpen || chrflag || spselflag)
-				*action = GameActionSendKey { DVL_VK_SPACE, false };
+			else if (invflag)
+				*action = GameAction(GameActionType_TOGGLE_INVENTORY);
+			else if (sbookflag)
+				*action = GameAction(GameActionType_TOGGLE_SPELL_BOOK);
+			else if (QuestLogIsOpen)
+				*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
+			else if (chrflag)
+				*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
 			return true;
 		}
 		if (VirtualGamepadState.healthButton.isHeld && VirtualGamepadState.healthButton.didStateChange) {
