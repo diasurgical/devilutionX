@@ -29,6 +29,7 @@ namespace {
 std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
+std::array<int, 6> FontFullwidth = { 16, 21, 29, 41, 43, 22 };
 std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
@@ -101,6 +102,15 @@ text_color GetColorFromFlags(UiFlags flags)
 	return ColorWhitegold;
 }
 
+bool IsFullWidth(uint16_t row)
+{
+	if (row >= 0x4e && row <= 0x9f)
+		return true; // CJK Unified Ideographs
+	if (row >= 0xac && row <= 0xd7)
+		return true; // Hangul Syllables
+	return false;
+}
+
 std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 {
 	uint32_t fontId = (size << 16) | row;
@@ -116,12 +126,14 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	auto *kerning = &FontKerns[fontId];
 
 	HANDLE handle;
-	if (SFileOpenFile(path, &handle)) {
+	if (IsFullWidth(row)) {
+		kerning->fill(FontFullwidth[size]);
+	} else if (SFileOpenFile(path, &handle)) {
 		SFileReadFileThreadSafe(handle, kerning, 256);
 		SFileCloseFileThreadSafe(handle);
 	} else {
 		LogError("Missing font kerning: {}", path);
-		kerning->fill(FontSizes[size]);
+		kerning->fill(FontFullwidth[size]);
 	}
 
 	return kerning;
