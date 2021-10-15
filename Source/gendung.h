@@ -244,6 +244,11 @@ constexpr bool TileContainsMissile(Point position)
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Missile);
 }
 
+constexpr bool TileContainsDeadPlayer(Point position)
+{
+	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::DeadPlayer);
+}
+
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();

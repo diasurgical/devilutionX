@@ -874,7 +874,7 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	DrawObject(out, tilePosition, targetBufferPosition, true);
 	DrawItem(out, tilePosition, targetBufferPosition, true);
 
-	if (HasAnyOf(bFlag, DungeonFlag::DeadPlayer)) {
+	if (TileContainsDeadPlayer(tilePosition)) {
 		DrawDeadPlayer(out, tilePosition, targetBufferPosition);
 	}
 	if (dPlayer[tilePosition.x][tilePosition.y] > 0) {

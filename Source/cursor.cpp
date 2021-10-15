@@ -559,9 +559,9 @@ void CheckCursMove()
 				pcursplr = bv;
 			}
 		}
-		if (HasAnyOf(dFlags[mx][my], DungeonFlag::DeadPlayer)) {
+		if (TileContainsDeadPlayer({ mx, my })) {
 			for (int i = 0; i < MAX_PLRS; i++) {
-				if (Players[i].position.tile.x == mx && Players[i].position.tile.y == my && i != MyPlayerId) {
+				if (Players[i].position.tile == Point { mx, my } && i != MyPlayerId) {
 					cursPosition = { mx, my };
 					pcursplr = i;
 				}
@@ -570,7 +570,7 @@ void CheckCursMove()
 		if (pcurs == CURSOR_RESURRECT) {
 			for (int xx = -1; xx < 2; xx++) {
 				for (int yy = -1; yy < 2; yy++) {
-					if (mx + xx < MAXDUNX && my + yy < MAXDUNY && HasAnyOf(dFlags[mx + xx][my + yy], DungeonFlag::DeadPlayer)) {
+					if (TileContainsDeadPlayer({ mx + xx, my + yy })) {
 						for (int i = 0; i < MAX_PLRS; i++) {
 							if (Players[i].position.tile.x == mx + xx && Players[i].position.tile.y == my + yy && i != MyPlayerId) {
 								cursPosition = Point { mx, my } + Displacement { xx, yy };
