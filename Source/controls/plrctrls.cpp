@@ -206,10 +206,11 @@ bool CanTargetMonster(const Monster &monster)
 	if (monster._mhitpoints >> 6 <= 0) // dead
 		return false;
 
+	if (!IsTileLit(monster.position.tile)) // not visible
+		return false;
+
 	const int mx = monster.position.tile.x;
 	const int my = monster.position.tile.y;
-	if (HasNoneOf(dFlags[mx][my], DungeonFlag::Lit)) // not visible
-		return false;
 	if (dMonster[mx][my] == 0)
 		return false;
 
@@ -349,7 +350,7 @@ void CheckPlayerNearby()
 		const int mx = player.position.future.x;
 		const int my = player.position.future.y;
 		if (dPlayer[mx][my] == 0
-		    || HasNoneOf(dFlags[mx][my], DungeonFlag::Lit)
+		    || !IsTileLit(player.position.future)
 		    || (player._pHitPoints == 0 && spl != SPL_RESURRECT))
 			continue;
 

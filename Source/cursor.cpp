@@ -335,7 +335,7 @@ void CheckCursMove()
 			const auto &monster = Monsters[pcursmonst];
 			if (monster._mDelFlag || monster._mhitpoints >> 6 <= 0
 			    || (monster._mFlags & MFLAG_HIDDEN) != 0
-			    || HasNoneOf(dFlags[monster.position.tile.x][monster.position.tile.y], DungeonFlag::Lit)) {
+			    || !IsTileLit(monster.position.tile)) {
 				pcursmonst = -1;
 			}
 		} else if (pcursobj != -1) {
@@ -345,7 +345,7 @@ void CheckCursMove()
 			auto &targetPlayer = Players[pcursplr];
 			if (targetPlayer._pmode == PM_DEATH || targetPlayer._pmode == PM_QUIT || !targetPlayer.plractive
 			    || currlevel != targetPlayer.plrlevel || targetPlayer._pHitPoints >> 6 <= 0
-			    || HasNoneOf(dFlags[targetPlayer.position.tile.x][targetPlayer.position.tile.y], DungeonFlag::Lit))
+			    || !IsTileLit(targetPlayer.position.tile))
 				pcursplr = -1;
 		}
 
@@ -400,51 +400,49 @@ void CheckCursMove()
 
 	if (leveltype != DTYPE_TOWN) {
 		if (pcurstemp != -1) {
-			if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && HasAnyOf(dFlags[mx + 2][my + 1], DungeonFlag::Lit)) {
+			if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
 				int mi = dMonster[mx + 2][my + 1] > 0 ? dMonster[mx + 2][my + 1] - 1 : -(dMonster[mx + 2][my + 1] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
-					/// BUGFIX: 'mx + 2' (fixed)
-					/// BUGFIX: 'my + 1' (fixed)
 					cursPosition = Point { mx, my } + Displacement { 2, 1 };
 					pcursmonst = mi;
 				}
 			}
-			if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && HasAnyOf(dFlags[mx + 1][my + 2], DungeonFlag::Lit)) {
+			if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
 				int mi = dMonster[mx + 1][my + 2] > 0 ? dMonster[mx + 1][my + 2] - 1 : -(dMonster[mx + 1][my + 2] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 2 };
 					pcursmonst = mi;
 				}
 			}
-			if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && HasAnyOf(dFlags[mx + 2][my + 2], DungeonFlag::Lit)) {
+			if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
 				int mi = dMonster[mx + 2][my + 2] > 0 ? dMonster[mx + 2][my + 2] - 1 : -(dMonster[mx + 2][my + 2] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 2, 2 };
 					pcursmonst = mi;
 				}
 			}
-			if (mx + 1 < MAXDUNX && !flipflag && dMonster[mx + 1][my] != 0 && HasAnyOf(dFlags[mx + 1][my], DungeonFlag::Lit)) {
+			if (mx + 1 < MAXDUNX && !flipflag && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
 				int mi = dMonster[mx + 1][my] > 0 ? dMonster[mx + 1][my] - 1 : -(dMonster[mx + 1][my] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 0 };
 					pcursmonst = mi;
 				}
 			}
-			if (my + 1 < MAXDUNY && flipflag && dMonster[mx][my + 1] != 0 && HasAnyOf(dFlags[mx][my + 1], DungeonFlag::Lit)) {
+			if (my + 1 < MAXDUNY && flipflag && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
 				int mi = dMonster[mx][my + 1] > 0 ? dMonster[mx][my + 1] - 1 : -(dMonster[mx][my + 1] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 0, 1 };
 					pcursmonst = mi;
 				}
 			}
-			if (dMonster[mx][my] != 0 && HasAnyOf(dFlags[mx][my], DungeonFlag::Lit)) {
+			if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
 				int mi = dMonster[mx][my] > 0 ? dMonster[mx][my] - 1 : -(dMonster[mx][my] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 1) != 0) {
 					cursPosition = { mx, my };
 					pcursmonst = mi;
 				}
 			}
-			if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && HasAnyOf(dFlags[mx + 1][my + 1], DungeonFlag::Lit)) {
+			if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
 				int mi = dMonster[mx + 1][my + 1] > 0 ? dMonster[mx + 1][my + 1] - 1 : -(dMonster[mx + 1][my + 1] + 1);
 				if (mi == pcurstemp && Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
 					cursPosition = Point { mx, my } + Displacement { 1, 1 };
@@ -462,49 +460,49 @@ void CheckCursMove()
 				return;
 			}
 		}
-		if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && HasAnyOf(dFlags[mx + 2][my + 1], DungeonFlag::Lit)) {
+		if (!flipflag && mx + 2 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 2][my + 1] != 0 && IsTileLit({ mx + 2, my + 1 })) {
 			int mi = dMonster[mx + 2][my + 1] > 0 ? dMonster[mx + 2][my + 1] - 1 : -(dMonster[mx + 2][my + 1] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 1 };
 				pcursmonst = mi;
 			}
 		}
-		if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && HasAnyOf(dFlags[mx + 1][my + 2], DungeonFlag::Lit)) {
+		if (flipflag && mx + 1 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 1][my + 2] != 0 && IsTileLit({ mx + 1, my + 2 })) {
 			int mi = dMonster[mx + 1][my + 2] > 0 ? dMonster[mx + 1][my + 2] - 1 : -(dMonster[mx + 1][my + 2] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 2 };
 				pcursmonst = mi;
 			}
 		}
-		if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && HasAnyOf(dFlags[mx + 2][my + 2], DungeonFlag::Lit)) {
+		if (mx + 2 < MAXDUNX && my + 2 < MAXDUNY && dMonster[mx + 2][my + 2] != 0 && IsTileLit({ mx + 2, my + 2 })) {
 			int mi = dMonster[mx + 2][my + 2] > 0 ? dMonster[mx + 2][my + 2] - 1 : -(dMonster[mx + 2][my + 2] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 4) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 2, 2 };
 				pcursmonst = mi;
 			}
 		}
-		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] != 0 && HasAnyOf(dFlags[mx + 1][my], DungeonFlag::Lit)) {
+		if (!flipflag && mx + 1 < MAXDUNX && dMonster[mx + 1][my] != 0 && IsTileLit({ mx + 1, my })) {
 			int mi = dMonster[mx + 1][my] > 0 ? dMonster[mx + 1][my] - 1 : -(dMonster[mx + 1][my] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 0 };
 				pcursmonst = mi;
 			}
 		}
-		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] != 0 && HasAnyOf(dFlags[mx][my + 1], DungeonFlag::Lit)) {
+		if (flipflag && my + 1 < MAXDUNY && dMonster[mx][my + 1] != 0 && IsTileLit({ mx, my + 1 })) {
 			int mi = dMonster[mx][my + 1] > 0 ? dMonster[mx][my + 1] - 1 : -(dMonster[mx][my + 1] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 0, 1 };
 				pcursmonst = mi;
 			}
 		}
-		if (dMonster[mx][my] != 0 && HasAnyOf(dFlags[mx][my], DungeonFlag::Lit)) {
+		if (dMonster[mx][my] != 0 && IsTileLit({ mx, my })) {
 			int mi = dMonster[mx][my] > 0 ? dMonster[mx][my] - 1 : -(dMonster[mx][my] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 1) != 0) {
 				cursPosition = { mx, my };
 				pcursmonst = mi;
 			}
 		}
-		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && HasAnyOf(dFlags[mx + 1][my + 1], DungeonFlag::Lit)) {
+		if (mx + 1 < MAXDUNX && my + 1 < MAXDUNY && dMonster[mx + 1][my + 1] != 0 && IsTileLit({ mx + 1, my + 1 })) {
 			int mi = dMonster[mx + 1][my + 1] > 0 ? dMonster[mx + 1][my + 1] - 1 : -(dMonster[mx + 1][my + 1] + 1);
 			if (Monsters[mi]._mhitpoints >> 6 > 0 && (Monsters[mi].MData->mSelFlag & 2) != 0) {
 				cursPosition = Point { mx, my } + Displacement { 1, 1 };

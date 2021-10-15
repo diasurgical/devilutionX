@@ -439,7 +439,7 @@ void DrawMonster(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	const auto &cel = *monster.AnimInfo.pCelSprite;
 
-	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit)) {
+	if (!IsTileLit(tilePosition)) {
 		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, cel, nCel, 1);
 		return;
 	}
@@ -509,7 +509,7 @@ void DrawPlayerIcons(const Surface &out, int pnum, Point position, bool lighting
  */
 void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBufferPosition)
 {
-	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit) && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
+	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag && leveltype != DTYPE_TOWN) {
 		return;
 	}
 
@@ -548,7 +548,7 @@ void DrawPlayer(const Surface &out, int pnum, Point tilePosition, Point targetBu
 		return;
 	}
 
-	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
+	if (!IsTileLit(tilePosition) || (Players[MyPlayerId]._pInfraFlag && LightTableIndex > 8)) {
 		Cl2DrawLightTbl(out, targetBufferPosition.x, targetBufferPosition.y, *pCelSprite, nCel, 1);
 		DrawPlayerIcons(out, pnum, targetBufferPosition, true);
 		return;
@@ -758,7 +758,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
 		return;
 	}
 
-	if (HasNoneOf(dFlags[tilePosition.x][tilePosition.y], DungeonFlag::Lit) && !Players[MyPlayerId]._pInfraFlag)
+	if (!IsTileLit(tilePosition) && !Players[MyPlayerId]._pInfraFlag)
 		return;
 
 	if (mi < 0 || mi >= MAXMONSTERS) {
@@ -836,12 +836,11 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 
 	DrawCell(out, tilePosition, targetBufferPosition);
 
-	DungeonFlag bFlag = dFlags[tilePosition.x][tilePosition.y];
 	int8_t bDead = dCorpse[tilePosition.x][tilePosition.y];
 	int8_t bMap = dTransVal[tilePosition.x][tilePosition.y];
 
 #ifdef _DEBUG
-	if (DebugVision && HasAnyOf(bFlag, DungeonFlag::Lit)) {
+	if (DebugVision && IsTileLit(tilePosition)) {
 		CelClippedDrawTo(out, targetBufferPosition, *pSquareCel, 1);
 	}
 	DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;

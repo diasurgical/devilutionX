@@ -285,6 +285,16 @@ constexpr bool IsTileVisible(Point position)
 	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Visible);
 }
 
+/**
+ * @brief Checks if a light source is illuminating this tile
+ * @param position Coordinates of the dungeon tile to check
+ * @return true if the tile is within the radius of at least one light source
+ */
+constexpr bool IsTileLit(Point position)
+{
+	return InDungeonBounds(position) && HasAnyOf(dFlags[position.x][position.y], DungeonFlag::Lit);
+}
+
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();
