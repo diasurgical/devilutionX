@@ -92,19 +92,19 @@ void SetPluralForm(char *string)
 	expression = StrTrimRight(expression);
 	expression = StrTrimLeft(expression);
 
-	// Chinese
+	// ko_KR, zh_CN, zh_TW
 	if (strcmp(expression, "0") == 0) {
 		GetLocalPluralId = [](int /*n*/) -> int { return 0; };
 		return;
 	}
 
-	// Portuguese, French
+	// fr, pt_BR
 	if (strcmp(expression, "(n > 1)") == 0) {
 		GetLocalPluralId = [](int n) -> int { return n > 1 ? 1 : 0; };
 		return;
 	}
 
-	// Russian, Croatian
+	// hr, ru
 	if (strcmp(expression, "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
 		GetLocalPluralId = [](int n) -> int {
 			if (n % 10 == 1 && n % 100 != 11)
@@ -116,17 +116,32 @@ void SetPluralForm(char *string)
 		return;
 	}
 
-	// Polish
-	if (strcmp(expression, "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)") == 0) {
+	// pl
+	if (strcmp(expression, "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
 		GetLocalPluralId = [](int n) -> int {
 			if (n == 1)
 				return 0;
-			if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20))
+			if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14))
 				return 1;
 			return 2;
 		};
 		return;
 	}
+
+	// cs
+	if (strcmp(expression, "(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2") == 0) {
+		GetLocalPluralId = [](int n) -> int {
+			if (n == 1)
+				return 0;
+			if (n >= 2 && n <= 4)
+				return 1;
+			return 2;
+		};
+		return;
+	}
+
+	// bg, da, de, es, it, sv
+	// (n != 1)
 }
 
 /**
