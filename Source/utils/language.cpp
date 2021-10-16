@@ -310,7 +310,7 @@ void LanguageInitialize()
 	std::vector<char> value;
 
 	// MO header
-	if (!ReadEntry(rw, &src[0], key) && ReadEntry(rw, &dst[0], value))
+	if (!ReadEntry(rw, &src[0], key) || !ReadEntry(rw, &dst[0], value))
 		return;
 
 	if (key[0] != '\0')
