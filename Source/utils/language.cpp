@@ -22,7 +22,6 @@ struct CStringCmp {
 };
 
 std::vector<std::map<std::string, std::string, std::less<>>> translation = { {}, {} };
-std::map<const char *, const char *, CStringCmp> meta;
 
 struct MoHead {
 	uint32_t magic;
@@ -186,7 +185,6 @@ void ParseMetadata(char *ptr)
 		}
 
 		val = StrTrimRight(val);
-		meta[key] = val;
 
 		if ((strcmp("Content-Type", key) == 0) && ((delim = strstr(val, "=")) != nullptr)) {
 			if (strcasecmp(delim + 1, "utf-8") != 0) {
@@ -250,16 +248,6 @@ const std::string &LanguageTranslate(const char *key)
 	auto it = translation[0].find(key);
 	if (it == translation[0].end()) {
 		it = translation[0].insert({ key, key }).first;
-	}
-
-	return it->second;
-}
-
-const char *LanguageMetadata(const char *key)
-{
-	auto it = meta.find(key);
-	if (it == meta.end()) {
-		return nullptr;
 	}
 
 	return it->second;
