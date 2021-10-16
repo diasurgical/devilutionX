@@ -38,10 +38,10 @@ jobs:
     - name: Build
       working-directory: ${{github.workspace}}
       shell: bash
-      run: cd android-project && ./gradlew assembleDebug
+      run: cd android-project && ./gradlew assemble
 
     - name: Upload-Package
       uses: actions/upload-artifact@v2
       with:
-        name: devilutionx-debug.apk
-        path: android-project/app/build/outputs/apk/debug/app-debug.apk
+        name: devilutionx.apk
+        path: android-project/app/build/outputs/apk/release/app.apk
