@@ -9,18 +9,23 @@ on:
 
 jobs:
   formatting-check:
-    name: Formatting Check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path:
-          - 'Source'
-          - 'test'
     steps:
-    - uses: actions/checkout@v2
-    - name: Run clang-format style check for C/C++ programs.
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Formatting Check (Source)
       uses: jidicula/clang-format-action@v3.4.0
       with:
         clang-format-version: '11'
-        check-path: ${{ matrix.path }}
+        check-path: 'Source'
+        fallback-style: 'webkit'
+
+    - name: Formatting Check (test)
+      uses: jidicula/clang-format-action@v3.4.0
+      with:
+        clang-format-version: '11'
+        check-path: 'test'
         fallback-style: 'webkit'
