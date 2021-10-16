@@ -21,8 +21,6 @@ namespace devilution {
 namespace {
 
 const SDL_Rect VIEWPORT = { 0, 114, 640, 251 };
-const int ShadowOffsetX = 2;
-const int ShadowOffsetY = 2;
 const int LINE_H = 22;
 
 char const *const *Text;
