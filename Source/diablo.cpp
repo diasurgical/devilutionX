@@ -1654,6 +1654,7 @@ void diablo_pause_game()
 		} else {
 			PauseMode = 2;
 			sound_stop();
+			qtextflag = false;
 			LastMouseButtonAction = MouseActionType::None;
 		}
 
