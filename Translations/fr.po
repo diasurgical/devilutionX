@@ -922,9 +922,8 @@ msgid "Spell Level {:d}"
 msgstr "Sort Niveau {:d}"
 
 #: Source/control.cpp:773
-#, fuzzy
 msgid "Scroll"
-msgstr "Parchemin {:s}"
+msgstr "Parchemin"
 
 #: Source/control.cpp:774 Source/control.cpp:1226
 msgid "Scroll of {:s}"
@@ -4141,7 +4140,7 @@ msgstr "faible dur, {:+d}% de dégât"
 
 #: Source/items.cpp:4090
 msgid "extra AC vs demons"
-msgstr "Classe"
+msgstr ""
 
 #: Source/items.cpp:4093
 msgid "extra AC vs undead"
@@ -5807,7 +5806,7 @@ msgstr "Parcelle de Champignon"
 
 #: Source/objects.cpp:5492
 msgid "Vile Stand"
-msgstr "Support ignoble"
+msgstr "Support Ignoble"
 
 #: Source/objects.cpp:5495
 msgid "Slain Hero"
