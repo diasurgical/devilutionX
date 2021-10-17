@@ -1272,6 +1272,11 @@ void FocusOnInventory()
 	ResetInvCursorPosition();
 }
 
+void FocusOnStash()
+{
+	Slot = SLOTXY_STASH_FIRST;
+}
+
 void plrctrls_after_check_curs_move()
 {
 	// check for monsters first, then items, then towners.
@@ -1331,12 +1336,15 @@ void UseBeltItem(int type)
 
 void PerformPrimaryAction()
 {
-	if (invflag) { // inventory is open
+	if (invflag || stashflag) { // inventory is open
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			CheckInvItem();
+			if (invflag)
+				CheckInvItem();
+			if (stashflag)
+				CheckStashItem();
 		}
 		return;
 	}
@@ -1432,14 +1440,17 @@ void PerformSpellAction()
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return;
 
-	if (invflag) {
+	if (invflag || stashflag) {
 		if (pcurs >= CURSOR_FIRSTITEM)
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			CheckInvItem(true, false);
+			if (invflag)
+				CheckInvItem(true, false);
+			if (stashflag)
+				CheckStashItem(true, false);
 			ResetInvCursorPosition();
 		}
 		return;
@@ -1490,6 +1501,30 @@ void CtrlUseInvItem()
 		ResetInvCursorPosition();
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
+	}
+}
+
+void CtrlUseStashItem()
+{
+	Item *item;
+
+	if (pcursstashitem == -1)
+		return;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (pcursstashitem <= STASHITEM_STASH_LAST)
+		item = &myPlayer.InvList[pcursinvitem - STASHITEM_STASH_FIRST];
+
+	if (item->IsScroll() && spelldata[item->_iSpell].sTargeted) {
+		return;
+	}
+
+	if (item->isEquipment()) {
+		CheckStashItem(true, false); // auto-equip if it's an equipment
+		//ResetStashCursorPosition();
+	} else {
+		UseStashItem(MyPlayerId, pcursstashitem);
 	}
 }
 

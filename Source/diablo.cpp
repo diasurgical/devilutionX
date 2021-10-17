@@ -66,6 +66,7 @@
 #include "utils/console.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "stash.h"
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
@@ -322,6 +323,9 @@ void LeftMouseDown(int wParam)
 			} else if (invflag && RightPanel.Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld, isCtrlHeld);
+			} else if (stashflag && LeftPanel.Contains(MousePosition)) {
+				if (!dropGoldFlag)
+					CheckStashItem(isShiftHeld, isCtrlHeld);
 			} else if (sbookflag && RightPanel.Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
@@ -1260,6 +1264,29 @@ void InventoryKeyPressed()
 	sbookflag = false;
 }
 
+void StashKeyPressed()
+{
+	if (stextflag != STORE_NONE)
+		return;
+	stashflag = !stashflag;
+
+	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+		if (!stashflag) { // We closed the stash
+			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition - Displacement { 160, 0 });
+			}
+		} else if (!QuestLogIsOpen && !chrflag) { // We opened the stash
+			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition + Displacement { 160, 0 });
+			}
+			
+				//LoadStash(0);
+		}
+	}
+	chrflag = false;
+	QuestLogIsOpen = false;
+}
+
 void CharacterSheetKeyPressed()
 {
 	if (stextflag != STORE_NONE)
@@ -1387,6 +1414,12 @@ void InitKeymapActions()
 	    "Inventory",
 	    'I',
 	    InventoryKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
+	});
+	keymapper.AddAction({
+	    "Stash",
+	    'X',
+	    StashKeyPressed,
 	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
@@ -1805,6 +1838,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (firstflag) {
 		InitInv();
+		InitStash();
 		InitQuestText();
 		InitStores();
 		InitAutomapOnce();

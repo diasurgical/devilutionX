@@ -411,6 +411,7 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			chrflag = !chrflag;
 			if (chrflag) {
 				QuestLogIsOpen = false;
+				stashflag = false;
 				spselflag = false;
 				if (pcurs == CURSOR_DISARM)
 					NewCursor(CURSOR_HAND);
@@ -421,9 +422,23 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 			if (!QuestLogIsOpen) {
 				StartQuestlog();
 				chrflag = false;
+				stashflag = false;
 				spselflag = false;
 			} else {
 				QuestLogIsOpen = false;
+			}
+			break;
+		case GameActionType_TOGGLE_STASH:
+			if (stashflag) {
+				stashflag = false;
+			} else {
+				chrflag = false;
+				QuestLogIsOpen = false;
+				spselflag = false;
+				stashflag = true;
+				if (pcurs == CURSOR_DISARM)
+					NewCursor(CURSOR_HAND);
+				FocusOnStash();
 			}
 			break;
 		case GameActionType_TOGGLE_INVENTORY:

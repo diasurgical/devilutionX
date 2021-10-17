@@ -896,6 +896,7 @@ Point GetPanelPosition(UiPanels panel, Point offset)
 		return MainPanel.position + displacement;
 	case UiPanels::Quest:
 	case UiPanels::Character:
+	case UiPanels::Stash:
 		return LeftPanel.position + displacement;
 	case UiPanels::Spell:
 	case UiPanels::Inventory:
@@ -1246,6 +1247,8 @@ void CheckPanelInfo()
 	}
 	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
+	if (MousePosition.x > 0 && MousePosition.x < 320 && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 0 + PANEL_TOP)
+		pcursstashitem = CheckStashHLight();
 
 	if (CheckXPBarInfo()) {
 		panelflag = true;
@@ -1347,7 +1350,7 @@ void FreeControlPan()
 void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
-	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
+	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();

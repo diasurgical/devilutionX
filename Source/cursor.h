@@ -36,6 +36,7 @@ extern int pcursmonst;
 extern Size icursSize28;
 extern Size icursSize;
 extern int8_t pcursinvitem;
+extern int8_t pcursstashitem;
 extern int8_t pcursitem;
 extern int8_t pcursobj;
 extern int8_t pcursplr;

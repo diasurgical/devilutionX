@@ -2024,6 +2024,35 @@ void Player::RemoveInvItem(int iv, bool calcScrolls)
 		CalcScrolls();
 }
 
+void StashStruct::RemoveStashItem(int iv, bool calcScrolls)
+{
+	iv++;
+
+	//Iterate through stashGrid and remove every reference to item
+	for (int8_t &itemId : StashGrid) {
+		if (itemId == iv || itemId == -iv) {
+			itemId = 0;
+		}
+	}
+
+	iv--;
+	_pNumStash--;
+
+	//If the item at the end of stash array isn't the one we removed, we need to swap its position in the array with the removed item
+	if (_pNumStash > 0 && _pNumStash != iv) {
+		StashList[iv] = StashList[_pNumStash];
+
+		for (int8_t &itemId : StashGrid) {
+			if (itemId == _pNumStash + 1) {
+				itemId = iv + 1;
+			}
+			if (itemId == -(_pNumStash + 1)) {
+				itemId = -(iv + 1);
+			}
+		}
+	}
+}
+
 bool Player::TryRemoveInvItemById(int item)
 {
 	int idx;

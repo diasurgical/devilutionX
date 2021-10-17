@@ -43,6 +43,7 @@ void PerformPrimaryAction();
 void PerformSecondaryAction();
 bool TryDropItem();
 void FocusOnInventory();
+void FocusOnStash();
 void PerformSpellAction();
 void StoreSpellCoords();
 

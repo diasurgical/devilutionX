@@ -1255,6 +1255,8 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawChr(out);
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
+	} else if (stashflag) {
+		DrawStash(out);
 	}
 	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
 	    && (!QuestLogIsOpen || !LeftPanel.Contains(MainPanel.position + Displacement { 0, -74 }))) {

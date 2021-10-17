@@ -14,6 +14,13 @@
 
 namespace devilution {
 
+enum stash_item : int8_t {
+	// clang-format off
+	STASHITEM_STASH_FIRST  = 0,
+	STASHITEM_STASH_LAST   = 99
+	// clang-format on
+};
+
 /**
  * identifiers for each of the stash squares
  * @see #StashRect
@@ -47,8 +54,22 @@ enum stash_xy_slot : uint8_t {
 	// clang-format on
 };
 
+#define NUM_STASH_GRID_ELEM 100
+
+struct StashStruct {
+	void RemoveStashItem(int iv, bool calcScrolls);
+
+	Item StashList[100];
+	int8_t StashGrid[NUM_STASH_GRID_ELEM];
+	int _pNumStash;
+};
+
+
+
+
 extern bool stashflag;
 extern const Point StashRect[100];
+extern int stashpage;
 
 /**
  * @brief Function type which performs an operation on the given item.
@@ -64,11 +85,8 @@ void InitStash();
 void DrawStash(const Surface &out);
 
 void CheckStashSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff);
-void stash_update_rem_item(Player &player, inv_body_loc iv);
 void CheckStashItem(bool isShiftHeld = false, bool isCtrlHeld = false);
 void StashCheckItemStats(Player &player);
-void StashGetItem(int pnum, Item *item, int ii);
-void StashAutoGetItem(int pnum, Item *item, int ii);
 int StashFindGetItem(int idx, uint16_t ci, int iseed);
 void StashSyncGetItem(Point position, int idx, uint16_t ci, int iseed);
 bool StashCanPut(Point position);
@@ -78,6 +96,10 @@ int SyncStashPutItem(Player &player, Point position, int idx, uint16_t icreatein
 bool UseStashItem(int pnum, int cii);
 int CalculateStashGold(Player &player);
 bool DropStashItemBeforeTrig();
+void LoadStash(int page);
+void SaveStash(int page);
+int8_t CheckStashHLight();
+
 
 /* data */
 

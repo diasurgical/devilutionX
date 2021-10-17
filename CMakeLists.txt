@@ -314,7 +314,7 @@ if(NOT NOSOUND)
 endif()
 
 add_library(smacker STATIC
-  3rdParty/libsmacker/smacker.c "Source/stash.cpp" "Source/stash.h")
+  3rdParty/libsmacker/smacker.c)
 target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
 
 if(WIN32)
@@ -334,7 +334,7 @@ add_library(StormLib STATIC
   3rdParty/StormLib/src/SFileGetFileInfo.cpp
   3rdParty/StormLib/src/SFileOpenArchive.cpp
   3rdParty/StormLib/src/SFileOpenFileEx.cpp
-  3rdParty/StormLib/src/SFileReadFile.cpp "Source/stash.cpp" "Source/stash.h")
+  3rdParty/StormLib/src/SFileReadFile.cpp)
 
 if(WIN32)
 # Enable Unicode for StormLib wchar_t* file APIs
@@ -343,7 +343,7 @@ endif()
 
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
-  3rdParty/PKWare/implode.cpp "Source/stash.cpp" "Source/stash.h")
+  3rdParty/PKWare/implode.cpp)
 target_include_directories(PKWare PUBLIC 3rdParty/PKWare)
 
 set(libdevilutionx_SRCS
@@ -406,6 +406,7 @@ set(libdevilutionx_SRCS
   Source/sha.cpp
   Source/spelldat.cpp
   Source/spells.cpp
+  Source/stash.cpp
   Source/stores.cpp
   Source/sync.cpp
   Source/textdat.cpp
@@ -579,7 +580,7 @@ if(RUN_TESTS)
     test/animationinfo_test.cpp)
 endif()
 
-add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS} "Source/stash.cpp" "Source/stash.h")
+add_library(libdevilutionx OBJECT ${libdevilutionx_SRCS})
 if (ANDROID)
   add_library(${BIN_TARGET} SHARED Source/main.cpp)
 else()
@@ -589,7 +590,7 @@ else()
     Source/main.cpp
     Source/devilutionx.exe.manifest
     Packaging/macOS/AppIcon.icns
-    Packaging/windows/devilutionx.rc "Source/stash.cpp" "Source/stash.h")
+    Packaging/windows/devilutionx.rc)
 endif()
 target_link_libraries(${BIN_TARGET} PRIVATE libdevilutionx)
 
