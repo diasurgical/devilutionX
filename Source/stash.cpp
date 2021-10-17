@@ -437,7 +437,7 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 						itemId = 0;
 				}
 			}
-			int ii = r - SLOTXY_INV_FIRST;
+			int ii = r - SLOTXY_STASH_FIRST;
 
 			// Calculate top-left position of item for StashGrid and then add item to StashGrid
 
@@ -654,13 +654,10 @@ void CheckStashScrn(bool isShiftHeld, bool isCtrlHeld)
 int8_t CheckStashHLight()
 {
 	int8_t r = 0;
-	for (; r < NUM_XY_SLOTS; r++) {
+	for (; r < STASH_NUM_XY_SLOTS; r++) {
 		int xo = LeftPanel.position.x;
 		int yo = LeftPanel.position.y;
-		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
-		}
+
 
 		if (MousePosition.x >= StashRect[r].x + xo
 		    && MousePosition.x < StashRect[r].x + xo + (InventorySlotSizeInPixels.width + 1)
@@ -719,7 +716,7 @@ bool UseStashItem(int pnum, int cii)
 		return true;
 	if (stextflag != STORE_NONE)
 		return true;
-	if (cii < INVITEM_INV_FIRST)
+	if (cii < STASHITEM_STASH_FIRST)
 		return false;
 
 	bool speedlist = false;

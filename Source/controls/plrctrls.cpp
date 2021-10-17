@@ -1514,7 +1514,7 @@ void CtrlUseStashItem()
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (pcursstashitem <= STASHITEM_STASH_LAST)
-		item = &myPlayer.InvList[pcursinvitem - STASHITEM_STASH_FIRST];
+		item = &myPlayer.InvList[pcursstashitem - STASHITEM_STASH_FIRST];
 
 	if (item->IsScroll() && spelldata[item->_iSpell].sTargeted) {
 		return;
