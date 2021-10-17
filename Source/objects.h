@@ -130,6 +130,35 @@ struct Object {
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR);
 	}
+
+	/**
+	 * @brief Check if this object is a chest
+	 * @return True if the object is one of the chest types (see _object_id)
+	 */
+	bool IsChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3,
+		    _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3, _object_id::OBJ_SIGNCHEST);
+	}
+
+	/**
+	 * @brief Check if this object is a book container (like book case or book stands (not the quest or story things))
+	 * @return True if the object is one of the book containing boject types (see _object_id)
+	 */
+	bool IsBookContainer() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_BOOKSHELF, _object_id::OBJ_BOOKCASEL, _object_id::OBJ_BOOKCASER,
+		    _object_id::OBJ_BOOKSTAND, _object_id::OBJ_SKELBOOK);
+	}
+
+	bool isAnyContainer() const
+	{
+		return IsChest()
+		    || IsBookContainer()
+		    || IsAnyOf(_otype, _object_id::OBJ_ARMORSTAND, _object_id::OBJ_WARARMOR, _object_id::OBJ_WARWEAP, _object_id::OBJ_WEAPONRACK,
+		        _object_id::OBJ_SARC, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX,
+		        _object_id::OBJ_DECAP);
+	}
 };
 
 extern Object Objects[MAXOBJECTS];

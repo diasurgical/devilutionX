@@ -13,11 +13,13 @@
 #include "inv.h"
 #include "monster.h"
 #include "palette.h"
+#include "missiles.h"
 #include "player.h"
 #include "setmaps.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
+#include "options.h"
 
 namespace devilution {
 
@@ -33,6 +35,8 @@ enum MapColors : uint8_t {
 	MapColorsDim = (PAL16_YELLOW + 8),
 	/** color for items on automap */
 	MapColorsItem = (PAL8_BLUE + 1),
+	/** color for objects on automap */
+	MapColorsObject = (PAL8_BLUE + 5), // same as used in DrawObject
 };
 
 struct AutomapTile {
@@ -269,16 +273,35 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 		else
 			tile.y++;
 	}
+	int levelRangeExtension = 0;
+	if (sgOptions.Gameplay.bImprovedSearchSpell) {
+		int spellLevel = GetSpellLevel(MyPlayerId, SPL_SEARCH);
+		levelRangeExtension = spellLevel / 3;
+	}
 
-	const int startX = clamp(tile.x - 8, 0, MAXDUNX);
-	const int startY = clamp(tile.y - 8, 0, MAXDUNY);
+	const int startX = clamp(tile.x - 8 - levelRangeExtension, 0, MAXDUNX);
+	const int startY = clamp(tile.y - 8 - levelRangeExtension, 0, MAXDUNY);
 
-	const int endX = clamp(tile.x + 8, 0, MAXDUNX);
-	const int endY = clamp(tile.y + 8, 0, MAXDUNY);
+	const int endX = clamp(tile.x + 8 + levelRangeExtension, 0, MAXDUNX);
+	const int endY = clamp(tile.y + 8 + levelRangeExtension, 0, MAXDUNY);
 
 	for (int i = startX; i < endX; i++) {
 		for (int j = startY; j < endY; j++) {
-			if (dItem[i][j] == 0)
+			bool markCell = false;
+			uint8_t cellCollor;
+			if (dItem[i][j] != 0) {
+				markCell = true;
+				cellCollor = MapColorsItem;
+			}
+
+			if (dObject[i][j] > 0) {
+				if (MarkObject4Search(dObject[i][j] - 1)) {
+					markCell = true;
+					cellCollor = MapColorsObject;
+				}
+			}
+
+			if (!markCell)
 				continue;
 
 			int px = i - 2 * AutomapOffset.deltaX - ViewPosition.x;
@@ -296,7 +319,7 @@ void SearchAutomapItem(const Surface &out, const Displacement &myPlayerOffset)
 					screen.x += 160;
 			}
 			screen.y -= AmLine8;
-			DrawDiamond(out, screen, MapColorsItem);
+			DrawDiamond(out, screen, cellCollor);
 		}
 	}
 }

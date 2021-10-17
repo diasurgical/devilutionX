@@ -77,6 +77,7 @@ void CalcTileOffset(int *offsetX, int *offsetY);
  */
 void TilesInView(int *columns, int *rows);
 void CalcViewportGeometry();
+bool MarkObject4Search(int i);
 
 /**
  * @brief Render the whole screen black

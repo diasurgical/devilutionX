@@ -126,6 +126,8 @@ struct GameplayOptions {
 	bool bShowMonsterType;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	bool bDisableCripplingShrines;
+	/** @brief Improves the seach spell with level dependend range increase and object (container) highlighting */
+	bool bImprovedSearchSpell;
 };
 
 struct ControllerOptions {
