@@ -388,68 +388,7 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
 	int cn = CURSOR_HAND;
-	switch (il) {
-	case ILOC_UNEQUIPABLE:
-		if (player.HoldItem._itype == ItemType::Gold && it == 0) {
-			int ii = r - SLOTXY_STASH_FIRST;
-			if (Stash.StashGrid[ii] > 0) {
-				int stashIndex = Stash.StashGrid[ii] - 1;
-				int gt = Stash.StashList[stashIndex]._ivalue;
-				int ig = player.HoldItem._ivalue + gt;
-				if (ig <= MaxGold) {
-					Stash.StashList[stashIndex]._ivalue = ig;
-					player._pGold += player.HoldItem._ivalue;
-					SetPlrHandGoldCurs(Stash.StashList[stashIndex]);
-				} else {
-					ig = MaxGold - gt;
-					player._pGold += ig;
-					player.HoldItem._ivalue -= ig;
-					Stash.StashList[stashIndex]._ivalue = MaxGold;
-					Stash.StashList[stashIndex]._iCurs = ICURS_GOLD_LARGE;
-					// BUGFIX: incorrect values here are leftover from beta (fixed)
-					cn = GetGoldCursor(player.HoldItem._ivalue);
-					cn += CURSOR_FIRSTITEM;
-				}
-			} else {
-				int stashIndex = Stash._pNumStash;
-				Stash.StashList[stashIndex] = player.HoldItem;
-				Stash._pNumStash++;
-				Stash.StashGrid[ii] = Stash._pNumStash;
-				player._pGold += player.HoldItem._ivalue;
-				SetPlrHandGoldCurs(Stash.StashList[stashIndex]);
-			}
-		} else {
-			if (it == 0) {
-				Stash.StashList[Stash._pNumStash] = player.HoldItem;
-				Stash._pNumStash++;
-				it = Stash._pNumStash;
-			} else {
-				int stashIndex = it - 1;
-				if (player.HoldItem._itype == ItemType::Gold)
-					player._pGold += player.HoldItem._ivalue;
-				cn = SwapItem(&Stash.StashList[stashIndex], &player.HoldItem);
-				if (player.HoldItem._itype == ItemType::Gold)
-					player._pGold = CalculateGold(player);
-				for (auto &itemId : Stash.StashGrid) {
-					if (itemId == it)
-						itemId = 0;
-					if (itemId == -it)
-						itemId = 0;
-				}
-			}
-			int ii = r - SLOTXY_STASH_FIRST;
-
-			// Calculate top-left position of item for StashGrid and then add item to StashGrid
-
-			int xx = std::max(ii % INV_ROW_SLOT_SIZE - ((itemSize.width - 1) / 2), 0);
-			int yy = std::max(INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE - ((itemSize.height - 1) / 2)), 0);
-			AddItemToStashGrid(xx + yy, it, itemSize);
-		}
-		break;
-	case ILOC_NONE:
-	case ILOC_INVALID:
-		break;
-	}
+	
 	CalcPlrInv(player, true);
 	if (pnum == MyPlayerId) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
