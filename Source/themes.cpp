@@ -676,7 +676,10 @@ void Theme_Treasure(int t)
 				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
 					int i = ItemNoFlippy();
 					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL) {
-						Items[i]._ivalue /= 2;
+						// only gold is using _ivalue so no point in reducing it for items that aren't a gold pile
+						// make sure value is >= 2 to prevent reaching 0
+						if (Items[i].IDidx == IDI_GOLD && Items[i]._ivalue >= 2)
+							Items[i]._ivalue /= 2;
 					}
 				}
 			}
