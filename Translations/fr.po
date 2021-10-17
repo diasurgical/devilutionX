@@ -58,7 +58,7 @@ msgstr "Programmation de l'installateur"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr "Directeur Artistique"
+msgstr "Directeurs Artistique"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
@@ -74,7 +74,7 @@ msgstr "Directeurs Artistiques Cinématographiques"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr ""
+msgstr "Artwork 3D Cinématique"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
@@ -107,7 +107,7 @@ msgstr "Conception Sonore"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr "Musique & Son Cinématiques"
+msgstr "Musique & Son des Cinématiques"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
@@ -127,7 +127,7 @@ msgstr "Voix"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr "Ingénieur d'enregistrement"
+msgstr "Ingénieur d'Enregistrement"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
@@ -184,7 +184,7 @@ msgstr "Relations Publiques"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
@@ -196,7 +196,7 @@ msgstr "Ventes U.S."
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr "Fabrication"
+msgstr "Manufacturing"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
@@ -204,7 +204,7 @@ msgstr "Juridique & Affaires"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr "Remerciement Spécial à"
+msgstr "Remerciements Spéciaux à"
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
@@ -272,7 +272,7 @@ msgstr "\t\t\tRemerciements particuliers à Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr ""
+msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
@@ -308,7 +308,7 @@ msgstr "L'Anneau des Mille"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr "\tAucune âme n'a été vendue dans la fabrication de ce jeu."
+msgstr "\tAucunes âmes n'ont été vendue durant le développement de ce jeu."
 
 #: Source/DiabloUI/dialogs.cpp:171 Source/DiabloUI/dialogs.cpp:183
 #: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
@@ -371,7 +371,7 @@ msgstr "Client-Serveur (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:41
 msgid "Loopback"
-msgstr ""
+msgstr "Rebouclage (Loopback)"
 
 #: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:437
 #: Source/DiabloUI/selgame.cpp:455
@@ -396,11 +396,12 @@ msgstr "Changer de Passerelle"
 
 #: Source/DiabloUI/selconn.cpp:101
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr "Les machines doivent être connectées à un réseau compatible TCP."
+msgstr ""
+"Tous les ordinateurs doivent être connectées à un réseau compatible TCP."
 
 #: Source/DiabloUI/selconn.cpp:105
 msgid "All computers must be connected to the internet."
-msgstr "Toutes les machines doivent être connectées à internet."
+msgstr "Toutes les ordinateurs doivent être connectées à internet."
 
 #: Source/DiabloUI/selconn.cpp:109
 msgid "Play by yourself with no network exposure."
@@ -416,7 +417,7 @@ msgstr "Description:"
 
 #: Source/DiabloUI/selgame.cpp:86
 msgid "Select Action"
-msgstr "Sélectioner l'action"
+msgstr "Sélectionner l'Action"
 
 #: Source/DiabloUI/selgame.cpp:88 Source/DiabloUI/selgame.cpp:152
 #: Source/DiabloUI/selgame.cpp:297
@@ -447,7 +448,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:155
 msgid "Select Difficulty"
-msgstr "Sélection difficulté"
+msgstr "Sélection Difficulté"
 
 #: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:204
 #: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:328
@@ -488,7 +489,7 @@ msgid ""
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
-"Difficulté Chauchemar.\n"
+"Difficulté Cauchemar.\n"
 "Les habitants du Labyrinthe ont été renforcés et se révéleront être un plus "
 "grand défi. Ceci est recommandé uniquement pour les personnages expérimentés."
 
@@ -576,7 +577,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:384 Source/DiabloUI/selgame.cpp:387
 msgid "Enter Password"
-msgstr "Entrez le Password"
+msgstr "Entrez le Mot de Passe"
 
 #: Source/DiabloUI/selgame.cpp:410
 msgid "The host is running a different game than you."
@@ -633,7 +634,7 @@ msgstr "Une Sauvegarde Existe"
 
 #: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
 msgid "Load Game"
-msgstr "Charger"
+msgstr "Charger Partie"
 
 #: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
@@ -834,11 +835,11 @@ msgstr "Erreur de répertoire en lecture seule"
 
 #: Source/automap.cpp:464
 msgid "game: "
-msgstr "jeux: "
+msgstr "partie: "
 
 #: Source/automap.cpp:470
 msgid "password: "
-msgstr "password: "
+msgstr "mot de passe: "
 
 #: Source/automap.cpp:483
 msgid "Level: Nest {:d}"
@@ -854,7 +855,7 @@ msgstr "Niveau: {:d}"
 
 #: Source/control.cpp:199
 msgid "Tab"
-msgstr ""
+msgstr "Tab"
 
 #: Source/control.cpp:199
 msgid "Esc"
@@ -901,10 +902,8 @@ msgid "{:s} Skill"
 msgstr "{:s} Compétence"
 
 #: Source/control.cpp:757
-#, fuzzy
-#| msgid "Spells"
 msgid "Spell"
-msgstr "Sorts"
+msgstr "Sort"
 
 #: Source/control.cpp:758 Source/control.cpp:1216
 msgid "{:s} Spell"
@@ -924,16 +923,15 @@ msgstr "Sort Niveau {:d}"
 
 #: Source/control.cpp:773
 #, fuzzy
-#| msgid "{:d} Scroll"
-#| msgid_plural "{:d} Scrolls"
 msgid "Scroll"
-msgstr "Parchemin de {:s}"
+msgstr "Parchemin {:s}"
 
 #: Source/control.cpp:774 Source/control.cpp:1226
 msgid "Scroll of {:s}"
 msgstr "Parchemin de {:s}"
 
 #: Source/control.cpp:779 Source/control.cpp:1232
+#, fuzzy
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "Parchemin de {:s}"
@@ -1217,7 +1215,7 @@ msgstr "{:s},version = {:s}, mode = {:s}"
 
 #: Source/dvlnet/loopback.cpp:111
 msgid "loopback"
-msgstr ""
+msgstr "rebouclage (loopback)"
 
 #: Source/dvlnet/tcp_client.cpp:68
 msgid "Unable to connect"
@@ -1646,7 +1644,7 @@ msgstr ""
 
 #: Source/help.cpp:51
 msgid "$Combat:"
-msgstr ""
+msgstr "$Combat:"
 
 #: Source/help.cpp:52
 msgid ""
@@ -2534,7 +2532,7 @@ msgstr "Pointu"
 
 #: Source/itemdat.cpp:219 Source/itemdat.cpp:229
 msgid "Fine"
-msgstr ""
+msgstr "Fine"
 
 #: Source/itemdat.cpp:220
 msgid "Warrior's"
@@ -2776,11 +2774,11 @@ msgstr ""
 
 #: Source/itemdat.cpp:291
 msgid "gore"
-msgstr ""
+msgstr "gore"
 
 #: Source/itemdat.cpp:292
 msgid "carnage"
-msgstr ""
+msgstr "carnage"
 
 #: Source/itemdat.cpp:293
 msgid "slaughter"
@@ -2912,11 +2910,11 @@ msgstr "vitalité"
 
 #: Source/itemdat.cpp:325
 msgid "zest"
-msgstr ""
+msgstr "zeste"
 
 #: Source/itemdat.cpp:326
 msgid "vim"
-msgstr ""
+msgstr "ardeur"
 
 #: Source/itemdat.cpp:327
 msgid "vigor"
@@ -3362,7 +3360,7 @@ msgstr "Le Protecteur"
 
 #: Source/itemdat.cpp:456
 msgid "Naj's Puzzler"
-msgstr "Le Casse-tête de Naj "
+msgstr "Le Casse-tête de Naj"
 
 #: Source/itemdat.cpp:457
 msgid "Mindcry"
@@ -3390,7 +3388,7 @@ msgstr "Crête du Fou"
 
 #: Source/itemdat.cpp:463
 msgid "Gotterdamerung"
-msgstr ""
+msgstr "Götterdämmerung"
 
 #: Source/itemdat.cpp:464
 msgid "Royal Circlet"
@@ -3526,7 +3524,7 @@ msgstr "Armure des Ténèbres"
 
 #: Source/itemdat.cpp:497
 msgid "Blitzen"
-msgstr ""
+msgstr "Blitzen"
 
 #: Source/itemdat.cpp:498
 msgid "Thunderclap"
@@ -3534,7 +3532,7 @@ msgstr "Coup de Tonnerre"
 
 #: Source/itemdat.cpp:499
 msgid "Shirotachi"
-msgstr ""
+msgstr "Shirotachi"
 
 #: Source/itemdat.cpp:500
 msgid "Eater of Souls"
@@ -4116,7 +4114,7 @@ msgstr "dégâts de foudre: {:d}-{:d}"
 
 #: Source/items.cpp:4063
 msgid "charged bolts on hits"
-msgstr ""
+msgstr "éclair chargé à l'impact"
 
 #: Source/items.cpp:4072
 msgid "occasional triple damage"
@@ -4143,7 +4141,7 @@ msgstr "faible dur, {:+d}% de dégât"
 
 #: Source/items.cpp:4090
 msgid "extra AC vs demons"
-msgstr ""
+msgstr "Classe"
 
 #: Source/items.cpp:4093
 msgid "extra AC vs undead"
@@ -4758,7 +4756,7 @@ msgstr "Psychorbe"
 #: Source/monstdat.cpp:135
 msgctxt "monster"
 msgid "Arachnon"
-msgstr ""
+msgstr "Arachnon"
 
 #: Source/monstdat.cpp:136
 msgctxt "monster"
@@ -4793,7 +4791,7 @@ msgstr "Ver Tordu"
 #: Source/monstdat.cpp:142
 msgctxt "monster"
 msgid "Torchant"
-msgstr ""
+msgstr "Flamboyant"
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
 msgctxt "monster"
@@ -4838,7 +4836,7 @@ msgstr "Démon de la Crypte"
 #: Source/monstdat.cpp:151
 msgctxt "monster"
 msgid "Hellbat"
-msgstr "Chauve Sourie Infernale"
+msgstr "Chauve-souris Infernale"
 
 #: Source/monstdat.cpp:152
 msgctxt "monster"
@@ -4853,7 +4851,7 @@ msgstr "Arche-Liche"
 #: Source/monstdat.cpp:154
 msgctxt "monster"
 msgid "Biclops"
-msgstr ""
+msgstr "Biclops"
 
 #: Source/monstdat.cpp:155
 msgctxt "monster"
@@ -4870,7 +4868,7 @@ msgstr "Faucheur"
 #: Source/monstdat.cpp:158 Source/monstdat.cpp:485
 msgctxt "monster"
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
@@ -4906,7 +4904,7 @@ msgstr "Jade Noir"
 #: Source/monstdat.cpp:480
 msgctxt "monster"
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachdanan"
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -4961,7 +4959,7 @@ msgstr "Tête-Brisée au Bouclier du Fracas"
 #: Source/monstdat.cpp:494
 msgctxt "monster"
 msgid "Bongo"
-msgstr ""
+msgstr "Bongo"
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
@@ -4986,7 +4984,7 @@ msgstr "Madeye Mort"
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr ""
+msgstr "El Chupacabras"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5316,7 +5314,7 @@ msgstr "Crâne d'Acier le Chasseur"
 #: Source/monstdat.cpp:565
 msgctxt "monster"
 msgid "Sir Gorash"
-msgstr ""
+msgstr "Sir Gorash"
 
 #: Source/monstdat.cpp:566
 msgctxt "monster"
@@ -5324,11 +5322,9 @@ msgid "The Vizier"
 msgstr "Le Vizir"
 
 #: Source/monstdat.cpp:567
-#, fuzzy
-#| msgid "Sapphire"
 msgctxt "monster"
 msgid "Zamphir"
-msgstr "Saphir"
+msgstr "Zamphir"
 
 #: Source/monstdat.cpp:568
 msgctxt "monster"
@@ -5338,7 +5334,7 @@ msgstr "Soif de Sang"
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Veuve-Toile"
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -5509,7 +5505,7 @@ msgstr "Cryptique"
 
 #: Source/objects.cpp:113
 msgid "Eldritch"
-msgstr ""
+msgstr "Eldritch"
 
 #: Source/objects.cpp:114
 msgid "Eerie"
@@ -5660,7 +5656,7 @@ msgstr "Journal: Ses Pouvoir Grandissent"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:278
 msgid "Journal: NA-KRUL"
-msgstr ""
+msgstr "Journal: NA-KRUL"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:279
@@ -5734,7 +5730,7 @@ msgstr "Bibliothèque"
 
 #: Source/objects.cpp:5425
 msgid "Pod"
-msgstr ""
+msgstr "Cosse"
 
 #: Source/objects.cpp:5427
 msgid "Urn"
@@ -5807,11 +5803,11 @@ msgstr "Piédestal de Sang"
 
 #: Source/objects.cpp:5489
 msgid "Mushroom Patch"
-msgstr ""
+msgstr "Parcelle de Champignon"
 
 #: Source/objects.cpp:5492
 msgid "Vile Stand"
-msgstr ""
+msgstr "Support ignoble"
 
 #: Source/objects.cpp:5495
 msgid "Slain Hero"
@@ -5849,7 +5845,7 @@ msgstr "Rien"
 
 #: Source/panels/charpanel.cpp:132
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #: Source/panels/charpanel.cpp:133
 msgid "Now"
@@ -5970,7 +5966,7 @@ msgstr "{:s} (lvl {:d}): {:s}"
 #: Source/qol/common.cpp:25
 #, c-format
 msgid ",%03d"
-msgstr ""
+msgstr ",%03d"
 
 #: Source/qol/itemlabels.cpp:70
 #, c-format
@@ -6022,13 +6018,11 @@ msgstr "Zhar le Fou"
 
 #: Source/quests.cpp:45
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachdanan"
 
 #: Source/quests.cpp:46
-#, fuzzy
-#| msgid "Exit Diablo"
 msgid "Diablo"
-msgstr "Quitter Diablo"
+msgstr "Diablo"
 
 #: Source/quests.cpp:47
 msgid "The Butcher"
@@ -6089,7 +6083,7 @@ msgstr "Le Profanateur"
 
 #: Source/quests.cpp:62
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
@@ -8025,7 +8019,7 @@ msgstr ""
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
 msgid "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz..."
-msgstr ""
+msgstr "Zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz..."
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:209
@@ -10219,7 +10213,7 @@ msgstr ""
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
 msgid "Waaaah! (sniff) Waaaah! (sniff)"
-msgstr ""
+msgstr "Waaaah! (sniff) Waaaah! (sniff)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
@@ -10645,19 +10639,19 @@ msgstr ""
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
 #: Source/textdat.cpp:651 Source/textdat.cpp:654
 msgid "In Spiritu Sanctum."
-msgstr ""
+msgstr "In Spiritu Sanctum."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:643 Source/textdat.cpp:646 Source/textdat.cpp:649
 #: Source/textdat.cpp:652 Source/textdat.cpp:655
 msgid "Praedictum Otium."
-msgstr ""
+msgstr "Praedictum Otium."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:644 Source/textdat.cpp:647 Source/textdat.cpp:650
 #: Source/textdat.cpp:653 Source/textdat.cpp:656
 msgid "Efficio Obitus Ut Inimicus."
-msgstr ""
+msgstr "Efficio Obitus Ut Inimicus."
 
 #: Source/towners.cpp:86
 msgid "Griswold the Blacksmith"
@@ -10701,7 +10695,7 @@ msgstr "Cinglé"
 
 #: Source/towners.cpp:266
 msgid "Celia"
-msgstr ""
+msgstr "Celia"
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
