@@ -2068,6 +2068,9 @@ void diablo_color_cyc_logic()
 	if (!sgOptions.Graphics.bColorCycling)
 		return;
 
+	if (PauseMode != 0)
+		return;
+
 	if (leveltype == DTYPE_HELL) {
 		lighting_color_cycling();
 	} else if (currlevel >= 21) {
