@@ -672,25 +672,17 @@ void InvMove(AxisDirection dir)
 	// when item is on cursor (pcurs > 1), this is the real cursor XY
 	if (dir.x == AxisDirectionX_LEFT) {
 		if (isHoldingItem) {
-			if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-				if (IsNoneOf(Slot, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST)) {
+			if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_BELT_LAST) {
+				if (IsNoneOf(Slot, SLOTXY_INV_ROW1_FIRST, SLOTXY_INV_ROW2_FIRST, SLOTXY_INV_ROW3_FIRST, SLOTXY_INV_ROW4_FIRST, SLOTXY_BELT_FIRST)) {
 					Slot -= 1;
 					mousePos = GetSlotCoord(Slot);
 				}
-			} else if (Slot > SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
-				Slot -= 1;
-				mousePos = GetSlotCoord(Slot);
 			} else if (myPlayer.HoldItem._itype == ItemType::Ring) {
 				Slot = SLOTXY_RING_LEFT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_LEFT);
 			} else if (myPlayer.HoldItem.isWeapon() || myPlayer.HoldItem.isShield()) {
-				if (Slot == SLOTXY_HAND_LEFT_FIRST) {
-					Slot = SLOTXY_HAND_RIGHT_FIRST;
-					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_RIGHT);
-				} else if (Slot == SLOTXY_HAND_RIGHT_FIRST) {
-					Slot = SLOTXY_HAND_LEFT_FIRST;
-					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_LEFT);
-				}
+				Slot = SLOTXY_HAND_LEFT_FIRST;
+				mousePos = InvGetEquipSlotCoord(INVLOC_HAND_LEFT);
 			}
 		} else {
 			if (Slot == SLOTXY_HAND_RIGHT_FIRST) {
@@ -724,25 +716,17 @@ void InvMove(AxisDirection dir)
 		}
 	} else if (dir.x == AxisDirectionX_RIGHT) {
 		if (isHoldingItem) {
-			if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-				if (IsNoneOf(Slot - 1 + icursSize28.width, SLOTXY_INV_ROW1_LAST, SLOTXY_INV_ROW2_LAST, SLOTXY_INV_ROW3_LAST, SLOTXY_INV_ROW4_LAST)) {
+			if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_BELT_LAST) {
+				if (IsNoneOf(Slot - 1 + icursSize28.width, SLOTXY_INV_ROW1_LAST, SLOTXY_INV_ROW2_LAST, SLOTXY_INV_ROW3_LAST, SLOTXY_INV_ROW4_LAST, SLOTXY_BELT_LAST)) {
 					Slot += 1;
 					mousePos = GetSlotCoord(Slot);
 				}
-			} else if (Slot >= SLOTXY_BELT_FIRST && Slot < SLOTXY_BELT_LAST) {
-				Slot += 1;
-				mousePos = GetSlotCoord(Slot);
 			} else if (myPlayer.HoldItem._itype == ItemType::Ring) {
 				Slot = SLOTXY_RING_RIGHT;
 				mousePos = InvGetEquipSlotCoord(INVLOC_RING_RIGHT);
 			} else if (myPlayer.HoldItem.isWeapon() || myPlayer.HoldItem.isShield()) {
-				if (Slot == SLOTXY_HAND_LEFT_FIRST) {
-					Slot = SLOTXY_HAND_RIGHT_FIRST;
-					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_RIGHT);
-				} else if (Slot == SLOTXY_HAND_RIGHT_FIRST) {
-					Slot = SLOTXY_HAND_LEFT_FIRST;
-					mousePos = InvGetEquipSlotCoord(INVLOC_HAND_LEFT);
-				}
+				Slot = SLOTXY_HAND_RIGHT_FIRST;
+				mousePos = InvGetEquipSlotCoord(INVLOC_HAND_RIGHT);
 			}
 		} else {
 			if (Slot == SLOTXY_RING_LEFT) {
