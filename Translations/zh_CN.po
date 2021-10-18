@@ -765,7 +765,7 @@ msgstr "而不是暴雪娱乐或GOG.com。"
 
 #: Source/DiabloUI/support_lines.cpp:23
 msgid "  Entertainment or GOG.com."
-msgstr ""
+msgstr " "
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -863,7 +863,7 @@ msgstr "主菜单"
 
 #: Source/control.cpp:206
 msgid "Inventory"
-msgstr "库存"
+msgstr "物品栏"
 
 #: Source/control.cpp:207
 msgid "Spell book"
@@ -879,7 +879,7 @@ msgstr "技能"
 
 #: Source/control.cpp:751 Source/control.cpp:1211
 msgid "{:s} Skill"
-msgstr "{:s}技能"
+msgstr "技能：{:s}"
 
 #: Source/control.cpp:757
 msgid "Spell"
@@ -887,7 +887,7 @@ msgstr "法术"
 
 #: Source/control.cpp:758 Source/control.cpp:1215
 msgid "{:s} Spell"
-msgstr "{:s}法术"
+msgstr "法术：{:s}"
 
 #: Source/control.cpp:760
 msgid "Damages undead only"
@@ -2793,7 +2793,7 @@ msgstr "萎缩"
 
 #: Source/itemdat.cpp:310
 msgid "dexterity"
-msgstr "灵巧"
+msgstr "敏捷"
 
 #: Source/itemdat.cpp:311
 msgid "skill"
@@ -3534,7 +3534,7 @@ msgstr "防水之油"
 #: Source/items.cpp:1188 Source/items.cpp:1256 Source/items.cpp:1275
 #: Source/items.cpp:1317
 msgid "{:s} of {:s}"
-msgstr "{:s} / {:s}"
+msgstr "{:s}之{:s}"
 
 #: Source/items.cpp:1894 Source/items.cpp:1906
 msgid "increases a weapon's"
@@ -5353,7 +5353,7 @@ msgstr "生命值: {:d}-{:d}"
 
 #: Source/monster.cpp:4651
 msgid "No magic resistance"
-msgstr "没有魔法抵抗"
+msgstr "没有魔法抗性"
 
 #: Source/monster.cpp:4655
 msgid "Resists: "
@@ -5389,11 +5389,11 @@ msgstr "无免疫"
 
 #: Source/monster.cpp:4695
 msgid "Some Magic Resistances"
-msgstr "一些魔法抵抗"
+msgstr "部分魔法抗性"
 
 #: Source/monster.cpp:4700
 msgid "Some Magic Immunities"
-msgstr "一些魔法免疫"
+msgstr "部分魔法免疫"
 
 #: Source/msg.cpp:497
 msgid "Trying to drop a floor item?"
@@ -5836,7 +5836,7 @@ msgstr "魔法"
 
 #: Source/panels/charpanel.cpp:142
 msgid "Dexterity"
-msgstr "灵巧"
+msgstr "敏捷"
 
 #: Source/panels/charpanel.cpp:145
 msgid "Vitality"
@@ -5868,7 +5868,7 @@ msgstr "法力"
 
 #: Source/panels/charpanel.cpp:177
 msgid "Resist magic"
-msgstr "魔法抵抗"
+msgstr "魔法抗性"
 
 #: Source/panels/charpanel.cpp:179
 msgid "Resist fire"
@@ -6013,7 +6013,7 @@ msgstr "目盲之厅"
 
 #: Source/quests.cpp:50
 msgid "Valor"
-msgstr "英勇"
+msgstr "荣耀"
 
 #: Source/quests.cpp:52
 msgid "Warlord of Blood"
@@ -6025,7 +6025,7 @@ msgstr "国王李奥瑞克的诅咒"
 
 #: Source/quests.cpp:54 Source/setmaps.cpp:27
 msgid "Poisoned Water Supply"
-msgstr "剧毒之水"
+msgstr "有毒的水源补给"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:55 Source/quests.cpp:91
@@ -6100,7 +6100,7 @@ msgstr "骷髅王的巢穴"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
-msgstr "白骨大厅"
+msgstr "白骨密室"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
@@ -6384,7 +6384,7 @@ msgstr "坚不可摧,  "
 
 #: Source/stores.cpp:210
 msgid "No required attributes"
-msgstr "没有达到属性需求"
+msgstr "无需属性"
 
 #: Source/stores.cpp:243 Source/stores.cpp:995 Source/stores.cpp:1239
 msgid "Welcome to the"
@@ -6499,7 +6499,7 @@ msgstr "你没有足够的金币"
 
 #: Source/stores.cpp:866
 msgid "You do not have enough room in inventory"
-msgstr "您的背包空间不足"
+msgstr "您的物品栏空间不足"
 
 #: Source/stores.cpp:903
 msgid "Do we have a deal?"
@@ -6539,11 +6539,11 @@ msgstr "我有东西要出售，"
 
 #: Source/stores.cpp:941
 msgid "but it will cost 50 gold"
-msgstr "但要花50金币"
+msgstr "但要花 50 金币"
 
 #: Source/stores.cpp:942
 msgid "just to take a look. "
-msgstr "那就看看吧。 "
+msgstr "才能看上一眼。"
 
 #: Source/stores.cpp:943
 msgid "What have you got?"
@@ -7206,30 +7206,31 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
-"一本关于藏骨密室的书？嗯，我在东方图书馆研究过的一些古代著作中提到了骨室。这"
-"些大部头书推断，当地下世界的领主想要保护巨大的宝藏时，他们会建立领地，让那些"
-"在试图窃取宝藏时死去的人永远有义务保卫宝藏。一个扭曲的，但奇怪的适合，结束"
+"一本书提到了一间满是人类骸骨的密室？嗯，在我曾经研究学习的东方图书馆，馆藏的"
+"一些古籍中提到了白骨密室。这些书籍推断，当下界领主想要保护大量宝藏时，他们会"
+"创建一些结界。在结界中，那些试图偷窃宝藏时死亡的人，将永远被束缚。一个扭曲"
+"的，既在情理之中，又在意料之外的结局。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
 msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
-msgstr "恐怕我对此一无所知，好师傅。凯恩有许多书可能对他有所帮助"
+msgstr "我恐怕对此一无所知，好心人。凯恩读过很多书，他也许能提供帮助。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
 msgid ""
 "This sounds like a very dangerous place. If you venture there, please take "
 "great care."
-msgstr "这听起来是个非常危险的地方。如果你在那里冒险，请小心"
+msgstr "这听起来是个非常危险的地方。如果你在那里冒险，请小心。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:111
 msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
-msgstr "恐怕我什么也没听说过。说书人凯恩也许能帮上忙"
+msgstr "恐怕我什么也没听说过。说书人凯恩也许能帮上忙。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -7238,8 +7239,8 @@ msgid ""
 "many things, and it would not surprise me if he had some answers to your "
 "question."
 msgstr ""
-"我对这地方一无所知，不过你可以问问凯恩。他谈了很多事情，如果他能回答你的问"
-"题，我也不会感到惊讶"
+"我对这地方一无所知，不过你可以问问凯恩。他知道很多事情，知道你问题的答案也不"
+"奇怪。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -7248,8 +7249,8 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
-"好吧，听着。有一间木屋，你看。他的妻子告诉树。。。因为你得等。然后我说，这可"
-"能对他不利，但如果你认为我会为此付出代价。。。你。。。UH是的"
+"看，有这样一个木屋。你知道他的妻子，她告诉那棵树……因为你必须等着。然后我说，"
+"这可能对他不利，但如果你认为我会为此付出代价……你……呃……对。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -7259,9 +7260,9 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
-"如果你死在这个被诅咒的领域里，你将成为黑暗领主的永恒仆人。\n"
-" \n"
-"进入骨室的风险由你自己承担"
+"倘若你死在这个被诅咒的结界里，你将成为黑暗领主永恒的仆人。\n"
+"\n"
+"进入白骨密室的风险由你自行承担。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:119
@@ -7270,8 +7271,8 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
-"你说是一个巨大而神秘的宝藏？也许我有兴趣从你那里得到一些东西。。。或者更好的"
-"是，你不需要一些稀有而昂贵的物资来度过这场磨难吗"
+"你是说一个巨大且神秘的宝藏？或许我有兴趣从你那里拿走些东西……或者更好的。你难"
+"道不需要些稀有且昂贵的物资来度过这场折磨吗？"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -7391,12 +7392,10 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
-"你背诵了一首有趣的韵文，它的风格让我想起了其他的作品。现在让我想想-那是什"
-"么？\n"
+"你朗诵了一首有趣的诗句，它的风格让我想起了另一个作品。让我好好想想。\n"
 " \n"
-"…黑暗笼罩着隐藏的世界。眼睛在看不见的地方闪闪发光，只有剃刀爪子的声音在短暂地"
-"刮来刮去，折磨那些永远失明的可怜的灵魂。为那些该死的人而设的监狱被命名为盲人"
-"的大厅"
+"…黑暗遮蔽的隐秘。那些可怜的灵魂双目发光但却无法看见，只有被利爪急促的挂磨声永"
+"远的折磨。一座为被诅咒的人所建立的监狱，盲目之厅……"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -7406,10 +7405,10 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
-"我从不太喜欢诗歌。偶尔，当旅店经营得很好的时候，我有理由雇佣吟游诗人，但那似"
-"乎是很久以前的事了。\n"
-" \n"
-"什么？哦，是的。。。呃，好吧，我想你可以看看别人知道什么"
+"我从来就不喜欢诗词。偶尔，旅店生意好的时候，我会雇上吟游诗人。但那似乎是很久"
+"以前的事情了。\n"
+"\n"
+"什么？啊，好吧……呃，我认为你可以问问别人知道什么。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -7418,8 +7417,8 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
-"不知怎么的，这似乎很熟悉。我似乎记得在研究恶魔痛苦的历史时读过类似这首诗的东"
-"西。它讲述了一个邪恶的地方。。。等等-你不会去的，是吗"
+"不知为何，这听起来挺熟悉的。我似乎回想起以前研究恶魔痛楚历史时读到类似的诗"
+"句，它讲述了一个非常邪恶的地方……等下，你是不会去那儿的对吧？"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -7428,8 +7427,8 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
-"如果你对失明有疑问，你应该和佩金谈谈。我知道他给了我祖母一种药水，帮助她消除"
-"视力，所以也许他也能帮你"
+"如果你对失明有疑问，你应该和佩金谈谈。我只知道它给了我祖母一瓶药水，使得她能"
+"清晰的看到东西，或许他也能帮助你。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -7438,13 +7437,13 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
-"恐怕我既没听说过也没见过一个地方与你生动的描述相符，我的朋友。说书人凯恩也许"
-"能帮上忙"
+"我恐怕从来没听过和见过一个地方与你生动的描述相符，朋友。也许说书人凯恩能提供"
+"些帮助。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
-msgstr "看这里。。。很有趣吧？了解了？瞎子-看这里"
+msgstr "看这里……好玩吧？明白？瞎子，看这？"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -7455,9 +7454,9 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
-"这是一个极度痛苦和恐怖的地方，因此很好地为主人服务。\n"
-" \n"
-"小心踩，否则你可能会比你预期的呆得久"
+"这是一个极度折磨和恐惧的地方，为它的主人很好的服务。\n"
+"\n"
+"小心点，不然你将被困在那儿，时间超乎你的想象。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -7466,8 +7465,8 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
-"让我想想，我是不是在卖东西给你？不，你是在给我钱告诉你这件事吗？不，你现在要"
-"走了，去和为这种事活着的说书人谈谈吗？是的"
+"我想想，我卖给你东西了？没有。你给钱让我告诉你这事情了吗？没有。你该离开去找"
+"那个活着就是为了跟你说话的说书人了吗？是的。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -7719,7 +7718,7 @@ msgid ""
 "could shift the course of the Sin War towards the Light."
 msgstr ""
 "迷宫里有许多神器，拥有着凡人无法理解的力量。其中一些拥有神奇的力量，可以被光"
-"明或黑暗所利用。从下面固定铁砧可以将罪恶战争的进程转向光明"
+"明或黑暗所利用。从下面固定铁砧可以将原罪之战的进程转向光明"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -7751,18 +7750,18 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
-"血之门和火之殿是神秘起源的地标。无论你从哪里读到这本书，它都是一个充满力量的"
-"地方。\n"
-" \n"
-"传说中有一个底座是用黑曜石雕刻而成的，上面有一滩沸腾的血。也有典故提到血石会"
-"打开一扇门，守护着一个古老的宝藏。。。\n"
-" \n"
-"我的朋友，这件宝藏的性质被猜测所掩盖，但据说古代英雄阿卡因把神圣的护甲英勇放"
-"置在一个秘密的地下室里。阿肯是第一个扭转罪恶战争潮流，将黑暗军团赶回燃烧地狱"
-"的凡人。\n"
-" \n"
-"就在阿凯死前，他的护甲藏在一个秘密的地下室里。据说，当这种神圣的护甲再次被需"
-"要时，一个英雄将再次出现在勇气堂。也许你就是那个英雄"
+"鲜血之门与火焰大厅都是神秘起源的地标。在你读到这本书的地方，一定充盈着强大力"
+"量。\n"
+"\n"
+"传说有一个用黑曜石雕刻的底座，装满了漂浮着骨屑的沸腾鲜血。传说还提到了鲜血"
+"石，它能开起一道守护远古财宝的大门……\n"
+"\n"
+"这件宝物的本质到底是什么众说纷纭，疑团重重，我的朋友。但据说古代的英雄阿凯尼"
+"把它的圣甲“荣耀”放置在一个秘密的地方。他是第一个扭转原罪之战的浪潮，将黑暗军"
+"团赶回烈焰地狱的凡人。\n"
+"\n"
+"阿凯尼临死前，他的铠甲就被秘密地藏进了一处密室中。相传等到这副圣甲需要再一次"
+"现世时，一位英雄将会挺身而出，并且再度荣耀加身。也许你就是那个英雄……"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -7771,8 +7770,8 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
-"每个孩子都会听到战士阿卡因和他那被称为英勇的神秘护甲的故事。如果你能找到它的"
-"安息之地，你就可以在迷宫里很好地抵御邪恶"
+"每个孩子听过战士阿凯尼和他被称作“荣耀”的传奇盔甲的故事。如果你能找到它沉睡的"
+"地方，你就能更好的保护自己对抗迷宫里的邪恶。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -7781,16 +7780,15 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
-"嗯。。。这听起来像是我应该记住的，但我一直忙于学习新的治疗方法和创造更好的长"
-"生不老药，我一定忘记了。对不起"
+"嗯……这听起来根本就记不住，因为我一直忙于学习新的治疗方法和制作更好的药剂，我"
+"必须忘掉这些事，抱歉……"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
 msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
-msgstr ""
-"我经常听到男孩们谈论的关于魔法护甲的故事叫做英勇。你最好问问村里的一个人"
+msgstr "我经常听到男孩们讨论关于魔法铠甲“荣耀”的故事。你最好问问村里的男人们。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -7800,8 +7798,9 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
-"被称为英勇的护甲可能会使天平对你有利。我要告诉你，很多人都找过，包括我自己。"
-"阿肯把它藏得很好，我的朋友，要解开隐藏了这么多年的秘密还需要一点运气哦，瞧"
+"被称作“荣耀”的盔甲，也许将让天平向你倾斜。我想说的是，包括我在内的许多人曾经"
+"都尝试寻找它。阿凯尼把它藏得很好，我的朋友，得需要点运气去揭开隐藏它的秘密，"
+"哎，尽管这么多年过去了。"
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
@@ -7816,9 +7815,9 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
-"如果你发现了这些血石，小心使用。\n"
-" \n"
-"道路充满危险，你唯一的希望在于你的自信"
+"一旦你发现了鲜血石，请小心谨慎的使用它。\n"
+"\n"
+"道路充满了危险，你唯一的希望源自于你的自信。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -7828,9 +7827,10 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
-"你想找到被称为英勇的护甲吗？\n"
-" \n"
-"没人知道阿凯把东西藏在哪里，如果我的联系人找不到，我很怀疑你也会"
+"你想要找到那件被称作“荣耀”的盔甲？\n"
+"\n"
+"没人知道阿凯尼把东西藏在哪里，如果我联系的人都找不到，我很怀疑你怎么可能会找"
+"到。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -7847,15 +7847,14 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
-"我只知道一个传说像你描述的那样提到一个战士。他的故事可以在罪恶战争的古代编年"
-"史中找到。。。\n"
+"据我所知，只有一种传说提到过你描述的那个战士。他的故事记录在在古老的《原罪之"
+"战编年史》中……\n"
+"\n"
+"持续千年的战争，鲜血与死亡，鲜血战神的受害者残肢断臂堆积如山。他的黑暗之刃向"
+"生者尖啸，散发黑色的诅咒；任何挡在地狱刽子手面前的人都将受到酷刑的邀请。\n"
 " \n"
-"被一千年的战争，鲜血和死亡所玷污，血的军阀站在他破旧的受害者的山上。他的黑暗"
-"之刃向活人发出了黑色的诅咒；对任何站在这个地狱刽子手面前的人的一个严刑拷打的"
-"邀请。\n"
-" \n"
-"书中还写到，虽然他曾经是一个凡人，在罪恶战争中与黑暗军团并肩作战，但他因对鲜"
-"血的贪得无厌而失去了人性"
+"书中还写到，尽管他只是一个在原罪之战中与黑暗军团并肩作战凡人，但嗜血的欲望使"
+"得他失去了人性。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -7864,23 +7863,22 @@ msgid ""
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
 msgstr ""
-"恐怕我还没听说过这么恶毒的战士，好师傅。我希望你不用和他打架，因为他听起来非"
-"常危险"
+"如此歹毒的战士我从未听说，好心人。我希望你不用跟他战斗，他听上去是极其的危"
+"险。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
 msgid ""
 "Cain would be able to tell you much more about something like this than I "
 "would ever wish to know."
-msgstr "凯恩会告诉你比我想知道的更多的事情"
+msgstr "凯恩能告诉你更多有关的事情，这些事真是我从来愿意知道的。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:219
 msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
-msgstr ""
-"如果你要与如此凶猛的对手作战，愿光明成为你的向导和卫士。我会一直惦记着你"
+msgstr "如果你要与如此凶猛的对手战斗，那愿圣光指引和保佑你。我会一直惦记着你。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
@@ -7888,8 +7886,8 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
-"黑暗邪恶的传说围绕着一个血的军阀。我的朋友，请做好准备，因为他既不仁慈也不吝"
-"啬"
+"“鲜血战神”被黑暗邪恶的传说笼罩。做好准备我的朋友，因为他既不仁慈，也不讲情"
+"面。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -7898,8 +7896,8 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
 msgstr ""
-"你总是说血？鲜花，阳光，还有那个送饮料的漂亮女孩呢。听着，朋友-你很痴迷，知道"
-"吗"
+"你总是不停的提到血么？不如说点鲜花、阳光和送饮料的漂亮女孩。听着，朋友，你真"
+"是执迷不悟，你知道么？"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -7908,8 +7906,8 @@ msgid ""
 "years knowing only warfare. I am sorry... I can not see if you will defeat "
 "him."
 msgstr ""
-"他的剑术令人敬畏，他已经活了几千年，只知道战争。我很抱歉。。。我看不出你是否"
-"能打败他"
+"他的剑术令人惊叹，千年的岁月对他而言只有战斗。我很抱歉……我也不好判断你能不否"
+"打败他。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:227
@@ -7917,15 +7915,15 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
-"我从来没有和你说的那个军阀打过交道，但他听起来好像经历了很多磨难。不介意为他"
-"的军队提供补给"
+"我从没跟那个什么战神进行过买卖，但是我听说他用坏过很多剑。你不介意我卖点武器"
+"装备给他吧……"
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
 msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied."
-msgstr "我的刀锋为你的鲜血歌唱，凡人，我的黑暗主人不会否认它"
+msgstr "我的刀刃正在为你的血歌唱，凡人。我的黑暗主人也会很高兴听到这歌声。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -9284,8 +9282,8 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
-"英雄殿后是藏骨密室。永恒的死亡等待着任何想要偷走这间屋子里珍宝的人。恐惧之王"
-"如此说，经上如此记着"
+"在英雄走廊的另一端藏匿着白骨密室。任何胆敢盗取此地财宝的人，都将遭受永恒的死"
+"亡。恐惧之王如是说，本书也如实写。"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -9293,7 +9291,7 @@ msgstr ""
 msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
-msgstr "……所以，在血之门的外面，在火之殿的前面，勇敢的等待着光之英雄的觉醒"
+msgstr "……于是，打开鲜血之门，穿过火焰大厅，荣耀等待着光明的英雄去唤醒……"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -9308,14 +9306,14 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
-"我能看到你看不到的东西。\n"
-"视力乳白色，然后眼睛腐烂。\n"
-"当你转过身，他们就不见了，\n"
-"低语着他们隐藏的歌声。\n"
-"然后你看到什么是不可能的，\n"
-"阴影在光线应该在的地方移动。\n"
-"走出黑暗，走出心灵，\n"
-"扔到盲人的大厅里"
+"我能见你所不能见\n"
+"鬼影缭绕腐蚀肉眼\n"
+"方一转身全数消散\n"
+"耳边响起招魂童谣\n"
+"无形之物即现眼前\n"
+"光影交叠怨气弥漫\n"
+"撕裂心灵冲破黑暗\n"
+"目盲之厅不见彼岸"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:477 Source/textdat.cpp:485 Source/textdat.cpp:493
@@ -9325,8 +9323,8 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"地狱的军械库是血之军阀的家。他身后躺着成千上万具残缺的尸体。天使和人类都被砍"
-"掉了，来完成他对黑暗势力无尽的牺牲，他们只为一件事而尖叫——鲜血"
+"地狱的军械库如同鲜血战神的私宅。其所到之处，无不留下成千上万的残肢断臂。无论"
+"是天使还是人类都将遭到残杀，只为了能够呈上邪魔们最渴望的东西——鲜血。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -9387,9 +9385,9 @@ msgstr ""
 "在他们身后战栗。我们的骑士团——赫拉迪姆——是由一群神秘的法师建立的，目的是一劳"
 "永逸地追捕和俘虏这三个恶魔。\n"
 " \n"
-"最初的赫拉德里姆在被称为“灵魂石”的强大文物中捕获了其中两个，并将它们深埋在荒"
-"凉的东部沙漠之下。第三个恶魔逃脱了追捕，逃到了西部，许多赫拉迪姆人都在追捕。"
-"第三个恶魔-被称为迪亚波罗，恐惧之王-最终被俘虏，他的灵魂石和埋在这个迷宫的本"
+"最初的赫拉迪姆在被称为“灵魂石”的强大文物中捕获了其中两个，并将它们深埋在荒凉"
+"的东部沙漠之下。第三个恶魔逃脱了追捕，逃到了西部，许多赫拉迪姆人都在追捕。第"
+"三个恶魔-被称为迪亚波罗，恐惧之王-最终被俘虏，他的灵魂石和埋在这个迷宫的本"
 "质。\n"
 " \n"
 "要被警告，灵魂之石必须防止被那些不信的人发现。如果迪亚波罗被释放，他会寻找一"
@@ -9442,14 +9440,14 @@ msgid ""
 "Sin War..."
 msgstr ""
 "因此，这三个主要的恶魔以灵魂的形式被放逐到凡人的领域，在东方缝了几十年的混乱"
-"之后，他们被凡人赫拉迪姆的诅咒的秩序所追捕。赫拉德里姆使用了被称为“灵魂石”的"
-"人工制品来容纳仇恨之主墨菲斯托和他的兄弟毁灭之主巴力的精髓。最小的弟弟——恐惧"
-"之王迪亚波罗——逃到了西方。\n"
+"之后，他们被凡人赫拉迪姆的诅咒的秩序所追捕。赫拉迪姆使用了被称为“灵魂石”的人"
+"工制品来容纳仇恨之主墨菲斯托和他的兄弟毁灭之主巴力的精髓。最小的弟弟——恐惧之"
+"王迪亚波罗——逃到了西方。\n"
 " \n"
-"最终，赫拉德里姆也在一块灵魂石中俘获了迪亚波罗，并将他埋葬在一座被遗忘的古老"
-"大教堂下。在那里，恐怖之主沉睡着，等待着他的重生。你们要知道，他要寻求一个充"
-"满青春和力量的身体来占有，一个清白和容易控制的身体。然后他会起来解救他的兄弟"
-"们，再一次煽起罪恶战争的火焰"
+"最终，赫拉迪姆也在一块灵魂石中俘获了迪亚波罗，并将他埋葬在一座被遗忘的古老大"
+"教堂下。在那里，恐怖之主沉睡着，等待着他的重生。你们要知道，他要寻求一个充满"
+"青春和力量的身体来占有，一个清白和容易控制的身体。然后他会起来解救他的兄弟"
+"们，再一次煽起原罪之战的火焰"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
@@ -9531,8 +9529,8 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
-"英雄殿后是藏骨密室。永恒的死亡等待着任何想要偷走这间屋子里珍宝的人。恐惧之耶"
-"和华如此说，经上如此记着"
+"在英雄走廊的另一端藏匿着白骨密室。任何胆敢盗取此地财宝的人，都将遭受永恒的死"
+"亡。恐惧之王如是说，本书也如实写。"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -9542,8 +9540,8 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"地狱的军械库是血之军阀的家。他身后躺着成千上万具残缺的尸体。天使和人类都被砍"
-"掉了，来完成他对黑暗势力无尽的牺牲，他们只为一件事而尖叫——血"
+"地狱的军械库如同鲜血战神的私宅。其所到之处，无不留下成千上万的残肢断臂。无论"
+"是天使还是人类都将遭到残杀，只为了能够呈上邪魔们最渴望的东西——鲜血。"
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -9785,7 +9783,7 @@ msgstr ""
 "的，安提拉石是以与赫拉迪姆分享力量的天使命名的。\n"
 " \n"
 "在画影子的那一年，大地震动，大教堂粉碎倒塌。随着地下墓穴和城堡的建造开始，人"
-"们开始抵抗罪恶战争的蹂躏，废墟被清理出来寻找石头。就这样，基石从人们的眼中消"
+"们开始抵抗原罪之战的蹂躏，废墟被清理出来寻找石头。就这样，基石从人们的眼中消"
 "失了。\n"
 " \n"
 "石头属于这个世界，也属于所有的世界，就像光既存在于万物之中，也存在于万物之"
