@@ -251,7 +251,18 @@ void UndrawCursor(const Surface &out)
 
 bool ShouldShowCursor()
 {
-	return !(sgbControllerActive && !IsMovingMouseCursorWithController() && pcurs != CURSOR_TELEPORT && !invflag && (!chrflag || Players[MyPlayerId]._pStatPts <= 0));
+	if (!sgbControllerActive && !sgbTouchActive)
+		return true;
+	if (IsMovingMouseCursorWithController())
+		return true;
+	if (pcurs == CURSOR_TELEPORT)
+		return true;
+	if (invflag)
+		return true;
+	if (chrflag && Players[MyPlayerId]._pStatPts > 0)
+		return true;
+
+	return false;
 }
 
 /**
