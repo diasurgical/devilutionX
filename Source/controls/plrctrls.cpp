@@ -26,6 +26,7 @@
 
 namespace devilution {
 
+bool sgbTouchActive = false;
 bool sgbControllerActive = false;
 Point speedspellscoords[50];
 int speedspellcount = 0;

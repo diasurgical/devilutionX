@@ -27,6 +27,7 @@ enum class ScrollDirection : uint8_t {
 
 // Defined in SourceX/controls/plctrls.cpp
 extern bool sgbControllerActive;
+extern bool sgbTouchActive;
 extern bool IsMovingMouseCursorWithController();
 
 extern int LightTableIndex;

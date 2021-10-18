@@ -14,6 +14,8 @@
 
 namespace devilution {
 
+extern bool sgbTouchActive;
+
 namespace {
 
 VirtualGamepadEventHandler Handler(&VirtualGamepadState);
@@ -86,11 +88,15 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 
 void HandleTouchEvent(const SDL_Event &event)
 {
+	sgbTouchActive = false;
+
 	if (Handler.Handle(event))
 		return;
 
 	if (!IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
 		return;
+
+	sgbTouchActive = true;
 
 	SimulateMouseMovement(event);
 
