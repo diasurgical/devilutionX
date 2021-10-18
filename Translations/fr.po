@@ -2286,7 +2286,7 @@ msgstr "Grande Epée"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr "Petire Hache"
+msgstr "Petite Hache"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
