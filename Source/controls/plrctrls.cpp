@@ -566,7 +566,7 @@ Point GetSlotCoord(int slot)
 }
 
 /**
- * Return the item id of the current tile
+ * Return the item id of the current slot
  */
 int GetItemIdOnSlot(int slot)
 {
@@ -605,9 +605,7 @@ Size GetItemSizeOnSlot(int slot)
 void ResetInvCursorPosition()
 {
 	Point mousePos {};
-	if (Slot < SLOTXY_INV_FIRST) {
-		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
-	} else if (Slot < SLOTXY_BELT_FIRST) {
+	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 		int8_t itemInvId = GetItemIdOnSlot(Slot);
 
 		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
@@ -626,14 +624,33 @@ void ResetInvCursorPosition()
 		mousePos = GetSlotCoord(Slot);
 		mousePos.x += ((itemSize.width - 1) * InventorySlotSizeInPixels.width) / 2;
 		mousePos.y += ((itemSize.height - 1) * InventorySlotSizeInPixels.height) / 2;
-	} else {
+	} else if (Slot >= SLOTXY_BELT_FIRST && Slot <= SLOTXY_BELT_LAST) {
 		mousePos = GetSlotCoord(Slot);
+	} else {
+		mousePos = InvGetEquipSlotCoordFromInvSlot((inv_xy_slot)Slot);
 	}
 
 	mousePos.x += (InventorySlotSizeInPixels.width / 2);
 	mousePos.y -= (InventorySlotSizeInPixels.height / 2);
 
 	SetCursorPos(mousePos);
+}
+
+int FindClosestInventorySlot(Point mousePos)
+{
+	int shortestDistance = std::numeric_limits<int>::max();
+	int bestSlot = 0;
+	mousePos += Displacement { -INV_SLOT_HALF_SIZE_PX, INV_SLOT_HALF_SIZE_PX };
+
+	for (int i = 0; i < NUM_XY_SLOTS; i++) {
+		int distance = mousePos.ManhattanDistance(GetSlotCoord(i));
+		if (distance < shortestDistance) {
+			shortestDistance = distance;
+			bestSlot = i;
+		}
+	}
+
+	return bestSlot;
 }
 
 /**
@@ -654,7 +671,7 @@ void InvMove(AxisDirection dir)
 
 	// normalize slots
 	if (Slot < 0)
-		Slot = 0;
+		Slot = FindClosestInventorySlot(mousePos);
 	else if (Slot >= SLOTXY_HEAD_FIRST && Slot <= SLOTXY_HEAD_LAST)
 		Slot = SLOTXY_HEAD_FIRST;
 	else if (Slot >= SLOTXY_HAND_LEFT_FIRST && Slot <= SLOTXY_HAND_LEFT_LAST)
@@ -1230,6 +1247,7 @@ void HandleRightStickMotion()
 
 	{ // move cursor
 		sgbControllerActive = false;
+		InvalidateInventorySlot();
 		int x = MousePosition.x;
 		int y = MousePosition.y;
 		acc.Pool(&x, &y, 2);
@@ -1246,6 +1264,11 @@ void HandleRightStickMotion()
 			lastMouseSetTick = now;
 		}
 	}
+}
+
+void InvalidateInventorySlot()
+{
+	Slot = -1;
 }
 
 /**

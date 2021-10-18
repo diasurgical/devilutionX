@@ -3,6 +3,7 @@
 #include "controls/touch/event_handlers.h"
 
 #include "control.h"
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "diablo.h"
 #include "engine.h"
@@ -31,6 +32,7 @@ void SimulateMouseMovement(const SDL_Event &event)
 	float y = event.tfinger.y;
 	MousePosition = ScaleToScreenCoordinates(x, y);
 	sgbControllerActive = false;
+	InvalidateInventorySlot();
 }
 
 bool HandleGameMenuInteraction(const SDL_Event &event)
