@@ -22,6 +22,7 @@
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
+//#include "stash.h"
 
 #define SPLICONLENGTH 56
 
@@ -30,6 +31,7 @@ namespace devilution {
 bool sgbControllerActive = false;
 Point speedspellscoords[50];
 int speedspellcount = 0;
+//StashStruct Stash;
 
 /**
  * Native game menu, controlled by simulating a keyboard.
@@ -48,6 +50,7 @@ bool InGameMenu()
 namespace {
 
 int Slot = SLOTXY_INV_FIRST;
+int StashSlot = SLOTXY_STASH_FIRST;
 
 /**
  * Number of angles to turn to face the coordinate
@@ -601,6 +604,37 @@ Size GetItemSizeOnSlot(int slot, char &itemInvId)
 	itemInvId = 0;
 	return { 1, 1 };
 }
+
+/**
+ * Get item size (grid size) on the slot specified. Returns 1x1 if none exists.
+ */
+/*
+Size GetItemSizeOnStashSlot(int slot, char &itemInvId)
+{
+	if (slot >= SLOTXY_STASH_FIRST && slot <= SLOTXY_STASH_LAST) {
+		int ig = slot - SLOTXY_STASH_FIRST;
+		auto &myPlayer = Players[MyPlayerId];
+		int8_t ii = Stash.StashGrid[ig];
+		if (ii != 0) {
+			int8_t iv = ii;
+			if (ii <= 0) {
+				iv = -ii;
+			}
+
+			Item &item = Stash.StashList[iv - 1];
+			if (!item.isEmpty()) {
+				auto size = GetInvItemSize(item._iCurs + CURSOR_FIRSTITEM);
+				size.width /= InventorySlotSizeInPixels.width;
+				size.height /= InventorySlotSizeInPixels.height;
+
+				itemInvId = ii;
+				return size;
+			}
+		}
+	}
+	itemInvId = 0;
+	return { 1, 1 };
+}*/
 
 /**
  * Reset cursor position based on the current slot.
@@ -1341,9 +1375,9 @@ void PerformPrimaryAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			if (invflag)
+			if (invflag && RightPanel.Contains(MousePosition))
 				CheckInvItem();
-			if (stashflag)
+			if (stashflag && LeftPanel.Contains(MousePosition))
 				CheckStashItem();
 		}
 		return;
@@ -1447,9 +1481,9 @@ void PerformSpellAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			if (invflag)
+			if (invflag && RightPanel.Contains(MousePosition))
 				CheckInvItem(true, false);
-			if (stashflag)
+			if (stashflag && LeftPanel.Contains(MousePosition))
 				CheckStashItem(true, false);
 			ResetInvCursorPosition();
 		}

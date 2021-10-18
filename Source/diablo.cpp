@@ -1279,8 +1279,7 @@ void StashKeyPressed()
 			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
 				SetCursorPos(MousePosition + Displacement { 160, 0 });
 			}
-			
-				//LoadStash(0);
+			LoadStash(0);
 		}
 	}
 	chrflag = false;

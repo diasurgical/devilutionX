@@ -1247,8 +1247,6 @@ void CheckPanelInfo()
 	}
 	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
-	if (MousePosition.x > 0 && MousePosition.x < 320 && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 0 + PANEL_TOP)
-		pcursstashitem = CheckStashHLight();
 
 	if (CheckXPBarInfo()) {
 		panelflag = true;

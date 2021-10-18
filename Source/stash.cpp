@@ -42,7 +42,7 @@ StashStruct EmptyStash;
 int tab;
 
 int stashx = 16;                         // initial stash cell x coordinate
-int stashy = 105;                        // initial stash cell y coordinate
+int stashy = 76;                        // initial stash cell y coordinate
 int stashslotadj = INV_SLOT_SIZE_PX + 1; // spacing between each cell
 
 const Point StashRect[] = { // Contains mappings for each cell in the stash (10x10)
@@ -187,7 +187,6 @@ void LoadStash(int page)
 		}
 		fin.close();
 	}
-	//CalcPlrStash(myplr, TRUE);
 }
 
 void SaveStash(int page)
@@ -320,6 +319,7 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 				r--;
 			}
 		}
+
 		if (r == SLOTXY_STASH_LAST && (itemSize.height & 1) == 0)
 			j += INV_SLOT_HALF_SIZE_PX;
 	}
@@ -329,7 +329,6 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 	item_equip_type il = ILOC_UNEQUIPABLE;
 
 	done = player.HoldItem._iLoc == il;
-
 
 	int8_t it = 0;
 	if (il == ILOC_UNEQUIPABLE) {
@@ -376,11 +375,6 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
-	if (IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT) && !player.HoldItem._iStatFlag) {
-		done = false;
-		player.Say(HeroSpeech::ICantUseThisYet);
-	}
-
 	if (!done)
 		return;
 
@@ -388,13 +382,75 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
 	int cn = CURSOR_HAND;
-	
+	switch (il) {
+	case ILOC_UNEQUIPABLE:
+		if (player.HoldItem._itype == ItemType::Gold && it == 0) {
+			int ii = r - SLOTXY_STASH_FIRST;
+			if (Stash.StashGrid[ii] > 0) {
+				int stashIndex = Stash.StashGrid[ii] - 1;
+				int gt = Stash.StashList[stashIndex]._ivalue;
+				int ig = player.HoldItem._ivalue + gt;
+				if (ig <= MaxGold) {
+					Stash.StashList[stashIndex]._ivalue = ig;
+					player._pGold += player.HoldItem._ivalue;
+					SetPlrHandGoldCurs(Stash.StashList[stashIndex]);
+				} else {
+					ig = MaxGold - gt;
+					player._pGold += ig;
+					player.HoldItem._ivalue -= ig;
+					Stash.StashList[stashIndex]._ivalue = MaxGold;
+					Stash.StashList[stashIndex]._iCurs = ICURS_GOLD_LARGE;
+					cn = GetGoldCursor(player.HoldItem._ivalue);
+					cn += CURSOR_FIRSTITEM;
+				}
+			} else {
+				int stashIndex = Stash._pNumStash;
+				Stash.StashList[stashIndex] = player.HoldItem;
+				Stash._pNumStash++;
+				Stash.StashGrid[ii] = Stash._pNumStash;
+				player._pGold += player.HoldItem._ivalue;
+				SetPlrHandGoldCurs(Stash.StashList[stashIndex]);
+			}
+		} else {
+			if (it == 0) {
+				Stash.StashList[Stash._pNumStash] = player.HoldItem;
+				Stash._pNumStash++;
+				it = Stash._pNumStash;
+			} else {
+				int stashIndex = it - 1;
+				if (player.HoldItem._itype == ItemType::Gold)
+					player._pGold += player.HoldItem._ivalue;
+				cn = SwapItem(&Stash.StashList[stashIndex], &player.HoldItem);
+				if (player.HoldItem._itype == ItemType::Gold)
+					player._pGold = CalculateGold(player);
+				for (auto &itemId : Stash.StashGrid) {
+					if (itemId == it)
+						itemId = 0;
+					if (itemId == -it)
+						itemId = 0;
+				}
+			}
+			int ii = r - SLOTXY_STASH_FIRST;
+
+			// Calculate top-left position of item for InvGrid and then add item to InvGrid
+
+			int xx = std::max(ii % INV_ROW_SLOT_SIZE - ((itemSize.width - 1) / 2), 0);
+			int yy = std::max(INV_ROW_SLOT_SIZE * (ii / INV_ROW_SLOT_SIZE - ((itemSize.height - 1) / 2)), 0);
+			AddItemToStashGrid(xx + yy, it, itemSize);
+		}
+		break;
+	case ILOC_NONE:
+	case ILOC_INVALID:
+		break;
+	}
 	CalcPlrInv(player, true);
 	if (pnum == MyPlayerId) {
 		if (cn == CURSOR_HAND && !IsHardwareCursor())
 			SetCursorPos(MousePosition + Displacement(cursSize / 2));
 		NewCursor(cn);
 	}
+	SaveStash(tab);
+	LoadStash(tab);
 }
 
 void CheckStashCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
@@ -413,7 +469,7 @@ void CheckStashCut(int pnum, Point cursorPosition, bool automaticMove, bool drop
 	bool done = false;
 
 	uint32_t r = 0;
-	for (; r < NUM_XY_SLOTS; r++) {
+	for (; r < STASH_NUM_XY_SLOTS; r++) {
 		int xo = LeftPanel.position.x;
 		int yo = LeftPanel.position.y;
 
@@ -506,8 +562,7 @@ void FreeStashGFX()
 
 void InitStash()
 {
-	//pStashCels = LoadCel("data\\Stash\\Stash.CEL", SPANEL_WIDTH);
-	pStashCels = LoadCel("Data\\Inv\\Inv.CEL", SPANEL_WIDTH);
+	pStashCels = LoadCel("Data\\Stash\\Stash.CEL", SPANEL_WIDTH);
 	tab = 0;
 	stashflag = false;
 }
@@ -548,6 +603,12 @@ void DrawStash(const Surface &out)
 			    cel, celFrame);
 		}
 	}
+	char stashpage[256];
+	
+	Point linePosition { 13, 18 };
+
+	std::sprintf(stashpage, "%d", tab + 1);
+	DrawString(out, stashpage, linePosition, UiFlags::ColorWhite);
 }
 
 void CheckStashSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
@@ -582,14 +643,6 @@ void CheckStashItem(bool isShiftHeld, bool isCtrlHeld)
 	}
 }
 
-void CheckStashScrn(bool isShiftHeld, bool isCtrlHeld)
-{
-	if (MousePosition.x > 0 && MousePosition.x < 320
-	    && MousePosition.y > PANEL_TOP && MousePosition.y < 0 + PANEL_TOP) {
-		CheckStashItem(isShiftHeld, isCtrlHeld);
-	}
-}
-
 int8_t CheckStashHLight()
 {
 	int8_t r = 0;
@@ -605,6 +658,9 @@ int8_t CheckStashHLight()
 			break;
 		}
 	}
+
+	if (r >= STASH_NUM_XY_SLOTS)
+		return -1;
 
 	int8_t rv = -1;
 	InfoColor = UiFlags::ColorWhite;
