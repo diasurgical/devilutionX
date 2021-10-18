@@ -851,8 +851,8 @@ void InvMove(AxisDirection dir)
 				mousePos = GetSlotCoord(Slot);
 			} else if (Slot <= SLOTXY_INV_LAST && myPlayer.HoldItem._itype == ItemType::Misc && icursSize28 == Size { 1, 1 }) { // forcing only 1x1 misc items
 				Slot += INV_ROW_SLOT_SIZE;
-				if (Slot > SLOTXY_BELT_LAST)
-					Slot = SLOTXY_BELT_LAST;
+				if (Slot + INV_ROW_SLOT_SIZE <= SLOTXY_BELT_LAST)
+					Slot += INV_ROW_SLOT_SIZE;
 				mousePos = GetSlotCoord(Slot);
 			}
 		} else {
@@ -883,9 +883,8 @@ void InvMove(AxisDirection dir)
 				mousePos = GetSlotCoord(Slot);
 			} else if (Slot <= SLOTXY_INV_LAST) {
 				Size itemSize = GetItemSizeOnSlot(Slot);
-				Slot += itemSize.height * INV_ROW_SLOT_SIZE;
-				if (Slot > SLOTXY_BELT_LAST)
-					Slot = SLOTXY_BELT_LAST;
+				if (Slot + itemSize.height * INV_ROW_SLOT_SIZE <= SLOTXY_BELT_LAST)
+					Slot += itemSize.height * INV_ROW_SLOT_SIZE;
 				mousePos = GetSlotCoord(Slot);
 			}
 		}
