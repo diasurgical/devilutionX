@@ -4,4 +4,10 @@
 	<string name="download_spawn">Download Demo Data</string>
 	<string name="game_data_retry">Tjek igen</string>
 	<string name="title_activity_data">Spil data</string>
+	<string name="missing_game_data">Spildata mangler</string>
+	<string name="download_started">Hent spildata</string>
+	<string name="shareware_data">Diablo demo data</string>
+	<string name="faq_link">Se <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">installations instruktionerne</a> for yderligere detaljer.</string>
+	<string name="guide_shareware">Alternativt kan du hente spawn-versionen for at spille demo-delen af spillet.</string>
+	<string name="guide_full_installation">For at spille den fulde version skal du placere DIABDAT.MPQ fra det originale spil i Android/data/org.diasurgical.devilutionx/files<br/>\n<br/>\nHvis du ikke har det originale spil, kan du købe Diablo på <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
 </resources>
