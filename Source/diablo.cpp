@@ -74,6 +74,7 @@
 #ifdef GPERF_HEAP_FIRST_GAME_ITERATION
 #include <gperftools/heap-profiler.h>
 #endif
+#include <DiabloUI/selstart.h>
 
 namespace devilution {
 
@@ -910,7 +911,7 @@ void DiabloInit()
 
 	if (forceSpawn)
 		gbIsSpawn = true;
-	if (forceDiablo)
+	if (forceDiablo || sgOptions.Hellfire.startUpGameOption == StartUpGameOption::Diablo)
 		gbIsHellfire = false;
 
 	gbIsHellfireSaveGame = gbIsHellfire;
@@ -935,6 +936,14 @@ void DiabloInit()
 	was_ui_init = true;
 
 	ReadOnlyTest();
+
+	if (gbIsHellfire && sgOptions.Hellfire.startUpGameOption == StartUpGameOption::None) {
+		UiSelStartUpGameOption();
+		if (!gbIsHellfire) {
+			// Reinitalize the UI Elements cause we changed the game
+			UiInitialize();
+		}
+	}
 
 	DiabloInitScreen();
 
@@ -1568,7 +1577,9 @@ int DiabloMain(int argc, char **argv)
 	DiabloParseFlags(argc, argv);
 	InitKeymapActions();
 	LoadOptions();
+
 	DiabloInit();
+
 	DiabloSplash();
 	mainmenu_loop();
 	DiabloDeinit();

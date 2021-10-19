@@ -537,6 +537,7 @@ void UnloadUiGFX()
 
 void UiInitialize()
 {
+	UnloadUiGFX();
 	LoadUiGFX();
 
 	if (ArtCursor.surface != nullptr) {
@@ -597,7 +598,7 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 	return (bw - w) / 2;
 }
 
-void LoadBackgroundArt(const char *pszFile, int frames)
+void LoadBackgroundArt(const char *pszFile, int frames, bool withFading)
 {
 	SDL_Color pPal[256];
 	LoadArt(pszFile, &ArtBackground, frames, pPal);
@@ -608,7 +609,7 @@ void LoadBackgroundArt(const char *pszFile, int frames)
 	ApplyGamma(logical_palette, orig_palette, 256);
 
 	fadeTc = 0;
-	fadeValue = 0;
+	fadeValue = withFading ? 0 : 256;
 
 	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)

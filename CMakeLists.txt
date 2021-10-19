@@ -465,6 +465,7 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/selgame.cpp
   Source/DiabloUI/selhero.cpp
   Source/DiabloUI/selok.cpp
+  Source/DiabloUI/selstart.cpp
   Source/DiabloUI/selyesno.cpp
   Source/DiabloUI/support_lines.cpp
   Source/DiabloUI/title.cpp
