@@ -184,8 +184,6 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 	if (CurrentProc == DisableInputWndProc)
 		return;
 
-	directionPadRenderer.Render(renderFunction);
-
 	primaryActionButtonRenderer.Render(renderFunction, buttonArt);
 	secondaryActionButtonRenderer.Render(renderFunction, buttonArt);
 	spellActionButtonRenderer.Render(renderFunction, buttonArt);
@@ -195,6 +193,8 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 
 	healthButtonRenderer.RenderPotion(renderFunction, potionArt);
 	manaButtonRenderer.RenderPotion(renderFunction, potionArt);
+
+	directionPadRenderer.Render(renderFunction);
 }
 
 void VirtualDirectionPadRenderer::Render(RenderFunction renderFunction)
