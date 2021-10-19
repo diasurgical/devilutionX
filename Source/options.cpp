@@ -86,6 +86,7 @@ CSimpleIni &GetIni()
 		auto path = GetIniPath();
 		auto stream = CreateFileStream(path.c_str(), std::fstream::in | std::fstream::binary);
 		ini.SetSpaces(false);
+		ini.SetMultiKey();
 		if (stream)
 			ini.LoadData(*stream);
 		isIniLoaded = true;
@@ -104,27 +105,35 @@ public:
 	{
 		this->sectionName_ = sectionName;
 		this->keyName_ = keyName;
-		std::list<CSimpleIni::Entry> values;
-		if (!GetIni().GetAllValues(sectionName, keyName, values)) {
+		oldValue_ = GetValue();
+		if (!oldValue_) {
 			// No entry found in original ini => new entry => changed
 			IniChanged = true;
 		}
-		const auto *value = GetIni().GetValue(sectionName, keyName);
-		if (value != nullptr)
-			oldValue_ = value;
 	}
 	~IniChangedChecker()
 	{
-		const auto *value = GetIni().GetValue(sectionName_, keyName_);
-		std::string newValue;
-		if (value != nullptr)
-			newValue = value;
+		auto newValue = GetValue();
 		if (oldValue_ != newValue)
 			IniChanged = true;
 	}
 
 private:
-	std::string oldValue_;
+	std::optional<std::string> GetValue()
+	{
+		std::list<CSimpleIni::Entry> values;
+		if (!GetIni().GetAllValues(sectionName_, keyName_, values))
+			return std::nullopt;
+		std::string ret;
+		for (auto &entry : values) {
+			if (entry.pItem != nullptr)
+				ret.append(entry.pItem);
+			ret.append("\n");
+		}
+		return ret;
+	}
+
+	std::optional<std::string> oldValue_;
 	const char *sectionName_;
 	const char *keyName_;
 };
@@ -144,34 +153,58 @@ float GetIniFloat(const char *sectionName, const char *keyName, float defaultVal
 	return (float)GetIni().GetDoubleValue(sectionName, keyName, defaultValue);
 }
 
+bool GetIniStringVector(const char *sectionName, const char *keyName, std::vector<std::string> &stringValues)
+{
+	std::list<CSimpleIni::Entry> values;
+	if (!GetIni().GetAllValues(sectionName, keyName, values)) {
+		return false;
+	}
+	for (auto &entry : values) {
+		stringValues.emplace_back(entry.pItem);
+	}
+	return true;
+}
+
 void SetIniValue(const char *keyname, const char *valuename, int value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value);
+	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, std::uint8_t value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value);
+	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, std::uint32_t value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value);
+	GetIni().SetLongValue(keyname, valuename, value, nullptr, false, true);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, bool value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetLongValue(keyname, valuename, value ? 1 : 0);
+	GetIni().SetLongValue(keyname, valuename, value ? 1 : 0, nullptr, false, true);
 }
 
 void SetIniValue(const char *keyname, const char *valuename, float value)
 {
 	IniChangedChecker changedChecker(keyname, valuename);
-	GetIni().SetDoubleValue(keyname, valuename, value);
+	GetIni().SetDoubleValue(keyname, valuename, value, nullptr, true);
+}
+
+void SetIniValue(const char *keyname, const char *valuename, const std::vector<std::string> &stringValues)
+{
+	IniChangedChecker changedChecker(keyname, valuename);
+	bool firstSet = true;
+	for (auto &value : stringValues) {
+		GetIni().SetValue(keyname, valuename, value.c_str(), nullptr, firstSet);
+		firstSet = false;
+	}
+	if (firstSet)
+		GetIni().SetValue(keyname, valuename, "", nullptr, true);
 }
 
 void SaveIni()
@@ -259,7 +292,7 @@ void SetIniValue(const char *sectionName, const char *keyName, const char *value
 	IniChangedChecker changedChecker(sectionName, keyName);
 	auto &ini = GetIni();
 	std::string stringValue(value, len != 0 ? len : strlen(value));
-	ini.SetValue(sectionName, keyName, stringValue.c_str());
+	ini.SetValue(sectionName, keyName, stringValue.c_str(), nullptr, true);
 }
 
 bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString)
