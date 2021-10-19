@@ -113,7 +113,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
-void LoadBackgroundArt(const char *pszFile, int frames = 1);
+void LoadBackgroundArt(const char *pszFile, int frames = 1, bool withFading = true);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = LOGO_MED, int y = 0);
 void UiFocusNavigationSelect();

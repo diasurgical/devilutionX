@@ -220,6 +220,7 @@ void LoadOptions()
 	sgOptions.Hellfire.bIntro = GetIniBool("Hellfire", "Intro", true);
 	sgOptions.Hellfire.lastSinglePlayerHero = GetIniInt("Hellfire", "LastSinglePlayerHero", 0);
 	sgOptions.Hellfire.lastMultiplayerHero = GetIniInt("Hellfire", "LastMultiplayerHero", 0);
+	sgOptions.Hellfire.startUpGameOption = static_cast<StartUpGameOption>(GetIniInt("Hellfire", "StartUpGameOption", static_cast<int>(StartUpGameOption::None)));
 	GetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem, sizeof(sgOptions.Hellfire.szItem), "");
 
 	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
@@ -375,6 +376,7 @@ void SaveOptions()
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 	SetIniValue("Hellfire", "LastSinglePlayerHero", sgOptions.Hellfire.lastSinglePlayerHero);
 	SetIniValue("Hellfire", "LastMultiplayerHero", sgOptions.Hellfire.lastMultiplayerHero);
+	SetIniValue("Hellfire", "StartUpGameOption", static_cast<int>(sgOptions.Hellfire.startUpGameOption));
 
 	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);

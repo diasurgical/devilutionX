@@ -8,6 +8,12 @@
 
 namespace devilution {
 
+enum class StartUpGameOption {
+	None,
+	Hellfire,
+	Diablo,
+};
+
 struct DiabloOptions {
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
@@ -26,6 +32,8 @@ struct HellfireOptions {
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
 	std::uint32_t lastMultiplayerHero;
+
+	StartUpGameOption startUpGameOption;
 };
 
 struct AudioOptions {
