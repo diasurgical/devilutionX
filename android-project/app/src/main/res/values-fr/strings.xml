@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="app_name">DevilutionX</string>
+	<string name="app_name" translatable="false">DevilutionX</string>
+	<!-- Strings used for fragments for navigation -->
+
+	<string name="guide_full_installation">Pour jouer à la version complète, placez le fichier DIABDAT.MPQ du jeu original dans Android/data/org.diasurgical.devilutionx/files.<br/>\n<br/>\nSi vous ne possédez pas le jeu original vous pouvez acheter Diablo sur <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
+	<string name="guide_shareware">Alternativement vous pouvez télécharger la version Démo afin de jouer à une portion du jeu.</string>
+	<string name="faq_link">Consulter les <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Instructions d\'Installation </a> pour plus de détails.</string>
+	<string name="game_data_retry">Vérifier les Données</string>
+	<string name="title_activity_data">Données de Jeu</string>
+	<string name="download_spawn">Télécharger la Démo</string>
+	<string name="missing_game_data">Données du jeu manquantes</string>
+	<string name="download_started">Téléchargement démarré</string>
+	<string name="shareware_data">Données de la Démo de Diablo</string>
 </resources>
