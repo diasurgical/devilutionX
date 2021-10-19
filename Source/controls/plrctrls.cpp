@@ -1484,8 +1484,10 @@ void PerformSpellAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
+			int itemId = GetItemIdOnSlot(Slot);
 			CheckInvItem(true, false);
-			ResetInvCursorPosition();
+			if (itemId != GetItemIdOnSlot(Slot))
+				ResetInvCursorPosition();
 		}
 		return;
 	}
@@ -1533,8 +1535,10 @@ void CtrlUseInvItem()
 	}
 
 	if (item->isEquipment()) {
+		int itemId = GetItemIdOnSlot(Slot);
 		CheckInvItem(true, false); // auto-equip if it's an equipment
-		ResetInvCursorPosition();
+		if (itemId != GetItemIdOnSlot(Slot))
+			ResetInvCursorPosition();
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
 	}
