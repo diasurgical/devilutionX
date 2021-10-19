@@ -1521,7 +1521,9 @@ void CtrlUseInvItem()
 
 	auto &myPlayer = Players[MyPlayerId];
 
-	if (pcursinvitem <= INVITEM_INV_LAST)
+	if (pcursinvitem < INVITEM_INV_FIRST)
+		item = &myPlayer.InvBody[pcursinvitem];
+	else if (pcursinvitem <= INVITEM_INV_LAST)
 		item = &myPlayer.InvList[pcursinvitem - INVITEM_INV_FIRST];
 	else
 		item = &myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST];
