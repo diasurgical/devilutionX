@@ -8,6 +8,7 @@
 #include "appfat.h"
 #include "diablo.h"
 #include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -16,8 +17,8 @@ class SFile {
 public:
 	explicit SFile(const char *path)
 	{
-		if (!SFileOpenFile(path, &handle_)) {
-			handle_ = nullptr;
+		handle_ = SFileOpenRw(path);
+		if (handle_ == nullptr) {
 			if (!gbQuietMode) {
 				const std::uint32_t code = SErrGetLastError();
 				if (code == STORM_ERROR_FILE_NOT_FOUND) {
@@ -32,7 +33,7 @@ public:
 	~SFile()
 	{
 		if (handle_ != nullptr)
-			SFileCloseFileThreadSafe(handle_);
+			SDL_RWclose(handle_);
 	}
 
 	[[nodiscard]] bool Ok() const
@@ -42,16 +43,16 @@ public:
 
 	[[nodiscard]] std::size_t Size() const
 	{
-		return SFileGetFileSize(handle_);
+		return SDL_RWsize(handle_);
 	}
 
 	bool Read(void *buffer, std::size_t len) const
 	{
-		return SFileReadFileThreadSafe(handle_, buffer, len);
+		return SDL_RWread(handle_, buffer, len, 1);
 	}
 
 private:
-	HANDLE handle_;
+	SDL_RWops *handle_;
 };
 
 template <typename T>

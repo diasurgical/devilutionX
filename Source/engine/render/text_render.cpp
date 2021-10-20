@@ -127,15 +127,17 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 
 	auto *kerning = &FontKerns[fontId];
 
-	HANDLE handle;
 	if (IsFullWidth(row)) {
 		kerning->fill(FontFullwidth[size]);
-	} else if (SFileOpenFile(path, &handle)) {
-		SFileReadFileThreadSafe(handle, kerning, 256);
-		SFileCloseFileThreadSafe(handle);
 	} else {
-		LogError("Missing font kerning: {}", path);
-		kerning->fill(FontFullwidth[size]);
+		SDL_RWops *handle = SFileOpenRw(path);
+		if (handle != nullptr) {
+			SDL_RWread(handle, kerning, 256, 1);
+			SDL_RWclose(handle);
+		} else {
+			LogError("Missing font kerning: {}", path);
+			kerning->fill(FontFullwidth[size]);
+		}
 	}
 
 	return kerning;
