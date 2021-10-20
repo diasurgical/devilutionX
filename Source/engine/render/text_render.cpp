@@ -26,6 +26,8 @@ namespace devilution {
 
 namespace {
 
+constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
+
 std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
@@ -205,6 +207,8 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 	int error;
 	for (; *textData != '\0'; i++) {
 		textData = utf8_decode(textData, &next, &error);
+		if (next == ZWSP)
+			continue;
 		if (error)
 			next = '?';
 
@@ -292,7 +296,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 			lastBreakableCodePoint = next;
 			continue;
 		}
-		if (IsAnyOf(next, U'　', U'，', U'、', U'。', U'？', U'！')) {
+		if (IsAnyOf(next, U'　', ZWSP, U'，', U'、', U'。', U'？', U'！')) {
 			lastBreakablePos = static_cast<int>(cur - begin - 3);
 			lastBreakableLen = 3;
 			lastBreakableCodePoint = next;
@@ -309,7 +313,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 
 		// Break line and continue to next line
 		const char *end = &input[lastBreakablePos];
-		if (!IsAnyOf(lastBreakableCodePoint, U' ', U'　')) {
+		if (!IsAnyOf(lastBreakableCodePoint, U' ', U'　', ZWSP)) {
 			end += lastBreakableLen;
 		}
 		output.append(processedEnd, end);
@@ -372,6 +376,8 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	int error;
 	for (; *textData != '\0'; previousPosition = textData) {
 		textData = utf8_decode(textData, &next, &error);
+		if (next == ZWSP)
+			continue;
 		if (error)
 			next = '?';
 
