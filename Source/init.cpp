@@ -16,6 +16,7 @@
 #include "dx.h"
 #include "pfile.h"
 #include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
@@ -189,10 +190,10 @@ void init_archives()
 		if (spawn_mpq != nullptr)
 			gbIsSpawn = true;
 	}
-	HANDLE fh = nullptr;
-	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
+	SDL_RWops *handle = SFileOpenRw("ui_art\\title.pcx");
+	if (handle == nullptr)
 		InsertCDDlg();
-	SFileCloseFileThreadSafe(fh);
+	SDL_RWclose(handle);
 
 	patch_rt_mpq = LoadMPQ(paths, "patch_rt.mpq");
 	if (patch_rt_mpq == nullptr)
