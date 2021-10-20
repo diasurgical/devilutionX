@@ -73,7 +73,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      - run: apk --no-cache add git cmake ninja bash pkgconfig
+      - run: apk --no-cache add git cmake ninja bash pkgconfig gettext
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
