@@ -2323,12 +2323,22 @@ void StartStore(talk_id s)
 	case STORE_SMITH:
 		StartSmith();
 		break;
-	case STORE_SBUY:
-		if (storenumh > 0)
+	case STORE_SBUY: {
+		bool hasAnyItems = false;
+		for (int i = 0; !smithitem[i].isEmpty(); i++) {
+			hasAnyItems = true;
+			break;
+		}
+		if (hasAnyItems)
 			StartSmithBuy();
-		else
-			StartSmith();
+		else {
+			stextflag = STORE_SBUY;
+			stextlhold = 12;
+			StoreESC();
+			return;
+		}
 		break;
+	}
 	case STORE_SSELL:
 		StartSmithSell();
 		break;
