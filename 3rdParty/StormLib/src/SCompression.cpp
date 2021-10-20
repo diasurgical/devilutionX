@@ -63,7 +63,6 @@ typedef struct
 } TDecompressTable;
 
 
-#ifdef FULL
 /*****************************************************************************/
 /*                                                                           */
 /*  Support for Huffman compression (0x01)                                   */
@@ -88,6 +87,7 @@ int Decompress_huff(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, i
     return (*pcbOutBuffer == 0) ? 0 : 1;
 }
 
+#ifdef FULL
 /******************************************************************************/
 /*                                                                            */
 /*  Support for ZLIB compression (0x02)                                       */
@@ -603,6 +603,8 @@ int Decompress_SPARSE(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer,
     return DecompressSparse(pvOutBuffer, pcbOutBuffer, pvInBuffer, cbInBuffer);
 }
 
+#endif // FULL
+
 /******************************************************************************/
 /*                                                                            */
 /*  Support for ADPCM mono compression (0x40)                                 */
@@ -670,7 +672,6 @@ static int Decompress_ADPCM_stereo(void * pvOutBuffer, int * pcbOutBuffer, void 
     *pcbOutBuffer = DecompressADPCM(pvOutBuffer, *pcbOutBuffer, pvInBuffer, cbInBuffer, 2);
     return 1;
 }
-#endif // FULL
 
 /*****************************************************************************/
 /*                                                                           */
@@ -763,9 +764,11 @@ static TCompressTable cmp_table[] =
 {
 #ifdef FULL
     {MPQ_COMPRESSION_SPARSE,       Compress_SPARSE},        // Sparse compression
+#endif // FULL
     {MPQ_COMPRESSION_ADPCM_MONO,   Compress_ADPCM_mono},    // IMA ADPCM mono compression
     {MPQ_COMPRESSION_ADPCM_STEREO, Compress_ADPCM_stereo},  // IMA ADPCM stereo compression
     {MPQ_COMPRESSION_HUFFMANN,     Compress_huff},          // Huffmann compression
+#ifdef FULL
     {MPQ_COMPRESSION_ZLIB,         Compress_ZLIB},          // Compression with the "zlib" library
 #endif // FULL
     {MPQ_COMPRESSION_PKWARE,       Compress_PKLIB},         // Compression with Pkware DCL
@@ -921,9 +924,11 @@ static TDecompressTable dcmp_table[] =
     {MPQ_COMPRESSION_PKWARE,       Decompress_PKLIB},        // Decompression with Pkware Data Compression Library
 #ifdef FULL
     {MPQ_COMPRESSION_ZLIB,         Decompress_ZLIB},         // Decompression with the "zlib" library
+#endif // FULL
     {MPQ_COMPRESSION_HUFFMANN,     Decompress_huff},         // Huffmann decompression
     {MPQ_COMPRESSION_ADPCM_STEREO, Decompress_ADPCM_stereo}, // IMA ADPCM stereo decompression
     {MPQ_COMPRESSION_ADPCM_MONO,   Decompress_ADPCM_mono},   // IMA ADPCM mono decompression
+#ifdef FULL
     {MPQ_COMPRESSION_SPARSE,       Decompress_SPARSE}        // Sparse decompression
 #endif // FULL
 };
@@ -1124,21 +1129,13 @@ int WINAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInB
         //
 
         case (MPQ_COMPRESSION_ADPCM_MONO | MPQ_COMPRESSION_HUFFMANN):
-#ifdef FULL
             pfnDecompress1 = Decompress_huff;
             pfnDecompress2 = Decompress_ADPCM_mono;
-#else
-            assert(0);
-#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_ADPCM_STEREO | MPQ_COMPRESSION_HUFFMANN):
-#ifdef FULL
             pfnDecompress1 = Decompress_huff;
             pfnDecompress2 = Decompress_ADPCM_stereo;
-#else
-            assert(0);
-#endif // FULL
             break;
 
         default:
