@@ -279,42 +279,57 @@ void LanguageInitialize()
 	// FIXME: Endianness.
 	MoHead head;
 	if (SDL_RWread(rw, &head, sizeof(MoHead), 1) != 1) {
+		SDL_RWclose(rw);
 		return;
 	}
 
 	if (head.magic != MO_MAGIC) {
+		SDL_RWclose(rw);
 		return; // not a MO file
 	}
 
 	if (head.revision.major > 1 || head.revision.minor > 1) {
+		SDL_RWclose(rw);
 		return; // unsupported revision
 	}
 
 	// Read entries of source strings
 	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1)
+	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1) {
+		SDL_RWclose(rw);
 		return;
+	}
 	// FIXME: Endianness.
-	if (SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings)
+	if (SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings) {
+		SDL_RWclose(rw);
 		return;
+	}
 
 	// Read entries of target strings
 	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1)
+	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1) {
+		SDL_RWclose(rw);
 		return;
+	}
 	// FIXME: Endianness.
-	if (SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings)
+	if (SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings) {
+		SDL_RWclose(rw);
 		return;
+	}
 
 	std::vector<char> key;
 	std::vector<char> value;
 
 	// MO header
-	if (!ReadEntry(rw, &src[0], key) || !ReadEntry(rw, &dst[0], value))
+	if (!ReadEntry(rw, &src[0], key) || !ReadEntry(rw, &dst[0], value)) {
+		SDL_RWclose(rw);
 		return;
+	}
 
-	if (key[0] != '\0')
+	if (key[0] != '\0') {
+		SDL_RWclose(rw);
 		return;
+	}
 
 	ParseMetadata(value.data());
 
@@ -337,4 +352,6 @@ void LanguageInitialize()
 			}
 		}
 	}
+
+	SDL_RWclose(rw);
 }
