@@ -9,6 +9,8 @@
 
 namespace devilution {
 
+namespace {
+
 static HANDLE SFileRwGetHandle(struct SDL_RWops *context)
 {
 	return (HANDLE)context->hidden.unknown.data1;
@@ -95,6 +97,8 @@ SDL_RWops *SFileRw_FromStormHandle(HANDLE handle)
 	SFileRwSetHandle(result, handle);
 	return result;
 }
+
+} // namespace
 
 SDL_RWops *SFileOpenRw(const char *filename)
 {
