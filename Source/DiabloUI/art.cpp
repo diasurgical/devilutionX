@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
@@ -16,10 +17,10 @@ constexpr size_t PcxHeaderSize = 128;
 constexpr unsigned NumPaletteColors = 256;
 constexpr unsigned PcxPaletteSize = 1 + NumPaletteColors * 3;
 
-bool LoadPcxMeta(HANDLE handle, int &width, int &height, std::uint8_t &bpp)
+bool LoadPcxMeta(SDL_RWops *handle, int &width, int &height, std::uint8_t &bpp)
 {
 	PCXHeader pcxhdr;
-	if (!SFileReadFileThreadSafe(handle, &pcxhdr, PcxHeaderSize)) {
+	if (!SDL_RWread(handle, &pcxhdr, PcxHeaderSize, 1)) {
 		return false;
 	}
 	width = SDL_SwapLE16(pcxhdr.Xmax) - SDL_SwapLE16(pcxhdr.Xmin) + 1;
@@ -28,11 +29,11 @@ bool LoadPcxMeta(HANDLE handle, int &width, int &height, std::uint8_t &bpp)
 	return true;
 }
 
-bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t bpp,
+bool LoadPcxPixelsAndPalette(SDL_RWops *handle, int width, int height, std::uint8_t bpp,
     BYTE *buffer, std::size_t bufferPitch, SDL_Color *palette)
 {
 	const bool has256ColorPalette = palette != nullptr && bpp == 8;
-	std::uint32_t pixelDataSize = SFileGetFileSize(handle);
+	std::uint32_t pixelDataSize = SDL_RWsize(handle);
 	if (pixelDataSize == static_cast<std::uint32_t>(-1)) {
 		return false;
 	}
@@ -41,7 +42,7 @@ bool LoadPcxPixelsAndPalette(HANDLE handle, int width, int height, std::uint8_t 
 	// We read 1 extra byte because it delimits the palette.
 	const size_t readSize = pixelDataSize + (has256ColorPalette ? PcxPaletteSize : 0);
 	std::unique_ptr<BYTE[]> fileBuffer { new BYTE[readSize] };
-	if (!SFileReadFileThreadSafe(handle, fileBuffer.get(), readSize)) {
+	if (!SDL_RWread(handle, fileBuffer.get(), readSize, 1)) {
 		return false;
 	}
 	const unsigned xSkip = bufferPitch - width;
@@ -108,17 +109,17 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, con
 
 	art->frames = frames;
 
-	HANDLE handle;
 	int width;
 	int height;
 	std::uint8_t bpp;
-	if (!SFileOpenFile(pszFile, &handle)) {
+	SDL_RWops *handle = SFileOpenRw(pszFile);
+	if (handle == nullptr) {
 		return;
 	}
 
 	if (!LoadPcxMeta(handle, width, height, bpp)) {
 		Log("LoadArt(\"{}\"): LoadPcxMeta failed with code {}", pszFile, SErrGetLastError());
-		SFileCloseFileThreadSafe(handle);
+		SDL_RWclose(handle);
 		return;
 	}
 
@@ -126,10 +127,10 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, con
 	if (!LoadPcxPixelsAndPalette(handle, width, height, bpp, static_cast<uint8_t *>(artSurface->pixels),
 	        artSurface->pitch, pPalette)) {
 		Log("LoadArt(\"{}\"): LoadPcxPixelsAndPalette failed with code {}", pszFile, SErrGetLastError());
-		SFileCloseFileThreadSafe(handle);
+		SDL_RWclose(handle);
 		return;
 	}
-	SFileCloseFileThreadSafe(handle);
+	SDL_RWclose(handle);
 
 	if (colorMapping != nullptr) {
 		for (int i = 0; i < artSurface->h * artSurface->pitch; i++) {
