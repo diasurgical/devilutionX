@@ -10,6 +10,9 @@
 #include "automap.h"
 #include "control.h"
 #include "cursor.h"
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 #include "drlg_l1.h"
 #include "drlg_l4.h"
 #include "engine/load_file.hpp"
@@ -811,6 +814,9 @@ void AddCryptObject(int i, int a2)
 
 void SetupObject(int i, Point position, _object_id ot)
 {
+#ifdef _DEBUG
+	DebugIndexToObjectID[i] = ot;
+#endif
 	Objects[i]._otype = ot;
 	object_graphic_id ofi = AllObjects[ot].ofindex;
 	Objects[i].position = position;

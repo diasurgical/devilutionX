@@ -35,6 +35,7 @@ bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
+std::unordered_map<int, int> DebugIndexToObjectID;
 
 namespace {
 
@@ -53,6 +54,7 @@ enum class DebugGridTextItem : uint16_t {
 	dSpecial,
 	coords,
 	cursorcoords,
+	objectindex,
 	nBlockTable,
 	nSolidTable,
 	nTransTable,
@@ -592,6 +594,7 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"dSpecial",
 		"coords",
 		"cursorcoords",
+		"objectindex",
 		"nBlockTable",
 		"nSolidTable",
 		"nTransTable",
@@ -810,6 +813,15 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 			return false;
 		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
 		return true;
+	case DebugGridTextItem::objectindex: {
+		info = 0;
+		int objectIndex = dObject[dungeonCoords.x][dungeonCoords.y];
+		if (objectIndex != 0 && DebugIndexToObjectID.find(objectIndex) != DebugIndexToObjectID.end()) {
+			objectIndex = objectIndex > 0 ? objectIndex - 1 : -(objectIndex + 1);
+			info = DebugIndexToObjectID[objectIndex];
+		}
+		break;
+	}
 	case DebugGridTextItem::dPiece:
 		info = dPiece[dungeonCoords.x][dungeonCoords.y];
 		break;
