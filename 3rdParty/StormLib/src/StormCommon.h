@@ -20,13 +20,13 @@
 // Include functions from Pkware Data Compression Library
 #include "../../PKWare/pkware.h"
 
-#ifdef FULL
 // Include functions from Huffmann compression
 #include "huffman/huff.h"
 
 // Include functions from IMA ADPCM compression
 #include "adpcm/adpcm.h"
 
+#ifdef FULL
 // Include functions from SPARSE compression
 #include "sparse/sparse.h"
 

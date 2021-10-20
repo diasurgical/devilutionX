@@ -324,6 +324,8 @@ endif()
 add_subdirectory(3rdParty/simpleini)
 
 add_library(StormLib STATIC
+  3rdParty/StormLib/src/huffman/huff.cpp
+  3rdParty/StormLib/src/adpcm/adpcm.cpp
   3rdParty/StormLib/src/FileStream.cpp
   3rdParty/StormLib/src/SBaseCommon.cpp
   3rdParty/StormLib/src/SBaseFileTable.cpp
