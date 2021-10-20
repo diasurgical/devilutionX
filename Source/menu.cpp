@@ -5,6 +5,8 @@
  */
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/extrasmenu.h"
+#include "DiabloUI/selok.h"
 #include "engine/demomode.h"
 #include "init.h"
 #include "movie.h"
@@ -131,17 +133,18 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 void mainmenu_loop()
 {
 	bool done;
-	_mainmenu_selections menu;
+	_mainmenu_selections menu = MAINMENU_NONE;
 
 	RefreshMusic();
 	done = false;
 
 	do {
-		menu = MAINMENU_NONE;
-		if (demo::IsRunning())
-			menu = MAINMENU_SINGLE_PLAYER;
-		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("%s", _("Unable to display mainmenu"));
+		if (menu == MAINMENU_NONE) {
+			if (demo::IsRunning())
+				menu = MAINMENU_SINGLE_PLAYER;
+			else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
+				app_fatal("%s", _("Unable to display mainmenu"));
+		}
 
 		switch (menu) {
 		case MAINMENU_NONE:
@@ -149,26 +152,49 @@ void mainmenu_loop()
 		case MAINMENU_SINGLE_PLAYER:
 			if (!InitSinglePlayerMenu())
 				done = true;
+			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_MULTIPLAYER:
 			if (!InitMultiPlayerMenu())
 				done = true;
+			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_ATTRACT_MODE:
-		case MAINMENU_REPLAY_INTRO:
 			if (gbIsSpawn && !gbIsHellfire)
 				done = false;
 			else if (gbActive)
 				PlayIntro();
+			menu = MAINMENU_NONE;
+			break;
+		case MAINMENU_REPLAY_INTRO:
+			if (gbIsSpawn && !gbIsHellfire) {
+				UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
+			} else if (gbActive)
+				PlayIntro();
+			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog();
+			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_SHOW_SUPPORT:
 			UiSupportDialog();
+			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_EXIT_DIABLO:
 			done = true;
+			break;
+		case MAINMENU_EXTRAS:
+			menu = UiExtrasMenu();
+			break;
+		case MAINMENU_SWITCHGAME:
+			gbIsHellfire = !gbIsHellfire;
+			sgOptions.Hellfire.startUpGameOption = gbIsHellfire ? StartUpGameOption::Hellfire : StartUpGameOption::Diablo;
+			UiInitialize();
+			FreeItemGFX();
+			InitItemGFX();
+			RefreshMusic();
+			menu = MAINMENU_NONE;
 			break;
 		}
 	} while (!done);
