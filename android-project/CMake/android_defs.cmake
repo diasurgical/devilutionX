@@ -10,5 +10,4 @@ if(BINARY_RELEASE OR CMAKE_BUILD_TYPE STREQUAL "Release")
   set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -flto=full")
 endif()
 
-file(GLOB VirtualGamepadArt "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/ui_art/*")
-file(COPY ${VirtualGamepadArt} DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets/ui_art")
+file(COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/" DESTINATION "${DevilutionX_SOURCE_DIR}/android-project/app/src/main/assets")
