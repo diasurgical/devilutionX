@@ -1,8 +1,9 @@
 # Nintendo Switch Port of DevilutionX (Diablo)
 
 # How To Install:
- - Put `devilutionx.nro` and `CharisSILB.ttf` in into `/switch/devilutionx`
+ - Put `devilutionx.nro` and `devilutionx.mpq` in into `/switch/devilutionx`
  - Copy diabdat.mpq from your CD (or GoG install folder) to `/switch/devilutionx`.
+ - To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
  - Launch `devilutionx.nro`. (Do not use album to launch; see the note below.)
  - *Note:* Hold R on any installed game and launch it. Do not use album to launch. If you use album, the homebrew will only have a small amount memory available, and the touch keyboard won't work. This is true for all homebrew, not just DevilutionX.
 
@@ -34,6 +35,13 @@
 
 # Credits
  - See list of contributors https://github.com/diasurgical/devilutionX/graphs/contributors
+
+# Links
+Discord: https://discord.gg/YQKCAYQ
+GitHub: https://github.com/diasurgical/devilutionX
+
+Check out the manual for what features are available and how best to take advantage of them: https://github.com/diasurgical/devilutionX/wiki
+For a full list of changes see our changelog: https://github.com/diasurgical/devilutionX/blob/master/docs/CHANGELOG.md
 
 # Legal
 DevilutionX is released to the Public Domain. The documentation and functionality provided by DevilutionX may only be utilized with assets provided by ownership of Diablo.

@@ -3,27 +3,18 @@
  *
  * Interface of the in-game help text.
  */
-#ifndef __HELP_H__
-#define __HELP_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
-extern BOOL helpflag;
+extern bool HelpFlag;
 
 void InitHelp();
-void DrawHelp(CelOutputBuffer out);
+void DrawHelp(const Surface &out);
 void DisplayHelp();
 void HelpScrollUp();
 void HelpScrollDown();
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __HELP_H__ */
+} // namespace devilution

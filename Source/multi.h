@@ -3,67 +3,66 @@
  *
  * Interface of functions for keeping multiplayer games in sync.
  */
-#ifndef __MULTI_H__
-#define __MULTI_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "msg.h"
 
-typedef struct GameData {
-	Sint32 size;
-	Sint32 dwSeed;
-	Uint32 programid;
-	Uint8 versionMajor;
-	Uint8 versionMinor;
-	Uint8 versionPatch;
-	Uint8 nDifficulty;
-	Uint8 nTickRate;
-	Uint8 bRunInTown;
-	Uint8 bTheoQuest;
-	Uint8 bCowQuest;
-	Uint8 bFriendlyFire;
-} GameData;
+namespace devilution {
 
-typedef struct _SNETPROGRAMDATA {
-	Sint32 size;
-	Uint8 maxplayers;
-	GameData *initdata;
-} _SNETPROGRAMDATA;
+// must be unsigned to generate unsigned comparisons with pnum
+#define MAX_PLRS 4
 
-extern BOOLEAN gbSomebodyWonGameKludge;
+enum event_type : uint8_t {
+	EVENT_TYPE_PLAYER_CREATE_GAME,
+	EVENT_TYPE_PLAYER_LEAVE_GAME,
+	EVENT_TYPE_PLAYER_MESSAGE,
+};
+
+struct GameData {
+	int32_t size;
+	/** Used to initialise the seed table for dungeon levels so players in multiplayer games generate the same layout */
+	uint32_t dwSeed;
+	uint32_t programid;
+	uint8_t versionMajor;
+	uint8_t versionMinor;
+	uint8_t versionPatch;
+	_difficulty nDifficulty;
+	uint8_t nTickRate;
+	uint8_t bRunInTown;
+	uint8_t bTheoQuest;
+	uint8_t bCowQuest;
+	uint8_t bFriendlyFire;
+};
+
+extern bool gbSomebodyWonGameKludge;
 extern char szPlayerDescript[128];
-extern WORD sgwPackPlrOffsetTbl[MAX_PLRS];
+extern uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
 extern BYTE gbActivePlayers;
-extern BOOLEAN gbGameDestroyed;
-extern BOOLEAN gbSelectProvider;
+extern bool gbGameDestroyed;
+extern GameData sgGameInitInfo;
+extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
 extern BYTE gbDeltaSender;
-extern int player_state[MAX_PLRS];
+extern uint32_t player_state[MAX_PLRS];
 
-void multi_msg_add(BYTE *pbMsg, BYTE bLen);
-void NetSendLoPri(BYTE *pbMsg, BYTE bLen);
-void NetSendHiPri(BYTE *pbMsg, BYTE bLen);
-void multi_send_msg_packet(int pmask, BYTE *src, BYTE len);
+void NetSendLoPri(int playerId, const byte *data, size_t size);
+void NetSendHiPri(int playerId, const byte *data, size_t size);
+void multi_send_msg_packet(uint32_t pmask, const byte *data, size_t size);
 void multi_msg_countdown();
 void multi_player_left(int pnum, int reason);
 void multi_net_ping();
-int multi_handle_delta();
+
+/**
+ * @return Always true for singleplayer
+ */
+bool multi_handle_delta();
 void multi_process_network_packets();
-void multi_send_zero_packet(int pnum, BYTE bCmd, BYTE *pbSrc, DWORD dwLen);
+void multi_send_zero_packet(int pnum, _cmd_id bCmd, const byte *data, size_t size);
 void NetClose();
-BOOL NetInit(BOOL bSinglePlayer, BOOL *pfExitProgram);
-BOOL multi_init_single(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info);
-BOOL multi_init_multi(_SNETPROGRAMDATA *client_info, _SNETPLAYERDATA *user_info, _SNETUIDATA *ui_info, BOOL *pfExitProgram);
-void recv_plrinfo(int pnum, TCmdPlrInfoHdr *p, BOOL recv);
+bool NetInit(bool bSinglePlayer);
+void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MULTI_H__ */
+} // namespace devilution

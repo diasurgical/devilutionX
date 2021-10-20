@@ -3,92 +3,92 @@
  *
  * Implementation of functions for placing dead monsters.
  */
-#include "all.h"
+#include "dead.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "gendung.h"
+#include "lighting.h"
+#include "misdat.h"
+#include "monster.h"
 
-DeadStruct dead[MAXDEAD];
-int stonendx;
+namespace devilution {
 
-void InitDead()
+Corpse Corpses[MaxCorpses];
+int8_t stonendx;
+
+namespace {
+void InitDeadAnimationFromMonster(Corpse &corpse, const CMonster &mon)
 {
-	int i, d, nd, mi;
-	int mtypes[MAXMONSTERS];
+	int i = 0;
+	const auto &animData = mon.GetAnimData(MonsterGraphic::Death);
+	for (const auto &celSprite : animData.CelSpritesForDirections)
+		corpse.data[i++] = celSprite->Data();
+	corpse.frame = animData.Frames;
+	corpse.width = animData.CelSpritesForDirections[0]->Width();
+}
+} // namespace
 
-	for (i = 0; i < MAXMONSTERS; i++)
-		mtypes[i] = 0;
+void InitCorpses()
+{
+	int8_t mtypes[MAXMONSTERS] = {};
 
-	nd = 0;
+	int8_t nd = 0;
 
-	for (i = 0; i < nummtypes; i++) {
-		if (mtypes[Monsters[i].mtype] == 0) {
-			for (d = 0; d < 8; d++)
-				dead[nd]._deadData[d] = Monsters[i].Anims[MA_DEATH].Data[d];
-			dead[nd]._deadFrame = Monsters[i].Anims[MA_DEATH].Frames;
-			dead[nd]._deadWidth = Monsters[i].width;
-			dead[nd]._deadWidth2 = Monsters[i].width2;
-			dead[nd]._deadtrans = 0;
-			Monsters[i].mdeadval = nd + 1;
-			mtypes[Monsters[i].mtype] = nd + 1;
+	for (int i = 0; i < LevelMonsterTypeCount; i++) {
+		if (mtypes[LevelMonsterTypes[i].mtype] != 0)
+			continue;
+
+		InitDeadAnimationFromMonster(Corpses[nd], LevelMonsterTypes[i]);
+		Corpses[nd].translationPaletteIndex = 0;
+		nd++;
+
+		LevelMonsterTypes[i].mdeadval = nd;
+		mtypes[LevelMonsterTypes[i].mtype] = nd;
+	}
+
+	nd++; // Unused blood spatter
+
+	for (auto &corpse : Corpses[nd].data)
+		corpse = MissileSpriteData[MFILE_SHATTER1].animData[0].get();
+
+	Corpses[nd].frame = 12;
+	Corpses[nd].width = 128;
+	Corpses[nd].translationPaletteIndex = 0;
+	nd++;
+
+	stonendx = nd;
+
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		auto &monster = Monsters[ActiveMonsters[i]];
+		if (monster._uniqtype != 0) {
+			InitDeadAnimationFromMonster(Corpses[nd], *monster.MType);
+			Corpses[nd].translationPaletteIndex = monster._uniqtrans + 4;
 			nd++;
+
+			monster._udeadval = nd;
 		}
 	}
 
-	for (d = 0; d < 8; d++)
-		dead[nd]._deadData[d] = misfiledata[MFILE_BLODBUR].mAnimData[0];
-	dead[nd]._deadFrame = 8;
-	dead[nd]._deadWidth = 128;
-	dead[nd]._deadWidth2 = 32;
-	dead[nd]._deadtrans = 0;
-	nd++;
-
-	for (d = 0; d < 8; d++)
-		dead[nd]._deadData[d] = misfiledata[MFILE_SHATTER1].mAnimData[0];
-	dead[nd]._deadFrame = 12;
-	dead[nd]._deadWidth = 128;
-	dead[nd]._deadWidth2 = 32;
-	dead[nd]._deadtrans = 0;
-	stonendx = nd + 1;
-	nd++;
-
-	for (i = 0; i < nummonsters; i++) {
-		mi = monstactive[i];
-		if (monster[mi]._uniqtype != 0) {
-			for (d = 0; d < 8; d++)
-				dead[nd]._deadData[d] = monster[mi].MType->Anims[MA_DEATH].Data[d];
-			dead[nd]._deadFrame = monster[mi].MType->Anims[MA_DEATH].Frames;
-			dead[nd]._deadWidth = monster[mi].MType->width;
-			dead[nd]._deadWidth2 = monster[mi].MType->width2;
-			dead[nd]._deadtrans = monster[mi]._uniqtrans + 4;
-			monster[mi]._udeadval = nd + 1;
-			nd++;
-		}
-	}
-
-	assert(nd <= MAXDEAD);
+	assert(static_cast<unsigned>(nd) <= MaxCorpses);
 }
 
-void AddDead(int dx, int dy, char dv, int ddir)
+void AddCorpse(Point tilePosition, int8_t dv, Direction ddir)
 {
-	dDead[dx][dy] = (dv & 0x1F) + (ddir << 5);
+	dCorpse[tilePosition.x][tilePosition.y] = (dv & 0x1F) + (static_cast<int>(ddir) << 5);
 }
 
-void SetDead()
+void SyncUniqDead()
 {
-	int i, mi;
-	int dx, dy;
-
-	for (i = 0; i < nummonsters; i++) {
-		mi = monstactive[i];
-		if (monster[mi]._uniqtype != 0) {
-			for (dx = 0; dx < MAXDUNX; dx++) {
-				for (dy = 0; dy < MAXDUNY; dy++) {
-					if ((dDead[dx][dy] & 0x1F) == monster[mi]._udeadval)
-						ChangeLightXY(monster[mi].mlid, dx, dy);
-				}
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		auto &monster = Monsters[ActiveMonsters[i]];
+		if (monster._uniqtype == 0)
+			continue;
+		for (int dx = 0; dx < MAXDUNX; dx++) {
+			for (int dy = 0; dy < MAXDUNY; dy++) {
+				if ((dCorpse[dx][dy] & 0x1F) == monster._udeadval)
+					ChangeLightXY(monster.mlid, { dx, dy });
 			}
 		}
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

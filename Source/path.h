@@ -3,48 +3,67 @@
  *
  * Interface of the path finding algorithms.
  */
-#ifndef __PATH_H__
-#define __PATH_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <functional>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <SDL.h>
 
-typedef struct PATHNODE {
-	Uint8 f;
-	Uint8 h;
-	Uint8 g;
-	int x;
-	int y;
+#include "engine/direction.hpp"
+#include "engine/point.hpp"
+
+namespace devilution {
+
+#define MAX_PATH_LENGTH 25
+
+struct PATHNODE {
+	uint8_t f;
+	uint8_t h;
+	uint8_t g;
+	Point position;
 	struct PATHNODE *Parent;
 	struct PATHNODE *Child[8];
 	struct PATHNODE *NextNode;
-} PATHNODE;
+};
 
-int FindPath(BOOL (*PosOk)(int, int, int), int PosOkArg, int sx, int sy, int dx, int dy, Sint8 path[MAX_PATH_LENGTH]);
-int path_get_h_cost(int sx, int sy, int dx, int dy);
-PATHNODE *GetNextPath();
-BOOL path_solid_pieces(PATHNODE *pPath, int dx, int dy);
-BOOL path_get_path(BOOL (*PosOk)(int, int, int), int PosOkArg, PATHNODE *pPath, int x, int y);
-BOOL path_parent_path(PATHNODE *pPath, int dx, int dy, int sx, int sy);
-PATHNODE *path_get_node1(int dx, int dy);
-PATHNODE *path_get_node2(int dx, int dy);
-void path_next_node(PATHNODE *pPath);
-void path_set_coords(PATHNODE *pPath);
-void path_push_active_step(PATHNODE *pPath);
-PATHNODE *path_pop_active_step();
-PATHNODE *path_new_step();
+bool IsTileNotSolid(Point position);
+bool IsTileSolid(Point position);
 
-/* rdata */
+/**
+ * @brief Checks the position is solid or blocked by an object
+ */
+bool IsTileWalkable(Point position, bool ignoreDoors = false);
 
-extern const char pathxdir[8];
-extern const char pathydir[8];
-#ifdef __cplusplus
-}
-#endif
+/**
+ * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
+ * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
+ */
+int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH]);
 
-DEVILUTION_END_NAMESPACE
+/**
+ * @brief check if stepping from a given position to a neighbouring tile cuts a corner.
+ *
+ * If you step from A to B, both Xs need to be clear:
+ *
+ *  AX
+ *  XB
+ *
+ * @return true if step is allowed
+ */
+bool path_solid_pieces(Point startPosition, Point destinationPosition);
 
-#endif /* __PATH_H__ */
+/** For iterating over the 8 possible movement directions */
+const Displacement PathDirs[8] = {
+	// clang-format off
+	{ -1, -1 }, //Direction::North
+	{ -1,  1 }, //Direction::West
+	{  1, -1 }, //Direction::East
+	{  1,  1 }, //Direction::South
+	{ -1,  0 }, //Direction::NorthWest
+	{  0, -1 }, //Direction::NorthEast
+	{  1,  0 }, //Direction::SouthEast
+	{  0,  1 }, //Direction::SouthWest
+	// clang-format on
+};
+
+} // namespace devilution

@@ -7,7 +7,7 @@
 # You should have received a copy of the CC0 Public Domain Dedication
 # along with this software. If not, see
 #
-#     http://creativecommons.org/publicdomain/zero/1.0/
+#     https://creativecommons.org/publicdomain/zero/1.0/
 #
 ########################################################################
 # Tries to find the local libsodium installation.
@@ -55,28 +55,37 @@ if (UNIX OR CMAKE_SYSTEM_NAME STREQUAL "Generic" OR AMIGA)
     endif()
 
     if(sodium_USE_STATIC_LIBS)
-    if(sodium_PKG_STATIC_LIBRARIES)
+      if(sodium_PKG_STATIC_LIBRARIES)
+        # Create a temporary list to manipulate the list of libraries we found
+        set(sodium_PKG_STATIC_LIBRARIES_TMP "")
+
+        # Mangle the library names into the format we need
         foreach(_libname ${sodium_PKG_STATIC_LIBRARIES})
-            if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
-                list(INSERT sodium_PKG_STATIC_LIBRARIES 0 "lib${_libname}.a")
-            endif()
+          if (NOT _libname MATCHES "^lib.*\\.a$") # ignore strings already ending with .a
+            list(APPEND sodium_PKG_STATIC_LIBRARIES_TMP "lib${_libname}.a")
+          endif()
         endforeach()
-        list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES)
-    else()
+
+        list(REMOVE_DUPLICATES sodium_PKG_STATIC_LIBRARIES_TMP)
+        # Replace the list with our processed one
+        set(sodium_PKG_STATIC_LIBRARIES ${sodium_PKG_STATIC_LIBRARIES_TMP})
+      else()
         # if pkgconfig for libsodium doesn't provide
         # static lib info, then override PKG_STATIC here..
-            set(sodium_PKG_STATIC_LIBRARIES libsodium.a)
-        endif()
+        set(sodium_PKG_STATIC_LIBRARIES libsodium.a)
+      endif()
 
-        set(XPREFIX sodium_PKG_STATIC)
+      set(XPREFIX sodium_PKG_STATIC)
     else()
-    if(sodium_PKG_LIBRARIES STREQUAL "")
-            set(sodium_PKG_LIBRARIES sodium)
-        endif()
+      if(sodium_PKG_LIBRARIES STREQUAL "")
+        set(sodium_PKG_LIBRARIES sodium)
+      endif()
 
-        set(XPREFIX sodium_PKG)
+      set(XPREFIX sodium_PKG)
     endif()
 
+    # Feed pkgconfig results (if found) into standard find_* to populate
+    # the right CMake cache variables
     find_path(sodium_INCLUDE_DIR sodium.h
         HINTS ${${XPREFIX}_INCLUDE_DIRS}
     )
@@ -112,15 +121,14 @@ elseif (WIN32)
     try_compile(_UNUSED_VAR "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/arch.c"
             OUTPUT_VARIABLE _COMPILATION_LOG
         )
-        string(REGEX REPLACE ".*ARCH_VALUE ([a-zA-Z0-9_]+).*" "\\1" _TARGET_ARCH "${_COMPILATION_LOG}")
 
         # construct library path
-        if (_TARGET_ARCH STREQUAL "x86_32")
+        if (CMAKE_SIZEOF_VOID_P EQUAL 4)
             string(APPEND _PLATFORM_PATH "Win32")
-        elseif(_TARGET_ARCH STREQUAL "x86_64")
+        elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
             string(APPEND _PLATFORM_PATH "x64")
         else()
-            message(FATAL_ERROR "the ${_TARGET_ARCH} architecture is not supported by Findsodium.cmake.")
+            message(FATAL_ERROR "Can't find target architecture. CMAKE_SIZEOF_VOID_P not 4 or 8.")
         endif()
         string(APPEND _PLATFORM_PATH "/$$CONFIG$$")
 

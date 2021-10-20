@@ -3,34 +3,30 @@
  *
  * Interface of functions for placing dead monsters.
  */
-#ifndef __DEAD_H__
-#define __DEAD_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <array>
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "engine/point.hpp"
+#include "engine.h"
 
-typedef struct DeadStruct {
-	Uint8 *_deadData[8];
-	int _deadFrame;
-	int _deadWidth;
-	int _deadWidth2;
-	Uint8 _deadtrans;
-} DeadStruct;
+namespace devilution {
 
-extern DeadStruct dead[MAXDEAD];
-extern int stonendx;
+static constexpr unsigned MaxCorpses = 31;
 
-void InitDead();
-void AddDead(int dx, int dy, char dv, int ddir);
-void SetDead();
+struct Corpse {
+	std::array<const byte *, 8> data;
+	int frame;
+	int width;
+	uint8_t translationPaletteIndex;
+};
 
-#ifdef __cplusplus
-}
-#endif
+extern Corpse Corpses[MaxCorpses];
+extern int8_t stonendx;
 
-DEVILUTION_END_NAMESPACE
+void InitCorpses();
+void AddCorpse(Point tilePosition, int8_t dv, Direction ddir);
+void SyncUniqDead();
 
-#endif /* __DEAD_H__ */
+} // namespace devilution

@@ -1,0 +1,89 @@
+---
+# clang-tidy configuration
+#
+# clang-tidy can be run manually like this:
+#
+#     run-clang-tidy -p build 'Source.*'
+#
+# To apply fixes suggested by clang-tidy, run:
+#
+#     run-clang-tidy -p build -fix -format 'Source.*'
+#
+# To limit the run to certain checks:
+#
+#     run-clang-tidy -checks='-*,modernize-use-nullptr' -p build 'Source.*'
+#
+# clang-tidy also has several IDE integrations listed here:
+# https://clang.llvm.org/extra/clang-tidy/Integrations.html
+
+# Enable most checks.
+#
+# Built-in checks:
+# https://clang.llvm.org/extra/clang-tidy/checks/list.html
+#
+# Exclusions:
+#
+# -modernize-avoid-c-arrays
+#   We use C-arrays throughout, e.g. for `constexpr char []`.
+#   `std::array` is not a replacement because its length is
+#   not deduced.
+#
+# -modernize-use-trailing-return-type
+#   A purely stylistic change that we do not want.
+#
+# -modernize-concat-nested-namespaces
+# -modernize-avoid-bind
+#   Compatibility with older compilers.
+Checks: >
+  -*,
+  bugprone-*,
+  cppcoreguidelines-pro-type-cstyle-cast,
+  google-runtime-int,
+  llvm-include-order,
+  llvm-namespace-comment,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -readability-magic-numbers,
+  -modernize-avoid-c-arrays,
+  -modernize-use-trailing-return-type,
+  -modernize-concat-nested-namespaces,
+  -modernize-avoid-bind
+
+HeaderFilterRegex: "^(Source|test)\\.h$"
+
+CheckOptions:
+  - { key: readability-identifier-naming.NamespaceCase,           value: lower_case }
+  - { key: readability-identifier-naming.ClassCase,               value: CamelCase  }
+  - { key: readability-identifier-naming.StructCase,              value: CamelCase  }
+  - { key: readability-identifier-naming.TemplateParameterCase,   value: CamelCase  }
+  - { key: readability-identifier-naming.FunctionCase,            value: CamelCase  }
+  - { key: readability-identifier-naming.ParameterCase,           value: camelBack  }
+  - { key: readability-identifier-naming.MemberCase,              value: camelBack  }
+  - { key: readability-identifier-naming.VariableCase,            value: camelBack  }
+  - { key: readability-identifier-naming.ClassMemberCase,         value: lower_case }
+  - { key: readability-identifier-naming.GlobalVariableCase,      value: aNy_CasE   }
+  - { key: readability-identifier-naming.GlobalFunctionCase,      value: aNy_CasE   }
+  - { key: readability-identifier-naming.ClassMemberSuffix,       value: _          }
+  - { key: readability-identifier-naming.PrivateMemberSuffix,     value: _          }
+  - { key: readability-identifier-naming.ProtectedMemberSuffix,   value: _          }
+  - { key: readability-identifier-naming.EnumConstantCase,        value: CamelCase  }
+  - { key: readability-identifier-naming.ConstexprVariableCase,   value: CamelCase  }
+  - { key: readability-identifier-naming.GlobalConstantCase,      value: CamelCase  }
+  - { key: readability-identifier-naming.MemberConstantCase,      value: CamelCase  }
+  - { key: readability-identifier-naming.StaticConstantCase,      value: CamelCase  }
+
+  # Allow short if-statements without braces
+  - { key: readability-braces-around-statements.ShortStatementLines, value: 3 }
+
+  # Use <cstdint> fixed-width integer types instead of short, long and long long
+  - { key: google-runtime-int.UnsignedTypePrefix, value: "std::uint" }
+  - { key: google-runtime-int.SignedTypePrefix, value: "std::int" }
+  - { key: google-runtime-int.TypeSuffix, value: "_t" }
+
+  # `int8_t` aren't used as chars, disable misleading warning.
+  - { key: bugprone-signed-char-misuse.CharTypdefsToIgnore, value: "std::int8_t" }
+
+  - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: true }

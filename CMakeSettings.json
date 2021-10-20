@@ -7,7 +7,19 @@
 			"buildRoot": "${workspaceRoot}\\build\\${name}",
 			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
 			"inheritEnvironments": [ "msvc_x64" ],
-			"intelliSenseMode": "windows-msvc-x64"
+			"intelliSenseMode": "windows-msvc-x64",
+			"enableClangTidyCodeAnalysis": true
+		},
+		{
+			"name": "x64-Debug-UnitTests",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"buildRoot": "${workspaceRoot}\\build\\${name}",
+			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+			"inheritEnvironments": [ "msvc_x64" ],
+			"intelliSenseMode": "windows-msvc-x64",
+			"cmakeCommandArgs": "-DRUN_TESTS=ON",
+			"enableClangTidyCodeAnalysis": true
 		},
 		{
 			"name": "x64-Release",
@@ -17,7 +29,8 @@
 			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
 			"cmakeCommandArgs": "-DBINARY_RELEASE=ON",
 			"inheritEnvironments": [ "msvc_x64" ],
-			"intelliSenseMode": "windows-msvc-x64"
+			"intelliSenseMode": "windows-msvc-x64",
+			"enableClangTidyCodeAnalysis": true
 		},
 		{
 			"name": "x86-Debug",
@@ -26,7 +39,19 @@
 			"buildRoot": "${workspaceRoot}\\build\\${name}",
 			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
 			"inheritEnvironments": [ "msvc_x86" ],
-			"intelliSenseMode": "windows-msvc-x86"
+			"intelliSenseMode": "windows-msvc-x86",
+			"enableClangTidyCodeAnalysis": true
+		},
+		{
+			"name": "x86-Debug-UnitTests",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"buildRoot": "${workspaceRoot}\\build\\${name}",
+			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+			"inheritEnvironments": [ "msvc_x86" ],
+			"intelliSenseMode": "windows-msvc-x86",
+			"cmakeCommandArgs": "-DRUN_TESTS=ON",
+			"enableClangTidyCodeAnalysis": true
 		},
 		{
 			"name": "x86-Release",
@@ -36,7 +61,8 @@
 			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
 			"cmakeCommandArgs": "-DBINARY_RELEASE=ON",
 			"inheritEnvironments": [ "msvc_x86" ],
-			"intelliSenseMode": "windows-msvc-x86"
+			"intelliSenseMode": "windows-msvc-x86",
+			"enableClangTidyCodeAnalysis": true
 		}
 	]
 }

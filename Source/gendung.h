@@ -3,92 +3,232 @@
  *
  * Interface of general dungeon generation code.
  */
-#ifndef __GENDUNG_H__
-#define __GENDUNG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
+#include <memory>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
+#include "scrollrt.h"
+#include "utils/stdcompat/optional.hpp"
 
-typedef struct ScrollStruct {
-	int _sxoff; // X-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pxoff
-	int _syoff; // Y-offset of camera position. This usually corresponds to a negative version of plr[myplr]._pyoff
-	int _sdx;
-	int _sdy;
-	int _sdir;
-} ScrollStruct;
+namespace devilution {
 
-typedef struct THEME_LOC {
-	int x;
-	int y;
-	int ttval;
-	int width;
-	int height;
-} THEME_LOC;
+#define DMAXX 40
+#define DMAXY 40
 
-typedef struct MICROS {
-	Uint16 mt[16];
-} MICROS;
+#define MAXDUNX (16 + DMAXX * 2 + 16)
+#define MAXDUNY (16 + DMAXY * 2 + 16)
 
-extern BYTE dungeon[DMAXX][DMAXY];
-extern BYTE pdungeon[DMAXX][DMAXY];
-extern char dflags[DMAXX][DMAXY];
+#define MAXTHEMES 50
+#define MAXTILES 2048
+
+enum _setlevels : int8_t {
+	SL_NONE,
+	SL_SKELKING,
+	SL_BONECHAMB,
+	SL_MAZE,
+	SL_POISONWATER,
+	SL_VILEBETRAYER,
+
+	SL_LAST = SL_VILEBETRAYER,
+};
+
+enum dungeon_type : int8_t {
+	DTYPE_TOWN,
+	DTYPE_CATHEDRAL,
+	DTYPE_CATACOMBS,
+	DTYPE_CAVES,
+	DTYPE_HELL,
+	DTYPE_NEST,
+	DTYPE_CRYPT,
+
+	DTYPE_LAST = DTYPE_CRYPT,
+	DTYPE_NONE = -1,
+};
+
+enum lvl_entry : uint8_t {
+	ENTRY_MAIN,
+	ENTRY_PREV,
+	ENTRY_SETLVL,
+	ENTRY_RTNLVL,
+	ENTRY_LOAD,
+	ENTRY_WARPLVL,
+	ENTRY_TWARPDN,
+	ENTRY_TWARPUP,
+};
+
+enum {
+	// clang-format off
+	DLRG_HDOOR     = 1 << 0,
+	DLRG_VDOOR     = 1 << 1,
+	DLRG_CHAMBER   = 1 << 6,
+	DLRG_PROTECTED = 1 << 7,
+	// clang-format on
+};
+
+enum {
+	// clang-format off
+	BFLAG_MISSILE     = 1 << 0,
+	BFLAG_VISIBLE     = 1 << 1,
+	BFLAG_DEAD_PLAYER = 1 << 2,
+	BFLAG_POPULATED   = 1 << 3,
+	BFLAG_MONSTLR     = 1 << 4,
+	BFLAG_PLAYERLR    = 1 << 5,
+	BFLAG_LIT         = 1 << 6,
+	BFLAG_EXPLORED    = 1 << 7,
+	// clang-format on
+};
+
+enum _difficulty : uint8_t {
+	DIFF_NORMAL,
+	DIFF_NIGHTMARE,
+	DIFF_HELL,
+
+	DIFF_LAST = DIFF_HELL,
+};
+
+struct ScrollStruct {
+	/** @brief Tile offset of camera. */
+	Point tile;
+	/** @brief Pixel offset of camera. */
+	Displacement offset;
+	/** @brief Move direction of camera. */
+	ScrollDirection _sdir;
+};
+
+struct THEME_LOC {
+	int16_t x;
+	int16_t y;
+	int16_t ttval;
+	int16_t width;
+	int16_t height;
+};
+
+struct MegaTile {
+	uint16_t micro1;
+	uint16_t micro2;
+	uint16_t micro3;
+	uint16_t micro4;
+};
+
+struct MICROS {
+	uint16_t mt[16];
+};
+
+struct ShadowStruct {
+	uint8_t strig;
+	uint8_t s1;
+	uint8_t s2;
+	uint8_t s3;
+	uint8_t nv1;
+	uint8_t nv2;
+	uint8_t nv3;
+};
+
+/** Contains the tile IDs of the map. */
+extern uint8_t dungeon[DMAXX][DMAXY];
+/** Contains a backup of the tile IDs of the map. */
+extern uint8_t pdungeon[DMAXX][DMAXY];
+extern uint8_t dflags[DMAXX][DMAXY];
+/** Specifies the active set level X-coordinate of the map. */
 extern int setpc_x;
+/** Specifies the active set level Y-coordinate of the map. */
 extern int setpc_y;
+/** Specifies the width of the active set level of the map. */
 extern int setpc_w;
+/** Specifies the height of the active set level of the map. */
 extern int setpc_h;
-extern BYTE *pSetPiece;
-extern BOOL setloadflag;
-extern BYTE *pSpecialCels;
-extern BYTE *pMegaTiles;
-extern BYTE *pLevelPieces;
-extern BYTE *pDungeonCels;
-extern char block_lvid[MAXTILES + 1];
-extern BOOLEAN nBlockTable[MAXTILES + 1];
-extern BOOLEAN nSolidTable[MAXTILES + 1];
-extern BOOLEAN nTransTable[MAXTILES + 1];
-extern BOOLEAN nMissileTable[MAXTILES + 1];
-extern BOOLEAN nTrapTable[MAXTILES + 1];
-extern int dminx;
-extern int dminy;
-extern int dmaxx;
-extern int dmaxy;
-extern int gnDifficulty;
+/** Contains the contents of the single player quest DUN file. */
+extern std::unique_ptr<uint16_t[]> pSetPiece;
+/** Specifies whether a single player quest DUN has been loaded. */
+extern bool setloadflag;
+extern std::optional<CelSprite> pSpecialCels;
+/** Specifies the tile definitions of the active dungeon type; (e.g. levels/l1data/l1.til). */
+extern std::unique_ptr<MegaTile[]> pMegaTiles;
+extern std::unique_ptr<uint16_t[]> pLevelPieces;
+extern std::unique_ptr<byte[]> pDungeonCels;
+/**
+ * List of transparancy masks to use for dPieces
+ */
+extern std::array<uint8_t, MAXTILES + 1> block_lvid;
+/**
+ * List of light blocking dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nBlockTable;
+/**
+ * List of path blocking dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nSolidTable;
+/**
+ * List of transparent dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nTransTable;
+/**
+ * List of missile blocking dPieces
+ */
+extern std::array<bool, MAXTILES + 1> nMissileTable;
+extern std::array<bool, MAXTILES + 1> nTrapTable;
+/** Specifies the minimum X,Y-coordinates of the map. */
+extern Point dminPosition;
+/** Specifies the maximum X,Y-coordinates of the map. */
+extern Point dmaxPosition;
+/** Specifies the active dungeon type of the current game. */
 extern dungeon_type leveltype;
-extern BYTE currlevel;
-extern BOOLEAN setlevel;
-extern BYTE setlvlnum;
+/** Specifies the active dungeon level of the current game. */
+extern uint8_t currlevel;
+extern bool setlevel;
+/** Specifies the active quest level of the current game. */
+extern _setlevels setlvlnum;
+/** Specifies the player viewpoint X-coordinate of the map. */
 extern dungeon_type setlvltype;
-extern int ViewX;
-extern int ViewY;
-extern int ViewBX;
-extern int ViewBY;
-extern int ViewDX;
-extern int ViewDY;
+/** Specifies the player viewpoint X,Y-coordinates of the map. */
+extern Point ViewPosition;
 extern ScrollStruct ScrollInfo;
-extern int LvlViewX;
-extern int LvlViewY;
 extern int MicroTileLen;
 extern char TransVal;
-extern BOOLEAN TransList[256];
+/** Specifies the active transparency indices. */
+extern bool TransList[256];
+/** Contains the piece IDs of each tile on the map. */
 extern int dPiece[MAXDUNX][MAXDUNY];
+/** Specifies the dungeon piece information for a given coordinate and block number. */
 extern MICROS dpiece_defs_map_2[MAXDUNX][MAXDUNY];
-extern char dTransVal[MAXDUNX][MAXDUNY];
+/** Specifies the transparency at each coordinate of the map. */
+extern int8_t dTransVal[MAXDUNX][MAXDUNY];
 extern char dLight[MAXDUNX][MAXDUNY];
 extern char dPreLight[MAXDUNX][MAXDUNY];
-extern char dFlags[MAXDUNX][MAXDUNY];
-extern char dPlayer[MAXDUNX][MAXDUNY];
-extern int dMonster[MAXDUNX][MAXDUNY];
-extern char dDead[MAXDUNX][MAXDUNY];
+extern int8_t dFlags[MAXDUNX][MAXDUNY];
+/** Contains the player numbers (players array indices) of the map. */
+extern int8_t dPlayer[MAXDUNX][MAXDUNY];
+/**
+ * Contains the NPC numbers of the map. The NPC number represents a
+ * towner number (towners array index) in Tristram and a monster number
+ * (monsters array index) in the dungeon.
+ */
+extern int16_t dMonster[MAXDUNX][MAXDUNY];
+/**
+ * Contains the dead numbers (deads array indices) and dead direction of
+ * the map, encoded as specified by the pseudo-code below.
+ * dDead[x][y] & 0x1F - index of dead
+ * dDead[x][y] >> 0x5 - direction
+ */
+extern int8_t dCorpse[MAXDUNX][MAXDUNY];
+/** Contains the object numbers (objects array indices) of the map. */
 extern char dObject[MAXDUNX][MAXDUNY];
-extern char dItem[MAXDUNX][MAXDUNY];
-extern char dMissile[MAXDUNX][MAXDUNY];
+/** Contains the item numbers (items array indices) of the map. */
+extern int8_t dItem[MAXDUNX][MAXDUNY];
+/**
+ * Contains the arch frame numbers of the map from the special tileset
+ * (e.g. "levels/l1data/l1s.cel"). Note, the special tileset of Tristram (i.e.
+ * "levels/towndata/towns.cel") contains trees rather than arches.
+ */
 extern char dSpecial[MAXDUNX][MAXDUNY];
 extern int themeCount;
 extern THEME_LOC themeLoc[MAXTHEMES];
 
+bool InDungeonBounds(Point position);
 void FillSolidBlockTbls();
 void SetDungeonMicros();
 void DRLG_InitTrans();
@@ -100,15 +240,12 @@ void DRLG_AreaTrans(int num, BYTE *List);
 void DRLG_InitSetPC();
 void DRLG_SetPC();
 void Make_SetPC(int x, int y, int w, int h);
-void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, int rndSize);
+void DRLG_PlaceThemeRooms(int minSize, int maxSize, int floor, int freq, bool rndSize);
 void DRLG_HoldThemeRooms();
-BOOL SkipThemeRoom(int x, int y);
+void DRLG_LPass3(int lv);
+void DRLG_Init_Globals();
+bool SkipThemeRoom(int x, int y);
 void InitLevels();
+void FloodTransparencyValues(uint8_t floorID);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __GENDUNG_H__ */
+} // namespace devilution

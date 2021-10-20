@@ -3,25 +3,16 @@
  *
  * Interface of functions for updating game state from network commands.
  */
-#ifndef __DTHREAD_H__
-#define __DTHREAD_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <memory>
+#include "utils/stdcompat/cstddef.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
-void dthread_remove_player(int pnum);
-void dthread_send_delta(int pnum, char cmd, void *pbSrc, int dwLen);
+void dthread_remove_player(uint8_t pnum);
+void dthread_send_delta(int pnum, _cmd_id cmd, std::unique_ptr<byte[]> data, uint32_t len);
 void dthread_start();
-void dthread_cleanup();
+void DThreadCleanup();
 
-/* data */
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DTHREAD_H__ */
+} // namespace devilution

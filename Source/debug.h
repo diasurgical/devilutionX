@@ -3,33 +3,33 @@
  *
  * Interface of debug functions.
  */
-#ifndef __DEBUG_H__
-#define __DEBUG_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <unordered_map>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "miniwin/miniwin.h"
+#include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/string_view.hpp"
 
-extern BYTE *pSquareCel;
+namespace devilution {
+
+extern std::optional<CelSprite> pSquareCel;
+extern bool DebugToggle;
+extern bool DebugGodMode;
+extern bool DebugVision;
+extern bool DebugGrid;
+extern std::unordered_map<int, Point> DebugCoordsMap;
+extern bool DebugScrollViewEnabled;
 
 void FreeDebugGFX();
-void CheckDungeonClear();
 void LoadDebugGFX();
-void GiveGoldCheat();
-void TakeGoldCheat();
-void MaxSpellsCheat();
-void SetAllSpellsCheat();
-void PrintDebugPlayer(BOOL bNextPlayer);
-void PrintDebugQuest();
 void GetDebugMonster();
 void NextDebugMonster();
+void SetDebugLevelSeedInfos(uint32_t mid1Seed, uint32_t mid2Seed, uint32_t mid3Seed, uint32_t endSeed);
+bool CheckDebugTextCommand(const string_view text);
+bool IsDebugGridTextNeeded();
+bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DEBUG_H__ */
+} // namespace devilution

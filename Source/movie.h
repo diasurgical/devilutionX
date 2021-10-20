@@ -3,24 +3,24 @@
  *
  * Interface of video playback.
  */
-#ifndef __MOVIE_H__
-#define __MOVIE_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+extern bool movie_playing;
+extern bool loop_movie;
 
-extern BYTE movie_playing;
-extern BOOL loop_movie;
+/**
+ * @brief Start playback of a given video.
+ * @param pszMovie The file name of the video
+ * @param user_can_close Set to false to make the video unskippable.
+ */
+void play_movie(const char *pszMovie, bool user_can_close);
 
-void play_movie(const char *pszMovie, BOOL user_can_close);
+/**
+ * @brief Fade to black and play a video
+ * @param pszMovie file path of movie
+ */
+void PlayInGameMovie(const char *pszMovie);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MOVIE_H__ */
+} // namespace devilution

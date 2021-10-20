@@ -1,13 +1,18 @@
 # DevilutionX
-Diablo build for modern operating systems
+DevilutionX is a source port of Diablo and Hellfire that strives to make it simple to run the game while providing engine improvements, bugfixes, and some optional quality of life features.
 
-Discord: https://discord.gg/aQBQdDe
+# Links
+Discord: https://discord.gg/YQKCAYQ
 GitHub: https://github.com/diasurgical/devilutionX
+
+Check out the manual for what features are available and how best to take advantage of them: https://github.com/diasurgical/devilutionX/wiki
+For a full list of changes see our changelog: https://github.com/diasurgical/devilutionX/blob/master/docs/CHANGELOG.md
 
 # How To Install:
  - Extract the files in the archive.
- - Install libsdl2 libsdl2-mixer libsdl2-ttf
- - Copy diabdat.mpq from your CD (or GoG install folder) to the DevilutionX install folder.
+ - Install libsdl2
+ - Copy DIABDAT.MPQ from the CD or GOG-installation (or extract it from the GoG installer) to the DevilutionX folder.
+	- To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
  - Run ./devilutionx
 
 # Multiplayer

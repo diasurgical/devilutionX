@@ -3,32 +3,20 @@
  *
  * Interface of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
  */
-#ifndef __SHA_H__
-#define __SHA_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "utils/stdcompat/cstddef.hpp"
 
-#define SHA1HashSize 20
+namespace devilution {
 
-typedef struct SHA1Context {
-	Uint32 state[5];
-	Uint32 count[2];
-	char buffer[64];
-} SHA1Context;
+constexpr size_t BlockSize = 64;
+constexpr size_t SHA1HashSize = 20;
 
 void SHA1Clear();
-void SHA1Result(int n, char Message_Digest[SHA1HashSize]);
-void SHA1Calculate(int n, const char *data, char Message_Digest[SHA1HashSize]);
+void SHA1Result(int n, byte messageDigest[SHA1HashSize]);
+void SHA1Calculate(int n, const byte data[BlockSize], byte messageDigest[SHA1HashSize]);
 void SHA1Reset(int n);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SHA_H__ */
+} // namespace devilution

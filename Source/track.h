@@ -3,23 +3,11 @@
  *
  * Interface of functionality tracking what the mouse cursor is pointing at.
  */
-#ifndef __TRACK_H__
-#define __TRACK_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void track_process();
-void track_repeat_walk(bool rep);
+void RepeatMouseAction();
 bool track_isscrolling();
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TRACK_H__ */
+} // namespace devilution

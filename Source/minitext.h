@@ -3,35 +3,39 @@
  *
  * Interface of scrolling dialog text.
  */
-#ifndef __MINITEXT_H__
-#define __MINITEXT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
+#include "textdat.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern bool qtextflag;
 
+/**
+ * @brief Free the resouces used by the quest dialog window
+ */
 void FreeQuestText();
+
+/**
+ * @brief Load the resouces used by the quest dialog window, and initialize it's state
+ */
 void InitQuestText();
-void InitQTextMsg(int m);
+
+/**
+ * @brief Start the given naration
+ * @param m Index of narration from the Texts table
+ */
+void InitQTextMsg(_speech_id m);
 
 /**
  * @brief Draw the quest dialog window decoration and background.
  */
-void DrawQTextBack(CelOutputBuffer out);
+void DrawQTextBack(const Surface &out);
 
 /**
  * @brief Draw the quest dialog window text.
  */
-void DrawQText(CelOutputBuffer out);
+void DrawQText(const Surface &out);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MINITEXT_H__ */
+} // namespace devilution

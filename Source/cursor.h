@@ -3,50 +3,68 @@
  *
  * Interface of cursor tracking functionality.
  */
-#ifndef __CURSOR_H__
-#define __CURSOR_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
+#include <utility>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "miniwin/miniwin.h"
+#include "utils/stdcompat/optional.hpp"
 
-extern int cursW;
-extern int cursH;
+namespace devilution {
+
+enum cursor_id : uint8_t {
+	CURSOR_NONE,
+	CURSOR_HAND,
+	CURSOR_IDENTIFY,
+	CURSOR_REPAIR,
+	CURSOR_RECHARGE,
+	CURSOR_DISARM,
+	CURSOR_OIL,
+	CURSOR_TELEKINESIS,
+	CURSOR_RESURRECT,
+	CURSOR_TELEPORT,
+	CURSOR_HEALOTHER,
+	CURSOR_HOURGLASS,
+	CURSOR_FIRSTITEM,
+};
+
+extern Size cursSize;
 extern int pcursmonst;
-extern int icursW28;
-extern int icursH28;
-extern BYTE *pCursCels;
-extern BYTE *pCursCels2;
-extern int icursH;
-extern char pcursinvitem;
-extern int icursW;
-extern char pcursitem;
-extern char pcursobj;
-extern char pcursplr;
-extern int cursmx;
-extern int cursmy;
+extern Size icursSize28;
+extern Size icursSize;
+extern int8_t pcursinvitem;
+extern int8_t pcursitem;
+extern int8_t pcursobj;
+extern int8_t pcursplr;
+extern Point cursPosition;
 extern int pcurs;
 
 void InitCursor();
 void FreeCursor();
-void SetICursor(int i);
-void SetCursor_(int i);
-void NewCursor(int i);
+void SetICursor(int cursId);
+void NewCursor(int cursId);
 void InitLevelCursor();
 void CheckRportal();
 void CheckTown();
 void CheckCursMove();
 
-/* rdata */
-extern const int InvItemWidth[];
-extern const int InvItemHeight[];
-
-#ifdef __cplusplus
+inline bool IsItemSprite(int cursId)
+{
+	return cursId >= CURSOR_FIRSTITEM;
 }
-#endif
 
-DEVILUTION_END_NAMESPACE
+void CelDrawCursor(const Surface &out, Point position, int cursId);
 
-#endif /* __CURSOR_H__ */
+/** Returns the sprite for the given inventory index. */
+const CelSprite &GetInvItemSprite(int i);
+
+/** Returns the CEL frame index for the given inventory index. */
+int GetInvItemFrame(int i);
+
+/** Returns the width and height for an inventory index. */
+Size GetInvItemSize(int cursId);
+
+} // namespace devilution

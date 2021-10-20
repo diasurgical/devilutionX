@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name" translatable="false">DevilutionX</string>
+	<!-- Strings used for fragments for navigation -->
+
+	<string name="guide_full_installation">За да играете пълната версия на играта поставете файла DIABDAT.MPQ (за допълнението Hellfire добавете всички останали MPQ файлове) от оригиналната PC/Mac версия в Android/data/org.diasurgical.devilutionx/files.<br/>\n<br/>\nАко нямате оригиналната версия на играта, можете да закупите Diablo от <a href="https://www.gog.com/game/diablo">GOG.com.</a></string>
+	<string name="guide_shareware">Като алтернатива можете да изтеглите пробната версия на играта.</string>
+	<string name="faq_link">Вижте <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">Упътването за инсталация</a> за повече информация.</string>
+	<string name="game_data_retry">Опитайте отново</string>
+	<string name="title_activity_data">Игрови ресурси</string>
+	<string name="download_spawn">Изтеглете пробна версия</string>
+</resources>

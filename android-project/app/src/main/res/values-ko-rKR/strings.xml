@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">DevilutionX</string>
+
+	<string name="guide_full_installation">풀버전을 플레이하려면 게임 원본의 DIABDAT.MPQ 파일을 Android/data/org.diasurgical.devilutionx/files 폴더에 배치해야 합니다.<br/>\n<br/>\n디아블로 게임을 가지고 있지 않으면 <a href="https://www.gog.com/game/diablo">GOG.com</a>에서 구입할 수 있습니다.</string>
+	<string name="guide_shareware">또는 스폰 버전을 다운로드 하여, 체험판을 플레이할 수도 있습니다.</string>
+	<string name="faq_link">자세한 내용은 <a href="https://github.com/diasurgical/devilutionX/blob/master/docs/installing.md#installing">설치 가이드</a>를 참조하세요.</string>
+	<string name="game_data_retry">다시 확인</string>
+	<string name="title_activity_data">게임 데이터</string>
+	<string name="download_spawn">체험판 데이터 다운로드</string>
+	<string name="missing_game_data">게임 데이터 없음</string>
+	<string name="download_started">다운로드 시작됨</string>
+	<string name="shareware_data">디아블로 체험판 데이터</string>
+</resources>

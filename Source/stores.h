@@ -3,18 +3,21 @@
  *
  * Interface of functionality for stores and towner dialogs.
  */
-#ifndef __STORES_H__
-#define __STORES_H__
+#pragma once
 
+#include "control.h"
 #include "engine.h"
+#include "engine/cel_sprite.hpp"
+#include "utils/stdcompat/optional.hpp"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define WITCH_ITEMS 25
+#define SMITH_ITEMS 25
+#define SMITH_PREMIUM_ITEMS 15
+#define STORE_LINES 104
 
-typedef enum talk_id {
+enum talk_id : uint8_t {
 	STORE_NONE,
 	STORE_SMITH,
 	STORE_SBUY,
@@ -39,25 +42,24 @@ typedef enum talk_id {
 	STORE_TAVERN,
 	STORE_DRUNK,
 	STORE_BARMAID,
-} talk_id;
+};
 
-typedef struct STextStruct {
+struct STextStruct {
 	int _sx;
 	int _syoff;
 	char _sstr[128];
-	bool _sjust;
-	text_color _sclr;
+	UiFlags flags;
 	int _sline;
 	bool _ssel;
 	int _sval;
-} STextStruct;
+};
 
 /** Shop frame graphics */
-extern BYTE *pSTextBoxCels;
+extern std::optional<CelSprite> pSTextBoxCels;
 /** Small text selection cursor */
-extern BYTE *pSPentSpn2Cels;
+extern std::optional<CelSprite> pSPentSpn2Cels;
 /** Scrollbar graphics */
-extern BYTE *pSTextSlidCels;
+extern std::optional<CelSprite> pSTextSlidCels;
 
 /** Currently active store */
 extern talk_id stextflag;
@@ -67,60 +69,49 @@ extern int storenumh;
 /** Map of inventory items being presented in the store */
 extern char storehidx[48];
 /** Copies of the players items as presented in the store */
-extern ItemStruct storehold[48];
+extern Item storehold[48];
 
 /** Temporary item used to generate gold piles by various function */
-extern ItemStruct golditem;
+extern Item golditem;
 
 /** Items sold by Griswold */
-extern ItemStruct smithitem[SMITH_ITEMS];
+extern Item smithitem[SMITH_ITEMS];
 /** Number of premium items for sale by Griswold */
 extern int numpremium;
 /** Base level of current premium items sold by Griswold */
 extern int premiumlevel;
 /** Premium items sold by Griswold */
-extern ItemStruct premiumitem[SMITH_PREMIUM_ITEMS];
+extern Item premiumitems[SMITH_PREMIUM_ITEMS];
 
 /** Items sold by Pepin */
-extern ItemStruct healitem[20];
+extern Item healitem[20];
 
 /** Items sold by Adria */
-extern ItemStruct witchitem[WITCH_ITEMS];
+extern Item witchitem[WITCH_ITEMS];
 
 /** Current level of the item sold by Wirt */
 extern int boylevel;
 /** Current item sold by Wirt */
-extern ItemStruct boyitem;
+extern Item boyitem;
 
-void AddStoreHoldRepair(ItemStruct *itm, int i);
+void AddStoreHoldRepair(Item *itm, int8_t i);
 void InitStores();
-int PentSpn2Spin();
 void SetupTownStores();
 void FreeStoreMem();
-void PrintSString(CelOutputBuffer out, int x, int y, bool cjustflag, const char *str, text_color col, int val);
-void DrawSLine(CelOutputBuffer out, int y);
+void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
+void DrawSLine(const Surface &out, int y);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void StartStore(talk_id s);
-void DrawSText(CelOutputBuffer out);
-void STextESC();
-void STextUp();
-void STextDown();
-void STextPrior();
-void STextNext();
-void SetGoldCurs(int pnum, int i);
-void SetSpdbarGoldCurs(int pnum, int i);
+void DrawSText(const Surface &out);
+void StoreESC();
+void StoreUp();
+void StoreDown();
+void StorePrior();
+void StoreNext();
 void TakePlrsMoney(int cost);
-void STextEnter();
+void StoreEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
 
-/* rdata */
-
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __STORES_H__ */
+} // namespace devilution

@@ -3,26 +3,31 @@
  *
  * Interface of the catacombs level generation algorithms.
  */
-#ifndef __DRLG_L2_H__
-#define __DRLG_L2_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "gendung.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
+
+struct HALLNODE {
+	int nHallx1;
+	int nHally1;
+	int nHallx2;
+	int nHally2;
+	int nHalldir;
+};
+
+struct ROOMNODE {
+	int nRoomx1;
+	int nRoomy1;
+	int nRoomx2;
+	int nRoomy2;
+};
 
 extern BYTE predungeon[DMAXX][DMAXY];
 
-void InitDungeon();
-void LoadL2Dungeon(const char *sFileName, int vx, int vy);
-void LoadPreL2Dungeon(const char *sFileName, int vx, int vy);
-void CreateL2Dungeon(DWORD rseed, int entry);
+void LoadL2Dungeon(const char *path, int vx, int vy);
+void LoadPreL2Dungeon(const char *path);
+void CreateL2Dungeon(uint32_t rseed, lvl_entry entry);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DRLG_L2_H__ */
+} // namespace devilution

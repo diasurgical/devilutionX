@@ -3,9 +3,32 @@
  *
  * Implementation of functionality the special quest dungeons.
  */
-#include "all.h"
+#include "setmaps.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "drlg_l1.h"
+#include "drlg_l2.h"
+#include "drlg_l3.h"
+#include "engine/load_file.hpp"
+#include "objdat.h"
+#include "objects.h"
+#include "palette.h"
+#include "quests.h"
+#include "trigs.h"
+#include "utils/language.h"
+
+namespace devilution {
+
+/** Maps from quest level to quest level names. */
+const char *const QuestLevelNames[] = {
+	"",
+	N_("Skeleton King's Lair"),
+	N_("Chamber of Bone"),
+	N_("Maze"),
+	N_("Poisoned Water Supply"),
+	N_("Archbishop Lazarus' Lair"),
+};
+
+namespace {
 
 // BUGFIX: constant data should be const
 BYTE SkelKingTrans1[] = {
@@ -61,91 +84,78 @@ BYTE SkelChamTrans3[] = {
 	50, 43, 59, 51
 };
 
-/** Maps from quest level to quest level names. */
-const char *const quest_level_names[] = {
-	"",
-	"Skeleton King's Lair",
-	"Chamber of Bone",
-	"Maze",
-	"Poisoned Water Supply",
-	"Archbishop Lazarus' Lair",
-};
-
-int ObjIndex(int x, int y)
-{
-	int i;
-	int oi;
-
-	for (i = 0; i < nobjects; i++) {
-		oi = objectactive[i];
-		if (object[oi]._ox == x && object[oi]._oy == y)
-			return oi;
-	}
-	app_fatal("ObjIndex: Active object not found at (%d,%d)", x, y);
-}
-
 void AddSKingObjs()
 {
-	SetObjMapRange(ObjIndex(64, 34), 20, 7, 23, 10, 1);
-	SetObjMapRange(ObjIndex(64, 59), 20, 14, 21, 16, 2);
-	SetObjMapRange(ObjIndex(27, 37), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(46, 35), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(49, 53), 8, 1, 15, 11, 3);
-	SetObjMapRange(ObjIndex(27, 53), 8, 1, 15, 11, 3);
+	constexpr Rectangle SmallSecretRoom { { 20, 7 }, { 3, 3 } };
+	ObjectAtPosition({ 64, 34 }).InitializeLoadedObject(SmallSecretRoom, 1);
+
+	constexpr Rectangle Gate { { 20, 14 }, { 1, 2 } };
+	ObjectAtPosition({ 64, 59 }).InitializeLoadedObject(Gate, 2);
+
+	constexpr Rectangle LargeSecretRoom { { 8, 1 }, { 7, 10 } };
+	ObjectAtPosition({ 27, 37 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 46, 35 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 49, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);
+	ObjectAtPosition({ 27, 53 }).InitializeLoadedObject(LargeSecretRoom, 3);
 }
 
 void AddSChamObjs()
 {
-	SetObjMapRange(ObjIndex(37, 30), 17, 0, 21, 5, 1);
-	SetObjMapRange(ObjIndex(37, 46), 13, 0, 16, 5, 2);
+	ObjectAtPosition({ 37, 30 }).InitializeLoadedObject({ { 17, 0 }, { 4, 5 } }, 1);
+	ObjectAtPosition({ 37, 46 }).InitializeLoadedObject({ { 13, 0 }, { 3, 5 } }, 2);
 }
 
 void AddVileObjs()
 {
-	SetObjMapRange(ObjIndex(26, 45), 1, 1, 9, 10, 1);
-	SetObjMapRange(ObjIndex(45, 46), 11, 1, 20, 10, 2);
-	SetObjMapRange(ObjIndex(35, 36), 7, 11, 13, 18, 3);
+	ObjectAtPosition({ 26, 45 }).InitializeLoadedObject({ { 1, 1 }, { 8, 9 } }, 1);
+	ObjectAtPosition({ 45, 46 }).InitializeLoadedObject({ { 11, 1 }, { 9, 9 } }, 2);
+	ObjectAtPosition({ 35, 36 }).InitializeLoadedObject({ { 7, 11 }, { 6, 7 } }, 3);
 }
 
-void DRLG_SetMapTrans(const char *sFileName)
+void SetmapTransparancy(const char *path)
 {
-	int x, y;
-	int i, j;
-	BYTE *pLevelMap;
-	BYTE *d;
-	DWORD dwOffset;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	pLevelMap = LoadFileInMem(sFileName, NULL);
-	d = pLevelMap + 2;
-	x = pLevelMap[0];
-	y = *d;
-	dwOffset = (x * y + 1) * 2;
-	x <<= 1;
-	y <<= 1;
-	dwOffset += 3 * x * y * 2;
-	d += dwOffset;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
 
-	for (j = 0; j < y; j++) {
-		for (i = 0; i < x; i++) {
-			dTransVal[16 + i][16 + j] = *d;
-			d += 2;
+	int layer2Offset = 2 + width * height;
+
+	// The rest of the layers are at dPiece scale
+	width *= 2;
+	height *= 2;
+
+	const uint16_t *transparantLayer = &dunData[layer2Offset + width * height * 3];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			dTransVal[16 + i][16 + j] = SDL_SwapLE16(*transparantLayer);
+			transparantLayer++;
 		}
 	}
-	mem_free_dbg(pLevelMap);
 }
 
-/**
- * @brief Load a quest map, the given map is specified via the global setlvlnum
- */
+} // namespace
+
+Object &ObjectAtPosition(Point position)
+{
+	for (int i = 0; i < ActiveObjectCount; i++) {
+		int oi = ActiveObjects[i];
+		if (Objects[oi].position == position)
+			return Objects[oi];
+	}
+	app_fatal("ObjectAtPosition: Active object not found at (%i,%i)", position.x, position.y);
+}
+
 void LoadSetMap()
 {
 	switch (setlvlnum) {
 	case SL_SKELKING:
-		if (quests[Q_SKELKING]._qactive == QUEST_INIT) {
-			quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
-			quests[Q_SKELKING]._qvar1 = 1;
+		if (Quests[Q_SKELKING]._qactive == QUEST_INIT) {
+			Quests[Q_SKELKING]._qactive = QUEST_ACTIVE;
+			Quests[Q_SKELKING]._qvar1 = 1;
 		}
-		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN", 83, 45);
+		LoadPreL1Dungeon("Levels\\L1Data\\SklKng1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\SklKng2.DUN", 83, 45);
 		LoadPalette("Levels\\L1Data\\L1_2.pal");
 		DRLG_AreaTrans(sizeof(SkelKingTrans1) / 4, &SkelKingTrans1[0]);
@@ -157,7 +167,7 @@ void LoadSetMap()
 		InitSKingTriggers();
 		break;
 	case SL_BONECHAMB:
-		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN", 69, 39);
+		LoadPreL2Dungeon("Levels\\L2Data\\Bonecha2.DUN");
 		LoadL2Dungeon("Levels\\L2Data\\Bonecha1.DUN", 69, 39);
 		LoadPalette("Levels\\L2Data\\L2_2.pal");
 		DRLG_ListTrans(sizeof(SkelChamTrans1) / 4, &SkelChamTrans1[0]);
@@ -168,35 +178,37 @@ void LoadSetMap()
 		InitSChambTriggers();
 		break;
 	case SL_MAZE:
-		LoadPreL1Dungeon("Levels\\L1Data\\Lv1MazeA.DUN", 20, 50);
+		LoadPreL1Dungeon("Levels\\L1Data\\Lv1MazeA.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\Lv1MazeB.DUN", 20, 50);
 		LoadPalette("Levels\\L1Data\\L1_5.pal");
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
-		DRLG_SetMapTrans("Levels\\L1Data\\Lv1MazeA.DUN");
+		SetmapTransparancy("Levels\\L1Data\\Lv1MazeA.DUN");
 		break;
 	case SL_POISONWATER:
-		if (quests[Q_PWATER]._qactive == QUEST_INIT)
-			quests[Q_PWATER]._qactive = QUEST_ACTIVE;
-		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 19, 50);
+		if (Quests[Q_PWATER]._qactive == QUEST_INIT)
+			Quests[Q_PWATER]._qactive = QUEST_ACTIVE;
+		LoadPreL3Dungeon("Levels\\L3Data\\Foulwatr.DUN");
 		LoadL3Dungeon("Levels\\L3Data\\Foulwatr.DUN", 31, 83);
 		LoadPalette("Levels\\L3Data\\L3pfoul.pal");
 		InitPWaterTriggers();
 		break;
 	case SL_VILEBETRAYER:
-		if (quests[Q_BETRAYER]._qactive == QUEST_DONE) {
-			quests[Q_BETRAYER]._qvar2 = 4;
-		} else if (quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
-			quests[Q_BETRAYER]._qvar2 = 3;
+		if (Quests[Q_BETRAYER]._qactive == QUEST_DONE) {
+			Quests[Q_BETRAYER]._qvar2 = 4;
+		} else if (Quests[Q_BETRAYER]._qactive == QUEST_ACTIVE) {
+			Quests[Q_BETRAYER]._qvar2 = 3;
 		}
-		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN", 35, 36);
+		LoadPreL1Dungeon("Levels\\L1Data\\Vile1.DUN");
 		LoadL1Dungeon("Levels\\L1Data\\Vile2.DUN", 35, 36);
 		LoadPalette("Levels\\L1Data\\L1_2.pal");
 		AddL1Objs(0, 0, MAXDUNX, MAXDUNY);
 		AddVileObjs();
-		DRLG_SetMapTrans("Levels\\L1Data\\Vile1.DUN");
+		SetmapTransparancy("Levels\\L1Data\\Vile1.DUN");
 		InitNoTriggers();
+		break;
+	case SL_NONE:
 		break;
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

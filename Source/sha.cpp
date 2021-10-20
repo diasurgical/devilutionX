@@ -3,42 +3,44 @@
  *
  * Implementation of functionality for calculating X-SHA-1 (a flawed implementation of SHA-1).
  */
-#include "all.h"
+#include "sha.h"
 
 #include <cstdint>
+#include <SDL.h>
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "appfat.h"
+
+namespace devilution {
 
 // NOTE: Diablo's "SHA1" is different from actual SHA1 in that it uses arithmetic
 // right shifts (sign bit extension).
 
 namespace {
 
+struct SHA1Context {
+	uint32_t state[SHA1HashSize / sizeof(uint32_t)];
+	uint32_t buffer[BlockSize / sizeof(uint32_t)];
+};
+
+SHA1Context sgSHA1[3];
+
 /**
  * Diablo-"SHA1" circular left shift, portable version.
  */
-uint32_t SHA1CircularShift(uint32_t bits, uint32_t word)
+uint32_t SHA1CircularShift(uint32_t word, size_t bits)
 {
 	assert(bits < 32);
 	assert(bits > 0);
 
-	if (word >> 31) {
-		//moving this part to a separate volatile variable fixes saves in x64-release build in visual studio 2017
-		volatile uint32_t tmp = ((~word) >> (32 - bits));
-		return (word << bits) | (~tmp);
-	} else {
-		return (word << bits) | (word >> (32 - bits));
-	}
+	// The SHA-like algorithm as originally implemented treated word as a signed value and used arithmetic right shifts
+	//  (sign-extending). This results in the high 32-`bits` bits being set to 1.
+	if ((word & (1 << 31)) != 0)
+		return (0xFFFFFFFF << bits) | (word >> (32 - bits));
+	return (word << bits) | (word >> (32 - bits));
 }
 
-} // namespace
-
-SHA1Context sgSHA1[3];
-
-static void SHA1Init(SHA1Context *context)
+void SHA1Init(SHA1Context *context)
 {
-	context->count[0] = 0;
-	context->count[1] = 0;
 	context->state[0] = 0x67452301;
 	context->state[1] = 0xEFCDAB89;
 	context->state[2] = 0x98BADCFE;
@@ -46,111 +48,98 @@ static void SHA1Init(SHA1Context *context)
 	context->state[4] = 0xC3D2E1F0;
 }
 
-static void SHA1ProcessMessageBlock(SHA1Context *context)
+void SHA1ProcessMessageBlock(SHA1Context *context)
 {
-	DWORD i, temp;
-	DWORD W[80];
-	DWORD A, B, C, D, E;
+	std::uint32_t w[80];
 
-	DWORD *buf = (DWORD *)context->buffer;
-	for (i = 0; i < 16; i++)
-		W[i] = SwapLE32(buf[i]);
+	for (int i = 0; i < 16; i++)
+		w[i] = SDL_SwapLE32(context->buffer[i]);
 
-	for (i = 16; i < 80; i++) {
-		W[i] = W[i - 16] ^ W[i - 14] ^ W[i - 8] ^ W[i - 3];
+	for (int i = 16; i < 80; i++) {
+		w[i] = w[i - 16] ^ w[i - 14] ^ w[i - 8] ^ w[i - 3];
 	}
 
-	A = context->state[0];
-	B = context->state[1];
-	C = context->state[2];
-	D = context->state[3];
-	E = context->state[4];
+	std::uint32_t a = context->state[0];
+	std::uint32_t b = context->state[1];
+	std::uint32_t c = context->state[2];
+	std::uint32_t d = context->state[3];
+	std::uint32_t e = context->state[4];
 
-	for (i = 0; i < 20; i++) {
-		temp = SHA1CircularShift(5, A) + ((B & C) | ((~B) & D)) + E + W[i] + 0x5A827999;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+	for (int i = 0; i < 20; i++) {
+		std::uint32_t temp = SHA1CircularShift(a, 5) + ((b & c) | ((~b) & d)) + e + w[i] + 0x5A827999;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(b, 30);
+		b = a;
+		a = temp;
 	}
 
-	for (i = 20; i < 40; i++) {
-		temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+	for (int i = 20; i < 40; i++) {
+		std::uint32_t temp = SHA1CircularShift(a, 5) + (b ^ c ^ d) + e + w[i] + 0x6ED9EBA1;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(b, 30);
+		b = a;
+		a = temp;
 	}
 
-	for (i = 40; i < 60; i++) {
-		temp = SHA1CircularShift(5, A) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+	for (int i = 40; i < 60; i++) {
+		std::uint32_t temp = SHA1CircularShift(a, 5) + ((b & c) | (b & d) | (c & d)) + e + w[i] + 0x8F1BBCDC;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(b, 30);
+		b = a;
+		a = temp;
 	}
 
-	for (i = 60; i < 80; i++) {
-		temp = SHA1CircularShift(5, A) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6;
-		E = D;
-		D = C;
-		C = SHA1CircularShift(30, B);
-		B = A;
-		A = temp;
+	for (int i = 60; i < 80; i++) {
+		std::uint32_t temp = SHA1CircularShift(a, 5) + (b ^ c ^ d) + e + w[i] + 0xCA62C1D6;
+		e = d;
+		d = c;
+		c = SHA1CircularShift(b, 30);
+		b = a;
+		a = temp;
 	}
 
-	context->state[0] += A;
-	context->state[1] += B;
-	context->state[2] += C;
-	context->state[3] += D;
-	context->state[4] += E;
+	context->state[0] += a;
+	context->state[1] += b;
+	context->state[2] += c;
+	context->state[3] += d;
+	context->state[4] += e;
 }
 
-static void SHA1Input(SHA1Context *context, const char *message_array, DWORD len)
+void SHA1Input(SHA1Context *context, const byte *messageArray, std::size_t len)
 {
-	DWORD i, count;
-
-	count = context->count[0] + 8 * len;
-	if (count < context->count[0])
-		context->count[1]++;
-
-	context->count[0] = count;
-	context->count[1] += len >> 29;
-
-	for (i = len; i >= 64; i -= 64) {
-		memcpy(context->buffer, message_array, sizeof(context->buffer));
+	for (auto i = len / BlockSize; i != 0; i--) {
+		memcpy(context->buffer, messageArray, BlockSize);
 		SHA1ProcessMessageBlock(context);
-		message_array += 64;
+		messageArray += BlockSize;
 	}
 }
+
+} // namespace
 
 void SHA1Clear()
 {
 	memset(sgSHA1, 0, sizeof(sgSHA1));
 }
 
-void SHA1Result(int n, char Message_Digest[SHA1HashSize])
+void SHA1Result(int n, byte messageDigest[SHA1HashSize])
 {
-	DWORD *Message_Digest_Block;
-	int i;
-
-	Message_Digest_Block = (DWORD *)Message_Digest;
-	if (Message_Digest) {
-		for (i = 0; i < 5; i++) {
-			*Message_Digest_Block = SwapLE32(sgSHA1[n].state[i]);
-			Message_Digest_Block++;
+	std::uint32_t *messageDigestBlock = reinterpret_cast<std::uint32_t *>(messageDigest);
+	if (messageDigest != nullptr) {
+		for (auto &block : sgSHA1[n].state) {
+			*messageDigestBlock = SDL_SwapLE32(block);
+			messageDigestBlock++;
 		}
 	}
 }
 
-void SHA1Calculate(int n, const char *data, char Message_Digest[SHA1HashSize])
+void SHA1Calculate(int n, const byte data[BlockSize], byte messageDigest[SHA1HashSize])
 {
-	SHA1Input(&sgSHA1[n], data, 64);
-	if (Message_Digest)
-		SHA1Result(n, Message_Digest);
+	SHA1Input(&sgSHA1[n], data, BlockSize);
+	if (messageDigest != nullptr)
+		SHA1Result(n, messageDigest);
 }
 
 void SHA1Reset(int n)
@@ -158,4 +147,4 @@ void SHA1Reset(int n)
 	SHA1Init(&sgSHA1[n]);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

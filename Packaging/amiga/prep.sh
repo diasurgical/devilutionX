@@ -37,31 +37,3 @@ mkdir -p ${SYSROOT}/usr/include
 cp -fvr libSDL.a ${SYSROOT}/usr/lib/
 cp -fvr include/* ${SYSROOT}/usr/include/
 cd ..
-
-# SDL_mixer
-wget https://github.com/SDL-mirror/SDL_mixer/archive/SDL-1.2.tar.gz -O SDL_mixer-SDL-1.2.tar.gz
-tar -xvf SDL_mixer-SDL-1.2.tar.gz
-cd SDL_mixer-SDL-1.2
-./autogen.sh
-SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS="-I${SYSROOT}/usr/include/SDL -noixemul" CFLAGS="${M68K_CFLAGS}" CXXFLAGS="${M68K_CXXFLAGS}" ./configure --disable-sdltest --disable-shared --enable-static --host=${TARGET} --prefix="${SYSROOT}/usr"
-make -j$(getconf _NPROCESSORS_ONLN)
-make install
-cd ..
-
-# FreeType
-wget https://download.savannah.gnu.org/releases/freetype/freetype-2.10.1.tar.gz -O freetype-2.10.1.tar.gz
-tar -xvf freetype-2.10.1.tar.gz
-mkdir -p freetype-2.10.1/build
-cd freetype-2.10.1/build
-cmake .. -DUNIX=1 -DM68K_CPU="$M68K_CPU" -DM68K_FPU="$M68K_FPU" -DM68K_COMMON="${M68K_COMMON}"
-cmake --build . --config Release --target install -- -j$(getconf _NPROCESSORS_ONLN)
-cd ../..
-
-# SDL_ttf
-wget https://github.com/SDL-mirror/SDL_ttf/archive/SDL-1.2.tar.gz -O SDL_ttf-SDL-1.2.tar.gz
-tar -xvf SDL_ttf-SDL-1.2.tar.gz
-cd SDL_ttf-SDL-1.2
-./autogen.sh
-LDFLAGS="-L${SYSROOT}/usr/lib" SDL_LIBS='-lSDL -ldebug' SDL_CFLAGS="-L${SYSROOT}/usr/lib -I${SYSROOT}/usr/include/SDL -noixemul"  CFLAGS="${M68K_CFLAGS}" CXXFLAGS="${M68K_CXXFLAGS}" FT2_CFLAGS="-L${SYSROOT}/usr/lib -I${SYSROOT}/usr/include/freetype2" FT2_LIBS="-lfreetype -lzlib" ./configure --disable-shared --enable-static --host=${TARGET} --prefix=${SYSROOT}/usr
-make -j$(getconf _NPROCESSORS_ONLN)
-make install

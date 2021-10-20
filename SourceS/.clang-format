@@ -1,8 +1,0 @@
-BasedOnStyle: webkit
-AlignTrailingComments: true
-AllowShortBlocksOnASingleLine: true
-AllowShortFunctionsOnASingleLine: None
-PointerAlignment: Right
-TabWidth: 4
-UseTab: ForIndentation
-SortIncludes: false

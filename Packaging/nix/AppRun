@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$APPDIR/usr/bin/devilutionx" --ttf-dir "$APPDIR/usr/share/fonts/truetype/"
+exec "$APPDIR/usr/bin/devilutionx" "$@"

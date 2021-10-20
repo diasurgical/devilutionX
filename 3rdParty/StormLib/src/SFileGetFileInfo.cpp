@@ -13,34 +13,7 @@
 #include "StormCommon.h"
 
 //-----------------------------------------------------------------------------
-// Local defines
-
-// Information types for SFileGetFileInfo
-#define SFILE_INFO_TYPE_INVALID_HANDLE  0
-#define SFILE_INFO_TYPE_NOT_FOUND       1
-#define SFILE_INFO_TYPE_DIRECT_POINTER  2
-#define SFILE_INFO_TYPE_ALLOCATED       3
-#define SFILE_INFO_TYPE_READ_FROM_FILE  4
-#define SFILE_INFO_TYPE_TABLE_POINTER   5
-#define SFILE_INFO_TYPE_FILE_ENTRY      6
-
-//-----------------------------------------------------------------------------
 // Local functions
-
-static void ConvertFileEntryToSelfRelative(TFileEntry * pFileEntry, TFileEntry * pSrcFileEntry)
-{
-    // Copy the file entry itself
-    memcpy(pFileEntry, pSrcFileEntry, sizeof(TFileEntry));
-
-    // If source is NULL, leave it NULL
-    if(pSrcFileEntry->szFileName != NULL)
-    {
-        // Set the file name pointer after the file entry
-        pFileEntry->szFileName = (char *)(pFileEntry + 1);
-        strcpy(pFileEntry->szFileName, pSrcFileEntry->szFileName);
-    }
-}
-
 
 static DWORD GetMpqFileCount(TMPQArchive * ha)
 {
@@ -69,56 +42,140 @@ static DWORD GetMpqFileCount(TMPQArchive * ha)
     return dwFileCount;
 }
 
-static bool GetFilePatchChain(TMPQFile * hf, void * pvFileInfo, DWORD cbFileInfo, DWORD * pcbLengthNeeded)
+static bool GetInfo_ReturnError(DWORD dwErrCode)
 {
-    TMPQFile * hfTemp;
-    TCHAR * szFileInfo = (TCHAR *)pvFileInfo;
-    size_t cchCharsNeeded = 1;
-    size_t cchFileInfo = (cbFileInfo / sizeof(TCHAR));
-    size_t nLength;
+    SetLastError(dwErrCode);
+    return false;
+}
 
-    // Patch chain is only supported on MPQ files.
-    if(hf->pStream != NULL)
+static bool GetInfo_BufferCheck(void * pvFileInfo, DWORD cbFileInfo, DWORD cbData, LPDWORD pcbLengthNeeded)
+{
+    // Give the length needed to store the info
+    if(pcbLengthNeeded != NULL)
+        pcbLengthNeeded[0] = cbData;
+
+    // Check for sufficient buffer
+    if(cbData > cbFileInfo)
+        return GetInfo_ReturnError(ERROR_INSUFFICIENT_BUFFER);
+
+    // If the buffer size is sufficient, check for valid user buffer
+    if(pvFileInfo == NULL)
+        return GetInfo_ReturnError(ERROR_INVALID_PARAMETER);
+
+    // Buffers and sizes are OK, we are ready to proceed file copying
+    return true;
+}
+
+static bool GetInfo(void * pvFileInfo, DWORD cbFileInfo, const void * pvData, DWORD cbData, LPDWORD pcbLengthNeeded)
+{
+    // Verify buffer pointer and buffer size
+    if(!GetInfo_BufferCheck(pvFileInfo, cbFileInfo, cbData, pcbLengthNeeded))
+        return false;
+
+    // Copy the data to the caller-supplied buffer
+    memcpy(pvFileInfo, pvData, cbData);
+    return true;
+}
+
+static bool GetInfo_Allocated(void * pvFileInfo, DWORD cbFileInfo, void * pvData, DWORD cbData, LPDWORD pcbLengthNeeded)
+{
+    bool bResult;
+
+    // Verify buffer pointer and buffer size
+    if((bResult = GetInfo_BufferCheck(pvFileInfo, cbFileInfo, cbData, pcbLengthNeeded)) != false)
+        memcpy(pvFileInfo, pvData, cbData);
+
+    // Copy the data to the user buffer
+    STORM_FREE(pvData);
+    return bResult;
+}
+
+static bool GetInfo_TablePointer(void * pvFileInfo, DWORD cbFileInfo, void * pvTablePointer, SFileInfoClass InfoClass, LPDWORD pcbLengthNeeded)
+{
+    // Verify buffer pointer and buffer size
+    if(!GetInfo_BufferCheck(pvFileInfo, cbFileInfo, sizeof(void *), pcbLengthNeeded))
     {
-        SetLastError(ERROR_INVALID_PARAMETER);
+#ifdef FULL
+        SFileFreeFileInfo(pvTablePointer, InfoClass);
+#endif // FULL
         return false;
     }
+
+    // The user buffer receives pointer to the table.
+    // When done, the caller needs to call SFileFreeFileInfo on it
+    *(void **)pvFileInfo = pvTablePointer;
+    return true;
+}
+
+static bool GetInfo_ReadFromFile(void * pvFileInfo, DWORD cbFileInfo, TFileStream * pStream, ULONGLONG ByteOffset, DWORD cbData, LPDWORD pcbLengthNeeded)
+{
+    // Verify buffer pointer and buffer size
+    if(!GetInfo_BufferCheck(pvFileInfo, cbFileInfo, cbData, pcbLengthNeeded))
+        return false;
+
+    return FileStream_Read(pStream, &ByteOffset, pvFileInfo, cbData);
+}
+
+static bool GetInfo_FileEntry(void * pvFileInfo, DWORD cbFileInfo, TFileEntry * pFileEntry, LPDWORD pcbLengthNeeded)
+{
+    LPBYTE pbFileInfo = (LPBYTE)pvFileInfo;
+    DWORD cbSrcFileInfo = sizeof(TFileEntry);
+    DWORD cbFileName = 1;
+
+    // The file name belongs to the file entry
+    if(pFileEntry->szFileName)
+        cbFileName = (DWORD)strlen(pFileEntry->szFileName) + 1;
+    cbSrcFileInfo += cbFileName;
+
+    // Verify buffer pointer and buffer size
+    if(!GetInfo_BufferCheck(pvFileInfo, cbFileInfo, cbSrcFileInfo, pcbLengthNeeded))
+        return false;
+
+    // Copy the file entry
+    memcpy(pbFileInfo, pFileEntry, sizeof(TFileEntry));
+    pbFileInfo += sizeof(TFileEntry);
+    pbFileInfo[0] = 0;
+
+    // Copy the file name
+    if(pFileEntry->szFileName)
+        memcpy(pbFileInfo, pFileEntry->szFileName, cbFileName);
+    return true;
+}
+
+static bool GetInfo_PatchChain(TMPQFile * hf, void * pvFileInfo, DWORD cbFileInfo, LPDWORD pcbLengthNeeded)
+{
+    TMPQFile * hfTemp;
+    LPCTSTR szPatchName;
+    LPTSTR szFileInfo = (LPTSTR)pvFileInfo;
+    size_t cchCharsNeeded = 1;
+    size_t nLength;
+
+    // Patch chain is only supported on MPQ files. Local files are not supported.
+    if(hf->pStream != NULL)
+        return GetInfo_ReturnError(ERROR_INVALID_PARAMETER);
 
     // Calculate the necessary length of the multi-string
     for(hfTemp = hf; hfTemp != NULL; hfTemp = hfTemp->hfPatch)
         cchCharsNeeded += _tcslen(FileStream_GetFileName(hfTemp->ha->pStream)) + 1;
 
-    // Give the caller the needed length
-    if(pcbLengthNeeded != NULL)
-        pcbLengthNeeded[0] = (DWORD)(cchCharsNeeded * sizeof(TCHAR));
+    // Verify whether the caller gave us valid buffer with enough size
+    if(!GetInfo_BufferCheck(pvFileInfo, cbFileInfo, (DWORD)(cchCharsNeeded * sizeof(TCHAR)), pcbLengthNeeded))
+        return false;
 
-    // If the caller gave both buffer pointer and data length,
-    // try to copy the patch chain
-    if(szFileInfo != NULL && cchFileInfo != 0)
+    // Copy each patch name
+    for(hfTemp = hf; hfTemp != NULL; hfTemp = hfTemp->hfPatch)
     {
-        // If there is enough space in the buffer, copy the patch chain
-        if(cchCharsNeeded > cchFileInfo)
-        {
-            SetLastError(ERROR_INSUFFICIENT_BUFFER);
-            return false;
-        }
+        // Get the file name and its length
+        szPatchName = FileStream_GetFileName(hfTemp->ha->pStream);
+        nLength = _tcslen(szPatchName) + 1;
 
-        // Copy each patch
-        for(hfTemp = hf; hfTemp != NULL; hfTemp = hfTemp->hfPatch)
-        {
-            // Get the file name and its length
-            const TCHAR * szFileName = FileStream_GetFileName(hfTemp->ha->pStream);
-            nLength = _tcslen(szFileName) + 1;
-
-            // Copy the file name
-            memcpy(szFileInfo, szFileName, nLength * sizeof(TCHAR));
-            szFileInfo += nLength;
-        }
-
-        // Make it multi-string
-        szFileInfo[0] = 0;
+        // Copy the file name
+        memcpy(szFileInfo, szPatchName, nLength * sizeof(TCHAR));
+        szFileInfo += nLength;
     }
 
+    // Make it multi-string
+    szFileInfo[0] = 0;
     return true;
 }
 
@@ -131,7 +188,7 @@ static bool GetFilePatchChain(TMPQFile * hf, void * pvFileInfo, DWORD cbFileInfo
 //  cbFileInfo - Size of the buffer pointed by pvFileInfo
 //  pcbLengthNeeded - Receives number of bytes necessary to store the information
 
-bool STORMAPI SFileGetFileInfo(
+bool WINAPI SFileGetFileInfo(
     HANDLE hMpqOrFile,
     SFileInfoClass InfoClass,
     void * pvFileInfo,
@@ -139,728 +196,261 @@ bool STORMAPI SFileGetFileInfo(
     LPDWORD pcbLengthNeeded)
 {
     MPQ_SIGNATURE_INFO SignatureInfo;
+    const TCHAR * szSrcFileInfo;
     TMPQArchive * ha = NULL;
     TFileEntry * pFileEntry = NULL;
+    TMPQHeader * pHeader = NULL;
     ULONGLONG Int64Value = 0;
-    ULONGLONG ByteOffset = 0;
     TMPQFile * hf = NULL;
     void * pvSrcFileInfo = NULL;
     DWORD cbSrcFileInfo = 0;
     DWORD dwInt32Value = 0;
-    int nInfoType = SFILE_INFO_TYPE_INVALID_HANDLE;
-    int nError = ERROR_SUCCESS;
 
-    switch(InfoClass)
+    // Validate archive/file handle
+    if((int)InfoClass <= (int)SFileMpqFlags)
     {
-        case SFileMpqFileName:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = (void *)FileStream_GetFileName(ha->pStream);
-                cbSrcFileInfo = (DWORD)(_tcslen((TCHAR *)pvSrcFileInfo) + 1) * sizeof(TCHAR);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqStreamBitmap:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-                return FileStream_GetBitmap(ha->pStream, pvFileInfo, cbFileInfo, pcbLengthNeeded);
-            break;
-
-        case SFileMpqUserDataOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(ha->pUserData != NULL)
-                {
-                    pvSrcFileInfo = &ha->UserDataPos;
-                    cbSrcFileInfo = sizeof(ULONGLONG);
-                    nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-                }
-            }
-            break;
-
-        case SFileMpqUserDataHeader:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(ha->pUserData != NULL)
-                {
-                    ByteOffset = ha->UserDataPos;
-                    cbSrcFileInfo = sizeof(TMPQUserData);
-                    nInfoType = SFILE_INFO_TYPE_READ_FROM_FILE;
-                }
-            }
-            break;
-
-        case SFileMpqUserData:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(ha->pUserData != NULL)
-                {
-                    ByteOffset = ha->UserDataPos + sizeof(TMPQUserData);
-                    cbSrcFileInfo = ha->pUserData->dwHeaderOffs - sizeof(TMPQUserData);
-                    nInfoType = SFILE_INFO_TYPE_READ_FROM_FILE;
-                }
-            }
-            break;
-
-        case SFileMpqHeaderOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->MpqPos;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHeaderSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->dwHeaderSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHeader:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                ByteOffset = ha->MpqPos;
-                cbSrcFileInfo = ha->pHeader->dwHeaderSize;
-                nInfoType = SFILE_INFO_TYPE_READ_FROM_FILE;
-            }
-            break;
-
-        case SFileMpqHetTableOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->HetTablePos64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-#ifdef FULL
-        case SFileMpqHetTableSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->HetTableSize64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHetHeader:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                pvSrcFileInfo = LoadExtTable(ha, ha->pHeader->HetTablePos64, (size_t)ha->pHeader->HetTableSize64, HET_TABLE_SIGNATURE, MPQ_KEY_HASH_TABLE);
-                if(pvSrcFileInfo != NULL)
-                {
-                    cbSrcFileInfo = sizeof(TMPQHetHeader);
-                    nInfoType = SFILE_INFO_TYPE_ALLOCATED;
-                }
-            }
-            break;
-
-        case SFileMpqHetTable:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                pvSrcFileInfo = LoadHetTable(ha);
-                if(pvSrcFileInfo != NULL)
-                {
-                    cbSrcFileInfo = sizeof(void *);
-                    nInfoType = SFILE_INFO_TYPE_TABLE_POINTER;
-                }
-            }
-            break;
-
-        case SFileMpqBetTableOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->BetTablePos64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqBetTableSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->BetTableSize64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqBetHeader:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                pvSrcFileInfo = LoadExtTable(ha, ha->pHeader->BetTablePos64, (size_t)ha->pHeader->BetTableSize64, BET_TABLE_SIGNATURE, MPQ_KEY_BLOCK_TABLE);
-                if(pvSrcFileInfo != NULL)
-                {
-                    // It is allowed for the caller to only require BET header.
-                    cbSrcFileInfo = sizeof(TMPQBetHeader) + ((TMPQBetHeader *)pvSrcFileInfo)->dwFlagCount * sizeof(DWORD);
-                    if(cbFileInfo == sizeof(TMPQBetHeader))
-                        cbSrcFileInfo = sizeof(TMPQBetHeader);
-                    nInfoType = SFILE_INFO_TYPE_ALLOCATED;
-                }
-            }
-            break;
-
-        case SFileMpqBetTable:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                pvSrcFileInfo = LoadBetTable(ha);
-                if(pvSrcFileInfo != NULL)
-                {
-                    cbSrcFileInfo = sizeof(void *);
-                    nInfoType = SFILE_INFO_TYPE_TABLE_POINTER;
-                }
-            }
-            break;
-#endif
-        case SFileMpqHashTableOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                Int64Value = MAKE_OFFSET64(ha->pHeader->wHashTablePosHi, ha->pHeader->dwHashTablePos);
-                pvSrcFileInfo = &Int64Value;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHashTableSize64:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->HashTableSize64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHashTableSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->dwHashTableSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHashTable:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL && ha->pHashTable != NULL)
-            {
-                pvSrcFileInfo = ha->pHashTable;
-                cbSrcFileInfo = ha->pHeader->dwHashTableSize * sizeof(TMPQHash);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqBlockTableOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                Int64Value = MAKE_OFFSET64(ha->pHeader->wBlockTablePosHi, ha->pHeader->dwBlockTablePos);
-                pvSrcFileInfo = &Int64Value;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqBlockTableSize64:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->BlockTableSize64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqBlockTableSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->dwBlockTableSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqBlockTable:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(MAKE_OFFSET64(ha->pHeader->wBlockTablePosHi, ha->pHeader->dwBlockTablePos) < ha->FileSize)
-                {
-                    cbSrcFileInfo = ha->pHeader->dwBlockTableSize * sizeof(TMPQBlock);
-                    if(cbFileInfo >= cbSrcFileInfo)
-                        pvSrcFileInfo = LoadBlockTable(ha, true);
-                    nInfoType = SFILE_INFO_TYPE_ALLOCATED;
-                }
-            }
-            break;
-
-        case SFileMpqHiBlockTableOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->HiBlockTablePos64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHiBlockTableSize64:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->HiBlockTableSize64;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqHiBlockTable:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(ha->pHeader->HiBlockTablePos64 && ha->pHeader->HiBlockTableSize64)
-                {
-                    assert(false);
-                }
-            }
-            break;
-
-#ifdef FULL
-        case SFileMpqSignatures:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL && QueryMpqSignatureInfo(ha, &SignatureInfo))
-            {
-                pvSrcFileInfo = &SignatureInfo.SignatureTypes;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqStrongSignatureOffset:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(QueryMpqSignatureInfo(ha, &SignatureInfo) && (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG))
-                {
-                    pvSrcFileInfo = &SignatureInfo.EndMpqData;
-                    cbSrcFileInfo = sizeof(ULONGLONG);
-                    nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-                }
-            }
-            break;
-
-        case SFileMpqStrongSignatureSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(QueryMpqSignatureInfo(ha, &SignatureInfo) && (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG))
-                {
-                    dwInt32Value = MPQ_STRONG_SIGNATURE_SIZE + 4;
-                    pvSrcFileInfo = &dwInt32Value;
-                    cbSrcFileInfo = sizeof(DWORD);
-                    nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-                }
-            }
-            break;
-
-        case SFileMpqStrongSignature:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(QueryMpqSignatureInfo(ha, &SignatureInfo) && (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG))
-                {
-                    pvSrcFileInfo = SignatureInfo.Signature;
-                    cbSrcFileInfo = MPQ_STRONG_SIGNATURE_SIZE + 4;
-                    nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-                }
-            }
-            break;
-#endif
-
-        case SFileMpqArchiveSize64:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->ArchiveSize64;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqArchiveSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->pHeader->dwArchiveSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqMaxFileCount:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->dwMaxFileCount;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqFileTableSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->dwFileTableSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqSectorSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &ha->dwSectorSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqNumberOfFiles:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                dwInt32Value = GetMpqFileCount(ha);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqRawChunkSize:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                nInfoType = SFILE_INFO_TYPE_NOT_FOUND;
-                if(ha->pHeader->dwRawChunkSize != 0)
-                {
-                    pvSrcFileInfo = &ha->pHeader->dwRawChunkSize;
-                    cbSrcFileInfo = sizeof(DWORD);
-                    nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-                }
-            }
-            break;
-
-        case SFileMpqStreamFlags:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                FileStream_GetFlags(ha->pStream, &dwInt32Value);
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileMpqFlags:
-            ha = IsValidMpqHandle(hMpqOrFile);
-            if(ha != NULL)
-            {
-                dwInt32Value  = ha->dwFlags;
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoPatchChain:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL)
-                return GetFilePatchChain(hf, pvFileInfo, cbFileInfo, pcbLengthNeeded);
-            break;
-
-        case SFileInfoFileEntry:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = pFileEntry = hf->pFileEntry;
-                cbSrcFileInfo = sizeof(TFileEntry);
-                if(pFileEntry->szFileName != NULL)
-                    cbSrcFileInfo += (DWORD)strlen(pFileEntry->szFileName) + 1;
-                nInfoType = SFILE_INFO_TYPE_FILE_ENTRY;
-            }
-            break;
-
-        case SFileInfoHashEntry:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pHashEntry != NULL)
-            {
-                pvSrcFileInfo = hf->pHashEntry;
-                cbSrcFileInfo = sizeof(TMPQHash);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoHashIndex:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pHashEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->dwHashIndex;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoNameHash1:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pHashEntry != NULL)
-            {
-                dwInt32Value = hf->pHashEntry->dwName1;
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoNameHash2:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pHashEntry != NULL)
-            {
-                dwInt32Value = hf->pHashEntry->dwName2;
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoNameHash3:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->pFileEntry->FileNameHash;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoLocale:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pHashEntry != NULL)
-            {
-                dwInt32Value = hf->pHashEntry->lcLocale;
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoFileIndex:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->ha != NULL && hf->pFileEntry != NULL)
-            {
-                dwInt32Value = (DWORD)(hf->pFileEntry - hf->ha->pFileTable);
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoByteOffset:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->pFileEntry->ByteOffset;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoFileTime:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->pFileEntry->FileTime;
-                cbSrcFileInfo = sizeof(ULONGLONG);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoFileSize:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->pFileEntry->dwFileSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoCompressedSize:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->pFileEntry->dwCmpSize;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoFlags:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                pvSrcFileInfo = &hf->pFileEntry->dwFlags;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoEncryptionKey:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL)
-            {
-                pvSrcFileInfo = &hf->dwFileKey;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoEncryptionKeyRaw:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                dwInt32Value = hf->dwFileKey;
-                if(hf->pFileEntry->dwFlags & MPQ_FILE_FIX_KEY)
-                    dwInt32Value = (dwInt32Value ^ hf->pFileEntry->dwFileSize) - (DWORD)hf->MpqFilePos;
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        case SFileInfoCRC32:
-            hf = IsValidFileHandle(hMpqOrFile);
-            if(hf != NULL && hf->pFileEntry != NULL)
-            {
-                dwInt32Value = hf->pFileEntry->dwCrc32;
-                pvSrcFileInfo = &dwInt32Value;
-                cbSrcFileInfo = sizeof(DWORD);
-                nInfoType = SFILE_INFO_TYPE_DIRECT_POINTER;
-            }
-            break;
-
-        default:    // Invalid info class
-            SetLastError(ERROR_INVALID_PARAMETER);
-            return false;
-    }
-
-    // If we validated the handle and info class, give as much info as possible
-    if(nInfoType >= SFILE_INFO_TYPE_DIRECT_POINTER)
-    {
-        // Give the length needed, if wanted
-        if(pcbLengthNeeded != NULL)
-            pcbLengthNeeded[0] = cbSrcFileInfo;
-
-        // If the caller entered an output buffer, the output size must also be entered
-        if(pvFileInfo != NULL && cbFileInfo != 0)
-        {
-            // Check if there is enough space in the output buffer
-            if(cbSrcFileInfo <= cbFileInfo)
-            {
-                switch(nInfoType)
-                {
-                    case SFILE_INFO_TYPE_DIRECT_POINTER:
-                    case SFILE_INFO_TYPE_ALLOCATED:
-                        assert(pvSrcFileInfo != NULL);
-                        memcpy(pvFileInfo, pvSrcFileInfo, cbSrcFileInfo);
-                        break;
-
-                    case SFILE_INFO_TYPE_READ_FROM_FILE:
-                        if(!FileStream_Read(ha->pStream, &ByteOffset, pvFileInfo, cbSrcFileInfo))
-                            nError = GetLastError();
-                        break;
-
-                    case SFILE_INFO_TYPE_TABLE_POINTER:
-                        assert(pvSrcFileInfo != NULL);
-                        *(void **)pvFileInfo = pvSrcFileInfo;
-                        pvSrcFileInfo = NULL;
-                        break;
-
-                    case SFILE_INFO_TYPE_FILE_ENTRY:
-                        assert(pFileEntry != NULL);
-                        ConvertFileEntryToSelfRelative((TFileEntry *)pvFileInfo, pFileEntry);
-                        break;
-                }
-            }
-            else
-            {
-                nError = ERROR_INSUFFICIENT_BUFFER;
-            }
-        }
-
-        // Free the file info if needed
-        if(nInfoType == SFILE_INFO_TYPE_ALLOCATED && pvSrcFileInfo != NULL)
-            STORM_FREE(pvSrcFileInfo);
-#ifdef FULL
-        if(nInfoType == SFILE_INFO_TYPE_TABLE_POINTER && pvSrcFileInfo != NULL)
-            SFileFreeFileInfo(pvSrcFileInfo, InfoClass);
-#endif
+        if((ha = IsValidMpqHandle(hMpqOrFile)) == NULL)
+            return GetInfo_ReturnError(ERROR_INVALID_HANDLE);
+        pHeader = ha->pHeader;
     }
     else
     {
-        // Handle error cases
-        if(nInfoType == SFILE_INFO_TYPE_INVALID_HANDLE)
-            nError = ERROR_INVALID_HANDLE;
-        if(nInfoType == SFILE_INFO_TYPE_NOT_FOUND)
-            nError = ERROR_FILE_NOT_FOUND;
+        if((hf = IsValidFileHandle(hMpqOrFile)) == NULL)
+            return GetInfo_ReturnError(ERROR_INVALID_HANDLE);
+        pFileEntry = hf->pFileEntry;
     }
 
-    // Set the last error value, if needed
-    if(nError != ERROR_SUCCESS)
-        SetLastError(nError);
-    return (nError == ERROR_SUCCESS);
+    // Return info-class-specific data
+    switch(InfoClass)
+    {
+        case SFileMpqFileName:
+            szSrcFileInfo = FileStream_GetFileName(ha->pStream);
+            cbSrcFileInfo = (DWORD)((_tcslen(szSrcFileInfo) + 1) * sizeof(TCHAR));
+            return GetInfo(pvFileInfo, cbFileInfo, szSrcFileInfo, cbSrcFileInfo, pcbLengthNeeded);
+
+        case SFileMpqStreamBitmap:
+            return FileStream_GetBitmap(ha->pStream, pvFileInfo, cbFileInfo, pcbLengthNeeded);
+
+        case SFileMpqUserDataOffset:
+            return GetInfo(pvFileInfo, cbFileInfo, &ha->UserDataPos, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqUserDataHeader:
+            return GetInfo_ReadFromFile(pvFileInfo, cbFileInfo, ha->pStream, ha->UserDataPos, sizeof(TMPQUserData), pcbLengthNeeded);
+
+        case SFileMpqUserData:
+            return GetInfo_ReadFromFile(pvFileInfo, cbFileInfo, ha->pStream, ha->UserDataPos + sizeof(TMPQUserData), ha->pUserData->dwHeaderOffs - sizeof(TMPQUserData), pcbLengthNeeded);
+
+        case SFileMpqHeaderOffset:
+            return GetInfo(pvFileInfo, cbFileInfo, &ha->MpqPos, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHeaderSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->dwHeaderSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqHeader:
+            return GetInfo_ReadFromFile(pvFileInfo, cbFileInfo, ha->pStream, ha->MpqPos, pHeader->dwHeaderSize, pcbLengthNeeded);
+
+#ifdef FULL
+        case SFileMpqHetTableOffset:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->HetTablePos64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHetTableSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->HetTableSize64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHetHeader:
+            pvSrcFileInfo = LoadExtTable(ha, pHeader->HetTablePos64, (size_t)pHeader->HetTableSize64, HET_TABLE_SIGNATURE, MPQ_KEY_HASH_TABLE);
+            if(pvSrcFileInfo == NULL)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            return GetInfo_Allocated(pvFileInfo, cbFileInfo, pvSrcFileInfo, sizeof(TMPQHetHeader), pcbLengthNeeded);
+
+        case SFileMpqHetTable:
+            if((pvSrcFileInfo = LoadHetTable(ha)) == NULL)
+                return GetInfo_ReturnError(ERROR_NOT_ENOUGH_MEMORY);
+            return GetInfo_TablePointer(pvFileInfo, cbFileInfo, pvSrcFileInfo, InfoClass, pcbLengthNeeded);
+
+        case SFileMpqBetTableOffset:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->BetTablePos64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqBetTableSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->BetTableSize64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqBetHeader:
+
+            // Retrieve the table and its size
+            pvSrcFileInfo = LoadExtTable(ha, pHeader->BetTablePos64, (size_t)pHeader->BetTableSize64, BET_TABLE_SIGNATURE, MPQ_KEY_BLOCK_TABLE);
+            if(pvSrcFileInfo == NULL)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            cbSrcFileInfo = sizeof(TMPQBetHeader) + ((TMPQBetHeader *)pvSrcFileInfo)->dwFlagCount * sizeof(DWORD);
+
+            // It is allowed for the caller to only require BET header
+            if(cbFileInfo == sizeof(TMPQBetHeader))
+                cbSrcFileInfo = sizeof(TMPQBetHeader);
+            return GetInfo_Allocated(pvFileInfo, cbFileInfo, pvSrcFileInfo, cbSrcFileInfo, pcbLengthNeeded);
+
+        case SFileMpqBetTable:
+            if((pvSrcFileInfo = LoadBetTable(ha)) == NULL)
+                return GetInfo_ReturnError(ERROR_NOT_ENOUGH_MEMORY);
+            return GetInfo_TablePointer(pvFileInfo, cbFileInfo, pvSrcFileInfo, InfoClass, pcbLengthNeeded);
+#endif // FULL
+
+        case SFileMpqHashTableOffset:
+            Int64Value = MAKE_OFFSET64(pHeader->wHashTablePosHi, pHeader->dwHashTablePos);
+            return GetInfo(pvFileInfo, cbFileInfo, &Int64Value, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHashTableSize64:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->HashTableSize64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHashTableSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->dwHashTableSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqHashTable:
+            cbSrcFileInfo = pHeader->dwHashTableSize * sizeof(TMPQHash);
+            return GetInfo(pvFileInfo, cbFileInfo, ha->pHashTable, cbSrcFileInfo, pcbLengthNeeded);
+
+        case SFileMpqBlockTableOffset:
+            Int64Value = MAKE_OFFSET64(pHeader->wBlockTablePosHi, pHeader->dwBlockTablePos);
+            return GetInfo(pvFileInfo, cbFileInfo, &Int64Value, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqBlockTableSize64:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->BlockTableSize64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqBlockTableSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->dwBlockTableSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqBlockTable:
+            if(MAKE_OFFSET64(pHeader->wBlockTablePosHi, pHeader->dwBlockTablePos) >= ha->FileSize)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            cbSrcFileInfo = pHeader->dwBlockTableSize * sizeof(TMPQBlock);
+            pvSrcFileInfo = LoadBlockTable(ha, true);
+            return GetInfo_Allocated(pvFileInfo, cbFileInfo, pvSrcFileInfo, cbSrcFileInfo, pcbLengthNeeded);
+
+        case SFileMpqHiBlockTableOffset:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->HiBlockTablePos64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHiBlockTableSize64:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->HiBlockTableSize64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqHiBlockTable:
+            return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+
+#ifdef FULL
+        case SFileMpqSignatures:
+            if(!QueryMpqSignatureInfo(ha, &SignatureInfo))
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            return GetInfo(pvFileInfo, cbFileInfo, &SignatureInfo.SignatureTypes, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqStrongSignatureOffset:
+            if(QueryMpqSignatureInfo(ha, &SignatureInfo) == false || (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG) == 0)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            return GetInfo(pvFileInfo, cbFileInfo, &SignatureInfo.EndMpqData, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqStrongSignatureSize:
+            if(QueryMpqSignatureInfo(ha, &SignatureInfo) == false || (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG) == 0)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            dwInt32Value = MPQ_STRONG_SIGNATURE_SIZE + 4;
+            return GetInfo(pvFileInfo, cbFileInfo, &dwInt32Value, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqStrongSignature:
+            if(QueryMpqSignatureInfo(ha, &SignatureInfo) == false || (SignatureInfo.SignatureTypes & SIGNATURE_TYPE_STRONG) == 0)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            return GetInfo(pvFileInfo, cbFileInfo, SignatureInfo.Signature, MPQ_STRONG_SIGNATURE_SIZE + 4, pcbLengthNeeded);
+#endif // FULL
+
+        case SFileMpqArchiveSize64:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->ArchiveSize64, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileMpqArchiveSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->dwArchiveSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqMaxFileCount:
+            return GetInfo(pvFileInfo, cbFileInfo, &ha->dwMaxFileCount, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqFileTableSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &ha->dwFileTableSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqSectorSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &ha->dwSectorSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqNumberOfFiles:
+            dwInt32Value = GetMpqFileCount(ha);
+            return GetInfo(pvFileInfo, cbFileInfo, &dwInt32Value, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqRawChunkSize:
+            if(pHeader->dwRawChunkSize == 0)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            return GetInfo(pvFileInfo, cbFileInfo, &pHeader->dwRawChunkSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqStreamFlags:
+            FileStream_GetFlags(ha->pStream, &dwInt32Value);
+            return GetInfo(pvFileInfo, cbFileInfo, &dwInt32Value, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileMpqFlags:
+            return GetInfo(pvFileInfo, cbFileInfo, &ha->dwFlags, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoPatchChain:
+            return GetInfo_PatchChain(hf, pvFileInfo, cbFileInfo, pcbLengthNeeded);
+
+        case SFileInfoFileEntry:
+            if(pFileEntry == NULL)
+                return GetInfo_ReturnError(ERROR_FILE_NOT_FOUND);
+            return GetInfo_FileEntry(pvFileInfo, cbFileInfo, pFileEntry, pcbLengthNeeded);
+
+        case SFileInfoHashEntry:
+            return GetInfo(pvFileInfo, cbFileInfo, hf->pHashEntry, sizeof(TMPQHash), pcbLengthNeeded);
+
+        case SFileInfoHashIndex:
+            return GetInfo(pvFileInfo, cbFileInfo, &hf->dwHashIndex, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoNameHash1:
+            return GetInfo(pvFileInfo, cbFileInfo, &hf->pHashEntry->dwName1, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoNameHash2:
+            return GetInfo(pvFileInfo, cbFileInfo, &hf->pHashEntry->dwName2, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoNameHash3:
+            return GetInfo(pvFileInfo, cbFileInfo, &pFileEntry->FileNameHash, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileInfoLocale:
+            dwInt32Value = hf->pHashEntry->lcLocale;
+            return GetInfo(pvFileInfo, cbFileInfo, &dwInt32Value, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoFileIndex:
+            dwInt32Value = (DWORD)(pFileEntry - hf->ha->pFileTable);
+            return GetInfo(pvFileInfo, cbFileInfo, &dwInt32Value, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoByteOffset:
+            return GetInfo(pvFileInfo, cbFileInfo, &pFileEntry->ByteOffset, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileInfoFileTime:
+            return GetInfo(pvFileInfo, cbFileInfo, &pFileEntry->FileTime, sizeof(ULONGLONG), pcbLengthNeeded);
+
+        case SFileInfoFileSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pFileEntry->dwFileSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoCompressedSize:
+            return GetInfo(pvFileInfo, cbFileInfo, &pFileEntry->dwCmpSize, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoFlags:
+            return GetInfo(pvFileInfo, cbFileInfo, &pFileEntry->dwFlags, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoEncryptionKey:
+            return GetInfo(pvFileInfo, cbFileInfo, &hf->dwFileKey, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoEncryptionKeyRaw:
+            dwInt32Value = hf->dwFileKey;
+            if(pFileEntry->dwFlags & MPQ_FILE_FIX_KEY)
+                dwInt32Value = (dwInt32Value ^ pFileEntry->dwFileSize) - (DWORD)hf->MpqFilePos;
+            return GetInfo(pvFileInfo, cbFileInfo, &dwInt32Value, sizeof(DWORD), pcbLengthNeeded);
+
+        case SFileInfoCRC32:
+            return GetInfo(pvFileInfo, cbFileInfo, &hf->pFileEntry->dwCrc32, sizeof(DWORD), pcbLengthNeeded);
+        default:
+            // Invalid info class
+            return GetInfo_ReturnError(ERROR_INVALID_PARAMETER);
+    }
 }
 
 #ifdef FULL
-bool STORMAPI SFileFreeFileInfo(void * pvFileInfo, SFileInfoClass InfoClass)
+bool WINAPI SFileFreeFileInfo(void * pvFileInfo, SFileInfoClass InfoClass)
 {
     switch(InfoClass)
     {
@@ -879,7 +469,7 @@ bool STORMAPI SFileFreeFileInfo(void * pvFileInfo, SFileInfoClass InfoClass)
     SetLastError(ERROR_INVALID_PARAMETER);
     return false;
 }
-#endif
+#endif // FULL
 
 //-----------------------------------------------------------------------------
 // Tries to retrieve the file name
@@ -916,6 +506,18 @@ static TFileHeader2Ext data2ext[] =
     {0x47585053, 0xFFFFFFFF, 0x00000000, 0x00000000, "bls"},    // WoW pixel shaders
     {0xE0FFD8FF, 0xFFFFFFFF, 0x00000000, 0x00000000, "jpg"},    // JPEG image
     {0x503B4449, 0xFFFFFFFF, 0x3B4C5857, 0xFFFFFFFF, "slk"},    // SLK file (usually starts with "ID;PWXL;N;E")
+    {0x61754C1B, 0xFFFFFFFF, 0x00000000, 0x00000000, "lua"},    // Compiled LUA files
+    {0x20534444, 0xFFFFFFFF, 0x00000000, 0x00000000, "dds"},    // DDS textures
+    {0x43614C66, 0xFFFFFFFF, 0x00000000, 0x00000000, "flac"},   // FLAC sound files
+    {0x0000FBFF, 0x0000FFFF, 0x00000000, 0x00000000, "mp3"},    // MP3 sound files
+    {0x0000F3FF, 0x0000FFFF, 0x00000000, 0x00000000, "mp3"},    // MP3 sound files
+    {0x0000F2FF, 0x0000FFFF, 0x00000000, 0x00000000, "mp3"},    // MP3 sound files
+    {0x00334449, 0x00FFFFFF, 0x00000000, 0x00000000, "mp3"},    // MP3 sound files
+    {0x57334D48, 0xFFFFFFFF, 0x00000000, 0x00000000, "w3x"},    // Warcraft III map files, can also be w3m
+    {0x6F643357, 0xFFFFFFFF, 0x00000000, 0x00000000, "doo"},    // Warcraft III doodad files
+    {0x21453357, 0xFFFFFFFF, 0x00000000, 0x00000000, "w3e"},    // Warcraft III environment files
+    {0x5733504D, 0xFFFFFFFF, 0x00000000, 0x00000000, "wpm"},    // Warcraft III pathing map files
+    {0x21475457, 0xFFFFFFFF, 0x00000000, 0x00000000, "wtg"},    // Warcraft III trigger files
     {0x00000000, 0x00000000, 0x00000000, 0x00000000, "xxx"},    // Default extension
     {0, 0, 0, 0, NULL}                                          // Terminator
 };
@@ -926,6 +528,7 @@ static int CreatePseudoFileName(HANDLE hFile, TFileEntry * pFileEntry, char * sz
     DWORD FirstBytes[2] = {0, 0};       // The first 4 bytes of the file
     DWORD dwBytesRead = 0;
     DWORD dwFilePos;                    // Saved file position
+    char szPseudoName[20];
 
     // Read the first 2 DWORDs bytes from the file
     dwFilePos = SFileSetFilePointer(hFile, 0, NULL, FILE_CURRENT);
@@ -944,10 +547,8 @@ static int CreatePseudoFileName(HANDLE hFile, TFileEntry * pFileEntry, char * sz
             if((FirstBytes[0] & data2ext[i].dwOffset00Mask) == data2ext[i].dwOffset00Data &&
                (FirstBytes[1] & data2ext[i].dwOffset04Mask) == data2ext[i].dwOffset04Data)
             {
-                char szPseudoName[20] = "";
-
                 // Format the pseudo-name
-                sprintf(szPseudoName, "File%08u.%s", (unsigned int)(pFileEntry - hf->ha->pFileTable), data2ext[i].szExt);
+                StringCreatePseudoFileName(szPseudoName, _countof(szPseudoName), (unsigned int)(pFileEntry - hf->ha->pFileTable), data2ext[i].szExt);
 
                 // Save the pseudo-name in the file entry as well
                 AllocateFileName(hf->ha, pFileEntry, szPseudoName);
@@ -963,7 +564,7 @@ static int CreatePseudoFileName(HANDLE hFile, TFileEntry * pFileEntry, char * sz
     return ERROR_CAN_NOT_COMPLETE;
 }
 
-bool STORMAPI SFileGetFileName(HANDLE hFile, char * szFileName)
+bool WINAPI SFileGetFileName(HANDLE hFile, char * szFileName)
 {
     TMPQFile * hf = (TMPQFile *)hFile;  // MPQ File handle
     int nError = ERROR_INVALID_HANDLE;

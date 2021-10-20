@@ -3,15 +3,20 @@
  *
  * Implementation of the cathedral level generation algorithms.
  */
-#include "all.h"
+#include "drlg_l1.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine/load_file.hpp"
+#include "engine/point.hpp"
+#include "engine/random.hpp"
+#include "gendung.h"
+#include "player.h"
+#include "quests.h"
+
+namespace devilution {
 
 int UberRow;
 int UberCol;
 bool IsUberRoomOpened;
-int UberLeverRow;
-int UberLeverCol;
 bool IsUberLeverActivated;
 int UberDiabloMonsterIndex;
 
@@ -21,22 +26,22 @@ namespace {
 BYTE L5dungeon[80][80];
 BYTE L5dflags[DMAXX][DMAXY];
 /** Specifies whether a single player quest DUN has been loaded. */
-BOOL L5setloadflag;
+bool L5setloadflag;
 /** Specifies whether to generate a horizontal room at position 1 in the Cathedral. */
-int HR1;
+bool HR1;
 /** Specifies whether to generate a horizontal room at position 2 in the Cathedral. */
-int HR2;
+bool HR2;
 /** Specifies whether to generate a horizontal room at position 3 in the Cathedral. */
-int HR3;
+bool HR3;
 
 /** Specifies whether to generate a vertical room at position 1 in the Cathedral. */
-BOOL VR1;
+bool VR1;
 /** Specifies whether to generate a vertical room at position 2 in the Cathedral. */
-BOOL VR2;
+bool VR2;
 /** Specifies whether to generate a vertical room at position 3 in the Cathedral. */
-BOOL VR3;
+bool VR3;
 /** Contains the contents of the single player quest DUN file. */
-BYTE *L5pSetPiece;
+std::unique_ptr<uint16_t[]> L5pSetPiece;
 
 /** Contains shadows for 2x2 blocks of base tile IDs in the Cathedral. */
 const ShadowStruct SPATS[37] = {
@@ -262,9 +267,9 @@ const BYTE PWATERIN[] = {
 	 0,   0,   0,   0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A1B4[4] = { 1, 1, 11, 95 };
-const BYTE byte_48A1B8[8] = { 1, 1, 12, 96 };
-const BYTE byte_48A1C0[8] = {
+const BYTE CryptPattern1[4] = { 1, 1, 11, 95 };
+const BYTE CryptPattern2[8] = { 1, 1, 12, 96 };
+const BYTE CryptPattern3[8] = {
 	// clang-format off
 	1, 3, // width, height
 
@@ -277,7 +282,7 @@ const BYTE byte_48A1C0[8] = {
 	89,
 	// clang-format on
 };
-const BYTE byte_48A1C8[8] = {
+const BYTE CryptPattern4[8] = {
 	// clang-format off
 	3, 1, // width, height
 
@@ -286,11 +291,11 @@ const BYTE byte_48A1C8[8] = {
 	94, 93, 92, // replace
 	// clang-format on
 };
-const BYTE byte_48A1D0[4] = { 1, 1, 13, 97 };
-const BYTE byte_48A1D4[4] = { 1, 1, 13, 98 };
-const BYTE byte_48A1D8[4] = { 1, 1, 13, 99 };
-const BYTE byte_48A1DC[4] = { 1, 1, 13, 100 };
-const BYTE byte_48A1E0[20] = {
+const BYTE CryptPattern5[4] = { 1, 1, 13, 97 };
+const BYTE CryptPattern6[4] = { 1, 1, 13, 98 };
+const BYTE CryptPattern7[4] = { 1, 1, 13, 99 };
+const BYTE CryptPattern8[4] = { 1, 1, 13, 100 };
+const BYTE CryptPattern9[20] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -303,33 +308,33 @@ const BYTE byte_48A1E0[20] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A1F4[4] = { 1, 1, 11, 185 };
-const BYTE byte_48A1F8[4] = { 1, 1, 11, 186 };
-const BYTE byte_48A1FC[4] = { 1, 1, 12, 187 };
-const BYTE byte_48A200[4] = { 1, 1, 12, 188 };
-const BYTE byte_48A204[4] = { 1, 1, 89, 173 };
-const BYTE byte_48A208[4] = { 1, 1, 89, 174 };
-const BYTE byte_48A20C[4] = { 1, 1, 90, 175 };
-const BYTE byte_48A210[4] = { 1, 1, 90, 176 };
-const BYTE byte_48A214[4] = { 1, 1, 91, 177 };
-const BYTE byte_48A218[4] = { 1, 1, 91, 178 };
-const BYTE byte_48A21C[4] = { 1, 1, 92, 179 };
-const BYTE byte_48A220[4] = { 1, 1, 92, 180 };
-const BYTE byte_48A224[4] = { 1, 1, 92, 181 };
-const BYTE byte_48A228[4] = { 1, 1, 92, 182 };
-const BYTE byte_48A22C[4] = { 1, 1, 92, 183 };
-const BYTE byte_48A230[4] = { 1, 1, 92, 184 };
-const BYTE byte_48A234[4] = { 1, 1, 98, 189 };
-const BYTE byte_48A238[4] = { 1, 1, 98, 190 };
-const BYTE byte_48A23C[4] = { 1, 1, 97, 191 };
-const BYTE byte_48A240[4] = { 1, 1, 15, 192 };
-const BYTE byte_48A244[4] = { 1, 1, 99, 193 };
-const BYTE byte_48A248[4] = { 1, 1, 99, 194 };
-const BYTE byte_48A24C[4] = { 1, 1, 100, 195 };
-const BYTE byte_48A250[4] = { 1, 1, 101, 196 };
-const BYTE byte_48A254[4] = { 1, 1, 101, 197 };
-const BYTE byte_48A258[8] = { 1, 1, 101, 198 };
-const BYTE byte_48A260[24] = {
+const BYTE CryptPattern10[4] = { 1, 1, 11, 185 };
+const BYTE CryptPattern11[4] = { 1, 1, 11, 186 };
+const BYTE CryptPattern12[4] = { 1, 1, 12, 187 };
+const BYTE CryptPattern13[4] = { 1, 1, 12, 188 };
+const BYTE CryptPattern14[4] = { 1, 1, 89, 173 };
+const BYTE CryptPattern15[4] = { 1, 1, 89, 174 };
+const BYTE CryptPattern16[4] = { 1, 1, 90, 175 };
+const BYTE CryptPattern17[4] = { 1, 1, 90, 176 };
+const BYTE CryptPattern18[4] = { 1, 1, 91, 177 };
+const BYTE CryptPattern19[4] = { 1, 1, 91, 178 };
+const BYTE CryptPattern20[4] = { 1, 1, 92, 179 };
+const BYTE CryptPattern21[4] = { 1, 1, 92, 180 };
+const BYTE CryptPattern22[4] = { 1, 1, 92, 181 };
+const BYTE CryptPattern23[4] = { 1, 1, 92, 182 };
+const BYTE CryptPattern24[4] = { 1, 1, 92, 183 };
+const BYTE CryptPattern25[4] = { 1, 1, 92, 184 };
+const BYTE CryptPattern26[4] = { 1, 1, 98, 189 };
+const BYTE CryptPattern27[4] = { 1, 1, 98, 190 };
+const BYTE CryptPattern28[4] = { 1, 1, 97, 191 };
+const BYTE CryptPattern29[4] = { 1, 1, 15, 192 };
+const BYTE CryptPattern30[4] = { 1, 1, 99, 193 };
+const BYTE CryptPattern31[4] = { 1, 1, 99, 194 };
+const BYTE CryptPattern32[4] = { 1, 1, 100, 195 };
+const BYTE CryptPattern33[4] = { 1, 1, 101, 196 };
+const BYTE CryptPattern34[4] = { 1, 1, 101, 197 };
+const BYTE CryptPattern35[8] = { 1, 1, 101, 198 };
+const BYTE CryptPattern36[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -342,7 +347,7 @@ const BYTE byte_48A260[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A278[24] = {
+const BYTE CryptPattern37[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -355,7 +360,7 @@ const BYTE byte_48A278[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A290[24] = {
+const BYTE CryptPattern38[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -367,7 +372,7 @@ const BYTE byte_48A290[24] = {
 	0, 169, 0,
 	0,   0, 0,
 };
-const BYTE byte_48A2A8[24] = {
+const BYTE CryptPattern39[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -380,7 +385,7 @@ const BYTE byte_48A2A8[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A2C0[24] = {
+const BYTE CryptPattern40[24] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -393,7 +398,7 @@ const BYTE byte_48A2C0[24] = {
 	0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A2D8[20] = {
+const BYTE CryptPattern41[20] = {
 	// clang-format off
 	3, 3, // width, height
 
@@ -406,97 +411,111 @@ const BYTE byte_48A2D8[20] = {
 	 0,   0, 0,
 	// clang-format on
 };
-const BYTE byte_48A2EC[4] = { 1, 1, 13, 163 };
-const BYTE byte_48A2F0[4] = { 1, 1, 13, 164 };
-const BYTE byte_48A2F4[4] = { 1, 1, 13, 165 };
-const BYTE byte_48A2F8[4] = { 1, 1, 13, 166 };
-const BYTE byte_48A2FC[4] = { 1, 1, 1, 112 };
-const BYTE byte_48A300[4] = { 1, 1, 2, 113 };
-const BYTE byte_48A304[4] = { 1, 1, 3, 114 };
-const BYTE byte_48A308[4] = { 1, 1, 4, 115 };
-const BYTE byte_48A30C[4] = { 1, 1, 5, 116 };
-const BYTE byte_48A310[4] = { 1, 1, 6, 117 };
-const BYTE byte_48A314[4] = { 1, 1, 7, 118 };
-const BYTE byte_48A318[4] = { 1, 1, 8, 119 };
-const BYTE byte_48A31C[4] = { 1, 1, 9, 120 };
-const BYTE byte_48A320[4] = { 1, 1, 10, 121 };
-const BYTE byte_48A324[4] = { 1, 1, 11, 122 };
-const BYTE byte_48A328[4] = { 1, 1, 12, 123 };
-const BYTE byte_48A32C[4] = { 1, 1, 13, 124 };
-const BYTE byte_48A330[4] = { 1, 1, 14, 125 };
-const BYTE byte_48A334[4] = { 1, 1, 15, 126 };
-const BYTE byte_48A338[4] = { 1, 1, 16, 127 };
-const BYTE byte_48A33C[4] = { 1, 1, 17, 128 };
-const BYTE byte_48A340[4] = { 1, 1, 1, 129 };
-const BYTE byte_48A344[4] = { 1, 1, 2, 130 };
-const BYTE byte_48A348[4] = { 1, 1, 3, 131 };
-const BYTE byte_48A34C[4] = { 1, 1, 4, 132 };
-const BYTE byte_48A350[4] = { 1, 1, 5, 133 };
-const BYTE byte_48A354[4] = { 1, 1, 6, 134 };
-const BYTE byte_48A358[4] = { 1, 1, 7, 135 };
-const BYTE byte_48A35C[4] = { 1, 1, 8, 136 };
-const BYTE byte_48A360[4] = { 1, 1, 9, 137 };
-const BYTE byte_48A364[4] = { 1, 1, 10, 138 };
-const BYTE byte_48A368[4] = { 1, 1, 11, 139 };
-const BYTE byte_48A36C[4] = { 1, 1, 12, 140 };
-const BYTE byte_48A370[4] = { 1, 1, 13, 141 };
-const BYTE byte_48A374[4] = { 1, 1, 14, 142 };
-const BYTE byte_48A378[4] = { 1, 1, 15, 143 };
-const BYTE byte_48A37C[4] = { 1, 1, 16, 144 };
-const BYTE byte_48A380[4] = { 1, 1, 17, 145 };
-const BYTE byte_48A384[4] = { 1, 1, 1, 146 };
-const BYTE byte_48A388[4] = { 1, 1, 2, 147 };
-const BYTE byte_48A38C[4] = { 1, 1, 3, 148 };
-const BYTE byte_48A390[4] = { 1, 1, 4, 149 };
-const BYTE byte_48A394[4] = { 1, 1, 5, 150 };
-const BYTE byte_48A398[4] = { 1, 1, 6, 151 };
-const BYTE byte_48A39C[4] = { 1, 1, 7, 152 };
-const BYTE byte_48A3A0[4] = { 1, 1, 8, 153 };
-const BYTE byte_48A3A4[4] = { 1, 1, 9, 154 };
-const BYTE byte_48A3A8[4] = { 1, 1, 10, 155 };
-const BYTE byte_48A3AC[4] = { 1, 1, 11, 156 };
-const BYTE byte_48A3B0[4] = { 1, 1, 12, 157 };
-const BYTE byte_48A3B4[4] = { 1, 1, 13, 158 };
-const BYTE byte_48A3B8[4] = { 1, 1, 14, 159 };
-const BYTE byte_48A3BC[4] = { 1, 1, 15, 160 };
-const BYTE byte_48A3C0[4] = { 1, 1, 16, 161 };
-const BYTE byte_48A3C4[4] = { 1, 1, 17, 162 };
-const BYTE byte_48A3C8[4] = { 1, 1, 1, 199 };
-const BYTE byte_48A3CC[4] = { 1, 1, 1, 201 };
-const BYTE byte_48A3D0[4] = { 1, 1, 2, 200 };
-const BYTE byte_48A3D4[4] = { 1, 1, 2, 202 };
+const BYTE CryptPattern42[4] = { 1, 1, 13, 163 };
+const BYTE CryptPattern43[4] = { 1, 1, 13, 164 };
+const BYTE CryptPattern44[4] = { 1, 1, 13, 165 };
+const BYTE CryptPattern45[4] = { 1, 1, 13, 166 };
+const BYTE CryptPattern46[4] = { 1, 1, 1, 112 };
+const BYTE CryptPattern47[4] = { 1, 1, 2, 113 };
+const BYTE CryptPattern48[4] = { 1, 1, 3, 114 };
+const BYTE CryptPattern49[4] = { 1, 1, 4, 115 };
+const BYTE CryptPattern50[4] = { 1, 1, 5, 116 };
+const BYTE CryptPattern51[4] = { 1, 1, 6, 117 };
+const BYTE CryptPattern52[4] = { 1, 1, 7, 118 };
+const BYTE CryptPattern53[4] = { 1, 1, 8, 119 };
+const BYTE CryptPattern54[4] = { 1, 1, 9, 120 };
+const BYTE CryptPattern55[4] = { 1, 1, 10, 121 };
+const BYTE CryptPattern56[4] = { 1, 1, 11, 122 };
+const BYTE CryptPattern57[4] = { 1, 1, 12, 123 };
+const BYTE CryptPattern58[4] = { 1, 1, 13, 124 };
+const BYTE CryptPattern59[4] = { 1, 1, 14, 125 };
+const BYTE CryptPattern60[4] = { 1, 1, 15, 126 };
+const BYTE CryptPattern61[4] = { 1, 1, 16, 127 };
+const BYTE CryptPattern62[4] = { 1, 1, 17, 128 };
+const BYTE CryptPattern63[4] = { 1, 1, 1, 129 };
+const BYTE CryptPattern64[4] = { 1, 1, 2, 130 };
+const BYTE CryptPattern65[4] = { 1, 1, 3, 131 };
+const BYTE CryptPattern66[4] = { 1, 1, 4, 132 };
+const BYTE CryptPattern67[4] = { 1, 1, 5, 133 };
+const BYTE CryptPattern68[4] = { 1, 1, 6, 134 };
+const BYTE CryptPattern69[4] = { 1, 1, 7, 135 };
+const BYTE CryptPattern70[4] = { 1, 1, 8, 136 };
+const BYTE CryptPattern71[4] = { 1, 1, 9, 137 };
+const BYTE CryptPattern72[4] = { 1, 1, 10, 138 };
+const BYTE CryptPattern73[4] = { 1, 1, 11, 139 };
+const BYTE CryptPattern74[4] = { 1, 1, 12, 140 };
+const BYTE CryptPattern75[4] = { 1, 1, 13, 141 };
+const BYTE CryptPattern76[4] = { 1, 1, 14, 142 };
+const BYTE CryptPattern77[4] = { 1, 1, 15, 143 };
+const BYTE CryptPattern78[4] = { 1, 1, 16, 144 };
+const BYTE CryptPattern79[4] = { 1, 1, 17, 145 };
+const BYTE CryptPattern80[4] = { 1, 1, 1, 146 };
+const BYTE CryptPattern81[4] = { 1, 1, 2, 147 };
+const BYTE CryptPattern82[4] = { 1, 1, 3, 148 };
+const BYTE CryptPattern83[4] = { 1, 1, 4, 149 };
+const BYTE CryptPattern84[4] = { 1, 1, 5, 150 };
+const BYTE CryptPattern85[4] = { 1, 1, 6, 151 };
+const BYTE CryptPattern86[4] = { 1, 1, 7, 152 };
+const BYTE CryptPattern87[4] = { 1, 1, 8, 153 };
+const BYTE CryptPattern88[4] = { 1, 1, 9, 154 };
+const BYTE CryptPattern89[4] = { 1, 1, 10, 155 };
+const BYTE CryptPattern90[4] = { 1, 1, 11, 156 };
+const BYTE CryptPattern91[4] = { 1, 1, 12, 157 };
+const BYTE CryptPattern92[4] = { 1, 1, 13, 158 };
+const BYTE CryptPattern93[4] = { 1, 1, 14, 159 };
+const BYTE CryptPattern94[4] = { 1, 1, 15, 160 };
+const BYTE CryptPattern95[4] = { 1, 1, 16, 161 };
+const BYTE CryptPattern96[4] = { 1, 1, 17, 162 };
+const BYTE CryptPattern97[4] = { 1, 1, 1, 199 };
+const BYTE CryptPattern98[4] = { 1, 1, 1, 201 };
+const BYTE CryptPattern99[4] = { 1, 1, 2, 200 };
+const BYTE CryptPattern100[4] = { 1, 1, 2, 202 };
 
 /* data */
 
-BYTE UberRoomPattern[32] = { 4, 6, 115, 130, 6, 13, 129, 108, 1, 13, 1, 107, 103, 13, 146, 106, 102, 13, 129, 168, 1, 13, 7, 2, 3, 13, 0, 0, 0, 0, 0, 0 };
-BYTE CornerstoneRoomPattern[32] = { 5, 5, 4, 2, 2, 2, 6, 1, 111, 172, 0, 1, 1, 172, 0, 0, 25, 1, 0, 0, 0, 1, 7, 2, 2, 2, 3, 0, 0, 0, 0, 0 };
+BYTE UberRoomPattern[26] = {
+	// clang-format off
+	4, 6, // width, height
+
+	115, 130,   6, 13, // pattern
+	129, 108,   1, 13,
+	  1, 107, 103, 13,
+	146, 106, 102, 13,
+	129, 168,   1, 13,
+	  7,   2,   3, 13,
+	// clang-format on
+};
+BYTE CornerstoneRoomPattern[27] = {
+	// clang-format off
+	5, 5, // width, height
+
+	4,   2,   2, 2,  6, // pattern
+	1, 111, 172, 0,  1,
+	1, 172,   0, 0, 25,
+	1,   0,   0, 0,  1,
+	7,   2,   2, 2,  3,
+	// clang-format on
+};
 /**
  * A lookup table for the 16 possible patterns of a 2x2 area,
  * where each cell either contains a SW wall or it doesn't.
  */
 BYTE L5ConvTbl[16] = { 22, 13, 1, 13, 2, 13, 13, 13, 4, 13, 1, 13, 2, 13, 16, 13 };
 
-} // namespace
-
-void DRLG_InitL5Vals()
+void InitCryptPieces()
 {
-	int i, j, pc;
-
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
 			if (dPiece[i][j] == 77) {
-				pc = 1;
+				dSpecial[i][j] = 1;
 			} else if (dPiece[i][j] == 80) {
-				pc = 2;
-			} else {
-				continue;
+				dSpecial[i][j] = 2;
 			}
-			dSpecial[i][j] = pc;
 		}
 	}
 }
 
-static void DRLG_PlaceDoor(int x, int y)
+void PlaceDoor(int x, int y)
 {
 	if ((L5dflags[x][y] & DLRG_PROTECTED) == 0) {
 		BYTE df = L5dflags[x][y] & 0x7F;
@@ -555,143 +574,13 @@ static void DRLG_PlaceDoor(int x, int y)
 	L5dflags[x][y] = DLRG_PROTECTED;
 }
 
-void drlg_l1_crypt_lavafloor()
+void CryptLavafloor()
 {
-	int i, j;
-
-	for (j = 1; j < 40; j++) {
-		for (i = 1; i < 40; i++) {
+	for (int j = 1; j < 40; j++) {
+		for (int i = 1; i < 40; i++) {
 			switch (dungeon[i][j]) {
 			case 5:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 7:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
-			case 8:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 9:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 10:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 11:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 12:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 14:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 15:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
-			case 17:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
-			case 95:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 96:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 208;
-				break;
 			case 116:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 118:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
-			case 119:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 120:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 121:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 122:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 211;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 212;
-				break;
-			case 123:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 125:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 126:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
-			case 128:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
 			case 133:
 				if (dungeon[i - 1][j] == 13)
 					dungeon[i - 1][j] = 203;
@@ -700,27 +589,73 @@ void drlg_l1_crypt_lavafloor()
 				if (dungeon[i][j - 1] == 13)
 					dungeon[i][j - 1] = 205;
 				break;
+			case 7:
+			case 15:
+			case 17:
+			case 118:
+			case 126:
+			case 128:
 			case 135:
+			case 152:
+			case 160:
 				if (dungeon[i - 1][j] == 13)
 					dungeon[i - 1][j] = 206;
 				if (dungeon[i - 1][j - 1] == 13)
 					dungeon[i - 1][j - 1] = 207;
 				break;
+			case 8:
+			case 11:
+			case 14:
+			case 95:
+			case 119:
+			case 125:
 			case 136:
+			case 142:
+			case 153:
+			case 156:
+			case 159:
+			case 185:
+			case 186:
 				if (dungeon[i - 1][j] == 13)
 					dungeon[i - 1][j] = 203;
 				if (dungeon[i - 1][j - 1] == 13)
 					dungeon[i - 1][j - 1] = 204;
+				break;
+			case 9:
+			case 120:
+			case 154:
+				if (dungeon[i - 1][j] == 13)
+					dungeon[i - 1][j] = 206;
+				if (dungeon[i - 1][j - 1] == 13)
+					dungeon[i - 1][j - 1] = 207;
+				if (dungeon[i][j - 1] == 13)
+					dungeon[i][j - 1] = 205;
+				break;
+			case 10:
+			case 12:
+			case 121:
+			case 123:
+			case 138:
+			case 155:
+				if (dungeon[i][j - 1] == 13)
+					dungeon[i][j - 1] = 205;
+				break;
+			case 96:
+			case 187:
+				if (dungeon[i][j - 1] == 13)
+					dungeon[i][j - 1] = 208;
+				break;
+			case 122:
+				if (dungeon[i - 1][j] == 13)
+					dungeon[i - 1][j] = 211;
+				if (dungeon[i - 1][j - 1] == 13)
+					dungeon[i - 1][j - 1] = 212;
 				break;
 			case 137:
 				if (dungeon[i - 1][j] == 13)
 					dungeon[i - 1][j] = 213;
 				if (dungeon[i - 1][j - 1] == 13)
 					dungeon[i - 1][j - 1] = 214;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 138:
 				if (dungeon[i][j - 1] == 13)
 					dungeon[i][j - 1] = 205;
 				break;
@@ -731,21 +666,11 @@ void drlg_l1_crypt_lavafloor()
 					dungeon[i - 1][j - 1] = 216;
 				break;
 			case 140:
+			case 157:
 				if (dungeon[i][j - 1] == 13)
 					dungeon[i][j - 1] = 217;
 				break;
-			case 142:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
 			case 143:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 213;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 214;
-				break;
 			case 145:
 				if (dungeon[i - 1][j] == 13)
 					dungeon[i - 1][j] = 213;
@@ -760,80 +685,8 @@ void drlg_l1_crypt_lavafloor()
 				if (dungeon[i][j - 1] == 13)
 					dungeon[i][j - 1] = 217;
 				break;
-			case 152:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
-			case 153:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 154:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 155:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 205;
-				break;
-			case 156:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 157:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 217;
-				break;
-			case 159:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 160:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 206;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 207;
-				break;
 			case 162:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 209;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 210;
-				break;
 			case 167:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 209;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 210;
-				break;
-			case 187:
-				if (dungeon[i][j - 1] == 13)
-					dungeon[i][j - 1] = 208;
-				break;
-			case 185:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
-			case 186:
-				if (dungeon[i - 1][j] == 13)
-					dungeon[i - 1][j] = 203;
-				if (dungeon[i - 1][j - 1] == 13)
-					dungeon[i - 1][j - 1] = 204;
-				break;
 			case 192:
 				if (dungeon[i - 1][j] == 13)
 					dungeon[i - 1][j] = 209;
@@ -845,197 +698,165 @@ void drlg_l1_crypt_lavafloor()
 	}
 }
 
-static void DRLG_L1Shadows()
+void ApplyShadowsPatterns()
 {
-	int x, y, i;
-	BYTE sd[2][2];
-	BYTE tnv3;
-	BOOL patflag;
+	uint8_t sd[2][2];
 
-	for (y = 1; y < DMAXY; y++) {
-		for (x = 1; x < DMAXX; x++) {
+	for (int y = 1; y < DMAXY; y++) {
+		for (int x = 1; x < DMAXX; x++) {
 			sd[0][0] = BSTYPES[dungeon[x][y]];
 			sd[1][0] = BSTYPES[dungeon[x - 1][y]];
 			sd[0][1] = BSTYPES[dungeon[x][y - 1]];
 			sd[1][1] = BSTYPES[dungeon[x - 1][y - 1]];
 
-			for (i = 0; i < 37; i++) {
-				if (SPATS[i].strig == sd[0][0]) {
-					patflag = TRUE;
-					if (SPATS[i].s1 && SPATS[i].s1 != sd[1][1])
-						patflag = FALSE;
-					if (SPATS[i].s2 && SPATS[i].s2 != sd[0][1])
-						patflag = FALSE;
-					if (SPATS[i].s3 && SPATS[i].s3 != sd[1][0])
-						patflag = FALSE;
-					if (patflag == TRUE) {
-						if (SPATS[i].nv1 && !L5dflags[x - 1][y - 1])
-							dungeon[x - 1][y - 1] = SPATS[i].nv1;
-						if (SPATS[i].nv2 && !L5dflags[x][y - 1])
-							dungeon[x][y - 1] = SPATS[i].nv2;
-						if (SPATS[i].nv3 && !L5dflags[x - 1][y])
-							dungeon[x - 1][y] = SPATS[i].nv3;
-					}
+			for (const auto &shadow : SPATS) {
+				if (shadow.strig != sd[0][0])
+					continue;
+				if (shadow.s1 != 0 && shadow.s1 != sd[1][1])
+					continue;
+				if (shadow.s2 != 0 && shadow.s2 != sd[0][1])
+					continue;
+				if (shadow.s3 != 0 && shadow.s3 != sd[1][0])
+					continue;
+
+				if (shadow.nv1 != 0 && L5dflags[x - 1][y - 1] == 0) {
+					dungeon[x - 1][y - 1] = shadow.nv1;
+				}
+				if (shadow.nv2 != 0 && L5dflags[x][y - 1] == 0) {
+					dungeon[x][y - 1] = shadow.nv2;
+				}
+				if (shadow.nv3 != 0 && L5dflags[x - 1][y] == 0) {
+					dungeon[x - 1][y] = shadow.nv3;
 				}
 			}
 		}
 	}
 
-	for (y = 1; y < DMAXY; y++) {
-		for (x = 1; x < DMAXX; x++) {
-			if (dungeon[x - 1][y] == 139 && !L5dflags[x - 1][y]) {
-				tnv3 = 139;
-				if (dungeon[x][y] == 29)
+	for (int y = 1; y < DMAXY; y++) {
+		for (int x = 1; x < DMAXX; x++) {
+			if (dungeon[x - 1][y] == 139 && L5dflags[x - 1][y] == 0) {
+				uint8_t tnv3 = 139;
+				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 141;
-				if (dungeon[x][y] == 32)
-					tnv3 = 141;
-				if (dungeon[x][y] == 35)
-					tnv3 = 141;
-				if (dungeon[x][y] == 37)
-					tnv3 = 141;
-				if (dungeon[x][y] == 38)
-					tnv3 = 141;
-				if (dungeon[x][y] == 39)
-					tnv3 = 141;
+				}
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 149 && !L5dflags[x - 1][y]) {
-				tnv3 = 149;
-				if (dungeon[x][y] == 29)
+			if (dungeon[x - 1][y] == 149 && L5dflags[x - 1][y] == 0) {
+				uint8_t tnv3 = 149;
+				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 153;
-				if (dungeon[x][y] == 32)
-					tnv3 = 153;
-				if (dungeon[x][y] == 35)
-					tnv3 = 153;
-				if (dungeon[x][y] == 37)
-					tnv3 = 153;
-				if (dungeon[x][y] == 38)
-					tnv3 = 153;
-				if (dungeon[x][y] == 39)
-					tnv3 = 153;
+				}
 				dungeon[x - 1][y] = tnv3;
 			}
-			if (dungeon[x - 1][y] == 148 && !L5dflags[x - 1][y]) {
-				tnv3 = 148;
-				if (dungeon[x][y] == 29)
+			if (dungeon[x - 1][y] == 148 && L5dflags[x - 1][y] == 0) {
+				uint8_t tnv3 = 148;
+				if (IsAnyOf(dungeon[x][y], 29, 32, 35, 37, 38, 39)) {
 					tnv3 = 154;
-				if (dungeon[x][y] == 32)
-					tnv3 = 154;
-				if (dungeon[x][y] == 35)
-					tnv3 = 154;
-				if (dungeon[x][y] == 37)
-					tnv3 = 154;
-				if (dungeon[x][y] == 38)
-					tnv3 = 154;
-				if (dungeon[x][y] == 39)
-					tnv3 = 154;
+				}
 				dungeon[x - 1][y] = tnv3;
 			}
 		}
 	}
 }
 
-static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, BOOL setview, int noquad, int ldir)
+int PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, int cy, bool setview, int noquad)
 {
-	int sx, sy, sw, sh, xx, yy, i, ii, numt, found, t;
-	BOOL abort;
+	int sx;
+	int sy;
 
-	sw = miniset[0];
-	sh = miniset[1];
+	int sw = miniset[0];
+	int sh = miniset[1];
 
-	if (tmax - tmin == 0)
-		numt = 1;
-	else
-		numt = random_(0, tmax - tmin) + tmin;
+	int numt = 1;
+	if (tmax - tmin != 0) {
+		numt = GenerateRnd(tmax - tmin) + tmin;
+	}
 
-	for (i = 0; i < numt; i++) {
-		sx = random_(0, DMAXX - sw);
-		sy = random_(0, DMAXY - sh);
-		abort = FALSE;
-		found = 0;
+	for (int i = 0; i < numt; i++) {
+		sx = GenerateRnd(DMAXX - sw);
+		sy = GenerateRnd(DMAXY - sh);
+		bool abort = false;
+		int found = 0;
 
-		while (abort == FALSE) {
-			abort = TRUE;
+		while (!abort) {
+			abort = true;
 			if (cx != -1 && sx >= cx - sw && sx <= cx + 12) {
 				sx++;
-				abort = FALSE;
+				abort = false;
 			}
 			if (cy != -1 && sy >= cy - sh && sy <= cy + 12) {
 				sy++;
-				abort = FALSE;
+				abort = false;
 			}
 
 			switch (noquad) {
 			case 0:
 				if (sx < cx && sy < cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			case 1:
 				if (sx > cx && sy < cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			case 2:
 				if (sx < cx && sy > cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			case 3:
 				if (sx > cx && sy > cy)
-					abort = FALSE;
+					abort = false;
 				break;
 			}
 
-			ii = 2;
+			int ii = 2;
 
-			for (yy = 0; yy < sh && abort == TRUE; yy++) {
-				for (xx = 0; xx < sw && abort == TRUE; xx++) {
-					if (miniset[ii] && dungeon[xx + sx][sy + yy] != miniset[ii])
-						abort = FALSE;
-					if (L5dflags[xx + sx][sy + yy])
-						abort = FALSE;
+			for (int yy = 0; yy < sh && abort; yy++) {
+				for (int xx = 0; xx < sw && abort; xx++) {
+					if (miniset[ii] != 0 && dungeon[xx + sx][sy + yy] != miniset[ii])
+						abort = false;
+					if (L5dflags[xx + sx][sy + yy] != 0)
+						abort = false;
 					ii++;
 				}
 			}
 
-			if (abort == FALSE) {
-				if (++sx == DMAXX - sw) {
+			if (!abort) {
+				sx++;
+				if (sx == DMAXX - sw) {
 					sx = 0;
-					if (++sy == DMAXY - sh)
+					sy++;
+					if (sy == DMAXY - sh) {
 						sy = 0;
+					}
 				}
 				if (++found > 4000)
 					return -1;
 			}
 		}
 
-		ii = sw * sh + 2;
+		int ii = sw * sh + 2;
 
-		for (yy = 0; yy < sh; yy++) {
-			for (xx = 0; xx < sw; xx++) {
-				if (miniset[ii])
+		for (int yy = 0; yy < sh; yy++) {
+			for (int xx = 0; xx < sw; xx++) {
+				if (miniset[ii] != 0) {
 					dungeon[xx + sx][sy + yy] = miniset[ii];
+				}
 				ii++;
 			}
 		}
 	}
 
 	if (miniset == PWATERIN) {
-		t = TransVal;
+		int8_t t = TransVal;
 		TransVal = 0;
 		DRLG_MRectTrans(sx, sy + 2, sx + 5, sy + 4);
 		TransVal = t;
 
-		quests[Q_PWATER]._qtx = 2 * sx + 21;
-		quests[Q_PWATER]._qty = 2 * sy + 22;
+		Quests[Q_PWATER].position = { 2 * sx + 21, 2 * sy + 22 };
 	}
 
-	if (setview == TRUE) {
-		ViewX = 2 * sx + 19;
-		ViewY = 2 * sy + 20;
-	}
-
-	if (ldir == 0) {
-		LvlViewX = 2 * sx + 19;
-		LvlViewY = 2 * sy + 20;
+	if (setview) {
+		ViewPosition = Point { 19, 20 } + Displacement { sx, sy } * 2;
 	}
 
 	if (sx < cx && sy < cy)
@@ -1044,19 +865,71 @@ static int DRLG_PlaceMiniSet(const BYTE *miniset, int tmin, int tmax, int cx, in
 		return 1;
 	if (sx < cx && sy > cy)
 		return 2;
-	else
-		return 3;
+
+	return 3;
 }
 
-static void DRLG_L1Floor()
+void PlaceMiniSetRandom(const BYTE *miniset, int rndper)
 {
-	int i, j;
-	LONG rv;
+	int sw = miniset[0];
+	int sh = miniset[1];
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int sy = 0; sy < DMAXY - sh; sy++) {
+		for (int sx = 0; sx < DMAXX - sw; sx++) {
+			bool found = true;
+			int ii = 2;
+			for (int yy = 0; yy < sh && found; yy++) {
+				for (int xx = 0; xx < sw && found; xx++) {
+					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
+						found = false;
+					}
+					if (dflags[xx + sx][yy + sy] != 0) {
+						found = false;
+					}
+					ii++;
+				}
+			}
+			int kk = sw * sh + 2;
+			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found) {
+				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
+				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 - NOT A BUG - "fixing" this breaks crypt
+
+				constexpr auto ComparisonWithBoundsCheck = [](Point p1, Point p2) {
+					return (p1.x >= 0 && p1.x < DMAXX && p1.y >= 0 && p1.y < DMAXY) && (p2.x >= 0 && p2.x < DMAXX && p2.y >= 0 && p2.y < DMAXY) && (dungeon[p1.x][p1.y] >= 84 && dungeon[p2.x][p2.y] <= 100);
+				};
+				if (ComparisonWithBoundsCheck({ sx - 1, sy }, { sx - 1, sy })) {
+					found = false;
+				}
+				if (ComparisonWithBoundsCheck({ sx + 1, sy }, { sx - 1, sy })) {
+					found = false;
+				}
+				if (ComparisonWithBoundsCheck({ sx, sy + 1 }, { sx - 1, sy })) {
+					found = false;
+				}
+				if (ComparisonWithBoundsCheck({ sx, sy - 1 }, { sx - 1, sy })) {
+					found = false;
+				}
+			}
+			if (found && GenerateRnd(100) < rndper) {
+				for (int yy = 0; yy < sh; yy++) {
+					for (int xx = 0; xx < sw; xx++) {
+						if (miniset[kk] != 0) {
+							dungeon[xx + sx][yy + sy] = miniset[kk];
+						}
+						kk++;
+					}
+				}
+			}
+		}
+	}
+}
+
+void FillFloor()
+{
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (L5dflags[i][j] == 0 && dungeon[i][j] == 13) {
-				rv = random_(0, 3);
+				int rv = GenerateRnd(3);
 
 				if (rv == 1)
 					dungeon[i][j] = 162;
@@ -1067,133 +940,44 @@ static void DRLG_L1Floor()
 	}
 }
 
-static void DRLG_L1Pass3()
+void LoadQuestSetPieces()
 {
-	int i, j, xx, yy;
-	long v1, v2, v3, v4, lv;
-	WORD *MegaTiles;
+	L5setloadflag = false;
 
-	lv = 22 - 1;
-
-	MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-	v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
-	v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
-	v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
-	v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
-
-	for (j = 0; j < MAXDUNY; j += 2) {
-		for (i = 0; i < MAXDUNX; i += 2) {
-			dPiece[i][j] = v1;
-			dPiece[i + 1][j] = v2;
-			dPiece[i][j + 1] = v3;
-			dPiece[i + 1][j + 1] = v4;
-		}
-	}
-
-	yy = 16;
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-		for (i = 0; i < DMAXX; i++) {
-			lv = dungeon[i][j] - 1;
-			/// ASSERT: assert(lv >= 0);
-			MegaTiles = (WORD *)&pMegaTiles[lv * 8];
-			v1 = SDL_SwapLE16(*(MegaTiles + 0)) + 1;
-			v2 = SDL_SwapLE16(*(MegaTiles + 1)) + 1;
-			v3 = SDL_SwapLE16(*(MegaTiles + 2)) + 1;
-			v4 = SDL_SwapLE16(*(MegaTiles + 3)) + 1;
-			dPiece[xx][yy] = v1;
-			dPiece[xx + 1][yy] = v2;
-			dPiece[xx][yy + 1] = v3;
-			dPiece[xx + 1][yy + 1] = v4;
-			xx += 2;
-		}
-		yy += 2;
+	if (Quests[Q_BUTCHER].IsAvailable()) {
+		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\rnd6.DUN");
+		L5setloadflag = true;
+	} else if (Quests[Q_SKELKING].IsAvailable() && !gbIsMultiplayer) {
+		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\SKngDO.DUN");
+		L5setloadflag = true;
+	} else if (Quests[Q_LTBANNER].IsAvailable()) {
+		L5pSetPiece = LoadFileInMem<uint16_t>("Levels\\L1Data\\Banner2.DUN");
+		L5setloadflag = true;
 	}
 }
 
-static void DRLG_LoadL1SP()
+void FreeQuestSetPieces()
 {
-	L5setloadflag = FALSE;
-	if (QuestStatus(Q_BUTCHER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\rnd6.DUN", NULL);
-		L5setloadflag = TRUE;
-	}
-	if (QuestStatus(Q_SKELKING) && !gbIsMultiplayer) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\SKngDO.DUN", NULL);
-		L5setloadflag = TRUE;
-	}
-	if (QuestStatus(Q_LTBANNER)) {
-		L5pSetPiece = LoadFileInMem("Levels\\L1Data\\Banner2.DUN", NULL);
-		L5setloadflag = TRUE;
-	}
+	L5pSetPiece = nullptr;
 }
 
-static void DRLG_FreeL1SP()
+void InitDungeonPieces()
 {
-	MemFreeDbg(L5pSetPiece);
-}
-
-void DRLG_Init_Globals()
-{
-	char c;
-
-	memset(dFlags, 0, sizeof(dFlags));
-	memset(dPlayer, 0, sizeof(dPlayer));
-	memset(dMonster, 0, sizeof(dMonster));
-	memset(dDead, 0, sizeof(dDead));
-	memset(dObject, 0, sizeof(dObject));
-	memset(dItem, 0, sizeof(dItem));
-	memset(dMissile, 0, sizeof(dMissile));
-	memset(dSpecial, 0, sizeof(dSpecial));
-	if (!lightflag) {
-		if (light4flag)
-			c = 3;
-		else
-			c = 15;
-	} else {
-		c = 0;
-	}
-	memset(dLight, c, sizeof(dLight));
-}
-
-static void DRLG_InitL1Vals()
-{
-	int i, j, pc;
-
-	for (j = 0; j < MAXDUNY; j++) {
-		for (i = 0; i < MAXDUNX; i++) {
-			if (dPiece[i][j] == 12) {
+	for (int j = 0; j < MAXDUNY; j++) {
+		for (int i = 0; i < MAXDUNX; i++) {
+			int8_t pc;
+			if (IsAnyOf(dPiece[i][j], 12, 71, 321, 211, 341, 418)) {
 				pc = 1;
-			} else if (dPiece[i][j] == 11) {
+			} else if (IsAnyOf(dPiece[i][j], 11, 249, 325, 344, 331, 421)) {
 				pc = 2;
-			} else if (dPiece[i][j] == 71) {
-				pc = 1;
 			} else if (dPiece[i][j] == 253) {
 				pc = 3;
-			} else if (dPiece[i][j] == 267) {
-				pc = 6;
-			} else if (dPiece[i][j] == 259) {
-				pc = 5;
-			} else if (dPiece[i][j] == 249) {
-				pc = 2;
-			} else if (dPiece[i][j] == 325) {
-				pc = 2;
-			} else if (dPiece[i][j] == 321) {
-				pc = 1;
 			} else if (dPiece[i][j] == 255) {
 				pc = 4;
-			} else if (dPiece[i][j] == 211) {
-				pc = 1;
-			} else if (dPiece[i][j] == 344) {
-				pc = 2;
-			} else if (dPiece[i][j] == 341) {
-				pc = 1;
-			} else if (dPiece[i][j] == 331) {
-				pc = 2;
-			} else if (dPiece[i][j] == 418) {
-				pc = 1;
-			} else if (dPiece[i][j] == 421) {
-				pc = 2;
+			} else if (dPiece[i][j] == 259) {
+				pc = 5;
+			} else if (dPiece[i][j] == 267) {
+				pc = 6;
 			} else {
 				continue;
 			}
@@ -1202,235 +986,133 @@ static void DRLG_InitL1Vals()
 	}
 }
 
-void LoadL1Dungeon(const char *sFileName, int vx, int vy)
+void InitDungeonFlags()
 {
-	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
-
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
-
-	DRLG_InitTrans();
-	pLevelMap = LoadFileInMem(sFileName, NULL);
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 22;
-			L5dflags[i][j] = 0;
-		}
-	}
-
-	lm = pLevelMap;
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-				L5dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 13;
-			}
-			lm += 2;
-		}
-	}
-
-	DRLG_L1Floor();
-	ViewX = vx;
-	ViewY = vy;
-	DRLG_L1Pass3();
-	DRLG_Init_Globals();
-	if (currlevel < 17)
-		DRLG_InitL1Vals();
-	SetMapMonsters(pLevelMap, 0, 0);
-	SetMapObjects(pLevelMap, 0, 0);
-	mem_free_dbg(pLevelMap);
-}
-
-void LoadPreL1Dungeon(const char *sFileName, int vx, int vy)
-{
-	int i, j, rw, rh;
-	BYTE *pLevelMap, *lm;
-
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
-
-	pLevelMap = LoadFileInMem(sFileName, NULL);
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			dungeon[i][j] = 22;
-			L5dflags[i][j] = 0;
-		}
-	}
-
-	lm = pLevelMap;
-	rw = *lm;
-	lm += 2;
-	rh = *lm;
-	lm += 2;
-
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*lm != 0) {
-				dungeon[i][j] = *lm;
-				L5dflags[i][j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[i][j] = 13;
-			}
-			lm += 2;
-		}
-	}
-
-	DRLG_L1Floor();
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			pdungeon[i][j] = dungeon[i][j];
-		}
-	}
-
-	mem_free_dbg(pLevelMap);
-}
-
-static void InitL5Dungeon()
-{
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			dungeon[i][j] = 0;
 			L5dflags[i][j] = 0;
 		}
 	}
 }
 
-static void L5ClearFlags()
+void ClearFlags()
 {
-	int i, j;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			L5dflags[i][j] &= 0xBF;
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
+			L5dflags[i][j] &= ~DLRG_CHAMBER;
 		}
 	}
 }
 
-static void L5drawRoom(int x, int y, int w, int h)
+void MapRoom(int x, int y, int width, int height)
 {
-	int i, j;
-
-	for (j = 0; j < h; j++) {
-		for (i = 0; i < w; i++) {
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
 			dungeon[x + i][y + j] = 1;
 		}
 	}
 }
 
-static BOOL L5checkRoom(int x, int y, int width, int height)
+bool CheckRoom(int x, int y, int width, int height)
 {
-	int i, j;
-
-	for (j = 0; j < height; j++) {
-		for (i = 0; i < width; i++) {
-			if (i + x < 0 || i + x >= DMAXX || j + y < 0 || j + y >= DMAXY)
-				return FALSE;
-			if (dungeon[i + x][j + y])
-				return FALSE;
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			if (i + x < 0 || i + x >= DMAXX || j + y < 0 || j + y >= DMAXY) {
+				return false;
+			}
+			if (dungeon[i + x][j + y] != 0) {
+				return false;
+			}
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
-static void L5roomGen(int x, int y, int w, int h, int dir)
+void GenerateRoom(int x, int y, int w, int h, int dir)
 {
-	BOOL ran, ran2;
-	int width, height, rx, ry, ry2;
-	int cw, ch, cx1, cy1, cx2;
-
-	int dirProb = random_(0, 4);
+	int dirProb = GenerateRnd(4);
 	int num = 0;
 
+	bool ran;
 	if ((dir == 1 && dirProb == 0) || (dir != 1 && dirProb != 0)) {
+		int cw;
+		int ch;
+		int cx1;
+		int cy1;
 		do {
-			cw = (random_(0, 5) + 2) & ~1;
-			ch = (random_(0, 5) + 2) & ~1;
-			cy1 = h / 2 + y - ch / 2;
+			cw = (GenerateRnd(5) + 2) & ~1;
+			ch = (GenerateRnd(5) + 2) & ~1;
 			cx1 = x - cw;
-			ran = L5checkRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
+			cy1 = h / 2 + y - ch / 2;
+			ran = CheckRoom(cx1 - 1, cy1 - 1, ch + 2, cw + 1); /// BUGFIX: swap args 3 and 4 ("ch+2" and "cw+1")
 			num++;
-		} while (ran == FALSE && num < 20);
+		} while (!ran && num < 20);
 
-		if (ran == TRUE)
-			L5drawRoom(cx1, cy1, cw, ch);
-		cx2 = x + w;
-		ran2 = L5checkRoom(cx2, cy1 - 1, cw + 1, ch + 2);
-		if (ran2 == TRUE)
-			L5drawRoom(cx2, cy1, cw, ch);
-		if (ran == TRUE)
-			L5roomGen(cx1, cy1, cw, ch, 1);
-		if (ran2 == TRUE)
-			L5roomGen(cx2, cy1, cw, ch, 1);
+		if (ran)
+			MapRoom(cx1, cy1, cw, ch);
+		int cx2 = x + w;
+		bool ran2 = CheckRoom(cx2, cy1 - 1, cw + 1, ch + 2);
+		if (ran2)
+			MapRoom(cx2, cy1, cw, ch);
+		if (ran)
+			GenerateRoom(cx1, cy1, cw, ch, 1);
+		if (ran2)
+			GenerateRoom(cx2, cy1, cw, ch, 1);
 		return;
 	}
 
+	int width;
+	int height;
+	int rx;
+	int ry;
 	do {
-		width = (random_(0, 5) + 2) & ~1;
-		height = (random_(0, 5) + 2) & ~1;
+		width = (GenerateRnd(5) + 2) & ~1;
+		height = (GenerateRnd(5) + 2) & ~1;
 		rx = w / 2 + x - width / 2;
 		ry = y - height;
-		ran = L5checkRoom(rx - 1, ry - 1, width + 2, height + 1);
+		ran = CheckRoom(rx - 1, ry - 1, width + 2, height + 1);
 		num++;
-	} while (ran == FALSE && num < 20);
+	} while (!ran && num < 20);
 
-	if (ran == TRUE)
-		L5drawRoom(rx, ry, width, height);
-	ry2 = y + h;
-	ran2 = L5checkRoom(rx - 1, ry2, width + 2, height + 1);
-	if (ran2 == TRUE)
-		L5drawRoom(rx, ry2, width, height);
-	if (ran == TRUE)
-		L5roomGen(rx, ry, width, height, 0);
-	if (ran2 == TRUE)
-		L5roomGen(rx, ry2, width, height, 0);
+	if (ran)
+		MapRoom(rx, ry, width, height);
+	int ry2 = y + h;
+	bool ran2 = CheckRoom(rx - 1, ry2, width + 2, height + 1);
+	if (ran2)
+		MapRoom(rx, ry2, width, height);
+	if (ran)
+		GenerateRoom(rx, ry, width, height, 0);
+	if (ran2)
+		GenerateRoom(rx, ry2, width, height, 0);
 }
 
-static void L5firstRoom()
+void FirstRoom()
 {
-	int ys, ye, y;
-	int xs, xe, x;
+	if (GenerateRnd(2) == 0) {
+		int ys = 1;
+		int ye = DMAXY - 1;
 
-	if (random_(0, 2) == 0) {
-		ys = 1;
-		ye = DMAXY - 1;
+		VR1 = (GenerateRnd(2) != 0);
+		VR2 = (GenerateRnd(2) != 0);
+		VR3 = (GenerateRnd(2) != 0);
 
-		VR1 = random_(0, 2);
-		VR2 = random_(0, 2);
-		VR3 = random_(0, 2);
-
-		if (VR1 + VR3 <= 1)
-			VR2 = 1;
+		if (!VR1 || !VR3)
+			VR2 = true;
 		if (VR1)
-			L5drawRoom(15, 1, 10, 10);
+			MapRoom(15, 1, 10, 10);
 		else
 			ys = 18;
 
 		if (VR2)
-			L5drawRoom(15, 15, 10, 10);
+			MapRoom(15, 15, 10, 10);
 		if (VR3)
-			L5drawRoom(15, 29, 10, 10);
+			MapRoom(15, 29, 10, 10);
 		else
 			ye = 22;
 
-		for (y = ys; y < ye; y++) {
+		for (int y = ys; y < ye; y++) {
 			dungeon[17][y] = 1;
 			dungeon[18][y] = 1;
 			dungeon[19][y] = 1;
@@ -1440,38 +1122,38 @@ static void L5firstRoom()
 		}
 
 		if (VR1)
-			L5roomGen(15, 1, 10, 10, 0);
+			GenerateRoom(15, 1, 10, 10, 0);
 		if (VR2)
-			L5roomGen(15, 15, 10, 10, 0);
+			GenerateRoom(15, 15, 10, 10, 0);
 		if (VR3)
-			L5roomGen(15, 29, 10, 10, 0);
+			GenerateRoom(15, 29, 10, 10, 0);
 
-		HR3 = 0;
-		HR2 = 0;
-		HR1 = 0;
+		HR3 = false;
+		HR2 = false;
+		HR1 = false;
 	} else {
-		xs = 1;
-		xe = DMAXX - 1;
+		int xs = 1;
+		int xe = DMAXX - 1;
 
-		HR1 = random_(0, 2);
-		HR2 = random_(0, 2);
-		HR3 = random_(0, 2);
+		HR1 = GenerateRnd(2) != 0;
+		HR2 = GenerateRnd(2) != 0;
+		HR3 = GenerateRnd(2) != 0;
 
-		if (HR1 + HR3 <= 1)
-			HR2 = 1;
+		if (!HR1 || !HR3)
+			HR2 = true;
 		if (HR1)
-			L5drawRoom(1, 15, 10, 10);
+			MapRoom(1, 15, 10, 10);
 		else
 			xs = 18;
 
 		if (HR2)
-			L5drawRoom(15, 15, 10, 10);
+			MapRoom(15, 15, 10, 10);
 		if (HR3)
-			L5drawRoom(29, 15, 10, 10);
+			MapRoom(29, 15, 10, 10);
 		else
 			xe = 22;
 
-		for (x = xs; x < xe; x++) {
+		for (int x = xs; x < xe; x++) {
 			dungeon[x][17] = 1;
 			dungeon[x][18] = 1;
 			dungeon[x][19] = 1;
@@ -1481,27 +1163,24 @@ static void L5firstRoom()
 		}
 
 		if (HR1)
-			L5roomGen(1, 15, 10, 10, 1);
+			GenerateRoom(1, 15, 10, 10, 1);
 		if (HR2)
-			L5roomGen(15, 15, 10, 10, 1);
+			GenerateRoom(15, 15, 10, 10, 1);
 		if (HR3)
-			L5roomGen(29, 15, 10, 10, 1);
+			GenerateRoom(29, 15, 10, 10, 1);
 
-		VR3 = 0;
-		VR2 = 0;
-		VR1 = 0;
+		VR3 = false;
+		VR2 = false;
+		VR1 = false;
 	}
 }
 
-static int L5GetArea()
+int FindArea()
 {
-	int i, j;
-	int rv;
+	int rv = 0;
 
-	rv = 0;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			if (dungeon[i][j] == 1)
 				rv++;
 		}
@@ -1510,103 +1189,94 @@ static int L5GetArea()
 	return rv;
 }
 
-static void L5makeDungeon()
+void MakeDungeon()
 {
-	int i, j;
-	int i_2, j_2;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			j_2 = j << 1;
-			i_2 = i << 1;
-			L5dungeon[i_2][j_2] = dungeon[i][j];
-			L5dungeon[i_2][j_2 + 1] = dungeon[i][j];
-			L5dungeon[i_2 + 1][j_2] = dungeon[i][j];
-			L5dungeon[i_2 + 1][j_2 + 1] = dungeon[i][j];
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			int i2 = i * 2;
+			int j2 = j * 2;
+			L5dungeon[i2][j2] = dungeon[i][j];
+			L5dungeon[i2][j2 + 1] = dungeon[i][j];
+			L5dungeon[i2 + 1][j2] = dungeon[i][j];
+			L5dungeon[i2 + 1][j2 + 1] = dungeon[i][j];
 		}
 	}
 }
 
-static void L5makeDmt()
+void MakeDmt()
 {
-	int i, j, idx, val, dmtx, dmty;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
 			dungeon[i][j] = 22;
 		}
 	}
 
-	for (j = 0, dmty = 1; dmty <= 77; j++, dmty += 2) {
-		for (i = 0, dmtx = 1; dmtx <= 77; i++, dmtx += 2) {
-			val = 8 * L5dungeon[dmtx + 1][dmty + 1]
+	int dmty = 1;
+	for (int j = 0; dmty <= 77; j++, dmty += 2) {
+		int dmtx = 1;
+		for (int i = 0; dmtx <= 77; i++, dmtx += 2) {
+			int val = 8 * L5dungeon[dmtx + 1][dmty + 1]
 			    + 4 * L5dungeon[dmtx][dmty + 1]
 			    + 2 * L5dungeon[dmtx + 1][dmty]
 			    + L5dungeon[dmtx][dmty];
-			idx = L5ConvTbl[val];
-			dungeon[i][j] = idx;
+			dungeon[i][j] = L5ConvTbl[val];
 		}
 	}
 }
 
-static int L5HWallOk(int i, int j)
+int HorizontalWallOk(int i, int j)
 {
 	int x;
-	BOOL wallok;
-
 	for (x = 1; dungeon[i + x][j] == 13; x++) {
-		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || L5dflags[i + x][j])
+		if (dungeon[i + x][j - 1] != 13 || dungeon[i + x][j + 1] != 13 || L5dflags[i + x][j] != 0)
 			break;
 	}
 
-	wallok = FALSE;
+	bool wallok = false;
 	if (dungeon[i + x][j] >= 3 && dungeon[i + x][j] <= 7)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i + x][j] >= 16 && dungeon[i + x][j] <= 24)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i + x][j] == 22)
-		wallok = FALSE;
+		wallok = false;
 	if (x == 1)
-		wallok = FALSE;
+		wallok = false;
 
 	if (wallok)
 		return x;
-	else
-		return -1;
+
+	return -1;
 }
 
-static int L5VWallOk(int i, int j)
+int VerticalWallOk(int i, int j)
 {
 	int y;
-	BOOL wallok;
-
 	for (y = 1; dungeon[i][j + y] == 13; y++) {
-		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || L5dflags[i][j + y])
+		if (dungeon[i - 1][j + y] != 13 || dungeon[i + 1][j + y] != 13 || L5dflags[i][j + y] != 0)
 			break;
 	}
 
-	wallok = FALSE;
+	bool wallok = false;
 	if (dungeon[i][j + y] >= 3 && dungeon[i][j + y] <= 7)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i][j + y] >= 16 && dungeon[i][j + y] <= 24)
-		wallok = TRUE;
+		wallok = true;
 	if (dungeon[i][j + y] == 22)
-		wallok = FALSE;
+		wallok = false;
 	if (y == 1)
-		wallok = FALSE;
+		wallok = false;
 
 	if (wallok)
 		return y;
-	else
-		return -1;
+
+	return -1;
 }
 
-static void L5HorizWall(int i, int j, char p, int dx)
+void HorizontalWall(int i, int j, char p, int dx)
 {
-	int xx;
-	char wt, dt;
+	int8_t dt;
 
-	switch (random_(0, 4)) {
+	switch (GenerateRnd(4)) {
 	case 0:
 	case 1:
 		dt = 2;
@@ -1627,20 +1297,20 @@ static void L5HorizWall(int i, int j, char p, int dx)
 		break;
 	}
 
-	if (random_(0, 6) == 5)
+	int8_t wt = 26;
+	if (GenerateRnd(6) == 5)
 		wt = 12;
-	else
-		wt = 26;
+
 	if (dt == 12)
 		wt = 12;
 
 	dungeon[i][j] = p;
 
-	for (xx = 1; xx < dx; xx++) {
+	for (int xx = 1; xx < dx; xx++) {
 		dungeon[i + xx][j] = dt;
 	}
 
-	xx = random_(0, dx - 1) + 1;
+	int xx = GenerateRnd(dx - 1) + 1;
 
 	if (wt == 12) {
 		dungeon[i + xx][j] = wt;
@@ -1650,12 +1320,11 @@ static void L5HorizWall(int i, int j, char p, int dx)
 	}
 }
 
-static void L5VertWall(int i, int j, char p, int dy)
+void VerticalWall(int i, int j, char p, int dy)
 {
-	int yy;
-	char wt, dt;
+	int8_t dt;
 
-	switch (random_(0, 4)) {
+	switch (GenerateRnd(4)) {
 	case 0:
 	case 1:
 		dt = 1;
@@ -1676,20 +1345,20 @@ static void L5VertWall(int i, int j, char p, int dy)
 		break;
 	}
 
-	if (random_(0, 6) == 5)
+	int8_t wt = 25;
+	if (GenerateRnd(6) == 5)
 		wt = 11;
-	else
-		wt = 25;
+
 	if (dt == 11)
 		wt = 11;
 
 	dungeon[i][j] = p;
 
-	for (yy = 1; yy < dy; yy++) {
+	for (int yy = 1; yy < dy; yy++) {
 		dungeon[i][j + yy] = dt;
 	}
 
-	yy = random_(0, dy - 1) + 1;
+	int yy = GenerateRnd(dy - 1) + 1;
 
 	if (wt == 11) {
 		dungeon[i][j + yy] = wt;
@@ -1699,53 +1368,61 @@ static void L5VertWall(int i, int j, char p, int dy)
 	}
 }
 
-static void L5AddWall()
+void AddWall()
 {
-	int i, j, x, y;
-
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (!L5dflags[i][j]) {
-				if (dungeon[i][j] == 3 && random_(0, 100) < 100) {
-					x = L5HWallOk(i, j);
-					if (x != -1)
-						L5HorizWall(i, j, 2, x);
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			if (L5dflags[i][j] == 0) {
+				if (dungeon[i][j] == 3) {
+					AdvanceRndSeed();
+					int x = HorizontalWallOk(i, j);
+					if (x != -1) {
+						HorizontalWall(i, j, 2, x);
+					}
 				}
-				if (dungeon[i][j] == 3 && random_(0, 100) < 100) {
-					y = L5VWallOk(i, j);
-					if (y != -1)
-						L5VertWall(i, j, 1, y);
+				if (dungeon[i][j] == 3) {
+					AdvanceRndSeed();
+					int y = VerticalWallOk(i, j);
+					if (y != -1) {
+						VerticalWall(i, j, 1, y);
+					}
 				}
-				if (dungeon[i][j] == 6 && random_(0, 100) < 100) {
-					x = L5HWallOk(i, j);
-					if (x != -1)
-						L5HorizWall(i, j, 4, x);
+				if (dungeon[i][j] == 6) {
+					AdvanceRndSeed();
+					int x = HorizontalWallOk(i, j);
+					if (x != -1) {
+						HorizontalWall(i, j, 4, x);
+					}
 				}
-				if (dungeon[i][j] == 7 && random_(0, 100) < 100) {
-					y = L5VWallOk(i, j);
-					if (y != -1)
-						L5VertWall(i, j, 4, y);
+				if (dungeon[i][j] == 7) {
+					AdvanceRndSeed();
+					int y = VerticalWallOk(i, j);
+					if (y != -1) {
+						VerticalWall(i, j, 4, y);
+					}
 				}
-				if (dungeon[i][j] == 2 && random_(0, 100) < 100) {
-					x = L5HWallOk(i, j);
-					if (x != -1)
-						L5HorizWall(i, j, 2, x);
+				if (dungeon[i][j] == 2) {
+					AdvanceRndSeed();
+					int x = HorizontalWallOk(i, j);
+					if (x != -1) {
+						HorizontalWall(i, j, 2, x);
+					}
 				}
-				if (dungeon[i][j] == 1 && random_(0, 100) < 100) {
-					y = L5VWallOk(i, j);
-					if (y != -1)
-						L5VertWall(i, j, 1, y);
+				if (dungeon[i][j] == 1) {
+					AdvanceRndSeed();
+					int y = VerticalWallOk(i, j);
+					if (y != -1) {
+						VerticalWall(i, j, 1, y);
+					}
 				}
 			}
 		}
 	}
 }
 
-static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL leftflag, BOOL rightflag)
+void GenerateChamber(int sx, int sy, bool topflag, bool bottomflag, bool leftflag, bool rightflag)
 {
-	int i, j;
-
-	if (topflag == TRUE) {
+	if (topflag) {
 		dungeon[sx + 2][sy] = 12;
 		dungeon[sx + 3][sy] = 12;
 		dungeon[sx + 4][sy] = 3;
@@ -1753,7 +1430,7 @@ static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL 
 		dungeon[sx + 8][sy] = 12;
 		dungeon[sx + 9][sy] = 2;
 	}
-	if (bottomflag == TRUE) {
+	if (bottomflag) {
 		sy += 11;
 		dungeon[sx + 2][sy] = 10;
 		dungeon[sx + 3][sy] = 12;
@@ -1765,7 +1442,7 @@ static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL 
 		}
 		sy -= 11;
 	}
-	if (leftflag == TRUE) {
+	if (leftflag) {
 		dungeon[sx][sy + 2] = 11;
 		dungeon[sx][sy + 3] = 11;
 		dungeon[sx][sy + 4] = 3;
@@ -1773,7 +1450,7 @@ static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL 
 		dungeon[sx][sy + 8] = 11;
 		dungeon[sx][sy + 9] = 1;
 	}
-	if (rightflag == TRUE) {
+	if (rightflag) {
 		sx += 11;
 		dungeon[sx][sy + 2] = 14;
 		dungeon[sx][sy + 3] = 11;
@@ -1786,8 +1463,8 @@ static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL 
 		sx -= 11;
 	}
 
-	for (j = 1; j < 11; j++) {
-		for (i = 1; i < 11; i++) {
+	for (int j = 1; j < 11; j++) {
+		for (int i = 1; i < 11; i++) {
 			dungeon[i + sx][j + sy] = 13;
 			L5dflags[i + sx][j + sy] |= DLRG_CHAMBER;
 		}
@@ -1799,32 +1476,29 @@ static void DRLG_L5GChamber(int sx, int sy, BOOL topflag, BOOL bottomflag, BOOL 
 	dungeon[sx + 7][sy + 7] = 15;
 }
 
-static void DRLG_L5GHall(int x1, int y1, int x2, int y2)
+void GenerateHall(int x1, int y1, int x2, int y2)
 {
-	int i;
-
 	if (y1 == y2) {
-		for (i = x1; i < x2; i++) {
+		for (int i = x1; i < x2; i++) {
 			dungeon[i][y1] = 12;
 			dungeon[i][y1 + 3] = 12;
 		}
-	} else {
-		for (i = y1; i < y2; i++) {
-			dungeon[x1][i] = 11;
-			dungeon[x1 + 3][i] = 11;
-		}
+		return;
+	}
+
+	for (int i = y1; i < y2; i++) {
+		dungeon[x1][i] = 11;
+		dungeon[x1 + 3][i] = 11;
 	}
 }
 
-static void L5tileFix()
+void FixTilesPatterns()
 {
-	int i, j;
-
 	// BUGFIX: Bounds checks are required in all loop bodies.
 	// See https://github.com/diasurgical/devilutionX/pull/401
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (i + 1 < DMAXX) {
 				if (dungeon[i][j] == 2 && dungeon[i + 1][j] == 22)
 					dungeon[i + 1][j] = 23;
@@ -1846,8 +1520,8 @@ static void L5tileFix()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (i + 1 < DMAXX) {
 				if (dungeon[i][j] == 13 && dungeon[i + 1][j] == 19)
 					dungeon[i + 1][j] = 21;
@@ -1927,8 +1601,8 @@ static void L5tileFix()
 		}
 	}
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (j + 1 < DMAXY && dungeon[i][j] == 4 && dungeon[i][j + 1] == 2)
 				dungeon[i][j + 1] = 7;
 			if (i + 1 < DMAXX && dungeon[i][j] == 2 && dungeon[i + 1][j] == 19)
@@ -1939,90 +1613,59 @@ static void L5tileFix()
 	}
 }
 
-void drlg_l1_crypt_rndset(const BYTE *miniset, int rndper)
+void SetCornerRoom(int rx1, int ry1)
 {
-	int sx, sy, sw, sh, xx, yy, ii, kk;
-	BOOL found;
+	int rw = CornerstoneRoomPattern[0];
+	int rh = CornerstoneRoomPattern[1];
 
-	sw = miniset[0];
-	sh = miniset[1];
+	setpc_x = rx1;
+	setpc_y = ry1;
+	setpc_w = rw;
+	setpc_h = rh;
 
-	for (sy = 0; sy < DMAXY - sh; sy++) {
-		for (sx = 0; sx < DMAXX - sw; sx++) {
-			found = TRUE;
-			ii = 2;
-			for (yy = 0; yy < sh && found == TRUE; yy++) {
-				for (xx = 0; xx < sw && found == TRUE; xx++) {
-					if (miniset[ii] != 0 && dungeon[xx + sx][yy + sy] != miniset[ii]) {
-						found = FALSE;
-					}
-					if (dflags[xx + sx][yy + sy] != 0) {
-						found = FALSE;
-					}
-					ii++;
-				}
+	int sp = 2;
+
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
+			if (CornerstoneRoomPattern[sp] != 0) {
+				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
+				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[rx1 + i][ry1 + j] = 13;
 			}
-			kk = sw * sh + 2;
-			if (miniset[kk] >= 84 && miniset[kk] <= 100 && found == TRUE) {
-				// BUGFIX: accesses to dungeon can go out of bounds (fixed)
-				// BUGFIX: Comparisons vs 100 should use same tile as comparisons vs 84 (fixed)
-				if (sx > 0 && dungeon[sx - 1][sy] >= 84 && dungeon[sx - 1][sy] <= 100) {
-					found = FALSE;
-				}
-				if (sx < DMAXX - 1 && dungeon[sx + 1][sy] >= 84 && dungeon[sx + 1][sy] <= 100) {
-					found = FALSE;
-				}
-				if (sy < DMAXY - 1 && dungeon[sx][sy + 1] >= 84 && dungeon[sx][sy + 1] <= 100) {
-					found = FALSE;
-				}
-				if (sy > 0 && dungeon[sx][sy - 1] >= 84 && dungeon[sx][sy - 1] <= 100) {
-					found = FALSE;
-				}
-			}
-			if (found == TRUE && random_(0, 100) < rndper) {
-				for (yy = 0; yy < sh; yy++) {
-					for (xx = 0; xx < sw; xx++) {
-						if (miniset[kk] != 0) {
-							dungeon[xx + sx][yy + sy] = miniset[kk];
-						}
-						kk++;
-					}
-				}
-			}
+			sp++;
 		}
 	}
 }
-
-static void DRLG_L5Subs()
+void Substitution()
 {
-	int x, y, rv, i;
-
-	for (y = 0; y < DMAXY; y++) {
-		for (x = 0; x < DMAXX; x++) {
-			if (random_(0, 4) == 0) {
-				BYTE c = L5BTYPES[dungeon[x][y]];
-
-				if (c && !L5dflags[x][y]) {
-					rv = random_(0, 16);
-					i = -1;
-
+	for (int y = 0; y < DMAXY; y++) {
+		for (int x = 0; x < DMAXX; x++) {
+			if (GenerateRnd(4) == 0) {
+				uint8_t c = L5BTYPES[dungeon[x][y]];
+				if (c != 0 && L5dflags[x][y] == 0) {
+					int rv = GenerateRnd(16);
+					int i = -1;
 					while (rv >= 0) {
-						if (++i == sizeof(L5BTYPES))
+						i++;
+						if (i == sizeof(L5BTYPES)) {
 							i = 0;
-						if (c == L5BTYPES[i])
+						}
+						if (c == L5BTYPES[i]) {
 							rv--;
+						}
 					}
 
 					// BUGFIX: Add `&& y > 0` to the if statement. (fixed)
 					if (i == 89 && y > 0) {
-						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1])
+						if (L5BTYPES[dungeon[x][y - 1]] != 79 || L5dflags[x][y - 1] != 0)
 							i = 79;
 						else
 							dungeon[x][y - 1] = 90;
 					}
 					// BUGFIX: Add `&& x + 1 < DMAXX` to the if statement. (fixed)
 					if (i == 91 && x + 1 < DMAXX) {
-						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y])
+						if (L5BTYPES[dungeon[x + 1][y]] != 80 || L5dflags[x + 1][y] != 0)
 							i = 80;
 						else
 							dungeon[x + 1][y] = 92;
@@ -2034,268 +1677,35 @@ static void DRLG_L5Subs()
 	}
 }
 
-static void DRLG_L5SetRoom(int rx1, int ry1)
+void SetRoom(int rx1, int ry1)
 {
-	int rw, rh, i, j;
-	BYTE *sp;
-
-	rw = *L5pSetPiece;
-	rh = *(L5pSetPiece + 2);
+	int width = SDL_SwapLE16(L5pSetPiece[0]);
+	int height = SDL_SwapLE16(L5pSetPiece[1]);
 
 	setpc_x = rx1;
 	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
+	setpc_w = width;
+	setpc_h = height;
 
-	sp = L5pSetPiece + 4;
+	uint16_t *tileLayer = &L5pSetPiece[2];
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (*sp) {
-				dungeon[rx1 + i][ry1 + j] = *sp;
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(tileLayer[j * width + i]);
+			if (tileId != 0) {
+				dungeon[rx1 + i][ry1 + j] = tileId;
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
 			} else {
 				dungeon[rx1 + i][ry1 + j] = 13;
 			}
-			sp += 2;
 		}
 	}
 }
 
-static void L5FillChambers()
+void SetCryptRoom(int rx1, int ry1)
 {
-	int c;
-
-	if (HR1)
-		DRLG_L5GChamber(0, 14, 0, 0, 0, 1);
-
-	if (HR2) {
-		if (HR1 && !HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 1, 0);
-		if (!HR1 && HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 0, 1);
-		if (HR1 && HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 1, 1);
-		if (!HR1 && !HR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 0, 0);
-	}
-
-	if (HR3)
-		DRLG_L5GChamber(28, 14, 0, 0, 1, 0);
-	if (HR1 && HR2)
-		DRLG_L5GHall(12, 18, 14, 18);
-	if (HR2 && HR3)
-		DRLG_L5GHall(26, 18, 28, 18);
-	if (HR1 && !HR2 && HR3)
-		DRLG_L5GHall(12, 18, 28, 18);
-	if (VR1)
-		DRLG_L5GChamber(14, 0, 0, 1, 0, 0);
-
-	if (VR2) {
-		if (VR1 && !VR3)
-			DRLG_L5GChamber(14, 14, 1, 0, 0, 0);
-		if (!VR1 && VR3)
-			DRLG_L5GChamber(14, 14, 0, 1, 0, 0);
-		if (VR1 && VR3)
-			DRLG_L5GChamber(14, 14, 1, 1, 0, 0);
-		if (!VR1 && !VR3)
-			DRLG_L5GChamber(14, 14, 0, 0, 0, 0);
-	}
-
-	if (VR3)
-		DRLG_L5GChamber(14, 28, 1, 0, 0, 0);
-	if (VR1 && VR2)
-		DRLG_L5GHall(18, 12, 18, 14);
-	if (VR2 && VR3)
-		DRLG_L5GHall(18, 26, 18, 28);
-	if (VR1 && !VR2 && VR3)
-		DRLG_L5GHall(18, 12, 18, 28);
-
-	if (currlevel == 24) {
-		if (VR1 || VR2 || VR3) {
-			c = 1;
-			if (!VR1 && VR2 && VR3 && random_(0, 2) != 0)
-				c = 2;
-			if (VR1 && VR2 && !VR3 && random_(0, 2) != 0)
-				c = 0;
-
-			if (VR1 && !VR2 && VR3) {
-				if (random_(0, 2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (VR1 && VR2 && VR3)
-				c = random_(0, 3);
-
-			switch (c) {
-			case 0:
-				drlg_l1_set_crypt_room(16, 2);
-				break;
-			case 1:
-				drlg_l1_set_crypt_room(16, 16);
-				break;
-			case 2:
-				drlg_l1_set_crypt_room(16, 30);
-				break;
-			}
-		} else {
-			c = 1;
-			if (!HR1 && HR2 && HR3 && random_(0, 2) != 0)
-				c = 2;
-			if (HR1 && HR2 && !HR3 && random_(0, 2) != 0)
-				c = 0;
-
-			if (HR1 && !HR2 && HR3) {
-				if (random_(0, 2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (HR1 && HR2 && HR3)
-				c = random_(0, 3);
-
-			switch (c) {
-			case 0:
-				drlg_l1_set_crypt_room(2, 16);
-				break;
-			case 1:
-				drlg_l1_set_crypt_room(16, 16);
-				break;
-			case 2:
-				drlg_l1_set_crypt_room(30, 16);
-				break;
-			}
-		}
-	}
-	if (currlevel == 21) {
-		if (VR1 || VR2 || VR3) {
-			c = 1;
-			if (!VR1 && VR2 && VR3 && random_(0, 2) != 0)
-				c = 2;
-			if (VR1 && VR2 && !VR3 && random_(0, 2) != 0)
-				c = 0;
-
-			if (VR1 && !VR2 && VR3) {
-				if (random_(0, 2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (VR1 && VR2 && VR3)
-				c = random_(0, 3);
-
-			switch (c) {
-			case 0:
-				drlg_l1_set_corner_room(16, 2);
-				break;
-			case 1:
-				drlg_l1_set_corner_room(16, 16);
-				break;
-			case 2:
-				drlg_l1_set_corner_room(16, 30);
-				break;
-			}
-		} else {
-			c = 1;
-			if (!HR1 && HR2 && HR3 && random_(0, 2))
-				c = 2;
-			if (HR1 && HR2 && !HR3 && random_(0, 2))
-				c = 0;
-
-			if (HR1 && !HR2 && HR3) {
-				if (random_(0, 2))
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (HR1 && HR2 && HR3)
-				c = random_(0, 3);
-
-			switch (c) {
-			case 0:
-				drlg_l1_set_corner_room(2, 16);
-				break;
-			case 1:
-				drlg_l1_set_corner_room(16, 16);
-				break;
-			case 2:
-				drlg_l1_set_corner_room(30, 16);
-				break;
-			}
-		}
-	}
-	if (L5setloadflag) {
-		if (VR1 || VR2 || VR3) {
-			c = 1;
-			if (!VR1 && VR2 && VR3 && random_(0, 2) != 0)
-				c = 2;
-			if (VR1 && VR2 && !VR3 && random_(0, 2) != 0)
-				c = 0;
-
-			if (VR1 && !VR2 && VR3) {
-				if (random_(0, 2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (VR1 && VR2 && VR3)
-				c = random_(0, 3);
-
-			switch (c) {
-			case 0:
-				DRLG_L5SetRoom(16, 2);
-				break;
-			case 1:
-				DRLG_L5SetRoom(16, 16);
-				break;
-			case 2:
-				DRLG_L5SetRoom(16, 30);
-				break;
-			}
-		} else {
-			c = 1;
-			if (!HR1 && HR2 && HR3 && random_(0, 2) != 0)
-				c = 2;
-			if (HR1 && HR2 && !HR3 && random_(0, 2) != 0)
-				c = 0;
-
-			if (HR1 && !HR2 && HR3) {
-				if (random_(0, 2) != 0)
-					c = 0;
-				else
-					c = 2;
-			}
-
-			if (HR1 && HR2 && HR3)
-				c = random_(0, 3);
-
-			switch (c) {
-			case 0:
-				DRLG_L5SetRoom(2, 16);
-				break;
-			case 1:
-				DRLG_L5SetRoom(16, 16);
-				break;
-			case 2:
-				DRLG_L5SetRoom(30, 16);
-				break;
-			}
-		}
-	}
-}
-
-void drlg_l1_set_crypt_room(int rx1, int ry1)
-{
-	int rw, rh, i, j, sp;
-
-	rw = UberRoomPattern[0];
-	rh = UberRoomPattern[1];
+	int rw = UberRoomPattern[0];
+	int rh = UberRoomPattern[1];
 
 	UberRow = 2 * rx1 + 6;
 	UberCol = 2 * ry1 + 8;
@@ -2306,11 +1716,11 @@ void drlg_l1_set_crypt_room(int rx1, int ry1)
 	IsUberRoomOpened = false;
 	IsUberLeverActivated = false;
 
-	sp = 2;
+	int sp = 2;
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (UberRoomPattern[sp]) {
+	for (int j = 0; j < rh; j++) {
+		for (int i = 0; i < rw; i++) {
+			if (UberRoomPattern[sp] != 0) {
 				dungeon[rx1 + i][ry1 + j] = UberRoomPattern[sp];
 				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
 			} else {
@@ -2321,106 +1731,232 @@ void drlg_l1_set_crypt_room(int rx1, int ry1)
 	}
 }
 
-void drlg_l1_set_corner_room(int rx1, int ry1)
+void FillChambers()
 {
-	int rw, rh, i, j, sp;
+	if (HR1)
+		GenerateChamber(0, 14, false, false, false, true);
 
-	rw = CornerstoneRoomPattern[0];
-	rh = CornerstoneRoomPattern[1];
+	if (HR2) {
+		if (HR1 && !HR3)
+			GenerateChamber(14, 14, false, false, true, false);
+		if (!HR1 && HR3)
+			GenerateChamber(14, 14, false, false, false, true);
+		if (HR1 && HR3)
+			GenerateChamber(14, 14, false, false, true, true);
+		if (!HR1 && !HR3)
+			GenerateChamber(14, 14, false, false, false, false);
+	}
 
-	setpc_x = rx1;
-	setpc_y = ry1;
-	setpc_w = rw;
-	setpc_h = rh;
+	if (HR3)
+		GenerateChamber(28, 14, false, false, true, false);
+	if (HR1 && HR2)
+		GenerateHall(12, 18, 14, 18);
+	if (HR2 && HR3)
+		GenerateHall(26, 18, 28, 18);
+	if (HR1 && !HR2 && HR3)
+		GenerateHall(12, 18, 28, 18);
+	if (VR1)
+		GenerateChamber(14, 0, false, true, false, false);
 
-	sp = 2;
+	if (VR2) {
+		if (VR1 && !VR3)
+			GenerateChamber(14, 14, true, false, false, false);
+		if (!VR1 && VR3)
+			GenerateChamber(14, 14, false, true, false, false);
+		if (VR1 && VR3)
+			GenerateChamber(14, 14, true, true, false, false);
+		if (!VR1 && !VR3)
+			GenerateChamber(14, 14, false, false, false, false);
+	}
 
-	for (j = 0; j < rh; j++) {
-		for (i = 0; i < rw; i++) {
-			if (CornerstoneRoomPattern[sp]) {
-				dungeon[rx1 + i][ry1 + j] = CornerstoneRoomPattern[sp];
-				L5dflags[rx1 + i][ry1 + j] |= DLRG_PROTECTED;
-			} else {
-				dungeon[rx1 + i][ry1 + j] = 13;
+	if (VR3)
+		GenerateChamber(14, 28, true, false, false, false);
+	if (VR1 && VR2)
+		GenerateHall(18, 12, 18, 14);
+	if (VR2 && VR3)
+		GenerateHall(18, 26, 18, 28);
+	if (VR1 && !VR2 && VR3)
+		GenerateHall(18, 12, 18, 28);
+
+	if (currlevel == 24) {
+		if (VR1 || VR2 || VR3) {
+			int c = 1;
+			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
+				c = 2;
+			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
+				c = 0;
+
+			if (VR1 && !VR2 && VR3) {
+				c = (GenerateRnd(2) != 0) ? 0 : 2;
 			}
-			sp++;
-		}
-	}
-}
 
-static void DRLG_L5FTVR(int i, int j, int x, int y, int d)
-{
-	if (dTransVal[x][y] || dungeon[i][j] != 13) {
-		if (d == 1) {
-			dTransVal[x][y] = TransVal;
-			dTransVal[x][y + 1] = TransVal;
-		}
-		if (d == 2) {
-			dTransVal[x + 1][y] = TransVal;
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 3) {
-			dTransVal[x][y] = TransVal;
-			dTransVal[x + 1][y] = TransVal;
-		}
-		if (d == 4) {
-			dTransVal[x][y + 1] = TransVal;
-			dTransVal[x + 1][y + 1] = TransVal;
-		}
-		if (d == 5)
-			dTransVal[x + 1][y + 1] = TransVal;
-		if (d == 6)
-			dTransVal[x][y + 1] = TransVal;
-		if (d == 7)
-			dTransVal[x + 1][y] = TransVal;
-		if (d == 8)
-			dTransVal[x][y] = TransVal;
-	} else {
-		dTransVal[x][y] = TransVal;
-		dTransVal[x + 1][y] = TransVal;
-		dTransVal[x][y + 1] = TransVal;
-		dTransVal[x + 1][y + 1] = TransVal;
-		DRLG_L5FTVR(i + 1, j, x + 2, y, 1);
-		DRLG_L5FTVR(i - 1, j, x - 2, y, 2);
-		DRLG_L5FTVR(i, j + 1, x, y + 2, 3);
-		DRLG_L5FTVR(i, j - 1, x, y - 2, 4);
-		DRLG_L5FTVR(i - 1, j - 1, x - 2, y - 2, 5);
-		DRLG_L5FTVR(i + 1, j - 1, x + 2, y - 2, 6);
-		DRLG_L5FTVR(i - 1, j + 1, x - 2, y + 2, 7);
-		DRLG_L5FTVR(i + 1, j + 1, x + 2, y + 2, 8);
-	}
-}
+			if (VR1 && VR2 && VR3)
+				c = GenerateRnd(3);
 
-static void DRLG_L5FloodTVal()
-{
-	int xx, yy, i, j;
-
-	yy = 16;
-
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-
-		for (i = 0; i < DMAXX; i++) {
-			if (dungeon[i][j] == 13 && !dTransVal[xx][yy]) {
-				DRLG_L5FTVR(i, j, xx, yy, 0);
-				TransVal++;
+			switch (c) {
+			case 0:
+				SetCryptRoom(16, 2);
+				break;
+			case 1:
+				SetCryptRoom(16, 16);
+				break;
+			case 2:
+				SetCryptRoom(16, 30);
+				break;
 			}
-			xx += 2;
+		} else {
+			int c = 1;
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
+				c = 2;
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
+				c = 0;
+
+			if (HR1 && !HR2 && HR3) {
+				c = (GenerateRnd(2) != 0) ? 0 : 2;
+			}
+
+			if (HR1 && HR2 && HR3)
+				c = GenerateRnd(3);
+
+			switch (c) {
+			case 0:
+				SetCryptRoom(2, 16);
+				break;
+			case 1:
+				SetCryptRoom(16, 16);
+				break;
+			case 2:
+				SetCryptRoom(30, 16);
+				break;
+			}
 		}
-		yy += 2;
+	}
+	if (currlevel == 21) {
+		if (VR1 || VR2 || VR3) {
+			int c = 1;
+			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
+				c = 2;
+			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
+				c = 0;
+
+			if (VR1 && !VR2 && VR3) {
+				if (GenerateRnd(2) != 0)
+					c = 0;
+				else
+					c = 2;
+			}
+
+			if (VR1 && VR2 && VR3)
+				c = GenerateRnd(3);
+
+			switch (c) {
+			case 0:
+				SetCornerRoom(16, 2);
+				break;
+			case 1:
+				SetCornerRoom(16, 16);
+				break;
+			case 2:
+				SetCornerRoom(16, 30);
+				break;
+			}
+		} else {
+			int c = 1;
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
+				c = 2;
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
+				c = 0;
+
+			if (HR1 && !HR2 && HR3) {
+				if (GenerateRnd(2) != 0)
+					c = 0;
+				else
+					c = 2;
+			}
+
+			if (HR1 && HR2 && HR3)
+				c = GenerateRnd(3);
+
+			switch (c) {
+			case 0:
+				SetCornerRoom(2, 16);
+				break;
+			case 1:
+				SetCornerRoom(16, 16);
+				break;
+			case 2:
+				SetCornerRoom(30, 16);
+				break;
+			}
+		}
+	}
+	if (L5setloadflag) {
+		if (VR1 || VR2 || VR3) {
+			int c = 1;
+			if (!VR1 && VR2 && VR3 && GenerateRnd(2) != 0)
+				c = 2;
+			if (VR1 && VR2 && !VR3 && GenerateRnd(2) != 0)
+				c = 0;
+
+			if (VR1 && !VR2 && VR3) {
+				if (GenerateRnd(2) != 0)
+					c = 0;
+				else
+					c = 2;
+			}
+
+			if (VR1 && VR2 && VR3)
+				c = GenerateRnd(3);
+
+			switch (c) {
+			case 0:
+				SetRoom(16, 2);
+				break;
+			case 1:
+				SetRoom(16, 16);
+				break;
+			case 2:
+				SetRoom(16, 30);
+				break;
+			}
+		} else {
+			int c = 1;
+			if (!HR1 && HR2 && HR3 && GenerateRnd(2) != 0)
+				c = 2;
+			if (HR1 && HR2 && !HR3 && GenerateRnd(2) != 0)
+				c = 0;
+
+			if (HR1 && !HR2 && HR3) {
+				if (GenerateRnd(2) != 0)
+					c = 0;
+				else
+					c = 2;
+			}
+
+			if (HR1 && HR2 && HR3)
+				c = GenerateRnd(3);
+
+			switch (c) {
+			case 0:
+				SetRoom(2, 16);
+				break;
+			case 1:
+				SetRoom(16, 16);
+				break;
+			case 2:
+				SetRoom(30, 16);
+				break;
+			}
+		}
 	}
 }
 
-static void DRLG_L5TransFix()
+void FixTransparency()
 {
-	int xx, yy, i, j;
-
-	yy = 16;
-
-	for (j = 0; j < DMAXY; j++) {
-		xx = 16;
-
-		for (i = 0; i < DMAXX; i++) {
+	int yy = 16;
+	for (int j = 0; j < DMAXY; j++) {
+		int xx = 16;
+		for (int i = 0; i < DMAXX; i++) {
 			// BUGFIX: Should check for `j > 0` first. (fixed)
 			if (dungeon[i][j] == 23 && j > 0 && dungeon[i][j - 1] == 18) {
 				dTransVal[xx + 1][yy] = dTransVal[xx][yy];
@@ -2450,52 +1986,55 @@ static void DRLG_L5TransFix()
 	}
 }
 
-static void DRLG_L5DirtFix()
+void FixDirtTiles()
 {
-	int i, j;
-
 	if (currlevel < 21) {
-		for (j = 0; j < DMAXY - 1; j++) {
-			for (i = 0; i < DMAXX - 1; i++) {
-				if (dungeon[i][j] == 21 && dungeon[i + 1][j] != 19)
+		for (int j = 0; j < DMAXY - 1; j++) {
+			for (int i = 0; i < DMAXX - 1; i++) {
+				if (dungeon[i][j] == 21 && dungeon[i + 1][j] != 19) {
 					dungeon[i][j] = 202;
-				if (dungeon[i][j] == 19 && dungeon[i + 1][j] != 19)
+				}
+				if (dungeon[i][j] == 19 && dungeon[i + 1][j] != 19) {
 					dungeon[i][j] = 200;
-				if (dungeon[i][j] == 24 && dungeon[i + 1][j] != 19)
+				}
+				if (dungeon[i][j] == 24 && dungeon[i + 1][j] != 19) {
 					dungeon[i][j] = 205;
-				if (dungeon[i][j] == 18 && dungeon[i][j + 1] != 18)
+				}
+				if (dungeon[i][j] == 18 && dungeon[i][j + 1] != 18) {
 					dungeon[i][j] = 199;
-				if (dungeon[i][j] == 21 && dungeon[i][j + 1] != 18)
+				}
+				if (dungeon[i][j] == 21 && dungeon[i][j + 1] != 18) {
 					dungeon[i][j] = 202;
-				if (dungeon[i][j] == 23 && dungeon[i][j + 1] != 18)
+				}
+				if (dungeon[i][j] == 23 && dungeon[i][j + 1] != 18) {
 					dungeon[i][j] = 204;
+				}
 			}
 		}
-	} else {
-		for (j = 0; j < DMAXY - 1; j++) {
-			for (i = 0; i < DMAXX - 1; i++) {
-				if (dungeon[i][j] == 19)
-					dungeon[i][j] = 83;
-				if (dungeon[i][j] == 21)
-					dungeon[i][j] = 85;
-				if (dungeon[i][j] == 23)
-					dungeon[i][j] = 87;
-				if (dungeon[i][j] == 24)
-					dungeon[i][j] = 88;
-				if (dungeon[i][j] == 18)
-					dungeon[i][j] = 82;
-			}
+		return;
+	}
+
+	for (int j = 0; j < DMAXY - 1; j++) {
+		for (int i = 0; i < DMAXX - 1; i++) {
+			if (dungeon[i][j] == 19)
+				dungeon[i][j] = 83;
+			if (dungeon[i][j] == 21)
+				dungeon[i][j] = 85;
+			if (dungeon[i][j] == 23)
+				dungeon[i][j] = 87;
+			if (dungeon[i][j] == 24)
+				dungeon[i][j] = 88;
+			if (dungeon[i][j] == 18)
+				dungeon[i][j] = 82;
 		}
 	}
 }
 
-static void DRLG_L5CornerFix()
+void FixCornerTiles()
 {
-	int i, j;
-
-	for (j = 1; j < DMAXY - 1; j++) {
-		for (i = 1; i < DMAXX - 1; i++) {
-			if (!(L5dflags[i][j] & DLRG_PROTECTED) && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
+	for (int j = 1; j < DMAXY - 1; j++) {
+		for (int i = 1; i < DMAXX - 1; i++) {
+			if ((L5dflags[i][j] & DLRG_PROTECTED) == 0 && dungeon[i][j] == 17 && dungeon[i - 1][j] == 13 && dungeon[i][j - 1] == 1) {
 				dungeon[i][j] = 16;
 				L5dflags[i][j - 1] &= DLRG_PROTECTED;
 			}
@@ -2506,12 +2045,132 @@ static void DRLG_L5CornerFix()
 	}
 }
 
-static void DRLG_L5(int entry)
+void CryptPatternGroup1(int rndper)
 {
-	int i, j;
-	LONG minarea;
-	BOOL doneflag;
+	PlaceMiniSetRandom(CryptPattern97, rndper);
+	PlaceMiniSetRandom(CryptPattern98, rndper);
+	PlaceMiniSetRandom(CryptPattern99, rndper);
+	PlaceMiniSetRandom(CryptPattern100, rndper);
+}
 
+void CryptPatternGroup2(int rndper)
+{
+	PlaceMiniSetRandom(CryptPattern46, rndper);
+	PlaceMiniSetRandom(CryptPattern47, rndper);
+	PlaceMiniSetRandom(CryptPattern48, rndper);
+	PlaceMiniSetRandom(CryptPattern49, rndper);
+	PlaceMiniSetRandom(CryptPattern50, rndper);
+	PlaceMiniSetRandom(CryptPattern51, rndper);
+	PlaceMiniSetRandom(CryptPattern52, rndper);
+	PlaceMiniSetRandom(CryptPattern53, rndper);
+	PlaceMiniSetRandom(CryptPattern54, rndper);
+	PlaceMiniSetRandom(CryptPattern55, rndper);
+	PlaceMiniSetRandom(CryptPattern56, rndper);
+	PlaceMiniSetRandom(CryptPattern57, rndper);
+	PlaceMiniSetRandom(CryptPattern58, rndper);
+	PlaceMiniSetRandom(CryptPattern59, rndper);
+	PlaceMiniSetRandom(CryptPattern60, rndper);
+	PlaceMiniSetRandom(CryptPattern61, rndper);
+	PlaceMiniSetRandom(CryptPattern62, rndper);
+}
+
+void CryptPatternGroup3(int rndper)
+{
+	PlaceMiniSetRandom(CryptPattern63, rndper);
+	PlaceMiniSetRandom(CryptPattern64, rndper);
+	PlaceMiniSetRandom(CryptPattern65, rndper);
+	PlaceMiniSetRandom(CryptPattern66, rndper);
+	PlaceMiniSetRandom(CryptPattern67, rndper);
+	PlaceMiniSetRandom(CryptPattern68, rndper);
+	PlaceMiniSetRandom(CryptPattern69, rndper);
+	PlaceMiniSetRandom(CryptPattern70, rndper);
+	PlaceMiniSetRandom(CryptPattern71, rndper);
+	PlaceMiniSetRandom(CryptPattern72, rndper);
+	PlaceMiniSetRandom(CryptPattern73, rndper);
+	PlaceMiniSetRandom(CryptPattern74, rndper);
+	PlaceMiniSetRandom(CryptPattern75, rndper);
+	PlaceMiniSetRandom(CryptPattern76, rndper);
+	PlaceMiniSetRandom(CryptPattern77, rndper);
+	PlaceMiniSetRandom(CryptPattern78, rndper);
+	PlaceMiniSetRandom(CryptPattern79, rndper);
+}
+
+void CryptPatternGroup4(int rndper)
+{
+	PlaceMiniSetRandom(CryptPattern80, rndper);
+	PlaceMiniSetRandom(CryptPattern81, rndper);
+	PlaceMiniSetRandom(CryptPattern82, rndper);
+	PlaceMiniSetRandom(CryptPattern83, rndper);
+	PlaceMiniSetRandom(CryptPattern84, rndper);
+	PlaceMiniSetRandom(CryptPattern85, rndper);
+	PlaceMiniSetRandom(CryptPattern86, rndper);
+	PlaceMiniSetRandom(CryptPattern87, rndper);
+	PlaceMiniSetRandom(CryptPattern88, rndper);
+	PlaceMiniSetRandom(CryptPattern89, rndper);
+	PlaceMiniSetRandom(CryptPattern90, rndper);
+	PlaceMiniSetRandom(CryptPattern91, rndper);
+	PlaceMiniSetRandom(CryptPattern92, rndper);
+	PlaceMiniSetRandom(CryptPattern93, rndper);
+	PlaceMiniSetRandom(CryptPattern94, rndper);
+	PlaceMiniSetRandom(CryptPattern95, rndper);
+	PlaceMiniSetRandom(CryptPattern96, rndper);
+}
+
+void CryptPatternGroup5(int rndper)
+{
+	PlaceMiniSetRandom(CryptPattern36, rndper);
+	PlaceMiniSetRandom(CryptPattern37, rndper);
+	PlaceMiniSetRandom(CryptPattern38, rndper);
+	PlaceMiniSetRandom(CryptPattern39, rndper);
+	PlaceMiniSetRandom(CryptPattern40, rndper);
+	PlaceMiniSetRandom(CryptPattern41, rndper);
+	PlaceMiniSetRandom(CryptPattern42, rndper);
+	PlaceMiniSetRandom(CryptPattern43, rndper);
+	PlaceMiniSetRandom(CryptPattern44, rndper);
+	PlaceMiniSetRandom(CryptPattern45, rndper);
+}
+
+void CryptPatternGroup6(int rndper)
+{
+	PlaceMiniSetRandom(CryptPattern10, rndper);
+	PlaceMiniSetRandom(CryptPattern12, rndper);
+	PlaceMiniSetRandom(CryptPattern11, rndper);
+	PlaceMiniSetRandom(CryptPattern13, rndper);
+	PlaceMiniSetRandom(CryptPattern14, rndper);
+	PlaceMiniSetRandom(CryptPattern15, rndper);
+	PlaceMiniSetRandom(CryptPattern16, rndper);
+	PlaceMiniSetRandom(CryptPattern17, rndper);
+	PlaceMiniSetRandom(CryptPattern18, rndper);
+	PlaceMiniSetRandom(CryptPattern19, rndper);
+	PlaceMiniSetRandom(CryptPattern20, rndper);
+	PlaceMiniSetRandom(CryptPattern21, rndper);
+	PlaceMiniSetRandom(CryptPattern22, rndper);
+	PlaceMiniSetRandom(CryptPattern23, rndper);
+	PlaceMiniSetRandom(CryptPattern24, rndper);
+	PlaceMiniSetRandom(CryptPattern25, rndper);
+	PlaceMiniSetRandom(CryptPattern26, rndper);
+	PlaceMiniSetRandom(CryptPattern27, rndper);
+	PlaceMiniSetRandom(CryptPattern28, rndper);
+	PlaceMiniSetRandom(CryptPattern29, rndper);
+	PlaceMiniSetRandom(CryptPattern30, rndper);
+	PlaceMiniSetRandom(CryptPattern31, rndper);
+	PlaceMiniSetRandom(CryptPattern32, rndper);
+	PlaceMiniSetRandom(CryptPattern33, rndper);
+	PlaceMiniSetRandom(CryptPattern34, rndper);
+	PlaceMiniSetRandom(CryptPattern35, rndper);
+}
+
+void CryptPatternGroup7(int rndper)
+{
+	PlaceMiniSetRandom(CryptPattern5, rndper);
+	PlaceMiniSetRandom(CryptPattern6, rndper);
+	PlaceMiniSetRandom(CryptPattern7, rndper);
+	PlaceMiniSetRandom(CryptPattern8, rndper);
+}
+
+void GenerateLevel(lvl_entry entry)
+{
+	int minarea = 761;
 	switch (currlevel) {
 	case 1:
 		minarea = 533;
@@ -2520,134 +2179,133 @@ static void DRLG_L5(int entry)
 		minarea = 693;
 		break;
 	default:
-		minarea = 761;
 		break;
 	}
 
+	bool doneflag;
 	do {
 		DRLG_InitTrans();
 
 		do {
-			InitL5Dungeon();
-			L5firstRoom();
-		} while (L5GetArea() < minarea);
+			InitDungeonFlags();
+			FirstRoom();
+		} while (FindArea() < minarea);
 
-		L5makeDungeon();
-		L5makeDmt();
-		L5FillChambers();
-		L5tileFix();
-		L5AddWall();
-		L5ClearFlags();
-		DRLG_L5FloodTVal();
+		MakeDungeon();
+		MakeDmt();
+		FillChambers();
+		FixTilesPatterns();
+		AddWall();
+		ClearFlags();
+		FloodTransparencyValues(13);
 
-		doneflag = TRUE;
+		doneflag = true;
 
-		if (QuestStatus(Q_PWATER)) {
+		if (Quests[Q_PWATER].IsAvailable()) {
 			if (entry == ENTRY_MAIN) {
-				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(PWATERIN, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
 			} else {
-				if (DRLG_PlaceMiniSet(PWATERIN, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
-				ViewY--;
+				if (PlaceMiniSet(PWATERIN, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
+				ViewPosition.y--;
 			}
 		}
-		if (QuestStatus(Q_LTBANNER)) {
+		if (Quests[Q_LTBANNER].IsAvailable()) {
 			if (entry == ENTRY_MAIN) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
 			} else {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
 				if (entry == ENTRY_PREV) {
-					ViewX = 2 * setpc_x + 20;
-					ViewY = 2 * setpc_y + 28;
+					ViewPosition = Point { 20, 28 } + Displacement { setpc_x, setpc_y } * 2;
 				} else {
-					ViewY--;
+					ViewPosition.y--;
 				}
 			}
 		} else if (entry == ENTRY_MAIN) {
 			if (currlevel < 21) {
-				if (!plr[myplr].pOriginalCathedral) {
-					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-						doneflag = FALSE;
-					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+				if (!Players[MyPlayerId].pOriginalCathedral) {
+					if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
+						doneflag = false;
+					if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
 				} else {
-					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-						doneflag = FALSE;
-					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, true, -1) < 0)
+						doneflag = false;
+					else if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
 				}
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-					doneflag = FALSE;
-				ViewY++;
+				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
+				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
+				ViewPosition.y++;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
 				}
-				ViewY++;
+				ViewPosition.y++;
 			}
-		} else if (!plr[myplr].pOriginalCathedral && entry == ENTRY_PREV) {
+		} else if (!Players[MyPlayerId].pOriginalCathedral && entry == ENTRY_PREV) {
 			if (currlevel < 21) {
-				if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-					doneflag = FALSE;
-				ViewY--;
+				if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
+				if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
+				ViewPosition.y--;
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, FALSE, -1, 6) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-					doneflag = FALSE;
-				ViewY += 3;
+				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
+				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
+				ViewPosition.y += 3;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
+						doneflag = false;
 				}
-				ViewY += 3;
+				ViewPosition.y += 3;
 			}
 		} else {
 			if (currlevel < 21) {
-				if (!plr[myplr].pOriginalCathedral) {
-					if (DRLG_PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-						doneflag = FALSE;
-					if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+				if (!Players[MyPlayerId].pOriginalCathedral) {
+					if (PlaceMiniSet(STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
+					if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
 				} else {
-					if (DRLG_PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, FALSE, -1, 0) < 0)
-						doneflag = FALSE;
-					else if (DRLG_PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, TRUE, -1, 1) < 0)
-						doneflag = FALSE;
-					ViewY--;
+					if (PlaceMiniSet(L5STAIRSUP, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
+					else if (PlaceMiniSet(STAIRSDOWN, 1, 1, 0, 0, true, -1) < 0)
+						doneflag = false;
+					ViewPosition.y--;
 				}
 			} else if (currlevel == 21) {
-				if (DRLG_PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, TRUE, -1, 6) < 0)
-					doneflag = FALSE;
-				if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(L5STAIRSTOWN, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
+				if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+					doneflag = false;
 			} else {
-				if (DRLG_PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, TRUE, -1, 0) < 0)
-					doneflag = FALSE;
+				if (PlaceMiniSet(L5STAIRSUPHF, 1, 1, 0, 0, true, -1) < 0)
+					doneflag = false;
 				if (currlevel != 24) {
-					if (DRLG_PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, FALSE, -1, 1) < 0)
-						doneflag = FALSE;
+					if (PlaceMiniSet(L5STAIRSDOWN, 1, 1, 0, 0, false, -1) < 0)
+						doneflag = false;
 				}
 			}
 		}
-	} while (doneflag == FALSE);
+	} while (!doneflag);
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			if (dungeon[i][j] == 64) {
 				int xx = 2 * i + 16; /* todo: fix loop */
 				int yy = 2 * j + 16;
@@ -2657,75 +2315,75 @@ static void DRLG_L5(int entry)
 		}
 	}
 
-	DRLG_L5TransFix();
-	DRLG_L5DirtFix();
-	DRLG_L5CornerFix();
+	FixTransparency();
+	FixDirtTiles();
+	FixCornerTiles();
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
-			if (L5dflags[i][j] & 0x7F)
-				DRLG_PlaceDoor(i, j);
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			if ((L5dflags[i][j] & ~DLRG_PROTECTED) != 0)
+				PlaceDoor(i, j);
 		}
 	}
 
 	if (currlevel < 21) {
-		DRLG_L5Subs();
+		Substitution();
 	} else {
-		drlg_l1_crypt_pattern1(10);
-		drlg_l1_crypt_rndset(byte_48A1B4, 95);
-		drlg_l1_crypt_rndset(byte_48A1B8, 95);
-		drlg_l1_crypt_rndset(byte_48A1C0, 100);
-		drlg_l1_crypt_rndset(byte_48A1C8, 100);
-		drlg_l1_crypt_rndset(byte_48A1E0, 60);
-		drlg_l1_crypt_lavafloor();
+		CryptPatternGroup1(10);
+		PlaceMiniSetRandom(CryptPattern1, 95);
+		PlaceMiniSetRandom(CryptPattern2, 95);
+		PlaceMiniSetRandom(CryptPattern3, 100);
+		PlaceMiniSetRandom(CryptPattern4, 100);
+		PlaceMiniSetRandom(CryptPattern9, 60);
+		CryptLavafloor();
 		switch (currlevel) {
 		case 21:
-			drlg_l1_crypt_pattern2(30);
-			drlg_l1_crypt_pattern3(15);
-			drlg_l1_crypt_pattern4(5);
-			drlg_l1_crypt_lavafloor();
-			drlg_l1_crypt_pattern7(10);
-			drlg_l1_crypt_pattern6(5);
-			drlg_l1_crypt_pattern5(20);
+			CryptPatternGroup2(30);
+			CryptPatternGroup3(15);
+			CryptPatternGroup4(5);
+			CryptLavafloor();
+			CryptPatternGroup7(10);
+			CryptPatternGroup6(5);
+			CryptPatternGroup5(20);
 			break;
 		case 22:
-			drlg_l1_crypt_pattern7(10);
-			drlg_l1_crypt_pattern6(10);
-			drlg_l1_crypt_pattern5(20);
-			drlg_l1_crypt_pattern2(30);
-			drlg_l1_crypt_pattern3(20);
-			drlg_l1_crypt_pattern4(10);
-			drlg_l1_crypt_lavafloor();
+			CryptPatternGroup7(10);
+			CryptPatternGroup6(10);
+			CryptPatternGroup5(20);
+			CryptPatternGroup2(30);
+			CryptPatternGroup3(20);
+			CryptPatternGroup4(10);
+			CryptLavafloor();
 			break;
 		case 23:
-			drlg_l1_crypt_pattern7(10);
-			drlg_l1_crypt_pattern6(15);
-			drlg_l1_crypt_pattern5(30);
-			drlg_l1_crypt_pattern2(30);
-			drlg_l1_crypt_pattern3(20);
-			drlg_l1_crypt_pattern4(15);
-			drlg_l1_crypt_lavafloor();
+			CryptPatternGroup7(10);
+			CryptPatternGroup6(15);
+			CryptPatternGroup5(30);
+			CryptPatternGroup2(30);
+			CryptPatternGroup3(20);
+			CryptPatternGroup4(15);
+			CryptLavafloor();
 			break;
 		default:
-			drlg_l1_crypt_pattern7(10);
-			drlg_l1_crypt_pattern6(20);
-			drlg_l1_crypt_pattern5(30);
-			drlg_l1_crypt_pattern2(30);
-			drlg_l1_crypt_pattern3(20);
-			drlg_l1_crypt_pattern4(20);
-			drlg_l1_crypt_lavafloor();
+			CryptPatternGroup7(10);
+			CryptPatternGroup6(20);
+			CryptPatternGroup5(30);
+			CryptPatternGroup2(30);
+			CryptPatternGroup3(20);
+			CryptPatternGroup4(20);
+			CryptLavafloor();
 			break;
 		}
 	}
 
 	if (currlevel < 21) {
-		DRLG_L1Shadows();
-		DRLG_PlaceMiniSet(LAMPS, 5, 10, 0, 0, FALSE, -1, 4);
-		DRLG_L1Floor();
+		ApplyShadowsPatterns();
+		PlaceMiniSet(LAMPS, 5, 10, 0, 0, false, -1);
+		FillFloor();
 	}
 
-	for (j = 0; j < DMAXY; j++) {
-		for (i = 0; i < DMAXX; i++) {
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
 			pdungeon[i][j] = dungeon[i][j];
 		}
 	}
@@ -2734,174 +2392,141 @@ static void DRLG_L5(int entry)
 	DRLG_CheckQuests(setpc_x, setpc_y);
 }
 
-void CreateL5Dungeon(DWORD rseed, int entry)
+void Pass3()
 {
-	int i, j;
+	DRLG_LPass3(22 - 1);
+}
 
+} // namespace
+
+void LoadL1Dungeon(const char *path, int vx, int vy)
+{
+	dminPosition = { 16, 16 };
+	dmaxPosition = { 96, 96 };
+
+	DRLG_InitTrans();
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			dungeon[i][j] = 22;
+			L5dflags[i][j] = 0;
+		}
+	}
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			tileLayer++;
+			if (tileId != 0) {
+				dungeon[i][j] = tileId;
+				L5dflags[i][j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i][j] = 13;
+			}
+		}
+	}
+
+	FillFloor();
+
+	ViewPosition = { vx, vy };
+
+	Pass3();
+	DRLG_Init_Globals();
+
+	if (currlevel < 17)
+		InitDungeonPieces();
+
+	SetMapMonsters(dunData.get(), { 0, 0 });
+	SetMapObjects(dunData.get(), 0, 0);
+}
+
+void LoadPreL1Dungeon(const char *path)
+{
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			dungeon[i][j] = 22;
+			L5dflags[i][j] = 0;
+		}
+	}
+
+	dminPosition = { 16, 16 };
+	dmaxPosition = { 96, 96 };
+
+	auto dunData = LoadFileInMem<uint16_t>(path);
+
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
+
+	const uint16_t *tileLayer = &dunData[2];
+
+	for (int j = 0; j < height; j++) {
+		for (int i = 0; i < width; i++) {
+			uint8_t tileId = SDL_SwapLE16(*tileLayer);
+			tileLayer++;
+			if (tileId != 0) {
+				dungeon[i][j] = tileId;
+				L5dflags[i][j] |= DLRG_PROTECTED;
+			} else {
+				dungeon[i][j] = 13;
+			}
+		}
+	}
+
+	FillFloor();
+
+	for (int j = 0; j < DMAXY; j++) {
+		for (int i = 0; i < DMAXX; i++) {
+			pdungeon[i][j] = dungeon[i][j];
+		}
+	}
+}
+
+void CreateL5Dungeon(uint32_t rseed, lvl_entry entry)
+{
 	SetRndSeed(rseed);
 
-	dminx = 16;
-	dminy = 16;
-	dmaxx = 96;
-	dmaxy = 96;
+	dminPosition = { 16, 16 };
+	dmaxPosition = { 96, 96 };
 
 	UberRow = 0;
 	UberCol = 0;
 	IsUberRoomOpened = false;
-	UberLeverRow = 0;
-	UberLeverCol = 0;
 	IsUberLeverActivated = false;
 	UberDiabloMonsterIndex = 0;
 
 	DRLG_InitTrans();
 	DRLG_InitSetPC();
-	DRLG_LoadL1SP();
-	DRLG_L5(entry);
-	DRLG_L1Pass3();
-	DRLG_FreeL1SP();
+	LoadQuestSetPieces();
+	GenerateLevel(entry);
+	Pass3();
+	FreeQuestSetPieces();
 
-	if (currlevel < 17)
-		DRLG_InitL1Vals();
-	else
-		DRLG_InitL5Vals();
+	if (currlevel < 17) {
+		InitDungeonPieces();
+	} else {
+		InitCryptPieces();
+	}
 
 	DRLG_SetPC();
 
-	for (j = dminy; j < dmaxy; j++) {
-		for (i = dminx; i < dmaxx; i++) {
+	for (int j = dminPosition.y; j < dmaxPosition.y; j++) {
+		for (int i = dminPosition.x; i < dmaxPosition.x; i++) {
 			if (dPiece[i][j] == 290) {
 				UberRow = i;
 				UberCol = j;
 			}
 			if (dPiece[i][j] == 317) {
-				CornerStone.x = i;
-				CornerStone.y = j;
+				CornerStone.position = { i, j };
 			}
 		}
 	}
 }
 
-void drlg_l1_crypt_pattern1(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A3C8, rndper);
-	drlg_l1_crypt_rndset(byte_48A3CC, rndper);
-	drlg_l1_crypt_rndset(byte_48A3D0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3D4, rndper);
-}
-
-void drlg_l1_crypt_pattern2(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A2FC, rndper);
-	drlg_l1_crypt_rndset(byte_48A300, rndper);
-	drlg_l1_crypt_rndset(byte_48A304, rndper);
-	drlg_l1_crypt_rndset(byte_48A308, rndper);
-	drlg_l1_crypt_rndset(byte_48A30C, rndper);
-	drlg_l1_crypt_rndset(byte_48A310, rndper);
-	drlg_l1_crypt_rndset(byte_48A314, rndper);
-	drlg_l1_crypt_rndset(byte_48A318, rndper);
-	drlg_l1_crypt_rndset(byte_48A31C, rndper);
-	drlg_l1_crypt_rndset(byte_48A320, rndper);
-	drlg_l1_crypt_rndset(byte_48A324, rndper);
-	drlg_l1_crypt_rndset(byte_48A328, rndper);
-	drlg_l1_crypt_rndset(byte_48A32C, rndper);
-	drlg_l1_crypt_rndset(byte_48A330, rndper);
-	drlg_l1_crypt_rndset(byte_48A334, rndper);
-	drlg_l1_crypt_rndset(byte_48A338, rndper);
-	drlg_l1_crypt_rndset(byte_48A33C, rndper);
-}
-
-void drlg_l1_crypt_pattern3(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A340, rndper);
-	drlg_l1_crypt_rndset(byte_48A344, rndper);
-	drlg_l1_crypt_rndset(byte_48A348, rndper);
-	drlg_l1_crypt_rndset(byte_48A34C, rndper);
-	drlg_l1_crypt_rndset(byte_48A350, rndper);
-	drlg_l1_crypt_rndset(byte_48A354, rndper);
-	drlg_l1_crypt_rndset(byte_48A358, rndper);
-	drlg_l1_crypt_rndset(byte_48A35C, rndper);
-	drlg_l1_crypt_rndset(byte_48A360, rndper);
-	drlg_l1_crypt_rndset(byte_48A364, rndper);
-	drlg_l1_crypt_rndset(byte_48A368, rndper);
-	drlg_l1_crypt_rndset(byte_48A36C, rndper);
-	drlg_l1_crypt_rndset(byte_48A370, rndper);
-	drlg_l1_crypt_rndset(byte_48A374, rndper);
-	drlg_l1_crypt_rndset(byte_48A378, rndper);
-	drlg_l1_crypt_rndset(byte_48A37C, rndper);
-	drlg_l1_crypt_rndset(byte_48A380, rndper);
-}
-
-void drlg_l1_crypt_pattern4(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A384, rndper);
-	drlg_l1_crypt_rndset(byte_48A388, rndper);
-	drlg_l1_crypt_rndset(byte_48A38C, rndper);
-	drlg_l1_crypt_rndset(byte_48A390, rndper);
-	drlg_l1_crypt_rndset(byte_48A394, rndper);
-	drlg_l1_crypt_rndset(byte_48A398, rndper);
-	drlg_l1_crypt_rndset(byte_48A39C, rndper);
-	drlg_l1_crypt_rndset(byte_48A3A0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3A4, rndper);
-	drlg_l1_crypt_rndset(byte_48A3A8, rndper);
-	drlg_l1_crypt_rndset(byte_48A3AC, rndper);
-	drlg_l1_crypt_rndset(byte_48A3B0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3B4, rndper);
-	drlg_l1_crypt_rndset(byte_48A3B8, rndper);
-	drlg_l1_crypt_rndset(byte_48A3BC, rndper);
-	drlg_l1_crypt_rndset(byte_48A3C0, rndper);
-	drlg_l1_crypt_rndset(byte_48A3C4, rndper);
-}
-
-void drlg_l1_crypt_pattern5(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A260, rndper);
-	drlg_l1_crypt_rndset(byte_48A278, rndper);
-	drlg_l1_crypt_rndset(byte_48A290, rndper);
-	drlg_l1_crypt_rndset(byte_48A2A8, rndper);
-	drlg_l1_crypt_rndset(byte_48A2C0, rndper);
-	drlg_l1_crypt_rndset(byte_48A2D8, rndper);
-	drlg_l1_crypt_rndset(byte_48A2EC, rndper);
-	drlg_l1_crypt_rndset(byte_48A2F0, rndper);
-	drlg_l1_crypt_rndset(byte_48A2F4, rndper);
-	drlg_l1_crypt_rndset(byte_48A2F8, rndper);
-}
-
-void drlg_l1_crypt_pattern6(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A1F4, rndper);
-	drlg_l1_crypt_rndset(byte_48A1FC, rndper);
-	drlg_l1_crypt_rndset(byte_48A1F8, rndper);
-	drlg_l1_crypt_rndset(byte_48A200, rndper);
-	drlg_l1_crypt_rndset(byte_48A204, rndper);
-	drlg_l1_crypt_rndset(byte_48A208, rndper);
-	drlg_l1_crypt_rndset(byte_48A20C, rndper);
-	drlg_l1_crypt_rndset(byte_48A210, rndper);
-	drlg_l1_crypt_rndset(byte_48A214, rndper);
-	drlg_l1_crypt_rndset(byte_48A218, rndper);
-	drlg_l1_crypt_rndset(byte_48A21C, rndper);
-	drlg_l1_crypt_rndset(byte_48A220, rndper);
-	drlg_l1_crypt_rndset(byte_48A224, rndper);
-	drlg_l1_crypt_rndset(byte_48A228, rndper);
-	drlg_l1_crypt_rndset(byte_48A22C, rndper);
-	drlg_l1_crypt_rndset(byte_48A230, rndper);
-	drlg_l1_crypt_rndset(byte_48A234, rndper);
-	drlg_l1_crypt_rndset(byte_48A238, rndper);
-	drlg_l1_crypt_rndset(byte_48A23C, rndper);
-	drlg_l1_crypt_rndset(byte_48A240, rndper);
-	drlg_l1_crypt_rndset(byte_48A244, rndper);
-	drlg_l1_crypt_rndset(byte_48A248, rndper);
-	drlg_l1_crypt_rndset(byte_48A24C, rndper);
-	drlg_l1_crypt_rndset(byte_48A250, rndper);
-	drlg_l1_crypt_rndset(byte_48A254, rndper);
-	drlg_l1_crypt_rndset(byte_48A258, rndper);
-}
-
-void drlg_l1_crypt_pattern7(int rndper)
-{
-	drlg_l1_crypt_rndset(byte_48A1D0, rndper);
-	drlg_l1_crypt_rndset(byte_48A1D4, rndper);
-	drlg_l1_crypt_rndset(byte_48A1D8, rndper);
-	drlg_l1_crypt_rndset(byte_48A1DC, rndper);
-}
-
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

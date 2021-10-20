@@ -3,36 +3,38 @@
  *
  * Interface of functions for managing game ticks.
  */
-#ifndef __NTHREAD_H__
-#define __NTHREAD_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "player.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern BYTE sgbNetUpdateRate;
-extern DWORD gdwMsgLenTbl[MAX_PLRS];
-extern DWORD gdwDeltaBytesSec;
-extern DWORD gdwTurnsInTransit;
+extern size_t gdwMsgLenTbl[MAX_PLRS];
+extern uint32_t gdwTurnsInTransit;
 extern uintptr_t glpMsgTbl[MAX_PLRS];
-extern DWORD gdwLargestMsgSize;
-extern DWORD gdwNormalMsgSize;
+extern uint32_t gdwLargestMsgSize;
+extern uint32_t gdwNormalMsgSize;
+extern float gfProgressToNextGameTick; // the progress as a fraction (0.0f to 1.0f) in time to the next game tick
+extern int last_tick;
 
 void nthread_terminate_game(const char *pszFcn);
-DWORD nthread_send_and_recv_turn(DWORD cur_turn, int turn_delta);
-BOOL nthread_recv_turns(BOOL *pfSendAsync);
+uint32_t nthread_send_and_recv_turn(uint32_t curTurn, int turnDelta);
+bool nthread_recv_turns(bool *pfSendAsync = nullptr);
 void nthread_set_turn_upper_bit();
-void nthread_start(BOOL set_turn_upper_bit);
+void nthread_start(bool setTurnUpperBit);
 void nthread_cleanup();
-void nthread_ignore_mutex(BOOL bStart);
-BOOL nthread_has_500ms_passed();
+void nthread_ignore_mutex(bool bStart);
 
-#ifdef __cplusplus
-}
-#endif
+/**
+ * @brief Checks if it's time for the logic to advance
+ * @return True if the engine should tick
+ */
+bool nthread_has_500ms_passed();
+/**
+ * @brief Calculates the progress in time to the next game tick
+ * @return Progress as a fraction (0.0f to 1.0f)
+ */
+void nthread_UpdateProgressToNextGameTick();
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __NTHREAD_H__ */
+} // namespace devilution

@@ -3,23 +3,16 @@
  *
  * Interface of functionality for syncing game state with other players.
  */
-#ifndef __SYNC_H__
-#define __SYNC_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "utils/stdcompat/cstddef.hpp"
 
-Uint32 sync_all_monsters(const Uint8 *pbBuf, Uint32 dwMaxLen);
-Uint32 sync_update(int pnum, const Uint8 *pbBuf);
+namespace devilution {
+
+uint32_t sync_all_monsters(byte *pbBuf, uint32_t dwMaxLen);
+uint32_t OnSyncData(const TCmd *pCmd, int pnum);
 void sync_init();
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __SYNC_H__ */
+} // namespace devilution

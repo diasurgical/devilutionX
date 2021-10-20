@@ -3,55 +3,57 @@
  *
  * Implementation of functionality for rendering the town, towners and calling other render routines.
  */
-#include "all.h"
+#include "town.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "drlg_l1.h"
+#include "engine/load_file.hpp"
+#include "engine/random.hpp"
+#include "init.h"
+#include "player.h"
+#include "quests.h"
+#include "trigs.h"
+
+namespace devilution {
 
 namespace {
 
 /**
  * @brief Load level data into dPiece
- * @param P3Tiles Tile set
- * @param pSector Sector data
+ * @param path Path of dun file
  * @param xi upper left destination
- * @param yi upper left destination
- * @param w width of sector
- * @param h height of sector
+ * @param yy upper left destination
  */
-void T_FillSector(Uint8 *P3Tiles, Uint8 *pSector, int xi, int yi, int w, int h)
+void FillSector(const char *path, int xi, int yy)
 {
-	int i, j, xx, yy, nMap;
-	Sint16 v1, v2, v3, v4, ii;
-	Uint16 *Sector;
+	auto dunData = LoadFileInMem<uint16_t>(path);
 
-	ii = 4;
-	yy = yi;
-	for (j = 0; j < h; j++) {
-		xx = xi;
-		for (i = 0; i < w; i++) {
-			Uint16 *Map;
+	int width = SDL_SwapLE16(dunData[0]);
+	int height = SDL_SwapLE16(dunData[1]);
 
-			Map = (Uint16 *)&pSector[ii];
-			nMap = SDL_SwapLE16(*Map);
-			if (nMap) {
-				Sector = (((Uint16 *)&P3Tiles[(nMap - 1) * 8]));
-				v1 = SDL_SwapLE16(*(Sector + 0)) + 1;
-				v2 = SDL_SwapLE16(*(Sector + 1)) + 1;
-				v3 = SDL_SwapLE16(*(Sector + 2)) + 1;
-				v4 = SDL_SwapLE16(*(Sector + 3)) + 1;
+	const uint16_t *tileLayer = &dunData[2];
 
-			} else {
-				v1 = 0;
-				v2 = 0;
-				v3 = 0;
-				v4 = 0;
+	for (int j = 0; j < height; j++) {
+		int xx = xi;
+		for (int i = 0; i < width; i++) {
+			int v1 = 0;
+			int v2 = 0;
+			int v3 = 0;
+			int v4 = 0;
+
+			int tileId = SDL_SwapLE16(tileLayer[j * width + i]) - 1;
+			if (tileId >= 0) {
+				MegaTile mega = pMegaTiles[tileId];
+				v1 = SDL_SwapLE16(mega.micro1) + 1;
+				v2 = SDL_SwapLE16(mega.micro2) + 1;
+				v3 = SDL_SwapLE16(mega.micro3) + 1;
+				v4 = SDL_SwapLE16(mega.micro4) + 1;
 			}
-			dPiece[xx][yy] = v1;
-			dPiece[xx + 1][yy] = v2;
-			dPiece[xx][yy + 1] = v3;
+
+			dPiece[xx + 0][yy + 0] = v1;
+			dPiece[xx + 1][yy + 0] = v2;
+			dPiece[xx + 0][yy + 1] = v3;
 			dPiece[xx + 1][yy + 1] = v4;
 			xx += 2;
-			ii += 2;
 		}
 		yy += 2;
 	}
@@ -59,26 +61,19 @@ void T_FillSector(Uint8 *P3Tiles, Uint8 *pSector, int xi, int yi, int w, int h)
 
 /**
  * @brief Load a tile in to dPiece
- * @param P3Tiles Tile set
+ * @param megas Map from mega tiles to macro tiles
  * @param xx upper left destination
  * @param yy upper left destination
  * @param t tile id
  */
-void T_FillTile(Uint8 *P3Tiles, int xx, int yy, int t)
+void FillTile(int xx, int yy, int t)
 {
-	long v1, v2, v3, v4;
-	Uint16 *Tiles;
+	MegaTile mega = pMegaTiles[t - 1];
 
-	Tiles = ((Uint16 *)&P3Tiles[(t - 1) * 8]);
-	v1 = SDL_SwapLE16(*(Tiles + 0)) + 1;
-	v2 = SDL_SwapLE16(*(Tiles + 1)) + 1;
-	v3 = SDL_SwapLE16(*(Tiles + 2)) + 1;
-	v4 = SDL_SwapLE16(*(Tiles + 3)) + 1;
-
-	dPiece[xx][yy] = v1;
-	dPiece[xx + 1][yy] = v2;
-	dPiece[xx][yy + 1] = v3;
-	dPiece[xx + 1][yy + 1] = v4;
+	dPiece[xx + 0][yy + 0] = SDL_SwapLE16(mega.micro1) + 1;
+	dPiece[xx + 1][yy + 0] = SDL_SwapLE16(mega.micro2) + 1;
+	dPiece[xx + 0][yy + 1] = SDL_SwapLE16(mega.micro3) + 1;
+	dPiece[xx + 1][yy + 1] = SDL_SwapLE16(mega.micro4) + 1;
 }
 
 /**
@@ -156,13 +151,10 @@ void TownCloseGrave()
 /**
  * @brief Initialize all of the levels data
  */
-void T_Pass3()
+void DrlgTPass3()
 {
-	int xx, yy, x;
-	Uint8 *P3Tiles, *pSector;
-
-	for (yy = 0; yy < MAXDUNY; yy += 2) {
-		for (xx = 0; xx < MAXDUNX; xx += 2) {
+	for (int yy = 0; yy < MAXDUNY; yy += 2) {
+		for (int xx = 0; xx < MAXDUNX; xx += 2) {
 			dPiece[xx][yy] = 0;
 			dPiece[xx + 1][yy] = 0;
 			dPiece[xx][yy + 1] = 0;
@@ -170,61 +162,58 @@ void T_Pass3()
 		}
 	}
 
-	P3Tiles = LoadFileInMem("Levels\\TownData\\Town.TIL", nullptr);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector1s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 46, 46, 25, 25);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector2s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 46, 0, 25, 23);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector3s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 0, 46, 23, 25);
-	mem_free_dbg(pSector);
-	pSector = LoadFileInMem("Levels\\TownData\\Sector4s.DUN", nullptr);
-	T_FillSector(P3Tiles, pSector, 0, 0, 23, 23);
-	mem_free_dbg(pSector);
+	FillSector("Levels\\TownData\\Sector1s.DUN", 46, 46);
+	FillSector("Levels\\TownData\\Sector2s.DUN", 46, 0);
+	FillSector("Levels\\TownData\\Sector3s.DUN", 0, 46);
+	FillSector("Levels\\TownData\\Sector4s.DUN", 0, 0);
 
-	if (gbIsSpawn || !gbIsMultiplayer) {
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 1) && (!gbIsHellfire || plr[myplr]._pLevel < 10))) {
-			T_FillTile(P3Tiles, 48, 20, 320);
-		}
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 2) && (!gbIsHellfire || plr[myplr]._pLevel < 15))) {
-			T_FillTile(P3Tiles, 16, 68, 332);
-			T_FillTile(P3Tiles, 16, 70, 331);
-		}
-		if (gbIsSpawn || (!(plr[myplr].pTownWarps & 4) && (!gbIsHellfire || plr[myplr]._pLevel < 20))) {
-			for (x = 36; x < 46; x++) {
-				T_FillTile(P3Tiles, x, 78, random_(0, 4) + 1);
-			}
+	if (!IsWarpOpen(DTYPE_CATACOMBS)) {
+		FillTile(48, 20, 320);
+	}
+	if (!IsWarpOpen(DTYPE_CAVES)) {
+		FillTile(16, 68, 332);
+		FillTile(16, 70, 331);
+	}
+	if (!IsWarpOpen(DTYPE_HELL)) {
+		for (int x = 36; x < 46; x++) {
+			FillTile(x, 78, GenerateRnd(4) + 1);
 		}
 	}
 	if (gbIsHellfire) {
-		if (quests[Q_FARMER]._qactive == 3 || quests[Q_FARMER]._qactive == 10
-		    || quests[Q_JERSEY]._qactive == 3 || quests[Q_JERSEY]._qactive == 10) {
+		if (IsWarpOpen(DTYPE_NEST)) {
 			TownOpenHive();
 		} else {
 			TownCloseHive();
 		}
-		if (quests[Q_GRAVE]._qactive == 3 || plr[myplr]._pLvlVisited[21])
+		if (IsWarpOpen(DTYPE_CRYPT))
 			TownOpenGrave();
 		else
 			TownCloseGrave();
 	}
 
-	if (quests[Q_PWATER]._qactive != QUEST_DONE && quests[Q_PWATER]._qactive) {
-		T_FillTile(P3Tiles, 60, 70, 342);
+	if (Quests[Q_PWATER]._qactive != QUEST_DONE && Quests[Q_PWATER]._qactive != QUEST_NOTAVAIL) {
+		FillTile(60, 70, 342);
 	} else {
-		T_FillTile(P3Tiles, 60, 70, 71);
+		FillTile(60, 70, 71);
 	}
-
-	mem_free_dbg(P3Tiles);
 }
 
+} // namespace
+
+bool OpensHive(Point position)
+{
+	int yp = position.y;
+	int xp = position.x;
+	return xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64;
 }
 
-/**
- * @brief Update the map to show the open hive
- */
+bool OpensGrave(Point position)
+{
+	int yp = position.y;
+	int xp = position.x;
+	return xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24;
+}
+
 void TownOpenHive()
 {
 	dPiece[78][60] = 0x48a;
@@ -276,9 +265,6 @@ void TownOpenHive()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Update the map to show the open grave
- */
 void TownOpenGrave()
 {
 	dPiece[36][21] = 0x533;
@@ -294,51 +280,36 @@ void TownOpenGrave()
 	SetDungeonMicros();
 }
 
-/**
- * @brief Initialize town level
- * @param entry Methode of entry
- */
-void CreateTown(int entry)
+void CreateTown(lvl_entry entry)
 {
-	int x, y;
-
-	dminx = 10;
-	dminy = 10;
-	dmaxx = 84;
-	dmaxy = 84;
+	dminPosition = { 10, 10 };
+	dmaxPosition = { 84, 84 };
 	DRLG_InitTrans();
 	DRLG_Init_Globals();
 
 	if (entry == ENTRY_MAIN) { // New game
-		ViewX = 75;
-		ViewY = 68;
+		ViewPosition = { 75, 68 };
 	} else if (entry == ENTRY_PREV) { // Cathedral
-		ViewX = 25;
-		ViewY = 31;
+		ViewPosition = { 25, 31 };
 	} else if (entry == ENTRY_TWARPUP) {
 		if (TWarpFrom == 5) {
-			ViewX = 49;
-			ViewY = 22;
+			ViewPosition = { 49, 22 };
 		}
 		if (TWarpFrom == 9) {
-			ViewX = 18;
-			ViewY = 69;
+			ViewPosition = { 18, 69 };
 		}
 		if (TWarpFrom == 13) {
-			ViewX = 41;
-			ViewY = 81;
+			ViewPosition = { 41, 81 };
 		}
 		if (TWarpFrom == 21) {
-			ViewX = 36;
-			ViewY = 25;
+			ViewPosition = { 36, 25 };
 		}
 		if (TWarpFrom == 17) {
-			ViewX = 79;
-			ViewY = 62;
+			ViewPosition = { 79, 62 };
 		}
 	}
 
-	T_Pass3();
+	DrlgTPass3();
 	memset(dFlags, 0, sizeof(dFlags));
 	memset(dLight, 0, sizeof(dLight));
 	memset(dFlags, 0, sizeof(dFlags));
@@ -348,8 +319,8 @@ void CreateTown(int entry)
 	memset(dItem, 0, sizeof(dItem));
 	memset(dSpecial, 0, sizeof(dSpecial));
 
-	for (y = 0; y < MAXDUNY; y++) {
-		for (x = 0; x < MAXDUNX; x++) {
+	for (int y = 0; y < MAXDUNY; y++) {
+		for (int x = 0; x < MAXDUNX; x++) {
 			if (dPiece[x][y] == 360) {
 				dSpecial[x][y] = 1;
 			} else if (dPiece[x][y] == 358) {
@@ -385,4 +356,4 @@ void CreateTown(int entry)
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

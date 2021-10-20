@@ -1,17 +1,196 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## DevilutionX 1.2.0 (unreleased)
+## DevilutionX 1.2.1
+### Bugfixes
+#### Gameplay
+- Gharbad not having to go out of vision before progressing his quest
+- Diablo: Items with negative AC morphing in multiplayer
+- Diablo: Griswold and Wirt selling unusually expensive items
+- Diablo: Gold not going directly to inventory
+- Hellfire: Some monsters having lower than intended HP
+- Hellfire: Auric Amulet not taking effect in most scenarios
+#### Graphics / Audio
+- Windows: Glitchy audio
+#### Controls
+- Vita: Inability to edit hero name on the creation screen
+#### Stability / Performance / System
+- Quest panel crashing the game for some quests
+- Windows: Some systems getting a sensor permission error
+- Windows: Stability issues and item morphing in Hellfire
+
+### Bugfixes for original Hellfire bugs
+#### Gameplay
+- Rage/Search/Lightningwall not factoring in the hero level for the first player
+- Sparkling Shrine dealing an incorrect amount of damage
+- Items with negative AC morphing in multiplayer
+
+## DevilutionX 1.2.0
 ### Features
-- Improved gamepad support:
-  - D-Pad / Left stick navigation now works in all menus and is more responsive.
-  - START + SELECT now opens the main menu.
-  - Right stick mouse emulation has been improved.
-  - Gamepads plugged in while the game is running can be used.
-  - All connected gamepads can be used (previously, only the first one).
+#### Gameplay
+- Hellfire support
+- Shareware support
+- Fully migrate saves between Diablo and Hellfire
+- Gold picked goes to stack even when inventory is open
+- Pepin automatically heals
+- Show other players on the map
+- Preserve list position when buying and selling items in stores
+- Preserve hotkeys and active spell across games
+- Set default active spell for new heroes
+- Experience bar (off by default)
+- Monster health bar (off by default)
+- Auto equip all item types on pickup or purchase (off by default)
+- Auto pickup gold (off by default)
+- Run in town (off by default) (also in multiplayer)
+- Disable friendly fire from arrows an spells (off by default)
+- Disable quest randomization (off by default)
+- Adria refills mana (off by default)
+- Barbarian and Bard heroes in Diablo (off by default)
+#### Controls
+- Use belt via the numpad
+- Close panels when pressing <kbd>ESC</kbd>
+- <kbd>Shift-click</kbd> to spend all stat points
+- <kbd>Shift-click</kbd> to clear readied spell
+- <kbd>Shift-click</kbd> consumables to move them between the belt and inventory
+- <kbd>Shift-click</kbd> equipment equip/unequip them
+- Controller mapping
+- <kbd>D-Pad</kbd> / Left stick navigation now works in all menus and is more responsive.
+- <kbd>START</kbd> + <kbd>SELECT</kbd> now opens the main menu.
+- Right stick mouse emulation has been improved.
+- Gamepads plugged in while the game is running can be used.
+- All connected gamepads can be used (previously, only the first one).
+#### Graphics / Audio
+- Widescreen menus
+- Scroll subtitles at the same speed as narration reader
+- Apply sound volume to videos
+- Improved transparency (on by default)
+- Auto-equip sounds (off by default)
+- Show monster type (off by default)
+- Disable walking sounds (off by default)
+#### Stability / Performance / System
+- Document [ini-file options](https://github.com/diasurgical/devilutionX/wiki/DevilutionX-diablo.ini-configuration-guide)
+- Reorganize ini-file
+- Allow for up to 99 save games of each type
+- Much lower memory usage (now in line with the original)
+- Configurable network port
+- Performance improvements
+- DIABDAT.MPQ may now be upper case
+- Support for portable installs
+- Support file paths longer than 259 characters
+- Add `--ttf-dir` and `--ttf-name` to allow for specifying a different UI font
+- Switch Windows releases to 64-bit
+- Added support for Nintendo 3DS
+- Added support for PlayStation Vita
+- Added support for DragonFly BSD
+- Added AppImage for Linux
+
+### Bugfixes
+#### Gameplay
+- Catacombs doors never having traps
+#### Graphics / Audio
+- Incorrect graphics under cave doors in multiplayer
+- Minor color issues in some videos
+- Command-line output missing on Windows
+- Correct visuals and function of the joining-game-dialog
+#### Controls
+- Mouse jumping to the top of the windows when using the menu
+- Mouse not releasing when exiting the window
+- Dragging on touch devices
+#### Stability / Performance / System
+- Multiplayer host crashing after beating the game
+
+### Bugfixes for original Diablo bugs
+#### Gameplay
+- Base damage not being updated when leveling up
+- Player vision radius not updating properly before changing level
+- Tiles not properly being marked as out of visibility when walking
+- Scavengers/Gravediggers taking damage when eating on higher difficulties
+- Flash only dealing 10% damage in some directions
+- Not getting XP for the first monster placed on a level
+- Not getting XP from monsters hit by golems
+- Monsters going inactive when fighting golems offscreen
+- Monsters with hiding ability fleeing in the wrong direction from golems
+- Fallen fleeing in the wrong direction
+- Monsters charge directions being biased for some angles
+- Monsters not being able to properly judge the location of firewalls
+- Some unique items morphing on a new game
+- Incorrectly seeing legit items as duplicates
+- Items being destroyed if held in cursor when entering dungeon
+- Being able to waste gold on red scrolls when not having room for them
+- Gaining mana from reading books despite wearing an item with corruption
+- Gold piles will be filled to their max, before starting a new one
+- Inconsistent repair prices caused by rounding errors
+- Arkaine's Valor brought from previous games breaking the game state
+- Several issues causing Arkaine's Valor to enter a broken state
+- Black Mushroom quest not resetting between games
+- Randomly being teleported from level 15 to Lazarus' chamber
+- Several bugs in Lazarus quest when re-entering the teleport
+- Town portals appearing on two levels when cast in a quest level
+#### Controls
+- Inconsistent mouse behavior when opening/closing various panels
+#### Graphics / Audio
+- Gold icons graphics are always correct
+- Arrows graphics not aligning with the move direction
+- Wrong death sound when monster/golem kills another monster
+- Lights not always following unique monsters
+- Lights added on map update not working (Arkaine's Valor, etc.)
+- Player light radius not readjusting when a player is knocked back
+- Loadscreen colors on entering the Poison Water quest
+- Lava pools sometimes having roof tiles in them
+- Doors sometimes missing in Halls of The Blind
+- Broken outline on some inventory items
+#### Stability / Performance / System
+- Fix more stability issues
+#### Bugfixes from Hellfire 1.00 - 1.01
+- Monster hitpoints overflowing in Nightmare/Hell difficulty
+- Gharbad the Weak not dropping his item when killed by a golem
+- Some stability issues
+
+### Bugfixes for original Hellfire bugs
+#### Gameplay
+- Firewall damage calculation being too low
+- Firewall/Lightningwall damage being based on the dungeon level instead of spell level for the first player
+- Right-hand item's decay suffix being applied to the left-hand item in multiplayer
+- Town Shrine would always cast TP from the first player instead of the user
+- Oily Shrine and Sparkling Shrine would cast their traps as if the first player was doing it
+- The farmer would always think he was talking to the local player
+- Scavenger/Gravedigger AI being stuck for a round after eating
+- Sync available quests in multiplayer
+- Correct spell level being ignored for Search and Rage
+#### Graphics / Audio
+- Monster attack sound sometimes not playing
+- Missing sounds when bards and barbarians talk to cows
+- "0 Gold" sometimes spawning on The Cornerstone
+- Minor typography corrections
+#### Bugfixes from Diablo 1.03 - 1.09
+- The Hidden Shrine freezes when not holding an applicable item
+- Memory corruption when casting town portal
+- Crashes associated with Black Death
+- Players getting stuck in a wall when using Town Portals
+- Some Hell difficulty monsters being too easy to hit
+- Mana Shield bugs that could make a player invulnerable and/or invisible
+- Disarming skill not working on levels 13 through 15
+- Mana Shield permanently using up level missiles
+- Corrected behaviour of Thieves, Speed/Haste, Balance/Stability/Harmony, and Piercing/Bashing/Puncturing
+- Mana Shield becoming less effective with increasing spell level
+- Excessive damage when a Mana Shield expired due to an attack
+- Bows with fire damage prevented the Gargoyles from healing
+- Right-clicking belt item 5-8 not working while the Spellbook is open
+- Mana Shield and Nova not appearing for other players
+- Shields disappearing when worn after wielding two-handed weapons
+- Adria's books appear white even when the player can't read them
+- Equipped shields not appear properly to other players
+- Monster health not appearing correctly on Nightmare and Hell difficulty
+- Diablo's scream being muted if you load a save game during his death throes
+- Multiplayer character files are now located in the data directory, and may be moved between computers
+- Some stability issues
+
+### Known issues
+- Save game difficulty does not carry over from 1.1.0
+- Amiga builds are currently unstable
 
 ## DevilutionX 1.1.0
 ### Features
@@ -76,7 +255,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Added support Clockwork PI GameShell
 - Added support for GKD350h
 - Switch to OPK for RetroFW (requires 2.0)
-- Update OpendDingus/RetroFW build root
+- Update OpenDingux/RetroFW build root
 
 ### Bugfixes
 - Game crashing on systems that do not report monitor refresh rate.
@@ -257,7 +436,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - An older and more original PSX symbol file is discovered
 
 ### October 1, 2018
-- Compiler version is confirmed to be correct by discovery of the [Rich header](http://bytepointer.com/articles/the_microsoft_rich_header.htm)
+- Compiler version is confirmed to be correct by discovery of the [Rich header](https://bytepointer.com/articles/the_microsoft_rich_header.htm)
 
 ### September 18, 2018
 - Merge nightly back in to devilution

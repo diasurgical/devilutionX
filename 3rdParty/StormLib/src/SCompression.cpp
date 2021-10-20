@@ -178,7 +178,7 @@ int Decompress_ZLIB(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, i
     }
     return nResult;
 }
-#endif
+#endif // FULL
 
 /******************************************************************************/
 /*                                                                            */
@@ -670,7 +670,7 @@ static int Decompress_ADPCM_stereo(void * pvOutBuffer, int * pcbOutBuffer, void 
     *pcbOutBuffer = DecompressADPCM(pvOutBuffer, *pcbOutBuffer, pvInBuffer, cbInBuffer, 2);
     return 1;
 }
-#endif
+#endif // FULL
 
 /*****************************************************************************/
 /*                                                                           */
@@ -678,7 +678,7 @@ static int Decompress_ADPCM_stereo(void * pvOutBuffer, int * pcbOutBuffer, void 
 /*                                                                           */
 /*****************************************************************************/
 
-int STORMAPI SCompImplode(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
+int WINAPI SCompImplode(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
 {
     int cbOutBuffer;
 
@@ -710,7 +710,7 @@ int STORMAPI SCompImplode(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuf
 /*                                                                           */
 /*****************************************************************************/
 
-int STORMAPI SCompExplode(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
+int WINAPI SCompExplode(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
 {
     int cbOutBuffer;
 
@@ -767,14 +767,14 @@ static TCompressTable cmp_table[] =
     {MPQ_COMPRESSION_ADPCM_STEREO, Compress_ADPCM_stereo},  // IMA ADPCM stereo compression
     {MPQ_COMPRESSION_HUFFMANN,     Compress_huff},          // Huffmann compression
     {MPQ_COMPRESSION_ZLIB,         Compress_ZLIB},          // Compression with the "zlib" library
-#endif
+#endif // FULL
     {MPQ_COMPRESSION_PKWARE,       Compress_PKLIB},         // Compression with Pkware DCL
 #ifdef FULL
     {MPQ_COMPRESSION_BZIP2,        Compress_BZIP2}          // Compression Bzip2 library
-#endif
+#endif // FULL
 };
 
-int STORMAPI SCompCompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer, unsigned uCompressionMask, int nCmpType, int nCmpLevel)
+int WINAPI SCompCompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer, unsigned uCompressionMask, int nCmpType, int nCmpLevel)
 {
     COMPRESS CompressFuncArray[0x10];                       // Array of compression functions, applied sequentially
     unsigned char CompressByte[0x10];                       // CompressByte for each method in the CompressFuncArray array
@@ -811,8 +811,8 @@ int STORMAPI SCompCompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBu
         CompressByte[0] = (char)uCompressionMask;
         nCompressCount = 1;
 #else
-		assert(0);
-#endif
+        assert(0);
+#endif // FULL
     }
     else
     {
@@ -917,7 +917,7 @@ static TDecompressTable dcmp_table[] =
 {
 #ifdef FULL
     {MPQ_COMPRESSION_BZIP2,        Decompress_BZIP2},        // Decompression with Bzip2 library
-#endif
+#endif // FULL
     {MPQ_COMPRESSION_PKWARE,       Decompress_PKLIB},        // Decompression with Pkware Data Compression Library
 #ifdef FULL
     {MPQ_COMPRESSION_ZLIB,         Decompress_ZLIB},         // Decompression with the "zlib" library
@@ -925,10 +925,10 @@ static TDecompressTable dcmp_table[] =
     {MPQ_COMPRESSION_ADPCM_STEREO, Decompress_ADPCM_stereo}, // IMA ADPCM stereo decompression
     {MPQ_COMPRESSION_ADPCM_MONO,   Decompress_ADPCM_mono},   // IMA ADPCM mono decompression
     {MPQ_COMPRESSION_SPARSE,       Decompress_SPARSE}        // Sparse decompression
-#endif
+#endif // FULL
 };
 
-int STORMAPI SCompDecompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
+int WINAPI SCompDecompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
 {
     unsigned char * pbWorkBuffer = NULL;
     unsigned char * pbOutBuffer = (unsigned char *)pvOutBuffer;
@@ -1034,7 +1034,7 @@ int STORMAPI SCompDecompress(void * pvOutBuffer, int * pcbOutBuffer, void * pvIn
     return nResult;
 }
 
-int STORMAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
+int WINAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer, int cbInBuffer)
 {
     DECOMPRESS pfnDecompress1 = NULL;
     DECOMPRESS pfnDecompress2 = NULL;
@@ -1063,37 +1063,58 @@ int STORMAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvI
     // We only recognize a fixed set of compression methods
     switch((unsigned char)CompressionMethod)
     {
-#ifdef FULL
         case MPQ_COMPRESSION_ZLIB:
+#ifdef FULL
             pfnDecompress1 = Decompress_ZLIB;
+#else
+            assert(0);
+#endif // FULL
             break;
-#endif
 
         case MPQ_COMPRESSION_PKWARE:
             pfnDecompress1 = Decompress_PKLIB;
             break;
 
-#ifdef FULL
         case MPQ_COMPRESSION_BZIP2:
+#ifdef FULL
             pfnDecompress1 = Decompress_BZIP2;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case MPQ_COMPRESSION_LZMA:
+#ifdef FULL
             pfnDecompress1 = Decompress_LZMA;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case MPQ_COMPRESSION_SPARSE:
+#ifdef FULL
             pfnDecompress1 = Decompress_SPARSE;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_SPARSE | MPQ_COMPRESSION_ZLIB):
+#ifdef FULL
             pfnDecompress1 = Decompress_ZLIB;
             pfnDecompress2 = Decompress_SPARSE;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_SPARSE | MPQ_COMPRESSION_BZIP2):
+#ifdef FULL
             pfnDecompress1 = Decompress_BZIP2;
             pfnDecompress2 = Decompress_SPARSE;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         //
@@ -1103,15 +1124,23 @@ int STORMAPI SCompDecompress2(void * pvOutBuffer, int * pcbOutBuffer, void * pvI
         //
 
         case (MPQ_COMPRESSION_ADPCM_MONO | MPQ_COMPRESSION_HUFFMANN):
+#ifdef FULL
             pfnDecompress1 = Decompress_huff;
             pfnDecompress2 = Decompress_ADPCM_mono;
+#else
+            assert(0);
+#endif // FULL
             break;
 
         case (MPQ_COMPRESSION_ADPCM_STEREO | MPQ_COMPRESSION_HUFFMANN):
+#ifdef FULL
             pfnDecompress1 = Decompress_huff;
             pfnDecompress2 = Decompress_ADPCM_stereo;
+#else
+            assert(0);
+#endif // FULL
             break;
-#endif
+
         default:
             SetLastError(ERROR_FILE_CORRUPT);
             return 0;
@@ -1162,5 +1191,5 @@ int SCompDecompressMpk(void * pvOutBuffer, int * pcbOutBuffer, void * pvInBuffer
 {
     return Decompress_LZMA_MPK(pvOutBuffer, pcbOutBuffer, pvInBuffer, cbInBuffer);
 }
-#endif
+#endif // FULL
 

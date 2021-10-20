@@ -1,0 +1,46 @@
+name: Windows_x64
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y cmake gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64 pkg-config-mingw-w64-x86-64 wget git sudo smpq &&
+        sudo Packaging/windows/mingw-prep64.sh
+
+    - name: Cache CMake build folder
+      uses: actions/cache@v2
+      with:
+        path: build
+        key: windows-x86_64-cmake-${{ github.sha }}
+        restore-keys: windows-x86_64-cmake-
+
+    - name: Configure CMake
+      shell: bash
+      working-directory: ${{github.workspace}}
+      run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=../CMake/mingwcc64.cmake
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: cmake --build build -j $(nproc) --target package
+
+    - name: Upload-Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx_x64.zip
+        path: build/devilutionx.zip

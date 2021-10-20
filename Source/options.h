@@ -1,35 +1,58 @@
 #pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
+
+#include <SDL_version.h>
+
+#include "pack.h"
+
+namespace devilution {
 
 struct DiabloOptions {
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
+	/** @brief Remembers what singleplayer hero/save was last used. */
+	std::uint32_t lastSinglePlayerHero;
+	/** @brief Remembers what multiplayer hero/save was last used. */
+	std::uint32_t lastMultiplayerHero;
 };
 
 struct HellfireOptions {
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
 	/** @brief Cornerstone of the world item. */
-	char szItem[sizeof(PkItemStruct) * 2 + 1];
+	char szItem[sizeof(ItemPack) * 2 + 1];
+	/** @brief Remembers what singleplayer hero/save was last used. */
+	std::uint32_t lastSinglePlayerHero;
+	/** @brief Remembers what multiplayer hero/save was last used. */
+	std::uint32_t lastMultiplayerHero;
 };
 
 struct AudioOptions {
 	/** @brief Movie and SFX volume. */
-	Sint32 nSoundVolume;
+	int nSoundVolume;
 	/** @brief Music volume. */
-	Sint32 nMusicVolume;
+	int nMusicVolume;
 	/** @brief Player emits sound when walking. */
 	bool bWalkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	bool bAutoEquipSound;
+
+	/** @brief Output sample rate (Hz) */
+	std::uint32_t nSampleRate;
+	/** @brief The number of output channels (1 or 2) */
+	std::uint8_t nChannels;
+	/** @brief Buffer size (number of frames per channel) */
+	std::uint32_t nBufferSize;
+	/** @brief Quality of the resampler, from 0 (lowest) to 10 (highest) */
+	std::uint8_t nResamplingQuality;
 };
 
 struct GraphicsOptions {
 	/** @brief Render width. */
-	Sint32 nWidth;
+	int nWidth;
 	/** @brief Render height. */
-	Sint32 nHeight;
+	int nHeight;
 	/** @brief Run in fullscreen or windowed mode. */
 	bool bFullscreen;
 	/** @brief Scale the image after rendering. */
@@ -45,16 +68,26 @@ struct GraphicsOptions {
 	/** @brief Use blended transparency rather than stippled. */
 	bool bBlendedTransparancy;
 	/** @brief Gamma correction level. */
-	Sint32 nGammaCorrection;
+	int nGammaCorrection;
 	/** @brief Enable color cycling animations. */
 	bool bColorCycling;
+#if SDL_VERSION_ATLEAST(2, 0, 0)
+	/** @brief Use a hardware cursor (SDL2 only). */
+	bool bHardwareCursor;
+	/** @brief Use a hardware cursor for items. */
+	bool bHardwareCursorForItems;
+	/** @brief Maximum width / height for the hardware cursor. Larger cursors fall back to software. */
+	int nHardwareCursorMaxSize;
+#endif
 	/** @brief Enable FPS Limit. */
 	bool bFPSLimit;
+	/** @brief Show FPS, even without the -f command line flag. */
+	bool bShowFPS;
 };
 
 struct GameplayOptions {
 	/** @brief Gameplay ticks per second. */
-	Sint32 nTickRate;
+	int nTickRate;
 	/** @brief Enable double walk speed when in town. */
 	bool bRunInTown;
 	/** @brief Do not let the mouse leave the application window. */
@@ -93,6 +126,8 @@ struct GameplayOptions {
 	bool bShowMonsterType;
 	/** @brief Refill belt form inventory, or rather, use potions/scrolls from inventory first when belt item is consumed.  */
 	bool bAutoRefillBelt;
+	/** @brief Locally disable clicking on shrines which permanently cripple character. */
+	bool bDisableCripplingShrines;
 };
 
 struct ControllerOptions {
@@ -102,6 +137,8 @@ struct ControllerOptions {
 	bool bDpadHotkeys;
 	/** @brief Shoulder gamepad shoulder buttons act as potions by default */
 	bool bSwapShoulderButtonMode;
+	/** @brief Configure gamepad joysticks deadzone */
+	float fDeadzone;
 #ifdef __vita__
 	/** @brief Enable input via rear touchpad */
 	bool bRearTouch;
@@ -114,12 +151,17 @@ struct NetworkOptions {
 	/** @brief Most recently entered Hostname in join dialog. */
 	char szPreviousHost[129];
 	/** @brief What network port to use. */
-	Uint16 nPort;
+	uint16_t nPort;
 };
 
 struct ChatOptions {
 	/** @brief Quick chat messages. */
-	char szHotKeyMsgs[4][MAX_SEND_STR_LEN];
+	char szHotKeyMsgs[QUICK_MESSAGE_OPTIONS][MAX_SEND_STR_LEN];
+};
+
+struct LanguageOptions {
+	/** @brief Language code (IETF) for text. */
+	char szCode[5];
 };
 
 struct Options {
@@ -131,8 +173,23 @@ struct Options {
 	ControllerOptions Controller;
 	NetworkOptions Network;
 	ChatOptions Chat;
+	LanguageOptions Language;
 };
 
-extern Options sgOptions;
+bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
+void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len = 0);
 
-DEVILUTION_END_NAMESPACE
+extern Options sgOptions;
+extern bool sbWasOptionsLoaded;
+
+/**
+ * @brief Save game configurations to ini file
+ */
+void SaveOptions();
+
+/**
+ * @brief Load game configurations from ini file
+ */
+void LoadOptions();
+
+} // namespace devilution

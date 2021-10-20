@@ -3,85 +3,23 @@
  *
  * Implementation of functions for compression and decompressing MPQ data.
  */
-#include "all.h"
-#include "../3rdParty/PKWare/pkware.h"
+#include <SDL.h>
+#include <cctype>
+#include <memory>
+#include <array>
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "encrypt.h"
+#include "pkware.h"
 
-DWORD hashtable[5][256];
+namespace devilution {
 
-void Decrypt(DWORD *castBlock, DWORD size, DWORD key)
+namespace {
+
+unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	DWORD seed, i;
+	auto *pInfo = reinterpret_cast<TDataInfo *>(param);
 
-	seed = 0xEEEEEEEE;
-	for (i = 0; i < (size >> 2); i++) {
-		DWORD t = SwapLE32(*castBlock);
-		seed += hashtable[4][(key & 0xFF)];
-		t ^= seed + key;
-		*castBlock = t;
-		seed += t + (seed << 5) + 3;
-		castBlock++;
-		key = (((key << 0x15) ^ 0xFFE00000) + 0x11111111) | (key >> 0x0B);
-	}
-}
-
-void Encrypt(DWORD *castBlock, DWORD size, DWORD key)
-{
-	DWORD seed, i, ch;
-
-	seed = 0xEEEEEEEE;
-	for (i = 0; i < (size >> 2); i++) {
-		DWORD t = ch = *castBlock;
-		seed += hashtable[4][(key & 0xFF)];
-		t ^= seed + key;
-		*castBlock = SwapLE32(t);
-		castBlock++;
-		seed += ch + (seed << 5) + 3;
-		key = ((key << 0x15) ^ 0xFFE00000) + 0x11111111 | (key >> 0x0B);
-	}
-}
-
-DWORD Hash(const char *s, int type)
-{
-	char ch;
-	DWORD seed1, seed2;
-
-	seed1 = 0x7FED7FED;
-	seed2 = 0xEEEEEEEE;
-	while (s != NULL && *s) {
-		ch = *s++;
-		ch = toupper(ch);
-		seed1 = hashtable[type][ch] ^ (seed1 + seed2);
-		seed2 += ch + seed1 + (seed2 << 5) + 3;
-	}
-	return seed1;
-}
-
-void InitHash()
-{
-	DWORD seed, ch;
-	int i, j;
-
-	seed = 0x00100001;
-
-	for (i = 0; i < 256; i++) {
-		for (j = 0; j < 5; j++) {
-			seed = (125 * seed + 3) % 0x2AAAAB;
-			ch = (seed & 0xFFFF);
-			seed = (125 * seed + 3) % 0x2AAAAB;
-			hashtable[j][i] = ch << 16 | (seed & 0xFFFF);
-		}
-	}
-}
-
-static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
-{
-	TDataInfo *pInfo;
-	DWORD sSize;
-
-	pInfo = (TDataInfo *)param;
-
+	uint32_t sSize;
 	if (*size >= pInfo->size - pInfo->srcOffset) {
 		sSize = pInfo->size - pInfo->srcOffset;
 	} else {
@@ -94,71 +32,117 @@ static unsigned int PkwareBufferRead(char *buf, unsigned int *size, void *param)
 	return sSize;
 }
 
-static void PkwareBufferWrite(char *buf, unsigned int *size, void *param)
+void PkwareBufferWrite(char *buf, unsigned int *size, void *param) // NOLINT(readability-non-const-parameter)
 {
-	TDataInfo *pInfo;
-
-	pInfo = (TDataInfo *)param;
+	auto *pInfo = reinterpret_cast<TDataInfo *>(param);
 
 	memcpy(pInfo->destData + pInfo->destOffset, buf, *size);
 	pInfo->destOffset += *size;
 }
 
-DWORD PkwareCompress(BYTE *srcData, DWORD size)
+const std::array<std::array<uint32_t, 256>, 5> hashtable = []() {
+	uint32_t seed = 0x00100001;
+	std::array<std::array<uint32_t, 256>, 5> ret = {};
+
+	for (int i = 0; i < 256; i++) {
+		for (int j = 0; j < 5; j++) { // NOLINT(modernize-loop-convert)
+			seed = (125 * seed + 3) % 0x2AAAAB;
+			uint32_t ch = (seed & 0xFFFF);
+			seed = (125 * seed + 3) % 0x2AAAAB;
+			ret[j][i] = ch << 16 | (seed & 0xFFFF);
+		}
+	}
+	return ret;
+}();
+
+} // namespace
+
+void Decrypt(uint32_t *castBlock, uint32_t size, uint32_t key)
 {
-	BYTE *destData;
-	char *ptr;
-	unsigned int destSize, type, dsize;
-	TDataInfo param;
+	uint32_t seed = 0xEEEEEEEE;
+	for (uint32_t i = 0; i < (size >> 2); i++) {
+		uint32_t t = SDL_SwapLE32(*castBlock);
+		seed += hashtable[4][(key & 0xFF)];
+		t ^= seed + key;
+		*castBlock = t;
+		seed += t + (seed << 5) + 3;
+		castBlock++;
+		key = (((key << 0x15) ^ 0xFFE00000) + 0x11111111) | (key >> 0x0B);
+	}
+}
 
-	ptr = (char *)DiabloAllocPtr(CMP_BUFFER_SIZE);
+void Encrypt(uint32_t *castBlock, uint32_t size, uint32_t key)
+{
+	uint32_t seed = 0xEEEEEEEE;
+	for (unsigned i = 0; i < (size >> 2); i++) {
+		uint32_t ch = *castBlock;
+		uint32_t t = ch;
+		seed += hashtable[4][(key & 0xFF)];
+		t ^= seed + key;
+		*castBlock = SDL_SwapLE32(t);
+		castBlock++;
+		seed += ch + (seed << 5) + 3;
+		key = (((key << 0x15) ^ 0xFFE00000) + 0x11111111) | (key >> 0x0B);
+	}
+}
 
-	destSize = 2 * size;
+uint32_t Hash(const char *s, int type)
+{
+	uint32_t seed1 = 0x7FED7FED;
+	uint32_t seed2 = 0xEEEEEEEE;
+	while (s != nullptr && (*s != '\0')) {
+		int8_t ch = *s++;
+		ch = toupper(ch);
+		seed1 = hashtable[type][ch] ^ (seed1 + seed2);
+		seed2 += ch + seed1 + (seed2 << 5) + 3;
+	}
+	return seed1;
+}
+
+uint32_t PkwareCompress(byte *srcData, uint32_t size)
+{
+	std::unique_ptr<char[]> ptr { new char[CMP_BUFFER_SIZE] };
+
+	unsigned destSize = 2 * size;
 	if (destSize < 2 * 4096)
 		destSize = 2 * 4096;
 
-	destData = (BYTE *)DiabloAllocPtr(destSize);
+	std::unique_ptr<byte[]> destData { new byte[destSize] };
 
+	TDataInfo param;
 	param.srcData = srcData;
 	param.srcOffset = 0;
-	param.destData = destData;
+	param.destData = destData.get();
 	param.destOffset = 0;
 	param.size = size;
 
-	type = 0;
-	dsize = 4096;
-	implode(PkwareBufferRead, PkwareBufferWrite, ptr, &param, &type, &dsize);
+	unsigned type = 0;
+	unsigned dsize = 4096;
+	implode(PkwareBufferRead, PkwareBufferWrite, ptr.get(), &param, &type, &dsize);
 
 	if (param.destOffset < size) {
-		memcpy(srcData, destData, param.destOffset);
+		memcpy(srcData, destData.get(), param.destOffset);
 		size = param.destOffset;
 	}
-
-	mem_free_dbg(ptr);
-	mem_free_dbg(destData);
 
 	return size;
 }
 
-void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes)
+void PkwareDecompress(byte *inBuff, int recvSize, int maxBytes)
 {
-	char *ptr;
-	BYTE *pbOutBuff;
 	TDataInfo info;
 
-	ptr = (char *)DiabloAllocPtr(CMP_BUFFER_SIZE);
-	pbOutBuff = DiabloAllocPtr(dwMaxBytes);
+	std::unique_ptr<char[]> ptr { new char[CMP_BUFFER_SIZE] };
+	std::unique_ptr<byte[]> outBuff { new byte[maxBytes] };
 
-	info.srcData = pbInBuff;
+	info.srcData = inBuff;
 	info.srcOffset = 0;
-	info.destData = pbOutBuff;
+	info.destData = outBuff.get();
 	info.destOffset = 0;
-	info.size = recv_size;
+	info.size = recvSize;
 
-	explode(PkwareBufferRead, PkwareBufferWrite, ptr, &info);
-	memcpy(pbInBuff, pbOutBuff, info.destOffset);
-	mem_free_dbg(ptr);
-	mem_free_dbg(pbOutBuff);
+	explode(PkwareBufferRead, PkwareBufferWrite, ptr.get(), &info);
+	memcpy(inBuff, outBuff.get(), info.destOffset);
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

@@ -3,266 +3,318 @@
  *
  * Interface of monster functionality, AI, actions, spawning, loading, etc.
  */
-#ifndef __MONSTER_H__
-#define __MONSTER_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
+#include <array>
+#include <functional>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "engine.h"
+#include "engine/actor_position.hpp"
+#include "engine/animationinfo.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/point.hpp"
+#include "miniwin/miniwin.h"
+#include "utils/stdcompat/optional.hpp"
+#include "monstdat.h"
+#include "sound.h"
+#include "spelldat.h"
+#include "textdat.h"
 
-typedef enum MON_MODE {
-	MM_STAND,
+namespace devilution {
+
+struct Missile;
+
+#define MAXMONSTERS 200
+#define MAX_LVLMTYPES 24
+
+enum monster_flag : uint16_t {
+	// clang-format off
+	MFLAG_HIDDEN          = 1 << 0,
+	MFLAG_LOCK_ANIMATION  = 1 << 1,
+	MFLAG_ALLOW_SPECIAL   = 1 << 2,
+	MFLAG_NOHEAL          = 1 << 3,
+	MFLAG_TARGETS_MONSTER = 1 << 4,
+	MFLAG_GOLEM           = 1 << 5,
+	MFLAG_QUEST_COMPLETE  = 1 << 6,
+	MFLAG_KNOCKBACK       = 1 << 7,
+	MFLAG_SEARCH          = 1 << 8,
+	MFLAG_CAN_OPEN_DOOR   = 1 << 9,
+	MFLAG_NO_ENEMY        = 1 << 10,
+	MFLAG_BERSERK         = 1 << 11,
+	MFLAG_NOLIFESTEAL     = 1 << 12,
+	// clang-format on
+};
+
+/** this enum contains indexes from UniqueMonstersData array for special unique monsters (usually quest related) */
+enum : uint8_t {
+	UMT_GARBUD,
+	UMT_SKELKING,
+	UMT_ZHAR,
+	UMT_SNOTSPIL,
+	UMT_LAZARUS,
+	UMT_RED_VEX,
+	UMT_BLACKJADE,
+	UMT_LACHDAN,
+	UMT_WARLORD,
+	UMT_BUTCHER,
+	UMT_HORKDMN,
+	UMT_DEFILER,
+	UMT_NAKRUL,
+};
+
+enum class MonsterMode {
+	Stand,
 	/** Movement towards N, NW, or NE */
-	MM_WALK,
+	MoveNorthwards,
 	/** Movement towards S, SW, or SE */
-	MM_WALK2,
+	MoveSouthwards,
 	/** Movement towards W or E */
-	MM_WALK3,
-	MM_ATTACK,
-	MM_GOTHIT,
-	MM_DEATH,
-	MM_SATTACK,
-	MM_FADEIN,
-	MM_FADEOUT,
-	MM_RATTACK,
-	MM_SPSTAND,
-	MM_RSPATTACK,
-	MM_DELAY,
-	MM_CHARGE,
-	MM_STONE,
-	MM_HEAL,
-	MM_TALK,
-} MON_MODE;
+	MoveSideways,
+	MeleeAttack,
+	HitRecovery,
+	Death,
+	SpecialMeleeAttack,
+	FadeIn,
+	FadeOut,
+	RangedAttack,
+	SpecialStand,
+	SpecialRangedAttack,
+	Delay,
+	Charge,
+	Petrified,
+	Heal,
+	Talk,
+};
 
-typedef struct CMonster {
+enum class MonsterGraphic {
+	Stand,
+	Walk,
+	Attack,
+	GotHit,
+	Death,
+	Special,
+};
+
+enum monster_goal : uint8_t {
+	MGOAL_NONE,
+	MGOAL_NORMAL,
+	MGOAL_RETREAT,
+	MGOAL_HEALING,
+	MGOAL_MOVE,
+	MGOAL_ATTACK2,
+	MGOAL_INQUIRING,
+	MGOAL_TALKING,
+};
+
+enum placeflag : uint8_t {
+	// clang-format off
+	PLACE_SCATTER = 1 << 0,
+	PLACE_SPECIAL = 1 << 1,
+	PLACE_UNIQUE  = 1 << 2,
+	// clang-format on
+};
+
+/**
+ * @brief Defines the relation of the monster to a monster pack.
+ *        If value is differnt from Individual Monster.leader must also be set
+ */
+enum class LeaderRelation : uint8_t {
+	None,
+	/**
+	 * @brief Minion that sticks with the leader
+	 */
+	Leashed,
+	/**
+	 * @brief Minion that was separated from leader and acts individual until it reaches the leader again
+	 */
+	Separated,
+};
+
+struct AnimStruct {
+	std::unique_ptr<byte[]> CMem;
+	std::array<std::optional<CelSprite>, 8> CelSpritesForDirections;
+
+	inline const std::optional<CelSprite> &GetCelSpritesForDirection(Direction direction) const
+	{
+		return CelSpritesForDirections[static_cast<size_t>(direction)];
+	}
+
+	int Frames;
+	int Rate;
+};
+
+struct CMonster {
 	_monster_id mtype;
 	/** placeflag enum as a flags*/
-	Uint8 mPlaceFlags;
+	uint8_t mPlaceFlags;
 	AnimStruct Anims[6];
-	TSnd *Snds[4][2];
-	Sint32 width;
-	Sint32 width2;
-	Uint8 mMinHP;
-	Uint8 mMaxHP;
-	bool has_special;
-	Uint8 mAFNum;
-	Sint8 mdeadval;
-	const MonsterData *MData;
 	/**
-	 * A TRN file contains a sequence of color transitions, represented
-	 * as indexes into a palette. (a 256 byte array of palette indices)
+	 * @brief Returns AnimStruct for specified graphic
 	 */
-	Uint8 *trans_file;
-} CMonster;
+	const AnimStruct &GetAnimData(MonsterGraphic graphic) const
+	{
+		return Anims[static_cast<int>(graphic)];
+	}
+	std::unique_ptr<TSnd> Snds[4][2];
+	uint16_t mMinHP;
+	uint16_t mMaxHP;
+	uint8_t mAFNum;
+	int8_t mdeadval;
+	const MonsterData *MData;
+};
 
-typedef struct MonsterStruct { // note: missing field _mAFNum
-	Sint32 _mMTidx;
-	MON_MODE _mmode;
-	Uint8 _mgoal;
-	Sint32 _mgoalvar1;
-	Sint32 _mgoalvar2;
-	Sint32 _mgoalvar3;
-	Uint8 _pathcount;
-	/** Tile X-position of monster */
-	Sint32 _mx;
-	/** Tile Y-position of monster */
-	Sint32 _my;
-	/** Future tile X-position of monster. Set at start of walking animation */
-	Sint32 _mfutx;
-	/** Future tile Y-position of monster. Set at start of walking animation */
-	Sint32 _mfuty;
-	/** Most recent X-position in dMonster. */
-	Sint32 _moldx;
-	/** Most recent Y-position in dMonster. */
-	Sint32 _moldy;
-	/** Monster sprite's pixel X-offset from tile. */
-	Sint32 _mxoff;
-	/** Monster sprite's pixel Y-offset from tile. */
-	Sint32 _myoff;
-	/** Pixel X-velocity while walking. Applied to _mxoff */
-	Sint32 _mxvel;
-	/** Pixel Y-velocity while walking. Applied to _myoff */
-	Sint32 _myvel;
+struct Monster { // note: missing field _mAFNum
+	int _mMTidx;
+	MonsterMode _mmode;
+	monster_goal _mgoal;
+	int _mgoalvar1;
+	int _mgoalvar2;
+	int _mgoalvar3;
+	uint8_t _pathcount;
+	ActorPosition position;
 	/** Direction faced by monster (direction enum) */
-	Sint32 _mdir;
+	Direction _mdir;
 	/** The current target of the mosnter. An index in to either the plr or monster array based on the _meflag value. */
-	Sint32 _menemy;
-	/** X-coordinate of enemy (usually correspond's to the enemy's futx value) */
-	Uint8 _menemyx;
-	/** Y-coordinate of enemy (usually correspond's to the enemy's futy value) */
-	Uint8 _menemyy;
-	Uint8 *_mAnimData;
-	/** Tick length of each frame in the current animation */
-	Sint32 _mAnimDelay;
-	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
-	Sint32 _mAnimCnt;
-	/** Number of frames in current animation */
-	Sint32 _mAnimLen;
-	/** Current frame of animation. */
-	Sint32 _mAnimFrame;
+	int _menemy;
+	/** Usually correspond's to the enemy's future position */
+	Point enemyPosition;
+	/**
+	 * @brief Contains Information for current Animation
+	 */
+	AnimationInfo AnimInfo;
 	bool _mDelFlag;
-	Sint32 _mVar1;
-	Sint32 _mVar2;
-	Sint32 _mVar3;
-	Sint32 _mVar4;
-	Sint32 _mVar5;
-	/** Used as _mxoff but with a higher range so that we can correctly apply velocities of a smaller number */
-	Sint32 _mVar6;
-	/** Used as _myoff but with a higher range so that we can correctly apply velocities of a smaller number */
-	Sint32 _mVar7;
-	/** Value used to measure progress for moving from one tile to another */
-	Sint32 _mVar8;
-	Sint32 _mmaxhp;
-	Sint32 _mhitpoints;
+	int _mVar1;
+	int _mVar2;
+	int _mVar3;
+	int _mmaxhp;
+	int _mhitpoints;
 	_mai_id _mAi;
-	Uint8 _mint;
-	Uint32 _mFlags;
-	Uint8 _msquelch;
-	Sint32 _lastx;
-	Sint32 _lasty;
-	Sint32 _mRndSeed;
-	Sint32 _mAISeed;
-	Uint8 _uniqtype;
-	Uint8 _uniqtrans;
-	Sint8 _udeadval;
-	Sint8 mWhoHit;
-	Sint8 mLevel;
-	Uint16 mExp;
-	Uint16 mHit;
-	Uint8 mMinDamage;
-	Uint8 mMaxDamage;
-	Uint16 mHit2;
-	Uint8 mMinDamage2;
-	Uint8 mMaxDamage2;
-	Uint8 mArmorClass;
-	Uint16 mMagicRes;
-	Sint32 mtalkmsg;
-	Uint8 leader;
-	Uint8 leaderflag;
-	Uint8 packsize;
-	Sint8 mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
+	uint8_t _mint;
+	uint32_t _mFlags;
+	uint8_t _msquelch;
+	/** Seed used to determine item drops on death */
+	uint32_t _mRndSeed;
+	/** Seed used to determine AI behaviour/sync sounds in multiplayer games? */
+	uint32_t _mAISeed;
+	uint8_t _uniqtype;
+	uint8_t _uniqtrans;
+	int8_t _udeadval;
+	int8_t mWhoHit;
+	int8_t mLevel;
+	uint16_t mExp;
+	uint16_t mHit;
+	uint8_t mMinDamage;
+	uint8_t mMaxDamage;
+	uint16_t mHit2;
+	uint8_t mMinDamage2;
+	uint8_t mMaxDamage2;
+	uint8_t mArmorClass;
+	uint16_t mMagicRes;
+	_speech_id mtalkmsg;
+	uint8_t leader;
+	LeaderRelation leaderRelation;
+	uint8_t packsize;
+	int8_t mlid; // BUGFIX -1 is used when not emitting light this should be signed (fixed)
 	const char *mName;
 	CMonster *MType;
 	const MonsterData *MData;
-} MonsterStruct;
 
-extern int monstkills[MAXMONSTERS];
-extern int monstactive[MAXMONSTERS];
-extern int nummonsters;
-extern BOOLEAN sgbSaveSoundOn;
-extern MonsterStruct monster[MAXMONSTERS];
-extern CMonster Monsters[MAX_LVLMTYPES];
-extern int nummtypes;
+	/**
+	 * @brief Sets the current cell sprite to match the desired direction and animation sequence
+	 * @param graphic Animation sequence of interest
+	 * @param direction Desired direction the monster should be visually facing
+	*/
+	void ChangeAnimationData(MonsterGraphic graphic, Direction direction)
+	{
+		auto &animationData = this->MType->GetAnimData(graphic);
+		auto &celSprite = animationData.GetCelSpritesForDirection(direction);
+
+		// Passing the Frames and Rate properties here is only relevant when initialising a monster, but doesn't cause any harm when switching animations.
+		this->AnimInfo.ChangeAnimationData(celSprite ? &*celSprite : nullptr, animationData.Frames, animationData.Rate);
+	}
+
+	/**
+	 * @brief Sets the current cell sprite to match the desired animation sequence using the direction the monster is currently facing
+	 * @param graphic Animation sequence of interest
+	*/
+	void ChangeAnimationData(MonsterGraphic graphic)
+	{
+		this->ChangeAnimationData(graphic, this->_mdir);
+	}
+
+	/**
+	 * @brief Check thats the correct stand Animation is loaded. This is needed if direction is changed (monster stands and looks to player).
+	 * @param mdir direction of the monster
+	 */
+	void CheckStandAnimationIsLoaded(Direction mdir);
+
+	/**
+	 * @brief Sets _mmode to MonsterMode::Petrified
+	 */
+	void Petrify();
+
+	/**
+	 * @brief Is the monster currently walking?
+	 */
+	bool IsWalking() const;
+};
+
+extern CMonster LevelMonsterTypes[MAX_LVLMTYPES];
+extern int LevelMonsterTypeCount;
+extern Monster Monsters[MAXMONSTERS];
+extern int ActiveMonsters[MAXMONSTERS];
+extern int ActiveMonsterCount;
+extern int MonsterKillCounts[MAXMONSTERS];
+extern bool sgbSaveSoundOn;
 
 void InitLevelMonsters();
 void GetLevelMTypes();
 void InitMonsterGFX(int monst);
-void InitMonster(int i, int rd, int mtype, int x, int y);
-void ClrAllMonsters();
 void monster_some_crypt();
-void PlaceGroup(int mtype, int num, int leaderf, int leader);
 void InitMonsters();
-void SetMapMonsters(BYTE *pMap, int startx, int starty);
-void DeleteMonster(int i);
-int AddMonster(int x, int y, int dir, int mtype, BOOL InMap);
-void monster_43C785(int i);
-BOOL M_Talker(int i);
-void M_StartStand(int i, int md);
+void SetMapMonsters(const uint16_t *dunData, Point startPosition);
+int AddMonster(Point position, Direction dir, int mtype, bool inMap);
+void AddDoppelganger(Monster &monster);
+bool M_Talker(const Monster &monster);
+void M_StartStand(Monster &monster, Direction md);
 void M_ClearSquares(int i);
 void M_GetKnockback(int i);
 void M_StartHit(int i, int pnum, int dam);
 void M_StartKill(int i, int pnum);
-void M_SyncStartKill(int i, int x, int y, int pnum);
-void M_Teleport(int i);
+void M_SyncStartKill(int i, Point position, int pnum);
 void M_UpdateLeader(int i);
 void DoEnding();
 void PrepDoEnding();
-void M_WalkDir(int i, int md);
-void MAI_Zombie(int i);
-void MAI_SkelSd(int i);
-void MAI_Snake(int i);
-void MAI_Bat(int i);
-void MAI_SkelBow(int i);
-void MAI_Fat(int i);
-void MAI_Sneak(int i);
-void MAI_Fireman(int i);
-void MAI_Fallen(int i);
-void MAI_Cleaver(int i);
-void MAI_Round(int i, BOOL special);
-void MAI_GoatMc(int i);
-void MAI_Ranged(int i, int missile_type, BOOL special);
-void MAI_GoatBow(int i);
-void MAI_Succ(int i);
-void MAI_Lich(int i);
-void MAI_ArchLich(int i);
-void MAI_Psychorb(int i);
-void MAI_Necromorb(int i);
-void MAI_AcidUniq(int i);
-void MAI_Firebat(int i);
-void MAI_Torchant(int i);
-void MAI_Scav(int i);
-void MAI_Garg(int i);
-void MAI_RoundRanged(int i, int missile_type, BOOL checkdoors, int dam, int lessmissiles);
-void MAI_Magma(int i);
-void MAI_Storm(int i);
-void MAI_BoneDemon(int i);
-void MAI_Acid(int i);
-void MAI_Diablo(int i);
-void MAI_Mega(int i);
-void MAI_Golum(int i);
-void MAI_SkelKing(int i);
-void MAI_Rhino(int i);
-void MAI_HorkDemon(int i);
-void MAI_Counselor(int i);
-void MAI_Garbud(int i);
-void MAI_Zhar(int i);
-void MAI_SnotSpil(int i);
-void MAI_Lazurus(int i);
-void MAI_Lazhelp(int i);
-void MAI_Lachdanan(int i);
-void MAI_Warlord(int i);
+void M_WalkDir(int i, Direction md);
+void GolumAi(int i);
 void DeleteMonsterList();
 void ProcessMonsters();
 void FreeMonsters();
-BOOL DirOK(int i, int mdir);
-BOOL PosOkMissile(int x, int y);
-BOOL CheckNoSolid(int x, int y);
-BOOL LineClearF(BOOL (*Clear)(int, int), int x1, int y1, int x2, int y2);
-BOOL LineClear(int x1, int y1, int x2, int y2);
-BOOL LineClearF1(BOOL (*Clear)(int, int, int), int monst, int x1, int y1, int x2, int y2);
-void SyncMonsterAnim(int i);
-void M_FallenFear(int x, int y);
+bool DirOK(int i, Direction mdir);
+bool PosOkMissile(Point position);
+bool LineClearMissile(Point startPoint, Point endPoint);
+bool LineClear(const std::function<bool(Point)> &clear, Point startPoint, Point endPoint);
+void SyncMonsterAnim(Monster &monster);
+void M_FallenFear(Point position);
 void PrintMonstHistory(int mt);
 void PrintUniqueHistory();
-void MissToMonst(int i, int x, int y);
-BOOL PosOkMonst(int i, int x, int y);
-BOOLEAN monster_posok(int i, int x, int y);
-BOOL PosOkMonst2(int i, int x, int y);
-BOOL PosOkMonst3(int i, int x, int y);
-BOOL IsSkel(int mt);
-BOOL IsGoat(int mt);
-int M_SpawnSkel(int x, int y, int dir);
-BOOL SpawnSkeleton(int ii, int x, int y);
+void PlayEffect(Monster &monster, int mode);
+void MissToMonst(Missile &missile, Point position);
+
+/**
+ * @brief Check that the given tile is available to the monster
+ */
+bool IsTileAvailable(const Monster &monster, Point position);
+bool IsSkel(int mt);
+bool IsGoat(int mt);
+bool SpawnSkeleton(int ii, Point position);
 int PreSpawnSkeleton();
-void TalktoMonster(int i);
-void SpawnGolum(int i, int x, int y, int mi);
-BOOL CanTalkToMonst(int m);
-BOOL CheckMonsterHit(int m, BOOL *ret);
-int encode_enemy(int m);
-void decode_enemy(int m, int enemy);
+void TalktoMonster(Monster &monster);
+void SpawnGolem(int i, Point position, Missile &missile);
+bool CanTalkToMonst(const Monster &monster);
+bool CheckMonsterHit(Monster &monster, bool *ret);
+int encode_enemy(Monster &monster);
+void decode_enemy(Monster &monster, int enemyId);
 
-/* data */
-
-extern int opposite[8];
-extern int offset_x[8];
-extern int offset_y[8];
-
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MONSTER_H__ */
+} // namespace devilution

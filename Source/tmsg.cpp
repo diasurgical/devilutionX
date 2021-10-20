@@ -3,64 +3,62 @@
  *
  * Implementation of functionality transmitting chat messages.
  */
-#include "all.h"
+#include <list>
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "diablo.h"
+#include "tmsg.h"
+
+namespace devilution {
 
 namespace {
 
-TMsg *sgpTimedMsgHead;
+struct TMsg {
+	uint32_t time;
+	std::unique_ptr<byte[]> body;
+	uint8_t len;
 
-}
+	TMsg(uint32_t time, const byte *data, uint8_t len)
+	    : time(time)
+	    , body(new byte[len])
+	    , len(len)
+	{
+		memcpy(body.get(), data, len);
+	}
+};
 
-int tmsg_get(Uint8 *pbMsg, Uint32 dwMaxLen)
+std::list<TMsg> TimedMsgList;
+
+} // namespace
+
+uint8_t tmsg_get(std::unique_ptr<byte[]> *msg)
 {
-	int len;
-	TMsg *head;
-
-	if (!sgpTimedMsgHead)
+	if (TimedMsgList.empty())
 		return 0;
 
-	if ((int)(sgpTimedMsgHead->hdr.dwTime - SDL_GetTicks()) >= 0)
+	TMsg &head = TimedMsgList.front();
+	if ((int)(head.time - SDL_GetTicks()) >= 0)
 		return 0;
-	head = sgpTimedMsgHead;
-	sgpTimedMsgHead = head->hdr.pNext;
-	len = head->hdr.bLen;
-	// BUGFIX: ignores dwMaxLen
-	memcpy(pbMsg, head->body, len);
-	mem_free_dbg(head);
+
+	uint8_t len = head.len;
+	*msg = std::move(head.body);
+	TimedMsgList.pop_front();
 	return len;
 }
 
-void tmsg_add(Uint8 *pbMsg, Uint8 bLen)
+void tmsg_add(const byte *msg, uint8_t len)
 {
-	TMsg **tail;
-
-	TMsg *msg = (TMsg *)DiabloAllocPtr(bLen + sizeof(*msg));
-	msg->hdr.pNext = nullptr;
-	msg->hdr.dwTime = SDL_GetTicks() + gnTickDelay * 10;
-	msg->hdr.bLen = bLen;
-	memcpy(msg->body, pbMsg, bLen);
-	for (tail = &sgpTimedMsgHead; *tail; tail = &(*tail)->hdr.pNext) {
-		;
-	}
-	*tail = msg;
+	uint32_t time = SDL_GetTicks() + gnTickDelay * 10;
+	TimedMsgList.emplace_back(time, msg, len);
 }
 
 void tmsg_start()
 {
-	assert(!sgpTimedMsgHead);
+	assert(TimedMsgList.empty());
 }
 
 void tmsg_cleanup()
 {
-	TMsg *next;
-
-	while (sgpTimedMsgHead) {
-		next = sgpTimedMsgHead->hdr.pNext;
-		MemFreeDbg(sgpTimedMsgHead);
-		sgpTimedMsgHead = next;
-	}
+	TimedMsgList.clear();
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

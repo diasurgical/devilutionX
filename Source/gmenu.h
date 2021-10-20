@@ -3,37 +3,49 @@
  *
  * Interface of the in-game navigation and interaction.
  */
-#ifndef __GMENU_H__
-#define __GMENU_H__
+#pragma once
+
+#include <cstdint>
 
 #include "engine.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define GMENU_SLIDER 0x40000000
+#define GMENU_ENABLED 0x80000000
+
+struct TMenuItem {
+	uint32_t dwFlags;
+	const char *pszStr;
+	void (*fnMenu)(bool);
+};
 
 extern TMenuItem *sgpCurrentMenu;
 
-void gmenu_draw_pause(CelOutputBuffer out);
+void gmenu_draw_pause(const Surface &out);
 void FreeGMenu();
 void gmenu_init_menu();
-BOOL gmenu_is_active();
-void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)(TMenuItem *));
-void gmenu_draw(CelOutputBuffer out);
-BOOL gmenu_presskeys(int vkey);
-BOOL gmenu_on_mouse_move();
-BOOL gmenu_left_mouse(BOOL isDown);
-void gmenu_enable(TMenuItem *pMenuItem, BOOL enable);
-void gmenu_slider_set(TMenuItem *pItem, int min, int max, int gamma);
+bool gmenu_is_active();
+void gmenu_set_items(TMenuItem *pItem, void (*gmFunc)());
+void gmenu_draw(const Surface &out);
+bool gmenu_presskeys(int vkey);
+bool gmenu_on_mouse_move();
+bool gmenu_left_mouse(bool isDown);
+void gmenu_enable(TMenuItem *pMenuItem, bool enable);
+
+/**
+ * @brief Set the TMenuItem slider position based on the given value
+ */
+void gmenu_slider_set(TMenuItem *pItem, int min, int max, int value);
+
+/**
+ * @brief Get the current value for the slider
+ */
 int gmenu_slider_get(TMenuItem *pItem, int min, int max);
-void gmenu_slider_steps(TMenuItem *pItem, int dwTicks);
 
-#ifdef __cplusplus
-}
-#endif
+/**
+ * @brief Set the number of steps for the slider
+ */
+void gmenu_slider_steps(TMenuItem *pItem, int steps);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __GMENU_H__ */
+} // namespace devilution

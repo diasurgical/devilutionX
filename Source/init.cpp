@@ -3,26 +3,33 @@
  *
  * Implementation of routines for initializing the environment, disable screen saver, load MPQ.
  */
+#include <SDL.h>
+#include <config.h>
 #include <string>
 #include <vector>
 
-#include "all.h"
-#include "paths.h"
-#include "../3rdParty/Storm/Source/storm.h"
-#include "../DiabloUI/diabloui.h"
-#include <SDL.h>
-#include <config.h>
+#if defined(_WIN64) || defined(_WIN32)
+#include <find_steam_game.h>
+#endif
+
+#include "DiabloUI/diabloui.h"
+#include "dx.h"
+#include "pfile.h"
+#include "storm/storm.h"
+#include "utils/language.h"
+#include "utils/log.hpp"
+#include "utils/paths.h"
+#include "utils/ui_fwd.h"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
 int _newlib_heap_size_user = 100 * 1024 * 1024;
 #endif
 
-DEVILUTION_BEGIN_NAMESPACE
+namespace devilution {
 
-_SNETVERSIONDATA fileinfo;
 /** True if the game is the current active window */
-int gbActive;
+bool gbActive;
 /** A handle to an hellfire.mpq archive. */
 HANDLE hellfire_mpq;
 /** The current input handler function */
@@ -50,189 +57,199 @@ HANDLE devilutionx_mpq;
 
 namespace {
 
-HANDLE init_test_access(const std::vector<std::string> &paths, const char *mpq_name, const char *reg_loc, int dwPriority, int fs)
+HANDLE LoadMPQ(const std::vector<std::string> &paths, const char *mpqName)
 {
 	HANDLE archive;
-	std::string mpq_abspath;
-	DWORD mpq_flags = 0;
-#if !defined(__SWITCH__) && !defined(__AMIGA__) && !defined(__vita__)
-	mpq_flags |= MPQ_FLAG_READ_ONLY;
-#endif
-	for (int i = 0; i < paths.size(); i++) {
-		mpq_abspath = paths[i] + mpq_name;
-		if (SFileOpenArchive(mpq_abspath.c_str(), dwPriority, mpq_flags, &archive)) {
-			SFileSetBasePath(paths[i].c_str());
+	std::string mpqAbsPath;
+	for (const auto &path : paths) {
+		mpqAbsPath = path + mpqName;
+		if (SFileOpenArchive(mpqAbsPath.c_str(), 0, MPQ_OPEN_READ_ONLY, &archive)) {
+			LogVerbose("  Found: {} in {}", mpqName, path);
+			SFileSetBasePath(path);
 			return archive;
 		}
+		if (SErrGetLastError() != STORM_ERROR_FILE_NOT_FOUND) {
+			LogError("Open error {}: {}", SErrGetLastError(), mpqAbsPath);
+		}
+	}
+	if (SErrGetLastError() == STORM_ERROR_FILE_NOT_FOUND) {
+		LogVerbose("Missing: {}", mpqName);
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 } // namespace
 
-/* data */
-
-char gszVersionNumber[64] = "internal version unknown";
-char gszProductName[64] = "DevilutionX vUnknown";
-
 void init_cleanup()
 {
-	if (gbIsMultiplayer) {
-		pfile_write_hero();
+	if (gbIsMultiplayer && gbRunGame) {
+		pfile_write_hero(/*writeGameData=*/false, /*clearTables=*/true);
 	}
-	pfile_flush_W();
 
-	if (spawn_mpq) {
+	if (spawn_mpq != nullptr) {
 		SFileCloseArchive(spawn_mpq);
-		spawn_mpq = NULL;
+		spawn_mpq = nullptr;
 	}
-	if (diabdat_mpq) {
+	if (diabdat_mpq != nullptr) {
 		SFileCloseArchive(diabdat_mpq);
-		diabdat_mpq = NULL;
+		diabdat_mpq = nullptr;
 	}
-	if (patch_rt_mpq) {
+	if (patch_rt_mpq != nullptr) {
 		SFileCloseArchive(patch_rt_mpq);
-		patch_rt_mpq = NULL;
+		patch_rt_mpq = nullptr;
 	}
-	if (hellfire_mpq) {
+	if (hellfire_mpq != nullptr) {
 		SFileCloseArchive(hellfire_mpq);
-		hellfire_mpq = NULL;
+		hellfire_mpq = nullptr;
 	}
-	if (hfmonk_mpq) {
+	if (hfmonk_mpq != nullptr) {
 		SFileCloseArchive(hfmonk_mpq);
-		hfmonk_mpq = NULL;
+		hfmonk_mpq = nullptr;
 	}
-	if (hfbard_mpq) {
+	if (hfbard_mpq != nullptr) {
 		SFileCloseArchive(hfbard_mpq);
-		hfbard_mpq = NULL;
+		hfbard_mpq = nullptr;
 	}
-	if (hfbarb_mpq) {
+	if (hfbarb_mpq != nullptr) {
 		SFileCloseArchive(hfbarb_mpq);
-		hfbarb_mpq = NULL;
+		hfbarb_mpq = nullptr;
 	}
-	if (hfmusic_mpq) {
+	if (hfmusic_mpq != nullptr) {
 		SFileCloseArchive(hfmusic_mpq);
-		hfmusic_mpq = NULL;
+		hfmusic_mpq = nullptr;
 	}
-	if (hfvoice_mpq) {
+	if (hfvoice_mpq != nullptr) {
 		SFileCloseArchive(hfvoice_mpq);
-		hfvoice_mpq = NULL;
+		hfvoice_mpq = nullptr;
 	}
-	if (hfopt1_mpq) {
+	if (hfopt1_mpq != nullptr) {
 		SFileCloseArchive(hfopt1_mpq);
-		hfopt1_mpq = NULL;
+		hfopt1_mpq = nullptr;
 	}
-	if (hfopt2_mpq) {
+	if (hfopt2_mpq != nullptr) {
 		SFileCloseArchive(hfopt2_mpq);
-		hfopt2_mpq = NULL;
+		hfopt2_mpq = nullptr;
 	}
-	if (devilutionx_mpq) {
-		SFileCloseArchive(patch_rt_mpq);
-		patch_rt_mpq = NULL;
+	if (devilutionx_mpq != nullptr) {
+		SFileCloseArchive(devilutionx_mpq);
+		devilutionx_mpq = nullptr;
 	}
 
 	NetClose();
 }
 
-static void init_get_file_info()
-{
-	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	snprintf(gszVersionNumber, sizeof(gszVersionNumber) / sizeof(char), "version %s", PROJECT_VERSION);
-}
-
 void init_archives()
 {
-	HANDLE fh = NULL;
-	memset(&fileinfo, 0, sizeof(fileinfo));
-	fileinfo.size = sizeof(fileinfo);
-	fileinfo.versionstring = gszVersionNumber;
-	init_get_file_info();
-
 	std::vector<std::string> paths;
-	paths.reserve(5);
-	paths.push_back(GetBasePath());
-	paths.push_back(GetPrefPath());
+	paths.push_back(paths::BasePath());
+	paths.push_back(paths::PrefPath());
 	if (paths[0] == paths[1])
 		paths.pop_back();
 
-#ifdef __linux__
-	paths.push_back("/usr/share/diasurgical/devilutionx/");
-	paths.push_back("/usr/local/share/diasurgical/devilutionx/");
+#if defined(__linux__) && !defined(__ANDROID__)
+	paths.emplace_back("/usr/share/diasurgical/devilutionx/");
+	paths.emplace_back("/usr/local/share/diasurgical/devilutionx/");
+#elif defined(__3DS__)
+	paths.emplace_back("romfs:/");
+#elif defined(_WIN64) || defined(_WIN32)
+	char gogpath[_FSG_PATH_MAX];
+	fsg_get_gog_game_path(gogpath, "1412601690");
+	if (strlen(gogpath) > 0) {
+		paths.emplace_back(std::string(gogpath) + "/");
+		paths.emplace_back(std::string(gogpath) + "/hellfire/");
+	}
 #endif
 
-	paths.push_back(""); // PWD
+	paths.emplace_back(""); // PWD
 
-	diabdat_mpq = init_test_access(paths, "DIABDAT.MPQ", "DiabloCD", 1000, FS_CD);
-	if (diabdat_mpq == NULL) {
-		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
-		diabdat_mpq = init_test_access(paths, "diabdat.mpq", "DiabloCD", 1000, FS_CD);
+	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
+		std::string message;
+		for (std::size_t i = 0; i < paths.size(); ++i) {
+			char prefix[32];
+			std::snprintf(prefix, sizeof(prefix), "\n%6u. '", static_cast<unsigned>(i + 1));
+			message.append(prefix);
+			message.append(paths[i]);
+			message += '\'';
+		}
+		LogVerbose("MPQ search paths:{}", message);
 	}
 
-	if (diabdat_mpq == NULL) {
-		spawn_mpq = init_test_access(paths, "spawn.mpq", "DiabloSpawn", 1000, FS_PC);
-		if (spawn_mpq != NULL)
+	// Load devilutionx.mpq first to get the font file for error messages
+	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+
+	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
+	if (diabdat_mpq == nullptr) {
+		// DIABDAT.MPQ is uppercase on the original CD and the GOG version.
+		diabdat_mpq = LoadMPQ(paths, "diabdat.mpq");
+	}
+
+	if (diabdat_mpq == nullptr) {
+		spawn_mpq = LoadMPQ(paths, "spawn.mpq");
+		if (spawn_mpq != nullptr)
 			gbIsSpawn = true;
 	}
+	HANDLE fh = nullptr;
 	if (!SFileOpenFile("ui_art\\title.pcx", &fh))
 		InsertCDDlg();
-	SFileCloseFile(fh);
+	SFileCloseFileThreadSafe(fh);
 
-	patch_rt_mpq = init_test_access(paths, "patch_rt.mpq", "DiabloInstall", 2000, FS_PC);
-	if (patch_rt_mpq == NULL)
-		patch_rt_mpq = init_test_access(paths, "patch_sh.mpq", "DiabloSpawn", 2000, FS_PC);
+	patch_rt_mpq = LoadMPQ(paths, "patch_rt.mpq");
+	if (patch_rt_mpq == nullptr)
+		patch_rt_mpq = LoadMPQ(paths, "patch_sh.mpq");
 
-	hellfire_mpq = init_test_access(paths, "hellfire.mpq", "DiabloInstall", 8000, FS_PC);
-	if (hellfire_mpq != NULL)
+	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
+	if (hellfire_mpq != nullptr)
 		gbIsHellfire = true;
-	hfmonk_mpq = init_test_access(paths, "hfmonk.mpq", "DiabloInstall", 8100, FS_PC);
-	hfbard_mpq = init_test_access(paths, "hfbard.mpq", "DiabloInstall", 8110, FS_PC);
-	if (hfbard_mpq != NULL)
+	hfmonk_mpq = LoadMPQ(paths, "hfmonk.mpq");
+	hfbard_mpq = LoadMPQ(paths, "hfbard.mpq");
+	if (hfbard_mpq != nullptr)
 		gbBard = true;
-	hfbarb_mpq = init_test_access(paths, "hfbarb.mpq", "DiabloInstall", 8120, FS_PC);
-	if (hfbarb_mpq != NULL)
+	hfbarb_mpq = LoadMPQ(paths, "hfbarb.mpq");
+	if (hfbarb_mpq != nullptr)
 		gbBarbarian = true;
-	hfmusic_mpq = init_test_access(paths, "hfmusic.mpq", "DiabloInstall", 8200, FS_PC);
-	hfvoice_mpq = init_test_access(paths, "hfvoice.mpq", "DiabloInstall", 8500, FS_PC);
-	hfopt1_mpq = init_test_access(paths, "hfopt1.mpq", "DiabloInstall", 8600, FS_PC);
-	hfopt2_mpq = init_test_access(paths, "hfopt2.mpq", "DiabloInstall", 8610, FS_PC);
+	hfmusic_mpq = LoadMPQ(paths, "hfmusic.mpq");
+	hfvoice_mpq = LoadMPQ(paths, "hfvoice.mpq");
+	hfopt1_mpq = LoadMPQ(paths, "hfopt1.mpq");
+	hfopt2_mpq = LoadMPQ(paths, "hfopt2.mpq");
 
-	if (gbIsHellfire && (hfmonk_mpq == NULL || hfmusic_mpq == NULL || hfvoice_mpq == NULL)) {
-		UiErrorOkDialog("Some Hellfire MPQs are missing", "Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files.");
-		app_fatal(NULL);
+	if (gbIsHellfire && (hfmonk_mpq == nullptr || hfmusic_mpq == nullptr || hfvoice_mpq == nullptr)) {
+		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
+		app_fatal(nullptr);
 	}
 
-	devilutionx_mpq = init_test_access(paths, "devilutionx.mpq", "DiabloInstall", 9000, FS_PC);
+	SFileSetAssetsPath(paths::AppPath() + "assets/");
 }
 
 void init_create_window()
 {
 	if (!SpawnWindow(PROJECT_NAME))
-		app_fatal("Unable to create main window");
+		app_fatal("%s", _("Unable to create main window"));
 	dx_init();
 	gbActive = true;
+#ifndef USE_SDL1
 	SDL_DisableScreenSaver();
+#endif
 }
 
-void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam)
+void MainWndProc(uint32_t msg)
 {
-	switch (Msg) {
+	switch (msg) {
 	case DVL_WM_PAINT:
 		force_redraw = 255;
 		break;
 	case DVL_WM_QUERYENDSESSION:
 		diablo_quit(0);
-		break;
 	}
 }
 
-WNDPROC SetWindowProc(WNDPROC NewProc)
+WNDPROC SetWindowProc(WNDPROC newProc)
 {
-	WNDPROC OldProc;
+	WNDPROC oldProc;
 
-	OldProc = CurrentProc;
-	CurrentProc = NewProc;
-	return OldProc;
+	oldProc = CurrentProc;
+	CurrentProc = newProc;
+	return oldProc;
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

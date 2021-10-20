@@ -3,23 +3,14 @@
  *
  * Interface of save game encryption algorithm.
  */
-#ifndef __CODEC_H__
-#define __CODEC_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "utils/stdcompat/cstddef.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
-int codec_decode(BYTE *pbSrcDst, DWORD size, const char *pszPassword);
-DWORD codec_get_encoded_len(DWORD dwSrcBytes);
-void codec_encode(BYTE *pbSrcDst, DWORD size, int size_64, const char *pszPassword);
+std::size_t codec_decode(byte *pbSrcDst, std::size_t size, const char *pszPassword);
+std::size_t codec_get_encoded_len(std::size_t dwSrcBytes);
+void codec_encode(byte *pbSrcDst, std::size_t size, std::size_t size_64, const char *pszPassword);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __CODEC_H__ */
+} // namespace devilution

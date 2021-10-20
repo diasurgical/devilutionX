@@ -1,0 +1,31 @@
+name: clang-format check
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  formatting-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Formatting Check (Source)
+      uses: jidicula/clang-format-action@v3.4.0
+      with:
+        clang-format-version: '11'
+        check-path: 'Source'
+        fallback-style: 'webkit'
+
+    - name: Formatting Check (test)
+      uses: jidicula/clang-format-action@v3.4.0
+      with:
+        clang-format-version: '11'
+        check-path: 'test'
+        fallback-style: 'webkit'

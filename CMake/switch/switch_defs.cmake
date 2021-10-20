@@ -1,10 +1,9 @@
-set(NONET ON)
-set(PREFILL_PLAYER_NAME ON)
+set(ASAN OFF)
+set(UBSAN OFF)
 
-# Streaming audio is broken on the Switch as of 25 Mar 2021:
-# https://github.com/devkitPro/SDL/issues/72
-set(DISABLE_STREAMING_MUSIC ON)
-set(DISABLE_STREAMING_SOUNDS ON)
+set(DEVILUTIONX_SYSTEM_LIBSODIUM OFF)
+set(DISABLE_ZERO_TIER ON)
+set(PREFILL_PLAYER_NAME ON)
 
 set(JOY_BUTTON_DPAD_LEFT 16)
 set(JOY_BUTTON_DPAD_UP 17)

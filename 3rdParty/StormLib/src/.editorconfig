@@ -1,0 +1,29 @@
+# StormLib is a mix of LF and CRLF files.
+
+[*]
+indent_style = space
+end_of_line = crlf
+
+[FileStream.h]
+end_of_line = lf
+
+[SBaseSubTypes.cpp]
+end_of_line = lf
+
+[SCompression.cpp]
+end_of_line = lf
+
+[SFileExtractFile.cpp]
+end_of_line = lf
+
+[SFileOpenArchive.cpp]
+end_of_line = lf
+
+[SFileReadFile.cpp]
+end_of_line = lf
+
+[StormLib.h]
+end_of_line = lf
+
+[StormPort.h]
+end_of_line = lf

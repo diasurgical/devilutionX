@@ -3,143 +3,130 @@
  *
  * Implementation of the character and main control panels
  */
-#include "all.h"
+#include "control.h"
 
+#include <algorithm>
+#include <array>
 #include <cstddef>
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <fmt/format.h>
 
-namespace {
+#include "DiabloUI/art.h"
+#include "DiabloUI/art_draw.h"
+#include "DiabloUI/diabloui.h"
+#include "automap.h"
+#include "controls/keymapper.hpp"
+#include "cursor.h"
+#include "engine/cel_sprite.hpp"
+#include "engine/load_cel.hpp"
+#include "engine/render/cel_render.hpp"
+#include "engine/render/text_render.hpp"
+#include "error.h"
+#include "gamemenu.h"
+#include "init.h"
+#include "inv.h"
+#include "inv_iterators.hpp"
+#include "lighting.h"
+#include "minitext.h"
+#include "missiles.h"
+#include "panels/charpanel.hpp"
+#include "panels/mainpanel.hpp"
+#include "qol/xpbar.h"
+#include "stores.h"
+#include "towners.h"
+#include "trigs.h"
+#include "utils/language.h"
+#include "utils/sdl_geometry.h"
+#include "utils/stdcompat/optional.hpp"
+#include "utils/utf8.h"
+#include "options.h"
 
-CelOutputBuffer pBtmBuff;
-CelOutputBuffer pLifeBuff;
-CelOutputBuffer pManaBuff;
+#ifdef _DEBUG
+#include "debug.h"
+#endif
 
-} // namespace
-
-BYTE sgbNextTalkSave;
-BYTE sgbTalkSavePos;
-BYTE *pDurIcons;
-BYTE *pChrButtons;
-BOOL drawhpflag;
-BOOL dropGoldFlag;
-BOOL panbtn[8];
-BOOL chrbtn[4];
-BYTE *pMultiBtns;
-BYTE *pPanelButtons;
-BYTE *pChrPanel;
-BOOL lvlbtndown;
-char sgszTalkSave[8][80];
+namespace devilution {
+/**
+ * @brief Set if the life flask needs to be redrawn during next frame
+ */
+bool drawhpflag;
+bool dropGoldFlag;
+bool chrbtn[4];
+bool lvlbtndown;
 int dropGoldValue;
-BOOL drawmanaflag;
-BOOL chrbtnactive;
-char sgszTalkMsg[MAX_SEND_STR_LEN];
-BYTE *pPanelText;
-BYTE *pTalkBtns;
-BOOL pstrjust[4];
+/**
+ * @brief Set if the mana flask needs to be redrawn during the next frame
+ */
+bool drawmanaflag;
+bool chrbtnactive;
 int pnumlines;
-BOOL pinfoflag;
-BOOL talkbtndown[3];
-spell_id pSpell;
-text_color infoclr;
-int sgbPlrTalkTbl;
-BYTE *pGBoxBuff;
-BYTE *pSBkBtnCel;
+UiFlags InfoColor;
 char tempstr[256];
-BOOLEAN whisper[MAX_PLRS];
 int sbooktab;
-spell_type pSplType;
-int initialDropGoldIndex;
-BOOL talkflag;
-BYTE *pSBkIconCels;
-BOOL sbookflag;
-BOOL chrflag;
-BOOL drawbtnflag;
-BYTE *pSpellBkCel;
+int8_t initialDropGoldIndex;
+bool talkflag;
+bool sbookflag;
+bool chrflag;
+bool drawbtnflag;
 char infostr[64];
-int numpanbtns;
-char panelstr[4][64];
-BOOL panelflag;
-BYTE SplTransTbl[256];
+bool panelflag;
 int initialDropGoldValue;
-BYTE *pSpellCels;
-BOOL panbtndown;
-BOOL spselflag;
+bool panbtndown;
+bool spselflag;
+Rectangle MainPanel;
+Rectangle LeftPanel;
+Rectangle RightPanel;
+std::optional<OwnedSurface> pBtmBuff;
 
-/** Map of hero class names */
-const char *const ClassStrTbl[] = {
-	"Warrior",
-	"Rogue",
-	"Sorcerer",
-	"Monk",
-	"Bard",
-	"Barbarian",
+extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
+
+/** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
+Rectangle ChrBtnsRect[4] = {
+	{ { 137, 138 }, { 41, 22 } },
+	{ { 137, 166 }, { 41, 22 } },
+	{ { 137, 195 }, { 41, 22 } },
+	{ { 137, 223 }, { 41, 22 } }
 };
 
-/** Maps from font index to smaltext.cel frame number. */
-const BYTE fontframe[128] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-	0, 54, 44, 57, 58, 56, 55, 47, 40, 41, 59, 39, 50, 37, 51, 52,
-	36, 27, 28, 29, 30, 31, 32, 33, 34, 35, 48, 49, 60, 38, 61, 53,
-	62, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 42, 63, 43, 64, 65,
-	0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-	16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 40, 66, 41, 67, 0
-};
-
-/**
- * Maps from smaltext.cel frame number to character width. Note, the
- * character width may be distinct from the frame width, which is 13 for every
- * smaltext.cel frame.
- */
-const BYTE fontkern[68] = {
-	8, 10, 7, 9, 8, 7, 6, 8, 8, 3,
-	3, 8, 6, 11, 9, 10, 6, 9, 9, 6,
-	9, 11, 10, 13, 10, 11, 7, 5, 7, 7,
-	8, 7, 7, 7, 7, 7, 10, 4, 5, 6,
-	3, 3, 4, 3, 6, 6, 3, 3, 3, 3,
-	3, 2, 7, 6, 3, 10, 10, 6, 6, 7,
-	4, 4, 9, 6, 6, 12, 3, 7
-};
-/**
- * Line start position for info box text when displaying 1, 2, 3, 4 and 5 lines respectivly
- */
-const int lineOffsets[5][5] = {
-	{ 82 },
-	{ 70, 94 },
-	{ 64, 82, 100 },
-	{ 60, 75, 89, 104 },
-	{ 58, 70, 82, 94, 105 },
-};
-
-/**
- * Maps ASCII character code to font index, as used by the
- * small, medium and large sized fonts; which corresponds to smaltext.cel,
- * medtexts.cel and bigtgold.cel respectively.
- */
-const BYTE gbFontTransTbl[256] = {
+/** Positions of panel buttons. */
+SDL_Rect PanBtnPos[8] = {
 	// clang-format off
-	'\0', 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
-	' ',  '!',  '\"', '#',  '$',  '%',  '&',  '\'', '(',  ')',  '*',  '+',  ',',  '-',  '.',  '/',
-	'0',  '1',  '2',  '3',  '4',  '5',  '6',  '7',  '8',  '9',  ':',  ';',  '<',  '=',  '>',  '?',
-	'@',  'A',  'B',  'C',  'D',  'E',  'F',  'G',  'H',  'I',  'J',  'K',  'L',  'M',  'N',  'O',
-	'P',  'Q',  'R',  'S',  'T',  'U',  'V',  'W',  'X',  'Y',  'Z',  '[',  '\\', ']',  '^',  '_',
-	'`',  'a',  'b',  'c',  'd',  'e',  'f',  'g',  'h',  'i',  'j',  'k',  'l',  'm',  'n',  'o',
-	'p',  'q',  'r',  's',  't',  'u',  'v',  'w',  'x',  'y',  'z',  '{',  '|',  '}',  '~',  0x01,
-	'C',  'u',  'e',  'a',  'a',  'a',  'a',  'c',  'e',  'e',  'e',  'i',  'i',  'i',  'A',  'A',
-	'E',  'a',  'A',  'o',  'o',  'o',  'u',  'u',  'y',  'O',  'U',  'c',  'L',  'Y',  'P',  'f',
-	'a',  'i',  'o',  'u',  'n',  'N',  'a',  'o',  '?',  0x01, 0x01, 0x01, 0x01, '!',  '<',  '>',
-	'o',  '+',  '2',  '3',  '\'', 'u',  'P',  '.',  ',',  '1',  '0',  '>',  0x01, 0x01, 0x01, '?',
-	'A',  'A',  'A',  'A',  'A',  'A',  'A',  'C',  'E',  'E',  'E',  'E',  'I',  'I',  'I',  'I',
-	'D',  'N',  'O',  'O',  'O',  'O',  'O',  'X',  '0',  'U',  'U',  'U',  'U',  'Y',  'b',  'B',
-	'a',  'a',  'a',  'a',  'a',  'a',  'a',  'c',  'e',  'e',  'e',  'e',  'i',  'i',  'i',  'i',
-	'o',  'n',  'o',  'o',  'o',  'o',  'o',  '/',  '0',  'u',  'u',  'u',  'u',  'y',  'b',  'y',
+	{   9,   9, 71, 19 }, // char button
+	{   9,  35, 71, 19 }, // quests button
+	{   9,  75, 71, 19 }, // map button
+	{   9, 101, 71, 19 }, // menu button
+	{ 560,   9, 71, 19 }, // inv button
+	{ 560,  35, 71, 19 }, // spells button
+	{  87,  91, 33, 32 }, // chat button
+	{ 527,  91, 33, 32 }, // friendly fire button
 	// clang-format on
 };
 
-/* data */
+namespace {
+
+std::optional<OwnedSurface> pLifeBuff;
+std::optional<OwnedSurface> pManaBuff;
+std::optional<CelSprite> talkButtons;
+std::optional<CelSprite> pDurIcons;
+std::optional<CelSprite> multiButtons;
+std::optional<CelSprite> pPanelButtons;
+std::optional<CelSprite> pGBoxBuff;
+std::optional<CelSprite> pSBkBtnCel;
+std::optional<CelSprite> pSBkIconCels;
+std::optional<CelSprite> pSpellBkCel;
+std::optional<CelSprite> pSpellCels;
+
+bool PanelButtons[8];
+int PanelButtonIndex;
+char TalkSave[8][80];
+uint8_t TalkSaveIndex;
+uint8_t NextTalkSave;
+char TalkMessage[MAX_SEND_STR_LEN];
+bool TalkButtonsDown[3];
+int sgbPlrTalkTbl;
+bool WhisperList[MAX_PLRS];
+char panelstr[4][64];
+uint8_t SplTransTbl[256];
 
 /** Maps from spell_id to spelicon.cel frame number. */
 char SpellITbl[] = {
@@ -196,38 +183,30 @@ char SpellITbl[] = {
 	35,
 	35,
 };
-/** Maps from panel_button_id to the position and dimensions of a panel button. */
-int PanBtnPos[8][5] = {
-	// clang-format off
-	{   9,   9, 71, 19, TRUE  }, // char button
-	{   9,  35, 71, 19, FALSE }, // quests button
-	{   9,  75, 71, 19, TRUE  }, // map button
-	{   9, 101, 71, 19, FALSE }, // menu button
-	{ 560,   9, 71, 19, TRUE  }, // inv button
-	{ 560,  35, 71, 19, FALSE }, // spells button
-	{  87,  91, 33, 32, TRUE  }, // chat button
-	{ 527,  91, 33, 32, TRUE  }, // friendly fire button
-	// clang-format on
+
+enum panel_button_id {
+	PanelButtonCharinfo,
+	PanelButtonQlog,
+	PanelButtonAutomap,
+	PanelButtonMainmenu,
+	PanelButtonInventory,
+	PanelButtonSpellbook,
+	PanelButtonSendmsg,
+	PanelButtonFriendly,
 };
+
 /** Maps from panel_button_id to hotkey name. */
-const char *const PanBtnHotKey[8] = { "'c'", "'q'", "Tab", "Esc", "'i'", "'b'", "Enter", NULL };
+const char *const PanBtnHotKey[8] = { "'c'", "'q'", N_("Tab"), N_("Esc"), "'i'", "'b'", N_("Enter"), nullptr };
 /** Maps from panel_button_id to panel button description. */
 const char *const PanBtnStr[8] = {
-	"Character Information",
-	"Quests log",
-	"Automap",
-	"Main Menu",
-	"Inventory",
-	"Spell book",
-	"Send Message",
-	"Player Attack"
-};
-/** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
-RECT32 ChrBtnsRect[4] = {
-	{ 137, 138, 41, 22 },
-	{ 137, 166, 41, 22 },
-	{ 137, 195, 41, 22 },
-	{ 137, 223, 41, 22 }
+	N_("Character Information"),
+	N_("Quests log"),
+	N_("Automap"),
+	N_("Main Menu"),
+	N_("Inventory"),
+	N_("Spell book"),
+	N_("Send Message"),
+	"" // Player attack
 };
 
 /** Maps from spellbook page number and position to spell_id. */
@@ -244,29 +223,57 @@ spell_id SpellPages[6][7] = {
 #define SPLROWICONLS 10
 #define SPLICONLAST (gbIsHellfire ? 52 : 43)
 
+void CalculatePanelAreas()
+{
+	MainPanel = {
+		{ (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT },
+		{ PANEL_WIDTH, PANEL_HEIGHT }
+	};
+	LeftPanel = {
+		{ 0, 0 },
+		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+	};
+	RightPanel = {
+		{ 0, 0 },
+		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+	};
+
+#ifdef VIRTUAL_GAMEPAD
+	LeftPanel.position.x = gnScreenWidth / 2 - LeftPanel.size.width;
+#else
+	if (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width > PANEL_WIDTH) {
+		LeftPanel.position.x = (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width - PANEL_WIDTH) / 2;
+	}
+#endif
+	LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
+
+#ifdef VIRTUAL_GAMEPAD
+	RightPanel.position.x = gnScreenWidth / 2;
+#else
+	RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
+#endif
+	RightPanel.position.y = LeftPanel.position.y;
+}
+
 /**
  * Draw spell cell onto the given buffer.
  * @param out Output buffer
- * @param xp Buffer coordinate
- * @param yp Buffer coordinate
- * @param Trans Pointer to the cel buffer.
+ * @param position Buffer coordinates
+ * @param cel The CEL sprite
  * @param nCel Index of the cel frame to draw. 0 based.
- * @param w Width of the frame.
  */
-static void DrawSpellCel(CelOutputBuffer out, int xp, int yp, BYTE *Trans, int nCel, int w)
+void DrawSpellCel(const Surface &out, Point position, const CelSprite &cel, int nCel)
 {
-	CelDrawLightTo(out, xp, yp, Trans, nCel, w, SplTransTbl);
+	CelDrawLightTo(out, position, cel, nCel, SplTransTbl);
 }
 
-void SetSpellTrans(char t)
+void SetSpellTrans(spell_type t)
 {
-	int i;
-
 	if (t == RSPLTYPE_SKILL) {
-		for (i = 0; i < 128; i++)
+		for (int i = 0; i < 128; i++)
 			SplTransTbl[i] = i;
 	}
-	for (i = 128; i < 256; i++)
+	for (int i = 128; i < 256; i++)
 		SplTransTbl[i] = i;
 	SplTransTbl[255] = 0;
 
@@ -275,7 +282,7 @@ void SetSpellTrans(char t)
 		SplTransTbl[PAL8_YELLOW] = PAL16_BLUE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_BLUE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_BLUE + 5;
-		for (i = PAL16_BLUE; i < PAL16_BLUE + 16; i++) {
+		for (int i = PAL16_BLUE; i < PAL16_BLUE + 16; i++) {
 			SplTransTbl[PAL16_BEIGE - PAL16_BLUE + i] = i;
 			SplTransTbl[PAL16_YELLOW - PAL16_BLUE + i] = i;
 			SplTransTbl[PAL16_ORANGE - PAL16_BLUE + i] = i;
@@ -285,7 +292,7 @@ void SetSpellTrans(char t)
 		SplTransTbl[PAL8_YELLOW] = PAL16_BEIGE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_BEIGE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_BEIGE + 5;
-		for (i = PAL16_BEIGE; i < PAL16_BEIGE + 16; i++) {
+		for (int i = PAL16_BEIGE; i < PAL16_BEIGE + 16; i++) {
 			SplTransTbl[PAL16_YELLOW - PAL16_BEIGE + i] = i;
 			SplTransTbl[PAL16_ORANGE - PAL16_BEIGE + i] = i;
 		}
@@ -294,7 +301,7 @@ void SetSpellTrans(char t)
 		SplTransTbl[PAL8_YELLOW] = PAL16_ORANGE + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_ORANGE + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_ORANGE + 5;
-		for (i = PAL16_ORANGE; i < PAL16_ORANGE + 16; i++) {
+		for (int i = PAL16_ORANGE; i < PAL16_ORANGE + 16; i++) {
 			SplTransTbl[PAL16_BEIGE - PAL16_ORANGE + i] = i;
 			SplTransTbl[PAL16_YELLOW - PAL16_ORANGE + i] = i;
 		}
@@ -303,7 +310,7 @@ void SetSpellTrans(char t)
 		SplTransTbl[PAL8_YELLOW] = PAL16_GRAY + 1;
 		SplTransTbl[PAL8_YELLOW + 1] = PAL16_GRAY + 3;
 		SplTransTbl[PAL8_YELLOW + 2] = PAL16_GRAY + 5;
-		for (i = PAL16_GRAY; i < PAL16_GRAY + 15; i++) {
+		for (int i = PAL16_GRAY; i < PAL16_GRAY + 15; i++) {
 			SplTransTbl[PAL16_BEIGE - PAL16_GRAY + i] = i;
 			SplTransTbl[PAL16_YELLOW - PAL16_GRAY + i] = i;
 			SplTransTbl[PAL16_ORANGE - PAL16_GRAY + i] = i;
@@ -312,157 +319,347 @@ void SetSpellTrans(char t)
 		SplTransTbl[PAL16_YELLOW + 15] = 0;
 		SplTransTbl[PAL16_ORANGE + 15] = 0;
 		break;
+	case RSPLTYPE_SKILL:
+		break;
 	}
+}
+
+void PrintSBookSpellType(const Surface &out, Point position, const std::string &text, uint8_t rectColorIndex)
+{
+	Point rect { position };
+	rect += Displacement { 0, -SPLICONLENGTH + 1 };
+
+	// Top
+	DrawHorizontalLine(out, rect, SPLICONLENGTH, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement { 0, 1 }, SPLICONLENGTH, rectColorIndex);
+
+	// Bottom
+	DrawHorizontalLine(out, rect + Displacement { 0, SPLICONLENGTH - 2 }, SPLICONLENGTH, rectColorIndex);
+	DrawHorizontalLine(out, rect + Displacement { 0, SPLICONLENGTH - 1 }, SPLICONLENGTH, rectColorIndex);
+
+	// Left Side
+	DrawVerticalLine(out, rect, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement { 1, 0 }, SPLICONLENGTH, rectColorIndex);
+
+	// Right Side
+	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 2, 0 }, SPLICONLENGTH, rectColorIndex);
+	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 1, 0 }, SPLICONLENGTH, rectColorIndex);
+
+	// Align the spell type text with bottom of spell icon
+	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, -15 };
+
+	// Draw a drop shadow below and to the left of the text
+	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
+	DrawString(out, text, position + Displacement { -1, -1 }, UiFlags::ColorBlack);
+	DrawString(out, text, position + Displacement { 1, -1 }, UiFlags::ColorBlack);
+	// Then draw the text over the top
+	DrawString(out, text, position, UiFlags::ColorWhite);
+}
+
+void PrintSBookHotkey(const Surface &out, Point position, const std::string &text)
+{
+	// Align the hot key text with the top-right corner of the spell icon
+	position += Displacement { SPLICONLENGTH - (GetLineWidth(text.c_str()) + 5), 5 - SPLICONLENGTH };
+
+	// Draw a drop shadow below and to the left of the text
+	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
+	// Then draw the text over the top
+	DrawString(out, text, position, UiFlags::ColorWhite);
 }
 
 /**
- * Sets the spell frame to draw and its position then draws it.
+ * Draws a section of the empty flask cel on top of the panel to create the illusion
+ * of the flask getting empty. This function takes a cel and draws a
+ * horizontal stripe of height (max-min) onto the given buffer.
+ * @param out Target buffer.
+ * @param position Buffer coordinate.
+ * @param celBuf Buffer of the empty flask cel.
+ * @param y0 Top of the flask cel section to draw.
+ * @param y1 Bottom of the flask cel section to draw.
  */
-static void DrawSpell(CelOutputBuffer out)
+void DrawFlaskTop(const Surface &out, Point position, const Surface &celBuf, int y0, int y1)
 {
-	char st;
-	int spl, tlvl;
-
-	spl = plr[myplr]._pRSpell;
-	st = plr[myplr]._pRSplType;
-
-	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
-	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
-		tlvl = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[spl];
-		if (!CheckSpell(myplr, spl, RSPLTYPE_SPELL, TRUE))
-			st = RSPLTYPE_INVALID;
-		if (tlvl <= 0)
-			st = RSPLTYPE_INVALID;
-	}
-	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
-		st = RSPLTYPE_INVALID;
-	if (plr[myplr]._pRSpell < 0)
-		st = RSPLTYPE_INVALID;
-	SetSpellTrans(st);
-	if (spl != SPL_INVALID)
-		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, SpellITbl[spl], SPLICONLENGTH);
-	else
-		DrawSpellCel(out, PANEL_X + 565, PANEL_Y + 119, pSpellCels, 27, SPLICONLENGTH);
+	out.BlitFrom(celBuf, SDL_Rect { 0, static_cast<decltype(SDL_Rect {}.y)>(y0), celBuf.w(), y1 - y0 }, position);
 }
 
-void DrawSpellList(CelOutputBuffer out)
+/**
+ * Draws the dome of the flask that protrudes above the panel top line.
+ * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
+ * into the target buffer.
+ * @param out The target buffer.
+ * @param celBuf Buffer of the empty flask cel.
+ * @param sourcePosition Source buffer start coordinate.
+ * @param targetPosition Target buffer coordinate.
+ * @param h How many lines of the source buffer that will be copied.
+ */
+void DrawFlask(const Surface &out, const Surface &celBuf, Point sourcePosition, Point targetPosition, int h)
 {
-	int x, y, c, s, t, v, lx, ly, trans;
-	Uint64 mask, spl;
+	constexpr int FlaskWidth = 59;
+	out.BlitFromSkipColorIndexZero(celBuf, MakeSdlRect(sourcePosition.x, sourcePosition.y, FlaskWidth, h), targetPosition);
+}
 
-	pSpell = SPL_INVALID;
-	infostr[0] = '\0';
-	x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-	y = PANEL_Y - 17;
-	ClearPanel();
+/**
+ * @brief Draws the part of the life/mana flasks protruding above the bottom panel
+ * @see DrawFlaskLower()
+ * @param out The display region to draw to
+ * @param sourceBuffer A sprite representing the appropriate background/empty flask style
+ * @param offset X coordinate offset for where the flask should be drawn
+ * @param fillPer How full the flask is (a value from 0 to 80)
+ */
+void DrawFlaskUpper(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
+{
+	// clamping because this function only draws the top 12% of the flask display
+	int emptyPortion = clamp(80 - fillPer, 0, 11) + 2; // +2 to account for the frame being included in the sprite
 
-	for (Sint32 i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
+	// Draw the empty part of the flask
+	DrawFlask(out, sourceBuffer, { 13, 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 }, emptyPortion);
+	if (emptyPortion < 13)
+		// Draw the filled part of the flask
+		DrawFlask(out, *pBtmBuff, { offset, emptyPortion + 3 }, { PANEL_LEFT + offset, PANEL_TOP - 13 + emptyPortion }, 13 - emptyPortion);
+}
+
+/**
+ * @brief Draws the part of the life/mana flasks inside the bottom panel
+ * @see DrawFlaskUpper()
+ * @param out The display region to draw to
+ * @param sourceBuffer A sprite representing the appropriate background/empty flask style
+ * @param offset X coordinate offset for where the flask should be drawn
+ * @param fillPer How full the flask is (a value from 0 to 80)
+ */
+void DrawFlaskLower(const Surface &out, const Surface &sourceBuffer, int offset, int fillPer)
+{
+	int filled = clamp(fillPer, 0, 69);
+
+	if (filled < 69)
+		DrawFlaskTop(out, { PANEL_X + offset, PANEL_Y }, sourceBuffer, 16, 85 - filled);
+
+	// It appears that the panel defaults to having a filled flask and DrawFlaskTop only overlays the appropriate amount of empty space.
+	// This draw might not be necessary?
+	if (filled > 0)
+		DrawPanelBox(out, { offset, 85 - filled, 88, filled }, { PANEL_X + offset, PANEL_Y + 69 - filled });
+}
+
+void SetButtonStateDown(int btnId)
+{
+	PanelButtons[btnId] = true;
+	drawbtnflag = true;
+	panbtndown = true;
+}
+
+void PrintInfo(const Surface &out)
+{
+	if (talkflag)
+		return;
+
+	const int LineStart[] = { 70, 58, 52, 48, 46 };
+	const int LineHeights[] = { 30, 24, 18, 15, 12 };
+
+	Rectangle line { { PANEL_X + 177, PANEL_Y + LineStart[pnumlines] }, { 288, 12 } };
+
+	if (infostr[0] != '\0') {
+		DrawString(out, infostr, line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
+		line.position.y += LineHeights[pnumlines];
+	}
+
+	for (int i = 0; i < pnumlines; i++) {
+		DrawString(out, panelstr[i], line, InfoColor | UiFlags::AlignCenter | UiFlags::KerningFitSpacing, 2);
+		line.position.y += LineHeights[pnumlines];
+	}
+}
+
+int CapStatPointsToAdd(int remainingStatPoints, const Player &player, CharacterAttribute attribute)
+{
+	int pointsToReachCap = player.GetMaximumAttributeValue(attribute) - player.GetBaseAttributeValue(attribute);
+
+	return std::min(remainingStatPoints, pointsToReachCap);
+}
+
+int DrawDurIcon4Item(const Surface &out, Item &pItem, int x, int c)
+{
+	if (pItem.isEmpty())
+		return x;
+	if (pItem._iDurability > 5)
+		return x;
+	if (c == 0) {
+		switch (pItem._itype) {
+		case ItemType::Sword:
+			c = 2;
+			break;
+		case ItemType::Axe:
+			c = 6;
+			break;
+		case ItemType::Bow:
+			c = 7;
+			break;
+		case ItemType::Mace:
+			c = 5;
+			break;
+		case ItemType::Staff:
+			c = 8;
+			break;
+		default:
+			c = 1;
+			break;
+		}
+	}
+	if (pItem._iDurability > 2)
+		c += 8;
+	CelDrawTo(out, { x, -17 + PANEL_Y }, *pDurIcons, c);
+	return x - 32 - 8;
+}
+
+void PrintSBookStr(const Surface &out, Point position, const char *text)
+{
+	DrawString(out, text, { GetPanelPosition(UiPanels::Spell, { SPLICONLENGTH + position.x, position.y }), { 222, 0 } }, UiFlags::ColorWhite);
+}
+
+spell_type GetSBookTrans(spell_id ii, bool townok)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	if ((myPlayer._pClass == HeroClass::Monk) && (ii == SPL_SEARCH))
+		return RSPLTYPE_SKILL;
+	spell_type st = RSPLTYPE_SPELL;
+	if ((myPlayer._pISpells & GetSpellBitmask(ii)) != 0) {
+		st = RSPLTYPE_CHARGES;
+	}
+	if ((myPlayer._pAblSpells & GetSpellBitmask(ii)) != 0) {
+		st = RSPLTYPE_SKILL;
+	}
+	if (st == RSPLTYPE_SPELL) {
+		if (CheckSpell(MyPlayerId, ii, st, true) != SpellCheckResult::Success) {
+			st = RSPLTYPE_INVALID;
+		}
+		if ((char)(myPlayer._pSplLvl[ii] + myPlayer._pISplLvlAdd) <= 0) {
+			st = RSPLTYPE_INVALID;
+		}
+	}
+	if (townok && currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[ii].sTownSpell) {
+		st = RSPLTYPE_INVALID;
+	}
+
+	return st;
+}
+
+void ControlSetGoldCurs(Player &player)
+{
+	SetPlrHandGoldCurs(player.HoldItem);
+	NewCursor(player.HoldItem._iCurs + CURSOR_FIRSTITEM);
+}
+
+void ResetTalkMsg()
+{
+#ifdef _DEBUG
+	if (CheckDebugTextCommand(TalkMessage))
+		return;
+#endif
+
+	uint32_t pmask = 0;
+
+	for (int i = 0; i < MAX_PLRS; i++) {
+		if (WhisperList[i])
+			pmask |= 1 << i;
+	}
+
+	NetSendCmdString(pmask, TalkMessage);
+}
+
+void ControlPressEnter()
+{
+	if (TalkMessage[0] != 0) {
+		ResetTalkMsg();
+		uint8_t i = 0;
+		for (; i < 8; i++) {
+			if (strcmp(TalkSave[i], TalkMessage) == 0)
+				break;
+		}
+		if (i >= 8) {
+			strcpy(TalkSave[NextTalkSave], TalkMessage);
+			NextTalkSave++;
+			NextTalkSave &= 7;
+		} else {
+			uint8_t talkSave = NextTalkSave - 1;
+			talkSave &= 7;
+			if (i != talkSave) {
+				strcpy(TalkSave[i], TalkSave[talkSave]);
+				strcpy(TalkSave[talkSave], TalkMessage);
+			}
+		}
+		TalkMessage[0] = '\0';
+		TalkSaveIndex = NextTalkSave;
+	}
+	control_reset_talk();
+}
+
+void ControlUpDown(int v)
+{
+	for (int i = 0; i < 8; i++) {
+		TalkSaveIndex = (v + TalkSaveIndex) & 7;
+		if (TalkSave[TalkSaveIndex][0] != 0) {
+			strcpy(TalkMessage, TalkSave[TalkSaveIndex]);
+			return;
+		}
+	}
+}
+
+void RemoveGold(Player &player, int goldIndex)
+{
+	int gi = goldIndex - INVITEM_INV_FIRST;
+	player.InvList[gi]._ivalue -= dropGoldValue;
+	if (player.InvList[gi]._ivalue > 0)
+		SetPlrHandGoldCurs(player.InvList[gi]);
+	else
+		player.RemoveInvItem(gi);
+	SetPlrHandItem(player.HoldItem, IDI_GOLD);
+	SetGoldSeed(player, player.HoldItem);
+	player.HoldItem._ivalue = dropGoldValue;
+	player.HoldItem._iStatFlag = true;
+	ControlSetGoldCurs(player);
+	player._pGold = CalculateGold(player);
+	dropGoldValue = 0;
+}
+
+struct SpellListItem {
+	Point location;
+	spell_type type;
+	spell_id id;
+	bool isSelected;
+};
+
+std::vector<SpellListItem> GetSpellListItems()
+{
+	std::vector<SpellListItem> spellListItems;
+
+	uint64_t mask;
+
+	int x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+	int y = PANEL_Y - 17;
+
+	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
+		auto &myPlayer = Players[MyPlayerId];
 		switch ((spell_type)i) {
 		case RSPLTYPE_SKILL:
-			SetSpellTrans(RSPLTYPE_SKILL);
-			mask = plr[myplr]._pAblSpells;
-			c = SPLICONLAST + 3;
+			mask = myPlayer._pAblSpells;
 			break;
 		case RSPLTYPE_SPELL:
-			mask = plr[myplr]._pMemSpells;
-			c = SPLICONLAST + 4;
+			mask = myPlayer._pMemSpells;
 			break;
 		case RSPLTYPE_SCROLL:
-			SetSpellTrans(RSPLTYPE_SCROLL);
-			mask = plr[myplr]._pScrlSpells;
-			c = SPLICONLAST + 1;
+			mask = myPlayer._pScrlSpells;
 			break;
 		case RSPLTYPE_CHARGES:
-			SetSpellTrans(RSPLTYPE_CHARGES);
-			mask = plr[myplr]._pISpells;
-			c = SPLICONLAST + 2;
+			mask = myPlayer._pISpells;
 			break;
 		case RSPLTYPE_INVALID:
 			break;
 		}
-		Sint32 j = SPL_FIREBOLT;
-		for (spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
-			if (!(mask & spl))
+		int8_t j = SPL_FIREBOLT;
+		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
+			if ((mask & spl) == 0)
 				continue;
-			if (i == RSPLTYPE_SPELL) {
-				s = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[j];
-				if (s < 0)
-					s = 0;
-				if (s > 0)
-					trans = RSPLTYPE_SPELL;
-				else
-					trans = RSPLTYPE_INVALID;
-				SetSpellTrans(trans);
-			}
-			if (currlevel == 0 && !spelldata[j].sTownSpell)
-				SetSpellTrans(RSPLTYPE_INVALID);
-			DrawSpellCel(out, x, y, pSpellCels, SpellITbl[j], SPLICONLENGTH);
-			lx = x;
-			ly = y - SPLICONLENGTH;
-			if (MouseX >= lx && MouseX < lx + SPLICONLENGTH && MouseY >= ly && MouseY < ly + SPLICONLENGTH) {
-				pSpell = (spell_id)j;
-				pSplType = (spell_type)i;
-				if (plr[myplr]._pClass == PC_MONK && j == SPL_SEARCH)
-					pSplType = RSPLTYPE_SKILL;
-				DrawSpellCel(out, x, y, pSpellCels, c, SPLICONLENGTH);
-				switch (pSplType) {
-				case RSPLTYPE_SKILL:
-					sprintf(infostr, "%s Skill", spelldata[pSpell].sSkillText);
-					break;
-				case RSPLTYPE_SPELL:
-					sprintf(infostr, "%s Spell", spelldata[pSpell].sNameText);
-					if (pSpell == SPL_HBOLT) {
-						sprintf(tempstr, "Damages undead only");
-						AddPanelString(tempstr, TRUE);
-					}
-					if (s == 0)
-						sprintf(tempstr, "Spell Level 0 - Unusable");
-					else
-						sprintf(tempstr, "Spell Level %i", s);
-					AddPanelString(tempstr, TRUE);
-					break;
-				case RSPLTYPE_SCROLL:
-					sprintf(infostr, "Scroll of %s", spelldata[pSpell].sNameText);
-					v = 0;
-					for (t = 0; t < plr[myplr]._pNumInv; t++) {
-						if (!plr[myplr].InvList[t].isEmpty()
-						    && (plr[myplr].InvList[t]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[t]._iMiscId == IMISC_SCROLLT)
-						    && plr[myplr].InvList[t]._iSpell == pSpell) {
-							v++;
-						}
-					}
-					for (t = 0; t < MAXBELTITEMS; t++) {
-						if (!plr[myplr].SpdList[t].isEmpty()
-						    && (plr[myplr].SpdList[t]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[t]._iMiscId == IMISC_SCROLLT)
-						    && plr[myplr].SpdList[t]._iSpell == pSpell) {
-							v++;
-						}
-					}
-					if (v == 1)
-						strcpy(tempstr, "1 Scroll");
-					else
-						sprintf(tempstr, "%i Scrolls", v);
-					AddPanelString(tempstr, TRUE);
-					break;
-				case RSPLTYPE_CHARGES:
-					sprintf(infostr, "Staff of %s", spelldata[pSpell].sNameText);
-					if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges == 1)
-						strcpy(tempstr, "1 Charge");
-					else
-						sprintf(tempstr, "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
-					AddPanelString(tempstr, TRUE);
-					break;
-				case RSPLTYPE_INVALID:
-					break;
-				}
-				for (t = 0; t < 4; t++) {
-					if (plr[myplr]._pSplHotKey[t] == pSpell && plr[myplr]._pSplTHotKey[t] == pSplType) {
-						DrawSpellCel(out, x, y, pSpellCels, t + SPLICONLAST + 5, SPLICONLENGTH);
-						sprintf(tempstr, "Spell Hotkey #F%i", t + 5);
-						AddPanelString(tempstr, TRUE);
-					}
-				}
-			}
+			int lx = x;
+			int ly = y - SPLICONLENGTH;
+			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
+			spellListItems.emplace_back(SpellListItem { { x, y }, (spell_type)i, (spell_id)j, isSelected });
 			x -= SPLICONLENGTH;
 			if (x == PANEL_X + 12 - SPLICONLENGTH) {
 				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
@@ -476,115 +673,223 @@ void DrawSpellList(CelOutputBuffer out)
 			y -= SPLICONLENGTH;
 		}
 	}
+
+	return spellListItems;
+}
+
+bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
+{
+	pSpell = spell_id::SPL_INVALID;
+	pSplType = spell_type::RSPLTYPE_INVALID;
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto &spellListItem : GetSpellListItems()) {
+		if (spellListItem.isSelected) {
+			pSpell = spellListItem.id;
+			pSplType = spellListItem.type;
+			if (myPlayer._pClass == HeroClass::Monk && spellListItem.id == SPL_SEARCH)
+				pSplType = RSPLTYPE_SKILL;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+} // namespace
+
+bool IsChatAvailable()
+{
+#ifdef _DEBUG
+	return true;
+#else
+	return gbIsMultiplayer;
+#endif
+}
+
+void DrawSpell(const Surface &out)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	spell_id spl = myPlayer._pRSpell;
+	spell_type st = myPlayer._pRSplType;
+
+	// BUGFIX: Move the next line into the if statement to avoid OOB (SPL_INVALID is -1) (fixed)
+	if (st == RSPLTYPE_SPELL && spl != SPL_INVALID) {
+		int tlvl = myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spl];
+		if (CheckSpell(MyPlayerId, spl, st, true) != SpellCheckResult::Success)
+			st = RSPLTYPE_INVALID;
+		if (tlvl <= 0)
+			st = RSPLTYPE_INVALID;
+	}
+	if (currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[spl].sTownSpell)
+		st = RSPLTYPE_INVALID;
+	SetSpellTrans(st);
+	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
+	const Point position { PANEL_X + 565, PANEL_Y + 119 };
+	DrawSpellCel(out, position, *pSpellCels, nCel);
+}
+
+void DrawSpellList(const Surface &out)
+{
+	infostr[0] = '\0';
+	ClearPanel();
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	for (auto &spellListItem : GetSpellListItems()) {
+		const spell_id spellId = spellListItem.id;
+		spell_type transType = spellListItem.type;
+		int spellLevel = 0;
+		const SpellData &spellDataItem = spelldata[static_cast<size_t>(spellListItem.id)];
+		if (currlevel == 0 && !spellDataItem.sTownSpell) {
+			transType = RSPLTYPE_INVALID;
+		}
+		if (spellListItem.type == RSPLTYPE_SPELL) {
+			spellLevel = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellListItem.id], 0);
+			if (spellLevel == 0)
+				transType = RSPLTYPE_INVALID;
+		}
+
+		SetSpellTrans(transType);
+		DrawSpellCel(out, spellListItem.location, *pSpellCels, SpellITbl[static_cast<size_t>(spellId)]);
+
+		if (!spellListItem.isSelected)
+			continue;
+
+		uint8_t spellColor = PAL16_GRAY + 5;
+
+		switch (spellListItem.type) {
+		case RSPLTYPE_SKILL:
+			spellColor = PAL16_YELLOW - 46;
+			PrintSBookSpellType(out, spellListItem.location, _("Skill"), spellColor);
+			strcpy(infostr, fmt::format(_("{:s} Skill"), pgettext("spell", spellDataItem.sSkillText)).c_str());
+			break;
+		case RSPLTYPE_SPELL:
+			if (myPlayer.plrlevel != 0) {
+				spellColor = PAL16_BLUE + 5;
+			}
+			PrintSBookSpellType(out, spellListItem.location, _("Spell"), spellColor);
+			strcpy(infostr, fmt::format(_("{:s} Spell"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			if (spellId == SPL_HBOLT) {
+				strcpy(tempstr, _("Damages undead only"));
+				AddPanelString(tempstr);
+			}
+			if (spellLevel == 0)
+				strcpy(tempstr, _("Spell Level 0 - Unusable"));
+			else
+				strcpy(tempstr, fmt::format(_("Spell Level {:d}"), spellLevel).c_str());
+			AddPanelString(tempstr);
+			break;
+		case RSPLTYPE_SCROLL: {
+			if (myPlayer.plrlevel != 0) {
+				spellColor = PAL16_RED - 59;
+			}
+			PrintSBookSpellType(out, spellListItem.location, _("Scroll"), spellColor);
+			strcpy(infostr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			const InventoryAndBeltPlayerItemsRange items { myPlayer };
+			const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+				return item.IsScrollOf(spellId);
+			});
+			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
+			AddPanelString(tempstr);
+		} break;
+		case RSPLTYPE_CHARGES: {
+			if (myPlayer.plrlevel != 0) {
+				spellColor = PAL16_ORANGE + 5;
+			}
+			PrintSBookSpellType(out, spellListItem.location, _("Staff"), spellColor);
+			strcpy(infostr, fmt::format(_("Staff of {:s}"), pgettext("spell", spellDataItem.sNameText)).c_str());
+			int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
+			strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", charges), charges).c_str());
+			AddPanelString(tempstr);
+		} break;
+		case RSPLTYPE_INVALID:
+			break;
+		}
+		for (int t = 0; t < 4; t++) {
+			if (myPlayer._pSplHotKey[t] == spellId && myPlayer._pSplTHotKey[t] == spellListItem.type) {
+				auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
+				PrintSBookHotkey(out, spellListItem.location, hotkeyName);
+				strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
+				AddPanelString(tempstr);
+			}
+		}
+	}
 }
 
 void SetSpell()
 {
-	spselflag = FALSE;
-	if (pSpell != SPL_INVALID) {
-		ClearPanel();
-		plr[myplr]._pRSpell = pSpell;
-		plr[myplr]._pRSplType = pSplType;
-		force_redraw = 255;
+	spell_id pSpell;
+	spell_type pSplType;
+
+	spselflag = false;
+	if (!GetSpellListSelection(pSpell, pSplType)) {
+		return;
 	}
+
+	ClearPanel();
+
+	auto &myPlayer = Players[MyPlayerId];
+	myPlayer._pRSpell = pSpell;
+	myPlayer._pRSplType = pSplType;
+
+	force_redraw = 255;
 }
 
 void SetSpeedSpell(int slot)
 {
-	if (pSpell != SPL_INVALID) {
-		for (int i = 0; i < 4; ++i) {
-			if (plr[myplr]._pSplHotKey[i] == pSpell && plr[myplr]._pSplTHotKey[i] == pSplType)
-				plr[myplr]._pSplHotKey[i] = SPL_INVALID;
-		}
-		plr[myplr]._pSplHotKey[slot] = pSpell;
-		plr[myplr]._pSplTHotKey[slot] = pSplType;
+	spell_id pSpell;
+	spell_type pSplType;
+
+	if (!GetSpellListSelection(pSpell, pSplType)) {
+		return;
 	}
+	auto &myPlayer = Players[MyPlayerId];
+	for (int i = 0; i < 4; ++i) {
+		if (myPlayer._pSplHotKey[i] == pSpell && myPlayer._pSplTHotKey[i] == pSplType)
+			myPlayer._pSplHotKey[i] = SPL_INVALID;
+	}
+	myPlayer._pSplHotKey[slot] = pSpell;
+	myPlayer._pSplTHotKey[slot] = pSplType;
 }
 
 void ToggleSpell(int slot)
 {
-	Uint64 spells;
+	uint64_t spells;
 
-	if (plr[myplr]._pSplHotKey[slot] == SPL_INVALID) {
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (myPlayer._pSplHotKey[slot] == SPL_INVALID) {
 		return;
 	}
 
-	switch (plr[myplr]._pSplTHotKey[slot]) {
+	switch (myPlayer._pSplTHotKey[slot]) {
 	case RSPLTYPE_SKILL:
-		spells = plr[myplr]._pAblSpells;
+		spells = myPlayer._pAblSpells;
 		break;
 	case RSPLTYPE_SPELL:
-		spells = plr[myplr]._pMemSpells;
+		spells = myPlayer._pMemSpells;
 		break;
 	case RSPLTYPE_SCROLL:
-		spells = plr[myplr]._pScrlSpells;
+		spells = myPlayer._pScrlSpells;
 		break;
 	case RSPLTYPE_CHARGES:
-		spells = plr[myplr]._pISpells;
+		spells = myPlayer._pISpells;
 		break;
 	case RSPLTYPE_INVALID:
 		return;
 	}
 
-	if (spells & GetSpellBitmask(plr[myplr]._pSplHotKey[slot])) {
-		plr[myplr]._pRSpell = plr[myplr]._pSplHotKey[slot];
-		plr[myplr]._pRSplType = plr[myplr]._pSplTHotKey[slot];
+	if ((spells & GetSpellBitmask(myPlayer._pSplHotKey[slot])) != 0) {
+		myPlayer._pRSpell = myPlayer._pSplHotKey[slot];
+		myPlayer._pRSplType = myPlayer._pSplTHotKey[slot];
 		force_redraw = 255;
 	}
 }
 
-void PrintChar(CelOutputBuffer out, int sx, int sy, int nCel, text_color col)
-{
-	int i;
-	BYTE pix;
-	BYTE tbl[256];
-
-	switch (col) {
-	case COL_WHITE:
-		CelDrawTo(out, sx, sy, pPanelText, nCel, 13);
-		return;
-	case COL_BLUE:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix > PAL16_GRAY + 13)
-				pix = PAL16_BLUE + 15;
-			else if (pix >= PAL16_GRAY)
-				pix -= PAL16_GRAY - (PAL16_BLUE + 2);
-			tbl[i] = pix;
-		}
-		break;
-	case COL_RED:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix >= PAL16_GRAY)
-				pix -= PAL16_GRAY - PAL16_RED;
-			tbl[i] = pix;
-		}
-		break;
-	case COL_GOLD:
-		for (i = 0; i < 256; i++) {
-			pix = i;
-			if (pix >= PAL16_GRAY) {
-				if (pix >= PAL16_GRAY + 14)
-					pix = PAL16_YELLOW + 15;
-				else
-					pix -= PAL16_GRAY - (PAL16_YELLOW + 2);
-			}
-			tbl[i] = pix;
-		}
-		break;
-	case COL_BLACK:
-		light_table_index = 15;
-		CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, NULL);
-		return;
-	}
-	CelDrawLightTo(out, sx, sy, pPanelText, nCel, 13, tbl);
-}
-
-void AddPanelString(const char *str, BOOL just)
+void AddPanelString(const char *str)
 {
 	strcpy(panelstr[pnumlines], str);
-	pstrjust[pnumlines] = just;
 
 	if (pnumlines < 4)
 		pnumlines++;
@@ -593,317 +898,209 @@ void AddPanelString(const char *str, BOOL just)
 void ClearPanel()
 {
 	pnumlines = 0;
-	pinfoflag = FALSE;
 }
 
-void DrawPanelBox(CelOutputBuffer out, int x, int y, int w, int h, int sx, int sy)
+Point GetPanelPosition(UiPanels panel, Point offset)
 {
-	const BYTE *src = pBtmBuff.at(x, y);
-	BYTE *dst = out.at(sx, sy);
+	Displacement displacement { offset.x, offset.y };
 
-	for (int hgt = h; hgt; hgt--, src += pBtmBuff.pitch(), dst += out.pitch()) {
-		memcpy(dst, src, w);
+	switch (panel) {
+	case UiPanels::Main:
+		return MainPanel.position + displacement;
+	case UiPanels::Quest:
+	case UiPanels::Character:
+		return LeftPanel.position + displacement;
+	case UiPanels::Spell:
+	case UiPanels::Inventory:
+		return RightPanel.position + displacement;
+	default:
+		return MainPanel.position + displacement;
 	}
 }
 
-/**
- * Draws a section of the empty flask cel on top of the panel to create the illusion
- * of the flask getting empty. This function takes a cel and draws a
- * horizontal stripe of height (max-min) onto the given buffer.
- * @param out Target buffer.
- * @param sx Buffer coordinate
- * @param sy Buffer coordinate
- * @param celBuf Buffer of the empty flask cel.
- * @param y0 Top of the flask cel section to draw.
- * @param y1 Bottom of the flask cel section to draw.
- */
-static void DrawFlaskTop(CelOutputBuffer out, int sx, int sy, CelOutputBuffer celBuf, int y0, int y1)
+void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition)
 {
-	const BYTE *src = celBuf.at(0, y0);
-	BYTE *dst = out.at(sx, sy);
-
-	for (int h = y1 - y0; h != 0; --h, src += celBuf.pitch(), dst += out.pitch())
-		memcpy(dst, src, celBuf.w());
+	out.BlitFrom(*pBtmBuff, srcRect, targetPosition);
 }
 
-/**
- * Draws the dome of the flask that protrudes above the panel top line.
- * It draws a rectangle of fixed width 59 and height 'h' from the source buffer
- * into the target buffer.
- * @param out The target buffer.
- * @param celBuf Buffer of the empty flask cel.
- * @param celX Source buffer start coordinate.
- * @param celY Source buffer start coordinate.
- * @param sx Target buffer coordinate.
- * @param sy Target buffer coordinate.
- * @param h How many lines of the source buffer that will be copied.
- */
-static void DrawFlask(CelOutputBuffer out, CelOutputBuffer celBuf, int celX, int celY, int x, int y, int h)
+void DrawLifeFlaskUpper(const Surface &out)
 {
-	int wdt, hgt;
-	const BYTE *src = celBuf.at(celX, celY);
-	BYTE *dst = out.at(x, y);
-
-	for (hgt = h; hgt; hgt--, src += celBuf.pitch() - 59, dst += out.pitch() - 59) {
-		for (wdt = 59; wdt; wdt--) {
-			if (*src)
-				*dst = *src;
-			src++;
-			dst++;
-		}
-	}
+	constexpr int LifeFlaskUpperOffset = 109;
+	DrawFlaskUpper(out, *pLifeBuff, LifeFlaskUpperOffset, Players[MyPlayerId]._pHPPer);
 }
 
-void DrawLifeFlask(CelOutputBuffer out)
+void DrawManaFlaskUpper(const Surface &out)
 {
-	double p;
-	int filled;
-
-	p = 0.0;
-	if (plr[myplr]._pMaxHP > 0) {
-		p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
-	}
-	plr[myplr]._pHPPer = p;
-	filled = plr[myplr]._pHPPer;
-
-	if (filled > 80)
-		filled = 80;
-
-	filled = 80 - filled;
-	if (filled > 11)
-		filled = 11;
-	filled += 2;
-
-	DrawFlask(out, pLifeBuff, 13, 3, PANEL_LEFT + 109, PANEL_TOP - 13, filled);
-	if (filled != 13)
-		DrawFlask(out, pBtmBuff, 109, filled + 3, PANEL_LEFT + 109, PANEL_TOP - 13 + filled, 13 - filled);
+	constexpr int ManaFlaskUpperOffset = 475;
+	DrawFlaskUpper(out, *pManaBuff, ManaFlaskUpperOffset, Players[MyPlayerId]._pManaPer);
 }
 
-void UpdateLifeFlask(CelOutputBuffer out)
+void DrawLifeFlaskLower(const Surface &out)
 {
-	double p;
-	int filled;
-
-	p = 0.0;
-	if (plr[myplr]._pMaxHP > 0) {
-		p = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
-	}
-	filled = p;
-	plr[myplr]._pHPPer = filled;
-
-	if (filled > 69)
-		filled = 69;
-	else if (filled < 0)
-		filled = 0;
-	if (filled != 69)
-		DrawFlaskTop(out, 96 + PANEL_X, PANEL_Y, pLifeBuff, 16, 85 - filled);
-	if (filled != 0)
-		DrawPanelBox(out, 96, 85 - filled, 88, filled, 96 + PANEL_X, PANEL_Y + 69 - filled);
+	constexpr int LifeFlaskLowerOffset = 96;
+	DrawFlaskLower(out, *pLifeBuff, LifeFlaskLowerOffset, Players[MyPlayerId]._pHPPer);
 }
 
-void DrawManaFlask(CelOutputBuffer out)
+void DrawManaFlaskLower(const Surface &out)
 {
-	int filled = plr[myplr]._pManaPer;
-	if (filled > 80)
-		filled = 80;
-	filled = 80 - filled;
-	if (filled > 11)
-		filled = 11;
-	filled += 2;
-
-	DrawFlask(out, pManaBuff, 13, 3, PANEL_LEFT + 475, PANEL_TOP - 13, filled);
-	if (filled != 13)
-		DrawFlask(out, pBtmBuff, 475, filled + 3, PANEL_LEFT + 475, PANEL_TOP - 13 + filled, 13 - filled);
+	constexpr int ManaFlaskLowerOffeset = 464;
+	DrawFlaskLower(out, *pManaBuff, ManaFlaskLowerOffeset, Players[MyPlayerId]._pManaPer);
 }
 
 void control_update_life_mana()
 {
-	int manaPer;
-	int maxMana = plr[myplr]._pMaxMana;
-	int mana = plr[myplr]._pMana;
-	if (maxMana < 0)
-		maxMana = 0;
-	if (mana < 0)
-		mana = 0;
-	if (maxMana == 0)
-		manaPer = 0;
-	else
-		manaPer = (double)mana / (double)maxMana * 80.0;
-	plr[myplr]._pManaPer = manaPer;
-	plr[myplr]._pHPPer = (double)plr[myplr]._pHitPoints / (double)plr[myplr]._pMaxHP * 80.0;
-}
-
-void UpdateManaFlask(CelOutputBuffer out)
-{
-	int filled;
-	int maxMana = plr[myplr]._pMaxMana;
-	int mana = plr[myplr]._pMana;
-	if (maxMana < 0)
-		maxMana = 0;
-	if (mana < 0)
-		mana = 0;
-
-	if (maxMana == 0)
-		filled = 0;
-	else
-		filled = (double)mana / (double)maxMana * 80.0;
-
-	plr[myplr]._pManaPer = filled;
-
-	if (filled > 69)
-		filled = 69;
-	if (filled != 69)
-		DrawFlaskTop(out, PANEL_X + 464, PANEL_Y, pManaBuff, 16, 85 - filled);
-	if (filled != 0)
-		DrawPanelBox(out, 464, 85 - filled, 88, filled, PANEL_X + 464, PANEL_Y + 69 - filled);
-
-	DrawSpell(out);
+	Players[MyPlayerId].UpdateManaPercentage();
+	Players[MyPlayerId].UpdateHitPointPercentage();
 }
 
 void InitControlPan()
 {
-	int i;
-	pBtmBuff = CelOutputBuffer::Alloc(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (gbIsMultiplayer ? 2 : 1));
-	pManaBuff = CelOutputBuffer::Alloc(88, 88);
-	pLifeBuff = CelOutputBuffer::Alloc(88, 88);
+	pBtmBuff.emplace(PANEL_WIDTH, (PANEL_HEIGHT + 16) * (IsChatAvailable() ? 2 : 1));
+	pManaBuff.emplace(88, 88);
+	pLifeBuff.emplace(88, 88);
 
-	pPanelText = LoadFileInMem("CtrlPan\\SmalText.CEL", NULL);
-	pChrPanel = LoadFileInMem("Data\\Char.CEL", NULL);
+	LoadCharPanel();
+
 	if (!gbIsHellfire)
-		pSpellCels = LoadFileInMem("CtrlPan\\SpelIcon.CEL", NULL);
+		pSpellCels = LoadCel("CtrlPan\\SpelIcon.CEL", SPLICONLENGTH);
 	else
-		pSpellCels = LoadFileInMem("Data\\SpelIcon.CEL", NULL);
+		pSpellCels = LoadCel("Data\\SpelIcon.CEL", SPLICONLENGTH);
 	SetSpellTrans(RSPLTYPE_SKILL);
-	BYTE *pStatusPanel = LoadFileInMem("CtrlPan\\Panel8.CEL", NULL);
-	CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) - 1, pStatusPanel, 1, PANEL_WIDTH);
-	MemFreeDbg(pStatusPanel);
-	pStatusPanel = LoadFileInMem("CtrlPan\\P8Bulbs.CEL", NULL);
-	CelDrawUnsafeTo(pLifeBuff, 0, 87, pStatusPanel, 1, 88);
-	CelDrawUnsafeTo(pManaBuff, 0, 87, pStatusPanel, 2, 88);
-	MemFreeDbg(pStatusPanel);
-	talkflag = FALSE;
-	if (gbIsMultiplayer) {
-		BYTE *pTalkPanel = LoadFileInMem("CtrlPan\\TalkPanl.CEL", NULL);
-		CelDrawUnsafeTo(pBtmBuff, 0, (PANEL_HEIGHT + 16) * 2 - 1, pTalkPanel, 1, PANEL_WIDTH);
-		MemFreeDbg(pTalkPanel);
-		pMultiBtns = LoadFileInMem("CtrlPan\\P8But2.CEL", NULL);
-		pTalkBtns = LoadFileInMem("CtrlPan\\TalkButt.CEL", NULL);
-		sgbPlrTalkTbl = 0;
-		sgszTalkMsg[0] = '\0';
-		for (i = 0; i < MAX_PLRS; i++)
-			whisper[i] = TRUE;
-		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
-			talkbtndown[i] = FALSE;
+	CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) - 1 }, LoadCel("CtrlPan\\Panel8.CEL", PANEL_WIDTH), 1);
+	{
+		const Point bulbsPosition { 0, 87 };
+		const CelSprite statusPanel = LoadCel("CtrlPan\\P8Bulbs.CEL", 88);
+		CelDrawUnsafeTo(*pLifeBuff, bulbsPosition, statusPanel, 1);
+		CelDrawUnsafeTo(*pManaBuff, bulbsPosition, statusPanel, 2);
 	}
-	panelflag = FALSE;
-	lvlbtndown = FALSE;
-	pPanelButtons = LoadFileInMem("CtrlPan\\Panel8bu.CEL", NULL);
-	for (i = 0; i < sizeof(panbtn) / sizeof(panbtn[0]); i++)
-		panbtn[i] = FALSE;
-	panbtndown = FALSE;
-	if (!gbIsMultiplayer)
-		numpanbtns = 6;
+	talkflag = false;
+	if (IsChatAvailable()) {
+		CelDrawUnsafeTo(*pBtmBuff, { 0, (PANEL_HEIGHT + 16) * 2 - 1 }, LoadCel("CtrlPan\\TalkPanl.CEL", PANEL_WIDTH), 1);
+		multiButtons = LoadCel("CtrlPan\\P8But2.CEL", 33);
+		talkButtons = LoadCel("CtrlPan\\TalkButt.CEL", 61);
+		sgbPlrTalkTbl = 0;
+		TalkMessage[0] = '\0';
+		for (bool &whisper : WhisperList)
+			whisper = true;
+		for (bool &talkButtonDown : TalkButtonsDown)
+			talkButtonDown = false;
+	}
+	LoadMainPanel();
+	panelflag = false;
+	lvlbtndown = false;
+	pPanelButtons = LoadCel("CtrlPan\\Panel8bu.CEL", 71);
+	ClearPanBtn();
+	if (!IsChatAvailable())
+		PanelButtonIndex = 6;
 	else
-		numpanbtns = 8;
-	pChrButtons = LoadFileInMem("Data\\CharBut.CEL", NULL);
-	for (i = 0; i < sizeof(chrbtn) / sizeof(chrbtn[0]); i++)
-		chrbtn[i] = FALSE;
-	chrbtnactive = FALSE;
-	pDurIcons = LoadFileInMem("Items\\DurIcons.CEL", NULL);
+		PanelButtonIndex = 8;
+	pChrButtons = LoadCel("Data\\CharBut.CEL", 41);
+	for (bool &buttonEnabled : chrbtn)
+		buttonEnabled = false;
+	chrbtnactive = false;
+	pDurIcons = LoadCel("Items\\DurIcons.CEL", 32);
 	strcpy(infostr, "");
 	ClearPanel();
-	drawhpflag = TRUE;
-	drawmanaflag = TRUE;
-	chrflag = FALSE;
-	spselflag = FALSE;
-	pSpellBkCel = LoadFileInMem("Data\\SpellBk.CEL", NULL);
-	pSBkBtnCel = LoadFileInMem("Data\\SpellBkB.CEL", NULL);
-	pSBkIconCels = LoadFileInMem("Data\\SpellI2.CEL", NULL);
+	drawhpflag = true;
+	drawmanaflag = true;
+	chrflag = false;
+	spselflag = false;
+	pSpellBkCel = LoadCel("Data\\SpellBk.CEL", SPANEL_WIDTH);
+
+	if (gbIsHellfire) {
+		static const int SBkBtnHellfireWidths[] = { 0, 61, 61, 61, 61, 61, 76 };
+		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", SBkBtnHellfireWidths);
+	} else {
+		pSBkBtnCel = LoadCel("Data\\SpellBkB.CEL", 76);
+	}
+	pSBkIconCels = LoadCel("Data\\SpellI2.CEL", 37);
 	sbooktab = 0;
-	sbookflag = FALSE;
-	if (plr[myplr]._pClass == PC_WARRIOR) {
+	sbookflag = false;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (myPlayer._pClass == HeroClass::Warrior) {
 		SpellPages[0][0] = SPL_REPAIR;
-	} else if (plr[myplr]._pClass == PC_ROGUE) {
+	} else if (myPlayer._pClass == HeroClass::Rogue) {
 		SpellPages[0][0] = SPL_DISARM;
-	} else if (plr[myplr]._pClass == PC_SORCERER) {
+	} else if (myPlayer._pClass == HeroClass::Sorcerer) {
 		SpellPages[0][0] = SPL_RECHARGE;
-	} else if (plr[myplr]._pClass == PC_MONK) {
+	} else if (myPlayer._pClass == HeroClass::Monk) {
 		SpellPages[0][0] = SPL_SEARCH;
-	} else if (plr[myplr]._pClass == PC_BARD) {
+	} else if (myPlayer._pClass == HeroClass::Bard) {
 		SpellPages[0][0] = SPL_IDENTIFY;
-	} else if (plr[myplr]._pClass == PC_BARBARIAN) {
+	} else if (myPlayer._pClass == HeroClass::Barbarian) {
 		SpellPages[0][0] = SPL_BLODBOIL;
 	}
-	pQLogCel = LoadFileInMem("Data\\Quest.CEL", NULL);
-	pGBoxBuff = LoadFileInMem("CtrlPan\\Golddrop.cel", NULL);
-	dropGoldFlag = FALSE;
+	pQLogCel = LoadCel("Data\\Quest.CEL", SPANEL_WIDTH);
+	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
+	dropGoldFlag = false;
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
+
+	CalculatePanelAreas();
 }
 
-void DrawCtrlPan(CelOutputBuffer out)
+void DrawCtrlPan(const Surface &out)
 {
-	DrawPanelBox(out, 0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT, PANEL_X, PANEL_Y);
+	DrawPanelBox(out, { 0, sgbPlrTalkTbl + 16, PANEL_WIDTH, PANEL_HEIGHT }, { PANEL_X, PANEL_Y });
 	DrawInfoBox(out);
 }
 
-void DrawCtrlBtns(CelOutputBuffer out)
+void DrawCtrlBtns(const Surface &out)
 {
-	int i;
-
-	for (i = 0; i < 6; i++) {
-		if (!panbtn[i])
-			DrawPanelBox(out, PanBtnPos[i][0], PanBtnPos[i][1] + 16, 71, 20, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y);
-		else
-			CelDrawTo(out, PanBtnPos[i][0] + PANEL_X, PanBtnPos[i][1] + PANEL_Y + 18, pPanelButtons, i + 1, 71);
+	for (int i = 0; i < 6; i++) {
+		if (!PanelButtons[i]) {
+			DrawPanelBox(out, { PanBtnPos[i].x, PanBtnPos[i].y + 16, 71, 20 }, { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y });
+		} else {
+			Point position { PanBtnPos[i].x + PANEL_X, PanBtnPos[i].y + PANEL_Y + 18 };
+			CelDrawTo(out, position, *pPanelButtons, i + 1);
+			DrawArt(out, position + Displacement { 4, -18 }, &PanelButtonDown, i);
+		}
 	}
-	if (numpanbtns == 8) {
-		CelDrawTo(out, 87 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[6] + 1, 33);
+	if (PanelButtonIndex == 8) {
+		CelDrawTo(out, { 87 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[6] ? 2 : 1);
 		if (gbFriendlyMode)
-			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 3, 33);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 4 : 3);
 		else
-			CelDrawTo(out, 527 + PANEL_X, 122 + PANEL_Y, pMultiBtns, panbtn[7] + 5, 33);
+			CelDrawTo(out, { 527 + PANEL_X, 122 + PANEL_Y }, *multiButtons, PanelButtons[7] ? 6 : 5);
 	}
 }
 
-/**
- * Draws the "Speed Book": the rows of known spells for quick-setting a spell that
- * show up when you click the spell slot at the control panel.
- */
 void DoSpeedBook()
 {
-	int xo, yo, X, Y, i, j;
+	spselflag = true;
+	int xo = PANEL_X + 12 + SPLICONLENGTH * 10;
+	int yo = PANEL_Y - 17;
+	int x = xo + SPLICONLENGTH / 2;
+	int y = yo - SPLICONLENGTH / 2;
 
-	spselflag = TRUE;
-	xo = PANEL_X + 12 + SPLICONLENGTH * 10;
-	yo = PANEL_Y - 17;
-	X = xo + SPLICONLENGTH / 2;
-	Y = yo - SPLICONLENGTH / 2;
+	auto &myPlayer = Players[MyPlayerId];
 
-	if (plr[myplr]._pRSpell != SPL_INVALID) {
-		for (i = 0; i < 4; i++) {
-			Uint64 spells;
+	if (myPlayer._pRSpell != SPL_INVALID) {
+		for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
+			uint64_t spells;
 			switch (i) {
 			case RSPLTYPE_SKILL:
-				spells = plr[myplr]._pAblSpells;
+				spells = myPlayer._pAblSpells;
 				break;
 			case RSPLTYPE_SPELL:
-				spells = plr[myplr]._pMemSpells;
+				spells = myPlayer._pMemSpells;
 				break;
 			case RSPLTYPE_SCROLL:
-				spells = plr[myplr]._pScrlSpells;
+				spells = myPlayer._pScrlSpells;
 				break;
 			case RSPLTYPE_CHARGES:
-				spells = plr[myplr]._pISpells;
+				spells = myPlayer._pISpells;
 				break;
 			}
-			Uint64 spell = 1;
-			for (j = 1; j < MAX_SPELLS; j++) {
-				if (spell & spells) {
-					if (j == plr[myplr]._pRSpell && i == plr[myplr]._pRSplType) {
-						X = xo + SPLICONLENGTH / 2;
-						Y = yo - SPLICONLENGTH / 2;
+			uint64_t spell = 1;
+			for (int j = 1; j < MAX_SPELLS; j++) {
+				if ((spell & spells) != 0) {
+					if (j == myPlayer._pRSpell && i == myPlayer._pRSplType) {
+						x = xo + SPLICONLENGTH / 2;
+						y = yo - SPLICONLENGTH / 2;
 					}
 					xo -= SPLICONLENGTH;
 					if (xo == PANEL_X + 12 - SPLICONLENGTH) {
@@ -913,7 +1110,7 @@ void DoSpeedBook()
 				}
 				spell <<= 1ULL;
 			}
-			if (spells && xo != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
+			if (spells != 0 && xo != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
 				xo -= SPLICONLENGTH;
 			if (xo == PANEL_X + 12 - SPLICONLENGTH) {
 				xo = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
@@ -922,31 +1119,35 @@ void DoSpeedBook()
 		}
 	}
 
-	SetCursorPos(X, Y);
+	SetCursorPos({ x, y });
 }
 
-/**
- * Checks if the mouse cursor is within any of the panel buttons and flag it if so.
- */
+void ClearPanBtn()
+{
+	for (bool &panelButton : PanelButtons)
+		panelButton = false;
+	drawbtnflag = true;
+	panbtndown = false;
+}
+
 void DoPanBtn()
 {
-	int i;
-
-	for (i = 0; i < numpanbtns; i++) {
-		int x = PanBtnPos[i][0] + PANEL_LEFT + PanBtnPos[i][2];
-		int y = PanBtnPos[i][1] + PANEL_TOP + PanBtnPos[i][3];
-		if (MouseX >= PanBtnPos[i][0] + PANEL_LEFT && MouseX <= x) {
-			if (MouseY >= PanBtnPos[i][1] + PANEL_TOP && MouseY <= y) {
-				panbtn[i] = TRUE;
-				drawbtnflag = TRUE;
-				panbtndown = TRUE;
+	for (int i = 0; i < PanelButtonIndex; i++) {
+		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
+		int y = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
+		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= x) {
+			if (MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= y) {
+				PanelButtons[i] = true;
+				drawbtnflag = true;
+				panbtndown = true;
 			}
 		}
 	}
-	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
-		if (SDL_GetModState() & KMOD_SHIFT) {
-			plr[myplr]._pRSpell = SPL_INVALID;
-			plr[myplr]._pRSplType = RSPLTYPE_INVALID;
+	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
+		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
+			auto &myPlayer = Players[MyPlayerId];
+			myPlayer._pRSpell = SPL_INVALID;
+			myPlayer._pRSplType = RSPLTYPE_INVALID;
 			force_redraw = 255;
 			return;
 		}
@@ -955,216 +1156,178 @@ void DoPanBtn()
 	}
 }
 
-void control_set_button_down(int btn_id)
-{
-	panbtn[btn_id] = TRUE;
-	drawbtnflag = TRUE;
-	panbtndown = TRUE;
-}
-
 void control_check_btn_press()
 {
-	int x, y;
-
-	x = PanBtnPos[3][0] + PANEL_LEFT + PanBtnPos[3][2];
-	y = PanBtnPos[3][1] + PANEL_TOP + PanBtnPos[3][3];
-	if (MouseX >= PanBtnPos[3][0] + PANEL_LEFT
-	    && MouseX <= x
-	    && MouseY >= PanBtnPos[3][1] + PANEL_TOP
-	    && MouseY <= y) {
-		control_set_button_down(3);
+	int x = PanBtnPos[3].x + PANEL_LEFT + PanBtnPos[3].w;
+	int y = PanBtnPos[3].y + PANEL_TOP + PanBtnPos[3].h;
+	if (MousePosition.x >= PanBtnPos[3].x + PANEL_LEFT
+	    && MousePosition.x <= x
+	    && MousePosition.y >= PanBtnPos[3].y + PANEL_TOP
+	    && MousePosition.y <= y) {
+		SetButtonStateDown(3);
 	}
-	x = PanBtnPos[6][0] + PANEL_LEFT + PanBtnPos[6][2];
-	y = PanBtnPos[6][1] + PANEL_TOP + PanBtnPos[6][3];
-	if (MouseX >= PanBtnPos[6][0] + PANEL_LEFT
-	    && MouseX <= x
-	    && MouseY >= PanBtnPos[6][1] + PANEL_TOP
-	    && MouseY <= y) {
-		control_set_button_down(6);
+	x = PanBtnPos[6].x + PANEL_LEFT + PanBtnPos[6].w;
+	y = PanBtnPos[6].y + PANEL_TOP + PanBtnPos[6].h;
+	if (MousePosition.x >= PanBtnPos[6].x + PANEL_LEFT
+	    && MousePosition.x <= x
+	    && MousePosition.y >= PanBtnPos[6].y + PANEL_TOP
+	    && MousePosition.y <= y) {
+		SetButtonStateDown(6);
 	}
 }
 
 void DoAutoMap()
 {
 	if (currlevel != 0 || gbIsMultiplayer) {
-		if (!automapflag)
+		if (!AutomapActive)
 			StartAutomap();
 		else
-			automapflag = FALSE;
+			AutomapActive = false;
 	} else {
 		InitDiabloMsg(EMSG_NO_AUTOMAP_IN_TOWN);
 	}
 }
 
-/**
- * Checks the mouse cursor position within the control panel and sets information
- * strings if needed.
- */
 void CheckPanelInfo()
 {
-	int i, c, s, xend, yend;
-
-	panelflag = FALSE;
+	panelflag = false;
 	ClearPanel();
-	for (i = 0; i < numpanbtns; i++) {
-		xend = PanBtnPos[i][0] + PANEL_LEFT + PanBtnPos[i][2];
-		yend = PanBtnPos[i][1] + PANEL_TOP + PanBtnPos[i][3];
-		if (MouseX >= PanBtnPos[i][0] + PANEL_LEFT && MouseX <= xend && MouseY >= PanBtnPos[i][1] + PANEL_TOP && MouseY <= yend) {
+	for (int i = 0; i < PanelButtonIndex; i++) {
+		int xend = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
+		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
+		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= yend) {
 			if (i != 7) {
-				strcpy(infostr, PanBtnStr[i]);
+				strcpy(infostr, _(PanBtnStr[i]));
 			} else {
 				if (gbFriendlyMode)
-					strcpy(infostr, "Player friendly");
+					strcpy(infostr, _("Player friendly"));
 				else
-					strcpy(infostr, "Player attack");
+					strcpy(infostr, _("Player attack"));
 			}
-			if (PanBtnHotKey[i] != NULL) {
-				sprintf(tempstr, "Hotkey: %s", PanBtnHotKey[i]);
-				AddPanelString(tempstr, TRUE);
+			if (PanBtnHotKey[i] != nullptr) {
+				strcpy(tempstr, fmt::format(_("Hotkey: {:s}"), _(PanBtnHotKey[i])).c_str());
+				AddPanelString(tempstr);
 			}
-			infoclr = COL_WHITE;
-			panelflag = TRUE;
-			pinfoflag = TRUE;
+			InfoColor = UiFlags::ColorWhite;
+			panelflag = true;
 		}
 	}
-	if (!spselflag && MouseX >= 565 + PANEL_LEFT && MouseX < 621 + PANEL_LEFT && MouseY >= 64 + PANEL_TOP && MouseY < 120 + PANEL_TOP) {
-		strcpy(infostr, "Select current spell button");
-		infoclr = COL_WHITE;
-		panelflag = TRUE;
-		pinfoflag = TRUE;
-		strcpy(tempstr, "Hotkey: 's'");
-		AddPanelString(tempstr, TRUE);
-		spell_id v = plr[myplr]._pRSpell;
-		if (v != SPL_INVALID) {
-			switch (plr[myplr]._pRSplType) {
+	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
+		strcpy(infostr, _("Select current spell button"));
+		InfoColor = UiFlags::ColorWhite;
+		panelflag = true;
+		strcpy(tempstr, _("Hotkey: 's'"));
+		AddPanelString(tempstr);
+		auto &myPlayer = Players[MyPlayerId];
+		const spell_id spellId = myPlayer._pRSpell;
+		if (spellId != SPL_INVALID) {
+			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
-				sprintf(tempstr, "%s Skill", spelldata[v].sSkillText);
-				AddPanelString(tempstr, TRUE);
+				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)).c_str());
+				AddPanelString(tempstr);
 				break;
-			case RSPLTYPE_SPELL:
-				sprintf(tempstr, "%s Spell", spelldata[v].sNameText);
-				AddPanelString(tempstr, TRUE);
-				c = plr[myplr]._pISplLvlAdd + plr[myplr]._pSplLvl[v];
-				if (c < 0)
-					c = 0;
+			case RSPLTYPE_SPELL: {
+				strcpy(tempstr, fmt::format(_("{:s} Spell"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
+				AddPanelString(tempstr);
+				int c = std::max(myPlayer._pISplLvlAdd + myPlayer._pSplLvl[spellId], 0);
 				if (c == 0)
-					sprintf(tempstr, "Spell Level 0 - Unusable");
+					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				else
-					sprintf(tempstr, "Spell Level %i", c);
-				AddPanelString(tempstr, TRUE);
-				break;
-			case RSPLTYPE_SCROLL:
-				sprintf(tempstr, "Scroll of %s", spelldata[v].sNameText);
-				AddPanelString(tempstr, TRUE);
-				s = 0;
-				for (i = 0; i < plr[myplr]._pNumInv; i++) {
-					if (!plr[myplr].InvList[i].isEmpty()
-					    && (plr[myplr].InvList[i]._iMiscId == IMISC_SCROLL || plr[myplr].InvList[i]._iMiscId == IMISC_SCROLLT)
-					    && plr[myplr].InvList[i]._iSpell == v) {
-						s++;
-					}
-				}
-				for (i = 0; i < MAXBELTITEMS; i++) {
-					if (!plr[myplr].SpdList[i].isEmpty()
-					    && (plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLL || plr[myplr].SpdList[i]._iMiscId == IMISC_SCROLLT)
-					    && plr[myplr].SpdList[i]._iSpell == v) {
-						s++;
-					}
-				}
-				if (s == 1)
-					strcpy(tempstr, "1 Scroll");
-				else
-					sprintf(tempstr, "%i Scrolls", s);
-				AddPanelString(tempstr, TRUE);
-				break;
+					strcpy(tempstr, fmt::format(_("Spell Level {:d}"), c).c_str());
+				AddPanelString(tempstr);
+			} break;
+			case RSPLTYPE_SCROLL: {
+				strcpy(tempstr, fmt::format(_("Scroll of {:s}"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
+				AddPanelString(tempstr);
+				const InventoryAndBeltPlayerItemsRange items { myPlayer };
+				const int scrollCount = std::count_if(items.begin(), items.end(), [spellId](const Item &item) {
+					return item.IsScrollOf(spellId);
+				});
+				strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
+				AddPanelString(tempstr);
+			} break;
 			case RSPLTYPE_CHARGES:
-				sprintf(tempstr, "Staff of %s", spelldata[v].sNameText);
-				AddPanelString(tempstr, TRUE);
-				if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges == 1)
-					strcpy(tempstr, "1 Charge");
-				else
-					sprintf(tempstr, "%i Charges", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
-				AddPanelString(tempstr, TRUE);
+				strcpy(tempstr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[spellId].sNameText)).c_str());
+				AddPanelString(tempstr);
+				strcpy(tempstr, fmt::format(ngettext("{:d} Charge", "{:d} Charges", myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges), myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges).c_str());
+				AddPanelString(tempstr);
 				break;
 			case RSPLTYPE_INVALID:
 				break;
 			}
 		}
 	}
-	if (MouseX > 190 + PANEL_LEFT && MouseX < 437 + PANEL_LEFT && MouseY > 4 + PANEL_TOP && MouseY < 33 + PANEL_TOP)
+	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 33 + PANEL_TOP)
 		pcursinvitem = CheckInvHLight();
+
+	if (CheckXPBarInfo()) {
+		panelflag = true;
+	}
 }
 
-/**
- * Check if the mouse is within a control panel button that's flagged.
- * Takes apropiate action if so.
- */
 void CheckBtnUp()
 {
-	int i;
-	BOOLEAN gamemenuOff;
+	bool gamemenuOff = true;
+	drawbtnflag = true;
+	panbtndown = false;
 
-	gamemenuOff = TRUE;
-	drawbtnflag = TRUE;
-	panbtndown = FALSE;
-
-	for (i = 0; i < 8; i++) {
-		if (!panbtn[i]) {
+	for (int i = 0; i < 8; i++) {
+		if (!PanelButtons[i]) {
 			continue;
 		}
 
-		panbtn[i] = FALSE;
+		PanelButtons[i] = false;
 
-		if (MouseX < PanBtnPos[i][0] + PANEL_LEFT
-		    || MouseX > PanBtnPos[i][0] + PANEL_LEFT + PanBtnPos[i][2]
-		    || MouseY < PanBtnPos[i][1] + PANEL_TOP
-		    || MouseY > PanBtnPos[i][1] + PANEL_TOP + PanBtnPos[i][3]) {
+		if (MousePosition.x < PanBtnPos[i].x + PANEL_LEFT
+		    || MousePosition.x > PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w
+		    || MousePosition.y < PanBtnPos[i].y + PANEL_TOP
+		    || MousePosition.y > PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h) {
 			continue;
 		}
 
 		switch (i) {
-		case PANBTN_CHARINFO:
-			questlog = FALSE;
+		case PanelButtonCharinfo:
+			QuestLogIsOpen = false;
 			chrflag = !chrflag;
 			break;
-		case PANBTN_QLOG:
-			chrflag = FALSE;
-			if (!questlog)
+		case PanelButtonQlog:
+			chrflag = false;
+			if (!QuestLogIsOpen)
 				StartQuestlog();
 			else
-				questlog = FALSE;
+				QuestLogIsOpen = false;
 			break;
-		case PANBTN_AUTOMAP:
+		case PanelButtonAutomap:
 			DoAutoMap();
 			break;
-		case PANBTN_MAINMENU:
-			qtextflag = FALSE;
+		case PanelButtonMainmenu:
+			qtextflag = false;
 			gamemenu_handle_previous();
-			gamemenuOff = FALSE;
+			gamemenuOff = false;
 			break;
-		case PANBTN_INVENTORY:
-			sbookflag = FALSE;
+		case PanelButtonInventory:
+			sbookflag = false;
 			invflag = !invflag;
 			if (dropGoldFlag) {
-				dropGoldFlag = FALSE;
+				dropGoldFlag = false;
 				dropGoldValue = 0;
 			}
 			break;
-		case PANBTN_SPELLBOOK:
-			invflag = FALSE;
+		case PanelButtonSpellbook:
+			invflag = false;
 			if (dropGoldFlag) {
-				dropGoldFlag = FALSE;
+				dropGoldFlag = false;
 				dropGoldValue = 0;
 			}
 			sbookflag = !sbookflag;
 			break;
-		case PANBTN_SENDMSG:
+		case PanelButtonSendmsg:
 			if (talkflag)
 				control_reset_talk();
 			else
 				control_type_message();
 			break;
-		case PANBTN_FRIENDLY:
+		case PanelButtonFriendly:
 			gbFriendlyMode = !gbFriendlyMode;
 			break;
 		}
@@ -1176,731 +1339,268 @@ void CheckBtnUp()
 
 void FreeControlPan()
 {
-	pBtmBuff.Free();
-	pManaBuff.Free();
-	pLifeBuff.Free();
-	MemFreeDbg(pPanelText);
-	MemFreeDbg(pChrPanel);
-	MemFreeDbg(pSpellCels);
-	MemFreeDbg(pPanelButtons);
-	MemFreeDbg(pMultiBtns);
-	MemFreeDbg(pTalkBtns);
-	MemFreeDbg(pChrButtons);
-	MemFreeDbg(pDurIcons);
-	MemFreeDbg(pQLogCel);
-	MemFreeDbg(pSpellBkCel);
-	MemFreeDbg(pSBkBtnCel);
-	MemFreeDbg(pSBkIconCels);
-	MemFreeDbg(pGBoxBuff);
+	pBtmBuff = std::nullopt;
+	pManaBuff = std::nullopt;
+	pLifeBuff = std::nullopt;
+	pSpellCels = std::nullopt;
+	pPanelButtons = std::nullopt;
+	multiButtons = std::nullopt;
+	talkButtons = std::nullopt;
+	pChrButtons = std::nullopt;
+	pDurIcons = std::nullopt;
+	pQLogCel = std::nullopt;
+	pSpellBkCel = std::nullopt;
+	pSBkBtnCel = std::nullopt;
+	pSBkIconCels = std::nullopt;
+	pGBoxBuff = std::nullopt;
+	FreeMainPanel();
+	FreeCharPanel();
 }
 
-BOOL control_WriteStringToBuffer(BYTE *str)
+void DrawInfoBox(const Surface &out)
 {
-	int k;
-	BYTE ichar;
-
-	k = 0;
-	while (*str) {
-		ichar = gbFontTransTbl[*str];
-		str++;
-		k += fontkern[fontframe[ichar]];
-		if (k >= 125)
-			return FALSE;
-	}
-
-	return TRUE;
-}
-
-static void CPrintString(CelOutputBuffer out, int y, const char *str, BOOL center, int lines)
-{
-	BYTE c;
-	const char *tmp;
-	int lineOffset, strWidth, sx, sy;
-
-	lineOffset = 0;
-	sx = 177 + PANEL_X;
-	sy = lineOffsets[lines][y] + PANEL_Y;
-	if (center == TRUE) {
-		strWidth = 0;
-		tmp = str;
-		while (*tmp) {
-			c = gbFontTransTbl[(BYTE)*tmp++];
-			strWidth += fontkern[fontframe[c]] + 2;
-		}
-		if (strWidth < 288)
-			lineOffset = (288 - strWidth) >> 1;
-		sx += lineOffset;
-	}
-	while (*str) {
-		c = gbFontTransTbl[(BYTE)*str++];
-		c = fontframe[c];
-		lineOffset += fontkern[c] + 2;
-		if (c) {
-			if (lineOffset < 288) {
-				PrintChar(out, sx, sy, c, infoclr);
-			}
-		}
-		sx += fontkern[c] + 2;
-	}
-}
-
-static void PrintInfo(CelOutputBuffer out)
-{
-	int yo, lo, i;
-
-	if (!talkflag) {
-		yo = 0;
-		lo = 1;
-		if (infostr[0] != '\0') {
-			CPrintString(out, 0, infostr, TRUE, pnumlines);
-			yo = 1;
-			lo = 0;
-		}
-
-		for (i = 0; i < pnumlines; i++) {
-			CPrintString(out, i + yo, panelstr[i], pstrjust[i], pnumlines - lo);
-		}
-	}
-}
-
-void DrawInfoBox(CelOutputBuffer out)
-{
-	int nGold;
-
-	DrawPanelBox(out, 177, 62, 288, 60, PANEL_X + 177, PANEL_Y + 46);
+	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
 	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
 		infostr[0] = '\0';
-		infoclr = COL_WHITE;
+		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();
 	}
 	if (spselflag || trigflag) {
-		infoclr = COL_WHITE;
+		InfoColor = UiFlags::ColorWhite;
 	} else if (pcurs >= CURSOR_FIRSTITEM) {
-		if (plr[myplr].HoldItem._itype == ITYPE_GOLD) {
-			nGold = plr[myplr].HoldItem._ivalue;
-			sprintf(infostr, "%i gold %s", nGold, get_pieces_str(nGold));
-		} else if (!plr[myplr].HoldItem._iStatFlag) {
+		auto &myPlayer = Players[MyPlayerId];
+		if (myPlayer.HoldItem._itype == ItemType::Gold) {
+			int nGold = myPlayer.HoldItem._ivalue;
+			strcpy(infostr, fmt::format(ngettext("{:d} gold piece", "{:d} gold pieces", nGold), nGold).c_str());
+		} else if (!myPlayer.HoldItem._iStatFlag) {
 			ClearPanel();
-			AddPanelString("Requirements not met", TRUE);
-			pinfoflag = TRUE;
+			AddPanelString(_("Requirements not met"));
 		} else {
-			if (plr[myplr].HoldItem._iIdentified)
-				strcpy(infostr, plr[myplr].HoldItem._iIName);
+			if (myPlayer.HoldItem._iIdentified)
+				strcpy(infostr, myPlayer.HoldItem._iIName);
 			else
-				strcpy(infostr, plr[myplr].HoldItem._iName);
-			if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_MAGIC)
-				infoclr = COL_BLUE;
-			if (plr[myplr].HoldItem._iMagical == ITEM_QUALITY_UNIQUE)
-				infoclr = COL_GOLD;
+				strcpy(infostr, myPlayer.HoldItem._iName);
+			InfoColor = myPlayer.HoldItem.getTextColor();
 		}
 	} else {
 		if (pcursitem != -1)
-			GetItemStr(pcursitem);
+			GetItemStr(Items[pcursitem]);
 		else if (pcursobj != -1)
 			GetObjectStr(pcursobj);
 		if (pcursmonst != -1) {
+			const auto &monster = Monsters[pcursmonst];
 			if (leveltype != DTYPE_TOWN) {
-				infoclr = COL_WHITE;
-				strcpy(infostr, monster[pcursmonst].mName);
+				InfoColor = UiFlags::ColorWhite;
+				strcpy(infostr, monster.mName);
 				ClearPanel();
-				if (monster[pcursmonst]._uniqtype != 0) {
-					infoclr = COL_GOLD;
+				if (monster._uniqtype != 0) {
+					InfoColor = UiFlags::ColorWhitegold;
 					PrintUniqueHistory();
 				} else {
-					PrintMonstHistory(monster[pcursmonst].MType->mtype);
+					PrintMonstHistory(monster.MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				strcpy(infostr, towner[pcursmonst]._tName);
+				string_view townerName = Towners[pcursmonst].name;
+				strncpy(infostr, townerName.data(), townerName.length());
+				infostr[townerName.length()] = '\0';
 			}
 		}
 		if (pcursplr != -1) {
-			infoclr = COL_GOLD;
-			strcpy(infostr, plr[pcursplr]._pName);
+			InfoColor = UiFlags::ColorWhitegold;
+			auto &target = Players[pcursplr];
+			strcpy(infostr, target._pName);
 			ClearPanel();
-			sprintf(tempstr, "%s, Level: %i", ClassStrTbl[plr[pcursplr]._pClass], plr[pcursplr]._pLevel);
-			AddPanelString(tempstr, TRUE);
-			sprintf(tempstr, "Hit Points %i of %i", plr[pcursplr]._pHitPoints >> 6, plr[pcursplr]._pMaxHP >> 6);
-			AddPanelString(tempstr, TRUE);
+			strcpy(tempstr, fmt::format(_("{:s}, Level: {:d}"), _(ClassStrTbl[static_cast<std::size_t>(target._pClass)]), target._pLevel).c_str());
+			AddPanelString(tempstr);
+			strcpy(tempstr, fmt::format(_("Hit Points {:d} of {:d}"), target._pHitPoints >> 6, target._pMaxHP >> 6).c_str());
+			AddPanelString(tempstr);
 		}
 	}
 	if (infostr[0] != '\0' || pnumlines != 0)
 		PrintInfo(out);
 }
 
-#define ADD_PlrStringXY(out, x, y, width, pszStr, col) MY_PlrStringXY(out, x, y, width, pszStr, col, 1)
-
-void PrintGameStr(CelOutputBuffer out, int x, int y, const char *str, text_color color)
-{
-	while (*str) {
-		BYTE c = gbFontTransTbl[(BYTE)*str++];
-		c = fontframe[c];
-		if (c)
-			PrintChar(out, x, y, c, color);
-		x += fontkern[c] + 1;
-	}
-}
-
-/**
- * @brief Render text string to the given buffer
- * @param out Buffer to render to
- * @param x Screen coordinate
- * @param y Screen coordinate
- * @param endX End of line in screen coordinate
- * @param pszStr String to print, in Windows-1252 encoding
- * @param col text_color color value
- * @param base Letter spacing
- */
-static void MY_PlrStringXY(CelOutputBuffer out, int x, int y, int endX, const char *pszStr, text_color col, int base)
-{
-	BYTE c;
-	const char *tmp;
-	int screen_x, line, widthOffset;
-
-	widthOffset = endX - x + 1;
-	line = 0;
-	screen_x = 0;
-	tmp = pszStr;
-	while (*tmp) {
-		c = gbFontTransTbl[(BYTE)*tmp++];
-		screen_x += fontkern[fontframe[c]] + base;
-	}
-	if (screen_x < widthOffset)
-		line = (widthOffset - screen_x) >> 1;
-	x += line;
-	while (*pszStr) {
-		c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[c];
-		line += fontkern[c] + base;
-		if (c) {
-			if (line < widthOffset)
-				PrintChar(out, x, y, c, col);
-		}
-		x += fontkern[c] + base;
-	}
-}
-
-void DrawChr(CelOutputBuffer out)
-{
-	text_color col = COL_WHITE;
-	char chrstr[64];
-	int mindam, maxdam;
-
-	CelDrawTo(out, 0, 351, pChrPanel, 1, SPANEL_WIDTH);
-	ADD_PlrStringXY(out, 20, 32, 151, plr[myplr]._pName, COL_WHITE);
-
-	ADD_PlrStringXY(out, 168, 32, 299, ClassStrTbl[plr[myplr]._pClass], COL_WHITE);
-
-	sprintf(chrstr, "%i", plr[myplr]._pLevel);
-	ADD_PlrStringXY(out, 66, 69, 109, chrstr, COL_WHITE);
-
-	sprintf(chrstr, "%i", plr[myplr]._pExperience);
-	ADD_PlrStringXY(out, 216, 69, 300, chrstr, COL_WHITE);
-
-	if (plr[myplr]._pLevel == MAXCHARLEVEL - 1) {
-		strcpy(chrstr, "None");
-		col = COL_GOLD;
-	} else {
-		sprintf(chrstr, "%i", plr[myplr]._pNextExper);
-		col = COL_WHITE;
-	}
-	ADD_PlrStringXY(out, 216, 97, 300, chrstr, col);
-
-	sprintf(chrstr, "%i", plr[myplr]._pGold);
-	ADD_PlrStringXY(out, 216, 146, 300, chrstr, COL_WHITE);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pIBonusAC > 0)
-		col = COL_BLUE;
-	if (plr[myplr]._pIBonusAC < 0)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pIBonusAC + plr[myplr]._pIAC + plr[myplr]._pDexterity / 5);
-	ADD_PlrStringXY(out, 258, 183, 301, chrstr, col);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pIBonusToHit > 0)
-		col = COL_BLUE;
-	if (plr[myplr]._pIBonusToHit < 0)
-		col = COL_RED;
-	sprintf(chrstr, "%i%%", (plr[myplr]._pDexterity >> 1) + plr[myplr]._pIBonusToHit + 50);
-	ADD_PlrStringXY(out, 258, 211, 301, chrstr, col);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pIBonusDam > 0)
-		col = COL_BLUE;
-	if (plr[myplr]._pIBonusDam < 0)
-		col = COL_RED;
-	mindam = plr[myplr]._pIMinDam;
-	mindam += plr[myplr]._pIBonusDam * mindam / 100;
-	mindam += plr[myplr]._pIBonusDamMod;
-	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW) {
-		if (plr[myplr]._pClass == PC_ROGUE)
-			mindam += plr[myplr]._pDamageMod;
-		else
-			mindam += plr[myplr]._pDamageMod >> 1;
-	} else {
-		mindam += plr[myplr]._pDamageMod;
-	}
-	maxdam = plr[myplr]._pIMaxDam;
-	maxdam += plr[myplr]._pIBonusDam * maxdam / 100;
-	maxdam += plr[myplr]._pIBonusDamMod;
-	if (plr[myplr].InvBody[INVLOC_HAND_LEFT]._itype == ITYPE_BOW) {
-		if (plr[myplr]._pClass == PC_ROGUE)
-			maxdam += plr[myplr]._pDamageMod;
-		else
-			maxdam += plr[myplr]._pDamageMod >> 1;
-	} else {
-		maxdam += plr[myplr]._pDamageMod;
-	}
-	sprintf(chrstr, "%i-%i", mindam, maxdam);
-	if (mindam >= 100 || maxdam >= 100)
-		MY_PlrStringXY(out, 254, 239, 305, chrstr, col, -1);
-	else
-		MY_PlrStringXY(out, 258, 239, 301, chrstr, col, 0);
-
-	if (plr[myplr]._pMagResist == 0)
-		col = COL_WHITE;
-	else
-		col = COL_BLUE;
-	if (plr[myplr]._pMagResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pMagResist);
-	} else {
-		col = COL_GOLD;
-		sprintf(chrstr, "MAX");
-	}
-	ADD_PlrStringXY(out, 257, 276, 300, chrstr, col);
-
-	if (plr[myplr]._pFireResist == 0)
-		col = COL_WHITE;
-	else
-		col = COL_BLUE;
-	if (plr[myplr]._pFireResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pFireResist);
-	} else {
-		col = COL_GOLD;
-		sprintf(chrstr, "MAX");
-	}
-	ADD_PlrStringXY(out, 257, 304, 300, chrstr, col);
-
-	if (plr[myplr]._pLghtResist == 0)
-		col = COL_WHITE;
-	else
-		col = COL_BLUE;
-	if (plr[myplr]._pLghtResist < MAXRESIST) {
-		sprintf(chrstr, "%i%%", plr[myplr]._pLghtResist);
-	} else {
-		col = COL_GOLD;
-		sprintf(chrstr, "MAX");
-	}
-	ADD_PlrStringXY(out, 257, 332, 300, chrstr, col);
-
-	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseStr);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_STR] == plr[myplr]._pBaseStr)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 155, 126, chrstr, col);
-
-	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseMag);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_MAG] == plr[myplr]._pBaseMag)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 183, 126, chrstr, col);
-
-	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseDex);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_DEX] == plr[myplr]._pBaseDex)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 211, 126, chrstr, col);
-
-	col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pBaseVit);
-	if (MaxStats[plr[myplr]._pClass][ATTRIB_VIT] == plr[myplr]._pBaseVit)
-		col = COL_GOLD;
-	ADD_PlrStringXY(out, 95, 239, 126, chrstr, col);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pStrength > plr[myplr]._pBaseStr)
-		col = COL_BLUE;
-	if (plr[myplr]._pStrength < plr[myplr]._pBaseStr)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pStrength);
-	ADD_PlrStringXY(out, 143, 155, 173, chrstr, col);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pMagic > plr[myplr]._pBaseMag)
-		col = COL_BLUE;
-	if (plr[myplr]._pMagic < plr[myplr]._pBaseMag)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pMagic);
-	ADD_PlrStringXY(out, 143, 183, 173, chrstr, col);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pDexterity > plr[myplr]._pBaseDex)
-		col = COL_BLUE;
-	if (plr[myplr]._pDexterity < plr[myplr]._pBaseDex)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pDexterity);
-	ADD_PlrStringXY(out, 143, 211, 173, chrstr, col);
-
-	col = COL_WHITE;
-	if (plr[myplr]._pVitality > plr[myplr]._pBaseVit)
-		col = COL_BLUE;
-	if (plr[myplr]._pVitality < plr[myplr]._pBaseVit)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pVitality);
-	ADD_PlrStringXY(out, 143, 239, 173, chrstr, col);
-
-	if (plr[myplr]._pStatPts > 0) {
-		if (CalcStatDiff(myplr) < plr[myplr]._pStatPts) {
-			plr[myplr]._pStatPts = CalcStatDiff(myplr);
-		}
-	}
-	if (plr[myplr]._pStatPts > 0) {
-		sprintf(chrstr, "%i", plr[myplr]._pStatPts);
-		ADD_PlrStringXY(out, 95, 266, 126, chrstr, COL_RED);
-		plr_class pc = plr[myplr]._pClass;
-		if (plr[myplr]._pBaseStr < MaxStats[pc][ATTRIB_STR])
-			CelDrawTo(out, 137, 159, pChrButtons, chrbtn[ATTRIB_STR] + 2, 41);
-		if (plr[myplr]._pBaseMag < MaxStats[pc][ATTRIB_MAG])
-			CelDrawTo(out, 137, 187, pChrButtons, chrbtn[ATTRIB_MAG] + 4, 41);
-		if (plr[myplr]._pBaseDex < MaxStats[pc][ATTRIB_DEX])
-			CelDrawTo(out, 137, 216, pChrButtons, chrbtn[ATTRIB_DEX] + 6, 41);
-		if (plr[myplr]._pBaseVit < MaxStats[pc][ATTRIB_VIT])
-			CelDrawTo(out, 137, 244, pChrButtons, chrbtn[ATTRIB_VIT] + 8, 41);
-	}
-
-	if (plr[myplr]._pMaxHP > plr[myplr]._pMaxHPBase)
-		col = COL_BLUE;
-	else
-		col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pMaxHP >> 6);
-	ADD_PlrStringXY(out, 95, 304, 126, chrstr, col);
-	if (plr[myplr]._pHitPoints != plr[myplr]._pMaxHP)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pHitPoints >> 6);
-	ADD_PlrStringXY(out, 143, 304, 174, chrstr, col);
-
-	if (plr[myplr]._pMaxMana > plr[myplr]._pMaxManaBase)
-		col = COL_BLUE;
-	else
-		col = COL_WHITE;
-	sprintf(chrstr, "%i", plr[myplr]._pMaxMana >> 6);
-	ADD_PlrStringXY(out, 95, 332, 126, chrstr, col);
-	if (plr[myplr]._pMana != plr[myplr]._pMaxMana)
-		col = COL_RED;
-	sprintf(chrstr, "%i", plr[myplr]._pMana >> 6);
-	ADD_PlrStringXY(out, 143, 332, 174, chrstr, col);
-}
-
 void CheckLvlBtn()
 {
-	if (!lvlbtndown && MouseX >= 40 + PANEL_LEFT && MouseX <= 81 + PANEL_LEFT && MouseY >= -39 + PANEL_TOP && MouseY <= -17 + PANEL_TOP)
-		lvlbtndown = TRUE;
+	if (!lvlbtndown && MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP)
+		lvlbtndown = true;
 }
 
 void ReleaseLvlBtn()
 {
-	if (MouseX >= 40 + PANEL_LEFT && MouseX <= 81 + PANEL_LEFT && MouseY >= -39 + PANEL_TOP && MouseY <= -17 + PANEL_TOP)
-		chrflag = TRUE;
-	lvlbtndown = FALSE;
+	if (MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP) {
+		QuestLogIsOpen = false;
+		chrflag = true;
+	}
+	lvlbtndown = false;
 }
 
-void DrawLevelUpIcon(CelOutputBuffer out)
+void DrawLevelUpIcon(const Surface &out)
 {
-	int nCel;
-
 	if (stextflag == STORE_NONE) {
-		nCel = lvlbtndown ? 3 : 2;
-		ADD_PlrStringXY(out, PANEL_LEFT + 0, PANEL_TOP - 49, PANEL_LEFT + 120, "Level Up", COL_WHITE);
-		CelDrawTo(out, 40 + PANEL_X, -17 + PANEL_Y, pChrButtons, nCel, 41);
+		int nCel = lvlbtndown ? 3 : 2;
+		DrawString(out, _("Level Up"), { { PANEL_LEFT + 0, PANEL_TOP - 62 }, { 120, 0 } }, UiFlags::ColorWhite | UiFlags::AlignCenter);
+		CelDrawTo(out, { 40 + PANEL_X, -17 + PANEL_Y }, *pChrButtons, nCel);
 	}
 }
 
 void CheckChrBtns()
 {
-	int i, x, y;
+	auto &myPlayer = Players[MyPlayerId];
 
-	if (!chrbtnactive && plr[myplr]._pStatPts) {
-		plr_class pc = plr[myplr]._pClass;
-		for (i = 0; i < 4; i++) {
-			switch (i) {
-			case ATTRIB_STR:
-				if (plr[myplr]._pBaseStr >= MaxStats[pc][ATTRIB_STR])
-					continue;
-				break;
-			case ATTRIB_MAG:
-				if (plr[myplr]._pBaseMag >= MaxStats[pc][ATTRIB_MAG])
-					continue;
-				break;
-			case ATTRIB_DEX:
-				if (plr[myplr]._pBaseDex >= MaxStats[pc][ATTRIB_DEX])
-					continue;
-				break;
-			case ATTRIB_VIT:
-				if (plr[myplr]._pBaseVit >= MaxStats[pc][ATTRIB_VIT])
-					continue;
-				break;
-			default:
-				continue;
-			}
-			x = ChrBtnsRect[i].x + ChrBtnsRect[i].w;
-			y = ChrBtnsRect[i].y + ChrBtnsRect[i].h;
-			if (MouseX >= ChrBtnsRect[i].x
-			    && MouseX <= x
-			    && MouseY >= ChrBtnsRect[i].y
-			    && MouseY <= y) {
-				chrbtn[i] = TRUE;
-				chrbtnactive = TRUE;
-			}
+	if (chrbtnactive || myPlayer._pStatPts == 0)
+		return;
+
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
+			continue;
+		auto buttonId = static_cast<size_t>(attribute);
+		Rectangle button = ChrBtnsRect[buttonId];
+		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		if (button.Contains(MousePosition)) {
+			chrbtn[buttonId] = true;
+			chrbtnactive = true;
 		}
 	}
 }
 
 void ReleaseChrBtns(bool addAllStatPoints)
 {
-	int i;
+	chrbtnactive = false;
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		auto buttonId = static_cast<size_t>(attribute);
+		if (!chrbtn[buttonId])
+			continue;
 
-	chrbtnactive = FALSE;
-	for (i = 0; i < 4; ++i) {
-		if (chrbtn[i]) {
-			chrbtn[i] = FALSE;
-			if (MouseX >= ChrBtnsRect[i].x
-			    && MouseX <= ChrBtnsRect[i].x + ChrBtnsRect[i].w
-			    && MouseY >= ChrBtnsRect[i].y
-			    && MouseY <= ChrBtnsRect[i].y + ChrBtnsRect[i].h) {
-				int statPointsToAdd = addAllStatPoints ? plr[myplr]._pStatPts : 1;
-				switch (i) {
-				case 0:
-					NetSendCmdParam1(TRUE, CMD_ADDSTR, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
-					break;
-				case 1:
-					NetSendCmdParam1(TRUE, CMD_ADDMAG, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
-					break;
-				case 2:
-					NetSendCmdParam1(TRUE, CMD_ADDDEX, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
-					break;
-				case 3:
-					NetSendCmdParam1(TRUE, CMD_ADDVIT, statPointsToAdd);
-					plr[myplr]._pStatPts -= statPointsToAdd;
-					break;
-				}
+		chrbtn[buttonId] = false;
+		Rectangle button = ChrBtnsRect[buttonId];
+		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		if (button.Contains(MousePosition)) {
+			auto &myPlayer = Players[MyPlayerId];
+			int statPointsToAdd = 1;
+			if (addAllStatPoints)
+				statPointsToAdd = CapStatPointsToAdd(myPlayer._pStatPts, myPlayer, attribute);
+			switch (attribute) {
+			case CharacterAttribute::Strength:
+				NetSendCmdParam1(true, CMD_ADDSTR, statPointsToAdd);
+				myPlayer._pStatPts -= statPointsToAdd;
+				break;
+			case CharacterAttribute::Magic:
+				NetSendCmdParam1(true, CMD_ADDMAG, statPointsToAdd);
+				myPlayer._pStatPts -= statPointsToAdd;
+				break;
+			case CharacterAttribute::Dexterity:
+				NetSendCmdParam1(true, CMD_ADDDEX, statPointsToAdd);
+				myPlayer._pStatPts -= statPointsToAdd;
+				break;
+			case CharacterAttribute::Vitality:
+				NetSendCmdParam1(true, CMD_ADDVIT, statPointsToAdd);
+				myPlayer._pStatPts -= statPointsToAdd;
+				break;
 			}
 		}
 	}
 }
 
-static int DrawDurIcon4Item(CelOutputBuffer out, ItemStruct *pItem, int x, int c)
+void DrawDurIcon(const Surface &out)
 {
-	if (pItem->isEmpty())
-		return x;
-	if (pItem->_iDurability > 5)
-		return x;
-	if (c == 0) {
-		switch (pItem->_itype) {
-		case ITYPE_SWORD:
-			c = 2;
-			break;
-		case ITYPE_AXE:
-			c = 6;
-			break;
-		case ITYPE_BOW:
-			c = 7;
-			break;
-		case ITYPE_MACE:
-			c = 5;
-			break;
-		case ITYPE_STAFF:
-			c = 8;
-			break;
-		default:
-			c = 1;
-			break;
-		}
-	}
-	if (pItem->_iDurability > 2)
-		c += 8;
-	CelDrawTo(out, x, -17 + PANEL_Y, pDurIcons, c, 32);
-	return x - 32 - 8;
-}
-
-void DrawDurIcon(CelOutputBuffer out)
-{
-	PlayerStruct *p;
-	int x;
-
 	bool hasRoomBetweenPanels = gnScreenWidth >= PANEL_WIDTH + 16 + (32 + 8 + 32 + 8 + 32 + 8 + 32) + 16;
 	bool hasRoomUnderPanels = gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
-		if ((chrflag || questlog) && (invflag || sbookflag))
+		if ((chrflag || QuestLogIsOpen) && (invflag || sbookflag))
 			return;
 	}
 
-	x = PANEL_X + PANEL_WIDTH - 32 - 16;
+	int x = PANEL_X + PANEL_WIDTH - 32 - 16;
 	if (!hasRoomUnderPanels) {
 		if (invflag || sbookflag)
 			x -= SPANEL_WIDTH - (gnScreenWidth - PANEL_WIDTH) / 2;
 	}
 
-	p = &plr[myplr];
-	x = DrawDurIcon4Item(out, &p->InvBody[INVLOC_HEAD], x, 4);
-	x = DrawDurIcon4Item(out, &p->InvBody[INVLOC_CHEST], x, 3);
-	x = DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_LEFT], x, 0);
-	DrawDurIcon4Item(out, &p->InvBody[INVLOC_HAND_RIGHT], x, 0);
+	auto &myPlayer = Players[MyPlayerId];
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HEAD], x, 4);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_CHEST], x, 3);
+	x = DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_LEFT], x, 0);
+	DrawDurIcon4Item(out, myPlayer.InvBody[INVLOC_HAND_RIGHT], x, 0);
 }
 
-void RedBack(CelOutputBuffer out)
+void RedBack(const Surface &out)
 {
-	int idx;
-
-	idx = light4flag ? 1536 : 4608;
-	int w, h;
-	BYTE *dst, *tbl;
-
-	if (leveltype != DTYPE_HELL) {
-		dst = out.begin();
-		tbl = &pLightTbl[idx];
-		for (h = gnViewportHeight; h; h--, dst += out.pitch() - gnScreenWidth) {
-			for (w = gnScreenWidth; w; w--) {
+	uint8_t *dst = out.begin();
+	uint8_t *tbl = &LightTables[4608];
+	for (int h = gnViewportHeight; h != 0; h--, dst += out.pitch() - gnScreenWidth) {
+		for (int w = gnScreenWidth; w != 0; w--) {
+			if (leveltype != DTYPE_HELL || *dst >= 32)
 				*dst = tbl[*dst];
-				dst++;
-			}
-		}
-	} else {
-		dst = out.begin();
-		tbl = &pLightTbl[idx];
-		for (h = gnViewportHeight; h; h--, dst += out.pitch() - gnScreenWidth) {
-			for (w = gnScreenWidth; w; w--) {
-				if (*dst >= 32)
-					*dst = tbl[*dst];
-				dst++;
-			}
+			dst++;
 		}
 	}
 }
 
-static void PrintSBookStr(CelOutputBuffer out, int x, int y, BOOL cjustflag, const char *pszStr, text_color col)
+void DrawSpellBook(const Surface &out)
 {
-	BYTE c;
-	const char *tmp;
-	int screen_x, line, sx;
-
-	sx = x + RIGHT_PANEL_X + SPLICONLENGTH;
-	line = 0;
-	if (cjustflag) {
-		screen_x = 0;
-		tmp = pszStr;
-		while (*tmp) {
-			c = gbFontTransTbl[(BYTE)*tmp++];
-			screen_x += fontkern[fontframe[c]] + 1;
-		}
-		if (screen_x < 222)
-			line = (222 - screen_x) >> 1;
-		sx += line;
-	}
-	while (*pszStr) {
-		c = gbFontTransTbl[(BYTE)*pszStr++];
-		c = fontframe[c];
-		line += fontkern[c] + 1;
-		if (c) {
-			if (line <= 222)
-				PrintChar(out, sx, y, c, col);
-		}
-		sx += fontkern[c] + 1;
-	}
-}
-
-char GetSBookTrans(int ii, BOOL townok)
-{
-	char st;
-
-	if ((plr[myplr]._pClass == PC_MONK) && (ii == SPL_SEARCH))
-		return RSPLTYPE_SKILL;
-	st = RSPLTYPE_SPELL;
-	if (plr[myplr]._pISpells & GetSpellBitmask(ii)) {
-		st = RSPLTYPE_CHARGES;
-	}
-	if (plr[myplr]._pAblSpells & GetSpellBitmask(ii)) {
-		st = RSPLTYPE_SKILL;
-	}
-	if (st == RSPLTYPE_SPELL) {
-		if (!CheckSpell(myplr, ii, RSPLTYPE_SPELL, TRUE)) {
-			st = RSPLTYPE_INVALID;
-		}
-		if ((char)(plr[myplr]._pSplLvl[ii] + plr[myplr]._pISplLvlAdd) <= 0) {
-			st = RSPLTYPE_INVALID;
-		}
-	}
-	if (townok && currlevel == 0 && st != RSPLTYPE_INVALID && !spelldata[ii].sTownSpell) {
-		st = RSPLTYPE_INVALID;
-	}
-
-	return st;
-}
-
-void DrawSpellBook(CelOutputBuffer out)
-{
-	int i, sn, mana, lvl, yp, min, max;
-	char st;
-
-	CelDrawTo(out, RIGHT_PANEL_X, 351, pSpellBkCel, 1, SPANEL_WIDTH);
+	CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 0, 351 }), *pSpellBkCel, 1);
 	if (gbIsHellfire && sbooktab < 5) {
-		CelDrawTo(out, RIGHT_PANEL_X + 61 * sbooktab + 7, 348, pSBkBtnCel, sbooktab + 1, 61);
+		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { 61 * sbooktab + 7, 348 }), *pSBkBtnCel, sbooktab + 1);
 	} else {
 		// BUGFIX: rendering of page 3 and page 4 buttons are both off-by-one pixel (fixed).
-		int sx = RIGHT_PANEL_X + 76 * sbooktab + 7;
+		int sx = 76 * sbooktab + 7;
 		if (sbooktab == 2 || sbooktab == 3) {
 			sx++;
 		}
-		CelDrawTo(out, sx, 348, pSBkBtnCel, sbooktab + 1, 76);
+		CelDrawTo(out, GetPanelPosition(UiPanels::Spell, { sx, 348 }), *pSBkBtnCel, sbooktab + 1);
 	}
-	Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
+	auto &myPlayer = Players[MyPlayerId];
+	uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 
-	yp = 55;
-	for (i = 1; i < 8; i++) {
-		sn = SpellPages[sbooktab][i - 1];
-		if (sn != -1 && spl & GetSpellBitmask(sn)) {
-			st = GetSBookTrans(sn, TRUE);
+	int yp = 43;
+	for (int i = 1; i < 8; i++) {
+		spell_id sn = SpellPages[sbooktab][i - 1];
+		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
+			spell_type st = GetSBookTrans(sn, true);
 			SetSpellTrans(st);
-			DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SpellITbl[sn], 37);
-			if (sn == plr[myplr]._pRSpell && st == plr[myplr]._pRSplType) {
+			const Point spellCellPosition = GetPanelPosition(UiPanels::Spell, { 11, yp + 12 });
+			DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SpellITbl[sn]);
+			if (sn == myPlayer._pRSpell && st == myPlayer._pRSplType) {
 				SetSpellTrans(RSPLTYPE_SKILL);
-				DrawSpellCel(out, RIGHT_PANEL_X + 11, yp, pSBkIconCels, SPLICONLAST, 37);
+				DrawSpellCel(out, spellCellPosition, *pSBkIconCels, SPLICONLAST);
 			}
-			PrintSBookStr(out, 10, yp - 23, FALSE, spelldata[sn].sNameText, COL_WHITE);
-			switch (GetSBookTrans(sn, FALSE)) {
+			int textOffset = 7;
+			switch (GetSBookTrans(sn, false)) {
 			case RSPLTYPE_SKILL:
-				strcpy(tempstr, "Skill");
+				strcpy(tempstr, _("Skill"));
 				break;
-			case RSPLTYPE_CHARGES:
-				sprintf(tempstr, "Staff (%i charges)", plr[myplr].InvBody[INVLOC_HAND_LEFT]._iCharges);
-				break;
-			default:
-				mana = GetManaAmount(myplr, sn) >> 6;
-				GetDamageAmt(sn, &min, &max);
-				if (min != -1) {
-					sprintf(tempstr, "Mana: %i  Dam: %i - %i", mana, min, max);
+			case RSPLTYPE_CHARGES: {
+				int charges = myPlayer.InvBody[INVLOC_HAND_LEFT]._iCharges;
+				strcpy(tempstr, fmt::format(ngettext("Staff ({:d} charge)", "Staff ({:d} charges)", charges), charges).c_str());
+			} break;
+			default: {
+				textOffset = 0;
+				int mana = GetManaAmount(myPlayer, sn) >> 6;
+				if (sn != SPL_BONESPIRIT) {
+					int min;
+					int max;
+					GetDamageAmt(sn, &min, &max);
+					if (min != -1) {
+						strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: {:d} - {:d}"), mana, min, max).c_str());
+					} else {
+						strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}   Dam: n/a"), mana).c_str());
+					}
 				} else {
-					sprintf(tempstr, "Mana: %i   Dam: n/a", mana);
+					strcpy(tempstr, fmt::format(_(/* TRANSLATORS: Dam refers to damage. UI constrains, keep short please.*/ "Mana: {:d}  Dam: 1/3 tgt hp"), mana).c_str());
 				}
-				if (sn == SPL_BONESPIRIT) {
-					sprintf(tempstr, "Mana: %i  Dam: 1/3 tgt hp", mana);
-				}
-				PrintSBookStr(out, 10, yp - 1, FALSE, tempstr, COL_WHITE);
-				lvl = plr[myplr]._pSplLvl[sn] + plr[myplr]._pISplLvlAdd;
-				if (lvl < 0) {
-					lvl = 0;
-				}
+				PrintSBookStr(out, { 10, yp }, tempstr);
+				int lvl = std::max(myPlayer._pSplLvl[sn] + myPlayer._pISplLvlAdd, 0);
 				if (lvl == 0) {
-					sprintf(tempstr, "Spell Level 0 - Unusable");
+					strcpy(tempstr, _("Spell Level 0 - Unusable"));
 				} else {
-					sprintf(tempstr, "Spell Level %i", lvl);
+					strcpy(tempstr, fmt::format(_("Spell Level {:d}"), lvl).c_str());
 				}
-				break;
+			} break;
 			}
-			PrintSBookStr(out, 10, yp - 12, FALSE, tempstr, COL_WHITE);
+			PrintSBookStr(out, { 10, yp + textOffset - 26 }, pgettext("spell", spelldata[sn].sNameText));
+			PrintSBookStr(out, { 10, yp + textOffset - 13 }, tempstr);
 		}
 		yp += 43;
 	}
@@ -1908,82 +1608,91 @@ void DrawSpellBook(CelOutputBuffer out)
 
 void CheckSBook()
 {
-	if (MouseX >= RIGHT_PANEL + 11 && MouseX < RIGHT_PANEL + 48 && MouseY >= 18 && MouseY < 314) {
-		spell_id sn = SpellPages[sbooktab][(MouseY - 18) / 43];
-		Uint64 spl = plr[myplr]._pMemSpells | plr[myplr]._pISpells | plr[myplr]._pAblSpells;
-		if (sn != SPL_INVALID && spl & GetSpellBitmask(sn)) {
+	Rectangle iconArea = { GetPanelPosition(UiPanels::Spell, { 11, 18 }), { 48 - 11, 314 - 18 } };
+	Rectangle tabArea = { GetPanelPosition(UiPanels::Spell, { 7, 320 }), { 311 - 7, 349 - 320 } };
+	if (iconArea.Contains(MousePosition)) {
+		spell_id sn = SpellPages[sbooktab][(MousePosition.y - RightPanel.position.y - 18) / 43];
+		auto &myPlayer = Players[MyPlayerId];
+		uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
+		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
 			spell_type st = RSPLTYPE_SPELL;
-			if (plr[myplr]._pISpells & GetSpellBitmask(sn)) {
+			if ((myPlayer._pISpells & GetSpellBitmask(sn)) != 0) {
 				st = RSPLTYPE_CHARGES;
 			}
-			if (plr[myplr]._pAblSpells & GetSpellBitmask(sn)) {
+			if ((myPlayer._pAblSpells & GetSpellBitmask(sn)) != 0) {
 				st = RSPLTYPE_SKILL;
 			}
-			plr[myplr]._pRSpell = sn;
-			plr[myplr]._pRSplType = st;
+			myPlayer._pRSpell = sn;
+			myPlayer._pRSplType = st;
 			force_redraw = 255;
 		}
 	}
-	if (MouseX >= RIGHT_PANEL + 7 && MouseX < RIGHT_PANEL + 311 && MouseY >= SPANEL_WIDTH && MouseY < 349) {
-		sbooktab = (MouseX - (RIGHT_PANEL + 7)) / (gbIsHellfire ? 61 : 76);
+	if (tabArea.Contains(MousePosition)) {
+		sbooktab = (MousePosition.x - (RightPanel.position.x + 7)) / (gbIsHellfire ? 61 : 76);
 	}
 }
 
-const char *get_pieces_str(int nGold)
+void DrawGoldSplit(const Surface &out, int amount)
 {
-	const char *result;
+	const int dialogX = 30;
 
-	result = "piece";
-	if (nGold != 1)
-		result = "pieces";
-	return result;
-}
+	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { dialogX, 178 }), *pGBoxBuff, 1);
 
-void DrawGoldSplit(CelOutputBuffer out, int amount)
-{
-	int screen_x, i;
+	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
 
-	screen_x = 0;
-	CelDrawTo(out, 351, 178, pGBoxBuff, 1, 261);
-	sprintf(tempstr, "You have %u gold", initialDropGoldValue);
-	ADD_PlrStringXY(out, 366, 87, 600, tempstr, COL_GOLD);
-	sprintf(tempstr, "%s.  How many do", get_pieces_str(initialDropGoldValue));
-	ADD_PlrStringXY(out, 366, 103, 600, tempstr, COL_GOLD);
-	ADD_PlrStringXY(out, 366, 121, 600, "you want to remove?", COL_GOLD);
+	// strncpy copies up to the maximum number of characters specified, it does not ensure that a null character is
+	// written to the end of the c-string. To be safe we specify a limit one character shorter than the buffer size and
+	// ensure that the buffer ends in a null character manually.
+	strncpy(
+	    tempstr,
+	    fmt::format(ngettext(
+	                    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/ "You have {:d} gold piece. How many do you want to remove?",
+	                    "You have {:d} gold pieces. How many do you want to remove?",
+	                    initialDropGoldValue),
+	        initialDropGoldValue)
+	        .c_str(),
+	    BufferSize - 1);
+	// Ensure the prompt shown to the player is terminated properly (in case the formatted/translated string ends up
+	// being longer than 255 characters)
+	tempstr[BufferSize - 1] = '\0';
+
+	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
+	const std::string wrapped = WordWrapString(tempstr, 200);
+
+	// The split gold dialog is roughly 4 lines high, but we need at least one line for the player to input an amount.
+	// Using a clipping region 50 units high (approx 3 lines with a lineheight of 17) to ensure there is enough room left
+	//  for the text entered by the player.
+	DrawString(out, wrapped, { GetPanelPosition(UiPanels::Inventory, { dialogX + 31, 75 }), { 200, 50 } }, UiFlags::ColorWhitegold | UiFlags::AlignCenter, 1, 17);
+
+	tempstr[0] = '\0';
 	if (amount > 0) {
-		sprintf(tempstr, "%u", amount);
-		PrintGameStr(out, 388, 140, tempstr, COL_WHITE);
+		// snprintf ensures that the destination buffer ends in a null character.
+		snprintf(tempstr, BufferSize, "%u", amount);
 	}
-	if (amount > 0) {
-		for (i = 0; i < tempstr[i]; i++) {
-			BYTE c = fontframe[gbFontTransTbl[(BYTE)tempstr[i]]];
-			screen_x += fontkern[c] + 1;
-		}
-		screen_x += 452;
-	} else {
-		screen_x = 450;
-	}
-	CelDrawTo(out, screen_x, 140, pSPentSpn2Cels, PentSpn2Spin(), 12);
+	// Even a ten digit amount of gold only takes up about half a line. There's no need to wrap or clip text here so we
+	// use the Point form of DrawString.
+	DrawString(out, tempstr, GetPanelPosition(UiPanels::Inventory, { dialogX + 37, 128 }), UiFlags::ColorWhite | UiFlags::PentaCursor);
 }
 
 void control_drop_gold(char vkey)
 {
-	char input[6];
+	auto &myPlayer = Players[MyPlayerId];
 
-	if (plr[myplr]._pHitPoints >> 6 <= 0) {
-		dropGoldFlag = FALSE;
+	if (myPlayer._pHitPoints >> 6 <= 0) {
+		dropGoldFlag = false;
 		dropGoldValue = 0;
 		return;
 	}
 
+	char input[6];
 	memset(input, 0, sizeof(input));
-	snprintf(input, sizeof(input), "%d", dropGoldValue);
+	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
-			control_remove_gold(myplr, initialDropGoldIndex);
-		dropGoldFlag = FALSE;
+			RemoveGold(myPlayer, initialDropGoldIndex);
+		dropGoldFlag = false;
 	} else if (vkey == DVL_VK_ESCAPE) {
-		dropGoldFlag = FALSE;
+		dropGoldFlag = false;
 		dropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
 		input[strlen(input) - 1] = '\0';
@@ -1993,8 +1702,6 @@ void control_drop_gold(char vkey)
 			input[strlen(input)] = vkey;
 			if (atoi(input) > initialDropGoldValue)
 				return;
-			if (strlen(input) > strlen(input))
-				return;
 		} else {
 			input[0] = vkey;
 		}
@@ -2002,301 +1709,188 @@ void control_drop_gold(char vkey)
 	}
 }
 
-void control_remove_gold(int pnum, int gold_index)
+void DrawTalkPan(const Surface &out)
 {
-	int gi;
-
-	if (gold_index <= INVITEM_INV_LAST) {
-		gi = gold_index - INVITEM_INV_FIRST;
-		plr[pnum].InvList[gi]._ivalue -= dropGoldValue;
-		if (plr[pnum].InvList[gi]._ivalue > 0)
-			SetGoldCurs(pnum, gi);
-		else
-			RemoveInvItem(pnum, gi);
-	} else {
-		gi = gold_index - INVITEM_BELT_FIRST;
-		plr[pnum].SpdList[gi]._ivalue -= dropGoldValue;
-		if (plr[pnum].SpdList[gi]._ivalue > 0)
-			SetSpdbarGoldCurs(pnum, gi);
-		else
-			RemoveSpdBarItem(pnum, gi);
-	}
-	SetPlrHandItem(&plr[pnum].HoldItem, IDI_GOLD);
-	GetGoldSeed(pnum, &plr[pnum].HoldItem);
-	plr[pnum].HoldItem._ivalue = dropGoldValue;
-	plr[pnum].HoldItem._iStatFlag = TRUE;
-	control_set_gold_curs(pnum);
-	plr[pnum]._pGold = CalculateGold(pnum);
-	dropGoldValue = 0;
-}
-
-void control_set_gold_curs(int pnum)
-{
-	SetPlrHandGoldCurs(&plr[pnum].HoldItem);
-	NewCursor(plr[pnum].HoldItem._iCurs + CURSOR_FIRSTITEM);
-}
-
-static char *control_print_talk_msg(CelOutputBuffer out, char *msg, int *x, int y, text_color color)
-{
-	BYTE c;
-	int width;
-
-	*x += 200;
-	y += 22 + PANEL_Y;
-	width = *x;
-	while (*msg) {
-
-		c = gbFontTransTbl[(BYTE)*msg];
-		c = fontframe[c];
-		width += fontkern[c] + 1;
-		if (width > 450 + PANEL_X)
-			return msg;
-		msg++;
-		if (c != 0) {
-			PrintChar(out, *x, y, c, color);
-		}
-		*x += fontkern[c] + 1;
-	}
-	return NULL;
-}
-
-void DrawTalkPan(CelOutputBuffer out)
-{
-	int i, off, talk_btn, nCel, x;
-	char *msg;
-
 	if (!talkflag)
 		return;
 
-	DrawPanelBox(out, 175, sgbPlrTalkTbl + 20, 294, 5, PANEL_X + 175, PANEL_Y + 4);
-	off = 0;
-	for (i = 293; i > 283; off++, i--) {
-		DrawPanelBox(out, (off >> 1) + 175, sgbPlrTalkTbl + off + 25, i, 1, (off >> 1) + PANEL_X + 175, off + PANEL_Y + 9);
+	DrawPanelBox(out, { 175, sgbPlrTalkTbl + 20, 294, 5 }, { PANEL_X + 175, PANEL_Y + 4 });
+	int off = 0;
+	for (int i = 293; i > 283; off++, i--) {
+		DrawPanelBox(out, { (off / 2) + 175, sgbPlrTalkTbl + off + 25, i, 1 }, { (off / 2) + PANEL_X + 175, off + PANEL_Y + 9 });
 	}
-	DrawPanelBox(out, 185, sgbPlrTalkTbl + 35, 274, 30, PANEL_X + 185, PANEL_Y + 19);
-	DrawPanelBox(out, 180, sgbPlrTalkTbl + 65, 284, 5, PANEL_X + 180, PANEL_Y + 49);
-	for (i = 0; i < 10; i++) {
-		DrawPanelBox(out, 180, sgbPlrTalkTbl + i + 70, i + 284, 1, PANEL_X + 180, i + PANEL_Y + 54);
+	DrawPanelBox(out, { 185, sgbPlrTalkTbl + 35, 274, 30 }, { PANEL_X + 185, PANEL_Y + 19 });
+	DrawPanelBox(out, { 180, sgbPlrTalkTbl + 65, 284, 5 }, { PANEL_X + 180, PANEL_Y + 49 });
+	for (int i = 0; i < 10; i++) {
+		DrawPanelBox(out, { 180, sgbPlrTalkTbl + i + 70, i + 284, 1 }, { PANEL_X + 180, i + PANEL_Y + 54 });
 	}
-	DrawPanelBox(out, 170, sgbPlrTalkTbl + 80, 310, 55, PANEL_X + 170, PANEL_Y + 64);
-	msg = sgszTalkMsg;
-	for (i = 0; i < 39; i += 13) {
-		x = 0 + PANEL_LEFT;
-		msg = control_print_talk_msg(out, msg, &x, i, COL_WHITE);
-		if (!msg)
-			break;
-	}
-	if (msg)
-		*msg = '\0';
-	CelDrawTo(out, x, i + 22 + PANEL_Y, pSPentSpn2Cels, PentSpn2Spin(), 12);
-	talk_btn = 0;
-	for (i = 0; i < 4; i++) {
-		if (i == myplr)
+	DrawPanelBox(out, { 170, sgbPlrTalkTbl + 80, 310, 55 }, { PANEL_X + 170, PANEL_Y + 64 });
+
+	int x = PANEL_LEFT + 200;
+	int y = PANEL_Y + 10;
+
+	uint32_t idx = DrawString(out, TalkMessage, { { x, y }, { 250, 27 } }, UiFlags::ColorWhite | UiFlags::PentaCursor, 1, 13);
+	if (idx < sizeof(TalkMessage))
+		TalkMessage[idx] = '\0';
+
+	x += 46;
+	int talkBtn = 0;
+	for (int i = 0; i < 4; i++) {
+		if (i == MyPlayerId)
 			continue;
-		text_color color = COL_RED;
-		if (whisper[i]) {
-			color = COL_GOLD;
-			if (talkbtndown[talk_btn]) {
-				if (talk_btn != 0)
-					nCel = 4;
-				else
-					nCel = 3;
-				CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
+
+		UiFlags color = UiFlags::ColorRed;
+		const Point talkPanPosition { 172 + PANEL_X, 84 + 18 * talkBtn + PANEL_Y };
+		if (WhisperList[i]) {
+			color = UiFlags::ColorWhitegold;
+			if (TalkButtonsDown[talkBtn]) {
+				int nCel = talkBtn != 0 ? 4 : 3;
+				CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
+				DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, 2);
 			}
 		} else {
-			if (talk_btn != 0)
-				nCel = 2;
-			else
-				nCel = 1;
-			if (talkbtndown[talk_btn])
+			int nCel = talkBtn != 0 ? 2 : 1;
+			if (TalkButtonsDown[talkBtn])
 				nCel += 4;
-			CelDrawTo(out, 172 + PANEL_X, 84 + 18 * talk_btn + PANEL_Y, pTalkBtns, nCel, 61);
+			CelDrawTo(out, talkPanPosition, *talkButtons, nCel);
+			DrawArt(out, talkPanPosition + Displacement { 4, -15 }, &TalkButton, TalkButtonsDown[talkBtn] ? 1 : 0);
 		}
-		if (plr[i].plractive) {
-			x = 46 + PANEL_LEFT;
-			control_print_talk_msg(out, plr[i]._pName, &x, 60 + talk_btn * 18, color);
+		auto &player = Players[i];
+		if (player.plractive) {
+			DrawString(out, player._pName, { { x, y + 60 + talkBtn * 18 }, { 204, 0 } }, color);
 		}
 
-		talk_btn++;
+		talkBtn++;
 	}
 }
 
-BOOL control_check_talk_btn()
+bool control_check_talk_btn()
 {
-	int i;
-
 	if (!talkflag)
-		return FALSE;
+		return false;
 
-	if (MouseX < 172 + PANEL_LEFT)
-		return FALSE;
-	if (MouseY < 69 + PANEL_TOP)
-		return FALSE;
-	if (MouseX > 233 + PANEL_LEFT)
-		return FALSE;
-	if (MouseY > 123 + PANEL_TOP)
-		return FALSE;
+	if (MousePosition.x < 172 + PANEL_LEFT)
+		return false;
+	if (MousePosition.y < 69 + PANEL_TOP)
+		return false;
+	if (MousePosition.x > 233 + PANEL_LEFT)
+		return false;
+	if (MousePosition.y > 123 + PANEL_TOP)
+		return false;
 
-	for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++) {
-		talkbtndown[i] = FALSE;
+	for (bool &talkButtonDown : TalkButtonsDown) {
+		talkButtonDown = false;
 	}
 
-	talkbtndown[(MouseY - (69 + PANEL_TOP)) / 18] = TRUE;
+	TalkButtonsDown[(MousePosition.y - (69 + PANEL_TOP)) / 18] = true;
 
-	return TRUE;
+	return true;
 }
 
 void control_release_talk_btn()
 {
-	int i, p, off;
+	if (!talkflag)
+		return;
 
-	if (talkflag) {
-		for (i = 0; i < sizeof(talkbtndown) / sizeof(talkbtndown[0]); i++)
-			talkbtndown[i] = FALSE;
-		if (MouseX >= 172 + PANEL_LEFT && MouseY >= 69 + PANEL_TOP && MouseX <= 233 + PANEL_LEFT && MouseY <= 123 + PANEL_TOP) {
-			off = (MouseY - (69 + PANEL_TOP)) / 18;
+	for (bool &talkButtonDown : TalkButtonsDown)
+		talkButtonDown = false;
 
-			for (p = 0; p < MAX_PLRS && off != -1; p++) {
-				if (p != myplr)
-					off--;
-			}
-			if (p <= MAX_PLRS)
-				whisper[p - 1] = !whisper[p - 1];
-		}
+	if (MousePosition.x < 172 + PANEL_LEFT || MousePosition.y < 69 + PANEL_TOP || MousePosition.x > 233 + PANEL_LEFT || MousePosition.y > 123 + PANEL_TOP)
+		return;
+
+	int off = (MousePosition.y - (69 + PANEL_TOP)) / 18;
+
+	int p = 0;
+	for (; p < MAX_PLRS && off != -1; p++) {
+		if (p != MyPlayerId)
+			off--;
 	}
-}
-
-void control_reset_talk_msg(char *msg)
-{
-	int i, pmask;
-	pmask = 0;
-
-	for (i = 0; i < MAX_PLRS; i++) {
-		if (whisper[i])
-			pmask |= 1 << i;
-	}
-	NetSendCmdString(pmask, sgszTalkMsg);
+	if (p <= MAX_PLRS)
+		WhisperList[p - 1] = !WhisperList[p - 1];
 }
 
 void control_type_message()
 {
-	int i;
-
-	if (!gbIsMultiplayer) {
+	if (!IsChatAvailable())
 		return;
-	}
 
-	talkflag = TRUE;
-	sgszTalkMsg[0] = '\0';
-	for (i = 0; i < 3; i++) {
-		talkbtndown[i] = FALSE;
+	talkflag = true;
+	int x = PANEL_LEFT + 200;
+	int y = PANEL_Y + 22;
+	SDL_Rect rect = { x, y, 250, 39 };
+	SDL_SetTextInputRect(&rect);
+	TalkMessage[0] = '\0';
+	for (bool &talkButtonDown : TalkButtonsDown) {
+		talkButtonDown = false;
 	}
 	sgbPlrTalkTbl = PANEL_HEIGHT + 16;
 	force_redraw = 255;
-	sgbTalkSavePos = sgbNextTalkSave;
+	TalkSaveIndex = NextTalkSave;
+	SDL_StartTextInput();
 }
 
 void control_reset_talk()
 {
-	talkflag = FALSE;
+	talkflag = false;
+	SDL_StopTextInput();
 	sgbPlrTalkTbl = 0;
 	force_redraw = 255;
 }
 
-static void control_press_enter()
+bool IsTalkActive()
 {
-	int i;
-	BYTE talk_save;
-
-	if (sgszTalkMsg[0] != 0) {
-		control_reset_talk_msg(sgszTalkMsg);
-		for (i = 0; i < 8; i++) {
-			if (!strcmp(sgszTalkSave[i], sgszTalkMsg))
-				break;
-		}
-		if (i >= 8) {
-			strcpy(sgszTalkSave[sgbNextTalkSave], sgszTalkMsg);
-			sgbNextTalkSave++;
-			sgbNextTalkSave &= 7;
-		} else {
-			talk_save = sgbNextTalkSave - 1;
-			talk_save &= 7;
-			if (i != talk_save) {
-				strcpy(sgszTalkSave[i], sgszTalkSave[talk_save]);
-				strcpy(sgszTalkSave[talk_save], sgszTalkMsg);
-			}
-		}
-		sgszTalkMsg[0] = '\0';
-		sgbTalkSavePos = sgbNextTalkSave;
-	}
-	control_reset_talk();
-}
-
-BOOL control_talk_last_key(int vkey)
-{
-	int result;
-
-	if (!gbIsMultiplayer)
-		return FALSE;
+	if (!IsChatAvailable())
+		return false;
 
 	if (!talkflag)
-		return FALSE;
+		return false;
 
-	if ((DWORD)vkey < DVL_VK_SPACE)
-		return FALSE;
-
-	result = strlen(sgszTalkMsg);
-	if (result < 78) {
-		sgszTalkMsg[result] = vkey;
-		sgszTalkMsg[result + 1] = '\0';
-	}
-	return TRUE;
+	return true;
 }
 
-static void control_up_down(int v)
+void control_new_text(string_view text)
 {
-	int i;
-
-	for (i = 0; i < 8; i++) {
-		sgbTalkSavePos = (v + sgbTalkSavePos) & 7;
-		if (sgszTalkSave[sgbTalkSavePos][0]) {
-			strcpy(sgszTalkMsg, sgszTalkSave[sgbTalkSavePos]);
-			return;
-		}
-	}
+	strncat(TalkMessage, text.data(), sizeof(TalkMessage) - strlen(TalkMessage) - 1);
 }
 
-BOOL control_presskeys(int vkey)
+bool control_presskeys(int vkey)
 {
-	int len;
-	BOOL ret;
+	if (!IsChatAvailable())
+		return false;
+	if (!talkflag)
+		return false;
 
-	if (gbIsMultiplayer) {
-		if (!talkflag) {
-			ret = FALSE;
-		} else {
-			if (vkey == DVL_VK_SPACE) {
-			} else if (vkey == DVL_VK_ESCAPE) {
-				control_reset_talk();
-			} else if (vkey == DVL_VK_RETURN) {
-				control_press_enter();
-			} else if (vkey == DVL_VK_BACK) {
-				len = strlen(sgszTalkMsg);
-				if (len > 0)
-					sgszTalkMsg[len - 1] = '\0';
-			} else if (vkey == DVL_VK_DOWN) {
-				control_up_down(1);
-			} else if (vkey == DVL_VK_UP) {
-				control_up_down(-1);
-			} else {
-				return FALSE;
-			}
-			ret = TRUE;
-		}
-	} else {
-		ret = FALSE;
+	if (vkey == DVL_VK_ESCAPE) {
+		control_reset_talk();
+	} else if (vkey == DVL_VK_RETURN) {
+		ControlPressEnter();
+	} else if (vkey == DVL_VK_BACK) {
+		TalkMessage[FindLastUtf8Symbols(TalkMessage)] = '\0';
+	} else if (vkey == DVL_VK_DOWN) {
+		ControlUpDown(1);
+	} else if (vkey == DVL_VK_UP) {
+		ControlUpDown(-1);
+	} else if (vkey != DVL_VK_SPACE) {
+		return false;
 	}
-	return ret;
+
+	return true;
 }
 
-DEVILUTION_END_NAMESPACE
+void DiabloHotkeyMsg(uint32_t dwMsg)
+{
+	if (!IsChatAvailable()) {
+		return;
+	}
+
+	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
+
+#ifdef _DEBUG
+	if (CheckDebugTextCommand(sgOptions.Chat.szHotKeyMsgs[dwMsg]))
+		return;
+#endif
+
+	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+}
+
+} // namespace devilution

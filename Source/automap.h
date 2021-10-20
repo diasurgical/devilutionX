@@ -3,30 +3,29 @@
  *
  * Interface of the in-game map overlay.
  */
-#ifndef __AUTOMAP_H__
-#define __AUTOMAP_H__
+#pragma once
+
+#include <cstdint>
 
 #include "engine.h"
+#include "engine/displacement.hpp"
+#include "engine/point.hpp"
+#include "gendung.h"
 
-DEVILUTION_BEGIN_NAMESPACE
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 /** Specifies whether the automap is enabled. */
-extern bool automapflag;
+extern bool AutomapActive;
 /** Tracks the explored areas of the map. */
-extern bool automapview[DMAXX][DMAXY];
+extern bool AutomapView[DMAXX][DMAXY];
 /** Specifies the scale of the automap. */
-extern Sint32 AutoMapScale;
-extern Sint32 AutoMapXOfs;
-extern Sint32 AutoMapYOfs;
-extern Sint32 AmLine64;
-extern Sint32 AmLine32;
-extern Sint32 AmLine16;
-extern Sint32 AmLine8;
-extern Sint32 AmLine4;
+extern int AutoMapScale;
+extern Displacement AutomapOffset;
+extern int AmLine64;
+extern int AmLine32;
+extern int AmLine16;
+extern int AmLine8;
+extern int AmLine4;
 
 /**
  * @brief Initializes the automap.
@@ -76,22 +75,16 @@ void AutomapZoomOut();
 /**
  * @brief Renders the automap to the given buffer.
  */
-void DrawAutomap(CelOutputBuffer out);
+void DrawAutomap(const Surface &out);
 
 /**
  * @brief Marks the given coordinate as within view on the automap.
  */
-void SetAutomapView(Sint32 x, Sint32 y);
+void SetAutomapView(Point tile);
 
 /**
  * @brief Resets the zoom level of the automap.
  */
 void AutomapZoomReset();
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __AUTOMAP_H__ */
+} // namespace devilution

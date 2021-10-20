@@ -4,7 +4,7 @@
 
 ## Installation
 
-1. Copy [devilutionx-gkd350h.opk](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-gkd350h.opk) to `/media/data/apps` or `/media/sdcard/apps/`.
+1. Copy [devilutionx-gkd350h.opk](https://github.com/diasurgical/devilutionX/releases/download/1.0.1/devilutionx-gkd350h.opk) to `/media/data/apps` or `/media/sdcard/apps/`.
 2. Copy `diabdat.mpq` from your CD, or GoG install folder to:
 
    ~~~
@@ -32,11 +32,11 @@
 
 * Start and Select are swapped in this version because Start + D-Pad controls backlight on the GKD350h.
 * There is nothing to map mouse emulation to in this version because of this but it isn't necessary to play the game. Unfortunately, this also means that you can't move the automap.
-* This version looks uglier than on RG350 because it uses software scaling beacuse the IPU on the GKD350h doesn't work.
+* This version looks uglier than on RG350 because it uses software scaling because the IPU on the GKD350h doesn't work.
 
 Saves are compatible with PC saves from Diablo 1 and DevilutionX.
 
 ## Resources
 
-* Discord: https://discord.gg/aQBQdDe
+* Discord: https://discord.gg/YQKCAYQ
 * GitHub: https://github.com/diasurgical/devilutionX

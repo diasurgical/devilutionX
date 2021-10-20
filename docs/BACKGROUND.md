@@ -70,11 +70,11 @@ P.P.P.S. you can also view our presentation slides here: https://docs.google.com
 
 [1]: https://github.com/diasurgical/scalpel/blob/master/psx/_dump_/_dump_merge_c_src_/diabpsx/source/drlg_l1.cpp
 
-[2]: http://diablo1.se/notes/debug.html
+[2]: https://web.archive.org/web/20191129090736/diablo1.se/notes/debug.html
 
 [3]: https://github.com/diasurgical/devilution/issues/111#issuecomment-426059660
 
-[4]: http://bytepointer.com/articles/the_microsoft_rich_header.htm
+[4]: https://bytepointer.com/articles/the_microsoft_rich_header.htm
 
 [5]: https://github.com/diasurgical/devilution/issues/111
 

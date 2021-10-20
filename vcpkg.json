@@ -1,0 +1,25 @@
+{
+    "name": "devilutionx",
+    "version-string": "1.2.1",
+    "dependencies": [
+        "fmt",
+        "libpng",
+        "libsodium",
+        "sdl2"
+    ],
+    "features": {
+        "translations": {
+            "description": "Build translation files",
+            "dependencies": [
+                {
+                    "name": "gettext",
+                    "features": [ "tools" ]
+                }
+            ]
+        },
+        "tests": {
+            "description": "Build tests",
+            "dependencies": [ "gtest" ]
+        }
+    }
+}

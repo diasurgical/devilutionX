@@ -1,5 +1,5 @@
 brew "cmake"
-brew "sdl2_mixer" 
-brew "sdl2_ttf" 
-brew "libsodium" 
+brew "fmt"
+brew "sdl2"
+brew "libsodium"
 brew "pkg-config"

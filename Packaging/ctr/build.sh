@@ -26,9 +26,8 @@ build() {
 
 install_deps() {
 	"$DEVKITPRO/pacman/bin/pacman" -S --needed --noconfirm --quiet \
-		3ds-sdl 3ds-sdl_ttf 3ds-sdl_mixer \
-		3ds-freetype 3ds-libogg 3ds-libvorbisidec 3ds-mikmod \
-		libctru citro3d picasso devkitARM general-tools 3dslink 3dstools devkitpro-pkgbuild-helpers
+		devkitARM general-tools 3dstools devkitpro-pkgbuild-helpers \
+		libctru citro3d 3ds-sdl
 }
 
 prepare_devkitpro() {

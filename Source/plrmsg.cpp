@@ -3,31 +3,52 @@
  *
  * Implementation of functionality for printing the ingame chat messages.
  */
-#include "all.h"
+#include "plrmsg.h"
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <fmt/format.h>
 
-static BYTE plr_msg_slot;
+#include "control.h"
+#include "engine/render/text_render.hpp"
+#include "inv.h"
+#include "utils/language.h"
+
+namespace devilution {
+
+namespace {
+
+#define PMSG_COUNT 8
+
+uint8_t plr_msg_slot;
 _plrmsg plr_msgs[PMSG_COUNT];
 
 /** Maps from player_num to text color, as used in chat messages. */
-const text_color text_color_from_player_num[MAX_PLRS + 1] = { COL_WHITE, COL_WHITE, COL_WHITE, COL_WHITE, COL_GOLD };
+const UiFlags TextColorFromPlayerId[MAX_PLRS + 1] = { UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhite, UiFlags::ColorWhitegold };
 
-void plrmsg_delay(BOOL delay)
+void PrintChatMessage(const Surface &out, int x, int y, int width, char *text, UiFlags style)
 {
-	int i;
-	_plrmsg *pMsg;
-	static DWORD plrmsg_ticks;
+	int length = strlen(text);
+	for (int i = 0; i < length; i++) {
+		if (text[i] == '\n')
+			text[i] = ' ';
+	}
+	DrawString(out, WordWrapString(text, width), { { x, y }, { width, 0 } }, style, 1, 10);
+}
+
+} // namespace
+
+void plrmsg_delay(bool delay)
+{
+	static uint32_t plrmsgTicks;
 
 	if (delay) {
-		plrmsg_ticks = -SDL_GetTicks();
+		plrmsgTicks = -SDL_GetTicks();
 		return;
 	}
 
-	plrmsg_ticks += SDL_GetTicks();
-	pMsg = plr_msgs;
-	for (i = 0; i < PMSG_COUNT; i++, pMsg++)
-		pMsg->time += plrmsg_ticks;
+	plrmsgTicks += SDL_GetTicks();
+	_plrmsg *pMsg = plr_msgs;
+	for (int i = 0; i < PMSG_COUNT; i++, pMsg++)
+		pMsg->time += plrmsgTicks;
 }
 
 void ErrorPlrMsg(const char *pszMsg)
@@ -61,18 +82,18 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	plr_msg_slot = (plr_msg_slot + 1) & (PMSG_COUNT - 1);
 	pMsg->player = pnum;
 	pMsg->time = SDL_GetTicks();
-	assert(strlen(plr[pnum]._pName) < PLR_NAME_LEN);
+	auto &player = Players[pnum];
+	assert(strlen(player._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
-	sprintf(pMsg->str, "%s (lvl %d): %s", plr[pnum]._pName, plr[pnum]._pLevel, pszStr);
+	strcpy(pMsg->str, fmt::format(_(/* TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location */ "{:s} (lvl {:d}): {:s}"), player._pName, player._pLevel, pszStr).c_str());
 }
 
 void ClearPlrMsg()
 {
-	int i;
 	_plrmsg *pMsg = plr_msgs;
-	DWORD tick = SDL_GetTicks();
+	uint32_t tick = SDL_GetTicks();
 
-	for (i = 0; i < PMSG_COUNT; i++, pMsg++) {
+	for (int i = 0; i < PMSG_COUNT; i++, pMsg++) {
 		if ((int)(tick - pMsg->time) > 10000)
 			pMsg->str[0] = '\0';
 	}
@@ -84,56 +105,14 @@ void InitPlrMsg()
 	plr_msg_slot = 0;
 }
 
-static void PrintPlrMsg(CelOutputBuffer out, DWORD x, DWORD y, DWORD width, const char *str, text_color col)
+void DrawPlrMsg(const Surface &out)
 {
-	int line = 0;
-
-	while (*str) {
-		BYTE c;
-		int sx = x;
-		DWORD len = 0;
-		const char *sstr = str;
-		const char *endstr = sstr;
-
-		while (1) {
-			if (*sstr) {
-				c = gbFontTransTbl[(BYTE)*sstr++];
-				c = fontframe[c];
-				len += fontkern[c] + 1;
-				if (!c) // allow wordwrap on blank glyph
-					endstr = sstr;
-				else if (len >= width)
-					break;
-			} else {
-				endstr = sstr;
-				break;
-			}
-		}
-
-		while (str < endstr) {
-			c = gbFontTransTbl[(BYTE)*str++];
-			c = fontframe[c];
-			if (c)
-				PrintChar(out, sx, y, c, col);
-			sx += fontkern[c] + 1;
-		}
-
-		y += 10;
-		line++;
-		if (line == 3)
-			break;
-	}
-}
-
-void DrawPlrMsg(CelOutputBuffer out)
-{
-	int i;
 	DWORD x = 10;
-	DWORD y = 70;
+	DWORD y = 58;
 	DWORD width = gnScreenWidth - 20;
 	_plrmsg *pMsg;
 
-	if (chrflag || questlog) {
+	if (chrflag || QuestLogIsOpen) {
 		x += SPANEL_WIDTH;
 		width -= SPANEL_WIDTH;
 	}
@@ -144,12 +123,12 @@ void DrawPlrMsg(CelOutputBuffer out)
 		return;
 
 	pMsg = plr_msgs;
-	for (i = 0; i < PMSG_COUNT; i++) {
-		if (pMsg->str[0])
-			PrintPlrMsg(out, x, y, width, pMsg->str, text_color_from_player_num[pMsg->player]);
+	for (int i = 0; i < PMSG_COUNT; i++) {
+		if (pMsg->str[0] != '\0')
+			PrintChatMessage(out, x, y, width, pMsg->str, TextColorFromPlayerId[pMsg->player]);
 		pMsg++;
 		y += 35;
 	}
 }
 
-DEVILUTION_END_NAMESPACE
+} // namespace devilution

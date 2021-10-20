@@ -3,14 +3,11 @@
  *
  * Interface of the hell level generation algorithms.
  */
-#ifndef __DRLG_L4_H__
-#define __DRLG_L4_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "gendung.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
 extern int diabquad1x;
 extern int diabquad1y;
@@ -20,14 +17,8 @@ extern int diabquad3x;
 extern int diabquad3y;
 extern int diabquad4x;
 extern int diabquad4y;
-BOOL IsDURWall(char d);
-BOOL IsDLLWall(char dd);
-void CreateL4Dungeon(DWORD rseed, int entry);
+void CreateL4Dungeon(uint32_t rseed, lvl_entry entry);
+void LoadL4Dungeon(const char *path, int vx, int vy);
+void LoadPreL4Dungeon(const char *path);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DRLG_L4_H__ */
+} // namespace devilution

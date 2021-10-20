@@ -3,34 +3,26 @@
  *
  * Interface of functions for compression and decompressing MPQ data.
  */
-#ifndef __ENCRYPT_H__
-#define __ENCRYPT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "utils/stdcompat/cstddef.hpp"
 
-typedef struct TDataInfo {
-	Uint8 *srcData;
-	Uint32 srcOffset;
-	Uint8 *destData;
-	Uint32 destOffset;
-	Uint32 size;
-} TDataInfo;
+namespace devilution {
 
-void Decrypt(DWORD *castBlock, DWORD size, DWORD key);
-void Encrypt(DWORD *castBlock, DWORD size, DWORD key);
-DWORD Hash(const char *s, int type);
-void InitHash();
-DWORD PkwareCompress(BYTE *srcData, DWORD size);
-void PkwareDecompress(BYTE *pbInBuff, int recv_size, int dwMaxBytes);
+struct TDataInfo {
+	byte *srcData;
+	uint32_t srcOffset;
+	byte *destData;
+	uint32_t destOffset;
+	uint32_t size;
+};
 
-#ifdef __cplusplus
-}
-#endif
+void Decrypt(uint32_t *castBlock, uint32_t size, uint32_t key);
+void Encrypt(uint32_t *castBlock, uint32_t size, uint32_t key);
+uint32_t Hash(const char *s, int type);
+uint32_t PkwareCompress(byte *srcData, uint32_t size);
+void PkwareDecompress(byte *inBuff, int recvSize, int maxBytes);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __ENCRYPT_H__ */
+} // namespace devilution

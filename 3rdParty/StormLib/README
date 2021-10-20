@@ -1,13 +1,6 @@
-This is a slightly modified version of ladislav-zezula/StormLib@4ad0bff21da0163917e1552960e6a43679586b89
+This is a slightly modified version of ladislav-zezula/StormLib@0a9057a09f083eb4791a55eb3d9538cea9822e37
 
-Cosmetic changes:
-* Remove all unused files.
+Changes:
+
+* Removed all files not used by DevilutionX.
 * Comment out unnecessary bits with `#ifndef FULL`.
-
-Implementation changes:
-* Redefine `bool` to `BOOL`.
-* Use STORMAPI instead of WINAPI for calling convention (and define it as nothing).
-* Use external Storm error handling (`SErrGetLastError()` etc.)
-* Convert pathnames to Unix-style slashes.
-* Bugfixes, with comment: // BUGFIX (devilutionX)
-* Fix missing header includes on macOS (devilutionX)

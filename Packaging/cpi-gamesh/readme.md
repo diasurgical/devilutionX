@@ -8,11 +8,12 @@ To install devilutionX, just copy the [\_\_init__.py](__init__.py) to a newly cr
 From this menu, you can press 'X' to clone the git repository for devilutionX and compile the code. Dependencies are installed automatically (cmake and SDL development packages).
 Once installed, 'X' pulls the updated code and does the compiling. Note that any changes made locally to the source are reverted before pulling.
 
-When the compile is finished and the diabdat.mpq is in place at '/home/cpi/.local/share/diasurgical/devilution/', you can play the game. Enjoy!
+When the compile is finished and the diabdat.mpq is in place at '/home/cpi/.local/share/diasurgical/devilution/', you can play the game.
+To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq. Enjoy!
 
 ## Play devilutionX on the CPi GameShell
 
-When the game is compiled and the diabdat.mpq is in place, you can press "A" in the devilutionX menu to play.
+When the game is compiled and the mpq files are in place, you can press "A" in the devilutionX menu to play.
 
 The following key mapping is in place.
 Unfortunately, the mapping is not trivial as devilutionX and GameShell use their own not(yet) compatible shift mechanism.

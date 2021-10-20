@@ -3,24 +3,26 @@
  *
  * Interface of functions setting up the graphics pipeline.
  */
-#ifndef __DX_H__
-#define __DX_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "engine.h"
 
-CelOutputBuffer GlobalBackBuffer();
+namespace devilution {
+
+/** Whether we render directly to the screen surface, i.e. `PalSurface == GetOutputSurface()` */
+extern bool RenderDirectlyToOutputSurface;
+
+Surface GlobalBackBuffer();
 
 void dx_init();
-void lock_buf(BYTE idx);
-void unlock_buf(BYTE idx);
+void lock_buf(int idx);
+void unlock_buf(int idx);
 void dx_cleanup();
 void dx_reinit();
 void InitPalette();
-void BltFast(SDL_Rect *src_rect, SDL_Rect *dst_rect);
-void Blit(SDL_Surface *src, SDL_Rect *src_rect, SDL_Rect *dst_rect);
+void BltFast(SDL_Rect *srcRect, SDL_Rect *dstRect);
+void Blit(SDL_Surface *src, SDL_Rect *srcRect, SDL_Rect *dstRect);
 void RenderPresent();
-void PaletteGetEntries(DWORD dwNumEntries, SDL_Color *lpEntries);
+void PaletteGetEntries(int dwNumEntries, SDL_Color *lpEntries);
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __DX_H__ */
+} // namespace devilution

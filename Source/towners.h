@@ -3,16 +3,22 @@
  *
  * Interface of functionality for loading and spawning towners.
  */
-#ifndef __TOWNERS_H__
-#define __TOWNERS_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
+#include <memory>
+#include "utils/stdcompat/string_view.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "items.h"
+#include "player.h"
+#include "quests.h"
+#include "utils/stdcompat/cstddef.hpp"
 
-typedef enum _talker_id {
+namespace devilution {
+
+#define NUM_TOWNERS 16
+
+enum _talker_id : uint8_t {
 	TOWN_SMITH,
 	TOWN_HEALER,
 	TOWN_DEADGUY,
@@ -27,64 +33,44 @@ typedef enum _talker_id {
 	TOWN_GIRL,
 	TOWN_COWFARM,
 	NUM_TOWNER_TYPES,
-} _talker_id;
+};
 
-typedef struct TNQ {
-	Uint8 _qsttype;
-	Uint8 _qstmsg;
-	bool _qstmsgact;
-} TNQ;
+struct Towner {
+	byte *_tNAnim[8];
+	std::unique_ptr<byte[]> data;
+	byte *_tAnimData;
+	/** Used to get a voice line and text related to active quests when the player speaks to a town npc */
+	int16_t seed;
+	/** Tile position of NPC */
+	Point position;
+	int16_t _tAnimWidth;
+	/** Tick length of each frame in the current animation */
+	int16_t _tAnimDelay;
+	/** Increases by one each game tick, counting how close we are to _pAnimDelay */
+	int16_t _tAnimCnt;
+	/** Number of frames in current animation */
+	uint8_t _tAnimLen;
+	/** Current frame of animation. */
+	uint8_t _tAnimFrame;
+	uint8_t _tAnimFrameCnt;
+	string_view name;
+	/** Specifies the animation frame sequence. */
+	const uint8_t *animOrder; // unowned
+	std::size_t animOrderSize;
+	void (*talk)(Player &player, Towner &towner);
+	_talker_id _ttype;
+};
 
-typedef struct TownerStruct {
-	int _tmode;
-	int _ttype;
-	int _tx;    // Tile X-position of NPC
-	int _ty;    // Tile Y-position of NPC
-	int _txoff; // Sprite X-offset (unused)
-	int _tyoff; // Sprite Y-offset (unused)
-	int _txvel; // X-velocity during movement (unused)
-	int _tyvel; // Y-velocity during movement (unused)
-	int _tdir;  // Facing of NPC (unused)
-	Uint8 *_tAnimData;
-	int _tAnimDelay; // Tick length of each frame in the current animation
-	int _tAnimCnt;   // Increases by one each game tick, counting how close we are to _pAnimDelay
-	int _tAnimLen;   // Number of frames in current animation
-	int _tAnimFrame; // Current frame of animation.
-	int _tAnimFrameCnt;
-	Sint8 _tAnimOrder;
-	int _tAnimWidth;
-	int _tAnimWidth2;
-	int _tTenPer;
-	int _teflag;
-	int _tbtcnt;
-	int _tSelFlag;
-	bool _tMsgSaid;
-	TNQ qsts[MAXQUESTS];
-	int _tSeed;
-	int _tVar1;
-	int _tVar2;
-	int _tVar3;
-	int _tVar4;
-	char _tName[PLR_NAME_LEN];
-	Uint8 *_tNAnim[8];
-	int _tNFrames;
-	Uint8 *_tNData;
-} TownerStruct;
-
-extern TownerStruct towner[NUM_TOWNERS];
+extern Towner Towners[NUM_TOWNERS];
 
 void InitTowners();
 void FreeTownerGFX();
 void ProcessTowners();
-ItemStruct *PlrHasItem(int pnum, int item, int *i);
-void TalkToTowner(int p, int t);
+void TalkToTowner(Player &player, int t);
 
-extern _speech_id Qtalklist[NUM_TOWNER_TYPES][MAXQUESTS];
-
-#ifdef __cplusplus
-}
+#ifdef _DEBUG
+bool DebugTalkToTowner(std::string targetName);
 #endif
+extern _speech_id QuestDialogTable[NUM_TOWNER_TYPES][MAXQUESTS];
 
-DEVILUTION_END_NAMESPACE
-
-#endif /* __TOWNERS_H__ */
+} // namespace devilution

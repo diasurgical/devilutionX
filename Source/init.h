@@ -3,17 +3,13 @@
  *
  * Interface of routines for initializing the environment, disable screen saver, load MPQ.
  */
-#ifndef __INIT_H__
-#define __INIT_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include "miniwin/miniwin.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+namespace devilution {
 
-extern _SNETVERSIONDATA fileinfo;
-extern int gbActive;
+extern bool gbActive;
 extern HANDLE hellfire_mpq;
 extern WNDPROC CurrentProc;
 extern HANDLE spawn_mpq;
@@ -34,18 +30,7 @@ extern HANDLE devilutionx_mpq;
 void init_cleanup();
 void init_archives();
 void init_create_window();
-void MainWndProc(UINT Msg, WPARAM wParam, LPARAM lParam);
+void MainWndProc(uint32_t Msg);
 WNDPROC SetWindowProc(WNDPROC NewProc);
 
-/* data */
-
-extern char gszVersionNumber[64];
-extern char gszProductName[64];
-
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __INIT_H__ */
+} // namespace devilution

@@ -3,16 +3,35 @@
  *
  * Interface of load screens.
  */
-#ifndef __INTERFAC_H__
-#define __INTERFAC_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "utils/ui_fwd.h"
 
-typedef enum Cutscenes {
+namespace devilution {
+
+#define UI_OFFSET_Y ((Sint16)((gnScreenHeight - 480) / 2))
+
+enum interface_mode : uint16_t {
+	// clang-format off
+	WM_DIABNEXTLVL  = 0x402, // WM_USER+2
+	WM_DIABPREVLVL  = 0x403,
+	WM_DIABRTNLVL   = 0x404,
+	WM_DIABSETLVL   = 0x405,
+	WM_DIABWARPLVL  = 0x406,
+	WM_DIABTOWNWARP = 0x407,
+	WM_DIABTWARPUP  = 0x408,
+	WM_DIABRETOWN   = 0x409,
+	WM_DIABNEWGAME  = 0x40A,
+	WM_DIABLOADGAME = 0x40B,
+	// clang-format on
+
+	WM_FIRST = WM_DIABNEXTLVL,
+	WM_LAST = WM_DIABLOADGAME,
+};
+
+enum Cutscenes : uint8_t {
 	CutStart,
 	CutTown,
 	CutLevel1,
@@ -24,16 +43,10 @@ typedef enum Cutscenes {
 	CutPortal,
 	CutPortalRed,
 	CutGate,
-} Cutscenes;
+};
 
 void interface_msg_pump();
 bool IncProgress();
 void ShowProgress(interface_mode uMsg);
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __INTERFAC_H__ */
+} // namespace devilution

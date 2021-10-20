@@ -3,265 +3,394 @@
  *
  * Interface of missile functionality.
  */
-#ifndef __MISSILES_H__
-#define __MISSILES_H__
+#pragma once
 
-DEVILUTION_BEGIN_NAMESPACE
+#include <cstdint>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "miniwin/miniwin.h"
+#include "engine.h"
+#include "engine/point.hpp"
+#include "misdat.h"
+#include "monster.h"
+#include "spelldat.h"
 
-typedef struct MissileData {
-	Uint8 mName;
-	void (*mAddProc)(Sint32, Sint32, Sint32, Sint32, Sint32, Sint32, Sint8, Sint32, Sint32);
-	void (*mProc)(Sint32);
-	bool mDraw;
-	Uint8 mType;
-	Uint8 mResist;
-	Uint8 mFileNum;
-	Sint32 mlSFX;
-	Sint32 miSFX;
-} MissileData;
+namespace devilution {
 
-typedef struct MisFileData {
-	Uint8 mAnimName;
-	Uint8 mAnimFAmt;
-	const char *mName;
-	Sint32 mFlags;
-	Uint8 *mAnimData[16];
-	Uint8 mAnimDelay[16];
-	Uint8 mAnimLen[16];
-	Sint32 mAnimWidth[16];
-	Sint32 mAnimWidth2[16];
-} MisFileData;
+#define MAXMISSILES 125
 
-typedef struct ChainStruct {
-	Sint32 idx;
-	Sint32 _mitype;
-	Sint32 _mirange;
-} ChainStruct;
+constexpr Point GolemHoldingCell = Point { 1, 0 };
 
-typedef struct MissileStruct {
-	Sint32 _mitype;  // Type of projectile (missile_id)
-	Sint32 _mix;     // Tile X-position of the missile
-	Sint32 _miy;     // Tile Y-position of the missile
-	Sint32 _mixoff;  // Sprite pixel X-offset for the missile
-	Sint32 _miyoff;  // Sprite pixel Y-offset for the missile
-	Sint32 _mixvel;  // Missile tile X-velocity while walking. This gets added onto _mitxoff each game tick
-	Sint32 _miyvel;  // Missile tile Y-velocity while walking. This gets added onto _mitxoff each game tick
-	Sint32 _misx;    // Initial tile X-position for missile
-	Sint32 _misy;    // Initial tile Y-position for missile
-	Sint32 _mitxoff; // How far the missile has travelled in its lifespan along the X-axis. mix/miy/mxoff/myoff get updated every game tick based on this
-	Sint32 _mityoff; // How far the missile has travelled in its lifespan along the Y-axis. mix/miy/mxoff/myoff get updated every game tick based on this
-	Sint32 _mimfnum; // The direction of the missile (direction enum)
-	Sint32 _mispllvl;
+struct ChainStruct {
+	int idx;
+	missile_id _mitype;
+	int _mirange;
+};
+
+struct MissilePosition {
+	Point tile;
+	/** Sprite's pixel offset from tile. */
+	Displacement offset;
+	/** Pixel velocity while moving */
+	Displacement velocity;
+	/** Start position */
+	Point start;
+	/** Start position */
+	Displacement traveled;
+
+	/**
+      * @brief Specifies the location (tile) while rendering
+      */
+	Point tileForRendering;
+	/**
+      * @brief Specifies the location (offset) while rendering
+      */
+	Displacement offsetForRendering;
+
+	/**
+      * @brief Stops the missile (set velocity to zero and set offset to last renderer location; shouldn't matter cause the missile don't move anymore)
+      */
+	void StopMissile()
+	{
+		velocity = {};
+		if (tileForRendering == tile)
+			offset = offsetForRendering;
+	}
+};
+
+/**
+ * Represent a more fine-grained direction than the 8 value Direction enum.
+ *
+ * This is used when rendering projectiles like arrows which have additional sprites for "half-winds" on a 16-point compass.
+ * The sprite sheets are typically 0-indexed and use the following layout (relative to the screen projection)
+ *
+ *      W  WSW   SW  SSW  S
+ *               ^
+ *     WNW       |       SSE
+ *               |
+ *     NW -------+------> SE
+ *               |
+ *     NNW       |       ESE
+ *               |
+ *      N  NNE   NE  ENE  E
+ */
+enum class Direction16 {
+	South,
+	South_SouthWest,
+	SouthWest,
+	West_SouthWest,
+	West,
+	West_NorthWest,
+	NorthWest,
+	North_NorthWest,
+	North,
+	North_NorthEast,
+	NorthEast,
+	East_NorthEast,
+	East,
+	East_SouthEast,
+	SouthEast,
+	South_SouthEast,
+};
+
+struct Missile {
+	/** Type of projectile */
+	missile_id _mitype;
+	MissilePosition position;
+	int _mimfnum; // The direction of the missile (direction enum)
+	int _mispllvl;
 	bool _miDelFlag; // Indicate whether the missile should be deleted
-	Uint8 _miAnimType;
-	Sint32 _miAnimFlags;
-	Uint8 *_miAnimData;
-	Sint32 _miAnimDelay; // Tick length of each frame in the current animation
-	Sint32 _miAnimLen;   // Number of frames in current animation
-	Sint32 _miAnimWidth;
-	Sint32 _miAnimWidth2;
-	Sint32 _miAnimCnt; // Increases by one each game tick, counting how close we are to _pAnimDelay
-	Sint32 _miAnimAdd;
-	Sint32 _miAnimFrame; // Current frame of animation.
+	uint8_t _miAnimType;
+	MissileDataFlags _miAnimFlags;
+	const byte *_miAnimData;
+	int _miAnimDelay; // Tick length of each frame in the current animation
+	int _miAnimLen;   // Number of frames in current animation
+	int _miAnimWidth;
+	int _miAnimWidth2;
+	int _miAnimCnt; // Increases by one each game tick, counting how close we are to _pAnimDelay
+	int _miAnimAdd;
+	int _miAnimFrame; // Current frame of animation.
 	bool _miDrawFlag;
 	bool _miLightFlag;
 	bool _miPreFlag;
-	Uint32 _miUniqTrans;
-	Sint32 _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
-	Sint32 _misource;
-	Sint32 _micaster;
-	Sint32 _midam;
+	uint32_t _miUniqTrans;
+	int _mirange; // Time to live for the missile in game ticks, oncs 0 the missile will be marked for deletion via _miDelFlag
+	int _misource;
+	mienemy_type _micaster;
+	int _midam;
 	bool _miHitFlag;
-	Sint32 _midist; // Used for arrows to measure distance travelled (increases by 1 each game tick). Higher value is a penalty for accuracy calculation when hitting enemy
-	Sint32 _mlid;
-	Sint32 _mirnd;
-	Sint32 _miVar1;
-	Sint32 _miVar2;
-	Sint32 _miVar3;
-	Sint32 _miVar4;
-	Sint32 _miVar5;
-	Sint32 _miVar6;
-	Sint32 _miVar7;
-	Sint32 _miVar8;
-} MissileStruct;
+	int _midist; // Used for arrows to measure distance travelled (increases by 1 each game tick). Higher value is a penalty for accuracy calculation when hitting enemy
+	int _mlid;
+	int _mirnd;
+	int var1;
+	int var2;
+	int var3;
+	int var4;
+	int var5;
+	int var6;
+	int var7;
+	bool limitReached;
+	/**
+      * @brief For moving missiles lastCollisionTargetHash contains the last entity (player or monster) that was checked in CheckMissileCol (needed to avoid multiple hits for a entity at the same tile).
+      */
+	int16_t lastCollisionTargetHash;
+};
 
-extern int missileactive[MAXMISSILES];
-extern int missileavail[MAXMISSILES];
-extern MissileStruct missile[MAXMISSILES];
-extern int nummissiles;
+extern Missile Missiles[MAXMISSILES];
+extern int AvailableMissiles[MAXMISSILES];
+extern int ActiveMissiles[MAXMISSILES];
+extern int ActiveMissileCount;
 extern bool MissilePreFlag;
 
 void GetDamageAmt(int i, int *mind, int *maxd);
-int GetSpellLevel(int id, int sn);
-int GetDirection8(int x1, int y1, int x2, int y2);
-int GetDirection16(int x1, int y1, int x2, int y2);
-void DeleteMissile(int mi, int i);
-BOOL MonsterTrapHit(int m, int mindam, int maxdam, int dist, int t, BOOLEAN shift);
-BOOL PlayerMHit(int pnum, int m, int dist, int mind, int maxd, int mtype, BOOLEAN shift, int earflag, BOOLEAN *blocked);
-void SetMissAnim(int mi, int animtype);
-void SetMissDir(int mi, int dir);
-void LoadMissileGFX(BYTE mi);
-void InitMissileGFX();
-void FreeMissiles();
-void FreeMissiles2();
+int GetSpellLevel(int playerId, spell_id sn);
+
+/**
+ * @brief Returns the direction a vector from p1(x1, y1) to p2(x2, y2) is pointing to.
+ *
+ *      W  sW  SW   Sw  S
+ *              ^
+ *     nW       |       Se
+ *              |
+ *     NW ------+-----> SE
+ *              |
+ *     Nw       |       sE
+ *              |
+ *      N  Ne  NE   nE  E
+ *
+ * @param x1 the x coordinate of p1
+ * @param y1 the y coordinate of p1
+ * @param x2 the x coordinate of p2
+ * @param y2 the y coordinate of p2
+ * @return the direction of the p1->p2 vector
+ */
+Direction16 GetDirection16(Point p1, Point p2);
+void DeleteMissile(int i);
+bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
+bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
+
+/**
+ * @brief Sets the missile sprite to the given sheet frame
+ * @param missile this object
+ * @param dir Sprite frame, typically representing a direction but there are some exceptions (arrows being 1 indexed, directionless spells)
+*/
+void SetMissDir(Missile &missile, int dir);
+
+/**
+ * @brief Sets the sprite for this missile so it matches the given Direction
+ * @param missile this object
+ * @param dir Desired facing
+*/
+inline void SetMissDir(Missile &missile, Direction dir)
+{
+	SetMissDir(missile, static_cast<int>(dir));
+}
+
+/**
+ * @brief Sets the sprite for this missile so it matches the given Direction16
+ * @param missile this object
+ * @param dir Desired facing at a 22.8125 degree resolution
+*/
+inline void SetMissDir(Missile &missile, Direction16 dir)
+{
+	SetMissDir(missile, static_cast<int>(dir));
+}
+
 void InitMissiles();
-void AddHiveExplosion(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFireRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddGreatLightningRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddImmolationRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddStoneRune(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddReflection(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBerserk(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddHorkSpawn(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddJester(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddStealPotions(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddManaTrap(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddSpecArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddWarp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLightningWall(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRuneExplosion(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddImmolation(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFireNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLightningArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlashFront(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlashBack(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddMana(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddMagi(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRing(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddSearch(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddCboltArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddHboltArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddArrow(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRndTeleport(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFirebolt(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 micaster, Sint32 id, Sint32 dam);
-void AddMagmaball(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddKrull(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddTeleport(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLightball(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFirewall(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFireball(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLightctrl(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddLightning(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddMisexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddWeapexp(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddTown(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlash(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlash2(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddManashield(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFiremove(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddGuardian(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddChain(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBloodStar(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBone(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddMetlHit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRhino(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFireman(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlare(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddAcid(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFireWallA(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddAcidpud(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddStone(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddGolem(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddEtherealize(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddDummy(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBlodbur(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBoom(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddHeal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddHealOther(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddElement(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddIdentify(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFirewallC(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddInfra(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddWave(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddNova(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBlodboil(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRepair(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRecharge(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddDisarm(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddApoca(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlame(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddFlamec(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddCbolt(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 micaster, Sint32 id, Sint32 dam);
-void AddHbolt(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 micaster, Sint32 id, Sint32 dam);
-void AddResurrect(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddResurrectBeam(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddTelekinesis(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddBoneSpirit(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddRportal(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-void AddDiabApoca(Sint32 mi, Sint32 sx, Sint32 sy, Sint32 dx, Sint32 dy, Sint32 midir, Sint8 mienemy, Sint32 id, Sint32 dam);
-int AddMissile(int sx, int sy, int dx, int dy, int midir, int mitype, char micaster, int id, int midam, int spllvl);
-void MI_Dummy(Sint32 i);
-void MI_Golem(Sint32 i);
-void MI_SetManashield(Sint32 i);
-void MI_LArrow(Sint32 i);
-void MI_Arrow(Sint32 i);
-void MI_Firebolt(Sint32 i);
-void MI_Lightball(Sint32 i);
-void MI_Krull(Sint32 i);
-void MI_Acidpud(Sint32 i);
-void MI_Firewall(Sint32 i);
-void MI_Fireball(Sint32 i);
-void MI_HorkSpawn(Sint32 i);
-void MI_Rune(Sint32 i);
-void MI_LightningWall(Sint32 i);
-void MI_HiveExplode(Sint32 i);
-void MI_Immolation(Sint32 i);
-void MI_LightningArrow(Sint32 i);
-void MI_FlashFront(Sint32 i);
-void MI_FlashBack(Sint32 i);
-void MI_Reflect(Sint32 i);
-void MI_FireRing(Sint32 i);
-void MI_LightningRing(Sint32 i);
-void MI_Search(Sint32 i);
-void MI_LightningWallC(Sint32 i);
-void MI_FireNova(Sint32 i);
-void MI_SpecArrow(Sint32 i);
-void MI_Lightctrl(Sint32 i);
-void MI_Lightning(Sint32 i);
-void MI_Town(Sint32 i);
-void MI_Flash(Sint32 i);
-void MI_Flash2(Sint32 i);
-void MI_Etherealize(Sint32 i);
-void MI_Firemove(Sint32 i);
-void MI_Guardian(Sint32 i);
-void MI_Chain(Sint32 i);
-void MI_Blood(Sint32 i);
-void MI_Weapexp(Sint32 i);
-void MI_Misexp(Sint32 i);
-void MI_Acidsplat(Sint32 i);
-void MI_Teleport(Sint32 i);
-void MI_Stone(Sint32 i);
-void MI_Boom(Sint32 i);
-void MI_Rhino(Sint32 i);
-void MI_Fireman(Sint32 i);
-void MI_FirewallC(Sint32 i);
-void MI_Infra(Sint32 i);
-void MI_Apoca(Sint32 i);
-void MI_Wave(Sint32 i);
-void MI_Nova(Sint32 i);
-void MI_Blodboil(Sint32 i);
-void MI_Flame(Sint32 i);
-void MI_Flamec(Sint32 i);
-void MI_Cbolt(Sint32 i);
-void MI_Hbolt(Sint32 i);
-void MI_Element(Sint32 i);
-void MI_Bonespirit(Sint32 i);
-void MI_ResurrectBeam(Sint32 i);
-void MI_Rportal(Sint32 i);
+void AddHiveExplosion(Missile &missile, Point dst, Direction midir);
+void AddFireRune(Missile &missile, Point dst, Direction midir);
+void AddLightningRune(Missile &missile, Point dst, Direction midir);
+void AddGreatLightningRune(Missile &missile, Point dst, Direction midir);
+void AddImmolationRune(Missile &missile, Point dst, Direction midir);
+void AddStoneRune(Missile &missile, Point dst, Direction midir);
+void AddReflection(Missile &missile, Point dst, Direction midir);
+void AddBerserk(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Direction to place the spawn
+ */
+void AddHorkSpawn(Missile &missile, Point dst, Direction midir);
+void AddJester(Missile &missile, Point dst, Direction midir);
+void AddStealPotions(Missile &missile, Point dst, Direction midir);
+void AddManaTrap(Missile &missile, Point dst, Direction midir);
+void AddSpecArrow(Missile &missile, Point dst, Direction midir);
+void AddWarp(Missile &missile, Point dst, Direction midir);
+void AddLightningWall(Missile &missile, Point dst, Direction midir);
+void AddRuneExplosion(Missile &missile, Point dst, Direction midir);
+void AddFireNova(Missile &missile, Point dst, Direction midir);
+void AddLightningArrow(Missile &missile, Point dst, Direction midir);
+void AddMana(Missile &missile, Point dst, Direction midir);
+void AddMagi(Missile &missile, Point dst, Direction midir);
+void AddRing(Missile &missile, Point dst, Direction midir);
+void AddSearch(Missile &missile, Point dst, Direction midir);
+void AddCboltArrow(Missile &missile, Point dst, Direction midir);
+void AddLArrow(Missile &missile, Point dst, Direction midir);
+void AddArrow(Missile &missile, Point dst, Direction midir);
+void AddRndTeleport(Missile &missile, Point dst, Direction midir);
+void AddFirebolt(Missile &missile, Point dst, Direction midir);
+void AddMagmaball(Missile &missile, Point dst, Direction midir);
+void AddTeleport(Missile &missile, Point dst, Direction midir);
+void AddLightball(Missile &missile, Point dst, Direction midir);
+void AddFirewall(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ * var4: X coordinate of the missile-light
+ * var5: Y coordinate of the missile-light
+ */
+void AddFireball(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile
+ * var2: Y coordinate of the missile
+ */
+void AddLightctrl(Missile &missile, Point dst, Direction midir);
+void AddLightning(Missile &missile, Point dst, Direction midir);
+void AddMisexp(Missile &missile, Point dst, Direction midir);
+void AddWeapexp(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Animation
+ */
+void AddTown(Missile &missile, Point dst, Direction midir);
+void AddFlash(Missile &missile, Point dst, Direction midir);
+void AddFlash2(Missile &missile, Point dst, Direction midir);
+void AddManashield(Missile &missile, Point dst, Direction midir);
+void AddFiremove(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Animation
+ * var3: Light strength
+ */
+void AddGuardian(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the destination
+ * var2: Y coordinate of the destination
+ */
+void AddChain(Missile &missile, Point dst, Direction midir);
+void AddRhino(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ */
+void AddFlare(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ */
+void AddAcid(Missile &missile, Point dst, Direction midir);
+void AddAcidpud(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: mmode of the monster
+ * var2: mnum of the monster
+ */
+void AddStone(Missile &missile, Point dst, Direction midir);
+void AddGolem(Missile &missile, Point dst, Direction midir);
+void AddBoom(Missile &missile, Point dst, Direction midir);
+void AddHeal(Missile &missile, Point dst, Direction midir);
+void AddHealOther(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the missile-light
+ * var2: Y coordinate of the missile-light
+ * var4: X coordinate of the destination
+ * var5: Y coordinate of the destination
+ */
+void AddElement(Missile &missile, Point dst, Direction midir);
+void AddIdentify(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the first wave
+ * var2: Y coordinate of the first wave
+ * var3: Direction of the first wave
+ * var4: Direction of the second wave
+ * var5: X coordinate of the second wave
+ * var6: Y coordinate of the second wave
+ */
+void AddFirewallC(Missile &missile, Point dst, Direction midir);
+void AddInfra(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: X coordinate of the destination
+ * var2: Y coordinate of the destination
+ */
+void AddWave(Missile &missile, Point dst, Direction midir);
+void AddNova(Missile &missile, Point dst, Direction midir);
+void AddBlodboil(Missile &missile, Point dst, Direction midir);
+void AddRepair(Missile &missile, Point dst, Direction midir);
+void AddRecharge(Missile &missile, Point dst, Direction midir);
+void AddDisarm(Missile &missile, Point dst, Direction midir);
+void AddApoca(Missile &missile, Point dst, Direction midir);
+void AddFlame(Missile &missile, Point dst, Direction midir);
+void AddFlamec(Missile &missile, Point dst, Direction midir);
+
+/**
+ * var1: Light strength
+ * var2: Base direction
+ */
+void AddCbolt(Missile &missile, Point dst, Direction midir);
+void AddHbolt(Missile &missile, Point dst, Direction midir);
+void AddResurrect(Missile &missile, Point dst, Direction midir);
+void AddResurrectBeam(Missile &missile, Point dst, Direction midir);
+void AddTelekinesis(Missile &missile, Point dst, Direction midir);
+void AddBoneSpirit(Missile &missile, Point dst, Direction midir);
+void AddRportal(Missile &missile, Point dst, Direction midir);
+void AddDiabApoca(Missile &missile, Point dst, Direction midir);
+int AddMissile(Point src, Point dst, Direction midir, missile_id mitype, mienemy_type micaster, int id, int midam, int spllvl);
+void MI_Golem(Missile &missile);
+void MI_Manashield(Missile &missile);
+void MI_LArrow(Missile &missile);
+void MI_Arrow(Missile &missile);
+void MI_Firebolt(Missile &missile);
+void MI_Lightball(Missile &missilei);
+void MI_Acidpud(Missile &missile);
+void MI_Firewall(Missile &missile);
+void MI_Fireball(Missile &missile);
+void MI_HorkSpawn(Missile &missile);
+void MI_Rune(Missile &missile);
+void MI_LightningWall(Missile &missile);
+void MI_HiveExplode(Missile &missile);
+void MI_LightningArrow(Missile &missile);
+void MI_FireRing(Missile &missile);
+void MI_Search(Missile &missile);
+void MI_LightningWallC(Missile &missile);
+void MI_FireNova(Missile &missile);
+void MI_SpecArrow(Missile &missile);
+void MI_Lightctrl(Missile &missile);
+void MI_Lightning(Missile &missile);
+void MI_Town(Missile &missile);
+void MI_Flash(Missile &missile);
+void MI_Flash2(Missile &missile);
+void MI_Firemove(Missile &missile);
+void MI_Guardian(Missile &missile);
+void MI_Chain(Missile &missile);
+void MI_Weapexp(Missile &missile);
+void MI_Misexp(Missile &missile);
+void MI_Acidsplat(Missile &missile);
+void MI_Teleport(Missile &missile);
+void MI_Stone(Missile &missile);
+void MI_Boom(Missile &missile);
+void MI_Rhino(Missile &missile);
+void MI_FirewallC(Missile &missile);
+void MI_Infra(Missile &missile);
+void MI_Apoca(Missile &missile);
+void MI_Wave(Missile &missile);
+void MI_Nova(Missile &missile);
+void MI_Blodboil(Missile &missile);
+void MI_Flame(Missile &missile);
+void MI_Flamec(Missile &missile);
+void MI_Cbolt(Missile &missile);
+void MI_Hbolt(Missile &missile);
+void MI_Element(Missile &missile);
+void MI_Bonespirit(Missile &missile);
+void MI_ResurrectBeam(Missile &missile);
+void MI_Rportal(Missile &missile);
 void ProcessMissiles();
 void missiles_process_charge();
-void ClearMissileSpot(int mi);
+void RedoMissileFlags();
 
-#ifdef __cplusplus
-}
-#endif
-
-DEVILUTION_END_NAMESPACE
-
-#endif /* __MISSILES_H__ */
+} // namespace devilution
