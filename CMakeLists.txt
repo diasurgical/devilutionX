@@ -533,6 +533,8 @@ endif()
 
 if(VITA)
   list(APPEND libdevilutionx_SRCS
+    Source/platform/vita/random.cpp
+    Source/platform/vita/network.cpp
     Source/platform/vita/keyboard.cpp
     Source/platform/vita/touch.cpp)
 endif()
@@ -937,6 +939,8 @@ if (VITA)
   target_link_libraries(libdevilutionx PUBLIC
         ScePower_stub
         SceAppUtil_stub
+        SceNet_stub
+        SceNetCtl_stub
   )
   target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
