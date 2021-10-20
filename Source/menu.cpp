@@ -196,6 +196,12 @@ void mainmenu_loop()
 			RefreshMusic();
 			menu = MAINMENU_NONE;
 			break;
+		case MAINMENU_TOGGLESPAWN:
+			gbIsSpawn = !gbIsSpawn;
+			UiSetSpawned(gbIsSpawn);
+			RefreshMusic();
+			menu = MAINMENU_NONE;
+			break;
 		}
 	} while (!done);
 
