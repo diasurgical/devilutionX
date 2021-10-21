@@ -2010,8 +2010,19 @@ bool UseInvItem(int pnum, int cii)
 		if (talkflag)
 			return true;
 		c = cii - INVITEM_BELT_FIRST;
+
 		item = &player.SpdList[c];
 		speedlist = true;
+
+		//If selected speedlist item exists in InvList, use the InvList item.
+		for (int i = 0; i < player._pNumInv && sgOptions.Gameplay.bAutoRefillBelt; i++) {
+			if (player.InvList[i]._iMiscId == item->_iMiscId && player.InvList[i]._iSpell == item->_iSpell) {
+				c = i;
+				item = &player.InvList[c];
+				speedlist = false;
+				break;
+			}
+		}
 	}
 
 	constexpr int SpeechDelay = 10;
@@ -2020,6 +2031,7 @@ bool UseInvItem(int pnum, int cii)
 		return true;
 	}
 	if (item->IDidx == IDI_FUNGALTM) {
+
 		PlaySFX(IS_IBOOK);
 		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
