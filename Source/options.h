@@ -16,6 +16,16 @@ enum class StartUpGameOption {
 	Diablo,
 };
 
+/** @brief Defines what splash screen should be shown at startup. */
+enum class StartUpSplash {
+	/** @brief Show no splash screen. */
+	None = 0,
+	/** @brief Show only TitleDialog. */
+	TitleDialog = 1,
+	/** @brief Show Logo and TitleDialog. */
+	LogoAndTitleDialog = 2,
+};
+
 enum class ScalingQuality {
 	NearestPixel,
 	BilinearFiltering,
@@ -176,6 +186,13 @@ protected:
 	string_view key;
 	string_view name;
 	string_view description;
+};
+
+struct StartUpOptions : OptionCategoryBase {
+	StartUpOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
+	OptionEntryEnum<StartUpSplash> splash;
 };
 
 struct DiabloOptions : OptionCategoryBase {
@@ -366,6 +383,7 @@ struct LanguageOptions : OptionCategoryBase {
 };
 
 struct Options {
+	StartUpOptions StartUp;
 	DiabloOptions Diablo;
 	HellfireOptions Hellfire;
 	AudioOptions Audio;
@@ -379,6 +397,7 @@ struct Options {
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
 		return {
+			&StartUp,
 			&Diablo,
 			&Hellfire,
 			&Audio,

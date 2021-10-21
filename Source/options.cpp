@@ -558,6 +558,23 @@ string_view OptionCategoryBase::GetDescription() const
 	return _(description.data());
 }
 
+StartUpOptions::StartUpOptions()
+    : OptionCategoryBase("StartUp", N_("Start Up"), N_("Start Up Settings"))
+    , splash("Splash", OptionEntryFlags::None, N_("Splash"), N_("Shown splash screen."), StartUpSplash::LogoAndTitleDialog,
+          {
+              { StartUpSplash::LogoAndTitleDialog, N_("Logo and Title Screen") },
+              { StartUpSplash::TitleDialog, N_("Title Screen") },
+              { StartUpSplash::None, N_("None") },
+          })
+{
+}
+std::vector<OptionEntryBase *> StartUpOptions::GetEntries()
+{
+	return {
+		&splash,
+	};
+}
+
 DiabloOptions::DiabloOptions()
     : OptionCategoryBase("Diablo", N_("Diablo"), N_("Diablo specific Settings"))
     , intro("Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
