@@ -8,6 +8,7 @@
 #include "DiabloUI/extrasmenu.h"
 #include "DiabloUI/selok.h"
 #include "engine/demomode.h"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "movie.h"
 #include "options.h"
@@ -193,6 +194,8 @@ void mainmenu_loop()
 			UiInitialize();
 			FreeItemGFX();
 			InitItemGFX();
+			if (IsHardwareCursor())
+				SetHardwareCursor(CursorInfo::UnknownCursor());
 			RefreshMusic();
 			menu = MAINMENU_NONE;
 			break;
