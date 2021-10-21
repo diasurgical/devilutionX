@@ -2440,7 +2440,8 @@ void ScavengerAi(int i)
 		return;
 	if (monster._mhitpoints < (monster._mmaxhp / 2) && monster._mgoal != MGOAL_HEALING) {
 		if (monster.leaderRelation != LeaderRelation::None) {
-			Monsters[monster.leader].packsize--;
+			if (monster.leaderRelation == LeaderRelation::Leashed)
+				Monsters[monster.leader].packsize--;
 			monster.leaderRelation = LeaderRelation::None;
 		}
 		monster._mgoal = MGOAL_HEALING;

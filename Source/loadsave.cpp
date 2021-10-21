@@ -643,6 +643,25 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	SyncMonsterAnim(monster);
 }
 
+/**
+ * @brief Recalculate the pack size of monster group that may have underflown
+ */
+void SyncPackSize(Monster &leader)
+{
+	if (leader._uniqtype == 0)
+		return;
+	if (leader._mAi != AI_SCAV)
+		return;
+
+	leader.packsize = 0;
+
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		auto &minion = Monsters[ActiveMonsters[i]];
+		if (minion.leaderRelation == LeaderRelation::Leashed && &Monsters[minion.leader] == &leader)
+			leader.packsize++;
+	}
+}
+
 void LoadMissile(LoadHelper *file, Missile &missile)
 {
 	missile._mitype = static_cast<missile_id>(file->NextLE<int32_t>());
@@ -1733,6 +1752,8 @@ void LoadGame(bool firstflag)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			SyncPackSize(Monsters[ActiveMonsters[i]]);
 		for (int &missileId : ActiveMissiles)
 			missileId = file.NextLE<int8_t>();
 		for (int &missileId : AvailableMissiles)
