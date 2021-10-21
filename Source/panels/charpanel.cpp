@@ -32,6 +32,7 @@ namespace {
 struct StyledText {
 	UiFlags style;
 	std::string text;
+	int spacing = 1;
 };
 
 struct PanelEntry {
@@ -162,7 +163,8 @@ PanelEntry panelEntries[] = {
 	{ N_("Damage"), { 253, 219 }, 57, 67,
 	    []() {
 	        std::pair<int, int> dmg = GetDamage();
-	        return StyledText { GetValueColor(MyPlayer->_pIBonusDam), fmt::format("{:d}-{:d}", dmg.first, dmg.second) };
+	        int spacing = ((dmg.first >= 100) ? -1 : 1);
+	        return StyledText { GetValueColor(MyPlayer->_pIBonusDam), fmt::format("{:d}-{:d}", dmg.first, dmg.second), spacing };
 	    } },
 
 	{ N_("Life"), { 88, 284 }, 45, 76,
@@ -282,7 +284,7 @@ void DrawChr(const Surface &out)
 			    out,
 			    tmp.text.c_str(),
 			    { entry.position + Displacement { pos.x, pos.y }, { entry.length, 27 } },
-			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style);
+			    UiFlags::AlignCenter | UiFlags::VerticalCenter | tmp.style, tmp.spacing);
 		}
 	}
 	DrawStatButtons(out);
