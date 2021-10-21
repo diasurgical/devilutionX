@@ -45,6 +45,8 @@ struct AudioOptions {
 	bool bWalkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	bool bAutoEquipSound;
+	/** @brief Picking up items emits the items pickup sound. */
+	bool bItemPickupSound;
 
 	/** @brief Output sample rate (Hz) */
 	std::uint32_t nSampleRate;

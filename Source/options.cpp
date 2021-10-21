@@ -227,6 +227,7 @@ void LoadOptions()
 	sgOptions.Audio.nMusicVolume = GetIniInt("Audio", "Music Volume", VOLUME_MAX);
 	sgOptions.Audio.bWalkingSound = GetIniBool("Audio", "Walking Sound", true);
 	sgOptions.Audio.bAutoEquipSound = GetIniBool("Audio", "Auto Equip Sound", AUTO_PICKUP_DEFAULT(false));
+	sgOptions.Audio.bItemPickupSound = GetIniBool("Audio", "Item Pickup Sound", AUTO_PICKUP_DEFAULT(false));
 
 	sgOptions.Audio.nSampleRate = GetIniInt("Audio", "Sample Rate", DEFAULT_AUDIO_SAMPLE_RATE);
 	sgOptions.Audio.nChannels = GetIniInt("Audio", "Channels", DEFAULT_AUDIO_CHANNELS);
@@ -382,6 +383,7 @@ void SaveOptions()
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
 	SetIniValue("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
 	SetIniValue("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
+	SetIniValue("Audio", "Item Pickup Sound", sgOptions.Audio.bItemPickupSound);
 
 	SetIniValue("Audio", "Sample Rate", sgOptions.Audio.nSampleRate);
 	SetIniValue("Audio", "Channels", sgOptions.Audio.nChannels);

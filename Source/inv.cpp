@@ -1586,6 +1586,7 @@ void InvGetItem(int pnum, Item *item, int ii)
 void AutoGetItem(int pnum, Item *item, int ii)
 {
 	bool done;
+	bool autoEquipped = false;
 
 	if (pcurs != CURSOR_HAND) {
 		return;
@@ -1615,6 +1616,10 @@ void AutoGetItem(int pnum, Item *item, int ii)
 		}
 	} else {
 		done = AutoEquipEnabled(player, player.HoldItem) && AutoEquip(pnum, player.HoldItem);
+		if (done) {
+			autoEquipped = true;
+		}
+
 		if (!done) {
 			done = AutoPlaceItemInBelt(player, player.HoldItem, true);
 		}
@@ -1624,6 +1629,10 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (done) {
+		if (!autoEquipped && sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
+			PlaySFX(IS_IGRAB);
+		}
+
 		CleanupItems(&Items[ii], ii);
 		return;
 	}
