@@ -4,10 +4,13 @@
     "dependencies": [
         "fmt",
         "libpng",
-        "libsodium",
         "sdl2"
     ],
     "features": {
+        "encryption": {
+            "description": "Build libsodium for packet encryption",
+            "dependencies": [ "libsodium" ]
+        },
         "translations": {
             "description": "Build translation files",
             "dependencies": [

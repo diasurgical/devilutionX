@@ -45,6 +45,7 @@ extern GameData sgGameInitInfo;
 extern bool gbSelectProvider;
 extern bool gbIsMultiplayer;
 extern char szPlayerName[128];
+extern bool PublicGame;
 extern BYTE gbDeltaSender;
 extern uint32_t player_state[MAX_PLRS];
 

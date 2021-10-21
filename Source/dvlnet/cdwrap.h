@@ -17,12 +17,13 @@ private:
 	std::unique_ptr<abstract_net> dvlnet_wrap;
 	std::map<event_type, SEVTHANDLER> registered_handlers;
 	buffer_t game_init_info;
+	std::optional<std::string> game_pw;
 
 	void reset();
 
 public:
-	virtual int create(std::string addrstr, std::string passwd);
-	virtual int join(std::string addrstr, std::string passwd);
+	virtual int create(std::string addrstr);
+	virtual int join(std::string addrstr);
 	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size);
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status);
@@ -41,6 +42,7 @@ public:
 	virtual void clear_gamelist();
 	virtual std::vector<std::string> get_gamelist();
 	virtual void setup_password(std::string pw);
+	virtual void clear_password();
 
 	cdwrap();
 	virtual ~cdwrap() = default;
@@ -58,23 +60,28 @@ void cdwrap<T>::reset()
 	dvlnet_wrap.reset(new T);
 	dvlnet_wrap->setup_gameinfo(game_init_info);
 
+	if (game_pw != std::nullopt)
+		dvlnet_wrap->setup_password(*game_pw);
+	else
+		dvlnet_wrap->clear_password();
+
 	for (const auto &pair : registered_handlers)
 		dvlnet_wrap->SNetRegisterEventHandler(pair.first, pair.second);
 }
 
 template <class T>
-int cdwrap<T>::create(std::string addrstr, std::string passwd)
+int cdwrap<T>::create(std::string addrstr)
 {
 	reset();
-	return dvlnet_wrap->create(addrstr, passwd);
+	return dvlnet_wrap->create(addrstr);
 }
 
 template <class T>
-int cdwrap<T>::join(std::string addrstr, std::string passwd)
+int cdwrap<T>::join(std::string addrstr)
 {
 	game_init_info = buffer_t();
 	reset();
-	return dvlnet_wrap->join(addrstr, passwd);
+	return dvlnet_wrap->join(addrstr);
 }
 
 template <class T>
@@ -186,7 +193,15 @@ std::vector<std::string> cdwrap<T>::get_gamelist()
 template <class T>
 void cdwrap<T>::setup_password(std::string pw)
 {
+	game_pw = pw;
 	return dvlnet_wrap->setup_password(pw);
+}
+
+template <class T>
+void cdwrap<T>::clear_password()
+{
+	game_pw = std::nullopt;
+	return dvlnet_wrap->clear_password();
 }
 
 } // namespace net

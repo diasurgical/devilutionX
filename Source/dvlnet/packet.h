@@ -5,7 +5,7 @@
 #include <memory>
 #include <array>
 #include <cstring>
-#ifndef NONET
+#ifdef PACKET_ENCRYPTION
 #include <sodium.h>
 #endif
 
@@ -35,7 +35,7 @@ typedef uint8_t plr_t;
 typedef uint32_t cookie_t;
 typedef int turn_t;      // change int to something else in devilution code later
 typedef int leaveinfo_t; // also change later
-#ifndef NONET
+#ifdef PACKET_ENCRYPTION
 typedef std::array<unsigned char, crypto_secretbox_KEYBYTES> key_t;
 #else
 // Stub out the key_t defintion as we're not doing any encryption.
@@ -115,7 +115,7 @@ public:
 	void process_element(buffer_t &x);
 	template <class T>
 	void process_element(T &x);
-	void Decrypt();
+	void Decrypt(buffer_t buf);
 };
 
 class packet_out : public packet_proc<packet_out> {
@@ -132,6 +132,7 @@ public:
 	static const unsigned char *begin(const T &x);
 	template <class T>
 	static const unsigned char *end(const T &x);
+	static cookie_t GenerateCookie();
 	void Encrypt();
 };
 
@@ -307,13 +308,13 @@ inline void packet_out::create<PT_DISCONNECT>(plr_t s, plr_t d, plr_t n,
 
 inline void packet_out::process_element(buffer_t &x)
 {
-	encrypted_buffer.insert(encrypted_buffer.end(), x.begin(), x.end());
+	decrypted_buffer.insert(decrypted_buffer.end(), x.begin(), x.end());
 }
 
 template <class T>
 void packet_out::process_element(T &x)
 {
-	encrypted_buffer.insert(encrypted_buffer.end(), begin(x), end(x));
+	decrypted_buffer.insert(decrypted_buffer.end(), begin(x), end(x));
 }
 
 template <class T>
@@ -330,11 +331,13 @@ const unsigned char *packet_out::end(const T &x)
 
 class packet_factory {
 	key_t key = {};
+	bool secure;
 
 public:
 	static constexpr unsigned short max_packet_size = 0xFFFF;
 
-	packet_factory(std::string pw = "");
+	packet_factory();
+	packet_factory(std::string pw);
 	std::unique_ptr<packet> make_packet(buffer_t buf);
 	template <packet_type t, typename... Args>
 	std::unique_ptr<packet> make_packet(Args... args);
@@ -343,8 +346,16 @@ public:
 inline std::unique_ptr<packet> packet_factory::make_packet(buffer_t buf)
 {
 	auto ret = std::make_unique<packet_in>(key);
+#ifndef PACKET_ENCRYPTION
 	ret->Create(std::move(buf));
-	ret->Decrypt();
+#else
+	if (!secure)
+		ret->Create(std::move(buf));
+	else
+		ret->Decrypt(std::move(buf));
+#endif
+	size_t size = ret->Data().size();
+	ret->process_data();
 	return ret;
 }
 
@@ -353,7 +364,11 @@ std::unique_ptr<packet> packet_factory::make_packet(Args... args)
 {
 	auto ret = std::make_unique<packet_out>(key);
 	ret->create<t>(args...);
-	ret->Encrypt();
+	ret->process_data();
+#ifdef PACKET_ENCRYPTION
+	if (secure)
+		ret->Encrypt();
+#endif
 	return ret;
 }
 

@@ -14,8 +14,8 @@ namespace net {
 
 class base : public abstract_net {
 public:
-	virtual int create(std::string addrstr, std::string passwd) = 0;
-	virtual int join(std::string addrstr, std::string passwd) = 0;
+	virtual int create(std::string addrstr) = 0;
+	virtual int join(std::string addrstr) = 0;
 
 	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size);
 	virtual bool SNetSendMessage(int playerId, void *data, unsigned int size);
@@ -37,6 +37,7 @@ public:
 	void setup_gameinfo(buffer_t info);
 
 	virtual void setup_password(std::string pw);
+	virtual void clear_password();
 
 	virtual ~base() = default;
 

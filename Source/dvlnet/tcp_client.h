@@ -17,8 +17,8 @@ namespace net {
 
 class tcp_client : public base {
 public:
-	int create(std::string addrstr, std::string passwd);
-	int join(std::string addrstr, std::string passwd);
+	int create(std::string addrstr);
+	int join(std::string addrstr);
 
 	virtual void poll();
 	virtual void send(packet &pkt);

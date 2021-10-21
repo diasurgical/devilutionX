@@ -16,6 +16,7 @@ namespace devilution {
 static std::unique_ptr<net::abstract_net> dvlnet_inst;
 static char gpszGameName[128] = {};
 static char gpszGamePassword[128] = {};
+static bool GameIsPublic = {};
 
 #ifndef NONET
 static SdlMutex storm_net_mutex;
@@ -165,8 +166,10 @@ bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *
 
 	strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
 	if (pszGamePassword != nullptr)
-		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
-	*playerID = dvlnet_inst->create(pszGameName, pszGamePassword);
+		DvlNet_SetPassword(pszGamePassword);
+	else
+		DvlNet_ClearPassword();
+	*playerID = dvlnet_inst->create(pszGameName);
 	return *playerID != -1;
 }
 
@@ -178,8 +181,10 @@ bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 	if (pszGameName != nullptr)
 		strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
 	if (pszGamePassword != nullptr)
-		strncpy(gpszGamePassword, pszGamePassword, sizeof(gpszGamePassword) - 1);
-	*playerID = dvlnet_inst->join(pszGameName, pszGamePassword);
+		DvlNet_SetPassword(pszGamePassword);
+	else
+		DvlNet_ClearPassword();
+	*playerID = dvlnet_inst->join(pszGameName);
 	return *playerID != -1;
 }
 
@@ -230,7 +235,21 @@ std::vector<std::string> DvlNet_GetGamelist()
 
 void DvlNet_SetPassword(std::string pw)
 {
+	GameIsPublic = false;
+	strncpy(gpszGamePassword, pw.c_str(), sizeof(gpszGamePassword) - 1);
 	dvlnet_inst->setup_password(std::move(pw));
+}
+
+void DvlNet_ClearPassword()
+{
+	GameIsPublic = true;
+	gpszGamePassword[0] = '\0';
+	dvlnet_inst->clear_password();
+}
+
+bool DvlNet_IsPublicGame()
+{
+	return GameIsPublic;
 }
 
 } // namespace devilution
