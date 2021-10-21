@@ -297,6 +297,20 @@ void UiFocusNavigation(SDL_Event *event)
 		break;
 	}
 
+#ifndef USE_SDL1
+	// SDL generates mouse events from touch-based inputs to provide basic
+	// touchscreeen support for apps that don't explicitly handle touch events
+	sgbTouchActive = false;
+	if (IsAnyOf(event->type, SDL_MOUSEBUTTONDOWN, SDL_MOUSEBUTTONUP) && event->button.which == SDL_TOUCH_MOUSEID)
+		sgbTouchActive = true;
+	if (event->type == SDL_MOUSEMOTION && event->motion.which == SDL_TOUCH_MOUSEID)
+		sgbTouchActive = true;
+	if (event->type == SDL_MOUSEWHEEL && event->wheel.which == SDL_TOUCH_MOUSEID)
+		sgbTouchActive = true;
+	if (IsAnyOf(event->type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
+		sgbTouchActive = true;
+#endif
+
 	if (HandleMenuAction(GetMenuAction(*event)))
 		return;
 
@@ -864,7 +878,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 		dbClickTimer = SDL_GetTicks();
 	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
 #else
-	} else if (gfnListFocus == nullptr || event.button.clicks >= 2) {
+	} else if (gfnListFocus == nullptr || (sgbTouchActive && SelectedItem == index) || event.button.clicks >= 2 || (sgbTouchActive && SelectedItem == index)) {
 #endif
 		SelectedItem = index;
 		UiFocusNavigationSelect();
@@ -1014,7 +1028,7 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 
 void DrawMouse()
 {
-	if (IsHardwareCursor() || sgbControllerActive)
+	if (IsHardwareCursor() || sgbControllerActive || sgbTouchActive)
 		return;
 
 	DrawArt(MousePosition, &ArtCursor);
