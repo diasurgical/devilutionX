@@ -90,16 +90,16 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		result = SFileOpenFileEx((HANDLE) nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
+	if (!result && font_mpq != nullptr) {
+		result = SFileOpenFileEx((HANDLE)font_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+	}
+	if (!result && lang_mpq != nullptr) {
+		result = SFileOpenFileEx((HANDLE)lang_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+	}
 	if (!result && devilutionx_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (gbIsHellfire) {
-		if (!result && hfopt2_mpq != nullptr) {
-			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
-		}
-		if (!result && hfopt1_mpq != nullptr) {
-			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
-		}
 		if (!result && hfvoice_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
@@ -118,9 +118,6 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		if (!result) {
 			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
-	}
-	if (!result && patch_rt_mpq != nullptr) {
-		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (!result && spawn_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
