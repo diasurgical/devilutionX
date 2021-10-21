@@ -44,7 +44,7 @@ extern bool talkflag;
 extern bool sbookflag;
 extern bool chrflag;
 extern bool drawbtnflag;
-extern char infostr[64];
+extern char infostr[128];
 extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;

@@ -68,7 +68,7 @@ bool talkflag;
 bool sbookflag;
 bool chrflag;
 bool drawbtnflag;
-char infostr[64];
+char infostr[128];
 bool panelflag;
 int initialDropGoldValue;
 bool panbtndown;
