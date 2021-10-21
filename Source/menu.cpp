@@ -185,7 +185,7 @@ void mainmenu_loop()
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog();
-			menu = MAINMENU_EXTRAS;
+			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_SHOW_SUPPORT:
 			UiSupportDialog();
