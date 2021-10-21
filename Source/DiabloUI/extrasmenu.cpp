@@ -25,6 +25,7 @@ void ItemSelected(int value)
 
 void EscPressed()
 {
+	selectionExtrasMenu = MAINMENU_NONE;
 	endMenu = true;
 }
 
