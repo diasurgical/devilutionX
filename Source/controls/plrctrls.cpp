@@ -1394,7 +1394,9 @@ void PerformPrimaryAction()
 	if (chrflag && !chrbtnactive && Players[MyPlayerId]._pStatPts > 0) {
 		CheckChrBtns();
 		for (int i = 0; i < 4; i++) {
-			if (ChrBtnsRect[i].Contains(MousePosition)) {
+			Rectangle button = ChrBtnsRect[i];
+			button.position = GetPanelPosition(UiPanels::Character, button.position);
+			if (button.Contains(MousePosition)) {
 				chrbtn[i] = true;
 				chrbtnactive = true;
 				ReleaseChrBtns(false);
