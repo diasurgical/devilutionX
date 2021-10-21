@@ -131,6 +131,13 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 	return true;
 }
 
+void mainmenu_wait_for_button_sound()
+{
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
+	UiPollAndRender();
+	SDL_Delay(350); // delay to let button pressed sound finish playing
+}
+
 void mainmenu_loop()
 {
 	bool done;
@@ -170,8 +177,10 @@ void mainmenu_loop()
 		case MAINMENU_REPLAY_INTRO:
 			if (gbIsSpawn && diabdat_mpq == nullptr) {
 				UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
-			} else if (gbActive)
+			} else if (gbActive) {
+				mainmenu_wait_for_button_sound();
 				PlayIntro();
+			}
 			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_SHOW_CREDITS:
@@ -183,6 +192,7 @@ void mainmenu_loop()
 			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_EXIT_DIABLO:
+			mainmenu_wait_for_button_sound();
 			done = true;
 			break;
 		case MAINMENU_EXTRAS:
