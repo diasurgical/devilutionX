@@ -311,7 +311,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.destParam2 = file.NextLE<int32_t>();
 	player.destParam3 = static_cast<Direction>(file.NextLE<int32_t>());
 	player.destParam4 = file.NextLE<int32_t>();
-	player.plrlevel = file.NextLE<int32_t>();
+	player.plrlevel = file.NextLE<uint32_t>();
 	player.position.tile.x = file.NextLE<int32_t>();
 	player.position.tile.y = file.NextLE<int32_t>();
 	player.position.future.x = file.NextLE<int32_t>();
@@ -628,6 +628,11 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.mlid == Players[MyPlayerId]._plid)
 		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
+	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+		int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+		monster.mlid = AddLight(monster.position.tile, lightRadius);
+	}
+
 	// Omit pointer mName;
 	// Omit pointer MType;
 	// Omit pointer MData;
@@ -636,6 +641,25 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 		return;
 
 	SyncMonsterAnim(monster);
+}
+
+/**
+ * @brief Recalculate the pack size of monster group that may have underflown
+ */
+void SyncPackSize(Monster &leader)
+{
+	if (leader._uniqtype == 0)
+		return;
+	if (leader._mAi != AI_SCAV)
+		return;
+
+	leader.packsize = 0;
+
+	for (int i = 0; i < ActiveMonsterCount; i++) {
+		auto &minion = Monsters[ActiveMonsters[i]];
+		if (minion.leaderRelation == LeaderRelation::Leashed && &Monsters[minion.leader] == &leader)
+			leader.packsize++;
+	}
 }
 
 void LoadMissile(LoadHelper *file, Missile &missile)
@@ -978,7 +1002,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	file.WriteLE<int32_t>(player.destParam2);
 	file.WriteLE<int32_t>(static_cast<int32_t>(player.destParam3));
 	file.WriteLE<int32_t>(player.destParam4);
-	file.WriteLE<int32_t>(player.plrlevel);
+	file.WriteLE<uint32_t>(player.plrlevel);
 	file.WriteLE<int32_t>(player.position.tile.x);
 	file.WriteLE<int32_t>(player.position.tile.y);
 	file.WriteLE<int32_t>(player.position.future.x);
@@ -1728,6 +1752,8 @@ void LoadGame(bool firstflag)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+		for (int i = 0; i < ActiveMonsterCount; i++)
+			SyncPackSize(Monsters[ActiveMonsters[i]]);
 		for (int &missileId : ActiveMissiles)
 			missileId = file.NextLE<int8_t>();
 		for (int &missileId : AvailableMissiles)
@@ -1865,13 +1891,9 @@ void SaveHeroItems(Player &player)
 		SaveItem(file, item);
 }
 
-// 256 kilobytes + 3 bytes (demo leftover) for file magic (262147)
-// final game uses 4-byte magic instead of 3
-#define FILEBUFF ((256 * 1024) + 3)
-
 void SaveGameData()
 {
-	SaveHelper file("game", FILEBUFF);
+	SaveHelper file("game", 320 * 1024);
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
@@ -2041,7 +2063,7 @@ void SaveLevel()
 
 	char szName[MAX_PATH];
 	GetTempLevelNames(szName);
-	SaveHelper file(szName, FILEBUFF);
+	SaveHelper file(szName, 256 * 1024);
 
 	if (leveltype != DTYPE_TOWN) {
 		for (int j = 0; j < MAXDUNY; j++) {

@@ -8,6 +8,7 @@
 
 #include "appfat.h"
 #include "multi.h"
+#include "utils/language.h"
 #include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
@@ -22,6 +23,8 @@ enum conn_type : uint8_t {
 	SELCONN_TCP,
 	SELCONN_LOOPBACK,
 };
+
+extern const char *ConnectionNames[];
 
 struct PCXHeader {
 	uint8_t Manufacturer;
@@ -195,7 +198,7 @@ bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFl
 #endif
 bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
-bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh);
+bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, unsigned int nNumberOfBytesToRead, unsigned int *read, void *lpDistanceToMoveHigh);
 DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh = nullptr);
 DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
@@ -247,6 +250,7 @@ void SErrSetLastError(uint32_t dwErrCode);
 void SStrCopy(char *dest, const char *src, int max_length);
 
 void SFileSetBasePath(string_view path);
+void SFileSetAssetsPath(string_view path);
 bool SNetGetOwnerTurnsWaiting(uint32_t *);
 bool SNetUnregisterEventHandler(event_type);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
@@ -287,5 +291,10 @@ inline std::uint64_t SFileGetFilePointer(HANDLE hFile)
 }
 
 #endif
+
+void DvlNet_SendInfoRequest();
+void DvlNet_ClearGamelist();
+std::vector<std::string> DvlNet_GetGamelist();
+void DvlNet_SetPassword(std::string pw);
 
 } // namespace devilution

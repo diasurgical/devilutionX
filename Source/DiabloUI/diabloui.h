@@ -33,6 +33,9 @@ enum _mainmenu_selections : uint8_t {
 	MAINMENU_MULTIPLAYER,
 	MAINMENU_REPLAY_INTRO,
 	MAINMENU_SHOW_SUPPORT,
+	MAINMENU_EXTRAS,
+	MAINMENU_SWITCHGAME,
+	MAINMENU_TOGGLESPAWN,
 	MAINMENU_SHOW_CREDITS,
 	MAINMENU_EXIT_DIABLO,
 	MAINMENU_ATTRACT_MODE,
@@ -113,13 +116,13 @@ bool UiItemMouseEvents(SDL_Event *event, const std::vector<std::unique_ptr<UiIte
 Sint16 GetCenterOffset(Sint16 w, Sint16 bw = 0);
 void LoadPalInMem(const SDL_Color *pPal);
 void DrawMouse();
-void LoadBackgroundArt(const char *pszFile, int frames = 1);
+void LoadBackgroundArt(const char *pszFile, int frames = 1, bool withFading = true);
 void UiAddBackground(std::vector<std::unique_ptr<UiItemBase>> *vecDialog);
 void UiAddLogo(std::vector<std::unique_ptr<UiItemBase>> *vecDialog, int size = LOGO_MED, int y = 0);
 void UiFocusNavigationSelect();
 void UiFocusNavigationEsc();
 void UiFocusNavigationYesNo();
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, bool (*fnYesNo)() = NULL);
+void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool wraps = false, bool (*fnYesNo)() = NULL, size_t selectedItem = 0);
 void UiInitScrollBar(UiScrollbar *uiSb, std::size_t viewportSize, const std::size_t *currentOffset);
 void UiClearScreen();
 void UiPollAndRender();

@@ -56,7 +56,7 @@ void RepeatMouseAction()
 	bool rangedAttack = myPlayer.UsesRangedWeapon();
 	switch (LastMouseButtonAction) {
 	case MouseActionType::Attack:
-		if (cursPosition.x >= 0 && cursPosition.x < MAXDUNX && cursPosition.y >= 0 && cursPosition.y < MAXDUNY)
+		if (InDungeonBounds(cursPosition))
 			NetSendCmdLoc(MyPlayerId, true, rangedAttack ? CMD_RATTACKXY : CMD_SATTACKXY, cursPosition);
 		break;
 	case MouseActionType::AttackMonsterTarget:

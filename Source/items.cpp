@@ -30,6 +30,7 @@
 #include "options.h"
 #include "player.h"
 #include "stores.h"
+#include "town.h"
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
@@ -1314,9 +1315,9 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 	}
 
 	char istr[68];
+	strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str());
 	if (!StringInPanel(istr))
-		strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str());
-	strcpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str());
+		strcpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str());
 	strcpy(item._iName, istr);
 	strcpy(item._iIName, istr);
 
@@ -3408,11 +3409,9 @@ void SpawnItem(Monster &monster, Point position, bool sendmsg)
 	GetSuperItemSpace(position, ii);
 	int uper = monster._uniqtype != 0 ? 15 : 1;
 
-	int8_t mLevel = monster.mLevel;
+	int8_t mLevel = monster.MData->mLevel;
 	if (!gbIsHellfire && monster.MType->mtype == MT_DIABLO)
 		mLevel -= 15;
-	if (mLevel > CF_LEVEL)
-		mLevel = CF_LEVEL;
 
 	SetupAllItems(item, idx, AdvanceRndSeed(), mLevel, uper, onlygood, false, false);
 
@@ -3541,9 +3540,9 @@ void CornerstoneSave()
 	if (!CornerStone.item.isEmpty()) {
 		ItemPack id;
 		PackItem(&id, &CornerStone.item);
-		const auto *buffer = reinterpret_cast<char *>(&id);
+		const auto *buffer = reinterpret_cast<uint8_t *>(&id);
 		for (size_t i = 0; i < sizeof(ItemPack); i++) {
-			sprintf(&sgOptions.Hellfire.szItem[i * 2], "%02X", buffer[i]);
+			snprintf(&sgOptions.Hellfire.szItem[i * 2], 3, "%02hhX", buffer[i]);
 		}
 	} else {
 		sgOptions.Hellfire.szItem[0] = '\0';
@@ -4421,6 +4420,30 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	default:
 		break;
 	}
+}
+
+bool UseItemOpensHive(const Item &item, Point position)
+{
+	if (item.IDidx != IDI_RUNEBOMB)
+		return false;
+	for (auto dir : PathDirs) {
+		Point adjacentPosition = position + dir;
+		if (OpensHive(adjacentPosition))
+			return true;
+	}
+	return false;
+}
+
+bool UseItemOpensCrypt(const Item &item, Point position)
+{
+	if (item.IDidx != IDI_MAPOFDOOM)
+		return false;
+	for (auto dir : PathDirs) {
+		Point adjacentPosition = position + dir;
+		if (OpensGrave(adjacentPosition))
+			return true;
+	}
+	return false;
 }
 
 void SpawnSmith(int lvl)

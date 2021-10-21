@@ -394,7 +394,7 @@ void PlaceUniqueMonst(int uniqindex, int miniontype, int bosspacksize)
 		int count2 = 0;
 		for (int x = xp - 3; x < xp + 3; x++) {
 			for (int y = yp - 3; y < yp + 3; y++) {
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && CanPlaceMonster(x, y)) {
+				if (InDungeonBounds({ x, y }) && CanPlaceMonster(x, y)) {
 					count2++;
 				}
 			}
@@ -707,7 +707,7 @@ void PlaceQuestMonsters()
 		}
 		if (Quests[Q_ANVIL].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L3Data\\Anvil.DUN");
-			SetMapMonsters(dunData.get(), Point { setpc_x + 2, setpc_y + 2 } * 2);
+			SetMapMonsters(dunData.get(), Point { setpc_x + 1, setpc_y + 1 } * 2);
 		}
 		if (Quests[Q_WARLORD].IsAvailable()) {
 			auto dunData = LoadFileInMem<uint16_t>("Levels\\L4Data\\Warlord.DUN");
@@ -778,6 +778,11 @@ void LoadDiabMonsts()
 
 void DeleteMonster(int i)
 {
+	const auto &monster = Monsters[ActiveMonsters[i]];
+	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+		AddUnLight(monster.mlid);
+	}
+
 	ActiveMonsterCount--;
 	std::swap(ActiveMonsters[i], ActiveMonsters[ActiveMonsterCount]); // This ensures alive monsters are before ActiveMonsterCount in the array and any deleted monster after
 }
@@ -1134,7 +1139,7 @@ void Teleport(int i)
 			if (j != 0 || k != 0) {
 				x = mx + rx * j;
 				y = my + ry * k;
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX && x != monster.position.tile.x && y != monster.position.tile.y) {
+				if (InDungeonBounds({ x, y }) && x != monster.position.tile.x && y != monster.position.tile.y) {
 					if (IsTileAvailable(monster, { x, y }))
 						done = true;
 				}
@@ -1896,6 +1901,22 @@ bool IsLineNotSolid(Point startPoint, Point endPoint)
 	return LineClear(IsTileNotSolid, startPoint, endPoint);
 }
 
+void FollowTheLeader(Monster &monster)
+{
+	if (monster.leader == 0)
+		return;
+
+	if (monster.leaderRelation != LeaderRelation::Leashed)
+		return;
+
+	auto &leader = Monsters[monster.leader];
+	if (monster._msquelch >= leader._msquelch)
+		return;
+
+	monster.position.last = leader.position.tile;
+	monster._msquelch = leader._msquelch - 1;
+}
+
 void GroupUnity(Monster &monster)
 {
 	if (monster.leaderRelation == LeaderRelation::None)
@@ -2419,7 +2440,8 @@ void ScavengerAi(int i)
 		return;
 	if (monster._mhitpoints < (monster._mmaxhp / 2) && monster._mgoal != MGOAL_HEALING) {
 		if (monster.leaderRelation != LeaderRelation::None) {
-			Monsters[monster.leader].packsize--;
+			if (monster.leaderRelation == LeaderRelation::Leashed)
+				Monsters[monster.leader].packsize--;
 			monster.leaderRelation = LeaderRelation::None;
 		}
 		monster._mgoal = MGOAL_HEALING;
@@ -2614,7 +2636,7 @@ void FallenAi(int i)
 			for (int x = -rad; x <= rad; x++) {
 				int xpos = monster.position.tile.x + x;
 				int ypos = monster.position.tile.y + y;
-				if (y >= 0 && y < MAXDUNY && x >= 0 && x < MAXDUNX) {
+				if (InDungeonBounds({ x, y })) {
 					int m = dMonster[xpos][ypos];
 					if (m <= 0)
 						continue;
@@ -3941,11 +3963,9 @@ void M_ClearSquares(int i)
 	int m2 = i + 1;
 
 	for (int y = my - 1; y <= my + 1; y++) {
-		if (y >= 0 && y < MAXDUNY) {
-			for (int x = mx - 1; x <= mx + 1; x++) {
-				if (x >= 0 && x < MAXDUNX && (dMonster[x][y] == m1 || dMonster[x][y] == m2))
-					dMonster[x][y] = 0;
-			}
+		for (int x = mx - 1; x <= mx + 1; x++) {
+			if (InDungeonBounds({ x, y }) && (dMonster[x][y] == m1 || dMonster[x][y] == m2))
+				dMonster[x][y] = 0;
 		}
 	}
 }
@@ -4248,6 +4268,7 @@ void ProcessMonsters()
 	for (int i = 0; i < ActiveMonsterCount; i++) {
 		int mi = ActiveMonsters[i];
 		auto &monster = Monsters[mi];
+		FollowTheLeader(monster);
 		bool raflag = false;
 		if (gbIsMultiplayer) {
 			SetRndSeed(monster._mAISeed);

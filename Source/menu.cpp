@@ -5,7 +5,10 @@
  */
 
 #include "DiabloUI/diabloui.h"
+#include "DiabloUI/extrasmenu.h"
+#include "DiabloUI/selok.h"
 #include "engine/demomode.h"
+#include "hwcursor.hpp"
 #include "init.h"
 #include "movie.h"
 #include "options.h"
@@ -86,11 +89,14 @@ bool DummyGetHeroInfo(_uiheroinfo * /*pInfo*/)
 
 bool mainmenu_select_hero_dialog(GameData *gameData)
 {
+	uint32_t *pSaveNumberFromOptions = nullptr;
 	_selhero_selections dlgresult = SELHERO_NEW_DUNGEON;
 	if (demo::IsRunning()) {
 		pfile_ui_set_hero_infos(DummyGetHeroInfo);
 		gbLoadGame = true;
 	} else if (!gbIsMultiplayer) {
+		pSaveNumberFromOptions = gbIsHellfire ? &sgOptions.Hellfire.lastSinglePlayerHero : &sgOptions.Diablo.lastSinglePlayerHero;
+		gSaveNumber = *pSaveNumberFromOptions;
 		UiSelHeroSingDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -102,6 +108,8 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 
 		gbLoadGame = (dlgresult == SELHERO_CONTINUE);
 	} else {
+		pSaveNumberFromOptions = gbIsHellfire ? &sgOptions.Hellfire.lastMultiplayerHero : &sgOptions.Diablo.lastMultiplayerHero;
+		gSaveNumber = *pSaveNumberFromOptions;
 		UiSelHeroMultDialog(
 		    pfile_ui_set_hero_infos,
 		    pfile_ui_save_create,
@@ -115,25 +123,36 @@ bool mainmenu_select_hero_dialog(GameData *gameData)
 		return false;
 	}
 
+	if (pSaveNumberFromOptions != nullptr)
+		*pSaveNumberFromOptions = gSaveNumber;
+
 	pfile_read_player_from_save(gSaveNumber, Players[MyPlayerId]);
 
 	return true;
 }
 
+void mainmenu_wait_for_button_sound()
+{
+	SDL_FillRect(DiabloUiSurface(), nullptr, 0x000000);
+	UiPollAndRender();
+	SDL_Delay(350); // delay to let button pressed sound finish playing
+}
+
 void mainmenu_loop()
 {
 	bool done;
-	_mainmenu_selections menu;
+	_mainmenu_selections menu = MAINMENU_NONE;
 
 	RefreshMusic();
 	done = false;
 
 	do {
-		menu = MAINMENU_NONE;
-		if (demo::IsRunning())
-			menu = MAINMENU_SINGLE_PLAYER;
-		else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
-			app_fatal("%s", _("Unable to display mainmenu"));
+		if (menu == MAINMENU_NONE) {
+			if (demo::IsRunning())
+				menu = MAINMENU_SINGLE_PLAYER;
+			else if (!UiMainMenuDialog(gszProductName, &menu, effects_play_sound, 30))
+				app_fatal("%s", _("Unable to display mainmenu"));
+		}
 
 		switch (menu) {
 		case MAINMENU_NONE:
@@ -141,26 +160,60 @@ void mainmenu_loop()
 		case MAINMENU_SINGLE_PLAYER:
 			if (!InitSinglePlayerMenu())
 				done = true;
+			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_MULTIPLAYER:
 			if (!InitMultiPlayerMenu())
 				done = true;
+			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_ATTRACT_MODE:
-		case MAINMENU_REPLAY_INTRO:
-			if (gbIsSpawn && !gbIsHellfire)
+			if (gbIsSpawn && diabdat_mpq == nullptr)
 				done = false;
 			else if (gbActive)
 				PlayIntro();
+			menu = MAINMENU_NONE;
+			break;
+		case MAINMENU_REPLAY_INTRO:
+			if (gbIsSpawn && diabdat_mpq == nullptr) {
+				UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
+			} else if (gbActive) {
+				mainmenu_wait_for_button_sound();
+				PlayIntro();
+			}
+			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_SHOW_CREDITS:
 			UiCreditsDialog();
+			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_SHOW_SUPPORT:
 			UiSupportDialog();
+			menu = MAINMENU_EXTRAS;
 			break;
 		case MAINMENU_EXIT_DIABLO:
+			mainmenu_wait_for_button_sound();
 			done = true;
+			break;
+		case MAINMENU_EXTRAS:
+			menu = UiExtrasMenu();
+			break;
+		case MAINMENU_SWITCHGAME:
+			gbIsHellfire = !gbIsHellfire;
+			sgOptions.Hellfire.startUpGameOption = gbIsHellfire ? StartUpGameOption::Hellfire : StartUpGameOption::Diablo;
+			UiInitialize();
+			FreeItemGFX();
+			InitItemGFX();
+			if (IsHardwareCursor())
+				SetHardwareCursor(CursorInfo::UnknownCursor());
+			RefreshMusic();
+			menu = MAINMENU_NONE;
+			break;
+		case MAINMENU_TOGGLESPAWN:
+			gbIsSpawn = !gbIsSpawn;
+			UiSetSpawned(gbIsSpawn);
+			RefreshMusic();
+			menu = MAINMENU_NONE;
 			break;
 		}
 	} while (!done);

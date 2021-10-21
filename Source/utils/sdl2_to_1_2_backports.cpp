@@ -512,6 +512,22 @@ char *readSymLink(const char *path)
 #endif
 } // namespace
 
+Sint64 SDL_RWsize(SDL_RWops *context)
+{
+	Sint64 pos = SDL_RWseek(context, 0, RW_SEEK_CUR);
+	if (pos == -1)
+		return -1;
+
+	Sint64 size = SDL_RWseek(context, 0, RW_SEEK_END);
+	if (size == -1)
+		return -1;
+
+	if (SDL_RWseek(context, pos, RW_SEEK_SET) == -1)
+		return -1;
+
+	return size;
+}
+
 char *SDL_GetBasePath()
 {
 	// From sdl2-2.0.9/src/filesystem/unix/SDL_sysfilesystem.c
@@ -620,7 +636,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
      *  This isn't strictly correct, but the results are relatively sane
      *  in any case.
      *
-     * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+     * https://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
      */
 	const char *envr = SDL_getenv("XDG_DATA_HOME");
 	const char *append;

@@ -21,6 +21,7 @@ namespace paths {
 
 namespace {
 
+std::optional<std::string> appPath;
 std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
@@ -50,10 +51,18 @@ std::string FromSDL(char *s)
 
 } // namespace
 
+const std::string &AppPath()
+{
+	if (!appPath) {
+		appPath = FromSDL(SDL_GetBasePath());
+	}
+	return *appPath;
+}
+
 const std::string &BasePath()
 {
 	if (!basePath) {
-		basePath = FromSDL(SDL_GetBasePath());
+		basePath = AppPath();
 	}
 	return *basePath;
 }

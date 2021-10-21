@@ -55,4 +55,54 @@ typename enum_values<T>::Iterator end(enum_values<T>)
 	return typename enum_values<T>::Iterator(static_cast<typename std::underlying_type<T>::type>(T::LAST) + 1);
 }
 
+template <typename>
+struct is_flags_enum : std::false_type {
+};
+
+#define use_enum_as_flags(Type)                   \
+	template <>                                   \
+	struct is_flags_enum<Type> : std::true_type { \
+	};
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr EnumType operator|(EnumType lhs, EnumType rhs)
+{
+	using T = std::underlying_type_t<EnumType>;
+	return static_cast<EnumType>(static_cast<T>(lhs) | static_cast<T>(rhs));
+}
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr EnumType operator|=(EnumType &lhs, EnumType rhs)
+{
+	lhs = lhs | rhs;
+	return lhs;
+}
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr EnumType operator&(EnumType lhs, EnumType rhs)
+{
+	using T = std::underlying_type_t<EnumType>;
+	return static_cast<EnumType>(static_cast<T>(lhs) & static_cast<T>(rhs));
+}
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr EnumType operator&=(EnumType &lhs, EnumType rhs)
+{
+	lhs = lhs & rhs;
+	return lhs;
+}
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr EnumType operator~(EnumType value)
+{
+	using T = std::underlying_type_t<EnumType>;
+	return static_cast<EnumType>(~static_cast<T>(value));
+}
+
+template <typename EnumType, std::enable_if_t<std::is_enum<EnumType>::value && is_flags_enum<EnumType>::value, bool> = true>
+constexpr bool HasAnyOf(EnumType lhs, EnumType test)
+{
+	return (lhs & test) != static_cast<EnumType>(0); // Some flags enums may not use a None value outside this check so we don't require an EnumType::None definition here.
+}
+
 } // namespace devilution

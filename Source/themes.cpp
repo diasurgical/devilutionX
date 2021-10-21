@@ -656,16 +656,17 @@ void Theme_SkelRoom(int t)
  */
 void Theme_Treasure(int t)
 {
-	char treasrnd[4] = { 4, 9, 7, 10 };
-	char monstrnd[4] = { 6, 8, 3, 7 };
+	int8_t treasrnd[4] = { 4, 9, 7, 10 };
+	int8_t monstrnd[4] = { 6, 8, 3, 7 };
 
 	AdvanceRndSeed();
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
 			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp })) {
-				int rv = GenerateRnd(treasrnd[leveltype - 1]);
+				int8_t treasureType = treasrnd[leveltype - 1];
+				int rv = GenerateRnd(treasureType);
 				// BUGFIX: the `2*` in `2*GenerateRnd(treasrnd...) == 0` has no effect, should probably be `GenerateRnd(2*treasrnd...) == 0`
-				if ((2 * GenerateRnd(treasrnd[leveltype - 1])) == 0) {
+				if ((2 * GenerateRnd(treasureType)) == 0) {
 					CreateTypeItem({ xp, yp }, false, ItemType::Gold, IMISC_NONE, false, true);
 					ItemNoFlippy();
 				}
@@ -673,10 +674,10 @@ void Theme_Treasure(int t)
 					CreateRndItem({ xp, yp }, false, false, true);
 					ItemNoFlippy();
 				}
-				if (rv == 0 || rv >= treasrnd[leveltype - 1] - 2) {
-					int i = ItemNoFlippy();
-					if (rv >= treasrnd[leveltype - 1] - 2 && leveltype != DTYPE_CATHEDRAL) {
-						Items[i]._ivalue /= 2;
+				if (rv >= treasureType - 2 && leveltype != DTYPE_CATHEDRAL) {
+					Item &item = Items[ActiveItems[ActiveItemCount - 1]];
+					if (item.IDidx == IDI_GOLD) {
+						item._ivalue = std::max(item._ivalue / 2, 1);
 					}
 				}
 			}

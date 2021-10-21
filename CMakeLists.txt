@@ -324,6 +324,8 @@ endif()
 add_subdirectory(3rdParty/simpleini)
 
 add_library(StormLib STATIC
+  3rdParty/StormLib/src/huffman/huff.cpp
+  3rdParty/StormLib/src/adpcm/adpcm.cpp
   3rdParty/StormLib/src/FileStream.cpp
   3rdParty/StormLib/src/SBaseCommon.cpp
   3rdParty/StormLib/src/SBaseFileTable.cpp
@@ -456,6 +458,7 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/diabloui.cpp
   Source/DiabloUI/dialogs.cpp
   Source/DiabloUI/errorart.cpp
+  Source/DiabloUI/extrasmenu.cpp
   Source/DiabloUI/mainmenu.cpp
   Source/DiabloUI/progress.cpp
   Source/DiabloUI/scrollbar.cpp
@@ -463,6 +466,7 @@ set(libdevilutionx_SRCS
   Source/DiabloUI/selgame.cpp
   Source/DiabloUI/selhero.cpp
   Source/DiabloUI/selok.cpp
+  Source/DiabloUI/selstart.cpp
   Source/DiabloUI/selyesno.cpp
   Source/DiabloUI/support_lines.cpp
   Source/DiabloUI/title.cpp
@@ -533,6 +537,8 @@ endif()
 
 if(VITA)
   list(APPEND libdevilutionx_SRCS
+    Source/platform/vita/random.cpp
+    Source/platform/vita/network.cpp
     Source/platform/vita/keyboard.cpp
     Source/platform/vita/touch.cpp)
 endif()
@@ -646,7 +652,7 @@ if(USE_GETTEXT_FROM_VCPKG)
 endif()
 find_package(Gettext)
 if (Gettext_FOUND)
-  foreach(lang bg da de es fr hr it ko_KR pt_BR ru sv zh_CN zh_TW)
+  foreach(lang bg cs da de es fr hr it ko_KR pl pt_BR ru sv zh_CN zh_TW)
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
     list(APPEND devilutionx_TRANSLATIONS ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
 
@@ -768,6 +774,9 @@ if(SMPQ)
     COMMAND ${SMPQ} -M 1 -C PKWARE -c "../devilutionx.mpq" ${devilutionx_assets})
   # Copy devilutionx.mpq to the build directory so the game can run from the build directory
   file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+else()
+  # Copy assets to the build directory so the game can load them from the build directory
+  file(COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/assets")
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
@@ -934,6 +943,8 @@ if (VITA)
   target_link_libraries(libdevilutionx PUBLIC
         ScePower_stub
         SceAppUtil_stub
+        SceNet_stub
+        SceNetCtl_stub
   )
   target_compile_definitions(libdevilutionx PUBLIC VITA)
 endif()
@@ -1044,18 +1055,24 @@ if(VITA)
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
   vita_create_self(devilutionx.self devilutionx UNSAFE)
-  vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
-    VERSION ${VITA_VERSION}
-    NAME ${VITA_APP_NAME}
-    FILE Packaging/vita/sce_sys/icon0.png sce_sys/icon0.png
-    FILE Packaging/vita/sce_sys/pic0.png sce_sys/pic0.png
-    FILE Packaging/vita/sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
-    FILE Packaging/vita/sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
-    FILE Packaging/vita/sce_sys/livearea/contents/logo0.png sce_sys/livearea/contents/logo0.png
-    FILE Packaging/vita/sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
-    FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
-    ${VITA_TRANSLATIONS_LIST}
-  )
+  if(SMPQ)
+    vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
+      VERSION ${VITA_VERSION}
+      NAME ${VITA_APP_NAME}
+      FILE Packaging/vita/sce_sys sce_sys
+      FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
+      ${VITA_TRANSLATIONS_LIST}
+    )
+  else()
+    vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
+      VERSION ${VITA_VERSION}
+      NAME ${VITA_APP_NAME}
+      FILE Packaging/vita/sce_sys sce_sys
+      FILE Packaging/resources/assets assets
+      ${VITA_TRANSLATIONS_LIST}
+    )
+  endif()
+
 endif()
 
 if(NINTENDO_3DS)
@@ -1217,5 +1234,9 @@ endif()
 
 if(NOT NONET AND NOT DISABLE_ZERO_TIER)
   add_subdirectory(3rdParty/libzt)
-  target_link_libraries(libdevilutionx PUBLIC zt-static)
+  if(NOT ANDROID)
+    target_link_libraries(libdevilutionx PUBLIC zt-static)
+  else()
+    target_link_libraries(libdevilutionx PUBLIC zt-shared)
+  endif()
 endif()

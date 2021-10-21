@@ -225,19 +225,33 @@ spell_id SpellPages[6][7] = {
 
 void CalculatePanelAreas()
 {
-	MainPanel = { { (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT }, { PANEL_WIDTH, PANEL_HEIGHT } };
-	LeftPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
-	RightPanel = { { 0, 0 }, { SPANEL_WIDTH, SPANEL_HEIGHT } };
+	MainPanel = {
+		{ (gnScreenWidth - PANEL_WIDTH) / 2, gnScreenHeight - PANEL_HEIGHT },
+		{ PANEL_WIDTH, PANEL_HEIGHT }
+	};
+	LeftPanel = {
+		{ 0, 0 },
+		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+	};
+	RightPanel = {
+		{ 0, 0 },
+		{ SPANEL_WIDTH, SPANEL_HEIGHT }
+	};
 
-	if (gnScreenWidth - 2 * SPANEL_WIDTH > PANEL_WIDTH) {
-		LeftPanel.position.x = (gnScreenWidth - 2 * SPANEL_WIDTH - PANEL_WIDTH) / 2;
-	} else {
-		LeftPanel.position.x = 0;
+#ifdef VIRTUAL_GAMEPAD
+	LeftPanel.position.x = gnScreenWidth / 2 - LeftPanel.size.width;
+#else
+	if (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width > PANEL_WIDTH) {
+		LeftPanel.position.x = (gnScreenWidth - LeftPanel.size.width - RightPanel.size.width - PANEL_WIDTH) / 2;
 	}
-
+#endif
 	LeftPanel.position.y = (gnScreenHeight - LeftPanel.size.height - PANEL_HEIGHT) / 2;
 
+#ifdef VIRTUAL_GAMEPAD
+	RightPanel.position.x = gnScreenWidth / 2;
+#else
 	RightPanel.position.x = gnScreenWidth - RightPanel.size.width - LeftPanel.position.x;
+#endif
 	RightPanel.position.y = LeftPanel.position.y;
 }
 
@@ -777,6 +791,7 @@ void DrawSpellList(const Surface &out)
 				return item.IsScrollOf(spellId);
 			});
 			strcpy(tempstr, fmt::format(ngettext("{:d} Scroll", "{:d} Scrolls", scrollCount), scrollCount).c_str());
+			AddPanelString(tempstr);
 		} break;
 		case RSPLTYPE_CHARGES: {
 			if (myPlayer.plrlevel != 0) {

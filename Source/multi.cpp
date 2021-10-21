@@ -32,7 +32,6 @@ bool gbSomebodyWonGameKludge;
 TBuffer sgHiPriBuf;
 char szPlayerDescript[128];
 uint16_t sgwPackPlrOffsetTbl[MAX_PLRS];
-PlayerPack netplr[MAX_PLRS];
 bool sgbPlayerTurnBitTbl[MAX_PLRS];
 bool sgbPlayerLeftGameTbl[MAX_PLRS];
 bool gbShouldValidatePackage;
@@ -489,7 +488,7 @@ void NetSendHiPri(int playerId, const byte *data, size_t size)
 		msgSize = sync_all_monsters(lowpriBody, msgSize);
 		size_t len = gdwNormalMsgSize - msgSize;
 		pkt.hdr.wLen = len;
-		if (!SNetSendMessage(-2, &pkt.hdr, len))
+		if (!SNetSendMessage(SNPLAYER_OTHERS, &pkt.hdr, len))
 			nthread_terminate_game("SNetSendMessage");
 	}
 }
@@ -730,7 +729,7 @@ bool NetInit(bool bSinglePlayer)
 		gbSomebodyWonGameKludge = false;
 		nthread_send_and_recv_turn(0, 0);
 		SetupLocalPositions();
-		SendPlayerInfo(-2, CMD_SEND_PLRINFO);
+		SendPlayerInfo(SNPLAYER_OTHERS, CMD_SEND_PLRINFO);
 
 		auto &myPlayer = Players[MyPlayerId];
 		ResetPlayerGFX(myPlayer);
@@ -757,19 +756,20 @@ bool NetInit(bool bSinglePlayer)
 	return true;
 }
 
-void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
+void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 {
-	const char *szEvent;
+	static PlayerPack PackedPlayerBuffer[MAX_PLRS];
 
 	if (MyPlayerId == pnum) {
 		return;
 	}
 	assert(pnum >= 0 && pnum < MAX_PLRS);
 	auto &player = Players[pnum];
+	auto &packedPlayer = PackedPlayerBuffer[pnum];
 
-	if (sgwPackPlrOffsetTbl[pnum] != p->wOffset) {
+	if (sgwPackPlrOffsetTbl[pnum] != header.wOffset) {
 		sgwPackPlrOffsetTbl[pnum] = 0;
-		if (p->wOffset != 0) {
+		if (header.wOffset != 0) {
 			return;
 		}
 	}
@@ -777,15 +777,18 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
 		SendPlayerInfo(pnum, CMD_ACK_PLRINFO);
 	}
 
-	memcpy((char *)&netplr[pnum] + p->wOffset, &p[1], p->wBytes); /* todo: cast? */
-	sgwPackPlrOffsetTbl[pnum] += p->wBytes;
-	if (sgwPackPlrOffsetTbl[pnum] != sizeof(*netplr)) {
+	memcpy(reinterpret_cast<uint8_t *>(&packedPlayer) + header.wOffset, reinterpret_cast<const uint8_t *>(&header) + sizeof(header), header.wBytes);
+
+	sgwPackPlrOffsetTbl[pnum] += header.wBytes;
+	if (sgwPackPlrOffsetTbl[pnum] != sizeof(packedPlayer)) {
 		return;
 	}
-
 	sgwPackPlrOffsetTbl[pnum] = 0;
+
 	PlayerLeftMsg(pnum, false);
-	UnPackPlayer(&netplr[pnum], player, true);
+	if (!UnPackPlayer(&packedPlayer, player, true)) {
+		return;
+	}
 
 	if (!recv) {
 		return;
@@ -795,6 +798,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr *p, bool recv)
 	player.plractive = true;
 	gbActivePlayers++;
 
+	const char *szEvent;
 	if (sgbPlayerTurnBitTbl[pnum]) {
 		szEvent = _("Player '{:s}' (level {:d}) just joined the game");
 	} else {

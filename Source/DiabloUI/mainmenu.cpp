@@ -35,8 +35,7 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Single Player"), MAINMENU_SINGLE_PLAYER));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Multi Player"), MAINMENU_MULTIPLAYER));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Replay Intro"), MAINMENU_REPLAY_INTRO));
-	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));
+	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Extras"), MAINMENU_EXTRAS));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(_("Show Credits"), MAINMENU_SHOW_CREDITS));
 	vecMenuItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Exit Hellfire") : _("Exit Diablo"), MAINMENU_EXIT_DIABLO));
 
@@ -88,17 +87,12 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*
 		while (MainMenuResult == MAINMENU_NONE) {
 			UiClearScreen();
 			UiPollAndRender();
-			if (!gbSpawned && SDL_GetTicks() >= dwAttractTicks) {
+			if (SDL_GetTicks() >= dwAttractTicks) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;
 			}
 		}
 
 		MainmenuFree();
-
-		if (gbSpawned && !gbIsHellfire && MainMenuResult == MAINMENU_REPLAY_INTRO) {
-			UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
-			MainMenuResult = MAINMENU_NONE;
-		}
 	}
 
 	*pdwResult = MainMenuResult;

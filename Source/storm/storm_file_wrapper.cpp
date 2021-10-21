@@ -2,7 +2,6 @@
 
 #ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
 
-#include "storm/storm.h"
 #include "utils/log.hpp"
 
 namespace devilution {
@@ -12,14 +11,11 @@ extern "C" {
 
 ssize_t SFileCookieRead(void *cookie, char *buf, size_t nbytes)
 {
-	size_t numRead = 0;
-	if (!SFileReadFileThreadSafe(static_cast<HANDLE>(cookie), buf, nbytes, &numRead)) {
-		const auto errCode = SErrGetLastError();
-		if (errCode != STORM_ERROR_HANDLE_EOF) {
-			Log("SFileRwRead error: {} ERROR CODE {}", (unsigned int)nbytes, (unsigned int)errCode);
-		}
+	size_t numRead = SDL_RWread(static_cast<SDL_RWops *>(cookie), buf, nbytes, 1);
+	if (numRead == 0) {
+		Log("SDL_RWread error: {} ERROR CODE {}", SDL_GetError(), numRead);
 	}
-	return numRead;
+	return numRead * nbytes;
 }
 
 int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
@@ -27,20 +23,20 @@ int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
 	int swhence;
 	switch (whence) {
 	case SEEK_SET:
-		swhence = DVL_FILE_BEGIN;
+		swhence = RW_SEEK_SET;
 		break;
 	case SEEK_CUR:
-		swhence = DVL_FILE_CURRENT;
+		swhence = RW_SEEK_CUR;
 		break;
 	case SEEK_END:
-		swhence = DVL_FILE_END;
+		swhence = RW_SEEK_END;
 		break;
 	default:
 		return -1;
 	}
-	const std::uint64_t spos = SFileSetFilePointer(static_cast<HANDLE>(cookie), *pos, swhence);
-	if (spos == static_cast<std::uint64_t>(-1)) {
-		Log("SFileRwSeek error: {}", SErrGetLastError());
+	const Sint64 spos = SDL_RWseek(static_cast<SDL_RWops *>(cookie), *pos, swhence);
+	if (spos < 0) {
+		Log("SFileRwSeek error: {}", SDL_GetError());
 		return -1;
 	}
 	*pos = static_cast<off64_t>(spos);
@@ -49,13 +45,13 @@ int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
 
 int SFileCookieClose(void *cookie)
 {
-	return SFileCloseFileThreadSafe(static_cast<HANDLE>(cookie)) ? 0 : -1;
+	return SDL_RWclose(static_cast<SDL_RWops *>(cookie));
 }
 
 } // extern "C"
 #endif
 
-FILE *FILE_FromStormHandle(HANDLE handle)
+FILE *FILE_FromStormHandle(SDL_RWops *handle)
 {
 #ifdef DEVILUTIONX_STORM_FILE_WRAPPER_IMPL_FOPENCOOKIE
 	cookie_io_functions_t ioFns;

@@ -3,14 +3,19 @@
 #include "controls/touch/event_handlers.h"
 
 #include "control.h"
+#include "controls/plrctrls.h"
+#include "cursor.h"
 #include "diablo.h"
 #include "engine.h"
 #include "gmenu.h"
+#include "inv.h"
 #include "scrollrt.h"
 #include "stores.h"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
+
+extern bool sgbTouchActive;
 
 namespace {
 
@@ -26,10 +31,15 @@ Point ScaleToScreenCoordinates(float x, float y)
 
 void SimulateMouseMovement(const SDL_Event &event)
 {
-	float x = event.tfinger.x;
-	float y = event.tfinger.y;
-	MousePosition = ScaleToScreenCoordinates(x, y);
+	Point position = ScaleToScreenCoordinates(event.tfinger.x, event.tfinger.y);
+
+	if (!spselflag && invflag && !MainPanel.Contains(position) && !RightPanel.Contains(position))
+		return;
+
+	MousePosition = position;
+
 	sgbControllerActive = false;
+	InvalidateInventorySlot();
 }
 
 bool HandleGameMenuInteraction(const SDL_Event &event)
@@ -63,6 +73,9 @@ bool HandleSpeedbookInteraction(const SDL_Event &event)
 
 void HandleBottomPanelInteraction(const SDL_Event &event)
 {
+	if (pcurs >= CURSOR_FIRSTITEM)
+		return;
+
 	ClearPanBtn();
 
 	if (event.type != SDL_FINGERUP) {
@@ -80,11 +93,15 @@ void HandleBottomPanelInteraction(const SDL_Event &event)
 
 void HandleTouchEvent(const SDL_Event &event)
 {
+	sgbTouchActive = false;
+
 	if (Handler.Handle(event))
 		return;
 
 	if (!IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION))
 		return;
+
+	sgbTouchActive = true;
 
 	SimulateMouseMovement(event);
 
@@ -195,6 +212,12 @@ bool VirtualDirectionPadEventHandler::HandleFingerMotion(const SDL_TouchFingerEv
 
 bool VirtualPadButtonEventHandler::Handle(const SDL_Event &event)
 {
+	if (!virtualPadButton->isUsable()) {
+		virtualPadButton->didStateChange = virtualPadButton->isHeld;
+		virtualPadButton->isHeld = false;
+		return false;
+	}
+
 	virtualPadButton->didStateChange = false;
 
 	switch (event.type) {

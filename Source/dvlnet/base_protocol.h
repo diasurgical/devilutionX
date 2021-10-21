@@ -26,6 +26,7 @@ public:
 
 	virtual std::string make_default_gamename();
 	virtual void send_info_request();
+	virtual void clear_gamelist();
 	virtual std::vector<std::string> get_gamelist();
 
 	virtual ~base_protocol() = default;
@@ -98,9 +99,10 @@ bool base_protocol<P>::wait_firstpeer()
 template <class P>
 void base_protocol<P>::send_info_request()
 {
-	auto pkt = pktfty->make_packet<PT_INFO_REQUEST>(PLR_BROADCAST,
-	    PLR_MASTER);
-	proto.send_oob_mc(pkt->Data());
+	if (wait_network()) {
+		auto pkt = pktfty->make_packet<PT_INFO_REQUEST>(PLR_BROADCAST, PLR_MASTER);
+		proto.send_oob_mc(pkt->Data());
+	}
 }
 
 template <class P>
@@ -271,6 +273,12 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 	if (pkt.Destination() != plr_self && pkt.Destination() != PLR_BROADCAST)
 		return; //packet not for us, drop
 	RecvLocal(pkt);
+}
+
+template <class P>
+void base_protocol<P>::clear_gamelist()
+{
+	game_list.clear();
 }
 
 template <class P>

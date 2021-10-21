@@ -20,6 +20,7 @@
 #include "options.h"
 #include "plrmsg.h"
 #include "stores.h"
+#include "town.h"
 #include "towners.h"
 #include "controls/plrctrls.h"
 #include "utils/language.h"
@@ -49,7 +50,6 @@ bool drawsbarflag;
  *              55 56 57 58 59 60 61 62 63 64
  *
  * 65 66 67 68 69 70 71 72
- * @see graphics/inv/inventory.png
  */
 const Point InvRect[] = {
 	// clang-format off
@@ -879,7 +879,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 				holdItem._itype = ItemType::None;
 			} else {
 				NewCursor(holdItem._iCurs + CURSOR_FIRSTITEM);
-				if (!IsHardwareCursor()) {
+				if (!IsHardwareCursor() && !dropItem) {
 					// For a hardware cursor, we set the "hot point" to the center of the item instead.
 					SetCursorPos(cursorPosition - Displacement(cursSize / 2));
 				}
@@ -990,6 +990,24 @@ void CheckQuestItem(Player &player)
 	}
 
 	CheckNaKrulNotes(player);
+}
+
+void OpenHive()
+{
+	NetSendCmd(false, CMD_OPENHIVE);
+	auto &quest = Quests[Q_FARMER];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
+}
+
+void OpenCrypt()
+{
+	NetSendCmd(false, CMD_OPENCRYPT);
+	auto &quest = Quests[Q_GRAVE];
+	quest._qactive = QUEST_DONE;
+	if (gbIsMultiplayer)
+		NetSendCmdQuest(true, quest);
 }
 
 void CleanupItems(Item *item, int ii)
@@ -1476,7 +1494,7 @@ bool GoldAutoPlaceInInventorySlot(Player &player, int slotIndex)
 	return true;
 }
 
-void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
+void CheckInvSwap(Player &player, inv_body_loc bLoc, int idx, uint16_t wCI, int seed, bool bId, uint32_t dwBuff)
 {
 	auto &item = Items[MAXITEMS];
 	memset(&item, 0, sizeof(item));
@@ -1488,24 +1506,20 @@ void CheckInvSwap(Player &player, BYTE bLoc, int idx, uint16_t wCI, int seed, bo
 		player.HoldItem._iIdentified = true;
 	}
 
-	if (bLoc < NUM_INVLOC) {
-		player.InvBody[bLoc] = player.HoldItem;
+	player.InvBody[bLoc] = player.HoldItem;
 
-		if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
-		} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
-			player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
-		}
+	if (bLoc == INVLOC_HAND_LEFT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+		player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+	} else if (bLoc == INVLOC_HAND_RIGHT && player.HoldItem._iLoc == ILOC_TWOHAND) {
+		player.InvBody[INVLOC_HAND_LEFT]._itype = ItemType::None;
 	}
 
 	CalcPlrInv(player, true);
 }
 
-void inv_update_rem_item(Player &player, BYTE iv)
+void inv_update_rem_item(Player &player, inv_body_loc iv)
 {
-	if (iv < NUM_INVLOC) {
-		player.InvBody[iv]._itype = ItemType::None;
-	}
+	player.InvBody[iv]._itype = ItemType::None;
 
 	CalcPlrInv(player, player._pmode != PM_DEATH);
 }
@@ -1674,7 +1688,6 @@ void SyncGetItem(Point position, int idx, uint16_t ci, int iseed)
 		return;
 
 	CleanupItems(&Items[ii], ii);
-	assert(FindGetItem(idx, ci, iseed) == -1);
 }
 
 bool CanPut(Point position)
@@ -1737,33 +1750,19 @@ bool TryInvPut()
 
 int InvPutItem(Player &player, Point position)
 {
-	if (!PutItem(player, position))
-		return -1;
-
-	if (currlevel == 0) {
-		int yp = cursPosition.y;
-		int xp = cursPosition.x;
-		if (player.HoldItem._iCurs == ICURS_RUNE_BOMB && xp >= 79 && xp <= 82 && yp >= 61 && yp <= 64) {
-			Displacement relativePosition = position - player.position.tile;
-			NetSendCmdLocParam2(false, CMD_OPENHIVE, player.position.tile, relativePosition.deltaX, relativePosition.deltaY);
-			auto &quest = Quests[Q_FARMER];
-			quest._qactive = QUEST_DONE;
-			if (gbIsMultiplayer) {
-				NetSendCmdQuest(true, quest);
-				return -1;
-			}
+	if (player.plrlevel == 0) {
+		if (player.HoldItem.IDidx == IDI_RUNEBOMB && OpensHive(position)) {
+			OpenHive();
 			return -1;
 		}
-		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && xp >= 35 && xp <= 38 && yp >= 20 && yp <= 24) {
-			NetSendCmd(false, CMD_OPENCRYPT);
-			auto &quest = Quests[Q_GRAVE];
-			quest._qactive = QUEST_DONE;
-			if (gbIsMultiplayer) {
-				NetSendCmdQuest(true, quest);
-			}
+		if (player.HoldItem.IDidx == IDI_MAPOFDOOM && OpensGrave(position)) {
+			OpenCrypt();
 			return -1;
 		}
 	}
+
+	if (!PutItem(player, position))
+		return -1;
 
 	assert(CanPut(position));
 
@@ -1787,6 +1786,13 @@ int InvPutItem(Player &player, Point position)
 
 int SyncPutItem(Player &player, Point position, int idx, uint16_t icreateinfo, int iseed, int id, int dur, int mdur, int ch, int mch, int ivalue, uint32_t ibuff, int toHit, int maxDam, int minStr, int minMag, int minDex, int ac)
 {
+	if (player.plrlevel == 0) {
+		if (idx == IDI_RUNEBOMB && OpensHive(position))
+			return -1;
+		if (idx == IDI_MAPOFDOOM && OpensGrave(position))
+			return -1;
+	}
+
 	if (!PutItem(player, position))
 		return -1;
 
@@ -2017,6 +2023,19 @@ bool UseInvItem(int pnum, int cii)
 		PlaySFX(IS_IBOOK);
 		player.Say(HeroSpeech::ThatDidntDoAnything, SpeechDelay);
 		return true;
+	}
+
+	if (player.plrlevel == 0) {
+		if (UseItemOpensHive(*item, player.position.tile)) {
+			OpenHive();
+			player.RemoveInvItem(c);
+			return true;
+		}
+		if (UseItemOpensCrypt(*item, player.position.tile)) {
+			OpenCrypt();
+			player.RemoveInvItem(c);
+			return true;
+		}
 	}
 
 	if (!AllItemsList[item->IDidx].iUsable)

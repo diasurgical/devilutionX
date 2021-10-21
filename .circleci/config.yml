@@ -40,16 +40,6 @@ jobs:
       - run: /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -S. -Bbuild .. -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.nro, destination: devilutionx.nro}
-  android:
-    docker:
-      - image: circleci/android:api-28-ndk
-    working_directory: ~/repo
-    steps:
-      - checkout
-      - run: sudo apt update -y
-      - run: sudo apt install -y g++ cmake ninja-build smpq
-      - run: cd android-project && ./gradlew assembleDebug
-      - store_artifacts: {path: ./android-project/app/build/outputs/apk/debug/app-debug.apk, destination: devilutionx-debug.apk}
   3ds:
     docker:
       - image: devkitpro/devkitarm:latest
@@ -83,11 +73,7 @@ jobs:
     working_directory: ~/repo
     steps:
       - checkout
-      # Work around https://github.com/vitasdk/vdpm/issues/69
-      - run: mkdir -p /usr/local && ln -sf /home/user/vitasdk /usr/local/vitasdk
-      # curl, zlib-dev, bzip2-dev, and build-base are only needed by build-and-install-smpq.sh
-      - run: apk --no-cache add git cmake ninja bash pkgconfig curl zlib-dev bzip2-dev build-base
-      - run: .circleci/build-and-install-smpq.sh
+      - run: apk --no-cache add git cmake ninja bash pkgconfig gettext
       - run: cmake -S. -Bbuild -GNinja -DCMAKE_TOOLCHAIN_FILE=${VITASDK}/share/vita.toolchain.cmake -DNIGHTLY_BUILD=ON
       - run: cmake --build build -j 2
       - store_artifacts: {path: ./build/devilutionx.vpk, destination: devilutionx.vpk}
@@ -99,7 +85,6 @@ workflows:
       - linux_x86_64
       - linux_x86_64_test
       - switch
-      - android
       - 3ds
       - amigaos-m68k
       - vita

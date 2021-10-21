@@ -1318,7 +1318,11 @@ void AddFireRune(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddLightningRune(Missile &missile, Point dst, Direction /*midir*/)
 {
-	AddRune(missile, dst, MIS_LIGHTBALL);
+	int id = missile._misource;
+	int lvl = (id > -1) ? Players[id]._pLevel : 0;
+	int dmg = 16 * (GenerateRndSum(10, 2) + lvl + 2);
+	missile._midam = dmg;
+	AddRune(missile, dst, MIS_LIGHTWALL);
 }
 
 void AddGreatLightningRune(Missile &missile, Point dst, Direction /*midir*/)
@@ -1394,8 +1398,8 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 			monster.mMaxDamage = (GenerateRnd(10) + 120) * monster.mMaxDamage / 100 + slvl;
 			monster.mMinDamage2 = (GenerateRnd(10) + 120) * monster.mMinDamage2 / 100 + slvl;
 			monster.mMaxDamage2 = (GenerateRnd(10) + 120) * monster.mMaxDamage2 / 100 + slvl;
-			int r = (currlevel < 17 || currlevel > 20) ? 3 : 9;
-			monster.mlid = AddLight(monster.position.tile, r);
+			int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+			monster.mlid = AddLight(monster.position.tile, lightRadius);
 			UseMana(missile._misource, SPL_BERSERK);
 			break;
 		}

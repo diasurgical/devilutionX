@@ -26,9 +26,12 @@ namespace devilution {
 
 namespace {
 
+constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
+
 std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
+std::array<uint8_t, 6> FontFullwidth = { 16, 21, 29, 41, 43, 16 };
 std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
@@ -101,6 +104,15 @@ text_color GetColorFromFlags(UiFlags flags)
 	return ColorWhitegold;
 }
 
+bool IsFullWidth(uint16_t row)
+{
+	if (row >= 0x4e && row <= 0x9f)
+		return true; // CJK Unified Ideographs
+	if (row >= 0xac && row <= 0xd7)
+		return true; // Hangul Syllables
+	return false;
+}
+
 std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 {
 	uint32_t fontId = (size << 16) | row;
@@ -115,7 +127,18 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 
 	auto *kerning = &FontKerns[fontId];
 
-	LoadFileInMem(path, kerning);
+	if (IsFullWidth(row)) {
+		kerning->fill(FontFullwidth[size]);
+	} else {
+		SDL_RWops *handle = SFileOpenRw(path);
+		if (handle != nullptr) {
+			SDL_RWread(handle, kerning, 256, 1);
+			SDL_RWclose(handle);
+		} else {
+			LogError("Missing font kerning: {}", path);
+			kerning->fill(FontFullwidth[size]);
+		}
+	}
 
 	return kerning;
 }
@@ -140,6 +163,9 @@ Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
 		LoadMaskedArt(path, font, 256, 1, &colorMapping);
 	} else {
 		LoadMaskedArt(path, font, 256, 1);
+	}
+	if (font->surface == nullptr) {
+		LogError("Missing font: {}", path);
 	}
 
 	return font;
@@ -183,6 +209,8 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 	int error;
 	for (; *textData != '\0'; i++) {
 		textData = utf8_decode(textData, &next, &error);
+		if (next == ZWSP)
+			continue;
 		if (error)
 			next = '?';
 
@@ -270,7 +298,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 			lastBreakableCodePoint = next;
 			continue;
 		}
-		if (IsAnyOf(next, U'　', U'，', U'、', U'。', U'？', U'！')) {
+		if (IsAnyOf(next, U'　', ZWSP, U'，', U'、', U'。', U'？', U'！')) {
 			lastBreakablePos = static_cast<int>(cur - begin - 3);
 			lastBreakableLen = 3;
 			lastBreakableCodePoint = next;
@@ -287,7 +315,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 
 		// Break line and continue to next line
 		const char *end = &input[lastBreakablePos];
-		if (!IsAnyOf(lastBreakableCodePoint, U' ', U'　')) {
+		if (!IsAnyOf(lastBreakableCodePoint, U' ', U'　', ZWSP)) {
 			end += lastBreakableLen;
 		}
 		output.append(processedEnd, end);
@@ -350,6 +378,8 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	int error;
 	for (; *textData != '\0'; previousPosition = textData) {
 		textData = utf8_decode(textData, &next, &error);
+		if (next == ZWSP)
+			continue;
 		if (error)
 			next = '?';
 

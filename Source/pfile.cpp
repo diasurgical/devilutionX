@@ -300,15 +300,17 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
 				auto &player = Players[0];
-				UnPackPlayer(&pkplr, player, false);
 
-				CloseArchive(&archive);
-				LoadHeroItems(player);
-				RemoveEmptyInventory(player);
-				CalcPlrInv(player, false);
+				player = {};
 
-				Game2UiPlayer(player, &uihero, hasSaveGame);
-				uiAddHeroInfo(&uihero);
+				if (UnPackPlayer(&pkplr, player, false)) {
+					LoadHeroItems(player);
+					RemoveEmptyInventory(player);
+					CalcPlrInv(player, false);
+
+					Game2UiPlayer(player, &uihero, hasSaveGame);
+					uiAddHeroInfo(&uihero);
+				}
 			}
 			CloseArchive(&archive);
 		}
@@ -380,6 +382,8 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	HANDLE archive;
 	PlayerPack pkplr;
 
+	player = {};
+
 	archive = OpenSaveArchive(saveNum);
 	if (archive == nullptr)
 		app_fatal("%s", _("Unable to open archive"));
@@ -392,7 +396,9 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 
 	CloseArchive(&archive);
 
-	UnPackPlayer(&pkplr, player, false);
+	if (!UnPackPlayer(&pkplr, player, false)) {
+		return;
+	}
 
 	LoadHeroItems(player);
 	RemoveEmptyInventory(player);

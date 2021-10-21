@@ -17,14 +17,13 @@ extern HANDLE diabdat_mpq;
 extern bool gbIsSpawn;
 extern bool gbIsHellfire;
 extern bool gbVanilla;
-extern HANDLE patch_rt_mpq;
 extern HANDLE hfmonk_mpq;
 extern HANDLE hfbard_mpq;
 extern HANDLE hfbarb_mpq;
 extern HANDLE hfmusic_mpq;
 extern HANDLE hfvoice_mpq;
-extern HANDLE hfopt1_mpq;
-extern HANDLE hfopt2_mpq;
+extern HANDLE font_mpq;
+extern HANDLE lang_mpq;
 extern HANDLE devilutionx_mpq;
 
 void init_cleanup();

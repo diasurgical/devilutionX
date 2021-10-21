@@ -32,6 +32,8 @@ enum _setlevels : int8_t {
 	SL_MAZE,
 	SL_POISONWATER,
 	SL_VILEBETRAYER,
+
+	SL_LAST = SL_VILEBETRAYER,
 };
 
 enum dungeon_type : int8_t {
@@ -42,6 +44,8 @@ enum dungeon_type : int8_t {
 	DTYPE_HELL,
 	DTYPE_NEST,
 	DTYPE_CRYPT,
+
+	DTYPE_LAST = DTYPE_CRYPT,
 	DTYPE_NONE = -1,
 };
 
@@ -82,6 +86,8 @@ enum _difficulty : uint8_t {
 	DIFF_NORMAL,
 	DIFF_NIGHTMARE,
 	DIFF_HELL,
+
+	DIFF_LAST = DIFF_HELL,
 };
 
 struct ScrollStruct {
@@ -172,7 +178,7 @@ extern Point dmaxPosition;
 /** Specifies the active dungeon type of the current game. */
 extern dungeon_type leveltype;
 /** Specifies the active dungeon level of the current game. */
-extern BYTE currlevel;
+extern uint8_t currlevel;
 extern bool setlevel;
 /** Specifies the active quest level of the current game. */
 extern _setlevels setlvlnum;

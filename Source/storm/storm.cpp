@@ -32,6 +32,7 @@ namespace {
 
 bool directFileAccess = false;
 std::optional<std::string> SBasePath;
+std::optional<std::string> AssetsPath;
 
 SdlMutex Mutex;
 
@@ -40,7 +41,7 @@ SdlMutex Mutex;
 bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh)
 {
 	const std::lock_guard<SdlMutex> lock(Mutex);
-	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
+	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, (unsigned int *)read, lpDistanceToMoveHigh);
 }
 
 bool SFileCloseFileThreadSafe(HANDLE hFile)
@@ -89,16 +90,16 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		result = SFileOpenFileEx((HANDLE) nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
+	if (!result && font_mpq != nullptr) {
+		result = SFileOpenFileEx((HANDLE)font_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+	}
+	if (!result && lang_mpq != nullptr) {
+		result = SFileOpenFileEx((HANDLE)lang_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+	}
 	if (!result && devilutionx_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)devilutionx_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (gbIsHellfire) {
-		if (!result && hfopt2_mpq != nullptr) {
-			result = SFileOpenFileEx((HANDLE)hfopt2_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
-		}
-		if (!result && hfopt1_mpq != nullptr) {
-			result = SFileOpenFileEx((HANDLE)hfopt1_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
-		}
 		if (!result && hfvoice_mpq != nullptr) {
 			result = SFileOpenFileEx((HANDLE)hfvoice_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
@@ -118,14 +119,19 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 			result = SFileOpenFileEx((HANDLE)hellfire_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 		}
 	}
-	if (!result && patch_rt_mpq != nullptr) {
-		result = SFileOpenFileEx((HANDLE)patch_rt_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
-	}
 	if (!result && spawn_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)spawn_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 	if (!result && diabdat_mpq != nullptr) {
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
+	}
+
+	// As last fallback always search app content folder
+	if (!result && AssetsPath) {
+		std::string path = *AssetsPath + filename;
+		for (std::size_t i = AssetsPath->size(); i < path.size(); ++i)
+			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
+		result = SFileOpenFileEx((HANDLE) nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
 	}
 
 	if (!result || (*phFile == nullptr)) {
@@ -152,6 +158,11 @@ void SErrSetLastError(uint32_t dwErrCode)
 void SFileSetBasePath(string_view path)
 {
 	SBasePath.emplace(path);
+}
+
+void SFileSetAssetsPath(string_view path)
+{
+	AssetsPath.emplace(path);
 }
 
 bool SFileEnableDirectAccess(bool enable)

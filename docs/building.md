@@ -7,12 +7,19 @@ cmake .. -DVERSION_NUM=1.0.0 -DVERSION_SUFFIX=FFFFFFF -DCMAKE_BUILD_TYPE=Release
 
 <details><summary>Linux</summary>
 
-Note that ```pkg-config``` is an optional dependency for finding libsodium,
-although we have a fallback if necessary.
+Note that ```pkg-config``` is an optional dependency for finding libsodium, although we have a fallback if necessary.
 
 ### Installing dependencies on Debian and Ubuntu
 ```
 sudo apt-get install cmake g++ libsdl2-dev libsodium-dev libpng-dev
+```
+### If you want to build the translations (optional)
+```
+sudo apt-get install gettext poedit
+```
+### If you want to build the devilutionX.mpq File (optional)
+```
+sudo apt-get install smpq
 ```
 ### Installing dependencies on Fedora
 ```
@@ -125,11 +132,12 @@ of the `(i686|x86_64)-w64-mingw32` directory.
 Make sure to install the `C++ CMake tools for Windows` and `Windows SDK` component for Visual Studio.
 *Note: `Windows SDK` component should match your Windows build version.*
 
-Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start.
+Install vcpkg following the instructions from https://github.com/microsoft/vcpkg#quick-start-windows.
 Don't forget to perform _user-wide integration_ step for additional convenience.
 
+### If you want to build the devilutionX.mpq File (optional)
 In order to build devilutionx.mpq, install smpq from https://launchpad.net/smpq/trunk/1.6/+download/SMPQ-1.6-x86_64.exe.
-The location of this tool will need to be [added to the system's PATH environment variable](https://docs.microsoft.com/en-us/previous-versions/office/developer/sharepoint-2010/ee537574(v=office.14)).
+The location of this tool will need to be [added to the system's PATH environment variable](https://www.architectryan.com/2018/03/17/add-to-the-path-on-windows-10/).
 
 ### Compiling
 

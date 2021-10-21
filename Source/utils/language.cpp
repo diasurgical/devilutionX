@@ -22,7 +22,6 @@ struct CStringCmp {
 };
 
 std::vector<std::map<std::string, std::string, std::less<>>> translation = { {}, {} };
-std::map<const char *, const char *, CStringCmp> meta;
 
 struct MoHead {
 	uint32_t magic;
@@ -92,19 +91,19 @@ void SetPluralForm(char *string)
 	expression = StrTrimRight(expression);
 	expression = StrTrimLeft(expression);
 
-	// Chinese
+	// ko_KR, zh_CN, zh_TW
 	if (strcmp(expression, "0") == 0) {
 		GetLocalPluralId = [](int /*n*/) -> int { return 0; };
 		return;
 	}
 
-	// Portuguese, French
+	// fr, pt_BR
 	if (strcmp(expression, "(n > 1)") == 0) {
 		GetLocalPluralId = [](int n) -> int { return n > 1 ? 1 : 0; };
 		return;
 	}
 
-	// Russian, Croatian
+	// hr, ru
 	if (strcmp(expression, "(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
 		GetLocalPluralId = [](int n) -> int {
 			if (n % 10 == 1 && n % 100 != 11)
@@ -116,17 +115,32 @@ void SetPluralForm(char *string)
 		return;
 	}
 
-	// Polish
-	if (strcmp(expression, "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)") == 0) {
+	// pl
+	if (strcmp(expression, "(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2)") == 0) {
 		GetLocalPluralId = [](int n) -> int {
 			if (n == 1)
 				return 0;
-			if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20))
+			if (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14))
 				return 1;
 			return 2;
 		};
 		return;
 	}
+
+	// cs
+	if (strcmp(expression, "(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2") == 0) {
+		GetLocalPluralId = [](int n) -> int {
+			if (n == 1)
+				return 0;
+			if (n >= 2 && n <= 4)
+				return 1;
+			return 2;
+		};
+		return;
+	}
+
+	// bg, da, de, es, it, sv
+	// (n != 1)
 }
 
 /**
@@ -171,7 +185,6 @@ void ParseMetadata(char *ptr)
 		}
 
 		val = StrTrimRight(val);
-		meta[key] = val;
 
 		if ((strcmp("Content-Type", key) == 0) && ((delim = strstr(val, "=")) != nullptr)) {
 			if (strcasecmp(delim + 1, "utf-8") != 0) {
@@ -240,16 +253,6 @@ const std::string &LanguageTranslate(const char *key)
 	return it->second;
 }
 
-const char *LanguageMetadata(const char *key)
-{
-	auto it = meta.find(key);
-	if (it == meta.end()) {
-		return nullptr;
-	}
-
-	return it->second;
-}
-
 bool HasTranslation(const std::string &locale)
 {
 	std::string moPath = paths::LangPath() + locale + ".mo";
@@ -276,42 +279,57 @@ void LanguageInitialize()
 	// FIXME: Endianness.
 	MoHead head;
 	if (SDL_RWread(rw, &head, sizeof(MoHead), 1) != 1) {
+		SDL_RWclose(rw);
 		return;
 	}
 
 	if (head.magic != MO_MAGIC) {
+		SDL_RWclose(rw);
 		return; // not a MO file
 	}
 
 	if (head.revision.major > 1 || head.revision.minor > 1) {
+		SDL_RWclose(rw);
 		return; // unsupported revision
 	}
 
 	// Read entries of source strings
 	std::unique_ptr<MoEntry[]> src { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1)
+	if (SDL_RWseek(rw, head.srcOffset, RW_SEEK_SET) == -1) {
+		SDL_RWclose(rw);
 		return;
+	}
 	// FIXME: Endianness.
-	if (SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings)
+	if (SDL_RWread(rw, src.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings) {
+		SDL_RWclose(rw);
 		return;
+	}
 
 	// Read entries of target strings
 	std::unique_ptr<MoEntry[]> dst { new MoEntry[head.nbMappings] };
-	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1)
+	if (SDL_RWseek(rw, head.dstOffset, RW_SEEK_SET) == -1) {
+		SDL_RWclose(rw);
 		return;
+	}
 	// FIXME: Endianness.
-	if (SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings)
+	if (SDL_RWread(rw, dst.get(), sizeof(MoEntry), head.nbMappings) != head.nbMappings) {
+		SDL_RWclose(rw);
 		return;
+	}
 
 	std::vector<char> key;
 	std::vector<char> value;
 
 	// MO header
-	if (!ReadEntry(rw, &src[0], key) && ReadEntry(rw, &dst[0], value))
+	if (!ReadEntry(rw, &src[0], key) || !ReadEntry(rw, &dst[0], value)) {
+		SDL_RWclose(rw);
 		return;
+	}
 
-	if (key[0] != '\0')
+	if (key[0] != '\0') {
+		SDL_RWclose(rw);
 		return;
+	}
 
 	ParseMetadata(value.data());
 
@@ -334,4 +352,6 @@ void LanguageInitialize()
 			}
 		}
 	}
+
+	SDL_RWclose(rw);
 }

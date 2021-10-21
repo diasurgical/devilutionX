@@ -16,7 +16,7 @@
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
-#include "storm/storm.h"
+#include "storm/storm_sdl_rw.h"
 #include "storm/storm_file_wrapper.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
@@ -150,16 +150,15 @@ bool SVidPlayBegin(const char *filename, int flags)
 	//0x800000 // Edge detection
 	//0x200800 // Clear FB
 
-	HANDLE videoStream;
-	SFileOpenFile(filename, &videoStream);
+	SDL_RWops *videoStream = SFileOpenRw(filename);
 #ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
 	FILE *file = FILE_FromStormHandle(videoStream);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
-	size_t bytestoread = SFileGetFileSize(videoStream);
+	size_t bytestoread = SDL_RWsize(videoStream);
 	SVidBuffer = std::unique_ptr<uint8_t[]> { new uint8_t[bytestoread] };
-	SFileReadFileThreadSafe(videoStream, SVidBuffer.get(), bytestoread);
-	SFileCloseFileThreadSafe(videoStream);
+	SDL_RWread(videoStream, SVidBuffer.get(), bytestoread, 1);
+	SDL_RWclose(videoStream);
 	SVidSMK = smk_open_memory(SVidBuffer.get(), bytestoread);
 #endif
 	if (SVidSMK == nullptr) {

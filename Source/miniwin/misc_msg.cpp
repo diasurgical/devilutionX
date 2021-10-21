@@ -502,6 +502,8 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		lpMsg->message = DVL_WM_MOUSEMOVE;
 		lpMsg->lParam = PositionForMouse(e.motion.x, e.motion.y);
 		lpMsg->wParam = KeystateForMouse(0);
+		if (!sgbControllerActive && invflag)
+			InvalidateInventorySlot();
 		break;
 	case SDL_MOUSEBUTTONDOWN: {
 		int button = e.button.button;

@@ -71,9 +71,13 @@ make_buildroot() {
 }
 
 cmake_configure() {
+	# libzt uses `-fstack-protector` GCC flag by default.
+	# We disable `-fstack-protector` because it isn't supported by target libc.
 	cmake -S. -B"$BUILD_DIR" \
 		"-DTARGET_PLATFORM=$TARGET" \
 		-DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}/usr/share/buildroot/toolchainfile.cmake" \
+		-DDEVILUTIONX_SYSTEM_LIBSODIUM=OFF \
+		-DSTACK_PROTECTOR=OFF \
 		"$@"
 }
 

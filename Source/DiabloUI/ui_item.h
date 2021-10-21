@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "DiabloUI/art.h"
+#include "utils/enum_traits.h"
 #include "utils/stubs.h"
 
 namespace devilution {
@@ -60,6 +61,7 @@ enum class UiFlags {
 	TextCursor         = 1 << 27,
 	// clang-format on
 };
+use_enum_as_flags(UiFlags);
 
 enum class UiPanels {
 	Main,
@@ -68,41 +70,6 @@ enum class UiPanels {
 	Spell,
 	Inventory,
 };
-
-inline UiFlags operator|(UiFlags lhs, UiFlags rhs)
-{
-	using T = std::underlying_type_t<UiFlags>;
-	return static_cast<UiFlags>(static_cast<T>(lhs) | static_cast<T>(rhs));
-}
-
-inline UiFlags operator|=(UiFlags &lhs, UiFlags rhs)
-{
-	lhs = lhs | rhs;
-	return lhs;
-}
-
-inline UiFlags operator&(UiFlags lhs, UiFlags rhs)
-{
-	using T = std::underlying_type_t<UiFlags>;
-	return static_cast<UiFlags>(static_cast<T>(lhs) & static_cast<T>(rhs));
-}
-
-inline UiFlags operator&=(UiFlags &lhs, UiFlags rhs)
-{
-	lhs = lhs & rhs;
-	return lhs;
-}
-
-inline UiFlags operator~(UiFlags value)
-{
-	using T = std::underlying_type_t<UiFlags>;
-	return static_cast<UiFlags>(~static_cast<T>(value));
-}
-
-inline bool HasAnyOf(UiFlags lhs, UiFlags test)
-{
-	return (lhs & test) != UiFlags::None;
-}
 
 class UiItemBase {
 public:

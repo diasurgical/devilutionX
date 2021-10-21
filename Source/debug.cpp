@@ -35,6 +35,7 @@ bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
+std::unordered_map<int, int> DebugIndexToObjectID;
 
 namespace {
 
@@ -53,6 +54,12 @@ enum class DebugGridTextItem : uint16_t {
 	dSpecial,
 	coords,
 	cursorcoords,
+	objectindex,
+	nBlockTable,
+	nSolidTable,
+	nTransTable,
+	nMissileTable,
+	nTrapTable,
 };
 
 DebugGridTextItem SelectedDebugGridTextItem;
@@ -587,12 +594,19 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"dSpecial",
 		"coords",
 		"cursorcoords",
+		"objectindex",
+		"nBlockTable",
+		"nSolidTable",
+		"nTransTable",
+		"nMissileTable",
+		"nTrapTable",
 	};
 
 	if (parameter == "clear") {
 		SelectedDebugGridTextItem = DebugGridTextItem::None;
 		return "Tile data cleared!";
-	} else if (parameter == "") {
+	}
+	if (parameter == "") {
 		std::string list = "clear";
 		for (const auto &param : paramList) {
 			list += " / " + param;
@@ -799,6 +813,15 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 			return false;
 		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
 		return true;
+	case DebugGridTextItem::objectindex: {
+		info = 0;
+		int objectIndex = dObject[dungeonCoords.x][dungeonCoords.y];
+		if (objectIndex != 0 && DebugIndexToObjectID.find(objectIndex) != DebugIndexToObjectID.end()) {
+			objectIndex = objectIndex > 0 ? objectIndex - 1 : -(objectIndex + 1);
+			info = DebugIndexToObjectID[objectIndex];
+		}
+		break;
+	}
 	case DebugGridTextItem::dPiece:
 		info = dPiece[dungeonCoords.x][dungeonCoords.y];
 		break;
@@ -831,6 +854,21 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		break;
 	case DebugGridTextItem::dObject:
 		info = dObject[dungeonCoords.x][dungeonCoords.y];
+		break;
+	case DebugGridTextItem::nBlockTable:
+		info = nBlockTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		break;
+	case DebugGridTextItem::nSolidTable:
+		info = nSolidTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		break;
+	case DebugGridTextItem::nTransTable:
+		info = nTransTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		break;
+	case DebugGridTextItem::nMissileTable:
+		info = nMissileTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		break;
+	case DebugGridTextItem::nTrapTable:
+		info = nTrapTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
 		break;
 	case DebugGridTextItem::None:
 		return false;

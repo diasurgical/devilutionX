@@ -7,7 +7,7 @@
 # You should have received a copy of the CC0 Public Domain Dedication
 # along with this software. If not, see
 #
-#     http://creativecommons.org/publicdomain/zero/1.0/
+#     https://creativecommons.org/publicdomain/zero/1.0/
 #
 ########################################################################
 # Tries to find the local libsodium installation.
@@ -121,15 +121,14 @@ elseif (WIN32)
     try_compile(_UNUSED_VAR "${CMAKE_CURRENT_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}/arch.c"
             OUTPUT_VARIABLE _COMPILATION_LOG
         )
-        string(REGEX REPLACE ".*ARCH_VALUE ([a-zA-Z0-9_]+).*" "\\1" _TARGET_ARCH "${_COMPILATION_LOG}")
 
         # construct library path
-        if (_TARGET_ARCH STREQUAL "x86_32")
+        if (CMAKE_SIZEOF_VOID_P EQUAL 4)
             string(APPEND _PLATFORM_PATH "Win32")
-        elseif(_TARGET_ARCH STREQUAL "x86_64")
+        elseif(CMAKE_SIZEOF_VOID_P EQUAL 8)
             string(APPEND _PLATFORM_PATH "x64")
         else()
-            message(FATAL_ERROR "the ${_TARGET_ARCH} architecture is not supported by Findsodium.cmake.")
+            message(FATAL_ERROR "Can't find target architecture. CMAKE_SIZEOF_VOID_P not 4 or 8.")
         endif()
         string(APPEND _PLATFORM_PATH "/$$CONFIG$$")
 
