@@ -41,7 +41,7 @@ SdlMutex Mutex;
 bool SFileReadFileThreadSafe(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh)
 {
 	const std::lock_guard<SdlMutex> lock(Mutex);
-	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, read, lpDistanceToMoveHigh);
+	return SFileReadFile(hFile, buffer, nNumberOfBytesToRead, (unsigned int *)read, lpDistanceToMoveHigh);
 }
 
 bool SFileCloseFileThreadSafe(HANDLE hFile)

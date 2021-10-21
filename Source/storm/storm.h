@@ -198,7 +198,7 @@ bool WINAPI SFileOpenArchive(const char *szMpqName, DWORD dwPriority, DWORD dwFl
 #endif
 bool WINAPI SFileCloseArchive(HANDLE hArchive);
 bool WINAPI SFileOpenFileEx(HANDLE hMpq, const char *szFileName, DWORD dwSearchScope, HANDLE *phFile);
-bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, size_t nNumberOfBytesToRead, size_t *read, int *lpDistanceToMoveHigh);
+bool WINAPI SFileReadFile(HANDLE hFile, void *buffer, unsigned int nNumberOfBytesToRead, unsigned int *read, void *lpDistanceToMoveHigh);
 DWORD WINAPI SFileGetFileSize(HANDLE hFile, uint32_t *lpFileSizeHigh = nullptr);
 DWORD WINAPI SFileSetFilePointer(HANDLE, int, int *, int);
 bool WINAPI SFileCloseFile(HANDLE hFile);
