@@ -64,6 +64,7 @@ bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
 bool textInputActive = true;
+bool allowEmptyTextInput = false;
 
 std::size_t SelectedItem = 0;
 
@@ -111,6 +112,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
 			SDL_SetTextInputRect(&item->m_rect);
 			textInputActive = true;
+			allowEmptyTextInput = pItemUIEdit->m_allowEmpty;
 #ifdef __SWITCH__
 			switch_start_text_input(pItemUIEdit->m_hint, pItemUIEdit->m_value, pItemUIEdit->m_max_length, /*multiline=*/0);
 #elif defined(__vita__)
@@ -425,7 +427,7 @@ void UiFocusNavigationSelect()
 {
 	UiPlaySelectSound();
 	if (textInputActive) {
-		if (strlen(UiTextInput) == 0) {
+		if (!allowEmptyTextInput && strlen(UiTextInput) == 0) {
 			return;
 		}
 #ifndef __SWITCH__

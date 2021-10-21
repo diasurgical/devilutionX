@@ -1,10 +1,52 @@
+#ifdef PACKET_ENCRYPTION
+#include <sodium.h>
+#else
+#include <chrono>
+#include <random>
+#endif
+
 #include "dvlnet/packet.h"
 
 namespace devilution {
 namespace net {
 
-#ifndef NONET
-static constexpr bool DisableEncryption = false;
+#ifdef PACKET_ENCRYPTION
+
+cookie_t packet_out::GenerateCookie()
+{
+	cookie_t cookie;
+	randombytes_buf(reinterpret_cast<unsigned char *>(&cookie),
+	    sizeof(cookie_t));
+	return cookie;
+}
+
+#else
+
+class cookie_generator {
+public:
+	cookie_generator()
+	{
+		unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+		generator.seed(seed);
+	}
+
+	cookie_t NewCookie()
+	{
+		return distribution(generator);
+	}
+
+private:
+	std::default_random_engine generator;
+	std::uniform_int_distribution<cookie_t> distribution;
+};
+
+cookie_generator CookieGenerator;
+
+cookie_t packet_out::GenerateCookie()
+{
+	return CookieGenerator.NewCookie();
+}
+
 #endif
 
 const char *packet_type_to_string(uint8_t packetType)
@@ -66,158 +108,153 @@ void CheckPacketTypeOneOf(std::initializer_list<packet_type> expectedTypes, std:
 
 const buffer_t &packet::Data()
 {
-	if (!have_decrypted || !have_encrypted)
-		ABORT();
-	return encrypted_buffer;
+	assert(have_encrypted || have_decrypted);
+	if (have_encrypted)
+		return encrypted_buffer;
+	return decrypted_buffer;
 }
 
 packet_type packet::Type()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	return m_type;
 }
 
 plr_t packet::Source() const
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	return m_src;
 }
 
 plr_t packet::Destination() const
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	return m_dest;
 }
 
 const buffer_t &packet::Message()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_MESSAGE }, m_type);
 	return m_message;
 }
 
 turn_t packet::Turn()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_TURN }, m_type);
 	return m_turn;
 }
 
 cookie_t packet::Cookie()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_JOIN_REQUEST, PT_JOIN_ACCEPT }, m_type);
 	return m_cookie;
 }
 
 plr_t packet::NewPlayer()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_JOIN_ACCEPT, PT_CONNECT, PT_DISCONNECT }, m_type);
 	return m_newplr;
 }
 
 const buffer_t &packet::Info()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_JOIN_REQUEST, PT_JOIN_ACCEPT, PT_CONNECT, PT_INFO_REPLY }, m_type);
 	return m_info;
 }
 
 leaveinfo_t packet::LeaveInfo()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
 	CheckPacketTypeOneOf({ PT_DISCONNECT }, m_type);
 	return m_leaveinfo;
 }
 
 void packet_in::Create(buffer_t buf)
 {
-	if (have_encrypted || have_decrypted)
-		ABORT();
-	encrypted_buffer = std::move(buf);
+	assert(!have_encrypted && !have_decrypted);
+	if (buf.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
+		throw packet_exception();
+
+	decrypted_buffer = std::move(buf);
+	have_decrypted = true;
+
+	// TCP server implementation forwards the original data to clients
+	// so although we are not decrypting anything,
+	// we save a copy in encrypted_buffer anyway
+	encrypted_buffer = decrypted_buffer;
 	have_encrypted = true;
 }
 
-void packet_in::Decrypt()
+#ifdef PACKET_ENCRYPTION
+void packet_in::Decrypt(buffer_t buf)
 {
-	if (!have_encrypted)
-		ABORT();
-	if (have_decrypted)
-		return;
-#ifndef NONET
-	if (!DisableEncryption) {
-		if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
-		        + crypto_secretbox_MACBYTES
-		        + sizeof(packet_type) + 2 * sizeof(plr_t))
-			throw packet_exception();
-		auto pktlen = (encrypted_buffer.size()
-		    - crypto_secretbox_NONCEBYTES
-		    - crypto_secretbox_MACBYTES);
-		decrypted_buffer.resize(pktlen);
-		int status = crypto_secretbox_open_easy(
-		    decrypted_buffer.data(),
-		    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
-		    encrypted_buffer.size() - crypto_secretbox_NONCEBYTES,
-		    encrypted_buffer.data(),
-		    key.data());
-		if (status != 0)
-			throw packet_exception();
-	} else
-#endif
-	{
-		if (encrypted_buffer.size() < sizeof(packet_type) + 2 * sizeof(plr_t))
-			throw packet_exception();
-		decrypted_buffer = encrypted_buffer;
-	}
+	assert(!have_encrypted && !have_decrypted);
+	encrypted_buffer = std::move(buf);
+	have_encrypted = true;
 
-	process_data();
+	if (encrypted_buffer.size() < crypto_secretbox_NONCEBYTES
+	        + crypto_secretbox_MACBYTES
+	        + sizeof(packet_type) + 2 * sizeof(plr_t))
+		throw packet_exception();
+	auto pktlen = (encrypted_buffer.size()
+	    - crypto_secretbox_NONCEBYTES
+	    - crypto_secretbox_MACBYTES);
+	decrypted_buffer.resize(pktlen);
+	int status = crypto_secretbox_open_easy(
+	    decrypted_buffer.data(),
+	    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
+	    encrypted_buffer.size() - crypto_secretbox_NONCEBYTES,
+	    encrypted_buffer.data(),
+	    key.data());
+	if (status != 0)
+		throw packet_exception();
 
 	have_decrypted = true;
 }
+#endif
 
+#ifdef PACKET_ENCRYPTION
 void packet_out::Encrypt()
 {
-	if (!have_decrypted)
-		ABORT();
+	assert(have_decrypted);
+
 	if (have_encrypted)
 		return;
 
-	process_data();
+	auto lenCleartext = decrypted_buffer.size();
+	encrypted_buffer.insert(encrypted_buffer.begin(),
+	    crypto_secretbox_NONCEBYTES, 0);
+	encrypted_buffer.insert(encrypted_buffer.end(),
+	    crypto_secretbox_MACBYTES + lenCleartext, 0);
+	randombytes_buf(encrypted_buffer.data(), crypto_secretbox_NONCEBYTES);
+	int status = crypto_secretbox_easy(
+	    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
+	    decrypted_buffer.data(),
+	    lenCleartext,
+	    encrypted_buffer.data(),
+	    key.data());
+	if (status != 0)
+		ABORT();
 
-#ifndef NONET
-	if (!DisableEncryption) {
-		auto lenCleartext = encrypted_buffer.size();
-		encrypted_buffer.insert(encrypted_buffer.begin(),
-		    crypto_secretbox_NONCEBYTES, 0);
-		encrypted_buffer.insert(encrypted_buffer.end(),
-		    crypto_secretbox_MACBYTES, 0);
-		randombytes_buf(encrypted_buffer.data(), crypto_secretbox_NONCEBYTES);
-		int status = crypto_secretbox_easy(
-		    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
-		    encrypted_buffer.data() + crypto_secretbox_NONCEBYTES,
-		    lenCleartext,
-		    encrypted_buffer.data(),
-		    key.data());
-		if (status != 0)
-			ABORT();
-	}
-#endif
 	have_encrypted = true;
+}
+#endif
+
+packet_factory::packet_factory()
+{
+	secure = false;
 }
 
 packet_factory::packet_factory(std::string pw)
 {
-#ifndef NONET
+	secure = false;
+
+#ifdef PACKET_ENCRYPTION
 	if (sodium_init() < 0)
 		ABORT();
 	pw.resize(std::min<std::size_t>(pw.size(), crypto_pwhash_argon2id_PASSWD_MAX));
@@ -235,6 +272,7 @@ packet_factory::packet_factory(std::string pw)
 	    crypto_pwhash_ALG_ARGON2ID13);
 	if (status != 0)
 		ABORT();
+	secure = true;
 #endif
 }
 

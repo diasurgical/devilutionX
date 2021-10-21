@@ -26,7 +26,7 @@ public:
 class tcp_server {
 public:
 	tcp_server(asio::io_context &ioc, const std::string &bindaddr,
-	    unsigned short port, std::string pw);
+	    unsigned short port, packet_factory &pktfty);
 	std::string LocalhostSelf();
 	void Close();
 	virtual ~tcp_server();
@@ -52,7 +52,7 @@ private:
 	typedef std::shared_ptr<client_connection> scc;
 
 	asio::io_context &ioc;
-	packet_factory pktfty;
+	packet_factory &pktfty;
 	std::unique_ptr<asio::ip::tcp::acceptor> acceptor;
 	std::array<scc, MAX_PLRS> connections;
 	buffer_t game_init_info;

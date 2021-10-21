@@ -41,8 +41,6 @@ std::vector<std::unique_ptr<UiItemBase>> vecSelGameDialog;
 std::vector<std::string> Gamelist;
 int HighlightedItem;
 
-constexpr const char *DefaultPassword = "asd";
-
 } // namespace
 
 void selgame_FreeVectors()
@@ -89,11 +87,14 @@ void selgame_GameSelection_Init()
 	SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 300), (Sint16)(UI_OFFSET_Y + 211), 295, 33 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Select Action"), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
+#ifdef PACKET_ENCRYPTION
 	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Game"), 0));
-	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Join Game"), 1));
+#endif
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Create Public Game"), 1));
+	vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(_("Join Game"), 2));
 
 	for (unsigned i = 0; i < Gamelist.size(); i++) {
-		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 2));
+		vecSelGameDlgItems.push_back(std::make_unique<UiListItem>(Gamelist[i].c_str(), i + 3));
 	}
 
 	vecSelGameDialog.push_back(std::make_unique<UiList>(vecSelGameDlgItems, PANEL_LEFT + 305, (UI_OFFSET_Y + 255), 285, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
@@ -104,7 +105,13 @@ void selgame_GameSelection_Init()
 	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 449), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("CANCEL"), &UiFocusNavigationEsc, rect6, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	UiInitList(vecSelGameDlgItems.size(), selgame_GameSelection_Focus, selgame_GameSelection_Select, selgame_GameSelection_Esc, vecSelGameDialog, true, nullptr, HighlightedItem);
+	auto selectFn = [](int index) {
+		// UiListItem::m_value could be different from
+		// the index if packet encryption is disabled
+		int itemValue = vecSelGameDlgItems[index]->m_value;
+		selgame_GameSelection_Select(itemValue);
+	};
+	UiInitList(vecSelGameDlgItems.size(), selgame_GameSelection_Focus, selectFn, selgame_GameSelection_Esc, vecSelGameDialog, true, nullptr, HighlightedItem);
 }
 
 void selgame_GameSelection_Focus(int value)
@@ -115,6 +122,9 @@ void selgame_GameSelection_Focus(int value)
 		strncpy(selgame_Description, _("Create a new game with a difficulty setting of your choice."), sizeof(selgame_Description) - 1);
 		break;
 	case 1:
+		strncpy(selgame_Description, _("Create a new public game that anyone can join with a difficulty setting of your choice."), sizeof(selgame_Description) - 1);
+		break;
+	case 2:
 		strncpy(selgame_Description, _("Enter an IP or a hostname and join a game already in progress at that address."), sizeof(selgame_Description) - 1);
 		break;
 	default:
@@ -143,9 +153,8 @@ void selgame_GameSelection_Select(int value)
 	selgame_enteringGame = true;
 	selgame_selectedGame = value;
 
-	if (value > 1 && selgame_selectedGame != 0) {
-		strcpy(selgame_Ip, Gamelist[value - 2].c_str());
-		strcpy(selgame_Password, DefaultPassword);
+	if (value > 2) {
+		strcpy(selgame_Ip, Gamelist[value - 3].c_str());
 		selgame_Password_Select(value);
 		return;
 	}
@@ -167,7 +176,8 @@ void selgame_GameSelection_Select(int value)
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(selgame_Description, rect3, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark, 1, 16));
 
 	switch (value) {
-	case 0: {
+	case 0:
+	case 1: {
 		title = _("Create Game");
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 211), 295, 35 };
@@ -188,14 +198,14 @@ void selgame_GameSelection_Select(int value)
 		UiInitList(vecSelGameDlgItems.size(), selgame_Diff_Focus, selgame_Diff_Select, selgame_Diff_Esc, vecSelGameDialog, true);
 		break;
 	}
-	case 1: {
+	case 2: {
 		title = _("Join TCP Games");
 
 		SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 211), 285, 33 };
 		vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Enter address"), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 		SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 314), 285, 33 };
-		vecSelGameDialog.push_back(std::make_unique<UiEdit>(_("Enter address"), selgame_Ip, 128, rect5, UiFlags::FontSize24 | UiFlags::ColorUiGold));
+		vecSelGameDialog.push_back(std::make_unique<UiEdit>(_("Enter address"), selgame_Ip, 128, false, rect5, UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 		SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 		vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect6, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -204,7 +214,12 @@ void selgame_GameSelection_Select(int value)
 		vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("CANCEL"), &UiFocusNavigationEsc, rect7, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
 		HighlightedItem = 0;
+
+#ifdef PACKET_ENCRYPTION
 		UiInitList(0, nullptr, selgame_Password_Init, selgame_GameSelection_Init, vecSelGameDialog);
+#else
+		UiInitList(0, nullptr, selgame_Password_Select, selgame_GameSelection_Init, vecSelGameDialog);
+#endif
 		break;
 	}
 	}
@@ -375,7 +390,7 @@ void selgame_Speed_Select(int value)
 {
 	nTickRate = vecSelGameDlgItems[value]->m_value;
 
-	if (provider == SELCONN_LOOPBACK) {
+	if (provider == SELCONN_LOOPBACK || selgame_selectedGame == 1) {
 		selgame_Password_Select(0);
 		return;
 	}
@@ -404,8 +419,10 @@ void selgame_Password_Init(int /*value*/)
 	SDL_Rect rect4 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 211), 285, 33 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtText>(_("Enter Password"), rect4, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
+	// Allow password to be empty only when joining games
+	bool allowEmpty = selgame_selectedGame == 2;
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 305), (Sint16)(UI_OFFSET_Y + 314), 285, 33 };
-	vecSelGameDialog.push_back(std::make_unique<UiEdit>(_("Enter Password"), selgame_Password, 15, rect5, UiFlags::FontSize24 | UiFlags::ColorUiGold));
+	vecSelGameDialog.push_back(std::make_unique<UiEdit>(_("Enter Password"), selgame_Password, 15, allowEmpty, rect5, UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 	SDL_Rect rect6 = { (Sint16)(PANEL_LEFT + 299), (Sint16)(UI_OFFSET_Y + 427), 140, 35 };
 	vecSelGameDialog.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect6, UiFlags::AlignCenter | UiFlags::VerticalCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -443,9 +460,15 @@ static bool IsGameCompatible(const GameData &data)
 
 void selgame_Password_Select(int /*value*/)
 {
-	if (selgame_selectedGame != 0) {
+	char *gamePassword = nullptr;
+	if (selgame_selectedGame == 0)
+		gamePassword = selgame_Password;
+	if (selgame_selectedGame == 2 && strlen(selgame_Password) > 0)
+		gamePassword = selgame_Password;
+
+	if (selgame_selectedGame > 1) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
-		if (SNetJoinGame(selgame_Ip, selgame_Password, gdwPlayerId)) {
+		if (SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
 			if (!IsGameCompatible(*m_game_data)) {
 				selgame_GameSelection_Select(1);
 				return;
@@ -468,7 +491,7 @@ void selgame_Password_Select(int /*value*/)
 	m_game_data->bTheoQuest = sgOptions.Gameplay.bTheoQuest ? 1 : 0;
 	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest ? 1 : 0;
 
-	if (SNetCreateGame(nullptr, selgame_Password, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
+	if (SNetCreateGame(nullptr, gamePassword, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
 		UiInitList_clear();
 		selgame_endMenu = true;
 	} else {
@@ -481,8 +504,8 @@ void selgame_Password_Select(int /*value*/)
 
 void selgame_Password_Esc()
 {
-	if (selgame_selectedGame == 1)
-		selgame_GameSelection_Select(1);
+	if (selgame_selectedGame == 2)
+		selgame_GameSelection_Select(2);
 	else
 		selgame_GameSpeedSelection();
 }
@@ -524,7 +547,7 @@ bool UiSelectGame(GameData *gameData, int *playerId)
 
 	selgame_endMenu = false;
 
-	DvlNet_SetPassword(DefaultPassword);
+	DvlNet_ClearPassword();
 	DvlNet_ClearGamelist();
 
 	while (!selgame_endMenu) {

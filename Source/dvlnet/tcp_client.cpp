@@ -6,7 +6,6 @@
 #include <exception>
 #include <functional>
 #include <memory>
-#include <sodium.h>
 #include <sstream>
 #include <stdexcept>
 #include <system_error>
@@ -16,24 +15,23 @@
 namespace devilution {
 namespace net {
 
-int tcp_client::create(std::string addrstr, std::string passwd)
+int tcp_client::create(std::string addrstr)
 {
 	try {
 		auto port = sgOptions.Network.nPort;
-		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, passwd);
-		return join(local_server->LocalhostSelf(), passwd);
+		local_server = std::make_unique<tcp_server>(ioc, addrstr, port, *pktfty);
+		return join(local_server->LocalhostSelf());
 	} catch (std::system_error &e) {
 		SDL_SetError("%s", e.what());
 		return -1;
 	}
 }
 
-int tcp_client::join(std::string addrstr, std::string passwd)
+int tcp_client::join(std::string addrstr)
 {
 	constexpr int MsSleep = 10;
 	constexpr int NoSleep = 250;
 
-	setup_password(passwd);
 	try {
 		std::stringstream port;
 		port << sgOptions.Network.nPort;
@@ -46,8 +44,7 @@ int tcp_client::join(std::string addrstr, std::string passwd)
 	}
 	StartReceive();
 	{
-		randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
-		    sizeof(cookie_t));
+		cookie_self = packet_out::GenerateCookie();
 		auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
 		    PLR_MASTER, cookie_self,
 		    game_init_info);

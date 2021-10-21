@@ -12,9 +12,9 @@ namespace devilution {
 namespace net {
 
 tcp_server::tcp_server(asio::io_context &ioc, const std::string &bindaddr,
-    unsigned short port, std::string pw)
+    unsigned short port, packet_factory &pktfty)
     : ioc(ioc)
-    , pktfty(std::move(pw))
+    , pktfty(pktfty)
 {
 	auto addr = asio::ip::address::from_string(bindaddr);
 	auto ep = asio::ip::tcp::endpoint(addr, port);

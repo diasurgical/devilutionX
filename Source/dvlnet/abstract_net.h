@@ -22,8 +22,8 @@ public:
 
 class abstract_net {
 public:
-	virtual int create(std::string addrstr, std::string passwd) = 0;
-	virtual int join(std::string addrstr, std::string passwd) = 0;
+	virtual int create(std::string addrstr) = 0;
+	virtual int join(std::string addrstr) = 0;
 	virtual bool SNetReceiveMessage(int *sender, void **data, uint32_t *size) = 0;
 	virtual bool SNetSendMessage(int dest, void *data, unsigned int size) = 0;
 	virtual bool SNetReceiveTurns(char **data, size_t *size, uint32_t *status) = 0;
@@ -41,6 +41,10 @@ public:
 	virtual std::string make_default_gamename() = 0;
 
 	virtual void setup_password(std::string passwd)
+	{
+	}
+
+	virtual void clear_password()
 	{
 	}
 

@@ -16,8 +16,8 @@ namespace net {
 template <class P>
 class base_protocol : public base {
 public:
-	virtual int create(std::string addrstr, std::string passwd);
-	virtual int join(std::string addrstr, std::string passwd);
+	virtual int create(std::string addrstr);
+	virtual int join(std::string addrstr);
 	virtual void poll();
 	virtual void send(packet &pkt);
 	virtual void DisconnectNet(plr_t plr);
@@ -108,8 +108,7 @@ void base_protocol<P>::send_info_request()
 template <class P>
 void base_protocol<P>::wait_join()
 {
-	randombytes_buf(reinterpret_cast<unsigned char *>(&cookie_self),
-	    sizeof(cookie_t));
+	cookie_self = packet_out::GenerateCookie();
 	auto pkt = pktfty->make_packet<PT_JOIN_REQUEST>(PLR_BROADCAST,
 	    PLR_MASTER, cookie_self, game_init_info);
 	proto.send(firstpeer, pkt->Data());
@@ -122,9 +121,8 @@ void base_protocol<P>::wait_join()
 }
 
 template <class P>
-int base_protocol<P>::create(std::string addrstr, std::string passwd)
+int base_protocol<P>::create(std::string addrstr)
 {
-	setup_password(passwd);
 	gamename = addrstr;
 
 	if (wait_network()) {
@@ -136,10 +134,8 @@ int base_protocol<P>::create(std::string addrstr, std::string passwd)
 }
 
 template <class P>
-int base_protocol<P>::join(std::string addrstr, std::string passwd)
+int base_protocol<P>::join(std::string addrstr)
 {
-	//addrstr = "fd80:56c2:e21c:0:199:931d:b14:c4d2";
-	setup_password(passwd);
 	gamename = addrstr;
 	if (wait_network())
 		if (wait_firstpeer())

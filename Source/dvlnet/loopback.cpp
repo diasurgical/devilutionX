@@ -5,12 +5,12 @@
 namespace devilution {
 namespace net {
 
-int loopback::create(std::string /*addrstr*/, std::string /*passwd*/)
+int loopback::create(std::string /*addrstr*/)
 {
 	return plr_single;
 }
 
-int loopback::join(std::string /*addrstr*/, std::string /*passwd*/)
+int loopback::join(std::string /*addrstr*/)
 {
 	ABORT();
 }

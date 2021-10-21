@@ -17,6 +17,11 @@ void base::setup_password(std::string pw)
 	pktfty = std::make_unique<packet_factory>(pw);
 }
 
+void base::clear_password()
+{
+	pktfty = std::make_unique<packet_factory>();
+}
+
 void base::RunEventHandler(_SNETEVENT &ev)
 {
 	auto f = registered_handlers[static_cast<event_type>(ev.eventid)];

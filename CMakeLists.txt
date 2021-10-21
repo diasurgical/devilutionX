@@ -27,14 +27,12 @@ option(BINARY_RELEASE "Enable options for binary release" OFF)
 option(NIGHTLY_BUILD "Enable options for nightly build" OFF)
 option(USE_SDL1 "Use SDL1.2 instead of SDL2" OFF)
 option(NONET "Disable network support" OFF)
+cmake_dependent_option(DISABLE_TCP "Disable TCP multiplayer option" OFF "NOT NONET" ON)
+cmake_dependent_option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF "NOT NONET" ON)
+cmake_dependent_option(PACKET_ENCRYPTION "Encrypt network packets" ON "NOT NONET" OFF)
 option(NOSOUND "Disable sound support" OFF)
 option(RUN_TESTS "Build and run tests" OFF)
 option(ENABLE_CODECOVERAGE "Instrument code for code coverage (only enabled with RUN_TESTS)" OFF)
-
-if(NOT NONET)
-  option(DISABLE_TCP "Disable TCP multiplayer option" OFF)
-  option(DISABLE_ZERO_TIER "Disable ZeroTier multiplayer option" OFF)
-endif()
 
 option(DISABLE_STREAMING_MUSIC "Disable streaming music (to work around broken platform implementations)" OFF)
 mark_as_advanced(DISABLE_STREAMING_MUSIC)
@@ -65,6 +63,9 @@ if(NIGHTLY_BUILD OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
   set(CPACK ON)
 endif()
 
+if(PACKET_ENCRYPTION)
+  list(APPEND VCPKG_MANIFEST_FEATURES "encryption")
+endif()
 if(USE_GETTEXT_FROM_VCPKG)
   list(APPEND VCPKG_MANIFEST_FEATURES "translations")
 endif()
@@ -78,7 +79,7 @@ if(NOT NOSOUND)
                         "DEVILUTIONX_SYSTEM_SDL_AUDIOLIB AND NOT DIST" ON)
 endif()
 
-if(NOT NONET)
+if(PACKET_ENCRYPTION)
   option(DEVILUTIONX_SYSTEM_LIBSODIUM "Use system-provided libsodium" ON)
   cmake_dependent_option(DEVILUTIONX_STATIC_LIBSODIUM "Link static libsodium" OFF
                         "DEVILUTIONX_SYSTEM_LIBSODIUM AND NOT DIST" ON)
@@ -216,6 +217,13 @@ if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
+if(NONET)
+  # Fix dependent options if platform defs disable network
+  set(DISABLE_TCP ON)
+  set(DISABLE_ZERO_TIER ON)
+  set(PACKET_ENCRYPTION OFF)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -227,7 +235,7 @@ if(NOT NINTENDO_3DS)
   find_package(Threads REQUIRED)
 endif()
 
-if(NOT NONET)
+if(PACKET_ENCRYPTION)
   if(DEVILUTIONX_SYSTEM_LIBSODIUM)
     set(sodium_USE_STATIC_LIBS ${DEVILUTIONX_STATIC_LIBSODIUM})
     find_package(sodium REQUIRED)
@@ -531,18 +539,26 @@ if(NINTENDO_SWITCH)
     Source/platform/switch/network.cpp
     Source/platform/switch/keyboard.cpp
     Source/platform/switch/docking.cpp
-    Source/platform/switch/random.cpp
     Source/platform/switch/asio/pause.c
     Source/platform/switch/asio/net/if.c
     Source/platform/switch/asio/sys/signal.c)
+
+  if(PACKET_ENCRYPTION)
+    list(APPEND libdevilutionx_SRCS
+      Source/platform/switch/random.cpp)
+  endif()
 endif()
 
 if(VITA)
   list(APPEND libdevilutionx_SRCS
-    Source/platform/vita/random.cpp
     Source/platform/vita/network.cpp
     Source/platform/vita/keyboard.cpp
     Source/platform/vita/touch.cpp)
+
+  if(PACKET_ENCRYPTION)
+    list(APPEND libdevilutionx_SRCS
+      Source/platform/vita/random.cpp)
+  endif()
 endif()
 
 if(NINTENDO_3DS)
@@ -551,13 +567,17 @@ if(NINTENDO_3DS)
     Source/platform/ctr/keyboard.cpp
     Source/platform/ctr/display.cpp
     Source/platform/ctr/messagebox.cpp
-    Source/platform/ctr/random.cpp
     Source/platform/ctr/sockets.cpp
     Source/platform/ctr/locale.cpp
     Source/platform/ctr/asio/net/if.c
     Source/platform/ctr/asio/sys/socket.c
     Source/platform/ctr/asio/sys/uio.c)
   set(BIN_TARGET ${BIN_TARGET}.elf)
+
+  if(PACKET_ENCRYPTION)
+    list(APPEND libdevilutionx_SRCS
+      Source/platform/ctr/random.cpp)
+  endif()
 endif()
 
 if(RUN_TESTS)
@@ -847,7 +867,9 @@ if(NOT NONET)
   if(NOT DISABLE_TCP)
     target_link_libraries(libdevilutionx PUBLIC asio)
   endif()
-  target_link_libraries(libdevilutionx PUBLIC sodium)
+  if(PACKET_ENCRYPTION)
+    target_link_libraries(libdevilutionx PUBLIC sodium)
+  endif()
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
@@ -874,6 +896,7 @@ foreach(
   GPERF_HEAP_MAIN
   GPERF_HEAP_FIRST_GAME_ITERATION
   STREAM_ALL_AUDIO
+  PACKET_ENCRYPTION
   VIRTUAL_GAMEPAD
 )
 if(${def_name})

@@ -51,6 +51,7 @@ DWORD sgdwGameLoops;
 bool gbIsMultiplayer;
 bool sgbTimeout;
 char szPlayerName[128];
+bool PublicGame;
 BYTE gbDeltaSender;
 bool sgbNetInited;
 uint32_t player_state[MAX_PLRS];
@@ -752,6 +753,7 @@ bool NetInit(bool bSinglePlayer)
 		nthread_terminate_game("SNetGetGameInfo1");
 	if (!SNetGetGameInfo(GAMEINFO_PASSWORD, szPlayerDescript, 128))
 		nthread_terminate_game("SNetGetGameInfo2");
+	PublicGame = DvlNet_IsPublicGame();
 
 	return true;
 }

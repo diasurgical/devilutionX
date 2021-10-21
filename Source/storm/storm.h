@@ -293,5 +293,7 @@ void DvlNet_SendInfoRequest();
 void DvlNet_ClearGamelist();
 std::vector<std::string> DvlNet_GetGamelist();
 void DvlNet_SetPassword(std::string pw);
+void DvlNet_ClearPassword();
+bool DvlNet_IsPublicGame();
 
 } // namespace devilution

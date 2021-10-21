@@ -466,11 +466,12 @@ void DrawAutomapText(const Surface &out)
 			linePosition.y += 15;
 		}
 
-		if (szPlayerDescript[0] != '\0') {
+		if (!PublicGame)
 			strcat(strcpy(desc, _("password: ")), szPlayerDescript);
-			DrawString(out, desc, linePosition);
-			linePosition.y += 15;
-		}
+		else
+			strcpy(desc, _("Public Game"));
+		DrawString(out, desc, linePosition);
+		linePosition.y += 15;
 	}
 
 	if (setlevel) {
