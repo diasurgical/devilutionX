@@ -14,6 +14,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
+#include "options.h"
 #include "pfile.h"
 #include "storm/storm.h"
 #include "storm/storm_sdl_rw.h"
@@ -39,8 +40,6 @@ WNDPROC CurrentProc;
 HANDLE spawn_mpq;
 /** A handle to the diabdat.mpq archive. */
 HANDLE diabdat_mpq;
-/** A handle to the patch_rt.mpq archive. */
-HANDLE patch_rt_mpq;
 /** Indicate if we only have access to demo data */
 bool gbIsSpawn;
 /** Indicate if we have loaded the Hellfire expansion data */
@@ -52,9 +51,9 @@ HANDLE hfbard_mpq;
 HANDLE hfbarb_mpq;
 HANDLE hfmusic_mpq;
 HANDLE hfvoice_mpq;
-HANDLE hfopt1_mpq;
-HANDLE hfopt2_mpq;
 HANDLE devilutionx_mpq;
+HANDLE lang_mpq;
+HANDLE font_mpq;
 
 namespace {
 
@@ -96,10 +95,6 @@ void init_cleanup()
 		SFileCloseArchive(diabdat_mpq);
 		diabdat_mpq = nullptr;
 	}
-	if (patch_rt_mpq != nullptr) {
-		SFileCloseArchive(patch_rt_mpq);
-		patch_rt_mpq = nullptr;
-	}
 	if (hellfire_mpq != nullptr) {
 		SFileCloseArchive(hellfire_mpq);
 		hellfire_mpq = nullptr;
@@ -124,13 +119,13 @@ void init_cleanup()
 		SFileCloseArchive(hfvoice_mpq);
 		hfvoice_mpq = nullptr;
 	}
-	if (hfopt1_mpq != nullptr) {
-		SFileCloseArchive(hfopt1_mpq);
-		hfopt1_mpq = nullptr;
+	if (lang_mpq != nullptr) {
+		SFileCloseArchive(lang_mpq);
+		lang_mpq = nullptr;
 	}
-	if (hfopt2_mpq != nullptr) {
-		SFileCloseArchive(hfopt2_mpq);
-		hfopt2_mpq = nullptr;
+	if (font_mpq != nullptr) {
+		SFileCloseArchive(font_mpq);
+		font_mpq = nullptr;
 	}
 	if (devilutionx_mpq != nullptr) {
 		SFileCloseArchive(devilutionx_mpq);
@@ -178,6 +173,15 @@ void init_archives()
 
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+	font_mpq = LoadMPQ(paths, "font.mpq"); // Extra fonts
+
+	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
+		char langMpqName[9] = {};
+		strncpy(langMpqName, sgOptions.Language.szCode, sizeof(langMpqName) - strlen(langMpqName) - 1);
+
+		strncat(langMpqName, ".mpq", sizeof(langMpqName) - strlen(langMpqName) - 1);
+		lang_mpq = LoadMPQ(paths, langMpqName);
+	}
 
 	diabdat_mpq = LoadMPQ(paths, "DIABDAT.MPQ");
 	if (diabdat_mpq == nullptr) {
@@ -195,10 +199,6 @@ void init_archives()
 		InsertCDDlg();
 	SDL_RWclose(handle);
 
-	patch_rt_mpq = LoadMPQ(paths, "patch_rt.mpq");
-	if (patch_rt_mpq == nullptr)
-		patch_rt_mpq = LoadMPQ(paths, "patch_sh.mpq");
-
 	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
 	if (hellfire_mpq != nullptr)
 		gbIsHellfire = true;
@@ -211,8 +211,6 @@ void init_archives()
 		gbBarbarian = true;
 	hfmusic_mpq = LoadMPQ(paths, "hfmusic.mpq");
 	hfvoice_mpq = LoadMPQ(paths, "hfvoice.mpq");
-	hfopt1_mpq = LoadMPQ(paths, "hfopt1.mpq");
-	hfopt2_mpq = LoadMPQ(paths, "hfopt2.mpq");
 
 	if (gbIsHellfire && (hfmonk_mpq == nullptr || hfmusic_mpq == nullptr || hfvoice_mpq == nullptr)) {
 		UiErrorOkDialog(_("Some Hellfire MPQs are missing"), _("Not all Hellfire MPQs were found.\nPlease copy all the hf*.mpq files."));
