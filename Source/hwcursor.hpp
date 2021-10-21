@@ -51,6 +51,11 @@ public:
 		return CursorInfo { CursorType::Game, gameSpriteId };
 	}
 
+	static CursorInfo UnknownCursor()
+	{
+		return CursorInfo { CursorType::Unknown };
+	}
+
 	[[nodiscard]] CursorType type() const
 	{
 		return type_;
