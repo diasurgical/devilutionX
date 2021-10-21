@@ -161,14 +161,14 @@ void mainmenu_loop()
 			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_ATTRACT_MODE:
-			if (gbIsSpawn && !gbIsHellfire)
+			if (gbIsSpawn && diabdat_mpq == nullptr)
 				done = false;
 			else if (gbActive)
 				PlayIntro();
 			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_REPLAY_INTRO:
-			if (gbIsSpawn && !gbIsHellfire) {
+			if (gbIsSpawn && diabdat_mpq == nullptr) {
 				UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
 			} else if (gbActive)
 				PlayIntro();
