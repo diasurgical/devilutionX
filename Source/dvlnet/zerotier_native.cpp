@@ -21,7 +21,7 @@ namespace devilution {
 namespace net {
 
 //static constexpr uint64_t zt_earth = 0x8056c2e21c000001;
-static constexpr uint64_t ZtNetwork = 0xaf78bf943649eb12;
+static constexpr uint64_t ZtNetwork = 0xa84ac5c10a7ebb5f;
 
 static std::atomic_bool zt_network_ready(false);
 static std::atomic_bool zt_node_online(false);
