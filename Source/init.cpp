@@ -173,7 +173,7 @@ void init_archives()
 
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
-	font_mpq = LoadMPQ(paths, "font.mpq"); // Extra fonts
+	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
 
 	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
 		char langMpqName[9] = {};
