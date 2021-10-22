@@ -694,6 +694,10 @@ set(devilutionx_assets
   fonts/12-03.pcx
   fonts/12-04.bin
   fonts/12-04.pcx
+  fonts/12-1f4.pcx
+  fonts/12-1f6.pcx
+  fonts/12-1f9.pcx
+  fonts/12-26.pcx
   fonts/22-00.bin
   fonts/22-00.pcx
   fonts/22-01.bin
@@ -716,6 +720,10 @@ set(devilutionx_assets
   fonts/24-03.pcx
   fonts/24-04.bin
   fonts/24-04.pcx
+  fonts/24-1f4.pcx
+  fonts/24-1f6.pcx
+  fonts/24-1f9.pcx
+  fonts/24-26.pcx
   fonts/30-00.bin
   fonts/30-00.pcx
   fonts/30-01.bin
