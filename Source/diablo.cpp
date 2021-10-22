@@ -37,6 +37,7 @@
 #include "error.h"
 #include "gamemenu.h"
 #include "gmenu.h"
+#include "hwcursor.hpp"
 #include "help.h"
 #include "init.h"
 #include "lighting.h"
@@ -942,6 +943,8 @@ void DiabloInit()
 		if (!gbIsHellfire) {
 			// Reinitalize the UI Elements cause we changed the game
 			UiInitialize();
+			if (IsHardwareCursor())
+				SetHardwareCursor(CursorInfo::UnknownCursor());
 		}
 	}
 
