@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=DevilutionX
+Comment=Diablo 1 for OpenDingux
+Exec=devilutionx
+Terminal=false
+Type=Application
+StartupNotify=true
+Icon=icon_32
+Categories=games;
+X-OD-Manual=readme.lepus.txt
+X-OD-NeedsDownscaling=true
+X-OD-NeedsJoystick=true
