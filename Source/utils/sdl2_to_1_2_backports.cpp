@@ -514,18 +514,22 @@ char *readSymLink(const char *path)
 
 Sint64 SDL_RWsize(SDL_RWops *context)
 {
-	Sint64 pos = SDL_RWseek(context, 0, RW_SEEK_CUR);
-	if (pos == -1)
+	const int current = SDL_RWtell(context);
+	if (current == -1)
 		return -1;
 
-	Sint64 size = SDL_RWseek(context, 0, RW_SEEK_END);
-	if (size == -1)
+	const int begin = SDL_RWseek(context, 0, RW_SEEK_SET);
+	if (begin == -1)
 		return -1;
 
-	if (SDL_RWseek(context, pos, RW_SEEK_SET) == -1)
+	const int end = SDL_RWseek(context, 0, RW_SEEK_END);
+	if (end == -1)
 		return -1;
 
-	return size;
+	if (SDL_RWseek(context, current, RW_SEEK_SET) == -1)
+		return -1;
+
+	return end - begin;
 }
 
 char *SDL_GetBasePath()
