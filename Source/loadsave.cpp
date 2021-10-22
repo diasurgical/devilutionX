@@ -1660,6 +1660,39 @@ void LoadHeroItems(Player &player)
 	gbIsHellfireSaveGame = gbIsHellfire;
 }
 
+void LoadBoughtItems()
+{
+	ResetBoughtItems();
+
+	if (currlevel != 0)
+		return;
+	if (gbIsMultiplayer)
+		return;
+
+	LoadHelper file("boughtitems");
+	if (!file.IsValid())
+		return;
+
+	for (int i = file.NextLE<uint32_t>(); i > 0; i--) {
+		auto index = file.NextLE<uint32_t>();
+		boughtSmithItems.push_back(index);
+		SmithBuyItem(true, index);
+	}
+	for (int i = file.NextLE<uint32_t>(); i > 0; i--) {
+		auto index = file.NextLE<uint32_t>();
+		boughtWitchItems.push_back(index);
+		WitchBuyItem(true, index);
+	}
+	for (int i = file.NextLE<uint32_t>(); i > 0; i--) {
+		auto index = file.NextLE<uint32_t>();
+		boughtHealerItems.push_back(index);
+		HealerBuyItem(true, index);
+	}
+	boughtWirtItem = static_cast<bool>(file.NextLE<uint32_t>());
+	if (boughtWirtItem)
+		BoyBuyItem(true);
+}
+
 void RemoveEmptyInventory(Player &player)
 {
 	for (int i = NUM_INV_GRID_ELEM; i > 0; i--) {
@@ -1874,6 +1907,8 @@ void LoadGame(bool firstflag)
 	}
 
 	gbIsHellfireSaveGame = gbIsHellfire;
+
+	LoadBoughtItems();
 }
 
 void SaveHeroItems(Player &player)
@@ -1889,6 +1924,23 @@ void SaveHeroItems(Player &player)
 		SaveItem(file, item);
 	for (const Item &item : player.SpdList)
 		SaveItem(file, item);
+}
+
+void SaveBoughtItems()
+{
+	size_t boughtItemsDataSize = sizeof(uint32_t) * (4 + boughtSmithItems.size() + boughtWitchItems.size() + boughtHealerItems.size());
+	SaveHelper file("boughtitems", boughtItemsDataSize);
+
+	file.WriteLE<uint32_t>(boughtSmithItems.size());
+	for (auto index : boughtSmithItems)
+		file.WriteLE<uint32_t>(index);
+	file.WriteLE<uint32_t>(boughtWitchItems.size());
+	for (auto index : boughtWitchItems)
+		file.WriteLE<uint32_t>(index);
+	file.WriteLE<uint32_t>(boughtHealerItems.size());
+	for (auto index : boughtHealerItems)
+		file.WriteLE<uint32_t>(index);
+	file.WriteLE<uint32_t>(boughtWirtItem);
 }
 
 void SaveGameData()
@@ -2042,6 +2094,8 @@ void SaveGameData()
 
 	file.WriteLE<uint8_t>(AutomapActive ? 1 : 0);
 	file.WriteBE<int32_t>(AutoMapScale);
+
+	SaveBoughtItems();
 }
 
 void SaveGame()

@@ -46,6 +46,11 @@ Item witchitem[WITCH_ITEMS];
 int boylevel;
 Item boyitem;
 
+std::vector<uint32_t> boughtSmithItems;
+std::vector<uint32_t> boughtWitchItems;
+std::vector<uint32_t> boughtHealerItems;
+bool boughtWirtItem = false;
+
 namespace {
 
 /** The current towner being interacted with */
@@ -1298,30 +1303,6 @@ void SmithEnter()
 	}
 }
 
-/**
- * @brief Purchases an item from the smith.
- */
-void SmithBuyItem()
-{
-	auto &myPlayer = Players[MyPlayerId];
-	auto &item = myPlayer.HoldItem;
-
-	TakePlrsMoney(item._iIvalue);
-	if (item._iMagical == ITEM_QUALITY_NORMAL)
-		item._iIdentified = false;
-	StoreAutoPlace();
-	int idx = stextvhold + ((stextlhold - stextup) / 4);
-	if (idx == SMITH_ITEMS - 1) {
-		smithitem[SMITH_ITEMS - 1]._itype = ItemType::None;
-	} else {
-		for (; !smithitem[idx + 1].isEmpty(); idx++) {
-			smithitem[idx] = smithitem[idx + 1];
-		}
-		smithitem[idx]._itype = ItemType::None;
-	}
-	CalcPlrInv(myPlayer, true);
-}
-
 void SmitBuyEnter()
 {
 	if (stextsel == 22) {
@@ -1625,35 +1606,6 @@ void WitchEnter()
 	}
 }
 
-/**
- * @brief Purchases an item from the witch.
- */
-void WitchBuyItem()
-{
-	auto &myPlayer = Players[MyPlayerId];
-
-	int idx = stextvhold + ((stextlhold - stextup) / 4);
-
-	if (idx < 3)
-		myPlayer.HoldItem._iSeed = AdvanceRndSeed();
-
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	StoreAutoPlace();
-
-	if (idx >= 3) {
-		if (idx == WITCH_ITEMS - 1) {
-			witchitem[WITCH_ITEMS - 1]._itype = ItemType::None;
-		} else {
-			for (; !witchitem[idx + 1].isEmpty(); idx++) {
-				witchitem[idx] = witchitem[idx + 1];
-			}
-			witchitem[idx]._itype = ItemType::None;
-		}
-	}
-
-	CalcPlrInv(myPlayer, true);
-}
-
 void WitchBuyEnter()
 {
 	if (stextsel == 22) {
@@ -1776,58 +1728,6 @@ void BoyEnter()
 	gossipstart = TEXT_WIRT2;
 	gossipend = TEXT_WIRT12;
 	StartStore(STORE_GOSSIP);
-}
-
-void BoyBuyItem()
-{
-	auto &myPlayer = Players[MyPlayerId];
-	TakePlrsMoney(myPlayer.HoldItem._iIvalue);
-	StoreAutoPlace();
-	boyitem._itype = ItemType::None;
-	stextshold = STORE_BOY;
-	CalcPlrInv(myPlayer, true);
-	stextlhold = 12;
-}
-
-/**
- * @brief Purchases an item from the healer.
- */
-void HealerBuyItem()
-{
-	auto &myPlayer = Players[MyPlayerId];
-	auto &item = myPlayer.HoldItem;
-
-	int idx = stextvhold + ((stextlhold - stextup) / 4);
-	if (!gbIsMultiplayer) {
-		if (idx < 2)
-			item._iSeed = AdvanceRndSeed();
-	} else {
-		if (idx < 3)
-			item._iSeed = AdvanceRndSeed();
-	}
-
-	TakePlrsMoney(item._iIvalue);
-	if (item._iMagical == ITEM_QUALITY_NORMAL)
-		item._iIdentified = false;
-	StoreAutoPlace();
-
-	if (!gbIsMultiplayer) {
-		if (idx < 2)
-			return;
-	} else {
-		if (idx < 3)
-			return;
-	}
-	idx = stextvhold + ((stextlhold - stextup) / 4);
-	if (idx == 19) {
-		healitem[19]._itype = ItemType::None;
-	} else {
-		for (; !healitem[idx + 1].isEmpty(); idx++) {
-			healitem[idx] = healitem[idx + 1];
-		}
-		healitem[idx]._itype = ItemType::None;
-	}
-	CalcPlrInv(myPlayer, true);
 }
 
 void BoyBuyEnter()
@@ -2793,6 +2693,126 @@ void ReleaseStoreBtn()
 {
 	stextscrlubtn = -1;
 	stextscrldbtn = -1;
+}
+
+void SmithBuyItem(bool fakeBuy, int newIdx)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	auto &item = myPlayer.HoldItem;
+
+	int idx = newIdx;
+	if (!fakeBuy) {
+		TakePlrsMoney(item._iIvalue);
+		if (item._iMagical == ITEM_QUALITY_NORMAL)
+			item._iIdentified = false;
+		StoreAutoPlace();
+		idx = stextvhold + ((stextlhold - stextup) / 4);
+		boughtSmithItems.push_back(idx);
+	}
+	if (idx == SMITH_ITEMS - 1) {
+		smithitem[SMITH_ITEMS - 1]._itype = ItemType::None;
+	} else {
+		for (; !smithitem[idx + 1].isEmpty(); idx++) {
+			smithitem[idx] = smithitem[idx + 1];
+		}
+		smithitem[idx]._itype = ItemType::None;
+	}
+	CalcPlrInv(myPlayer, true);
+}
+
+void WitchBuyItem(bool fakeBuy, int newIdx)
+{
+	auto &myPlayer = Players[MyPlayerId];
+
+	int idx = newIdx;
+	if (!fakeBuy) {
+		idx = stextvhold + ((stextlhold - stextup) / 4);
+
+		if (idx < 3)
+			myPlayer.HoldItem._iSeed = AdvanceRndSeed();
+
+		TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+		StoreAutoPlace();
+		boughtWitchItems.push_back(idx);
+	}
+
+	if (idx >= 3) {
+		if (idx == WITCH_ITEMS - 1) {
+			witchitem[WITCH_ITEMS - 1]._itype = ItemType::None;
+		} else {
+			for (; !witchitem[idx + 1].isEmpty(); idx++) {
+				witchitem[idx] = witchitem[idx + 1];
+			}
+			witchitem[idx]._itype = ItemType::None;
+		}
+	}
+
+	CalcPlrInv(myPlayer, true);
+}
+
+void HealerBuyItem(bool fakeBuy, int newIdx)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	auto &item = myPlayer.HoldItem;
+
+	int idx = newIdx;
+	if (!fakeBuy) {
+		idx = stextvhold + ((stextlhold - stextup) / 4);
+		if (!gbIsMultiplayer) {
+			if (idx < 2)
+				item._iSeed = AdvanceRndSeed();
+		} else {
+			if (idx < 3)
+				item._iSeed = AdvanceRndSeed();
+		}
+
+		TakePlrsMoney(item._iIvalue);
+		if (item._iMagical == ITEM_QUALITY_NORMAL)
+			item._iIdentified = false;
+		StoreAutoPlace();
+
+		if (!gbIsMultiplayer) {
+			if (idx < 2)
+				return;
+		} else {
+			if (idx < 3)
+				return;
+		}
+
+		boughtHealerItems.push_back(idx);
+	}
+
+	if (idx == 19) {
+		healitem[19]._itype = ItemType::None;
+	} else {
+		for (; !healitem[idx + 1].isEmpty(); idx++) {
+			healitem[idx] = healitem[idx + 1];
+		}
+		healitem[idx]._itype = ItemType::None;
+	}
+	CalcPlrInv(myPlayer, true);
+}
+
+void BoyBuyItem(bool fakeBuy)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	if (!fakeBuy) {
+		TakePlrsMoney(myPlayer.HoldItem._iIvalue);
+		StoreAutoPlace();
+		boughtWirtItem = true;
+	}
+	boyitem._itype = ItemType::None;
+	stextshold = STORE_BOY;
+	CalcPlrInv(myPlayer, true);
+	stextlhold = 12;
+}
+
+void ResetBoughtItems()
+{
+	boughtSmithItems.clear();
+	boughtWitchItems.clear();
+	boughtHealerItems.clear();
+	boughtWirtItem = false;
 }
 
 } // namespace devilution

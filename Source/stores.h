@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <vector>
+
 #include "control.h"
 #include "engine.h"
 #include "engine/cel_sprite.hpp"
@@ -94,6 +96,11 @@ extern int boylevel;
 /** Current item sold by Wirt */
 extern Item boyitem;
 
+extern std::vector<uint32_t> boughtSmithItems;
+extern std::vector<uint32_t> boughtWitchItems;
+extern std::vector<uint32_t> boughtHealerItems;
+extern bool boughtWirtItem;
+
 void AddStoreHoldRepair(Item *itm, int8_t i);
 void InitStores();
 void SetupTownStores();
@@ -113,5 +120,25 @@ void TakePlrsMoney(int cost);
 void StoreEnter();
 void CheckStoreBtn();
 void ReleaseStoreBtn();
+
+/**
+ * @brief Purchases an item from the smith.
+ * @param fakeBuy - if true, item is removed to maintain accurate stock when loading the game
+ */
+void SmithBuyItem(bool fakeBuy = false, int newIdx = 0);
+
+/**
+ * @brief Purchases an item from the witch.
+ * @param fakeBuy - if true, item is removed to maintain accurate stock when loading the game
+ */
+void WitchBuyItem(bool fakeBuy = false, int newIdx = 0);
+
+/**
+ * @brief Purchases an item from the healer.
+ * @param fakeBuy - if true, item is removed to maintain accurate stock when loading the game
+ */
+void HealerBuyItem(bool fakeBuy = false, int newIdx = 0);
+void BoyBuyItem(bool fakeBuy = false);
+void ResetBoughtItems();
 
 } // namespace devilution
