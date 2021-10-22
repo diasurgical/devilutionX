@@ -6,7 +6,7 @@ For Hellfire, also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, and hfvoice.mpq.
 Game saves and diablo.ini are located at:
 ~/.local/share/diasurgical/devilution
 
-~ is your home directory, /media/home by default.
+~ is your home directory, /media/data/home by default.
 
 Controls:
 - D-pad: move hero
