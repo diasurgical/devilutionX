@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=DevilutionX
 Comment=Diablo 1 for GKD350h
-Exec=devilutionx --diablo
+Exec=devilutionx
 Terminal=false
 Type=Application
 StartupNotify=true
