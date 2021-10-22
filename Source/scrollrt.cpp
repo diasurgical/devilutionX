@@ -1206,9 +1206,15 @@ void DrawView(const Surface &out, Point startPosition)
 		// force redrawing or debug stuff stays on panel on 640x480 resolution
 		force_redraw = 255;
 		char debugGridTextBuffer[10];
+		bool megaTiles = IsDebugGridInMegatiles();
+
 		for (auto m : DebugCoordsMap) {
 			Point dunCoords = { m.first % MAXDUNX, m.first / MAXDUNX };
+			if (megaTiles && (dunCoords.x % 2 == 1 || dunCoords.y % 2 == 1))
+				continue;
 			Point pixelCoords = m.second;
+			if (megaTiles)
+				pixelCoords += Displacement { 0, TILE_HEIGHT / 2 };
 			if (!zoomflag)
 				pixelCoords *= 2;
 			if (debugGridTextNeeded && GetDebugGridText(dunCoords, debugGridTextBuffer)) {
@@ -1218,21 +1224,31 @@ void DrawView(const Surface &out, Point startPosition)
 				DrawString(out, debugGridTextBuffer, { pixelCoords - Displacement { 0, tileSize.height }, tileSize }, UiFlags::ColorRed | UiFlags::AlignCenter | UiFlags::VerticalCenter);
 			}
 			if (DebugGrid) {
-				auto DrawLine = [&out](Point from, Point to, uint8_t col) {
-					int dx = to.x - from.x;
-					int dy = to.y - from.y;
-					int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
-					float ix = dx / (float)steps;
-					float iy = dy / (float)steps;
-					float sx = from.x;
-					float sy = from.y;
+				auto DrawDebugSquare = [&out](Point center, Displacement hor, Displacement ver, uint8_t col) {
+					auto DrawLine = [&out](Point from, Point to, uint8_t col) {
+						int dx = to.x - from.x;
+						int dy = to.y - from.y;
+						int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
+						float ix = dx / (float)steps;
+						float iy = dy / (float)steps;
+						float sx = from.x;
+						float sy = from.y;
 
-					for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
-						out.SetPixel({ (int)sx, (int)sy }, col);
+						for (int i = 0; i <= steps; i++, sx += ix, sy += iy)
+							out.SetPixel({ (int)sx, (int)sy }, col);
+					};
+					DrawLine(center - hor, center + ver, col);
+					DrawLine(center + hor, center + ver, col);
+					DrawLine(center - hor, center - ver, col);
+					DrawLine(center + hor, center - ver, col);
 				};
 
 				Displacement hor = { TILE_WIDTH / 2, 0 };
 				Displacement ver = { 0, TILE_HEIGHT / 2 };
+				if (megaTiles) {
+					hor *= 2;
+					ver *= 2;
+				}
 				if (!zoomflag) {
 					hor *= 2;
 					ver *= 2;
@@ -1240,10 +1256,18 @@ void DrawView(const Surface &out, Point startPosition)
 				Point center = pixelCoords + hor - ver;
 
 				uint8_t col = PAL16_BEIGE;
-				DrawLine(center - hor, center + ver, col);
-				DrawLine(center + hor, center + ver, col);
-				DrawLine(center - hor, center - ver, col);
-				DrawLine(center + hor, center - ver, col);
+
+				if (megaTiles) {
+					// redraw for each corner to stop disappearing around screen edges while walking
+					center = pixelCoords + ver * 0.5F + hor * 1.5F;
+					DrawDebugSquare(center, hor, ver, col);
+					center = pixelCoords - ver * 1.5F + hor * 1.5F;
+					DrawDebugSquare(center, hor, ver, col);
+					center = pixelCoords - ver * 1.5F - hor * 0.5F;
+					DrawDebugSquare(center, hor, ver, col);
+					center = pixelCoords + ver * 0.5F - hor * 0.5F;
+				}
+				DrawDebugSquare(center, hor, ver, col);
 			}
 		}
 	}
