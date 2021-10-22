@@ -5,6 +5,12 @@
 #include <memory>
 #include <vector>
 
+#include <SDL.h>
+
+#ifdef USE_SDL1
+#include "utils/sdl2_to_1_2_backports.h"
+#endif
+
 #include "options.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
@@ -210,6 +216,37 @@ bool ReadEntry(SDL_RWops *rw, MoEntry *e, std::vector<char> &result)
 	return (SDL_RWread(rw, result.data(), sizeof(char), e->length) == e->length);
 }
 
+SDL_RWops *OpenLangFile(const char *code)
+{
+	std::vector<std::string> paths { paths::LangPath(), paths::BasePath() };
+	if (paths[0] == paths[1])
+		paths.pop_back();
+
+	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
+		std::string message;
+		for (std::size_t i = 0; i < paths.size(); ++i) {
+			char prefix[32];
+			std::snprintf(prefix, sizeof(prefix), "\n%6u. '", static_cast<unsigned>(i + 1));
+			message.append(prefix);
+			message.append(paths[i]);
+			message += '\'';
+		}
+		LogVerbose("Translations search paths:{}", message);
+	}
+
+	SDL_RWops *rw;
+	for (const std::string &root : paths) {
+		for (const char *ext : { ".mo", ".gmo" }) {
+			std::string path = root + code + ext;
+			if ((rw = SDL_RWFromFile(path.c_str(), "rb")) != nullptr) {
+				LogDebug("Opened translation file: {}", path);
+				return rw;
+			}
+		}
+	}
+	return nullptr;
+}
+
 } // namespace
 
 const std::string &LanguageParticularTranslate(const char *context, const char *message)
@@ -265,16 +302,14 @@ bool HasTranslation(const std::string &locale)
 
 void LanguageInitialize()
 {
-	SDL_RWops *rw;
-
-	auto path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
-	if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
-		path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
-		if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
-			perror(path.c_str());
-			return;
-		}
+	if (sgOptions.Language.szCode == string_view("en"))
+		return;
+	SDL_RWops *rw = OpenLangFile(sgOptions.Language.szCode);
+	if (rw == nullptr) {
+		LogError("Error opening translation data for {}: {}", sgOptions.Language.szCode, SDL_GetError());
+		return;
 	}
+
 	// Read header and do sanity checks
 	// FIXME: Endianness.
 	MoHead head;
