@@ -76,7 +76,11 @@ prepare_buildroot() {
 
 make_buildroot() {
 	cd "$BUILDROOT"
-	BR2_JLEVEL=0 make toolchain sdl
+	local -a packages=(toolchain sdl)
+	if [[ $TARGET = rg350 ]] || [[ $TARGET = lepus ]]; then
+		packages+=(libhugetlbfs)
+	fi
+	BR2_JLEVEL=0 make "${packages[@]}"
 	cd -
 }
 
