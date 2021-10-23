@@ -160,6 +160,9 @@ void init_archives()
 	paths.emplace_back(""); // PWD
 
 	if (SDL_LOG_PRIORITY_VERBOSE >= SDL_LogGetPriority(SDL_LOG_CATEGORY_APPLICATION)) {
+		LogVerbose("Paths:\n    base: {}\n    pref: {}\n  config: {}\n  assets: {}",
+		    paths::BasePath(), paths::PrefPath(), paths::ConfigPath(), paths::AssetsPath());
+
 		std::string message;
 		for (std::size_t i = 0; i < paths.size(); ++i) {
 			char prefix[32];
