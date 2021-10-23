@@ -923,7 +923,7 @@ msgstr "{:s} навык"
 
 #: Source/control.cpp:771
 msgid "Spell"
-msgstr "Заклинание"
+msgstr "Заклин"
 
 #: Source/control.cpp:772 Source/control.cpp:1230
 msgid "{:s} Spell"
