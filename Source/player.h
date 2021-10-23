@@ -492,15 +492,17 @@ struct Player {
 	int CalculateArmorPierce(int monsterArmor, bool isMelee) const
 	{
 		int tmac = monsterArmor;
-		if (gbIsHellfire && _pIEnAc > 0) {
-			int pIEnAc = _pIEnAc - 1;
-			if (pIEnAc > 0)
-				tmac >>= pIEnAc;
-			else
-				tmac -= tmac / 4;
-		}
-		if (isMelee && _pClass == HeroClass::Barbarian) {
-			tmac -= monsterArmor / 8;
+		if (_pIEnAc > 0) {
+			if (gbIsHellfire) {
+				int pIEnAc = _pIEnAc - 1;
+				if (pIEnAc > 0)
+					tmac >>= pIEnAc;
+				else
+					tmac -= tmac / 4;
+			}
+			if (isMelee && _pClass == HeroClass::Barbarian) {
+				tmac -= monsterArmor / 8;
+			}
 		}
 		if (tmac < 0)
 			tmac = 0;
