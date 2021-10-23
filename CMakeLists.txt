@@ -98,6 +98,10 @@ option(DEVILUTIONX_SYSTEM_SDL_IMAGE "Use system-provided SDL_image" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_SDL_IMAGE "Link static SDL_image" OFF
                        "DEVILUTIONX_SYSTEM_SDL_IMAGE AND NOT DIST" ON)
 
+option(DEVILUTIONX_SYSTEM_BZIP2 "Use system-provided bzip2" ON)
+cmake_dependent_option(DEVILUTIONX_STATIC_BZIP2 "Link static bzip2" OFF
+                      "DEVILUTIONX_SYSTEM_BZIP2 AND NOT DIST" ON)
+
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
   get_git_tag(VERSION_NUM)
@@ -259,6 +263,10 @@ if(DEVILUTIONX_SYSTEM_LIBFMT)
 endif()
 if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
+endif()
+
+if(NOT DEVILUTIONX_SYSTEM_BZIP2)
+  add_subdirectory(3rdParty/bzip2)
 endif()
 
 if(ANDROID)
