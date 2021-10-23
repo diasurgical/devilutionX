@@ -2313,7 +2313,7 @@ void AddAcid(Missile &missile, Point dst, Direction /*midir*/)
 {
 	UpdateMissileVelocity(missile, dst, 16);
 	SetMissDir(missile, GetDirection16(missile.position.start, dst));
-	if ((!gbIsHellfire && (missile.position.velocity.deltaX & 0xFFFF0000) != 0) || (missile.position.velocity.deltaY & 0xFFFF0000) != 0)
+	if ((!gbIsHellfire || (missile.position.velocity.deltaX & 0xFFFF0000) != 0) || (missile.position.velocity.deltaY & 0xFFFF0000) != 0)
 		missile._mirange = 5 * (Monsters[missile._misource]._mint + 4);
 	else
 		missile._mirange = 1;
