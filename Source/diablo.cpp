@@ -904,7 +904,6 @@ void DiabloInit()
 	init_create_window();
 	was_window_init = true;
 
-	SFileEnableDirectAccess(true);
 	init_archives();
 	was_archives_init = true;
 

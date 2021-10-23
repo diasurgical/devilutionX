@@ -4,7 +4,6 @@
 
 #include "utils/file_util.h"
 #include "utils/log.hpp"
-#include "utils/stdcompat/optional.hpp"
 #include "utils/sdl_ptrs.h"
 
 #ifdef USE_SDL1
@@ -22,6 +21,7 @@ std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
 std::optional<std::string> assetsPath;
+std::optional<std::string> mpqDir;
 
 void AddTrailingSlash(std::string &path)
 {
@@ -90,6 +90,11 @@ const std::string &AssetsPath()
 	if (!assetsPath)
 		assetsPath.emplace(AppPath() + "assets/");
 	return *assetsPath;
+}
+
+const std::optional<std::string> &MpqDir()
+{
+	return mpqDir;
 }
 
 void SetBasePath(const std::string &path)
