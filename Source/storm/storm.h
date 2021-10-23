@@ -249,14 +249,12 @@ void SErrSetLastError(uint32_t dwErrCode);
  */
 void SStrCopy(char *dest, const char *src, int max_length);
 
-void SFileSetBasePath(string_view path);
 bool SNetGetOwnerTurnsWaiting(uint32_t *);
 bool SNetUnregisterEventHandler(event_type);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
 bool SNetSetBasePlayer(int);
 bool SNetInitializeProvider(uint32_t provider, struct GameData *gameData);
 void SNetGetProviderCaps(struct _SNETCAPS *);
-bool SFileEnableDirectAccess(bool enable);
 
 #if defined(__GNUC__) || defined(__cplusplus)
 }
