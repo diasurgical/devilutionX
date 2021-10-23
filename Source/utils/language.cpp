@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "options.h"
+#include "storm/storm_sdl_rw.h"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 
@@ -265,16 +266,12 @@ bool HasTranslation(const std::string &locale)
 
 void LanguageInitialize()
 {
-	SDL_RWops *rw;
+	std::string filename = sgOptions.Language.szCode;
+	filename.append(".gmo");
+	SDL_RWops *rw = SFileOpenRw(filename.c_str());
+	if (rw == nullptr)
+		return;
 
-	auto path = paths::LangPath() + sgOptions.Language.szCode + ".mo";
-	if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
-		path = paths::LangPath() + sgOptions.Language.szCode + ".gmo";
-		if ((rw = SDL_RWFromFile(path.c_str(), "rb")) == nullptr) {
-			perror(path.c_str());
-			return;
-		}
-	}
 	// Read header and do sanity checks
 	// FIXME: Endianness.
 	MoHead head;
