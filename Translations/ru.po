@@ -323,26 +323,20 @@ msgid "OK"
 msgstr "ОК"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:61
-#, fuzzy
-#| msgid "Down to Diablo"
 msgid "Switch to Diablo"
-msgstr "Спуститься к Диабло"
+msgstr "Перейти в Diablo"
 
 #: Source/DiabloUI/extrasmenu.cpp:41
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Switch to Hellfire"
-msgstr "Выйти из Hellfire"
+msgstr "Перейти в Hellfire"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-msgstr ""
+msgstr "Перейти в полную игру"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Switch to Shareware"
-msgstr "в shareware"
+msgstr "Перейти в Shareware"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -366,10 +360,8 @@ msgid "Multi Player"
 msgstr "Мультиплеер"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-#, fuzzy
-#| msgid "Extra charges"
 msgid "Extras"
-msgstr "Дополнительные заряды"
+msgstr "Дополнения"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Show Credits"
@@ -470,14 +462,8 @@ msgstr ""
 "запущена по этому адресу или доменному имени."
 
 #: Source/DiabloUI/selgame.cpp:121
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Join the public game already in progress at this address."
-msgstr ""
-"Введите IP адрес или доменное имя и подключитесь к игре, которая уже "
-"запущена по этому адресу или доменному имени."
+msgstr "Присоединитесь к игре, что уже запущена по этому адресу."
 
 #: Source/DiabloUI/selgame.cpp:174
 msgid "Select Difficulty"
@@ -751,10 +737,8 @@ msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Вы действительно хотите удалить персонажа \"{:s}\"?"
 
 #: Source/DiabloUI/selstart.cpp:60
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Enter Hellfire"
-msgstr "Выйти из Hellfire"
+msgstr "Зайти в Hellfire"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
