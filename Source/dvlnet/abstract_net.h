@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 
 namespace devilution {
 namespace net {

@@ -3,8 +3,7 @@
 #include <SDL.h>
 
 #include "miniwin/miniwin.h"
-#include "storm/storm.h"
-#include "storm/storm_sdl_rw.h"
+#include "engine/game_assets.hpp"
 
 #ifdef __cplusplus
 extern "C" {
@@ -43,7 +42,7 @@ inline void QuitPNG()
 
 inline SDL_Surface *LoadPNG(const char *file)
 {
-	SDL_RWops *rwops = SFileOpenRw(file);
+	SDL_RWops *rwops = OpenAsset(file);
 	SDL_Surface *surface = IMG_LoadPNG_RW(rwops);
 	SDL_RWclose(rwops);
 	return surface;

@@ -54,3 +54,5 @@ set(ZLIB_PROCESS_LIBS ZLIB_LIBRARY)
 libfind_process(ZLIB)
 
 try_add_imported_target(ZLIB)
+
+add_library(ZLIB::ZLIB ALIAS 3ds::zlib)

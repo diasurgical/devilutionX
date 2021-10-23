@@ -27,7 +27,7 @@
 #include "movie.h"
 #include "options.h"
 #include "spelldat.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "themes.h"
 #include "towners.h"
 #include "trigs.h"

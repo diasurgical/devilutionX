@@ -18,7 +18,6 @@
 #include "engine/render/text_render.hpp"
 #include "hwcursor.hpp"
 #include "palette.h"
-#include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"

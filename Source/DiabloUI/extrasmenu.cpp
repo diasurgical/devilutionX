@@ -37,9 +37,9 @@ _mainmenu_selections UiExtrasMenu()
 	UiAddBackground(&vecDialog);
 	UiAddLogo(&vecDialog);
 
-	if (diabdat_mpq != nullptr && hellfire_mpq != nullptr)
+	if (diabdat_mpq && hellfire_mpq)
 		vecDialogItems.push_back(std::make_unique<UiListItem>(gbIsHellfire ? _("Switch to Diablo") : _("Switch to Hellfire"), MAINMENU_SWITCHGAME));
-	if (diabdat_mpq != nullptr)
+	if (diabdat_mpq)
 		vecDialogItems.push_back(std::make_unique<UiListItem>(gbIsSpawn ? _("Switch to Fullgame") : _("Switch to Shareware"), MAINMENU_TOGGLESPAWN));
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Replay Intro"), MAINMENU_REPLAY_INTRO));
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Support"), MAINMENU_SHOW_SUPPORT));

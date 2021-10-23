@@ -8,7 +8,7 @@
 #include "engine/demomode.h"
 #include "gmenu.h"
 #include "nthread.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "utils/sdl_mutex.h"
 #include "utils/sdl_thread.h"
 

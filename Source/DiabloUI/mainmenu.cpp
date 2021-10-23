@@ -92,7 +92,7 @@ bool UiMainMenuDialog(const char *name, _mainmenu_selections *pdwResult, void (*
 		while (MainMenuResult == MAINMENU_NONE) {
 			UiClearScreen();
 			UiPollAndRender();
-			if (SDL_GetTicks() >= dwAttractTicks && (diabdat_mpq != nullptr || hellfire_mpq != nullptr)) {
+			if (SDL_GetTicks() >= dwAttractTicks && (diabdat_mpq || hellfire_mpq)) {
 				MainMenuResult = MAINMENU_ATTRACT_MODE;
 			}
 		}

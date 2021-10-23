@@ -14,10 +14,10 @@
 #include "menu.h"
 #include "mpqapi.h"
 #include "pack.h"
-#include "storm/storm.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
+#include "utils/mpq.hpp"
 #include "utils/paths.h"
 
 namespace devilution {
@@ -113,33 +113,26 @@ void RenameTempToPerm()
 	assert(!GetPermSaveNames(dwIndex, szPerm));
 }
 
-std::unique_ptr<byte[]> ReadArchive(HANDLE archive, const char *pszName, size_t *pdwLen = nullptr)
+std::unique_ptr<byte[]> ReadArchive(MpqArchive &archive, const char *pszName, size_t *pdwLen = nullptr)
 {
-	HANDLE file;
+	int32_t error;
+	std::size_t length;
 
-	if (!SFileOpenFileEx(archive, pszName, 0, &file))
+	std::unique_ptr<byte[]> result = archive.ReadFile(pszName, length, error);
+	if (error != 0)
 		return nullptr;
 
-	size_t length = SFileGetFileSize(file);
-	if (length == 0)
-		return nullptr;
-
-	std::unique_ptr<byte[]> buf { new byte[length] };
-	if (!SFileReadFileThreadSafe(file, buf.get(), length))
-		return nullptr;
-	SFileCloseFileThreadSafe(file);
-
-	length = codec_decode(buf.get(), length, pfile_get_password());
-	if (length == 0)
+	std::size_t decodedLength = codec_decode(result.get(), length, pfile_get_password());
+	if (decodedLength == 0)
 		return nullptr;
 
 	if (pdwLen != nullptr)
-		*pdwLen = length;
+		*pdwLen = decodedLength;
 
-	return buf;
+	return result;
 }
 
-bool ReadHero(HANDLE archive, PlayerPack *pPack)
+bool ReadHero(MpqArchive &archive, PlayerPack *pPack)
 {
 	size_t read;
 
@@ -171,22 +164,10 @@ bool OpenArchive(uint32_t saveNum)
 	return OpenMPQ(GetSavePath(saveNum).c_str());
 }
 
-HANDLE OpenSaveArchive(uint32_t saveNum)
+std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
 {
-	HANDLE archive;
-
-	if (SFileOpenArchive(GetSavePath(saveNum).c_str(), 0, 0, &archive))
-		return archive;
-	return nullptr;
-}
-
-void CloseArchive(HANDLE *hsArchive)
-{
-	if (*hsArchive == nullptr)
-		return;
-
-	SFileCloseArchive(*hsArchive);
-	*hsArchive = nullptr;
+	std::int32_t error;
+	return MpqArchive::Open(GetSavePath(saveNum).c_str(), error);
 }
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
@@ -229,7 +210,7 @@ bool GetFileName(uint8_t lvl, char *dst)
 	return true;
 }
 
-bool ArchiveContainsGame(HANDLE hsArchive)
+bool ArchiveContainsGame(MpqArchive &hsArchive)
 {
 	if (gbIsMultiplayer)
 		return false;
@@ -288,14 +269,14 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 	memset(hero_names, 0, sizeof(hero_names));
 
 	for (uint32_t i = 0; i < MAX_CHARACTERS; i++) {
-		HANDLE archive = OpenSaveArchive(i);
-		if (archive != nullptr) {
+		std::optional<MpqArchive> archive = OpenSaveArchive(i);
+		if (archive) {
 			PlayerPack pkplr;
-			if (ReadHero(archive, &pkplr)) {
+			if (ReadHero(*archive, &pkplr)) {
 				_uiheroinfo uihero;
 				uihero.saveNumber = i;
 				strcpy(hero_names[i], pkplr.pName);
-				bool hasSaveGame = ArchiveContainsGame(archive);
+				bool hasSaveGame = ArchiveContainsGame(*archive);
 				if (hasSaveGame)
 					pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
 
@@ -312,7 +293,6 @@ bool pfile_ui_set_hero_infos(bool (*uiAddHeroInfo)(_uiheroinfo *))
 					uiAddHeroInfo(&uihero);
 				}
 			}
-			CloseArchive(&archive);
 		}
 	}
 
@@ -382,22 +362,20 @@ bool pfile_delete_save(_uiheroinfo *heroInfo)
 
 void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 {
-	HANDLE archive;
-	PlayerPack pkplr;
-
 	player = {};
 
-	archive = OpenSaveArchive(saveNum);
-	if (archive == nullptr)
-		app_fatal("%s", _("Unable to open archive"));
-	if (!ReadHero(archive, &pkplr))
-		app_fatal("%s", _("Unable to load character"));
+	PlayerPack pkplr;
+	{
+		std::optional<MpqArchive> archive = OpenSaveArchive(saveNum);
+		if (!archive)
+			app_fatal("%s", _("Unable to open archive"));
+		if (!ReadHero(*archive, &pkplr))
+			app_fatal("%s", _("Unable to load character"));
 
-	gbValidSaveFile = ArchiveContainsGame(archive);
-	if (gbValidSaveFile)
-		pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
-
-	CloseArchive(&archive);
+		gbValidSaveFile = ArchiveContainsGame(*archive);
+		if (gbValidSaveFile)
+			pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
+	}
 
 	if (!UnPackPlayer(&pkplr, player, false)) {
 		return;
@@ -462,19 +440,11 @@ void pfile_remove_temp_files()
 
 std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)
 {
-	HANDLE archive;
-
 	uint32_t saveNum = gSaveNumber;
-	archive = OpenSaveArchive(saveNum);
-	if (archive == nullptr)
+	std::optional<MpqArchive> archive = OpenSaveArchive(saveNum);
+	if (!archive)
 		return nullptr;
-
-	auto buf = ReadArchive(archive, pszName, pdwLen);
-	CloseArchive(&archive);
-	if (buf == nullptr)
-		return nullptr;
-
-	return buf;
+	return ReadArchive(*archive, pszName, pdwLen);
 }
 
 void pfile_update(bool forceSave)

@@ -10,7 +10,6 @@
 #include "controls/touch/renderers.h"
 #include "engine.h"
 #include "options.h"
-#include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_mutex.h"

@@ -9,10 +9,10 @@
 #include "DiabloUI/diabloui.h"
 #include "dx.h"
 #include "palette.h"
-#include "storm/storm.h"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
 #include "utils/paths.h"
+#include "utils/pcx.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {

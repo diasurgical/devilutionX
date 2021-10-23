@@ -7,8 +7,7 @@
 
 #include "appfat.h"
 #include "diablo.h"
-#include "storm/storm.h"
-#include "storm/storm_sdl_rw.h"
+#include "engine/game_assets.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
@@ -17,15 +16,10 @@ class SFile {
 public:
 	explicit SFile(const char *path)
 	{
-		handle_ = SFileOpenRw(path);
+		handle_ = OpenAsset(path);
 		if (handle_ == nullptr) {
 			if (!gbQuietMode) {
-				const std::uint32_t code = SErrGetLastError();
-				if (code == STORM_ERROR_FILE_NOT_FOUND) {
-					app_fatal("Failed to open file:\n%s\n\nFile not found", path);
-				} else {
-					app_fatal("Failed to open file:\n%s\n\nError Code: %u", path, code);
-				}
+				app_fatal("Failed to open file:\n%s\n\n%s", path, SDL_GetError());
 			}
 		}
 	}

@@ -26,7 +26,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "spells.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "sync.h"
 #include "town.h"
 #include "towners.h"

@@ -16,11 +16,11 @@
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
-#include "storm/storm_sdl_rw.h"
-#include "storm/storm_file_wrapper.h"
+#include "engine/game_assets.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
+#include "utils/sdl_rwops_file_wrapper.hpp"
 #include "utils/sdl_wrap.h"
 #include "utils/stdcompat/optional.hpp"
 
@@ -42,7 +42,7 @@ SDL_Color SVidPreviousPalette[256];
 SDLPaletteUniquePtr SVidPalette;
 SDLSurfaceUniquePtr SVidSurface;
 
-#ifndef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
+#ifndef DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_AVAILABLE
 std::unique_ptr<uint8_t[]> SVidBuffer;
 #endif
 
@@ -150,9 +150,9 @@ bool SVidPlayBegin(const char *filename, int flags)
 	//0x800000 // Edge detection
 	//0x200800 // Clear FB
 
-	SDL_RWops *videoStream = SFileOpenRw(filename);
-#ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
-	FILE *file = FILE_FromStormHandle(videoStream);
+	SDL_RWops *videoStream = OpenAsset(filename);
+#ifdef DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_AVAILABLE
+	FILE *file = FILE_FromSDL_RWops(videoStream);
 	SVidSMK = smk_open_filepointer(file, SMK_MODE_DISK);
 #else
 	size_t bytestoread = SDL_RWsize(videoStream);
@@ -358,7 +358,7 @@ void SVidPlayEnd()
 	if (SVidSMK != nullptr)
 		smk_close(SVidSMK);
 
-#ifndef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
+#ifndef DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_AVAILABLE
 	SVidBuffer = nullptr;
 #endif
 

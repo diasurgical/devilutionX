@@ -2,7 +2,7 @@
 
 #include "DiabloUI/diabloui.h"
 #include "stores.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "utils/language.h"
 
 namespace devilution {

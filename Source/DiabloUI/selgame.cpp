@@ -10,7 +10,7 @@
 #include "control.h"
 #include "menu.h"
 #include "options.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "utils/language.h"
 
 namespace devilution {

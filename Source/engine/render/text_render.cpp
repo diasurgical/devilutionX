@@ -130,7 +130,7 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 	if (IsFullWidth(row)) {
 		kerning->fill(FontFullwidth[size]);
 	} else {
-		SDL_RWops *handle = SFileOpenRw(path);
+		SDL_RWops *handle = OpenAsset(path);
 		if (handle != nullptr) {
 			SDL_RWread(handle, kerning, 256, 1);
 			SDL_RWclose(handle);

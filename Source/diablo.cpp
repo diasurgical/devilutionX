@@ -58,7 +58,7 @@
 #include "setmaps.h"
 #include "sound.h"
 #include "stores.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "themes.h"
 #include "town.h"
 #include "towners.h"

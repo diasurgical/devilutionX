@@ -1,3 +1,5 @@
+#include "storm/storm_net.hpp"
+
 #include <memory>
 #ifndef NONET
 #include "utils/sdl_mutex.h"
@@ -13,14 +15,27 @@
 
 namespace devilution {
 
-static std::unique_ptr<net::abstract_net> dvlnet_inst;
-static char gpszGameName[128] = {};
-static char gpszGamePassword[128] = {};
-static bool GameIsPublic = {};
+namespace {
+std::unique_ptr<net::abstract_net> dvlnet_inst;
+char gpszGameName[128] = {};
+char gpszGamePassword[128] = {};
+bool GameIsPublic = {};
+thread_local uint32_t dwLastError = 0;
 
 #ifndef NONET
-static SdlMutex storm_net_mutex;
+SdlMutex storm_net_mutex;
 #endif
+} // namespace
+
+uint32_t SErrGetLastError()
+{
+	return dwLastError;
+}
+
+void SErrSetLastError(uint32_t dwErrCode)
+{
+	dwLastError = dwErrCode;
+}
 
 bool SNetReceiveMessage(int *senderplayerid, void **data, uint32_t *databytes)
 {
