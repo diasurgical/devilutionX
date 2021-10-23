@@ -778,15 +778,32 @@ set(devilutionx_assets
 
 find_program(SMPQ smpq)
 if(SMPQ)
-  file(REMOVE "Packaging/resources/devilutionx.mpq")
-  execute_process(
-    WORKING_DIRECTORY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets"
-    COMMAND ${SMPQ} -M 1 -C PKWARE -c "../devilutionx.mpq" ${devilutionx_assets})
-  # Copy devilutionx.mpq to the build directory so the game can run from the build directory
-  file(COPY "Packaging/resources/devilutionx.mpq" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  set(DEVILUTIONX_MPQ "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq")
+  set(devilutionx_assets_src_relative ${devilutionx_assets})
+  list(TRANSFORM devilutionx_assets_src_relative PREPEND Packaging/resources/assets/)
+  add_custom_command(
+    COMMENT "Building devilutionx.mpq"
+    OUTPUT "${DEVILUTIONX_MPQ}"
+    COMMAND ${CMAKE_COMMAND} -E remove -f "${DEVILUTIONX_MPQ}"
+    COMMAND ${SMPQ} -M 1 -C PKWARE -c "${DEVILUTIONX_MPQ}" ${devilutionx_assets}
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets"
+    DEPENDS ${devilutionx_assets_src_relative}
+    VERBATIM)
+  add_custom_target(devilutionx_mpq ALL DEPENDS "${DEVILUTIONX_MPQ}")
 else()
   # Copy assets to the build directory so the game can load them from the build directory
-  file(COPY "${DevilutionX_SOURCE_DIR}/Packaging/resources/assets/" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/assets")
+  foreach(asset_file ${devilutionx_assets})
+    set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
+    set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${asset_file}")
+    list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES ${dst})
+    add_custom_command(
+      COMMENT "Copying ${asset_file}"
+      OUTPUT "${dst}"
+      COMMAND ${CMAKE_COMMAND} -E copy ${src} ${dst}
+      DEPENDS "${src}"
+      VERBATIM)
+  endforeach()
+  add_custom_target(devilutionx_assets ALL DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES})
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
@@ -1070,7 +1087,7 @@ if(VITA)
       VERSION ${VITA_VERSION}
       NAME ${VITA_APP_NAME}
       FILE Packaging/vita/sce_sys sce_sys
-      FILE Packaging/resources/devilutionx.mpq devilutionx.mpq
+      FILE ${DEVILUTIONX_MPQ} devilutionx.mpq
       ${VITA_TRANSLATIONS_LIST}
     )
   else()
@@ -1095,7 +1112,7 @@ if(NINTENDO_3DS)
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   list(APPEND APP_ROMFS_FILES
-    ${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq
+    ${DEVILUTIONX_MPQ}
     ${devilutionx_TRANSLATIONS})
   set(APP_VERSION ${PROJECT_VERSION})
 
@@ -1128,7 +1145,7 @@ if(NINTENDO_3DS)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
-if(CPACK)
+if(CPACK AND SMPQ)
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
       set(SDL2_WIN32_DLLS_DIR "${CMAKE_BINARY_DIR}")
@@ -1153,7 +1170,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/windows/README.txt"
       DESTINATION "."
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+    install(FILES "${DEVILUTIONX_MPQ}"
       DESTINATION "."
     )
 
@@ -1196,7 +1213,7 @@ if(CPACK)
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/nix/README.txt"
       DESTINATION "share/diasurgical/${project_name}"
     )
-    install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/devilutionx.mpq"
+    install(FILES "${DEVILUTIONX_MPQ}"
       DESTINATION "share/diasurgical/${project_name}"
     )
     install(FILES "${PROJECT_SOURCE_DIR}/Packaging/resources/icon.png"
