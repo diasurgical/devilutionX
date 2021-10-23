@@ -14,7 +14,7 @@
 #endif
 
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
+#include "engine/game_assets.hpp"
 #include "utils/log.hpp"
 #include "utils/math.h"
 #include "utils/stubs.h"
@@ -116,9 +116,9 @@ void SoundSample::Stop()
 int SoundSample::SetChunkStream(std::string filePath)
 {
 	file_path_ = std::move(filePath);
-	SDL_RWops *handle = SFileOpenRw(file_path_.c_str());
+	SDL_RWops *handle = OpenAsset(file_path_.c_str(), /*threadsafe=*/true);
 	if (handle == nullptr) {
-		LogError(LogCategory::Audio, "SFileOpenRw failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
+		LogError(LogCategory::Audio, "OpenAsset failed (from SoundSample::SetChunkStream): {}", SDL_GetError());
 		return -1;
 	}
 

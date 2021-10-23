@@ -27,7 +27,6 @@
 #include "qol/autopickup.h"
 #include "spells.h"
 #include "stores.h"
-#include "storm/storm.h"
 #include "towners.h"
 #include "utils/language.h"
 #include "utils/log.hpp"
@@ -2156,9 +2155,9 @@ void LoadPlrGFX(Player &player, player_graphic graphic)
 	const char *szCel;
 
 	HeroClass c = player._pClass;
-	if (c == HeroClass::Bard && hfbard_mpq == nullptr) {
+	if (c == HeroClass::Bard && !hfbard_mpq) {
 		c = HeroClass::Rogue;
-	} else if (c == HeroClass::Barbarian && hfbarb_mpq == nullptr) {
+	} else if (c == HeroClass::Barbarian && !hfbarb_mpq) {
 		c = HeroClass::Warrior;
 	}
 

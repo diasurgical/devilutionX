@@ -23,7 +23,6 @@
 #include "menu.h"
 #include "miniwin/miniwin.h"
 #include "movie.h"
-#include "storm/storm.h"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"

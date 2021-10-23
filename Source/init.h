@@ -6,26 +6,27 @@
 #pragma once
 
 #include "miniwin/miniwin.h"
+#include "utils/mpq.hpp"
 
 namespace devilution {
 
 extern bool gbActive;
-extern HANDLE hellfire_mpq;
+extern std::optional<MpqArchive> hellfire_mpq;
 extern WNDPROC CurrentProc;
-extern HANDLE spawn_mpq;
-extern HANDLE diabdat_mpq;
+extern std::optional<MpqArchive> spawn_mpq;
+extern std::optional<MpqArchive> diabdat_mpq;
 extern bool gbIsSpawn;
 extern bool gbIsHellfire;
 extern bool gbVanilla;
 extern bool forceHellfire;
-extern HANDLE hfmonk_mpq;
-extern HANDLE hfbard_mpq;
-extern HANDLE hfbarb_mpq;
-extern HANDLE hfmusic_mpq;
-extern HANDLE hfvoice_mpq;
-extern HANDLE font_mpq;
-extern HANDLE lang_mpq;
-extern HANDLE devilutionx_mpq;
+extern std::optional<MpqArchive> hfmonk_mpq;
+extern std::optional<MpqArchive> hfbard_mpq;
+extern std::optional<MpqArchive> hfbarb_mpq;
+extern std::optional<MpqArchive> hfmusic_mpq;
+extern std::optional<MpqArchive> hfvoice_mpq;
+extern std::optional<MpqArchive> font_mpq;
+extern std::optional<MpqArchive> lang_mpq;
+extern std::optional<MpqArchive> devilutionx_mpq;
 
 void init_cleanup();
 void init_archives();

@@ -9,6 +9,6 @@ namespace devilution {
  *
  * Closes the handle when it gets closed.
  */
-SDL_RWops *SFileOpenRw(const char *filename);
+SDL_RWops *OpenAsset(const char *filename, bool threadsafe = false);
 
 } // namespace devilution

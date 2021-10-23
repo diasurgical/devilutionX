@@ -1,15 +1,15 @@
-#include "storm_file_wrapper.h"
+#include "utils/sdl_rwops_file_wrapper.hpp"
 
-#ifdef DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
+#ifdef DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_AVAILABLE
 
 #include "utils/log.hpp"
 
 namespace devilution {
 extern "C" {
 
-#ifdef DEVILUTIONX_STORM_FILE_WRAPPER_IMPL_FOPENCOOKIE
+#ifdef DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_IMPL_FOPENCOOKIE
 
-ssize_t SFileCookieRead(void *cookie, char *buf, size_t nbytes)
+ssize_t SDL_RWops_CookieRead(void *cookie, char *buf, size_t nbytes)
 {
 	size_t numRead = SDL_RWread(static_cast<SDL_RWops *>(cookie), buf, nbytes, 1);
 	if (numRead == 0) {
@@ -18,7 +18,7 @@ ssize_t SFileCookieRead(void *cookie, char *buf, size_t nbytes)
 	return numRead * nbytes;
 }
 
-int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
+int SDL_RWops_CookieSeek(void *cookie, off64_t *pos, int whence)
 {
 	int swhence;
 	switch (whence) {
@@ -36,14 +36,14 @@ int SFileCookieSeek(void *cookie, off64_t *pos, int whence)
 	}
 	const Sint64 spos = SDL_RWseek(static_cast<SDL_RWops *>(cookie), *pos, swhence);
 	if (spos < 0) {
-		Log("SFileRwSeek error: {}", SDL_GetError());
+		Log("SDL_RWops_RwSeek error: {}", SDL_GetError());
 		return -1;
 	}
 	*pos = static_cast<off64_t>(spos);
 	return 0;
 }
 
-int SFileCookieClose(void *cookie)
+int SDL_RWops_CookieClose(void *cookie)
 {
 	return SDL_RWclose(static_cast<SDL_RWops *>(cookie));
 }
@@ -51,14 +51,14 @@ int SFileCookieClose(void *cookie)
 } // extern "C"
 #endif
 
-FILE *FILE_FromStormHandle(SDL_RWops *handle)
+FILE *FILE_FromSDL_RWops(SDL_RWops *handle)
 {
-#ifdef DEVILUTIONX_STORM_FILE_WRAPPER_IMPL_FOPENCOOKIE
+#ifdef DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_IMPL_FOPENCOOKIE
 	cookie_io_functions_t ioFns;
 	std::memset(&ioFns, 0, sizeof(ioFns));
-	ioFns.read = &SFileCookieRead;
-	ioFns.seek = &SFileCookieSeek;
-	ioFns.close = &SFileCookieClose;
+	ioFns.read = &SDL_RWops_CookieRead;
+	ioFns.seek = &SDL_RWops_CookieSeek;
+	ioFns.close = &SDL_RWops_CookieClose;
 	return fopencookie(handle, "rb", ioFns);
 #else
 #error "unimplemented"

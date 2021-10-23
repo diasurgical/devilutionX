@@ -11,6 +11,7 @@
 #include "dvlnet/packet.h"
 #include "dvlnet/abstract_net.h"
 #include "dvlnet/frame_queue.h"
+#include "multi.h"
 
 namespace devilution {
 namespace net {

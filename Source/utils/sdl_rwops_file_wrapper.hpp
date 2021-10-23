@@ -3,14 +3,14 @@
 #if (defined(__linux__) && !defined(__ANDROID__)) || defined(__FreeBSD__) || defined(__DragonFly__) || defined(__HAIKU__)
 #include <cstdio>
 
-#include "storm/storm_sdl_rw.h"
+#include <SDL.h>
 
-#define DEVILUTIONX_STORM_FILE_WRAPPER_AVAILABLE
-#define DEVILUTIONX_STORM_FILE_WRAPPER_IMPL_FOPENCOOKIE
+#define DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_AVAILABLE
+#define DEVILUTIONX_SDL_RWOPS_FILE_WRAPPER_IMPL_FOPENCOOKIE
 
 namespace devilution {
 
-FILE *FILE_FromStormHandle(SDL_RWops *handle);
+FILE *FILE_FromSDL_RWops(SDL_RWops *handle);
 
 } // namespace devilution
 

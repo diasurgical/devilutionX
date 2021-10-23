@@ -9,7 +9,8 @@
 #include <fmt/format.h>
 
 #include "diablo.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
+#include "multi.h"
 #include "utils/language.h"
 #include "utils/sdl_thread.h"
 #include "utils/ui_fwd.h"

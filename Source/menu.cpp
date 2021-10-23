@@ -13,7 +13,7 @@
 #include "movie.h"
 #include "options.h"
 #include "pfile.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "utils/language.h"
 
 namespace devilution {
@@ -168,14 +168,14 @@ void mainmenu_loop()
 			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_ATTRACT_MODE:
-			if (gbIsSpawn && diabdat_mpq == nullptr)
+			if (gbIsSpawn && !diabdat_mpq)
 				done = false;
 			else if (gbActive)
 				PlayIntro();
 			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_REPLAY_INTRO:
-			if (gbIsSpawn && diabdat_mpq == nullptr && hellfire_mpq == nullptr) {
+			if (gbIsSpawn && !diabdat_mpq && !hellfire_mpq) {
 				UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
 			} else if (gbActive) {
 				mainmenu_wait_for_button_sound();

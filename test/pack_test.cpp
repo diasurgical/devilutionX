@@ -3,7 +3,6 @@
 
 #include "pack.h"
 #include "utils/paths.h"
-#include "storm/storm.h"
 
 using namespace devilution;
 

@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "options.h"
-#include "storm/storm_sdl_rw.h"
+#include "engine/game_assets.hpp"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 
@@ -269,7 +269,7 @@ const std::string &LanguageTranslate(const char *key)
 bool HasTranslation(const std::string &locale)
 {
 	for (const char *ext : { ".mo", ".gmo" }) {
-		SDL_RWops *rw = SFileOpenRw((locale + ext).c_str());
+		SDL_RWops *rw = OpenAsset((locale + ext).c_str());
 		if (rw != nullptr) {
 			SDL_RWclose(rw);
 			return true;
@@ -288,7 +288,7 @@ void LanguageInitialize()
 	// We also support ".mo" because that is what poedit generates
 	// and what translators use to test their work.
 	for (const char *ext : { ".mo", ".gmo" }) {
-		if ((rw = SFileOpenRw((lang + ext).c_str())) != nullptr)
+		if ((rw = OpenAsset((lang + ext).c_str())) != nullptr)
 			break;
 	}
 	if (rw == nullptr)

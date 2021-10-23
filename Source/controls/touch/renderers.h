@@ -2,11 +2,15 @@
 
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
 
+#include <SDL.h>
+
+#include "DiabloUI/art.h"
 #include "controls/plrctrls.h"
 #include "controls/touch/gamepad.h"
 #include "engine/surface.hpp"
 #include "utils/png.h"
 #include "utils/sdl_ptrs.h"
+#include "utils/stdcompat/optional.hpp"
 
 namespace devilution {
 

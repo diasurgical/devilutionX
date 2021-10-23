@@ -368,6 +368,8 @@ add_library(StormLib STATIC
   3rdParty/StormLib/src/SFileOpenFileEx.cpp
   3rdParty/StormLib/src/SFileReadFile.cpp)
 
+add_subdirectory(3rdParty/libmpq)
+
 if(WIN32)
 # Enable Unicode for StormLib wchar_t* file APIs
 target_compile_definitions(StormLib PRIVATE -DUNICODE -D_UNICODE)
@@ -398,6 +400,7 @@ set(libdevilutionx_SRCS
   Source/encrypt.cpp
   Source/engine.cpp
   Source/error.cpp
+  Source/engine/game_assets.cpp
   Source/gamemenu.cpp
   Source/gendung.cpp
   Source/gmenu.cpp
@@ -477,8 +480,11 @@ set(libdevilutionx_SRCS
   Source/utils/display.cpp
   Source/utils/file_util.cpp
   Source/utils/language.cpp
+  Source/utils/mpq.cpp
+  Source/utils/mpq_sdl_rwops.cpp
   Source/utils/paths.cpp
   Source/utils/sdl_bilinear_scale.cpp
+  Source/utils/sdl_rwops_file_wrapper.cpp
   Source/utils/sdl_thread.cpp
   Source/DiabloUI/art.cpp
   Source/DiabloUI/art_draw.cpp
@@ -508,10 +514,7 @@ set(libdevilutionx_SRCS
   Source/dvlnet/frame_queue.cpp
   Source/dvlnet/loopback.cpp
   Source/dvlnet/packet.cpp
-  Source/storm/storm.cpp
-  Source/storm/storm_file_wrapper.cpp
   Source/storm/storm_net.cpp
-  Source/storm/storm_sdl_rw.cpp
   Source/storm/storm_svid.cpp
   Source/miniwin/misc_msg.cpp)
 
@@ -877,6 +880,7 @@ endif()
 target_link_libraries(libdevilutionx PUBLIC
   PKWare
   StormLib
+  libmpq
   smacker
   simpleini)
 

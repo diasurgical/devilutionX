@@ -19,7 +19,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
-#include "storm/storm.h"
+#include "storm/storm_net.hpp"
 #include "sync.h"
 #include "tmsg.h"
 #include "utils/endian.hpp"
@@ -419,7 +419,6 @@ void EventHandler(bool add)
 bool InitSingle(GameData *gameData)
 {
 	if (!SNetInitializeProvider(SELCONN_LOOPBACK, gameData)) {
-		SErrGetLastError();
 		return false;
 	}
 
