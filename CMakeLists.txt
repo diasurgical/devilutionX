@@ -648,18 +648,19 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
+set(devilutionx_langs bg cs da de es fr hr it ko_KR pl pt_BR ru sv zh_CN zh_TW)
 if(USE_GETTEXT_FROM_VCPKG)
   # vcpkg doesn't add its own tools directory to the search path
   list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
 endif()
 find_package(Gettext)
 if (Gettext_FOUND)
-  foreach(lang bg cs da de es fr hr it ko_KR pl pt_BR ru sv zh_CN zh_TW)
+  foreach(lang ${devilutionx_langs})
     GETTEXT_PROCESS_PO_FILES(${lang} ALL PO_FILES ${CMAKE_CURRENT_LIST_DIR}/Translations/${lang}.po)
     list(APPEND devilutionx_TRANSLATIONS ${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo)
 
     if(VITA)
-      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "${lang}.gmo")
+      list(APPEND VITA_TRANSLATIONS_LIST "FILE" "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo" "assets/${lang}.gmo")
     endif()
   endforeach(lang)
 
@@ -776,34 +777,51 @@ set(devilutionx_assets
   ui_art/mainmenuw.pcx
   ui_art/supportw.pcx)
 
+
+# Copy assets to the build assets subdirectory. This serves two purposes:
+# - If smpq is installed, devilutionx.mpq is built from these files.
+# - If smpq is not installed, the game will load the assets directly from this directoy.
+foreach(asset_file ${devilutionx_assets})
+  set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
+  set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${asset_file}")
+  list(APPEND DEVILUTIONX_MPQ_FILES ${asset_file})
+  list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES ${dst})
+  add_custom_command(
+    COMMENT "Copying ${asset_file}"
+    OUTPUT "${dst}"
+    DEPENDS "${src}"
+    COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
+    VERBATIM)
+endforeach()
+if (Gettext_FOUND)
+  foreach(lang ${devilutionx_langs})
+    set(src "${CMAKE_CURRENT_BINARY_DIR}/${lang}.gmo")
+    set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${lang}.gmo")
+    list(APPEND DEVILUTIONX_MPQ_FILES ${lang}.gmo)
+    list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES ${dst})
+    add_custom_command(
+      COMMENT "Copying ${lang}.gmo"
+      OUTPUT "${dst}"
+      DEPENDS "${src}"
+      COMMAND ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
+      VERBATIM)
+  endforeach()
+endif()
+
 find_program(SMPQ smpq)
 if(SMPQ)
   set(DEVILUTIONX_MPQ "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq")
-  set(devilutionx_assets_src_relative ${devilutionx_assets})
-  list(TRANSFORM devilutionx_assets_src_relative PREPEND Packaging/resources/assets/)
   add_custom_command(
     COMMENT "Building devilutionx.mpq"
     OUTPUT "${DEVILUTIONX_MPQ}"
     COMMAND ${CMAKE_COMMAND} -E remove -f "${DEVILUTIONX_MPQ}"
-    COMMAND ${SMPQ} -M 1 -C PKWARE -c "${DEVILUTIONX_MPQ}" ${devilutionx_assets}
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets"
-    DEPENDS ${devilutionx_assets_src_relative}
+    COMMAND ${SMPQ} -M 1 -C PKWARE -c "${DEVILUTIONX_MPQ}" ${DEVILUTIONX_MPQ_FILES}
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/assets"
+    DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES}
     VERBATIM)
   add_custom_target(devilutionx_mpq ALL DEPENDS "${DEVILUTIONX_MPQ}")
 else()
-  # Copy assets to the build directory so the game can load them from the build directory
-  foreach(asset_file ${devilutionx_assets})
-    set(src "${CMAKE_CURRENT_SOURCE_DIR}/Packaging/resources/assets/${asset_file}")
-    set(dst "${CMAKE_CURRENT_BINARY_DIR}/assets/${asset_file}")
-    list(APPEND DEVILUTIONX_OUTPUT_ASSETS_FILES ${dst})
-    add_custom_command(
-      COMMENT "Copying ${asset_file}"
-      OUTPUT "${dst}"
-      COMMAND ${CMAKE_COMMAND} -E copy ${src} ${dst}
-      DEPENDS "${src}"
-      VERBATIM)
-  endforeach()
-  add_custom_target(devilutionx_assets ALL DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES})
+  add_custom_target(devilutionx_copied_assets ALL DEPENDS ${DEVILUTIONX_OUTPUT_ASSETS_FILES})
 endif()
 
 target_include_directories(libdevilutionx PUBLIC
@@ -1088,7 +1106,6 @@ if(VITA)
       NAME ${VITA_APP_NAME}
       FILE Packaging/vita/sce_sys sce_sys
       FILE ${DEVILUTIONX_MPQ} devilutionx.mpq
-      ${VITA_TRANSLATIONS_LIST}
     )
   else()
     vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
@@ -1112,8 +1129,7 @@ if(NINTENDO_3DS)
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
   list(APPEND APP_ROMFS_FILES
-    ${DEVILUTIONX_MPQ}
-    ${devilutionx_TRANSLATIONS})
+    ${DEVILUTIONX_MPQ})
   set(APP_VERSION ${PROJECT_VERSION})
 
   find_program(FFMPEG ffmpeg)
