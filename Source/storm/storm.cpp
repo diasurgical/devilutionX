@@ -32,7 +32,6 @@ namespace {
 
 bool directFileAccess = false;
 std::optional<std::string> SBasePath;
-std::optional<std::string> AssetsPath;
 
 SdlMutex Mutex;
 
@@ -126,22 +125,6 @@ bool SFileOpenFile(const char *filename, HANDLE *phFile)
 		result = SFileOpenFileEx((HANDLE)diabdat_mpq, filename, SFILE_OPEN_FROM_MPQ, phFile);
 	}
 
-	// As last fallback always search app content folder
-	if (!result && AssetsPath) {
-		std::string path = *AssetsPath + filename;
-		for (std::size_t i = AssetsPath->size(); i < path.size(); ++i)
-			path[i] = AsciiToLowerTable_Path[static_cast<unsigned char>(path[i])];
-		result = SFileOpenFileEx((HANDLE) nullptr, path.c_str(), SFILE_OPEN_LOCAL_FILE, phFile);
-	}
-
-	if (!result || (*phFile == nullptr)) {
-		const auto error = SErrGetLastError();
-		if (error == STORM_ERROR_FILE_NOT_FOUND) {
-			LogVerbose("{}(\"{}\") File not found", __FUNCTION__, filename);
-		} else {
-			LogError("{}(\"{}\") Failed with error code {}", __FUNCTION__, filename, error);
-		}
-	}
 	return result;
 }
 
@@ -158,11 +141,6 @@ void SErrSetLastError(uint32_t dwErrCode)
 void SFileSetBasePath(string_view path)
 {
 	SBasePath.emplace(path);
-}
-
-void SFileSetAssetsPath(string_view path)
-{
-	AssetsPath.emplace(path);
 }
 
 bool SFileEnableDirectAccess(bool enable)

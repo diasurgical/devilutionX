@@ -1,11 +1,13 @@
 #include "storm/storm_sdl_rw.h"
 
+#include <algorithm>
 #include <cstdint>
 #include <cstring>
 
 #include "engine.h"
 #include "storm/storm.h"
 #include "utils/log.hpp"
+#include "utils/paths.h"
 
 namespace devilution {
 
@@ -106,14 +108,24 @@ SDL_RWops *SFileOpenRw(const char *filename)
 	if (SFileOpenFile(filename, &handle))
 		return SFileRw_FromStormHandle(handle);
 
-#ifdef __ANDROID__
 	std::string relativePath = filename;
-	for (std::size_t i = 0; i < relativePath.size(); ++i) {
-		if (relativePath[i] == '\\')
-			relativePath[i] = '/';
+#ifndef _WIN32
+	std::replace(relativePath.begin(), relativePath.end(), '\\', '/');
+#endif
+
+	SDL_RWops *rwops;
+	if (relativePath[0] == '/') {
+		return SDL_RWFromFile(relativePath.c_str(), "rb");
 	}
-	SDL_RWops *rwops = SDL_RWFromFile(relativePath.c_str(), "rb");
-	if (rwops != nullptr)
+
+	const std::string path = paths::AssetsPath() + relativePath;
+	if ((rwops = SDL_RWFromFile(path.c_str(), "rb")) != nullptr)
+		return rwops;
+
+#ifdef __ANDROID__
+	// On Android, fall back to the APK's assets.
+	// This is handled by SDL when we pass a relative path.
+	if (!paths::AssetsPath().empty() && (rwops = SDL_RWFromFile(relativePath.c_str(), "rb")))
 		return rwops;
 #endif
 

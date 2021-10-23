@@ -21,6 +21,7 @@ std::optional<std::string> appPath;
 std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
+std::optional<std::string> assetsPath;
 
 void AddTrailingSlash(std::string &path)
 {
@@ -84,6 +85,13 @@ const std::string &ConfigPath()
 	return *configPath;
 }
 
+const std::string &AssetsPath()
+{
+	if (!assetsPath)
+		assetsPath.emplace(AppPath() + "assets/");
+	return *assetsPath;
+}
+
 void SetBasePath(const std::string &path)
 {
 	basePath = path;
@@ -100,6 +108,11 @@ void SetConfigPath(const std::string &path)
 {
 	configPath = path;
 	AddTrailingSlash(*configPath);
+}
+
+void SetMpqDir(const std::string &path)
+{
+	mpqDir = std::string(path);
 }
 
 } // namespace paths

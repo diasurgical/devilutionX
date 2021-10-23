@@ -250,7 +250,6 @@ void SErrSetLastError(uint32_t dwErrCode);
 void SStrCopy(char *dest, const char *src, int max_length);
 
 void SFileSetBasePath(string_view path);
-void SFileSetAssetsPath(string_view path);
 bool SNetGetOwnerTurnsWaiting(uint32_t *);
 bool SNetUnregisterEventHandler(event_type);
 bool SNetRegisterEventHandler(event_type, SEVTHANDLER);
