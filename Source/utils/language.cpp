@@ -266,9 +266,16 @@ bool HasTranslation(const std::string &locale)
 
 void LanguageInitialize()
 {
-	std::string filename = sgOptions.Language.szCode;
-	filename.append(".gmo");
-	SDL_RWops *rw = SFileOpenRw(filename.c_str());
+	const std::string lang = sgOptions.Language.szCode;
+	SDL_RWops *rw;
+
+	// Translations normally come in ".gmo" files.
+	// We also support ".mo" because that is what poedit generates
+	// and what translators use to test their work.
+	for (const char *ext : { ".mo", ".gmo" }) {
+		if ((rw = SFileOpenRw((lang + ext).c_str())) != nullptr)
+			break;
+	}
 	if (rw == nullptr)
 		return;
 
