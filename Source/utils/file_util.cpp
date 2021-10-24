@@ -54,7 +54,7 @@ bool FileExists(const char *path)
 		return false;
 	}
 	if (!::PathFileExistsW(&pathUtf16[0])) {
-		if (::GetLastError() == ERROR_FILE_NOT_FOUND) {
+		if (::GetLastError() == ERROR_FILE_NOT_FOUND || ::GetLastError() == ERROR_PATH_NOT_FOUND) {
 			::SetLastError(ERROR_SUCCESS);
 		} else {
 			LogError("PathFileExistsW: error code {}", ::GetLastError());
