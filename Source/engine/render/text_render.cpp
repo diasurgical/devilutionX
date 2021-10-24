@@ -202,12 +202,12 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 	textBuffer.resize(textBuffer.size() + 3);
 	const char *textData = textBuffer.data();
 
-	size_t i = 0;
+	uint32_t codepoints = 0;
 	uint32_t currentUnicodeRow = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
 	char32_t next;
 	int error;
-	for (; *textData != '\0'; i++) {
+	while (*textData != '\0') {
 		textData = utf8_decode(textData, &next, &error);
 		if (error)
 			break;
@@ -221,17 +221,13 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 		uint32_t unicodeRow = next >> 8;
 		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
-			if (kerning == nullptr) {
-				continue;
-			}
 			currentUnicodeRow = unicodeRow;
 		}
 		lineWidth += (*kerning)[frame] + spacing;
-		i++;
+		codepoints++;
 	}
-
 	if (charactersInLine != nullptr)
-		*charactersInLine = i;
+		*charactersInLine = codepoints;
 
 	return lineWidth != 0 ? (lineWidth - spacing) : 0;
 }
@@ -285,9 +281,6 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		uint32_t unicodeRow = next >> 8;
 		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
-			if (kerning == nullptr) {
-				continue;
-			}
 			currentUnicodeRow = unicodeRow;
 		}
 		lineWidth += (*kerning)[frame] + spacing;
