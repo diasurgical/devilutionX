@@ -511,7 +511,7 @@ struct ChatOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Quick chat messages. */
-	char szHotKeyMsgs[QUICK_MESSAGE_OPTIONS][MAX_SEND_STR_LEN];
+	std::vector<std::string> szHotKeyMsgs[QUICK_MESSAGE_OPTIONS];
 };
 
 struct LanguageOptions : OptionCategoryBase {
