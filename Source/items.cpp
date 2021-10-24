@@ -4219,9 +4219,9 @@ void PrintItemDur(Item *x)
 	PrintItemInfo(*x);
 }
 
-void UseItem(int p, item_misc_id mid, spell_id spl)
+void UseItem(int pnum, item_misc_id mid, spell_id spl)
 {
-	auto &player = Players[p];
+	auto &player = Players[pnum];
 
 	switch (mid) {
 	case IMISC_HEAL:
@@ -4262,10 +4262,10 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_ELIXSTR:
-		ModifyPlrStr(p, 1);
+		ModifyPlrStr(pnum, 1);
 		break;
 	case IMISC_ELIXMAG:
-		ModifyPlrMag(p, 1);
+		ModifyPlrMag(pnum, 1);
 		if (gbIsHellfire) {
 			player._pMana = player._pMaxMana;
 			player._pManaBase = player._pMaxManaBase;
@@ -4273,10 +4273,10 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		}
 		break;
 	case IMISC_ELIXDEX:
-		ModifyPlrDex(p, 1);
+		ModifyPlrDex(pnum, 1);
 		break;
 	case IMISC_ELIXVIT:
-		ModifyPlrVit(p, 1);
+		ModifyPlrVit(pnum, 1);
 		if (gbIsHellfire) {
 			player._pHitPoints = player._pMaxHP;
 			player._pHPBase = player._pMaxHPBase;
@@ -4318,7 +4318,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_SCROLL:
 		if (spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (p == MyPlayerId)
+			if (pnum == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -4328,14 +4328,14 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player.destAction = ACTION_SPELL;
 			player.destParam1 = cursPosition.x;
 			player.destParam2 = cursPosition.y;
-			if (p == MyPlayerId && spl == SPL_NOVA)
-				NetSendCmdLoc(MyPlayerId, true, CMD_NOVA, cursPosition);
+			if (pnum == MyPlayerId && spl == SPL_NOVA)
+				NetSendCmdLoc(pnum, true, CMD_NOVA, cursPosition);
 		}
 		break;
 	case IMISC_SCROLLT:
 		if (spelldata[spl].sTargeted) {
 			player._pTSpell = spl;
-			if (p == MyPlayerId)
+			if (pnum == MyPlayerId)
 				NewCursor(CURSOR_TELEPORT);
 		} else {
 			ClrPlrPath(player);
@@ -4357,7 +4357,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 			player._pManaBase += spelldata[spl].sManaCost << 6;
 			player._pManaBase = std::min(player._pManaBase, player._pMaxManaBase);
 		}
-		if (p == MyPlayerId)
+		if (pnum == MyPlayerId)
 			CalcPlrBookVals(player);
 		drawmanaflag = true;
 		break;
@@ -4375,7 +4375,7 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 	case IMISC_OILHARD:
 	case IMISC_OILIMP:
 		player._pOilType = mid;
-		if (p != MyPlayerId) {
+		if (pnum != MyPlayerId) {
 			return;
 		}
 		if (sbookflag) {
@@ -4387,34 +4387,34 @@ void UseItem(int p, item_misc_id mid, spell_id spl)
 		NewCursor(CURSOR_OIL);
 		break;
 	case IMISC_SPECELIX:
-		ModifyPlrStr(p, 3);
-		ModifyPlrMag(p, 3);
-		ModifyPlrDex(p, 3);
-		ModifyPlrVit(p, 3);
+		ModifyPlrStr(pnum, 3);
+		ModifyPlrMag(pnum, 3);
+		ModifyPlrDex(pnum, 3);
+		ModifyPlrVit(pnum, 3);
 		break;
 	case IMISC_RUNEF:
 		player._pTSpell = SPL_RUNEFIRE;
-		if (p == MyPlayerId)
+		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNEL:
 		player._pTSpell = SPL_RUNELIGHT;
-		if (p == MyPlayerId)
+		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEL:
 		player._pTSpell = SPL_RUNENOVA;
-		if (p == MyPlayerId)
+		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_GR_RUNEF:
 		player._pTSpell = SPL_RUNEIMMOLAT;
-		if (p == MyPlayerId)
+		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	case IMISC_RUNES:
 		player._pTSpell = SPL_RUNESTONE;
-		if (p == MyPlayerId)
+		if (pnum == MyPlayerId)
 			NewCursor(CURSOR_TELEPORT);
 		break;
 	default:

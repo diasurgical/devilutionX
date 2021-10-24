@@ -682,7 +682,7 @@ void InitLevelChange(int pnum)
 	RemovePlrFromMap(pnum);
 	SetPlayerOld(player);
 	if (pnum == MyPlayerId) {
-		dPlayer[myPlayer.position.tile.x][myPlayer.position.tile.y] = MyPlayerId + 1;
+		dPlayer[player.position.tile.x][player.position.tile.y] = pnum + 1;
 	} else {
 		player._pLvlVisited[player.plrlevel] = true;
 	}
@@ -1759,7 +1759,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND && !item->_iRequest) {
-					NetSendCmdGItem(true, CMD_REQUESTGITEM, MyPlayerId, MyPlayerId, targetId);
+					NetSendCmdGItem(true, CMD_REQUESTGITEM, pnum, pnum, targetId);
 					item->_iRequest = true;
 				}
 			}
@@ -1769,7 +1769,7 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 				x = abs(player.position.tile.x - item->position.x);
 				y = abs(player.position.tile.y - item->position.y);
 				if (x <= 1 && y <= 1 && pcurs == CURSOR_HAND) {
-					NetSendCmdGItem(true, CMD_REQUESTAGITEM, MyPlayerId, MyPlayerId, targetId);
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, targetId);
 				}
 			}
 			break;
@@ -2742,7 +2742,7 @@ void InitPlayer(Player &player, bool firstTime)
 
 		if (&player == &myPlayer) {
 			player._plid = AddLight(player.position.tile, player._pLightRad);
-			ChangeLightXY(myPlayer._plid, myPlayer.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
+			ChangeLightXY(player._plid, player.position.tile); // fix for a bug where old light is still visible at the entrance after reentering level
 		} else {
 			player._plid = NO_LIGHT;
 		}
