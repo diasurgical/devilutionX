@@ -3184,10 +3184,7 @@ void CreatePlrItems(int playerId)
 
 bool ItemSpaceOk(Point position)
 {
-	int oi;
-
-	// BUGFIX: Check `i + 1 >= MAXDUNX` and `j + 1 >= MAXDUNY` (applied)
-	if (position.x < 0 || position.x + 1 >= MAXDUNX || position.y < 0 || position.y + 1 >= MAXDUNY)
+	if (!InDungeonBounds(position))
 		return false;
 
 	if (dMonster[position.x][position.y] != 0)
@@ -3200,7 +3197,7 @@ bool ItemSpaceOk(Point position)
 		return false;
 
 	if (dObject[position.x][position.y] != 0) {
-		oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
+		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
 		if (Objects[oi]._oSolidFlag)
 			return false;
 	}

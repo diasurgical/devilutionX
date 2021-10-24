@@ -253,8 +253,7 @@ bool CanPlaceMonster(int xp, int yp)
 {
 	char f;
 
-	if (xp < 0 || xp >= MAXDUNX
-	    || yp < 0 || yp >= MAXDUNY
+	if (!InDungeonBounds({ xp, yp })
 	    || dMonster[xp][yp] != 0
 	    || dPlayer[xp][yp] != 0) {
 		return false;
@@ -2479,8 +2478,8 @@ void ScavengerAi(int i)
 				if (GenerateRnd(2) != 0) {
 					for (y = -4; y <= 4 && !done; y++) {
 						for (x = -4; x <= 4 && !done; x++) {
-							// BUGFIX: incorrect check of offset against limits of the dungeon
-							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
+							// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
+							if (!InDungeonBounds(monster.position.tile + Displacement { x, y }))
 								continue;
 							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
 							    && IsLineNotSolid(
@@ -2493,8 +2492,8 @@ void ScavengerAi(int i)
 				} else {
 					for (y = 4; y >= -4 && !done; y--) {
 						for (x = 4; x >= -4 && !done; x--) {
-							// BUGFIX: incorrect check of offset against limits of the dungeon
-							if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
+							// BUGFIX: incorrect check of offset against limits of the dungeon (fixed)
+							if (!InDungeonBounds(monster.position.tile + Displacement { x, y }))
 								continue;
 							done = dCorpse[monster.position.tile.x + x][monster.position.tile.y + y] != 0
 							    && IsLineNotSolid(
@@ -4404,7 +4403,7 @@ bool DirOK(int i, Direction mdir)
 	auto &monster = Monsters[i];
 	Point position = monster.position.tile;
 	Point futurePosition = position + mdir;
-	if (futurePosition.y < 0 || futurePosition.y >= MAXDUNY || futurePosition.x < 0 || futurePosition.x >= MAXDUNX || !IsTileAvailable(monster, futurePosition))
+	if (!InDungeonBounds(futurePosition) || !IsTileAvailable(monster, futurePosition))
 		return false;
 	if (mdir == Direction::East) {
 		if (IsTileSolid(position + Direction::SouthEast))
@@ -4426,7 +4425,7 @@ bool DirOK(int i, Direction mdir)
 	int mcount = 0;
 	for (int x = futurePosition.x - 3; x <= futurePosition.x + 3; x++) {
 		for (int y = futurePosition.y - 3; y <= futurePosition.y + 3; y++) {
-			if (y < 0 || y >= MAXDUNY || x < 0 || x >= MAXDUNX)
+			if (!InDungeonBounds({ x, y }))
 				continue;
 			int mi = dMonster[x][y];
 			if (mi == 0)

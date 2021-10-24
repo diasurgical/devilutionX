@@ -648,7 +648,7 @@ void DoUnVision(Point position, int nRadius)
 void DoVision(Point position, int nRadius, bool doautomap, bool visible)
 {
 
-	if (position.x >= 0 && position.x <= MAXDUNX && position.y >= 0 && position.y <= MAXDUNY) {
+	if (InDungeonBounds(position)) {
 		if (doautomap) {
 			if (dFlags[position.x][position.y] != 0) {
 				SetAutomapView(position);

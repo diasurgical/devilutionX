@@ -95,9 +95,7 @@ std::unordered_multimap<Point, Missile *, PointHash> MissilesAtRenderingTile;
  */
 bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 {
-	if (tile.x >= MAXDUNX || tile.x < 0)
-		return true;
-	if (tile.y >= MAXDUNY || tile.y < 0)
+	if (!InDungeonBounds(tile))
 		return true;
 	if (checkPlayerAndMonster) {
 		if (dMonster[tile.x][tile.y] > 0)
@@ -931,7 +929,7 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 {
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
-			if (tilePosition.x >= 0 && tilePosition.x < MAXDUNX && tilePosition.y >= 0 && tilePosition.y < MAXDUNY) {
+			if (InDungeonBounds(tilePosition)) {
 				level_piece_id = dPiece[tilePosition.x][tilePosition.y];
 				if (level_piece_id != 0) {
 					if (!nSolidTable[level_piece_id])

@@ -18,7 +18,7 @@ namespace {
 
 void RepeatWalk(Player &player)
 {
-	if (cursPosition.x < 0 || cursPosition.x >= MAXDUNX - 1 || cursPosition.y < 0 || cursPosition.y >= MAXDUNY - 1)
+	if (!InDungeonBounds(cursPosition))
 		return;
 
 	if (player._pmode != PM_STAND && !(player.IsWalking() && player.AnimInfo.GetFrameToUseForRendering() > 6))
