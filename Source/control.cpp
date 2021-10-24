@@ -1237,12 +1237,16 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 
 	assert(dwMsg < QUICK_MESSAGE_OPTIONS);
 
-#ifdef _DEBUG
-	if (CheckDebugTextCommand(sgOptions.Chat.szHotKeyMsgs[dwMsg]))
-		return;
-#endif
+	for (auto &msg : sgOptions.Chat.szHotKeyMsgs[dwMsg]) {
 
-	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+#ifdef _DEBUG
+		if (CheckDebugTextCommand(msg))
+			continue;
+#endif
+		char charMsg[MAX_SEND_STR_LEN];
+		CopyUtf8(charMsg, msg, sizeof(charMsg));
+		NetSendCmdString(0xFFFFFF, charMsg);
+	}
 }
 
 void CloseGoldDrop()

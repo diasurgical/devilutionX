@@ -929,10 +929,11 @@ void DiabloInit()
 	SetApplicationVersions();
 
 	for (size_t i = 0; i < QUICK_MESSAGE_OPTIONS; i++) {
-		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
+		auto &messages = sgOptions.Chat.szHotKeyMsgs[i];
+		if (messages.size() > 0) {
 			continue;
 		}
-		CopyUtf8(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
+		messages.emplace_back(_(QuickMessages[i].message));
 	}
 
 #ifdef VIRTUAL_GAMEPAD
