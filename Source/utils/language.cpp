@@ -256,12 +256,15 @@ const std::string &LanguageTranslate(const char *key)
 
 bool HasTranslation(const std::string &locale)
 {
-	std::string moPath = paths::LangPath() + locale + ".mo";
-	if (FileExists(moPath.c_str()))
-		return true;
+	for (const char *ext : { ".mo", ".gmo" }) {
+		SDL_RWops *rw = SFileOpenRw((locale + ext).c_str());
+		if (rw != nullptr) {
+			SDL_RWclose(rw);
+			return true;
+		}
+	}
 
-	std::string gmoPath = paths::LangPath() + locale + ".gmo";
-	return FileExists(gmoPath.c_str());
+	return false;
 }
 
 void LanguageInitialize()
