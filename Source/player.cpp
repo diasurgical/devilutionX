@@ -3369,7 +3369,7 @@ void ClrPlrPath(Player &player)
  */
 bool PosOkPlayer(const Player &player, Point position)
 {
-	if (position.x < 0 || position.x >= MAXDUNX || position.y < 0 || position.y >= MAXDUNY)
+	if (!InDungeonBounds(position))
 		return false;
 	if (dPiece[position.x][position.y] == 0)
 		return false;

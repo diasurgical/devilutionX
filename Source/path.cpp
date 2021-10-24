@@ -285,7 +285,7 @@ bool GetPath(const std::function<bool(Point)> &posOk, PATHNODE *pPath, Point des
 
 bool IsTileNotSolid(Point position)
 {
-	if (position.x < 0 || position.y < 0 || position.x >= MAXDUNX || position.y >= MAXDUNY) {
+	if (!InDungeonBounds(position)) {
 		return false;
 	}
 
@@ -294,7 +294,7 @@ bool IsTileNotSolid(Point position)
 
 bool IsTileSolid(Point position)
 {
-	if (position.x < 0 || position.y < 0 || position.x >= MAXDUNX || position.y >= MAXDUNY) {
+	if (!InDungeonBounds(position)) {
 		return false;
 	}
 
