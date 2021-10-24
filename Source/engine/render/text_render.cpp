@@ -209,10 +209,10 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 	int error;
 	for (; *textData != '\0'; i++) {
 		textData = utf8_decode(textData, &next, &error);
+		if (error)
+			break;
 		if (next == ZWSP)
 			continue;
-		if (error)
-			next = '?';
 
 		if (next == '\n')
 			break;
@@ -271,7 +271,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 	while (*cur != '\0') {
 		cur = utf8_decode(cur, &next, &error);
 		if (error != 0)
-			next = U'?';
+			break;
 
 		if (next == U'\n') { // Existing line break, scan next line
 			lastBreakablePos = -1;
@@ -378,10 +378,10 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	int error;
 	for (; *textData != '\0'; previousPosition = textData) {
 		textData = utf8_decode(textData, &next, &error);
+		if (error)
+			break;
 		if (next == ZWSP)
 			continue;
-		if (error)
-			next = '?';
 
 		uint32_t unicodeRow = next >> 8;
 		if (unicodeRow != currentUnicodeRow || font == nullptr) {
