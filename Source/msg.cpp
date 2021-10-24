@@ -1477,8 +1477,8 @@ DWORD OnPlayerDamage(const TCmd *pCmd, Player &player)
 	const auto &message = *reinterpret_cast<const TCmdDamage *>(pCmd);
 
 	if (message.bPlr == MyPlayerId && currlevel != 0 && gbBufferMsgs != 1) {
-		if (currlevel == player.plrlevel && message.dwDam <= 192000 && Players[MyPlayerId]._pHitPoints >> 6 > 0) {
-			ApplyPlrDamage(MyPlayerId, 0, 0, message.dwDam, 1);
+		if (currlevel == player.plrlevel && message.dwDam <= 192000 && Players[message.bPlr]._pHitPoints >> 6 > 0) {
+			ApplyPlrDamage(message.bPlr, 0, 0, message.dwDam, 1);
 		}
 	}
 

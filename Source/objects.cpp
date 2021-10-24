@@ -2406,7 +2406,7 @@ void OperateMushPatch(int pnum, int i)
 
 	if (Quests[Q_MUSHROOM]._qactive != QUEST_ACTIVE) {
 		if (!deltaload && pnum == MyPlayerId) {
-			Players[MyPlayerId].Say(HeroSpeech::ICantUseThisYet);
+			Players[pnum].Say(HeroSpeech::ICantUseThisYet);
 		}
 		return;
 	}
@@ -2432,7 +2432,7 @@ void OperateInnSignChest(int pnum, int i)
 
 	if (Quests[Q_LTBANNER]._qvar1 != 2) {
 		if (!deltaload && pnum == MyPlayerId) {
-			Players[MyPlayerId].Say(HeroSpeech::ICantOpenThisYet);
+			Players[pnum].Say(HeroSpeech::ICantOpenThisYet);
 		}
 		return;
 	}
