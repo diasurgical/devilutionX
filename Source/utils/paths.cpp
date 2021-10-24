@@ -11,10 +11,6 @@
 #include "utils/sdl2_to_1_2_backports.h"
 #endif
 
-#ifndef MO_LANG_DIR
-#define MO_LANG_DIR ""
-#endif
-
 namespace devilution {
 
 namespace paths {
@@ -25,7 +21,6 @@ std::optional<std::string> appPath;
 std::optional<std::string> basePath;
 std::optional<std::string> prefPath;
 std::optional<std::string> configPath;
-std::optional<std::string> langPath;
 
 void AddTrailingSlash(std::string &path)
 {
@@ -89,13 +84,6 @@ const std::string &ConfigPath()
 	return *configPath;
 }
 
-const std::string &LangPath()
-{
-	if (!langPath)
-		langPath.emplace(MO_LANG_DIR);
-	return *langPath;
-}
-
 void SetBasePath(const std::string &path)
 {
 	basePath = path;
@@ -112,12 +100,6 @@ void SetConfigPath(const std::string &path)
 {
 	configPath = path;
 	AddTrailingSlash(*configPath);
-}
-
-void SetLangPath(const std::string &path)
-{
-	langPath = path;
-	AddTrailingSlash(*langPath);
 }
 
 } // namespace paths

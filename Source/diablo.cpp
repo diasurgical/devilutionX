@@ -832,8 +832,6 @@ void DiabloParseFlags(int argc, char **argv)
 			recordNumber = SDL_atoi(argv[++i]);
 		} else if (strcasecmp("--config-dir", argv[i]) == 0) {
 			paths::SetConfigPath(argv[++i]);
-		} else if (strcasecmp("--lang-dir", argv[i]) == 0) {
-			paths::SetLangPath(argv[++i]);
 		} else if (strcasecmp("-n", argv[i]) == 0) {
 			gbShowIntro = false;
 		} else if (strcasecmp("-f", argv[i]) == 0) {
