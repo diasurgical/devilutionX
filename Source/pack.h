@@ -84,7 +84,7 @@ bool UnPackPlayer(const PlayerPack *pPack, Player &player, bool netSync);
 void PackItem(ItemPack *id, const Item *is);
 
 /**
- * Expand a ItemPack in to a Item
+ * Expand an ItemPack into an Item
  *
  * Note: last slot of item[MAXITEMS+1] used as temporary buffer
  * find real name reference below, possibly [sizeof(item[])/sizeof(Item)]

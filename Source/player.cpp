@@ -44,9 +44,9 @@ int deathdelay;
 int plrxoff[9] = { 0, 2, 0, 2, 1, 0, 1, 2, 1 };
 /** Specifies the Y-coordinate delta from the player start location in Tristram. */
 int plryoff[9] = { 0, 2, 2, 0, 1, 1, 0, 1, 2 };
-/** Specifies the X-coordinate delta from a player, used for instanced when casting resurrect. */
+/** Specifies the X-coordinate delta from a player, used for instance when casting resurrect. */
 int plrxoff2[9] = { 0, 1, 0, 1, 2, 0, 1, 2, 2 };
-/** Specifies the Y-coordinate delta from a player, used for instanced when casting resurrect. */
+/** Specifies the Y-coordinate delta from a player, used for instance when casting resurrect. */
 int plryoff2[9] = { 0, 0, 1, 1, 0, 2, 2, 1, 2 };
 
 /** Maps from player_class to starting stat in strength. */
