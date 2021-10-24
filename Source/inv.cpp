@@ -470,6 +470,9 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	if (!done)
 		return;
 
+	if (player._pmode > PM_WALK3 && IsNoneOf(il, ILOC_UNEQUIPABLE, ILOC_BELT))
+		return;
+
 	if (pnum == MyPlayerId)
 		PlaySFX(ItemInvSnds[ItemCAnimTbl[player.HoldItem._iCurs]]);
 
