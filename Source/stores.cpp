@@ -51,7 +51,7 @@ namespace {
 /** The current towner being interacted with */
 _talker_id talker;
 
-/** Is the curren dialog full size */
+/** Is the current dialog full size */
 bool stextsize;
 
 /** Number of text lines in the current dialog */
@@ -1322,7 +1322,7 @@ void SmithBuyItem()
 	CalcPlrInv(myPlayer, true);
 }
 
-void SmitBuyEnter()
+void SmithBuyEnter()
 {
 	if (stextsel == 22) {
 		StartStore(STORE_SMITH);
@@ -1382,7 +1382,7 @@ void SmithBuyPItem()
 	SpawnPremium(MyPlayerId);
 }
 
-void SmitPremiumBuyEnter()
+void SmithPremiumBuyEnter()
 {
 	if (stextsel == 22) {
 		StartStore(STORE_SMITH);
@@ -1527,7 +1527,7 @@ void StoreSellItem()
 	}
 }
 
-void SmitSellEnter()
+void SmithSellEnter()
 {
 	if (stextsel == 22) {
 		StartStore(STORE_SMITH);
@@ -1576,7 +1576,7 @@ void SmithRepairItem()
 	myPlayer.InvList[i]._iDurability = myPlayer.InvList[i]._iMaxDur;
 }
 
-void SmitRepairEnter()
+void SmithRepairEnter()
 {
 	if (stextsel == 22) {
 		StartStore(STORE_SMITH);
@@ -2669,16 +2669,16 @@ void StoreEnter()
 		SmithEnter();
 		break;
 	case STORE_SPBUY:
-		SmitPremiumBuyEnter();
+		SmithPremiumBuyEnter();
 		break;
 	case STORE_SBUY:
-		SmitBuyEnter();
+		SmithBuyEnter();
 		break;
 	case STORE_SSELL:
-		SmitSellEnter();
+		SmithSellEnter();
 		break;
 	case STORE_SREPAIR:
-		SmitRepairEnter();
+		SmithRepairEnter();
 		break;
 	case STORE_WITCH:
 		WitchEnter();
