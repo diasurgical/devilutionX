@@ -789,18 +789,21 @@ msgstr ""
 #: Source/appfat.cpp:115
 #, fuzzy
 #| msgid ""
-#| "Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+#| "Unable to open main data archive ({:s}).\n"
 #| "\n"
 #| "Make sure that it is in the game folder and that the file name is in all "
 #| "lowercase."
 msgid ""
-"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"無法打開主數據存檔（diabdat.mpq或spawn.mpq）。\n"
+"無法打開主數據存檔（{:s}）。\n"
 "\n"
 "確保它在遊戲資料夾中，並且檔名都是小寫的。"
+
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq或spawn.mpq"
 
 #: Source/appfat.cpp:119
 msgid "Data File Error"

@@ -104,7 +104,7 @@ void ErrDlg(const char *title, const char *error, const char *logFilePath, int l
 	app_fatal(nullptr);
 }
 
-void InsertCDDlg()
+void InsertCDDlg(const char *archiveName)
 {
 	char text[1024];
 
@@ -112,9 +112,12 @@ void InsertCDDlg()
 	    text,
 	    sizeof(text),
 	    "%s",
-	    _("Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
-	      "\n"
-	      "Make sure that it is in the game folder."));
+	    fmt::format(
+	        _("Unable to open main data archive ({:s}).\n"
+	          "\n"
+	          "Make sure that it is in the game folder."),
+	        archiveName)
+	        .c_str());
 
 	UiErrorOkDialog(_("Data File Error"), text);
 	app_fatal(nullptr);

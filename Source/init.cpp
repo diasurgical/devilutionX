@@ -46,6 +46,8 @@ bool gbIsSpawn;
 bool gbIsHellfire;
 /** Indicate if we want vanilla savefiles */
 bool gbVanilla;
+/** Whether the Hellfire mode is required (forced). */
+bool forceHellfire;
 HANDLE hfmonk_mpq;
 HANDLE hfbard_mpq;
 HANDLE hfbarb_mpq;
@@ -199,12 +201,15 @@ void init_archives()
 	}
 	SDL_RWops *handle = SFileOpenRw("ui_art\\title.pcx");
 	if (handle == nullptr)
-		InsertCDDlg();
+		InsertCDDlg(_("diabdat.mpq or spawn.mpq"));
 	SDL_RWclose(handle);
 
 	hellfire_mpq = LoadMPQ(paths, "hellfire.mpq");
 	if (hellfire_mpq != nullptr)
 		gbIsHellfire = true;
+	if (forceHellfire && hellfire_mpq == nullptr)
+		InsertCDDlg("hellfire.mpq");
+
 	hfmonk_mpq = LoadMPQ(paths, "hfmonk.mpq");
 	hfbard_mpq = LoadMPQ(paths, "hfbard.mpq");
 	if (hfbard_mpq != nullptr)

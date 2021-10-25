@@ -792,13 +792,16 @@ msgstr "오류 발생: {:s} 줄 {:d}"
 
 #: Source/appfat.cpp:115
 msgid ""
-"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"메인 데이터 아카이브(diabdat.mpq 또는 spawn.mpq)\n"
+"메인 데이터 아카이브({:s})\n"
 "\n"
 "게임 폴더 안에 있는지 확인해 주십시오."
+
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq 또는 spawn.mpq"
 
 #: Source/appfat.cpp:119
 msgid "Data File Error"

@@ -17,6 +17,7 @@ extern HANDLE diabdat_mpq;
 extern bool gbIsSpawn;
 extern bool gbIsHellfire;
 extern bool gbVanilla;
+extern bool forceHellfire;
 extern HANDLE hfmonk_mpq;
 extern HANDLE hfbard_mpq;
 extern HANDLE hfbarb_mpq;
