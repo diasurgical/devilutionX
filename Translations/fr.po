@@ -66,7 +66,7 @@ msgstr "Illustration"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr ""
+msgstr "Illustration Technique"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
@@ -78,7 +78,7 @@ msgstr "Artwork 3D Cinématique"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr ""
+msgstr "Illustration Technique Cinématographique"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
@@ -172,7 +172,7 @@ msgstr "Ventes"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
-msgstr ""
+msgstr "Dunsel"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
@@ -2749,7 +2749,7 @@ msgstr "Foudre"
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"
-msgstr ""
+msgstr "de Jester"
 
 #: Source/itemdat.cpp:276
 msgid "Crystalline"
@@ -2758,7 +2758,7 @@ msgstr "Cristalline"
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:278
 msgid "Doppelganger's"
-msgstr ""
+msgstr "de Doppelganger"
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
@@ -2767,11 +2767,11 @@ msgstr "qualité"
 
 #: Source/itemdat.cpp:289
 msgid "maiming"
-msgstr ""
+msgstr "mutilant"
 
 #: Source/itemdat.cpp:290
 msgid "slaying"
-msgstr ""
+msgstr "occiseur"
 
 #: Source/itemdat.cpp:291
 msgid "gore"
@@ -4142,11 +4142,11 @@ msgstr "faible dur, {:+d}% de dégât"
 
 #: Source/items.cpp:4090
 msgid "extra AC vs demons"
-msgstr ""
+msgstr "extra CA vs démons"
 
 #: Source/items.cpp:4093
 msgid "extra AC vs undead"
-msgstr ""
+msgstr "extra CA vs Morts-Vivants"
 
 #: Source/items.cpp:4096
 #, no-c-format
@@ -4160,7 +4160,7 @@ msgstr "40% de santé transféré au Mana"
 
 #: Source/items.cpp:4102
 msgid "Another ability (NW)"
-msgstr ""
+msgstr "Une autre Capacité (NW)"
 
 #: Source/items.cpp:4139 Source/items.cpp:4186
 msgid "damage: {:d}  Indestructible"
@@ -5423,7 +5423,7 @@ msgstr "Quelques Immunités Magiques"
 
 #: Source/msg.cpp:497
 msgid "Trying to drop a floor item?"
-msgstr ""
+msgstr "Vous essayez de déposer un objet au sol ?"
 
 #: Source/msg.cpp:950 Source/msg.cpp:985 Source/msg.cpp:1018
 #: Source/msg.cpp:1145 Source/msg.cpp:1177 Source/msg.cpp:1209
@@ -6093,7 +6093,7 @@ msgstr "Pierre Angulaire du Monde"
 #. TRANSLATORS: Quest Name Block end
 #: Source/quests.cpp:64
 msgid "The Jersey's Jersey"
-msgstr ""
+msgstr "Le Jersey du Jersey"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:90
