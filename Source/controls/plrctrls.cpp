@@ -31,6 +31,8 @@ bool sgbControllerActive = false;
 Point speedspellscoords[50];
 int speedspellcount = 0;
 int pcurstrig = -1;
+int pcursmissile = -1;
+quest_id pcursquest = Q_INVALID;
 
 /**
  * Native game menu, controlled by simulating a keyboard.
@@ -373,9 +375,6 @@ void FindActor()
 	if (gbIsMultiplayer)
 		CheckPlayerNearby();
 }
-
-int pcursmissile;
-quest_id pcursquest;
 
 void FindTrigger()
 {
