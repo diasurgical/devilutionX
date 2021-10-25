@@ -283,11 +283,11 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	switch (explorationType) {
 	case MAP_EXP_SHRINE:
 		colorDim = PAL16_GRAY + 11;
-		colorBright = PAL16_GRAY + 9;
+		colorBright = PAL16_GRAY + 3;
 		break;
 	case MAP_EXP_OTHERS:
-		colorDim = PAL16_YELLOW + 11;
-		colorBright = PAL16_YELLOW + 9;
+		colorDim = PAL16_BEIGE + 10;
+		colorBright = PAL16_BEIGE + 2;
 		break;
 	case MAP_EXP_SELF:
 	case MAP_EXP_NONE:

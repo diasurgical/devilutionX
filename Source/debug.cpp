@@ -346,8 +346,7 @@ std::string DebugCmdMapHide(const string_view parameter)
 {
 	for (int x = 0; x < DMAXX; x++)
 		for (int y = 0; y < DMAXY; y++)
-			if (AutomapView[x][y] == MAP_EXP_SHRINE)
-				AutomapView[x][y] = MAP_EXP_NONE;
+			AutomapView[x][y] = MAP_EXP_NONE;
 
 	return "The way is made unclear when viewed from below";
 }
