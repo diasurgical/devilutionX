@@ -331,7 +331,7 @@ msgstr "Przełącz na Hellfire"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-msgstr ""
+msgstr "Przełącz na pełną wersję"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Shareware"
@@ -874,10 +874,8 @@ msgid "password: "
 msgstr "hasło: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Public Game"
-msgstr "Wyjdź z Gry"
+msgstr "Publiczna Gra"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -940,10 +938,8 @@ msgid "{:s} Skill"
 msgstr "Umiejętność: {:s}"
 
 #: Source/control.cpp:771
-#, fuzzy
-#| msgid "Spells"
 msgid "Spell"
-msgstr "Czary"
+msgstr "Czar"
 
 #: Source/control.cpp:772 Source/control.cpp:1230
 msgid "{:s} Spell"
@@ -962,11 +958,8 @@ msgid "Spell Level {:d}"
 msgstr "Poziom Czaru: {:d}"
 
 #: Source/control.cpp:787
-#, fuzzy
-#| msgid "{:d} Scroll"
-#| msgid_plural "{:d} Scrolls"
 msgid "Scroll"
-msgstr "Zwój: {:d}"
+msgstr "Zwój"
 
 #: Source/control.cpp:788 Source/control.cpp:1240
 msgid "Scroll of {:s}"
@@ -1203,23 +1196,23 @@ msgid ""
 "\n"
 "Game selection:\n"
 msgstr ""
+"\n"
+"Wybór gry:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Force Shareware mode"
-msgstr ""
+msgstr "Wymuś tryb demo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:796
 msgid "Force Diablo mode"
-msgstr ""
+msgstr "Wymuś tryb Diablo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
-#, fuzzy
-#| msgid "Hellfire Help"
 msgid "Force Hellfire mode"
-msgstr "Pomoc Hellfire"
+msgstr "Wymuś tryb Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
@@ -4921,7 +4914,7 @@ msgstr "Żniwiarz"
 #: Source/monstdat.cpp:158 Source/monstdat.cpp:485
 msgctxt "monster"
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
@@ -4957,7 +4950,7 @@ msgstr "Nefrytoczerń"
 #: Source/monstdat.cpp:480
 msgctxt "monster"
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachdanan"
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -5012,7 +5005,7 @@ msgstr "Czaszkołup Tarczownik"
 #: Source/monstdat.cpp:494
 msgctxt "monster"
 msgid "Bongo"
-msgstr ""
+msgstr "Bongo"
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
@@ -5037,7 +5030,7 @@ msgstr "Trup Szalonooki"
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr ""
+msgstr "El Chupacabras"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5375,11 +5368,9 @@ msgid "The Vizier"
 msgstr "Wezyr"
 
 #: Source/monstdat.cpp:567
-#, fuzzy
-#| msgid "Sapphire"
 msgctxt "monster"
 msgid "Zamphir"
-msgstr "Szafirowy"
+msgstr "Zamphir"
 
 #: Source/monstdat.cpp:568
 msgctxt "monster"
@@ -5389,7 +5380,7 @@ msgstr "Żądna Krwi"
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr ""
+msgstr "Wdowa Sieci"
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -6077,13 +6068,11 @@ msgstr "Zhar Szalony"
 
 #: Source/quests.cpp:45
 msgid "Lachdanan"
-msgstr ""
+msgstr "Lachdanan"
 
 #: Source/quests.cpp:46
-#, fuzzy
-#| msgid "Exit Diablo"
 msgid "Diablo"
-msgstr "Wyjdź z Diablo"
+msgstr "Diablo"
 
 #: Source/quests.cpp:47
 msgid "The Butcher"
@@ -6144,7 +6133,7 @@ msgstr "Profanator"
 
 #: Source/quests.cpp:62
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
@@ -10890,7 +10879,7 @@ msgstr "Skończony Wariat"
 
 #: Source/towners.cpp:266
 msgid "Celia"
-msgstr ""
+msgstr "Celia"
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
