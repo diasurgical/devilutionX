@@ -612,6 +612,10 @@ bool FetchMessage_Real(tagMSG *lpMsg)
 		}
 
 		break;
+
+	case SDL_RENDER_DEVICE_RESET:
+		ReinitializeRenderer();
+		break;
 #endif
 	default:
 		return FalseAvail("unknown", e.type);

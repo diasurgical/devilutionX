@@ -22,6 +22,8 @@ extern SDL_Renderer *renderer;
 extern SDLTextureUniquePtr texture;
 #endif
 
+void ReinitializeRenderer();
+
 extern SDLPaletteUniquePtr Palette;
 extern SDL_Surface *PalSurface;
 extern unsigned int pal_surface_palette_version;

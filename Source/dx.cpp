@@ -310,26 +310,10 @@ void RenderPresent()
 #ifndef USE_SDL1
 	if (renderer != nullptr) {
 		if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
-			// We should supposedly handle SDL_RENDER_DEVICE_RESET, but I tried and it doesn't arrive
+			// We do handle SDL_RENDER_DEVICE_RESET, but I tried and it doesn't arrive
 			if (string_view(SDL_GetError()) == "LockRect(): INVALIDCALL") {
-				texture.reset();
-				SDL_DestroyRenderer(renderer);
-
-				renderer = SDL_CreateRenderer(ghMainWnd, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
-				if (renderer == nullptr) {
-					ErrSdl();
-				}
-
-				texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
-				if (texture == nullptr) {
-					ErrSdl();
-				}
-
-				if (SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
-					ErrSdl();
-				}
-
-				if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) { //pitch is 2560
+				ReinitializeRenderer();
+				if (SDL_UpdateTexture(texture.get(), nullptr, surface->pixels, surface->pitch) <= -1) {
 					ErrSdl();
 				}
 			} else {

@@ -218,28 +218,7 @@ bool SpawnWindow(const char *lpWindowName)
 	refreshDelay = 1000000 / refreshRate;
 
 	if (sgOptions.Graphics.bUpscale) {
-#ifndef USE_SDL1
-		Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
-
-		if (sgOptions.Graphics.bVSync) {
-			rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
-		}
-
-		renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
-		if (renderer == nullptr) {
-			ErrSdl();
-		}
-
-		texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, width, height);
-
-		if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
-			ErrSdl();
-		}
-
-		if (SDL_RenderSetLogicalSize(renderer, width, height) <= -1) {
-			ErrSdl();
-		}
-#endif
+		ReinitializeRenderer();
 	} else {
 #ifdef USE_SDL1
 		const SDL_VideoInfo &current = *SDL_GetVideoInfo();
@@ -252,6 +231,37 @@ bool SpawnWindow(const char *lpWindowName)
 	}
 
 	return ghMainWnd != nullptr;
+}
+
+void ReinitializeRenderer()
+{
+#ifndef USE_SDL1
+	Uint32 rendererFlags = SDL_RENDERER_ACCELERATED;
+
+	if (sgOptions.Graphics.bVSync) {
+		rendererFlags |= SDL_RENDERER_PRESENTVSYNC;
+	}
+
+	texture.reset();
+	if (renderer != nullptr) {
+		SDL_DestroyRenderer(renderer);
+	}
+
+	renderer = SDL_CreateRenderer(ghMainWnd, -1, rendererFlags);
+	if (renderer == nullptr) {
+		ErrSdl();
+	}
+
+	texture = SDLWrap::CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, gnScreenWidth, gnScreenHeight);
+
+	if (sgOptions.Graphics.bIntegerScaling && SDL_RenderSetIntegerScale(renderer, SDL_TRUE) < 0) {
+		ErrSdl();
+	}
+
+	if (SDL_RenderSetLogicalSize(renderer, gnScreenWidth, gnScreenHeight) <= -1) {
+		ErrSdl();
+	}
+#endif
 }
 
 SDL_Surface *GetOutputSurface()
