@@ -1184,7 +1184,7 @@ if(NINTENDO_3DS)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
-if(CPACK AND SMPQ)
+if(CPACK AND (APPLE OR SMPQ))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
       set(SDL2_WIN32_DLLS_DIR "${CMAKE_BINARY_DIR}")
