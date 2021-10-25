@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-25 04:23+0300\n"
+"POT-Creation-Date: 2021-10-25 22:19+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -373,6 +373,10 @@ msgstr "Ieșire Hellfire"
 msgid "Exit Diablo"
 msgstr "Ieșire Diablo"
 
+#: Source/DiabloUI/mainmenu.cpp:55
+msgid "Shareware"
+msgstr "Mod Demo"
+
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
@@ -481,17 +485,17 @@ msgstr "Sel. dificultate"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "Normală"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1441
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "Coșmar"
 
 #: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1442
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "Iad"
 
@@ -768,10 +772,11 @@ msgstr "GOG.com menține un sit web la https://www.gog.com/forum/diablo"
 #: Source/DiabloUI/support_lines.cpp:9
 msgid "Follow the links to visit the discussion boards associated with Diablo."
 msgstr ""
+"Accesați aceste adrese pentru a vizita liste de discuții despre Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid "and the Hellfire expansion."
-msgstr ""
+msgstr "și extinderea Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:12
 msgid ""
@@ -836,23 +841,22 @@ msgstr ""
 "\n"
 "Eroare s-a produs la: {:s} linia {:d}"
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:116
 msgid ""
-"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"Nu s-a putut deschide arhiva principală de date (diabdat.mpq sau spawn."
-"mpq).\n"
+"Nu s-a putut deschide arhiva principală de date ({:s}).\n"
 "\n"
 "Asigurați-vă că este în directorul jocului."
 
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:122
 msgid "Data File Error"
 msgstr "Eroare fișier de date"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:130
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -860,7 +864,7 @@ msgstr ""
 "Nu s-a putut scrie în locația:\n"
 "{:s}"
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:132
 msgid "Read-Only Directory Error"
 msgstr "Eroare de director doar-citire"
 
@@ -997,7 +1001,7 @@ msgstr "Jucător prietenos"
 
 #: Source/control.cpp:1205
 msgid "Player attack"
-msgstr "Jucător atacabil"
+msgstr "Jucător agresiv"
 
 #: Source/control.cpp:1208
 msgid "Hotkey: {:s}"
@@ -1014,9 +1018,9 @@ msgstr "Tasta: 's'"
 #: Source/control.cpp:1374 Source/inv.cpp:1916 Source/items.cpp:3742
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
-msgstr[0] "{:d} piesă aur"
-msgstr[1] "{:d} piese aur"
-msgstr[2] "{:d} de piese de aur"
+msgstr[0] "{:d} galben"
+msgstr[1] "{:d} galbeni"
+msgstr[2] "{:d} de galbeni"
 
 #: Source/control.cpp:1377
 msgid "Requirements not met"
@@ -1060,9 +1064,9 @@ msgstr "Mana: {:d}  Dam: 1/3 tgt hp"
 #: Source/control.cpp:1649
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "Aveți {:d} piesă de aur. Cate doriți sa scoateți?"
-msgstr[1] "Aveți {:d} piese de aur. Cate doriți sa scoateți?"
-msgstr[2] "Aveți {:d} de piese de aur. Cate doriți sa scoateți?"
+msgstr[0] "Aveți {:d} galben. Câți doriți sa scoateți?"
+msgstr[1] "Aveți {:d} galbeni. Cați doriți sa scoateți?"
+msgstr[2] "Aveți {:d} de galbeni. Cați doriți sa scoateți?"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Menu"
@@ -1176,26 +1180,43 @@ msgstr "Activează jurnalul detaliat"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Forțează modul spawn chiar dacă diabdat.mpq este găsit"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr "Înregistrează un demo în fișier"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr "Rulează un fișier demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr "Dezactivează limitările de cadre la rularea unui demo"
 
 #. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+msgid "Force Hellfire mode"
+msgstr "Forțează modul Hellfire"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1204,16 +1225,11 @@ msgstr ""
 "Opțiuni Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Forțează modul diablo chiar dacă hellfire.mpq este găsit"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr "Folosește o paletă alternativă pentru cuib"
 
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1221,32 +1237,32 @@ msgstr ""
 "\n"
 "Raportați problemele la https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
 msgstr "opțiune nerecunoscută '{:s}'\n"
 
-#: Source/diablo.cpp:896
+#: Source/diablo.cpp:900
 msgid "version {:s}"
 msgstr "versiune {:s}"
 
-#: Source/diablo.cpp:1212
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "-- Timp așteptare rețea expirat --"
 
-#: Source/diablo.cpp:1213
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "-- Waiting for players --"
 
-#: Source/diablo.cpp:1232
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "Ajutor indisponibil"
 
-#: Source/diablo.cpp:1233
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr ""
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1445
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, versiune = {:s}, mod = {:s}"
 
@@ -1632,7 +1648,7 @@ msgstr "+ / -: Zoom hartă"
 
 #: Source/help.cpp:40
 msgid "1 - 8: Use Belt item"
-msgstr "1 - 8: Folosește obiect din curea"
+msgstr "1 - 8: Folosește obiect de pe centură"
 
 #: Source/help.cpp:41
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
@@ -1652,12 +1668,12 @@ msgid ""
 "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip "
 "item"
 msgstr ""
-"Shift + Butonul stânga maus (în inventar): Mută obiect pe curea sau dez/"
+"Shift + Butonul stânga maus (în inventar): Mută obiect pe centură sau dez/"
 "echipează obiect"
 
 #: Source/help.cpp:45
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
-msgstr "Shift + Buton stânga maus (pe curea): Mută obiect în inventar"
+msgstr "Shift + Buton stânga maus (pe centură): Mută obiect în inventar"
 
 #: Source/help.cpp:47
 msgid "$Movement:"
@@ -1668,7 +1684,7 @@ msgid ""
 "If you hold the mouse button down while moving, the character will continue "
 "to move in that direction."
 msgstr ""
-"Dacă țineți butonul mausului apăsat în timpul mișcării, personajul v-a "
+"Dacă țineți butonul mausului apăsat în timpul mișcării, personajul va "
 "continua să se miște în acea direcție."
 
 #: Source/help.cpp:51
@@ -1709,18 +1725,23 @@ msgid ""
 "box. Items may be used by either pressing the corresponding number or right-"
 "clicking on the item."
 msgstr ""
+"Obiectele utilizabile de dimensiuni mici, precum poțiunile sau pergamentele, "
+"sunt automat plasate pe 'centura' localizată în partea de sus a barei de "
+"interfață. Când un obiect e pus pe centură, un număr mic apare în acea "
+"căsuța. Obiectele pot fi folosite apăsând numărul corespunzător sau făcând "
+"clic-dreapta pe obiect."
 
 #: Source/help.cpp:68
 msgid "$Gold"
-msgstr "$Aur"
+msgstr "$Galbeni"
 
 #: Source/help.cpp:69
 msgid ""
 "You can select a specific amount of gold to drop by right-clicking on a pile "
 "of gold in your inventory."
 msgstr ""
-"Puteți selecta o suma anume de aur pe care să o lăsați făcând clic-dreapta "
-"pe o grămadă de aur din inventar."
+"Puteți selecta o sumă anume de galbeni pe care să o lăsați, făcând clic-"
+"dreapta pe o grămadă de galbeni din inventar."
 
 #: Source/help.cpp:72
 msgid "$Skills & Spells:"
@@ -1734,6 +1755,11 @@ msgid ""
 "will ready the spell. A readied spell may be cast by simply right-clicking "
 "in the play area."
 msgstr ""
+"Puteți să accesați lista de abilitați și vrăji cu clic-stânga pe butonul "
+"'VRĂJI' din bara de interfată. Vrăjile memorate și cele disponibile pe "
+"toiege sunt listate aici. Clic-stânga pe o vrajă pe care doriți să o "
+"folosiți va pregăti vraja. O vrajă pregătită poate fi folosită cu un clic-"
+"dreapta în zona de joc."
 
 #: Source/help.cpp:79
 msgid "$Using the Speedbook for Spells"
@@ -1745,6 +1771,10 @@ msgid ""
 "allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
+"Clic-stânga pe butonul de 'vrajă pregătită' va deschide 'Apelarea Rapidă' "
+"care vă permite să selectați o abilitate sau o vrajă pentru utilizare "
+"imediată. Pentru a folosi o abilitate sau vrajă pregătită, apăsați clic-"
+"dreapta în zona principală de joc."
 
 #: Source/help.cpp:84
 msgid ""
@@ -1764,6 +1794,10 @@ msgid ""
 "opening the 'speedbook' as described in the section above. Press the F5, F6, "
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
+"Puteți aloca pană la patru taste pentru abilitați, vrăji sau pergamente. "
+"Începeți prin a deschide 'apelarea rapidă' cum e descris mai sus. Apăsati "
+"tastele F5, F6, F7 sau F8 după ce ați selectat vraja pe care doriți să o "
+"alocați."
 
 #: Source/help.cpp:92
 msgid "$Spell Books"
@@ -1774,7 +1808,7 @@ msgid ""
 "Reading more than one book increases your knowledge of that spell, allowing "
 "you to cast the spell more effectively."
 msgstr ""
-"Citind mai mult de o carte vă creste cunoștințele despre acea vrajă, "
+"Citind mai mult de o carte vă creșteți cunoștințele despre acea vrajă, "
 "permițându-vă să o folosiți mai eficient."
 
 #: Source/help.cpp:129
@@ -1797,11 +1831,15 @@ msgstr "Ajutor Diablo"
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Apăsați ESC pentru a încheia sau săgeți pentru a derula."
 
-#: Source/init.cpp:219
+#: Source/init.cpp:204
+msgid "diabdat.mpq or spawn.mpq"
+msgstr ""
+
+#: Source/init.cpp:224
 msgid "Some Hellfire MPQs are missing"
 msgstr "Niște fișiere MPQ Hellfire lipsesc"
 
-#: Source/init.cpp:219
+#: Source/init.cpp:224
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1809,13 +1847,13 @@ msgstr ""
 "Nu toate fișierele Hellfire MPQ au fost găsite\n"
 "Vă rugăm să copiați fișierele hf*.mpq."
 
-#: Source/init.cpp:227
+#: Source/init.cpp:232
 msgid "Unable to create main window"
 msgstr "Nu s-a putut crea fereastra principală"
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
 msgid "Gold"
-msgstr "Aur"
+msgstr "Galbeni"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
@@ -3776,7 +3814,7 @@ msgstr "Clic-dreapta vizualizare"
 
 #: Source/items.cpp:2083
 msgid "Doubles gold capacity"
-msgstr ""
+msgstr "Dublează capacitatea de galbeni"
 
 #: Source/items.cpp:2095 Source/stores.cpp:212
 msgid "Required:"
@@ -4249,6 +4287,8 @@ msgid ""
 "The Diablo introduction cinematic is only available in the full retail "
 "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
+"Filmul cinematic de introducere este disponibil doar în jocul complet "
+"Diablo. Vizitați https://www.gog.com/game/diablo pentru a cumpăra."
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -5443,25 +5483,25 @@ msgstr ""
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:984 Source/msg.cpp:1019 Source/msg.cpp:1052
-#: Source/msg.cpp:1179 Source/msg.cpp:1211 Source/msg.cpp:1243
-#: Source/msg.cpp:1273
+#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
+#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
+#: Source/msg.cpp:1269
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:1659 Source/multi.cpp:805
+#: Source/msg.cpp:1655 Source/multi.cpp:805
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
-#: Source/msg.cpp:1963
+#: Source/msg.cpp:1959
 msgid "Waiting for game data..."
 msgstr ""
 
-#: Source/msg.cpp:1971
+#: Source/msg.cpp:1967
 msgid "The game ended"
 msgstr ""
 
-#: Source/msg.cpp:1977
+#: Source/msg.cpp:1973
 msgid "Unable to get level data"
 msgstr ""
 
@@ -5958,23 +5998,23 @@ msgstr "amuțește"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
-msgstr ""
+msgstr "Eroare la deschiderea pentru scriere a arhivei jucătorului."
 
 #: Source/pfile.cpp:389
 msgid "Unable to open archive"
-msgstr ""
+msgstr "Nu s-a putut deschide arhiva"
 
 #: Source/pfile.cpp:391
 msgid "Unable to load character"
-msgstr ""
+msgstr "Nu s-a putut încarcă personajul"
 
 #: Source/pfile.cpp:416 Source/pfile.cpp:436
 msgid "Unable to read to save file archive"
-msgstr ""
+msgstr "Nu s-a putut citi arhiva fișierului salvat"
 
 #: Source/pfile.cpp:455
 msgid "Unable to write to save file archive"
-msgstr ""
+msgstr "Nu s-a putut scrie arhiva fișierului salvat"
 
 #. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:88
@@ -5990,7 +6030,7 @@ msgstr ",%03d"
 #: Source/qol/itemlabels.cpp:70
 #, c-format
 msgid "%i gold"
-msgstr "%i aur"
+msgstr "%i galbeni"
 
 #: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
 msgid ""
@@ -5998,6 +6038,9 @@ msgid ""
 "\n"
 "Make sure devilutionx.mpq is in the game folder and that it is up to date."
 msgstr ""
+"Eroare la încărcarea resurselor interfeței UI.\n"
+"\n"
+"Asigurați-vă ca devilutionx.mpq este în directorul jocului si că este la zi."
 
 #: Source/qol/xpbar.cpp:125
 msgid "Level {:d}"
@@ -6071,11 +6114,11 @@ msgstr ""
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:55 Source/quests.cpp:91
 msgid "The Chamber of Bone"
-msgstr ""
+msgstr "Camera de Os"
 
 #: Source/quests.cpp:56
 msgid "Archbishop Lazarus"
-msgstr ""
+msgstr "Arhiepiscopul Lazarus"
 
 #: Source/quests.cpp:57
 msgid "Grave Matters"
@@ -6099,7 +6142,7 @@ msgstr ""
 
 #: Source/quests.cpp:62
 msgid "Na-Krul"
-msgstr ""
+msgstr "Na-Krul"
 
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
@@ -6113,7 +6156,7 @@ msgstr ""
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:90
 msgid "King Leoric's Tomb"
-msgstr ""
+msgstr "Mormântul Regelui Leoric"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:92 Source/setmaps.cpp:26
@@ -6123,7 +6166,7 @@ msgstr "Labirint"
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:93
 msgid "A Dark Passage"
-msgstr ""
+msgstr "Un pasaj întunecos"
 
 #. TRANSLATORS: Quest Map
 #: Source/quests.cpp:94
@@ -6133,19 +6176,19 @@ msgstr ""
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
 #: Source/quests.cpp:450
 msgid "To {:s}"
-msgstr ""
+msgstr "Către {:s}"
 
 #: Source/setmaps.cpp:24
 msgid "Skeleton King's Lair"
-msgstr ""
+msgstr "Bârlogul Regelui Schelet"
 
 #: Source/setmaps.cpp:25
 msgid "Chamber of Bone"
-msgstr ""
+msgstr "Camera oaselor"
 
 #: Source/setmaps.cpp:28
 msgid "Archbishop Lazarus' Lair"
-msgstr ""
+msgstr "Bârlogul Arhiepiscopului Lazarus"
 
 #: Source/spelldat.cpp:16
 msgctxt "spell"
@@ -6416,11 +6459,11 @@ msgstr "Armură: {:d}  "
 
 #: Source/stores.cpp:199
 msgid "Dur: {:d}/{:d},  "
-msgstr ""
+msgstr "Dur: {:d}/{:d},  "
 
 #: Source/stores.cpp:202
 msgid "Indestructible,  "
-msgstr ""
+msgstr "Indestructibil,  "
 
 #: Source/stores.cpp:210
 msgid "No required attributes"
@@ -6467,7 +6510,7 @@ msgstr "Ieșiți din magazin"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Am aceste obiecte de vânzare:             Aurul tău: {:d}"
+msgstr "Am aceste obiecte de vânzare:             Galbeni: {:d}"
 
 #: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
 #: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
@@ -6481,27 +6524,27 @@ msgstr "Înapoi"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:351
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Am aceste obiecte de lux de vânzare:             Aurul tău: {:d}"
+msgstr "Am aceste obiecte de lux de vânzare:             Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:474 Source/stores.cpp:746
 msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "Nu aveți nimic din ce aș vrea.             Aurul tău: {:d}"
+msgstr "Nu aveți nimic din ce aș vrea.             Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:489 Source/stores.cpp:761
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "Care obiect e de vânzare?             Aurul tău: {:d}"
+msgstr "Care obiect e de vânzare?             Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:564
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "Nu aveți nimic de reparat.             Aurul tău: {:d}"
+msgstr "Nu aveți nimic de reparat.             Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:579
 msgid "Repair which item?             Your gold: {:d}"
-msgstr "Repar care obiect?             Aurul tău: {:d}"
+msgstr "Repar care obiect?             Galbeni: {:d}"
 
 #: Source/stores.cpp:609
 msgid "Witch's shack"
@@ -6526,16 +6569,16 @@ msgstr "Ieșiți din colibă"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:827
 msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "Nu aveți nimic de reîncărcat.             Aurul tău: {:d}"
+msgstr "Nu aveți nimic de reîncărcat.             Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:842
 msgid "Recharge which item?             Your gold: {:d}"
-msgstr "Reîncărcați care obiect?             Aurul tău: {:d}"
+msgstr "Reîncărcați care obiect?             Galbeni: {:d}"
 
 #: Source/stores.cpp:858
 msgid "You do not have enough gold"
-msgstr "Nu aveți destul aur"
+msgstr "Nu aveți destui galbeni"
 
 #: Source/stores.cpp:866
 msgid "You do not have enough room in inventory"
@@ -6543,7 +6586,7 @@ msgstr "Nu aveți destul loc in inventar"
 
 #: Source/stores.cpp:903
 msgid "Do we have a deal?"
-msgstr ""
+msgstr "Deci ne-am înțeles?"
 
 #: Source/stores.cpp:906
 msgid "Are you sure you want to identify this item?"
@@ -6551,7 +6594,7 @@ msgstr "Sunteți siguri că vreți să identificați acest obiect?"
 
 #: Source/stores.cpp:912
 msgid "Are you sure you want to buy this item?"
-msgstr ""
+msgstr "Sunteți siguri că vreți să cumpărați acest obiect?"
 
 #: Source/stores.cpp:915
 msgid "Are you sure you want to recharge this item?"
@@ -6579,15 +6622,15 @@ msgstr "Am ceva de vânzare,"
 
 #: Source/stores.cpp:941
 msgid "but it will cost 50 gold"
-msgstr ""
+msgstr "dar te va costa 50 de galbeni"
 
 #: Source/stores.cpp:942
 msgid "just to take a look. "
-msgstr ""
+msgstr "doar ca să arunc o privire. "
 
 #: Source/stores.cpp:943
 msgid "What have you got?"
-msgstr ""
+msgstr "Și ce ai?"
 
 #: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
 #: Source/stores.cpp:1255
@@ -6597,7 +6640,7 @@ msgstr "Spuneți la revedere"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:957
 msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "Am acest obiect de vânzare:             Aurul tău: {:d}"
+msgstr "Am acest obiect de vânzare:             Galbeni: {:d}"
 
 #: Source/stores.cpp:974
 msgid "Leave"
@@ -6630,20 +6673,20 @@ msgstr "Identificați un obiect"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1149
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "Nu aveți nimic de identificat.             Aurul tău: {:d}"
+msgstr "Nu aveți nimic de identificat.             Galbeni: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1164
 msgid "Identify which item?             Your gold: {:d}"
-msgstr "Identific care obiect?             Aurul tău: {:d}"
+msgstr "Identific care obiect?             Galbeni: {:d}"
 
 #: Source/stores.cpp:1184
 msgid "This item is:"
-msgstr ""
+msgstr "Acest obiect este:"
 
 #: Source/stores.cpp:1187
 msgid "Done"
-msgstr ""
+msgstr "Gata"
 
 #: Source/stores.cpp:1196
 msgid "Talk to {:s}"
@@ -6655,15 +6698,15 @@ msgstr "Vorbiți cu {:s}"
 
 #: Source/stores.cpp:1202
 msgid "is not available"
-msgstr ""
+msgstr "nu este disponibil"
 
 #: Source/stores.cpp:1203
 msgid "in the shareware"
-msgstr ""
+msgstr "în versiunea Demo"
 
 #: Source/stores.cpp:1204
 msgid "version"
-msgstr ""
+msgstr "versiune"
 
 #: Source/stores.cpp:1231
 msgid "Gossip"
@@ -9466,3 +9509,9 @@ msgstr "Coboară la Diablo"
 #: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
 msgid "Back to Level {:d}"
 msgstr "Înapoi la Nivelul {:d}"
+
+#~ msgid "Force spawn mode even if diabdat.mpq is found"
+#~ msgstr "Forțează modul spawn chiar dacă diabdat.mpq este găsit"
+
+#~ msgid "Force diablo mode even if hellfire.mpq is found"
+#~ msgstr "Forțează modul diablo chiar dacă hellfire.mpq este găsit"
