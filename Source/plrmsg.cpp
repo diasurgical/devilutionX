@@ -107,17 +107,17 @@ void InitPlrMsg()
 
 void DrawPlrMsg(const Surface &out)
 {
-	DWORD x = 10;
-	DWORD y = 58;
-	DWORD width = gnScreenWidth - 20;
+	int x = 10;
+	int y = 58;
+	int width = gnScreenWidth - 20;
 	_plrmsg *pMsg;
 
 	if (chrflag || QuestLogIsOpen) {
-		x += SPANEL_WIDTH;
-		width -= SPANEL_WIDTH;
+		x += LeftPanel.position.x + LeftPanel.size.width;
+		width -= LeftPanel.size.width;
 	}
 	if (invflag || sbookflag)
-		width -= SPANEL_WIDTH;
+		width -= gnScreenWidth - RightPanel.position.x;
 
 	if (width < 300)
 		return;
