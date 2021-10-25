@@ -398,7 +398,7 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		dam -= (dam * resper) / 100;
 		if (pnum == MyPlayerId)
 			NetSendCmdDamage(true, p, dam);
-		player.Say(HeroSpeech::ArghClang);
+		target.Say(HeroSpeech::ArghClang);
 		return true;
 	}
 
