@@ -278,7 +278,7 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	AutomapTile tile = GetAutomapTypeView(map);
 	uint8_t colorBright = MapColorsBright;
 	uint8_t colorDim = MapColorsDim;
-	MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[map.x][map.y]);
+	MapExplorationType explorationType = static_cast<MapExplorationType>(AutomapView[clamp(map.x, 0, DMAXX - 1)][clamp(map.y, 0, DMAXY - 1)]);
 
 	switch (explorationType) {
 	case MAP_EXP_SHRINE:
