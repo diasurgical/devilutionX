@@ -176,8 +176,10 @@ void init_archives()
 		LogVerbose("MPQ search paths:{}", message);
 	}
 
+#ifndef __ANDROID__
 	// Load devilutionx.mpq first to get the font file for error messages
 	devilutionx_mpq = LoadMPQ(paths, "devilutionx.mpq");
+#endif
 	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
 
 	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
