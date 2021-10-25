@@ -98,8 +98,7 @@ public:
 
 	bool IsValid(size_t size = 1)
 	{
-		return m_buffer_ != nullptr
-		    && m_size_ >= (m_cur_ + size);
+		return m_buffer_ != nullptr && m_size_ >= (m_cur_ + size);
 	}
 
 	template <typename T>
@@ -161,8 +160,7 @@ public:
 
 	bool IsValid(size_t len = 1)
 	{
-		return m_buffer_ != nullptr
-		    && m_capacity_ >= (m_cur_ + len);
+		return m_buffer_ != nullptr && m_capacity_ >= (m_cur_ + len);
 	}
 
 	template <typename T>
