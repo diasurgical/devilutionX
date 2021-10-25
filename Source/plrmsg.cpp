@@ -85,7 +85,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	auto &player = Players[pnum];
 	assert(strlen(player._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
-	strcpy(pMsg->str, fmt::format(_(/* TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location */ "{:s} (lvl {:d}): {:s}"), player._pName, player._pLevel, pszStr).c_str());
+	strcpy(pMsg->str, fmt::format(_("{:s} (lvl {:d}): {:s}"), player._pName, player._pLevel, pszStr).c_str());
 }
 
 void ClearPlrMsg()
