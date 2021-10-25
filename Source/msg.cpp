@@ -976,8 +976,6 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (message.wParam2 > RSPLTYPE_INVALID)
 		return sizeof(message);
-	if (message.wParam3 > static_cast<int>(Direction::SouthEast))
-		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
@@ -989,7 +987,7 @@ DWORD OnSpellWall(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELLWALL;
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
-	player.destParam3 = static_cast<Direction>(message.wParam3);
+	player.destParam3 = message.wParam3;
 	player.destParam4 = message.wParam4;
 	player._pSpell = spell;
 	player._pSplType = static_cast<spell_type>(message.wParam2);
@@ -1024,7 +1022,7 @@ DWORD OnSpellTile(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELL;
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
-	player.destParam4 = message.wParam3;
+	player.destParam3 = message.wParam3;
 	player._pSpell = spell;
 	player._pSplType = static_cast<spell_type>(message.wParam2);
 
@@ -1044,8 +1042,6 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 		return sizeof(message);
 	if (message.wParam1 > SPL_LAST)
 		return sizeof(message);
-	if (message.wParam2 > static_cast<int>(Direction::SouthEast))
-		return sizeof(message);
 
 	auto spell = static_cast<spell_id>(message.wParam1);
 	if (currlevel == 0 && !spelldata[spell].sTownSpell) {
@@ -1057,7 +1053,7 @@ DWORD OnTargetSpellTile(const TCmd *pCmd, Player &player)
 	player.destAction = ACTION_SPELL;
 	player.destParam1 = position.x;
 	player.destParam2 = position.y;
-	player.destParam3 = static_cast<Direction>(message.wParam2);
+	player.destParam3 = message.wParam2;
 	player._pSpell = spell;
 	player._pSplType = RSPLTYPE_INVALID;
 	player._pSplFrom = 2;

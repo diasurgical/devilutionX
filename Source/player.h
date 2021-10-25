@@ -177,7 +177,7 @@ struct Player {
 	action_id destAction;
 	int destParam1;
 	int destParam2;
-	Direction destParam3;
+	int destParam3;
 	int destParam4;
 	uint8_t plrlevel;
 	ActorPosition position;

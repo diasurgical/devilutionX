@@ -309,7 +309,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 	player.destAction = static_cast<action_id>(file.NextLE<int32_t>());
 	player.destParam1 = file.NextLE<int32_t>();
 	player.destParam2 = file.NextLE<int32_t>();
-	player.destParam3 = static_cast<Direction>(file.NextLE<int32_t>());
+	player.destParam3 = file.NextLE<int32_t>();
 	player.destParam4 = file.NextLE<int32_t>();
 	player.plrlevel = file.NextLE<uint32_t>();
 	player.position.tile.x = file.NextLE<int32_t>();
