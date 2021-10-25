@@ -50,10 +50,15 @@ void MainmenuLoad(const char *name, void (*fnSound)(const char *file))
 	UiAddBackground(&vecMainMenuDialog);
 	UiAddLogo(&vecMainMenuDialog);
 
+	if (gbSpawned && gbIsHellfire) {
+		SDL_Rect rect1 = { (Sint16)(PANEL_LEFT), (Sint16)(UI_OFFSET_Y + 145), 640, 30 };
+		vecMainMenuDialog.push_back(std::make_unique<UiArtText>(_("Shareware"), rect1, UiFlags::FontSize30 | UiFlags::ColorUiSilver | UiFlags::AlignCenter, 8));
+	}
+
 	vecMainMenuDialog.push_back(std::make_unique<UiList>(vecMenuItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 192), 510, 43, UiFlags::FontSize42 | UiFlags::ColorUiGold | UiFlags::AlignCenter, 5));
 
-	SDL_Rect rect = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
-	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
+	SDL_Rect rect2 = { 17, (Sint16)(gnScreenHeight - 36), 605, 21 };
+	vecMainMenuDialog.push_back(std::make_unique<UiArtText>(name, rect2, UiFlags::FontSize12 | UiFlags::ColorUiSilverDark));
 
 	UiInitList(vecMenuItems.size(), nullptr, UiMainMenuSelect, MainmenuEsc, vecMainMenuDialog, true);
 }
