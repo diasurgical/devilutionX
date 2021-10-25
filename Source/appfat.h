@@ -54,7 +54,7 @@ void DrawDlg(const char *pszFmt, ...) DVL_PRINTF_ATTRIBUTE(1, 2);
 /**
  * @brief Terminates the game with an insert CD error dialog.
  */
-[[noreturn]] void InsertCDDlg();
+[[noreturn]] void InsertCDDlg(const char *archiveName);
 
 /**
  * @brief Terminates the game with a read-only directory error dialog.

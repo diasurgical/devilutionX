@@ -17,7 +17,7 @@ TEST(Appfat, ErrDlg)
 
 TEST(Appfat, InsertCDDlg)
 {
-	EXPECT_EXIT(InsertCDDlg(), ::testing::ExitedWithCode(1), "diabdat.mpq");
+	EXPECT_EXIT(InsertCDDlg("diabdat.mpq"), ::testing::ExitedWithCode(1), "diabdat.mpq");
 }
 
 TEST(Appfat, DirErrorDlg)

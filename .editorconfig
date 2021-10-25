@@ -34,6 +34,9 @@ end_of_line = lf
 indent_style = space
 indent_size = 2
 
+[*.desktop]
+end_of_line = lf
+
 [*.md]
 indent_style = space
 indent_size = 2

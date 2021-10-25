@@ -788,12 +788,14 @@ void RunGameLoop(interface_mode uMsg)
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-f", _("Display frames per second"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "-x", _("Run in windowed mode"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--verbose", _("Enable verbose logging"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force spawn mode even if diabdat.mpq is found"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--record <#>", _("Record a demo file"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--demo <#>", _("Play a demo file"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--timedemo", _("Disable all frame limiting during demo playback"));
+	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nGame selection:\n"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--spawn", _("Force Shareware mode"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force Diablo mode"));
+	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--hellfire", _("Force Hellfire mode"));
 	printInConsole("%s", _(/* TRANSLATORS: Commandline Option */ "\nHellfire options:\n"));
-	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--diablo", _("Force diablo mode even if hellfire.mpq is found"));
 	printInConsole("    %-20s %-30s\n", /* TRANSLATORS: Commandline Option */ "--nestart", _("Use alternate nest palette"));
 #ifdef _DEBUG
 	printInConsole("\nDebug options:\n");
@@ -842,6 +844,8 @@ void DiabloParseFlags(int argc, char **argv)
 			forceSpawn = true;
 		} else if (strcasecmp("--diablo", argv[i]) == 0) {
 			forceDiablo = true;
+		} else if (strcasecmp("--hellfire", argv[i]) == 0) {
+			forceHellfire = true;
 		} else if (strcasecmp("--nestart", argv[i]) == 0) {
 			gbNestArt = true;
 		} else if (strcasecmp("--vanilla", argv[i]) == 0) {
@@ -911,6 +915,8 @@ void DiabloInit()
 		gbIsSpawn = true;
 	if (forceDiablo || sgOptions.Hellfire.startUpGameOption == StartUpGameOption::Diablo)
 		gbIsHellfire = false;
+	if (forceHellfire)
+		gbIsHellfire = true;
 
 	gbIsHellfireSaveGame = gbIsHellfire;
 
@@ -935,7 +941,7 @@ void DiabloInit()
 
 	ReadOnlyTest();
 
-	if (gbIsHellfire && sgOptions.Hellfire.startUpGameOption == StartUpGameOption::None) {
+	if (gbIsHellfire && !forceHellfire && sgOptions.Hellfire.startUpGameOption == StartUpGameOption::None) {
 		UiSelStartUpGameOption();
 		if (!gbIsHellfire) {
 			// Reinitalize the UI Elements cause we changed the game

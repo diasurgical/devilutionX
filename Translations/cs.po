@@ -799,13 +799,16 @@ msgstr ""
 
 #: Source/appfat.cpp:115
 msgid ""
-"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
+"Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"Nelze otevřít hlavní datový archiv (diabdat.mpq nebo spawn.mpq).\n"
+"Nelze otevřít hlavní datový archiv ({:s}).\n"
 "\n"
 "Ujistěte se, že je výše uvedený soubor ve složce se hrou."
+
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq nebo spawn.mpq"
 
 #: Source/appfat.cpp:119
 msgid "Data File Error"
