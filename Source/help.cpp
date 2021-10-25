@@ -100,6 +100,10 @@ std::vector<std::string> HelpTextLines;
 
 void InitHelp()
 {
+	static bool Initialized = false;
+	if (Initialized)
+		return;
+
 	HelpFlag = false;
 	char tempString[1024];
 
@@ -117,6 +121,8 @@ void InitHelp()
 			previous = next + 1;
 		}
 	}
+
+	Initialized = true;
 }
 
 void DrawHelp(const Surface &out)
