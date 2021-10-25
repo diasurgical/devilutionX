@@ -1701,11 +1701,11 @@ void CheckNewPath(int pnum, bool pmWillBeCalled)
 		case ACTION_SPELL:
 			d = GetDirection(player.position.tile, { player.destParam1, player.destParam2 });
 			StartSpell(pnum, d, player.destParam1, player.destParam2);
-			player.spellLevel = player.destParam4;
+			player.spellLevel = player.destParam3;
 			break;
 		case ACTION_SPELLWALL:
-			StartSpell(pnum, player.destParam3, player.destParam1, player.destParam2);
-			player.tempDirection = player.destParam3;
+			StartSpell(pnum, static_cast<Direction>(player.destParam3), player.destParam1, player.destParam2);
+			player.tempDirection = static_cast<Direction>(player.destParam3);
 			player.spellLevel = player.destParam4;
 			break;
 		case ACTION_SPELLMON:
