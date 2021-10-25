@@ -440,10 +440,8 @@ msgid "Create Game"
 msgstr "Создать игру"
 
 #: Source/DiabloUI/selgame.cpp:93
-#, fuzzy
-#| msgid "Create Game"
 msgid "Create Public Game"
-msgstr "Создать игру"
+msgstr "Открытая Игра"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
@@ -460,12 +458,10 @@ msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Создать новую игру с выбором уровня сложности."
 
 #: Source/DiabloUI/selgame.cpp:125
-#, fuzzy
-#| msgid "Create a new game with a difficulty setting of your choice."
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr "Создать новую игру с выбором уровня сложности."
+msgstr "Создать новую открытую игру без пароля с выбором уровня сложности."
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
@@ -876,10 +872,8 @@ msgid "password: "
 msgstr "пароль: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Public Game"
-msgstr "Выйти из Игры"
+msgstr "Открытая Игра"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
