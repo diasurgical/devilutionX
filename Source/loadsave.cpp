@@ -33,6 +33,8 @@ namespace devilution {
 
 bool gbIsHellfireSaveGame;
 uint8_t giNumberOfLevels;
+int8_t lightIdMap[MAXLIGHTS] = { 0 };
+const int maxLightsVanillaSaveFormat = 32;
 
 namespace {
 
@@ -535,7 +537,7 @@ void LoadPlayer(LoadHelper &file, Player &player)
 
 bool gbSkipSync = false;
 
-void LoadMonster(LoadHelper *file, Monster &monster)
+void LoadMonster(LoadHelper *file, Monster &monster, bool loadGame)
 {
 	monster._mMTidx = file->NextLE<int32_t>();
 	monster._mmode = static_cast<MonsterMode>(file->NextLE<int32_t>());
@@ -628,9 +630,12 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	if (monster.mlid == Players[MyPlayerId]._plid)
 		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
-	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
-		int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
-		monster.mlid = AddLight(monster.position.tile, lightRadius);
+	/* If loaded when switching levels we can add the lights here, if loaded from a savegame we need to add the lights later */
+	if (!loadGame) {
+		if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+			int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+			monster.mlid = AddLight(monster.position.tile, lightRadius);
+		}
 	}
 
 	// Omit pointer mName;
@@ -1035,7 +1040,7 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	// write _pAnimWidth2 for vanilla compatibility
 	file.WriteLE<int32_t>(CalculateWidth2(animWidth));
 	file.Skip<uint32_t>(); // Skip _peflag
-	file.WriteLE<int32_t>(player._plid);
+	file.WriteLE<int32_t>(lightIdMap[player._plid]);
 	file.WriteLE<int32_t>(player._pvid);
 
 	file.WriteLE<int32_t>(player._pSpell);
@@ -1305,7 +1310,7 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.leader);
 	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderRelation));
 	file->WriteLE<uint8_t>(monster.packsize);
-	file->WriteLE<int8_t>(monster.mlid);
+	monster.mlid != NO_LIGHT ? file->WriteLE<int8_t>(lightIdMap[monster.mlid]) : file->WriteLE<int8_t>(monster.mlid);
 
 	// Omit pointer mName;
 	// Omit pointer MType;
@@ -1349,7 +1354,7 @@ void SaveMissile(SaveHelper *file, Missile &missile)
 	file->WriteLE<int32_t>(missile._midam);
 	file->WriteLE<uint32_t>(missile._miHitFlag ? 1 : 0);
 	file->WriteLE<int32_t>(missile._midist);
-	file->WriteLE<int32_t>(missile._mlid);
+	missile._mlid != NO_LIGHT ? file->WriteLE<int32_t>(lightIdMap[missile._mlid]) : file->WriteLE<int32_t>(missile._mlid);
 	file->WriteLE<int32_t>(missile._mirnd);
 	file->WriteLE<int32_t>(missile.var1);
 	file->WriteLE<int32_t>(missile.var2);
@@ -1752,7 +1757,7 @@ void LoadGame(bool firstflag)
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+			LoadMonster(&file, Monsters[ActiveMonsters[i]], true);
 		for (int i = 0; i < ActiveMonsterCount; i++)
 			SyncPackSize(Monsters[ActiveMonsters[i]]);
 		for (int &missileId : ActiveMissiles)
@@ -1772,16 +1777,33 @@ void LoadGame(bool firstflag)
 
 		ActiveLightCount = file.NextBE<int32_t>();
 
-		for (uint8_t &lightId : ActiveLights)
-			lightId = file.NextLE<uint8_t>();
-		for (int i = 0; i < ActiveLightCount; i++)
+		int i = 0;
+		for (uint8_t &lightId : ActiveLights) {
+			if (i < maxLightsVanillaSaveFormat) {
+				lightId = file.NextLE<uint8_t>();
+			} else {
+				lightId = i;
+			}
+			i++;
+		}
+
+		for (int i = 0; i < ActiveLightCount; i++) {
 			LoadLighting(&file, &Lights[ActiveLights[i]]);
+		}
 
 		VisionId = file.NextBE<int32_t>();
 		VisionCount = file.NextBE<int32_t>();
 
 		for (int i = 0; i < VisionCount; i++)
 			LoadLighting(&file, &VisionList[i]);
+
+		/* Reload Berserk Lights */
+		for (Monster &monster : Monsters) {
+			if ((monster._mFlags & MFLAG_BERSERK) != 0) {
+				int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+				monster.mlid = AddLight(monster.position.tile, lightRadius);
+			}
+		}
 	}
 
 	for (int &itemId : ActiveItems)
@@ -1894,7 +1916,29 @@ void SaveHeroItems(Player &player)
 
 void SaveGameData()
 {
+	int BerserkLightCount = 0;
 	SaveHelper file("game", 320 * 1024);
+
+	/* Make sure that the first 32 lights in the save (limit for vanilla) have no berserk lights in them. Don't need to save them. We can recreate them on load */
+	int8_t newId = 0;
+	for (int i = 0; i < MAXLIGHTS; i++) {
+		if (newId >= 32) {
+			lightIdMap[i] = NO_LIGHT;
+		} else {
+			for (const Monster &monster : Monsters) {
+				if (monster.mlid == i && (monster._mFlags & MFLAG_BERSERK) != 0) {
+					BerserkLightCount++;
+					lightIdMap[i] = NO_LIGHT;
+					break;
+				}
+			}
+		}
+
+		if (lightIdMap[i] != NO_LIGHT) {
+			lightIdMap[i] = newId;
+			newId++;
+		}
+	}
 
 	if (gbIsSpawn && !gbIsHellfire)
 		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
@@ -1964,18 +2008,22 @@ void SaveGameData()
 		for (int i = 0; i < ActiveObjectCount; i++)
 			SaveObject(file, Objects[ActiveObjects[i]]);
 
-		file.WriteBE<int32_t>(ActiveLightCount);
+		file.WriteBE<int32_t>(ActiveLightCount - BerserkLightCount);
 
-		for (uint8_t lightId : ActiveLights)
-			file.WriteLE<uint8_t>(lightId);
-		for (int i = 0; i < ActiveLightCount; i++)
+		for (uint8_t i = 0; i < maxLightsVanillaSaveFormat; i++) {
+			file.WriteLE<uint8_t>(i);
+		}
+
+		for (int i = 0; i < ActiveLightCount - BerserkLightCount; i++) {
 			SaveLighting(&file, &Lights[ActiveLights[i]]);
+		}
 
 		file.WriteBE<int32_t>(VisionId);
 		file.WriteBE<int32_t>(VisionCount);
 
-		for (int i = 0; i < VisionCount; i++)
+		for (int i = 0; i < VisionCount; i++) {
 			SaveLighting(&file, &VisionList[i]);
+		}
 	}
 
 	for (int itemId : ActiveItems)
@@ -2160,7 +2208,7 @@ void LoadLevel()
 		for (int &monsterId : ActiveMonsters)
 			monsterId = file.NextBE<int32_t>();
 		for (int i = 0; i < ActiveMonsterCount; i++)
-			LoadMonster(&file, Monsters[ActiveMonsters[i]]);
+			LoadMonster(&file, Monsters[ActiveMonsters[i]], false);
 		for (int &objectId : ActiveObjects)
 			objectId = file.NextLE<int8_t>();
 		for (int &objectId : AvailableObjects)
