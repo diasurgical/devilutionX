@@ -56,7 +56,7 @@ bool zerotier_network_ready()
 
 void zerotier_network_start()
 {
-	std::string ztpath = paths::PrefPath() + "zerotier";
+	std::string ztpath = paths::ConfigPath() + "zerotier";
 	zts_start(ztpath.c_str(), (void (*)(void *))Callback, 0);
 }
 
