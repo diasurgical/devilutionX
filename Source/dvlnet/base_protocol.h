@@ -262,7 +262,8 @@ void base_protocol<P>::recv_ingame(packet &pkt, endpoint sender)
 		return;
 	} else if (pkt.Source() >= MAX_PLRS) {
 		// normal packets
-		ABORT();
+		LogDebug("Invalid packet: packet source ({}) >= MAX_PLRS", pkt.Source());
+		return;
 	}
 	connected_table[pkt.Source()] = true;
 	peers[pkt.Source()] = sender;
