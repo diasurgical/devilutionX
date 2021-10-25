@@ -12,9 +12,11 @@
 #include "engine/render/automap_render.hpp"
 #include "inv.h"
 #include "monster.h"
+#include "options.h"
 #include "palette.h"
 #include "player.h"
 #include "setmaps.h"
+#include "trigs.h"
 #include "utils/language.h"
 #include "utils/stdcompat/algorithm.hpp"
 #include "utils/ui_fwd.h"
@@ -23,6 +25,13 @@ namespace devilution {
 
 namespace {
 Point Automap;
+
+enum StairsType : uint8_t {
+	STAIRS_QUEST,
+	STAIRS_UP,
+	STAIRS_DOWN,
+	STAIRS_TOWN,
+};
 
 enum MapColors : uint8_t {
 	/** color used to draw the player's arrow */
@@ -130,12 +139,26 @@ void DrawDirt(const Surface &out, Point center, uint8_t color)
 	out.SetPixel({ center.x, center.y + AmLine16 }, color);
 }
 
-void DrawStairs(const Surface &out, Point center, uint8_t color)
+void DrawStairs(const Surface &out, Point center, uint8_t color, StairsType stairsType)
 {
 	constexpr int NumStairSteps = 4;
 	const Displacement offset = { -AmLine8, AmLine4 };
 	Point p = { center.x - AmLine8, center.y - AmLine8 - AmLine4 };
 	for (int i = 0; i < NumStairSteps; ++i) {
+		switch (stairsType) {
+		case STAIRS_UP:
+			if (i == 0)
+				DrawMapLineSE(out, p + offset * 0.5F, AmLine16, color);
+			break;
+		case STAIRS_TOWN:
+			DrawMapLineSE(out, p - offset * 0.5F, AmLine16, color);
+			break;
+		case STAIRS_DOWN:
+			if (i == NumStairSteps - 1)
+				DrawMapLineSE(out, p - offset * 0.5F, AmLine16, color);
+			break;
+		}
+
 		DrawMapLineSE(out, p, AmLine16, color);
 		p += offset;
 	}
@@ -300,7 +323,27 @@ void DrawAutomapTile(const Surface &out, Point center, Point map)
 	}
 
 	if (tile.HasFlag(AutomapTile::Flags::Stairs)) {
-		DrawStairs(out, center, colorBright);
+		StairsType stairsType = STAIRS_QUEST;
+		Point mapToDungeon = map * 2 + Displacement { 16, 16 };
+		int radius = 2;
+		if (leveltype == DTYPE_HELL)
+			radius = 6; //hell stairs are bigger, detect all segments
+		for (int j = 0; j < numtrigs; j++) {
+			if (mapToDungeon.ApproxDistance(trigs[j].position) <= radius) {
+				switch (trigs[j]._tmsg) {
+				case WM_DIABTWARPUP:
+					stairsType = STAIRS_TOWN;
+					break;
+				case WM_DIABNEXTLVL:
+					stairsType = STAIRS_DOWN;
+					break;
+				case WM_DIABPREVLVL:
+					stairsType = STAIRS_UP;
+					break;
+				}
+			}
+		}
+		DrawStairs(out, center, colorBright, stairsType);
 	}
 
 	switch (tile.type) {

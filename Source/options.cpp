@@ -282,6 +282,7 @@ void LoadOptions()
 	sgOptions.Gameplay.bShowMonsterType = GetIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bDisableCripplingShrines = GetIniBool("Game", "Disable Crippling Shrines", false);
 	sgOptions.Gameplay.bAutoRefillBelt = GetIniBool("Game", "Auto Refill Belt", AUTO_PICKUP_DEFAULT(false));
+	sgOptions.Gameplay.bCustomStairsShapes = GetIniBool("Game", "Automap Shows Stairs Type", false);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -434,6 +435,7 @@ void SaveOptions()
 	SetIniValue("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 	SetIniValue("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
 	SetIniValue("Game", "Auto Refill Belt", sgOptions.Gameplay.bAutoRefillBelt);
+	SetIniValue("Game", "Automap Shows Stairs Type", sgOptions.Gameplay.bCustomStairsShapes);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);

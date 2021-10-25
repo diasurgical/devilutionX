@@ -138,6 +138,8 @@ struct GameplayOptions {
 	bool bAutoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	bool bDisableCripplingShrines;
+	/** @brief Stairs shape shown on automap indicates type - up/down/town/quest */
+	bool bCustomStairsShapes;
 };
 
 struct ControllerOptions {
