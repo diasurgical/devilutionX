@@ -11,6 +11,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - name: Install gettext
+      run: sudo apt install -y gettext
+
     - name: Checkout
       uses: actions/checkout@v2
       with:
