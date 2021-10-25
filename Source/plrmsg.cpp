@@ -10,6 +10,7 @@
 #include "control.h"
 #include "engine/render/text_render.hpp"
 #include "inv.h"
+#include "qol/chatlog.h"
 #include "utils/language.h"
 
 namespace devilution {
@@ -61,8 +62,9 @@ void ErrorPlrMsg(const char *pszMsg)
 	pMsg->str[sizeof(pMsg->str) - 1] = '\0';
 }
 
-size_t EventPlrMsg(const char *pszFmt, ...)
+size_t EventPlrMsg(int pnum, const char *pszFmt, ...)
 {
+	AddMessageToChatLog(pnum, pszFmt, true);
 	_plrmsg *pMsg;
 	va_list va;
 
@@ -86,6 +88,7 @@ void SendPlrMsg(int pnum, const char *pszStr)
 	assert(strlen(player._pName) < PLR_NAME_LEN);
 	assert(strlen(pszStr) < MAX_SEND_STR_LEN);
 	strcpy(pMsg->str, fmt::format(_("{:s} (lvl {:d}): {:s}"), player._pName, player._pLevel, pszStr).c_str());
+	AddMessageToChatLog(pnum, pszStr);
 }
 
 void ClearPlrMsg()
@@ -120,6 +123,9 @@ void DrawPlrMsg(const Surface &out)
 		width -= gnScreenWidth - RightPanel.position.x;
 
 	if (width < 300)
+		return;
+
+	if (IsChatLogEnabled())
 		return;
 
 	pMsg = plr_msgs;

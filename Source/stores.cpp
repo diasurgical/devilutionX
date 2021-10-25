@@ -19,6 +19,7 @@
 #include "options.h"
 #include "towners.h"
 #include "utils/language.h"
+#include "qol/chatlog.h"
 
 namespace devilution {
 
@@ -2310,6 +2311,59 @@ void ClearSText(int s, int e)
 	}
 }
 
+void ScrollChatLog(int idx)
+{
+	ClearSText(5, 21);
+	stextup = 5;
+
+	storenumh = ChatLogMessages.size();
+	stextsmax = std::max(storenumh - 4, 0);
+
+	char title[64];
+	sprintf(title, _("Chat History (Messages: %d)"), storenumh);
+	AddSText(0, 1, title, UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+
+	for (int l = 5; l < 20; l += 4) {
+		if (idx < ChatLogMessages.size()) {
+			uint32_t index = ChatLogMessages.size() - 1 - idx;
+			PlayerMessage &msg = ChatLogMessages[index];
+			time_t tm = ChatLogMessages[index].timestamp;
+			char timestamp[128];
+			sprintf(timestamp, "%02d:%02d:%02d", localtime(&tm)->tm_hour, localtime(&tm)->tm_min, localtime(&tm)->tm_sec);
+
+			if (msg.systemMessage) {
+				AddSText(20, l, msg.text.c_str(), UiFlags::ColorWhite, true);
+				AddSText(30, l + 1, timestamp, UiFlags::ColorRed, false);
+			} else {
+				UiFlags color = (msg.myMessage ? UiFlags::ColorWhitegold : UiFlags::ColorBlue);
+				AddSText(20, l, fmt::format(_("{:s} (lvl {:d}): {:s}"), msg.sender, msg.level, "").c_str(), color, true);
+				AddSText(30, l + 1, timestamp, UiFlags::ColorRed, false);
+				AddSText(40, l + 2, msg.text.c_str(), UiFlags::ColorWhite, false);
+			}
+			stextdown = l;
+			idx++;
+		}
+	}
+
+	if (stextsel != -1 && !stext[stextsel]._ssel && stextsel != 22)
+		stextsel = stextdown;
+	if (stextsel == 22)
+		StoreESC();
+}
+
+void StartChatLog()
+{
+	stextsize = true;
+	stextscrl = true;
+	stextsval = 0;
+
+	AddSLine(3);
+	AddSLine(21);
+	ScrollChatLog(stextsval);
+	AddSText(0, 22, _("Back"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
+	OffsetSTextY(22, 6);
+}
+
 void StartStore(talk_id s)
 {
 	sbookflag = false;
@@ -2320,6 +2374,9 @@ void StartStore(talk_id s)
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();
 	switch (s) {
+	case STORE_CHATLOG:
+		StartChatLog();
+		break;
 	case STORE_SMITH:
 		StartSmith();
 		break;
@@ -2429,6 +2486,9 @@ void DrawSText(const Surface &out)
 
 	if (stextscrl) {
 		switch (stextflag) {
+		case STORE_CHATLOG:
+			ScrollChatLog(stextsval);
+			break;
 		case STORE_SBUY:
 			ScrollSmithBuy(stextsval);
 			break;
@@ -2474,6 +2534,7 @@ void StoreESC()
 	}
 
 	switch (stextflag) {
+	case STORE_CHATLOG:
 	case STORE_SMITH:
 	case STORE_WITCH:
 	case STORE_BOY:

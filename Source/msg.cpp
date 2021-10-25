@@ -1665,7 +1665,7 @@ DWORD OnPlayerJoinLevel(const TCmd *pCmd, int pnum)
 		ResetPlayerGFX(player);
 		player.plractive = true;
 		gbActivePlayers++;
-		EventPlrMsg(fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel).c_str());
+		EventPlrMsg(pnum, fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), player._pName, player._pLevel).c_str());
 	}
 
 	if (player.plractive && MyPlayerId != pnum) {

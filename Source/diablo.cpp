@@ -53,6 +53,7 @@
 #include "pfile.h"
 #include "plrmsg.h"
 #include "qol/common.h"
+#include "qol/chatlog.h"
 #include "qol/itemlabels.h"
 #include "restrict.h"
 #include "setmaps.h"
@@ -1491,6 +1492,12 @@ void InitKeymapActions()
 	    DVL_VK_INVALID,
 	    [] { Players[MyPlayerId].Stop(); },
 	    [&]() { return !IsPlayerDead(); },
+	});
+	keymapper.AddAction({
+	    "ChatLog",
+	    'L',
+	    [] { ToggleChatLog(); },
+	    [&]() { return gbIsMultiplayer; },
 	});
 #ifdef _DEBUG
 	keymapper.AddAction({

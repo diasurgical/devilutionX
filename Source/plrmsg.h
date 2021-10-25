@@ -20,7 +20,7 @@ struct _plrmsg {
 
 void plrmsg_delay(bool delay);
 void ErrorPlrMsg(const char *pszMsg);
-size_t EventPlrMsg(const char *pszFmt, ...);
+size_t EventPlrMsg(int pnum, const char *pszFmt, ...);
 void SendPlrMsg(int pnum, const char *pszStr);
 void ClearPlrMsg();
 void InitPlrMsg();

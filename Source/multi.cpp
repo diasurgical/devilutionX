@@ -19,6 +19,7 @@
 #include "options.h"
 #include "pfile.h"
 #include "plrmsg.h"
+#include "qol/chatlog.h"
 #include "storm/storm_net.hpp"
 #include "sync.h"
 #include "tmsg.h"
@@ -202,7 +203,7 @@ void PlayerLeftMsg(int pnum, bool left)
 			pszFmt = _("Player '{:s}' dropped due to timeout");
 			break;
 		}
-		EventPlrMsg(fmt::format(pszFmt, player._pName).c_str());
+		EventPlrMsg(pnum, fmt::format(pszFmt, player._pName).c_str());
 	}
 	player.plractive = false;
 	player._pName[0] = '\0';
@@ -754,6 +755,11 @@ bool NetInit(bool bSinglePlayer)
 		nthread_terminate_game("SNetGetGameInfo2");
 	PublicGame = DvlNet_IsPublicGame();
 
+	auto &myPlayer = Players[MyPlayerId];
+	// separator for marking messages from a different game
+	AddMessageToChatLog(MyPlayerId, "===========================================================================", true);
+	AddMessageToChatLog(MyPlayerId, fmt::format(_("Player '{:s}' (level {:d}) just joined the game"), myPlayer._pName, myPlayer._pLevel).c_str(), true);
+
 	return true;
 }
 
@@ -805,7 +811,7 @@ void recv_plrinfo(int pnum, const TCmdPlrInfoHdr &header, bool recv)
 	} else {
 		szEvent = _("Player '{:s}' (level {:d}) is already in the game");
 	}
-	EventPlrMsg(fmt::format(szEvent, player._pName, player._pLevel).c_str());
+	EventPlrMsg(pnum, fmt::format(szEvent, player._pName, player._pLevel).c_str());
 
 	SyncInitPlr(pnum);
 

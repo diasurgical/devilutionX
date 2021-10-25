@@ -42,6 +42,7 @@ enum talk_id : uint8_t {
 	STORE_TAVERN,
 	STORE_DRUNK,
 	STORE_BARMAID,
+	STORE_CHATLOG,
 };
 
 struct STextStruct {
