@@ -1549,7 +1549,12 @@ void CtrlUseInvItem()
 void PerformSecondaryAction()
 {
 	if (invflag) {
-		CtrlUseInvItem();
+		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
+			TryIconCurs();
+			NewCursor(CURSOR_HAND);
+		} else {
+			CtrlUseInvItem();
+		}
 		return;
 	}
 
