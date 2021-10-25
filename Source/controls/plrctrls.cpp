@@ -30,6 +30,7 @@ bool sgbTouchActive = false;
 bool sgbControllerActive = false;
 Point speedspellscoords[50];
 int speedspellcount = 0;
+int pcurstrig = -1;
 
 /**
  * Native game menu, controlled by simulating a keyboard.
@@ -374,7 +375,6 @@ void FindActor()
 }
 
 int pcursmissile;
-int pcurstrig;
 quest_id pcursquest;
 
 void FindTrigger()

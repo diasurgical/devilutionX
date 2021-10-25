@@ -45,7 +45,7 @@ VirtualGamepadButtonType GetCastButtonType(bool isPressed)
 	return isPressed ? GAMEPAD_CASTSPELLDOWN : GAMEPAD_CASTSPELL;
 }
 
-VirtualGamepadButtonType GetCancelButtonType(bool isPressed)
+VirtualGamepadButtonType GetBackButtonType(bool isPressed)
 {
 	return isPressed ? GAMEPAD_BACKDOWN : GAMEPAD_BACK;
 }
@@ -55,9 +55,34 @@ VirtualGamepadButtonType GetBlankButtonType(bool isPressed)
 	return isPressed ? GAMEPAD_BLANKDOWN : GAMEPAD_BLANK;
 }
 
+VirtualGamepadButtonType GetApplyButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_APPLYDOWN : GAMEPAD_APPLY;
+}
+
+VirtualGamepadButtonType GetEquipButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_EQUIPDOWN : GAMEPAD_EQUIP;
+}
+
+VirtualGamepadButtonType GetDropButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_DROPDOWN : GAMEPAD_DROP;
+}
+
+VirtualGamepadButtonType GetStairsButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_STAIRSDOWN : GAMEPAD_STAIRS;
+}
+
+VirtualGamepadButtonType GetStandButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_STANDDOWN : GAMEPAD_STAND;
+}
+
 void LoadButtonArt(Art *buttonArt, SDL_Renderer *renderer)
 {
-	const int Frames = 14;
+	const int Frames = 24;
 	buttonArt->surface.reset(LoadPNG("ui_art\\button.png"));
 	if (buttonArt->surface == nullptr)
 		return;
@@ -351,21 +376,50 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
+extern int pcurstrig;
+
 VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
-	// NEED: Stairs surface
+	if (pcurstrig != -1)
+		return GetStairsButtonType(virtualPadButton->isHeld);
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return GetBlankButtonType(virtualPadButton->isHeld);
 	if (pcursobj != -1)
 		return GetObjectButtonType(virtualPadButton->isHeld);
 	if (pcursitem != -1)
 		return GetItemButtonType(virtualPadButton->isHeld);
+	if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
+		return GetApplyButtonType(virtualPadButton->isHeld);
+
+	if (pcursinvitem != -1) {
+		Item *item;
+		if (pcursinvitem < INVITEM_INV_FIRST)
+			item = &MyPlayer->InvBody[pcursinvitem];
+		else if (pcursinvitem <= INVITEM_INV_LAST)
+			item = &MyPlayer->InvList[pcursinvitem - INVITEM_INV_FIRST];
+		else
+			item = &MyPlayer->SpdList[pcursinvitem - INVITEM_BELT_FIRST];
+
+		if (!item->IsScroll() || !spelldata[item->_iSpell].sTargeted) {
+			if (!item->isEquipment()) {
+				return GetApplyButtonType(virtualPadButton->isHeld);
+			}
+		}
+	}
+
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
 VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 {
-	if (!InGameMenu() && !QuestLogIsOpen && !sbookflag)
+	if (pcurs >= CURSOR_FIRSTITEM)
+		return GetDropButtonType(virtualPadButton->isHeld);
+
+	if (pcursinvitem != -1 && pcurs == CURSOR_HAND) {
+		return GetEquipButtonType(virtualPadButton->isHeld);
+	}
+
+	if (!invflag && !InGameMenu() && !QuestLogIsOpen && !sbookflag)
 		return GetCastButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
@@ -373,9 +427,9 @@ VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 VirtualGamepadButtonType CancelButtonRenderer::GetButtonType()
 {
 	if (InGameMenu())
-		return GetCancelButtonType(virtualPadButton->isHeld);
+		return GetBackButtonType(virtualPadButton->isHeld);
 	if (DoomFlag || invflag || sbookflag || QuestLogIsOpen || chrflag)
-		return GetCancelButtonType(virtualPadButton->isHeld);
+		return GetBackButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }
 
