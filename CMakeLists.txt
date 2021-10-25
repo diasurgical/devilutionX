@@ -1151,8 +1151,7 @@ if(NINTENDO_3DS)
   set(APP_AUDIO       "${CMAKE_BINARY_DIR}/banner_audio.wav")
   set(APP_RSF         "${PROJECT_SOURCE_DIR}/Packaging/ctr/template.rsf")
   set(APP_ROMFS       "${CMAKE_BINARY_DIR}/romfs")
-  list(APPEND APP_ROMFS_FILES
-    ${DEVILUTIONX_MPQ})
+  list(APPEND APP_ROMFS_FILES ${DEVILUTIONX_MPQ})
   set(APP_VERSION ${PROJECT_VERSION})
 
   find_program(FFMPEG ffmpeg)
@@ -1173,7 +1172,7 @@ if(NINTENDO_3DS)
 
   add_custom_target(romfs_files
     COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS romfs_directory)
+    DEPENDS romfs_directory ${APP_ROMFS_FILES})
 
   include(Tools3DS)
   add_3dsx_target(${BIN_TARGET})
