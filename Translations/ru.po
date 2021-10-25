@@ -432,7 +432,7 @@ msgstr "Описание:"
 
 #: Source/DiabloUI/selgame.cpp:88
 msgid "Select Action"
-msgstr "Выберете действие"
+msgstr "Выберите действие"
 
 #: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
 #: Source/DiabloUI/selgame.cpp:333
