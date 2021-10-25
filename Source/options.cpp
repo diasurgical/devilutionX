@@ -262,7 +262,7 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bRunInTown = GetIniBool("Game", "Run in Town", true);
+	sgOptions.Gameplay.bRunInTown = GetIniBool("Game", "Run in Town", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bGrabInput = GetIniBool("Game", "Grab Input", false);
 	sgOptions.Gameplay.bTheoQuest = GetIniBool("Game", "Theo Quest", false);
 	sgOptions.Gameplay.bCowQuest = GetIniBool("Game", "Cow Quest", false);
@@ -273,7 +273,7 @@ void LoadOptions()
 	sgOptions.Gameplay.bEnemyHealthBar = GetIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.Gameplay.bAutoGoldPickup = GetIniBool("Game", "Auto Gold Pickup", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAdriaRefillsMana = GetIniBool("Game", "Adria Refills Mana", false);
-	sgOptions.Gameplay.bAutoEquipWeapons = GetIniBool("Game", "Auto Equip Weapons", AUTO_PICKUP_DEFAULT(true));
+	sgOptions.Gameplay.bAutoEquipWeapons = GetIniBool("Game", "Auto Equip Weapons", true);
 	sgOptions.Gameplay.bAutoEquipArmor = GetIniBool("Game", "Auto Equip Armor", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAutoEquipHelms = GetIniBool("Game", "Auto Equip Helms", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAutoEquipShields = GetIniBool("Game", "Auto Equip Shields", AUTO_PICKUP_DEFAULT(false));
