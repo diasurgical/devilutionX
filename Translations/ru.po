@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-25 16:10+0300\n"
+"POT-Creation-Date: 2021-10-25 23:30+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -375,6 +375,12 @@ msgstr "Выйти из Hellfire"
 msgid "Exit Diablo"
 msgstr "Выйти из Diablo"
 
+#: Source/DiabloUI/mainmenu.cpp:55
+#, fuzzy
+#| msgid "Switch to Shareware"
+msgid "Shareware"
+msgstr "Перейти в Shareware"
+
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
@@ -481,17 +487,17 @@ msgstr "Выберете сложность"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "Нормальная"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1441
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "Кошмарная"
 
 #: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1442
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "Адская"
 
@@ -836,7 +842,7 @@ msgstr ""
 "\n"
 "Ошибка: в {:s} в строке {:d}"
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:116
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -846,15 +852,12 @@ msgstr ""
 "\n"
 "Убедитесь, что файлы находятся в папке игры."
 
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq или spawn.mpq"
-
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:122
 msgid "Data File Error"
 msgstr "Ошибка файла данных"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:130
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -862,7 +865,7 @@ msgstr ""
 "Невозможно записать в:\n"
 "{:s}"
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:132
 msgid "Read-Only Directory Error"
 msgstr "Папка только для чтения"
 
@@ -1178,26 +1181,45 @@ msgstr "Включить подробное логирование"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Принудительный режим spawn, даже если diabdat.mpq был найден"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr "Записать демо"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr "Воспроизвести демо"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr "Отключить лимит кадров во время проигрывания демо"
 
 #. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+#, fuzzy
+#| msgid "Hellfire Help"
+msgid "Force Hellfire mode"
+msgstr "Помощь Hellfire"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1206,16 +1228,11 @@ msgstr ""
 "Параметры Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Принудительный режим diablo, даже если hellfire.mpq был найден"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr "Использовать альтернативную палитру для уровней гнезда"
 
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1223,32 +1240,32 @@ msgstr ""
 "\n"
 "Сообщайте об ошибках на https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
 msgstr "неизвестный параметр '{:s}'\n"
 
-#: Source/diablo.cpp:896
+#: Source/diablo.cpp:900
 msgid "version {:s}"
 msgstr "версия {:s}"
 
-#: Source/diablo.cpp:1212
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "-- Истекло время ожидания --"
 
-#: Source/diablo.cpp:1213
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "-- Ожидание игроков --"
 
-#: Source/diablo.cpp:1232
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "Помощь недоступна"
 
-#: Source/diablo.cpp:1233
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr "в магазинах"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1445
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, версия = {:s}, сложность = {:s}"
 
@@ -1799,31 +1816,35 @@ msgstr ""
 "Чтение более одной книги укрепляет ваши знания заклинания, позволяя творить "
 "более эффективные заклинания."
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Shareware Hellfire Help"
 msgstr "Помощь Shareware Hellfire"
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Hellfire Help"
 msgstr "Помощь Hellfire"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Shareware Diablo Help"
 msgstr "Помощь Shareware Diablo"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Diablo Help"
 msgstr "Помощь Diablo"
 
-#: Source/help.cpp:155
+#: Source/help.cpp:161
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Нажмите ESC для завершения или клавиши со стрелками для прокрутки."
 
-#: Source/init.cpp:219
+#: Source/init.cpp:204
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq или spawn.mpq"
+
+#: Source/init.cpp:224
 msgid "Some Hellfire MPQs are missing"
 msgstr "Некоторые MPQ Hellfire отсутствуют"
 
-#: Source/init.cpp:219
+#: Source/init.cpp:224
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1831,7 +1852,7 @@ msgstr ""
 "Не все MPQ Hellfire были найдены.\n"
 "Скопируйте все файлы hf*.mpq."
 
-#: Source/init.cpp:227
+#: Source/init.cpp:232
 msgid "Unable to create main window"
 msgstr "Невозможно создать главное окно"
 
@@ -5487,25 +5508,25 @@ msgstr "Какой-то магический иммунитет"
 msgid "Trying to drop a floor item?"
 msgstr "Пытаетесь выкинуть предмет лежащий на полу?"
 
-#: Source/msg.cpp:984 Source/msg.cpp:1019 Source/msg.cpp:1052
-#: Source/msg.cpp:1179 Source/msg.cpp:1211 Source/msg.cpp:1243
-#: Source/msg.cpp:1273
+#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
+#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
+#: Source/msg.cpp:1269
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} произнес запрещённое заклинание."
 
-#: Source/msg.cpp:1659 Source/multi.cpp:805
+#: Source/msg.cpp:1655 Source/multi.cpp:805
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Игрок '{:s}' (уровень {:d}) только что присоединился к игре"
 
-#: Source/msg.cpp:1963
+#: Source/msg.cpp:1959
 msgid "Waiting for game data..."
 msgstr "Ожидание игровых данных..."
 
-#: Source/msg.cpp:1971
+#: Source/msg.cpp:1967
 msgid "The game ended"
 msgstr "Игра окончена"
 
-#: Source/msg.cpp:1977
+#: Source/msg.cpp:1973
 msgid "Unable to get level data"
 msgstr "Невозможно получить данные уровня"
 
@@ -6023,7 +6044,6 @@ msgstr "Невозможно прочитать архив файла сохра
 msgid "Unable to write to save file archive"
 msgstr "Невозможно записать в архив файла сохранения"
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (урвн {:d}): {:s}"
@@ -10694,6 +10714,12 @@ msgstr "Спуститься к Диабло"
 #: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
 msgid "Back to Level {:d}"
 msgstr "Вернуться на Уровень {:d}"
+
+#~ msgid "Force spawn mode even if diabdat.mpq is found"
+#~ msgstr "Принудительный режим spawn, даже если diabdat.mpq был найден"
+
+#~ msgid "Force diablo mode even if hellfire.mpq is found"
+#~ msgstr "Принудительный режим diablo, даже если hellfire.mpq был найден"
 
 #~ msgid "Specify the location of the .ttf font"
 #~ msgstr "Указать путь к .ttf шрифту"
