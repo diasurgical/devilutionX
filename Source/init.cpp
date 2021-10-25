@@ -181,7 +181,7 @@ void init_archives()
 	font_mpq = LoadMPQ(paths, "fonts.mpq"); // Extra fonts
 
 	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
-		char langMpqName[9] = {};
+		char langMpqName[10] = {};
 		strncpy(langMpqName, sgOptions.Language.szCode, sizeof(langMpqName) - strlen(langMpqName) - 1);
 
 		strncat(langMpqName, ".mpq", sizeof(langMpqName) - strlen(langMpqName) - 1);
