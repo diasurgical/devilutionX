@@ -830,6 +830,77 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 				if (CanBePlacedOnBelt(holdItem)) {
 					automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true);
 				} else {
+					/*
+					 * Move the respective InvBodyItem to inventory before moving the item from inventory
+					 * to InvBody with AutoEquip. AutoEquip requires the InvBody slot to be empty.
+					 * First identify the correct InvBody slot and store it in invloc.
+					 */
+					automaticallyUnequip = true; // Switch to say "I have no room when inventory is too full"
+					int invloc = NUM_INVLOC;
+					switch (holdItem._iLoc) {
+					case ILOC_ARMOR:
+						invloc = INVLOC_CHEST;
+						break;
+					case ILOC_HELM:
+						invloc = INVLOC_HEAD;
+						break;
+					case ILOC_AMULET:
+						invloc = INVLOC_AMULET;
+						break;
+					case ILOC_ONEHAND:
+						// Ensure shield is on the right, weapon on the left.
+						if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
+							SwapItem(&player.InvBody[INVLOC_HAND_RIGHT], &player.InvBody[INVLOC_HAND_LEFT]);
+						}
+						// User is attempting to move a weapon (left hand)
+						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_LEFT]._iClass
+						    && player.InvList[iv - 1]._iLoc == player.InvBody[INVLOC_HAND_LEFT]._iLoc) {
+							invloc = INVLOC_HAND_LEFT;
+						}
+						// User is attempting to move a shield (right hand)
+						if (player.InvList[iv - 1]._iClass == player.InvBody[INVLOC_HAND_RIGHT]._iClass
+						    && player.InvList[iv - 1]._iLoc == player.InvBody[INVLOC_HAND_RIGHT]._iLoc) {
+							invloc = INVLOC_HAND_RIGHT;
+						}
+						// A two-hand item can always be replaced with a one-hand item
+						if (player.InvBody[INVLOC_HAND_LEFT]._iLoc == ILOC_TWOHAND) {
+							invloc = INVLOC_HAND_LEFT;
+						}
+						break;
+					case ILOC_TWOHAND:
+						// Moving a two-hand item from inventory to InvBody requires emptying both hands
+						if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty()) {
+							holdItem = player.InvBody[INVLOC_HAND_RIGHT];
+							if (!AutoPlaceItemInInventory(player, holdItem, true)) {
+								// No space to  move right hand item to inventory, abort.
+								break;
+							}
+							holdItem = player.InvBody[INVLOC_HAND_LEFT];
+							if (!AutoPlaceItemInInventory(player, holdItem, false)) {
+								// No space for left item. Move back right item to right hand and abort.
+								player.InvBody[INVLOC_HAND_RIGHT] = player.InvList[player._pNumInv - 1];
+								player.RemoveInvItem(player._pNumInv - 1, false);
+								break;
+							}
+							player.InvBody[INVLOC_HAND_RIGHT]._itype = ItemType::None;
+							invloc = INVLOC_HAND_LEFT;
+						} else {
+							invloc = INVLOC_HAND_LEFT;
+						}
+						break;
+					default:
+						automaticallyUnequip = false; // Switch to say "I can't do that"
+						invloc = NUM_INVLOC;
+						break;
+					}
+					// Empty the identified InvBody slot (invloc) and hand over to AutoEquip
+					holdItem = player.InvBody[invloc];
+					if (player.InvBody[invloc]._itype != ItemType::None) {
+						if (invloc != NUM_INVLOC && AutoPlaceItemInInventory(player, holdItem, true)) {
+							player.InvBody[invloc]._itype = ItemType::None;
+						}
+					}
+					holdItem = player.InvList[iv - 1];
 					automaticallyMoved = automaticallyEquipped = AutoEquip(pnum, holdItem);
 				}
 			}
