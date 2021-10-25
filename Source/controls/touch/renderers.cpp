@@ -377,32 +377,37 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 }
 
 extern int pcurstrig;
+extern int pcursmissile;
+extern quest_id pcursquest;
 
 VirtualGamepadButtonType SecondaryActionButtonRenderer::GetButtonType()
 {
-	if (pcurstrig != -1)
+	if (pcursmissile != -1 || pcurstrig != -1 || pcursquest != Q_INVALID) {
 		return GetStairsButtonType(virtualPadButton->isHeld);
+	}
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return GetBlankButtonType(virtualPadButton->isHeld);
 	if (pcursobj != -1)
 		return GetObjectButtonType(virtualPadButton->isHeld);
 	if (pcursitem != -1)
 		return GetItemButtonType(virtualPadButton->isHeld);
-	if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
-		return GetApplyButtonType(virtualPadButton->isHeld);
+	if (invflag) {
+		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM)
+			return GetApplyButtonType(virtualPadButton->isHeld);
 
-	if (pcursinvitem != -1) {
-		Item *item;
-		if (pcursinvitem < INVITEM_INV_FIRST)
-			item = &MyPlayer->InvBody[pcursinvitem];
-		else if (pcursinvitem <= INVITEM_INV_LAST)
-			item = &MyPlayer->InvList[pcursinvitem - INVITEM_INV_FIRST];
-		else
-			item = &MyPlayer->SpdList[pcursinvitem - INVITEM_BELT_FIRST];
+		if (pcursinvitem != -1) {
+			Item *item;
+			if (pcursinvitem < INVITEM_INV_FIRST)
+				item = &MyPlayer->InvBody[pcursinvitem];
+			else if (pcursinvitem <= INVITEM_INV_LAST)
+				item = &MyPlayer->InvList[pcursinvitem - INVITEM_INV_FIRST];
+			else
+				item = &MyPlayer->SpdList[pcursinvitem - INVITEM_BELT_FIRST];
 
-		if (!item->IsScroll() || !spelldata[item->_iSpell].sTargeted) {
-			if (!item->isEquipment()) {
-				return GetApplyButtonType(virtualPadButton->isHeld);
+			if (!item->IsScroll() || !spelldata[item->_iSpell].sTargeted) {
+				if (!item->isEquipment()) {
+					return GetApplyButtonType(virtualPadButton->isHeld);
+				}
 			}
 		}
 	}
@@ -415,7 +420,7 @@ VirtualGamepadButtonType SpellActionButtonRenderer::GetButtonType()
 	if (pcurs >= CURSOR_FIRSTITEM)
 		return GetDropButtonType(virtualPadButton->isHeld);
 
-	if (pcursinvitem != -1 && pcurs == CURSOR_HAND) {
+	if (invflag && pcursinvitem != -1 && pcurs == CURSOR_HAND) {
 		return GetEquipButtonType(virtualPadButton->isHeld);
 	}
 
