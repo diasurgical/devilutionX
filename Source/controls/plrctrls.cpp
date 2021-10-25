@@ -602,6 +602,20 @@ Size GetItemSizeOnSlot(int slot)
 }
 
 /**
+ * Search for the first slot occupied by an item in the inventory.
+*/
+int FindFirstSlotOnItem(int8_t itemInvId)
+{
+	if (itemInvId == 0)
+		return -1;
+	for (int s = SLOTXY_INV_FIRST; s < SLOTXY_INV_LAST; s++) {
+		if (GetItemIdOnSlot(s) == itemInvId)
+			return s;
+	}
+	return -1;
+}
+
+/**
  * Reset cursor position based on the current slot.
  */
 void ResetInvCursorPosition()
@@ -609,16 +623,9 @@ void ResetInvCursorPosition()
 	Point mousePos {};
 	if (Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
 		int8_t itemInvId = GetItemIdOnSlot(Slot);
-
-		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
-		if (itemInvId != 0) {
-			for (int s = SLOTXY_INV_FIRST; s < SLOTXY_INV_LAST; ++s) {
-				if (GetItemIdOnSlot(s) == itemInvId) {
-					Slot = s;
-					break;
-				}
-			}
-		}
+		int itemSlot = FindFirstSlotOnItem(itemInvId);
+		if (itemSlot >= 0)
+			Slot = itemSlot;
 
 		// offset the slot to always move to the top-left most slot of that item
 		Size itemSize = GetItemSizeOnSlot(Slot);
@@ -933,18 +940,10 @@ void InvMove(AxisDirection dir)
 
 	// get item under new slot if navigating on the inventory
 	if (!isHoldingItem && Slot >= SLOTXY_INV_FIRST && Slot <= SLOTXY_INV_LAST) {
-		int itemSlot = Slot;
-		int8_t itemInvId = GetItemIdOnSlot(itemSlot);
-
-		// search the 'first slot' for that item in the inventory, it should have the positive number of that same InvId
-		if (itemInvId != 0) {
-			for (int s = SLOTXY_INV_FIRST; s < SLOTXY_INV_LAST; s++) {
-				if (GetItemIdOnSlot(s) == itemInvId) {
-					itemSlot = s;
-					break;
-				}
-			}
-		}
+		int8_t itemInvId = GetItemIdOnSlot(Slot);
+		int itemSlot = FindFirstSlotOnItem(itemInvId);
+		if (itemSlot < 0)
+			itemSlot = Slot;
 
 		// offset the slot to always move to the top-left most slot of that item
 		mousePos = GetSlotCoord(itemSlot);
@@ -1381,7 +1380,39 @@ void PerformPrimaryAction()
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
+			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
+
+			// Find any item occupying a slot that is currently under the cursor
+			int8_t itemUnderCursor = [](int inventorySlot) {
+				if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
+					return 0;
+				for (int x = 0; x < icursSize28.width; x++) {
+					for (int y = 0; y < icursSize28.height; y++) {
+						int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
+						if (slotUnderCursor > SLOTXY_INV_LAST)
+							continue;
+						int itemId = GetItemIdOnSlot(slotUnderCursor);
+						if (itemId != 0)
+							return itemId;
+					}
+				}
+				return 0;
+			}(inventorySlot);
+
+			// The cursor will need to be shifted to
+			// this slot if the item is swapped or lifted
+			int jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
 			CheckInvItem();
+
+			// If we don't find the item in the same position as before,
+			// it suggests that the item was swapped or lifted
+			int newSlot = FindFirstSlotOnItem(itemUnderCursor);
+			if (jumpSlot >= 0 && jumpSlot != newSlot) {
+				Point mousePos = GetSlotCoord(jumpSlot);
+				mousePos.y -= InventorySlotSizeInPixels.height;
+				Slot = jumpSlot;
+				SetCursorPos(mousePos);
+			}
 		}
 		return;
 	}
