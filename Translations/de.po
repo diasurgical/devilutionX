@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-25 07:12+0200\n"
+"POT-Creation-Date: 2021-10-25 23:11+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -321,26 +321,20 @@ msgid "OK"
 msgstr "OK"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:61
-#, fuzzy
-#| msgid "Down to Diablo"
 msgid "Switch to Diablo"
-msgstr "Hinunter zu Diablo"
+msgstr "Zu Diablo wechseln"
 
 #: Source/DiabloUI/extrasmenu.cpp:41
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Switch to Hellfire"
-msgstr "Hellfire verlassen"
+msgstr "Zu Hellfire wechseln"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-msgstr ""
+msgstr "Zur Vollversion wechseln"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Switch to Shareware"
-msgstr "in der Shareware"
+msgstr "Zur Shareware wechseln"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -363,10 +357,8 @@ msgid "Multi Player"
 msgstr "Mehrspieler"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-#, fuzzy
-#| msgid "Extra charges"
 msgid "Extras"
-msgstr "Extraladungen"
+msgstr "Extras"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Show Credits"
@@ -379,6 +371,10 @@ msgstr "Hellfire verlassen"
 #: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Diablo"
 msgstr "Diablo verlassen"
+
+#: Source/DiabloUI/mainmenu.cpp:55
+msgid "Shareware"
+msgstr "Shareware"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
@@ -447,10 +443,8 @@ msgid "Create Game"
 msgstr "Spiel erstellen"
 
 #: Source/DiabloUI/selgame.cpp:93
-#, fuzzy
-#| msgid "Create Game"
 msgid "Create Public Game"
-msgstr "Spiel erstellen"
+msgstr "Öffentliches Spiel erstellen"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
@@ -467,28 +461,24 @@ msgid "Create a new game with a difficulty setting of your choice."
 msgstr "Erstelle ein neues Spiel mit dem von Dir gewählten Schwierigkeitsgrad."
 
 #: Source/DiabloUI/selgame.cpp:125
-#, fuzzy
-#| msgid "Create a new game with a difficulty setting of your choice."
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr "Erstelle ein neues Spiel mit dem von Dir gewählten Schwierigkeitsgrad."
+msgstr ""
+"Erstelle ein neues öffentliches Spiel mit freiem Beitritt und dem von Dir "
+"gewählten Schwierigkeitsgrad."
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr ""
-"Tritt einem Netzwerkspiel mithilfe der IP-Adresse oder des Hostnamens bei."
+"Tritt einem laufenden Netzwerkspiel mithilfe der IP-Adresse oder des "
+"Hostnamens bei."
 
 #: Source/DiabloUI/selgame.cpp:131
-#, fuzzy
-#| msgid ""
-#| "Enter an IP or a hostname and join a game already in progress at that "
-#| "address."
 msgid "Join the public game already in progress at this address."
-msgstr ""
-"Tritt einem Netzwerkspiel mithilfe der IP-Adresse oder des Hostnamens bei."
+msgstr "Dem unter dieser Adresse laufenden öffentlichen Spiel beitreten."
 
 #: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
@@ -496,17 +486,17 @@ msgstr "Schwierigkeitsgrad"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "Normal"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1441
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "Alptraum"
 
 #: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1442
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "Hölle"
 
@@ -763,10 +753,8 @@ msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Bist Du sicher, dass Du den Charakter \"{:s}\" löschen willst?"
 
 #: Source/DiabloUI/selstart.cpp:60
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Enter Hellfire"
-msgstr "Hellfire verlassen"
+msgstr "Hellfire betreten"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
@@ -815,9 +803,6 @@ msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
 msgstr " DevilutionX wird weder von Blizzard Entertainment noch von"
 
 #: Source/DiabloUI/support_lines.cpp:20
-#, fuzzy
-#| msgid ""
-#| "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
 msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
 msgstr " GOG.com unterstützt oder betrieben und wurde von diesen"
 
@@ -854,26 +839,22 @@ msgstr ""
 "\n"
 "Fehler an Position {:s} Zeile {:d}"
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:116
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"Das Hauptdatenarchiv ({:s}) kann nicht geöffnet "
-"werden.\n"
+"Das Hauptdatenarchiv ({:s}) kann nicht geöffnet werden.\n"
 "\n"
 "Stelle sicher, dass es sich im Spielordner befindet."
 
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq oder spawn.mpq"
-
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:122
 msgid "Data File Error"
 msgstr "Dateifehler"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:130
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -881,7 +862,7 @@ msgstr ""
 "An folgenden Speicherort kann nicht geschrieben werden:\n"
 "{:s}"
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:132
 msgid "Read-Only Directory Error"
 msgstr "Nur-Lesen-Verzeichnisfehler"
 
@@ -894,10 +875,8 @@ msgid "password: "
 msgstr "Passwort: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Public Game"
-msgstr "Spiel beenden"
+msgstr "Öffentliches Spiel"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -960,8 +939,6 @@ msgid "{:s} Skill"
 msgstr "{:s}-Fertigkeit"
 
 #: Source/control.cpp:771
-#, fuzzy
-#| msgid "Spells"
 msgid "Spell"
 msgstr "Zauber"
 
@@ -982,11 +959,8 @@ msgid "Spell Level {:d}"
 msgstr "Zauberlevel {:d}"
 
 #: Source/control.cpp:787
-#, fuzzy
-#| msgid "{:d} Scroll"
-#| msgid_plural "{:d} Scrolls"
 msgid "Scroll"
-msgstr "{:d}-Schriftrolle"
+msgstr "Schriftrolle"
 
 #: Source/control.cpp:788 Source/control.cpp:1240
 msgid "Scroll of {:s}"
@@ -1199,26 +1173,45 @@ msgstr "\"Verbose logging\" aktivieren"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Spawnmodus starten, auch wenn diabdat.mpq vorhanden ist"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr "Demo-Datei aufnehmen"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr "Demo-Datei abspielen"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr "Alle Frame-Begrenzungen bei Demo-Wiedergabe ausschalten"
 
 #. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+#, fuzzy
+#| msgid "Hellfire Help"
+msgid "Force Hellfire mode"
+msgstr "Hellfire-Hilfe"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1227,16 +1220,11 @@ msgstr ""
 "Hellfire-Optionen:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Start von Diablo erzwingen, auch wenn hellfire.mpq vorhanden ist"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr "Wechselnde Farbpalette für den Stock verwenden"
 
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1244,32 +1232,32 @@ msgstr ""
 "\n"
 "Bugs melden unter https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
 msgstr "Unbekannte Option '{:s}'\n"
 
-#: Source/diablo.cpp:896
+#: Source/diablo.cpp:900
 msgid "version {:s}"
 msgstr "Version {:s}"
 
-#: Source/diablo.cpp:1212
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "-- Netzwerkunterbrechung --"
 
-#: Source/diablo.cpp:1213
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "-- Warten auf Spieler --"
 
-#: Source/diablo.cpp:1232
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "Hilfe nicht verfügbar"
 
-#: Source/diablo.cpp:1233
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr "während des Dialogs"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1445
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, Version = {:s}, Modus = {:s}"
 
@@ -1504,7 +1492,7 @@ msgstr "Gebt und Ihr werdet empfangen."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:103
 msgid "Some experience is gained by touch."
-msgstr "Einige Erfahrungen werden durch Berührung gesammelt."
+msgstr "Manche Erfahrung wird durch Berührung gewonnen."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:104
@@ -1815,31 +1803,35 @@ msgstr ""
 "Je mehr Bücher eines bestimmten Zaubers Du liest, desto größer wird Dein "
 "Wissen und Deine Effektivität beim Anwenden des Zaubers."
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Shareware Hellfire Help"
 msgstr "Shareware-Hellfire-Hilfe"
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Hellfire Help"
 msgstr "Hellfire-Hilfe"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Shareware Diablo Help"
 msgstr "Shareware-Diablo-Hilfe"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Diablo Help"
 msgstr "Diablo-Hilfe"
 
-#: Source/help.cpp:155
+#: Source/help.cpp:161
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Escape zum Beenden oder Pfeiltasten um zu scrollen."
 
-#: Source/init.cpp:219
+#: Source/init.cpp:204
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq oder spawn.mpq"
+
+#: Source/init.cpp:224
 msgid "Some Hellfire MPQs are missing"
 msgstr "Einige Hellfire-MPQs fehlen"
 
-#: Source/init.cpp:219
+#: Source/init.cpp:224
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1847,7 +1839,7 @@ msgstr ""
 "Nicht alle Hellfire-MPQs vorhanden.\n"
 "Bitte besorge alle hf*.mpq-Dateien."
 
-#: Source/init.cpp:227
+#: Source/init.cpp:232
 msgid "Unable to create main window"
 msgstr "Hauptfenster kann nicht erstellt werden"
 
@@ -5479,25 +5471,25 @@ msgstr "Einige magische Immunitäten"
 msgid "Trying to drop a floor item?"
 msgstr "Versuchst Du, einen Bodengegenstand fallen zu lassen?"
 
-#: Source/msg.cpp:984 Source/msg.cpp:1019 Source/msg.cpp:1052
-#: Source/msg.cpp:1179 Source/msg.cpp:1211 Source/msg.cpp:1243
-#: Source/msg.cpp:1273
+#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
+#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
+#: Source/msg.cpp:1269
 msgid "{:s} has cast an illegal spell."
 msgstr "Illegaler Zauber von {:s}"
 
-#: Source/msg.cpp:1659 Source/multi.cpp:805
+#: Source/msg.cpp:1655 Source/multi.cpp:805
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Spieler '{:s}' (Level {:d}) ist dem Spiel beigetreten"
 
-#: Source/msg.cpp:1963
+#: Source/msg.cpp:1959
 msgid "Waiting for game data..."
 msgstr "Warte auf Spieldaten..."
 
-#: Source/msg.cpp:1971
+#: Source/msg.cpp:1967
 msgid "The game ended"
 msgstr "Das Spiel ist zu Ende"
 
-#: Source/msg.cpp:1977
+#: Source/msg.cpp:1973
 msgid "Unable to get level data"
 msgstr "Leveldaten nicht verfügbar"
 
@@ -6012,7 +6004,6 @@ msgstr "Fehler beim Lesen vom Spielstandsarchiv"
 msgid "Unable to write to save file archive"
 msgstr "Fehler beim Schreiben ins Spielstandsarchiv"
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (lvl {:d}): {:s}"
@@ -10859,9 +10850,3 @@ msgstr "Hinunter zu Diablo"
 #: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
 msgid "Back to Level {:d}"
 msgstr "Zurück zu Level {:d}"
-
-#~ msgid "Specify the location of the .ttf font"
-#~ msgstr "Speicherort der .ttf-Schriftart definieren"
-
-#~ msgid "Specify the name of a custom .ttf font"
-#~ msgstr "Namen einer benutzerdefinierten .ttf-Schriftart definieren"
