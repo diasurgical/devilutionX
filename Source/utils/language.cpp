@@ -128,6 +128,18 @@ void SetPluralForm(char *string)
 		return;
 	}
 
+	// ro
+	if (strcmp(expression, "(n==1 ? 0 : n==0 || (n!=1 && n%100>=1 && n%100<=19) ? 1 : 2)") == 0) {
+		GetLocalPluralId = [](int n) -> int {
+			if (n == 1)
+				return 0;
+			if (n == 0 || (n != 1 && n % 100 >= 1 && n % 100 <= 19))
+				return 1;
+			return 2;
+		};
+		return;
+	}
+
 	// cs
 	if (strcmp(expression, "(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2") == 0) {
 		GetLocalPluralId = [](int n) -> int {
