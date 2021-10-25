@@ -376,10 +376,8 @@ msgid "Exit Diablo"
 msgstr "Выйти из Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:55
-#, fuzzy
-#| msgid "Switch to Shareware"
 msgid "Shareware"
-msgstr "Перейти в Shareware"
+msgstr "Shareware"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
@@ -1200,23 +1198,23 @@ msgid ""
 "\n"
 "Game selection:\n"
 msgstr ""
+"\n"
+"Выбор игры:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Force Shareware mode"
-msgstr ""
+msgstr "Запустить в режиме Shareware"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:796
 msgid "Force Diablo mode"
-msgstr ""
+msgstr "Запустить в режиме Diablo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
-#, fuzzy
-#| msgid "Hellfire Help"
 msgid "Force Hellfire mode"
-msgstr "Помощь Hellfire"
+msgstr "Запустить в режиме Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
