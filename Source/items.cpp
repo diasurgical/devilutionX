@@ -1314,12 +1314,12 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 			s = SPL_FIREBOLT;
 	}
 
-	char istr[68];
-	strcpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str());
+	char istr[68] = {};
+	strncpy(istr, fmt::format(_("{:s} of {:s}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(istr) - 1);
 	if (!StringInPanel(istr))
-		strcpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str());
-	strcpy(item._iName, istr);
-	strcpy(item._iIName, istr);
+		strncpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(istr) - 1);
+	strncpy(item._iName, istr, sizeof(item._iName) - 1);
+	strncpy(item._iIName, istr, sizeof(item._iIName) - 1);
 
 	int minc = spelldata[bs].sStaffMin;
 	int maxc = spelldata[bs].sStaffMax - minc + 1;
