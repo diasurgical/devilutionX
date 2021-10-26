@@ -3871,7 +3871,7 @@ bool OperateFountains(int pnum, int i)
 {
 	auto &player = Players[pnum];
 	bool applied = false;
-	SetRndSeed(Objects[i]._oRndSeed);
+	TemporarySeed temporarySeed(Objects[i]._oRndSeed);
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
 		if (deltaload)

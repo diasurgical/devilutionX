@@ -47,4 +47,15 @@ int32_t GenerateRnd(int32_t v)
 	return AdvanceRndSeed() % v;
 }
 
+TemporarySeed::TemporarySeed(uint32_t seed)
+{
+	OriginalSeed = sglGameSeed;
+	SetRndSeed(seed);
+}
+
+TemporarySeed::~TemporarySeed()
+{
+	SetRndSeed(OriginalSeed);
+}
+
 } // namespace devilution

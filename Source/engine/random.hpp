@@ -73,4 +73,16 @@ const T PickRandomlyAmong(const std::initializer_list<T> &values)
 	return *(values.begin() + index);
 }
 
+/**
+ * @brief Temporarily seeds the random number generator until the temporary seed goes out of scope.
+*/
+class TemporarySeed {
+public:
+	TemporarySeed(uint32_t seed);
+	~TemporarySeed();
+
+private:
+	uint32_t OriginalSeed;
+};
+
 } // namespace devilution
