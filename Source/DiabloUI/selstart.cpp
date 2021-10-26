@@ -28,30 +28,13 @@ void EscPressed()
 	endMenu = true;
 }
 
-void FocusChanged(int value)
-{
-	auto option = static_cast<StartUpGameOption>(vecDialogItems[value]->m_value);
-	gbIsHellfire = option == StartUpGameOption::Hellfire;
-	ArtBackground.Unload();
-	ArtBackgroundWidescreen.Unload();
-	LoadBackgroundArt("ui_art\\mainmenu.pcx", 1, false);
-	SetFadeLevel(256);
-	artLogo.Unload();
-	if (gbIsHellfire) {
-		LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
-		LoadMaskedArt("ui_art\\hf_logo2.pcx", &artLogo, 16);
-	} else {
-		LoadMaskedArt("ui_art\\smlogo.pcx", &artLogo, 15);
-	}
-	gbIsHellfire = true;
-}
-
 } // namespace
 
 void UiSelStartUpGameOption()
 {
 	LoadArt("ui_art\\mainmenuw.pcx", &ArtBackgroundWidescreen);
 	LoadBackgroundArt("ui_art\\mainmenu.pcx");
+	LoadMaskedArt("ui_art\\hf_logo2.pcx", &artLogo, 16);
 	UiAddBackground(&vecDialog);
 
 	SDL_Rect rect = { 0, (Sint16)(UI_OFFSET_Y), 0, 0 };
@@ -61,7 +44,7 @@ void UiSelStartUpGameOption()
 	vecDialogItems.push_back(std::make_unique<UiListItem>(_("Switch to Diablo"), static_cast<int>(StartUpGameOption::Diablo)));
 	vecDialog.push_back(std::make_unique<UiList>(vecDialogItems, PANEL_LEFT + 64, (UI_OFFSET_Y + 240), 510, 43, UiFlags::AlignCenter | UiFlags::FontSize42 | UiFlags::ColorUiGold, 5));
 
-	UiInitList(vecDialogItems.size(), FocusChanged, ItemSelected, EscPressed, vecDialog, true);
+	UiInitList(vecDialogItems.size(), nullptr, ItemSelected, EscPressed, vecDialog, true);
 
 	endMenu = false;
 	while (!endMenu) {

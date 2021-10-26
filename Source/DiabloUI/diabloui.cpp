@@ -614,7 +614,7 @@ Sint16 GetCenterOffset(Sint16 w, Sint16 bw)
 	return (bw - w) / 2;
 }
 
-void LoadBackgroundArt(const char *pszFile, int frames, bool withFading)
+void LoadBackgroundArt(const char *pszFile, int frames)
 {
 	SDL_Color pPal[256];
 	LoadArt(pszFile, &ArtBackground, frames, pPal);
@@ -625,7 +625,7 @@ void LoadBackgroundArt(const char *pszFile, int frames, bool withFading)
 	ApplyGamma(logical_palette, orig_palette, 256);
 
 	fadeTc = 0;
-	fadeValue = withFading ? 0 : 256;
+	fadeValue = 0;
 
 	if (IsHardwareCursorEnabled() && ArtCursor.surface != nullptr && GetCurrentCursorInfo().type() != CursorType::UserInterface) {
 #if SDL_VERSION_ATLEAST(2, 0, 0)
@@ -880,7 +880,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 		dbClickTimer = SDL_GetTicks();
 	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
 #else
-	} else if (gfnListFocus == nullptr || (sgbTouchActive && SelectedItem == index) || event.button.clicks >= 2 || (sgbTouchActive && SelectedItem == index)) {
+	} else if (gfnListFocus == nullptr || event.button.clicks >= 2) {
 #endif
 		SelectedItem = index;
 		UiFocusNavigationSelect();
