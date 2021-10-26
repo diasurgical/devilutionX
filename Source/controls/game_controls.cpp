@@ -100,6 +100,22 @@ bool GetGameAction(const SDL_Event &event, ControllerButtonEvent ctrlEvent, Game
 
 #if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
 	if (event.type == SDL_FINGERDOWN) {
+		if (VirtualGamepadState.menuPanel.charButton.isHeld && VirtualGamepadState.menuPanel.charButton.didStateChange) {
+			*action = GameAction(GameActionType_TOGGLE_CHARACTER_INFO);
+			return true;
+		}
+		if (VirtualGamepadState.menuPanel.questsButton.isHeld && VirtualGamepadState.menuPanel.questsButton.didStateChange) {
+			*action = GameAction(GameActionType_TOGGLE_QUEST_LOG);
+			return true;
+		}
+		if (VirtualGamepadState.menuPanel.inventoryButton.isHeld && VirtualGamepadState.menuPanel.inventoryButton.didStateChange) {
+			*action = GameAction(GameActionType_TOGGLE_INVENTORY);
+			return true;
+		}
+		if (VirtualGamepadState.menuPanel.mapButton.isHeld && VirtualGamepadState.menuPanel.mapButton.didStateChange) {
+			*action = GameActionSendKey { DVL_VK_TAB, false };
+			return true;
+		}
 		if (VirtualGamepadState.primaryActionButton.isHeld && VirtualGamepadState.primaryActionButton.didStateChange) {
 			if (!inGameMenu && !QuestLogIsOpen && !sbookflag)
 				*action = GameAction(GameActionType_PRIMARY_ACTION);

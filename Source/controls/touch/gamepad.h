@@ -7,6 +7,7 @@
 #include "controls/controller_buttons.h"
 #include "engine/circle.hpp"
 #include "engine/point.hpp"
+#include "engine/rectangle.hpp"
 
 namespace devilution {
 
@@ -31,22 +32,64 @@ struct VirtualDirectionPad {
 	void UpdatePosition(Point touchCoordinates);
 };
 
-struct VirtualPadButton {
-	Circle area;
+struct VirtualButton {
 	bool isHeld;
 	bool didStateChange;
 	std::function<bool()> isUsable;
 
-	VirtualPadButton()
-	    : area({ { 0, 0 }, 0 })
-	    , isHeld(false)
+	VirtualButton()
+	    : isHeld(false)
 	    , didStateChange(false)
 	    , isUsable([]() { return true; })
+	{
+	}
+
+	virtual bool Contains(Point point) = 0;
+};
+
+struct VirtualMenuButton : VirtualButton {
+	Rectangle area;
+
+	VirtualMenuButton()
+	    : area({ { 0, 0 }, { 0, 0 } })
+	{
+	}
+
+	bool Contains(Point point) override
+	{
+		return area.Contains(point);
+	}
+};
+
+struct VirtualPadButton : VirtualButton {
+	Circle area;
+
+	VirtualPadButton()
+	    : area({ { 0, 0 }, 0 })
+	{
+	}
+
+	bool Contains(Point point) override
+	{
+		return area.Contains(point);
+	}
+};
+
+struct VirtualMenuPanel {
+	VirtualMenuButton charButton;
+	VirtualMenuButton questsButton;
+	VirtualMenuButton inventoryButton;
+	VirtualMenuButton mapButton;
+	Rectangle area;
+
+	VirtualMenuPanel()
+	    : area({ { 0, 0 }, { 0, 0 } })
 	{
 	}
 };
 
 struct VirtualGamepad {
+	VirtualMenuPanel menuPanel;
 	VirtualDirectionPad directionPad;
 
 	VirtualPadButton primaryActionButton;

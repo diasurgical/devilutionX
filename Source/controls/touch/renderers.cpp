@@ -190,9 +190,20 @@ void RenderVirtualGamepad(SDL_Surface *surface)
 
 void VirtualGamepadRenderer::LoadArt(SDL_Renderer *renderer)
 {
+	menuPanelRenderer.LoadArt(renderer);
 	directionPadRenderer.LoadArt(renderer);
 	LoadButtonArt(&buttonArt, renderer);
 	LoadPotionArt(&potionArt, renderer);
+}
+
+void VirtualMenuPanelRenderer::LoadArt(SDL_Renderer *renderer)
+{
+	menuArt.surface.reset(LoadPNG("ui_art\\menu.png"));
+
+	if (renderer != nullptr) {
+		menuArt.texture.reset(SDL_CreateTextureFromSurface(renderer, menuArt.surface.get()));
+		menuArt.surface = nullptr;
+	}
 }
 
 void VirtualDirectionPadRenderer::LoadArt(SDL_Renderer *renderer)
@@ -225,6 +236,17 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 	manaButtonRenderer.RenderPotion(renderFunction, potionArt);
 
 	directionPadRenderer.Render(renderFunction);
+	menuPanelRenderer.Render(renderFunction);
+}
+
+void VirtualMenuPanelRenderer::Render(RenderFunction renderFunction)
+{
+	int x = virtualMenuPanel->area.position.x;
+	int y = virtualMenuPanel->area.position.y;
+	int width = virtualMenuPanel->area.size.width;
+	int height = virtualMenuPanel->area.size.height;
+	SDL_Rect rect { x, y, width, height };
+	renderFunction(menuArt, nullptr, &rect);
 }
 
 void VirtualDirectionPadRenderer::Render(RenderFunction renderFunction)
@@ -450,9 +472,15 @@ VirtualGamepadButtonType PotionButtonRenderer::GetButtonType()
 
 void VirtualGamepadRenderer::UnloadArt()
 {
+	menuPanelRenderer.UnloadArt();
 	directionPadRenderer.UnloadArt();
 	buttonArt.Unload();
 	potionArt.Unload();
+}
+
+void VirtualMenuPanelRenderer::UnloadArt()
+{
+	menuArt.Unload();
 }
 
 void VirtualDirectionPadRenderer::UnloadArt()
