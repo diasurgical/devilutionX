@@ -105,7 +105,7 @@ msgstr "Музыка"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr "Звуковой дизайн"
+msgstr "Дизайн звука"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
@@ -149,7 +149,7 @@ msgstr "Штурмовая команда (Тестировщики)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr "Спецназ тестировщиков (Тестировщики совместимости)"
+msgstr "Команда специальных операций (Тестировщики совместимости)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
