@@ -204,7 +204,8 @@ bool GetIniValue(const char *sectionName, const char *keyName, char *string, int
 		strncpy(string, defaultString, stringSize);
 		return false;
 	}
-	strncpy(string, value, stringSize);
+	strncpy(string, value, stringSize - 1);
+	string[stringSize - 1] = '\0';
 	return true;
 }
 
