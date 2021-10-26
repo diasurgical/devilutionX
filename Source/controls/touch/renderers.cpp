@@ -235,6 +235,7 @@ void VirtualGamepadRenderer::Render(RenderFunction renderFunction)
 	healthButtonRenderer.RenderPotion(renderFunction, potionArt);
 	manaButtonRenderer.RenderPotion(renderFunction, potionArt);
 
+	standButtonRenderer.Render(renderFunction, buttonArt);
 	directionPadRenderer.Render(renderFunction);
 	menuPanelRenderer.Render(renderFunction);
 }
@@ -365,6 +366,11 @@ std::optional<VirtualGamepadPotionType> PotionButtonRenderer::GetPotionType()
 	}
 
 	return std::nullopt;
+}
+
+VirtualGamepadButtonType StandButtonRenderer::GetButtonType()
+{
+	return GetStandButtonType(virtualPadButton->isHeld);
 }
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()

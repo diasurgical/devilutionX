@@ -9,6 +9,7 @@
 #include "controls/controller.h"
 #include "controls/controller_motion.h"
 #include "controls/game_controls.h"
+#include "controls/touch/gamepad.h"
 #include "cursor.h"
 #include "doom.h"
 #include "engine/point.hpp"
@@ -52,6 +53,13 @@ namespace {
 
 int Slot = SLOTXY_INV_FIRST;
 int PreviousInventoryColumn = -1;
+
+const Direction FaceDir[3][3] = {
+	// NONE             UP                DOWN
+	{ Direction::South, Direction::North, Direction::South },        // NONE
+	{ Direction::West, Direction::NorthWest, Direction::SouthWest }, // LEFT
+	{ Direction::East, Direction::NorthEast, Direction::SouthEast }, // RIGHT
+};
 
 /**
  * Number of angles to turn to face the coordinate
@@ -441,13 +449,42 @@ void Interact()
 {
 	if (leveltype == DTYPE_TOWN && pcursmonst != -1) {
 		NetSendCmdLocParam1(true, CMD_TALKXY, Towners[pcursmonst].position, pcursmonst);
-	} else if (pcursmonst != -1) {
+		return;
+	}
+
+	bool stand = false;
+#ifdef VIRTUAL_GAMEPAD
+	stand = VirtualGamepadState.standButton.isHeld;
+#endif
+
+	if (leveltype != DTYPE_TOWN && stand) {
+		auto &myPlayer = Players[MyPlayerId];
+		Direction pdir = myPlayer._pdir;
+		AxisDirection moveDir = GetMoveDirection();
+		bool motion = moveDir.x != AxisDirectionX_NONE || moveDir.y != AxisDirectionY_NONE;
+		if (motion) {
+			pdir = FaceDir[static_cast<std::size_t>(moveDir.x)][static_cast<std::size_t>(moveDir.y)];
+		}
+
+		Point position = myPlayer.position.tile + pdir;
+		if (pcursmonst != -1 && !motion) {
+			position = Monsters[pcursmonst].position.tile;
+		}
+
+		NetSendCmdLoc(MyPlayerId, true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKXY : CMD_SATTACKXY, position);
+		return;
+	}
+
+	if (pcursmonst != -1) {
 		if (!Players[MyPlayerId].UsesRangedWeapon() || CanTalkToMonst(Monsters[pcursmonst])) {
 			NetSendCmdParam1(true, CMD_ATTACKID, pcursmonst);
 		} else {
 			NetSendCmdParam1(true, CMD_RATTACKID, pcursmonst);
 		}
-	} else if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
+		return;
+	}
+
+	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
 	}
 }
@@ -1044,13 +1081,6 @@ void SpellBookMove(AxisDirection dir)
 	}
 }
 
-const Direction FaceDir[3][3] = {
-	// NONE             UP                DOWN
-	{ Direction::South, Direction::North, Direction::South },        // NONE
-	{ Direction::West, Direction::NorthWest, Direction::SouthWest }, // LEFT
-	{ Direction::East, Direction::NorthEast, Direction::SouthEast }, // RIGHT
-};
-
 /**
  * @brief check if stepping in direction (dir) from position is blocked.
  *
@@ -1092,6 +1122,11 @@ void WalkInDir(int playerId, AxisDirection dir)
 
 	if (!player.IsWalking() && player.CanChangeAction())
 		player._pdir = pdir;
+
+#ifdef VIRTUAL_GAMEPAD
+	if (VirtualGamepadState.standButton.isHeld)
+		return;
+#endif
 
 	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
 		return; // Don't start backtrack around obstacles

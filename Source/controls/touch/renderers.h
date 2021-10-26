@@ -102,6 +102,17 @@ protected:
 	virtual VirtualGamepadButtonType GetButtonType() = 0;
 };
 
+class StandButtonRenderer : public VirtualPadButtonRenderer {
+public:
+	StandButtonRenderer(VirtualPadButton *standButton)
+	    : VirtualPadButtonRenderer(standButton)
+	{
+	}
+
+private:
+	VirtualGamepadButtonType GetButtonType();
+};
+
 class PrimaryActionButtonRenderer : public VirtualPadButtonRenderer {
 public:
 	PrimaryActionButtonRenderer(VirtualPadButton *primaryActionButton)
@@ -171,6 +182,7 @@ public:
 	VirtualGamepadRenderer(VirtualGamepad *virtualGamepad)
 	    : menuPanelRenderer(&virtualGamepad->menuPanel)
 	    , directionPadRenderer(&virtualGamepad->directionPad)
+	    , standButtonRenderer(&virtualGamepad->standButton)
 	    , primaryActionButtonRenderer(&virtualGamepad->primaryActionButton)
 	    , secondaryActionButtonRenderer(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonRenderer(&virtualGamepad->spellActionButton)
@@ -187,6 +199,7 @@ public:
 private:
 	VirtualMenuPanelRenderer menuPanelRenderer;
 	VirtualDirectionPadRenderer directionPadRenderer;
+	StandButtonRenderer standButtonRenderer;
 
 	PrimaryActionButtonRenderer primaryActionButtonRenderer;
 	SecondaryActionButtonRenderer secondaryActionButtonRenderer;

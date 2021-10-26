@@ -91,6 +91,7 @@ struct VirtualMenuPanel {
 struct VirtualGamepad {
 	VirtualMenuPanel menuPanel;
 	VirtualDirectionPad directionPad;
+	VirtualPadButton standButton;
 
 	VirtualPadButton primaryActionButton;
 	VirtualPadButton secondaryActionButton;

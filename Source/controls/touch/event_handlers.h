@@ -31,10 +31,11 @@ private:
 
 class VirtualButtonEventHandler {
 public:
-	VirtualButtonEventHandler(VirtualButton *virtualButton)
+	VirtualButtonEventHandler(VirtualButton *virtualButton, bool toggles = false)
 	    : virtualButton(virtualButton)
 	    , activeFinger(0)
 	    , isActive(false)
+	    , toggles(toggles)
 	{
 	}
 
@@ -44,6 +45,7 @@ private:
 	VirtualButton *virtualButton;
 	SDL_FingerID activeFinger;
 	bool isActive;
+	bool toggles;
 
 	bool HandleFingerDown(const SDL_TouchFingerEvent &event);
 	bool HandleFingerUp(const SDL_TouchFingerEvent &event);
@@ -58,6 +60,7 @@ public:
 	    , inventoryMenuButtonEventHandler(&virtualGamepad->menuPanel.inventoryButton)
 	    , mapMenuButtonEventHandler(&virtualGamepad->menuPanel.mapButton)
 	    , directionPadEventHandler(&virtualGamepad->directionPad)
+	    , standButtonEventHandler(&virtualGamepad->standButton, true)
 	    , primaryActionButtonEventHandler(&virtualGamepad->primaryActionButton)
 	    , secondaryActionButtonEventHandler(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonEventHandler(&virtualGamepad->spellActionButton)
@@ -76,6 +79,7 @@ private:
 	VirtualButtonEventHandler mapMenuButtonEventHandler;
 
 	VirtualDirectionPadEventHandler directionPadEventHandler;
+	VirtualButtonEventHandler standButtonEventHandler;
 
 	VirtualButtonEventHandler primaryActionButtonEventHandler;
 	VirtualButtonEventHandler secondaryActionButtonEventHandler;
