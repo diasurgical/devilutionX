@@ -55,6 +55,11 @@ VirtualGamepadButtonType GetBlankButtonType(bool isPressed)
 	return isPressed ? GAMEPAD_BLANKDOWN : GAMEPAD_BLANK;
 }
 
+VirtualGamepadButtonType GetPotionButtonType(bool isPressed)
+{
+	return isPressed ? GAMEPAD_POTIONDOWN : GAMEPAD_POTION;
+}
+
 VirtualGamepadButtonType GetApplyButtonType(bool isPressed)
 {
 	return isPressed ? GAMEPAD_APPLYDOWN : GAMEPAD_APPLY;
@@ -82,7 +87,7 @@ VirtualGamepadButtonType GetStandButtonType(bool isPressed)
 
 void LoadButtonArt(Art *buttonArt, SDL_Renderer *renderer)
 {
-	const int Frames = 24;
+	const int Frames = 26;
 	buttonArt->surface.reset(LoadPNG("ui_art\\button.png"));
 	if (buttonArt->surface == nullptr)
 		return;
@@ -440,7 +445,7 @@ VirtualGamepadButtonType CancelButtonRenderer::GetButtonType()
 
 VirtualGamepadButtonType PotionButtonRenderer::GetButtonType()
 {
-	return GetBlankButtonType(virtualPadButton->isHeld);
+	return GetPotionButtonType(virtualPadButton->isHeld);
 }
 
 void VirtualGamepadRenderer::UnloadArt()

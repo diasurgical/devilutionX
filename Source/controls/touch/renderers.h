@@ -35,6 +35,8 @@ enum VirtualGamepadButtonType {
 	GAMEPAD_STAIRSDOWN,
 	GAMEPAD_STAND,
 	GAMEPAD_STANDDOWN,
+	GAMEPAD_POTION,
+	GAMEPAD_POTIONDOWN,
 };
 
 enum VirtualGamepadPotionType {
