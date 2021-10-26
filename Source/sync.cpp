@@ -157,16 +157,18 @@ void SyncMonster(int pnum, const TSyncMonster &monsterSync)
 	const Point position { monsterSync._mx, monsterSync._my };
 	const int enemyId = monsterSync._menemy;
 
-	uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
-	if (delta > 255) {
-		delta = 255;
-	}
+	if (monster._msquelch != 0) {
+		uint32_t delta = Players[MyPlayerId].position.tile.ManhattanDistance(monster.position.tile);
+		if (delta > 255) {
+			delta = 255;
+		}
 
-	if (delta < monsterSync._mdelta || (delta == monsterSync._mdelta && pnum > MyPlayerId)) {
-		return;
-	}
-	if (monster.position.future == position) {
-		return;
+		if (delta < monsterSync._mdelta || (delta == monsterSync._mdelta && pnum > MyPlayerId)) {
+			return;
+		}
+		if (monster.position.future == position) {
+			return;
+		}
 	}
 	if (IsAnyOf(monster._mmode, MonsterMode::Charge, MonsterMode::Petrified)) {
 		return;
