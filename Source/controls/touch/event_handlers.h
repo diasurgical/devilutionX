@@ -29,10 +29,10 @@ private:
 	bool HandleFingerMotion(const SDL_TouchFingerEvent &event);
 };
 
-class VirtualPadButtonEventHandler {
+class VirtualButtonEventHandler {
 public:
-	VirtualPadButtonEventHandler(VirtualPadButton *virtualPadButton)
-	    : virtualPadButton(virtualPadButton)
+	VirtualButtonEventHandler(VirtualButton *virtualButton)
+	    : virtualButton(virtualButton)
 	    , activeFinger(0)
 	    , isActive(false)
 	{
@@ -41,7 +41,7 @@ public:
 	bool Handle(const SDL_Event &event);
 
 private:
-	VirtualPadButton *virtualPadButton;
+	VirtualButton *virtualButton;
 	SDL_FingerID activeFinger;
 	bool isActive;
 
@@ -53,7 +53,11 @@ private:
 class VirtualGamepadEventHandler {
 public:
 	VirtualGamepadEventHandler(VirtualGamepad *virtualGamepad)
-	    : directionPadEventHandler(&virtualGamepad->directionPad)
+	    : charMenuButtonEventHandler(&virtualGamepad->menuPanel.charButton)
+	    , questsMenuButtonEventHandler(&virtualGamepad->menuPanel.questsButton)
+	    , inventoryMenuButtonEventHandler(&virtualGamepad->menuPanel.inventoryButton)
+	    , mapMenuButtonEventHandler(&virtualGamepad->menuPanel.mapButton)
+	    , directionPadEventHandler(&virtualGamepad->directionPad)
 	    , primaryActionButtonEventHandler(&virtualGamepad->primaryActionButton)
 	    , secondaryActionButtonEventHandler(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonEventHandler(&virtualGamepad->spellActionButton)
@@ -66,15 +70,20 @@ public:
 	bool Handle(const SDL_Event &event);
 
 private:
+	VirtualButtonEventHandler charMenuButtonEventHandler;
+	VirtualButtonEventHandler questsMenuButtonEventHandler;
+	VirtualButtonEventHandler inventoryMenuButtonEventHandler;
+	VirtualButtonEventHandler mapMenuButtonEventHandler;
+
 	VirtualDirectionPadEventHandler directionPadEventHandler;
 
-	VirtualPadButtonEventHandler primaryActionButtonEventHandler;
-	VirtualPadButtonEventHandler secondaryActionButtonEventHandler;
-	VirtualPadButtonEventHandler spellActionButtonEventHandler;
-	VirtualPadButtonEventHandler cancelButtonEventHandler;
+	VirtualButtonEventHandler primaryActionButtonEventHandler;
+	VirtualButtonEventHandler secondaryActionButtonEventHandler;
+	VirtualButtonEventHandler spellActionButtonEventHandler;
+	VirtualButtonEventHandler cancelButtonEventHandler;
 
-	VirtualPadButtonEventHandler healthButtonEventHandler;
-	VirtualPadButtonEventHandler manaButtonEventHandler;
+	VirtualButtonEventHandler healthButtonEventHandler;
+	VirtualButtonEventHandler manaButtonEventHandler;
 };
 
 void HandleTouchEvent(const SDL_Event &event);

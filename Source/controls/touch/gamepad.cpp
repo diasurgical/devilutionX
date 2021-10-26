@@ -51,6 +51,7 @@ void InitializeVirtualGamepad()
 {
 	int screenPixels = std::min(gnScreenWidth, gnScreenHeight);
 	int inputMargin = screenPixels / 10;
+	int menuButtonWidth = screenPixels / 10;
 	int directionPadSize = screenPixels / 4;
 	int padButtonSize = round(1.1 * screenPixels / 10);
 	int padButtonSpacing = inputMargin / 3;
@@ -67,10 +68,19 @@ void InitializeVirtualGamepad()
 
 		float dpi = std::min(hdpi, vdpi);
 		inputMargin = round(0.25 * dpi);
+		menuButtonWidth = round(0.2 * dpi);
 		directionPadSize = round(dpi);
 		padButtonSize = round(0.3 * dpi);
 		padButtonSpacing = round(0.1 * dpi);
 	}
+
+	int menuPanelTopMargin = 30;
+	int menuPanelButtonSpacing = 4;
+	Size menuPanelButtonSize = { 64, 62 };
+	int rightMarginMenuButton4 = menuPanelButtonSpacing + menuPanelButtonSize.width;
+	int rightMarginMenuButton3 = rightMarginMenuButton4 + menuPanelButtonSpacing + menuPanelButtonSize.width;
+	int rightMarginMenuButton2 = rightMarginMenuButton3 + menuPanelButtonSpacing + menuPanelButtonSize.width;
+	int rightMarginMenuButton1 = rightMarginMenuButton2 + menuPanelButtonSpacing + menuPanelButtonSize.width;
 
 	int padButtonAreaWidth = round(std::sqrt(2) * (padButtonSize + padButtonSpacing));
 
@@ -79,42 +89,74 @@ void InitializeVirtualGamepad()
 	int padButtonBottom = gnScreenHeight - inputMargin - padButtonSize / 2;
 	int padButtonTop = padButtonBottom - padButtonAreaWidth;
 
+	Rectangle &charButtonArea = VirtualGamepadState.menuPanel.charButton.area;
+	charButtonArea.position.x = gnScreenWidth - rightMarginMenuButton1 * menuButtonWidth / menuPanelButtonSize.width;
+	charButtonArea.position.y = menuPanelTopMargin * menuButtonWidth / menuPanelButtonSize.width;
+	charButtonArea.size.width = menuButtonWidth;
+	charButtonArea.size.height = menuPanelButtonSize.height * menuButtonWidth / menuPanelButtonSize.width;
+
+	Rectangle &questsButtonArea = VirtualGamepadState.menuPanel.questsButton.area;
+	questsButtonArea.position.x = gnScreenWidth - rightMarginMenuButton2 * menuButtonWidth / menuPanelButtonSize.width;
+	questsButtonArea.position.y = menuPanelTopMargin * menuButtonWidth / menuPanelButtonSize.width;
+	questsButtonArea.size.width = menuButtonWidth;
+	questsButtonArea.size.height = menuPanelButtonSize.height * menuButtonWidth / menuPanelButtonSize.width;
+
+	Rectangle &inventoryButtonArea = VirtualGamepadState.menuPanel.inventoryButton.area;
+	inventoryButtonArea.position.x = gnScreenWidth - rightMarginMenuButton3 * menuButtonWidth / menuPanelButtonSize.width;
+	inventoryButtonArea.position.y = menuPanelTopMargin * menuButtonWidth / menuPanelButtonSize.width;
+	inventoryButtonArea.size.width = menuButtonWidth;
+	inventoryButtonArea.size.height = menuPanelButtonSize.height * menuButtonWidth / menuPanelButtonSize.width;
+
+	Rectangle &mapButtonArea = VirtualGamepadState.menuPanel.mapButton.area;
+	mapButtonArea.position.x = gnScreenWidth - rightMarginMenuButton4 * menuButtonWidth / menuPanelButtonSize.width;
+	mapButtonArea.position.y = menuPanelTopMargin * menuButtonWidth / menuPanelButtonSize.width;
+	mapButtonArea.size.width = menuButtonWidth;
+	mapButtonArea.size.height = menuPanelButtonSize.height * menuButtonWidth / menuPanelButtonSize.width;
+
+	Rectangle &menuPanelArea = VirtualGamepadState.menuPanel.area;
+	menuPanelArea.position.x = gnScreenWidth - 399 * menuButtonWidth / menuPanelButtonSize.width;
+	menuPanelArea.position.y = 0;
+	menuPanelArea.size.width = 399 * menuButtonWidth / menuPanelButtonSize.width;
+	menuPanelArea.size.height = 162 * menuButtonWidth / menuPanelButtonSize.width;
+
 	VirtualDirectionPad &directionPad = VirtualGamepadState.directionPad;
 	directionPad.area.position.x = inputMargin + directionPadSize / 2;
 	directionPad.area.position.y = gnScreenHeight - inputMargin - directionPadSize / 2;
 	directionPad.area.radius = directionPadSize / 2;
 	directionPad.position = directionPad.area.position;
 
-	VirtualPadButton &primaryActionButton = VirtualGamepadState.primaryActionButton;
-	primaryActionButton.area.position.x = padButtonRight;
-	primaryActionButton.area.position.y = (padButtonTop + padButtonBottom) / 2;
-	primaryActionButton.area.radius = padButtonSize / 2;
+	Circle &primaryActionButtonArea = VirtualGamepadState.primaryActionButton.area;
+	primaryActionButtonArea.position.x = padButtonRight;
+	primaryActionButtonArea.position.y = (padButtonTop + padButtonBottom) / 2;
+	primaryActionButtonArea.radius = padButtonSize / 2;
 
-	VirtualPadButton &secondaryActionButton = VirtualGamepadState.secondaryActionButton;
-	secondaryActionButton.area.position.x = (padButtonLeft + padButtonRight) / 2;
-	secondaryActionButton.area.position.y = padButtonTop;
-	secondaryActionButton.area.radius = padButtonSize / 2;
+	Circle &secondaryActionButtonArea = VirtualGamepadState.secondaryActionButton.area;
+	secondaryActionButtonArea.position.x = (padButtonLeft + padButtonRight) / 2;
+	secondaryActionButtonArea.position.y = padButtonTop;
+	secondaryActionButtonArea.radius = padButtonSize / 2;
 
-	VirtualPadButton &spellActionButton = VirtualGamepadState.spellActionButton;
-	spellActionButton.area.position.x = padButtonLeft;
-	spellActionButton.area.position.y = (padButtonTop + padButtonBottom) / 2;
-	spellActionButton.area.radius = padButtonSize / 2;
+	Circle &spellActionButtonArea = VirtualGamepadState.spellActionButton.area;
+	spellActionButtonArea.position.x = padButtonLeft;
+	spellActionButtonArea.position.y = (padButtonTop + padButtonBottom) / 2;
+	spellActionButtonArea.radius = padButtonSize / 2;
 
-	VirtualPadButton &cancelButton = VirtualGamepadState.cancelButton;
-	cancelButton.area.position.x = (padButtonLeft + padButtonRight) / 2;
-	cancelButton.area.position.y = padButtonBottom;
-	cancelButton.area.radius = padButtonSize / 2;
+	Circle &cancelButtonArea = VirtualGamepadState.cancelButton.area;
+	cancelButtonArea.position.x = (padButtonLeft + padButtonRight) / 2;
+	cancelButtonArea.position.y = padButtonBottom;
+	cancelButtonArea.radius = padButtonSize / 2;
 
 	VirtualPadButton &healthButton = VirtualGamepadState.healthButton;
-	healthButton.area.position.x = directionPad.area.position.x - (padButtonSize + padButtonSpacing) / 2;
-	healthButton.area.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
-	healthButton.area.radius = padButtonSize / 2;
+	Circle &healthButtonArea = healthButton.area;
+	healthButtonArea.position.x = directionPad.area.position.x - (padButtonSize + padButtonSpacing) / 2;
+	healthButtonArea.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
+	healthButtonArea.radius = padButtonSize / 2;
 	healthButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
 
 	VirtualPadButton &manaButton = VirtualGamepadState.manaButton;
-	manaButton.area.position.x = directionPad.area.position.x + (padButtonSize + padButtonSpacing) / 2;
-	manaButton.area.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
-	manaButton.area.radius = padButtonSize / 2;
+	Circle &manaButtonArea = manaButton.area;
+	manaButtonArea.position.x = directionPad.area.position.x + (padButtonSize + padButtonSpacing) / 2;
+	manaButtonArea.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
+	manaButtonArea.radius = padButtonSize / 2;
 	manaButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
 }
 

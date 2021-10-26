@@ -49,6 +49,22 @@ enum VirtualGamepadPotionType {
 
 typedef std::function<void(Art &art, SDL_Rect *src, SDL_Rect *dst)> RenderFunction;
 
+class VirtualMenuPanelRenderer {
+public:
+	VirtualMenuPanelRenderer(VirtualMenuPanel *virtualMenuPanel)
+	    : virtualMenuPanel(virtualMenuPanel)
+	{
+	}
+
+	void LoadArt(SDL_Renderer *renderer);
+	void Render(RenderFunction renderFunction);
+	void UnloadArt();
+
+private:
+	VirtualMenuPanel *virtualMenuPanel;
+	Art menuArt;
+};
+
 class VirtualDirectionPadRenderer {
 public:
 	VirtualDirectionPadRenderer(VirtualDirectionPad *virtualDirectionPad)
@@ -151,7 +167,8 @@ private:
 class VirtualGamepadRenderer {
 public:
 	VirtualGamepadRenderer(VirtualGamepad *virtualGamepad)
-	    : directionPadRenderer(&virtualGamepad->directionPad)
+	    : menuPanelRenderer(&virtualGamepad->menuPanel)
+	    , directionPadRenderer(&virtualGamepad->directionPad)
 	    , primaryActionButtonRenderer(&virtualGamepad->primaryActionButton)
 	    , secondaryActionButtonRenderer(&virtualGamepad->secondaryActionButton)
 	    , spellActionButtonRenderer(&virtualGamepad->spellActionButton)
@@ -166,6 +183,7 @@ public:
 	void UnloadArt();
 
 private:
+	VirtualMenuPanelRenderer menuPanelRenderer;
 	VirtualDirectionPadRenderer directionPadRenderer;
 
 	PrimaryActionButtonRenderer primaryActionButtonRenderer;
