@@ -2086,8 +2086,23 @@ void SaveLevel()
 			file.WriteLE<int8_t>(objectId);
 		for (int objectId : AvailableObjects)
 			file.WriteLE<int8_t>(objectId);
-		for (int i = 0; i < ActiveObjectCount; i++)
+		for (int i = 0; i < ActiveObjectCount; i++) {
+			/* make dynamic light sources unseen when saving level data for level change */
+			switch (Objects[ActiveObjects[i]]._otype) {
+			case OBJ_L1LIGHT:
+			case OBJ_SKFIRE:
+			case OBJ_CANDLE1:
+			case OBJ_CANDLE2:
+			case OBJ_BOOKCANDLE:
+			case OBJ_STORYCANDLE:
+			case OBJ_TORCHL:
+			case OBJ_TORCHR:
+			case OBJ_TORCHL2:
+			case OBJ_TORCHR2:
+				Objects[ActiveObjects[i]]._oVar1 = 0;
+			}
 			SaveObject(file, Objects[ActiveObjects[i]]);
+		}
 	}
 
 	for (int itemId : ActiveItems)
