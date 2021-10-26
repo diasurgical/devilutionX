@@ -1034,7 +1034,7 @@ void InitControlPan()
 	}
 	pQLogCel = LoadCel("Data\\Quest.CEL", SPANEL_WIDTH);
 	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
-	dropGoldFlag = false;
+	CloseGoldDrop();
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
@@ -1309,14 +1309,14 @@ void CheckBtnUp()
 			sbookflag = false;
 			invflag = !invflag;
 			if (dropGoldFlag) {
-				dropGoldFlag = false;
+				CloseGoldDrop();
 				dropGoldValue = 0;
 			}
 			break;
 		case PanelButtonSpellbook:
 			invflag = false;
 			if (dropGoldFlag) {
-				dropGoldFlag = false;
+				CloseGoldDrop();
 				dropGoldValue = 0;
 			}
 			sbookflag = !sbookflag;
@@ -1679,7 +1679,7 @@ void control_drop_gold(char vkey)
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 		return;
 	}
@@ -1690,9 +1690,9 @@ void control_drop_gold(char vkey)
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			RemoveGold(myPlayer, initialDropGoldIndex);
-		dropGoldFlag = false;
+		CloseGoldDrop();
 	} else if (vkey == DVL_VK_ESCAPE) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
 		input[strlen(input) - 1] = '\0';
@@ -1891,6 +1891,11 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 #endif
 
 	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+}
+
+void CloseGoldDrop()
+{
+	dropGoldFlag = false;
 }
 
 } // namespace devilution

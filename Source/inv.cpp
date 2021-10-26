@@ -684,7 +684,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -1631,7 +1631,7 @@ void CheckItemStats(Player &player)
 void InvGetItem(int pnum, Item *item, int ii)
 {
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -1667,7 +1667,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -2138,7 +2138,7 @@ bool UseInvItem(int pnum, int cii)
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
