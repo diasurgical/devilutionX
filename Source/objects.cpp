@@ -3560,7 +3560,7 @@ bool OperateShrineMurphys(int pnum)
 void OperateShrine(int pnum, int i, _sfx_id sType)
 {
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 

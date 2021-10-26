@@ -2316,7 +2316,7 @@ void StartStore(talk_id s)
 	invflag = false;
 	chrflag = false;
 	QuestLogIsOpen = false;
-	dropGoldFlag = false;
+	CloseGoldDrop();
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();
 	switch (s) {
