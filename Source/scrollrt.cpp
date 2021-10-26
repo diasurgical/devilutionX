@@ -1264,10 +1264,12 @@ void DrawView(const Surface &out, Point startPosition)
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
 	}
+#ifndef VIRTUAL_GAMEPAD
 	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag
 	    && (!QuestLogIsOpen || !LeftPanel.Contains(MainPanel.position + Displacement { 0, -74 }))) {
 		DrawLevelUpIcon(out);
 	}
+#endif
 	if (ShowUniqueItemInfoBox) {
 		DrawUniqueInfo(out);
 	}

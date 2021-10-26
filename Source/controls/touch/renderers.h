@@ -65,6 +65,7 @@ public:
 private:
 	VirtualMenuPanel *virtualMenuPanel;
 	Art menuArt;
+	Art menuArtLevelUp;
 };
 
 class VirtualDirectionPadRenderer {
