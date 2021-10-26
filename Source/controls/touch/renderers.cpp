@@ -199,10 +199,13 @@ void VirtualGamepadRenderer::LoadArt(SDL_Renderer *renderer)
 void VirtualMenuPanelRenderer::LoadArt(SDL_Renderer *renderer)
 {
 	menuArt.surface.reset(LoadPNG("ui_art\\menu.png"));
+	menuArtLevelUp.surface.reset(LoadPNG("ui_art\\menu-levelup.png"));
 
 	if (renderer != nullptr) {
 		menuArt.texture.reset(SDL_CreateTextureFromSurface(renderer, menuArt.surface.get()));
 		menuArt.surface = nullptr;
+		menuArtLevelUp.texture.reset(SDL_CreateTextureFromSurface(renderer, menuArtLevelUp.surface.get()));
+		menuArtLevelUp.surface = nullptr;
 	}
 }
 
@@ -246,7 +249,7 @@ void VirtualMenuPanelRenderer::Render(RenderFunction renderFunction)
 	int width = virtualMenuPanel->area.size.width;
 	int height = virtualMenuPanel->area.size.height;
 	SDL_Rect rect { x, y, width, height };
-	renderFunction(menuArt, nullptr, &rect);
+	renderFunction(MyPlayer->_pStatPts == 0 ? menuArt : menuArtLevelUp, nullptr, &rect);
 }
 
 void VirtualDirectionPadRenderer::Render(RenderFunction renderFunction)
@@ -481,6 +484,7 @@ void VirtualGamepadRenderer::UnloadArt()
 void VirtualMenuPanelRenderer::UnloadArt()
 {
 	menuArt.Unload();
+	menuArtLevelUp.Unload();
 }
 
 void VirtualDirectionPadRenderer::UnloadArt()
