@@ -11,7 +11,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -306,7 +306,7 @@ msgstr "Помощник менеджера продукта"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr "Кольцо Одной Тысячи"
+msgstr "Круг Одной Тысячи"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
@@ -357,7 +357,7 @@ msgstr "Одиночная игра"
 # "Многопользовательская игра" не помещается в главное меню
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr "Мультиплеер"
+msgstr "Сетевая игра"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Extras"
@@ -396,7 +396,7 @@ msgstr "Петля"
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:481
 #: Source/DiabloUI/selgame.cpp:499
 msgid "Multi Player Game"
-msgstr "Мультиплеер Игра"
+msgstr "Сетевая Игра"
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
@@ -477,7 +477,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:131
 msgid "Join the public game already in progress at this address."
-msgstr "Присоединитесь к игре, что уже запущена по этому адресу."
+msgstr "Присоединитесь к игре, которая уже запущена по этому адресу."
 
 #: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
@@ -617,8 +617,8 @@ msgstr "На сервере запущена другая игра."
 #: Source/DiabloUI/selgame.cpp:451
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
-"Ваша версия игры ({:s}) не соответствует с версией игры на сервере ({:d}.{:"
-"d}.{:d})"
+"Ваша версия игры ({:s}) не совпадает с версией игры на сервере ({:d}.{:d}.{:"
+"d})"
 
 #: Source/DiabloUI/selhero.cpp:100
 msgid "New Hero"
@@ -654,7 +654,7 @@ msgstr "Варвар"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Multi Player Hero"
-msgstr "Новый герой мультиплеер игры"
+msgstr "Новый герой сетевой игры"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Single Player Hero"
@@ -736,11 +736,11 @@ msgstr "Удалить"
 
 #: Source/DiabloUI/selhero.cpp:549
 msgid "Multi Player Characters"
-msgstr "Мультиплеер персонажи"
+msgstr "Персонажи сетевой игры"
 
 #: Source/DiabloUI/selhero.cpp:599
 msgid "Delete Multi Player Hero"
-msgstr "Удалить мультиплеер персонажа"
+msgstr "Удалить персонажа сетевой игры"
 
 #: Source/DiabloUI/selhero.cpp:601
 msgid "Delete Single Player Hero"
@@ -1266,11 +1266,11 @@ msgstr "ошибка: прочитано 0 байтов с сервера"
 
 #: Source/error.cpp:57
 msgid "No automap available in town"
-msgstr "Автокарта не доступна в городе"
+msgstr "Автокарта недоступна в городе"
 
 #: Source/error.cpp:58
 msgid "No multiplayer functions in demo"
-msgstr "Мультиплеер не доступен в демо-версии"
+msgstr "Сетевая игра недоступна в демоверсии"
 
 #: Source/error.cpp:59
 msgid "Direct Sound Creation Failed"
@@ -1294,11 +1294,11 @@ msgstr "Рекомендуется копирование на жёсткий д
 
 #: Source/error.cpp:64
 msgid "Multiplayer sync problem"
-msgstr "Проблема синхронизации мультиплеера"
+msgstr "Проблема синхронизации сетевой игры"
 
 #: Source/error.cpp:65
 msgid "No pause in multiplayer"
-msgstr "В мультиплеере нет паузы"
+msgstr "В сетевой игре нет паузы"
 
 #: Source/error.cpp:66
 msgid "Loading..."
@@ -1311,12 +1311,12 @@ msgstr "Сохранение..."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:68
 msgid "Some are weakened as one grows strong"
-msgstr "Кто-то слабеет, кто-то сильнеет"
+msgstr "Чем сильнее один, тем слабее другие"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:69
 msgid "New strength is forged through destruction"
-msgstr "Новая сила куётся разрушением"
+msgstr "Прочность куется из обломков"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:70
@@ -1352,7 +1352,7 @@ msgstr "Магия не всегда то, чем кажется"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:76
 msgid "What once was opened now is closed"
-msgstr "Что было раньше открыто, теперь закрыто"
+msgstr "Что было открыто - закрыто теперь"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:77
@@ -1362,7 +1362,7 @@ msgstr "Интенсивность достигается за счёт мудр
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:78
 msgid "Arcane power brings destruction"
-msgstr "Тайная сила приносит разрушение"
+msgstr "Тайная сила приносит разруху"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:79
@@ -1372,7 +1372,7 @@ msgstr "Не сломать того, что не взять"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:80
 msgid "Crimson and Azure become as the sun"
-msgstr "Багровый и лазурный становятся как солнце"
+msgstr "Кровь и лазурь становятся солнцем"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:81
@@ -1402,7 +1402,7 @@ msgstr "Изобилие богатства, когда меньше всего 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:86
 msgid "Where avarice fails, patience gains reward"
-msgstr "Где жадность терпит поражение, терпение получает награду"
+msgstr "Где жадность терпит поражение, терпение вознаграждается"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:87
@@ -1427,7 +1427,7 @@ msgstr "Суть жизни течёт изнутри"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:91
 msgid "The way is made clear when viewed from above"
-msgstr "Путь становится понятным, если смотреть сверху"
+msgstr "С высоты путь виднее"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:92
@@ -1479,7 +1479,7 @@ msgstr "Знание - сила."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:102
 msgid "Give and you shall receive."
-msgstr "Дай - и получишь."
+msgstr "Давайте - и вам дано будет."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:103
@@ -6974,7 +6974,7 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
-"Боже мой, бесы, бегающие по деревне ночами, грабящие наши дома - разве нет "
+"Боже мой, бесы бегают по деревне ночами и грабят наши дома - разве нет "
 "ничего святого? Я надеюсь, что Огден и Гарда в порядке. Я полагаю, что они "
 "пришли бы ко мне, если бы им было больно ..."
 
@@ -10560,7 +10560,7 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat."
 msgstr ""
-"Тот кто найдёт этот свитое должен остановить демоническое существо, запретом "
+"Тот кто найдёт этот свиток обязан остановить демоническое существо, запертое "
 "в этих стенах. Моё время кончилось. Даже сейчас его адские приспешники "
 "царапают хлипкую дверь, за которой я прячусь. \n"
 "\n"
@@ -10570,8 +10570,8 @@ msgstr ""
 "Заклинания из трёх моих гримуаров обеспечат вам безопасный вход в его "
 "владения, но только если они будут произнесены в правильной "
 "последовательности. Рычаги у входа снимут барьеры и освободят демона; не "
-"трогай их! Используй только эти заклинания, чтобы войти, иначе его сила "
-"будет слишком велика для вас."
+"трожь их! Используй только эти заклинания, чтобы войти, иначе его сила будет "
+"слишком велика."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
