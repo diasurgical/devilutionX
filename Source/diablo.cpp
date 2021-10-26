@@ -2029,6 +2029,8 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 	UpdateMonsterLights();
 	UnstuckChargers();
 	if (leveltype != DTYPE_TOWN) {
+		memcpy(dLight, dPreLight, sizeof(dLight));                                   // resets the light on entering a level to get rid of incorrect light
+		ChangeLightXY(Players[MyPlayerId]._plid, Players[MyPlayerId].position.tile); // forces player light refresh
 		ProcessLightList();
 		ProcessVisionList();
 	}

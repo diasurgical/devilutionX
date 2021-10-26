@@ -2212,6 +2212,9 @@ void LoadLevel()
 				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
 			}
 		}
+		//no need to load dLight, we can recreate it accurately from LightList
+		memcpy(dLight, dPreLight, sizeof(dLight));                                   // resets the light on entering a level to get rid of incorrect light
+		ChangeLightXY(Players[MyPlayerId]._plid, Players[MyPlayerId].position.tile); // forces player light refresh
 	}
 
 	if (gbIsHellfireSaveGame != gbIsHellfire) {
