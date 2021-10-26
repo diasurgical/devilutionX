@@ -478,7 +478,10 @@ void selgame_Password_Select(int /*value*/)
 			selgame_endMenu = true;
 		} else {
 			selgame_Free();
-			UiSelOkDialog(_("Multi Player Game"), SDL_GetError(), false);
+			std::string error = SDL_GetError();
+			if (error.empty())
+				error = "Unknown network error";
+			UiSelOkDialog(_("Multi Player Game"), error.c_str(), false);
 			LoadBackgroundArt("ui_art\\selgame.pcx");
 			selgame_Password_Init(selgame_selectedGame);
 		}
@@ -496,7 +499,10 @@ void selgame_Password_Select(int /*value*/)
 		selgame_endMenu = true;
 	} else {
 		selgame_Free();
-		UiSelOkDialog(_("Multi Player Game"), SDL_GetError(), false);
+		std::string error = SDL_GetError();
+		if (error.empty())
+			error = "Unknown network error";
+		UiSelOkDialog(_("Multi Player Game"), error.c_str(), false);
 		LoadBackgroundArt("ui_art\\selgame.pcx");
 		selgame_Password_Init(0);
 	}
