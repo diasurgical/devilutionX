@@ -1440,12 +1440,14 @@ void MonsterAttackPlayer(int i, int pnum, int hit, int minDam, int maxDam)
 	assert(i >= 0 && i < MAXMONSTERS);
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
-	auto &player = Players[pnum];
 
 	if ((monster._mFlags & MFLAG_TARGETS_MONSTER) != 0) {
 		MonsterAttackMonster(i, pnum, hit, minDam, maxDam);
 		return;
 	}
+
+	auto &player = Players[pnum];
+
 	if (player._pHitPoints >> 6 <= 0 || player._pInvincible || (player._pSpellFlags & 1) != 0)
 		return;
 	if (monster.position.tile.WalkingDistance(player.position.tile) >= 2)
