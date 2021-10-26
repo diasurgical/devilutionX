@@ -89,7 +89,7 @@ static int vita_keyboard_get(const char *guide_text, const char *initial_text, i
 	SceImeDialogParam param;
 	sceImeDialogParamInit(&param);
 
-	param.supportedLanguages = SCE_IME_LANGUAGE_ENGLISH;
+	param.supportedLanguages = 0;
 	param.languagesForced = SCE_FALSE;
 	param.type = SCE_IME_TYPE_DEFAULT;
 	param.option = 0;
