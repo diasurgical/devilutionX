@@ -350,6 +350,7 @@ void LoadOptions()
 	std::string locale = std::locale("").name().substr(0, 5);
 #endif
 
+	locale = locale.substr(0, 5);
 	LogVerbose("Prefered locale: {}", locale);
 	if (!HasTranslation(locale)) {
 		locale = locale.substr(0, 2);
