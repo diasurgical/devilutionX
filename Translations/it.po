@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-25 10:06+0200\n"
-"PO-Revision-Date: 2021-10-25 10:08+0200\n"
+"POT-Creation-Date: 2021-10-27 00:35+0200\n"
+"PO-Revision-Date: 2021-10-27 00:52+0200\n"
 "Last-Translator: Gianluca Boiano <morf3089@gmail.com>\n"
 "Language-Team: zuminator.altervista.org\n"
 "Language: it\n"
@@ -321,7 +321,7 @@ msgstr ""
 msgid "OK"
 msgstr "OK"
 
-#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:61
+#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
 msgid "Switch to Diablo"
 msgstr "Passa a Diablo"
 
@@ -373,6 +373,10 @@ msgstr "Esci da Hellfire"
 msgid "Exit Diablo"
 msgstr "Esci da Diablo"
 
+#: Source/DiabloUI/mainmenu.cpp:55
+msgid "Shareware"
+msgstr "Demo"
+
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
@@ -387,8 +391,8 @@ msgstr "Client-Server (TCP)"
 msgid "Loopback"
 msgstr "Loopback"
 
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:481
-#: Source/DiabloUI/selgame.cpp:499
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
+#: Source/DiabloUI/selgame.cpp:505
 msgid "Multi Player Game"
 msgstr "Multi Giocatore"
 
@@ -481,17 +485,17 @@ msgstr "Difficoltà"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr "Normale"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1441
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr "Incubo"
 
 #: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1442
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr "Inferno"
 
@@ -748,7 +752,7 @@ msgstr "Elimina Eroe Giocatore Singolo"
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Sei sicuro di voler eliminare il personaggio \"{:s}\"?"
 
-#: Source/DiabloUI/selstart.cpp:60
+#: Source/DiabloUI/selstart.cpp:43
 msgid "Enter Hellfire"
 msgstr "Entra in Hellfire"
 
@@ -766,6 +770,9 @@ msgid ""
 "our community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
+"Gestiamo un server di chat su Discord.gg/YQKCAYQ Segui i link per unirti "
+"alla nostra community dove parliamo di cose relative a Diablo e "
+"all'espansione Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -804,6 +811,10 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
+"\tQuesto port utilizza CharisSILB, Unifont e Noto concessi in licenza SIL "
+"Open Font License, nonché Twitmoji concesso in licenza CC-BY 4.0. Il port fa "
+"anche uso di SDL concesso in licenza zlib-license. Consulta il ReadMe per "
+"ulteriori dettagli."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -824,7 +835,7 @@ msgstr ""
 "\n"
 "L'errore si è verificato alla linea: {:s} {:d}"
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:116
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -834,15 +845,12 @@ msgstr ""
 "\n"
 "Assicurati che sia nella cartella del gioco."
 
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq o spawn.mpq"
-
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:122
 msgid "Data File Error"
 msgstr "Errore File Dati"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:130
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -850,7 +858,7 @@ msgstr ""
 "Impossibile scrivere nella posizione:\n"
 "{:s}"
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:132
 msgid "Read-Only Directory Error"
 msgstr "Errore di Cartella in Sola Lettura"
 
@@ -999,7 +1007,7 @@ msgstr "Seleziona magia corrente"
 msgid "Hotkey: 's'"
 msgstr "Tasto: 's'"
 
-#: Source/control.cpp:1374 Source/inv.cpp:1916 Source/items.cpp:3742
+#: Source/control.cpp:1374 Source/inv.cpp:1992 Source/items.cpp:3742
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} moneta"
@@ -1161,26 +1169,45 @@ msgstr "Abilita log dettagliato"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "Forza modalità spawn anche se diabdat.mpq è presente"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr "Registra un file demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr "Riproduci un file demo"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr "Disabilita limitazioni di frame in riproduzione demo"
 
 #. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+"\n"
+"Selezione gioco:\n"
+
+#. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr "Forza modalità Demo"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr "Forza modalità Diablo"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+msgid "Force Hellfire mode"
+msgstr "Forza modalità Hellfire"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1189,16 +1216,11 @@ msgstr ""
 "Opzioni Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "Forza la modalità diablo anche se viene trovato hellfire.mpq"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr "Usa tavolozza alternativa"
 
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1206,32 +1228,32 @@ msgstr ""
 "\n"
 "Segnala gli errori a https://github.com/diasurgical/devilutionX/\n"
 
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
 msgstr "opzione sconosciuta '{:s}'\n"
 
-#: Source/diablo.cpp:896
+#: Source/diablo.cpp:900
 msgid "version {:s}"
 msgstr "versione {:s}"
 
-#: Source/diablo.cpp:1212
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr "-- Timeout di rete --"
 
-#: Source/diablo.cpp:1213
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr "-- In attesa di giocatori --"
 
-#: Source/diablo.cpp:1232
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr "Nessun aiuto disponibile"
 
-#: Source/diablo.cpp:1233
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr "mentre nei negozi"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1445
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, versione = {:s}, modalità = {:s}"
 
@@ -1782,31 +1804,35 @@ msgstr ""
 "Leggere più di un libro aumenta la tua conoscenza di quella magia, "
 "permettendoti di lanciarla in modo più efficace."
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Shareware Hellfire Help"
 msgstr "Guida Hellfire Demo"
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Hellfire Help"
 msgstr "Guida Hellfire"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Shareware Diablo Help"
 msgstr "Guida Diablo Demo"
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Diablo Help"
 msgstr "Guida Diablo"
 
-#: Source/help.cpp:155
+#: Source/help.cpp:161
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Premi ESC per uscire o le frecce per scorrere."
 
-#: Source/init.cpp:219
+#: Source/init.cpp:206
+msgid "diabdat.mpq or spawn.mpq"
+msgstr "diabdat.mpq o spawn.mpq"
+
+#: Source/init.cpp:226
 msgid "Some Hellfire MPQs are missing"
 msgstr "Mancano alcuni MPQ di Hellfire"
 
-#: Source/init.cpp:219
+#: Source/init.cpp:226
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1814,7 +1840,7 @@ msgstr ""
 "Non tutti gli MPQ Hellfire sono stati trovati.\n"
 "Si prega di copiare tutti i file hf*.mpq."
 
-#: Source/init.cpp:227
+#: Source/init.cpp:234
 msgid "Unable to create main window"
 msgstr "Impossibile creare la finestra principale"
 
@@ -4224,19 +4250,19 @@ msgstr "oggetto unico"
 msgid "Not Identified"
 msgstr "Sconosciuto"
 
-#: Source/loadsave.cpp:1680 Source/loadsave.cpp:2144
+#: Source/loadsave.cpp:1679 Source/loadsave.cpp:2145
 msgid "Unable to open save file archive"
 msgstr "Impossibile aprire file di salvataggio"
 
-#: Source/loadsave.cpp:1683
+#: Source/loadsave.cpp:1682
 msgid "Invalid save file"
 msgstr "Salvataggio non valido"
 
-#: Source/loadsave.cpp:1712
+#: Source/loadsave.cpp:1713
 msgid "Player is on a Hellfire only level"
 msgstr "Il Giocatore è in un livello esclusivo di Hellfire"
 
-#: Source/loadsave.cpp:1907
+#: Source/loadsave.cpp:1908
 msgid "Invalid game state"
 msgstr "Stato del gioco non valido"
 
@@ -5374,71 +5400,71 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Doomlock"
 
-#: Source/monster.cpp:3495
+#: Source/monster.cpp:3497
 msgid "Animal"
 msgstr "Bestia"
 
-#: Source/monster.cpp:3497
+#: Source/monster.cpp:3499
 msgid "Demon"
 msgstr "Demone"
 
-#: Source/monster.cpp:3499
+#: Source/monster.cpp:3501
 msgid "Undead"
 msgstr "Non morto"
 
-#: Source/monster.cpp:4630
+#: Source/monster.cpp:4632
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Tipo: {:s}  Uccisioni: {:d}"
 
-#: Source/monster.cpp:4632
+#: Source/monster.cpp:4634
 msgid "Total kills: {:d}"
 msgstr "Tot. uccisioni : {:d}"
 
-#: Source/monster.cpp:4665
+#: Source/monster.cpp:4667
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Punti Ferita: {:d}-{:d}"
 
-#: Source/monster.cpp:4671
+#: Source/monster.cpp:4673
 msgid "No magic resistance"
 msgstr "Nessuna Res. Magica"
 
-#: Source/monster.cpp:4675
+#: Source/monster.cpp:4677
 msgid "Resists: "
 msgstr "Resiste: "
 
-#: Source/monster.cpp:4677 Source/monster.cpp:4688
+#: Source/monster.cpp:4679 Source/monster.cpp:4690
 msgid "Magic "
 msgstr "Magia "
 
-#: Source/monster.cpp:4679 Source/monster.cpp:4690
+#: Source/monster.cpp:4681 Source/monster.cpp:4692
 msgid "Fire "
 msgstr "Fuoco "
 
-#: Source/monster.cpp:4681 Source/monster.cpp:4692
+#: Source/monster.cpp:4683 Source/monster.cpp:4694
 msgid "Lightning "
 msgstr "Fulmine "
 
-#: Source/monster.cpp:4686
+#: Source/monster.cpp:4688
 msgid "Immune: "
 msgstr "Immune: "
 
-#: Source/monster.cpp:4704
+#: Source/monster.cpp:4706
 msgid "Type: {:s}"
 msgstr "Tipo: {:s}"
 
-#: Source/monster.cpp:4710 Source/monster.cpp:4717
+#: Source/monster.cpp:4712 Source/monster.cpp:4719
 msgid "No resistances"
 msgstr "No resistenze"
 
-#: Source/monster.cpp:4712 Source/monster.cpp:4722
+#: Source/monster.cpp:4714 Source/monster.cpp:4724
 msgid "No Immunities"
 msgstr "No Immunità"
 
-#: Source/monster.cpp:4715
+#: Source/monster.cpp:4717
 msgid "Some Magic Resistances"
 msgstr "Alcune Resistenze Magiche"
 
-#: Source/monster.cpp:4720
+#: Source/monster.cpp:4722
 msgid "Some Magic Immunities"
 msgstr "Alcune Immunità Magiche"
 
@@ -5446,25 +5472,25 @@ msgstr "Alcune Immunità Magiche"
 msgid "Trying to drop a floor item?"
 msgstr "Abbandonare un oggetto a terra?"
 
-#: Source/msg.cpp:984 Source/msg.cpp:1019 Source/msg.cpp:1052
-#: Source/msg.cpp:1179 Source/msg.cpp:1211 Source/msg.cpp:1243
-#: Source/msg.cpp:1273
+#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
+#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
+#: Source/msg.cpp:1269
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} ha usato magia illegale."
 
-#: Source/msg.cpp:1659 Source/multi.cpp:805
+#: Source/msg.cpp:1655 Source/multi.cpp:805
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "'{:s}' (livello {:d}) si è unito alla partita"
 
-#: Source/msg.cpp:1963
+#: Source/msg.cpp:1959
 msgid "Waiting for game data..."
 msgstr "In attesa di dati di gioco..."
 
-#: Source/msg.cpp:1971
+#: Source/msg.cpp:1967
 msgid "The game ended"
 msgstr "La partita è finita"
 
-#: Source/msg.cpp:1977
+#: Source/msg.cpp:1973
 msgid "Unable to get level data"
 msgstr "Impossibile ottenere dati di livello"
 
@@ -5963,23 +5989,22 @@ msgstr "silenzia"
 msgid "Failed to open player archive for writing."
 msgstr "Impossibile aprire archivio in scrittura."
 
-#: Source/pfile.cpp:389
+#: Source/pfile.cpp:392
 msgid "Unable to open archive"
 msgstr "Impossibile aprire archivio"
 
-#: Source/pfile.cpp:391
+#: Source/pfile.cpp:394
 msgid "Unable to load character"
 msgstr "Impossibile caricare personaggio"
 
-#: Source/pfile.cpp:416 Source/pfile.cpp:436
+#: Source/pfile.cpp:419 Source/pfile.cpp:439
 msgid "Unable to read to save file archive"
 msgstr "Impossibile leggere archivio di salvataggio"
 
-#: Source/pfile.cpp:455
+#: Source/pfile.cpp:458
 msgid "Unable to write to save file archive"
 msgstr "Impossibile scrivere archivio di salvataggio"
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (liv {:d}): {:s}"
@@ -10594,17 +10619,17 @@ msgid "Down to Crypt"
 msgstr "Giù nella Cripta"
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
-#: Source/trigs.cpp:630
+#: Source/trigs.cpp:634
 msgid "Up to level {:d}"
 msgstr "Su al livello {:d}"
 
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
-#: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
+#: Source/trigs.cpp:600 Source/trigs.cpp:617 Source/trigs.cpp:664
 msgid "Up to town"
 msgstr "Su in città"
 
-#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
-#: Source/trigs.cpp:577 Source/trigs.cpp:642
+#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:556
+#: Source/trigs.cpp:581 Source/trigs.cpp:646
 msgid "Down to level {:d}"
 msgstr "Giù al livello {:d}"
 
@@ -10616,14 +10641,14 @@ msgstr "Giù al livello della Cripta {:d}"
 msgid "Down to Crypt level {:d}"
 msgstr "Giù al livello della Cripta {:d}"
 
-#: Source/trigs.cpp:564
+#: Source/trigs.cpp:568
 msgid "Up to Nest level {:d}"
 msgstr "Su al livello del Covo {:d}"
 
-#: Source/trigs.cpp:673
+#: Source/trigs.cpp:677
 msgid "Down to Diablo"
 msgstr "Giù da Diablo"
 
-#: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
+#: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "Torna al Livello {:d}"
