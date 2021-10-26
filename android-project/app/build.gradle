@@ -1,4 +1,4 @@
-def buildAsLibrary = project.hasProperty('BUILD_AS_LIBRARY');
+def buildAsLibrary = project.hasProperty('BUILD_AS_LIBRARY')
 def buildAsApplication = !buildAsLibrary
 if (buildAsApplication) {
 	apply plugin: 'com.android.application'
@@ -7,16 +7,13 @@ if (buildAsApplication) {
 }
 
 android {
-	compileSdkVersion 29 // Upgrade to 30 after november 2021
-	aaptOptions {
-		noCompress 'mpq'
-	}
+	compileSdkVersion 30
 	defaultConfig {
 		if (buildAsApplication) {
 			applicationId "org.diasurgical.devilutionx"
 		}
 		minSdkVersion 18
-		targetSdkVersion 29 // Upgrade to 30 after november 2021
+		targetSdkVersion 30
 		versionCode 18
 		versionName "1.2.1"
 		externalNativeBuild {
@@ -31,6 +28,9 @@ android {
 			minifyEnabled false
 			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 		}
+	}
+	androidResources {
+		noCompress 'mpq'
 	}
 	if (!project.hasProperty('EXCLUDE_NATIVE_LIBS')) {
 		sourceSets.main {
@@ -50,8 +50,8 @@ android {
 			variant.outputs.each { output ->
 				def outputFile = output.outputFile
 				if (outputFile != null && outputFile.name.endsWith(".aar")) {
-					def fileName = "org.diasurgical.devilutionx.aar";
-					output.outputFile = new File(outputFile.parent, fileName);
+					def fileName = "org.diasurgical.devilutionx.aar"
+					output.outputFile = new File(outputFile.parent, fileName)
 				}
 			}
 		}
