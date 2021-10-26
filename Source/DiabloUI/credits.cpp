@@ -43,7 +43,7 @@ public:
 				indexFirstNotTab++;
 			}
 
-			const std::string paragraphs = WordWrapString(orgText.substr(indexFirstNotTab), 580 - offset, FontSizeDialog, 0);
+			const std::string paragraphs = WordWrapString(orgText.substr(indexFirstNotTab), 580 - offset, FontSizeDialog);
 
 			size_t previous = 0;
 			while (true) {
@@ -121,7 +121,7 @@ void CreditsRenderer::Render()
 		SDL_Rect dstRect { destX + lineContent.offset, destY, 0, 0 };
 		ScaleOutputRect(&dstRect);
 		const Surface &out = Surface(DiabloUiSurface());
-		DrawString(out, lineContent.text, Point { dstRect.x, dstRect.y }, UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite, 0);
+		DrawString(out, lineContent.text, Point { dstRect.x, dstRect.y }, UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
 	}
 	SDL_SetClipRect(DiabloUiSurface(), nullptr);
 }

@@ -29,7 +29,7 @@ void RenderButton(UiButton *button)
 		--textRect.position.y;
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, button->m_text, textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite, 0);
+	DrawString(out, button->m_text, textRect, UiFlags::AlignCenter | UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
 }
 
 bool HandleMouseEventButton(const SDL_Event &event, UiButton *button)

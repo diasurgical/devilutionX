@@ -732,7 +732,7 @@ void Render(UiText *uiText)
 	Rectangle rect { { uiText->m_rect.x, uiText->m_rect.y }, { uiText->m_rect.w, uiText->m_rect.h } };
 
 	const Surface &out = Surface(DiabloUiSurface());
-	DrawString(out, uiText->m_text, rect, uiText->m_iFlags | UiFlags::FontSizeDialog, 0);
+	DrawString(out, uiText->m_text, rect, uiText->m_iFlags | UiFlags::FontSizeDialog);
 }
 
 void Render(const UiArtText *uiArtText)
