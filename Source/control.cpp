@@ -1684,9 +1684,6 @@ void control_drop_gold(char vkey)
 		return;
 	}
 
-	char input[6];
-	memset(input, 0, sizeof(input));
-	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			RemoveGold(myPlayer, initialDropGoldIndex);
@@ -1695,17 +1692,7 @@ void control_drop_gold(char vkey)
 		CloseGoldDrop();
 		dropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
-		input[strlen(input) - 1] = '\0';
-		dropGoldValue = atoi(input);
-	} else if (vkey - '0' >= 0 && vkey - '0' <= 9) {
-		if (dropGoldValue != 0 || atoi(input) <= initialDropGoldValue) {
-			input[strlen(input)] = vkey;
-			if (atoi(input) > initialDropGoldValue)
-				return;
-		} else {
-			input[0] = vkey;
-		}
-		dropGoldValue = atoi(input);
+		dropGoldValue = dropGoldValue / 10;
 	}
 }
 
@@ -1895,7 +1882,24 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 
 void CloseGoldDrop()
 {
+	if (!dropGoldFlag)
+		return;
 	dropGoldFlag = false;
+	SDL_StopTextInput();
+}
+
+void GoldDropNewText(string_view text)
+{
+	for (char vkey : text) {
+		int digit = vkey - '0';
+		if (digit >= 0 && digit <= 9) {
+			int newGoldValue = dropGoldValue * 10;
+			newGoldValue += digit;
+			if (newGoldValue <= initialDropGoldValue) {
+				dropGoldValue = newGoldValue;
+			}
+		}
+	}
 }
 
 } // namespace devilution
