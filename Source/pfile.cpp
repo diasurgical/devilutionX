@@ -347,6 +347,9 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	if (!OpenArchive(saveNum))
 		return false;
 	heroinfo->saveNumber = saveNum;
+
+	giNumberOfLevels = gbIsHellfire ? 25 : 17;
+
 	mpqapi_remove_hash_entries(GetFileName);
 	strncpy(hero_names[saveNum], heroinfo->name, PLR_NAME_LEN);
 	hero_names[saveNum][PLR_NAME_LEN - 1] = '\0';

@@ -331,6 +331,7 @@ TEST(Writehero, pfile_write_hero)
 	gbIsMultiplayer = true;
 	gbIsHellfireSaveGame = false;
 	leveltype = DTYPE_TOWN;
+	giNumberOfLevels = 17;
 
 	MyPlayerId = 0;
 	MyPlayer = &Players[MyPlayerId];
