@@ -1673,7 +1673,6 @@ void RemoveEmptyInventory(Player &player)
 void LoadGame(bool firstflag)
 {
 	FreeGameMem();
-	pfile_remove_temp_files();
 
 	LoadHelper file("game");
 	if (!file.IsValid())
@@ -1692,6 +1691,8 @@ void LoadGame(bool firstflag)
 		giNumberQuests = 16;
 		giNumberOfSmithPremiumItems = 6;
 	}
+
+	pfile_remove_temp_files();
 
 	setlevel = file.NextBool8();
 	setlvlnum = static_cast<_setlevels>(file.NextBE<uint32_t>());
