@@ -1504,18 +1504,18 @@ void ReleaseChrBtns(bool addAllStatPoints)
 
 void DrawDurIcon(const Surface &out)
 {
-	bool hasRoomBetweenPanels = gnScreenWidth >= PANEL_WIDTH + 16 + (32 + 8 + 32 + 8 + 32 + 8 + 32) + 16;
-	bool hasRoomUnderPanels = gnScreenHeight >= SPANEL_HEIGHT + PANEL_HEIGHT + 16 + 32 + 16;
+	bool hasRoomBetweenPanels = RightPanel.position.x - (LeftPanel.position.x + LeftPanel.size.width) >= 16 + (32 + 8 + 32 + 8 + 32 + 8 + 32) + 16;
+	bool hasRoomUnderPanels = MainPanel.position.y - (RightPanel.position.y + RightPanel.size.height) >= 16 + 32 + 16;
 
 	if (!hasRoomBetweenPanels && !hasRoomUnderPanels) {
 		if ((chrflag || QuestLogIsOpen) && (invflag || sbookflag))
 			return;
 	}
 
-	int x = PANEL_X + PANEL_WIDTH - 32 - 16;
+	int x = MainPanel.position.x + MainPanel.size.width - 32 - 16;
 	if (!hasRoomUnderPanels) {
-		if (invflag || sbookflag)
-			x -= SPANEL_WIDTH - (gnScreenWidth - PANEL_WIDTH) / 2;
+		if ((invflag || sbookflag) && MainPanel.position.x + MainPanel.size.width > RightPanel.position.x)
+			x -= MainPanel.position.x + MainPanel.size.width - RightPanel.position.x;
 	}
 
 	auto &myPlayer = Players[MyPlayerId];
