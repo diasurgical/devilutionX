@@ -26,6 +26,11 @@ struct ChainStruct {
 	int _mirange;
 };
 
+struct DamageRange {
+	int min;
+	int max;
+};
+
 struct MissilePosition {
 	Point tile;
 	/** Sprite's pixel offset from tile. */
@@ -165,8 +170,8 @@ int GetSpellLevel(int playerId, spell_id sn);
  */
 Direction16 GetDirection16(Point p1, Point p2);
 void DeleteMissile(int i);
-bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool shift);
-bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
+bool MonsterTrapHit(int m, DamageRange damrange, int dist, missile_id t, bool shift);
+bool PlayerMHit(int pnum, Monster *monster, int dist, DamageRange damrange, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**
  * @brief Sets the missile sprite to the given sheet frame

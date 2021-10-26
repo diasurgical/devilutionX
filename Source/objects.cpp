@@ -1576,10 +1576,10 @@ void UpdateFlameTrap(int i)
 		int x = Objects[i].position.x;
 		int y = Objects[i].position.y;
 		if (dMonster[x][y] > 0)
-			MonsterTrapHit(dMonster[x][y] - 1, mindam / 2, maxdam / 2, 0, MIS_FIREWALLC, false);
+			MonsterTrapHit(dMonster[x][y] - 1, DamageRange { mindam / 2, maxdam / 2 }, 0, MIS_FIREWALLC, false);
 		if (dPlayer[x][y] > 0) {
 			bool unused;
-			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, mindam, maxdam, MIS_FIREWALLC, false, 0, &unused);
+			PlayerMHit(dPlayer[x][y] - 1, nullptr, 0, DamageRange { mindam, maxdam }, MIS_FIREWALLC, false, 0, &unused);
 		}
 
 		if (Objects[i]._oAnimFrame == Objects[i]._oAnimLen)
@@ -4201,10 +4201,10 @@ void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
 		for (int yp = Objects[i].position.y - 1; yp <= Objects[i].position.y + 1; yp++) {
 			for (int xp = Objects[i].position.x - 1; xp <= Objects[i].position.x + 1; xp++) {
 				if (dMonster[xp][yp] > 0)
-					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
+					MonsterTrapHit(dMonster[xp][yp] - 1, DamageRange { 1, 4 }, 0, MIS_FIREBOLT, false);
 				bool unused;
 				if (dPlayer[xp][yp] > 0)
-					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
+					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, DamageRange { 8, 16 }, MIS_FIREBOLT, false, 0, &unused);
 				if (dObject[xp][yp] > 0) {
 					int oi = dObject[xp][yp] - 1;
 					if (Objects[oi]._otype == OBJ_BARRELEX && Objects[oi]._oBreak != -1)
