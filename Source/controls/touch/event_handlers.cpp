@@ -142,6 +142,9 @@ bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)
 	if (directionPadEventHandler.Handle(event))
 		return true;
 
+	if (standButtonEventHandler.Handle(event))
+		return true;
+
 	if (primaryActionButtonEventHandler.Handle(event))
 		return true;
 
@@ -259,7 +262,11 @@ bool VirtualButtonEventHandler::HandleFingerDown(const SDL_TouchFingerEvent &eve
 	if (!virtualButton->Contains(touchCoordinates))
 		return false;
 
-	virtualButton->isHeld = true;
+	if (toggles)
+		virtualButton->isHeld = !virtualButton->isHeld;
+	else
+		virtualButton->isHeld = true;
+
 	virtualButton->didStateChange = true;
 	activeFinger = event.fingerId;
 	isActive = true;
@@ -271,10 +278,12 @@ bool VirtualButtonEventHandler::HandleFingerUp(const SDL_TouchFingerEvent &event
 	if (!isActive || event.fingerId != activeFinger)
 		return false;
 
-	if (virtualButton->isHeld)
-		virtualButton->didStateChange = true;
+	if (!toggles) {
+		if (virtualButton->isHeld)
+			virtualButton->didStateChange = true;
+		virtualButton->isHeld = false;
+	}
 
-	virtualButton->isHeld = false;
 	isActive = false;
 	return true;
 }
@@ -283,6 +292,9 @@ bool VirtualButtonEventHandler::HandleFingerMotion(const SDL_TouchFingerEvent &e
 {
 	if (!isActive || event.fingerId != activeFinger)
 		return false;
+
+	if (toggles)
+		return true;
 
 	float x = event.x;
 	float y = event.y;

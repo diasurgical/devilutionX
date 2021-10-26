@@ -120,10 +120,18 @@ void InitializeVirtualGamepad()
 	menuPanelArea.size.height = 162 * menuButtonWidth / menuPanelButtonSize.width;
 
 	VirtualDirectionPad &directionPad = VirtualGamepadState.directionPad;
-	directionPad.area.position.x = inputMargin + directionPadSize / 2;
-	directionPad.area.position.y = gnScreenHeight - inputMargin - directionPadSize / 2;
-	directionPad.area.radius = directionPadSize / 2;
-	directionPad.position = directionPad.area.position;
+	Circle &directionPadArea = directionPad.area;
+	directionPadArea.position.x = inputMargin + directionPadSize / 2;
+	directionPadArea.position.y = gnScreenHeight - inputMargin - directionPadSize / 2;
+	directionPadArea.radius = directionPadSize / 2;
+	directionPad.position = directionPadArea.position;
+
+	int standButtonDiagonalOffset = directionPadArea.radius + padButtonSpacing / 2 + padButtonSize / 2;
+	int standButtonOffset = round(standButtonDiagonalOffset / std::sqrt(2));
+	Circle &standButtonArea = VirtualGamepadState.standButton.area;
+	standButtonArea.position.x = directionPadArea.position.x - standButtonOffset;
+	standButtonArea.position.y = directionPadArea.position.y + standButtonOffset;
+	standButtonArea.radius = padButtonSize / 2;
 
 	Circle &primaryActionButtonArea = VirtualGamepadState.primaryActionButton.area;
 	primaryActionButtonArea.position.x = padButtonRight;
