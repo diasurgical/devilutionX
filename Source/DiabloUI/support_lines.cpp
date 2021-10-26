@@ -23,6 +23,9 @@ const char *const SupportLines[] = {
 	N_("  Entertainment or GOG.com."),
 	"",
 	"",
+	N_("	This port makes use of CharisSILB, Unifont, and Noto which are licensed under the SIL Open Font License, as well as Twitmoji which is licensed under CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-license. See the ReadMe for further details."),
+	"",
+	"",
 };
 
 const std::size_t SupportLinesSize = sizeof(SupportLines) / sizeof(SupportLines[0]);
