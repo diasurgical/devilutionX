@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: DevilutionX csCZ\n"
+"Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-10-08 21:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Psojed <realpsojed@gmail.com>\n"
@@ -11,10 +11,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: _;N_\n"
-"X-Poedit-Basepath: ../../Documents/GitHub/devilutionX/Translations\n"
+"X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
+"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=3;  plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Poedit-SearchPath-0: devilutionx.pot\n"
+"X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
@@ -719,64 +719,47 @@ msgid "No"
 msgstr "Ne"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com udržuje webovou stránku https://www.gog.com/forum/diablo"
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "Pro návštěvu diskuzního fóra spojeného s Diablem klikni na odkaz."
+msgid ""
+"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
+"our community where we talk about things related to Diablo, and the Hellfire "
+"expansion."
+msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr "a rozšíření Hellfire."
-
-#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr "DevilutionX spravuje Diasurgical, problémy a chyby můžete hlásit"
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
+"this address: https://github.com/diasurgical/devilutionX To help us better "
+"serve you, please be sure to include the version number, operating system, "
+"and the nature of the problem."
+msgstr "DevilutionX spravuje Diasurgical, problémy a chyby můžete hlásit "
+"na této adrese: https://github.com/diasurgical/devilutionX "
+"Abychom vám mohli lépe pomoci, prosím uveďte číslo verze hry, "
+"váš operační systém a popište váš problém."
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr "na této adrese: https://github.com/diasurgical/devilutionX"
-
-#: Source/DiabloUI/support_lines.cpp:14
-msgid ""
-"To help us better serve you, please be sure to include the version number,"
-msgstr "Abychom vám mohli lépe pomoci, prosím uveďte číslo verze hry,"
-
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr "váš operační systém a popište váš problém."
-
-#: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
 msgstr "Prohlášení:"
 
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr ""
-"  DevilutionX není podporován ani spravován společností Blizzard "
-"Entertainment,"
-
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr "  ani GOG.com. Blizzard Entertainment ani GOG.com netestovaly"
-
-#: Source/DiabloUI/support_lines.cpp:21
+#: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"  or certified the quality or compatibility of DevilutionX. All inquiries"
+"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
+"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
+"the quality or compatibility of DevilutionX. All inquiries regarding "
+"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
+"or GOG.com."
 msgstr ""
-"  ani necertifikovaly kvalitu nebo kompatibilitu DevilutionX. Všechny dotazy"
+"\tDevilutionX není podporován ani spravován společností Blizzard "
+"Entertainment, ani GOG.com. Blizzard Entertainment ani GOG.com netestovaly "
+"ani necertifikovaly kvalitu nebo kompatibilitu DevilutionX. Všechny dotazy "
+"ohledně DevilutionX by měly být směřovány k Diasurgical, nikoliv k Blizzard "
+"Entertainment nebo GOG.com."
 
-#: Source/DiabloUI/support_lines.cpp:22
 msgid ""
-"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
+"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
+"under the SIL Open Font License, as well as Twitmoji which is licensed under "
+"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
+"license. See the ReadMe for further details."
 msgstr ""
-"  ohledně DevilutionX by měly být směřovány k Diasurgical, nikoliv k Blizzard"
-
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
-msgstr "  Entertainment nebo GOG.com."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"

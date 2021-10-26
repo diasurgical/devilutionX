@@ -727,64 +727,48 @@ msgid "No"
 msgstr "Non"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com héberge un site à l'adresse https://www.gog.com/forum/diablo"
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
+msgid ""
+"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
+"our community where we talk about things related to Diablo, and the Hellfire "
+"expansion."
 msgstr ""
-"Suivez le lien pour visiter les forums de discussion associés à Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr "et l'extension Hellfire."
-
-#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr "DevilutionX est développé par Diasurgical. Les problèmes peuvent être"
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
+"this address: https://github.com/diasurgical/devilutionX To help us better "
+"serve you, please be sure to include the version number, operating system, "
+"and the nature of the problem."
+msgstr "DevilutionX est développé par Diasurgical. Les problèmes peuvent être "
+"signalés à cette adresse: https://github.com/diasurgical/devilutionX "
+"Merci de bien vouloir inclure le numéro de version ainsi que le système, "
+"d'exploitation utilisé afin que nous puissions mieux vous aider."
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr "signalés à cette adresse: https://github.com/diasurgical/devilutionX"
-
-#: Source/DiabloUI/support_lines.cpp:14
-msgid ""
-"To help us better serve you, please be sure to include the version number,"
-msgstr ""
-"Merci de bien vouloir inclure le numéro de version ainsi que le système,"
-
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr "d'exploitation utilisé afin que nous puissions mieux vous aider."
-
-#: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
 msgstr "Avertissement:"
 
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr ""
-" DevilutionX n'est pas supporté ni maintenu par Blizzard Entertainment,"
-
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr " ou GOG.com. Ni Blizzard Entertainment ni GOG.com n'ont testé"
-
-#: Source/DiabloUI/support_lines.cpp:21
+#: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"  or certified the quality or compatibility of DevilutionX. All inquiries"
+"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
+"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
+"the quality or compatibility of DevilutionX. All inquiries regarding "
+"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
+"or GOG.com."
 msgstr ""
+"\tDevilutionX n'est pas supporté ni maintenu par Blizzard Entertainment,"
+" ou GOG.com. Ni Blizzard Entertainment ni GOG.com n'ont testé"
 " ou certifié la qualité ou la compatibilité de DevilutionX. Toutes demandes"
+" concernant DevilutionX doivent être adressées à Diasurgical et non à"
+" Blizzard Entertainment ou GOG.com."
 
-#: Source/DiabloUI/support_lines.cpp:22
+#: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr " concernant DevilutionX doivent être adressées à Diasurgical et non à"
-
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
-msgstr " Blizzard Entertainment ou GOG.com."
+"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
+"under the SIL Open Font License, as well as Twitmoji which is licensed under "
+"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
+"license. See the ReadMe for further details."
+msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -10761,8 +10745,3 @@ msgstr "Descendre vers Diablo"
 msgid "Back to Level {:d}"
 msgstr "Retourner au Niveau {:d}"
 
-#~ msgid "Specify the location of the .ttf font"
-#~ msgstr "Spécifie l'emplacement de la font .ttf"
-
-#~ msgid "Specify the name of a custom .ttf font"
-#~ msgstr "Spécifie le nom d'une font .ttf personnalisé"

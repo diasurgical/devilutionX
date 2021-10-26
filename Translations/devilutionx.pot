@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-25 07:08+0200\n"
+"POT-Creation-Date: 2021-10-26 23:07+0200\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -371,6 +371,10 @@ msgstr ""
 msgid "Exit Diablo"
 msgstr ""
 
+#: Source/DiabloUI/mainmenu.cpp:55
+msgid "Shareware"
+msgstr ""
+
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
@@ -385,8 +389,8 @@ msgstr ""
 msgid "Loopback"
 msgstr ""
 
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:481
-#: Source/DiabloUI/selgame.cpp:499
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
+#: Source/DiabloUI/selgame.cpp:505
 msgid "Multi Player Game"
 msgstr ""
 
@@ -471,17 +475,17 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1440
+#: Source/diablo.cpp:1446
 msgid "Normal"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1441
+#: Source/diablo.cpp:1447
 msgid "Nightmare"
 msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1442
+#: Source/diablo.cpp:1448
 msgid "Hell"
 msgstr ""
 
@@ -707,55 +711,23 @@ msgid "No"
 msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
+msgid "We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join our community where we talk about things related to Diablo, and the Hellfire expansion."
 msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:12
-msgid "DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
+msgid "DevilutionX is maintained by Diasurgical, issues and bugs can be reported at this address: https://github.com/diasurgical/devilutionX To help us better serve you, please be sure to include the version number, operating system, and the nature of the problem."
 msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:14
-msgid "To help us better serve you, please be sure to include the version number,"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
 msgstr ""
 
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
+#: Source/DiabloUI/support_lines.cpp:14
+msgid "\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified the quality or compatibility of DevilutionX. All inquiries regarding DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment or GOG.com."
 msgstr ""
 
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:21
-msgid "  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:22
-msgid "  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr ""
-
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
+#: Source/DiabloUI/support_lines.cpp:17
+msgid "\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed under the SIL Open Font License, as well as Twitmoji which is licensed under CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-license. See the ReadMe for further details."
 msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
@@ -774,25 +746,25 @@ msgid ""
 "The error occurred at: {:s} line {:d}"
 msgstr ""
 
-#: Source/appfat.cpp:115
+#: Source/appfat.cpp:116
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
 
-#: Source/appfat.cpp:119
+#: Source/appfat.cpp:122
 msgid "Data File Error"
 msgstr ""
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:127
+#: Source/appfat.cpp:130
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
 
-#: Source/appfat.cpp:129
+#: Source/appfat.cpp:132
 msgid "Read-Only Directory Error"
 msgstr ""
 
@@ -941,7 +913,7 @@ msgstr ""
 msgid "Hotkey: 's'"
 msgstr ""
 
-#: Source/control.cpp:1374 Source/inv.cpp:1916 Source/items.cpp:3742
+#: Source/control.cpp:1374 Source/inv.cpp:1987 Source/items.cpp:3742
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] ""
@@ -1103,73 +1075,85 @@ msgstr ""
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
-msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr ""
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
 msgid "Record a demo file"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:792
 msgid "Play a demo file"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
+#: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:794
+msgid ""
+"\n"
+"Game selection:\n"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
+msgid "Force Shareware mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:796
+msgid "Force Diablo mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:797
+msgid "Force Hellfire mode"
+msgstr ""
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:798
 msgid ""
 "\n"
 "Hellfire options:\n"
 msgstr ""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
-msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr ""
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
+#: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
 msgstr ""
 
-#: Source/diablo.cpp:803
+#: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 msgstr ""
 
-#: Source/diablo.cpp:865
+#: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
 msgstr ""
 
-#: Source/diablo.cpp:896
+#: Source/diablo.cpp:900
 msgid "version {:s}"
 msgstr ""
 
-#: Source/diablo.cpp:1212
+#: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
 msgstr ""
 
-#: Source/diablo.cpp:1213
+#: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
 msgstr ""
 
-#: Source/diablo.cpp:1232
+#: Source/diablo.cpp:1238
 msgid "No help available"
 msgstr ""
 
-#: Source/diablo.cpp:1233
+#: Source/diablo.cpp:1239
 msgid "while in stores"
 msgstr ""
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1445
+#: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr ""
 
@@ -1653,37 +1637,41 @@ msgstr ""
 msgid "Reading more than one book increases your knowledge of that spell, allowing you to cast the spell more effectively."
 msgstr ""
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Shareware Hellfire Help"
 msgstr ""
 
-#: Source/help.cpp:129
+#: Source/help.cpp:135
 msgid "Hellfire Help"
 msgstr ""
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Shareware Diablo Help"
 msgstr ""
 
-#: Source/help.cpp:131
+#: Source/help.cpp:137
 msgid "Diablo Help"
 msgstr ""
 
-#: Source/help.cpp:155
+#: Source/help.cpp:161
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr ""
 
-#: Source/init.cpp:219
+#: Source/init.cpp:206
+msgid "diabdat.mpq or spawn.mpq"
+msgstr ""
+
+#: Source/init.cpp:226
 msgid "Some Hellfire MPQs are missing"
 msgstr ""
 
-#: Source/init.cpp:219
+#: Source/init.cpp:226
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
 
-#: Source/init.cpp:227
+#: Source/init.cpp:234
 msgid "Unable to create main window"
 msgstr ""
 
@@ -4093,19 +4081,19 @@ msgstr ""
 msgid "Not Identified"
 msgstr ""
 
-#: Source/loadsave.cpp:1680 Source/loadsave.cpp:2144
+#: Source/loadsave.cpp:1679 Source/loadsave.cpp:2145
 msgid "Unable to open save file archive"
 msgstr ""
 
-#: Source/loadsave.cpp:1683
+#: Source/loadsave.cpp:1682
 msgid "Invalid save file"
 msgstr ""
 
-#: Source/loadsave.cpp:1712
+#: Source/loadsave.cpp:1713
 msgid "Player is on a Hellfire only level"
 msgstr ""
 
-#: Source/loadsave.cpp:1907
+#: Source/loadsave.cpp:1908
 msgid "Invalid game state"
 msgstr ""
 
@@ -5239,71 +5227,71 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr ""
 
-#: Source/monster.cpp:3495
+#: Source/monster.cpp:3497
 msgid "Animal"
 msgstr ""
 
-#: Source/monster.cpp:3497
+#: Source/monster.cpp:3499
 msgid "Demon"
 msgstr ""
 
-#: Source/monster.cpp:3499
+#: Source/monster.cpp:3501
 msgid "Undead"
 msgstr ""
 
-#: Source/monster.cpp:4630
+#: Source/monster.cpp:4632
 msgid "Type: {:s}  Kills: {:d}"
 msgstr ""
 
-#: Source/monster.cpp:4632
+#: Source/monster.cpp:4634
 msgid "Total kills: {:d}"
 msgstr ""
 
-#: Source/monster.cpp:4665
+#: Source/monster.cpp:4667
 msgid "Hit Points: {:d}-{:d}"
 msgstr ""
 
-#: Source/monster.cpp:4671
+#: Source/monster.cpp:4673
 msgid "No magic resistance"
 msgstr ""
 
-#: Source/monster.cpp:4675
+#: Source/monster.cpp:4677
 msgid "Resists: "
 msgstr ""
 
-#: Source/monster.cpp:4677 Source/monster.cpp:4688
+#: Source/monster.cpp:4679 Source/monster.cpp:4690
 msgid "Magic "
 msgstr ""
 
-#: Source/monster.cpp:4679 Source/monster.cpp:4690
+#: Source/monster.cpp:4681 Source/monster.cpp:4692
 msgid "Fire "
 msgstr ""
 
-#: Source/monster.cpp:4681 Source/monster.cpp:4692
+#: Source/monster.cpp:4683 Source/monster.cpp:4694
 msgid "Lightning "
 msgstr ""
 
-#: Source/monster.cpp:4686
+#: Source/monster.cpp:4688
 msgid "Immune: "
 msgstr ""
 
-#: Source/monster.cpp:4704
+#: Source/monster.cpp:4706
 msgid "Type: {:s}"
 msgstr ""
 
-#: Source/monster.cpp:4710 Source/monster.cpp:4717
+#: Source/monster.cpp:4712 Source/monster.cpp:4719
 msgid "No resistances"
 msgstr ""
 
-#: Source/monster.cpp:4712 Source/monster.cpp:4722
+#: Source/monster.cpp:4714 Source/monster.cpp:4724
 msgid "No Immunities"
 msgstr ""
 
-#: Source/monster.cpp:4715
+#: Source/monster.cpp:4717
 msgid "Some Magic Resistances"
 msgstr ""
 
-#: Source/monster.cpp:4720
+#: Source/monster.cpp:4722
 msgid "Some Magic Immunities"
 msgstr ""
 
@@ -5311,25 +5299,25 @@ msgstr ""
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:984 Source/msg.cpp:1019 Source/msg.cpp:1052
-#: Source/msg.cpp:1179 Source/msg.cpp:1211 Source/msg.cpp:1243
-#: Source/msg.cpp:1273
+#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
+#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
+#: Source/msg.cpp:1269
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:1659 Source/multi.cpp:805
+#: Source/msg.cpp:1655 Source/multi.cpp:805
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
-#: Source/msg.cpp:1963
+#: Source/msg.cpp:1959
 msgid "Waiting for game data..."
 msgstr ""
 
-#: Source/msg.cpp:1971
+#: Source/msg.cpp:1967
 msgid "The game ended"
 msgstr ""
 
-#: Source/msg.cpp:1977
+#: Source/msg.cpp:1973
 msgid "Unable to get level data"
 msgstr ""
 
@@ -5828,23 +5816,22 @@ msgstr ""
 msgid "Failed to open player archive for writing."
 msgstr ""
 
-#: Source/pfile.cpp:389
+#: Source/pfile.cpp:392
 msgid "Unable to open archive"
 msgstr ""
 
-#: Source/pfile.cpp:391
+#: Source/pfile.cpp:394
 msgid "Unable to load character"
 msgstr ""
 
-#: Source/pfile.cpp:416 Source/pfile.cpp:436
+#: Source/pfile.cpp:419 Source/pfile.cpp:439
 msgid "Unable to read to save file archive"
 msgstr ""
 
-#: Source/pfile.cpp:455
+#: Source/pfile.cpp:458
 msgid "Unable to write to save file archive"
 msgstr ""
 
-#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr ""
@@ -8301,17 +8288,17 @@ msgid "Down to Crypt"
 msgstr ""
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
-#: Source/trigs.cpp:630
+#: Source/trigs.cpp:634
 msgid "Up to level {:d}"
 msgstr ""
 
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
-#: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
+#: Source/trigs.cpp:600 Source/trigs.cpp:617 Source/trigs.cpp:664
 msgid "Up to town"
 msgstr ""
 
-#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
-#: Source/trigs.cpp:577 Source/trigs.cpp:642
+#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:556
+#: Source/trigs.cpp:581 Source/trigs.cpp:646
 msgid "Down to level {:d}"
 msgstr ""
 
@@ -8323,14 +8310,14 @@ msgstr ""
 msgid "Down to Crypt level {:d}"
 msgstr ""
 
-#: Source/trigs.cpp:564
+#: Source/trigs.cpp:568
 msgid "Up to Nest level {:d}"
 msgstr ""
 
-#: Source/trigs.cpp:673
+#: Source/trigs.cpp:677
 msgid "Down to Diablo"
 msgstr ""
 
-#: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
+#: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr ""

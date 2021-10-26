@@ -2,6 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
 "POT-Creation-Date: 2021-10-25 07:08+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: NSM53PROJECT <nsm53project@gmail.com>\n"
+"Language-Team: \n"
+"Language: ko_KR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9,11 +13,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
-"PO-Revision-Date: \n"
-"Language-Team: \n"
-"Last-Translator: NSM53PROJECT <nsm53project@gmail.com>\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: ko_KR\n"
 "X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
@@ -747,65 +747,47 @@ msgid "No"
 msgstr "아니요"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
+msgid ""
+"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
+"our community where we talk about things related to Diablo, and the Hellfire "
+"expansion."
 msgstr ""
-"GOG.com에서 운영하는 웹사이트는 https://www.gog.com/forum/diablo 입니다"
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "링크를 따라 디아블로와 확장팩 헬파이어 관련 토론 게시판을"
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr "방문해 보세요."
-
-#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr "DevilutionX는 Diasurgical이 관리하며 문제 및 버그를 보고 받습니다"
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
+"this address: https://github.com/diasurgical/devilutionX To help us better "
+"serve you, please be sure to include the version number, operating system, "
+"and the nature of the problem."
+msgstr ""
+"DevilutionX는 Diasurgical이 관리하며 문제 및 버그를 보고 받습니다 주소는 다음"
+"과 같습니다: https://github.com/diasurgical/devilutionX 더 나은 서비스를 제공"
+"을 위해 버전 정보, 운영체제, 문제 유형을, 포함해 주시기 바랍니다."
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr "주소는 다음과 같습니다: https://github.com/diasurgical/devilutionX"
-
-#: Source/DiabloUI/support_lines.cpp:14
-msgid ""
-"To help us better serve you, please be sure to include the version number,"
-msgstr "더 나은 서비스를 제공을 위해 버전 정보, 운영체제,"
-
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr "문제 유형을, 포함해 주시기 바랍니다."
-
-#: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
 msgstr "책임 부인:"
 
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr ""
-"  DevilutionX는 Blizzard Entertainment에서 지원받거나 운영되지 않습니다,"
-
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr ""
-"  GOG.com 또한 마찬가지입니다. Blizzard Entertainment와 GOG.com은 DevilutionX"
-"의 품질"
-
-#: Source/DiabloUI/support_lines.cpp:21
+#: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr "  또는 호환성을 테스트하거나 인증하지 않았습니다"
-
-#: Source/DiabloUI/support_lines.cpp:22
-msgid ""
-"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
+"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
+"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
+"the quality or compatibility of DevilutionX. All inquiries regarding "
+"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
+"or GOG.com."
 msgstr ""
-"  DevilutionX에 관한 문의 일체는 Blizzard Entertainment나 GOG.com이 아닌"
+"\tDevilutionX는 Blizzard Entertainment에서 지원받거나 운영되지 않습니다, GOG."
+"com 또한 마찬가지입니다. Blizzard Entertainment와 GOG.com은 DevilutionX의 품"
+"질 또는 호환성을 테스트하거나 인증하지 않았습니다 DevilutionX에 관한 문의 일"
+"체는 Blizzard Entertainment나 GOG.com이 아닌 Diasurgical에 해야 합니다."
 
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
-msgstr "  Diasurgical에 해야 합니다."
+#: Source/DiabloUI/support_lines.cpp:17
+msgid ""
+"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
+"under the SIL Open Font License, as well as Twitmoji which is licensed under "
+"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
+"license. See the ReadMe for further details."
+msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
