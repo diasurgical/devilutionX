@@ -171,6 +171,8 @@ void FindItemOrObject()
 				continue;
 			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
+			if (objectIsDisabled(o))
+				continue;
 			rotations = newRotations;
 			pcursobj = o;
 			cursPosition = Point { mx, my } + Displacement { xx, yy };
