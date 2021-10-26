@@ -69,6 +69,20 @@ public class DevilutionXSDLActivity extends SDLActivity {
 	}
 
 	private boolean missingGameData() {
+		String lang = Locale.getDefault().toString();
+		if (lang.startsWith("pl")) {
+			File pl_mpq = new File(externalDir + "/pl.mpq");
+			if (!pl_mpq.exists()) {
+				return true;
+			}
+		}
+		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
+			File fonts_mpq = new File(externalDir + "/fonts.mpq");
+			if (!fonts_mpq.exists()) {
+				return true;
+			}
+		}
+
 		File fileLower = new File(externalDir + "/diabdat.mpq");
 		File fileUpper = new File(externalDir + "/DIABDAT.MPQ");
 		File spawnFile = new File(externalDir + "/spawn.mpq");

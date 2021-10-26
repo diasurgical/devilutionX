@@ -15,16 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Locale;
 
 public class DataActivity extends Activity {
 	private String externalDir;
 	private DownloadReceiver mReceiver;
-	private boolean isDownloading = false;
+	private boolean isDownloadingSpawn = false;
+	private boolean isDownloadingTranslation = false;
+	private boolean isDownloadingFonts = false;
+	private int pendingDownloads = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		externalDir = getExternalFilesDir(null).getAbsolutePath();
-
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_data);
 
@@ -34,6 +36,9 @@ public class DataActivity extends Activity {
 
 	protected void onResume() {
 		super.onResume();
+
+		externalDir = getExternalFilesDir(null).getAbsolutePath();
+
 		startGame();
 	}
 
@@ -64,11 +69,41 @@ public class DataActivity extends Activity {
 	 * Check if the game data is present
 	 */
 	private boolean missingGameData() {
+		String lang = Locale.getDefault().toString();
+		if (lang.startsWith("pl")) {
+			File pl_mpq = new File(externalDir + "/pl.mpq");
+			if (!pl_mpq.exists()) {
+				if (!isDownloadingTranslation) {
+					isDownloadingTranslation = true;
+					sendDownloadRequest(
+						"https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq",
+						"pl.mpq",
+						"Translation Data"
+					);
+				}
+				return true;
+			}
+		}
+		if (lang.startsWith("ko") || lang.startsWith("zh") || lang.startsWith("ja")) {
+			File fonts_mpq = new File(externalDir + "/fonts.mpq");
+			if (!fonts_mpq.exists()) {
+				if (!isDownloadingFonts) {
+					isDownloadingFonts = true;
+					sendDownloadRequest(
+						"https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq",
+						"fonts.mpq",
+						"Extra Game Fonts"
+					);
+				}
+				return true;
+			}
+		}
+
 		File fileLower = new File(externalDir + "/diabdat.mpq");
 		File fileUpper = new File(externalDir + "/DIABDAT.MPQ");
 		File spawnFile = new File(externalDir + "/spawn.mpq");
 
-		return !fileUpper.exists() && !fileLower.exists() && (!spawnFile.exists() || isDownloading);
+		return !fileUpper.exists() && !fileLower.exists() && (!spawnFile.exists() || isDownloadingSpawn);
 	}
 
 	/**
@@ -81,28 +116,34 @@ public class DataActivity extends Activity {
 			return;
 		}
 
-		String url = "https://github.com/d07RiV/diabloweb/raw/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq";
-		String fileName = "spawn.mpq";
-
-		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
-				.setTitle(fileName)
-				.setDescription(getString(R.string.shareware_data))
-				.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-
-		request.setDestinationInExternalFilesDir(this, null, fileName);
-
-		DownloadManager downloadManager = (DownloadManager)this.getSystemService(Context.DOWNLOAD_SERVICE);
-		downloadManager.enqueue(request);
+		isDownloadingSpawn = true;
+		sendDownloadRequest(
+			"https://github.com/d07RiV/diabloweb/raw/3a5a51e84d5dab3cfd4fef661c46977b091aaa9c/spawn.mpq",
+			"spawn.mpq",
+			getString(R.string.shareware_data)
+		);
 
 		if (mReceiver == null)
 			mReceiver = new DownloadReceiver();
 		registerReceiver(mReceiver, new IntentFilter("android.intent.action.DOWNLOAD_COMPLETE"));
 
-		isDownloading = true;
 		view.setEnabled(false);
 
 		Toast toast = Toast.makeText(getApplicationContext(), getString(R.string.download_started), Toast.LENGTH_SHORT);
 		toast.show();
+	}
+
+	public void sendDownloadRequest(String url, String fileName, String description) {
+		DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url))
+				.setTitle(fileName)
+				.setDescription(description)
+				.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
+
+		request.setDestinationInExternalFilesDir(this, null, fileName);
+
+		DownloadManager downloadManager = (DownloadManager)this.getSystemService(Context.DOWNLOAD_SERVICE);
+		pendingDownloads++;
+		downloadManager.enqueue(request);
 	}
 
 	/**
@@ -111,8 +152,6 @@ public class DataActivity extends Activity {
 	private class DownloadReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			isDownloading = false;
-
 			long receivedID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1L);
 			DownloadManager mgr = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
@@ -122,11 +161,23 @@ public class DataActivity extends Activity {
 			int index = cur.getColumnIndex(DownloadManager.COLUMN_STATUS);
 			if (cur.moveToFirst()) {
 				if (cur.getInt(index) == DownloadManager.STATUS_SUCCESSFUL) {
-					startGame();
+					pendingDownloads--;
+				}
+				if (cur.getInt(index) == DownloadManager.STATUS_FAILED) {
+					isDownloadingSpawn = false;
+					isDownloadingFonts = false;
+					isDownloadingTranslation = false;
 				}
 			}
 			cur.close();
-			findViewById(R.id.download_button).setEnabled(true);
+
+			if (pendingDownloads == 0) {
+				if (isDownloadingSpawn) {
+					isDownloadingSpawn = false;
+					startGame();
+				}
+				findViewById(R.id.download_button).setEnabled(true);
+			}
 		}
 	}
 }
