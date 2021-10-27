@@ -12,14 +12,6 @@
 namespace devilution {
 
 /**
- * @brief Find an object given a point in map coordinates
- *
- * @param position The map coordinate to test
- * @return A reference to the object
- */
-Object &ObjectAtPosition(Point position);
-
-/**
  * @brief Load a quest map, the given map is specified via the global setlvlnum
  */
 void LoadSetMap();

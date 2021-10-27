@@ -238,6 +238,14 @@ extern int ActiveObjectCount;
 extern bool ApplyObjectLighting;
 extern bool LoadingMapObjects;
 
+/**
+ * @brief Find an object given a point in map coordinates
+ *
+ * @param position The map coordinate to test
+ * @return A pointer to the object or nullptr if no object exists at this location
+ */
+Object *ObjectAtPosition(Point position);
+
 void InitObjectGFX();
 void FreeObjectGFX();
 void AddL1Objs(int x1, int y1, int x2, int y2);

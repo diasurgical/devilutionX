@@ -682,7 +682,7 @@ void LoadMapObjects(const char *path, Point start, Rectangle mapRange, int lever
 			if (objectId != 0) {
 				Point mapPos = start + Displacement { i, j };
 				AddObject(ObjTypeConv[objectId], mapPos);
-				ObjectAtPosition(mapPos).InitializeLoadedObject(mapRange, leveridx);
+				ObjectAtPosition(mapPos)->InitializeLoadedObject(mapRange, leveridx);
 			}
 		}
 	}
@@ -4348,6 +4348,16 @@ bool Object::IsDisabled() const
 		return false;
 	}
 	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
+}
+
+Object *ObjectAtPosition(Point position)
+{
+	if (InDungeonBounds(position) && dObject[position.x][position.y] != 0) {
+		return &Objects[abs(dObject[position.x][position.y]) - 1];
+	}
+
+	// nothing at this position, return a nullptr
+	return nullptr;
 }
 
 void InitObjectGFX()

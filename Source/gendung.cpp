@@ -55,7 +55,7 @@ DungeonFlag dFlags[MAXDUNX][MAXDUNY];
 int8_t dPlayer[MAXDUNX][MAXDUNY];
 int16_t dMonster[MAXDUNX][MAXDUNY];
 int8_t dCorpse[MAXDUNX][MAXDUNY];
-char dObject[MAXDUNX][MAXDUNY];
+int8_t dObject[MAXDUNX][MAXDUNY];
 int8_t dItem[MAXDUNX][MAXDUNY];
 char dSpecial[MAXDUNX][MAXDUNY];
 int themeCount;
