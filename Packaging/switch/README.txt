@@ -26,13 +26,6 @@
 - Select + L2: quest log (alt: Start + Y)
 - Select + R2: spell book (alt: Start + B)
 
-# Touch Controls
- - Single finger drag: move the mouse pointer (pointer jumps to finger)
- - Single short tap: left mouse click
- - Single short tap while holding a second finger down: right mouse click
- - Dual finger drag: drag'n'drop (left mouse button is held down)
- - Three finger drag: drag'n'drop (right mouse button is held down)
-
 # Credits
  - See list of contributors https://github.com/diasurgical/devilutionX/graphs/contributors
 
