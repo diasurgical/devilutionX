@@ -1701,6 +1701,8 @@ void DrawTalkPan(const Surface &out)
 	if (!talkflag)
 		return;
 
+	force_redraw = 255;
+
 	DrawPanelBox(out, { 175, sgbPlrTalkTbl + 20, 294, 5 }, { PANEL_X + 175, PANEL_Y + 4 });
 	int off = 0;
 	for (int i = 293; i > 283; off++, i--) {
