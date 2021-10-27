@@ -1220,7 +1220,7 @@ void CheckPanelInfo()
 		AddPanelString(tempstr);
 		auto &myPlayer = Players[MyPlayerId];
 		const spell_id spellId = myPlayer._pRSpell;
-		if (spellId != SPL_INVALID) {
+		if (spellId != SPL_INVALID && spellId != SPL_NULL) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)).c_str());
