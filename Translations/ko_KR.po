@@ -18,289 +18,289 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
+msgstr "게임 디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr ""
+msgstr "수석 디자이너"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr ""
+msgstr "추가 디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr ""
+msgstr "책임 프로그래머"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr ""
+msgstr "수석 프로그래머"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
-msgstr ""
+msgstr "프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr ""
+msgstr "특별 초빙 프로그래머"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
-msgstr ""
+msgstr "배틀넷 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr ""
+msgstr "직렬 통신 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr ""
+msgstr "인스톨러 프로그래밍"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr ""
+msgstr "미술 연출"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr ""
+msgstr "삽화"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr ""
+msgstr "기술 삽화"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr ""
+msgstr "영상 미술 연출"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr ""
+msgstr "3D 영상 삽화"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr ""
+msgstr "영상 기술 삽화"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr ""
+msgstr "총괄 제작"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
-msgstr ""
+msgstr "제작"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr ""
+msgstr "제작보"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr ""
+msgstr "디아블로 스트라이크 팀"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
-msgstr ""
+msgstr "음악"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr ""
+msgstr "음향 설계"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr ""
+msgstr "영상 음악 & 음향"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr ""
+msgstr "성우 프로덕션, 제작 & 섭외"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr ""
+msgstr "대본"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr ""
+msgstr "음성 편집"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr ""
+msgstr "성우"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr ""
+msgstr "녹음 기술"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr ""
+msgstr "메뉴얼 디자인 및 레이아웃"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
-msgstr ""
+msgstr "메뉴얼 삽화"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
-msgstr ""
+msgstr "QA 임시 연출 (책임 테스터)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr ""
+msgstr "QA 유격대 (테스터)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr ""
+msgstr "QA 특수 작전조 (호환성 테스터)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr ""
+msgstr "QA 포격 지원 (추가 테스터) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
-msgstr ""
+msgstr "QA 방첩대"
 
 #. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
-msgstr ""
+msgstr "네트워크 정보 서비스 관리"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
-msgstr ""
+msgstr "고객 지원"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
-msgstr ""
+msgstr "판매"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
-msgstr ""
+msgstr "바지사장"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr ""
+msgstr "다비리 씨의 백보컬"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "홍보"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr ""
+msgstr "마케팅"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr ""
+msgstr "해외 판매"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
-msgstr ""
+msgstr "U.S. 판매"
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr ""
+msgstr "제조"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr ""
+msgstr "법무 & 사업부문"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr ""
+msgstr "특히 감사한 분들"
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
-msgstr ""
+msgstr "감사한 분들"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
-msgstr ""
+msgstr "이들을 추모하며"
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
-msgstr ""
+msgstr "너무나도 특히 감사한 분들"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr ""
+msgstr "총관리"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "소프트웨어 기술"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "미술 연출"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "미술"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
-msgstr ""
+msgstr "디자인"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "음향 설계, SFX & 기술"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "품질 보증 책임"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "테스터"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr ""
+msgstr "매뉴얼"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr ""
+msgstr "\t추가 작업"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr ""
+msgstr "퀘스트 대본 작성"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
-msgstr ""
+msgstr "감사한 분들"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr ""
+msgstr "\t\t\t정말 고마워요, 블리자드 엔터테인먼트"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr ""
+msgstr "\t\t\t시에라 온라인 주식회사. 노스웨스트"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr ""
+msgstr "품질 보증 관리"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr ""
+msgstr "품질 보증 책임 테스터"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr ""
+msgstr "주요 테스터"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr ""
+msgstr "추가 테스터"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr ""
+msgstr "제품 마케팅 관리"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr ""
+msgstr "홍보 관리"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr ""
+msgstr "제품 관리보"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
@@ -752,6 +752,8 @@ msgid ""
 "our community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
+"Discord.gg/YQKCAYQ에 채팅 서버를 개설해 놓았습니다. 링크를 따라 커뮤니티에 가"
+"입하여 디아블로와 헬파이어 확장팩에 관해 이야기를 나누세요."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -788,6 +790,9 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
+"\t이 포팅은 SIL Open Font License에 의해 허가된 CharisSILB, Unifont, Noto와 "
+"CC-BY 4.0에 의해 허가된 Twitmoji를 사용합니다. 또한 zlib-license에 의해 허가"
+"된 SDL을 사용합니다. 자세한 내용은 ReadMe를 참조하세요."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -1059,7 +1064,6 @@ msgstr "생성자: {:s}"
 
 # 조합 확인 필요
 #: Source/cursor.cpp:229
-#, fuzzy
 msgid "Portal to"
 msgstr "차원문"
 
@@ -1480,7 +1484,7 @@ msgstr "상쾌한 기분이다."
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:110
 msgid "That which can break will."
-msgstr "의지를 꺽을 수 있는 바로 그것."
+msgstr "의지를 꺾을 수 있는 바로 그것."
 
 #: Source/gamemenu.cpp:35
 msgid "Save Game"
@@ -1891,7 +1895,7 @@ msgstr "마나 물약"
 
 #: Source/itemdat.cpp:42 Source/itemdat.cpp:110
 msgid "Scroll of Identify"
-msgstr "감정 두루마리"
+msgstr "감별 두루마리"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
@@ -2150,75 +2154,75 @@ msgstr "생명력 영약"
 
 #: Source/itemdat.cpp:107
 msgid "Scroll of Healing"
-msgstr ""
+msgstr "치료 두루마리"
 
 #: Source/itemdat.cpp:108
 msgid "Scroll of Search"
-msgstr ""
+msgstr "탐색 두루마리"
 
 #: Source/itemdat.cpp:109
 msgid "Scroll of Lightning"
-msgstr ""
+msgstr "번개 두루마리"
 
 #: Source/itemdat.cpp:112
 msgid "Scroll of Fire Wall"
-msgstr ""
+msgstr "화염 방벽 두루마리"
 
 #: Source/itemdat.cpp:113
 msgid "Scroll of Inferno"
-msgstr ""
+msgstr "불바다 두루마리"
 
 #: Source/itemdat.cpp:115
 msgid "Scroll of Flash"
-msgstr ""
+msgstr "섬광 두루마리"
 
 #: Source/itemdat.cpp:116
 msgid "Scroll of Infravision"
-msgstr ""
+msgstr "초월 시야 두루마리"
 
 #: Source/itemdat.cpp:117
 msgid "Scroll of Phasing"
-msgstr ""
+msgstr "위치 변경 두루마리"
 
 #: Source/itemdat.cpp:118
 msgid "Scroll of Mana Shield"
-msgstr ""
+msgstr "마나 방패 두루마리"
 
 #: Source/itemdat.cpp:119
 msgid "Scroll of Flame Wave"
-msgstr ""
+msgstr "화염파 두루마리"
 
 #: Source/itemdat.cpp:120
 msgid "Scroll of Fireball"
-msgstr ""
+msgstr "화염구 두루마리"
 
 #: Source/itemdat.cpp:121
 msgid "Scroll of Stone Curse"
-msgstr ""
+msgstr "석화 저주 두루마리"
 
 #: Source/itemdat.cpp:122
 msgid "Scroll of Chain Lightning"
-msgstr ""
+msgstr "연쇄 번개 두루마리"
 
 #: Source/itemdat.cpp:123
 msgid "Scroll of Guardian"
-msgstr ""
+msgstr "수호자 두루마리"
 
 #: Source/itemdat.cpp:125
 msgid "Scroll of Nova"
-msgstr ""
+msgstr "초신성 두루마리"
 
 #: Source/itemdat.cpp:126
 msgid "Scroll of Golem"
-msgstr ""
+msgstr "골렘 두루마리"
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
-msgstr ""
+msgstr "순간 이동 두루마리"
 
 #: Source/itemdat.cpp:129
 msgid "Scroll of Apocalypse"
-msgstr ""
+msgstr "파멸 두루마리"
 
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
@@ -3673,7 +3677,7 @@ msgstr "생명 회복"
 
 #: Source/items.cpp:1982
 msgid "deadly heal"
-msgstr "치명적 치유"
+msgstr "치명적 치료"
 
 #: Source/items.cpp:1986
 msgid "restore some mana"
@@ -3963,7 +3967,7 @@ msgstr "사용자가 모든 마나를 잃음"
 
 #: Source/items.cpp:3968
 msgid "you can't heal"
-msgstr "치유할 수 없음"
+msgstr "치료할 수 없음"
 
 #: Source/items.cpp:3971
 msgid "absorbs half of trap damage"
@@ -4081,7 +4085,7 @@ msgstr "힘 요구치 없음"
 
 #: Source/items.cpp:4049
 msgid "see with infravision"
-msgstr "적외선 시야"
+msgstr "초월 시야"
 
 #: Source/items.cpp:4056
 msgid "lightning damage: {:d}"
@@ -4093,9 +4097,8 @@ msgstr "번개 피해: {:d}-{:d}"
 
 # 마법명 미확정
 #: Source/items.cpp:4061
-#, fuzzy
 msgid "charged bolts on hits"
-msgstr "적중 시 charged bolts"
+msgstr "적중 시 충전탄"
 
 #: Source/items.cpp:4070
 msgid "occasional triple damage"
@@ -5412,7 +5415,6 @@ msgstr "일부 면역 저항"
 
 # 언제 나오는 말인지 확인 필요
 #: Source/msg.cpp:494
-#, fuzzy
 msgid "Trying to drop a floor item?"
 msgstr "물품을 바닥에 떨구려 합니까?"
 
@@ -5457,128 +5459,128 @@ msgstr "플레이어 '{:s}' (레벨 {:d})은(는) 이미 게임에 참여 중입
 #. TRANSLATORS: Shrine Name Block
 #: Source/objects.cpp:104
 msgid "Mysterious"
-msgstr ""
+msgstr "신비한"
 
 #: Source/objects.cpp:105
 msgid "Hidden"
-msgstr ""
+msgstr "비밀의"
 
 #: Source/objects.cpp:106
 msgid "Gloomy"
-msgstr ""
+msgstr "음침한"
 
 #: Source/objects.cpp:108 Source/objects.cpp:115
 msgid "Magical"
-msgstr ""
+msgstr "마법의"
 
 #: Source/objects.cpp:109
 msgid "Stone"
-msgstr ""
+msgstr "석조"
 
 #: Source/objects.cpp:110
 msgid "Religious"
-msgstr ""
+msgstr "경건한"
 
 #: Source/objects.cpp:111
 msgid "Enchanted"
-msgstr ""
+msgstr "매혹의"
 
 #: Source/objects.cpp:112
 msgid "Thaumaturgic"
-msgstr ""
+msgstr "요술의"
 
 #: Source/objects.cpp:113
 msgid "Fascinating"
-msgstr ""
+msgstr "흥미로운"
 
 #: Source/objects.cpp:114
 msgid "Cryptic"
-msgstr ""
+msgstr "의문의"
 
 #: Source/objects.cpp:116
 msgid "Eldritch"
-msgstr ""
+msgstr "무시무시한"
 
 #: Source/objects.cpp:117
 msgid "Eerie"
-msgstr ""
+msgstr "섬뜩한"
 
 #: Source/objects.cpp:118
 msgid "Divine"
-msgstr ""
+msgstr "거룩한"
 
 #: Source/objects.cpp:120
 msgid "Sacred"
-msgstr ""
+msgstr "신성한"
 
 #: Source/objects.cpp:121
 msgid "Spiritual"
-msgstr ""
+msgstr "숭고한"
 
 #: Source/objects.cpp:122
 msgid "Spooky"
-msgstr ""
+msgstr "으스스한"
 
 #: Source/objects.cpp:123
 msgid "Abandoned"
-msgstr ""
+msgstr "버려진"
 
 #: Source/objects.cpp:124
 msgid "Creepy"
-msgstr ""
+msgstr "오싹한"
 
 #: Source/objects.cpp:125
 msgid "Quiet"
-msgstr ""
+msgstr "고요한"
 
 #: Source/objects.cpp:126
 msgid "Secluded"
-msgstr ""
+msgstr "호젓한"
 
 #: Source/objects.cpp:127
 msgid "Ornate"
-msgstr ""
+msgstr "화려한"
 
 #: Source/objects.cpp:128
 msgid "Glimmering"
-msgstr ""
+msgstr "미광의"
 
 #: Source/objects.cpp:129
 msgid "Tainted"
-msgstr ""
+msgstr "부패한"
 
 #: Source/objects.cpp:130
 msgid "Oily"
-msgstr ""
+msgstr "기름진"
 
 #: Source/objects.cpp:131
 msgid "Glowing"
-msgstr ""
+msgstr "찬란한"
 
 #: Source/objects.cpp:132
 msgid "Mendicant's"
-msgstr ""
+msgstr "탁발 수도사의"
 
 #: Source/objects.cpp:133
 msgid "Sparkling"
-msgstr ""
+msgstr "반짝이는"
 
 #: Source/objects.cpp:134
 msgid "Town"
-msgstr ""
+msgstr "마을"
 
 #: Source/objects.cpp:135
 msgid "Shimmering"
-msgstr ""
+msgstr "희미하게 빛나는"
 
 #: Source/objects.cpp:136
 msgid "Solar"
-msgstr ""
+msgstr "태양의"
 
 #. TRANSLATORS: Shrine Name Block end
 #: Source/objects.cpp:138
 msgid "Murphy's"
-msgstr ""
+msgstr "머피의"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:268
@@ -6126,257 +6128,257 @@ msgstr "대주교 라자루스의 본거지"
 #: Source/spelldat.cpp:16
 msgctxt "spell"
 msgid "Firebolt"
-msgstr ""
+msgstr "화염탄"
 
 #: Source/spelldat.cpp:17
 msgctxt "spell"
 msgid "Healing"
-msgstr ""
+msgstr "회복"
 
 #: Source/spelldat.cpp:18
 msgctxt "spell"
 msgid "Lightning"
-msgstr ""
+msgstr "번개"
 
 #: Source/spelldat.cpp:19
 msgctxt "spell"
 msgid "Flash"
-msgstr ""
+msgstr "섬광"
 
 #: Source/spelldat.cpp:20
 msgctxt "spell"
 msgid "Identify"
-msgstr ""
+msgstr "감별"
 
 #: Source/spelldat.cpp:21
 msgctxt "spell"
 msgid "Fire Wall"
-msgstr ""
+msgstr "화염 방벽"
 
 #: Source/spelldat.cpp:22
 msgctxt "spell"
 msgid "Town Portal"
-msgstr ""
+msgstr "마을 차원문"
 
 #: Source/spelldat.cpp:23
 msgctxt "spell"
 msgid "Stone Curse"
-msgstr ""
+msgstr "석화 저주"
 
 #: Source/spelldat.cpp:24
 msgctxt "spell"
 msgid "Infravision"
-msgstr ""
+msgstr "초월 시야"
 
 #: Source/spelldat.cpp:25
 msgctxt "spell"
 msgid "Phasing"
-msgstr ""
+msgstr "위치 변화"
 
 #: Source/spelldat.cpp:26
 msgctxt "spell"
 msgid "Mana Shield"
-msgstr ""
+msgstr "마나 방패"
 
 #: Source/spelldat.cpp:27
 msgctxt "spell"
 msgid "Fireball"
-msgstr ""
+msgstr "화염구"
 
 #: Source/spelldat.cpp:28
 msgctxt "spell"
 msgid "Guardian"
-msgstr ""
+msgstr "수호자"
 
 #: Source/spelldat.cpp:29
 msgctxt "spell"
 msgid "Chain Lightning"
-msgstr ""
+msgstr "연쇄 번개"
 
 #: Source/spelldat.cpp:30
 msgctxt "spell"
 msgid "Flame Wave"
-msgstr ""
+msgstr "화염파"
 
 #: Source/spelldat.cpp:31
 msgctxt "spell"
 msgid "Doom Serpents"
-msgstr ""
+msgstr "파멸의 뱀"
 
 #: Source/spelldat.cpp:32
 msgctxt "spell"
 msgid "Blood Ritual"
-msgstr ""
+msgstr "피의 의식"
 
 #: Source/spelldat.cpp:33
 msgctxt "spell"
 msgid "Nova"
-msgstr ""
+msgstr "초신성"
 
 #: Source/spelldat.cpp:34
 msgctxt "spell"
 msgid "Invisibility"
-msgstr ""
+msgstr "투명"
 
 #: Source/spelldat.cpp:35
 msgctxt "spell"
 msgid "Inferno"
-msgstr ""
+msgstr "불바다"
 
 #: Source/spelldat.cpp:36
 msgctxt "spell"
 msgid "Golem"
-msgstr ""
+msgstr "골렘"
 
 #: Source/spelldat.cpp:37
 msgctxt "spell"
 msgid "Rage"
-msgstr ""
+msgstr "분노"
 
 #: Source/spelldat.cpp:38
 msgctxt "spell"
 msgid "Teleport"
-msgstr ""
+msgstr "순간 이동"
 
 #: Source/spelldat.cpp:39
 msgctxt "spell"
 msgid "Apocalypse"
-msgstr ""
+msgstr "파멸"
 
 #: Source/spelldat.cpp:40
 msgctxt "spell"
 msgid "Etherealize"
-msgstr ""
+msgstr "영묘화"
 
 #: Source/spelldat.cpp:41
 msgctxt "spell"
 msgid "Item Repair"
-msgstr ""
+msgstr "물품 수리"
 
 #: Source/spelldat.cpp:42
 msgctxt "spell"
 msgid "Staff Recharge"
-msgstr ""
+msgstr "지팡이 충전"
 
 #: Source/spelldat.cpp:43
 msgctxt "spell"
 msgid "Trap Disarm"
-msgstr ""
+msgstr "함정 해제"
 
 #: Source/spelldat.cpp:44
 msgctxt "spell"
 msgid "Elemental"
-msgstr ""
+msgstr "전열"
 
 #: Source/spelldat.cpp:45
 msgctxt "spell"
 msgid "Charged Bolt"
-msgstr ""
+msgstr "충전탄"
 
 #: Source/spelldat.cpp:46
 msgctxt "spell"
 msgid "Holy Bolt"
-msgstr ""
+msgstr "성스러운 화살"
 
 #: Source/spelldat.cpp:47
 msgctxt "spell"
 msgid "Resurrect"
-msgstr ""
+msgstr "부활"
 
 #: Source/spelldat.cpp:48
 msgctxt "spell"
 msgid "Telekinesis"
-msgstr ""
+msgstr "염력"
 
 #: Source/spelldat.cpp:49
 msgctxt "spell"
 msgid "Heal Other"
-msgstr ""
+msgstr "타인 치료"
 
 #: Source/spelldat.cpp:50
 msgctxt "spell"
 msgid "Blood Star"
-msgstr ""
+msgstr "유혈의 별"
 
 #: Source/spelldat.cpp:51
 msgctxt "spell"
 msgid "Bone Spirit"
-msgstr ""
+msgstr "뼈 영혼"
 
 #: Source/spelldat.cpp:52
 msgctxt "spell"
 msgid "Mana"
-msgstr ""
+msgstr "마나"
 
 #: Source/spelldat.cpp:53
 msgctxt "spell"
 msgid "the Magi"
-msgstr ""
+msgstr "마법사"
 
 #: Source/spelldat.cpp:54
 msgctxt "spell"
 msgid "the Jester"
-msgstr ""
+msgstr "광대"
 
 #: Source/spelldat.cpp:55
 msgctxt "spell"
 msgid "Lightning Wall"
-msgstr ""
+msgstr "번개 방벽"
 
 #: Source/spelldat.cpp:56
 msgctxt "spell"
 msgid "Immolation"
-msgstr ""
+msgstr "불사름"
 
 #: Source/spelldat.cpp:57
 msgctxt "spell"
 msgid "Warp"
-msgstr ""
+msgstr "초광속 이동"
 
 #: Source/spelldat.cpp:58
 msgctxt "spell"
 msgid "Reflect"
-msgstr ""
+msgstr "반사"
 
 #: Source/spelldat.cpp:59
 msgctxt "spell"
 msgid "Berserk"
-msgstr ""
+msgstr "광폭화"
 
 #: Source/spelldat.cpp:60
 msgctxt "spell"
 msgid "Ring of Fire"
-msgstr ""
+msgstr "화염의 고리"
 
 #: Source/spelldat.cpp:61
 msgctxt "spell"
 msgid "Search"
-msgstr ""
+msgstr "탐색"
 
 #: Source/spelldat.cpp:62
 msgctxt "spell"
 msgid "Rune of Fire"
-msgstr ""
+msgstr "화염의 룬"
 
 #: Source/spelldat.cpp:63
 msgctxt "spell"
 msgid "Rune of Light"
-msgstr ""
+msgstr "빛의 룬"
 
 #: Source/spelldat.cpp:64
 msgctxt "spell"
 msgid "Rune of Nova"
-msgstr ""
+msgstr "초신성의 룬"
 
 #: Source/spelldat.cpp:65
 msgctxt "spell"
 msgid "Rune of Immolation"
-msgstr ""
+msgstr "불사름의 룬"
 
 #: Source/spelldat.cpp:66
 msgctxt "spell"
 msgid "Rune of Stone"
-msgstr ""
+msgstr "석화의 룬"
 
 #: Source/stores.cpp:179 Source/stores.cpp:186
 msgid ",  "
@@ -6523,7 +6525,7 @@ msgstr "거래하겠습니까?"
 
 #: Source/stores.cpp:906
 msgid "Are you sure you want to identify this item?"
-msgstr "이 물품을 감정하겠습니까?"
+msgstr "이 물품을 감별하겠습니까?"
 
 #: Source/stores.cpp:912
 msgid "Are you sure you want to buy this item?"
@@ -6601,17 +6603,17 @@ msgstr "케인과 대화"
 
 #: Source/stores.cpp:1056
 msgid "Identify an item"
-msgstr "물품 감정"
+msgstr "물품 감별"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1149
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "감정할 게 없군 그래.             소지금: {:d}"
+msgstr "감별할 게 없군 그래.             소지금: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1164
 msgid "Identify which item?             Your gold: {:d}"
-msgstr "어느 물건을 감정하겠나?             소지금: {:d}"
+msgstr "어느 물건을 감별하겠나?             소지금: {:d}"
 
 #: Source/stores.cpp:1184
 msgid "This item is:"
@@ -9698,6 +9700,9 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search."
 msgstr ""
+"탐험을 계속하세요. 잃어버린 보물을 찾는다는 건 쉬운 일이 아니니 그보다는 상대"
+"적으로 좀 더 드러난 보물을 찾아보세요. 이걸 당신에게 맡기도록 하죠. 시간의 모"
+"래가 당신의 탐색을 흐트리지 않도록 하세요."
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
@@ -9707,6 +9712,9 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
+"뭐?! 아이고 이 양반아. 여기 트리스트럼에 보물 같은 게 묻혀 있을 리가 있나. 어"
+"디 보자고!! 어째 그림이 틀린 거 같은데. 우리 마을하고 전혀 맞질 않잖아. 우리 "
+"발밑에 있는 것보단 대성당 밑에 있는 게 난 더 신경쓰이는군."
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
@@ -9714,6 +9722,8 @@ msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
 msgstr ""
+"자네가 찾고 있는 지도에 관해 얘기할 시간이 도무지 나질 않는군 그래. 나와 자"
+"네 도움이 필요한 환자들이 넘치니 말이야."
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
