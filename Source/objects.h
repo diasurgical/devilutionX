@@ -246,6 +246,13 @@ extern bool LoadingMapObjects;
  */
 Object *ObjectAtPosition(Point position);
 
+/**
+ * @brief Check whether an item occupies this tile position
+ * @param position The map coordinate to test
+ * @return true if the tile is occupied
+ */
+bool IsObjectAtPosition(Point position);
+
 void InitObjectGFX();
 void FreeObjectGFX();
 void AddL1Objs(int x1, int y1, int x2, int y2);
