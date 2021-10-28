@@ -2397,24 +2397,14 @@ void AddGolem(Missile &missile, Point dst, Direction /*midir*/)
 	UseMana(playerId, SPL_GOLEM);
 
 	if (Monsters[playerId].position.tile == GolemHoldingCell) {
-		for (int i = 0; i < 6; i++) {
-			int k = CrawlNum[i];
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
+		std::optional<Point> spawnPosition = FindClosestValidPosition(
+		    [start = missile.position.start](Point target) {
+			    return !IsTileOccupied(target) && LineClearMissile(start, target);
+		    },
+		    dst, 0, 5);
 
-				if (!InDungeonBounds(target))
-					continue;
-
-				if (!LineClearMissile(missile.position.start, target))
-					continue;
-
-				if (dMonster[target.x][target.y] != 0 || nSolidTable[dPiece[target.x][target.y]] || dObject[target.x][target.y] != 0 || dPlayer[target.x][target.y] != 0)
-					continue;
-
-				SpawnGolem(playerId, target, missile);
-				return;
-			}
+		if (spawnPosition) {
+			SpawnGolem(playerId, *spawnPosition, missile);
 		}
 	}
 }
