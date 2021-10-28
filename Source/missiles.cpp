@@ -3156,30 +3156,18 @@ void MI_HorkSpawn(Missile &missile)
 	CheckMissileCol(missile, 0, 0, false, missile.position.tile, false);
 	if (missile._mirange <= 0) {
 		missile._miDelFlag = true;
-		for (int i = 0; i < 2; i++) {
-			int k = CrawlNum[i];
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				Point target = missile.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-				if (!InDungeonBounds(target))
-					continue;
 
-				if (nSolidTable[dPiece[target.x][target.y]])
-					continue;
-				if (dMonster[target.x][target.y] != 0)
-					continue;
-				if (dPlayer[target.x][target.y] != 0)
-					continue;
-				if (dObject[target.x][target.y] != 0)
-					continue;
+		std::optional<Point> spawnPosition = FindClosestValidPosition(
+		    [](Point target) {
+			    return !IsTileOccupied(target);
+		    },
+		    missile.position.tile, 0, 1);
 
-				auto md = static_cast<Direction>(missile.var1);
-				int monsterId = AddMonster(target, md, 1, true);
-				if (monsterId != -1)
-					M_StartStand(Monsters[monsterId], md);
-
-				i = 6;
-				break;
+		if (spawnPosition) {
+			auto facing = static_cast<Direction>(missile.var1);
+			int monsterId = AddMonster(*spawnPosition, facing, 1, true);
+			if (monsterId != -1) {
+				M_StartStand(Monsters[monsterId], facing);
 			}
 		}
 	} else {
