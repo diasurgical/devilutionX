@@ -4357,6 +4357,11 @@ Object *ObjectAtPosition(Point position)
 	return nullptr;
 }
 
+bool IsObjectAtPosition(Point position)
+{
+	return ObjectAtPosition(position) != nullptr;
+}
+
 void InitObjectGFX()
 {
 	bool fileload[56] = {};

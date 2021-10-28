@@ -68,24 +68,25 @@ bool TFit_Shrine(int i)
 	int found = 0;
 
 	while (found == 0) {
+		Point testPosition { xp, yp };
 		if (dTransVal[xp][yp] == themes[i].ttval) {
 			if (nTrapTable[dPiece[xp][yp - 1]]
-			    && IsTileNotSolid({ xp - 1, yp })
-			    && IsTileNotSolid({ xp + 1, yp })
+			    && IsTileNotSolid(testPosition + Direction::NorthWest)
+			    && IsTileNotSolid(testPosition + Direction::SouthEast)
 			    && dTransVal[xp - 1][yp] == themes[i].ttval
 			    && dTransVal[xp + 1][yp] == themes[i].ttval
-			    && dObject[xp - 1][yp - 1] == 0
-			    && dObject[xp + 1][yp - 1] == 0) {
+			    && !IsObjectAtPosition(testPosition + Direction::North)
+			    && !IsObjectAtPosition(testPosition + Direction::East)) {
 				found = 1;
 			}
 			if (found == 0
 			    && nTrapTable[dPiece[xp - 1][yp]]
-			    && IsTileNotSolid({ xp, yp - 1 })
-			    && IsTileNotSolid({ xp, yp + 1 })
+			    && IsTileNotSolid(testPosition + Direction::NorthEast)
+			    && IsTileNotSolid(testPosition + Direction::SouthWest)
 			    && dTransVal[xp][yp - 1] == themes[i].ttval
 			    && dTransVal[xp][yp + 1] == themes[i].ttval
-			    && dObject[xp - 1][yp - 1] == 0
-			    && dObject[xp - 1][yp + 1] == 0) {
+			    && !IsObjectAtPosition(testPosition + Direction::North)
+			    && !IsObjectAtPosition(testPosition + Direction::West)) {
 				found = 2;
 			}
 		}
@@ -181,16 +182,22 @@ bool TFit_GoatShrine(int t)
 bool CheckThemeObj3(int xp, int yp, int t, int f)
 {
 	for (int i = 0; i < 9; i++) {
-		if (xp + trm3x[i] < 0 || yp + trm3y[i] < 0)
+		Point testPosition = Point { xp, yp } + Displacement { trm3x[i], trm3y[i] };
+		if (testPosition.x < 0 || testPosition.y < 0) {
 			return false;
-		if (nSolidTable[dPiece[xp + trm3x[i]][yp + trm3y[i]]])
+		}
+		if (IsTileSolid(testPosition)) {
 			return false;
-		if (dTransVal[xp + trm3x[i]][yp + trm3y[i]] != themes[t].ttval)
+		}
+		if (dTransVal[testPosition.x][testPosition.y] != themes[t].ttval) {
 			return false;
-		if (dObject[xp + trm3x[i]][yp + trm3y[i]] != 0)
+		}
+		if (IsObjectAtPosition(testPosition)) {
 			return false;
-		if (f != -1 && GenerateRnd(f) == 0)
+		}
+		if (f != -1 && GenerateRnd(f) == 0) {
 			return false;
+		}
 	}
 
 	return true;
@@ -487,7 +494,7 @@ void PlaceThemeMonsts(int t, int f)
 	int mtype = scattertypes[GenerateRnd(numscattypes)];
 	for (int yp = 0; yp < MAXDUNY; yp++) {
 		for (int xp = 0; xp < MAXDUNX; xp++) {
-			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && dItem[xp][yp] == 0 && dObject[xp][yp] == 0) {
+			if (dTransVal[xp][yp] == themes[t].ttval && IsTileNotSolid({ xp, yp }) && dItem[xp][yp] == 0 && !IsObjectAtPosition({ xp, yp })) {
 				if (GenerateRnd(f) == 0) {
 					AddMonster({ xp, yp }, static_cast<Direction>(GenerateRnd(8)), mtype, true);
 				}
@@ -641,10 +648,10 @@ void Theme_SkelRoom(int t)
 		AddObject(OBJ_BANNERL, { xp + 1, yp + 1 });
 	}
 
-	if (dObject[xp][yp - 3] == 0) {
+	if (!IsObjectAtPosition({ xp, yp - 3 })) {
 		AddObject(OBJ_SKELBOOK, { xp, yp - 2 });
 	}
-	if (dObject[xp][yp + 3] == 0) {
+	if (!IsObjectAtPosition({ xp, yp + 3 })) {
 		AddObject(OBJ_SKELBOOK, { xp, yp + 2 });
 	}
 }
@@ -712,10 +719,12 @@ void Theme_Library(int t)
 		for (int xp = 1; xp < MAXDUNX - 1; xp++) {
 			if (CheckThemeObj3(xp, yp, t, -1) && dMonster[xp][yp] == 0 && GenerateRnd(librnd[leveltype - 1]) == 0) {
 				AddObject(OBJ_BOOKSTAND, { xp, yp });
-				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0 && dObject[xp][yp] != 0) { /// BUGFIX: check dObject[xp][yp] was populated by AddObject (fixed)
-					int oi = dObject[xp][yp] - 1;
-					Objects[oi]._oSelFlag = 0;
-					Objects[oi]._oAnimFrame += 2;
+				if (GenerateRnd(2 * librnd[leveltype - 1]) != 0) {
+					Object *bookstand = ObjectAtPosition({ xp, yp });
+					if (bookstand != nullptr) {
+						bookstand->_oSelFlag = 0;
+						bookstand->_oAnimFrame += 2;
+					}
 				}
 			}
 		}
