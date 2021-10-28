@@ -83,22 +83,18 @@ bool CheckBlock(Point from, Point to)
 
 Monster *FindClosest(Point source, int rad)
 {
-	if (rad > 19)
-		rad = 19;
+	std::optional<Point> monsterPosition = FindClosestValidPosition(
+	    [&source](Point target) {
+		    // search for a monster with clear line of sight
+		    return InDungeonBounds(target) && dMonster[target.x][target.y] > 0 && !CheckBlock(source, target);
+	    },
+	    source, 1, rad);
 
-	for (int i = 1; i < rad; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = source + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!InDungeonBounds(target))
-				continue;
-
-			int mid = dMonster[target.x][target.y];
-			if (mid > 0 && !CheckBlock(source, target))
-				return &Monsters[mid - 1];
-		}
+	if (monsterPosition) {
+		int mid = dMonster[monsterPosition->x][monsterPosition->y];
+		return &Monsters[mid - 1];
 	}
+
 	return nullptr;
 }
 
