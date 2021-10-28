@@ -154,6 +154,24 @@ void LoadPotionArt(Art *potionArt, SDL_Renderer *renderer)
 	}
 }
 
+bool InteractsWithCharButton(Point point)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	if (myPlayer._pStatPts == 0)
+		return false;
+	for (auto attribute : enum_values<CharacterAttribute>()) {
+		if (myPlayer.GetBaseAttributeValue(attribute) >= myPlayer.GetMaximumAttributeValue(attribute))
+			continue;
+		auto buttonId = static_cast<size_t>(attribute);
+		Rectangle button = ChrBtnsRect[buttonId];
+		button.position = GetPanelPosition(UiPanels::Character, button.position);
+		if (button.Contains(point)) {
+			return true;
+		}
+	}
+	return false;
+}
+
 } // namespace
 
 void RenderVirtualGamepad(SDL_Renderer *renderer)
@@ -381,6 +399,8 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetButtonType()
 	// NEED: Confirm surface
 	if (qtextflag)
 		return GetTalkButtonType(virtualPadButton->isHeld);
+	if (chrflag && InteractsWithCharButton(MousePosition))
+		return GetApplyButtonType(virtualPadButton->isHeld);
 	if (invflag)
 		return GetInventoryButtonType();
 	if (leveltype == DTYPE_TOWN)
