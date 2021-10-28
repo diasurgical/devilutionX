@@ -488,6 +488,12 @@ void Interact()
 
 	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		return;
+	}
+
+	if (pcursobj != -1) {
+		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		return;
 	}
 }
 
