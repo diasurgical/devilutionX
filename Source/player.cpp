@@ -3591,16 +3591,15 @@ void SyncInitPlrPos(int pnum)
 				return position;
 		}
 
-		for (int k : CrawlNum) {
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				Point position = player.position.tile + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-				if (PosOkPlayer(player, position) && !PosOkPortal(currlevel, position.x, position.y))
-					return position;
-			}
-		}
+		std::optional<Point> nearPosition = FindClosestValidPosition(
+		    [&player](Point testPosition) {
+			    return PosOkPlayer(player, testPosition) && !PosOkPortal(currlevel, testPosition.x, testPosition.y);
+		    },
+		    player.position.tile,
+		    1, // skip the starting tile since that was checked in the previous loop
+		    50);
 
-		return Point { 0, 0 };
+		return nearPosition.value_or(Point { 0, 0 });
 	}();
 
 	player.position.tile = position;
