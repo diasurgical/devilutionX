@@ -14,7 +14,7 @@
 
 namespace devilution {
 
-#define MAXLIGHTS 32
+#define MAXLIGHTS 127
 #define MAXVISION 32
 #define LIGHTSIZE (27 * 256)
 #define NO_LIGHT -1
