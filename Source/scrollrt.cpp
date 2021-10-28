@@ -1245,28 +1245,19 @@ void DrawView(const Surface &out, Point startPosition)
 
 				Displacement hor = { TILE_WIDTH / 2, 0 };
 				Displacement ver = { 0, TILE_HEIGHT / 2 };
-				if (megaTiles) {
-					hor *= 2;
-					ver *= 2;
-				}
 				if (!zoomflag) {
 					hor *= 2;
 					ver *= 2;
 				}
 				Point center = pixelCoords + hor - ver;
 
+				if (megaTiles) {
+					hor *= 2;
+					ver *= 2;
+				}
+
 				uint8_t col = PAL16_BEIGE;
 
-				if (megaTiles) {
-					// redraw for each corner to stop disappearing around screen edges while walking
-					center = pixelCoords + ver * 0.5F + hor * 1.5F;
-					DrawDebugSquare(center, hor, ver, col);
-					center = pixelCoords - ver * 1.5F + hor * 1.5F;
-					DrawDebugSquare(center, hor, ver, col);
-					center = pixelCoords - ver * 1.5F - hor * 0.5F;
-					DrawDebugSquare(center, hor, ver, col);
-					center = pixelCoords + ver * 0.5F - hor * 0.5F;
-				}
 				DrawDebugSquare(center, hor, ver, col);
 			}
 		}
