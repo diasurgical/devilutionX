@@ -2503,35 +2503,26 @@ void AddIdentify(Missile &missile, Point /*dst*/, Direction /*midir*/)
 
 void AddFirewallC(Missile &missile, Point dst, Direction midir)
 {
-	missile._miDelFlag = true;
-	for (int i = 0; i < 6; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!InDungeonBounds(target))
-				continue;
+	std::optional<Point> spreadPosition = FindClosestValidPosition(
+	    [start = missile.position.start](Point target) {
+		    return start != target && IsTileNotSolid(target) && InDungeonBounds(target) && dObject[target.x][target.y] == 0 && LineClearMissile(start, target);
+	    },
+	    dst, 0, 5);
 
-			if (LineClearMissile(missile.position.start, target)) {
-				if (missile.position.start != target && IsTileNotSolid(target) && dObject[target.x][target.y] == 0) {
-					missile.var1 = target.x;
-					missile.var2 = target.y;
-					missile.var5 = target.x;
-					missile.var6 = target.y;
-					missile._miDelFlag = false;
-					i = 6;
-					break;
-				}
-			}
-		}
+	if (!spreadPosition) {
+		missile._miDelFlag = true;
+		return;
 	}
 
-	if (!missile._miDelFlag) {
-		missile.var3 = static_cast<int>(Left(Left(midir)));
-		missile.var4 = static_cast<int>(Right(Right(midir)));
-		missile._mirange = 7;
-		UseMana(missile._misource, SPL_FIREWALL);
-	}
+	missile._miDelFlag = false;
+	missile.var1 = spreadPosition->x;
+	missile.var2 = spreadPosition->y;
+	missile.var5 = spreadPosition->x;
+	missile.var6 = spreadPosition->y;
+	missile.var3 = static_cast<int>(Left(Left(midir)));
+	missile.var4 = static_cast<int>(Right(Right(midir)));
+	missile._mirange = 7;
+	UseMana(missile._misource, SPL_FIREWALL);
 }
 
 void AddInfra(Missile &missile, Point /*dst*/, Direction /*midir*/)
