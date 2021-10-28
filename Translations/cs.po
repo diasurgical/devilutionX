@@ -3558,10 +3558,22 @@ msgstr "Olej Tvrdnutí"
 msgid "Oil of Imperviousness"
 msgstr "Olej Nepropustnosti"
 
-#. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1188 Source/items.cpp:1256 Source/items.cpp:1275
-#: Source/items.cpp:1317
-msgid "{:s} of {:s}"
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
+#: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
+#: Source/items.cpp:1269
+msgid "{0} {1}"
+msgstr ""
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall
+#: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
+#: Source/items.cpp:1315
+msgid "{0} of {1}"
 msgstr "{:s} {:s}"
 
 #: Source/items.cpp:1894 Source/items.cpp:1906
