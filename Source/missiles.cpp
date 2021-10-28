@@ -1523,27 +1523,22 @@ void AddStealPotions(Missile &missile, Point /*dst*/, Direction /*midir*/)
 
 void AddManaTrap(Missile &missile, Point /*dst*/, Direction /*midir*/)
 {
-	for (int i = 0; i < 3; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = missile.position.start + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!InDungeonBounds(target))
-				continue;
+	std::optional<Point> trappedPlayerPosition = FindClosestValidPosition(
+	    [](Point target) {
+		    return InDungeonBounds(target) && dPlayer[target.x][target.y] != 0;
+	    },
+	    missile.position.start, 0, 2);
 
-			int8_t pid = dPlayer[target.x][target.y];
-			if (pid == 0)
-				continue;
+	if (trappedPlayerPosition) {
+		auto &player = Players[abs(dPlayer[trappedPlayerPosition->x][trappedPlayerPosition->y]) - 1];
 
-			auto &player = Players[abs(pid) - 1];
-
-			player._pMana = 0;
-			player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
-			CalcPlrInv(player, false);
-			drawmanaflag = true;
-			PlaySfxLoc(TSFX_COW7, target);
-		}
+		player._pMana = 0;
+		player._pManaBase = player._pMana + player._pMaxManaBase - player._pMaxMana;
+		CalcPlrInv(player, false);
+		drawmanaflag = true;
+		PlaySfxLoc(TSFX_COW7, *trappedPlayerPosition);
 	}
+
 	missile._miDelFlag = true;
 }
 
