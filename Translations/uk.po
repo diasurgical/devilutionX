@@ -319,195 +319,197 @@ msgstr ""
 #: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
-msgstr ""
+msgstr "ОК"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:61
 msgid "Switch to Diablo"
-msgstr ""
+msgstr "Перейти в Diablo"
 
 #: Source/DiabloUI/extrasmenu.cpp:41
 msgid "Switch to Hellfire"
-msgstr ""
+msgstr "Перейти в Hellfire"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-msgstr ""
+msgstr "Перейти в повну гру"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Shareware"
-msgstr ""
+msgstr "Перейти в Shareware"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
-msgstr ""
+msgstr "Зіграти Заставку"
 
 #: Source/DiabloUI/extrasmenu.cpp:45
 msgid "Support"
-msgstr ""
+msgstr "Підтримка"
 
 #: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
 msgid "Previous Menu"
-msgstr ""
+msgstr "Попереднє Меню"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
-msgstr ""
+msgstr "Грати Одному"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr ""
+msgstr "Грати з Друзями"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Extras"
-msgstr ""
+msgstr "Додатки"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Show Credits"
-msgstr ""
+msgstr "Показати Авторів"
 
 #: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Hellfire"
-msgstr ""
+msgstr "Вийти з Hellfire"
 
 #: Source/DiabloUI/mainmenu.cpp:40
 msgid "Exit Diablo"
-msgstr ""
+msgstr "Вийти з Diablo"
 
 #: Source/DiabloUI/mainmenu.cpp:55
 msgid "Shareware"
-msgstr ""
+msgstr "Shareware"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
 msgid "Cancel"
-msgstr ""
+msgstr "Скасувати"
 
 #: Source/DiabloUI/selconn.cpp:13
 msgid "Client-Server (TCP)"
-msgstr ""
+msgstr "Клієнт-Сервер (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:14
 msgid "Loopback"
-msgstr ""
+msgstr "Петльова адреса"
 
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
 #: Source/DiabloUI/selgame.cpp:505
 msgid "Multi Player Game"
-msgstr ""
+msgstr "Гра з Друзями"
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
-msgstr ""
+msgstr "Вимоги:"
 
 #: Source/DiabloUI/selconn.cpp:65
 msgid "no gateway needed"
-msgstr ""
+msgstr "gateway не потрібен"
 
 #: Source/DiabloUI/selconn.cpp:71
 msgid "Select Connection"
-msgstr ""
+msgstr "Виберіть З'єднання"
 
 #: Source/DiabloUI/selconn.cpp:74
 msgid "Change Gateway"
-msgstr ""
+msgstr "Змінити Gateway"
 
 #: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr ""
+msgstr "Всі комп'ютери мають бути з'єднані через TCP мережу."
 
 #: Source/DiabloUI/selconn.cpp:111
 msgid "All computers must be connected to the internet."
-msgstr ""
+msgstr "Всі комп'ютери мають бути під'єднані до Інтернету."
 
 #: Source/DiabloUI/selconn.cpp:115
 msgid "Play by yourself with no network exposure."
-msgstr ""
+msgstr "Грайте самостійно без доступу до мереж."
 
 #: Source/DiabloUI/selconn.cpp:120
 msgid "Players Supported: {:d}"
-msgstr ""
+msgstr "Підтримується Гравців: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
 msgid "Description:"
-msgstr ""
+msgstr "Описання:"
 
 #: Source/DiabloUI/selgame.cpp:88
 msgid "Select Action"
-msgstr ""
+msgstr "Виберіть"
 
 #: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
 #: Source/DiabloUI/selgame.cpp:333
 msgid "Create Game"
-msgstr ""
+msgstr "Створити Гру"
 
 #: Source/DiabloUI/selgame.cpp:93
 msgid "Create Public Game"
-msgstr ""
+msgstr "Відкрита Гра"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
-msgstr ""
+msgstr "Приєднатися"
 
 #: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
 #: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
 #: Source/DiabloUI/selgame.cpp:431
 msgid "CANCEL"
-msgstr ""
+msgstr "СКАСУВАТИ"
 
 #: Source/DiabloUI/selgame.cpp:122
 msgid "Create a new game with a difficulty setting of your choice."
-msgstr ""
+msgstr "Створити нову гру з вибором рівня важкості."
 
 #: Source/DiabloUI/selgame.cpp:125
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr ""
+msgstr "Створити нову відкриту гру без паролю з вибором рівня важкості."
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
-msgstr ""
+msgstr "Введіть IP адресу або ім'я домену і приєднайтесь до вже запущеної гри."
 
 #: Source/DiabloUI/selgame.cpp:131
 msgid "Join the public game already in progress at this address."
-msgstr ""
+msgstr "Приєднайтесь до відкритої гри, яка вже запущена по цій адресі."
 
 #: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
-msgstr ""
+msgstr "Виберіть Складність"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
 #: Source/diablo.cpp:1446
 msgid "Normal"
-msgstr ""
+msgstr "Нормальна"
 
 #: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
 #: Source/diablo.cpp:1447
 msgid "Nightmare"
-msgstr ""
+msgstr "Кошмарна"
 
 #: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
 #: Source/diablo.cpp:1448
 msgid "Hell"
-msgstr ""
+msgstr "Пекельна"
 
 #: Source/DiabloUI/selgame.cpp:202
 msgid "Join TCP Games"
-msgstr ""
+msgstr "Приєднатися по TCP"
 
 #: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
 msgid "Enter address"
-msgstr ""
+msgstr "Введіть адресу"
 
 #: Source/DiabloUI/selgame.cpp:240
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
+"Нормальна Складність\n"
+"Рекомендується для нових героїв, що хочуть перемогти Діабло."
 
 #: Source/DiabloUI/selgame.cpp:244
 msgid ""
@@ -515,6 +517,9 @@ msgid ""
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
+"Кошмарна Складність\n"
+"Мешканці Лабіринту стали сильніші і їх буде важче перемогти. Рекомендується "
+"тільки для досвідчених героїв."
 
 #: Source/DiabloUI/selgame.cpp:248
 msgid ""
@@ -522,40 +527,49 @@ msgid ""
 "The most powerful of the underworld's creatures lurk at the gateway into "
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
+"Пекельна Складність\n"
+"Наймогутніші пекельні створіння підстерігають Вас біля воріт в Пекло. Тільки "
+"найбільш досвідчені герої відважаться підти туди."
 
 #: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr ""
+"Ваш герой має бути 20 рівня щоб приєднатися до гри з друзями Кошмарної "
+"складності."
 
 #: Source/DiabloUI/selgame.cpp:266
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr ""
+"Ваш герой має бути 30 рівня щоб приєднатися до гри з друзями Пекельної "
+"складності."
 
 #: Source/DiabloUI/selgame.cpp:342
 msgid "Select Game Speed"
-msgstr ""
+msgstr "Виберіть Швидкість Гри"
 
 #: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
 msgid "Fast"
-msgstr ""
+msgstr "Швидка"
 
 #: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
 msgid "Faster"
-msgstr ""
+msgstr "Дуже Швидка"
 
 #: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
 msgid "Fastest"
-msgstr ""
+msgstr "Найшвидша"
 
 #: Source/DiabloUI/selgame.cpp:365
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
+"Нормальна Швидкість\n"
+"Рекомендується для нових героїв, що хочуть перемогти Діабло."
 
 #: Source/DiabloUI/selgame.cpp:369
 msgid ""
@@ -563,6 +577,8 @@ msgid ""
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
+"Мешканці Лабіринту стали швидше і їх буде важче перемогти. Рекомендується "
+"тільки для досвідчених героїв."
 
 #: Source/DiabloUI/selgame.cpp:373
 msgid ""
@@ -570,6 +586,9 @@ msgid ""
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
+"Дуже Швидка Швидкість\n"
+"Монстри підземелля вишукують тебе набагато швидше. Тільки досвідчені "
+"чемпіони спробують удачу на цій швидкості."
 
 #: Source/DiabloUI/selgame.cpp:377
 msgid ""
@@ -577,157 +596,165 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
+"Найшвидша Швидкість\n"
+"Служники Пекла відразу атакують без будь-яких вагань. Тільки справжні "
+"безумці будуть встигати за ними."
 
 #: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
 msgid "Enter Password"
-msgstr ""
+msgstr "Введіть Пароль"
 
 #: Source/DiabloUI/selgame.cpp:448
 msgid "The host is running a different game than you."
-msgstr ""
+msgstr "На сервері запущена інша гра."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:451
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr ""
+"Ваша версія {:s} несумісна з версією {:d}.{:d}.{:d} що присутня на сервері."
 
 #: Source/DiabloUI/selhero.cpp:100
 msgid "New Hero"
-msgstr ""
+msgstr "Новий Герой"
 
 #: Source/DiabloUI/selhero.cpp:164
 msgid "Choose Class"
-msgstr ""
+msgstr "Виберіть Клас"
 
 #: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
 msgid "Warrior"
-msgstr ""
+msgstr "Воїн"
 
 #: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
 msgid "Rogue"
-msgstr ""
+msgstr "Пройдисвіт"
 
 #: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
-msgstr ""
+msgstr "Чаклун"
 
 #: Source/DiabloUI/selhero.cpp:172 Source/panels/charpanel.cpp:25
 msgid "Monk"
-msgstr ""
+msgstr "Монах"
 
 #: Source/DiabloUI/selhero.cpp:175 Source/panels/charpanel.cpp:26
 msgid "Bard"
-msgstr ""
+msgstr "Бард"
 
 #: Source/DiabloUI/selhero.cpp:178 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
-msgstr ""
+msgstr "Варвар"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Multi Player Hero"
-msgstr ""
+msgstr "Новий Герой для Гри з Друзями"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Single Player Hero"
-msgstr ""
+msgstr "Новий Герой"
 
 #: Source/DiabloUI/selhero.cpp:203
 msgid "Save File Exists"
-msgstr ""
+msgstr "Збереження Існує"
 
 #: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
 msgid "Load Game"
-msgstr ""
+msgstr "Завантажити Гру"
 
 #: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
-msgstr ""
+msgstr "Нова Гра"
 
 #: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
 msgid "Single Player Characters"
-msgstr ""
+msgstr "Герої"
 
 #: Source/DiabloUI/selhero.cpp:263
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
+"Пройдисвіт і Чаклун доступні тільки в повній версії Diablo. Зайдіть на "
+"https://www.gog.com/game/diablo щоб купити її."
 
 #: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
 msgid "Enter Name"
-msgstr ""
+msgstr "Введіть Ім'я"
 
 #: Source/DiabloUI/selhero.cpp:307
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
 msgstr ""
+"Недійсне ім'я. Воно повинне не мати пробіли, спеціальні символи або ключові "
+"слова.\n"
 
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:314
 msgid "Unable to create character."
-msgstr ""
+msgstr "Неможливо створити героя."
 
 #: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
 msgid "Level:"
-msgstr ""
+msgstr "Рівень:"
 
 #: Source/DiabloUI/selhero.cpp:476
 msgid "Strength:"
-msgstr ""
+msgstr "Сила:"
 
 #: Source/DiabloUI/selhero.cpp:481
 msgid "Magic:"
-msgstr ""
+msgstr "Магія:"
 
 #: Source/DiabloUI/selhero.cpp:486
 msgid "Dexterity:"
-msgstr ""
+msgstr "Спритність:"
 
 #: Source/DiabloUI/selhero.cpp:491
 msgid "Vitality:"
-msgstr ""
+msgstr "Живучість:"
 
 #: Source/DiabloUI/selhero.cpp:497
 msgid "Savegame:"
-msgstr ""
+msgstr "Збереження:"
 
 #: Source/DiabloUI/selhero.cpp:510
 msgid "Select Hero"
-msgstr ""
+msgstr "Виберіть Героя"
 
 #: Source/DiabloUI/selhero.cpp:539
 msgid "Delete"
-msgstr ""
+msgstr "Стерти"
 
 #: Source/DiabloUI/selhero.cpp:549
 msgid "Multi Player Characters"
-msgstr ""
+msgstr "Мультиплеєрні Герої"
 
 #: Source/DiabloUI/selhero.cpp:599
 msgid "Delete Multi Player Hero"
-msgstr ""
+msgstr "Стерти Героя для Гри з Друзями"
 
 #: Source/DiabloUI/selhero.cpp:601
 msgid "Delete Single Player Hero"
-msgstr ""
+msgstr "Стерти Героя"
 
 #: Source/DiabloUI/selhero.cpp:603
 msgid "Are you sure you want to delete the character \"{:s}\"?"
-msgstr ""
+msgstr "Ви впевнені, що хочете стерти героя \"{:s}\"?"
 
 #: Source/DiabloUI/selstart.cpp:60
 msgid "Enter Hellfire"
-msgstr ""
+msgstr "Зайти в Hellfire"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
-msgstr ""
+msgstr "Так"
 
 #: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:929
 msgid "No"
-msgstr ""
+msgstr "Ні"
 
 #: Source/DiabloUI/support_lines.cpp:8
 msgid ""
