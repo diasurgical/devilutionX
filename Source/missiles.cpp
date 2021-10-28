@@ -693,23 +693,29 @@ void SetMissAnim(Missile &missile, int animtype)
 void AddRune(Missile &missile, Point dst, missile_id missileID)
 {
 	if (LineClearMissile(missile.position.start, dst)) {
-		for (int i = 0; i < 10; i++) {
-			int k = CrawlNum[i];
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-				if (!InDungeonBounds(target))
-					continue;
+		std::optional<Point> runePosition = FindClosestValidPosition(
+		    [](Point target) {
+			    if (!InDungeonBounds(target)) {
+				    return false;
+			    }
+			    if (dObject[target.x][target.y] != 0) {
+				    return false;
+			    }
+			    if (TileContainsMissile(target)) {
+				    return false;
+			    }
+			    if (nSolidTable[dPiece[target.x][target.y]]) {
+				    return false;
+			    }
+			    return true;
+		    },
+		    dst, 0, 9);
 
-				int dp = dPiece[target.x][target.y];
-				if (nSolidTable[dp] || dObject[target.x][target.y] != 0 || TileContainsMissile(target))
-					continue;
-
-				missile.position.tile = target;
-				missile.var1 = missileID;
-				missile._mlid = AddLight(target, 8);
-				return;
-			}
+		if (runePosition) {
+			missile.position.tile = *runePosition;
+			missile.var1 = missileID;
+			missile._mlid = AddLight(missile.position.tile, 8);
+			return;
 		}
 	}
 
