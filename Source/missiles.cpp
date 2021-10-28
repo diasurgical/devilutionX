@@ -1361,45 +1361,45 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 	if (missile._misource < 0)
 		return;
 
-	for (int i = 0; i < 6; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!InDungeonBounds(target))
-				continue;
+	std::optional<Point> targetMonsterPosition = FindClosestValidPosition(
+	    [](Point target) {
+		    if (!InDungeonBounds(target)) {
+			    return false;
+		    }
 
-			int dm = dMonster[target.x][target.y];
-			dm = dm > 0 ? dm - 1 : -(dm + 1);
-			if (dm < MAX_PLRS)
-				continue;
-			auto &monster = Monsters[dm];
+		    int monsterId = abs(dMonster[target.x][target.y]) - 1;
+		    if (monsterId < MAX_PLRS) { // exclude player golems (and tiles which contain no monsters)
+			    return false;
+		    }
 
-			if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
-				continue;
-			if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut))
-				continue;
-			if ((monster.mMagicRes & IMMUNE_MAGIC) != 0)
-				continue;
-			if ((monster.mMagicRes & RESIST_MAGIC) != 0 && ((monster.mMagicRes & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
-				continue;
-			if (monster._mmode == MonsterMode::Charge)
-				continue;
-			if ((monster._mFlags & MFLAG_BERSERK) != 0)
-				continue;
+		    const auto &monster = Monsters[monsterId];
+		    if ((monster._mFlags & MFLAG_BERSERK) != 0)
+			    return false;
 
-			i = 6;
-			auto slvl = GetSpellLevel(missile._misource, SPL_BERSERK);
-			monster._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
-			monster.mMinDamage = (GenerateRnd(10) + 120) * monster.mMinDamage / 100 + slvl;
-			monster.mMaxDamage = (GenerateRnd(10) + 120) * monster.mMaxDamage / 100 + slvl;
-			monster.mMinDamage2 = (GenerateRnd(10) + 120) * monster.mMinDamage2 / 100 + slvl;
-			monster.mMaxDamage2 = (GenerateRnd(10) + 120) * monster.mMaxDamage2 / 100 + slvl;
-			int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
-			monster.mlid = AddLight(monster.position.tile, lightRadius);
-			UseMana(missile._misource, SPL_BERSERK);
-			break;
-		}
+		    if (monster._uniqtype != 0 || monster._mAi == AI_DIABLO)
+			    return false;
+		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
+			    return false;
+		    if ((monster.mMagicRes & IMMUNE_MAGIC) != 0)
+			    return false;
+		    if ((monster.mMagicRes & RESIST_MAGIC) != 0 && ((monster.mMagicRes & RESIST_MAGIC) != 1 || GenerateRnd(2) != 0))
+			    return false;
+
+		    return true;
+	    },
+	    dst, 0, 5);
+
+	if (targetMonsterPosition) {
+		auto &monster = Monsters[abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1];
+		int slvl = GetSpellLevel(missile._misource, SPL_BERSERK);
+		monster._mFlags |= MFLAG_BERSERK | MFLAG_GOLEM;
+		monster.mMinDamage = (GenerateRnd(10) + 120) * monster.mMinDamage / 100 + slvl;
+		monster.mMaxDamage = (GenerateRnd(10) + 120) * monster.mMaxDamage / 100 + slvl;
+		monster.mMinDamage2 = (GenerateRnd(10) + 120) * monster.mMinDamage2 / 100 + slvl;
+		monster.mMaxDamage2 = (GenerateRnd(10) + 120) * monster.mMaxDamage2 / 100 + slvl;
+		int lightRadius = (currlevel < 17 || currlevel > 20) ? 3 : 9;
+		monster.mlid = AddLight(monster.position.tile, lightRadius);
+		UseMana(missile._misource, SPL_BERSERK);
 	}
 }
 
