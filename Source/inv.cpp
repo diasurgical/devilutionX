@@ -1130,18 +1130,11 @@ bool PutItem(Player &player, Point &position)
 	if (CanPut(position))
 		return true;
 
-	for (int l = 1; l < 50; l++) {
-		for (int j = -l; j <= l; j++) {
-			int yp = j + player.position.tile.y;
-			for (int i = -l; i <= l; i++) {
-				int xp = i + player.position.tile.x;
-				if (!CanPut({ xp, yp }))
-					continue;
+	std::optional<Point> itemPosition = FindClosestValidPosition(CanPut, player.position.tile, 1, 50);
 
-				position = { xp, yp };
-				return true;
-			}
-		}
+	if (itemPosition) {
+		position = *itemPosition;
+		return true;
 	}
 
 	return false;
