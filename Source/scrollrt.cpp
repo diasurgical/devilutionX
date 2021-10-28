@@ -602,12 +602,12 @@ void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPositi
 		return;
 	}
 
-	auto objectId = abs(dObject[tilePosition.x][tilePosition.y]) - 1;
-	if (objectId < 0) {
+	Object *object = ObjectAtPosition(tilePosition);
+	if (object == nullptr) {
 		return;
 	}
 
-	Object &objectToDraw = Objects[objectId];
+	const Object &objectToDraw = *object;
 	if (objectToDraw._oPreFlag != pre) {
 		return;
 	}
