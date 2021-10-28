@@ -8,7 +8,6 @@
 
 namespace devilution {
 
-extern int TestPathGetHCost(Point startPosition, Point destinationPosition);
 extern int TestPathGetHeuristicCost(Point startPosition, Point destinationPosition);
 
 TEST(PathTest, Heuristics)
