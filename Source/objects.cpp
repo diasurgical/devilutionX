@@ -3871,7 +3871,6 @@ bool OperateFountains(int pnum, int i)
 {
 	auto &player = Players[pnum];
 	bool applied = false;
-	SetRndSeed(Objects[i]._oRndSeed);
 	switch (Objects[i]._otype) {
 	case OBJ_BLOODFTN:
 		if (deltaload)
@@ -3943,12 +3942,13 @@ bool OperateFountains(int pnum, int i)
 		if (pnum != MyPlayerId)
 			return false;
 
-		int fromStat = GenerateRnd(4);
-		int toStat = abs(GenerateRnd(3));
+		unsigned randomValue = (Objects[i]._oRndSeed >> 16) % 12;
+		unsigned fromStat = randomValue / 3;
+		unsigned toStat = randomValue % 3;
 		if (toStat >= fromStat)
 			toStat++;
 
-		std::pair<int, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
+		std::pair<unsigned, int> alterations[] = { { fromStat, -1 }, { toStat, 1 } };
 		for (auto alteration : alterations) {
 			switch (alteration.first) {
 			case 0:
