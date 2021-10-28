@@ -2071,32 +2071,40 @@ void AddWeapexp(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 {
-	Point target = dst;
-	if (currlevel != 0) {
-		missile._miDelFlag = true;
-		for (int i = 0; i < 6; i++) {
-			int k = CrawlNum[i];
-			int ck = k + 2;
-			for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-				target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-				if (!InDungeonBounds(target))
-					continue;
-
-				int dp = dPiece[target.x][target.y];
-				if (!TileContainsMissile(target) && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && dPlayer[target.x][target.y] == 0) {
-					if (!CheckIfTrig(target)) {
-						missile.position.tile = target;
-						missile.position.start = target;
-						missile._miDelFlag = false;
-						i = 6;
-						break;
-					}
-				}
-			}
-		}
+	if (currlevel == 0) {
+		missile.position.tile = dst;
+		missile.position.start = dst;
 	} else {
-		missile.position.tile = target;
-		missile.position.start = target;
+		std::optional<Point> targetPosition = FindClosestValidPosition(
+		    [](Point target) {
+			    if (!InDungeonBounds(target)) {
+				    return false;
+			    }
+			    if (dObject[target.x][target.y] != 0) {
+				    return false;
+			    }
+			    if (dPlayer[target.x][target.y] != 0) {
+				    return false;
+			    }
+			    if (TileContainsMissile(target)) {
+				    return false;
+			    }
+
+			    int dp = dPiece[target.x][target.y];
+			    if (nSolidTable[dp] || nMissileTable[dp]) {
+				    return false;
+			    }
+			    return !CheckIfTrig(target);
+		    },
+		    dst, 0, 5);
+
+		if (targetPosition) {
+			missile.position.tile = *targetPosition;
+			missile.position.start = *targetPosition;
+			missile._miDelFlag = false;
+		} else {
+			missile._miDelFlag = true;
+		}
 	}
 
 	missile._mirange = 100;
@@ -2110,9 +2118,9 @@ void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 	PutMissile(missile);
 	if (missile._misource == MyPlayerId && !missile._miDelFlag && currlevel != 0) {
 		if (!setlevel) {
-			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, target, currlevel, leveltype, 0);
+			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, missile.position.tile, currlevel, leveltype, 0);
 		} else {
-			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, target, setlvlnum, leveltype, 1);
+			NetSendCmdLocParam3(true, CMD_ACTIVATEPORTAL, missile.position.tile, setlvlnum, leveltype, 1);
 		}
 	}
 }
