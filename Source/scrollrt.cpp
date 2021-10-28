@@ -596,49 +596,48 @@ void DrawDeadPlayer(const Surface &out, Point tilePosition, Point targetBufferPo
  */
 void DrawObject(const Surface &out, Point tilePosition, Point targetBufferPosition, bool pre)
 {
-	int8_t bv = dObject[tilePosition.x][tilePosition.y];
-	if (bv == 0 || LightTableIndex >= LightsMax)
+	if (LightTableIndex >= LightsMax) {
 		return;
-
-	Point objectPosition {};
-
-	if (bv > 0) {
-		bv = bv - 1;
-		if (Objects[bv]._oPreFlag != pre)
-			return;
-		objectPosition = targetBufferPosition - Displacement { CalculateWidth2(Objects[bv]._oAnimWidth), 0 };
-	} else {
-		bv = -(bv + 1);
-		if (Objects[bv]._oPreFlag != pre)
-			return;
-		int xx = Objects[bv].position.x - tilePosition.x;
-		int yy = Objects[bv].position.y - tilePosition.y;
-		objectPosition.x = (xx * TILE_WIDTH / 2) + targetBufferPosition.x - CalculateWidth2(Objects[bv]._oAnimWidth) - (yy * TILE_WIDTH / 2);
-		objectPosition.y = targetBufferPosition.y + (yy * TILE_HEIGHT / 2) + (xx * TILE_HEIGHT / 2);
 	}
 
-	assert(bv >= 0 && bv < MAXOBJECTS);
+	auto objectId = abs(dObject[tilePosition.x][tilePosition.y]) - 1;
+	if (objectId < 0) {
+		return;
+	}
 
-	byte *pCelBuff = Objects[bv]._oAnimData;
+	Object &objectToDraw = Objects[objectId];
+	if (objectToDraw._oPreFlag != pre) {
+		return;
+	}
+
+	Point screenPosition = targetBufferPosition - Displacement { CalculateWidth2(objectToDraw._oAnimWidth), 0 };
+	if (objectToDraw.position != tilePosition) {
+		// drawing a large or offset object, calculate the correct position for the center of the sprite
+		Displacement screenOffset = objectToDraw.position - tilePosition;
+		screenPosition -= screenOffset.WorldToScreen();
+	}
+
+	byte *pCelBuff = objectToDraw._oAnimData;
 	if (pCelBuff == nullptr) {
-		Log("Draw Object type {}: NULL Cel Buffer", Objects[bv]._otype);
+		Log("Draw Object type {}: NULL Cel Buffer", objectToDraw._otype);
 		return;
 	}
 
-	uint32_t nCel = Objects[bv]._oAnimFrame;
+	uint32_t nCel = objectToDraw._oAnimFrame;
 	uint32_t frames = LoadLE32(pCelBuff);
 	if (nCel < 1 || frames > 50 || nCel > frames) {
-		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, Objects[bv]._otype);
+		Log("Draw Object: frame {} of {}, object type=={}", nCel, frames, objectToDraw._otype);
 		return;
 	}
 
-	CelSprite cel { Objects[bv]._oAnimData, Objects[bv]._oAnimWidth };
-	if (bv == pcursobj)
-		CelBlitOutlineTo(out, 194, objectPosition, cel, Objects[bv]._oAnimFrame);
-	if (Objects[bv]._oLight) {
-		CelClippedDrawLightTo(out, objectPosition, cel, Objects[bv]._oAnimFrame);
+	CelSprite cel { objectToDraw._oAnimData, objectToDraw._oAnimWidth };
+	if (pcursobj != -1 && &objectToDraw == &Objects[pcursobj]) {
+		CelBlitOutlineTo(out, 194, screenPosition, cel, objectToDraw._oAnimFrame);
+	}
+	if (objectToDraw._oLight) {
+		CelClippedDrawLightTo(out, screenPosition, cel, objectToDraw._oAnimFrame);
 	} else {
-		CelClippedDrawTo(out, objectPosition, cel, Objects[bv]._oAnimFrame);
+		CelClippedDrawTo(out, screenPosition, cel, objectToDraw._oAnimFrame);
 	}
 }
 
