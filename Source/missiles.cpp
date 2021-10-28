@@ -2330,44 +2330,44 @@ void AddAcidpud(Missile &missile, Point /*dst*/, Direction /*midir*/)
 
 void AddStone(Missile &missile, Point dst, Direction /*midir*/)
 {
-	Point target;
+	std::optional<Point> targetMonsterPosition = FindClosestValidPosition(
+	    [](Point target) {
+		    if (!InDungeonBounds(target)) {
+			    return false;
+		    }
 
-	bool found = false;
-	for (int i = 0; i < 6; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!InDungeonBounds(target))
-				continue;
+		    int monsterId = abs(dMonster[target.x][target.y]) - 1;
+		    if (monsterId < 0) {
+			    return false;
+		    }
 
-			int mid = dMonster[target.x][target.y];
-			if (mid == 0)
-				continue;
-			mid = abs(mid) - 1;
-			auto &monster = Monsters[mid];
+		    auto &monster = Monsters[monsterId];
 
-			if (IsAnyOf(monster.MType->mtype, MT_GOLEM, MT_DIABLO, MT_NAKRUL))
-				continue;
+		    if (IsAnyOf(monster.MType->mtype, MT_GOLEM, MT_DIABLO, MT_NAKRUL)) {
+			    return false;
+		    }
+		    if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge)) {
+			    return false;
+		    }
 
-			if (IsAnyOf(monster._mmode, MonsterMode::FadeIn, MonsterMode::FadeOut, MonsterMode::Charge))
-				continue;
+		    return true;
+	    },
+	    dst, 0, 5);
 
-			found = true;
-			missile.var1 = static_cast<int>(monster._mmode);
-			missile.var2 = mid;
-			monster.Petrify();
-			i = 6;
-			break;
-		}
-	}
-
-	if (!found) {
+	if (!targetMonsterPosition) {
 		missile._miDelFlag = true;
 		return;
 	}
 
-	missile.position.tile = target;
+	// Petrify the targeted monster
+	int monsterId = abs(dMonster[targetMonsterPosition->x][targetMonsterPosition->y]) - 1;
+	auto &monster = Monsters[monsterId];
+	missile.var1 = static_cast<int>(monster._mmode);
+	missile.var2 = monsterId;
+	monster.Petrify();
+
+	// And set up the missile to unpetrify it in the future
+	missile.position.tile = *targetMonsterPosition;
 	missile.position.start = missile.position.tile;
 	missile._mirange = missile._mispllvl + 6;
 	missile._mirange += (missile._mirange * Players[missile._misource]._pISplDur) / 128;
