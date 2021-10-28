@@ -3229,19 +3229,9 @@ int AllocateItem()
 
 Point GetSuperItemLoc(Point position)
 {
-	for (int k = 1; k < 50; k++) {
-		for (int j = -k; j <= k; j++) {
-			for (int i = -k; i <= k; i++) {
-				Displacement offset = { i, j };
-				Point positionToCheck = position + offset;
-				if (ItemSpaceOk(positionToCheck)) {
-					return positionToCheck;
-				}
-			}
-		}
-	}
+	std::optional<Point> itemPosition = FindClosestValidPosition(ItemSpaceOk, position, 1, 50);
 
-	return { 0, 0 }; // TODO handle no space for dropping items
+	return itemPosition.value_or(Point { 0, 0 }); // TODO handle no space for dropping items
 }
 
 void GetItemAttrs(Item &item, int itemData, int lvl)
