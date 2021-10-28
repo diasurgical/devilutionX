@@ -1929,23 +1929,20 @@ void AddMagmaball(Missile &missile, Point dst, Direction /*midir*/)
 
 void AddTeleport(Missile &missile, Point dst, Direction /*midir*/)
 {
-	for (int i = 0; i < 6; i++) {
-		int k = CrawlNum[i];
-		int ck = k + 2;
-		for (auto j = static_cast<uint8_t>(CrawlTable[k]); j > 0; j--, ck += 2) {
-			Point target = dst + Displacement { CrawlTable[ck - 1], CrawlTable[ck] };
-			if (!PosOkPlayer(Players[missile._misource], target))
-				continue;
+	std::optional<Point> teleportDestination = FindClosestValidPosition(
+	    [&player = Players[missile._misource]](Point target) {
+		    return PosOkPlayer(player, target);
+	    },
+	    dst, 0, 5);
 
-			missile.position.tile = target;
-			missile.position.start = target;
-			UseMana(missile._misource, SPL_TELEPORT);
-			missile._mirange = 2;
-			return;
-		}
+	if (teleportDestination) {
+		missile.position.tile = *teleportDestination;
+		missile.position.start = *teleportDestination;
+		UseMana(missile._misource, SPL_TELEPORT);
+		missile._mirange = 2;
+	} else {
+		missile._miDelFlag = true;
 	}
-
-	missile._miDelFlag = true;
 }
 
 void AddLightball(Missile &missile, Point dst, Direction /*midir*/)
