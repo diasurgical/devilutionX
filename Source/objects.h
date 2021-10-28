@@ -242,16 +242,28 @@ extern bool LoadingMapObjects;
  * @brief Find an object given a point in map coordinates
  *
  * @param position The map coordinate to test
+ * @param considerLargeObjects Default behaviour will return a pointer to a large object that covers this tile, set
+ *                             this param to false if you only want the object whose base position matches this tile
  * @return A pointer to the object or nullptr if no object exists at this location
  */
-Object *ObjectAtPosition(Point position);
+Object *ObjectAtPosition(Point position, bool considerLargeObjects = true);
 
 /**
  * @brief Check whether an item occupies this tile position
  * @param position The map coordinate to test
  * @return true if the tile is occupied
  */
-bool IsObjectAtPosition(Point position);
+inline bool IsObjectAtPosition(Point position)
+{
+	return ObjectAtPosition(position) != nullptr;
+}
+
+/**
+ * @brief Check whether an item blocking object (solid object or open door) is located at this tile position
+ * @param position The map coordinate to test
+ * @return true if the tile is blocked
+ */
+bool IsItemBlockingObjectAtPosition(Point position);
 
 void InitObjectGFX();
 void FreeObjectGFX();
