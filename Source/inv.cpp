@@ -1769,29 +1769,30 @@ void SyncGetItem(Point position, int32_t iseed, _item_indexes idx, uint16_t ci)
 
 bool CanPut(Point position)
 {
-	if (dItem[position.x][position.y] != 0)
+	if (!InDungeonBounds(position)) {
 		return false;
-	if (nSolidTable[dPiece[position.x][position.y]])
-		return false;
-	if (dObject[position.x][position.y] != 0 && Objects[abs(dObject[position.x][position.y]) - 1]._oSolidFlag)
-		return false;
+	}
 
-	if (dObject[position.x + 1][position.y + 1] != 0) {
-		int8_t oi = abs(dObject[position.x + 1][position.y + 1]) - 1;
-		if (Objects[oi]._oSelFlag != 0) {
+	if (IsTileSolid(position)) {
+		return false;
+	}
+
+	if (dItem[position.x][position.y] != 0) {
+		return false;
+	}
+
+	if (currlevel == 0) {
+		if (dMonster[position.x][position.y] != 0) {
+			return false;
+		}
+		if (dMonster[position.x + 1][position.y + 1] != 0) {
 			return false;
 		}
 	}
 
-	if (dObject[position.x + 1][position.y] > 0 && dObject[position.x][position.y + 1] > 0) {
-		if (Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0 && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0)
-			return false;
+	if (IsItemBlockingObjectAtPosition(position)) {
+		return false;
 	}
-
-	if (currlevel == 0 && dMonster[position.x][position.y] != 0)
-		return false;
-	if (currlevel == 0 && dMonster[position.x + 1][position.y + 1] != 0)
-		return false;
 
 	return true;
 }

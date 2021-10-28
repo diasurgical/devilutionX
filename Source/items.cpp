@@ -396,11 +396,11 @@ bool ItemPlace(Point position)
 		return false;
 	if (dItem[position.x][position.y] != 0)
 		return false;
-	if (dObject[position.x][position.y] != 0)
+	if (IsObjectAtPosition(position))
 		return false;
 	if (TileContainsSetPiece(position))
 		return false;
-	if (nSolidTable[dPiece[position.x][position.y]])
+	if (IsTileSolid(position))
 		return false;
 
 	return true;
@@ -3106,44 +3106,31 @@ void CreatePlrItems(int playerId)
 
 bool ItemSpaceOk(Point position)
 {
-	if (!InDungeonBounds(position))
+	if (!InDungeonBounds(position)) {
 		return false;
-
-	if (dMonster[position.x][position.y] != 0)
-		return false;
-
-	if (dPlayer[position.x][position.y] != 0)
-		return false;
-
-	if (dItem[position.x][position.y] != 0)
-		return false;
-
-	if (dObject[position.x][position.y] != 0) {
-		int oi = abs(dObject[position.x][position.y]) - 1;
-		if (Objects[oi]._oSolidFlag)
-			return false;
 	}
 
-	Point south = position + Direction::South;
-	if (InDungeonBounds(south)) {
-		int objectId = dObject[south.x][south.y];
-		if (objectId != 0 && Objects[abs(objectId) - 1]._oSelFlag != 0)
-			return false;
+	if (IsTileSolid(position)) {
+		return false;
 	}
 
-	Point southEast = position + Direction::SouthEast;
-	Point southWest = position + Direction::SouthWest;
-	if (InDungeonBounds(southEast) && InDungeonBounds(southWest)) {
-		int objectIdSE = dObject[southEast.x][southEast.y];
-		int objectIdSW = dObject[southWest.x][southWest.y];
-		if (objectIdSE > 0 && objectIdSW > 0) {
-			if (Objects[objectIdSE - 1]._oSelFlag != 0 && Objects[objectIdSW - 1]._oSelFlag != 0) {
-				return false;
-			}
-		}
+	if (dItem[position.x][position.y] != 0) {
+		return false;
 	}
 
-	return IsTileNotSolid(position);
+	if (dMonster[position.x][position.y] != 0) {
+		return false;
+	}
+
+	if (dPlayer[position.x][position.y] != 0) {
+		return false;
+	}
+
+	if (IsItemBlockingObjectAtPosition(position)) {
+		return false;
+	}
+
+	return true;
 }
 
 int AllocateItem()

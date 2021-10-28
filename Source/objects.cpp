@@ -4347,19 +4347,46 @@ bool Object::IsDisabled() const
 	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
 }
 
-Object *ObjectAtPosition(Point position)
+Object *ObjectAtPosition(Point position, bool considerLargeObjects)
 {
-	if (InDungeonBounds(position) && dObject[position.x][position.y] != 0) {
-		return &Objects[abs(dObject[position.x][position.y]) - 1];
+	if (!InDungeonBounds(position)) {
+		return nullptr;
+	}
+
+	auto objectId = dObject[position.x][position.y];
+
+	if (objectId > 0 || (considerLargeObjects && objectId != 0)) {
+		return &Objects[abs(objectId) - 1];
 	}
 
 	// nothing at this position, return a nullptr
 	return nullptr;
 }
 
-bool IsObjectAtPosition(Point position)
+bool IsItemBlockingObjectAtPosition(Point position)
 {
-	return ObjectAtPosition(position) != nullptr;
+	Object *object = ObjectAtPosition(position);
+	if (object != nullptr && object->_oSolidFlag) {
+		// solid object
+		return true;
+	}
+
+	object = ObjectAtPosition(position + Direction::South);
+	if (object != nullptr && object->_oSelFlag != 0) {
+		// An unopened container or breakable object exists which potentially overlaps this tile, the player might not be able to pick up an item dropped here.
+		return true;
+	}
+
+	object = ObjectAtPosition(position + Direction::SouthEast, false);
+	if (object != nullptr) {
+		Object *otherDoor = ObjectAtPosition(position + Direction::SouthWest, false);
+		if (otherDoor != nullptr && object->_oSelFlag != 0 && otherDoor->_oSelFlag != 0) {
+			// Two interactive objects potentially overlap both sides of this tile, as above the player might not be able to pick up an item which is dropped here.
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void InitObjectGFX()
