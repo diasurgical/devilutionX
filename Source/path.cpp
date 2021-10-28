@@ -316,6 +316,28 @@ bool IsTileWalkable(Point position, bool ignoreDoors)
 	return !IsTileSolid(position);
 }
 
+bool IsTileOccupied(Point position)
+{
+	if (!InDungeonBounds(position)) {
+		return true; // OOB positions are considered occupied.
+	}
+
+	if (IsTileSolid(position)) {
+		return true;
+	}
+	if (dMonster[position.x][position.y] != 0) {
+		return true;
+	}
+	if (dPlayer[position.x][position.y] != 0) {
+		return true;
+	}
+	if (dObject[position.x][position.y] != 0) {
+		return true;
+	}
+
+	return false;
+}
+
 int FindPath(const std::function<bool(Point)> &posOk, Point startPosition, Point destinationPosition, int8_t path[MAX_PATH_LENGTH])
 {
 	/**

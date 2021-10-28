@@ -36,6 +36,11 @@ bool IsTileSolid(Point position);
 bool IsTileWalkable(Point position, bool ignoreDoors = false);
 
 /**
+ * @brief Checks if the position contains an object, player, monster, or solid dungeon piece
+*/
+bool IsTileOccupied(Point position);
+
+/**
  * @brief Find the shortest path from startPosition to destinationPosition, using PosOk(Point) to check that each step is a valid position.
  * Store the step directions (corresponds to an index in PathDirs) in path, which must have room for 24 steps
  */
