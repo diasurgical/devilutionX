@@ -39,7 +39,6 @@ bool DebugVision = false;
 bool DebugGrid = false;
 std::unordered_map<int, Point> DebugCoordsMap;
 bool DebugScrollViewEnabled = false;
-std::unordered_map<int, int> DebugIndexToObjectID;
 
 namespace {
 
@@ -861,9 +860,9 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		return true;
 	case DebugGridTextItem::objectindex: {
 		info = 0;
-		int objectIndex = dObject[dungeonCoords.x][dungeonCoords.y];
-		if (objectIndex != 0 && DebugIndexToObjectID.find(objectIndex) != DebugIndexToObjectID.end()) {
-			info = DebugIndexToObjectID[abs(objectIndex) - 1];
+		Object *object = ObjectAtPosition(dungeonCoords);
+		if (object != nullptr) {
+			info = static_cast<int>(object->_otype);
 		}
 		break;
 	}
