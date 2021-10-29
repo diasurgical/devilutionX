@@ -17,6 +17,7 @@
 #include "drlg_l1.h"
 #include "drlg_l4.h"
 #include "engine/load_file.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "engine/random.hpp"
 #include "error.h"
 #include "init.h"
@@ -4864,16 +4865,19 @@ void OperateTrap(Object &trap)
 	}
 
 	trap._oVar4 = 1;
-	Point target = trigger.position;
-	for (int y = target.y - 1; y <= trigger.position.y + 1; y++) {
-		for (int x = trigger.position.x - 1; x <= trigger.position.x + 1; x++) {
-			if (dPlayer[x][y] != 0) {
-				target.x = x;
-				target.y = y;
-			}
-		}
-	}
+
 	if (!deltaload) {
+		// default to firing at the trigger object
+		Point target = trigger.position;
+
+		PointsInRectangleRange searchArea { Rectangle { target, 1 } };
+		// look for a player near the trigger (using a reverse search to match vanilla behaviour)
+		auto foundPosition = std::find_if(searchArea.crbegin(), searchArea.crend(), [](Point testPosition) { return InDungeonBounds(testPosition) && dPlayer[testPosition.x][testPosition.y] != 0; });
+		if (foundPosition != searchArea.crend()) {
+			// if a player is standing near the trigger then target them instead
+			target = *foundPosition;
+		}
+
 		Direction dir = GetDirection(trap.position, target);
 		AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
 		PlaySfxLoc(IS_TRAP, trigger.position);
