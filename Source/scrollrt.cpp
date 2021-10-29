@@ -106,13 +106,8 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 		if (dPlayer[tile.x][tile.y] > 0)
 			return true;
 	}
-	int oid = dObject[tile.x][tile.y];
-	if (oid != 0) {
-		oid = abs(oid) - 1;
-		if (!Objects[oid]._oMissFlag)
-			return true;
-	}
-	return nMissileTable[dPiece[tile.x][tile.y]];
+
+	return IsMissileBlockedByTile(tile);
 }
 
 void UpdateMissileRendererData(Missile &m)
