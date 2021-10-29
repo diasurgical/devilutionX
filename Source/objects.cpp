@@ -5274,9 +5274,8 @@ void BreakObject(int pnum, Object &object)
 	}
 }
 
-void SyncBreakObj(int pnum, int oi)
+void SyncBreakObj(int pnum, Object &object)
 {
-	Object &object = Objects[oi];
 	if (object.IsBarrel()) {
 		BreakBarrel(pnum, object, 0, true, false);
 	}

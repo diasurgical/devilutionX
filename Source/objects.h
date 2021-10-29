@@ -260,7 +260,7 @@ int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, Object &object);
-void SyncBreakObj(int pnum, int oi);
+void SyncBreakObj(int pnum, Object &object);
 void SyncObjectAnim(Object &object);
 /**
  * @brief Updates the text drawn in the info box to describe the given object

@@ -1554,8 +1554,9 @@ DWORD OnBreakObject(const TCmd *pCmd, int pnum)
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (message.wParam1 < MAX_PLRS && message.wParam2 < MAXOBJECTS) {
 		int playerLevel = Players[pnum].plrlevel;
-		if (currlevel == playerLevel)
-			SyncBreakObj(message.wParam1, message.wParam2);
+		if (currlevel == playerLevel) {
+			SyncBreakObj(message.wParam1, Objects[message.wParam2]);
+		}
 		DeltaSyncObject(message.wParam2, CMD_BREAKOBJ, playerLevel);
 	}
 
@@ -2277,7 +2278,7 @@ void DeltaLoadLevel()
 				SyncOpObject(-1, sgLevels[currlevel].object[i].bCmd, i);
 				break;
 			case CMD_BREAKOBJ:
-				SyncBreakObj(-1, i);
+				SyncBreakObj(-1, Objects[i]);
 				break;
 			default:
 				break;
