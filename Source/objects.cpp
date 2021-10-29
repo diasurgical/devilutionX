@@ -810,9 +810,6 @@ void AddCryptObject(int i, int a2)
 
 void SetupObject(int i, Point position, _object_id ot)
 {
-#ifdef _DEBUG
-	DebugIndexToObjectID[i] = ot;
-#endif
 	Objects[i]._otype = ot;
 	object_graphic_id ofi = AllObjects[ot].ofindex;
 	Objects[i].position = position;
