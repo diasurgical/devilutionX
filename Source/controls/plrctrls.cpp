@@ -171,7 +171,7 @@ void FindItemOrObject()
 				continue;
 			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
-			if (objectIsDisabled(o))
+			if (Objects[o].IsDisabled())
 				continue;
 			rotations = newRotations;
 			pcursobj = o;

@@ -123,6 +123,11 @@ struct Object {
 	}
 
 	/**
+	 * Returns true if the object is a harmful shrine and the player has disabled permanent shrine effects.
+	 */
+	[[nodiscard]] bool IsDisabled() const;
+
+	/**
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */
@@ -168,6 +173,5 @@ void GetObjectStr(int i);
 void OperateNakrulLever();
 void SyncNakrulRoom();
 void AddNakrulLeaver();
-bool objectIsDisabled(int i);
 
 } // namespace devilution
