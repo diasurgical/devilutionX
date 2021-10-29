@@ -548,10 +548,11 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		}
 	}
 	if (dObject[mx][my] != 0) {
-		int oi = abs(dObject[mx][my]) - 1;
-		if (!Objects[oi]._oMissFlag) {
-			if (Objects[oi]._oBreak == 1)
-				BreakObject(-1, oi);
+		Object &object = Objects[abs(dObject[mx][my]) - 1];
+		if (!object._oMissFlag) {
+			if (object.IsBreakable()) {
+				BreakObject(-1, object);
+			}
 			if (!nodel)
 				missile._mirange = 0;
 			missile._miHitFlag = false;

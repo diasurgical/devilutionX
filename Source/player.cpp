@@ -1143,16 +1143,15 @@ bool PlrHitPlr(int pnum, int8_t p)
 
 bool PlrHitObj(int pnum, int mx, int my)
 {
-	int oi;
-
-	if (dObject[mx][my] > 0) {
-		oi = dObject[mx][my] - 1;
-	} else {
-		oi = -dObject[mx][my] - 1;
+	int oi = abs(dObject[mx][my]) - 1;
+	if (oi < 0) {
+		return false;
 	}
 
-	if (Objects[oi]._oBreak == 1) {
-		BreakObject(pnum, oi);
+	Object &targetObject = Objects[oi];
+
+	if (targetObject.IsBreakable()) {
+		BreakObject(pnum, targetObject);
 		return true;
 	}
 

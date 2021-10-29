@@ -58,6 +58,13 @@ struct Object {
 	int _oVar8;
 
 	/**
+	 * @brief Returns the network identifier for this object
+	 *
+	 * This is currently the index into the Objects array, but may change in the future.
+	 */
+	unsigned int GetId() const;
+
+	/**
 	 * @brief Marks the map region to be refreshed when the player interacts with the object.
 	 *
 	 * Some objects will cause a map region to change when a player interacts with them (e.g. Skeleton King
@@ -120,6 +127,24 @@ struct Object {
 	{
 		SetMapRange(mapRange);
 		_oVar8 = leverID;
+	}
+
+	/**
+	 * @brief Check if the object can be broken (is an intact barrel or crux)
+	 * @return True if the object is intact and breakable, false if already broken or not a breakable object.
+	 */
+	[[nodiscard]] constexpr bool IsBreakable() const
+	{
+		return _oBreak == 1;
+	}
+
+	/**
+	 * @brief Check if the object has been broken
+	 * @return True if the object is breakable and has been broken, false if unbroken or not a breakable object.
+	 */
+	[[nodiscard]] constexpr bool IsBroken() const
+	{
+		return _oBreak == -1;
 	}
 
 	/**
@@ -234,7 +259,7 @@ void TryDisarm(int pnum, int i);
 int ItemMiscIdIdx(item_misc_id imiscid);
 void OperateObject(int pnum, int i, bool TeleFlag);
 void SyncOpObject(int pnum, int cmd, int i);
-void BreakObject(int pnum, int oi);
+void BreakObject(int pnum, Object &object);
 void SyncBreakObj(int pnum, int oi);
 void SyncObjectAnim(Object &object);
 /**
