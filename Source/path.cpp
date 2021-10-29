@@ -305,12 +305,14 @@ bool IsTileSolid(Point position)
 
 bool IsTileWalkable(Point position, bool ignoreDoors)
 {
-	if (dObject[position.x][position.y] != 0) {
-		int oi = abs(dObject[position.x][position.y]) - 1;
-		if (ignoreDoors && Objects[oi].IsDoor())
+	Object *object = ObjectAtPosition(position);
+	if (object != nullptr) {
+		if (ignoreDoors && object->IsDoor()) {
 			return true;
-		if (Objects[oi]._oSolidFlag)
+		}
+		if (object->_oSolidFlag) {
 			return false;
+		}
 	}
 
 	return !IsTileSolid(position);
