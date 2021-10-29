@@ -13,6 +13,7 @@
 #include "cursor.h"
 #include "doom.h"
 #include "engine/point.hpp"
+#include "engine/points_in_rectangle_range.hpp"
 #include "gmenu.h"
 #include "help.h"
 #include "inv.h"
@@ -122,61 +123,72 @@ int GetDistanceRanged(Point destination)
 	return Players[MyPlayerId].position.future.ExactDistance(destination);
 }
 
-/**
- * @todo The loops in this function are iterating through tiles offset from the player position. This
- * could be accomplished by looping over the values in the Direction enum and making use of
- * Point math instead of nested loops from [-1, 1].
- */
 void FindItemOrObject()
 {
-	int mx = Players[MyPlayerId].position.future.x;
-	int my = Players[MyPlayerId].position.future.y;
+	Point futurePosition = Players[MyPlayerId].position.future;
 	int rotations = 5;
 
-	// As the player can not stand on the edge of the map this is safe from OOB
-	for (int xx = -1; xx < 2; xx++) {
-		for (int yy = -1; yy < 2; yy++) {
-			if (dItem[mx + xx][my + yy] <= 0)
-				continue;
-			int i = dItem[mx + xx][my + yy] - 1;
-			auto &item = Items[i];
-			if (item.isEmpty()
-			    || item._iSelFlag == 0)
-				continue;
-			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
-			if (rotations < newRotations)
-				continue;
-			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
-				continue;
-			rotations = newRotations;
-			pcursitem = i;
-			cursPosition = Point { mx, my } + Displacement { xx, yy };
+	auto searchArea = PointsInRectangleRangeColMajor { Rectangle { futurePosition, 1 } };
+
+	for (Point targetPosition : searchArea) {
+		// As the player can not stand on the edge of the map this is safe from OOB
+		int8_t itemId = dItem[targetPosition.x][targetPosition.y] - 1;
+		if (itemId < 0) {
+			// there shouldn't be any items that occupy multiple ground tiles, but just in case only considering positive indexes here
+
+			continue;
 		}
+		auto &item = Items[itemId];
+		if (item.isEmpty() || item._iSelFlag == 0) {
+			continue;
+		}
+
+		int newRotations = GetRotaryDistance(targetPosition);
+		if (rotations < newRotations) {
+			continue;
+		}
+		if (targetPosition != futurePosition && GetDistance(targetPosition, 1) == 0) {
+			// Don't check the tile we're leaving if the player is walking
+			continue;
+		}
+		rotations = newRotations;
+		pcursitem = itemId;
+		cursPosition = targetPosition;
 	}
 
-	if (leveltype == DTYPE_TOWN || pcursitem != -1)
+	if (leveltype == DTYPE_TOWN || pcursitem != -1) {
 		return; // Don't look for objects in town
+	}
 
-	for (int xx = -1; xx < 2; xx++) {
-		for (int yy = -1; yy < 2; yy++) {
-			if (dObject[mx + xx][my + yy] == 0)
-				continue;
-			int o = abs(dObject[mx + xx][my + yy]) - 1;
-			if (Objects[o]._oSelFlag == 0)
-				continue;
-			if (xx == 0 && yy == 0 && Objects[o]._oDoorFlag)
-				continue; // Ignore doorway so we don't get stuck behind barrels
-			int newRotations = GetRotaryDistance({ mx + xx, my + yy });
-			if (rotations < newRotations)
-				continue;
-			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
-				continue;
-			if (Objects[o].IsDisabled())
-				continue;
-			rotations = newRotations;
-			pcursobj = o;
-			cursPosition = Point { mx, my } + Displacement { xx, yy };
+	for (Point targetPosition : searchArea) {
+		int8_t objectId = abs(dObject[targetPosition.x][targetPosition.y]) - 1;
+		if (objectId < 0) {
+			continue;
 		}
+
+		Object &object = Objects[objectId];
+		if (object._oSelFlag == 0) {
+			continue;
+		}
+		if (targetPosition == futurePosition && object._oDoorFlag) {
+			continue; // Ignore doorway so we don't get stuck behind barrels
+		}
+
+		int newRotations = GetRotaryDistance(targetPosition);
+		if (rotations < newRotations) {
+			continue;
+		}
+		if (targetPosition != futurePosition && GetDistance(targetPosition, 1) == 0) {
+			// Don't check the tile we're leaving if the player is walking
+			continue;
+		}
+		if (object.IsDisabled()) {
+			continue;
+		}
+
+		rotations = newRotations;
+		pcursobj = objectId;
+		cursPosition = targetPosition;
 	}
 }
 
