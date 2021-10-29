@@ -33,6 +33,7 @@ struct Object {
 	bool _oDelFlag;
 	int8_t _oBreak;
 	bool _oSolidFlag;
+	/** True if the object allows missiles to pass through, false if it collides with missiles */
 	bool _oMissFlag;
 	uint8_t _oSelFlag;
 	bool _oPreFlag;

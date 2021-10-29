@@ -169,6 +169,11 @@ bool MonsterTrapHit(int m, int mindam, int maxdam, int dist, missile_id t, bool 
 bool PlayerMHit(int pnum, Monster *monster, int dist, int mind, int maxd, missile_id mtype, bool shift, int earflag, bool *blocked);
 
 /**
+ * @brief Could the missile collide with solid objects? (like walls or closed doors)
+ */
+bool IsMissileBlockedByTile(Point position);
+
+/**
  * @brief Sets the missile sprite to the given sheet frame
  * @param missile this object
  * @param dir Sprite frame, typically representing a direction but there are some exceptions (arrows being 1 indexed, directionless spells)

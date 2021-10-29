@@ -547,38 +547,19 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			}
 		}
 	}
-	if (dObject[mx][my] != 0) {
-		Object &object = Objects[abs(dObject[mx][my]) - 1];
-		if (!object._oMissFlag) {
-			if (object.IsBreakable()) {
-				BreakObject(-1, object);
-			}
-			if (!nodel)
-				missile._mirange = 0;
-			missile._miHitFlag = false;
+	if (IsMissileBlockedByTile({ mx, my })) {
+		Object *object = ObjectAtPosition({ mx, my });
+		if (object != nullptr && object->IsBreakable()) {
+			BreakObject(-1, *object);
 		}
-	}
-	if (nMissileTable[dPiece[mx][my]]) {
+
 		if (!nodel)
 			missile._mirange = 0;
 		missile._miHitFlag = false;
 	}
+
 	if (missile._mirange == 0 && MissilesData[missile._mitype].miSFX != -1)
 		PlaySfxLoc(MissilesData[missile._mitype].miSFX, missile.position.tile);
-}
-
-/**
- * @brief Could the missile collide with solid objects? (like walls or closed doors)
- */
-bool CouldMissileCollideWithSolidObject(Point tile)
-{
-	int oid = dObject[tile.x][tile.y];
-	if (oid != 0) {
-		oid = abs(oid) - 1;
-		if (!Objects[oid]._oMissFlag)
-			return true;
-	}
-	return nMissileTable[dPiece[tile.x][tile.y]];
 }
 
 void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, bool ignoreStart, bool ifCollidesDontMoveToHitTile)
@@ -633,7 +614,7 @@ void MoveMissileAndCheckMissileCol(Missile &missile, int mindam, int maxdam, boo
 			if (missile._mirange != 0)
 				continue;
 
-			if ((missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistrubution::Blockable) || CouldMissileCollideWithSolidObject(tile)) {
+			if ((missile._miHitFlag && MissilesData[missile._mitype].MovementDistribution == MissileMovementDistrubution::Blockable) || IsMissileBlockedByTile(tile)) {
 				missile.position.traveled = traveled;
 				if (ifCollidesDontMoveToHitTile && missile._mirange == 0) {
 					missile.position.traveled -= incVelocity;
@@ -838,6 +819,21 @@ void SpawnLightning(Missile &missile, int dam)
 }
 
 } // namespace
+
+bool IsMissileBlockedByTile(Point tile)
+{
+	if (!InDungeonBounds(tile)) {
+		return true;
+	}
+
+	if (nMissileTable[dPiece[tile.x][tile.y]]) {
+		return true;
+	}
+
+	Object *object = ObjectAtPosition(tile);
+	// _oMissFlag is true if the object allows missiles to pass through so we need to invert the check here...
+	return object != nullptr && !object->_oMissFlag;
+}
 
 void GetDamageAmt(int i, int *mind, int *maxd)
 {
