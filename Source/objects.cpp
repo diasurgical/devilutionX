@@ -4367,6 +4367,20 @@ void SyncL3Doors(Object &door)
 
 } // namespace
 
+bool Object::IsDisabled() const
+{
+	if (!sgOptions.Gameplay.bDisableCripplingShrines) {
+		return false;
+	}
+	if (IsAnyOf(_otype, _object_id::OBJ_GOATSHRINE, _object_id::OBJ_CAULDRON)) {
+		return true;
+	}
+	if (IsNoneOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER)) {
+		return false;
+	}
+	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
+}
+
 void InitObjectGFX()
 {
 	bool fileload[56] = {};
@@ -5064,21 +5078,6 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 	return i;
 }
 
-bool objectIsDisabled(int i)
-{
-	if (!sgOptions.Gameplay.bDisableCripplingShrines)
-		return false;
-	if ((Objects[i]._otype == OBJ_GOATSHRINE) || (Objects[i]._otype == OBJ_CAULDRON))
-		return true;
-	if ((Objects[i]._otype != OBJ_SHRINEL) && (Objects[i]._otype != OBJ_SHRINER))
-		return false;
-	if ((Objects[i]._oVar1 == ShrineFascinating)
-	    || (Objects[i]._oVar1 == ShrineOrnate)
-	    || (Objects[i]._oVar1 == ShrineSacred))
-		return true;
-	return false;
-}
-
 void OperateObject(int pnum, int i, bool teleFlag)
 {
 	bool sendmsg = pnum == MyPlayerId;
@@ -5523,7 +5522,7 @@ void GetObjectStr(int i)
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
-	if (objectIsDisabled(i)) {
+	if (Objects[i].IsDisabled()) {
 		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
 		strcpy(infostr, tempstr);
 		InfoColor = UiFlags::ColorRed;
