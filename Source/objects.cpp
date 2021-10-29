@@ -5523,12 +5523,7 @@ void OperateNakrulLever()
 {
 	if (currlevel == 24) {
 		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
-		//the part below is the same as SyncNakrulRoom
-		dPiece[UberRow][UberCol] = 298;
-		dPiece[UberRow][UberCol - 1] = 301;
-		dPiece[UberRow][UberCol - 2] = 300;
-		dPiece[UberRow][UberCol + 1] = 299;
-		SetDungeonMicros();
+		SyncNakrulRoom();
 	}
 }
 
