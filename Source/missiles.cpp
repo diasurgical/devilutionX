@@ -1389,6 +1389,8 @@ void AddBerserk(Missile &missile, Point dst, Direction /*midir*/)
 				continue;
 			if (monster._mmode == MonsterMode::Charge)
 				continue;
+			if ((monster._mFlags & MFLAG_BERSERK) != 0)
+				continue;
 
 			i = 6;
 			auto slvl = GetSpellLevel(missile._misource, SPL_BERSERK);
