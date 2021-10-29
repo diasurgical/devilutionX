@@ -664,7 +664,7 @@ void AddRune(Missile &missile, Point dst, missile_id missileID)
 			    if (!InDungeonBounds(target)) {
 				    return false;
 			    }
-			    if (dObject[target.x][target.y] != 0) {
+			    if (IsObjectAtPosition(target)) {
 				    return false;
 			    }
 			    if (TileContainsMissile(target)) {
@@ -2059,7 +2059,7 @@ void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 			    if (!InDungeonBounds(target)) {
 				    return false;
 			    }
-			    if (dObject[target.x][target.y] != 0) {
+			    if (IsObjectAtPosition(target)) {
 				    return false;
 			    }
 			    if (dPlayer[target.x][target.y] != 0) {
@@ -2181,7 +2181,7 @@ void AddGuardian(Missile &missile, Point dst, Direction /*midir*/)
 		    if (dMonster[target.x][target.y] != 0) {
 			    return false;
 		    }
-		    if (dObject[target.x][target.y] != 0) {
+		    if (IsObjectAtPosition(target)) {
 			    return false;
 		    }
 		    if (TileContainsMissile(target)) {
@@ -2491,7 +2491,7 @@ void AddFirewallC(Missile &missile, Point dst, Direction midir)
 {
 	std::optional<Point> spreadPosition = FindClosestValidPosition(
 	    [start = missile.position.start](Point target) {
-		    return start != target && IsTileNotSolid(target) && InDungeonBounds(target) && dObject[target.x][target.y] == 0 && LineClearMissile(start, target);
+		    return start != target && IsTileNotSolid(target) && !IsObjectAtPosition(target) && LineClearMissile(start, target);
 	    },
 	    dst, 0, 5);
 
@@ -3010,16 +3010,16 @@ void MI_Firebolt(Missile &missile)
 
 void MI_Lightball(Missile &missile)
 {
-	int tx = missile.var1;
-	int ty = missile.var2;
+	Point targetPosition = { missile.var1, missile.var2 };
 	missile._mirange--;
 	int j = missile._mirange;
 	MoveMissileAndCheckMissileCol(missile, missile._midam, missile._midam, false, false);
 	if (missile._miHitFlag)
 		missile._mirange = j;
-	if (missile.position.tile == Point { tx, ty }) {
-		int8_t oi = abs(dObject[tx][ty]) - 1;
-		if (oi >= 0 && Objects[oi].IsShrine()) {
+
+	if (missile.position.tile == targetPosition) {
+		Object *object = ObjectAtPosition(targetPosition);
+		if (object != nullptr && object->IsShrine()) {
 			missile._mirange = j;
 		}
 	}
@@ -3216,7 +3216,7 @@ void MI_FireRing(Missile &missile)
 		int dp = dPiece[target.x][target.y];
 		if (nSolidTable[dp])
 			continue;
-		if (dObject[target.x][target.y] != 0)
+		if (IsObjectAtPosition(target))
 			continue;
 		if (!LineClearMissile(missile.position.tile, target))
 			continue;
