@@ -49,26 +49,6 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 </details>
 
-<details><summary>Ubuntu PPA</summary>
-
-- Add [DevilutionX stable](https://launchpad.net/~devilutionx/+archive/ubuntu/stable)
-
-```bash
-sudo add-apt-repository ppa:devilutionx/stable
-```
-
-- Install DeviliutionX
-
-```bash
-sudo apt update
-sudo apt install devilutionx
-```
-
-- Copy the MPQ files to `~/.local/share/diasurgical/devilution/`
-- Run DevilutionX or DevilutionX Hellfire from the menu to start the game
-
-</details>
-
 <details><summary>MacOS X</summary>
 
 - Copy the MPQ files to the folder containing the DevilutionX application, or to the data folder. The data folder path may differ, but will normally be `~/Library/Application Support/diasurgical/devilution`
