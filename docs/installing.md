@@ -11,7 +11,7 @@ Download the latest [DevilutionX release](https://github.com/diasurgical/devilut
 
 <details><summary>Android</summary>
 
-Fierst install the App via one of these 3 methodes:
+First install the App via one of these 3 methods:
   - [Google Play](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx)
   - Copy the APK file to the device and tap on it in the device's file explorer and follow the instruction
   - Install via `adb install` (if USB debugging is enabled on the device)
