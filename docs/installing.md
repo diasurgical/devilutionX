@@ -26,7 +26,7 @@ Open the phones internal storage and navigate to `Android/data/org.diasurgical.d
 
 ![image](https://user-images.githubusercontent.com/204594/139542962-4e776854-6ca4-4872-8ed6-6303fc4bf040.png)
   
-When the transfer is done you can disconnect your device and press ask the app to check again for the MPQ files.
+When the transfer is done you can disconnect your device and press "Check again" in the App to start the game.
 
 ![image](https://user-images.githubusercontent.com/204594/139541657-d8c1197d-fbef-42b6-a34f-2b17f1ceab5f.png)
 
