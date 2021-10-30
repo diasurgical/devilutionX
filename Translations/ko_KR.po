@@ -4244,7 +4244,7 @@ msgstr "썩은 시체"
 #: Source/monstdat.cpp:23
 msgctxt "monster"
 msgid "Black Death"
-msgstr "검은 죽음"
+msgstr "검은 망자"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
 msgctxt "monster"
@@ -4519,7 +4519,7 @@ msgstr "낡은뼈대"
 #: Source/monstdat.cpp:89
 msgctxt "monster"
 msgid "Red Death"
-msgstr "붉은 죽음"
+msgstr "붉은 망자"
 
 #: Source/monstdat.cpp:90
 msgctxt "monster"
@@ -4909,7 +4909,7 @@ msgstr "피의 전쟁군주"
 #: Source/monstdat.cpp:484
 msgctxt "monster"
 msgid "The Defiler"
-msgstr "디파일러"
+msgstr "모독자"
 
 #: Source/monstdat.cpp:486
 msgctxt "monster"
@@ -6059,9 +6059,11 @@ msgstr "뼈의 방"
 msgid "Archbishop Lazarus"
 msgstr "대주교 라자루스"
 
+# Grave Matters
+# 무덤 문제와 중대사, 중의적 의미
 #: Source/quests.cpp:57
 msgid "Grave Matters"
-msgstr "무덤가 중대사"
+msgstr "무덤 중대사"
 
 #: Source/quests.cpp:58
 msgid "Farmer's Orchard"
@@ -6069,7 +6071,7 @@ msgstr "농부의 과수원"
 
 #: Source/quests.cpp:59
 msgid "Little Girl"
-msgstr "작은 여자아이"
+msgstr "어린 소녀"
 
 #: Source/quests.cpp:60
 msgid "Wandering Trader"
@@ -6077,7 +6079,7 @@ msgstr "방랑상인"
 
 #: Source/quests.cpp:61
 msgid "The Defiler"
-msgstr "디파일러"
+msgstr "모독자"
 
 #: Source/quests.cpp:62
 msgid "Na-Krul"
@@ -8987,7 +8989,7 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
-"페핀 영감님은 자신보다 남을 먼저 생각하는 훌륭한 분이지. 트리트스람뿐만 아니"
+"페핀 영감님은 자신보다 남을 먼저 생각하는 훌륭한 분이지. 트리스트럼뿐만 아니"
 "라 그 어디에도 그분을 험담하는 사람은 아무도 없다고."
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
@@ -9710,7 +9712,7 @@ msgid ""
 "the sands of time confuse your search."
 msgstr ""
 "탐험을 계속하세요. 잃어버린 보물을 찾는다는 건 쉬운 일이 아니니 그보다는 상대"
-"적으로 좀 더 드러난 보물을 찾아보세요. 이걸 당신에게 맡기도록 하죠. 시간의 모"
+"적으로 좀 더 드러난 보물을 찾아보세요. 이건 당신에게 맡기도록 하죠. 시간의 모"
 "래가 당신의 탐색을 흐트리지 않도록 하세요."
 
 #. TRANSLATORS: Quest text spoken by Griswold
@@ -9745,6 +9747,7 @@ msgstr ""
 "고 얼굴은 변한 채, 불멸의 고통 속에 갇혀 있죠. 자신을 자유롭게 할 그 무언가"
 "를 은폐했다는 혐의를 받고 있죠."
 
+# your nose in the dirt
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
 msgid ""
@@ -9752,6 +9755,8 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
+"워트 녀석은 당신이 오는 걸 알고선, 당신이 마을 여기저기서 애먹는 걸 보고 비웃"
+"으려 했던 게 틀림없습니다. 무시해야겠군요."
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
@@ -9761,6 +9766,10 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
+"이 마을은 먼 곳에서 온 여행자들이 자주 들르던 시절이 있었네. 그 이래로 많은 "
+"것이 변했지만, 숨겨진 동굴과 보물 같은 건 아이들이 흔히 할 법한 공상이지. 워"
+"트는 아이들 놀이에 좀처럼 끼질 않았네. 그러니 그건 그저 그 아이의 상상일 수"
+"도 있을 테지."
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
@@ -9781,6 +9790,11 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
+"할머니는 교회 밖 묘지에 서식하는 기이한 힘에 대해 종종 말씀하세요. 당신이 듣"
+"기엔 흥미로운 얘기일 테죠. 적당한 공물을 묘지에 둔 다음, 대성당에 가서 죽은 "
+"자를 위해 기도하고 돌아오면 공물이 기이하게 바뀔 거라고 할머니가 그러셨어요. "
+"아프신 할머니가 그냥 하는 얘기겠지만, 요사이 일들을 보면 말도 안 되는 일 같"
+"진 않네요."
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -9792,6 +9806,7 @@ msgstr ""
 "흐음. 신비롭고 막대한 보물이라고 그랬나요? 몫을 좀 나눠 준다면 흥미가 있겠는"
 "데... 그보단 고생하는 그쪽한테 딱인 진귀한 물건이 있는데 안 살래요?"
 
+# 아드리아가 농부한테 준 걸 주인공한테 주는지 모르겠음.
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
 msgid ""
@@ -9803,6 +9818,13 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
+"그러니까 당신이 모두가 말하는 영웅이시군요. 그저 가난하고 평범한 이 농부를 심"
+"각한 곤경에서 벗어나게 해 주시겠습니까? 제 과수원 모퉁이에, 그러니까 여기서 "
+"바로 남쪽에 땅 위으로 부풀어 오른 끔찍한 것이 있습니다. 농작품이나 건초를 수"
+"확할 수 없어서 불쌍한 소들이 굶어 죽게 생겼죠. 마녀가 이걸 주며 이게 제 땅에"
+"서 그 끔찍한 걸 날려 버릴 거라더군요. 당신이 없애만 주신다면 그 은혜를 영원"
+"히 잊지 않겠습니다. 제가 직접하고 싶지만 누군가는 소와 함께 있어야 해서 말이"
+"죠..."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -9810,7 +9832,10 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
+"마녀 말처럼 간단히 될 거라고는 생각하지 않았습니다. 이웃도 못 믿을 슬픈 세상"
+"이로군요."
 
+# 문맥상 it이 아드라이가 준 거 같긴 한데 헬파이어를 해보지 않아서 정확히 모르겠음.
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
 msgid ""
@@ -9818,6 +9843,9 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
+"없앴습니까? 그게 태어난 하데스의 깊숙한 곳으로 돌려보내셨나요? 뭐라고요? 마녀"
+"가 준 걸 잃어버렸단 소린 하지 마세요! 그냥 공으로 얻을 수 있는 것들이 아니라"
+"고요. 마녀가 준 걸 찾아서 우리 마을에서 그 끔찍한 걸 날려 버리셔야 합니다."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -9827,6 +9855,10 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
+"여기서 폭발 소리가 들렸습니다! . 친절하신 이방인분께 그저 감사할 따름입니다. "
+"이런 것들이 땅 위에 생기질 않나, 괴물들이 교회를 장악하질 않나, 힘든 시기가 "
+"아닐 수 없군요. 전 그저 가난한 농부에 불과하지만 부디 제 정성을 받아 주십시"
+"오."
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -9836,6 +9868,9 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
+"아, 그런 문제가 있습니다... 어쩌면... 아닙니다, 다른 문제들까지 전부 당신에"
+"게 떠맡길 순 없죠. 교회에서 괴물들을 좀 정리하고 돌아오시면... 가난한 농부를 "
+"도울 시간 좀 내주실 수 있을까요?"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
@@ -9850,6 +9885,10 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
+"테오를 잃어버렸어요. 내 가장 소중한 친구를 잃어버렸다고요! 같이 강가에서 놀"
+"고 있었는데 테오가 커다란 녹색 물체를 보러 가고 싶다고 그랬거든요. 내가 그러"
+"면 안 된다고 말했지만, 결국 거기에 같이 몰래 들어갔는데 갑자기 이런 벌레가 나"
+"타났어요! 도망치다가 테오가 넘어졌고 벌레가 테오를 데려간 거예요!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -9857,6 +9896,8 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
+"테오를 찾았나요? 제발 테오도어를 찾아 주세요! 아직 어린애예요. 혼자 못 있는다"
+"고요! 제발요!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -9865,6 +9906,9 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
+"테오를 찾아주셨군요! 찾아주셨어요! 고마워요! 테오야, 그 못된 벌레들 땜에 많"
+"이 놀랐지? 어머! 으앗! 겉에 뭐가 묻었잖아! 으이구! 어서 집에 가자, 테오야! 정"
+"말 고마워요, 영웅 아저씨!"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
@@ -9872,6 +9916,8 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
 msgstr ""
+"우리는 오래도록 동면하였으나 이제 깨어날 시간이 왔다. 기나긴 잠이었기에 우리"
+"는 너무도 굶주려 있다. 이제 곧 먹이를 먹어야 한다..."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
@@ -9879,6 +9925,8 @@ msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
 msgstr ""
+"즐거운 시간을 보냈나, 하찮은 포유류여? 애처롭구나. 너희들의 작은 세계는 일거"
+"리조차 되지 못할 테니 말이야."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -9887,6 +9935,9 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
+"이 대지는 더렵혀질 것이며, 우리 무리는 인간들이 집이라 부르는 들판을 뒤덮을 "
+"것이다. 우리의 덩굴손이 이 세계를 장악할 것이며 그곳 생물들의 살점으로 축제"
+"를 벌이리다. 인간들은 우리의 식량이 될 터이다."
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
@@ -9894,6 +9945,8 @@ msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
 msgstr ""
+"아, 난 네놈의 냄새를 맡을 수 있다...가깝구나! 가까워! 스스스스... 피와 공포"
+"의 향기가... 매혹적이로다..."
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -9949,13 +10002,15 @@ msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
 msgstr ""
+"왜 시간 낭비를 하고 있는 거야? 가서 내 정장이나 가져와! 서두르라고! 저기 있"
+"는 젖소가 나한테 계속 윙크하고 있으니까 말이야!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
 msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
-msgstr ""
+msgstr "이봐, 내 양복 갖고 있어? 빨리 넘기라고! 말도 못 하게 귀가 가렵단 말야!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
@@ -9964,6 +10019,8 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
+"아냐 아니라고 아니라니까! 이건 내 회색옷이잖아! 잠옷이라고! 공식 행사란 말"
+"야! 이건 못 입어. 미친 거 아냐? 갈색 정장이 필요해."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -9975,12 +10032,15 @@ msgid ""
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
 
+# under your belt
+# 캐릭터를 보면 말장난일 거 같은데 상황을 모르겠음.
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
 msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
+"잘 봐, 난 소야. 그리고 넌 괴물 미끼고. 경험 좀 쌓지 그래. 얘기 좀 해야겠어..."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -9988,6 +10048,8 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
+"제가 당신에게 맡긴 일은 참으로 무시무시한 일이 아닐 수 없죠. 제가 할 수 있을 "
+"만한 거라면... 신선하고 깨끗한 우유 한 잔이면 도움이 될런지요?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
@@ -9995,6 +10057,8 @@ msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
 msgstr ""
+"오, 도움을 받아도 되지만 저 짐승들이 신성 모독을 범한 지하묘지를 당신이 구한 "
+"다음이 좋겠군요."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
@@ -10002,6 +10066,8 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
+"뭔가 조치를 취해야 하지만 생판 남에게 떠맡길 순 없는 노릇이죠. 여기서 좀 더 "
+"머무르신 다음, 부탁을 드리는 게 나을 것 같습니다."
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -10009,6 +10075,8 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
+"당신한테선 엄청난 가능성이 엿보이는군요. 당신의 운명을 따르다 여유가 생기면 "
+"저에게 호의를 좀 베풀어 주시겠습니까?"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -10017,12 +10085,14 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
+"좀 더 강해지신 다음에 저를 도와주시는 게 좋을 것 같습니다. 교회의 위협을 물리"
+"칠 유일한 기회를 망치고 싶진 않거든요!"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
 msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
-msgstr ""
+msgstr "난 자수성가한 소야. 너도 뭔가를 이뤄 봐... 그런 다음 얘기하자고."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
@@ -10030,6 +10100,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
+"지나가는 사람들한테 일일이 날 설명할 필요는 없잖아! 죽일 괴물들이 없나 보지? "
+"다음에 얘기할 일이 있겠지. 살다 보면 말이야..."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -10038,6 +10110,8 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
+"그만 좀 괴롭혀. 난 진짜 영웅을 찾고 있다고. 그치만 넌 아니야. 넌 못 미덥거"
+"든, 언제고 괴물들한테 잡아먹힐 테니까 말이야... 경험 많은 영웅이 필요해."
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
