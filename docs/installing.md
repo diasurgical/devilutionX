@@ -3,7 +3,7 @@
 First, you will need access to the game MPQ files.
 - First, locate `DIABDAT.MPQ` on your CD or in the GoG installation (or [extract it from the GoG installer](https://github.com/diasurgical/devilutionX/wiki/Extracting-the-.MPQs-from-the-GoG-installer)).
 - For the Diablo: Hellfire expansion you will also need `hellfire.mpq`, `hfmonk.mpq`, `hfmusic.mpq`, `hfvoice.mpq`.
-- DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/devilutionx.mpq) which is also need.
+- DevilutionX comes with [devilutionx.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/devilutionx.mpq) which is also needed.
 - Chinese, Korean, and Japanse users will also need [fonts.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq) or the text will to be missing.
 - For Polish voice support you need [pl.mpq](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq)
 
