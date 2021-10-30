@@ -13,7 +13,7 @@ Download the latest [DevilutionX release](https://github.com/diasurgical/devilut
 
 First install the App via one of these 3 methods:
   - [Google Play](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx)
-  - Copy the APK file to the device and tap on it in the device's file explorer and follow the instruction
+  - Copy the APK file to the device and tap on it in the device's file explorer and follow the instructions
   - Install via `adb install` (if USB debugging is enabled on the device)
 
 Then launch the App, this will let it create the folder where you need to place the MPQ files.
