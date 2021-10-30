@@ -16,7 +16,7 @@ First install the App via one of these 3 methods:
   - Copy the APK file to the device and tap on it in the device's file explorer and follow the instruction
   - Install via `adb install` (if USB debugging is enabled on the device)
 
-Then launch the the App, this will let it create the folder where you need to place the MPQ files.
+Then launch the App, this will let it create the folder where you need to place the MPQ files.
 
 Connect the device to your computer via USB cable, and allow data access from your device:
 
