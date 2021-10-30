@@ -20,7 +20,7 @@ Then launch the App, this will let it create the folder where you need to place 
 
 Connect the device to your computer via USB cable, and allow data access from your device:
 
-![image](https://user-images.githubusercontent.com/204594/139541558-b46a2341-797b-4752-9ae9-013baa1a711b.png)
+![image](https://user-images.githubusercontent.com/204594/139543023-3c45bb22-35f7-41af-8b3d-c714a9542d23.png)
   
 Open the phones internal storage and navigate to `Android/data/org.diasurgical.devilutionx/files`, then copy the MPQ-files to this folder.
 
