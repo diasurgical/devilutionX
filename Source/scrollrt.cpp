@@ -3,6 +3,8 @@
  *
  * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
  */
+#include <climits>
+#include <random>
 
 #include "automap.h"
 #include "controls/touch/renderers.h"
@@ -916,6 +918,139 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	}
 }
 
+Point CheckPredefinedPattern(Point tilePosition)
+{
+	Point pos = { 0, 0 };
+	if (tilePosition.y == -1 && tilePosition.x >= 52 && tilePosition.x <= 61) {
+		// top side sand patch
+		if (tilePosition.x == 61) {
+			// right corner
+			pos = { 64, 66 };
+		} else if (tilePosition.x == 52) {
+			// left corner
+			pos = { 57, 66 };
+		} else {
+			// edge
+			pos = { 61, 66 };
+		}
+	} else if (tilePosition.x == 96 && ((tilePosition.y >= 52 && tilePosition.y <= 71) || (tilePosition.y >= 79 && tilePosition.y <= 89))) {
+		// right side sand patch
+		if (tilePosition.y == 89 || tilePosition.y == 71) {
+			// bottom corner
+			pos = { 65, 74 };
+		} else if (tilePosition.y == 79 || tilePosition.y == 52) {
+			// top corner
+			pos = { 65, 67 };
+		} else {
+			// edge
+			pos = { 65, 72 };
+		}
+	} else if ((tilePosition.y < 0 && IsAnyOf(tilePosition.x, 2, 62, 82))
+	    || (tilePosition.y > 95 && IsAnyOf(tilePosition.x, 32, 84))) {
+		// left river bank
+		pos = { 68, 22 - abs(tilePosition.y % 3) };
+	} else if ((tilePosition.y < 0 && IsAnyOf(tilePosition.x, 3, 63, 83))
+	    || (tilePosition.y > 95 && IsAnyOf(tilePosition.x, 33, 85))) {
+		// right river bank
+		pos = { 69, 22 - abs(tilePosition.y % 3) };
+	}
+	return pos;
+}
+
+Point FillPattern(Point tilePosition)
+{
+	constexpr int PATTERNWIDTH = 5;
+	constexpr int PATTERNHEIGHT = 5;
+	constexpr std::array<Point, 6> patterns { { { 51, 27 }, { 23, 57 }, { 54, 34 }, { 79, 46 }, { 41, 32 }, { 52, 21 } } };
+
+	static int patternRandomizer[MAXDUNX][MAXDUNY] {};
+	static bool doInit = true;
+
+	if (doInit) {
+		doInit = false;
+		std::mt19937 BetterRng;
+		BetterRng.seed(666);
+		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
+		for (int x = 0; x < MAXDUNX; x++) {
+			for (int y = 0; y < MAXDUNY; y++) {
+				patternRandomizer[x][y] = dist(BetterRng) % patterns.size();
+			}
+		}
+	}
+
+	Point patternBaseTile = abs(tilePosition);
+	int offsetX = patternBaseTile.x % PATTERNWIDTH;
+	int offsetY = patternBaseTile.y % PATTERNHEIGHT;
+	if (tilePosition.x < 0)
+		offsetX = PATTERNWIDTH - 1 - patternBaseTile.x % PATTERNWIDTH;
+	if (tilePosition.y < 0)
+		offsetY = PATTERNHEIGHT - 1 - patternBaseTile.y % PATTERNHEIGHT;
+	Displacement patternOffset { offsetX, offsetY };
+
+	patternBaseTile.x /= PATTERNWIDTH;
+	patternBaseTile.y /= PATTERNHEIGHT;
+
+	Point patternPos = CheckPredefinedPattern(tilePosition);
+	if (patternPos != Point { 0, 0 }) {
+		if (InDungeonBounds(patternBaseTile)) {
+			patternRandomizer[patternBaseTile.x][patternBaseTile.y] = -1;
+		}
+		return patternPos;
+	}
+
+	Point base = patterns[0];
+	if (InDungeonBounds(patternBaseTile)) {
+		int pattern = patternRandomizer[patternBaseTile.x][patternBaseTile.y];
+		if (pattern != -1) {
+			base = patterns[pattern];
+		}
+	}
+	return base + patternOffset;
+}
+
+void DrawDungeonBorders(const Surface &out, Point tilePosition, Point targetBufferPosition)
+{
+	assert(InDungeonBounds(tilePosition));
+
+	LightTableIndex = dLight[tilePosition.x][tilePosition.y];
+
+	DrawCell(out, tilePosition, targetBufferPosition);
+
+	// Tree leaves should always cover player when entering or leaving the tile,
+	// So delay the rendering until after the next row is being drawn.
+	// This could probably have been better solved by sprites in screen space.
+	if (tilePosition.x > 0 && tilePosition.y > 0 && targetBufferPosition.y > TILE_HEIGHT) {
+		char bArch = dSpecial[tilePosition.x - 1][tilePosition.y - 1];
+		if (bArch != 0) {
+			CelDrawTo(out, targetBufferPosition + Displacement { 0, -TILE_HEIGHT }, *pSpecialCels, bArch);
+		}
+	}
+}
+
+/**
+ * @brief Render some semi random patterns beyond town borders instead of black void
+ */
+
+void RenderTownBorders(const Surface &out, Point tilePosition, Point targetBufferPosition, bool isDungeon)
+{
+	if (leveltype != DTYPE_TOWN)
+		return;
+	static bool firstRender = true;
+	if (firstRender) {
+		firstRender = false;
+		for (int x = -MAXDUNX + 1; x < MAXDUNX; x++) {
+			for (int y = -MAXDUNY + 1; y < MAXDUNY; y++) {
+				FillPattern({ x, y });
+			}
+		}
+	}
+	Point pos = FillPattern(tilePosition);
+	if (isDungeon)
+		DrawDungeonBorders(out, pos, targetBufferPosition);
+	else
+		DrawFloor(out, pos, targetBufferPosition);
+}
+
 /**
  * @brief Render a row of tiles
  * @param out Buffer to render to
@@ -935,9 +1070,11 @@ void DrawFloor(const Surface &out, Point tilePosition, Point targetBufferPositio
 						DrawFloor(out, tilePosition, targetBufferPosition);
 				} else {
 					world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
+					RenderTownBorders(out, tilePosition, targetBufferPosition, false);
 				}
 			} else {
 				world_draw_black_tile(out, targetBufferPosition.x, targetBufferPosition.y);
+				RenderTownBorders(out, tilePosition, targetBufferPosition, false);
 			}
 			tilePosition += Direction::East;
 			targetBufferPosition.x += TILE_WIDTH;
@@ -993,7 +1130,11 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 				}
 				if (dPiece[tilePosition.x][tilePosition.y] != 0) {
 					DrawDungeon(out, tilePosition, targetBufferPosition);
+				} else {
+					RenderTownBorders(out, tilePosition, targetBufferPosition, true);
 				}
+			} else {
+				RenderTownBorders(out, tilePosition, targetBufferPosition, true);
 			}
 			tilePosition += Direction::East;
 			targetBufferPosition.x += TILE_WIDTH;
