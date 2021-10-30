@@ -22,7 +22,7 @@ Connect the device to your computer via USB cable, and allow data access from yo
 
 ![image](https://user-images.githubusercontent.com/204594/139543023-3c45bb22-35f7-41af-8b3d-c714a9542d23.png)
   
-Open the phones internal storage and navigate to `Android/data/org.diasurgical.devilutionx/files`, then copy the MPQ-files to this folder.
+Open the device's internal storage, and navigate to `Android/data/org.diasurgical.devilutionx/files`, then copy the MPQ-files to this folder.
 
 ![image](https://user-images.githubusercontent.com/204594/139542962-4e776854-6ca4-4872-8ed6-6303fc4bf040.png)
   
