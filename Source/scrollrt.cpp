@@ -970,10 +970,10 @@ Point FillPattern(Point tilePosition)
 		doInit = false;
 		std::mt19937 BetterRng;
 		BetterRng.seed(666);
-		std::uniform_int_distribution<int32_t> dist(0, INT_MAX);
+		std::uniform_int_distribution<int> dist(0, patterns.size() - 1);
 		for (int x = 0; x < MAXDUNX; x++) {
 			for (int y = 0; y < MAXDUNY; y++) {
-				patternRandomizer[x][y] = dist(BetterRng) % patterns.size();
+				patternRandomizer[x][y] = dist(BetterRng);
 			}
 		}
 	}
