@@ -62,6 +62,28 @@ std::string GetSavePath(uint32_t saveNum)
 	return path;
 }
 
+std::string GetStashSavePath(uint32_t page)
+{
+
+	std::string path = paths::PrefPath();
+	const char *ext = ".dxs";
+	if (gbIsHellfire) {
+		ext = ".hdxs";
+	}
+
+	if (!gbIsMultiplayer) {
+		path.append("spstash_");
+	} else {
+		path.append("mpstash_");
+	}
+
+	char saveNumStr[21];
+	snprintf(saveNumStr, sizeof(saveNumStr) / sizeof(char), "%i", page);
+	path.append(saveNumStr);
+	path.append(ext);
+	return path;
+}
+
 bool GetPermSaveNames(uint8_t dwIndex, char *szPerm)
 {
 	const char *fmt;
@@ -176,6 +198,15 @@ HANDLE OpenSaveArchive(uint32_t saveNum)
 	HANDLE archive;
 
 	if (SFileOpenArchive(GetSavePath(saveNum).c_str(), 0, 0, &archive))
+		return archive;
+	return nullptr;
+}
+
+HANDLE OpenStashSaveArchive(uint32_t Page)
+{
+	HANDLE archive;
+
+	if (SFileOpenArchive(GetStashSavePath(Page).c_str(), 0, 0, &archive))
 		return archive;
 	return nullptr;
 }
@@ -393,6 +424,28 @@ void pfile_read_player_from_save(uint32_t saveNum, Player &player)
 	gbValidSaveFile = ArchiveContainsGame(archive);
 	if (gbValidSaveFile)
 		pkplr.bIsHellfire = gbIsHellfireSaveGame ? 1 : 0;
+
+	CloseArchive(&archive);
+
+	if (!UnPackPlayer(&pkplr, player, false)) {
+		return;
+	}
+
+	LoadHeroItems(player);
+	RemoveEmptyInventory(player);
+	CalcPlrInv(player, false);
+}
+
+void pfile_read_stash_from_save(uint32_t Page)
+{
+	HANDLE archive;
+	PlayerPack pkplr;
+
+	archive = OpenStashSaveArchive(Page);
+	if (archive == nullptr)
+		app_fatal("%s", _("Unable to open archive"));
+	if (!ReadHero(archive, &pkplr))
+		app_fatal("%s", _("Unable to load stash"));
 
 	CloseArchive(&archive);
 

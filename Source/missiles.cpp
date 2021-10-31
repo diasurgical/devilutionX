@@ -331,6 +331,9 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 		return false;
 	}
 
+	if (target._pmode == PM_WALK3)
+		return false;
+
 	if (mtype == MIS_HBOLT) {
 		return false;
 	}

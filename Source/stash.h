@@ -9,6 +9,7 @@
 
 #include "engine/point.hpp"
 #include "items.h"
+#include "loadsave.h"
 #include "palette.h"
 #include "player.h"
 
@@ -69,7 +70,9 @@ struct StashStruct {
 
 extern bool stashflag;
 extern const Point StashRect[100];
-extern int stashpage;
+
+// Current Stash Page
+extern int Page;
 
 /**
  * @brief Function type which performs an operation on the given item.
@@ -99,6 +102,7 @@ bool DropStashItemBeforeTrig();
 void LoadStash(int page);
 void SaveStash(int page);
 int8_t CheckStashHLight();
+void CheckStashBtn();
 
 
 /* data */

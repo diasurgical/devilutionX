@@ -34,6 +34,7 @@ namespace devilution {
 
 bool gbIsHellfireSaveGame;
 uint8_t giNumberOfLevels;
+StashStruct Stash;
 
 namespace {
 
@@ -535,6 +536,24 @@ void LoadPlayer(LoadHelper &file, Player &player)
 }
 
 bool gbSkipSync = false;
+
+void LoadStash()
+{
+	LoadHelper file("stash");
+	if (!file.IsValid())
+		app_fatal("%s", _("Unable to open stash file archive"));
+
+	if (!IsHeaderValid(file.NextLE<uint32_t>()))
+		app_fatal("%s", _("Invalid stash file"));
+
+	for (Item &item : Stash.StashList)
+		LoadItemData(file, item);
+
+	Stash._pNumStash = file.NextLE<int32_t>();
+
+	for (int8_t &cell : Stash.StashGrid)
+		cell = file.NextLE<int8_t>();
+}
 
 void LoadMonster(LoadHelper *file, Monster &monster)
 {
@@ -1197,6 +1216,30 @@ void SavePlayer(SaveHelper &file, const Player &player)
 	// Omit pointer _pDData
 	// Omit pointer _pBData
 	// Omit pointer pReserved
+}
+
+void SaveStash()
+{
+	SaveHelper file("game", 320 * 1024);
+
+	if (gbIsSpawn && !gbIsHellfire)
+		file.WriteLE<uint32_t>(LoadLE32("SHAR"));
+	else if (gbIsSpawn && gbIsHellfire)
+		file.WriteLE<uint32_t>(LoadLE32("SHLF"));
+	else if (!gbIsSpawn && gbIsHellfire)
+		file.WriteLE<uint32_t>(LoadLE32("HELF"));
+	else if (!gbIsSpawn && !gbIsHellfire)
+		file.WriteLE<uint32_t>(LoadLE32("RETL"));
+	else
+		app_fatal("%s", _("Invalid game state"));
+
+	for (const Item &item : Stash.StashList)
+		SaveItem(file, item);
+
+	file.WriteLE<int32_t>(Stash._pNumStash);
+
+	for (int8_t cell : Stash.StashGrid)
+		file.WriteLE<int8_t>(cell);
 }
 
 void SaveMonster(SaveHelper *file, Monster &monster)

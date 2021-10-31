@@ -11,6 +11,7 @@
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
+#include "engine/rectangle.hpp"
 #include "engine/render/cel_render.hpp"
 #include "engine/render/text_render.hpp"
 #include "engine/size.hpp"
@@ -23,6 +24,7 @@
 #include "town.h"
 #include "towners.h"
 #include "controls/plrctrls.h"
+#include "utils/paths.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -37,174 +39,196 @@ std::streampos size;
 
 StashStruct Stash;
 
-StashStruct EmptyStash;
+int Page; // current page in the stash
 
-int tab;
-
-int stashx = 16;                         // initial stash cell x coordinate
-int stashy = 76;                        // initial stash cell y coordinate
-int stashslotadj = INV_SLOT_SIZE_PX + 1; // spacing between each cell
+int stashX = 16; // initial stash cell x coordinate
+int stashY = 76; // initial stash cell y coordinate
+int stashNextCell = INV_SLOT_SIZE_PX + 1; // spacing between each cell
 
 const Point StashRect[] = { // Contains mappings for each cell in the stash (10x10)
 	// clang-format off
 	//  X,   Y
 	// row 1
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 0 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 0 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 0 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 0 },
 	// row 2
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 1 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 1 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 1 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 1 },
 	// row 3
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 2 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 2 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 2 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 2 },
 	// row 4
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 3 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 3 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 3 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 3 },
 	// row 5
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 4 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 4 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 4 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 4 },
 	// row 6
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 5 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 5 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 5 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 5 },
 	// row 7
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 6 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 6 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 6 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 6 },
 	// row 8
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 7 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 7 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 7 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 7 },
 	// row 9
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 8 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 8 },
+	{ stashX + stashNextCell * 0,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 1,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 2,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 3,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 4,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 5,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 6,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 7,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 8,  stashY + stashNextCell * 8 },
+	{ stashX + stashNextCell * 9,  stashY + stashNextCell * 8 },
 	// row 10
-	{ stashx + stashslotadj * 0,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 1,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 2,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 3,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 4,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 5,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 6,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 7,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 8,  stashy + stashslotadj * 9 },
-	{ stashx + stashslotadj * 9,  stashy + stashslotadj * 9 }
+	//{ stashX + stashNextCell * 0,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 1,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 2,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 3,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 4,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 5,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 6,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 7,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 8,  stashY + stashNextCell * 9 },
+	//{ stashX + stashNextCell * 9,  stashY + stashNextCell * 9 }
 
 	// clang-format on
 };
 
-void LoadStash(int page)
+int stashNavY = 15; // position for stash buttons
+int stashNavW = 21;
+int stashNavH = 19;
+
+int stashGoldY = 16; // position for withdraw gold button
+int stashGoldW = 27;
+int stashGoldH = 19;
+
+const Rectangle StashButtonRect[] = {
+	// Contains mappings for the buttons in the stash (2 navigation buttons, withdraw gold buttons, 2 navigation buttons)
+	// clang-format off
+	//  X,   Y,   W,   H
+	{ { 35,   stashNavY },   { stashNavW, stashNavH } }, // 10 left
+	{ { 63,   stashNavY },   { stashNavW, stashNavH } }, // 1 left
+	{ { 92,  stashGoldY }, { stashGoldW, stashGoldH } }, // withdraw gold
+	{ { 240,  stashNavY },   { stashNavW, stashNavH } }, // 1 right
+	{ { 268,  stashNavY },   { stashNavW, stashNavH } }  // 10 right
+
+	// clang-format on
+};
+
+/*void LoadStash(int page)
 {
 	// Loads stash from file
+
+	const char *stashHeader = "DXS001";
+	if (gbIsHellfire)
+		stashHeader = "HDXS001";
 
 	// Clear the stash first, in case we fail
 	Stash._pNumStash = 0;
 	memset(Stash.StashGrid, 0, sizeof(Stash.StashGrid));
+	memset(Stash.StashList, 0, sizeof(Stash.StashList));
 
-	char szStash[512];
-	sprintf(szStash, "%s%i%s", "stash_", page, ".dxs");
-
-	std::ifstream fin(szStash, std::ifstream::binary);
+	std::ifstream fin(GetStashSavePath(page), std::ifstream::binary);
 
 	if (fin.is_open()) {
+		fin.read((char *)&stashHeader, sizeof(stashHeader));
 		fin.read((char *)&Stash._pNumStash, sizeof(Stash._pNumStash));
 		fin.read((char *)&Stash.StashGrid, sizeof(Stash.StashGrid));
-
-		if (fin) {
-			// Continue reading items
-			for (int i = 0; i < Stash._pNumStash; i++) {
-				fin.read((char *)Stash.StashList, static_cast<std::streamsize>(sizeof(Item)) * Stash._pNumStash);
-			}
+		for (int i = 0; i < Stash._pNumStash; i++) {
+			fin.read((char *)Stash.StashList, static_cast<std::streamsize>(sizeof(Item)) * Stash._pNumStash);
 		}
 		fin.close();
 	}
 }
 
+
+
 void SaveStash(int page)
 {
 	// Saves stash to file
 
-	char szStash[512];
-	sprintf(szStash, "%s%i%s", "stash_", page, ".dxs");
+	const char *stashHeader = "DXS001";
+	if (gbIsHellfire)
+		stashHeader = "HDXS001";
 
-	std::ofstream fout(szStash, std::ofstream::binary);
+	std::ofstream fout(GetStashSavePath(page), std::ofstream::binary);
 
 	if (fout.is_open()) {
+		fout.write((char *)&stashHeader, sizeof(stashHeader));
 		fout.write((char *)&Stash._pNumStash, sizeof(Stash._pNumStash));
 		fout.write((char *)&Stash.StashGrid, sizeof(Stash.StashGrid));
 		fout.write((char *)Stash.StashList, static_cast<std::streamsize>(sizeof(Item)) * Stash._pNumStash);
 		fout.close();
 	}
-}
+}*/
 
 namespace {
 enum class stash_xy_slot;
@@ -449,8 +473,8 @@ void CheckStashPaste(int pnum, Point cursorPosition)
 			SetCursorPos(MousePosition + Displacement(cursSize / 2));
 		NewCursor(cn);
 	}
-	SaveStash(tab);
-	LoadStash(tab);
+	SaveStash(Page);
+	LoadStash(Page);
 }
 
 void CheckStashCut(int pnum, Point cursorPosition, bool automaticMove, bool dropItem)
@@ -551,6 +575,8 @@ void CheckStashCut(int pnum, Point cursorPosition, bool automaticMove, bool drop
 	if (dropItem) {
 		TryDropItem();
 	}
+	SaveStash(Page);
+	LoadStash(Page);
 }
 
 } // namespace
@@ -563,8 +589,48 @@ void FreeStashGFX()
 void InitStash()
 {
 	pStashCels = LoadCel("Data\\Stash\\Stash.CEL", SPANEL_WIDTH);
-	tab = 0;
+	LoadStash(0);
 	stashflag = false;
+}
+
+void CheckStashBtn()
+{
+	int slot = 0;
+	Rectangle stashButton;
+
+	for (int i = 0; i < 5; i++) {
+		stashButton = StashButtonRect[i];
+		stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
+		if (stashButton.Contains(MousePosition)) {
+			slot = i;
+			break;
+		}
+	}
+
+	switch (slot) {
+		case 0:
+			Page -= 10;
+			break;
+		case 1:
+			Page -= 1;
+			break;
+		case 2:
+			//StashWithdrawGold();
+			break;
+		case 3:
+			Page += 1;
+			break;
+		case 4:
+			Page += 10;
+			break;
+		}
+
+
+	if (Page < 0)
+		Page = 0;
+	if (Page > 29)
+		Page = 29;
+	LoadStash(Page);
 }
 
 void DrawStash(const Surface &out)
@@ -603,11 +669,11 @@ void DrawStash(const Surface &out)
 			    cel, celFrame);
 		}
 	}
+
 	char stashpage[256];
-	
 	Point linePosition { 13, 18 };
 
-	std::sprintf(stashpage, "%d", tab + 1);
+	std::sprintf(stashpage, "%d", Page + 1);
 	DrawString(out, stashpage, linePosition, UiFlags::ColorWhite);
 }
 
