@@ -21,6 +21,7 @@
 #include "missiles.h"
 #include "panels/spell_list.hpp"
 #include "panels/ui_panels.hpp"
+#include "stash.h"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -1314,6 +1315,11 @@ void FocusOnInventory()
 	ResetInvCursorPosition();
 }
 
+void FocusOnStash()
+{
+	Slot = SLOTXY_STASH_FIRST;
+}
+
 void plrctrls_after_check_curs_move()
 {
 	// check for monsters first, then items, then towners.
@@ -1373,44 +1379,48 @@ void UseBeltItem(int type)
 
 void PerformPrimaryAction()
 {
-	if (invflag) { // inventory is open
+	if (invflag || stashflag) { // inventory is open
 		if (pcurs > CURSOR_HAND && pcurs < CURSOR_FIRSTITEM) {
 			TryIconCurs();
 			NewCursor(CURSOR_HAND);
 		} else {
-			int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
+			if (invflag && GetRightPanel().Contains(MousePosition)) {
+				int inventorySlot = (Slot >= 0) ? Slot : FindClosestInventorySlot(MousePosition);
 
-			// Find any item occupying a slot that is currently under the cursor
-			int8_t itemUnderCursor = [](int inventorySlot) {
-				if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
-					return 0;
-				for (int x = 0; x < icursSize28.width; x++) {
-					for (int y = 0; y < icursSize28.height; y++) {
-						int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
-						if (slotUnderCursor > SLOTXY_INV_LAST)
-							continue;
-						int itemId = GetItemIdOnSlot(slotUnderCursor);
-						if (itemId != 0)
-							return itemId;
+				// Find any item occupying a slot that is currently under the cursor
+				int8_t itemUnderCursor = [](int inventorySlot) {
+					if (inventorySlot < SLOTXY_INV_FIRST || inventorySlot > SLOTXY_INV_LAST)
+						return 0;
+					for (int x = 0; x < icursSize28.width; x++) {
+						for (int y = 0; y < icursSize28.height; y++) {
+							int slotUnderCursor = inventorySlot + x + y * INV_ROW_SLOT_SIZE;
+							if (slotUnderCursor > SLOTXY_INV_LAST)
+								continue;
+							int itemId = GetItemIdOnSlot(slotUnderCursor);
+							if (itemId != 0)
+								return itemId;
+						}
 					}
+					return 0;
+				}(inventorySlot);
+
+				// The cursor will need to be shifted to
+				// this slot if the item is swapped or lifted
+				int jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
+				CheckInvItem();
+
+				// If we don't find the item in the same position as before,
+				// it suggests that the item was swapped or lifted
+				int newSlot = FindFirstSlotOnItem(itemUnderCursor);
+				if (jumpSlot >= 0 && jumpSlot != newSlot) {
+					Point mousePos = GetSlotCoord(jumpSlot);
+					mousePos.y -= InventorySlotSizeInPixels.height;
+					Slot = jumpSlot;
+					SetCursorPos(mousePos);
 				}
-				return 0;
-			}(inventorySlot);
-
-			// The cursor will need to be shifted to
-			// this slot if the item is swapped or lifted
-			int jumpSlot = FindFirstSlotOnItem(itemUnderCursor);
-			CheckInvItem();
-
-			// If we don't find the item in the same position as before,
-			// it suggests that the item was swapped or lifted
-			int newSlot = FindFirstSlotOnItem(itemUnderCursor);
-			if (jumpSlot >= 0 && jumpSlot != newSlot) {
-				Point mousePos = GetSlotCoord(jumpSlot);
-				mousePos.y -= InventorySlotSizeInPixels.height;
-				Slot = jumpSlot;
-				SetCursorPos(mousePos);
 			}
+			if (stashflag && GetLeftPanel().Contains(MousePosition))
+				CheckStashItem();
 		}
 		return;
 	}
@@ -1501,7 +1511,7 @@ void PerformSpellAction()
 	if (InGameMenu() || QuestLogIsOpen || sbookflag)
 		return;
 
-	if (invflag) {
+	if (invflag || stashflag) {
 		if (pcurs >= CURSOR_FIRSTITEM)
 			TryDropItem();
 		else if (pcurs > CURSOR_HAND) {
@@ -1509,7 +1519,10 @@ void PerformSpellAction()
 			NewCursor(CURSOR_HAND);
 		} else {
 			int itemId = GetItemIdOnSlot(Slot);
-			CheckInvItem(true, false);
+			if (invflag && GetRightPanel().Contains(MousePosition))
+				CheckInvItem(true, false);
+			if (stashflag && GetLeftPanel().Contains(MousePosition))
+				CheckStashItem(true, false);
 			if (itemId != GetItemIdOnSlot(Slot))
 				ResetInvCursorPosition();
 		}
@@ -1565,6 +1578,30 @@ void CtrlUseInvItem()
 			ResetInvCursorPosition();
 	} else {
 		UseInvItem(MyPlayerId, pcursinvitem);
+	}
+}
+
+void CtrlUseStashItem()
+{
+	Item *item;
+
+	if (pcursstashitem == -1)
+		return;
+
+	auto &myPlayer = Players[MyPlayerId];
+
+	if (pcursstashitem <= STASHITEM_STASH_LAST)
+		item = &myPlayer.InvList[pcursstashitem - STASHITEM_STASH_FIRST];
+
+	if (item->IsScroll() && spelldata[item->_iSpell].sTargeted) {
+		return;
+	}
+
+	if (item->isEquipment()) {
+		CheckStashItem(true, false); // auto-equip if it's an equipment
+		                             //ResetStashCursorPosition();
+	} else {
+		UseStashItem(MyPlayerId, pcursstashitem);
 	}
 }
 

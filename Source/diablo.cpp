@@ -61,6 +61,7 @@
 #include "restrict.h"
 #include "setmaps.h"
 #include "sound.h"
+#include "stash.h"
 #include "stores.h"
 #include "storm/storm_net.hpp"
 #include "themes.h"
@@ -317,6 +318,29 @@ void LeftMouseDown(int wParam)
 	bool isShiftHeld = (wParam & DVL_MK_SHIFT) != 0;
 	bool isCtrlHeld = (wParam & DVL_MK_CTRL) != 0;
 
+	int stashNavY = 15; // position for stash buttons
+	int stashNavW = 21;
+	int stashNavH = 19;
+
+	int stashGoldY = 16; // position for withdraw gold button
+	int stashGoldW = 27;
+	int stashGoldH = 19;
+
+	const Rectangle StashButtonRect[] = {
+		// Contains mappings for the buttons in the stash (2 navigation buttons, withdraw gold buttons, 2 navigation buttons)
+		// clang-format off
+	//  X,   Y,   W,   H
+	{ { 35,   stashNavY },   { stashNavW, stashNavH } }, // 10 left
+	{ { 63,   stashNavY },   { stashNavW, stashNavH } }, // 1 left
+	{ { 92,  stashGoldY }, { stashGoldW, stashGoldH } }, // withdraw gold
+	{ { 240,  stashNavY },   { stashNavW, stashNavH } }, // 1 right
+	{ { 268,  stashNavY },   { stashNavW, stashNavH } }  // 10 right
+
+		// clang-format on
+	};
+
+	Rectangle stashButton;
+
 	if (!GetMainPanel().Contains(MousePosition)) {
 		if (!gmenu_is_active() && !TryIconCurs()) {
 			if (QuestLogIsOpen && GetLeftPanel().Contains(MousePosition)) {
@@ -329,6 +353,18 @@ void LeftMouseDown(int wParam)
 			} else if (invflag && GetRightPanel().Contains(MousePosition)) {
 				if (!dropGoldFlag)
 					CheckInvItem(isShiftHeld, isCtrlHeld);
+			} else if (stashflag && GetLeftPanel().Contains(MousePosition)) {
+				if (!dropGoldFlag)
+					CheckStashItem(isShiftHeld, isCtrlHeld);
+				for (int i = 0; i < 5; i++) {
+					stashButton = StashButtonRect[i];
+					stashButton.position = GetPanelPosition(UiPanels::Stash, stashButton.position);
+					if (stashButton.Contains(MousePosition)) {
+						CheckStashBtn();
+						break;
+					}
+				}
+
 			} else if (sbookflag && GetRightPanel().Contains(MousePosition)) {
 				CheckSBook();
 			} else if (pcurs >= CURSOR_FIRSTITEM) {
@@ -1289,6 +1325,28 @@ void InventoryKeyPressed()
 	sbookflag = false;
 }
 
+void StashKeyPressed()
+{
+	if (stextflag != STORE_NONE)
+		return;
+	stashflag = !stashflag;
+
+	if (!invflag && !sbookflag && CanPanelsCoverView()) {
+		if (!stashflag) { // We closed the stash
+			if (MousePosition.x > 160 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition - Displacement { 160, 0 });
+			}
+		} else if (!QuestLogIsOpen && !chrflag) { // We opened the stash
+			if (MousePosition.x < 480 && MousePosition.y < PANEL_TOP) {
+				SetCursorPos(MousePosition + Displacement { 160, 0 });
+			}
+			LoadStash(Page);
+		}
+	}
+	chrflag = false;
+	QuestLogIsOpen = false;
+}
+
 void CharacterSheetKeyPressed()
 {
 	if (stextflag != STORE_NONE)
@@ -1306,6 +1364,7 @@ void CharacterSheetKeyPressed()
 		}
 	}
 	QuestLogIsOpen = false;
+	stashflag = false;
 }
 
 void QuestLogKeyPressed()
@@ -1329,6 +1388,7 @@ void QuestLogKeyPressed()
 		}
 	}
 	chrflag = false;
+	stashflag = false;
 }
 
 void DisplaySpellsKeyPressed()
@@ -1337,6 +1397,7 @@ void DisplaySpellsKeyPressed()
 		return;
 	chrflag = false;
 	QuestLogIsOpen = false;
+	stashflag = false;
 	invflag = false;
 	sbookflag = false;
 	if (!spselflag) {
@@ -1419,6 +1480,12 @@ void InitKeymapActions()
 	    "Inventory",
 	    'I',
 	    InventoryKeyPressed,
+	    [&]() { return !IsPlayerDead(); },
+	});
+	keymapper.AddAction({
+	    "Stash",
+	    'X',
+	    StashKeyPressed,
 	    [&]() { return !IsPlayerDead(); },
 	});
 	keymapper.AddAction({
@@ -1841,6 +1908,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 
 	if (firstflag) {
 		InitInv();
+		InitStash();
 		InitQuestText();
 		InitStores();
 		InitAutomapOnce();

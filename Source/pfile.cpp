@@ -227,6 +227,29 @@ bool ArchiveContainsGame(MpqArchive &hsArchive)
 
 } // namespace
 
+std::string GetStashSavePath(int page)
+{
+	std::string path = paths::PrefPath();
+
+	if (!gbIsMultiplayer) {
+		path.append("spstash_");
+	} else {
+		path.append("mpstash_");
+	}
+
+	char saveNumStr[21];
+	snprintf(saveNumStr, sizeof(saveNumStr) / sizeof(char), "%i", page);
+	path.append(saveNumStr);
+
+	if (gbIsHellfire) {
+		path.append(".hdxs");
+	} else {
+		path.append(".dxs");
+	}
+
+	return path;
+}
+
 const char *pfile_get_password()
 {
 	if (gbIsSpawn)

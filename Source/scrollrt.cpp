@@ -30,6 +30,7 @@
 #include "qol/itemlabels.h"
 #include "qol/monhealthbar.h"
 #include "qol/xpbar.h"
+#include "stash.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/display.h"
@@ -1278,6 +1279,8 @@ void DrawView(const Surface &out, Point startPosition)
 		DrawChr(out);
 	} else if (QuestLogIsOpen) {
 		DrawQuestLog(out);
+	} else if (stashflag) {
+		DrawStash(out);
 	}
 #ifndef VIRTUAL_GAMEPAD
 	if (!chrflag && Players[MyPlayerId]._pStatPts != 0 && !spselflag

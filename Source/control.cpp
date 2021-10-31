@@ -35,6 +35,7 @@
 #include "panels/spell_icons.hpp"
 #include "panels/spell_list.hpp"
 #include "qol/xpbar.h"
+#include "stash.h"
 #include "stores.h"
 #include "towners.h"
 #include "trigs.h"
@@ -447,6 +448,7 @@ Point GetPanelPosition(UiPanels panel, Point offset)
 		return GetMainPanel().position + displacement;
 	case UiPanels::Quest:
 	case UiPanels::Character:
+	case UiPanels::Stash:
 		return GetLeftPanel().position + displacement;
 	case UiPanels::Spell:
 	case UiPanels::Inventory:
@@ -820,7 +822,7 @@ void FreeControlPan()
 void DrawInfoBox(const Surface &out)
 {
 	DrawPanelBox(out, { 177, 62, 288, 60 }, { PANEL_X + 177, PANEL_Y + 46 });
-	if (!panelflag && !trigflag && pcursinvitem == -1 && !spselflag) {
+	if (!panelflag && !trigflag && pcursinvitem == -1 && pcursstashitem == -1 && !spselflag) {
 		infostr[0] = '\0';
 		InfoColor = UiFlags::ColorWhite;
 		ClearPanel();

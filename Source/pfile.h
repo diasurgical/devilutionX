@@ -43,5 +43,6 @@ void GetPermLevelNames(char *szPerm);
 void pfile_remove_temp_files();
 std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen);
 void pfile_update(bool forceSave);
+std::string GetStashSavePath(int page);
 
 } // namespace devilution

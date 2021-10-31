@@ -238,6 +238,7 @@ set(libdevilutionx_SRCS
   Source/sha.cpp
   Source/spelldat.cpp
   Source/spells.cpp
+  Source/stash.cpp
   Source/stores.cpp
   Source/sync.cpp
   Source/textdat.cpp

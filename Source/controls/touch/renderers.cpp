@@ -1,5 +1,5 @@
-#include "controls/touch/renderers.h"
 #include "control.h"
+#include "controls/touch/renderers.h"
 #include "cursor.h"
 #include "diablo.h"
 #include "doom.h"
@@ -10,6 +10,7 @@
 #include "inv.h"
 #include "minitext.h"
 #include "panels/ui_panels.hpp"
+#include "stash.h"
 #include "stores.h"
 #include "towners.h"
 #include "utils/sdl_compat.h"
@@ -428,7 +429,7 @@ VirtualGamepadButtonType PrimaryActionButtonRenderer::GetDungeonButtonType()
 
 VirtualGamepadButtonType PrimaryActionButtonRenderer::GetInventoryButtonType()
 {
-	if (pcursinvitem != -1 || pcurs > CURSOR_HAND)
+	if (pcursinvitem != -1 || pcursstashitem != -1 || pcurs > CURSOR_HAND)
 		return GetItemButtonType(virtualPadButton->isHeld);
 	return GetBlankButtonType(virtualPadButton->isHeld);
 }

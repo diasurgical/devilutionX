@@ -54,6 +54,7 @@ set(devilutionx_assets
   data/resistance.pcx
   data/talkbutton.pcx
   data/xpbar.pcx
+  data/stash.cel
   fonts/12-00.bin
   fonts/12-00.pcx
   fonts/12-01.bin
