@@ -3,7 +3,6 @@
  *
  * Implementation of functionality for rendering the dungeons, monsters and calling other render routines.
  */
-#include <climits>
 #include <random>
 
 #include "automap.h"
