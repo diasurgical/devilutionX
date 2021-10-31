@@ -829,7 +829,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 			if (automaticMove) {
 				if (CanBePlacedOnBelt(holdItem)) {
 					automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true);
-				} else {
+				} else if (CanEquip(holdItem)) {
 					/*
 					 * Move the respective InvBodyItem to inventory before moving the item from inventory
 					 * to InvBody with AutoEquip. AutoEquip requires the InvBody slot to be empty.
