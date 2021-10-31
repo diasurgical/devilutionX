@@ -854,15 +854,15 @@ msgstr "공개 게임"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
-msgstr "둥지 {:d} 층"
+msgstr "둥지 지하 {:d}층"
 
 #: Source/automap.cpp:506
 msgid "Level: Crypt {:d}"
-msgstr "지하묘소 {:d} 층"
+msgstr "지하묘소 지하 {:d}층"
 
 #: Source/automap.cpp:508 Source/items.cpp:2079
 msgid "Level: {:d}"
-msgstr "{:d} 층"
+msgstr "지하 {:d}층"
 
 #: Source/control.cpp:199
 msgid "Tab"
