@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-28 02:14+0200\n"
+"POT-Creation-Date: 2021-10-31 23:17+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -2079,7 +2079,7 @@ msgid "Quilted Armor"
 msgstr "Ватирана броня"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5467
+#: Source/itemdat.cpp:77 Source/objects.cpp:5478
 msgid "Armor"
 msgstr "Броня"
 
@@ -4257,19 +4257,19 @@ msgstr "уникат"
 msgid "Not Identified"
 msgstr "Неразпознат"
 
-#: Source/loadsave.cpp:1679 Source/loadsave.cpp:2145
+#: Source/loadsave.cpp:1683 Source/loadsave.cpp:2149
 msgid "Unable to open save file archive"
 msgstr "Невъзможно отваряне на файл за запис"
 
-#: Source/loadsave.cpp:1682
+#: Source/loadsave.cpp:1686
 msgid "Invalid save file"
 msgstr "Невалиден файлов запис"
 
-#: Source/loadsave.cpp:1713
+#: Source/loadsave.cpp:1717
 msgid "Player is on a Hellfire only level"
 msgstr "Играчът е на ниво само за Hellfire"
 
-#: Source/loadsave.cpp:1908
+#: Source/loadsave.cpp:1912
 msgid "Invalid game state"
 msgstr "Невалидно игрово състояние"
 
@@ -5723,158 +5723,158 @@ msgstr "Дневник: Краят"
 msgid "A Spellbook"
 msgstr "Книга за заклинания"
 
-#: Source/objects.cpp:5373
+#: Source/objects.cpp:5384
 msgid "Crucified Skeleton"
 msgstr "Разпнат Скелет"
 
-#: Source/objects.cpp:5377
+#: Source/objects.cpp:5388
 msgid "Lever"
 msgstr "Лост"
 
-#: Source/objects.cpp:5386
+#: Source/objects.cpp:5397
 msgid "Open Door"
 msgstr "Отворена Врата"
 
-#: Source/objects.cpp:5388
+#: Source/objects.cpp:5399
 msgid "Closed Door"
 msgstr "Затворена Врата"
 
-#: Source/objects.cpp:5390
+#: Source/objects.cpp:5401
 msgid "Blocked Door"
 msgstr "Блокирана Врата"
 
-#: Source/objects.cpp:5395
+#: Source/objects.cpp:5406
 msgid "Ancient Tome"
 msgstr "Древен Том"
 
-#: Source/objects.cpp:5397
+#: Source/objects.cpp:5408
 msgid "Book of Vileness"
 msgstr "Книга на Безчестието"
 
-#: Source/objects.cpp:5402
+#: Source/objects.cpp:5413
 msgid "Skull Lever"
 msgstr "Черепен Лост"
 
-#: Source/objects.cpp:5405
+#: Source/objects.cpp:5416
 msgid "Mythical Book"
 msgstr "Митическа Книга"
 
-#: Source/objects.cpp:5409
+#: Source/objects.cpp:5420
 msgid "Small Chest"
 msgstr "Малък Сандък"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5424
 msgid "Chest"
 msgstr "Сандък"
 
-#: Source/objects.cpp:5418
+#: Source/objects.cpp:5429
 msgid "Large Chest"
 msgstr "Голям Сандък"
 
-#: Source/objects.cpp:5421
+#: Source/objects.cpp:5432
 msgid "Sarcophagus"
 msgstr "Саркофаг"
 
-#: Source/objects.cpp:5424
+#: Source/objects.cpp:5435
 msgid "Bookshelf"
 msgstr "Лавица за книги"
 
-#: Source/objects.cpp:5428
+#: Source/objects.cpp:5439
 msgid "Bookcase"
 msgstr "Библиотека"
 
-#: Source/objects.cpp:5433
+#: Source/objects.cpp:5444
 msgid "Pod"
 msgstr "Зародиш"
 
-#: Source/objects.cpp:5435
+#: Source/objects.cpp:5446
 msgid "Urn"
 msgstr "Урна"
 
-#: Source/objects.cpp:5437
+#: Source/objects.cpp:5448
 msgid "Barrel"
 msgstr "Бъчва"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5441
+#: Source/objects.cpp:5452
 msgid "{:s} Shrine"
 msgstr "{:s} Светилище"
 
-#: Source/objects.cpp:5445
+#: Source/objects.cpp:5456
 msgid "Skeleton Tome"
 msgstr "Скелетен Том"
 
-#: Source/objects.cpp:5448
+#: Source/objects.cpp:5459
 msgid "Library Book"
 msgstr "Библиотечен Том"
 
-#: Source/objects.cpp:5451
+#: Source/objects.cpp:5462
 msgid "Blood Fountain"
 msgstr "Кръвен Фонтан"
 
-#: Source/objects.cpp:5454
+#: Source/objects.cpp:5465
 msgid "Decapitated Body"
 msgstr "Обезглавено Тяло"
 
-#: Source/objects.cpp:5457
+#: Source/objects.cpp:5468
 msgid "Book of the Blind"
 msgstr "Книга на Слепите"
 
-#: Source/objects.cpp:5460
+#: Source/objects.cpp:5471
 msgid "Book of Blood"
 msgstr "Книга на Кръвта"
 
-#: Source/objects.cpp:5463
+#: Source/objects.cpp:5474
 msgid "Purifying Spring"
 msgstr "Пречистващ извор"
 
-#: Source/objects.cpp:5470 Source/objects.cpp:5494
+#: Source/objects.cpp:5481 Source/objects.cpp:5505
 msgid "Weapon Rack"
 msgstr "Оръжейна стойка"
 
-#: Source/objects.cpp:5473
+#: Source/objects.cpp:5484
 msgid "Goat Shrine"
 msgstr "Козьо Светилище"
 
-#: Source/objects.cpp:5476
+#: Source/objects.cpp:5487
 msgid "Cauldron"
 msgstr "Котел"
 
-#: Source/objects.cpp:5479
+#: Source/objects.cpp:5490
 msgid "Murky Pool"
 msgstr "Мътен вир"
 
-#: Source/objects.cpp:5482
+#: Source/objects.cpp:5493
 msgid "Fountain of Tears"
 msgstr "Фонтан на сълзите"
 
-#: Source/objects.cpp:5485
+#: Source/objects.cpp:5496
 msgid "Steel Tome"
 msgstr "Стоманен Том"
 
-#: Source/objects.cpp:5488
+#: Source/objects.cpp:5499
 msgid "Pedestal of Blood"
 msgstr "Педестал от Кръв"
 
-#: Source/objects.cpp:5497
+#: Source/objects.cpp:5508
 msgid "Mushroom Patch"
 msgstr "Гъбен мицел"
 
-#: Source/objects.cpp:5500
+#: Source/objects.cpp:5511
 msgid "Vile Stand"
 msgstr "Ужасяваща стойка"
 
-#: Source/objects.cpp:5503
+#: Source/objects.cpp:5514
 msgid "Slain Hero"
 msgstr "Повален герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5510
+#: Source/objects.cpp:5521
 msgid "Trapped {:s}"
 msgstr "{:s} клопка"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5516
+#: Source/objects.cpp:5527
 msgid "{:s} (disabled)"
 msgstr "{:s} (изключено)"
 
@@ -6446,6 +6446,38 @@ msgstr "Руна на Изгарящ погром"
 msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "Руна за Вкаменяване"
+
+#: Source/stores.cpp:91
+msgid "Griswold"
+msgstr "Грисволд"
+
+#: Source/stores.cpp:92
+msgid "Pepin"
+msgstr "Пепин"
+
+#: Source/stores.cpp:94
+msgid "Ogden"
+msgstr "Огдън"
+
+#: Source/stores.cpp:95
+msgid "Cain"
+msgstr "Кайн"
+
+#: Source/stores.cpp:96
+msgid "Farnham"
+msgstr "Фарнам"
+
+#: Source/stores.cpp:97
+msgid "Adria"
+msgstr "Адрия"
+
+#: Source/stores.cpp:98 Source/stores.cpp:1252
+msgid "Gillian"
+msgstr "Джилиън"
+
+#: Source/stores.cpp:99
+msgid "Wirt"
+msgstr "Върт"
 
 #: Source/stores.cpp:179 Source/stores.cpp:186
 msgid ",  "
