@@ -3908,6 +3908,7 @@ msgid "{:+d}% damage"
 msgstr "{:+d}% daño"
 
 #: Source/items.cpp:3838 Source/items.cpp:4094
+#, fuzzy
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "para golpear: {:+d}%,{:+d} {:d} daño"
 
