@@ -9,7 +9,10 @@ From this menu, you can press 'X' to clone the git repository for devilutionX an
 Once installed, 'X' pulls the updated code and does the compiling. Note that any changes made locally to the source are reverted before pulling.
 
 When the compile is finished and the diabdat.mpq is in place at '/home/cpi/.local/share/diasurgical/devilution/', you can play the game.
-To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq. Enjoy!
+ - To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
+ - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq and add it to the game folder.
+ - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq.
+Enjoy!
 
 ## Play devilutionX on the CPi GameShell
 
