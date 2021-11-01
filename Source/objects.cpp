@@ -2297,18 +2297,19 @@ void OperateBookLever(int pnum, int i)
 	}
 }
 
-void OperateSChambBk(int i)
+void OperateChamberOfBoneBook(Object &questBook)
 {
-	if (Objects[i]._oSelFlag == 0 || qtextflag) {
+	if (questBook._oSelFlag == 0 || qtextflag) {
 		return;
 	}
 
-	if (Objects[i]._oAnimFrame != Objects[i]._oVar6) {
-		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		for (int j = 0; j < ActiveObjectCount; j++)
+	if (questBook._oAnimFrame != questBook._oVar6) {
+		ObjChangeMapResync(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
+		for (int j = 0; j < ActiveObjectCount; j++) {
 			SyncObjectAnim(Objects[ActiveObjects[j]]);
+		}
 	}
-	Objects[i]._oAnimFrame = Objects[i]._oVar6;
+	questBook._oAnimFrame = questBook._oVar6;
 	if (Quests[Q_SCHAMB]._qactive == QUEST_INIT) {
 		Quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
 		Quests[Q_SCHAMB]._qlog = true;
@@ -2398,7 +2399,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
 }
 
-void OperateMushPatch(int pnum, int i)
+void OperateMushroomPatch(int pnum, Object &questContainer)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2411,20 +2412,22 @@ void OperateMushPatch(int pnum, int i)
 		return;
 	}
 
-	if (Objects[i]._oSelFlag != 0) {
-		if (!deltaload)
-			PlaySfxLoc(IS_CHEST, Objects[i].position);
-		Objects[i]._oSelFlag = 0;
-		Objects[i]._oAnimFrame++;
-		if (!deltaload) {
-			Point pos = GetSuperItemLoc(Objects[i].position);
-			SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
-			Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
-		}
+	if (questContainer._oSelFlag == 0) {
+		return;
+	}
+
+	questContainer._oSelFlag = 0;
+	questContainer._oAnimFrame++;
+
+	if (!deltaload) {
+		PlaySfxLoc(IS_CHEST, questContainer.position);
+		Point pos = GetSuperItemLoc(questContainer.position);
+		SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
+		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 	}
 }
 
-void OperateInnSignChest(int pnum, int i)
+void OperateInnSignChest(int pnum, Object &questContainer)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2437,15 +2440,16 @@ void OperateInnSignChest(int pnum, int i)
 		return;
 	}
 
-	if (Objects[i]._oSelFlag == 0) {
+	if (questContainer._oSelFlag == 0) {
 		return;
 	}
-	if (!deltaload)
-		PlaySfxLoc(IS_CHEST, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame += 2;
+
+	questContainer._oSelFlag = 0;
+	questContainer._oAnimFrame += 2;
+
 	if (!deltaload) {
-		Point pos = GetSuperItemLoc(Objects[i].position);
+		PlaySfxLoc(IS_CHEST, questContainer.position);
+		Point pos = GetSuperItemLoc(questContainer.position);
 		SpawnQuestItem(IDI_BANNER, pos, 0, 0);
 	}
 }
@@ -2480,30 +2484,32 @@ void OperateSlainHero(int pnum, int i)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateTrapLvr(int i)
+void OperateTrapLever(Object &flameLever)
 {
-	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, Objects[i].position);
+	if (!deltaload) {
+		PlaySfxLoc(IS_LEVER, flameLever.position);
+	}
 
-	if (Objects[i]._oAnimFrame == 1) {
-		Objects[i]._oAnimFrame = 2;
+	if (flameLever._oAnimFrame == 1) {
+		flameLever._oAnimFrame = 2;
 		for (int j = 0; j < ActiveObjectCount; j++) {
-			int oi = ActiveObjects[j];
-			if (Objects[oi]._otype == Objects[i]._oVar2 && Objects[oi]._oVar1 == Objects[i]._oVar1) {
-				Objects[oi]._oVar2 = 1;
-				Objects[oi]._oAnimFlag = 0;
+			Object &target = Objects[ActiveObjects[j]];
+			if (target._otype == flameLever._oVar2 && target._oVar1 == flameLever._oVar1) {
+				target._oVar2 = 1;
+				target._oAnimFlag = 0;
 			}
 		}
 		return;
 	}
 
-	Objects[i]._oAnimFrame--;
+	flameLever._oAnimFrame--;
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		if (Objects[oi]._otype == Objects[i]._oVar2 && Objects[oi]._oVar1 == Objects[i]._oVar1) {
-			Objects[oi]._oVar2 = 0;
-			if (Objects[oi]._oVar4 != 0)
-				Objects[oi]._oAnimFlag = 1;
+		Object &target = Objects[ActiveObjects[j]];
+		if (target._otype == flameLever._oVar2 && target._oVar1 == flameLever._oVar1) {
+			target._oVar2 = 0;
+			if (target._oVar4 != 0) {
+				target._oAnimFlag = 1;
+			}
 		}
 	}
 }
@@ -4780,20 +4786,21 @@ void AddObject(_object_id objType, Point objPos)
 	ActiveObjectCount++;
 }
 
-void Obj_Trap(int i)
+void OperateTrap(Object &trap)
 {
-	if (Objects[i]._oVar4 != 0)
+	if (trap._oVar4 != 0)
 		return;
 
-	int oti = dObject[Objects[i]._oVar1][Objects[i]._oVar2] - 1;
-	switch (Objects[oti]._otype) {
+	int oti = dObject[trap._oVar1][trap._oVar2] - 1;
+	Object &trigger = Objects[oti];
+	switch (trigger._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (Objects[oti]._oVar4 == 0)
+		if (trigger._oVar4 == 0)
 			return;
 		break;
 	case OBJ_LEVER:
@@ -4802,17 +4809,17 @@ void Obj_Trap(int i)
 	case OBJ_CHEST3:
 	case OBJ_SWITCHSKL:
 	case OBJ_SARC:
-		if (Objects[oti]._oSelFlag != 0)
+		if (trigger._oSelFlag != 0)
 			return;
 		break;
 	default:
 		return;
 	}
 
-	Objects[i]._oVar4 = 1;
-	Point target = Objects[oti].position;
-	for (int y = target.y - 1; y <= Objects[oti].position.y + 1; y++) {
-		for (int x = Objects[oti].position.x - 1; x <= Objects[oti].position.x + 1; x++) {
+	trap._oVar4 = 1;
+	Point target = trigger.position;
+	for (int y = target.y - 1; y <= trigger.position.y + 1; y++) {
+		for (int x = trigger.position.x - 1; x <= trigger.position.x + 1; x++) {
 			if (dPlayer[x][y] != 0) {
 				target.x = x;
 				target.y = y;
@@ -4820,11 +4827,11 @@ void Obj_Trap(int i)
 		}
 	}
 	if (!deltaload) {
-		Direction dir = GetDirection(Objects[i].position, target);
-		AddMissile(Objects[i].position, target, dir, static_cast<missile_id>(Objects[i]._oVar3), TARGET_PLAYERS, -1, 0, 0);
-		PlaySfxLoc(IS_TRAP, Objects[oti].position);
+		Direction dir = GetDirection(trap.position, target);
+		AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
+		PlaySfxLoc(IS_TRAP, trigger.position);
 	}
-	Objects[oti]._oTrapFlag = false;
+	trigger._oTrapFlag = false;
 }
 
 void ProcessObjects()
@@ -4874,7 +4881,7 @@ void ProcessObjects()
 			break;
 		case OBJ_TRAPL:
 		case OBJ_TRAPR:
-			Obj_Trap(oi);
+			OperateTrap(Objects[oi]);
 			break;
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
@@ -5084,7 +5091,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateBook(pnum, i);
 		break;
 	case OBJ_BOOK2R:
-		OperateSChambBk(i);
+		OperateChamberOfBoneBook(Objects[i]);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
@@ -5098,7 +5105,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateSarc(pnum, i, sendmsg);
 		break;
 	case OBJ_FLAMELVR:
-		OperateTrapLvr(i);
+		OperateTrapLever(Objects[i]);
 		break;
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
@@ -5147,7 +5154,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateWeaponRack(pnum, i, sendmsg);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushPatch(pnum, i);
+		OperateMushroomPatch(pnum, Objects[i]);
 		break;
 	case OBJ_LAZSTAND:
 		OperateLazStand(pnum, i);
@@ -5156,7 +5163,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(pnum, i);
+		OperateInnSignChest(pnum, Objects[i]);
 		break;
 	default:
 		break;
@@ -5238,13 +5245,13 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateWeaponRack(pnum, i, false);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushPatch(pnum, i);
+		OperateMushroomPatch(pnum, Objects[i]);
 		break;
 	case OBJ_SLAINHERO:
 		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(pnum, i);
+		OperateInnSignChest(pnum, Objects[i]);
 		break;
 	default:
 		break;
