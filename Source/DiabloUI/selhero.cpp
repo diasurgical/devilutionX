@@ -88,33 +88,6 @@ void SelheroSetStats()
 std::size_t listOffset = 0;
 UiArtTextButton *SELLIST_DIALOG_DELETE_BUTTON;
 
-void SelheroUpdateViewportItems()
-{
-	const std::size_t numViewportHeroes = std::min(selhero_SaveCount - listOffset, MaxViewportItems);
-	for (std::size_t i = 0; i < numViewportHeroes; i++) {
-		const std::size_t index = i + listOffset;
-		vecSelHeroDlgItems[i]->m_text = selhero_heros[index].name;
-		vecSelHeroDlgItems[i]->m_value = static_cast<int>(index);
-	}
-	if (numViewportHeroes < MaxViewportItems) {
-		vecSelHeroDlgItems[numViewportHeroes]->m_text = _("New Hero");
-		vecSelHeroDlgItems[numViewportHeroes]->m_value = static_cast<int>(selhero_SaveCount);
-	}
-}
-
-void SelheroScrollIntoView(std::size_t index)
-{
-	std::size_t newOffset = listOffset;
-	if (index >= listOffset + MaxViewportItems)
-		newOffset = index - (MaxViewportItems - 1);
-	if (index < listOffset)
-		newOffset = index;
-	if (newOffset != listOffset) {
-		listOffset = newOffset;
-		SelheroUpdateViewportItems();
-	}
-}
-
 bool SelHeroGetHeroInfo(_uiheroinfo *pInfo)
 {
 	selhero_heros[selhero_SaveCount] = *pInfo;
@@ -127,7 +100,6 @@ bool SelHeroGetHeroInfo(_uiheroinfo *pInfo)
 void SelheroListFocus(int value)
 {
 	const auto index = static_cast<std::size_t>(value);
-	SelheroScrollIntoView(index);
 	UiFlags baseFlags = UiFlags::AlignCenter | UiFlags::FontSize30;
 	if (selhero_SaveCount != 0 && index < selhero_SaveCount) {
 		memcpy(&selhero_heroInfo, &selhero_heros[index], sizeof(selhero_heroInfo));
@@ -510,27 +482,17 @@ void selhero_List_Init()
 	vecSelDlgItems.push_back(std::make_unique<UiArtText>(_("Select Hero"), rect1, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiSilver, 3));
 
 	vecSelHeroDlgItems.clear();
-	const size_t numViewportHeroes = std::min(selhero_SaveCount + 1, MaxViewportItems);
-	for (std::size_t i = 0; i < numViewportHeroes; i++) {
-		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>("", -1));
-	}
-	// Adjust list to last selected hero
-	for (size_t i = 0; i < selhero_SaveCount; i++) {
-		if (selhero_heros[i].saveNumber == selhero_heroInfo.saveNumber) {
+	for (std::size_t i = 0; i < selhero_SaveCount; i++) {
+		vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(selhero_heros[i].name, static_cast<int>(i)));
+		if (selhero_heros[i].saveNumber == selhero_heroInfo.saveNumber)
 			selectedItem = i;
-			if (i > (MaxViewportItems - 1))
-				listOffset = i - (MaxViewportItems - 1);
-			break;
-		}
 	}
-	SelheroUpdateViewportItems();
+	vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("New Hero"), static_cast<int>(selhero_SaveCount)));
 
 	vecSelDlgItems.push_back(std::make_unique<UiList>(vecSelHeroDlgItems, PANEL_LEFT + 265, (UI_OFFSET_Y + 256), 320, 26, UiFlags::AlignCenter | UiFlags::FontSize24 | UiFlags::ColorUiGold));
 
 	SDL_Rect rect2 = { (Sint16)(PANEL_LEFT + 585), (Sint16)(UI_OFFSET_Y + 244), 25, 178 };
-	auto pinnedScrollBar = std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, rect2);
-	auto *scrollBar = pinnedScrollBar.get();
-	vecSelDlgItems.push_back(std::move(pinnedScrollBar));
+	vecSelDlgItems.push_back(std::move(std::make_unique<UiScrollbar>(&ArtScrollBarBackground, &ArtScrollBarThumb, &ArtScrollBarArrow, rect2)));
 
 	SDL_Rect rect3 = { (Sint16)(PANEL_LEFT + 239), (Sint16)(UI_OFFSET_Y + 429), 120, 35 };
 	vecSelDlgItems.push_back(std::make_unique<UiArtTextButton>(_("OK"), &UiFocusNavigationSelect, rect3, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
@@ -543,8 +505,7 @@ void selhero_List_Init()
 	SDL_Rect rect5 = { (Sint16)(PANEL_LEFT + 489), (Sint16)(UI_OFFSET_Y + 429), 120, 35 };
 	vecSelDlgItems.push_back(std::make_unique<UiArtTextButton>(_("Cancel"), &UiFocusNavigationEsc, rect5, UiFlags::AlignCenter | UiFlags::FontSize30 | UiFlags::ColorUiGold));
 
-	UiInitList(selhero_SaveCount + 1, SelheroListFocus, SelheroListSelect, SelheroListEsc, vecSelDlgItems, false, SelheroListDeleteYesNo, selectedItem);
-	UiInitScrollBar(scrollBar, MaxViewportItems, &listOffset);
+	UiInitList(MaxViewportItems, SelheroListFocus, SelheroListSelect, SelheroListEsc, vecSelDlgItems, false, SelheroListDeleteYesNo, selectedItem);
 	if (selhero_isMultiPlayer) {
 		title = _("Multi Player Characters");
 	} else {

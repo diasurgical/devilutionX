@@ -44,7 +44,7 @@ namespace devilution {
 
 std::size_t SelectedItemMax;
 std::size_t ListViewportSize = 1;
-const std::size_t *ListOffset = nullptr;
+std::size_t listOffset = 0;
 
 std::array<Art, 3> ArtLogos;
 std::array<Art, 3> ArtFocus;
@@ -84,13 +84,21 @@ struct ScrollBarState {
 	}
 } scrollBarState;
 
+void AdjustListOffset(std::size_t itemIndex)
+{
+	if (itemIndex >= listOffset + ListViewportSize)
+		listOffset = itemIndex - (ListViewportSize - 1);
+	if (itemIndex < listOffset)
+		listOffset = itemIndex;
+}
+
 } // namespace
 
-void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
+void UiInitList(size_t listViewportSize, void (*fnFocus)(int value), void (*fnSelect)(int value), void (*fnEsc)(), const std::vector<std::unique_ptr<UiItemBase>> &items, bool itemsWraps, bool (*fnYesNo)(), size_t selectedItem /*= 0*/)
 {
 	SelectedItem = selectedItem;
-	SelectedItemMax = std::max(count - 1, 0);
-	ListViewportSize = count;
+	SelectedItemMax = 0;
+	ListViewportSize = listViewportSize;
 	gfnListFocus = fnFocus;
 	gfnListSelect = fnSelect;
 	gfnListEsc = fnEsc;
@@ -99,7 +107,8 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	for (const auto &item : items)
 		gUiItems.push_back(item.get());
 	UiItemsWraps = itemsWraps;
-	ListOffset = nullptr;
+	listOffset = 0;
+	AdjustListOffset(selectedItem);
 	if (fnFocus != nullptr)
 		fnFocus(selectedItem);
 
@@ -107,6 +116,7 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 	SDL_StopTextInput(); // input is enabled by default
 #endif
 	textInputActive = false;
+	UiScrollbar *uiScrollbar = nullptr;
 	for (const auto &item : items) {
 		if (item->m_type == UiType::Edit) {
 			auto *pItemUIEdit = static_cast<UiEdit *>(item.get());
@@ -124,18 +134,20 @@ void UiInitList(int count, void (*fnFocus)(int value), void (*fnSelect)(int valu
 #endif
 			UiTextInput = pItemUIEdit->m_value;
 			UiTextInputLen = pItemUIEdit->m_max_length;
+		} else if (item->m_type == UiType::List) {
+			auto *uiList = static_cast<UiList *>(item.get());
+			SelectedItemMax = std::max(uiList->m_vecItems.size() - 1, static_cast<size_t>(0));
+		} else if (item->m_type == UiType::Scrollbar) {
+			uiScrollbar = static_cast<UiScrollbar *>(item.get());
 		}
 	}
-}
 
-void UiInitScrollBar(UiScrollbar *uiSb, std::size_t viewportSize, const std::size_t *currentOffset)
-{
-	ListViewportSize = viewportSize;
-	ListOffset = currentOffset;
-	if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax + 1)) {
-		uiSb->add_flag(UiFlags::ElementHidden);
-	} else {
-		uiSb->remove_flag(UiFlags::ElementHidden);
+	if (uiScrollbar != nullptr) {
+		if (ListViewportSize >= static_cast<std::size_t>(SelectedItemMax + 1)) {
+			uiScrollbar->add_flag(UiFlags::ElementHidden);
+		} else {
+			uiScrollbar->remove_flag(UiFlags::ElementHidden);
+		}
 	}
 }
 
@@ -175,6 +187,8 @@ void UiFocus(std::size_t itemIndex)
 
 	UiPlayMoveSound();
 
+	AdjustListOffset(itemIndex);
+
 	if (gfnListFocus != nullptr)
 		gfnListFocus(itemIndex);
 }
@@ -199,33 +213,33 @@ void UiFocusDown()
 
 void UiFocusPageUp()
 {
-	if (ListOffset == nullptr || *ListOffset == 0) {
+	if (listOffset == 0) {
 		UiFocus(0);
 	} else {
-		const std::size_t relpos = SelectedItem - *ListOffset;
+		const std::size_t relpos = SelectedItem - listOffset;
 		std::size_t prevPageStart = SelectedItem - relpos;
 		if (prevPageStart >= ListViewportSize)
 			prevPageStart -= ListViewportSize;
 		else
 			prevPageStart = 0;
 		UiFocus(prevPageStart);
-		UiFocus(*ListOffset + relpos);
+		UiFocus(listOffset + relpos);
 	}
 }
 
 void UiFocusPageDown()
 {
-	if (ListOffset == nullptr || *ListOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
+	if (listOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
 		UiFocus(SelectedItemMax);
 	} else {
-		const std::size_t relpos = SelectedItem - *ListOffset;
+		const std::size_t relpos = SelectedItem - listOffset;
 		std::size_t nextPageEnd = SelectedItem + (ListViewportSize - relpos - 1);
 		if (nextPageEnd + ListViewportSize <= static_cast<std::size_t>(SelectedItemMax))
 			nextPageEnd += ListViewportSize;
 		else
 			nextPageEnd = SelectedItemMax;
 		UiFocus(nextPageEnd);
-		UiFocus(*ListOffset + relpos);
+		UiFocus(listOffset + relpos);
 	}
 }
 
@@ -760,10 +774,10 @@ void Render(const UiList *uiList)
 {
 	const Surface &out = Surface(DiabloUiSurface());
 
-	for (std::size_t i = 0; i < uiList->m_vecItems.size(); ++i) {
-		SDL_Rect rect = uiList->itemRect(i);
+	for (std::size_t i = listOffset; i < uiList->m_vecItems.size() && (i - listOffset) < ListViewportSize; ++i) {
+		SDL_Rect rect = uiList->itemRect(i - listOffset);
 		const UiListItem *item = uiList->GetItem(i);
-		if (i + (ListOffset == nullptr ? 0 : *ListOffset) == SelectedItem)
+		if (i == SelectedItem)
 			DrawSelector(rect);
 
 		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
@@ -863,7 +877,7 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 		return false;
 
 	std::size_t index = uiList->indexAt(event.button.y);
-	index += (ListOffset == nullptr ? 0 : *ListOffset);
+	index += listOffset;
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
 		UiFocus(index);
