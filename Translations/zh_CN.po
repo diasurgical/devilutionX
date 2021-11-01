@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-01 14:59+0800\n"
+"POT-Creation-Date: 2021-11-01 15:00+0800\n"
 "PO-Revision-Date: \n"
 "Last-Translator: muziling <pieceking@qq.com>\n"
 "Language-Team: Emiliano Augusto Gonzalez\n"
@@ -321,26 +321,20 @@ msgid "OK"
 msgstr "确定"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
-#, fuzzy
-#| msgid "Down to Diablo"
 msgid "Switch to Diablo"
-msgstr "下到迪亚波罗"
+msgstr "切换到原版"
 
 #: Source/DiabloUI/extrasmenu.cpp:41
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Switch to Hellfire"
-msgstr "退出地狱火"
+msgstr "切换到地狱火"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-msgstr ""
+msgstr "切换到完整版游戏"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Switch to Shareware"
-msgstr "在共享软件中"
+msgstr "切换到共享版"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -363,10 +357,8 @@ msgid "Multi Player"
 msgstr "多人游戏"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-#, fuzzy
-#| msgid "Extra charges"
 msgid "Extras"
-msgstr "额外充能次数"
+msgstr "额外内容"
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Show Credits"
@@ -381,10 +373,8 @@ msgid "Exit Diablo"
 msgstr "退出暗黑破坏神"
 
 #: Source/DiabloUI/mainmenu.cpp:55
-#, fuzzy
-#| msgid "in the shareware"
 msgid "Shareware"
-msgstr "在共享软件中"
+msgstr "共享版"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
@@ -451,10 +441,8 @@ msgid "Create Game"
 msgstr "创建游戏"
 
 #: Source/DiabloUI/selgame.cpp:93
-#, fuzzy
-#| msgid "Create Game"
 msgid "Create Public Game"
-msgstr "创建游戏"
+msgstr "创建公开游戏"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
@@ -471,12 +459,10 @@ msgid "Create a new game with a difficulty setting of your choice."
 msgstr "从你选择的难度设置创建游戏。"
 
 #: Source/DiabloUI/selgame.cpp:125
-#, fuzzy
-#| msgid "Create a new game with a difficulty setting of your choice."
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr "从你选择的难度设置创建游戏。"
+msgstr "创建一个公开游戏，任何人都可加入的，游戏难度将依据你的设定。"
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
@@ -750,10 +736,8 @@ msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "是否确实要删除角色“{:s}”？"
 
 #: Source/DiabloUI/selstart.cpp:43
-#, fuzzy
-#| msgid "Exit Hellfire"
 msgid "Enter Hellfire"
-msgstr "退出地狱火"
+msgstr "进入《地狱火》"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
@@ -769,6 +753,8 @@ msgid ""
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
+"我们维护的聊天服务器部署在 Discord.gg/YQKCAYQ ，点击连接加入我们的社群，我们"
+"在那里谈论有关暗黑破坏神以及地狱火资料片。"
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -804,6 +790,9 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
+"\t这个移植使用了 CharisSILB、Unifont 和 Noto，它们处于SIL Open Font License、"
+"CC-BY 4.0和Twitmoji许可授权。该移植还使用了SDL，处于zlib-license许可。更多细"
+"节请参见ReadMe。"
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -860,10 +849,8 @@ msgid "password: "
 msgstr "密码: "
 
 #: Source/automap.cpp:492
-#, fuzzy
-#| msgid "Quit Game"
 msgid "Public Game"
-msgstr "退出游戏"
+msgstr "公开游戏"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -951,7 +938,7 @@ msgstr "卷轴"
 
 #: Source/control.cpp:788 Source/control.cpp:1240
 msgid "Scroll of {:s}"
-msgstr "{:s}的卷轴"
+msgstr "{:s}卷轴"
 
 #: Source/control.cpp:793 Source/control.cpp:1246
 msgid "{:d} Scroll"
@@ -965,7 +952,7 @@ msgstr "法杖"
 
 #: Source/control.cpp:801 Source/control.cpp:1250 Source/items.cpp:1317
 msgid "Staff of {:s}"
-msgstr "{:s}的法杖"
+msgstr "{:s}法杖"
 
 #: Source/control.cpp:803 Source/control.cpp:1252
 msgid "{:d} Charge"
@@ -1174,23 +1161,23 @@ msgid ""
 "\n"
 "Game selection:\n"
 msgstr ""
+"\n"
+"游戏选项：\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Force Shareware mode"
-msgstr ""
+msgstr "强制共享版模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:796
 msgid "Force Diablo mode"
-msgstr ""
+msgstr "强制原版模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
-#, fuzzy
-#| msgid "Hellfire Help"
 msgid "Force Hellfire mode"
-msgstr "地狱火帮助"
+msgstr "强制地狱火模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
@@ -4829,10 +4816,9 @@ msgstr "鞭状蠕虫"
 
 #: Source/monstdat.cpp:142
 #, fuzzy
-#| msgid "Torchant"
 msgctxt "monster"
 msgid "Torchant"
-msgstr "托尔昌特"
+msgstr "火蚂蚁"
 
 #: Source/monstdat.cpp:143 Source/monstdat.cpp:483
 msgctxt "monster"
@@ -5128,18 +5114,18 @@ msgstr "死亡之影·肉锤"
 #: Source/monstdat.cpp:518
 msgctxt "monster"
 msgid "Warmaggot the Mad"
-msgstr "疯狂的蛆虫"
+msgstr "疯狂的战斗蛆虫"
 
 #: Source/monstdat.cpp:519
 #, fuzzy
 msgctxt "monster"
 msgid "Glasskull the Jagged"
-msgstr "边沿破碎玻璃的颅骨"
+msgstr "玻璃颅·锯齿"
 
 #: Source/monstdat.cpp:520
 msgctxt "monster"
 msgid "Blightfire"
-msgstr "明火"
+msgstr "死疫之火"
 
 #: Source/monstdat.cpp:521
 msgctxt "monster"
@@ -5159,7 +5145,7 @@ msgstr "青铜拳·火石"
 #: Source/monstdat.cpp:524
 msgctxt "monster"
 msgid "Wrathfire the Doomed"
-msgstr "愤怒火·末日"
+msgstr "怒火·末日"
 
 #: Source/monstdat.cpp:525
 msgctxt "monster"
@@ -5194,7 +5180,7 @@ msgstr "疯燃者"
 #: Source/monstdat.cpp:531
 msgctxt "monster"
 msgid "Bonesaw the Litch"
-msgstr "巫妖骨锯"
+msgstr "骨锯·巫妖"
 
 #: Source/monstdat.cpp:532
 msgctxt "monster"
@@ -7140,8 +7126,8 @@ msgid ""
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
 "当我听说镇上的人那天晚上打算干什么时，我很震惊。我想在所有人中，拉扎鲁斯应该"
-"更有理智。他是一位大主教，似乎总是那么关心特里斯特拉姆的市民。这么多人受伤，"
-"我救不了他们"
+"更有理智。他是一位大主教，似乎总是那么关心崔斯特姆的市民。这么多人受伤，我救"
+"不了他们"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -7299,7 +7285,7 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
-"如果你不能恢复井中的淡水，崔斯特瑞姆人就会死。\n"
+"如果你不能恢复井中的淡水，崔斯特姆人就会死。\n"
 " \n"
 "知道这一点-恶魔是这件事的核心，但他们仍然不知道他们产生了什么"
 
@@ -7399,9 +7385,9 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
-"似乎拉扎鲁斯大主教怂恿许多市民冒险进入迷宫寻找国王失踪的儿子。他利用他们的恐"
-"惧，把他们鞭打成一群疯狂的暴徒。他们中没有一个人准备好面对冰冷的地球上的一"
-"切。。。拉扎鲁斯把他们丢在那里，丢在难以形容的恐惧魔爪里，等死"
+"大主教拉扎鲁斯似乎怂恿过很多镇民冒险进入迷宫，去寻找国王失踪的儿子。他以镇民"
+"的恐惧为乐，鞭打他们使其成为疯狂的暴徒。没有人对倒在冰冷地面有所准备……拉扎鲁"
+"斯抛弃了他们，使留在难以言喻的恐怖中，等死。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -7409,7 +7395,8 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
-"是的，法恩汉喃喃地说了一些关于一个笨重的畜生挥舞着凶器的事。我相信他叫他屠夫"
+"是的，法恩汉含糊的地说到一些关于一个笨重的畜生挥舞着恐怖武器的事。我确定他称"
+"他为屠夫。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -7421,10 +7408,10 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
-"借着光明，我知道这个邪恶的恶魔。当拉扎鲁斯率领的少数几名冲锋幸存者从大教堂爬"
-"出来时，许多人身上留下了他愤怒的伤疤。我不知道他以前是怎么切开受害者的，但这"
-"不可能是这个世界的。它留下的伤口溃烂与疾病，甚至我发现他们几乎不可能治疗。如"
-"果你打算和这个恶魔战斗，要小心"
+"圣光在上，我知道这恶魔一些事情。当拉扎鲁斯带领少数幸存者从大教堂中逃出来时，"
+"很多人身上都有着恐怖的伤口。我清楚，他用什么玩意儿在受害者身上割出这样的伤口"
+"的，但绝对不是来自这个世界。它留下的伤口全是溃烂与恶疾，即便是我也毫无办法去"
+"治疗。如果你打算跟这个恶魔战斗，当心……"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
@@ -7432,8 +7419,7 @@ msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
 msgstr ""
-"当法恩汉说起屠夫杀人的事时，我立刻打消了这个念头。但既然是你提出来的，也许是"
-"真的"
+"当法恩汉说起屠夫杀人的事时，我根本不信他。然而你的再次提到，那也许是真的。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:129
@@ -7445,10 +7431,10 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
-"我看到法恩汉所说的屠夫在我朋友的尸体上划出一条小路。他挥舞着一把斧头般大的砍"
-"刀，砍断四肢，砍倒站在那里的勇士。我被一群尖叫着的小恶魔从纷争中分离出来，不"
-"知怎的我找到了通向外面的楼梯。我再也没见过那可怕的野兽，但他那血迹斑斑的面容"
-"至今萦绕在我心头"
+"我亲眼看到法恩汉所说的“屠夫”，我那些被他杀死朋友，尸体铺成了路。他手中挥舞的"
+"切肉刀大的就像一把斧子，胆敢面对他的勇士都被剁成了尸块。在打斗中我被另一群尖"
+"啸的恶魔拦住，还好我碰巧找到了逃离的楼梯。之后我再也没见过那可怕的怪物，但他"
+"那血迹斑斑的面容让我至今心有余悸。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (*sad face*)
 #: Source/textdat.cpp:131
@@ -7457,8 +7443,8 @@ msgid ""
 "couldn't save them. Trapped in a room with so many bodies... so many "
 "friends... NOOOOOOOOOO!"
 msgstr ""
-"大的大砍刀杀了我所有的朋友。阻止不了他，不得不逃跑，救不了他们。被困在一个有"
-"这么多尸体的房间里。。。这么多朋友。。。不，不"
+"大！大砍刀杀了我所有的伙伴。没法阻止他，必须逃跑，救不了他们。被关在一间全是"
+"尸体的房间……那么多的朋友……不，不！"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:133
@@ -7467,8 +7453,8 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
-"屠夫是个虐待狂，喜欢别人的折磨和痛苦。你见过他在酒鬼法恩汉的作品。他的毁灭将"
-"对确保这个村庄的安全大有帮助"
+"“屠夫”是个彻彻底底的虐待狂，以别人的痛苦和折磨为乐。你已经看到他的杰作，让法"
+"恩汉一蹶不振就此成了醉鬼。消灭他能有效的确保村子安全。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -7480,10 +7466,10 @@ msgid ""
 "I'll put it bluntly - kill him before he kills you and adds your corpse to "
 "his collection."
 msgstr ""
-"我知道的比你想的还要多。他的小朋友们抓住了我，设法在格里斯沃尔德把我从洞里拉"
-"出来之前抓住了我的腿。\n"
-" \n"
-"我直截了当地说——在他杀了你并把你的尸体加入他的收藏之前杀了他"
+"关于那个狰狞的恶魔，我知道的远比你想象的多。他的小伙伴抓到了我，在格里斯沃尔"
+"德赶来成功帮我逃出魔窟前，成功的卸掉了我的腿。\n"
+"\n"
+"我就直话直说了，在他杀了你，让你的尸体成为他收藏品前杀了他。"
 
 #. TRANSLATORS: Quest dialog spoken by Wounded Townsman (Dying)
 #: Source/textdat.cpp:137
@@ -7493,9 +7479,9 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
-"请听我说。拉扎鲁斯大主教，他带我们到这里来寻找失踪的王子。那混蛋把我们引入陷"
-"阱！现在每个人都死了。。。被一个叫屠夫的恶魔杀死。为我们报仇！找到这个屠夫，"
-"杀了他，让我们的灵魂最终安息"
+"请听我说。大主教拉扎鲁斯，是他带领我们来这里寻找失踪的王子。结果那混蛋把我们"
+"引入了陷阱！现在所有人都死了……被一个叫做“屠夫”的恶魔杀死。为我们报仇！找到这"
+"个“屠夫”，杀了他，让我们的灵魂最终得到安息。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -7596,10 +7582,10 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
-"你声称和拉赫达南谈过？他一生是个伟大的英雄。拉赫达南是一个光荣而公正的人，多"
+"你声称和拉齐达南谈过？他一生是个伟大的英雄。拉齐达南是一个光荣而公正的人，多"
 "年来一直忠实地为国王服务。当然，你已经知道了。\n"
 " \n"
-"在那些被国王诅咒的人中，拉赫达南最不可能不战而屈身于黑暗，所以我想你的故事可"
+"在那些被国王诅咒的人中，拉齐达南最不可能不战而屈身于黑暗，所以我想你的故事可"
 "能是真的。如果我在你的位置，我的朋友，我会想办法把他从折磨中释放出来"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
@@ -7618,16 +7604,16 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
-"你说是“金色药剂”。我从来没有调制过那种颜色的药水，所以我不能告诉你如果你试着"
-"喝它会有什么影响。作为你的治疗者，我强烈建议，如果你找到这样一种长生不老药，"
-"按照拉赫达南的要求去做，不要试图使用它"
+"你是说一种金色的药剂。我从未调制过那种颜色的药水，所以我没办法告诉你如果你喝"
+"了它会怎样。作为一个治疗者，我强烈建议你去寻找那种药剂，照着拉齐达南要求的"
+"做，但你绝对不要喝了它。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
 msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
-msgstr "我以前从没听说过拉赫达南。对不起，我想我帮不了你什么忙"
+msgstr "我从来没听说过拉齐达南，抱歉我帮不了你。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -7637,17 +7623,15 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
-"如果你遇到的是拉赫达南，那么我建议你帮助他。我和他打过几次交道，发现他生性诚"
-"实忠诚。落在国王李奥瑞克的追随者身上的诅咒尤其会落在他身上"
+"如果你真的遇到了拉齐达南，我希望你帮帮他。我和他打过几次交道，发现他生性诚实"
+"且富有荣誉感。李奥瑞克国王的追随者遭受的诅咒，在他身上会更加糟糕。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
 msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
-msgstr ""
-"拉赫达南死了。每个人都知道这一点，你不能骗我去想别的。你不能和死人说话。我知"
-"道"
+msgstr "拉齐达南已经死了。所有人都知道，你没法骗我。你不能和死人说话。我知道！"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -7657,9 +7641,9 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
-"你可能会遇到被困在迷宫里的人，比如拉赫达南。\n"
-" \n"
-"我从他身上感受到荣誉和巨大的内疚。帮帮他，你就帮帮崔斯特瑞姆"
+"你也许能遇到被困在迷宫里的人，拉齐达南只是其中之一。\n"
+"\n"
+"我从他身上感受到荣誉和巨大的内疚。帮助他就是帮助崔斯特姆。"
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -7669,9 +7653,9 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
-"等等，让我猜猜。凯恩被一条巨大的裂缝吞没了，裂缝在他下面张开。他在地狱之火中"
-"被烧死了，再也回答不了你的问题了。哦，不是这样吗？那我猜你要买点东西了，要不"
-"就上路了"
+"等等，让我猜猜。一条巨大裂缝出现在凯恩脚下将他吞噬，地狱烈焰把他烧得个精光，"
+"以至于没法回答你问题了。哦，不是那样么？那我就只能认为你是想买点东西或是该上"
+"路了。"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -7688,21 +7672,21 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
-"拜托，别杀我，听我说完。我曾经是李奥瑞克国王骑士团的队长，以正义和荣誉维护这"
-"片土地的法律。然后他的黑暗诅咒降临在我们身上，因为我们在他悲惨的死亡中扮演了"
-"角色。当我的骑士同伴们屈服于他们扭曲的命运时，我逃离了国王的墓室，寻找某种方"
-"法来摆脱诅咒。我失败了。。。\n"
-" \n"
-"我听说有一种“金色药剂”可以解除诅咒，让我的灵魂安息，但我一直找不到它。我的力"
-"量正在衰退，伴随着它，我最后的人性也在衰退。请帮助我找到长生不老药。我会报答"
-"你的努力-我以我的名誉起誓"
+"手下留情，别杀我，请听我把话说完。我曾经是李奥瑞克国王的骑士队长，以正义和荣"
+"誉捍卫着这王国的律法。后来他的黑暗诅咒降临在我们身上，只因我们在他的悲剧死亡"
+"中扮演的角色。当我的其他骑士同伴屈服于他们扭曲命运的时，我逃出了国王的墓室，"
+"寻找某种能解除我身上诅咒的方法。我……失败了……\n"
+"\n"
+"我听说有一种“金色药剂”可以解除诅咒，让我的灵魂安息，可惜我无法找到它。我的意"
+"志逐渐衰弱，我也会因此最终失去人性。请帮帮我，找到药剂。我以荣耀发誓一定会报"
+"答你的帮助。"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
 msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
-msgstr "你还没有找到“金色药剂”。我害怕我注定要永生。请继续努力"
+msgstr "如果你还没找到“金色药剂”，我就将承受永恒的诅咒了。求你，继续寻找吧……"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -7713,9 +7697,9 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
-"你救了我的灵魂脱离了诅咒，为此我欠你的债。如果有什么方法可以让我从坟墓那边回"
-"报你的话，我会找到的，但是现在，请你掌舵。在我即将踏上的旅途中，我对它毫无用"
-"处。愿它保护你不受黑暗势力的伤害。跟着光走，我的朋友"
+"你把我的灵魂从诅咒中拯救出来，为此我欠你一个人情。如果有办法让死后的我报答"
+"你，我一定会去做，但现在能做的——拿走我的头盔吧。我今后的旅途里，用不到它了。"
+"愿它能保护你免受地底黑暗力量的侵扰。圣光伴你同行，我的朋友……"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -8547,9 +8531,9 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
-"女巫艾德莉亚是特里斯特拉姆的一个异类。她是在大教堂被亵渎后不久到达的，而大多"
-"数人都在逃离。她在城镇边缘建了一间小屋，似乎是一夜之间建成的，她能接触到许多"
-"奇怪而神秘的文物和知识的大部头，连我都从未见过"
+"女巫艾德莉亚是崔斯特姆的一个异类。她是在大教堂被亵渎后不久到达的，而大多数人"
+"都在逃离。她在城镇边缘建了一间小屋，似乎是一夜之间建成的，她能接触到许多奇怪"
+"而神秘的文物和知识的大部头，连我都从未见过"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:321
@@ -8771,9 +8755,9 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
-"我真不明白奥格登为什么留在特里斯特拉姆。他有点紧张，但他是一个聪明而勤奋的"
-"人，无论他去哪里都会做得很好。我想可能是因为害怕周围农村发生的许多谋杀案，也"
-"可能是因为他妻子的愿望，他和他的家人一直呆在那里"
+"我真不明白奥格登为什么留在崔斯特姆。他有点紧张，但他是一个聪明而勤奋的人，无"
+"论他去哪里都会做得很好。我想可能是因为害怕周围农村发生的许多谋杀案，也可能是"
+"因为他妻子的愿望，他和他的家人一直呆在那里"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -8822,9 +8806,9 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
-"我们的铁匠是特里斯特拉姆人民的骄傲。他不仅是一个手艺大师，在他的行会中赢得了"
-"许多比赛，而且他还得到了我们国王李奥瑞克本人的赞扬——愿他的灵魂安息。格里斯沃"
-"尔德也是一位伟大的英雄；问问凯恩"
+"我们的铁匠是崔斯特姆人民的骄傲。他不仅是一个手艺大师，在他的行会中赢得了许多"
+"比赛，而且他还得到了我们国王李奥瑞克本人的赞扬——愿他的灵魂安息。格里斯沃尔德"
+"也是一位伟大的英雄；问问凯恩"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
@@ -8832,7 +8816,7 @@ msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
 msgstr ""
-"从我记事起，凯恩一直是崔斯特瑞姆的说书人。他知道的太多了，几乎什么都能告诉你"
+"从我记事起，凯恩一直是崔斯特姆的说书人。他知道的太多了，几乎什么都能告诉你"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -8985,8 +8969,8 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
-"把别人的需要放在自己的需要之上的好人。你不会发现任何人留在崔斯特瑞姆-或任何其"
-"他地方的问题-谁有一个坏东西说的治疗者"
+"把别人的需要放在自己的需要之上的好人。你不会发现任何人留在崔斯特姆-或任何其他"
+"地方的问题-谁有一个坏东西说的治疗者"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -9236,7 +9220,7 @@ msgid ""
 msgstr ""
 "手、心和心在完美的和谐中就能创造奇迹。治疗者佩金以一种连我都看不到的方式观察"
 "身体。他对长生不老药和药水的理解使他恢复病人和伤者的能力得到了放大。他和你在"
-"特里斯特拉姆一样是个伟大的盟友"
+"崔斯特姆一样是个伟大的盟友"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -9251,8 +9235,8 @@ msgid ""
 msgstr ""
 "未来有很多我们看不到的，但当它来临时，将是孩子们掌握着它。这个男孩的灵魂是黑"
 "暗的，但他对这个城镇和它的人民没有威胁。他与附近城镇的顽童和不为人知的行会的"
-"秘密交易使他能够接触到许多在特里斯特拉姆很难找到的设备。虽然他的方法可能会受"
-"到指责，但怀特可以为你对抗日益逼近的黑暗提供帮助"
+"秘密交易使他能够接触到许多在崔斯特姆很难找到的设备。虽然他的方法可能会受到指"
+"责，但怀特可以为你对抗日益逼近的黑暗提供帮助"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -9267,9 +9251,9 @@ msgid ""
 msgstr ""
 "土墙和茅草屋顶不是一个家。旅馆老板奥格登在这个镇上的作用比许多人所理解的要大"
 "得多。他为吉莉安和她的女族长提供庇护所，维持法恩汉留给他的生活，并为留在镇上"
-"的所有人提供一个锚，让他们回到特里斯特拉姆曾经的样子。他的小酒馆，以及在那里"
-"仍然可以找到的简单的乐趣，让我们看到了这里的人们所记得的生活。正是这段记忆，"
-"让他们对你的成功充满了希望"
+"的所有人提供一个锚，让他们回到崔斯特姆曾经的样子。他的小酒馆，以及在那里仍然"
+"可以找到的简单的乐趣，让我们看到了这里的人们所记得的生活。正是这段记忆，让他"
+"们对你的成功充满了希望"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
@@ -9284,8 +9268,8 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
-"并不是所有在特里斯特拉姆的人都有一个用途-或市场-你会发现在迷宫中的一切。连我"
-"都不相信。\n"
+"并不是所有在崔斯特姆的人都有一个用途-或市场-你会发现在迷宫中的一切。连我都不"
+"相信。\n"
 " \n"
 "有时候，只有你才能为某些事情找到目标"
 
@@ -9304,7 +9288,7 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
-"如果你没注意到，我不会从崔斯特瑞买任何东西。我是一个进口优质商品的进口商。如"
+"如果你没注意到，我不会从崔斯特姆买任何东西。我是一个进口优质商品的进口商。如"
 "果你想兜售垃圾，你得去看看格里斯沃尔德，佩金或那个女巫，艾德莉亚。我相信他们"
 "会抢购你能带给他们的任何东西"
 
@@ -9329,7 +9313,7 @@ msgid ""
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
 "如果我再大几岁，我会尽我所能给她带来财富，让我向你保证，我可以得到一些非常好"
-"的东西。吉莉安是一个美丽的女孩，她应该尽快离开特里斯特拉姆，只要它是安全的。"
+"的东西。吉莉安是一个美丽的女孩，她应该尽快离开崔斯特姆，只要它是安全的。"
 "嗯。。。也许我去的时候会带她一起去"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
@@ -9629,14 +9613,14 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
-"谢天谢地你回来了\n"
-"自从你住在这里，我的朋友，一切都变了。一切都很平静，直到黑暗骑士来摧毁我们的"
-"村庄。许多人在原地被砍倒，拿起武器的人被杀或被拖走成为奴隶，甚至更糟。城市边"
-"缘的教堂被亵渎，被用来举行黑暗的仪式。夜晚回响的尖叫声是不人道的，但我们的一"
-"些市民可能还活着。沿着我的小酒馆和铁匠铺之间的小路去寻找教堂，拯救你能拯救的"
-"人。\n"
-" \n"
-"如果我们再谈的话，也许我可以告诉你更多。祝你好运"
+"谢天谢地，你终于回来了！\n"
+"我的朋友，你居住过的这里发生了巨大的变化。一切都很平静，直到黑暗骑士到来，摧"
+"毁了我们的村子。很多没有抵抗的人直接被砍杀，而那些拿起武器反抗的人也被屠杀或"
+"是被抓走成为奴隶，甚至更糟。城镇边的教堂已经被亵渎，用作黑暗仪式。回荡在叫声"
+"夜晚不是人可以忍受的，也许一些镇民还活着。这条我的旅店和这铁匠铺之间的路通向"
+"教堂，去拯救那些人吧。\n"
+"\n"
+"如果你想要知道更多事，就再和我谈谈，我也许能告诉你。祝你好运。"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:525 Source/textdat.cpp:533
@@ -9677,8 +9661,8 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
-"什么？！这是愚蠢的。特里斯特拉姆这里没有宝藏。让我看看！！啊，看这些画不准"
-"确。他们根本不符合我们的城市。我会把心思放在大教堂下面，而不是我们的表土下面"
+"什么？！这是愚蠢的。崔斯特姆这里没有宝藏。让我看看！！啊，看这些画不准确。他"
+"们根本不符合我们的城市。我会把心思放在大教堂下面，而不是我们的表土下面"
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
