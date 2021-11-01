@@ -128,6 +128,15 @@ struct Object {
 	[[nodiscard]] bool IsDisabled() const;
 
 	/**
+	 * @brief Check if this object is barrel (or explosive barrel)
+	 * @return True if the object is one of the barrel types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsBarrel() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX);
+	}
+
+	/**
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */

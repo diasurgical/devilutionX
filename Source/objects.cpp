@@ -5263,25 +5263,18 @@ void BreakObject(int pnum, int oi)
 		objdam += player._pDamageMod + player._pIBonusDamMod + objdam * player._pIBonusDam / 100;
 	}
 
-	switch (Objects[oi]._otype) {
-	case OBJ_CRUX1:
-	case OBJ_CRUX2:
-	case OBJ_CRUX3:
-		BreakCrux(Objects[oi]);
-		break;
-	case OBJ_BARREL:
-	case OBJ_BARRELEX:
+	if (Objects[oi].IsBarrel()) {
 		BreakBarrel(pnum, oi, objdam, false, true);
-		break;
-	default:
-		break;
+	} else if (IsAnyOf(Objects[oi]._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3)) {
+		BreakCrux(Objects[oi]);
 	}
 }
 
 void SyncBreakObj(int pnum, int oi)
 {
-	if (Objects[oi]._otype >= OBJ_BARREL && Objects[oi]._otype <= OBJ_BARRELEX)
+	if (Objects[oi].IsBarrel()) {
 		BreakBarrel(pnum, oi, 0, true, false);
+	}
 }
 
 void SyncObjectAnim(Object &object)
