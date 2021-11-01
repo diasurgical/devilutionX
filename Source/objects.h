@@ -137,6 +137,15 @@ struct Object {
 	}
 
 	/**
+	 * @brief Check if this object is a crucifix
+	 * @return True if the object is one of the crux types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsCrux() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CRUX1, _object_id::OBJ_CRUX2, _object_id::OBJ_CRUX3);
+	}
+
+	/**
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */

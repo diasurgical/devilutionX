@@ -4102,7 +4102,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		const auto &testObject = Objects[ActiveObjects[j]];
-		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+		if (!testObject.IsCrux())
 			continue; // Not a Crux object, keep searching
 		if (cruxType != testObject._oVar8 || testObject._oBreak == -1)
 			continue; // Found either a different crux or a previously broken crux, keep searching
@@ -5265,7 +5265,7 @@ void BreakObject(int pnum, int oi)
 
 	if (Objects[oi].IsBarrel()) {
 		BreakBarrel(pnum, oi, objdam, false, true);
-	} else if (IsAnyOf(Objects[oi]._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3)) {
+	} else if (Objects[oi].IsCrux()) {
 		BreakCrux(Objects[oi]);
 	}
 }
