@@ -10454,10 +10454,3 @@ msgstr "디아블로에게 향한다"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "지하 {:d} 층으로 돌아간다"
-
-# spawn mode 가 뭐임?
-#~ msgid "Force spawn mode even if diabdat.mpq is found"
-#~ msgstr "diabdat.mpq가 존재해도 강제로 스폰 모드"
-
-#~ msgid "Force diablo mode even if hellfire.mpq is found"
-#~ msgstr "hellfire.mpq가 존재해도 강제로 디아블로 모드"
