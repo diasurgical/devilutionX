@@ -353,27 +353,7 @@ endif()
 
 add_subdirectory(3rdParty/simpleini)
 
-add_library(StormLib STATIC
-  3rdParty/StormLib/src/huffman/huff.cpp
-  3rdParty/StormLib/src/adpcm/adpcm.cpp
-  3rdParty/StormLib/src/FileStream.cpp
-  3rdParty/StormLib/src/SBaseCommon.cpp
-  3rdParty/StormLib/src/SBaseFileTable.cpp
-  3rdParty/StormLib/src/SBaseSubTypes.cpp
-  3rdParty/StormLib/src/SCompression.cpp
-  3rdParty/StormLib/src/SFileExtractFile.cpp
-  3rdParty/StormLib/src/SFileFindFile.cpp
-  3rdParty/StormLib/src/SFileGetFileInfo.cpp
-  3rdParty/StormLib/src/SFileOpenArchive.cpp
-  3rdParty/StormLib/src/SFileOpenFileEx.cpp
-  3rdParty/StormLib/src/SFileReadFile.cpp)
-
 add_subdirectory(3rdParty/libmpq)
-
-if(WIN32)
-# Enable Unicode for StormLib wchar_t* file APIs
-target_compile_definitions(StormLib PRIVATE -DUNICODE -D_UNICODE)
-endif()
 
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
@@ -879,7 +859,6 @@ endif()
 
 target_link_libraries(libdevilutionx PUBLIC
   PKWare
-  StormLib
   libmpq
   smacker
   simpleini)
