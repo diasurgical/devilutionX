@@ -5016,15 +5016,9 @@ void TryDisarm(int pnum, int i)
 		return;
 	}
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		bool checkflag = false;
-		int oi = ActiveObjects[j];
-		int oti = Objects[oi]._otype;
-		if (oti == OBJ_TRAPL)
-			checkflag = true;
-		if (oti == OBJ_TRAPR)
-			checkflag = true;
-		if (checkflag && dObject[Objects[oi]._oVar1][Objects[oi]._oVar2] - 1 == i) {
-			Objects[oi]._oVar4 = 1;
+		Object &trap = Objects[ActiveObjects[j]];
+		if (trap.IsTrap() && dObject[trap._oVar1][trap._oVar2] - 1 == i) {
+			trap._oVar4 = 1;
 			Objects[i]._oTrapFlag = false;
 		}
 	}

@@ -2280,9 +2280,9 @@ void DeltaLoadLevel()
 		}
 
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			int ot = Objects[ActiveObjects[i]]._otype;
-			if (ot == OBJ_TRAPL || ot == OBJ_TRAPR)
+			if (Objects[ActiveObjects[i]].IsTrap()) {
 				OperateTrap(Objects[ActiveObjects[i]]);
+			}
 		}
 	}
 	deltaload = false;
