@@ -10277,9 +10277,3 @@ msgstr "下到迪亚波罗"
 #: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
 msgid "Back to Level {:d}"
 msgstr "返回到 {:d} 层"
-
-#~ msgid "Force spawn mode even if diabdat.mpq is found"
-#~ msgstr "即使找到diabdat.mpq，也使用强制生成模式"
-
-#~ msgid "Force diablo mode even if hellfire.mpq is found"
-#~ msgstr "即使hellfire.mpq存在，也强制使用暗黑破坏神原版模式"
