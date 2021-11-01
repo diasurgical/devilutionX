@@ -2297,18 +2297,19 @@ void OperateBookLever(int pnum, int i)
 	}
 }
 
-void OperateSChambBk(int i)
+void OperateChamberOfBoneBook(Object &questBook)
 {
-	if (Objects[i]._oSelFlag == 0 || qtextflag) {
+	if (questBook._oSelFlag == 0 || qtextflag) {
 		return;
 	}
 
-	if (Objects[i]._oAnimFrame != Objects[i]._oVar6) {
-		ObjChangeMapResync(Objects[i]._oVar1, Objects[i]._oVar2, Objects[i]._oVar3, Objects[i]._oVar4);
-		for (int j = 0; j < ActiveObjectCount; j++)
+	if (questBook._oAnimFrame != questBook._oVar6) {
+		ObjChangeMapResync(questBook._oVar1, questBook._oVar2, questBook._oVar3, questBook._oVar4);
+		for (int j = 0; j < ActiveObjectCount; j++) {
 			SyncObjectAnim(Objects[ActiveObjects[j]]);
+		}
 	}
-	Objects[i]._oAnimFrame = Objects[i]._oVar6;
+	questBook._oAnimFrame = questBook._oVar6;
 	if (Quests[Q_SCHAMB]._qactive == QUEST_INIT) {
 		Quests[Q_SCHAMB]._qactive = QUEST_ACTIVE;
 		Quests[Q_SCHAMB]._qlog = true;
@@ -5087,7 +5088,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateBook(pnum, i);
 		break;
 	case OBJ_BOOK2R:
-		OperateSChambBk(i);
+		OperateChamberOfBoneBook(Objects[i]);
 		break;
 	case OBJ_CHEST1:
 	case OBJ_CHEST2:
