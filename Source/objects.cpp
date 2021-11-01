@@ -2399,7 +2399,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 		NetSendCmdParam2(false, CMD_PLROPOBJ, pnum, i);
 }
 
-void OperateMushPatch(int pnum, int i)
+void OperateMushroomPatch(int pnum, Object &questContainer)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2412,16 +2412,18 @@ void OperateMushPatch(int pnum, int i)
 		return;
 	}
 
-	if (Objects[i]._oSelFlag != 0) {
-		if (!deltaload)
-			PlaySfxLoc(IS_CHEST, Objects[i].position);
-		Objects[i]._oSelFlag = 0;
-		Objects[i]._oAnimFrame++;
-		if (!deltaload) {
-			Point pos = GetSuperItemLoc(Objects[i].position);
-			SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
-			Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
-		}
+	if (questContainer._oSelFlag == 0) {
+		return;
+	}
+
+	questContainer._oSelFlag = 0;
+	questContainer._oAnimFrame++;
+
+	if (!deltaload) {
+		PlaySfxLoc(IS_CHEST, questContainer.position);
+		Point pos = GetSuperItemLoc(questContainer.position);
+		SpawnQuestItem(IDI_MUSHROOM, pos, 0, 0);
+		Quests[Q_MUSHROOM]._qvar1 = QS_MUSHSPAWNED;
 	}
 }
 
@@ -5151,7 +5153,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateWeaponRack(pnum, i, sendmsg);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushPatch(pnum, i);
+		OperateMushroomPatch(pnum, Objects[i]);
 		break;
 	case OBJ_LAZSTAND:
 		OperateLazStand(pnum, i);
@@ -5242,7 +5244,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateWeaponRack(pnum, i, false);
 		break;
 	case OBJ_MUSHPATCH:
-		OperateMushPatch(pnum, i);
+		OperateMushroomPatch(pnum, Objects[i]);
 		break;
 	case OBJ_SLAINHERO:
 		OperateSlainHero(pnum, i);
