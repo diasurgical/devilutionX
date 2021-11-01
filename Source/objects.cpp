@@ -2480,30 +2480,32 @@ void OperateSlainHero(int pnum, int i)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateTrapLvr(int i)
+void OperateTrapLever(Object &flameLever)
 {
-	if (!deltaload)
-		PlaySfxLoc(IS_LEVER, Objects[i].position);
+	if (!deltaload) {
+		PlaySfxLoc(IS_LEVER, flameLever.position);
+	}
 
-	if (Objects[i]._oAnimFrame == 1) {
-		Objects[i]._oAnimFrame = 2;
+	if (flameLever._oAnimFrame == 1) {
+		flameLever._oAnimFrame = 2;
 		for (int j = 0; j < ActiveObjectCount; j++) {
-			int oi = ActiveObjects[j];
-			if (Objects[oi]._otype == Objects[i]._oVar2 && Objects[oi]._oVar1 == Objects[i]._oVar1) {
-				Objects[oi]._oVar2 = 1;
-				Objects[oi]._oAnimFlag = 0;
+			Object &target = Objects[ActiveObjects[j]];
+			if (target._otype == flameLever._oVar2 && target._oVar1 == flameLever._oVar1) {
+				target._oVar2 = 1;
+				target._oAnimFlag = 0;
 			}
 		}
 		return;
 	}
 
-	Objects[i]._oAnimFrame--;
+	flameLever._oAnimFrame--;
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		int oi = ActiveObjects[j];
-		if (Objects[oi]._otype == Objects[i]._oVar2 && Objects[oi]._oVar1 == Objects[i]._oVar1) {
-			Objects[oi]._oVar2 = 0;
-			if (Objects[oi]._oVar4 != 0)
-				Objects[oi]._oAnimFlag = 1;
+		Object &target = Objects[ActiveObjects[j]];
+		if (target._otype == flameLever._oVar2 && target._oVar1 == flameLever._oVar1) {
+			target._oVar2 = 0;
+			if (target._oVar4 != 0) {
+				target._oAnimFlag = 1;
+			}
 		}
 	}
 }
@@ -5099,7 +5101,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateSarc(pnum, i, sendmsg);
 		break;
 	case OBJ_FLAMELVR:
-		OperateTrapLvr(i);
+		OperateTrapLever(Objects[i]);
 		break;
 	case OBJ_BLINDBOOK:
 	case OBJ_BLOODBOOK:
