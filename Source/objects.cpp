@@ -2725,14 +2725,14 @@ bool OperateShrineWeird(int pnum)
 	if (!player.InvBody[INVLOC_HAND_RIGHT].isEmpty() && player.InvBody[INVLOC_HAND_RIGHT]._itype != ItemType::Shield)
 		player.InvBody[INVLOC_HAND_RIGHT]._iMaxDam++;
 
-	for (int j = 0; j < player._pNumInv; j++) {
-		switch (player.InvList[j]._itype) {
+	for (Item &item : InventoryPlayerItemsRange { player }) {
+		switch (item._itype) {
 		case ItemType::Sword:
 		case ItemType::Axe:
 		case ItemType::Bow:
 		case ItemType::Mace:
 		case ItemType::Staff:
-			player.InvList[j]._iMaxDam++;
+			item._iMaxDam++;
 			break;
 		default:
 			break;
@@ -2776,17 +2776,7 @@ bool OperateShrineStone(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
-
-	for (auto &item : player.InvBody) {
-		if (item._itype == ItemType::Staff)
-			item._iCharges = item._iMaxCharges;
-	}
-	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._itype == ItemType::Staff)
-			player.InvList[j]._iCharges = player.InvList[j]._iMaxCharges;
-	}
-	for (auto &item : player.SpdList) {
+	for (Item &item : PlayerItemsRange { Players[pnum] }) {
 		if (item._itype == ItemType::Staff)
 			item._iCharges = item._iMaxCharges; // belt items don't have charges?
 	}
@@ -2803,14 +2793,9 @@ bool OperateShrineReligious(int pnum)
 	if (pnum != MyPlayerId)
 		return true;
 
-	auto &player = Players[pnum];
-
-	for (auto &item : player.InvBody)
-		item._iDurability = item._iMaxDur;
-	for (int j = 0; j < player._pNumInv; j++)
-		player.InvList[j]._iDurability = player.InvList[j]._iMaxDur;
-	for (auto &item : player.SpdList)
+	for (Item &item : PlayerItemsRange { Players[pnum] }) {
 		item._iDurability = item._iMaxDur; // belt items don't have durability?
+	}
 
 	InitDiabloMsg(EMSG_SHRINE_RELIGIOUS);
 
@@ -2957,25 +2942,7 @@ bool OperateShrineEldritch(int pnum)
 
 	auto &player = Players[pnum];
 
-	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._itype == ItemType::Misc) {
-			if (player.InvList[j]._iMiscId == IMISC_HEAL
-			    || player.InvList[j]._iMiscId == IMISC_MANA) {
-				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_REJUV));
-				GetPlrHandSeed(&player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				player.InvList[j] = player.HoldItem;
-			}
-			if (player.InvList[j]._iMiscId == IMISC_FULLHEAL
-			    || player.InvList[j]._iMiscId == IMISC_FULLMANA) {
-				SetPlrHandItem(player.HoldItem, ItemMiscIdIdx(IMISC_FULLREJUV));
-				GetPlrHandSeed(&player.HoldItem);
-				player.HoldItem._iStatFlag = true;
-				player.InvList[j] = player.HoldItem;
-			}
-		}
-	}
-	for (auto &item : player.SpdList) {
+	for (Item &item : InventoryAndBeltPlayerItemsRange { player }) {
 		if (item._itype == ItemType::Misc) {
 			if (item._iMiscId == IMISC_HEAL
 			    || item._iMiscId == IMISC_MANA) {
@@ -3264,19 +3231,10 @@ bool OperateShrineGlimmering(int pnum)
 	if (pnum != MyPlayerId)
 		return false;
 
-	auto &player = Players[pnum];
-
-	for (auto &item : player.InvBody) {
-		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified)
-			item._iIdentified = true;
-	}
-	for (int j = 0; j < player._pNumInv; j++) {
-		if (player.InvList[j]._iMagical != ITEM_QUALITY_NORMAL && !player.InvList[j]._iIdentified)
-			player.InvList[j]._iIdentified = true;
-	}
-	for (auto &item : player.SpdList) {
-		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified)
+	for (Item &item : PlayerItemsRange { Players[pnum] }) {
+		if (item._iMagical != ITEM_QUALITY_NORMAL && !item._iIdentified) {
 			item._iIdentified = true; // belt items can't be magical?
+		}
 	}
 
 	InitDiabloMsg(EMSG_SHRINE_GLIMMERING);
@@ -3560,7 +3518,7 @@ bool OperateShrineMurphys(int pnum)
 void OperateShrine(int pnum, int i, _sfx_id sType)
 {
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -3997,6 +3955,17 @@ void OperateWeaponRack(int pnum, int i, bool sendmsg)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
+/**
+ * @brief Checks whether the player is activating Na-Krul's spell tomes in the correct order
+ *
+ * Used as part of the final Diablo: Hellfire quest (from the hints provided to the player in the
+ * reconstructed note). This function both updates the state of the variable that tracks progress
+ * and also determines whether the spawn conditions are met (i.e. all tomes have been triggered
+ * in the correct order).
+ *
+ * @param s the id of the spell tome
+ * @return true if the player has activated all three tomes in the correct order, false otherwise
+ */
 bool OperateNakrulBook(int s)
 {
 	switch (s) {
@@ -4355,6 +4324,20 @@ void SyncL3Doors(Object &door)
 }
 
 } // namespace
+
+bool Object::IsDisabled() const
+{
+	if (!sgOptions.Gameplay.bDisableCripplingShrines) {
+		return false;
+	}
+	if (IsAnyOf(_otype, _object_id::OBJ_GOATSHRINE, _object_id::OBJ_CAULDRON)) {
+		return true;
+	}
+	if (IsNoneOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER)) {
+		return false;
+	}
+	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
+}
 
 void InitObjectGFX()
 {
@@ -5053,21 +5036,6 @@ int ItemMiscIdIdx(item_misc_id imiscid)
 	return i;
 }
 
-bool objectIsDisabled(int i)
-{
-	if (!sgOptions.Gameplay.bDisableCripplingShrines)
-		return false;
-	if ((Objects[i]._otype == OBJ_GOATSHRINE) || (Objects[i]._otype == OBJ_CAULDRON))
-		return true;
-	if ((Objects[i]._otype != OBJ_SHRINEL) && (Objects[i]._otype != OBJ_SHRINER))
-		return false;
-	if ((Objects[i]._oVar1 == ShrineFascinating)
-	    || (Objects[i]._oVar1 == ShrineOrnate)
-	    || (Objects[i]._oVar1 == ShrineSacred))
-		return true;
-	return false;
-}
-
 void OperateObject(int pnum, int i, bool teleFlag)
 {
 	bool sendmsg = pnum == MyPlayerId;
@@ -5364,9 +5332,9 @@ void SyncObjectAnim(Object &object)
 	}
 }
 
-void GetObjectStr(int i)
+void GetObjectStr(const Object &object)
 {
-	switch (Objects[i]._otype) {
+	switch (object._otype) {
 	case OBJ_CRUX1:
 	case OBJ_CRUX2:
 	case OBJ_CRUX3:
@@ -5382,11 +5350,11 @@ void GetObjectStr(int i)
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (Objects[i]._oVar4 == 1)
+		if (object._oVar4 == 1)
 			strcpy(infostr, _("Open Door"));
-		if (Objects[i]._oVar4 == 0)
+		if (object._oVar4 == 0)
 			strcpy(infostr, _("Closed Door"));
-		if (Objects[i]._oVar4 == 2)
+		if (object._oVar4 == 2)
 			strcpy(infostr, _("Blocked Door"));
 		break;
 	case OBJ_BOOK2L:
@@ -5438,7 +5406,7 @@ void GetObjectStr(int i)
 		break;
 	case OBJ_SHRINEL:
 	case OBJ_SHRINER:
-		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[Objects[i]._oVar1])).c_str());
+		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will be a name from the Shrine block above */ "{:s} Shrine"), _(ShrineNames[object._oVar1])).c_str());
 		strcpy(infostr, tempstr);
 		break;
 	case OBJ_SKELBOOK:
@@ -5488,7 +5456,7 @@ void GetObjectStr(int i)
 		strcpy(infostr, _("Pedestal of Blood"));
 		break;
 	case OBJ_STORYBOOK:
-		strcpy(infostr, _(StoryBookName[Objects[i]._oVar3]));
+		strcpy(infostr, _(StoryBookName[object._oVar3]));
 		break;
 	case OBJ_WEAPONRACK:
 		strcpy(infostr, _("Weapon Rack"));
@@ -5506,13 +5474,13 @@ void GetObjectStr(int i)
 		break;
 	}
 	if (Players[MyPlayerId]._pClass == HeroClass::Rogue) {
-		if (Objects[i]._oTrapFlag) {
+		if (object._oTrapFlag) {
 			strcpy(tempstr, fmt::format(_(/* TRANSLATORS: {:s} will either be a chest or a door */ "Trapped {:s}"), infostr).c_str());
 			strcpy(infostr, tempstr);
 			InfoColor = UiFlags::ColorRed;
 		}
 	}
-	if (objectIsDisabled(i)) {
+	if (object.IsDisabled()) {
 		strcpy(tempstr, fmt::format(_(/* TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver */ "{:s} (disabled)"), infostr).c_str());
 		strcpy(infostr, tempstr);
 		InfoColor = UiFlags::ColorRed;
@@ -5523,12 +5491,7 @@ void OperateNakrulLever()
 {
 	if (currlevel == 24) {
 		PlaySfxLoc(IS_CROPEN, { UberRow, UberCol });
-		//the part below is the same as SyncNakrulRoom
-		dPiece[UberRow][UberCol] = 298;
-		dPiece[UberRow][UberCol - 1] = 301;
-		dPiece[UberRow][UberCol - 2] = 300;
-		dPiece[UberRow][UberCol + 1] = 299;
-		SetDungeonMicros();
+		SyncNakrulRoom();
 	}
 }
 

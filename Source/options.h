@@ -171,7 +171,7 @@ struct ChatOptions {
 
 struct LanguageOptions {
 	/** @brief Language code (IETF) for text. */
-	char szCode[5];
+	char szCode[6];
 };
 
 struct Options {

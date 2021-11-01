@@ -171,6 +171,8 @@ void FindItemOrObject()
 				continue;
 			if (xx != 0 && yy != 0 && GetDistance({ mx + xx, my + yy }, 1) == 0)
 				continue;
+			if (Objects[o].IsDisabled())
+				continue;
 			rotations = newRotations;
 			pcursobj = o;
 			cursPosition = Point { mx, my } + Displacement { xx, yy };
@@ -486,6 +488,12 @@ void Interact()
 
 	if (leveltype != DTYPE_TOWN && pcursplr != -1 && !gbFriendlyMode) {
 		NetSendCmdParam1(true, Players[MyPlayerId].UsesRangedWeapon() ? CMD_RATTACKPID : CMD_ATTACKPID, pcursplr);
+		return;
+	}
+
+	if (pcursobj != -1) {
+		NetSendCmdLocParam1(true, CMD_OPOBJXY, cursPosition, pcursobj);
+		return;
 	}
 }
 
@@ -1458,15 +1466,8 @@ void PerformPrimaryAction()
 
 	if (chrflag && !chrbtnactive && Players[MyPlayerId]._pStatPts > 0) {
 		CheckChrBtns();
-		for (int i = 0; i < 4; i++) {
-			Rectangle button = ChrBtnsRect[i];
-			button.position = GetPanelPosition(UiPanels::Character, button.position);
-			if (button.Contains(MousePosition)) {
-				chrbtn[i] = true;
-				chrbtnactive = true;
-				ReleaseChrBtns(false);
-			}
-		}
+		if (chrbtnactive)
+			ReleaseChrBtns(false);
 		return;
 	}
 

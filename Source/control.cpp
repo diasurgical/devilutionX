@@ -1034,7 +1034,7 @@ void InitControlPan()
 	}
 	pQLogCel = LoadCel("Data\\Quest.CEL", SPANEL_WIDTH);
 	pGBoxBuff = LoadCel("CtrlPan\\Golddrop.cel", 261);
-	dropGoldFlag = false;
+	CloseGoldDrop();
 	dropGoldValue = 0;
 	initialDropGoldValue = 0;
 	initialDropGoldIndex = 0;
@@ -1220,7 +1220,7 @@ void CheckPanelInfo()
 		AddPanelString(tempstr);
 		auto &myPlayer = Players[MyPlayerId];
 		const spell_id spellId = myPlayer._pRSpell;
-		if (spellId != SPL_INVALID) {
+		if (spellId != SPL_INVALID && spellId != SPL_NULL) {
 			switch (myPlayer._pRSplType) {
 			case RSPLTYPE_SKILL:
 				strcpy(tempstr, fmt::format(_("{:s} Skill"), pgettext("spell", spelldata[spellId].sSkillText)).c_str());
@@ -1309,14 +1309,14 @@ void CheckBtnUp()
 			sbookflag = false;
 			invflag = !invflag;
 			if (dropGoldFlag) {
-				dropGoldFlag = false;
+				CloseGoldDrop();
 				dropGoldValue = 0;
 			}
 			break;
 		case PanelButtonSpellbook:
 			invflag = false;
 			if (dropGoldFlag) {
-				dropGoldFlag = false;
+				CloseGoldDrop();
 				dropGoldValue = 0;
 			}
 			sbookflag = !sbookflag;
@@ -1386,10 +1386,10 @@ void DrawInfoBox(const Surface &out)
 		if (pcursitem != -1)
 			GetItemStr(Items[pcursitem]);
 		else if (pcursobj != -1)
-			GetObjectStr(pcursobj);
+			GetObjectStr(Objects[pcursobj]);
 		if (pcursmonst != -1) {
-			const auto &monster = Monsters[pcursmonst];
 			if (leveltype != DTYPE_TOWN) {
+				const auto &monster = Monsters[pcursmonst];
 				InfoColor = UiFlags::ColorWhite;
 				strcpy(infostr, monster.mName);
 				ClearPanel();
@@ -1679,33 +1679,20 @@ void control_drop_gold(char vkey)
 	auto &myPlayer = Players[MyPlayerId];
 
 	if (myPlayer._pHitPoints >> 6 <= 0) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 		return;
 	}
 
-	char input[6];
-	memset(input, 0, sizeof(input));
-	snprintf(input, sizeof(input), "%i", dropGoldValue);
 	if (vkey == DVL_VK_RETURN) {
 		if (dropGoldValue > 0)
 			RemoveGold(myPlayer, initialDropGoldIndex);
-		dropGoldFlag = false;
+		CloseGoldDrop();
 	} else if (vkey == DVL_VK_ESCAPE) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	} else if (vkey == DVL_VK_BACK) {
-		input[strlen(input) - 1] = '\0';
-		dropGoldValue = atoi(input);
-	} else if (vkey - '0' >= 0 && vkey - '0' <= 9) {
-		if (dropGoldValue != 0 || atoi(input) <= initialDropGoldValue) {
-			input[strlen(input)] = vkey;
-			if (atoi(input) > initialDropGoldValue)
-				return;
-		} else {
-			input[0] = vkey;
-		}
-		dropGoldValue = atoi(input);
+		dropGoldValue = dropGoldValue / 10;
 	}
 }
 
@@ -1713,6 +1700,8 @@ void DrawTalkPan(const Surface &out)
 {
 	if (!talkflag)
 		return;
+
+	force_redraw = 255;
 
 	DrawPanelBox(out, { 175, sgbPlrTalkTbl + 20, 294, 5 }, { PANEL_X + 175, PANEL_Y + 4 });
 	int off = 0;
@@ -1891,6 +1880,28 @@ void DiabloHotkeyMsg(uint32_t dwMsg)
 #endif
 
 	NetSendCmdString(0xFFFFFF, sgOptions.Chat.szHotKeyMsgs[dwMsg]);
+}
+
+void CloseGoldDrop()
+{
+	if (!dropGoldFlag)
+		return;
+	dropGoldFlag = false;
+	SDL_StopTextInput();
+}
+
+void GoldDropNewText(string_view text)
+{
+	for (char vkey : text) {
+		int digit = vkey - '0';
+		if (digit >= 0 && digit <= 9) {
+			int newGoldValue = dropGoldValue * 10;
+			newGoldValue += digit;
+			if (newGoldValue <= initialDropGoldValue) {
+				dropGoldValue = newGoldValue;
+			}
+		}
+	}
 }
 
 } // namespace devilution

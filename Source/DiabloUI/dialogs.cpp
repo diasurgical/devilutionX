@@ -181,7 +181,7 @@ void Init(const char *caption, const char *text, bool error, bool renderBehind)
 
 	const int textWidth = dialogArt.w() - 40;
 
-	wrappedText = WordWrapString(text, textWidth, FontSizeDialog, 0);
+	wrappedText = WordWrapString(text, textWidth, FontSizeDialog);
 
 	if (caption == nullptr) {
 		SDL_Rect rect1 = MakeSdlRect(PANEL_LEFT + 180, UI_OFFSET_Y + 168, dialogArt.w(), dialogArt.h());

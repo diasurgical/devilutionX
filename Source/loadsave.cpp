@@ -625,7 +625,7 @@ void LoadMonster(LoadHelper *file, Monster &monster)
 	monster.leaderRelation = static_cast<LeaderRelation>(file->NextLE<uint8_t>());
 	monster.packsize = file->NextLE<uint8_t>();
 	monster.mlid = file->NextLE<int8_t>();
-	if (monster.mlid == Players[MyPlayerId]._plid)
+	if (monster.mlid == 0)
 		monster.mlid = NO_LIGHT; // Correct incorect values in old saves
 
 	if ((monster._mFlags & MFLAG_BERSERK) != 0) {
@@ -1305,7 +1305,11 @@ void SaveMonster(SaveHelper *file, Monster &monster)
 	file->WriteLE<uint8_t>(monster.leader);
 	file->WriteLE<uint8_t>(static_cast<std::uint8_t>(monster.leaderRelation));
 	file->WriteLE<uint8_t>(monster.packsize);
-	file->WriteLE<int8_t>(monster.mlid);
+	// vanilla compatibility
+	if (monster.mlid == NO_LIGHT)
+		file->WriteLE<int8_t>(0);
+	else
+		file->WriteLE<int8_t>(monster.mlid);
 
 	// Omit pointer mName;
 	// Omit pointer MType;
@@ -1673,7 +1677,6 @@ void RemoveEmptyInventory(Player &player)
 void LoadGame(bool firstflag)
 {
 	FreeGameMem();
-	pfile_remove_temp_files();
 
 	LoadHelper file("game");
 	if (!file.IsValid())
@@ -1692,6 +1695,8 @@ void LoadGame(bool firstflag)
 		giNumberQuests = 16;
 		giNumberOfSmithPremiumItems = 6;
 	}
+
+	pfile_remove_temp_files();
 
 	setlevel = file.NextBool8();
 	setlvlnum = static_cast<_setlevels>(file.NextBE<uint32_t>());

@@ -4,6 +4,8 @@
  - Put `devilutionx.nro` and `devilutionx.mpq` in into `/switch/devilutionx`
  - Copy diabdat.mpq from your CD (or GoG install folder) to `/switch/devilutionx`.
  - To run the Diablo: Hellfire expansion you will need to also copy hellfire.mpq, hfmonk.mpq, hfmusic.mpq, hfvoice.mpq.
+ - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq and add it to the game folder.
+ - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq.
  - Launch `devilutionx.nro`. (Do not use album to launch; see the note below.)
  - *Note:* Hold R on any installed game and launch it. Do not use album to launch. If you use album, the homebrew will only have a small amount memory available, and the touch keyboard won't work. This is true for all homebrew, not just DevilutionX.
 
@@ -25,13 +27,6 @@
 - Select + Right analog click: right mouse click (alt: Select + R1)
 - Select + L2: quest log (alt: Start + Y)
 - Select + R2: spell book (alt: Start + B)
-
-# Touch Controls
- - Single finger drag: move the mouse pointer (pointer jumps to finger)
- - Single short tap: left mouse click
- - Single short tap while holding a second finger down: right mouse click
- - Dual finger drag: drag'n'drop (left mouse button is held down)
- - Three finger drag: drag'n'drop (right mouse button is held down)
 
 # Credits
  - See list of contributors https://github.com/diasurgical/devilutionX/graphs/contributors

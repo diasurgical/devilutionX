@@ -771,66 +771,49 @@ msgid "No"
 msgstr "Не"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
+msgid ""
+"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
+"our community where we talk about things related to Diablo, and the Hellfire "
+"expansion."
 msgstr ""
-"Страница на играта в GOG.com се намира на адрес, https://www.gog.com/forum/"
-"diablo"
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "Използвайте връзката, за да посетите интернет форума за Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr "и допълнението Hellfire."
-
-#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
+"this address: https://github.com/diasurgical/devilutionX To help us better "
+"serve you, please be sure to include the version number, operating system, "
+"and the nature of the problem."
 msgstr ""
 "DevilutionX е поддържан от Diasurgical, сведения за проблеми и бъгове могат "
-"да"
+"да бъдат докладвани на: https://github.com/diasurgical/devilutionX За да "
+"предложим по-добро качество на продукта, моля, посочете номер на версията, "
+"операционна система и естеството на проблема."
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr "бъдат докладвани на: https://github.com/diasurgical/devilutionX"
-
-#: Source/DiabloUI/support_lines.cpp:14
-msgid ""
-"To help us better serve you, please be sure to include the version number,"
-msgstr ""
-"За да предложим по-добро качество на продукта, моля, посочете номер на "
-"версията,"
-
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr "операционна система и естеството на проблема."
-
-#: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
 msgstr "Отказ от отговорност:"
 
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr "  DevilutionX не е обвързан и/или поддържан от Blizzard Entertainment,"
-
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr "  нито от GOG.com. Blizzard Entertainment или GOG.com не са изпитали"
-
-#: Source/DiabloUI/support_lines.cpp:21
+#: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr "  или сертифицирали качеството и съвместимостта на DevilutionX. Всички"
+"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
+"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
+"the quality or compatibility of DevilutionX. All inquiries regarding "
+"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
+"or GOG.com."
+msgstr ""
+"\tDevilutionX не е обвързан и/или поддържан от Blizzard Entertainment, нито "
+"от GOG.com. Blizzard Entertainment или GOG.com не са изпитали или "
+"сертифицирали качеството и съвместимостта на DevilutionX. Всички Въпроси за "
+"DevilutionX трябва да бъдат насочени към Diasurgical, и не към Blizzard "
+"Entertainment или GOG.com."
 
-#: Source/DiabloUI/support_lines.cpp:22
+#: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr "  Въпроси за DevilutionX трябва да бъдат насочени към Diasurgical,"
-
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
-msgstr "  и не към Blizzard Entertainment или GOG.com."
+"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
+"under the SIL Open Font License, as well as Twitmoji which is licensed under "
+"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
+"license. See the ReadMe for further details."
+msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -3639,10 +3622,22 @@ msgstr "Масло на Втвърдяването"
 msgid "Oil of Imperviousness"
 msgstr "Масло на Непробиваемостта"
 
-#. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1189 Source/items.cpp:1257 Source/items.cpp:1276
-#: Source/items.cpp:1318
-msgid "{:s} of {:s}"
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
+#: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
+#: Source/items.cpp:1269
+msgid "{0} {1}"
+msgstr ""
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall
+#: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
+#: Source/items.cpp:1315
+msgid "{0} of {1}"
 msgstr "{:s} на {:s}"
 
 #: Source/items.cpp:1895 Source/items.cpp:1907
@@ -10696,17 +10691,3 @@ msgstr "Надолу към Диабло"
 msgid "Back to Level {:d}"
 msgstr "Нагоре към Ниво {:d}"
 
-#~ msgid "Specify the location of the .ttf font"
-#~ msgstr "Посочете местонахождението на .ttf шрифта"
-
-#~ msgid "Specify the name of a custom .ttf font"
-#~ msgstr "Въведете името на потребителския .ttf шрифт"
-
-#~ msgid "Credits"
-#~ msgstr "Създатели"
-
-#~ msgid "Quest Log"
-#~ msgstr "Списък със задачи"
-
-#~ msgid "Close Quest Log"
-#~ msgstr "Затвори списък със задачи"

@@ -63,6 +63,7 @@ bool protocol_zt::network_online()
 		auto ret = lwip_bind(fd_udp, (struct sockaddr *)&in6, sizeof(in6));
 		if (ret < 0) {
 			Log("lwip, (udp) bind: {}", strerror(errno));
+			SDL_SetError("lwip, (udp) bind: %s", strerror(errno));
 			throw protocol_exception();
 		}
 		set_nonblock(fd_udp);
@@ -73,11 +74,13 @@ bool protocol_zt::network_online()
 		auto r1 = lwip_bind(fd_tcp, (struct sockaddr *)&in6, sizeof(in6));
 		if (r1 < 0) {
 			Log("lwip, (tcp) bind: {}", strerror(errno));
+			SDL_SetError("lwip, (udp) bind: %s", strerror(errno));
 			throw protocol_exception();
 		}
 		auto r2 = lwip_listen(fd_tcp, 10);
 		if (r2 < 0) {
 			Log("lwip, listen: {}", strerror(errno));
+			SDL_SetError("lwip, listen: %s", strerror(errno));
 			throw protocol_exception();
 		}
 		set_nonblock(fd_tcp);
@@ -209,6 +212,7 @@ bool protocol_zt::accept_all()
 		std::copy(in6.sin6_addr.s6_addr, in6.sin6_addr.s6_addr + 16, ep.addr.begin());
 		if (peer_list[ep].fd != -1) {
 			Log("protocol_zt::accept_all: WARNING: overwriting connection");
+			SDL_SetError("protocol_zt::accept_all: WARNING: overwriting connection");
 			lwip_close(peer_list[ep].fd);
 		}
 		set_nonblock(newfd);
@@ -258,6 +262,7 @@ void protocol_zt::disconnect(const endpoint &peer)
 		if (peer_list[peer].fd != -1) {
 			if (lwip_close(peer_list[peer].fd) < 0) {
 				Log("lwip_close: {}", strerror(errno));
+				SDL_SetError("lwip_close: %s", strerror(errno));
 			}
 		}
 		peer_list.erase(peer);

@@ -1,6 +1,8 @@
 # DevilutionX (Diablo 1) for Nintendo 3DS
 
 ## Installation
+ - For Chinese, Japanese, and Korean text support download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq and add it to the game folder.
+ - For the Polish voice pack download https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq.
 
 ### .3dsx installation
 
@@ -10,7 +12,6 @@
 
 #### Install DevilutionX: Diablo - Hellfire
 3. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
-    1. *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
 ### .cia installation
 

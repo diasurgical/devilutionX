@@ -73,6 +73,11 @@ public:
 			return index_ == count_;
 		}
 
+		[[nodiscard]] std::size_t Index() const
+		{
+			return index_;
+		}
+
 	private:
 		void AdvancePastEmpty()
 		{

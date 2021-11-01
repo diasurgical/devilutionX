@@ -765,60 +765,44 @@ msgid "No"
 msgstr "Nein"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
-msgstr "GOG.com unterhält ein Diablo-Forum unter"
-
-#: Source/DiabloUI/support_lines.cpp:9
-msgid "Follow the links to visit the discussion boards associated with Diablo."
-msgstr "https://www.gog.com/forum/diablo. Folge dem Link zu den"
+msgid ""
+"We maintains a chat server at Discord.gg/YQKCAYQ Follow the links to join "
+"our community where we talk about things related to Diablo, and the Hellfire "
+"expansion."
+msgstr ""
 
 #: Source/DiabloUI/support_lines.cpp:10
-msgid "and the Hellfire expansion."
-msgstr "Diskussionsforen rund um Diablo und die Hellfire-Erweiterung."
-
-#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
-msgstr "DevilutionX ist ein Projekt von Diasurgical, Probleme und Fehler"
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
+"this address: https://github.com/diasurgical/devilutionX To help us better "
+"serve you, please be sure to include the version number, operating system, "
+"and the nature of the problem."
+msgstr ""
+"DevilutionX ist ein Projekt von Diasurgical, Probleme und Fehler bitte hier "
+"melden: https://github.com/diasurgical/devilutionX Damit wir Dir helfen "
+"können, teile uns bitte Deine Versionsnummer, Dein Betriebssystem und die "
+"Art Deines Problems mit."
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "at this address: https://github.com/diasurgical/devilutionX"
-msgstr "bitte hier melden: https://github.com/diasurgical/devilutionX"
-
-#: Source/DiabloUI/support_lines.cpp:14
-msgid ""
-"To help us better serve you, please be sure to include the version number,"
-msgstr "Damit wir Dir helfen können, teile uns bitte Deine Versionsnummer,"
-
-#: Source/DiabloUI/support_lines.cpp:15
-msgid "operating system, and the nature of the problem."
-msgstr "Dein Betriebssystem und die Art Deines Problems mit."
-
-#: Source/DiabloUI/support_lines.cpp:18
 msgid "Disclaimer:"
 msgstr "Haftungsausschluss:"
 
-#: Source/DiabloUI/support_lines.cpp:19
-msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
-msgstr " DevilutionX wird weder von Blizzard Entertainment noch von"
-
-#: Source/DiabloUI/support_lines.cpp:20
-msgid "  nor GOG.com. Neither Blizzard Entertainment nor GOG.com has tested"
-msgstr " GOG.com unterstützt oder betrieben und wurde von diesen"
-
-#: Source/DiabloUI/support_lines.cpp:21
+#: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"  or certified the quality or compatibility of DevilutionX. All inquiries"
-msgstr " nicht auf Qualität oder Kompatibilität getestet."
+"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
+"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
+"the quality or compatibility of DevilutionX. All inquiries regarding "
+"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
+"or GOG.com."
+msgstr ""
 
-#: Source/DiabloUI/support_lines.cpp:22
+#: Source/DiabloUI/support_lines.cpp:17
 msgid ""
-"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
-msgstr " Alle Anfragen bezüglich DevilutionX bitte direkt an Diasurgical"
-
-#: Source/DiabloUI/support_lines.cpp:23
-msgid "  Entertainment or GOG.com."
-msgstr " richten, nicht an Blizzard Entertainment oder GOG.com."
+"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
+"under the SIL Open Font License, as well as Twitmoji which is licensed under "
+"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
+"license. See the ReadMe for further details."
+msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -3625,10 +3609,22 @@ msgstr "Öl des Härtens"
 msgid "Oil of Imperviousness"
 msgstr "Öl der Undurchlässigkeit"
 
-#. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
-#: Source/items.cpp:1189 Source/items.cpp:1257 Source/items.cpp:1276
-#: Source/items.cpp:1318
-msgid "{:s} of {:s}"
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
+#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
+#: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
+#: Source/items.cpp:1269
+msgid "{0} {1}"
+msgstr ""
+
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale
+#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall
+#: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
+#: Source/items.cpp:1315
+msgid "{0} of {1}"
 msgstr "{:s} de{:s}"
 
 #: Source/items.cpp:1895 Source/items.cpp:1907

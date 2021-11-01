@@ -9,4 +9,7 @@
 	<string name="game_data_retry">Опитайте отново</string>
 	<string name="title_activity_data">Игрови ресурси</string>
 	<string name="download_spawn">Изтеглете пробна версия</string>
+	<string name="missing_game_data">Липсват игрови ресурси</string>
+	<string name="download_started">Изтеглянето е започнало</string>
+	<string name="shareware_data">Ресурси Diablo пробна версия</string>
 </resources>

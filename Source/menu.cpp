@@ -175,7 +175,7 @@ void mainmenu_loop()
 			menu = MAINMENU_NONE;
 			break;
 		case MAINMENU_REPLAY_INTRO:
-			if (gbIsSpawn && diabdat_mpq == nullptr) {
+			if (gbIsSpawn && diabdat_mpq == nullptr && hellfire_mpq == nullptr) {
 				UiSelOkDialog(nullptr, _(/* TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu */ "The Diablo introduction cinematic is only available in the full retail version of Diablo. Visit https://www.gog.com/game/diablo to purchase."), true);
 			} else if (gbActive) {
 				mainmenu_wait_for_button_sound();

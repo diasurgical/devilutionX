@@ -684,7 +684,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -829,7 +829,7 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 			if (automaticMove) {
 				if (CanBePlacedOnBelt(holdItem)) {
 					automaticallyMoved = AutoPlaceItemInBelt(player, holdItem, true);
-				} else {
+				} else if (CanEquip(holdItem)) {
 					/*
 					 * Move the respective InvBodyItem to inventory before moving the item from inventory
 					 * to InvBody with AutoEquip. AutoEquip requires the InvBody slot to be empty.
@@ -1166,11 +1166,16 @@ void StartGoldDrop()
 	else
 		initialDropGoldValue = myPlayer.SpdList[pcursinvitem - INVITEM_BELT_FIRST]._ivalue;
 
-	dropGoldFlag = true;
-	dropGoldValue = 0;
-
 	if (talkflag)
 		control_reset_talk();
+
+	Point start = GetPanelPosition(UiPanels::Inventory, { 67, 128 });
+	SDL_Rect rect = { start.x, start.y, 180, 20 };
+	SDL_SetTextInputRect(&rect);
+
+	dropGoldFlag = true;
+	dropGoldValue = 0;
+	SDL_StartTextInput();
 }
 
 } // namespace
@@ -1631,7 +1636,7 @@ void CheckItemStats(Player &player)
 void InvGetItem(int pnum, Item *item, int ii)
 {
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -1667,7 +1672,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 
@@ -2001,21 +2006,23 @@ int8_t CheckInvHLight()
 
 void RemoveScroll(Player &player)
 {
-	for (int i = 0; i < player._pNumInv; i++) {
-		if (!player.InvList[i].isEmpty()
-		    && IsAnyOf(player.InvList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
-		    && player.InvList[i]._iSpell == player._pSpell) {
-			player.RemoveInvItem(i);
-			player.CalcScrolls();
+	const spell_id spellId = player._pSpell;
+	const auto isCurrentSpell = [spellId](const Item &item) {
+		return item.IsScrollOf(spellId);
+	};
+	{
+		const InventoryPlayerItemsRange items { player };
+		const auto scrollIt = std::find_if(items.begin(), items.end(), isCurrentSpell);
+		if (scrollIt != items.end()) {
+			player.RemoveInvItem(static_cast<int>(scrollIt.Index()));
 			return;
 		}
 	}
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (!player.SpdList[i].isEmpty()
-		    && IsAnyOf(player.SpdList[i]._iMiscId, IMISC_SCROLL, IMISC_SCROLLT)
-		    && player.SpdList[i]._iSpell == player._pSpell) {
-			player.RemoveSpdBarItem(i);
-			player.CalcScrolls();
+	{
+		const BeltPlayerItemsRange items { player };
+		const auto scrollIt = std::find_if(items.begin(), items.end(), isCurrentSpell);
+		if (scrollIt != items.end()) {
+			player.RemoveSpdBarItem(static_cast<int>(scrollIt.Index()));
 			return;
 		}
 	}
@@ -2138,7 +2145,7 @@ bool UseInvItem(int pnum, int cii)
 	}
 
 	if (dropGoldFlag) {
-		dropGoldFlag = false;
+		CloseGoldDrop();
 		dropGoldValue = 0;
 	}
 

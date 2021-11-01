@@ -129,8 +129,7 @@ int base_protocol<P>::create(std::string addrstr)
 		plr_self = 0;
 		connected_table[plr_self] = true;
 	}
-
-	return (plr_self == PLR_BROADCAST ? MAX_PLRS : plr_self);
+	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
 }
 
 template <class P>
@@ -140,7 +139,8 @@ int base_protocol<P>::join(std::string addrstr)
 	if (wait_network())
 		if (wait_firstpeer())
 			wait_join();
-	return (plr_self == PLR_BROADCAST ? MAX_PLRS : plr_self);
+
+	return (plr_self == PLR_BROADCAST ? -1 : plr_self);
 }
 
 template <class P>

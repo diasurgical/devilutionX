@@ -414,6 +414,26 @@ bool Plr2PlrMHit(int pnum, int p, int mindam, int maxdam, int dist, missile_id m
 	return true;
 }
 
+void RotateBlockedMissile(Missile &missile)
+{
+	int rotation = GenerateRnd(2) != 0 ? 1 : -1;
+
+	if (missile._miAnimType == MFILE_ARROWS) {
+		int dir = missile._miAnimFrame + rotation;
+		missile._miAnimFrame = (dir + 15) % 16 + 1;
+		return;
+	}
+
+	int dir = missile._mimfnum + rotation;
+	int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
+	if (dir < 0)
+		dir = mAnimFAmt - 1;
+	else if (dir >= mAnimFAmt)
+		dir = 0;
+
+	SetMissDir(missile, dir);
+}
+
 void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point position, bool nodel)
 {
 	if (!InDungeonBounds(position))
@@ -469,14 +489,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			        shift,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					int dir = missile._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
-					if (dir < 0)
-						dir = mAnimFAmt - 1;
-					else if (dir >= mAnimFAmt)
-						dir = 0;
-
-					SetMissDir(missile, dir);
+					RotateBlockedMissile(missile);
 				} else if (!nodel) {
 					missile._mirange = 0;
 				}
@@ -504,14 +517,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			        0,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					int dir = missile._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
-					if (dir < 0)
-						dir = mAnimFAmt - 1;
-					else if (dir >= mAnimFAmt)
-						dir = 0;
-
-					SetMissDir(missile, dir);
+					RotateBlockedMissile(missile);
 				} else if (!nodel) {
 					missile._mirange = 0;
 				}
@@ -553,14 +559,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 			        (missile._miAnimType == MFILE_FIREWAL || missile._miAnimType == MFILE_LGHNING) ? 1 : 0,
 			        &blocked)) {
 				if (gbIsHellfire && blocked) {
-					int dir = missile._mimfnum + (GenerateRnd(2) != 0 ? 1 : -1);
-					int mAnimFAmt = MissileSpriteData[missile._miAnimType].animFAmt;
-					if (dir < 0)
-						dir = mAnimFAmt - 1;
-					else if (dir >= mAnimFAmt)
-						dir = 0;
-
-					SetMissDir(missile, dir);
+					RotateBlockedMissile(missile);
 				} else if (!nodel) {
 					missile._mirange = 0;
 				}

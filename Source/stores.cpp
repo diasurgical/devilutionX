@@ -88,15 +88,15 @@ _speech_id gossipend;
 
 /** Maps from towner IDs to NPC names. */
 const char *const TownerNames[] = {
-	"Griswold",
-	"Pepin",
+	N_("Griswold"),
+	N_("Pepin"),
 	"",
-	"Ogden",
-	"Cain",
-	"Farnham",
-	"Adria",
-	"Gillian",
-	"Wirt"
+	N_("Ogden"),
+	N_("Cain"),
+	N_("Farnham"),
+	N_("Adria"),
+	N_("Gillian"),
+	N_("Wirt"),
 };
 
 void DrawSTextBack(const Surface &out)
@@ -1193,11 +1193,11 @@ void StartTalk()
 
 	stextsize = false;
 	stextscrl = false;
-	strcpy(tempstr, fmt::format(_("Talk to {:s}"), TownerNames[talker]).c_str());
+	strcpy(tempstr, fmt::format(_("Talk to {:s}"), _(TownerNames[talker])).c_str());
 	AddSText(0, 2, tempstr, UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSLine(5);
 	if (gbIsSpawn) {
-		strcpy(tempstr, fmt::format(_("Talking to {:s}"), TownerNames[talker]).c_str());
+		strcpy(tempstr, fmt::format(_("Talking to {:s}"), _(TownerNames[talker])).c_str());
 		AddSText(0, 10, tempstr, UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 		AddSText(0, 12, _("is not available"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
 		AddSText(0, 14, _("in the shareware"), UiFlags::ColorWhite | UiFlags::AlignCenter, false);
@@ -1249,7 +1249,7 @@ void StartBarmaid()
 {
 	stextsize = false;
 	stextscrl = false;
-	AddSText(0, 2, "Gillian", UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
+	AddSText(0, 2, _("Gillian"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSText(0, 9, _("Would you like to:"), UiFlags::ColorWhitegold | UiFlags::AlignCenter, false);
 	AddSText(0, 12, _("Talk to Gillian"), UiFlags::ColorBlue | UiFlags::AlignCenter, true);
 	AddSText(0, 18, _("Say goodbye"), UiFlags::ColorWhite | UiFlags::AlignCenter, true);
@@ -2316,7 +2316,7 @@ void StartStore(talk_id s)
 	invflag = false;
 	chrflag = false;
 	QuestLogIsOpen = false;
-	dropGoldFlag = false;
+	CloseGoldDrop();
 	ClearSText(0, STORE_LINES);
 	ReleaseStoreBtn();
 	switch (s) {

@@ -123,6 +123,11 @@ struct Object {
 	}
 
 	/**
+	 * Returns true if the object is a harmful shrine and the player has disabled permanent shrine effects.
+	 */
+	[[nodiscard]] bool IsDisabled() const;
+
+	/**
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */
@@ -164,22 +169,13 @@ void SyncOpObject(int pnum, int cmd, int i);
 void BreakObject(int pnum, int oi);
 void SyncBreakObj(int pnum, int oi);
 void SyncObjectAnim(Object &object);
-void GetObjectStr(int i);
+/**
+ * @brief Updates the text drawn in the info box to describe the given object
+ * @param object The currently highlighted object
+*/
+void GetObjectStr(const Object &object);
 void OperateNakrulLever();
 void SyncNakrulRoom();
 void AddNakrulLeaver();
-/**
- * @brief Checks whether the player is activating Na-Krul's spell tomes in the correct order
- *
- * Used as part of the final Diablo: Hellfire quest (from the hints provided to the player in the
- * reconstructed note). This function both updates the state of the variable that tracks progress
- * and also determines whether the spawn conditions are met (i.e. all tomes have been triggered
- * in the correct order).
- *
- * @param s the id of the spell tome
- * @return true if the player has activated all three tomes in the correct order, false otherwise
- */
-bool OperateNakrulBook(int s);
-bool objectIsDisabled(int i);
 
 } // namespace devilution

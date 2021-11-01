@@ -180,7 +180,8 @@ bool IsTalkActive();
 void control_new_text(string_view text);
 bool control_presskeys(int vkey);
 void DiabloHotkeyMsg(uint32_t dwMsg);
-
+void CloseGoldDrop();
+void GoldDropNewText(string_view text);
 extern Rectangle ChrBtnsRect[4];
 
 } // namespace devilution
