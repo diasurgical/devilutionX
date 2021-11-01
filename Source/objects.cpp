@@ -2427,7 +2427,7 @@ void OperateMushroomPatch(int pnum, Object &questContainer)
 	}
 }
 
-void OperateInnSignChest(int pnum, int i)
+void OperateInnSignChest(int pnum, Object &questContainer)
 {
 	if (ActiveItemCount >= MAXITEMS) {
 		return;
@@ -2440,15 +2440,16 @@ void OperateInnSignChest(int pnum, int i)
 		return;
 	}
 
-	if (Objects[i]._oSelFlag == 0) {
+	if (questContainer._oSelFlag == 0) {
 		return;
 	}
-	if (!deltaload)
-		PlaySfxLoc(IS_CHEST, Objects[i].position);
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame += 2;
+
+	questContainer._oSelFlag = 0;
+	questContainer._oAnimFrame += 2;
+
 	if (!deltaload) {
-		Point pos = GetSuperItemLoc(Objects[i].position);
+		PlaySfxLoc(IS_CHEST, questContainer.position);
+		Point pos = GetSuperItemLoc(questContainer.position);
 		SpawnQuestItem(IDI_BANNER, pos, 0, 0);
 	}
 }
@@ -5162,7 +5163,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(pnum, i);
+		OperateInnSignChest(pnum, Objects[i]);
 		break;
 	default:
 		break;
@@ -5250,7 +5251,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 		OperateSlainHero(pnum, i);
 		break;
 	case OBJ_SIGNCHEST:
-		OperateInnSignChest(pnum, i);
+		OperateInnSignChest(pnum, Objects[i]);
 		break;
 	default:
 		break;
