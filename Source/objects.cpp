@@ -4780,20 +4780,21 @@ void AddObject(_object_id objType, Point objPos)
 	ActiveObjectCount++;
 }
 
-void Obj_Trap(int i)
+void OperateTrap(Object &trap)
 {
-	if (Objects[i]._oVar4 != 0)
+	if (trap._oVar4 != 0)
 		return;
 
-	int oti = dObject[Objects[i]._oVar1][Objects[i]._oVar2] - 1;
-	switch (Objects[oti]._otype) {
+	int oti = dObject[trap._oVar1][trap._oVar2] - 1;
+	Object &trigger = Objects[oti];
+	switch (trigger._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
 	case OBJ_L2LDOOR:
 	case OBJ_L2RDOOR:
 	case OBJ_L3LDOOR:
 	case OBJ_L3RDOOR:
-		if (Objects[oti]._oVar4 == 0)
+		if (trigger._oVar4 == 0)
 			return;
 		break;
 	case OBJ_LEVER:
@@ -4802,17 +4803,17 @@ void Obj_Trap(int i)
 	case OBJ_CHEST3:
 	case OBJ_SWITCHSKL:
 	case OBJ_SARC:
-		if (Objects[oti]._oSelFlag != 0)
+		if (trigger._oSelFlag != 0)
 			return;
 		break;
 	default:
 		return;
 	}
 
-	Objects[i]._oVar4 = 1;
-	Point target = Objects[oti].position;
-	for (int y = target.y - 1; y <= Objects[oti].position.y + 1; y++) {
-		for (int x = Objects[oti].position.x - 1; x <= Objects[oti].position.x + 1; x++) {
+	trap._oVar4 = 1;
+	Point target = trigger.position;
+	for (int y = target.y - 1; y <= trigger.position.y + 1; y++) {
+		for (int x = trigger.position.x - 1; x <= trigger.position.x + 1; x++) {
 			if (dPlayer[x][y] != 0) {
 				target.x = x;
 				target.y = y;
@@ -4820,11 +4821,11 @@ void Obj_Trap(int i)
 		}
 	}
 	if (!deltaload) {
-		Direction dir = GetDirection(Objects[i].position, target);
-		AddMissile(Objects[i].position, target, dir, static_cast<missile_id>(Objects[i]._oVar3), TARGET_PLAYERS, -1, 0, 0);
-		PlaySfxLoc(IS_TRAP, Objects[oti].position);
+		Direction dir = GetDirection(trap.position, target);
+		AddMissile(trap.position, target, dir, static_cast<missile_id>(trap._oVar3), TARGET_PLAYERS, -1, 0, 0);
+		PlaySfxLoc(IS_TRAP, trigger.position);
 	}
-	Objects[oti]._oTrapFlag = false;
+	trigger._oTrapFlag = false;
 }
 
 void ProcessObjects()
@@ -4874,7 +4875,7 @@ void ProcessObjects()
 			break;
 		case OBJ_TRAPL:
 		case OBJ_TRAPR:
-			Obj_Trap(oi);
+			OperateTrap(Objects[oi]);
 			break;
 		case OBJ_MCIRCLE1:
 		case OBJ_MCIRCLE2:
