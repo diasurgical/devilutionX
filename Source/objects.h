@@ -137,6 +137,38 @@ struct Object {
 	}
 
 	/**
+	 * @brief Check if this object is a chest (or trapped chest).
+	 *
+	 * Trapped chests get their base type change in addition to having the trap flag set, but if they get "refilled" by
+	 * a Thaumaturgic shrine the base type is not reverted. This means you need to consider both the base type and the
+	 * trap flag to differentiate between chests that are currently trapped and chests which have never been trapped.
+	 *
+	 * @return True if the object is any of the chest types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3);
+	}
+
+	/**
+	 * @brief Check if this object is a trapped chest (specifically a chest which is currently trapped).
+	 * @return True if the object is one of the trapped chest types (see _object_id) and has an active trap.
+	 */
+	[[nodiscard]] constexpr bool IsTrappedChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3) && _oTrapFlag;
+	}
+
+	/**
+	 * @brief Check if this object is an untrapped chest (specifically a chest which has not been trapped).
+	 * @return True if the object is one of the untrapped chest types (see _object_id) and has no active trap.
+	 */
+	[[nodiscard]] constexpr bool IsUntrappedChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3) && !_oTrapFlag;
+	}
+
+	/**
 	 * @brief Check if this object is a crucifix
 	 * @return True if the object is one of the crux types (see _object_id)
 	 */

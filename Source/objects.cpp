@@ -635,7 +635,7 @@ void AddChestTraps()
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			if (dObject[i][j] > 0) {
 				int8_t oi = dObject[i][j] - 1;
-				if (Objects[oi]._otype >= OBJ_CHEST1 && Objects[oi]._otype <= OBJ_CHEST3 && !Objects[oi]._oTrapFlag && GenerateRnd(100) < 10) {
+				if (Objects[oi].IsUntrappedChest() && GenerateRnd(100) < 10) {
 					switch (Objects[oi]._otype) {
 					case OBJ_CHEST1:
 						Objects[oi]._otype = OBJ_TCHEST1;
@@ -2366,7 +2366,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				CreateRndUseful(Objects[i].position, sendmsg);
 		}
 	}
-	if (Objects[i]._oTrapFlag && Objects[i]._otype >= OBJ_TCHEST1 && Objects[i]._otype <= OBJ_TCHEST3) {
+	if (Objects[i].IsTrappedChest()) {
 		auto &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
@@ -2855,7 +2855,7 @@ bool OperateShrineThaumaturgic(int pnum)
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		int v1 = ActiveObjects[j];
 		assert(v1 >= 0 && v1 < MAXOBJECTS);
-		if (IsAnyOf(Objects[v1]._otype, OBJ_CHEST1, OBJ_CHEST2, OBJ_CHEST3, OBJ_TCHEST1, OBJ_TCHEST2, OBJ_TCHEST3) && Objects[v1]._oSelFlag == 0) {
+		if (Objects[v1].IsChest() && Objects[v1]._oSelFlag == 0) {
 			Objects[v1]._oRndSeed = AdvanceRndSeed();
 			Objects[v1]._oSelFlag = 1;
 			Objects[v1]._oAnimFrame -= 2;
@@ -5022,9 +5022,9 @@ void TryDisarm(int pnum, int i)
 			Objects[i]._oTrapFlag = false;
 		}
 	}
-	int oti = Objects[i]._otype;
-	if (oti >= OBJ_TCHEST1 && oti <= OBJ_TCHEST3)
+	if (Objects[i].IsTrappedChest()) {
 		Objects[i]._oTrapFlag = false;
+	}
 }
 
 int ItemMiscIdIdx(item_misc_id imiscid)
