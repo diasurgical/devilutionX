@@ -33,14 +33,8 @@ bool HasRoomForGold()
 int numMiscItemsInInv(int iMiscId)
 {
 	int numItems = 0;
-	for (int i = 0; i < Players[MyPlayerId]._pNumInv; i++) {
-		if (Players[MyPlayerId].InvList[i]._iMiscId == iMiscId) {
-			numItems++;
-		}
-	}
-
-	for (int i = 0; i < MAXBELTITEMS; i++) {
-		if (!Players[MyPlayerId].SpdList[i].isEmpty() && Players[MyPlayerId].SpdList[i]._iMiscId == iMiscId) {
+	for (const auto &item : InventoryAndBeltPlayerItemsRange { Players[MyPlayerId] }) {
+		if (item._iMiscId == iMiscId) {
 			numItems++;
 		}
 	}
