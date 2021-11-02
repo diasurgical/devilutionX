@@ -4698,38 +4698,38 @@ void MonstCheckDoors(Monster &monster)
 	    || dObject[mx][my + 1] != 0
 	    || dObject[mx + 1][my + 1] != 0) {
 		for (int i = 0; i < ActiveObjectCount; i++) {
-			Object &object = Objects[ActiveObjects[i]];
-			if ((object._otype == OBJ_L1LDOOR || object._otype == OBJ_L1RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L1LDOOR)
-					OperateL1LDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L1RDOOR)
-					OperateL1RDoor(object, true);
+			// Assuming the object is a door, if it isn't none of the OperateDoor functions will actually be called and we just go to the next object.
+			Object &door = Objects[ActiveObjects[i]];
+
+			if (door._oVar4 != 0) {
+				// Door is not closed, don't need to try open it
+				continue;
 			}
-			if ((object._otype == OBJ_L2LDOOR || object._otype == OBJ_L2RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L2LDOOR)
-					OperateL2LDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L2RDOOR)
-					OperateL2RDoor(object, true);
+
+			// L3 doors are backwards, see OperateL3Door
+			int dpx = abs(door.position.x - mx);
+			int dpy = abs(door.position.y - my);
+			if (dpx == 1 && dpy <= 1) {
+				if (door._otype == OBJ_L1LDOOR) {
+					OperateL1LDoor(door, true);
+				} else if (door._otype == OBJ_L2LDOOR) {
+					OperateL2LDoor(door, true);
+				} else if (door._otype == OBJ_L3RDOOR) {
+					OperateL3RDoor(door, true);
+				} else if (door._otype == OBJ_L5LDOOR) {
+					OperateL5LDoor(door, true);
+				}
 			}
-			if ((object._otype == OBJ_L3LDOOR || object._otype == OBJ_L3RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L3RDOOR)
-					OperateL3RDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L3LDOOR)
-					OperateL3LDoor(object, true);
-			}
-			if ((object._otype == OBJ_L5LDOOR || object._otype == OBJ_L5RDOOR) && object._oVar4 == 0) {
-				int dpx = abs(object.position.x - mx);
-				int dpy = abs(object.position.y - my);
-				if (dpx == 1 && dpy <= 1 && object._otype == OBJ_L5LDOOR)
-					OperateL5LDoor(object, true);
-				if (dpx <= 1 && dpy == 1 && object._otype == OBJ_L5RDOOR)
-					OperateL5RDoor(object, true);
+			if (dpx <= 1 && dpy == 1) {
+				if (door._otype == OBJ_L1RDOOR) {
+					OperateL1RDoor(door, true);
+				} else if (door._otype == OBJ_L2RDOOR) {
+					OperateL2RDoor(door, true);
+				} else if (door._otype == OBJ_L3LDOOR) {
+					OperateL3LDoor(door, true);
+				} else if (door._otype == OBJ_L5RDOOR) {
+					OperateL5RDoor(door, true);
+				}
 			}
 		}
 	}
