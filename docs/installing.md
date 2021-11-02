@@ -64,19 +64,18 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 </details>
 
-<details><summary>New Nintendo 3DS</summary>
+<details><summary>Nintendo 3DS</summary>
 
 ### .3dsx installation
 
 - Copy `devilutionx.3dsx` into `sd:/3ds/devilutionx/`.
-- Copy the MPQ files into `sd:/3ds/devilutionx/`.
+- Copy the Diablo and Hellfire MPQ files into `sd:/3ds/devilutionx/`. You do not need to copy devilutionx.mpq.
 - Launch `devilutionx.3dsx` with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
-    - *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
 ### .cia installation
 
 - Copy `devilutionx.cia` to your SD card.
-- Copy the MPQ files to `sd:/3ds/devilutionx/`.
+- Copy the Diablo and Hellfire MPQ files to `sd:/3ds/devilutionx/`. You do not need to copy devilutionx.mpq.
 - Install `devilutionx.cia` with a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
     - `devilutionx.cia` can be removed after being installed.
 - Launch Diablo from your 3DS Homemenu.
