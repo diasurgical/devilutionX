@@ -4,6 +4,229 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## DevilutionX 1.3.0
+
+### Features
+#### Platforms
+- Added support for [Android](https://play.google.com/store/apps/details?id=org.diasurgical.devilutionx) (leave us a review 🤗)
+- Added support for the original Nintendo 3DS
+- Added support for Lepus
+- Added multiplayer support to Nintendo Switch
+- Added multiplayer support to Nintendo 3DS
+- Added multiplayer support to PlayStation Vita
+- Added multiplayer support to OpenDingux
+- Update macOS icon to follow Big Sur style guide
+- Add launcher sound to 3DS version
+#### Graphics / Audio
+- Animations are now updated at render time for high fps visuals
+- Added support for hardware cursor (solves cursor lag)
+- Quests being ordered logically in the quest panel
+- Quest panel now lists completed quests
+- More fine grained volume slider
+- Added option for pickup sound
+- Shrine reveals map in a different color than your own exploration
+- Automap has drop shadow for better contrast in some levels
+- Added font with support for Extended Latin, Greek, Coptic, Cyrillic, [Chinese, Japanese, and Korean](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq)
+- Item outline color now matches rarity
+- Use gold color to indicate unique items in stores
+- Improved XP bar visuals
+- Widescreen loading sceens
+#### Multiplayer
+- Added built in support for ZeroTier (no need for port forwarding, no need for an extra application)
+- Added support for unencrypted public games
+- Added auto discovery of public games over ZeroTier
+- Share map exploration (in a different color than your own exploration)
+#### Controls
+- Press alt to show items on ground with labels
+- Added option for stopping the hero with a key-press
+- Hold click to continue to attack/walk/consume
+- Click ctrl-click to drop an item
+- Click shift-click to swap to the clicked weapon
+- Operate object as last option for primary controller action
+- Allow applying oils with secondary action button
+- Inventory now takes object size into consideration
+- Add joystick dead zone range to ini
+- Limit the max width between panels
+- Center align panels
+- Rune bomb and crypt map can be used when  standing next to target
+- Added option for disabling crippling shrines
+- Improve inventory filling order
+- Added option to refill belt automatically
+- Equip equipment when pressing [use] on the controller
+- Add input hint to virtual keyboards
+#### Stability / Performance / System
+- Add support for translations
+- Run in self-contained (portable) mode if diablo.ini is in the same folder as DevilutionX
+- Auto detect location of MPQ files from GOG installation
+- Chat now supports Unicode, including emojis
+- Several actions can now have their key bindings remapped in the ini
+- Added key bind options for quick save/load
+- Show additional logging with `--verbose`
+- Start directly in Hellfire mode with `--hellfire`
+- Support for MPQs that use Huffman+ADPCM compression
+- Log errors to the terminal as well
+- Added options to adjust audio quality to ini
+- Update Shareware help text to match retail version
+- Automatically pause and mute the game when put in the background
+- Allow for multiple heroes with the same name
+- Only update diablo.ini if there are changes
+#### Translations
+- Added Brazilian Portuguese
+- Added Bulgarian
+- Added Czech
+- Added French
+- Added German
+- Added Italian
+- Added Korean (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+- Added Polish ([optional dub](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/pl.mpq) by professional voice actors)
+- Added Russian
+- Added Simplified Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+- Added Spanish
+- Added Traditional Chinese (requires the [additional fonts](https://github.com/diasurgical/devilutionx-assets/releases/download/v1/fonts.mpq))
+
+### Bugfixes
+#### Gameplay
+- Fix small rooms missing from some levels
+- Elemental spell was missing in Hellfire
+- Correct spells mana cost for the Sorcerer when not running Hellfire
+- Armor piercing was 2x of what it should be in Diablo
+- Barbarian missing his armor piercing bonus when playing Diablo
+- Firering spell not creating the correct shape
+- Golem's to-hit being incorrect after loading a save game
+#### Platforms
+- Nintendo Switch no longer reacts to touch events
+#### Graphics / Audio
+- Corrected directional sounds for distant sources
+- Fix sound cut off when exiting game or starting the intro video
+- Entirely new audio mixer to solve audio issues and lower memory usage
+- Clearly indicate when game is running Hellfire in shareware mode
+- Draw belt item number for unusable scrolls
+- Fixed rendering issues on 8bit outputs
+- Changed player saying "Not enough mana" to a more fitting message when using a level 0 spell
+#### Multiplayer
+- Reverted melee damage, when friendly fire and friendly mode is on
+- Do not show XP bar when chat is open
+- Do not show unbound status in place of game name
+- Show host version when incompatible
+#### Controls
+- Prevent wasting stat points on maxed out stats
+- Open virtual keyboard when text input is needed
+- Do not reset cursor position when switching between mouse and gamepad
+- Unable to open crypt and hive using a gamepad
+- Close cathedral map when pressing B-button
+#### Stability / Performance / System
+- Correctly reset game state if not saved
+- Compatibility with shareware save games
+- Correctly handle folders with non English symbols in them
+- Free network connection after ending game
+- Never require write mode for MPQ files
+- Allow for comments in ini file
+- Load assets from a folder called `assets` next to the application if not found in data paths
+- Added listfile to all our MPQs
+- Add ini option for showing FPS
+- Fix name filtering
+- Stop showing network errors twice
+- Correct minor memory leaks
+- Further reduced memory usage
+- Performance improvments
+
+### Bugfixes for original Diablo bugs
+#### Gameplay
+- Player becoming immune to stun while using manashield at low health
+- Monsters and players are no-longer immune to missiles when moving horizontally
+- Fix missiles hitting multiple times
+- Fix missiles sometimes skipping hit checks when passing a target
+- Fix charging monsters disappearing from the game if changing levels while they were charging
+- Fix negative AC bonus resulting in +1 AC
+- Do not attack dead monsters
+- Show more accurate `To hit` value in char panel
+- Wake up minions when their leader wakes up
+- Disallow swapping gear while not standing/walking to avoid animation lock
+- Switching of spells during casting changing the cost of the cast
+- Not being able to pick up items after starting a new game for a short amount of time
+- Persist shop inventory shop items when saving and loading
+- Diablo's chamber opening with one lever after level loading
+- Thaumaturgic shrine not restocking trapped chests
+- Scavengers/Gravedigger were only able to search for corpses south of them
+- Scavenger leaders getting stuck if minions started eating
+- Quest monsters level being increased twice
+- Fix gold piles with 0 gold from incorrect treasure room generation
+- Avoid using temporary missiles for game state tracking
+- Object interactions stacking while other actions are being performed
+- Quest items sometimes not being picked up when clicked
+- Teleport spell failing for some valid positions
+- Phasing spell sometime failing or sending you outside the level
+- Phasing not working in Lazarus' chamber
+- Too many monster slots being allocated for golems on levels with quests
+- Golems spawning on top of the player
+- Fix Zhar's bookcase resetting a golem instead of Zhar
+- Zhar saying his line twice in a game
+- Fix stairs up to level 8 sometimes taking the player to town instead
+- Fix random tiles being explored on automap
+- Fixed various typos
+#### Graphics / Audio
+- Monster light not updating when monster teleports
+- Correctly shorten item names depending on visual length
+- Missing dirt corners on map
+- Wobbling map indicator when walking
+- Fix screen position jumping after loading some saves
+- Some lava still animated despite game pause
+- Fully close the dialog screen when pausing game
+#### Multiplayer
+- Correct dsync caused by incorrect vision range for other players
+- Sync monster active state
+- Player attack speed being out of sync
+- Dsync when switching items without sufficient inventory space
+- Compensate for desync cause related to player movement
+- Golem dsyncing if owner leaves level
+- Prevent golems from fighting each other
+- Play the correct sound when a player is hit by missiles
+#### Controls
+- Controls [ + ] stat point buttons sometimes not responding to clicks
+#### Stability / Performance / System
+- Keyboard layout is now correct when entering chat messages
+- Validate network messages to harden security
+- Fix corrupt save games for levels with large amount of entities
+- Game now remembers the last selected hero
+- Added menu for switching between Hellfire / Diablo
+- Make menu navigation wrapping consistent
+- Corrected multiple crashes and stability issues
+
+### Bugfixes for original Hellfire bugs
+#### Gameplay
+- Range monsters cannot hit target at melee range
+- Monsters could not see firewalls if covered by lightning wall and vice versa
+- Armor piercing affix on ranged weapons decreasing hit chance instead of increasing it
+- Fix stuttering when running in town
+- Firering spell damage not being based on the caster
+- Firering spell giving XP to the wrong player
+- Solar shrine time was off by 1 hour, and did nothing between 4 and 5 am
+- Reflect spell not working after loading a save game
+- Potion trap was not degrading rejuvenation potion into mana or life
+- Barbarian's skill not correctly updating health points
+#### Graphics / Audio
+- Fix missing player lights when loading Hive level 3
+- Apply lights to all berserked monsters after loading save game
+- Remove light when killing a berserked monster
+- Blood star becoming invisible when blocked
+- Rotate arrows in the appropriate direction when blocking
+- Candles around around the storybook sometimes missing in Crypt
+- Celia now leaves after her quest ends
+- Update Celia and Complete Nut graphics when completing their quests
+- Only play "Uh uh" sound the first time you pick up the cathedral map
+- Glass breaking sound sometimes not playing for the potion trap
+#### Multiplayer
+- Fix dsync in Hive
+- Open Crypt from the start
+- Restrict access to Hive and Crypt based on level
+- Reflect spell not being synced
+- Search spell affecting all players
+
+### Known issues
+- Polish dub sometimes produces weird sounds on Nintendo Switch
+- devilutionx-rg350.opk now requires OpenDingux Beta
+- devilutionx-lepus.opk for OpenDingux Beta for jz4760 devices (RG300) with multiplayer support
+
 ## DevilutionX 1.2.1
 ### Bugfixes
 #### Gameplay
