@@ -79,37 +79,36 @@ void AutoItemPickup(int pnum)
 	for (auto pathDir : PathDirs) {
 		Point tile = Players[pnum].position.tile + pathDir;
 		if (dItem[tile.x][tile.y] != 0) {
-                        int itemIndex = dItem[tile.x][tile.y] - 1;
-                        auto &item = Items[itemIndex];
+			int itemIndex = dItem[tile.x][tile.y] - 1;
+			auto &item = Items[itemIndex];
 			if (AutoPlaceItemInInventory(Players[pnum], item, false) || AutoPlaceItemInBelt(Players[pnum], item, false)) {
-                        if (sgOptions.Gameplay.nHealPotionPickup > numMiscItemsInInv(IMISC_HEAL) && item._iMiscId == IMISC_HEAL) {
-                                NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-                                item._iRequest = true;
-                        }
-                        if (sgOptions.Gameplay.nFullHealPotionPickup > numMiscItemsInInv(IMISC_FULLHEAL) && item._iMiscId == IMISC_FULLHEAL) {
-                                NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-                                item._iRequest = true;
-                        }
-                        if (sgOptions.Gameplay.nManaPotionPickup > numMiscItemsInInv(IMISC_MANA) && item._iMiscId == IMISC_MANA) {
-                                NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-                                item._iRequest = true;
-                        }
-                        if (sgOptions.Gameplay.nFullManaPotionPickup > numMiscItemsInInv(IMISC_FULLMANA) && item._iMiscId == IMISC_FULLMANA) {
-                                NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-                                item._iRequest = true;
-                        }
-                        if (sgOptions.Gameplay.nRejuPotionPickup > numMiscItemsInInv(IMISC_REJUV) && item._iMiscId == IMISC_REJUV) {
-                                NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-                                item._iRequest = true;
-                        }
-                        if (sgOptions.Gameplay.nFullRejuPotionPickup > numMiscItemsInInv(IMISC_FULLREJUV) && item._iMiscId == IMISC_FULLREJUV) {
-                                NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
-                                item._iRequest = true;
-                        }
+				if (sgOptions.Gameplay.nHealPotionPickup > numMiscItemsInInv(IMISC_HEAL) && item._iMiscId == IMISC_HEAL) {
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+					item._iRequest = true;
+				}
+				if (sgOptions.Gameplay.nFullHealPotionPickup > numMiscItemsInInv(IMISC_FULLHEAL) && item._iMiscId == IMISC_FULLHEAL) {
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+					item._iRequest = true;
+				}
+				if (sgOptions.Gameplay.nManaPotionPickup > numMiscItemsInInv(IMISC_MANA) && item._iMiscId == IMISC_MANA) {
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+					item._iRequest = true;
+				}
+				if (sgOptions.Gameplay.nFullManaPotionPickup > numMiscItemsInInv(IMISC_FULLMANA) && item._iMiscId == IMISC_FULLMANA) {
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+					item._iRequest = true;
+				}
+				if (sgOptions.Gameplay.nRejuPotionPickup > numMiscItemsInInv(IMISC_REJUV) && item._iMiscId == IMISC_REJUV) {
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+					item._iRequest = true;
+				}
+				if (sgOptions.Gameplay.nFullRejuPotionPickup > numMiscItemsInInv(IMISC_FULLREJUV) && item._iMiscId == IMISC_FULLREJUV) {
+					NetSendCmdGItem(true, CMD_REQUESTAGITEM, pnum, pnum, itemIndex);
+					item._iRequest = true;
+				}
 			}
-                }
-         }
-
+		}
+	}
 }
 
 } // namespace devilution

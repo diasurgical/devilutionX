@@ -150,7 +150,6 @@ struct GameplayOptions {
 	int nRejuPotionPickup;
 	/** @brief Number of Full Rejuvenating potions to pick up automatically */
 	int nFullRejuPotionPickup;
-
 };
 
 struct ControllerOptions {
