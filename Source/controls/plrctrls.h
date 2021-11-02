@@ -45,7 +45,6 @@ bool TryDropItem();
 void InvalidateInventorySlot();
 void FocusOnInventory();
 void PerformSpellAction();
-void StoreSpellCoords();
 
 extern int speedspellcount;
 

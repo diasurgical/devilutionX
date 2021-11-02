@@ -29,8 +29,6 @@ namespace devilution {
 
 bool sgbTouchActive = false;
 bool sgbControllerActive = false;
-Point speedspellscoords[50];
-int speedspellcount = 0;
 int pcurstrig = -1;
 int pcursmissile = -1;
 quest_id pcursquest = Q_INVALID;
@@ -1014,22 +1012,6 @@ void InvMove(AxisDirection dir)
 	SetCursorPos(mousePos);
 }
 
-/**
- * check if hot spell at X Y exists
- */
-bool HSExists(Point target)
-{
-	for (int r = 0; r < speedspellcount; r++) {
-		if (target.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && target.x < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && target.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && target.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
-			return true;
-		}
-	}
-	return false;
-}
-
 void HotSpellMove(AxisDirection dir)
 {
 	static AxisDirectionRepeater repeater;
@@ -1037,41 +1019,55 @@ void HotSpellMove(AxisDirection dir)
 	if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 		return;
 
-	int spbslot = Players[MyPlayerId]._pRSpell;
-	for (int r = 0; r < speedspellcount; r++) {
-		if (MousePosition.x >= speedspellscoords[r].x - SPLICONLENGTH / 2
-		    && MousePosition.x < speedspellscoords[r].x + SPLICONLENGTH / 2
-		    && MousePosition.y >= speedspellscoords[r].y - SPLICONLENGTH / 2
-		    && MousePosition.y < speedspellscoords[r].y + SPLICONLENGTH / 2) {
-			spbslot = r;
+	auto spellListItems = GetSpellListItems();
+
+	Point position = MousePosition;
+	int shortestDistance = std::numeric_limits<int>::max();
+	for (auto &spellListItem : spellListItems) {
+		Point center = spellListItem.location + Displacement { SPLICONLENGTH / 2, -SPLICONLENGTH / 2 };
+		int distance = MousePosition.ManhattanDistance(center);
+		if (distance < shortestDistance) {
+			position = center;
+			shortestDistance = distance;
+		}
+	}
+
+	auto search = [&](AxisDirection dir, bool searchForward) {
+		if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
+			return;
+
+		for (size_t i = 0; i < spellListItems.size(); i++) {
+			auto index = i;
+			if (searchForward)
+				index = spellListItems.size() - i - 1;
+
+			auto &spellListItem = spellListItems[index];
+			if (spellListItem.isSelected)
+				continue;
+
+			Point center = spellListItem.location + Displacement { SPLICONLENGTH / 2, -SPLICONLENGTH / 2 };
+			if (dir.x == AxisDirectionX_LEFT && center.x >= MousePosition.x)
+				continue;
+			if (dir.x == AxisDirectionX_RIGHT && center.x <= MousePosition.x)
+				continue;
+			if (dir.x == AxisDirectionX_NONE && center.x != position.x)
+				continue;
+			if (dir.y == AxisDirectionY_UP && center.y >= MousePosition.y)
+				continue;
+			if (dir.y == AxisDirectionY_DOWN && center.y <= MousePosition.y)
+				continue;
+			if (dir.y == AxisDirectionY_NONE && center.y != position.y)
+				continue;
+
+			position = center;
 			break;
 		}
-	}
+	};
+	search({ AxisDirectionX_NONE, dir.y }, dir.y == AxisDirectionY_DOWN);
+	search({ dir.x, AxisDirectionY_NONE }, dir.x == AxisDirectionX_RIGHT);
 
-	Point newMousePosition = speedspellscoords[spbslot];
-
-	if (dir.x == AxisDirectionX_LEFT) {
-		if (spbslot < speedspellcount - 1) {
-			newMousePosition = speedspellscoords[spbslot + 1];
-		}
-	} else if (dir.x == AxisDirectionX_RIGHT) {
-		if (spbslot > 0) {
-			newMousePosition = speedspellscoords[spbslot - 1];
-		}
-	}
-
-	if (dir.y == AxisDirectionY_UP) {
-		if (HSExists(newMousePosition - Displacement { 0, SPLICONLENGTH })) {
-			newMousePosition.y -= SPLICONLENGTH;
-		}
-	} else if (dir.y == AxisDirectionY_DOWN) {
-		if (HSExists(newMousePosition + Displacement { 0, SPLICONLENGTH })) {
-			newMousePosition.y += SPLICONLENGTH;
-		}
-	}
-
-	if (newMousePosition != MousePosition) {
-		SetCursorPos(newMousePosition);
+	if (position != MousePosition) {
+		SetCursorPos(position);
 	}
 }
 
@@ -1247,53 +1243,6 @@ struct RightStickAccumulator {
 };
 
 } // namespace
-
-void StoreSpellCoords()
-{
-	const int startX = PANEL_LEFT + 12 + SPLICONLENGTH / 2;
-	const int endX = startX + SPLICONLENGTH * 10;
-	const int endY = PANEL_TOP - 17 - SPLICONLENGTH / 2;
-	speedspellcount = 0;
-	int xo = endX;
-	int yo = endY;
-	for (int i = RSPLTYPE_SKILL; i <= RSPLTYPE_CHARGES; i++) {
-		std::uint64_t spells;
-		auto &myPlayer = Players[MyPlayerId];
-		switch (i) {
-		case RSPLTYPE_SKILL:
-			spells = myPlayer._pAblSpells;
-			break;
-		case RSPLTYPE_SPELL:
-			spells = myPlayer._pMemSpells;
-			break;
-		case RSPLTYPE_SCROLL:
-			spells = myPlayer._pScrlSpells;
-			break;
-		case RSPLTYPE_CHARGES:
-			spells = myPlayer._pISpells;
-			break;
-		}
-		std::uint64_t spell = 1;
-		for (int j = 1; j < MAX_SPELLS; j++) {
-			if ((spell & spells) != 0) {
-				speedspellscoords[speedspellcount] = { xo, yo };
-				++speedspellcount;
-				xo -= SPLICONLENGTH;
-				if (xo < startX) {
-					xo = endX;
-					yo -= SPLICONLENGTH;
-				}
-			}
-			spell <<= 1;
-		}
-		if (spells != 0 && xo != endX)
-			xo -= SPLICONLENGTH;
-		if (xo < startX) {
-			xo = endX;
-			yo -= SPLICONLENGTH;
-		}
-	}
-}
 
 bool IsAutomapActive()
 {
