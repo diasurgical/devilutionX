@@ -138,6 +138,19 @@ struct GameplayOptions {
 	bool bAutoRefillBelt;
 	/** @brief Locally disable clicking on shrines which permanently cripple character. */
 	bool bDisableCripplingShrines;
+	/** @brief Number of Healing potions to pick up automatically */
+	int nHealPotionPickup;
+	/** @brief Number of Full Healing potions to pick up automatically */
+	int nFullHealPotionPickup;
+	/** @brief Number of Mana potions to pick up automatically */
+	int nManaPotionPickup;
+	/** @brief Number of Full Mana potions to pick up automatically */
+	int nFullManaPotionPickup;
+	/** @brief Number of Rejuvenating potions to pick up automatically */
+	int nRejuPotionPickup;
+	/** @brief Number of Full Rejuvenating potions to pick up automatically */
+	int nFullRejuPotionPickup;
+
 };
 
 struct ControllerOptions {

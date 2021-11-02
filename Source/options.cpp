@@ -283,6 +283,12 @@ void LoadOptions()
 	sgOptions.Gameplay.bShowMonsterType = GetIniBool("Game", "Show Monster Type", false);
 	sgOptions.Gameplay.bDisableCripplingShrines = GetIniBool("Game", "Disable Crippling Shrines", false);
 	sgOptions.Gameplay.bAutoRefillBelt = GetIniBool("Game", "Auto Refill Belt", AUTO_PICKUP_DEFAULT(false));
+	sgOptions.Gameplay.nHealPotionPickup = GetIniInt("Game", "Heal Potion Pickup", 0);
+	sgOptions.Gameplay.nFullHealPotionPickup = GetIniInt("Game", "Full Heal Potion Pickup", 0);
+	sgOptions.Gameplay.nManaPotionPickup = GetIniInt("Game", "Mana Potion Pickup", 0);
+	sgOptions.Gameplay.nFullManaPotionPickup = GetIniInt("Game", "Full Mana Potion Pickup", 0);
+	sgOptions.Gameplay.nRejuPotionPickup = GetIniInt("Game", "Rejuvenation Potion Pickup", 0);
+	sgOptions.Gameplay.nFullRejuPotionPickup = GetIniInt("Game", "Full Rejuvenation Potion Pickup", 0);
 
 	GetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress, sizeof(sgOptions.Network.szBindAddress), "0.0.0.0");
 	sgOptions.Network.nPort = GetIniInt("Network", "Port", 6112);
@@ -436,6 +442,12 @@ void SaveOptions()
 	SetIniValue("Game", "Show Monster Type", sgOptions.Gameplay.bShowMonsterType);
 	SetIniValue("Game", "Disable Crippling Shrines", sgOptions.Gameplay.bDisableCripplingShrines);
 	SetIniValue("Game", "Auto Refill Belt", sgOptions.Gameplay.bAutoRefillBelt);
+	SetIniValue("Game", "Heal Potion Pickup", sgOptions.Gameplay.nHealPotionPickup);
+	SetIniValue("Game", "Full Heal Potion Pickup", sgOptions.Gameplay.nFullHealPotionPickup);
+	SetIniValue("Game", "Mana Potion Pickup", sgOptions.Gameplay.nManaPotionPickup);
+	SetIniValue("Game", "Full Mana Potion Pickup", sgOptions.Gameplay.nFullManaPotionPickup);
+	SetIniValue("Game", "Rejuvenation Potion Pickup", sgOptions.Gameplay.nRejuPotionPickup);
+	SetIniValue("Game", "Full Rejuvenation Potion Pickup", sgOptions.Gameplay.nFullRejuPotionPickup);
 
 	SetIniValue("Network", "Bind Address", sgOptions.Network.szBindAddress);
 	SetIniValue("Network", "Port", sgOptions.Network.nPort);

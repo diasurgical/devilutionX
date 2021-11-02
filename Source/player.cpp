@@ -760,6 +760,7 @@ bool DoWalk(int pnum, int variant)
 		}
 
 		AutoGoldPickup(pnum);
+		AutoItemPickup(pnum);
 		return true;
 	} //We didn't reach new tile so update player's "sub-tile" position
 	ChangeOffset(pnum);
