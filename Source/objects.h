@@ -187,6 +187,15 @@ struct Object {
 	}
 
 	/**
+	 * @brief Check if this object is a shrine
+	 * @return True if the object is one of the shrine types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsShrine() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER);
+	}
+
+	/**
 	 * @brief Check if this object is a trap source
 	 * @return True if the object is one of the trap types (see _object_id)
 	 */

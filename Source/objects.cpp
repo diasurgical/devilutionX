@@ -4339,7 +4339,7 @@ bool Object::IsDisabled() const
 	if (IsAnyOf(_otype, _object_id::OBJ_GOATSHRINE, _object_id::OBJ_CAULDRON)) {
 		return true;
 	}
-	if (IsNoneOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER)) {
+	if (!IsShrine()) {
 		return false;
 	}
 	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
