@@ -2273,7 +2273,6 @@ void OperateBookLever(int pnum, int i)
 			Quests[Q_BLOOD]._qvar1 = 1;
 			SpawnQuestItem(IDI_BLDSTONE, { 2 * setpc_x + 25, 2 * setpc_y + 33 }, 0, 1);
 		}
-		Objects[i]._otype = Objects[i]._otype;
 		if (Objects[i]._otype == OBJ_STEELTOME && Quests[Q_WARLORD]._qvar1 == 0) {
 			Quests[Q_WARLORD]._qactive = QUEST_ACTIVE;
 			Quests[Q_WARLORD]._qlog = true;
