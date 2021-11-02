@@ -6,6 +6,7 @@
 
 #include "options.h"
 #include "player.h"
+#include "inv_iterators.hpp"
 
 namespace devilution {
 namespace {
@@ -33,7 +34,7 @@ bool HasRoomForGold()
 int numMiscItemsInInv(int iMiscId)
 {
 	int numItems = 0;
-	for (const auto &item : InventoryAndBeltPlayerItemsRange { Players[MyPlayerId] }) {
+	for (const auto &item : InventoryAndBeltPlayerItemsRange(Players[MyPlayerId])) {
 		if (item._iMiscId == iMiscId) {
 			numItems++;
 		}
