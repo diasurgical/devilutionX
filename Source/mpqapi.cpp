@@ -5,11 +5,9 @@
  */
 #include "mpqapi.h"
 
-#include <cerrno>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
-#include <fstream>
 #include <memory>
 #include <type_traits>
 
@@ -19,6 +17,7 @@
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/log.hpp"
+#include "utils/logged_fstream.hpp"
 
 namespace devilution {
 
@@ -52,115 +51,13 @@ struct CheckSize : AssertEq<sizeof(T), S>, AssertLte<alignof(T), sizeof(T)> {
 static_assert(CheckSize<_HASHENTRY, 4 * 4>::value, "sizeof(_HASHENTRY) == 4 * 4 && alignof(_HASHENTRY) <= 4 * 4 not satisfied");
 static_assert(CheckSize<_BLOCKENTRY, 4 * 4>::value, "sizeof(_BLOCKENTRY) == 4 * 4 && alignof(_BLOCKENTRY) <= 4 * 4 not satisfied");
 
-const char *DirToString(std::ios::seekdir dir)
-{
-	switch (dir) {
-	case std::ios::beg:
-		return "std::ios::beg";
-	case std::ios::end:
-		return "std::ios::end";
-	case std::ios::cur:
-		return "std::ios::cur";
-	default:
-		return "invalid";
-	}
-}
-
-std::string OpenModeToString(std::ios::openmode mode)
-{
-	std::string result;
-	if ((mode & std::ios::app) != 0)
-		result.append("std::ios::app | ");
-	if ((mode & std::ios::ate) != 0)
-		result.append("std::ios::ate | ");
-	if ((mode & std::ios::binary) != 0)
-		result.append("std::ios::binary | ");
-	if ((mode & std::ios::in) != 0)
-		result.append("std::ios::in | ");
-	if ((mode & std::ios::out) != 0)
-		result.append("std::ios::out | ");
-	if ((mode & std::ios::trunc) != 0)
-		result.append("std::ios::trunc | ");
-	if (!result.empty())
-		result.resize(result.size() - 3);
-	return result;
-}
-
-struct FStreamWrapper {
-public:
-	bool Open(const char *path, std::ios::openmode mode)
-	{
-		s_ = CreateFileStream(path, mode);
-		return CheckError("new std::fstream(\"{}\", {})", path, OpenModeToString(mode).c_str());
-	}
-
-	void Close()
-	{
-		s_ = std::nullopt;
-	}
-
-	[[nodiscard]] bool IsOpen() const
-	{
-		return s_ != std::nullopt;
-	}
-
-	bool Seekp(std::streampos pos)
-	{
-		s_->seekp(pos);
-		return CheckError("seekp({})", pos);
-	}
-
-	bool Seekp(std::streamoff pos, std::ios::seekdir dir)
-	{
-		s_->seekp(pos, dir);
-		return CheckError("seekp({}, {})", pos, DirToString(dir));
-	}
-
-	bool Tellp(std::streampos *result)
-	{
-		*result = s_->tellp();
-		return CheckError("tellp() = {}", *result);
-	}
-
-	bool Write(const char *data, std::streamsize size)
-	{
-		s_->write(data, size);
-		return CheckError("write(data, {})", size);
-	}
-
-	bool Read(char *out, std::streamsize size)
-	{
-		s_->read(out, size);
-		return CheckError("read(out, {})", size);
-	}
-
-private:
-	template <typename... PrintFArgs>
-	bool CheckError(const char *fmt, PrintFArgs... args)
-	{
-		if (s_->fail()) {
-			std::string fmtWithError = fmt;
-			fmtWithError.append(": failed with \"{}\"");
-			const char *errorMessage = std::strerror(errno);
-			if (errorMessage == nullptr)
-				errorMessage = "";
-			LogError(LogCategory::System, fmtWithError.c_str(), args..., errorMessage);
-		} else {
-			LogVerbose(LogCategory::System, fmt, args...);
-		}
-		return !s_->fail();
-	}
-
-	std::optional<std::fstream> s_;
-};
-
 constexpr std::size_t BlockEntrySize = INDEX_ENTRIES * sizeof(_BLOCKENTRY);
 constexpr std::size_t HashEntrySize = INDEX_ENTRIES * sizeof(_HASHENTRY);
 constexpr std::ios::off_type MpqBlockEntryOffset = sizeof(_FILEHEADER);
 constexpr std::ios::off_type MpqHashEntryOffset = MpqBlockEntryOffset + BlockEntrySize;
 
 struct Archive {
-	FStreamWrapper stream;
+	LoggedFStream stream;
 	std::string name;
 	std::uintmax_t size;
 	bool modified;

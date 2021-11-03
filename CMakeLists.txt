@@ -475,6 +475,7 @@ set(libdevilutionx_SRCS
   Source/utils/display.cpp
   Source/utils/file_util.cpp
   Source/utils/language.cpp
+  Source/utils/logged_fstream.cpp
   Source/utils/mpq.cpp
   Source/utils/mpq_sdl_rwops.cpp
   Source/utils/paths.cpp
