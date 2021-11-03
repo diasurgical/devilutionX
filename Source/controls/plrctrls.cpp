@@ -1132,12 +1132,18 @@ void WalkInDir(int playerId, AxisDirection dir)
 		player._pdir = pdir;
 
 #ifdef VIRTUAL_GAMEPAD
-	if (VirtualGamepadState.standButton.isHeld)
+	if (VirtualGamepadState.standButton.isHeld) {
+		if (player._pmode == PM_STAND)
+			StartStand(playerId, pdir);
 		return;
+	}
 #endif
 
-	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir))
+	if (PosOkPlayer(player, delta) && IsPathBlocked(player.position.future, pdir)) {
+		if (player._pmode == PM_STAND)
+			StartStand(playerId, pdir);
 		return; // Don't start backtrack around obstacles
+	}
 
 	NetSendCmdLoc(playerId, true, CMD_WALKXY, delta);
 }
