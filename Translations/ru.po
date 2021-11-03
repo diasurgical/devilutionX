@@ -553,7 +553,7 @@ msgstr ""
 
 #: Source/DiabloUI/selgame.cpp:342
 msgid "Select Game Speed"
-msgstr "Выберите скорость"
+msgstr "Скорость игры"
 
 #: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
 msgid "Fast"
