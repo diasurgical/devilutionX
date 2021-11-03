@@ -12,7 +12,6 @@
 #include "init.h"
 #include "loadsave.h"
 #include "menu.h"
-#include "mpqapi.h"
 #include "pack.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
@@ -30,6 +29,8 @@ namespace devilution {
 bool gbValidSaveFile;
 
 namespace {
+
+MpqWriter archive;
 
 /** List of character names for the character selection screen. */
 char hero_names[MAX_CHARACTERS][PLR_NAME_LEN];
@@ -104,10 +105,10 @@ void RenameTempToPerm()
 		[[maybe_unused]] bool result = GetPermSaveNames(dwIndex, szPerm); // DO NOT PUT DIRECTLY INTO ASSERT!
 		assert(result);
 		dwIndex++;
-		if (mpqapi_has_file(szTemp)) {
-			if (mpqapi_has_file(szPerm))
-				mpqapi_remove_hash_entry(szPerm);
-			mpqapi_rename(szTemp, szPerm);
+		if (archive.HasFile(szTemp)) {
+			if (archive.HasFile(szPerm))
+				archive.RemoveHashEntry(szPerm);
+			archive.RenameFile(szTemp, szPerm);
 		}
 	}
 	assert(!GetPermSaveNames(dwIndex, szPerm));
@@ -156,12 +157,12 @@ void EncodeHero(const PlayerPack *pack)
 
 	memcpy(packed.get(), pack, sizeof(*pack));
 	codec_encode(packed.get(), sizeof(*pack), packedLen, pfile_get_password());
-	mpqapi_write_file("hero", packed.get(), packedLen);
+	archive.WriteFile("hero", packed.get(), packedLen);
 }
 
 bool OpenArchive(uint32_t saveNum)
 {
-	return OpenMPQ(GetSavePath(saveNum).c_str());
+	return archive.Open(GetSavePath(saveNum).c_str());
 }
 
 std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
@@ -243,7 +244,12 @@ PFileScopedArchiveWriter::PFileScopedArchiveWriter(bool clearTables)
 
 PFileScopedArchiveWriter::~PFileScopedArchiveWriter()
 {
-	mpqapi_flush_and_close(clear_tables_);
+	archive.Close(clear_tables_);
+}
+
+MpqWriter &CurrentSaveArchive()
+{
+	return archive;
 }
 
 void pfile_write_hero(bool writeGameData, bool clearTables)
@@ -330,7 +336,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 
 	giNumberOfLevels = gbIsHellfire ? 25 : 17;
 
-	mpqapi_remove_hash_entries(GetFileName);
+	archive.RemoveHashEntries(GetFileName);
 	strncpy(hero_names[saveNum], heroinfo->name, PLR_NAME_LEN);
 	hero_names[saveNum][PLR_NAME_LEN - 1] = '\0';
 
@@ -346,7 +352,7 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 		SaveHeroItems(player);
 	}
 
-	mpqapi_flush_and_close(true);
+	archive.Close();
 	return true;
 }
 
@@ -396,8 +402,8 @@ bool LevelFileExists()
 	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to read to save file archive"));
 
-	bool hasFile = mpqapi_has_file(szName);
-	mpqapi_flush_and_close(true);
+	bool hasFile = archive.HasFile(szName);
+	archive.Close();
 	return hasFile;
 }
 
@@ -416,8 +422,8 @@ void GetPermLevelNames(char *szPerm)
 	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to read to save file archive"));
 
-	bool hasFile = mpqapi_has_file(szPerm);
-	mpqapi_flush_and_close(true);
+	bool hasFile = archive.HasFile(szPerm);
+	archive.Close();
 	if (!hasFile) {
 		if (setlevel)
 			sprintf(szPerm, "perms%02d", setlvlnum);
@@ -434,8 +440,8 @@ void pfile_remove_temp_files()
 	uint32_t saveNum = gSaveNumber;
 	if (!OpenArchive(saveNum))
 		app_fatal("%s", _("Unable to write to save file archive"));
-	mpqapi_remove_hash_entries(GetTempSaveNames);
-	mpqapi_flush_and_close(true);
+	archive.RemoveHashEntries(GetTempSaveNames);
+	archive.Close();
 }
 
 std::unique_ptr<byte[]> pfile_read(const char *pszName, size_t *pdwLen)

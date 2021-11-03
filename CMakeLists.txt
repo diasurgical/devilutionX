@@ -415,7 +415,6 @@ set(libdevilutionx_SRCS
   Source/monstdat.cpp
   Source/monster.cpp
   Source/movie.cpp
-  Source/mpqapi.cpp
   Source/msg.cpp
   Source/multi.cpp
   Source/nthread.cpp
@@ -478,6 +477,7 @@ set(libdevilutionx_SRCS
   Source/utils/logged_fstream.cpp
   Source/utils/mpq.cpp
   Source/utils/mpq_sdl_rwops.cpp
+  Source/utils/mpq_writer.cpp
   Source/utils/paths.cpp
   Source/utils/sdl_bilinear_scale.cpp
   Source/utils/sdl_rwops_file_wrapper.cpp
