@@ -618,65 +618,6 @@ void RemoveGold(Player &player, int goldIndex)
 	dropGoldValue = 0;
 }
 
-struct SpellListItem {
-	Point location;
-	spell_type type;
-	spell_id id;
-	bool isSelected;
-};
-
-std::vector<SpellListItem> GetSpellListItems()
-{
-	std::vector<SpellListItem> spellListItems;
-
-	uint64_t mask;
-
-	int x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-	int y = PANEL_Y - 17;
-
-	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
-		auto &myPlayer = Players[MyPlayerId];
-		switch ((spell_type)i) {
-		case RSPLTYPE_SKILL:
-			mask = myPlayer._pAblSpells;
-			break;
-		case RSPLTYPE_SPELL:
-			mask = myPlayer._pMemSpells;
-			break;
-		case RSPLTYPE_SCROLL:
-			mask = myPlayer._pScrlSpells;
-			break;
-		case RSPLTYPE_CHARGES:
-			mask = myPlayer._pISpells;
-			break;
-		case RSPLTYPE_INVALID:
-			break;
-		}
-		int8_t j = SPL_FIREBOLT;
-		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
-			if ((mask & spl) == 0)
-				continue;
-			int lx = x;
-			int ly = y - SPLICONLENGTH;
-			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
-			spellListItems.emplace_back(SpellListItem { { x, y }, (spell_type)i, (spell_id)j, isSelected });
-			x -= SPLICONLENGTH;
-			if (x == PANEL_X + 12 - SPLICONLENGTH) {
-				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-				y -= SPLICONLENGTH;
-			}
-		}
-		if (mask != 0 && x != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
-			x -= SPLICONLENGTH;
-		if (x == PANEL_X + 12 - SPLICONLENGTH) {
-			x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
-			y -= SPLICONLENGTH;
-		}
-	}
-
-	return spellListItems;
-}
-
 bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 {
 	pSpell = spell_id::SPL_INVALID;
@@ -815,6 +756,58 @@ void DrawSpellList(const Surface &out)
 			}
 		}
 	}
+}
+
+std::vector<SpellListItem> GetSpellListItems()
+{
+	std::vector<SpellListItem> spellListItems;
+
+	uint64_t mask;
+
+	int x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+	int y = PANEL_Y - 17;
+
+	for (int i = RSPLTYPE_SKILL; i < RSPLTYPE_INVALID; i++) {
+		auto &myPlayer = Players[MyPlayerId];
+		switch ((spell_type)i) {
+		case RSPLTYPE_SKILL:
+			mask = myPlayer._pAblSpells;
+			break;
+		case RSPLTYPE_SPELL:
+			mask = myPlayer._pMemSpells;
+			break;
+		case RSPLTYPE_SCROLL:
+			mask = myPlayer._pScrlSpells;
+			break;
+		case RSPLTYPE_CHARGES:
+			mask = myPlayer._pISpells;
+			break;
+		case RSPLTYPE_INVALID:
+			break;
+		}
+		int8_t j = SPL_FIREBOLT;
+		for (uint64_t spl = 1; j < MAX_SPELLS; spl <<= 1, j++) {
+			if ((mask & spl) == 0)
+				continue;
+			int lx = x;
+			int ly = y - SPLICONLENGTH;
+			bool isSelected = (MousePosition.x >= lx && MousePosition.x < lx + SPLICONLENGTH && MousePosition.y >= ly && MousePosition.y < ly + SPLICONLENGTH);
+			spellListItems.emplace_back(SpellListItem { { x, y }, (spell_type)i, (spell_id)j, isSelected });
+			x -= SPLICONLENGTH;
+			if (x == PANEL_X + 12 - SPLICONLENGTH) {
+				x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+				y -= SPLICONLENGTH;
+			}
+		}
+		if (mask != 0 && x != PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS)
+			x -= SPLICONLENGTH;
+		if (x == PANEL_X + 12 - SPLICONLENGTH) {
+			x = PANEL_X + 12 + SPLICONLENGTH * SPLROWICONLS;
+			y -= SPLICONLENGTH;
+		}
+	}
+
+	return spellListItems;
 }
 
 void SetSpell()
