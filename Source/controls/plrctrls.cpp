@@ -1037,9 +1037,7 @@ void HotSpellMove(AxisDirection dir)
 			return;
 
 		for (size_t i = 0; i < spellListItems.size(); i++) {
-			const size_t index = i;
-			if (searchForward)
-				index = spellListItems.size() - i - 1;
+			const size_t index = searchForward ? spellListItems.size() - i - 1 : i;
 
 			auto &spellListItem = spellListItems[index];
 			if (spellListItem.isSelected)
