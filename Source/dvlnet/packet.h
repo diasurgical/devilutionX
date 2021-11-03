@@ -354,7 +354,6 @@ inline std::unique_ptr<packet> packet_factory::make_packet(buffer_t buf)
 	else
 		ret->Decrypt(std::move(buf));
 #endif
-	size_t size = ret->Data().size();
 	ret->process_data();
 	return ret;
 }
