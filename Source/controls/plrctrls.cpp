@@ -1032,12 +1032,12 @@ void HotSpellMove(AxisDirection dir)
 		}
 	}
 
-	auto search = [&](AxisDirection dir, bool searchForward) {
+	const auto search = [&](AxisDirection dir, bool searchForward) {
 		if (dir.x == AxisDirectionX_NONE && dir.y == AxisDirectionY_NONE)
 			return;
 
 		for (size_t i = 0; i < spellListItems.size(); i++) {
-			auto index = i;
+			const size_t index = i;
 			if (searchForward)
 				index = spellListItems.size() - i - 1;
 
