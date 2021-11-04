@@ -1,5 +1,20 @@
-include(FetchContent_MakeAvailableExcludeFromAll)
+option(DEVILUTIONX_SYSTEM_LIBPNG "Use system-provided libpng" ON)
+cmake_dependent_option(DEVILUTIONX_STATIC_LIBPNG "Link static libpng" OFF
+                      "DEVILUTIONX_SYSTEM_LIBPNG AND NOT DIST" ON)
 
+if(DEVILUTIONX_SYSTEM_LIBPNG)
+  find_package(PNG QUIET)
+  if(PNG_FOUND)
+    message("-- Found png ${PNG_VERSION_STRING}")
+  else()
+    message("-- Suitable system png package not found, will use png from source")
+  endif()
+endif()
+if(NOT PNG_FOUND)
+  add_subdirectory(../libpng libpng)
+endif()
+
+include(FetchContent_MakeAvailableExcludeFromAll)
 include(FetchContent)
 if(USE_SDL1)
   FetchContent_Declare(SDL_image

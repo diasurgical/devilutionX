@@ -89,10 +89,6 @@ option(DEVILUTIONX_SYSTEM_LIBFMT "Use system-provided libfmt" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBFMT "Link static libfmt" OFF
                        "DEVILUTIONX_SYSTEM_LIBFMT AND NOT DIST" ON)
 
-option(DEVILUTIONX_SYSTEM_LIBPNG "Use system-provided libpng" ON)
-cmake_dependent_option(DEVILUTIONX_STATIC_LIBPNG "Link static libpng" OFF
-                       "DEVILUTIONX_SYSTEM_LIBPNG AND NOT DIST" ON)
-
 option(DEVILUTIONX_SYSTEM_SDL_IMAGE "Use system-provided SDL_image" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_SDL_IMAGE "Link static SDL_image" OFF
                        "DEVILUTIONX_SYSTEM_SDL_IMAGE AND NOT DIST" ON)
@@ -258,21 +254,6 @@ if(DEVILUTIONX_SYSTEM_LIBFMT)
 endif()
 if(NOT fmt_FOUND)
   add_subdirectory(3rdParty/libfmt)
-endif()
-
-if(DEVILUTIONX_SYSTEM_LIBPNG)
-  find_package(PNG QUIET)
-  if(PNG_FOUND)
-    message("-- Found png ${PNG_VERSION_STRING}")
-  else()
-    message("-- Suitable system png package not found, will use png from source")
-  endif()
-  if(NOT TARGET PNG::PNG AND TARGET 3ds::png)
-    add_library(PNG::PNG ALIAS 3ds::png)
-  endif()
-endif()
-if(NOT PNG_FOUND)
-  add_subdirectory(3rdParty/libpng)
 endif()
 
 if(ANDROID)
@@ -899,7 +880,6 @@ if(NOT NONET)
 endif()
 
 target_link_libraries(libdevilutionx PUBLIC fmt::fmt)
-target_link_libraries(libdevilutionx PUBLIC PNG::PNG)
 
 genex_for_option(DEBUG)
 target_compile_definitions(libdevilutionx PUBLIC "$<${DEBUG_GENEX}:_DEBUG>")
