@@ -93,6 +93,10 @@ option(DEVILUTIONX_SYSTEM_LIBPNG "Use system-provided libpng" ON)
 cmake_dependent_option(DEVILUTIONX_STATIC_LIBPNG "Link static libpng" OFF
                        "DEVILUTIONX_SYSTEM_LIBPNG AND NOT DIST" ON)
 
+option(DEVILUTIONX_SYSTEM_SDL_IMAGE "Use system-provided SDL_image" ON)
+cmake_dependent_option(DEVILUTIONX_STATIC_SDL_IMAGE "Link static SDL_image" OFF
+                       "DEVILUTIONX_SYSTEM_SDL_IMAGE AND NOT DIST" ON)
+
 if(NOT VERSION_NUM)
   include(CMake/git.cmake)
   get_git_tag(VERSION_NUM)
@@ -313,7 +317,29 @@ if(NOT NONET AND NOT DISABLE_TCP)
   endif()
 endif()
 
-add_subdirectory(3rdParty/SDL_image)
+if(DEVILUTIONX_SYSTEM_SDL_IMAGE)
+  if(USE_SDL1)
+    find_package(SDL_image QUIET)
+  else()
+    # vcpkg uses sdl2-image as the package name
+    find_package(sdl2-image QUIET)
+    set(SDL_image_FOUND ${sdl2-image_FOUND})
+
+    if(NOT SDL_image_FOUND)
+      # Fall back on PkgConfig via FindSDL2_image.cmake
+      find_package(SDL2_image QUIET)
+      set(SDL_image_FOUND ${SDL2_image_FOUND})
+    endif()
+  endif()
+  if(SDL_image_FOUND)
+    message("-- Found SDL_image")
+  else()
+    message("-- Suitable system SDL_image package not found, will use SDL_image from source")
+  endif()
+endif()
+if(NOT SDL_image_FOUND)
+  add_subdirectory(3rdParty/SDL_image)
+endif()
 
 if(NOT NOSOUND)
   if(DEVILUTIONX_SYSTEM_SDL_AUDIOLIB)
@@ -986,14 +1012,15 @@ endif()
 
 if(USE_SDL1)
   target_link_libraries(libdevilutionx PUBLIC
-    ${SDL_LIBRARY})
+    ${SDL_LIBRARY}
+    SDL_image)
   target_compile_definitions(libdevilutionx PUBLIC USE_SDL1)
 else()
   target_link_libraries(libdevilutionx PUBLIC
     SDL2::SDL2
-    ${SDL2_MAIN})
+    ${SDL2_MAIN}
+    SDL2::SDL2_image)
 endif()
-target_link_libraries(libdevilutionx PUBLIC SDL_image)
 
 if(NOT NOSOUND)
   target_link_libraries(libdevilutionx PUBLIC SDL_audiolib)

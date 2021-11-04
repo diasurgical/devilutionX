@@ -4,7 +4,8 @@
     "dependencies": [
         "fmt",
         "libpng",
-        "sdl2"
+        "sdl2",
+        "sdl2-image"
     ],
     "features": {
         "encryption": {
