@@ -3,7 +3,6 @@
     "version-string": "1.2.1",
     "dependencies": [
         "fmt",
-        "libpng",
         "sdl2",
         "sdl2-image"
     ],
