@@ -44,7 +44,9 @@ inline void QuitPNG()
 inline SDL_Surface *LoadPNG(const char *file)
 {
 	SDL_RWops *rwops = SFileOpenRw(file);
-	return IMG_LoadPNG_RW(rwops);
+	SDL_Surface *surface = IMG_LoadPNG_RW(rwops);
+	SDL_RWclose(rwops);
+	return surface;
 }
 
 } // namespace devilution
