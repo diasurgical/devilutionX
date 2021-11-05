@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
+import java.util.Objects;
 
 public class DevilutionXSDLActivity extends SDLActivity {
 	private String externalDir;
@@ -34,7 +35,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 
 		externalDir = getExternalFilesDir(null).getAbsolutePath();
 
-		migrateAppData();
+		migrateSaveGames();
 
 		super.onCreate(savedInstanceState);
 	}
@@ -109,7 +110,7 @@ public class DevilutionXSDLActivity extends SDLActivity {
 				in.close();
 			}
 		} catch (IOException exception) {
-			Log.e("copyFile", exception.getMessage());
+			Log.e("copyFile", Objects.requireNonNull(exception.getMessage()));
 			if (dst.exists()) {
 				//noinspection ResultOfMethodCallIgnored
 				dst.delete();
@@ -121,22 +122,13 @@ public class DevilutionXSDLActivity extends SDLActivity {
 	}
 
 	private void migrateFile(File file) {
-		if (!file.exists() || !file.canRead()) {
-			return;
-		}
-
 		File newPath = new File(externalDir + "/" + file.getName());
-		if (file.getName().equals("spawn.mpq"))
-			newPath = new File(externalDir + "/" + file.getName() + "-temp");
 
 		if (newPath.exists()) {
 			if (file.canWrite()) {
 				//noinspection ResultOfMethodCallIgnored
 				file.delete();
 			}
-			return;
-		}
-		if (!new File(newPath.getParent()).canWrite()) {
 			return;
 		}
 		if (!file.renameTo(newPath)) {
@@ -147,26 +139,8 @@ public class DevilutionXSDLActivity extends SDLActivity {
 		}
 	}
 
-	/**
-	 * This can be removed Nov 2021 and Google will no longer permit access to the old folder from that point on
-	 */
-	@SuppressWarnings("deprecation")
-	@SuppressLint("SdCardPath")
-	private void migrateAppData() {
-		if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-			if (PackageManager.PERMISSION_GRANTED != checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-				return;
-			}
-		}
-
-		migrateFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/diabdat.mpq"));
-		migrateFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/DIABDAT.MPQ"));
-
-		migrateFile(new File("/sdcard/diabdat.mpq"));
-		migrateFile(new File("/sdcard/devilutionx/diabdat.mpq"));
-		migrateFile(new File("/sdcard/devilutionx/spawn.mpq"));
-
-		for (File internalFile : getFilesDir().listFiles()) {
+	private void migrateSaveGames() {
+		for (File internalFile : Objects.requireNonNull(getFilesDir().listFiles())) {
 			migrateFile(internalFile);
 		}
 	}
