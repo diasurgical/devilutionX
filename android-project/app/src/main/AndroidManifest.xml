@@ -27,8 +27,6 @@
         android:name="android.hardware.type.pc"
         android:required="false" />
 
-    <!-- TODO: Remove this after November 2021 -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- Required for downloading shareware data on older devices -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="22" />
     <!-- Allow access to Bluetooth devices -->
@@ -42,8 +40,7 @@
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-        android:hardwareAccelerated="true"
-        android:requestLegacyExternalStorage="true">
+        android:hardwareAccelerated="true">
 
         <!-- Example of setting SDL hints from AndroidManifest.xml:
         <meta-data android:name="SDL_ENV.SDL_ACCELEROMETER_AS_JOYSTICK" android:value="0"/>
