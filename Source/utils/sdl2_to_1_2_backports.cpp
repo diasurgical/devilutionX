@@ -5,6 +5,14 @@
 
 #include "./console.h"
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX 1
+#define UNICODE 1
+#include <shlobj.h>
+#include <windows.h>
+#endif
+
 #define DEFAULT_PRIORITY SDL_LOG_PRIORITY_CRITICAL
 #define DEFAULT_ASSERT_PRIORITY SDL_LOG_PRIORITY_WARN
 #define DEFAULT_APPLICATION_PRIORITY SDL_LOG_PRIORITY_INFO
@@ -477,6 +485,216 @@ int SDL_BlitScaled(SDL_Surface *src, SDL_Rect *srcrect,
 
 // = Filesystem
 
+Sint64 SDL_RWsize(SDL_RWops *context)
+{
+	const int current = SDL_RWtell(context);
+	if (current == -1)
+		return -1;
+
+	const int begin = SDL_RWseek(context, 0, RW_SEEK_SET);
+	if (begin == -1)
+		return -1;
+
+	const int end = SDL_RWseek(context, 0, RW_SEEK_END);
+	if (end == -1)
+		return -1;
+
+	if (SDL_RWseek(context, current, RW_SEEK_SET) == -1)
+		return -1;
+
+	return end - begin;
+}
+
+#ifdef _WIN32
+
+namespace {
+
+// From sdl2-2.0.9/src/core/windows/SDL_windows.h
+#define WIN_StringToUTF8(S) SDL_iconv_string("UTF-8", "UTF-16LE", (char *)(S), (wcslen(S) + 1) * sizeof(WCHAR))
+#define WIN_UTF8ToString(S) (WCHAR *)SDL_iconv_string("UTF-16LE", "UTF-8", (char *)(S), SDL_strlen(S) + 1)
+
+/* Sets an error message based on an HRESULT */
+int WIN_SetErrorFromHRESULT(const char *prefix, HRESULT hr)
+{
+	// From sdl2-2.0.9/src/core/windows/SDL_windows.c
+
+	TCHAR buffer[1024];
+	char *message;
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, NULL, hr, 0,
+	    buffer, SDL_arraysize(buffer), NULL);
+	message = WIN_StringToUTF8(buffer);
+	SDL_SetError("%s%s%s", prefix ? prefix : "", prefix ? ": " : "", message);
+	SDL_free(message);
+	return -1;
+}
+
+/* Sets an error message based on GetLastError() */
+int WIN_SetError(const char *prefix)
+{
+	// From sdl2-2.0.9/src/core/windows/SDL_windows.c
+
+	return WIN_SetErrorFromHRESULT(prefix, GetLastError());
+}
+
+} // namespace
+
+char *SDL_GetBasePath(void)
+{
+	// From sdl2-2.0.9/src/filesystem/windows/SDL_sysfilesystem.c
+
+	typedef DWORD(WINAPI * GetModuleFileNameExW_t)(HANDLE, HMODULE, LPWSTR, DWORD);
+	GetModuleFileNameExW_t pGetModuleFileNameExW;
+	DWORD buflen = 128;
+	WCHAR *path = NULL;
+	HMODULE psapi = LoadLibrary(L"psapi.dll");
+	char *retval = NULL;
+	DWORD len = 0;
+	int i;
+
+	if (!psapi) {
+		WIN_SetError("Couldn't load psapi.dll");
+		return NULL;
+	}
+
+	pGetModuleFileNameExW = (GetModuleFileNameExW_t)GetProcAddress(psapi, "GetModuleFileNameExW");
+	if (!pGetModuleFileNameExW) {
+		WIN_SetError("Couldn't find GetModuleFileNameExW");
+		FreeLibrary(psapi);
+		return NULL;
+	}
+
+	while (SDL_TRUE) {
+		void *ptr = SDL_realloc(path, buflen * sizeof(WCHAR));
+		if (!ptr) {
+			SDL_free(path);
+			FreeLibrary(psapi);
+			SDL_OutOfMemory();
+			return NULL;
+		}
+
+		path = (WCHAR *)ptr;
+
+		len = pGetModuleFileNameExW(GetCurrentProcess(), NULL, path, buflen);
+		if (len != buflen) {
+			break;
+		}
+
+		/* buffer too small? Try again. */
+		buflen *= 2;
+	}
+
+	FreeLibrary(psapi);
+
+	if (len == 0) {
+		SDL_free(path);
+		WIN_SetError("Couldn't locate our .exe");
+		return NULL;
+	}
+
+	for (i = len - 1; i > 0; i--) {
+		if (path[i] == '\\') {
+			break;
+		}
+	}
+
+	path[i + 1] = '\0'; /* chop off filename. */
+
+	retval = WIN_StringToUTF8(path);
+	SDL_free(path);
+
+	return retval;
+}
+
+char *SDL_GetPrefPath(const char *org, const char *app)
+{
+	// From sdl2-2.0.9/src/filesystem/windows/SDL_sysfilesystem.c
+
+	/*
+     * Vista and later has a new API for this, but SHGetFolderPath works there,
+     *  and apparently just wraps the new API. This is the new way to do it:
+     *
+     *     SHGetKnownFolderPath(FOLDERID_RoamingAppData, KF_FLAG_CREATE,
+     *                          NULL, &wszPath);
+     */
+
+	WCHAR path[MAX_PATH];
+	char *retval = NULL;
+	WCHAR *worg = NULL;
+	WCHAR *wapp = NULL;
+	size_t new_wpath_len = 0;
+	BOOL api_result = FALSE;
+
+	if (!app) {
+		SDL_InvalidParamError("app");
+		return NULL;
+	}
+	if (!org) {
+		org = "";
+	}
+
+	if (!SUCCEEDED(SHGetFolderPathW(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, path))) {
+		WIN_SetError("Couldn't locate our prefpath");
+		return NULL;
+	}
+
+	worg = WIN_UTF8ToString(org);
+	if (worg == NULL) {
+		SDL_OutOfMemory();
+		return NULL;
+	}
+
+	wapp = WIN_UTF8ToString(app);
+	if (wapp == NULL) {
+		SDL_free(worg);
+		SDL_OutOfMemory();
+		return NULL;
+	}
+
+	new_wpath_len = lstrlenW(worg) + lstrlenW(wapp) + lstrlenW(path) + 3;
+
+	if ((new_wpath_len + 1) > MAX_PATH) {
+		SDL_free(worg);
+		SDL_free(wapp);
+		WIN_SetError("Path too long.");
+		return NULL;
+	}
+
+	if (*worg) {
+		lstrcatW(path, L"\\");
+		lstrcatW(path, worg);
+	}
+	SDL_free(worg);
+
+	api_result = CreateDirectoryW(path, NULL);
+	if (api_result == FALSE) {
+		if (GetLastError() != ERROR_ALREADY_EXISTS) {
+			SDL_free(wapp);
+			WIN_SetError("Couldn't create a prefpath.");
+			return NULL;
+		}
+	}
+
+	lstrcatW(path, L"\\");
+	lstrcatW(path, wapp);
+	SDL_free(wapp);
+
+	api_result = CreateDirectoryW(path, NULL);
+	if (api_result == FALSE) {
+		if (GetLastError() != ERROR_ALREADY_EXISTS) {
+			WIN_SetError("Couldn't create a prefpath.");
+			return NULL;
+		}
+	}
+
+	lstrcatW(path, L"\\");
+
+	retval = WIN_StringToUTF8(path);
+
+	return retval;
+}
+
+#else
+
 namespace {
 #if !defined(__QNXNTO__)
 char *readSymLink(const char *path)
@@ -511,26 +729,6 @@ char *readSymLink(const char *path)
 }
 #endif
 } // namespace
-
-Sint64 SDL_RWsize(SDL_RWops *context)
-{
-	const int current = SDL_RWtell(context);
-	if (current == -1)
-		return -1;
-
-	const int begin = SDL_RWseek(context, 0, RW_SEEK_SET);
-	if (begin == -1)
-		return -1;
-
-	const int end = SDL_RWseek(context, 0, RW_SEEK_END);
-	if (end == -1)
-		return -1;
-
-	if (SDL_RWseek(context, current, RW_SEEK_SET) == -1)
-		return -1;
-
-	return end - begin;
-}
 
 char *SDL_GetBasePath()
 {
@@ -719,3 +917,5 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 
 	return retval;
 }
+
+#endif
