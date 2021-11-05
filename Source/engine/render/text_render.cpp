@@ -346,7 +346,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 		characterPosition.x += rect.size.width - lineWidth;
 
 	int rightMargin = rect.position.x + rect.size.width;
-	int bottomMargin = rect.size.height != 0 ? rect.position.y + rect.size.height : out.h();
+	const int bottomMargin = rect.size.height != 0 ? std::min(rect.position.y + rect.size.height, out.h()) : out.h();
 
 	if (lineHeight == -1)
 		lineHeight = LineHeights[size];
