@@ -37,6 +37,10 @@ void DrawArt(Point screenPosition, Art *art, int nFrame, Uint16 srcW, Uint16 src
 		srcRect.w = srcW;
 	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
+
+	if (screenPosition.x + srcRect.w <= 0 || screenPosition.y + srcRect.h <= 0)
+		return;
+
 	SDL_Rect dstRect = MakeSdlRect(screenPosition.x, screenPosition.y, srcRect.w, srcRect.h);
 	ScaleOutputRect(&dstRect);
 
@@ -56,6 +60,9 @@ void DrawArt(const Surface &out, Point position, Art *art, int nFrame, Uint16 sr
 		srcRect.w = srcW;
 	if (srcH != 0 && srcH < srcRect.h)
 		srcRect.h = srcH;
+
+	if (position.x + srcRect.w <= 0 || position.y + srcRect.h <= 0)
+		return;
 
 	out.Clip(&srcRect, &position);
 	SDL_Rect dstRect = MakeSdlRect(position.x + out.region.x, position.y + out.region.y, 0, 0);
