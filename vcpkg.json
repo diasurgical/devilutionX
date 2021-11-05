@@ -2,11 +2,17 @@
     "name": "devilutionx",
     "version-string": "1.2.1",
     "dependencies": [
-        "fmt",
-        "sdl2",
-        "sdl2-image"
+        "fmt"
     ],
     "features": {
+        "sdl1": {
+            "description": "Use SDL1.2 instead of SDL2",
+            "dependencies": [ "sdl1", "libpng" ]
+        },
+        "sdl2": {
+            "description": "Use SDL2",
+            "dependencies": [ "sdl2", "sdl2-image" ]
+        },
         "encryption": {
             "description": "Build libsodium for packet encryption",
             "dependencies": [ "libsodium" ]
