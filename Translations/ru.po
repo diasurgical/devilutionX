@@ -6237,7 +6237,7 @@ msgstr "Исцеление"
 #: Source/spelldat.cpp:18
 msgctxt "spell"
 msgid "Lightning"
-msgstr "Светящийся"
+msgstr "Молния"
 
 #: Source/spelldat.cpp:19
 msgctxt "spell"
@@ -6257,7 +6257,7 @@ msgstr "Стена Огня"
 #: Source/spelldat.cpp:22
 msgctxt "spell"
 msgid "Town Portal"
-msgstr "Городской портал"
+msgstr "Городской Портал"
 
 #: Source/spelldat.cpp:23
 msgctxt "spell"
@@ -6277,7 +6277,7 @@ msgstr "Перемещение"
 #: Source/spelldat.cpp:26
 msgctxt "spell"
 msgid "Mana Shield"
-msgstr "Щит маны"
+msgstr "Щит Маны"
 
 #: Source/spelldat.cpp:27
 msgctxt "spell"
@@ -6322,7 +6322,7 @@ msgstr "Невидимость"
 #: Source/spelldat.cpp:35
 msgctxt "spell"
 msgid "Inferno"
-msgstr "Преисподня"
+msgstr "Преисподняя"
 
 #: Source/spelldat.cpp:36
 msgctxt "spell"
