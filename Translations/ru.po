@@ -5927,7 +5927,7 @@ msgstr "Опыт"
 
 #: Source/panels/charpanel.cpp:124
 msgid "Next level"
-msgstr "Следующий Уровень"
+msgstr "Следующий уровень"
 
 #: Source/panels/charpanel.cpp:127
 msgid "None"
@@ -6085,15 +6085,15 @@ msgstr "Опыт: "
 
 #: Source/qol/xpbar.cpp:136
 msgid "Maximum Level"
-msgstr "Максимальный Уровень"
+msgstr "Максимальный уровень"
 
 #: Source/qol/xpbar.cpp:147
 msgid "Next Level: "
-msgstr "Следующий Уровень: "
+msgstr "Следующий уровень: "
 
 #: Source/qol/xpbar.cpp:151
 msgid " to Level {:d}"
-msgstr " до Уровня {:d}"
+msgstr " до уровня {:d}"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:41
