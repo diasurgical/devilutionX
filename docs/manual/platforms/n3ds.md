@@ -3,7 +3,7 @@
 
 ## Installation
 
-Start by downloading [devilutionx-n3ds.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-n3ds.zip).
+Start by downloading [devilutionx-3ds.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-3ds.zip).
 
 <details><summary>.3dsx installation</summary>
 
