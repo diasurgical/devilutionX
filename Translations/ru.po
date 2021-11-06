@@ -5546,7 +5546,7 @@ msgstr "Игрок '{:s}' убил Диабло и покинул игру!"
 
 #: Source/multi.cpp:202
 msgid "Player '{:s}' dropped due to timeout"
-msgstr "Игрок \"{:s}\" вышел из-за тайм-аута"
+msgstr "Игрок '{:s}' вышел из-за тайм-аута"
 
 #: Source/multi.cpp:807
 msgid "Player '{:s}' (level {:d}) is already in the game"
