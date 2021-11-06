@@ -6625,7 +6625,7 @@ msgstr "По рукам?"
 
 #: Source/stores.cpp:906
 msgid "Are you sure you want to identify this item?"
-msgstr "Вы уверены, что хотите идентифицировать эти предметы?"
+msgstr "Вы уверены, что хотите идентифицировать этот предмет?"
 
 #: Source/stores.cpp:912
 msgid "Are you sure you want to buy this item?"
@@ -6633,7 +6633,7 @@ msgstr "Вы уверены, что хотите купить этот пред�
 
 #: Source/stores.cpp:915
 msgid "Are you sure you want to recharge this item?"
-msgstr "Вы уверены что хотите зарядить этот предмет?"
+msgstr "Вы уверены, что хотите зарядить этот предмет?"
 
 #: Source/stores.cpp:919
 msgid "Are you sure you want to sell this item?"
@@ -6641,7 +6641,7 @@ msgstr "Вы уверены, что хотите продать этот пре�
 
 #: Source/stores.cpp:922
 msgid "Are you sure you want to repair this item?"
-msgstr "Вы уверены, что хотите починить эту вещь?"
+msgstr "Вы уверены, что хотите починить этот предмет?"
 
 #: Source/stores.cpp:936 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
@@ -6776,7 +6776,7 @@ msgstr "Поговорить с Фарнамом"
 
 #: Source/stores.cpp:1267
 msgid "Say Goodbye"
-msgstr "Сказать До свидания"
+msgstr "Попрощаться"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:15
