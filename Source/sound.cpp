@@ -164,7 +164,7 @@ std::unique_ptr<TSnd> sound_file_load(const char *path, bool stream)
 #ifndef STREAM_ALL_AUDIO
 	} else {
 		SDL_RWops *file = SFileOpenRw(path);
-		if (path == nullptr) {
+		if (file == nullptr) {
 			ErrDlg("SFileOpenFile failed", path, __FILE__, __LINE__);
 		}
 		size_t dwBytes = SDL_RWsize(file);
