@@ -52,14 +52,23 @@ enum class DebugGridTextItem : uint16_t {
 	dObject,
 	dItem,
 	dSpecial,
+
 	coords,
 	cursorcoords,
 	objectindex,
+
+	//take dPiece as index
 	nBlockTable,
 	nSolidTable,
 	nTransTable,
 	nMissileTable,
 	nTrapTable,
+
+	// megatiles
+	AutomapView,
+	dungeon,
+	pdungeon,
+	dflags,
 };
 
 DebugGridTextItem SelectedDebugGridTextItem;
@@ -611,6 +620,10 @@ std::string DebugCmdShowTileData(const string_view parameter)
 		"nTransTable",
 		"nMissileTable",
 		"nTrapTable",
+		"AutomapView",
+		"dungeon",
+		"pdungeon",
+		"dflags",
 	};
 
 	if (parameter == "clear") {
@@ -813,9 +826,22 @@ bool IsDebugGridTextNeeded()
 	return SelectedDebugGridTextItem != DebugGridTextItem::None;
 }
 
+bool IsDebugGridInMegatiles()
+{
+	switch (SelectedDebugGridTextItem) {
+	case DebugGridTextItem::AutomapView:
+	case DebugGridTextItem::dungeon:
+	case DebugGridTextItem::pdungeon:
+	case DebugGridTextItem::dflags:
+		return true;
+	}
+	return false;
+}
+
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 {
 	int info = 0;
+	Point megaCoords = { (dungeonCoords.x - 16) / 2, (dungeonCoords.y - 16) / 2 };
 	switch (SelectedDebugGridTextItem) {
 	case DebugGridTextItem::coords:
 		sprintf(debugGridTextBuffer, "%d:%d", dungeonCoords.x, dungeonCoords.y);
@@ -881,6 +907,18 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		break;
 	case DebugGridTextItem::nTrapTable:
 		info = nTrapTable[dPiece[dungeonCoords.x][dungeonCoords.y]];
+		break;
+	case DebugGridTextItem::AutomapView:
+		info = AutomapView[megaCoords.x][megaCoords.y];
+		break;
+	case DebugGridTextItem::dungeon:
+		info = dungeon[megaCoords.x][megaCoords.y];
+		break;
+	case DebugGridTextItem::pdungeon:
+		info = pdungeon[megaCoords.x][megaCoords.y];
+		break;
+	case DebugGridTextItem::dflags:
+		info = dflags[megaCoords.x][megaCoords.y];
 		break;
 	case DebugGridTextItem::None:
 		return false;
