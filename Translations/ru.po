@@ -3717,7 +3717,7 @@ msgstr "брони и щитов"
 
 #: Source/items.cpp:1947
 msgid "greatly increases the armor"
-msgstr "сильно улучшает класс брони"
+msgstr "значительно улучшает класс брони"
 
 #: Source/items.cpp:1949
 msgid "class of armor and shields"
@@ -3881,7 +3881,7 @@ msgstr "Сопротивление огню: 75% MAX"
 
 #: Source/items.cpp:3849
 msgid "Resist Lightning: {:+d}%"
-msgstr "Сопротивление молнии:  {:d}%"
+msgstr "Сопротивление молнии: {:d}%"
 
 #: Source/items.cpp:3851
 #, no-c-format
@@ -3890,7 +3890,7 @@ msgstr "Сопротивление молнии: 75% MAX"
 
 #: Source/items.cpp:3856
 msgid "Resist Magic: {:+d}%"
-msgstr "Сопротивление магии:  {:d}%"
+msgstr "Сопротивление магии: {:d}%"
 
 #: Source/items.cpp:3858
 #, no-c-format
@@ -3899,7 +3899,7 @@ msgstr "Сопротивление магии: 75% MAX"
 
 #: Source/items.cpp:3863
 msgid "Resist All: {:+d}%"
-msgstr "Общее сопротивление:  {:d}%"
+msgstr "Общее сопротивление: {:d}%"
 
 #: Source/items.cpp:3865
 #, no-c-format
@@ -3965,7 +3965,7 @@ msgstr "{:+d} к ловкости"
 
 #: Source/items.cpp:3907
 msgid "{:+d} to vitality"
-msgstr "{:+d} к выносливости"
+msgstr "{:+d} к живучести"
 
 #: Source/items.cpp:3911
 msgid "{:+d} to all attributes"
@@ -4019,19 +4019,20 @@ msgstr "урон огненных стрел: {:d}-{:d}"
 
 #: Source/items.cpp:3951
 msgid "lightning arrows damage {:d}"
-msgstr "урон грозовых стрел : {:d}"
+msgstr "урон грозовых стрел: {:d}"
 
 #: Source/items.cpp:3953
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "урон грозовых стрел: {:d}-{:d}"
 
+# "Fireball" is singular here.
 #: Source/items.cpp:3957
 msgid "fireball damage: {:d}"
-msgstr "урон фаерболов : {:d}"
+msgstr "урон огненного шара: {:d}"
 
 #: Source/items.cpp:3959
 msgid "fireball damage: {:d}-{:d}"
-msgstr "урон фаерболов : {:d}-{:d}"
+msgstr "урон огненного шара: {:d}-{:d}"
 
 #: Source/items.cpp:3962
 msgid "attacker takes 1-3 damage"
@@ -4100,11 +4101,11 @@ msgstr "быстрая атака"
 
 #: Source/items.cpp:4006
 msgid "faster attack"
-msgstr "более быстрая така"
+msgstr "более быстрая атака"
 
 #: Source/items.cpp:4008
 msgid "fastest attack"
-msgstr "наибыстрейшая атка"
+msgstr "наибыстрейшая атака"
 
 #: Source/items.cpp:4012
 msgid "fast hit recovery"
@@ -4133,9 +4134,10 @@ msgstr[2] "добавляет {:d} очков к урону"
 msgid "fires random speed arrows"
 msgstr "выпускает случайные быстрые стрелы"
 
+# Doesn't damage an item, but an item itself deals damage.
 #: Source/items.cpp:4028
 msgid "unusual item damage"
-msgstr "необычный урон предметам"
+msgstr "необычный урон предмета"
 
 #: Source/items.cpp:4031
 msgid "altered durability"
