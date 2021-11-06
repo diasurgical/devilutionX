@@ -59,6 +59,9 @@ enum class UiFlags {
 
 	PentaCursor        = 1 << 26,
 	TextCursor         = 1 << 27,
+
+	/** @brief Ensures that the if current element is active that the next element is also visible. */
+	NeedsNextElement   = 1 << 28,
 	// clang-format on
 };
 use_enum_as_flags(UiFlags);
