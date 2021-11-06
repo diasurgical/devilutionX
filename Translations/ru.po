@@ -4319,12 +4319,12 @@ msgstr "Упырь"
 #: Source/monstdat.cpp:22
 msgctxt "monster"
 msgid "Rotting Carcass"
-msgstr "Гниющая туша"
+msgstr "Гниющая Туша"
 
 #: Source/monstdat.cpp:23
 msgctxt "monster"
 msgid "Black Death"
-msgstr "Чёрная смерть"
+msgstr "Чёрная Смерть"
 
 #: Source/monstdat.cpp:24 Source/monstdat.cpp:32
 msgctxt "monster"
@@ -4495,7 +4495,7 @@ msgstr "Ядовитый Плеватель"
 #: Source/monstdat.cpp:68
 msgctxt "monster"
 msgid "Pit Beast"
-msgstr "Зверь Преисподни"
+msgstr "Зверь Преисподней"
 
 #: Source/monstdat.cpp:69
 msgctxt "monster"
@@ -4602,12 +4602,12 @@ msgctxt "monster"
 msgid "Red Death"
 msgstr "Красная Смерть"
 
-# https://www.wikiwand.com/ru/Licht_(%D1%86%D0%B8%D0%BA%D0%BB_%D0%BE%D0%BF%D0%B5%D1%80)
-# https://translate.google.com/?sl=en&tl=ru&text=Licht&op=translate
+# "Li_t_ch", not "Licht".
+# (Also, see the translation of "The Arch-Litch Malignus" below.)
 #: Source/monstdat.cpp:90
 msgctxt "monster"
 msgid "Litch Demon"
-msgstr "Демон Cвета"
+msgstr "Демон-Лич"
 
 #: Source/monstdat.cpp:91
 msgctxt "monster"
@@ -4739,10 +4739,11 @@ msgctxt "monster"
 msgid "Blood Knight"
 msgstr "Рыцарь Крови"
 
+# Adjective.
 #: Source/monstdat.cpp:117
 msgctxt "monster"
 msgid "The Shredded"
-msgstr "Дроблённый"
+msgstr "Дроблёный"
 
 # Пустой?
 #: Source/monstdat.cpp:118
@@ -4779,7 +4780,7 @@ msgstr "Адское Отродье"
 #: Source/monstdat.cpp:124
 msgctxt "monster"
 msgid "Soul Burner"
-msgstr "Сжигатель душ"
+msgstr "Сжигатель Душ"
 
 #: Source/monstdat.cpp:125
 msgctxt "monster"
@@ -4831,6 +4832,8 @@ msgctxt "monster"
 msgid "Psychorb"
 msgstr "Психорб"
 
+# FIXME: This creature is not a simple spider, so it might need a different translation.
+# "Арахнон"?
 #: Source/monstdat.cpp:135
 msgctxt "monster"
 msgid "Arachnon"
@@ -4924,7 +4927,7 @@ msgstr "Костяной Демон"
 #: Source/monstdat.cpp:153
 msgctxt "monster"
 msgid "Arch Lich"
-msgstr "Архи-лич"
+msgstr "Архилич"
 
 #: Source/monstdat.cpp:154
 msgctxt "monster"
@@ -4989,7 +4992,7 @@ msgstr "Лахданан"
 #: Source/monstdat.cpp:481
 msgctxt "monster"
 msgid "Warlord of Blood"
-msgstr "Кровавый полководец"
+msgstr "Кровавый Полководец"
 
 #: Source/monstdat.cpp:484
 msgctxt "monster"
@@ -5016,7 +5019,6 @@ msgctxt "monster"
 msgid "Pukerat the Unclean"
 msgstr "Нечистый Блевокрыс"
 
-# Костедёр?
 #: Source/monstdat.cpp:490
 msgctxt "monster"
 msgid "Boneripper"
@@ -5027,6 +5029,8 @@ msgctxt "monster"
 msgid "Rotfeast the Hungry"
 msgstr "Гнилоед Голодный"
 
+# FIXME: "Guts" and "hank".
+# "Моток кишок"?
 #: Source/monstdat.cpp:492
 msgctxt "monster"
 msgid "Gutshank the Quick"
@@ -5062,10 +5066,12 @@ msgctxt "monster"
 msgid "Madeye the Dead"
 msgstr "Бесоглаз Мертвец"
 
+# https://en.wikipedia.org/wiki/Chupacabra
+# "El" = "The".
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr "Чупакабры"
+msgstr "Чупакабра"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5192,12 +5198,12 @@ msgstr "Бронзокулакий Огнекам"
 #: Source/monstdat.cpp:524
 msgctxt "monster"
 msgid "Wrathfire the Doomed"
-msgstr "Огонегнев Обречённый"
+msgstr "Огнегнев Обречённый"
 
 #: Source/monstdat.cpp:525
 msgctxt "monster"
 msgid "Firewound the Grim"
-msgstr "Огнежег Беспощадный"
+msgstr "Огнежёг Беспощадный"
 
 #: Source/monstdat.cpp:526
 msgctxt "monster"
@@ -5343,7 +5349,7 @@ msgstr "Ветрородье"
 #: Source/monstdat.cpp:554
 msgctxt "monster"
 msgid "Lord of the Pit"
-msgstr "Повелитель Ада"
+msgstr "Повелитель Ямы"
 
 #: Source/monstdat.cpp:555
 msgctxt "monster"
