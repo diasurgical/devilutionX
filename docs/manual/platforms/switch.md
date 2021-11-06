@@ -3,7 +3,7 @@
 ## Installation
 
 1. Download and unzip [devilutionx-switch.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-switch.zip).
-2. Put `devilutionx.nro` and `CharisSILB.ttf` in into `/switch/devilutionx`
+2. Put `devilutionx.nro` into `/switch/devilutionx`
 3. Copy `diabdat.mpq` from your CD (or GoG install folder) to `/switch/devilutionx`.
 
 ## Usage
