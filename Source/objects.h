@@ -128,12 +128,80 @@ struct Object {
 	[[nodiscard]] bool IsDisabled() const;
 
 	/**
+	 * @brief Check if this object is barrel (or explosive barrel)
+	 * @return True if the object is one of the barrel types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsBarrel() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_BARREL, _object_id::OBJ_BARRELEX);
+	}
+
+	/**
+	 * @brief Check if this object is a chest (or trapped chest).
+	 *
+	 * Trapped chests get their base type change in addition to having the trap flag set, but if they get "refilled" by
+	 * a Thaumaturgic shrine the base type is not reverted. This means you need to consider both the base type and the
+	 * trap flag to differentiate between chests that are currently trapped and chests which have never been trapped.
+	 *
+	 * @return True if the object is any of the chest types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3);
+	}
+
+	/**
+	 * @brief Check if this object is a trapped chest (specifically a chest which is currently trapped).
+	 * @return True if the object is one of the trapped chest types (see _object_id) and has an active trap.
+	 */
+	[[nodiscard]] constexpr bool IsTrappedChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_TCHEST1, _object_id::OBJ_TCHEST2, _object_id::OBJ_TCHEST3) && _oTrapFlag;
+	}
+
+	/**
+	 * @brief Check if this object is an untrapped chest (specifically a chest which has not been trapped).
+	 * @return True if the object is one of the untrapped chest types (see _object_id) and has no active trap.
+	 */
+	[[nodiscard]] constexpr bool IsUntrappedChest() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CHEST1, _object_id::OBJ_CHEST2, _object_id::OBJ_CHEST3) && !_oTrapFlag;
+	}
+
+	/**
+	 * @brief Check if this object is a crucifix
+	 * @return True if the object is one of the crux types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsCrux() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_CRUX1, _object_id::OBJ_CRUX2, _object_id::OBJ_CRUX3);
+	}
+
+	/**
 	 * @brief Check if this object is a door
 	 * @return True if the object is one of the door types (see _object_id)
 	 */
-	bool IsDoor() const
+	[[nodiscard]] constexpr bool IsDoor() const
 	{
 		return IsAnyOf(_otype, _object_id::OBJ_L1LDOOR, _object_id::OBJ_L1RDOOR, _object_id::OBJ_L2LDOOR, _object_id::OBJ_L2RDOOR, _object_id::OBJ_L3LDOOR, _object_id::OBJ_L3RDOOR);
+	}
+
+	/**
+	 * @brief Check if this object is a shrine
+	 * @return True if the object is one of the shrine types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsShrine() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER);
+	}
+
+	/**
+	 * @brief Check if this object is a trap source
+	 * @return True if the object is one of the trap types (see _object_id)
+	 */
+	[[nodiscard]] constexpr bool IsTrap() const
+	{
+		return IsAnyOf(_otype, _object_id::OBJ_TRAPL, _object_id::OBJ_TRAPR);
 	}
 };
 

@@ -3042,11 +3042,11 @@ void MI_Lightball(Missile &missile)
 	MoveMissileAndCheckMissileCol(missile, missile._midam, missile._midam, false, false);
 	if (missile._miHitFlag)
 		missile._mirange = j;
-	int8_t obj = dObject[tx][ty];
-	if (obj != 0 && missile.position.tile == Point { tx, ty }) {
-		int oi = (obj > 0) ? (obj - 1) : -(obj + 1);
-		if (Objects[oi]._otype == OBJ_SHRINEL || Objects[oi]._otype == OBJ_SHRINER)
+	if (missile.position.tile == Point { tx, ty }) {
+		int8_t oi = abs(dObject[tx][ty]) - 1;
+		if (oi >= 0 && Objects[oi].IsShrine()) {
 			missile._mirange = j;
+		}
 	}
 	if (missile._mirange == 0)
 		missile._miDelFlag = true;

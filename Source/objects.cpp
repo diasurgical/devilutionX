@@ -635,7 +635,7 @@ void AddChestTraps()
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 			if (dObject[i][j] > 0) {
 				int8_t oi = dObject[i][j] - 1;
-				if (Objects[oi]._otype >= OBJ_CHEST1 && Objects[oi]._otype <= OBJ_CHEST3 && !Objects[oi]._oTrapFlag && GenerateRnd(100) < 10) {
+				if (Objects[oi].IsUntrappedChest() && GenerateRnd(100) < 10) {
 					switch (Objects[oi]._otype) {
 					case OBJ_CHEST1:
 						Objects[oi]._otype = OBJ_TCHEST1;
@@ -2365,7 +2365,7 @@ void OperateChest(int pnum, int i, bool sendmsg)
 				CreateRndUseful(Objects[i].position, sendmsg);
 		}
 	}
-	if (Objects[i]._oTrapFlag && Objects[i]._otype >= OBJ_TCHEST1 && Objects[i]._otype <= OBJ_TCHEST3) {
+	if (Objects[i].IsTrappedChest()) {
 		auto &player = Players[pnum];
 		Direction mdir = GetDirection(Objects[i].position, player.position.tile);
 		missile_id mtype;
@@ -2854,7 +2854,7 @@ bool OperateShrineThaumaturgic(int pnum)
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		int v1 = ActiveObjects[j];
 		assert(v1 >= 0 && v1 < MAXOBJECTS);
-		if (IsAnyOf(Objects[v1]._otype, OBJ_CHEST1, OBJ_CHEST2, OBJ_CHEST3, OBJ_TCHEST1, OBJ_TCHEST2, OBJ_TCHEST3) && Objects[v1]._oSelFlag == 0) {
+		if (Objects[v1].IsChest() && Objects[v1]._oSelFlag == 0) {
 			Objects[v1]._oRndSeed = AdvanceRndSeed();
 			Objects[v1]._oSelFlag = 1;
 			Objects[v1]._oAnimFrame -= 2;
@@ -4101,7 +4101,7 @@ bool AreAllCruxesOfTypeBroken(int cruxType)
 {
 	for (int j = 0; j < ActiveObjectCount; j++) {
 		const auto &testObject = Objects[ActiveObjects[j]];
-		if (IsNoneOf(testObject._otype, OBJ_CRUX1, OBJ_CRUX2, OBJ_CRUX3))
+		if (!testObject.IsCrux())
 			continue; // Not a Crux object, keep searching
 		if (cruxType != testObject._oVar8 || testObject._oBreak == -1)
 			continue; // Found either a different crux or a previously broken crux, keep searching
@@ -4338,7 +4338,7 @@ bool Object::IsDisabled() const
 	if (IsAnyOf(_otype, _object_id::OBJ_GOATSHRINE, _object_id::OBJ_CAULDRON)) {
 		return true;
 	}
-	if (IsNoneOf(_otype, _object_id::OBJ_SHRINEL, _object_id::OBJ_SHRINER)) {
+	if (!IsShrine()) {
 		return false;
 	}
 	return IsAnyOf(static_cast<shrine_type>(_oVar1), shrine_type::ShrineFascinating, shrine_type::ShrineOrnate, shrine_type::ShrineSacred);
@@ -5015,21 +5015,15 @@ void TryDisarm(int pnum, int i)
 		return;
 	}
 	for (int j = 0; j < ActiveObjectCount; j++) {
-		bool checkflag = false;
-		int oi = ActiveObjects[j];
-		int oti = Objects[oi]._otype;
-		if (oti == OBJ_TRAPL)
-			checkflag = true;
-		if (oti == OBJ_TRAPR)
-			checkflag = true;
-		if (checkflag && dObject[Objects[oi]._oVar1][Objects[oi]._oVar2] - 1 == i) {
-			Objects[oi]._oVar4 = 1;
+		Object &trap = Objects[ActiveObjects[j]];
+		if (trap.IsTrap() && dObject[trap._oVar1][trap._oVar2] - 1 == i) {
+			trap._oVar4 = 1;
 			Objects[i]._oTrapFlag = false;
 		}
 	}
-	int oti = Objects[i]._otype;
-	if (oti >= OBJ_TCHEST1 && oti <= OBJ_TCHEST3)
+	if (Objects[i].IsTrappedChest()) {
 		Objects[i]._oTrapFlag = false;
+	}
 }
 
 int ItemMiscIdIdx(item_misc_id imiscid)
@@ -5268,25 +5262,18 @@ void BreakObject(int pnum, int oi)
 		objdam += player._pDamageMod + player._pIBonusDamMod + objdam * player._pIBonusDam / 100;
 	}
 
-	switch (Objects[oi]._otype) {
-	case OBJ_CRUX1:
-	case OBJ_CRUX2:
-	case OBJ_CRUX3:
-		BreakCrux(Objects[oi]);
-		break;
-	case OBJ_BARREL:
-	case OBJ_BARRELEX:
+	if (Objects[oi].IsBarrel()) {
 		BreakBarrel(pnum, oi, objdam, false, true);
-		break;
-	default:
-		break;
+	} else if (Objects[oi].IsCrux()) {
+		BreakCrux(Objects[oi]);
 	}
 }
 
 void SyncBreakObj(int pnum, int oi)
 {
-	if (Objects[oi]._otype >= OBJ_BARREL && Objects[oi]._otype <= OBJ_BARRELEX)
+	if (Objects[oi].IsBarrel()) {
 		BreakBarrel(pnum, oi, 0, true, false);
+	}
 }
 
 void SyncObjectAnim(Object &object)
