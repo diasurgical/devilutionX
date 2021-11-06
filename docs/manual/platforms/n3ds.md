@@ -8,12 +8,11 @@ Start by downloading [devilutionx-n3ds.zip](https://github.com/diasurgical/devil
 <details><summary>.3dsx installation</summary>
 
 #### Install DevilutionX: Diablo
-1. Extract `devilutionx.3dsx`, `CharisSILB.ttf`, and `devilutionx.mpq` and put them into `sd:/3ds/devilutionx/`.
+1. Extract `devilutionx.3dsx` and place into `sd:/3ds/devilutionx/`.
 2. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
 #### Install DevilutionX: Diablo - Hellfire
 3. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
-    1. *Note:* When the Hellfire .mpqs are installed you can still launch regular Diablo by passing `--diablo` to `devilutionx.3dsx`.
 
 </details>
 
@@ -21,9 +20,8 @@ Start by downloading [devilutionx-n3ds.zip](https://github.com/diasurgical/devil
 
 #### Install DevilutionX: Diablo
 1. Extract `devilutionx.cia` and place it on your SD card.
-2. Extract `devilutionx.mpq` and `CharisSILB.ttf` and put them into `sd:/3ds/devilutionx/`.
-3. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
-4. Put the SD card back into the 3DS and install `devilutionx.cia` using a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
+2. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+3. Put the SD card back into the 3DS and install `devilutionx.cia` using a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
     1. `devilutionx.cia` can be removed after being installed.
 
 ##### Install DevilutionX: Diablo - Hellfire
