@@ -290,9 +290,10 @@ public:
 
 class UiListItem {
 public:
-	UiListItem(const char *text = "", int value = 0)
+	UiListItem(const char *text = "", int value = 0, UiFlags uiFlags = UiFlags::None)
 	    : m_text(text)
 	    , m_value(value)
+	    , uiFlags(uiFlags)
 	{
 	}
 
@@ -301,6 +302,7 @@ public:
 	//private:
 	const char *m_text;
 	int m_value;
+	UiFlags uiFlags;
 };
 
 typedef std::vector<std::unique_ptr<UiListItem>> vUiListItem;

@@ -781,7 +781,7 @@ void Render(const UiList *uiList)
 			DrawSelector(rect);
 
 		Rectangle rectangle { { rect.x, rect.y }, { rect.w, rect.h } };
-		DrawString(out, item->m_text, rectangle, uiList->m_iFlags, uiList->spacing());
+		DrawString(out, item->m_text, rectangle, uiList->m_iFlags | item->uiFlags, uiList->spacing());
 	}
 }
 
