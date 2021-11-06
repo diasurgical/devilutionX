@@ -5873,7 +5873,7 @@ msgstr "Козлиный храм"
 
 #: Source/objects.cpp:5476
 msgid "Cauldron"
-msgstr "Котел"
+msgstr "Котёл"
 
 #: Source/objects.cpp:5479
 msgid "Murky Pool"
@@ -5901,7 +5901,7 @@ msgstr "Мерзкий стенд"
 
 #: Source/objects.cpp:5503
 msgid "Slain Hero"
-msgstr "Убитый Герой"
+msgstr "Убитый герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
 #: Source/objects.cpp:5510
