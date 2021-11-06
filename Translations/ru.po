@@ -5686,7 +5686,7 @@ msgstr "Великий Конфликт"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:269
 msgid "The Wages of Sin are War"
-msgstr "Возмездие за грех - Война"
+msgstr "Возмездие за Грех - Война"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:270
@@ -5696,12 +5696,12 @@ msgstr "Сказ Хорадримов"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:271
 msgid "The Dark Exile"
-msgstr "Тёмный изгнанник"
+msgstr "Тёмное Изгнание"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:272
 msgid "The Sin War"
-msgstr "Война Грехов"
+msgstr "Война Греха"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:273
@@ -5741,7 +5741,7 @@ msgstr "Журнал: Тирада"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:280
 msgid "Journal: His Power Grows"
-msgstr "Журнал: Его сила растет"
+msgstr "Журнал: Его Сила Растёт"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:281
