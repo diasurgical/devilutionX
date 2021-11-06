@@ -207,6 +207,9 @@ void UiFocus(std::size_t itemIndex, bool checkUp)
 		}
 		return;
 	}
+	if (HasAnyOf(pItem->uiFlags, UiFlags::NeedsNextElement)) {
+		AdjustListOffset(itemIndex + 1);
+	}
 
 	SelectedItem = itemIndex;
 
