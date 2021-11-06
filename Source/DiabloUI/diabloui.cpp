@@ -60,6 +60,7 @@ void (*gfnListSelect)(int value);
 void (*gfnListEsc)();
 bool (*gfnListYesNo)();
 std::vector<UiItemBase *> gUiItems;
+UiList *gUiList = nullptr;
 bool UiItemsWraps;
 char *UiTextInput;
 int UiTextInputLen;
@@ -137,6 +138,7 @@ void UiInitList(size_t listViewportSize, void (*fnFocus)(int value), void (*fnSe
 		} else if (item->m_type == UiType::List) {
 			auto *uiList = static_cast<UiList *>(item.get());
 			SelectedItemMax = std::max(uiList->m_vecItems.size() - 1, static_cast<size_t>(0));
+			gUiList = uiList;
 		} else if (item->m_type == UiType::Scrollbar) {
 			uiScrollbar = static_cast<UiScrollbar *>(item.get());
 		}
@@ -160,6 +162,7 @@ void UiInitList_clear()
 	gfnListSelect = nullptr;
 	gfnListEsc = nullptr;
 	gfnListYesNo = nullptr;
+	gUiList = nullptr;
 	gUiItems.clear();
 	UiItemsWraps = false;
 }
@@ -178,16 +181,36 @@ void UiPlaySelectSound()
 
 namespace {
 
-void UiFocus(std::size_t itemIndex)
+void UiFocus(std::size_t itemIndex, bool checkUp)
 {
 	if (SelectedItem == itemIndex)
 		return;
 
+	AdjustListOffset(itemIndex);
+
+	auto pItem = gUiList->GetItem(itemIndex);
+	if (HasAnyOf(pItem->uiFlags, UiFlags::ElementHidden | UiFlags::ElementDisabled)) {
+		if (checkUp) {
+			if (itemIndex > 0)
+				UiFocus(itemIndex - 1, checkUp);
+			else if (UiItemsWraps)
+				UiFocus(SelectedItemMax, checkUp);
+			else
+				UiFocus(itemIndex, false);
+		} else {
+			if (itemIndex < SelectedItemMax)
+				UiFocus(itemIndex + 1, checkUp);
+			else if (UiItemsWraps)
+				UiFocus(0, checkUp);
+			else
+				UiFocus(itemIndex, true);
+		}
+		return;
+	}
+
 	SelectedItem = itemIndex;
 
 	UiPlayMoveSound();
-
-	AdjustListOffset(itemIndex);
 
 	if (gfnListFocus != nullptr)
 		gfnListFocus(itemIndex);
@@ -196,17 +219,17 @@ void UiFocus(std::size_t itemIndex)
 void UiFocusUp()
 {
 	if (SelectedItem > 0)
-		UiFocus(SelectedItem - 1);
+		UiFocus(SelectedItem - 1, true);
 	else if (UiItemsWraps)
-		UiFocus(SelectedItemMax);
+		UiFocus(SelectedItemMax, true);
 }
 
 void UiFocusDown()
 {
 	if (SelectedItem < SelectedItemMax)
-		UiFocus(SelectedItem + 1);
+		UiFocus(SelectedItem + 1, false);
 	else if (UiItemsWraps)
-		UiFocus(0);
+		UiFocus(0, false);
 }
 
 // UiFocusPageUp/Down mimics the slightly weird behaviour of actual Diablo.
@@ -214,7 +237,7 @@ void UiFocusDown()
 void UiFocusPageUp()
 {
 	if (listOffset == 0) {
-		UiFocus(0);
+		UiFocus(0, true);
 	} else {
 		const std::size_t relpos = SelectedItem - listOffset;
 		std::size_t prevPageStart = SelectedItem - relpos;
@@ -222,15 +245,15 @@ void UiFocusPageUp()
 			prevPageStart -= ListViewportSize;
 		else
 			prevPageStart = 0;
-		UiFocus(prevPageStart);
-		UiFocus(listOffset + relpos);
+		UiFocus(prevPageStart, true);
+		UiFocus(listOffset + relpos, true);
 	}
 }
 
 void UiFocusPageDown()
 {
 	if (listOffset + ListViewportSize > static_cast<std::size_t>(SelectedItemMax)) {
-		UiFocus(SelectedItemMax);
+		UiFocus(SelectedItemMax, false);
 	} else {
 		const std::size_t relpos = SelectedItem - listOffset;
 		std::size_t nextPageEnd = SelectedItem + (ListViewportSize - relpos - 1);
@@ -238,8 +261,8 @@ void UiFocusPageDown()
 			nextPageEnd += ListViewportSize;
 		else
 			nextPageEnd = SelectedItemMax;
-		UiFocus(nextPageEnd);
-		UiFocus(listOffset + relpos);
+		UiFocus(nextPageEnd, false);
+		UiFocus(listOffset + relpos, false);
 	}
 }
 
@@ -880,13 +903,15 @@ bool HandleMouseEventList(const SDL_Event &event, UiList *uiList)
 	index += listOffset;
 
 	if (gfnListFocus != nullptr && SelectedItem != index) {
-		UiFocus(index);
+		UiFocus(index, true);
 #ifdef USE_SDL1
 		dbClickTimer = SDL_GetTicks();
 	} else if (gfnListFocus == NULL || dbClickTimer + 500 >= SDL_GetTicks()) {
 #else
 	} else if (gfnListFocus == nullptr || event.button.clicks >= 2) {
 #endif
+		if (HasAnyOf(uiList->GetItem(index)->uiFlags, UiFlags::ElementHidden | UiFlags::ElementDisabled))
+			return false;
 		SelectedItem = index;
 		UiFocusNavigationSelect();
 #ifdef USE_SDL1
