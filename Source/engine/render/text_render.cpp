@@ -315,7 +315,9 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		}
 		output.append(processedEnd, end);
 		output += '\n';
-		remaining.remove_prefix(lastBreakablePos + lastBreakableLen - (remaining.data() - begin));
+
+		// Restart from the beginning of the new line.
+		remaining = text.substr(lastBreakablePos + lastBreakableLen);
 		processedEnd = remaining.data();
 		lastBreakablePos = -1;
 		lineWidth = 0;
