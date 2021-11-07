@@ -171,6 +171,16 @@ Art *LoadFont(GameFontTables size, text_color color, uint16_t row)
 	return font;
 }
 
+bool IsWhitespace(char32_t c)
+{
+	return IsAnyOf(c, U' ', U'　', ZWSP);
+}
+
+bool IsPunct(char32_t c)
+{
+	return IsAnyOf(c, U',', U'.', U'?', U'!', U'，', U'、', U'。', U'？', U'！');
+}
+
 } // namespace
 
 void UnloadFonts(GameFontTables size, text_color color)
@@ -238,55 +248,55 @@ int AdjustSpacingToFitHorizontally(int &lineWidth, int maxSpacing, int character
 
 std::string WordWrapString(string_view text, size_t width, GameFontTables size, int spacing)
 {
+	std::string output;
+	if (text.empty() || text[0] == '\0')
+		return output;
+
+	output.reserve(text.size());
+	const char *begin = text.data();
+	const char *processedEnd = text.data();
 	int lastBreakablePos = -1;
 	int lastBreakableLen;
-	char32_t lastBreakableCodePoint;
-
-	std::string input { text };
-	std::string output;
-	output.reserve(text.size());
-	const char *begin = input.data();
-	const char *end = input.data() + input.size();
-	const char *cur = begin;
-
-	const char *processedEnd = cur;
+	bool lastBreakableKeep = false;
 	uint32_t currentUnicodeRow = 0;
 	size_t lineWidth = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
-	char32_t next;
-	while (cur != end && *cur != '\0') {
-		uint8_t codepointLen;
-		next = DecodeFirstUtf8CodePoint(cur, &codepointLen);
-		cur += codepointLen;
-		if (next == Utf8DecodeError)
-			break;
 
-		if (next == U'\n') { // Existing line break, scan next line
+	char32_t codepoint = U'\0'; // the current codepoint
+	char32_t nextCodepoint;     // the next codepoint
+	uint8_t nextCodepointLen;
+	string_view remaining = text;
+	nextCodepoint = DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen);
+	do {
+		codepoint = nextCodepoint;
+		const uint8_t codepointLen = nextCodepointLen;
+		if (codepoint == Utf8DecodeError)
+			break;
+		remaining.remove_prefix(codepointLen);
+		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
+
+		if (codepoint == U'\n') { // Existing line break, scan next line
 			lastBreakablePos = -1;
 			lineWidth = 0;
-			output.append(processedEnd, cur);
-			processedEnd = cur;
+			output.append(processedEnd, remaining.data());
+			processedEnd = remaining.data();
 			continue;
 		}
 
-		uint8_t frame = next & 0xFF;
-		uint32_t unicodeRow = next >> 8;
+		uint8_t frame = codepoint & 0xFF;
+		uint32_t unicodeRow = codepoint >> 8;
 		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
 			kerning = LoadFontKerning(size, unicodeRow);
 			currentUnicodeRow = unicodeRow;
 		}
 		lineWidth += (*kerning)[frame] + spacing;
 
-		if (IsAnyOf(next, U' ', U',', U'.', U'?', U'!')) {
-			lastBreakablePos = static_cast<int>(cur - begin - 1);
-			lastBreakableLen = 1;
-			lastBreakableCodePoint = next;
-			continue;
-		}
-		if (IsAnyOf(next, U'　', ZWSP, U'，', U'、', U'。', U'？', U'！')) {
-			lastBreakablePos = static_cast<int>(cur - begin - 3);
-			lastBreakableLen = 3;
-			lastBreakableCodePoint = next;
+		const bool isPunct = IsPunct(codepoint);
+		const bool canBreak = isPunct ? !IsPunct(nextCodepoint) : IsWhitespace(codepoint);
+		if (canBreak) {
+			lastBreakablePos = static_cast<int>(remaining.data() - begin - codepointLen);
+			lastBreakableLen = codepointLen;
+			lastBreakableKeep = isPunct;
 			continue;
 		}
 
@@ -299,18 +309,18 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		}
 
 		// Break line and continue to next line
-		const char *end = &input[lastBreakablePos];
-		if (!IsAnyOf(lastBreakableCodePoint, U' ', U'　', ZWSP)) {
+		const char *end = &text[lastBreakablePos];
+		if (lastBreakableKeep) {
 			end += lastBreakableLen;
 		}
 		output.append(processedEnd, end);
 		output += '\n';
-		cur = &input[lastBreakablePos + lastBreakableLen];
-		processedEnd = cur;
+		remaining.remove_prefix(lastBreakablePos + lastBreakableLen - (remaining.data() - begin));
+		processedEnd = remaining.data();
 		lastBreakablePos = -1;
 		lineWidth = 0;
-	}
-	output.append(processedEnd, cur);
+	} while (!remaining.empty() && remaining[0] != '\0');
+	output.append(processedEnd, remaining.data());
 	return output;
 }
 
