@@ -5,6 +5,8 @@
 #include <SDL_version.h>
 
 #include "pack.h"
+#include "utils/enum_traits.h"
+#include "utils/stdcompat/string_view.hpp"
 
 namespace devilution {
 
@@ -12,6 +14,156 @@ enum class StartUpGameOption {
 	None,
 	Hellfire,
 	Diablo,
+};
+
+enum class OptionEntryType {
+	Boolean,
+	List,
+};
+
+enum class OptionEntryFlags {
+	/** @brief No special logic. */
+	None = 0,
+	/** @brief Shouldn't be shown in settings dialog. */
+	Invisible = 1 << 0,
+	/** @brief Need to restart the current running game (single- or multiplayer) to take effect. */
+	CantChangeInGame = 1 << 1,
+	/** @brief Need to restart the current running multiplayer game to take effect. */
+	CantChangeInMultiPlayer = 1 << 2,
+	/** @brief Option is only relevant for Hellfire. */
+	OnlyHellfire = 1 << 3,
+	/** @brief Option is only relevant for Diablo. */
+	OnlyDiablo = 1 << 4,
+};
+use_enum_as_flags(OptionEntryFlags);
+
+class OptionEntryBase {
+public:
+	OptionEntryBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	    : key(key)
+	    , flags(flags)
+	    , name(name)
+	    , description(description)
+	{
+	}
+	[[nodiscard]] string_view GetName() const;
+	[[nodiscard]] string_view GetDescription() const;
+	[[nodiscard]] virtual OptionEntryType GetType() const = 0;
+	[[nodiscard]] OptionEntryFlags GetFlags() const;
+
+	void SetValueChangedCallback(std::function<void()> callback);
+
+	[[nodiscard]] virtual string_view GetValueDescription() const = 0;
+	virtual void LoadFromIni(string_view category) = 0;
+	virtual void SaveToIni(string_view category) const = 0;
+
+protected:
+	string_view key;
+	string_view name;
+	string_view description;
+	OptionEntryFlags flags;
+	void NotifyValueChanged();
+
+private:
+	std::function<void()> callback;
+};
+
+class OptionEntryBoolean : public OptionEntryBase {
+public:
+	OptionEntryBoolean(string_view key, OptionEntryFlags flags, string_view name, string_view description, bool defaultValue)
+	    : OptionEntryBase(key, flags, name, description)
+	    , defaultValue(defaultValue)
+	    , value(defaultValue)
+	{
+	}
+	[[nodiscard]] bool operator*() const;
+	void SetValue(bool value);
+
+	[[nodiscard]] OptionEntryType GetType() const override;
+	[[nodiscard]] string_view GetValueDescription() const override;
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+private:
+	bool value;
+	bool defaultValue;
+};
+
+class OptionEntryListBase : public OptionEntryBase {
+public:
+	[[nodiscard]] virtual size_t GetListSize() const = 0;
+	[[nodiscard]] virtual string_view GetListDescription(size_t index) const = 0;
+	[[nodiscard]] virtual size_t GetActiveListIndex() const = 0;
+	virtual void SetActiveListIndex(size_t index) = 0;
+
+	[[nodiscard]] OptionEntryType GetType() const override;
+	[[nodiscard]] string_view GetValueDescription() const override;
+
+protected:
+	OptionEntryListBase(string_view key, OptionEntryFlags flags, string_view name, string_view description)
+	    : OptionEntryBase(key, flags, name, description)
+	{
+	}
+};
+
+class OptionEntryEnumBase : public OptionEntryListBase {
+public:
+	void LoadFromIni(string_view category) override;
+	void SaveToIni(string_view category) const override;
+
+	[[nodiscard]] virtual size_t GetListSize() const override;
+	[[nodiscard]] virtual string_view GetListDescription(size_t index) const override;
+	[[nodiscard]] size_t GetActiveListIndex() const override;
+	void SetActiveListIndex(size_t index) override;
+
+protected:
+	OptionEntryEnumBase(string_view key, OptionEntryFlags flags, string_view name, string_view description, int defaultValue)
+	    : OptionEntryListBase(key, flags, name, description)
+	    , defaultValue(defaultValue)
+	    , value(defaultValue)
+	{
+	}
+
+	int GetValueInternal();
+
+	void AddEntry(int value, string_view name);
+
+private:
+	int value;
+	int defaultValue;
+	std::vector<string_view> entryNames;
+	std::vector<int> entryValues;
+};
+
+template <typename T>
+class OptionEntryEnum : public OptionEntryEnumBase {
+public:
+	OptionEntryEnum(string_view key, OptionEntryFlags flags, string_view name, string_view description, T defaultValue, std::initializer_list<std::pair<T, string_view>> entries)
+	    : OptionEntryEnumBase(key, flags, name, description, static_cast<int>(defaultValue))
+	{
+		for (auto entry : entries) {
+			AddEntry(static_cast<int>(entry.first), entry.second);
+		}
+	}
+	[[nodiscard]] T operator*() const
+	{
+		return static_cast<T>(GetValueInternal());
+	}
+};
+
+struct OptionCategoryBase {
+	OptionCategoryBase(string_view key, string_view name, string_view description);
+
+	[[nodiscard]] string_view GetKey() const;
+	[[nodiscard]] string_view GetName() const;
+	[[nodiscard]] string_view GetDescription() const;
+
+	virtual std::vector<OptionEntryBase *> GetEntries() = 0;
+
+protected:
+	string_view key;
+	string_view name;
+	string_view description;
 };
 
 struct DiabloOptions {
@@ -184,6 +336,11 @@ struct Options {
 	NetworkOptions Network;
 	ChatOptions Chat;
 	LanguageOptions Language;
+
+	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
+	{
+		return {};
+	}
 };
 
 bool GetIniValue(const char *sectionName, const char *keyName, char *string, int stringSize, const char *defaultString = "");
