@@ -280,7 +280,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Enable the cow quest. */
 	OptionEntryBoolean cowQuest;
 	/** @brief Will players still damage other players in non-PvP mode. */
-	bool bFriendlyFire;
+	OptionEntryBoolean friendlyFire;
 	/** @brief Enable the bard hero class. */
 	bool bTestBard;
 	/** @brief Enable the babarian hero class. */

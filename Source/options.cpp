@@ -275,7 +275,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bFriendlyFire = GetIniBool("Game", "Friendly Fire", true);
 	sgOptions.Gameplay.bTestBard = GetIniBool("Game", "Test Bard", false);
 	sgOptions.Gameplay.bTestBarbarian = GetIniBool("Game", "Test Barbarian", false);
 	sgOptions.Gameplay.bExperienceBar = GetIniBool("Game", "Experience Bar", AUTO_PICKUP_DEFAULT(false));
@@ -426,7 +425,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
 	SetIniValue("Game", "Test Bard", sgOptions.Gameplay.bTestBard);
 	SetIniValue("Game", "Test Barbarian", sgOptions.Gameplay.bTestBarbarian);
 	SetIniValue("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
@@ -636,6 +634,7 @@ GameplayOptions::GameplayOptions()
     , grabInput("Grab Input", OptionEntryFlags::None, N_("Grab Input"), N_("When enabled mouse is locked to the game window."), false)
     , theoQuest("Theo Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Theo Quest"), N_("Enable Little Girl quest."), false)
     , cowQuest("Cow Quest", OptionEntryFlags::CantChangeInGame | OptionEntryFlags::OnlyHellfire, N_("Cow Quest"), N_("Enable Jersey's quest. Lester the farmer is replaced by the Complete Nut."), false)
+    , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 }
@@ -646,6 +645,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&grabInput,
 		&theoQuest,
 		&cowQuest,
+		&friendlyFire,
 	};
 }
 
