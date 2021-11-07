@@ -192,7 +192,8 @@ bool SpawnWindow(const char *lpWindowName)
 		}
 		flags |= SDL_WINDOW_RESIZABLE;
 
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, sgOptions.Graphics.szScaleQuality);
+		auto quality = fmt::format("{}", static_cast<int>(*sgOptions.Graphics.scaleQuality));
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, quality.c_str());
 	} else if (!gbForceWindowed && sgOptions.Graphics.bFullscreen) {
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}

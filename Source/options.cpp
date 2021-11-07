@@ -251,7 +251,6 @@ void LoadOptions()
 	sgOptions.Graphics.bUpscale = false;
 #endif
 	sgOptions.Graphics.bFitToScreen = GetIniBool("Graphics", "Fit to Screen", true);
-	GetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality, sizeof(sgOptions.Graphics.szScaleQuality), "2");
 	sgOptions.Graphics.bIntegerScaling = GetIniBool("Graphics", "Integer Scaling", false);
 	sgOptions.Graphics.bVSync = GetIniBool("Graphics", "Vertical Sync", true);
 	sgOptions.Graphics.bBlendedTransparancy = GetIniBool("Graphics", "Blended Transparency", true);
@@ -407,7 +406,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Upscale", sgOptions.Graphics.bUpscale);
 #endif
 	SetIniValue("Graphics", "Fit to Screen", sgOptions.Graphics.bFitToScreen);
-	SetIniValue("Graphics", "Scaling Quality", sgOptions.Graphics.szScaleQuality);
 	SetIniValue("Graphics", "Integer Scaling", sgOptions.Graphics.bIntegerScaling);
 	SetIniValue("Graphics", "Vertical Sync", sgOptions.Graphics.bVSync);
 	SetIniValue("Graphics", "Blended Transparency", sgOptions.Graphics.bBlendedTransparancy);
@@ -615,11 +613,19 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 
 GraphicsOptions::GraphicsOptions()
     : OptionCategoryBase("Graphics", N_("Graphics"), N_("Graphics Settings"))
+    , scaleQuality("Scaling Quality", OptionEntryFlags::None, N_("Scaling Quality"), N_("Enables optional filters to the output image when upscaling."), ScalingQuality::AnisotropicFiltering,
+          {
+              { ScalingQuality::NearestPixel, N_("Nearest Pixel") },
+              { ScalingQuality::BilinearFiltering, N_("Bilinear") },
+              { ScalingQuality::AnisotropicFiltering, N_("Anisotropic") },
+          })
 {
 }
 std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 {
-	return {};
+	return {
+		&scaleQuality,
+	};
 }
 
 GameplayOptions::GameplayOptions()
