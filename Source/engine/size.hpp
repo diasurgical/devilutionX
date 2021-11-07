@@ -6,6 +6,20 @@ struct Size {
 	int width;
 	int height;
 
+	Size() = default;
+
+	constexpr Size(int width, int height)
+	    : width(width)
+	    , height(height)
+	{
+	}
+
+	explicit constexpr Size(int size)
+	    : width(size)
+	    , height(size)
+	{
+	}
+
 	bool operator==(const Size &other) const
 	{
 		return width == other.width && height == other.height;

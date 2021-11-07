@@ -20,6 +20,12 @@ struct Displacement {
 	{
 	}
 
+	explicit constexpr Displacement(int delta)
+	    : deltaX(delta)
+	    , deltaY(delta)
+	{
+	}
+
 	explicit constexpr Displacement(const Size &size)
 	    : deltaX(size.width)
 	    , deltaY(size.height)
