@@ -348,7 +348,7 @@ msgstr "Помощь"
 
 #: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
 msgid "Previous Menu"
-msgstr "Предыдущее Меню"
+msgstr "Предыдущее меню"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -396,7 +396,7 @@ msgstr "Петля"
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:481
 #: Source/DiabloUI/selgame.cpp:499
 msgid "Multi Player Game"
-msgstr "Сетевая Игра"
+msgstr "Сетевая игра"
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
@@ -408,11 +408,11 @@ msgstr "gateway не нужен"
 
 #: Source/DiabloUI/selconn.cpp:71
 msgid "Select Connection"
-msgstr "Выбрать Подключение"
+msgstr "Выбрать подключение"
 
 #: Source/DiabloUI/selconn.cpp:74
 msgid "Change Gateway"
-msgstr "Сменить Gateway"
+msgstr "Сменить gateway"
 
 #: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
@@ -445,11 +445,11 @@ msgstr "Создать игру"
 
 #: Source/DiabloUI/selgame.cpp:93
 msgid "Create Public Game"
-msgstr "Открытая Игра"
+msgstr "Открытая игра"
 
 #: Source/DiabloUI/selgame.cpp:94
 msgid "Join Game"
-msgstr "Подключится к игре"
+msgstr "Подключиться к игре"
 
 #: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
 #: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
@@ -481,7 +481,7 @@ msgstr "Присоединитесь к игре, которая уже запу
 
 #: Source/DiabloUI/selgame.cpp:184
 msgid "Select Difficulty"
-msgstr "Выберете сложность"
+msgstr "Выберите сложность"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
@@ -501,7 +501,7 @@ msgstr "Адская"
 
 #: Source/DiabloUI/selgame.cpp:202
 msgid "Join TCP Games"
-msgstr "Подключится к игре используя TCP"
+msgstr "Подключиться к игре используя TCP"
 
 #: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
 msgid "Enter address"
@@ -522,7 +522,7 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Кошмарная сложность\n"
-"Обитатели Лабиринта стали сильнее чем раньше, что станет сложным испытанием "
+"Обитатели Лабиринта стали сильнее, чем раньше, что станет сложным испытанием "
 "для вас. Рекомендуется только для опытных персонажей."
 
 #: Source/DiabloUI/selgame.cpp:248
@@ -532,8 +532,8 @@ msgid ""
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
 "Адская сложность\n"
-"Самые сильные и мощные существа подземного мира поджидают у ворот ада. "
-"Только самые опытные персонажи рискнут явиться в этот мир."
+"Самые сильные и могущественные существа подземного мира поджидают у врат в "
+"Ад. Только самые опытные персонажи рискнут явиться в этот мир."
 
 #: Source/DiabloUI/selgame.cpp:264
 msgid ""
@@ -582,7 +582,7 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "Быстрая скорость\n"
-"Теперь обитатели лабиринта стали быстрее и будут большим испытанием. Эта "
+"Теперь обитатели Лабиринта стали быстрее и будут большим испытанием. Эта "
 "скорость рекомендуется только для опытных персонажей."
 
 #: Source/DiabloUI/selgame.cpp:373
@@ -626,7 +626,7 @@ msgstr "Новый герой"
 
 #: Source/DiabloUI/selhero.cpp:164
 msgid "Choose Class"
-msgstr "Выберете класс"
+msgstr "Выберите класс"
 
 #: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
 msgid "Warrior"
@@ -862,7 +862,7 @@ msgstr "пароль: "
 
 #: Source/automap.cpp:492
 msgid "Public Game"
-msgstr "Открытая Игра"
+msgstr "Открытая игра"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -902,7 +902,7 @@ msgstr "Автоматическая карта"
 
 #: Source/control.cpp:205
 msgid "Main Menu"
-msgstr "Главное Меню"
+msgstr "Главное меню"
 
 #: Source/control.cpp:206
 msgid "Inventory"
@@ -916,6 +916,7 @@ msgstr "Книга заклинаний"
 msgid "Send Message"
 msgstr "Отправить сообщение"
 
+# Why "умение", but "навык"?
 #: Source/control.cpp:764 Source/control.cpp:1572
 msgid "Skill"
 msgstr "Умение"
@@ -924,6 +925,7 @@ msgstr "Умение"
 msgid "{:s} Skill"
 msgstr "{:s} навык"
 
+# Why "чары", but "заклинание"?
 #: Source/control.cpp:771
 msgid "Spell"
 msgstr "Чары"
@@ -938,7 +940,7 @@ msgstr "Наносит урон только нежити"
 
 #: Source/control.cpp:778 Source/control.cpp:1234 Source/control.cpp:1596
 msgid "Spell Level 0 - Unusable"
-msgstr "Уровень заклинаний 0 - Нельзя использовать"
+msgstr "Уровень заклинания 0 - Нельзя использовать"
 
 #: Source/control.cpp:780 Source/control.cpp:1236 Source/control.cpp:1598
 msgid "Spell Level {:d}"
@@ -1260,9 +1262,10 @@ msgstr "петлевой адрес"
 msgid "Unable to connect"
 msgstr "Невозможно соединиться"
 
+# Счётная форма.
 #: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
-msgstr "ошибка: прочитано 0 байтов с сервера"
+msgstr "ошибка: прочитано 0 байт с сервера"
 
 #: Source/error.cpp:57
 msgid "No automap available in town"
@@ -1286,7 +1289,7 @@ msgstr "Недостаточно места на диске для сохран�
 
 #: Source/error.cpp:62
 msgid "No Pause in town"
-msgstr "В городе нет паузы"
+msgstr "Пауза недоступна в городе"
 
 #: Source/error.cpp:63
 msgid "Copying to a hard disk is recommended"
@@ -1298,7 +1301,7 @@ msgstr "Проблема синхронизации сетевой игры"
 
 #: Source/error.cpp:65
 msgid "No pause in multiplayer"
-msgstr "В сетевой игре нет паузы"
+msgstr "Пауза недоступна в сетевой игре"
 
 #: Source/error.cpp:66
 msgid "Loading..."
@@ -1316,7 +1319,7 @@ msgstr "Чем сильнее один, тем слабее другие"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:69
 msgid "New strength is forged through destruction"
-msgstr "Прочность куется из обломков"
+msgstr "Прочность куётся из обломков"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:70
@@ -1523,7 +1526,7 @@ msgstr "То, что может сломать волю."
 
 #: Source/gamemenu.cpp:35
 msgid "Save Game"
-msgstr "Сохранить Игру"
+msgstr "Сохранить игру"
 
 #: Source/gamemenu.cpp:36 Source/gamemenu.cpp:47
 msgid "Options"
@@ -1531,11 +1534,11 @@ msgstr "Настройки"
 
 #: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Quit Game"
-msgstr "Выйти из Игры"
+msgstr "Выйти из игры"
 
 #: Source/gamemenu.cpp:49
 msgid "Restart In Town"
-msgstr "Начать в Городе"
+msgstr "Начать в городе"
 
 #: Source/gamemenu.cpp:59
 msgid "Gamma"
@@ -1547,7 +1550,7 @@ msgstr "Скорость"
 
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
-msgstr "Музыка Выключена"
+msgstr "Музыка выключена"
 
 #: Source/gamemenu.cpp:72
 msgid "Sound"
@@ -1555,7 +1558,7 @@ msgstr "Звук"
 
 #: Source/gamemenu.cpp:73
 msgid "Sound Disabled"
-msgstr "Звук Выключен"
+msgstr "Звук выключен"
 
 #: Source/gamemenu.cpp:155
 msgid "Speed: Fastest"
@@ -1673,7 +1676,7 @@ msgid ""
 "If you hold the mouse button down while moving, the character will continue "
 "to move in that direction."
 msgstr ""
-"Если вы держите кнопку мыши пока двигаетесь, персонаж будет продолжать "
+"Если вы держите кнопку мыши во время движения, персонаж будет продолжать "
 "двигаться в этом направлении."
 
 #: Source/help.cpp:51
@@ -1759,7 +1762,7 @@ msgid ""
 "allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
-"Левый клик на подготовленное заклинание откроет быструю книгу заклинаний "
+"Левый клик на подготовленное заклинание откроет быструю книгу заклинаний, "
 "позволяющую выбрать заклинание для немедленного использования. Для "
 "использования подготовленного заклинания просто кликните правой клавишей на "
 "игровой зоне."
