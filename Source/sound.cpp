@@ -240,7 +240,12 @@ void music_start(uint8_t nTrack)
 		else
 			trackPath = MusicTracks[nTrack];
 
-		SDL_RWops *handle = OpenAsset(trackPath);
+#ifdef DISABLE_STREAMING_MUSIC
+		const bool threadsafe = false;
+#else
+		const bool threadsafe = true;
+#endif
+		SDL_RWops *handle = OpenAsset(trackPath, threadsafe);
 		if (handle != nullptr) {
 			LoadMusic(handle);
 			if (!music->open()) {
