@@ -1,0 +1,64 @@
+name: OpenDingux Release Build
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  gcw0:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y curl git smpq &&
+        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-gcw0-toolchain.2021-03-10.tar.xz -o gcw0-toolchain.tar.xz &&
+        sudo mkdir -p /opt/gcw0-toolchain && sudo chown -R "${USER}:" /opt/gcw0-toolchain &&
+        tar -C /opt -xvf gcw0-toolchain.tar.xz
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: Packaging/OpenDingux/build.sh rg350
+      env:
+      - TOOLCHAIN: /opt/gcw0-toolchain
+
+    - name: Upload-Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-rg350.opk.zip
+        path: build-rg350/devilutionx-rg350.opk
+
+  lepus:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y curl git smpq &&
+        curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-lepus-toolchain.2021-03-10.tar.xz -o lepus-toolchain.tar.xz &&
+        sudo mkdir -p /opt/lepus-toolchain && sudo chown -R "${USER}:" /opt/lepus-toolchain &&
+        tar -C /opt -xvf lepus-toolchain.tar.xz
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: Packaging/OpenDingux/build.sh lepus
+      env:
+      - TOOLCHAIN: /opt/lepus-toolchain
+
+    - name: Upload-Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-lepus.opk.zip
+        path: build-lepus/devilutionx-lepus.opk
