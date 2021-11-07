@@ -80,6 +80,7 @@ cmake_configure() {
 		"-DTARGET_PLATFORM=$TARGET" \
 		-DCMAKE_TOOLCHAIN_FILE="${TOOLCHAIN}/usr/share/buildroot/toolchainfile.cmake" \
 		-DDEVILUTIONX_SYSTEM_LIBSODIUM=OFF \
+		-DDEVILUTIONX_SYSTEM_BZIP2=OFF \
 		-DSTACK_PROTECTOR=OFF \
 		"$@"
 }
