@@ -725,6 +725,12 @@ std::string DebugCmdPlayerInfo(const string_view parameter)
 	    player._pInvincible ? 1 : 0, player._pHitPoints);
 }
 
+std::string DebugCmdToggleFPS(const string_view parameter)
+{
+	frameflag = !frameflag;
+	return "";
+}
+
 std::vector<DebugCmdItem> DebugCmdList = {
 	{ "help", "Prints help overview or help for a specific command.", "({command})", &DebugCmdHelp },
 	{ "give gold", "Fills the inventory with gold.", "", &DebugCmdGiveGoldCheat },
@@ -755,6 +761,7 @@ std::vector<DebugCmdItem> DebugCmdList = {
 	{ "iteminfo", "Shows info of currently selected item.", "", &DebugCmdItemInfo },
 	{ "questinfo", "Shows info of quests.", "{id}", &DebugCmdQuestInfo },
 	{ "playerinfo", "Shows info of player.", "{playerid}", &DebugCmdPlayerInfo },
+	{ "fps", "Toggles displaying FPS", "", &DebugCmdToggleFPS },
 };
 
 } // namespace
@@ -817,7 +824,8 @@ bool CheckDebugTextCommand(const string_view text)
 		parameter = text.substr(dbgCmd.text.length() + 1);
 	const auto result = dbgCmd.actionProc(parameter);
 	Log("DebugCmd: {} Result: {}", text, result);
-	InitDiabloMsg(result);
+	if (result != "")
+		InitDiabloMsg(result);
 	return true;
 }
 
