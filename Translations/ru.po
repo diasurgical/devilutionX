@@ -286,11 +286,11 @@ msgstr "Ведущий тестировщик"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr "Основные Тестеры"
+msgstr "Основные тестировщики"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr "Дополнительные Тестеры"
+msgstr "Дополнительные тестировщики"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
