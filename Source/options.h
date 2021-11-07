@@ -124,7 +124,7 @@ protected:
 	{
 	}
 
-	int GetValueInternal();
+	[[nodiscard]] int GetValueInternal() const;
 
 	void AddEntry(int value, string_view name);
 
@@ -166,7 +166,10 @@ protected:
 	string_view description;
 };
 
-struct DiabloOptions {
+struct DiabloOptions : OptionCategoryBase {
+	DiabloOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
 	/** @brief Remembers what singleplayer hero/save was last used. */
@@ -175,7 +178,10 @@ struct DiabloOptions {
 	std::uint32_t lastMultiplayerHero;
 };
 
-struct HellfireOptions {
+struct HellfireOptions : OptionCategoryBase {
+	HellfireOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Play game intro video on startup. */
 	bool bIntro;
 	/** @brief Cornerstone of the world item. */
@@ -188,7 +194,10 @@ struct HellfireOptions {
 	StartUpGameOption startUpGameOption;
 };
 
-struct AudioOptions {
+struct AudioOptions : OptionCategoryBase {
+	AudioOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Movie and SFX volume. */
 	int nSoundVolume;
 	/** @brief Music volume. */
@@ -210,7 +219,10 @@ struct AudioOptions {
 	std::uint8_t nResamplingQuality;
 };
 
-struct GraphicsOptions {
+struct GraphicsOptions : OptionCategoryBase {
+	GraphicsOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Render width. */
 	int nWidth;
 	/** @brief Render height. */
@@ -247,7 +259,10 @@ struct GraphicsOptions {
 	bool bShowFPS;
 };
 
-struct GameplayOptions {
+struct GameplayOptions : OptionCategoryBase {
+	GameplayOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Gameplay ticks per second. */
 	int nTickRate;
 	/** @brief Enable double walk speed when in town. */
@@ -292,7 +307,10 @@ struct GameplayOptions {
 	bool bDisableCripplingShrines;
 };
 
-struct ControllerOptions {
+struct ControllerOptions : OptionCategoryBase {
+	ControllerOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief SDL Controller mapping, see SDL_GameControllerDB. */
 	char szMapping[1024];
 	/** @brief Use dpad for spell hotkeys without holding "start" */
@@ -307,7 +325,10 @@ struct ControllerOptions {
 #endif
 };
 
-struct NetworkOptions {
+struct NetworkOptions : OptionCategoryBase {
+	NetworkOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Optionally bind to a specific network interface. */
 	char szBindAddress[129];
 	/** @brief Most recently entered Hostname in join dialog. */
@@ -316,12 +337,18 @@ struct NetworkOptions {
 	uint16_t nPort;
 };
 
-struct ChatOptions {
+struct ChatOptions : OptionCategoryBase {
+	ChatOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Quick chat messages. */
 	char szHotKeyMsgs[QUICK_MESSAGE_OPTIONS][MAX_SEND_STR_LEN];
 };
 
-struct LanguageOptions {
+struct LanguageOptions : OptionCategoryBase {
+	LanguageOptions();
+	std::vector<OptionEntryBase *> GetEntries() override;
+
 	/** @brief Language code (IETF) for text. */
 	char szCode[6];
 };
@@ -339,7 +366,17 @@ struct Options {
 
 	[[nodiscard]] std::vector<OptionCategoryBase *> GetCategories()
 	{
-		return {};
+		return {
+			&Diablo,
+			&Hellfire,
+			&Audio,
+			&Gameplay,
+			&Graphics,
+			&Controller,
+			&Network,
+			&Chat,
+			&Language,
+		};
 	}
 };
 

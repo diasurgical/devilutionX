@@ -536,7 +536,7 @@ void OptionEntryEnumBase::SaveToIni(string_view category) const
 {
 	SetIniValue(category.data(), key.data(), value);
 }
-int OptionEntryEnumBase::GetValueInternal()
+int OptionEntryEnumBase::GetValueInternal() const
 {
 	return value;
 }
@@ -583,6 +583,87 @@ string_view OptionCategoryBase::GetName() const
 string_view OptionCategoryBase::GetDescription() const
 {
 	return _(description.data());
+}
+
+DiabloOptions::DiabloOptions()
+    : OptionCategoryBase("Diablo", N_("Diablo"), N_("Diablo specific Settings"))
+{
+}
+std::vector<OptionEntryBase *> DiabloOptions::GetEntries()
+{
+	return {};
+}
+
+HellfireOptions::HellfireOptions()
+    : OptionCategoryBase("Hellfire", N_("Hellfire"), N_("Hellfire specific Settings"))
+{
+}
+std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
+{
+	return {};
+}
+
+AudioOptions::AudioOptions()
+    : OptionCategoryBase("Audio", N_("Audio"), N_("Audio Settings"))
+{
+}
+std::vector<OptionEntryBase *> AudioOptions::GetEntries()
+{
+	return {};
+}
+
+GraphicsOptions::GraphicsOptions()
+    : OptionCategoryBase("Graphics", N_("Graphics"), N_("Graphics Settings"))
+{
+}
+std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
+{
+	return {};
+}
+
+GameplayOptions::GameplayOptions()
+    : OptionCategoryBase("Game", N_("Gameplay"), N_("Gameplay Settings"))
+{
+}
+std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
+{
+	return {};
+}
+
+ControllerOptions::ControllerOptions()
+    : OptionCategoryBase("Controller", N_("Controller"), N_("Controller Settings"))
+{
+}
+std::vector<OptionEntryBase *> ControllerOptions::GetEntries()
+{
+	return {};
+}
+
+NetworkOptions::NetworkOptions()
+    : OptionCategoryBase("Network", N_("Network"), N_("Network Settings"))
+{
+}
+std::vector<OptionEntryBase *> NetworkOptions::GetEntries()
+{
+	return {};
+}
+
+ChatOptions::ChatOptions()
+    : OptionCategoryBase("NetMsg", N_("Chat"), N_("Chat Settings"))
+{
+}
+std::vector<OptionEntryBase *> ChatOptions::GetEntries()
+{
+	return {};
+}
+
+LanguageOptions::LanguageOptions()
+    : OptionCategoryBase("Language", N_("Language"), N_("Language Settings"))
+{
+}
+std::vector<OptionEntryBase *> LanguageOptions::GetEntries()
+{
+	return {};
 }
 
 } // namespace devilution
