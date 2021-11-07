@@ -242,10 +242,8 @@ void LoadOptions()
 		}
 	}
 
-	sgOptions.Diablo.bIntro = GetIniBool("Diablo", "Intro", true);
 	sgOptions.Diablo.lastSinglePlayerHero = GetIniInt("Diablo", "LastSinglePlayerHero", 0);
 	sgOptions.Diablo.lastMultiplayerHero = GetIniInt("Diablo", "LastMultiplayerHero", 0);
-	sgOptions.Hellfire.bIntro = GetIniBool("Hellfire", "Intro", true);
 	sgOptions.Hellfire.lastSinglePlayerHero = GetIniInt("Hellfire", "LastSinglePlayerHero", 0);
 	sgOptions.Hellfire.lastMultiplayerHero = GetIniInt("Hellfire", "LastMultiplayerHero", 0);
 	sgOptions.Hellfire.startUpGameOption = static_cast<StartUpGameOption>(GetIniInt("Hellfire", "StartUpGameOption", static_cast<int>(StartUpGameOption::None)));
@@ -394,10 +392,8 @@ void SaveOptions()
 		}
 	}
 
-	SetIniValue("Diablo", "Intro", sgOptions.Diablo.bIntro);
 	SetIniValue("Diablo", "LastSinglePlayerHero", sgOptions.Diablo.lastSinglePlayerHero);
 	SetIniValue("Diablo", "LastMultiplayerHero", sgOptions.Diablo.lastMultiplayerHero);
-	SetIniValue("Hellfire", "Intro", sgOptions.Hellfire.bIntro);
 	SetIniValue("Hellfire", "SItem", sgOptions.Hellfire.szItem);
 	SetIniValue("Hellfire", "LastSinglePlayerHero", sgOptions.Hellfire.lastSinglePlayerHero);
 	SetIniValue("Hellfire", "LastMultiplayerHero", sgOptions.Hellfire.lastMultiplayerHero);
@@ -584,20 +580,26 @@ string_view OptionCategoryBase::GetDescription() const
 
 DiabloOptions::DiabloOptions()
     : OptionCategoryBase("Diablo", N_("Diablo"), N_("Diablo specific Settings"))
+    , intro("Intro", OptionEntryFlags::OnlyDiablo, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
 {
 }
 std::vector<OptionEntryBase *> DiabloOptions::GetEntries()
 {
-	return {};
+	return {
+		&intro,
+	};
 }
 
 HellfireOptions::HellfireOptions()
     : OptionCategoryBase("Hellfire", N_("Hellfire"), N_("Hellfire specific Settings"))
+    , intro("Intro", OptionEntryFlags::OnlyHellfire, N_("Intro"), N_("Enable/disable Intro cinematic."), true)
 {
 }
 std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
 {
-	return {};
+	return {
+		&intro,
+	};
 }
 
 AudioOptions::AudioOptions()

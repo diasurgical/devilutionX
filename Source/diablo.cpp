@@ -969,13 +969,11 @@ void DiabloSplash()
 
 	play_movie("gendata\\logo.smk", true);
 
-	if (gbIsHellfire && sgOptions.Hellfire.bIntro) {
+	if (gbIsHellfire && *sgOptions.Hellfire.intro) {
 		play_movie("gendata\\Hellfire.smk", true);
-		sgOptions.Hellfire.bIntro = false;
 	}
-	if (!gbIsHellfire && !gbIsSpawn && sgOptions.Diablo.bIntro) {
+	if (!gbIsHellfire && !gbIsSpawn && *sgOptions.Diablo.intro) {
 		play_movie("gendata\\diablo1.smk", true);
-		sgOptions.Diablo.bIntro = false;
 	}
 
 	UiTitleDialog();
