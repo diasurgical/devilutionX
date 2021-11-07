@@ -1848,7 +1848,7 @@ msgstr "Золото"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr "Короткий меч"
+msgstr "Короткий Меч"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
@@ -1890,10 +1890,9 @@ msgstr "Оптический Амулет"
 msgid "Ring of Truth"
 msgstr "Кольцо Истины"
 
-# Возможно нужно везде поменять "знак" на "вывеску"
 #: Source/itemdat.cpp:28
 msgid "Tavern Sign"
-msgstr "Знак Таверны"
+msgstr "Вывеска Таверны"
 
 # Или просто шапка/шлем
 #: Source/itemdat.cpp:29 Source/itemdat.cpp:401
@@ -2054,7 +2053,7 @@ msgstr "Шлем"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
-msgstr "Закрытый шлем"
+msgstr "Закрытый Шлем"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
@@ -2062,7 +2061,7 @@ msgstr "Корона"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
-msgstr "Большой шлем"
+msgstr "Большой Шлем"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
@@ -2082,7 +2081,7 @@ msgstr "Роба"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
-msgstr "Стёганые доспехи"
+msgstr "Стёганые Доспехи"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
 #: Source/itemdat.cpp:77 Source/objects.cpp:5467
@@ -2091,19 +2090,19 @@ msgstr "Доспехи"
 
 #: Source/itemdat.cpp:75
 msgid "Leather Armor"
-msgstr "Кожаная броня"
+msgstr "Кожаная Броня"
 
 #: Source/itemdat.cpp:76
 msgid "Hard Leather Armor"
-msgstr "Дублёная кожаная броня"
+msgstr "Дублёная Кожаная Броня"
 
 #: Source/itemdat.cpp:77
 msgid "Studded Leather Armor"
-msgstr "Клёпаный кожаный доспех"
+msgstr "Клёпаный Кожаный Доспех"
 
 #: Source/itemdat.cpp:78
 msgid "Ring Mail"
-msgstr "Кольцевая кольчуга"
+msgstr "Кольцевая Кольчуга"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:79 Source/itemdat.cpp:80
 #: Source/itemdat.cpp:82
@@ -2112,11 +2111,11 @@ msgstr "Кольчуга"
 
 #: Source/itemdat.cpp:79
 msgid "Chain Mail"
-msgstr "Кольчатая кольчуга"
+msgstr "Кольчатая Кольчуга"
 
 #: Source/itemdat.cpp:80
 msgid "Scale Mail"
-msgstr "Чешуйчатая кольчуга"
+msgstr "Чешуйчатая Кольчуга"
 
 #: Source/itemdat.cpp:81
 msgid "Breast Plate"
@@ -2129,23 +2128,23 @@ msgstr "Латы"
 
 #: Source/itemdat.cpp:82
 msgid "Splint Mail"
-msgstr "Шинная кольчуга"
+msgstr "Шинная Кольчуга"
 
 #: Source/itemdat.cpp:83
 msgid "Plate Mail"
-msgstr "Пластинчатый доспех"
+msgstr "Пластинчатый Доспех"
 
 #: Source/itemdat.cpp:84
 msgid "Field Plate"
-msgstr "Полевая пластина"
+msgstr "Полевая Пластина"
 
 #: Source/itemdat.cpp:85
 msgid "Gothic Plate"
-msgstr "Готическая пластина"
+msgstr "Готическая Пластина"
 
 #: Source/itemdat.cpp:86
 msgid "Full Plate Mail"
-msgstr "Полная пластинчатая кольчуга"
+msgstr "Полная Пластинчатая Кольчуга"
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
@@ -2154,23 +2153,23 @@ msgstr "Щит"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
-msgstr "Маленький щит"
+msgstr "Маленький Щит"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr "Большой щит"
+msgstr "Большой Щит"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
-msgstr "Треугольный щит"
+msgstr "Треугольный Щит"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
-msgstr "Башенный щит"
+msgstr "Башенный Щит"
 
 #: Source/itemdat.cpp:92
 msgid "Gothic Shield"
-msgstr "Готический щит"
+msgstr "Готический Щит"
 
 #: Source/itemdat.cpp:97
 msgid "Potion of Rejuvenation"
@@ -2226,11 +2225,11 @@ msgstr "Свиток Стены Огня"
 
 #: Source/itemdat.cpp:113
 msgid "Scroll of Inferno"
-msgstr "Свиток Преисподни"
+msgstr "Свиток Преисподней"
 
 #: Source/itemdat.cpp:115
 msgid "Scroll of Flash"
-msgstr "Свиток вспышки"
+msgstr "Свиток Вспышки"
 
 #: Source/itemdat.cpp:116
 msgid "Scroll of Infravision"
@@ -2360,7 +2359,7 @@ msgstr "Моргенштерн"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr "Боевой молот"
+msgstr "Боевой Молот"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
@@ -2368,7 +2367,7 @@ msgstr "Молот"
 
 #: Source/itemdat.cpp:155
 msgid "Spiked Club"
-msgstr "Шипованная дубина"
+msgstr "Шипованная Дубина"
 
 #: Source/itemdat.cpp:157
 msgid "Flail"
