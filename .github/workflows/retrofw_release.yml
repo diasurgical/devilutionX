@@ -1,0 +1,35 @@
+name: RetroFW Release Build
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  retrofw:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Create Build Environment
+      run: >
+        sudo apt update &&
+        sudo apt install -y curl git smpq &&
+        curl -L https://github.com/retrofw/buildroot/releases/download/2018.02.11/mipsel-linux-uclibc_x64.tar.gz -o retrofw-toolchain.tar.xz &&
+        sudo mkdir -p /opt/mipsel-linux-uclibc && sudo chown -R "${USER}:" /opt/mipsel-linux-uclibc &&
+        tar -C /opt -xvf retrofw-toolchain.tar.xz
+
+    - name: Build
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: Packaging/OpenDingux/build.sh retrofw
+      env:
+      - TOOLCHAIN: /opt/mipsel-linux-uclibc
+
+    - name: Upload-Package
+      uses: actions/upload-artifact@v2
+      with:
+        name: devilutionx-retrofw.opk.zip
+        path: build-retrofw/devilutionx-retrofw.opk
