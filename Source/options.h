@@ -276,7 +276,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Do not let the mouse leave the application window. */
 	OptionEntryBoolean grabInput;
 	/** @brief Enable the Theo quest. */
-	bool bTheoQuest;
+	OptionEntryBoolean theoQuest;
 	/** @brief Enable the cow quest. */
 	bool bCowQuest;
 	/** @brief Will players still damage other players in non-PvP mode. */
