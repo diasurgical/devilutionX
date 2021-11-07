@@ -176,9 +176,14 @@ bool IsWhitespace(char32_t c)
 	return IsAnyOf(c, U' ', U'　', ZWSP);
 }
 
-bool IsPunct(char32_t c)
+bool IsFullWidthPunct(char32_t c)
 {
-	return IsAnyOf(c, U',', U'.', U'?', U'!', U'，', U'、', U'。', U'？', U'！');
+	return IsAnyOf(c, U'，', U'、', U'。', U'？', U'！');
+}
+
+bool IsBreakAllowed(char32_t codepoint, char32_t nextCodepoint)
+{
+	return IsFullWidthPunct(codepoint) && !IsFullWidthPunct(nextCodepoint);
 }
 
 } // namespace
@@ -291,12 +296,11 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		}
 		lineWidth += (*kerning)[frame] + spacing;
 
-		const bool isPunct = IsPunct(codepoint);
-		const bool canBreak = isPunct ? !IsPunct(nextCodepoint) : IsWhitespace(codepoint);
-		if (canBreak) {
+		const bool isWhitespace = IsWhitespace(codepoint);
+		if (isWhitespace || IsBreakAllowed(codepoint, nextCodepoint)) {
 			lastBreakablePos = static_cast<int>(remaining.data() - begin - codepointLen);
 			lastBreakableLen = codepointLen;
-			lastBreakableKeep = isPunct;
+			lastBreakableKeep = !isWhitespace;
 			continue;
 		}
 
