@@ -10680,7 +10680,7 @@ msgstr "Спуститься в ад"
 
 #: Source/trigs.cpp:384
 msgid "Down to Hive"
-msgstr "Спустится в Улей"
+msgstr "Спуститься в Улей"
 
 #: Source/trigs.cpp:396
 msgid "Down to Crypt"
