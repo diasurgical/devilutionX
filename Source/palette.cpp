@@ -19,6 +19,8 @@ SDL_Color system_palette[256];
 SDL_Color orig_palette[256];
 Uint8 paletteTransparencyLookup[256][256];
 
+uint16_t paletteTransparencyLookupBlack16[65536];
+
 namespace {
 
 /** Specifies whether the palette has max brightness. */
@@ -86,6 +88,17 @@ void GenerateBlendedLookupTable(SDL_Color *palette, int skipFrom, int skipTo, in
 			blendedColor.b = ((int)palette[i].b + (int)palette[j].b) / 2;
 			Uint8 best = FindBestMatchForColor(palette, blendedColor, skipFrom, skipTo);
 			paletteTransparencyLookup[i][j] = best;
+		}
+	}
+
+	for (unsigned i = 0; i < 256; ++i) {
+		for (unsigned j = 0; j < 256; ++j) {
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+			const std::uint16_t index = i | (j << 8);
+#else
+			const std::uint16_t index = j | (i << 8);
+#endif
+			paletteTransparencyLookupBlack16[index] = paletteTransparencyLookup[0][i] | (paletteTransparencyLookup[0][j] << 8);
 		}
 	}
 }

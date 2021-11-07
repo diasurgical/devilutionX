@@ -5,6 +5,8 @@
  */
 #pragma once
 
+#include <cstdint>
+
 #include "gendung.h"
 
 namespace devilution {
@@ -34,6 +36,17 @@ extern SDL_Color system_palette[256];
 extern SDL_Color orig_palette[256];
 /** Lookup table for transparency */
 extern Uint8 paletteTransparencyLookup[256][256];
+
+/**
+ * A lookup table from black for a pair of colors.
+ *
+ * For a pair of colors i and j, the index `i | (j << 8)` contains
+ * `paletteTransparencyLookup[0][i] | (paletteTransparencyLookup[0][j] << 8)`.
+ *
+ * On big-endian platforms, the indices are encoded as `j | (i << 8)`, while the
+ * value order remains the same.
+ */
+extern uint16_t paletteTransparencyLookupBlack16[65536];
 
 void palette_update(int first = 0, int ncolor = 256);
 void palette_init();
