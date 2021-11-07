@@ -159,7 +159,7 @@ void FindItemOrObject()
 		for (int yy = -1; yy < 2; yy++) {
 			if (dObject[mx + xx][my + yy] == 0)
 				continue;
-			int o = dObject[mx + xx][my + yy] > 0 ? dObject[mx + xx][my + yy] - 1 : -(dObject[mx + xx][my + yy] + 1);
+			int o = abs(dObject[mx + xx][my + yy]) - 1;
 			if (Objects[o]._oSelFlag == 0)
 				continue;
 			if (xx == 0 && yy == 0 && Objects[o]._oDoorFlag)
@@ -290,7 +290,7 @@ void FindMeleeTarget()
 				visited[dx][dy] = true;
 
 				if (dMonster[dx][dy] != 0) {
-					const int mi = dMonster[dx][dy] > 0 ? dMonster[dx][dy] - 1 : -(dMonster[dx][dy] + 1);
+					const int mi = abs(dMonster[dx][dy]) - 1;
 					const auto &monster = Monsters[mi];
 					if (CanTargetMonster(monster)) {
 						const bool newCanTalk = CanTalkToMonst(monster);

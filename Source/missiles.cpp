@@ -443,26 +443,10 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 	if (missile._micaster != TARGET_BOTH && missile._misource != -1) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
-			if (mid > 0) {
-				mid -= 1;
+			if (mid != 0 && (mid > 0 || Monsters[mid]._mmode == MonsterMode::Petrified)) {
 				if (MonsterMHit(
 				        missile._misource,
-				        mid,
-				        mindam,
-				        maxdam,
-				        missile._midist,
-				        missile._mitype,
-				        shift)) {
-					if (!nodel)
-						missile._mirange = 0;
-					missile._miHitFlag = true;
-				}
-			} else if (mid < 0) {
-				mid = -(mid + 1);
-				if (Monsters[mid]._mmode == MonsterMode::Petrified
-				    && MonsterMHit(
-				        missile._misource,
-				        mid,
+				        abs(mid) - 1,
 				        mindam,
 				        maxdam,
 				        missile._midist,
@@ -564,7 +548,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 		}
 	}
 	if (dObject[mx][my] != 0) {
-		int oi = dObject[mx][my] > 0 ? dObject[mx][my] - 1 : -(dObject[mx][my] + 1);
+		int oi = abs(dObject[mx][my]) - 1;
 		if (!Objects[oi]._oMissFlag) {
 			if (Objects[oi]._oBreak == 1)
 				BreakObject(-1, oi);
@@ -3178,20 +3162,17 @@ void MI_Rune(Missile &missile)
 {
 	Point position = missile.position.tile;
 	int mid = dMonster[position.x][position.y];
-	int8_t pid = dPlayer[position.x][position.y];
+	int pid = dPlayer[position.x][position.y];
 	if (mid != 0 || pid != 0) {
-		Direction dir;
-		if (mid != 0) {
-			mid = (mid > 0) ? (mid - 1) : -(mid + 1);
-			dir = GetDirection(position, Monsters[mid].position.tile);
-		} else {
-			pid = (pid > 0) ? (pid - 1) : -(pid + 1);
-			dir = GetDirection(position, Players[pid].position.tile);
-		}
+		Point targetPosition = mid != 0 ? Monsters[abs(mid) - 1].position.tile : Players[abs(pid) - 1].position.tile;
+		Direction dir = GetDirection(position, targetPosition);
+
 		missile._miDelFlag = true;
 		AddUnLight(missile._mlid);
+
 		AddMissile(position, position, dir, static_cast<missile_id>(missile.var1), TARGET_BOTH, missile._misource, missile._midam, missile._mispllvl);
 	}
+
 	PutMissile(missile);
 }
 

@@ -3194,7 +3194,7 @@ bool ItemSpaceOk(Point position)
 		return false;
 
 	if (dObject[position.x][position.y] != 0) {
-		int oi = dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1);
+		int oi = abs(dObject[position.x][position.y]) - 1;
 		if (Objects[oi]._oSolidFlag)
 			return false;
 	}

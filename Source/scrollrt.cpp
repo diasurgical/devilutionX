@@ -107,7 +107,7 @@ bool CouldMissileCollide(Point tile, bool checkPlayerAndMonster)
 	}
 	int oid = dObject[tile.x][tile.y];
 	if (oid != 0) {
-		oid = oid > 0 ? oid - 1 : -(oid + 1);
+		oid = abs(oid) - 1;
 		if (!Objects[oid]._oMissFlag)
 			return true;
 	}
@@ -744,8 +744,7 @@ void DrawItem(const Surface &out, Point tilePosition, Point targetBufferPosition
  */
 void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	int mi = dMonster[tilePosition.x][tilePosition.y];
-	mi = mi > 0 ? mi - 1 : -(mi + 1);
+	int mi = abs(dMonster[tilePosition.x][tilePosition.y]) - 1;
 
 	if (leveltype == DTYPE_TOWN) {
 		auto &towner = Towners[mi];
@@ -799,8 +798,7 @@ void DrawMonsterHelper(const Surface &out, Point tilePosition, Point targetBuffe
  */
 void DrawPlayerHelper(const Surface &out, Point tilePosition, Point targetBufferPosition)
 {
-	int8_t p = dPlayer[tilePosition.x][tilePosition.y];
-	p = p > 0 ? p - 1 : -(p + 1);
+	int8_t p = abs(dPlayer[tilePosition.x][tilePosition.y]) - 1;
 
 	if (p < 0 || p >= MAX_PLRS) {
 		Log("draw player: tried to draw illegal player {}", p);
