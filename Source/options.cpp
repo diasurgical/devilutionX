@@ -232,7 +232,6 @@ void LoadOptions()
 
 	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
 	sgOptions.Audio.nMusicVolume = GetIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.Audio.bWalkingSound = GetIniBool("Audio", "Walking Sound", true);
 	sgOptions.Audio.bAutoEquipSound = GetIniBool("Audio", "Auto Equip Sound", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Audio.bItemPickupSound = GetIniBool("Audio", "Item Pickup Sound", AUTO_PICKUP_DEFAULT(false));
 
@@ -396,7 +395,6 @@ void SaveOptions()
 
 	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-	SetIniValue("Audio", "Walking Sound", sgOptions.Audio.bWalkingSound);
 	SetIniValue("Audio", "Auto Equip Sound", sgOptions.Audio.bAutoEquipSound);
 	SetIniValue("Audio", "Item Pickup Sound", sgOptions.Audio.bItemPickupSound);
 
@@ -605,11 +603,14 @@ std::vector<OptionEntryBase *> HellfireOptions::GetEntries()
 
 AudioOptions::AudioOptions()
     : OptionCategoryBase("Audio", N_("Audio"), N_("Audio Settings"))
+    , walkingSound("Walking Sound", OptionEntryFlags::None, N_("Walking Sound"), N_("Player emits sound when walking."), true)
 {
 }
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 {
-	return {};
+	return {
+		&walkingSound,
+	};
 }
 
 GraphicsOptions::GraphicsOptions()
