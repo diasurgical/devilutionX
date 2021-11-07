@@ -274,7 +274,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Enable double walk speed when in town. */
 	OptionEntryBoolean runInTown;
 	/** @brief Do not let the mouse leave the application window. */
-	bool bGrabInput;
+	OptionEntryBoolean grabInput;
 	/** @brief Enable the Theo quest. */
 	bool bTheoQuest;
 	/** @brief Enable the cow quest. */
