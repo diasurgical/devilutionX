@@ -251,21 +251,17 @@ void InitMonster(Monster &monster, Direction rd, int mtype, Point position)
 
 bool CanPlaceMonster(int xp, int yp)
 {
-	char f;
-
 	if (!InDungeonBounds({ xp, yp })
 	    || dMonster[xp][yp] != 0
 	    || dPlayer[xp][yp] != 0) {
 		return false;
 	}
 
-	f = dFlags[xp][yp];
-
-	if ((f & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible({ xp, yp })) {
 		return false;
 	}
 
-	if ((f & BFLAG_POPULATED) != 0) {
+	if (TileContainsSetPiece({ xp, yp })) {
 		return false;
 	}
 
@@ -1996,7 +1992,7 @@ bool RandomWalk2(int i, Direction md)
  */
 bool IsTileSafe(const Monster &monster, Point position)
 {
-	if ((dFlags[position.x][position.y] & BFLAG_MISSILE) == 0) {
+	if (!TileContainsMissile(position)) {
 		return true;
 	}
 
@@ -2309,14 +2305,12 @@ void ZombieAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) == 0) {
+	if (!IsTileVisible(monster.position.tile)) {
 		return;
 	}
 
 	if (GenerateRnd(100) < 2 * monster._mint + 10) {
-		int dist = monster.enemyPosition.WalkingDistance({ mx, my });
+		int dist = monster.enemyPosition.WalkingDistance(monster.position.tile);
 		if (dist >= 2) {
 			if (dist >= 2 * monster._mint + 4) {
 				Direction md = monster._mdir;
@@ -2929,13 +2923,11 @@ void GharbadAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
 
 	if (monster.mtalkmsg >= TEXT_GARBUD1
 	    && monster.mtalkmsg <= TEXT_GARBUD3
-	    && (dFlags[mx][my] & BFLAG_VISIBLE) == 0
+	    && !IsTileVisible(monster.position.tile)
 	    && monster._mgoal == MGOAL_TALKING) {
 		monster._mgoal = MGOAL_INQUIRING;
 		switch (monster.mtalkmsg) {
@@ -2953,7 +2945,7 @@ void GharbadAi(int i)
 		}
 	}
 
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.mtalkmsg == TEXT_GARBUD4) {
 			if (!effect_is_playing(USFX_GARBUD4) && monster._mgoal == MGOAL_TALKING) {
 				monster._mgoal = MGOAL_NORMAL;
@@ -2988,11 +2980,9 @@ void SnotSpilAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
 
-	if (monster.mtalkmsg == TEXT_BANNER10 && (dFlags[mx][my] & BFLAG_VISIBLE) == 0 && monster._mgoal == MGOAL_TALKING) {
+	if (monster.mtalkmsg == TEXT_BANNER10 && !IsTileVisible(monster.position.tile) && monster._mgoal == MGOAL_TALKING) {
 		monster.mtalkmsg = TEXT_BANNER11;
 		monster._mgoal = MGOAL_INQUIRING;
 	}
@@ -3002,7 +2992,7 @@ void SnotSpilAi(int i)
 		monster._mgoal = MGOAL_NORMAL;
 	}
 
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.mtalkmsg == TEXT_BANNER12) {
 			if (!effect_is_playing(USFX_SNOT3) && monster._mgoal == MGOAL_TALKING) {
 				ObjChangeMap(setpc_x, setpc_y, setpc_x + setpc_w + 1, setpc_y + setpc_h + 1);
@@ -3158,15 +3148,13 @@ void ZharAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
-	if (monster.mtalkmsg == TEXT_ZHAR1 && (dFlags[mx][my] & BFLAG_VISIBLE) == 0 && monster._mgoal == MGOAL_TALKING) {
+	if (monster.mtalkmsg == TEXT_ZHAR1 && !IsTileVisible(monster.position.tile) && monster._mgoal == MGOAL_TALKING) {
 		monster.mtalkmsg = TEXT_ZHAR2;
 		monster._mgoal = MGOAL_INQUIRING;
 	}
 
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.mtalkmsg == TEXT_ZHAR2) {
 			if (!effect_is_playing(USFX_ZHAR2) && monster._mgoal == MGOAL_TALKING) {
 				monster._msquelch = UINT8_MAX;
@@ -3265,13 +3253,11 @@ void LazarusAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (!gbIsMultiplayer) {
 			auto &myPlayer = Players[MyPlayerId];
-			if (monster.mtalkmsg == TEXT_VILE13 && monster._mgoal == MGOAL_INQUIRING && myPlayer.position.tile.x == 35 && myPlayer.position.tile.y == 46) {
+			if (monster.mtalkmsg == TEXT_VILE13 && monster._mgoal == MGOAL_INQUIRING && myPlayer.position.tile == Point { 35, 46 }) {
 				PlayInGameMovie("gendata\\fprst3.smk");
 				monster._mmode = MonsterMode::Talk;
 				Quests[Q_BETRAYER]._qvar1 = 5;
@@ -3313,11 +3299,9 @@ void LazarusMinionAi(int i)
 	if (monster._mmode != MonsterMode::Stand)
 		return;
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
 
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (!gbIsMultiplayer) {
 			if (Quests[Q_BETRAYER]._qvar1 <= 5) {
 				monster._mgoal = MGOAL_INQUIRING;
@@ -3343,16 +3327,14 @@ void LachdananAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
 
-	if (monster.mtalkmsg == TEXT_VEIL9 && (dFlags[mx][my] & BFLAG_VISIBLE) == 0 && monster._mgoal == MGOAL_TALKING) {
+	if (monster.mtalkmsg == TEXT_VEIL9 && !IsTileVisible(monster.position.tile) && monster._mgoal == MGOAL_TALKING) {
 		monster.mtalkmsg = TEXT_VEIL10;
 		monster._mgoal = MGOAL_INQUIRING;
 	}
 
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.mtalkmsg == TEXT_VEIL11) {
 			if (!effect_is_playing(USFX_LACH3) && monster._mgoal == MGOAL_TALKING) {
 				monster.mtalkmsg = TEXT_NONE;
@@ -3374,10 +3356,8 @@ void WarlordAi(int i)
 		return;
 	}
 
-	int mx = monster.position.tile.x;
-	int my = monster.position.tile.y;
 	Direction md = GetMonsterDirection(monster);
-	if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+	if (IsTileVisible(monster.position.tile)) {
 		if (monster.mtalkmsg == TEXT_WARLRD9 && monster._mgoal == MGOAL_INQUIRING)
 			monster._mmode = MonsterMode::Talk;
 		if (monster.mtalkmsg == TEXT_WARLRD9 && !effect_is_playing(USFX_WARLRD1) && monster._mgoal == MGOAL_TALKING) {
@@ -4282,10 +4262,8 @@ void ProcessMonsters()
 				monster._mhitpoints += monster.mLevel;
 			}
 		}
-		int mx = monster.position.tile.x;
-		int my = monster.position.tile.y;
 
-		if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0 && monster._msquelch == 0) {
+		if (IsTileVisible(monster.position.tile) && monster._msquelch == 0) {
 			if (monster.MType->mtype == MT_CLEAVER) {
 				PlaySFX(USFX_CLEAVER);
 			}
@@ -4312,7 +4290,7 @@ void ProcessMonsters()
 			assert(monster._menemy >= 0 && monster._menemy < MAX_PLRS);
 			auto &player = Players[monster._menemy];
 			monster.enemyPosition = player.position.future;
-			if ((dFlags[mx][my] & BFLAG_VISIBLE) != 0) {
+			if (IsTileVisible(monster.position.tile)) {
 				monster._msquelch = UINT8_MAX;
 				monster.position.last = player.position.future;
 			} else if (monster._msquelch != 0 && monster.MType->mtype != MT_DIABLO) { /// BUGFIX: change '_mAi' to 'MType->mtype'

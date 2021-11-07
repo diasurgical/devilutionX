@@ -1511,7 +1511,7 @@ bool DoDeath(int pnum)
 
 		player.AnimInfo.TicksPerFrame = 10000;
 		player.AnimInfo.CurrentFrame = player.AnimInfo.NumberOfFrames;
-		dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
+		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 	}
 
 	if (player.deathFrame < 100) {
@@ -3005,7 +3005,7 @@ StartPlayerKill(int pnum, int earflag)
 	if (player.plrlevel == currlevel) {
 		FixPlayerLocation(pnum, player._pdir);
 		RemovePlrFromMap(pnum);
-		dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
+		dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 		SetPlayerOld(player);
 
 		if (pnum == MyPlayerId) {

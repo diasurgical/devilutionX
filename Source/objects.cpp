@@ -297,7 +297,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (dObject[xp][yp] != 0)
 		return false;
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 	if (nSolidTable[dPiece[xp][yp]])
 		return false;
@@ -306,7 +306,7 @@ bool RndLocOk(int xp, int yp)
 
 bool CanPlaceWallTrap(int xp, int yp)
 {
-	if ((dFlags[xp][yp] & BFLAG_POPULATED) != 0)
+	if (TileContainsSetPiece({ xp, yp }))
 		return false;
 
 	return nTrapTable[dPiece[xp][yp]];
@@ -550,16 +550,11 @@ void AddL3Objs(int x1, int y1, int x2, int y2)
 	}
 }
 
-bool TorchLocOK(int xp, int yp)
-{
-	return (dFlags[xp][yp] & BFLAG_POPULATED) == 0;
-}
-
 void AddL2Torches()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (!TorchLocOK(i, j))
+			if (TileContainsSetPiece({ i, j }))
 				continue;
 
 			int pn = dPiece[i][j];

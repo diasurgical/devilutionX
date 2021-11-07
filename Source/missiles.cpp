@@ -138,7 +138,7 @@ void PutMissile(Missile &missile)
 		return;
 	}
 
-	dFlags[position.x][position.y] |= BFLAG_MISSILE;
+	dFlags[position.x][position.y] |= DungeonFlag::Missile;
 
 	if (missile._miPreFlag)
 		MissilePreFlag = true;
@@ -706,7 +706,7 @@ void AddRune(Missile &missile, Point dst, missile_id missileID)
 					continue;
 
 				int dp = dPiece[target.x][target.y];
-				if (nSolidTable[dp] || dObject[target.x][target.y] != 0 || (dFlags[target.x][target.y] & BFLAG_MISSILE) != 0)
+				if (nSolidTable[dp] || dObject[target.x][target.y] != 0 || TileContainsMissile(target))
 					continue;
 
 				missile.position.tile = target;
@@ -1295,7 +1295,7 @@ void InitMissiles()
 	}
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
-			dFlags[i][j] &= ~BFLAG_MISSILE;
+			dFlags[i][j] &= ~DungeonFlag::Missile;
 		}
 	}
 }
@@ -2087,7 +2087,7 @@ void AddTown(Missile &missile, Point dst, Direction /*midir*/)
 					continue;
 
 				int dp = dPiece[target.x][target.y];
-				if ((dFlags[target.x][target.y] & BFLAG_MISSILE) == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && dPlayer[target.x][target.y] == 0) {
+				if (!TileContainsMissile(target) && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && dPlayer[target.x][target.y] == 0) {
 					if (!CheckIfTrig(target)) {
 						missile.position.tile = target;
 						missile.position.start = target;
@@ -2201,7 +2201,7 @@ void AddGuardian(Missile &missile, Point dst, Direction /*midir*/)
 
 			if (LineClearMissile(missile.position.start, target)) {
 				int dp = dPiece[target.x][target.y];
-				if (dMonster[target.x][target.y] == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && (dFlags[target.x][target.y] & BFLAG_MISSILE) == 0) {
+				if (dMonster[target.x][target.y] == 0 && !nSolidTable[dp] && !nMissileTable[dp] && dObject[target.x][target.y] == 0 && !TileContainsMissile(target)) {
 					missile.position.tile = target;
 					missile.position.start = target;
 					missile._miDelFlag = false;
@@ -4245,7 +4245,7 @@ void ProcessMissiles()
 	for (int i = 0; i < ActiveMissileCount; i++) {
 		auto &missile = Missiles[ActiveMissiles[i]];
 		const auto &position = missile.position.tile;
-		dFlags[position.x][position.y] &= ~BFLAG_MISSILE;
+		dFlags[position.x][position.y] &= ~DungeonFlag::Missile;
 		if (!InDungeonBounds(position))
 			missile._miDelFlag = true;
 	}

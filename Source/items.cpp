@@ -396,7 +396,7 @@ bool ItemPlace(Point position)
 		return false;
 	if (dObject[position.x][position.y] != 0)
 		return false;
-	if ((dFlags[position.x][position.y] & BFLAG_POPULATED) != 0)
+	if (TileContainsSetPiece(position))
 		return false;
 	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;

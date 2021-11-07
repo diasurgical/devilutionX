@@ -1936,7 +1936,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		} else {
 			for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
 				for (int j = 0; j < MAXDUNY; j++) {
-					dFlags[i][j] |= BFLAG_LIT;
+					dFlags[i][j] |= DungeonFlag::Lit;
 				}
 			}
 
@@ -2011,7 +2011,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 				else
 					SyncInitPlrPos(i);
 			} else {
-				dFlags[player.position.tile.x][player.position.tile.y] |= BFLAG_DEAD_PLAYER;
+				dFlags[player.position.tile.x][player.position.tile.y] |= DungeonFlag::DeadPlayer;
 			}
 		}
 	}

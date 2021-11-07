@@ -361,7 +361,7 @@ bool CheckThemeRoom(int tv)
 		for (int i = 0; i < MAXDUNX; i++) {
 			if (dTransVal[i][j] != tv)
 				continue;
-			if ((dFlags[i][j] & BFLAG_POPULATED) != 0)
+			if (TileContainsSetPiece({ i, j }))
 				return false;
 
 			tarea++;
@@ -460,7 +460,7 @@ void HoldThemeRooms()
 		for (int y = 0; y < MAXDUNY; y++) {
 			for (int x = 0; x < MAXDUNX; x++) {
 				if (dTransVal[x][y] == v) {
-					dFlags[x][y] |= BFLAG_POPULATED;
+					dFlags[x][y] |= DungeonFlag::Populated;
 				}
 			}
 		}
