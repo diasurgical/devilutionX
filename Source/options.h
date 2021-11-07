@@ -282,7 +282,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Will players still damage other players in non-PvP mode. */
 	OptionEntryBoolean friendlyFire;
 	/** @brief Enable the bard hero class. */
-	bool bTestBard;
+	OptionEntryBoolean testBard;
 	/** @brief Enable the babarian hero class. */
 	bool bTestBarbarian;
 	/** @brief Show the current level progress. */
