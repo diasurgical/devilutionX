@@ -215,6 +215,12 @@ bool sbWasOptionsLoaded = false;
 
 void LoadOptions()
 {
+	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
+			pEntry->LoadFromIni(pCategory->GetKey());
+		}
+	}
+
 	sgOptions.Diablo.bIntro = GetIniBool("Diablo", "Intro", true);
 	sgOptions.Diablo.lastSinglePlayerHero = GetIniInt("Diablo", "LastSinglePlayerHero", 0);
 	sgOptions.Diablo.lastMultiplayerHero = GetIniInt("Diablo", "LastMultiplayerHero", 0);
@@ -373,6 +379,12 @@ void LoadOptions()
 
 void SaveOptions()
 {
+	for (OptionCategoryBase *pCategory : sgOptions.GetCategories()) {
+		for (OptionEntryBase *pEntry : pCategory->GetEntries()) {
+			pEntry->SaveToIni(pCategory->GetKey());
+		}
+	}
+
 	SetIniValue("Diablo", "Intro", sgOptions.Diablo.bIntro);
 	SetIniValue("Diablo", "LastSinglePlayerHero", sgOptions.Diablo.lastSinglePlayerHero);
 	SetIniValue("Diablo", "LastMultiplayerHero", sgOptions.Diablo.lastMultiplayerHero);
@@ -457,6 +469,120 @@ void SaveOptions()
 	keymapper.Save();
 
 	SaveIni();
+}
+
+string_view OptionEntryBase::GetName() const
+{
+	return _(name.data());
+}
+string_view OptionEntryBase::GetDescription() const
+{
+	return _(description.data());
+}
+OptionEntryFlags OptionEntryBase::GetFlags() const
+{
+	return flags;
+}
+void OptionEntryBase::SetValueChangedCallback(std::function<void()> callback)
+{
+	this->callback = callback;
+}
+void OptionEntryBase::NotifyValueChanged()
+{
+	if (callback)
+		callback();
+}
+
+void OptionEntryBoolean::LoadFromIni(string_view category)
+{
+	value = GetIniBool(category.data(), key.data(), defaultValue);
+}
+void OptionEntryBoolean::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), key.data(), value);
+}
+bool OptionEntryBoolean::operator*() const
+{
+	return value;
+}
+void OptionEntryBoolean::SetValue(bool value)
+{
+	this->value = value;
+	this->NotifyValueChanged();
+}
+OptionEntryType OptionEntryBoolean::GetType() const
+{
+	return OptionEntryType::Boolean;
+}
+string_view OptionEntryBoolean::GetValueDescription() const
+{
+	return value ? _("ON") : _("OFF");
+}
+
+OptionEntryType OptionEntryListBase::GetType() const
+{
+	return OptionEntryType::List;
+}
+string_view OptionEntryListBase::GetValueDescription() const
+{
+	return GetListDescription(GetActiveListIndex());
+}
+
+void OptionEntryEnumBase::LoadFromIni(string_view category)
+{
+	value = GetIniInt(category.data(), key.data(), defaultValue);
+}
+void OptionEntryEnumBase::SaveToIni(string_view category) const
+{
+	SetIniValue(category.data(), key.data(), value);
+}
+int OptionEntryEnumBase::GetValueInternal()
+{
+	return value;
+}
+void OptionEntryEnumBase::AddEntry(int value, string_view name)
+{
+	entryValues.push_back(value);
+	entryNames.push_back(name);
+}
+size_t OptionEntryEnumBase::GetListSize() const
+{
+	return entryValues.size();
+}
+string_view OptionEntryEnumBase::GetListDescription(size_t index) const
+{
+	return _(entryNames[index].data());
+}
+size_t OptionEntryEnumBase::GetActiveListIndex() const
+{
+	auto iterator = std::find(entryValues.begin(), entryValues.end(), value);
+	if (iterator == entryValues.end())
+		return 0;
+	return std::distance(entryValues.begin(), iterator);
+}
+void OptionEntryEnumBase::SetActiveListIndex(size_t index)
+{
+	this->value = entryValues[index];
+	this->NotifyValueChanged();
+}
+
+OptionCategoryBase::OptionCategoryBase(string_view key, string_view name, string_view description)
+    : key(key)
+    , name(name)
+    , description(description)
+{
+}
+string_view OptionCategoryBase::GetKey() const
+{
+	return key;
+}
+string_view OptionCategoryBase::GetName() const
+{
+	return _(name.data());
+}
+string_view OptionCategoryBase::GetDescription() const
+{
+	return _(description.data());
 }
 
 } // namespace devilution
