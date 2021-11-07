@@ -2692,7 +2692,7 @@ msgstr "Жемчужный"
 
 #: Source/itemdat.cpp:251
 msgid "Ivory"
-msgstr "Слоновой кости"
+msgstr "Слоновой Кости"
 
 #: Source/itemdat.cpp:252
 msgid "Crystal"
