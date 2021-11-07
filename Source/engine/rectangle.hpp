@@ -9,6 +9,28 @@ struct Rectangle {
 	Point position;
 	Size size;
 
+	Rectangle() = default;
+
+	constexpr Rectangle(Point position, Size size)
+	    : position(position)
+	    , size(size)
+	{
+	}
+
+	/**
+	 * @brief Constructs a rectangle centered on the given point and including all tiles within the given radius.
+	 *
+	 * The resulting rectangle will be square with an odd size equal to 2*radius + 1.
+	 *
+	 * @param center center point of the target rectangle
+	 * @param radius a non-negative value indicating how many tiles to include around the center
+	 */
+	explicit constexpr Rectangle(Point center, int radius)
+	    : position(center - Displacement { radius })
+	    , size(2 * radius + 1)
+	{
+	}
+
 	constexpr bool Contains(Point point) const
 	{
 		return point.x >= this->position.x

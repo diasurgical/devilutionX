@@ -18,6 +18,7 @@ set(tests
   cursor_test
   dead_test
   diablo_test
+  drlg_common_test
   drlg_l1_test
   effects_test
   file_util_test
