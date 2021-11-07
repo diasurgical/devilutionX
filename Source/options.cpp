@@ -28,6 +28,7 @@
 #include "diablo.h"
 #include "engine/demomode.h"
 #include "options.h"
+#include "qol/xpbar.h"
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/paths.h"
@@ -197,6 +198,16 @@ void OptionGrabInputChanged()
 #endif
 }
 
+void OptionExperienceBarChanged()
+{
+	if (!gbRunGame)
+		return;
+	if (*sgOptions.Gameplay.experienceBar)
+		InitXPBar();
+	else
+		FreeXPBar();
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -275,7 +286,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bExperienceBar = GetIniBool("Game", "Experience Bar", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bEnemyHealthBar = GetIniBool("Game", "Enemy Health Bar", false);
 	sgOptions.Gameplay.bAutoGoldPickup = GetIniBool("Game", "Auto Gold Pickup", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bAdriaRefillsMana = GetIniBool("Game", "Adria Refills Mana", false);
@@ -423,7 +433,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Experience Bar", sgOptions.Gameplay.bExperienceBar);
 	SetIniValue("Game", "Enemy Health Bar", sgOptions.Gameplay.bEnemyHealthBar);
 	SetIniValue("Game", "Auto Gold Pickup", sgOptions.Gameplay.bAutoGoldPickup);
 	SetIniValue("Game", "Adria Refills Mana", sgOptions.Gameplay.bAdriaRefillsMana);
@@ -633,8 +642,10 @@ GameplayOptions::GameplayOptions()
     , friendlyFire("Friendly Fire", OptionEntryFlags::CantChangeInMultiPlayer, N_("Friendly Fire"), N_("Allow arrow/spell damage between players in multiplayer even when the friendly mode is on."), true)
     , testBard("Test Bard", OptionEntryFlags::CantChangeInGame, N_("Test Bard"), N_("Force the Bard character type to appear in the hero selection menu."), false)
     , testBarbarian("Test Barbarian", OptionEntryFlags::CantChangeInGame, N_("Test Barbarian"), N_("Force the Barbarian character type to appear in the hero selection menu."), false)
+    , experienceBar("Experience Bar", OptionEntryFlags::None, N_("Experience Bar"), N_("Experience Bar is added to the UI at the bottom of the screen."), AUTO_PICKUP_DEFAULT(false))
 {
 	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
+	grabInput.SetValueChangedCallback(OptionExperienceBarChanged);
 }
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
@@ -646,6 +657,7 @@ std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 		&friendlyFire,
 		&testBard,
 		&testBarbarian,
+		&experienceBar,
 	};
 }
 

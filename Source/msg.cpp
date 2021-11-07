@@ -1829,7 +1829,7 @@ DWORD OnCheatExperience(const TCmd *pCmd, int pnum) // NOLINT(misc-unused-parame
 		SendPacket(pnum, pCmd, sizeof(*pCmd));
 	else if (Players[pnum]._pLevel < MAXCHARLEVEL - 1) {
 		Players[pnum]._pExperience = Players[pnum]._pNextExper;
-		if (sgOptions.Gameplay.bExperienceBar) {
+		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
 		NextPlrLevel(pnum);

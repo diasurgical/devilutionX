@@ -286,7 +286,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Enable the babarian hero class. */
 	OptionEntryBoolean testBarbarian;
 	/** @brief Show the current level progress. */
-	bool bExperienceBar;
+	OptionEntryBoolean experienceBar;
 	/** @brief Show enemy health at the top of the screen. */
 	bool bEnemyHealthBar;
 	/** @brief Automatically pick up gold when walking over it. */

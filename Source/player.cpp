@@ -1884,7 +1884,7 @@ void ValidatePlayer()
 		myPlayer._pLevel = MAXCHARLEVEL - 1;
 	if (myPlayer._pExperience > myPlayer._pNextExper) {
 		myPlayer._pExperience = myPlayer._pNextExper;
-		if (sgOptions.Gameplay.bExperienceBar) {
+		if (*sgOptions.Gameplay.experienceBar) {
 			force_redraw = 255;
 		}
 	}
@@ -2638,7 +2638,7 @@ void AddPlrExperience(int pnum, int lvl, int exp)
 	// Overflow is only possible if a kill grants more than (2^32-1 - MaxExperience) XP in one go, which doesn't happen in normal gameplay
 	player._pExperience = std::min(player._pExperience + clampedExp, MaxExperience);
 
-	if (sgOptions.Gameplay.bExperienceBar) {
+	if (*sgOptions.Gameplay.experienceBar) {
 		force_redraw = 255;
 	}
 
