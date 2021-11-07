@@ -24,7 +24,7 @@
 #include "utils/sdl_wrap.h"
 #include "utils/stubs.h"
 #include "utils/language.h"
-#include "utils/utf8.h"
+#include "utils/utf8.hpp"
 
 #ifdef __SWITCH__
 // for virtual keyboard on Switch

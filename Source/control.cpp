@@ -38,7 +38,7 @@
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
-#include "utils/utf8.h"
+#include "utils/utf8.hpp"
 #include "options.h"
 
 #ifdef _DEBUG

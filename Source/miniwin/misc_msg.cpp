@@ -27,7 +27,7 @@
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
 #include "utils/stubs.h"
-#include "utils/utf8.h"
+#include "utils/utf8.hpp"
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
