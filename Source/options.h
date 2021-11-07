@@ -16,6 +16,12 @@ enum class StartUpGameOption {
 	Diablo,
 };
 
+enum class ScalingQuality {
+	NearestPixel,
+	BilinearFiltering,
+	AnisotropicFiltering,
+};
+
 enum class OptionEntryType {
 	Boolean,
 	List,
@@ -234,7 +240,7 @@ struct GraphicsOptions : OptionCategoryBase {
 	/** @brief Expand the aspect ratio to match the screen. */
 	bool bFitToScreen;
 	/** @brief See SDL_HINT_RENDER_SCALE_QUALITY. */
-	char szScaleQuality[2];
+	OptionEntryEnum<ScalingQuality> scaleQuality;
 	/** @brief Only scale by values divisible by the width and height. */
 	bool bIntegerScaling;
 	/** @brief Enable vsync on the output. */
