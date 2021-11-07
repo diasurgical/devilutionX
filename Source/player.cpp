@@ -706,7 +706,7 @@ bool DoWalk(int pnum, int variant)
 	auto &player = Players[pnum];
 
 	//Play walking sound effect on certain animation frames
-	if (sgOptions.Audio.bWalkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
+	if (*sgOptions.Audio.walkingSound && (currlevel != 0 || sgGameInitInfo.bRunInTown == 0)) {
 		if (player.AnimInfo.CurrentFrame == 1
 		    || player.AnimInfo.CurrentFrame == 5) {
 			PlaySfxLoc(PS_WALK1, player.position.tile);
