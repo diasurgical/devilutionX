@@ -232,7 +232,6 @@ void LoadOptions()
 
 	sgOptions.Audio.nSoundVolume = GetIniInt("Audio", "Sound Volume", VOLUME_MAX);
 	sgOptions.Audio.nMusicVolume = GetIniInt("Audio", "Music Volume", VOLUME_MAX);
-	sgOptions.Audio.bItemPickupSound = GetIniBool("Audio", "Item Pickup Sound", AUTO_PICKUP_DEFAULT(false));
 
 	sgOptions.Audio.nSampleRate = GetIniInt("Audio", "Sample Rate", DEFAULT_AUDIO_SAMPLE_RATE);
 	sgOptions.Audio.nChannels = GetIniInt("Audio", "Channels", DEFAULT_AUDIO_CHANNELS);
@@ -394,7 +393,6 @@ void SaveOptions()
 
 	SetIniValue("Audio", "Sound Volume", sgOptions.Audio.nSoundVolume);
 	SetIniValue("Audio", "Music Volume", sgOptions.Audio.nMusicVolume);
-	SetIniValue("Audio", "Item Pickup Sound", sgOptions.Audio.bItemPickupSound);
 
 	SetIniValue("Audio", "Sample Rate", sgOptions.Audio.nSampleRate);
 	SetIniValue("Audio", "Channels", sgOptions.Audio.nChannels);
@@ -603,6 +601,7 @@ AudioOptions::AudioOptions()
     : OptionCategoryBase("Audio", N_("Audio"), N_("Audio Settings"))
     , walkingSound("Walking Sound", OptionEntryFlags::None, N_("Walking Sound"), N_("Player emits sound when walking."), true)
     , autoEquipSound("Auto Equip Sound", OptionEntryFlags::None, N_("Auto Equip Sound"), N_("Automatically equipping items on pickup emits the equipment sound."), AUTO_PICKUP_DEFAULT(false))
+    , itemPickupSound("Item Pickup Sound", OptionEntryFlags::None, N_("Item Pickup Sound"), N_("Picking up items emits the items pickup sound."), AUTO_PICKUP_DEFAULT(false))
 {
 }
 std::vector<OptionEntryBase *> AudioOptions::GetEntries()
@@ -610,6 +609,7 @@ std::vector<OptionEntryBase *> AudioOptions::GetEntries()
 	return {
 		&walkingSound,
 		&autoEquipSound,
+		&itemPickupSound,
 	};
 }
 

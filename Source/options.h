@@ -207,7 +207,7 @@ struct AudioOptions : OptionCategoryBase {
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
 	OptionEntryBoolean autoEquipSound;
 	/** @brief Picking up items emits the items pickup sound. */
-	bool bItemPickupSound;
+	OptionEntryBoolean itemPickupSound;
 
 	/** @brief Output sample rate (Hz) */
 	std::uint32_t nSampleRate;

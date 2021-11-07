@@ -1701,7 +1701,7 @@ void AutoGetItem(int pnum, Item *item, int ii)
 	}
 
 	if (done) {
-		if (!autoEquipped && sgOptions.Audio.bItemPickupSound && pnum == MyPlayerId) {
+		if (!autoEquipped && *sgOptions.Audio.itemPickupSound && pnum == MyPlayerId) {
 			PlaySFX(IS_IGRAB);
 		}
 
