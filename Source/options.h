@@ -177,7 +177,7 @@ struct DiabloOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Play game intro video on startup. */
-	bool bIntro;
+	OptionEntryBoolean intro;
 	/** @brief Remembers what singleplayer hero/save was last used. */
 	std::uint32_t lastSinglePlayerHero;
 	/** @brief Remembers what multiplayer hero/save was last used. */
@@ -189,7 +189,7 @@ struct HellfireOptions : OptionCategoryBase {
 	std::vector<OptionEntryBase *> GetEntries() override;
 
 	/** @brief Play game intro video on startup. */
-	bool bIntro;
+	OptionEntryBoolean intro;
 	/** @brief Cornerstone of the world item. */
 	char szItem[sizeof(ItemPack) * 2 + 1];
 	/** @brief Remembers what singleplayer hero/save was last used. */
