@@ -181,7 +181,7 @@ bool SpawnWindow(const char *lpWindowName)
 #ifdef USE_SDL1
 	SDL_WM_SetCaption(lpWindowName, WINDOW_ICON_NAME);
 	SetVideoModeToPrimary(!gbForceWindowed && sgOptions.Graphics.bFullscreen, width, height);
-	if (sgOptions.Gameplay.bGrabInput)
+	if (*sgOptions.Gameplay.grabInput)
 		SDL_WM_GrabInput(SDL_GRAB_ON);
 	atexit(SDL_VideoQuit); // Without this video mode is not restored after fullscreen.
 #else
@@ -198,7 +198,7 @@ bool SpawnWindow(const char *lpWindowName)
 		flags |= SDL_WINDOW_FULLSCREEN;
 	}
 
-	if (sgOptions.Gameplay.bGrabInput) {
+	if (*sgOptions.Gameplay.grabInput) {
 		flags |= SDL_WINDOW_INPUT_GRABBED;
 	}
 

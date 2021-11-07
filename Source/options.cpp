@@ -187,6 +187,16 @@ bool HardwareCursorDefault()
 }
 #endif
 
+void OptionGrabInputChanged()
+{
+#ifdef USE_SDL1
+	SDL_WM_GrabInput(*sgOptions.Gameplay.grabInput ? SDL_GRAB_ON : SDL_GRAB_OFF);
+#else
+	if (ghMainWnd != nullptr)
+		SDL_SetWindowGrab(ghMainWnd, *sgOptions.Gameplay.grabInput ? SDL_TRUE : SDL_FALSE);
+#endif
+}
+
 } // namespace
 
 void SetIniValue(const char *sectionName, const char *keyName, const char *value, int len)
@@ -265,7 +275,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bGrabInput = GetIniBool("Game", "Grab Input", false);
 	sgOptions.Gameplay.bTheoQuest = GetIniBool("Game", "Theo Quest", false);
 	sgOptions.Gameplay.bCowQuest = GetIniBool("Game", "Cow Quest", false);
 	sgOptions.Gameplay.bFriendlyFire = GetIniBool("Game", "Friendly Fire", true);
@@ -419,7 +428,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
 	SetIniValue("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
 	SetIniValue("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
 	SetIniValue("Game", "Friendly Fire", sgOptions.Gameplay.bFriendlyFire);
@@ -629,12 +637,15 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 GameplayOptions::GameplayOptions()
     : OptionCategoryBase("Game", N_("Gameplay"), N_("Gameplay Settings"))
     , runInTown("Run in Town", OptionEntryFlags::CantChangeInMultiPlayer, N_("Run in Town"), N_("Enable jogging/fast walking in town for Diablo and Hellfire. This option was introduced in the expansion."), AUTO_PICKUP_DEFAULT(false))
+    , grabInput("Grab Input", OptionEntryFlags::None, N_("Grab Input"), N_("When enabled mouse is locked to the game window."), false)
 {
+	grabInput.SetValueChangedCallback(OptionGrabInputChanged);
 }
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
 	return {
 		&runInTown,
+		&grabInput,
 	};
 }
 
