@@ -143,7 +143,7 @@ void SelheroListSelect(int value)
 		if (gbIsHellfire) {
 			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Monk"), static_cast<int>(HeroClass::Monk)));
 		}
-		if (gbBard || sgOptions.Gameplay.bTestBard) {
+		if (gbBard || *sgOptions.Gameplay.testBard) {
 			vecSelHeroDlgItems.push_back(std::make_unique<UiListItem>(_("Bard"), static_cast<int>(HeroClass::Bard)));
 		}
 		if (gbBarbarian || sgOptions.Gameplay.bTestBarbarian) {
