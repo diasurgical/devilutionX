@@ -74,6 +74,8 @@ int level_piece_id;
 // DevilutionX extension.
 extern void DrawControllerModifierHints(const Surface &out);
 
+bool frameflag;
+
 namespace {
 /**
  * @brief Hash algorithm for point
@@ -202,7 +204,6 @@ uint32_t sgdwCursHgtOld;
 
 bool dRendered[MAXDUNX][MAXDUNY];
 
-bool frameflag;
 int frameend;
 int framerate;
 int framestart;
