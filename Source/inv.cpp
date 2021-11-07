@@ -327,7 +327,7 @@ bool AutoEquip(int playerId, const Item &item, inv_body_loc bodyLocation, bool p
 	if (persistItem) {
 		player.InvBody[bodyLocation] = item;
 
-		if (sgOptions.Audio.bAutoEquipSound && playerId == MyPlayerId) {
+		if (*sgOptions.Audio.autoEquipSound && playerId == MyPlayerId) {
 			PlaySFX(ItemInvSnds[ItemCAnimTbl[item._iCurs]]);
 		}
 

@@ -205,7 +205,7 @@ struct AudioOptions : OptionCategoryBase {
 	/** @brief Player emits sound when walking. */
 	OptionEntryBoolean walkingSound;
 	/** @brief Automatically equipping items on pickup emits the equipment sound. */
-	bool bAutoEquipSound;
+	OptionEntryBoolean autoEquipSound;
 	/** @brief Picking up items emits the items pickup sound. */
 	bool bItemPickupSound;
 
