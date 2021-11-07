@@ -1141,15 +1141,8 @@ bool PlrHitPlr(int pnum, int8_t p)
 	return true;
 }
 
-bool PlrHitObj(int pnum, int mx, int my)
+bool PlrHitObj(int pnum, Object &targetObject)
 {
-	int oi = abs(dObject[mx][my]) - 1;
-	if (oi < 0) {
-		return false;
-	}
-
-	Object &targetObject = Objects[oi];
-
 	if (targetObject.IsBreakable()) {
 		BreakObject(pnum, targetObject);
 		return true;
@@ -1214,7 +1207,7 @@ bool DoAttack(int pnum)
 			}
 			didhit = PlrHitPlr(pnum, p);
 		} else if (dObject[dx][dy] > 0) {
-			didhit = PlrHitObj(pnum, dx, dy);
+			didhit = PlrHitObj(pnum, Objects[dObject[dx][dy] - 1]);
 		}
 		if ((player._pClass == HeroClass::Monk
 		        && (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff || player.InvBody[INVLOC_HAND_RIGHT]._itype == ItemType::Staff))
