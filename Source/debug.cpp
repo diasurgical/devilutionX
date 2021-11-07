@@ -782,9 +782,7 @@ void GetDebugMonster()
 	if (mi1 == -1) {
 		int mi2 = dMonster[cursPosition.x][cursPosition.y];
 		if (mi2 != 0) {
-			mi1 = mi2 - 1;
-			if (mi2 <= 0)
-				mi1 = -(mi2 + 1);
+			mi1 = abs(mi2) - 1;
 		} else {
 			mi1 = DebugMonsterId;
 		}
@@ -863,8 +861,7 @@ bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
 		info = 0;
 		int objectIndex = dObject[dungeonCoords.x][dungeonCoords.y];
 		if (objectIndex != 0 && DebugIndexToObjectID.find(objectIndex) != DebugIndexToObjectID.end()) {
-			objectIndex = objectIndex > 0 ? objectIndex - 1 : -(objectIndex + 1);
-			info = DebugIndexToObjectID[objectIndex];
+			info = DebugIndexToObjectID[abs(objectIndex) - 1];
 		}
 		break;
 	}

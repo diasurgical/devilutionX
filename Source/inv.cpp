@@ -1768,24 +1768,18 @@ bool CanPut(Point position)
 		return false;
 	if (nSolidTable[dPiece[position.x][position.y]])
 		return false;
+	if (dObject[position.x][position.y] != 0 && Objects[abs(dObject[position.x][position.y]) - 1]._oSolidFlag)
+		return false;
 
-	if (dObject[position.x][position.y] != 0) {
-		if (Objects[dObject[position.x][position.y] > 0 ? dObject[position.x][position.y] - 1 : -(dObject[position.x][position.y] + 1)]._oSolidFlag)
+	if (dObject[position.x + 1][position.y + 1] != 0) {
+		int8_t oi = abs(dObject[position.x + 1][position.y + 1]) - 1;
+		if (Objects[oi]._oSelFlag != 0) {
 			return false;
+		}
 	}
 
-	int8_t oi = dObject[position.x + 1][position.y + 1];
-	if (oi > 0 && Objects[oi - 1]._oSelFlag != 0) {
-		return false;
-	}
-	if (oi < 0 && Objects[-(oi + 1)]._oSelFlag != 0) {
-		return false;
-	}
-
-	oi = dObject[position.x + 1][position.y];
-	if (oi > 0) {
-		int8_t oi2 = dObject[position.x][position.y + 1];
-		if (oi2 > 0 && Objects[oi - 1]._oSelFlag != 0 && Objects[oi2 - 1]._oSelFlag != 0)
+	if (dObject[position.x + 1][position.y] > 0 && dObject[position.x][position.y + 1] > 0) {
+		if (Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0 && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0)
 			return false;
 	}
 
