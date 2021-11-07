@@ -4125,81 +4125,86 @@ void BreakCrux(Object &crux)
 	ObjChangeMap(crux._oVar1, crux._oVar2, crux._oVar3, crux._oVar4);
 }
 
-void BreakBarrel(int pnum, int i, int dam, bool forcebreak, bool sendmsg)
+void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendmsg)
 {
-	if (Objects[i]._oSelFlag == 0)
+	if (barrel._oSelFlag == 0)
 		return;
 	if (forcebreak) {
-		Objects[i]._oVar1 = 0;
+		barrel._oVar1 = 0;
 	} else {
-		Objects[i]._oVar1 -= dam;
-		if (pnum != MyPlayerId && Objects[i]._oVar1 <= 0)
-			Objects[i]._oVar1 = 1;
+		barrel._oVar1 -= dam;
+		if (pnum != MyPlayerId && barrel._oVar1 <= 0)
+			barrel._oVar1 = 1;
 	}
-	if (Objects[i]._oVar1 > 0) {
+	if (barrel._oVar1 > 0) {
 		if (deltaload)
 			return;
 
-		PlaySfxLoc(IS_IBOW, Objects[i].position);
+		PlaySfxLoc(IS_IBOW, barrel.position);
 		return;
 	}
 
-	Objects[i]._oVar1 = 0;
-	Objects[i]._oAnimFlag = 1;
-	Objects[i]._oAnimFrame = 1;
-	Objects[i]._oAnimDelay = 1;
-	Objects[i]._oSolidFlag = false;
-	Objects[i]._oMissFlag = true;
-	Objects[i]._oBreak = -1;
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oPreFlag = true;
+	barrel._oVar1 = 0;
+	barrel._oAnimFlag = 1;
+	barrel._oAnimFrame = 1;
+	barrel._oAnimDelay = 1;
+	barrel._oSolidFlag = false;
+	barrel._oMissFlag = true;
+	barrel._oBreak = -1;
+	barrel._oSelFlag = 0;
+	barrel._oPreFlag = true;
 	if (deltaload) {
-		Objects[i]._oAnimFrame = Objects[i]._oAnimLen;
-		Objects[i]._oAnimCnt = 0;
-		Objects[i]._oAnimDelay = 1000;
+		barrel._oAnimFrame = barrel._oAnimLen;
+		barrel._oAnimCnt = 0;
+		barrel._oAnimDelay = 1000;
 		return;
 	}
 
-	if (Objects[i]._otype == OBJ_BARRELEX) {
+	if (barrel._otype == OBJ_BARRELEX) {
 		if (currlevel >= 21 && currlevel <= 24)
-			PlaySfxLoc(IS_POPPOP3, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP3, barrel.position);
 		else if (currlevel >= 17 && currlevel <= 20)
-			PlaySfxLoc(IS_POPPOP8, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP8, barrel.position);
 		else
-			PlaySfxLoc(IS_BARLFIRE, Objects[i].position);
-		for (int yp = Objects[i].position.y - 1; yp <= Objects[i].position.y + 1; yp++) {
-			for (int xp = Objects[i].position.x - 1; xp <= Objects[i].position.x + 1; xp++) {
-				if (dMonster[xp][yp] > 0)
+			PlaySfxLoc(IS_BARLFIRE, barrel.position);
+		for (int yp = barrel.position.y - 1; yp <= barrel.position.y + 1; yp++) {
+			for (int xp = barrel.position.x - 1; xp <= barrel.position.x + 1; xp++) {
+				if (dMonster[xp][yp] > 0) {
 					MonsterTrapHit(dMonster[xp][yp] - 1, 1, 4, 0, MIS_FIREBOLT, false);
-				bool unused;
-				if (dPlayer[xp][yp] > 0)
+				}
+				if (dPlayer[xp][yp] > 0) {
+					bool unused;
 					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
-				if (dObject[xp][yp] > 0) {
-					int oi = dObject[xp][yp] - 1;
-					if (Objects[oi]._otype == OBJ_BARRELEX && Objects[oi]._oBreak != -1)
-						BreakBarrel(pnum, oi, dam, true, sendmsg);
+				}
+				int oi = dObject[xp][yp] - 1;
+				if (oi >= 0) {
+					Object &adjacentObject = Objects[oi];
+					if (adjacentObject._otype == _object_id::OBJ_BARRELEX && !adjacentObject.IsBroken()) {
+						BreakBarrel(pnum, adjacentObject, dam, true, sendmsg);
+					}
 				}
 			}
 		}
 	} else {
 		if (currlevel >= 21 && currlevel <= 24)
-			PlaySfxLoc(IS_POPPOP2, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP2, barrel.position);
 		else if (currlevel >= 17 && currlevel <= 20)
-			PlaySfxLoc(IS_POPPOP5, Objects[i].position);
+			PlaySfxLoc(IS_POPPOP5, barrel.position);
 		else
-			PlaySfxLoc(IS_BARREL, Objects[i].position);
-		SetRndSeed(Objects[i]._oRndSeed);
-		if (Objects[i]._oVar2 <= 1) {
-			if (Objects[i]._oVar3 == 0)
-				CreateRndUseful(Objects[i].position, sendmsg);
+			PlaySfxLoc(IS_BARREL, barrel.position);
+		SetRndSeed(barrel._oRndSeed);
+		if (barrel._oVar2 <= 1) {
+			if (barrel._oVar3 == 0)
+				CreateRndUseful(barrel.position, sendmsg);
 			else
-				CreateRndItem(Objects[i].position, false, sendmsg, false);
+				CreateRndItem(barrel.position, false, sendmsg, false);
 		}
-		if (Objects[i]._oVar2 >= 8)
-			SpawnSkeleton(Objects[i]._oVar4, Objects[i].position);
+		if (barrel._oVar2 >= 8)
+			SpawnSkeleton(barrel._oVar4, barrel.position);
 	}
-	if (pnum == MyPlayerId)
-		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, i);
+	if (pnum == MyPlayerId) {
+		NetSendCmdParam2(false, CMD_BREAKOBJ, pnum, static_cast<uint16_t>(barrel.GetId()));
+	}
 }
 
 void SyncCrux(const Object &crux)
@@ -4324,6 +4329,11 @@ void SyncL3Doors(Object &door)
 }
 
 } // namespace
+
+unsigned int Object::GetId() const
+{
+	return abs(dObject[position.x][position.y]) - 1;
+}
 
 bool Object::IsDisabled() const
 {
@@ -5246,7 +5256,7 @@ void SyncOpObject(int pnum, int cmd, int i)
 	}
 }
 
-void BreakObject(int pnum, int oi)
+void BreakObject(int pnum, Object &object)
 {
 	int objdam = 10;
 	if (pnum != -1) {
@@ -5257,17 +5267,17 @@ void BreakObject(int pnum, int oi)
 		objdam += player._pDamageMod + player._pIBonusDamMod + objdam * player._pIBonusDam / 100;
 	}
 
-	if (Objects[oi].IsBarrel()) {
-		BreakBarrel(pnum, oi, objdam, false, true);
-	} else if (Objects[oi].IsCrux()) {
-		BreakCrux(Objects[oi]);
+	if (object.IsBarrel()) {
+		BreakBarrel(pnum, object, objdam, false, true);
+	} else if (object.IsCrux()) {
+		BreakCrux(object);
 	}
 }
 
-void SyncBreakObj(int pnum, int oi)
+void SyncBreakObj(int pnum, Object &object)
 {
-	if (Objects[oi].IsBarrel()) {
-		BreakBarrel(pnum, oi, 0, true, false);
+	if (object.IsBarrel()) {
+		BreakBarrel(pnum, object, 0, true, false);
 	}
 }
 
