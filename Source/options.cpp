@@ -265,7 +265,6 @@ void LoadOptions()
 	sgOptions.Graphics.bShowFPS = (GetIniInt("Graphics", "Show FPS", 0) != 0);
 
 	sgOptions.Gameplay.nTickRate = GetIniInt("Game", "Speed", 20);
-	sgOptions.Gameplay.bRunInTown = GetIniBool("Game", "Run in Town", AUTO_PICKUP_DEFAULT(false));
 	sgOptions.Gameplay.bGrabInput = GetIniBool("Game", "Grab Input", false);
 	sgOptions.Gameplay.bTheoQuest = GetIniBool("Game", "Theo Quest", false);
 	sgOptions.Gameplay.bCowQuest = GetIniBool("Game", "Cow Quest", false);
@@ -420,7 +419,6 @@ void SaveOptions()
 	SetIniValue("Graphics", "Show FPS", sgOptions.Graphics.bShowFPS);
 
 	SetIniValue("Game", "Speed", sgOptions.Gameplay.nTickRate);
-	SetIniValue("Game", "Run in Town", sgOptions.Gameplay.bRunInTown);
 	SetIniValue("Game", "Grab Input", sgOptions.Gameplay.bGrabInput);
 	SetIniValue("Game", "Theo Quest", sgOptions.Gameplay.bTheoQuest);
 	SetIniValue("Game", "Cow Quest", sgOptions.Gameplay.bCowQuest);
@@ -630,11 +628,14 @@ std::vector<OptionEntryBase *> GraphicsOptions::GetEntries()
 
 GameplayOptions::GameplayOptions()
     : OptionCategoryBase("Game", N_("Gameplay"), N_("Gameplay Settings"))
+    , runInTown("Run in Town", OptionEntryFlags::CantChangeInMultiPlayer, N_("Run in Town"), N_("Enable jogging/fast walking in town for Diablo and Hellfire. This option was introduced in the expansion."), AUTO_PICKUP_DEFAULT(false))
 {
 }
 std::vector<OptionEntryBase *> GameplayOptions::GetEntries()
 {
-	return {};
+	return {
+		&runInTown,
+	};
 }
 
 ControllerOptions::ControllerOptions()

@@ -272,7 +272,7 @@ struct GameplayOptions : OptionCategoryBase {
 	/** @brief Gameplay ticks per second. */
 	int nTickRate;
 	/** @brief Enable double walk speed when in town. */
-	bool bRunInTown;
+	OptionEntryBoolean runInTown;
 	/** @brief Do not let the mouse leave the application window. */
 	bool bGrabInput;
 	/** @brief Enable the Theo quest. */
