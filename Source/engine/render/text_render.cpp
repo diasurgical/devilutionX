@@ -20,7 +20,7 @@
 #include "palette.h"
 #include "utils/display.h"
 #include "utils/sdl_compat.h"
-#include "utils/utf8.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -196,20 +196,13 @@ int GetLineWidth(string_view text, GameFontTables size, int spacing, int *charac
 {
 	int lineWidth = 0;
 
-	std::string textBuffer;
-	textBuffer.reserve(textBuffer.size() + 3); // Buffer must be padded before calling utf8_decode()
-	textBuffer.append(text.data(), text.size());
-	textBuffer.resize(textBuffer.size() + 3);
-	const char *textData = textBuffer.data();
-
 	uint32_t codepoints = 0;
 	uint32_t currentUnicodeRow = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
 	char32_t next;
-	int error;
-	while (*textData != '\0') {
-		textData = utf8_decode(textData, &next, &error);
-		if (error)
+	while (!text.empty()) {
+		next = ConsumeFirstUtf8CodePoint(&text);
+		if (next == Utf8DecodeError)
 			break;
 		if (next == ZWSP)
 			continue;
@@ -249,13 +242,11 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 	int lastBreakableLen;
 	char32_t lastBreakableCodePoint;
 
-	std::string input;
+	std::string input { text };
 	std::string output;
-	input.reserve(input.size() + 3); // Buffer must be padded before calling utf8_decode()
-	input.append(text.data(), text.size());
-	input.resize(input.size() + 3);
 	output.reserve(text.size());
 	const char *begin = input.data();
+	const char *end = input.data() + input.size();
 	const char *cur = begin;
 
 	const char *processedEnd = cur;
@@ -263,10 +254,11 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 	size_t lineWidth = 0;
 	std::array<uint8_t, 256> *kerning = nullptr;
 	char32_t next;
-	int error;
-	while (*cur != '\0') {
-		cur = utf8_decode(cur, &next, &error);
-		if (error != 0)
+	while (cur != end && *cur != '\0') {
+		uint8_t codepointLen;
+		next = DecodeFirstUtf8CodePoint(cur, &codepointLen);
+		cur += codepointLen;
+		if (next == Utf8DecodeError)
 			break;
 
 		if (next == U'\n') { // Existing line break, scan next line
@@ -361,17 +353,12 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 	Art *font = nullptr;
 	std::array<uint8_t, 256> *kerning = nullptr;
 
-	std::string textBuffer(text);
-	textBuffer.resize(textBuffer.size() + 4); // Buffer must be padded before calling utf8_decode()
-	const char *textData = textBuffer.data();
-	const char *previousPosition = textData;
-
 	char32_t next;
 	uint32_t currentUnicodeRow = 0;
-	int error;
-	for (; *textData != '\0'; previousPosition = textData) {
-		textData = utf8_decode(textData, &next, &error);
-		if (error)
+	string_view remaining = text;
+	while (!remaining.empty() && remaining[0] != '\0') {
+		next = ConsumeFirstUtf8CodePoint(&remaining);
+		if (next == Utf8DecodeError)
 			break;
 		if (next == ZWSP)
 			continue;
@@ -392,8 +379,8 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
-				if (*textData != '\0')
-					lineWidth += spacing + GetLineWidth(textData, size, spacing);
+				if (text[0] != '\0')
+					lineWidth += spacing + GetLineWidth(text, size, spacing);
 			}
 
 			if (HasAnyOf(flags, UiFlags::AlignCenter))
@@ -415,7 +402,7 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 		DrawArt(out, characterPosition, LoadFont(size, color, 0), '|');
 	}
 
-	return previousPosition - textBuffer.data();
+	return text.data() - remaining.data();
 }
 
 uint8_t PentSpn2Spin()

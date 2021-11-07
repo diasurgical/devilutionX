@@ -355,6 +355,8 @@ add_subdirectory(3rdParty/simpleini)
 
 add_subdirectory(3rdParty/libmpq)
 
+add_subdirectory(3rdParty/hoehrmann_utf8)
+
 add_library(PKWare STATIC
   3rdParty/PKWare/explode.cpp
   3rdParty/PKWare/implode.cpp)
@@ -466,6 +468,7 @@ set(libdevilutionx_SRCS
   Source/utils/sdl_bilinear_scale.cpp
   Source/utils/sdl_rwops_file_wrapper.cpp
   Source/utils/sdl_thread.cpp
+  Source/utils/utf8.cpp
   Source/DiabloUI/art.cpp
   Source/DiabloUI/art_draw.cpp
   Source/DiabloUI/button.cpp
@@ -861,7 +864,8 @@ target_link_libraries(libdevilutionx PUBLIC
   PKWare
   libmpq
   smacker
-  simpleini)
+  simpleini
+  hoehrmann_utf8)
 
 if(WIN32)
   target_link_libraries(libdevilutionx PUBLIC find_steam_game)
