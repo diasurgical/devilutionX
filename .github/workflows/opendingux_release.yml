@@ -3,6 +3,7 @@ name: OpenDingux Release Build
 on:
   release:
     types: [created]
+  workflow_dispatch:
 
 jobs:
   gcw0:
