@@ -497,7 +497,7 @@ void selgame_Password_Select(int /*value*/)
 	m_game_data->nTickRate = nTickRate;
 	m_game_data->bRunInTown = *sgOptions.Gameplay.runInTown ? 1 : 0;
 	m_game_data->bTheoQuest = *sgOptions.Gameplay.theoQuest ? 1 : 0;
-	m_game_data->bCowQuest = sgOptions.Gameplay.bCowQuest ? 1 : 0;
+	m_game_data->bCowQuest = *sgOptions.Gameplay.cowQuest ? 1 : 0;
 
 	if (SNetCreateGame(nullptr, gamePassword, (char *)m_game_data, sizeof(*m_game_data), gdwPlayerId)) {
 		UiInitList_clear();
