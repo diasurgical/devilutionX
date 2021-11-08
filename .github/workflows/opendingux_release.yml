@@ -16,7 +16,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y curl cmake git smpq squashfs-tools &&
+        sudo apt install -y curl cmake git squashfs-tools &&
         curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-gcw0-toolchain.2021-03-10.tar.xz -o gcw0-toolchain.tar.xz &&
         sudo mkdir -p /opt/gcw0-toolchain && sudo chown -R "${USER}:" /opt/gcw0-toolchain &&
         tar -C /opt -xf gcw0-toolchain.tar.xz
@@ -46,7 +46,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y curl cmake git smpq squashfs-tools &&
+        sudo apt install -y curl cmake git squashfs-tools &&
         curl -L http://od.abstraction.se/opendingux/toolchain/opendingux-lepus-toolchain.2021-03-11.tar.xz -o lepus-toolchain.tar.xz &&
         sudo mkdir -p /opt/lepus-toolchain && sudo chown -R "${USER}:" /opt/lepus-toolchain &&
         tar -C /opt -xf lepus-toolchain.tar.xz

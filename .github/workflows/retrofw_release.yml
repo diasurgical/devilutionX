@@ -16,7 +16,7 @@ jobs:
     - name: Create Build Environment
       run: >
         sudo apt update &&
-        sudo apt install -y curl cmake git smpq squashfs-tools gettext &&
+        sudo apt install -y curl cmake git squashfs-tools gettext &&
         curl -L https://github.com/Poligraf/retrofw_buildroot_gcc11/releases/download/2.3.2/host.tar.gz -o retrofw-toolchain.tar.gz &&
         sudo mkdir -p /opt/retrofw-toolchain && sudo chown -R "${USER}:" /opt/retrofw-toolchain &&
         tar -C /opt/retrofw-toolchain --strip-components=1 -xf retrofw-toolchain.tar.gz &&
