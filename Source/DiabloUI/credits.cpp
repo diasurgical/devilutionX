@@ -118,7 +118,7 @@ void CreditsRenderer::Render()
 
 		auto &lineContent = linesToRender[i];
 
-		SDL_Rect dstRect { destX + lineContent.offset, destY, 0, 0 };
+		SDL_Rect dstRect = MakeSdlRect(destX + lineContent.offset, destY, 0, 0);
 		ScaleOutputRect(&dstRect);
 		const Surface &out = Surface(DiabloUiSurface());
 		DrawString(out, lineContent.text, Point { dstRect.x, dstRect.y }, UiFlags::FontSizeDialog | UiFlags::ColorDialogWhite);
