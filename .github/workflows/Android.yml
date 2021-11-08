@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install gettext
-      run: sudo apt install -y gettext
+      run: sudo apt update && sudo apt install -y gettext
 
     - name: Checkout
       uses: actions/checkout@v2
       with:
         fetch-depth: 0
-    
+
     - name: set up JDK 11
       uses: actions/setup-java@v2
       with:
@@ -37,13 +37,14 @@ jobs:
         path: android-project/app/.cxx
         key: android-cmake-${{ github.sha }}
         restore-keys: android-cmake-
-      
+
     - name: Build
       working-directory: ${{github.workspace}}
       shell: bash
       run: cd android-project && ./gradlew assembleDebug
 
     - name: Upload-Package
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx-debug.apk

@@ -40,6 +40,7 @@ jobs:
       run: cmake --build build -j $(nproc) --target package
 
     - name: Upload-Package
+      if: ${{ !env.ACT }}
       uses: actions/upload-artifact@v2
       with:
         name: devilutionx_x86.zip
