@@ -466,6 +466,11 @@ void selgame_Password_Select(int /*value*/)
 	if (selgame_selectedGame == 2 && strlen(selgame_Password) > 0)
 		gamePassword = selgame_Password;
 
+	// If there is an error, the error message won't necessarily be set.
+	// Clear the error so that we display "Unknown network error"
+	// instead of an arbitrary message in that case.
+	SDL_ClearError();
+
 	if (selgame_selectedGame > 1) {
 		strcpy(sgOptions.Network.szPreviousHost, selgame_Ip);
 		if (SNetJoinGame(selgame_Ip, gamePassword, gdwPlayerId)) {
