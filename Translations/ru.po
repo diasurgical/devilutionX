@@ -6697,7 +6697,7 @@ msgstr "Покинуть дом целителя"
 
 #: Source/stores.cpp:1053
 msgid "The Town Elder"
-msgstr "Городской Старец"
+msgstr "Городской Старейшина"
 
 #: Source/stores.cpp:1055
 msgid "Talk to Cain"
@@ -6768,11 +6768,11 @@ msgstr "Поговорить с Джиллиан"
 
 #: Source/stores.cpp:1264 Source/towners.cpp:212
 msgid "Farnham the Drunk"
-msgstr "Пьяница Фарнхэм"
+msgstr "Пьяница Фарнам"
 
 #: Source/stores.cpp:1266
 msgid "Talk to Farnham"
-msgstr "Поговорить с Фарнхэмом"
+msgstr "Поговорить с Фарнамом"
 
 #: Source/stores.cpp:1267
 msgid "Say Goodbye"
@@ -10640,7 +10640,7 @@ msgstr "Целитель Пипин"
 
 #: Source/towners.cpp:196
 msgid "Cain the Elder"
-msgstr "Старец Каин"
+msgstr "Старейшина Каин"
 
 #: Source/towners.cpp:225
 msgid "Cow"
