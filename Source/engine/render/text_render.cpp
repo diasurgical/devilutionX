@@ -288,13 +288,15 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 			continue;
 		}
 
-		uint8_t frame = codepoint & 0xFF;
-		uint32_t unicodeRow = codepoint >> 8;
-		if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
-			kerning = LoadFontKerning(size, unicodeRow);
-			currentUnicodeRow = unicodeRow;
+		if (codepoint != ZWSP) {
+			uint8_t frame = codepoint & 0xFF;
+			uint32_t unicodeRow = codepoint >> 8;
+			if (unicodeRow != currentUnicodeRow || kerning == nullptr) {
+				kerning = LoadFontKerning(size, unicodeRow);
+				currentUnicodeRow = unicodeRow;
+			}
+			lineWidth += (*kerning)[frame] + spacing;
 		}
-		lineWidth += (*kerning)[frame] + spacing;
 
 		const bool isWhitespace = IsWhitespace(codepoint);
 		if (isWhitespace || IsBreakAllowed(codepoint, nextCodepoint)) {
