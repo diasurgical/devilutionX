@@ -2212,7 +2212,7 @@ void LoadLevel()
 		}
 		for (int j = 0; j < DMAXY; j++) {
 			for (int i = 0; i < DMAXX; i++) { // NOLINT(modernize-loop-convert)
-				uint8_t automapView = file.NextLE<uint8_t>();
+				const auto automapView = static_cast<MapExplorationType>(file.NextLE<uint8_t>());
 				AutomapView[i][j] = automapView == MAP_EXP_OLD ? MAP_EXP_SELF : automapView;
 			}
 		}

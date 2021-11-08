@@ -19,11 +19,12 @@
 #include "hwcursor.hpp"
 #include "palette.h"
 #include "utils/display.h"
+#include "utils/language.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"
+#include "utils/sdl_geometry.h"
 #include "utils/sdl_wrap.h"
 #include "utils/stubs.h"
-#include "utils/language.h"
 #include "utils/utf8.hpp"
 
 #ifdef __SWITCH__
@@ -470,15 +471,6 @@ bool IsInsideRect(const SDL_Event &event, const SDL_Rect &rect)
 	return SDL_PointInRect(&point, &rect) == SDL_TRUE;
 }
 
-// Equivalent to SDL_Rect { ... } but avoids -Wnarrowing.
-inline SDL_Rect MakeRect(int x, int y, int w, int h)
-{
-	using Pos = decltype(SDL_Rect {}.x);
-	using Len = decltype(SDL_Rect {}.w);
-	return SDL_Rect { static_cast<Pos>(x), static_cast<Pos>(y),
-		static_cast<Len>(w), static_cast<Len>(h) };
-}
-
 void LoadHeros()
 {
 	LoadArt("ui_art\\heros.pcx", &ArtHero);
@@ -501,8 +493,8 @@ void LoadHeros()
 		if (offset + portraitHeight > ArtHero.h()) {
 			offset = 0;
 		}
-		SDL_Rect srcRect = MakeRect(0, offset, ArtHero.w(), portraitHeight);
-		SDL_Rect dstRect = MakeRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
+		SDL_Rect srcRect = MakeSdlRect(0, offset, ArtHero.w(), portraitHeight);
+		SDL_Rect dstRect = MakeSdlRect(0, i * portraitHeight, ArtHero.w(), portraitHeight);
 		SDL_BlitSurface(ArtHero.surface.get(), &srcRect, heros.get(), &dstRect);
 	}
 
@@ -514,7 +506,7 @@ void LoadHeros()
 		if (portrait.surface == nullptr)
 			continue;
 
-		SDL_Rect dstRect = MakeRect(0, i * portraitHeight, portrait.w(), portraitHeight);
+		SDL_Rect dstRect = MakeSdlRect(0, i * portraitHeight, portrait.w(), portraitHeight);
 		SDL_BlitSurface(portrait.surface.get(), nullptr, heros.get(), &dstRect);
 	}
 

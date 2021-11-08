@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <fmt/format.h>
 
+#include "controls/plrctrls.h"
 #include "cursor.h"
 #include "engine/cel_sprite.hpp"
 #include "engine/load_cel.hpp"
@@ -22,7 +23,6 @@
 #include "stores.h"
 #include "town.h"
 #include "towners.h"
-#include "controls/plrctrls.h"
 #include "utils/language.h"
 #include "utils/sdl_geometry.h"
 #include "utils/stdcompat/optional.hpp"
@@ -1163,7 +1163,7 @@ void StartGoldDrop()
 		control_reset_talk();
 
 	Point start = GetPanelPosition(UiPanels::Inventory, { 67, 128 });
-	SDL_Rect rect = { start.x, start.y, 180, 20 };
+	SDL_Rect rect = MakeSdlRect(start.x, start.y, 180, 20);
 	SDL_SetTextInputRect(&rect);
 
 	dropGoldFlag = true;

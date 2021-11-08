@@ -1903,16 +1903,16 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		if (leveltype != DTYPE_TOWN) {
 			if (firstflag || lvldir == ENTRY_LOAD || !myPlayer._pLvlVisited[currlevel] || gbIsMultiplayer) {
 				HoldThemeRooms();
-				uint32_t mid1Seed = GetLCGEngineState();
+				[[maybe_unused]] uint32_t mid1Seed = GetLCGEngineState();
 				InitMonsters();
-				uint32_t mid2Seed = GetLCGEngineState();
+				[[maybe_unused]] uint32_t mid2Seed = GetLCGEngineState();
 				IncProgress();
 				InitObjects();
 				InitItems();
 				if (currlevel < 17)
 					CreateThemeRooms();
 				IncProgress();
-				uint32_t mid3Seed = GetLCGEngineState();
+				[[maybe_unused]] uint32_t mid3Seed = GetLCGEngineState();
 				InitMissiles();
 				InitCorpses();
 #if _DEBUG
