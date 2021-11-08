@@ -510,7 +510,7 @@ void LoadHeros()
 		Art portrait;
 		char portraitPath[18];
 		sprintf(portraitPath, "ui_art\\hero%i.pcx", i);
-		LoadArt(portraitPath, &portrait);
+		LoadArt(portraitPath, &portrait, 1, nullptr, nullptr, false);
 		if (portrait.surface == nullptr)
 			continue;
 

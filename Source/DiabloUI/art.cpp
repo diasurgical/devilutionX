@@ -102,7 +102,7 @@ Uint32 GetPcxSdlPixelFormat(unsigned bpp)
 
 } // namespace
 
-void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, const std::array<uint8_t, 256> *colorMapping)
+void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, const std::array<uint8_t, 256> *colorMapping, bool showError)
 {
 	if (art == nullptr || art->surface != nullptr)
 		return;
@@ -114,6 +114,8 @@ void LoadArt(const char *pszFile, Art *art, int frames, SDL_Color *pPalette, con
 	std::uint8_t bpp;
 	SDL_RWops *handle = OpenAsset(pszFile);
 	if (handle == nullptr) {
+		if (showError)
+			ErrDlg("OpenAsset failed", pszFile, __FILE__, __LINE__);
 		return;
 	}
 
