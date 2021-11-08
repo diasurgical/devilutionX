@@ -296,7 +296,7 @@ bool RndLocOk(int xp, int yp)
 		return false;
 	if (dPlayer[xp][yp] != 0)
 		return false;
-	if (dObject[xp][yp] != 0)
+	if (IsObjectAtPosition({ xp, yp }))
 		return false;
 	if (TileContainsSetPiece({ xp, yp }))
 		return false;
@@ -477,8 +477,7 @@ void AddBookLever(Rectangle affectedArea, _speech_id msg)
 		yp = 2 * setpc_y + 40;
 		AddObject(OBJ_BLOODBOOK, { xp, yp });
 	}
-	int ob = dObject[xp][yp] - 1;
-	Objects[ob].InitializeQuestBook(affectedArea, leverid, msg);
+	ObjectAtPosition({ xp, yp })->InitializeQuestBook(affectedArea, leverid, msg);
 	leverid++;
 }
 
@@ -555,21 +554,26 @@ void AddL2Torches()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (TileContainsSetPiece({ i, j }))
+			Point testPosition = { i, j };
+			if (!TileContainsSetPiece(testPosition))
 				continue;
 
 			int pn = dPiece[i][j];
-			if (pn == 1 && GenerateRnd(3) == 0)
-				AddObject(OBJ_TORCHL2, { i, j });
+			if (pn == 1 && GenerateRnd(3) == 0) {
+				AddObject(OBJ_TORCHL2, testPosition);
+			}
 
-			if (pn == 5 && GenerateRnd(3) == 0)
-				AddObject(OBJ_TORCHR2, { i, j });
+			if (pn == 5 && GenerateRnd(3) == 0) {
+				AddObject(OBJ_TORCHR2, testPosition);
+			}
 
-			if (pn == 37 && GenerateRnd(10) == 0 && dObject[i - 1][j] == 0)
-				AddObject(OBJ_TORCHL, { i - 1, j });
+			if (pn == 37 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthWest)) {
+				AddObject(OBJ_TORCHL, testPosition + Direction::NorthWest);
+			}
 
-			if (pn == 41 && GenerateRnd(10) == 0 && dObject[i][j - 1] == 0)
-				AddObject(OBJ_TORCHR, { i, j - 1 });
+			if (pn == 41 && GenerateRnd(10) == 0 && !IsObjectAtPosition(testPosition + Direction::NorthEast)) {
+				AddObject(OBJ_TORCHR, testPosition + Direction::NorthEast);
+			}
 		}
 	}
 }
@@ -587,39 +591,41 @@ void AddObjTraps()
 		rndv = 25;
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) {
-			if (dObject[i][j] <= 0 || GenerateRnd(100) >= rndv)
+			Object *triggerObject = ObjectAtPosition({ i, j }, false);
+			if (triggerObject == nullptr || GenerateRnd(100) >= rndv)
 				continue;
 
-			int8_t oi = dObject[i][j] - 1;
-			if (!AllObjects[Objects[oi]._otype].oTrapFlag)
+			if (!AllObjects[triggerObject->_otype].oTrapFlag)
 				continue;
 
+			Object *trapObject = nullptr;
 			if (GenerateRnd(2) == 0) {
 				int xp = i - 1;
-				while (IsTileNotSolid({ xp, j })) // BUGFIX: check if xp >= 0
+				while (IsTileNotSolid({ xp, j }))
 					xp--;
 
 				if (!CanPlaceWallTrap(xp, j) || i - xp <= 1)
 					continue;
 
 				AddObject(OBJ_TRAPL, { xp, j });
-				int8_t oiTrap = dObject[xp][j] - 1;
-				Objects[oiTrap]._oVar1 = i;
-				Objects[oiTrap]._oVar2 = j;
-				Objects[oi]._oTrapFlag = true;
+				trapObject = ObjectAtPosition({ xp, j });
 			} else {
 				int yp = j - 1;
-				while (IsTileNotSolid({ i, yp })) // BUGFIX: check if yp >= 0
+				while (IsTileNotSolid({ i, yp }))
 					yp--;
 
 				if (!CanPlaceWallTrap(i, yp) || j - yp <= 1)
 					continue;
 
 				AddObject(OBJ_TRAPR, { i, yp });
-				int8_t oiTrap = dObject[i][yp] - 1;
-				Objects[oiTrap]._oVar1 = i;
-				Objects[oiTrap]._oVar2 = j;
-				Objects[oi]._oTrapFlag = true;
+				trapObject = ObjectAtPosition({ i, yp });
+			}
+
+			if (trapObject != nullptr) {
+				// nullptr check just in case we fail to find a valid location to place a trap in the chosen direction
+				trapObject->_oVar1 = i;
+				trapObject->_oVar2 = j;
+				triggerObject->_oTrapFlag = true;
 			}
 		}
 	}
@@ -629,28 +635,26 @@ void AddChestTraps()
 {
 	for (int j = 0; j < MAXDUNY; j++) {
 		for (int i = 0; i < MAXDUNX; i++) { // NOLINT(modernize-loop-convert)
-			if (dObject[i][j] > 0) {
-				int8_t oi = dObject[i][j] - 1;
-				if (Objects[oi].IsUntrappedChest() && GenerateRnd(100) < 10) {
-					switch (Objects[oi]._otype) {
-					case OBJ_CHEST1:
-						Objects[oi]._otype = OBJ_TCHEST1;
-						break;
-					case OBJ_CHEST2:
-						Objects[oi]._otype = OBJ_TCHEST2;
-						break;
-					case OBJ_CHEST3:
-						Objects[oi]._otype = OBJ_TCHEST3;
-						break;
-					default:
-						break;
-					}
-					Objects[oi]._oTrapFlag = true;
-					if (leveltype == DTYPE_CATACOMBS) {
-						Objects[oi]._oVar4 = GenerateRnd(2);
-					} else {
-						Objects[oi]._oVar4 = GenerateRnd(gbIsHellfire ? 6 : 3);
-					}
+			Object *chestObject = ObjectAtPosition({ i, j }, false);
+			if (chestObject != nullptr && chestObject->IsUntrappedChest() && GenerateRnd(100) < 10) {
+				switch (chestObject->_otype) {
+				case OBJ_CHEST1:
+					chestObject->_otype = OBJ_TCHEST1;
+					break;
+				case OBJ_CHEST2:
+					chestObject->_otype = OBJ_TCHEST2;
+					break;
+				case OBJ_CHEST3:
+					chestObject->_otype = OBJ_TCHEST3;
+					break;
+				default:
+					break;
+				}
+				chestObject->_oTrapFlag = true;
+				if (leveltype == DTYPE_CATACOMBS) {
+					chestObject->_oVar4 = GenerateRnd(2);
+				} else {
+					chestObject->_oVar4 = GenerateRnd(gbIsHellfire ? 6 : 3);
 				}
 			}
 		}
@@ -2176,47 +2180,49 @@ void OperateLever(int pnum, int i)
 		NetSendCmdParam1(false, CMD_OPERATEOBJ, i);
 }
 
-void OperateBook(int pnum, int i)
+void OperateBook(int pnum, Object &book)
 {
-	int dx;
-	int dy;
+	if (book._oSelFlag == 0) {
+		return;
+	}
 
 	auto &player = Players[pnum];
 
-	if (Objects[i]._oSelFlag == 0)
-		return;
 	if (setlevel && setlvlnum == SL_VILEBETRAYER) {
-		bool doAddMissile = false;
 		bool missileAdded = false;
 		for (int j = 0; j < ActiveObjectCount; j++) {
-			int oi = ActiveObjects[j];
-			int otype = Objects[oi]._otype;
-			if (otype == OBJ_MCIRCLE2 && Objects[oi]._oVar6 == 1) {
-				dx = 27;
-				dy = 29;
-				Objects[oi]._oVar6 = 4;
+			Object &questObject = Objects[ActiveObjects[j]];
+
+			Point target {};
+			bool doAddMissile = false;
+
+			if (questObject._otype == OBJ_MCIRCLE2 && questObject._oVar6 == 1) {
+				target = { 27, 29 };
 				doAddMissile = true;
 			}
-			if (otype == OBJ_MCIRCLE2 && Objects[oi]._oVar6 == 2) {
-				dx = 43;
-				dy = 29;
-				Objects[oi]._oVar6 = 4;
+			if (questObject._otype == OBJ_MCIRCLE2 && questObject._oVar6 == 2) {
+				target = { 43, 29 };
 				doAddMissile = true;
 			}
+
 			if (doAddMissile) {
-				Objects[dObject[35][36] - 1]._oVar5++;
-				AddMissile(player.position.tile, { dx, dy }, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
+				questObject._oVar6 = 4;
+				ObjectAtPosition({ 35, 36 })->_oVar5++;
+				AddMissile(player.position.tile, target, Direction::South, MIS_RNDTELEPORT, TARGET_BOTH, pnum, 0, 0);
 				missileAdded = true;
-				doAddMissile = false;
 			}
 		}
-		if (!missileAdded)
+		if (!missileAdded) {
 			return;
+		}
 	}
-	Objects[i]._oSelFlag = 0;
-	Objects[i]._oAnimFrame++;
-	if (!setlevel)
+
+	book._oSelFlag = 0;
+	book._oAnimFrame++;
+
+	if (!setlevel) {
 		return;
+	}
 
 	if (setlvlnum == SL_BONECHAMB) {
 		player._pMemSpells |= GetSpellBitmask(SPL_GUARDIAN);
@@ -2224,11 +2230,11 @@ void OperateBook(int pnum, int i)
 			player._pSplLvl[SPL_GUARDIAN]++;
 		Quests[Q_SCHAMB]._qactive = QUEST_DONE;
 		if (!deltaload)
-			PlaySfxLoc(IS_QUESTDN, Objects[i].position);
+			PlaySfxLoc(IS_QUESTDN, book.position);
 		InitDiabloMsg(EMSG_BONECHAMB);
 		AddMissile(
 		    player.position.tile,
-		    Objects[i].position + Displacement { -2, -4 },
+		    book.position + Displacement { -2, -4 },
 		    player._pdir,
 		    MIS_GUARDIAN,
 		    TARGET_MONSTERS,
@@ -2238,10 +2244,10 @@ void OperateBook(int pnum, int i)
 	}
 	if (setlvlnum == SL_VILEBETRAYER) {
 		ObjChangeMapResync(
-		    Objects[i]._oVar1,
-		    Objects[i]._oVar2,
-		    Objects[i]._oVar3,
-		    Objects[i]._oVar4);
+		    book._oVar1,
+		    book._oVar2,
+		    book._oVar3,
+		    book._oVar4);
 		for (int j = 0; j < ActiveObjectCount; j++)
 			SyncObjectAnim(Objects[ActiveObjects[j]]);
 	}
@@ -4174,12 +4180,10 @@ void BreakBarrel(int pnum, Object &barrel, int dam, bool forcebreak, bool sendms
 					bool unused;
 					PlayerMHit(dPlayer[xp][yp] - 1, nullptr, 0, 8, 16, MIS_FIREBOLT, false, 0, &unused);
 				}
-				int oi = dObject[xp][yp] - 1;
-				if (oi >= 0) {
-					Object &adjacentObject = Objects[oi];
-					if (adjacentObject._otype == _object_id::OBJ_BARRELEX && !adjacentObject.IsBroken()) {
-						BreakBarrel(pnum, adjacentObject, dam, true, sendmsg);
-					}
+				// don't really need to exclude large objects as explosive barrels are single tile objects, but using considerLargeObjects == false as this matches the old logic.
+				Object *adjacentObject = ObjectAtPosition({ xp, yp }, false);
+				if (adjacentObject != nullptr && adjacentObject->_otype == _object_id::OBJ_BARRELEX && !adjacentObject->IsBroken()) {
+					BreakBarrel(pnum, *adjacentObject, dam, true, sendmsg);
 				}
 			}
 		}
@@ -4835,8 +4839,7 @@ void OperateTrap(Object &trap)
 	if (trap._oVar4 != 0)
 		return;
 
-	int oti = dObject[trap._oVar1][trap._oVar2] - 1;
-	Object &trigger = Objects[oti];
+	Object &trigger = *ObjectAtPosition({ trap._oVar1, trap._oVar2 });
 	switch (trigger._otype) {
 	case OBJ_L1LDOOR:
 	case OBJ_L1RDOOR:
@@ -5126,7 +5129,7 @@ void OperateObject(int pnum, int i, bool teleFlag)
 		OperateLever(pnum, i);
 		break;
 	case OBJ_BOOK2L:
-		OperateBook(pnum, i);
+		OperateBook(pnum, Objects[i]);
 		break;
 	case OBJ_BOOK2R:
 		OperateChamberOfBoneBook(Objects[i]);
