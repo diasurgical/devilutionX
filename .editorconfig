@@ -48,7 +48,7 @@ end_of_line = crlf
 [AppRun]
 end_of_line = lf
 
-[CMakeLists.txt]
+[{CMakeLists.txt,CMakeSettings.json}]
 indent_style = space
 indent_size = 2
 end_of_line = crlf

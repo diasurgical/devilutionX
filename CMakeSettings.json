@@ -1,68 +1,82 @@
 {
-	"configurations": [
-		{
-			"name": "x64-Debug",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"inheritEnvironments": [ "msvc_x64" ],
-			"intelliSenseMode": "windows-msvc-x64",
-			"enableClangTidyCodeAnalysis": true
-		},
-		{
-			"name": "x64-Debug-UnitTests",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"inheritEnvironments": [ "msvc_x64" ],
-			"intelliSenseMode": "windows-msvc-x64",
-			"cmakeCommandArgs": "-DRUN_TESTS=ON",
-			"enableClangTidyCodeAnalysis": true
-		},
-		{
-			"name": "x64-Release",
-			"generator": "Ninja",
-			"configurationType": "Release",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"cmakeCommandArgs": "-DBINARY_RELEASE=ON",
-			"inheritEnvironments": [ "msvc_x64" ],
-			"intelliSenseMode": "windows-msvc-x64",
-			"enableClangTidyCodeAnalysis": true
-		},
-		{
-			"name": "x86-Debug",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"inheritEnvironments": [ "msvc_x86" ],
-			"intelliSenseMode": "windows-msvc-x86",
-			"enableClangTidyCodeAnalysis": true
-		},
-		{
-			"name": "x86-Debug-UnitTests",
-			"generator": "Ninja",
-			"configurationType": "Debug",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"inheritEnvironments": [ "msvc_x86" ],
-			"intelliSenseMode": "windows-msvc-x86",
-			"cmakeCommandArgs": "-DRUN_TESTS=ON",
-			"enableClangTidyCodeAnalysis": true
-		},
-		{
-			"name": "x86-Release",
-			"generator": "Ninja",
-			"configurationType": "Release",
-			"buildRoot": "${workspaceRoot}\\build\\${name}",
-			"installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
-			"cmakeCommandArgs": "-DBINARY_RELEASE=ON",
-			"inheritEnvironments": [ "msvc_x86" ],
-			"intelliSenseMode": "windows-msvc-x86",
-			"enableClangTidyCodeAnalysis": true
-		}
-	]
+  "configurations": [
+    {
+      "name": "x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
+      "name": "x64-Debug-UnitTests",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "cmakeCommandArgs": "-DRUN_TESTS=ON",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
+      "name": "x64-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "cmakeCommandArgs": "-DBINARY_RELEASE=ON",
+      "inheritEnvironments": [ "msvc_x64" ],
+      "intelliSenseMode": "windows-msvc-x64",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
+      "name": "x86-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "intelliSenseMode": "windows-msvc-x86",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
+      "name": "x86-Debug-UnitTests",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "intelliSenseMode": "windows-msvc-x86",
+      "cmakeCommandArgs": "-DRUN_TESTS=ON",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
+      "name": "x86-Release",
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "cmakeCommandArgs": "-DBINARY_RELEASE=ON",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "intelliSenseMode": "windows-msvc-x86",
+      "enableClangTidyCodeAnalysis": true
+    },
+    {
+      "name": "WSL-GCC-x64-Debug",
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${workspaceRoot}\\build\\${name}",
+      "installRoot": "${env.USERPROFILE}\\CMakeBuilds\\${workspaceHash}\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux_x64" ],
+      "wslPath": "${defaultWSLPath}",
+      "variables": []
+    }
+  ]
 }

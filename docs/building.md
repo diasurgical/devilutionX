@@ -143,7 +143,13 @@ The location of this tool will need to be [added to the system's PATH environmen
 
 * **Through Open->CMake in Visual Studio**
 1. Go to `File -> Open -> CMake`, select `CMakeLists.txt` from the project root.
-2. Select `Build devilution.exe` from the `Build` menu.
+2. Select the `x64-Release` configuration (or `x86` for 32 bit builds, `-Debug` for debug builds).
+3. Select `Build devilution.exe` from the `Build` menu.
+
+* **Through GCC/WSL in Visual Studio**
+1. Ensure the WSL environment has the build pre-requisites for both devilutionX (see "Installing Dependencies on Debian and Ubuntu" under the "Linux" section above) and [WSL remote development](https://docs.microsoft.com/en-us/cpp/linux/connect-to-your-remote-linux-computer?view=msvc-160#connect-to-wsl).
+2. Select the `WSL-GCC-x64-Debug` configuration.
+3. Select `Build devilution` from the `Build` menu.
 
 * **Through cmake-gui**
 
