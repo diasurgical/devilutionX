@@ -41,6 +41,19 @@ mark_as_advanced(DISABLE_STREAMING_SOUNDS)
 option(STREAM_ALL_AUDIO "Stream all the audio. For extremely RAM-constrained platforms.")
 mark_as_advanced(STREAM_ALL_AUDIO)
 
+# By default, devilutionx.mpq is built only if smpq is installed.
+if(NOT DEFINED BUILD_ASSETS_MPQ)
+  find_program(SMPQ smpq)
+elseif(BUILD_ASSETS_MPQ)
+  find_program(SMPQ smpq REQUIRED)
+endif()
+if(SMPQ)
+  set(_has_smpq ON)
+else()
+  set(_has_smpq OFF)
+endif()
+option(BUILD_ASSETS_MPQ "If true, assets are packaged into devilutionx.mpq." ${_has_smpq})
+
 # The gettext[tools] package takes a very long time to install
 if(CMAKE_TOOLCHAIN_FILE MATCHES "vcpkg.cmake$")
   option(USE_GETTEXT_FROM_VCPKG "Add vcpkg dependency for gettext[tools] for compiling translations" OFF)
@@ -835,8 +848,7 @@ if (Gettext_FOUND)
   endforeach()
 endif()
 
-find_program(SMPQ smpq)
-if(SMPQ)
+if(BUILD_ASSETS_MPQ)
   set(DEVILUTIONX_MPQ "${CMAKE_CURRENT_BINARY_DIR}/devilutionx.mpq")
   add_custom_command(
     COMMENT "Building devilutionx.mpq"
@@ -1131,7 +1143,7 @@ if(VITA)
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
   set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
   vita_create_self(devilutionx.self devilutionx UNSAFE)
-  if(SMPQ)
+  if(BUILD_ASSETS_MPQ)
     vita_create_vpk(devilutionx.vpk ${VITA_TITLEID} devilutionx.self
       VERSION ${VITA_VERSION}
       NAME ${VITA_APP_NAME}
@@ -1191,7 +1203,7 @@ if(NINTENDO_3DS)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
-if(CPACK AND (APPLE OR SMPQ))
+if(CPACK AND (APPLE OR BUILD_ASSETS_MPQ))
   if(WIN32)
     if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
       set(SDL2_WIN32_DLLS_DIR "${CMAKE_BINARY_DIR}")
