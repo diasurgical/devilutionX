@@ -67,7 +67,7 @@ Want to compile the program by yourself? Great! Simply follow the [build instruc
 
 - The original Devilution project [Devilution](https://github.com/diasurgical/devilution#credits)
 - [Everyone](https://github.com/diasurgical/devilutionX/graphs/contributors) who worked on Devilution/DevilutionX
-- [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) who provided new backgrounds and icons
+- [Nikolay Popov](https://www.instagram.com/nikolaypopovz/) for UI and graphics
 - [WiAParker](https://wiaparker.pl/projekty/diablo-hellfire/) for the Polish voice pack
 - And thanks to all who support the project, report bugs, and help spread the word ❤️
 
