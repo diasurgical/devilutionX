@@ -803,9 +803,9 @@ msgid ""
 "license. See the ReadMe for further details."
 msgstr ""
 "\tЦей порт використовує шрифти CharisSILB, Unifont, та Noto, що ліцензовані "
-"під CharisSILB, Unifont, and Noto, а також Twitmoji, що ліцензований під CC-"
-"BY 4.0. Порт також використовує SDL що ліцензований під zlib-ліцензією. "
-"Дивіться файл ReadMe щоб дізнатися більше."
+"під SIL Open Font License, а також Twitmoji, що ліцензований під CC-BY 4.0. "
+"Порт також використовує SDL що ліцензований під zlib-ліцензією. Дивіться "
+"файл ReadMe щоб дізнатися більше."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
