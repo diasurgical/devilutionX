@@ -9,44 +9,6 @@ using namespace devilution;
 
 bool isN3DS;
 
-aptHookCookie cookie;
-
-void aptHookFunc(APT_HookType hookType, void *param)
-{
-	switch (hookType) {
-	case APTHOOK_ONSUSPEND:
-		ctr_lcd_backlight_on();
-		break;
-	case APTHOOK_ONSLEEP:
-		break;
-	case APTHOOK_ONRESTORE:
-		ctr_lcd_backlight_off();
-		break;
-	case APTHOOK_ONWAKEUP:
-		ctr_lcd_backlight_off();
-		break;
-	case APTHOOK_ONEXIT:
-		ctr_lcd_backlight_on();
-		break;
-	default:
-		break;
-	}
-}
-
-void ctr_lcd_backlight_on()
-{
-	gspLcdInit();
-	GSPLCD_PowerOnBacklight(GSPLCD_SCREEN_BOTTOM);
-	gspLcdExit();
-}
-
-void ctr_lcd_backlight_off()
-{
-	gspLcdInit();
-	GSPLCD_PowerOffBacklight(GSPLCD_SCREEN_BOTTOM);
-	gspLcdExit();
-}
-
 bool ctr_check_dsp()
 {
 	FILE *dsp = fopen("sdmc:/3ds/dspfirm.cdc", "r");
@@ -68,14 +30,9 @@ void ctr_sys_init()
 	if (ctr_check_dsp() == false)
 		exit(0);
 
-	aptHook(&cookie, aptHookFunc, NULL);
-
 	APT_CheckNew3DS(&isN3DS);
 	if (isN3DS)
 		osSetSpeedupEnable(true);
-
-	ctr_lcd_backlight_off();
-	atexit([]() { ctr_lcd_backlight_on(); });
 
 	romfsInit();
 	atexit([]() { romfsExit(); });
