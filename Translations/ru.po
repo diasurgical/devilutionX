@@ -6122,7 +6122,7 @@ msgstr "Мясник"
 
 #: Source/quests.cpp:48
 msgid "Ogden's Sign"
-msgstr "Знак Огдена"
+msgstr "Вывеска Огдена"
 
 #: Source/quests.cpp:49
 msgid "Halls of the Blind"
