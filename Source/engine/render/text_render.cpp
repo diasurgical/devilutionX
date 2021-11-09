@@ -327,6 +327,7 @@ std::string WordWrapString(string_view text, size_t width, GameFontTables size, 
 		processedEnd = remaining.data();
 		lastBreakablePos = -1;
 		lineWidth = 0;
+		nextCodepoint = !remaining.empty() ? DecodeFirstUtf8CodePoint(remaining, &nextCodepointLen) : U'\0';
 	} while (!remaining.empty() && remaining[0] != '\0');
 	output.append(processedEnd, remaining.data());
 	return output;
