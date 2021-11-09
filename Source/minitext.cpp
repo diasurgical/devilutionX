@@ -111,8 +111,8 @@ void DrawQTextContent(const Surface &out)
 			continue;
 		}
 
-		const char *line = TextLines[lineNumber].c_str();
-		if (line[0] == '\0') {
+		const std::string &line = TextLines[lineNumber];
+		if (line.empty()) {
 			continue;
 		}
 
