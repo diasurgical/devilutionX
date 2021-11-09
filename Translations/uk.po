@@ -628,7 +628,7 @@ msgstr "Воїн"
 
 #: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
 msgid "Rogue"
-msgstr "Пройдисвіт"
+msgstr "Пройдисвітка"
 
 #: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
@@ -813,7 +813,7 @@ msgstr "Авторські права © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:38
 msgid "Error"
-msgstr ""
+msgstr "Помилка"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
 #: Source/appfat.cpp:102
@@ -822,6 +822,9 @@ msgid ""
 "\n"
 "The error occurred at: {:s} line {:d}"
 msgstr ""
+"{:s}\n"
+"\n"
+"Сталася помилка в файлі: {:s}, лінія {:d}"
 
 #: Source/appfat.cpp:117
 msgid ""
@@ -829,10 +832,13 @@ msgid ""
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
+"Неможливо відкрити архів даних ({:s}).\n"
+"\n"
+"Впевніться, что він знаходиться в папці зі грою."
 
 #: Source/appfat.cpp:123
 msgid "Data File Error"
-msgstr ""
+msgstr "Помилка Файлу Даних"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
 #: Source/appfat.cpp:131
@@ -840,149 +846,151 @@ msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
+"Неможливо писати дані в:\n"
+"{:s}"
 
 #: Source/appfat.cpp:133
 msgid "Read-Only Directory Error"
-msgstr ""
+msgstr "Папка доступна тільки для читання"
 
 #: Source/automap.cpp:484
 msgid "game: "
-msgstr ""
+msgstr "гра: "
 
 #: Source/automap.cpp:490
 msgid "password: "
-msgstr ""
+msgstr "пароль: "
 
 #: Source/automap.cpp:492
 msgid "Public Game"
-msgstr ""
+msgstr "Відкрита Гра"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
-msgstr ""
+msgstr "Рівень: Гніздо {:d}"
 
 #: Source/automap.cpp:506
 msgid "Level: Crypt {:d}"
-msgstr ""
+msgstr "Рівень: Склеп {:d}"
 
 #: Source/automap.cpp:508 Source/items.cpp:2076
 msgid "Level: {:d}"
-msgstr ""
+msgstr "Рівень: {:d}"
 
 #: Source/control.cpp:199
 msgid "Tab"
-msgstr ""
+msgstr "Tab"
 
 #: Source/control.cpp:199
 msgid "Esc"
-msgstr ""
+msgstr "Esc"
 
 #: Source/control.cpp:199
 msgid "Enter"
-msgstr ""
+msgstr "Enter"
 
 #: Source/control.cpp:202
 msgid "Character Information"
-msgstr ""
+msgstr "Інформація про Героя"
 
 #: Source/control.cpp:203
 msgid "Quests log"
-msgstr ""
+msgstr "Журнал"
 
 #: Source/control.cpp:204
 msgid "Automap"
-msgstr ""
+msgstr "Автокарта"
 
 #: Source/control.cpp:205
 msgid "Main Menu"
-msgstr ""
+msgstr "Головне Меню"
 
 #: Source/control.cpp:206
 msgid "Inventory"
-msgstr ""
+msgstr "Інвентар"
 
 #: Source/control.cpp:207
 msgid "Spell book"
-msgstr ""
+msgstr "Книга Магії"
 
 #: Source/control.cpp:208
 msgid "Send Message"
-msgstr ""
+msgstr "Відправити Повідомлення"
 
 #: Source/control.cpp:705 Source/control.cpp:1565
 msgid "Skill"
-msgstr ""
+msgstr "Талант"
 
 #: Source/control.cpp:706 Source/control.cpp:1219
 msgid "{:s} Skill"
-msgstr ""
+msgstr "{:s} Талант"
 
 #: Source/control.cpp:712
 msgid "Spell"
-msgstr ""
+msgstr "Чари"
 
 #: Source/control.cpp:713 Source/control.cpp:1223
 msgid "{:s} Spell"
-msgstr ""
+msgstr "Чари {:s}"
 
 #: Source/control.cpp:715
 msgid "Damages undead only"
-msgstr ""
+msgstr "Б'є тільки нечисть"
 
 #: Source/control.cpp:719 Source/control.cpp:1227 Source/control.cpp:1589
 msgid "Spell Level 0 - Unusable"
-msgstr ""
+msgstr "0-овий Рівень Чар - Невикористовні"
 
 #: Source/control.cpp:721 Source/control.cpp:1229 Source/control.cpp:1591
 msgid "Spell Level {:d}"
-msgstr ""
+msgstr "Рівень Чар {:d}"
 
 #: Source/control.cpp:728
 msgid "Scroll"
-msgstr ""
+msgstr "Згорток"
 
 #: Source/control.cpp:729 Source/control.cpp:1233
 msgid "Scroll of {:s}"
-msgstr ""
+msgstr "Згорток {:s}"
 
 #: Source/control.cpp:734 Source/control.cpp:1239
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{:d} Згорток"
+msgstr[1] "{:d} Згортка"
+msgstr[2] "{:d} Згортків"
 
 #: Source/control.cpp:741 Source/itemdat.cpp:167 Source/itemdat.cpp:168
 #: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
 msgid "Staff"
-msgstr ""
+msgstr "Посох"
 
 #: Source/control.cpp:742 Source/control.cpp:1243 Source/items.cpp:1317
 msgid "Staff of {:s}"
-msgstr ""
+msgstr "Посох {:s}"
 
 #: Source/control.cpp:744 Source/control.cpp:1245
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{:d} Заряд"
+msgstr[1] "{:d} Заряда"
+msgstr[2] "{:d} Зарядів"
 
 #: Source/control.cpp:754
 msgid "Spell Hotkey {:s}"
-msgstr ""
+msgstr "Гаряча клавіша Чар {:s}"
 
 #: Source/control.cpp:1196
 msgid "Player friendly"
-msgstr ""
+msgstr "Дружній гравець"
 
 #: Source/control.cpp:1198
 msgid "Player attack"
-msgstr ""
+msgstr "Гравець атакує"
 
 #: Source/control.cpp:1201
 msgid "Hotkey: {:s}"
-msgstr ""
+msgstr "Гаряча клавіша: {:s}"
 
 #: Source/control.cpp:1209
 msgid "Select current spell button"
