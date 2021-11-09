@@ -853,7 +853,8 @@ void UpdateEnemy(Monster &monster)
 			continue;
 		if (M_Talker(otherMonster) && otherMonster.mtalkmsg != TEXT_NONE)
 			continue;
-		if ((monster._mFlags & MFLAG_GOLEM) != 0 && (otherMonster._mFlags & MFLAG_GOLEM) != 0) // prevent golems from fighting each other
+		bool isBerserked = (monster._mFlags & MFLAG_BERSERK) != 0 || (otherMonster._mFlags & MFLAG_BERSERK) != 0;
+		if ((monster._mFlags & MFLAG_GOLEM) != 0 && (otherMonster._mFlags & MFLAG_GOLEM) != 0 && !isBerserked) // prevent golems from fighting each other
 			continue;
 
 		int dist = otherMonster.position.tile.WalkingDistance(position);
