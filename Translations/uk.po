@@ -762,6 +762,9 @@ msgid ""
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
+"У нас є чат-сервер за адресою Discord.gg/YQKCAYQ Переходьте по посиланням, "
+"щоб приєднатися до нашої громади, де ми розмовляємо про Diablo та розширення "
+"Hellfire."
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -770,10 +773,14 @@ msgid ""
 "serve you, please be sure to include the version number, operating system, "
 "and the nature of the problem."
 msgstr ""
+"DevilutionX підтримується Diasurgical, задавайте питання та пишіть про "
+"помилки за цією адресою: https://github.com/diasurgical/devilutionX Не "
+"забудьте включати номер версії, операційну систему і опис помилки, щоб ми "
+"могли швидше її вирішити."
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "Disclaimer:"
-msgstr ""
+msgstr "Відмова від відповідальності:"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
@@ -783,6 +790,10 @@ msgid ""
 "DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
 "or GOG.com."
 msgstr ""
+"\tDevilutionX не розробляється і не підтримується Blizzard Entertainment або "
+"GOG.com. Ні Blizzard Entertainment, ні GOG.com не перевіряли якість або "
+"сумісність DevilutionX. Всі питання зв'язані з DevilutionX мають бути "
+"адресовані Diasurgical, а не Blizzard Entertainment або GOG.com."
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
@@ -791,10 +802,14 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
+"\tЦей порт використовує шрифти CharisSILB, Unifont, та Noto, що ліцензовані "
+"під CharisSILB, Unifont, and Noto, а також Twitmoji, що ліцензований під CC-"
+"BY 4.0. Порт також використовує SDL що ліцензований під zlib-ліцензією. "
+"Дивіться файл ReadMe щоб дізнатися більше."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr ""
+msgstr "Авторські права © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:38
 msgid "Error"
