@@ -55,7 +55,6 @@ jobs:
       - run: sudo chmod +rx /opt/devkitpro/tools/bin/makerom
       - run: cmake -S. -Bbuild -DNIGHTLY_BUILD=ON -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/3DS.cmake
       - run: cmake --build build -j 2
-      - store_artifacts: {path: ./build/devilutionx.3dsx, destination: devilutionx.3dsx}
       - store_artifacts: {path: ./build/devilutionx.cia, destination: devilutionx.cia}
   amigaos-m68k:
     docker:

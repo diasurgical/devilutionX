@@ -1182,11 +1182,9 @@ if(NINTENDO_3DS)
     DEPENDS romfs_directory ${APP_ROMFS_FILES})
 
   include(Tools3DS)
-  add_3dsx_target(${BIN_TARGET})
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
 
   get_filename_component(APP_TARGET_PREFIX ${BIN_TARGET} NAME_WE)
-  add_dependencies(${APP_TARGET_PREFIX}_3dsx romfs_files)
   add_dependencies(${APP_TARGET_PREFIX}_cia romfs_files)
 endif()
 
