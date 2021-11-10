@@ -1911,15 +1911,15 @@ msgstr "阿凯尼​的​荣耀"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
-msgstr "完全​治疗​药剂"
+msgstr "完全生命恢复药水"
 
 #: Source/itemdat.cpp:46 Source/itemdat.cpp:96
 msgid "Potion of Full Mana"
-msgstr "全​法力​药剂"
+msgstr "完全法力恢复药水"
 
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:404
 msgid "Griswold's Edge"
-msgstr "格里斯沃尔德​的​锐利"
+msgstr "格里斯沃尔德之锋"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
 msgid "Bovine Plate"
@@ -1939,7 +1939,7 @@ msgstr "铁匠​之​油"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
-msgstr "短​法​杖"
+msgstr "短杖"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:135 Source/itemdat.cpp:136
 #: Source/itemdat.cpp:137 Source/itemdat.cpp:138 Source/itemdat.cpp:141
@@ -2006,11 +2006,11 @@ msgstr "全​护盔"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
-msgstr "皇​冠"
+msgstr "王冠"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
-msgstr "巨型​战盔"
+msgstr "重盔"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
@@ -2081,7 +2081,7 @@ msgstr "板条​甲"
 
 #: Source/itemdat.cpp:83
 msgid "Plate Mail"
-msgstr "板条​锁甲"
+msgstr "板链甲"
 
 #: Source/itemdat.cpp:84
 msgid "Field Plate"
@@ -2098,7 +2098,7 @@ msgstr "全身​板链甲"
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
 msgid "Shield"
-msgstr "之​盾"
+msgstr "盾"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
@@ -2106,7 +2106,7 @@ msgstr "小​盾"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr "大​盾​牌"
+msgstr "大盾"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
@@ -2126,7 +2126,7 @@ msgstr "活力​恢复​药​水"
 
 #: Source/itemdat.cpp:98
 msgid "Potion of Full Rejuvenation"
-msgstr "完全​活力​恢复​药​水"
+msgstr "完全活力恢复药水"
 
 #: Source/itemdat.cpp:100 Source/items.cpp:161
 msgid "Oil of Accuracy"
@@ -2186,7 +2186,7 @@ msgstr "夜视​卷轴"
 
 #: Source/itemdat.cpp:117
 msgid "Scroll of Phasing"
-msgstr "相位​调整​卷轴"
+msgstr "相位术卷轴"
 
 #: Source/itemdat.cpp:118
 msgid "Scroll of Mana Shield"
@@ -2239,15 +2239,15 @@ msgstr "弯​刃剑"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
-msgstr "西​米塔​弯刀"
+msgstr "弯刀"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr "双​刃​大​剑"
+msgstr "双​手​大​剑"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
-msgstr "利刃"
+msgstr "短刃"
 
 #: Source/itemdat.cpp:140
 msgid "Sabre"
@@ -2263,7 +2263,7 @@ msgstr "阔​剑"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr "重​剑"
+msgstr "手半​剑"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
@@ -2271,7 +2271,7 @@ msgstr "双​手​剑"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr "双​手​巨剑"
+msgstr "重剑"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
@@ -2288,7 +2288,7 @@ msgstr "大斧"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr "阔斧"
+msgstr "宽刃斧"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
@@ -2296,7 +2296,7 @@ msgstr "战斗​斧"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
-msgstr "大斧"
+msgstr "重斧"
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
@@ -2324,7 +2324,7 @@ msgstr "连​枷"
 
 #: Source/itemdat.cpp:158
 msgid "Maul"
-msgstr "大​头​锤"
+msgstr "大锤"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
@@ -2362,19 +2362,19 @@ msgstr "长​战争​弓"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
-msgstr "长​法​杖"
+msgstr "长​杖"
 
 #: Source/itemdat.cpp:169
 msgid "Composite Staff"
-msgstr "复​合法​杖"
+msgstr "复​合杖"
 
 #: Source/itemdat.cpp:170
 msgid "Quarter Staff"
-msgstr "弦月​法杖"
+msgstr "铁头棒"
 
 #: Source/itemdat.cpp:171
 msgid "War Staff"
-msgstr "战争​法​杖"
+msgstr "战杖"
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
@@ -2460,7 +2460,7 @@ msgstr "奇​异"
 
 #: Source/itemdat.cpp:204
 msgid "Useless"
-msgstr "无​用​的"
+msgstr "无​用​"
 
 #: Source/itemdat.cpp:205
 msgid "Bent"
@@ -2468,7 +2468,7 @@ msgstr "弯曲"
 
 #: Source/itemdat.cpp:206
 msgid "Weak"
-msgstr "软弱​的"
+msgstr "软弱​"
 
 #: Source/itemdat.cpp:207
 msgid "Jagged"
@@ -2480,7 +2480,7 @@ msgstr "致命"
 
 #: Source/itemdat.cpp:209
 msgid "Heavy"
-msgstr "沉重​的"
+msgstr "沉重​"
 
 #: Source/itemdat.cpp:210
 msgid "Vicious"
@@ -2500,7 +2500,7 @@ msgstr "野​蛮"
 
 #: Source/itemdat.cpp:214
 msgid "Ruthless"
-msgstr "无情​的"
+msgstr "无情​"
 
 #: Source/itemdat.cpp:215
 msgid "Merciless"
@@ -2508,11 +2508,11 @@ msgstr "无情"
 
 #: Source/itemdat.cpp:216
 msgid "Clumsy"
-msgstr "笨拙​的"
+msgstr "笨拙​"
 
 #: Source/itemdat.cpp:217
 msgid "Dull"
-msgstr "迟钝​的"
+msgstr "迟钝​"
 
 #: Source/itemdat.cpp:218
 msgid "Sharp"
@@ -2624,7 +2624,7 @@ msgstr "青​金石"
 
 #: Source/itemdat.cpp:247
 msgid "Cobalt"
-msgstr "钴​蓝"
+msgstr "钴制"
 
 #: Source/itemdat.cpp:248
 msgid "Sapphire"
@@ -2672,7 +2672,7 @@ msgstr "绿​宝石"
 
 #: Source/itemdat.cpp:259
 msgid "Hyena's"
-msgstr "土​狼"
+msgstr "鬣狗的"
 
 #: Source/itemdat.cpp:260
 msgid "Frog's"
@@ -2802,7 +2802,7 @@ msgstr "渗透"
 
 #: Source/itemdat.cpp:301
 msgid "frailty"
-msgstr "虚​弱"
+msgstr "脆弱"
 
 #: Source/itemdat.cpp:302
 msgid "weakness"
@@ -3148,11 +3148,11 @@ msgstr "屠夫​的​剁肉刀"
 
 #: Source/itemdat.cpp:406
 msgid "The Rift Bow"
-msgstr "裂缝​弓"
+msgstr "裂隙之弓"
 
 #: Source/itemdat.cpp:407
 msgid "The Needler"
-msgstr "缝纫​工"
+msgstr "穿针引线"
 
 #: Source/itemdat.cpp:408
 msgid "The Celestial Bow"
@@ -3208,7 +3208,7 @@ msgstr "凸月"
 
 #: Source/itemdat.cpp:421
 msgid "Ice Shank"
-msgstr "冰柄"
+msgstr "寒冰削骨刀"
 
 #: Source/itemdat.cpp:422
 msgid "The Executioner's Blade"
@@ -3220,7 +3220,7 @@ msgstr "骨锯"
 
 #: Source/itemdat.cpp:424
 msgid "Shadowhawk"
-msgstr "影鹰"
+msgstr "影隼"
 
 #: Source/itemdat.cpp:425
 msgid "Wizardspike"
@@ -3320,7 +3320,7 @@ msgstr "舍费尔​之​锤"
 
 #: Source/itemdat.cpp:449
 msgid "Dreamflange"
-msgstr "梦​幻法兰"
+msgstr "梦境边缘"
 
 #: Source/itemdat.cpp:450
 msgid "Staff of Shadows"
@@ -3328,7 +3328,7 @@ msgstr "暗影​之​杖"
 
 #: Source/itemdat.cpp:451
 msgid "Immolator"
-msgstr "献祭者"
+msgstr "焚化者"
 
 #: Source/itemdat.cpp:452
 msgid "Storm Spire"
@@ -3368,7 +3368,7 @@ msgstr "思考帽"
 
 #: Source/itemdat.cpp:461
 msgid "OverLord's Helm"
-msgstr "霸王​的​头盔"
+msgstr "霸主盔"
 
 #: Source/itemdat.cpp:462
 msgid "Fool's Crest"
@@ -3408,7 +3408,7 @@ msgstr "电光锁​甲"
 
 #: Source/itemdat.cpp:471
 msgid "Scavenger Carapace"
-msgstr "食​腐甲壳"
+msgstr "清道夫的甲壳"
 
 #: Source/itemdat.cpp:472
 msgid "Nightscape"
@@ -3420,7 +3420,7 @@ msgstr "诺吉​的​轻铠​甲"
 
 #: Source/itemdat.cpp:474
 msgid "Demonspike Coat"
-msgstr "恶​魔长​钉​外套"
+msgstr "恶魔长角外套"
 
 #: Source/itemdat.cpp:475
 msgid "The Deflector"
@@ -3428,11 +3428,11 @@ msgstr "偏转者"
 
 #: Source/itemdat.cpp:476
 msgid "Split Skull Shield"
-msgstr "裂颅​护盾"
+msgstr "裂颅盾"
 
 #: Source/itemdat.cpp:477
 msgid "Dragon's Breach"
-msgstr "巨​龙吐息"
+msgstr "巨龙之息"
 
 #: Source/itemdat.cpp:478
 msgid "Blackoak Shield"
@@ -3476,11 +3476,11 @@ msgstr "水​银戒指"
 
 #: Source/itemdat.cpp:488
 msgid "Xorine's Ring"
-msgstr "克索林​的​戒指"
+msgstr "索克林之戒"
 
 #: Source/itemdat.cpp:489
 msgid "Karik's Ring"
-msgstr "卡里克戒指"
+msgstr "卡里克之戒"
 
 #: Source/itemdat.cpp:490
 msgid "Ring of Magma"
@@ -6427,32 +6427,28 @@ msgid "Rune of Stone"
 msgstr "符文石"
 
 #: Source/stores.cpp:91
-#, fuzzy
-#| msgid "Griswold's Edge"
 msgid "Griswold"
-msgstr "格里斯沃尔德​的​锐利"
+msgstr "格里斯沃尔德"
 
 #: Source/stores.cpp:92
 msgid "Pepin"
-msgstr ""
+msgstr "佩金"
 
 #: Source/stores.cpp:94
 msgid "Ogden"
-msgstr ""
+msgstr "奥格登"
 
 #: Source/stores.cpp:95
 msgid "Cain"
-msgstr ""
+msgstr "凯恩"
 
 #: Source/stores.cpp:96
-#, fuzzy
-#| msgid "Talk to Farnham"
 msgid "Farnham"
-msgstr "与​法恩汉​交谈"
+msgstr "法恩汉​"
 
 #: Source/stores.cpp:97
 msgid "Adria"
-msgstr ""
+msgstr "艾德莉亚"
 
 #: Source/stores.cpp:98 Source/stores.cpp:1252
 #, fuzzy
@@ -8196,7 +8192,7 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
-"如果​阿德里娅​没有​这些​，​你​可以​打​赌​这​确实​是​一​件​罕见​的​事情​。​我​不​能​给​你​更​多​的​帮"
+"如果​艾德莉亚​没有​这些​，​你​可以​打​赌​这​确实​是​一​件​罕见​的​事情​。​我​不​能​给​你​更​多​的​帮"
 "助​，​但是​听​起来​。​。​。​一​个​巨大​的​，​巨大​的​，​肿胀​的​，​膨胀​的​蘑菇​！​嗯​，​我​想​打猎"
 "​不错​吧"
 
@@ -8924,7 +8920,7 @@ msgid ""
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
 "当​我​不​得不​从​我们​该​死​的​小​镇​边缘​的​商队​里​偷运​我​所​需要​的​金属​和​工具​时​，​那​个​女"
-"​巫艾德里亚​似乎​总​能​得到​她​所​需要​的​一切​。​如果​我​像​她​那样​懂得​如何​运用​魔法​，​我​就​能​"
+"​巫艾德莉亚​​似乎​总​能​得到​她​所​需要​的​一切​。​如果​我​像​她​那样​懂得​如何​运用​魔法​，​我​就​能​"
 "做出​一些​真正​不可​思议​的​事情"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
@@ -9358,7 +9354,7 @@ msgid ""
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
 "艾德莉亚真​让​我​烦恼​。​当然​，​凯恩​对​你​说​的​关于​过去​的​事​是​令​人​毛骨悚然​的​，​但​那​个​女"
-"​巫能​看​透​你​的​过去​。​她​也​总​有​办法​得到​她​需要​的​东西​。​阿德里娅​拿到​的​商品​比​我​在​节"
+"​巫能​看​透​你​的​过去​。​她​也​总​有​办法​得到​她​需要​的​东西​。​艾德莉亚​拿到​的​商品​比​我​在​节"
 "日​期间​穿过​国王​集市​的​大门​看到​的​还​要​多"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
