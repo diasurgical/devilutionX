@@ -787,7 +787,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("WeaponDur: illegal player %i", pnum);
+		app_fatal("DamageWeapon: illegal player %i", pnum);
 	}
 	auto &player = Players[pnum];
 
