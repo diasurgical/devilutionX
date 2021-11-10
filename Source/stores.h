@@ -52,6 +52,17 @@ struct STextStruct {
 	int _sline;
 	bool _ssel;
 	int _sval;
+
+	int y;
+
+	[[nodiscard]] bool IsDivider() const
+	{
+		return _sline != 0;
+	}
+	[[nodiscard]] bool IsText() const
+	{
+		return _sstr[0] != '\0';
+	}
 };
 
 /** Shop frame graphics */

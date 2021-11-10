@@ -9,6 +9,7 @@
 #include "engine/assets.hpp"
 #include "utils/file_util.h"
 #include "utils/paths.h"
+#include "utils/stdcompat/string_view.hpp"
 
 using namespace devilution;
 #define MO_MAGIC 0x950412de
@@ -277,6 +278,12 @@ bool HasTranslation(const std::string &locale)
 	}
 
 	return false;
+}
+
+bool IsSmallFontTall()
+{
+	string_view code(sgOptions.Language.szCode, 2);
+	return code == "zh" || code == "ja" || code == "ko";
 }
 
 void LanguageInitialize()
