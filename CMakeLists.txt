@@ -1192,7 +1192,9 @@ if(NINTENDO_3DS)
 
   add_custom_target(romfs_files
     COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
-    DEPENDS romfs_directory ${APP_ROMFS_FILES})
+    DEPENDS ${APP_ROMFS_FILES})
+    
+  add_dependencies(romfs_files romfs_directory devilutionx_mpq)
 
   include(Tools3DS)
   add_cia_target(${BIN_TARGET} ${APP_RSF} ${APP_BANNER} ${APP_AUDIO})
