@@ -1,22 +1,8 @@
 # DevilutionX (Diablo 1) for Nintendo 3DS
-*New3DS only
 
 ## Installation
 
-Start by downloading [devilutionx-3ds.zip](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-3ds.zip).
-
-<details><summary>.3dsx installation</summary>
-
-#### Install DevilutionX: Diablo
-1. Extract `devilutionx.3dsx` and place into `sd:/3ds/devilutionx/`.
-2. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
-
-#### Install DevilutionX: Diablo - Hellfire
-3. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
-
-</details>
-
-<details><summary>.cia installation</summary>
+Start by downloading [devilutionx-3ds.cia](https://github.com/diasurgical/devilutionX/releases/latest/download/devilutionx-3ds.cia).
 
 #### Install DevilutionX: Diablo
 1. Extract `devilutionx.cia` and place it on your SD card.
@@ -27,15 +13,7 @@ Start by downloading [devilutionx-3ds.zip](https://github.com/diasurgical/devilu
 ##### Install DevilutionX: Diablo - Hellfire
 5. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
-</details>
-
 ## Usage
-
-When using .3dsx:
-
-- Launch DevilutionX with the [Homebrew Launcher](https://github.com/fincs/new-hbmenu).
-
-or, when using .cia:
 
 - Launch Diablo from your 3DS Homemenu.
 
