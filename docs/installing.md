@@ -66,13 +66,14 @@ When the transfer is done you can disconnect your device and press "Check again"
 
 <details><summary>Nintendo 3DS</summary>
 
-### .cia installation
+#### Install DevilutionX: Diablo
+1. Extract `devilutionx.cia` and place it on your SD card.
+2. Copy `diabdat.mpq` from your Diablo CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
+3. Put the SD card back into the 3DS and install `devilutionx.cia` using a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
+    1. `devilutionx.cia` can be removed after being installed.
 
-- Copy `devilutionx.cia` to your SD card.
-- Copy the Diablo and Hellfire MPQ files to `sd:/3ds/devilutionx/`. You do not need to copy devilutionx.mpq.
-- Install `devilutionx.cia` with a title manager (e.g. [FBI](https://github.com/Steveice10/FBI)).
-    - `devilutionx.cia` can be removed after being installed.
-- Launch Diablo from your 3DS Homemenu.
+##### Install DevilutionX: Diablo - Hellfire
+5. Copy `hellfire.mpq` `hfmonk.mpq` `hfmusic.mpq` and `hfvoice.mpq` from your Hellfire CD (or GoG install folder) to `sd:/3ds/devilutionx/`.
 
 </details>
 
