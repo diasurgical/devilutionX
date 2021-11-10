@@ -224,7 +224,7 @@ make -j$(nproc)
 ```
 The output files will be generated in the build folder.
 
-[Nintendo 3DS manual](/docs/manual/platforms/n3ds.md)
+[Nintendo 3DS manual](/docs/manual/platforms/3ds.md)
 </details>
 
 <details><summary>PlayStation Vita</summary>
