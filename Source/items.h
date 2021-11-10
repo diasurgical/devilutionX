@@ -202,8 +202,8 @@ struct Item {
 	enum spell_id _iSpell;
 	int _iCharges;
 	int _iMaxCharges;
-	uint8_t _iDurability;
-	uint8_t _iMaxDur;
+	int _iDurability;
+	int _iMaxDur;
 	int16_t _iPLDam;
 	int16_t _iPLToHit;
 	int16_t _iPLAC;
