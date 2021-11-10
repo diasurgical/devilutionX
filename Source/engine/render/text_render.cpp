@@ -398,8 +398,8 @@ uint32_t DrawString(const Surface &out, string_view text, const Rectangle &rect,
 
 			if (HasAnyOf(flags, (UiFlags::AlignCenter | UiFlags::AlignRight))) {
 				lineWidth = (*kerning)[frame];
-				if (text[0] != '\0')
-					lineWidth += spacing + GetLineWidth(text, size, spacing);
+				if (!remaining.empty())
+					lineWidth += spacing + GetLineWidth(remaining, size, spacing);
 			}
 
 			if (HasAnyOf(flags, UiFlags::AlignCenter))
