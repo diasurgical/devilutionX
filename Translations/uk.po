@@ -998,37 +998,37 @@ msgstr ""
 
 #: Source/control.cpp:1212
 msgid "Hotkey: 's'"
-msgstr ""
+msgstr "Гаряча клавіша: 's'"
 
 #: Source/control.cpp:1367 Source/inv.cpp:1979 Source/items.cpp:3729
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{:d} золота монета"
+msgstr[1] "{:d} золоті монети"
+msgstr[2] "{:d} золотих монет"
 
 #: Source/control.cpp:1370
 msgid "Requirements not met"
-msgstr ""
+msgstr "Вимоги не виконані"
 
 #: Source/control.cpp:1406
 msgid "{:s}, Level: {:d}"
-msgstr ""
+msgstr "{:s}, Рівень {:d}"
 
 #: Source/control.cpp:1408
 msgid "Hit Points {:d} of {:d}"
-msgstr ""
+msgstr "Здоров'я {:d} з {:d}"
 
 #: Source/control.cpp:1435
 msgid "Level Up"
-msgstr ""
+msgstr "Новий Рівень"
 
 #: Source/control.cpp:1569
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "Посох ({:d} заряд)"
+msgstr[1] "Посох ({:d} заряда)"
+msgstr[2] "Посох ({:d} зарядів)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1579
@@ -1049,69 +1049,69 @@ msgstr ""
 #: Source/control.cpp:1642
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "У тебе {:d} золота монета. Скільки ти хочеш забрати?"
+msgstr[1] "У тебе {:d} золоті монети. Скільки монет ти хочеш забрати?"
+msgstr[2] "У тебе {:d} золотих монет. Скільки монет ти хочеш забрати?"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Menu"
-msgstr ""
+msgstr "Меню"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Inv"
-msgstr ""
+msgstr "Інвен"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Map"
-msgstr ""
+msgstr "Карта"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Char"
-msgstr ""
+msgstr "Герой"
 
 #: Source/controls/modifier_hints.cpp:122
 msgid "Spells"
-msgstr ""
+msgstr "Чари"
 
 #: Source/controls/modifier_hints.cpp:122
 msgid "Quests"
-msgstr ""
+msgstr "Журнал"
 
 #: Source/cursor.cpp:211
 msgid "Town Portal"
-msgstr ""
+msgstr "Портал в Місто"
 
 #: Source/cursor.cpp:212
 msgid "from {:s}"
-msgstr ""
+msgstr "з {:s}"
 
 #: Source/cursor.cpp:229
 msgid "Portal to"
-msgstr ""
+msgstr "Портал в"
 
 #: Source/cursor.cpp:231
 msgid "The Unholy Altar"
-msgstr ""
+msgstr "Нечестивий Вівтар"
 
 #: Source/cursor.cpp:233
 msgid "level 15"
-msgstr ""
+msgstr "рівень 15"
 
 #: Source/diablo.cpp:114
 msgid "I need help! Come Here!"
-msgstr ""
+msgstr "Допоможіть! Сюди!"
 
 #: Source/diablo.cpp:115
 msgid "Follow me."
-msgstr ""
+msgstr "За мною."
 
 #: Source/diablo.cpp:116
 msgid "Here's something for you."
-msgstr ""
+msgstr "Ось щось для тебе."
 
 #: Source/diablo.cpp:117
 msgid "Now you DIE!"
-msgstr ""
+msgstr "А тепер ПОМРИ!"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:781
