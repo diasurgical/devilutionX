@@ -1,34 +1,19 @@
-#include "platform/ctr/locale.hpp"
-
 #include <3ds.h>
+
+#include "platform/ctr/cfgu_service.hpp"
+#include "platform/ctr/locale.hpp"
 
 namespace devilution {
 namespace n3ds {
 
-namespace {
-
-class CFGUService {
-public:
-	CFGUService()
-	{
-		cfguInit();
-	}
-
-	~CFGUService()
-	{
-		cfguExit();
-	}
-};
-
-} // namespace
-
 std::string GetLocale()
 {
 	CFGUService cfguService;
+	if (!cfguService.IsInitialized())
+		return "";
 
 	u8 language;
 	Result res = CFGU_GetSystemLanguage(&language);
-
 	if (!R_SUCCEEDED(res))
 		return "";
 
