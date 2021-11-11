@@ -1517,59 +1517,59 @@ msgstr ""
 
 #: Source/gamemenu.cpp:35
 msgid "Save Game"
-msgstr ""
+msgstr "Зберегти Гру"
 
 #: Source/gamemenu.cpp:36 Source/gamemenu.cpp:47
 msgid "Options"
-msgstr ""
+msgstr "Опції"
 
 #: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Quit Game"
-msgstr ""
+msgstr "Вийти з Гри"
 
 #: Source/gamemenu.cpp:49
 msgid "Restart In Town"
-msgstr ""
+msgstr "Почати в Місті"
 
 #: Source/gamemenu.cpp:59
 msgid "Gamma"
-msgstr ""
+msgstr "Гамма"
 
 #: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
 msgid "Speed"
-msgstr ""
+msgstr "Швидкість"
 
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
-msgstr ""
+msgstr "Музика Вимкнена"
 
 #: Source/gamemenu.cpp:72
 msgid "Sound"
-msgstr ""
+msgstr "Звук"
 
 #: Source/gamemenu.cpp:73
 msgid "Sound Disabled"
-msgstr ""
+msgstr "Звук Вимкнено"
 
 #: Source/gamemenu.cpp:155
 msgid "Speed: Fastest"
-msgstr ""
+msgstr "Швидкість: Найшвидша"
 
 #: Source/gamemenu.cpp:157
 msgid "Speed: Faster"
-msgstr ""
+msgstr "Швидкість: Дуже Швидка"
 
 #: Source/gamemenu.cpp:159
 msgid "Speed: Fast"
-msgstr ""
+msgstr "Швидкість: Швидка"
 
 #: Source/gamemenu.cpp:161
 msgid "Speed: Normal"
-msgstr ""
+msgstr "Швикість: Нормальна"
 
 #: Source/gmenu.cpp:166
 msgid "Pause"
-msgstr ""
+msgstr "Пауза"
 
 #: Source/help.cpp:26
 msgid "$Keyboard Shortcuts:"
@@ -5920,36 +5920,36 @@ msgstr ""
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
 #: Source/panels/mainpanel.cpp:108
 msgid "voice"
-msgstr ""
+msgstr "чат"
 
 #: Source/panels/mainpanel.cpp:84
 msgid "char"
-msgstr ""
+msgstr "герой"
 
 #: Source/panels/mainpanel.cpp:85
 msgid "quests"
-msgstr ""
+msgstr "журнал"
 
 #: Source/panels/mainpanel.cpp:86
 msgid "map"
-msgstr ""
+msgstr "карта"
 
 #: Source/panels/mainpanel.cpp:87
 msgid "menu"
-msgstr ""
+msgstr "меню"
 
 #: Source/panels/mainpanel.cpp:88
 msgid "inv"
-msgstr ""
+msgstr "інвен"
 
 #: Source/panels/mainpanel.cpp:89
 msgid "spells"
-msgstr ""
+msgstr "чари"
 
 #: Source/panels/mainpanel.cpp:101 Source/panels/mainpanel.cpp:103
 #: Source/panels/mainpanel.cpp:105
 msgid "mute"
-msgstr ""
+msgstr "заблок"
 
 #: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."
