@@ -100,7 +100,7 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
-msgstr ""
+msgstr "Музика"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
@@ -355,7 +355,7 @@ msgstr "Грати Одному"
 
 #: Source/DiabloUI/mainmenu.cpp:37
 msgid "Multi Player"
-msgstr "Грати з Друзями"
+msgstr "Грати в Мережі"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Extras"
@@ -394,7 +394,7 @@ msgstr "Петльова адреса"
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
 #: Source/DiabloUI/selgame.cpp:510
 msgid "Multi Player Game"
-msgstr "Гра з Друзями"
+msgstr "Гра в Мережі"
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
@@ -536,7 +536,7 @@ msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr ""
-"Ваш герой має бути 20 рівня щоб приєднатися до гри з друзями Кошмарної "
+"Ваш герой має бути 20 рівня щоб приєднатися до мережевої гри Кошмарної "
 "складності."
 
 #: Source/DiabloUI/selgame.cpp:266
@@ -544,7 +544,7 @@ msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr ""
-"Ваш герой має бути 30 рівня щоб приєднатися до гри з друзями Пекельної "
+"Ваш герой має бути 30 рівня щоб приєднатися до мережевої гри Пекельної "
 "складності."
 
 #: Source/DiabloUI/selgame.cpp:342
@@ -648,7 +648,7 @@ msgstr "Варвар"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Multi Player Hero"
-msgstr "Новий Герой для Гри з Друзями"
+msgstr "Новий Герой для Мережевої Гри"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
 msgid "New Single Player Hero"
@@ -730,11 +730,11 @@ msgstr "Стерти"
 
 #: Source/DiabloUI/selhero.cpp:549
 msgid "Multi Player Characters"
-msgstr "Мультиплеєрні Герої"
+msgstr "Герої Мережевої Гри"
 
 #: Source/DiabloUI/selhero.cpp:599
 msgid "Delete Multi Player Hero"
-msgstr "Стерти Героя для Гри з Друзями"
+msgstr "Стерти Героя для Мережевої Гри"
 
 #: Source/DiabloUI/selhero.cpp:601
 msgid "Delete Single Player Hero"
@@ -1050,8 +1050,8 @@ msgstr ""
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "У тебе {:d} золота монета. Скільки ти хочеш забрати?"
-msgstr[1] "У тебе {:d} золоті монети. Скільки монет ти хочеш забрати?"
-msgstr[2] "У тебе {:d} золотих монет. Скільки монет ти хочеш забрати?"
+msgstr[1] "У тебе {:d} золоті монети. Скільки ти хочеш забрати?"
+msgstr[2] "У тебе {:d} золотих монет. Скільки ти хочеш забрати?"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Menu"
@@ -1116,67 +1116,67 @@ msgstr "А тепер ПОМРИ!"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:781
 msgid "Options:\n"
-msgstr ""
+msgstr "Опції:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:782
 msgid "Print this message and exit"
-msgstr ""
+msgstr "Показати це повідомлення і вийти"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:783
 msgid "Print the version and exit"
-msgstr ""
+msgstr "Показати версію і вийти"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:784
 msgid "Specify the folder of diabdat.mpq"
-msgstr ""
+msgstr "Визначити папку з diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:785
 msgid "Specify the folder of save files"
-msgstr ""
+msgstr "Визначити папку з збереженнями"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:786
 msgid "Specify the location of diablo.ini"
-msgstr ""
+msgstr "Визначити папку з diablo.ini"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:787
 msgid "Skip startup videos"
-msgstr ""
+msgstr "Пропустити заставки"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:788
 msgid "Display frames per second"
-msgstr ""
+msgstr "Показати кадри в секунду"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:789
 msgid "Run in windowed mode"
-msgstr ""
+msgstr "Запустити в режимі вікна"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:790
 msgid "Enable verbose logging"
-msgstr ""
+msgstr "Ввімкнути велемовне логування"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:791
 msgid "Record a demo file"
-msgstr ""
+msgstr "Записати демо"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:792
 msgid "Play a demo file"
-msgstr ""
+msgstr "Зіграти демо"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
-msgstr ""
+msgstr "Віключити ліміт кадрів під час програшу демо"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:794
@@ -1184,21 +1184,23 @@ msgid ""
 "\n"
 "Game selection:\n"
 msgstr ""
+"\n"
+"Вибір гри:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Force Shareware mode"
-msgstr ""
+msgstr "Примусити режим Shareware"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:796
 msgid "Force Diablo mode"
-msgstr ""
+msgstr "Примусити режим Diablo"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
 msgid "Force Hellfire mode"
-msgstr ""
+msgstr "Примусити режим Hellfire"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
@@ -1206,102 +1208,106 @@ msgid ""
 "\n"
 "Hellfire options:\n"
 msgstr ""
+"\n"
+"Опції Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:799
 msgid "Use alternate nest palette"
-msgstr ""
+msgstr "Альтернативна палітра для Гнізда"
 
 #: Source/diablo.cpp:805
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
 msgstr ""
+"\n"
+"Пишіть про помилки на https://github.com/diasurgical/devilutionX/\n"
 
 #: Source/diablo.cpp:869
 msgid "unrecognized option '{:s}'\n"
-msgstr ""
+msgstr "невпізнана опція '{:s}'\n"
 
 #: Source/diablo.cpp:900
 msgid "version {:s}"
-msgstr ""
+msgstr "версія {:s}"
 
 #: Source/diablo.cpp:1218
 msgid "-- Network timeout --"
-msgstr ""
+msgstr "-- Тайм-аут мережі --"
 
 #: Source/diablo.cpp:1219
 msgid "-- Waiting for players --"
-msgstr ""
+msgstr "-- Чекаємо гравців --"
 
 #: Source/diablo.cpp:1238
 msgid "No help available"
-msgstr ""
+msgstr "Допомога недоступна"
 
 #: Source/diablo.cpp:1239
 msgid "while in stores"
-msgstr ""
+msgstr "в магазинах"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
 #: Source/diablo.cpp:1451
 msgid "{:s}, version = {:s}, mode = {:s}"
-msgstr ""
+msgstr "{:s}, версія = {:s}, складність = {:s}"
 
 #: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
-msgstr ""
+msgstr "петльова адреса"
 
 #: Source/dvlnet/tcp_client.cpp:65
 msgid "Unable to connect"
-msgstr ""
+msgstr "Не зміг з'єднатися"
 
 #: Source/dvlnet/tcp_client.cpp:86
 msgid "error: read 0 bytes from server"
-msgstr ""
+msgstr "помилка: прочитано 0 байт від сервера"
 
 #: Source/error.cpp:57
 msgid "No automap available in town"
-msgstr ""
+msgstr "Автокарта недоступна в Місті"
 
 #: Source/error.cpp:58
 msgid "No multiplayer functions in demo"
-msgstr ""
+msgstr "Мережева гра недоступна в демо"
 
 #: Source/error.cpp:59
 msgid "Direct Sound Creation Failed"
-msgstr ""
+msgstr "Помилка створення Direct Sound"
 
 #: Source/error.cpp:60
 msgid "Not available in shareware version"
-msgstr ""
+msgstr "Недоступно в версії shareware"
 
 #: Source/error.cpp:61
 msgid "Not enough space to save"
-msgstr ""
+msgstr "Недостатньо місця для збереження"
 
 #: Source/error.cpp:62
 msgid "No Pause in town"
-msgstr ""
+msgstr "Пауза недоступна в Місті"
 
 #: Source/error.cpp:63
 msgid "Copying to a hard disk is recommended"
-msgstr ""
+msgstr "Рекомендуємо копіювати на жорсткий диск"
 
 #: Source/error.cpp:64
 msgid "Multiplayer sync problem"
-msgstr ""
+msgstr "Проблема синхронізації мережі"
 
 #: Source/error.cpp:65
 msgid "No pause in multiplayer"
-msgstr ""
+msgstr "Пауза недоступна в мережевій грі"
 
 #: Source/error.cpp:66
 msgid "Loading..."
-msgstr ""
+msgstr "Завантажуємо..."
 
 #: Source/error.cpp:67
 msgid "Saving..."
-msgstr ""
+msgstr "Зберігаємо..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:68
