@@ -81,6 +81,17 @@ bool GetSpellListSelection(spell_id &pSpell, spell_type &pSplType)
 	return false;
 }
 
+std::optional<std::string> GetHotkeyName(spell_id spellId, spell_type spellType)
+{
+	auto &myPlayer = Players[MyPlayerId];
+	for (int t = 0; t < 4; t++) {
+		if (myPlayer._pSplHotKey[t] != spellId || myPlayer._pSplTHotKey[t] != spellType)
+			continue;
+		return keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
+	}
+	return {};
+}
+
 } // namespace
 
 void DrawSpell(const Surface &out)
@@ -103,6 +114,10 @@ void DrawSpell(const Surface &out)
 	const int nCel = (spl != SPL_INVALID) ? SpellITbl[spl] : 27;
 	const Point position { PANEL_X + 565, PANEL_Y + 119 };
 	DrawSpellCel(out, position, nCel);
+
+	std::optional<std::string> hotkeyName = GetHotkeyName(spl, st);
+	if (hotkeyName)
+		PrintSBookHotkey(out, position, *hotkeyName);
 }
 
 void DrawSpellList(const Surface &out)
@@ -128,6 +143,11 @@ void DrawSpellList(const Surface &out)
 
 		SetSpellTrans(transType);
 		DrawSpellCel(out, spellListItem.location, SpellITbl[static_cast<size_t>(spellId)]);
+
+		std::optional<std::string> hotkeyName = GetHotkeyName(spellId, spellListItem.type);
+
+		if (hotkeyName)
+			PrintSBookHotkey(out, spellListItem.location, *hotkeyName);
 
 		if (!spellListItem.isSelected)
 			continue;
@@ -182,13 +202,9 @@ void DrawSpellList(const Surface &out)
 		case RSPLTYPE_INVALID:
 			break;
 		}
-		for (int t = 0; t < 4; t++) {
-			if (myPlayer._pSplHotKey[t] == spellId && myPlayer._pSplTHotKey[t] == spellListItem.type) {
-				auto hotkeyName = keymapper.KeyNameForAction(quickSpellActionIndexes[t]);
-				PrintSBookHotkey(out, spellListItem.location, hotkeyName);
-				strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), hotkeyName.c_str()).c_str());
-				AddPanelString(tempstr);
-			}
+		if (hotkeyName) {
+			strcpy(tempstr, fmt::format(_("Spell Hotkey {:s}"), *hotkeyName).c_str());
+			AddPanelString(tempstr);
 		}
 	}
 }
