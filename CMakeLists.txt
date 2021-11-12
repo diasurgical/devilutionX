@@ -688,7 +688,7 @@ if(GPERF)
   find_package(Gperftools REQUIRED)
 endif()
 
-set(devilutionx_langs bg cs da de es fr hr it ko_KR pl pt_BR ro_RO ru uk sv zh_CN zh_TW)
+set(devilutionx_langs bg cs da de es fr hr it ja ko_KR pl pt_BR ro_RO ru uk sv zh_CN zh_TW)
 if(USE_GETTEXT_FROM_VCPKG)
   # vcpkg doesn't add its own tools directory to the search path
   list(APPEND Gettext_ROOT ${CMAKE_CURRENT_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/tools/gettext/bin)
