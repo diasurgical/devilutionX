@@ -1479,7 +1479,7 @@ void InitKeymapActions()
 	    "QuickLoad",
 	    DVL_VK_F3,
 	    [] { gamemenu_load_game(false); },
-	    [&]() { return !gbIsMultiplayer && gbValidSaveFile; },
+	    [&]() { return !gbIsMultiplayer && gbValidSaveFile && stextflag == STORE_NONE; },
 	});
 	keymapper.AddAction({
 	    "QuitGame",
