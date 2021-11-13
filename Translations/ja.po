@@ -18,84 +18,84 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr "ゲームデザイン"
+msgstr "Game Design"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr "シニアデザイナー"
+msgstr "Senior Designers"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr "追加設計"
+msgstr "Additional Design"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr "リードプログラマー"
+msgstr "Lead Programmer"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr "シニアプログラマー"
+msgstr "Senior Programmers"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
-msgstr "プログラミング"
+msgstr "Programming"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr "スペシャル・ゲスト・プログラマー"
+msgstr "Special Guest Programmers"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
-msgstr "Battle.net プログラミング"
+msgstr "Battle.net Programming"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr "シリアル・コミュニケーション・プログラミング"
+msgstr "Serial Communications Programming"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr "インストーラ・プログラミング"
+msgstr "Installer Programming"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr "アート・ディレクター"
+msgstr "Art Directors"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr "アートワーク"
+msgstr "Artwork"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr "テクニカル・アートワーク"
+msgstr "Technical Artwork"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr "シネマティック・アート・ディレクター"
+msgstr "Cinematic Art Directors"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr "3Dシネマティック・アートワーク"
+msgstr "3D Cinematic Artwork"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr "シネマティック・テクニカル・アートワーク"
+msgstr "Cinematic Technical Artwork"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr "エグゼクティブ・プロデューサー"
+msgstr "Executive Producer"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
-msgstr "プロデューサー"
+msgstr "Producer"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr "アソシエート・プロデューサー"
+msgstr "Associate Producer"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr "ディアブロ・ストライク・チーム"
+msgstr "Diablo Strike Team"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
@@ -103,253 +103,210 @@ msgstr "音楽"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr "サウンドデザイン"
+msgstr "Sound Design"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr "シネマティック・ミュージック＆サウンド"
+msgstr "Cinematic Music & Sound"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr "ボイスプロダクション、ディレクション、キャスティング"
+msgstr "Voice Production, Direction & Casting"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr "脚本・ストーリー"
+msgstr "Script & Story"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr "ボイスエディット"
+msgstr "Voice Editing"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr "声"
+msgstr "Voices"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr "レコーディング・エンジニア"
+msgstr "Recording Engineer"
 
 #: Source/DiabloUI/credits_lines.cpp:104
-#, fuzzy
 msgid "Manual Design & Layout"
 msgstr "Manual Design & Layout"
 
 #: Source/DiabloUI/credits_lines.cpp:108
-#, fuzzy
 msgid "Manual Artwork"
 msgstr "Manual Artwork"
 
 #: Source/DiabloUI/credits_lines.cpp:112
-#, fuzzy
 msgid "Provisional Director of QA (Lead Tester)"
 msgstr "Provisional Director of QA (Lead Tester)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
-#, fuzzy
 msgid "QA Assault Team (Testers)"
 msgstr "QA Assault Team (Testers)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
-#, fuzzy
 msgid "QA Special Ops Team (Compatibility Testers)"
 msgstr "QA Special Ops Team (Compatibility Testers)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
-#, fuzzy
 msgid "QA Artillery Support (Additional Testers) "
 msgstr "QA Artillery Support (Additional Testers) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
-#, fuzzy
 msgid "QA Counterintelligence"
 msgstr "QA Counterintelligence"
 
 #. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
-#, fuzzy
 msgid "Order of Network Information Services"
 msgstr "Order of Network Information Services"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
-msgstr "カスタマーサポート"
+msgstr "Customer Support"
 
 #: Source/DiabloUI/credits_lines.cpp:139
-#, fuzzy
 msgid "Sales"
 msgstr "Sales"
 
 #: Source/DiabloUI/credits_lines.cpp:142
-#, fuzzy
 msgid "Dunsel"
 msgstr "Dunsel"
 
 #: Source/DiabloUI/credits_lines.cpp:145
-#, fuzzy
 msgid "Mr. Dabiri's Background Vocalists"
 msgstr "Mr. Dabiri’s Background Vocalists"
 
 #: Source/DiabloUI/credits_lines.cpp:149
-#, fuzzy
 msgid "Public Relations"
 msgstr "Public Relations"
 
 #: Source/DiabloUI/credits_lines.cpp:152
-#, fuzzy
 msgid "Marketing"
 msgstr "Marketing"
 
 #: Source/DiabloUI/credits_lines.cpp:155
-#, fuzzy
 msgid "International Sales"
 msgstr "International Sales"
 
 #: Source/DiabloUI/credits_lines.cpp:158
-#, fuzzy
 msgid "U.S. Sales"
 msgstr "U.S. Sales"
 
 #: Source/DiabloUI/credits_lines.cpp:161
-#, fuzzy
 msgid "Manufacturing"
 msgstr "Manufacturing"
 
 #: Source/DiabloUI/credits_lines.cpp:164
-#, fuzzy
 msgid "Legal & Business"
 msgstr "Legal & Business"
 
 #: Source/DiabloUI/credits_lines.cpp:167
-#, fuzzy
 msgid "Special Thanks To"
 msgstr "Special Thanks To"
 
 #: Source/DiabloUI/credits_lines.cpp:171
-#, fuzzy
 msgid "Thanks To"
 msgstr "Thanks To"
 
 #: Source/DiabloUI/credits_lines.cpp:200
-#, fuzzy
 msgid "In memory of"
-msgstr "を記念して"
+msgstr "In memory of"
 
 #: Source/DiabloUI/credits_lines.cpp:206
-#, fuzzy
 msgid "Very Special Thanks to"
 msgstr "Very Special Thanks to"
 
 #: Source/DiabloUI/credits_lines.cpp:212
-#, fuzzy
 msgid "General Manager"
 msgstr "General Manager"
 
 #: Source/DiabloUI/credits_lines.cpp:218
-#, fuzzy
 msgid "Software Engineering"
 msgstr "Software Engineering"
 
 #: Source/DiabloUI/credits_lines.cpp:221
-#, fuzzy
 msgid "Art Director"
 msgstr "Art Director"
 
 #: Source/DiabloUI/credits_lines.cpp:224
-#, fuzzy
 msgid "Artists"
 msgstr "Artists"
 
 #: Source/DiabloUI/credits_lines.cpp:228
-#, fuzzy
 msgid "Design"
 msgstr "Design"
 
 #: Source/DiabloUI/credits_lines.cpp:235
-#, fuzzy
 msgid "Sound Design, SFX & Audio Engineering"
 msgstr "Sound Design, SFX & Audio Engineering"
 
 #: Source/DiabloUI/credits_lines.cpp:238
-#, fuzzy
 msgid "Quality Assurance Lead"
 msgstr "Quality Assurance Lead"
 
 #: Source/DiabloUI/credits_lines.cpp:241
-#, fuzzy
 msgid "Testers"
 msgstr "Testers"
 
 #: Source/DiabloUI/credits_lines.cpp:246
-#, fuzzy
 msgid "Manual"
 msgstr "Manual"
 
 #: Source/DiabloUI/credits_lines.cpp:255
-#, fuzzy
 msgid "\tAdditional Work"
 msgstr "\tAdditional Work"
 
 #: Source/DiabloUI/credits_lines.cpp:257
-#, fuzzy
 msgid "Quest Text Writing"
 msgstr "Quest Text Writing"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
-#, fuzzy
 msgid "Thanks to"
 msgstr "Thanks to"
 
 #: Source/DiabloUI/credits_lines.cpp:265
-#, fuzzy
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
 msgstr "\t\t\tSpecial Thanks to Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
-#, fuzzy
 msgid "\t\t\tSierra On-Line Inc. Northwest"
 msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
-#, fuzzy
 msgid "Quality Assurance Manager"
 msgstr "Quality Assurance Manager"
 
 #: Source/DiabloUI/credits_lines.cpp:275
-#, fuzzy
 msgid "Quality Assurance Lead Tester"
 msgstr "Quality Assurance Lead Tester"
 
 #: Source/DiabloUI/credits_lines.cpp:278
-#, fuzzy
 msgid "Main Testers"
 msgstr "Main Testers"
 
 #: Source/DiabloUI/credits_lines.cpp:281
-#, fuzzy
 msgid "Additional Testers"
 msgstr "Additional Testers"
 
 #: Source/DiabloUI/credits_lines.cpp:286
-#, fuzzy
 msgid "Product Marketing Manager"
 msgstr "Product Marketing Manager"
 
 #: Source/DiabloUI/credits_lines.cpp:289
-#, fuzzy
 msgid "Public Relations Manager"
 msgstr "Public Relations Manager"
 
 #: Source/DiabloUI/credits_lines.cpp:292
-#, fuzzy
 msgid "Associate Product Manager"
 msgstr "Associate Product Manager"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr "一千の指輪"
+msgstr "The Ring of One Thousand"
 
 #: Source/DiabloUI/credits_lines.cpp:547
-#, fuzzy
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\tNo souls were sold in the making of this game."
 
@@ -364,74 +321,60 @@ msgid "OK"
 msgstr "OK"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
-#, fuzzy
 msgid "Switch to Diablo"
-msgstr "Switch to Diablo"
+msgstr "ディアブロに切り替え"
 
 #: Source/DiabloUI/extrasmenu.cpp:41
-#, fuzzy
 msgid "Switch to Hellfire"
-msgstr "Switch to Hellfire"
+msgstr "ヘルファイアに切り替え"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
 msgid "Switch to Fullgame"
-msgstr "Switch to Fullgame"
+msgstr "フルゲームに切り替え"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
-#, fuzzy
 msgid "Switch to Shareware"
-msgstr "Switch to Shareware"
+msgstr "シェアウェアに切り替え"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
-#, fuzzy
 msgid "Replay Intro"
-msgstr "Replay Intro"
+msgstr "イントロを再生"
 
 #: Source/DiabloUI/extrasmenu.cpp:45
-#, fuzzy
 msgid "Support"
-msgstr "Support"
+msgstr "サポート"
 
 #: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
-#, fuzzy
 msgid "Previous Menu"
-msgstr "Previous Menu"
+msgstr "前のメニュー"
 
 #: Source/DiabloUI/mainmenu.cpp:36
-#, fuzzy
 msgid "Single Player"
-msgstr "Single Player"
+msgstr "シングルプレイヤー"
 
 #: Source/DiabloUI/mainmenu.cpp:37
-#, fuzzy
 msgid "Multi Player"
-msgstr "Multi Player"
+msgstr "マルチプレイヤー"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-#, fuzzy
 msgid "Extras"
-msgstr "Extras"
+msgstr "エクストラ"
 
 #: Source/DiabloUI/mainmenu.cpp:39
-#, fuzzy
 msgid "Show Credits"
-msgstr "Show Credits"
+msgstr "クレジットを見る"
 
 #: Source/DiabloUI/mainmenu.cpp:40
-#, fuzzy
 msgid "Exit Hellfire"
-msgstr "Exit Hellfire"
+msgstr "ヘルファイアを終了"
 
 #: Source/DiabloUI/mainmenu.cpp:40
-#, fuzzy
 msgid "Exit Diablo"
-msgstr "Exit Diablo"
+msgstr "ディアブロを終了"
 
 #: Source/DiabloUI/mainmenu.cpp:55
-#, fuzzy
 msgid "Shareware"
-msgstr "Shareware"
+msgstr "シェアウェア"
 
 #: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
@@ -440,37 +383,31 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #: Source/DiabloUI/selconn.cpp:13
-#, fuzzy
 msgid "Client-Server (TCP)"
 msgstr "Client-Server (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:14
-#, fuzzy
 msgid "Loopback"
 msgstr "Loopback"
 
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
 #: Source/DiabloUI/selgame.cpp:505
-#, fuzzy
 msgid "Multi Player Game"
-msgstr "Multi Player Game"
+msgstr "マルチプレイヤーゲーム"
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "Requirements:"
 msgstr "必要条件:"
 
 #: Source/DiabloUI/selconn.cpp:65
-#, fuzzy
 msgid "no gateway needed"
-msgstr "no gateway needed"
+msgstr "ゲートウェイ不要"
 
 #: Source/DiabloUI/selconn.cpp:71
-#, fuzzy
 msgid "Select Connection"
-msgstr "Select Connection"
+msgstr "コネクションを選択"
 
 #: Source/DiabloUI/selconn.cpp:74
-#, fuzzy
 msgid "Change Gateway"
 msgstr "Change Gateway"
 
@@ -484,24 +421,20 @@ msgid "All computers must be connected to the internet."
 msgstr "すべてのコンピューターがインターネットに接続されている必要があります。"
 
 #: Source/DiabloUI/selconn.cpp:115
-#, fuzzy
 msgid "Play by yourself with no network exposure."
-msgstr "Play by yourself with no network exposure."
+msgstr "ひとりでプレイしても、ネットワークに触れることはありません。"
 
 #: Source/DiabloUI/selconn.cpp:120
-#, fuzzy
 msgid "Players Supported: {:d}"
-msgstr "Players Supported: {:d}"
+msgstr "サポートしているプレイヤー数: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
-#, fuzzy
 msgid "Description:"
-msgstr "Description:"
+msgstr "説明:"
 
 #: Source/DiabloUI/selgame.cpp:88
-#, fuzzy
 msgid "Select Action"
-msgstr "Select Action"
+msgstr "アクションを選択"
 
 #: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
 #: Source/DiabloUI/selgame.cpp:333
@@ -513,9 +446,8 @@ msgid "Create Public Game"
 msgstr "パブリックゲームの作成"
 
 #: Source/DiabloUI/selgame.cpp:94
-#, fuzzy
 msgid "Join Game"
-msgstr "Join Game"
+msgstr "ゲームに参加"
 
 #: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
 #: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
@@ -535,23 +467,20 @@ msgstr ""
 "誰でも参加できる新しいパブリックゲームを作成し、お好みの難易度を設定します。"
 
 #: Source/DiabloUI/selgame.cpp:128
-#, fuzzy
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr ""
-"Enter an IP or a hostname and join a game already in progress at that "
-"address."
+"IPやホスト名を入力すると、そのアドレスですでに行われているゲームに参加するこ"
+"とができます。"
 
 #: Source/DiabloUI/selgame.cpp:131
-#, fuzzy
 msgid "Join the public game already in progress at this address."
-msgstr "Join the public game already in progress at this address."
+msgstr "このアドレスですでに行われている公開ゲームに参加する。"
 
 #: Source/DiabloUI/selgame.cpp:184
-#, fuzzy
 msgid "Select Difficulty"
-msgstr "Select Difficulty"
+msgstr "難易度の選択"
 
 #: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
 #: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
@@ -570,14 +499,12 @@ msgid "Hell"
 msgstr "ヘル"
 
 #: Source/DiabloUI/selgame.cpp:202
-#, fuzzy
 msgid "Join TCP Games"
 msgstr "Join TCP Games"
 
 #: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
-#, fuzzy
 msgid "Enter address"
-msgstr "Enter address"
+msgstr "アドレスを入力"
 
 #: Source/DiabloUI/selgame.cpp:240
 msgid ""
@@ -598,15 +525,14 @@ msgstr ""
 "ラクターにのみお勧めです。"
 
 #: Source/DiabloUI/selgame.cpp:248
-#, fuzzy
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
-"Hell Difficulty\n"
-"The most powerful of the underworld’s creatures lurk at the gateway into "
-"Hell. Only the most experienced characters should venture in this realm."
+"ヘル難易度\n"
+"地獄への入り口には、地下世界の最強の生物が潜んでいます。経験豊富なキャラク"
+"ターだけが、この領域に足を踏み入れることができます。"
 
 #: Source/DiabloUI/selgame.cpp:264
 msgid ""
@@ -630,11 +556,11 @@ msgstr "ゲームスピード"
 
 #: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
 msgid "Fast"
-msgstr "超高速"
+msgstr "高速"
 
 #: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
 msgid "Faster"
-msgstr "高速"
+msgstr "超高速"
 
 #: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
 msgid "Fastest"
@@ -654,7 +580,7 @@ msgid ""
 "The denizens of the Labyrinth have been hastened and will prove to be a "
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
-"超高速\n"
+"高速\n"
 "迷宮の住人たちは、より速く、より大きな挑戦となるでしょう。経験豊富なキャラク"
 "ターにのみお勧めです。"
 
@@ -664,7 +590,7 @@ msgid ""
 "Most monsters of the dungeon will seek you out quicker than ever before. "
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
-"より高速\n"
+"超高速\n"
 "ダンジョン内のほとんどのモンスターは、これまで以上に素早くあなたを探し出しま"
 "す。経験豊富なチャンピオンだけが、このスピードで運を試すことができます。"
 
@@ -674,14 +600,13 @@ msgid ""
 "The minions of the underworld will rush to attack without hesitation. Only a "
 "true speed demon should enter at this pace."
 msgstr ""
-"最速\n"
+"神速\n"
 "冥界の手下たちは、迷うことなく攻撃を仕掛けてくる。このペースで進入するのは、"
 "真のスピード・デーモンだけにしてください。"
 
 #: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
-#, fuzzy
 msgid "Enter Password"
-msgstr "Enter Password"
+msgstr "パスワードを入力"
 
 #: Source/DiabloUI/selgame.cpp:448
 msgid "The host is running a different game than you."
@@ -693,9 +618,8 @@ msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "あなたのバージョン{:s}は、ホスト{:d}.{:d}.{:d}と一致しません。"
 
 #: Source/DiabloUI/selhero.cpp:100
-#, fuzzy
 msgid "New Hero"
-msgstr "New Hero"
+msgstr "新しいヒーロー"
 
 #: Source/DiabloUI/selhero.cpp:164
 msgid "Choose Class"
@@ -726,35 +650,29 @@ msgid "Barbarian"
 msgstr "バーバリアン"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
-#, fuzzy
 msgid "New Multi Player Hero"
-msgstr "New Multi Player Hero"
+msgstr "新しいマルチプレイヤーヒーロー"
 
 #: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
-#, fuzzy
 msgid "New Single Player Hero"
-msgstr "New Single Player Hero"
+msgstr "新しいシングルプレイヤーヒーロー"
 
 #: Source/DiabloUI/selhero.cpp:203
-#, fuzzy
 msgid "Save File Exists"
-msgstr "Save File Exists"
+msgstr "セーブファイルがあります"
 
 #: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
-#, fuzzy
 msgid "Load Game"
-msgstr "Load Game"
+msgstr "ゲームのロード"
 
 #: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
-#, fuzzy
 msgid "New Game"
-msgstr "New Game"
+msgstr "新規ゲーム"
 
 #: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
-#, fuzzy
 msgid "Single Player Characters"
-msgstr "Single Player Characters"
+msgstr "シングルプレイヤーキャラクター"
 
 #: Source/DiabloUI/selhero.cpp:263
 msgid ""
@@ -765,9 +683,8 @@ msgstr ""
 "www.gog.com/game/diablo をご覧ください。"
 
 #: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
-#, fuzzy
 msgid "Enter Name"
-msgstr "Enter Name"
+msgstr "名前を入力"
 
 #: Source/DiabloUI/selhero.cpp:307
 msgid ""
@@ -802,34 +719,28 @@ msgid "Vitality:"
 msgstr "VIT:"
 
 #: Source/DiabloUI/selhero.cpp:497
-#, fuzzy
 msgid "Savegame:"
-msgstr "Savegame:"
+msgstr "セーブ数:"
 
 #: Source/DiabloUI/selhero.cpp:510
-#, fuzzy
 msgid "Select Hero"
-msgstr "Select Hero"
+msgstr "ヒーローの選択"
 
 #: Source/DiabloUI/selhero.cpp:539
-#, fuzzy
 msgid "Delete"
-msgstr "Delete"
+msgstr "削除"
 
 #: Source/DiabloUI/selhero.cpp:549
-#, fuzzy
 msgid "Multi Player Characters"
-msgstr "Multi Player Characters"
+msgstr "マルチプレイヤーキャラクター"
 
 #: Source/DiabloUI/selhero.cpp:599
-#, fuzzy
 msgid "Delete Multi Player Hero"
-msgstr "Delete Multi Player Hero"
+msgstr "マルチプレイヤーヒーローを削除"
 
 #: Source/DiabloUI/selhero.cpp:601
-#, fuzzy
 msgid "Delete Single Player Hero"
-msgstr "Delete Single Player Hero"
+msgstr "シングルプレイヤーヒーローを削除"
 
 #: Source/DiabloUI/selhero.cpp:603
 msgid "Are you sure you want to delete the character \"{:s}\"?"
@@ -837,7 +748,7 @@ msgstr "キャラクター「{:s}」を削除してよろしいですか？"
 
 #: Source/DiabloUI/selstart.cpp:43
 msgid "Enter Hellfire"
-msgstr "Enter Hellfire"
+msgstr "ヘルファイアへ"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
@@ -947,7 +858,7 @@ msgstr "Read-Only Directory Error"
 
 #: Source/automap.cpp:484
 msgid "game: "
-msgstr "game: "
+msgstr "ゲーム: "
 
 #: Source/automap.cpp:490
 msgid "password: "
@@ -955,7 +866,7 @@ msgstr "パスワード: "
 
 #: Source/automap.cpp:492
 msgid "Public Game"
-msgstr "Public Game"
+msgstr "パブリックゲーム"
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -979,7 +890,7 @@ msgstr "Esc"
 
 #: Source/control.cpp:199
 msgid "Enter"
-msgstr "Enter"
+msgstr "入力"
 
 #: Source/control.cpp:202
 msgid "Character Information"
@@ -1007,7 +918,7 @@ msgstr "スペルブック"
 
 #: Source/control.cpp:208
 msgid "Send Message"
-msgstr "Send Message"
+msgstr "メッセージ送信"
 
 #: Source/control.cpp:764 Source/control.cpp:1572
 msgid "Skill"
@@ -1066,7 +977,7 @@ msgstr[0] "{:d}チャージ"
 
 #: Source/control.cpp:813
 msgid "Spell Hotkey {:s}"
-msgstr "Spell Hotkey {:s}"
+msgstr "スペルホットキー {:s}"
 
 #: Source/control.cpp:1203
 msgid "Player friendly"
@@ -1112,7 +1023,7 @@ msgstr "レベルアップ"
 #: Source/control.cpp:1576
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] "Staff ({:d} チェージ)"
+msgstr[0] "スタッフ ({:d} チェージ)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1586
@@ -1198,7 +1109,7 @@ msgstr "さあ、死ぬんだ!"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:781
 msgid "Options:\n"
-msgstr "Options:\n"
+msgstr "オプション:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:782
@@ -1267,7 +1178,7 @@ msgid ""
 "Game selection:\n"
 msgstr ""
 "\n"
-"Game selection:\n"
+"ゲームを選択:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
@@ -1291,7 +1202,7 @@ msgid ""
 "Hellfire options:\n"
 msgstr ""
 "\n"
-"Hellfire options:\n"
+"ヘルファイアのオプション:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:799
@@ -1353,7 +1264,7 @@ msgstr "町中ではオートマップを使えません"
 
 #: Source/error.cpp:58
 msgid "No multiplayer functions in demo"
-msgstr "No multiplayer functions in demo"
+msgstr "デモではマルチプレイ機能はありません"
 
 #: Source/error.cpp:59
 msgid "Direct Sound Creation Failed"
@@ -1361,11 +1272,11 @@ msgstr "Direct Sound Creation Failed"
 
 #: Source/error.cpp:60
 msgid "Not available in shareware version"
-msgstr "Not available in shareware version"
+msgstr "シェアウェア版では使用できません"
 
 #: Source/error.cpp:61
 msgid "Not enough space to save"
-msgstr "Not enough space to save"
+msgstr "保存するための十分なスペースがありません"
 
 #: Source/error.cpp:62
 msgid "No Pause in town"
@@ -1381,7 +1292,7 @@ msgstr "Multiplayer sync problem"
 
 #: Source/error.cpp:65
 msgid "No pause in multiplayer"
-msgstr "No pause in multiplayer"
+msgstr "マルチプレイではポーズができません"
 
 #: Source/error.cpp:66
 msgid "Loading..."
@@ -1605,11 +1516,11 @@ msgstr "壊せるものは壊す。"
 
 #: Source/gamemenu.cpp:35
 msgid "Save Game"
-msgstr "Save Game"
+msgstr "ゲームのセーブ"
 
 #: Source/gamemenu.cpp:36 Source/gamemenu.cpp:47
 msgid "Options"
-msgstr "Options"
+msgstr "オプション"
 
 #: Source/gamemenu.cpp:39 Source/gamemenu.cpp:50
 msgid "Quit Game"
@@ -1621,39 +1532,39 @@ msgstr "町からやり直す"
 
 #: Source/gamemenu.cpp:59
 msgid "Gamma"
-msgstr "Gamma"
+msgstr "明るさ"
 
 #: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
 msgid "Speed"
-msgstr "Speed"
+msgstr "スピード"
 
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
-msgstr "Music Disabled"
+msgstr "音楽を禁止"
 
 #: Source/gamemenu.cpp:72
 msgid "Sound"
-msgstr "SFX"
+msgstr "効果音"
 
 #: Source/gamemenu.cpp:73
 msgid "Sound Disabled"
-msgstr "Sound Disabled"
+msgstr "効果音を禁止"
 
 #: Source/gamemenu.cpp:155
 msgid "Speed: Fastest"
-msgstr "Speed: Fastest"
+msgstr "スピード: 最速"
 
 #: Source/gamemenu.cpp:157
 msgid "Speed: Faster"
-msgstr "Speed: Faster"
+msgstr "スピード: より速い"
 
 #: Source/gamemenu.cpp:159
 msgid "Speed: Fast"
-msgstr "Speed: Fast"
+msgstr "スピード: 速い"
 
 #: Source/gamemenu.cpp:161
 msgid "Speed: Normal"
-msgstr "Speed: Normal"
+msgstr "スピード: 通常"
 
 #: Source/gmenu.cpp:166
 msgid "Pause"
@@ -1665,15 +1576,15 @@ msgstr "$Keyboard Shortcuts:"
 
 #: Source/help.cpp:27
 msgid "F1:    Open Help Screen"
-msgstr "F1:    Open Help Screen"
+msgstr "F1:    ヘルプを開く"
 
 #: Source/help.cpp:28
 msgid "Esc:   Display Main Menu"
-msgstr "Esc:   Display Main Menu"
+msgstr "Esc:   メインメニューを表示"
 
 #: Source/help.cpp:29
 msgid "Tab:   Display Auto-map"
-msgstr "Tab:   Display Auto-map"
+msgstr "Tab:   オートマップを表示"
 
 #: Source/help.cpp:30
 msgid "Space: Hide all info screens"
@@ -1681,7 +1592,7 @@ msgstr "Space: Hide all info screens"
 
 #: Source/help.cpp:31
 msgid "S: Open Speedbook"
-msgstr "S: Open Speedbook"
+msgstr "S: スペルブックを開く"
 
 #: Source/help.cpp:32
 msgid "B: Open Spellbook"
@@ -1693,19 +1604,19 @@ msgstr "I: インベントリ画面を開く"
 
 #: Source/help.cpp:34
 msgid "C: Open Character screen"
-msgstr "C: Open Character screen"
+msgstr "C: キャラクター画面を開く"
 
 #: Source/help.cpp:35
 msgid "Q: Open Quest log"
-msgstr "Q: Open Quest log"
+msgstr "Q: クエストログを開く"
 
 #: Source/help.cpp:36
 msgid "F: Reduce screen brightness"
-msgstr "F: Reduce screen brightness"
+msgstr "F: 画面の明るさを下げる"
 
 #: Source/help.cpp:37
 msgid "G: Increase screen brightness"
-msgstr "G: Increase screen brightness"
+msgstr "G：画面の明るさを上げる"
 
 #: Source/help.cpp:38
 msgid "Z: Zoom Game Screen"
@@ -1721,7 +1632,7 @@ msgstr "1 - 8: Use Belt item"
 
 #: Source/help.cpp:41
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
-msgstr "F5, F6, F7, F8:     Set hotkey for skill or spell"
+msgstr "F5, F6, F7, F8:     スキル、スペルのホットキー設定"
 
 #: Source/help.cpp:42
 msgid "Shift + Left Mouse Button: Attack without moving"
@@ -1879,7 +1790,7 @@ msgstr ""
 
 #: Source/help.cpp:135
 msgid "Shareware Hellfire Help"
-msgstr "Shareware Hellfire Help"
+msgstr "シェアウェア ヘルファイア ヘルプ"
 
 #: Source/help.cpp:135
 msgid "Hellfire Help"
@@ -1887,7 +1798,7 @@ msgstr "Hellfire Help"
 
 #: Source/help.cpp:137
 msgid "Shareware Diablo Help"
-msgstr "Shareware Diablo Help"
+msgstr "シェアウェア ディアブロ ヘルプ"
 
 #: Source/help.cpp:137
 msgid "Diablo Help"
@@ -3230,7 +3141,7 @@ msgstr "スイフトネス"
 
 #: Source/itemdat.cpp:377
 msgid "speed"
-msgstr "speed"
+msgstr "スピード"
 
 #: Source/itemdat.cpp:378
 msgid "haste"
@@ -3985,7 +3896,7 @@ msgstr[0] "全呪文{:d}レベルダウン"
 
 #: Source/items.cpp:3870
 msgid "spell levels unchanged (?)"
-msgstr "spell levels unchanged (?)"
+msgstr "呪文のレベルに変化なし(?)"
 
 #: Source/items.cpp:3873
 msgid "Extra charges"
@@ -4336,13 +4247,12 @@ msgid "Unable to open save file archive"
 msgstr "Unable to open save file archive"
 
 #: Source/loadsave.cpp:1686
-#, fuzzy
 msgid "Invalid save file"
-msgstr "ファイル(&F)"
+msgstr "Invalid save file"
 
 #: Source/loadsave.cpp:1717
 msgid "Player is on a Hellfire only level"
-msgstr "Player is on a Hellfire only level"
+msgstr "プレイヤーはHellfireのみのレベルにいます"
 
 #: Source/loadsave.cpp:1912
 msgid "Invalid game state"
@@ -4996,10 +4906,9 @@ msgstr "リーパー"
 #. TRANSLATORS: Monster Block end
 #. MT_NAKRUL
 #: Source/monstdat.cpp:158 Source/monstdat.cpp:485
-#, fuzzy
 msgctxt "monster"
 msgid "Na-Krul"
-msgstr "Na-Krul"
+msgstr "ナ・クルル"
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
@@ -5113,10 +5022,9 @@ msgid "Madeye the Dead"
 msgstr "マッドアイ・ザ・デッド"
 
 #: Source/monstdat.cpp:499
-#, fuzzy
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr "El Chupacabras"
+msgstr "エル・チュパカブラ"
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5767,39 +5675,33 @@ msgstr "暗黒の王"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:277
-#, fuzzy
 msgid "Journal: The Ensorcellment"
-msgstr "Journal: The Ensorcellment"
+msgstr "ジャーナル: 包囲"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:278
-#, fuzzy
 msgid "Journal: The Meeting"
-msgstr "Journal: The Meeting"
+msgstr "ジャーナル: 会議"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:279
-#, fuzzy
 msgid "Journal: The Tirade"
-msgstr "Journal: The Tirade"
+msgstr "ジャーナル: ティラード"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:280
-#, fuzzy
 msgid "Journal: His Power Grows"
-msgstr "Journal: His Power Grows"
+msgstr "ジャーナル: 勢力拡大"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:281
-#, fuzzy
 msgid "Journal: NA-KRUL"
-msgstr "Journal: NA-KRUL"
+msgstr "ジャーナル: ナ・クルル"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:282
-#, fuzzy
 msgid "Journal: The End"
-msgstr "Journal: The End"
+msgstr "ジャーナル: 終焉"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:283
@@ -5979,7 +5881,7 @@ msgstr "次のレベル"
 
 #: Source/panels/charpanel.cpp:127
 msgid "None"
-msgstr "None"
+msgstr "なし"
 
 #: Source/panels/charpanel.cpp:133
 msgid "Base"
@@ -6221,7 +6123,7 @@ msgstr "デファイラー"
 
 #: Source/quests.cpp:62
 msgid "Na-Krul"
-msgstr "Na-Krul"
+msgstr "ナ・クルル"
 
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
@@ -6375,7 +6277,6 @@ msgid "Golem"
 msgstr "ゴーレム"
 
 #: Source/spelldat.cpp:37
-#, fuzzy
 msgctxt "spell"
 msgid "Rage"
 msgstr "レイジ"
@@ -6471,7 +6372,6 @@ msgid "Lightning Wall"
 msgstr "ライトニングウォール"
 
 #: Source/spelldat.cpp:56
-#, fuzzy
 msgctxt "spell"
 msgid "Immolation"
 msgstr "イモレーション"
@@ -6814,7 +6714,6 @@ msgid "is not available"
 msgstr "使用不能"
 
 #: Source/stores.cpp:1203
-#, fuzzy
 msgid "in the shareware"
 msgstr "シェアウェアで"
 
@@ -7394,7 +7293,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
-#, fuzzy
 msgid "You drink water?"
 msgstr "水を飲むのか？"
 
@@ -7472,7 +7370,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
-#, fuzzy
 msgid ""
 "Okay, so listen. There's this chamber of wood, see. And his wife, you know - "
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
@@ -7769,13 +7666,12 @@ msgstr ""
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
-#, fuzzy
 msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
-"ラクダナンは死んだ。誰もが知っていることだし、私を騙して他の考え方をさせるこ"
-"とはできない。死者に話しかけることはできない。知ってるよ！"
+"ラクダナンは死んだ。みーんな知っていることだし、わしを騙そうたってそうはいか"
+"ない。死んだやつとは話せない。知ってるよ！"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -8573,7 +8469,7 @@ msgstr ""
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
 msgstr ""
-"Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
+"お願いだから、傷つけないで。殺さないで。そしたら良いものを持ってくからさ。"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -9418,7 +9314,6 @@ msgstr ""
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
-#, fuzzy
 msgid ""
 "The hand, the heart and the mind can perform miracles when they are in "
 "perfect harmony. The healer Pepin sees into the body in a way that even I "
@@ -9874,7 +9769,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
-#, fuzzy
 msgid ""
 "Maintain your quest.  Finding a treasure that is lost is not easy.  Finding "
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
@@ -9886,31 +9780,27 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
-#, fuzzy
 msgid ""
 "A what?!  This is foolishness.  There's no treasure buried here in "
 "Tristram.  Let me see that!!  Ah, Look these drawings are inaccurate.  They "
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
-"えっ！？ 愚かなことだ。 トリストラムには宝は埋まっていません。 それを見せ"
-"ろ！ ああ、見てくださいこの絵は不正確なんです。 この街には似つかわしくありま"
-"せん。 私は大聖堂の下にあるものに目を向けています表土の下にあるものではありま"
-"せん"
+"なんと愚かな。 トリストラムには宝なんか埋まってるもんか。 それを見せてみな！ "
+"こりゃデタラメだ。この街のものじゃないな。 俺は大聖堂の下にあるんじゃないかと"
+"踏んでるんだ、表土じゃなくてな。"
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
-#, fuzzy
 msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
 msgstr ""
-"私には、あなたが探している地図について話し合う時間がありません。 私には私の助"
+"私には、あなたが探している地図について話し合う時間がないのだよ。 私には私の助"
 "けを必要とする多くの病人がいて、あなたの助けも必要なのです。"
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
-#, fuzzy
 msgid ""
 "The once proud Iswall is trapped deep beneath the surface of this world.  "
 "His honor stripped and his visage altered.  He is trapped in immortal "
@@ -9922,7 +9812,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
-#, fuzzy
 msgid ""
 "I'll bet that Wirt saw you coming and put on an act just so he could laugh "
 "at you later when you were running around the town with your nose in the "
@@ -9933,7 +9822,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
-#, fuzzy
 msgid ""
 "There was a time when this town was a frequent stop for travelers from far "
 "and wide.  Much has changed since then.  But hidden caves and buried "
@@ -9956,7 +9844,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
-#, fuzzy
 msgid ""
 "My grandmother often tells me stories about the strange forces that inhabit "
 "the graveyard outside of the church.  And it may well interest you to hear "
@@ -10002,7 +9889,6 @@ msgstr ""
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
-#, fuzzy
 msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
@@ -10012,7 +9898,6 @@ msgstr ""
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
-#, fuzzy
 msgid ""
 "Is it gone? Did you send it back to the dark recesses of Hades that spawned "
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
@@ -10024,7 +9909,6 @@ msgstr ""
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
-#, fuzzy
 msgid ""
 "I heard the explosion from here! Many thanks to you, kind stranger. What "
 "with all these things comin' out of the ground, monsters taking over the "
@@ -10037,7 +9921,6 @@ msgstr ""
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
-#, fuzzy
 msgid ""
 "Oh, such a trouble I have...maybe...No, I couldn't impose on you, what with "
 "all the other troubles. Maybe after you've cleansed the church of some of "
@@ -10055,7 +9938,6 @@ msgstr "ワァー! (鼻息)ワァーッ! (鼻息)"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:572
-#, fuzzy
 msgid ""
 "I lost Theo!  I lost my best friend!  We were playing over by the river, and "
 "Theo said he wanted to go look at the big green thing.  I said we shouldn't, "
@@ -10069,17 +9951,15 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
-#, fuzzy
 msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
-"彼を見つけたか？ セオドアを見つけてくれ、頼む！ 彼はまだ小さいんです。 自分の"
-"世話もできないのよ！ お願い！"
+"彼を見つけた？ セオドアを見つけて！、お願い！ まだ小さいわ。 自分の世話もでき"
+"ないのよ！ お願いよ！"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
-#, fuzzy
 msgid ""
 "You found him!  You found him!  Thank you!  Oh Theo, did those nasty bugs "
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
@@ -10091,7 +9971,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
-#, fuzzy
 msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
@@ -10101,7 +9980,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
-#, fuzzy
 msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
@@ -10111,7 +9989,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
-#, fuzzy
 msgid ""
 "These lands shall be defiled, and our brood shall overrun the fields that "
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
@@ -10123,7 +10000,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
-#, fuzzy
 msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
@@ -10133,7 +10009,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
-#, fuzzy
 msgid ""
 "And in the year of the Golden Light, it was so decreed that a great "
 "Cathedral be raised.  The cornerstone of this holy place was to be carved "
@@ -10168,19 +10043,16 @@ msgstr "モー。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
-#, fuzzy
 msgid "I said, Moo."
 msgstr "モー"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
-#, fuzzy
 msgid "Look I'm just a cow, OK?"
 msgstr "僕はただの牛なんだよ、わかる？"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
-#, fuzzy
 msgid ""
 "All right, all right.  I'm not really a cow.  I don't normally go around "
 "like this; but, I was sitting at home minding my own business and all of a "
@@ -10204,7 +10076,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
-#, fuzzy
 msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
@@ -10214,7 +10085,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
-#, fuzzy
 msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
@@ -10223,7 +10093,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
-#, fuzzy
 msgid ""
 "No no no no!  This is my GRAY suit!  It's for evening wear!  Formal "
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
@@ -10235,7 +10104,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
-#, fuzzy
 msgid ""
 "Ahh, that's MUCH better.  Whew!  At last, some dignity!  Are my antlers on "
 "straight?  Good.  Look, thanks a lot for helping me out.  Here, take this as "
@@ -10251,7 +10119,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
-#, fuzzy
 msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
@@ -10261,7 +10128,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
-#, fuzzy
 msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
@@ -10271,7 +10137,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
-#, fuzzy
 msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
@@ -10281,7 +10146,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
-#, fuzzy
 msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
@@ -10292,7 +10156,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
-#, fuzzy
 msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
@@ -10302,7 +10165,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
-#, fuzzy
 msgid ""
 "I think you could probably help me, but perhaps after you've gotten a little "
 "more powerful. I wouldn't want to injure the village's only chance to "
@@ -10314,14 +10176,12 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
-#, fuzzy
 msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
 msgstr "私は、自分で作った牛です。 自分で何かを作って…それから話そう。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
-#, fuzzy
 msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
@@ -10331,7 +10191,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
-#, fuzzy
 msgid ""
 "Quit bugging me.  I'm looking for someone really heroic.  And you're not "
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
@@ -10343,7 +10202,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
-#, fuzzy
 msgid ""
 "All right, I'll cut the bull.  I didn't mean to steer you wrong.  I was "
 "sitting at home, feeling moo-dy, when things got really un-stable; a whole "
@@ -10369,7 +10227,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
-#, fuzzy
 msgid ""
 "Cloudy and cooler today.  Casting the nets of necromancy across the void "
 "landed two new subspecies of flying horror; a good day's work.  Must "
@@ -10382,7 +10239,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
-#, fuzzy
 msgid ""
 "I have tried spells, threats, abjuration and bargaining with this foul "
 "creature -- to no avail.  My methods of enslaving lesser demons seem to have "
@@ -10393,7 +10249,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
-#, fuzzy
 msgid ""
 "My home is slowly becoming corrupted by the vileness of this unwanted "
 "prisoner.  The crypts are\tfull of shadows that move just beyond the corners "
@@ -10406,21 +10261,19 @@ msgstr ""
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
-#, fuzzy
 msgid ""
 "In its ranting, the creature has let slip its name -- Na-Krul.  I have "
 "attempted to research the name, but the smaller demons have somehow "
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
-"暴言を吐く中で、その生物は自分の名前を漏らした—Na-Krul。 私はその名前を調べよ"
-"うとしたが、小悪魔たちが何らかの方法で私の図書館を破壊した。 Na-Krul…。その名"
-"は私に冷たい恐怖を与えた。 本当の名前を考えるよりも、”クリーチャー “としか考"
-"えたくない。"
+"暴言を吐く中で、その生物は自分の名前を漏らした—ナ・クルル。 私はその名前を調"
+"べようとしたが、小悪魔たちが何らかの方法で私の図書館を破壊した。 ナ・クル"
+"ル…。その名は私に冷たい恐怖を与えた。 本当の名前を考えるよりも、”クリー"
+"チャー “としか考えたくない。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
-#, fuzzy
 msgid ""
 "The entrapped creature's howls of fury keep me from gaining much needed "
 "sleep.  It rages against the one who sent it to the Void, and it calls foul "
@@ -10434,7 +10287,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
-#, fuzzy
 msgid ""
 "My time is quickly running out.  I must record the ways to weaken the demon, "
 "and then conceal that text, lest his minions find some way to use my "
@@ -10448,7 +10300,6 @@ msgstr ""
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
-#, fuzzy
 msgid ""
 "Whoever finds this scroll is charged with stopping the demonic creature that "
 "lies within these walls.  My time is over. Even now, its hellish minions "
@@ -10478,20 +10329,18 @@ msgstr ""
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
 #: Source/textdat.cpp:651 Source/textdat.cpp:654
-#, fuzzy
 msgid "In Spiritu Sanctum."
-msgstr "スピリット・サンクタム"
+msgstr "In Spiritu Sanctum."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:643 Source/textdat.cpp:646 Source/textdat.cpp:649
 #: Source/textdat.cpp:652 Source/textdat.cpp:655
 msgid "Praedictum Otium."
-msgstr "プレディクタム・オティウム"
+msgstr "Praedictum Otium."
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:644 Source/textdat.cpp:647 Source/textdat.cpp:650
 #: Source/textdat.cpp:653 Source/textdat.cpp:656
-#, fuzzy
 msgid "Efficio Obitus Ut Inimicus."
 msgstr "Efficio Obitus Ut Inimicus."
 
