@@ -880,9 +880,10 @@ void ToggleSpell(int slot)
 	}
 }
 
-void AddPanelString(const char *str)
+void AddPanelString(string_view str)
 {
-	strcpy(panelstr[pnumlines], str);
+	strncpy(panelstr[pnumlines], str.data(), str.size());
+	panelstr[pnumlines][str.size()] = '\0';
 
 	if (pnumlines < 4)
 		pnumlines++;

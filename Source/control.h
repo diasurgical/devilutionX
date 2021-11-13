@@ -14,6 +14,7 @@
 #include "spelldat.h"
 #include "spells.h"
 #include "utils/stdcompat/optional.hpp"
+#include "utils/stdcompat/string_view.hpp"
 #include "utils/ui_fwd.h"
 
 namespace devilution {
@@ -76,7 +77,7 @@ void SetSpell();
 void SetSpeedSpell(int slot);
 void ToggleSpell(int slot);
 
-void AddPanelString(const char *str);
+void AddPanelString(string_view str);
 void ClearPanel();
 void DrawPanelBox(const Surface &out, SDL_Rect srcRect, Point targetPosition);
 Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
