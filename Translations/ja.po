@@ -5426,19 +5426,19 @@ msgstr "耐性: "
 
 #: Source/monster.cpp:4679 Source/monster.cpp:4690
 msgid "Magic "
-msgstr " 魔法"
+msgstr "魔法 "
 
 #: Source/monster.cpp:4681 Source/monster.cpp:4692
 msgid "Fire "
-msgstr "火炎"
+msgstr "火炎 "
 
 #: Source/monster.cpp:4683 Source/monster.cpp:4694
 msgid "Lightning "
-msgstr "ライトニング"
+msgstr "ライトニング "
 
 #: Source/monster.cpp:4688
 msgid "Immune: "
-msgstr "無効:"
+msgstr "無効: "
 
 #: Source/monster.cpp:4706
 msgid "Type: {:s}"

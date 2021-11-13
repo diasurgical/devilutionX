@@ -32,6 +32,7 @@
 #include "towners.h"
 #include "trigs.h"
 #include "utils/language.h"
+#include "utils/utf8.hpp"
 
 #ifdef _DEBUG
 #include "debug.h"
@@ -1340,7 +1341,7 @@ bool MonsterWalk(int i, MonsterMode variant)
 	auto &monster = Monsters[i];
 	assert(monster.MType != nullptr);
 
-	//Check if we reached new tile
+	// Check if we reached new tile
 	bool isAnimationEnd = monster.AnimInfo.CurrentFrame == monster.AnimInfo.NumberOfFrames;
 	if (isAnimationEnd) {
 		switch (variant) {
@@ -1365,7 +1366,7 @@ bool MonsterWalk(int i, MonsterMode variant)
 		if (monster.mlid != NO_LIGHT)
 			ChangeLightXY(monster.mlid, monster.position.tile);
 		M_StartStand(monster, monster._mdir);
-	} else { //We didn't reach new tile so update monster's "sub-tile" position
+	} else { // We didn't reach new tile so update monster's "sub-tile" position
 		if (monster.AnimInfo.TickCounterOfCurrentFrame == 0) {
 			if (monster.AnimInfo.CurrentFrame == 0 && monster.MType->mtype == MT_FLESTHNG)
 				PlayEffect(monster, 3);
@@ -1422,7 +1423,7 @@ void CheckReflect(int mon, int pnum, int dam)
 	player.wReflections--;
 	if (player.wReflections <= 0)
 		NetSendCmdParam1(true, CMD_SETREFLECT, 0);
-	//reflects 20-30% damage
+	// reflects 20-30% damage
 	int mdam = dam * (GenerateRnd(10) + 20L) / 100;
 	monster._mhitpoints -= mdam;
 	dam = std::max(dam - mdam, 0);
@@ -4660,8 +4661,9 @@ void PrintMonstHistory(int mt)
 					strcat(tempstr, _("Fire "));
 				if ((res & RESIST_LIGHTNING) != 0)
 					strcat(tempstr, _("Lightning "));
-				tempstr[strlen(tempstr) - 1] = '\0';
-				AddPanelString(tempstr);
+				string_view str { tempstr };
+				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
+				AddPanelString(str);
 			}
 			if ((res & (IMMUNE_MAGIC | IMMUNE_FIRE | IMMUNE_LIGHTNING)) != 0) {
 				strcpy(tempstr, _("Immune: "));
@@ -4671,8 +4673,9 @@ void PrintMonstHistory(int mt)
 					strcat(tempstr, _("Fire "));
 				if ((res & IMMUNE_LIGHTNING) != 0)
 					strcat(tempstr, _("Lightning "));
-				tempstr[strlen(tempstr) - 1] = '\0';
-				AddPanelString(tempstr);
+				string_view str { tempstr };
+				str.remove_suffix(str.size() - FindLastUtf8Symbols(str));
+				AddPanelString(str);
 			}
 		}
 	}
