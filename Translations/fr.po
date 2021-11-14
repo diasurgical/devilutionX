@@ -986,8 +986,8 @@ msgstr "Niveau Supérieur"
 #: Source/control.cpp:1562
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
-msgstr[0] "Bâton ({:s} charge)"
-msgstr[1] "Bâton ({:s} charges)"
+msgstr[0] "Bâton ({:d} charge)"
+msgstr[1] "Bâton ({:d} charges)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1572
@@ -10756,4 +10756,3 @@ msgstr "Descendre vers Diablo"
 #: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
 msgid "Back to Level {:d}"
 msgstr "Retourner au Niveau {:d}"
-
