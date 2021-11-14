@@ -1303,11 +1303,11 @@ msgstr "Пауза недоступна в мережевій грі"
 
 #: Source/error.cpp:66
 msgid "Loading..."
-msgstr "Завантажуємо..."
+msgstr "Завантажується..."
 
 #: Source/error.cpp:67
 msgid "Saving..."
-msgstr "Зберігаємо..."
+msgstr "Зберігається..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:68
@@ -1730,7 +1730,7 @@ msgstr ""
 
 #: Source/help.cpp:72
 msgid "$Skills & Spells:"
-msgstr "$Таланти і Чари:"
+msgstr "$Таланти та Чари:"
 
 #: Source/help.cpp:73
 msgid ""
