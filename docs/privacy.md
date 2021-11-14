@@ -1,6 +1,6 @@
 ## DevilutionX Privacy Policy
 
-### We don't store you data
+### We don't store your data
 
 Diasurgical does not collect any data from users of DevilutionX
 
