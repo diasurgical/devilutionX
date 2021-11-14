@@ -842,7 +842,6 @@ void DrawDungeon(const Surface &out, Point tilePosition, Point targetBufferPosit
 	if (DebugVision && IsTileLit(tilePosition)) {
 		CelClippedDrawTo(out, targetBufferPosition, *pSquareCel, 1);
 	}
-	DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;
 #endif
 
 	if (MissilePreFlag) {
@@ -978,6 +977,9 @@ void DrawTileContent(const Surface &out, Point tilePosition, Point targetBufferP
 	for (int i = 0; i < rows; i++) {
 		for (int j = 0; j < columns; j++) {
 			if (InDungeonBounds(tilePosition)) {
+#ifdef _DEBUG
+				DebugCoordsMap[tilePosition.x + tilePosition.y * MAXDUNX] = targetBufferPosition;
+#endif
 				if (tilePosition.x + 1 < MAXDUNX && tilePosition.y - 1 >= 0 && targetBufferPosition.x + TILE_WIDTH <= gnScreenWidth) {
 					// Render objects behind walls first to prevent sprites, that are moving
 					// between tiles, from poking through the walls as they exceed the tile bounds.
