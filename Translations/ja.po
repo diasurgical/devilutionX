@@ -384,11 +384,11 @@ msgstr "キャンセル"
 
 #: Source/DiabloUI/selconn.cpp:13
 msgid "Client-Server (TCP)"
-msgstr "Client-Server (TCP)"
+msgstr "クライアント - サーバー (TCP)"
 
 #: Source/DiabloUI/selconn.cpp:14
 msgid "Loopback"
-msgstr "Loopback"
+msgstr "ループバック"
 
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
 #: Source/DiabloUI/selgame.cpp:505
@@ -409,7 +409,7 @@ msgstr "コネクションを選択"
 
 #: Source/DiabloUI/selconn.cpp:74
 msgid "Change Gateway"
-msgstr "Change Gateway"
+msgstr "ゲートウェイの変更"
 
 #: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
@@ -500,7 +500,7 @@ msgstr "ヘル"
 
 #: Source/DiabloUI/selgame.cpp:202
 msgid "Join TCP Games"
-msgstr "Join TCP Games"
+msgstr "TCPゲームに参加"
 
 #: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
 msgid "Enter address"
@@ -696,7 +696,7 @@ msgstr ""
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:314
 msgid "Unable to create character."
-msgstr "キャラクターを作ることができない"
+msgstr "キャラクターを作ることができません。"
 
 #: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
 msgid "Level:"
@@ -720,7 +720,7 @@ msgstr "VIT:"
 
 #: Source/DiabloUI/selhero.cpp:497
 msgid "Savegame:"
-msgstr "セーブ数:"
+msgstr "セーブ回数:"
 
 #: Source/DiabloUI/selhero.cpp:510
 msgid "Select Hero"
@@ -835,9 +835,9 @@ msgid ""
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"Unable to open main data archive ({:s}).\n"
+"メインデータアーカイブ({:s})を開くことができません。\n"
 "\n"
-"Make sure that it is in the game folder."
+"ゲームフォルダに入っているか確認してください。"
 
 #: Source/appfat.cpp:122
 msgid "Data File Error"
@@ -1044,7 +1044,7 @@ msgstr "マナ: {:d}  ダメージ: 1/3 ターゲットHP"
 #: Source/control.cpp:1649
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
-msgstr[0] "あなたは{:d}金貨を持っています。何枚削除しますか？"
+msgstr[0] "あなたは{:d}ゴールドを持っています。何枚削除しますか？"
 
 #: Source/controls/modifier_hints.cpp:121
 msgid "Menu"
@@ -1100,7 +1100,7 @@ msgstr "ついてきて。"
 
 #: Source/diablo.cpp:116
 msgid "Here's something for you."
-msgstr "これは、あなたのために用意したものです"
+msgstr "これは、あなたのために用意したものです。"
 
 #: Source/diablo.cpp:117
 msgid "Now you DIE!"
@@ -1149,7 +1149,7 @@ msgstr "Display frames per second"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:789
 msgid "Run in windowed mode"
-msgstr "ウィンドウモードでの動作"
+msgstr "Run in windowed mode"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:790
@@ -1169,7 +1169,7 @@ msgstr "Play a demo file"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:793
 msgid "Disable all frame limiting during demo playback"
-msgstr "デモ再生時にすべてのフレーム制限を無効にする"
+msgstr "Disable all frame limiting during demo playback"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:794
@@ -1178,7 +1178,7 @@ msgid ""
 "Game selection:\n"
 msgstr ""
 "\n"
-"ゲームを選択:\n"
+"Game selection:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
@@ -1202,7 +1202,7 @@ msgid ""
 "Hellfire options:\n"
 msgstr ""
 "\n"
-"ヘルファイアのオプション:\n"
+"Hellfire options:\n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:799
@@ -1572,7 +1572,7 @@ msgstr "ポーズ"
 
 #: Source/help.cpp:26
 msgid "$Keyboard Shortcuts:"
-msgstr "$Keyboard Shortcuts:"
+msgstr "$キーボードショートカット:"
 
 #: Source/help.cpp:27
 msgid "F1:    Open Help Screen"
@@ -1588,15 +1588,15 @@ msgstr "Tab:   オートマップを表示"
 
 #: Source/help.cpp:30
 msgid "Space: Hide all info screens"
-msgstr "Space: Hide all info screens"
+msgstr "Space: 全ての情報画面を非表示"
 
 #: Source/help.cpp:31
 msgid "S: Open Speedbook"
-msgstr "S: スペルブックを開く"
+msgstr "S: スピードブックを開く"
 
 #: Source/help.cpp:32
 msgid "B: Open Spellbook"
-msgstr "B: Open Spellbook"
+msgstr "B: スペルブックを開く"
 
 #: Source/help.cpp:33
 msgid "I: Open Inventory screen"
@@ -1628,7 +1628,7 @@ msgstr "+ / -: ズーム オートマップ"
 
 #: Source/help.cpp:40
 msgid "1 - 8: Use Belt item"
-msgstr "1 - 8: Use Belt item"
+msgstr "1 - 8: ベルトアイテムを使う"
 
 #: Source/help.cpp:41
 msgid "F5, F6, F7, F8:     Set hotkey for skill or spell"
@@ -1794,7 +1794,7 @@ msgstr "シェアウェア ヘルファイア ヘルプ"
 
 #: Source/help.cpp:135
 msgid "Hellfire Help"
-msgstr "Hellfire Help"
+msgstr "ヘルファイア ヘルプ"
 
 #: Source/help.cpp:137
 msgid "Shareware Diablo Help"
@@ -1802,7 +1802,7 @@ msgstr "シェアウェア ディアブロ ヘルプ"
 
 #: Source/help.cpp:137
 msgid "Diablo Help"
-msgstr "ディアブロヘルプ"
+msgstr "ディアブロ ヘルプ"
 
 #: Source/help.cpp:161
 msgid "Press ESC to end or the arrow keys to scroll."
@@ -1814,7 +1814,7 @@ msgstr "diabdat.mpqまたはspawn.mpq"
 
 #: Source/init.cpp:226
 msgid "Some Hellfire MPQs are missing"
-msgstr "いくつかのHellfire MPQが欠落しています。"
+msgstr "いくつかのHellfire MPQが欠落しています"
 
 #: Source/init.cpp:226
 msgid ""
@@ -2266,7 +2266,7 @@ msgstr "アポカリプス・スクロール"
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
 msgid "Book of "
-msgstr "呪文の書:"
+msgstr "呪文の書: "
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
@@ -3555,7 +3555,7 @@ msgstr "サンダークラップ"
 
 #: Source/itemdat.cpp:499
 msgid "Shirotachi"
-msgstr "シロタチ"
+msgstr "白太刀"
 
 #: Source/itemdat.cpp:500
 msgid "Eater of Souls"
@@ -5488,7 +5488,7 @@ msgstr "Unable to get level data"
 
 #: Source/multi.cpp:195
 msgid "Player '{:s}' just left the game"
-msgstr "プレイヤー「{:s}」がゲームから離脱しました。"
+msgstr "プレイヤー「{:s}」がゲームから離脱しました"
 
 #: Source/multi.cpp:198
 msgid "Player '{:s}' killed Diablo and left the game!"
@@ -5979,7 +5979,7 @@ msgstr "ミュート"
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
-msgstr "書き込み用のプレーヤーアーカイブのオープンに失敗しました。"
+msgstr "Failed to open player archive for writing."
 
 #: Source/pfile.cpp:392
 msgid "Unable to open archive"
@@ -5999,7 +5999,7 @@ msgstr "Unable to write to save file archive"
 
 #: Source/plrmsg.cpp:88
 msgid "{:s} (lvl {:d}): {:s}"
-msgstr "{:s} (lvl {:d}): {:s}"
+msgstr "{:s} (レベル {:d}): {:s}"
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
@@ -6029,7 +6029,7 @@ msgstr "レベル {:d}"
 
 #: Source/qol/xpbar.cpp:132 Source/qol/xpbar.cpp:143
 msgid "Experience: "
-msgstr "経験値:"
+msgstr "経験値: "
 
 #: Source/qol/xpbar.cpp:136
 msgid "Maximum Level"
@@ -6037,11 +6037,11 @@ msgstr "最大レベル"
 
 #: Source/qol/xpbar.cpp:147
 msgid "Next Level: "
-msgstr "次のレベル:"
+msgstr "次のレベル: "
 
 #: Source/qol/xpbar.cpp:151
 msgid " to Level {:d}"
-msgstr " to Level {:d}"
+msgstr "レベル{:d}へ"
 
 #. TRANSLATORS: Quest Name Block
 #: Source/quests.cpp:41
@@ -6763,7 +6763,7 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
-"おお、王の物語か。レオリック王の堕落は土地の者には大いなる悲劇じゃった。王を"
+" おお、王の物語か。レオリック王の堕落は土地の者には大いなる悲劇じゃった。王を"
 "敬愛してきた人々も、今は王の殺戮におびえる日々。誰よりも高潔であったあのレオ"
 "リック王が、どうして光の世界からはずれてしまったのか不思議でならぬ。あの方の"
 "精神をあそこまで破壊するとは、地獄でも最強の力に違いない。"
@@ -7254,10 +7254,9 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
-"どうか、急いでください。一時間経つごとに、飲む水がない状態に近づいていきま"
-"す。\n"
-" \n"
-"あなたの助けがなければ、長くは生きられません。"
+"どうか急いでくれ。もうすぐ飲み水が底をついてしまう。\n"
+"\n"
+"君の助けなくては、我々はもうこれ以上生き延びられない。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -7508,10 +7507,9 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
-"頼むから聞いてくれ。ラザロ大司教は、失われた王子を見つけるために、私たちをこ"
-"こに導いてくれました。私生児は我々を罠にはめた！みんな死んでしまった…ブッ"
-"チャーと呼ばれる悪魔に殺されたのだ 仇を討て！ブッチャーを見つけて殺してくれ "
-"そうすれば我々の魂は安らかに眠れる…"
+"聞いてくれ。大司教ラザルスは、王子を探すと言って我々を連れ込んだ。しかし、罠"
+"だったんだ! みんな死んでしまった。ブッチャーという化物に殺されたんだ。かたき"
+"をうってくれ! 我々の魂が安らかに眠れるよう、ブッチャーを殺してくれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -7670,7 +7668,7 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
-"ラクダナンは死んだ。みーんな知っていることだし、わしを騙そうたってそうはいか"
+" ラクダナンは死んだ。みーんな知っていることだし、わしを騙そうたってそうはいか"
 "ない。死んだやつとは話せない。知ってるよ！"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
@@ -7711,16 +7709,15 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
-"お願いだから殺さないで、話を聞いてください。私はかつてレオリック王の騎士団長"
-"として、正義と名誉をもってこの国の法律を守っていました。その後、彼の悲劇的な"
-"死で我々が果たした役割のために、彼の暗い呪いが我々に降りかかった。仲間の騎士"
-"たちが歪んだ運命に屈したとき、私は王の埋葬室から逃げ出し、呪いから解放される"
-"方法を探した。失敗しました…\n"
-" \n"
-"呪いを解き放ち 魂を休ませることができる ゴールデンエリクサーの話を聞いたが 見"
-"つけることができなかった 私の力は衰え、人間性も失われつつあります。どうか私を"
-"助けてエリクサーを見つけてください。あなたの努力に報いることを、私の名誉にか"
-"けて誓います。"
+"待て。武器を収め、話を聞いてくれ。私はレオリック騎士団長ラックダナンだ。正義"
+"と名誉にかけてこの国の法を守ってきた者だ。しかし、レオリック王を非業の死に追"
+"いやったため、呪いをかけられてしまった。騎士団の団員はみな死んでしまい、私は"
+"王の葬られた部屋から唯一人逃げ出して、この呪いから逃れる方法を探している。\n"
+"\n"
+"呪いを解き、魂を安らかな眠りにつかせてくれるというゴールデン・エリクサーにつ"
+"いて聞いたことがあるが、見つけることはできなかった。力も衰え、わずかな理性も"
+"また、衰えつつある。エリクサーを探しだし、私を助けて欲しい。礼\\nはさせてもら"
+"う。名誉にかけて誓おう。"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
@@ -8468,8 +8465,7 @@ msgstr ""
 #: Source/textdat.cpp:297
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
-msgstr ""
-"お願いだから、傷つけないで。殺さないで。そしたら良いものを持ってくからさ。"
+msgstr "頼む、殺さないでくれ! 助けてくれたら、つぎ来たときにいいものをやる。"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -8479,10 +8475,9 @@ msgid ""
 " \n"
 "You take this as proof I keep word..."
 msgstr ""
-"あなたのために何か作っています。もう一度、ガルバッドを殺すのではなく 生きて、"
-"良いものを与える。\n"
-" \n"
-"私が約束を守っている証拠だと思って…。"
+"いま作ってるところだ。殺さないでくれ。いいものをやるからさ。\n"
+"\n"
+"ほら、やるよ。約束は守ったよ。"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:301
@@ -8922,10 +8917,9 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
-"ペピンは私の祖母の命を救ってくれましたが、その恩返しができないことはわかって"
-"います。どんな病気でも治すことができるペピンの能力は、最強の剣よりも強力で、"
-"どんな呪文よりも神秘的だと思います。もし、あなたが癒しを必要としているなら、"
-"ペピンがあなたを助けてくれるでしょう。"
+"ペピンはおばあさまの命の恩人で、いくら感謝してもしきれないわ。病を癒す彼の力"
+"は、どんな剣よりも強くて、どんな魔法よりも不思議ね。もし治療が必要になった"
+"ら、あなたもペピンに頼むといいわ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -8951,8 +8945,8 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
-"オグン夫婦は私とおばあさまを自分たちの家に迎えてくれて、私には宿での仕事まで"
-"与えてくれた恩人よ。いつかここを離れて、ご夫婦が東部で立派な宿屋を始めるの"
+"オグデン夫婦は私とおばあさまを自分たちの家に迎えてくれて、私には宿での仕事ま"
+"で与えてくれた恩人よ。いつかここを離れて、ご夫婦が東部で立派な宿屋を始めるの"
 "を、手伝いたいわね。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
@@ -8979,9 +8973,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
-"どうだいこの刃は。バランスがとれていて見事だろう。剣てのは、ふさわしい者が使"
-"えば、最強の武器となる。この鋭い切っ先は、アンデッドには向いていないが、相手"
-"が生き物ならその肉を簡単に断ち切ってくれる。"
+"なに斧? 斧ってのは、どんな魔物とも戦えるすぐれ物だ。空気を切り裂くこともでき"
+"る。悪魔の首なぞ一振りですっ飛ぶだろうよ。素早く扱うのは無理だが、破壊力は抜"
+"群さ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -9806,9 +9800,10 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him."
 msgstr ""
-"かつて誇り高かったイスウォールは、この世界の地表深くに閉じ込められていた。 名"
-"誉を剥奪され、姿を変えられた彼は  彼は不滅の苦しみに陥っている  彼を解放する"
-"ことができるものを隠すように課せられた。"
+"かつて誇り高かったイスウォールは、この世界の地下深くに閉じ込められたわ。 名誉"
+"を剥奪され、姿も変えられたの。\n"
+"彼は、不滅の苦しみに陥っているわ。彼を解放することができるものを隠すように課"
+"せられたわ。"
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -9852,11 +9847,11 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
-"私の祖母は、教会の外にある墓地に生息する奇妙な力について、よく話をしてくれま"
-"す。 そのうちの一つを聞いてみると、興味が湧くかもしれません。 墓地にお供え物"
-"を置いて大聖堂に入り、死者のために祈りを捧げてから戻ってくると、お供え物が不"
-"思議な方法で変えられてしまうというのです。 これが病気の老婆の話なのかどうかは"
-"わからないが、最近は何でもありのようだ。"
+"おばあさまは、教会の外にある墓地に生息する奇妙な力について、よく話をしてくれ"
+"るの。 そのうちの一つに興味が湧くかもしれないわ。 墓地にお供え物を置いて大聖"
+"堂に入って、死者のために祈りを捧げてから戻ってくると、お供え物が不思議な方法"
+"で変えられてしまうそうよ。 病気の老婆の戯言かもしれないけれど、最近は何でもあ"
+"りのようだわ。"
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -9879,13 +9874,13 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
-"あなたはみんなが話していたヒーローなのね。もしかしたら、あなたは貧しい素朴な"
-"農夫を助けてくれるかもしれませんね。ひどい混乱から？この南にある私の果樹園の"
-"端で、地面から恐ろしいものが膨らんでいるのです 作物も干草も手に入らないし、哀"
-"れな牛たちも飢えてしまうのです。魔女がこれを私にくれて、これがあれを私の畑か"
-"ら吹き飛ばしてくれると言いました。もし、あれを破壊してくれたら、一生感謝しま"
-"す。私がやってもいいのですが、誰かがここで牛の世話をしなければなりませんの"
-"で…。"
+"みんなが話しているヒーローはあなたなんですね。ひどい混乱から、この貧しい素朴"
+"な農夫を助けてくれませんか？\n"
+"この南にある私の果樹園の端で、地面から恐ろしいものが膨らんでいるのです！\n"
+"作物も干し草も手に入らないし、哀れな牛たちも飢えてしまいます。魔女が、あれを"
+"畑から吹き飛ばしてくれると言って、これをくれました。もし、あなたが、あれを破"
+"壊してくれたら、一生感謝します。\n"
+"私がやってもいいのですが、誰かがここで牛の世話をしなければなりませんので…。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -9893,7 +9888,7 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
-"あの魔女が言うような簡単な話ではないと思ったのです。近所の人さえも信用できな"
+"あの魔女が言うような簡単な話ではないと思ったんです。近所の人さえも信用できな"
 "いなんて、悲しい世の中ですね。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
@@ -9903,9 +9898,9 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
-"それは消えてしまったのか？それを生んだ黄泉の国の暗黒の奥地に送り返したのか？"
-"何だって？失くしたなんて言わないでよ。あれは安いものではありませんからね。見"
-"つけ出して、その恐怖をこの街から消し去るんだ。"
+"なくなった？黄泉の国の暗黒の奥地に送り返したのか？失くしたなんて言わないでく"
+"れ。あれは安くはないんでね。見つけ出して、この街から恐怖を消し消し去ってく"
+"れ。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -9915,9 +9910,9 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
-"ここから爆発音が聞こえてきました。見知らぬあなたに感謝します。地面から何かが"
-"出てきたり怪物が教会を占拠したりと今は大変な時代です。私は一介の農夫に過ぎな"
-"いが、これを受け取って感謝する。"
+"ここでも爆発音が聞こえました。見知らぬあなたに感謝します。地面から何かが出て"
+"きたり怪物が教会を占拠したりと今は大変な時代です。私はただの農夫ですが、これ"
+"を受け取ってください。感謝します。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -9927,9 +9922,9 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
-"ああ、そんな悩みがあるのか…いや、他の悩みを抱えているあなたに押し付けることは"
-"できない。あなたが教会の中の生き物を浄化した後、戻ってきて…貧しい農民を助ける"
-"ために少し時間を割いてくれませんか？"
+"ああ、どうしたものか…いや、他にも問題を抱えているあなたに押し付けることはでき"
+"ません。よかったら、教会の中の生き物を浄化した後、貧しい農民を助けるために少"
+"し時間を割いてくれませんか？"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
@@ -9944,10 +9939,10 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
-"テオを失った! 親友を失った! 私たちは川のそばで遊んでいて、テオが大きな緑のも"
-"のを見に行きたいと言った。ダメって言ったんだけど、あっちでもぐもぐしてたら、"
-"いきなりこのバグが出てきたのよ! 私たちは逃げたけど、テオは転んでしまい、虫に"
-"やられて連れ去られてしまいました!"
+"セオがいなくなった! 親友をだったのに! 川のそばで遊んでて、そしたらテオがおっ"
+"きな緑のものを見に行きたいと言い出したの。ダメって言ったのに、あっちでもぐも"
+"ぐしてたら、いきなりバグが出てきたの! 逃げたんだけど、テオは転んじゃって、虫"
+"につれていかれちゃった!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -9955,8 +9950,8 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
-"彼を見つけた？ セオドアを見つけて！、お願い！ まだ小さいわ。 自分の世話もでき"
-"ないのよ！ お願いよ！"
+"彼を見つけた？ セオドアを見つけて！お願い！ まだ小さいの。 自分の世話もできな"
+"いのよ！ お願いだから！"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -9965,9 +9960,9 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
-"あなたは彼を見つけました。 見つけてくれたんだね  ありがとう！ テオ あの虫たち"
-"に脅かされなかった？ うわぁ！ 毛皮に何かくっついてるぞ！ イック！ さあ、テ"
-"オ、家に帰ろう！ ヒーローの方、本当にありがとうございました。"
+"見つけたのね！ 見つけてくれた！ ありがとう！ あーセオ あの虫たちに脅かされな"
+"かった？ きゃあ！ 毛皮に何かくっついてる！ わあ！ さあ、テオ、家に帰ろう！ 本"
+"当にありがとう！"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
@@ -9975,8 +9970,8 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
 msgstr ""
-"長い間、眠っていた私たちが目覚める時が来たのです。 長い眠りの後、私たちは大き"
-"な飢えに満たされています。 すぐに、今、私たちは食べよう…。"
+"長きに渡り眠っていた我々が目覚める時が来た。 長い眠りの後、我々は大きな飢えに"
+"満ちている。 すぐに、今、餌を食べよう…。"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
@@ -9984,8 +9979,8 @@ msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
 msgstr ""
-"楽しんでいますか、小さな哺乳類？ なんて哀れなんだ。あなたの小さな世界は、何の"
-"チャレンジにもなりません。"
+"楽しんでいるか、小さな哺乳類よ？ 哀れな。お前の小さな世界は、何のチャレンジに"
+"もならん。"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -10004,8 +9999,8 @@ msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
 msgstr ""
-"ああ、あなたの匂いがする…あなたは近くにいる! 近い! スッ…血と恐怖の香り…なんて"
-"魅力的なんだ…。"
+"ああ、お前の匂いがする…近くにいるな! 近い! すぅー…血と恐怖の香り…なんて魅力的"
+"なんだ…。"
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -10044,12 +10039,12 @@ msgstr "モー。"
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
 msgid "I said, Moo."
-msgstr "モー"
+msgstr "俺はモーと言ったんだ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?"
-msgstr "僕はただの牛なんだよ、わかる？"
+msgstr "俺はただの牛なんだよ、わかる？"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
@@ -10065,14 +10060,14 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden."
 msgstr ""
-"わかった、わかった。 私は本当に牛ではありません。 普段はこんなことしないんだ"
-"けど、家でぼーっとしていたら、突然床から虫やつるや球根などが出てきて…怖かった"
-"よ。 普通の服を着ていれば、そんなにひどいことにはならなかったんですけどね。 "
-"ねえ、私の家に戻って、私のスーツを取ってきてくれない？ グレーじゃなくて茶色の"
-"やつ、あれは夕方に着るやつなんだ。 自分でやってもいいんだけど、こんな姿を誰か"
-"に見られたくないんだよね。 これを持って行ってくれ 必要になるかもしれない… 伸"
-"びすぎた植物を殺すためにね  私の家は、川の分岐点の南側にあります…ご存知ですよ"
-"ね…生い茂った菜園のある家です。"
+"わかった、わかった。 本当は牛じゃないよ。 いつもはこんなことしないけど、家で"
+"ぼーっとしてたら、突然床から虫やつるや球根なんかが出てきてよ・・・びびった"
+"よ。 普通の服を着てれば、そんなにひどいことにはならなかったな。 なあ、俺の家"
+"に行って、スーツを取ってきてくれないか？ グレーじゃなくて茶色のやつだ、あれは"
+"夕方に着るやつなんだ。 自分でやってもいいんだけど、こんな姿を誰かに見られたく"
+"ないんだよ。 必要になるかもしれないからこれを持って行ってくれ… 伸びすぎた植物"
+"を殺すためにさ。 俺の家は、川の分岐点の南側にある…知ってるよな…生い茂った菜園"
+"のある家だ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
@@ -10080,8 +10075,8 @@ msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
 msgstr ""
-"何のために時間を無駄にしているの？ 俺のスーツを取りに行け！ 急いで！ あそこの"
-"ホルスタインがずっとウインクしてる！"
+"なんで時間を無駄にしてんだ？ 早く俺のスーツを取りに行け！ あそこのホルスタイ"
+"ンがずっとウインクしてる！"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
@@ -10098,9 +10093,8 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
-"いやいやいやいや！？ これは私のグレーのスーツだ！ 晩年の服だよ！ フォーマルな"
-"場面で使うんだ！ こんなの着れないよ  あなたは変人ですか？ ブラウンのスーツが"
-"必要です。"
+"いやいやいやいや！？ これは俺のグレーのスーツだ！ これはちゃんとした時に着る"
+"服だぞ！ こんなの着れないよ、お前変人なのか？ 必要なのは茶色のスーツだ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -10111,11 +10105,10 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
-"ああ、それはとても良いことです。 フーッ!  やっとこさ、威厳が出てきましたね  "
-"私のツノはまっすぐ？ いいね  助けてくれて本当にありがとう  これはプレゼント"
-"だ それに… ちょっとしたファッションのヒントにもなる 君にはちょっとした… 新し"
-"い…  冒険家のモチーフは、とても…レトロな感じがします。 一言アドバイスしてくれ"
-"ないか？ チャオ。"
+"ああ、とてもいい。 ふぅー! やっとこさ、威厳が出たな！ 俺のツノはまっすぐか？ "
+"よし。 助けてくれて本当にありがとうな、これはお礼だ。それに… ファッションの"
+"ちょっとしたヒントにもなる 君にはちょっとした… 新しい… 冒険家のモチーフは、と"
+"ても…レトロな感じがする。 一言アドバイスしてくれないか？ チャオ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
@@ -10123,8 +10116,8 @@ msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
-"見てください。 俺は牛だ。 お前はモンスターのエサだ。ベルトの下で経験を積むん"
-"だ！ 話し合おう…"
+"見てくれ。 俺は牛だ。 で、お前はモンスターのエサだ。ベルトの下で経験を積むん"
+"だ！ 話をしてみると…。"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -10132,8 +10125,8 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
-"私があなたに課したのは、本当に恐ろしい仕事に違いありません。もし、私にできる"
-"ことがあれば…おいしい新鮮なミルクを一杯飲んでみませんか？"
+"私はあなたに、本当に恐ろしい仕事を課してしまいました。私にできることは…新鮮な"
+"美味しい牛乳を一杯どうですか？"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
@@ -10141,8 +10134,7 @@ msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
 msgstr ""
-"あなたの助けを借りたいのですが、おそらくカタコンベを獣たちの冒涜から救ってか"
-"らにしましょう。"
+"助けを借りたいのですが、カタコンベを獣たちの冒涜から救ってからにしましょう。"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
@@ -10150,9 +10142,8 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
-"やってもらいたいことがあるのですが、見ず知らずの人に押し付けることはできませ"
-"ん。あなたがしばらくここにいてくれたら、私も安心してお願いできるかもしれませ"
-"ん。"
+"やってもらいたいことがあるのですが、見ず知らずの人に押し付けていいのものかど"
+"うか。しばらくここに留まるつもりなら、安心してお願いできるかもしれません。"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -10160,8 +10151,8 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
-"あなたには偉大な可能性があります。 運命を全うするために、いつか私にちょっとし"
-"た頼みごとをしてくれないだろうか？"
+"あなたには偉大な可能性が見えます。運命を果たしている間、いつか私の頼みごとを"
+"聞いてくれないだろうか？"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -10170,9 +10161,9 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
-"あなたは私を助けることができると思いますが、もう少し力をつけてからにしましょ"
-"う。教会の中の脅威を破壊するための、村の唯一のチャンスを傷つけたくありません"
-"からね"
+"あなたは私を助けることができると思いますが、もう少し力をつけてからの方が良い"
+"ようです。教会の脅威を打破できる、唯一のチャンスを傷つけたくはありませんから"
+"ね！"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
@@ -10186,8 +10177,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
-"通りすがりの観光客に説明する必要はないんだ！ 殺すべきモンスターはいないの"
-"か？ 後で話そう。 あなたが生きていれば…"
+"通りすがりの旅行者に説明する必要なんてない！ 殺すべきモンスターはいないのか"
+"よ？ 後で話そうぜ。 あんたが生きていればな…"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -10196,9 +10187,9 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
-"悩むのはやめよう。 私は本当に英雄的な人を探しているの  あなたは違うわ。 君は"
-"信用できないし、今にもモンスターに食われそうだ… 経験豊富なヒーローが必要なん"
-"だ"
+"悩むのはやめ。 俺は本当のヒーローを探してるんだ。あんたは違うな。 あんたは信"
+"用ならんし、今にもモンスターに食われそうだ… 経験豊富なヒーローが必要なんだ"
+"よ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
@@ -10215,15 +10206,14 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden."
 msgstr ""
-"わかった、牛を切るよ。 誤解させるつもりはなかったんだ。 家でくつろいでいた"
-"時、状況が不安定になって、床からモンスターの大群が出てきたんだ。 私はただ怖気"
-"づいただけです。 たまたまこのジャージを着ていてドアから飛び出したのですが、今"
-"となってはうどんのように滑稽に見えてしまいます。 普通の服を着ていれば、こんな"
-"ことにはならなかったのに。 ねえ、私の家に戻ってスーツを取ってきてくれない？ "
-"グレーじゃなくて茶色のやつ、あれは夕方に着るやつなんだ。 自分でやってもいいん"
-"だけど、こんな姿を誰かに見られたくないんだよね。 これを持って行ってくれ 必要"
-"になるかもしれない… 伸びすぎた植物を殺すためにね  私の家は、川の分岐点の南側"
-"にあります…ご存知ですよね…生い茂った菜園のある家です。"
+"わかった、牛を切るよ。 誤解させるつもりはなかったんだ。 家でくつろいでら、な"
+"んか変になって、床からモンスターの大群が出てきたんだ。 俺はただただ怖かった"
+"よ。 たまたま、このジャージを着ているときに外に飛び出したもんだから、馬鹿にさ"
+"れるてるよ。 普通の服を着ていれば、良かったんだけど。 なあ、俺の家に行って"
+"スーツを取ってきてくれないか？ 茶色のやつだよ、グレーじゃなくて。 自分でやっ"
+"てもいいんだけど、こんな姿を誰かに見られたくないんだよね。 必要になるかもしれ"
+"ないから、これを持って行ってくれ … 伸びすぎた植物を殺すためにね 。俺の家は、"
+"川の分岐点の南側だ…知ってるよな…生い茂った菜園のある家だよ。"
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
@@ -10233,9 +10223,9 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
-"今日は曇っていて気温も低い。 虚空に死霊術の網を張って、空飛ぶホラーの新しい亜"
-"種を2つ見つけました。 アドリアにバットグアノとブラックキャンドルを注文するの"
-"を忘れてはならない。"
+"今日は曇っていて涼しい。 虚空に死霊術の網を張って、空飛ぶホラーの新しい亜種を"
+"2つ見つけました。 エイドリアにバットグアノとブラックキャンドルを注文するのを"
+"忘れてないで。少し足りないから。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -10245,7 +10235,7 @@ msgid ""
 "no effect on this fearsome beast."
 msgstr ""
 "呪文、脅し、魔術、交渉を試みましたが、この汚い生き物には効果がありません。 小"
-"悪魔を奴隷にした私の方法は、この恐ろしい獣には効果がないようです。"
+"悪魔を奴隷にした手法も、この恐ろしい獣には効果がないようです。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
@@ -10267,9 +10257,9 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
-"暴言を吐く中で、その生物は自分の名前を漏らした—ナ・クルル。 私はその名前を調"
-"べようとしたが、小悪魔たちが何らかの方法で私の図書館を破壊した。 ナ・クル"
-"ル…。その名は私に冷たい恐怖を与えた。 本当の名前を考えるよりも、”クリー"
+"怒号の中、その生物は自分の名前を漏らした—ナ・クルル。 私はその名前を調べよう"
+"としたが、小悪魔たちが何らかの方法で、私の図書館を破壊してしまった。 ナ・クル"
+"ル…。その名は私を冷たい恐怖で満たした。 本当の名前で考えるよりも、”クリー"
 "チャー “としか考えたくない。"
 
 #. TRANSLATORS: Quest text read aloud from book
@@ -10280,10 +10270,10 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice."
 msgstr ""
-"閉じ込められた生物の怒りの遠吠えで、私は必要な睡眠をとることができない。 それ"
-"は、自分をボイドに送った者に対する怒りであり、自分をここに閉じ込めた私に対す"
-"る汚い呪いの言葉である。 その言葉は私の心を恐怖で満たしますが、その声を遮断す"
-"ることはできません。"
+"閉じ込められた生物の怒りの遠吠えで、ほとんど眠ることができない。 それは、自分"
+"をボイドに送った者に対する怒りであり、自分をここに閉じ込めた私に対する汚い呪"
+"いの言葉である。 その言葉は私の心を恐怖で満たすが、その声を遮断することはでき"
+"ない。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
@@ -10293,10 +10283,9 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge."
 msgstr ""
-"私の時間はすぐになくなってしまいます。 私は悪魔を弱める方法を記録し、その文章"
-"を隠さなければならない。悪魔の手下が私の知識を使って主君を解放する方法を見つ"
-"けないように。 この日記を見つけた人が、その知識を求めてくれることを願ってい"
-"る。"
+"私の時間はすぐに尽きてしまう。 悪魔を弱める方法を記録した書物を隠さなければな"
+"らない。悪魔の手下が、私の知識を使って主君を解放する方法を見つけないように。 "
+"この日記を見つけた人が、その知識を求めてくれることを願っている。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -10321,10 +10310,9 @@ msgstr ""
 "私は魔術で悪魔を操り、大きな壁の中に閉じ込めたが、それだけでは不十分だと思"
 "う。\n"
 " \n"
-"私の3つの魔道書にある呪文は、あなたに彼の領域への保護された入り口を提供します"
-"が、それは適切な順序で唱えた場合のみです。 入り口にあるレバーは障壁を取り除"
-"き、悪魔を解放します。 これらの呪文を使わないと、彼の力はあなたには勝てないか"
-"もしれません。"
+"3つの魔道書にある呪文は、正しい順序で唱えた場合にのみ。やつの領域への入口を開"
+"く。 入口にあるレバーは障壁を取り除き、悪魔を解放する。 それに触れてはなら"
+"ぬ！呪文を使った後でなければ、やつの力が強大すぎて倒せないだろう。"
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
