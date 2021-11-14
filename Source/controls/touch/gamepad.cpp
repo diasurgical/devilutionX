@@ -166,6 +166,43 @@ void InitializeVirtualGamepad()
 	manaButtonArea.position.y = directionPad.area.position.y - (directionPadSize + padButtonSize + padButtonSpacing) / 2;
 	manaButtonArea.radius = padButtonSize / 2;
 	manaButton.isUsable = []() { return !chrflag && !QuestLogIsOpen; };
+
+	VirtualGamepadState.isActive = false;
+}
+
+void ActivateVirtualGamepad()
+{
+	VirtualGamepadState.isActive = true;
+}
+
+void DeactivateVirtualGamepad()
+{
+	VirtualGamepadState.Deactivate();
+}
+
+void VirtualGamepad::Deactivate()
+{
+	isActive = false;
+
+	menuPanel.Deactivate();
+	directionPad.Deactivate();
+	standButton.Deactivate();
+
+	primaryActionButton.Deactivate();
+	secondaryActionButton.Deactivate();
+	spellActionButton.Deactivate();
+	cancelButton.Deactivate();
+
+	healthButton.Deactivate();
+	manaButton.Deactivate();
+}
+
+void VirtualMenuPanel::Deactivate()
+{
+	charButton.Deactivate();
+	questsButton.Deactivate();
+	inventoryButton.Deactivate();
+	mapButton.Deactivate();
 }
 
 void VirtualDirectionPad::UpdatePosition(Point touchCoordinates)
@@ -197,6 +234,21 @@ void VirtualDirectionPad::UpdatePosition(Point touchCoordinates)
 	isDownPressed = PointsDown(angle);
 	isLeftPressed = PointsLeft(angle);
 	isRightPressed = PointsRight(angle);
+}
+
+void VirtualDirectionPad::Deactivate()
+{
+	position = area.position;
+	isUpPressed = false;
+	isDownPressed = false;
+	isLeftPressed = false;
+	isRightPressed = false;
+}
+
+void VirtualButton::Deactivate()
+{
+	isHeld = false;
+	didStateChange = false;
 }
 
 } // namespace devilution
