@@ -119,7 +119,7 @@ void HandleTouchEvent(const SDL_Event &event)
 
 bool VirtualGamepadEventHandler::Handle(const SDL_Event &event)
 {
-	if (!IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
+	if (!VirtualGamepadState.isActive || !IsAnyOf(event.type, SDL_FINGERDOWN, SDL_FINGERUP, SDL_FINGERMOTION)) {
 		VirtualGamepadState.primaryActionButton.didStateChange = false;
 		VirtualGamepadState.secondaryActionButton.didStateChange = false;
 		VirtualGamepadState.spellActionButton.didStateChange = false;

@@ -1521,6 +1521,7 @@ void FreeGameMem()
 	FreeMonsterSnd();
 	FreeTownerGFX();
 #ifdef VIRTUAL_GAMEPAD
+	DeactivateVirtualGamepad();
 	FreeVirtualGamepadGFX();
 #endif
 }
@@ -2041,6 +2042,10 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			SyncNakrulRoom();
 		}
 	}
+
+#ifdef VIRTUAL_GAMEPAD
+	ActivateVirtualGamepad();
+#endif
 
 	if (currlevel >= 17)
 		music_start(currlevel > 20 ? TMUSIC_L5 : TMUSIC_L6);
