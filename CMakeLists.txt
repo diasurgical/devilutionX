@@ -239,6 +239,10 @@ if(PIE)
   set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 endif()
 
+if(USE_SDL1)
+  set(VIRTUAL_GAMEPAD OFF)
+endif()
+
 if(NONET)
   # Fix dependent options if platform defs disable network
   set(DISABLE_TCP ON)

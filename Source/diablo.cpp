@@ -931,7 +931,7 @@ void DiabloInit()
 		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	InitializeVirtualGamepad();
 #endif
 
@@ -1064,7 +1064,7 @@ void LoadLvlGFX()
 void LoadAllGFX()
 {
 	IncProgress();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	InitVirtualGamepadGFX(renderer);
 #endif
 	IncProgress();
@@ -1520,7 +1520,7 @@ void FreeGameMem()
 	FreeObjectGFX();
 	FreeMonsterSnd();
 	FreeTownerGFX();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	FreeVirtualGamepadGFX();
 #endif
 }
@@ -1860,7 +1860,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 			LoadAllGFX();
 		} else {
 			IncProgress();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 			InitVirtualGamepadGFX(renderer);
 #endif
 			IncProgress();
@@ -1963,7 +1963,7 @@ void LoadGameLevel(bool firstflag, lvl_entry lvldir)
 		IncProgress();
 		InitMonsters();
 		IncProgress();
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 		InitVirtualGamepadGFX(renderer);
 #endif
 		InitMissileGFX(gbIsHellfire);

@@ -53,7 +53,7 @@ namespace devilution {
 #define DEFAULT_AUDIO_RESAMPLING_QUALITY 5
 #endif
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 #define AUTO_PICKUP_DEFAULT(bValue) true
 #else
 #define AUTO_PICKUP_DEFAULT(bValue) bValue

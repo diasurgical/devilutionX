@@ -160,7 +160,7 @@ AxisDirection GetLeftStickOrDpadDirection(bool allowDpad)
 	bool isLeftPressed = stickX <= -0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_LEFT));
 	bool isRightPressed = stickX >= 0.5 || (allowDpad && IsControllerButtonPressed(ControllerButton_BUTTON_DPAD_RIGHT));
 
-#if defined(VIRTUAL_GAMEPAD) && !defined(USE_SDL1)
+#ifdef VIRTUAL_GAMEPAD
 	isUpPressed |= VirtualGamepadState.directionPad.isUpPressed;
 	isDownPressed |= VirtualGamepadState.directionPad.isDownPressed;
 	isLeftPressed |= VirtualGamepadState.directionPad.isLeftPressed;
