@@ -367,6 +367,11 @@ struct Item {
 		return IsScroll() && _iSpell == spellId;
 	}
 
+	[[nodiscard]] bool KeyAttributesMatch(int32_t seed, _item_indexes itemIndex, uint16_t createInfo)
+	{
+		return _iSeed == seed && IDidx == itemIndex && _iCreateInfo == createInfo;
+	}
+
 	UiFlags getTextColor() const
 	{
 		switch (_iMagical) {
