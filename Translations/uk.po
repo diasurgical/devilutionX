@@ -1033,17 +1033,17 @@ msgstr[2] "Посох ({:d} зарядів)"
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1580
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
-msgstr ""
+msgstr "Мана: {:d}  Шкд: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1582
 msgid "Mana: {:d}   Dam: n/a"
-msgstr ""
+msgstr "Мана: {:d}  Шкд: n/a"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1585
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
-msgstr ""
+msgstr "Мана: {:d}  Шкд: 1/3 жит цілі"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1643
