@@ -1,11 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-<<<<<<< Updated upstream
-"POT-Creation-Date: 2021-10-31 23:17+0100\n"
-=======
-"POT-Creation-Date: 2021-11-15 17:59+0100\n"
->>>>>>> Stashed changes
+"POT-Creation-Date: 2021-09-21 03:39+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -14,7 +10,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.3\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -315,55 +311,15 @@ msgstr "Пръстенът на хилядата"
 msgid "\tNo souls were sold in the making of this game."
 msgstr "\tПри създаването на тази игра не е продадена нито една душа."
 
-#: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
-#: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
-#: Source/DiabloUI/selgame.cpp:193 Source/DiabloUI/selgame.cpp:211
-#: Source/DiabloUI/selgame.cpp:352 Source/DiabloUI/selgame.cpp:428
-#: Source/DiabloUI/selhero.cpp:186 Source/DiabloUI/selhero.cpp:211
-#: Source/DiabloUI/selhero.cpp:281 Source/DiabloUI/selhero.cpp:536
+#: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
+#: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
+#: Source/DiabloUI/selgame.cpp:163 Source/DiabloUI/selgame.cpp:181
+#: Source/DiabloUI/selgame.cpp:314 Source/DiabloUI/selgame.cpp:387
+#: Source/DiabloUI/selhero.cpp:185 Source/DiabloUI/selhero.cpp:210
+#: Source/DiabloUI/selhero.cpp:280 Source/DiabloUI/selhero.cpp:525
 #: Source/DiabloUI/selok.cpp:68
 msgid "OK"
 msgstr "Добре"
-
-#: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
-msgid "Switch to Diablo"
-<<<<<<< Updated upstream
-msgstr "Режим Diablo"
-=======
-msgstr "Режим Диабло"
->>>>>>> Stashed changes
-
-#: Source/DiabloUI/extrasmenu.cpp:41
-msgid "Switch to Hellfire"
-msgstr "Режим Hellfire"
-
-#: Source/DiabloUI/extrasmenu.cpp:43
-msgid "Switch to Fullgame"
-<<<<<<< Updated upstream
-msgstr "Режим Пълна игра"
-
-#: Source/DiabloUI/extrasmenu.cpp:43
-msgid "Switch to Shareware"
-msgstr "Режим пробна версия"
-=======
-msgstr "Пълна версия"
-
-#: Source/DiabloUI/extrasmenu.cpp:43
-msgid "Switch to Shareware"
-msgstr "Пробна версия"
->>>>>>> Stashed changes
-
-#: Source/DiabloUI/extrasmenu.cpp:44
-msgid "Replay Intro"
-msgstr "Начално видео"
-
-#: Source/DiabloUI/extrasmenu.cpp:45
-msgid "Support"
-msgstr "Поддръжка"
-
-#: Source/DiabloUI/extrasmenu.cpp:46 Source/gamemenu.cpp:61
-msgid "Previous Menu"
-msgstr "Предишно меню"
 
 #: Source/DiabloUI/mainmenu.cpp:36
 msgid "Single Player"
@@ -374,167 +330,148 @@ msgid "Multi Player"
 msgstr "Групова игра"
 
 #: Source/DiabloUI/mainmenu.cpp:38
-msgid "Extras"
-<<<<<<< Updated upstream
-msgstr "Допълнения"
-=======
-msgstr "Екстри"
->>>>>>> Stashed changes
+msgid "Replay Intro"
+msgstr "Начално видео"
 
 #: Source/DiabloUI/mainmenu.cpp:39
+msgid "Support"
+msgstr "Поддръжка"
+
+#: Source/DiabloUI/mainmenu.cpp:40
 msgid "Show Credits"
 msgstr "Виж създателите"
 
-#: Source/DiabloUI/mainmenu.cpp:40
+#: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Hellfire"
 msgstr "Изход от Hellfire"
 
-#: Source/DiabloUI/mainmenu.cpp:40
+#: Source/DiabloUI/mainmenu.cpp:41
 msgid "Exit Diablo"
 msgstr "Изход от Diablo"
 
-#: Source/DiabloUI/mainmenu.cpp:55
-msgid "Shareware"
-msgstr "Пробна версия"
+#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
+#: Source/DiabloUI/mainmenu.cpp:99
+msgid ""
+"The Diablo introduction cinematic is only available in the full retail "
+"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
+msgstr ""
+"Началното видео е налично само в пълната версия на играта. Посетете https://"
+"www.gog.com/game/diablo, за да я закупите."
 
-#: Source/DiabloUI/progress.cpp:36 Source/DiabloUI/selconn.cpp:82
-#: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
-#: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
+#: Source/DiabloUI/progress.cpp:48 Source/DiabloUI/selconn.cpp:76
+#: Source/DiabloUI/selhero.cpp:188 Source/DiabloUI/selhero.cpp:213
+#: Source/DiabloUI/selhero.cpp:283 Source/DiabloUI/selhero.cpp:533
 msgid "Cancel"
 msgstr "Отказ"
 
-#: Source/DiabloUI/selconn.cpp:13
+#: Source/DiabloUI/selconn.cpp:38 Source/DiabloUI/selgame.cpp:77
+#: Source/DiabloUI/selgame.cpp:372
 msgid "Client-Server (TCP)"
 msgstr "Клиент-сървър (TCP)"
 
-#: Source/DiabloUI/selconn.cpp:14
+#: Source/DiabloUI/selconn.cpp:41
 msgid "Loopback"
 msgstr "Обратна връзка"
 
-<<<<<<< Updated upstream
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
-#: Source/DiabloUI/selgame.cpp:505
-=======
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
-#: Source/DiabloUI/selgame.cpp:510
->>>>>>> Stashed changes
+#: Source/DiabloUI/selconn.cpp:47 Source/DiabloUI/selgame.cpp:434
+#: Source/DiabloUI/selgame.cpp:452
 msgid "Multi Player Game"
 msgstr "Групова игра"
 
-#: Source/DiabloUI/selconn.cpp:59
+#: Source/DiabloUI/selconn.cpp:53
 msgid "Requirements:"
 msgstr "Изисквания:"
 
-#: Source/DiabloUI/selconn.cpp:65
+#: Source/DiabloUI/selconn.cpp:59
 msgid "no gateway needed"
 msgstr "не е необходим регион"
 
-#: Source/DiabloUI/selconn.cpp:71
+#: Source/DiabloUI/selconn.cpp:65
 msgid "Select Connection"
 msgstr "Изберете връзка"
 
-#: Source/DiabloUI/selconn.cpp:74
+#: Source/DiabloUI/selconn.cpp:68
 msgid "Change Gateway"
 msgstr "Промяна на регион"
 
-#: Source/DiabloUI/selconn.cpp:107
+#: Source/DiabloUI/selconn.cpp:101
 msgid "All computers must be connected to a TCP-compatible network."
 msgstr "Всички компютри трябва да са свързани с TCP-съвместима мрежа."
 
-#: Source/DiabloUI/selconn.cpp:111
+#: Source/DiabloUI/selconn.cpp:105
 msgid "All computers must be connected to the internet."
 msgstr "Всички компютри трябва да са свързани с интернет."
 
-#: Source/DiabloUI/selconn.cpp:115
+#: Source/DiabloUI/selconn.cpp:109
 msgid "Play by yourself with no network exposure."
 msgstr "Играй в единична игра, без достъп до интернет."
 
-#: Source/DiabloUI/selconn.cpp:120
+#: Source/DiabloUI/selconn.cpp:114
 msgid "Players Supported: {:d}"
 msgstr "Брой играчи: {:d}"
 
-#: Source/DiabloUI/selgame.cpp:82 Source/DiabloUI/selgame.cpp:414
+#: Source/DiabloUI/selgame.cpp:80 Source/DiabloUI/selgame.cpp:375
 msgid "Description:"
 msgstr "Описание:"
 
-#: Source/DiabloUI/selgame.cpp:88
+#: Source/DiabloUI/selgame.cpp:86
 msgid "Select Action"
 msgstr "Изберете действие"
 
-#: Source/DiabloUI/selgame.cpp:91 Source/DiabloUI/selgame.cpp:181
-#: Source/DiabloUI/selgame.cpp:333
+#: Source/DiabloUI/selgame.cpp:88 Source/DiabloUI/selgame.cpp:151
+#: Source/DiabloUI/selgame.cpp:295
 msgid "Create Game"
 msgstr "Създай игра"
 
-#: Source/DiabloUI/selgame.cpp:93
-msgid "Create Public Game"
-msgstr "Създай публична игра"
-
-#: Source/DiabloUI/selgame.cpp:94
+#: Source/DiabloUI/selgame.cpp:89
 msgid "Join Game"
 msgstr "Присъедини се към игра"
 
-#: Source/DiabloUI/selgame.cpp:106 Source/DiabloUI/selgame.cpp:196
-#: Source/DiabloUI/selgame.cpp:214 Source/DiabloUI/selgame.cpp:355
-#: Source/DiabloUI/selgame.cpp:431
+#: Source/DiabloUI/selgame.cpp:97 Source/DiabloUI/selgame.cpp:166
+#: Source/DiabloUI/selgame.cpp:184 Source/DiabloUI/selgame.cpp:317
+#: Source/DiabloUI/selgame.cpp:390
 msgid "CANCEL"
 msgstr "ОТКАЗ"
 
-#: Source/DiabloUI/selgame.cpp:122
+#: Source/DiabloUI/selgame.cpp:106
 msgid "Create a new game with a difficulty setting of your choice."
-msgstr "Създай игра с трудност по Ваш избор."
+msgstr "Създай игра с трудност по избор."
 
-#: Source/DiabloUI/selgame.cpp:125
-msgid ""
-"Create a new public game that anyone can join with a difficulty setting of "
-"your choice."
-<<<<<<< Updated upstream
-msgstr "Създай публична игра с трудност по избор."
-=======
-msgstr "Създай публична игра с трудност по Ваш избор."
->>>>>>> Stashed changes
-
-#: Source/DiabloUI/selgame.cpp:128
+#: Source/DiabloUI/selgame.cpp:109
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr "Напишете IP или hostname и се присъединете към текущата игра."
 
-#: Source/DiabloUI/selgame.cpp:131
-msgid "Join the public game already in progress at this address."
-msgstr ""
-"Присъединете към текущата публична игра на този адрес\n"
-"."
-
-#: Source/DiabloUI/selgame.cpp:184
+#: Source/DiabloUI/selgame.cpp:154
 msgid "Select Difficulty"
 msgstr "Изберете трудност"
 
-#: Source/DiabloUI/selgame.cpp:186 Source/DiabloUI/selgame.cpp:239
-#: Source/DiabloUI/selgame.cpp:344 Source/DiabloUI/selgame.cpp:364
-#: Source/diablo.cpp:1446
+#: Source/DiabloUI/selgame.cpp:156 Source/DiabloUI/selgame.cpp:203
+#: Source/DiabloUI/selgame.cpp:306 Source/DiabloUI/selgame.cpp:326
+#: Source/diablo.cpp:1434
 msgid "Normal"
 msgstr "Нормалнa"
 
-#: Source/DiabloUI/selgame.cpp:187 Source/DiabloUI/selgame.cpp:243
-#: Source/diablo.cpp:1447
+#: Source/DiabloUI/selgame.cpp:157 Source/DiabloUI/selgame.cpp:207
+#: Source/diablo.cpp:1435
 msgid "Nightmare"
 msgstr "Кошмарнa"
 
-#: Source/DiabloUI/selgame.cpp:188 Source/DiabloUI/selgame.cpp:247
-#: Source/diablo.cpp:1448
+#: Source/DiabloUI/selgame.cpp:158 Source/DiabloUI/selgame.cpp:211
+#: Source/diablo.cpp:1436
 msgid "Hell"
 msgstr "Ад на земята"
 
-#: Source/DiabloUI/selgame.cpp:202
+#: Source/DiabloUI/selgame.cpp:172
 msgid "Join TCP Games"
 msgstr "Присъедини се към TCP игри"
 
-#: Source/DiabloUI/selgame.cpp:205 Source/DiabloUI/selgame.cpp:208
+#: Source/DiabloUI/selgame.cpp:175 Source/DiabloUI/selgame.cpp:178
 msgid "Enter address"
 msgstr "Въведете адрес"
 
-#: Source/DiabloUI/selgame.cpp:240
+#: Source/DiabloUI/selgame.cpp:204
 msgid ""
 "Normal Difficulty\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -542,7 +479,7 @@ msgstr ""
 "Нормална трудност\n"
 "Тук начинаещия герой започва своето приключение да срази Диабло."
 
-#: Source/DiabloUI/selgame.cpp:244
+#: Source/DiabloUI/selgame.cpp:208
 msgid ""
 "Nightmare Difficulty\n"
 "The denizens of the Labyrinth have been bolstered and will prove to be a "
@@ -552,7 +489,7 @@ msgstr ""
 "Обитателите на Лабиринта са подсилени и ще бъдат по-голямо "
 "предизвикателство. Препоръчително за герои които имат опит."
 
-#: Source/DiabloUI/selgame.cpp:248
+#: Source/DiabloUI/selgame.cpp:212
 msgid ""
 "Hell Difficulty\n"
 "The most powerful of the underworld's creatures lurk at the gateway into "
@@ -562,7 +499,7 @@ msgstr ""
 "Най-могъщите същества от пъкъла се таят пред портите на Ада. Само най-"
 "опитните могат да поемат този риск."
 
-#: Source/DiabloUI/selgame.cpp:264
+#: Source/DiabloUI/selgame.cpp:227
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
@@ -570,7 +507,7 @@ msgstr ""
 "Вашият герой трябва да достигне ниво 20, преди да можете да се присъедините "
 "към игра от Кошмарна трудност."
 
-#: Source/DiabloUI/selgame.cpp:266
+#: Source/DiabloUI/selgame.cpp:229
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
@@ -578,23 +515,23 @@ msgstr ""
 "Вашият герой трябва да достигне ниво 30, преди да можете да се присъедините "
 "към игра от Адска трудност."
 
-#: Source/DiabloUI/selgame.cpp:342
+#: Source/DiabloUI/selgame.cpp:304
 msgid "Select Game Speed"
 msgstr "Изберете скорост"
 
-#: Source/DiabloUI/selgame.cpp:345 Source/DiabloUI/selgame.cpp:368
+#: Source/DiabloUI/selgame.cpp:307 Source/DiabloUI/selgame.cpp:330
 msgid "Fast"
 msgstr "Бърза"
 
-#: Source/DiabloUI/selgame.cpp:346 Source/DiabloUI/selgame.cpp:372
+#: Source/DiabloUI/selgame.cpp:308 Source/DiabloUI/selgame.cpp:334
 msgid "Faster"
 msgstr "По-бърза"
 
-#: Source/DiabloUI/selgame.cpp:347 Source/DiabloUI/selgame.cpp:376
+#: Source/DiabloUI/selgame.cpp:309 Source/DiabloUI/selgame.cpp:338
 msgid "Fastest"
 msgstr "Най-бърза"
 
-#: Source/DiabloUI/selgame.cpp:365
+#: Source/DiabloUI/selgame.cpp:327
 msgid ""
 "Normal Speed\n"
 "This is where a starting character should begin the quest to defeat Diablo."
@@ -602,7 +539,7 @@ msgstr ""
 "Нормална скорост\n"
 "Тук начинаещия герой започва своето приключение да срази Диабло."
 
-#: Source/DiabloUI/selgame.cpp:369
+#: Source/DiabloUI/selgame.cpp:331
 msgid ""
 "Fast Speed\n"
 "The denizens of the Labyrinth have been hastened and will prove to be a "
@@ -612,7 +549,7 @@ msgstr ""
 "Обитателите на Лабиринта са ускорени и ще бъдат по-голямо предизвикателство. "
 "Препоръчително за герои които имат опит."
 
-#: Source/DiabloUI/selgame.cpp:373
+#: Source/DiabloUI/selgame.cpp:335
 msgid ""
 "Faster Speed\n"
 "Most monsters of the dungeon will seek you out quicker than ever before. "
@@ -622,7 +559,7 @@ msgstr ""
 "Повечето чудовища от подземието ще Ви издирят по-бързо от когато и да било. "
 "Само опитни герои могат да изпробват късмета си на тази скорост."
 
-#: Source/DiabloUI/selgame.cpp:377
+#: Source/DiabloUI/selgame.cpp:339
 msgid ""
 "Fastest Speed\n"
 "The minions of the underworld will rush to attack without hesitation. Only a "
@@ -632,77 +569,77 @@ msgstr ""
 "Слуги на подземното царство ще нападат изненадващо и без задръжки. Само "
 "някой със светкавични рефлекси би се справил с това темпо."
 
-#: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
+#: Source/DiabloUI/selgame.cpp:381 Source/DiabloUI/selgame.cpp:384
 msgid "Enter Password"
 msgstr "Въведи парола"
 
-#: Source/DiabloUI/selgame.cpp:448
+#: Source/DiabloUI/selgame.cpp:407
 msgid "The host is running a different game than you."
 msgstr "Домакинът играе различна игра, в сравнение с Вас."
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
-#: Source/DiabloUI/selgame.cpp:451
+#: Source/DiabloUI/selgame.cpp:410
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
 msgstr "Вашата версия {:s} не съвпада с тази на домакина {:d}.{:d}.{:d}."
 
-#: Source/DiabloUI/selhero.cpp:100
+#: Source/DiabloUI/selhero.cpp:99
 msgid "New Hero"
 msgstr "Нов герой"
 
-#: Source/DiabloUI/selhero.cpp:164
+#: Source/DiabloUI/selhero.cpp:163
 msgid "Choose Class"
 msgstr "Изберете клас"
 
-#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:22
+#: Source/DiabloUI/selhero.cpp:167 Source/panels/charpanel.cpp:22
 msgid "Warrior"
 msgstr "Войн"
 
-#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:23
+#: Source/DiabloUI/selhero.cpp:168 Source/panels/charpanel.cpp:23
 msgid "Rogue"
 msgstr "Разбойник"
 
-#: Source/DiabloUI/selhero.cpp:170 Source/panels/charpanel.cpp:24
+#: Source/DiabloUI/selhero.cpp:169 Source/panels/charpanel.cpp:24
 msgid "Sorcerer"
 msgstr "Магьосник"
 
-#: Source/DiabloUI/selhero.cpp:172 Source/panels/charpanel.cpp:25
+#: Source/DiabloUI/selhero.cpp:171 Source/panels/charpanel.cpp:25
 msgid "Monk"
 msgstr "Монах"
 
-#: Source/DiabloUI/selhero.cpp:175 Source/panels/charpanel.cpp:26
+#: Source/DiabloUI/selhero.cpp:174 Source/panels/charpanel.cpp:26
 msgid "Bard"
 msgstr "Бард"
 
-#: Source/DiabloUI/selhero.cpp:178 Source/panels/charpanel.cpp:27
+#: Source/DiabloUI/selhero.cpp:177 Source/panels/charpanel.cpp:27
 msgid "Barbarian"
 msgstr "Варварин"
 
-#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
+#: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
 msgid "New Multi Player Hero"
 msgstr "Нов герой за Групова игра"
 
-#: Source/DiabloUI/selhero.cpp:195 Source/DiabloUI/selhero.cpp:269
+#: Source/DiabloUI/selhero.cpp:194 Source/DiabloUI/selhero.cpp:268
 msgid "New Single Player Hero"
 msgstr "Нов герой за Единична игра"
 
-#: Source/DiabloUI/selhero.cpp:203
+#: Source/DiabloUI/selhero.cpp:202
 msgid "Save File Exists"
-msgstr "Запис вече съществува"
+msgstr "Запис с такова име вече съществува"
 
-#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:38
+#: Source/DiabloUI/selhero.cpp:205 Source/gamemenu.cpp:38
 msgid "Load Game"
 msgstr "Зареди игра"
 
-#: Source/DiabloUI/selhero.cpp:207 Source/gamemenu.cpp:37
+#: Source/DiabloUI/selhero.cpp:206 Source/gamemenu.cpp:37
 #: Source/gamemenu.cpp:48
 msgid "New Game"
 msgstr "Нова игра"
 
-#: Source/DiabloUI/selhero.cpp:217 Source/DiabloUI/selhero.cpp:551
+#: Source/DiabloUI/selhero.cpp:216 Source/DiabloUI/selhero.cpp:540
 msgid "Single Player Characters"
 msgstr "Герои за Единична игра"
 
-#: Source/DiabloUI/selhero.cpp:263
+#: Source/DiabloUI/selhero.cpp:262
 msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
@@ -710,11 +647,11 @@ msgstr ""
 "Разбойникът и магьосникът са достъпни само в пълната версия на играта. "
 "Посетете https://www.gog.com/game/diablo, за да я закупите."
 
-#: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
+#: Source/DiabloUI/selhero.cpp:274 Source/DiabloUI/selhero.cpp:277
 msgid "Enter Name"
 msgstr "Въведете име"
 
-#: Source/DiabloUI/selhero.cpp:307
+#: Source/DiabloUI/selhero.cpp:306
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
@@ -723,65 +660,57 @@ msgstr ""
 "непозволени думи.\n"
 
 #. TRANSLATORS: Error Message
-#: Source/DiabloUI/selhero.cpp:314
+#: Source/DiabloUI/selhero.cpp:313
 msgid "Unable to create character."
 msgstr "Не е възможно създаването на герой."
 
-#: Source/DiabloUI/selhero.cpp:468 Source/DiabloUI/selhero.cpp:471
+#: Source/DiabloUI/selhero.cpp:467 Source/DiabloUI/selhero.cpp:470
 msgid "Level:"
 msgstr "Ниво:"
 
-#: Source/DiabloUI/selhero.cpp:476
+#: Source/DiabloUI/selhero.cpp:475
 msgid "Strength:"
 msgstr "Сила:"
 
-#: Source/DiabloUI/selhero.cpp:481
+#: Source/DiabloUI/selhero.cpp:480
 msgid "Magic:"
 msgstr "Магия:"
 
-#: Source/DiabloUI/selhero.cpp:486
+#: Source/DiabloUI/selhero.cpp:485
 msgid "Dexterity:"
 msgstr "Сръчност:"
 
-#: Source/DiabloUI/selhero.cpp:491
+#: Source/DiabloUI/selhero.cpp:490
 msgid "Vitality:"
 msgstr "Жизненост:"
 
-#: Source/DiabloUI/selhero.cpp:497
+#: Source/DiabloUI/selhero.cpp:496
 msgid "Savegame:"
 msgstr "Номер запис:"
 
-#: Source/DiabloUI/selhero.cpp:510
+#: Source/DiabloUI/selhero.cpp:508
 msgid "Select Hero"
 msgstr "Изберете герой"
 
-#: Source/DiabloUI/selhero.cpp:539
+#: Source/DiabloUI/selhero.cpp:528
 msgid "Delete"
 msgstr "Изтрий"
 
-#: Source/DiabloUI/selhero.cpp:549
+#: Source/DiabloUI/selhero.cpp:538
 msgid "Multi Player Characters"
 msgstr "Герои за Групова игра"
 
-#: Source/DiabloUI/selhero.cpp:599
+#: Source/DiabloUI/selhero.cpp:580
 msgid "Delete Multi Player Hero"
 msgstr "Изтрий Герой за Групова игра"
 
-#: Source/DiabloUI/selhero.cpp:601
+#: Source/DiabloUI/selhero.cpp:582
 msgid "Delete Single Player Hero"
 msgstr "Изтрий Герой за Единична игра"
 
-#: Source/DiabloUI/selhero.cpp:603
+#: Source/DiabloUI/selhero.cpp:584
 msgid "Are you sure you want to delete the character \"{:s}\"?"
 msgstr "Наистина ли искате да изтриете героя \"{:s}\"?"
-
-#: Source/DiabloUI/selstart.cpp:43
-msgid "Enter Hellfire"
-<<<<<<< Updated upstream
-msgstr "Режим Hellfire"
-=======
-msgstr "Вход в Hellfire"
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
@@ -792,80 +721,77 @@ msgid "No"
 msgstr "Не"
 
 #: Source/DiabloUI/support_lines.cpp:8
-msgid ""
-"We maintain a chat server at Discord.gg/YQKCAYQ Follow the links to join our "
-"community where we talk about things related to Diablo, and the Hellfire "
-"expansion."
+msgid "GOG.com maintains a web site at https://www.gog.com/forum/diablo"
 msgstr ""
-<<<<<<< Updated upstream
-"Поддържаме Чат сървър на Discord.gg/YQKCAYQ Присъединете се към нашата "
-"общност, където можем да говорим за всичко свързано с Diablo и допълнението "
-"Hellfire."
-=======
-"Поддържаме чат сървър на Discord.gg/YQKCAYQ Следвайте връзката за да се "
-"присъедините към нашата общност където дискутираме всичко свързано с Diablo "
-"и допълнението Hellfire."
->>>>>>> Stashed changes
+"Страница на играта в GOG.com се намира на адрес, https://www.gog.com/forum/"
+"diablo"
+
+#: Source/DiabloUI/support_lines.cpp:9
+msgid "Follow the links to visit the discussion boards associated with Diablo."
+msgstr "Използвайте връзката, за да посетите интернет форума за Diablo."
 
 #: Source/DiabloUI/support_lines.cpp:10
+msgid "and the Hellfire expansion."
+msgstr "и допълнението Hellfire."
+
+#: Source/DiabloUI/support_lines.cpp:12
 msgid ""
-"DevilutionX is maintained by Diasurgical, issues and bugs can be reported at "
-"this address: https://github.com/diasurgical/devilutionX To help us better "
-"serve you, please be sure to include the version number, operating system, "
-"and the nature of the problem."
+"DevilutionX is maintained by Diasurgical, issues and bugs can be reported"
 msgstr ""
 "DevilutionX е поддържан от Diasurgical, сведения за проблеми и бъгове могат "
-"да бъдат докладвани на: https://github.com/diasurgical/devilutionX За да "
-"предложим по-добро качество на продукта, моля, посочете номер на версията, "
-"операционна система и естеството на проблема."
+"да"
 
 #: Source/DiabloUI/support_lines.cpp:13
-msgid "Disclaimer:"
-msgstr "Отказ от отговорност:"
+msgid "at this address: https://github.com/diasurgical/devilutionX"
+msgstr "бъдат докладвани на: https://github.com/diasurgical/devilutionX"
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
-"\tDevilutionX is not supported or maintained by Blizzard Entertainment, nor "
-"GOG.com. Neither Blizzard Entertainment nor GOG.com has tested or certified "
-"the quality or compatibility of DevilutionX. All inquiries regarding "
-"DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
-"or GOG.com."
+"To help us better serve you, please be sure to include the version number,"
 msgstr ""
-"\tDevilutionX не е обвързан и/или поддържан от Blizzard Entertainment, нито "
-"от GOG.com. Blizzard Entertainment или GOG.com не са изпитали или "
-"сертифицирали качеството и съвместимостта на DevilutionX. Всички Въпроси за "
-"DevilutionX трябва да бъдат насочени към Diasurgical, и не към Blizzard "
-"Entertainment или GOG.com."
+"За да предложим по-добро качество на продукта, моля, посочете номер на "
+"версията,"
 
-#: Source/DiabloUI/support_lines.cpp:17
+#: Source/DiabloUI/support_lines.cpp:15
+msgid "operating system, and the nature of the problem."
+msgstr "операционна система и естеството на проблема."
+
+#: Source/DiabloUI/support_lines.cpp:18
+msgid "Disclaimer:"
+msgstr "Отказ от отговорност:"
+
+#: Source/DiabloUI/support_lines.cpp:19
+msgid "  DevilutionX is not supported or maintained by Blizzard Entertainment,"
+msgstr "  DevilutionX не е обвързан и/или поддържан от Blizzard Entertainment,"
+
+#: Source/DiabloUI/support_lines.cpp:20
+msgid "  nor GOG.com. Neither Blizzard Entertainment or GOG.com has not tested"
+msgstr "  нито от GOG.com. Blizzard Entertainment или GOG.com не са изпитали"
+
+#: Source/DiabloUI/support_lines.cpp:21
 msgid ""
-"\tThis port makes use of CharisSILB, Unifont, and Noto which are licensed "
-"under the SIL Open Font License, as well as Twitmoji which is licensed under "
-"CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
-"license. See the ReadMe for further details."
-msgstr ""
-<<<<<<< Updated upstream
-"\tТози порт използва шрифтовете CharisSILB, Unifont, и Noto лицензирани под "
-"SIL Open Font License, както и Twitmoji лицензирани под CC-BY 4.0. Този порт "
-"използва също SDL, лицензиран под zlib-license. Виж ReadMe (ПрочетиМе) за "
-"повече информация."
-=======
-"\tТози порт използва шрифтовете CharisSILB, Unifont, and Noto лицензирани "
-"под SIL Open Font License, както и Twitmoji лицензирани под CC-BY 4.0. Този "
-"порт използва също SDL, лицензиран под zlib-license. Виж ReadMe (ПрочетиМе) "
-"текстов файл)за повече информация."
->>>>>>> Stashed changes
+"  or certified the quality or compatibility of DevilutionX. All inquiries"
+msgstr "  или сертифицирали качеството и съвместимостта на DevilutionX. Всички"
+
+#: Source/DiabloUI/support_lines.cpp:22
+msgid ""
+"  regarding DevilutionX should be directed to Diasurgical, not to Blizzard"
+msgstr "  Въпроси за DevilutionX трябва да бъдат насочени към Diasurgical,"
+
+#: Source/DiabloUI/support_lines.cpp:23
+msgid "  Entertainment or GOG.com."
+msgstr "  и не към Blizzard Entertainment или GOG.com."
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Запазени права © 1996-2001 Blizzard Entertainment"
 
-#: Source/appfat.cpp:38
+#: Source/appfat.cpp:37
 msgid "Error"
 msgstr "Грешка"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
-#: Source/appfat.cpp:102
+#: Source/appfat.cpp:101
 msgid ""
 "{:s}\n"
 "\n"
@@ -875,34 +801,22 @@ msgstr ""
 "\n"
 "Изглежда има грешка в {:s} при ред {:d}"
 
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:116
-=======
-#: Source/appfat.cpp:117
->>>>>>> Stashed changes
+#: Source/appfat.cpp:115
 msgid ""
-"Unable to open main data archive ({:s}).\n"
+"Unable to open main data archive (diabdat.mpq or spawn.mpq).\n"
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"Неуспешно прочитане на водещ файлов архив ({:s}).\n"
+"Неуспешно прочитане на водещ файлов архив (diabdat.mpq или spawn.mpq).\n"
 "\n"
 "Уверете се, че се съответният се намира в папката на играта."
 
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:122
-=======
-#: Source/appfat.cpp:123
->>>>>>> Stashed changes
+#: Source/appfat.cpp:119
 msgid "Data File Error"
 msgstr "Грешка при прочитане на данни от файл"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:130
-=======
-#: Source/appfat.cpp:131
->>>>>>> Stashed changes
+#: Source/appfat.cpp:127
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -910,224 +824,183 @@ msgstr ""
 "Неуспешно записване в директория:\n"
 "{:s}"
 
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:132
-=======
-#: Source/appfat.cpp:133
->>>>>>> Stashed changes
+#: Source/appfat.cpp:129
 msgid "Read-Only Directory Error"
 msgstr "Грешка при отваряне на папка с зададен достъп само за четене"
 
-#: Source/automap.cpp:484
+#: Source/automap.cpp:468
 msgid "game: "
 msgstr "игра: "
 
-#: Source/automap.cpp:490
+#: Source/automap.cpp:474
 msgid "password: "
 msgstr "парола: "
 
-#: Source/automap.cpp:492
-msgid "Public Game"
-<<<<<<< Updated upstream
-msgstr "Публична Игра"
-=======
-msgstr "Публична игра"
->>>>>>> Stashed changes
-
-#: Source/automap.cpp:504
+#: Source/automap.cpp:487
 msgid "Level: Nest {:d}"
 msgstr "Ниво: Свърталище {:d}"
 
-#: Source/automap.cpp:506
+#: Source/automap.cpp:489
 msgid "Level: Crypt {:d}"
 msgstr "Ниво: Гробница {:d}"
 
-#: Source/automap.cpp:508 Source/items.cpp:2076
+#: Source/automap.cpp:491 Source/items.cpp:2086
 msgid "Level: {:d}"
 msgstr "Ниво: {:d}"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:196
 msgid "Tab"
 msgstr "Tab"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:196
 msgid "Esc"
 msgstr "Esc"
 
-#: Source/control.cpp:199
+#: Source/control.cpp:196
 msgid "Enter"
 msgstr "Enter"
 
-#: Source/control.cpp:202
+#: Source/control.cpp:199
 msgid "Character Information"
 msgstr "Информация за персонажа"
 
-#: Source/control.cpp:203
+#: Source/control.cpp:200
 msgid "Quests log"
 msgstr "Приключенски дневник"
 
-#: Source/control.cpp:204
+#: Source/control.cpp:201
 msgid "Automap"
 msgstr "Автоматична карта"
 
-#: Source/control.cpp:205
+#: Source/control.cpp:202
 msgid "Main Menu"
 msgstr "Главно меню"
 
-#: Source/control.cpp:206
+#: Source/control.cpp:203
 msgid "Inventory"
 msgstr "Инвентар"
 
-#: Source/control.cpp:207
+#: Source/control.cpp:204
 msgid "Spell book"
 msgstr "Книга за Заклинания"
 
-#: Source/control.cpp:208
+#: Source/control.cpp:205
 msgid "Send Message"
 msgstr "Изпрати съобщение"
 
-#: Source/control.cpp:705 Source/control.cpp:1566
-msgid "Skill"
-msgstr "Умение"
-
-#: Source/control.cpp:706 Source/control.cpp:1220
+#: Source/control.cpp:712 Source/control.cpp:1175
 msgid "{:s} Skill"
 msgstr "{:s} Умение"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:771
-=======
-#: Source/control.cpp:712
->>>>>>> Stashed changes
-msgid "Spell"
-msgstr "Заклинание"
-
-#: Source/control.cpp:713 Source/control.cpp:1224
+#: Source/control.cpp:716 Source/control.cpp:1179
 msgid "{:s} Spell"
 msgstr "{:s} Заклинание"
 
-#: Source/control.cpp:715
+#: Source/control.cpp:718
 msgid "Damages undead only"
 msgstr "Поразява само немъртви"
 
-#: Source/control.cpp:719 Source/control.cpp:1228 Source/control.cpp:1590
+#: Source/control.cpp:722 Source/control.cpp:1183 Source/control.cpp:1554
 msgid "Spell Level 0 - Unusable"
 msgstr "Заклинание Ниво 0 - Неизползваемо"
 
-#: Source/control.cpp:721 Source/control.cpp:1230 Source/control.cpp:1592
+#: Source/control.cpp:724 Source/control.cpp:1185 Source/control.cpp:1556
 msgid "Spell Level {:d}"
 msgstr "Заклинание Ниво {:d}"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:787
-=======
-#: Source/control.cpp:728
->>>>>>> Stashed changes
-msgid "Scroll"
-msgstr "{:d} Свитък"
-
-#: Source/control.cpp:729 Source/control.cpp:1234
+#: Source/control.cpp:729 Source/control.cpp:1189
 msgid "Scroll of {:s}"
 msgstr "Свитък на {:s}"
 
-#: Source/control.cpp:734 Source/control.cpp:1240
+#: Source/control.cpp:745 Source/control.cpp:1206
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} Свитък"
 msgstr[1] "{:d} Свитъци"
 
-#: Source/control.cpp:741 Source/itemdat.cpp:167 Source/itemdat.cpp:168
-#: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
-msgid "Staff"
-msgstr "Жезъл"
-
-<<<<<<< Updated upstream
-#: Source/control.cpp:801 Source/control.cpp:1250 Source/items.cpp:1317
-=======
-#: Source/control.cpp:742 Source/control.cpp:1244 Source/items.cpp:1317
->>>>>>> Stashed changes
+#: Source/control.cpp:750 Source/control.cpp:1210 Source/items.cpp:1325
 msgid "Staff of {:s}"
 msgstr "Жезъл на {:s}"
 
-#: Source/control.cpp:744 Source/control.cpp:1246
+#: Source/control.cpp:752 Source/control.cpp:1212
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Заряд"
 msgstr[1] "{:d} Заряди"
 
-#: Source/control.cpp:754
+#: Source/control.cpp:762
 msgid "Spell Hotkey {:s}"
 msgstr "Клавишна комбинация за заклинания {:s}"
 
-#: Source/control.cpp:1197
+#: Source/control.cpp:1152
 msgid "Player friendly"
 msgstr "Приятелска игра"
 
-#: Source/control.cpp:1199
+#: Source/control.cpp:1154
 msgid "Player attack"
 msgstr "Враждебна игра"
 
-#: Source/control.cpp:1202
+#: Source/control.cpp:1157
 msgid "Hotkey: {:s}"
 msgstr "Клавишна комбинация: {:s}"
 
-#: Source/control.cpp:1210
+#: Source/control.cpp:1165
 msgid "Select current spell button"
 msgstr "Бутон за избор на текущо заклинание"
 
-#: Source/control.cpp:1213
+#: Source/control.cpp:1168
 msgid "Hotkey: 's'"
 msgstr "Клавишна комбинация: 's'"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:1374 Source/inv.cpp:1992 Source/items.cpp:3739
-=======
-#: Source/control.cpp:1368 Source/inv.cpp:1979 Source/items.cpp:3729
->>>>>>> Stashed changes
+#: Source/control.cpp:1334 Source/inv.cpp:1893 Source/items.cpp:3751
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} златна монета"
 msgstr[1] "{:d} златни монети"
 
-#: Source/control.cpp:1371
+#: Source/control.cpp:1337
 msgid "Requirements not met"
 msgstr "Изискванията не са покрити"
 
-#: Source/control.cpp:1407
+#: Source/control.cpp:1373
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Ниво: {:d}"
 
-#: Source/control.cpp:1409
+#: Source/control.cpp:1375
 msgid "Hit Points {:d} of {:d}"
 msgstr "Точки живот {:d} от {:d}"
 
-#: Source/control.cpp:1436
+#: Source/control.cpp:1402
 msgid "Level Up"
 msgstr "Ново ниво"
 
-#: Source/control.cpp:1570
+#: Source/control.cpp:1532
+msgid "Skill"
+msgstr "Умение"
+
+#: Source/control.cpp:1536
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Жезъл ({:d} заряд)"
 msgstr[1] "Жезъл ({:d} заряди)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1580
+#: Source/control.cpp:1544
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "Мана: {:d}  Щети: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1582
+#: Source/control.cpp:1546
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "Мана: {:d}  Щети: няма"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1585
+#: Source/control.cpp:1549
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "Мана: {:d}  Щети: 1/3 ж.т.цел"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1643
+#: Source/control.cpp:1606
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "Имате {:d} златна монета. Колко искате да отделите?"
@@ -1177,125 +1050,105 @@ msgstr "Нечестивия олтар"
 msgid "level 15"
 msgstr "ниво 15"
 
-#: Source/diablo.cpp:114
+#: Source/diablo.cpp:111
 msgid "I need help! Come Here!"
 msgstr "Ела! Нуждая се от помощ!"
 
-#: Source/diablo.cpp:115
+#: Source/diablo.cpp:112
 msgid "Follow me."
 msgstr "Следвай ме."
 
-#: Source/diablo.cpp:116
+#: Source/diablo.cpp:113
 msgid "Here's something for you."
 msgstr "Ето нещо за теб."
 
-#: Source/diablo.cpp:117
+#: Source/diablo.cpp:114
 msgid "Now you DIE!"
 msgstr "Сега ще УМРЕШ!"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:781
+#: Source/diablo.cpp:777
 msgid "Options:\n"
 msgstr "Настройки:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:782
+#: Source/diablo.cpp:778
 msgid "Print this message and exit"
 msgstr "Показване на това съобщение и изход"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:783
+#: Source/diablo.cpp:779
 msgid "Print the version and exit"
 msgstr "Показване на версията и изход"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:784
+#: Source/diablo.cpp:780
 msgid "Specify the folder of diabdat.mpq"
 msgstr "Посочете местонахождението на diabdat.mpq"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:785
+#: Source/diablo.cpp:781
 msgid "Specify the folder of save files"
 msgstr "Посочете папката с записните файлове"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:786
+#: Source/diablo.cpp:782
 msgid "Specify the location of diablo.ini"
 msgstr "Посочете папката с файл diablo.ini"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:787
+#: Source/diablo.cpp:783
+msgid "Specify the location of the .ttf font"
+msgstr "Посочете местонахождението на .ttf шрифта"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:784
+msgid "Specify the name of a custom .ttf font"
+msgstr "Въведете името на потребителския .ttf шрифт"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:785
 msgid "Skip startup videos"
 msgstr "Пропускане на началните видеа"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:788
+#: Source/diablo.cpp:786
 msgid "Display frames per second"
 msgstr "Показване на индикатор за кадри в секунда"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:789
+#: Source/diablo.cpp:787
 msgid "Run in windowed mode"
-msgstr "Отваряне на приложението в режим в прозорец"
+msgstr "Отваряне на приложението в режим \"в прозорец\""
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:790
+#: Source/diablo.cpp:788
 msgid "Enable verbose logging"
 msgstr "Използване на подробно регистриране на команди"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:791
+#: Source/diablo.cpp:789
+msgid "Force spawn mode even if diabdat.mpq is found"
+msgstr ""
+"Принудително използване на режим spawn, дори когато diabdat.mpq е налице"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:790
 msgid "Record a demo file"
 msgstr "Записване на демо файл"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:792
+#: Source/diablo.cpp:791
 msgid "Play a demo file"
 msgstr "Репродуциране на демо файл"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:793
+#: Source/diablo.cpp:792
 msgid "Disable all frame limiting during demo playback"
 msgstr "Забраняване на всички лимити на кадри при репродукция"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:794
-msgid ""
-"\n"
-"Game selection:\n"
-msgstr ""
-"\n"
-"Избор на игра:\n"
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:795
-msgid "Force Shareware mode"
-<<<<<<< Updated upstream
-msgstr "Принудителен пробен режим"
-=======
-msgstr "Принуди Пробна версия"
->>>>>>> Stashed changes
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:796
-msgid "Force Diablo mode"
-<<<<<<< Updated upstream
-msgstr "Принудителен режим Diablo"
-=======
-msgstr "Принуди режим Diablo"
->>>>>>> Stashed changes
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:797
-msgid "Force Hellfire mode"
-<<<<<<< Updated upstream
-msgstr "Принудителен режим Hellfire"
-=======
-msgstr "Принуди режим Hellfire"
->>>>>>> Stashed changes
-
-#. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:798
+#: Source/diablo.cpp:793
 msgid ""
 "\n"
 "Hellfire options:\n"
@@ -1304,11 +1157,17 @@ msgstr ""
 "Настройки на Hellfire:\n"
 
 #. TRANSLATORS: Commandline Option
-#: Source/diablo.cpp:799
+#: Source/diablo.cpp:794
+msgid "Force diablo mode even if hellfire.mpq is found"
+msgstr ""
+"Принудително използване на режим Diablo, дори когато hellfire.mpq е налице"
+
+#. TRANSLATORS: Commandline Option
+#: Source/diablo.cpp:795
 msgid "Use alternate nest palette"
 msgstr "Използване на вторична палитра за ниво Свърталище"
 
-#: Source/diablo.cpp:805
+#: Source/diablo.cpp:801
 msgid ""
 "\n"
 "Report bugs at https://github.com/diasurgical/devilutionX/\n"
@@ -1324,293 +1183,293 @@ msgstr "неразпозната опция '{:s}'\n"
 msgid "version {:s}"
 msgstr "версия {:s}"
 
-#: Source/diablo.cpp:1218
+#: Source/diablo.cpp:1206
 msgid "-- Network timeout --"
 msgstr "-- Мрежово прекъсване --"
 
-#: Source/diablo.cpp:1219
+#: Source/diablo.cpp:1207
 msgid "-- Waiting for players --"
 msgstr "-- Изчакване на играчи --"
 
-#: Source/diablo.cpp:1238
+#: Source/diablo.cpp:1226
 msgid "No help available"
 msgstr "Не е намерен помощен файл"
 
-#: Source/diablo.cpp:1239
+#: Source/diablo.cpp:1227
 msgid "while in stores"
 msgstr "докато сте в магазин"
 
 #. TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty.
-#: Source/diablo.cpp:1451
+#: Source/diablo.cpp:1439
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, версия = {:s}, режим = {:s}"
 
-#: Source/dvlnet/loopback.cpp:113
+#: Source/dvlnet/loopback.cpp:111
 msgid "loopback"
 msgstr "обратна връзка"
 
-#: Source/dvlnet/tcp_client.cpp:65
+#: Source/dvlnet/tcp_client.cpp:68
 msgid "Unable to connect"
 msgstr "Невъзможно свързване"
 
-#: Source/dvlnet/tcp_client.cpp:86
+#: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
 msgstr "грешка: прочетени 0 байта от сървъра"
 
-#: Source/error.cpp:57
+#: Source/error.cpp:58
 msgid "No automap available in town"
 msgstr "Авто-картата не е достъпна в града"
 
-#: Source/error.cpp:58
+#: Source/error.cpp:59
 msgid "No multiplayer functions in demo"
 msgstr "Мрежовата функция не е достъпна в демонстрационната версия"
 
-#: Source/error.cpp:59
+#: Source/error.cpp:60
 msgid "Direct Sound Creation Failed"
 msgstr "Грешка при създаване на Direct Sound"
 
-#: Source/error.cpp:60
+#: Source/error.cpp:61
 msgid "Not available in shareware version"
 msgstr "Не е налично в пробната версия"
 
-#: Source/error.cpp:61
+#: Source/error.cpp:62
 msgid "Not enough space to save"
 msgstr "Няма достатъчно място за направата на запис"
 
-#: Source/error.cpp:62
+#: Source/error.cpp:63
 msgid "No Pause in town"
 msgstr "Прекъсването на играта не е позволено в града"
 
-#: Source/error.cpp:63
+#: Source/error.cpp:64
 msgid "Copying to a hard disk is recommended"
 msgstr "Препоръчително е копирането върху хард-диск"
 
-#: Source/error.cpp:64
+#: Source/error.cpp:65
 msgid "Multiplayer sync problem"
 msgstr "Проблем с мрежовото синхронизиране"
 
-#: Source/error.cpp:65
+#: Source/error.cpp:66
 msgid "No pause in multiplayer"
 msgstr "Пауза не е позволена в групова игра"
 
-#: Source/error.cpp:66
+#: Source/error.cpp:67
 msgid "Loading..."
 msgstr "Зареждане..."
 
-#: Source/error.cpp:67
+#: Source/error.cpp:68
 msgid "Saving..."
 msgstr "Запазване..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:68
+#: Source/error.cpp:69
 msgid "Some are weakened as one grows strong"
 msgstr "Някои линеят, докато едно расте силно"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:69
+#: Source/error.cpp:70
 msgid "New strength is forged through destruction"
 msgstr "Нова сила е сътворена чрез разруха"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:70
+#: Source/error.cpp:71
 msgid "Those who defend seldom attack"
 msgstr "Който брани, рядко атакува"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:71
+#: Source/error.cpp:72
 msgid "The sword of justice is swift and sharp"
 msgstr "Мечът на справедливостта е бърз и остър"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:72
+#: Source/error.cpp:73
 msgid "While the spirit is vigilant the body thrives"
 msgstr "Тялото заяква, докато духът е бдителен"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:73
+#: Source/error.cpp:74
 msgid "The powers of mana refocused renews"
 msgstr "Мощта на пренасочената мана я подновява"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:74
+#: Source/error.cpp:75
 msgid "Time cannot diminish the power of steel"
 msgstr "Времето не може да отслаби мощта на стоманата"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:75
+#: Source/error.cpp:76
 msgid "Magic is not always what it seems to be"
 msgstr "Магията не винаги е това което изглежда"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:76
+#: Source/error.cpp:77
 msgid "What once was opened now is closed"
 msgstr "Каквото е било отворено, сега е затворено"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:77
+#: Source/error.cpp:78
 msgid "Intensity comes at the cost of wisdom"
 msgstr "Усилието идва на цената на проникновението"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:78
+#: Source/error.cpp:79
 msgid "Arcane power brings destruction"
 msgstr "Тайнствената сила носи разруха"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:79
+#: Source/error.cpp:80
 msgid "That which cannot be held cannot be harmed"
 msgstr "Онова, което не може да се държи, не може да се повреди"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:80
+#: Source/error.cpp:81
 msgid "Crimson and Azure become as the sun"
 msgstr "Ален и Лазурен се превръщат като слънцето"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:81
+#: Source/error.cpp:82
 msgid "Knowledge and wisdom at the cost of self"
 msgstr "Знание и мъдрост на цената на живеца"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:82
+#: Source/error.cpp:83
 msgid "Drink and be refreshed"
 msgstr "Пий и изпитай бодростта"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:83
+#: Source/error.cpp:84
 msgid "Wherever you go, there you are"
 msgstr "Където отидеш, там оставаш"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:84
+#: Source/error.cpp:85
 msgid "Energy comes at the cost of wisdom"
 msgstr "Енергията идва на цената на мъдростта"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:85
+#: Source/error.cpp:86
 msgid "Riches abound when least expected"
 msgstr "Богатство идва когато най-малко го очакваш"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:86
+#: Source/error.cpp:87
 msgid "Where avarice fails, patience gains reward"
 msgstr ""
 "Там, където скъперничеството се проваля, търпението носи възнаграждения"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:87
+#: Source/error.cpp:88
 msgid "Blessed by a benevolent companion!"
 msgstr "Благословен от доброжелателен спътник!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:88
+#: Source/error.cpp:89
 msgid "The hands of men may be guided by fate"
 msgstr "Човешките дела могат да бъдат направлявани от съдбата"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:89
+#: Source/error.cpp:90
 msgid "Strength is bolstered by heavenly faith"
 msgstr "Силата е подсилена с небесна воля"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:90
+#: Source/error.cpp:91
 msgid "The essence of life flows from within"
 msgstr "Естеството на живота идва от вътре"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:91
+#: Source/error.cpp:92
 msgid "The way is made clear when viewed from above"
 msgstr "Пътят се вижда по-ясно, бидейки гледан от високо"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:92
+#: Source/error.cpp:93
 msgid "Salvation comes at the cost of wisdom"
 msgstr "Избавлението идва с цената на мъдростта"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:93
+#: Source/error.cpp:94
 msgid "Mysteries are revealed in the light of reason"
 msgstr "Загадките разбулва светлината на логиката"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:94
+#: Source/error.cpp:95
 msgid "Those who are last may yet be first"
 msgstr "Изостаналите все пак могат и да са първи"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:95
+#: Source/error.cpp:96
 msgid "Generosity brings its own rewards"
 msgstr "Щедростта носи своите ползи"
 
-#: Source/error.cpp:96
+#: Source/error.cpp:97
 msgid "You must be at least level 8 to use this."
 msgstr "Трябва да сте поне ниво 8, за да използвате това."
 
-#: Source/error.cpp:97
+#: Source/error.cpp:98
 msgid "You must be at least level 13 to use this."
 msgstr "Трябва да сте поне ниво 13, за да използвате това."
 
-#: Source/error.cpp:98
+#: Source/error.cpp:99
 msgid "You must be at least level 17 to use this."
 msgstr "Трябва да сте поне ниво 17, за да използвате това."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:99
+#: Source/error.cpp:100
 msgid "Arcane knowledge gained!"
 msgstr "Усвоено бе тайнствено знание!"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:100
+#: Source/error.cpp:101
 msgid "That which does not kill you..."
 msgstr "Това, което не те убива..."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:101
+#: Source/error.cpp:102
 msgid "Knowledge is power."
 msgstr "Знанието е сила."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:102
+#: Source/error.cpp:103
 msgid "Give and you shall receive."
 msgstr "Дай и ще получиш."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:103
+#: Source/error.cpp:104
 msgid "Some experience is gained by touch."
 msgstr "Малко опит се усвоява чрез допир."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:104
+#: Source/error.cpp:105
 msgid "There's no place like home."
 msgstr "Няма друго място като у дома."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:105
+#: Source/error.cpp:106
 msgid "Spiritual energy is restored."
 msgstr "Духовната сила е възстановена."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:106
+#: Source/error.cpp:107
 msgid "You feel more agile."
 msgstr "Чувстваш се по-сръчен."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:107
+#: Source/error.cpp:108
 msgid "You feel stronger."
 msgstr "Чувстваш се по-силен."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:108
+#: Source/error.cpp:109
 msgid "You feel wiser."
 msgstr "Чувстваш се по-мъдър."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:109
+#: Source/error.cpp:110
 msgid "You feel refreshed."
 msgstr "Чувстваш се по-здрав."
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
-#: Source/error.cpp:110
+#: Source/error.cpp:111
 msgid "That which can break will."
 msgstr "Чупливото ще се счупи."
 
@@ -1637,6 +1496,10 @@ msgstr "Гама"
 #: Source/gamemenu.cpp:60 Source/gamemenu.cpp:167
 msgid "Speed"
 msgstr "Скорост"
+
+#: Source/gamemenu.cpp:61
+msgid "Previous Menu"
+msgstr "Предишно меню"
 
 #: Source/gamemenu.cpp:68
 msgid "Music Disabled"
@@ -1791,7 +1654,7 @@ msgid ""
 "press 'TAB' on the keyboard. Zooming in and out of the map is done with the "
 "+ and - keys. Scrolling the map uses the arrow keys."
 msgstr ""
-"За да включите картата,натиснете бутона 'КАРТА' на информационната ивица или "
+"За да включите картата,натиснете бутона 'MAP' на информационната ивица или "
 "натиснете клавиша 'TAB' на клавиатурата. Мащабирането на картата е чрез "
 "клавишите + и -.Отместването е чрез клавишите за посока."
 
@@ -1814,7 +1677,7 @@ msgstr ""
 "съответната цифра на клавиатурата."
 
 #: Source/help.cpp:68
-msgid "$Gold:"
+msgid "$Gold"
 msgstr "$Злато:"
 
 #: Source/help.cpp:69
@@ -1838,14 +1701,14 @@ msgid ""
 "in the play area."
 msgstr ""
 "Можете да получите достъп до списъка си с умения и заклинания, като кликнете "
-"с левия бутон на мишката върху бутона 'ЗАКЛ' върху интерфейса. Тук са "
+"с левия бутон на мишката върху бутона 'SPELLS' върху интерфейса. Тук са "
 "изброени научените заклинания и тези, които са достъпни чрез жезли. "
 "Натискането на левия бутон на мишката върху заклинанието, което желаете да "
 "използвате, ще го подготви. Подготвеното заклинание може да бъде изречено "
 "чрез кликване с десния бутон на мишката в игралната зона."
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells:"
+msgid "$Using the Speedbook for Spells"
 msgstr "$Използване на Бърз списък за Заклинания:"
 
 #: Source/help.cpp:80
@@ -1862,13 +1725,13 @@ msgstr ""
 #: Source/help.cpp:84
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell."
+"readied spell"
 msgstr ""
 "Бутон Shift + Ляв бутон на мишката върху бутона 'Подготвено заклинание' ще "
 "изчисти подготвеното заклинание. "
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys:"
+msgid "$Setting Spell Hotkeys"
 msgstr "$Задаване бързи клавиши за заклинания"
 
 #: Source/help.cpp:87
@@ -1878,12 +1741,12 @@ msgid ""
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
 "Може да зададете до четири бързи клавиша за умения, заклинания или свитъци. "
-"Започнете с отварянето на 'бърз лист' както е обяснено в горния абзац. "
+"Започнете с отварянето на ‘бърз лист’ както е обяснено в горния абзац. "
 "Натиснете клавиши F5, F6, F7 или F8 след като посочите заклинанието което "
 "искате да зададете."
 
 #: Source/help.cpp:92
-msgid "$Spell Books:"
+msgid "$Spell Books"
 msgstr "$Книги със Заклинания"
 
 #: Source/help.cpp:93
@@ -1894,48 +1757,32 @@ msgstr ""
 "Четенето на повече от една книга за едно и също заклинание, прави същото по-"
 "ефикасно."
 
-#: Source/help.cpp:135
+#: Source/help.cpp:130
 msgid "Shareware Hellfire Help"
 msgstr "Помощ за пробна версия на Hellfire"
 
-#: Source/help.cpp:135
+#: Source/help.cpp:130
 msgid "Hellfire Help"
 msgstr "Помощ за Hellfire"
 
-#: Source/help.cpp:137
+#: Source/help.cpp:132
 msgid "Shareware Diablo Help"
 msgstr "Помощ за пробна версия на Diablo"
 
-#: Source/help.cpp:137
+#: Source/help.cpp:132
 msgid "Diablo Help"
 msgstr "Помощ за Diablo"
 
-#: Source/help.cpp:161
+#: Source/help.cpp:156
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr ""
 "Наиснете ESC, за да прекъснете или клавишните стрелки за да превъртите."
 
-<<<<<<< Updated upstream
-#: Source/init.cpp:206
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq или spawn.mpq"
-
-#: Source/init.cpp:226
+#: Source/init.cpp:214
 msgid "Some Hellfire MPQs are missing"
 msgstr "Някой MPQ файловете от Hellfire липсват."
 
-#: Source/init.cpp:226
-=======
-#: Source/init.cpp:175
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq или spawn.mpq"
-
-#: Source/init.cpp:196
-msgid "Some Hellfire MPQs are missing"
-msgstr "Някой MPQ файловете от Hellfire липсват."
-
-#: Source/init.cpp:196
->>>>>>> Stashed changes
+#: Source/init.cpp:214
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1943,15 +1790,11 @@ msgstr ""
 "Не всички Hellfire MPQ файлове бяха намерени.\n"
 "Моля, поставете всички hf*.mpq файлове."
 
-<<<<<<< Updated upstream
-#: Source/init.cpp:234
-=======
-#: Source/init.cpp:204
->>>>>>> Stashed changes
+#: Source/init.cpp:224
 msgid "Unable to create main window"
 msgstr "Невъзможно създаването на основен прозорец"
 
-#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
+#: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:154
 msgid "Gold"
 msgstr "Злато"
 
@@ -2091,9 +1934,9 @@ msgstr "Жезълът на Лазар"
 msgid "Scroll of Resurrect"
 msgstr "Свитък за Възкресение"
 
-#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
+#: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:164
 msgid "Blacksmith Oil"
-msgstr "Ковашко масло"
+msgstr "Ковашко мсло"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
@@ -2152,7 +1995,7 @@ msgstr "Каска"
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
-msgstr "Наскулна каска"
+msgstr "Ковашка каска"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
 msgid "Helm"
@@ -2160,7 +2003,7 @@ msgstr "Шлем"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
-msgstr "Пълен шлем"
+msgstr "Цял шлем"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
@@ -2191,11 +2034,7 @@ msgid "Quilted Armor"
 msgstr "Ватирана броня"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-<<<<<<< Updated upstream
-#: Source/itemdat.cpp:77 Source/objects.cpp:5478
-=======
-#: Source/itemdat.cpp:77 Source/objects.cpp:5433
->>>>>>> Stashed changes
+#: Source/itemdat.cpp:77 Source/objects.cpp:5459
 msgid "Armor"
 msgstr "Броня"
 
@@ -2290,11 +2129,11 @@ msgstr "Отвара за Възобновление"
 msgid "Potion of Full Rejuvenation"
 msgstr "Отвара за Пълно възобновление"
 
-#: Source/itemdat.cpp:100 Source/items.cpp:161
+#: Source/itemdat.cpp:100 Source/items.cpp:159
 msgid "Oil of Accuracy"
 msgstr "Масло на Точността"
 
-#: Source/itemdat.cpp:101 Source/items.cpp:163
+#: Source/itemdat.cpp:101 Source/items.cpp:161
 msgid "Oil of Sharpness"
 msgstr "Масло на Остротата"
 
@@ -2393,7 +2232,7 @@ msgstr "Свитък за Апокалипсис"
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
 msgid "Book of "
-msgstr "Книга на "
+msgstr "Книга на"
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
@@ -2522,6 +2361,11 @@ msgstr "Къс военен лък"
 msgid "Long War Bow"
 msgstr "Дълъг военен лък"
 
+#: Source/itemdat.cpp:167 Source/itemdat.cpp:168 Source/itemdat.cpp:169
+#: Source/itemdat.cpp:170 Source/itemdat.cpp:171
+msgid "Staff"
+msgstr "Жезъл"
+
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
 msgstr "Дълъг жезъл"
@@ -2612,7 +2456,7 @@ msgstr "Митрилови"
 msgid "Meteoric"
 msgstr "Метеоритни"
 
-#: Source/itemdat.cpp:202 Source/objects.cpp:107
+#: Source/itemdat.cpp:202 Source/objects.cpp:104
 msgid "Weird"
 msgstr "Особени"
 
@@ -2748,7 +2592,7 @@ msgstr "Блажени"
 msgid "Awesome"
 msgstr "Невероятни"
 
-#: Source/itemdat.cpp:237 Source/objects.cpp:119
+#: Source/itemdat.cpp:237 Source/objects.cpp:116
 msgid "Holy"
 msgstr "Свещени"
 
@@ -3357,7 +3201,7 @@ msgid "The Defender"
 msgstr "Закрилникът"
 
 #: Source/itemdat.cpp:418
-msgid "Gryphon's Claw"
+msgid "Gryphons Claw"
 msgstr "Грифонски нокът"
 
 #: Source/itemdat.cpp:419
@@ -3521,7 +3365,7 @@ msgid "Rod of Onan"
 msgstr "Тоягата на Онан"
 
 #: Source/itemdat.cpp:459
-msgid "Helm of Spirits"
+msgid "Helm of Sprits"
 msgstr "Шлем от Духове"
 
 #: Source/itemdat.cpp:460
@@ -3709,1090 +3553,677 @@ msgstr "Псалтски амулет"
 msgid "Gladiator's Ring"
 msgstr "Гладиаторски пръстен"
 
-#: Source/items.cpp:162
+#: Source/items.cpp:160
 msgid "Oil of Mastery"
 msgstr "Масло на Майсторството"
 
-#: Source/items.cpp:164
+#: Source/items.cpp:162
 msgid "Oil of Death"
 msgstr "Масло на Смъртта"
 
-#: Source/items.cpp:165
+#: Source/items.cpp:163
 msgid "Oil of Skill"
 msgstr "Масло на Умението"
 
-#: Source/items.cpp:167
+#: Source/items.cpp:165
 msgid "Oil of Fortitude"
 msgstr "Масло на Крепкостта"
 
-#: Source/items.cpp:168
+#: Source/items.cpp:166
 msgid "Oil of Permanence"
 msgstr "Масло на Неизменността"
 
-#: Source/items.cpp:169
+#: Source/items.cpp:167
 msgid "Oil of Hardening"
 msgstr "Масло на Втвърдяването"
 
-#: Source/items.cpp:170
+#: Source/items.cpp:168
 msgid "Oil of Imperviousness"
 msgstr "Масло на Непробиваемостта"
 
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
-#. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
-#: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
-#: Source/items.cpp:1269
-msgid "{0} {1}"
-msgstr "{0} {1}"
+#. TRANSLATORS: Constructs item names. Format: <Prefix> <Item> of <Suffix>. Example: King's Long Sword of the Whale
+#: Source/items.cpp:1194 Source/items.cpp:1262 Source/items.cpp:1281
+#: Source/items.cpp:1324
+msgid "{:s} of {:s}"
+msgstr "{:s} на {:s}"
 
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale
-#. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall
-#: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
-#: Source/items.cpp:1315
-msgid "{0} of {1}"
-msgstr "{0} на {1}"
-
-#: Source/items.cpp:1892 Source/items.cpp:1904
+#: Source/items.cpp:1902 Source/items.cpp:1914
 msgid "increases a weapon's"
 msgstr "увеличава"
 
-#: Source/items.cpp:1894
+#: Source/items.cpp:1904
 msgid "chance to hit"
 msgstr "шанса за попадение на оръжието"
 
-#: Source/items.cpp:1898
+#: Source/items.cpp:1908
 msgid "greatly increases a"
 msgstr "значително увеличава шанса"
 
-#: Source/items.cpp:1900
+#: Source/items.cpp:1910
 msgid "weapon's chance to hit"
 msgstr "за попадение на оръжието"
 
-#: Source/items.cpp:1906
+#: Source/items.cpp:1916
 msgid "damage potential"
 msgstr "потенциал за щети"
 
-#: Source/items.cpp:1910
+#: Source/items.cpp:1920
 msgid "greatly increases a weapon's"
 msgstr "значително увеличава"
 
-#: Source/items.cpp:1912
+#: Source/items.cpp:1922
 msgid "damage potential - not bows"
 msgstr "потенциала за щети - изкл. лъкове"
 
-#: Source/items.cpp:1916
+#: Source/items.cpp:1926
 msgid "reduces attributes needed"
 msgstr "намалява нужните атрибути"
 
-#: Source/items.cpp:1918
+#: Source/items.cpp:1928
 msgid "to use armor or weapons"
 msgstr "използва се в/у брони и оръжия"
 
-#: Source/items.cpp:1922
+#: Source/items.cpp:1932
 #, no-c-format
 msgid "restores 20% of an"
 msgstr "възстановява 20% от"
 
-#: Source/items.cpp:1924
+#: Source/items.cpp:1934
 msgid "item's durability"
 msgstr "здравината на предмета"
 
-#: Source/items.cpp:1928
+#: Source/items.cpp:1938
 msgid "increases an item's"
 msgstr "увеличава"
 
-#: Source/items.cpp:1930
+#: Source/items.cpp:1940
 msgid "current and max durability"
 msgstr "текуща и макс здравина на предмета"
 
-#: Source/items.cpp:1934
+#: Source/items.cpp:1944
 msgid "makes an item indestructible"
 msgstr "прави предмет неразрушим"
 
-#: Source/items.cpp:1938
+#: Source/items.cpp:1948
 msgid "increases the armor class"
 msgstr "увеличава клас на бронята"
 
-#: Source/items.cpp:1940
+#: Source/items.cpp:1950
 msgid "of armor and shields"
 msgstr "на брони и щитове"
 
-#: Source/items.cpp:1944
+#: Source/items.cpp:1954
 msgid "greatly increases the armor"
 msgstr "значително увеличава клас на бронята"
 
-#: Source/items.cpp:1946
+#: Source/items.cpp:1956
 msgid "class of armor and shields"
 msgstr "на брони и щитове"
 
-#: Source/items.cpp:1950 Source/items.cpp:1959
+#: Source/items.cpp:1960 Source/items.cpp:1969
 msgid "sets fire trap"
 msgstr "залага огнена клопка"
 
-#: Source/items.cpp:1955
+#: Source/items.cpp:1965
 msgid "sets lightning trap"
 msgstr "залага мълниена клопка"
 
-#: Source/items.cpp:1963
+#: Source/items.cpp:1973
 msgid "sets petrification trap"
 msgstr "залага вкаменяваща клопка"
 
-#: Source/items.cpp:1967
+#: Source/items.cpp:1977
 msgid "restore all life"
 msgstr "напълно възстановява живот"
 
-#: Source/items.cpp:1971
+#: Source/items.cpp:1981
 msgid "restore some life"
 msgstr "частично възстановява живот"
 
-#: Source/items.cpp:1975
+#: Source/items.cpp:1985
 msgid "recover life"
 msgstr "възстановява живот"
 
-#: Source/items.cpp:1979
+#: Source/items.cpp:1989
 msgid "deadly heal"
 msgstr "смъртоносно изцеление"
 
-#: Source/items.cpp:1983
+#: Source/items.cpp:1993
 msgid "restore some mana"
 msgstr "частично възстановява мана"
 
-#: Source/items.cpp:1987
+#: Source/items.cpp:1997
 msgid "restore all mana"
 msgstr "напълно възстановява мана"
 
-#: Source/items.cpp:1991
+#: Source/items.cpp:2001
 msgid "increase strength"
 msgstr "увеличава сила"
 
-#: Source/items.cpp:1995
+#: Source/items.cpp:2005
 msgid "increase magic"
 msgstr "увеличава магия"
 
-#: Source/items.cpp:1999
+#: Source/items.cpp:2009
 msgid "increase dexterity"
 msgstr "увеличава сръчност"
 
-#: Source/items.cpp:2003
+#: Source/items.cpp:2013
 msgid "increase vitality"
 msgstr "увеличава жизненост"
 
-#: Source/items.cpp:2008
+#: Source/items.cpp:2018
 msgid "decrease strength"
 msgstr "намалява сила"
 
-#: Source/items.cpp:2012
+#: Source/items.cpp:2022
 msgid "decrease dexterity"
 msgstr "намалява сръчност"
 
-#: Source/items.cpp:2016
+#: Source/items.cpp:2026
 msgid "decrease vitality"
 msgstr "намалява жизненост"
 
-#: Source/items.cpp:2020
+#: Source/items.cpp:2030
 msgid "restore some life and mana"
 msgstr "частично възстановява живот и мана"
 
-#: Source/items.cpp:2024
+#: Source/items.cpp:2034
 msgid "restore all life and mana"
 msgstr "напълно възстановява живот и мана"
 
-#: Source/items.cpp:2039 Source/items.cpp:2064
+#: Source/items.cpp:2049 Source/items.cpp:2074
 msgid "Right-click to read"
 msgstr "Десен клик за прочитане"
 
-#: Source/items.cpp:2043
+#: Source/items.cpp:2053
 msgid "Right-click to read, then"
 msgstr "Десен клик за прочитане, "
 
-#: Source/items.cpp:2045
+#: Source/items.cpp:2055
 msgid "left-click to target"
 msgstr "следван от ляв клик върху цел"
 
-#: Source/items.cpp:2050
+#: Source/items.cpp:2060
 msgid "Right-click to use"
 msgstr "Десен клик за използване"
 
-#: Source/items.cpp:2055 Source/items.cpp:2060
+#: Source/items.cpp:2065 Source/items.cpp:2070
 msgid "Right click to use"
 msgstr "Десен клик за използване"
 
-#: Source/items.cpp:2068
+#: Source/items.cpp:2078
 msgid "Right click to read"
 msgstr "Десен клик за прочитане"
 
-#: Source/items.cpp:2072
+#: Source/items.cpp:2082
 msgid "Right-click to view"
 msgstr "Десен клик за поглед"
 
-#: Source/items.cpp:2080
+#: Source/items.cpp:2090
 msgid "Doubles gold capacity"
 msgstr "Удвоява лимит на златото"
 
-#: Source/items.cpp:2092 Source/stores.cpp:212
+#: Source/items.cpp:2102 Source/stores.cpp:212
 msgid "Required:"
 msgstr "Необходими:"
 
-#: Source/items.cpp:2094 Source/stores.cpp:214
+#: Source/items.cpp:2104 Source/stores.cpp:214
 msgid " {:d} Str"
 msgstr " {:d} Сила"
 
-#: Source/items.cpp:2096 Source/stores.cpp:216
+#: Source/items.cpp:2106 Source/stores.cpp:216
 msgid " {:d} Mag"
 msgstr " {:d} Маг"
 
-#: Source/items.cpp:2098 Source/stores.cpp:218
+#: Source/items.cpp:2108 Source/stores.cpp:218
 msgid " {:d} Dex"
 msgstr " {:d} Сръч"
 
 #. TRANSLATORS: {:s} will be a Character Name
-<<<<<<< Updated upstream
-#: Source/items.cpp:3523 Source/player.cpp:3027
+#: Source/items.cpp:3535 Source/player.cpp:3042
 msgid "Ear of {:s}"
 msgstr "Ухо на {:s}"
-
-#: Source/items.cpp:3818
-msgid "chance to hit: {:+d}%"
-msgstr "шанс за удар: {:+d}%"
-
-#: Source/items.cpp:3822
-=======
-#: Source/items.cpp:3513 Source/player.cpp:3018
-msgid "Ear of {:s}"
-msgstr "Ухо на {:s}"
-
-#: Source/items.cpp:3808
-msgid "chance to hit: {:+d}%"
-msgstr "шанс за удар: {:+d}%"
-
-#: Source/items.cpp:3812
->>>>>>> Stashed changes
-#, no-c-format
-msgid "{:+d}% damage"
-msgstr "{:+d}% щети"
-
-<<<<<<< Updated upstream
-#: Source/items.cpp:3826 Source/items.cpp:4082
-msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "шанс удар: {:+d}%, {:+d}% щети"
 
 #: Source/items.cpp:3830
-=======
-#: Source/items.cpp:3816 Source/items.cpp:4072
-msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "шанс удар: {:+d}%, {:+d}% щети"
+msgid "chance to hit: {:+d}%"
+msgstr "шанс за удар: {:+d}%"
 
-#: Source/items.cpp:3820
->>>>>>> Stashed changes
+#: Source/items.cpp:3834
+#, no-c-format
+msgid "{:+d}% damage"
+msgstr "{:+d}% щета"
+
+#: Source/items.cpp:3838 Source/items.cpp:4094
+msgid "to hit: {:+d}%, {:+d}% damage"
+msgstr "шанс удар: {:+d}%, {:+d}% щета"
+
+#: Source/items.cpp:3842
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% броня"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3834
+#: Source/items.cpp:3846
 msgid "armor class: {:d}"
-msgstr "клас броня: {:d}"
+msgstr "клас на броня: {:d}"
 
-#: Source/items.cpp:3839 Source/items.cpp:4064
+#: Source/items.cpp:3851 Source/items.cpp:4076
 msgid "Resist Fire: {:+d}%"
 msgstr "Устойчивост Огън: {:+d}%"
 
-#: Source/items.cpp:3841
-=======
-#: Source/items.cpp:3824
-msgid "armor class: {:d}"
-msgstr "клас броня: {:d}"
-
-#: Source/items.cpp:3829 Source/items.cpp:4054
-msgid "Resist Fire: {:+d}%"
-msgstr "Устойчивост Огън: {:+d}%"
-
-#: Source/items.cpp:3831
->>>>>>> Stashed changes
+#: Source/items.cpp:3853
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "Устойчивост Огън: 75% MAКС"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3846
+#: Source/items.cpp:3858
 msgid "Resist Lightning: {:+d}%"
 msgstr "Устойчивост Мълния: {:+d}%"
 
-#: Source/items.cpp:3848
-=======
-#: Source/items.cpp:3836
-msgid "Resist Lightning: {:+d}%"
-msgstr "Устойчивост Мълния: {:+d}%"
-
-#: Source/items.cpp:3838
->>>>>>> Stashed changes
+#: Source/items.cpp:3860
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "Устойчивост Мълния: 75% MAКС"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3853
+#: Source/items.cpp:3865
 msgid "Resist Magic: {:+d}%"
 msgstr "Устойчивост Магия: {:+d}%"
 
-#: Source/items.cpp:3855
-=======
-#: Source/items.cpp:3843
-msgid "Resist Magic: {:+d}%"
-msgstr "Устойчивост Магия: {:+d}%"
-
-#: Source/items.cpp:3845
->>>>>>> Stashed changes
+#: Source/items.cpp:3867
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "Устойчивост Магия: 75% MAX"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3860
+#: Source/items.cpp:3872
 msgid "Resist All: {:+d}%"
 msgstr "Устойчивост Всичко: {:+d}%"
 
-#: Source/items.cpp:3862
-=======
-#: Source/items.cpp:3850
-msgid "Resist All: {:+d}%"
-msgstr "Устойчивост Всичко: {:+d}%"
-
-#: Source/items.cpp:3852
->>>>>>> Stashed changes
+#: Source/items.cpp:3874
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "Устойчивост Всичко: 75% MAX"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3866
-=======
-#: Source/items.cpp:3856
->>>>>>> Stashed changes
+#: Source/items.cpp:3878
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "заклинанията са увеличени с {:d} ниво"
 msgstr[1] "заклинанията са увеличени с {:d} нива"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3868
-=======
-#: Source/items.cpp:3858
->>>>>>> Stashed changes
+#: Source/items.cpp:3880
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "заклинанията са намалени с {:d} ниво"
 msgstr[1] "заклинанията са намалени с {:d} нива"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3870
+#: Source/items.cpp:3882
 msgid "spell levels unchanged (?)"
 msgstr "нива на заклинания непроменени (?)"
 
-#: Source/items.cpp:3873
+#: Source/items.cpp:3885
 msgid "Extra charges"
 msgstr "Допълнителни заряди"
 
-#: Source/items.cpp:3876
-=======
-#: Source/items.cpp:3860
-msgid "spell levels unchanged (?)"
-msgstr "нива на заклинания непроменени (?)"
-
-#: Source/items.cpp:3863
-msgid "Extra charges"
-msgstr "Допълнителни заряди"
-
-#: Source/items.cpp:3866
->>>>>>> Stashed changes
+#: Source/items.cpp:3888
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} заряд"
 msgstr[1] "{:d} {:s} заряди"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3880
-msgid "Fire hit damage: {:d}"
-msgstr "Щети Огнен Удар: {:d}"
-
-#: Source/items.cpp:3882
-msgid "Fire hit damage: {:d}-{:d}"
-msgstr "Щети Огнен Удар: {:d}-{:d}"
-
-#: Source/items.cpp:3886
-msgid "Lightning hit damage: {:d}"
-msgstr "Щети Мълниен Удар: {:d}"
-
-#: Source/items.cpp:3888
-msgid "Lightning hit damage: {:d}-{:d}"
-msgstr "Щети Мълниен Удар: {:d}-{:d}"
-
 #: Source/items.cpp:3892
-msgid "{:+d} to strength"
-msgstr "{:+d} към сила"
-
-#: Source/items.cpp:3896
-msgid "{:+d} to magic"
-msgstr "{:+d} към магия"
-
-#: Source/items.cpp:3900
-msgid "{:+d} to dexterity"
-msgstr "{:+d} към сръчност"
-
-#: Source/items.cpp:3904
-msgid "{:+d} to vitality"
-msgstr "{:+d} към жизненост"
-
-#: Source/items.cpp:3908
-msgid "{:+d} to all attributes"
-msgstr "{:+d} към всички атрибути"
-
-#: Source/items.cpp:3912
-msgid "{:+d} damage from enemies"
-msgstr "{:+d} щети от врагове"
-
-#: Source/items.cpp:3916
-msgid "Hit Points: {:+d}"
-msgstr "Живот: {:+d}"
-
-#: Source/items.cpp:3920
-msgid "Mana: {:+d}"
-msgstr "Мана: {:+d}"
-
-#: Source/items.cpp:3923
-msgid "high durability"
-msgstr "висока издържливост"
-
-#: Source/items.cpp:3926
-msgid "decreased durability"
-msgstr "понижена издържливост"
-
-#: Source/items.cpp:3929
-msgid "indestructible"
-msgstr "неразрушими"
-
-#: Source/items.cpp:3932
-=======
-#: Source/items.cpp:3870
 msgid "Fire hit damage: {:d}"
 msgstr "Щети Огнен Удар: {:d}"
-
-#: Source/items.cpp:3872
-msgid "Fire hit damage: {:d}-{:d}"
-msgstr "Щети Огнен Удар: {:d}-{:d}"
-
-#: Source/items.cpp:3876
-msgid "Lightning hit damage: {:d}"
-msgstr "Щети Мълниен Удар: {:d}"
-
-#: Source/items.cpp:3878
-msgid "Lightning hit damage: {:d}-{:d}"
-msgstr "Щети Мълниен Удар: {:d}-{:d}"
-
-#: Source/items.cpp:3882
-msgid "{:+d} to strength"
-msgstr "{:+d} към сила"
-
-#: Source/items.cpp:3886
-msgid "{:+d} to magic"
-msgstr "{:+d} към магия"
-
-#: Source/items.cpp:3890
-msgid "{:+d} to dexterity"
-msgstr "{:+d} към сръчност"
 
 #: Source/items.cpp:3894
+msgid "Fire hit damage: {:d}-{:d}"
+msgstr "Щети Огнен Удар: {:d}-{:d}"
+
+#: Source/items.cpp:3898
+msgid "Lightning hit damage: {:d}"
+msgstr "Щети Мълниен Удар: {:d}"
+
+#: Source/items.cpp:3900
+msgid "Lightning hit damage: {:d}-{:d}"
+msgstr "Щети Мълниен Удар: {:d}-{:d}"
+
+#: Source/items.cpp:3904
+msgid "{:+d} to strength"
+msgstr "{:+d} към сила"
+
+#: Source/items.cpp:3908
+msgid "{:+d} to magic"
+msgstr "{:+d} към магия"
+
+#: Source/items.cpp:3912
+msgid "{:+d} to dexterity"
+msgstr "{:+d} към сръчност"
+
+#: Source/items.cpp:3916
 msgid "{:+d} to vitality"
 msgstr "{:+d} към жизненост"
 
-#: Source/items.cpp:3898
+#: Source/items.cpp:3920
 msgid "{:+d} to all attributes"
 msgstr "{:+d} към всички атрибути"
 
-#: Source/items.cpp:3902
+#: Source/items.cpp:3924
 msgid "{:+d} damage from enemies"
 msgstr "{:+d} щети от врагове"
 
-#: Source/items.cpp:3906
+#: Source/items.cpp:3928
 msgid "Hit Points: {:+d}"
 msgstr "Живот: {:+d}"
 
-#: Source/items.cpp:3910
+#: Source/items.cpp:3932
 msgid "Mana: {:+d}"
 msgstr "Мана: {:+d}"
 
-#: Source/items.cpp:3913
+#: Source/items.cpp:3935
 msgid "high durability"
 msgstr "висока издържливост"
 
-#: Source/items.cpp:3916
+#: Source/items.cpp:3938
 msgid "decreased durability"
 msgstr "понижена издържливост"
 
-#: Source/items.cpp:3919
+#: Source/items.cpp:3941
 msgid "indestructible"
-msgstr "неразрушими"
+msgstr "неразрушим"
 
-#: Source/items.cpp:3922
->>>>>>> Stashed changes
+#: Source/items.cpp:3944
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% светлинен радиус"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3935
-=======
-#: Source/items.cpp:3925
->>>>>>> Stashed changes
+#: Source/items.cpp:3947
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% светлинен радиус"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3938
+#: Source/items.cpp:3950
 msgid "multiple arrows per shot"
 msgstr "множество стрели при изстрел"
-
-#: Source/items.cpp:3942
-msgid "fire arrows damage: {:d}"
-msgstr "щети огнени стрели: {:d}"
-
-#: Source/items.cpp:3944
-msgid "fire arrows damage: {:d}-{:d}"
-msgstr "щети огнени стрели: {:d}-{:d}"
-
-#: Source/items.cpp:3948
-msgid "lightning arrows damage {:d}"
-msgstr "щети мълнийни стрели {:d}"
-
-#: Source/items.cpp:3950
-msgid "lightning arrows damage {:d}-{:d}"
-msgstr "щети мълнийни стрели {:d}-{:d}"
 
 #: Source/items.cpp:3954
-msgid "fireball damage: {:d}"
-msgstr "щети огненo кълбо {:d}"
-
-#: Source/items.cpp:3956
-msgid "fireball damage: {:d}-{:d}"
-msgstr "щети огнено кълбо {:d}-{:d}"
-
-#: Source/items.cpp:3959
-msgid "attacker takes 1-3 damage"
-msgstr "атакуващият получава 1-3 щети"
-
-#: Source/items.cpp:3962
-msgid "user loses all mana"
-msgstr "играчът губи всичката мана"
-
-#: Source/items.cpp:3965
-msgid "you can't heal"
-msgstr "не може да се лекувате"
-
-#: Source/items.cpp:3968
-msgid "absorbs half of trap damage"
-msgstr "поглъща половината щети от капани"
-
-#: Source/items.cpp:3971
-msgid "knocks target back"
-msgstr "избутва целта назад"
-
-#: Source/items.cpp:3974
-=======
-#: Source/items.cpp:3928
-msgid "multiple arrows per shot"
-msgstr "множество стрели при изстрел"
-
-#: Source/items.cpp:3932
 msgid "fire arrows damage: {:d}"
 msgstr "щети огнени стрели: {:d}"
 
-#: Source/items.cpp:3934
+#: Source/items.cpp:3956
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "щети огнени стрели: {:d}-{:d}"
 
-#: Source/items.cpp:3938
+#: Source/items.cpp:3960
 msgid "lightning arrows damage {:d}"
 msgstr "щети мълнийни стрели {:d}"
 
-#: Source/items.cpp:3940
+#: Source/items.cpp:3962
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "щети мълнийни стрели {:d}-{:d}"
 
-#: Source/items.cpp:3944
+#: Source/items.cpp:3966
 msgid "fireball damage: {:d}"
 msgstr "щети огненo кълбо {:d}"
 
-#: Source/items.cpp:3946
+#: Source/items.cpp:3968
 msgid "fireball damage: {:d}-{:d}"
 msgstr "щети огнено кълбо {:d}-{:d}"
 
-#: Source/items.cpp:3949
+#: Source/items.cpp:3971
 msgid "attacker takes 1-3 damage"
 msgstr "атакуващият получава 1-3 щети"
 
-#: Source/items.cpp:3952
+#: Source/items.cpp:3974
 msgid "user loses all mana"
 msgstr "играчът губи всичката мана"
 
-#: Source/items.cpp:3955
+#: Source/items.cpp:3977
 msgid "you can't heal"
 msgstr "не може да се лекувате"
 
-#: Source/items.cpp:3958
+#: Source/items.cpp:3980
 msgid "absorbs half of trap damage"
 msgstr "поглъща половината щети от капани"
 
-#: Source/items.cpp:3961
+#: Source/items.cpp:3983
 msgid "knocks target back"
 msgstr "избутва целта назад"
 
-#: Source/items.cpp:3964
->>>>>>> Stashed changes
+#: Source/items.cpp:3986
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% щети срещу демони"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3977
+#: Source/items.cpp:3989
 msgid "All Resistance equals 0"
 msgstr "Всички устойчивости са 0"
 
-#: Source/items.cpp:3980
+#: Source/items.cpp:3992
 msgid "hit monster doesn't heal"
 msgstr "поразен враг не може да се лекува"
 
-#: Source/items.cpp:3984
-=======
-#: Source/items.cpp:3967
-msgid "All Resistance equals 0"
-msgstr "Всички устойчивости са 0"
-
-#: Source/items.cpp:3970
-msgid "hit monster doesn't heal"
-msgstr "поразен враг не може да се лекува"
-
-#: Source/items.cpp:3974
->>>>>>> Stashed changes
+#: Source/items.cpp:3996
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "удар отнема 3% мана"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3986
-=======
-#: Source/items.cpp:3976
->>>>>>> Stashed changes
+#: Source/items.cpp:3998
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "удар отнема 5% мана"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3990
-=======
-#: Source/items.cpp:3980
->>>>>>> Stashed changes
+#: Source/items.cpp:4002
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "удар отнема 3% жизненост"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3992
-=======
-#: Source/items.cpp:3982
->>>>>>> Stashed changes
+#: Source/items.cpp:4004
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "удар отнема 5% жизненост"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3995
+#: Source/items.cpp:4007
 msgid "penetrates target's armor"
 msgstr "пробива бронята на врага"
-
-#: Source/items.cpp:3999
-msgid "quick attack"
-msgstr "ускорен замах"
-
-#: Source/items.cpp:4001
-msgid "fast attack"
-msgstr "бърз замах"
-
-#: Source/items.cpp:4003
-msgid "faster attack"
-msgstr "по-бърз замах"
-
-#: Source/items.cpp:4005
-msgid "fastest attack"
-msgstr "най-бърз замах"
-
-#: Source/items.cpp:4009
-msgid "fast hit recovery"
-msgstr "бързо възстановяване от удар"
 
 #: Source/items.cpp:4011
-msgid "faster hit recovery"
-msgstr "по-бързо възстановяване от удар"
-
-#: Source/items.cpp:4013
-msgid "fastest hit recovery"
-msgstr "най-бързо възстановяване от удар"
-
-#: Source/items.cpp:4016
-msgid "fast block"
-msgstr "бързо блокиране"
-
-#: Source/items.cpp:4019
-=======
-#: Source/items.cpp:3985
-msgid "penetrates target's armor"
-msgstr "пробива бронята на врага"
-
-#: Source/items.cpp:3989
 msgid "quick attack"
 msgstr "ускорен замах"
 
-#: Source/items.cpp:3991
+#: Source/items.cpp:4013
 msgid "fast attack"
 msgstr "бърз замах"
 
-#: Source/items.cpp:3993
+#: Source/items.cpp:4015
 msgid "faster attack"
 msgstr "по-бърз замах"
 
-#: Source/items.cpp:3995
+#: Source/items.cpp:4017
 msgid "fastest attack"
 msgstr "най-бърз замах"
 
-#: Source/items.cpp:3999
+#: Source/items.cpp:4021
 msgid "fast hit recovery"
 msgstr "бързо възстановяване от удар"
 
-#: Source/items.cpp:4001
+#: Source/items.cpp:4023
 msgid "faster hit recovery"
 msgstr "по-бързо възстановяване от удар"
 
-#: Source/items.cpp:4003
+#: Source/items.cpp:4025
 msgid "fastest hit recovery"
 msgstr "най-бързо възстановяване от удар"
 
-#: Source/items.cpp:4006
+#: Source/items.cpp:4028
 msgid "fast block"
 msgstr "бързо блокиране"
 
-#: Source/items.cpp:4009
->>>>>>> Stashed changes
+#: Source/items.cpp:4031
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "добавя {:d} точка към щети"
 msgstr[1] "добавя {:d} точки към щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4022
+#: Source/items.cpp:4034
 msgid "fires random speed arrows"
 msgstr "изстрелва стрели със случайна скорост"
-
-#: Source/items.cpp:4025
-msgid "unusual item damage"
-msgstr "необичайни щети за тип предмет"
-
-#: Source/items.cpp:4028
-msgid "altered durability"
-msgstr "променена издръжливост"
-
-#: Source/items.cpp:4031
-msgid "Faster attack swing"
-msgstr "по-бърз удар с замах"
-
-#: Source/items.cpp:4034
-msgid "one handed sword"
-msgstr "меч за една ръка"
 
 #: Source/items.cpp:4037
-msgid "constantly lose hit points"
-msgstr "постоянно губене на живот"
-
-#: Source/items.cpp:4040
-msgid "life stealing"
-msgstr "изсмукване на живот"
-
-#: Source/items.cpp:4043
-msgid "no strength requirement"
-msgstr "няма изисквания за сила"
-
-#: Source/items.cpp:4046
-msgid "see with infravision"
-msgstr "гледай с инфразрение"
-
-#: Source/items.cpp:4053
-msgid "lightning damage: {:d}"
-msgstr "мълнийни щети: {:d}"
-
-#: Source/items.cpp:4055
-msgid "lightning damage: {:d}-{:d}"
-msgstr "мълнийни щети: {:d}-{:d}"
-
-#: Source/items.cpp:4058
-msgid "charged bolts on hits"
-msgstr "светкавични заряди при удар"
-
-#: Source/items.cpp:4067
-msgid "occasional triple damage"
-msgstr "случайни тройни щети"
-
-#: Source/items.cpp:4070
-=======
-#: Source/items.cpp:4012
-msgid "fires random speed arrows"
-msgstr "изстрелва стрели със случайна скорост"
-
-#: Source/items.cpp:4015
 msgid "unusual item damage"
 msgstr "необичайни щети за тип предмет"
 
-#: Source/items.cpp:4018
+#: Source/items.cpp:4040
 msgid "altered durability"
 msgstr "променена издръжливост"
 
-#: Source/items.cpp:4021
+#: Source/items.cpp:4043
 msgid "Faster attack swing"
 msgstr "по-бърз удар с замах"
 
-#: Source/items.cpp:4024
+#: Source/items.cpp:4046
 msgid "one handed sword"
 msgstr "меч за една ръка"
 
-#: Source/items.cpp:4027
+#: Source/items.cpp:4049
 msgid "constantly lose hit points"
 msgstr "постоянно губене на живот"
 
-#: Source/items.cpp:4030
+#: Source/items.cpp:4052
 msgid "life stealing"
 msgstr "изсмукване на живот"
 
-#: Source/items.cpp:4033
+#: Source/items.cpp:4055
 msgid "no strength requirement"
 msgstr "няма изисквания за сила"
 
-#: Source/items.cpp:4036
+#: Source/items.cpp:4058
 msgid "see with infravision"
 msgstr "гледай с инфразрение"
 
-#: Source/items.cpp:4043
+#: Source/items.cpp:4065
 msgid "lightning damage: {:d}"
 msgstr "мълнийни щети: {:d}"
 
-#: Source/items.cpp:4045
+#: Source/items.cpp:4067
 msgid "lightning damage: {:d}-{:d}"
 msgstr "мълнийни щети: {:d}-{:d}"
 
-#: Source/items.cpp:4048
+#: Source/items.cpp:4070
 msgid "charged bolts on hits"
 msgstr "светкавични заряди при удар"
 
-#: Source/items.cpp:4057
+#: Source/items.cpp:4079
 msgid "occasional triple damage"
 msgstr "случайни тройни щети"
 
-#: Source/items.cpp:4060
->>>>>>> Stashed changes
+#: Source/items.cpp:4082
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "разпадащи се {:+d}% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4073
+#: Source/items.cpp:4085
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x щети за чуд., 1x за играч"
 
-#: Source/items.cpp:4076
-=======
-#: Source/items.cpp:4063
-msgid "2x dmg to monst, 1x to you"
-msgstr "2x щети за чуд., 1x за играч"
-
-#: Source/items.cpp:4066
->>>>>>> Stashed changes
+#: Source/items.cpp:4088
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Произволни 0 - 500% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4079
-=======
-#: Source/items.cpp:4069
->>>>>>> Stashed changes
+#: Source/items.cpp:4091
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "ниска изд., {:+d}% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4085
+#: Source/items.cpp:4097
 msgid "extra AC vs demons"
 msgstr "допълнително КБ с/у демони"
 
-#: Source/items.cpp:4088
+#: Source/items.cpp:4100
 msgid "extra AC vs undead"
 msgstr "допълнително КБ с/у немъртви"
 
-#: Source/items.cpp:4091
-=======
-#: Source/items.cpp:4075
-msgid "extra AC vs demons"
-msgstr "допълнително КБ с/у демони"
-
-#: Source/items.cpp:4078
-msgid "extra AC vs undead"
-msgstr "допълнително КБ с/у немъртви"
-
-#: Source/items.cpp:4081
->>>>>>> Stashed changes
+#: Source/items.cpp:4103
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50% Мана пренесена в Живот"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4094
-=======
-#: Source/items.cpp:4084
->>>>>>> Stashed changes
+#: Source/items.cpp:4106
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40% Живот пренесен в Мана"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4097
+#: Source/items.cpp:4109
 msgid "Another ability (NW)"
 msgstr "Друга способност (NW)"
 
-#: Source/items.cpp:4134 Source/items.cpp:4181
-=======
-#: Source/items.cpp:4087
-msgid "Another ability (NW)"
-msgstr "Друга способност (NW)"
-
-#: Source/items.cpp:4124 Source/items.cpp:4171
->>>>>>> Stashed changes
+#: Source/items.cpp:4146 Source/items.cpp:4193
 msgid "damage: {:d}  Indestructible"
 msgstr "щети: {:d}  Неразрушими"
 
 #. TRANSLATORS: Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4136 Source/items.cpp:4183
+#: Source/items.cpp:4148 Source/items.cpp:4195
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}  Изд: {:d}/{:d}"
 
-#: Source/items.cpp:4139 Source/items.cpp:4186
-=======
-#: Source/items.cpp:4126 Source/items.cpp:4173
-msgid "damage: {:d}  Dur: {:d}/{:d}"
-msgstr "щети: {:d}  Изд: {:d}/{:d}"
-
-#: Source/items.cpp:4129 Source/items.cpp:4176
->>>>>>> Stashed changes
+#: Source/items.cpp:4151 Source/items.cpp:4198
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "щети: {:d}-{:d}  Неразрушим"
 
 #. TRANSLATORS: Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4141 Source/items.cpp:4188
+#: Source/items.cpp:4153 Source/items.cpp:4200
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
 
-#: Source/items.cpp:4147 Source/items.cpp:4200
-=======
-#: Source/items.cpp:4131 Source/items.cpp:4178
-msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
-
-#: Source/items.cpp:4137 Source/items.cpp:4190
->>>>>>> Stashed changes
+#: Source/items.cpp:4159 Source/items.cpp:4212
 msgid "armor: {:d}  Indestructible"
 msgstr "броня: {:d}  Неразрушим"
 
 #. TRANSLATORS: Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4149 Source/items.cpp:4202
-=======
-#: Source/items.cpp:4139 Source/items.cpp:4192
->>>>>>> Stashed changes
+#: Source/items.cpp:4161 Source/items.cpp:4214
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "броня: {:d}  Изд: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4154
-=======
-#: Source/items.cpp:4144
->>>>>>> Stashed changes
+#: Source/items.cpp:4166
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}  Изд: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4156
+#: Source/items.cpp:4168
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
 
-#: Source/items.cpp:4157 Source/items.cpp:4192 Source/items.cpp:4207
-=======
-#: Source/items.cpp:4146
-msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
-
-#: Source/items.cpp:4147 Source/items.cpp:4182 Source/items.cpp:4197
->>>>>>> Stashed changes
+#: Source/items.cpp:4169 Source/items.cpp:4204 Source/items.cpp:4219
 #: Source/stores.cpp:184
 msgid "Charges: {:d}/{:d}"
 msgstr "Заряди: {:d}/{:d}"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4169
-=======
-#: Source/items.cpp:4159
->>>>>>> Stashed changes
+#: Source/items.cpp:4181
 msgid "unique item"
-msgstr "уникат"
+msgstr "уникален предмет"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4196 Source/items.cpp:4205 Source/items.cpp:4212
-=======
-#: Source/items.cpp:4186 Source/items.cpp:4195 Source/items.cpp:4202
->>>>>>> Stashed changes
+#: Source/items.cpp:4208 Source/items.cpp:4217 Source/items.cpp:4224
 msgid "Not Identified"
 msgstr "Неразпознат"
 
-#: Source/loadsave.cpp:1683 Source/loadsave.cpp:2149
+#: Source/loadsave.cpp:1656 Source/loadsave.cpp:2122
 msgid "Unable to open save file archive"
 msgstr "Невъзможно отваряне на файл за запис"
 
-#: Source/loadsave.cpp:1686
+#: Source/loadsave.cpp:1659
 msgid "Invalid save file"
 msgstr "Невалиден файлов запис"
 
-#: Source/loadsave.cpp:1717
+#: Source/loadsave.cpp:1688
 msgid "Player is on a Hellfire only level"
 msgstr "Играчът е на ниво само за Hellfire"
 
-#: Source/loadsave.cpp:1912
+#: Source/loadsave.cpp:1885
 msgid "Invalid game state"
 msgstr "Невалидно игрово състояние"
 
-#: Source/menu.cpp:154
+#: Source/menu.cpp:136
 msgid "Unable to display mainmenu"
 msgstr "Невъзможно да се покаже главно меню"
-
-#. TRANSLATORS:  Error Message when a Shareware User clicks on "Replay Intro" in the Main Menu
-#: Source/menu.cpp:179
-msgid ""
-"The Diablo introduction cinematic is only available in the full retail "
-"version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
-msgstr ""
-"Началното видео е налично само в пълната версия на играта. Посетете https://"
-"www.gog.com/game/diablo, за да я закупите."
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -5431,7 +4862,7 @@ msgstr "Жътвар"
 #: Source/monstdat.cpp:158 Source/monstdat.cpp:485
 msgctxt "monster"
 msgid "Na-Krul"
-msgstr "На-Крул"
+msgstr ""
 
 #. TRANSLATORS: Unique Monster Block start
 #: Source/monstdat.cpp:473
@@ -5467,7 +4898,7 @@ msgstr "Черната Джейд"
 #: Source/monstdat.cpp:480
 msgctxt "monster"
 msgid "Lachdanan"
-msgstr "Лахданан"
+msgstr ""
 
 #: Source/monstdat.cpp:481
 msgctxt "monster"
@@ -5522,7 +4953,7 @@ msgstr "Чупеглав Хлопащит"
 #: Source/monstdat.cpp:494
 msgctxt "monster"
 msgid "Bongo"
-msgstr "Бонго"
+msgstr ""
 
 #: Source/monstdat.cpp:495
 msgctxt "monster"
@@ -5547,7 +4978,7 @@ msgstr "Мъртвия Лудоок"
 #: Source/monstdat.cpp:499
 msgctxt "monster"
 msgid "El Chupacabras"
-msgstr "El Chupacabras"
+msgstr ""
 
 #: Source/monstdat.cpp:500
 msgctxt "monster"
@@ -5885,6 +5316,8 @@ msgid "The Vizier"
 msgstr "Визирът"
 
 #: Source/monstdat.cpp:567
+#, fuzzy
+#| msgid "Sapphire"
 msgctxt "monster"
 msgid "Zamphir"
 msgstr "Сапфирени"
@@ -5897,7 +5330,7 @@ msgstr "Кръвожажда"
 #: Source/monstdat.cpp:569
 msgctxt "monster"
 msgid "Webwidow"
-msgstr "Оплетовдовица"
+msgstr ""
 
 #: Source/monstdat.cpp:570
 msgctxt "monster"
@@ -5915,877 +5348,612 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Гибелобречен"
 
-<<<<<<< Updated upstream
-#: Source/monster.cpp:3497
+#: Source/monster.cpp:3474
 msgid "Animal"
 msgstr "Животно"
 
-#: Source/monster.cpp:3499
+#: Source/monster.cpp:3476
 msgid "Demon"
 msgstr "Демон"
 
-#: Source/monster.cpp:3501
+#: Source/monster.cpp:3478
 msgid "Undead"
 msgstr "Немъртъв"
 
-#: Source/monster.cpp:4632
+#: Source/monster.cpp:4610
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "Тип: {:s}  Убити: {:d}"
-
-#: Source/monster.cpp:4634
-msgid "Total kills: {:d}"
-msgstr "Всичко убити: {:d}"
-
-#: Source/monster.cpp:4667
-msgid "Hit Points: {:d}-{:d}"
-msgstr "Точки живот: {:d}-{:d}"
-
-#: Source/monster.cpp:4673
-msgid "No magic resistance"
-msgstr "Няма магическа устойчивост"
-
-#: Source/monster.cpp:4677
-msgid "Resists: "
-msgstr "Устойчивост: "
-
-#: Source/monster.cpp:4679 Source/monster.cpp:4690
-msgid "Magic "
-msgstr "Магия "
-
-#: Source/monster.cpp:4681 Source/monster.cpp:4692
-msgid "Fire "
-msgstr "Огън "
-
-#: Source/monster.cpp:4683 Source/monster.cpp:4694
-msgid "Lightning "
-msgstr "Мълния "
-
-#: Source/monster.cpp:4688
-msgid "Immune: "
-msgstr "Имунитет: "
-
-#: Source/monster.cpp:4706
-msgid "Type: {:s}"
-msgstr "Тип: {:s}"
-
-#: Source/monster.cpp:4712 Source/monster.cpp:4719
-msgid "No resistances"
-msgstr "Няма устойчивости"
-
-#: Source/monster.cpp:4714 Source/monster.cpp:4724
-msgid "No Immunities"
-msgstr "Няма имунитети"
-
-#: Source/monster.cpp:4717
-msgid "Some Magic Resistances"
-msgstr "Някакви Магически Устойчивости"
-
-#: Source/monster.cpp:4722
-=======
-#: Source/monster.cpp:3479
-msgid "Animal"
-msgstr "Животно"
-
-#: Source/monster.cpp:3481
-msgid "Demon"
-msgstr "Демон"
-
-#: Source/monster.cpp:3483
-msgid "Undead"
-msgstr "Немъртъв"
 
 #: Source/monster.cpp:4612
-msgid "Type: {:s}  Kills: {:d}"
-msgstr "Тип: {:s}  Убити: {:d}"
-
-#: Source/monster.cpp:4614
 msgid "Total kills: {:d}"
 msgstr "Всичко убити: {:d}"
 
-#: Source/monster.cpp:4647
+#: Source/monster.cpp:4645
 msgid "Hit Points: {:d}-{:d}"
 msgstr "Точки живот: {:d}-{:d}"
 
-#: Source/monster.cpp:4653
+#: Source/monster.cpp:4651
 msgid "No magic resistance"
 msgstr "Няма магическа устойчивост"
 
-#: Source/monster.cpp:4657
+#: Source/monster.cpp:4655
 msgid "Resists: "
 msgstr "Устойчивост: "
 
-#: Source/monster.cpp:4659 Source/monster.cpp:4671
+#: Source/monster.cpp:4657 Source/monster.cpp:4668
 msgid "Magic "
 msgstr "Магия "
 
-#: Source/monster.cpp:4661 Source/monster.cpp:4673
+#: Source/monster.cpp:4659 Source/monster.cpp:4670
 msgid "Fire "
 msgstr "Огън "
 
-#: Source/monster.cpp:4663 Source/monster.cpp:4675
+#: Source/monster.cpp:4661 Source/monster.cpp:4672
 msgid "Lightning "
 msgstr "Мълния "
 
-#: Source/monster.cpp:4669
+#: Source/monster.cpp:4666
 msgid "Immune: "
 msgstr "Имунитет: "
 
-#: Source/monster.cpp:4688
+#: Source/monster.cpp:4684
 msgid "Type: {:s}"
 msgstr "Тип: {:s}"
 
-#: Source/monster.cpp:4694 Source/monster.cpp:4701
+#: Source/monster.cpp:4690 Source/monster.cpp:4697
 msgid "No resistances"
 msgstr "Няма устойчивости"
 
-#: Source/monster.cpp:4696 Source/monster.cpp:4706
+#: Source/monster.cpp:4692 Source/monster.cpp:4702
 msgid "No Immunities"
 msgstr "Няма имунитети"
 
-#: Source/monster.cpp:4699
+#: Source/monster.cpp:4695
 msgid "Some Magic Resistances"
 msgstr "Някакви Магически Устойчивости"
 
-#: Source/monster.cpp:4704
->>>>>>> Stashed changes
+#: Source/monster.cpp:4700
 msgid "Some Magic Immunities"
 msgstr "Някакви Магически Имунитети"
 
-#: Source/msg.cpp:495
+#: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
 msgstr "Опит за хвърляне на предмет от пода?"
 
-<<<<<<< Updated upstream
-#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
-#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
-#: Source/msg.cpp:1269
+#: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
+#: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} е направил непозволено заклинание."
 
-#: Source/msg.cpp:1655 Source/multi.cpp:805
+#: Source/msg.cpp:1529 Source/multi.cpp:815
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "Играч '{:s}' (ниво {:d}) се присъедини към играта"
 
-#: Source/msg.cpp:1959
+#: Source/msg.cpp:1826
 msgid "Waiting for game data..."
 msgstr "Изчакване за данни на играта..."
 
-#: Source/msg.cpp:1967
+#: Source/msg.cpp:1834
 msgid "The game ended"
 msgstr "Играта приключи"
 
-#: Source/msg.cpp:1973
-=======
-#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
-#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
-#: Source/msg.cpp:1281
-msgid "{:s} has cast an illegal spell."
-msgstr "{:s} е направил непозволено заклинание."
-
-#: Source/msg.cpp:1668 Source/multi.cpp:804
-msgid "Player '{:s}' (level {:d}) just joined the game"
-msgstr "Играч '{:s}' (ниво {:d}) се присъедини към играта"
-
-#: Source/msg.cpp:1972
-msgid "Waiting for game data..."
-msgstr "Изчакване за данни на играта..."
-
-#: Source/msg.cpp:1980
-msgid "The game ended"
-msgstr "Играта приключи"
-
-#: Source/msg.cpp:1986
->>>>>>> Stashed changes
+#: Source/msg.cpp:1840
 msgid "Unable to get level data"
 msgstr "Невъзможно да получи данни за ниво"
 
 #: Source/multi.cpp:195
 msgid "Player '{:s}' just left the game"
-msgstr "Играч '{:s}' напусна играта"
+msgstr "Играч '{:s}’ напусна играта"
 
 #: Source/multi.cpp:198
 msgid "Player '{:s}' killed Diablo and left the game!"
-msgstr "Играч '{:s}' уби Диабло и напусна играта!"
+msgstr "Играч '{:s}’ уби Диабло и напусна играта!"
 
 #: Source/multi.cpp:202
 msgid "Player '{:s}' dropped due to timeout"
-msgstr "Играч '{:s}' отпадна заради прекъсване"
+msgstr "Играч '{:s}’ отпадна заради прекъсване"
 
-#: Source/multi.cpp:806
+#: Source/multi.cpp:817
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "Играч '{:s}' (ниво {:d}) в вече в играта"
 
 #. TRANSLATORS: Shrine Name Block
-#: Source/objects.cpp:104
+#: Source/objects.cpp:101
 msgid "Mysterious"
 msgstr "Мистериозно"
 
-#: Source/objects.cpp:105
+#: Source/objects.cpp:102
 msgid "Hidden"
 msgstr "Прикрит"
 
-#: Source/objects.cpp:106
+#: Source/objects.cpp:103
 msgid "Gloomy"
 msgstr "Мрачно"
 
-#: Source/objects.cpp:108 Source/objects.cpp:115
+#: Source/objects.cpp:105 Source/objects.cpp:112
 msgid "Magical"
 msgstr "Магическо"
 
-#: Source/objects.cpp:109
+#: Source/objects.cpp:106
 msgid "Stone"
 msgstr "Каменено"
 
-#: Source/objects.cpp:110
+#: Source/objects.cpp:107
 msgid "Religious"
 msgstr "Религиозно"
 
-#: Source/objects.cpp:111
+#: Source/objects.cpp:108
 msgid "Enchanted"
 msgstr "Омагьосано"
 
-#: Source/objects.cpp:112
+#: Source/objects.cpp:109
 msgid "Thaumaturgic"
 msgstr "Чудно"
 
-#: Source/objects.cpp:113
+#: Source/objects.cpp:110
 msgid "Fascinating"
 msgstr "Очарователно"
 
-#: Source/objects.cpp:114
+#: Source/objects.cpp:111
 msgid "Cryptic"
 msgstr "Загадъчно"
 
-#: Source/objects.cpp:116
+#: Source/objects.cpp:113
 msgid "Eldritch"
 msgstr "Ужасно"
 
-#: Source/objects.cpp:117
+#: Source/objects.cpp:114
 msgid "Eerie"
 msgstr "Свръхестествено"
 
-#: Source/objects.cpp:118
+#: Source/objects.cpp:115
 msgid "Divine"
 msgstr "Божествено"
 
-#: Source/objects.cpp:120
+#: Source/objects.cpp:117
 msgid "Sacred"
 msgstr "Неприкосновено"
 
-#: Source/objects.cpp:121
+#: Source/objects.cpp:118
 msgid "Spiritual"
 msgstr "Духовно"
 
-#: Source/objects.cpp:122
+#: Source/objects.cpp:119
 msgid "Spooky"
 msgstr "Призрачно"
 
-#: Source/objects.cpp:123
+#: Source/objects.cpp:120
 msgid "Abandoned"
 msgstr "Изоставено"
 
-#: Source/objects.cpp:124
+#: Source/objects.cpp:121
 msgid "Creepy"
 msgstr "Зловещо"
 
-#: Source/objects.cpp:125
+#: Source/objects.cpp:122
 msgid "Quiet"
 msgstr "Тихо"
 
-#: Source/objects.cpp:126
+#: Source/objects.cpp:123
 msgid "Secluded"
 msgstr "Усамотено"
 
-#: Source/objects.cpp:127
+#: Source/objects.cpp:124
 msgid "Ornate"
 msgstr "Инкрустирано"
 
-#: Source/objects.cpp:128
+#: Source/objects.cpp:125
 msgid "Glimmering"
 msgstr "Мъждеещо"
 
-#: Source/objects.cpp:129
+#: Source/objects.cpp:126
 msgid "Tainted"
 msgstr "Опозорено"
 
-#: Source/objects.cpp:130
+#: Source/objects.cpp:127
 msgid "Oily"
 msgstr "Мазно"
 
-#: Source/objects.cpp:131
+#: Source/objects.cpp:128
 msgid "Glowing"
 msgstr "Ярко"
 
-#: Source/objects.cpp:132
+#: Source/objects.cpp:129
 msgid "Mendicant's"
 msgstr "Просещо"
 
-#: Source/objects.cpp:133
+#: Source/objects.cpp:130
 msgid "Sparkling"
 msgstr "Искрящо"
 
-#: Source/objects.cpp:134
+#: Source/objects.cpp:131
 msgid "Town"
 msgstr "Градско"
 
-#: Source/objects.cpp:135
+#: Source/objects.cpp:132
 msgid "Shimmering"
 msgstr "Блещукащо"
 
-#: Source/objects.cpp:136
+#: Source/objects.cpp:133
 msgid "Solar"
 msgstr "Слънчево"
 
 #. TRANSLATORS: Shrine Name Block end
-#: Source/objects.cpp:138
+#: Source/objects.cpp:135
 msgid "Murphy's"
 msgstr "Мърфово"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:268
+#: Source/objects.cpp:265
 msgid "The Great Conflict"
 msgstr "Великия Сблъсък"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:269
+#: Source/objects.cpp:266
 msgid "The Wages of Sin are War"
 msgstr "Възмездието на Греха е Война"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:270
+#: Source/objects.cpp:267
 msgid "The Tale of the Horadrim"
 msgstr "Историята на Хорадрим"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:271
+#: Source/objects.cpp:268
 msgid "The Dark Exile"
 msgstr "Тъмното Изгнание"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:272
+#: Source/objects.cpp:269
 msgid "The Sin War"
 msgstr "Войната на Греха"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:273
+#: Source/objects.cpp:270
 msgid "The Binding of the Three"
 msgstr "Запечатването на Тримата"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:274
+#: Source/objects.cpp:271
 msgid "The Realms Beyond"
 msgstr "Царствата Отвъд"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:275
+#: Source/objects.cpp:272
 msgid "Tale of the Three"
 msgstr "Историята на Тримата"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:276
+#: Source/objects.cpp:273
 msgid "The Black King"
 msgstr "Черния Крал"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:277
+#: Source/objects.cpp:274
 msgid "Journal: The Ensorcellment"
 msgstr "Дневник: Омагьосването"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:278
+#: Source/objects.cpp:275
 msgid "Journal: The Meeting"
 msgstr "Дневник: Срещата"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:279
+#: Source/objects.cpp:276
 msgid "Journal: The Tirade"
 msgstr "Дневник: Гневния вой"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:280
+#: Source/objects.cpp:277
 msgid "Journal: His Power Grows"
 msgstr "Дневник: Мощта му расте"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:281
+#: Source/objects.cpp:278
 msgid "Journal: NA-KRUL"
 msgstr "Дневник: На-Крул"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:282
+#: Source/objects.cpp:279
 msgid "Journal: The End"
 msgstr "Дневник: Краят"
 
 #. TRANSLATORS: Book Title
-#: Source/objects.cpp:283
+#: Source/objects.cpp:280
 msgid "A Spellbook"
 msgstr "Книга за заклинания"
 
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5384
+#: Source/objects.cpp:5365
 msgid "Crucified Skeleton"
 msgstr "Разпнат Скелет"
 
-#: Source/objects.cpp:5388
+#: Source/objects.cpp:5369
 msgid "Lever"
 msgstr "Лост"
 
-#: Source/objects.cpp:5397
+#: Source/objects.cpp:5378
 msgid "Open Door"
 msgstr "Отворена Врата"
 
-#: Source/objects.cpp:5399
+#: Source/objects.cpp:5380
 msgid "Closed Door"
 msgstr "Затворена Врата"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5382
 msgid "Blocked Door"
 msgstr "Блокирана Врата"
-
-#: Source/objects.cpp:5406
-msgid "Ancient Tome"
-msgstr "Древен Том"
-
-#: Source/objects.cpp:5408
-msgid "Book of Vileness"
-msgstr "Книга на Безчестието"
-
-#: Source/objects.cpp:5413
-msgid "Skull Lever"
-msgstr "Черепен Лост"
-
-#: Source/objects.cpp:5416
-msgid "Mythical Book"
-msgstr "Митическа Книга"
-
-#: Source/objects.cpp:5420
-msgid "Small Chest"
-msgstr "Малък Сандък"
-
-#: Source/objects.cpp:5424
-msgid "Chest"
-msgstr "Сандък"
-
-#: Source/objects.cpp:5429
-msgid "Large Chest"
-msgstr "Голям Сандък"
-
-#: Source/objects.cpp:5432
-msgid "Sarcophagus"
-msgstr "Саркофаг"
-
-#: Source/objects.cpp:5435
-msgid "Bookshelf"
-msgstr "Лавица за книги"
-
-#: Source/objects.cpp:5439
-msgid "Bookcase"
-msgstr "Библиотека"
-
-#: Source/objects.cpp:5444
-msgid "Pod"
-msgstr "Зародиш"
-
-#: Source/objects.cpp:5446
-msgid "Urn"
-msgstr "Урна"
-
-#: Source/objects.cpp:5448
-=======
-#: Source/objects.cpp:5339
-msgid "Crucified Skeleton"
-msgstr "Разпнат Скелет"
-
-#: Source/objects.cpp:5343
-msgid "Lever"
-msgstr "Лост"
-
-#: Source/objects.cpp:5352
-msgid "Open Door"
-msgstr "Отворена Врата"
-
-#: Source/objects.cpp:5354
-msgid "Closed Door"
-msgstr "Затворена Врата"
-
-#: Source/objects.cpp:5356
-msgid "Blocked Door"
-msgstr "Блокирана Врата"
-
-#: Source/objects.cpp:5361
-msgid "Ancient Tome"
-msgstr "Древен Том"
-
-#: Source/objects.cpp:5363
-msgid "Book of Vileness"
-msgstr "Книга на Безчестието"
-
-#: Source/objects.cpp:5368
-msgid "Skull Lever"
-msgstr "Черепен Лост"
-
-#: Source/objects.cpp:5371
-msgid "Mythical Book"
-msgstr "Митическа Книга"
-
-#: Source/objects.cpp:5375
-msgid "Small Chest"
-msgstr "Малък Сандък"
-
-#: Source/objects.cpp:5379
-msgid "Chest"
-msgstr "Сандък"
-
-#: Source/objects.cpp:5384
-msgid "Large Chest"
-msgstr "Голям Сандък"
 
 #: Source/objects.cpp:5387
+msgid "Ancient Tome"
+msgstr "Древен Том"
+
+#: Source/objects.cpp:5389
+msgid "Book of Vileness"
+msgstr "Книга на Безчестието"
+
+#: Source/objects.cpp:5394
+msgid "Skull Lever"
+msgstr "Черепен Лост"
+
+#: Source/objects.cpp:5397
+msgid "Mythical Book"
+msgstr "Митическа Книга"
+
+#: Source/objects.cpp:5401
+msgid "Small Chest"
+msgstr "Малък Сандък"
+
+#: Source/objects.cpp:5405
+msgid "Chest"
+msgstr "Сандък"
+
+#: Source/objects.cpp:5410
+msgid "Large Chest"
+msgstr "Голям Сандък"
+
+#: Source/objects.cpp:5413
 msgid "Sarcophagus"
 msgstr "Саркофаг"
 
-#: Source/objects.cpp:5390
+#: Source/objects.cpp:5416
 msgid "Bookshelf"
 msgstr "Лавица за книги"
 
-#: Source/objects.cpp:5394
+#: Source/objects.cpp:5420
 msgid "Bookcase"
 msgstr "Библиотека"
 
-#: Source/objects.cpp:5399
+#: Source/objects.cpp:5425
 msgid "Pod"
 msgstr "Зародиш"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5427
 msgid "Urn"
 msgstr "Урна"
 
-#: Source/objects.cpp:5403
->>>>>>> Stashed changes
+#: Source/objects.cpp:5429
 msgid "Barrel"
 msgstr "Бъчва"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5452
+#: Source/objects.cpp:5433
 msgid "{:s} Shrine"
 msgstr "{:s} Светилище"
 
-#: Source/objects.cpp:5456
+#: Source/objects.cpp:5437
 msgid "Skeleton Tome"
 msgstr "Скелетен Том"
 
-#: Source/objects.cpp:5459
+#: Source/objects.cpp:5440
 msgid "Library Book"
 msgstr "Библиотечен Том"
 
-#: Source/objects.cpp:5462
+#: Source/objects.cpp:5443
 msgid "Blood Fountain"
 msgstr "Кръвен Фонтан"
+
+#: Source/objects.cpp:5446
+msgid "Decapitated Body"
+msgstr "Обезглавено Тяло"
+
+#: Source/objects.cpp:5449
+msgid "Book of the Blind"
+msgstr "Книга на Слепите"
+
+#: Source/objects.cpp:5452
+msgid "Book of Blood"
+msgstr "Книга на Кръвта"
+
+#: Source/objects.cpp:5455
+msgid "Purifying Spring"
+msgstr "Пречистващ извор"
+
+#: Source/objects.cpp:5462 Source/objects.cpp:5486
+msgid "Weapon Rack"
+msgstr "Оръжейна стойка"
 
 #: Source/objects.cpp:5465
-msgid "Decapitated Body"
-msgstr "Обезглавено Тяло"
+msgid "Goat Shrine"
+msgstr "Козьо Светилище"
 
 #: Source/objects.cpp:5468
-msgid "Book of the Blind"
-msgstr "Книга на Слепите"
+msgid "Cauldron"
+msgstr "Котел"
 
 #: Source/objects.cpp:5471
-msgid "Book of Blood"
-msgstr "Книга на Кръвта"
+msgid "Murky Pool"
+msgstr "Мътен вир"
 
 #: Source/objects.cpp:5474
-msgid "Purifying Spring"
-msgstr "Пречистващ извор"
-
-#: Source/objects.cpp:5481 Source/objects.cpp:5505
-msgid "Weapon Rack"
-msgstr "Оръжейна стойка"
-
-#: Source/objects.cpp:5484
-msgid "Goat Shrine"
-msgstr "Козьо Светилище"
-
-#: Source/objects.cpp:5487
-msgid "Cauldron"
-msgstr "Котел"
-
-#: Source/objects.cpp:5490
-msgid "Murky Pool"
-msgstr "Мътен вир"
-
-#: Source/objects.cpp:5493
 msgid "Fountain of Tears"
 msgstr "Фонтан на сълзите"
 
-#: Source/objects.cpp:5496
+#: Source/objects.cpp:5477
 msgid "Steel Tome"
 msgstr "Стоманен Том"
 
-#: Source/objects.cpp:5499
+#: Source/objects.cpp:5480
 msgid "Pedestal of Blood"
 msgstr "Педестал от Кръв"
 
-#: Source/objects.cpp:5508
+#: Source/objects.cpp:5489
 msgid "Mushroom Patch"
 msgstr "Гъбен мицел"
 
-#: Source/objects.cpp:5511
+#: Source/objects.cpp:5492
 msgid "Vile Stand"
 msgstr "Ужасяваща стойка"
 
-#: Source/objects.cpp:5514
-=======
-#: Source/objects.cpp:5407
-msgid "{:s} Shrine"
-msgstr "{:s} Светилище"
-
-#: Source/objects.cpp:5411
-msgid "Skeleton Tome"
-msgstr "Скелетен Том"
-
-#: Source/objects.cpp:5414
-msgid "Library Book"
-msgstr "Библиотечен Том"
-
-#: Source/objects.cpp:5417
-msgid "Blood Fountain"
-msgstr "Кръвен Фонтан"
-
-#: Source/objects.cpp:5420
-msgid "Decapitated Body"
-msgstr "Обезглавено Тяло"
-
-#: Source/objects.cpp:5423
-msgid "Book of the Blind"
-msgstr "Книга на Слепите"
-
-#: Source/objects.cpp:5426
-msgid "Book of Blood"
-msgstr "Книга на Кръвта"
-
-#: Source/objects.cpp:5429
-msgid "Purifying Spring"
-msgstr "Пречистващ извор"
-
-#: Source/objects.cpp:5436 Source/objects.cpp:5460
-msgid "Weapon Rack"
-msgstr "Оръжейна стойка"
-
-#: Source/objects.cpp:5439
-msgid "Goat Shrine"
-msgstr "Козьо Светилище"
-
-#: Source/objects.cpp:5442
-msgid "Cauldron"
-msgstr "Котел"
-
-#: Source/objects.cpp:5445
-msgid "Murky Pool"
-msgstr "Мътен вир"
-
-#: Source/objects.cpp:5448
-msgid "Fountain of Tears"
-msgstr "Фонтан на сълзите"
-
-#: Source/objects.cpp:5451
-msgid "Steel Tome"
-msgstr "Стоманен Том"
-
-#: Source/objects.cpp:5454
-msgid "Pedestal of Blood"
-msgstr "Педестал от Кръв"
-
-#: Source/objects.cpp:5463
-msgid "Mushroom Patch"
-msgstr "Гъбен мицел"
-
-#: Source/objects.cpp:5466
-msgid "Vile Stand"
-msgstr "Ужасяваща стойка"
-
-#: Source/objects.cpp:5469
->>>>>>> Stashed changes
+#: Source/objects.cpp:5495
 msgid "Slain Hero"
 msgstr "Повален герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5521
-=======
-#: Source/objects.cpp:5476
->>>>>>> Stashed changes
+#: Source/objects.cpp:5502
 msgid "Trapped {:s}"
 msgstr "{:s} клопка"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5527
-=======
-#: Source/objects.cpp:5482
->>>>>>> Stashed changes
+#: Source/objects.cpp:5508
 msgid "{:s} (disabled)"
 msgstr "{:s} (изключено)"
 
-#: Source/panels/charpanel.cpp:110
+#: Source/panels/charpanel.cpp:109
 msgid "MAX"
 msgstr "МАКС"
 
-#: Source/panels/charpanel.cpp:120
+#: Source/panels/charpanel.cpp:119
 msgid "Level"
 msgstr "Ниво"
 
-#: Source/panels/charpanel.cpp:122
+#: Source/panels/charpanel.cpp:121
 msgid "Experience"
 msgstr "Опит"
 
-#: Source/panels/charpanel.cpp:124
+#: Source/panels/charpanel.cpp:123
 msgid "Next level"
 msgstr "Следващо ниво"
 
-#: Source/panels/charpanel.cpp:127
+#: Source/panels/charpanel.cpp:126
 msgid "None"
 msgstr "Няма"
 
-#: Source/panels/charpanel.cpp:133
+#: Source/panels/charpanel.cpp:132
 msgid "Base"
 msgstr "База"
 
-#: Source/panels/charpanel.cpp:134
+#: Source/panels/charpanel.cpp:133
 msgid "Now"
 msgstr "Сега"
 
-#: Source/panels/charpanel.cpp:135
+#: Source/panels/charpanel.cpp:134
 msgid "Strength"
 msgstr "Сила"
 
-#: Source/panels/charpanel.cpp:139
+#: Source/panels/charpanel.cpp:138
 msgid "Magic"
 msgstr "Магия"
 
-#: Source/panels/charpanel.cpp:143
+#: Source/panels/charpanel.cpp:142
 msgid "Dexterity"
 msgstr "Сръчност"
 
-#: Source/panels/charpanel.cpp:146
+#: Source/panels/charpanel.cpp:145
 msgid "Vitality"
 msgstr "Жизненост"
 
-#: Source/panels/charpanel.cpp:149
+#: Source/panels/charpanel.cpp:148
 msgid "Points to distribute"
-msgstr "Точки за подобрение"
+msgstr "Точки за разпределяне"
 
-#: Source/panels/charpanel.cpp:159
+#: Source/panels/charpanel.cpp:158
 msgid "Armor class"
 msgstr "Клас броня"
 
-#: Source/panels/charpanel.cpp:161
+#: Source/panels/charpanel.cpp:160
 msgid "To hit"
-msgstr ""
-"Шанс\n"
-" за удар"
+msgstr "Шанс удар"
 
-#: Source/panels/charpanel.cpp:163
+#: Source/panels/charpanel.cpp:162
 msgid "Damage"
 msgstr "Щети"
 
-#: Source/panels/charpanel.cpp:170
+#: Source/panels/charpanel.cpp:168
 msgid "Life"
 msgstr "Живот"
 
-#: Source/panels/charpanel.cpp:174
+#: Source/panels/charpanel.cpp:172
 msgid "Mana"
 msgstr "Мана"
 
-#: Source/panels/charpanel.cpp:179
+#: Source/panels/charpanel.cpp:177
 msgid "Resist magic"
-msgstr ""
-" \n"
-"Устойчивости:\n"
-"Магия\n"
-"\n"
-" "
+msgstr "Устойчивост магия"
+
+#: Source/panels/charpanel.cpp:179
+msgid "Resist fire"
+msgstr "Устойчивост огън"
 
 #: Source/panels/charpanel.cpp:181
-msgid "Resist fire"
-msgstr "Огън"
-
-#: Source/panels/charpanel.cpp:183
 msgid "Resist lightning"
-msgstr "Мълния"
+msgstr "Устойчивост мълния"
 
-#: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:106
-#: Source/panels/mainpanel.cpp:108
+#: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
+#: Source/panels/mainpanel.cpp:111
 msgid "voice"
 msgstr "глас"
 
-#: Source/panels/mainpanel.cpp:84
+#: Source/panels/mainpanel.cpp:87
 msgid "char"
 msgstr "герой"
 
-#: Source/panels/mainpanel.cpp:85
+#: Source/panels/mainpanel.cpp:88
 msgid "quests"
 msgstr "задачи"
 
-#: Source/panels/mainpanel.cpp:86
+#: Source/panels/mainpanel.cpp:89
 msgid "map"
 msgstr "карта"
 
-#: Source/panels/mainpanel.cpp:87
+#: Source/panels/mainpanel.cpp:90
 msgid "menu"
-msgstr "mеню"
+msgstr "меню"
 
-#: Source/panels/mainpanel.cpp:88
+#: Source/panels/mainpanel.cpp:91
 msgid "inv"
 msgstr "инв"
 
-#: Source/panels/mainpanel.cpp:89
+#: Source/panels/mainpanel.cpp:92
 msgid "spells"
 msgstr "закл"
 
-#: Source/panels/mainpanel.cpp:101 Source/panels/mainpanel.cpp:103
-#: Source/panels/mainpanel.cpp:105
+#: Source/panels/mainpanel.cpp:104 Source/panels/mainpanel.cpp:106
+#: Source/panels/mainpanel.cpp:108
 msgid "mute"
 msgstr "ням"
 
-#: Source/pfile.cpp:242
+#: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
 msgstr "Неуспешно отваряне на архива на играча за записване."
 
-<<<<<<< Updated upstream
-#: Source/pfile.cpp:392
+#: Source/pfile.cpp:385
 msgid "Unable to open archive"
 msgstr "Неуспешно отваряне на архив"
 
-#: Source/pfile.cpp:394
+#: Source/pfile.cpp:387
 msgid "Unable to load character"
 msgstr "Неуспешно зареждане на герой"
 
-#: Source/pfile.cpp:419 Source/pfile.cpp:439
+#: Source/pfile.cpp:410 Source/pfile.cpp:430
 msgid "Unable to read to save file archive"
 msgstr "Неуспешно прочитане на архив за записен файл"
 
-#: Source/pfile.cpp:458
-=======
-#: Source/pfile.cpp:377
-msgid "Unable to open archive"
-msgstr "Неуспешно отваряне на архив"
-
-#: Source/pfile.cpp:379
-msgid "Unable to load character"
-msgstr "Неуспешно зареждане на герой"
-
-#: Source/pfile.cpp:403 Source/pfile.cpp:423
-msgid "Unable to read to save file archive"
-msgstr "Неуспешно прочитане на архив за записен файл"
-
-#: Source/pfile.cpp:442
->>>>>>> Stashed changes
+#: Source/pfile.cpp:449
 msgid "Unable to write to save file archive"
 msgstr "Неуспешно записване в архив за записен файл"
 
-#: Source/plrmsg.cpp:88
+#. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
+#: Source/plrmsg.cpp:89
 msgid "{:s} (lvl {:d}): {:s}"
 msgstr "{:s} (ниво {:d}): {:s}"
 
@@ -6800,7 +5968,7 @@ msgstr ",%03d"
 msgid "%i gold"
 msgstr "%i злато"
 
-#: Source/qol/monhealthbar.cpp:37 Source/qol/xpbar.cpp:56
+#: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
 msgid ""
 "Failed to load UI resources.\n"
 "\n"
@@ -6843,14 +6011,6 @@ msgstr "Гарбад Хилавия"
 msgid "Zhar the Mad"
 msgstr "Лудият Жар"
 
-#: Source/quests.cpp:45
-msgid "Lachdanan"
-msgstr "Лахданан"
-
-#: Source/quests.cpp:46
-msgid "Diablo"
-msgstr "Диабло"
-
 #: Source/quests.cpp:47
 msgid "The Butcher"
 msgstr "Касапина"
@@ -6880,7 +6040,7 @@ msgid "Poisoned Water Supply"
 msgstr "Отровения извор"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:55 Source/quests.cpp:91
+#: Source/quests.cpp:55 Source/quests.cpp:90
 msgid "The Chamber of Bone"
 msgstr "Залата на Костите"
 
@@ -6908,10 +6068,6 @@ msgstr "Пътуващият търговец"
 msgid "The Defiler"
 msgstr "Осквернителят"
 
-#: Source/quests.cpp:62
-msgid "Na-Krul"
-msgstr "На-Крул"
-
 #: Source/quests.cpp:63 Source/trigs.cpp:447
 msgid "Cornerstone of the World"
 msgstr "Крайъгълният камък на Света"
@@ -6922,27 +6078,27 @@ msgid "The Jersey's Jersey"
 msgstr "Говежди Одежди"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:90
+#: Source/quests.cpp:89
 msgid "King Leoric's Tomb"
 msgstr "Гробницата на Крал Леорик"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:92 Source/setmaps.cpp:26
+#: Source/quests.cpp:91 Source/setmaps.cpp:26
 msgid "Maze"
 msgstr "Лабиринт"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:93
+#: Source/quests.cpp:92
 msgid "A Dark Passage"
 msgstr "Мрачен проход"
 
 #. TRANSLATORS: Quest Map
-#: Source/quests.cpp:94
+#: Source/quests.cpp:93
 msgid "Unholy Altar"
 msgstr "Неосветения олтар"
 
 #. TRANSLATORS: Used for Quest Portals. {:s} is a Map Name
-#: Source/quests.cpp:450
+#: Source/quests.cpp:449
 msgid "To {:s}"
 msgstr "До {:s}"
 
@@ -7213,38 +6369,6 @@ msgctxt "spell"
 msgid "Rune of Stone"
 msgstr "Руна за Вкаменяване"
 
-#: Source/stores.cpp:91
-msgid "Griswold"
-msgstr "Грисволд"
-
-#: Source/stores.cpp:92
-msgid "Pepin"
-msgstr "Пепин"
-
-#: Source/stores.cpp:94
-msgid "Ogden"
-msgstr "Огдън"
-
-#: Source/stores.cpp:95
-msgid "Cain"
-msgstr "Кайн"
-
-#: Source/stores.cpp:96
-msgid "Farnham"
-msgstr "Фарнам"
-
-#: Source/stores.cpp:97
-msgid "Adria"
-msgstr "Адрия"
-
-#: Source/stores.cpp:98 Source/stores.cpp:1252
-msgid "Gillian"
-msgstr "Джилиън"
-
-#: Source/stores.cpp:99
-msgid "Wirt"
-msgstr "Върт"
-
 #: Source/stores.cpp:179 Source/stores.cpp:186
 msgid ",  "
 msgstr ",  "
@@ -7310,7 +6434,7 @@ msgstr "Напуснете ателието"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "Продавам тези предмети.             Вашето злато: {:d}"
+msgstr "Предлагам тези предмети за продажба.             Вашето злато: {:d}"
 
 #: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
 #: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
@@ -7324,7 +6448,7 @@ msgstr "Назад"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:351
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "Продавам тези изключителни предмети.    Вашето злато: {:d}"
+msgstr "Предлагам тези качествени предмети за продажба.    Вашето злато: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:474 Source/stores.cpp:746
@@ -7550,7 +6674,7 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
-" Ааа, за историята на Краля ли? Трагичния крах на Леорик дойде като гръм от "
+" O, за историята на Краля, нали? Трагичния крах на Леорик дойде като гръм от "
 "ясно небе за тези земи. Хората винаги обичаха Краля, а сега живеят в дълбок "
 "страх от него. Въпросът, който продължавам да си задавам, е, как е могъл да "
 "падне толкова далеч от Светилната - все пак Леорик винаги е бил най-светият "
@@ -7578,23 +6702,23 @@ msgid ""
 "levels beneath the Cathedral. Please, good master, put his soul at ease by "
 "destroying his now cursed form..."
 msgstr ""
-"Градът се нуждае от Вашата помощ, драги господарю! Преди няколко месеца, "
+"Градът се нуждае от вашата помощ, драги господарю! Преди няколко месеца, "
 "Принц Албрихт, синът на Крал Леорик, бе отвлечен. Побеснял, Кралят реши да "
 "обърне всеки камък, за да намери своята рожба. Но с всеки изминал ден, "
-"Леорик сякаш изпадаше във все по-дълбока лудост. Обвиняваше невинни жители "
+"Леорик сякаш изпадаше във все по-дълбока лудост. Обвиняваше невинните жители "
 "за изчезването на сина си, като ги осъждаше на ужасяваща екзекуция. По-малко "
 "от половината от нас успяха да се спасят от неговото безумие.\n"
 "\n"
-"Рицарите му и придворните свещеници се опитаха да го усмирят, но той се "
-"обърна срещу тях и заа жалост, те бяха принудени на цареубийство. С "
-"последния си дъх, Кралят отправи жестоко проклятие към бившите си слуги, "
-"кълнейки, се че те ще му служат вечно в мрака.\n"
+"Неговите рицарите и свещениците се опитаха да го усмирят, но той се обърна "
+"срещу тях. За жалост, те бяха принудени на цареубийство. С последния си дъх, "
+"Кралят отправи жестоко проклятие към бившите си слуги, кълнейки, се че те ще "
+"му служат вечно в мрака.\n"
 "\n"
 "Точно тогава, събитията придобиха още по-мрачен изглед, какъвто не съм и "
 "предполагал! Някогашният ни Крал се надигна от своя вечен сън и в момента "
 "ръководи легион от немъртви чудовища в Лабиринта. Тялото му лежи заровено в "
-"гробница, на три нива под Катедралата. Умолявам те, драги господарю, върни "
-"душата му в покой, като унищожиш тази му прокълната същност..."
+"гробница, цели три нива под Катедралата. Умолявам те, драги господарю, върни "
+"душата му в покой, като унищожиш прокълнатата му същност..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
@@ -7604,7 +6728,7 @@ msgid ""
 "land..."
 msgstr ""
 "Както вече споменах, драги господарю, Кралят е загробен на три нива "
-"дълбочина. Той е там долу, в зловещата тъмнина, чакайки момента да унищожи "
+"дълбочина. Спотайва се долу, в зловещата тъмнина, чакайки момента да унищожи "
 "тази земя."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
@@ -7690,7 +6814,7 @@ msgid ""
 msgstr ""
 "Виж, имам си достатъчно работа. Не продавам информация и не ме увлича "
 "някакъв си Крал, особено ако е мъртъв от години. Ако ти трябва нещо, с което "
-"да се изправиш срещу този Господар на Немъртвите, може би мога да ти "
+"да се изправиш срещу този \"Господар на немъртвите\", може би мога да ти "
 "помогна..."
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
@@ -8611,14 +7735,14 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
-"Грисволд говори за Наковалнята на Яростта - легендарен артефакт, който дълго "
-"е бил търсен, но никога не е бил намерен. Изработена от металните кости на "
-"демоните от Ямата на Остриетата, Наковалнята на Яростта е излята между "
-"черепите на петте най-могъщи магове на подземния свят. Гравирана с руни на "
-"силата и хаоса, всяко оръжие или броня, изковани на тази наковалня, ще бъдат "
-"потопени в царството на Хаоса, което ще им придаде магически свойства. "
-"Твърди се, че непредсказуемостта на Хаоса прави трудно да се разбере какъв "
-"ще бъде резултатът от изковаването..."
+"Грисволд говори за \"Наковалнята на яростта\" - легендарен артефакт, който "
+"дълго е бил търсен, но никога не е бил намерен. Изработена от металните "
+"кости на демоните от Ямата на Остриетата, \"Наковалнята на яростта\" е "
+"излята между черепите на петте най-могъщи магове на подземния свят. "
+"Гравирана с руни на силата и хаоса, всяко оръжие или броня, изковани на тази "
+"наковалня, ще бъдат потопени в царството на Хаоса, което ще им придаде "
+"магически свойства. Твърди се, че непредсказуемостта на Хаоса прави трудно "
+"да се разбере какъв ще бъде резултатът от изковаването..."
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -9489,7 +8613,7 @@ msgid ""
 "deep sense of responsibility."
 msgstr ""
 "Огдън е собственик и управител на странноприемницата и гостилница "
-"'Изгряващото слънце' вече почти четири години. Той я купи само няколко "
+"\"Изгряващото слънце\" вече почти четири години. Той я купи само няколко "
 "месеца преди всичко тук да се превърне в Ад. Двамата със съпругата му Гарда "
 "нямат пари, за да си тръгнат, тъй като са вложили всичко, което са имали, за "
 "да си създадат живот тук. Той е добър човек с дълбоко чувство за отговорност."
@@ -10740,15 +9864,15 @@ msgid ""
 " \n"
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
-"Слава богу, че се завърна!\n"
-"Доста неща се промениха откакто си тръгна, приятелю. Цареше мир, докато "
-"Мрачни ездачи не минаха и опустошиха градчето ни. Мнозина завариха смъртта "
-"си на място, а онези, осмелили се да вдигнат оръжие, бяха жестоко разсечени, "
-"взети за роби или ги застигна нещо по-лошото. Църквата в края на града бе "
-"осквернена и ползвана за мрачни ритуали. Писъците, които се чуват през нощта "
-"оттам, са нечовешки, но някои от съжителите ни може и да е оцелял. Следвай "
-"пътеката, минаваща между моята гостилница и ковачницата, за да стигнеш до "
-"църквата и спасиш когото можеш.\n"
+"Слава богу, че се върна!\n"
+"Доста неща се промениха, откакто си тръгна, приятелю. Цареше пълен мир, "
+"докато Ездачите на мрака не минаха и разрушиха градчето ни. Мнозина завариха "
+"смъртта си на място. Онези, които се осмелиха да вдигнат оръжие, бяха "
+"жестоко разсечени, взети за роби или ги застигна нещо по-лошото. Църквата в "
+"края на града бе осквернена и ползвана за мрачни ритуали. Писъците, които се "
+"чуват през нощта оттам, са нечовешки, но някои от съжителите ни може и да е "
+"оцелял. Следвай пътеката, минаваща между моята гостилница и ковачницата, за "
+"да стигнеш до църквата, спаси когото можеш.\n"
 "\n"
 "Може би ще можем да си поговорим по-обширно някой друг път. Успех."
 
@@ -11414,7 +10538,7 @@ msgstr "Пълен Откачалник"
 
 #: Source/towners.cpp:266
 msgid "Celia"
-msgstr "Селия"
+msgstr ""
 
 #: Source/towners.cpp:279
 msgid "Slain Townsman"
@@ -11445,17 +10569,17 @@ msgid "Down to Crypt"
 msgstr "Надолу към Гробницата"
 
 #: Source/trigs.cpp:412 Source/trigs.cpp:492 Source/trigs.cpp:539
-#: Source/trigs.cpp:634
+#: Source/trigs.cpp:630
 msgid "Up to level {:d}"
 msgstr "Нагоре към ниво {:d}"
 
 #: Source/trigs.cpp:414 Source/trigs.cpp:469 Source/trigs.cpp:521
-#: Source/trigs.cpp:600 Source/trigs.cpp:617 Source/trigs.cpp:664
+#: Source/trigs.cpp:596 Source/trigs.cpp:613 Source/trigs.cpp:660
 msgid "Up to town"
 msgstr "Нагоре към Града"
 
-#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:556
-#: Source/trigs.cpp:581 Source/trigs.cpp:646
+#: Source/trigs.cpp:425 Source/trigs.cpp:503 Source/trigs.cpp:552
+#: Source/trigs.cpp:577 Source/trigs.cpp:642
 msgid "Down to level {:d}"
 msgstr "Надолу към ниво {:d}"
 
@@ -11467,22 +10591,23 @@ msgstr "Нагоре към Гробница ниво {:d}"
 msgid "Down to Crypt level {:d}"
 msgstr "Надолу към Гробница ниво {:d}"
 
-#: Source/trigs.cpp:568
+#: Source/trigs.cpp:564
 msgid "Up to Nest level {:d}"
 msgstr "Нагоре към Свърталище ниво {:d}"
 
-#: Source/trigs.cpp:677
+#: Source/trigs.cpp:673
 msgid "Down to Diablo"
 msgstr "Надолу към Диабло"
 
-#: Source/trigs.cpp:710 Source/trigs.cpp:724 Source/trigs.cpp:738
+#: Source/trigs.cpp:706 Source/trigs.cpp:720 Source/trigs.cpp:734
 msgid "Back to Level {:d}"
 msgstr "Нагоре към Ниво {:d}"
 
-#~ msgid "Force spawn mode even if diabdat.mpq is found"
-#~ msgstr ""
-#~ "Принудително използване на режим spawn, дори когато diabdat.mpq е налице"
+#~ msgid "Credits"
+#~ msgstr "Създатели"
 
-#~ msgid "Force diablo mode even if hellfire.mpq is found"
-#~ msgstr ""
-#~ "Принудително използване на режим Diablo, дори когато hellfire.mpq е налице"
+#~ msgid "Quest Log"
+#~ msgstr "Списък със задачи"
+
+#~ msgid "Close Quest Log"
+#~ msgstr "Затвори списък със задачи"
