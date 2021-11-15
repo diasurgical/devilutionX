@@ -331,11 +331,11 @@ msgstr "Режим Hellfire"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-msgstr "Пълна версия"
+msgstr "Режим Пълна версия"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Shareware"
-msgstr "Пробна версия"
+msgstr "Режим Пробна версия"
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -1855,7 +1855,7 @@ msgstr "Кръгъл щит"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
-msgstr "Тояга"
+msgstr "Сопа"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
@@ -2311,7 +2311,7 @@ msgstr "Широк меч"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr "Рицарски меч"
+msgstr "Батардов меч"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
