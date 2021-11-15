@@ -1,11 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-<<<<<<< Updated upstream
-"POT-Creation-Date: 2021-10-31 23:17+0100\n"
-=======
-"POT-Creation-Date: 2021-11-15 17:59+0100\n"
->>>>>>> Stashed changes
+"POT-Creation-Date: 2021-11-15 22:07+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Nikolay Popov <nikolai.popovz@gmail.com>\n"
 "Language-Team: Nikolay Popov <nikolai.popovz@gmail.com>; Zakxaev68 / "
@@ -327,11 +323,7 @@ msgstr "Добре"
 
 #: Source/DiabloUI/extrasmenu.cpp:41 Source/DiabloUI/selstart.cpp:44
 msgid "Switch to Diablo"
-<<<<<<< Updated upstream
 msgstr "Режим Diablo"
-=======
-msgstr "Режим Диабло"
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/extrasmenu.cpp:41
 msgid "Switch to Hellfire"
@@ -339,19 +331,11 @@ msgstr "Режим Hellfire"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Fullgame"
-<<<<<<< Updated upstream
-msgstr "Режим Пълна игра"
-
-#: Source/DiabloUI/extrasmenu.cpp:43
-msgid "Switch to Shareware"
-msgstr "Режим пробна версия"
-=======
 msgstr "Пълна версия"
 
 #: Source/DiabloUI/extrasmenu.cpp:43
 msgid "Switch to Shareware"
 msgstr "Пробна версия"
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/extrasmenu.cpp:44
 msgid "Replay Intro"
@@ -375,11 +359,7 @@ msgstr "Групова игра"
 
 #: Source/DiabloUI/mainmenu.cpp:38
 msgid "Extras"
-<<<<<<< Updated upstream
-msgstr "Допълнения"
-=======
 msgstr "Екстри"
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/mainmenu.cpp:39
 msgid "Show Credits"
@@ -411,13 +391,8 @@ msgstr "Клиент-сървър (TCP)"
 msgid "Loopback"
 msgstr "Обратна връзка"
 
-<<<<<<< Updated upstream
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
-#: Source/DiabloUI/selgame.cpp:505
-=======
 #: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
 #: Source/DiabloUI/selgame.cpp:510
->>>>>>> Stashed changes
 msgid "Multi Player Game"
 msgstr "Групова игра"
 
@@ -488,11 +463,7 @@ msgstr "Създай игра с трудност по Ваш избор."
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-<<<<<<< Updated upstream
-msgstr "Създай публична игра с трудност по избор."
-=======
 msgstr "Създай публична игра с трудност по Ваш избор."
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
@@ -777,11 +748,7 @@ msgstr "Наистина ли искате да изтриете героя \"{:
 
 #: Source/DiabloUI/selstart.cpp:43
 msgid "Enter Hellfire"
-<<<<<<< Updated upstream
 msgstr "Режим Hellfire"
-=======
-msgstr "Вход в Hellfire"
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
@@ -797,15 +764,9 @@ msgid ""
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-<<<<<<< Updated upstream
-"Поддържаме Чат сървър на Discord.gg/YQKCAYQ Присъединете се към нашата "
-"общност, където можем да говорим за всичко свързано с Diablo и допълнението "
-"Hellfire."
-=======
 "Поддържаме чат сървър на Discord.gg/YQKCAYQ Следвайте връзката за да се "
 "присъедините към нашата общност където дискутираме всичко свързано с Diablo "
 "и допълнението Hellfire."
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -844,17 +805,10 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
-<<<<<<< Updated upstream
 "\tТози порт използва шрифтовете CharisSILB, Unifont, и Noto лицензирани под "
 "SIL Open Font License, както и Twitmoji лицензирани под CC-BY 4.0. Този порт "
 "използва също SDL, лицензиран под zlib-license. Виж ReadMe (ПрочетиМе) за "
 "повече информация."
-=======
-"\tТози порт използва шрифтовете CharisSILB, Unifont, and Noto лицензирани "
-"под SIL Open Font License, както и Twitmoji лицензирани под CC-BY 4.0. Този "
-"порт използва също SDL, лицензиран под zlib-license. Виж ReadMe (ПрочетиМе) "
-"текстов файл)за повече информация."
->>>>>>> Stashed changes
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
@@ -875,11 +829,7 @@ msgstr ""
 "\n"
 "Изглежда има грешка в {:s} при ред {:d}"
 
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:116
-=======
 #: Source/appfat.cpp:117
->>>>>>> Stashed changes
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -889,20 +839,12 @@ msgstr ""
 "\n"
 "Уверете се, че се съответният се намира в папката на играта."
 
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:122
-=======
 #: Source/appfat.cpp:123
->>>>>>> Stashed changes
 msgid "Data File Error"
 msgstr "Грешка при прочитане на данни от файл"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:130
-=======
 #: Source/appfat.cpp:131
->>>>>>> Stashed changes
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -910,11 +852,7 @@ msgstr ""
 "Неуспешно записване в директория:\n"
 "{:s}"
 
-<<<<<<< Updated upstream
-#: Source/appfat.cpp:132
-=======
 #: Source/appfat.cpp:133
->>>>>>> Stashed changes
 msgid "Read-Only Directory Error"
 msgstr "Грешка при отваряне на папка с зададен достъп само за четене"
 
@@ -928,11 +866,7 @@ msgstr "парола: "
 
 #: Source/automap.cpp:492
 msgid "Public Game"
-<<<<<<< Updated upstream
-msgstr "Публична Игра"
-=======
 msgstr "Публична игра"
->>>>>>> Stashed changes
 
 #: Source/automap.cpp:504
 msgid "Level: Nest {:d}"
@@ -994,11 +928,7 @@ msgstr "Умение"
 msgid "{:s} Skill"
 msgstr "{:s} Умение"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:771
-=======
 #: Source/control.cpp:712
->>>>>>> Stashed changes
 msgid "Spell"
 msgstr "Заклинание"
 
@@ -1018,11 +948,7 @@ msgstr "Заклинание Ниво 0 - Неизползваемо"
 msgid "Spell Level {:d}"
 msgstr "Заклинание Ниво {:d}"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:787
-=======
 #: Source/control.cpp:728
->>>>>>> Stashed changes
 msgid "Scroll"
 msgstr "{:d} Свитък"
 
@@ -1041,11 +967,7 @@ msgstr[1] "{:d} Свитъци"
 msgid "Staff"
 msgstr "Жезъл"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:801 Source/control.cpp:1250 Source/items.cpp:1317
-=======
 #: Source/control.cpp:742 Source/control.cpp:1244 Source/items.cpp:1317
->>>>>>> Stashed changes
 msgid "Staff of {:s}"
 msgstr "Жезъл на {:s}"
 
@@ -1079,11 +1001,7 @@ msgstr "Бутон за избор на текущо заклинание"
 msgid "Hotkey: 's'"
 msgstr "Клавишна комбинация: 's'"
 
-<<<<<<< Updated upstream
-#: Source/control.cpp:1374 Source/inv.cpp:1992 Source/items.cpp:3739
-=======
 #: Source/control.cpp:1368 Source/inv.cpp:1979 Source/items.cpp:3729
->>>>>>> Stashed changes
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} златна монета"
@@ -1270,29 +1188,17 @@ msgstr ""
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
 msgid "Force Shareware mode"
-<<<<<<< Updated upstream
-msgstr "Принудителен пробен режим"
-=======
 msgstr "Принуди Пробна версия"
->>>>>>> Stashed changes
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:796
 msgid "Force Diablo mode"
-<<<<<<< Updated upstream
 msgstr "Принудителен режим Diablo"
-=======
-msgstr "Принуди режим Diablo"
->>>>>>> Stashed changes
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:797
 msgid "Force Hellfire mode"
-<<<<<<< Updated upstream
 msgstr "Принудителен режим Hellfire"
-=======
-msgstr "Принуди режим Hellfire"
->>>>>>> Stashed changes
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:798
@@ -1915,17 +1821,6 @@ msgid "Press ESC to end or the arrow keys to scroll."
 msgstr ""
 "Наиснете ESC, за да прекъснете или клавишните стрелки за да превъртите."
 
-<<<<<<< Updated upstream
-#: Source/init.cpp:206
-msgid "diabdat.mpq or spawn.mpq"
-msgstr "diabdat.mpq или spawn.mpq"
-
-#: Source/init.cpp:226
-msgid "Some Hellfire MPQs are missing"
-msgstr "Някой MPQ файловете от Hellfire липсват."
-
-#: Source/init.cpp:226
-=======
 #: Source/init.cpp:175
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq или spawn.mpq"
@@ -1935,7 +1830,6 @@ msgid "Some Hellfire MPQs are missing"
 msgstr "Някой MPQ файловете от Hellfire липсват."
 
 #: Source/init.cpp:196
->>>>>>> Stashed changes
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1943,11 +1837,7 @@ msgstr ""
 "Не всички Hellfire MPQ файлове бяха намерени.\n"
 "Моля, поставете всички hf*.mpq файлове."
 
-<<<<<<< Updated upstream
-#: Source/init.cpp:234
-=======
 #: Source/init.cpp:204
->>>>>>> Stashed changes
 msgid "Unable to create main window"
 msgstr "Невъзможно създаването на основен прозорец"
 
@@ -2191,11 +2081,7 @@ msgid "Quilted Armor"
 msgstr "Ватирана броня"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-<<<<<<< Updated upstream
-#: Source/itemdat.cpp:77 Source/objects.cpp:5478
-=======
 #: Source/itemdat.cpp:77 Source/objects.cpp:5433
->>>>>>> Stashed changes
 msgid "Armor"
 msgstr "Броня"
 
@@ -3949,17 +3835,6 @@ msgid " {:d} Dex"
 msgstr " {:d} Сръч"
 
 #. TRANSLATORS: {:s} will be a Character Name
-<<<<<<< Updated upstream
-#: Source/items.cpp:3523 Source/player.cpp:3027
-msgid "Ear of {:s}"
-msgstr "Ухо на {:s}"
-
-#: Source/items.cpp:3818
-msgid "chance to hit: {:+d}%"
-msgstr "шанс за удар: {:+d}%"
-
-#: Source/items.cpp:3822
-=======
 #: Source/items.cpp:3513 Source/player.cpp:3018
 msgid "Ear of {:s}"
 msgstr "Ухо на {:s}"
@@ -3969,39 +3844,19 @@ msgid "chance to hit: {:+d}%"
 msgstr "шанс за удар: {:+d}%"
 
 #: Source/items.cpp:3812
->>>>>>> Stashed changes
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3826 Source/items.cpp:4082
-msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "шанс удар: {:+d}%, {:+d}% щети"
-
-#: Source/items.cpp:3830
-=======
 #: Source/items.cpp:3816 Source/items.cpp:4072
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "шанс удар: {:+d}%, {:+d}% щети"
 
 #: Source/items.cpp:3820
->>>>>>> Stashed changes
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}% броня"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3834
-msgid "armor class: {:d}"
-msgstr "клас броня: {:d}"
-
-#: Source/items.cpp:3839 Source/items.cpp:4064
-msgid "Resist Fire: {:+d}%"
-msgstr "Устойчивост Огън: {:+d}%"
-
-#: Source/items.cpp:3841
-=======
 #: Source/items.cpp:3824
 msgid "armor class: {:d}"
 msgstr "клас броня: {:d}"
@@ -4011,93 +3866,49 @@ msgid "Resist Fire: {:+d}%"
 msgstr "Устойчивост Огън: {:+d}%"
 
 #: Source/items.cpp:3831
->>>>>>> Stashed changes
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "Устойчивост Огън: 75% MAКС"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3846
-msgid "Resist Lightning: {:+d}%"
-msgstr "Устойчивост Мълния: {:+d}%"
-
-#: Source/items.cpp:3848
-=======
 #: Source/items.cpp:3836
 msgid "Resist Lightning: {:+d}%"
 msgstr "Устойчивост Мълния: {:+d}%"
 
 #: Source/items.cpp:3838
->>>>>>> Stashed changes
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "Устойчивост Мълния: 75% MAКС"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3853
-msgid "Resist Magic: {:+d}%"
-msgstr "Устойчивост Магия: {:+d}%"
-
-#: Source/items.cpp:3855
-=======
 #: Source/items.cpp:3843
 msgid "Resist Magic: {:+d}%"
 msgstr "Устойчивост Магия: {:+d}%"
 
 #: Source/items.cpp:3845
->>>>>>> Stashed changes
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "Устойчивост Магия: 75% MAX"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3860
-msgid "Resist All: {:+d}%"
-msgstr "Устойчивост Всичко: {:+d}%"
-
-#: Source/items.cpp:3862
-=======
 #: Source/items.cpp:3850
 msgid "Resist All: {:+d}%"
 msgstr "Устойчивост Всичко: {:+d}%"
 
 #: Source/items.cpp:3852
->>>>>>> Stashed changes
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "Устойчивост Всичко: 75% MAX"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3866
-=======
 #: Source/items.cpp:3856
->>>>>>> Stashed changes
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "заклинанията са увеличени с {:d} ниво"
 msgstr[1] "заклинанията са увеличени с {:d} нива"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3868
-=======
 #: Source/items.cpp:3858
->>>>>>> Stashed changes
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "заклинанията са намалени с {:d} ниво"
 msgstr[1] "заклинанията са намалени с {:d} нива"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3870
-msgid "spell levels unchanged (?)"
-msgstr "нива на заклинания непроменени (?)"
-
-#: Source/items.cpp:3873
-msgid "Extra charges"
-msgstr "Допълнителни заряди"
-
-#: Source/items.cpp:3876
-=======
 #: Source/items.cpp:3860
 msgid "spell levels unchanged (?)"
 msgstr "нива на заклинания непроменени (?)"
@@ -4107,75 +3918,11 @@ msgid "Extra charges"
 msgstr "Допълнителни заряди"
 
 #: Source/items.cpp:3866
->>>>>>> Stashed changes
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s} заряд"
 msgstr[1] "{:d} {:s} заряди"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3880
-msgid "Fire hit damage: {:d}"
-msgstr "Щети Огнен Удар: {:d}"
-
-#: Source/items.cpp:3882
-msgid "Fire hit damage: {:d}-{:d}"
-msgstr "Щети Огнен Удар: {:d}-{:d}"
-
-#: Source/items.cpp:3886
-msgid "Lightning hit damage: {:d}"
-msgstr "Щети Мълниен Удар: {:d}"
-
-#: Source/items.cpp:3888
-msgid "Lightning hit damage: {:d}-{:d}"
-msgstr "Щети Мълниен Удар: {:d}-{:d}"
-
-#: Source/items.cpp:3892
-msgid "{:+d} to strength"
-msgstr "{:+d} към сила"
-
-#: Source/items.cpp:3896
-msgid "{:+d} to magic"
-msgstr "{:+d} към магия"
-
-#: Source/items.cpp:3900
-msgid "{:+d} to dexterity"
-msgstr "{:+d} към сръчност"
-
-#: Source/items.cpp:3904
-msgid "{:+d} to vitality"
-msgstr "{:+d} към жизненост"
-
-#: Source/items.cpp:3908
-msgid "{:+d} to all attributes"
-msgstr "{:+d} към всички атрибути"
-
-#: Source/items.cpp:3912
-msgid "{:+d} damage from enemies"
-msgstr "{:+d} щети от врагове"
-
-#: Source/items.cpp:3916
-msgid "Hit Points: {:+d}"
-msgstr "Живот: {:+d}"
-
-#: Source/items.cpp:3920
-msgid "Mana: {:+d}"
-msgstr "Мана: {:+d}"
-
-#: Source/items.cpp:3923
-msgid "high durability"
-msgstr "висока издържливост"
-
-#: Source/items.cpp:3926
-msgid "decreased durability"
-msgstr "понижена издържливост"
-
-#: Source/items.cpp:3929
-msgid "indestructible"
-msgstr "неразрушими"
-
-#: Source/items.cpp:3932
-=======
 #: Source/items.cpp:3870
 msgid "Fire hit damage: {:d}"
 msgstr "Щети Огнен Удар: {:d}"
@@ -4237,71 +3984,15 @@ msgid "indestructible"
 msgstr "неразрушими"
 
 #: Source/items.cpp:3922
->>>>>>> Stashed changes
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "+{:d}% светлинен радиус"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3935
-=======
 #: Source/items.cpp:3925
->>>>>>> Stashed changes
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "-{:d}% светлинен радиус"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3938
-msgid "multiple arrows per shot"
-msgstr "множество стрели при изстрел"
-
-#: Source/items.cpp:3942
-msgid "fire arrows damage: {:d}"
-msgstr "щети огнени стрели: {:d}"
-
-#: Source/items.cpp:3944
-msgid "fire arrows damage: {:d}-{:d}"
-msgstr "щети огнени стрели: {:d}-{:d}"
-
-#: Source/items.cpp:3948
-msgid "lightning arrows damage {:d}"
-msgstr "щети мълнийни стрели {:d}"
-
-#: Source/items.cpp:3950
-msgid "lightning arrows damage {:d}-{:d}"
-msgstr "щети мълнийни стрели {:d}-{:d}"
-
-#: Source/items.cpp:3954
-msgid "fireball damage: {:d}"
-msgstr "щети огненo кълбо {:d}"
-
-#: Source/items.cpp:3956
-msgid "fireball damage: {:d}-{:d}"
-msgstr "щети огнено кълбо {:d}-{:d}"
-
-#: Source/items.cpp:3959
-msgid "attacker takes 1-3 damage"
-msgstr "атакуващият получава 1-3 щети"
-
-#: Source/items.cpp:3962
-msgid "user loses all mana"
-msgstr "играчът губи всичката мана"
-
-#: Source/items.cpp:3965
-msgid "you can't heal"
-msgstr "не може да се лекувате"
-
-#: Source/items.cpp:3968
-msgid "absorbs half of trap damage"
-msgstr "поглъща половината щети от капани"
-
-#: Source/items.cpp:3971
-msgid "knocks target back"
-msgstr "избутва целта назад"
-
-#: Source/items.cpp:3974
-=======
 #: Source/items.cpp:3928
 msgid "multiple arrows per shot"
 msgstr "множество стрели при изстрел"
@@ -4351,22 +4042,10 @@ msgid "knocks target back"
 msgstr "избутва целта назад"
 
 #: Source/items.cpp:3964
->>>>>>> Stashed changes
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "+200% щети срещу демони"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3977
-msgid "All Resistance equals 0"
-msgstr "Всички устойчивости са 0"
-
-#: Source/items.cpp:3980
-msgid "hit monster doesn't heal"
-msgstr "поразен враг не може да се лекува"
-
-#: Source/items.cpp:3984
-=======
 #: Source/items.cpp:3967
 msgid "All Resistance equals 0"
 msgstr "Всички устойчивости са 0"
@@ -4376,77 +4055,25 @@ msgid "hit monster doesn't heal"
 msgstr "поразен враг не може да се лекува"
 
 #: Source/items.cpp:3974
->>>>>>> Stashed changes
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "удар отнема 3% мана"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3986
-=======
 #: Source/items.cpp:3976
->>>>>>> Stashed changes
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "удар отнема 5% мана"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3990
-=======
 #: Source/items.cpp:3980
->>>>>>> Stashed changes
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "удар отнема 3% жизненост"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3992
-=======
 #: Source/items.cpp:3982
->>>>>>> Stashed changes
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "удар отнема 5% жизненост"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:3995
-msgid "penetrates target's armor"
-msgstr "пробива бронята на врага"
-
-#: Source/items.cpp:3999
-msgid "quick attack"
-msgstr "ускорен замах"
-
-#: Source/items.cpp:4001
-msgid "fast attack"
-msgstr "бърз замах"
-
-#: Source/items.cpp:4003
-msgid "faster attack"
-msgstr "по-бърз замах"
-
-#: Source/items.cpp:4005
-msgid "fastest attack"
-msgstr "най-бърз замах"
-
-#: Source/items.cpp:4009
-msgid "fast hit recovery"
-msgstr "бързо възстановяване от удар"
-
-#: Source/items.cpp:4011
-msgid "faster hit recovery"
-msgstr "по-бързо възстановяване от удар"
-
-#: Source/items.cpp:4013
-msgid "fastest hit recovery"
-msgstr "най-бързо възстановяване от удар"
-
-#: Source/items.cpp:4016
-msgid "fast block"
-msgstr "бързо блокиране"
-
-#: Source/items.cpp:4019
-=======
 #: Source/items.cpp:3985
 msgid "penetrates target's armor"
 msgstr "пробива бронята на врага"
@@ -4484,67 +4111,11 @@ msgid "fast block"
 msgstr "бързо блокиране"
 
 #: Source/items.cpp:4009
->>>>>>> Stashed changes
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "добавя {:d} точка към щети"
 msgstr[1] "добавя {:d} точки към щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4022
-msgid "fires random speed arrows"
-msgstr "изстрелва стрели със случайна скорост"
-
-#: Source/items.cpp:4025
-msgid "unusual item damage"
-msgstr "необичайни щети за тип предмет"
-
-#: Source/items.cpp:4028
-msgid "altered durability"
-msgstr "променена издръжливост"
-
-#: Source/items.cpp:4031
-msgid "Faster attack swing"
-msgstr "по-бърз удар с замах"
-
-#: Source/items.cpp:4034
-msgid "one handed sword"
-msgstr "меч за една ръка"
-
-#: Source/items.cpp:4037
-msgid "constantly lose hit points"
-msgstr "постоянно губене на живот"
-
-#: Source/items.cpp:4040
-msgid "life stealing"
-msgstr "изсмукване на живот"
-
-#: Source/items.cpp:4043
-msgid "no strength requirement"
-msgstr "няма изисквания за сила"
-
-#: Source/items.cpp:4046
-msgid "see with infravision"
-msgstr "гледай с инфразрение"
-
-#: Source/items.cpp:4053
-msgid "lightning damage: {:d}"
-msgstr "мълнийни щети: {:d}"
-
-#: Source/items.cpp:4055
-msgid "lightning damage: {:d}-{:d}"
-msgstr "мълнийни щети: {:d}-{:d}"
-
-#: Source/items.cpp:4058
-msgid "charged bolts on hits"
-msgstr "светкавични заряди при удар"
-
-#: Source/items.cpp:4067
-msgid "occasional triple damage"
-msgstr "случайни тройни щети"
-
-#: Source/items.cpp:4070
-=======
 #: Source/items.cpp:4012
 msgid "fires random speed arrows"
 msgstr "изстрелва стрели със случайна скорост"
@@ -4598,48 +4169,24 @@ msgid "occasional triple damage"
 msgstr "случайни тройни щети"
 
 #: Source/items.cpp:4060
->>>>>>> Stashed changes
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "разпадащи се {:+d}% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4073
-msgid "2x dmg to monst, 1x to you"
-msgstr "2x щети за чуд., 1x за играч"
-
-#: Source/items.cpp:4076
-=======
 #: Source/items.cpp:4063
 msgid "2x dmg to monst, 1x to you"
 msgstr "2x щети за чуд., 1x за играч"
 
 #: Source/items.cpp:4066
->>>>>>> Stashed changes
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "Произволни 0 - 500% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4079
-=======
 #: Source/items.cpp:4069
->>>>>>> Stashed changes
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "ниска изд., {:+d}% щети"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4085
-msgid "extra AC vs demons"
-msgstr "допълнително КБ с/у демони"
-
-#: Source/items.cpp:4088
-msgid "extra AC vs undead"
-msgstr "допълнително КБ с/у немъртви"
-
-#: Source/items.cpp:4091
-=======
 #: Source/items.cpp:4075
 msgid "extra AC vs demons"
 msgstr "допълнително КБ с/у демони"
@@ -4649,119 +4196,66 @@ msgid "extra AC vs undead"
 msgstr "допълнително КБ с/у немъртви"
 
 #: Source/items.cpp:4081
->>>>>>> Stashed changes
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50% Мана пренесена в Живот"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4094
-=======
 #: Source/items.cpp:4084
->>>>>>> Stashed changes
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40% Живот пренесен в Мана"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4097
-msgid "Another ability (NW)"
-msgstr "Друга способност (NW)"
-
-#: Source/items.cpp:4134 Source/items.cpp:4181
-=======
 #: Source/items.cpp:4087
 msgid "Another ability (NW)"
 msgstr "Друга способност (NW)"
 
 #: Source/items.cpp:4124 Source/items.cpp:4171
->>>>>>> Stashed changes
 msgid "damage: {:d}  Indestructible"
 msgstr "щети: {:d}  Неразрушими"
 
 #. TRANSLATORS: Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4136 Source/items.cpp:4183
-msgid "damage: {:d}  Dur: {:d}/{:d}"
-msgstr "щети: {:d}  Изд: {:d}/{:d}"
-
-#: Source/items.cpp:4139 Source/items.cpp:4186
-=======
 #: Source/items.cpp:4126 Source/items.cpp:4173
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}  Изд: {:d}/{:d}"
 
 #: Source/items.cpp:4129 Source/items.cpp:4176
->>>>>>> Stashed changes
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "щети: {:d}-{:d}  Неразрушим"
 
 #. TRANSLATORS: Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4141 Source/items.cpp:4188
-msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
-
-#: Source/items.cpp:4147 Source/items.cpp:4200
-=======
 #: Source/items.cpp:4131 Source/items.cpp:4178
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
 
 #: Source/items.cpp:4137 Source/items.cpp:4190
->>>>>>> Stashed changes
 msgid "armor: {:d}  Indestructible"
 msgstr "броня: {:d}  Неразрушим"
 
 #. TRANSLATORS: Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4149 Source/items.cpp:4202
-=======
 #: Source/items.cpp:4139 Source/items.cpp:4192
->>>>>>> Stashed changes
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "броня: {:d}  Изд: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4154
-=======
 #: Source/items.cpp:4144
->>>>>>> Stashed changes
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}  Изд: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-<<<<<<< Updated upstream
-#: Source/items.cpp:4156
-msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
-
-#: Source/items.cpp:4157 Source/items.cpp:4192 Source/items.cpp:4207
-=======
 #: Source/items.cpp:4146
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "щети: {:d}-{:d}  Изд: {:d}/{:d}"
 
 #: Source/items.cpp:4147 Source/items.cpp:4182 Source/items.cpp:4197
->>>>>>> Stashed changes
 #: Source/stores.cpp:184
 msgid "Charges: {:d}/{:d}"
 msgstr "Заряди: {:d}/{:d}"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4169
-=======
 #: Source/items.cpp:4159
->>>>>>> Stashed changes
 msgid "unique item"
 msgstr "уникат"
 
-<<<<<<< Updated upstream
-#: Source/items.cpp:4196 Source/items.cpp:4205 Source/items.cpp:4212
-=======
 #: Source/items.cpp:4186 Source/items.cpp:4195 Source/items.cpp:4202
->>>>>>> Stashed changes
 msgid "Not Identified"
 msgstr "Неразпознат"
 
@@ -5915,73 +5409,6 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "Гибелобречен"
 
-<<<<<<< Updated upstream
-#: Source/monster.cpp:3497
-msgid "Animal"
-msgstr "Животно"
-
-#: Source/monster.cpp:3499
-msgid "Demon"
-msgstr "Демон"
-
-#: Source/monster.cpp:3501
-msgid "Undead"
-msgstr "Немъртъв"
-
-#: Source/monster.cpp:4632
-msgid "Type: {:s}  Kills: {:d}"
-msgstr "Тип: {:s}  Убити: {:d}"
-
-#: Source/monster.cpp:4634
-msgid "Total kills: {:d}"
-msgstr "Всичко убити: {:d}"
-
-#: Source/monster.cpp:4667
-msgid "Hit Points: {:d}-{:d}"
-msgstr "Точки живот: {:d}-{:d}"
-
-#: Source/monster.cpp:4673
-msgid "No magic resistance"
-msgstr "Няма магическа устойчивост"
-
-#: Source/monster.cpp:4677
-msgid "Resists: "
-msgstr "Устойчивост: "
-
-#: Source/monster.cpp:4679 Source/monster.cpp:4690
-msgid "Magic "
-msgstr "Магия "
-
-#: Source/monster.cpp:4681 Source/monster.cpp:4692
-msgid "Fire "
-msgstr "Огън "
-
-#: Source/monster.cpp:4683 Source/monster.cpp:4694
-msgid "Lightning "
-msgstr "Мълния "
-
-#: Source/monster.cpp:4688
-msgid "Immune: "
-msgstr "Имунитет: "
-
-#: Source/monster.cpp:4706
-msgid "Type: {:s}"
-msgstr "Тип: {:s}"
-
-#: Source/monster.cpp:4712 Source/monster.cpp:4719
-msgid "No resistances"
-msgstr "Няма устойчивости"
-
-#: Source/monster.cpp:4714 Source/monster.cpp:4724
-msgid "No Immunities"
-msgstr "Няма имунитети"
-
-#: Source/monster.cpp:4717
-msgid "Some Magic Resistances"
-msgstr "Някакви Магически Устойчивости"
-
-#: Source/monster.cpp:4722
-=======
 #: Source/monster.cpp:3479
 msgid "Animal"
 msgstr "Животно"
@@ -6047,7 +5474,6 @@ msgid "Some Magic Resistances"
 msgstr "Някакви Магически Устойчивости"
 
 #: Source/monster.cpp:4704
->>>>>>> Stashed changes
 msgid "Some Magic Immunities"
 msgstr "Някакви Магически Имунитети"
 
@@ -6055,27 +5481,6 @@ msgstr "Някакви Магически Имунитети"
 msgid "Trying to drop a floor item?"
 msgstr "Опит за хвърляне на предмет от пода?"
 
-<<<<<<< Updated upstream
-#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
-#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
-#: Source/msg.cpp:1269
-msgid "{:s} has cast an illegal spell."
-msgstr "{:s} е направил непозволено заклинание."
-
-#: Source/msg.cpp:1655 Source/multi.cpp:805
-msgid "Player '{:s}' (level {:d}) just joined the game"
-msgstr "Играч '{:s}' (ниво {:d}) се присъедини към играта"
-
-#: Source/msg.cpp:1959
-msgid "Waiting for game data..."
-msgstr "Изчакване за данни на играта..."
-
-#: Source/msg.cpp:1967
-msgid "The game ended"
-msgstr "Играта приключи"
-
-#: Source/msg.cpp:1973
-=======
 #: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
 #: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
 #: Source/msg.cpp:1281
@@ -6095,7 +5500,6 @@ msgid "The game ended"
 msgstr "Играта приключи"
 
 #: Source/msg.cpp:1986
->>>>>>> Stashed changes
 msgid "Unable to get level data"
 msgstr "Невъзможно да получи данни за ниво"
 
@@ -6321,77 +5725,6 @@ msgstr "Дневник: Краят"
 msgid "A Spellbook"
 msgstr "Книга за заклинания"
 
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5384
-msgid "Crucified Skeleton"
-msgstr "Разпнат Скелет"
-
-#: Source/objects.cpp:5388
-msgid "Lever"
-msgstr "Лост"
-
-#: Source/objects.cpp:5397
-msgid "Open Door"
-msgstr "Отворена Врата"
-
-#: Source/objects.cpp:5399
-msgid "Closed Door"
-msgstr "Затворена Врата"
-
-#: Source/objects.cpp:5401
-msgid "Blocked Door"
-msgstr "Блокирана Врата"
-
-#: Source/objects.cpp:5406
-msgid "Ancient Tome"
-msgstr "Древен Том"
-
-#: Source/objects.cpp:5408
-msgid "Book of Vileness"
-msgstr "Книга на Безчестието"
-
-#: Source/objects.cpp:5413
-msgid "Skull Lever"
-msgstr "Черепен Лост"
-
-#: Source/objects.cpp:5416
-msgid "Mythical Book"
-msgstr "Митическа Книга"
-
-#: Source/objects.cpp:5420
-msgid "Small Chest"
-msgstr "Малък Сандък"
-
-#: Source/objects.cpp:5424
-msgid "Chest"
-msgstr "Сандък"
-
-#: Source/objects.cpp:5429
-msgid "Large Chest"
-msgstr "Голям Сандък"
-
-#: Source/objects.cpp:5432
-msgid "Sarcophagus"
-msgstr "Саркофаг"
-
-#: Source/objects.cpp:5435
-msgid "Bookshelf"
-msgstr "Лавица за книги"
-
-#: Source/objects.cpp:5439
-msgid "Bookcase"
-msgstr "Библиотека"
-
-#: Source/objects.cpp:5444
-msgid "Pod"
-msgstr "Зародиш"
-
-#: Source/objects.cpp:5446
-msgid "Urn"
-msgstr "Урна"
-
-#: Source/objects.cpp:5448
-=======
 #: Source/objects.cpp:5339
 msgid "Crucified Skeleton"
 msgstr "Разпнат Скелет"
@@ -6461,82 +5794,10 @@ msgid "Urn"
 msgstr "Урна"
 
 #: Source/objects.cpp:5403
->>>>>>> Stashed changes
 msgid "Barrel"
 msgstr "Бъчва"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5452
-msgid "{:s} Shrine"
-msgstr "{:s} Светилище"
-
-#: Source/objects.cpp:5456
-msgid "Skeleton Tome"
-msgstr "Скелетен Том"
-
-#: Source/objects.cpp:5459
-msgid "Library Book"
-msgstr "Библиотечен Том"
-
-#: Source/objects.cpp:5462
-msgid "Blood Fountain"
-msgstr "Кръвен Фонтан"
-
-#: Source/objects.cpp:5465
-msgid "Decapitated Body"
-msgstr "Обезглавено Тяло"
-
-#: Source/objects.cpp:5468
-msgid "Book of the Blind"
-msgstr "Книга на Слепите"
-
-#: Source/objects.cpp:5471
-msgid "Book of Blood"
-msgstr "Книга на Кръвта"
-
-#: Source/objects.cpp:5474
-msgid "Purifying Spring"
-msgstr "Пречистващ извор"
-
-#: Source/objects.cpp:5481 Source/objects.cpp:5505
-msgid "Weapon Rack"
-msgstr "Оръжейна стойка"
-
-#: Source/objects.cpp:5484
-msgid "Goat Shrine"
-msgstr "Козьо Светилище"
-
-#: Source/objects.cpp:5487
-msgid "Cauldron"
-msgstr "Котел"
-
-#: Source/objects.cpp:5490
-msgid "Murky Pool"
-msgstr "Мътен вир"
-
-#: Source/objects.cpp:5493
-msgid "Fountain of Tears"
-msgstr "Фонтан на сълзите"
-
-#: Source/objects.cpp:5496
-msgid "Steel Tome"
-msgstr "Стоманен Том"
-
-#: Source/objects.cpp:5499
-msgid "Pedestal of Blood"
-msgstr "Педестал от Кръв"
-
-#: Source/objects.cpp:5508
-msgid "Mushroom Patch"
-msgstr "Гъбен мицел"
-
-#: Source/objects.cpp:5511
-msgid "Vile Stand"
-msgstr "Ужасяваща стойка"
-
-#: Source/objects.cpp:5514
-=======
 #: Source/objects.cpp:5407
 msgid "{:s} Shrine"
 msgstr "{:s} Светилище"
@@ -6606,25 +5867,16 @@ msgid "Vile Stand"
 msgstr "Ужасяваща стойка"
 
 #: Source/objects.cpp:5469
->>>>>>> Stashed changes
 msgid "Slain Hero"
 msgstr "Повален герой"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5521
-=======
 #: Source/objects.cpp:5476
->>>>>>> Stashed changes
 msgid "Trapped {:s}"
 msgstr "{:s} клопка"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-<<<<<<< Updated upstream
-#: Source/objects.cpp:5527
-=======
 #: Source/objects.cpp:5482
->>>>>>> Stashed changes
 msgid "{:s} (disabled)"
 msgstr "{:s} (изключено)"
 
@@ -6753,21 +6005,6 @@ msgstr "ням"
 msgid "Failed to open player archive for writing."
 msgstr "Неуспешно отваряне на архива на играча за записване."
 
-<<<<<<< Updated upstream
-#: Source/pfile.cpp:392
-msgid "Unable to open archive"
-msgstr "Неуспешно отваряне на архив"
-
-#: Source/pfile.cpp:394
-msgid "Unable to load character"
-msgstr "Неуспешно зареждане на герой"
-
-#: Source/pfile.cpp:419 Source/pfile.cpp:439
-msgid "Unable to read to save file archive"
-msgstr "Неуспешно прочитане на архив за записен файл"
-
-#: Source/pfile.cpp:458
-=======
 #: Source/pfile.cpp:377
 msgid "Unable to open archive"
 msgstr "Неуспешно отваряне на архив"
@@ -6781,7 +6018,6 @@ msgid "Unable to read to save file archive"
 msgstr "Неуспешно прочитане на архив за записен файл"
 
 #: Source/pfile.cpp:442
->>>>>>> Stashed changes
 msgid "Unable to write to save file archive"
 msgstr "Неуспешно записване в архив за записен файл"
 
