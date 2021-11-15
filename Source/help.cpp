@@ -65,7 +65,7 @@ const char *const HelpText[] = {
 	   "number appears in that box. Items may be used by either pressing "
 	   "the corresponding number or right-clicking on the item."),
 	"",
-	N_("$Gold"),
+	N_("$Gold:"),
 	N_("You can select a specific amount of gold to drop by "
 	   "right-clicking on a pile of gold in your inventory."),
 	"",
@@ -81,7 +81,7 @@ const char *const HelpText[] = {
 	   "which allows you to select a skill or spell for immediate use. "
 	   "To use a readied skill or spell, simply right-click in the main play "
 	   "area."),
-	N_("Shift + Left-clicking on the 'select current spell' button will clear the readied spell"),
+	N_("Shift + Left-clicking on the 'select current spell' button will clear the readied spell."),
 	"",
 	N_("$Setting Spell Hotkeys"),
 	N_("You can assign up to four Hotkeys for skills, spells or scrolls. "
