@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-11 15:51+0200\n"
+"POT-Creation-Date: 2021-11-15 17:31+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Oleksandr Kalko (tsunami_state) <tsunami.wave@ukr.net>\n"
 "Language-Team: \n"
@@ -19,84 +19,84 @@ msgstr ""
 
 #: Source/DiabloUI/credits_lines.cpp:7
 msgid "Game Design"
-msgstr ""
+msgstr "Дизайн Гри"
 
 #: Source/DiabloUI/credits_lines.cpp:10
 msgid "Senior Designers"
-msgstr ""
+msgstr "Старші Дизайнери"
 
 #: Source/DiabloUI/credits_lines.cpp:13 Source/DiabloUI/credits_lines.cpp:232
 msgid "Additional Design"
-msgstr ""
+msgstr "Додатковий Дизайн"
 
 #: Source/DiabloUI/credits_lines.cpp:16 Source/DiabloUI/credits_lines.cpp:215
 msgid "Lead Programmer"
-msgstr ""
+msgstr "Головний Програміст"
 
 #: Source/DiabloUI/credits_lines.cpp:19
 msgid "Senior Programmers"
-msgstr ""
+msgstr "Старші Програмісти"
 
 #: Source/DiabloUI/credits_lines.cpp:23
 msgid "Programming"
-msgstr ""
+msgstr "Програмісти"
 
 #: Source/DiabloUI/credits_lines.cpp:26
 msgid "Special Guest Programmers"
-msgstr ""
+msgstr "Спеціальні Гості-Програмісти"
 
 #: Source/DiabloUI/credits_lines.cpp:29
 msgid "Battle.net Programming"
-msgstr ""
+msgstr "Програмісти Battle.net"
 
 #: Source/DiabloUI/credits_lines.cpp:32
 msgid "Serial Communications Programming"
-msgstr ""
+msgstr "Програмісти Послідовних Комунікацій"
 
 #: Source/DiabloUI/credits_lines.cpp:35
 msgid "Installer Programming"
-msgstr ""
+msgstr "Програмісти Інсталлятору"
 
 #: Source/DiabloUI/credits_lines.cpp:38
 msgid "Art Directors"
-msgstr ""
+msgstr "Художні Керівники"
 
 #: Source/DiabloUI/credits_lines.cpp:41
 msgid "Artwork"
-msgstr ""
+msgstr "Художники"
 
 #: Source/DiabloUI/credits_lines.cpp:48
 msgid "Technical Artwork"
-msgstr ""
+msgstr "Технічні Художники"
 
 #: Source/DiabloUI/credits_lines.cpp:52
 msgid "Cinematic Art Directors"
-msgstr ""
+msgstr "Художні Керівники Роликів"
 
 #: Source/DiabloUI/credits_lines.cpp:55
 msgid "3D Cinematic Artwork"
-msgstr ""
+msgstr "3D Художники Роликів"
 
 #: Source/DiabloUI/credits_lines.cpp:61
 msgid "Cinematic Technical Artwork"
-msgstr ""
+msgstr "Технічний Художник Роликів"
 
 #: Source/DiabloUI/credits_lines.cpp:64
 msgid "Executive Producer"
-msgstr ""
+msgstr "Виконавчий Режисер"
 
 #: Source/DiabloUI/credits_lines.cpp:67
 msgid "Producer"
-msgstr ""
+msgstr "Режисер"
 
 #: Source/DiabloUI/credits_lines.cpp:70
 msgid "Associate Producer"
-msgstr ""
+msgstr "Помічник Режисера"
 
 #. TRANSLATORS: Keep Strike Team as Name
 #: Source/DiabloUI/credits_lines.cpp:73
 msgid "Diablo Strike Team"
-msgstr ""
+msgstr "Ударна Команда Diablo"
 
 #: Source/DiabloUI/credits_lines.cpp:77 Source/gamemenu.cpp:67
 msgid "Music"
@@ -104,212 +104,212 @@ msgstr "Музика"
 
 #: Source/DiabloUI/credits_lines.cpp:80
 msgid "Sound Design"
-msgstr ""
+msgstr "Звуковий Дизайн"
 
 #: Source/DiabloUI/credits_lines.cpp:83
 msgid "Cinematic Music & Sound"
-msgstr ""
+msgstr "Музика і Звуки в Роликах"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr ""
+msgstr "Звуковий Продюсер, Режисер і Кастинг"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
-msgstr ""
+msgstr "Сценаристи"
 
 #: Source/DiabloUI/credits_lines.cpp:93
 msgid "Voice Editing"
-msgstr ""
+msgstr "Редактор Озвучування"
 
 #: Source/DiabloUI/credits_lines.cpp:96 Source/DiabloUI/credits_lines.cpp:250
 msgid "Voices"
-msgstr ""
+msgstr "Актори Озвучування"
 
 #: Source/DiabloUI/credits_lines.cpp:101
 msgid "Recording Engineer"
-msgstr ""
+msgstr "Інженер Запису"
 
 #: Source/DiabloUI/credits_lines.cpp:104
 msgid "Manual Design & Layout"
-msgstr ""
+msgstr "Дизайн і Компонування Інстркуції"
 
 #: Source/DiabloUI/credits_lines.cpp:108
 msgid "Manual Artwork"
-msgstr ""
+msgstr "Художники Інструкції"
 
 #: Source/DiabloUI/credits_lines.cpp:112
 msgid "Provisional Director of QA (Lead Tester)"
-msgstr ""
+msgstr "Тимчасовий Керівник QA (Головний Тестер)"
 
 #: Source/DiabloUI/credits_lines.cpp:115
 msgid "QA Assault Team (Testers)"
-msgstr ""
+msgstr "Десант QA (Тестери)"
 
 #: Source/DiabloUI/credits_lines.cpp:120
 msgid "QA Special Ops Team (Compatibility Testers)"
-msgstr ""
+msgstr "Спецпідрозділ QA (Тестери Сумісності)"
 
 #: Source/DiabloUI/credits_lines.cpp:123
 msgid "QA Artillery Support (Additional Testers) "
-msgstr ""
+msgstr "Артилерійська Підтримка QA (Додаткові Тестери) "
 
 #: Source/DiabloUI/credits_lines.cpp:127
 msgid "QA Counterintelligence"
-msgstr ""
+msgstr "Контррозвідка QA"
 
 #. TRANSLATORS: A group of people
 #: Source/DiabloUI/credits_lines.cpp:130
 msgid "Order of Network Information Services"
-msgstr ""
+msgstr "Орден Інформаційних Сервісів Мережі"
 
 #: Source/DiabloUI/credits_lines.cpp:134
 msgid "Customer Support"
-msgstr ""
+msgstr "Підтримка Клієнтів"
 
 #: Source/DiabloUI/credits_lines.cpp:139
 msgid "Sales"
-msgstr ""
+msgstr "Продажі"
 
 #: Source/DiabloUI/credits_lines.cpp:142
 msgid "Dunsel"
-msgstr ""
+msgstr "Дурень"
 
 #: Source/DiabloUI/credits_lines.cpp:145
 msgid "Mr. Dabiri's Background Vocalists"
-msgstr ""
+msgstr "Бек-вокал Мр-а. Дабірі"
 
 #: Source/DiabloUI/credits_lines.cpp:149
 msgid "Public Relations"
-msgstr ""
+msgstr "Зв'язки з Громадськістю"
 
 #: Source/DiabloUI/credits_lines.cpp:152
 msgid "Marketing"
-msgstr ""
+msgstr "Маркетинг"
 
 #: Source/DiabloUI/credits_lines.cpp:155
 msgid "International Sales"
-msgstr ""
+msgstr "Міжнародні Продажі"
 
 #: Source/DiabloUI/credits_lines.cpp:158
 msgid "U.S. Sales"
-msgstr ""
+msgstr "Продажі в США"
 
 #: Source/DiabloUI/credits_lines.cpp:161
 msgid "Manufacturing"
-msgstr ""
+msgstr "Виробництво"
 
 #: Source/DiabloUI/credits_lines.cpp:164
 msgid "Legal & Business"
-msgstr ""
+msgstr "Юристи"
 
 #: Source/DiabloUI/credits_lines.cpp:167
 msgid "Special Thanks To"
-msgstr ""
+msgstr "Особлива Подяка"
 
 #: Source/DiabloUI/credits_lines.cpp:171
 msgid "Thanks To"
-msgstr ""
+msgstr "Дякуємо"
 
 #: Source/DiabloUI/credits_lines.cpp:200
 msgid "In memory of"
-msgstr ""
+msgstr "В пам'ять про"
 
 #: Source/DiabloUI/credits_lines.cpp:206
 msgid "Very Special Thanks to"
-msgstr ""
+msgstr "Дуже Особлива Подяка"
 
 #: Source/DiabloUI/credits_lines.cpp:212
 msgid "General Manager"
-msgstr ""
+msgstr "Генеральний Менеджер"
 
 #: Source/DiabloUI/credits_lines.cpp:218
 msgid "Software Engineering"
-msgstr ""
+msgstr "Розробка"
 
 #: Source/DiabloUI/credits_lines.cpp:221
 msgid "Art Director"
-msgstr ""
+msgstr "Художній Керівник"
 
 #: Source/DiabloUI/credits_lines.cpp:224
 msgid "Artists"
-msgstr ""
+msgstr "Художники"
 
 #: Source/DiabloUI/credits_lines.cpp:228
 msgid "Design"
-msgstr ""
+msgstr "Дизайн"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr ""
+msgstr "Дизайнер Звуку і Аудіо"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
-msgstr ""
+msgstr "Керівник Забезпечення Якості"
 
 #: Source/DiabloUI/credits_lines.cpp:241
 msgid "Testers"
-msgstr ""
+msgstr "Тестери"
 
 #: Source/DiabloUI/credits_lines.cpp:246
 msgid "Manual"
-msgstr ""
+msgstr "Інстркуція"
 
 #: Source/DiabloUI/credits_lines.cpp:255
 msgid "\tAdditional Work"
-msgstr ""
+msgstr "\tДодаткова Робота"
 
 #: Source/DiabloUI/credits_lines.cpp:257
 msgid "Quest Text Writing"
-msgstr ""
+msgstr "Написання Текстів для Квестів"
 
 #: Source/DiabloUI/credits_lines.cpp:260 Source/DiabloUI/credits_lines.cpp:295
 msgid "Thanks to"
-msgstr ""
+msgstr "Дякуємо"
 
 #: Source/DiabloUI/credits_lines.cpp:265
 msgid "\t\t\tSpecial Thanks to Blizzard Entertainment"
-msgstr ""
+msgstr "\t\t\tОсоблива подяка Blizzard Entertainment"
 
 #: Source/DiabloUI/credits_lines.cpp:270
 msgid "\t\t\tSierra On-Line Inc. Northwest"
-msgstr ""
+msgstr "\t\t\tSierra On-Line Inc. Northwest"
 
 #: Source/DiabloUI/credits_lines.cpp:272
 msgid "Quality Assurance Manager"
-msgstr ""
+msgstr "Менеджер Забезпечення Якості"
 
 #: Source/DiabloUI/credits_lines.cpp:275
 msgid "Quality Assurance Lead Tester"
-msgstr ""
+msgstr "Головний Тестер Забезпечення Якості"
 
 #: Source/DiabloUI/credits_lines.cpp:278
 msgid "Main Testers"
-msgstr ""
+msgstr "Основні Тестери"
 
 #: Source/DiabloUI/credits_lines.cpp:281
 msgid "Additional Testers"
-msgstr ""
+msgstr "Додаткові Тестери"
 
 #: Source/DiabloUI/credits_lines.cpp:286
 msgid "Product Marketing Manager"
-msgstr ""
+msgstr "Менеджер Маркетингу Продукту"
 
 #: Source/DiabloUI/credits_lines.cpp:289
 msgid "Public Relations Manager"
-msgstr ""
+msgstr "Менеджер Зв'язків з Громадськістю"
 
 #: Source/DiabloUI/credits_lines.cpp:292
 msgid "Associate Product Manager"
-msgstr ""
+msgstr "Помічник Менеджера Продукту"
 
 #: Source/DiabloUI/credits_lines.cpp:301
 msgid "The Ring of One Thousand"
-msgstr ""
+msgstr "Коло Однієї Тисячі"
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr ""
+msgstr "\tПід час створення цієї гри не було продано ні однієї душі."
 
 #: Source/DiabloUI/dialogs.cpp:194 Source/DiabloUI/dialogs.cpp:206
 #: Source/DiabloUI/selconn.cpp:79 Source/DiabloUI/selgame.cpp:103
@@ -381,7 +381,7 @@ msgstr "Shareware"
 #: Source/DiabloUI/selhero.cpp:189 Source/DiabloUI/selhero.cpp:214
 #: Source/DiabloUI/selhero.cpp:284 Source/DiabloUI/selhero.cpp:544
 msgid "Cancel"
-msgstr "Скасувати"
+msgstr "Відміна"
 
 #: Source/DiabloUI/selconn.cpp:13
 msgid "Client-Server (TCP)"
@@ -917,11 +917,11 @@ msgstr "Книга Магії"
 msgid "Send Message"
 msgstr "Відправити Повідомлення"
 
-#: Source/control.cpp:705 Source/control.cpp:1565
+#: Source/control.cpp:705 Source/control.cpp:1566
 msgid "Skill"
 msgstr "Талант"
 
-#: Source/control.cpp:706 Source/control.cpp:1219
+#: Source/control.cpp:706 Source/control.cpp:1220
 msgid "{:s} Skill"
 msgstr "{:s} Талант"
 
@@ -929,7 +929,7 @@ msgstr "{:s} Талант"
 msgid "Spell"
 msgstr "Чари"
 
-#: Source/control.cpp:713 Source/control.cpp:1223
+#: Source/control.cpp:713 Source/control.cpp:1224
 msgid "{:s} Spell"
 msgstr "Чари {:s}"
 
@@ -937,11 +937,11 @@ msgstr "Чари {:s}"
 msgid "Damages undead only"
 msgstr "Б'є тільки нечисть"
 
-#: Source/control.cpp:719 Source/control.cpp:1227 Source/control.cpp:1589
+#: Source/control.cpp:719 Source/control.cpp:1228 Source/control.cpp:1590
 msgid "Spell Level 0 - Unusable"
 msgstr "0-овий Рівень Чар - Невикористовні"
 
-#: Source/control.cpp:721 Source/control.cpp:1229 Source/control.cpp:1591
+#: Source/control.cpp:721 Source/control.cpp:1230 Source/control.cpp:1592
 msgid "Spell Level {:d}"
 msgstr "Рівень Чар {:d}"
 
@@ -949,11 +949,11 @@ msgstr "Рівень Чар {:d}"
 msgid "Scroll"
 msgstr "Згорток"
 
-#: Source/control.cpp:729 Source/control.cpp:1233
+#: Source/control.cpp:729 Source/control.cpp:1234
 msgid "Scroll of {:s}"
 msgstr "Згорток {:s}"
 
-#: Source/control.cpp:734 Source/control.cpp:1239
+#: Source/control.cpp:734 Source/control.cpp:1240
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} Згорток"
@@ -965,11 +965,11 @@ msgstr[2] "{:d} Згортків"
 msgid "Staff"
 msgstr "Посох"
 
-#: Source/control.cpp:742 Source/control.cpp:1243 Source/items.cpp:1317
+#: Source/control.cpp:742 Source/control.cpp:1244 Source/items.cpp:1317
 msgid "Staff of {:s}"
 msgstr "Посох {:s}"
 
-#: Source/control.cpp:744 Source/control.cpp:1245
+#: Source/control.cpp:744 Source/control.cpp:1246
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d} Заряд"
@@ -980,50 +980,50 @@ msgstr[2] "{:d} Зарядів"
 msgid "Spell Hotkey {:s}"
 msgstr "Гаряча клавіша Чар {:s}"
 
-#: Source/control.cpp:1196
+#: Source/control.cpp:1197
 msgid "Player friendly"
 msgstr "Дружній гравець"
 
-#: Source/control.cpp:1198
+#: Source/control.cpp:1199
 msgid "Player attack"
 msgstr "Гравець атакує"
 
-#: Source/control.cpp:1201
+#: Source/control.cpp:1202
 msgid "Hotkey: {:s}"
 msgstr "Гаряча клавіша: {:s}"
 
-#: Source/control.cpp:1209
+#: Source/control.cpp:1210
 msgid "Select current spell button"
 msgstr ""
 
-#: Source/control.cpp:1212
+#: Source/control.cpp:1213
 msgid "Hotkey: 's'"
 msgstr "Гаряча клавіша: 's'"
 
-#: Source/control.cpp:1367 Source/inv.cpp:1979 Source/items.cpp:3729
+#: Source/control.cpp:1368 Source/inv.cpp:1979 Source/items.cpp:3729
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} золота монета"
 msgstr[1] "{:d} золоті монети"
 msgstr[2] "{:d} золотих монет"
 
-#: Source/control.cpp:1370
+#: Source/control.cpp:1371
 msgid "Requirements not met"
 msgstr "Вимоги не виконані"
 
-#: Source/control.cpp:1406
+#: Source/control.cpp:1407
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Рівень {:d}"
 
-#: Source/control.cpp:1408
+#: Source/control.cpp:1409
 msgid "Hit Points {:d} of {:d}"
 msgstr "Здоров'я {:d} з {:d}"
 
-#: Source/control.cpp:1435
+#: Source/control.cpp:1436
 msgid "Level Up"
 msgstr "Новий Рівень"
 
-#: Source/control.cpp:1569
+#: Source/control.cpp:1570
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "Посох ({:d} заряд)"
@@ -1031,22 +1031,22 @@ msgstr[1] "Посох ({:d} заряда)"
 msgstr[2] "Посох ({:d} зарядів)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1579
+#: Source/control.cpp:1580
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr ""
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1581
+#: Source/control.cpp:1582
 msgid "Mana: {:d}   Dam: n/a"
 msgstr ""
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1584
+#: Source/control.cpp:1585
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr ""
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1642
+#: Source/control.cpp:1643
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "У тебе {:d} золота монета. Скільки ти хочеш забрати?"
@@ -1717,7 +1717,7 @@ msgstr ""
 "предметі."
 
 #: Source/help.cpp:68
-msgid "$Gold"
+msgid "$Gold:"
 msgstr "$Золото:"
 
 #: Source/help.cpp:69
@@ -1747,8 +1747,8 @@ msgstr ""
 "чарами робиться кліком правої кнопки миші в зоні гри."
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells"
-msgstr "$Використання Швидкої Книги Чар"
+msgid "$Using the Speedbook for Spells:"
+msgstr "$Використання Швидкої Книги Чар:"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1763,13 +1763,13 @@ msgstr ""
 #: Source/help.cpp:84
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell"
+"readied spell."
 msgstr ""
 "Shift + Ліва кнопка миші на кнопці \"Підготовлені чари\" очистить підготовку."
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys"
-msgstr "$Встановлення гарячих клавіш для чар"
+msgid "$Setting Spell Hotkeys:"
+msgstr "$Встановлення гарячих клавіш для чар:"
 
 #: Source/help.cpp:87
 msgid ""
@@ -1782,8 +1782,8 @@ msgstr ""
 "бажані чари і натисніть клавішу F5, F6, F7 або F8 для призначення."
 
 #: Source/help.cpp:92
-msgid "$Spell Books"
-msgstr "$Книги Чар"
+msgid "$Spell Books:"
+msgstr "$Книги Чар:"
 
 #: Source/help.cpp:93
 msgid ""
@@ -5403,71 +5403,71 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr ""
 
-#: Source/monster.cpp:3478
+#: Source/monster.cpp:3479
 msgid "Animal"
 msgstr ""
 
-#: Source/monster.cpp:3480
+#: Source/monster.cpp:3481
 msgid "Demon"
 msgstr ""
 
-#: Source/monster.cpp:3482
+#: Source/monster.cpp:3483
 msgid "Undead"
 msgstr ""
 
-#: Source/monster.cpp:4611
+#: Source/monster.cpp:4612
 msgid "Type: {:s}  Kills: {:d}"
 msgstr ""
 
-#: Source/monster.cpp:4613
+#: Source/monster.cpp:4614
 msgid "Total kills: {:d}"
 msgstr ""
 
-#: Source/monster.cpp:4646
+#: Source/monster.cpp:4647
 msgid "Hit Points: {:d}-{:d}"
 msgstr ""
 
-#: Source/monster.cpp:4652
+#: Source/monster.cpp:4653
 msgid "No magic resistance"
 msgstr ""
 
-#: Source/monster.cpp:4656
+#: Source/monster.cpp:4657
 msgid "Resists: "
 msgstr ""
 
-#: Source/monster.cpp:4658 Source/monster.cpp:4669
+#: Source/monster.cpp:4659 Source/monster.cpp:4671
 msgid "Magic "
 msgstr ""
 
-#: Source/monster.cpp:4660 Source/monster.cpp:4671
+#: Source/monster.cpp:4661 Source/monster.cpp:4673
 msgid "Fire "
 msgstr ""
 
-#: Source/monster.cpp:4662 Source/monster.cpp:4673
+#: Source/monster.cpp:4663 Source/monster.cpp:4675
 msgid "Lightning "
 msgstr ""
 
-#: Source/monster.cpp:4667
+#: Source/monster.cpp:4669
 msgid "Immune: "
 msgstr ""
 
-#: Source/monster.cpp:4685
+#: Source/monster.cpp:4688
 msgid "Type: {:s}"
 msgstr ""
 
-#: Source/monster.cpp:4691 Source/monster.cpp:4698
+#: Source/monster.cpp:4694 Source/monster.cpp:4701
 msgid "No resistances"
 msgstr ""
 
-#: Source/monster.cpp:4693 Source/monster.cpp:4703
+#: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid "No Immunities"
 msgstr ""
 
-#: Source/monster.cpp:4696
+#: Source/monster.cpp:4699
 msgid "Some Magic Resistances"
 msgstr ""
 
-#: Source/monster.cpp:4701
+#: Source/monster.cpp:4704
 msgid "Some Magic Immunities"
 msgstr ""
 
@@ -5475,25 +5475,25 @@ msgstr ""
 msgid "Trying to drop a floor item?"
 msgstr ""
 
-#: Source/msg.cpp:983 Source/msg.cpp:1018 Source/msg.cpp:1049
-#: Source/msg.cpp:1176 Source/msg.cpp:1208 Source/msg.cpp:1240
-#: Source/msg.cpp:1270
+#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
+#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
+#: Source/msg.cpp:1281
 msgid "{:s} has cast an illegal spell."
 msgstr ""
 
-#: Source/msg.cpp:1657 Source/multi.cpp:804
+#: Source/msg.cpp:1668 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr ""
 
-#: Source/msg.cpp:1961
+#: Source/msg.cpp:1972
 msgid "Waiting for game data..."
 msgstr ""
 
-#: Source/msg.cpp:1969
+#: Source/msg.cpp:1980
 msgid "The game ended"
 msgstr ""
 
-#: Source/msg.cpp:1975
+#: Source/msg.cpp:1986
 msgid "Unable to get level data"
 msgstr ""
 
