@@ -4,7 +4,7 @@
 
 #include <SDL.h>
 
-#include "utils/mpq.hpp"
+#include "mpq/mpq_reader.hpp"
 
 namespace devilution {
 
