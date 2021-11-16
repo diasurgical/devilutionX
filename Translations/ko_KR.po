@@ -1696,8 +1696,8 @@ msgstr ""
 "됩니다. 해당 숫자를 누르거나 마우스 우클릭으로 사용할 수 있습니다."
 
 #: Source/help.cpp:68
-msgid "$Gold"
-msgstr "$금화"
+msgid "$Gold:"
+msgstr "$금화:"
 
 #: Source/help.cpp:69
 msgid ""
@@ -1723,8 +1723,8 @@ msgstr ""
 "투 지역에서 시전할 수 있습니다."
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells"
-msgstr "$주문용 신속서 사용"
+msgid "$Using the Speedbook for Spells:"
+msgstr "$주문용 신속서 사용:"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1739,14 +1739,14 @@ msgstr ""
 #: Source/help.cpp:84
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell"
+"readied spell."
 msgstr ""
 "'현재 선택한 주문' 버튼에서 Shift + 마우스 좌클릭을 하면 선택된 주문이 삭제됩"
-"니다"
+"니다."
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys"
-msgstr "$주문 단축키 설정"
+msgid "$Setting Spell Hotkeys:"
+msgstr "$주문 단축키 설정:"
 
 #: Source/help.cpp:87
 msgid ""
@@ -1759,8 +1759,8 @@ msgstr ""
 "나를 누릅니다."
 
 #: Source/help.cpp:92
-msgid "$Spell Books"
-msgstr "$주문서"
+msgid "$Spell Books:"
+msgstr "$주문서:"
 
 #: Source/help.cpp:93
 msgid ""
@@ -2248,7 +2248,7 @@ msgstr "파멸 두루마리"
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
 msgid "Book of "
-msgstr ""
+msgstr "주문서: "
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
@@ -6072,7 +6072,7 @@ msgstr "용맹"
 
 #: Source/quests.cpp:52
 msgid "Warlord of Blood"
-msgstr "피의 군주"
+msgstr "피의 전쟁군주"
 
 #: Source/quests.cpp:53
 msgid "The Curse of King Leoric"
@@ -8117,7 +8117,7 @@ msgid ""
 "carrying."
 msgstr ""
 "예, 뭔가 있어 보이는 대상 사람들이 여기에 들르긴 했지만 벌써 꽤 예전 일이네"
-"요. 이상한 억양이라든지 오랜 여행 중이라고 말했던 기억이 나요. 그 사람들이 운"
+"요. 이상한 억양이랑 오랜 여행 중이라고 말했던 게 기억이 나요. 그 사람들이 운"
 "반하던 걸 어떻게 찾을 수 있을지 모르겠네요."
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
@@ -9454,7 +9454,7 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
-"떨어져 나간 손발을 다시 붙은 것처럼 느껴질 정도로 페핀 영감은 정말 솜씨가 좋"
+"떨어져 나간 손발을 다시 붙인 것처럼 느껴질 정도로 페핀 영감은 정말 솜씨가 좋"
 "아요.\n"
 "\n"
 "페핀이 만든 물약이 있었더라면 내 다리는 멀쩡했겠죠..."
