@@ -16,7 +16,7 @@
 #include "dx.h"
 #include "options.h"
 #include "palette.h"
-#include "engine/game_assets.hpp"
+#include "engine/assets.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"

@@ -16,7 +16,7 @@
 #include "dx.h"
 #include "options.h"
 #include "pfile.h"
-#include "engine/game_assets.hpp"
+#include "engine/assets.hpp"
 #include "mpq/mpq_reader.hpp"
 #include "utils/language.h"
 #include "utils/log.hpp"
