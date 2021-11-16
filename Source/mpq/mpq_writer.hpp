@@ -1,5 +1,5 @@
 /**
- * @file utils/mpq_writer.hpp
+ * @file mpq/mpq_writer.hpp
  *
  * Interface of functions for creating and editing MPQ files.
  */

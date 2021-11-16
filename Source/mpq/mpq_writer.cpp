@@ -1,9 +1,4 @@
-/**
- * @file mpqapi.cpp
- *
- * Implementation of functions for creating and editing MPQ files.
- */
-#include "utils/mpq_writer.hpp"
+#include "mpq/mpq_writer.hpp"
 
 #include <cstddef>
 #include <cstdint>

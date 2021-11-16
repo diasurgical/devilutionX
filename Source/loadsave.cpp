@@ -25,9 +25,9 @@
 #include "missiles.h"
 #include "pfile.h"
 #include "stores.h"
+#include "mpq/mpq_writer.hpp"
 #include "utils/endian.hpp"
 #include "utils/language.h"
-#include "utils/mpq_writer.hpp"
 
 namespace devilution {
 

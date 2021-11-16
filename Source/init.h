@@ -6,7 +6,7 @@
 #pragma once
 
 #include "miniwin/miniwin.h"
-#include "utils/mpq.hpp"
+#include "mpq/mpq_reader.hpp"
 
 namespace devilution {
 
