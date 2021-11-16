@@ -707,7 +707,18 @@ DWORD OnRequestGetItem(const TCmd *pCmd, Player &player)
 	if (gbBufferMsgs != 1 && IOwnLevel(player.plrlevel) && IsGItemValid(message)) {
 		const Point position { message.x, message.y };
 		if (GetItemRecord(message.dwSeed, message.wCI, message.wIndx)) {
-			int ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
+			int ii = -1;
+			if (InDungeonBounds(position)) {
+				ii = abs(dItem[position.x][position.y]) - 1;
+				if (ii >= 0 && !Items[ii].KeyAttributesMatch(message.dwSeed, static_cast<_item_indexes>(message.wIndx), message.wCI)) {
+					ii = -1;
+				}
+			}
+
+			if (ii == -1) { // No item at the target position or the key attributes don't match, so try find a matching item.
+				ii = FindGetItem(message.wIndx, message.wCI, message.dwSeed);
+			}
+
 			if (ii != -1) {
 				NetSendCmdGItem2(false, CMD_GETITEM, MyPlayerId, message.bPnum, message);
 				if (message.bPnum != MyPlayerId)

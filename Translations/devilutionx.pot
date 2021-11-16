@@ -1594,7 +1594,7 @@ msgid "Useable items that are small in size, such as potions or scrolls, are aut
 msgstr ""
 
 #: Source/help.cpp:68
-msgid "$Gold"
+msgid "$Gold:"
 msgstr ""
 
 #: Source/help.cpp:69
@@ -1610,7 +1610,7 @@ msgid "You can access your list of skills and spells by left-clicking on the 'SP
 msgstr ""
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells"
+msgid "$Using the Speedbook for Spells:"
 msgstr ""
 
 #: Source/help.cpp:80
@@ -1618,11 +1618,11 @@ msgid "Left-clicking on the 'readied spell' button will open the 'Speedbook' whi
 msgstr ""
 
 #: Source/help.cpp:84
-msgid "Shift + Left-clicking on the 'select current spell' button will clear the readied spell"
+msgid "Shift + Left-clicking on the 'select current spell' button will clear the readied spell."
 msgstr ""
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys"
+msgid "$Setting Spell Hotkeys:"
 msgstr ""
 
 #: Source/help.cpp:87
@@ -1630,7 +1630,7 @@ msgid "You can assign up to four Hotkeys for skills, spells or scrolls. Start by
 msgstr ""
 
 #: Source/help.cpp:92
-msgid "$Spell Books"
+msgid "$Spell Books:"
 msgstr ""
 
 #: Source/help.cpp:93

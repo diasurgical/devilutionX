@@ -27,6 +27,7 @@ Installation instructions can be found on the [Installing](/docs/installing.md) 
 * Start + X: toggle zoom
 * Select + D-Pad: move automap or simulate mouse
 * Select + A/B/X/Y: Spell hotkeys
+* C-stick: move automap or simulate mouse
 * Select + ZL: quest log (alt: Start + Y)
 * Select + ZR: spell book (alt: Start + B)
 

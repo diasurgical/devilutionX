@@ -31,7 +31,7 @@ constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
-std::array<uint8_t, 6> FontFullwidth = { 16, 21, 29, 41, 43, 16 };
+std::array<uint8_t, 6> FontFullwidth = { 17, 21, 29, 41, 43, 16 };
 std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
