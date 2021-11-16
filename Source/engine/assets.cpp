@@ -1,4 +1,4 @@
-#include "engine/game_assets.hpp"
+#include "engine/assets.hpp"
 
 #include <algorithm>
 #include <cstdint>

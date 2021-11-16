@@ -399,7 +399,7 @@ set(libdevilutionx_SRCS
   Source/encrypt.cpp
   Source/engine.cpp
   Source/error.cpp
-  Source/engine/game_assets.cpp
+  Source/engine/assets.cpp
   Source/gamemenu.cpp
   Source/gendung.cpp
   Source/gmenu.cpp

@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "engine/game_assets.hpp"
+#include "engine/assets.hpp"
 #include "utils/display.h"
 #include "utils/log.hpp"
 #include "utils/sdl_compat.h"

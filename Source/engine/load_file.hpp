@@ -7,7 +7,7 @@
 
 #include "appfat.h"
 #include "diablo.h"
-#include "engine/game_assets.hpp"
+#include "engine/assets.hpp"
 #include "utils/stdcompat/cstddef.hpp"
 
 namespace devilution {
