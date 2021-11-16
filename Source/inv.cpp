@@ -1130,14 +1130,28 @@ bool PutItem(Player &player, Point &position)
 	if (CanPut(position))
 		return true;
 
-	std::optional<Point> itemPosition = FindClosestValidPosition(CanPut, player.position.tile, 1, 50);
-
-	if (itemPosition) {
-		position = *itemPosition;
+	position = player.position.tile + Left(Left(d));
+	if (CanPut(position))
 		return true;
-	}
 
-	return false;
+	position = player.position.tile + Right(Right(d));
+	if (CanPut(position))
+		return true;
+
+	position = player.position.tile + Left(Left(Left(d)));
+	if (CanPut(position))
+		return true;
+
+	position = player.position.tile + Right(Right(Right(d)));
+	if (CanPut(position))
+		return true;
+
+	position = player.position.tile + Opposite(d);
+	if (CanPut(position))
+		return true;
+
+	position = player.position.tile;
+	return CanPut(position);
 }
 
 bool CanUseStaff(Item &staff, spell_id spell)
