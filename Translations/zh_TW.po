@@ -111,7 +111,7 @@ msgstr "影片​音樂​和​音效"
 
 #: Source/DiabloUI/credits_lines.cpp:86
 msgid "Voice Production, Direction & Casting"
-msgstr "語音​製作​、​導演​和​配音"
+msgstr "語音​製作、導演​和​配音"
 
 #: Source/DiabloUI/credits_lines.cpp:89
 msgid "Script & Story"
@@ -239,7 +239,7 @@ msgstr "設​計"
 
 #: Source/DiabloUI/credits_lines.cpp:235
 msgid "Sound Design, SFX & Audio Engineering"
-msgstr "音效​設計​、​混音​和​音訊​工程"
+msgstr "音效​設計、混音​和​音訊​工程"
 
 #: Source/DiabloUI/credits_lines.cpp:238
 msgid "Quality Assurance Lead"
@@ -307,7 +307,7 @@ msgstr "最初​的​一千​名​Beta測試人員​（​The Ring of One T
 
 #: Source/DiabloUI/credits_lines.cpp:547
 msgid "\tNo souls were sold in the making of this game."
-msgstr "\t​在​這個​遊戲​的​製作​過程​中​沒​有​任何​靈魂​被​出賣​。"
+msgstr "\t​在​這個​遊戲​的​製作​過程​中​沒​有​任何​靈魂​被​出賣。"
 
 #: Source/DiabloUI/dialogs.cpp:172 Source/DiabloUI/dialogs.cpp:185
 #: Source/DiabloUI/selconn.cpp:73 Source/DiabloUI/selgame.cpp:94
@@ -353,8 +353,8 @@ msgid ""
 "The Diablo introduction cinematic is only available in the full retail "
 "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"暗​黑破壞​神介紹​電影版​只​提供​完整​的​零售版​暗​黑破壞神​。​前往​ https://www.gog.com/ga"
-"me/diablo ​購買​。"
+"暗​黑破壞​神介紹​電影版​只​提供​完整​的​零售版​暗​黑破壞神。前往 https://www.gog.com/game/"
+"diablo 購買。"
 
 #: Source/DiabloUI/progress.cpp:48 Source/DiabloUI/selconn.cpp:76
 #: Source/DiabloUI/selhero.cpp:188 Source/DiabloUI/selhero.cpp:213
@@ -378,7 +378,7 @@ msgstr "多​人​遊戲"
 
 #: Source/DiabloUI/selconn.cpp:53
 msgid "Requirements:"
-msgstr "要求​: "
+msgstr "要求: "
 
 #: Source/DiabloUI/selconn.cpp:59
 msgid "no gateway needed"
@@ -394,23 +394,23 @@ msgstr "更改​閘​道器"
 
 #: Source/DiabloUI/selconn.cpp:101
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr "所有​計算​機​必須連線​到​與​TCP​相容​的​網路​。"
+msgstr "所有​計算​機​必須連線​到​與​TCP​相容​的​網路。"
 
 #: Source/DiabloUI/selconn.cpp:105
 msgid "All computers must be connected to the internet."
-msgstr "所有​計算機​都​必須​連線​到​因特網​。"
+msgstr "所有​計算機​都​必須​連線​到​因特網。"
 
 #: Source/DiabloUI/selconn.cpp:109
 msgid "Play by yourself with no network exposure."
-msgstr "自己​玩​，​沒​有​網路​曝光​。"
+msgstr "自己​玩，沒​有​網路​曝光。"
 
 #: Source/DiabloUI/selconn.cpp:114
 msgid "Players Supported: {:d}"
-msgstr "支援​的​玩家​:​ {:d}"
+msgstr "支援​的​玩家: {:d}"
 
 #: Source/DiabloUI/selgame.cpp:80 Source/DiabloUI/selgame.cpp:375
 msgid "Description:"
-msgstr "說​明​: "
+msgstr "說​明: "
 
 #: Source/DiabloUI/selgame.cpp:86
 msgid "Select Action"
@@ -433,13 +433,13 @@ msgstr "取消"
 
 #: Source/DiabloUI/selgame.cpp:106
 msgid "Create a new game with a difficulty setting of your choice."
-msgstr "建立​一​個​新​遊戲​的​難度​設定​你​的​選擇​。"
+msgstr "建立​一​個​新​遊戲​的​難度​設定​你​的​選擇。"
 
 #: Source/DiabloUI/selgame.cpp:109
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
-msgstr "輸入​IP​或​主機名​，​然​後​在​該​地址​加入​正在​進行​的​遊戲​。"
+msgstr "輸入​IP​或​主機名，然​後​在​該​地址​加入​正在​進行​的​遊戲。"
 
 #: Source/DiabloUI/selgame.cpp:154
 msgid "Select Difficulty"
@@ -475,7 +475,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "正常​難度​\n"
-"這​是​一​個​開始​的​角色​應該​開始尋求擊敗迪亞波羅​。"
+"這​是​一​個​開始​的​角色​應該​開始尋求擊敗迪亞波羅。"
 
 #: Source/DiabloUI/selgame.cpp:208
 msgid ""
@@ -484,7 +484,7 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "噩夢​難度​\n"
-"迷宮裡​的​居民​得到​了​支援​，​這將​是​一​個​更​大​的​挑戰​。​這隻​建議​有​經驗​的​角色​使用​。"
+"迷宮裡​的​居民​得到​了​支援，這將​是​一​個​更​大​的​挑戰。這隻​建議​有​經驗​的​角色​使用。"
 
 #: Source/DiabloUI/selgame.cpp:212
 msgid ""
@@ -493,20 +493,19 @@ msgid ""
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
 "地​獄​般​的​困難​\n"
-"​最​強​大​的​地下​世界​的​生物​潛伏在地獄​的​大門​。​只有​最​有​經驗​的​人物​才​能​在​這個​領域​冒險​"
-"。"
+"​最​強​大​的​地下​世界​的​生物​潛伏在地獄​的​大門。只有​最​有​經驗​的​人物​才​能​在​這個​領域​冒險。"
 
 #: Source/DiabloUI/selgame.cpp:227
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
-msgstr "你​的​角色​必須達​到​20​級​才​能​進入​多​人​遊戲​的​噩夢​難度​。"
+msgstr "你​的​角色​必須達​到​20​級​才​能​進入​多​人​遊戲​的​噩夢​難度。"
 
 #: Source/DiabloUI/selgame.cpp:229
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
-msgstr "你​的​角色​必須達​到​30​級​才​能​進入​地獄​難度​的​多​人​遊戲​。"
+msgstr "你​的​角色​必須達​到​30​級​才​能​進入​地獄​難度​的​多​人​遊戲。"
 
 #: Source/DiabloUI/selgame.cpp:304
 msgid "Select Game Speed"
@@ -530,7 +529,7 @@ msgid ""
 "This is where a starting character should begin the quest to defeat Diablo."
 msgstr ""
 "正常​速度​\n"
-"這​是​一​個​開始​的​角色​應該​開始尋求擊敗迪亞波羅​。"
+"這​是​一​個​開始​的​角色​應該​開始尋求擊敗迪亞波羅。"
 
 #: Source/DiabloUI/selgame.cpp:331
 msgid ""
@@ -539,7 +538,7 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "快速​\n"
-"迷宮​的​居民​們​已​經​被​催促​了​，​這將​是​一​個​更​大​的​挑戰​。​這隻​建議​有​經驗​的​角色​使用​。"
+"迷宮​的​居民​們​已​經​被​催促​了，這將​是​一​個​更​大​的​挑戰。這隻​建議​有​經驗​的​角色​使用。"
 
 #: Source/DiabloUI/selgame.cpp:335
 msgid ""
@@ -548,8 +547,8 @@ msgid ""
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
 "更​快​的​速度​\n"
-"​地​牢里​的​大多​數​怪物會​比​以前​更​快​地​找到​你​。​只有​有​經驗​的​冠軍​才​能​在​這個​速度​下​碰"
-"碰運氣​。"
+"​地​牢里​的​大多​數​怪物會​比​以前​更​快​地​找到​你。只有​有​經驗​的​冠軍​才​能​在​這個​速度​下​碰碰運"
+"氣。"
 
 #: Source/DiabloUI/selgame.cpp:339
 msgid ""
@@ -558,7 +557,7 @@ msgid ""
 "true speed demon should enter at this pace."
 msgstr ""
 "最​快​速度​\n"
-"​黑社​會​的​僕從們會​毫​不​猶​豫​地​趕來​攻擊​。​只有​真正​的​速度​惡魔​才​能​以​這種​速度​進入​。"
+"​黑社​會​的​僕從們會​毫​不​猶​豫​地​趕來​攻擊。只有​真正​的​速度​惡魔​才​能​以​這種​速度​進入。"
 
 #: Source/DiabloUI/selgame.cpp:381 Source/DiabloUI/selgame.cpp:384
 msgid "Enter Password"
@@ -566,12 +565,12 @@ msgstr "輸​入​密碼"
 
 #: Source/DiabloUI/selgame.cpp:407
 msgid "The host is running a different game than you."
-msgstr "主機​執行​的​遊戲與​您​不同​。"
+msgstr "主機​執行​的​遊戲與​您​不同。"
 
 #. TRANSLATORS: Error message when somebody tries to join a game running another version.
 #: Source/DiabloUI/selgame.cpp:410
 msgid "Your version {:s} does not match the host {:d}.{:d}.{:d}."
-msgstr "您​的​版本​{:s}​與​主機{:d}.{:d}.{:d}​不​匹配​。"
+msgstr "您​的​版本​{:s}​與​主機{:d}.{:d}.{:d}​不​匹配。"
 
 #: Source/DiabloUI/selhero.cpp:99
 msgid "New Hero"
@@ -635,8 +634,8 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"流亡者​和​巫師​只​在​暗​黑破​壞神​的​完整​零售版​中​提供​。​前往​ https://www.gog.com/ga"
-"me/diablo ​購買​。"
+"流亡者​和​巫師​只​在​暗​黑破​壞神​的​完整​零售版​中​提供。前往 https://www.gog.com/game/"
+"diablo 購買。"
 
 #: Source/DiabloUI/selhero.cpp:274 Source/DiabloUI/selhero.cpp:277
 msgid "Enter Name"
@@ -646,32 +645,32 @@ msgstr "輸​入名稱"
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
-msgstr "名稱​無效​。​名稱​不​能​包含​空格​、​保留​字元​或​保留​字​。​\n"
+msgstr "名稱​無效。名稱​不​能​包含​空格、保留​字元​或​保留​字。\n"
 
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:313
 msgid "Unable to create character."
-msgstr "無​法​建立​角色​。"
+msgstr "無​法​建立​角色。"
 
 #: Source/DiabloUI/selhero.cpp:467 Source/DiabloUI/selhero.cpp:470
 msgid "Level:"
-msgstr "等​級​: "
+msgstr "等​級: "
 
 #: Source/DiabloUI/selhero.cpp:475
 msgid "Strength:"
-msgstr "強度​: "
+msgstr "強度: "
 
 #: Source/DiabloUI/selhero.cpp:480
 msgid "Magic:"
-msgstr "魔術​: "
+msgstr "魔術: "
 
 #: Source/DiabloUI/selhero.cpp:485
 msgid "Dexterity:"
-msgstr "敏​捷​: "
+msgstr "敏​捷: "
 
 #: Source/DiabloUI/selhero.cpp:490
 msgid "Vitality:"
-msgstr "活力​: "
+msgstr "活力: "
 
 #: Source/DiabloUI/selhero.cpp:496
 #, fuzzy
@@ -701,7 +700,7 @@ msgstr "刪​除​單人​遊戲​英雄"
 
 #: Source/DiabloUI/selhero.cpp:584
 msgid "Are you sure you want to delete the character \"{:s}\"?"
-msgstr "是否​確實​要​刪除​角色​「​{:s}​」​？"
+msgstr "是否​確實​要​刪除​角色​「​{:s}​」？"
 
 #: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
 msgid "Yes"
@@ -725,13 +724,13 @@ msgid ""
 "serve you, please be sure to include the version number, operating system, "
 "and the nature of the problem."
 msgstr ""
-"DevilutionX​由​Diasurgical​維護​，​可以​報告問題​和​錯誤​地址​:​ https://githu"
-"b.com/diasurgical/devilutionX爲​了​幫助​我​們​更​好​地​為​您​服務​，​請務​必​包括​"
-"版本​號​，​操作系統​，​以及​問題​的​性質​。"
+"DevilutionX​由​Diasurgical​維護，可以​報告問題​和​錯誤​地址: https://github.co"
+"m/diasurgical/devilutionX爲​了​幫助​我​們​更​好​地​為​您​服務，請務​必​包括​版本​號，操"
+"作系統，以及​問題​的​性質。"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "Disclaimer:"
-msgstr "免​責​聲​明​: "
+msgstr "免​責​聲​明: "
 
 #: Source/DiabloUI/support_lines.cpp:14
 msgid ""
@@ -741,9 +740,9 @@ msgid ""
 "DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
 "or GOG.com."
 msgstr ""
-"\t​暴雪​娛樂​不​支援​或​維護​DevilutionX​，​也​不​是​GOG.com​。​暴雪娛樂​和​GOG.com"
-"​都​沒​有​進行測試​或者​證明​了​DevilutionX​的​質量​或​相容性​。​所有​查詢關​於​Devilutio"
-"nX​，​應​直接​向​Diasurgical​，​而​不​是​暴雪娛樂​或​GOG.com​。"
+"\t​暴雪​娛樂​不​支援​或​維護​DevilutionX，也​不​是​GOG.com。暴雪娛樂​和​GOG.com​都​沒"
+"​有​進行測試​或者​證明​了​DevilutionX​的​質量​或​相容性。所有​查詢關​於​DevilutionX，應​直"
+"接​向​Diasurgical，而​不​是​暴雪娛樂​或​GOG.com。"
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
@@ -755,7 +754,7 @@ msgstr ""
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
-msgstr "Copyright ​©​ 1996-2001 Blizzard Entertainment"
+msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
 #: Source/appfat.cpp:37
 msgid "Error"
@@ -770,7 +769,7 @@ msgid ""
 msgstr ""
 "{: s}\n"
 "\n"
-"錯誤​發生​在​:​ {: s}​，​行{: d}"
+"錯誤​發生​在: {: s}，行{: d}"
 
 #: Source/appfat.cpp:115
 #, fuzzy
@@ -784,9 +783,9 @@ msgid ""
 "\n"
 "Make sure that it is in the game folder."
 msgstr ""
-"無​法​打開主數據​存檔​（​{:s}​）​。​\n"
+"無​法​打開主數據​存檔​（​{:s}​）。\n"
 "\n"
-"確保​它​在​遊戲​資料夾​中​，​並且​檔名​都​是​小寫​的​。"
+"確保​它​在​遊戲​資料夾​中，並且​檔名​都​是​小寫​的。"
 
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq或spawn.mpq"
@@ -801,7 +800,7 @@ msgid ""
 "Unable to write to location:\n"
 "{:s}"
 msgstr ""
-"無​法​寫入​位置​:​ \n"
+"無​法​寫入​位置: \n"
 "{: s}"
 
 #: Source/appfat.cpp:129
@@ -810,23 +809,23 @@ msgstr "只​讀目錄​錯誤"
 
 #: Source/automap.cpp:468
 msgid "game: "
-msgstr "遊​戲​: "
+msgstr "遊​戲: "
 
 #: Source/automap.cpp:474
 msgid "password: "
-msgstr "密碼​: "
+msgstr "密碼: "
 
 #: Source/automap.cpp:487
 msgid "Level: Nest {:d}"
-msgstr "層​數​:​ {:d}​巢​穴"
+msgstr "層​數: {:d}​巢​穴"
 
 #: Source/automap.cpp:489
 msgid "Level: Crypt {:d}"
-msgstr "層​數​:​ {:d}​墓穴"
+msgstr "層​數: {:d}​墓穴"
 
 #: Source/automap.cpp:491 Source/items.cpp:2086
 msgid "Level: {:d}"
-msgstr "等​級​:​ {:d}"
+msgstr "等​級: {:d}"
 
 #: Source/control.cpp:196
 msgid "Tab"
@@ -914,7 +913,7 @@ msgstr[0] "生命點{:d}的{:d}"
 #, fuzzy
 #| msgid "Spell Hotkey #F{:d}"
 msgid "Spell Hotkey {:s}"
-msgstr "熱​鍵​:​ {:s}"
+msgstr "熱​鍵: {:s}"
 
 #: Source/control.cpp:1152
 msgid "Player friendly"
@@ -926,7 +925,7 @@ msgstr "玩​家​攻擊"
 
 #: Source/control.cpp:1157
 msgid "Hotkey: {:s}"
-msgstr "熱​鍵​:​ {:s}"
+msgstr "熱​鍵: {:s}"
 
 #: Source/control.cpp:1165
 msgid "Select current spell button"
@@ -934,7 +933,7 @@ msgstr "選​擇​目前​法術​按​鈕"
 
 #: Source/control.cpp:1168
 msgid "Hotkey: 's'"
-msgstr "熱​鍵​: 「​s​」"
+msgstr "熱​鍵: 「​s​」"
 
 #: Source/control.cpp:1334 Source/inv.cpp:1893 Source/items.cpp:3751
 #, fuzzy
@@ -949,7 +948,7 @@ msgstr "未​滿足​條件"
 
 #: Source/control.cpp:1373
 msgid "{:s}, Level: {:d}"
-msgstr "{:s}​，​層數​:​ {:d}"
+msgstr "{:s}，層數: {:d}"
 
 #: Source/control.cpp:1375
 msgid "Hit Points {:d} of {:d}"
@@ -973,17 +972,17 @@ msgstr[0] "{:s}的職員"
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1544
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
-msgstr "法力​:​ {:d} ​傷害​:​ {:d}-{:d}"
+msgstr "法力: {:d} 傷害: {:d}-{:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1546
 msgid "Mana: {:d}   Dam: n/a"
-msgstr "法力​:​ {:d} ​傷害​:​ n/a"
+msgstr "法力: {:d} 傷害: n/a"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
 #: Source/control.cpp:1549
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
-msgstr "法力​:​ {:d} ​傷害​:​ 1/3 tgt hp"
+msgstr "法力: {:d} 傷害: 1/3 tgt hp"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
 #: Source/control.cpp:1606
@@ -1037,24 +1036,24 @@ msgstr "15​級"
 
 #: Source/diablo.cpp:111
 msgid "I need help! Come Here!"
-msgstr "我​需要​幫助​！​過來​！"
+msgstr "我​需要​幫助！過來！"
 
 #: Source/diablo.cpp:112
 msgid "Follow me."
-msgstr "跟​著​我​。"
+msgstr "跟​著​我。"
 
 #: Source/diablo.cpp:113
 msgid "Here's something for you."
-msgstr "這​是​給​你​的​。"
+msgstr "這​是​給​你​的。"
 
 #: Source/diablo.cpp:114
 msgid "Now you DIE!"
-msgstr "現​在​你​死定​了​！"
+msgstr "現​在​你​死定​了！"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:777
 msgid "Options:\n"
-msgstr "選​項​:​ \n"
+msgstr "選​項: \n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:778
@@ -1114,7 +1113,7 @@ msgstr "啟​用​詳​細​日誌記錄"
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:789
 msgid "Force spawn mode even if diabdat.mpq is found"
-msgstr "即使​找到​diabdat.mpq​，​也​強制產生​模式"
+msgstr "即使​找到​diabdat.mpq，也​強制產生​模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:790
@@ -1126,7 +1125,7 @@ msgstr "儲​存檔案​已​存在"
 #: Source/diablo.cpp:791
 #, fuzzy
 msgid "Play a demo file"
-msgstr "自己​玩​，​沒​有​網路​曝光​。"
+msgstr "自己​玩，沒​有​網路​曝光。"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:792
@@ -1140,12 +1139,12 @@ msgid ""
 "Hellfire options:\n"
 msgstr ""
 "\n"
-"地​獄火選項​:​ \n"
+"地​獄火選項: \n"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:794
 msgid "Force diablo mode even if hellfire.mpq is found"
-msgstr "即使​hellfire.mpq​存在​，​也​強制​使用​暗​黑破壞神​原版​模式"
+msgstr "即使​hellfire.mpq​存在，也​強制​使用​暗​黑破壞神​原版​模式"
 
 #. TRANSLATORS: Commandline Option
 #: Source/diablo.cpp:795
@@ -1189,7 +1188,7 @@ msgstr "在​商店​裡"
 #, fuzzy
 #| msgid "{:s}, mode = {:s}"
 msgid "{:s}, version = {:s}, mode = {:s}"
-msgstr "{:s}​（​等​級{:d}​）​:​ {:s}"
+msgstr "{:s}​（​等​級{:d}​）: {:s}"
 
 #: Source/dvlnet/loopback.cpp:111
 msgid "loopback"
@@ -1201,7 +1200,7 @@ msgstr "無​法連線"
 
 #: Source/dvlnet/tcp_client.cpp:89
 msgid "error: read 0 bytes from server"
-msgstr "錯​誤​: 從伺​服器​讀​取​0​位​元組"
+msgstr "錯​誤: 從伺​服器​讀​取​0​位​元組"
 
 #: Source/error.cpp:58
 msgid "No automap available in town"
@@ -1241,16 +1240,16 @@ msgstr "多​人​遊戲​中​無暫​停"
 
 #: Source/error.cpp:67
 msgid "Loading..."
-msgstr "載入​。​。​。"
+msgstr "載入。。。"
 
 #: Source/error.cpp:68
 msgid "Saving..."
-msgstr "正在​儲存​。​。​。"
+msgstr "正在​儲存。。。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:69
 msgid "Some are weakened as one grows strong"
-msgstr "當​一​個​人​變​得​強壯時​，​有些​人​會​變​得​虛弱"
+msgstr "當​一​個​人​變​得​強壯時，有些​人​會​變​得​虛弱"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:70
@@ -1270,7 +1269,7 @@ msgstr "正​義​之​劍​迅捷​而​鋒利"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:73
 msgid "While the spirit is vigilant the body thrives"
-msgstr "當​精神​保持​警惕時​，​身體​就​會茁壯​成長"
+msgstr "當​精神​保持​警惕時，身體​就​會茁壯​成長"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:74
@@ -1325,7 +1324,7 @@ msgstr "喝​酒​提神"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:84
 msgid "Wherever you go, there you are"
-msgstr "無論​你​走到​哪​裡​，​你​都​在​那​裡"
+msgstr "無論​你​走到​哪​裡，你​都​在​那​裡"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:85
@@ -1340,12 +1339,12 @@ msgstr "財富​在​最​不​經意​的​時候​大量​存在"
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:87
 msgid "Where avarice fails, patience gains reward"
-msgstr "貪​婪失敗​了​，​耐心​就​會​得到​回報"
+msgstr "貪​婪失敗​了，耐心​就​會​得到​回報"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:88
 msgid "Blessed by a benevolent companion!"
-msgstr "被​仁慈​的​同伴​祝福​！"
+msgstr "被​仁慈​的​同伴​祝福！"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:89
@@ -1389,75 +1388,75 @@ msgstr "慷慨​自​有​回報"
 
 #: Source/error.cpp:97
 msgid "You must be at least level 8 to use this."
-msgstr "你​必須​至少​達​到​8​級​才​能​使用​這個​。"
+msgstr "你​必須​至少​達​到​8​級​才​能​使用​這個。"
 
 #: Source/error.cpp:98
 msgid "You must be at least level 13 to use this."
-msgstr "你​必須​至少​達​到​13級​才​能​使用​這個​。"
+msgstr "你​必須​至少​達​到​13級​才​能​使用​這個。"
 
 #: Source/error.cpp:99
 msgid "You must be at least level 17 to use this."
-msgstr "你​必須​至少​達​到​17級​才​能​使用​這個​。"
+msgstr "你​必須​至少​達​到​17級​才​能​使用​這個。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:100
 msgid "Arcane knowledge gained!"
-msgstr "獲​得​奧術​知識​！"
+msgstr "獲​得​奧術​知識！"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:101
 msgid "That which does not kill you..."
-msgstr "不​會殺死​你​的​東西​。​。​。"
+msgstr "不​會殺死​你​的​東西。。。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:102
 msgid "Knowledge is power."
-msgstr "知識​就​是​力量​。"
+msgstr "知識​就​是​力量。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:103
 msgid "Give and you shall receive."
-msgstr "付出​你​就​會​得到​。"
+msgstr "付出​你​就​會​得到。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:104
 msgid "Some experience is gained by touch."
-msgstr "一些​經驗​是​通過​接觸​獲得​的​。"
+msgstr "一些​經驗​是​通過​接觸​獲得​的。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:105
 msgid "There's no place like home."
-msgstr "沒​有​比家​更​好​的​地方​了​。"
+msgstr "沒​有​比家​更​好​的​地方​了。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:106
 msgid "Spiritual energy is restored."
-msgstr "精神​能量​被​恢復​。"
+msgstr "精神​能量​被​恢復。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:107
 msgid "You feel more agile."
-msgstr "你​感覺​更​敏捷​。"
+msgstr "你​感覺​更​敏捷。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:108
 msgid "You feel stronger."
-msgstr "你​感覺​更​強壯​。"
+msgstr "你​感覺​更​強壯。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:109
 msgid "You feel wiser."
-msgstr "你​覺得​自己​更​聰明​。"
+msgstr "你​覺得​自己​更​聰明。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:110
 msgid "You feel refreshed."
-msgstr "你​感覺​神清​氣爽​。"
+msgstr "你​感覺​神清​氣爽。"
 
 #. TRANSLATORS: Shrine Text. Keep atmospheric. :)
 #: Source/error.cpp:111
 msgid "That which can break will."
-msgstr "能​打破​意志​的​東西​。"
+msgstr "能​打破​意志​的​東西。"
 
 #: Source/gamemenu.cpp:35
 msgid "Save Game"
@@ -1501,19 +1500,19 @@ msgstr "聲音​已​禁​用"
 
 #: Source/gamemenu.cpp:155
 msgid "Speed: Fastest"
-msgstr "速度​: 最​快"
+msgstr "速度: 最​快"
 
 #: Source/gamemenu.cpp:157
 msgid "Speed: Faster"
-msgstr "速度​: 更​快"
+msgstr "速度: 更​快"
 
 #: Source/gamemenu.cpp:159
 msgid "Speed: Fast"
-msgstr "速度​: 快"
+msgstr "速度: 快"
 
 #: Source/gamemenu.cpp:161
 msgid "Speed: Normal"
-msgstr "速度​: 正常"
+msgstr "速度: 正常"
 
 #: Source/gmenu.cpp:166
 msgid "Pause"
@@ -1748,7 +1747,7 @@ msgstr "暗​黑破壞神​幫助"
 
 #: Source/help.cpp:156
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr "按​ESC鍵​結束​，​或​按箭頭鍵​滾動​。"
+msgstr "按​ESC鍵​結束，或​按箭頭鍵​滾動。"
 
 #: Source/init.cpp:214
 msgid "Some Hellfire MPQs are missing"
@@ -1759,8 +1758,8 @@ msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
 msgstr ""
-"地​獄火​MPQ​未​能​全部​找到​。​\n"
-"請​複製​所有​hf​*​.mpq檔案​。"
+"地​獄火​MPQ​未​能​全部​找到。\n"
+"請​複製​所有​hf​*​.mpq檔案。"
 
 #: Source/init.cpp:224
 msgid "Unable to create main window"
@@ -3734,7 +3733,7 @@ msgstr "右​擊閱讀"
 
 #: Source/items.cpp:2053
 msgid "Right-click to read, then"
-msgstr "右​擊​閱讀​，​然​後"
+msgstr "右​擊​閱讀，然​後"
 
 #: Source/items.cpp:2055
 msgid "left-click to target"
@@ -3762,7 +3761,7 @@ msgstr "金幣​容量​翻倍"
 
 #: Source/items.cpp:2102 Source/stores.cpp:212
 msgid "Required:"
-msgstr "需求​: "
+msgstr "需求: "
 
 #: Source/items.cpp:2104 Source/stores.cpp:214
 msgid " {:d} Str"
@@ -3783,7 +3782,7 @@ msgstr "{:s}​的​耳朵"
 
 #: Source/items.cpp:3830
 msgid "chance to hit: {:+d}%"
-msgstr "命​中​機率​:​ {:+d}%"
+msgstr "命​中​機率: {:+d}%"
 
 #: Source/items.cpp:3834
 #, fuzzy, no-c-format
@@ -3793,53 +3792,53 @@ msgstr "{:+d}​敵人​傷害"
 
 #: Source/items.cpp:3838 Source/items.cpp:4094
 msgid "to hit: {:+d}%, {:+d}% damage"
-msgstr "命​中​:​ {:+d}%​, {:+d}%​傷害"
+msgstr "命​中: {:+d}%​, {:+d}%​傷害"
 
 #: Source/items.cpp:3842
 #, fuzzy, no-c-format
 #| msgid "{:+d}% armor"
 msgid "{:+d}% armor"
-msgstr "護​甲​:​ {:d}"
+msgstr "護​甲: {:d}"
 
 #: Source/items.cpp:3846
 msgid "armor class: {:d}"
-msgstr "護​甲​等​級​:​ {:d}"
+msgstr "護​甲​等​級: {:d}"
 
 #: Source/items.cpp:3851 Source/items.cpp:4076
 msgid "Resist Fire: {:+d}%"
-msgstr "火焰​抗性​:​ {:+d}%"
+msgstr "火焰​抗性: {:+d}%"
 
 #: Source/items.cpp:3853
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
-msgstr "火焰​抗性​: 最​大​75%"
+msgstr "火焰​抗性: 最​大​75%"
 
 #: Source/items.cpp:3858
 msgid "Resist Lightning: {:+d}%"
-msgstr "閃​電​抗性​:​ {:+d}%"
+msgstr "閃​電​抗性: {:+d}%"
 
 #: Source/items.cpp:3860
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
-msgstr "閃​電​抗性​: 最​大​75%"
+msgstr "閃​電​抗性: 最​大​75%"
 
 #: Source/items.cpp:3865
 msgid "Resist Magic: {:+d}%"
-msgstr "抵抗​魔法​:​ {:+d}%"
+msgstr "抵抗​魔法: {:+d}%"
 
 #: Source/items.cpp:3867
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
-msgstr "抵抗​魔法​: 最​大​75%"
+msgstr "抵抗​魔法: 最​大​75%"
 
 #: Source/items.cpp:3872
 msgid "Resist All: {:+d}%"
-msgstr "所有​抗性​:​ {:+d}%"
+msgstr "所有​抗性: {:+d}%"
 
 #: Source/items.cpp:3874
 #, no-c-format
 msgid "Resist All: 75% MAX"
-msgstr "所有​抗性​: 最​大​75%"
+msgstr "所有​抗性: 最​大​75%"
 
 #: Source/items.cpp:3878
 #, fuzzy
@@ -3857,7 +3856,7 @@ msgstr[0] "層數: {:d}巢穴"
 
 #: Source/items.cpp:3882
 msgid "spell levels unchanged (?)"
-msgstr "法術​等​級​不​變​（​？​）"
+msgstr "法術​等​級​不​變​（？）"
 
 #: Source/items.cpp:3885
 msgid "Extra charges"
@@ -3872,19 +3871,19 @@ msgstr[0] "{:s}，層數: {:d}"
 
 #: Source/items.cpp:3892
 msgid "Fire hit damage: {:d}"
-msgstr "火焰​傷害​:​ {:d}"
+msgstr "火焰​傷害: {:d}"
 
 #: Source/items.cpp:3894
 msgid "Fire hit damage: {:d}-{:d}"
-msgstr "火焰​傷害​:​ {:d}-{:d}"
+msgstr "火焰​傷害: {:d}-{:d}"
 
 #: Source/items.cpp:3898
 msgid "Lightning hit damage: {:d}"
-msgstr "閃電​傷害​:​ {:d}"
+msgstr "閃電​傷害: {:d}"
 
 #: Source/items.cpp:3900
 msgid "Lightning hit damage: {:d}-{:d}"
-msgstr "閃電​傷害​:​ {:d}-{:d}"
+msgstr "閃電​傷害: {:d}-{:d}"
 
 #: Source/items.cpp:3904
 msgid "{:+d} to strength"
@@ -3912,11 +3911,11 @@ msgstr "{:+d}​敵人​傷害"
 
 #: Source/items.cpp:3928
 msgid "Hit Points: {:+d}"
-msgstr "生命​值​:​ {:+d}"
+msgstr "生命​值: {:+d}"
 
 #: Source/items.cpp:3932
 msgid "Mana: {:+d}"
-msgstr "法力值​:​ {:+d}"
+msgstr "法力值: {:+d}"
 
 #: Source/items.cpp:3935
 msgid "high durability"
@@ -3948,11 +3947,11 @@ msgstr "射​出​多​重箭"
 
 #: Source/items.cpp:3954
 msgid "fire arrows damage: {:d}"
-msgstr "火箭​傷害​:​ {:d}"
+msgstr "火箭​傷害: {:d}"
 
 #: Source/items.cpp:3956
 msgid "fire arrows damage: {:d}-{:d}"
-msgstr "火箭​傷害​:​ {:d}-{:d}"
+msgstr "火箭​傷害: {:d}-{:d}"
 
 #: Source/items.cpp:3960
 msgid "lightning arrows damage {:d}"
@@ -3964,11 +3963,11 @@ msgstr "閃​電箭​傷害{:d}-{:d}"
 
 #: Source/items.cpp:3966
 msgid "fireball damage: {:d}"
-msgstr "火球​傷害​:​ {:d}"
+msgstr "火球​傷害: {:d}"
 
 #: Source/items.cpp:3968
 msgid "fireball damage: {:d}-{:d}"
-msgstr "火球​傷害​:​ {:d}-{:d}"
+msgstr "火球​傷害: {:d}-{:d}"
 
 #: Source/items.cpp:3971
 msgid "attacker takes 1-3 damage"
@@ -4104,11 +4103,11 @@ msgstr "夜視​能力"
 
 #: Source/items.cpp:4065
 msgid "lightning damage: {:d}"
-msgstr "閃電​傷害​:​ {:d}"
+msgstr "閃電​傷害: {:d}"
 
 #: Source/items.cpp:4067
 msgid "lightning damage: {:d}-{:d}"
-msgstr "閃電​傷害​:​ {:d}-{:d}"
+msgstr "閃電​傷害: {:d}-{:d}"
 
 #: Source/items.cpp:4070
 msgid "charged bolts on hits"
@@ -4122,11 +4121,11 @@ msgstr "有​概率​造成​三​倍​傷害"
 #, fuzzy, no-c-format
 #| msgid "decaying {:+d}% damage"
 msgid "decaying {:+d}% damage"
-msgstr "傷害​:​ {:d} Dur: {:d}/{:d}"
+msgstr "傷害: {:d} Dur: {:d}/{:d}"
 
 #: Source/items.cpp:4085
 msgid "2x dmg to monst, 1x to you"
-msgstr "2x ​對​怪物​傷害​，​1x ​反噬​自身"
+msgstr "2x 對​怪物​傷害，1x 反噬​自身"
 
 #: Source/items.cpp:4088
 #, no-c-format
@@ -4137,7 +4136,7 @@ msgstr "隨​機​0-500​%​傷害"
 #, fuzzy, no-c-format
 #| msgid "low dur, {:+d}% damage"
 msgid "low dur, {:+d}% damage"
-msgstr "傷害​:​ {:d}-{:d} ​耐久​:​ {:d}/{:d}"
+msgstr "傷害: {:d}-{:d} 耐久: {:d}/{:d}"
 
 #: Source/items.cpp:4097
 msgid "extra AC vs demons"
@@ -4163,45 +4162,45 @@ msgstr "另​一​種​能力​（​NW​）"
 
 #: Source/items.cpp:4146 Source/items.cpp:4193
 msgid "damage: {:d}  Indestructible"
-msgstr "傷害​:​ {:d} ​堅​不​可​摧"
+msgstr "傷害: {:d} 堅​不​可​摧"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4148 Source/items.cpp:4195
 msgid "damage: {:d}  Dur: {:d}/{:d}"
-msgstr "傷害​:​ {:d} Dur: {:d}/{:d}"
+msgstr "傷害: {:d} Dur: {:d}/{:d}"
 
 #: Source/items.cpp:4151 Source/items.cpp:4198
 msgid "damage: {:d}-{:d}  Indestructible"
-msgstr "傷害​:​ {:d}-{:d} ​堅​不​可​摧"
+msgstr "傷害: {:d}-{:d} 堅​不​可​摧"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4153 Source/items.cpp:4200
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "傷害​:​ {:d}-{:d} ​耐久​:​ {:d}/{:d}"
+msgstr "傷害: {:d}-{:d} 耐久: {:d}/{:d}"
 
 #: Source/items.cpp:4159 Source/items.cpp:4212
 msgid "armor: {:d}  Indestructible"
-msgstr "護​甲​:​ {:d} ​堅​不​可​摧"
+msgstr "護​甲: {:d} 堅​不​可​摧"
 
 #. TRANSLATORS: Dur: is durability
 #: Source/items.cpp:4161 Source/items.cpp:4214
 msgid "armor: {:d}  Dur: {:d}/{:d}"
-msgstr "護​甲​:​ {:d} ​耐久​:​ {:d}/{:d}"
+msgstr "護​甲: {:d} 耐久: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
 #: Source/items.cpp:4166
 msgid "dam: {:d}  Dur: {:d}/{:d}"
-msgstr "傷害​:​ {:d} ​耐久​:​ {:d}/{:d}"
+msgstr "傷害: {:d} 耐久: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
 #: Source/items.cpp:4168
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
-msgstr "傷害​:​ {:d}-{:d} ​耐久​:​ {:d}/{:d}"
+msgstr "傷害: {:d}-{:d} 耐久: {:d}/{:d}"
 
 #: Source/items.cpp:4169 Source/items.cpp:4204 Source/items.cpp:4219
 #: Source/stores.cpp:184
 msgid "Charges: {:d}/{:d}"
-msgstr "充能​:​ {:d}/{:d}"
+msgstr "充能: {:d}/{:d}"
 
 #: Source/items.cpp:4181
 msgid "unique item"
@@ -4316,8 +4315,8 @@ msgstr "燃燒"
 msgctxt "monster"
 msgid "Horror"
 msgstr ""
-"它​不​見​了​嗎​？​你​把​它​送回​了​孕育​它​的​陰間嗎​？​你​什麼​？​哦​，​別告訴​我​你​丟​了​！​你​"
-"知道​，​那些​東西不便宜​。​你​一定​要​找到​它​，​然​後​把​那​恐懼​的​東西轟​出去"
+"它​不​見​了​嗎？你​把​它​送回​了​孕育​它​的​陰間嗎？你​什麼？哦，別告訴​我​你​丟​了！你​知道，那些​東西不便"
+"宜。你​一定​要​找到​它，然​後​把​那​恐懼​的​東西轟​出去"
 
 #: Source/monstdat.cpp:36
 #, fuzzy
@@ -4407,12 +4406,10 @@ msgstr "追蹤者"
 msgctxt "monster"
 msgid "Unseen"
 msgstr ""
-"你​背誦​了​一​首​有趣​的​韻文​，​它​的​風格讓​我​想起​了​其他​的​作品​。​現​在​讓​我​想想​-​那​是​"
-"什么​？​\n"
+"你​背誦​了​一​首​有趣​的​韻文，它​的​風格讓​我​想起​了​其他​的​作品。現​在​讓​我​想想​-​那​是​什么？\n"
 " \n"
-"​…​黑暗​籠罩​著​隱藏​的​世界​。​眼睛​在​看​不​見​的​地方​閃閃​發光​，​只有​剃刀​爪子​的​聲音​在​短暫"
-"​地​刮來​刮去​，​折磨​那些​永遠失明​的​可憐​的​靈魂​。​為​那些​該死​的​人​而​設​的​監獄​被​命名​為盲人"
-"​的​大廳"
+"​…​黑暗​籠罩​著​隱藏​的​世界。眼睛​在​看​不​見​的​地方​閃閃​發光，只有​剃刀​爪子​的​聲音​在​短暫​地​刮"
+"來​刮去，折磨​那些​永遠失明​的​可憐​的​靈魂。為​那些​該死​的​人​而​設​的​監獄​被​命名​為盲人​的​大廳"
 
 #: Source/monstdat.cpp:52
 #, fuzzy
@@ -4462,10 +4459,9 @@ msgstr "夜晚"
 msgctxt "monster"
 msgid "Fiend"
 msgstr ""
-"藉​著​光明​，​我​知道​這個​邪惡​的​惡魔​。​當拉撒路率領​的​少數​幾名衝鋒倖​存者​從大​教堂​爬出來時​，​許多"
-"​人​身​上​留下​了​他​憤怒​的​傷疤​。​我​不​知道​他​以前​是​怎麼​切開​受害者​的​，​但​這​不​可能​是​"
-"這個​世界​的​。​它​留下​的​傷口潰爛與​疾病​，​甚至​我​發現​他​們​幾乎​不​可能​治療​。​如果​你​打算​和​"
-"這個​惡​魔戰​鬥​，​要​小心"
+"藉​著​光明，我​知道​這個​邪惡​的​惡魔。當拉撒路率領​的​少數​幾名衝鋒倖​存者​從大​教堂​爬出來時，許多​人​身​上"
+"​留下​了​他​憤怒​的​傷疤。我​不​知道​他​以前​是​怎麼​切開​受害者​的，但​這​不​可能​是​這個​世界​的。它​"
+"留下​的​傷口潰爛與​疾病，甚至​我​發現​他​們​幾乎​不​可能​治療。如果​你​打算​和​這個​惡​魔戰​鬥，要​小心"
 
 #: Source/monstdat.cpp:59
 #, fuzzy
@@ -4487,8 +4483,8 @@ msgstr "陰沉​的​護甲"
 msgctxt "monster"
 msgid "Familiar"
 msgstr ""
-"不​知​怎麼​的​，​這​似乎​很​熟悉​。​我​似乎​記​得​在​研究​惡魔​痛苦​的​歷史時讀過​類​似​這​首​詩​的​"
-"東西​。​它​講述​了​一​個​邪惡​的​地方​。​。​。​等等​-​你​不​會去​的​，​是​嗎"
+"不​知​怎麼​的，這​似乎​很​熟悉。我​似乎​記​得​在​研究​惡魔​痛苦​的​歷史時讀過​類​似​這​首​詩​的​東西。它"
+"​講述​了​一​個​邪惡​的​地方。。。等等​-​你​不​會去​的，是​嗎"
 
 #: Source/monstdat.cpp:66
 #, fuzzy
@@ -4940,19 +4936,18 @@ msgstr "傀儡​卷軸"
 msgctxt "monster"
 msgid "The Dark Lord"
 msgstr ""
-"所以​，​地圖​上​的​傳說​是​真實​的​。​連​我​都​不​相信​！​我​想​是​時候​告訴​你​我​是​誰​了​，​我​"
-"的​朋友​。​你​看​，​我​並​不​像​我​看​起來​那​樣​。​。​。​\n"
+"所以，地圖​上​的​傳說​是​真實​的。連​我​都​不​相信！我​想​是​時候​告訴​你​我​是​誰​了，我​的​朋友。你​看"
+"，我​並​不​像​我​看​起來​那​樣。。。\n"
 " \n"
-"​我​的​真名​是​老凱恩​，​我​是​一​個​古老​兄弟會​的​最後​一個​後​代​，​這個​兄弟​會​致力​於​保守​和​"
-"保護​一​個​永恒​邪惡​的​秘密​。​一​個​很​明顯​已​經​被​釋放​的​惡魔​。​。​。​\n"
+"​我​的​真名​是​老凱恩，我​是​一​個​古老​兄弟會​的​最後​一個​後​代，這個​兄弟​會​致力​於​保守​和​保護​一"
+"​個​永恒​邪惡​的​秘密。一​個​很​明顯​已​經​被​釋放​的​惡魔。。。\n"
 " \n"
-"​你​要​對付​的​惡魔​是​恐怖​的​黑魔王​——​凡​人​都​知道​的​迪亞波羅​。​幾個世紀​前​被​囚禁​在​迷宮裡​"
-"的​正​是​他​。​你​現​在​持有​的​地圖​是​很​久​以前​創造​的​，​用來標​記​迪亞波羅從​監​禁​中​復活​的​"
-"時間​。​當​那​張​地圖​上​的​兩顆​星星對​齊時​，​迪亞波羅將達​到​他​的​能量​頂峰​。​他​將​所​向​無敵​。"
-"​。​。​\n"
+"​你​要​對付​的​惡魔​是​恐怖​的​黑魔王​——​凡​人​都​知道​的​迪亞波羅。幾個世紀​前​被​囚禁​在​迷宮裡​的​"
+"正​是​他。你​現​在​持有​的​地圖​是​很​久​以前​創造​的，用來標​記​迪亞波羅從​監​禁​中​復活​的​時間。當​那"
+"​張​地圖​上​的​兩顆​星星對​齊時，迪亞波羅將達​到​他​的​能量​頂峰。他​將​所​向​無敵。。。\n"
 " \n"
-"​你​現​在在​和​時間​賽​跑​，​我​的​朋友​！​找到​迪亞波羅​，​在​眾星​雲集​之前​消滅​他​，​因​為​我​們"
-"​可能​再​也​沒​有​機會擺脫​他​的​邪惡​了"
+"​你​現​在在​和​時間​賽​跑，我​的​朋友！找到​迪亞波羅，在​眾星​雲集​之前​消滅​他，因​為​我​們​可能​再​也​"
+"沒​有​機會擺脫​他​的​邪惡​了"
 
 #: Source/monstdat.cpp:131
 #, fuzzy
@@ -5783,15 +5778,15 @@ msgstr "亡靈"
 
 #: Source/monster.cpp:4610
 msgid "Type: {:s}  Kills: {:d}"
-msgstr "型​別​:​ {:s} ​擊殺​:​ {:d}"
+msgstr "型​別: {:s} 擊殺: {:d}"
 
 #: Source/monster.cpp:4612
 msgid "Total kills: {:d}"
-msgstr "擊​殺總​數​:​ {:d}"
+msgstr "擊​殺總​數: {:d}"
 
 #: Source/monster.cpp:4645
 msgid "Hit Points: {:d}-{:d}"
-msgstr "生命​值​:​ {:d}-{:d}"
+msgstr "生命​值: {:d}-{:d}"
 
 #: Source/monster.cpp:4651
 msgid "No magic resistance"
@@ -5799,7 +5794,7 @@ msgstr "沒​有​魔法​抵抗"
 
 #: Source/monster.cpp:4655
 msgid "Resists: "
-msgstr "抗性​: "
+msgstr "抗性: "
 
 #: Source/monster.cpp:4657 Source/monster.cpp:4668
 msgid "Magic "
@@ -5815,11 +5810,11 @@ msgstr "閃​電"
 
 #: Source/monster.cpp:4666
 msgid "Immune: "
-msgstr "免疫​: "
+msgstr "免疫: "
 
 #: Source/monster.cpp:4684
 msgid "Type: {:s}"
-msgstr "型​別​:​ {:s}"
+msgstr "型​別: {:s}"
 
 #: Source/monster.cpp:4690 Source/monster.cpp:4697
 msgid "No resistances"
@@ -5839,12 +5834,12 @@ msgstr "一些​魔法​免疫"
 
 #: Source/msg.cpp:484
 msgid "Trying to drop a floor item?"
-msgstr "想​扔​地板嗎​？"
+msgstr "想​扔​地板嗎？"
 
 #: Source/msg.cpp:951 Source/msg.cpp:975 Source/msg.cpp:998 Source/msg.cpp:1113
 #: Source/msg.cpp:1136 Source/msg.cpp:1158 Source/msg.cpp:1180
 msgid "{:s} has cast an illegal spell."
-msgstr "{:s}​施放​了​非法​法術​。"
+msgstr "{:s}​施放​了​非法​法術。"
 
 #: Source/msg.cpp:1529 Source/multi.cpp:815
 msgid "Player '{:s}' (level {:d}) just joined the game"
@@ -5852,7 +5847,7 @@ msgstr "玩​家​{:s}(​等​級{:d})剛​加入​了​遊戲"
 
 #: Source/msg.cpp:1826
 msgid "Waiting for game data..."
-msgstr "正在​等待​遊戲​數據​。​。​。"
+msgstr "正在​等待​遊戲​數據。。。"
 
 #: Source/msg.cpp:1834
 msgid "The game ended"
@@ -5868,11 +5863,11 @@ msgstr "玩​家​{:s}​剛剛離開​了​遊戲"
 
 #: Source/multi.cpp:198
 msgid "Player '{:s}' killed Diablo and left the game!"
-msgstr "玩​家​{:s}​殺死​了​迪亞波羅並​離開​了​遊戲​！"
+msgstr "玩​家​{:s}​殺死​了​迪亞波羅並​離開​了​遊戲！"
 
 #: Source/multi.cpp:202
 msgid "Player '{:s}' dropped due to timeout"
-msgstr "由於​超時​，​玩家​{:s}​的​掉落物​被​刪除"
+msgstr "由於​超時，玩家​{:s}​的​掉落物​被​刪除"
 
 #: Source/multi.cpp:817
 msgid "Player '{:s}' (level {:d}) is already in the game"
@@ -6052,32 +6047,32 @@ msgstr "黑​王"
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:274
 msgid "Journal: The Ensorcellment"
-msgstr "期​刊​: 感悟"
+msgstr "期​刊: 感悟"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:275
 msgid "Journal: The Meeting"
-msgstr "日​記​: 會議"
+msgstr "日​記: 會議"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:276
 msgid "Journal: The Tirade"
-msgstr "日​記​: 長篇​大論"
+msgstr "日​記: 長篇​大論"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:277
 msgid "Journal: His Power Grows"
-msgstr "日​記​: 他​的​力量​在​增長"
+msgstr "日​記: 他​的​力量​在​增長"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:278
 msgid "Journal: NA-KRUL"
-msgstr "期​刊​:​ NA-KRUL"
+msgstr "期​刊: NA-KRUL"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:279
 msgid "Journal: The End"
-msgstr "日​記​: 結束"
+msgstr "日​記: 結束"
 
 #. TRANSLATORS: Book Title
 #: Source/objects.cpp:280
@@ -6247,19 +6242,19 @@ msgstr "馬​克斯"
 #, fuzzy
 #| msgid "Level:"
 msgid "Level"
-msgstr "等​級​: "
+msgstr "等​級: "
 
 #: Source/panels/charpanel.cpp:121
 #, fuzzy
 #| msgid "Experience: "
 msgid "Experience"
-msgstr "經​驗​: "
+msgstr "經​驗: "
 
 #: Source/panels/charpanel.cpp:123
 #, fuzzy
 #| msgid "Next Level: "
 msgid "Next level"
-msgstr "下​一​級​: "
+msgstr "下​一​級: "
 
 #: Source/panels/charpanel.cpp:126
 msgid "None"
@@ -6302,13 +6297,13 @@ msgstr "活力"
 #: Source/panels/charpanel.cpp:148
 #, fuzzy
 msgid "Points to distribute"
-msgstr "生命​值​:​ {:d}-{:d}"
+msgstr "生命​值: {:d}-{:d}"
 
 #: Source/panels/charpanel.cpp:158
 #, fuzzy
 #| msgid "armor class: {:d}"
 msgid "Armor class"
-msgstr "護​甲​等​級​:​ {:d}"
+msgstr "護​甲​等​級: {:d}"
 
 #: Source/panels/charpanel.cpp:160
 #, fuzzy
@@ -6333,26 +6328,26 @@ msgstr "法力"
 #, fuzzy
 #| msgid "Resist Magic: {:+d}%"
 msgid "Resist magic"
-msgstr "抵抗​魔法​:​ {:+d}%"
+msgstr "抵抗​魔法: {:+d}%"
 
 #: Source/panels/charpanel.cpp:179
 #, fuzzy
 #| msgid "Resists: "
 msgid "Resist fire"
-msgstr "火焰​抗性​:​ {:+d}%"
+msgstr "火焰​抗性: {:+d}%"
 
 #: Source/panels/charpanel.cpp:181
 #, fuzzy
 #| msgid "Resist Lightning: {:+d}%"
 msgid "Resist lightning"
-msgstr "閃​電​抗性​:​ {:+d}%"
+msgstr "閃​電​抗性: {:+d}%"
 
 #: Source/panels/mainpanel.cpp:62 Source/panels/mainpanel.cpp:109
 #: Source/panels/mainpanel.cpp:111
 #, fuzzy
 #| msgid "Voices"
 msgid "voice"
-msgstr "語音​製作​、​導演​和​配音"
+msgstr "語音​製作、導演​和​配音"
 
 #: Source/panels/mainpanel.cpp:87
 #, fuzzy
@@ -6395,7 +6390,7 @@ msgstr ""
 
 #: Source/pfile.cpp:260
 msgid "Failed to open player archive for writing."
-msgstr "無​法​打開​播放器​存檔​進行​寫入​。"
+msgstr "無​法​打開​播放器​存檔​進行​寫入。"
 
 #: Source/pfile.cpp:385
 msgid "Unable to open archive"
@@ -6416,7 +6411,7 @@ msgstr "無​法寫​入​以​儲存檔​案​存檔"
 #. TRANSLATORS: Shown if player presses "v" button. {:s} is player name, {:d} is level, {:s} is location
 #: Source/plrmsg.cpp:89
 msgid "{:s} (lvl {:d}): {:s}"
-msgstr "{:s}​（​等​級{:d}​）​:​ {:s}"
+msgstr "{:s}​（​等​級{:d}​）: {:s}"
 
 #. TRANSLATORS: Decimal separator
 #: Source/qol/common.cpp:25
@@ -6437,7 +6432,7 @@ msgid ""
 "Failed to load UI resources.\n"
 "\n"
 "Make sure devilutionx.mpq is in the game folder and that it is up to date."
-msgstr "無​法載入​UI資源​。​devilutionx.mpq​是否​可​訪問且​是​最​新​的​？"
+msgstr "無​法載入​UI資源。devilutionx.mpq​是否​可​訪問且​是​最​新​的？"
 
 #: Source/qol/xpbar.cpp:125
 msgid "Level {:d}"
@@ -6445,7 +6440,7 @@ msgstr "等​級{:d}"
 
 #: Source/qol/xpbar.cpp:132 Source/qol/xpbar.cpp:143
 msgid "Experience: "
-msgstr "經​驗​: "
+msgstr "經​驗: "
 
 #: Source/qol/xpbar.cpp:136
 msgid "Maximum Level"
@@ -6453,7 +6448,7 @@ msgstr "最高​水位"
 
 #: Source/qol/xpbar.cpp:147
 msgid "Next Level: "
-msgstr "下​一​級​: "
+msgstr "下​一​級: "
 
 #: Source/qol/xpbar.cpp:151
 msgid " to Level {:d}"
@@ -6653,7 +6648,7 @@ msgstr "法力​盾​卷軸"
 #| msgid "Fireball"
 msgctxt "spell"
 msgid "Fireball"
-msgstr "火球​傷害​:​ {:d}"
+msgstr "火球​傷害: {:d}"
 
 #: Source/spelldat.cpp:28
 #, fuzzy
@@ -6722,18 +6717,17 @@ msgstr "傀儡​卷軸"
 msgctxt "spell"
 msgid "Rage"
 msgstr ""
-"村​裡​需要​你​的​幫助​，​好師傅​！​幾​個​月​前​，​萊奧​里克國王​的​兒子​阿爾布雷希特​王子​被​綁架​。​國"
-"王勃然大怒​，​在​村子​裡​到​處尋​找​他​失蹤​的​孩子​。​日復​一​日​，​萊奧​里克​似乎​陷入​了​更​深​的​"
-"瘋狂​之中​。​他​試圖​把​男孩​的​失蹤歸咎於​無辜​的​市民​，​並殘​忍地處決​了​他​們​。​只​有​不到​一半​的"
-"​人從​他​的​瘋狂​中​倖存​下來​。​。​。​\n"
+"村​裡​需要​你​的​幫助，好師傅！幾​個​月​前，萊奧​里克國王​的​兒子​阿爾布雷希特​王子​被​綁架。國王勃然大怒，在​"
+"村子​裡​到​處尋​找​他​失蹤​的​孩子。日復​一​日，萊奧​里克​似乎​陷入​了​更​深​的​瘋狂​之中。他​試圖​把​男"
+"孩​的​失蹤歸咎於​無辜​的​市民，並殘​忍地處決​了​他​們。只​有​不到​一半​的​人從​他​的​瘋狂​中​倖存​下來。。"
+"。\n"
 " \n"
-"國王​的​騎士​和​牧師試​圖安撫​他​，​但​他​轉​而​反對​他​們​，​不幸​的​是​，​他​們​被迫殺​了​他​。​國"
-"王臨終​前​一​口​氣對​他​以前​的​追隨者​下​了​一​個​可怕​的​詛咒​。​他​發誓​他​們會​永遠​在​黑暗中​為​"
-"他​服務​。​。​。​\n"
+"國王​的​騎士​和​牧師試​圖安撫​他，但​他​轉​而​反對​他​們，不幸​的​是，他​們​被迫殺​了​他。國王臨終​前​一​"
+"口​氣對​他​以前​的​追隨者​下​了​一​個​可怕​的​詛咒。他​發誓​他​們會​永遠​在​黑暗中​為​他​服務。。。\n"
 " \n"
-"這​是​事情​發生​了​比​我​想像​的​更​黑暗​的​轉折​！​我​們​的​前​國​王​已​經從​永恒​的​睡眠​中​醒來​"
-"，​現​在在​迷宮​中​指揮​著​一​支​不​死​僕從​軍團​。​他​的​屍體​被​埋​在​大​教堂​下面​三​層​的​墳​墓"
-"​里​。​求​你​了​，​好​主人​，​通過摧毀​他​現​在​被​詛咒​的​身體來讓​他​的​靈魂​放鬆"
+"這​是​事情​發生​了​比​我​想像​的​更​黑暗​的​轉折！我​們​的​前​國​王​已​經從​永恒​的​睡眠​中​醒來，現​"
+"在在​迷宮​中​指揮​著​一​支​不​死​僕從​軍團。他​的​屍體​被​埋​在​大​教堂​下面​三​層​的​墳​墓​里。求​你"
+"​了，好​主人，通過摧毀​他​現​在​被​詛咒​的​身體來讓​他​的​靈魂​放鬆"
 
 #: Source/spelldat.cpp:38
 #, fuzzy
@@ -6844,18 +6838,17 @@ msgstr "法力"
 msgctxt "spell"
 msgid "the Magi"
 msgstr ""
-"注意​並見​證這裡​的​真理​，​因​為​它​們​是​赫拉迪姆​最後​的​遺產​。​近​三百​年​前​，​人們​知道​燃燒​地"
-"獄​的​三​大​惡魔​神秘​地來​到​了​我​們​的​世界​。​兄弟​三​人​蹂躪​東方​的​土地​數​十​年​，​而​人類卻"
-"​在​他​們身​後​戰慄​。​我​們​的​騎士團​——​赫拉迪姆​——​是​由​一​群​神秘​的​法師​建立​的​，​目的​是"
-"​一​勞​永逸​地​追捕​和​俘虜​這​三​個​惡魔​。​\n"
+"注意​並見​證這裡​的​真理，因​為​它​們​是​赫拉迪姆​最後​的​遺產。近​三百​年​前，人們​知道​燃燒​地獄​的​三​"
+"大​惡魔​神秘​地來​到​了​我​們​的​世界。兄弟​三​人​蹂躪​東方​的​土地​數​十​年，而​人類卻​在​他​們身​後​"
+"戰慄。我​們​的​騎士團​——​赫拉迪姆​——​是​由​一​群​神秘​的​法師​建立​的，目的​是​一​勞​永逸​地​追捕​和"
+"​俘虜​這​三​個​惡魔。\n"
 " \n"
-"​最初​的​赫拉德里姆​在​被​稱為​「​靈魂石​」​的​強大​文物​中​捕獲​了​其中​兩個​，​並將​它​們​深​埋​在​"
-"荒涼​的​東部​沙漠​之下​。​第三​個​惡​魔逃脫​了​追捕​，​逃到​了​西部​，​許多赫拉迪姆人​都​在​追捕​。​第三"
-"​個​惡​魔-​被​稱為迪亞波羅​，​恐懼​之​王-​最​終​被​俘虜​，​他​的​靈魂石​和​埋​在​這個​迷宮​的​本質​"
-"。​\n"
+"​最初​的​赫拉德里姆​在​被​稱為​「​靈魂石​」​的​強大​文物​中​捕獲​了​其中​兩個，並將​它​們​深​埋​在​荒涼"
+"​的​東部​沙漠​之下。第三​個​惡​魔逃脫​了​追捕，逃到​了​西部，許多赫拉迪姆人​都​在​追捕。第三​個​惡​魔-​被​"
+"稱為迪亞波羅，恐懼​之​王-​最​終​被​俘虜，他​的​靈魂石​和​埋​在​這個​迷宮​的​本質。\n"
 " \n"
-"​要​被​警告​，​靈魂​之石必須​防止​被​那些​不​信​的​人​發現​。​如果​迪亞波羅​被​釋放​，​他​會尋​找​一​"
-"個身體​很​容易​控制​，​因​為​他​會​非常​虛弱​-​也​許​是​一​個​老人​或​兒童"
+"​要​被​警告，靈魂​之石必須​防止​被​那些​不​信​的​人​發現。如果​迪亞波羅​被​釋放，他​會尋​找​一​個身體​很​"
+"容易​控制，因​為​他​會​非常​虛弱​-​也​許​是​一​個​老人​或​兒童"
 
 #: Source/spelldat.cpp:54
 #, fuzzy
@@ -6950,19 +6943,19 @@ msgstr ","
 
 #: Source/stores.cpp:195
 msgid "Damage: {:d}-{:d}  "
-msgstr "傷害​:​ {:d}-{:d}"
+msgstr "傷害: {:d}-{:d}"
 
 #: Source/stores.cpp:197
 msgid "Armor: {:d}  "
-msgstr "護​甲​:​ {:d}"
+msgstr "護​甲: {:d}"
 
 #: Source/stores.cpp:199
 msgid "Dur: {:d}/{:d},  "
-msgstr "杜爾​:​ {:d}/{:d}​，"
+msgstr "杜爾: {:d}/{:d}，"
 
 #: Source/stores.cpp:202
 msgid "Indestructible,  "
-msgstr "堅​不​可摧​，"
+msgstr "堅​不​可摧，"
 
 #: Source/stores.cpp:210
 msgid "No required attributes"
@@ -6980,7 +6973,7 @@ msgstr "鐵匠​鋪"
 #: Source/stores.cpp:1054 Source/stores.cpp:1241 Source/stores.cpp:1253
 #: Source/stores.cpp:1265
 msgid "Would you like to:"
-msgstr "您​想​: "
+msgstr "您​想: "
 
 #: Source/stores.cpp:246
 msgid "Talk to Griswold"
@@ -7009,7 +7002,7 @@ msgstr "離​開​商店"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
 msgid "I have these items for sale:             Your gold: {:d}"
-msgstr "我​有​這​些​東西​要​賣​: 你​的​金幣​:​ {:d}"
+msgstr "我​有​這​些​東西​要​賣: 你​的​金幣: {:d}"
 
 #: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
 #: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
@@ -7023,27 +7016,27 @@ msgstr "返回"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:351
 msgid "I have these premium items for sale:     Your gold: {:d}"
-msgstr "我​有​這​些​高檔​商品​出售​: 你​的​金幣​:​ {:d}"
+msgstr "我​有​這​些​高檔​商品​出售: 你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:474 Source/stores.cpp:746
 msgid "You have nothing I want.             Your gold: {:d}"
-msgstr "你​沒​有​我​想要​的​東西​。​你​的​金幣​:​ {:d}"
+msgstr "你​沒​有​我​想要​的​東西。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:489 Source/stores.cpp:761
 msgid "Which item is for sale?             Your gold: {:d}"
-msgstr "哪​件​商品​在​出售​？​你​的​金幣​:​ {:d}"
+msgstr "哪​件​商品​在​出售？你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:564
 msgid "You have nothing to repair.             Your gold: {:d}"
-msgstr "你​沒什麼​可​修​的​。​你​的​金幣​:​ {:d}"
+msgstr "你​沒什麼​可​修​的。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:579
 msgid "Repair which item?             Your gold: {:d}"
-msgstr "修理​哪​個​專案​？​你​的​金幣​:​ {:d}"
+msgstr "修理​哪​個​專案？你​的​金幣: {:d}"
 
 #: Source/stores.cpp:609
 msgid "Witch's shack"
@@ -7068,12 +7061,12 @@ msgstr "離​開​小​屋"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:827
 msgid "You have nothing to recharge.             Your gold: {:d}"
-msgstr "你​沒什麼​好​充電​的​。​你​的​金幣​:​ {:d}"
+msgstr "你​沒什麼​好​充電​的。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:842
 msgid "Recharge which item?             Your gold: {:d}"
-msgstr "給​哪​個​專案​充值​？​你​的​金幣​:​ {:d}"
+msgstr "給​哪​個​專案​充值？你​的​金幣: {:d}"
 
 #: Source/stores.cpp:858
 msgid "You do not have enough gold"
@@ -7085,27 +7078,27 @@ msgstr "您​的​庫存​空間​不足"
 
 #: Source/stores.cpp:903
 msgid "Do we have a deal?"
-msgstr "我​們​有​協議嗎​？"
+msgstr "我​們​有​協議嗎？"
 
 #: Source/stores.cpp:906
 msgid "Are you sure you want to identify this item?"
-msgstr "確​定​要​標識​此​專案嗎​？"
+msgstr "確​定​要​標識​此​專案嗎？"
 
 #: Source/stores.cpp:912
 msgid "Are you sure you want to buy this item?"
-msgstr "您​確定​要​購買​此​商品​嗎​？"
+msgstr "您​確定​要​購買​此​商品​嗎？"
 
 #: Source/stores.cpp:915
 msgid "Are you sure you want to recharge this item?"
-msgstr "您​確定​要​為該​物品​充值​嗎​？"
+msgstr "您​確定​要​為該​物品​充值​嗎？"
 
 #: Source/stores.cpp:919
 msgid "Are you sure you want to sell this item?"
-msgstr "你​確定​要​賣這個東​西嗎​？"
+msgstr "你​確定​要​賣這個東​西嗎？"
 
 #: Source/stores.cpp:922
 msgid "Are you sure you want to repair this item?"
-msgstr "確​定​要​修復​此​專案嗎​？"
+msgstr "確​定​要​修復​此​專案嗎？"
 
 #: Source/stores.cpp:936 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
@@ -7117,7 +7110,7 @@ msgstr "和​沃特談談"
 
 #: Source/stores.cpp:940
 msgid "I have something for sale,"
-msgstr "我​有​東西​要​賣​，"
+msgstr "我​有​東西​要​賣，"
 
 #: Source/stores.cpp:941
 msgid "but it will cost 50 gold"
@@ -7125,11 +7118,11 @@ msgstr "但​要​花​50​金"
 
 #: Source/stores.cpp:942
 msgid "just to take a look. "
-msgstr "只​是​想​看看​。"
+msgstr "只​是​想​看看。"
 
 #: Source/stores.cpp:943
 msgid "What have you got?"
-msgstr "你​有​什麼發現​？"
+msgstr "你​有​什麼發現？"
 
 #: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
 #: Source/stores.cpp:1255
@@ -7139,7 +7132,7 @@ msgstr "說​再​見"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:957
 msgid "I have this item for sale:             Your gold: {:d}"
-msgstr "我​有​這個​東西​要​賣​: 你​的​金幣​:​ {:d}"
+msgstr "我​有​這個​東西​要​賣: 你​的​金幣: {:d}"
 
 #: Source/stores.cpp:974
 msgid "Leave"
@@ -7172,16 +7165,16 @@ msgstr "標​識​專案"
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1149
 msgid "You have nothing to identify.             Your gold: {:d}"
-msgstr "你​沒什麼​可​指認​的​。​你​的​金幣​:​ {:d}"
+msgstr "你​沒什麼​可​指認​的。你​的​金幣: {:d}"
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
 #: Source/stores.cpp:1164
 msgid "Identify which item?             Your gold: {:d}"
-msgstr "確定​哪​一​項​？​你​的​金幣​:​ {:d}"
+msgstr "確定​哪​一​項？你​的​金幣: {:d}"
 
 #: Source/stores.cpp:1184
 msgid "This item is:"
-msgstr "此​專案​是​: "
+msgstr "此​專案​是: "
 
 #: Source/stores.cpp:1187
 msgid "Done"
@@ -7249,10 +7242,10 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
-"啊​，​我​們​國王​的​故事​，​是​嗎​？​李奧瑞克​的​悲慘​淪​陷對​這片​土地​是​一​個​沉重​的​打擊​。​人民"
-"​一直​愛​著​國王​，​現​在​他​們​生活​在​對​他​的​極度​恐懼​之中​。​我​一直​在​問​自己​的​問題​是​，"
-"​他​怎么​會落​在​離光這​麼遠​的​地方​，​因​為​李奧瑞克​一直​是​最​神聖​的​人​。​只有​地​獄​中​最​邪惡"
-"​的​力量​才​能​如此​徹底​地摧毀​一​個​人"
+"啊，我​們​國王​的​故事，是​嗎？李奧瑞克​的​悲慘​淪​陷對​這片​土地​是​一​個​沉重​的​打擊。人民​一直​愛​著​"
+"國王，現​在​他​們​生活​在​對​他​的​極度​恐懼​之中。我​一直​在​問​自己​的​問題​是，他​怎么​會落​在​離光這"
+"​麼遠​的​地方，因​為​李奧瑞克​一直​是​最​神聖​的​人。只有​地​獄​中​最​邪惡​的​力量​才​能​如此​徹底​地摧"
+"毀​一​個​人"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:17
@@ -7275,18 +7268,17 @@ msgid ""
 "levels beneath the Cathedral. Please, good master, put his soul at ease by "
 "destroying his now cursed form..."
 msgstr ""
-"村​裡​需要​你​的​幫助​，​好師傅​！​幾​個​月​前​，​萊奧​里克國王​的​兒子​阿爾布雷希特​王子​被​綁架​。​國"
-"王勃然大怒​，​在​村子​裡​到​處尋​找​他​失蹤​的​孩子​。​日復​一​日​，​萊奧​里克​似乎​陷入​了​更​深​的​"
-"瘋狂​之中​。​他​試圖​把​男孩​的​失蹤歸咎於​無辜​的​市民​，​並殘​忍地處決​了​他​們​。​只​有​不到​一半​的"
-"​人從​他​的​瘋狂​中​倖存​下來​。​。​。​\n"
+"村​裡​需要​你​的​幫助，好師傅！幾​個​月​前，萊奧​里克國王​的​兒子​阿爾布雷希特​王子​被​綁架。國王勃然大怒，在​"
+"村子​裡​到​處尋​找​他​失蹤​的​孩子。日復​一​日，萊奧​里克​似乎​陷入​了​更​深​的​瘋狂​之中。他​試圖​把​男"
+"孩​的​失蹤歸咎於​無辜​的​市民，並殘​忍地處決​了​他​們。只​有​不到​一半​的​人從​他​的​瘋狂​中​倖存​下來。。"
+"。\n"
 " \n"
-"國王​的​騎士​和​牧師試​圖安撫​他​，​但​他​轉​而​反對​他​們​，​不幸​的​是​，​他​們​被迫殺​了​他​。​國"
-"王臨終​前​一​口​氣對​他​以前​的​追隨者​下​了​一​個​可怕​的​詛咒​。​他​發誓​他​們會​永遠​在​黑暗中​為​"
-"他​服務​。​。​。​\n"
+"國王​的​騎士​和​牧師試​圖安撫​他，但​他​轉​而​反對​他​們，不幸​的​是，他​們​被迫殺​了​他。國王臨終​前​一​"
+"口​氣對​他​以前​的​追隨者​下​了​一​個​可怕​的​詛咒。他​發誓​他​們會​永遠​在​黑暗中​為​他​服務。。。\n"
 " \n"
-"這​是​事情​發生​了​比​我​想像​的​更​黑暗​的​轉折​！​我​們​的​前​國​王​已​經從​永恒​的​睡眠​中​醒來​"
-"，​現​在在​迷宮​中​指揮​著​一​支​不​死​僕從​軍團​。​他​的​屍體​被​埋​在​大​教堂​下面​三​層​的​墳​墓"
-"​里​。​求​你​了​，​好​主人​，​通過摧毀​他​現​在​被​詛咒​的​身體來讓​他​的​靈魂​放鬆"
+"這​是​事情​發生​了​比​我​想像​的​更​黑暗​的​轉折！我​們​的​前​國​王​已​經從​永恒​的​睡眠​中​醒來，現​"
+"在在​迷宮​中​指揮​著​一​支​不​死​僕從​軍團。他​的​屍體​被​埋​在​大​教堂​下面​三​層​的​墳​墓​里。求​你"
+"​了，好​主人，通過摧毀​他​現​在​被​詛咒​的​身體來讓​他​的​靈魂​放鬆"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
@@ -7295,8 +7287,8 @@ msgid ""
 "down there, waiting in the putrid darkness for his chance to destroy this "
 "land..."
 msgstr ""
-"正​如​我​告訴​你​的​，​好​主人​，​國王​被​埋葬​在​下面​三​層​。​他​在​下面​，​在​腐朽​的​黑暗​中​等"
-"待​著​毀滅​這片​土地​的​機會"
+"正​如​我​告訴​你​的，好​主人，國王​被​埋葬​在​下面​三​層。他​在​下面，在​腐朽​的​黑暗​中​等待​著​毀滅​這"
+"片​土地​的​機會"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:21
@@ -7306,9 +7298,8 @@ msgid ""
 "consumes our land, for your victory is a good omen. May Light guide you on "
 "your way, good master."
 msgstr ""
-"我​們​國王​的​詛咒​已​經過​去​了​，​但​我​擔心這​只是​更​大​的​罪惡​的​一​部分​。​然而​，​我​們​仍​"
-"有​可能​從吞滅​我​們​土地​的​黑暗中​得救​，​因​為​你​們​的​勝利​是​個好​兆頭​。​愿​光明​指引​你​前進​"
-"，​好​主人"
+"我​們​國王​的​詛咒​已​經過​去​了，但​我​擔心這​只是​更​大​的​罪惡​的​一​部分。然而，我​們​仍​有​可能​從"
+"吞滅​我​們​土地​的​黑暗中​得救，因​為​你​們​的​勝利​是​個好​兆頭。愿​光明​指引​你​前進，好​主人"
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:23
@@ -7318,9 +7309,9 @@ msgid ""
 "this kingdom from that day forward, but perhaps if you were to free his "
 "spirit from his earthly prison, the curse would be lifted..."
 msgstr ""
-"失去​兒子對​李奧瑞克國王來說​是​太​多​了​。​我​盡​我​所​能​減輕​他​的​瘋狂​，​但​最​終還​是​戰勝​了​他"
-"​。​從​那​一​天​起​，​一​個​黑色​的​詛咒​就​籠罩​著​這個​王國​，​但是​如果​你​把​他​的​靈魂從​塵世​"
-"的​牢獄​中​釋​放出來​，​詛咒​就​會​解除"
+"失去​兒子對​李奧瑞克國王來說​是​太​多​了。我​盡​我​所​能​減輕​他​的​瘋狂，但​最​終還​是​戰勝​了​他。從​那"
+"​一​天​起，一​個​黑色​的​詛咒​就​籠罩​著​這個​王國，但是​如果​你​把​他​的​靈魂從​塵世​的​牢獄​中​釋​放"
+"出來，詛咒​就​會​解除"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:25
@@ -7329,8 +7320,8 @@ msgid ""
 "the kind and just ruler that he was. His death was so sad and seemed very "
 "wrong, somehow."
 msgstr ""
-"我​不​想​去​想​國​王​是​怎麼死​的​。​我​喜歡記​住​他​的​善良​和​公正​的​統治者​，​他​是​。​他​的​死"
-"​是​如此​悲傷​，​似乎​非常​錯誤​，​不​知​何​故"
+"我​不​想​去​想​國​王​是​怎麼死​的。我​喜歡記​住​他​的​善良​和​公正​的​統治者，他​是。他​的​死​是​如此​"
+"悲傷，似乎​非常​錯誤，不​知​何​故"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
@@ -7340,18 +7331,16 @@ msgid ""
 "mithril for him, as well as a field crown to match. I still cannot believe "
 "how he died, but it must have been some sinister force that drove him insane!"
 msgstr ""
-"我​做​了​很多​武器​和​大部分​護甲​，​國王李奧瑞克​用​來裝備​他​的​騎士​。​我​甚至​為​他​製​作​了​一​把"
-"​巨大​的​雙手劍​，​是​最​好​的​秘銀劍​，​還​有​一​頂​與​之​相配​的​戰地​王冠​。​我​仍然​無法​相信​他"
-"​是​怎麼死​的​，​但​一定​是​某​種​邪惡​的​力量​把​他​逼瘋​了"
+"我​做​了​很多​武器​和​大部分​護甲，國王李奧瑞克​用​來裝備​他​的​騎士。我​甚至​為​他​製​作​了​一​把​巨大​"
+"的​雙手劍，是​最​好​的​秘銀劍，還​有​一​頂​與​之​相配​的​戰地​王冠。我​仍然​無法​相信​他​是​怎麼死​的，但"
+"​一定​是​某​種​邪惡​的​力量​把​他​逼瘋​了"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
 msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING!"
-msgstr ""
-"我​才​不管​呢​。​聽著​，​沒​有​骷髏會​是​我​的​國王​。​利奧里克​是​國王​。​國王​，​你​聽見​了​嗎​？​"
-"向​國王​致敬"
+msgstr "我​才​不管​呢。聽著，沒​有​骷髏會​是​我​的​國王。利奧里克​是​國王。國王，你​聽見​了​嗎？向​國王​致敬"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:31
@@ -7361,9 +7350,8 @@ msgid ""
 "you do not stop his reign, he will surely march across this land and slay "
 "all who still live here."
 msgstr ""
-"行​在​活​人​中間​的​死人​，​都​跟​隨​被​咒詛​的​王​。​他​有​能力​為​一​支​不​斷壯​大​的​不​死軍​團"
-"​培養​更​多​的​戰士​。​如果​你​不​停止​他​的​統治​，​他​一定​會​穿過​這片​土地​，​殺死​所有​仍然​住​"
-"在​這裡​的​人"
+"行​在​活​人​中間​的​死人，都​跟​隨​被​咒詛​的​王。他​有​能力​為​一​支​不​斷壯​大​的​不​死軍​團​培養​"
+"更​多​的​戰士。如果​你​不​停止​他​的​統治，他​一定​會​穿過​這片​土地，殺死​所有​仍然​住​在​這裡​的​人"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:33
@@ -7373,15 +7361,15 @@ msgid ""
 "need something to use against this King of the undead, then I can help you "
 "out..."
 msgstr ""
-"聽​著​，​我​在​這裡​做​生意​。​我​不​賣情報​，​我​也​不​關心​那些​死得​比​我​還久​的​國王​。​如果​你"
-"​需要​什麼東​西來​對​付​不​死​之​王​，​那​麼​我​可以​幫​你"
+"聽​著，我​在​這裡​做​生意。我​不​賣情報，我​也​不​關心​那些​死得​比​我​還久​的​國王。如果​你​需要​什麼東​"
+"西來​對​付​不​死​之​王，那​麼​我​可以​幫​你"
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
 #: Source/textdat.cpp:35
 msgid ""
 "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve "
 "my Master for eternity!"
-msgstr "生命​的​溫暖​已​經進入​我​的​墳​墓​。​準備​好​你​自己​，​凡​人​，​為​我​的​主人服務​到​永遠"
+msgstr "生命​的​溫暖​已​經進入​我​的​墳​墓。準備​好​你​自己，凡​人，為​我​的​主人服務​到​永遠"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
@@ -7392,9 +7380,9 @@ msgid ""
 "led them to believe that it too holds some arcane powers. Hmm, perhaps they "
 "are not all as smart as we had feared..."
 msgstr ""
-"我​知道​這種​奇怪​的​行為​也​讓​你​困惑​。​我​猜想​，​既然​許​多​惡​魔​害怕​太​陽光​，​相信​它​擁​有"
-"​巨大​的​力量​，​那​可能​是​你​所​說​的​星座​上​描繪​的​旭日​讓​他​們​相信​它​也​擁​有​一些​神秘​的"
-"​力量​。​嗯​，​也​許​他​們並​不​像​我​們​擔心​的​那​麼​聰明"
+"我​知道​這種​奇怪​的​行為​也​讓​你​困惑。我​猜想，既然​許​多​惡​魔​害怕​太​陽光，相信​它​擁​有​巨大​的​"
+"力量，那​可能​是​你​所​說​的​星座​上​描繪​的​旭日​讓​他​們​相信​它​也​擁​有​一些​神秘​的​力量。嗯，也​"
+"許​他​們並​不​像​我​們​擔心​的​那​麼​聰明"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -7408,11 +7396,10 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
-"師父​，​我​有​一​個​奇怪​的​經歷​。​我​知道​你​對迷宮裡​的​怪物​很​瞭解​，​這​是​我​一​生​都​無法​理"
-"解​的​。​。​。​我​在​晚上​被​酒店​外面​的​刮擦聲​吵醒​了​。​當​我​從​臥室​往外​看​的​時候​，​我​看到"
-"​客棧​院子​里​有​一些​像​魔鬼​一​樣​的​小​動物​。​過​了​一​會兒​，​他​們​跑掉​了​，​但​還沒來​得​及"
-"​把​牌子​偷​到​我​的​客棧​。​我​不​知道​為​什麼​惡​魔會​偷走​我​的​標誌​，​卻讓​我​的​家人​安然​無恙"
-"​…​…​」​很​奇怪​，​不​是​嗎"
+"師父，我​有​一​個​奇怪​的​經歷。我​知道​你​對迷宮裡​的​怪物​很​瞭解，這​是​我​一​生​都​無法​理解​的。。。"
+"我​在​晚上​被​酒店​外面​的​刮擦聲​吵醒​了。當​我​從​臥室​往外​看​的​時候，我​看到​客棧​院子​里​有​一些​"
+"像​魔鬼​一​樣​的​小​動物。過​了​一​會兒，他​們​跑掉​了，但​還沒來​得​及​把​牌子​偷​到​我​的​客棧。我​不"
+"​知道​為​什麼​惡​魔會​偷走​我​的​標誌，卻讓​我​的​家人​安然​無恙​…​…​」​很​奇怪，不​是​嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -7423,10 +7410,9 @@ msgid ""
 "cap was left in one of the rooms by a magician who stayed here some time "
 "ago. Perhaps it may be of some value to you."
 msgstr ""
-"哦​，​你​不​必​把​我​的​牌子​拿回來​，​但​我​想​它​確實​可以​幫​我​省下​再​做​一​個​牌子​的​費用​。"
-"​好​吧​，​讓​我​想想​，​我​能​給​你​什麼​作​為​找到​它​的​費用​？​嗯​，​我​們這裡​有​什麼​。​。​。"
-"​啊​，​是​的​！​這頂​帽子​是​一​個​魔術​師​不久​前​留下​來​的​，​他​把​它​放​在​一​個​房間​里​。​"
-"也​許對​你​有​價值"
+"哦，你​不​必​把​我​的​牌子​拿回來，但​我​想​它​確實​可以​幫​我​省下​再​做​一​個​牌子​的​費用。好​吧，讓"
+"​我​想想，我​能​給​你​什麼​作​為​找到​它​的​費用？嗯，我​們這裡​有​什麼。。。啊，是​的！這頂​帽子​是​一​個"
+"​魔術​師​不久​前​留下​來​的，他​把​它​放​在​一​個​房間​里。也​許對​你​有​價值"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -7435,8 +7421,8 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
-"我​的​天哪​，​惡魔們​晚上​在​村子​裡​到​處亂​跑​，​掠奪​我​們​的​家園​——​難道沒​有​什麼神聖​的​東西嗎"
-"​？​我​希望​奧格登​和​加爾達​沒​事​。​我​想​如果​他​們受傷​了​他​們會來​看​我​的"
+"我​的​天哪，惡魔們​晚上​在​村子​裡​到​處亂​跑，掠奪​我​們​的​家園​——​難道沒​有​什麼神聖​的​東西嗎？我​希"
+"望​奧格登​和​加爾達​沒​事。我​想​如果​他​們受傷​了​他​們會來​看​我​的"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:45
@@ -7444,7 +7430,7 @@ msgid ""
 "Oh my! Is that where the sign went? My Grandmother and I must have slept "
 "right through the whole thing. Thank the Light that those monsters didn't "
 "attack the inn."
-msgstr "天​哪​！​標誌​就​在​那​裡嗎​？​我​祖母​和​我​一定​一直​都​在​睡覺​。​感謝​那些​怪物沒​有​攻擊客棧"
+msgstr "天​哪！標誌​就​在​那​裡嗎？我​祖母​和​我​一定​一直​都​在​睡覺。感謝​那些​怪物沒​有​攻擊客棧"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:47
@@ -7454,9 +7440,9 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
-"你​說惡​魔偷​了​奧格登​的​招牌​？​這聽​起來​不​像​我​聽說過​或​見過​的​暴行​。​\n"
+"你​說惡​魔偷​了​奧格登​的​招牌？這聽​起來​不​像​我​聽說過​或​見過​的​暴行。\n"
 " \n"
-"惡​魔關​心​的​是​撕碎​你​的​心​，​而​不​是​你​的​路標"
+"惡​魔關​心​的​是​撕碎​你​的​心，而​不​是​你​的​路標"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:49
@@ -7466,9 +7452,8 @@ msgid ""
 "new sign with some pretty drawing on it. Maybe a nice mug of ale or a piece "
 "of cheese..."
 msgstr ""
-"你​知道​我​怎​麼​想​嗎​？​有​人​拿​了​那個​牌子​，​他​們會​想要​很多​錢​的​。​如果​我​是​奧格登​。​"
-"。​。​我​不​是​，​但​如果​我​是​。​。​。​我​想​買​一​個​新​牌子​，​上面​畫​些​漂亮​的​圖案​。​也​"
-"許​是​一​杯​啤酒​或者​一​塊​奶酪"
+"你​知道​我​怎​麼​想​嗎？有​人​拿​了​那個​牌子，他​們會​想要​很多​錢​的。如果​我​是​奧格登。。。我​不​是，"
+"但​如果​我​是。。。我​想​買​一​個​新​牌子，上面​畫​些​漂亮​的​圖案。也​許​是​一​杯​啤酒​或者​一​塊​奶酪"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:51
@@ -7477,9 +7462,9 @@ msgid ""
 " \n"
 "Never let their erratic actions confuse you, as that too may be their plan."
 msgstr ""
-"沒​有​人​能​真正​理解​惡魔​的​思想​。​\n"
+"沒​有​人​能​真正​理解​惡魔​的​思想。\n"
 " \n"
-"永遠​不​要​讓​他​們​不​穩定​的​行為​迷惑​你​，​因​為​那​也​可能​是​他​們​的​計劃"
+"永遠​不​要​讓​他​們​不​穩定​的​行為​迷惑​你，因​為​那​也​可能​是​他​們​的​計劃"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:53
@@ -7490,9 +7475,9 @@ msgid ""
 "Look, I got over simple sign stealing months ago. You can't turn a profit on "
 "a piece of wood."
 msgstr ""
-"他​是​說​我​拿​了​那個​？​我​想​格里斯沃​爾德​也​站​在​他​這邊​。​\n"
+"他​是​說​我​拿​了​那個？我​想​格里斯沃​爾德​也​站​在​他​這邊。\n"
 " \n"
-"​聽​著​，​我​幾​個​月​前​就​忘​了​偷牌子​了​。​你​不​能​靠​一​塊木頭​賺錢"
+"​聽​著，我​幾​個​月​前​就​忘​了​偷牌子​了。你​不​能​靠​一​塊木頭​賺錢"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:55
@@ -7501,18 +7486,18 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
-"嘿​-​你​就​是​那​個殺​人狂​！​你​給​我​拿​魔旗​否則​我​們​就​進攻​！​你​不​能​離開​生命​！​你​殺​"
-"了​大醜​八怪還​了​魔法​。​穿過​街角​和​門​，​找到​醜陋​的​東西​。​你​給​，​你​走"
+"嘿​-​你​就​是​那​個殺​人狂！你​給​我​拿​魔旗​否則​我​們​就​進攻！你​不​能​離開​生命！你​殺​了​大醜​八"
+"怪還​了​魔法。穿過​街角​和​門，找到​醜陋​的​東西。你​給，你​走"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
 msgid "You kill uglies, get banner. You bring to me, or else..."
-msgstr "你​殺​了​醜​八怪​，​得到​橫幅​。​你​給​我​帶來​，​否則"
+msgstr "你​殺​了​醜​八怪，得到​橫幅。你​給​我​帶來，否則"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
-msgstr "你​給​我​！​是​的​，​很​好​！​走​吧​，​我​們​堅強​。​我​們​用​大​魔法​殺​人"
+msgstr "你​給​我！是​的，很​好！走​吧，我​們​堅強。我​們​用​大​魔法​殺​人"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
@@ -7541,29 +7526,28 @@ msgid ""
 "You must hurry and save the prince from the sacrificial blade of this "
 "demented fiend!"
 msgstr ""
-"這​不​是​好​兆頭​，​因​為​它​證實​了​我​最​黑暗​的​恐懼​。​雖然​我​不​允許​自己​相信​古老​的​傳說​，"
-"​但​我​現​在​不​能否​認​它​們​。​也​許​是​時候​揭露​我​是​誰​了​。​\n"
+"這​不​是​好​兆頭，因​為​它​證實​了​我​最​黑暗​的​恐懼。雖然​我​不​允許​自己​相信​古老​的​傳說，但​我​現"
+"​在​不​能否​認​它​們。也​許​是​時候​揭露​我​是​誰​了。\n"
 " \n"
-"​我​的​真名​是​老凱恩​，​我​是​一​個​古老​兄弟會​的​最後​一個​後​代​，​這個​兄弟​會​致力​於​保護​一​"
-"個​永恒​邪惡​的​秘密​。​一​個​很​明顯​已​經​被​釋放​的​惡魔​。​\n"
+"​我​的​真名​是​老凱恩，我​是​一​個​古老​兄弟會​的​最後​一個​後​代，這個​兄弟​會​致力​於​保護​一​個​永恒"
+"​邪惡​的​秘密。一​個​很​明顯​已​經​被​釋放​的​惡魔。\n"
 " \n"
-"拉撒雷茲​大​主教​曾​經​是​萊奧​里克國王​最​信任​的​顧問​，​他​帶領​一​隊​普通​的​市民​進入​迷宮​，​尋​"
-"找​國​王失蹤​的​兒子​阿爾布雷希特​。​過​了​很​長​一​段​時間​他​們​才​回來​，​只有​少​數人​帶​著​生命​"
-"逃走​了​。​\n"
+"拉撒雷茲​大​主教​曾​經​是​萊奧​里克國王​最​信任​的​顧問，他​帶領​一​隊​普通​的​市民​進入​迷宮，尋​找​國​"
+"王失蹤​的​兒子​阿爾布雷希特。過​了​很​長​一​段​時間​他​們​才​回來，只有​少​數人​帶​著​生命​逃走​了。\n"
 " \n"
-"​詛咒​我​是​個​傻瓜​！​我​當時應該​懷疑​他​暗中​的​背叛​。​一定​是​拉撒路​自己​綁架​了​阿爾佈​雷希特​，"
-"​然​後​把​他​藏​在​迷宮裡​。​我​不​明白​大​主教​為什麼轉​向​黑暗​，​或者​他​對這個​孩子​有​什麼​興趣​"
-"，​除非​他​打算​把​他​獻給​他​的​黑暗​主人​！​\n"
+"​詛咒​我​是​個​傻瓜！我​當時應該​懷疑​他​暗中​的​背叛。一定​是​拉撒路​自己​綁架​了​阿爾佈​雷希特，然​後​把"
+"​他​藏​在​迷宮裡。我​不​明白​大​主教​為什麼轉​向​黑暗，或者​他​對這個​孩子​有​什麼​興趣，除非​他​打算​把​"
+"他​獻給​他​的​黑暗​主人！\n"
 " \n"
-"​那​一定​是​他​的​計劃​！​他​的​「​救援隊​」​的​倖存者​說​，​拉撒路​最後​一​次​被​看到​跑進迷宮​最​深"
-"​處​。​你​必須​趕​快​把​王子從​這個​瘋狂​惡魔​的​祭劍​中​救出​來"
+"​那​一定​是​他​的​計劃！他​的​「​救援隊​」​的​倖存者​說，拉撒路​最後​一​次​被​看到​跑進迷宮​最​深​處。你"
+"​必須​趕​快​把​王子從​這個​瘋狂​惡魔​的​祭劍​中​救出​來"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:63
 msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
-msgstr "你​必須​趕​快​把​阿爾布雷希特從拉撒路​手​中​救出來​。​王子​和​這個​王國​的​人民​都​指望​著​你"
+msgstr "你​必須​趕​快​把​阿爾布雷希特從拉撒路​手​中​救出來。王子​和​這個​王國​的​人民​都​指望​著​你"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -7579,13 +7563,13 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
-"你​的​故事​很​殘​酷​，​我​的​朋友​。​拉撒路​一定​會​因​為​他​那​可怕​的​行為​在地​獄裡​被​燒死​。​你"
-"​描述​的​那​個​男孩​不​是​我​們​的​王子​，​但​我​相信​阿爾布雷希特​可能​還處​在​危險​之中​。​你​所​說"
-"​的​權力​的​象徵​一定​是​迷宮​中心​的​一​個​入口​。​\n"
+"你​的​故事​很​殘​酷，我​的​朋友。拉撒路​一定​會​因​為​他​那​可怕​的​行為​在地​獄裡​被​燒死。你​描述​的​"
+"那​個​男孩​不​是​我​們​的​王子，但​我​相信​阿爾布雷希特​可能​還處​在​危險​之中。你​所​說​的​權力​的​象徵"
+"​一定​是​迷宮​中心​的​一​個​入口。\n"
 " \n"
-"​你​要​知道​，​我​的​朋友​，​你​所​反對​的​邪惡​是​恐怖​的​黑魔王​。​他​被​世人​稱為​迪亞波羅​。​幾個"
-"世紀​前​，​正​是​他​被​囚禁​在​迷宮裡​，​我​擔心​他​又​一​次​企圖​在​人類​的​王國里​製造​混亂​。​你​"
-"必​須​冒險​穿過傳​送門​，​在​一切​還​不​到​時候摧毀迪亞波羅"
+"​你​要​知道，我​的​朋友，你​所​反對​的​邪惡​是​恐怖​的​黑魔王。他​被​世人​稱為​迪亞波羅。幾個世紀​前，正​是"
+"​他​被​囚禁​在​迷宮裡，我​擔心​他​又​一​次​企圖​在​人類​的​王國里​製造​混亂。你​必​須​冒險​穿過傳​送門，"
+"在​一切​還​不​到​時候摧毀迪亞波羅"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -7595,9 +7579,9 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
-"拉撒路​是​大主教​，​他​帶領​許​多​市民​進入​迷宮​。​那天​我​失去​了​很多​好​朋友​，​拉撒路​再​也​沒​有"
-"​回來​。​我​想​他​是​和​其他​大多​數​人​一起​被​殺​的​。​如果​你​能幫​我​一​個​忙​，​好​主人​-​請"
-"​不​要​和​法納​姆談論​那​一​天"
+"拉撒路​是​大主教，他​帶領​許​多​市民​進入​迷宮。那天​我​失去​了​很多​好​朋友，拉撒路​再​也​沒​有​回來。我​"
+"想​他​是​和​其他​大多​數​人​一起​被​殺​的。如果​你​能幫​我​一​個​忙，好​主人​-​請​不​要​和​法納​姆談"
+"論​那​一​天"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -7607,9 +7591,8 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
-"當​我​聽說鎮​上​的​人​那天​晚上​打算​幹什麼時​，​我​很​震驚​。​我​想​在​所有​人​中​，​拉撒路​應該​更​"
-"有​理智​。​他​是​一​位​大主教​，​似乎​總​是​那​麼​關​心​特里斯特拉姆​的​市民​。​這麼​多​人​受傷​，​我"
-"​救​不​了​他​們"
+"當​我​聽說鎮​上​的​人​那天​晚上​打算​幹什麼時，我​很​震驚。我​想​在​所有​人​中，拉撒路​應該​更​有​理智。他"
+"​是​一​位​大主教，似乎​總​是​那​麼​關​心​特里斯特拉姆​的​市民。這麼​多​人​受傷，我​救​不​了​他​們"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -7618,9 +7601,8 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
-"我​記​得​拉撒路​是​一​個​非常​和​善​和​樂於​奉獻​的​人​。​他​在​我​母親​的​葬禮​上​發表​了​講話​，​"
-"在​非常​困難​的​時候​支援​我​和​我​的​祖母​。​我​每​晚​都​祈禱​，​不​知​何故​，​他​還活著​，​安然​無"
-"恙"
+"我​記​得​拉撒路​是​一​個​非常​和​善​和​樂於​奉獻​的​人。他​在​我​母親​的​葬禮​上​發表​了​講話，在​非常"
+"​困難​的​時候​支援​我​和​我​的​祖母。我​每​晚​都​祈禱，不​知​何故，他​還活著，安然​無恙"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -7630,9 +7612,9 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
-"拉撒路領​我​們​進迷宮​的​時候​，​我​在​那裡​。​他​談​到​了​神聖​的​報應​，​但​當​我​們開​始與​那些​地"
-"獄​之​子​戰鬥時​，​他​甚至​沒​有​舉起​他​的​狼牙棒來​對付​他​們​。​他​只不​過​是​往​黑暗​的​僕人們​所"
-"​住​的​昏暗​無邊​的​房間​里​跑​得​更​深"
+"拉撒路領​我​們​進迷宮​的​時候，我​在​那裡。他​談​到​了​神聖​的​報應，但​當​我​們開​始與​那些​地獄​之​子​"
+"戰鬥時，他​甚至​沒​有​舉起​他​的​狼牙棒來​對付​他​們。他​只不​過​是​往​黑暗​的​僕人們​所​住​的​昏暗​無邊"
+"​的​房間​里​跑​得​更​深"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -7641,9 +7623,8 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
-"它​們刺​，​然​後​咬​，​然​後​它​們​就​在​你​周圍​。​說謊者​！​說謊者​！​他​們​都​死​了​！​死去​的​"
-"你​聽見​了​嗎​？​他​們​只​是​不​斷​地​跌倒​。​。​。​他​們​的​血灑​得​滿​地​都​是​。​。​。​全​是​"
-"他​的​錯"
+"它​們刺，然​後​咬，然​後​它​們​就​在​你​周圍。說謊者！說謊者！他​們​都​死​了！死去​的​你​聽見​了​嗎？他​們"
+"​只​是​不​斷​地​跌倒。。。他​們​的​血灑​得​滿​地​都​是。。。全​是​他​的​錯"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:79
@@ -7652,8 +7633,8 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
-"我​不​認識​你​們​所​說​的​拉撒路​，​但​我​確​實感覺​到​他​內​心有​很​大​的​矛盾​。​他​帶來​了​巨大​"
-"的​危險​，​他​將​不​擇​手段​地為​黑暗​勢力服務​，​黑暗​勢力將​他​視為​他​們​的"
+"我​不​認識​你​們​所​說​的​拉撒路，但​我​確​實感覺​到​他​內​心有​很​大​的​矛盾。他​帶來​了​巨大​的​危險"
+"，他​將​不​擇​手段​地為​黑暗​勢力服務，黑暗​勢力將​他​視為​他​們​的"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -7662,8 +7643,8 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
-"是​的​，​正義​的​拉撒路​，​他​對​那​裡​的​怪物​非常​有效​。​沒救​我​的​腿​，​是​嗎​？​聽著​，​我​給"
-"​你​一​個​免費​的​建議​。​問問法納姆​，​他​在​那​兒"
+"是​的，正義​的​拉撒路，他​對​那​裡​的​怪物​非常​有效。沒救​我​的​腿，是​嗎？聽著，我​給​你​一​個​免費​的​"
+"建議。問問法納姆，他​在​那​兒"
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -7671,8 +7652,8 @@ msgid ""
 "Abandon your foolish quest. All that awaits you is the wrath of my Master! "
 "You are too late to save the child. Now you will join him in Hell!"
 msgstr ""
-"放棄​你​愚蠢​的​追求​。​等待​你​的​只​有​我​主人​的​憤怒​！​你​來​不​及​救​孩子​了​。​現​在​你​要​"
-"和​他​一起​下地獄​了"
+"放棄​你​愚蠢​的​追求。等待​你​的​只​有​我​主人​的​憤怒！你​來​不​及​救​孩子​了。現​在​你​要​和​他​一起"
+"​下地獄​了"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:86
@@ -7683,9 +7664,9 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
-"嗯​，​我​不​知道​我​能​告訴​你​些​什麼對​你​有​幫助​。​充滿​我​們​水​井​的​水來​自​地下泉水​。​我​聽"
-"說​過​一​條​通往​大​湖​的​隧道​——​也​許​它​們​是​同​一​條​。​不幸​的​是​，​我​不​知道​什麼會​導致"
-"​我​們​的​供水​受到​污染"
+"嗯，我​不​知道​我​能​告訴​你​些​什麼對​你​有​幫助。充滿​我​們​水​井​的​水來​自​地下泉水。我​聽說​過​一​"
+"條​通往​大​湖​的​隧道​——​也​許​它​們​是​同​一​條。不幸​的​是，我​不​知道​什麼會​導致​我​們​的​供水​"
+"受到​污染"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -7696,10 +7677,10 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
-"我​一直​試圖​在​我​們​的​儲藏室​裡​儲存​大量​的​食品​和​飲料​，​但​由於​全​鎮沒​有​淡水​供應​，​即使​"
-"是​我​們​的​商店​也​很​快​就​會​乾涸​。​\n"
+"我​一直​試圖​在​我​們​的​儲藏室​裡​儲存​大量​的​食品​和​飲料，但​由於​全​鎮沒​有​淡水​供應，即使​是​我​"
+"們​的​商店​也​很​快​就​會​乾涸。\n"
 " \n"
-"拜託​，​做​你​能​做​的​，​否則​我​不​知道​我​們會​做​什麼"
+"拜託，做​你​能​做​的，否則​我​不​知道​我​們會​做​什麼"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:90
@@ -7710,9 +7691,9 @@ msgid ""
 "passage that leads to the springs that serve our town. Please find what has "
 "caused this calamity, or we all will surely perish."
 msgstr ""
-"很​高​興​我​及​時趕​上​了​你​！​我​們​的​水井變​得​微咸​、​死氣​沉沉​，​一些​城裡人​喝​得​不​好​。​"
-"我​們​儲備​的​淡水​很​快​就​乾涸​了​。​我​相信​有​一​條​通道​通向​為​我​們城鎮服務​的​泉水​。​請​找出"
-"​造成​這場​災難​的​原因​，​否則​我​們​都​將滅亡"
+"很​高​興​我​及​時趕​上​了​你！我​們​的​水井變​得​微咸、死氣​沉沉，一些​城裡人​喝​得​不​好。我​們​儲備​的"
+"​淡水​很​快​就​乾涸​了。我​相信​有​一​條​通道​通向​為​我​們城鎮服務​的​泉水。請​找出​造成​這場​災難​的​"
+"原因，否則​我​們​都​將滅亡"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -7722,9 +7703,9 @@ msgid ""
 " \n"
 "We cannot survive for long without your help."
 msgstr ""
-"拜託​，​你​必須​快點​。​每​過​一​個​小​時​，​我​們​就​更​接近​沒​有​水​喝​了​。​\n"
+"拜託，你​必須​快點。每​過​一​個​小​時，我​們​就​更​接近​沒​有​水​喝​了。\n"
 " \n"
-"沒​有​你​的​幫助​，​我​們​活​不​了​多久"
+"沒​有​你​的​幫助，我​們​活​不​了​多久"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:94
@@ -7734,16 +7715,16 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
-"你​說什麼​？​僅僅​是​惡魔​的​存在​就​導致​了​水​被​污染​了​？​哦​，​我​們鎮​下​確實​隱​藏​著​一​個​"
-"巨大​的​惡魔​，​但​你​的​毅力​和​勇氣給​了​我​們​希望​。​請收​下​這​枚​戒指​——​也​許​它​能​幫助​你"
-"​消滅​這​些​邪惡​的​生物"
+"你​說什麼？僅僅​是​惡魔​的​存在​就​導致​了​水​被​污染​了？哦，我​們鎮​下​確實​隱​藏​著​一​個​巨大​的​惡"
+"魔，但​你​的​毅力​和​勇氣給​了​我​們​希望。請收​下​這​枚​戒指​——​也​許​它​能​幫助​你​消滅​這​些​邪惡"
+"​的​生物"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
 msgid ""
 "My grandmother is very weak, and Garda says that we cannot drink the water "
 "from the wells. Please, can you do something to help us?"
-msgstr "我​祖母​很​虛弱​，​嘉達說​我​們​不​能​喝​井​水​。​拜託​，​你​能幫​點​忙嗎"
+msgstr "我​祖母​很​虛弱，嘉達說​我​們​不​能​喝​井​水。拜託，你​能幫​點​忙嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:98
@@ -7752,8 +7733,8 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
-"佩平告訴​了​你​真相​。​我​們​很​快​就​會​急​需​淡水​。​我​試過​清理​其中​一​口​小​井​，​但​它​散發​"
-"著​死​水​的​臭味​。​一定​是​源頭​堵塞​了"
+"佩平告訴​了​你​真相。我​們​很​快​就​會​急​需​淡水。我​試過​清理​其中​一​口​小​井，但​它​散發​著​死​水​"
+"的​臭味。一定​是​源頭​堵塞​了"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
@@ -7769,9 +7750,9 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
-"如果​你​不​能​恢復​井​中​的​淡水​，​崔斯特瑞姆人​就​會死​。​\n"
+"如果​你​不​能​恢復​井​中​的​淡水，崔斯特瑞姆人​就​會死。\n"
 " \n"
-"​知道​這​一​點​-​惡魔​是​這件​事​的​核心​，​但​他​們​仍然​不​知道​他​們產生​了​什麼"
+"​知道​這​一​點​-​惡魔​是​這件​事​的​核心，但​他​們​仍然​不​知道​他​們產生​了​什麼"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:103
@@ -7779,8 +7760,8 @@ msgid ""
 "For once, I'm with you. My business runs dry - so to speak - if I have no "
 "market to sell to. You better find out what is going on, and soon!"
 msgstr ""
-"這​一​次​，​我​和​你​在一起​。​可以​說​，​如果​我​沒​有​銷路​的​話​，​我​的​生意​就​完​了​。​你​最"
-"好​儘快​弄清楚​發生​了​什麼​事"
+"這​一​次，我​和​你​在一起。可以​說，如果​我​沒​有​銷路​的​話，我​的​生意​就​完​了。你​最好​儘快​弄清楚​發"
+"生​了​什麼​事"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:105
@@ -7792,30 +7773,30 @@ msgid ""
 "the attempt to steal that treasure would be forever bound to defend it. A "
 "twisted, but strangely fitting, end?"
 msgstr ""
-"一​本​關於​藏骨密室​的​書​？​嗯​，​我​在​東方圖書館​研究過​的​一些​古代​著作​中​提到​了​骨室​。​這​些​"
-"大部​頭書​推斷​，​當​地下​世界​的​領主​想要​保護​巨大​的​寶藏時​，​他​們會​建立​領地​，​讓​那些​在​試圖"
-"​竊取寶​藏時死去​的​人永遠​有​義務​保衛​寶藏​。​一​個​扭曲​的​，​但​奇怪​的​適合​，​結束"
+"一​本​關於​藏骨密室​的​書？嗯，我​在​東方圖書館​研究過​的​一些​古代​著作​中​提到​了​骨室。這​些​大部​頭書​"
+"推斷，當​地下​世界​的​領主​想要​保護​巨大​的​寶藏時，他​們會​建立​領地，讓​那些​在​試圖​竊取寶​藏時死去​的​"
+"人永遠​有​義務​保衛​寶藏。一​個​扭曲​的，但​奇怪​的​適合，結束"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
 msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
-msgstr "恐怕​我​對​此​一​無​所​知​，​好​師傅​。​凱恩​有​許​多​書​可能​對​他​有所​幫助"
+msgstr "恐怕​我​對​此​一​無​所​知，好​師傅。凱恩​有​許​多​書​可能​對​他​有所​幫助"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
 msgid ""
 "This sounds like a very dangerous place. If you venture there, please take "
 "great care."
-msgstr "這​聽起來​是​個​非常​危險​的​地方​。​如果​你​在​那裡​冒險​，​請​小心"
+msgstr "這​聽起來​是​個​非常​危險​的​地方。如果​你​在​那裡​冒險，請​小心"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:111
 msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
-msgstr "恐怕​我​什麼​也​沒聽​說過​。​說書人​凱恩​也​許能​幫​上​忙"
+msgstr "恐怕​我​什麼​也​沒聽​說過。說書人​凱恩​也​許能​幫​上​忙"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -7824,8 +7805,8 @@ msgid ""
 "many things, and it would not surprise me if he had some answers to your "
 "question."
 msgstr ""
-"我​對這​地方​一​無​所​知​，​不​過​你​可以​問問​凱恩​。​他​談​了​很多​事情​，​如果​他​能​回答​你​的​"
-"問題​，​我​也​不​會​感到​驚訝"
+"我​對這​地方​一​無​所​知，不​過​你​可以​問問​凱恩。他​談​了​很多​事情，如果​他​能​回答​你​的​問題，我​也"
+"​不​會​感到​驚訝"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -7834,8 +7815,8 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
-"好​吧​，​聽著​。​有​一​間​木屋​，​你​看​。​他​的​妻子​告訴樹​。​。​。​因為​你​得​等​。​然​後​我​說"
-"​，​這​可能​對​他​不利​，​但​如果​你​認為​我​會​為​此​付出​代價​。​。​。​你​。​。​。​UH​是​的"
+"好​吧，聽著。有​一​間​木屋，你​看。他​的​妻子​告訴樹。。。因為​你​得​等。然​後​我​說，這​可能​對​他​不利，但"
+"​如果​你​認為​我​會​為​此​付出​代價。。。你。。。UH​是​的"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -7845,7 +7826,7 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
-"如果​你​死​在​這個​被​詛咒​的​領域裡​，​你​將成為​黑暗​領主​的​永恒​僕​人​。​\n"
+"如果​你​死​在​這個​被​詛咒​的​領域裡，你​將成為​黑暗​領主​的​永恒​僕​人。\n"
 " \n"
 "​進入骨室​的​風險​由​你​自己​承擔"
 
@@ -7856,8 +7837,8 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
-"你​說​是​一​個​巨大​而​神秘​的​寶藏​？​也​許​我​有​興趣從​你​那​裡​得到​一些​東西​。​。​。​或者​更​"
-"好​的​是​，​你​不​需要​一些​稀有​而​昂貴​的​物資​來度​過這​場​磨難嗎"
+"你​說​是​一​個​巨大​而​神秘​的​寶藏？也​許​我​有​興趣從​你​那​裡​得到​一些​東西。。。或者​更​好​的​是，"
+"你​不​需要​一些​稀有​而​昂貴​的​物資​來度​過這​場​磨難嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -7868,16 +7849,16 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
-"似乎​拉撒路​大​主教​慫恿許​多​市民​冒險進​入​迷宮尋​找​國​王失蹤​的​兒子​。​他​利用​他​們​的​恐懼​，​把"
-"​他​們鞭​打​成​一​群​瘋狂​的​暴徒​。​他​們​中​沒​有​一​個人準備​好​面對​冰冷​的​地球​上​的​一切​。​"
-"。​。​拉撒路​把​他​們丟​在​那裡​，​丟​在​難​以​形容​的​恐懼​魔爪​里​，​等​死"
+"似乎​拉撒路​大​主教​慫恿許​多​市民​冒險進​入​迷宮尋​找​國​王失蹤​的​兒子。他​利用​他​們​的​恐懼，把​他​們"
+"鞭​打​成​一​群​瘋狂​的​暴徒。他​們​中​沒​有​一​個人準備​好​面對​冰冷​的​地球​上​的​一切。。。拉撒路​把​"
+"他​們丟​在​那裡，丟​在​難​以​形容​的​恐懼​魔爪​里，等​死"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
 msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
-msgstr "是​的​，​法納姆喃喃​地說​了​一些​關​於​一​個​笨重​的​畜生​揮​舞著​兇器​的​事​。​我​相信​他​叫​他​屠夫"
+msgstr "是​的，法納姆喃喃​地說​了​一些​關​於​一​個​笨重​的​畜生​揮​舞著​兇器​的​事。我​相信​他​叫​他​屠夫"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -7889,19 +7870,16 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
-"藉​著​光明​，​我​知道​這個​邪惡​的​惡魔​。​當拉撒路率領​的​少數​幾名衝鋒倖​存者​從大​教堂​爬出來時​，​許多"
-"​人​身​上​留下​了​他​憤怒​的​傷疤​。​我​不​知道​他​以前​是​怎麼​切開​受害者​的​，​但​這​不​可能​是​"
-"這個​世界​的​。​它​留下​的​傷口潰爛與​疾病​，​甚至​我​發現​他​們​幾乎​不​可能​治療​。​如果​你​打算​和​"
-"這個​惡​魔戰​鬥​，​要​小心"
+"藉​著​光明，我​知道​這個​邪惡​的​惡魔。當拉撒路率領​的​少數​幾名衝鋒倖​存者​從大​教堂​爬出來時，許多​人​身​上"
+"​留下​了​他​憤怒​的​傷疤。我​不​知道​他​以前​是​怎麼​切開​受害者​的，但​這​不​可能​是​這個​世界​的。它​"
+"留下​的​傷口潰爛與​疾病，甚至​我​發現​他​們​幾乎​不​可能​治療。如果​你​打算​和​這個​惡​魔戰​鬥，要​小心"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
 msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
-msgstr ""
-"當​法納姆說​起​屠夫殺人​的​事時​，​我​立刻​打消​了​這個​念頭​。​但​既然​是​你​提出​來​的​，​也​許​是​"
-"真的"
+msgstr "當​法納姆說​起​屠夫殺人​的​事時，我​立刻​打消​了​這個​念頭。但​既然​是​你​提出​來​的，也​許​是​真的"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:129
@@ -7913,10 +7891,10 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
-"我​看到​法納姆所說​的​屠夫​在​我​朋友​的​屍體​上​劃​出​一​條​小​路​。​他​揮​舞​著​一​把​斧頭​般​大​"
-"的​砍​刀​，​砍​斷​四肢​，​砍​倒​站​在​那裡​的​勇士​。​我​被​一​群​尖叫​著​的​小​惡​魔從​紛爭​中​分"
-"離出來​，​不​知​怎​的​我​找到​了​通向​外面​的​樓梯​。​我​再​也​沒見​過​那​可怕​的​野獸​，​但​他​那​"
-"血跡​斑斑​的​面容​至今​縈繞​在​我​心頭"
+"我​看到​法納姆所說​的​屠夫​在​我​朋友​的​屍體​上​劃​出​一​條​小​路。他​揮​舞​著​一​把​斧頭​般​大​的​"
+"砍​刀，砍​斷​四肢，砍​倒​站​在​那裡​的​勇士。我​被​一​群​尖叫​著​的​小​惡​魔從​紛爭​中​分離出來，不​知​"
+"怎​的​我​找到​了​通向​外面​的​樓梯。我​再​也​沒見​過​那​可怕​的​野獸，但​他​那​血跡​斑斑​的​面容​至今​"
+"縈繞​在​我​心頭"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (*sad face*)
 #: Source/textdat.cpp:131
@@ -7925,8 +7903,8 @@ msgid ""
 "couldn't save them. Trapped in a room with so many bodies... so many "
 "friends... NOOOOOOOOOO!"
 msgstr ""
-"大​的​大​砍​刀​殺​了​我​所有​的​朋友​。​阻止​不​了​他​，​不得不​逃跑​，​救​不​了​他​們​。​被困​在​"
-"一​個​有​這麼​多​屍體​的​房間​里​。​。​。​這麼​多​朋友​。​。​。​不​，​不"
+"大​的​大​砍​刀​殺​了​我​所有​的​朋友。阻止​不​了​他，不得不​逃跑，救​不​了​他​們。被困​在​一​個​有​這麼"
+"​多​屍體​的​房間​里。。。這麼​多​朋友。。。不，不"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:133
@@ -7935,8 +7913,8 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
-"屠夫​是​個虐待​狂​，​喜​歡​別​人​的​折磨​和​痛苦​。​你​見過​他​在​酒​鬼法納姆​的​作品​。​他​的​毀滅將"
-"對​確​保這個​村莊​的​安全​大​有​幫助"
+"屠夫​是​個虐待​狂，喜​歡​別​人​的​折磨​和​痛苦。你​見過​他​在​酒​鬼法納姆​的​作品。他​的​毀滅將對​確​保這"
+"個​村莊​的​安全​大​有​幫助"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -7948,8 +7926,8 @@ msgid ""
 "I'll put it bluntly - kill him before he kills you and adds your corpse to "
 "his collection."
 msgstr ""
-"我​知道​的​比​你​想​的​還​要​多​。​他​的​小朋友​們​抓住​了​我​，​設法​在​格里斯沃​爾德​把​我​從洞​里"
-"拉​出來​之前​抓住​了​我​的​腿​。​\n"
+"我​知道​的​比​你​想​的​還​要​多。他​的​小朋友​們​抓住​了​我，設法​在​格里斯沃​爾德​把​我​從洞​里拉​出來"
+"​之前​抓住​了​我​的​腿。\n"
 " \n"
 "​我​直截​了​當​地說​——​在​他​殺​了​你​並​把​你​的​屍體​加入​他​的​收藏​之前​殺​了​他"
 
@@ -7961,9 +7939,9 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
-"請聽​我​說​。​拉撒路​大​主教​，​他​帶​我​們​到​這裡​來尋​找​失蹤​的​王子​。​那​混蛋​把​我​們​引入​陷"
-"阱​！​現​在​每​個​人​都​死​了​。​。​。​被​一​個​叫​屠夫​的​惡魔​殺死​。​為​我​們報仇​！​找到​這個​"
-"屠夫​，​殺​了​他​，​讓​我​們​的​靈魂​最​終​安息"
+"請聽​我​說。拉撒路​大​主教，他​帶​我​們​到​這裡​來尋​找​失蹤​的​王子。那​混蛋​把​我​們​引入​陷阱！現​在​"
+"每​個​人​都​死​了。。。被​一​個​叫​屠夫​的​惡魔​殺死。為​我​們報仇！找到​這個​屠夫，殺​了​他，讓​我​們​的"
+"​靈魂​最​終​安息"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -7976,12 +7954,10 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
-"你​背誦​了​一​首​有趣​的​韻文​，​它​的​風格讓​我​想起​了​其他​的​作品​。​現​在​讓​我​想想​-​那​是​"
-"什么​？​\n"
+"你​背誦​了​一​首​有趣​的​韻文，它​的​風格讓​我​想起​了​其他​的​作品。現​在​讓​我​想想​-​那​是​什么？\n"
 " \n"
-"​…​黑暗​籠罩​著​隱藏​的​世界​。​眼睛​在​看​不​見​的​地方​閃閃​發光​，​只有​剃刀​爪子​的​聲音​在​短暫"
-"​地​刮來​刮去​，​折磨​那些​永遠失明​的​可憐​的​靈魂​。​為​那些​該死​的​人​而​設​的​監獄​被​命名​為盲人"
-"​的​大廳"
+"​…​黑暗​籠罩​著​隱藏​的​世界。眼睛​在​看​不​見​的​地方​閃閃​發光，只有​剃刀​爪子​的​聲音​在​短暫​地​刮"
+"來​刮去，折磨​那些​永遠失明​的​可憐​的​靈魂。為​那些​該死​的​人​而​設​的​監獄​被​命名​為盲人​的​大廳"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -7991,10 +7967,10 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
-"我​從​不​太​喜​歡​詩歌​。​偶爾​，​當​旅店​經​營​得​很​好​的​時候​，​我​有​理由​僱​傭吟遊​詩人​，​但"
-"​那​似乎​是​很​久​以前​的​事​了​。​\n"
+"我​從​不​太​喜​歡​詩歌。偶爾，當​旅店​經​營​得​很​好​的​時候，我​有​理由​僱​傭吟遊​詩人，但​那​似乎​是​"
+"很​久​以前​的​事​了。\n"
 " \n"
-"什麼​？​哦​，​是​的​。​。​。​呃​，​好​吧​，​我​想​你​可以​看看​別人​知道​什麼"
+"什麼？哦，是​的。。。呃，好​吧，我​想​你​可以​看看​別人​知道​什麼"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -8003,8 +7979,8 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
-"不​知​怎麼​的​，​這​似乎​很​熟悉​。​我​似乎​記​得​在​研究​惡魔​痛苦​的​歷史時讀過​類​似​這​首​詩​的​"
-"東西​。​它​講述​了​一​個​邪惡​的​地方​。​。​。​等等​-​你​不​會去​的​，​是​嗎"
+"不​知​怎麼​的，這​似乎​很​熟悉。我​似乎​記​得​在​研究​惡魔​痛苦​的​歷史時讀過​類​似​這​首​詩​的​東西。它"
+"​講述​了​一​個​邪惡​的​地方。。。等等​-​你​不​會去​的，是​嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -8013,8 +7989,8 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
-"如果​你​對失明有​疑問​，​你​應該​和​佩平談談​。​我​知道​他​給​了​我​祖母​一​種​藥​水​，​幫助​她​消除​"
-"視力​，​所以​也​許​他​也​能​幫​你"
+"如果​你​對失明有​疑問，你​應該​和​佩平談談。我​知道​他​給​了​我​祖母​一​種​藥​水，幫助​她​消除​視力，所以​"
+"也​許​他​也​能​幫​你"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -8023,13 +7999,13 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
-"恐怕​我​既​沒​聽說過​也​沒見過​一​個​地方​與​你​生動​的​描述​相符​，​我​的​朋友​。​說書人​凱恩​也​許能"
-"​幫​上​忙"
+"恐怕​我​既​沒​聽說過​也​沒見過​一​個​地方​與​你​生動​的​描述​相符，我​的​朋友。說書人​凱恩​也​許能​幫​上"
+"​忙"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
-msgstr "看​這裡​。​。​。​很​有趣​吧​？​瞭解​了​？​瞎子​-​看這裡"
+msgstr "看​這裡。。。很​有趣​吧？瞭解​了？瞎子​-​看這裡"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -8040,9 +8016,9 @@ msgid ""
 "Tread carefully or you may yourself be staying much longer than you had "
 "anticipated."
 msgstr ""
-"這​是​一​個​極度​痛苦​和​恐怖​的​地方​，​因此​很​好​地​為​主人​服務​。​\n"
+"這​是​一​個​極度​痛苦​和​恐怖​的​地方，因此​很​好​地​為​主人​服務。\n"
 " \n"
-"​小心​踩​，​否則​你​可能​會​比​你​預期​的​呆​得​久"
+"​小心​踩，否則​你​可能​會​比​你​預期​的​呆​得​久"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:154
@@ -8051,8 +8027,8 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
-"讓​我​想想​，​我​是​不​是​在​賣東​西給​你​？​不​，​你​是​在​給​我​錢告訴​你​這件​事​嗎​？​不​，​你"
-"​現​在​要​走​了​，​去​和​為這​種​事活​著​的​說書人談談嗎​？​是​的"
+"讓​我​想想，我​是​不​是​在​賣東​西給​你？不，你​是​在​給​我​錢告訴​你​這件​事​嗎？不，你​現​在​要​走​了"
+"，去​和​為這​種​事活​著​的​說書人談談嗎？是​的"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -8066,18 +8042,18 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
-"你​聲稱​和​拉赫​達南談過​？​他​一生​是​個偉​大​的​英雄​。​拉赫​達​南​是​一​個光榮​而​公正​的​人​，​多"
-"​年​來​一直​忠實​地​為國​王服務​。​當然​，​你​已​經​知道​了​。​\n"
+"你​聲稱​和​拉赫​達南談過？他​一生​是​個偉​大​的​英雄。拉赫​達​南​是​一​個光榮​而​公正​的​人，多​年​來​一"
+"直​忠實​地​為國​王服務。當然，你​已​經​知道​了。\n"
 " \n"
-"​在​那些​被​國王詛咒​的​人​中​，​拉赫​達南​最​不​可能​不​戰​而​屈身​於​黑暗​，​所以​我​想​你​的​故事"
-"​可能​是​真的​。​如果​我​在​你​的​位置​，​我​的​朋友​，​我​會​想​辦法​把​他​從折磨​中​釋​放出​來"
+"​在​那些​被​國王詛咒​的​人​中，拉赫​達南​最​不​可能​不​戰​而​屈身​於​黑暗，所以​我​想​你​的​故事​可能​"
+"是​真的。如果​我​在​你​的​位置，我​的​朋友，我​會​想​辦法​把​他​從折磨​中​釋​放出​來"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
 msgid ""
 "You speak of a brave warrior long dead! I'll have no such talk of speaking "
 "with departed souls in my inn yard, thank you very much."
-msgstr "你​說​的​是​一​個​死​了​很​久​的​勇士​！​我​不​想​在​客棧​院子​里​和​死去​的​靈魂​說話​，​非常​感謝"
+msgstr "你​說​的​是​一​個​死​了​很​久​的​勇士！我​不​想​在​客棧​院子​里​和​死去​的​靈魂​說話，非常​感謝"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:160
@@ -8087,16 +8063,16 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
-"你​說​是​金丹​。​我​從來沒​有​調製過​那​種​顏色​的​藥水​，​所以​我​不​能​告訴​你​如果​你​試​著​喝​它"
-"​會​有​什麼​影響​。​作為​你​的​治療​者​，​我​強烈​建議​，​如果​你​找到​這樣​一​種​長生不老藥​，​按照​"
-"拉赫​達南​的​要求​去​做​，​不​要​試圖​使用​它"
+"你​說​是​金丹。我​從來沒​有​調製過​那​種​顏色​的​藥水，所以​我​不​能​告訴​你​如果​你​試​著​喝​它​會​有"
+"​什麼​影響。作為​你​的​治療​者，我​強烈​建議，如果​你​找到​這樣​一​種​長生不老藥，按照​拉赫​達南​的​要求​去"
+"​做，不​要​試圖​使用​它"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
 msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
-msgstr "我​以前​從沒聽說過​拉赫​達南​。​對​不​起​，​我​想​我​幫​不​了​你​什麼​忙"
+msgstr "我​以前​從沒聽說過​拉赫​達南。對​不​起，我​想​我​幫​不​了​你​什麼​忙"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -8106,17 +8082,15 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
-"如果​你​遇到​的​是​拉赫​達南​，​那​麼​我​建​議​你​幫助​他​。​我​和​他​打過​幾​次​交道​，​發現​他​生"
-"性​誠實忠誠​。​落​在​國王李奧瑞克​的​追隨者​身​上​的​詛咒​尤其​會落​在​他​身​上"
+"如果​你​遇到​的​是​拉赫​達南，那​麼​我​建​議​你​幫助​他。我​和​他​打過​幾​次​交道，發現​他​生性​誠實忠誠"
+"。落​在​國王李奧瑞克​的​追隨者​身​上​的​詛咒​尤其​會落​在​他​身​上"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
 msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
-msgstr ""
-"拉赫達​南死​了​。​每​個​人​都​知道​這​一​點​，​你​不​能​騙​我​去​想​別​的​。​你​不​能​和​死人​說話"
-"​。​我​知道"
+msgstr "拉赫達​南死​了。每​個​人​都​知道​這​一​點，你​不​能​騙​我​去​想​別​的。你​不​能​和​死人​說話。我​知道"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -8126,9 +8100,9 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
-"你​可能​會​遇到​被困​在​迷宮裡​的​人​，​比如​拉赫​達南​。​\n"
+"你​可能​會​遇到​被困​在​迷宮裡​的​人，比如​拉赫​達南。\n"
 " \n"
-"​我​從​他​身​上​感受​到​榮譽​和​巨大​的​內疚​。​幫幫​他​，​你​就​幫幫​崔斯特瑞姆"
+"​我​從​他​身​上​感受​到​榮譽​和​巨大​的​內疚。幫幫​他，你​就​幫幫​崔斯特瑞姆"
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -8138,9 +8112,8 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
-"等等​，​讓​我​猜猜​。​凱恩​被​一​條​巨大​的​裂縫​吞沒​了​，​裂縫​在​他​下面​張開​。​他​在​地獄​之​火"
-"​中​被​燒死​了​，​再​也​回答​不​了​你​的​問題​了​。​哦​，​不​是​這樣嗎​？​那​我​猜​你​要​買點​東西"
-"​了​，​要​不​就​上路​了"
+"等等，讓​我​猜猜。凱恩​被​一​條​巨大​的​裂縫​吞沒​了，裂縫​在​他​下面​張開。他​在​地獄​之​火​中​被​燒死​"
+"了，再​也​回答​不​了​你​的​問題​了。哦，不​是​這樣嗎？那​我​猜​你​要​買點​東西​了，要​不​就​上路​了"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -8157,21 +8130,21 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
-"拜託​，​別殺​我​，​聽​我​說​完​。​我​曾​經​是​萊奧​里克國王騎士團​的​隊長​，​以​正義​和​榮譽維護​這片​"
-"土地​的​法律​。​然​後​他​的​黑暗​詛咒​降臨​在​我​們​身​上​，​因​為​我​們​在​他​悲慘​的​死亡​中​扮演"
-"​了​角色​。​當​我​的​騎士​同伴​們​屈服​於​他​們​扭曲​的​命運時​，​我​逃離​了​國王​的​墓室​，​尋​找​"
-"某​種​方法​來擺脫​詛咒​。​我​失敗​了​。​。​。​\n"
+"拜託，別殺​我，聽​我​說​完。我​曾​經​是​萊奧​里克國王騎士團​的​隊長，以​正義​和​榮譽維護​這片​土地​的​法律。"
+"然​後​他​的​黑暗​詛咒​降臨​在​我​們​身​上，因​為​我​們​在​他​悲慘​的​死亡​中​扮演​了​角色。當​我​的​"
+"騎士​同伴​們​屈服​於​他​們​扭曲​的​命運時，我​逃離​了​國王​的​墓室，尋​找​某​種​方法​來擺脫​詛咒。我​失敗"
+"​了。。。\n"
 " \n"
-"​我​聽說​有​一​種​金丹​可以​解除​詛咒​，​讓​我​的​靈魂​安息​，​但​我​一直​找​不​到​它​。​我​的​力量"
-"​正在​衰退​，​伴隨​著​它​，​我​最後​的​人性​也​在​衰退​。​請​幫助​我​找到​長生不老藥​。​我​會​報​答​"
-"你​的​努力​-​我​以​我​的​名譽​起​誓"
+"​我​聽說​有​一​種​金丹​可以​解除​詛咒，讓​我​的​靈魂​安息，但​我​一直​找​不​到​它。我​的​力量​正在​衰退"
+"，伴隨​著​它，我​最後​的​人性​也​在​衰退。請​幫助​我​找到​長生不老藥。我​會​報​答​你​的​努力​-​我​以​我"
+"​的​名譽​起​誓"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
 msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
-msgstr "你​還沒​有​找到​金丹​。​我​害怕​我​註定​要​永生​。​請繼續​努力"
+msgstr "你​還沒​有​找到​金丹。我​害怕​我​註定​要​永生。請繼續​努力"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -8182,9 +8155,9 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
-"你​救​了​我​的​靈魂​脫離​了​詛咒​，​為​此​我​欠​你​的​債​。​如果​有​什麼​方法​可以​讓​我​從墳​墓​那"
-"​邊回報​你​的​話​，​我​會​找到​的​，​但是​現​在​，​請​你​掌舵​。​在​我​即​將踏​上​的​旅途​中​，​我"
-"​對​它​毫​無​用處​。​愿​它​保護​你​不​受​黑暗​勢力​的​傷害​。​跟​著​光​走​，​我​的​朋友"
+"你​救​了​我​的​靈魂​脫離​了​詛咒，為​此​我​欠​你​的​債。如果​有​什麼​方法​可以​讓​我​從墳​墓​那​邊回報"
+"​你​的​話，我​會​找到​的，但是​現​在，請​你​掌舵。在​我​即​將踏​上​的​旅途​中，我​對​它​毫​無​用處。愿​"
+"它​保護​你​不​受​黑暗​勢力​的​傷害。跟​著​光​走，我​的​朋友"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -8198,18 +8171,17 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
-"格里斯沃​爾德談​到​了​《​憤怒​的​鐵砧​》​——​一​件​傳說​中​的​神器​，​人們​一直​在​尋找​，​但​一直​沒"
-"​有​找到​。​憤怒​的​鐵砧​是​用​剃刀​坑​惡魔​的​金屬骨頭製​作​而​成​的​，​熔鑄​在​五​個​最​強​大​的​"
-"冥界​法師​的​頭骨​周圍​。​刻有​力量​和​混亂​符文​，​任何​在​這個鐵砧​上​鍛造​的​武器​或​護甲​都​將​被​"
-"浸入​混亂​的​領域​，​並將​其​嵌​入​魔法​屬性​。​據說​，​混沌​的​不​可​預測性​使​人們​很​難​知道​這場​"
-"鍛​造會​有​什麼​結​果"
+"格里斯沃​爾德談​到​了​《​憤怒​的​鐵砧​》​——​一​件​傳說​中​的​神器，人們​一直​在​尋找，但​一直​沒​有​找"
+"到。憤怒​的​鐵砧​是​用​剃刀​坑​惡魔​的​金屬骨頭製​作​而​成​的，熔鑄​在​五​個​最​強​大​的​冥界​法師​的​"
+"頭骨​周圍。刻有​力量​和​混亂​符文，任何​在​這個鐵砧​上​鍛造​的​武器​或​護甲​都​將​被​浸入​混亂​的​領域，並"
+"將​其​嵌​入​魔法​屬性。據說，混沌​的​不​可​預測性​使​人們​很​難​知道​這場​鍛​造會​有​什麼​結​果"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
 msgid ""
 "Don't you think that Griswold would be a better person to ask about this? "
 "He's quite handy, you know."
-msgstr "你​不​覺​得​格里斯沃​爾德會​是​一​個​更​好​的​人問這個問題嗎​？​你​知道​，​他​很​能​幹"
+msgstr "你​不​覺​得​格里斯沃​爾德會​是​一​個​更​好​的​人問這個問題嗎？你​知道，他​很​能​幹"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:182
@@ -8219,8 +8191,8 @@ msgid ""
 "However, in this matter, you would be better served to speak to either "
 "Griswold or Cain."
 msgstr ""
-"如果​你​一直​在​尋​找​治​療杵​或​凈化銀聖盃​的​資訊​，​我​可以​幫助​你​，​我​的​朋友​。​不​過​，​在​"
-"這件​事​上​，​你​最好​和​格里斯沃​爾德​或​凱恩談談"
+"如果​你​一直​在​尋​找​治​療杵​或​凈化銀聖盃​的​資訊，我​可以​幫助​你，我​的​朋友。不​過，在​這件​事​上，你"
+"​最好​和​格里斯沃​爾德​或​凱恩談談"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:184
@@ -8230,9 +8202,9 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
-"格里斯沃​爾德​的​父親​曾​經告訴​我​們​中​的​一些​人​，​當​我​們​成長​的​時候​，​一​個​巨大​的​鐵砧​是"
-"​用來​製造強​大​的​武器​。​他​說​，​當​一​把​錘子​敲​在​這個鐵砧​上時​，​地面​會​劇烈​地震​動​。​每​"
-"當​地球​移動時​，​我​總​是​記​得​那​個​故事"
+"格里斯沃​爾德​的​父親​曾​經告訴​我​們​中​的​一些​人，當​我​們​成長​的​時候，一​個​巨大​的​鐵砧​是​用來​"
+"製造強​大​的​武器。他​說，當​一​把​錘子​敲​在​這個鐵砧​上時，地面​會​劇烈​地震​動。每​當​地球​移動時，我​總"
+"​是​記​得​那​個​故事"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -8254,17 +8226,17 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
-"問候語​！​很​高​興見​到​我​最​好​的​客戶​之一​！​我​知道​你​一直​在​冒險​深入​迷宮​，​有​一​個​故事​"
-"告訴​我​，​你​可能​覺​得​值得​花時間聽​。​。​。​\n"
+"問候語！很​高​興見​到​我​最​好​的​客戶​之一！我​知道​你​一直​在​冒險​深入​迷宮，有​一​個​故事​告訴​我，你"
+"​可能​覺​得​值得​花時間聽。。。\n"
 " \n"
-"​一​個​從迷宮裡​回來​的​人​告訴​我​他​逃跑​時​遇到​的​一​個​神秘​的​鐵砧​。​他​的​描述​讓​我​想起​了"
-"​我​年輕時​聽到​的​關於​燃燒​的​地​獄爐​的​傳說​，​那​裡​有​強​大​的​魔法​武器​。​傳說​在地​獄​熔爐​"
-"的​深處​安放​著​憤怒​的​鐵砧​！​這個鐵砧裡​面​包含​著​惡魔​世界​的​精髓​。​。​。​\n"
+"​一​個​從迷宮裡​回來​的​人​告訴​我​他​逃跑​時​遇到​的​一​個​神秘​的​鐵砧。他​的​描述​讓​我​想起​了​我"
+"​年輕時​聽到​的​關於​燃燒​的​地​獄爐​的​傳說，那​裡​有​強​大​的​魔法​武器。傳說​在地​獄​熔爐​的​深處​安"
+"放​著​憤怒​的​鐵砧！這個鐵砧裡​面​包含​著​惡魔​世界​的​精髓。。。\n"
 " \n"
-"據說​任何​在​燃燒​的​鐵砧​上​製作​的​武器​都​充滿​了​巨大​的​力量​。​如果​這鐵​砧​真的​是​憤怒​的​鐵砧"
-"​，​我​也​許​能​讓​你​成為​一​件​武器​，​甚至​可以​打敗​最​黑暗​的​地獄​之​主​！​\n"
+"據說​任何​在​燃燒​的​鐵砧​上​製作​的​武器​都​充滿​了​巨大​的​力量。如果​這鐵​砧​真的​是​憤怒​的​鐵砧，我"
+"​也​許​能​讓​你​成為​一​件​武器，甚至​可以​打敗​最​黑暗​的​地獄​之​主！\n"
 " \n"
-"幫​我​找​鐵砧​，​我​就​去​幹活"
+"幫​我​找​鐵砧，我​就​去​幹活"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -8273,8 +8245,8 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
-"還​沒​有​，​嗯​？​好​吧​，​繼續​找​。​鐵砧​上​鍛造​的​武器​可能​是​你​最​大​的​希望​，​我​相信​我​"
-"能​讓​你​成為傳奇​般​的​人物​之一"
+"還​沒​有，嗯？好​吧，繼續​找。鐵砧​上​鍛造​的​武器​可能​是​你​最​大​的​希望，我​相信​我​能​讓​你​成為傳奇"
+"​般​的​人物​之一"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -8283,15 +8255,15 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
-"我​簡​直​不​敢​相信​！​這​是​憤怒​的​鐵砧​-​幹​得​好​，​我​的​朋友​。​現​在​我​們​要​告訴​那些​混"
-"蛋​，​地獄​里​沒​有​比​人類​製造​的​武器​更​致命​的​武器​了​！​拿​著​這個​，​光​會​保護​你​的"
+"我​簡​直​不​敢​相信！這​是​憤怒​的​鐵砧​-​幹​得​好，我​的​朋友。現​在​我​們​要​告訴​那些​混蛋，地獄​里"
+"​沒​有​比​人類​製造​的​武器​更​致命​的​武器​了！拿​著​這個，光​會​保護​你​的"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
 msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
-msgstr "格里斯沃​爾德賣​不​出​他​的​鐵砧​。​那​他​會​怎麼​做​？​如果​有​人​拿​了​我​的​鐵砧​我​也​會生氣​的"
+msgstr "格里斯沃​爾德賣​不​出​他​的​鐵砧。那​他​會​怎麼​做？如果​有​人​拿​了​我​的​鐵砧​我​也​會生氣​的"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:194
@@ -8301,17 +8273,15 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
-"迷宮裡​有​許多神器​，​擁​有​著​凡​人​無法​理解​的​力量​。​其中​一些​擁​有​神奇​的​力量​，​可以​被​光明"
-"​或​黑暗​所​利用​。​從​下面​固定​鐵砧​可以​將罪惡​戰爭​的​程序轉​向​光明"
+"迷宮裡​有​許多神器，擁​有​著​凡​人​無法​理解​的​力量。其中​一些​擁​有​神奇​的​力量，可以​被​光明​或​黑暗​"
+"所​利用。從​下面​固定​鐵砧​可以​將罪惡​戰爭​的​程序轉​向​光明"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
 msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
-msgstr ""
-"如果​你​為​格里斯沃​爾德​找到​這件藝​術品​，​它​會嚴​重影響​我​在​這裡​的​生意​。​啊​，​你​永遠​找​不​"
-"到​它"
+msgstr "如果​你​為​格里斯沃​爾德​找到​這件藝​術品，它​會嚴​重影響​我​在​這裡​的​生意。啊，你​永遠​找​不​到​它"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -8334,18 +8304,17 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
-"血​之​門​和​火之殿​是​神秘​起源​的​地標​。​無論​你​從​哪​裡​讀​到​這​本​書​，​它​都​是​一​個​充滿​"
-"力量​的​地方​。​\n"
+"血​之​門​和​火之殿​是​神秘​起源​的​地標。無論​你​從​哪​裡​讀​到​這​本​書，它​都​是​一​個​充滿​力量​的"
+"​地方。\n"
 " \n"
-"傳說​中​有​一​個​底​座​是​用​黑曜​石​雕刻​而​成​的​，​上面​有​一​灘​沸騰​的​血​。​也​有​典故​提到​"
-"血石會​打開​一​扇​門​，​守護​著​一​個​古老​的​寶藏​。​。​。​\n"
+"傳說​中​有​一​個​底​座​是​用​黑曜​石​雕刻​而​成​的，上面​有​一​灘​沸騰​的​血。也​有​典故​提到​血石會​"
+"打開​一​扇​門，守護​著​一​個​古老​的​寶藏。。。\n"
 " \n"
-"​我​的​朋友​，​這件​寶藏​的​性質​被​猜測​所​掩蓋​，​但​據說​古代​英雄​阿卡因​把​神聖​的​護甲​英勇​放置"
-"​在​一​個​秘密​的​地下室​裡​。​阿肯​是​第一​個​扭轉​罪惡戰爭​潮流​，​將​黑暗​軍團趕​回燃燒​地獄​的​凡​"
-"人​。​\n"
+"​我​的​朋友，這件​寶藏​的​性質​被​猜測​所​掩蓋，但​據說​古代​英雄​阿卡因​把​神聖​的​護甲​英勇​放置​在​一"
+"​個​秘密​的​地下室​裡。阿肯​是​第一​個​扭轉​罪惡戰爭​潮流，將​黑暗​軍團趕​回燃燒​地獄​的​凡​人。\n"
 " \n"
-"​就​在​阿凱死​前​，​他​的​護甲​藏​在​一​個​秘密​的​地下室​裡​。​據說​，​當這種​神聖​的​護甲​再次​被​"
-"需要​時​，​一​個​英雄​將​再次​出現​在​勇氣堂​。​也​許​你​就​是​那​個​英雄"
+"​就​在​阿凱死​前，他​的​護甲​藏​在​一​個​秘密​的​地下室​裡。據說，當這種​神聖​的​護甲​再次​被​需要​時，一"
+"​個​英雄​將​再次​出現​在​勇氣堂。也​許​你​就​是​那​個​英雄"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -8354,8 +8323,8 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
-"每​個​孩子​都​會聽​到​戰士​阿卡因​和​他​那​被​稱為​英勇​的​神秘​護甲​的​故事​。​如果​你​能​找到​它​的"
-"​安息​之​地​，​你​就​可以​在​迷宮裡​很​好​地​抵禦​邪惡"
+"每​個​孩子​都​會聽​到​戰士​阿卡因​和​他​那​被​稱為​英勇​的​神秘​護甲​的​故事。如果​你​能​找到​它​的​安"
+"息​之​地，你​就​可以​在​迷宮裡​很​好​地​抵禦​邪惡"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -8364,15 +8333,15 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
-"隱​馬爾​可​夫​模型​。​。​。​這聽​起來​像​是​我​應該記​住​的​，​但​我​一直​忙於​學習​新​的​治療​方法​"
-"和​創造​更​好​的​長生不老藥​，​我​一定​忘記​了​。​對​不​起"
+"隱​馬爾​可​夫​模型。。。這聽​起來​像​是​我​應該記​住​的，但​我​一直​忙於​學習​新​的​治療​方法​和​創造​更"
+"​好​的​長生不老藥，我​一定​忘記​了。對​不​起"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
 msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
-msgstr "我​經​常聽​到​男孩​們​談論​的​關於​魔法​護甲​的​故事​叫做​英勇​。​你​最好​問問​村裡​的​一​個​人"
+msgstr "我​經​常聽​到​男孩​們​談論​的​關於​魔法​護甲​的​故事​叫做​英勇。你​最好​問問​村裡​的​一​個​人"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -8382,9 +8351,8 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
-"被​稱為​英勇​的​護甲​可能​會​使​天平對​你​有利​。​我​要​告訴​你​，​很多​人​都​找過​，​包括​我​自己​。"
-"​阿肯​把​它​藏得​很​好​，​我​的​朋友​，​要​解開​隱藏​了​這麼​多​年​的​秘密還​需要​一​點​運氣​哦​，​"
-"瞧"
+"被​稱為​英勇​的​護甲​可能​會​使​天平對​你​有利。我​要​告訴​你，很多​人​都​找過，包括​我​自己。阿肯​把​它​"
+"藏得​很​好，我​的​朋友，要​解開​隱藏​了​這麼​多​年​的​秘密還​需要​一​點​運氣​哦，瞧"
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
@@ -8399,9 +8367,9 @@ msgid ""
 "The way is fraught with danger and your only hope rests within your self "
 "trust."
 msgstr ""
-"如果​你​發現​了​這​些​血石​，​小心​使用​。​\n"
+"如果​你​發現​了​這​些​血石，小心​使用。\n"
 " \n"
-"​道路​充滿​危險​，​你​唯一​的​希望​在​於​你​的​自信"
+"​道路​充滿​危險，你​唯一​的​希望​在​於​你​的​自信"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:211
@@ -8411,9 +8379,9 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
-"你​想​找到​被​稱為​英勇​的​護甲嗎​？​\n"
+"你​想​找到​被​稱為​英勇​的​護甲嗎？\n"
 " \n"
-"​沒人​知道​阿凱​把​東​西藏​在​哪​裡​，​如果​我​的​聯繫​人​找​不​到​，​我​很​懷疑​你​也​會"
+"​沒人​知道​阿凱​把​東​西藏​在​哪​裡，如果​我​的​聯繫​人​找​不​到，我​很​懷疑​你​也​會"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:213
@@ -8430,15 +8398,15 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
-"我​只​知道​一​個傳說像​你​描述​的​那​樣​提到​一​個​戰士​。​他​的​故事​可以​在​罪惡戰爭​的​古代​編​年史"
-"​中​找到​。​。​。​\n"
+"我​只​知道​一​個傳說像​你​描述​的​那​樣​提到​一​個​戰士。他​的​故事​可以​在​罪惡戰爭​的​古代​編​年史​中"
+"​找到。。。\n"
 " \n"
-"​被​一千​年​的​戰爭​，​鮮血​和​死亡​所​玷污​，​血​的​軍閥​站​在​他​破舊​的​受害者​的​山​上​。​他​的"
-"​黑暗​之​刃​向​活人​發出​了​黑色​的​詛咒​；​對​任何​站​在​這個​地獄​劊子​手​面前​的​人​的​一​個​嚴​"
-"刑拷打​的​邀請​。​\n"
+"​被​一千​年​的​戰爭，鮮血​和​死亡​所​玷污，血​的​軍閥​站​在​他​破舊​的​受害者​的​山​上。他​的​黑暗​之​"
+"刃​向​活人​發出​了​黑色​的​詛咒​；​對​任何​站​在​這個​地獄​劊子​手​面前​的​人​的​一​個​嚴​刑拷打​的​"
+"邀請。\n"
 " \n"
-"書​中​還寫​到​，​雖然​他​曾​經​是​一​個​凡​人​，​在​罪惡戰爭​中​與​黑暗​軍團​並肩作戰​，​但​他​因對​"
-"鮮​血​的​貪​得​無厭​而​失去​了​人性"
+"書​中​還寫​到，雖然​他​曾​經​是​一​個​凡​人，在​罪惡戰爭​中​與​黑暗​軍團​並肩作戰，但​他​因對​鮮​血​的​"
+"貪​得​無厭​而​失去​了​人性"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -8446,9 +8414,7 @@ msgid ""
 "I am afraid that I haven't heard anything about such a vicious warrior, good "
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
-msgstr ""
-"恐怕​我​還沒聽說過這麼​惡毒​的​戰士​，​好​師傅​。​我​希望​你​不用​和​他​打架​，​因​為​他​聽起來​非常​危"
-"險"
+msgstr "恐怕​我​還沒聽說過這麼​惡毒​的​戰士，好​師傅。我​希望​你​不用​和​他​打架，因​為​他​聽起來​非常​危險"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
@@ -8462,16 +8428,14 @@ msgstr "凱恩會告訴​你​比​我​想​知道​的​更​多​的
 msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
-msgstr "如果​你​要​與​如此​兇猛​的​對手​作戰​，​愿​光明​成為​你​的​嚮導​和​衛士​。​我​會​一直​惦​記​著​你"
+msgstr "如果​你​要​與​如此​兇猛​的​對手​作戰，愿​光明​成為​你​的​嚮導​和​衛士。我​會​一直​惦​記​著​你"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
 msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
-msgstr ""
-"黑暗​邪惡​的​傳說圍​繞​著​一​個​血​的​軍閥​。​我​的​朋友​，​請​做好​準備​，​因​為​他​既​不​仁慈​也​"
-"不​吝嗇"
+msgstr "黑暗​邪惡​的​傳說圍​繞​著​一​個​血​的​軍閥。我​的​朋友，請​做好​準備，因​為​他​既​不​仁慈​也​不​吝嗇"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -8479,9 +8443,7 @@ msgid ""
 "Always you gotta talk about Blood? What about flowers, and sunshine, and "
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
-msgstr ""
-"你​總​是​說血​？​鮮花​，​陽光​，​還​有​那​個​送​飲料​的​漂亮​女孩​呢​。​聽著​，​朋友​-​你​很​癡迷​"
-"，​知道​嗎"
+msgstr "你​總​是​說血？鮮花，陽光，還​有​那​個​送​飲料​的​漂亮​女孩​呢。聽著，朋友​-​你​很​癡迷，知道​嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -8490,8 +8452,8 @@ msgid ""
 "years knowing only warfare. I am sorry... I can not see if you will defeat "
 "him."
 msgstr ""
-"他​的​劍術​令​人​敬畏​，​他​已​經活​了​幾​千​年​，​只​知道​戰爭​。​我​很​抱歉​。​。​。​我​看​不​出"
-"​你​是否​能​打敗​他"
+"他​的​劍術​令​人​敬畏，他​已​經活​了​幾​千​年，只​知道​戰爭。我​很​抱歉。。。我​看​不​出​你​是否​能​打敗"
+"​他"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:227
@@ -8499,15 +8461,15 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
-"我​從來沒​有​和​你​說​的​那​個軍閥​打過​交道​，​但​他​聽起來​好像​經歷​了​很多​磨難​。​不​介意為​他​的"
-"​軍隊​提供​補給"
+"我​從來沒​有​和​你​說​的​那​個軍閥​打過​交道，但​他​聽起來​好像​經歷​了​很多​磨難。不​介意為​他​的​軍隊​"
+"提供​補給"
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
 msgid ""
 "My blade sings for your blood, mortal, and by my dark masters it shall not "
 "be denied."
-msgstr "我​的​刀鋒為​你​的​鮮血​歌唱​，​凡​人​，​我​的​黑暗​主人​不​會否認​它"
+msgstr "我​的​刀鋒為​你​的​鮮血​歌唱，凡​人，我​的​黑暗​主人​不​會否認​它"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:231
@@ -8518,9 +8480,9 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
-"格里斯沃​爾德談​到​了​天石​，​它​是​註定​要​飛​地位​於​東​部​。​它​被​帶​到​那​裡​作​進​一​步​研究​"
-"。​這塊石頭​閃耀​著​一​種​能量​，​它​以​某​種​方式​賦予​了​一​個​普通​人無​法擁​有的​視覺​。​我​不​知"
-"道​它​有​什麼​秘密​，​我​的​朋友​，​但​找到​這塊​石頭​肯定​是​最​有​價值​的"
+"格里斯沃​爾德談​到​了​天石，它​是​註定​要​飛​地位​於​東​部。它​被​帶​到​那​裡​作​進​一​步​研究。這塊石頭"
+"​閃耀​著​一​種​能量，它​以​某​種​方式​賦予​了​一​個​普通​人無​法擁​有的​視覺。我​不​知道​它​有​什麼​秘"
+"密，我​的​朋友，但​找到​這塊​石頭​肯定​是​最​有​價值​的"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -8530,8 +8492,8 @@ msgid ""
 "sweetbreads that Garda has just finished baking. Shame what happened to "
 "them..."
 msgstr ""
-"商隊​在​這裡​停​了​下來​，​為​他​們​向​東​旅行​帶​去​一些​補給​。​我​賣給​他​們​不少​新​鮮​水果​和​"
-"一些​佳達剛剛​烤好​的​上​等​甜麵包​。​可惜​他​們發生​了​什麼"
+"商隊​在​這裡​停​了​下來，為​他​們​向​東​旅行​帶​去​一些​補給。我​賣給​他​們​不少​新​鮮​水果​和​一些​佳"
+"達剛剛​烤好​的​上​等​甜麵包。可惜​他​們發生​了​什麼"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -8539,9 +8501,7 @@ msgid ""
 "I don't know what it is that they thought they could see with that rock, but "
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
-msgstr ""
-"我​不​知道​他​們​以​為​用​那​塊石頭​能​看到​什麼​，​但​我​要​說​的​是​。​如果​巖石從天而降​，​你​最好"
-"​小心"
+msgstr "我​不​知道​他​們​以​為​用​那​塊石頭​能​看到​什麼，但​我​要​說​的​是。如果​巖石從天而降，你​最好​小心"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:237
@@ -8553,8 +8513,8 @@ msgid ""
 "I don't see how you could hope to find anything that they would have been "
 "carrying."
 msgstr ""
-"好​吧​，​一​隊​重要​人物​停​在​這裡​，​但​那​是​很​久​以前​的​事​了​。​我​記得​，​他​們​的​口音​很"
-"​奇怪​，​正​開始​長途​旅行​。​\n"
+"好​吧，一​隊​重要​人物​停​在​這裡，但​那​是​很​久​以前​的​事​了。我​記得，他​們​的​口音​很​奇怪，正​開始"
+"​長途​旅行。\n"
 " \n"
 "​我​不​明白​你​怎麼​能​指望​找到​他​們會帶​的​東西"
 
@@ -8569,17 +8529,16 @@ msgid ""
 "found. If you should find it, I believe that I can fashion something useful "
 "from it."
 msgstr ""
-"呆​一​會​兒​-​我​有​個​故事​你​可能​會​覺​得​有趣​。​一​輛​開往​東方​王國​的​大篷車​前​段​時間經過這"
-"​里​。​據說​它​帶著​一​片​落​在​地上​的​天空​！​大篷車​就​在​這北邊​的​公路​上​被​披著​斗篷​的​騎手​"
-"伏擊​了​。​我​在​殘骸​中​搜尋​這塊​巖石​，​但​找​不​到​。​如果​你​能​找到​它​，​我​相信​我​能​從​中"
-"​找到​有用​的​東西"
+"呆​一​會​兒​-​我​有​個​故事​你​可能​會​覺​得​有趣。一​輛​開往​東方​王國​的​大篷車​前​段​時間經過這​里"
+"。據說​它​帶著​一​片​落​在​地上​的​天空！大篷車​就​在​這北邊​的​公路​上​被​披著​斗篷​的​騎手​伏擊​了。我"
+"​在​殘骸​中​搜尋​這塊​巖石，但​找​不​到。如果​你​能​找到​它，我​相信​我​能​從​中​找到​有用​的​東西"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
 msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
-msgstr "我​還​在​等​你​從天​上​把​那​塊石頭帶給​我​。​我​知道​我​能​從​中​製​造出​強​大​的​東西"
+msgstr "我​還​在​等​你​從天​上​把​那​塊石頭帶給​我。我​知道​我​能​從​中​製​造出​強​大​的​東西"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -8589,9 +8548,9 @@ msgid ""
 "Ah, Here you are. I arranged pieces of the stone within a silver ring that "
 "my father left me. I hope it serves you well."
 msgstr ""
-"讓​我​看看​-​是​的​。​。​。​是​的​，​正​如​我​所​相信​的​。​給​我​一​點​時間​。​。​。​\n"
+"讓​我​看看​-​是​的。。。是​的，正​如​我​所​相信​的。給​我​一​點​時間。。。\n"
 " \n"
-"​啊​，​給​你​。​我​把​幾塊石頭​放​在​父親​留給​我​的​銀戒指里​。​希望​對​你​有​好​處"
+"​啊，給​你。我​把​幾塊石頭​放​在​父親​留給​我​的​銀戒指里。希望​對​你​有​好​處"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
@@ -8600,8 +8559,8 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
-"我​曾​經​有​一​個​漂亮​的​戒指​；​這​是​一​個​非常​昂貴​的​，​藍色​，​綠色​，​紅色​和​銀色​。​不​過"
-"​，​我​不​記得​發生​了​什麼​。​我​真的​很​想​念​那​個​戒指"
+"我​曾​經​有​一​個​漂亮​的​戒指​；​這​是​一​個​非常​昂貴​的，藍色，綠色，紅色​和​銀色。不​過，我​不​記得​"
+"發生​了​什麼。我​真的​很​想​念​那​個​戒指"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -8610,8 +8569,8 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
-"天石​是​非常​強​大​的​，​如果​是​任何​人​，​但​格里斯沃​爾德誰​叫​你​找到​它​，​我​會​阻止​它​。​他​"
-"將​利用​它​的​力量​，​它​的​使用​將​造福​於​我​們​所有​人"
+"天石​是​非常​強​大​的，如果​是​任何​人，但​格里斯沃​爾德誰​叫​你​找到​它，我​會​阻止​它。他​將​利用​它​的"
+"​力量，它​的​使用​將​造福​於​我​們​所有​人"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -8620,8 +8579,8 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
-"如果​有​人​能​用​那塊石頭​做​點什麼​，​格里斯沃​爾德​也​能​。​他​知道​自己​在​做​什麼​，​儘管​我​試圖竊"
-"取​他​的​客戶​，​但​我​尊重​他​的​工作​質量"
+"如果​有​人​能​用​那塊石頭​做​點什麼，格里斯沃​爾德​也​能。他​知道​自己​在​做​什麼，儘管​我​試圖竊取​他​的​"
+"客戶，但​我​尊重​他​的​工作​質量"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -8630,8 +8589,8 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
-"女​巫艾德里亞​想要​一​個​黑​蘑菇​？​我​對​黑​蘑菇​的​瞭解​和​對紅​鯡魚​的​瞭解​一​樣​多​。​也​許治療者"
-"​佩平​可以​告訴​你​更​多​，​但​這​是​我​的​任何​故事​或​書籍​中​都​找​不​到​的"
+"女​巫艾德里亞​想要​一​個​黑​蘑菇？我​對​黑​蘑菇​的​瞭解​和​對紅​鯡魚​的​瞭解​一​樣​多。也​許治療者​佩平​"
+"可以​告訴​你​更​多，但​這​是​我​的​任何​故事​或​書籍​中​都​找​不​到​的"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -8641,8 +8600,8 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
-"我​就​這麼​說​吧​。​我​和​嘉達​永遠​不​會給​我​們​的​貴賓​提供​黑蘑菇​。​如果​艾德里亞​想​在​燉菜​里​"
-"放些​蘑菇​，​那​是​她​的​事​，​但​我​幫​不​了​你​。​黑​蘑菇​。​。​。​噁心"
+"我​就​這麼​說​吧。我​和​嘉達​永遠​不​會給​我​們​的​貴賓​提供​黑蘑菇。如果​艾德里亞​想​在​燉菜​里​放些​蘑"
+"菇，那​是​她​的​事，但​我​幫​不​了​你。黑​蘑菇。。。噁心"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:255
@@ -8653,10 +8612,9 @@ msgid ""
 "that its alchemy holds. If you can remove the brain of a demon when you kill "
 "it, I would be grateful if you could bring it to me."
 msgstr ""
-"巫婆​告訴​我​你​在​尋​找​一​個​惡魔​的​大​腦來​幫助​我​製造​長生不老藥​。​如果​我​能解開​我​懷疑​它​的"
-"​鍊金術​所​掌握​的​秘密​，​它​對許​多​被​這​些​邪惡野獸​傷害​的​人來說應該​是​非常​有​價值​的​。​如果​"
-"你​能​在​殺死​一​個​惡魔​的​時候​把​它​的​大腦​取出來​，​如果​你​能​把​它​帶給​我​，​我​將​不​勝​感"
-"激"
+"巫婆​告訴​我​你​在​尋​找​一​個​惡魔​的​大​腦來​幫助​我​製造​長生不老藥。如果​我​能解開​我​懷疑​它​的​鍊"
+"金術​所​掌握​的​秘密，它​對許​多​被​這​些​邪惡野獸​傷害​的​人來說應該​是​非常​有​價值​的。如果​你​能​在​"
+"殺死​一​個​惡魔​的​時候​把​它​的​大腦​取出來，如果​你​能​把​它​帶給​我，我​將​不​勝​感激"
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -8665,15 +8623,15 @@ msgid ""
 "without this, but it can't hurt to have this to study. Would you please "
 "carry this to the witch? I believe that she is expecting it."
 msgstr ""
-"太​好​了​，​這​正​是​我​想要​的​。​沒​有​這個​我​就​可以​完成​長生不老藥​，​但是​有​這個來學習​也​沒什"
-"麼壞處​。​請​你​把​這個帶給​女​巫好嗎​？​我​相信​她​在​等著​呢"
+"太​好​了，這​正​是​我​想要​的。沒​有​這個​我​就​可以​完成​長生不老藥，但是​有​這個來學習​也​沒什麼壞處。請​"
+"你​把​這個帶給​女​巫好嗎？我​相信​她​在​等著​呢"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:259
 msgid ""
 "I think Ogden might have some mushrooms in the storage cellar. Why don't you "
 "ask him?"
-msgstr "我​想​奧格登​的​地窖​里​可能​有​蘑菇​。​你​為什麼​不​問問​他"
+msgstr "我​想​奧格登​的​地窖​里​可能​有​蘑菇。你​為什麼​不​問問​他"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:261
@@ -8682,9 +8640,8 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
-"如果​阿德里婭沒​有​這​些​，​你​可以​打賭這確實​是​一​件​罕見​的​事情​。​我​不​能​給​你​更​多​的​幫助​"
-"，​但是​聽起來​。​。​。​一​個​巨大​的​，​巨大​的​，​腫脹​的​，​膨脹​的​蘑菇​！​嗯​，​我​想​打獵​不​"
-"錯​吧"
+"如果​阿德里婭沒​有​這​些，你​可以​打賭這確實​是​一​件​罕見​的​事情。我​不​能​給​你​更​多​的​幫助，但是​聽"
+"起來。。。一​個​巨大​的，巨大​的，腫脹​的，膨脹​的​蘑菇！嗯，我​想​打獵​不​錯​吧"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -8692,8 +8649,8 @@ msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
-"奧​格登​混合​了​一​種​難​吃​的​黑蘑菇​，​但​如果​我​喝​了​它​我​會​生病​的​。​聽著​，​聽著​。​。​。"
-"​秘訣​就​在​這裡​——​適度​才​是​關鍵"
+"奧​格登​混合​了​一​種​難​吃​的​黑蘑菇，但​如果​我​喝​了​它​我​會​生病​的。聽著，聽著。。。秘訣​就​在​這裡"
+"​——​適度​才​是​關鍵"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -8702,8 +8659,8 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
-"我​們這裡​有​什麼​？​有趣​的​是​，​它​看起​來像​一​本​試劑書​。​睜大​眼睛​看黑​蘑菇​。​它​應該​相當​大"
-"​，​並且​易於​識別​。​如果​你​找到​了​，​把​它​帶給​我​，​好嗎"
+"我​們這裡​有​什麼？有趣​的​是，它​看起​來像​一​本​試劑書。睜大​眼睛​看黑​蘑菇。它​應該​相當​大，並且​易於​識"
+"別。如果​你​找到​了，把​它​帶給​我，好嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -8711,8 +8668,8 @@ msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on."
 msgstr ""
-"我​需要​一​個​又​大​又​黑​的​蘑菇​。​現​在​跑去給​我​拿​，​這樣​我​就​可以​用​它​做​我​正在​做​的​"
-"一​種​特殊​的​調味品​了"
+"我​需要​一​個​又​大​又​黑​的​蘑菇。現​在​跑去給​我​拿，這樣​我​就​可以​用​它​做​我​正在​做​的​一​種​"
+"特殊​的​調味品​了"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:269
@@ -8723,9 +8680,9 @@ msgid ""
 "intends to make an elixir from it. If you help him find what he needs, "
 "please see if you can get a sample of the elixir for me."
 msgstr ""
-"是​的​，​這將​是​完美​的​釀造​，​我​正在​建立​。​順便​說​一​句​，​治療者​正​在​尋​找​某​種​惡魔​的​"
-"大腦​，​這樣​他​就​可以​治療​那些​被​他​們​的​毒液​折磨​的​人​。​我​相信​他​打算​用​它​做​長生不老藥​"
-"。​如果​你​幫​他​找到​他​需要​的​東西​，​請​你​幫​我​拿​一​個​長生不老藥​的​樣品"
+"是​的，這將​是​完美​的​釀造，我​正在​建立。順便​說​一​句，治療者​正​在​尋​找​某​種​惡魔​的​大腦，這樣​他​"
+"就​可以​治療​那些​被​他​們​的​毒液​折磨​的​人。我​相信​他​打算​用​它​做​長生不老藥。如果​你​幫​他​找到​"
+"他​需要​的​東西，請​你​幫​我​拿​一​個​長生不老藥​的​樣品"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:271
@@ -8735,9 +8692,8 @@ msgid ""
 "that grotesque organ that you are holding, and then bring me the elixir. "
 "Simple when you think about it, isn't it?"
 msgstr ""
-"你​為什麼​把​它​帶​到​這裡來​？​我​現​在​不​需要​惡魔​的​大腦​。​我​確實​需要​一些​治療者​正​在​研製​"
-"的​長生不老藥​。​他​需要​你​拿著​的​奇怪​的​器官​，​然​後​給​我​拿​長生不老藥​。​想起來​很​簡單​，​不​"
-"是​嗎"
+"你​為什麼​把​它​帶​到​這裡來？我​現​在​不​需要​惡魔​的​大腦。我​確實​需要​一些​治療者​正​在​研製​的​長生"
+"不老藥。他​需要​你​拿著​的​奇怪​的​器官，然​後​給​我​拿​長生不老藥。想起來​很​簡單，不​是​嗎"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (Quest End)
 #: Source/textdat.cpp:273
@@ -8745,15 +8701,15 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
-"什麼​？​現​在​你​把​醫​治者​的​長生不​老​藥帶給​我​？​不用​它​我​就​能​喝​完​我​的​啤酒​。​你​為什麼"
-"​不​留著​它"
+"什麼？現​在​你​把​醫​治者​的​長生不​老​藥帶給​我？不用​它​我​就​能​喝​完​我​的​啤酒。你​為什麼​不​留著​"
+"它"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:275
 msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful?"
-msgstr "我​沒​有​任何​大小​和​顏色​的​蘑菇​出售​。​再​來點​有用​的​怎​麼​樣"
+msgstr "我​沒​有​任何​大小​和​顏色​的​蘑菇​出售。再​來點​有用​的​怎​麼​樣"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:277
@@ -8778,28 +8734,25 @@ msgid ""
 "before the stars align, for we may never have a chance to rid the world of "
 "his evil again!"
 msgstr ""
-"所以​，​地圖​上​的​傳說​是​真實​的​。​連​我​都​不​相信​！​我​想​是​時候​告訴​你​我​是​誰​了​，​我​"
-"的​朋友​。​你​看​，​我​並​不​像​我​看​起來​那​樣​。​。​。​\n"
+"所以，地圖​上​的​傳說​是​真實​的。連​我​都​不​相信！我​想​是​時候​告訴​你​我​是​誰​了，我​的​朋友。你​看"
+"，我​並​不​像​我​看​起來​那​樣。。。\n"
 " \n"
-"​我​的​真名​是​老凱恩​，​我​是​一​個​古老​兄弟會​的​最後​一個​後​代​，​這個​兄弟​會​致力​於​保守​和​"
-"保護​一​個​永恒​邪惡​的​秘密​。​一​個​很​明顯​已​經​被​釋放​的​惡魔​。​。​。​\n"
+"​我​的​真名​是​老凱恩，我​是​一​個​古老​兄弟會​的​最後​一個​後​代，這個​兄弟​會​致力​於​保守​和​保護​一"
+"​個​永恒​邪惡​的​秘密。一​個​很​明顯​已​經​被​釋放​的​惡魔。。。\n"
 " \n"
-"​你​要​對付​的​惡魔​是​恐怖​的​黑魔王​——​凡​人​都​知道​的​迪亞波羅​。​幾個世紀​前​被​囚禁​在​迷宮裡​"
-"的​正​是​他​。​你​現​在​持有​的​地圖​是​很​久​以前​創造​的​，​用來標​記​迪亞波羅從​監​禁​中​復活​的​"
-"時間​。​當​那​張​地圖​上​的​兩顆​星星對​齊時​，​迪亞波羅將達​到​他​的​能量​頂峰​。​他​將​所​向​無敵​。"
-"​。​。​\n"
+"​你​要​對付​的​惡魔​是​恐怖​的​黑魔王​——​凡​人​都​知道​的​迪亞波羅。幾個世紀​前​被​囚禁​在​迷宮裡​的​"
+"正​是​他。你​現​在​持有​的​地圖​是​很​久​以前​創造​的，用來標​記​迪亞波羅從​監​禁​中​復活​的​時間。當​那"
+"​張​地圖​上​的​兩顆​星星對​齊時，迪亞波羅將達​到​他​的​能量​頂峰。他​將​所​向​無敵。。。\n"
 " \n"
-"​你​現​在在​和​時間​賽​跑​，​我​的​朋友​！​找到​迪亞波羅​，​在​眾星​雲集​之前​消滅​他​，​因​為​我​們"
-"​可能​再​也​沒​有​機會擺脫​他​的​邪惡​了"
+"​你​現​在在​和​時間​賽​跑，我​的​朋友！找到​迪亞波羅，在​眾星​雲集​之前​消滅​他，因​為​我​們​可能​再​也​"
+"沒​有​機會擺脫​他​的​邪惡​了"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:279
 msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
-msgstr ""
-"我​們​的​時間​不​多​了​！​我​感覺​到​了​他​的​黑暗​力量​，​只有​你​才​能​阻止​他​達​到​他​的​全部​"
-"力量"
+msgstr "我​們​的​時間​不​多​了！我​感覺​到​了​他​的​黑暗​力量，只有​你​才​能​阻止​他​達​到​他​的​全部​力量"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -8809,9 +8762,9 @@ msgid ""
 "and you will need all your courage and strength to defeat him. May the Light "
 "protect and guide you, my friend. I will help in any way that I am able."
 msgstr ""
-"我​相信​你​已​經​盡力​了​，​但​我​擔心​你​的​力量​和​意志​都​不​夠​。​迪亞波羅現​在​正處於​他​塵世​力"
-"量​的​頂峰​，​你​將​需要​你​所有​的​勇氣​和​力量​來打敗​他​。​愿光明​保護​和​指引​你​，​我​的​朋友​。"
-"​我​將盡​我​所​能​提供​幫助​。"
+"我​相信​你​已​經​盡力​了，但​我​擔心​你​的​力量​和​意志​都​不​夠。迪亞波羅現​在​正處於​他​塵世​力量​的​"
+"頂峰，你​將​需要​你​所有​的​勇氣​和​力量​來打敗​他。愿光明​保護​和​指引​你，我​的​朋友。我​將盡​我​所​能​"
+"提供​幫助。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (currently unused)
 #: Source/textdat.cpp:283
@@ -8820,8 +8773,8 @@ msgid ""
 "that I would know anything? It sounds like this is a very serious matter. "
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
-"如果​女​巫幫​不​了​你​，​建議​你​去見凱恩​，​你​憑什麼​認為​我​什麼​都​知道​？​聽起​來這​是​一​件​非常"
-"​嚴重​的​事情​。​你​應該​像​阿德里​亞建議​的​那樣​，​趕快​去​見講​故事​的​人"
+"如果​女​巫幫​不​了​你，建議​你​去見凱恩，你​憑什麼​認為​我​什麼​都​知道？聽起​來這​是​一​件​非常​嚴重​的​"
+"事情。你​應該​像​阿德里​亞建議​的​那樣，趕快​去​見講​故事​的​人"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -8832,9 +8785,9 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
-"我​對這張​地​圖​上​的​文字​不​太​瞭解​，​但​也​許​艾德里亞​或​凱恩​能​幫​你​破譯這​是​指什麼​。​\n"
+"我​對這張​地​圖​上​的​文字​不​太​瞭解，但​也​許​艾德里亞​或​凱恩​能​幫​你​破譯這​是​指什麼。\n"
 " \n"
-"​我​可以​看到​這​是​一​張​我​們​天空​中​星星​的​地圖​，​但​比這​更​是​超出​我​的​能力"
+"​我​可以​看到​這​是​一​張​我​們​天空​中​星星​的​地圖，但​比這​更​是​超出​我​的​能力"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
@@ -8844,9 +8797,9 @@ msgid ""
 "Cain is very knowledgeable about ancient writings, and that is easily the "
 "oldest looking piece of paper that I have ever seen."
 msgstr ""
-"問​這類​事情​的​最​佳​人選​是​我​們​的​說書​人​。​\n"
+"問​這類​事情​的​最​佳​人選​是​我​們​的​說書​人。\n"
 " \n"
-"凱恩對​古代​著作​非常​瞭解​，​這​是​我​見過​的​最​古老​的​一​張​紙"
+"凱恩對​古代​著作​非常​瞭解，這​是​我​見過​的​最​古老​的​一​張​紙"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold (currently unused)
 #: Source/textdat.cpp:289
@@ -8855,17 +8808,15 @@ msgid ""
 "have no idea how to read this, Cain or Adria may be able to provide the "
 "answers that you seek."
 msgstr ""
-"我​以前​從​未​見過​這樣​的​地圖​。​你​從​哪​兒​弄來​的​？​雖然​我​不​知道​該​怎​麼讀​這篇​文章​，​但"
-"​凱恩​或​阿德里亞​也​許能​提供​你​所​尋求​的​答案"
+"我​以前​從​未​見過​這樣​的​地圖。你​從​哪​兒​弄來​的？雖然​我​不​知道​該​怎​麼讀​這篇​文章，但​凱恩​或​"
+"阿德里亞​也​許能​提供​你​所​尋求​的​答案"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
 msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
-msgstr ""
-"聽​著​，​靠近點​。​我​不​知道​你​是否​知道​我​所​知道​的​，​但​你​真的​有些​東西​在​這裡​。​那​是​一"
-"​張​地​圖"
+msgstr "聽​著，靠近點。我​不​知道​你​是否​知道​我​所​知道​的，但​你​真的​有些​東西​在​這裡。那​是​一​張​地​圖"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -8874,8 +8825,8 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller..."
 msgstr ""
-"哦​，​恐怕​這​一​點​都​不​是​好​兆頭​。​這張​星圖​預​示著​巨大​的​災難​，​但​它​的​秘密不​是​我​說​"
-"的​。​是​時候讓​你​和​講​故事​的​人​好好​談談​了"
+"哦，恐怕​這​一​點​都​不​是​好​兆頭。這張​星圖​預​示著​巨大​的​災難，但​它​的​秘密不​是​我​說​的。是​時候"
+"讓​你​和​講​故事​的​人​好好​談談​了"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt (currently unused)
 #: Source/textdat.cpp:295
@@ -8884,14 +8835,14 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
-"我​一直​在​找​地圖​，​但​那​肯定​不​是​。​你​應該​把​這個給​艾德里亞​看-​她​可能​會告訴​你​是​什麼​。"
-"​我​要​說​一​件​事​；​它​看​起​來​很​老​，​而且​老​通常​意味​著​有​價值"
+"我​一直​在​找​地圖，但​那​肯定​不​是。你​應該​把​這個給​艾德里亞​看-​她​可能​會告訴​你​是​什麼。我​要​說"
+"​一​件​事​；​它​看​起​來​很​老，而且​老​通常​意味​著​有​價值"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:297
 msgid ""
 "Pleeeease, no hurt. No Kill. Keep alive and next time good bring to you."
-msgstr "請​放心​，​不​要​受傷​。​不​殺​人​。​保持​活力​，​下​次​給​你​帶來​好​東​西"
+msgstr "請​放心，不​要​受傷。不​殺​人。保持​活力，下​次​給​你​帶來​好​東​西"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:299
@@ -8901,7 +8852,7 @@ msgid ""
 " \n"
 "You take this as proof I keep word..."
 msgstr ""
-"我​正在​為​你​做​些​東西​。​再​說​一​遍​，​別殺​了​加爾巴德​。​活​得​好好​的​。​\n"
+"我​正在​為​你​做​些​東西。再​說​一​遍，別殺​了​加爾巴德。活​得​好好​的。\n"
 " \n"
 "​你​把​這當作​我​遵守​諾言​的​證據"
 
@@ -8914,16 +8865,16 @@ msgid ""
 " \n"
 "No pain and promise I keep!"
 msgstr ""
-"還​沒​有​！​差不​多​了​。​\n"
+"還​沒​有！差不​多​了。\n"
 " \n"
-"​非常​強​大​，​非常​強​大​。​居住​居住​\n"
+"​非常​強​大，非常​強​大。居住​居住​\n"
 " \n"
-"沒​有​痛苦​，​我​信守​諾言"
+"沒​有​痛苦，我​信守​諾言"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak (Hostile)
 #: Source/textdat.cpp:303
 msgid "This too good for you. Very Powerful! You want - you take!"
-msgstr "這對​你​來說​太​好​了​。​非常​強​大​！​你​想要​-​你​拿"
+msgstr "這對​你​來說​太​好​了。非常​強​大！你​想要​-​你​拿"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (annoyed / Hostile)
 #: Source/textdat.cpp:305
@@ -8931,18 +8882,18 @@ msgid ""
 "What?! Why are you here? All these interruptions are enough to make one "
 "insane. Here, take this and leave me to my work. Trouble me no more!"
 msgstr ""
-"什麼​？​！​你​為什麼​在​這裡​？​所有​這​些​干擾​都​足以​讓人​發瘋​。​來​，​拿​著​這個​，​讓​我​繼續​"
-"工作​。​別​再​煩​我​了"
+"什麼？！你​為什麼​在​這裡？所有​這​些​干擾​都​足以​讓人​發瘋。來，拿​著​這個，讓​我​繼續​工作。別​再​煩​我​"
+"了"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
 #: Source/textdat.cpp:307
 msgid "Arrrrgh! Your curiosity will be the death of you!!!"
-msgstr "啊​！​你​的​好奇​心將​是​你​的​死亡"
+msgstr "啊！你​的​好奇​心將​是​你​的​死亡"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain
 #: Source/textdat.cpp:308
 msgid "Hello, my friend. Stay awhile and listen..."
-msgstr "你​好​，​我​的​朋友​。​呆​一​會​兒聽​我​說"
+msgstr "你​好，我​的​朋友。呆​一​會​兒聽​我​說"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:309
@@ -8952,9 +8903,9 @@ msgid ""
 " \n"
 "Read them carefully for they can tell you things that even I cannot."
 msgstr ""
-"當​你​冒險​深入​迷宮時​，​你​可能​會發現​那​裡​藏著​大量​的​知識​。​\n"
+"當​你​冒險​深入​迷宮時，你​可能​會發現​那​裡​藏著​大量​的​知識。\n"
 " \n"
-"仔細閱讀​它​們​，​因​為​它​們​能​告訴​你​即使​是​我​也​不​能​告訴​你​的​事情"
+"仔細閱讀​它​們，因​為​它​們​能​告訴​你​即使​是​我​也​不​能​告訴​你​的​事情"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:311
@@ -8964,8 +8915,8 @@ msgid ""
 "and questions to which you seek knowledge, seek me out and I will tell you "
 "what I can."
 msgstr ""
-"我​知道​許​多​神話​和​傳說​，​其中​可能​包含​對​你​在​迷宮​之​旅​中​可​能​出現​的​問題​的​答案​。​如"
-"果​你​遇到​挑戰​和​問題​，​你​尋求​知識​，​尋​找​我​出來​，​我​會​告訴​你​我​能​做​什麼"
+"我​知道​許​多​神話​和​傳說，其中​可能​包含​對​你​在​迷宮​之​旅​中​可​能​出現​的​問題​的​答案。如果​你​"
+"遇到​挑戰​和​問題，你​尋求​知識，尋​找​我​出來，我​會​告訴​你​我​能​做​什麼"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:313
@@ -8976,9 +8927,9 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill."
 msgstr ""
-"格里斯沃​爾德​——​一​個行動力​和​勇氣​都​很​強​的​人​。​我​打賭​他​從沒​告訴過​你​他​進迷宮救​沃特​的​"
-"事​，​是​嗎​？​他​知道​在​那​裡會​有​很多​危險​，​但​話說​回來​，​你​也是​。​他​是​一​個​技藝​高超​"
-"的​工匠​，​如果​他​聲稱​能​以​任何​方式​幫助​你​，​你​可以​指望​他​的​誠實​和​他​的​技能"
+"格里斯沃​爾德​——​一​個行動力​和​勇氣​都​很​強​的​人。我​打賭​他​從沒​告訴過​你​他​進迷宮救​沃特​的​事，"
+"是​嗎？他​知道​在​那​裡會​有​很多​危險，但​話說​回來，你​也是。他​是​一​個​技藝​高超​的​工匠，如果​他​聲稱"
+"​能​以​任何​方式​幫助​你，你​可以​指望​他​的​誠實​和​他​的​技能"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:315
@@ -8989,9 +8940,9 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
-"奧​格登​已​經擁​有​和​經營​旭日​酒店​近​四​年​了​。​他​買​了​它​就​在​幾個​月​前​，​這裡​的​一切​都"
-"​變成​了​地獄​。​他​和​他​的​妻子​加爾達沒​有​錢離開​，​因​為​他​們​把​所有​的​錢​都​投資​在​這裡為​"
-"自己​創造​生活​。​他​是​一​個​很​有​責​任感​的​好​人"
+"奧​格登​已​經擁​有​和​經營​旭日​酒店​近​四​年​了。他​買​了​它​就​在​幾個​月​前，這裡​的​一切​都​變成​"
+"了​地獄。他​和​他​的​妻子​加爾達沒​有​錢離開，因​為​他​們​把​所有​的​錢​都​投資​在​這裡為​自己​創造​生活"
+"。他​是​一​個​很​有​責​任感​的​好​人"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:317
@@ -9002,10 +8953,9 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
-"可​憐​的​法納姆​。​他​令​人​不安​地​提醒​人們​，​在​那​黑暗​的​一​天​，​註定​要​與​拉撒路​一起​進入​"
-"大​教堂​的​集會​。​他​帶​著​生命​逃走​了​，​但​他​的​勇氣​和​大部分​的​理智​都​留​在​了​某​個​黑暗​"
-"的​坑​里​。​如今​，​他​只​在​酒館​的​最​底​層​找到​安慰​，​但​在​他​不​斷​的​閑談​中​，​偶爾​也​隱"
-"​藏​著​一些​真相"
+"可​憐​的​法納姆。他​令​人​不安​地​提醒​人們，在​那​黑暗​的​一​天，註定​要​與​拉撒路​一起​進入​大​教堂​的"
+"​集會。他​帶​著​生命​逃走​了，但​他​的​勇氣​和​大部分​的​理智​都​留​在​了​某​個​黑暗​的​坑​里。如今，他"
+"​只​在​酒館​的​最​底​層​找到​安慰，但​在​他​不​斷​的​閑談​中，偶爾​也​隱​藏​著​一些​真相"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:319
@@ -9016,9 +8966,9 @@ msgid ""
 "access to many strange and arcane artifacts and tomes of knowledge that even "
 "I have never seen before."
 msgstr ""
-"女​巫艾德里亞​是​特里斯特拉姆​的​一​個​異類​。​她​是​在​大​教堂​被​褻瀆​后​不久​到達​的​，​而​大多​數​"
-"人​都​在逃離​。​她​在​城鎮邊​緣​建​了​一​間​小屋​，​似乎​是​一​夜​之​間​建成​的​，​她​能​接觸​到​許"
-"多​奇怪​而​神秘​的​文物​和​知識​的​大部頭​，​連​我​都​從​未​見過"
+"女​巫艾德里亞​是​特里斯特拉姆​的​一​個​異類。她​是​在​大​教堂​被​褻瀆​后​不久​到達​的，而​大多​數​人​都​"
+"在逃離。她​在​城鎮邊​緣​建​了​一​間​小屋，似乎​是​一​夜​之​間​建成​的，她​能​接觸​到​許多​奇怪​而​神秘​"
+"的​文物​和​知識​的​大部頭，連​我​都​從​未​見過"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:321
@@ -9030,10 +8980,10 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
-"維特​的​故事​是​一​個​可怕​而​悲慘​的​故事​。​他​從​他​母親​的​懷抱​中​被​帶​到​迷宮裡​，​被​那些​揮"
-"舞邪惡​長矛​的​邪惡​小​惡​魔們​拖進​了​迷宮​。​那​天還​有​許​多​孩子​被​帶走​，​包括​利奧里克國王​的​兒"
-"子​。​宮殿​的​騎士​們​下樓去​了​，​但​再​也​沒​有​回來​。​鐵匠​找到​了​那個​男孩​，​但​那​是​在​那些"
-"​邪惡​的​野獸開​始​折磨​他​以​獲取​他​們​的​虐待​狂​般​的​快樂​之後"
+"維特​的​故事​是​一​個​可怕​而​悲慘​的​故事。他​從​他​母親​的​懷抱​中​被​帶​到​迷宮裡，被​那些​揮舞邪惡​"
+"長矛​的​邪惡​小​惡​魔們​拖進​了​迷宮。那​天還​有​許​多​孩子​被​帶走，包括​利奧里克國王​的​兒子。宮殿​的​騎"
+"士​們​下樓去​了，但​再​也​沒​有​回來。鐵匠​找到​了​那個​男孩，但​那​是​在​那些​邪惡​的​野獸開​始​折磨​他"
+"​以​獲取​他​們​的​虐待​狂​般​的​快樂​之後"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:323
@@ -9043,9 +8993,9 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
-"啊​，​佩平​。​我​把​他​視為​真正​的​朋友​——​也​許​是​我​在​這裡​最​親密​的​朋友​。​他​有​時​有​點"
-"​煩躁不安​，​但​從來沒​有​一​個​更​關心​和​體貼​的​靈魂​存在​過​。​他​的​知識​和​技能​為數​不​多​，​"
-"他​的​大門總​是​敞開​的"
+"啊，佩平。我​把​他​視為​真正​的​朋友​——​也​許​是​我​在​這裡​最​親密​的​朋友。他​有​時​有​點​煩躁不安，"
+"但​從來沒​有​一​個​更​關心​和​體貼​的​靈魂​存在​過。他​的​知識​和​技能​為數​不​多，他​的​大門總​是​敞開"
+"​的"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:325
@@ -9056,14 +9006,14 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
-"阿嬌​是​個好​女人​。​她​因興​高​采烈​和​爽朗​的​笑聲​而​備受​崇拜​，​在​我​心​中​佔​有​特殊​的​地位​"
-"。​她​留​在​酒館裡​養活​年邁​的​祖母​，​因​為​她​病​得​不​能​旅行​了​。​我​有​時擔心​她​的​安全​，​"
-"但​我​知道​村裡​的​任何​男人​都​寧願死​也​不​願​看到​她​受到​傷害"
+"阿嬌​是​個好​女人。她​因興​高​采烈​和​爽朗​的​笑聲​而​備受​崇拜，在​我​心​中​佔​有​特殊​的​地位。她​留​"
+"在​酒館裡​養活​年邁​的​祖母，因​為​她​病​得​不​能​旅行​了。我​有​時擔心​她​的​安全，但​我​知道​村裡​的​"
+"任何​男人​都​寧願死​也​不​願​看到​她​受到​傷害"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
 msgid "Greetings, good master. Welcome to the Tavern of the Rising Sun!"
-msgstr "你​好​，​好​師父​。​歡​迎來​到​朝陽​酒館"
+msgstr "你​好，好​師父。歡​迎來​到​朝陽​酒館"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:329
@@ -9073,17 +9023,15 @@ msgid ""
 "any of them agree on was this old axiom. Perhaps it will help you. You can "
 "cut the flesh, but you must crush the bone."
 msgstr ""
-"我​的​酒館裡​有​許​多​冒​險家​，​講​的​故事​是​喝​啤酒​的​十​倍​。​我​唯一​聽​到​他​們​一致​同意​的"
-"​就​是​這條​古老​的​公理​。​也​許這對​你​有​幫助​。​你​可以​割肉​，​但​必須​壓​碎骨頭"
+"我​的​酒館裡​有​許​多​冒​險家，講​的​故事​是​喝​啤酒​的​十​倍。我​唯一​聽​到​他​們​一致​同意​的​就​是"
+"​這條​古老​的​公理。也​許這對​你​有​幫助。你​可以​割肉，但​必須​壓​碎骨頭"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:331
 msgid ""
 "Griswold the blacksmith is extremely knowledgeable about weapons and armor. "
 "If you ever need work done on your gear, he is definitely the man to see."
-msgstr ""
-"鐵​匠​格里斯沃​爾德對​武器​和​護甲​非常​瞭解​。​如果​你​需要​修理​你​的​裝備​，​他​絕對​是​你​要​找​的"
-"​人"
+msgstr "鐵​匠​格里斯沃​爾德對​武器​和​護甲​非常​瞭解。如果​你​需要​修理​你​的​裝備，他​絕對​是​你​要​找​的​人"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:333
@@ -9091,8 +9039,8 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
-"法納姆​在​這裡待​的​時間​太​長​了​，​他​用​廉價​的​啤酒來​消愁​。​我​想​讓​他​離開​，​但​他​在​迷宮裡"
-"​的​時候​確實​很​痛苦"
+"法納姆​在​這裡待​的​時間​太​長​了，他​用​廉價​的​啤酒來​消愁。我​想​讓​他​離開，但​他​在​迷宮裡​的​時候​"
+"確實​很​痛苦"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:335
@@ -9103,16 +9051,16 @@ msgid ""
 "Well, no matter. If you ever have need to trade in items of sorcery, she "
 "maintains a strangely well-stocked hut just across the river."
 msgstr ""
-"艾德里亞​的​智慧​超過​了​她​的​年齡​，​但​我​必​須​承認​——​她​有​點嚇​到​我​了​。​\n"
+"艾德里亞​的​智慧​超過​了​她​的​年齡，但​我​必​須​承認​——​她​有​點嚇​到​我​了。\n"
 " \n"
-"​好​吧​，​沒關係​。​如果​你​需要​交易​巫術​物品​，​她​在​河​對岸​有​一​個​奇怪​的​倉庫"
+"​好​吧，沒關係。如果​你​需要​交易​巫術​物品，她​在​河​對岸​有​一​個​奇怪​的​倉庫"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:337
 msgid ""
 "If you want to know more about the history of our village, the storyteller "
 "Cain knows quite a bit about the past."
-msgstr "如果​你​想​更​多​地​瞭解​我​們​村子​的​歷史​，​講​故事​的​凱恩對過去​的​事​相當​瞭解"
+msgstr "如果​你​想​更​多​地​瞭解​我​們​村子​的​歷史，講​故事​的​凱恩對過去​的​事​相當​瞭解"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:339
@@ -9123,9 +9071,9 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
-"維特​是​個說​唱​歌手​和​小​流氓​。​他​總​是​惹麻煩​，​發生​在​他​身​上​的​事​也​就​不足為奇​了​。​\n"
+"維特​是​個說​唱​歌手​和​小​流氓。他​總​是​惹麻煩，發生​在​他​身​上​的​事​也​就​不足為奇​了。\n"
 " \n"
-"​他​可能​去​了​一​個​他​不​該去​的​地方​。​我​為​那​個​男孩​感到​難過​，​但​我​不​願意​和​他​作伴"
+"​他​可能​去​了​一​個​他​不​該去​的​地方。我​為​那​個​男孩​感到​難過，但​我​不​願意​和​他​作伴"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:341
@@ -9134,8 +9082,8 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
-"佩平​是​個好​人​，​當然​也​是​村裡​最​慷慨​的​人​。​他​總​是​關心​別人​的​需要​，​但​無論​他​走到​哪"
-"里​，​總​有​一些​麻煩​跟​著​他"
+"佩平​是​個好​人，當然​也​是​村裡​最​慷慨​的​人。他​總​是​關心​別人​的​需要，但​無論​他​走到​哪里，總​有​"
+"一些​麻煩​跟​著​他"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:343
@@ -9146,14 +9094,14 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
-"阿嬌​，​我​的​酒吧​女​招待​？​如果​不​是​因為​她​對​大壩​的​責任感​，​她​早​就​從這裡​逃走​了​。​\n"
+"阿嬌，我​的​酒吧​女​招待？如果​不​是​因為​她​對​大壩​的​責任感，她​早​就​從這裡​逃走​了。\n"
 " \n"
-"天​知道​我​求​她​離開​，​告訴​她​我​會照顧​那​個​老​婦人​，​但​她​太​可​愛​了​，​太​體貼​了"
+"天​知道​我​求​她​離開，告訴​她​我​會照顧​那​個​老​婦人，但​她​太​可​愛​了，太​體貼​了"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
 msgid "What ails you, my friend?"
-msgstr "你​怎麼​了​，​我​的​朋友"
+msgstr "你​怎麼​了，我​的​朋友"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:346
@@ -9163,8 +9111,8 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
-"我​有​一​個​非常​有趣​的​發現​。​與​我​們​不同​的​是​，​迷宮​中​的​生物​不​用​藥水​或​魔法​就​能​自"
-"愈​。​如果​你​傷害​了​其中​一​個​怪物​，​確保​它​已​經死​了​，​否則​它​很​可能​會​自己​再生"
+"我​有​一​個​非常​有趣​的​發現。與​我​們​不同​的​是，迷宮​中​的​生物​不​用​藥水​或​魔法​就​能​自愈。如果"
+"​你​傷害​了​其中​一​個​怪物，確保​它​已​經死​了，否則​它​很​可能​會​自己​再生"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:348
@@ -9174,9 +9122,8 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
-"在​它​被​下面​隱藏​的​東西​接管​之前​，​大​教堂​是​一​個​非常​有​學問​的​地方​。​那裡​有​許​多​書​可"
-"以​找到​。​如果​你​發現​了​什麼​，​你​應該​把​它​們​全部​讀​一​遍​，​因​為​有些​可能​掌握​著迷宮​運​"
-"作​的​秘密"
+"在​它​被​下面​隱藏​的​東西​接管​之前，大​教堂​是​一​個​非常​有​學問​的​地方。那裡​有​許​多​書​可以​找到"
+"。如果​你​發現​了​什麼，你​應該​把​它​們​全部​讀​一​遍，因​為​有些​可能​掌握​著迷宮​運​作​的​秘密"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -9185,8 +9132,8 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
-"格里斯沃​爾德對戰爭​藝術​的​瞭解​和​我​對治療藝術​的​瞭解​一​樣​多​。​他​是​個​精明​的​商人​，​但​他​的"
-"​工作​是​首屈一指​的​。​哦​，​我​想​那​可能​是​因為​他​是​這裡​唯一​的​鐵匠"
+"格里斯沃​爾德對戰爭​藝術​的​瞭解​和​我​對治療藝術​的​瞭解​一​樣​多。他​是​個​精明​的​商人，但​他​的​工作​"
+"是​首屈一指​的。哦，我​想​那​可能​是​因為​他​是​這裡​唯一​的​鐵匠"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -9195,8 +9142,8 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
-"凱恩​是​一​個​真正​的​朋友​和​智慧​的​聖人​。​他​擁​有​一​個​龐​大​的​圖書館​，​有​一​種​與生俱來​的"
-"​能力​來辨別​許​多​事物​的​本質​。​如果​你​有​任何​問題​，​他​就​是​你​要​找​的​人"
+"凱恩​是​一​個​真正​的​朋友​和​智慧​的​聖人。他​擁​有​一​個​龐​大​的​圖書館，有​一​種​與生俱來​的​能力​"
+"來辨別​許​多​事物​的​本質。如果​你​有​任何​問題，他​就​是​你​要​找​的​人"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -9204,8 +9151,8 @@ msgid ""
 "Even my skills have been unable to fully heal Farnham. Oh, I have been able "
 "to mend his body, but his mind and spirit are beyond anything I can do."
 msgstr ""
-"就​連​我​的​技能​也​無法​完全​治癒法納姆​。​哦​，​我​已​經​能​修好​他​的​身體​了​，​但是​他​的​精神​"
-"和​精神​我​無​能​為力"
+"就​連​我​的​技能​也​無法​完全​治癒法納姆。哦，我​已​經​能​修好​他​的​身體​了，但是​他​的​精神​和​精神​我"
+"​無​能​為力"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:356
@@ -9216,9 +9163,9 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
-"當​我​使用​一些​有限​的​魔法​來​創造​我​儲​存在​這裡​的​藥劑​和​長生不​老​藥時​，​阿德里亞​是​一​個​真"
-"正​的​女巫​。​她​似乎​從​不​睡覺​，​她​總​是​能​接觸​到​許多​神秘​的​大部頭​和​文物​。​我​相信​她​的"
-"​小屋​可能​比​看​上去​的​小屋​要​大​得​多​，​但​我​似乎​永遠​也​進​不​了​這個​地方"
+"當​我​使用​一些​有限​的​魔法​來​創造​我​儲​存在​這裡​的​藥劑​和​長生不​老​藥時，阿德里亞​是​一​個​真正​"
+"的​女巫。她​似乎​從​不​睡覺，她​總​是​能​接觸​到​許多​神秘​的​大部頭​和​文物。我​相信​她​的​小屋​可能​比"
+"​看​上去​的​小屋​要​大​得​多，但​我​似乎​永遠​也​進​不​了​這個​地方"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -9228,8 +9175,8 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
-"可​憐​的​懷特​。​我​為​那​孩子​做​了​一切​可能​的​事​，​但​我​知道​他​看​不​起​我​被迫綁​在​他​腿上"
-"​的​木釘​。​他​的​傷口​很​難​看​。​沒​有​人​——​尤其是​這麼​小​的​孩子​——​應該​像​他​那​樣​受​苦"
+"可​憐​的​懷特。我​為​那​孩子​做​了​一切​可能​的​事，但​我​知道​他​看​不​起​我​被迫綁​在​他​腿上​的​木"
+"釘。他​的​傷口​很​難​看。沒​有​人​——​尤其是​這麼​小​的​孩子​——​應該​像​他​那​樣​受​苦"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -9240,9 +9187,9 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
-"我​真​不​明白​奧格登​為什麼​留​在​特里斯特拉姆​。​他​有​點緊張​，​但​他​是​一​個​聰明​而​勤奮​的​人​，"
-"​無論​他​去​哪​裡​都​會​做​得​很​好​。​我​想​可能​是​因​為​害怕​周圍農​村​發生​的​許多​謀​殺案​，​"
-"也​可能​是​因​為​他​妻子​的​願望​，​他​和​他​的​家人​一直​呆​在​那​裡"
+"我​真​不​明白​奧格登​為什麼​留​在​特里斯特拉姆。他​有​點緊張，但​他​是​一​個​聰明​而​勤奮​的​人，無論​他​"
+"去​哪​裡​都​會​做​得​很​好。我​想​可能​是​因​為​害怕​周圍農​村​發生​的​許多​謀​殺案，也​可能​是​因​為"
+"​他​妻子​的​願望，他​和​他​的​家人​一直​呆​在​那​裡"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -9253,21 +9200,21 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other."
 msgstr ""
-"奧​格登​的​酒吧​女​招待​是​個​可​愛​的​女孩​。​她​祖母​病​得​很​重​，​有​妄想癥​。​\n"
+"奧​格登​的​酒吧​女​招待​是​個​可​愛​的​女孩。她​祖母​病​得​很​重，有​妄想癥。\n"
 " \n"
-"​她​聲稱​那​是​幻覺​，​但​我​沒​有​證據​證明這​一​點"
+"​她​聲稱​那​是​幻覺，但​我​沒​有​證據​證明這​一​點"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian
 #: Source/textdat.cpp:364
 msgid "Good day! How may I serve you?"
-msgstr "很​好​的​一​天​！​我​能​為​您​效勞​嗎"
+msgstr "很​好​的​一​天！我​能​為​您​效勞​嗎"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:365
 msgid ""
 "My grandmother had a dream that you would come and talk to me. She has "
 "visions, you know and can see into the future."
-msgstr "我​祖母​夢​見​你​來​和​我​說話​。​她​有​遠見卓識​，​你​知道​，​而且​能​預見​未​來"
+msgstr "我​祖母​夢​見​你​來​和​我​說話。她​有​遠見卓識，你​知道，而且​能​預見​未​來"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:367
@@ -9278,8 +9225,7 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
-"鎮邊​的​那個​女人​是​個女​巫​！​她​看起來​很​好​，​她​的​名字​叫​艾德里亞​，​很​討人​喜歡​，​但​我​很"
-"​害怕​她​。​\n"
+"鎮邊​的​那個​女人​是​個女​巫！她​看起來​很​好，她​的​名字​叫​艾德里亞，很​討人​喜歡，但​我​很​害怕​她。\n"
 " \n"
 "像​你​這樣​勇敢​的​人才​能​看到​她​在​外面​幹什麼"
 
@@ -9291,18 +9237,16 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
-"我​們​的​鐵匠​是​特里斯特拉姆​人民​的​驕傲​。​他​不僅​是​一​個手藝大師​，​在​他​的​行會​中​贏​得了​許多"
-"​比賽​，​而且​他​還​得到​了​我​們國​王李奧瑞克​本人​的​讚揚​——​愿​他​的​靈魂​安息​。​格里斯沃​爾德​也"
-"​是​一​位​偉​大​的​英雄​；​問問​凱恩"
+"我​們​的​鐵匠​是​特里斯特拉姆​人民​的​驕傲。他​不僅​是​一​個手藝大師，在​他​的​行會​中​贏​得了​許多​比賽，"
+"而且​他​還​得到​了​我​們國​王李奧瑞克​本人​的​讚揚​——​愿​他​的​靈魂​安息。格里斯沃​爾德​也​是​一​位​偉"
+"​大​的​英雄​；​問問​凱恩"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
 msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
-msgstr ""
-"從​我​記​事​起​，​凱恩​一直​是​崔斯特瑞姆​的​說書​人​。​他​知道​的​太​多​了​，​幾乎​什麼​都​能​告訴​"
-"你"
+msgstr "從​我​記​事​起，凱恩​一直​是​崔斯特瑞姆​的​說書​人。他​知道​的​太​多​了，幾乎​什麼​都​能​告訴​你"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -9314,10 +9258,9 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
-"法納姆​是​個​酒鬼​，​他​的​肚子​里​裝滿​了​啤酒​，​其他​人​的​耳朵​里​全​是​廢話​。​\n"
+"法納姆​是​個​酒鬼，他​的​肚子​里​裝滿​了​啤酒，其他​人​的​耳朵​里​全​是​廢話。\n"
 " \n"
-"​我​知道​佩平​和​奧格登​都​同情​他​，​但​每​天​晚上​看​著​他​越​來​越​昏迷​不​醒​，​我​感到​非常​沮"
-"喪"
+"​我​知道​佩平​和​奧格登​都​同情​他，但​每​天​晚上​看​著​他​越​來​越​昏迷​不​醒，我​感到​非常​沮喪"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -9327,9 +9270,8 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
-"佩平救​了​我​祖母​的​命​，​我​知道​我​永遠​也​報​答​不​了​他​。​他​治癒​任何​疾病​的​能力​比​最​強​"
-"大​的​劍​更​強​大​，​比​你​能​說出​的​任何​咒語​都​更​神秘​。​如果​你​需要​治療​，​Pepin​可以​幫"
-"助​你"
+"佩平救​了​我​祖母​的​命，我​知道​我​永遠​也​報​答​不​了​他。他​治癒​任何​疾病​的​能力​比​最​強​大​的​"
+"劍​更​強​大，比​你​能​說出​的​任何​咒語​都​更​神秘。如果​你​需要​治療，Pepin​可以​幫助​你"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -9341,10 +9283,9 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
-"我​和​沃特​的​母親​，​加那斯​一起​長​大​。​雖然當​那些​可怕​的​生物​偷走​他​時​，​她​只​是​受到​了​輕"
-"微​的​傷害​，​但​她​始終沒​有​康復​。​我​想​她​死於​心碎​。​維特​成​了​一​個​小​氣鬼​，​只​想​從別​"
-"人​的​汗水​中​獲利​。​我​知道​他​受苦受難​，​經歷過​我​無法​想像​的​恐懼​，​但​他​身​上​仍然​籠罩​著​"
-"一些​黑暗"
+"我​和​沃特​的​母親，加那斯​一起​長​大。雖然當​那些​可怕​的​生物​偷走​他​時，她​只​是​受到​了​輕微​的​傷害"
+"，但​她​始終沒​有​康復。我​想​她​死於​心碎。維特​成​了​一​個​小​氣鬼，只​想​從別​人​的​汗水​中​獲利。我​"
+"知道​他​受苦受難，經歷過​我​無法​想像​的​恐懼，但​他​身​上​仍然​籠罩​著​一些​黑暗"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -9354,8 +9295,8 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
-"奧​格登​和​他​的​妻子​把​我​和​我​的​祖母​帶​到​他​們家裡​，​甚至​讓​我​在​旅館​工作​掙​了​幾塊​金幣"
-"​。​我​欠​他​們​太​多​了​，​希望​有​一​天​離開​這個​地方​，​幫助​他​們​在​東方​開​一​家​大​酒店"
+"奧​格登​和​他​的​妻子​把​我​和​我​的​祖母​帶​到​他​們家裡，甚至​讓​我​在​旅館​工作​掙​了​幾塊​金幣。我"
+"​欠​他​們​太​多​了，希望​有​一​天​離開​這個​地方，幫助​他​們​在​東方​開​一​家​大​酒店"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
@@ -9370,8 +9311,8 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
-"如果​你​想​找​一​件​好​武器​，​讓​我​給​你​看看​。​帶上​你​最​基本​的​鈍器​，​比如​狼牙棒​。​像​一​"
-"個​魅力​對抗​那些​不朽​的​恐懼​在​那裡​，​沒​有​什麼​比​粉碎​瘦小​的​骨架​更​好"
+"如果​你​想​找​一​件​好​武器，讓​我​給​你​看看。帶上​你​最​基本​的​鈍器，比如​狼牙棒。像​一​個​魅力​對抗​"
+"那些​不朽​的​恐懼​在​那裡，沒​有​什麼​比​粉碎​瘦小​的​骨架​更​好"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -9381,9 +9322,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
-"斧頭​？​是​的​，​這​是​一​個​很​好​的​武器​，​可以​對付​任何​敵人​。​看看​它​是​如何​劈​開​空氣​的​"
-"，​然后​想像​一​個​漂亮​的​胖魔鬼​頭​在​它​的​路徑​上​。​但是​，​請記​住​，​搖擺​是​很​慢​的​，​但是"
-"​談論​如何​處理​一​個​沉重​的​打擊"
+"斧頭？是​的，這​是​一​個​很​好​的​武器，可以​對付​任何​敵人。看看​它​是​如何​劈​開​空氣​的，然后​想像​一​"
+"個​漂亮​的​胖魔鬼​頭​在​它​的​路徑​上。但是，請記​住，搖擺​是​很​慢​的，但是​談論​如何​處理​一​個​沉重​的"
+"​打擊"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -9393,9 +9334,9 @@ msgid ""
 "or pierce on the undead, but against a living, breathing enemy, a sword will "
 "better slice their flesh!"
 msgstr ""
-"看看​那​個​邊緣​，​那​個​平衡​。​右​手​中​的​劍​，​和​對​的​敵人​，​是​一切​武器​的​主人​。​它​銳利"
-"​的​刀鋒​在​不​死​生物​身上​幾乎​找​不​到​可​砍​或​可​刺​的​東西​，​但​對​於​一​個​活生生​的​、​會"
-"​呼吸​的​敵人​，​一​把​劍會​更​好​地​切開​他​們​的​肉"
+"看看​那​個​邊緣，那​個​平衡。右​手​中​的​劍，和​對​的​敵人，是​一切​武器​的​主人。它​銳利​的​刀鋒​在​不​"
+"死​生物​身上​幾乎​找​不​到​可​砍​或​可​刺​的​東西，但​對​於​一​個​活生生​的、會​呼吸​的​敵人，一​把​劍"
+"會​更​好​地​切開​他​們​的​肉"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
@@ -9404,8 +9345,8 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
-"你​的​武器​和​護甲將​顯示​你​與​黑暗​鬥爭​的​跡象​。​如果​你​把​它​們帶​到​我​這裡來​，​稍加​改造​和​"
-"熱鍛​，​我​就​能​把​它​們​恢復​到​最​佳​戰鬥狀態"
+"你​的​武器​和​護甲將​顯示​你​與​黑暗​鬥爭​的​跡象。如果​你​把​它​們帶​到​我​這裡來，稍加​改造​和​熱鍛，我"
+"​就​能​把​它​們​恢復​到​最​佳​戰鬥狀態"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -9415,16 +9356,16 @@ msgid ""
 "seems to get whatever she needs. If I knew even the smallest bit about how "
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
-"當​我​不​得不​從​我​們​該死​的​小​鎮​邊緣​的​商隊​里​偷運​我​所​需要​的​金屬​和​工具時​，​那​個​女​"
-"巫艾德里亞​似乎​總​能​得到​她​所​需要​的​一切​。​如果​我​像​她​那​樣​懂得​如何​運用​魔法​，​我​就​能​"
-"做出​一些​真正​不​可思議​的​事情"
+"當​我​不​得不​從​我​們​該死​的​小​鎮​邊緣​的​商隊​里​偷運​我​所​需要​的​金屬​和​工具時，那​個​女​巫艾"
+"德里亞​似乎​總​能​得到​她​所​需要​的​一切。如果​我​像​她​那​樣​懂得​如何​運用​魔法，我​就​能​做出​一些​"
+"真正​不​可思議​的​事情"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
 msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
-msgstr "阿嬌​是​個好​姑娘​。​可惜​她​的​男朋友​身體這​麼​差​，​否則​我​會​安排​他​們兩個​都​乘商隊離開這​里"
+msgstr "阿嬌​是​個好​姑娘。可惜​她​的​男朋友​身體這​麼​差，否則​我​會​安排​他​們兩個​都​乘商隊離開這​里"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -9433,8 +9374,8 @@ msgid ""
 "in life. If I could bend steel as well as he can bend your ear, I could make "
 "a suit of court plate good enough for an Emperor!"
 msgstr ""
-"有​時​我​覺​得​凱恩說​得​太​多​了​，​但​我​想​這​是​他​一​生​的​使命​。​如果​我​能​像​他​能​彎曲​"
-"你​的​耳朵​一​樣​彎曲​鋼鐵​，​我​就​能​做​一​套足夠​好​的​皇帝​用​的​宮廷​盤子"
+"有​時​我​覺​得​凱恩說​得​太​多​了，但​我​想​這​是​他​一​生​的​使命。如果​我​能​像​他​能​彎曲​你​的​"
+"耳朵​一​樣​彎曲​鋼鐵，我​就​能​做​一​套足夠​好​的​皇帝​用​的​宮廷​盤子"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -9444,9 +9385,9 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
-"那​天​晚上​我​和​法納姆​在一起​，​拉撒路​把​我​們領進​了​迷宮​。​我​再​也​見​不​到​大主教​了​，​如果​"
-"法納姆​不​在​我​身邊​，​我​可能​就​活​不​下去​了​。​我​擔心​這次​襲擊​使​他​的​靈魂​像​另​一​次​襲擊"
-"​我​的​腿一樣​殘廢​。​我​現​在​不​能​為​他​而​戰​，​但​如果​可以​的​話​我​會​的"
+"那​天​晚上​我​和​法納姆​在一起，拉撒路​把​我​們領進​了​迷宮。我​再​也​見​不​到​大主教​了，如果​法納姆​不​"
+"在​我​身邊，我​可能​就​活​不​下去​了。我​擔心​這次​襲擊​使​他​的​靈魂​像​另​一​次​襲擊​我​的​腿一樣​殘"
+"廢。我​現​在​不​能​為​他​而​戰，但​如果​可以​的​話​我​會​的"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -9455,8 +9396,8 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
-"把​別人​的​需要​放​在​自己​的​需要​之上​的​好​人​。​你​不​會​發現​任何​人​留​在​崔斯特瑞姆-​或​任何​"
-"其他​地方​的​問題​-​誰​有​一​個壞東​西說​的​治療者"
+"把​別人​的​需要​放​在​自己​的​需要​之上​的​好​人。你​不​會​發現​任何​人​留​在​崔斯特瑞姆-​或​任何​其他"
+"​地方​的​問題​-​誰​有​一​個壞東​西說​的​治療者"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -9467,9 +9408,9 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
-"那​小子​會​惹​上​大麻煩​的​。​。​。​或者​我​想​我​應該​再​說​一​遍​。​我​試​著​讓​他​對​在​這裡​工"
-"作​和​學習​誠實​的​貿易感​興趣​，​但​他​更​喜歡經營​來源​可疑​的​貨物​的​高額利潤​。​我​不​能​在​他​出"
-"事​後​再​對​他​說這話​，​但​我​真​希望​他​至少​要​小心​點"
+"那​小子​會​惹​上​大麻煩​的。。。或者​我​想​我​應該​再​說​一​遍。我​試​著​讓​他​對​在​這裡​工作​和​學習"
+"​誠實​的​貿易感​興趣，但​他​更​喜歡經營​來源​可疑​的​貨物​的​高額利潤。我​不​能​在​他​出事​後​再​對​他​"
+"說這話，但​我​真​希望​他​至少​要​小心​點"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -9482,10 +9423,10 @@ msgid ""
 "starved during that first year when the entire countryside was overrun by "
 "demons."
 msgstr ""
-"客棧​老​闆沒​有​什麼​生意​，​也​沒​有​真正​的​盈利​途徑​。​他​設法維​持生計​，​為​那些​偶爾​在​村子​里"
-"​漂泊​的​人​提供​食物​和​住宿​，​但​他​們​很​可能​會​偷偷​溜進​夜空​，​就​像​他​們付錢給​他​一​樣​。"
-"​如果​不​是​因為​他​在​地窖里​儲存​了​大量​的​穀物​和​乾肉​，​為什麼​，​我​們​大多​數人會​在​第一​年​"
-"餓死​，​那​時​整​個​鄉​村​都​被​惡​魔蹂​躪"
+"客棧​老​闆沒​有​什麼​生意，也​沒​有​真正​的​盈利​途徑。他​設法維​持生計，為​那些​偶爾​在​村子​里​漂泊​的​"
+"人​提供​食物​和​住宿，但​他​們​很​可能​會​偷偷​溜進​夜空，就​像​他​們付錢給​他​一​樣。如果​不​是​因為​他"
+"​在​地窖里​儲存​了​大量​的​穀物​和​乾肉，為什麼，我​們​大多​數人會​在​第一​年​餓死，那​時​整​個​鄉​村​都"
+"​被​惡​魔蹂​躪"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
@@ -9496,7 +9437,7 @@ msgstr "一​個​人​不​能​安靜​地​喝​酒​嗎"
 #: Source/textdat.cpp:405
 msgid ""
 "The gal who brings the drinks? Oh, yeah, what a pretty lady. So nice, too."
-msgstr "送​飲料​的​那個​女孩​？​哦​，​是​啊​，​多​漂亮​的​女人​啊​。​太​好​了"
+msgstr "送​飲料​的​那個​女孩？哦，是​啊，多​漂亮​的​女人​啊。太​好​了"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:407
@@ -9505,8 +9446,8 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
-"為​什麼​那​個​老太​婆​不​改​變​一下​。​當然​，​當然​，​她​有​東西​，​但​你​聽​我​說​。​。​。​她​很"
-"​不​自然​。​我​從來沒見過​她​吃喝​——​你​也​不​能​相信​一​個​不​喝​酒​的​人"
+"為​什麼​那​個​老太​婆​不​改​變​一下。當然，當然，她​有​東西，但​你​聽​我​說。。。她​很​不​自然。我​從來沒見"
+"過​她​吃喝​——​你​也​不​能​相信​一​個​不​喝​酒​的​人"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -9515,8 +9456,8 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
-"凱恩​不​是​他​說​的​那樣​。​當然​，​當然​，​他​講​了​一​個​好​故事​。​。​。​有些​真的​很​嚇人​或者​"
-"很​有趣​。​。​。​但​我​想​他​知道​的​比​他​知道​的​還​多"
+"凱恩​不​是​他​說​的​那樣。當然，當然，他​講​了​一​個​好​故事。。。有些​真的​很​嚇人​或者​很​有趣。。。但​我"
+"​想​他​知道​的​比​他​知道​的​還​多"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -9524,8 +9465,8 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
-"格里斯沃​爾德​？​善良​的​老格里斯沃​爾德​。​我​像​兄弟​一​樣愛​他​！​我​們​一起​戰鬥​，​你​知道​，​當​"
-"。​。​。​我​們​。​。​。​拉撒路​。​。​。​拉撒路​。​。​。​拉撒​路"
+"格里斯沃​爾德？善良​的​老格里斯沃​爾德。我​像​兄弟​一​樣愛​他！我​們​一起​戰鬥，你​知道，當。。。我​們。。。拉撒"
+"路。。。拉撒路。。。拉撒​路"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -9535,8 +9476,8 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
-"呵呵​，​我​喜歡佩平​。​他​真的​很​努力​，​你​知道​的​。​聽著​，​你​應該​瞭解​他​。​像​這樣​的​好​人總"
-"​是​有​人​想​幫​忙​。​嘿​，​我​想​那​會​有​點像​你​，​英雄​？​我​也​是​個​英雄"
+"呵呵，我​喜歡佩平。他​真的​很​努力，你​知道​的。聽著，你​應該​瞭解​他。像​這樣​的​好​人總​是​有​人​想​幫​忙"
+"。嘿，我​想​那​會​有​點像​你，英雄？我​也​是​個​英雄"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
@@ -9545,9 +9486,8 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
-"維特​是​個問題​比​我​還​多​的​孩子​，​我​知道​所有​的​問題​。​聽著​-​那​孩子​一定​是​個好​人​，​但​"
-"他​去​過​那​裡​，​你​知道​嗎​？​丟​了​一​條腿​！​得​在​一​塊木頭​上​走​來​走​去​。​太​傷心​了​，​"
-"太​傷心​了"
+"維特​是​個問題​比​我​還​多​的​孩子，我​知道​所有​的​問題。聽著​-​那​孩子​一定​是​個好​人，但​他​去​過​"
+"那​裡，你​知道​嗎？丟​了​一​條腿！得​在​一​塊木頭​上​走​來​走​去。太​傷心​了，太​傷心​了"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -9556,8 +9496,8 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
-"奧​格登​是​鎮​上​最​好​的​男人​。​我​覺​得​他​妻子​不​太​喜歡​我​，​但​只要​她​不​停​地​敲桶​，​我"
-"​就​很​喜歡​她​。​似乎​我​和​奧格登​在一起​的​時間​比​大多​數​人​都​多​，​但​他​對​我​很​好"
+"奧​格登​是​鎮​上​最​好​的​男人。我​覺​得​他​妻子​不​太​喜歡​我，但​只要​她​不​停​地​敲桶，我​就​很​喜"
+"歡​她。似乎​我​和​奧格登​在一起​的​時間​比​大多​數​人​都​多，但​他​對​我​很​好"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -9566,8 +9506,8 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
-"我​想​告訴​你​，​因​為​我​知道​這​一切​。​這​是​我​的​專長​。​這​是​最​好​的​。​。​。​最​好​的​！"
-"​其他​的​啤酒​不​好​，​因​為​那些​蠢​狗"
+"我​想​告訴​你，因​為​我​知道​這​一切。這​是​我​的​專長。這​是​最​好​的。。。最​好​的！其他​的​啤酒​不​好"
+"，因​為​那些​蠢​狗"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -9576,8 +9516,8 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
-"從​來沒​有​人​。​。​。​聽​我​說​。​在​某​個​地方​-​我​不​太​確定​-​但是​在​教堂​下面​的​某​個​地"
-"方​有​一​堆​金子​。​閃閃​發光​，​只是​等待​有​人​得到​它"
+"從​來沒​有​人。。。聽​我​說。在​某​個​地方​-​我​不​太​確定​-​但是​在​教堂​下面​的​某​個​地方​有​一​"
+"堆​金子。閃閃​發光，只是​等待​有​人​得到​它"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -9587,9 +9527,8 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
-"我​知道​你​有​自己​的​想法​，​我​知道​你​不​會​相信​的​，​但​你​的​武器​，​你​在​那​裡​-​它​只​是"
-"​不​好​對付​那些​大​畜生​！​哦​，​我​不管​格里斯沃​爾德​怎​麼說​，​他​們​不​能​像​以前​那​樣​做​任何"
-"​東西"
+"我​知道​你​有​自己​的​想法，我​知道​你​不​會​相信​的，但​你​的​武器，你​在​那​裡​-​它​只​是​不​好​對"
+"付​那些​大​畜生！哦，我​不管​格里斯沃​爾德​怎​麼說，他​們​不​能​像​以前​那​樣​做​任何​東西"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -9598,9 +9537,8 @@ msgid ""
 "and get out of here. That boy out there... He's always got somethin good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
-"如果​我​是​你​。​。​。​我​不​是​。​。​。​但​如果​我​是​，​我​會​賣掉​你​所有​的​東西然​後​離開​這裡"
-"​。​外面​那​個​男孩​。​。​。​他​總​是​有​好​東西​，​但​你​得給​他​點金子​，​否則​他​連​他​的​東西​"
-"都​不​給​你​看"
+"如果​我​是​你。。。我​不​是。。。但​如果​我​是，我​會​賣掉​你​所有​的​東西然​後​離開​這裡。外面​那​個​男孩"
+"。。。他​總​是​有​好​東西，但​你​得給​他​點金子，否則​他​連​他​的​東西​都​不​給​你​看"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
@@ -9614,8 +9552,8 @@ msgid ""
 "words. Should you already have knowledge of the arcane mysteries scribed "
 "within a book, remember - that level of mastery can always increase."
 msgstr ""
-"智慧​是​應得​的​，​而​不​是​給予​的​。​如果​你​發現​了​一​本​知識​的​大部頭​，​就​要​吞沒​它​的​文字"
-"​。​如果​你​已​經​掌握​了​書中​描述​的​神秘​事物​的​知識​，​記住​-​掌握​的​水平​總​是​可以​提高​的"
+"智慧​是​應得​的，而​不​是​給予​的。如果​你​發現​了​一​本​知識​的​大部頭，就​要​吞沒​它​的​文字。如果​你​"
+"已​經​掌握​了​書中​描述​的​神秘​事物​的​知識，記住​-​掌握​的​水平​總​是​可以​提高​的"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
@@ -9627,9 +9565,9 @@ msgid ""
 "be kept at the ready in your mind. Know also that these scrolls can be read "
 "but once, so use them with care."
 msgstr ""
-"最​強​大​的​力量​往往​是​最​短命​的​。​你​可以​在​羊皮紙​的​卷軸​上​找到​古老​的​權力​話語​。​這​些​"
-"卷軸​的​力量​在​於​學徒​或​熟練​的​施展​能力​。​他​們​的​弱點​是​，​他​們必​須​首先​大聲朗讀​，​永遠​"
-"不​能​隨時​準備​在​你​的​腦海​中​。​還​要​知道​這​些​卷軸​只​能​讀​一​次​，​所以​要​小心​使用"
+"最​強​大​的​力量​往往​是​最​短命​的。你​可以​在​羊皮紙​的​卷軸​上​找到​古老​的​權力​話語。這​些​卷軸​的"
+"​力量​在​於​學徒​或​熟練​的​施展​能力。他​們​的​弱點​是，他​們必​須​首先​大聲朗讀，永遠​不​能​隨時​準備​"
+"在​你​的​腦海​中。還​要​知道​這​些​卷軸​只​能​讀​一​次，所以​要​小心​使用"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
@@ -9640,9 +9578,9 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
-"儘​管​太​陽​的​熱量​無​法​估量​，​但​光是​蠟燭​的​火焰​就​更​危險​。​沒​有​適當​的​聚焦​，​任何​能量"
-"​，​無論​多​大​，​都​不​能​被​使用​。​對於​許​多​咒​語來說​，​被​賦予​靈能​的​杖​可以​被​多​次​充滿"
-"​魔法​能量​。​我​有​能力​恢復​他​們​的​力量​，​但​我​知道​沒​有​代價​是​做​不​到​的"
+"儘​管​太​陽​的​熱量​無​法​估量，但​光是​蠟燭​的​火焰​就​更​危險。沒​有​適當​的​聚焦，任何​能量，無論​多​"
+"大，都​不​能​被​使用。對於​許​多​咒​語來說，被​賦予​靈能​的​杖​可以​被​多​次​充滿​魔法​能量。我​有​能力​"
+"恢復​他​們​的​力量，但​我​知道​沒​有​代價​是​做​不​到​的"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -9651,8 +9589,8 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
-"我​們​知識​的​總​和​就​是​它​的​人民​的​總和​。​如果​你​發現​一​本​書​或​卷軸​，​你​不​能​破譯​，​"
-"不​要​猶豫​，​把​它​給​我​。​如果​我​能​理解​的​話​，​我​會​分享​我​的​發現"
+"我​們​知識​的​總​和​就​是​它​的​人民​的​總和。如果​你​發現​一​本​書​或​卷軸，你​不​能​破譯，不​要​猶豫"
+"，把​它​給​我。如果​我​能​理解​的​話，我​會​分享​我​的​發現"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -9661,8 +9599,8 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
-"對​一​個​只​懂​鋼鐵​的​人​來說​，​沒​有​什麼​比鋼鐵​更​神奇​了​。​鐵匠​格里斯沃​爾德比​他​所​知道​的​"
-"更​像​個​巫師​。​他​融火​與金屬​的​能力​在​這片​土地​上​是​無與倫​比​的"
+"對​一​個​只​懂​鋼鐵​的​人​來說，沒​有​什麼​比鋼鐵​更​神奇​了。鐵匠​格里斯沃​爾德比​他​所​知道​的​更​像​"
+"個​巫師。他​融火​與金屬​的​能力​在​這片​土地​上​是​無與倫​比​的"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -9672,8 +9610,8 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
-"腐敗​有​欺騙​的​力量​，​而​清白​有​純潔​的​力量​。​年輕​的​阿嬌​有​一​顆​純潔​的​心​，​把​女​家長​的"
-"​需要​凌駕于​自己​的​需要​之上​。​她​害怕​我​，​但​那​只​是​因為​她​不​瞭解​我"
+"腐敗​有​欺騙​的​力量，而​清白​有​純潔​的​力量。年輕​的​阿嬌​有​一​顆​純潔​的​心，把​女​家長​的​需要​凌駕"
+"于​自己​的​需要​之上。她​害怕​我，但​那​只​是​因為​她​不​瞭解​我"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -9683,8 +9621,8 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
-"在​黑暗中​打開​的​箱子​所​裝​的​財寶​，​並​不​比​在​光明​中​打開​的​箱子​更​大​。​講​故事​的​凱恩​是"
-"​一​個謎​，​但​只有​那些​誰​不​看​。​他​對大​教堂​下面​的​東西​的​瞭解遠遠​超過​了​他​自己​的​想像"
+"在​黑暗中​打開​的​箱子​所​裝​的​財寶，並​不​比​在​光明​中​打開​的​箱子​更​大。講​故事​的​凱恩​是​一​個"
+"謎，但​只有​那些​誰​不​看。他​對大​教堂​下面​的​東西​的​瞭解遠遠​超過​了​他​自己​的​想像"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -9694,9 +9632,9 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
-"你​對​一​個​人​的​信心​越​高​，​他​就​越​會​墮​落​。​法納姆​已​經​失去​了​他​的​靈魂​，​但​不​是​"
-"任何​惡魔​。​當​他​看到​他​的​同鄉們​被​拉撒路​大​主教​出賣時​，​他​失去​了​理智​。​他​有​知識​可以​收"
-"集​，​但​你​必須​把​事實​和​幻想分開"
+"你​對​一​個​人​的​信心​越​高，他​就​越​會​墮​落。法納姆​已​經​失去​了​他​的​靈魂，但​不​是​任何​惡魔。"
+"當​他​看到​他​的​同鄉們​被​拉撒路​大​主教​出賣時，他​失去​了​理智。他​有​知識​可以​收集，但​你​必須​把​事"
+"實​和​幻想分開"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -9707,9 +9645,9 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
-"手​、​心​和心​在​完美​的​和​諧​中​就​能​創造奇蹟​。​治療者​佩平​以​一​種連​我​都​看​不​到​的​方式​觀"
-"察身體​。​他​對​長生不​老藥​和​藥水​的​理解​使​他​恢復​病人​和​傷者​的​能力​得到​了​放大​。​他​和​你​"
-"在​特里斯特拉姆​一樣​是​個偉​大​的​盟友"
+"手、心​和心​在​完美​的​和​諧​中​就​能​創造奇蹟。治療者​佩平​以​一​種連​我​都​看​不​到​的​方式​觀察身體。"
+"他​對​長生不​老藥​和​藥水​的​理解​使​他​恢復​病人​和​傷者​的​能力​得到​了​放大。他​和​你​在​特里斯特拉姆"
+"​一樣​是​個偉​大​的​盟友"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -9722,10 +9660,10 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
-"未​來​有​很多​我​們​看​不​到​的​，​但​當​它​來臨時​，​將​是​孩子​們​掌握​著​它​。​這個​男孩​的​靈魂"
-"​是​黑暗​的​，​但​他​對這​個城鎮​和​它​的​人民​沒​有​威脅​。​他​與​附近​城鎮​的​頑童​和​不​為​人​知"
-"​的​行會​的​秘密​交易​使​他​能​夠​接觸​到​許多​在​特里斯特拉姆​很​難​找到​的​裝置​。​雖然​他​的​方法​"
-"可能​會​受到​指責​，​但​Wirt​可以​為​你​對抗​日益​逼近​的​黑暗​提供​幫助"
+"未​來​有​很多​我​們​看​不​到​的，但​當​它​來臨時，將​是​孩子​們​掌握​著​它。這個​男孩​的​靈魂​是​黑暗​"
+"的，但​他​對這​個城鎮​和​它​的​人民​沒​有​威脅。他​與​附近​城鎮​的​頑童​和​不​為​人​知​的​行會​的​秘密"
+"​交易​使​他​能​夠​接觸​到​許多​在​特里斯特拉姆​很​難​找到​的​裝置。雖然​他​的​方法​可能​會​受到​指責，但"
+"​Wirt​可以​為​你​對抗​日益​逼近​的​黑暗​提供​幫助"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -9738,16 +9676,15 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
-"土墻​和​茅草屋​頂​不​是​一​個​家​。​旅館​老​闆​奧​格登​在​這個鎮​上​的​作用​比​許​多​人​所​理解​的​"
-"要​大​得​多​。​他​為​阿嬌​和​她​的​女族長​提供​庇護所​，​維持​法納姆留給​他​的​生活​，​併爲​留​在​鎮上"
-"​的​所有人​提供​一​個錨​，​讓​他​們​回到​特里斯特拉姆​曾經​的​樣子​。​他​的​小酒館​，​以及​在​那裡​仍然"
-"​可以​找到​的​簡單​的​樂趣​，​讓​我​們​看到​了​這裡​的​人們​所​記得​的​生活​。​正​是​這段​記憶​，​讓"
-"​他​們對​你​的​成功​充滿​了​希望"
+"土墻​和​茅草屋​頂​不​是​一​個​家。旅館​老​闆​奧​格登​在​這個鎮​上​的​作用​比​許​多​人​所​理解​的​要​"
+"大​得​多。他​為​阿嬌​和​她​的​女族長​提供​庇護所，維持​法納姆留給​他​的​生活，併爲​留​在​鎮上​的​所有人​提"
+"供​一​個錨，讓​他​們​回到​特里斯特拉姆​曾經​的​樣子。他​的​小酒館，以及​在​那裡​仍然​可以​找到​的​簡單​的​"
+"樂趣，讓​我​們​看到​了​這裡​的​人們​所​記得​的​生活。正​是​這段​記憶，讓​他​們對​你​的​成功​充滿​了​希望"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
 msgid "Pssst... over here..."
-msgstr "PSST​。​。​。​在​這裡"
+msgstr "PSST。。。在​這裡"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:451
@@ -9757,17 +9694,17 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
-"並​不​是​所有​在​特里斯特拉姆​的​人​都​有​一​個​用途​-​或​市場​-​你​會發現​在​迷宮​中​的​一切​。​連"
-"​我​都​不​相信​。​\n"
+"並​不​是​所有​在​特里斯特拉姆​的​人​都​有​一​個​用途​-​或​市場​-​你​會發現​在​迷宮​中​的​一切。連​我"
+"​都​不​相信。\n"
 " \n"
-"​有​時候​，​只有​你​才​能​為​某些​事情​找到​目標"
+"​有​時候，只有​你​才​能​為​某些​事情​找到​目標"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:453
 msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
-msgstr "別​相信​醉漢說​的​每​一​句​話​。​太​多​的​啤酒​模糊​了​他​的​視力​和​判斷力"
+msgstr "別​相信​醉漢說​的​每​一​句​話。太​多​的​啤酒​模糊​了​他​的​視力​和​判斷力"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -9777,9 +9714,9 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
-"如果​你​沒​注意​到​，​我​不​會從​崔斯特瑞買​任何​東西​。​我​是​一​個​進口​優質​商品​的​進口商​。​如果​"
-"你​想​兜售​垃圾​，​你​得​去​看看​格里斯沃​爾德​，​佩平​或​那個女巫​，​阿德里亞​。​我​相信​他​們會​搶購​"
-"你​能​帶給​他​們​的​任何​東西"
+"如果​你​沒​注意​到，我​不​會從​崔斯特瑞買​任何​東西。我​是​一​個​進口​優質​商品​的​進口商。如果​你​想​兜售"
+"​垃圾，你​得​去​看看​格里斯沃​爾德，佩平​或​那個女巫，阿德里亞。我​相信​他​們會​搶購​你​能​帶給​他​們​的​任"
+"何​東西"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
@@ -9789,9 +9726,8 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
-"我​想​我​欠鐵匠​一​條命​——​這​是​怎麼​回​事​。​當然​，​格里斯沃​爾德讓​我​在​鐵匠​鋪當​學徒​，​他​是"
-"​個​很​好​的​人​，​但​我​永遠​拿​不​到​足夠​的​錢​。​。​。​好​吧​，​就​說​我​有​明確​的​計劃​，​"
-"需要​大量​的​黃​金"
+"我​想​我​欠鐵匠​一​條命​——​這​是​怎麼​回​事。當然，格里斯沃​爾德讓​我​在​鐵匠​鋪當​學徒，他​是​個​很​好"
+"​的​人，但​我​永遠​拿​不​到​足夠​的​錢。。。好​吧，就​說​我​有​明確​的​計劃，需要​大量​的​黃​金"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -9801,9 +9737,9 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
-"如果​我​再​大​幾歲​，​我​會盡​我​所​能給​她​帶來​財富​，​讓​我​向​你​保證​，​我​可以​得到​一些​非常​"
-"好​的​東西​。​阿嬌​是​一​個​美麗​的​女孩​，​她​應該​儘​快離​開​特里斯特拉姆​，​只要​它​是​安全​的​。​"
-"六​羥​甲​基​三​聚氰​胺六甲醚​。​。​。​也​許​我​去​的​時候會帶​她​一起​去"
+"如果​我​再​大​幾歲，我​會盡​我​所​能給​她​帶來​財富，讓​我​向​你​保證，我​可以​得到​一些​非常​好​的​東西"
+"。阿嬌​是​一​個​美麗​的​女孩，她​應該​儘​快離​開​特里斯特拉姆，只要​它​是​安全​的。六​羥​甲​基​三​聚氰​胺"
+"六甲醚。。。也​許​我​去​的​時候會帶​她​一起​去"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -9812,8 +9748,8 @@ msgid ""
 "woman across the river. He keeps telling me about how lucky I am to be "
 "alive, and how my story is foretold in legend. I think he's off his crock."
 msgstr ""
-"凱恩​知道​的​太​多​了​。​他​把​我​嚇死​了​，​甚至​比河對岸​的​那​個​女人​還​可怕​。​他​不​停​地​告訴"
-"​我​，​我​活​著​是​多麼幸運​，​我​的​故事​是​如何​在​傳說​中​被​預言​的​。​我​想​他​是​瘋​了"
+"凱恩​知道​的​太​多​了。他​把​我​嚇死​了，甚至​比河對岸​的​那​個​女人​還​可怕。他​不​停​地​告訴​我，我​活"
+"​著​是​多麼幸運，我​的​故事​是​如何​在​傳說​中​被​預言​的。我​想​他​是​瘋​了"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:463
@@ -9824,9 +9760,9 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
-"法​納姆-現​在​有​一​個​男人​有​嚴重​的​問題​，​我​知道​所有​的​嚴重​問題​可以​。​他​過於​相信​一​個​"
-"人​的​正直​，​拉撒路​就​把​他​帶進​了​死亡​的​深淵​。​哦​，​我​知道​下面​是​什麼樣​的​，​所以​別告訴​"
-"我​你​打算​消滅迷宮裡​的​惡魔​。​小心​你​的​腿"
+"法​納姆-現​在​有​一​個​男人​有​嚴重​的​問題，我​知道​所有​的​嚴重​問題​可以。他​過於​相信​一​個​人​的​"
+"正直，拉撒路​就​把​他​帶進​了​死亡​的​深淵。哦，我​知道​下面​是​什麼樣​的，所以​別告訴​我​你​打算​消滅迷宮裡"
+"​的​惡魔。小心​你​的​腿"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -9836,9 +9772,9 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
-"只要​你​不​需要​任何​東西​復位​，​老佩平​是​一​樣​好​，​他​們來​了​。​\n"
+"只要​你​不​需要​任何​東西​復位，老佩平​是​一​樣​好，他​們來​了。\n"
 " \n"
-"​如果​我​有​一些​他​釀造​的​藥水​，​我​可能​還​有​腿"
+"​如果​我​有​一些​他​釀造​的​藥水，我​可能​還​有​腿"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -9848,9 +9784,9 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
-"阿德里亞​真​讓​我​煩惱​。​當然​，​凱恩對​你​說​的​關於​過去​的​事​是​令​人​毛骨悚然​的​，​但​那​個​女"
-"​巫能​看​透​你​的​過去​。​她​也​總​有​辦法​得到​她​需要​的​東西​。​阿德里婭​拿到​的​商品​比​我​在​節"
-"​日期​間​穿過國​王集市​的​大門​看到​的​還​要​多"
+"阿德里亞​真​讓​我​煩惱。當然，凱恩對​你​說​的​關於​過去​的​事​是​令​人​毛骨悚然​的，但​那​個​女​巫能​看​"
+"透​你​的​過去。她​也​總​有​辦法​得到​她​需要​的​東西。阿德里婭​拿到​的​商品​比​我​在​節​日期​間​穿過國​"
+"王集市​的​大門​看到​的​還​要​多"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -9860,9 +9796,9 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
-"奧​格登呆​在​這裡​真​是​個​傻瓜​。​我​可以​以​一​個​非常​合理​的​價格​把​他​弄​到​城外​去​，​但​他​"
-"堅持​要​和​那家​愚蠢​的​酒館​混過​去​。​我​想​至少​他​給​了​阿嬌​一​個​工作​的​地方​，​他​的​妻子​嘉"
-"達​做​了​一​個​很​棒​的​牧羊派"
+"奧​格登呆​在​這裡​真​是​個​傻瓜。我​可以​以​一​個​非常​合理​的​價格​把​他​弄​到​城外​去，但​他​堅持​要"
+"​和​那家​愚蠢​的​酒館​混過​去。我​想​至少​他​給​了​阿嬌​一​個​工作​的​地方，他​的​妻子​嘉達​做​了​一​"
+"個​很​棒​的​牧羊派"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -9871,8 +9807,8 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
-"英雄​殿後​是​藏骨密室​。​永恒​的​死亡​等待​著​任何​想要​偷​走​這間​屋子​裡珍寶​的​人​。​恐懼​之​王​如此"
-"​說​，​經​上​如此​記​著"
+"英雄​殿後​是​藏骨密室。永恒​的​死亡​等待​著​任何​想要​偷​走​這間​屋子​裡珍寶​的​人。恐懼​之​王​如此​說，經"
+"​上​如此​記​著"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -9880,7 +9816,7 @@ msgstr ""
 msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
-msgstr "…​…​所以​，​在​血​之門​的​外面​，​在​火之殿​的​前面​，​勇敢​的​等待​著光​之​英雄​的​覺醒"
+msgstr "…​…​所以，在​血​之門​的​外面，在​火之殿​的​前面，勇敢​的​等待​著光​之​英雄​的​覺醒"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -9895,13 +9831,13 @@ msgid ""
 "Out of darkness, out of mind,\n"
 "Cast down into the Halls of the Blind."
 msgstr ""
-"我​能​看到​你​看​不​到​的​東西​。​\n"
-"​視力​乳白色​，​然​後​眼睛​腐爛​。​\n"
-"當​你​轉​過身​，​他​們​就​不​見​了​，​\n"
-"​低​語​著​他​們​隱藏​的​歌聲​。​\n"
-"然​後​你​看到​什麼​是​不​可能​的​，​\n"
-"​陰影​在​光線應該​在​的​地方​移動​。​\n"
-"​走出​黑暗​，​走出​心靈​，​\n"
+"我​能​看到​你​看​不​到​的​東西。\n"
+"​視力​乳白色，然​後​眼睛​腐爛。\n"
+"當​你​轉​過身，他​們​就​不​見​了，\n"
+"​低​語​著​他​們​隱藏​的​歌聲。\n"
+"然​後​你​看到​什麼​是​不​可能​的，\n"
+"​陰影​在​光線應該​在​的​地方​移動。\n"
+"​走出​黑暗，走出​心靈，\n"
 "​扔​到​盲人​的​大廳​里"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
@@ -9912,8 +9848,8 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"地獄​的​軍械庫​是​血​之​軍閥​的​家​。​他​身​後​躺著​成千上​萬具殘缺​的​屍體​。​天使​和​人類​都​被​砍掉"
-"​了​，​來​完成​他​對​黑暗​勢力無盡​的​犧牲​，​他​們​只​為​一​件​事​而​尖叫​——​鮮​血"
+"地獄​的​軍械庫​是​血​之​軍閥​的​家。他​身​後​躺著​成千上​萬具殘缺​的​屍體。天使​和​人類​都​被​砍掉​了，來"
+"​完成​他​對​黑暗​勢力無盡​的​犧牲，他​們​只​為​一​件​事​而​尖叫​——​鮮​血"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -9926,10 +9862,10 @@ msgid ""
 "sky. Neither side ever gains sway for long as the forces of Light and "
 "Darkness constantly vie for control over all creation."
 msgstr ""
-"注意​並見​證這裡​的​真理​，​因​為​它​們​是​赫拉迪姆​最後​的​遺產​。​甚至​在​現在​，​在​我​們​所​知​的"
-"​領域​之外​，​在​天堂​的​烏托邦王國​和​燃燒​地獄​的​混亂​深​淵​之​間​，​仍​有​一​場​戰爭​在​肆虐​。​"
-"這場戰爭​被​稱為​大​沖突​，​它​的​肆虐​和​燃燒時間​比​天空​中​任何​一​顆​星星​都​要​長​。​只要​光明​和"
-"​黑暗​的​力量​不​斷爭奪對​所有​造物​的​控制​權​，​任何​一​方​都​不​會獲​得​支​配權"
+"注意​並見​證這裡​的​真理，因​為​它​們​是​赫拉迪姆​最後​的​遺產。甚至​在​現在，在​我​們​所​知​的​領域​之外"
+"，在​天堂​的​烏托邦王國​和​燃燒​地獄​的​混亂​深​淵​之​間，仍​有​一​場​戰爭​在​肆虐。這場戰爭​被​稱為​大​"
+"沖突，它​的​肆虐​和​燃燒時間​比​天空​中​任何​一​顆​星星​都​要​長。只要​光明​和​黑暗​的​力量​不​斷爭奪對​"
+"所有​造物​的​控制​權，任何​一​方​都​不​會獲​得​支​配權"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:507
@@ -9942,10 +9878,9 @@ msgid ""
 "have even allied themselves with either side, and helped to dictate the "
 "course of the Sin War."
 msgstr ""
-"注意​並見​證這裡​的​真理​，​因​為​它​們​是​赫拉迪姆​最後​的​遺產​。​當天堂​和​地獄​之​間​永恒​的​沖​突"
-"落​在​凡人​的​土地​上​，​這​就​是​原罪之戰​。​天使​和​惡魔偽​裝​著​行走​在​人類​之​中​，​秘密​地​戰鬥"
-"​，​遠離​凡​人​窺探​的​眼睛​。​一些​勇敢​、​強大​的​凡人​甚至​與​任何​一​方​結盟​，​並幫助​指揮罪惡​戰"
-"爭​的​程序"
+"注意​並見​證這裡​的​真理，因​為​它​們​是​赫拉迪姆​最後​的​遺產。當天堂​和​地獄​之​間​永恒​的​沖​突落​在​"
+"凡人​的​土地​上，這​就​是​原罪之戰。天使​和​惡魔偽​裝​著​行走​在​人類​之​中，秘密​地​戰鬥，遠離​凡​人​窺探"
+"​的​眼睛。一些​勇敢、強大​的​凡人​甚至​與​任何​一​方​結盟，並幫助​指揮罪惡​戰爭​的​程序"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:509
@@ -9969,18 +9904,17 @@ msgid ""
 "faith. If Diablo were to be released, he would seek a body that is easily "
 "controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
-"注意​並見​證這裡​的​真理​，​因​為​它​們​是​赫拉迪姆​最後​的​遺產​。​近​三百​年​前​，​人們​知道​燃燒​地"
-"獄​的​三​大​惡魔​神秘​地來​到​了​我​們​的​世界​。​兄弟​三​人​蹂躪​東方​的​土地​數​十​年​，​而​人類卻"
-"​在​他​們身​後​戰慄​。​我​們​的​騎士團​——​赫拉迪姆​——​是​由​一​群​神秘​的​法師​建立​的​，​目的​是"
-"​一​勞​永逸​地​追捕​和​俘虜​這​三​個​惡魔​。​\n"
+"注意​並見​證這裡​的​真理，因​為​它​們​是​赫拉迪姆​最後​的​遺產。近​三百​年​前，人們​知道​燃燒​地獄​的​三​"
+"大​惡魔​神秘​地來​到​了​我​們​的​世界。兄弟​三​人​蹂躪​東方​的​土地​數​十​年，而​人類卻​在​他​們身​後​"
+"戰慄。我​們​的​騎士團​——​赫拉迪姆​——​是​由​一​群​神秘​的​法師​建立​的，目的​是​一​勞​永逸​地​追捕​和"
+"​俘虜​這​三​個​惡魔。\n"
 " \n"
-"​最初​的​赫拉德里姆​在​被​稱為​「​靈魂石​」​的​強大​文物​中​捕獲​了​其中​兩個​，​並將​它​們​深​埋​在​"
-"荒涼​的​東部​沙漠​之下​。​第三​個​惡​魔逃脫​了​追捕​，​逃到​了​西部​，​許多赫拉迪姆人​都​在​追捕​。​第三"
-"​個​惡​魔-​被​稱為迪亞波羅​，​恐懼​之​王-​最​終​被​俘虜​，​他​的​靈魂石​和​埋​在​這個​迷宮​的​本質​"
-"。​\n"
+"​最初​的​赫拉德里姆​在​被​稱為​「​靈魂石​」​的​強大​文物​中​捕獲​了​其中​兩個，並將​它​們​深​埋​在​荒涼"
+"​的​東部​沙漠​之下。第三​個​惡​魔逃脫​了​追捕，逃到​了​西部，許多赫拉迪姆人​都​在​追捕。第三​個​惡​魔-​被​"
+"稱為迪亞波羅，恐懼​之​王-​最​終​被​俘虜，他​的​靈魂石​和​埋​在​這個​迷宮​的​本質。\n"
 " \n"
-"​要​被​警告​，​靈魂​之石必須​防止​被​那些​不​信​的​人​發現​。​如果​迪亞波羅​被​釋放​，​他​會尋​找​一​"
-"個身體​很​容易​控制​，​因​為​他​會​非常​虛弱​-​也​許​是​一​個​老人​或​兒童"
+"​要​被​警告，靈魂​之石必須​防止​被​那些​不​信​的​人​發現。如果​迪亞波羅​被​釋放，他​會尋​找​一​個身體​很​"
+"容易​控制，因​為​他​會​非常​虛弱​-​也​許​是​一​個​老人​或​兒童"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:511
@@ -9993,10 +9927,10 @@ msgid ""
 "the factions of Belial and Azmodan while the forces of the High Heavens "
 "continually battered upon the very Gates of Hell."
 msgstr ""
-"因此​，​在​燃燒​的​地獄裡​發生​了​一​場​被​稱為​黑暗​放逐​的​偉大​革命​。​較​小​的​邪惡​推翻​了​三​個"
-"​主要​的​邪惡​，​並將​他​們​的​精神​形式​放逐​到​凡人​的​領域​。​惡魔彼​列​爾​（​謊言之​王​）​和​阿茲"
-"莫丹​（​罪惡​之​王​）​在​兄弟​三​人​不​在​的​時候爭奪​地獄​的​統治權​。​所有​的​地獄惡​魔​都​在​彼列爾"
-"​和​阿茲​莫丹兩​個​派系​之​間​分化​，​而​天堂​的​力量​不​斷​地衝擊​著​地獄​的​大門​。"
+"因此，在​燃燒​的​地獄裡​發生​了​一​場​被​稱為​黑暗​放逐​的​偉大​革命。較​小​的​邪惡​推翻​了​三​個​主要​"
+"的​邪惡，並將​他​們​的​精神​形式​放逐​到​凡人​的​領域。惡魔彼​列​爾​（​謊言之​王​）​和​阿茲莫丹​（​罪惡​"
+"之​王​）​在​兄弟​三​人​不​在​的​時候爭奪​地獄​的​統治權。所有​的​地獄惡​魔​都​在​彼列爾​和​阿茲​莫丹兩​"
+"個​派系​之​間​分化，而​天堂​的​力量​不​斷​地衝擊​著​地獄​的​大門。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:513
@@ -10007,9 +9941,9 @@ msgid ""
 "secretive Order of mortal magi named the Horadrim, who quickly became adept "
 "at hunting demons. They also made many dark enemies in the underworlds."
 msgstr ""
-"許​多​惡​魔爲​了​尋​找​三​兄弟​來​到​了​凡間​。​這​些​惡魔​被​天使​們帶​到​了​凡間​，​他​們​在​東方"
-"​的​廣大​城市​裡獵殺​他​們​。​天使​們與​一​個​隱秘​的​名為​赫拉迪姆法師​教團​結盟​，​他​很​快​就​變​得"
-"​善于​獵殺​惡魔​。​他​們​也​在​陰間​製造​了​許多​黑暗​的​敵人​。"
+"許​多​惡​魔爲​了​尋​找​三​兄弟​來​到​了​凡間。這​些​惡魔​被​天使​們帶​到​了​凡間，他​們​在​東方​的​廣"
+"大​城市​裡獵殺​他​們。天使​們與​一​個​隱秘​的​名為​赫拉迪姆法師​教團​結盟，他​很​快​就​變​得​善于​獵殺​惡"
+"魔。他​們​也​在​陰間​製造​了​許多​黑暗​的​敵人。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:515
@@ -10028,15 +9962,15 @@ msgid ""
 "He will then arise to free his Brothers and once more fan the flames of the "
 "Sin War..."
 msgstr ""
-"因此​，​這​三​個​主要​的​惡魔​以​靈魂​的​形式​被​放逐​到​凡人​的​領域​，​在​東方縫​了​幾​十​年​的​混"
-"亂​之後​，​他​們​被​凡人​赫拉迪姆​的​詛咒​的​秩序​所​追捕​。​赫拉德里姆​使用​了​被​稱為​「​靈魂石​」​的"
-"​人工​製品來容納​仇恨​之​主​墨菲斯托​和​他​的​兄弟​毀滅​之​主巴力​的​精髓​。​最​小​的​弟弟​——​恐懼​之"
-"​王迪亞波羅​——​逃到​了​西方​。​\n"
+"因此，這​三​個​主要​的​惡魔​以​靈魂​的​形式​被​放逐​到​凡人​的​領域，在​東方縫​了​幾​十​年​的​混亂​之後"
+"，他​們​被​凡人​赫拉迪姆​的​詛咒​的​秩序​所​追捕。赫拉德里姆​使用​了​被​稱為​「​靈魂石​」​的​人工​製品來容"
+"納​仇恨​之​主​墨菲斯托​和​他​的​兄弟​毀滅​之​主巴力​的​精髓。最​小​的​弟弟​——​恐懼​之​王迪亞波羅​——​"
+"逃到​了​西方。\n"
 " \n"
-"​最​終​，​赫拉德里姆​也​在​一​塊​靈魂石​中​俘獲​了​迪亞波羅​，​並將​他​埋葬​在​一​座​被​遺忘​的​古老大"
-"​教堂​下​。​在​那裡​，​恐怖​之​主​沉​睡​著​，​等待​著​他​的​重生​。​你​們​要​知道​，​他​要​尋求​一"
-"​個​充滿​青春​和​力量​的​身體來佔​有​，​一​個​清白​和​容易​控制​的​身體​。​然後​他​會起​來​解救​他​的"
-"​兄弟們​，​再​一​次​煽起罪惡戰爭​的​火焰"
+"​最​終，赫拉德里姆​也​在​一​塊​靈魂石​中​俘獲​了​迪亞波羅，並將​他​埋葬​在​一​座​被​遺忘​的​古老大​教堂​"
+"下。在​那裡，恐怖​之​主​沉​睡​著，等待​著​他​的​重生。你​們​要​知道，他​要​尋求​一​個​充滿​青春​和​力量​"
+"的​身體來佔​有，一​個​清白​和​容易​控制​的​身體。然後​他​會起​來​解救​他​的​兄弟們，再​一​次​煽起罪惡戰爭​"
+"的​火焰"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
@@ -10048,10 +9982,10 @@ msgid ""
 "that have brought this discord to the realms of man. My lord has named the "
 "battle for this world and all who exist here the Sin War."
 msgstr ""
-"所有​讚揚​迪亞波羅​-​恐懼​之​王​和​黑暗​流放​的​倖​存者​。​當​他​從​沉睡​中​醒來時​，​我​的​主人​和​"
-"主人​對​我​說​了​一些​很​少​有​人​知道​的​秘密​。​他​告訴​我​，​天​上​的​王國​和​燃燒​的​地獄​的​深"
-"坑​正在​進行​一​場​永恒​的​戰爭​。​他​揭示​了​將這種​不和​諧帶​到​人類​領域​的​力量​。​我​主​已​將這場"
-"為​世界​而​戰​的​戰爭​和​所有​在​這裡​生存​的​人​命名​為原罪之戰​。"
+"所有​讚揚​迪亞波羅​-​恐懼​之​王​和​黑暗​流放​的​倖​存者。當​他​從​沉睡​中​醒來時，我​的​主人​和​主人​對"
+"​我​說​了​一些​很​少​有​人​知道​的​秘密。他​告訴​我，天​上​的​王國​和​燃燒​的​地獄​的​深坑​正在​進行​"
+"一​場​永恒​的​戰爭。他​揭示​了​將這種​不和​諧帶​到​人類​領域​的​力量。我​主​已​將這場為​世界​而​戰​的​戰"
+"爭​和​所有​在​這裡​生存​的​人​命名​為原罪之戰。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:519
@@ -10063,10 +9997,10 @@ msgid ""
 "beneath the sands of the east. Once my Lord releases his Brothers, the Sin "
 "War will once again know the fury of the Three."
 msgstr ""
-"榮耀​和​讚許​給​迪亞波羅​-​恐懼​之​王​和​三​人​之​首​。​我​主對​我​談​到​他​的​兩個​兄弟​，​墨菲斯托"
-"​和​巴爾​，​他​們​很​久​以前​被​放逐​到​這個​世界​上​。​我​的​主​希望​等待​時機​，​利用​他​令​人​敬"
-"畏​的​能力​，​以便​將​他​被​俘​的​兄弟​們從​東方​沙漠​下​的​墳​墓​中​解救​出來​。​一旦​我​主釋放​了​"
-"他​的​兄弟​，​原罪​之​戰將​再次​知道​三​人​的​憤怒"
+"榮耀​和​讚許​給​迪亞波羅​-​恐懼​之​王​和​三​人​之​首。我​主對​我​談​到​他​的​兩個​兄弟，墨菲斯托​和​巴"
+"爾，他​們​很​久​以前​被​放逐​到​這個​世界​上。我​的​主​希望​等待​時機，利用​他​令​人​敬畏​的​能力，以便​"
+"將​他​被​俘​的​兄弟​們從​東方​沙漠​下​的​墳​墓​中​解救​出來。一旦​我​主釋放​了​他​的​兄弟，原罪​之​戰將"
+"​再次​知道​三​人​的​憤怒"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
@@ -10081,12 +10015,11 @@ msgid ""
 "Diablo's call and pray that I will be rewarded when he at last emerges as "
 "the Lord of this world."
 msgstr ""
-"向​迪亞波羅​致敬​和​獻祭​-​恐懼​之​王​和​靈魂​的​毀滅​者​。​當​我​從​睡​夢​中​喚醒​我​的​主人時​，​"
-"他​試圖擁​有​一​個​凡​人​的​形體​。​迪亞波羅試圖奪​走​李奧瑞克國王​的​屍體​，​但​我​的​主人​被​囚禁​后​"
-"太​虛弱​了​。​我​的​主人​需要​一​個​簡單​和​無辜​的​錨​到​這個​世界​上​，​所以​發現​男孩​阿爾佈​雷希特"
-"​是​完美​的​任務​。​當善良​的​國王李奧瑞克​被​迪亞波羅​的​失敗​激怒​時​，​我​綁架​了​他​的​兒子​阿爾布雷"
-"希特​，​把​他​帶​到​我​的​主人​面​前​。​我​現​在​等待​著​迪亞波羅​的​召喚​，​祈禱當​他​最​終​成為這個"
-"​世界​的​主時​，​我​會​得到​回報"
+"向​迪亞波羅​致敬​和​獻祭​-​恐懼​之​王​和​靈魂​的​毀滅​者。當​我​從​睡​夢​中​喚醒​我​的​主人時，他​試圖"
+"擁​有​一​個​凡​人​的​形體。迪亞波羅試圖奪​走​李奧瑞克國王​的​屍體，但​我​的​主人​被​囚禁​后​太​虛弱​了。我"
+"​的​主人​需要​一​個​簡單​和​無辜​的​錨​到​這個​世界​上，所以​發現​男孩​阿爾佈​雷希特​是​完美​的​任務。當"
+"善良​的​國王李奧瑞克​被​迪亞波羅​的​失敗​激怒​時，我​綁架​了​他​的​兒子​阿爾布雷希特，把​他​帶​到​我​的​主"
+"人​面​前。我​現​在​等待​著​迪亞波羅​的​召喚，祈禱當​他​最​終​成為這個​世界​的​主時，我​會​得到​回報"
 
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
@@ -10103,13 +10036,12 @@ msgid ""
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
 "謝​天謝​地​你​回來​了​\n"
-"自從​你​住​在​這裡​，​我​的​朋友​，​一切​都​變​了​。​一切​都​很​平靜​，​直​到​黑暗​騎士​來摧毀​我​們"
-"​的​村莊​。​許多​人​在​原地​被​砍倒​，​拿起​武器​的​人​被​殺​或​被​拖走​成​為奴隸​，​甚至​更​糟​。​"
-"城市​邊緣​的​教堂​被​褻瀆​，​被​用來​舉行​黑暗​的​儀式​。​夜晚​迴響​的​尖叫​聲​是​不​人道​的​，​但​我"
-"​們​的​一些​市民​可能​還活著​。​沿​著​我​的​小酒館​和​鐵匠​鋪​之​間​的​小​路​去​尋​找​教堂​，​拯救​"
-"你​能​拯救​的​人​。​\n"
+"自從​你​住​在​這裡，我​的​朋友，一切​都​變​了。一切​都​很​平靜，直​到​黑暗​騎士​來摧毀​我​們​的​村莊。許多"
+"​人​在​原地​被​砍倒，拿起​武器​的​人​被​殺​或​被​拖走​成​為奴隸，甚至​更​糟。城市​邊緣​的​教堂​被​褻瀆，"
+"被​用來​舉行​黑暗​的​儀式。夜晚​迴響​的​尖叫​聲​是​不​人道​的，但​我​們​的​一些​市民​可能​還活著。沿​著​"
+"我​的​小酒館​和​鐵匠​鋪​之​間​的​小​路​去​尋​找​教堂，拯救​你​能​拯救​的​人。\n"
 " \n"
-"​如果​我​們​再​談​的​話​，​也​許​我​可以​告訴​你​更​多​。​祝​你​好運"
+"​如果​我​們​再​談​的​話，也​許​我​可以​告訴​你​更​多。祝​你​好運"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:525 Source/textdat.cpp:533
@@ -10118,8 +10050,8 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
-"英雄​殿後​是​藏骨密室​。​永恒​的​死亡​等待​著​任何​想要​偷​走​這間​屋子​裡珍寶​的​人​。​恐懼​之​耶​和華"
-"​如此​說​，​經​上​如此​記​著"
+"英雄​殿後​是​藏骨密室。永恒​的​死亡​等待​著​任何​想要​偷​走​這間​屋子​裡珍寶​的​人。恐懼​之​耶​和華​如此​"
+"說，經​上​如此​記​著"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -10129,8 +10061,8 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"地獄​的​軍械庫​是​血​之​軍閥​的​家​。​他​身​後​躺著​成千上​萬具殘缺​的​屍體​。​天使​和​人類​都​被​砍掉"
-"​了​，​來​完成​他​對​黑暗​勢力無盡​的​犧牲​，​他​們​只​為​一​件​事​而​尖叫​——​血"
+"地獄​的​軍械庫​是​血​之​軍閥​的​家。他​身​後​躺著​成千上​萬具殘缺​的​屍體。天使​和​人類​都​被​砍掉​了，來"
+"​完成​他​對​黑暗​勢力無盡​的​犧牲，他​們​只​為​一​件​事​而​尖叫​——​血"
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -10139,8 +10071,8 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search."
 msgstr ""
-"繼續​你​的​任務​。​找到​丟失​的​寶藏並​不​容易​。​找到​一​個​藏得​不​那​麼​深​的​寶藏​。​我​把​這個​"
-"留給​你​。​不​要​讓時間​的​沙子​迷惑​了​你​的​尋​找"
+"繼續​你​的​任務。找到​丟失​的​寶藏並​不​容易。找到​一​個​藏得​不​那​麼​深​的​寶藏。我​把​這個​留給​你。不"
+"​要​讓時間​的​沙子​迷惑​了​你​的​尋​找"
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
@@ -10150,16 +10082,15 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
-"什麼​？​！​這​是​愚蠢​的​。​特里斯特拉姆​這裡沒​有​寶藏​。​讓​我​看看​！​！​啊​，​看這​些​畫​不​準確​"
-"。​他​們​根本​不​符合​我​們​的​城市​。​我​會​把​心思放​在​大​教堂​下面​，​而​不​是​我​們​的​表土​下"
-"面"
+"什麼？！這​是​愚蠢​的。特里斯特拉姆​這裡沒​有​寶藏。讓​我​看看！！啊，看這​些​畫​不​準確。他​們​根本​不​符合​"
+"我​們​的​城市。我​會​把​心思放​在​大​教堂​下面，而​不​是​我​們​的​表土​下面"
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
 msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
-msgstr "我​真的​沒​有​時間討論​你​要​找​的​地圖​。​我​有​許​多​病人​需要​我​和​你​的​幫助"
+msgstr "我​真的​沒​有​時間討論​你​要​找​的​地圖。我​有​許​多​病人​需要​我​和​你​的​幫助"
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
@@ -10168,8 +10099,8 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him."
 msgstr ""
-"曾​經引​以​為傲​的​Iswall​深陷​在​這個​世界​的​表面​之下​。​他​的​榮譽​被​剝奪​了​，​面容​也​變​"
-"了​。​他​被困​在​不朽​的​折磨​之中​。​被​指控​隱瞞​能​讓​他​自由​的​事情"
+"曾​經引​以​為傲​的​Iswall​深陷​在​這個​世界​的​表面​之下。他​的​榮譽​被​剝奪​了，面容​也​變​了。他​"
+"被困​在​不朽​的​折磨​之中。被​指控​隱瞞​能​讓​他​自由​的​事情"
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -10178,8 +10109,8 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
-"我​敢​打賭​，​沃特​看見​你​來​了​，​就​裝​出​一​副樣子​，​這樣​他​就​可以​在​你​鼻子​埋​在​泥土裡​在"
-"​城里​跑​的​時候​嘲笑​你​了​。​我​會​忽略​它"
+"我​敢​打賭，沃特​看見​你​來​了，就​裝​出​一​副樣子，這樣​他​就​可以​在​你​鼻子​埋​在​泥土裡​在​城里​跑​"
+"的​時候​嘲笑​你​了。我​會​忽略​它"
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
@@ -10189,18 +10120,16 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
-"曾​經​有​一​段​時間​，​這個城鎮​是​遠道​而來​的​旅行者​的​常去之​地​。​從​那​以​後​發生​了​很​大​的​"
-"變化​。​但​隱藏​的​洞穴​和​埋藏​的​寶藏​是​任何​孩子​的​共同​幻想​。​懷特​很少​沉迷​於​年輕人​的​游戲​"
-"。​所以​這​可能​只​是​他​的​想像"
+"曾​經​有​一​段​時間，這個城鎮​是​遠道​而來​的​旅行者​的​常去之​地。從​那​以​後​發生​了​很​大​的​變化。但"
+"​隱藏​的​洞穴​和​埋藏​的​寶藏​是​任何​孩子​的​共同​幻想。懷特​很少​沉迷​於​年輕人​的​游戲。所以​這​可能​"
+"只​是​他​的​想像"
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
 msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map."
-msgstr ""
-"聽​著​。​靠近​點​。​我​不​知道​你​是否​知道​我​所​知道​的​，​但​你​真的​有所​收穫​。​那​是​一​張​地"
-"​圖"
+msgstr "聽​著。靠近​點。我​不​知道​你​是否​知道​我​所​知道​的，但​你​真的​有所​收穫。那​是​一​張​地​圖"
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
@@ -10212,10 +10141,9 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
-"我​祖母​經​常給​我​講​一些​關於​居住​在​教堂​外​墓地​的​奇怪​勢力​的​故事​。​你​可能​會對​其中​一​個​"
-"很​感​興趣​。​她​說​，​如果​你​把​合適​的​祭品​留​在​墓地​，​進入​大​教堂​為​死者​祈禱​，​然​後​再​"
-"回來​，​祭品會​以​某​種​奇怪​的​方式​改變​。​我​不​知道​這​是​不​是​一​個​老​病婦​的​談話​，​但​最近"
-"​似乎​什麼​都​有​可能"
+"我​祖母​經​常給​我​講​一些​關於​居住​在​教堂​外​墓地​的​奇怪​勢力​的​故事。你​可能​會對​其中​一​個​很​"
+"感​興趣。她​說，如果​你​把​合適​的​祭品​留​在​墓地，進入​大​教堂​為​死者​祈禱，然​後​再​回來，祭品會​以​某"
+"​種​奇怪​的​方式​改變。我​不​知道​這​是​不​是​一​個​老​病婦​的​談話，但​最近​似乎​什麼​都​有​可能"
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -10224,8 +10152,8 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
-"嗯​。​你​說​的​是​一​個​巨大​而​神秘​的​寶藏​。​嗯​。​也​許​我​有​興趣從​你​那​裡​得到​一些​東西​。"
-"​或者​更​好​的​是​，​你​不​需要​一些​稀有​而​昂貴​的​物資​來度​過這​場​磨難嗎"
+"嗯。你​說​的​是​一​個​巨大​而​神秘​的​寶藏。嗯。也​許​我​有​興趣從​你​那​裡​得到​一些​東西。或者​更​好​"
+"的​是，你​不​需要​一些​稀有​而​昂貴​的​物資​來度​過這​場​磨難嗎"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
@@ -10238,11 +10166,10 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
-"所以​，​你​是​每​個​人​都​在​談論​的​英雄​。​也​許​你​能​幫助​一​個​貧窮​的​農民擺脫​困境​？​在​我​"
-"的​果園​的​邊緣​，​就​在​這裡​的​南邊​，​有​一​個​可怕​的​東西從​地​裡​冒出​來​！​我​不​能​得到​我​"
-"的​莊稼​或​我​的​捆乾草​，​我​可​憐​的​奶牛會​餓死​。​巫婆​把​這個給​了​我​，​說​它​會​把​那​東​西從"
-"​我​的​地裡​炸​出來​。​如果​你​能​毀掉​它​，​我​將​永遠​感激​。​我​自己​會​做​的​，​但​總​得​有​人"
-"​留下​來​陪​奶牛"
+"所以，你​是​每​個​人​都​在​談論​的​英雄。也​許​你​能​幫助​一​個​貧窮​的​農民擺脫​困境？在​我​的​果園​的"
+"​邊緣，就​在​這裡​的​南邊，有​一​個​可怕​的​東西從​地​裡​冒出​來！我​不​能​得到​我​的​莊稼​或​我​的​捆"
+"乾草，我​可​憐​的​奶牛會​餓死。巫婆​把​這個給​了​我，說​它​會​把​那​東​西從​我​的​地裡​炸​出來。如果​你​"
+"能​毀掉​它，我​將​永遠​感激。我​自己​會​做​的，但​總​得​有​人​留下​來​陪​奶牛"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -10250,8 +10177,8 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
-"我​知道​事情​不​會​像​巫婆說​的​那​麼​簡單​。​當​你​連鄰居​都​不​能​信任​的​時候​，​這​是​一​個​悲哀"
-"​的​世界"
+"我​知道​事情​不​會​像​巫婆說​的​那​麼​簡單。當​你​連鄰居​都​不​能​信任​的​時候，這​是​一​個​悲哀​的​世"
+"界"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
@@ -10260,8 +10187,8 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
-"它​不​見​了​嗎​？​你​把​它​送回​了​孕育​它​的​陰間嗎​？​你​什麼​？​哦​，​別告訴​我​你​丟​了​！​你​"
-"知道​，​那些​東西不便宜​。​你​一定​要​找到​它​，​然​後​把​那​恐懼​的​東西轟​出去"
+"它​不​見​了​嗎？你​把​它​送回​了​孕育​它​的​陰間嗎？你​什麼？哦，別告訴​我​你​丟​了！你​知道，那些​東西不便"
+"宜。你​一定​要​找到​它，然​後​把​那​恐懼​的​東西轟​出去"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -10271,9 +10198,8 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
-"我​聽​到​爆炸聲​了​！​多​謝​你​，​善良​的​陌生人​。​隨著​所有​這​些​東西從​地下​冒出來​，​怪物佔領​了​"
-"教堂​，​等等​，​這​些​都​是​艱難​的​時刻​。​我​只​是​一​個​貧窮​的​農民​，​但​在​這裡​——​請​接受​"
-"我​的​謝意"
+"我​聽​到​爆炸聲​了！多​謝​你，善良​的​陌生人。隨著​所有​這​些​東西從​地下​冒出來，怪物佔領​了​教堂，等等，這​"
+"些​都​是​艱難​的​時刻。我​只​是​一​個​貧窮​的​農民，但​在​這裡​——​請​接受​我​的​謝意"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -10283,9 +10209,8 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
-"哦​，​我​有​這麼​大​的​麻煩​…​也​許​…​不​，​我​不​能​強加給​你​，​還​有​其他​的​麻煩​。​也​許​在"
-"​你​清除​了​教堂​里​的​一些​生物​之後​你​可以​回來​。​。​。​抽出​一​點​時間​去​幫助​一​個​貧窮​的​農"
-"民"
+"哦，我​有​這麼​大​的​麻煩​…​也​許​…​不，我​不​能​強加給​你，還​有​其他​的​麻煩。也​許​在​你​清除​了​"
+"教堂​里​的​一些​生物​之後​你​可以​回來。。。抽出​一​點​時間​去​幫助​一​個​貧窮​的​農民"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
@@ -10300,18 +10225,16 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
-"我​失去​了​西奧​！​我​失去​了​我​最​好​的​朋友​！​我​們​在​河邊​玩​，​西奧說​他​想​去​看看​綠色​的​"
-"東西​。​我​說​我​們​不​應該​，​但​我​們​偷偷​溜過​去​，​然後​突然​這個​蟲子​出來​了​！​我​們​逃跑​了"
-"​，​但​西奧​摔倒​了​，​蟲子​抓住​他​，​把​他​帶​走​了"
+"我​失去​了​西奧！我​失去​了​我​最​好​的​朋友！我​們​在​河邊​玩，西奧說​他​想​去​看看​綠色​的​東西。我​說"
+"​我​們​不​應該，但​我​們​偷偷​溜過​去，然後​突然​這個​蟲子​出來​了！我​們​逃跑​了，但​西奧​摔倒​了，蟲子​"
+"抓住​他，把​他​帶​走​了"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
 msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
-msgstr ""
-"你​找到​他​了​嗎​？​你​得​找到​西奧​多​，​求​你​了​！​他​只是​個​小​孩子​。​他​不​能​照顧​自己​！​"
-"求​你​了"
+msgstr "你​找到​他​了​嗎？你​得​找到​西奧​多，求​你​了！他​只是​個​小​孩子。他​不​能​照顧​自己！求​你​了"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -10320,25 +10243,22 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
-"你​找到​他​了​！​你​找到​他​了​！​非常​感謝​。​哦​，​西奧​，​那些​討厭​的​蟲子嚇​到​你​了​嗎​？​嘿​"
-"啊​！​有​東​西粘​在​你​的​毛上​了​！​哎呀​！​來​吧​，​西奧​，​我​們​回家​吧​！​再次​感謝​，​英雄​人"
-"物"
+"你​找到​他​了！你​找到​他​了！非常​感謝。哦，西奧，那些​討厭​的​蟲子嚇​到​你​了​嗎？嘿​啊！有​東​西粘​在​你"
+"​的​毛上​了！哎呀！來​吧，西奧，我​們​回家​吧！再次​感謝，英雄​人物"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
 msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
-msgstr ""
-"我​們​早​已​沉睡​，​覺醒​的​時刻​已​經​到​來​。​長眠​之後​，​我​們​感到​非常​飢餓​。​很​快​，​現​在"
-"​，​我​們將餵養"
+msgstr "我​們​早​已​沉睡，覺醒​的​時刻​已​經​到​來。長眠​之後，我​們​感到​非常​飢餓。很​快，現​在，我​們將餵養"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
 msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
-msgstr "你​玩​得​開心嗎​，​小​哺​乳動物​？​真​可​憐​。​你​的​小​世界​不​會​是​什麼​挑戰"
+msgstr "你​玩​得​開心嗎，小​哺​乳動物？真​可​憐。你​的​小​世界​不​會​是​什麼​挑戰"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -10347,15 +10267,15 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
-"這​些​地​必​被​玷污​，​我​們​的​後​裔​必​漫過人​們稱​為家​的​田地​。​我​們​的​捲鬚​要​包裹這​世界​，"
-"​我​們​要​以​其​居民​的​肉為食​。​人類將​成為​我​們​的​動產​和​食物"
+"這​些​地​必​被​玷污，我​們​的​後​裔​必​漫過人​們稱​為家​的​田地。我​們​的​捲鬚​要​包裹這​世界，我​們​要"
+"​以​其​居民​的​肉為食。人類將​成為​我​們​的​動產​和​食物"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
 msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
-msgstr "啊​，​我​能​聞​到​你​…​你​就​在​附近​！​接近​！​血​和​恐懼​的​味道​…​多​麼​誘​人"
+msgstr "啊，我​能​聞​到​你​…​你​就​在​附近！接近！血​和​恐懼​的​味道​…​多​麼​誘​人"
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -10374,15 +10294,14 @@ msgid ""
 "within all things and beyond all things. Light and unity are the products of "
 "this holy foundation, a unity of purpose and a unity of possession."
 msgstr ""
-"在​金光​之​年​，​一​座​大​教堂​被​立​了​起來​。​這個​聖地​的​基石​是​用半​透明​的​安提拉​石​雕刻​而​"
-"成​的​，​安提拉石​是​以​與​赫拉迪姆​分享​力量​的​天使​命名​的​。​\n"
+"在​金光​之​年，一​座​大​教堂​被​立​了​起來。這個​聖地​的​基石​是​用半​透明​的​安提拉​石​雕刻​而​成​的，"
+"安提拉石​是​以​與​赫拉迪姆​分享​力量​的​天使​命名​的。\n"
 " \n"
-"​在​畫​影子​的​那​一​年​，​大​地震​動​，​大​教堂​粉碎​倒塌​。​隨​著​地下​墓穴​和​城堡​的​建造​開始​"
-"，​人們​開始​抵抗​罪惡戰爭​的​蹂躪​，​廢墟​被​清理​出來尋​找​石頭​。​就​這樣​，​基石​從人們​的​眼​中​消"
-"失​了​。​\n"
+"​在​畫​影子​的​那​一​年，大​地震​動，大​教堂​粉碎​倒塌。隨​著​地下​墓穴​和​城堡​的​建造​開始，人們​開始​"
+"抵抗​罪惡戰爭​的​蹂躪，廢墟​被​清理​出來尋​找​石頭。就​這樣，基石​從人們​的​眼​中​消失​了。\n"
 " \n"
-"石頭屬​於​這個​世界​，​也​屬於​所有​的​世界​，​就​像​光​既​存在​於​萬物​之​中​，​也​存在​於​萬物​之外"
-"​。​光明​與​統​一​是​這個神聖基礎​的​產物​，​是​目的​的​統​一​和​佔有的​統​一​。"
+"石頭屬​於​這個​世界，也​屬於​所有​的​世界，就​像​光​既​存在​於​萬物​之​中，也​存在​於​萬物​之外。光明​與​"
+"統​一​是​這個神聖基礎​的​產物，是​目的​的​統​一​和​佔有的​統​一。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
@@ -10392,12 +10311,12 @@ msgstr "嗚​嗚"
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:595
 msgid "I said, Moo."
-msgstr "我​說​，​穆"
+msgstr "我​說，穆"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:596
 msgid "Look I'm just a cow, OK?"
-msgstr "聽​著​，​我​只​是​一​頭牛​，​好嗎"
+msgstr "聽​著，我​只​是​一​頭牛，好嗎"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:597
@@ -10413,26 +10332,26 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden."
 msgstr ""
-"好​吧​，​好​吧​。​我​不​是​一​頭​牛​。​我​一般​不​會這樣​到​處走​；​但是​，​當時​我​正​坐​在​家裡​"
-"處理​自己​的​事情​，​突然​這​些​蟲子​、​藤蔓​、​球莖​之​類​的​東西開始從​地板​上​冒出來​。​。​。​太​可"
-"怕​了​！​如果​我​有​正常​的​衣服​穿​，​就​不​會​那麼​糟糕​了​。​嘿​你​能回​我​家​幫​我​拿​衣服​嗎​"
-"？​棕色​的​，​不​是​灰色​的​，​那​是​晚裝​的​。​我​會​自己​做​的​，​但​我​不​想​讓​任何​人​看到​我"
-"​這樣​。​給​，​拿​著​這個​，​你​可能​需要​它​。​。​。​殺死​那些​長滿​一切​的​東西​。​你​不​會​錯過​"
-"我​家​的​，​就​在​河​的​岔口​南邊​。​。​。​你​知道​的​。​。​。​有​雜草​叢生​的​菜園​的​那​個"
+"好​吧，好​吧。我​不​是​一​頭​牛。我​一般​不​會這樣​到​處走​；​但是，當時​我​正​坐​在​家裡​處理​自己​的​"
+"事情，突然​這​些​蟲子、藤蔓、球莖​之​類​的​東西開始從​地板​上​冒出來。。。太​可怕​了！如果​我​有​正常​的​衣服"
+"​穿，就​不​會​那麼​糟糕​了。嘿​你​能回​我​家​幫​我​拿​衣服​嗎？棕色​的，不​是​灰色​的，那​是​晚裝​的。我"
+"​會​自己​做​的，但​我​不​想​讓​任何​人​看到​我​這樣。給，拿​著​這個，你​可能​需要​它。。。殺死​那些​長滿​"
+"一切​的​東西。你​不​會​錯過​我​家​的，就​在​河​的​岔口​南邊。。。你​知道​的。。。有​雜草​叢生​的​菜園​的​"
+"那​個"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
 msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
-msgstr "你​在​浪費​時間​幹​什麼​？​去​拿​我​的​衣服​！​快點​！​那​邊​那​個​荷斯坦人​一直​對​我​眨眼"
+msgstr "你​在​浪費​時間​幹​什麼？去​拿​我​的​衣服！快點！那​邊​那​個​荷斯坦人​一直​對​我​眨眼"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
 msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
-msgstr "嘿​，​你​有​我​的​西裝嗎​？​快​，​傳過來​！​這​些​耳朵​癢​得​你​都​不​敢​相信"
+msgstr "嘿，你​有​我​的​西裝嗎？快，傳過來！這​些​耳朵​癢​得​你​都​不​敢​相信"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
@@ -10441,8 +10360,8 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
-"不​不​不​！​這​是​我​的​灰色​西裝​！​這​是​晚裝​！​正式​場合​！​我​不​能​穿這個​。​你​是​什麼​怪人​"
-"？​我​需要​那​套​棕色​的​西裝"
+"不​不​不！這​是​我​的​灰色​西裝！這​是​晚裝！正式​場合！我​不​能​穿這個。你​是​什麼​怪人？我​需要​那​套​棕"
+"色​的​西裝"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -10453,17 +10372,16 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
-"啊​，​好多​了​。​呼​！​終於​有​尊嚴​了​！​我​的​鹿角​是​直​的​嗎​？​很​好​。​聽著​，​非常​感謝​你​"
-"幫​我​。​來​，​把​這個​當作​禮物​；​而且​，​你​知道​。​。​。​一​點​時​尚​提示​。​。​。​你​可以​用​"
-"一​點​。​。​。​你​可以​用​一​個​新​的​。​。​。​你​知道​什麼​時候​？​整​個​冒險家​的​主題​就是​。​。"
-"​。​復古​的​。​只​是​一​句​忠告​，​嗯​？​再​見"
+"啊，好多​了。呼！終於​有​尊嚴​了！我​的​鹿角​是​直​的​嗎？很​好。聽著，非常​感謝​你​幫​我。來，把​這個​當作​"
+"禮物​；​而且，你​知道。。。一​點​時​尚​提示。。。你​可以​用​一​點。。。你​可以​用​一​個​新​的。。。你​知道​"
+"什麼​時候？整​個​冒險家​的​主題​就是。。。復古​的。只​是​一​句​忠告，嗯？再​見"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
 msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
-msgstr "你​看​。​我​是​一​頭​牛​。​而​你​，​你​是​怪物誘餌​。​在​你​的​腰帶​下獲​得​一些​經驗​！​我​們談談"
+msgstr "你​看。我​是​一​頭​牛。而​你，你​是​怪物誘餌。在​你​的​腰帶​下獲​得​一些​經驗！我​們談談"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -10471,15 +10389,15 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
-"這​一定​是​我​擺​在​你​面前​的​一​項​可怕​的​任務​。​如果​有​什麼辦法​我​可以​。​。​。​喝​一​大杯​新"
-"鮮​的​牛奶​好​嗎"
+"這​一定​是​我​擺​在​你​面前​的​一​項​可怕​的​任務。如果​有​什麼辦法​我​可以。。。喝​一​大杯​新鮮​的​牛奶"
+"​好​嗎"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
 msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
-msgstr "哦​，​我​需要​你​的​幫助​，​但​也​許​在​你​從​那些​野獸​的​褻瀆​中​拯救​了​地下​墓穴​之後"
+msgstr "哦，我​需要​你​的​幫助，但​也​許​在​你​從​那些​野獸​的​褻瀆​中​拯救​了​地下​墓穴​之後"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
@@ -10487,8 +10405,8 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
-"我​需要​做​點什麼​，​但​我​不​能​強​加給​一​個​完全​陌生​的​人​。​也​許​在​你​來​了​一​段​時間​之後"
-"​，​我​會​更​樂意請​你​幫個​忙"
+"我​需要​做​點什麼，但​我​不​能​強​加給​一​個​完全​陌生​的​人。也​許​在​你​來​了​一​段​時間​之後，我​會"
+"​更​樂意請​你​幫個​忙"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -10496,8 +10414,8 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
-"我​從​你​身​上​看到​了​偉大​的​潛力​。​也​許​某​個​時候​你​正在​完成​你​的​命運​，​你​可以​停下​來幫"
-"​我​一​個​小​忙"
+"我​從​你​身​上​看到​了​偉大​的​潛力。也​許​某​個​時候​你​正在​完成​你​的​命運，你​可以​停下​來幫​我​一"
+"​個​小​忙"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -10506,14 +10424,14 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
-"我​想​你​也​許​可以​幫​我​，​但​也​許​在​你​變​得​更​有​力量​之後​。​我​可​不​想​破壞​村子​裡摧毀​"
-"教堂​威脅​的​唯一​機會"
+"我​想​你​也​許​可以​幫​我，但​也​許​在​你​變​得​更​有​力量​之後。我​可​不​想​破壞​村子​裡摧毀​教堂​威"
+"脅​的​唯一​機會"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
 msgid ""
 "Me, I'm a self-made cow.  Make something of yourself, and... then we'll talk."
-msgstr "我​，​我​是​一​頭​白手​起家​的​母牛​。​做點​自己​，​然​後​。​。​。​那​我​們談談"
+msgstr "我，我​是​一​頭​白手​起家​的​母牛。做點​自己，然​後。。。那​我​們談談"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:622
@@ -10521,8 +10439,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
-"我​不​必​向​每​一​個​路過​的​遊客解釋​我​自己​！​你​不​是​有​怪物​要​殺嗎​？​也​許​我​們​以​後​再​"
-"談​。​如果​你​活​著"
+"我​不​必​向​每​一​個​路過​的​遊客解釋​我​自己！你​不​是​有​怪物​要​殺嗎？也​許​我​們​以​後​再​談。如果"
+"​你​活​著"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -10531,8 +10449,8 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
-"別煩​我​了​。​我​在​找​一​個​真正​的​英雄​。​但​你​不是​。​我​不​能​相信​你​，​你​隨時​都​會​被​怪"
-"物​吃掉​的​。​。​。​我​需要​一​個​有​經驗​的​英雄"
+"別煩​我​了。我​在​找​一​個​真正​的​英雄。但​你​不是。我​不​能​相信​你，你​隨時​都​會​被​怪物​吃掉​的。。"
+"。我​需要​一​個​有​經驗​的​英雄"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
@@ -10549,13 +10467,12 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden."
 msgstr ""
-"好​吧​，​我​來切​公牛​。​我​不​是​故意​誤導​你​的​。​我​坐​在​家裡​，​心情​很​不​好​，​這時​情況變​"
-"得​很​不​穩定​；​一​大​群​怪物從​地板​上​跑​了​出來​！​我​只​是​嚇​了​一​跳​。​我​跑出家門​的​時候​"
-"正好​穿​著​這件​球衣​，​現​在​我​看​起來​很​可​笑​。​如果​我​有​正常​的​衣服​穿​，​就​不​會​那麼​糟"
-"糕​了​。​嘿​你​能回​我​家​幫​我​拿​衣服​嗎​？​棕色​的​，​不​是​灰色​的​，​那​是​晚裝​的​。​我​會​"
-"自己​做​的​，​但​我​不​想​讓​任何​人​看到​我​這樣​。​給​，​拿​著​這個​，​你​可能​需要​它​。​。​。​"
-"殺死​那些​長滿​一切​的​東西​。​你​不​會​錯過​我​家​的​，​就​在​河​的​岔口​南邊​。​。​。​你​知道​的​"
-"。​。​。​有​雜草​叢生​的​菜園​的​那​個"
+"好​吧，我​來切​公牛。我​不​是​故意​誤導​你​的。我​坐​在​家裡，心情​很​不​好，這時​情況變​得​很​不​穩定​；"
+"​一​大​群​怪物從​地板​上​跑​了​出來！我​只​是​嚇​了​一​跳。我​跑出家門​的​時候​正好​穿​著​這件​球衣，現"
+"​在​我​看​起來​很​可​笑。如果​我​有​正常​的​衣服​穿，就​不​會​那麼​糟糕​了。嘿​你​能回​我​家​幫​我​拿"
+"​衣服​嗎？棕色​的，不​是​灰色​的，那​是​晚裝​的。我​會​自己​做​的，但​我​不​想​讓​任何​人​看到​我​這樣。"
+"給，拿​著​這個，你​可能​需要​它。。。殺死​那些​長滿​一切​的​東西。你​不​會​錯過​我​家​的，就​在​河​的​岔口"
+"​南邊。。。你​知道​的。。。有​雜草​叢生​的​菜園​的​那​個"
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
@@ -10565,8 +10482,8 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
-"今天​多​雲​涼爽​。​將亡靈​之​網​撒向虛空​，​降落​了​兩個​新​的​飛行​恐懼​亞種​；​一​天​的​好​工作​。​"
-"一定​要​記​得​從​阿德里亞訂購​更​多​的​蝙蝠糞​和​黑蠟燭​；​我​的​血壓​有​點​低"
+"今天​多​雲​涼爽。將亡靈​之​網​撒向虛空，降落​了​兩個​新​的​飛行​恐懼​亞種​；​一​天​的​好​工作。一定​要​記"
+"​得​從​阿德里亞訂購​更​多​的​蝙蝠糞​和​黑蠟燭​；​我​的​血壓​有​點​低"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -10575,8 +10492,8 @@ msgid ""
 "creature -- to no avail.  My methods of enslaving lesser demons seem to have "
 "no effect on this fearsome beast."
 msgstr ""
-"我​試過咒​語​，​威脅​，​放棄​和​這個​骯髒​的​生物​討價​還價​——​都​沒​有用​。​我​奴役​小惡魔​的​方法​"
-"似乎​對這個​可怕​的​野獸沒​有​效果"
+"我​試過咒​語，威脅，放棄​和​這個​骯髒​的​生物​討價​還價​——​都​沒​有用。我​奴役​小惡魔​的​方法​似乎​對這個"
+"​可怕​的​野獸沒​有​效果"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
@@ -10586,8 +10503,8 @@ msgid ""
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""
-"我​的​家正​慢慢​被​這個​不​受​歡迎​的​囚犯​的​卑鄙行徑​所​腐蝕​。​地窖里​到​處​都​是​影子​，​它​們​就"
-"​在​我​視線​的​角落​之外​。​我​耳邊隱約傳​來​爪子​的​拼字聲​。​我​想​，​他​們​在​找這​本​雜誌"
+"我​的​家正​慢慢​被​這個​不​受​歡迎​的​囚犯​的​卑鄙行徑​所​腐蝕。地窖里​到​處​都​是​影子，它​們​就​在​我"
+"​視線​的​角落​之外。我​耳邊隱約傳​來​爪子​的​拼字聲。我​想，他​們​在​找這​本​雜誌"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
@@ -10597,9 +10514,9 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
-"在​咆哮​中​，​這個​生物​漏​了​自己​的​名字​——​納克魯爾​。​我​曾​試圖​研究​這個​名字​，​但​小​惡​魔​"
-"不​知​何故毀​了​我​的​圖書館​。​納克魯爾​。​。​。​我​對這個​名字​充滿​了​恐懼​。​我​寧願​把​它​當​作​"
-"一​種​生物​，​而​不​願考慮​它​的​真名"
+"在​咆哮​中，這個​生物​漏​了​自己​的​名字​——​納克魯爾。我​曾​試圖​研究​這個​名字，但​小​惡​魔​不​知​何故"
+"毀​了​我​的​圖書館。納克魯爾。。。我​對這個​名字​充滿​了​恐懼。我​寧願​把​它​當​作​一​種​生物，而​不​願考慮"
+"​它​的​真名"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
@@ -10609,9 +10526,8 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice."
 msgstr ""
-"那​被​困住​的​生物​狂怒​的​嚎叫​使​我​無法獲​得​急​需​的​睡眠​。​它​向​那​把​它​送到​虛空​的​人​發怒"
-"​，​因​我​把​它​困​在​這裡​，​就​咒​詛​我​。​它​的​話語​使​我​的​心充滿​恐懼​，​然而​我​無​法​阻擋"
-"​它​的​聲音"
+"那​被​困住​的​生物​狂怒​的​嚎叫​使​我​無法獲​得​急​需​的​睡眠。它​向​那​把​它​送到​虛空​的​人​發怒，因"
+"​我​把​它​困​在​這裡，就​咒​詛​我。它​的​話語​使​我​的​心充滿​恐懼，然而​我​無​法​阻擋​它​的​聲音"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
@@ -10621,8 +10537,8 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge."
 msgstr ""
-"我​的​時間​快​用完​了​。​我​必​須記錄​下​削弱​惡魔​的​方法​，​然​後​隱​藏這​段​文字​，​以免​他​的​爪"
-"牙們​想​辦法​利用​我​的​知識來​解放​他​們​的​主​。​我​希望​找到​這本​日記​的​人​都​能​找到​知識"
+"我​的​時間​快​用完​了。我​必​須記錄​下​削弱​惡魔​的​方法，然​後​隱​藏這​段​文字，以免​他​的​爪牙們​想​辦"
+"法​利用​我​的​知識來​解放​他​們​的​主。我​希望​找到​這本​日記​的​人​都​能​找到​知識"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -10640,14 +10556,14 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat."
 msgstr ""
-"無​論誰​找到​這卷​卷軸​，​都​將負責​阻止​這​些​墻內​的​惡魔​生物​。​我​的​時間​到​了​。​即使​是​現​在"
-"​，​它​的​地獄​般​的​爪子​在​脆弱​的​門​，​我​躲​在​後面​爪​。​\n"
+"無​論誰​找到​這卷​卷軸，都​將負責​阻止​這​些​墻內​的​惡魔​生物。我​的​時間​到​了。即使​是​現​在，它​的​地"
+"獄​般​的​爪子​在​脆弱​的​門，我​躲​在​後面​爪。\n"
 " \n"
-"​我​已​經用​神秘​的​魔法​把​惡​魔束​縛住​，​把​它​包裹​在​長城裡​，​但​我​擔心這還​不​夠​。​\n"
+"​我​已​經用​神秘​的​魔法​把​惡​魔束​縛住，把​它​包裹​在​長城裡，但​我​擔心這還​不​夠。\n"
 " \n"
-"​在​我​的​三​個​幽靈​身​上​找到​的​法術將為​你​提供​進入​他​的​領地​的​保護​，​但​前提​是​必須​按​正"
-"確​的​順序​施放​。​入口​的​槓桿​會​移​除障​礙物​，​釋放​惡魔​；​別碰​他​們​！​只​使用​這​些​法術​進入"
-"​，​否則​他​的​力量​可能​太​大​，​你​無法擊敗"
+"​在​我​的​三​個​幽靈​身​上​找到​的​法術將為​你​提供​進入​他​的​領地​的​保護，但​前提​是​必須​按​正確​"
+"的​順序​施放。入口​的​槓桿​會​移​除障​礙物，釋放​惡魔​；​別碰​他​們！只​使用​這​些​法術​進入，否則​他​的​"
+"力量​可能​太​大，你​無法擊敗"
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
