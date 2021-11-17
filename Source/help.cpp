@@ -96,6 +96,49 @@ const char *const HelpText[] = {
 
 std::vector<std::string> HelpTextLines;
 
+constexpr int PaddingTop = 32;
+constexpr int PaddingLeft = 32;
+constexpr int ContentPaddingTop = 19;
+constexpr int ContentOuterHeight = 180;
+
+constexpr int PanelHeight = 297;
+constexpr int ContentTextWidth = 577;
+
+int LineHeight()
+{
+	return IsSmallFontTall() ? 18 : 14;
+}
+
+int BlankLineHeight()
+{
+	return 12;
+}
+
+int DividerLineMarginY()
+{
+	return BlankLineHeight() / 2;
+}
+
+int HeaderHeight()
+{
+	return PaddingTop + LineHeight() + 2 * BlankLineHeight() + DividerLineMarginY();
+}
+
+int ContentPaddingY()
+{
+	return BlankLineHeight();
+}
+
+int ContentsTextHeight()
+{
+	return PanelHeight - HeaderHeight() - DividerLineMarginY() - 2 * ContentPaddingY() - BlankLineHeight();
+}
+
+int NumVisibleLines()
+{
+	return (ContentsTextHeight() - 1) / LineHeight() + 1; // Ceil
+}
+
 } // namespace
 
 void InitHelp()
@@ -130,21 +173,30 @@ void DrawHelp(const Surface &out)
 	DrawSTextHelp();
 	DrawQTextBack(out);
 
+	const int lineHeight = LineHeight();
+	const int blankLineHeight = BlankLineHeight();
+
 	const char *title;
 	if (gbIsHellfire)
 		title = gbIsSpawn ? _("Shareware Hellfire Help") : _("Hellfire Help");
 	else
 		title = gbIsSpawn ? _("Shareware Diablo Help") : _("Diablo Help");
-	PrintSString(out, 0, 2, title, UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 
-	DrawSLine(out, 5);
+	const int sx = PANEL_X + PaddingLeft;
+	const int sy = UI_OFFSET_Y;
 
-	const int sx = PANEL_X + 32;
-	const int sy = UI_OFFSET_Y + 51;
+	DrawString(out, title,
+	    { { sx, sy + PaddingTop + blankLineHeight }, { ContentTextWidth, lineHeight } },
+	    UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 
-	for (int i = 6; i < 21; i++) {
-		const char *line = HelpTextLines[i - 6 + SkipLines].c_str();
-		if (line[0] == '\0') {
+	const int titleBottom = sy + HeaderHeight();
+	DrawSLine(out, titleBottom);
+
+	const int numLines = NumVisibleLines();
+	const int contentY = titleBottom + DividerLineMarginY() + ContentPaddingY();
+	for (int i = 0; i < numLines; i++) {
+		const string_view line = HelpTextLines[i + SkipLines];
+		if (line.empty()) {
 			continue;
 		}
 
@@ -152,13 +204,15 @@ void DrawHelp(const Surface &out)
 		UiFlags style = UiFlags::ColorWhite;
 		if (line[0] == '$') {
 			offset = 1;
-			style = UiFlags::ColorRed;
+			style = UiFlags::ColorBlue;
 		}
 
-		DrawString(out, &line[offset], { { sx, sy + i * 12 }, { 577, 12 } }, style);
+		DrawString(out, line.substr(offset), { { sx, contentY + i * lineHeight }, { ContentTextWidth, lineHeight } }, style, /*spacing=*/1, lineHeight);
 	}
 
-	PrintSString(out, 0, 23, _("Press ESC to end or the arrow keys to scroll."), UiFlags::ColorWhitegold | UiFlags::AlignCenter);
+	DrawString(out, _("Press ESC to end or the arrow keys to scroll."),
+	    { { sx, contentY + ContentsTextHeight() + ContentPaddingY() + blankLineHeight }, { ContentTextWidth, lineHeight } },
+	    UiFlags::ColorWhitegold | UiFlags::AlignCenter);
 }
 
 void DisplayHelp()
@@ -175,7 +229,7 @@ void HelpScrollUp()
 
 void HelpScrollDown()
 {
-	if (SkipLines < HelpTextLines.size() - 15)
+	if (SkipLines + NumVisibleLines() < HelpTextLines.size())
 		SkipLines++;
 }
 
