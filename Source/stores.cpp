@@ -2326,10 +2326,9 @@ void PrintSString(const Surface &out, int margin, int line, const char *text, Ui
 	}
 }
 
-void DrawSLine(const Surface &out, int y)
+void DrawSLine(const Surface &out, int sy)
 {
 	int sx = 26;
-	const int sy = PaddingTop + stext[y].y + TextHeight() / 2;
 	int width = 587;
 
 	if (!stextsize) {
@@ -2509,7 +2508,7 @@ void DrawSText(const Surface &out)
 	CalculateLineHeights();
 	for (int i = 0; i < STORE_LINES; i++) {
 		if (stext[i].IsDivider())
-			DrawSLine(out, i);
+			DrawSLine(out, PaddingTop + stext[i].y + TextHeight() / 2);
 		if (stext[i].IsText())
 			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
 	}

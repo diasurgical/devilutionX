@@ -110,7 +110,7 @@ void InitStores();
 void SetupTownStores();
 void FreeStoreMem();
 void PrintSString(const Surface &out, int margin, int line, const char *text, UiFlags flags, int price = 0);
-void DrawSLine(const Surface &out, int y);
+void DrawSLine(const Surface &out, int sy);
 void DrawSTextHelp();
 void ClearSText(int s, int e);
 void StartStore(talk_id s);
