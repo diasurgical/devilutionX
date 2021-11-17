@@ -12,11 +12,11 @@
 #include "init.h"
 #include "loadsave.h"
 #include "menu.h"
+#include "mpq/mpq_reader.hpp"
 #include "pack.h"
 #include "utils/endian.hpp"
 #include "utils/file_util.h"
 #include "utils/language.h"
-#include "utils/mpq.hpp"
 #include "utils/paths.h"
 
 namespace devilution {

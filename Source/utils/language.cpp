@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "options.h"
-#include "engine/game_assets.hpp"
+#include "engine/assets.hpp"
 #include "utils/file_util.h"
 #include "utils/paths.h"
 

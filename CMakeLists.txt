@@ -399,7 +399,7 @@ set(libdevilutionx_SRCS
   Source/encrypt.cpp
   Source/engine.cpp
   Source/error.cpp
-  Source/engine/game_assets.cpp
+  Source/engine/assets.cpp
   Source/gamemenu.cpp
   Source/gendung.cpp
   Source/gmenu.cpp
@@ -469,6 +469,9 @@ set(libdevilutionx_SRCS
   Source/engine/render/dun_render.cpp
   Source/engine/render/text_render.cpp
   Source/engine/surface.cpp
+  Source/mpq/mpq_reader.cpp
+  Source/mpq/mpq_sdl_rwops.cpp
+  Source/mpq/mpq_writer.cpp
   Source/qol/autopickup.cpp
   Source/qol/common.cpp
   Source/qol/monhealthbar.cpp
@@ -479,9 +482,6 @@ set(libdevilutionx_SRCS
   Source/utils/file_util.cpp
   Source/utils/language.cpp
   Source/utils/logged_fstream.cpp
-  Source/utils/mpq.cpp
-  Source/utils/mpq_sdl_rwops.cpp
-  Source/utils/mpq_writer.cpp
   Source/utils/paths.cpp
   Source/utils/sdl_bilinear_scale.cpp
   Source/utils/sdl_rwops_file_wrapper.cpp
@@ -1198,7 +1198,7 @@ if(NINTENDO_3DS)
   add_custom_target(romfs_files
     COMMAND ${CMAKE_COMMAND} -E copy ${APP_ROMFS_FILES} ${APP_ROMFS}
     DEPENDS ${APP_ROMFS_FILES})
-    
+
   add_dependencies(romfs_files romfs_directory devilutionx_mpq)
 
   include(Tools3DS)

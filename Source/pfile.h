@@ -5,9 +5,9 @@
  */
 #pragma once
 
+#include "mpq/mpq_writer.hpp"
 #include "player.h"
 #include "DiabloUI/diabloui.h"
-#include "utils/mpq_writer.hpp"
 
 namespace devilution {
 

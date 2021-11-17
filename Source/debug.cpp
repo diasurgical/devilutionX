@@ -840,8 +840,9 @@ bool IsDebugGridInMegatiles()
 	case DebugGridTextItem::pdungeon:
 	case DebugGridTextItem::dflags:
 		return true;
+	default:
+		return false;
 	}
-	return false;
 }
 
 bool GetDebugGridText(Point dungeonCoords, char *debugGridTextBuffer)
