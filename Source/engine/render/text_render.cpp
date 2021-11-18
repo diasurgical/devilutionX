@@ -32,7 +32,7 @@ std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
 std::array<uint8_t, 6> CJKWidth = { 17, 24, 28, 41, 47, 16 };
-std::array<uint8_t, 6> HangulWidth = { 17, 22, 26, 38, 42, 16 };
+std::array<uint8_t, 6> HangulWidth = { 15, 20, 24, 35, 39, 15 };
 std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
@@ -107,16 +107,12 @@ text_color GetColorFromFlags(UiFlags flags)
 
 bool IsCJK(uint16_t row)
 {
-	if (row >= 0x4e && row <= 0x9f)
-		return true;
-	return false;
+	return row >= 0x4e && row <= 0x9f;
 }
 
 bool IsHangul(uint16_t row)
 {
-	if (row >= 0xac && row <= 0xd7)
-		return true;
-	return false;
+	return row >= 0xac && row <= 0xd7;
 }
 
 std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
