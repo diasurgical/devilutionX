@@ -31,7 +31,8 @@ constexpr char32_t ZWSP = U'\u200B'; // Zero-width space
 std::unordered_map<uint32_t, Art> Fonts;
 std::unordered_map<uint32_t, std::array<uint8_t, 256>> FontKerns;
 std::array<int, 6> FontSizes = { 12, 24, 30, 42, 46, 22 };
-std::array<uint8_t, 6> FontFullwidth = { 17, 21, 29, 41, 43, 16 };
+std::array<uint8_t, 6> CJKWidth = { 17, 24, 28, 41, 47, 16 };
+std::array<uint8_t, 6> HangulWidth = { 17, 22, 26, 38, 42, 16 };
 std::array<int, 6> LineHeights = { 12, 26, 38, 42, 50, 22 };
 std::array<int, 6> BaseLineOffset = { -3, -2, -3, -6, -7, 3 };
 
@@ -104,12 +105,17 @@ text_color GetColorFromFlags(UiFlags flags)
 	return ColorWhitegold;
 }
 
-bool IsFullWidth(uint16_t row)
+bool IsCJK(uint16_t row)
 {
 	if (row >= 0x4e && row <= 0x9f)
-		return true; // CJK Unified Ideographs
+		return true;
+	return false;
+}
+
+bool IsHangul(uint16_t row)
+{
 	if (row >= 0xac && row <= 0xd7)
-		return true; // Hangul Syllables
+		return true;
 	return false;
 }
 
@@ -127,8 +133,10 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 
 	auto *kerning = &FontKerns[fontId];
 
-	if (IsFullWidth(row)) {
-		kerning->fill(FontFullwidth[size]);
+	if (IsCJK(row)) {
+		kerning->fill(CJKWidth[size]);
+	} else if (IsHangul(row)) {
+		kerning->fill(HangulWidth[size]);
 	} else {
 		SDL_RWops *handle = OpenAsset(path);
 		if (handle != nullptr) {
@@ -136,7 +144,7 @@ std::array<uint8_t, 256> *LoadFontKerning(GameFontTables size, uint16_t row)
 			SDL_RWclose(handle);
 		} else {
 			LogError("Missing font kerning: {}", path);
-			kerning->fill(FontFullwidth[size]);
+			kerning->fill(CJKWidth[size]);
 		}
 	}
 
