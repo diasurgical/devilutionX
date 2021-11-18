@@ -360,9 +360,7 @@ if(NOT NOSOUND)
   endif()
 endif()
 
-add_library(smacker STATIC
-  3rdParty/libsmacker/smacker.c)
-target_include_directories(smacker PUBLIC 3rdParty/libsmacker)
+add_subdirectory(3rdParty/libsmackerdec)
 
 if(WIN32)
 add_subdirectory(3rdParty/find_steam_game)
@@ -484,7 +482,6 @@ set(libdevilutionx_SRCS
   Source/utils/logged_fstream.cpp
   Source/utils/paths.cpp
   Source/utils/sdl_bilinear_scale.cpp
-  Source/utils/sdl_rwops_file_wrapper.cpp
   Source/utils/sdl_thread.cpp
   Source/utils/utf8.cpp
   Source/DiabloUI/art.cpp
@@ -880,7 +877,7 @@ endif()
 target_link_libraries(libdevilutionx PUBLIC
   PKWare
   libmpq
-  smacker
+  libsmackerdec
   simpleini
   hoehrmann_utf8)
 
