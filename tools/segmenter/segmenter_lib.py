@@ -66,7 +66,7 @@ def _RecoverGaps(text: bytes, starts: List[int], ends: List[int]) -> Tuple[List[
 
 
 _DISALLOW_SEGMENTATION = re.compile(
-	r'(?:\{.*?\}|\\[a-z]|[\w/-](?::[\w/-]?)?|[.,;?!=+/#]|.?’.?|.:)+'.encode())
+	r'(?:\{.*?\}|\\[a-z]|[\w/-](?::[\w/-]?)?|[.,;?!=+/#]|.?’.?|.:|%[0-9a-z.]+)+'.encode())
 
 
 def _MergeDisallowedPositions(text: bytes, starts: List[int], ends: List[int]) -> Tuple[List[int], List[int]]:
