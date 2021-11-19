@@ -443,7 +443,7 @@ void CheckMissileCol(Missile &missile, int mindam, int maxdam, bool shift, Point
 	if (missile._micaster != TARGET_BOTH && missile._misource != -1) {
 		if (missile._micaster == TARGET_MONSTERS) {
 			int mid = dMonster[mx][my];
-			if (mid != 0 && (mid > 0 || Monsters[mid]._mmode == MonsterMode::Petrified)) {
+			if (mid != 0 && (mid > 0 || Monsters[abs(mid) - 1]._mmode == MonsterMode::Petrified)) {
 				if (MonsterMHit(
 				        missile._misource,
 				        abs(mid) - 1,
