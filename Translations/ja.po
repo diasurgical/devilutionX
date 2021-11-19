@@ -528,7 +528,7 @@ msgid ""
 "The most powerful of the underworld's creatures lurk at the gateway into "
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
-"ヘル​難易度​\n"
+"ヘル​の​難易度​\n"
 "​地獄​へ​の​入り口​に​は、地下​世界​の​最強​の​生物​が​潜ん​で​い​ます。経験​豊富​な​キャラクター​だけ​が"
 "、この​領域​に​足​を​踏み入れる​こと​が​でき​ます。"
 
@@ -1725,10 +1725,10 @@ msgid ""
 "will ready the spell. A readied spell may be cast by simply right-clicking "
 "in the play area."
 msgstr ""
-"インターフェースバー​の​「​SPELLS​」​ボタン​を​左​クリック​する​と、自分​の​スキル​や​呪文​の​リスト​に"
-"​アクセス​でき​ます。覚え​て​いる​呪文​や​杖​で​使える​呪文​は​ここ​に​表示​さ​れ​て​い​ます。唱え​たい​"
-"呪文​を​左​クリック​する​と、その​呪文​を​準備​する​こと​が​でき​ます。準備​さ​れ​た​呪文​は、プレイ​エリア"
-"​内​で​右​クリック​する​だけ​で​唱える​こと​が​でき​ます。"
+"インターフェースバー​の​「​呪文​」​ボタン​を​左​クリック​する​と、自分​の​スキル​や​呪文​の​リスト​に​アクセ"
+"ス​でき​ます。覚え​て​いる​呪文​や​杖​で​使える​呪文​は​ここ​に​表示​さ​れ​て​い​ます。唱え​たい​呪文​を"
+"​左​クリック​する​と、その​呪文​を​準備​する​こと​が​でき​ます。準備​さ​れ​た​呪文​は、プレイ​エリア​内​で"
+"​右​クリック​する​だけ​で​唱える​こと​が​でき​ます。"
 
 #: Source/help.cpp:79
 msgid "$Using the Speedbook for Spells"
@@ -1750,7 +1750,7 @@ msgid ""
 "readied spell"
 msgstr ""
 "Shift + 左​クリック​で​「​現在​の​呪文​を​選択​」​ボタン​を​押す​と、準備​し​て​い​た​呪文​が​クリ"
-"ア​さ​れる"
+"ア​さ​れ​ます"
 
 #: Source/help.cpp:86
 msgid "$Setting Spell Hotkeys"
@@ -1983,7 +1983,7 @@ msgstr "ルーン​爆弾"
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
-msgstr "セオドア"
+msgstr "テオドア"
 
 #: Source/itemdat.cpp:57
 msgid "Auric Amulet"
@@ -9728,9 +9728,9 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
-"かつて​この​町​は、遠方​から​の​旅行者​が​頻繁​に​立ち寄っ​て​い​た​時代​が​あっ​た。 それ​以来、多く​の​"
-"こと​が​変わり​まし​た。 しかし、隠さ​れ​た​洞窟​や​埋蔵金​は、子供たち​の​共通​の​空想​です。 ワート​は​子"
-"供​の​遊び​に​は​あまり​付き合わ​ない。 だ​から、それ​は​彼​の​想像​な​の​か​も​しれ​ない。"
+"かつて​この​町​に​は、遠く​から​の​旅人​が​頻繁​に​立ち寄っ​て​い​た​時代​が​あっ​て​な。 それ​から、いろ"
+"いろ​と​変わっ​て​しまっ​た​ん​じゃ。 しかし、隠さ​れ​た​洞窟​や​埋蔵金​の​話​は、子供たち​の​空想​じゃ​よ"
+"。 ワート​は​子供​の​遊び​に​は​あまり​付き合わ​ん​から​彼​が​想像​し​た​産物​か​も​しれ​ん​な。"
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
@@ -9842,10 +9842,10 @@ msgid ""
 "but we snuck over there, and then suddenly this BUG came out!  We ran away "
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
-"セオ​が​い​なく​なっ​た​! 親友​を​だっ​た​の​に​! 川​の​そば​で​遊ん​で​て、そ​し​たら​テオ​が​おっ"
-"きな​緑​の​もの​を​見​に​行き​たい​と​言い​出し​た​の。ダメ​って​言っ​た​の​に、あっち​で​もぐもぐ​し​て"
-"​たら、いきなり​バグ​が​出​て​き​た​の​! 逃げ​た​ん​だ​けど、テオ​は​転ん​じゃっ​て、虫​に​つれ​て​いか"
-"​れ​ちゃっ​た​!"
+"テオ​が​い​なく​なっ​ちゃっ​た​! 親友​だっ​た​の​に​! 川​の​そば​で​遊ん​で​て、そ​し​たら​テオ​が​"
+"おっきな​緑​の​もの​を​見​に​行き​たい​と​言い​出し​た​の。ダメ​って​言っ​た​の​に、あっち​で​もぐもぐ​し"
+"​て​たら、いきなり​バグ​が​出​て​き​た​の​! 逃げ​た​ん​だ​けど、テオ​は​転ん​じゃっ​て、虫​に​つれ​て​"
+"いか​れ​ちゃっ​た​!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -9853,7 +9853,7 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
-"彼​を​見つけ​た？ セオドア​を​見つけ​て！お願い！ まだ​小さい​の。 自分​の​世話​も​でき​ない​の​よ！ お願い"
+"彼​を​見つけ​た？ テオドア​を​見つけ​て！お願い！ まだ​小さい​の。 自分​の​世話​も​でき​ない​の​よ！ お願い"
 "​だ​から！"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
@@ -9863,7 +9863,7 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
-"見つけ​た​の​ね！ 見つけ​て​くれ​た！ ありがとう！ あー​セオ あの​虫​たち​に​脅かさ​れ​なかっ​た？ きゃあ！"
+"見つけ​た​の​ね！ 見つけ​て​くれ​た！ ありがとう！ あー​テオ あの​虫​たち​に​脅かさ​れ​なかっ​た？ きゃあ！"
 " 毛皮​に​何​か​くっつい​てる！ わあ！ さあ、テオ、家​に​帰ろう！ 本当​に​ありがとう！"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
