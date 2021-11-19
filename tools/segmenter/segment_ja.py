@@ -9,7 +9,6 @@ import segmenter_lib
 class JaTokenizer():
 	_MODE = sudachipy.SplitMode.C
 
-
 	def __init__(self) -> None:
 		self._tokenizer = sudachipy.Dictionary().create()
 
