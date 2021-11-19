@@ -1350,7 +1350,7 @@ DWORD OnNewLevel(const TCmd *pCmd, int pnum)
 	if (gbBufferMsgs == 1) {
 		SendPacket(pnum, &message, sizeof(message));
 	} else if (pnum != MyPlayerId) {
-		if (message.wParam1 < WM_FIRST && message.wParam1 > WM_LAST)
+		if (message.wParam1 < WM_FIRST || message.wParam1 > WM_LAST)
 			return sizeof(message);
 
 		auto mode = static_cast<interface_mode>(message.wParam1);
