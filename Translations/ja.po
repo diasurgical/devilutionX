@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 2.4.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -1712,8 +1712,6 @@ msgstr ""
 "か、アイテム​上​で​右​クリック​する​こと​で​使用​でき​ます。"
 
 #: Source/help.cpp:68
-#, fuzzy
-#| msgid "$Gold"
 msgid "$Gold:"
 msgstr "$​ゴールド"
 
@@ -1743,8 +1741,6 @@ msgstr ""
 "さ​れ​た​呪文​は、プレイ​エリア​内​で​右​クリック​する​だけ​で​唱える​こと​が​でき​ます。"
 
 #: Source/help.cpp:79
-#, fuzzy
-#| msgid "$Using the Speedbook for Spells"
 msgid "$Using the Speedbook for Spells:"
 msgstr "$​呪文​の​ため​の​スピード​ブック​の​使用"
 
@@ -1759,10 +1755,6 @@ msgstr ""
 "イン​の​プレイ​エリア​で​右​クリック​する​だけ​です。"
 
 #: Source/help.cpp:84
-#, fuzzy
-#| msgid ""
-#| "Shift + Left-clicking on the 'select current spell' button will clear the "
-#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
 "readied spell."
@@ -1771,8 +1763,6 @@ msgstr ""
 "リア​さ​れ​ます"
 
 #: Source/help.cpp:86
-#, fuzzy
-#| msgid "$Setting Spell Hotkeys"
 msgid "$Setting Spell Hotkeys:"
 msgstr "$​スペルホットキー​の​設定"
 
@@ -1787,8 +1777,6 @@ msgstr ""
 "い​呪文​を​ハイライト​し​た​後、F5、F6、F7、F8​キー​を​押し​ます。"
 
 #: Source/help.cpp:92
-#, fuzzy
-#| msgid "$Spell Books"
 msgid "$Spell Books:"
 msgstr "$​スペル​ブック"
 
@@ -7298,14 +7286,13 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
-"ペピン​は​あなた​に​真実​を​話し​まし​た。新鮮​な​水​が​すぐ​に​で​も​必要​に​なり​ます。小さな​"
-"井戸​の​一​つ​を​掃除​し​て​み​た​が、淀ん​だ​汚物​の​臭い​が​する。水源​が​詰まっ​て​いる​の​で"
-"しょう。"
+"ぺ​ピン​の​言う​通り、喉​から​手​が​出る​ほど​真水​が​欲しい​ん​だ。井戸​から​よどん​だ​水​が​し"
+"みだし​て​くる​の​は、水源​に​何​か​が​詰まっ​て​いる​から​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
 msgid "You drink water?"
-msgstr "水​を​飲む​の​か？"
+msgstr "おい、水​飲む​か​?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:101
@@ -7386,10 +7373,9 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
-"よし、じゃあ​聞い​て​くれ。木​の​部屋​が​ある​ん​だ。そして​彼​の​妻​が、彼女​が、木​に​言う​"
-"ん​だ​…​あなた​は​待た​なけれ​ば​なら​ない​から、と。そして​私​は​言っ​た、それ​は​彼​に​とっ​て​"
-"不利​に​働く​か​も​しれ​ない​が、もし​私​が​この​ため​に​お金​を​払う​と​思う​なら、あなた​は​…​え"
-"え​と​…​そう​だ。"
+"へ​へ、よく​聞け​よ。木​の​部屋​が​あっ​て​だ​な、やつ​の​女房​が​木​が、どう​と​か​言っ​て​よ​… "
+"あ​そう​だ、ちょっと​待っ​て​くれ​や。やつ​の​ため​に​は​なら​ん​か​も​しれ​ん​が​金​は​…​払う​ぜ​… "
+"払う​とも​…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -8386,7 +8372,7 @@ msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
 msgstr ""
-"私たち​の​時間​は​残り​わずか​です。彼​の​暗黒​の​力​が​増大​し​て​いる​の​を​感じ​て​い​ます。"
+"もう​時間​が​ない​ぞ​! きゃつ​は​暗黒​の​力​を​蓄え​て​おる。止め​られる​の​は​お主​だけ​じゃ​…"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -10189,7 +10175,7 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
-"通りすがり​の​旅行者​に​説明​する​必要​なんて​ない！ 殺す​べき​モンスター​は​い​ない​の​か​"
+"通りすがり​の​旅人​に​説明​する​必要​なんて​ない​だろ！ 殺す​べき​モンスター​は​い​ない​の​か​"
 "よ？ 後​で​話そう​ぜ。 あんた​が​生き​て​いれ​ば​な​…"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
