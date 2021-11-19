@@ -6017,7 +6017,7 @@ msgstr "{:s} (​レベル {:d}): {:s}"
 #: Source/qol/common.cpp:25
 #, c-format
 msgid ",%03d"
-msgstr ",​%03d"
+msgstr ",%03d"
 
 #: Source/qol/itemlabels.cpp:70
 #, c-format
