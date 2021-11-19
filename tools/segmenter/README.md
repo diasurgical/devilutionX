@@ -47,7 +47,13 @@ You can also see the segmenter output for a given string like this:
 tools/segmenter/segment_zh.py --debug '返回到 {:d} 层'
 ```
 ```
-返回|到| |{|:d}| |层
+返回｜到 {:d} 层
+```
+
+When inspecting the diffs, you can use `sed` to display the segments, e.g.:
+
+```bash
+git diff --color | sed "s/$(echo -ne '\u200B')/｜/g"
 ```
 
 [ZWSP]: https://en.wikipedia.org/wiki/Zero-width_space
