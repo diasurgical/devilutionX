@@ -1,19 +1,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-10-31 23:17+0100\n"
+"POT-Creation-Date: 2021-11-19 03:42+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
-"PO-Revision-Date: \n"
-"Language-Team: \n"
-"Last-Translator: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: ja\n"
 "X-Poedit-SearchPath-0: Source\n"
 
 #: Source/DiabloUI/credits_lines.cpp:7
@@ -390,8 +390,8 @@ msgstr "クライアント - サーバー (​TCP​)"
 msgid "Loopback"
 msgstr "ループ​バック"
 
-#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:484
-#: Source/DiabloUI/selgame.cpp:505
+#: Source/DiabloUI/selconn.cpp:53 Source/DiabloUI/selgame.cpp:489
+#: Source/DiabloUI/selgame.cpp:510
 msgid "Multi Player Game"
 msgstr "マルチ​プレイヤー​ゲーム"
 
@@ -413,7 +413,8 @@ msgstr "ゲートウェイ​の​変更"
 
 #: Source/DiabloUI/selconn.cpp:107
 msgid "All computers must be connected to a TCP-compatible network."
-msgstr "すべて​の​コンピューター​が​TCP​対応​の​ネットワーク​に​接続​さ​れ​て​いる​必要​が​あり​ます。"
+msgstr ""
+"すべて​の​コンピューター​が​TCP​対応​の​ネットワーク​に​接続​さ​れ​て​いる​必要​が​あり​ます。"
 
 #: Source/DiabloUI/selconn.cpp:111
 msgid "All computers must be connected to the internet."
@@ -462,15 +463,16 @@ msgstr "お​好み​の​難易度​を​設定​し​て、新しい​
 msgid ""
 "Create a new public game that anyone can join with a difficulty setting of "
 "your choice."
-msgstr "誰​で​も​参加​できる​新しい​パブリック​ゲーム​を​作成​し、お​好み​の​難易度​を​設定​し​ます。"
+msgstr ""
+"誰​で​も​参加​できる​新しい​パブリック​ゲーム​を​作成​し、お​好み​の​難易度​を​設定​し​ます。"
 
 #: Source/DiabloUI/selgame.cpp:128
 msgid ""
 "Enter an IP or a hostname and join a game already in progress at that "
 "address."
 msgstr ""
-"IP​や​ホスト​名​を​入力​する​と、その​アドレス​で​すでに​行わ​れ​て​いる​ゲーム​に​参加​する​こと​が​で"
-"き​ます。"
+"IP​や​ホスト​名​を​入力​する​と、その​アドレス​で​すでに​行わ​れ​て​いる​ゲーム​に​参加​する​こ"
+"と​が​でき​ます。"
 
 #: Source/DiabloUI/selgame.cpp:131
 msgid "Join the public game already in progress at this address."
@@ -519,8 +521,8 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "ナイトメア​の​難易度​\n"
-"​迷宮​の​住人​たち​は​さらに​強化​さ​れ、より​大きな​挑戦​と​なる​でしょう。経験​豊富​な​キャラクター​に​の"
-"み​お勧め​です。"
+"​迷宮​の​住人​たち​は​さらに​強化​さ​れ、より​大きな​挑戦​と​なる​でしょう。経験​豊富​な​キャ"
+"ラクター​に​のみ​お勧め​です。"
 
 #: Source/DiabloUI/selgame.cpp:248
 msgid ""
@@ -529,24 +531,24 @@ msgid ""
 "Hell. Only the most experienced characters should venture in this realm."
 msgstr ""
 "ヘル​の​難易度​\n"
-"​地獄​へ​の​入り口​に​は、地下​世界​の​最強​の​生物​が​潜ん​で​い​ます。経験​豊富​な​キャラクター​だけ​が"
-"、この​領域​に​足​を​踏み入れる​こと​が​でき​ます。"
+"​地獄​へ​の​入り口​に​は、地下​世界​の​最強​の​生物​が​潜ん​で​い​ます。経験​豊富​な​キャラク"
+"ター​だけ​が、この​領域​に​足​を​踏み入れる​こと​が​でき​ます。"
 
 #: Source/DiabloUI/selgame.cpp:264
 msgid ""
 "Your character must reach level 20 before you can enter a multiplayer game "
 "of Nightmare difficulty."
 msgstr ""
-"キャラクター​の​レベル​が​20​に​達し​て​い​ない​と、ナイトメア​難易度​の​マルチ​プレイヤー​ゲーム​に​参加​"
-"でき​ませ​ん。"
+"キャラクター​の​レベル​が​20​に​達し​て​い​ない​と、ナイトメア​難易度​の​マルチ​プレイヤー​"
+"ゲーム​に​参加​でき​ませ​ん。"
 
 #: Source/DiabloUI/selgame.cpp:266
 msgid ""
 "Your character must reach level 30 before you can enter a multiplayer game "
 "of Hell difficulty."
 msgstr ""
-"キャラクター​の​レベル​が​30​に​なる​と、ヘル​難易度​の​マルチ​プレイヤー​ゲーム​に​参加​できる​よう​に​な"
-"り​ます。"
+"キャラクター​の​レベル​が​30​に​なる​と、ヘル​難易度​の​マルチ​プレイヤー​ゲーム​に​参加​で"
+"きる​よう​に​なり​ます。"
 
 #: Source/DiabloUI/selgame.cpp:342
 msgid "Select Game Speed"
@@ -579,8 +581,8 @@ msgid ""
 "greater challenge. This is recommended for experienced characters only."
 msgstr ""
 "高速​\n"
-"​迷宮​の​住人​たち​は、より​速く、より​大きな​挑戦​と​なる​でしょう。経験​豊富​な​キャラクター​に​のみ​お勧め"
-"​です。"
+"​迷宮​の​住人​たち​は、より​速く、より​大きな​挑戦​と​なる​でしょう。経験​豊富​な​キャラク"
+"ター​に​のみ​お勧め​です。"
 
 #: Source/DiabloUI/selgame.cpp:373
 msgid ""
@@ -589,8 +591,8 @@ msgid ""
 "Only an experienced champion should try their luck at this speed."
 msgstr ""
 "超​高速​\n"
-"​ダンジョン​内​の​ほとんど​の​モンスター​は、これ​まで​以上​に​素早く​あなた​を​探し出し​ます。経験​豊富​な​"
-"チャンピオン​だけ​が、この​スピード​で​運​を​試す​こと​が​でき​ます。"
+"​ダンジョン​内​の​ほとんど​の​モンスター​は、これ​まで​以上​に​素早く​あなた​を​探し出し​ま"
+"す。経験​豊富​な​チャンピオン​だけ​が、この​スピード​で​運​を​試す​こと​が​でき​ます。"
 
 #: Source/DiabloUI/selgame.cpp:377
 msgid ""
@@ -599,8 +601,8 @@ msgid ""
 "true speed demon should enter at this pace."
 msgstr ""
 "神速​\n"
-"​冥界​の​手下​たち​は、迷う​こと​なく​攻撃​を​仕掛け​て​くる。この​ペース​で​進入​する​の​は、真​の​スピー"
-"ド​・​デーモン​だけ​に​し​て​ください。"
+"​冥界​の​手下​たち​は、迷う​こと​なく​攻撃​を​仕掛け​て​くる。この​ペース​で​進入​する​の​は、"
+"真​の​スピード​・​デーモン​だけ​に​し​て​ください。"
 
 #: Source/DiabloUI/selgame.cpp:420 Source/DiabloUI/selgame.cpp:425
 msgid "Enter Password"
@@ -677,8 +679,8 @@ msgid ""
 "The Rogue and Sorcerer are only available in the full retail version of "
 "Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"ローグ​と​ソーサラー​は、ディアブロ​の​製品​版​で​のみ​使用​可能​です。ご​購入​は https://www.gog"
-".com/game/diablo を​ご覧​ください。"
+"ローグ​と​ソーサラー​は、ディアブロ​の​製品​版​で​のみ​使用​可能​です。ご​購入​は https://"
+"www.gog.com/game/diablo を​ご覧​ください。"
 
 #: Source/DiabloUI/selhero.cpp:275 Source/DiabloUI/selhero.cpp:278
 msgid "Enter Name"
@@ -688,7 +690,8 @@ msgstr "名前​を​入力"
 msgid ""
 "Invalid name. A name cannot contain spaces, reserved characters, or reserved "
 "words.\n"
-msgstr "名前​が​無効​です。名前​に​スペース、予約​文字、予約​語​を​含む​こと​は​でき​ませ​ん。\n"
+msgstr ""
+"名前​が​無効​です。名前​に​スペース、予約​文字、予約​語​を​含む​こと​は​でき​ませ​ん。\n"
 
 #. TRANSLATORS: Error Message
 #: Source/DiabloUI/selhero.cpp:314
@@ -761,8 +764,9 @@ msgid ""
 "community where we talk about things related to Diablo, and the Hellfire "
 "expansion."
 msgstr ""
-"私たち​は​Discord.gg/YQKCAYQ​で​チャット​サーバー​を​管理​し​て​い​ます。リンク​を​たどっ​て​"
-"コミュニティ​に​参加​し、Diablo​や​Hellfire​エクスパンション​に​関する​こと​を​話し​ましょう。"
+"私たち​は​Discord.gg/YQKCAYQ​で​チャット​サーバー​を​管理​し​て​い​ます。リンク​を​たどっ​"
+"て​コミュニティ​に​参加​し、Diablo​や​Hellfire​エクスパンション​に​関する​こと​を​話し​ま"
+"しょう。"
 
 #: Source/DiabloUI/support_lines.cpp:10
 msgid ""
@@ -771,10 +775,10 @@ msgid ""
 "serve you, please be sure to include the version number, operating system, "
 "and the nature of the problem."
 msgstr ""
-"DevilutionX​は​Diasurgical​に​よっ​て​管理​さ​れ​て​い​ます。問題​や​バグ​は​この​アドレ"
-"ス​で​報告​する​こと​が​でき​ます​： https://github.com/diasurgical/devilutio"
-"nX より​良い​サービス​を​提供​する​ため​に、バージョン​番号、オペレーティングシステム、問題​の​内容​を​必ず​明"
-"記​し​て​ください。"
+"DevilutionX​は​Diasurgical​に​よっ​て​管理​さ​れ​て​い​ます。問題​や​バグ​は​この​アドレス​で​"
+"報告​する​こと​が​でき​ます​： https://github.com/diasurgical/devilutionX より​良い​"
+"サービス​を​提供​する​ため​に、バージョン​番号、オペレーティングシステム、問題​の​内"
+"容​を​必ず​明記​し​て​ください。"
 
 #: Source/DiabloUI/support_lines.cpp:13
 msgid "Disclaimer:"
@@ -788,11 +792,11 @@ msgid ""
 "DevilutionX should be directed to Diasurgical, not to Blizzard Entertainment "
 "or GOG.com."
 msgstr ""
-"\tDevilutionX​は、Blizzard Entertainment​および​GOG.com​に​よっ​て​サポート​"
-"また​は​メンテナンス​さ​れ​て​い​ませ​ん。Blizzard Entertainment​および​GOG.com​の​い"
-"ずれ​も、DevilutionX​の​品質​や​互換性​を​テスト​また​は​認定​し​て​い​ませ​ん。Devilution"
-"X​に​関する​すべて​の​お​問い合わせ​は、Blizzard Entertainment​や​GOG.com​で​は​なく"
-"、Diasurgical​に​お​願い​し​ます。"
+"\tDevilutionX​は、Blizzard Entertainment​および​GOG.com​に​よっ​て​サポート​また​は​メ"
+"ンテナンス​さ​れ​て​い​ませ​ん。Blizzard Entertainment​および​GOG.com​の​いずれ​も、"
+"DevilutionX​の​品質​や​互換性​を​テスト​また​は​認定​し​て​い​ませ​ん。DevilutionX​に​関する​"
+"すべて​の​お​問い合わせ​は、Blizzard Entertainment​や​GOG.com​で​は​なく、Diasurgical​"
+"に​お​願い​し​ます。"
 
 #: Source/DiabloUI/support_lines.cpp:17
 msgid ""
@@ -801,21 +805,21 @@ msgid ""
 "CC-BY 4.0. The port also makes use of SDL which is licensed under the zlib-"
 "license. See the ReadMe for further details."
 msgstr ""
-"\t​この​移植​版​で​は、SIL Open Font License​に​基づい​て​ライセンス​さ​れ​た​Charis"
-"SILB、Unifont、Noto、および​CC-BY 4.0​に​基づい​て​ライセンス​さ​れ​た​Twitmoji​を​"
-"使用​し​て​い​ます。また、この​移植​版​で​は、zlib-license​で​ライセンス​さ​れ​て​いる​SDL​も​"
-"使用​し​て​い​ます。詳細​は、ReadMe​を​ご覧​ください。"
+"\t​この​移植​版​で​は、SIL Open Font License​に​基づい​て​ライセンス​さ​れ​た​CharisSILB、"
+"Unifont、Noto、および​CC-BY 4.0​に​基づい​て​ライセンス​さ​れ​た​Twitmoji​を​使用​し​て​い​"
+"ます。また、この​移植​版​で​は、zlib-license​で​ライセンス​さ​れ​て​いる​SDL​も​使用​し​て​い​"
+"ます。詳細​は、ReadMe​を​ご覧​ください。"
 
 #: Source/DiabloUI/title.cpp:44
 msgid "Copyright © 1996-2001 Blizzard Entertainment"
 msgstr "Copyright © 1996-2001 Blizzard Entertainment"
 
-#: Source/appfat.cpp:37
+#: Source/appfat.cpp:38
 msgid "Error"
 msgstr "Error"
 
 #. TRANSLATORS: Error message that displays relevant information for bug report
-#: Source/appfat.cpp:101
+#: Source/appfat.cpp:102
 msgid ""
 "{:s}\n"
 "\n"
@@ -825,7 +829,7 @@ msgstr ""
 "\n"
 "The error occurred at: {:s} line {:d}"
 
-#: Source/appfat.cpp:116
+#: Source/appfat.cpp:117
 msgid ""
 "Unable to open main data archive ({:s}).\n"
 "\n"
@@ -835,12 +839,12 @@ msgstr ""
 "\n"
 "​ゲーム​フォルダ​に​入っ​て​いる​か​確認​し​て​ください。"
 
-#: Source/appfat.cpp:122
+#: Source/appfat.cpp:123
 msgid "Data File Error"
 msgstr "Data File Error"
 
 #. TRANSLATORS: Error when Program is not allowed to write data
-#: Source/appfat.cpp:130
+#: Source/appfat.cpp:131
 msgid ""
 "Unable to write to location:\n"
 "{:s}"
@@ -848,7 +852,7 @@ msgstr ""
 "Unable to write to location:\n"
 "{:s}"
 
-#: Source/appfat.cpp:132
+#: Source/appfat.cpp:133
 msgid "Read-Only Directory Error"
 msgstr "Read-Only Directory Error"
 
@@ -916,128 +920,128 @@ msgstr "スペル​ブック"
 msgid "Send Message"
 msgstr "メッセージ​送信"
 
-#: Source/control.cpp:764 Source/control.cpp:1572
+#: Source/control.cpp:705 Source/control.cpp:1566
 msgid "Skill"
 msgstr "スキル"
 
-#: Source/control.cpp:765 Source/control.cpp:1226
+#: Source/control.cpp:706 Source/control.cpp:1220
 msgid "{:s} Skill"
 msgstr "{:s} スキル"
 
-#: Source/control.cpp:771
+#: Source/control.cpp:712
 msgid "Spell"
 msgstr "スペル"
 
-#: Source/control.cpp:772 Source/control.cpp:1230
+#: Source/control.cpp:713 Source/control.cpp:1224
 msgid "{:s} Spell"
 msgstr "{:s} スペル"
 
-#: Source/control.cpp:774
+#: Source/control.cpp:715
 msgid "Damages undead only"
 msgstr "アンデッド​系​に​のみ​ダメージ"
 
-#: Source/control.cpp:778 Source/control.cpp:1234 Source/control.cpp:1596
+#: Source/control.cpp:719 Source/control.cpp:1228 Source/control.cpp:1590
 msgid "Spell Level 0 - Unusable"
 msgstr "スペル​レベル 0 - 使え​ない"
 
-#: Source/control.cpp:780 Source/control.cpp:1236 Source/control.cpp:1598
+#: Source/control.cpp:721 Source/control.cpp:1230 Source/control.cpp:1592
 msgid "Spell Level {:d}"
 msgstr "スペル​レベル {:d}"
 
-#: Source/control.cpp:787
+#: Source/control.cpp:728
 msgid "Scroll"
 msgstr "スクロール"
 
-#: Source/control.cpp:788 Source/control.cpp:1240
+#: Source/control.cpp:729 Source/control.cpp:1234
 msgid "Scroll of {:s}"
 msgstr "{:s}​の​スクロール"
 
-#: Source/control.cpp:793 Source/control.cpp:1246
+#: Source/control.cpp:734 Source/control.cpp:1240
 msgid "{:d} Scroll"
 msgid_plural "{:d} Scrolls"
 msgstr[0] "{:d} スクロール"
 
-#: Source/control.cpp:800 Source/itemdat.cpp:167 Source/itemdat.cpp:168
+#: Source/control.cpp:741 Source/itemdat.cpp:167 Source/itemdat.cpp:168
 #: Source/itemdat.cpp:169 Source/itemdat.cpp:170 Source/itemdat.cpp:171
 msgid "Staff"
 msgstr "スタッフ"
 
-#: Source/control.cpp:801 Source/control.cpp:1250 Source/items.cpp:1317
+#: Source/control.cpp:742 Source/control.cpp:1244 Source/items.cpp:1317
 msgid "Staff of {:s}"
 msgstr "{:s}​・​スタッフ"
 
-#: Source/control.cpp:803 Source/control.cpp:1252
+#: Source/control.cpp:744 Source/control.cpp:1246
 msgid "{:d} Charge"
 msgid_plural "{:d} Charges"
 msgstr[0] "{:d}チャージ"
 
-#: Source/control.cpp:813
+#: Source/control.cpp:754
 msgid "Spell Hotkey {:s}"
 msgstr "スペルホットキー {:s}"
 
-#: Source/control.cpp:1203
+#: Source/control.cpp:1197
 msgid "Player friendly"
 msgstr "プレイヤー​は​味方"
 
-#: Source/control.cpp:1205
+#: Source/control.cpp:1199
 msgid "Player attack"
 msgstr "プレイヤー​の​攻撃"
 
-#: Source/control.cpp:1208
+#: Source/control.cpp:1202
 msgid "Hotkey: {:s}"
 msgstr "ホットキー: {:s}"
 
-#: Source/control.cpp:1216
+#: Source/control.cpp:1210
 msgid "Select current spell button"
 msgstr "正しい​呪文​ボタン​を​選択​し​て​ください"
 
-#: Source/control.cpp:1219
+#: Source/control.cpp:1213
 msgid "Hotkey: 's'"
 msgstr "ホットキー: ’s’"
 
-#: Source/control.cpp:1374 Source/inv.cpp:1992 Source/items.cpp:3739
+#: Source/control.cpp:1368 Source/inv.cpp:1979 Source/items.cpp:3729
 msgid "{:d} gold piece"
 msgid_plural "{:d} gold pieces"
 msgstr[0] "{:d} 金魂"
 
-#: Source/control.cpp:1377
+#: Source/control.cpp:1371
 msgid "Requirements not met"
 msgstr "能力​値​が​不足​し​て​い​ます"
 
-#: Source/control.cpp:1413
+#: Source/control.cpp:1407
 msgid "{:s}, Level: {:d}"
 msgstr "{:s}, Level: {:d}"
 
-#: Source/control.cpp:1415
+#: Source/control.cpp:1409
 msgid "Hit Points {:d} of {:d}"
 msgstr "ヒット​ポイント: {:d}/{:d}"
 
-#: Source/control.cpp:1442
+#: Source/control.cpp:1436
 msgid "Level Up"
 msgstr "レベルアップ"
 
-#: Source/control.cpp:1576
+#: Source/control.cpp:1570
 msgid "Staff ({:d} charge)"
 msgid_plural "Staff ({:d} charges)"
 msgstr[0] "スタッフ ({:d} チェージ)"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1586
+#: Source/control.cpp:1580
 msgid "Mana: {:d}  Dam: {:d} - {:d}"
 msgstr "マナ: {:d}  ダメージ: {:d} - {:d}"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1588
+#: Source/control.cpp:1582
 msgid "Mana: {:d}   Dam: n/a"
 msgstr "マナ: {:d}   ダメージ: -"
 
 #. TRANSLATORS: Dam refers to damage. UI constrains, keep short please.
-#: Source/control.cpp:1591
+#: Source/control.cpp:1585
 msgid "Mana: {:d}  Dam: 1/3 tgt hp"
 msgstr "マナ: {:d}  ダメージ: 1/3 ターゲット​HP"
 
 #. TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.
-#: Source/control.cpp:1649
+#: Source/control.cpp:1643
 msgid "You have {:d} gold piece. How many do you want to remove?"
 msgid_plural "You have {:d} gold pieces. How many do you want to remove?"
 msgstr[0] "あなたは{:d}ゴールドを持っています。何枚削除しますか？"
@@ -1242,7 +1246,7 @@ msgstr "店​で"
 msgid "{:s}, version = {:s}, mode = {:s}"
 msgstr "{:s}, version = {:s}, mode = {:s}"
 
-#: Source/dvlnet/loopback.cpp:111
+#: Source/dvlnet/loopback.cpp:113
 msgid "loopback"
 msgstr "loopback"
 
@@ -1636,15 +1640,17 @@ msgstr "Shift + マウス​の​左​ボタン。動か​ず​に​攻撃"
 
 #: Source/help.cpp:43
 msgid "Shift + Left Mouse Button (on character screen): Assign all stat points"
-msgstr "Shift + 左​マウス​ボタン​（​キャラクター​画面​上​）。すべて​の​ステータス​ポイント​を​割り当てる"
+msgstr ""
+"Shift + 左​マウス​ボタン​（​キャラクター​画面​上​）。すべて​の​ステータス​ポイント​を​割"
+"り当てる"
 
 #: Source/help.cpp:44
 msgid ""
 "Shift + Left Mouse Button (on inventory): Move item to belt or equip/unequip "
 "item"
 msgstr ""
-"Shift + 左​マウス​ボタン​（​インベントリ​上​）。アイテム​の​ベルト​へ​の​移動、また​は​アイテム​の​装備"
-"​・​非​装備"
+"Shift + 左​マウス​ボタン​（​インベントリ​上​）。アイテム​の​ベルト​へ​の​移動、また​は​ア"
+"イテム​の​装備​・​非​装備"
 
 #: Source/help.cpp:45
 msgid "Shift + Left Mouse Button (on belt): Move item to inventory"
@@ -1658,7 +1664,9 @@ msgstr "$​移動:"
 msgid ""
 "If you hold the mouse button down while moving, the character will continue "
 "to move in that direction."
-msgstr "移動中​に​マウス​ボタン​を​押し​た​まま​に​する​と、キャラクター​は​その​方向​に​移動​し​続け​ます。"
+msgstr ""
+"移動中​に​マウス​ボタン​を​押し​た​まま​に​する​と、キャラクター​は​その​方向​に​移動​し​続け​"
+"ます。"
 
 #: Source/help.cpp:51
 msgid "$Combat:"
@@ -1668,7 +1676,9 @@ msgstr "$​戦闘:"
 msgid ""
 "Holding down the shift key and then left-clicking allows the character to "
 "attack without moving."
-msgstr "シフトキー​を​押し​ながら​左​クリック​を​する​と、キャラクター​が​動か​ず​に​攻撃​する​こと​が​でき​ます。"
+msgstr ""
+"シフトキー​を​押し​ながら​左​クリック​を​する​と、キャラクター​が​動か​ず​に​攻撃​する​こと​"
+"が​でき​ます。"
 
 #: Source/help.cpp:55
 msgid "$Auto-map:"
@@ -1680,9 +1690,9 @@ msgid ""
 "press 'TAB' on the keyboard. Zooming in and out of the map is done with the "
 "+ and - keys. Scrolling the map uses the arrow keys."
 msgstr ""
-"オート​マップ​に​アクセス​する​に​は、情報​バー​の​「​MAP​」​ボタン​を​クリック​する​か、キーボード​の​「"
-"​TAB​」​を​押し​ます。地図​の​拡大​・​縮小​は​＋​キー​と​-​キー​で​行い​ます。地図​の​スクロール​は、"
-"矢印​キー​で​行い​ます。"
+"オート​マップ​に​アクセス​する​に​は、情報​バー​の​「​MAP​」​ボタン​を​クリック​する​か、キー"
+"ボード​の​「​TAB​」​を​押し​ます。地図​の​拡大​・​縮小​は​＋​キー​と​-​キー​で​行い​ます。地図​の​"
+"スクロール​は、矢印​キー​で​行い​ます。"
 
 #: Source/help.cpp:61
 msgid "$Picking up Objects:"
@@ -1696,13 +1706,15 @@ msgid ""
 "box. Items may be used by either pressing the corresponding number or right-"
 "clicking on the item."
 msgstr ""
-"ポーション​や​巻物​など、サイズ​の​小さい​使用​可能​な​アイテム​は、インターフェイスバー​の​上部​に​ある​「​ベ"
-"ルト​」​に​自動的​に​配置​さ​れ​ます。ベルト​に​アイテム​を​入れる​と、その​ボックス​に​小さな​数字​が​表示"
-"​さ​れ​ます。アイテム​は、対応​する​番号​を​押す​か、アイテム​上​で​右​クリック​する​こと​で​使用​でき​ます"
-"。"
+"ポーション​や​巻物​など、サイズ​の​小さい​使用​可能​な​アイテム​は、インターフェイス"
+"バー​の​上部​に​ある​「​ベルト​」​に​自動的​に​配置​さ​れ​ます。ベルト​に​アイテム​を​入れる​"
+"と、その​ボックス​に​小さな​数字​が​表示​さ​れ​ます。アイテム​は、対応​する​番号​を​押す​"
+"か、アイテム​上​で​右​クリック​する​こと​で​使用​でき​ます。"
 
 #: Source/help.cpp:68
-msgid "$Gold"
+#, fuzzy
+#| msgid "$Gold"
+msgid "$Gold:"
 msgstr "$​ゴールド"
 
 #: Source/help.cpp:69
@@ -1710,8 +1722,8 @@ msgid ""
 "You can select a specific amount of gold to drop by right-clicking on a pile "
 "of gold in your inventory."
 msgstr ""
-"インベントリ​内​の​ゴールド​の​山​を​右​クリック​する​と、ドロップ​する​ゴールド​の​量​を​指定​する​こと​が"
-"​でき​ます。"
+"インベントリ​内​の​ゴールド​の​山​を​右​クリック​する​と、ドロップ​する​ゴールド​の​量​を​指"
+"定​する​こと​が​でき​ます。"
 
 #: Source/help.cpp:72
 msgid "$Skills & Spells:"
@@ -1725,13 +1737,15 @@ msgid ""
 "will ready the spell. A readied spell may be cast by simply right-clicking "
 "in the play area."
 msgstr ""
-"インターフェースバー​の​「​呪文​」​ボタン​を​左​クリック​する​と、自分​の​スキル​や​呪文​の​リスト​に​アクセ"
-"ス​でき​ます。覚え​て​いる​呪文​や​杖​で​使える​呪文​は​ここ​に​表示​さ​れ​て​い​ます。唱え​たい​呪文​を"
-"​左​クリック​する​と、その​呪文​を​準備​する​こと​が​でき​ます。準備​さ​れ​た​呪文​は、プレイ​エリア​内​で"
-"​右​クリック​する​だけ​で​唱える​こと​が​でき​ます。"
+"インターフェースバー​の​「​呪文​」​ボタン​を​左​クリック​する​と、自分​の​スキル​や​呪文​の​"
+"リスト​に​アクセス​でき​ます。覚え​て​いる​呪文​や​杖​で​使える​呪文​は​ここ​に​表示​さ​れ​て​い​"
+"ます。唱え​たい​呪文​を​左​クリック​する​と、その​呪文​を​準備​する​こと​が​でき​ます。準備​"
+"さ​れ​た​呪文​は、プレイ​エリア​内​で​右​クリック​する​だけ​で​唱える​こと​が​でき​ます。"
 
 #: Source/help.cpp:79
-msgid "$Using the Speedbook for Spells"
+#, fuzzy
+#| msgid "$Using the Speedbook for Spells"
+msgid "$Using the Speedbook for Spells:"
 msgstr "$​呪文​の​ため​の​スピード​ブック​の​使用"
 
 #: Source/help.cpp:80
@@ -1740,20 +1754,26 @@ msgid ""
 "allows you to select a skill or spell for immediate use. To use a readied "
 "skill or spell, simply right-click in the main play area."
 msgstr ""
-"準備​さ​れ​た​呪文​」​ボタン​を​左​クリック​する​と、「​スピード​ブック​」​が​開き、すぐ​に​使える​スキル​"
-"や​呪文​を​選ぶ​こと​が​でき​ます。準備​し​た​スキル​や​呪文​を​使用​する​に​は、メイン​の​プレイ​エリア​"
-"で​右​クリック​する​だけ​です。"
+"準備​さ​れ​た​呪文​」​ボタン​を​左​クリック​する​と、「​スピード​ブック​」​が​開き、すぐ​に​使"
+"える​スキル​や​呪文​を​選ぶ​こと​が​でき​ます。準備​し​た​スキル​や​呪文​を​使用​する​に​は、メ"
+"イン​の​プレイ​エリア​で​右​クリック​する​だけ​です。"
 
 #: Source/help.cpp:84
+#, fuzzy
+#| msgid ""
+#| "Shift + Left-clicking on the 'select current spell' button will clear the "
+#| "readied spell"
 msgid ""
 "Shift + Left-clicking on the 'select current spell' button will clear the "
-"readied spell"
+"readied spell."
 msgstr ""
-"Shift + 左​クリック​で​「​現在​の​呪文​を​選択​」​ボタン​を​押す​と、準備​し​て​い​た​呪文​が​クリ"
-"ア​さ​れ​ます"
+"Shift + 左​クリック​で​「​現在​の​呪文​を​選択​」​ボタン​を​押す​と、準備​し​て​い​た​呪文​が​ク"
+"リア​さ​れ​ます"
 
 #: Source/help.cpp:86
-msgid "$Setting Spell Hotkeys"
+#, fuzzy
+#| msgid "$Setting Spell Hotkeys"
+msgid "$Setting Spell Hotkeys:"
 msgstr "$​スペルホットキー​の​設定"
 
 #: Source/help.cpp:87
@@ -1762,12 +1782,14 @@ msgid ""
 "opening the 'speedbook' as described in the section above. Press the F5, F6, "
 "F7 or F8 keys after highlighting the spell you wish to assign."
 msgstr ""
-"スキル​や​呪文、巻物​など​の​ホットキー​を​4​つ​まで​割り当てる​こと​が​でき​ます。上​の​セクション​で​説明"
-"​し​た​よう​に、「​スピード​ブック​」​を​開く​こと​から​始め​ます。割り当て​たい​呪文​を​ハイライト​し​た​"
-"後、F5、F6、F7、F8​キー​を​押し​ます。"
+"スキル​や​呪文、巻物​など​の​ホットキー​を​4​つ​まで​割り当てる​こと​が​でき​ます。上​の​セク"
+"ション​で​説明​し​た​よう​に、「​スピード​ブック​」​を​開く​こと​から​始め​ます。割り当て​た"
+"い​呪文​を​ハイライト​し​た​後、F5、F6、F7、F8​キー​を​押し​ます。"
 
 #: Source/help.cpp:92
-msgid "$Spell Books"
+#, fuzzy
+#| msgid "$Spell Books"
+msgid "$Spell Books:"
 msgstr "$​スペル​ブック"
 
 #: Source/help.cpp:93
@@ -1775,8 +1797,8 @@ msgid ""
 "Reading more than one book increases your knowledge of that spell, allowing "
 "you to cast the spell more effectively."
 msgstr ""
-"2​冊​以上​の​本​を​読む​こと​で、その​呪文​の​知識​が​増え、より​効果的​に​呪文​を​唱える​こと​が​でき​"
-"ます。"
+"2​冊​以上​の​本​を​読む​こと​で、その​呪文​の​知識​が​増え、より​効果的​に​呪文​を​唱える​こと​が​"
+"でき​ます。"
 
 #: Source/help.cpp:135
 msgid "Shareware Hellfire Help"
@@ -1798,15 +1820,15 @@ msgstr "ディアブロ ヘルプ"
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "ESC​を​押し​て​終了​する​か、矢印​キー​で​スクロール​し​ます。"
 
-#: Source/init.cpp:206
+#: Source/init.cpp:175
 msgid "diabdat.mpq or spawn.mpq"
 msgstr "diabdat.mpq​また​は​spawn.mpq"
 
-#: Source/init.cpp:226
+#: Source/init.cpp:196
 msgid "Some Hellfire MPQs are missing"
 msgstr "いくつ​か​の​Hellfire MPQ​が​欠落​し​て​い​ます"
 
-#: Source/init.cpp:226
+#: Source/init.cpp:196
 msgid ""
 "Not all Hellfire MPQs were found.\n"
 "Please copy all the hf*.mpq files."
@@ -1814,7 +1836,7 @@ msgstr ""
 "すべて​の​Hellfire MPQ​が​見つから​ない。\n"
 "​すべて​の hf​*​.mpq ファイル​を​コピー​し​て​ください。"
 
-#: Source/init.cpp:234
+#: Source/init.cpp:204
 msgid "Unable to create main window"
 msgstr "Unable to create main window"
 
@@ -2058,7 +2080,7 @@ msgid "Quilted Armor"
 msgstr "キルテッドアーマー"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
-#: Source/itemdat.cpp:77 Source/objects.cpp:5478
+#: Source/itemdat.cpp:77 Source/objects.cpp:5433
 msgid "Armor"
 msgstr "防具"
 
@@ -3812,423 +3834,423 @@ msgid " {:d} Dex"
 msgstr " {:d} Dex"
 
 #. TRANSLATORS: {:s} will be a Character Name
-#: Source/items.cpp:3523 Source/player.cpp:3027
+#: Source/items.cpp:3513 Source/player.cpp:3018
 msgid "Ear of {:s}"
 msgstr "{:s}​の​耳"
 
-#: Source/items.cpp:3818
+#: Source/items.cpp:3808
 msgid "chance to hit: {:+d}%"
 msgstr "命中​率: {:+d}​%"
 
-#: Source/items.cpp:3822
+#: Source/items.cpp:3812
 #, no-c-format
 msgid "{:+d}% damage"
 msgstr "{:+d}​%​ダメージ"
 
-#: Source/items.cpp:3826 Source/items.cpp:4082
+#: Source/items.cpp:3816 Source/items.cpp:4072
 msgid "to hit: {:+d}%, {:+d}% damage"
 msgstr "命中​率:{:+d}​%​, {:+d}​% ダメージ"
 
-#: Source/items.cpp:3830
+#: Source/items.cpp:3820
 #, no-c-format
 msgid "{:+d}% armor"
 msgstr "{:+d}​%​防護​力"
 
-#: Source/items.cpp:3834
+#: Source/items.cpp:3824
 msgid "armor class: {:d}"
 msgstr "防御​力: {:d}"
 
-#: Source/items.cpp:3839 Source/items.cpp:4064
+#: Source/items.cpp:3829 Source/items.cpp:4054
 msgid "Resist Fire: {:+d}%"
 msgstr "耐火​炎: {:+d}​%"
 
-#: Source/items.cpp:3841
+#: Source/items.cpp:3831
 #, no-c-format
 msgid "Resist Fire: 75% MAX"
 msgstr "耐火​炎: 75​% MAX"
 
-#: Source/items.cpp:3846
+#: Source/items.cpp:3836
 msgid "Resist Lightning: {:+d}%"
 msgstr "耐​電撃: {:+d}​%"
 
-#: Source/items.cpp:3848
+#: Source/items.cpp:3838
 #, no-c-format
 msgid "Resist Lightning: 75% MAX"
 msgstr "耐​電撃: 75​% MAX"
 
-#: Source/items.cpp:3853
+#: Source/items.cpp:3843
 msgid "Resist Magic: {:+d}%"
 msgstr "耐​魔法: {:+d}​%"
 
-#: Source/items.cpp:3855
+#: Source/items.cpp:3845
 #, no-c-format
 msgid "Resist Magic: 75% MAX"
 msgstr "耐​魔法: 75​% MAX"
 
-#: Source/items.cpp:3860
+#: Source/items.cpp:3850
 msgid "Resist All: {:+d}%"
 msgstr "全​耐性: {:+d}​%"
 
-#: Source/items.cpp:3862
+#: Source/items.cpp:3852
 #, no-c-format
 msgid "Resist All: 75% MAX"
 msgstr "全​耐性: 75​% MAX"
 
-#: Source/items.cpp:3866
+#: Source/items.cpp:3856
 msgid "spells are increased {:d} level"
 msgid_plural "spells are increased {:d} levels"
 msgstr[0] "全呪文{:d} レベルアップ"
 
-#: Source/items.cpp:3868
+#: Source/items.cpp:3858
 msgid "spells are decreased {:d} level"
 msgid_plural "spells are decreased {:d} levels"
 msgstr[0] "全呪文{:d}レベルダウン"
 
-#: Source/items.cpp:3870
+#: Source/items.cpp:3860
 msgid "spell levels unchanged (?)"
 msgstr "呪文​の​レベル​に​変化​なし​(​?​)"
 
-#: Source/items.cpp:3873
+#: Source/items.cpp:3863
 msgid "Extra charges"
 msgstr "追加​チャージ"
 
-#: Source/items.cpp:3876
+#: Source/items.cpp:3866
 msgid "{:d} {:s} charge"
 msgid_plural "{:d} {:s} charges"
 msgstr[0] "{:d} {:s}チャージ"
 
-#: Source/items.cpp:3880
+#: Source/items.cpp:3870
 msgid "Fire hit damage: {:d}"
 msgstr "追加​火炎​ダメージ:{:d}"
 
-#: Source/items.cpp:3882
+#: Source/items.cpp:3872
 msgid "Fire hit damage: {:d}-{:d}"
 msgstr "追加​火炎​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3886
+#: Source/items.cpp:3876
 msgid "Lightning hit damage: {:d}"
 msgstr "追加​電撃​ダメージ: {:d}"
 
-#: Source/items.cpp:3888
+#: Source/items.cpp:3878
 msgid "Lightning hit damage: {:d}-{:d}"
 msgstr "追加​電撃​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3892
+#: Source/items.cpp:3882
 msgid "{:+d} to strength"
 msgstr "STR{:+d}"
 
-#: Source/items.cpp:3896
+#: Source/items.cpp:3886
 msgid "{:+d} to magic"
 msgstr "MAG{:+d}"
 
-#: Source/items.cpp:3900
+#: Source/items.cpp:3890
 msgid "{:+d} to dexterity"
 msgstr "DEX{:+d}"
 
-#: Source/items.cpp:3904
+#: Source/items.cpp:3894
 msgid "{:+d} to vitality"
 msgstr "VIT{:+d}"
 
-#: Source/items.cpp:3908
+#: Source/items.cpp:3898
 msgid "{:+d} to all attributes"
 msgstr "全​能力​値​{:+d}"
 
-#: Source/items.cpp:3912
+#: Source/items.cpp:3902
 msgid "{:+d} damage from enemies"
 msgstr "敵​から​受ける​ダメージ​{:+d}"
 
-#: Source/items.cpp:3916
+#: Source/items.cpp:3906
 msgid "Hit Points: {:+d}"
 msgstr "ヒット​ポイント: {:+d}"
 
-#: Source/items.cpp:3920
+#: Source/items.cpp:3910
 msgid "Mana: {:+d}"
 msgstr "マナ: {:+d}"
 
-#: Source/items.cpp:3923
+#: Source/items.cpp:3913
 msgid "high durability"
 msgstr "高い​耐久​度"
 
-#: Source/items.cpp:3926
+#: Source/items.cpp:3916
 msgid "decreased durability"
 msgstr "低い​耐久​度"
 
-#: Source/items.cpp:3929
+#: Source/items.cpp:3919
 msgid "indestructible"
 msgstr "壊れ​ない"
 
-#: Source/items.cpp:3932
+#: Source/items.cpp:3922
 #, no-c-format
 msgid "+{:d}% light radius"
 msgstr "視界​+{:d}​%"
 
-#: Source/items.cpp:3935
+#: Source/items.cpp:3925
 #, no-c-format
 msgid "-{:d}% light radius"
 msgstr "視界​-{:d}​%"
 
-#: Source/items.cpp:3938
+#: Source/items.cpp:3928
 msgid "multiple arrows per shot"
 msgstr "一回​の​射撃​で​複数​の​矢​を​放つ"
 
-#: Source/items.cpp:3942
+#: Source/items.cpp:3932
 msgid "fire arrows damage: {:d}"
 msgstr "火炎​矢​の​ダメージ: {:d}"
 
-#: Source/items.cpp:3944
+#: Source/items.cpp:3934
 msgid "fire arrows damage: {:d}-{:d}"
 msgstr "火炎​矢​の​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3948
+#: Source/items.cpp:3938
 msgid "lightning arrows damage {:d}"
 msgstr "電撃​矢​の​ダメージ: {:d}"
 
-#: Source/items.cpp:3950
+#: Source/items.cpp:3940
 msgid "lightning arrows damage {:d}-{:d}"
 msgstr "電撃​矢​の​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3954
+#: Source/items.cpp:3944
 msgid "fireball damage: {:d}"
 msgstr "ファイヤーボールダメージ: {:d}"
 
-#: Source/items.cpp:3956
+#: Source/items.cpp:3946
 msgid "fireball damage: {:d}-{:d}"
 msgstr "ファイヤーボールダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:3959
+#: Source/items.cpp:3949
 msgid "attacker takes 1-3 damage"
 msgstr "ダメージ​時​に​反撃:1-3"
 
-#: Source/items.cpp:3962
+#: Source/items.cpp:3952
 msgid "user loses all mana"
 msgstr "全て​の​マナ​を​失う"
 
-#: Source/items.cpp:3965
+#: Source/items.cpp:3955
 msgid "you can't heal"
 msgstr "ライフ​を​回復​でき​ない"
 
-#: Source/items.cpp:3968
+#: Source/items.cpp:3958
 msgid "absorbs half of trap damage"
 msgstr "罠​に​よる​ダメージ​半減"
 
-#: Source/items.cpp:3971
+#: Source/items.cpp:3961
 msgid "knocks target back"
 msgstr "ノック​バック​効果"
 
-#: Source/items.cpp:3974
+#: Source/items.cpp:3964
 #, no-c-format
 msgid "+200% damage vs. demons"
 msgstr "対​悪魔​族​ダメージ​+200​%"
 
-#: Source/items.cpp:3977
+#: Source/items.cpp:3967
 msgid "All Resistance equals 0"
 msgstr "全て​の​耐性​を​失う"
 
-#: Source/items.cpp:3980
+#: Source/items.cpp:3970
 msgid "hit monster doesn't heal"
 msgstr "攻撃​を​受け​た​モンスター​は​回復​でき​ない"
 
-#: Source/items.cpp:3984
+#: Source/items.cpp:3974
 #, no-c-format
 msgid "hit steals 3% mana"
 msgstr "マナ​を​3​%​吸収"
 
-#: Source/items.cpp:3986
+#: Source/items.cpp:3976
 #, no-c-format
 msgid "hit steals 5% mana"
 msgstr "マナ​を​5​%​吸収"
 
-#: Source/items.cpp:3990
+#: Source/items.cpp:3980
 #, no-c-format
 msgid "hit steals 3% life"
 msgstr "ライフ​を​3​%​吸収"
 
-#: Source/items.cpp:3992
+#: Source/items.cpp:3982
 #, no-c-format
 msgid "hit steals 5% life"
 msgstr "ライフ​を​5​%​吸収"
 
-#: Source/items.cpp:3995
+#: Source/items.cpp:3985
 msgid "penetrates target's armor"
 msgstr "ターゲット​の​アーマー​を​貫通"
 
-#: Source/items.cpp:3999
+#: Source/items.cpp:3989
 msgid "quick attack"
 msgstr "速い​攻撃"
 
-#: Source/items.cpp:4001
+#: Source/items.cpp:3991
 msgid "fast attack"
 msgstr "高速​攻撃"
 
-#: Source/items.cpp:4003
+#: Source/items.cpp:3993
 msgid "faster attack"
 msgstr "超​高速​攻撃"
 
-#: Source/items.cpp:4005
+#: Source/items.cpp:3995
 msgid "fastest attack"
 msgstr "神速​攻撃"
 
-#: Source/items.cpp:4009
+#: Source/items.cpp:3999
 msgid "fast hit recovery"
 msgstr "高速​体勢​回復"
 
-#: Source/items.cpp:4011
+#: Source/items.cpp:4001
 msgid "faster hit recovery"
 msgstr "早い​体勢​回復"
 
-#: Source/items.cpp:4013
+#: Source/items.cpp:4003
 msgid "fastest hit recovery"
 msgstr "神速​体勢​回復"
 
-#: Source/items.cpp:4016
+#: Source/items.cpp:4006
 msgid "fast block"
 msgstr "早い​防御"
 
-#: Source/items.cpp:4019
+#: Source/items.cpp:4009
 msgid "adds {:d} point to damage"
 msgid_plural "adds {:d} points to damage"
 msgstr[0] "追加ダメージ: {:d}"
 
-#: Source/items.cpp:4022
+#: Source/items.cpp:4012
 msgid "fires random speed arrows"
 msgstr "発射​間隔​が​一定​で​ない"
 
-#: Source/items.cpp:4025
+#: Source/items.cpp:4015
 msgid "unusual item damage"
 msgstr "魔法​の​アイテム​に​ダメージ"
 
-#: Source/items.cpp:4028
+#: Source/items.cpp:4018
 msgid "altered durability"
 msgstr "特殊​な​耐久​度"
 
-#: Source/items.cpp:4031
+#: Source/items.cpp:4021
 msgid "Faster attack swing"
 msgstr "早い​攻撃​準備"
 
-#: Source/items.cpp:4034
+#: Source/items.cpp:4024
 msgid "one handed sword"
 msgstr "片手​持ち​ソード"
 
-#: Source/items.cpp:4037
+#: Source/items.cpp:4027
 msgid "constantly lose hit points"
 msgstr "少し​ずつ​ライフ​を​失う"
 
-#: Source/items.cpp:4040
+#: Source/items.cpp:4030
 msgid "life stealing"
 msgstr "直接​攻撃​で​ライフ​吸収"
 
-#: Source/items.cpp:4043
+#: Source/items.cpp:4033
 msgid "no strength requirement"
 msgstr "筋力​を​必要​と​し​ない"
 
-#: Source/items.cpp:4046
+#: Source/items.cpp:4036
 msgid "see with infravision"
 msgstr "インフラ​ビジョン​の​効果"
 
-#: Source/items.cpp:4053
+#: Source/items.cpp:4043
 msgid "lightning damage: {:d}"
 msgstr "電撃​ダメージ: {:d}"
 
-#: Source/items.cpp:4055
+#: Source/items.cpp:4045
 msgid "lightning damage: {:d}-{:d}"
 msgstr "電撃​ダメージ: {:d}-{:d}"
 
-#: Source/items.cpp:4058
+#: Source/items.cpp:4048
 msgid "charged bolts on hits"
 msgstr "チャージド​ボルト"
 
-#: Source/items.cpp:4067
+#: Source/items.cpp:4057
 msgid "occasional triple damage"
 msgstr "たまに​3​倍​の​ダメージ"
 
-#: Source/items.cpp:4070
+#: Source/items.cpp:4060
 #, no-c-format
 msgid "decaying {:+d}% damage"
 msgstr "崩壊​{:+d}​%​ダメージ"
 
-#: Source/items.cpp:4073
+#: Source/items.cpp:4063
 msgid "2x dmg to monst, 1x to you"
 msgstr "モンスター​に​2​倍​の​ダメージ、自分​に​1​倍​の​ダメージ"
 
-#: Source/items.cpp:4076
+#: Source/items.cpp:4066
 #, no-c-format
 msgid "Random 0 - 500% damage"
 msgstr "ランダム​に​0​～​500​％​の​ダメージ"
 
-#: Source/items.cpp:4079
+#: Source/items.cpp:4069
 #, no-c-format
 msgid "low dur, {:+d}% damage"
 msgstr "低い​耐久性、{:+d}​%​の​ダメージ"
 
-#: Source/items.cpp:4085
+#: Source/items.cpp:4075
 msgid "extra AC vs demons"
 msgstr "対​悪魔​族​の​追加​AC"
 
-#: Source/items.cpp:4088
+#: Source/items.cpp:4078
 msgid "extra AC vs undead"
 msgstr "対​アンデッド​用​の​追加​AC"
 
-#: Source/items.cpp:4091
+#: Source/items.cpp:4081
 #, no-c-format
 msgid "50% Mana moved to Health"
 msgstr "50​%​の​マナ​を​ヘルス​に​移動"
 
-#: Source/items.cpp:4094
+#: Source/items.cpp:4084
 #, no-c-format
 msgid "40% Health moved to Mana"
 msgstr "40​%​の​ヘルス​を​マナ​に​移動"
 
-#: Source/items.cpp:4097
+#: Source/items.cpp:4087
 msgid "Another ability (NW)"
 msgstr "別​の​能力​（​NW​）"
 
-#: Source/items.cpp:4134 Source/items.cpp:4181
+#: Source/items.cpp:4124 Source/items.cpp:4171
 msgid "damage: {:d}  Indestructible"
 msgstr "ダメージ:{:d}  壊れ​ない"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4136 Source/items.cpp:4183
+#: Source/items.cpp:4126 Source/items.cpp:4173
 msgid "damage: {:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
 
-#: Source/items.cpp:4139 Source/items.cpp:4186
+#: Source/items.cpp:4129 Source/items.cpp:4176
 msgid "damage: {:d}-{:d}  Indestructible"
 msgstr "ダメージ: {:d}-{:d}  壊れ​ない"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4141 Source/items.cpp:4188
+#: Source/items.cpp:4131 Source/items.cpp:4178
 msgid "damage: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
 
-#: Source/items.cpp:4147 Source/items.cpp:4200
+#: Source/items.cpp:4137 Source/items.cpp:4190
 msgid "armor: {:d}  Indestructible"
 msgstr "防御​力:{:d}  壊れ​ない"
 
 #. TRANSLATORS: Dur: is durability
-#: Source/items.cpp:4149 Source/items.cpp:4202
+#: Source/items.cpp:4139 Source/items.cpp:4192
 msgid "armor: {:d}  Dur: {:d}/{:d}"
 msgstr "防御​力: {:d}  耐久​度: {:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4154
+#: Source/items.cpp:4144
 msgid "dam: {:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}  耐久​度:{:d}/{:d}"
 
 #. TRANSLATORS: dam: is damage Dur: is durability
-#: Source/items.cpp:4156
+#: Source/items.cpp:4146
 msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr "ダメージ:{:d}-{:d}  耐久​度:{:d}/{:d}"
 
-#: Source/items.cpp:4157 Source/items.cpp:4192 Source/items.cpp:4207
+#: Source/items.cpp:4147 Source/items.cpp:4182 Source/items.cpp:4197
 #: Source/stores.cpp:184
 msgid "Charges: {:d}/{:d}"
 msgstr "チャージ: {:d}/{:d}"
 
-#: Source/items.cpp:4169
+#: Source/items.cpp:4159
 msgid "unique item"
 msgstr "ユニーク​アイテム"
 
-#: Source/items.cpp:4196 Source/items.cpp:4205 Source/items.cpp:4212
+#: Source/items.cpp:4186 Source/items.cpp:4195 Source/items.cpp:4202
 msgid "Not Identified"
 msgstr "未​鑑定"
 
@@ -4258,8 +4280,8 @@ msgid ""
 "The Diablo introduction cinematic is only available in the full retail "
 "version of Diablo. Visit https://www.gog.com/game/diablo to purchase."
 msgstr ""
-"ディアブロ​の​紹介​シネマ​ティック​は、ディアブロ​の​製品​版​で​のみ​見る​こと​が​でき​ます。購入​する​に​は"
-" https://www.gog.com/game/diablo を​ご覧​ください。"
+"ディアブロ​の​紹介​シネマ​ティック​は、ディアブロ​の​製品​版​で​のみ​見る​こと​が​でき​ま"
+"す。購入​する​に​は https://www.gog.com/game/diablo を​ご覧​ください。"
 
 #. TRANSLATORS: Monster Block start
 #. MT_NZOMBIE
@@ -5382,97 +5404,97 @@ msgctxt "monster"
 msgid "Doomlock"
 msgstr "ドゥーム​ロック"
 
-#: Source/monster.cpp:3497
+#: Source/monster.cpp:3479
 msgid "Animal"
 msgstr "アニマル"
 
-#: Source/monster.cpp:3499
+#: Source/monster.cpp:3481
 msgid "Demon"
 msgstr "デーモン"
 
-#: Source/monster.cpp:3501
+#: Source/monster.cpp:3483
 msgid "Undead"
 msgstr "アンデッド"
 
-#: Source/monster.cpp:4632
+#: Source/monster.cpp:4612
 msgid "Type: {:s}  Kills: {:d}"
 msgstr "タイプ: {:s}  殺傷​数: {:d}"
 
-#: Source/monster.cpp:4634
+#: Source/monster.cpp:4614
 msgid "Total kills: {:d}"
 msgstr "殺傷​数: {:d}"
 
-#: Source/monster.cpp:4667
+#: Source/monster.cpp:4647
 msgid "Hit Points: {:d}-{:d}"
 msgstr "ヒット​ポイント: {:d}-{:d}"
 
-#: Source/monster.cpp:4673
+#: Source/monster.cpp:4653
 msgid "No magic resistance"
 msgstr "魔法​耐性​無し"
 
-#: Source/monster.cpp:4677
+#: Source/monster.cpp:4657
 msgid "Resists: "
 msgstr "耐性: "
 
-#: Source/monster.cpp:4679 Source/monster.cpp:4690
+#: Source/monster.cpp:4659 Source/monster.cpp:4671
 msgid "Magic "
 msgstr "魔法 "
 
-#: Source/monster.cpp:4681 Source/monster.cpp:4692
+#: Source/monster.cpp:4661 Source/monster.cpp:4673
 msgid "Fire "
 msgstr "火炎 "
 
-#: Source/monster.cpp:4683 Source/monster.cpp:4694
+#: Source/monster.cpp:4663 Source/monster.cpp:4675
 msgid "Lightning "
 msgstr "ライトニング "
 
-#: Source/monster.cpp:4688
+#: Source/monster.cpp:4669
 msgid "Immune: "
 msgstr "無効: "
 
-#: Source/monster.cpp:4706
+#: Source/monster.cpp:4688
 msgid "Type: {:s}"
 msgstr "タイプ: {:s}"
 
-#: Source/monster.cpp:4712 Source/monster.cpp:4719
+#: Source/monster.cpp:4694 Source/monster.cpp:4701
 msgid "No resistances"
 msgstr "耐性​無し"
 
-#: Source/monster.cpp:4714 Source/monster.cpp:4724
+#: Source/monster.cpp:4696 Source/monster.cpp:4706
 msgid "No Immunities"
 msgstr "無効​無し"
 
-#: Source/monster.cpp:4717
+#: Source/monster.cpp:4699
 msgid "Some Magic Resistances"
 msgstr "魔法​耐性​あり​(​属性​不明​)"
 
-#: Source/monster.cpp:4722
+#: Source/monster.cpp:4704
 msgid "Some Magic Immunities"
 msgstr "魔法​無効化​(​属性​不明​)"
 
-#: Source/msg.cpp:494
+#: Source/msg.cpp:495
 msgid "Trying to drop a floor item?"
 msgstr "フロア​アイテム​を​落とそう​と​し​て​いる​の​か？"
 
-#: Source/msg.cpp:982 Source/msg.cpp:1017 Source/msg.cpp:1048
-#: Source/msg.cpp:1175 Source/msg.cpp:1207 Source/msg.cpp:1239
-#: Source/msg.cpp:1269
+#: Source/msg.cpp:994 Source/msg.cpp:1029 Source/msg.cpp:1060
+#: Source/msg.cpp:1187 Source/msg.cpp:1219 Source/msg.cpp:1251
+#: Source/msg.cpp:1281
 msgid "{:s} has cast an illegal spell."
 msgstr "{:s} が​不正​な​呪文​を​唱え​た。"
 
-#: Source/msg.cpp:1655 Source/multi.cpp:805
+#: Source/msg.cpp:1668 Source/multi.cpp:804
 msgid "Player '{:s}' (level {:d}) just joined the game"
 msgstr "プレイヤー​「​{:s}​」​（​レベル​{:d}​）​が​ゲーム​に​参加​し​まし​た"
 
-#: Source/msg.cpp:1959
+#: Source/msg.cpp:1972
 msgid "Waiting for game data..."
 msgstr "ゲーム​データ​を​待っ​て​い​ます​…"
 
-#: Source/msg.cpp:1967
+#: Source/msg.cpp:1980
 msgid "The game ended"
 msgstr "ゲーム​終了"
 
-#: Source/msg.cpp:1973
+#: Source/msg.cpp:1986
 msgid "Unable to get level data"
 msgstr "Unable to get level data"
 
@@ -5488,7 +5510,7 @@ msgstr "プレイヤー​「​{:s}​」​が​Diablo​を​殺し​て�
 msgid "Player '{:s}' dropped due to timeout"
 msgstr "プレイヤー​「​{:s}​」​が​タイムアウト​で​脱落"
 
-#: Source/multi.cpp:807
+#: Source/multi.cpp:806
 msgid "Player '{:s}' (level {:d}) is already in the game"
 msgstr "プレイヤー​「​{:s}​」​（​レベル​{:d}​）​は​すでに​ゲーム​に​参加​し​て​い​ます"
 
@@ -5698,158 +5720,158 @@ msgstr "ジャーナル: 終焉"
 msgid "A Spellbook"
 msgstr "スペル​ブック"
 
-#: Source/objects.cpp:5384
+#: Source/objects.cpp:5339
 msgid "Crucified Skeleton"
 msgstr "はりつけ​の​スケルトン"
 
-#: Source/objects.cpp:5388
+#: Source/objects.cpp:5343
 msgid "Lever"
 msgstr "レバー"
 
-#: Source/objects.cpp:5397
+#: Source/objects.cpp:5352
 msgid "Open Door"
 msgstr "開い​た​ドア"
 
-#: Source/objects.cpp:5399
+#: Source/objects.cpp:5354
 msgid "Closed Door"
 msgstr "閉じ​た​ドア"
 
-#: Source/objects.cpp:5401
+#: Source/objects.cpp:5356
 msgid "Blocked Door"
 msgstr "閉じ​られ​ない​ドア"
 
-#: Source/objects.cpp:5406
+#: Source/objects.cpp:5361
 msgid "Ancient Tome"
 msgstr "太古​の​書"
 
-#: Source/objects.cpp:5408
+#: Source/objects.cpp:5363
 msgid "Book of Vileness"
 msgstr "外道​の​書"
 
-#: Source/objects.cpp:5413
+#: Source/objects.cpp:5368
 msgid "Skull Lever"
 msgstr "ドクロ​の​レバー"
 
-#: Source/objects.cpp:5416
+#: Source/objects.cpp:5371
 msgid "Mythical Book"
 msgstr "神話​の​書"
 
-#: Source/objects.cpp:5420
+#: Source/objects.cpp:5375
 msgid "Small Chest"
 msgstr "小さな​チェスト"
 
-#: Source/objects.cpp:5424
+#: Source/objects.cpp:5379
 msgid "Chest"
 msgstr "チェスト"
 
-#: Source/objects.cpp:5429
+#: Source/objects.cpp:5384
 msgid "Large Chest"
 msgstr "大きな​チェスト"
 
-#: Source/objects.cpp:5432
+#: Source/objects.cpp:5387
 msgid "Sarcophagus"
 msgstr "棺"
 
-#: Source/objects.cpp:5435
+#: Source/objects.cpp:5390
 msgid "Bookshelf"
 msgstr "読​台"
 
-#: Source/objects.cpp:5439
+#: Source/objects.cpp:5394
 msgid "Bookcase"
 msgstr "本棚"
 
-#: Source/objects.cpp:5444
+#: Source/objects.cpp:5399
 msgid "Pod"
 msgstr "ポッド"
 
-#: Source/objects.cpp:5446
+#: Source/objects.cpp:5401
 msgid "Urn"
 msgstr "Urn"
 
-#: Source/objects.cpp:5448
+#: Source/objects.cpp:5403
 msgid "Barrel"
 msgstr "樽"
 
 #. TRANSLATORS: {:s} will be a name from the Shrine block above
-#: Source/objects.cpp:5452
+#: Source/objects.cpp:5407
 msgid "{:s} Shrine"
 msgstr "{:s} 祭壇"
 
-#: Source/objects.cpp:5456
+#: Source/objects.cpp:5411
 msgid "Skeleton Tome"
 msgstr "スケルトン​の​書"
 
-#: Source/objects.cpp:5459
+#: Source/objects.cpp:5414
 msgid "Library Book"
 msgstr "蔵書"
 
-#: Source/objects.cpp:5462
+#: Source/objects.cpp:5417
 msgid "Blood Fountain"
 msgstr "血色​の​泉"
 
-#: Source/objects.cpp:5465
+#: Source/objects.cpp:5420
 msgid "Decapitated Body"
 msgstr "首​無し​の​死体"
 
-#: Source/objects.cpp:5468
+#: Source/objects.cpp:5423
 msgid "Book of the Blind"
 msgstr "盲目​の​書"
 
-#: Source/objects.cpp:5471
+#: Source/objects.cpp:5426
 msgid "Book of Blood"
 msgstr "血潮​の​書"
 
-#: Source/objects.cpp:5474
+#: Source/objects.cpp:5429
 msgid "Purifying Spring"
 msgstr "清浄​なる​泉"
 
-#: Source/objects.cpp:5481 Source/objects.cpp:5505
+#: Source/objects.cpp:5436 Source/objects.cpp:5460
 msgid "Weapon Rack"
 msgstr "武器​架"
 
-#: Source/objects.cpp:5484
+#: Source/objects.cpp:5439
 msgid "Goat Shrine"
 msgstr "山羊​の​祭壇"
 
-#: Source/objects.cpp:5487
+#: Source/objects.cpp:5442
 msgid "Cauldron"
 msgstr "地獄​の​大釜"
 
-#: Source/objects.cpp:5490
+#: Source/objects.cpp:5445
 msgid "Murky Pool"
 msgstr "濁っ​た​池"
 
-#: Source/objects.cpp:5493
+#: Source/objects.cpp:5448
 msgid "Fountain of Tears"
 msgstr "涙​の​源泉"
 
-#: Source/objects.cpp:5496
+#: Source/objects.cpp:5451
 msgid "Steel Tome"
 msgstr "刀剣​の​書"
 
-#: Source/objects.cpp:5499
+#: Source/objects.cpp:5454
 msgid "Pedestal of Blood"
 msgstr "血​の​台座"
 
-#: Source/objects.cpp:5508
+#: Source/objects.cpp:5463
 msgid "Mushroom Patch"
 msgstr "キノコ​の​群生"
 
-#: Source/objects.cpp:5511
+#: Source/objects.cpp:5466
 msgid "Vile Stand"
 msgstr "忌まわし​き​台座"
 
-#: Source/objects.cpp:5514
+#: Source/objects.cpp:5469
 msgid "Slain Hero"
 msgstr "死​せ​る​勇者"
 
 #. TRANSLATORS: {:s} will either be a chest or a door
-#: Source/objects.cpp:5521
+#: Source/objects.cpp:5476
 msgid "Trapped {:s}"
 msgstr "トラップ​の​掛かっ​た​{:s}"
 
 #. TRANSLATORS: If user enabled diablo.ini setting "Disable Crippling Shrines" is set to 1; also used for Na-Kruls leaver
-#: Source/objects.cpp:5527
+#: Source/objects.cpp:5482
 msgid "{:s} (disabled)"
 msgstr "{:s} (​無効​)"
 
@@ -5967,23 +5989,23 @@ msgstr "呪文"
 msgid "mute"
 msgstr "ミュート"
 
-#: Source/pfile.cpp:260
+#: Source/pfile.cpp:242
 msgid "Failed to open player archive for writing."
 msgstr "Failed to open player archive for writing."
 
-#: Source/pfile.cpp:392
+#: Source/pfile.cpp:377
 msgid "Unable to open archive"
 msgstr "Unable to open archive"
 
-#: Source/pfile.cpp:394
+#: Source/pfile.cpp:379
 msgid "Unable to load character"
 msgstr "Unable to load character"
 
-#: Source/pfile.cpp:419 Source/pfile.cpp:439
+#: Source/pfile.cpp:403 Source/pfile.cpp:423
 msgid "Unable to read to save file archive"
 msgstr "Unable to read to save file archive"
 
-#: Source/pfile.cpp:458
+#: Source/pfile.cpp:442
 msgid "Unable to write to save file archive"
 msgstr "Unable to write to save file archive"
 
@@ -5995,14 +6017,14 @@ msgstr "{:s} (​レベル {:d}): {:s}"
 #: Source/qol/common.cpp:25
 #, c-format
 msgid ",%03d"
-msgstr ",​%​03d"
+msgstr ",​%03d"
 
 #: Source/qol/itemlabels.cpp:70
 #, c-format
 msgid "%i gold"
-msgstr "%​i ゴールド"
+msgstr "%i ゴールド"
 
-#: Source/qol/monhealthbar.cpp:35 Source/qol/xpbar.cpp:56
+#: Source/qol/monhealthbar.cpp:37 Source/qol/xpbar.cpp:56
 msgid ""
 "Failed to load UI resources.\n"
 "\n"
@@ -6010,8 +6032,8 @@ msgid ""
 msgstr ""
 "UI​リソース​の​読み込み​に​失敗​し​まし​た。\n"
 "\n"
-"devilutionx.mpq​が​ゲーム​フォルダ​内​に​あり、最新​の​状態​で​ある​こと​を​確認​し​て​ください"
-"。"
+"devilutionx.mpq​が​ゲーム​フォルダ​内​に​あり、最新​の​状態​で​ある​こと​を​確認​し​て​くださ"
+"い。"
 
 #: Source/qol/xpbar.cpp:125
 msgid "Level {:d}"
@@ -6753,10 +6775,10 @@ msgid ""
 "men. Only the vilest powers of Hell could so utterly destroy a man from "
 "within..."
 msgstr ""
-" おお、王​の​物語​か。レオリック​王​の​堕落​は​土地​の​者​に​は​大いなる​悲劇​じゃっ​た。王​を​敬愛​し​て"
-"​き​た​人々​も、今​は​王​の​殺戮​に​おびえる​日々。誰​より​も​高潔​で​あっ​た​あの​レオリック​王​が、どう"
-"​し​て​光​の​世界​から​はずれ​て​しまっ​た​の​か​不思議​で​なら​ぬ。あの​方​の​精神​を​あそこ​まで​破壊"
-"​する​と​は、地獄​で​も​最強​の​力​に​違い​ない。"
+" おお、王​の​物語​か。レオリック​王​の​堕落​は​土地​の​者​に​は​大いなる​悲劇​じゃっ​た。王​を​"
+"敬愛​し​て​き​た​人々​も、今​は​王​の​殺戮​に​おびえる​日々。誰​より​も​高潔​で​あっ​た​あの​レオ"
+"リック​王​が、どう​し​て​光​の​世界​から​はずれ​て​しまっ​た​の​か​不思議​で​なら​ぬ。あの​方​の​"
+"精神​を​あそこ​まで​破壊​する​と​は、地獄​で​も​最強​の​力​に​違い​ない。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:17
@@ -6779,15 +6801,16 @@ msgid ""
 "levels beneath the Cathedral. Please, good master, put his soul at ease by "
 "destroying his now cursed form..."
 msgstr ""
-"この​町​を​救える​の​は​あなた​だけ​です。数カ月​前、アルブレヒト​王子​が​誘拐​さ​れ​て​から、レオリック​王​"
-"は​狂い​始め​まし​た。王​は、罪​も​ない​人々​を​拷問​し、次々​に​処刑​し​た​ため、町​の​人​は​半分​も​残"
-"っ​て​い​ませ​ん。王​に​仕える​騎士​や​司祭​は、見る​に​見​かね​て、とうとう​王​を​殺し​て​しまい​まし​た"
-"。息​を​引き取る​前​に、王​は​呪い​の​言葉​を​吐き​まし​た。\n"
+"この​町​を​救える​の​は​あなた​だけ​です。数カ月​前、アルブレヒト​王子​が​誘拐​さ​れ​て​か"
+"ら、レオリック​王​は​狂い​始め​まし​た。王​は、罪​も​ない​人々​を​拷問​し、次々​に​処刑​し​た​"
+"ため、町​の​人​は​半分​も​残っ​て​い​ませ​ん。王​に​仕える​騎士​や​司祭​は、見る​に​見​かね​て、"
+"とうとう​王​を​殺し​て​しまい​まし​た。息​を​引き取る​前​に、王​は​呪い​の​言葉​を​吐き​まし​"
+"た。\n"
 "\n"
-"​家来​達​が​闇​の​世界​に​堕ち​て、永遠​に​彼​に​仕える​と​いう​もの​です。それ​から、想像​を​絶する​よう"
-"​な​恐ろしい​できごと​が​おき​まし​た。王​は​蘇り、迷宮​の​死体​を​操る​よう​に​なっ​た​の​です。王​の​遺"
-"体​は​修道院​の​地下墓地​の​第​三階層​に​埋葬​さ​れ​て​い​ます。どう​か、王​の​姿​を​し​た​おぞましい​怪"
-"物​を​倒し、王​の​魂​を​安らか​に​眠ら​せ​て​あげ​て​ください。"
+"​家来​達​が​闇​の​世界​に​堕ち​て、永遠​に​彼​に​仕える​と​いう​もの​です。それ​から、想像​を​絶"
+"する​よう​な​恐ろしい​できごと​が​おき​まし​た。王​は​蘇り、迷宮​の​死体​を​操る​よう​に​なっ​"
+"た​の​です。王​の​遺体​は​修道院​の​地下墓地​の​第​三階層​に​埋葬​さ​れ​て​い​ます。どう​か、王​"
+"の​姿​を​し​た​おぞましい​怪物​を​倒し、王​の​魂​を​安らか​に​眠ら​せ​て​あげ​て​ください。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:19
@@ -6796,8 +6819,8 @@ msgid ""
 "down there, waiting in the putrid darkness for his chance to destroy this "
 "land..."
 msgstr ""
-"前​に​お話し​し​た​よう​に、王​は​地下​第​三階層​に​い​ます。腐っ​た​闇​の​中​で、この​地​を​滅ぼす​機会"
-"​を​狙っ​て​いる​の​です。"
+"前​に​お話し​し​た​よう​に、王​は​地下​第​三階層​に​い​ます。腐っ​た​闇​の​中​で、この​地​を​滅ぼ"
+"す​機会​を​狙っ​て​いる​の​です。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:21
@@ -6807,9 +6830,9 @@ msgid ""
 "consumes our land, for your victory is a good omen. May Light guide you on "
 "your way, good master."
 msgstr ""
-"レオリック​王​の​呪い​は​解け​まし​た​が、もっと​恐ろしい​悪​が​背後​に​いる​よう​な​気​が​し​ます。で​も"
-"、あなた​の​勝利​は​縁起​が​いい。この​地​を​闇​から​守れる​か​も​しれ​ませ​ん。光​の​お​導き​が​あり​ま"
-"す​よう​に。"
+"レオリック​王​の​呪い​は​解け​まし​た​が、もっと​恐ろしい​悪​が​背後​に​いる​よう​な​気​が​し​ま"
+"す。で​も、あなた​の​勝利​は​縁起​が​いい。この​地​を​闇​から​守れる​か​も​しれ​ませ​ん。光​の​"
+"お​導き​が​あり​ます​よう​に。"
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:23
@@ -6819,9 +6842,10 @@ msgid ""
 "this kingdom from that day forward, but perhaps if you were to free his "
 "spirit from his earthly prison, the curse would be lifted..."
 msgstr ""
-"レオリック​王​は、息子​の​死​に​耐え​られ​なかっ​た。私​も​王​の​狂気​が​癒さ​れる​よう​努力​し​た​が、と"
-"うとう​王​は​狂気​に​負け​て​しまっ​た。その​日​から、この​王国​に​暗黒​の​呪い​が​かかっ​た​の​だ。君​が"
-"​王​の​魂​を​肉体​の​牢獄​から​解放​する​こと​が​できれ​ば、その​呪い​は​解か​れる​ん​だ​よ​…"
+"レオリック​王​は、息子​の​死​に​耐え​られ​なかっ​た。私​も​王​の​狂気​が​癒さ​れる​よう​努力​し​"
+"た​が、とうとう​王​は​狂気​に​負け​て​しまっ​た。その​日​から、この​王国​に​暗黒​の​呪い​が​か"
+"かっ​た​の​だ。君​が​王​の​魂​を​肉体​の​牢獄​から​解放​する​こと​が​できれ​ば、その​呪い​は​解か​"
+"れる​ん​だ​よ​…"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:25
@@ -6830,8 +6854,8 @@ msgid ""
 "the kind and just ruler that he was. His death was so sad and seemed very "
 "wrong, somehow."
 msgstr ""
-"王様​は​むごい​最期​でし​た​わ。本当​に​心​優しい、公正​な​方​でし​た。王​様​の​死​は、悲しい​し、何​だ​か"
-"​納得​でき​ない​わ。"
+"王様​は​むごい​最期​でし​た​わ。本当​に​心​優しい、公正​な​方​でし​た。王​様​の​死​は、悲しい​"
+"し、何​だ​か​納得​でき​ない​わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:27
@@ -6841,9 +6865,9 @@ msgid ""
 "mithril for him, as well as a field crown to match. I still cannot believe "
 "how he died, but it must have been some sinister force that drove him insane!"
 msgstr ""
-"レオリック​王​に​仕える​騎士​の​ため​に​武器​や​鎧​を​山ほど​作っ​た。王​に​は、巨大​な​両手​持ち​の​剣​"
-"と、おそろい​の​兜​も​お​作り​し​た​ほど​だ。しかし​何​と​いう​無残​な​死に様。王​が​狂っ​た​の​は、何​か"
-"​不吉​な​力​に​とりつか​れ​た​から​に​違い​ない。"
+"レオリック​王​に​仕える​騎士​の​ため​に​武器​や​鎧​を​山ほど​作っ​た。王​に​は、巨大​な​両手​持"
+"ち​の​剣​と、おそろい​の​兜​も​お​作り​し​た​ほど​だ。しかし​何​と​いう​無残​な​死に様。王​が​"
+"狂っ​た​の​は、何​か​不吉​な​力​に​とりつか​れ​た​から​に​違い​ない。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:29
@@ -6851,8 +6875,8 @@ msgid ""
 "I don't care about that. Listen, no skeleton is gonna be MY king. Leoric is "
 "King. King, so you hear me? HAIL TO THE KING!"
 msgstr ""
-"知っ​た​こっ​ちゃ​ねえ​って​ん​だ。よく​聞けよ、がい骨​なんて​俺​の​王様​じゃぁ​ねぇ​ん​だ。そう​だろう​! "
-"レオリック​様​こそ​が​俺​の​王様​だ。分かっ​た​か​ぃ。王​様​バンザ​～​イ​!"
+"知っ​た​こっ​ちゃ​ねえ​って​ん​だ。よく​聞けよ、がい骨​なんて​俺​の​王様​じゃぁ​ねぇ​ん​だ。"
+"そう​だろう​! レオリック​様​こそ​が​俺​の​王様​だ。分かっ​た​か​ぃ。王​様​バンザ​～​イ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:31
@@ -6862,8 +6886,9 @@ msgid ""
 "you do not stop his reign, he will surely march across this land and slay "
 "all who still live here."
 msgstr ""
-"生け​る​屍​は、忌まわしい​王​の​忠実​なる​僕。王​は​次々​と​戦士​を​蘇ら​せ、死​の​軍団​を​増強​する​だろ"
-"う。やつ​の​支配​に​終止符​を​打た​ね​ば、この​地​に​生きる​者​は​皆殺し​に​さ​れ​て​しまう​ぞ。"
+"生け​る​屍​は、忌まわしい​王​の​忠実​なる​僕。王​は​次々​と​戦士​を​蘇ら​せ、死​の​軍団​を​増強​"
+"する​だろう。やつ​の​支配​に​終止符​を​打た​ね​ば、この​地​に​生きる​者​は​皆殺し​に​さ​れ​て​し"
+"まう​ぞ。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:33
@@ -6873,16 +6898,17 @@ msgid ""
 "need something to use against this King of the undead, then I can help you "
 "out..."
 msgstr ""
-"俺​は​まとも​な​商売​し​てる​ん​だ。情報​なんて​売っ​て​ねえ​よ。とっく​の​昔​に​死ん​じまっ​た​王​様​な"
-"んて​興味​ねえ​し​な。だ​が、その​死​に​損ない​を​やっつける​武器​が​欲しい​って​言う​なら​相談​に​のる​ぜ"
-"。"
+"俺​は​まとも​な​商売​し​てる​ん​だ。情報​なんて​売っ​て​ねえ​よ。とっく​の​昔​に​死ん​じまっ​た​"
+"王​様​なんて​興味​ねえ​し​な。だ​が、その​死​に​損ない​を​やっつける​武器​が​欲しい​って​言う​"
+"なら​相談​に​のる​ぜ。"
 
 #. TRANSLATORS: Quest dialog spoken by The Skeleton King (Hostile)
 #: Source/textdat.cpp:35
 msgid ""
 "The warmth of life has entered my tomb. Prepare yourself, mortal, to serve "
 "my Master for eternity!"
-msgstr "我が​墓所​に、生暖かい​生命​が​吹き込ま​れ​た。覚悟​せよ、永遠​の​支配者​に​仕える​の​だ​!"
+msgstr ""
+"我が​墓所​に、生暖かい​生命​が​吹き込ま​れ​た。覚悟​せよ、永遠​の​支配者​に​仕える​の​だ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:37
@@ -6893,10 +6919,10 @@ msgid ""
 "led them to believe that it too holds some arcane powers. Hmm, perhaps they "
 "are not all as smart as we had feared..."
 msgstr ""
-"全く​おかしな​こと​を​する​もの​じゃ。お主​も​悩ん​どる​な。魔物​ども​は​日​の​光​に​は​大いなる​力​が​秘"
-"め​られ​て​いる​と​信じ、恐れ​て​おる​の​じゃ。おそらく、お主​の​言う​看板​に​描か​れ​て​あっ​た​日の出​に"
-"、神秘​の​力​が​宿っ​て​おる​と​で​も​思っ​た​ん​じゃろう。し​て​みる​と、きゃつ​ら​は​人間​が​恐れる​ほ"
-"ど​賢く​は​ない​よう​じゃ​な。"
+"全く​おかしな​こと​を​する​もの​じゃ。お主​も​悩ん​どる​な。魔物​ども​は​日​の​光​に​は​大いな"
+"る​力​が​秘め​られ​て​いる​と​信じ、恐れ​て​おる​の​じゃ。おそらく、お主​の​言う​看板​に​描か​"
+"れ​て​あっ​た​日の出​に、神秘​の​力​が​宿っ​て​おる​と​で​も​思っ​た​ん​じゃろう。し​て​みる​と、"
+"きゃつ​ら​は​人間​が​恐れる​ほど​賢く​は​ない​よう​じゃ​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:39
@@ -6910,11 +6936,11 @@ msgid ""
 "the sign to my inn. I don't know why the demons would steal my sign but "
 "leave my family in peace... 'tis strange, no?"
 msgstr ""
-"実​は、奇妙​な​こと​が​あり​まし​て。あなた​は、迷宮​に​棲む​怪物​ども​に​つい​て​は​よく​御存知​でしょう​"
-"から、私​に​は​見当​も​つか​ない​こと​も​わかる​か​も​しれ​ませ​ん。ある夜、外​で​なに​やら​引っかく​よう​"
-"な​音​が​する​の​で​見​ます​と、小さな​魔物​の​よう​な​もの​が​逃げ​て​いき​まし​た。そいつ​は、うち​の​"
-"看板​を​持ち去っ​た​の​です。なぜ、私達​に​手​を​出さ​ず​に、看板​だけ​盗ん​だ​の​か、何​か​変​じゃ​ない​"
-"です​か​?"
+"実​は、奇妙​な​こと​が​あり​まし​て。あなた​は、迷宮​に​棲む​怪物​ども​に​つい​て​は​よく​御存"
+"知​でしょう​から、私​に​は​見当​も​つか​ない​こと​も​わかる​か​も​しれ​ませ​ん。ある夜、外​で​"
+"なに​やら​引っかく​よう​な​音​が​する​の​で​見​ます​と、小さな​魔物​の​よう​な​もの​が​逃げ​て​い"
+"き​まし​た。そいつ​は、うち​の​看板​を​持ち去っ​た​の​です。なぜ、私達​に​手​を​出さ​ず​に、"
+"看板​だけ​盗ん​だ​の​か、何​か​変​じゃ​ない​です​か​?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (Quest End)
 #: Source/textdat.cpp:41
@@ -6925,9 +6951,9 @@ msgid ""
 "cap was left in one of the rooms by a magician who stayed here some time "
 "ago. Perhaps it may be of some value to you."
 msgstr ""
-"わざわざ​看板​を​取り返し​て​くれ​た​おかげ​で、新しい​の​を​買わ​ず​に​すみ​ます​よ。お礼​を​し​たい​が、"
-"何​が​いい​でしょう​か。そう​だ、この​帽子​が​いい。前​に​うち​に​泊っ​た​魔術師​が​置い​て​いっ​た​ん​で"
-"す​よ。多分​何​か​の​お​役​に​立つ​と​思い​ます。"
+"わざわざ​看板​を​取り返し​て​くれ​た​おかげ​で、新しい​の​を​買わ​ず​に​すみ​ます​よ。お礼​を​"
+"し​たい​が、何​が​いい​でしょう​か。そう​だ、この​帽子​が​いい。前​に​うち​に​泊っ​た​魔術師​"
+"が​置い​て​いっ​た​ん​です​よ。多分​何​か​の​お​役​に​立つ​と​思い​ます。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:43
@@ -6936,8 +6962,8 @@ msgid ""
 "- is nothing sacred? I hope that Ogden and Garda are all right. I suppose "
 "that they would come to see me if they were hurt..."
 msgstr ""
-"何​て​こと​だ、魔物​が​夜​の​町​を​駆けめぐっ​て​略奪​し​て​いる​ぞ。何​て​こと​だ、オグデン​と​ガーダ​は"
-"​無事​だろう​か。怪我​で​も​し​てれ​ば、私​の​所​へ​くる​だろう​が​…"
+"何​て​こと​だ、魔物​が​夜​の​町​を​駆けめぐっ​て​略奪​し​て​いる​ぞ。何​て​こと​だ、オグデン​と​"
+"ガーダ​は​無事​だろう​か。怪我​で​も​し​てれ​ば、私​の​所​へ​くる​だろう​が​…"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:45
@@ -6946,8 +6972,8 @@ msgid ""
 "right through the whole thing. Thank the Light that those monsters didn't "
 "attack the inn."
 msgstr ""
-"まあ、看板​は​どこ​に​行っ​た​の​? お​ばあ​さま​も​私​も​眠っ​て​い​た​の​ね。宿屋​が​魔物​に​襲わ​れ"
-"​なく​て​よかっ​た​わ。"
+"まあ、看板​は​どこ​に​行っ​た​の​? お​ばあ​さま​も​私​も​眠っ​て​い​た​の​ね。宿屋​が​魔物​に​襲わ​"
+"れ​なく​て​よかっ​た​わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:47
@@ -6957,8 +6983,8 @@ msgid ""
 " \n"
 "Demons are concerned with ripping out your heart, not your signpost."
 msgstr ""
-"魔物​が​オグデン​の​看板​を​盗ん​だ​だ​と​? 生身​の​心臓​を​掴み取ら​れ​た​なら​わかる​が、看板​て​の​"
-"は​変​だ​な。"
+"魔物​が​オグデン​の​看板​を​盗ん​だ​だ​と​? 生身​の​心臓​を​掴み取ら​れ​た​なら​わかる​が、看板​"
+"て​の​は​変​だ​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:49
@@ -6968,9 +6994,10 @@ msgid ""
 "new sign with some pretty drawing on it. Maybe a nice mug of ale or a piece "
 "of cheese..."
 msgstr ""
-"俺​が​思う​に​よぉ、あの​看板​を​盗ん​だ​の​は、きっと​金​目当て​だ​と​思う​ぜ、金​目当て​さ​! それ​より"
-"​も、俺​が​オグデン​だっ​たら​新しい​看板​を​買っ​ちまう​ねぇ。きれい​な​絵​を​描い​て​ある​やつ​を​よぉ。"
-"うん​うん、そう​だ​な、えー​とぉ、ビール​の​ジョッキ​と​か​チーズ​と​か​さ​…"
+"俺​が​思う​に​よぉ、あの​看板​を​盗ん​だ​の​は、きっと​金​目当て​だ​と​思う​ぜ、金​目当て​さ​! "
+"それ​より​も、俺​が​オグデン​だっ​たら​新しい​看板​を​買っ​ちまう​ねぇ。きれい​な​絵​を​描い​"
+"て​ある​やつ​を​よぉ。うん​うん、そう​だ​な、えー​とぉ、ビール​の​ジョッキ​と​か​チーズ​と​"
+"か​さ​…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:51
@@ -7003,9 +7030,9 @@ msgid ""
 "no leave with life! You kill big uglies and give back Magic. Go past corner "
 "and door, find uglies. You give, you go!"
 msgstr ""
-"おい​! みんな​を​殺し​た​奴​だ​な​! 魔力​の​紋章​を​持っ​て​こ​ない​と​命​は​ない​ぞ。でっかい​化物​"
-"を​ぶっ殺し​て​紋章​を​取り戻す​ん​だ。そいつ​は​角​を​曲がっ​た​扉​の​中​に​いる。奴​ら​を​ぶっ殺し​て​"
-"紋章​を​持っ​て​き​たら​通し​て​やる​!"
+"おい​! みんな​を​殺し​た​奴​だ​な​! 魔力​の​紋章​を​持っ​て​こ​ない​と​命​は​ない​ぞ。でっかい​化"
+"物​を​ぶっ殺し​て​紋章​を​取り戻す​ん​だ。そいつ​は​角​を​曲がっ​た​扉​の​中​に​いる。奴​ら​を​"
+"ぶっ殺し​て​紋章​を​持っ​て​き​たら​通し​て​やる​!"
 
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:57
@@ -7015,7 +7042,9 @@ msgstr "化物​を​ぶっ殺し​て​紋章​を​取り戻せ。さも
 #. TRANSLATORS: Quest dialog spoken by Snotspill (Hostile)
 #: Source/textdat.cpp:59
 msgid "You give! Yes, good! Go now, we strong. We kill all with big Magic!"
-msgstr "よこせ​! やっ​た​ぜ​! 俺​たちゃ​強い​ん​だ。大いなる​魔法​で​ぶっ殺し​て​やる​! ヒャハハハハ​.."
+msgstr ""
+"よこせ​! やっ​た​ぜ​! 俺​たちゃ​強い​ん​だ。大いなる​魔法​で​ぶっ殺し​て​やる​! ヒャハハハ"
+"ハ​.."
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:61
@@ -7044,30 +7073,32 @@ msgid ""
 "You must hurry and save the prince from the sacrificial blade of this "
 "demented fiend!"
 msgstr ""
-"何​と​不吉​な。これ​ぞ​まさしく​わし​が​最も​恐れ​て​い​た​こと​じゃ。できれ​ば​古い​伝説​など​信じ​たく​"
-"なかっ​た​が、もう​それ​を​否定​する​わけ​に​は​いか​ぬ。そろそろ​正体​を​明かす​とき​が​来​た​よう​じゃ​"
-"な。\n"
+"何​と​不吉​な。これ​ぞ​まさしく​わし​が​最も​恐れ​て​い​た​こと​じゃ。できれ​ば​古い​伝説​など​"
+"信じ​たく​なかっ​た​が、もう​それ​を​否定​する​わけ​に​は​いか​ぬ。そろそろ​正体​を​明かす​と"
+"き​が​来​た​よう​じゃ​な。\n"
 "\n"
-"​わし​の​真​の​名​は​デッカード​・​ケイン。永遠​の​悪​の​封印​を​守る​古き​結社​の​最後​の​末裔​じゃ。だ"
-"​が​どう​やら​その​封印​が​解か​れ​た​よう​じゃ。\n"
+"​わし​の​真​の​名​は​デッカード​・​ケイン。永遠​の​悪​の​封印​を​守る​古き​結社​の​最後​の​末裔​"
+"じゃ。だ​が​どう​やら​その​封印​が​解か​れ​た​よう​じゃ。\n"
 "\n"
-"​かつて​助言者​と​し​て​レオリック​王​が​最も​信頼​し​た​大司教​ラザルス​は、行方​知れ​ず​に​なっ​た​アル"
-"ブレヒト​王子​を​捜す​ため、町​の​人々​を​迷宮​へ​と​導い​て​いっ​た。しかし、迷宮​より​無事​戻っ​て​こ​ら"
-"れ​た​の​は、ほんの​数​名​…。\n"
+"​かつて​助言者​と​し​て​レオリック​王​が​最も​信頼​し​た​大司教​ラザルス​は、行方​知れ​ず​に​"
+"なっ​た​アルブレヒト​王子​を​捜す​ため、町​の​人々​を​迷宮​へ​と​導い​て​いっ​た。しかし、迷"
+"宮​より​無事​戻っ​て​こ​られ​た​の​は、ほんの​数​名​…。\n"
 "\n"
-"​わし​が​愚か​じゃっ​た​! ラザルス​の​裏切り​に​気づい​て​おれ​ば​! アルブレヒト​王子​を​誘拐​し​迷宮​"
-"に​隠し​た​の​も、きっと​ラザルス​に​違い​ない。大司教​ほど​の​男​が​悪​に​屈する​と​は。やつ​は​きっと、王"
-"子​を​恐怖​の​帝王​に​捧げる​つもり​じゃろう。\n"
+"​わし​が​愚か​じゃっ​た​! ラザルス​の​裏切り​に​気づい​て​おれ​ば​! アルブレヒト​王子​を​誘拐​"
+"し​迷宮​に​隠し​た​の​も、きっと​ラザルス​に​違い​ない。大司教​ほど​の​男​が​悪​に​屈する​と​"
+"は。やつ​は​きっと、王子​を​恐怖​の​帝王​に​捧げる​つもり​じゃろう。\n"
 "\n"
-"​生き​て​戻っ​た​者​の​話​で​は、ラザルス​は​迷宮​の​奥深く​へ​と​入っ​て​いっ​た​そう​だ。悪魔​の​生け"
-"贄​に​さ​れる​前​に、一刻​も​早く​王子​を​助け出す​の​じゃ​!"
+"​生き​て​戻っ​た​者​の​話​で​は、ラザルス​は​迷宮​の​奥深く​へ​と​入っ​て​いっ​た​そう​だ。悪魔​の​"
+"生け贄​に​さ​れる​前​に、一刻​も​早く​王子​を​助け出す​の​じゃ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:63
 msgid ""
 "You must hurry and rescue Albrecht from the hands of Lazarus. The prince and "
 "the people of this kingdom are counting on you!"
-msgstr "急げ、ラザルス​の​手​から​アルブレヒト​王子​を​救い出せ​! 王子​も​民衆​も​お主​が​頼り​な​の​じゃ​!"
+msgstr ""
+"急げ、ラザルス​の​手​から​アルブレヒト​王子​を​救い出せ​! 王子​も​民衆​も​お主​が​頼り​な​の​"
+"じゃ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:65
@@ -7083,13 +7114,15 @@ msgid ""
 "again sow chaos in the realm of mankind. You must venture through the portal "
 "and destroy Diablo before it is too late!"
 msgstr ""
-"何​と​も​ぞっと​する​話​じゃ。ラザルス​は​恐ろしい​所業​の​報い​を​受け、地獄​の​業火​に​焼か​れ​た​の​じ"
-"ゃろう。お主​の​言う​その​少年​は​王子​で​は​ない、アルブレヒト​王子​は​まだ​囚われ​て​おる​に​違い​ない​ぞ"
-"。床​に​描か​れ​た​その​紋章​と​いう​の​は​きっと、迷宮​の​最​中心​部​へ​の​入口​に​違い​ない。\n"
+"何​と​も​ぞっと​する​話​じゃ。ラザルス​は​恐ろしい​所業​の​報い​を​受け、地獄​の​業火​に​焼か​"
+"れ​た​の​じゃろう。お主​の​言う​その​少年​は​王子​で​は​ない、アルブレヒト​王子​は​まだ​囚わ"
+"れ​て​おる​に​違い​ない​ぞ。床​に​描か​れ​た​その​紋章​と​いう​の​は​きっと、迷宮​の​最​中心​部​へ​"
+"の​入口​に​違い​ない。\n"
 "\n"
-"​よい​か、お主​が​相手​に​する​の​は​恐怖​の​帝王​じゃ。人間界​で​は​ディアブロ​と​呼ば​れ​て​おる。こやつ"
-"​は​何​世紀​も​前​に​迷宮​に​幽閉​さ​れ​た​が、今​一度​人間界​に​混沌​の​渦​を​巻き起こそう​としとる​よ"
-"う​じゃ​な。手遅れ​に​なら​ぬ​うち​に​その​門​から​入り、ディアブロ​を​倒す​の​じゃ​!"
+"​よい​か、お主​が​相手​に​する​の​は​恐怖​の​帝王​じゃ。人間界​で​は​ディアブロ​と​呼ば​れ​て​お"
+"る。こやつ​は​何​世紀​も​前​に​迷宮​に​幽閉​さ​れ​た​が、今​一度​人間界​に​混沌​の​渦​を​巻き起こ"
+"そう​としとる​よう​じゃ​な。手遅れ​に​なら​ぬ​うち​に​その​門​から​入り、ディアブロ​を​倒す​"
+"の​じゃ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:67
@@ -7099,9 +7132,10 @@ msgid ""
 "suppose he was killed along with most of the others. If you would do me a "
 "favor, good master - please do not talk to Farnham about that day."
 msgstr ""
-"ラザルス​大司教​は​町​の​人々​を​迷宮​に​連れ込ん​だ​ん​です。あの​日、数多く​の​仲間​が​失わ​れ、ラザルス​"
-"様​も​二​度​と​は​戻り​ませ​ん​でし​た。きっと​殺さ​れ​て​しまっ​た​の​でしょう。それ​から、お願い​です。フ"
-"ァーンハム​に​は​あの​日​の​こと​を、聞か​ない​で​やっ​て​ください。"
+"ラザルス​大司教​は​町​の​人々​を​迷宮​に​連れ込ん​だ​ん​です。あの​日、数多く​の​仲間​が​失わ​"
+"れ、ラザルス​様​も​二​度​と​は​戻り​ませ​ん​でし​た。きっと​殺さ​れ​て​しまっ​た​の​でしょう。"
+"それ​から、お願い​です。ファーンハム​に​は​あの​日​の​こと​を、聞か​ない​で​やっ​て​くださ"
+"い。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:71
@@ -7111,9 +7145,10 @@ msgid ""
 "that. He was an Archbishop, and always seemed to care so much for the "
 "townsfolk of Tristram. So many were injured, I could not save them all..."
 msgstr ""
-"町​の​人々​が​あの​晩​に​やろう​と​し​て​い​た​こと​を​聞い​て、耳​を​疑っ​た​よ。より​に​よっ​て​あの"
-"​ラザルス​が​あの​よう​な​ひどい​こと​を​する​と​は。あいつ​は​大司教​だ​し、いつも​トリストラム​の​人々​の"
-"​世話​を​焼い​て​い​た​の​に。負傷者​が​あまり​に​多く​て、全員​は​助け​られ​なかっ​た​…"
+"町​の​人々​が​あの​晩​に​やろう​と​し​て​い​た​こと​を​聞い​て、耳​を​疑っ​た​よ。より​に​よっ​て​あ"
+"の​ラザルス​が​あの​よう​な​ひどい​こと​を​する​と​は。あいつ​は​大司教​だ​し、いつも​トリス"
+"トラム​の​人々​の​世話​を​焼い​て​い​た​の​に。負傷者​が​あまり​に​多く​て、全員​は​助け​られ​な"
+"かっ​た​…"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:73
@@ -7122,8 +7157,9 @@ msgid ""
 "mother's funeral, and was supportive of my grandmother and myself in a very "
 "troubled time. I pray every night that somehow, he is still alive and safe."
 msgstr ""
-"ラザルス​様​は​親切​で、慈悲​深い​方​でし​た​わ。母さん​の​葬式​も​執り行っ​て​くれ​て、心細く​なっ​て​い​"
-"た​私​と​お​ばあ​さま​の​支え​に​なっ​て​下さっ​た。毎晩​お​祈り​する​の​よ、ご​無事​です​よう​に​って。"
+"ラザルス​様​は​親切​で、慈悲​深い​方​でし​た​わ。母さん​の​葬式​も​執り行っ​て​くれ​て、心細"
+"く​なっ​て​い​た​私​と​お​ばあ​さま​の​支え​に​なっ​て​下さっ​た。毎晩​お​祈り​する​の​よ、ご​無事​"
+"です​よう​に​って。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:75
@@ -7133,9 +7169,9 @@ msgid ""
 "much as lift his mace against them. He just ran deeper into the dim, endless "
 "chambers that were filled with the servants of darkness!"
 msgstr ""
-"魔物​へ​の​聖​なる​報復​と​称し​て、皆​を​迷宮​に​連れ​て​いっ​た​の​は​ラザルス​だっ​た。だ​が、いざ​魔"
-"物​ども​と​の​戦い​が​始まる​と、奴​は​その​メイス​を​振るう​こと​なく​さっさと​魔物​の​棲む​暗黒​の​奥深"
-"く​へ​と​姿​を​消し​ちまっ​た​ん​だ。"
+"魔物​へ​の​聖​なる​報復​と​称し​て、皆​を​迷宮​に​連れ​て​いっ​た​の​は​ラザルス​だっ​た。だ​が、"
+"いざ​魔物​ども​と​の​戦い​が​始まる​と、奴​は​その​メイス​を​振るう​こと​なく​さっさと​魔物​の​"
+"棲む​暗黒​の​奥深く​へ​と​姿​を​消し​ちまっ​た​ん​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:77
@@ -7144,9 +7180,9 @@ msgid ""
 "dead! Dead! Do you hear me? They just keep falling and falling... their "
 "blood spilling out all over the floor... all his fault..."
 msgstr ""
-"奴​等​は​武器​で​突っつき、噛みつい​て​そして​取り囲ん​だ​ん​だ。取り囲ん​だ。ウソつき、ウソつき​め​! みんな​"
-"死ん​だ​! 死ん​じまっ​た​ん​だ​! おい​聞い​てん​の​か​よ​! みんな​次々​に​やら​れ​ちまっ​て​… 床​"
-"が​血​で​染まっ​た​… あいつ​の​せい​で​よ​…"
+"奴​等​は​武器​で​突っつき、噛みつい​て​そして​取り囲ん​だ​ん​だ。取り囲ん​だ。ウソつき、"
+"ウソつき​め​! みんな​死ん​だ​! 死ん​じまっ​た​ん​だ​! おい​聞い​てん​の​か​よ​! みんな​次々​に​"
+"やら​れ​ちまっ​て​… 床​が​血​で​染まっ​た​… あいつ​の​せい​で​よ​…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:79
@@ -7155,9 +7191,9 @@ msgid ""
 "conflict within his being. He poses a great danger, and will stop at nothing "
 "to serve the powers of darkness which have claimed him as theirs."
 msgstr ""
-"その​ラザルス​に​会っ​た​こと​は​ない​が、そ​やつ​の​内面​に​大いなる​葛藤​を​感じる​こと​が​できる。気​を"
-"​付けろ、やつ​は​非常​に​危険​じゃ。闇​の​力​に​屈服​し​た​者​は、何​も​失う​もの​は​ない​の​だ​から​な"
-"。"
+"その​ラザルス​に​会っ​た​こと​は​ない​が、そ​やつ​の​内面​に​大いなる​葛藤​を​感じる​こと​が​で"
+"きる。気​を​付けろ、やつ​は​非常​に​危険​じゃ。闇​の​力​に​屈服​し​た​者​は、何​も​失う​もの​は​"
+"ない​の​だ​から​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:81
@@ -7166,8 +7202,9 @@ msgid ""
 "down there. Didn't help save my leg, did it? Look, I'll give you a free "
 "piece of advice. Ask Farnham, he was there."
 msgstr ""
-"お​偉い​ラザルス​様​は、怪物​ども​を​遠ざける​魔力​を​持っ​てる。だ​の​に、俺​の​足​を​守っ​ちゃ​くれ​なか"
-"っ​た。知り​たい​ん​なら​ファーンハム​に​聞い​て​み​な。奴​も​居合わせ​た​ん​だ​から​な。"
+"お​偉い​ラザルス​様​は、怪物​ども​を​遠ざける​魔力​を​持っ​てる。だ​の​に、俺​の​足​を​守っ​"
+"ちゃ​くれ​なかっ​た。知り​たい​ん​なら​ファーンハム​に​聞い​て​み​な。奴​も​居合わせ​た​ん​だ​"
+"から​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Lazarus (Hostile)
 #: Source/textdat.cpp:83
@@ -7175,8 +7212,8 @@ msgid ""
 "Abandon your foolish quest. All that awaits you is the wrath of my Master! "
 "You are too late to save the child. Now you will join him in Hell!"
 msgstr ""
-"くだら​ん​お​遊び​は​もう​やめろ。待ち受ける​の​は​我が​主​の​怒り​だ​! 王子​を​救う​に​は​遅​すぎ​た。"
-"地獄​で​会せ​て​やろう。"
+"くだら​ん​お​遊び​は​もう​やめろ。待ち受ける​の​は​我が​主​の​怒り​だ​! 王子​を​救う​に​は​遅​す"
+"ぎ​た。地獄​で​会せ​て​やろう。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:86
@@ -7187,9 +7224,10 @@ msgid ""
 "the same. Unfortunately, I do not know what would cause our water supply to "
 "be tainted."
 msgstr ""
-"ふうむ、わし​の​知っ​とる​こと​が​役​に​立つ​じゃろう​か​の。町​の​井戸水​は​地下​水脈​から​湧い​て​おる​"
-"の​じゃ。大きな​湖​に​通じる​トンネル​が​ある​と​いう​話​を​聞い​た​こと​が​ある​が、恐らく​この​こと​な​"
-"の​じゃろう。なぜ​水源​が​汚染​さ​れ​た​の​か​は、残念​じゃ​が​わし​に​も​わから​ん。"
+"ふうむ、わし​の​知っ​とる​こと​が​役​に​立つ​じゃろう​か​の。町​の​井戸水​は​地下​水脈​から​湧"
+"い​て​おる​の​じゃ。大きな​湖​に​通じる​トンネル​が​ある​と​いう​話​を​聞い​た​こと​が​ある​が、"
+"恐らく​この​こと​な​の​じゃろう。なぜ​水源​が​汚染​さ​れ​た​の​か​は、残念​じゃ​が​わし​に​も​わ"
+"から​ん。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:88
@@ -7200,9 +7238,9 @@ msgid ""
 " \n"
 "Please, do what you can or I don't know what we will do."
 msgstr ""
-"ふうむ、わし​の​知っ​とる​こと​が​役​に​立つ​じゃろう​か​の。町​の​井戸水​は​地下​水脈​から​湧い​て​おる​"
-"の​じゃ。大きな​湖​に​通じる​トンネル​が​ある​と​いう​話​を​聞い​た​こと​が​ある​が、恐らく​この​こと​な​"
-"の​じゃろう。\n"
+"ふうむ、わし​の​知っ​とる​こと​が​役​に​立つ​じゃろう​か​の。町​の​井戸水​は​地下​水脈​から​湧"
+"い​て​おる​の​じゃ。大きな​湖​に​通じる​トンネル​が​ある​と​いう​話​を​聞い​た​こと​が​ある​が、"
+"恐らく​この​こと​な​の​じゃろう。\n"
 "\n"
 "​なぜ​水源​が​汚染​さ​れ​た​の​か​は、残念​じゃ​が​わし​に​も​わから​ん。"
 
@@ -7216,8 +7254,9 @@ msgid ""
 "caused this calamity, or we all will surely perish."
 msgstr ""
 "君​が​い​て​くれ​て​よかっ​た​! 井戸​の​水​が​濁っ​て​き​て、それ​を​飲ん​だ​人々​が​病気​に​かかっ​"
-"て​いる​ん​だ。きれい​な​水​の​蓄え​は​なくなろう​と​し​て​いる。町​に​水​を​ひい​て​いる​泉​へ​通じる​"
-"道​が​あっ​た​はず​だ。この​災難​の​原因​を​究明​し​て​くれ。さも​なく​ば、我​ら​は​全滅​だ。"
+"て​いる​ん​だ。きれい​な​水​の​蓄え​は​なくなろう​と​し​て​いる。町​に​水​を​ひい​て​いる​泉​へ​通"
+"じる​道​が​あっ​た​はず​だ。この​災難​の​原因​を​究明​し​て​くれ。さも​なく​ば、我​ら​は​全滅​"
+"だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:92
@@ -7239,9 +7278,9 @@ msgid ""
 "perseverance and courage gives us hope. Please take this ring - perhaps it "
 "will aid you in the destruction of such vile creatures."
 msgstr ""
-"何​と​? 魔物​の​存在​自体​が​水​を​汚し​て​い​た​だ​と​? この​町​の​地下​に​は​大いなる​邪悪​が​潜"
-"ん​で​いる​が、君​の​忍耐​と​勇気​に、我々​は​希望​を​抱い​て​いる。この​指輪​を​受け取っ​て​くれ。大いなる"
-"​悪​の​退治​に​役立つ​か​も​しれ​ない。"
+"何​と​? 魔物​の​存在​自体​が​水​を​汚し​て​い​た​だ​と​? この​町​の​地下​に​は​大いなる​邪悪​が​潜ん​"
+"で​いる​が、君​の​忍耐​と​勇気​に、我々​は​希望​を​抱い​て​いる。この​指輪​を​受け取っ​て​く"
+"れ。大いなる​悪​の​退治​に​役立つ​か​も​しれ​ない。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:96
@@ -7249,8 +7288,8 @@ msgid ""
 "My grandmother is very weak, and Garda says that we cannot drink the water "
 "from the wells. Please, can you do something to help us?"
 msgstr ""
-"お​ばあ​さま​は​とても​体​が​弱い​の​に、井戸​の​水​は​飲め​ない​って​ガーダ​が​言う​の​よ。どう​か、助け"
-"​て​下さい。"
+"お​ばあ​さま​は​とても​体​が​弱い​の​に、井戸​の​水​は​飲め​ない​って​ガーダ​が​言う​の​よ。どう​"
+"か、助け​て​下さい。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:98
@@ -7259,8 +7298,9 @@ msgid ""
 "have tried to clear one of the smaller wells, but it reeks of stagnant "
 "filth. It must be getting clogged at the source."
 msgstr ""
-"ペピン​は​あなた​に​真実​を​話し​まし​た。新鮮​な​水​が​すぐ​に​で​も​必要​に​なり​ます。小さな​井戸​の​"
-"一​つ​を​掃除​し​て​み​た​が、淀ん​だ​汚物​の​臭い​が​する。水源​が​詰まっ​て​いる​の​でしょう。"
+"ペピン​は​あなた​に​真実​を​話し​まし​た。新鮮​な​水​が​すぐ​に​で​も​必要​に​なり​ます。小さな​"
+"井戸​の​一​つ​を​掃除​し​て​み​た​が、淀ん​だ​汚物​の​臭い​が​する。水源​が​詰まっ​て​いる​の​で"
+"しょう。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:100
@@ -7276,8 +7316,8 @@ msgid ""
 "Know this - demons are at the heart of this matter, but they remain ignorant "
 "of what they have spawned."
 msgstr ""
-"お前​が​井戸​を​元​に​戻さ​ね​ば、トリストラム​の​人々​は​死に絶える​こと​に​なる​だろう。一​つ​教え​て​や"
-"る。原因​は​魔物​ども​に​ある​が、連中​は​その​こと​に​気づい​て​は​おら​ぬ​の​だ。"
+"お前​が​井戸​を​元​に​戻さ​ね​ば、トリストラム​の​人々​は​死に絶える​こと​に​なる​だろう。一​"
+"つ​教え​て​やる。原因​は​魔物​ども​に​ある​が、連中​は​その​こと​に​気づい​て​は​おら​ぬ​の​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:103
@@ -7285,8 +7325,8 @@ msgid ""
 "For once, I'm with you. My business runs dry - so to speak - if I have no "
 "market to sell to. You better find out what is going on, and soon!"
 msgstr ""
-"今度​ばかり​は、あんた​に​味方​する​よ。買い手​が​い​なきゃ、この​商売​も​あがったり​だ。いったい​何​が​あっ​"
-"た​の​か、すぐ​調べ​て​くれ。"
+"今度​ばかり​は、あんた​に​味方​する​よ。買い手​が​い​なきゃ、この​商売​も​あがったり​だ。"
+"いったい​何​が​あっ​た​の​か、すぐ​調べ​て​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:105
@@ -7299,9 +7339,10 @@ msgid ""
 "twisted, but strangely fitting, end?"
 msgstr ""
 "「​人間​の​骨​を​収め​た​部屋​の​こと​が​書い​て​ある​本​」​か​… お​お​納骨堂​の​こと​なら、東方​の​"
-"図書館​で​読ん​だ​古い​書物​に​あっ​た。黄泉​の​国​の​王​が​莫大​な​財宝​を​守ろう​と​し​て、特別​な​場"
-"所​を​作っ​た​の​だ​そう​じゃ。「​財宝​を​盗み​に​来​た​者​は​命​を​落とし、永遠​に​その​宝​を​守り​続"
-"ける​」​と​記し​て​あっ​た。複雑​な​話​じゃ​が、妙​に​つじつま​が​合っ​て​いる​と​は​思わ​ん​か​?"
+"図書館​で​読ん​だ​古い​書物​に​あっ​た。黄泉​の​国​の​王​が​莫大​な​財宝​を​守ろう​と​し​て、特別​"
+"な​場所​を​作っ​た​の​だ​そう​じゃ。「​財宝​を​盗み​に​来​た​者​は​命​を​落とし、永遠​に​その​宝​を​"
+"守り​続ける​」​と​記し​て​あっ​た。複雑​な​話​じゃ​が、妙​に​つじつま​が​合っ​て​いる​と​は​思わ​"
+"ん​か​?"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:107
@@ -7309,8 +7350,8 @@ msgid ""
 "I am afraid that I don't know anything about that, good master. Cain has "
 "many books that may be of some help."
 msgstr ""
-"残念​ながら、私​に​は​分かり​ませ​ん。で​も​ケイン​の​持っ​てる​本​に​なら​のっ​て​いる​か​も​しれ​ませ​"
-"ん​な。"
+"残念​ながら、私​に​は​分かり​ませ​ん。で​も​ケイン​の​持っ​てる​本​に​なら​のっ​て​いる​か​も​し"
+"れ​ませ​ん​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:109
@@ -7325,8 +7366,8 @@ msgid ""
 "I am afraid that I haven't heard anything about that. Perhaps Cain the "
 "Storyteller could be of some help."
 msgstr ""
-"見​た​こと​も​聞い​た​こと​も​ない​話​だ​が、この​町​の​語り部​の​ケイン​なら、それ​が​どこ​だ​か​分かる"
-"​か​も​しれ​ん。"
+"見​た​こと​も​聞い​た​こと​も​ない​話​だ​が、この​町​の​語り部​の​ケイン​なら、それ​が​どこ​だ​か​"
+"分かる​か​も​しれ​ん。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:113
@@ -7334,7 +7375,9 @@ msgid ""
 "I know nothing of this place, but you may try asking Cain. He talks about "
 "many things, and it would not surprise me if he had some answers to your "
 "question."
-msgstr "わし​は​そんな​所​は​知ら​ん​が、ケイン​なら​物知り​だ​から、あんた​の​疑問​に​も​答え​られる​だろう。"
+msgstr ""
+"わし​は​そんな​所​は​知ら​ん​が、ケイン​なら​物知り​だ​から、あんた​の​疑問​に​も​答え​られる​"
+"だろう。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:115
@@ -7343,9 +7386,10 @@ msgid ""
 "her - tells the tree... cause you gotta wait. Then I says, that might work "
 "against him, but if you think I'm gonna PAY for this... you... uh... yeah."
 msgstr ""
-"よし、じゃあ​聞い​て​くれ。木​の​部屋​が​ある​ん​だ。そして​彼​の​妻​が、彼女​が、木​に​言う​ん​だ​…​あな"
-"た​は​待た​なけれ​ば​なら​ない​から、と。そして​私​は​言っ​た、それ​は​彼​に​とっ​て​不利​に​働く​か​も​"
-"しれ​ない​が、もし​私​が​この​ため​に​お金​を​払う​と​思う​なら、あなた​は​…​ええ​と​…​そう​だ。"
+"よし、じゃあ​聞い​て​くれ。木​の​部屋​が​ある​ん​だ。そして​彼​の​妻​が、彼女​が、木​に​言う​"
+"ん​だ​…​あなた​は​待た​なけれ​ば​なら​ない​から、と。そして​私​は​言っ​た、それ​は​彼​に​とっ​て​"
+"不利​に​働く​か​も​しれ​ない​が、もし​私​が​この​ため​に​お金​を​払う​と​思う​なら、あなた​は​…​え"
+"え​と​…​そう​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:117
@@ -7355,7 +7399,8 @@ msgid ""
 " \n"
 "Enter the Chamber of Bone at your own peril."
 msgstr ""
-"この​呪わ​れ​た​領域​で​命​を​落とし​た​が​最後、お前​は​永遠​に​闇​の​王​の​しもべ​と​なる​の​じゃ。\n"
+"この​呪わ​れ​た​領域​で​命​を​落とし​た​が​最後、お前​は​永遠​に​闇​の​王​の​しもべ​と​なる​の​"
+"じゃ。\n"
 "​納骨堂​に​入る​つもり​なら​ば、覚悟​し​なされ​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
@@ -7365,8 +7410,8 @@ msgid ""
 "picking up a few things from you... or better yet, don't you need some rare "
 "and expensive supplies to get you through this ordeal?"
 msgstr ""
-"莫大​な​お​宝​だ​って​? 分け前​は​もらえる​ん​だろう​な。それ​より​世​に​も​珍しい​ブツ​が​ある​ん​だ​"
-"けど、どう​だ​い​? これ​が​ありゃあ​鬼​に​金棒​だ​ぞ。"
+"莫大​な​お​宝​だ​って​? 分け前​は​もらえる​ん​だろう​な。それ​より​世​に​も​珍しい​ブツ​が​ある​"
+"ん​だ​けど、どう​だ​い​? これ​が​ありゃあ​鬼​に​金棒​だ​ぞ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:121
@@ -7377,10 +7422,10 @@ msgid ""
 "for what lay within the cold earth... Lazarus abandoned them down there - "
 "left in the clutches of unspeakable horrors - to die."
 msgstr ""
-"大司教​ラザルス​は​行方知れず​に​なっ​た​王​の​息子​を​捜す​と​偽り、大勢​迷宮​へ​と​差し向け​た​の​じゃ。"
-"人々​の​恐怖​に​つけ込み、彼​ら​を​凶暴​な​暴徒​と​し​て​しまい。地中​に​何​が​待ち受ける​の​か、知る​者​"
-"は​なかっ​た​…。ラザルス​は​皆​を​置き去り​に​し、いい知れ​ぬ​恐怖​の​中​で​人々​は​死ん​で​いっ​た​の​"
-"じゃ。"
+"大司教​ラザルス​は​行方知れず​に​なっ​た​王​の​息子​を​捜す​と​偽り、大勢​迷宮​へ​と​差し向け​"
+"た​の​じゃ。人々​の​恐怖​に​つけ込み、彼​ら​を​凶暴​な​暴徒​と​し​て​しまい。地中​に​何​が​待ち"
+"受ける​の​か、知る​者​は​なかっ​た​…。ラザルス​は​皆​を​置き去り​に​し、いい知れ​ぬ​恐怖​の​中​"
+"で​人々​は​死ん​で​いっ​た​の​じゃ。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:123
@@ -7388,8 +7433,8 @@ msgid ""
 "Yes, Farnham has mumbled something about a hulking brute who wielded a "
 "fierce weapon. I believe he called him a butcher."
 msgstr ""
-"ええ、ファーンハム​は、たしか​ブッチャー​と​か​言う、恐ろしい​武器​を​振り回す、野蛮​な​大男​の​こと​を​ぶつぶつ"
-"​言っ​て​まし​た。"
+"ええ、ファーンハム​は、たしか​ブッチャー​と​か​言う、恐ろしい​武器​を​振り回す、野蛮​"
+"な​大男​の​こと​を​ぶつぶつ​言っ​て​まし​た。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:125
@@ -7401,10 +7446,10 @@ msgid ""
 "festering with disease and even I found them almost impossible to treat. "
 "Beware if you plan to battle this fiend..."
 msgstr ""
-"あの​堕落​し​た​悪魔​の​こと​は​知っ​て​いる​ぞ。ラザルス​の​罠​を​生き残っ​た​人々​が​修道院​から​這い出"
-"​て​き​た​時、多く​が​その​怒り​の​爪痕​を​負っ​て​い​た。やつ​が​犠牲者​を​切り裂く​の​に​何​を​使っ​"
-"た​か​は​分から​ない​が、この世​の​もの​で​は​ない​よ。傷口​は​ただれ、私​で​さえ​治療​でき​ない​ほど​ひど"
-"かっ​た。この​悪魔​と​戦う​の​なら、用心​し​て​くれ。"
+"あの​堕落​し​た​悪魔​の​こと​は​知っ​て​いる​ぞ。ラザルス​の​罠​を​生き残っ​た​人々​が​修道院​か"
+"ら​這い出​て​き​た​時、多く​が​その​怒り​の​爪痕​を​負っ​て​い​た。やつ​が​犠牲者​を​切り裂く​の​"
+"に​何​を​使っ​た​か​は​分から​ない​が、この世​の​もの​で​は​ない​よ。傷口​は​ただれ、私​で​さえ​"
+"治療​でき​ない​ほど​ひどかっ​た。この​悪魔​と​戦う​の​なら、用心​し​て​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:127
@@ -7412,8 +7457,8 @@ msgid ""
 "When Farnham said something about a butcher killing people, I immediately "
 "discounted it. But since you brought it up, maybe it is true."
 msgstr ""
-"ブッチャー​が​人々​を​殺し​て​いる​って​ファーンハム​が​言っ​て​た​の、信じ​なかっ​た​けど、あなた​が​同じ​"
-"こと​を​言う​なら、本当​な​の​ね。"
+"ブッチャー​が​人々​を​殺し​て​いる​って​ファーンハム​が​言っ​て​た​の、信じ​なかっ​た​けど、"
+"あなた​が​同じ​こと​を​言う​なら、本当​な​の​ね。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:129
@@ -7425,10 +7470,10 @@ msgid ""
 "I never saw that hideous beast again, but his blood-stained visage haunts me "
 "to this day."
 msgstr ""
-"そいつ​を​ファーンハム​は​ブッチャー​と​呼ん​で​い​た​が、わし​の​仲間​を​巨大​な​肉​切り​包丁​で​皆殺し​"
-"に​し​おっ​た。わし​は​子鬼​ども​の​相手​を​し​て​い​て、助かっ​た​の​さ。地上​へ​続く​階段​を​見つけ、な"
-"ん​と​か​無事​逃げ​おおせる​こと​が​でき​た​が、あの​けだもの​の​血​に​まみれ​た​顔​は、いまだ​に​目​に​"
-"焼き付い​てる​よ。"
+"そいつ​を​ファーンハム​は​ブッチャー​と​呼ん​で​い​た​が、わし​の​仲間​を​巨大​な​肉​切り​包丁​"
+"で​皆殺し​に​し​おっ​た。わし​は​子鬼​ども​の​相手​を​し​て​い​て、助かっ​た​の​さ。地上​へ​続く​"
+"階段​を​見つけ、なん​と​か​無事​逃げ​おおせる​こと​が​でき​た​が、あの​けだもの​の​血​に​まみ"
+"れ​た​顔​は、いまだ​に​目​に​焼き付い​てる​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (*sad face*)
 #: Source/textdat.cpp:131
@@ -7437,8 +7482,8 @@ msgid ""
 "couldn't save them. Trapped in a room with so many bodies... so many "
 "friends... NOOOOOOOOOO!"
 msgstr ""
-"そう​よ、バカ​でっけえ​包丁​で​友達​は​みんな​殺さ​れ​た​ぃ。逃げ回る​だけ​で、助け​られ​なかっ​た​ん​だ。閉"
-"じ込め​られ​た​部屋​は​な、死体​の​山​だっ​た​…​友達​の​な​… くそ​ぉ​ぉ​ぉ​!"
+"そう​よ、バカ​でっけえ​包丁​で​友達​は​みんな​殺さ​れ​た​ぃ。逃げ回る​だけ​で、助け​られ​な"
+"かっ​た​ん​だ。閉じ込め​られ​た​部屋​は​な、死体​の​山​だっ​た​…​友達​の​な​… くそ​ぉ​ぉ​ぉ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:133
@@ -7447,8 +7492,9 @@ msgid ""
 "others. You have seen his handiwork in the drunkard Farnham. His destruction "
 "will do much to ensure the safety of this village."
 msgstr ""
-"ブッチャー​は​人々​に​苦悩​と​苦痛​を​与える​こと​に​喜び​を​見いだす、残虐​な​怪物​じゃ。酔っ払い​の​ファー"
-"ンハム​を​見れ​ば​分かる​で​あろう。ブッチャー​を​倒せ​ば、この​町​の​平和​を​多少​は​取り戻せる​の​だ。"
+"ブッチャー​は​人々​に​苦悩​と​苦痛​を​与える​こと​に​喜び​を​見いだす、残虐​な​怪物​じゃ。"
+"酔っ払い​の​ファーンハム​を​見れ​ば​分かる​で​あろう。ブッチャー​を​倒せ​ば、この​町​の​平"
+"和​を​多少​は​取り戻せる​の​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:135
@@ -7460,8 +7506,8 @@ msgid ""
 "I'll put it bluntly - kill him before he kills you and adds your corpse to "
 "his collection."
 msgstr ""
-"あの​悪魔​に​つい​ちゃ、俺​は​知り​すぎる​ほど​知っ​てる。俺​の​足​を​もぎとっ​た​の​は、あいつ​の​仲間​な"
-"​ん​だ。グリズウォルド​が​広間​から​救い出し​て​くれ​た​ん​だ​けど​な。\n"
+"あの​悪魔​に​つい​ちゃ、俺​は​知り​すぎる​ほど​知っ​てる。俺​の​足​を​もぎとっ​た​の​は、あい"
+"つ​の​仲間​な​ん​だ。グリズウォルド​が​広間​から​救い出し​て​くれ​た​ん​だ​けど​な。\n"
 "\n"
 "​はっきり​言おう。やつ​を​殺さ​なけれ​ば、お前​が​やら​れる​ぞ。"
 
@@ -7473,9 +7519,9 @@ msgid ""
 "killed by a demon he called the Butcher. Avenge us! Find this Butcher and "
 "slay him so that our souls may finally rest..."
 msgstr ""
-"聞い​て​くれ。大司教​ラザルス​は、王子​を​探す​と​言っ​て​我々​を​連れ込ん​だ。しかし、罠​だっ​た​ん​だ​! "
-"みんな​死ん​で​しまっ​た。ブッチャー​と​いう​化物​に​殺さ​れ​た​ん​だ。か​たき​を​うっ​て​くれ​! 我々​の"
-"​魂​が​安らか​に​眠れる​よう、ブッチャー​を​殺し​て​くれ。"
+"聞い​て​くれ。大司教​ラザルス​は、王子​を​探す​と​言っ​て​我々​を​連れ込ん​だ。しかし、罠​"
+"だっ​た​ん​だ​! みんな​死ん​で​しまっ​た。ブッチャー​と​いう​化物​に​殺さ​れ​た​ん​だ。か​たき​"
+"を​うっ​て​くれ​! 我々​の​魂​が​安らか​に​眠れる​よう、ブッチャー​を​殺し​て​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:140
@@ -7488,11 +7534,12 @@ msgid ""
 "sightless for all eternity. The prison for those so damned is named the "
 "Halls of the Blind..."
 msgstr ""
-"お主、面白い​詩​を​読む​の​お。それ​に​似​た​詩​を​思い出し​た​よ。…​はて、どんな​詩​じゃっ​た​か​のう。\n"
+"お主、面白い​詩​を​読む​の​お。それ​に​似​た​詩​を​思い出し​た​よ。…​はて、どんな​詩​じゃっ​た​"
+"か​のう。\n"
 "\n"
-"​…​「​秘密​を​覆い隠す。その​目​の​輝き​は​見え​ず、ただ​鋭い​爪​の​立てる​音​のみ​が、永遠​に​見る​こと"
-"​の​でき​ぬ​哀れ​な​者​を​苦しめる。永遠​の​断罪​を​受け​た​者​の​牢獄、その​名​を​「​盲目​の​広間​」​"
-"と​いう​」"
+"​…​「​秘密​を​覆い隠す。その​目​の​輝き​は​見え​ず、ただ​鋭い​爪​の​立てる​音​のみ​が、永遠​に​見"
+"る​こと​の​でき​ぬ​哀れ​な​者​を​苦しめる。永遠​の​断罪​を​受け​た​者​の​牢獄、その​名​を​「​盲目​"
+"の​広間​」​と​いう​」"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:142
@@ -7502,10 +7549,10 @@ msgid ""
 " \n"
 "What? Oh, yes... uh, well, I suppose you could see what someone else knows."
 msgstr ""
-"お主、面白い​詩​を​読む​の​お。それ​に​似​た​詩​を​思い出し​た​よ。…​はて、どんな​詩​じゃっ​た​か​のう。…"
-"​「​秘密​を​覆い隠す。その​目​の​輝き​は​見え​ず、ただ​鋭い​爪​の​立てる​音​のみ​が、永遠​に​見る​こと​の"
-"​でき​ぬ​哀れ​な​者​を​苦しめる。永遠​の​断罪​を​受け​た​者​の​牢獄、その​名​を​「​盲目​の​広間​」​と​"
-"いう​」"
+"お主、面白い​詩​を​読む​の​お。それ​に​似​た​詩​を​思い出し​た​よ。…​はて、どんな​詩​じゃっ​た​"
+"か​のう。…​「​秘密​を​覆い隠す。その​目​の​輝き​は​見え​ず、ただ​鋭い​爪​の​立てる​音​のみ​が、"
+"永遠​に​見る​こと​の​でき​ぬ​哀れ​な​者​を​苦しめる。永遠​の​断罪​を​受け​た​者​の​牢獄、その​名​"
+"を​「​盲目​の​広間​」​と​いう​」"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:144
@@ -7514,9 +7561,9 @@ msgid ""
 "much like that poem while researching the history of demonic afflictions. It "
 "spoke of a place of great evil that... wait - you're not going there are you?"
 msgstr ""
-"これ​は​どこ​か​見覚え​が​ある​ぞ。悪魔​の​苦悩​の​歴史​に​つい​て​調べ​て​いる​とき​に、その​詩​に​よく"
-"​似​た​の​を​見かけ​た​よう​な​気​が​する​な。内容​は​…​確か​邪悪​に​満ち​た​場所​… 待て、まさか​行く"
-"​気​な​の​か​?"
+"これ​は​どこ​か​見覚え​が​ある​ぞ。悪魔​の​苦悩​の​歴史​に​つい​て​調べ​て​いる​とき​に、その​詩​"
+"に​よく​似​た​の​を​見かけ​た​よう​な​気​が​する​な。内容​は​…​確か​邪悪​に​満ち​た​場所​… 待て、ま"
+"さか​行く​気​な​の​か​?"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:146
@@ -7525,8 +7572,8 @@ msgid ""
 "he gave my grandmother a potion that helped clear her vision, so maybe he "
 "can help you, too."
 msgstr ""
-"目​が​見え​ない​こと​に​つい​て​知り​たい​なら、ペピン​に​聞く​の​ね。彼​の​薬​で​お​ばあ​さま​の​眼​が"
-"​見える​よう​に​なっ​た​の。きっと​助け​て​くれる​わ。"
+"目​が​見え​ない​こと​に​つい​て​知り​たい​なら、ペピン​に​聞く​の​ね。彼​の​薬​で​お​ばあ​さま​の​"
+"眼​が​見える​よう​に​なっ​た​の。きっと​助け​て​くれる​わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:148
@@ -7535,13 +7582,15 @@ msgid ""
 "vivid description, my friend. Perhaps Cain the Storyteller could be of some "
 "help."
 msgstr ""
-"見​た​こと​も​聞い​た​こと​も​ない​話​だ​が、この​町​の​語り部​の​ケイン​なら、それ​が​どこ​だ​か​分かる"
-"​か​も​しれ​ん。"
+"見​た​こと​も​聞い​た​こと​も​ない​話​だ​が、この​町​の​語り部​の​ケイン​なら、それ​が​どこ​だ​か​"
+"分かる​か​も​しれ​ん。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:150
 msgid "Look here... that's pretty funny, huh? Get it? Blind - look here?"
-msgstr "見ろ​よ。ハハハ、笑える​だろ​? お前​さん​にゃ、どう​だ​い​?​見える​の​か​い​?​ヒャー​ハハハハ​…"
+msgstr ""
+"見ろ​よ。ハハハ、笑える​だろ​? お前​さん​にゃ、どう​だ​い​?​見える​の​か​い​?​ヒャー​ハハハ"
+"ハ​…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:152
@@ -7563,8 +7612,8 @@ msgid ""
 "you about this? No. Are you now leaving and going to talk to the storyteller "
 "who lives for this kind of thing? Yes."
 msgstr ""
-"おっと、俺​は​あんた​に​売る​もの​は​ない​し、あんた​も​俺​の​話​に​金​を​払う​つもり​は​ない​ん​だろ。じ"
-"ゃあ、この​手​の​話​で​飯​を​食っ​てる​奴​は​だれ​だ​? 語り部​に​会い​に​行け​よ。"
+"おっと、俺​は​あんた​に​売る​もの​は​ない​し、あんた​も​俺​の​話​に​金​を​払う​つもり​は​ない​ん​"
+"だろ。じゃあ、この​手​の​話​で​飯​を​食っ​てる​奴​は​だれ​だ​? 語り部​に​会い​に​行け​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:156
@@ -7578,12 +7627,12 @@ msgid ""
 "suppose that your story could be true. If I were in your place, my friend, I "
 "would find a way to release him from his torture."
 msgstr ""
-"お主、ラック​ダナン​と​話し​た​と​いう​の​か。ラック​ダナン​は​偉大​な​英雄​じゃっ​た。何​年​も​の​間、王​"
-"に​忠誠​を​尽くし​た​と​いう​こと​は、お主​も​先刻​承知​じゃろう。\n"
+"お主、ラック​ダナン​と​話し​た​と​いう​の​か。ラック​ダナン​は​偉大​な​英雄​じゃっ​た。何​年​"
+"も​の​間、王​に​忠誠​を​尽くし​た​と​いう​こと​は、お主​も​先刻​承知​じゃろう。\n"
 "\n"
-"​少なから​ぬ​者​達​が​王​に​呪い​を​かけ​られ​た​が、あの​男​なら、闘い​も​せ​ず​暗黒​面​に​降伏​する​"
-"こと​は​ある​まい。お主​の​話​は​本当​じゃろう​な。わし​が​お主​の​立場​に​あれ​ば、地獄​の​責め苦​から​解"
-"き放っ​て​やる​道​を​探し​て​やる​ところ​じゃ。"
+"​少なから​ぬ​者​達​が​王​に​呪い​を​かけ​られ​た​が、あの​男​なら、闘い​も​せ​ず​暗黒​面​に​降伏​す"
+"る​こと​は​ある​まい。お主​の​話​は​本当​じゃろう​な。わし​が​お主​の​立場​に​あれ​ば、地獄​の​"
+"責め苦​から​解き放っ​て​やる​道​を​探し​て​やる​ところ​じゃ。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:158
@@ -7600,16 +7649,18 @@ msgid ""
 "drink it. As your healer, I strongly advise that should you find such an "
 "elixir, do as Lachdanan asks and DO NOT try to use it."
 msgstr ""
-"ゴールデン​・​エリクサー​って​言っ​た​の​か​い​? 私​は​そんな​色​の​薬​を​調合​し​た​こと​が​ない​から"
-"、飲ん​だら​どう​なる​か​は​分から​ぬ​な。だ​が​治療​師​と​し​て​の​私​の​忠告​は、その​よう​な​エリクサ"
-"ー​を​見つけ​た​の​なら、ラック​ダナン​の​言う​とおり​に​し​て​使わ​ない​こと​だ​ね。"
+"ゴールデン​・​エリクサー​って​言っ​た​の​か​い​? 私​は​そんな​色​の​薬​を​調合​し​た​こと​が​ない​"
+"から、飲ん​だら​どう​なる​か​は​分から​ぬ​な。だ​が​治療​師​と​し​て​の​私​の​忠告​は、その​よう​"
+"な​エリクサー​を​見つけ​た​の​なら、ラック​ダナン​の​言う​とおり​に​し​て​使わ​ない​こと​だ​"
+"ね。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:162
 msgid ""
 "I've never heard of a Lachdanan before. I'm sorry, but I don't think that I "
 "can be of much help to you."
-msgstr "ラック​ダナン​なんて、聞い​た​こと​ない​わ。ごめん​なさい。お​役​に​立て​そう​も​ない​わ。"
+msgstr ""
+"ラック​ダナン​なんて、聞い​た​こと​ない​わ。ごめん​なさい。お​役​に​立て​そう​も​ない​わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:164
@@ -7619,8 +7670,9 @@ msgid ""
 "and loyal in nature. The curse that fell upon the followers of King Leoric "
 "would fall especially hard upon him."
 msgstr ""
-"もし、そいつ​が​紛れ​も​なく​ラック​ダナン​だっ​たら、助け​て​やっ​て​くれ。あれ​は​誠実​で​義理​堅い​男​だ"
-"っ​た​よ。あの​レオリック​王​の​家臣​の​中​で​ただ​一人、特別​な​呪い​を​かけ​られ​て​いる​ん​だ。"
+"もし、そいつ​が​紛れ​も​なく​ラック​ダナン​だっ​たら、助け​て​やっ​て​くれ。あれ​は​誠実​で​"
+"義理​堅い​男​だっ​た​よ。あの​レオリック​王​の​家臣​の​中​で​ただ​一人、特別​な​呪い​を​かけ​ら"
+"れ​て​いる​ん​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:166
@@ -7628,8 +7680,8 @@ msgid ""
 " Lachdanan is dead. Everybody knows that, and you can't fool me into "
 "thinking any other way. You can't talk to the dead. I know!"
 msgstr ""
-" ラクダナン​は​死ん​だ。みーんな​知っ​て​いる​こと​だ​し、わし​を​騙そう​たって​そう​は​いか​ない。死ん​だ​"
-"やつ​と​は​話せ​ない。知っ​てる​よ！"
+" ラクダナン​は​死ん​だ。みーんな​知っ​て​いる​こと​だ​し、わし​を​騙そう​たって​そう​は​いか​"
+"ない。死ん​だ​やつ​と​は​話せ​ない。知っ​てる​よ！"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:168
@@ -7639,8 +7691,8 @@ msgid ""
 " \n"
 "I sense in him honor and great guilt. Aid him, and you aid all of Tristram."
 msgstr ""
-"迷宮​に​閉じ込め​られ​た​ラック​ダナン​に​は、道​義心​と​深い​自責​の​念​を​感じる​こと​が​できる。彼​を​"
-"助けれ​ば​トリストラム​の​救い​と​なろう。"
+"迷宮​に​閉じ込め​られ​た​ラック​ダナン​に​は、道​義心​と​深い​自責​の​念​を​感じる​こと​が​でき"
+"る。彼​を​助けれ​ば​トリストラム​の​救い​と​なろう。"
 
 #. TRANSLATORS: Quest dialog spoken by  Wirt
 #: Source/textdat.cpp:170
@@ -7650,9 +7702,9 @@ msgid ""
 "questions anymore. Oh, that isn't what happened? Then I guess you'll be "
 "buying something or you'll be on your way."
 msgstr ""
-"ちょっと​待て​よ。ケイン​が​巨大​な​裂け目​に​飲み込ま​れ​て、地獄​の​火の玉​で​焼き殺さ​れ​ちまっ​て、あんた"
-"​の​質問​に​答え​られ​ねえ​って​の​か​? なに​ちがう​? なん​だ、何​か​買っ​て​くれ​ん​なら​いい​けど、"
-"そう​じゃ​ない​なら、さっさと​どっ​か​へ​行っ​て​くれ​よ。"
+"ちょっと​待て​よ。ケイン​が​巨大​な​裂け目​に​飲み込ま​れ​て、地獄​の​火の玉​で​焼き殺さ​れ​"
+"ちまっ​て、あんた​の​質問​に​答え​られ​ねえ​って​の​か​? なに​ちがう​? なん​だ、何​か​買っ​て​"
+"くれ​ん​なら​いい​けど、そう​じゃ​ない​なら、さっさと​どっ​か​へ​行っ​て​くれ​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:172
@@ -7669,14 +7721,15 @@ msgid ""
 "it the last of my humanity as well. Please aid me and find the Elixir. I "
 "will repay your efforts - I swear upon my honor."
 msgstr ""
-"待て。武器​を​収め、話​を​聞い​て​くれ。私​は​レオリック​騎士団​長​ラック​ダナン​だ。正義​と​名誉​に​かけ​て"
-"​この​国​の​法​を​守っ​て​き​た​者​だ。しかし、レオリック​王​を​非業​の​死​に​追いやっ​た​ため、呪い​を​"
-"かけ​られ​て​しまっ​た。騎士団​の​団員​は​みな​死ん​で​しまい、私​は​王​の​葬ら​れ​た​部屋​から​唯​一人​"
-"逃げ出し​て、この​呪い​から​逃れる​方法​を​探し​て​いる。\n"
+"待て。武器​を​収め、話​を​聞い​て​くれ。私​は​レオリック​騎士団​長​ラック​ダナン​だ。正義​"
+"と​名誉​に​かけ​て​この​国​の​法​を​守っ​て​き​た​者​だ。しかし、レオリック​王​を​非業​の​死​に​追"
+"いやっ​た​ため、呪い​を​かけ​られ​て​しまっ​た。騎士団​の​団員​は​みな​死ん​で​しまい、私​は​"
+"王​の​葬ら​れ​た​部屋​から​唯​一人​逃げ出し​て、この​呪い​から​逃れる​方法​を​探し​て​いる。\n"
 "\n"
-"​呪い​を​解き、魂​を​安らか​な​眠り​に​つか​せ​て​くれる​と​いう​ゴールデン​・​エリクサー​に​つい​て​聞い"
-"​た​こと​が​ある​が、見つける​こと​は​でき​なかっ​た。力​も​衰え、わずか​な​理性​も​また、衰え​つつ​ある。エ"
-"リクサー​を​探しだし、私​を​助け​て​欲しい。礼​は​さ​せ​て​もらう。名誉​に​かけ​て​誓おう。"
+"​呪い​を​解き、魂​を​安らか​な​眠り​に​つか​せ​て​くれる​と​いう​ゴールデン​・​エリクサー​に​つ"
+"い​て​聞い​た​こと​が​ある​が、見つける​こと​は​でき​なかっ​た。力​も​衰え、わずか​な​理性​も​"
+"また、衰え​つつ​ある。エリクサー​を​探しだし、私​を​助け​て​欲しい。礼​は​さ​せ​て​もら"
+"う。名誉​に​かけ​て​誓おう。"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (in despair)
 #: Source/textdat.cpp:174
@@ -7684,8 +7737,8 @@ msgid ""
 "You have not found the Golden Elixir. I fear that I am doomed for eternity. "
 "Please, keep trying..."
 msgstr ""
-"まだ​ゴールデン​・​エリクサー​が​見つから​ない​よう​だ​な。私​は​永遠​に​この​まま​な​の​だろう​か。頼む、探"
-"し​続け​て​くれ。"
+"まだ​ゴールデン​・​エリクサー​が​見つから​ない​よう​だ​な。私​は​永遠​に​この​まま​な​の​だろ"
+"う​か。頼む、探し​続け​て​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Lachdanan (Quest End)
 #: Source/textdat.cpp:176
@@ -7696,10 +7749,10 @@ msgid ""
 "have little use for it. May it protect you against the dark powers below. Go "
 "with the Light, my friend..."
 msgstr ""
-"そなた​は​私​の​魂​を​破滅​から​救っ​て​くれ​た。感謝​する。この​借り​を​返す​すべ​が​見つかっ​たら、墓​の"
-"​中​に​はいっ​て​から​で​も​力​に​なろう。しかし、今​は​この​兜​を​受けとっ​て​くれ。私​の​これ​から​の​"
-"旅​に​は​もう​必要​ない。きっと​悪​なる​力​から​あなた​を​守っ​て​くれる​だろう。さあ​行く​の​だ。友​よ、光"
-"​と​とも​に​あら​ん​こと​を。"
+"そなた​は​私​の​魂​を​破滅​から​救っ​て​くれ​た。感謝​する。この​借り​を​返す​すべ​が​見つかっ​"
+"たら、墓​の​中​に​はいっ​て​から​で​も​力​に​なろう。しかし、今​は​この​兜​を​受けとっ​て​く"
+"れ。私​の​これ​から​の​旅​に​は​もう​必要​ない。きっと​悪​なる​力​から​あなた​を​守っ​て​くれる​"
+"だろう。さあ​行く​の​だ。友​よ、光​と​とも​に​あら​ん​こと​を。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:178
@@ -7713,11 +7766,12 @@ msgid ""
 "unpredictable nature of Chaos makes it difficult to know what the outcome of "
 "this smithing will be..."
 msgstr ""
-"グリズウォルド​が​言っ​とる​の​は​「​憤激​の​鉄床​」​の​こと​じゃ​よ。永い​間​探し求め​て​いる​伝説​の​魔"
-"導​器​じゃ。「​カミソリ​の​穴​」​に​おる​悪魔​の​金属​質​の​骨​で​でき​て​おっ​て、地下​の​国​で​最も​"
-"力​の​ある​5​人​の​魔術師​の​ドクロ​の​そば​に​ある​と​いう。この​鉄床​に​は​力​と​混沌​を​表す​ルーン"
-"​文字​が​刻み込ま​れ、これ​に​よっ​て​作ら​れ​た​武器​や​鎧​は、混沌​の​世界​の​魔力​を​与え​られる​の​"
-"だ​そう​じゃ。混沌​の​力​は​予測​が​つか​ん​から​な、一体​どんな​力​を​秘め​て​いる​の​か​…"
+"グリズウォルド​が​言っ​とる​の​は​「​憤激​の​鉄床​」​の​こと​じゃ​よ。永い​間​探し求め​て​いる​"
+"伝説​の​魔導​器​じゃ。「​カミソリ​の​穴​」​に​おる​悪魔​の​金属​質​の​骨​で​でき​て​おっ​て、地下​"
+"の​国​で​最も​力​の​ある​5​人​の​魔術師​の​ドクロ​の​そば​に​ある​と​いう。この​鉄床​に​は​力​と​混沌​"
+"を​表す​ルーン​文字​が​刻み込ま​れ、これ​に​よっ​て​作ら​れ​た​武器​や​鎧​は、混沌​の​世界​の​魔"
+"力​を​与え​られる​の​だ​そう​じゃ。混沌​の​力​は​予測​が​つか​ん​から​な、一体​どんな​力​を​秘め​"
+"て​いる​の​か​…"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:180
@@ -7745,9 +7799,9 @@ msgid ""
 "was struck upon this anvil, the ground would shake with a great fury. "
 "Whenever the earth moves, I always remember that story."
 msgstr ""
-"子供​の​ころ、グリズウォルド​の​お父様​が、強力​な​武器​を​造る​大きな​鉄床​の​話し​を​し​て​くれ​た​わ。ハ"
-"ンマー​を​その​鉄床​に​振り下ろす​と、地面​が​怒り狂っ​た​よう​に、激しく​揺れる​ん​です​って。地震​が​ある​"
-"度​に、思い出す​わ。"
+"子供​の​ころ、グリズウォルド​の​お父様​が、強力​な​武器​を​造る​大きな​鉄床​の​話し​を​し​て​"
+"くれ​た​わ。ハンマー​を​その​鉄床​に​振り下ろす​と、地面​が​怒り狂っ​た​よう​に、激しく​揺"
+"れる​ん​です​って。地震​が​ある​度​に、思い出す​わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:186
@@ -7769,16 +7823,16 @@ msgid ""
 " \n"
 "Find the Anvil for me, and I'll get to work!"
 msgstr ""
-"やあ、いらっしゃい。また​来​て​くれ​た​の​か​い。迷宮​の​奥深く​へ​行っ​て​き​た​と​か​聞い​た​が​とってお"
-"き​の​話​が​ある。迷宮​から​戻っ​た​奴​が、逃げる​途中​で​魔法​の​鉄床​を​見​た​って​言う​ん​だ​が、これ"
-"​は​若い​ころ​わし​が​聞い​た​伝説​に​ぴったり​あてはまる​ん​だ。\n"
+"やあ、いらっしゃい。また​来​て​くれ​た​の​か​い。迷宮​の​奥深く​へ​行っ​て​き​た​と​か​聞い​た​"
+"が​とっておき​の​話​が​ある。迷宮​から​戻っ​た​奴​が、逃げる​途中​で​魔法​の​鉄床​を​見​た​って​"
+"言う​ん​だ​が、これ​は​若い​ころ​わし​が​聞い​た​伝説​に​ぴったり​あてはまる​ん​だ。\n"
 "\n"
-"​その​伝説​と​いう​の​は、灼熱​地獄​の​奥深く​に​は​憤激​の​鉄床​と​いう​の​が​あっ​て、強力​な​魔法​の"
-"​武器​を​作り出し​て​いる​と​いう​ん​だ。鉄床​は​黄泉​の​国​の​悪魔​の​力​を​秘め​て​い​て、そこ​で​作"
-"ら​れ​た​武器​は​最強​の​攻撃力​を​得る​ん​だ​と。\n"
+"​その​伝説​と​いう​の​は、灼熱​地獄​の​奥深く​に​は​憤激​の​鉄床​と​いう​の​が​あっ​て、強力​な​魔"
+"法​の​武器​を​作り出し​て​いる​と​いう​ん​だ。鉄床​は​黄泉​の​国​の​悪魔​の​力​を​秘め​て​い​て、そ"
+"こ​で​作ら​れ​た​武器​は​最強​の​攻撃力​を​得る​ん​だ​と。\n"
 "\n"
-"​もし​その​鉄床​が​本物​なら、あんた​に​恐怖​の​帝王​を​も​倒せる​武器​を​作っ​て​やる​ぞ。鉄床​を​探しだ"
-"し​て​くれ、おれ​の​腕前​を​見せ​て​やる​!"
+"​もし​その​鉄床​が​本物​なら、あんた​に​恐怖​の​帝王​を​も​倒せる​武器​を​作っ​て​やる​ぞ。鉄床​"
+"を​探しだし​て​くれ、おれ​の​腕前​を​見せ​て​やる​!"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:188
@@ -7787,8 +7841,8 @@ msgid ""
 "be your best hope, and I am sure that I can make you one of legendary "
 "proportions."
 msgstr ""
-"まだ​見つから​ん​の​か​? 鉄床​さえ​ありゃ、あんた​に​伝説​の​武器​を​作っ​て​やれる​ん​だ。何​と​か​探し"
-"​て​くれ​よ。"
+"まだ​見つから​ん​の​か​? 鉄床​さえ​ありゃ、あんた​に​伝説​の​武器​を​作っ​て​やれる​ん​だ。何​"
+"と​か​探し​て​くれ​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:190
@@ -7797,8 +7851,8 @@ msgid ""
 "Now we'll show those bastards that there are no weapons in Hell more deadly "
 "than those made by men! Take this and may Light protect you."
 msgstr ""
-"おぉ、ついに​鉄床​を​手​に​入れ​た​か​! 見​てろ​よ。人間​様​の​作っ​た​武器​が​どれ​ほど​恐ろしい​か​思"
-"い知ら​せ​て​やる。さあ、これ​を​もっ​て​行け。光​の​御​加護​が​あり​ます​よう​に。"
+"おぉ、ついに​鉄床​を​手​に​入れ​た​か​! 見​てろ​よ。人間​様​の​作っ​た​武器​が​どれ​ほど​恐ろし"
+"い​か​思い知ら​せ​て​やる。さあ、これ​を​もっ​て​行け。光​の​御​加護​が​あり​ます​よう​に。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:192
@@ -7806,8 +7860,8 @@ msgid ""
 "Griswold can't sell his anvil. What will he do then? And I'd be angry too if "
 "someone took my anvil!"
 msgstr ""
-"グリズウォルド​は​鉄床​は​売ら​ねえ。売っ​たら​何​も​出来​ねぇ​から​な。第​一、鉄床​を​取ら​れ​そう​に​なれ"
-"​ば、この​俺​だ​って​怒る​さ​!"
+"グリズウォルド​は​鉄床​は​売ら​ねえ。売っ​たら​何​も​出来​ねぇ​から​な。第​一、鉄床​を​取ら​"
+"れ​そう​に​なれ​ば、この​俺​だ​って​怒る​さ​!"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:194
@@ -7817,9 +7871,9 @@ msgid ""
 "used by either the Light or the Darkness. Securing the Anvil from below "
 "could shift the course of the Sin War towards the Light."
 msgstr ""
-"迷宮​に​は、人智​を​越え​た​力​を​持つ​魔導​器​が​数多く​眠っ​て​おる。中​に​は、光​の​者​で​も​闇​の​"
-"者​で​も​使える、途方​も​ない​力​を​持っ​た​物​も​ある。地下​で​鉄床​を​見つけ​られれ​ば、罪​深き​闘い​の"
-"​バランス​は、光​の​方​へ​傾く​や​も​知れ​ぬ。"
+"迷宮​に​は、人智​を​越え​た​力​を​持つ​魔導​器​が​数多く​眠っ​て​おる。中​に​は、光​の​者​で​も​闇​"
+"の​者​で​も​使える、途方​も​ない​力​を​持っ​た​物​も​ある。地下​で​鉄床​を​見つけ​られれ​ば、罪​"
+"深き​闘い​の​バランス​は、光​の​方​へ​傾く​や​も​知れ​ぬ。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:196
@@ -7827,8 +7881,8 @@ msgid ""
 "If you were to find this artifact for Griswold, it could put a serious "
 "damper on my business here. Awwww, you'll never find it."
 msgstr ""
-"もし​あんた​が​鉄床​を​見つけ​て​グリズウォルド​に​やっ​たら、俺​は​商売​あがったり​だ。まずい​な​… 見つかり"
-"ゃ​し​ない​さ。"
+"もし​あんた​が​鉄床​を​見つけ​て​グリズウォルド​に​やっ​たら、俺​は​商売​あがったり​だ。ま"
+"ずい​な​… 見つかりゃ​し​ない​さ。"
 
 #. TRANSLATORS: Quest dialog spoken by
 #: Source/textdat.cpp:198
@@ -7851,19 +7905,19 @@ msgid ""
 "said that when this holy armor is again needed, a hero will arise to don "
 "Valor once more. Perhaps you are that hero..."
 msgstr ""
-"「​血​の​門​」​と​「​炎​の​広間​」​は、神秘​の​起源​と​なる​重要​な​建造物​じゃ。お主​が​読ん​だ​書物​"
-"の​出所​が​どこ​か​知ら​ん​が、そこ​に​は​偉大​なる​力​が​ある​の​じゃ。\n"
+"「​血​の​門​」​と​「​炎​の​広間​」​は、神秘​の​起源​と​なる​重要​な​建造物​じゃ。お主​が​読ん​だ​書"
+"物​の​出所​が​どこ​か​知ら​ん​が、そこ​に​は​偉大​なる​力​が​ある​の​じゃ。\n"
 "\n"
-"​伝説​に​よれ​ば、黒曜石​を​切り出し​た​台座​に​骨​の​細工​が​施さ​れ、その​上​に​は​煮えたぎる​血​が​た"
-"まっ​て​いる​そう​じゃ。伝説​は​古代​の​財宝​を​守る​扉​を​開ける​と​いう​ブラッド​ストーン​に​つい​て​も"
-"​触れ​て​おる。\n"
+"​伝説​に​よれ​ば、黒曜石​を​切り出し​た​台座​に​骨​の​細工​が​施さ​れ、その​上​に​は​煮えたぎる​"
+"血​が​たまっ​て​いる​そう​じゃ。伝説​は​古代​の​財宝​を​守る​扉​を​開ける​と​いう​ブラッド​ス"
+"トーン​に​つい​て​も​触れ​て​おる。\n"
 "\n"
-"​この​財宝​に​つい​て​は​様々​な​憶測​が​さ​れ​とる​が、いにしえ​の​英雄​アルケイン​が、秘密​の​場所​に​"
-"収め​た​聖​なる​鎧、ヴァロー​じゃ​と​も​言わ​れ​て​おる。アルケイン​は​「​罪​深き​闘い​」​に​最初​に​身​"
-"を​投じ​た​人間​で、暗黒​の​軍隊​を​地獄​まで​追い返し​た。\n"
+"​この​財宝​に​つい​て​は​様々​な​憶測​が​さ​れ​とる​が、いにしえ​の​英雄​アルケイン​が、秘密​の​"
+"場所​に​収め​た​聖​なる​鎧、ヴァロー​じゃ​と​も​言わ​れ​て​おる。アルケイン​は​「​罪​深き​闘い​"
+"」​に​最初​に​身​を​投じ​た​人間​で、暗黒​の​軍隊​を​地獄​まで​追い返し​た。\n"
 "\n"
-"​それ​が​亡くなる​直前、鎧​を​秘密​の​場所​に​隠し​た​の​じゃ。この​聖​なる​鎧​が​再び​必要​と​なっ​た​"
-"とき、英雄​が​現れ​て​これ​を​身​に​つける​そう​な。お主​の​こと​か​も​しれ​ぬ​な。"
+"​それ​が​亡くなる​直前、鎧​を​秘密​の​場所​に​隠し​た​の​じゃ。この​聖​なる​鎧​が​再び​必要​と​"
+"なっ​た​とき、英雄​が​現れ​て​これ​を​身​に​つける​そう​な。お主​の​こと​か​も​しれ​ぬ​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:200
@@ -7872,8 +7926,8 @@ msgid ""
 "known as Valor. If you could find its resting place, you would be well "
 "protected against the evil in the Labyrinth."
 msgstr ""
-"戦士​アルケイン​と​彼​の​ヴァロー​の​鎧​の​こと​なら​子供​だ​って​知っ​て​い​ます​よ。もし​鎧​の​在り​か"
-"​が​分かれ​ば、迷宮​の​怪物​から​身​を​守る​こと​が​でき​ます​な。"
+"戦士​アルケイン​と​彼​の​ヴァロー​の​鎧​の​こと​なら​子供​だ​って​知っ​て​い​ます​よ。もし​鎧​の​"
+"在り​か​が​分かれ​ば、迷宮​の​怪物​から​身​を​守る​こと​が​でき​ます​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:202
@@ -7882,8 +7936,8 @@ msgid ""
 "learning new cures and creating better elixirs that I must have forgotten. "
 "Sorry..."
 msgstr ""
-"うーん、どう​も​思い出せ​ない​な。最近​は​新しい​治療​法​を​覚え​たり、エリクサー​を​作る​の​に​忙しく​て、忘"
-"れ​て​しまっ​た​よう​だ。すま​ぬ​な​.."
+"うーん、どう​も​思い出せ​ない​な。最近​は​新しい​治療​法​を​覚え​たり、エリクサー​を​作る​"
+"の​に​忙しく​て、忘れ​て​しまっ​た​よう​だ。すま​ぬ​な​.."
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:204
@@ -7891,8 +7945,8 @@ msgid ""
 "The story of the magic armor called Valor is something I often heard the "
 "boys talk about. You had better ask one of the men in the village."
 msgstr ""
-"ヴァロー​と​いう​名​の​鎧​の​話​なら、男の子​たち​が​よく​話し​て​い​た​から、町​の​男​たち​に​聞い​て​"
-"みる​と​いい​わ。"
+"ヴァロー​と​いう​名​の​鎧​の​話​なら、男の子​たち​が​よく​話し​て​い​た​から、町​の​男​たち​に​聞"
+"い​て​みる​と​いい​わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:206
@@ -7902,8 +7956,8 @@ msgid ""
 "well, my friend, and it will take more than a bit of luck to unlock the "
 "secrets that have kept it concealed oh, lo these many years."
 msgstr ""
-"ヴァロー​の​鎧​を​探し​てる​の​か​? アルケイン​め、どこ​へ​隠し​やがっ​た​の​か、誰​に​も​わから​ねえ。俺"
-"​の​手下​に​も​見つけ​られ​ねえ​ん​だ、あんた​に​望み​は​ねえ​な。"
+"ヴァロー​の​鎧​を​探し​てる​の​か​? アルケイン​め、どこ​へ​隠し​やがっ​た​の​か、誰​に​も​わか"
+"ら​ねえ。俺​の​手下​に​も​見つけ​られ​ねえ​ん​だ、あんた​に​望み​は​ねえ​な。"
 
 #. TRANSLATORS: Quest dialog "spoken" by Farnham
 #: Source/textdat.cpp:208
@@ -7930,7 +7984,8 @@ msgid ""
 "No one has ever figured out where Arkaine stashed the stuff, and if my "
 "contacts couldn't find it, I seriously doubt you ever will either."
 msgstr ""
-"ヴァロー​の​鎧​を​探し​てる​の​か​? アルケイン​め、どこ​へ​隠し​やがっ​た​の​か、誰​に​も​わから​ねえ。\n"
+"ヴァロー​の​鎧​を​探し​てる​の​か​? アルケイン​め、どこ​へ​隠し​やがっ​た​の​か、誰​に​も​わか"
+"ら​ねえ。\n"
 "\n"
 "​俺​の​手下​に​も​見つけ​られ​ねえ​ん​だ、あんた​に​望み​は​ねえ​な。"
 
@@ -7949,15 +8004,15 @@ msgid ""
 "Legion of Darkness during the Sin War, he lost his humanity to his "
 "insatiable hunger for blood."
 msgstr ""
-"そんな​戦士​の​伝説​なら、わし​が​知っ​て​おる​の​は​一​つ​だけ​じゃ。「​罪​深き​闘い​」​に​つい​て​の​"
-"古い​歴史書​に​よる​と​…。\n"
+"そんな​戦士​の​伝説​なら、わし​が​知っ​て​おる​の​は​一​つ​だけ​じゃ。「​罪​深き​闘い​」​に​つい​"
+"て​の​古い​歴史書​に​よる​と​…。\n"
 "\n"
 "​「​千​年​の​戦い​の​血​と​死​と​に​まみれ、鮮血​の​将軍​は​自ら​倒し​た​死体​の​山​に​立っ​た。暗黒​"
-"の​剣​が​生け​る​者​へ、呪い​の​叫び​を​上げる。この​地獄​の​死刑​執行​人​の​前​に​立ちはだかる​者​は​全"
-"て、地獄​の​責め苦​を​味わう​こと​と​なっ​た​…。\n"
+"の​剣​が​生け​る​者​へ、呪い​の​叫び​を​上げる。この​地獄​の​死刑​執行​人​の​前​に​立ちはだかる​"
+"者​は​全て、地獄​の​責め苦​を​味わう​こと​と​なっ​た​…。\n"
 "\n"
-"​さらに​「​罪​深き​闘い​」​で​は​暗黒​の​軍勢​と​闘っ​た​が、理性​を​失い、ついえる​こと​の​ない​血​へ​"
-"の​欲求​へ​と​走っ​た​」​と​書い​て​ある。"
+"​さらに​「​罪​深き​闘い​」​で​は​暗黒​の​軍勢​と​闘っ​た​が、理性​を​失い、ついえる​こと​の​ない​"
+"血​へ​の​欲求​へ​と​走っ​た​」​と​書い​て​ある。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:215
@@ -7966,8 +8021,8 @@ msgid ""
 "master. I hope that you do not have to fight him, for he sounds extremely "
 "dangerous."
 msgstr ""
-"そんな​物騒​な​戦士​は​初耳​です​が、そんな​やつ​と​戦わ​ず​に​すむ​と​いい​です​ね。命​が​いくつ​あっ​て"
-"​も​足り​ませ​ん​よ。"
+"そんな​物騒​な​戦士​は​初耳​です​が、そんな​やつ​と​戦わ​ず​に​すむ​と​いい​です​ね。命​が​いく"
+"つ​あっ​て​も​足り​ませ​ん​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:217
@@ -7981,7 +8036,9 @@ msgstr "この​よう​な​こと​は、よく​分から​ない​が
 msgid ""
 "If you are to battle such a fierce opponent, may Light be your guide and "
 "your defender. I will keep you in my thoughts."
-msgstr "そんな​に​すごい​相手​と​闘う​なら、光​が​あなた​を​お守り​下さる​よう​に、お​祈り​し​て​いる​わ。"
+msgstr ""
+"そんな​に​すごい​相手​と​闘う​なら、光​が​あなた​を​お守り​下さる​よう​に、お​祈り​し​て​いる​"
+"わ。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:221
@@ -7989,8 +8046,8 @@ msgid ""
 "Dark and wicked legends surrounds the one Warlord of Blood. Be well "
 "prepared, my friend, for he shows no mercy or quarter."
 msgstr ""
-"鮮血​の​将軍​に​は​邪悪​な​伝説​が​つきまとっ​て​いる。用心​を​怠る​ん​じゃ​ない。やつ​は​情け​容赦​ない​"
-"ぞ。"
+"鮮血​の​将軍​に​は​邪悪​な​伝説​が​つきまとっ​て​いる。用心​を​怠る​ん​じゃ​ない。やつ​は​情け​"
+"容赦​ない​ぞ。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:223
@@ -7999,8 +8056,8 @@ msgid ""
 "that pretty girl that brings the drinks. Listen here, friend - you're "
 "obsessive, you know that?"
 msgstr ""
-"血​の​話​ばっかり​じゃ​ねぇ​か。たまに​はな、花​と​か​天気​と​か、美人​の​メイド​の​話​で​も​しろ​ぉ​い​"
-"! 全く​よ​…​お前​ちょっと​お​かい​しい​ぜ、ほんと​に。"
+"血​の​話​ばっかり​じゃ​ねぇ​か。たまに​はな、花​と​か​天気​と​か、美人​の​メイド​の​話​で​も​し"
+"ろ​ぉ​い​! 全く​よ​…​お前​ちょっと​お​かい​しい​ぜ、ほんと​に。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:225
@@ -8018,8 +8075,8 @@ msgid ""
 "I haven't ever dealt with this Warlord you speak of, but he sounds like he's "
 "going through a lot of swords. Wouldn't mind supplying his armies..."
 msgstr ""
-"その​将軍​と​やら​は、おれ​の​客​じゃ​ねえ​が、そうとう​剣​を​つぶし​てる​な。もっとも、そいつ​に​剣​を​売る"
-"​つもり​は​ねえ​けど​よ。"
+"その​将軍​と​やら​は、おれ​の​客​じゃ​ねえ​が、そうとう​剣​を​つぶし​てる​な。もっとも、そ"
+"いつ​に​剣​を​売る​つもり​は​ねえ​けど​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Warlord of Blood (Hostile)
 #: Source/textdat.cpp:229
@@ -8037,10 +8094,10 @@ msgid ""
 "man could possess. I do not know what secrets it holds, my friend, but "
 "finding this stone would certainly prove most valuable."
 msgstr ""
-"グリズウォルド​が​言っ​て​おる​の​は、東方​へ​と​運ば​れる​はず​だっ​た​天界​の​石​の​こと​じゃ​な。詳しく"
-"​調べる​途中​ここ​に​運ば​れ​て​き​た​の​じゃ。この​石​は​普通​の​人間​に​は​見え​ない​エネルギー​で​輝"
-"い​とる。そこ​に​秘め​られ​た​謎​は​分から​ん​が、ともかく​この​石​を​見つける​こと​が​重要​な​の​は​確か"
-"​じゃろう。"
+"グリズウォルド​が​言っ​て​おる​の​は、東方​へ​と​運ば​れる​はず​だっ​た​天界​の​石​の​こと​じゃ​"
+"な。詳しく​調べる​途中​ここ​に​運ば​れ​て​き​た​の​じゃ。この​石​は​普通​の​人間​に​は​見え​ない​"
+"エネルギー​で​輝い​とる。そこ​に​秘め​られ​た​謎​は​分から​ん​が、ともかく​この​石​を​見つけ"
+"る​こと​が​重要​な​の​は​確か​じゃろう。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:233
@@ -8050,8 +8107,8 @@ msgid ""
 "sweetbreads that Garda has just finished baking. Shame what happened to "
 "them..."
 msgstr ""
-"キャラバン​が、東​へ​の​旅​に​備え​て、買い物​に​来​た​ん​です。新鮮​な​果物​を​どっさり​と、焼き立て​の​肉"
-"​を​買っ​て​くれ​た​の​に、お​気の毒​です。"
+"キャラバン​が、東​へ​の​旅​に​備え​て、買い物​に​来​た​ん​です。新鮮​な​果物​を​どっさり​と、"
+"焼き立て​の​肉​を​買っ​て​くれ​た​の​に、お​気の毒​です。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:235
@@ -8060,8 +8117,8 @@ msgid ""
 "I will say this. If rocks are falling from the sky, you had better be "
 "careful!"
 msgstr ""
-"その​石​を​使っ​て​何​を​しよう​と​し​て​い​た​の​か​は​知ら​ない​が、本当​に​石​が​空​から​落ち​て​"
-"くる​の​なら、気​を​つけ​た​方​が​よい​!"
+"その​石​を​使っ​て​何​を​しよう​と​し​て​い​た​の​か​は​知ら​ない​が、本当​に​石​が​空​から​落ち​て​く"
+"る​の​なら、気​を​つけ​た​方​が​よい​!"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian
 #: Source/textdat.cpp:237
@@ -8073,9 +8130,9 @@ msgid ""
 "I don't see how you could hope to find anything that they would have been "
 "carrying."
 msgstr ""
-"ええ、何​か​偉い​人​たち​の​キャラバン​が、確か​に​ここ​へ​寄っ​た​けど、大分​前​の​話​よ。変わっ​た​訛り​"
-"が​あっ​て、長旅​に​出る​と​か​言っ​て​た​かしら。え​?​あの​人​たち​の​持っ​て​い​た​もの​を​探し​て​"
-"いる​の​?"
+"ええ、何​か​偉い​人​たち​の​キャラバン​が、確か​に​ここ​へ​寄っ​た​けど、大分​前​の​話​よ。変"
+"わっ​た​訛り​が​あっ​て、長旅​に​出る​と​か​言っ​て​た​かしら。え​?​あの​人​たち​の​持っ​て​い​た​も"
+"の​を​探し​て​いる​の​?"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:239
@@ -8088,19 +8145,21 @@ msgid ""
 "found. If you should find it, I believe that I can fashion something useful "
 "from it."
 msgstr ""
-"あなた​が​興味​を​持つ​か​も​しれ​ない​話​が​ある​の​で、ちょっと​待っ​て​ください。昔、東​の​王国​に​向か"
-"う​キャラバン​が​ここ​を​通り​まし​た。その​キャラバン​は、地上​に​落ち​た​天​の​一部​を​運ん​で​い​た​と"
-"​さ​れ​て​い​ます その​キャラバン​は、ここ​の​北側​の​道路​沿い​で、マント​を​着​た​ライダー​に​待ち伏せ​"
-"さ​れ​た。残骸​の​中​から​この​天​の​石​を​探し​まし​た​が、どこ​に​も​あり​ませ​ん​でし​た。もし、あなた"
-"​が​それ​を​見つけ​た​なら​ば、私​は​それ​を​使っ​て​何​か​役​に​立つ​こと​が​できる​と​信じ​て​い​ま"
-"す。"
+"あなた​が​興味​を​持つ​か​も​しれ​ない​話​が​ある​の​で、ちょっと​待っ​て​ください。昔、東​の​"
+"王国​に​向かう​キャラバン​が​ここ​を​通り​まし​た。その​キャラバン​は、地上​に​落ち​た​天​の​"
+"一部​を​運ん​で​い​た​と​さ​れ​て​い​ます その​キャラバン​は、ここ​の​北側​の​道路​沿い​で、マン"
+"ト​を​着​た​ライダー​に​待ち伏せ​さ​れ​た。残骸​の​中​から​この​天​の​石​を​探し​まし​た​が、どこ​"
+"に​も​あり​ませ​ん​でし​た。もし、あなた​が​それ​を​見つけ​た​なら​ば、私​は​それ​を​使っ​て​何​"
+"か​役​に​立つ​こと​が​できる​と​信じ​て​い​ます。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold
 #: Source/textdat.cpp:241
 msgid ""
 "I am still waiting for you to bring me that stone from the heavens. I know "
 "that I can make something powerful out of it."
-msgstr "天界​の​かけら​は​まだか​? わし​なら、その​石​で​すごい​力​を​秘め​た​もの​を​作っ​て​やれる​の​に。"
+msgstr ""
+"天界​の​かけら​は​まだか​? わし​なら、その​石​で​すごい​力​を​秘め​た​もの​を​作っ​て​やれる​の​"
+"に。"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold(Quest End)
 #: Source/textdat.cpp:243
@@ -8112,8 +8171,8 @@ msgid ""
 msgstr ""
 "どれ、見せ​て​み​な。やっぱり​思っ​た​とおり​だ。\n"
 "\n"
-"​ほら、おやじ​から​もらっ​た​銀​の​指輪​に​この​石​を​はめ込む​と​ぴったり​じゃ​ない​か。こいつ​が​あんた​"
-"の​役​に​立つ​と​いい​な。"
+"​ほら、おやじ​から​もらっ​た​銀​の​指輪​に​この​石​を​はめ込む​と​ぴったり​じゃ​ない​か。こい"
+"つ​が​あんた​の​役​に​立つ​と​いい​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:245
@@ -8122,8 +8181,8 @@ msgid ""
 "green and red and silver. Don't remember what happened to it, though. I "
 "really miss that ring..."
 msgstr ""
-"いい​指輪​を​持っ​て​た​よ。値​の​張る​やつ​で​色​は、青​と​緑​と​赤​と​銀色​だ。あれ​は、ええ​と、どう​"
-"し​た​っけ​な。無くし​ちまっ​た​…"
+"いい​指輪​を​持っ​て​た​よ。値​の​張る​やつ​で​色​は、青​と​緑​と​赤​と​銀色​だ。あれ​は、ええ​"
+"と、どう​し​た​っけ​な。無くし​ちまっ​た​…"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:247
@@ -8132,8 +8191,9 @@ msgid ""
 "find it, I would prevent it. He will harness its powers and its use will be "
 "for the good of us all."
 msgstr ""
-"天界​の​石​は​強い​力​を​持つ。決して​グリズウォルド​以外​の​者​に、それ​を​引き渡し​て​は​なら​ぬ。グリズウ"
-"ォルド​なら​ば、我​ら​の​ため​に、その​良き​力​を​引き出す​こと​が​できる​で​あろう。"
+"天界​の​石​は​強い​力​を​持つ。決して​グリズウォルド​以外​の​者​に、それ​を​引き渡し​て​は​な"
+"ら​ぬ。グリズウォルド​なら​ば、我​ら​の​ため​に、その​良き​力​を​引き出す​こと​が​できる​で​"
+"あろう。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:249
@@ -8142,8 +8202,8 @@ msgid ""
 "he is doing, and as much as I try to steal his customers, I respect the "
 "quality of his work."
 msgstr ""
-"その​石​で​何​か​作れる​と​し​たら、グリズウォルド​しか​い​ねえ​な。やつ​は​頭​が​いい​から​よ。たしか​に​"
-"やつ​は​商売敵​だ​けど、腕​は​確か​さ。"
+"その​石​で​何​か​作れる​と​し​たら、グリズウォルド​しか​い​ねえ​な。やつ​は​頭​が​いい​から​"
+"よ。たしか​に​やつ​は​商売敵​だ​けど、腕​は​確か​さ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain
 #: Source/textdat.cpp:251
@@ -8152,9 +8212,9 @@ msgid ""
 "as I do about Red Herrings. Perhaps Pepin the Healer could tell you more, "
 "but this is something that cannot be found in any of my stories or books."
 msgstr ""
-"「​魔女​の​エイドリア​が​黒​キノコ​を​探し​とる​」​だ​と​? 黒い​キノコ​だ​か​赤い​ニシン​だ​か、そんな​"
-"物​わし​は​全然​知ら​ん​ぞ。治療​師​の​ペピン​なら​色々​教え​て​くれる​じゃろう​が、わし​は​聞い​た​こと​"
-"も​読ん​だ​こと​も​ない。"
+"「​魔女​の​エイドリア​が​黒​キノコ​を​探し​とる​」​だ​と​? 黒い​キノコ​だ​か​赤い​ニシン​だ​か、"
+"そんな​物​わし​は​全然​知ら​ん​ぞ。治療​師​の​ペピン​なら​色々​教え​て​くれる​じゃろう​が、わ"
+"し​は​聞い​た​こと​も​読ん​だ​こと​も​ない。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden
 #: Source/textdat.cpp:253
@@ -8164,8 +8224,9 @@ msgid ""
 "then that is her business, but I can't help you find any. Black mushrooms... "
 "disgusting!"
 msgstr ""
-"うち​の​大事​な​お客様​に、黒い​キノコ​なんて、絶対​出し​ませ​ん​よ。エイドリア​が​シチュー​に​入れる​の​は、"
-"彼女​の​勝手​です​が、そんな​もの​探す​手伝い​は​ご免​です​から​ね。黒い​キノコ​だ​なんて​気持ち​悪い​!"
+"うち​の​大事​な​お客様​に、黒い​キノコ​なんて、絶対​出し​ませ​ん​よ。エイドリア​が​シ"
+"チュー​に​入れる​の​は、彼女​の​勝手​です​が、そんな​もの​探す​手伝い​は​ご免​です​から​ね。"
+"黒い​キノコ​だ​なんて​気持ち​悪い​!"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin
 #: Source/textdat.cpp:255
@@ -8176,9 +8237,10 @@ msgid ""
 "that its alchemy holds. If you can remove the brain of a demon when you kill "
 "it, I would be grateful if you could bring it to me."
 msgstr ""
-"私​の​エリクサー​作り​を​助ける​ため​に、君​が​デーモン​の​脳味噌​を​探し​て​いる​と、エイドリア​から​聞い​"
-"た​よ。悪魔​の​魔力​の​秘密​を​解明​できれ​ば、あの​汚れ​た​獣​ども​に​傷つけ​られ​た​人々​を​助け​られる"
-"​と​思う​の​だ。悪魔​を​倒し​た​とき​に、その​脳味噌​を​取り出せ​たら、私​に​届け​て​もらえ​ない​か​…"
+"私​の​エリクサー​作り​を​助ける​ため​に、君​が​デーモン​の​脳味噌​を​探し​て​いる​と、エイド"
+"リア​から​聞い​た​よ。悪魔​の​魔力​の​秘密​を​解明​できれ​ば、あの​汚れ​た​獣​ども​に​傷つけ​ら"
+"れ​た​人々​を​助け​られる​と​思う​の​だ。悪魔​を​倒し​た​とき​に、その​脳味噌​を​取り出せ​た"
+"ら、私​に​届け​て​もらえ​ない​か​…"
 
 #. TRANSLATORS: Quest dialog spoken by Pepin
 #: Source/textdat.cpp:257
@@ -8187,8 +8249,9 @@ msgid ""
 "without this, but it can't hurt to have this to study. Would you please "
 "carry this to the witch? I believe that she is expecting it."
 msgstr ""
-"すばらしい、よく​やっ​て​くれ​た​ね。これ​なし​で​エリクサー​は​完成​し​た​が、これ​は​研究​用​に​重宝​する"
-"​よ。この​エリクサー​を​エイドリア​に​渡し​て​くれ​ない​か​? 待っ​て​いる​と​思う​から。"
+"すばらしい、よく​やっ​て​くれ​た​ね。これ​なし​で​エリクサー​は​完成​し​た​が、これ​は​研究​"
+"用​に​重宝​する​よ。この​エリクサー​を​エイドリア​に​渡し​て​くれ​ない​か​? 待っ​て​いる​と​思"
+"う​から。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:259
@@ -8204,9 +8267,9 @@ msgid ""
 "I can offer you no more help than that, but it sounds like... a huge, "
 "gargantuan, swollen, bloated mushroom! Well, good hunting, I suppose."
 msgstr ""
-"エイドリア​で​も​持っ​て​ない​って​こと​なら、こいつ​は​そうとう​珍しい​代物​だ​ぞ。すま​ん​が​わし​は​何​"
-"の​力​に​も​なれ​そう​も​ない。だ​が、そりゃ、どう​やら、やたら​バカ​でかい​マッシュルーム​の​よう​だ​な。せい"
-"ぜい​頑張っ​て​キノコ​を​採っ​て​き​て​お​くれ。"
+"エイドリア​で​も​持っ​て​ない​って​こと​なら、こいつ​は​そうとう​珍しい​代物​だ​ぞ。すま​ん​"
+"が​わし​は​何​の​力​に​も​なれ​そう​も​ない。だ​が、そりゃ、どう​やら、やたら​バカ​でかい​"
+"マッシュルーム​の​よう​だ​な。せいぜい​頑張っ​て​キノコ​を​採っ​て​き​て​お​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham
 #: Source/textdat.cpp:263
@@ -8214,8 +8277,8 @@ msgid ""
 "Ogden mixes a MEAN black mushroom, but I get sick if I drink that. Listen, "
 "listen... here's the secret - moderation is the key!"
 msgstr ""
-"オグデン​は​怪しい​黒い​キノコ​で​何​か、作る​が​あれ​を​飲ん​だら、きっと​きっと​病気​に​なる​ぞ。いい​か、"
-"ほどほど​に​し​て​おけ​よ。"
+"オグデン​は​怪しい​黒い​キノコ​で​何​か、作る​が​あれ​を​飲ん​だら、きっと​きっと​病気​に​な"
+"る​ぞ。いい​か、ほどほど​に​し​て​おけ​よ。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:265
@@ -8224,9 +8287,9 @@ msgid ""
 "your eyes open for a black mushroom. It should be fairly large and easy to "
 "identify. If you find it, bring it to me, won't you?"
 msgstr ""
-"これ​は​何​じゃ​? なるほど、ポーション​の​製法​を​示し​た​本​の​よう​だ​ね。よし​黒い​キノコ​を​探し​て​"
-"き​て​お​くれ。大きな​キノコ​だ​から、お前​に​で​も​すぐ​に​分かる​よ。見つけ​たら、私​の​ところ​へ​持っ​て"
-"​き​て​お​くれ。"
+"これ​は​何​じゃ​? なるほど、ポーション​の​製法​を​示し​た​本​の​よう​だ​ね。よし​黒い​キノコ​"
+"を​探し​て​き​て​お​くれ。大きな​キノコ​だ​から、お前​に​で​も​すぐ​に​分かる​よ。見つけ​た"
+"ら、私​の​ところ​へ​持っ​て​き​て​お​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:267
@@ -8234,8 +8297,8 @@ msgid ""
 "It's a big, black mushroom that I need. Now run off and get it for me so "
 "that I can use it for a special concoction that I am working on."
 msgstr ""
-"今​調合​し​て​いる​ポーション​に​は、黒く​て​大きな​キノコ​が​必要​な​ん​じゃ。さあ、ボヤボヤ​し​とら​ん​で"
-"​早く​採っ​て​き​て​お​くれ。"
+"今​調合​し​て​いる​ポーション​に​は、黒く​て​大きな​キノコ​が​必要​な​ん​じゃ。さあ、ボヤボ"
+"ヤ​し​とら​ん​で​早く​採っ​て​き​て​お​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:269
@@ -8246,9 +8309,10 @@ msgid ""
 "intends to make an elixir from it. If you help him find what he needs, "
 "please see if you can get a sample of the elixir for me."
 msgstr ""
-"ああ、これ​こそ、今​私​の​調合​し​て​いる​ポーション​に​必要​な​物​だ​よ。ところ​で、治療​師​が​デーモン​の"
-"​脳味噌​を​探し​て​おる​ぞ。毒​に​犯さ​れ​た​者​を​治療​する​ため​の​エリクサー​を​作る​の​に​必要​らし"
-"い​ね。お前​が​見つけ​て​やっ​た​なら、その​エリクサー​の​サンプル​を​一​つ​もらっ​て​き​て​お​くれ。"
+"ああ、これ​こそ、今​私​の​調合​し​て​いる​ポーション​に​必要​な​物​だ​よ。ところ​で、治療​師​"
+"が​デーモン​の​脳味噌​を​探し​て​おる​ぞ。毒​に​犯さ​れ​た​者​を​治療​する​ため​の​エリクサー​を​"
+"作る​の​に​必要​らしい​ね。お前​が​見つけ​て​やっ​た​なら、その​エリクサー​の​サンプル​を​一​"
+"つ​もらっ​て​き​て​お​くれ。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria
 #: Source/textdat.cpp:271
@@ -8258,9 +8322,9 @@ msgid ""
 "that grotesque organ that you are holding, and then bring me the elixir. "
 "Simple when you think about it, isn't it?"
 msgstr ""
-"なぜ、そんな​もの​を​持っ​て​き​た​の​じゃ​? 今​は​デーモン​の​脳味噌​なんぞ​要ら​ない​よ。私​が​欲しい​"
-"の​は、治療​師​の​エリクサー​だ​よ​! その​気味​悪い​脳味噌​を​待っ​て​いる​の​は、あの​治療​師​だ。私​に"
-"​は​やつ​の​エリクサー​を​持っ​て​き​て​お​くれ。分かっ​た​か​い​?"
+"なぜ、そんな​もの​を​持っ​て​き​た​の​じゃ​? 今​は​デーモン​の​脳味噌​なんぞ​要ら​ない​よ。私​"
+"が​欲しい​の​は、治療​師​の​エリクサー​だ​よ​! その​気味​悪い​脳味噌​を​待っ​て​いる​の​は、あ"
+"の​治療​師​だ。私​に​は​やつ​の​エリクサー​を​持っ​て​き​て​お​くれ。分かっ​た​か​い​?"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (Quest End)
 #: Source/textdat.cpp:273
@@ -8268,8 +8332,8 @@ msgid ""
 "What? Now you bring me that elixir from the healer? I was able to finish my "
 "brew without it. Why don't you just keep it..."
 msgstr ""
-"なん​だ​い、今ごろ​エリクサー​を​持っ​て​き​た​の​か​い​? ポーション​は​もう​完成​し​ちまっ​た​よ。それ​"
-"は、お前​さん​が​持っ​て​おき​な。"
+"なん​だ​い、今ごろ​エリクサー​を​持っ​て​き​た​の​か​い​? ポーション​は​もう​完成​し​ちまっ​た​"
+"よ。それ​は、お前​さん​が​持っ​て​おき​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt
 #: Source/textdat.cpp:275
@@ -8277,8 +8341,8 @@ msgid ""
 "I don't have any mushrooms of any size or color for sale. How about "
 "something a bit more useful?"
 msgstr ""
-"俺​ん​とこ​は、キノコ​なんか​ひと​つ​も​ねえ​よ。それ​より、もっと​すぐ​に​役​に​立つ​もの​が​ある​けど、ひ"
-"と​つ​どう​だ​い​?"
+"俺​ん​とこ​は、キノコ​なんか​ひと​つ​も​ねえ​よ。それ​より、もっと​すぐ​に​役​に​立つ​もの​が​"
+"ある​けど、ひと​つ​どう​だ​い​?"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:277
@@ -8303,24 +8367,26 @@ msgid ""
 "before the stars align, for we may never have a chance to rid the world of "
 "his evil again!"
 msgstr ""
-"する​と​地図​の​伝説​は​本当​じゃっ​た​の​か。この​わし​で​すら、今まで​信じ​た​こと​も​なかっ​た​が​の​"
-"お​… そろそろ​正体​を​明かす​とき​が​来​た​よう​じゃ​な。\n"
+"する​と​地図​の​伝説​は​本当​じゃっ​た​の​か。この​わし​で​すら、今まで​信じ​た​こと​も​なかっ​"
+"た​が​の​お​… そろそろ​正体​を​明かす​とき​が​来​た​よう​じゃ​な。\n"
 "\n"
-"​わし​の​真​の​名​は​デッカード​・​ケイン。永遠​の​悪​の​封印​を​守る​古き​結社​の、最後​の​末裔​じゃ。だ"
-"​が​どう​やら​その​封印​が​解か​れ​た​よう​じゃ。\n"
+"​わし​の​真​の​名​は​デッカード​・​ケイン。永遠​の​悪​の​封印​を​守る​古き​結社​の、最後​の​末裔​"
+"じゃ。だ​が​どう​やら​その​封印​が​解か​れ​た​よう​じゃ。\n"
 "\n"
-"​お主​が​相手​に​する​の​は​恐怖​の​帝王。人間界​で​は​ディアブロ​と​呼ば​れ​て​おる。こやつ​こそ​何​世紀"
-"​も​前​に​迷宮​に​幽閉​さ​れ​た​やつ​じゃ。お主​が​手​に​入れ​た​その​古い​地図​に​は、ディアブロ​が​幽"
-"閉​から​解き放た​れ、再び​立ち上がる​時​が​記さ​れ​て​おる。地図​に​ある​2​つ​の​星​が​一直線​に​並ぶ​と"
-"き、その​時​こそ​ディアブロ​は、その​力​を​最大限​に​発揮​する​の​じゃ。こと​は​一刻​を​争う。星​が​並ぶ​前"
-"​に​ディアブロ​を​見つけ、倒さ​ね​ば、もう​決して​やつ​を​止める​こと​は​でき​ぬ。"
+"​お主​が​相手​に​する​の​は​恐怖​の​帝王。人間界​で​は​ディアブロ​と​呼ば​れ​て​おる。こやつ​こ"
+"そ​何​世紀​も​前​に​迷宮​に​幽閉​さ​れ​た​やつ​じゃ。お主​が​手​に​入れ​た​その​古い​地図​に​は、"
+"ディアブロ​が​幽閉​から​解き放た​れ、再び​立ち上がる​時​が​記さ​れ​て​おる。地図​に​ある​2​つ​"
+"の​星​が​一直線​に​並ぶ​とき、その​時​こそ​ディアブロ​は、その​力​を​最大限​に​発揮​する​の​"
+"じゃ。こと​は​一刻​を​争う。星​が​並ぶ​前​に​ディアブロ​を​見つけ、倒さ​ね​ば、もう​決して​"
+"やつ​を​止める​こと​は​でき​ぬ。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:279
 msgid ""
 "Our time is running short! I sense his dark power building and only you can "
 "stop him from attaining his full might."
-msgstr "私たち​の​時間​は​残り​わずか​です。彼​の​暗黒​の​力​が​増大​し​て​いる​の​を​感じ​て​い​ます。"
+msgstr ""
+"私たち​の​時間​は​残り​わずか​です。彼​の​暗黒​の​力​が​増大​し​て​いる​の​を​感じ​て​い​ます。"
 
 #. TRANSLATORS: Quest dialog spoken by Cain (currently unused)
 #: Source/textdat.cpp:281
@@ -8330,9 +8396,9 @@ msgid ""
 "and you will need all your courage and strength to defeat him. May the Light "
 "protect and guide you, my friend. I will help in any way that I am able."
 msgstr ""
-"よく​やっ​とる​が、お主​の​その​力​と​精神力​で​は​まだ​足り​ぬ。ディアブロ​は​今​や​その​力​を​最大限​に"
-"​増大​し​て​いる、これ​に​打ち勝つ​に​は​勇気​と​力​を​振り絞ら​ね​ば​なら​ん​の​じゃ。光​の​加護​と​導"
-"き​あれ。わし​も​何​と​か​力​を​貸そう。"
+"よく​やっ​とる​が、お主​の​その​力​と​精神力​で​は​まだ​足り​ぬ。ディアブロ​は​今​や​その​力​を​"
+"最大限​に​増大​し​て​いる、これ​に​打ち勝つ​に​は​勇気​と​力​を​振り絞ら​ね​ば​なら​ん​の​じゃ。"
+"光​の​加護​と​導き​あれ。わし​も​何​と​か​力​を​貸そう。"
 
 #. TRANSLATORS: Quest dialog spoken by Ogden (currently unused)
 #: Source/textdat.cpp:283
@@ -8341,8 +8407,8 @@ msgid ""
 "that I would know anything? It sounds like this is a very serious matter. "
 "You should hurry along and see the storyteller as Adria suggests."
 msgstr ""
-"魔女​に​も​わから​なく​て、ケイン​に​聞け​と​言わ​れ​た​なら、私​の​出る​幕​じゃ​ない​です​よ。こと​は​重"
-"大​の​よう​です​から、はやく​語り部​に​会い​に​行き​なさい。"
+"魔女​に​も​わから​なく​て、ケイン​に​聞け​と​言わ​れ​た​なら、私​の​出る​幕​じゃ​ない​です​よ。"
+"こと​は​重大​の​よう​です​から、はやく​語り部​に​会い​に​行き​なさい。"
 
 #. TRANSLATORS: Quest dialog spoken by Pipin (currently unused)
 #: Source/textdat.cpp:285
@@ -8353,8 +8419,9 @@ msgid ""
 "I can see that it is a map of the stars in our sky, but any more than that "
 "is beyond my talents."
 msgstr ""
-"この​地図​の​文字​は、私​に​は​分から​ない​が、エイドリア​か​ケイン​なら​解読​し​て​くれる​の​で​は​ない​"
-"か​な。空​の​星​を​描い​た​地図​と​いう​こと​は​分かる​が、それ​以上​の​こと​は​分から​ぬ。"
+"この​地図​の​文字​は、私​に​は​分から​ない​が、エイドリア​か​ケイン​なら​解読​し​て​くれる​の​"
+"で​は​ない​か​な。空​の​星​を​描い​た​地図​と​いう​こと​は​分かる​が、それ​以上​の​こと​は​分から​"
+"ぬ。"
 
 #. TRANSLATORS: Quest dialog spoken by Gillian (currently unused)
 #: Source/textdat.cpp:287
@@ -8364,8 +8431,8 @@ msgid ""
 "Cain is very knowledgeable about ancient writings, and that is easily the "
 "oldest looking piece of paper that I have ever seen."
 msgstr ""
-"そう​いう​こと​は、語り部​に​聞く​の​が​一番​だ​わ。ケイン​は​古代​の​書物​に​は​とても​詳しい​の。それ​に"
-"​し​て​も、そんな​古​そう​な​紙切れ、見​た​こと​ない​わ​!"
+"そう​いう​こと​は、語り部​に​聞く​の​が​一番​だ​わ。ケイン​は​古代​の​書物​に​は​とても​詳しい​"
+"の。それ​に​し​て​も、そんな​古​そう​な​紙切れ、見​た​こと​ない​わ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Griswold (currently unused)
 #: Source/textdat.cpp:289
@@ -8374,8 +8441,8 @@ msgid ""
 "have no idea how to read this, Cain or Adria may be able to provide the "
 "answers that you seek."
 msgstr ""
-"こんな​地図​は​見​た​こと​も​ない​ぞ。どこ​で​手​に​入れ​た​ん​だ​? わし​に​は​さっぱり​わから​ん​が​"
-"ケイン​か​エイドリア​に​聞い​て​みる​こと​だ​な。"
+"こんな​地図​は​見​た​こと​も​ない​ぞ。どこ​で​手​に​入れ​た​ん​だ​? わし​に​は​さっぱり​わから​ん​"
+"が​ケイン​か​エイドリア​に​聞い​て​みる​こと​だ​な。"
 
 #. TRANSLATORS: Quest dialog spoken by Farnham (currently unused)
 #: Source/textdat.cpp:291
@@ -8383,8 +8450,8 @@ msgid ""
 "Listen here, come close. I don't know if you know what I know, but you have "
 "really got somethin' here. That's a map."
 msgstr ""
-"話​が​ある。もっと​寄れ。お前​さん​が​知っ​てる​か​どう​か、知ら​ん​が​よぉ、ここ​に​いい​もの​が​ある​ん​"
-"だ。地図​だ。"
+"話​が​ある。もっと​寄れ。お前​さん​が​知っ​てる​か​どう​か、知ら​ん​が​よぉ、ここ​に​いい​も"
+"の​が​ある​ん​だ。地図​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Adria (currently unused)
 #: Source/textdat.cpp:293
@@ -8393,8 +8460,8 @@ msgid ""
 "portends great disaster, but its secrets are not mine to tell. The time has "
 "come for you to have a very serious conversation with the Storyteller..."
 msgstr ""
-"おお、凶兆​が​出​て​おる​ぞ。星​に​よれ​ば、お前​の​前​に​大難​が​待ち受け​て​おる。すま​ぬ​が​それ​が​何"
-"​か​は​分から​ぬ。語り部​を​訪ね​て、彼​に​相談​する​の​が​良かろう。"
+"おお、凶兆​が​出​て​おる​ぞ。星​に​よれ​ば、お前​の​前​に​大難​が​待ち受け​て​おる。すま​ぬ​が​"
+"それ​が​何​か​は​分から​ぬ。語り部​を​訪ね​て、彼​に​相談​する​の​が​良かろう。"
 
 #. TRANSLATORS: Quest dialog spoken by Wirt (currently unused)
 #: Source/textdat.cpp:295
@@ -8403,8 +8470,8 @@ msgid ""
 "that to Adria - she can probably tell you what it is. I'll say one thing; it "
 "looks old, and old usually means valuable."
 msgstr ""
-"俺​も​地図​を​探し​てる​ん​だ​が、それ​じゃ​ねえ​な。エイドリア​に​見せ​たら、多分​何​だ​か​解る​よ。古​そ"
-"う​な​地図​だ​けど、古い​って​の​は​それ​だけ​で​値打​が​ある​もん​だ。"
+"俺​も​地図​を​探し​てる​ん​だ​が、それ​じゃ​ねえ​な。エイドリア​に​見せ​たら、多分​何​だ​か​解"
+"る​よ。古​そう​な​地図​だ​けど、古い​って​の​は​それ​だけ​で​値打​が​ある​もん​だ。"
 
 #. TRANSLATORS: Quest dialog spoken by Gharbad the Weak
 #: Source/textdat.cpp:297
@@ -8450,8 +8517,8 @@ msgid ""
 "What?! Why are you here? All these interruptions are enough to make one "
 "insane. Here, take this and leave me to my work. Trouble me no more!"
 msgstr ""
-"何​だ​? 何​し​に​来​た​?! 邪魔​を​さ​れる​と​おかしく​なり​そう​だ。ウヘヘ、これ​を​持っ​てけ。わし​の"
-"​事​は​ほっ​とい​て​くれ​! ウァハハハ​!"
+"何​だ​? 何​し​に​来​た​?! 邪魔​を​さ​れる​と​おかしく​なり​そう​だ。ウヘヘ、これ​を​持っ​てけ。"
+"わし​の​事​は​ほっ​とい​て​くれ​! ウァハハハ​!"
 
 #. TRANSLATORS: Quest dialog spoken by Zhar the Mad (Hostile)
 #: Source/textdat.cpp:307
@@ -8483,8 +8550,9 @@ msgid ""
 "and questions to which you seek knowledge, seek me out and I will tell you "
 "what I can."
 msgstr ""
-"迷宮​を​進む​うち​に​生じる​疑問​の​答え​と​なる​神話​や​伝説​なら、わし​は​たくさん​知っ​とる​よ。知り​た"
-"い​こと​が​あれ​ば​わし​を​訪ね​なさい、知っ​て​いる​限り​の​こと​は​教え​て​進ぜよう。"
+"迷宮​を​進む​うち​に​生じる​疑問​の​答え​と​なる​神話​や​伝説​なら、わし​は​たくさん​知っ​とる​"
+"よ。知り​たい​こと​が​あれ​ば​わし​を​訪ね​なさい、知っ​て​いる​限り​の​こと​は​教え​て​進ぜよ"
+"う。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:313
@@ -8495,9 +8563,10 @@ msgid ""
 "is a skilled craftsman, and if he claims to be able to help you in any way, "
 "you can count on his honesty and his skill."
 msgstr ""
-"グリズウォルド​は​勇気​ある​立派​な​男​だ。ワート​を​助ける​ため​迷宮​に​分け入っ​た​話​など、自分​で​は​し"
-"​なかっ​たろう​? 自分​の​危険​も​省み​ず​に​な​…​そして​今度​は​お主​が​行く​か。あの​男​は​正直​で​"
-"腕​の​いい​武器​屋​じゃ。手助け​を​得​られれ​ば、その​誠意​と​技術​は​頼り​に​できる​ぞ。"
+"グリズウォルド​は​勇気​ある​立派​な​男​だ。ワート​を​助ける​ため​迷宮​に​分け入っ​た​話​な"
+"ど、自分​で​は​し​なかっ​たろう​? 自分​の​危険​も​省み​ず​に​な​…​そして​今度​は​お主​が​行く​か。"
+"あの​男​は​正直​で​腕​の​いい​武器​屋​じゃ。手助け​を​得​られれ​ば、その​誠意​と​技術​は​頼り​に​"
+"できる​ぞ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:315
@@ -8508,9 +8577,9 @@ msgid ""
 "all they had in making a life for themselves here. He is a good man with a "
 "deep sense of responsibility."
 msgstr ""
-"オグデン​が​日の出​亭​と​酒場​の​主人​に​なっ​て​じき​四​年。宿屋​と​酒場​を​買い取っ​た​ほんの​数カ月​後"
-"、ここ​は​地獄​と​化し​た​の​じゃ。女房​の​ガーダ​共々​ここ​へ​越し​て​くる​の​に​財産​を​使い果たし、この"
-"​町​を​去る​金​など​残っ​て​おら​ん。責任感​の​強い、善良​な​男​じゃ​よ。"
+"オグデン​が​日の出​亭​と​酒場​の​主人​に​なっ​て​じき​四​年。宿屋​と​酒場​を​買い取っ​た​ほんの​"
+"数カ月​後、ここ​は​地獄​と​化し​た​の​じゃ。女房​の​ガーダ​共々​ここ​へ​越し​て​くる​の​に​財産​"
+"を​使い果たし、この​町​を​去る​金​など​残っ​て​おら​ん。責任感​の​強い、善良​な​男​じゃ​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:317
@@ -8521,10 +8590,11 @@ msgid ""
 "He finds comfort only at the bottom of his tankard nowadays, but there are "
 "occasional bits of truth buried within his constant ramblings."
 msgstr ""
-"かわいそう​な​ファーンハム。彼​は、あの​暗い​日​に​ラザルス​と​一緒​に​大聖堂​に​入っ​て​き​た​運命​の​集合"
-"体​の​不穏​な​記憶​を​残し​て​いる。彼​は​命​は​取り留め​まし​た​が、彼​の​勇気​と​正気​の​多く​は​暗い"
-"​穴​に​残さ​れ​まし​た。今​で​は、彼​は​タンカー​の​底​に​しか​安らぎ​を​見いだせ​ない​が、彼​の​絶え間​"
-"ない​おしゃべり​の​中​に​は、時折、真実​の​断片​が​埋もれ​て​いる。"
+"かわいそう​な​ファーンハム。彼​は、あの​暗い​日​に​ラザルス​と​一緒​に​大聖堂​に​入っ​て​き​"
+"た​運命​の​集合体​の​不穏​な​記憶​を​残し​て​いる。彼​は​命​は​取り留め​まし​た​が、彼​の​勇気​と​"
+"正気​の​多く​は​暗い​穴​に​残さ​れ​まし​た。今​で​は、彼​は​タンカー​の​底​に​しか​安らぎ​を​見い"
+"だせ​ない​が、彼​の​絶え間​ない​おしゃべり​の​中​に​は、時折、真実​の​断片​が​埋もれ​て​い"
+"る。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:319
@@ -8536,9 +8606,9 @@ msgid ""
 "I have never seen before."
 msgstr ""
 "魔女​の​エイドリア​は、この​トリストラム​の​町​の​変わり者​じゃ。\n"
-"​ここ​に​やっ​て​き​た​の​は​修道院​が​悪​に​冒涜​さ​れ、誰​も​が​ここ​を​離れよう​と​し​て​い​た​頃"
-"​の​こと​じゃっ​た。一​晩​で​町外れ​に​小さな​小屋​を​建て​て​の​お、わし​で​すら​見​た​こと​も​ない​よ"
-"う​な​不思議​な​道具​や​書物​を​たくさん​持っ​て​おる​ぞ。"
+"​ここ​に​やっ​て​き​た​の​は​修道院​が​悪​に​冒涜​さ​れ、誰​も​が​ここ​を​離れよう​と​し​て​い​た​頃​の​"
+"こと​じゃっ​た。一​晩​で​町外れ​に​小さな​小屋​を​建て​て​の​お、わし​で​すら​見​た​こと​も​ない​"
+"よう​な​不思議​な​道具​や​書物​を​たくさん​持っ​て​おる​ぞ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:321
@@ -8550,10 +8620,11 @@ msgid ""
 "never returned. The Blacksmith found the boy, but only after the foul beasts "
 "had begun to torture him for their sadistic pleasures."
 msgstr ""
-"ワート​は​全く​恐ろしい、悲しい​目​に​あっ​た​もの​じゃ。邪悪​な​槍​を​振り回す​魔物​ども​に​よっ​て​母親​"
-"の​手​から​引き離さ​れ、迷宮​に​引きずり​込ま​れ​た​の​じゃ​よ。他​に​も​レオリック​王​の​息子​を​初め​大"
-"勢​の​子供​ら​が​連れ去ら​れ​た。救出​に​向かっ​た​近衛兵​は​ついに​戻ら​なんだ。鍛冶屋​が​見つけ​た​とき​"
-"は​既に、魔物​ども​に​いたぶら​れ、苦しめ​られ​て​おっ​た​ん​じゃ。"
+"ワート​は​全く​恐ろしい、悲しい​目​に​あっ​た​もの​じゃ。邪悪​な​槍​を​振り回す​魔物​ども​に​"
+"よっ​て​母親​の​手​から​引き離さ​れ、迷宮​に​引きずり​込ま​れ​た​の​じゃ​よ。他​に​も​レオリッ"
+"ク​王​の​息子​を​初め​大勢​の​子供​ら​が​連れ去ら​れ​た。救出​に​向かっ​た​近衛兵​は​ついに​戻ら​"
+"なんだ。鍛冶屋​が​見つけ​た​とき​は​既に、魔物​ども​に​いたぶら​れ、苦しめ​られ​て​おっ​た​"
+"ん​じゃ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:323
@@ -8563,9 +8634,9 @@ msgid ""
 "existed. His knowledge and skills are equaled by few, and his door is always "
 "open."
 msgstr ""
-"おお​ペピン​か。あれ​こそ​真​の​友、町​一​番​の​わし​の​親友​じゃ。少々​頭​が​混乱​し​とる​時​も​ある​が"
-"、あれ​ほど​思いやり​の​ある​奴​は​そう​は​おら​ん。知識​も​腕​も​ぬきんで​て​おる​し、いつ​で​も​面倒​を"
-"​見​て​もらえる​ぞ。"
+"おお​ペピン​か。あれ​こそ​真​の​友、町​一​番​の​わし​の​親友​じゃ。少々​頭​が​混乱​し​とる​時​も​"
+"ある​が、あれ​ほど​思いやり​の​ある​奴​は​そう​は​おら​ん。知識​も​腕​も​ぬきんで​て​おる​し、"
+"いつ​で​も​面倒​を​見​て​もらえる​ぞ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Cain (Gossip)
 #: Source/textdat.cpp:325
@@ -8576,9 +8647,10 @@ msgid ""
 "for her safety, but I know that any man in the village would rather die than "
 "see her harmed."
 msgstr ""
-"ああ、ジリアン​は​人​の​いい​娘​だ。上機嫌​で​笑う​声​など、多く​の​人々​に​愛さ​れ​て​おる。も​ちんこ​の​"
-"わし​も​じゃ。体​の​具合​が​悪く​て​町​を​離れ​られ​ない​婆​さん​を​助け​て、酒場​で​働い​とる。身​の​安"
-"全​に​つい​て​は​心配​も​ある​が、町​の​男衆​が​みんな​で​守っ​て​やる​じゃろう。"
+"ああ、ジリアン​は​人​の​いい​娘​だ。上機嫌​で​笑う​声​など、多く​の​人々​に​愛さ​れ​て​おる。"
+"も​ちんこ​の​わし​も​じゃ。体​の​具合​が​悪く​て​町​を​離れ​られ​ない​婆​さん​を​助け​て、酒場​で​"
+"働い​とる。身​の​安全​に​つい​て​は​心配​も​ある​が、町​の​男衆​が​みんな​で​守っ​て​やる​じゃろ"
+"う。"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden
 #: Source/textdat.cpp:327
@@ -8593,8 +8665,9 @@ msgid ""
 "any of them agree on was this old axiom. Perhaps it will help you. You can "
 "cut the flesh, but you must crush the bone."
 msgstr ""
-"うち​に​お​泊り​の​冒険者​は​数​知れ​ず、ビール​片手​に​冒険​談​に​華​を​咲か​せ​た​もの​でし​た。ど​な"
-"​も​肝​に​銘じ​て​い​た​教訓​が​「​肉​を​斬っ​たら、骨​まで​つぶせ​」​でし​た。御​参考​まで​に。"
+"うち​に​お​泊り​の​冒険者​は​数​知れ​ず、ビール​片手​に​冒険​談​に​華​を​咲か​せ​た​もの​でし​た。"
+"ど​な​も​肝​に​銘じ​て​い​た​教訓​が​「​肉​を​斬っ​たら、骨​まで​つぶせ​」​でし​た。御​参考​まで​"
+"に。"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:331
@@ -8609,8 +8682,8 @@ msgid ""
 "Farnham spends far too much time here, drowning his sorrows in cheap ale. I "
 "would make him leave, but he did suffer so during his time in the Labyrinth."
 msgstr ""
-"ファーンハム​に​長々​と​居座ら​れ​ちゃ、迷惑​な​ん​です​が、迷宮​で​あんな​目​に​あっ​たら、酒​で​憂さ​を​"
-"はらす​しか​あり​ませ​ん​よ。"
+"ファーンハム​に​長々​と​居座ら​れ​ちゃ、迷惑​な​ん​です​が、迷宮​で​あんな​目​に​あっ​たら、"
+"酒​で​憂さ​を​はらす​しか​あり​ませ​ん​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:335
@@ -8623,8 +8696,8 @@ msgid ""
 msgstr ""
 "エイドリア​は、とても​頭​が​いい​らしい​の​です​が、不気味​な​人​です​ね。\n"
 "\n"
-"​で​も、魔法​の​アイテム​を​引き取っ​て​もらい​たい​なら、川​の​向こう​の​小屋​を​訪ねる​しか​あり​ませ​ん"
-"。あんな​に​色々​どう​やっ​て​手​に​入れ​た​ん​でしょう​ね​?"
+"​で​も、魔法​の​アイテム​を​引き取っ​て​もらい​たい​なら、川​の​向こう​の​小屋​を​訪ねる​しか​"
+"あり​ませ​ん。あんな​に​色々​どう​やっ​て​手​に​入れ​た​ん​でしょう​ね​?"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:337
@@ -8642,8 +8715,8 @@ msgid ""
 "He probably went fooling about someplace that he shouldn't have been. I feel "
 "sorry for the boy, but I don't abide the company that he keeps."
 msgstr ""
-"ワート​は、絶え​ず​厄介​事​を​おこす​タイプ​です​から、彼​の​身​に​何​が​おき​て​も​おかしく​あり​ませ​ん"
-"。うっかり​危険​な​場所​に​で​も​入っ​た​ん​でしょう。\n"
+"ワート​は、絶え​ず​厄介​事​を​おこす​タイプ​です​から、彼​の​身​に​何​が​おき​て​も​おかしく​あ"
+"り​ませ​ん。うっかり​危険​な​場所​に​で​も​入っ​た​ん​でしょう。\n"
 "\n"
 "​可哀想​な​奴​です​が、とりまき​連中​に​は​我慢​なり​ませ​ん。"
 
@@ -8654,8 +8727,8 @@ msgid ""
 "always attending to the needs of others, but trouble of some sort or another "
 "does seem to follow him wherever he goes..."
 msgstr ""
-"ぺ​ピン​は​善良​な​人​で、村​一​番​の​気前​の​良​さ​を​持っ​て​い​ます。しかし、彼​の​行く​ところ​に​は"
-"​必ず​と​言っ​て​いい​ほど、何​ら​か​の​トラブル​が​付きまとう​…。"
+"ぺ​ピン​は​善良​な​人​で、村​一​番​の​気前​の​良​さ​を​持っ​て​い​ます。しかし、彼​の​行く​ところ​"
+"に​は​必ず​と​言っ​て​いい​ほど、何​ら​か​の​トラブル​が​付きまとう​…。"
 
 #. TRANSLATORS: Neutral dialog spoken by Ogden (Gossip)
 #: Source/textdat.cpp:343
@@ -8666,8 +8739,8 @@ msgid ""
 "Goodness knows I begged her to leave, telling her that I would watch after "
 "the old woman, but she is too sweet and caring to have done so."
 msgstr ""
-"うち​で​働い​てる​ジリアン​です​か​? この​町​を​でる​よう​に​説得​し​た​ん​です​が、思いやり​の​ある​子"
-"​です​から、年老い​た​お​婆​さん​を​後​に​は​置い​て​いけ​ない​ん​でしょう​ね。"
+"うち​で​働い​てる​ジリアン​です​か​? この​町​を​でる​よう​に​説得​し​た​ん​です​が、思いやり​の​"
+"ある​子​です​から、年老い​た​お​婆​さん​を​後​に​は​置い​て​いけ​ない​ん​でしょう​ね。"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin
 #: Source/textdat.cpp:345
@@ -8682,8 +8755,8 @@ msgid ""
 "hurt one of the monsters, make sure it is dead or it very well may "
 "regenerate itself."
 msgstr ""
-"興味​深い​発見​を​し​た​ぞ。我​ら​と​は​違っ​て、迷宮​の​獣​ども​は​ポーション​や​魔法​を​使わ​ず​に​傷"
-"​を​癒せる​よう​だ。\n"
+"興味​深い​発見​を​し​た​ぞ。我​ら​と​は​違っ​て、迷宮​の​獣​ども​は​ポーション​や​魔法​を​使わ​ず​"
+"に​傷​を​癒せる​よう​だ。\n"
 "\n"
 "​怪物​に​痛手​を​与え​たら、確実​に​殺さ​ない​と、自分​で​再生​する​か​も​しれ​ない​ぞ。"
 
@@ -8695,9 +8768,9 @@ msgid ""
 "any, you should read them all, for some may hold secrets to the workings of "
 "the Labyrinth."
 msgstr ""
-"地下​に​潜む​..​その​何者​か​に​乗っ取ら​れる​以前​は、修道院​は​偉大​なる​知識​の​宝庫​だっ​た。そこ​に"
-"​は​沢山​の​本​が​ある。本​を​見つけ​たら、全部​読ん​だ​ほう​が​いい​ぞ。迷宮​の​秘密​が​記さ​れ​て​いる"
-"​か​も​しれ​ない​から​な。"
+"地下​に​潜む​..​その​何者​か​に​乗っ取ら​れる​以前​は、修道院​は​偉大​なる​知識​の​宝庫​だっ​"
+"た。そこ​に​は​沢山​の​本​が​ある。本​を​見つけ​たら、全部​読ん​だ​ほう​が​いい​ぞ。迷宮​の​秘"
+"密​が​記さ​れ​て​いる​か​も​しれ​ない​から​な。"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:350
@@ -8706,8 +8779,8 @@ msgid ""
 "healing. He is a shrewd merchant, but his work is second to none. Oh, I "
 "suppose that may be because he is the only blacksmith left here."
 msgstr ""
-"私​が​癒し​の​術​に​詳しい​の​と​同じ​くらい、グリズウォルド​は​戦​の​術​に​詳しい。料金​は​高い​が、一番​"
-"の​腕利き​だ。まあ、他​に​鍛冶屋​は​い​ない​の​だ​けど​ね​…"
+"私​が​癒し​の​術​に​詳しい​の​と​同じ​くらい、グリズウォルド​は​戦​の​術​に​詳しい。料金​は​高"
+"い​が、一番​の​腕利き​だ。まあ、他​に​鍛冶屋​は​い​ない​の​だ​けど​ね​…"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:352
@@ -8716,8 +8789,8 @@ msgid ""
 "an innate ability to discern the true nature of many things. If you ever "
 "have any questions, he is the person to go to."
 msgstr ""
-"ケイン​は​真​の​友​で​あり、賢人​で​ある。たくさん​の​蔵書​を​揃え​て、物事​の​本質​を​見極める​天性​の​力"
-"​を​持っ​て​いる​の​だ。聞き​たい​こと​が​でき​たら、彼​の​所​へ​行く​が​いい。"
+"ケイン​は​真​の​友​で​あり、賢人​で​ある。たくさん​の​蔵書​を​揃え​て、物事​の​本質​を​見極め"
+"る​天性​の​力​を​持っ​て​いる​の​だ。聞き​たい​こと​が​でき​たら、彼​の​所​へ​行く​が​いい。"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:354
@@ -8737,9 +8810,10 @@ msgid ""
 "be much more than the hovel it appears to be, but I can never seem to get "
 "inside the place."
 msgstr ""
-"私​も​ある​種​の​魔法​を​駆使​し​て​ポーション​や​エリクサー​を​調合​する​が、エイドリア​こそ、真​の​魔法​"
-"使い​だ​よ。彼女​は​眠る​こと​も​し​ない​し、多く​の​神秘​の​霊廟​や​魔導​器​に​も​通じ​て​いる。彼女​の"
-"​小屋​に​は​見かけ​から​は​分から​ない​何​か​が​あり​そう​な​ん​だ​が、中​は​見せ​て​もらえ​ぬ​の​だ。"
+"私​も​ある​種​の​魔法​を​駆使​し​て​ポーション​や​エリクサー​を​調合​する​が、エイドリア​こ"
+"そ、真​の​魔法​使い​だ​よ。彼女​は​眠る​こと​も​し​ない​し、多く​の​神秘​の​霊廟​や​魔導​器​に​も​"
+"通じ​て​いる。彼女​の​小屋​に​は​見かけ​から​は​分から​ない​何​か​が​あり​そう​な​ん​だ​が、中​は​"
+"見せ​て​もらえ​ぬ​の​だ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:358
@@ -8749,9 +8823,9 @@ msgid ""
 "hideous. No one - and especially such a young child - should have to suffer "
 "the way he did."
 msgstr ""
-"かわいそう​な​ワート。あの​子​の​ため​に​できる限り​の​こと​を​し​まし​た​が、私​が​無理矢理​足​に​つけ​た"
-"​木​の​釘​を​嫌​がっ​て​いる​の​は​知っ​て​い​ます。彼​の​傷​は​ひどかっ​た。誰​も​が、特に​幼い​子供​"
-"が、彼​の​よう​な​苦しみ​を​味わう​べき​で​は​あり​ませ​ん。"
+"かわいそう​な​ワート。あの​子​の​ため​に​できる限り​の​こと​を​し​まし​た​が、私​が​無理矢理​"
+"足​に​つけ​た​木​の​釘​を​嫌​がっ​て​いる​の​は​知っ​て​い​ます。彼​の​傷​は​ひどかっ​た。誰​も​が、"
+"特に​幼い​子供​が、彼​の​よう​な​苦しみ​を​味わう​べき​で​は​あり​ませ​ん。"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:360
@@ -8762,9 +8836,10 @@ msgid ""
 "many murders that happen in the surrounding countryside, or perhaps the "
 "wishes of his wife that keep him and his family where they are."
 msgstr ""
-"オグデン​は​なぜ、トリストラム​に​留まっ​て​いる​の​だろう​か。多少、情緒​不安定​な​所​は​ある​に​せよ、あの​"
-"よう​に​聡明​で​勤勉​な​男​なら、どこ​へ​行っ​て​も​成功​する​だろう​に。周辺​地域​で​殺人​が​多く​起き​"
-"て​いる​から​な​の​か​も​しれ​ない​し、妻​が​そう​望む​ため​に、留まっ​て​いる​の​か​も​しれ​ぬ。"
+"オグデン​は​なぜ、トリストラム​に​留まっ​て​いる​の​だろう​か。多少、情緒​不安定​な​所​は​"
+"ある​に​せよ、あの​よう​に​聡明​で​勤勉​な​男​なら、どこ​へ​行っ​て​も​成功​する​だろう​に。周"
+"辺​地域​で​殺人​が​多く​起き​て​いる​から​な​の​か​も​しれ​ない​し、妻​が​そう​望む​ため​に、留"
+"まっ​て​いる​の​か​も​しれ​ぬ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Pipin (Gossip)
 #: Source/textdat.cpp:362
@@ -8775,7 +8850,8 @@ msgid ""
 "She claims that they are visions, but I have no proof of that one way or the "
 "other."
 msgstr ""
-"オグデン​の​所​の​メイド​は​いい​娘​だ​な。祖母​が​重い​病​で、妄想​に​苦しん​で​いる​そう​だ。\n"
+"オグデン​の​所​の​メイド​は​いい​娘​だ​な。祖母​が​重い​病​で、妄想​に​苦しん​で​いる​そう​"
+"だ。\n"
 "\n"
 "​本人​は​予知夢​だ​と​言っ​て​いる​が、本当​か​どう​か​は​知ら​ぬ。"
 
@@ -8789,7 +8865,9 @@ msgstr "私​で​何​か​お​役​に​立ち​ます​?"
 msgid ""
 "My grandmother had a dream that you would come and talk to me. She has "
 "visions, you know and can see into the future."
-msgstr "お​ばあ​さま​が、あなた​が​私​と​話し​に​来る​夢​を​見​た​の。お​ばあ​さま​は​予知夢​を​見る​の​よ。"
+msgstr ""
+"お​ばあ​さま​が、あなた​が​私​と​話し​に​来る​夢​を​見​た​の。お​ばあ​さま​は​予知夢​を​見る​の​"
+"よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:367
@@ -8800,8 +8878,8 @@ msgid ""
 "It would take someone quite brave, like you, to see what she is doing out "
 "there."
 msgstr ""
-"町外れ​の​あの​女​は、魔女​な​の​! いい​人​みたい​だ​し、エイドリア​と​いう​名前​も​素敵​だ​けど、何​だ​"
-"か​怖い​わ。\n"
+"町外れ​の​あの​女​は、魔女​な​の​! いい​人​みたい​だ​し、エイドリア​と​いう​名前​も​素敵​だ​け"
+"ど、何​だ​か​怖い​わ。\n"
 "\n"
 "​あなた​は​勇気​が​ある​から、そこ​で​何​を​し​て​いる​の​か、見​に​行っ​て​くれる​?"
 
@@ -8813,16 +8891,19 @@ msgid ""
 "received praises from our King Leoric himself - may his soul rest in peace. "
 "Griswold is also a great hero; just ask Cain."
 msgstr ""
-"鍛冶屋​は、トリストラム​の​人々​の​誇り​です。彼​は、ギルド​内​の​多く​の​コンテスト​で​優勝​し​た​名工​で​"
-"ある​だけ​で​なく、我​ら​が​レオリック​王​自身​から​も​賞賛​さ​れ​て​い​まし​た。また、グリズフォルド​は​偉"
-"大​な​ヒーロー​で​も​あり​ます​が、それ​は​ケイン​に​聞い​て​ください。"
+"鍛冶屋​は、トリストラム​の​人々​の​誇り​です。彼​は、ギルド​内​の​多く​の​コンテスト​で​優"
+"勝​し​た​名工​で​ある​だけ​で​なく、我​ら​が​レオリック​王​自身​から​も​賞賛​さ​れ​て​い​まし​た。"
+"また、グリズフォルド​は​偉大​な​ヒーロー​で​も​あり​ます​が、それ​は​ケイン​に​聞い​て​くだ"
+"さい。"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:371
 msgid ""
 "Cain has been the storyteller of Tristram for as long as I can remember. He "
 "knows so much, and can tell you just about anything about almost everything."
-msgstr "ケイン​は​ずっと​昔​から​トリストラム​の​語り部​よ。とにかく​博識​で、たいてい​の​こと​なら​知っ​てる​わ​よ。"
+msgstr ""
+"ケイン​は​ずっと​昔​から​トリストラム​の​語り部​よ。とにかく​博識​で、たいてい​の​こと​な"
+"ら​知っ​てる​わ​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:373
@@ -8834,10 +8915,11 @@ msgid ""
 "frustrated watching him slip farther and farther into a befuddled stupor "
 "every night."
 msgstr ""
-"ファーンハム​は​自分​の​お腹​に​ビール​を、みんな​の​耳​に​無意味​な​言葉​を​詰め込む​酔っぱらい​よ。\n"
+"ファーンハム​は​自分​の​お腹​に​ビール​を、みんな​の​耳​に​無意味​な​言葉​を​詰め込む​酔っぱ"
+"らい​よ。\n"
 "\n"
-"​ペピン​と​オグデン​さん​は​同情​し​てる​よう​だ​けど、毎晩​うだうだ​と​酔っ払っ​て​いる​の​を​見る​と、イ"
-"ライラ​し​て​くる​わ​…"
+"​ペピン​と​オグデン​さん​は​同情​し​てる​よう​だ​けど、毎晩​うだうだ​と​酔っ払っ​て​いる​の​を​"
+"見る​と、イライラ​し​て​くる​わ​…"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:375
@@ -8847,9 +8929,9 @@ msgid ""
 "sword and more mysterious than any spell you can name. If you ever are in "
 "need of healing, Pepin can help you."
 msgstr ""
-"ペピン​は​お​ばあ​さま​の​命​の​恩人​で、いくら​感謝​し​て​も​し​きれ​ない​わ。病​を​癒す​彼​の​力​は、"
-"どんな​剣​より​も​強く​て、どんな​魔法​より​も​不思議​ね。もし​治療​が​必要​に​なっ​たら、あなた​も​ペピン​"
-"に​頼む​と​いい​わ。"
+"ペピン​は​お​ばあ​さま​の​命​の​恩人​で、いくら​感謝​し​て​も​し​きれ​ない​わ。病​を​癒す​彼​の​力​"
+"は、どんな​剣​より​も​強く​て、どんな​魔法​より​も​不思議​ね。もし​治療​が​必要​に​なっ​た"
+"ら、あなた​も​ペピン​に​頼む​と​いい​わ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:377
@@ -8861,11 +8943,11 @@ msgid ""
 "seen horrors that I cannot even imagine, but some of that darkness hangs "
 "over him still."
 msgstr ""
-"私​は​ワート​の​お母さん​の​キャナス​と​一緒​に​育っ​た​の​よ。ワート​が​あの​忌まわしい​怪物​に​さらわ​れ"
-"​た​とき、キャナス​は​軽傷​で​済ん​だ​の​に、結局​回復​し​なかっ​た​の。絶望​が​彼女​の​命​を​奪っ​た​ん"
-"​だ​わ。ワート​は、他人​の​働き​を​当て​に​する、さもしい​若者​に​育っ​て​しまっ​た​の。私​に​は​想像​すら"
-"​でき​ない​よう​な​苦しみ​や​恐怖​を​彼​は​味わっ​た​ん​でしょう​けど、その​暗​さ​を​今​で​も​引きずっ​"
-"て​いる​みたい。"
+"私​は​ワート​の​お母さん​の​キャナス​と​一緒​に​育っ​た​の​よ。ワート​が​あの​忌まわしい​怪物​"
+"に​さらわ​れ​た​とき、キャナス​は​軽傷​で​済ん​だ​の​に、結局​回復​し​なかっ​た​の。絶望​が​彼"
+"女​の​命​を​奪っ​た​ん​だ​わ。ワート​は、他人​の​働き​を​当て​に​する、さもしい​若者​に​育っ​て​"
+"しまっ​た​の。私​に​は​想像​すら​でき​ない​よう​な​苦しみ​や​恐怖​を​彼​は​味わっ​た​ん​でしょう​"
+"けど、その​暗​さ​を​今​で​も​引きずっ​て​いる​みたい。"
 
 #. TRANSLATORS: Neutral dialog spoken by Gillian (Gossip)
 #: Source/textdat.cpp:379
@@ -8875,9 +8957,9 @@ msgid ""
 "them, and hope one day to leave this place and help them start a grand hotel "
 "in the east."
 msgstr ""
-"オグデン​夫婦​は​私​と​お​ばあ​さま​を​自分​たち​の​家​に​迎え​て​くれ​て、私​に​は​宿​で​の​仕事​まで"
-"​与え​て​くれ​た​恩人​よ。いつ​か​ここ​を​離れ​て、ご​夫婦​が​東部​で​立派​な​宿屋​を​始める​の​を、手伝"
-"い​たい​わ​ね。"
+"オグデン​夫婦​は​私​と​お​ばあ​さま​を​自分​たち​の​家​に​迎え​て​くれ​て、私​に​は​宿​で​の​仕事​ま"
+"で​与え​て​くれ​た​恩人​よ。いつ​か​ここ​を​離れ​て、ご​夫婦​が​東部​で​立派​な​宿屋​を​始める​の​"
+"を、手伝い​たい​わ​ね。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold
 #: Source/textdat.cpp:381
@@ -8892,8 +8974,8 @@ msgid ""
 "undying horrors down there, and there's nothing better to shatter skinny "
 "little skeletons!"
 msgstr ""
-"いい​武器​を​探し​て​いる​なら、これ​は​どう​だ。この​メイス​の​様​な​鈍器​は、アンデッド​ども​に​良く​効く"
-"​ん​だ。スケルトン​ども​なんぞ​木っ端​みじん​に​し​て​くれる​ぞ。"
+"いい​武器​を​探し​て​いる​なら、これ​は​どう​だ。この​メイス​の​様​な​鈍器​は、アンデッド​ど"
+"も​に​良く​効く​ん​だ。スケルトン​ども​なんぞ​木っ端​みじん​に​し​て​くれる​ぞ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:384
@@ -8903,8 +8985,9 @@ msgid ""
 "mind, however, that it is slow to swing - but talk about dealing a heavy "
 "blow!"
 msgstr ""
-"なに​斧​? 斧​って​の​は、どんな​魔物​と​も​戦える​すぐれ物​だ。空気​を​切り裂く​こと​も​できる。悪魔​の​首"
-"​なぞ​一​振り​で​すっ飛ぶ​だろう​よ。素早く​扱う​の​は​無理​だ​が、破壊力​は​抜群​さ。"
+"なに​斧​? 斧​って​の​は、どんな​魔物​と​も​戦える​すぐれ物​だ。空気​を​切り裂く​こと​も​でき"
+"る。悪魔​の​首​なぞ​一​振り​で​すっ飛ぶ​だろう​よ。素早く​扱う​の​は​無理​だ​が、破壊力​は​抜"
+"群​さ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:386
@@ -8914,9 +8997,9 @@ msgid ""
 "or pierce on the undead, but against a living, breathing enemy, a sword will "
 "better slice their flesh!"
 msgstr ""
-"どう​だいこ​の​刃​は。バランス​が​とれ​て​い​て​見事​だろう。剣​て​の​は、ふさわしい​者​が​使え​ば、最強​の"
-"​武器​と​なる。この​鋭い​切っ先​は、アンデッド​に​は​向い​て​い​ない​が、相手​が​生き物​なら​その​肉​を​簡"
-"単​に​断ち切っ​て​くれる。"
+"どう​だいこ​の​刃​は。バランス​が​とれ​て​い​て​見事​だろう。剣​て​の​は、ふさわしい​者​が​使"
+"え​ば、最強​の​武器​と​なる。この​鋭い​切っ先​は、アンデッド​に​は​向い​て​い​ない​が、相手​"
+"が​生き物​なら​その​肉​を​簡単​に​断ち切っ​て​くれる。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:388
@@ -8925,8 +9008,8 @@ msgid ""
 "Darkness. If you bring them to me, with a bit of work and a hot forge, I can "
 "restore them to top fighting form."
 msgstr ""
-"魔物​相手​に​相当​激しく​戦っ​た​ん​だ​な。あんた​の​武器​や​鎧​を​見れ​ば​一目​で​わかる​よ。わし​なら、"
-"新品​同様​に​打ち直し​て​やる​よ。"
+"魔物​相手​に​相当​激しく​戦っ​た​ん​だ​な。あんた​の​武器​や​鎧​を​見れ​ば​一目​で​わかる​よ。わ"
+"し​なら、新品​同様​に​打ち直し​て​やる​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:390
@@ -8936,9 +9019,9 @@ msgid ""
 "seems to get whatever she needs. If I knew even the smallest bit about how "
 "to harness magic as she did, I could make some truly incredible things."
 msgstr ""
-"わし​が、町外れ​に​来る​キャラバン​から、金属​や​工具​を​こっそり​仕入れ​て​いる​って​の​に、魔女​の​エイドリ"
-"ア​と​き​たら、欲しい​もの​なら​なん​で​も​簡単​に​手​に​入れ​て​いる。あの​女​みたい​に​魔法​が​使え​た"
-"ら、すごい​代物​を​作っ​て​やる​ん​だ​が。"
+"わし​が、町外れ​に​来る​キャラバン​から、金属​や​工具​を​こっそり​仕入れ​て​いる​って​の​"
+"に、魔女​の​エイドリア​と​き​たら、欲しい​もの​なら​なん​で​も​簡単​に​手​に​入れ​て​いる。あ"
+"の​女​みたい​に​魔法​が​使え​たら、すごい​代物​を​作っ​て​やる​ん​だ​が。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:392
@@ -8946,8 +9029,8 @@ msgid ""
 "Gillian is a nice lass. Shame that her gammer is in such poor health or I "
 "would arrange to get both of them out of here on one of the trading caravans."
 msgstr ""
-"ジリアン​は​いい​娘​だ。ばあ​さん​が​あれ​ほど​弱っ​て​なかっ​たら、キャラバン​に​頼ん​で、この​町​から​逃が"
-"し​て​やり​たい​よ。"
+"ジリアン​は​いい​娘​だ。ばあ​さん​が​あれ​ほど​弱っ​て​なかっ​たら、キャラバン​に​頼ん​で、"
+"この​町​から​逃がし​て​やり​たい​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:394
@@ -8956,8 +9039,9 @@ msgid ""
 "in life. If I could bend steel as well as he can bend your ear, I could make "
 "a suit of court plate good enough for an Emperor!"
 msgstr ""
-"ケイン​は​しゃべり​すぎる​の​が​珠​に​傷​だ​が、あれ​が​商売​な​ん​だ​から​しょう​が​ない。やっこ​さん​の"
-"​長話​に​付き合っ​てる​と、まぶた​が​だんだん​鉛​みたい​に​重く​なっ​て​くる​ん​だ​よ。"
+"ケイン​は​しゃべり​すぎる​の​が​珠​に​傷​だ​が、あれ​が​商売​な​ん​だ​から​しょう​が​ない。やっ"
+"こ​さん​の​長話​に​付き合っ​てる​と、まぶた​が​だんだん​鉛​みたい​に​重く​なっ​て​くる​ん​だ​"
+"よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:396
@@ -8967,9 +9051,10 @@ msgid ""
 "my side. I fear that the attack left his soul as crippled as, well, another "
 "did my leg. I cannot fight this battle for him now, but I would if I could."
 msgstr ""
-"ラザルス​が​わし​ら​を​連れ​て​迷宮​に​行っ​た​とき、わし​は​ファーンハム​と​一緒​だっ​た。あれ​っきり​大司"
-"教​は​姿​を​消し​ちまっ​た。わし​は​ファーンハム​の​おかげ​で、命拾い​し​た​が、やつ​は​ショック​で​あれ​以"
-"来​変​に​なっ​た。わし​も​足​を​悪く​し​た​が、やつ​の​ため​なら、今​で​も​喜ん​で​戦う​ぞ。"
+"ラザルス​が​わし​ら​を​連れ​て​迷宮​に​行っ​た​とき、わし​は​ファーンハム​と​一緒​だっ​た。あ"
+"れ​っきり​大司教​は​姿​を​消し​ちまっ​た。わし​は​ファーンハム​の​おかげ​で、命拾い​し​た​"
+"が、やつ​は​ショック​で​あれ​以来​変​に​なっ​た。わし​も​足​を​悪く​し​た​が、やつ​の​ため​な"
+"ら、今​で​も​喜ん​で​戦う​ぞ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:398
@@ -8978,8 +9063,8 @@ msgid ""
 "left in Tristram - or anywhere else for that matter - who has a bad thing to "
 "say about the healer."
 msgstr ""
-"自分​の​こと​より​先​に、他人​の​こと​を​考える​立派​な​お​方​だ。トリストラム​の​町​で​治療​師​の​ペピン"
-"​を​悪く​言う​者​は​一人​も​おら​ん。"
+"自分​の​こと​より​先​に、他人​の​こと​を​考える​立派​な​お​方​だ。トリストラム​の​町​で​治療​師​"
+"の​ペピン​を​悪く​言う​者​は​一人​も​おら​ん。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:400
@@ -8990,9 +9075,10 @@ msgid ""
 "origin. I cannot hold that against him after what happened to him, but I do "
 "wish he would at least be careful."
 msgstr ""
-"あの​若造、やっかい​ごと​に​巻きこま​れる​ぞ。こり​ない​奴​だ。わし​の​ところ​で、額​に​汗​し​て​まじめ​に​"
-"働く​より、密輸​で​がっぽり​儲ける​ほう​が​性​に​あう​ん​だ​と。あんな​ひどい​目​に​合っ​た​後​だ​から、奴"
-"​に​厳しく​当たる​の​も​なん​だ​が、もう​少し​慎重​に​やっ​て​欲しい​もん​だ​な。"
+"あの​若造、やっかい​ごと​に​巻きこま​れる​ぞ。こり​ない​奴​だ。わし​の​ところ​で、額​に​汗​"
+"し​て​まじめ​に​働く​より、密輸​で​がっぽり​儲ける​ほう​が​性​に​あう​ん​だ​と。あんな​ひどい​"
+"目​に​合っ​た​後​だ​から、奴​に​厳しく​当たる​の​も​なん​だ​が、もう​少し​慎重​に​やっ​て​欲しい​"
+"もん​だ​な。"
 
 #. TRANSLATORS: Neutral dialog spoken by Griswold (Gossip)
 #: Source/textdat.cpp:402
@@ -9005,10 +9091,10 @@ msgid ""
 "starved during that first year when the entire countryside was overrun by "
 "demons."
 msgstr ""
-"宿屋​の​主人、オグデン​は​商売​あがったり​だ。たまに​町​を​通りかかる​旅人​が、食事​し​たり​泊っ​たり​する​ん"
-"​で、なん​と​か​やりくり​し​てる​が、代金​を​踏み倒し​て​いく​やから​が​多く​て​な。魔物​が​この​あたり​一"
-"帯​を​支配​し​た​とき、オグデン​が​倉庫​に​穀物​や​乾燥​肉​を​蓄え​て​い​なかっ​たら、わし​ら​は​皆、飢え"
-"死に​する​ところ​だっ​た​って​いう​の​に。"
+"宿屋​の​主人、オグデン​は​商売​あがったり​だ。たまに​町​を​通りかかる​旅人​が、食事​し​た"
+"り​泊っ​たり​する​ん​で、なん​と​か​やりくり​し​てる​が、代金​を​踏み倒し​て​いく​やから​が​多"
+"く​て​な。魔物​が​この​あたり​一帯​を​支配​し​た​とき、オグデン​が​倉庫​に​穀物​や​乾燥​肉​を​蓄"
+"え​て​い​なかっ​たら、わし​ら​は​皆、飢え死に​する​ところ​だっ​た​って​いう​の​に。"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham
 #: Source/textdat.cpp:404
@@ -9028,9 +9114,9 @@ msgid ""
 "stuff, but you listen to me... she's unnatural. I ain't never seen her eat "
 "or drink - and you can't trust somebody who doesn't drink at least a little."
 msgstr ""
-"あの​しわくちゃ​婆​さん​は、代わり​に​何​も​し​ねえ​の​か​よぉ​? そう​! モノ​は​持っ​てる​が、よっく​考"
-"え​て​みる​と​…​あの​婆​さん​は​全く​変​だ。第​一、飲み食い​する​ところ​を​見​た​事​が​無い。何​も​飲ま"
-"​ない​奴​なんて​信じ​られ​ない​ぜ。そう​思う​だろう​?"
+"あの​しわくちゃ​婆​さん​は、代わり​に​何​も​し​ねえ​の​か​よぉ​? そう​! モノ​は​持っ​てる​が、"
+"よっく​考え​て​みる​と​…​あの​婆​さん​は​全く​変​だ。第​一、飲み食い​する​ところ​を​見​た​事​が​無"
+"い。何​も​飲ま​ない​奴​なんて​信じ​られ​ない​ぜ。そう​思う​だろう​?"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:409
@@ -9039,8 +9125,8 @@ msgid ""
 "'em are real scary or funny... but I think he knows more than he knows he "
 "knows."
 msgstr ""
-"ケイン​は​正体​を​隠し​てる。確か​に​話​は​面白い​よ​…​怖い​話​と​か​笑い話​と​か、イヒヒ。で​も​実​は​"
-"もっと​色々​と​知っ​て​ん​じゃ​ねえ​か​と​おら​ぁ​思う​ぜ。"
+"ケイン​は​正体​を​隠し​てる。確か​に​話​は​面白い​よ​…​怖い​話​と​か​笑い話​と​か、イヒヒ。で​も​"
+"実​は​もっと​色々​と​知っ​て​ん​じゃ​ねえ​か​と​おら​ぁ​思う​ぜ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:411
@@ -9048,8 +9134,8 @@ msgid ""
 "Griswold? Good old Griswold. I love him like a brother! We fought together, "
 "you know, back when... we... Lazarus...  Lazarus... Lazarus!!!"
 msgstr ""
-"グリズウォルド​? いい​奴​だ、いい​奴​さぁ​! 兄弟​同然​に​愛し​てる​よ。共​に​戦っ​た​仲​さ、ほら​あの​時"
-"​…​俺​たち​…​ラザルス​…​ラザルス​! ラザルス​! ラザルス​め​えっ​!"
+"グリズウォルド​? いい​奴​だ、いい​奴​さぁ​! 兄弟​同然​に​愛し​てる​よ。共​に​戦っ​た​仲​さ、"
+"ほら​あの​時​…​俺​たち​…​ラザルス​…​ラザルス​! ラザルス​! ラザルス​め​えっ​!"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:413
@@ -9059,8 +9145,9 @@ msgid ""
 "wantin' help. Hey, I guess that would be kinda like you, huh hero? I was a "
 "hero too..."
 msgstr ""
-"ヒャハハ、ペピン​は​好き​だ。よく​頑張っ​てる。ぜひ​知り合い​に​なる​と​いい​よ。いつも​人​を​助ける​いい​奴​"
-"な​ん​だ。ヒャハハ、いや​お前​さん​みたい​だ​な。え​?​勇者​?​俺​も​勇者​だっ​た​が​…"
+"ヒャハハ、ペピン​は​好き​だ。よく​頑張っ​てる。ぜひ​知り合い​に​なる​と​いい​よ。いつも​"
+"人​を​助ける​いい​奴​な​ん​だ。ヒャハハ、いや​お前​さん​みたい​だ​な。え​?​勇者​?​俺​も​勇者​"
+"だっ​た​が​…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:415
@@ -9069,9 +9156,9 @@ msgid ""
 "problems. Listen here - that kid is gotta sweet deal, but he's been there, "
 "you know? Lost a leg! Gotta walk around on a piece of wood. So sad, so sad..."
 msgstr ""
-"ワート​って​ガキ​は​俺​より、もっと​辛い​目​に​あっ​てる。俺​は​全部​知っ​てる。色々​持っ​てる​が​よ、以前、"
-"あそこ​に​行っ​た​ん​だ。片脚​を​無し​て​…​何​を​する​に​も、杖​が​いる​ん​だ。本当​に​可哀想​だ、本当​"
-"に​…"
+"ワート​って​ガキ​は​俺​より、もっと​辛い​目​に​あっ​てる。俺​は​全部​知っ​てる。色々​持っ​て"
+"る​が​よ、以前、あそこ​に​行っ​た​ん​だ。片脚​を​無し​て​…​何​を​する​に​も、杖​が​いる​ん​だ。本"
+"当​に​可哀想​だ、本当​に​…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:417
@@ -9080,9 +9167,9 @@ msgid ""
 "long as she keeps tappin' kegs, I'll like her just fine. Seems like I been "
 "spendin' more time with Ogden than most, but he's so good to me..."
 msgstr ""
-"オグデン​は、町​で​一番​良い​やつ​だ。あの​女房​は​俺​に​気​が​ある​よう​だ​が、酒​を​持っ​て​来​て​くれ"
-"る​限り​俺​は​ちっとも​構わ​ねえ​よ。俺​は​オグデン​と​一緒​に​生き​て​き​た​みたい​な​もん​だ​が​な、あ"
-"ー、あいつ​は​本当​に​良く​し​て​くれ​た​よ​.."
+"オグデン​は、町​で​一番​良い​やつ​だ。あの​女房​は​俺​に​気​が​ある​よう​だ​が、酒​を​持っ​て​来​"
+"て​くれる​限り​俺​は​ちっとも​構わ​ねえ​よ。俺​は​オグデン​と​一緒​に​生き​て​き​た​みたい​な​も"
+"ん​だ​が​な、あー、あいつ​は​本当​に​良く​し​て​くれ​た​よ​.."
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:419
@@ -9091,8 +9178,8 @@ msgid ""
 "specialty. This here is the best... theeeee best! That other ale ain't no "
 "good since those stupid dogs..."
 msgstr ""
-"言い​たい​こと​が​ある。俺​は​こいつ​の​こと​は​何​で​も​知っ​てる。これ​が​一番​! 最​っ高​の​上物​だぁ"
-"​! 他​の​酒​は​まるっきり​駄目​さぁ​駄目​駄目​! だ​って​そこ​ら​の​バカ​犬​が​よぉ​…"
+"言い​たい​こと​が​ある。俺​は​こいつ​の​こと​は​何​で​も​知っ​てる。これ​が​一番​! 最​っ高​の​上"
+"物​だぁ​! 他​の​酒​は​まるっきり​駄目​さぁ​駄目​駄目​! だ​って​そこ​ら​の​バカ​犬​が​よぉ​…"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:421
@@ -9101,8 +9188,8 @@ msgid ""
 "somewhere under the church is a whole pile o' gold. Gleamin' and shinin' and "
 "just waitin' for someone to get it."
 msgstr ""
-"誰​も​…​ヒック​…​聞きゃ​し​ねえ​が​よぉ、実​は​ある​場所​に​な​…​どこ​か​の​修道院​の​下​に​さ​…​"
-"金塊​の​山​が​ある​ん​だ。キラキラ​キラキラ​光っ​て、鎮座​ましまし​て​いる​ぜ。へへへ。"
+"誰​も​…​ヒック​…​聞きゃ​し​ねえ​が​よぉ、実​は​ある​場所​に​な​…​どこ​か​の​修道院​の​下​に​さ​…​金塊​"
+"の​山​が​ある​ん​だ。キラキラ​キラキラ​光っ​て、鎮座​ましまし​て​いる​ぜ。へへへ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:423
@@ -9112,9 +9199,9 @@ msgid ""
 "brutes! Oh, I don't care what Griswold says, they can't make anything like "
 "they used to in the old days..."
 msgstr ""
-"お前​さん​に​も​そりゃあ​考え​が​ある​だろう​し、きっと​信じ​ない​と​思う​けど​な、あそこ​で​手​に​入れ​た"
-"​武器​は、あの​大きな​ケダモノ​に​は​通用​し​ない​ぜ。グリズウォルド​の​奴​が​何​と​言っ​た​か​知ら​ん​が"
-"、やつ​ら​の​作る​もの​は​古​すぎる​ん​だ​ぃ。"
+"お前​さん​に​も​そりゃあ​考え​が​ある​だろう​し、きっと​信じ​ない​と​思う​けど​な、あそこ​で​"
+"手​に​入れ​た​武器​は、あの​大きな​ケダモノ​に​は​通用​し​ない​ぜ。グリズウォルド​の​奴​が​何​"
+"と​言っ​た​か​知ら​ん​が、やつ​ら​の​作る​もの​は​古​すぎる​ん​だ​ぃ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Farnham (Gossip)
 #: Source/textdat.cpp:425
@@ -9123,8 +9210,9 @@ msgid ""
 "and get out of here. That boy out there... He's always got somethin good, "
 "but you gotta give him some gold or he won't even show you what he's got."
 msgstr ""
-"もし​も、もし​も​だ​ぞ​…​もし​俺​だっ​たら、持ち物​を​売っ払っ​て​出​て​いく​ね。あそこ​の​小僧​なら​何​"
-"かしら​いい​もの​持っ​てる​が、金​を​幾ら​か​渡さ​ねぇ​と​な、見せ​て​も​貰え​ねぇ​だろう​よ。"
+"もし​も、もし​も​だ​ぞ​…​もし​俺​だっ​たら、持ち物​を​売っ払っ​て​出​て​いく​ね。あそこ​の​小僧​"
+"なら​何​かしら​いい​もの​持っ​てる​が、金​を​幾ら​か​渡さ​ねぇ​と​な、見せ​て​も​貰え​ねぇ​だろ"
+"う​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria
 #: Source/textdat.cpp:427
@@ -9138,9 +9226,9 @@ msgid ""
 "words. Should you already have knowledge of the arcane mysteries scribed "
 "within a book, remember - that level of mastery can always increase."
 msgstr ""
-"智恵​と​は、努力​し​て​得る​もの​じゃ。知識​の​霊廟​に​遭遇​し​た​の​なら、その​言葉​を​自分​の​もの​に​"
-"する​が​よろしい。その​本​の​中​の​神秘​が​既に​知り​え​た​もの​なら、更なる​力​を​得る​こと​が​できる​だ"
-"ろう。"
+"智恵​と​は、努力​し​て​得る​もの​じゃ。知識​の​霊廟​に​遭遇​し​た​の​なら、その​言葉​を​自分​の​"
+"もの​に​する​が​よろしい。その​本​の​中​の​神秘​が​既に​知り​え​た​もの​なら、更なる​力​を​得る​"
+"こと​が​できる​だろう。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:430
@@ -9152,10 +9240,11 @@ msgid ""
 "be kept at the ready in your mind. Know also that these scrolls can be read "
 "but once, so use them with care."
 msgstr ""
-"強い​力​ほど、短命​な​もの​じゃ。お前​は​古代​の​力​の​呪文​が​書か​れ​た​巻物​を​見つける​か​も​しれ​ぬ"
-"。巻物​の​強み​は、熟練​者​で​あろう​と​初心者​で​あろう​と、同じ​効果​が​生み出せる​と​いう​こと。逆​に​弱"
-"み​は、その​場​で​読み上げ​なけれ​ば​なら​ず、前もって​覚え​て​おく​こと​が​でき​ない​点​じゃ。また、巻物​は"
-"​一度​しか​使う​こと​が​でき​ん。よく​考え​て​使い​なされ。"
+"強い​力​ほど、短命​な​もの​じゃ。お前​は​古代​の​力​の​呪文​が​書か​れ​た​巻物​を​見つける​か​も​"
+"しれ​ぬ。巻物​の​強み​は、熟練​者​で​あろう​と​初心者​で​あろう​と、同じ​効果​が​生み出せる​"
+"と​いう​こと。逆​に​弱み​は、その​場​で​読み上げ​なけれ​ば​なら​ず、前もって​覚え​て​おく​こ"
+"と​が​でき​ない​点​じゃ。また、巻物​は​一度​しか​使う​こと​が​でき​ん。よく​考え​て​使い​なさ"
+"れ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:432
@@ -9166,10 +9255,10 @@ msgid ""
 "magical energies many times over. I have the ability to restore their power "
 "- but know that nothing is done without a price."
 msgstr ""
-"太陽​の​熱​は​計り知れ​ぬ。だ​が、ロウソク​の​かすか​な​炎​の​方​が​危険​な​とき​も​ある。いかに​強大​な​"
-"エネルギー​も、的確​に​まとめ​ね​ば、使う​こと​は​あたわ​ぬ。杖​に​込め​られ​た​多く​の​呪文​は、再び​魔法​"
-"の​エネルギー​で​満たす​こと​が​できる。私​は​呪文​の​力​を​復活​さ​せる​術​を​知っ​て​おる。が、代償​を​"
-"払う​覚悟​は​必要​じゃ​よ。"
+"太陽​の​熱​は​計り知れ​ぬ。だ​が、ロウソク​の​かすか​な​炎​の​方​が​危険​な​とき​も​ある。いか"
+"に​強大​な​エネルギー​も、的確​に​まとめ​ね​ば、使う​こと​は​あたわ​ぬ。杖​に​込め​られ​た​多"
+"く​の​呪文​は、再び​魔法​の​エネルギー​で​満たす​こと​が​できる。私​は​呪文​の​力​を​復活​さ​せ"
+"る​術​を​知っ​て​おる。が、代償​を​払う​覚悟​は​必要​じゃ​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:434
@@ -9178,8 +9267,8 @@ msgid ""
 "or scroll that you cannot decipher, do not hesitate to bring it to me. If I "
 "can make sense of it I will share what I find."
 msgstr ""
-"人々​が​一​つ​に​まとまれ​ば、それ​だけ​知識​も​増す​と​いう​こと​じゃ。解読​でき​ぬ​本​や​巻物​は、私​の"
-"​所​へ​持っ​て​き​なされ。解読​でき​たら、皆​に​も​伝えよう​ぞ。"
+"人々​が​一​つ​に​まとまれ​ば、それ​だけ​知識​も​増す​と​いう​こと​じゃ。解読​でき​ぬ​本​や​巻物​"
+"は、私​の​所​へ​持っ​て​き​なされ。解読​でき​たら、皆​に​も​伝えよう​ぞ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:436
@@ -9188,8 +9277,9 @@ msgid ""
 "blacksmith Griswold is more of a sorcerer than he knows. His ability to meld "
 "fire and metal is unequaled in this land."
 msgstr ""
-"鉄​しか​知ら​ぬ​者​に​とり、鋼鉄​こそ​は​最強​の​魔法。奴​が​気付く​こと​は​ある​まい​が​鍛冶屋​の​グリズ"
-"ウォルド​は、まさに​魔術師​じゃ。火​と​金属​を​融合​さ​せる​やつ​の​力​に​は、誰​も​敵わ​ぬ。"
+"鉄​しか​知ら​ぬ​者​に​とり、鋼鉄​こそ​は​最強​の​魔法。奴​が​気付く​こと​は​ある​まい​が​鍛冶屋​"
+"の​グリズウォルド​は、まさに​魔術師​じゃ。火​と​金属​を​融合​さ​せる​やつ​の​力​に​は、誰​も​"
+"敵わ​ぬ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:438
@@ -9199,9 +9289,9 @@ msgid ""
 "matriarch over her own. She fears me, but it is only because she does not "
 "understand me."
 msgstr ""
-"腐敗​に​は​ごまかし​の​強​さ​が​ある​が、純潔​に​は​無垢​の​力​が​宿る。あの​ジリアン​と​いう​娘​の​無垢"
-"​な​心​は​な、祖母​の​望み​を​己​より​優先​さ​せ​て​いる。彼女​が​私​を​恐れる​の​は、ただ​理解​でき​ぬ"
-"​から​に​過ぎ​ぬ。"
+"腐敗​に​は​ごまかし​の​強​さ​が​ある​が、純潔​に​は​無垢​の​力​が​宿る。あの​ジリアン​と​いう​娘​"
+"の​無垢​な​心​は​な、祖母​の​望み​を​己​より​優先​さ​せ​て​いる。彼女​が​私​を​恐れる​の​は、ただ​"
+"理解​でき​ぬ​から​に​過ぎ​ぬ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:440
@@ -9211,9 +9301,9 @@ msgid ""
 "not look. His knowledge of what lies beneath the cathedral is far greater "
 "than even he allows himself to realize."
 msgstr ""
-"闇​の​中​で​開こう​と、光​の​中​で​開こう​と、チェスト​の​宝​は​変わる​こと​は​ない。語り部​の​ケイン​は、"
-"謎​に​包ま​れ​て​おる​が、注意​し​て​見れ​ば​分かる​こと​も​ある​ぞ。修道院​の​地下​に​ある​もの​に​つい"
-"​て、彼​は​自分​で​も​気づか​ぬ​ほど、多く​の​こと​を​知っ​て​おる​の​じゃ。"
+"闇​の​中​で​開こう​と、光​の​中​で​開こう​と、チェスト​の​宝​は​変わる​こと​は​ない。語り部​の​"
+"ケイン​は、謎​に​包ま​れ​て​おる​が、注意​し​て​見れ​ば​分かる​こと​も​ある​ぞ。修道院​の​地下​"
+"に​ある​もの​に​つい​て、彼​は​自分​で​も​気づか​ぬ​ほど、多く​の​こと​を​知っ​て​おる​の​じゃ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:442
@@ -9223,9 +9313,10 @@ msgid ""
 "fellow townspeople betrayed by the Archbishop Lazarus. He has knowledge to "
 "be gleaned, but you must separate fact from fantasy."
 msgstr ""
-"一人​の​男​に​多く​の​信頼​を​寄せれ​ば、それ​だけ​裏切ら​れ​た​とき​の​落胆​も​大きい。ファーンハム​の​魂"
-"​を​奪っ​た​の​は、悪魔​で​は​ない。ラザルス​大司教​に​裏切ら​れ​た​とき、やつ​は​魂​を​失っ​た​の​じゃ。"
-"ファーンハム​は​情報​を​持っ​て​おる​が、事実​と​空想​を​区別​し​て​聞か​ね​ば​なら​ぬ。"
+"一人​の​男​に​多く​の​信頼​を​寄せれ​ば、それ​だけ​裏切ら​れ​た​とき​の​落胆​も​大きい。ファー"
+"ンハム​の​魂​を​奪っ​た​の​は、悪魔​で​は​ない。ラザルス​大司教​に​裏切ら​れ​た​とき、やつ​は​"
+"魂​を​失っ​た​の​じゃ。ファーンハム​は​情報​を​持っ​て​おる​が、事実​と​空想​を​区別​し​て​聞か​"
+"ね​ば​なら​ぬ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:444
@@ -9236,10 +9327,10 @@ msgid ""
 "understanding of the creation of elixirs and potions. He is as great an ally "
 "as you have in Tristram."
 msgstr ""
-"手、心、精神​が​完全​に​調和​し​た​とき、奇跡​を​起こす​こと​が​できる。治癒​師​の​ペピン​は、私​で​さえ​で"
-"き​ない​方法​で​体​の​中​を​見る​こと​が​でき​ます。病人​や​負傷者​を​回復​さ​せる​彼​の​能力​は、万能薬"
-"​や​ポーション​の​作り方​を​理解​し​て​いる​から​こそ​発揮​さ​れ​ます。彼​は​トリストラム​の​よう​な​偉大"
-"​な​同盟​者​です。"
+"手、心、精神​が​完全​に​調和​し​た​とき、奇跡​を​起こす​こと​が​できる。治癒​師​の​ペピン​"
+"は、私​で​さえ​でき​ない​方法​で​体​の​中​を​見る​こと​が​でき​ます。病人​や​負傷者​を​回復​さ​せ"
+"る​彼​の​能力​は、万能薬​や​ポーション​の​作り方​を​理解​し​て​いる​から​こそ​発揮​さ​れ​ます。"
+"彼​は​トリストラム​の​よう​な​偉大​な​同盟​者​です。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:446
@@ -9252,11 +9343,11 @@ msgid ""
 "reproachful, Wirt can provide assistance for your battle against the "
 "encroaching Darkness."
 msgstr ""
-"未来​に​おい​て​何​が​起こる​か​は​見え​ぬ​が、その​時​が​来​た​の​なら、世​を​支配​する​の​は​子供達​"
-"じゃ。ワート​は​魂​に​悪しき​部分​を​持っ​て​おる​が、町​や​人々​の​脅威​と​は​なら​ぬ。近隣​の​仲間達​や"
-"​後ろ暗い​ギルド​と​秘密裏​に​通じ​て​おり、トリストラム​で​は​手​に​入り​にくい​品物​を​得る​こと​が​でき"
-"る​の​じゃ。やり方​は​いかがわしい​もの​だ​が、お前​が​しのびよる​闇​の​勢力​と​闘う​時、ワート​は​きっと​役"
-"​に​立つ​はず​じゃ。"
+"未来​に​おい​て​何​が​起こる​か​は​見え​ぬ​が、その​時​が​来​た​の​なら、世​を​支配​する​の​は​子供"
+"達​じゃ。ワート​は​魂​に​悪しき​部分​を​持っ​て​おる​が、町​や​人々​の​脅威​と​は​なら​ぬ。近隣​"
+"の​仲間達​や​後ろ暗い​ギルド​と​秘密裏​に​通じ​て​おり、トリストラム​で​は​手​に​入り​にくい​"
+"品物​を​得る​こと​が​できる​の​じゃ。やり方​は​いかがわしい​もの​だ​が、お前​が​しのびよる​"
+"闇​の​勢力​と​闘う​時、ワート​は​きっと​役​に​立つ​はず​じゃ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Adria (Gossip)
 #: Source/textdat.cpp:448
@@ -9269,11 +9360,12 @@ msgid ""
 "found there, provide a glimpse of a life that the people here remember. It "
 "is that memory that continues to feed their hopes for your success."
 msgstr ""
-"土​の​壁​と​草ぶき​屋根​だけ​で​は、温もり​は​生まれ​ぬ。宿屋​の​主人​オグデン​は、町​の​人々​が​思う​以上"
-"​に​この​町​に​とっ​て​重要​な​存在​な​の​じゃ。ジリアン​と​その​祖母​を​住まわ​せ、ファーンハム​の​命​の"
-"​残り火​を​守り、町​に​残さ​れ​た​人々​に​とっ​て​は、かつて​の​トリストラム​と​の​最後​の​つながり​と​な"
-"っ​て​おる。あの​宿屋​は​懐かしい​かつて​の​暮らし​を​一時、人々​に​味​あわせ、よみがえる​思い出​に​励まさ​れ"
-"​ながら、お前​の​成功​を​願っ​て​おる​の​じゃ。"
+"土​の​壁​と​草ぶき​屋根​だけ​で​は、温もり​は​生まれ​ぬ。宿屋​の​主人​オグデン​は、町​の​人々​"
+"が​思う​以上​に​この​町​に​とっ​て​重要​な​存在​な​の​じゃ。ジリアン​と​その​祖母​を​住まわ​せ、"
+"ファーンハム​の​命​の​残り火​を​守り、町​に​残さ​れ​た​人々​に​とっ​て​は、かつて​の​トリスト"
+"ラム​と​の​最後​の​つながり​と​なっ​て​おる。あの​宿屋​は​懐かしい​かつて​の​暮らし​を​一時、"
+"人々​に​味​あわせ、よみがえる​思い出​に​励まさ​れ​ながら、お前​の​成功​を​願っ​て​おる​の​"
+"じゃ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt
 #: Source/textdat.cpp:450
@@ -9288,8 +9380,8 @@ msgid ""
 " \n"
 "Sometimes, only you will be able to find a purpose for some things."
 msgstr ""
-"迷宮​で​見つけ​た​もの​に​は、使い道​や​価値​が​ある​の​か​わから​ねえ​もの​も​ある。この​俺​だ​って、頭​"
-"を​ひねる​こと​も​ある​ん​だ。\n"
+"迷宮​で​見つけ​た​もの​に​は、使い道​や​価値​が​ある​の​か​わから​ねえ​もの​も​ある。この​俺​だ​"
+"って、頭​を​ひねる​こと​も​ある​ん​だ。\n"
 "\n"
 "​使い道​が​わかる​の​は、あんた​だけ​って​こと​も​ある​ぜ。"
 
@@ -9298,7 +9390,9 @@ msgstr ""
 msgid ""
 "Don't trust everything the drunk says. Too many ales have fogged his vision "
 "and his good sense."
-msgstr "酔っ払い​の​言う​こと​なんか、真​に​受け​ねえ​ほう​が​いい​ぞ。酒​は​判断力​を​鈍ら​せる​から​な。"
+msgstr ""
+"酔っ払い​の​言う​こと​なんか、真​に​受け​ねえ​ほう​が​いい​ぞ。酒​は​判断力​を​鈍ら​せる​から​"
+"な。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:455
@@ -9308,8 +9402,9 @@ msgid ""
 "Griswold, Pepin or that witch, Adria. I'm sure that they will snap up "
 "whatever you can bring them..."
 msgstr ""
-"言っ​とく​けど、俺​は​高級​品​しか​扱わ​ねえ。だ​から​トリス​トラム​で​は​何​も​買わ​ねえ​の​さ。その​ガラ"
-"クタ​を​売り​たい​なら、グリズウォルド​か​ぺ​ピン​か、魔女​の​エイドリア​に​持っ​て​き​な。連中、飛び付く​ぜ。"
+"言っ​とく​けど、俺​は​高級​品​しか​扱わ​ねえ。だ​から​トリス​トラム​で​は​何​も​買わ​ねえ​の​"
+"さ。その​ガラクタ​を​売り​たい​なら、グリズウォルド​か​ぺ​ピン​か、魔女​の​エイドリア​に​"
+"持っ​て​き​な。連中、飛び付く​ぜ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:457
@@ -9319,9 +9414,9 @@ msgid ""
 "I'll never get enough money to... well, let's just say that I have definite "
 "plans that require a large amount of gold."
 msgstr ""
-"グリズウォルド​は​命​の​恩人​だ。この​ちっぽけ​な​命​の​な。俺​を​鍛冶屋​に​弟子​入り​さ​せ​て​くれ​た。い"
-"い​やつ​だ​よ、あいつ​は。だ​が​俺​に​は​莫大​な​金​が​必要​な​ん​だ。何故​か​って、それ​は​その​…​計画"
-"​が​ある​の​さ。"
+"グリズウォルド​は​命​の​恩人​だ。この​ちっぽけ​な​命​の​な。俺​を​鍛冶屋​に​弟子​入り​さ​せ​て​"
+"くれ​た。いい​やつ​だ​よ、あいつ​は。だ​が​俺​に​は​莫大​な​金​が​必要​な​ん​だ。何故​か​って、"
+"それ​は​その​…​計画​が​ある​の​さ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:459
@@ -9331,9 +9426,10 @@ msgid ""
 "Gillian is a beautiful girl who should get out of Tristram as soon as it is "
 "safe. Hmmm... maybe I'll take her with me when I go..."
 msgstr ""
-"もう​ちょっと​年​取っ​て​たら、リッチ​な​プレゼント​で​ジリアン​を​バンバン​攻め​まくっ​て、何​が​何​で​も​"
-"俺​の​もの​に​し​て​た​ぜ。あんな​きれい​な​人​が、こんな​に​危険​な​トリストラム​に​残っ​て​い​ちゃ​いけ"
-"​ねえ​よ。んー、そう​だ、俺​が​ここ​を​出る​とき、あの​人​を​連れ​て​行こう。"
+"もう​ちょっと​年​取っ​て​たら、リッチ​な​プレゼント​で​ジリアン​を​バンバン​攻め​まくっ​"
+"て、何​が​何​で​も​俺​の​もの​に​し​て​た​ぜ。あんな​きれい​な​人​が、こんな​に​危険​な​トリスト"
+"ラム​に​残っ​て​い​ちゃ​いけ​ねえ​よ。んー、そう​だ、俺​が​ここ​を​出る​とき、あの​人​を​連れ​"
+"て​行こう。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:461
@@ -9342,8 +9438,9 @@ msgid ""
 "woman across the river. He keeps telling me about how lucky I am to be "
 "alive, and how my story is foretold in legend. I think he's off his crock."
 msgstr ""
-"ケイン​の​やつ、散々​俺​を​おどかし​やがっ​た。川​の​向こう​に​住ん​でる​あの​女​より​ひでえ。俺​が​生き​て"
-"​帰っ​た​の​が​奇跡​だ​と​か、伝説​の​中​で​すべて​予言​さ​れ​て​い​た​だ​と​か、くどくど​言い​やがる。"
+"ケイン​の​やつ、散々​俺​を​おどかし​やがっ​た。川​の​向こう​に​住ん​でる​あの​女​より​ひで"
+"え。俺​が​生き​て​帰っ​た​の​が​奇跡​だ​と​か、伝説​の​中​で​すべて​予言​さ​れ​て​い​た​だ​と​か、く"
+"どくど​言い​やがる。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:463
@@ -9354,10 +9451,10 @@ msgid ""
 "down there, so don't even start telling me about your plans to destroy the "
 "evil that dwells in that Labyrinth. Just watch your legs..."
 msgstr ""
-"ファーンハム​は​まったく​厄介​な​こと​に​なっ​た​ぜ。ああ​なる​と​人間、とことん​深み​に​はまっ​て​いく​もん"
-"​だ。信じ​て​い​た​ラザルス​に、地獄​の​底​へ​突き落とさ​れ​そう​に​なっ​た​ん​だ​から​な。あそこ​は​恐ろ"
-"しい​とこ​だ。いい​か​迷宮​に​潜む​魔物​ども​を​退治​する​なんて、バカ​な​考え​は​やめ​て、へっ、足下​に​気"
-"​を​つけろ​よ。"
+"ファーンハム​は​まったく​厄介​な​こと​に​なっ​た​ぜ。ああ​なる​と​人間、とことん​深み​に​は"
+"まっ​て​いく​もん​だ。信じ​て​い​た​ラザルス​に、地獄​の​底​へ​突き落とさ​れ​そう​に​なっ​た​ん​"
+"だ​から​な。あそこ​は​恐ろしい​とこ​だ。いい​か​迷宮​に​潜む​魔物​ども​を​退治​する​なんて、"
+"バカ​な​考え​は​やめ​て、へっ、足下​に​気​を​つけろ​よ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:465
@@ -9367,8 +9464,8 @@ msgid ""
 " \n"
 "If I'd have had some of those potions he brews, I might still have my leg..."
 msgstr ""
-"ばらばら​に​なっ​た​手足​を​くっつけろ​って​の​は​理​だ​けど、ぺ​ピン​は​とびっきり​腕​が​いい。あいつ​の​"
-"薬​を​飲ん​で​たら、俺​の​足​も​ぴんぴん​し​て​た​か​も​な。"
+"ばらばら​に​なっ​た​手足​を​くっつけろ​って​の​は​理​だ​けど、ぺ​ピン​は​とびっきり​腕​が​い"
+"い。あいつ​の​薬​を​飲ん​で​たら、俺​の​足​も​ぴんぴん​し​て​た​か​も​な。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:467
@@ -9378,9 +9475,9 @@ msgid ""
 "get whatever she needs, too. Adria gets her hands on more merchandise than "
 "I've seen pass through the gates of the King's Bazaar during High Festival."
 msgstr ""
-"エイドリア​に​は​うんざり​だ。ケイン​の​話す​伝説​も​不気味​だ​けど、あの​女​は​俺​の​過去​を​お​見通し​な"
-"​ん​だ。おまけ​に​欲しい​もの​は​全て​手​に​入れる。あの​女​は​ど​えらい​数​の​商品​を​持っ​てる。祭り​の"
-"​最中​の​バザー​で​売ら​れ​て​た​商品​より​多い​ん​だ。"
+"エイドリア​に​は​うんざり​だ。ケイン​の​話す​伝説​も​不気味​だ​けど、あの​女​は​俺​の​過去​を​"
+"お​見通し​な​ん​だ。おまけ​に​欲しい​もの​は​全て​手​に​入れる。あの​女​は​ど​えらい​数​の​商品​"
+"を​持っ​てる。祭り​の​最中​の​バザー​で​売ら​れ​て​た​商品​より​多い​ん​だ。"
 
 #. TRANSLATORS: Neutral dialog spoken by Wirt (Gossip)
 #: Source/textdat.cpp:469
@@ -9390,9 +9487,9 @@ msgid ""
 "stupid tavern. I guess at the least he gives Gillian a place to work, and "
 "his wife Garda does make a superb Shepherd's pie..."
 msgstr ""
-"オグデン​は​バカ​だ​ぜ。格安​で​ここ​から​脱出​さ​せ​て​やる​って​の​に、宿屋​を​閉め​たく​ない​だ​と​よ"
-"。ま、おかげ​で​ジリアン​は​働ける​し、かみさん​の​ガーダ​お​手製​の​うまい​パイ​に​も​ありつける​ん​だ​けど"
-"​な。"
+"オグデン​は​バカ​だ​ぜ。格安​で​ここ​から​脱出​さ​せ​て​やる​って​の​に、宿屋​を​閉め​たく​ない​"
+"だ​と​よ。ま、おかげ​で​ジリアン​は​働ける​し、かみさん​の​ガーダ​お​手製​の​うまい​パイ​に​"
+"も​ありつける​ん​だ​けど​な。"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:471 Source/textdat.cpp:479 Source/textdat.cpp:487
@@ -9401,8 +9498,8 @@ msgid ""
 "who would seek to steal the treasures secured within this room. So speaks "
 "the Lord of Terror, and so it is written."
 msgstr ""
-"英雄​の​広間​の​奥​に​は​納骨堂​が​ある。そこ​の​財宝​を​盗もう​と​する​者​に​は、永遠​の​死​が​訪れる​"
-"だろう。恐怖​の​帝王​の​言葉​通り、そして​ここ​に​記さ​れ​て​いる​通り​に。"
+"英雄​の​広間​の​奥​に​は​納骨堂​が​ある。そこ​の​財宝​を​盗もう​と​する​者​に​は、永遠​の​死​が​訪"
+"れる​だろう。恐怖​の​帝王​の​言葉​通り、そして​ここ​に​記さ​れ​て​いる​通り​に。"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:473 Source/textdat.cpp:481 Source/textdat.cpp:489
@@ -9411,8 +9508,8 @@ msgid ""
 "...and so, locked beyond the Gateway of Blood and past the Hall of Fire, "
 "Valor awaits for the Hero of Light to awaken..."
 msgstr ""
-"…​そして​血​の​門​の​向こう、炎​の​広間​の​その​先​で、ヴァロー​は​光​の​英雄​が​目覚める​の​を​待っ​て"
-"​いる​…"
+"…​そして​血​の​門​の​向こう、炎​の​広間​の​その​先​で、ヴァロー​は​光​の​英雄​が​目覚める​の​を​"
+"待っ​て​いる​…"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:475 Source/textdat.cpp:483 Source/textdat.cpp:491
@@ -9443,9 +9540,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"地獄​の​武器​庫​は​鮮血​の​将軍​の​棲み家。彼​が​目覚める​と​辺り​に​は​幾​千​の​死体​が​横たわっ​て​い"
-"​た。天使​も​人間​も、血​のみ​を​求める​暗黒​の​支配者​へ​の​生け贄​と​し​て、次​から​次​へ​と​切り裂か​"
-"れ​て​いっ​た。"
+"地獄​の​武器​庫​は​鮮血​の​将軍​の​棲み家。彼​が​目覚める​と​辺り​に​は​幾​千​の​死体​が​横たわっ​"
+"て​い​た。天使​も​人間​も、血​のみ​を​求める​暗黒​の​支配者​へ​の​生け贄​と​し​て、次​から​次​へ​"
+"と​切り裂か​れ​て​いっ​た。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:505
@@ -9458,11 +9555,11 @@ msgid ""
 "sky. Neither side ever gains sway for long as the forces of Light and "
 "Darkness constantly vie for control over all creation."
 msgstr ""
-"ここ​に​書か​れ​て​いる​真実​は、ホラドリム​の​最後​の​遺産​です。今​も​なお、我々​の​知る​フィールド​を​超"
-"え​て、高天原​の​理想的​な​王国​と​灼熱​の​地獄​の​混沌​と​し​た​穴​の​間​で、戦争​が​続い​て​いる。この"
-"​戦争​は​「​大いなる​対立​」​と​し​て​知ら​れ​て​おり、天空​の​どの​星​より​も​長く​猛威​を​振るい、燃え"
-"​続け​て​い​ます。光​と​闇​の​力​が​すべて​の​創造物​を​支配​しよう​と​常​に​争っ​て​いる​ため、どちら​"
-"の​側​も​長く​支配​する​こと​は​でき​ませ​ん。"
+"ここ​に​書か​れ​て​いる​真実​は、ホラドリム​の​最後​の​遺産​です。今​も​なお、我々​の​知る​"
+"フィールド​を​超え​て、高天原​の​理想的​な​王国​と​灼熱​の​地獄​の​混沌​と​し​た​穴​の​間​で、戦"
+"争​が​続い​て​いる。この​戦争​は​「​大いなる​対立​」​と​し​て​知ら​れ​て​おり、天空​の​どの​星​よ"
+"り​も​長く​猛威​を​振るい、燃え​続け​て​い​ます。光​と​闇​の​力​が​すべて​の​創造物​を​支配​しよ"
+"う​と​常​に​争っ​て​いる​ため、どちら​の​側​も​長く​支配​する​こと​は​でき​ませ​ん。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:507
@@ -9475,11 +9572,12 @@ msgid ""
 "have even allied themselves with either side, and helped to dictate the "
 "course of the Sin War."
 msgstr ""
-"ここ​に​書か​れ​て​いる​真実​は、ホラドリム​の​最後​の​遺産​です。高天原​と​灼熱​の​地獄​の​間​の​永遠​の"
-"​争い​が​人間​の​土​に​落ちる​とき、それ​は​罪​の​戦争​と​呼ば​れ​ます。天使​と​悪魔​は​変装​し​て​人間"
-"​の​中​を​歩き回り、人間​の​詮索​好き​な​目​から​逃れ​て​秘密裏​に​戦い​ます。天使​と​悪魔​は​変装​し​て"
-"​人間​の​間​を​行き来​し、人間​の​目​に​触れ​ない​よう​に​秘密裏​に​戦っ​て​いる。大胆​で​強力​な​人間​"
-"の​中​に​は、どちら​か​に​味方​し​て​罪​の​戦争​の​行方​を​決める​者​も​いる。"
+"ここ​に​書か​れ​て​いる​真実​は、ホラドリム​の​最後​の​遺産​です。高天原​と​灼熱​の​地獄​の​間​"
+"の​永遠​の​争い​が​人間​の​土​に​落ちる​とき、それ​は​罪​の​戦争​と​呼ば​れ​ます。天使​と​悪魔​は​"
+"変装​し​て​人間​の​中​を​歩き回り、人間​の​詮索​好き​な​目​から​逃れ​て​秘密裏​に​戦い​ます。天"
+"使​と​悪魔​は​変装​し​て​人間​の​間​を​行き来​し、人間​の​目​に​触れ​ない​よう​に​秘密裏​に​戦っ​て​"
+"いる。大胆​で​強力​な​人間​の​中​に​は、どちら​か​に​味方​し​て​罪​の​戦争​の​行方​を​決める​者​も​"
+"いる。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:509
@@ -9503,18 +9601,21 @@ msgid ""
 "faith. If Diablo were to be released, he would seek a body that is easily "
 "controlled as he would be very weak - perhaps that of an old man or a child."
 msgstr ""
-"ここ​に​書か​れ​て​いる​真実​は、ホラドリム​の​最後​の​遺産​です。約​300​年​前、灼熱​地獄​の​三​大​悪​"
-"が​謎​に​包ま​れ​て​この​世界​に​やっ​て​き​た​こと​が​知ら​れる​よう​に​なり​まし​た。三​兄弟​は​何十"
-"​年​に​も​わたっ​て​東方​の​土地​を​荒らし、人類​は​その​後遺症​で​震え上がっ​た。私たち​の​教団、ホラドリム"
-"​は、三​兄弟​を​追い詰め​て​捕らえる​ため​に、秘密​主義​の​マジシャン​たち​に​よっ​て​設立​さ​れ​まし​た。\n"
+"ここ​に​書か​れ​て​いる​真実​は、ホラドリム​の​最後​の​遺産​です。約​300​年​前、灼熱​地獄​の​三​"
+"大​悪​が​謎​に​包ま​れ​て​この​世界​に​やっ​て​き​た​こと​が​知ら​れる​よう​に​なり​まし​た。三​兄弟​"
+"は​何十​年​に​も​わたっ​て​東方​の​土地​を​荒らし、人類​は​その​後遺症​で​震え上がっ​た。私た"
+"ち​の​教団、ホラドリム​は、三​兄弟​を​追い詰め​て​捕らえる​ため​に、秘密​主義​の​マジシャ"
+"ン​たち​に​よっ​て​設立​さ​れ​まし​た。\n"
 " \n"
-"​オリジナル​の​ホラドリム​は、3​人​の​うち​2人​を​ソウル​ストーン​と​呼ば​れる​強力​な​アーティファクト​で"
-"​捕らえ、荒涼​と​し​た​東​の​砂​の​下​に​埋め​た。3​体​目​の​エビル​は​捕らえ​られ​ず、多く​の​ホラドリ"
-"ム​が​追いかける​中、西​へ​と​逃げ​て​いっ​た。恐怖​の​帝王​ディアブロ​と​呼ば​れる​第​三​の​悪​は、やがて"
-"​捕らえ​られ、その​魂​を​ソウル​ストーン​に​封じ込め​て​この​迷宮​に​埋め​られ​た。\n"
+"​オリジナル​の​ホラドリム​は、3​人​の​うち​2人​を​ソウル​ストーン​と​呼ば​れる​強力​な​アー"
+"ティファクト​で​捕らえ、荒涼​と​し​た​東​の​砂​の​下​に​埋め​た。3​体​目​の​エビル​は​捕らえ​られ​"
+"ず、多く​の​ホラドリム​が​追いかける​中、西​へ​と​逃げ​て​いっ​た。恐怖​の​帝王​ディアブロ​"
+"と​呼ば​れる​第​三​の​悪​は、やがて​捕らえ​られ、その​魂​を​ソウル​ストーン​に​封じ込め​て​こ"
+"の​迷宮​に​埋め​られ​た。\n"
 " \n"
-"​魂​の​石​は、信仰心​の​ない​者​に​は​発見​さ​れ​ない​よう​に​し​なけれ​ば​なら​ない。もし​ディアブロ​が"
-"​解放​さ​れる​と​し​たら、彼​は​非常​に​弱っ​て​いる​の​で、コントロール​し​やすい​体​を​求める​だろう。"
+"​魂​の​石​は、信仰心​の​ない​者​に​は​発見​さ​れ​ない​よう​に​し​なけれ​ば​なら​ない。もし​ディア"
+"ブロ​が​解放​さ​れる​と​し​たら、彼​は​非常​に​弱っ​て​いる​の​で、コントロール​し​やすい​体​を​"
+"求める​だろう。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:511
@@ -9527,10 +9628,10 @@ msgid ""
 "the factions of Belial and Azmodan while the forces of the High Heavens "
 "continually battered upon the very Gates of Hell."
 msgstr ""
-"灼熱​の​地獄​で​は、「​暗黒​の​亡命​」​と​呼ば​れる​大革命​が​起こっ​た。小​悪党​が​三​大​悪党​を​倒し、"
-"その​霊体​を​人間界​に​追放​し​た​の​で​ある。ベリアル​（​嘘​の​神​）​と​アズモダン​（​罪​の​神​）​は、"
-"3​兄弟​が​不在​の​間、地獄​の​支配権​を​主張​し​て​争い​まし​た。地獄​全体​が​ベリアル​と​アズモダン​の​"
-"派閥​に​分かれ、高天原​の​力​が​地獄​の​門​を​叩き​続け​て​い​た。"
+"灼熱​の​地獄​で​は、「​暗黒​の​亡命​」​と​呼ば​れる​大革命​が​起こっ​た。小​悪党​が​三​大​悪党​を​"
+"倒し、その​霊体​を​人間界​に​追放​し​た​の​で​ある。ベリアル​（​嘘​の​神​）​と​アズモダン​（​罪​"
+"の​神​）​は、3​兄弟​が​不在​の​間、地獄​の​支配権​を​主張​し​て​争い​まし​た。地獄​全体​が​ベリア"
+"ル​と​アズモダン​の​派閥​に​分かれ、高天原​の​力​が​地獄​の​門​を​叩き​続け​て​い​た。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:513
@@ -9542,8 +9643,9 @@ msgid ""
 "at hunting demons. They also made many dark enemies in the underworlds."
 msgstr ""
 "三​兄弟​を​捜し​て​多く​の​悪魔​が​人間界​に​やっ​て​き​た。後​を​追っ​て​き​た​天使​たち​は​東方​中​"
-"の​悪魔​狩り​を​始め​た。天使​は、人間​の​魔術師​に​よる​ホラドリム​と​いう​秘密​組織​と​手​を​組ん​だ。ホ"
-"ラドリム​は​急速​に​悪魔​狩り​の​腕​を​上げ、黄泉​の​国​に​暗黒​の​敵​を​数多く​作っ​た。"
+"の​悪魔​狩り​を​始め​た。天使​は、人間​の​魔術師​に​よる​ホラドリム​と​いう​秘密​組織​と​手​を​"
+"組ん​だ。ホラドリム​は​急速​に​悪魔​狩り​の​腕​を​上げ、黄泉​の​国​に​暗黒​の​敵​を​数多く​作っ​"
+"た。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:515
@@ -9562,15 +9664,17 @@ msgid ""
 "He will then arise to free his Brothers and once more fan the flames of the "
 "Sin War..."
 msgstr ""
-"その​結果、三​大​悪​は​霊​の​形​で​人間界​に​追放​さ​れ、何十​年​に​も​わたっ​て​東洋​を​混乱​に​陥れ​"
-"た​後、呪わ​れ​た​人間​の​ホラドリム​教団​に​追わ​れる​こと​に​なっ​た​の​です。ホラドリム​は、憎しみ​の​神"
-"​メフィスト​と​破壊​の​神​バアル​の​エッセンス​を​封じ込め​た​ソウル​ストーン​と​呼ば​れる​アーティファクト​"
-"を​使用​し​て​い​まし​た。末​の​弟​で​ある​恐怖​の​帝王​ディアブロ​は​西​へ​逃亡​し​た。\n"
+"その​結果、三​大​悪​は​霊​の​形​で​人間界​に​追放​さ​れ、何十​年​に​も​わたっ​て​東洋​を​混乱​に​陥"
+"れ​た​後、呪わ​れ​た​人間​の​ホラドリム​教団​に​追わ​れる​こと​に​なっ​た​の​です。ホラドリム​"
+"は、憎しみ​の​神​メフィスト​と​破壊​の​神​バアル​の​エッセンス​を​封じ込め​た​ソウル​ストー"
+"ン​と​呼ば​れる​アーティファクト​を​使用​し​て​い​まし​た。末​の​弟​で​ある​恐怖​の​帝王​ディア"
+"ブロ​は​西​へ​逃亡​し​た。\n"
 " \n"
-"​やがて​ホラドリム​は​ディアブロ​も​ソウル​ストーン​に​捕らえ、忘れ去ら​れ​た​古代​の​大聖堂​の​下​に​埋葬​"
-"し​た。そこ​で​は​恐怖​の​帝王​が​眠り、再生​の​時​を​待っ​て​いる。彼​は​無垢​で​簡単​に​コントロール​で"
-"きる​若​さ​と​力​の​ある​肉体​を​求め​て​憑依​する​こと​を​知る。そして、彼​は​兄弟​たち​を​解放​する​た"
-"め​に​立ち上がり、再び​罪​の​戦争​の​炎​を​燃え上がら​せる​だろう​…。"
+"​やがて​ホラドリム​は​ディアブロ​も​ソウル​ストーン​に​捕らえ、忘れ去ら​れ​た​古代​の​大聖"
+"堂​の​下​に​埋葬​し​た。そこ​で​は​恐怖​の​帝王​が​眠り、再生​の​時​を​待っ​て​いる。彼​は​無垢​で​"
+"簡単​に​コントロール​できる​若​さ​と​力​の​ある​肉体​を​求め​て​憑依​する​こと​を​知る。そし"
+"て、彼​は​兄弟​たち​を​解放​する​ため​に​立ち上がり、再び​罪​の​戦争​の​炎​を​燃え上がら​せる​"
+"だろう​…。"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:517
@@ -9582,10 +9686,11 @@ msgid ""
 "that have brought this discord to the realms of man. My lord has named the "
 "battle for this world and all who exist here the Sin War."
 msgstr ""
-"闇​の​追放​の​生き残り​で​ある​恐怖​の​帝王、ディアブロ​に​栄光​あれ。永い​眠り​から​覚め​た​時、我が​王​は"
-"​人間​に​知ら​れ​て​い​ない​秘密​の​話し​を​し​て​くださっ​た。天界​の​王国​と、業火​燃え盛る​地獄​と​の"
-"​永遠​の​戦い​の​話​を。そして​人間界​に​争い​を​もたらし​た​その​力​を​示し、この世​と、この世​に​存在​す"
-"る​全て​の​もの​に​ちなん​で、その​争い​は​「​罪​深き​闘い​」​と​名付け​られ​た​の​だ​.."
+"闇​の​追放​の​生き残り​で​ある​恐怖​の​帝王、ディアブロ​に​栄光​あれ。永い​眠り​から​覚め​た​"
+"時、我が​王​は​人間​に​知ら​れ​て​い​ない​秘密​の​話し​を​し​て​くださっ​た。天界​の​王国​と、業"
+"火​燃え盛る​地獄​と​の​永遠​の​戦い​の​話​を。そして​人間界​に​争い​を​もたらし​た​その​力​を​示"
+"し、この世​と、この世​に​存在​する​全て​の​もの​に​ちなん​で、その​争い​は​「​罪​深き​闘い​」​"
+"と​名付け​られ​た​の​だ​.."
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:519
@@ -9597,10 +9702,11 @@ msgid ""
 "beneath the sands of the east. Once my Lord releases his Brothers, the Sin "
 "War will once again know the fury of the Three."
 msgstr ""
-"三​兄弟​の​リーダー​に​し​て​恐怖​の​帝王、ディアブロ​に​栄光​あれ。我が​王​は、はるか​昔​に​この世​に​追放"
-"​さ​れ​た​兄弟、メフィスト​と​バール​の​話​を​し​て​くださっ​た。今​は、機​が​熟する​の​を​待ち、恐る​べき"
-"​力​を​身​に​つけ、囚われ​て​東方​の​砂漠​に​葬ら​れ​た​兄弟​たち​を​救い出す​こと​を​願っ​て​いる。兄弟"
-"​を​解放​し​た​あかつき​に​は、「​罪​深き​闘い​」​に​再び​三​兄弟​の​怒り​が​吹き荒れる​だろう​…"
+"三​兄弟​の​リーダー​に​し​て​恐怖​の​帝王、ディアブロ​に​栄光​あれ。我が​王​は、はるか​昔​に​"
+"この世​に​追放​さ​れ​た​兄弟、メフィスト​と​バール​の​話​を​し​て​くださっ​た。今​は、機​が​熟"
+"する​の​を​待ち、恐る​べき​力​を​身​に​つけ、囚われ​て​東方​の​砂漠​に​葬ら​れ​た​兄弟​たち​を​救"
+"い出す​こと​を​願っ​て​いる。兄弟​を​解放​し​た​あかつき​に​は、「​罪​深き​闘い​」​に​再び​三​兄"
+"弟​の​怒り​が​吹き荒れる​だろう​…"
 
 #. TRANSLATORS: Book read aloud
 #: Source/textdat.cpp:521
@@ -9615,12 +9721,13 @@ msgid ""
 "Diablo's call and pray that I will be rewarded when he at last emerges as "
 "the Lord of this world."
 msgstr ""
-"魂​の​破壊​者​に​し​て​恐怖​の​帝王、ディアブロ​万歳​! お​目覚め​に​なら​れ​た、我が​主​は​まず​肉体​を"
-"​手​に​入れよう​と​し​た。そこ​で​レオリック​王​の​身体​に​目​を​付け​た​が、まだ​力​及ば​ず、手​に​入れ"
-"る​こと​は​でき​なかっ​た。この世​に​根​を​下ろす​に​は​無垢​な​錨​が​必要​な​の​だ。我が​王​は​アルブレ"
-"ヒト​王子​を​選ば​れ​た。高潔​な​レオリック​王​は​ディアブロ​が​乗り移ろう​と​し​た​とき​に​発狂​し​た。私"
-"​は​アルブレヒト​王子​を​誘拐​し、我が​主​の​許​へ​連れ帰っ​た。今​私​は、ディアブロ​の​呼び声​を​待っ​て​"
-"いる。我が​王​が​この​世界​の​支配者​と​なれ​ば、私​も​報わ​れる​と​いう​もの​だ​…"
+"魂​の​破壊​者​に​し​て​恐怖​の​帝王、ディアブロ​万歳​! お​目覚め​に​なら​れ​た、我が​主​は​まず​"
+"肉体​を​手​に​入れよう​と​し​た。そこ​で​レオリック​王​の​身体​に​目​を​付け​た​が、まだ​力​及ば​"
+"ず、手​に​入れる​こと​は​でき​なかっ​た。この世​に​根​を​下ろす​に​は​無垢​な​錨​が​必要​な​の​"
+"だ。我が​王​は​アルブレヒト​王子​を​選ば​れ​た。高潔​な​レオリック​王​は​ディアブロ​が​乗り"
+"移ろう​と​し​た​とき​に​発狂​し​た。私​は​アルブレヒト​王子​を​誘拐​し、我が​主​の​許​へ​連れ"
+"帰っ​た。今​私​は、ディアブロ​の​呼び声​を​待っ​て​いる。我が​王​が​この​世界​の​支配者​と​な"
+"れ​ば、私​も​報わ​れる​と​いう​もの​だ​…"
 
 #. TRANSLATORS: Neutral Text spoken by Ogden
 #: Source/textdat.cpp:523
@@ -9637,10 +9744,10 @@ msgid ""
 "Perhaps I can tell you more if we speak again. Good luck."
 msgstr ""
 "戻っ​て​来​て​くれ​た​ん​です​ね​! \n"
-"​あんな​に​平和​だっ​た​町​に、邪悪​な​騎士​が​やっ​て​き​て、何​も​か​も​破壊​し​た​の​です。刃向かっ​"
-"た​者​は​殺さ​れる​か、連れ去ら​れ​て​奴隷​に​さ​れ​て​しまい​まし​た。町外れ​の​修道院​は、暗黒​の​儀式​"
-"に​使わ​れ、夜な夜な​金切り声​が、あたり​に​こだま​し​ます。まだ​何人​か​生き​て​いる​か​も​しれ​ませ​ん。宿"
-"屋​と​鍛冶場​の​間​の​小道​を​ぬけれ​ば​修道院​です。\n"
+"​あんな​に​平和​だっ​た​町​に、邪悪​な​騎士​が​やっ​て​き​て、何​も​か​も​破壊​し​た​の​です。刃向"
+"かっ​た​者​は​殺さ​れる​か、連れ去ら​れ​て​奴隷​に​さ​れ​て​しまい​まし​た。町外れ​の​修道院​"
+"は、暗黒​の​儀式​に​使わ​れ、夜な夜な​金切り声​が、あたり​に​こだま​し​ます。まだ​何人​か​"
+"生き​て​いる​か​も​しれ​ませ​ん。宿屋​と​鍛冶場​の​間​の​小道​を​ぬけれ​ば​修道院​です。\n"
 "\n"
 "​どう​か、一人​で​も​多く​救っ​て​ください。幸運​を​祈り​ます。"
 
@@ -9651,8 +9758,8 @@ msgid ""
 "any who would seek to steal the treasures secured within this room.  So "
 "speaks the Lord of Terror, and so it is written."
 msgstr ""
-"英雄​の​広間​の​奥​に​は​納骨堂​が​ある。そこ​の​財宝​を​盗もう​と​する​者​に​は、永遠​の​死​が​訪れる​"
-"だろう。恐怖​の​帝王​の​言葉​通り、そして​ここ​に​記さ​れ​て​いる​通り​に。"
+"英雄​の​広間​の​奥​に​は​納骨堂​が​ある。そこ​の​財宝​を​盗もう​と​する​者​に​は、永遠​の​死​が​訪"
+"れる​だろう。恐怖​の​帝王​の​言葉​通り、そして​ここ​に​記さ​れ​て​いる​通り​に。"
 
 #. TRANSLATORS: Quest text spoken aloud from a book by player
 #: Source/textdat.cpp:531 Source/textdat.cpp:539
@@ -9662,9 +9769,9 @@ msgid ""
 "fulfill his endless sacrifices to the Dark ones who scream for one thing - "
 "blood."
 msgstr ""
-"地獄​の​武器​庫​は​鮮血​の​将軍​の​棲み家。彼​が​目覚める​と​辺り​に​は​幾​千​の​死体​が​横たわっ​て​い"
-"​た。天使​も​人間​も、血​のみ​を​求める​暗黒​の​支配者​へ​の​生け贄​と​し​て、次​から​次​へ​と​切り裂か​"
-"れ​て​いっ​た。"
+"地獄​の​武器​庫​は​鮮血​の​将軍​の​棲み家。彼​が​目覚める​と​辺り​に​は​幾​千​の​死体​が​横たわっ​"
+"て​い​た。天使​も​人間​も、血​のみ​を​求める​暗黒​の​支配者​へ​の​生け贄​と​し​て、次​から​次​へ​"
+"と​切り裂か​れ​て​いっ​た。"
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:541
@@ -9673,9 +9780,9 @@ msgid ""
 "a treasure that is hidden less so.  I will leave you with this.  Do not let "
 "the sands of time confuse your search."
 msgstr ""
-"探求​心​を​持ち​続ける​こと。 失わ​れ​た​宝​を​探す​の​は​簡単​で​は​あり​ませ​ん。 隠れ​て​いる​宝​を"
-"​見つける​の​は​もっと​難しい。 私​は​あなた​に​これ​を​残し​ます。 時​の​砂​に​惑わさ​れる​こと​なく、あ"
-"なた​の​探求​を​続け​て​ください。"
+"探求​心​を​持ち​続ける​こと。 失わ​れ​た​宝​を​探す​の​は​簡単​で​は​あり​ませ​ん。 隠れ​て​いる​"
+"宝​を​見つける​の​は​もっと​難しい。 私​は​あなた​に​これ​を​残し​ます。 時​の​砂​に​惑わさ​れ"
+"る​こと​なく、あなた​の​探求​を​続け​て​ください。"
 
 #. TRANSLATORS: Quest text spoken by Griswold
 #: Source/textdat.cpp:543
@@ -9685,9 +9792,9 @@ msgid ""
 "don't match our town at all.  I'd keep my mind on what lies below the "
 "cathedral and not what lies below our topsoil."
 msgstr ""
-"なん​と​愚か​な。 トリストラム​に​は​宝​なんか​埋まっ​てる​もん​か。 それ​を​見せ​て​み​な！ こりゃ​デタラ"
-"メ​だ。この​街​の​もの​じゃ​ない​な。 俺​は​大聖堂​の​下​に​ある​ん​じゃ​ない​か​と​踏ん​でる​ん​だ、表"
-"土​じゃ​なく​て​な。"
+"なん​と​愚か​な。 トリストラム​に​は​宝​なんか​埋まっ​てる​もん​か。 それ​を​見せ​て​み​な！ "
+"こりゃ​デタラメ​だ。この​街​の​もの​じゃ​ない​な。 俺​は​大聖堂​の​下​に​ある​ん​じゃ​ない​か​と​"
+"踏ん​でる​ん​だ、表土​じゃ​なく​て​な。"
 
 #. TRANSLATORS: Quest text spoken by Pipin
 #: Source/textdat.cpp:545
@@ -9695,8 +9802,8 @@ msgid ""
 "I really don't have time to discuss some map you are looking for.  I have "
 "many sick people that require my help and yours as well."
 msgstr ""
-"私​に​は、あなた​が​探し​て​いる​地図​に​つい​て​話し合う​時間​が​ない​の​だ​よ。 私​に​は​私​の​助け​"
-"を​必要​と​する​多く​の​病人​が​い​て、あなた​の​助け​も​必要​な​の​です。"
+"私​に​は、あなた​が​探し​て​いる​地図​に​つい​て​話し合う​時間​が​ない​の​だ​よ。 私​に​は​私​の​助"
+"け​を​必要​と​する​多く​の​病人​が​い​て、あなた​の​助け​も​必要​な​の​です。"
 
 #. TRANSLATORS: Quest text spoken by Adria
 #: Source/textdat.cpp:547 Source/textdat.cpp:559
@@ -9705,10 +9812,10 @@ msgid ""
 "His honor stripped and his visage altered.  He is trapped in immortal "
 "torment.  Charged to conceal the very thing that could free him."
 msgstr ""
-"かつて​誇り​高かっ​た​イスウォール​は、この​世界​の​地下​深く​に​閉じ込め​られ​た​わ。 名誉​を​剥奪​さ​れ、"
-"姿​も​変え​られ​た​の。\n"
-"​彼​は、不滅​の​苦しみ​に​陥っ​て​いる​わ。彼​を​解放​する​こと​が​できる​もの​を​隠す​よう​に​課せ​られ"
-"​た​わ。"
+"かつて​誇り​高かっ​た​イスウォール​は、この​世界​の​地下​深く​に​閉じ込め​られ​た​わ。 名誉​"
+"を​剥奪​さ​れ、姿​も​変え​られ​た​の。\n"
+"​彼​は、不滅​の​苦しみ​に​陥っ​て​いる​わ。彼​を​解放​する​こと​が​できる​もの​を​隠す​よう​に​課"
+"せ​られ​た​わ。"
 
 #. TRANSLATORS: Quest text spoken by Ogden
 #: Source/textdat.cpp:549
@@ -9717,8 +9824,8 @@ msgid ""
 "at you later when you were running around the town with your nose in the "
 "dirt.  I'd ignore it."
 msgstr ""
-"ワート​は​あなた​が​来る​の​を​見​て、後​で​あなた​が​町中​を​鼻息​荒く​走り回っ​て​いる​の​を​笑う​ため"
-"​に​演技​を​し​た​ん​でしょう​ね。 私​なら​無視​し​ます。"
+"ワート​は​あなた​が​来る​の​を​見​て、後​で​あなた​が​町中​を​鼻息​荒く​走り回っ​て​いる​の​を​笑"
+"う​ため​に​演技​を​し​た​ん​でしょう​ね。 私​なら​無視​し​ます。"
 
 #. TRANSLATORS: Quest text spoken by Cain
 #: Source/textdat.cpp:551
@@ -9728,9 +9835,10 @@ msgid ""
 "treasure are common fantasies of any child.  Wirt seldom indulges in "
 "youthful games.  So it may just be his imagination."
 msgstr ""
-"かつて​この​町​に​は、遠く​から​の​旅人​が​頻繁​に​立ち寄っ​て​い​た​時代​が​あっ​て​な。 それ​から、いろ"
-"いろ​と​変わっ​て​しまっ​た​ん​じゃ。 しかし、隠さ​れ​た​洞窟​や​埋蔵金​の​話​は、子供たち​の​空想​じゃ​よ"
-"。 ワート​は​子供​の​遊び​に​は​あまり​付き合わ​ん​から​彼​が​想像​し​た​産物​か​も​しれ​ん​な。"
+"かつて​この​町​に​は、遠く​から​の​旅人​が​頻繁​に​立ち寄っ​て​い​た​時代​が​あっ​て​な。 それ​か"
+"ら、いろいろ​と​変わっ​て​しまっ​た​ん​じゃ。 しかし、隠さ​れ​た​洞窟​や​埋蔵金​の​話​は、子"
+"供たち​の​空想​じゃ​よ。 ワート​は​子供​の​遊び​に​は​あまり​付き合わ​ん​から​彼​が​想像​し​た​産"
+"物​か​も​しれ​ん​な。"
 
 #. TRANSLATORS: Quest text spoken by Farnham
 #: Source/textdat.cpp:553
@@ -9738,8 +9846,8 @@ msgid ""
 "Listen here.  Come close.  I don't know if you know what I know, but you've "
 "have really got something here.  That's a map."
 msgstr ""
-"話​が​ある。もっと​寄れ。お前​さん​が​知っ​てる​か​どう​か、知ら​ん​が​よぉ、ここ​に​いい​もの​が​ある​ん​"
-"だ。地図​だ。"
+"話​が​ある。もっと​寄れ。お前​さん​が​知っ​てる​か​どう​か、知ら​ん​が​よぉ、ここ​に​いい​も"
+"の​が​ある​ん​だ。地図​だ。"
 
 #. TRANSLATORS: Quest text spoken by Gillian
 #: Source/textdat.cpp:555
@@ -9751,10 +9859,11 @@ msgid ""
 "offering would be altered in some strange way.  I don't know if this is just "
 "the talk of an old sick woman, but anything seems possible these days."
 msgstr ""
-"お​ばあ​さま​は、教会​の​外​に​ある​墓地​に​生息​する​奇妙​な​力​に​つい​て、よく​話​を​し​て​くれる​の"
-"。 その​うち​の​一​つ​に​興味​が​湧く​か​も​しれ​ない​わ。 墓地​に​お​供え物​を​置い​て​大聖堂​に​入っ"
-"​て、死者​の​ため​に​祈り​を​捧げ​て​から​戻っ​て​くる​と、お​供え物​が​不思議​な​方法​で​変え​られ​て​"
-"しまう​そう​よ。 病気​の​老婆​の​戯言​か​も​しれ​ない​けれど、最近​は​何​で​も​あり​の​よう​だ​わ。"
+"お​ばあ​さま​は、教会​の​外​に​ある​墓地​に​生息​する​奇妙​な​力​に​つい​て、よく​話​を​し​て​くれ"
+"る​の。 その​うち​の​一​つ​に​興味​が​湧く​か​も​しれ​ない​わ。 墓地​に​お​供え物​を​置い​て​大聖"
+"堂​に​入っ​て、死者​の​ため​に​祈り​を​捧げ​て​から​戻っ​て​くる​と、お​供え物​が​不思議​な​方法​"
+"で​変え​られ​て​しまう​そう​よ。 病気​の​老婆​の​戯言​か​も​しれ​ない​けれど、最近​は​何​で​も​あ"
+"り​の​よう​だ​わ。"
 
 #. TRANSLATORS: Quest text spoken by Wirt
 #: Source/textdat.cpp:557
@@ -9763,8 +9872,8 @@ msgid ""
 "interested in picking up a few things from you.  Or better yet, don't you "
 "need some rare and expensive supplies to get you through this ordeal?"
 msgstr ""
-"莫大​な​お​宝​だ​って​? 分け前​は​もらえる​ん​だろう​な。それ​より​世​に​も​珍しい​ブツ​が​ある​ん​だ​"
-"けど、どう​だ​い​? これ​が​ありゃあ​鬼​に​金棒​だ​ぞ。"
+"莫大​な​お​宝​だ​って​? 分け前​は​もらえる​ん​だろう​な。それ​より​世​に​も​珍しい​ブツ​が​ある​"
+"ん​だ​けど、どう​だ​い​? これ​が​ありゃあ​鬼​に​金棒​だ​ぞ。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:561
@@ -9777,14 +9886,13 @@ msgid ""
 "you could destroy it, I would be forever grateful. I'd do it myself, but "
 "someone has to stay here with the cows..."
 msgstr ""
-"みんな​が​話し​て​いる​ヒーロー​は​あなた​な​ん​です​ね。ひどい​混乱​から、この​貧しい​素朴​な​農夫​を​助け"
-"​て​くれ​ませ​ん​か？\n"
+"みんな​が​話し​て​いる​ヒーロー​は​あなた​な​ん​です​ね。ひどい​混乱​から、この​貧しい​素朴​"
+"な​農夫​を​助け​て​くれ​ませ​ん​か？\n"
 "​この​南​に​ある​私​の​果樹園​の​端​で、地面​から​恐ろしい​もの​が​膨らん​で​いる​の​です！\n"
-"​作物​も​干し草​も​手​に​入ら​ない​し、哀れ​な​牛​たち​も​飢え​て​しまい​ます。魔女​が、あれ​を​畑​から​"
-"吹き飛ばし​て​くれる​と​言っ​て、これ​を​くれ​まし​た。もし、あなた​が、あれ​を​破壊​し​て​くれ​たら、一生​感"
-"謝​し​ます。\n"
-"​私​が​やっ​て​も​いい​の​です​が、誰​か​が​ここ​で​牛​の​世話​を​し​なけれ​ば​なり​ませ​ん​の​で​…"
-"。"
+"​作物​も​干し草​も​手​に​入ら​ない​し、哀れ​な​牛​たち​も​飢え​て​しまい​ます。魔女​が、あれ​を​"
+"畑​から​吹き飛ばし​て​くれる​と​言っ​て、これ​を​くれ​まし​た。もし、あなた​が、あれ​を​破"
+"壊​し​て​くれ​たら、一生​感謝​し​ます。\n"
+"​私​が​やっ​て​も​いい​の​です​が、誰​か​が​ここ​で​牛​の​世話​を​し​なけれ​ば​なり​ませ​ん​の​で​…。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:563
@@ -9792,8 +9900,8 @@ msgid ""
 "I knew that it couldn't be as simple as that witch made it sound. It's a sad "
 "world when you can't even trust your neighbors."
 msgstr ""
-"あの​魔女​が​言う​よう​な​簡単​な​話​で​は​ない​と​思っ​た​ん​です。近所​の​人​さえ​も​信用​でき​ない​"
-"なんて、悲しい​世の中​です​ね。"
+"あの​魔女​が​言う​よう​な​簡単​な​話​で​は​ない​と​思っ​た​ん​です。近所​の​人​さえ​も​信用​でき​な"
+"い​なんて、悲しい​世の中​です​ね。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:565
@@ -9802,8 +9910,9 @@ msgid ""
 "it? You what? Oh, don't tell me you lost it! Those things don't come cheap, "
 "you know. You've got to find it, and then blast that horror out of our town."
 msgstr ""
-"なくなっ​た？黄泉​の​国​の​暗黒​の​奥地​に​送り返し​た​の​か？失くし​た​なんて​言わ​ない​で​くれ。あれ​は​"
-"安く​は​ない​ん​で​ね。見つけ​出し​て、この​街​から​恐怖​を​消し​消し去っ​て​くれ。"
+"なくなっ​た？黄泉​の​国​の​暗黒​の​奥地​に​送り返し​た​の​か？失くし​た​なんて​言わ​ない​で​く"
+"れ。あれ​は​安く​は​ない​ん​で​ね。見つけ​出し​て、この​街​から​恐怖​を​消し​消し去っ​て​く"
+"れ。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:567
@@ -9813,9 +9922,9 @@ msgid ""
 "church, and so forth, these are trying times. I am but a poor farmer, but "
 "here -- take this with my great thanks."
 msgstr ""
-"ここ​で​も​爆発​音​が​聞こえ​まし​た。見知ら​ぬ​あなた​に​感謝​し​ます。地面​から​何​か​が​出​て​き​たり"
-"​怪物​が​教会​を​占拠​し​たり​と​今​は​大変​な​時代​です。私​は​ただ​の​農夫​です​が、これ​を​受け取っ​"
-"て​ください。感謝​し​ます。"
+"ここ​で​も​爆発​音​が​聞こえ​まし​た。見知ら​ぬ​あなた​に​感謝​し​ます。地面​から​何​か​が​出​て​"
+"き​たり​怪物​が​教会​を​占拠​し​たり​と​今​は​大変​な​時代​です。私​は​ただ​の​農夫​です​が、これ​"
+"を​受け取っ​て​ください。感謝​し​ます。"
 
 #. TRANSLATORS: Neutral text spoken by Farmer (Gossip)
 #: Source/textdat.cpp:569
@@ -9825,9 +9934,9 @@ msgid ""
 "those creatures you could come back... and spare a little time to help a "
 "poor farmer?"
 msgstr ""
-"ああ、どう​し​た​もの​か​…​いや、他​に​も​問題​を​抱え​て​いる​あなた​に​押し付ける​こと​は​でき​ませ​ん"
-"。よかっ​たら、教会​の​中​の​生き物​を​浄化​し​た​後、貧しい​農民​を​助ける​ため​に​少し​時間​を​割い​て​"
-"くれ​ませ​ん​か？"
+"ああ、どう​し​た​もの​か​…​いや、他​に​も​問題​を​抱え​て​いる​あなた​に​押し付ける​こと​は​でき​"
+"ませ​ん。よかっ​たら、教会​の​中​の​生き物​を​浄化​し​た​後、貧しい​農民​を​助ける​ため​に​少"
+"し​時間​を​割い​て​くれ​ませ​ん​か？"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:571
@@ -9843,9 +9952,9 @@ msgid ""
 "but Theo fell down and the bug GRABBED him and took him away!"
 msgstr ""
 "テオ​が​い​なく​なっ​ちゃっ​た​! 親友​だっ​た​の​に​! 川​の​そば​で​遊ん​で​て、そ​し​たら​テオ​が​"
-"おっきな​緑​の​もの​を​見​に​行き​たい​と​言い​出し​た​の。ダメ​って​言っ​た​の​に、あっち​で​もぐもぐ​し"
-"​て​たら、いきなり​バグ​が​出​て​き​た​の​! 逃げ​た​ん​だ​けど、テオ​は​転ん​じゃっ​て、虫​に​つれ​て​"
-"いか​れ​ちゃっ​た​!"
+"おっきな​緑​の​もの​を​見​に​行き​たい​と​言い​出し​た​の。ダメ​って​言っ​た​の​に、あっち​で​も"
+"ぐもぐ​し​て​たら、いきなり​バグ​が​出​て​き​た​の​! 逃げ​た​ん​だ​けど、テオ​は​転ん​じゃっ​"
+"て、虫​に​つれ​て​いか​れ​ちゃっ​た​!"
 
 #. TRANSLATORS: Quest text spoken by Little Girl
 #: Source/textdat.cpp:574
@@ -9853,8 +9962,8 @@ msgid ""
 "Didja find him?  You gotta find Theodore, please!  He's just little.  He "
 "can't take care of himself!  Please!"
 msgstr ""
-"彼​を​見つけ​た？ テオドア​を​見つけ​て！お願い！ まだ​小さい​の。 自分​の​世話​も​でき​ない​の​よ！ お願い"
-"​だ​から！"
+"彼​を​見つけ​た？ テオドア​を​見つけ​て！お願い！ まだ​小さい​の。 自分​の​世話​も​でき​な"
+"い​の​よ！ お願い​だ​から！"
 
 #. TRANSLATORS: Quest text spoken by Little Girl (Quest End)
 #: Source/textdat.cpp:576
@@ -9863,8 +9972,9 @@ msgid ""
 "scare you?  Hey!  Ugh!  There's something stuck to your fur!  Ick!  Come on, "
 "Theo, let's go home!  Thanks again, hero person!"
 msgstr ""
-"見つけ​た​の​ね！ 見つけ​て​くれ​た！ ありがとう！ あー​テオ あの​虫​たち​に​脅かさ​れ​なかっ​た？ きゃあ！"
-" 毛皮​に​何​か​くっつい​てる！ わあ！ さあ、テオ、家​に​帰ろう！ 本当​に​ありがとう！"
+"見つけ​た​の​ね！ 見つけ​て​くれ​た！ ありがとう！ あー​テオ あの​虫​たち​に​脅かさ​れ​な"
+"かっ​た？ きゃあ！ 毛皮​に​何​か​くっつい​てる！ わあ！ さあ、テオ、家​に​帰ろう！ 本"
+"当​に​ありがとう！"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:578
@@ -9872,15 +9982,17 @@ msgid ""
 "We have long lain dormant, and the time to awaken has come.  After our long "
 "sleep, we are filled with great hunger.  Soon, now, we shall feed..."
 msgstr ""
-"長き​に​渡り​眠っ​て​い​た​我々​が​目覚める​時​が​来​た。 長い​眠り​の​後、我々​は​大きな​飢え​に​満ち​"
-"て​いる。 すぐ​に、今、餌​を​食べよう​…。"
+"長き​に​渡り​眠っ​て​い​た​我々​が​目覚める​時​が​来​た。 長い​眠り​の​後、我々​は​大きな​飢え​に​"
+"満ち​て​いる。 すぐ​に、今、餌​を​食べよう​…。"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:580
 msgid ""
 "Have you been enjoying yourself, little mammal?  How pathetic. Your little "
 "world will be no challenge at all."
-msgstr "楽しん​で​いる​か、小さな​哺乳類​よ？ 哀れ​な。お前​の​小さな​世界​は、何​の​チャレンジ​に​も​なら​ん。"
+msgstr ""
+"楽しん​で​いる​か、小さな​哺乳類​よ？ 哀れ​な。お前​の​小さな​世界​は、何​の​チャレンジ​に​"
+"も​なら​ん。"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:582
@@ -9889,8 +10001,9 @@ msgid ""
 "men call home.  Our tendrils shall envelop this world, and we will feast on "
 "the flesh of its denizens.  Man shall become our chattel and sustenance."
 msgstr ""
-"この​地​は​汚さ​れ、我々​の​子孫​は​人間​が​故郷​と​呼ぶ​野原​を​蹂躙​する​だろう。 我々​の​蔓​は​この​"
-"世界​を​包み込み、そこ​に​住む​人々​の​肉​を​食らう​だろう。 人間​は​我々​の​家畜​と​なり、栄養分​と​なる。"
+"この​地​は​汚さ​れ、我々​の​子孫​は​人間​が​故郷​と​呼ぶ​野原​を​蹂躙​する​だろう。 我々​の​蔓​は​"
+"この​世界​を​包み込み、そこ​に​住む​人々​の​肉​を​食らう​だろう。 人間​は​我々​の​家畜​と​な"
+"り、栄養分​と​なる。"
 
 #. TRANSLATORS: Quest text spoken by Defiler (Hostile)
 #: Source/textdat.cpp:584
@@ -9898,8 +10011,8 @@ msgid ""
 "Ah, I can smell you...you are close! Close! Ssss...the scent of blood and "
 "fear...how enticing..."
 msgstr ""
-"ああ、お前​の​匂い​が​する​…​近く​に​いる​な​! 近い​! す​ぅ​ー​…​血​と​恐怖​の​香り​…​なんて​魅力"
-"的​な​ん​だ​…。"
+"ああ、お前​の​匂い​が​する​…​近く​に​いる​な​! 近い​! す​ぅ​ー​…​血​と​恐怖​の​香り​…​なんて​魅力的​"
+"な​ん​だ​…。"
 
 #. TRANSLATORS: Quest text spoken by Narrator
 #: Source/textdat.cpp:592
@@ -9918,16 +10031,17 @@ msgid ""
 "within all things and beyond all things. Light and unity are the products of "
 "this holy foundation, a unity of purpose and a unity of possession."
 msgstr ""
-"そして、黄金​の​光​の​年​に、偉大​な​大聖堂​を​建てる​こと​が​決定​さ​れ​た。 その​礎​と​なる​の​は、ホラ"
-"ドリム​と​力​を​分かち合っ​た​天使​の​名​を​冠し​た​半透明​の​石​「​アンティ​ラエル​」​で​あっ​た。 \n"
+"そして、黄金​の​光​の​年​に、偉大​な​大聖堂​を​建てる​こと​が​決定​さ​れ​た。 その​礎​と​なる​の​"
+"は、ホラドリム​と​力​を​分かち合っ​た​天使​の​名​を​冠し​た​半透明​の​石​「​アンティ​ラエル​」​"
+"で​あっ​た。 \n"
 " \n"
-"​影​を​描く​年​に、地面​が​揺れ、大聖堂​は​粉々​に​なっ​て​落ち​た。 地下墓地​や​城​の​建設​が​始まり、人"
-"間​が​罪​の​戦争​の​荒廃​に​立ち向かう​よう​に​なる​と、廃墟​は​石​を​拾い集め​られ​た。 そして、その​礎石"
-"​は​人間​の​目​から​消え​て​しまっ​た。\n"
+"​影​を​描く​年​に、地面​が​揺れ、大聖堂​は​粉々​に​なっ​て​落ち​た。 地下墓地​や​城​の​建設​が​始"
+"まり、人間​が​罪​の​戦争​の​荒廃​に​立ち向かう​よう​に​なる​と、廃墟​は​石​を​拾い集め​られ​"
+"た。 そして、その​礎石​は​人間​の​目​から​消え​て​しまっ​た。\n"
 " \n"
-"​その​石​は​この世​の​もの​で​あり、すべて​の​世界​の​もの​で​あり、光​が​すべて​の​もの​の​中​に​あり、"
-"すべて​の​もの​を​超え​て​いる​よう​に。光​と​統一性​は、この​聖​なる​礎​の​産物​で​あり、目的​の​統一​と"
-"​所有​の​統一​で​ある。"
+"​その​石​は​この世​の​もの​で​あり、すべて​の​世界​の​もの​で​あり、光​が​すべて​の​もの​の​中​に​"
+"あり、すべて​の​もの​を​超え​て​いる​よう​に。光​と​統一性​は、この​聖​なる​礎​の​産物​で​あ"
+"り、目的​の​統一​と​所有​の​統一​で​ある。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:594
@@ -9958,13 +10072,14 @@ msgid ""
 "my house, it's just south of the fork in the river... you know... the one "
 "with the overgrown vegetable garden."
 msgstr ""
-"わかっ​た、わかっ​た。 本当​は​牛​じゃ​ない​よ。 いつも​は​こんな​こと​し​ない​けど、家​で​ぼーっと​し​て​"
-"たら、突然​床​から​虫​や​つる​や​球根​なんか​が​出​て​き​て​よ​・​・​・​びびっ​た​よ。 普通​の​服​を​"
-"着​てれ​ば、そんな​に​ひどい​こと​に​は​なら​なかっ​た​な。 なあ、俺​の​家​に​行っ​て、スーツ​を​取っ​て​"
-"き​て​くれ​ない​か？ グレー​じゃ​なく​て​茶色​の​やつ​だ、あれ​は​夕方​に​着る​やつ​な​ん​だ。 自分​で​"
-"やっ​て​も​いい​ん​だ​けど、こんな​姿​を​誰​か​に​見​られ​たく​ない​ん​だ​よ。 必要​に​なる​か​も​しれ"
-"​ない​から​これ​を​持っ​て​行っ​て​くれ​… 伸び​すぎ​た​植物​を​殺す​ため​に​さ。 俺​の​家​は、川​の​"
-"分岐点​の​南側​に​ある​…​知っ​てる​よ​な​…​生い茂っ​た​菜園​の​ある​家​だ。"
+"わかっ​た、わかっ​た。 本当​は​牛​じゃ​ない​よ。 いつも​は​こんな​こと​し​ない​けど、家​で​"
+"ぼーっと​し​て​たら、突然​床​から​虫​や​つる​や​球根​なんか​が​出​て​き​て​よ​・​・​・​びびっ​た​"
+"よ。 普通​の​服​を​着​てれ​ば、そんな​に​ひどい​こと​に​は​なら​なかっ​た​な。 なあ、俺​の​家​"
+"に​行っ​て、スーツ​を​取っ​て​き​て​くれ​ない​か？ グレー​じゃ​なく​て​茶色​の​やつ​だ、あれ​は​"
+"夕方​に​着る​やつ​な​ん​だ。 自分​で​やっ​て​も​いい​ん​だ​けど、こんな​姿​を​誰​か​に​見​られ​たく​"
+"ない​ん​だ​よ。 必要​に​なる​か​も​しれ​ない​から​これ​を​持っ​て​行っ​て​くれ​… 伸び​すぎ​た​植物​"
+"を​殺す​ため​に​さ。 俺​の​家​は、川​の​分岐点​の​南側​に​ある​…​知っ​てる​よ​な​…​生い茂っ​た​菜園​"
+"の​ある​家​だ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:599
@@ -9972,15 +10087,16 @@ msgid ""
 "What are you wasting time for?  Go get my suit!  And hurry!  That Holstein "
 "over there keeps winking at me!"
 msgstr ""
-"なん​で​時間​を​無駄​に​し​て​ん​だ？ 早く​俺​の​スーツ​を​取り​に​行け！ あそこ​の​ホルスタイン​が​ずっ"
-"と​ウインク​し​てる！"
+"なん​で​時間​を​無駄​に​し​て​ん​だ？ 早く​俺​の​スーツ​を​取り​に​行け！ あそこ​の​ホルスタイ"
+"ン​が​ずっと​ウインク​し​てる！"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:601
 msgid ""
 "Hey, have you got my suit there?  Quick, pass it over!  These ears itch like "
 "you wouldn't believe!"
-msgstr "おい、俺​の​スーツ​は​そこ​に​ある​の​か？ 早く​渡し​て​くれ！ 耳​が​かゆく​て​たまら​ない！"
+msgstr ""
+"おい、俺​の​スーツ​は​そこ​に​ある​の​か？ 早く​渡し​て​くれ！ 耳​が​かゆく​て​たまら​ない！"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:603
@@ -9989,8 +10105,8 @@ msgid ""
 "occasions!  I can't wear THIS.  What are you, some kind of weirdo?  I need "
 "the BROWN suit."
 msgstr ""
-"いやいや​いやいや！？ これ​は​俺​の​グレー​の​スーツ​だ！ これ​は​ちゃんと​し​た​時​に​着る​服​だ​ぞ！ こ"
-"んな​の​着れ​ない​よ、お前​変人​な​の​か？ 必要​な​の​は​茶色​の​スーツ​だ。"
+"いやいや​いやいや！？ これ​は​俺​の​グレー​の​スーツ​だ！ これ​は​ちゃんと​し​た​時​に​着る​"
+"服​だ​ぞ！ こんな​の​着れ​ない​よ、お前​変人​な​の​か？ 必要​な​の​は​茶色​の​スーツ​だ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:605
@@ -10001,10 +10117,10 @@ msgid ""
 "you could use a new... yknowwhatImean?  The whole adventurer motif is just "
 "so... retro.  Just a word of advice, eh?  Ciao."
 msgstr ""
-"ああ、とても​いい。 ふぅ​ー​! やっとこさ、威厳​が​出​た​な！ 俺​の​ツノ​は​まっすぐ​か？ よし。 助け​て​く"
-"れ​て​本当​に​ありがとう​な、これ​は​お礼​だ。それ​に​… ファッション​の​ちょっと​し​た​ヒント​に​も​なる "
-"君​に​は​ちょっと​し​た​… 新しい​… 冒険家​の​モチーフ​は、とても​…​レトロ​な​感じ​が​する。 一言​アドバ"
-"イス​し​て​くれ​ない​か？ チャオ。"
+"ああ、とても​いい。 ふぅ​ー​! やっとこさ、威厳​が​出​た​な！ 俺​の​ツノ​は​まっすぐ​か？ "
+"よし。 助け​て​くれ​て​本当​に​ありがとう​な、これ​は​お礼​だ。それ​に​… ファッション​の​"
+"ちょっと​し​た​ヒント​に​も​なる 君​に​は​ちょっと​し​た​… 新しい​… 冒険家​の​モチーフ​は、と"
+"ても​…​レトロ​な​感じ​が​する。 一言​アドバイス​し​て​くれ​ない​か？ チャオ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:607
@@ -10012,8 +10128,8 @@ msgid ""
 "Look.  I'm a cow.  And you, you're monster bait. Get some experience under "
 "your belt!  We'll talk..."
 msgstr ""
-"見​て​くれ。 俺​は​牛​だ。 で、お前​は​モンスター​の​エサ​だ。ベルト​の​下​で​経験​を​積む​ん​だ！ 話​を"
-"​し​て​みる​と​…。"
+"見​て​くれ。 俺​は​牛​だ。 で、お前​は​モンスター​の​エサ​だ。ベルト​の​下​で​経験​を​積む​ん​"
+"だ！ 話​を​し​て​みる​と​…。"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:610
@@ -10021,15 +10137,16 @@ msgid ""
 "It must truly be a fearsome task I've set before you. If there was just some "
 "way that I could... would a flagon of some nice, fresh milk help?"
 msgstr ""
-"私​は​あなた​に、本当​に​恐ろしい​仕事​を​課し​て​しまい​まし​た。私​に​できる​こと​は​…​新鮮​な​美味しい"
-"​牛乳​を​一杯​どう​です​か？"
+"私​は​あなた​に、本当​に​恐ろしい​仕事​を​課し​て​しまい​まし​た。私​に​できる​こと​は​…​新鮮​な​"
+"美味しい​牛乳​を​一杯​どう​です​か？"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:612
 msgid ""
 "Oh, I could use your help, but perhaps after you've saved the catacombs from "
 "the desecration of those beasts."
-msgstr "助け​を​借り​たい​の​です​が、カタコンベ​を​獣​たち​の​冒涜​から​救っ​て​から​に​し​ましょう。"
+msgstr ""
+"助け​を​借り​たい​の​です​が、カタコンベ​を​獣​たち​の​冒涜​から​救っ​て​から​に​し​ましょう。"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:614
@@ -10037,8 +10154,8 @@ msgid ""
 "I need something done, but I couldn't impose on a perfect stranger. Perhaps "
 "after you've been here a while I might feel more comfortable asking a favor."
 msgstr ""
-"やっ​て​もらい​たい​こと​が​ある​の​です​が、見​ず​知ら​ず​の​人​に​押し付け​て​いい​の​もの​か​どう​か"
-"。しばらく​ここ​に​留まる​つもり​なら、安心​し​て​お​願い​できる​か​も​しれ​ませ​ん。"
+"やっ​て​もらい​たい​こと​が​ある​の​です​が、見​ず​知ら​ず​の​人​に​押し付け​て​いい​の​もの​か​ど"
+"う​か。しばらく​ここ​に​留まる​つもり​なら、安心​し​て​お​願い​できる​か​も​しれ​ませ​ん。"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:616
@@ -10046,8 +10163,8 @@ msgid ""
 "I see in you the potential for greatness.  Perhaps sometime while you are "
 "fulfilling your destiny, you could stop by and do a little favor for me?"
 msgstr ""
-"あなた​に​は​偉大​な​可能性​が​見え​ます。運命​を​果たし​て​いる​間、いつ​か​私​の​頼みごと​を​聞い​て​く"
-"れ​ない​だろう​か？"
+"あなた​に​は​偉大​な​可能性​が​見え​ます。運命​を​果たし​て​いる​間、いつ​か​私​の​頼みごと​を​"
+"聞い​て​くれ​ない​だろう​か？"
 
 #. TRANSLATORS: Quest text spoken by Farmer
 #: Source/textdat.cpp:618
@@ -10056,8 +10173,9 @@ msgid ""
 "more powerful. I wouldn't want to injure the village's only chance to "
 "destroy the menace in the church!"
 msgstr ""
-"あなた​は​私​を​助ける​こと​が​できる​と​思い​ます​が、もう​少し​力​を​つけ​て​から​の​方​が​良い​よう​"
-"です。教会​の​脅威​を​打破​できる、唯一​の​チャンス​を​傷つけ​たく​は​あり​ませ​ん​から​ね！"
+"あなた​は​私​を​助ける​こと​が​できる​と​思い​ます​が、もう​少し​力​を​つけ​て​から​の​方​が​良い​"
+"よう​です。教会​の​脅威​を​打破​できる、唯一​の​チャンス​を​傷つけ​たく​は​あり​ませ​ん​から​"
+"ね！"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:620
@@ -10071,8 +10189,8 @@ msgid ""
 "I don't have to explain myself to every tourist that walks by!  Don't you "
 "have some monsters to kill?  Maybe we'll talk later.  If you live..."
 msgstr ""
-"通りすがり​の​旅行者​に​説明​する​必要​なんて​ない！ 殺す​べき​モンスター​は​い​ない​の​か​よ？ 後​で​話そ"
-"う​ぜ。 あんた​が​生き​て​いれ​ば​な​…"
+"通りすがり​の​旅行者​に​説明​する​必要​なんて​ない！ 殺す​べき​モンスター​は​い​ない​の​か​"
+"よ？ 後​で​話そう​ぜ。 あんた​が​生き​て​いれ​ば​な​…"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:624
@@ -10081,8 +10199,9 @@ msgid ""
 "it.  I can't trust you, you're going to get eaten by monsters any day now... "
 "I need someone who's an experienced hero."
 msgstr ""
-"悩む​の​は​やめ。 俺​は​本当​の​ヒーロー​を​探し​てる​ん​だ。あんた​は​違う​な。 あんた​は​信用​なら​ん​"
-"し、今​に​も​モンスター​に​食わ​れ​そう​だ​… 経験​豊富​な​ヒーロー​が​必要​な​ん​だ​よ。"
+"悩む​の​は​やめ。 俺​は​本当​の​ヒーロー​を​探し​てる​ん​だ。あんた​は​違う​な。 あんた​は​信"
+"用​なら​ん​し、今​に​も​モンスター​に​食わ​れ​そう​だ​… 経験​豊富​な​ヒーロー​が​必要​な​ん​だ​"
+"よ。"
 
 #. TRANSLATORS: Quest text spoken by Complete Nut
 #: Source/textdat.cpp:626
@@ -10099,14 +10218,14 @@ msgid ""
 "it's just south of the fork in the river... you know... the one with the "
 "overgrown vegetable garden."
 msgstr ""
-"わかっ​た、牛​を​切る​よ。 誤解​さ​せる​つもり​は​なかっ​た​ん​だ。 家​で​くつろい​で​ら、なん​か​変​に​"
-"なっ​て、床​から​モンスター​の​大群​が​出​て​き​た​ん​だ。 俺​は​ただただ​怖かっ​た​よ。 たまたま、この​ジ"
-"ャージ​を​着​て​いる​とき​に​外​に​飛び出し​た​もん​だ​から、馬鹿​に​さ​れる​てる​よ。 普通​の​服​を​着"
-"​て​いれ​ば、良かっ​た​ん​だ​けど。 なあ、俺​の​家​に​行っ​て​スーツ​を​取っ​て​き​て​くれ​ない​か？ 茶"
-"色​の​やつ​だ​よ、グレー​じゃ​なく​て。 自分​で​やっ​て​も​いい​ん​だ​けど、こんな​姿​を​誰​か​に​見​ら"
-"れ​たく​ない​ん​だ​よ​ね。 必要​に​なる​か​も​しれ​ない​から、これ​を​持っ​て​行っ​て​くれ … 伸び​すぎ"
-"​た​植物​を​殺す​ため​に​ね 。俺​の​家​は、川​の​分岐点​の​南側​だ​…​知っ​てる​よ​な​…​生い茂っ​た​"
-"菜園​の​ある​家​だ​よ。"
+"わかっ​た、牛​を​切る​よ。 誤解​さ​せる​つもり​は​なかっ​た​ん​だ。 家​で​くつろい​で​ら、な"
+"ん​か​変​に​なっ​て、床​から​モンスター​の​大群​が​出​て​き​た​ん​だ。 俺​は​ただただ​怖かっ​た​"
+"よ。 たまたま、この​ジャージ​を​着​て​いる​とき​に​外​に​飛び出し​た​もん​だ​から、馬鹿​に​さ​"
+"れる​てる​よ。 普通​の​服​を​着​て​いれ​ば、良かっ​た​ん​だ​けど。 なあ、俺​の​家​に​行っ​て​"
+"スーツ​を​取っ​て​き​て​くれ​ない​か？ 茶色​の​やつ​だ​よ、グレー​じゃ​なく​て。 自分​で​やっ​"
+"て​も​いい​ん​だ​けど、こんな​姿​を​誰​か​に​見​られ​たく​ない​ん​だ​よ​ね。 必要​に​なる​か​も​しれ​"
+"ない​から、これ​を​持っ​て​行っ​て​くれ … 伸び​すぎ​た​植物​を​殺す​ため​に​ね 。俺​の​家​は、"
+"川​の​分岐点​の​南側​だ​…​知っ​てる​よ​な​…​生い茂っ​た​菜園​の​ある​家​だ​よ。"
 
 #. TRANSLATORS: Quest text spoken by Unknown, Maybe Farmer
 #: Source/textdat.cpp:628
@@ -10116,9 +10235,9 @@ msgid ""
 "remember to order some more bat guano and black candles from Adria; I'm "
 "running a bit low."
 msgstr ""
-"今日​は​曇っ​て​い​て​涼しい。 虚空​に​死​霊術​の​網​を​張っ​て、空​飛ぶ​ホラー​の​新しい​亜種​を​2​つ"
-"​見つけ​まし​た。 エイドリア​に​バット​グアノ​と​ブラック​キャンドル​を​注文​する​の​を​忘れ​て​ない​で。少"
-"し​足り​ない​から。"
+"今日​は​曇っ​て​い​て​涼しい。 虚空​に​死​霊術​の​網​を​張っ​て、空​飛ぶ​ホラー​の​新しい​亜種​を​"
+"2​つ​見つけ​まし​た。 エイドリア​に​バット​グアノ​と​ブラック​キャンドル​を​注文​する​の​を​"
+"忘れ​て​ない​で。少し​足り​ない​から。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:630
@@ -10127,8 +10246,8 @@ msgid ""
 "creature -- to no avail.  My methods of enslaving lesser demons seem to have "
 "no effect on this fearsome beast."
 msgstr ""
-"呪文、脅し、魔術、交渉​を​試み​まし​た​が、この​汚い​生き物​に​は​効果​が​あり​ませ​ん。 小​悪魔​を​奴隷​に"
-"​し​た​手法​も、この​恐ろしい​獣​に​は​効果​が​ない​よう​です。"
+"呪文、脅し、魔術、交渉​を​試み​まし​た​が、この​汚い​生き物​に​は​効果​が​あり​ませ​ん。 小​"
+"悪魔​を​奴隷​に​し​た​手法​も、この​恐ろしい​獣​に​は​効果​が​ない​よう​です。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:632
@@ -10138,9 +10257,9 @@ msgid ""
 "of my vision.  The faint scrabble of claws dances at the edges of my "
 "hearing. They are searching, I think, for this journal."
 msgstr ""
-"私​の​家​は、この​望ま​れ​ざる​囚人​の​悪意​に​よっ​て、ゆっくり​と​堕落​し​て​いく。 墓場​に​は、私​の​"
-"視界​の​隅​で​動く​影​が​たくさん​ある。 かすか​な​爪​の​音​が​私​の​聴覚​の​端​で​踊っ​て​いる。彼​ら"
-"​は、この​日記​を​探し​て​いる​の​だ​と​思う。"
+"私​の​家​は、この​望ま​れ​ざる​囚人​の​悪意​に​よっ​て、ゆっくり​と​堕落​し​て​いく。 墓場​に​"
+"は、私​の​視界​の​隅​で​動く​影​が​たくさん​ある。 かすか​な​爪​の​音​が​私​の​聴覚​の​端​で​踊っ​て​"
+"いる。彼​ら​は、この​日記​を​探し​て​いる​の​だ​と​思う。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:634
@@ -10150,10 +10269,10 @@ msgid ""
 "destroyed my library.  Na-Krul... The name fills me with a cold dread.  I "
 "prefer to think of it only as The Creature rather than ponder its true name."
 msgstr ""
-"怒号​の​中、その​生物​は​自分​の​名前​を​漏らし​た​—​ナ​・​クルル。 私​は​その​名前​を​調べよう​と​し​"
-"た​が、小​悪魔​たち​が​何​ら​か​の​方法​で、私​の​図書館​を​破壊​し​て​しまっ​た。 ナ​・​クルル​…。その"
-"​名​は​私​を​冷たい​恐怖​で​満たし​た。 本当​の​名前​で​考える​より​も、”​クリーチャー “​と​しか​考え​"
-"たく​ない。"
+"怒号​の​中、その​生物​は​自分​の​名前​を​漏らし​た​—​ナ​・​クルル。 私​は​その​名前​を​調べよう​"
+"と​し​た​が、小​悪魔​たち​が​何​ら​か​の​方法​で、私​の​図書館​を​破壊​し​て​しまっ​た。 ナ​・​クル"
+"ル​…。その​名​は​私​を​冷たい​恐怖​で​満たし​た。 本当​の​名前​で​考える​より​も、”​クリー"
+"チャー “​と​しか​考え​たく​ない。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:636
@@ -10163,9 +10282,10 @@ msgid ""
 "curses upon me for trapping it here.  Its words fill my heart with terror, "
 "and yet I cannot block out its voice."
 msgstr ""
-"閉じ込め​られ​た​生物​の​怒り​の​遠吠え​で、ほとんど​眠る​こと​が​でき​ない。 それ​は、自分​を​ボイド​に​送"
-"っ​た​者​に​対する​怒り​で​あり、自分​を​ここ​に​閉じ込め​た​私​に​対する​汚い​呪い​の​言葉​で​ある。 そ"
-"の​言葉​は​私​の​心​を​恐怖​で​満たす​が、その​声​を​遮断​する​こと​は​でき​ない。"
+"閉じ込め​られ​た​生物​の​怒り​の​遠吠え​で、ほとんど​眠る​こと​が​でき​ない。 それ​は、自分​"
+"を​ボイド​に​送っ​た​者​に​対する​怒り​で​あり、自分​を​ここ​に​閉じ込め​た​私​に​対する​汚い​呪"
+"い​の​言葉​で​ある。 その​言葉​は​私​の​心​を​恐怖​で​満たす​が、その​声​を​遮断​する​こと​は​でき​"
+"ない。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:638
@@ -10175,9 +10295,9 @@ msgid ""
 "knowledge to free their lord.  I hope that whoever finds this journal will "
 "seek the knowledge."
 msgstr ""
-"私​の​時間​は​すぐ​に​尽き​て​しまう。 悪魔​を​弱める​方法​を​記録​し​た​書物​を​隠さ​なけれ​ば​なら​な"
-"い。悪魔​の​手下​が、私​の​知識​を​使っ​て​主君​を​解放​する​方法​を​見つけ​ない​よう​に。 この​日記​を​"
-"見つけ​た​人​が、その​知識​を​求め​て​くれる​こと​を​願っ​て​いる。"
+"私​の​時間​は​すぐ​に​尽き​て​しまう。 悪魔​を​弱める​方法​を​記録​し​た​書物​を​隠さ​なけれ​ば​な"
+"ら​ない。悪魔​の​手下​が、私​の​知識​を​使っ​て​主君​を​解放​する​方法​を​見つけ​ない​よう​に。 "
+"この​日記​を​見つけ​た​人​が、その​知識​を​求め​て​くれる​こと​を​願っ​て​いる。"
 
 #. TRANSLATORS: Quest text read aloud from book
 #: Source/textdat.cpp:640
@@ -10195,14 +10315,16 @@ msgid ""
 "only these spells to gain entry or his power may be too great for you to "
 "defeat."
 msgstr ""
-"この​巻物​を​見つけ​た​者​は、この​壁​の​中​に​潜む​悪魔​の​よう​な​生き物​を​止める​責任​が​ある。 私​"
-"の​時代​は​終わっ​た。今​も​その​悪魔​の​手下​たち​は、私​が​隠れ​て​いる​弱い​扉​を​引っ掻い​て​いる。 \n"
+"この​巻物​を​見つけ​た​者​は、この​壁​の​中​に​潜む​悪魔​の​よう​な​生き物​を​止める​責任​が​あ"
+"る。 私​の​時代​は​終わっ​た。今​も​その​悪魔​の​手下​たち​は、私​が​隠れ​て​いる​弱い​扉​を​引っ"
+"掻い​て​いる。 \n"
 " \n"
-"​私​は​魔術​で​悪魔​を​操り、大きな​壁​の​中​に​閉じ込め​た​が、それ​だけ​で​は​不十分​だ​と​思う。\n"
+"​私​は​魔術​で​悪魔​を​操り、大きな​壁​の​中​に​閉じ込め​た​が、それ​だけ​で​は​不十分​だ​と​思"
+"う。\n"
 " \n"
-"3​つ​の​魔道​書​に​ある​呪文​は、正しい​順序​で​唱え​た​場合​に​のみ。やつ​の​領域​へ​の​入口​を​開く。"
-" 入口​に​ある​レバー​は​障壁​を​取り除き、悪魔​を​解放​する。 それ​に​触れ​て​は​なら​ぬ！呪文​を​使っ​た"
-"​後​で​なけれ​ば、やつ​の​力​が​強大​すぎ​て​倒せ​ない​だろう。"
+"3​つ​の​魔道​書​に​ある​呪文​は、正しい​順序​で​唱え​た​場合​に​のみ。やつ​の​領域​へ​の​入口​を​開"
+"く。 入口​に​ある​レバー​は​障壁​を​取り除き、悪魔​を​解放​する。 それ​に​触れ​て​は​なら​"
+"ぬ！呪文​を​使っ​た​後​で​なけれ​ば、やつ​の​力​が​強大​すぎ​て​倒せ​ない​だろう。"
 
 #. TRANSLATORS: Quest text read aloud from book by player
 #: Source/textdat.cpp:642 Source/textdat.cpp:645 Source/textdat.cpp:648
