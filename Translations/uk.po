@@ -3609,31 +3609,31 @@ msgstr ""
 
 #: Source/items.cpp:162
 msgid "Oil of Mastery"
-msgstr ""
+msgstr "Масло Майстерності"
 
 #: Source/items.cpp:164
 msgid "Oil of Death"
-msgstr ""
+msgstr "Масло Смерті"
 
 #: Source/items.cpp:165
 msgid "Oil of Skill"
-msgstr ""
+msgstr "Масло Таланту"
 
 #: Source/items.cpp:167
 msgid "Oil of Fortitude"
-msgstr ""
+msgstr "Масло Стійкості"
 
 #: Source/items.cpp:168
 msgid "Oil of Permanence"
-msgstr ""
+msgstr "Масло Міцності"
 
 #: Source/items.cpp:169
 msgid "Oil of Hardening"
-msgstr ""
+msgstr "Масло Гартування"
 
 #: Source/items.cpp:170
 msgid "Oil of Imperviousness"
-msgstr ""
+msgstr "Масло Непроникності"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword
 #. TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword
@@ -3642,7 +3642,7 @@ msgstr ""
 #: Source/items.cpp:1174 Source/items.cpp:1184 Source/items.cpp:1233
 #: Source/items.cpp:1269
 msgid "{0} {1}"
-msgstr ""
+msgstr "{0} {1}"
 
 #. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall
 #. TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale
@@ -3651,7 +3651,7 @@ msgstr ""
 #: Source/items.cpp:1187 Source/items.cpp:1254 Source/items.cpp:1273
 #: Source/items.cpp:1315
 msgid "{0} of {1}"
-msgstr ""
+msgstr "{0} {1}"
 
 #: Source/items.cpp:1892 Source/items.cpp:1904
 msgid "increases a weapon's"
