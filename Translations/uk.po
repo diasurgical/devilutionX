@@ -1835,623 +1835,636 @@ msgstr "Не зміг створити головне вікно"
 
 #: Source/itemdat.cpp:16 Source/itemdat.cpp:198 Source/panels/charpanel.cpp:155
 msgid "Gold"
-msgstr ""
+msgstr "Золото"
 
 #: Source/itemdat.cpp:17 Source/itemdat.cpp:135
 msgid "Short Sword"
-msgstr ""
+msgstr "Короткий Меч"
 
 #: Source/itemdat.cpp:18 Source/itemdat.cpp:87
 msgid "Buckler"
-msgstr ""
+msgstr "Круглий Щит"
 
 #: Source/itemdat.cpp:19 Source/itemdat.cpp:155 Source/itemdat.cpp:156
 msgid "Club"
-msgstr ""
+msgstr "Палиця"
 
 #: Source/itemdat.cpp:20 Source/itemdat.cpp:159
 msgid "Short Bow"
-msgstr ""
+msgstr "Короткий Лук"
 
 #: Source/itemdat.cpp:21
 msgid "Short Staff of Mana"
-msgstr ""
+msgstr "Короткий Посох Мани"
 
 #: Source/itemdat.cpp:22
 msgid "Cleaver"
-msgstr ""
+msgstr "Сікач"
 
 #: Source/itemdat.cpp:23 Source/itemdat.cpp:397
 msgid "The Undead Crown"
-msgstr ""
+msgstr "Нечестива Корона"
 
 #: Source/itemdat.cpp:24 Source/itemdat.cpp:398
 msgid "Empyrean Band"
-msgstr ""
+msgstr "Обруч Емпірею"
 
 #: Source/itemdat.cpp:25
 msgid "Magic Rock"
-msgstr ""
+msgstr "Магічний Камінь"
 
 #: Source/itemdat.cpp:26 Source/itemdat.cpp:399
 msgid "Optic Amulet"
-msgstr ""
+msgstr "Оптичний Амулет"
 
 #: Source/itemdat.cpp:27 Source/itemdat.cpp:400
 msgid "Ring of Truth"
-msgstr ""
+msgstr "Перстень Правди"
 
 #: Source/itemdat.cpp:28
 msgid "Tavern Sign"
-msgstr ""
+msgstr "Знак Таверни"
 
 #: Source/itemdat.cpp:29 Source/itemdat.cpp:401
 msgid "Harlequin Crest"
-msgstr ""
+msgstr "Гребінь Арлекіна"
 
 #: Source/itemdat.cpp:30 Source/itemdat.cpp:402
 msgid "Veil of Steel"
-msgstr ""
+msgstr "Стальна Чадра"
 
 #: Source/itemdat.cpp:31
 msgid "Golden Elixir"
-msgstr ""
+msgstr "Золотий Еліксир"
 
 #: Source/itemdat.cpp:32 Source/quests.cpp:51
 msgid "Anvil of Fury"
-msgstr ""
+msgstr "Наковальня Люті"
 
 #: Source/itemdat.cpp:33 Source/quests.cpp:42
 msgid "Black Mushroom"
-msgstr ""
+msgstr "Чорний Гриб"
 
 #: Source/itemdat.cpp:34
 msgid "Brain"
-msgstr ""
+msgstr "Мозок"
 
 #: Source/itemdat.cpp:35
 msgid "Fungal Tome"
-msgstr ""
+msgstr "Грибковий Том"
 
 #: Source/itemdat.cpp:36
 msgid "Spectral Elixir"
-msgstr ""
+msgstr "Примарний Еліксир"
 
 #: Source/itemdat.cpp:37
 msgid "Blood Stone"
-msgstr ""
+msgstr "Кров'яний Камінь"
 
 #: Source/itemdat.cpp:38
 msgid "Cathedral Map"
-msgstr ""
+msgstr "Карта Собору"
 
 #: Source/itemdat.cpp:39
 msgid "Heart"
-msgstr ""
+msgstr "Сердце"
 
 #: Source/itemdat.cpp:40 Source/itemdat.cpp:93
 msgid "Potion of Healing"
-msgstr ""
+msgstr "Зілля Зцілення"
 
 #: Source/itemdat.cpp:41 Source/itemdat.cpp:95
 msgid "Potion of Mana"
-msgstr ""
+msgstr "Зілля Мани"
 
 #: Source/itemdat.cpp:42 Source/itemdat.cpp:110
 msgid "Scroll of Identify"
-msgstr ""
+msgstr "Згорток Розпізнавання"
 
 #: Source/itemdat.cpp:43 Source/itemdat.cpp:114
 msgid "Scroll of Town Portal"
-msgstr ""
+msgstr "Згорток Порталу в Місто"
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:403
+#, fuzzy
 msgid "Arkaine's Valor"
-msgstr ""
+msgstr "Хоробрість Аркейну"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
-msgstr ""
+msgstr "Зілля Повного Зцілення"
 
 #: Source/itemdat.cpp:46 Source/itemdat.cpp:96
 msgid "Potion of Full Mana"
-msgstr ""
+msgstr "Зілля Повної Мани"
 
 #: Source/itemdat.cpp:47 Source/itemdat.cpp:404
 msgid "Griswold's Edge"
-msgstr ""
+msgstr "Лезо Грізволда"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
+#, fuzzy
 msgid "Bovine Plate"
-msgstr ""
+msgstr "Свині Лати"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
-msgstr ""
+msgstr "Посох Лазаря"
 
 #: Source/itemdat.cpp:50 Source/itemdat.cpp:111
 msgid "Scroll of Resurrect"
-msgstr ""
+msgstr "Згорток Воскрешення"
 
 #: Source/itemdat.cpp:51 Source/itemdat.cpp:99 Source/items.cpp:166
 msgid "Blacksmith Oil"
-msgstr ""
+msgstr "Ковальське Масло"
 
 #: Source/itemdat.cpp:52 Source/itemdat.cpp:167
 msgid "Short Staff"
-msgstr ""
+msgstr "Короткий Посох"
 
 #: Source/itemdat.cpp:53 Source/itemdat.cpp:135 Source/itemdat.cpp:136
 #: Source/itemdat.cpp:137 Source/itemdat.cpp:138 Source/itemdat.cpp:141
 #: Source/itemdat.cpp:142 Source/itemdat.cpp:143 Source/itemdat.cpp:144
 #: Source/itemdat.cpp:145
 msgid "Sword"
-msgstr ""
+msgstr "Меч"
 
 #: Source/itemdat.cpp:54 Source/itemdat.cpp:134
 msgid "Dagger"
-msgstr ""
+msgstr "Кинджал"
 
 #: Source/itemdat.cpp:55
 msgid "Rune Bomb"
-msgstr ""
+msgstr "Рунна Бомба"
 
 #: Source/itemdat.cpp:56
 msgid "Theodore"
-msgstr ""
+msgstr "Теодор"
 
 #: Source/itemdat.cpp:57
 msgid "Auric Amulet"
-msgstr ""
+msgstr "Золотоносний Амулет"
 
 #: Source/itemdat.cpp:58
 msgid "Torn Note 1"
-msgstr ""
+msgstr "Розірвана Записка 1"
 
 #: Source/itemdat.cpp:59
 msgid "Torn Note 2"
-msgstr ""
+msgstr "Розірвана Записка 2"
 
 #: Source/itemdat.cpp:60
 msgid "Torn Note 3"
-msgstr ""
+msgstr "Розірвана Записка 3"
 
 #: Source/itemdat.cpp:61
 msgid "Reconstructed Note"
-msgstr ""
+msgstr "Відновлена Записка"
 
 #: Source/itemdat.cpp:62
 msgid "Brown Suit"
-msgstr ""
+msgstr "Коричневий Костюм"
 
 #: Source/itemdat.cpp:63
 msgid "Grey Suit"
-msgstr ""
+msgstr "Сірий Костюм"
 
 #: Source/itemdat.cpp:64 Source/itemdat.cpp:65
 msgid "Cap"
-msgstr ""
+msgstr "Шапка"
 
 #: Source/itemdat.cpp:65
 msgid "Skull Cap"
-msgstr ""
+msgstr "Черепна Шапка"
 
 #: Source/itemdat.cpp:66 Source/itemdat.cpp:67 Source/itemdat.cpp:69
 msgid "Helm"
-msgstr ""
+msgstr "Шолом"
 
 #: Source/itemdat.cpp:67
 msgid "Full Helm"
-msgstr ""
+msgstr "Повний Шолом"
 
 #: Source/itemdat.cpp:68
 msgid "Crown"
-msgstr ""
+msgstr "Корона"
 
 #: Source/itemdat.cpp:69
 msgid "Great Helm"
-msgstr ""
+msgstr "Величезний Шолом"
 
 #: Source/itemdat.cpp:70
 msgid "Cape"
-msgstr ""
+msgstr "Накидка"
 
 #: Source/itemdat.cpp:71
 msgid "Rags"
-msgstr ""
+msgstr "Ганчірки"
 
 #: Source/itemdat.cpp:72
 msgid "Cloak"
-msgstr ""
+msgstr "Мантія"
 
 #: Source/itemdat.cpp:73
 msgid "Robe"
-msgstr ""
+msgstr "Ряса"
 
 #: Source/itemdat.cpp:74
 msgid "Quilted Armor"
-msgstr ""
+msgstr "Стьобана Броня"
 
 #: Source/itemdat.cpp:74 Source/itemdat.cpp:75 Source/itemdat.cpp:76
 #: Source/itemdat.cpp:77 Source/objects.cpp:5433
 msgid "Armor"
-msgstr ""
+msgstr "Броня"
 
 #: Source/itemdat.cpp:75
 msgid "Leather Armor"
-msgstr ""
+msgstr "Шкіряна Броня"
 
 #: Source/itemdat.cpp:76
 msgid "Hard Leather Armor"
-msgstr ""
+msgstr "Броня з Твердої Шкіри"
 
 #: Source/itemdat.cpp:77
 msgid "Studded Leather Armor"
-msgstr ""
+msgstr "Броня з Клепаної Шкіри"
 
 #: Source/itemdat.cpp:78
 msgid "Ring Mail"
-msgstr ""
+msgstr "Кільцева Кольчуга"
 
 #: Source/itemdat.cpp:78 Source/itemdat.cpp:79 Source/itemdat.cpp:80
 #: Source/itemdat.cpp:82
 msgid "Mail"
-msgstr ""
+msgstr "Кольчуга"
 
 #: Source/itemdat.cpp:79
 msgid "Chain Mail"
-msgstr ""
+msgstr "Кільчаста Кольчуга"
 
 #: Source/itemdat.cpp:80
 msgid "Scale Mail"
-msgstr ""
+msgstr "Лускова Кольчуга"
 
 #: Source/itemdat.cpp:81
+#, fuzzy
 msgid "Breast Plate"
-msgstr ""
+msgstr "Нагрудні Лати"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:83 Source/itemdat.cpp:84
 #: Source/itemdat.cpp:85 Source/itemdat.cpp:86
+#, fuzzy
 msgid "Plate"
-msgstr ""
+msgstr "Лати"
 
 #: Source/itemdat.cpp:82
+#, fuzzy
 msgid "Splint Mail"
-msgstr ""
+msgstr "Лати з Осколків"
 
 #: Source/itemdat.cpp:83
+#, fuzzy
 msgid "Plate Mail"
-msgstr ""
+msgstr "Пластинчасті Лати"
 
 #: Source/itemdat.cpp:84
+#, fuzzy
 msgid "Field Plate"
-msgstr ""
+msgstr "Польові Лати"
 
 #: Source/itemdat.cpp:85
+#, fuzzy
 msgid "Gothic Plate"
-msgstr ""
+msgstr "Готичні Лати"
 
 #: Source/itemdat.cpp:86
+#, fuzzy
 msgid "Full Plate Mail"
-msgstr ""
+msgstr "Повні Лати"
 
 #: Source/itemdat.cpp:87 Source/itemdat.cpp:88 Source/itemdat.cpp:89
 #: Source/itemdat.cpp:90 Source/itemdat.cpp:91 Source/itemdat.cpp:92
 msgid "Shield"
-msgstr ""
+msgstr "Щит"
 
 #: Source/itemdat.cpp:88
 msgid "Small Shield"
-msgstr ""
+msgstr "Малий Щит"
 
 #: Source/itemdat.cpp:89
 msgid "Large Shield"
-msgstr ""
+msgstr "Великий Щит"
 
 #: Source/itemdat.cpp:90
 msgid "Kite Shield"
-msgstr ""
+msgstr "Краплеподібний Щит"
 
 #: Source/itemdat.cpp:91
 msgid "Tower Shield"
-msgstr ""
+msgstr "Баштовий Щит"
 
 #: Source/itemdat.cpp:92
 msgid "Gothic Shield"
-msgstr ""
+msgstr "Готичний Щит"
 
 #: Source/itemdat.cpp:97
 msgid "Potion of Rejuvenation"
-msgstr ""
+msgstr "Зілля Омолодження"
 
 #: Source/itemdat.cpp:98
 msgid "Potion of Full Rejuvenation"
-msgstr ""
+msgstr "Зілля Повного Омолодження"
 
 #: Source/itemdat.cpp:100 Source/items.cpp:161
 msgid "Oil of Accuracy"
-msgstr ""
+msgstr "Масло Точності"
 
 #: Source/itemdat.cpp:101 Source/items.cpp:163
 msgid "Oil of Sharpness"
-msgstr ""
+msgstr "Масло Гостроти"
 
 #: Source/itemdat.cpp:102
 msgid "Oil"
-msgstr ""
+msgstr "Масло"
 
 #: Source/itemdat.cpp:103
 msgid "Elixir of Strength"
-msgstr ""
+msgstr "Еліксир Сили"
 
 #: Source/itemdat.cpp:104
 msgid "Elixir of Magic"
-msgstr ""
+msgstr "Еліксир Магії"
 
 #: Source/itemdat.cpp:105
 msgid "Elixir of Dexterity"
-msgstr ""
+msgstr "Еліксир Спритності"
 
 #: Source/itemdat.cpp:106
 msgid "Elixir of Vitality"
-msgstr ""
+msgstr "Еліксир Живучості"
 
 #: Source/itemdat.cpp:107
 msgid "Scroll of Healing"
-msgstr ""
+msgstr "Згорток Зцілення"
 
 #: Source/itemdat.cpp:108
 msgid "Scroll of Search"
-msgstr ""
+msgstr "Згорток Пошуку"
 
 #: Source/itemdat.cpp:109
 msgid "Scroll of Lightning"
-msgstr ""
+msgstr "Згорток Блискавки"
 
 #: Source/itemdat.cpp:112
 msgid "Scroll of Fire Wall"
-msgstr ""
+msgstr "Згорток Стіни Вогню"
 
 #: Source/itemdat.cpp:113
 msgid "Scroll of Inferno"
-msgstr ""
+msgstr "Згорток Пекла"
 
 #: Source/itemdat.cpp:115
 msgid "Scroll of Flash"
-msgstr ""
+msgstr "Згорток Спалаху"
 
 #: Source/itemdat.cpp:116
 msgid "Scroll of Infravision"
-msgstr ""
+msgstr "Згорток Інфрабачення"
 
 #: Source/itemdat.cpp:117
+#, fuzzy
 msgid "Scroll of Phasing"
-msgstr ""
+msgstr "Згорток Фазування"
 
 #: Source/itemdat.cpp:118
 msgid "Scroll of Mana Shield"
-msgstr ""
+msgstr "Згорток Щита Мани"
 
 #: Source/itemdat.cpp:119
 msgid "Scroll of Flame Wave"
-msgstr ""
+msgstr "Згорток Хвилі Вогню"
 
 #: Source/itemdat.cpp:120
 msgid "Scroll of Fireball"
-msgstr ""
+msgstr "Згорток Кулі Вогню"
 
 #: Source/itemdat.cpp:121
 msgid "Scroll of Stone Curse"
-msgstr ""
+msgstr "Згорток Кам'яного Прокляття"
 
 #: Source/itemdat.cpp:122
 msgid "Scroll of Chain Lightning"
-msgstr ""
+msgstr "Згорток Ланцюгової Блискавки"
 
 #: Source/itemdat.cpp:123
 msgid "Scroll of Guardian"
-msgstr ""
+msgstr "Згорток Охоронця"
 
 #: Source/itemdat.cpp:125
+#, fuzzy
 msgid "Scroll of Nova"
-msgstr ""
+msgstr "Згорток Наднової Зорі"
 
 #: Source/itemdat.cpp:126
 msgid "Scroll of Golem"
-msgstr ""
+msgstr "Згорток Голему"
 
 #: Source/itemdat.cpp:128
 msgid "Scroll of Teleport"
-msgstr ""
+msgstr "Згорток Телепорту"
 
 #: Source/itemdat.cpp:129
 msgid "Scroll of Apocalypse"
-msgstr ""
+msgstr "Згорток Апокаліпсису"
 
 #: Source/itemdat.cpp:130 Source/itemdat.cpp:131 Source/itemdat.cpp:132
 #: Source/itemdat.cpp:133
 msgid "Book of "
-msgstr ""
+msgstr "Книга "
 
 #: Source/itemdat.cpp:136
 msgid "Falchion"
-msgstr ""
+msgstr "Фальшіон"
 
 #: Source/itemdat.cpp:137
 msgid "Scimitar"
-msgstr ""
+msgstr "Ятаган"
 
 #: Source/itemdat.cpp:138
 msgid "Claymore"
-msgstr ""
+msgstr "Клеймор"
 
 #: Source/itemdat.cpp:139
 msgid "Blade"
-msgstr ""
+msgstr "Клинок"
 
 #: Source/itemdat.cpp:140
 msgid "Sabre"
-msgstr ""
+msgstr "Шабля"
 
 #: Source/itemdat.cpp:141
 msgid "Long Sword"
-msgstr ""
+msgstr "Довгий Меч"
 
 #: Source/itemdat.cpp:142
 msgid "Broad Sword"
-msgstr ""
+msgstr "Широкий Меч"
 
 #: Source/itemdat.cpp:143
 msgid "Bastard Sword"
-msgstr ""
+msgstr "Меч-Бастард"
 
 #: Source/itemdat.cpp:144
 msgid "Two-Handed Sword"
-msgstr ""
+msgstr "Дворучний Меч"
 
 #: Source/itemdat.cpp:145
 msgid "Great Sword"
-msgstr ""
+msgstr "Величезний Меч"
 
 #: Source/itemdat.cpp:146
 msgid "Small Axe"
-msgstr ""
+msgstr "Мала Сокира"
 
 #: Source/itemdat.cpp:146 Source/itemdat.cpp:147 Source/itemdat.cpp:148
 #: Source/itemdat.cpp:149 Source/itemdat.cpp:150 Source/itemdat.cpp:151
 msgid "Axe"
-msgstr ""
+msgstr "Сокира"
 
 #: Source/itemdat.cpp:148
 msgid "Large Axe"
-msgstr ""
+msgstr "Велика Сокира"
 
 #: Source/itemdat.cpp:149
 msgid "Broad Axe"
-msgstr ""
+msgstr "Широка Сокира"
 
 #: Source/itemdat.cpp:150
 msgid "Battle Axe"
-msgstr ""
+msgstr "Бойова Сокира"
 
 #: Source/itemdat.cpp:151
 msgid "Great Axe"
-msgstr ""
+msgstr "Величезна Сокира"
 
 #: Source/itemdat.cpp:152 Source/itemdat.cpp:153
 msgid "Mace"
-msgstr ""
+msgstr "Булава"
 
 #: Source/itemdat.cpp:153
 msgid "Morning Star"
-msgstr ""
+msgstr "Моргенштерн"
 
 #: Source/itemdat.cpp:154
 msgid "War Hammer"
-msgstr ""
+msgstr "Бойовий Молот"
 
 #: Source/itemdat.cpp:154
 msgid "Hammer"
-msgstr ""
+msgstr "Молот"
 
 #: Source/itemdat.cpp:155
 msgid "Spiked Club"
-msgstr ""
+msgstr "Палиця з Гвіздками"
 
 #: Source/itemdat.cpp:157
 msgid "Flail"
-msgstr ""
+msgstr "Ціп"
 
 #: Source/itemdat.cpp:158
+#, fuzzy
 msgid "Maul"
-msgstr ""
+msgstr "Якийсь Молот"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
 #: Source/itemdat.cpp:165 Source/itemdat.cpp:166
 msgid "Bow"
-msgstr ""
+msgstr "Лук"
 
 #: Source/itemdat.cpp:160
 msgid "Hunter's Bow"
-msgstr ""
+msgstr "Мисливський Лук"
 
 #: Source/itemdat.cpp:161
 msgid "Long Bow"
-msgstr ""
+msgstr "Довгий Лук"
 
 #: Source/itemdat.cpp:162
 msgid "Composite Bow"
-msgstr ""
+msgstr "Композитний Лук"
 
 #: Source/itemdat.cpp:163
 msgid "Short Battle Bow"
-msgstr ""
+msgstr "Короткий Бойовий Лук"
 
 #: Source/itemdat.cpp:164
 msgid "Long Battle Bow"
-msgstr ""
+msgstr "Довгий Бойовий Лук"
 
 #: Source/itemdat.cpp:165
 msgid "Short War Bow"
-msgstr ""
+msgstr "Короткий Воєнний Лук"
 
 #: Source/itemdat.cpp:166
 msgid "Long War Bow"
-msgstr ""
+msgstr "Довгий Воєнний Лук"
 
 #: Source/itemdat.cpp:168
 msgid "Long Staff"
-msgstr ""
+msgstr "Довгий Посох"
 
 #: Source/itemdat.cpp:169
 msgid "Composite Staff"
-msgstr ""
+msgstr "Композитний Посох"
 
 #: Source/itemdat.cpp:170
 msgid "Quarter Staff"
-msgstr ""
+msgstr "Четвертковий Посох"
 
 #: Source/itemdat.cpp:171
 msgid "War Staff"
-msgstr ""
+msgstr "Бойовий Посох"
 
 #: Source/itemdat.cpp:172 Source/itemdat.cpp:173 Source/itemdat.cpp:174
 msgid "Ring"
-msgstr ""
+msgstr "Перстень"
 
 #: Source/itemdat.cpp:175 Source/itemdat.cpp:176
 msgid "Amulet"
-msgstr ""
+msgstr "Амулет"
 
 #: Source/itemdat.cpp:177
 msgid "Rune of Fire"
-msgstr ""
+msgstr "Руна Вогню"
 
 #: Source/itemdat.cpp:177 Source/itemdat.cpp:178 Source/itemdat.cpp:179
 #: Source/itemdat.cpp:180 Source/itemdat.cpp:181
 msgid "Rune"
-msgstr ""
+msgstr "Руна"
 
 #: Source/itemdat.cpp:178
 msgid "Rune of Lightning"
-msgstr ""
+msgstr "Руна Блискавки"
 
 #: Source/itemdat.cpp:179
 msgid "Greater Rune of Fire"
-msgstr ""
+msgstr "Більша Руна Вогню"
 
 #: Source/itemdat.cpp:180
 msgid "Greater Rune of Lightning"
-msgstr ""
+msgstr "Більша Руна Блискавки"
 
 #: Source/itemdat.cpp:181
 msgid "Rune of Stone"
-msgstr ""
+msgstr "Руна Каменю"
 
 #: Source/itemdat.cpp:182
+#, fuzzy
 msgid "Short Staff of Charged Bolt"
-msgstr ""
+msgstr "Короткий Посох Зарядженої Стріли"
 
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
