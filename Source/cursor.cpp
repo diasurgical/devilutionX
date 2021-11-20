@@ -248,9 +248,9 @@ void CheckCursMove()
 
 	if (CanPanelsCoverView()) {
 		if (chrflag || QuestLogIsOpen) {
-			sx -= gnScreenWidth / 4;
+			sx -= GetScreenWidth() / 4;
 		} else if (invflag || sbookflag) {
-			sx += gnScreenWidth / 4;
+			sx += GetScreenWidth() / 4;
 		}
 	}
 	if (sy > PANEL_TOP - 1 && MousePosition.x >= PANEL_LEFT && MousePosition.x < PANEL_LEFT + PANEL_WIDTH && track_isscrolling()) {

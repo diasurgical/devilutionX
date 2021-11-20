@@ -36,6 +36,21 @@ Uint16 gnScreenWidth;
 Uint16 gnScreenHeight;
 Uint16 gnViewportHeight;
 
+Uint16 GetScreenWidth()
+{
+	return gnScreenWidth;
+}
+
+Uint16 GetScreenHeight()
+{
+	return gnScreenHeight;
+}
+
+Uint16 GetViewportHeight()
+{
+	return gnViewportHeight;
+}
+
 #ifdef USE_SDL1
 void SetVideoMode(int width, int height, int bpp, uint32_t flags)
 {
