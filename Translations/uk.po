@@ -1811,7 +1811,7 @@ msgstr "Допомога Diablo"
 
 #: Source/help.cpp:213
 msgid "Press ESC to end or the arrow keys to scroll."
-msgstr "Настисніть ESC щоб закрити або клавіші зі стріклами для прокрутки."
+msgstr "Натисніть ESC щоб закрити або клавіші зі стрілками для прокрутки."
 
 #: Source/init.cpp:175
 msgid "diabdat.mpq or spawn.mpq"
