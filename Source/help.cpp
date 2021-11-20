@@ -158,7 +158,7 @@ void InitHelp()
 		size_t previous = 0;
 		while (true) {
 			size_t next = paragraph.find('\n', previous);
-			HelpTextLines.emplace_back(paragraph.substr(previous, next));
+			HelpTextLines.emplace_back(paragraph.substr(previous, next - previous));
 			if (next == std::string::npos)
 				break;
 			previous = next + 1;
