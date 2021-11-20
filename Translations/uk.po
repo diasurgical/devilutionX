@@ -2807,396 +2807,399 @@ msgstr "Двійниковий"
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
 msgid "quality"
-msgstr ""
+msgstr "якості"
 
 #: Source/itemdat.cpp:289
 msgid "maiming"
-msgstr ""
+msgstr "знівечення"
 
 #: Source/itemdat.cpp:290
 msgid "slaying"
-msgstr ""
+msgstr "убивання"
 
 #: Source/itemdat.cpp:291
+#, fuzzy
 msgid "gore"
-msgstr ""
+msgstr "крові"
 
 #: Source/itemdat.cpp:292
 msgid "carnage"
-msgstr ""
+msgstr "різанини"
 
 #: Source/itemdat.cpp:293
 msgid "slaughter"
-msgstr ""
+msgstr "забою"
 
 #: Source/itemdat.cpp:294
 msgid "pain"
-msgstr ""
+msgstr "болі"
 
 #: Source/itemdat.cpp:295
 msgid "tears"
-msgstr ""
+msgstr "сліз"
 
 #: Source/itemdat.cpp:296
 msgid "health"
-msgstr ""
+msgstr "здоров'я"
 
 #: Source/itemdat.cpp:297
 msgid "protection"
-msgstr ""
+msgstr "захисту"
 
 #: Source/itemdat.cpp:298
 msgid "absorption"
-msgstr ""
+msgstr "поглинання"
 
 #: Source/itemdat.cpp:299
 msgid "deflection"
-msgstr ""
+msgstr "відхилення"
 
 #: Source/itemdat.cpp:300
 msgid "osmosis"
-msgstr ""
+msgstr "осмосу"
 
 #: Source/itemdat.cpp:301
 msgid "frailty"
-msgstr ""
+msgstr "субтильності"
 
 #: Source/itemdat.cpp:302
 msgid "weakness"
-msgstr ""
+msgstr "слабкості"
 
 #: Source/itemdat.cpp:303
 msgid "strength"
-msgstr ""
+msgstr "сили"
 
 #: Source/itemdat.cpp:304
 msgid "might"
-msgstr ""
+msgstr "могутності"
 
 #: Source/itemdat.cpp:305
 msgid "power"
-msgstr ""
+msgstr "міці"
 
 #: Source/itemdat.cpp:306
 msgid "giants"
-msgstr ""
+msgstr "гіганта"
 
 #: Source/itemdat.cpp:307
 msgid "titans"
-msgstr ""
+msgstr "титана"
 
 #: Source/itemdat.cpp:308
 msgid "paralysis"
-msgstr ""
+msgstr "паралізу"
 
 #: Source/itemdat.cpp:309
 msgid "atrophy"
-msgstr ""
+msgstr "атрофії"
 
 #: Source/itemdat.cpp:310
 msgid "dexterity"
-msgstr ""
+msgstr "спритності"
 
 #: Source/itemdat.cpp:311
 msgid "skill"
-msgstr ""
+msgstr "таланту"
 
 #: Source/itemdat.cpp:312
 msgid "accuracy"
-msgstr ""
+msgstr "точності"
 
 #: Source/itemdat.cpp:313
 msgid "precision"
-msgstr ""
+msgstr "влучності"
 
 #: Source/itemdat.cpp:314
 msgid "perfection"
-msgstr ""
+msgstr "досконалості"
 
 #: Source/itemdat.cpp:315
 msgid "the fool"
-msgstr ""
+msgstr "дурня"
 
 #: Source/itemdat.cpp:316
 msgid "dyslexia"
-msgstr ""
+msgstr "дислексії"
 
 #: Source/itemdat.cpp:317
 msgid "magic"
-msgstr ""
+msgstr "магії"
 
 #: Source/itemdat.cpp:318
 msgid "the mind"
-msgstr ""
+msgstr "розуму"
 
 #: Source/itemdat.cpp:319
 msgid "brilliance"
-msgstr ""
+msgstr "здібності"
 
 #: Source/itemdat.cpp:320
 msgid "sorcery"
-msgstr ""
+msgstr "чарівництва"
 
 #: Source/itemdat.cpp:321
 msgid "wizardry"
-msgstr ""
+msgstr "чаклунства"
 
 #: Source/itemdat.cpp:322
 msgid "illness"
-msgstr ""
+msgstr "недуги"
 
 #: Source/itemdat.cpp:323
 msgid "disease"
-msgstr ""
+msgstr "хвороби"
 
 #: Source/itemdat.cpp:324
 msgid "vitality"
-msgstr ""
+msgstr "жувочості"
 
 #: Source/itemdat.cpp:325
 msgid "zest"
-msgstr ""
+msgstr "запалу"
 
 #: Source/itemdat.cpp:326
 msgid "vim"
-msgstr ""
+msgstr "енергії"
 
 #: Source/itemdat.cpp:327
 msgid "vigor"
-msgstr ""
+msgstr "снаги"
 
 #: Source/itemdat.cpp:328
 msgid "life"
-msgstr ""
+msgstr "життя"
 
 #: Source/itemdat.cpp:329
 msgid "trouble"
-msgstr ""
+msgstr "лиха"
 
 #: Source/itemdat.cpp:330
 msgid "the pit"
-msgstr ""
+msgstr "ями"
 
 #: Source/itemdat.cpp:331
 msgid "the sky"
-msgstr ""
+msgstr "неба"
 
 #: Source/itemdat.cpp:332
 msgid "the moon"
-msgstr ""
+msgstr "місяця"
 
 #: Source/itemdat.cpp:333
 msgid "the stars"
-msgstr ""
+msgstr "зорей"
 
 #: Source/itemdat.cpp:334
 msgid "the heavens"
-msgstr ""
+msgstr "небес"
 
 #: Source/itemdat.cpp:335
 msgid "the zodiac"
-msgstr ""
+msgstr "зодіаку"
 
 #: Source/itemdat.cpp:336
 msgid "the vulture"
-msgstr ""
+msgstr "стерв'ятника"
 
 #: Source/itemdat.cpp:337
 msgid "the jackal"
-msgstr ""
+msgstr "шакала"
 
 #: Source/itemdat.cpp:338
 msgid "the fox"
-msgstr ""
+msgstr "лисиці"
 
 #: Source/itemdat.cpp:339
 msgid "the jaguar"
-msgstr ""
+msgstr "ягуара"
 
 #: Source/itemdat.cpp:340
 msgid "the eagle"
-msgstr ""
+msgstr "орла"
 
 #: Source/itemdat.cpp:341
 msgid "the wolf"
-msgstr ""
+msgstr "вовка"
 
 #: Source/itemdat.cpp:342
 msgid "the tiger"
-msgstr ""
+msgstr "тигра"
 
 #: Source/itemdat.cpp:343
 msgid "the lion"
-msgstr ""
+msgstr "лева"
 
 #: Source/itemdat.cpp:344
 msgid "the mammoth"
-msgstr ""
+msgstr "мамонта"
 
 #: Source/itemdat.cpp:345
 msgid "the whale"
-msgstr ""
+msgstr "кита"
 
 #: Source/itemdat.cpp:346
 msgid "fragility"
-msgstr ""
+msgstr "крихкості"
 
 #: Source/itemdat.cpp:347
 msgid "brittleness"
-msgstr ""
+msgstr "ламкості"
 
 #: Source/itemdat.cpp:348
 msgid "sturdiness"
-msgstr ""
+msgstr "міцності"
 
 #: Source/itemdat.cpp:349
 msgid "craftsmanship"
-msgstr ""
+msgstr "майстерності"
 
 #: Source/itemdat.cpp:350
 msgid "structure"
-msgstr ""
+msgstr "структури"
 
 #: Source/itemdat.cpp:351
 msgid "the ages"
-msgstr ""
+msgstr "віків"
 
 #: Source/itemdat.cpp:352
 msgid "the dark"
-msgstr ""
+msgstr "темряви"
 
 #: Source/itemdat.cpp:353
 msgid "the night"
-msgstr ""
+msgstr "ночі"
 
 #: Source/itemdat.cpp:354
 msgid "light"
-msgstr ""
+msgstr "світла"
 
 #: Source/itemdat.cpp:355
 msgid "radiance"
-msgstr ""
+msgstr "сяяння"
 
 #: Source/itemdat.cpp:356
 msgid "flame"
-msgstr ""
+msgstr "полум'я"
 
 #: Source/itemdat.cpp:357
 msgid "fire"
-msgstr ""
+msgstr "вогню"
 
 #: Source/itemdat.cpp:358
 msgid "burning"
-msgstr ""
+msgstr "горіння"
 
 #: Source/itemdat.cpp:359
 msgid "shock"
-msgstr ""
+msgstr "шоку"
 
 #: Source/itemdat.cpp:360
 msgid "lightning"
-msgstr ""
+msgstr "блискавки"
 
 #: Source/itemdat.cpp:361
 msgid "thunder"
-msgstr ""
+msgstr "грому"
 
 #: Source/itemdat.cpp:362
 msgid "many"
-msgstr ""
+msgstr "багатьох"
 
 #: Source/itemdat.cpp:363
 msgid "plenty"
-msgstr ""
+msgstr "безлічі"
 
 #: Source/itemdat.cpp:364
 msgid "thorns"
-msgstr ""
+msgstr "шипів"
 
 #: Source/itemdat.cpp:365
 msgid "corruption"
-msgstr ""
+msgstr "псування"
 
 #: Source/itemdat.cpp:366
 msgid "thieves"
-msgstr ""
+msgstr "крадіїв"
 
 #: Source/itemdat.cpp:367
 msgid "the bear"
-msgstr ""
+msgstr "ведмеда"
 
 #: Source/itemdat.cpp:368
 msgid "the bat"
-msgstr ""
+msgstr "літучої миші"
 
 #: Source/itemdat.cpp:369
 msgid "vampires"
-msgstr ""
+msgstr "вампірів"
 
 #: Source/itemdat.cpp:370
 msgid "the leech"
-msgstr ""
+msgstr "п'явки"
 
 #: Source/itemdat.cpp:371
 msgid "blood"
-msgstr ""
+msgstr "крові"
 
 #: Source/itemdat.cpp:372
 msgid "piercing"
-msgstr ""
+msgstr "пробивання"
 
 #: Source/itemdat.cpp:373
+#, fuzzy
 msgid "puncturing"
-msgstr ""
+msgstr "пробиття"
 
 #: Source/itemdat.cpp:374
 msgid "bashing"
-msgstr ""
+msgstr "побиття"
 
 #: Source/itemdat.cpp:375
 msgid "readiness"
-msgstr ""
+msgstr "готовності"
 
 #: Source/itemdat.cpp:376
 msgid "swiftness"
-msgstr ""
+msgstr "хуткості"
 
 #: Source/itemdat.cpp:377
 msgid "speed"
-msgstr ""
+msgstr "швидкості"
 
 #: Source/itemdat.cpp:378
 msgid "haste"
-msgstr ""
+msgstr "поспішності"
 
 #: Source/itemdat.cpp:379
 msgid "balance"
-msgstr ""
+msgstr "балансу"
 
 #: Source/itemdat.cpp:380
 msgid "stability"
-msgstr ""
+msgstr "стабільності"
 
 #: Source/itemdat.cpp:381
 msgid "harmony"
-msgstr ""
+msgstr "гармонії"
 
 #: Source/itemdat.cpp:382
 msgid "blocking"
-msgstr ""
+msgstr "блокування"
 
 #: Source/itemdat.cpp:383
 msgid "devastation"
-msgstr ""
+msgstr "спустошення"
 
 #: Source/itemdat.cpp:384
 msgid "decay"
-msgstr ""
+msgstr "занепаду"
 
 #. TRANSLATORS: Item suffix section end.
 #: Source/itemdat.cpp:386
+#, fuzzy
 msgid "peril"
-msgstr ""
+msgstr "ризику"
 
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:396
