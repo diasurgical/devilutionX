@@ -593,7 +593,7 @@ static void UiSelHeroDialog(
 		SelheroFree();
 
 		if (selhero_navigateYesNo) {
-			char dialogTitle[32];
+			char dialogTitle[128];
 			char dialogText[256];
 			if (selhero_isMultiPlayer) {
 				strncpy(dialogTitle, _("Delete Multi Player Hero"), sizeof(dialogTitle) - 1);
