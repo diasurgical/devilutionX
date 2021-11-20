@@ -2469,336 +2469,340 @@ msgstr "Короткий Посох Зарядженої Стріли"
 #. TRANSLATORS: Item prefix section.
 #: Source/itemdat.cpp:192
 msgid "Tin"
-msgstr ""
+msgstr "Олов'яний"
 
 #: Source/itemdat.cpp:193
 msgid "Brass"
-msgstr ""
+msgstr "Латунний"
 
 #: Source/itemdat.cpp:194
 msgid "Bronze"
-msgstr ""
+msgstr "Бронзовий"
 
 #: Source/itemdat.cpp:195
 msgid "Iron"
-msgstr ""
+msgstr "Залізний"
 
 #: Source/itemdat.cpp:196
 msgid "Steel"
-msgstr ""
+msgstr "Стальний"
 
 #: Source/itemdat.cpp:197
 msgid "Silver"
-msgstr ""
+msgstr "Срібний"
 
 #: Source/itemdat.cpp:199
 msgid "Platinum"
-msgstr ""
+msgstr "Платиновий"
 
 #: Source/itemdat.cpp:200
 msgid "Mithril"
-msgstr ""
+msgstr "Міфріловий"
 
 #: Source/itemdat.cpp:201
 msgid "Meteoric"
-msgstr ""
+msgstr "Метеоритний"
 
 #: Source/itemdat.cpp:202 Source/objects.cpp:107
 msgid "Weird"
-msgstr ""
+msgstr "Чудний"
 
 #: Source/itemdat.cpp:203
 msgid "Strange"
-msgstr ""
+msgstr "Дивний"
 
 #: Source/itemdat.cpp:204
 msgid "Useless"
-msgstr ""
+msgstr "Непотрібний"
 
 #: Source/itemdat.cpp:205
 msgid "Bent"
-msgstr ""
+msgstr "Погнутий"
 
 #: Source/itemdat.cpp:206
 msgid "Weak"
-msgstr ""
+msgstr "Слабий"
 
 #: Source/itemdat.cpp:207
 msgid "Jagged"
-msgstr ""
+msgstr "Зазублений"
 
 #: Source/itemdat.cpp:208
 msgid "Deadly"
-msgstr ""
+msgstr "Смертельний"
 
 #: Source/itemdat.cpp:209
 msgid "Heavy"
-msgstr ""
+msgstr "Важкий"
 
 #: Source/itemdat.cpp:210
 msgid "Vicious"
-msgstr ""
+msgstr "Розпутний"
 
 #: Source/itemdat.cpp:211
 msgid "Brutal"
-msgstr ""
+msgstr "Брутальний"
 
 #: Source/itemdat.cpp:212
 msgid "Massive"
-msgstr ""
+msgstr "Масивний"
 
 #: Source/itemdat.cpp:213
 msgid "Savage"
-msgstr ""
+msgstr "Дикий"
 
 #: Source/itemdat.cpp:214
 msgid "Ruthless"
-msgstr ""
+msgstr "Жорстокий"
 
 #: Source/itemdat.cpp:215
 msgid "Merciless"
-msgstr ""
+msgstr "Безжалісний"
 
 #: Source/itemdat.cpp:216
 msgid "Clumsy"
-msgstr ""
+msgstr "Незграбний"
 
 #: Source/itemdat.cpp:217
 msgid "Dull"
-msgstr ""
+msgstr "Тупий"
 
 #: Source/itemdat.cpp:218
 msgid "Sharp"
-msgstr ""
+msgstr "Гострий"
 
 #: Source/itemdat.cpp:219 Source/itemdat.cpp:229
 msgid "Fine"
-msgstr ""
+msgstr "Гарний"
 
 #: Source/itemdat.cpp:220
 msgid "Warrior's"
-msgstr ""
+msgstr "Воїнський"
 
 #: Source/itemdat.cpp:221
 msgid "Soldier's"
-msgstr ""
+msgstr "Солдатський"
 
 #: Source/itemdat.cpp:222
 msgid "Lord's"
-msgstr ""
+msgstr "Лордський"
 
 #: Source/itemdat.cpp:223
 msgid "Knight's"
-msgstr ""
+msgstr "Лицарський"
 
 #: Source/itemdat.cpp:224
 msgid "Master's"
-msgstr ""
+msgstr "Паньский"
 
 #: Source/itemdat.cpp:225
 msgid "Champion's"
-msgstr ""
+msgstr "Чемпіонський"
 
 #: Source/itemdat.cpp:226
 msgid "King's"
-msgstr ""
+msgstr "Королівський"
 
 #: Source/itemdat.cpp:227
 msgid "Vulnerable"
-msgstr ""
+msgstr "Уразливий"
 
 #: Source/itemdat.cpp:228
 msgid "Rusted"
-msgstr ""
+msgstr "Іржавий"
 
 #: Source/itemdat.cpp:230
 msgid "Strong"
-msgstr ""
+msgstr "Сильний"
 
 #: Source/itemdat.cpp:231
 msgid "Grand"
-msgstr ""
+msgstr "Величний"
 
 #: Source/itemdat.cpp:232
 msgid "Valiant"
-msgstr ""
+msgstr "Доблесний"
 
 #: Source/itemdat.cpp:233
 msgid "Glorious"
-msgstr ""
+msgstr "Славетний"
 
 #: Source/itemdat.cpp:234
 msgid "Blessed"
-msgstr ""
+msgstr "Благословенний"
 
 #: Source/itemdat.cpp:235
 msgid "Saintly"
-msgstr ""
+msgstr "Праведний"
 
 #: Source/itemdat.cpp:236
 msgid "Awesome"
-msgstr ""
+msgstr "Фантастичний"
 
 #: Source/itemdat.cpp:237 Source/objects.cpp:119
 msgid "Holy"
-msgstr ""
+msgstr "Святий"
 
 #: Source/itemdat.cpp:238
 msgid "Godly"
-msgstr ""
+msgstr "Божий"
 
 #: Source/itemdat.cpp:239
 msgid "Red"
-msgstr ""
+msgstr "Червоний"
 
 #: Source/itemdat.cpp:240 Source/itemdat.cpp:241
 msgid "Crimson"
-msgstr ""
+msgstr "Багряний"
 
 #: Source/itemdat.cpp:242
 msgid "Garnet"
-msgstr ""
+msgstr "Гранатовий"
 
 #: Source/itemdat.cpp:243
 msgid "Ruby"
-msgstr ""
+msgstr "Рубіновий"
 
 #: Source/itemdat.cpp:244
 msgid "Blue"
-msgstr ""
+msgstr "Синій"
 
 #: Source/itemdat.cpp:245
 msgid "Azure"
-msgstr ""
+msgstr "Блакитний"
 
 #: Source/itemdat.cpp:246
 msgid "Lapis"
-msgstr ""
+msgstr "Лазурний"
 
 #: Source/itemdat.cpp:247
 msgid "Cobalt"
-msgstr ""
+msgstr "Кобальтовий"
 
 #: Source/itemdat.cpp:248
 msgid "Sapphire"
-msgstr ""
+msgstr "Сапфірний"
 
 #: Source/itemdat.cpp:249
 msgid "White"
-msgstr ""
+msgstr "Білий"
 
 #: Source/itemdat.cpp:250
 msgid "Pearl"
-msgstr ""
+msgstr "Перламутровий"
 
 #: Source/itemdat.cpp:251
 msgid "Ivory"
-msgstr ""
+msgstr "Слонової кістки"
 
 #: Source/itemdat.cpp:252
 msgid "Crystal"
-msgstr ""
+msgstr "Кришталевий"
 
 #: Source/itemdat.cpp:253
 msgid "Diamond"
-msgstr ""
+msgstr "Діамантовий"
 
 #: Source/itemdat.cpp:254
 msgid "Topaz"
-msgstr ""
+msgstr "Топазовий"
 
 #: Source/itemdat.cpp:255
 msgid "Amber"
-msgstr ""
+msgstr "Бурштинний"
 
 #: Source/itemdat.cpp:256
 msgid "Jade"
-msgstr ""
+msgstr "Нефритовий"
 
 #: Source/itemdat.cpp:257
 msgid "Obsidian"
-msgstr ""
+msgstr "Обсидіяновий"
 
 #: Source/itemdat.cpp:258
 msgid "Emerald"
-msgstr ""
+msgstr "Смарагдовий"
 
 #: Source/itemdat.cpp:259
 msgid "Hyena's"
-msgstr ""
+msgstr "Гієнний"
 
 #: Source/itemdat.cpp:260
 msgid "Frog's"
-msgstr ""
+msgstr "Жаб'ячий"
 
 #: Source/itemdat.cpp:261
 msgid "Spider's"
-msgstr ""
+msgstr "Павучий"
 
 #: Source/itemdat.cpp:262
 msgid "Raven's"
-msgstr ""
+msgstr "Воронний"
 
 #: Source/itemdat.cpp:263
 msgid "Snake's"
-msgstr ""
+msgstr "Зміїний"
 
 #: Source/itemdat.cpp:264
 msgid "Serpent's"
-msgstr ""
+msgstr "Гадючий"
 
 #: Source/itemdat.cpp:265
+#, fuzzy
 msgid "Drake's"
-msgstr ""
+msgstr "Синонім дракона"
 
 #: Source/itemdat.cpp:266
+#, fuzzy
 msgid "Dragon's"
-msgstr ""
+msgstr "Драконячий"
 
 #: Source/itemdat.cpp:267
+#, fuzzy
 msgid "Wyrm's"
-msgstr ""
+msgstr "Ще один синонім дракона"
 
 #: Source/itemdat.cpp:268
 msgid "Hydra's"
-msgstr ""
+msgstr "Гідровий"
 
 #: Source/itemdat.cpp:269
 msgid "Angel's"
-msgstr ""
+msgstr "Ангела"
 
 #: Source/itemdat.cpp:270
 msgid "Arch-Angel's"
-msgstr ""
+msgstr "Архангела"
 
 #: Source/itemdat.cpp:271
 msgid "Plentiful"
-msgstr ""
+msgstr "Рясний"
 
 #: Source/itemdat.cpp:272
 msgid "Bountiful"
-msgstr ""
+msgstr "Щедрий"
 
 #: Source/itemdat.cpp:273
 msgid "Flaming"
-msgstr ""
+msgstr "Полум'яний"
 
 #: Source/itemdat.cpp:274
 msgid "Lightning"
-msgstr ""
+msgstr "Блискавичий"
 
 #: Source/itemdat.cpp:275
 msgid "Jester's"
-msgstr ""
+msgstr "Блазневий"
 
 #: Source/itemdat.cpp:276
 msgid "Crystalline"
-msgstr ""
+msgstr "Кристалічний"
 
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:278
+#, fuzzy
 msgid "Doppelganger's"
-msgstr ""
+msgstr "Двійниковий"
 
 #. TRANSLATORS: Item suffix section. All items will have a word binding word. (Format: {:s} of {:s} - e.g. Rags of Valor)
 #: Source/itemdat.cpp:288
