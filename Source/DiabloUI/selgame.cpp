@@ -18,7 +18,7 @@ namespace devilution {
 char selgame_Label[32];
 char selgame_Ip[129] = "";
 char selgame_Password[16] = "";
-char selgame_Description[256];
+char selgame_Description[512];
 bool selgame_enteringGame;
 int selgame_selectedGame;
 bool selgame_endMenu;
