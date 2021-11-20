@@ -346,7 +346,7 @@ void PrintSBookSpellType(const Surface &out, Point position, const std::string &
 	DrawVerticalLine(out, rect + Displacement { SPLICONLENGTH - 1, 0 }, SPLICONLENGTH, rectColorIndex);
 
 	// Align the spell type text with bottom of spell icon
-	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, -15 };
+	position += Displacement { SPLICONLENGTH / 2 - GetLineWidth(text.c_str()) / 2, (IsSmallFontTall() ? -19 : -15) };
 
 	// Draw a drop shadow below and to the left of the text
 	DrawString(out, text, position + Displacement { -1, 1 }, UiFlags::ColorBlack);
