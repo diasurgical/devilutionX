@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.4.2\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: _;N_;P_:1c,2\n"
 "X-Poedit-Basepath: ..\n"
@@ -1713,7 +1713,7 @@ msgstr ""
 
 #: Source/help.cpp:68
 msgid "$Gold:"
-msgstr "$​ゴールド"
+msgstr "$​ゴールド:"
 
 #: Source/help.cpp:69
 msgid ""
@@ -1742,7 +1742,7 @@ msgstr ""
 
 #: Source/help.cpp:79
 msgid "$Using the Speedbook for Spells:"
-msgstr "$​呪文​の​ため​の​スピード​ブック​の​使用"
+msgstr "$​呪文​の​ため​の​スピード​ブック​の​使用:"
 
 #: Source/help.cpp:80
 msgid ""
@@ -1764,7 +1764,7 @@ msgstr ""
 
 #: Source/help.cpp:86
 msgid "$Setting Spell Hotkeys:"
-msgstr "$​スペルホットキー​の​設定"
+msgstr "$​スペルホットキー​の​設定:"
 
 #: Source/help.cpp:87
 msgid ""
@@ -1778,7 +1778,7 @@ msgstr ""
 
 #: Source/help.cpp:92
 msgid "$Spell Books:"
-msgstr "$​スペル​ブック"
+msgstr "$​スペル​ブック:"
 
 #: Source/help.cpp:93
 msgid ""
@@ -3787,7 +3787,7 @@ msgstr "左​クリック​で​ターゲット"
 
 #: Source/items.cpp:2050
 msgid "Right-click to use"
-msgstr "右​クリック​し​て"
+msgstr "右​クリック​で​使用"
 
 #: Source/items.cpp:2055 Source/items.cpp:2060
 msgid "Right click to use"
