@@ -2337,7 +2337,7 @@ void DrawSLine(const Surface &out, int sy)
 	}
 
 	BYTE *src = out.at(PANEL_LEFT + sx, UI_OFFSET_Y + 25);
-	BYTE *dst = out.at(PANEL_X + sx, UI_OFFSET_Y + sy);
+	BYTE *dst = out.at(PANEL_X + sx, sy);
 
 	for (int i = 0; i < 3; i++, src += out.pitch(), dst += out.pitch())
 		memcpy(dst, src, width);
@@ -2508,7 +2508,7 @@ void DrawSText(const Surface &out)
 	CalculateLineHeights();
 	for (int i = 0; i < STORE_LINES; i++) {
 		if (stext[i].IsDivider())
-			DrawSLine(out, PaddingTop + stext[i].y + TextHeight() / 2);
+			DrawSLine(out, UI_OFFSET_Y + PaddingTop + stext[i].y + TextHeight() / 2);
 		if (stext[i].IsText())
 			PrintSString(out, stext[i]._sx, i, stext[i]._sstr, stext[i].flags, stext[i]._sval);
 	}
