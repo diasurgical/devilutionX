@@ -57,9 +57,9 @@ extern bool panelflag;
 extern int initialDropGoldValue;
 extern bool panbtndown;
 extern bool spselflag;
-extern Rectangle MainPanel;
-extern Rectangle LeftPanel;
-extern Rectangle RightPanel;
+const Rectangle &GetMainPanel();
+const Rectangle &GetLeftPanel();
+const Rectangle &GetRightPanel();
 extern std::optional<OwnedSurface> pBtmBuff;
 extern SDL_Rect PanBtnPos[8];
 
@@ -69,7 +69,7 @@ bool IsChatAvailable();
  */
 inline bool CanPanelsCoverView()
 {
-	return gnScreenWidth <= PANEL_WIDTH && gnScreenHeight <= SPANEL_HEIGHT + PANEL_HEIGHT;
+	return GetScreenWidth() <= PANEL_WIDTH && GetScreenHeight() <= SPANEL_HEIGHT + PANEL_HEIGHT;
 }
 
 void DrawSpellList(const Surface &out);

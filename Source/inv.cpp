@@ -356,11 +356,11 @@ void CheckInvPaste(int pnum, Point cursorPosition)
 	bool done = false;
 	int r = 0;
 	for (; r < NUM_XY_SLOTS && !done; r++) {
-		int xo = RightPanel.position.x;
-		int yo = RightPanel.position.y;
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
 		}
 
 		if (i >= InvRect[r].x + xo && i <= InvRect[r].x + xo + InventorySlotSizeInPixels.width) {
@@ -692,11 +692,11 @@ void CheckInvCut(int pnum, Point cursorPosition, bool automaticMove, bool dropIt
 
 	uint32_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = RightPanel.position.x;
-		int yo = RightPanel.position.y;
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
 		}
 
 		// check which inventory rectangle the mouse is in, if any
@@ -1264,8 +1264,8 @@ void DrawInv(const Surface &out)
 						LightTableIndex = 0;
 						cel_transparency_active = true;
 
-						const int dstX = RightPanel.position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
-						const int dstY = RightPanel.position.y + slotPos[INVLOC_HAND_RIGHT].y;
+						const int dstX = GetRightPanel().position.x + slotPos[INVLOC_HAND_RIGHT].x + (frameSize.width == InventorySlotSizeInPixels.width ? INV_SLOT_HALF_SIZE_PX : 0) - 1;
+						const int dstY = GetRightPanel().position.y + slotPos[INVLOC_HAND_RIGHT].y;
 						CelClippedBlitLightTransTo(out, { dstX, dstY }, cel, celFrame);
 
 						cel_transparency_active = false;
@@ -1607,8 +1607,9 @@ void CheckInvItem(bool isShiftHeld, bool isCtrlHeld)
 
 void CheckInvScrn(bool isShiftHeld, bool isCtrlHeld)
 {
-	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT
-	    && MousePosition.y > PANEL_TOP && MousePosition.y < 33 + PANEL_TOP) {
+	auto &mainPanelPosition = GetMainPanel().position;
+	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x
+	    && MousePosition.y > mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y) {
 		CheckInvItem(isShiftHeld, isCtrlHeld);
 	}
 }
@@ -1904,11 +1905,11 @@ int8_t CheckInvHLight()
 {
 	int8_t r = 0;
 	for (; r < NUM_XY_SLOTS; r++) {
-		int xo = RightPanel.position.x;
-		int yo = RightPanel.position.y;
+		int xo = GetRightPanel().position.x;
+		int yo = GetRightPanel().position.y;
 		if (r >= SLOTXY_BELT_FIRST) {
-			xo = PANEL_LEFT;
-			yo = PANEL_TOP;
+			xo = GetMainPanel().position.x;
+			yo = GetMainPanel().position.y;
 		}
 
 		if (MousePosition.x >= InvRect[r].x + xo

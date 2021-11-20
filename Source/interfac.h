@@ -11,7 +11,11 @@
 
 namespace devilution {
 
-#define UI_OFFSET_Y ((Sint16)((gnScreenHeight - 480) / 2))
+inline Sint16 GetUIOffsetY()
+{
+	return ((Sint16)((GetScreenHeight() - 480) / 2));
+}
+#define UI_OFFSET_Y (GetUIOffsetY())
 
 enum interface_mode : uint16_t {
 	// clang-format off

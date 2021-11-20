@@ -33,7 +33,7 @@ void SimulateMouseMovement(const SDL_Event &event)
 {
 	Point position = ScaleToScreenCoordinates(event.tfinger.x, event.tfinger.y);
 
-	if (!spselflag && invflag && !MainPanel.Contains(position) && !RightPanel.Contains(position))
+	if (!spselflag && invflag && !GetMainPanel().Contains(position) && !GetRightPanel().Contains(position))
 		return;
 
 	MousePosition = position;
