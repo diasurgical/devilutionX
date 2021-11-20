@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: DevilutionX\n"
-"POT-Creation-Date: 2021-11-15 17:31+0200\n"
+"POT-Creation-Date: 2021-11-20 20:00+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Oleksandr Kalko (tsunami_state) <tsunami.wave@ukr.net>\n"
 "Language-Team: \n"
@@ -748,11 +748,11 @@ msgstr "Ви впевнені, що хочете стерти героя \"{:s}\
 msgid "Enter Hellfire"
 msgstr "Зайти в Hellfire"
 
-#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:928
+#: Source/DiabloUI/selyesno.cpp:54 Source/stores.cpp:978
 msgid "Yes"
 msgstr "Так"
 
-#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:929
+#: Source/DiabloUI/selyesno.cpp:55 Source/stores.cpp:979
 msgid "No"
 msgstr "Ні"
 
@@ -1793,23 +1793,23 @@ msgstr ""
 "Читання більш ніж однієї книги чар покращує знання про них, що дозволить "
 "ворожувати ці чари більш ефективно."
 
-#: Source/help.cpp:135
+#: Source/help.cpp:181
 msgid "Shareware Hellfire Help"
 msgstr "Допомога Shareware Hellfire"
 
-#: Source/help.cpp:135
+#: Source/help.cpp:181
 msgid "Hellfire Help"
 msgstr "Допомога Hellfire"
 
-#: Source/help.cpp:137
+#: Source/help.cpp:183
 msgid "Shareware Diablo Help"
 msgstr "Допомога Shareware Diablo"
 
-#: Source/help.cpp:137
+#: Source/help.cpp:183
 msgid "Diablo Help"
 msgstr "Допомога Diablo"
 
-#: Source/help.cpp:161
+#: Source/help.cpp:213
 msgid "Press ESC to end or the arrow keys to scroll."
 msgstr "Настисніть ESC щоб закрити або клавіші зі стріклами для прокрутки."
 
@@ -3810,19 +3810,19 @@ msgstr ""
 msgid "Doubles gold capacity"
 msgstr ""
 
-#: Source/items.cpp:2092 Source/stores.cpp:212
+#: Source/items.cpp:2092 Source/stores.cpp:283
 msgid "Required:"
 msgstr ""
 
-#: Source/items.cpp:2094 Source/stores.cpp:214
+#: Source/items.cpp:2094 Source/stores.cpp:285
 msgid " {:d} Str"
 msgstr ""
 
-#: Source/items.cpp:2096 Source/stores.cpp:216
+#: Source/items.cpp:2096 Source/stores.cpp:287
 msgid " {:d} Mag"
 msgstr ""
 
-#: Source/items.cpp:2098 Source/stores.cpp:218
+#: Source/items.cpp:2098 Source/stores.cpp:289
 msgid " {:d} Dex"
 msgstr ""
 
@@ -4243,7 +4243,7 @@ msgid "dam: {:d}-{:d}  Dur: {:d}/{:d}"
 msgstr ""
 
 #: Source/items.cpp:4147 Source/items.cpp:4182 Source/items.cpp:4197
-#: Source/stores.cpp:184
+#: Source/stores.cpp:255
 msgid "Charges: {:d}/{:d}"
 msgstr ""
 
@@ -6457,7 +6457,7 @@ msgstr ""
 msgid "Adria"
 msgstr ""
 
-#: Source/stores.cpp:98 Source/stores.cpp:1252
+#: Source/stores.cpp:98 Source/stores.cpp:1305
 msgid "Gillian"
 msgstr ""
 
@@ -6465,298 +6465,293 @@ msgstr ""
 msgid "Wirt"
 msgstr ""
 
-#: Source/stores.cpp:179 Source/stores.cpp:186
+#: Source/stores.cpp:218 Source/stores.cpp:225
+msgid "Back"
+msgstr ""
+
+#: Source/stores.cpp:250 Source/stores.cpp:257
 msgid ",  "
 msgstr ""
 
-#: Source/stores.cpp:195
+#: Source/stores.cpp:266
 msgid "Damage: {:d}-{:d}  "
 msgstr ""
 
-#: Source/stores.cpp:197
+#: Source/stores.cpp:268
 msgid "Armor: {:d}  "
 msgstr ""
 
-#: Source/stores.cpp:199
+#: Source/stores.cpp:270
 msgid "Dur: {:d}/{:d},  "
 msgstr ""
 
-#: Source/stores.cpp:202
+#: Source/stores.cpp:273
 msgid "Indestructible,  "
 msgstr ""
 
-#: Source/stores.cpp:210
+#: Source/stores.cpp:281
 msgid "No required attributes"
 msgstr ""
 
-#: Source/stores.cpp:243 Source/stores.cpp:995 Source/stores.cpp:1239
+#: Source/stores.cpp:314 Source/stores.cpp:1052 Source/stores.cpp:1292
 msgid "Welcome to the"
 msgstr ""
 
-#: Source/stores.cpp:244
+#: Source/stores.cpp:315
 msgid "Blacksmith's shop"
 msgstr ""
 
-#: Source/stores.cpp:245 Source/stores.cpp:610 Source/stores.cpp:997
-#: Source/stores.cpp:1054 Source/stores.cpp:1241 Source/stores.cpp:1253
-#: Source/stores.cpp:1265
+#: Source/stores.cpp:316 Source/stores.cpp:670 Source/stores.cpp:1054
+#: Source/stores.cpp:1110 Source/stores.cpp:1294 Source/stores.cpp:1306
+#: Source/stores.cpp:1318
 msgid "Would you like to:"
 msgstr ""
 
-#: Source/stores.cpp:246
+#: Source/stores.cpp:317
 msgid "Talk to Griswold"
 msgstr ""
 
-#: Source/stores.cpp:247
+#: Source/stores.cpp:318
 msgid "Buy basic items"
 msgstr ""
 
-#: Source/stores.cpp:248
+#: Source/stores.cpp:319
 msgid "Buy premium items"
 msgstr ""
 
-#: Source/stores.cpp:249 Source/stores.cpp:613
+#: Source/stores.cpp:320 Source/stores.cpp:673
 msgid "Sell items"
 msgstr ""
 
-#: Source/stores.cpp:250
+#: Source/stores.cpp:321
 msgid "Repair items"
 msgstr ""
 
-#: Source/stores.cpp:251
+#: Source/stores.cpp:322
 msgid "Leave the shop"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:289 Source/stores.cpp:654 Source/stores.cpp:1032
+#: Source/stores.cpp:360 Source/stores.cpp:714 Source/stores.cpp:1089
 msgid "I have these items for sale:             Your gold: {:d}"
 msgstr ""
 
-#: Source/stores.cpp:295 Source/stores.cpp:356 Source/stores.cpp:479
-#: Source/stores.cpp:495 Source/stores.cpp:569 Source/stores.cpp:585
-#: Source/stores.cpp:660 Source/stores.cpp:751 Source/stores.cpp:767
-#: Source/stores.cpp:832 Source/stores.cpp:848 Source/stores.cpp:1038
-#: Source/stores.cpp:1154 Source/stores.cpp:1170 Source/stores.cpp:1205
-#: Source/stores.cpp:1232
-msgid "Back"
-msgstr ""
-
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:351
+#: Source/stores.cpp:420
 msgid "I have these premium items for sale:     Your gold: {:d}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:474 Source/stores.cpp:746
+#: Source/stores.cpp:541 Source/stores.cpp:804
 msgid "You have nothing I want.             Your gold: {:d}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:489 Source/stores.cpp:761
+#: Source/stores.cpp:554 Source/stores.cpp:817
 msgid "Which item is for sale?             Your gold: {:d}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:564
+#: Source/stores.cpp:627
 msgid "You have nothing to repair.             Your gold: {:d}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:579
+#: Source/stores.cpp:640
 msgid "Repair which item?             Your gold: {:d}"
 msgstr ""
 
-#: Source/stores.cpp:609
+#: Source/stores.cpp:669
 msgid "Witch's shack"
 msgstr ""
 
-#: Source/stores.cpp:611
+#: Source/stores.cpp:671
 msgid "Talk to Adria"
 msgstr ""
 
-#: Source/stores.cpp:612 Source/stores.cpp:999
+#: Source/stores.cpp:672 Source/stores.cpp:1056
 msgid "Buy items"
 msgstr ""
 
-#: Source/stores.cpp:614
+#: Source/stores.cpp:674
 msgid "Recharge staves"
 msgstr ""
 
-#: Source/stores.cpp:615
+#: Source/stores.cpp:675
 msgid "Leave the shack"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:827
+#: Source/stores.cpp:881
 msgid "You have nothing to recharge.             Your gold: {:d}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:842
+#: Source/stores.cpp:894
 msgid "Recharge which item?             Your gold: {:d}"
 msgstr ""
 
-#: Source/stores.cpp:858
+#: Source/stores.cpp:908
 msgid "You do not have enough gold"
 msgstr ""
 
-#: Source/stores.cpp:866
+#: Source/stores.cpp:916
 msgid "You do not have enough room in inventory"
 msgstr ""
 
-#: Source/stores.cpp:903
+#: Source/stores.cpp:953
 msgid "Do we have a deal?"
 msgstr ""
 
-#: Source/stores.cpp:906
+#: Source/stores.cpp:956
 msgid "Are you sure you want to identify this item?"
 msgstr ""
 
-#: Source/stores.cpp:912
+#: Source/stores.cpp:962
 msgid "Are you sure you want to buy this item?"
 msgstr ""
 
-#: Source/stores.cpp:915
+#: Source/stores.cpp:965
 msgid "Are you sure you want to recharge this item?"
 msgstr ""
 
-#: Source/stores.cpp:919
+#: Source/stores.cpp:969
 msgid "Are you sure you want to sell this item?"
 msgstr ""
 
-#: Source/stores.cpp:922
+#: Source/stores.cpp:972
 msgid "Are you sure you want to repair this item?"
 msgstr ""
 
-#: Source/stores.cpp:936 Source/towners.cpp:157
+#: Source/stores.cpp:986 Source/towners.cpp:157
 msgid "Wirt the Peg-legged boy"
 msgstr ""
 
-#: Source/stores.cpp:939 Source/stores.cpp:946
+#: Source/stores.cpp:989 Source/stores.cpp:996
 msgid "Talk to Wirt"
 msgstr ""
 
-#: Source/stores.cpp:940
+#: Source/stores.cpp:990
 msgid "I have something for sale,"
 msgstr ""
 
-#: Source/stores.cpp:941
+#: Source/stores.cpp:991
 msgid "but it will cost 50 gold"
 msgstr ""
 
-#: Source/stores.cpp:942
+#: Source/stores.cpp:992
 msgid "just to take a look. "
 msgstr ""
 
-#: Source/stores.cpp:943
+#: Source/stores.cpp:993
 msgid "What have you got?"
 msgstr ""
 
-#: Source/stores.cpp:944 Source/stores.cpp:947 Source/stores.cpp:1057
-#: Source/stores.cpp:1255
+#: Source/stores.cpp:994 Source/stores.cpp:997 Source/stores.cpp:1113
+#: Source/stores.cpp:1308
 msgid "Say goodbye"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:957
+#: Source/stores.cpp:1007
 msgid "I have this item for sale:             Your gold: {:d}"
 msgstr ""
 
-#: Source/stores.cpp:974
+#: Source/stores.cpp:1030
 msgid "Leave"
 msgstr ""
 
-#: Source/stores.cpp:996
+#: Source/stores.cpp:1053
 msgid "Healer's home"
 msgstr ""
 
-#: Source/stores.cpp:998
+#: Source/stores.cpp:1055
 msgid "Talk to Pepin"
 msgstr ""
 
-#: Source/stores.cpp:1000
+#: Source/stores.cpp:1057
 msgid "Leave Healer's home"
 msgstr ""
 
-#: Source/stores.cpp:1053
+#: Source/stores.cpp:1109
 msgid "The Town Elder"
 msgstr ""
 
-#: Source/stores.cpp:1055
+#: Source/stores.cpp:1111
 msgid "Talk to Cain"
 msgstr ""
 
-#: Source/stores.cpp:1056
+#: Source/stores.cpp:1112
 msgid "Identify an item"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1149
+#: Source/stores.cpp:1205
 msgid "You have nothing to identify.             Your gold: {:d}"
 msgstr ""
 
 #. TRANSLATORS: This text is white space sensitive. Check for correct alignment!
-#: Source/stores.cpp:1164
+#: Source/stores.cpp:1218
 msgid "Identify which item?             Your gold: {:d}"
 msgstr ""
 
-#: Source/stores.cpp:1184
+#: Source/stores.cpp:1237
 msgid "This item is:"
 msgstr ""
 
-#: Source/stores.cpp:1187
+#: Source/stores.cpp:1240
 msgid "Done"
 msgstr ""
 
-#: Source/stores.cpp:1196
+#: Source/stores.cpp:1249
 msgid "Talk to {:s}"
 msgstr ""
 
-#: Source/stores.cpp:1200
+#: Source/stores.cpp:1253
 msgid "Talking to {:s}"
 msgstr ""
 
-#: Source/stores.cpp:1202
+#: Source/stores.cpp:1255
 msgid "is not available"
 msgstr ""
 
-#: Source/stores.cpp:1203
+#: Source/stores.cpp:1256
 msgid "in the shareware"
 msgstr ""
 
-#: Source/stores.cpp:1204
+#: Source/stores.cpp:1257
 msgid "version"
 msgstr ""
 
-#: Source/stores.cpp:1231
+#: Source/stores.cpp:1284
 msgid "Gossip"
 msgstr ""
 
-#: Source/stores.cpp:1240
+#: Source/stores.cpp:1293
 msgid "Rising Sun"
 msgstr ""
 
-#: Source/stores.cpp:1242
+#: Source/stores.cpp:1295
 msgid "Talk to Ogden"
 msgstr ""
 
-#: Source/stores.cpp:1243
+#: Source/stores.cpp:1296
 msgid "Leave the tavern"
 msgstr ""
 
-#: Source/stores.cpp:1254
+#: Source/stores.cpp:1307
 msgid "Talk to Gillian"
 msgstr ""
 
-#: Source/stores.cpp:1264 Source/towners.cpp:212
+#: Source/stores.cpp:1317 Source/towners.cpp:212
 msgid "Farnham the Drunk"
 msgstr ""
 
-#: Source/stores.cpp:1266
+#: Source/stores.cpp:1319
 msgid "Talk to Farnham"
 msgstr ""
 
-#: Source/stores.cpp:1267
+#: Source/stores.cpp:1320
 msgid "Say Goodbye"
 msgstr ""
 
