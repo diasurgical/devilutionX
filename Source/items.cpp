@@ -3199,17 +3199,23 @@ bool ItemSpaceOk(Point position)
 			return false;
 	}
 
-	if (dObject[position.x + 1][position.y + 1] > 0 && Objects[dObject[position.x + 1][position.y + 1] - 1]._oSelFlag != 0)
-		return false;
+	Point south = position + Direction::South;
+	if (InDungeonBounds(south)) {
+		int objectId = dObject[south.x][south.y];
+		if (objectId != 0 && Objects[abs(objectId) - 1]._oSelFlag != 0)
+			return false;
+	}
 
-	if (dObject[position.x + 1][position.y + 1] < 0 && Objects[-(dObject[position.x + 1][position.y + 1] + 1)]._oSelFlag != 0)
-		return false;
-
-	if (dObject[position.x + 1][position.y] > 0
-	    && dObject[position.x][position.y + 1] > 0
-	    && Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0
-	    && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0) {
-		return false;
+	Point southEast = position + Direction::SouthEast;
+	Point southWest = position + Direction::SouthWest;
+	if (InDungeonBounds(southEast) && InDungeonBounds(southWest)) {
+		int objectIdSE = dObject[southEast.x][southEast.y];
+		int objectIdSW = dObject[southWest.x][southWest.y];
+		if (objectIdSE > 0 && objectIdSW > 0) {
+			if (Objects[objectIdSE - 1]._oSelFlag != 0 && Objects[objectIdSW - 1]._oSelFlag != 0) {
+				return false;
+			}
+		}
 	}
 
 	return IsTileNotSolid(position);
