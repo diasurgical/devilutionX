@@ -2030,7 +2030,7 @@ void PrintItemOil(char iDidx)
 void DrawUniqueInfoWindow(const Surface &out)
 {
 	CelDrawTo(out, GetPanelPosition(UiPanels::Inventory, { 24 - SPANEL_WIDTH, 327 }), *pSTextBoxCels, 1);
-	DrawHalfTransparentRectTo(out, RightPanel.position.x - SPANEL_WIDTH + 27, RightPanel.position.y + 28, 265, 297);
+	DrawHalfTransparentRectTo(out, GetRightPanel().position.x - SPANEL_WIDTH + 27, GetRightPanel().position.y + 28, 265, 297);
 }
 
 void PrintItemMisc(Item &item)
@@ -3199,17 +3199,23 @@ bool ItemSpaceOk(Point position)
 			return false;
 	}
 
-	if (dObject[position.x + 1][position.y + 1] > 0 && Objects[dObject[position.x + 1][position.y + 1] - 1]._oSelFlag != 0)
-		return false;
+	Point south = position + Direction::South;
+	if (InDungeonBounds(south)) {
+		int objectId = dObject[south.x][south.y];
+		if (objectId != 0 && Objects[abs(objectId) - 1]._oSelFlag != 0)
+			return false;
+	}
 
-	if (dObject[position.x + 1][position.y + 1] < 0 && Objects[-(dObject[position.x + 1][position.y + 1] + 1)]._oSelFlag != 0)
-		return false;
-
-	if (dObject[position.x + 1][position.y] > 0
-	    && dObject[position.x][position.y + 1] > 0
-	    && Objects[dObject[position.x + 1][position.y] - 1]._oSelFlag != 0
-	    && Objects[dObject[position.x][position.y + 1] - 1]._oSelFlag != 0) {
-		return false;
+	Point southEast = position + Direction::SouthEast;
+	Point southWest = position + Direction::SouthWest;
+	if (InDungeonBounds(southEast) && InDungeonBounds(southWest)) {
+		int objectIdSE = dObject[southEast.x][southEast.y];
+		int objectIdSW = dObject[southWest.x][southWest.y];
+		if (objectIdSE > 0 && objectIdSW > 0) {
+			if (Objects[objectIdSE - 1]._oSelFlag != 0 && Objects[objectIdSW - 1]._oSelFlag != 0) {
+				return false;
+			}
+		}
 	}
 
 	return IsTileNotSolid(position);
@@ -4091,8 +4097,8 @@ void PrintItemPower(char plidx, Item *x)
 
 void DrawUniqueInfo(const Surface &out)
 {
-	const Point position { RightPanel.position.x - SPANEL_WIDTH, RightPanel.position.y };
-	if ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(position)) {
+	const Point position { GetLeftPanel().position.x - SPANEL_WIDTH, GetLeftPanel().position.y };
+	if ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(position)) {
 		return;
 	}
 

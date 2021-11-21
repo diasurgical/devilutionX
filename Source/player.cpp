@@ -787,7 +787,7 @@ bool DamageWeapon(int pnum, int durrnd)
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("WeaponDur: illegal player %i", pnum);
+		app_fatal("DamageWeapon: illegal player %i", pnum);
 	}
 	auto &player = Players[pnum];
 
@@ -1326,18 +1326,18 @@ bool DoRangeAttack(int pnum)
 	return false;
 }
 
-void ShieldDur(int pnum)
+void DamageParryItem(int pnum)
 {
 	if (pnum != MyPlayerId) {
 		return;
 	}
 
 	if ((DWORD)pnum >= MAX_PLRS) {
-		app_fatal("ShieldDur: illegal player %i", pnum);
+		app_fatal("DamageParryItem: illegal player %i", pnum);
 	}
 	auto &player = Players[pnum];
 
-	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield) {
+	if (player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Shield || player.InvBody[INVLOC_HAND_LEFT]._itype == ItemType::Staff) {
 		if (player.InvBody[INVLOC_HAND_LEFT]._iDurability == DUR_INDESTRUCTIBLE) {
 			return;
 		}
@@ -1374,7 +1374,7 @@ bool DoBlock(int pnum)
 		ClearStateVariables(player);
 
 		if (GenerateRnd(10) == 0) {
-			ShieldDur(pnum);
+			DamageParryItem(pnum);
 		}
 		return true;
 	}
@@ -3441,12 +3441,12 @@ void CheckPlrSpell(bool isShiftHeld)
 		if (pcurs != CURSOR_HAND)
 			return;
 
-		if (MainPanel.Contains(MousePosition)) // inside main panel
+		if (GetMainPanel().Contains(MousePosition)) // inside main panel
 			return;
 
 		if (
-		    ((chrflag || QuestLogIsOpen) && LeftPanel.Contains(MousePosition)) // inside left panel
-		    || ((invflag || sbookflag) && RightPanel.Contains(MousePosition))  // inside right panel
+		    ((chrflag || QuestLogIsOpen) && GetLeftPanel().Contains(MousePosition)) // inside left panel
+		    || ((invflag || sbookflag) && GetRightPanel().Contains(MousePosition))  // inside right panel
 		) {
 			if (rspell != SPL_HEAL
 			    && rspell != SPL_IDENTIFY

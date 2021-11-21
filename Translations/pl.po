@@ -4007,7 +4007,7 @@ msgstr "obr. ognistej kuli {:d}-{:d}"
 
 #: Source/items.cpp:3962
 msgid "attacker takes 1-3 damage"
-msgstr "1-3 obrażeń wraca do ciebie"
+msgstr "atakujący otrzymuje 1-3 obrażeń"
 
 #: Source/items.cpp:3965
 msgid "user loses all mana"

@@ -17,7 +17,7 @@ const char *ConnectionNames[] {
 namespace {
 
 char selconn_MaxPlayers[64];
-char selconn_Description[128];
+char selconn_Description[256];
 char selconn_Gateway[129];
 bool selconn_ReturnValue = false;
 bool selconn_EndMenu = false;

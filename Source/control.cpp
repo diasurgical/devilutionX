@@ -78,6 +78,19 @@ Rectangle LeftPanel;
 Rectangle RightPanel;
 std::optional<OwnedSurface> pBtmBuff;
 
+const Rectangle &GetMainPanel()
+{
+	return MainPanel;
+}
+const Rectangle &GetLeftPanel()
+{
+	return LeftPanel;
+}
+const Rectangle &GetRightPanel()
+{
+	return RightPanel;
+}
+
 extern std::array<Keymapper::ActionIndex, 4> quickSpellActionIndexes;
 
 /** Maps from attribute_id to the rectangle on screen used for attribute increment buttons. */
@@ -900,15 +913,15 @@ Point GetPanelPosition(UiPanels panel, Point offset)
 
 	switch (panel) {
 	case UiPanels::Main:
-		return MainPanel.position + displacement;
+		return GetMainPanel().position + displacement;
 	case UiPanels::Quest:
 	case UiPanels::Character:
-		return LeftPanel.position + displacement;
+		return GetLeftPanel().position + displacement;
 	case UiPanels::Spell:
 	case UiPanels::Inventory:
-		return RightPanel.position + displacement;
+		return GetRightPanel().position + displacement;
 	default:
-		return MainPanel.position + displacement;
+		return GetMainPanel().position + displacement;
 	}
 }
 
@@ -1126,18 +1139,20 @@ void ClearPanBtn()
 
 void DoPanBtn()
 {
+	auto &mainPanelPosition = GetMainPanel().position;
+
 	for (int i = 0; i < PanelButtonIndex; i++) {
-		int x = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
-		int y = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
-		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= x) {
-			if (MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= y) {
+		int x = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
+		int y = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
+		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= x) {
+			if (MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= y) {
 				PanelButtons[i] = true;
 				drawbtnflag = true;
 				panbtndown = true;
 			}
 		}
 	}
-	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
+	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		if ((SDL_GetModState() & KMOD_SHIFT) != 0) {
 			auto &myPlayer = Players[MyPlayerId];
 			myPlayer._pRSpell = SPL_INVALID;
@@ -1152,19 +1167,20 @@ void DoPanBtn()
 
 void control_check_btn_press()
 {
-	int x = PanBtnPos[3].x + PANEL_LEFT + PanBtnPos[3].w;
-	int y = PanBtnPos[3].y + PANEL_TOP + PanBtnPos[3].h;
-	if (MousePosition.x >= PanBtnPos[3].x + PANEL_LEFT
+	auto &mainPanelPosition = GetMainPanel().position;
+	int x = PanBtnPos[3].x + mainPanelPosition.x + PanBtnPos[3].w;
+	int y = PanBtnPos[3].y + mainPanelPosition.y + PanBtnPos[3].h;
+	if (MousePosition.x >= PanBtnPos[3].x + mainPanelPosition.x
 	    && MousePosition.x <= x
-	    && MousePosition.y >= PanBtnPos[3].y + PANEL_TOP
+	    && MousePosition.y >= PanBtnPos[3].y + mainPanelPosition.y
 	    && MousePosition.y <= y) {
 		SetButtonStateDown(3);
 	}
-	x = PanBtnPos[6].x + PANEL_LEFT + PanBtnPos[6].w;
-	y = PanBtnPos[6].y + PANEL_TOP + PanBtnPos[6].h;
-	if (MousePosition.x >= PanBtnPos[6].x + PANEL_LEFT
+	x = PanBtnPos[6].x + mainPanelPosition.x + PanBtnPos[6].w;
+	y = PanBtnPos[6].y + mainPanelPosition.y + PanBtnPos[6].h;
+	if (MousePosition.x >= PanBtnPos[6].x + mainPanelPosition.x
 	    && MousePosition.x <= x
-	    && MousePosition.y >= PanBtnPos[6].y + PANEL_TOP
+	    && MousePosition.y >= PanBtnPos[6].y + mainPanelPosition.y
 	    && MousePosition.y <= y) {
 		SetButtonStateDown(6);
 	}
@@ -1185,11 +1201,12 @@ void DoAutoMap()
 void CheckPanelInfo()
 {
 	panelflag = false;
+	auto &mainPanelPosition = GetMainPanel().position;
 	ClearPanel();
 	for (int i = 0; i < PanelButtonIndex; i++) {
-		int xend = PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w;
-		int yend = PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h;
-		if (MousePosition.x >= PanBtnPos[i].x + PANEL_LEFT && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + PANEL_TOP && MousePosition.y <= yend) {
+		int xend = PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w;
+		int yend = PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h;
+		if (MousePosition.x >= PanBtnPos[i].x + mainPanelPosition.x && MousePosition.x <= xend && MousePosition.y >= PanBtnPos[i].y + mainPanelPosition.y && MousePosition.y <= yend) {
 			if (i != 7) {
 				strcpy(infostr, _(PanBtnStr[i]));
 			} else {
@@ -1206,7 +1223,7 @@ void CheckPanelInfo()
 			panelflag = true;
 		}
 	}
-	if (!spselflag && MousePosition.x >= 565 + PANEL_LEFT && MousePosition.x < 621 + PANEL_LEFT && MousePosition.y >= 64 + PANEL_TOP && MousePosition.y < 120 + PANEL_TOP) {
+	if (!spselflag && MousePosition.x >= 565 + mainPanelPosition.x && MousePosition.x < 621 + mainPanelPosition.x && MousePosition.y >= 64 + mainPanelPosition.y && MousePosition.y < 120 + mainPanelPosition.y) {
 		strcpy(infostr, _("Select current spell button"));
 		InfoColor = UiFlags::ColorWhite;
 		panelflag = true;
@@ -1251,7 +1268,7 @@ void CheckPanelInfo()
 			}
 		}
 	}
-	if (MousePosition.x > 190 + PANEL_LEFT && MousePosition.x < 437 + PANEL_LEFT && MousePosition.y > 4 + PANEL_TOP && MousePosition.y < 33 + PANEL_TOP)
+	if (MousePosition.x > 190 + mainPanelPosition.x && MousePosition.x < 437 + mainPanelPosition.x && MousePosition.y > 4 + mainPanelPosition.y && MousePosition.y < 33 + mainPanelPosition.y)
 		pcursinvitem = CheckInvHLight();
 
 	if (CheckXPBarInfo()) {
@@ -1262,6 +1279,8 @@ void CheckPanelInfo()
 void CheckBtnUp()
 {
 	bool gamemenuOff = true;
+	auto &mainPanelPosition = GetMainPanel().position;
+
 	drawbtnflag = true;
 	panbtndown = false;
 
@@ -1272,10 +1291,10 @@ void CheckBtnUp()
 
 		PanelButtons[i] = false;
 
-		if (MousePosition.x < PanBtnPos[i].x + PANEL_LEFT
-		    || MousePosition.x > PanBtnPos[i].x + PANEL_LEFT + PanBtnPos[i].w
-		    || MousePosition.y < PanBtnPos[i].y + PANEL_TOP
-		    || MousePosition.y > PanBtnPos[i].y + PANEL_TOP + PanBtnPos[i].h) {
+		if (MousePosition.x < PanBtnPos[i].x + mainPanelPosition.x
+		    || MousePosition.x > PanBtnPos[i].x + mainPanelPosition.x + PanBtnPos[i].w
+		    || MousePosition.y < PanBtnPos[i].y + mainPanelPosition.y
+		    || MousePosition.y > PanBtnPos[i].y + mainPanelPosition.y + PanBtnPos[i].h) {
 			continue;
 		}
 
@@ -1416,13 +1435,15 @@ void DrawInfoBox(const Surface &out)
 
 void CheckLvlBtn()
 {
-	if (!lvlbtndown && MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP)
+	auto &mainPanelPosition = GetMainPanel().position;
+	if (!lvlbtndown && MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y)
 		lvlbtndown = true;
 }
 
 void ReleaseLvlBtn()
 {
-	if (MousePosition.x >= 40 + PANEL_LEFT && MousePosition.x <= 81 + PANEL_LEFT && MousePosition.y >= -39 + PANEL_TOP && MousePosition.y <= -17 + PANEL_TOP) {
+	auto &mainPanelPosition = GetMainPanel().position;
+	if (MousePosition.x >= 40 + mainPanelPosition.x && MousePosition.x <= 81 + mainPanelPosition.x && MousePosition.y >= -39 + mainPanelPosition.y && MousePosition.y <= -17 + mainPanelPosition.y) {
 		QuestLogIsOpen = false;
 		chrflag = true;
 	}
@@ -1605,7 +1626,7 @@ void CheckSBook()
 	Rectangle iconArea = { GetPanelPosition(UiPanels::Spell, { 11, 18 }), { 48 - 11, 314 - 18 } };
 	Rectangle tabArea = { GetPanelPosition(UiPanels::Spell, { 7, 320 }), { 311 - 7, 349 - 320 } };
 	if (iconArea.Contains(MousePosition)) {
-		spell_id sn = SpellPages[sbooktab][(MousePosition.y - RightPanel.position.y - 18) / 43];
+		spell_id sn = SpellPages[sbooktab][(MousePosition.y - GetRightPanel().position.y - 18) / 43];
 		auto &myPlayer = Players[MyPlayerId];
 		uint64_t spl = myPlayer._pMemSpells | myPlayer._pISpells | myPlayer._pAblSpells;
 		if (sn != SPL_INVALID && (spl & GetSpellBitmask(sn)) != 0) {
@@ -1622,7 +1643,7 @@ void CheckSBook()
 		}
 	}
 	if (tabArea.Contains(MousePosition)) {
-		sbooktab = (MousePosition.x - (RightPanel.position.x + 7)) / (gbIsHellfire ? 61 : 76);
+		sbooktab = (MousePosition.x - (GetRightPanel().position.x + 7)) / (gbIsHellfire ? 61 : 76);
 	}
 }
 
@@ -1752,20 +1773,22 @@ bool control_check_talk_btn()
 	if (!talkflag)
 		return false;
 
-	if (MousePosition.x < 172 + PANEL_LEFT)
+	auto &mainPanelPosition = GetMainPanel().position;
+
+	if (MousePosition.x < 172 + mainPanelPosition.x)
 		return false;
-	if (MousePosition.y < 69 + PANEL_TOP)
+	if (MousePosition.y < 69 + mainPanelPosition.y)
 		return false;
-	if (MousePosition.x > 233 + PANEL_LEFT)
+	if (MousePosition.x > 233 + mainPanelPosition.x)
 		return false;
-	if (MousePosition.y > 123 + PANEL_TOP)
+	if (MousePosition.y > 123 + mainPanelPosition.y)
 		return false;
 
 	for (bool &talkButtonDown : TalkButtonsDown) {
 		talkButtonDown = false;
 	}
 
-	TalkButtonsDown[(MousePosition.y - (69 + PANEL_TOP)) / 18] = true;
+	TalkButtonsDown[(MousePosition.y - (69 + mainPanelPosition.y)) / 18] = true;
 
 	return true;
 }
@@ -1778,10 +1801,12 @@ void control_release_talk_btn()
 	for (bool &talkButtonDown : TalkButtonsDown)
 		talkButtonDown = false;
 
-	if (MousePosition.x < 172 + PANEL_LEFT || MousePosition.y < 69 + PANEL_TOP || MousePosition.x > 233 + PANEL_LEFT || MousePosition.y > 123 + PANEL_TOP)
+	auto &mainPanelPosition = GetMainPanel().position;
+
+	if (MousePosition.x < 172 + mainPanelPosition.x || MousePosition.y < 69 + mainPanelPosition.y || MousePosition.x > 233 + mainPanelPosition.x || MousePosition.y > 123 + mainPanelPosition.y)
 		return;
 
-	int off = (MousePosition.y - (69 + PANEL_TOP)) / 18;
+	int off = (MousePosition.y - (69 + mainPanelPosition.y)) / 18;
 
 	int p = 0;
 	for (; p < MAX_PLRS && off != -1; p++) {
