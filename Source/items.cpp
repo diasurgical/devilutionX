@@ -1171,26 +1171,60 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 		}
 		if (nl != 0) {
 			preidx = l[GenerateRnd(nl)];
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
 			item._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemAffix(item, ItemPrefixes[preidx]);
 			item._iPrePower = ItemPrefixes[preidx].power.type;
 		}
 	}
-	if (!StringInPanel(item._iIName)) {
-		strcpy(item._iIName, _(AllItemsList[item.IDidx].iSName));
-		if (preidx != -1) {
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
+
+	const char *baseName = _(AllItemsList[item.IDidx].iName);
+	const char *shortName = _(AllItemsList[item.IDidx].iSName);
+	const char *spellName = pgettext("spell", spelldata[bs].sNameText);
+	const char *normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
+
+	strncpy(item._iName, fmt::format(normalFmt, baseName, spellName).c_str(), sizeof(item._iName) - 1);
+	item._iName[sizeof(item._iName) - 1] = '\0';
+	if (!StringInPanel(item._iName)) {
+		strncpy(item._iName, fmt::format(normalFmt, shortName, spellName).c_str(), sizeof(item._iName) - 1);
+		item._iName[sizeof(item._iName) - 1] = '\0';
+	}
+
+	if (preidx != -1) {
+		const char *magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}");
+		const char *prefixName = _(ItemPrefixes[preidx].PLName);
+		strncpy(item._iIName, fmt::format(magicFmt, prefixName, baseName, spellName).c_str(), sizeof(item._iIName) - 1);
+		item._iIName[sizeof(item._iIName) - 1] = '\0';
+		if (!StringInPanel(item._iIName)) {
+			strncpy(item._iIName, fmt::format(magicFmt, prefixName, shortName, spellName).c_str(), sizeof(item._iIName) - 1);
 			item._iIName[sizeof(item._iIName) - 1] = '\0';
 		}
-		strncpy(item._iIName, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's Staff of Firewall */ "{0} of {1}"), item._iIName, pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(item._iIName) - 1);
-		item._iIName[sizeof(item._iIName) - 1] = '\0';
-		if (item._iMagical == ITEM_QUALITY_NORMAL)
-			strcpy(item._iName, item._iIName);
+	} else {
+		strncpy(item._iIName, item._iName, sizeof(item._iIName) - 1);
+		item._iName[sizeof(item._iName) - 1] = '\0';
 	}
+
 	CalcItemValue(item);
 }
+
+namespace {
+
+std::string GenerateMagicItemName(const string_view &baseNamel, int preidx, int sufidx)
+{
+	if (preidx != -1 && sufidx != -1) {
+		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} {1} of {2}");
+		return fmt::format(fmt, _(ItemPrefixes[preidx].PLName), baseNamel, _(ItemSuffixes[sufidx].PLName));
+	} else if (preidx != -1) {
+		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ "{0} {1}");
+		return fmt::format(fmt, _(ItemPrefixes[preidx].PLName), baseNamel);
+	} else if (sufidx != -1) {
+		const char *fmt = _(/* TRANSLATORS: Constructs item names. Format: {Item} of {Suffix}. Example: Long Sword of the Whale */ "{0} of {1}");
+		return fmt::format(fmt, baseNamel, _(ItemSuffixes[sufidx].PLName));
+	}
+
+	return std::string(baseNamel);
+}
+
+} // namespace
 
 void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool onlygood)
 {
@@ -1230,8 +1264,6 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 		}
 		if (nt != 0) {
 			preidx = l[GenerateRnd(nt)];
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Long Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
 			item._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemAffix(item, ItemPrefixes[preidx]);
 			item._iPrePower = ItemPrefixes[preidx].power.type;
@@ -1251,28 +1283,17 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 		}
 		if (nl != 0) {
 			sufidx = l[GenerateRnd(nl)];
-			strncpy(item._iIName, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Long Sword of the Whale */ "{0} of {1}"), item._iIName, _(ItemSuffixes[sufidx].PLName)).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
 			item._iMagical = ITEM_QUALITY_MAGIC;
 			SaveItemAffix(item, ItemSuffixes[sufidx]);
 			item._iSufPower = ItemSuffixes[sufidx].power.type;
 		}
 	}
-	if (!StringInPanel(item._iIName)) {
-		int aii = item.IDidx;
-		if (AllItemsList[aii].iSName != nullptr)
-			strcpy(item._iIName, _(AllItemsList[aii].iSName));
-		else
-			item._iName[0] = 0;
 
-		if (preidx != -1) {
-			strncpy(item._iIName, fmt::format(/* TRANSLATORS: Constructs item names. Format: {Prefix} {Item}. Example: King's Sword */ _("{0} {1}"), _(ItemPrefixes[preidx].PLName), item._iIName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
-		}
-		if (sufidx != -1) {
-			strncpy(item._iIName, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Suffix}. Example: King's Sword of the Whale */ "{0} of {1}"), item._iIName, _(ItemSuffixes[sufidx].PLName)).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
-		}
+	strncpy(item._iIName, GenerateMagicItemName(item._iName, preidx, sufidx).c_str(), sizeof(item._iIName) - 1);
+	item._iIName[sizeof(item._iIName) - 1] = '\0';
+	if (!StringInPanel(item._iIName)) {
+		strncpy(item._iIName, GenerateMagicItemName(_(AllItemsList[item.IDidx].iSName), preidx, sufidx).c_str(), sizeof(item._iIName) - 1);
+		item._iIName[sizeof(item._iIName) - 1] = '\0';
 	}
 	if (preidx != -1 || sufidx != -1)
 		CalcItemValue(item);
@@ -1310,13 +1331,6 @@ void GetStaffSpell(Item &item, int lvl, bool onlygood)
 		if (s == maxSpells)
 			s = SPL_FIREBOLT;
 	}
-
-	char istr[68] = {};
-	strncpy(istr, fmt::format(_(/* TRANSLATORS: Constructs item names. Format: {Prefix Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} of {1}"), item._iName, pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(istr) - 1);
-	if (!StringInPanel(istr))
-		strncpy(istr, fmt::format(_("Staff of {:s}"), pgettext("spell", spelldata[bs].sNameText)).c_str(), sizeof(istr) - 1);
-	strncpy(item._iName, istr, sizeof(item._iName) - 1);
-	strncpy(item._iIName, istr, sizeof(item._iIName) - 1);
 
 	int minc = spelldata[bs].sStaffMin;
 	int maxc = spelldata[bs].sStaffMax - minc + 1;
