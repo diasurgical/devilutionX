@@ -22,6 +22,7 @@
 #include "utils/log.hpp"
 #include "utils/paths.h"
 #include "utils/ui_fwd.h"
+#include "utils/utf8.hpp"
 
 #ifdef __vita__
 // increase default allowed heap size on Vita
@@ -152,7 +153,7 @@ void init_archives()
 
 	if (strcasecmp("en", sgOptions.Language.szCode) != 0 || strlen(sgOptions.Language.szCode) != 2) {
 		char langMpqName[10] = {};
-		strncpy(langMpqName, sgOptions.Language.szCode, sizeof(langMpqName) - strlen(langMpqName) - 1);
+		CopyUtf8(langMpqName, sgOptions.Language.szCode, sizeof(langMpqName));
 
 		strncat(langMpqName, ".mpq", sizeof(langMpqName) - strlen(langMpqName) - 1);
 		lang_mpq = LoadMPQ(paths, langMpqName);

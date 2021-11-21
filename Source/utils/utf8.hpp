@@ -53,4 +53,10 @@ inline std::size_t FindLastUtf8Symbols(string_view input)
 	return pos;
 }
 
+/**
+ * @brief Copy up to a given number of bytes from a UTF8 string, and zero terminate string
+ * @param bytes Max number of bytes to copy
+ */
+void CopyUtf8(char *dest, string_view source, std::size_t bytes);
+
 } // namespace devilution

@@ -12,6 +12,7 @@
 #include "menu.h"
 #include "options.h"
 #include "utils/stubs.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -127,10 +128,10 @@ bool SNetGetGameInfo(game_info type, void *dst, unsigned int length)
 #endif
 	switch (type) {
 	case GAMEINFO_NAME:
-		strncpy((char *)dst, gpszGameName, length);
+		CopyUtf8((char *)dst, gpszGameName, length);
 		break;
 	case GAMEINFO_PASSWORD:
-		strncpy((char *)dst, gpszGamePassword, length);
+		CopyUtf8((char *)dst, gpszGamePassword, length);
 		break;
 	}
 
@@ -179,7 +180,7 @@ bool SNetCreateGame(const char *pszGameName, const char *pszGamePassword, char *
 		pszGameName = defaultName.c_str();
 	}
 
-	strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
+	CopyUtf8(gpszGameName, pszGameName, sizeof(gpszGameName));
 	if (pszGamePassword != nullptr)
 		DvlNet_SetPassword(pszGamePassword);
 	else
@@ -194,7 +195,7 @@ bool SNetJoinGame(char *pszGameName, char *pszGamePassword, int *playerID)
 	std::lock_guard<SdlMutex> lg(storm_net_mutex);
 #endif
 	if (pszGameName != nullptr)
-		strncpy(gpszGameName, pszGameName, sizeof(gpszGameName) - 1);
+		CopyUtf8(gpszGameName, pszGameName, sizeof(gpszGameName));
 	if (pszGamePassword != nullptr)
 		DvlNet_SetPassword(pszGamePassword);
 	else
@@ -251,7 +252,7 @@ std::vector<std::string> DvlNet_GetGamelist()
 void DvlNet_SetPassword(std::string pw)
 {
 	GameIsPublic = false;
-	strncpy(gpszGamePassword, pw.c_str(), sizeof(gpszGamePassword) - 1);
+	CopyUtf8(gpszGamePassword, pw, sizeof(gpszGamePassword));
 	dvlnet_inst->setup_password(std::move(pw));
 }
 

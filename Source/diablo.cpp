@@ -67,6 +67,7 @@
 #include "utils/console.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/utf8.hpp"
 
 #ifdef __vita__
 #include "platform/vita/touch.h"
@@ -897,7 +898,7 @@ void DiabloInitScreen()
 void SetApplicationVersions()
 {
 	snprintf(gszProductName, sizeof(gszProductName) / sizeof(char), "%s v%s", PROJECT_NAME, PROJECT_VERSION);
-	strncpy(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION).c_str(), sizeof(gszVersionNumber) / sizeof(char));
+	CopyUtf8(gszVersionNumber, fmt::format(_("version {:s}"), PROJECT_VERSION), sizeof(gszVersionNumber) / sizeof(char));
 }
 
 void DiabloInit()
@@ -928,7 +929,7 @@ void DiabloInit()
 		if (strlen(sgOptions.Chat.szHotKeyMsgs[i]) != 0) {
 			continue;
 		}
-		strncpy(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
+		CopyUtf8(sgOptions.Chat.szHotKeyMsgs[i], _(QuickMessages[i].message), MAX_SEND_STR_LEN);
 	}
 
 #ifdef VIRTUAL_GAMEPAD
@@ -1447,11 +1448,10 @@ void InitKeymapActions()
 			    _("Nightmare"),
 			    _("Hell"),
 		    };
-		    strncpy(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
-		                                    "{:s}, version = {:s}, mode = {:s}"),
-		                        PROJECT_NAME, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty])
-		                        .c_str(),
-		        MAX_SEND_STR_LEN - 1);
+		    CopyUtf8(pszStr, fmt::format(_(/* TRANSLATORS: {:s} means: Character Name, Game Version, Game Difficulty. */
+		                                     "{:s}, version = {:s}, mode = {:s}"),
+		                         PROJECT_NAME, PROJECT_VERSION, difficulties[sgGameInitInfo.nDifficulty]),
+		        sizeof(pszStr));
 		    NetSendCmdString(1 << MyPlayerId, pszStr);
 	    },
 	    [&]() { return !IsPlayerDead(); },
