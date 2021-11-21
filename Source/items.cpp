@@ -34,6 +34,7 @@
 #include "utils/language.h"
 #include "utils/math.h"
 #include "utils/stdcompat/algorithm.hpp"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -1182,25 +1183,20 @@ void GetStaffPower(Item &item, int lvl, int bs, bool onlygood)
 	const char *spellName = pgettext("spell", spelldata[bs].sNameText);
 	const char *normalFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Item} of {Spell}. Example: War Staff of Firewall */ "{0} of {1}");
 
-	strncpy(item._iName, fmt::format(normalFmt, baseName, spellName).c_str(), sizeof(item._iName) - 1);
-	item._iName[sizeof(item._iName) - 1] = '\0';
+	CopyUtf8(item._iName, fmt::format(normalFmt, baseName, spellName), sizeof(item._iName));
 	if (!StringInPanel(item._iName)) {
-		strncpy(item._iName, fmt::format(normalFmt, shortName, spellName).c_str(), sizeof(item._iName) - 1);
-		item._iName[sizeof(item._iName) - 1] = '\0';
+		CopyUtf8(item._iName, fmt::format(normalFmt, shortName, spellName), sizeof(item._iName));
 	}
 
 	if (preidx != -1) {
 		const char *magicFmt = pgettext("spell", /* TRANSLATORS: Constructs item names. Format: {Prefix} {Item} of {Spell}. Example: King's War Staff of Firewall */ "{0} {1} of {2}");
 		const char *prefixName = _(ItemPrefixes[preidx].PLName);
-		strncpy(item._iIName, fmt::format(magicFmt, prefixName, baseName, spellName).c_str(), sizeof(item._iIName) - 1);
-		item._iIName[sizeof(item._iIName) - 1] = '\0';
+		CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, baseName, spellName), sizeof(item._iIName));
 		if (!StringInPanel(item._iIName)) {
-			strncpy(item._iIName, fmt::format(magicFmt, prefixName, shortName, spellName).c_str(), sizeof(item._iIName) - 1);
-			item._iIName[sizeof(item._iIName) - 1] = '\0';
+			CopyUtf8(item._iIName, fmt::format(magicFmt, prefixName, shortName, spellName), sizeof(item._iIName));
 		}
 	} else {
-		strncpy(item._iIName, item._iName, sizeof(item._iIName) - 1);
-		item._iName[sizeof(item._iName) - 1] = '\0';
+		CopyUtf8(item._iIName, item._iName, sizeof(item._iIName));
 	}
 
 	CalcItemValue(item);
@@ -1289,11 +1285,9 @@ void GetItemPower(Item &item, int minlvl, int maxlvl, affix_item_type flgs, bool
 		}
 	}
 
-	strncpy(item._iIName, GenerateMagicItemName(item._iName, preidx, sufidx).c_str(), sizeof(item._iIName) - 1);
-	item._iIName[sizeof(item._iIName) - 1] = '\0';
+	CopyUtf8(item._iIName, GenerateMagicItemName(item._iName, preidx, sufidx), sizeof(item._iIName));
 	if (!StringInPanel(item._iIName)) {
-		strncpy(item._iIName, GenerateMagicItemName(_(AllItemsList[item.IDidx].iSName), preidx, sufidx).c_str(), sizeof(item._iIName) - 1);
-		item._iIName[sizeof(item._iIName) - 1] = '\0';
+		CopyUtf8(item._iIName, GenerateMagicItemName(_(AllItemsList[item.IDidx].iSName), preidx, sufidx), sizeof(item._iIName));
 	}
 	if (preidx != -1 || sufidx != -1)
 		CalcItemValue(item);

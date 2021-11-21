@@ -895,8 +895,7 @@ void ToggleSpell(int slot)
 
 void AddPanelString(string_view str)
 {
-	strncpy(panelstr[pnumlines], str.data(), str.size());
-	panelstr[pnumlines][str.size()] = '\0';
+	CopyUtf8(panelstr[pnumlines], str, sizeof(*panelstr));
 
 	if (pnumlines < 4)
 		pnumlines++;
@@ -1413,9 +1412,7 @@ void DrawInfoBox(const Surface &out)
 					PrintMonstHistory(monster.MType->mtype);
 				}
 			} else if (pcursitem == -1) {
-				string_view townerName = Towners[pcursmonst].name;
-				strncpy(infostr, townerName.data(), townerName.length());
-				infostr[townerName.length()] = '\0';
+				CopyUtf8(infostr, Towners[pcursmonst].name, sizeof(infostr));
 			}
 		}
 		if (pcursplr != -1) {
@@ -1655,21 +1652,14 @@ void DrawGoldSplit(const Surface &out, int amount)
 
 	constexpr auto BufferSize = sizeof(tempstr) / sizeof(*tempstr);
 
-	// strncpy copies up to the maximum number of characters specified, it does not ensure that a null character is
-	// written to the end of the c-string. To be safe we specify a limit one character shorter than the buffer size and
-	// ensure that the buffer ends in a null character manually.
-	strncpy(
+	CopyUtf8(
 	    tempstr,
 	    fmt::format(ngettext(
 	                    /* TRANSLATORS: {:d} is a number. Dialog is shown when splitting a stash of Gold.*/ "You have {:d} gold piece. How many do you want to remove?",
 	                    "You have {:d} gold pieces. How many do you want to remove?",
 	                    initialDropGoldValue),
-	        initialDropGoldValue)
-	        .c_str(),
-	    BufferSize - 1);
-	// Ensure the prompt shown to the player is terminated properly (in case the formatted/translated string ends up
-	// being longer than 255 characters)
-	tempstr[BufferSize - 1] = '\0';
+	        initialDropGoldValue),
+	    BufferSize);
 
 	// Pre-wrap the string at spaces, otherwise DrawString would hard wrap in the middle of words
 	const std::string wrapped = WordWrapString(tempstr, 200);

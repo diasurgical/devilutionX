@@ -18,6 +18,7 @@
 #include "utils/file_util.h"
 #include "utils/language.h"
 #include "utils/paths.h"
+#include "utils/utf8.hpp"
 
 namespace devilution {
 
@@ -173,8 +174,7 @@ std::optional<MpqArchive> OpenSaveArchive(uint32_t saveNum)
 
 void Game2UiPlayer(const Player &player, _uiheroinfo *heroinfo, bool bHasSaveFile)
 {
-	strncpy(heroinfo->name, player._pName, sizeof(heroinfo->name) - 1);
-	heroinfo->name[sizeof(heroinfo->name) - 1] = '\0';
+	CopyUtf8(heroinfo->name, player._pName, sizeof(heroinfo->name));
 	heroinfo->level = player._pLevel;
 	heroinfo->heroclass = player._pClass;
 	heroinfo->strength = player._pStrength;
@@ -337,13 +337,11 @@ bool pfile_ui_save_create(_uiheroinfo *heroinfo)
 	giNumberOfLevels = gbIsHellfire ? 25 : 17;
 
 	archive.RemoveHashEntries(GetFileName);
-	strncpy(hero_names[saveNum], heroinfo->name, PLR_NAME_LEN);
-	hero_names[saveNum][PLR_NAME_LEN - 1] = '\0';
+	CopyUtf8(hero_names[saveNum], heroinfo->name, sizeof(hero_names[saveNum]));
 
 	auto &player = Players[0];
 	CreatePlayer(0, heroinfo->heroclass);
-	strncpy(player._pName, heroinfo->name, PLR_NAME_LEN);
-	player._pName[PLR_NAME_LEN - 1] = '\0';
+	CopyUtf8(player._pName, heroinfo->name, PLR_NAME_LEN);
 	PackPlayer(&pkplr, player, true);
 	EncodeHero(&pkplr);
 	Game2UiPlayer(player, heroinfo, false);
