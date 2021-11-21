@@ -2225,7 +2225,6 @@ msgid "Scroll of Infravision"
 msgstr "Згорток Інфрабачення"
 
 #: Source/itemdat.cpp:117
-#, fuzzy
 msgid "Scroll of Phasing"
 msgstr "Згорток Фазування"
 
@@ -2254,9 +2253,8 @@ msgid "Scroll of Guardian"
 msgstr "Згорток Охоронця"
 
 #: Source/itemdat.cpp:125
-#, fuzzy
 msgid "Scroll of Nova"
-msgstr "Згорток Наднової Зорі"
+msgstr "Згорток Нови"
 
 #: Source/itemdat.cpp:126
 msgid "Scroll of Golem"
@@ -2365,9 +2363,8 @@ msgid "Flail"
 msgstr "Ціп"
 
 #: Source/itemdat.cpp:158
-#, fuzzy
 msgid "Maul"
-msgstr "Якийсь Молот"
+msgstr "Клепач"
 
 #: Source/itemdat.cpp:159 Source/itemdat.cpp:160 Source/itemdat.cpp:161
 #: Source/itemdat.cpp:162 Source/itemdat.cpp:163 Source/itemdat.cpp:164
@@ -2453,7 +2450,6 @@ msgid "Rune of Stone"
 msgstr "Руна Каменю"
 
 #: Source/itemdat.cpp:182
-#, fuzzy
 msgid "Short Staff of Charged Bolt"
 msgstr "Короткий Посох Зарядженої Стріли"
 
@@ -2791,7 +2787,6 @@ msgstr "Кристалічний"
 
 #. TRANSLATORS: Item prefix section end.
 #: Source/itemdat.cpp:278
-#, fuzzy
 msgid "Doppelganger's"
 msgstr "Двійниковий"
 
@@ -2809,7 +2804,6 @@ msgid "slaying"
 msgstr "убивання"
 
 #: Source/itemdat.cpp:291
-#, fuzzy
 msgid "gore"
 msgstr "крові"
 
@@ -3138,9 +3132,8 @@ msgid "piercing"
 msgstr "пробивання"
 
 #: Source/itemdat.cpp:373
-#, fuzzy
 msgid "puncturing"
-msgstr "пробиття"
+msgstr "проколювання"
 
 #: Source/itemdat.cpp:374
 msgid "bashing"
@@ -3188,9 +3181,8 @@ msgstr "занепаду"
 
 #. TRANSLATORS: Item suffix section end.
 #: Source/itemdat.cpp:386
-#, fuzzy
 msgid "peril"
-msgstr "ризику"
+msgstr "небезпеки"
 
 #. TRANSLATORS: Unique Item section
 #: Source/itemdat.cpp:396
