@@ -1946,9 +1946,8 @@ msgid "Scroll of Town Portal"
 msgstr "Згорток Порталу в Місто"
 
 #: Source/itemdat.cpp:44 Source/itemdat.cpp:403
-#, fuzzy
 msgid "Arkaine's Valor"
-msgstr "Хоробрість Аркейну"
+msgstr "Доблесть Аркейну"
 
 #: Source/itemdat.cpp:45 Source/itemdat.cpp:94
 msgid "Potion of Full Healing"
@@ -1963,9 +1962,8 @@ msgid "Griswold's Edge"
 msgstr "Лезо Грізволда"
 
 #: Source/itemdat.cpp:48 Source/itemdat.cpp:405
-#, fuzzy
 msgid "Bovine Plate"
-msgstr "Свині Лати"
+msgstr "Бичачі Лати"
 
 #: Source/itemdat.cpp:49
 msgid "Staff of Lazarus"
@@ -2109,38 +2107,31 @@ msgid "Scale Mail"
 msgstr "Лускова Кольчуга"
 
 #: Source/itemdat.cpp:81
-#, fuzzy
 msgid "Breast Plate"
-msgstr "Нагрудні Лати"
+msgstr "Нагрудник"
 
 #: Source/itemdat.cpp:81 Source/itemdat.cpp:83 Source/itemdat.cpp:84
 #: Source/itemdat.cpp:85 Source/itemdat.cpp:86
-#, fuzzy
 msgid "Plate"
 msgstr "Лати"
 
 #: Source/itemdat.cpp:82
-#, fuzzy
 msgid "Splint Mail"
-msgstr "Лати з Осколків"
+msgstr "Шинні Лати"
 
 #: Source/itemdat.cpp:83
-#, fuzzy
 msgid "Plate Mail"
 msgstr "Пластинчасті Лати"
 
 #: Source/itemdat.cpp:84
-#, fuzzy
 msgid "Field Plate"
 msgstr "Польові Лати"
 
 #: Source/itemdat.cpp:85
-#, fuzzy
 msgid "Gothic Plate"
 msgstr "Готичні Лати"
 
 #: Source/itemdat.cpp:86
-#, fuzzy
 msgid "Full Plate Mail"
 msgstr "Повні Лати"
 
